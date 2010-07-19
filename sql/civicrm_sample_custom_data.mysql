@@ -1,0 +1,74 @@
+-- +--------------------------------------------------------------------+
+-- | CiviCRM version 3.1                                                |
+-- +--------------------------------------------------------------------+
+-- | Copyright CiviCRM LLC (c) 2004-2010                                |
+-- +--------------------------------------------------------------------+
+-- | This file is a part of CiviCRM.                                    |
+-- |                                                                    |
+-- | CiviCRM is free software; you can copy, modify, and distribute it  |
+-- | under the terms of the GNU Affero General Public License           |
+-- | Version 3, 19 November 2007 and the CiviCRM Licensing Exception.   |
+-- |                                                                    |
+-- | CiviCRM is distributed in the hope that it will be useful, but     |
+-- | WITHOUT ANY WARRANTY; without even the implied warranty of         |
+-- | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.               |
+-- | See the GNU Affero General Public License for more details.        |
+-- |                                                                    |
+-- | You should have received a copy of the GNU Affero General Public   |
+-- | License and the CiviCRM Licensing Exception along                  |
+-- | with this program; if not, contact CiviCRM LLC                     |
+-- | at info[AT]civicrm[DOT]org. If you have questions about the        |
+-- | GNU Affero General Public License or the licensing of CiviCRM,     |
+-- | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
+-- +--------------------------------------------------------------------+
+
+
+-- /*******************************************************
+-- *
+-- * Sample Custom Data  
+-- *
+-- *******************************************************/
+
+-- /*******************************************************
+-- *
+-- * create custom group
+-- *
+-- *******************************************************/
+INSERT INTO `civicrm_custom_group` (`name`, `title`, `extends`, `style`, `collapse_display`, `help_pre`, `weight`, `is_active`, `table_name`, `is_multiple`) VALUES ( 'constituent_information', 'Constituent Information', 'Individual', 'Inline', 0, 'Please enter additional constituent information as data becomes available for this contact.', 1, 1,'civicrm_value_constituent_information_1', 0);
+
+
+
+-- /*******************************************************
+-- *
+-- * create option group for storing custom options for custom fields
+-- *
+-- *******************************************************/
+INSERT INTO  `civicrm_option_group` (`name`, `label`, `is_reserved`, `is_active`) VALUES ('custom_most_important_issue', 'Most Important Issue', 0, 1), ( 'custom_marital_status', 'Marital Status', 0, 1);
+
+SELECT @option_most_id    := max(id) from civicrm_option_group where name = 'custom_most_important_issue';
+SELECT @option_marital_id := max(id) from civicrm_option_group where name = 'custom_marital_status';
+
+
+
+-- /*******************************************************
+-- *
+-- * create option values (custom options for custom fields)
+-- *
+-- *******************************************************/
+INSERT INTO `civicrm_option_value` (`option_group_id`, `label`, `value`, `weight`, `is_active`, `is_default`) VALUES (@option_most_id   , 'Education', 'Edu', 1, 1,0), (@option_most_id   , 'Environment', 'Env', 2, 1,0), (@option_most_id   , 'Social Justice', 'SocJus', 3, 1,0),(@option_marital_id, 'Single', 'S', 1, 1,0),(@option_marital_id, 'Married', 'M', 2, 1,0), (@option_marital_id, 'Domestic Partner', 'D', 3, 1,0), (@option_marital_id, 'Widowed', 'W', 4, 1,0), (@option_marital_id, 'Other', 'O', 5, 1,0);
+
+
+-- /*******************************************************
+-- *
+-- * create custom field
+-- *
+-- *******************************************************/
+INSERT INTO `civicrm_custom_field` (`custom_group_id`, `label`, `data_type`, `html_type`, `is_required`, `weight`, `help_post`, `is_active`, `is_view`, `is_searchable`, `options_per_line`, `column_name`, `option_group_id`, `start_date_years`, `end_date_years`, `date_format`, `time_format` ) VALUES (1, 'Most Important Issue', 'String', 'Radio', 0, 1, '', 1, 0, 1, NULL, 'most_important_issue_1', @option_most_id, NULL, NULL, NULL, NULL), (1, 'Marital Status', 'String', 'Select', 0, 2, '', 1, 0, 1, NULL, 'marital_status_2', @option_marital_id, NULL, NULL, NULL, NULL), (1, 'Marriage Date', 'Date', 'Select Date', 0, 3, '', 1, 0, 1, NULL, 'marriage_date_3', NULL, 30, 0, 'mm/dd/yy', 0);
+
+
+-- /*******************************************************
+-- *
+-- * create table to store custom values of a custom group
+-- *
+-- *******************************************************/
+CREATE TABLE `civicrm_value_constituent_information_1` (`id` int(10) unsigned NOT NULL auto_increment, `entity_id` int(10) unsigned NOT NULL,  `most_important_issue_1` varchar(255) default NULL,  `marital_status_2` varchar(255) default NULL, `marriage_date_3` datetime default NULL, PRIMARY KEY  (`id`), UNIQUE KEY `unique_entity_id` (`entity_id`), INDEX `INDEX_most_important_issue_1` (`most_important_issue_1`), INDEX `INDEX_marital_status_2` (`marital_status_2`), INDEX `INDEX_marriage_date_3` (`marriage_date_3`), CONSTRAINT `FK_civicrm_value_constituent_information_1_entity_id` FOREIGN KEY (`entity_id`) REFERENCES `civicrm_contact` (`id`) ON DELETE CASCADE) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
