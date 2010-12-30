@@ -1,0 +1,6 @@
+name = Newweb functions
+description = Newweb payment functions for civicrm.
+package = CiviCRM
+dependencies[] = civicrm
+core = 6.x
+version = 3.15-dev

@@ -1,0 +1,255 @@
+<?php
+define('NEWWEB_HOST', '61.221.66.144');
+define('NEWWEB_USER', 'rp_nncf');
+define('NEWWEB_PASS', '');
+
+function civicrm_newweb_init(){
+  $path = drupal_get_path('module', 'civicrm_newweb');
+  drupal_add_css("$path/civicrm_newweb.css");
+
+  if(strstr($_GET['q'], 'civicrm_newweb')){
+    $GLOBALS['conf']['cache'] = FALSE;
+  }
+}
+
+function civicrm_newweb_menu(){
+  return array(
+    'civicrm_newweb' => array(
+      /*'title'            => 'CiviCRM',*/
+      'access callback' => true,
+      'page callback' => 'civicrm_newweb_page',
+      'type' => MENU_CALLBACK,
+      'weight' => 0,
+    ),
+    'civicrm_newweb_error' => array(
+      /*'title'            => 'CiviCRM',*/
+      'access callback' => true,
+      'page callback' => 'civicrm_newweb_error',
+      'type' => MENU_CALLBACK,
+      'weight' => 0,
+    )
+  );
+}
+
+function civicrm_newweb_page(){
+  drupal_set_header('Pragma: no-cache');
+  drupal_set_header('Cache-Control: no-store, no-cache, must-revalidate');
+  drupal_set_header('Expires: 0');
+  $qfKey = $_GET['qfKey'];
+  $form = $_SESSION['newweb_form'];
+
+  if(isset($form) && !empty($form) && $qfKey == $form['#params']['qfKey'] ){
+    _civicrm_newweb_js_redirect();
+    $o .= '<div style="width:100%;height:20px;background:url('.base_path().'misc/progress.gif) repeat-x;">'.t('Processing').'</div>';
+    $o .= '<form action="'.$form['#action'].'" method="post" id="redirect-form">';
+    foreach($form as $k=>$p){
+      if($k[0] != '#'){
+        $o .= '<input type="hidden" name="'.$k.'" value="'.$p.'" />';
+      }
+    }
+    $o .= '</form>';
+    $_SESSION['civicrm_redirect'] = $form['#redirect'];
+    return $o;
+  }
+  elseif($_SESSION['civicrm_redirect']){
+    drupal_goto($_SESSION['civicrm_redirect']);
+  }
+  else{
+    // error message
+    // drupal_set_message();
+    // drupal_access_denied();
+    return 'error';
+  }
+}
+
+/**
+ * Implementation of hook_civicrm_buildForm()
+ */
+function civicrm_newweb_civicrm_buildForm($form_name, &$form){
+  switch($form_name){
+    case 'CRM_Contribute_Form_Contribution_ThankYou':
+      if(isset($_POST['final_result'])){
+        if($_POST['final_result'] == 1 && $_POST['final_return_PRC'] == 0 && $_POST['final_return_SRC'] == 0){
+          // success here
+        }
+        else{
+          // error here
+          require_once "CRM/Core/Payment/NewwebResponse.php";
+          $e = new CRM_Core_Payment_NewwebResponse;
+          $prc = $_POST['final_return_PRC'];
+          $src = $_POST['final_return_SRC'];
+          $brc = $_POST['final_return_BankRC'];
+          $order_num = $_POST['P_OrderNumber'];
+          $error = $e->response($prc,$src,$brc, $order_num);
+          // simulate message
+          $_SESSION['newweb']['error'] = $error;
+          drupal_goto('civicrm_newweb_error', "id=$order_num");
+        }
+      }
+      break;
+    case 'CRM_Contribute_Form_Contribution_Main':
+      // add newweb payment method selection
+      require_once "CRM/Core/DAO.php";
+      if($form->_paymentProcessor['payment_processor_type'] == 'Newweb'){
+        unset($_SESSION['newweb']);
+        unset($_SESSION['newweb_form']);
+        $dao = CRM_Core_DAO::executeQuery("SELECT id FROM civicrm_payment_processor_type WHERE name LIKE 'Newweb'");
+        $dao->fetch();
+        $ppt_id = $dao->id;
+        $dao = CRM_Core_DAO::executeQuery("SELECT * FROM civicrm_option_value WHERE filter = $ppt_id AND is_active = 1");
+        $default = 'Credit Card';
+        $radios[1] = array('name' => $default, 'label' => ts($default));
+        while($dao->fetch()){
+          $radios[$dao->value] = array('name'=> $dao->name, 'label' => ts($dao->label), 'description' => $dao->description);
+
+        }
+        $form->addElement('hidden', 'newweb_instrument_id', 1);
+        drupal_add_js(_civicrm_newweb_js_form($radios), 'inline');
+      }
+      break;
+    case 'CRM_Event_Form_Registration_Register':
+      // add newweb payment method selection
+      require_once "CRM/Core/DAO.php";
+      if($form->_paymentProcessor['payment_processor_type'] == 'Newweb'){
+        unset($_SESSION['newweb']);
+        unset($_SESSION['newweb_form']);
+        $dao = CRM_Core_DAO::executeQuery("SELECT id FROM civicrm_payment_processor_type WHERE name LIKE 'Newweb'");
+        $dao->fetch();
+        $ppt_id = $dao->id;
+        $dao = CRM_Core_DAO::executeQuery("SELECT * FROM civicrm_option_value WHERE filter = $ppt_id AND is_active = 1");
+        $default = 'Credit Card';
+        $radios[1] = array('name' => $default, 'label' => ts($default));
+        while($dao->fetch()){
+          $radios[$dao->value] = array('name'=> $dao->name, 'label' => ts($dao->label), 'description' => $dao->description);
+        }
+        $form->addElement('hidden', 'newweb_instrument_id', 1);
+        drupal_add_js(_civicrm_newweb_js_form($radios), 'inline');
+      }
+      break;
+    case 'CRM_Contribute_Form_ContributionPage_Amount':
+      _civicrm_newweb_js_contritweak();
+      break;
+  }
+}
+
+/**
+ * Implementation of hook_cron()
+ */
+function civicrm_newweb_cron(){
+  require_once("civicrm_newweb.inc");
+  $is_test = 1;
+  $hour = date('G');
+  $now = time();
+  $yesterday = $now - 86400;
+
+  if($hour >= 9 && $hour <= 12 && variable_get('civicrm_newweb_response', 0) < $yesterday){
+    // get yesterday modification result
+    if(civicrm_newweb_process_response($is_test)){
+      variable_set('civicrm_newweb_response', $now);
+    }
+  }
+  if($hour >= 13 && $hour <= 17 && variable_get('civicrm_newweb_transaction', 0) < $yesterday){
+    // get yesterday transaction result
+    if(civicrm_newweb_process_transaction($is_test)){
+      variable_set('civicrm_newweb_transaction', $now);
+    }
+  }
+  if($hour >= 15 && $hour <= 17 && variable_get('civicrm_newweb_uploaded', 0) < $yesterday){
+    // doing upload stuff
+    if(civicrm_newweb_process_upload($is_test)){
+      variable_set('civicrm_newweb_uploaded', $now);
+    }
+  }
+}
+
+function _civicrm_newweb_instrument(){
+  return array(
+    'ATM' => array('name' => 'ATM', 'desc' => ''),
+    'WEBATM' => array('name' => 'Web ATM', 'desc' => ''),
+    'CS' => array('name'=>'Convenient Store', 'desc'=>''),
+    'MMK' => array('name'=>'7-11 iBon / Family FamiPort / HiLife Life-ET','desc' => ''),
+    'ALIPAY' => array('name' => 'AliPay', 'desc' => ''),
+  );
+}
+
+function _civicrm_newweb_js_form($radios){
+  $output = "<div class='section'>";
+  $output .= "<div class='label'>".ts('Payment Instrument').'</div>';
+  $output .= "<div class='content'>";
+  foreach($radios as $value => $radio){
+    $checked = $value == 1 ? "checked='checked'" : '';
+    $radio['description'] = str_replace(array("\n","\r"), array('',''), $radio['description']);
+    $output .= "<div class='newweb-dummy-wrapper'><label><input type='radio' name='newweb_dummy' value='".$value."' class='form-radio' $checked />".$radio['label']."</label><div class='hover-item'>".$radio['description']."</div></div>";
+  }
+  $output .= '</div>';
+  $output .= "<div class='clear'></div>";
+  $output .= '</div>';
+  return '
+$(document).ready(function(){
+  // add radios
+  $("#crm-container form[name=Main] #intro_text, #crm-container form[name=Register] .paid_event-section").after("'.$output.'");
+  // modified exists recurring input
+
+  $("input[name=newweb_dummy]").click(function(){
+    var v = $(this).val();
+    $("input[name=newweb_instrument_id]").val(v);
+    if(v != 1){
+      $("#crm-container input[name=is_recur][value=0]").click();
+      $("#crm-container input[name=is_recur][value=1]").attr("disabled","disabled");
+    }
+    else{
+      $("#crm-container input[name=is_recur][value=1]").removeAttr("disabled");
+    }
+  });
+  
+  $(".hover-item").css({position:"absolute",display:"none"});
+  $(".newweb-dummy-wrapper").hover(function(){
+    $(this).children(".hover-item").show();
+  },function(){
+    $(this).children(".hover-item").hide();
+  });
+});  
+  ';
+}
+function _civicrm_newweb_js_contritweak(){
+  $js = '
+$(document).ready(function(){
+  $("input[name=\'recur_frequency_unit[week]\']").hide();
+  $("label[for=\'recur_frequency_unit[week]\']").hide();
+  $("input[name=\'recur_frequency_unit[day]\']").hide();
+  $("label[for=\'recur_frequency_unit[day]\']").hide();
+  $("input[name=\'recur_frequency_unit[year]\']").hide();
+  $("label[for=\'recur_frequency_unit[year]\']").hide();
+  $("#is_recur").click(function(){
+    $("#is_recur_interval").attr( "checked", false );
+  });
+  $("#is_recur_interval").parents("tr").hide();
+
+});  
+';
+  drupal_add_js($js, 'inline', 'footer');
+}
+
+function _civicrm_newweb_js_redirect(){
+  $js = '
+$(document).ready(function(){
+  $("#redirect-form").submit();
+});
+';
+  drupal_add_js($js, 'inline');
+}
+
+function civicrm_newweb_error(){
+  $msg = $_SESSION['newweb']['error'];
+  if(!count($msg)){
+    drupal_access_denied();
+  }
+  $output .= '<div class="newweb-error">';
+  $output .= '<div class="newweb-error-first">'.array_shift($msg).'</div>';
+  foreach($msg as $m){
+    $items[] = $m;
+  }
+  $output .= theme('item_list', $items);
+  $output .= '</div>';
+  return $output;
+}
