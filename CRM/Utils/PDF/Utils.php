@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -38,7 +38,10 @@
 class CRM_Utils_PDF_Utils {
 
     static function domlib( $text,
-                            $fileName = 'civicrm.pdf' ) {
+                            $fileName = 'civicrm.pdf',
+                            $output = false,
+                            $orientation = 'landscape',
+                            $paperSize   = 'a3' ) {
         require_once 'packages/dompdf/dompdf_config.inc.php';
         $dompdf = new DOMPDF( );
         
@@ -50,32 +53,73 @@ class CRM_Utils_PDF_Utils {
         }
 
         $first = true;
-        $html = "
-<style>
-.page_break {
-  page-break-before: always;
-}
-</style>
-";
+        
+        $html = '
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title></title>
+    <style>
+      .page_break {
+        page-break-before: always;
+      }
+    </style>
+  </head>
+  <body>';
 
+        $htmlElementstoStrip = array(
+                                     '@<head[^>]*?>.*?</head>@siu',
+                                     '@<body>@siu',
+                                     '@</body>@siu',
+                                     '@<html[^>]*?>@siu',
+                                     '@</html>@siu',
+                                     '@<!DOCTYPE[^>]*?>@siu',
+                                     );
+        $htmlElementsInstead = array("","","","","","");                     
+        
         foreach ( $values as $value ) {
-            if ( ! $first ) {
-                $html .= "<h2 class=\"page_break\">{$value['to']}: {$value['subject']}</h2><p>";
-            } else {
-                $html .= "<h2>{$value['to']}: {$value['subject']}</h2><p>";
+            if ( $first ) {
                 $first = false;
+                $pattern = '@<html[^>]*?>.*?<body>@siu';
+                preg_match($pattern, $value['html'], $matches);
+                //If there is a header in the template it will be used instead of the default header
+                $html = $matches[0] ? $matches[0] : nothing;
+                //$html .= "<h2>{$value['to']}: {$value['subject']}</h2><p>"; //If needed it should be generated through the message template
+            } else {
+                $html .= "<div style=\"page-break-after: always\"></div>";
+                //$html .= "<h2 class=\"page_break\">{$value['to']}: {$value['subject']}</h2><p>"; //If needed it should be generated through the message template
             }
-            $html .= "{$value['body']}\n";
+            if ( $value['html'] ) {
+                //Strip the header from the template to avoid multiple headers within one document causing invalid html
+                $value['html'] = preg_replace( $htmlElementstoStrip,
+                                               $htmlElementsInstead,
+                                               $value['html'] );
+                $html .= "{$value['html']}\n";              
+            } else {
+                $html .= "{$value['body']}\n";
+            }
         }
+
+        $html .= '
+          </body>
+        </html>';
+                        
         $dompdf->load_html( $html );
+        $dompdf->set_paper ($paperSize, $orientation);
         $dompdf->render( );
-        $dompdf->stream( $fileName );
+        
+        if ( $output ) {
+            return $dompdf->output( );
+        } else {
+            $dompdf->stream( $fileName );
+        }
     }
 
     static function html2pdf( $text,
                               $fileName = 'civicrm.pdf',
                               $orientation = 'landscape',
-                              $paperSize   = 'a3' ) {
+                              $paperSize   = 'a3',
+                              $output = false ) {
         require_once 'packages/dompdf/dompdf_config.inc.php';
         spl_autoload_register('DOMPDF_autoload');
         $dompdf = new DOMPDF( );
@@ -101,7 +145,11 @@ class CRM_Utils_PDF_Utils {
         $dompdf->load_html( $html );
         $dompdf->set_paper ($paperSize, $orientation);
         $dompdf->render( );
-        $dompdf->stream( $fileName );
+        if ( $output ) {
+            return $dompdf->output( );
+        } else {
+            $dompdf->stream( $fileName );
+        }
     }
 
     static function &pdflib( $fileName,
@@ -122,7 +170,7 @@ class CRM_Utils_PDF_Utils {
                 CRM_Core_Error::statusBounce( "PDFlib Error: " . $pdf->get_errmsg( ) );
             }
 
-            $config =& CRM_Core_Config::singleton( );
+            $config = CRM_Core_Config::singleton( );
             $pdf->set_parameter( 'resourcefile', $config->templateDir . '/Quest/pdf/pdflib.upr' );
             $pdf->set_parameter( 'textformat', 'utf8' );
 
@@ -191,7 +239,7 @@ class CRM_Utils_PDF_Utils {
                 header("Content-Length: $len");
                 header("Content-Disposition: inline; filename={$output}.pdf");
                 echo $buf;
-                exit( );
+                CRM_Utils_System::civiExit( ); 
             } else {
                 return $buf;
             }

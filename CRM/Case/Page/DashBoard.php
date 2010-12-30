@@ -1,7 +1,7 @@
 <?php
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -34,6 +34,7 @@
  */
 
 require_once 'CRM/Core/Page.php';
+require_once 'CRM/Case/BAO/Case.php';
 
 /**
  * This page is for Case Dashboard
@@ -50,21 +51,32 @@ class CRM_Case_Page_DashBoard extends CRM_Core_Page
      */ 
     function preProcess( ) 
     {
-        // Make sure case types have been configured for the component
-        require_once 'CRM/Core/OptionGroup.php';        
-        $caseType = CRM_Core_OptionGroup::values('case_type');
-        if ( empty( $caseType ) ){
-            $this->assign('notConfigured', 1);
+        //check for civicase access.
+        if ( !CRM_Case_BAO_Case::accessCiviCase( ) ) {
+            CRM_Core_Error::fatal( ts( 'You are not authorized to access this page.' ) );
+        }
+        
+        //validate case configuration.
+        require_once 'CRM/Case/BAO/Case.php';
+        $configured = CRM_Case_BAO_Case::isCaseConfigured( );
+        $this->assign( 'notConfigured',       !$configured['configured'] );
+        $this->assign( 'allowToAddNewCase',   $configured['allowToAddNewCase'] );
+        if ( !$configured['configured'] ) {
             return;
         }
-
+        
         $session = & CRM_Core_Session::singleton();
         $allCases = CRM_Utils_Request::retrieve( 'all', 'Positive', $session );
         
         CRM_Utils_System::setTitle( ts('CiviCase Dashboard') );
         
         $userID  = $session->get('userID');
-               
+        
+        //validate access for all cases.
+        if ( $allCases && !CRM_Core_Permission::check( 'access all cases and activities' ) ) {
+            $allCases = false;
+            CRM_Core_Session::setStatus( ts( 'You are not authorized to access all cases and activities.' ) );
+        }
         if ( ! $allCases ) {
             $this->assign('myCases', true );
         } else {
@@ -72,7 +84,8 @@ class CRM_Case_Page_DashBoard extends CRM_Core_Page
         }
         
         $this->assign('newClient', false );
-        if ( CRM_Core_Permission::check('add contacts')) {
+        if ( CRM_Core_Permission::check( 'add contacts' ) && 
+             CRM_Core_Permission::check( 'access all cases and activities' ) ) {
             $this->assign('newClient', true );
         }
         require_once 'CRM/Case/BAO/Case.php';

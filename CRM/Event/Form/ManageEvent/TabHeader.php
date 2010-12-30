@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -56,31 +56,31 @@ class CRM_Event_Form_ManageEvent_TabHeader {
         }
 
         $tabs = array(
-                      'EventInfo'    => array( 'title'  => ts( 'Info and Settings' ),
+                      'eventInfo'    => array( 'title'  => ts( 'Info and Settings' ),
                                                'link'   => null,
                                                'valid'  => false,
                                                'active' => false,
                                                'current' => false,
                                                ),
-                      'Location'     => array( 'title' => ts( 'Event Location' ),
+                      'location'     => array( 'title' => ts( 'Event Location' ),
                                                'link'   => null,
                                                'valid' => false,
                                                'active' => false,
                                                'current' => false,
                                                ),
-                      'Fee'          => array( 'title' => ts( 'Fees' ),
+                      'fee'          => array( 'title' => ts( 'Fees' ),
                                                'link'   => null,
                                                'valid' => false,
                                                'active' => false,
                                                'current' => false,
                                                ),
-                      'Registration' => array( 'title' => ts( 'Online Registration' ),
+                      'registration' => array( 'title' => ts( 'Online Registration' ),
                                                'link'   => null,
                                                'valid' => false,
                                                'active' => false,
                                                'current' => false,
                                                ),
-                      'Friend'       => array( 'title' => ts( 'Tell a Friend' ),
+                      'friend'       => array( 'title' => ts( 'Tell a Friend' ),
                                                'link'   => null,
                                                'valid' => false,
                                                'active' => false,
@@ -90,22 +90,30 @@ class CRM_Event_Form_ManageEvent_TabHeader {
 
         $eventID = $form->getVar( '_id' );
 
-        $fullName  = $form->getVar( '_name' );
+        $fullName  = $form->getVar( '_name' );      
         $className = CRM_Utils_String::getClassName( $fullName );
-
+        $class = strtolower($className) ;
         // hack for tell a friend, since class name is different
         if ( $className == 'Event' ) {
-            $className = 'Friend';
-        }
-        if ( array_key_exists( $className, $tabs ) ) {
-            $tabs[$className]['current'] = true;
+            $class = 'friend';
+        } elseif ( $className == 'EventInfo' ){
+            $class = 'eventInfo';
+        }        
+
+        if ( array_key_exists( $class, $tabs ) ) {
+            $tabs[$class]['current'] = true;
         }
 
         if ( $eventID ) {
             $reset = CRM_Utils_Array::value('reset', $_GET) ? 'reset=1&' : '';
+            
+            //add qf key
+            $qfKey = $form->get( 'qfKey' );
+            $form->assign( 'qfKey', $qfKey );
+            
             foreach ( $tabs as $key => $value ) {
-                $tabs[$key]['link'] = CRM_Utils_System::url( 'civicrm/admin/event',
-                                                             "{$reset}action=update&snippet=4&subPage={$key}&id={$eventID}" );
+                $tabs[$key]['link'] = CRM_Utils_System::url( "civicrm/event/manage/{$key}",
+                                                             "{$reset}action=update&snippet=4&id={$eventID}&qfKey={$qfKey}" );
                 $tabs[$key]['active'] = $tabs[$key]['valid'] = true;
             }
             
@@ -123,15 +131,15 @@ WHERE      e.id = %1
             }
 
             if ( ! $dao->is_online_registration ) {
-                $tabs['Registration']['valid'] = false;
+                $tabs['registration']['valid'] = false;
             }
             
             if ( ! $dao->is_monetary ) {
-                $tabs['Fee']['valid'] = false;
+                $tabs['fee']['valid'] = false;
             }
         
             if ( ! $dao->is_active ) {
-                $tabs['Friend']['valid'] = false;
+                $tabs['friend']['valid'] = false;
             }
         }
 
@@ -141,32 +149,6 @@ WHERE      e.id = %1
     static function reset( &$form ) {
         $tabs =& self::process( $form );
         $form->set( 'tabHeader', $tabs );
-    }
-
-    static function getNextSubPage( $form, $currentSubPage = 'EventInfo' ) {
-        $tabs = self::build( $form );
-        $flag = false;
-
-        if ( is_array($tabs) ) {
-            foreach ( $tabs as $subPage => $pageVal ) {
-                if ( $flag && $pageVal['valid'] ) {
-                    return $subPage;
-                }
-                if ( $subPage == $currentSubPage ) {
-                    $flag = true;
-                }
-            }
-        }
-        return 'EventInfo';
-    }
-
-    static function getSubPageInfo( $form, $subPage, $info = 'title' ) {
-        $tabs = self::build( $form );
-
-        if ( is_array($tabs[$subPage]) && array_key_exists($info, $tabs[$subPage]) ) {
-            return $tabs[$subPage][$info];
-        }
-        return false;
     }
 
     static function getCurrentTab( $tabs ) {
@@ -185,7 +167,8 @@ WHERE      e.id = %1
             }
         }
         
-        $current = $current ? $current : 'EventInfo';
+        $current = $current ? $current : 'eventInfo';
         return $current;
+
     }
 }

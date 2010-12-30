@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -23,16 +23,12 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
-<div class="form-item">
+<div class="crm-block crm-event-participant_confirm-form-block">
   <div class="messages status">
-    <dl>
-	<dd>
-	   {$statusMsg}
-    </dd>
-    </dl>
+        {$statusMsg}
   </div>
 
   <div id="crm-submit-buttons">
-	{$form.buttons.html}
+	{include file="CRM/common/formButtons.tpl" location="bottom"}
   </div>
 </div>

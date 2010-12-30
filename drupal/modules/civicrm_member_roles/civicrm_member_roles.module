@@ -148,10 +148,10 @@ function civicrm_member_roles_show_rules($action = NULL, $id = NULL)
     }
     
     if (!empty($data)) {
-        $output = t('Use the "Add Association Rule" form to add new rules.');
+        $output = t("Use the 'Add Association Rule' form to add new rules.");
         $output .= theme('table', $header, $data);
     } else {
-        $output = t('There are no rules currently set. Use the "Add Association Rule" form to add one.');
+        $output = t("There are no rules currently set. Use the 'Add Association Rule' form to add one.");
     }
     
     return $output;
@@ -335,7 +335,23 @@ function civicrm_member_roles_add_rule_form_validate($form, &$form_state)
   
     //Validate edit flag if set
     if (isset($form_state['values']['edit_flag']) && !is_numeric($form_state['values']['edit_flag'])) {
-        for_set_error('', t('Edit flag was not numeric.'));
+        form_set_error('', t('Edit flag was not numeric.'));
+    }
+    
+    //Validate duplicate rules
+    if ( !isset( $form_state['values']['edit_flag'] ) ) {
+        $result = false;
+        $membershipTypeId = (int) $form_state['values']['add_rule']['select_membership'];
+        $roleId           = (int) $form_state['values']['add_rule']['select_role'];
+        $sql = db_query( "SELECT * FROM {civicrm_member_roles_rules} WHERE rid = %d AND type_id = %d", 
+                         $roleId, $membershipTypeId );
+        while( $values = db_fetch_object( $sql ) ) {
+            if ( $values ) {
+                $result = true;
+                break;
+            }
+        }
+        if ( $result ) form_set_error('', t('This rule set is already exist in data base.'));
     }
 }
 
@@ -392,7 +408,7 @@ function civicrm_member_roles_add_rule_form_submit($form, &$form_state)
  * Finds members and applies roles based on the rules defined in the settings page. If the ext_uid param is defined then
  * this function will only sync one user.
  */
-function _civicrm_member_roles_sync($ext_uid = NULL) 
+function _civicrm_member_roles_sync( $ext_uid = NULL ) 
 {    
     if ( ! civicrm_initialize( ) ) {
         return;
@@ -400,99 +416,109 @@ function _civicrm_member_roles_sync($ext_uid = NULL)
     //Bring in CRM_Core_BAO_UFMatch class so we can find Drupal UIDs
     global $civicrm_root;
     require_once $civicrm_root . '/CRM/Core/BAO/UFMatch.php';
-  
     $rules = db_query('SELECT * FROM {civicrm_member_roles_rules}');
-  
     //Error check
     if ($rules === FALSE) {
         return FALSE;
     }
-  
-    while ($result = db_fetch_object($rules)) {
-        $codes = unserialize($result->status_codes);
     
-        //CiviCRM query
-        $memberships = "
-SELECT    status_id, email, cm.contact_id
-FROM      civicrm_membership cm
-LEFT JOIN civicrm_email ce ON cm.contact_id = ce.contact_id 
-LEFT JOIN civicrm_contact cc ON cm.contact_id = cc.id  
-WHERE     cc.contact_type = 'Individual'  
-AND       ce.is_primary = 1
-AND       membership_type_id = %1
-";
-        $params = array( 1 => array($result->type_id, 'Integer') );
-        
-        if (!empty($ext_uid)) {
-      
-            //Let's get the UID's Contact ID so we only grab one record from the CiviCRM DB.
-            $cid = CRM_Core_BAO_UFMatch::getContactId($ext_uid);
-
-            if(!empty($cid)) {
-                $memberships .= ' AND cm.contact_id = %3';
-                $params[3] = array((int) $cid, 'Integer');
-            } else {
-                watchdog('civicrm_member_roles', 
-                         'The uid: @uid did not have a CiviCRM Contact ID.',
-                         array('@uid' => (int) $ext_uid),
-                         WATCHDOG_ERROR);
-                return FALSE;
-            }
+    //Find all contacts that have membership rules (or just use $ext_uid)
+    if ( empty( $ext_uid ) ) {
+        //Put all unique membership types that have rules in an array
+        $all_rule_membership_types = array();
+        while ($result = db_fetch_object( $rules ) ) {
+            $all_rule_membership_types[] = $result->type_id;
         }
-
-        $dao =& CRM_Core_DAO::executeQuery($memberships, $params);
-
-        $add_accounts = array();
-        $remove_accounts = array();
-        while ($dao->fetch()) {
-      
-            //Let's get the Drupal UID based on CiviCRM Contact ID
-            $uid = CRM_Core_BAO_UFMatch::getUFId($dao->contact_id);
-      
-            /* We silently don't add the UID if it doesn't exist so we don't force that a Drupal user exists
-             * for each CiviCRM contact.
-             */
-            if (!empty($uid)) {
-        
-                //If the record has the correct status, set up the Drupal user to either have a role added or removed
-                if (in_array($dao->status_id, $codes['current'])) {
-                    $add_accounts[] = (int) $uid;
-                } elseif (in_array($dao->status_id, $codes['expired'])) {
-                    $remove_accounts[] = (int) $uid;
-                }
-            }
+        if ( empty( $all_rule_membership_types ) ) return FALSE;
+        $memTypes = implode( ",", $all_rule_membership_types );
+        // OPTIMIZATION: "SELECT DISTINCT contact_id" would be better if field were indexed
+        $sql ="SELECT DISTINCT contact_id FROM civicrm_uf_match";
+        $contacts = CRM_Core_DAO::executeQuery ( $sql,CRM_Core_DAO::$_nullArray );
+        if ( $contacts->N == 0 ) {
+            return FALSE;
         }
-    
-        unset($dao);
-
-	// also make sure the add has precedence over remove, i.e. if we add a role, we dont remove it
-	// in case of multiple membership types
-	$remove_accounts = array_diff( $remove_accounts, $add_accounts );
-	        
-        //Let's make sure the rid is really an rid.
-        if(is_numeric($result->rid)) {
-      
-            /* Now we are going to give the current user temp user 1 status (superuser) so they can edit roles.
-             * We turn session saving off to prevent permission escalation in case there is a problem loading
-             * the page.
-             */
-            global $user;
-            $current_user = $user->uid;
-            session_save_session(FALSE);
-            $user = user_load(array('uid' => 1));
-      
-            //Apply roles.
-            user_multiple_role_edit($add_accounts, 'add_role', $result->rid);
-            user_multiple_role_edit($remove_accounts, 'remove_role', $result->rid);
-      
-            //Now we restore the current user and renable session saving.
-            $user = user_load(array('uid' => $current_user));
-            session_save_session(TRUE);
-        } else {
+    } else {
+        //Let's get the UID's Contact ID so we only grab one record from the CiviCRM DB.
+        $uid = $ext_uid;
+        $sql = "SELECT contact_id FROM civicrm_uf_match WHERE uf_id = %1";
+        $params = array( 1=>array( $uid, "Integer" ) );
+        $contacts = CRM_Core_DAO::executeQuery ( $sql, $params );
+        if ($contacts->N == 0) {
+            watchdog( 'civicrm_member_roles', 
+                     'The uid: @uid did not have a CiviCRM Contact ID.',
+                     array('@uid' => (int) $ext_uid),
+                     WATCHDOG_ERROR );
             return FALSE;
         }
     }
-  
+    $memberRules = db_query( 'SELECT * FROM {civicrm_member_roles_rules}' );
+    $memberroles = array();
+    while ( $ruleValues = db_fetch_object( $memberRules ) ) {
+        $memberroles[$ruleValues->type_id][] = array(
+                                                     'rid' => $ruleValues->rid,
+                                                     'codes' => unserialize( $ruleValues->status_codes ),
+                                                     );
+        $rid[] = $ruleValues->rid;
+        
+    }
+    $allRoles = user_roles( TRUE ); 
+    while ( $contacts->fetch() ) {
+        $cid = $contacts->contact_id;
+        $uid = CRM_Core_BAO_UFMatch::getUFId( $cid );
+        if ( empty( $uid ) ) continue;
+        
+        //Get all memberships of contact
+        require_once 'api/v2/Membership.php';
+        $memberships = civicrm_contact_memberships_get( $cid );
+        $contactMemberships = CRM_Utils_Array::value( $cid, $memberships, array( ) );
+        $addRoles = array();
+        $expRoles = array();
+        
+        if( empty( $contactMemberships )&& !empty( $rid )  ) {
+            if( is_array( $rid ) )$rid = implode("," , $rid );
+            db_query( 'DELETE  FROM {users_roles} WHERE uid = '.$uid.' AND rid IN( '.$rid.' )' );
+            
+        } else { 
+            foreach ( $contactMemberships as $membership ) {
+                if ( !empty( $rid ) ) {  
+                    if( is_array( $rid ) ) $rid = implode("," , $rid );
+                    db_query( 'DELETE  FROM {users_roles} WHERE uid = '.$uid.' AND rid IN( '.$rid.' ) ' );
+                }
+                if ( is_array( $memberroles[$membership['membership_type_id']] ) ) {
+                    foreach( $memberroles[$membership['membership_type_id']] as $rolerule ) {
+                        if ( in_array( $membership['status_id'], $rolerule['codes']['current'] ) ) {
+                            $addRoles[] = $rolerule['rid'];
+                        } elseif ( in_array( $membership['status_id'], $rolerule['codes']['expired'] ) ) {
+                            $expRoles[] = $rolerule['rid'];
+                        }
+                    }
+                }
+                if ( count( $addRoles ) > 0 || count( $expRoles ) > 0 ) {
+                    $addRoles = array_unique( $addRoles );
+                    $expRoles = array_unique( $expRoles );
+                    $account = user_load( array( 'uid' => $uid ) );
+                    if ( $account !== FALSE ) {
+                        // Retain a user's existing roles that aren't explicitly expired--the assumption is that roles granted 
+                        // manually won't have expired memberships that correspond to those roles.  If a status is neither 
+                        // current nor expired, the membership will have no effect on the role.
+                        
+                        $rolesRetain = array_diff_key( $account->roles, array_flip( $expRoles ) ); 
+                        
+                        // Certainly add all roles that correspond to current memberships
+                        
+                        foreach ( $addRoles as $addRole ) {
+                            $rolesRetain[$addRole] = $allRoles[$addRole];
+                        }
+                        
+                        // Overwrite the user's roles to the ones we've set
+                        user_save( $account, array( 'roles' => $rolesRetain ) ); 
+                    }
+                }
+                
+            }
+            
+        }
+    }
     return TRUE;    
 }
 

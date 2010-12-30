@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -126,7 +126,7 @@ class CRM_Price_Page_Field extends CRM_Core_Page {
     {
         require_once 'CRM/Price/BAO/Field.php';
         $priceField = array();
-        $priceFieldBAO =& new CRM_Price_BAO_Field();
+        $priceFieldBAO = new CRM_Price_BAO_Field();
         
         // fkey is sid
         $priceFieldBAO->price_set_id = $this->_sid;
@@ -140,10 +140,12 @@ class CRM_Price_Page_Field extends CRM_Core_Page {
             // get price if it's a text field
             if ( $priceFieldBAO->html_type == 'Text' ) {
                 $optionValues = array( );
-                $params       = array( 'name' => "civicrm_price_field.amount.{$priceFieldBAO->id}" );
-                require_once 'CRM/Core/OptionValue.php';
-                CRM_Core_OptionValue::getValues( $params, $optionValues );
-                $priceField[$priceFieldBAO->id]['price'] = CRM_Utils_Array::value( 'value', array_pop( $optionValues ) );
+                $params       = array( 'price_field_id' => $priceFieldBAO->id );
+                
+                require_once 'CRM/Price/BAO/FieldValue.php';
+                CRM_Price_BAO_FieldValue::retrieve($params , $optionValues );
+
+                $priceField[$priceFieldBAO->id]['price'] = CRM_Utils_Array::value( 'amount', $optionValues );
             }
             
             $action = array_sum(array_keys($this->actionLinks()));
@@ -194,10 +196,10 @@ class CRM_Price_Page_Field extends CRM_Core_Page {
     function edit($action)
     {
         // create a simple controller for editing price data
-        $controller =& new CRM_Core_Controller_Simple('CRM_Price_Form_Field', ts('Price Field'), $action);
+        $controller = new CRM_Core_Controller_Simple('CRM_Price_Form_Field', ts('Price Field'), $action);
 
         // set the userContext stack
-        $session =& CRM_Core_Session::singleton();
+        $session = CRM_Core_Session::singleton();
         $session->pushUserContext(CRM_Utils_System::url('civicrm/admin/price/field', 'reset=1&action=browse&sid=' . $this->_sid));
        
         $controller->set('sid', $this->_sid);
@@ -240,7 +242,7 @@ class CRM_Price_Page_Field extends CRM_Core_Page {
                 // prompt to delete
                 $session = & CRM_Core_Session::singleton();
                 $session->pushUserContext(CRM_Utils_System::url('civicrm/admin/price/field', 'reset=1&action=browse&sid=' . $this->_sid));
-                $controller =& new CRM_Core_Controller_Simple( 'CRM_Price_Form_DeleteField',"Delete Price Field",'' );
+                $controller = new CRM_Core_Controller_Simple( 'CRM_Price_Form_DeleteField',"Delete Price Field",'' );
                 $controller->set('fid', $fid);
                 $controller->setEmbedded( true );
                 $controller->process( );
@@ -300,8 +302,8 @@ class CRM_Price_Page_Field extends CRM_Core_Page {
      */
     function preview($fid)
     {
-        $controller =& new CRM_Core_Controller_Simple('CRM_Price_Form_Preview', ts('Preview Form Field'), CRM_Core_Action::PREVIEW);
-        $session =& CRM_Core_Session::singleton();
+        $controller = new CRM_Core_Controller_Simple('CRM_Price_Form_Preview', ts('Preview Form Field'), CRM_Core_Action::PREVIEW);
+        $session = CRM_Core_Session::singleton();
         $session->pushUserContext(CRM_Utils_System::url('civicrm/admin/price/field', 'reset=1&action=browse&sid=' . $this->_sid));
         $controller->set('fieldId', $fid);
         $controller->set('groupId', $this->_sid);

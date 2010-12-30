@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -53,7 +53,7 @@ class CRM_Core_BAO_Email extends CRM_Core_DAO_Email
      */
     static function add( &$params ) 
     {
-        $email =& new CRM_Core_DAO_Email( );
+        $email = new CRM_Core_DAO_Email( );
         $email->copyValues($params);
 
         // lower case email field to optimize queries

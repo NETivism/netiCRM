@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -25,8 +25,15 @@
 *}
 {* this div is being used to apply special css *}
     {if !$section }
-        {include file="CRM/Report/Form/Fields.tpl"}
-        {*Statistics at the Top of the page*}
+    <div class="crm-block crm-form-block crm-report-field-form-block">         
+    {include file="CRM/Report/Form/Fields.tpl"}
+       </div>
+    {/if}    
+	
+<div class="crm-block crm-content-block crm-report-form-block">  
+{include file="CRM/Report/Form/Actions.tpl"}
+{*Statistics at the Top of the page*}
+    {if !$section }
         {include file="CRM/Report/Form/Statistics.tpl" top=true}    
     {/if}
     
@@ -35,11 +42,7 @@
             {include file="CRM/common/pager.tpl" location="top" noForm=0}
         </div>
         {foreach from=$events item=eventID}
-            <br />
-            <table class="report-layout">
-                <tr>
-                    <td>    
-                	<table class="report-layout" >
+                	<table class="report-layout">
                 	    {foreach from=$summary.$eventID item=values key=keys}
                 	        {if $keys == 'Title'}
                         	    <tr>
@@ -47,9 +50,9 @@
                                         <th colspan="3">{$values}</th>
                                     </tr>
                                 {else}  
-                                    <tr>
-                                        <td class="report-contents">{$keys}</td>
-                                        <td class="report-contents" colspan="3">{$values}</td>
+                                    <tr class="{cycle values="odd-row,even-row"} crm-report crm-report_event_summary" id="crm-report_{$eventID}_summary_{$keys}">
+                                        <td class="report-contents crm-report_summary_title">{$keys}</td>
+                                        <td class="report-contents crm-report_summary_details" colspan="3">{$values}</td>
                                     </tr>
                                 {/if}
                             {/foreach}
@@ -65,23 +68,20 @@
                                         <th class="reports-header-right">{ts}Revenue{/ts}</th>
                                     </tr>
                                     {foreach from=$row.$eventID item=row key=role}
-                                        <tr>
-                                            <td class="report-contents" width="34%">{$role}</td>
-                                            <td class="report-contents-right">{$row.0}</td>
-                                            <td class="report-contents-right">{$row.1}</td>
-                                            <td class="report-contents-right">{$row.2|crmMoney}</td>	        
+                                        <tr class="{cycle values="odd-row,even-row"} crm-report crm-report_{$keys}_{$role}" id="crm-report_{$eventID}_{$keys}_{$role}">
+                                            <td class="report-contents crm-report_{$keys}_breakdown" width="34%">{$role}</td>
+                                            <td class="report-contents-right crm-report_{$keys}_total">{$row.total}</td>
+                                            <td class="report-contents-right crm-report_{$keys}_percentage">{$row.round}</td>
+                                            <td class="report-contents-right crm-report_{$keys}_revenue">{$row.amount|crmMoney}</td>	        
                                         </tr>
                                     {/foreach}
                                 {/if}
                             </table>
                             {/if}
-                        {/foreach} 
-                    </td>
-                </tr>
-            </table>       
+                        {/foreach}  
         {/foreach}
          
-	<div class="report-pager">
+		<div class="report-pager">
             {include file="CRM/common/pager.tpl" noForm=0}
         </div>
         {if !$section }
@@ -89,5 +89,5 @@
             {include file="CRM/Report/Form/Statistics.tpl" bottom=true}
         {/if}    
     {/if}
-    
-{include file="CRM/Report/Form/ErrorMessage.tpl"}
+    {include file="CRM/Report/Form/ErrorMessage.tpl"}
+</div>

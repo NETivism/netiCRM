@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -23,15 +23,35 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
-<fieldset><legend>{ts}View Contribution{/ts}</legend>
-<table class="view-layout">
+<div class="crm-block crm-content-block crm-contribution-view-form-block">
+<h3>{ts}View Contribution{/ts}</h3>
+<div class="action-link">
+    <div class="crm-submit-buttons">
+    {if call_user_func(array('CRM_Core_Permission','check'), 'edit contributions')}
+       {assign var='urlParams' value="reset=1&id=$id&cid=$contact_id&action=update&context=$context"}
+       {if ( $context eq 'fulltext' || $context eq 'search' ) && $searchKey}
+       {assign var='urlParams' value="reset=1&id=$id&cid=$contact_id&action=update&context=$context&key=$searchKey"}	   
+       {/if}
+       <a class="button" href="{crmURL p='civicrm/contact/view/contribution' q=$urlParams}" accesskey="e"><span><div class="icon edit-icon"></div>{ts}Edit{/ts}</span></a>
+    {/if}
+    {if call_user_func(array('CRM_Core_Permission','check'), 'delete in CiviContribute')}
+       {assign var='urlParams' value="reset=1&id=$id&cid=$contact_id&action=delete&context=$context"}
+       {if ( $context eq 'fulltext' || $context eq 'search' ) && $searchKey}
+       {assign var='urlParams' value="reset=1&id=$id&cid=$contact_id&action=delete&context=$context&key=$searchKey"}	   
+       {/if}
+       <a class="button" href="{crmURL p='civicrm/contact/view/contribution' q=$urlParams}"><span><div class="icon delete-icon"></div>{ts}Delete{/ts}</span></a>
+    {/if}
+    {include file="CRM/common/formButtons.tpl" location="top"}
+    </div>
+</div>
+<table class="crm-info-panel">
     <tr>
         <td class="label">{ts}From{/ts}</td>
         <td class="bold">{$displayName}</td>
     </tr>
     <tr>
         <td class="label">{ts}Contribution Type{/ts}</td>
-    	<td>{$contribution_type}&nbsp; {if $is_test} {ts}(test){/ts} {/if}</td>
+    	<td>{$contribution_type}{if $is_test} {ts}(test){/ts} {/if}</td>
     </tr>
     {if $lineItem}
     <tr>
@@ -70,7 +90,7 @@
 
 	<tr>
 	    <td class="label">{ts}Received{/ts}</td>
-    	<td>{if $receive_date}{$receive_date|truncate:10:''|crmDate}{else}({ts}pending{/ts}){/if}</td>
+    	<td>{if $receive_date}{$receive_date|crmDate}{else}({ts}pending{/ts}){/if}</td>
 	</tr>
 	<tr>
 	    <td class="label">{ts}Contribution Status{/ts}</td>
@@ -81,7 +101,7 @@
 	{if $cancel_date}
         <tr>
 	        <td class="label">{ts}Cancelled Date{/ts}</td>
-	        <td>{$cancel_date|truncate:10:''|crmDate}</td>
+	        <td>{$cancel_date|crmDate}</td>
         </tr>
 	    {if $cancel_reason}
 	        <tr>
@@ -108,7 +128,7 @@
 	{if $receipt_date}
     	<tr>
     	    <td class="label">{ts}Receipt Sent{/ts}</td>
-        	<td>{$receipt_date|truncate:10:''|crmDate}</td>
+        	<td>{$receipt_date|crmDate}</td>
     	</tr>
 	{/if}	
 	{foreach from=$note item="rec"} 
@@ -130,7 +150,7 @@
 	    <tr>
 	        <td class="label">{ts}Invoice ID{/ts}</td>
 	        <td>{$invoice_id}&nbsp;</td>
-	    </tr
+	    </tr>
 	{/if} 
 
 	{if $honor_display}
@@ -143,7 +163,7 @@
 	{if $thankyou_date}
 	    <tr>
 	        <td class="label">{ts}Thank-you Sent{/ts}</td>
-	        <td>{$thankyou_date|truncate:10:''|crmDate}</td>
+	        <td>{$thankyou_date|crmDate}</td>
 	    </tr>
 	{/if}
 	
@@ -156,33 +176,45 @@
 </table>
 
 {if $premium}
-<fieldset><legend>{ts}Premium Information{/ts}</legend>
-<table class="view-layout">
-	<td class="label">{ts}Premium{/ts}</td><td>{$premium}</td>
-	<td class="label">{ts}Option{/ts}</td><td>{$option}</td>
-	<td class="label">{ts}Fulfilled{/ts}</td><td>{$fulfilled|truncate:10:''|crmDate}</td>
-</table>
-</fieldset>
+    <div class="crm-accordion-wrapper crm-accordion_title-accordion crm-accordion-open">
+        <div class="crm-accordion-header">
+            <div class="icon crm-accordion-pointer"></div> 
+            {ts}Premium Information{/ts}
+        </div>
+        <div class="crm-accordion-body">			   
+        <table class="crm-info-panel">
+        	<td class="label">{ts}Premium{/ts}</td><td>{$premium}</td>
+        	<td class="label">{ts}Option{/ts}</td><td>{$option}</td>
+        	<td class="label">{ts}Fulfilled{/ts}</td><td>{$fulfilled|truncate:10:''|crmDate}</td>
+        </table>
+        </div>
+    </div>
 {/if}
 
 {if $pcp_id}
-<fieldset><legend>{ts}Personal Campaign Page Contribution Information{/ts}</legend>
-<table class="view-layout">
-    <tr>
-	    <td class="label">{ts}Campaign Page{/ts}</td>
-        <td><a href="{crmURL p="civicrm/contribute/pcp/info" q="reset=1&id=`$pcp_id`"}">{$pcp}</a><br />
-            <span class="description">{ts}Contribution was made through this personal campaign page.{/ts}</span>
-        </td>
-    </tr>
-    <tr><td class="label">{ts}In Public Honor Roll?{/ts}</td><td>{if $pcp_display_in_roll}{ts}Yes{/ts}{else}{ts}No{/ts}{/if}</td></tr>
-    {if $pcp_roll_nickname}
-        <tr><td class="label">{ts}Honor Roll Name{/ts}</td><td>{$pcp_roll_nickname}</td></tr>
-    {/if}
-    {if $pcp_personal_note}
-        <tr><td class="label">{ts}Personal Note{/ts}</td><td>{$pcp_personal_note}</td></tr>
-    {/if}
-</table>
-</fieldset>
+    <div class="crm-accordion-wrapper crm-accordion_title-accordion crm-accordion-open">
+         <div class="crm-accordion-header">
+              <div class="icon crm-accordion-pointer"></div> 
+              {ts}Personal Campaign Page Contribution Information{/ts}
+         </div>
+         <div class="crm-accordion-body">			   
+            <table class="crm-info-panel">
+                <tr>
+            	    <td class="label">{ts}Campaign Page{/ts}</td>
+                    <td><a href="{crmURL p="civicrm/contribute/pcp/info" q="reset=1&id=`$pcp_id`"}">{$pcp}</a><br />
+                        <span class="description">{ts}Contribution was made through this personal campaign page.{/ts}</span>
+                    </td>
+                </tr>
+                <tr><td class="label">{ts}In Public Honor Roll?{/ts}</td><td>{if $pcp_display_in_roll}{ts}Yes{/ts}{else}{ts}No{/ts}{/if}</td></tr>
+                {if $pcp_roll_nickname}
+                    <tr><td class="label">{ts}Honor Roll Name{/ts}</td><td>{$pcp_roll_nickname}</td></tr>
+                {/if}
+                {if $pcp_personal_note}
+                    <tr><td class="label">{ts}Personal Note{/ts}</td><td>{$pcp_personal_note}</td></tr>
+                {/if}
+            </table>
+         </div>
+    </div>
 {/if}
 
 {include file="CRM/Custom/Page/CustomDataView.tpl"}
@@ -195,19 +227,21 @@
 </fieldset>
 {/if}
 
-<table class="form-layout buttons">
-    <tr>
-	    <td>&nbsp;</td>
-        <td>
-            {$form.buttons.html}
-            {if call_user_func(array('CRM_Core_Permission','check'), 'edit contributions')}
-                &nbsp;|&nbsp;<a href="{crmURL p='civicrm/contact/view/contribution' q="reset=1&id=$id&cid=$contact_id&action=update&context=$context"}" accesskey="e">Edit</a>
-            {/if}
-            {if call_user_func(array('CRM_Core_Permission','check'), 'delete in CiviContribute')}
-                &nbsp;|&nbsp;<a href="{crmURL p='civicrm/contact/view/contribution' q="reset=1&id=$id&cid=$contact_id&action=delete&context=$context"}">Delete</a>
-            {/if}
-        </td>
-    </tr>    
-</table>
-
-</fieldset>
+<div class="crm-submit-buttons">
+    {if call_user_func(array('CRM_Core_Permission','check'), 'edit contributions')}
+       {assign var='urlParams' value="reset=1&id=$id&cid=$contact_id&action=update&context=$context"}
+       {if ( $context eq 'fulltext' || $context eq 'search' ) && $searchKey}
+       {assign var='urlParams' value="reset=1&id=$id&cid=$contact_id&action=update&context=$context&key=$searchKey"}	   
+       {/if}
+       <a class="button" href="{crmURL p='civicrm/contact/view/contribution' q=$urlParams}" accesskey="e"><span><div class="icon edit-icon"></div>{ts}Edit{/ts}</span></a>
+    {/if}
+    {if call_user_func(array('CRM_Core_Permission','check'), 'delete in CiviContribute')}
+       {assign var='urlParams' value="reset=1&id=$id&cid=$contact_id&action=delete&context=$context"}
+       {if ( $context eq 'fulltext' || $context eq 'search' ) && $searchKey}
+       {assign var='urlParams' value="reset=1&id=$id&cid=$contact_id&action=delete&context=$context&key=$searchKey"}	   
+       {/if}
+       <a class="button" href="{crmURL p='civicrm/contact/view/contribution' q=$urlParams}"><span><div class="icon delete-icon"></div>{ts}Delete{/ts}</span></a>
+    {/if}
+    {include file="CRM/common/formButtons.tpl" location="bottom"}
+</div>
+</div>

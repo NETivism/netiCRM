@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -46,7 +46,7 @@ class CRM_Core_Payment_BaseIPN {
 
         // make sure contact exists and is valid
         require_once 'CRM/Contact/DAO/Contact.php';
-        $contact =& new CRM_Contact_DAO_Contact( );
+        $contact = new CRM_Contact_DAO_Contact( );
         $contact->id = $ids['contact'];
         if ( ! $contact->find( true ) ) {
             CRM_Core_Error::debug_log_message( "Could not find contact record: $contactID" );
@@ -56,7 +56,7 @@ class CRM_Core_Payment_BaseIPN {
 
         // make sure contribution exists and is valid
         require_once 'CRM/Contribute/DAO/Contribution.php';
-        $contribution =& new CRM_Contribute_DAO_Contribution( );
+        $contribution = new CRM_Contribute_DAO_Contribution( );
         $contribution->id = $ids['contribution'];
         if ( ! $contribution->find( true ) ) {
             CRM_Core_Error::debug_log_message( "Could not find contribution record: $contributionID" );
@@ -107,7 +107,7 @@ class CRM_Core_Payment_BaseIPN {
         $objects['pledge_payment']    = null;
 
         require_once 'CRM/Contribute/DAO/ContributionType.php';
-        $contributionType =& new CRM_Contribute_DAO_ContributionType( );
+        $contributionType = new CRM_Contribute_DAO_ContributionType( );
         $contributionType->id = $contribution->contribution_type_id;
         if ( ! $contributionType->find( true ) ) {
             CRM_Core_Error::debug_log_message( "Could not find contribution type record: $contributionTypeID" );
@@ -117,29 +117,10 @@ class CRM_Core_Payment_BaseIPN {
         $objects['contributionType'] = $contributionType;
         $paymentProcessorID          = null;
         if ( $input['component'] == 'contribute' ) {
-            // get the contribution page id from the contribution
-            // and then initialize the payment processor from it
-            if ( ! $contribution->contribution_page_id ) {
-                if ( !CRM_Utils_Array::value( 'pledge_payment', $ids ) ) {
-                // return if we are just doing an optional validation
-                if ( ! $required ) {
-                    return true;
-                }
-                
-                CRM_Core_Error::debug_log_message( "Could not find contribution page for contribution record: $contributionID" );
-                echo "Failure: Could not find contribution page for contribution record: $contributionID<p>";
-                return false;
-                }
-            }
-            //for offline pldedge we dont have contribution page.
-            if ( !CRM_Utils_Array::value( 'pledge_payment', $ids ) ) {
-                // get the payment processor id from contribution page
-                $paymentProcessorID = CRM_Core_DAO::getFieldValue( 'CRM_Contribute_DAO_ContributionPage',
-                                                                   $contribution->contribution_page_id,
-                                                                   'payment_processor_id' );
-            }
-                        
-            // now retrieve the other optional objects
+
+            // retrieve the other optional objects first so
+            // stuff down the line can use this info and do things
+            // CRM-6056
             if ( isset( $ids['membership'] ) ) {
                 require_once 'CRM/Member/DAO/Membership.php';
                 $membership = new CRM_Member_DAO_Membership( );
@@ -175,7 +156,7 @@ class CRM_Core_Payment_BaseIPN {
            
             if ( isset( $ids['contributionRecur'] ) ) {
                 require_once 'CRM/Contribute/DAO/ContributionRecur.php';
-                $recur =& new CRM_Contribute_DAO_ContributionRecur( );
+                $recur = new CRM_Contribute_DAO_ContributionRecur( );
                 $recur->id = $ids['contributionRecur'];
                 if ( ! $recur->find( true ) ) {
                     CRM_Core_Error::debug_log_message( "Could not find recur record: $contributionRecurID" );
@@ -184,11 +165,34 @@ class CRM_Core_Payment_BaseIPN {
                 }
                 $objects['contributionRecur'] =& $recur;
             }
+
+            // get the contribution page id from the contribution
+            // and then initialize the payment processor from it
+            if ( ! $contribution->contribution_page_id ) {
+                if ( !CRM_Utils_Array::value( 'pledge_payment', $ids ) ) {
+                    // return if we are just doing an optional validation
+                    if ( ! $required ) {
+                        return true;
+                    }
+                
+                    CRM_Core_Error::debug_log_message( "Could not find contribution page for contribution record: $contributionID" );
+                    echo "Failure: Could not find contribution page for contribution record: $contributionID<p>";
+                    return false;
+                }
+            }
+
+            //for offline pledge we dont have contribution page.
+            if ( !CRM_Utils_Array::value( 'pledge_payment', $ids ) ) {
+                // get the payment processor id from contribution page
+                $paymentProcessorID = CRM_Core_DAO::getFieldValue( 'CRM_Contribute_DAO_ContributionPage',
+                                                                   $contribution->contribution_page_id,
+                                                                   'payment_processor_id' );
+            }
         } else {
             // we are in event mode
             // make sure event exists and is valid
             require_once 'CRM/Event/DAO/Event.php';
-            $event =& new CRM_Event_DAO_Event( );
+            $event = new CRM_Event_DAO_Event( );
             $event->id = $ids['event'];
             if ( $ids['event'] &&
                  ! $event->find( true ) ) {
@@ -200,7 +204,7 @@ class CRM_Core_Payment_BaseIPN {
             $objects['event'] =& $event;
 
             require_once 'CRM/Event/DAO/Participant.php';
-            $participant =& new CRM_Event_DAO_Participant( );
+            $participant = new CRM_Event_DAO_Participant( );
             $participant->id = $ids['participant'];
             if ( $ids['participant'] &&
                  ! $participant->find( true ) ) {
@@ -265,7 +269,7 @@ class CRM_Core_Payment_BaseIPN {
     function pending( &$objects, &$transaction ) {
         $transaction->commit( );
         CRM_Core_Error::debug_log_message( "returning since contribution status is pending" );
-        echo "Success: Returning since contribution status is pending<p>";
+        //echo "Success: Returning since contribution status is pending<p>";
         return true;
     }
 
@@ -313,12 +317,13 @@ class CRM_Core_Payment_BaseIPN {
         $membership   =& $objects['membership']  ;
         $participant  =& $objects['participant'] ;
         $event        =& $objects['event']       ;
-        
+        $changeToday  =  CRM_Utils_Array::value( 'trxn_date', $input, self::$_now );
+
         $values = array( );
         if ( $input['component'] == 'contribute' ) {
             require_once 'CRM/Contribute/BAO/ContributionPage.php';
             CRM_Contribute_BAO_ContributionPage::setValues( $contribution->contribution_page_id, $values );
-            $contribution->source                  = ts( 'Online Contribution' ) . ': ' . $values['title'];
+            $contribution->source = $values['title'];
             
             if ( $values['is_email_receipt'] ) {
                 $contribution->receipt_date = self::$_now;
@@ -337,9 +342,10 @@ class CRM_Core_Payment_BaseIPN {
                      * In BAO/Membership.php(renewMembership function), we skip the extend membership date and status 
                      * when Contribution mode is notify and membership is for renewal ) 
                      */
-                    CRM_Member_BAO_Membership::fixMembershipStatusBeforeRenew( $currentMembership, $changeToday = null  );
+                    CRM_Member_BAO_Membership::fixMembershipStatusBeforeRenew( $currentMembership, $changeToday );
                     
-                    $dates = CRM_Member_BAO_MembershipType::getRenewalDatesForMembershipType( $membership->id , $changeToday = null );
+                    $dates = CRM_Member_BAO_MembershipType::getRenewalDatesForMembershipType( $membership->id , 
+                                                                                              $changeToday );
                     
                     $dates['join_date'] =  CRM_Utils_Date::customFormat($currentMembership['join_date'], $format );
                     
@@ -360,7 +366,10 @@ class CRM_Core_Payment_BaseIPN {
                                          'start_date'    => CRM_Utils_Date::customFormat( $dates['start_date'],    $format ),
                                          'end_date'      => CRM_Utils_Date::customFormat( $dates['end_date'],      $format ),
                                          'reminder_date' => CRM_Utils_Date::customFormat( $dates['reminder_date'], $format ) );
-                
+                //we might be renewing membership, 
+                //so make status override false.  
+                $formatedParams['is_override'] = false;
+
                 $membership->copyValues( $formatedParams );
                 $membership->save( );
 
@@ -461,8 +470,8 @@ class CRM_Core_Payment_BaseIPN {
                                 'trxn_id'           => $contribution->trxn_id,
                                 );
             
-            require_once 'CRM/Contribute/BAO/FinancialTrxn.php';
-            $trxn =& CRM_Contribute_BAO_FinancialTrxn::create( $trxnParams );
+            require_once 'CRM/Core/BAO/FinancialTrxn.php';
+            $trxn =& CRM_Core_BAO_FinancialTrxn::create( $trxnParams );
         }
         
         //update corresponding pledge payment record
@@ -524,6 +533,7 @@ class CRM_Core_Payment_BaseIPN {
 
         if ( empty( $values ) ) {
             $values = array( );
+            $contribID = $ids['contribution'];
             if ( $input['component'] == 'contribute' ) {
                 require_once 'CRM/Contribute/BAO/ContributionPage.php';
                 if ( isset( $contribution->contribution_page_id ) ) {
@@ -533,14 +543,23 @@ class CRM_Core_Payment_BaseIPN {
                     $values['is_email_receipt'] = 1;
                     $values['title']            = 'Contribution';
                 }
+                // set lineItem for contribution
+                require_once 'CRM/Price/BAO/Set.php';
+                if ( $contribID && $pId = CRM_Price_BAO_Set::getFor( 'civicrm_contribution', $contribID ) ) {
+                    require_once 'CRM/Price/BAO/LineItem.php';
+                    $values['lineItem'][0] = CRM_Price_BAO_LineItem::getLineItems( $contribID, 'contribution' );
+                    $values['priceSetID']  = $pId;
+                }
+                require_once 'CRM/Contribute/BAO/Contribution.php';
+                $relatedContact = CRM_Contribute_BAO_Contribution::getOnbehalfIds( $contribID,
+                                                                                   $contribution->contact_id );
+                // if this is onbehalf of contribution then set related contact
+                if ( $relatedContactId = $relatedContact['individual_id'] ) {
+                    $values['related_contact'] = $ids['related_contact'] = $relatedContactId;
+                }
+                
             } else {
                 // event
-                $eventParams     = array( 'id' => $objects['event']->id );
-                $values['event'] = array( );
-                
-                require_once 'CRM/Event/BAO/Event.php';
-                CRM_Event_BAO_Event::retrieve( $eventParams, $values['event'] );
-                
                 $eventParams = array( 'id' => $objects['event']->id );
                 $values['event'] = array( );
                 
@@ -562,6 +581,41 @@ class CRM_Core_Payment_BaseIPN {
                 
                 $ufJoinParams['weight'] = 2;
                 $values['custom_post_id'] = CRM_Core_BAO_UFJoin::findUFGroupId( $ufJoinParams );
+
+                // set lineItem for event contribution
+                if ( $contribID  ) {
+                    require_once 'CRM/Event/BAO/Participant.php';
+                    $participantIds = CRM_Event_BAO_Participant::getParticipantIds( $contribID );
+                    require_once 'CRM/Price/BAO/LineItem.php';
+                    if ( !empty ( $participantIds ) ) {
+                        foreach ( $participantIds as $pIDs ) {
+                            $lineItem = CRM_Price_BAO_LineItem::getLineItems( $pIDs );
+                            if ( !CRM_Utils_System::isNull( $lineItem ) ) {
+                                $values['lineItem'][] = $lineItem;
+                            }
+                        }
+                    }
+                }
+                
+            }
+            
+            // set receipt from e-mail and name in value
+            if ( !$returnMessageText ) {
+                require_once 'CRM/Contact/BAO/Contact/Location.php';
+                $session  = CRM_Core_Session::singleton( );
+                $userID   = $session->get( 'userID' );
+                list( $userName, $userEmail ) = CRM_Contact_BAO_Contact_Location::getEmailDetails( $userID );
+                $values['receipt_from_email'] = $userEmail;
+                $values['receipt_from_name']  = $userName;
+            }
+            
+            // set display address of contributor
+            if ( $contribution->address_id ) {
+                require_once 'CRM/Core/BAO/Address.php';
+                $addressParams     = array( 'id' => $contribution->address_id );	
+                $addressDetails    = CRM_Core_BAO_Address::getValues( $addressParams, false, 'id' );
+                $addressDetails    = array_values( $addressDetails );
+                $values['address'] = $addressDetails[0]['display'];                
             }
         }
 
@@ -593,14 +647,14 @@ class CRM_Core_Payment_BaseIPN {
         }
 
         require_once 'CRM/Contribute/DAO/ContributionProduct.php';
-        $dao = & new CRM_Contribute_DAO_ContributionProduct();
+        $dao = new CRM_Contribute_DAO_ContributionProduct();
         $dao->contribution_id =  $contribution->id;
         if ( $dao->find(true) ) {
             $premiumId = $dao->product_id;
             $template->assign('option',       $dao->product_option );
            
             require_once 'CRM/Contribute/DAO/Product.php';
-            $productDAO =& new CRM_Contribute_DAO_Product();
+            $productDAO = new CRM_Contribute_DAO_Product();
             $productDAO->id = $premiumId;
             $productDAO->find(true);
             $template->assign('selectPremium', true );
@@ -616,7 +670,7 @@ class CRM_Core_Payment_BaseIPN {
 
             //PCP Info
             require_once 'CRM/Contribute/DAO/ContributionSoft.php';
-            $softDAO = & new CRM_Contribute_DAO_ContributionSoft();
+            $softDAO = new CRM_Contribute_DAO_ContributionSoft();
             $softDAO->contribution_id =  $contribution->id;
             if ( $softDAO->find(true) ) {
                 $template->assign( 'pcpBlock'           , true );
@@ -626,7 +680,7 @@ class CRM_Core_Payment_BaseIPN {
                 
                 //assign the pcp page title for email subject
                 require_once 'CRM/Contribute/DAO/PCP.php';
-                $pcpDAO = & new CRM_Contribute_DAO_PCP();
+                $pcpDAO = new CRM_Contribute_DAO_PCP();
                 $pcpDAO->id = $softDAO->pcp_id;
                 if ( $pcpDAO->find(true) ) {
                     $template->assign( 'title', $pcpDAO->title );
@@ -636,6 +690,10 @@ class CRM_Core_Payment_BaseIPN {
             $template->assign( 'title', $values['event']['title']);
             $template->assign( 'totalAmount' , $input['amount'] );
         }
+
+        if ( $contribution->contribution_type_id ) {
+            $values['contribution_type_id'] = $contribution->contribution_type_id;
+        } 
 
         $template->assign( 'trxn_id', $contribution->trxn_id );
         $template->assign( 'receive_date', 
@@ -647,9 +705,10 @@ class CRM_Core_Payment_BaseIPN {
                                                    $values ) );
         $template->assign( 'is_monetary', 1 );
         $template->assign( 'is_recur', $recur );
+        $template->assign( 'currency', $contribution->currency );
         if ( $recur ) {
             require_once 'CRM/Core/Payment.php';
-            $paymentObject =& CRM_Core_Payment::singleton( $contribution->is_test ? 'test' : 'live', 'Contribute',
+            $paymentObject =& CRM_Core_Payment::singleton( $contribution->is_test ? 'test' : 'live', 
                                                            $objects['paymentProcessor'] );
             $url = $paymentObject->cancelSubscriptionURL( );
             $template->assign( 'cancelSubscriptionUrl', $url );
@@ -661,7 +720,6 @@ class CRM_Core_Payment_BaseIPN {
         
         require_once 'CRM/Utils/Address.php';
         $template->assign( 'address', CRM_Utils_Address::format( $input ) );
-
         if ( $input['component'] == 'event' ) { 
             require_once 'CRM/Core/OptionGroup.php';
             $participant_role = CRM_Core_OptionGroup::values('participant_role');
@@ -694,7 +752,7 @@ class CRM_Core_Payment_BaseIPN {
                 foreach ( $additionalIDs as $pId => $cId ) {
                     $amount = array( );
                     //to change the status pending to completed
-                    $additional = & new CRM_Event_DAO_Participant( );
+                    $additional = new CRM_Event_DAO_Participant( );
                     $additional->id = $pId;
                     $additional->contact_id = $cId; 
                     $additional->find(true);
@@ -727,7 +785,12 @@ class CRM_Core_Payment_BaseIPN {
             $values['params']['additionalParticipant'] = false;
             $template->assign( 'isPrimary', 1 );
             $template->assign( 'amount', $primaryAmount );
-            
+            $template->assign( 'register_date', CRM_Utils_Date::isoToMysql($participant->register_date) );
+            if ( $contribution->payment_instrument_id ) {
+                require_once 'CRM/Contribute/PseudoConstant.php';
+                $paymentInstrument = CRM_Contribute_PseudoConstant::paymentInstrument();
+                $template->assign( 'paidBy', $paymentInstrument[$contribution->payment_instrument_id] );
+            }
             // carry paylater, since we did not created billing,
             // so need to pull email from primary location, CRM-4395 
             $values['params']['is_pay_later'] = $participant->is_pay_later;
@@ -761,7 +824,7 @@ class CRM_Core_Payment_BaseIPN {
                 require_once 'CRM/Core/BAO/Address.php';
                 $entityBlock = array( 'contact_id'       => $ids['contact'], 
                                       'location_type_id' => CRM_Core_DAO::getFieldValue( 'CRM_Core_DAO_LocationType', 
-                                                                                         'Main', 'id', 'name' ) );
+                                                                                         'Home', 'id', 'name' ) );
                 $address = CRM_Core_BAO_Address::getValues( $entityBlock );
                 $template->assign('onBehalfAddress', $address[$entityBlock['location_type_id']]['display']);
             }

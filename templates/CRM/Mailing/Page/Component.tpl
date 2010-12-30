@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -25,7 +25,7 @@
 *}
 {if $action eq 1 or $action eq 2}
    {include file="CRM/Mailing/Form/Component.tpl"}
-{/if}
+{else}
 
 <div id="ltype">
  <p></p>
@@ -62,8 +62,9 @@
        {if $action ne 1 and $action ne 2}
 	<br/>
        <div class="action-link">
-    	 <a href="{crmURL q="action=add&reset=1"}" class="button"><span>&raquo; {ts}New Mailing Component{/ts}</span></a>
+    	 <a href="{crmURL q="action=add&reset=1"}" class="button"><span><div class="icon add-icon"></div>{ts}Add Mailing Component{/ts}</span></a>
        </div>
        {/if}
     </div>
 </div>
+{/if}

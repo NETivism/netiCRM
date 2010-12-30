@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -23,6 +23,8 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
+  
+<div class="crm-block crm-form-block crm-import-datasource-form-block">
 {if $showOnlyDataSourceFormPane}
   {include file=$dataSourceFormTemplateFile}
 {else}
@@ -31,16 +33,15 @@
 
   {* WizardHeader.tpl provides visual display of steps thru the wizard as well as title for current step *}
   {include file="CRM/common/WizardHeader.tpl"}
-
-  <div id="help">
-      {ts}The Import Wizard allows you to easily import contact records from other applications into CiviCRM. For example, if your organization has contacts in MS Access&copy; or Excel&copy;, and you want to start using CiviCRM to store these contacts, you can 'import' them here.{/ts} {help id='choose-data-source-intro'}
+   <div id="help">
+      {ts}The Import Wizard allows you to easily import contact records from other applications into CiviCRM. For example, if your organization has contacts in MS Access&reg; or Excel&reg;, and you want to start using CiviCRM to store these contacts, you can 'import' them here.{/ts} {help id='choose-data-source-intro'}
   </div>
-
+  <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>
   <div id="choose-data-source" class="form-item">
     <fieldset>
       <legend>{ts}Choose Data Source{/ts}</legend>
       <table class="form-layout">
-        <tr>
+        <tr class="crm-import-datasource-form-block-dataSource">
             <td class="label">{$form.dataSource.label}</td>
             <td>{$form.dataSource.html} {help id='data-source-selection'}</td>
         </tr>
@@ -58,36 +59,45 @@
   <div id="common-form-controls" class="form-item">
     <fieldset>
       <legend>{ts}Import Options{/ts}</legend>
-      <dl>
-        <dt>{$form.contactType.label}</dt><dd>{$form.contactType.html} {help id='contact-type'}&nbsp;&nbsp;&nbsp;
-            <span id="contact-subtype">{$form.subType.label}&nbsp;&nbsp;&nbsp;{$form.subType.html} {help id='contact-sub-type'}</span></dd>
-        <dt>{$form.onDuplicate.label}</dt><dd>{$form.onDuplicate.html} {help id='dupes'}</dd>
-        
-        {include file="CRM/Core/Date.tpl"}
-        <dt>&nbsp;</dt>
-        <dd class="description">{ts}Select the format that is used for date fields in your import data.{/ts}</dd>
-
+      <table class="form-layout-compressed">
+         <tr class="crm-import-datasource-form-block-contactType">
+	     <td class="label">{$form.contactType.label}</td>
+             <td>{$form.contactType.html} {help id='contact-type'}&nbsp;&nbsp;&nbsp;
+               <span id="contact-subtype">{$form.subType.label}&nbsp;&nbsp;&nbsp;{$form.subType.html} {help id='contact-sub-type'}</span></td>
+         </tr>
+         <tr class="crm-import-datasource-form-block-onDuplicate">
+             <td class="label">{$form.onDuplicate.label}</td>
+             <td>{$form.onDuplicate.html} {help id='dupes'}</td>
+         </tr>
+         <tr>{include file="CRM/Core/Date.tpl"}</tr>
+         <tr>
+             <td></td><td class="description">{ts}Select the format that is used for date fields in your import data.{/ts}</td>
+         </tr>
+         
         {if $geoCode}
-          <dt>&nbsp;</dt><dd>{$form.doGeocodeAddress.html} {$form.doGeocodeAddress.label}</dd>
-          <dt>&nbsp;</dt>
-          <dd class="description">
-            {ts}This option is not recommended for large imports. Use the command-line geocoding script instead.{/ts} {docURL page="Batch Geocoding Script"}
-          </dd>
+         <tr class="crm-import-datasource-form-block-doGeocodeAddress">
+             <td class="label"></td>
+             <td>{$form.doGeocodeAddress.html} {$form.doGeocodeAddress.label}<br />
+               <span class="description">
+                {ts}This option is not recommended for large imports. Use the command-line geocoding script instead.{/ts} 
+               </span>
+               {docURL page="Batch Geocoding Script"}
+            </td>
+         </tr>
         {/if}
 
         {if $savedMapping}
-          <dt>{if $loadedMapping}{ts}Select a Different Field Mapping{/ts}{else}{ts}Load Saved Field Mapping{/ts}{/if}</dt>
-          <dd><span>{$form.savedMapping.html}</span></dd>
-          <dt>&nbsp;</dt>
-          <dd class="description">{ts}Select Saved Mapping or Leave blank to create a new One.{/ts}</dd>
-        {/if}
-      </dl>
+         <tr  class="crm-import-datasource-form-block-savedMapping">
+              <td class="label"><label for="savedMapping">{if $loadedMapping}{ts}Select a Different Field Mapping{/ts}{else}{ts}Load Saved Field Mapping{/ts}{/if}</label></td>
+              <td>{$form.savedMapping.html}<br />
+	    &nbsp;&nbsp;&nbsp;<span class="description">{ts}Select Saved Mapping or Leave blank to create a new One.{/ts}</span></td>
+         </tr>
+        { /if}
+ </table>
     </fieldset>
   </div>
 
-  <div id="crm-submit-buttons">
-    {$form.buttons.html}
-  </div>
+  <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"} </div>
 
   {literal}
     <script type="text/javascript">
@@ -146,3 +156,4 @@
     </script>
   {/literal}
 {/if}
+</div>

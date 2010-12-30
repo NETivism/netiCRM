@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -74,9 +74,13 @@
 	<td>{$form.contribution_pcp_made_through_id.label} <br />
 	{$form.contribution_pcp_made_through_id.html}</td>
 	<td>{$form.contribution_pcp_display_in_roll.label}
-	{$form.contribution_pcp_display_in_roll.html}&nbsp;&nbsp;<a href="javascript:unselectRadio('contribution_pcp_display_in_roll','Search')">unselect</a></td>
+	{$form.contribution_pcp_display_in_roll.html}<span class="crm-clear-link">(<a href="javascript:unselectRadio('contribution_pcp_display_in_roll','{$form.formName}')">{ts}clear{/ts}</a>)</span></td>
 </tr>
 
+<tr>
+	<td><label>{ts}Currency{/ts}</label> <br />
+	{$form.contribution_currency_type.html}</td>
+</tr>
 {if $contributeGroupTree}
 <tr>
 	<td colspan="2">

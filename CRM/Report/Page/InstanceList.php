@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -73,7 +73,7 @@ class CRM_Report_Page_InstanceList extends CRM_Core_Page
          ORDER BY v.weight
         ";
         $dao  = CRM_Core_DAO::executeQuery( $sql );
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
         $rows = array();
         $url  = 'civicrm/report/instance';
         while ( $dao->fetch( ) ) {

@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -24,6 +24,51 @@
  +--------------------------------------------------------------------+
 *}
 {* tpl for building Individual related fields *}
+<script type="text/javascript">
+var cid=parseFloat("{$contactId}");//parseInt is octal by default
+var contactIndividual = "{crmURL p='civicrm/ajax/rest?fnName=civicrm/contact/search&json=1&contact_type=Individual&return[display_name]&return[sort_name]=1&return[email]=1&rowCount=50'}";
+var viewIndividual = "{crmURL p='civicrm/contact/view?reset=1&cid='}";
+var editIndividual = "{crmURL p='civicrm/contact/add?reset=1&action=update&cid='}";
+var checkSimilar =  {$checkSimilar};
+{literal}
+
+  cj(function( ) {
+     if (cj('#contact_sub_type *').length ==1) {//if they aren't any subtype we don't offer the option
+        cj('#contact_sub_type').parent().hide();
+     }
+
+     if (!isNaN(cid) || ! checkSimilar)
+       return;//no dupe check if this is a modif or if checkSimilar is disabled (CIVICRM_CONTACT_AJAX_CHECK_SIMILAR in civicrm_setting)
+
+	     cj('#last_name').blur(function () {
+         cj('#lastname_msg').remove();
+             if (this.value =='') return;
+	     cj.getJSON(contactIndividual,{sort_name:cj('#last_name').val()},
+         function(data){
+           if (data.is_error== 0) {
+             return;
+           }
+           var msg="<tr id='lastname_msg'><td colspan='5'><div class='messages status'><div class='icon inform-icon'></div>";
+
+           if (data.length ==1) {
+             msg = msg + "{/literal}{ts}There is a contact with a similar last name. If the person you were trying to add is listed below, click on their name to view or edit their record{/ts}{literal}";  
+           } else {
+             // ideally, should use a merge with data.length
+             msg = msg + "{/literal}{ts}There are contacts with a similar last name. If the person you were trying to add is listed below, click on their name to view or edit their record{/ts}{literal}";
+           }
+           msg = msg+ '<table class="matching-contacts-actions">';
+           cj.each(data, function(i,contact){
+             msg = msg + '<tr><td><a href="'+viewIndividual+contact.contact_id+'">'+ contact.display_name +'</a></td><td>'+contact.email+'</td><td class="action-items"><a class="action-item action-item-first" href="'+viewIndividual+contact.contact_id+'">{/literal}{ts}View{/ts}{literal}</a><a class="action-item" href="'+editIndividual+contact.contact_id+'">{/literal}{ts}Edit{/ts}{literal}</a></td></tr>';
+           });
+           msg = msg+ '</table>';
+           cj('#last_name').parent().parent().after(msg+'</div><td></tr>');
+           cj('#lastname_msg a').click(function(){global_formNavigate =true; return true;});// No confirmation dialog on click
+         });
+	    });
+  });
+</script>
+{/literal}
+
 <table class="form-layout-compressed">
     <tr>
         {if $form.prefix_id}
@@ -63,7 +108,7 @@
     
     <tr>
         <td colspan="2">
-            {$form.current_employer.label}&nbsp;&nbsp;<br />
+            {$form.current_employer.label}&nbsp;{help id="id-current-employer" file="CRM/Contact/Form/Contact.hlp"}<br />
             {$form.current_employer.html|crmReplace:class:twenty}
             <div id="employer_address" style="display:none;"></div>
         </td>
@@ -76,7 +121,7 @@
             {$form.nick_name.html|crmReplace:class:big}
         </td>
         <td>
-            {if $action == 1 and $contactSubType}&nbsp;{else}
+            {if $buildContactSubType}&nbsp;
                {$form.contact_sub_type.label}<br />
                {$form.contact_sub_type.html}
             {/if}
@@ -110,5 +155,24 @@ cj("form").submit(function() {
   if ( !cj('#current_employer').val() ) cj( "#current_employer_id" ).val('');
 });
 
+//current employer default setting
+var employerId = "{/literal}{$currentEmployer}{literal}";
+if ( employerId ) {
+    var dataUrl = "{/literal}{crmURL p='civicrm/ajax/rest' h=0 q="className=CRM_Contact_Page_AJAX&fnName=getContactList&json=1&context=contact&org=1&id=" }{literal}" + employerId ;
+    cj.ajax({ 
+        url     : dataUrl,   
+        async   : false,
+        success : function(html){
+            //fixme for showing address in div
+            htmlText = html.split( '|' , 2);
+            cj('input#current_employer').val(htmlText[0]);
+            cj('input#current_employer_id').val(htmlText[1]);
+        }
+    }); 
+}
+
+cj("input#current_employer").click( function( ) {
+    cj("input#current_employer_id").val('');
+});
 </script>
 {/literal}

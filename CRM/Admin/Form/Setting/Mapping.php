@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -68,7 +68,7 @@ class CRM_Admin_Form_Setting_Mapping extends CRM_Admin_Form_Setting
      * @access public
      * @static
      */
-    static function formRule(&$fields) {
+    static function formRule( $fields) {
         $errors = array();
 
         if ( ! CRM_Utils_System::checkPHPVersion( 5, false ) ) {

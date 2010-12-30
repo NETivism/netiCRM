@@ -33,7 +33,7 @@
  *
  */
 
-function conf_init() {
+function civicrm_conf_init() {
     global $skipConfigError;
 
     static $conf = '';
@@ -107,4 +107,4 @@ function conf_init() {
     return $conf;
 }
 
-include_once conf_init( ) . '/civicrm.settings.php';
+include_once civicrm_conf_init( ) . '/civicrm.settings.php';

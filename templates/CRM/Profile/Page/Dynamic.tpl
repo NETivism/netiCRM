@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -25,14 +25,22 @@
 *}
 {if ! empty( $row )} 
 {* wrap in crm-container div so crm styles are used *}
-<div id="crm-container" lang="{$config->lcMessages|truncate:2:"":true}" xml:lang="{$config->lcMessages|truncate:2:"":true}">
-<fieldset>
-<table class="view-layout">                               
-{foreach from=$row item=value key=rowName name=profile}
-  <tr id="row-{$smarty.foreach.profile.iteration}"><td class="label">{$rowName}</td><td class="view-value">{$value}</td></tr>
-{/foreach}
-</table>
-</fieldset>
-</div>
+    {if $overlayProfile }
+        {include file="CRM/Profile/Page/Overlay.tpl"}
+    {else}
+        <div id="crm-container" lang="{$config->lcMessages|truncate:2:"":true}" xml:lang="{$config->lcMessages|truncate:2:"":true}">
+            {foreach from=$profileFields item=field key=rowName}
+              <div id="row-{$rowName}" class="crm-section {$rowName}-section">
+                <div class="label">
+                    {$field.label}
+                </div>
+                 <div class="content">
+                    {$field.value}
+                 </div>
+                 <div class="clear"></div>
+              </div>
+            {/foreach}
+        </div>
+    {/if}
 {/if} 
 {* fields array is not empty *}

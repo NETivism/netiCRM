@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -104,12 +104,12 @@ class CRM_Contact_Page_View_UserDashBoard_GroupContact extends CRM_Contact_Page_
             CRM_Utils_System::redirect( $url );
         }
 
-        $controller =& new CRM_Core_Controller_Simple( 'CRM_Contact_Form_GroupContact',
+        $controller = new CRM_Core_Controller_Simple( 'CRM_Contact_Form_GroupContact',
                                                        ts("Contact's Groups"),
                                                        CRM_Core_Action::ADD );
         $controller->setEmbedded( true );
 
-        $session =& CRM_Core_Session::singleton();
+        $session = CRM_Core_Session::singleton();
         $session->pushUserContext( CRM_Utils_System::url('civicrm/user',
                                                          "reset=1&id={$this->_contactId}" ),
                                    false);

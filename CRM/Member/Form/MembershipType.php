@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -66,10 +66,16 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form
         //setting default relationshipType
         if ( isset ( $defaults['relationship_type_id'] ) ) {
             //$defaults['relationship_type_id'] = $defaults['relationship_type_id'].'_a_b';
-            $defaults['relationship_type_id'] = $defaults['relationship_type_id'].'_'.$defaults['relationship_direction'];
+            // Set values for relation type select box
+            $relTypeIds    = explode( CRM_Core_DAO::VALUE_SEPARATOR, $defaults['relationship_type_id'] );
+            $relDirections = explode( CRM_Core_DAO::VALUE_SEPARATOR, $defaults['relationship_direction'] );
+            $defaults['relationship_type_id'] = array( );
+            foreach( $relTypeIds as $key => $value ) {
+                $defaults['relationship_type_id'][] = $value.'_'.$relDirections[$key];
+            }
         }
         
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
         //setting default fixed_period_start_day & fixed_period_rollover_day
         $periods = array('fixed_period_start_day',  'fixed_period_rollover_day');
         foreach ( $periods as $per ) {
@@ -140,6 +146,7 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form
             asort($relTypeInd);
         }
         $memberRel =& $this->add('select', 'relationship_type_id', ts('Relationship Type'),  array('' => ts('- select -')) + $relTypeInd);
+        $memberRel->setMultiple( true ); 
 
         $this->add( 'select', 'visibility', ts('Visibility'), CRM_Core_SelectValues::memberVisibility( ) );
         $this->add('text', 'weight', ts('Order'), 
@@ -234,7 +241,7 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form
      * @access public
      * @static
      */
-    public function formRule( &$params ) 
+    static function formRule( $params ) 
     {
         require_once 'CRM/Utils/Rule.php';        
         $errors = array( );
@@ -272,7 +279,7 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form
                 $errors['period_type'] = ts('Period type should be Rolling when duration unit is Day');
             }
             
-            $config =& CRM_Core_Config::singleton( );
+            $config = CRM_Core_Config::singleton( );
             if ( ( $params['period_type']   == 'fixed' ) && 
                 ( $params['duration_unit'] == 'year'  ) ) {
                 $periods = array('fixed_period_start_day', 'fixed_period_rollover_day');
@@ -347,9 +354,16 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form
            
             $params['minimum_fee'] = CRM_Utils_Rule::cleanMoney( $params['minimum_fee'] );
             if ( CRM_Utils_Array::value( 'relationship_type_id', $params ) ) {
-                $relationId = explode( '_', $params['relationship_type_id'] );
-                $params['relationship_type_id'  ] = $relationId[0];
-                $params['relationship_direction'] = $relationId[1].'_'.$relationId[2];
+                // To insert relation ids and directions with value separator
+                $relTypeDirs = $params['relationship_type_id'];
+                foreach( $relTypeDirs as $key => $value ) {
+                    $relationId = explode( '_', $value );
+                    $relIds[] = $relationId[0];
+                    $relDirection[] = $relationId[1].'_'.$relationId[2];
+                } 
+                require_once 'CRM/Core/DAO.php';
+                $params['relationship_type_id'  ] = implode( CRM_Core_DAO::VALUE_SEPARATOR, $relIds );
+                $params['relationship_direction'] = implode( CRM_Core_DAO::VALUE_SEPARATOR, $relDirection );
             } 
             if ($this->_action & CRM_Core_Action::UPDATE ) {
                 $ids['membershipType'] = $this->_id;
@@ -359,7 +373,7 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form
                 $params['duration_interval'] = 1;
             }
             
-            $config =& CRM_Core_Config::singleton( );
+            $config = CRM_Core_Config::singleton( );
             $periods = array('fixed_period_start_day', 'fixed_period_rollover_day');
             foreach ( $periods as $per ) {
                 if ($params[$per]['M'] && $params[$per]['d']) {
@@ -383,7 +397,7 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form
             $membershipType = CRM_Member_BAO_MembershipType::add($params, $ids);
             CRM_Core_Session::setStatus( ts('The membership type \'%1\' has been saved.', array( 1 => $membershipType->name )) );
             $buttonName = $this->controller->getButtonName( );
-            $session =& CRM_Core_Session::singleton( );
+            $session = CRM_Core_Session::singleton( );
             if ( $buttonName == $this->getButtonName( 'upload', 'new' ) ) {
                 CRM_Core_Session::setStatus( ts(' You can add another membership type.') );
                 $session->replaceUserContext( CRM_Utils_System::url( 'civicrm/admin/member/membershipType', 'action=add&reset=1' ) );
@@ -411,15 +425,15 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form
 
         // get the count of contact
         require_once 'CRM/Contact/BAO/Contact.php';
-        $contactBAO  =& new CRM_Contact_BAO_Contact( );
-        $query =& new CRM_Contact_BAO_Query( $searchValues );
+        $contactBAO  = new CRM_Contact_BAO_Contact( );
+        $query = new CRM_Contact_BAO_Query( $searchValues );
         $searchCount = $query->searchQuery(0, 0, null, true );
         $this->set( 'searchCount', $searchCount );
         if ( $searchCount <= self::MAX_CONTACTS ) {
             // get the result of the search
             $result = $query->searchQuery(0, self::MAX_CONTACTS, null);
 
-            $config =& CRM_Core_Config::singleton( );
+            $config = CRM_Core_Config::singleton( );
             $searchRows = array( );
 
             while($result->fetch()) {

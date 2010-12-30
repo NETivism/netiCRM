@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -30,6 +30,7 @@
   {assign var=height value="600px"}
   {assign var=width  value="100%"}
 {/if}
+{assign var=defaultZoom value=12}  
 {literal}
 <script src="http://maps.google.com/maps?file=api&v=2&key={/literal}{$mapKey}{literal}" type="text/javascript"></script>
 <script type="text/javascript">
@@ -44,8 +45,13 @@
 	GEvent.addListener(map, 'resize', function() { map.setCenter(bounds.getCenter()); map.checkResize(); });
 	
 	// Creates a marker whose info window displays the given number
-	function createMarker(point, data) {
-	    var marker = new GMarker(point);
+	function createMarker(point, data, image) {
+	    var icon = new GIcon();
+ 	    icon.image = image;
+ 	    icon.iconSize = new GSize(24, 24);
+ 	    icon.iconAnchor = new GPoint(12, 24);
+ 	    icon.infoWindowAnchor = new GPoint(18, 1);
+	    var marker = new GMarker(point, icon);
 	    GEvent.addListener(marker, "click", function() {
 		marker.openInfoWindowHtml(data);
 	    });
@@ -67,13 +73,35 @@
 	    {/literal}
 	    {if $location.lat}
 		var point  = new GLatLng({$location.lat},{$location.lng});
-		var marker = createMarker(point, data);
+		{if $location.image && ( $location.marker_class neq 'Event' ) }
+ 		  var image = '{$location.image}';
+		{else}
+                 {if $location.marker_class eq 'Individual'}
+ 		      var image = "{$config->resourceBase}i/contact_ind.gif";
+ 		  {/if}
+ 		  {if $location.marker_class eq 'Household'}
+ 		      var image = "{$config->resourceBase}i/contact_house.png";
+ 		  {/if}
+ 		  {if $location.marker_class eq 'Organization' || $location.marker_class eq 'Event'}
+  		      var image = "{$config->resourceBase}i/contact_org.gif";
+ 		  {/if}
+                {/if}
+ 	
+               	var marker = createMarker(point, data, image);
 		map.addOverlay(marker);
 		bounds.extend(point);
 	    {/if}
 	{/foreach}
-	map.setZoom(map.getBoundsZoomLevel(bounds));
+	map.setMapType(G_NORMAL_MAP);
 	map.setCenter(bounds.getCenter());
+	{if count($locations) gt 1}  
+ 	    map.setZoom(map.getBoundsZoomLevel(bounds));
+ 	    map.setMapType(G_PHYSICAL_MAP);
+ 	{elseif $location.marker_class eq 'Event' || $location.marker_class eq 'Individual'|| $location.marker_class eq 'Household' || $location.marker_class eq 'Organization' }
+ 	    map.setZoom({$defaultZoom});
+	{else} 
+	    map.setZoom({$defaultZoom}); 
+ 	{/if}
 	{literal}	
 	//]]>  
     }

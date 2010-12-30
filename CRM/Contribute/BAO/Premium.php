@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -64,7 +64,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium
      */
     static function retrieve( &$params, &$defaults ) 
     {
-        $premium =& new CRM_Contribute_DAO_Product( );
+        $premium = new CRM_Contribute_DAO_Product( );
         $premium->copyValues( $params );
         if ( $premium->find( true ) ) {
             CRM_Core_DAO::storeValues( $premium, $defaults );
@@ -100,7 +100,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium
         
         //delete from contribution Type table
         require_once 'CRM/Contribute/DAO/Premium.php';
-        $premium =& new CRM_Contribute_DAO_Premium( );
+        $premium = new CRM_Contribute_DAO_Premium( );
         $premium->id = $premiumID;
         $premium->delete();
     }
@@ -115,7 +115,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium
     function buildPremiumBlock( &$form , $pageID , $formItems = false ,$selectedProductID = null ,$selectedOption = null ) {
         
         require_once 'CRM/Contribute/DAO/Premium.php';
-        $dao =& new CRM_Contribute_DAO_Premium();
+        $dao = new CRM_Contribute_DAO_Premium();
         $dao->entity_table = 'civicrm_contribution_page';
         $dao->entity_id = $pageID; 
         $dao->premiums_active = 1;
@@ -126,7 +126,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium
             CRM_Core_DAO::storeValues($dao, $premiumBlock );
             
             require_once 'CRM/Contribute/DAO/PremiumsProduct.php';
-            $dao =& new CRM_Contribute_DAO_PremiumsProduct();
+            $dao = new CRM_Contribute_DAO_PremiumsProduct();
             $dao->premiums_id = $premiumID;
             $dao->orderBy('weight');
             $dao->find();
@@ -135,7 +135,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium
             $radio    = array();
             while ($dao->fetch()) {
                 require_once 'CRM/Contribute/DAO/Product.php';
-                $productDAO =& new CRM_Contribute_DAO_Product();
+                $productDAO = new CRM_Contribute_DAO_Product();
                 $productDAO->id = $dao->product_id;
                 $productDAO->is_active = 1;
                 if ($productDAO->find(true) ) {
@@ -189,12 +189,12 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium
         require_once 'CRM/Contribute/DAO/Product.php';
         if ( $premiumProductID ) {
             require_once 'CRM/Contribute/DAO/PremiumsProduct.php';
-            $dao =& new CRM_Contribute_DAO_PremiumsProduct();
+            $dao = new CRM_Contribute_DAO_PremiumsProduct();
             $dao->id = $premiumProductID;
             $dao->find(true);
             $productID = $dao->product_id;
         }
-        $productDAO =& new CRM_Contribute_DAO_Product();
+        $productDAO = new CRM_Contribute_DAO_Product();
         $productDAO->id = $productID;
         $productDAO->is_active = 1;
         if ($productDAO->find(true) ) {
@@ -240,12 +240,12 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium
         $params = array( 'entity_id'    => $contributionPageID,
                          'entity_table' => 'civicrm_contribution_page' );
         
-        $premium =& new CRM_Contribute_DAO_Premium( ); 
+        $premium = new CRM_Contribute_DAO_Premium( ); 
         $premium->copyValues( $params );
         $premium->find( );
         while ( $premium->fetch( ) ) {
             //lets delete from civicrm_premiums_product
-            $premiumsProduct =& new CRM_Contribute_DAO_PremiumsProduct( );
+            $premiumsProduct = new CRM_Contribute_DAO_PremiumsProduct( );
             $premiumsProduct->premiums_id = $premium->id;
             $premiumsProduct->delete( );
             

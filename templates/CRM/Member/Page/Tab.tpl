@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -35,37 +35,36 @@
 
     {if $action ne 1 and $action ne 2 and $permission EQ 'edit'}
         <div id="help">
-            {ts 1=$displayName}Current and inactive memberships for %1 are listed below.{/ts}
-            {if $permission EQ 'edit'}{ts 1=$newURL}Click <a href='%1'>New Membership</a> to record a new membership.{/ts}{/if}
-	    {if $newCredit}	
-            {capture assign=newCreditURL}{crmURL p="civicrm/contact/view/membership" q="reset=1&action=add&cid=`$contactId`&context=membership&mode=live"}{/capture}
-            {ts 1=$newCreditURL}Click <a href='%1'>Submit Credit Card Membership</a> to process a Membership on behalf of the member using their credit card.{/ts}
+            {if $permission EQ 'edit'}
+                {ts 1=$newURL}Click <a href='%1'>Add Membership</a> to record a new membership.{/ts}
+	            {if $newCredit}	
+                    {capture assign=newCreditURL}{crmURL p="civicrm/contact/view/membership" q="reset=1&action=add&cid=`$contactId`&context=membership&mode=live"}{/capture}
+                    {ts 1=$newCreditURL}Click <a href='%1'>Submit Credit Card Membership</a> to process a Membership on behalf of the member using their credit card.{/ts}
+                {/if}
+            {else}
+                {ts 1=$displayName}Current and inactive memberships for %1 are listed below.{/ts}
             {/if}
         </div>
 
         <div class="action-link">
-            <a accesskey="N" href="{$newURL}" class="button"><span>&raquo; {ts}New Membership{/ts}</span></a>
+            <a accesskey="N" href="{$newURL}" class="button"><span><div class="icon add-icon"></div>{ts}Add Membership{/ts}</span></a>
             {if $accessContribution and $newCredit}
-                <a accesskey="N" href="{$newCreditURL}" class="button"><span>&raquo; {ts}Submit Credit Card Membership{/ts}</span></a><br /><br />
+                <a accesskey="N" href="{$newCreditURL}" class="button"><span><div class="icon add-icon"></div>{ts}Submit Credit Card Membership{/ts}</span></a><br /><br />
             {else}
-                <br/ ><br/ >	
-        {/if}
+                <br/ ><br/ >
+            {/if}
         </div>
     {/if}
     {if NOT ($activeMembers or $inActiveMembers) and $action ne 2 and $action ne 1 and $action ne 8 and $action ne 4 and $action ne 32768}
        	<div class="messages status">
-           <dl>
-	     <dt><img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}" /></dt>
-               <dd>
-                 {ts}No memberships have been recorded for this contact.{/ts}
-               </dd>
-           </dl>
-      </div>
+          <div class="icon inform-icon"></div>
+              {ts}No memberships have been recorded for this contact.{/ts}
+         </div>
     {/if}
     {include file="CRM/common/jsortable.tpl"}
     {if $activeMembers}
     <div id="memberships">
-        <div><label>{ts}Active Memberships{/ts}</label></div>
+        <h3>{ts}Active Memberships{/ts}</h3>
         {strip}
         <table id="active_membership" class="display">
             <thead>
@@ -79,15 +78,15 @@
             </tr>
             </thead>
             {foreach from=$activeMembers item=activeMember}
-            <tr id="mem_{$activeMember.id}" class="{cycle values="odd-row,even-row"} {$activeMember.class}">
-                <td>
+            <tr id="crm-membership_{$activeMember.id}" class="{cycle values="odd-row,even-row"} {$activeMember.class} crm-membership">
+                <td class="crm-membership-membership_type">
                     {$activeMember.membership_type}
                     {if $activeMember.owner_membership_id}<br />({ts}by relationship{/ts}){/if}
                 </td>
-                <td>{$activeMember.start_date|crmDate}</td>
-                <td>{$activeMember.end_date|crmDate}</td>
-                <td>{$activeMember.status}</td>
-                <td>{$activeMember.source}</td>
+                <td class="crm-membership-start_date">{$activeMember.start_date|crmDate}</td>
+                <td class="crm-membership-end_date">{$activeMember.end_date|crmDate}</td>
+                <td class="crm-membership-status">{$activeMember.status}</td>
+                <td class="crm-membership-source">{$activeMember.source}</td>
                 <td>
                     {$activeMember.action|replace:'xx':$activeMember.id}
                     {if $activeMember.owner_membership_id}
@@ -104,10 +103,10 @@
     {if $inActiveMembers}
         <div id="inactive-memberships">
         <p></p>
-        <div class="label font-red">{ts}Pending and Inactive Memberships{/ts}</div>
+        <h3 class="font-red">{ts}Pending and Inactive Memberships{/ts}</h3>
         {strip}
         <table id="pending_membership" class="display">
-           <thead>
+            <thead>
             <tr>
                 <th>{ts}Membership{/ts}</th>
                 <th>{ts}Start Date{/ts}</th>
@@ -118,12 +117,12 @@
             </tr>
             </thead>
             {foreach from=$inActiveMembers item=inActiveMember}
-            <tr id="mem_{$inActiveMember.id}" class="{cycle values="odd-row,even-row"} {$inActiveMember.class}">
-                <td>{$inActiveMember.membership_type}</td>
-                <td>{$inActiveMember.start_date|crmDate}</td>
-                <td>{$inActiveMember.end_date|crmDate}</td>
-                <td>{$inActiveMember.status}</td>
-                <td>{$inActiveMember.source}</td>
+            <tr id="crm-membership_{$inActiveMember.id}" class="{cycle values="odd-row,even-row"} {$inActiveMember.class} crm-membership">
+                <td class="crm-membership-membership_type">{$inActiveMember.membership_type}</td>
+                <td class="crm-membership-start_date">{$inActiveMember.start_date|crmDate}</td>
+                <td class="crm-membership-end_date">{$inActiveMember.end_date|crmDate}</td>
+                <td class="crm-membership-status">{$inActiveMember.status}</td>
+                <td class="crm-membership-source">{$inActiveMember.source}</td>
                 <td>{$inActiveMember.action|replace:'xx':$inActiveMember.id}</td>
             </tr>
             {/foreach}
@@ -149,17 +148,17 @@
                 <th>{ts}Minimum Fee{/ts}</th>
                 <th>{ts}Duration{/ts}</th>            
                 <th>{ts}Visibility{/ts}</th>
-                <th></th>
+                <th></th> 
             </tr>
             </thead>
             {foreach from=$membershipTypes item=membershipType}
-            <tr class="{cycle values="odd-row,even-row"} {$membershipType.class}">
-                <td>{$membershipType.name}</td>
-            <td>{$membershipType.period_type}</td>
-            <td>{$membershipType.fixed_period_start_day}</td>
-                <td>{$membershipType.minimum_fee}</td>
-                <td>{$membershipType.duration_unit}</td>	        
-                <td>{$membershipType.visibility}</td>
+            <tr class="{cycle values="odd-row,even-row"} {$membershipType.class} crm-membership">
+                <td class="crm-membership-name">{$membershipType.name}</td>
+                <td class="crm-membership-period_type">{$membershipType.period_type}</td>
+                <td class="crm-membership-fixed_period_start_day">{$membershipType.fixed_period_start_day}</td>
+                <td class="crm-membership-minimum_fee">{$membershipType.minimum_fee}</td>
+                <td class="crm-membership-duration_unit">{$membershipType.duration_unit}</td>	        
+                <td class="crm-membership-visibility">{$membershipType.visibility}</td>
                 <td>{$membershipType.action|replace:xx:$membershipType.id}</td>
             </tr>
             {/foreach}

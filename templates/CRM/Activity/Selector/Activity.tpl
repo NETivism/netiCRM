@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -27,10 +27,10 @@
 
 <div>
   {if !$noFieldSet}	
-  <fieldset>
-  <legend>{ts}Activities{/ts}</legend>
+  <h3 class="crm-table-title">{ts}Activities{/ts}</h3>
   {/if}
 {if $rows}
+  <span id='fileOnCaseStatusMsg' style="display:none;"></span>
   <form title="activity_pager" action="{crmURL}" method="post">
   {include file="CRM/common/pager.tpl" location="top"}
 
@@ -51,23 +51,20 @@
 
       {counter start=0 skip=1 print=false}
       {foreach from=$rows item=row}
-      <tr class="{cycle values="odd-row,even-row"} {$row.class}">
-
-        <td>{$row.activity_type}</td>
-       
-    	<td>{$row.subject}</td>
-	
-        <td>
-        {if !$row.source_contact_id}
-          <em>n/a</em>
-        {elseif $contactId NEQ $row.source_contact_id}
+      <tr class="{cycle values="odd-row,even-row"} {$row.class} crm-activity crm-activity_status-{$row.activity_status_id} crm-activity-type_{$row.activity_type_id}" id="crm-activity_{$row.activity_id}">
+        <td class="crm-activity-type crm-activity-type_{$row.activity_type_id}">{$row.activity_type}</td>
+      	<td class="crm-activity-subject">{$row.subject}</td>
+        <td class="crm-activity-source_contact_name">
+        {if $contactId == $row.source_contact_id}
+          {$row.source_contact_name}
+        {elseif $row.source_contact_id}
           <a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$row.source_contact_id`"}" title="{ts}View contact{/ts}">{$row.source_contact_name}</a>
         {else}
-          {$row.source_contact_name}	
+          <em>n/a</em>
         {/if}			
         </td>
 
-        <td>
+        <td class="crm-activity-target_contact_name">
         {if $row.mailingId}
           <a href="{$row.mailingId}" title="{ts}View Mailing Report{/ts}">{$row.recipients}</a>
         {elseif $row.recipients}
@@ -86,7 +83,7 @@
         {/if}
         </td>
 
-        <td>
+        <td class="crm-activity-assignee_contact_name">
         {if !$row.assignee_contact_name}
             <em>n/a</em>
         {elseif $row.assignee_contact_name}
@@ -101,10 +98,8 @@
         {/if}	
         </td>
 
-        <td>{$row.activity_date_time|crmDate}</td>
-
-        <td>{$row.status}</td>
-
+        <td class="crm-activity-date_time">{$row.activity_date_time|crmDate}</td>
+        <td class="crm-activity-status crm-activity-status_{$row.status_id}">{$row.status}</td>
         <td>{$row.action|replace:'xx':$row.id}</td>
       </tr>
       {/foreach}
@@ -113,8 +108,9 @@
   {/strip}
 
   {include file="CRM/common/pager.tpl" location="bottom"}
+  
+  {include file="CRM/Case/Form/ActivityToCase.tpl" contactID=$contactId}
   </form>
-
 {else}
 
   <div class="messages status">
@@ -129,7 +125,6 @@
 
 {/if}
 {if !$noFieldSet}
-</fieldset>
 {/if}
 </div>
 

@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -23,104 +23,86 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
-<fieldset><legend>{if $action eq 8}{ts}Delete CiviCRM Profile Field{/ts}{else}{ts}CiviCRM Profile Field{/ts}{/if}</legend>
-{if $action ne 8} {* do not display stuff for delete function *}
-    <div id="crm-submit-buttons-top" class="form-item"> 
-    <dl> 
-    {if $action ne 4} 
-        <dt>&nbsp;</dt><dd>&nbsp;{$form.buttons.html}</dd> 
-    {else} 
-        <dt>&nbsp;</dt><dd>&nbsp;{$form.done.html}</dd> 
-    {/if} {* $action ne view *} 
-    </dl> 
-    </div>
-{/if} {* action ne delete *}
-    
-    <div class="form-item">
+<h3>{if $action eq 8}{ts}Delete Field{/ts} - {$fieldTitle}{elseif $action eq 1}{ts}Add Field{/ts}{elseif $action eq 2}{ts}Edit Field{/ts} - {$fieldTitle}{/if}</h3>
+<div class="crm-block crm-form-block crm-uf-field-form-block">
     {if $action eq 8}
       	<div class="messages status">
-        <dl>
-          <dt><img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}" /></dt>
-          <dd>    
+          <div class="icon inform-icon"></div>
             {ts}WARNING: Deleting this profile field will remove it from Profile forms and listings. If this field is used in any 'stand-alone' Profile forms, you will need to update those forms to remove this field.{/ts} {ts}Do you want to continue?{/ts}
-          </dd>
-       </dl>
       </div>
     {else}
-        <dl>
-        <dt>{$form.field_name.label}</dt><dd>&nbsp;{$form.field_name.html}</dd>
-        {edit}
-            <dt> </dt><dd class="description">&nbsp;{ts}Select the type of CiviCRM record and the field you want to include in this Profile.{/ts}</dd>
-        {/edit}  
-        <dt>{$form.label.label} {if $action == 2}{include file='CRM/Core/I18n/Dialog.tpl' table='civicrm_uf_field' field='label' id=$fieldId}{/if}</dt><dd>&nbsp;{$form.label.html}</dd>       
-        {edit}
-            <dt> </dt><dd class="description">&nbsp;{ts}The field label displayed on the form (over-ride the default field label here, if desired).{/ts}</dd>
-        {/edit}  
-        <dt>{$form.is_required.label}</dt><dd>&nbsp;{$form.is_required.html}</dd>
-        {edit}
-            <dt>&nbsp;</dt><dd class="description">&nbsp;{ts}Are users required to complete this field?{/ts}</dd>
-        {/edit}
-        <dt>{$form.is_view.label}</dt><dd>&nbsp;{$form.is_view.html}</dd>
-        {edit}
-        <dt>&nbsp;</dt><dd class="description">&nbsp;{ts}If checked, users can view but not edit this field.{/ts}<br />&nbsp;{ts}NOTE: View Only fields can not be included in Profile Search forms.{/ts}</dd>
-        {/edit}
-        <dt>{$form.visibility.label}</dt><dd>&nbsp;{$form.visibility.html}</dd>
-        {edit}
-        <dt class="">&nbsp;</dt><dd class="description">&nbsp;{ts}Is this field hidden from other users ('User and User Admin Only'), or is it visible to others and potentially searchable in the Profile Search form ('Public Pages' or 'Public Pages and Listings')? When visibility is 'Public Pages and Listings', users can also click the field value when viewing a contact in order to locate other contacts with the same value(s) (i.e. other contacts who live in Poland).{/ts}</dd>                                                         
-        {/edit}
-        <dt id="is_search_label">{$form.is_searchable.label}</dt><dd id="is_search_html">&nbsp;{$form.is_searchable.html}</dd>
-        {edit}
-        <dt id="is_search_desDt">&nbsp;</dt><dd class="description" id="is_search_desDd">&nbsp;{ts}Do you want to include this field in the Profile's Search form?{/ts}</dd>
-        {/edit}
-        <dt id="in_selector_label">{$form.in_selector.label}</dt><dd id="in_selector_html">&nbsp;{$form.in_selector.html}</dd>        
-        {edit}
-        <dt id="in_selector_desDt">&nbsp;</dt><dd id="in_selector_desDd" class="description">&nbsp;{ts}Is this field included as a column in the search results table? This setting applies only to fields with 'Public Pages' or 'Public Pages and Listings' visibility.{/ts}</dd>
-        {/edit}
-	<dl class="html-adjust">
-        <dt>{$form.help_post.label} {if $action == 2}{include file='CRM/Core/I18n/Dialog.tpl' table='civicrm_uf_field' field='help_post' id=$fieldId}{/if}</dt><dd>&nbsp;{$form.help_post.html|crmReplace:class:huge}</dd></dl>
-        {edit}
-	<div class="spacer"></div>  
-        <dt>&nbsp;</dt><dd class="description">&nbsp;{ts}Explanatory text displayed to users for this field (can include HTML formatting tags).{/ts}</dd>
-        {/edit} 
-	<div class="spacer"></div>   
-        <dt>{$form.weight.label}</dt><dd>&nbsp;{$form.weight.html}</dd>
-        {edit}
-        <dt>&nbsp;</dt><dd class="description">&nbsp;{ts}Weight controls the order in which fields are displayed within a profile. Enter a positive or negative integer - lower numbers are displayed ahead of higher numbers.{/ts}</dd>
-        {/edit}
-        <dt>{$form.is_active.label}</dt><dd>&nbsp;{$form.is_active.html}</dd>
-        </dl>
-    
+        <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div> 
+        <table class="form-layout-compressed">
+        <tr class="crm-uf-field-form-block-field_name">
+            <td class="label">{$form.field_name.label}</td>
+            <td>{$form.field_name.html}<br />
+            <span class="description">&nbsp;{ts}Select the type of CiviCRM record and the field you want to include in this Profile.{/ts}</span></td>
+        </tr> 
+        <tr class="crm-uf-field-form-block-label">
+            <td class="label">{$form.label.label} {if $action == 2}{include file='CRM/Core/I18n/Dialog.tpl' table='civicrm_uf_field' field='label' id=$fieldId}{/if}</td>
+            <td>{$form.label.html}<br />       
+            <span class="description">{ts}The field label displayed on the form (over-ride the default field label here, if desired).{/ts}</span></td>
+        </tr>
+        <tr class="crm-uf-field-form-block-is_required">
+            <td class="label">{$form.is_required.label}</td>
+            <td>{$form.is_required.html}<br />
+            <span class="description">{ts}Are users required to complete this field?{/ts}</span></td>
+        </tr>
+        <tr class="crm-uf-field-form-block-is_view">
+            <td class="label">{$form.is_view.label}</td>
+            <td>{$form.is_view.html}<br />
+            <span class="description">&nbsp;{ts}If checked, users can view but not edit this field.{/ts}<br />&nbsp;{ts}NOTE: View Only fields can not be included in Profile Search forms.{/ts}</span></td>
+        </tr>
+        <tr class="crm-uf-field-form-block-visibility">
+            <td class="label">{$form.visibility.label}</td>
+            <td>{$form.visibility.html}<br />
+            <span class="description">&nbsp;{ts}Is this field hidden from other users ('User and User Admin Only'), or is it visible to others and potentially searchable in the Profile Search form ('Public Pages' or 'Public Pages and Listings')? When visibility is 'Public Pages and Listings', users can also click the field value when viewing a contact in order to locate other contacts with the same value(s) (i.e. other contacts who live in Poland).{/ts}</span></td>
+        </tr>                                                     
+        <tr class="crm-uf-field-form-block-is_searchable">
+            <td class="label"><div id="is_search_label">{$form.is_searchable.label}</div></td>
+            <td><div id="is_search_html">{$form.is_searchable.html}<br />
+            <span class="description" id="is_search_desSpan">{ts}Do you want to include this field in the Profile's Search form?{/ts}</span></div></td>
+        </tr>
+        <tr class="crm-uf-field-form-block-in_selector">
+            <td class="label"><div id="in_selector_label">{$form.in_selector.label}</div></td>
+            <td><div id="in_selector_html">{$form.in_selector.html}<br />         
+            <span id="in_selector_desSpan" class="description">{ts}Is this field included as a column in the search results table? This setting applies only to fields with 'Public Pages' or 'Public Pages and Listings' visibility.{/ts}</span></div></td>
+        </tr>
+        <tr class="crm-uf-field-form-block-help_post">
+            <td class="label">{$form.help_post.label}{if $action == 2}{include file='CRM/Core/I18n/Dialog.tpl' table='civicrm_uf_field' field='help_post' id=$fieldId}{/if}</td>
+            <td>{$form.help_post.html|crmReplace:class:huge}<br /> 
+            <span class="description">&nbsp;{ts}Explanatory text displayed to users for this field (can include HTML formatting tags).{/ts}</span></td>
+        </tr>
+        <tr class="crm-uf-field-form-block-weight"> 
+            <td class="label">{$form.weight.label}</td>
+            <td>&nbsp;{$form.weight.html}<br />
+            <span class="description">&nbsp;{ts}Weight controls the order in which fields are displayed within a profile. Enter a positive or negative integer - lower numbers are displayed ahead of higher numbers.{/ts}</span></td>
+        </tr>
+        <tr class="crm-uf-field-form-block-is_active">
+            <td class="label">{$form.is_active.label}</td>
+            <td>{$form.is_active.html}</td>
+        </tr>
+        </table>
     {/if}
-    </div>
-    <div id="crm-submit-buttons-bottom" class="form-item">
-    <dl>
-    {if $action ne 4}
-    
-        <dt>&nbsp;</dt><dd>&nbsp;{$form.buttons.html}</dd>
-    
-    {else}
-    
-        <dt>&nbsp;</dt><dd>&nbsp;{$form.done.html}</dd>
-    
-    {/if} {* $action ne view *}
-    </dl>
-    </div>
-</fieldset>
+    <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
+</div>
 
  {$initHideBoxes}
 
 {literal}
 <script type="text/javascript">
 function showLabel( ) {
-
+    var labelValue = '';
     /* Code to set the Field Label */		
     if (document.forms.Field['field_name[0]'].options[document.forms.Field['field_name[0]'].selectedIndex].value) { 
-        var labelValue = document.forms.Field['field_name[1]'].options[document.forms.Field['field_name[1]'].selectedIndex].text; 
+        if ( document.forms.Field['field_name[1]'].value ) {
+            labelValue = document.forms.Field['field_name[1]'].options[document.forms.Field['field_name[1]'].selectedIndex].text; 
+        }
 
-        if (document.forms.Field['field_name[3]'].value) { 
+        if ( document.forms.Field['field_name[3]'].value ) { 
             labelValue = labelValue + '-' + document.forms.Field['field_name[3]'].options[document.forms.Field['field_name[3]'].selectedIndex].text + ''; 
         }   
-        if (document.forms.Field['field_name[2]'].value) { 
+        if ( document.forms.Field['field_name[2]'].value ) { 
             labelValue = labelValue + ' (' + document.forms.Field['field_name[2]'].options[document.forms.Field['field_name[2]'].selectedIndex].text + ')'; 
         }   
     } else {
@@ -131,6 +113,9 @@ function showLabel( ) {
     if ( custom.substring( 0, 7 ) == 'custom_' ) {
         var customFieldLabel = labelValue.split(' :: ', 2);
         labelValue = customFieldLabel[0];
+        if ( document.forms.Field['field_name[2]'].value ) { 
+            labelValue = labelValue + ' (' + document.forms.Field['field_name[2]'].options[document.forms.Field['field_name[2]'].selectedIndex].text + ')'; 
+        }
     }
     
     var input = document.getElementById('label');
@@ -148,8 +133,7 @@ function showLabel( ) {
         if (field2 == noSearch) {
             hide("is_search_label");
             hide("is_search_html");
-            hide("is_search_desDt");
-            hide("is_search_desDd");
+            hide("is_search_desSpan");
         }
         {/literal}
     {/foreach}
@@ -180,33 +164,28 @@ function showLabel( ) {
        if ( vsbl == "User and User Admin Only"){
            hide("is_search_label");
            hide("is_search_html");
-           hide("is_search_desDt");
-           hide("is_search_desDd");
+           hide("is_search_desSpan");
            hide("in_selector_label");
            hide("in_selector_html");
-           hide("in_selector_desDt");
-           hide("in_selector_desDd");
+           hide("in_selector_desSpan");
            cj("#is_searchable").attr('checked',false);
        } else {
            if ( ! cj("#is_view").attr('checked') ) {
                show("is_search_label");
                show("is_search_html");
-               show("is_search_desDt");
-               show("is_search_desDd");
+               show("is_search_desSpan");
            }
            var fldName = cj("#field_name\\[1\\]").val();
            if ( fldName == 'group' || fldName == 'tag' ) { 
                hide("in_selector_label");
                hide("in_selector_html");
-               hide("in_selector_desDt");
-               hide("in_selector_desDd");
+               hide("in_selector_desSpan");
            } else {
                show("in_selector_label");
                show("in_selector_html");
-               show("in_selector_desDt");
-               show("in_selector_desDd");
+               show("in_selector_desSpan");
            }
-       }	
+       }
    }
 
    cj("#field_name\\[1\\]").bind( 'change blur', function( ) {
@@ -228,14 +207,12 @@ function viewOnlyShowHide( ) {
     if (cj("#is_view").attr('checked')) {
        hide("is_search_label");
        hide("is_search_html");
-       hide("is_search_desDt");
-       hide("is_search_desDd");
+       hide("is_search_desSpan");
        cj("#is_searchable").attr('checked',false);
     } else if ( vsbl != "User and User Admin Only")  {
        show("is_search_label");
        show("is_search_html");
-       show("is_search_desDt");
-       show("is_search_desDd");
+       show("is_search_desSpan");
     }
 }
 

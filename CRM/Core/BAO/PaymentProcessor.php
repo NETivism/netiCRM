@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -68,7 +68,7 @@ class CRM_Core_BAO_PaymentProcessor extends CRM_Core_DAO_PaymentProcessor
      */
     static function retrieve( &$params, &$defaults ) 
     {
-        $paymentProcessor =& new CRM_Core_DAO_PaymentProcessor( );
+        $paymentProcessor = new CRM_Core_DAO_PaymentProcessor( );
         $paymentProcessor->copyValues( $params );
         if ( $paymentProcessor->find( true ) ) {
             CRM_Core_DAO::storeValues( $paymentProcessor, $defaults );
@@ -126,13 +126,13 @@ class CRM_Core_BAO_PaymentProcessor extends CRM_Core_DAO_PaymentProcessor
             CRM_Core_Error::fatal( ts( 'Invalid value passed to delete function' ) );
         }
 
-        $dao            =& new CRM_Core_DAO_PaymentProcessor( );
+        $dao            = new CRM_Core_DAO_PaymentProcessor( );
         $dao->id        =  $paymentProcessorID;
         if ( ! $dao->find( true ) ) {
             return null;
         }
 
-        $testDAO            =& new CRM_Core_DAO_PaymentProcessor( );
+        $testDAO            = new CRM_Core_DAO_PaymentProcessor( );
         $testDAO->name      =  $dao->name;
         $testDAO->is_test   =  1;
         $testDAO->delete( );
@@ -156,7 +156,7 @@ class CRM_Core_BAO_PaymentProcessor extends CRM_Core_DAO_PaymentProcessor
             CRM_Core_Error::fatal( ts( 'Invalid value passed to getPayment function' ) );
         }
 
-        $dao            =& new CRM_Core_DAO_PaymentProcessor( );
+        $dao            = new CRM_Core_DAO_PaymentProcessor( );
         $dao->id        =  $paymentProcessorID;
         $dao->is_active =  1;
         if ( ! $dao->find( true ) ) {
@@ -164,7 +164,7 @@ class CRM_Core_BAO_PaymentProcessor extends CRM_Core_DAO_PaymentProcessor
         }
 
         if ( $mode == 'test' ) {
-            $testDAO =& new CRM_Core_DAO_PaymentProcessor( );
+            $testDAO = new CRM_Core_DAO_PaymentProcessor( );
             $testDAO->name      = $dao->name;
             $testDAO->is_active = 1;
             $testDAO->is_test   = 1;

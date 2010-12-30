@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -53,7 +53,7 @@ class CRM_Core_BAO_IM extends CRM_Core_DAO_IM
      */
     static function add( &$params ) 
     {
-        $im =& new CRM_Core_DAO_IM();
+        $im = new CRM_Core_DAO_IM();
         
         $im->copyValues($params);
 

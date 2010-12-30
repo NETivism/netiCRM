@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -23,21 +23,24 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
-<div class='spacer'></div>
-<fieldset>
-<legend>
-{ts}Choose Relationship Type and Target Household{/ts}
-</legend>
-<br />
-<div class="form-item">
+<div class="crm-block crm-form-block crm-contact-task-addtohousehold-form-block">
+  <div id="help">
+    {ts}Choose Relationship Type and Target Household{/ts}
+  </div>
     <table class="form-layout-compressed"> 
         <tr><td></td><td>{include file="CRM/Contact/Form/Task.tpl"}</td></tr>
             {if $action EQ 2} {* action = update *}
                 <tr><td><label>{$sort_name}</label></td></tr>
             {else} {* action = add *}
-                <tr><td>{$form.relationship_type_id.label}</td><td>{$form.relationship_type_id.html}</td></tr>   
+                <tr class="crm-contact-task-addtohousehold-form-block-relationship_type_id">
+                    <td>{$form.relationship_type_id.label}</td>
+                    <td>{$form.relationship_type_id.html}</td>
+                </tr>   
                 <tr><td></td></tr>
-                <tr><td>{$form.name.label}</td><td>{$form.name.html}</td></tr>
+                <tr class="crm-contact-task-addtohousehold-form-block-name">
+                    <td>{$form.name.label}</td>
+                    <td>{$form.name.html}</td>
+                </tr>
                 <tr><td></td><td>{$form._qf_AddToHousehold_refresh.html}&nbsp;&nbsp;{$form._qf_AddToHousehold_cancel.html}</td></tr>
      </table>
          {if $searchDone } {* Search button clicked *}
@@ -50,12 +53,12 @@
                         {strip}
                         <table>
                         <tr class="columnheader">
-                        <th>&nbsp;</th>
-                        <th>{ts}Name{/ts}</th>
-                        <th>{ts}City{/ts}</th>
-                        <th>{ts}State{/ts}</th>
-                        <th>{ts}Email{/ts}</th>
-                        <th>{ts}Phone{/ts}</th>
+                        <td>&nbsp;</td>
+                        <td>{ts}Name{/ts}</td>
+                        <td>{ts}City{/ts}</td>
+                        <td>{ts}State{/ts}</td>
+                        <td>{ts}Email{/ts}</td>
+                        <td>{ts}Phone{/ts}</td>
                         </tr>
                         {foreach from=$searchRows item=row}
                         <tr class="{cycle values="odd-row,even-row"}">
@@ -88,13 +91,11 @@
         {* Only show buttons if action=update, OR if we have $contacts (results)*}
         {if $searchRows OR $action EQ 2}
             <div class="form-item">
-                <dl>
-                  <dt> </dt>
-                    <dd class="description">
+              
+                    <div class="description">
 
-                    </dd>
-                <dt></dt><dd>{$form.buttons.html}</dd>
-                </dl>
+                    </div>
+               <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl"}</div>
             </div>
 	<div class="form-item">
 	{$form.status.label} {$form.status.html}
@@ -103,6 +104,3 @@
 
             </div></fieldset>
 	{/if}
-
-
-

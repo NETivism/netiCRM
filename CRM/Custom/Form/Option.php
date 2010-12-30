@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -42,12 +42,20 @@ require_once 'CRM/Core/Form.php';
 class CRM_Custom_Form_Option extends CRM_Core_Form 
 {
     /**
-     * the custom group id saved to the session for an update
+     * the custom field id saved to the session for an update
      *
      * @var int
      * @access protected
      */
     protected $_fid;
+
+    /**
+     * the custom group id saved to the session for an update
+     *
+     * @var int
+     * @access protected
+     */
+    protected $_gid;
 
     /**
      * The option group ID 
@@ -62,7 +70,6 @@ class CRM_Custom_Form_Option extends CRM_Core_Form
      */
     protected $_id;
 
-
     /**
      * Function to set variables up before form is built
      * 
@@ -73,17 +80,21 @@ class CRM_Custom_Form_Option extends CRM_Core_Form
      */
     public function preProcess()
     {
-        $this->_fid = CRM_Utils_Request::retrieve('fid', 'Positive',
-                                                  $this);
+        $this->_fid = CRM_Utils_Request::retrieve( 'fid', 'Positive', $this );
+        
+        $this->_gid = CRM_Utils_Request::retrieve( 'gid', 'Positive', $this );
+        if ( !isset( $this->_gid ) && $this->_fid ) {
+            $this->_gid = CRM_Core_DAO::getFieldValue( 'CRM_Core_DAO_CustomField',
+                                                       $this->_fid,
+                                                       'custom_group_id' );
+        }   
         if ( $this->_fid ) {
             $this->_optionGroupID = CRM_Core_DAO::getFieldValue( 'CRM_Core_DAO_CustomField',
                                                                  $this->_fid,
                                                                  'option_group_id' );
-            
         }
-
-        $this->_id  = CRM_Utils_Request::retrieve('id' , 'Positive',
-                                                  $this);
+        
+        $this->_id = CRM_Utils_Request::retrieve( 'id', 'Positive', $this );
     }
 
     /**
@@ -97,21 +108,20 @@ class CRM_Custom_Form_Option extends CRM_Core_Form
      */
     function setDefaultValues()
     {
-        $defaults = array();
-        $fieldDefaults = array();
+        $defaults = $fieldDefaults = array();
         if ( isset( $this->_id ) ) {
-            $params = array('id' => $this->_id);
-            CRM_Core_BAO_CustomOption::retrieve($params, $defaults);
-
-            $paramsField = array('id' => $this->_fid);            
-            CRM_Core_BAO_CustomField::retrieve($paramsField, $fieldDefaults);
-
+            $params = array( 'id' => $this->_id );
+            CRM_Core_BAO_CustomOption::retrieve( $params, $defaults );
+                        
+            $paramsField = array( 'id' => $this->_fid );            
+            CRM_Core_BAO_CustomField::retrieve( $paramsField, $fieldDefaults );
+            
             if ( $fieldDefaults['html_type'] == 'CheckBox' 
                  || $fieldDefaults['html_type'] == 'Multi-Select' 
                  || $fieldDefaults['html_type'] == 'AdvMulti-Select' ) {
-                $defaultCheckValues = explode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
-                                              substr( $fieldDefaults['default_value'], 1, -1 ) );
-                if ( in_array($defaults['value'], $defaultCheckValues ) ) 
+                $defaultCheckValues = explode( CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
+                                               substr( $fieldDefaults['default_value'], 1, -1 ) );
+                if ( in_array( $defaults['value'], $defaultCheckValues ) ) 
                     $defaults['default_value'] = 1;
             } else {
                 if( CRM_Utils_Array::value( 'default_value', $fieldDefaults ) == CRM_Utils_Array::value( 'value', $defaults ) ) {
@@ -123,9 +133,9 @@ class CRM_Custom_Form_Option extends CRM_Core_Form
         }
       
         require_once 'CRM/Core/DAO.php';
-        if ($this->_action & CRM_Core_Action::ADD) {
+        if ( $this->_action & CRM_Core_Action::ADD ) {
             $fieldValues = array( 'option_group_id' => $this->_optionGroupID );
-            $defaults['weight'] = CRM_Utils_Weight::getDefaultWeight('CRM_Core_DAO_OptionValue', $fieldValues);
+            $defaults['weight'] = CRM_Utils_Weight::getDefaultWeight( 'CRM_Core_DAO_OptionValue', $fieldValues );
         }
 
         return $defaults;
@@ -141,11 +151,11 @@ class CRM_Custom_Form_Option extends CRM_Core_Form
      */
     public function buildQuickForm()
     {
-        if ($this->_action == CRM_Core_Action::DELETE) {
+        if ( $this->_action == CRM_Core_Action::DELETE ) {
             $this->addButtons( array(
                                      array ( 'type'      => 'next',
                                              'name'      => ts('Delete'),
-                                             'isDefault' => true   ),
+                                             'isDefault' => true),
                                      array ( 'type'      => 'cancel',
                                              'name'      => ts('Cancel') ),
                                      )
@@ -195,9 +205,16 @@ class CRM_Custom_Form_Option extends CRM_Core_Form
             // if view mode pls freeze it with the done button.
             if ($this->_action & CRM_Core_Action::VIEW) {
                 $this->freeze();
-                $this->addElement('button', 'done', ts('Done'), array('onclick' => "location.href='civicrm/admin/custom/group/field/option?reset=1&action=browse&fid=" . $this->_fid . "'"));
+                $url = CRM_Utils_System::url('civicrm/admin/custom/group/field/option', 
+                                             'reset=1&action=browse&fid=' . $this->_fid . '&gid=' . $this->_gid,
+                                             true, null, false );
+                $this->addElement('button',
+                                  'done', 
+                                  ts('Done'), 
+                                  array('onclick' => "location.href='$url'", 'class' => 'form-submit'));
             }
         }
+        $this->assign('id', $this->_id);
     }
         
     /**
@@ -209,7 +226,7 @@ class CRM_Custom_Form_Option extends CRM_Core_Form
      * @static
      * @access public
      */
-    static function formRule( &$fields, &$files, &$form ) 
+    static function formRule( $fields, $files, $form ) 
     {
         $optionLabel   = CRM_Utils_Type::escape( $fields['label'], 'String' );
         $optionValue   = CRM_Utils_Type::escape( $fields['value'], 'String' );
@@ -358,7 +375,7 @@ SELECT count(*)
         // set values for custom field properties and save
         require_once 'CRM/Core/DAO/OptionValue.php';
         require_once 'CRM/Utils/String.php';
-        $customOption                =& new CRM_Core_DAO_OptionValue();
+        $customOption                = new CRM_Core_DAO_OptionValue();
         $customOption->label         = $params['label'];
         $customOption->name          = CRM_Utils_String::titleToVar( $params['label'] );
         $customOption->weight        = $params['weight'];
@@ -373,11 +390,9 @@ SELECT count(*)
             return;
         }
 
-        if ($this->_action & CRM_Core_Action::UPDATE) {
+        if ($this->_id) {
             $customOption->id = $this->_id;
             CRM_Core_BAO_CustomOption::updateCustomValues($params);
-        }
-        if ($this->_id) {
             $oldWeight = CRM_Core_DAO::getFieldValue( 'CRM_Core_DAO_OptionValue', $this->_id, 'weight', 'id' );
         }
 
@@ -387,7 +402,7 @@ SELECT count(*)
         
         $customOption->option_group_id = $this->_optionGroupID;
         
-        $customField =& new CRM_Core_DAO_CustomField();
+        $customField = new CRM_Core_DAO_CustomField();
         $customField->id = $this->_fid;
         if ( $customField->find( true ) &&
              ( $customField->html_type == 'CheckBox' ||
@@ -450,10 +465,11 @@ SELECT count(*)
              
         CRM_Core_Session::setStatus(ts('Your multiple choice option \'%1\' has been saved', array(1 => $customOption->label)));
         $buttonName = $this->controller->getButtonName( );
-        $session =& CRM_Core_Session::singleton( );
+        $session = CRM_Core_Session::singleton( );
         if ( $buttonName == $this->getButtonName( 'next', 'new' ) ) {
             CRM_Core_Session::setStatus( ts(' You can add another option.') );
-            $session->replaceUserContext(CRM_Utils_System::url('civicrm/admin/custom/group/field/option', 'reset=1&action=add&fid=' . $this->_fid . '&gid=' . $this->_gid));
+            $session->replaceUserContext(CRM_Utils_System::url('civicrm/admin/custom/group/field/option', 
+                                                               'reset=1&action=add&fid=' . $this->_fid . '&gid=' . $this->_gid));
         }
     }
 }

@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -127,8 +127,8 @@ class CRM_Core_Page {
 
         // let the constructor initialize this, should happen only once
         if ( ! isset( self::$_template ) ) {
-            self::$_template =& CRM_Core_Smarty::singleton( );
-            self::$_session  =& CRM_Core_Session::singleton( );
+            self::$_template = CRM_Core_Smarty::singleton( );
+            self::$_session  = CRM_Core_Session::singleton( );
 
         }
 
@@ -180,9 +180,9 @@ class CRM_Core_Page {
             } else {
                 echo $content;
             }
-            exit( );
+            CRM_Utils_System::civiExit( );
         }
-        $config =& CRM_Core_Config::singleton();
+        $config = CRM_Core_Config::singleton();
         $content = self::$_template->fetch( 'CRM/common/'. strtolower($config->userFramework) .'.tpl' );
         echo CRM_Utils_System::theme( 'page', $content, true, $this->_print );
         return;

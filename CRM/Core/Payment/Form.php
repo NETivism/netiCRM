@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -96,7 +96,7 @@ class CRM_Core_Payment_Form {
                    'cc_field'   => true,
                    'attributes' => array( '' => ts( '- select -' ) ) +
                    CRM_Core_PseudoConstant::stateProvince( ),
-                   'is_required'=> true 
+                   'is_required'=> self::checkRequiredStateProvince( $form )
                    );
         
         $form->_fields["billing_postal_code-{$bltID}"] = 
@@ -334,6 +334,37 @@ class CRM_Core_Payment_Form {
             }
         }
     }
-
-}
-
+    
+    /**
+     * function to return state/province is_required = true/false 
+     *
+     */
+    function checkRequiredStateProvince( $form ) 
+    {     
+        // If selected country has possible values for state/province mark the
+        // state/province field as required.
+        require_once 'CRM/Core/DAO/StateProvince.php';
+        $config = CRM_Core_Config::singleton( );
+        $stateProvince = new CRM_Core_DAO_StateProvince( );
+        $stateProvince->country_id = CRM_Utils_Array::value( "billing_country_id-{$form->_bltID}", $form->_submitValues );
+        
+        if ( $stateProvince->count( ) > 0 ) {
+            // check that the state/province data is not excluded by a
+            // limitation in the localisation settings.
+            require_once 'CRM/Core/PseudoConstant.php';
+            $countryIsoCodes = CRM_Core_PseudoConstant::countryIsoCode( );
+            $limitCodes      = $config->provinceLimit( );
+            $limitIds        = array( );
+            foreach ( $limitCodes as $code ) {
+                $limitIds = array_merge( $limitIds, array_keys( $countryIsoCodes, $code ) );
+            }
+            
+            $limitCountryId = CRM_Utils_Array::value( "billing_country_id-{$form->_bltID}", $form->_submitValues );
+            if ( $limitCountryId && in_array( $limitCountryId, $limitIds ) ) {
+                return true;    
+            }
+            return false;
+        } 
+        return false;    
+    }
+  }

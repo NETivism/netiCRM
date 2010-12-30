@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -54,7 +54,7 @@ class CRM_SMS_BAO_History extends CRM_SMS_DAO_History {
      * @static
      */
     static function send( &$contactIds, &$message, $smsNumber ) {
-        $session =& CRM_Core_Session::singleton( );
+        $session = CRM_Core_Session::singleton( );
         $userID  =  $session->get( 'userID' );
         list( $fromDisplayName, 
               $fromSMSNumber ) = CRM_Contact_BAO_Contact_Location::getPhoneDetails( $userID, 'Mobile' );
@@ -65,7 +65,7 @@ class CRM_SMS_BAO_History extends CRM_SMS_DAO_History {
         $message = trim( $message );
 
         // create the meta level record first
-        $history             =& new CRM_SMS_DAO_History( );
+        $history             = new CRM_SMS_DAO_History( );
         $history->message    = $message;
         $history->contact_id = $userID;
         $history->sent_date  = date( 'Ymd' );
@@ -156,7 +156,7 @@ class CRM_SMS_BAO_History extends CRM_SMS_DAO_History {
      */
     public static function deleteContact($id)
     {
-        $dao =& new CRM_SMS_DAO_History();
+        $dao = new CRM_SMS_DAO_History();
         $dao->contact_id = $id;
         $dao->delete();
     }

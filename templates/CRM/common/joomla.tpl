@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -30,7 +30,7 @@
 <div id="crm-container" lang="{$config->lcMessages|truncate:2:"":true}" xml:lang="{$config->lcMessages|truncate:2:"":true}">
     
 {* Only include joomla.css in administrator (backend). Page layout style ids and classes conflict with typical front-end css and break the page layout. *}
-
+{include file="CRM/common/action.tpl"}
 {if $buildNavigation }
     {include file="CRM/common/Navigation.tpl" }
 {/if}
@@ -55,21 +55,23 @@
     </div>
     {/if}
 
-    {if $pageTitle}
-        <h1 class="title">{$pageTitle}</h1>
-    {/if}
-  
 {if $browserPrint}
 {* Javascript window.print link. Used for public pages where we can't do printer-friendly view. *}
-<div id="printer-friendly"><a href="javascript:window.print()" title="{ts}Print this page.{/ts}"><img src="{$config->resourceBase}i/print-icon.png" alt="{ts}Print this page.{/ts}" /></a></div>
+<div id="printer-friendly"><a href="javascript:window.print()" title="{ts}Print this page.{/ts}"><div class="ui-icon ui-icon-print"></div></a></div>
 {else}
 {* Printer friendly link/icon. *}
-<div id="printer-friendly"><a href="{$printerFriendly}" title="{ts}Printer-friendly view of this page.{/ts}"><img src="{$config->resourceBase}i/print-icon.png" alt="{ts}Printer-friendly view of this page.{/ts}" /></a></div>
+<div id="printer-friendly"><a href="{$printerFriendly}" title="{ts}Printer-friendly view of this page.{/ts}"><div class="ui-icon ui-icon-print"></div></a></div>
+{/if}
+
+{if $pageTitle}
+	<div class="crm-title">
+		<h1 class="title">{if $isDeleted}<del>{/if}{$pageTitle}{if $isDeleted}</del>{/if}</h1>
+	</div>    
 {/if}
 
 {*{include file="CRM/common/langSwitch.tpl"}*}
 
-    <div class="spacer"></div>
+    <div class="clear"></div>
 
     {if $localTasks}
         {include file="CRM/common/localNav.tpl"}
@@ -93,6 +95,13 @@
   </tr>
 </table>
 
+{literal}
+<script type="text/javascript">
+cj(function() {
+   cj().crmtooltip(); 
+});
+</script>
+{/literal}
 {* We need to set jquery $ object back to $*}
 <script type="text/javascript">jQuery.noConflict(true);</script>
 </div> {* end crm-container div *}

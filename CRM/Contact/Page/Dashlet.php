@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -51,9 +51,9 @@ class CRM_Contact_Page_Dashlet extends CRM_Core_Page
      */
     function run( ) {
         CRM_Utils_System::setTitle( ts('Dashlets') );
-        
+
         $this->assign( 'admin', CRM_Core_Permission::check( 'administer CiviCRM' ) );
-           
+
         // get all dashlets
         require_once 'CRM/Core/BAO/Dashboard.php';
         $allDashlets = CRM_Core_BAO_Dashboard::getDashlets( false );
@@ -61,25 +61,26 @@ class CRM_Contact_Page_Dashlet extends CRM_Core_Page
         // get dashlets for logged in contact
         $currentDashlets  = CRM_Core_BAO_Dashboard::getContactDashlets( );
         $contactDashlets  = $availableDashlets = array( );
-        
+
         foreach( $currentDashlets as $columnNo => $values ) {
-           foreach ( $values as $dashletID => $isMinimized ) {
+            foreach ( $values as $val => $isMinimized ) {
+                list( $weight, $dashletID ) = explode( '-', $val);
                 $key = "{$dashletID}-{$isMinimized}";
                 $contactDashlets[$columnNo][$key] = array( 'label'       => $allDashlets[$dashletID]['label'],
                                                            'is_reserved' => $allDashlets[$dashletID]['is_reserved'] );                
                 unset( $allDashlets[$dashletID] );
             }
         }
-    
-       foreach ( $allDashlets as $dashletID => $values ) {
+
+        foreach ( $allDashlets as $dashletID => $values ) {
             $key = "{$dashletID}-0";
             $availableDashlets[$key] = array( 'label'       => $values['label'],
                                               'is_reserved' => $values['is_reserved'] );                
         }
-        
+
         $this->assign( 'contactDashlets'  , $contactDashlets   );
         $this->assign( 'availableDashlets', $availableDashlets );
-        
+
         return parent::run( );
     }
 }

@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -29,14 +29,14 @@
 
 {include file="CRM/common/TrackingFields.tpl"}
 
-<div class="contribution_confirmation-page">
+<div class="crm-block crm-contribution-confirm-form-block">
     <div id="help">
         <p>{ts}Please verify the information below carefully. Click <strong>Go Back</strong> if you need to make changes.{/ts}
             {if $contributeMode EQ 'notify' and ! $is_pay_later}
                 {if $paymentProcessor.payment_processor_type EQ 'Google_Checkout'} 
                     {ts}Click the <strong>Google Checkout</strong> button to checkout to Google, where you will select your payment method and complete the contribution.{/ts}
                 {else} 
-                    {ts 1=$paymentProcessor.processorName 2=$button}Click the <strong>%2</strong> button to go to %1, where you will select your payment method and complete the contribution.{/ts}
+                    {ts 1=$paymentProcessor.processorName 2=$button}Click the <strong>%2</strong> button to got to payment page, where you will enter the payment information then complete.{/ts}
                 {/if} 
             {elseif ! $is_monetary or $amount LE 0.0 or $is_pay_later}
                 {ts 1=$button}To complete this transaction, click the <strong>%1</strong> button below.{/ts}
@@ -168,11 +168,11 @@
                 <div class="header-dark">
                     {ts}Billing Name and Address{/ts}
                 </div>
-            	<div class="section no-label billing_name-section">
+            	<div class="crm-section no-label billing_name-section">
             		<div class="content">{$billingName}</div>
             		<div class="clear"></div>
             	</div>
-            	<div class="section no-label billing_address-section">
+            	<div class="crm-section no-label billing_address-section">
             		<div class="content">{$address|nl2br}</div>
             		<div class="clear"></div>
             	</div>
@@ -183,7 +183,7 @@
                 <div class="header-dark">
                     {ts}Your Email{/ts}
                 </div>
-                <div class="section no-label contributor_email-section">
+                <div class="crm-section no-label contributor_email-section">
                 	<div class="content">{$email}</div>
                 	<div class="clear"></div>
                 </div>
@@ -208,7 +208,7 @@
                     {ts}Bank Name{/ts}: {$bank_name}<br />
                 </div>
             {else}
-                <div class="section no-label credit_card_details-section">
+                <div class="crm-section no-label credit_card_details-section">
                     <div class="content">{$credit_card_type}</div>
                 	<div class="content">{$credit_card_number}</div>
                 	<div class="content">{ts}Expires{/ts}: {$credit_card_exp_date|truncate:7:''|crmDate}</div>
@@ -272,7 +272,7 @@
         </fieldset>    
     {/if}
 
-    <div id="crm-submit-buttons">
-        {$form.buttons.html}
+    <div id="crm-submit-buttons" class="crm-submit-buttons">
+        {include file="CRM/common/formButtons.tpl" location="bottom"}
     </div>
 </div>

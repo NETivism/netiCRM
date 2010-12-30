@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -73,20 +73,20 @@ class CRM_Contribute_Page_Premium extends CRM_Core_Page_Basic
             self::$_links = array(
                                   CRM_Core_Action::UPDATE  => array(
                                                                     'name'  => ts('Edit'),
-                                                                    'url'   => CRM_Utils_System::currentPath( ),
-                                                                    'qs'    => 'action=update&id=%%id%%&pid=%%pid%%&reset=1&subPage=AddProductToPage',
+                                                                    'url'   => 'civicrm/admin/contribute/addProductToPage',
+                                                                    'qs'    => 'action=update&id=%%id%%&pid=%%pid%%&reset=1',
                                                                     'title' => ts('Edit Premium') 
                                                                    ),
                                   CRM_Core_Action::PREVIEW => array(
                                                                     'name'  => ts('Preview'),
-                                                                    'url'   =>  CRM_Utils_System::currentPath( ),
-                                                                    'qs'    => 'action=preview&id=%%id%%&pid=%%pid%%&subPage=AddProductToPage',
+                                                                    'url'   => 'civicrm/admin/contribute/addProductToPage',
+                                                                    'qs'    => 'action=preview&id=%%id%%&pid=%%pid%%',
                                                                     'title' => ts('Preview Premium') 
                                                                    ),
                                   CRM_Core_Action::DELETE => array(
                                                                     'name'  => ts('Remove'),
-                                                                    'url'   =>  CRM_Utils_System::currentPath( ),
-                                                                    'qs'    => 'action=delete&id=%%id%%&pid=%%pid%%&subPage=AddProductToPage',                    
+                                                                    'url'   => 'civicrm/admin/contribute/addProductToPage',
+                                                                    'qs'    => 'action=delete&id=%%id%%&pid=%%pid%%',                    
                                                                     'extra' => 'onclick = "if (confirm(\'' . $deleteExtra . '\') ) this.href+=\'&amp;confirmed=1\'; else return false;"',
                                                                    
                                                                     'title' => ts('Disable Premium') 
@@ -95,8 +95,6 @@ class CRM_Contribute_Page_Premium extends CRM_Core_Page_Basic
                                  );
         }
         return self::$_links;
-        
-      
     }
 
     /**
@@ -113,15 +111,21 @@ class CRM_Contribute_Page_Premium extends CRM_Core_Page_Basic
     function run()
     {
         // get the requested action
-        $action = CRM_Utils_Request::retrieve('action', 'String',
-                                              $this, false, 'browse'); // default to 'browse'
-
-        // assign vars to templates
-        $this->assign('action', $action);
-        $id = CRM_Utils_Request::retrieve('id', 'Positive',
-                                          $this, false, 0);
+        $action = CRM_Utils_Request::retrieve( 'action', 'String',
+                                               $this, false, 'browse' ); // default to 'browse'
         
-        $this->edit($action, $id, false, false) ;
+        // assign vars to templates
+        $this->assign( 'action', $action );
+        $id = CRM_Utils_Request::retrieve( 'id', 'Positive',
+                                           $this, false, 0 );
+        $this->assign( 'id', $id );
+
+        $this->edit( $action, $id, false, false );
+
+        // this is special case where we need to call browse to list premium
+        if ( $action == CRM_Core_Action::UPDATE ) {
+            $this->browse( );
+        }
 
         // parent run 
         parent::run();
@@ -140,7 +144,7 @@ class CRM_Contribute_Page_Premium extends CRM_Core_Page_Basic
         require_once 'CRM/Contribute/DAO/Product.php';
         $pageID = CRM_Utils_Request::retrieve('id', 'Positive',
                                               $this, false, 0);
-        $dao =& new CRM_Contribute_DAO_Premium();
+        $dao = new CRM_Contribute_DAO_Premium();
         $dao->entity_table = 'civicrm_contribution_page';
         $dao->entity_id = $pageID; 
         $dao->find(true);
@@ -151,13 +155,13 @@ class CRM_Contribute_Page_Premium extends CRM_Core_Page_Basic
         }
         
         require_once 'CRM/Contribute/DAO/PremiumsProduct.php';
-        $dao =& new CRM_Contribute_DAO_PremiumsProduct();
+        $dao = new CRM_Contribute_DAO_PremiumsProduct();
         $dao->premiums_id = $premiumID;
         $dao->orderBy('weight');
         $dao->find();
 
         while ($dao->fetch()) {
-            $productDAO =& new CRM_Contribute_DAO_Product();
+            $productDAO = new CRM_Contribute_DAO_Product();
             $productDAO->id = $dao->product_id;
             $productDAO->is_active = 1;
            
@@ -181,7 +185,7 @@ class CRM_Contribute_Page_Premium extends CRM_Core_Page_Basic
         }
         
         // Add order changing widget to selector
-        $returnURL = CRM_Utils_System::url( 'civicrm/admin/contribute', "reset=1&action=update&id={$pageID}&subPage=Premium" );
+        $returnURL = CRM_Utils_System::url( 'civicrm/admin/contribute/premium', "reset=1&action=update&id={$pageID}" );
         $filter    = "premiums_id = {$premiumID}";
         require_once 'CRM/Utils/Weight.php';
         CRM_Utils_Weight::addOrder( $premiums, 'CRM_Contribute_DAO_PremiumsProduct',

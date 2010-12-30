@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -24,7 +24,8 @@
  +--------------------------------------------------------------------+
 *}
 {* Event Import Wizard - Data Mapping table used by MapFields.tpl and Preview.tpl *}
- <div id="map-field">
+<div class="crm-block crm-form-block crm-event-import-maptable-form-block"> 
+<div id="map-field">
     {strip}
     <table>
     {if $loadedMapping}
@@ -79,10 +80,14 @@
     	{/if}
     	<span>{$form.saveMapping.html} &nbsp;&nbsp; {$form.saveMapping.label}</span>
     	<div id="saveDetails" class="form-item">
-    	      <dl>
-    		   <dt>{$form.saveMappingName.label}</dt><dd>{$form.saveMappingName.html}</dd>
-    		   <dt>{$form.saveMappingDesc.label}</dt><dd>{$form.saveMappingDesc.html}</dd>
-    	      </dl>
+	   <table class="form-layout">
+    	      <tr class="crm-event_map_table-form-block-saveMappingName">
+    		   <td class="label">{$form.saveMappingName.label}</td><td>{$form.saveMappingName.html}</td>
+	      </tr>
+	      <tr class="crm-event_map_table-form-block-saveMappingDesc">	   
+    		   <td class="label">{$form.saveMappingDesc.label}</td><td>{$form.saveMappingDesc.html}</td>
+    	      </tr>
+	   </table>
     	</div>
     	<script type="text/javascript">
              {if $mappingDetailsError }
@@ -109,3 +114,4 @@
     </div>
     {/if}
  </div>
+</div>

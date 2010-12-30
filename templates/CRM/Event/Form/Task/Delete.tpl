@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -24,16 +24,22 @@
  +--------------------------------------------------------------------+
 *}
 {* Confirmation of participation deletes  *}
-<div class="messages status">
-  <dl>
-    <dt><img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}" /></dt>
-    <dd>
-        <p>{ts}Are you sure you want to delete the selected participations? This delete operation cannot be undone and will delete all transactions and activity associated with these participations.{/ts}</p>
-        <p>{include file="CRM/Event/Form/Task.tpl"}</p>
-    </dd>
-  </dl>
+<div class="crm-block crm-form-block crm-event-delete-form-block">
+<div class="crm-submit-buttons">
+ {include file="CRM/common/formButtons.tpl" location="top"}
 </div>
+<div class="messages status">
+  <div class="icon inform-icon"></div>
+  <div> 
+  	<p>{ts}Are you sure you want to delete the selected participations? This delete operation cannot be undone and will delete all transactions and activity associated with these participations.{/ts}</p>
+        <p>{include file="CRM/Event/Form/Task.tpl"}</p>
+  </div>
+</div>
+{if $additionalParticipants}
+    {$form.delete_participant.html}
+{/if}
 <p>
-<div class="form-item">
- {$form.buttons.html}
+<div class="crm-submit-buttons">
+ {include file="CRM/common/formButtons.tpl" location="bottom"}
+</div>
 </div>

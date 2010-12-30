@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -38,9 +38,9 @@
                 </tr>
                 {counter start=0 skip=1 print=false}
                 {foreach from=$event_rows item=row}
-                    <tr id='rowid{$row.participant_id}' class="{cycle values="odd-row,even-row"}{if $row.status eq Cancelled} disabled{/if}">
-                       <td><a href="{crmURL p='civicrm/event/info' q="reset=1&id=`$row.event_id`&context=dashboard"}">{$row.event_title}</a></td>
-                       <td>
+                    <tr id='rowid{$row.participant_id}' class=" crm-event-participant-id_{$row.participant_id} {cycle values="odd-row,even-row"}{if $row.status eq Cancelled} disabled{/if}">
+                       <td class="crm-participant-event-id_{$row.event_id}"><a href="{crmURL p='civicrm/event/info' q="reset=1&id=`$row.event_id`&context=dashboard"}">{$row.event_title}</a></td>
+                       <td class="crm-participant-event_start_date">
                             {$row.event_start_date|crmDate}
                             {if $row.event_end_date}
                                 &nbsp; - &nbsp;
@@ -52,8 +52,8 @@
                                 {/if}
                             {/if}
                        </td>
-                       <td>{$row.participant_status_id}</td>
-                       <td>
+                       <td class="crm-participant-participant_status">{$row.participant_status}</td>
+                       <td class="crm-participant-showConfirmUrl">
                             {if $row.showConfirmUrl}
                                 <a href="{crmURL p='civicrm/event/confirm' q="reset=1&participantId=`$row.participant_id`"}">{ts}Confirm Registration{/ts}</a>                            
                             {/if}
@@ -64,12 +64,9 @@
         {/strip}
     {else}
         <div class="messages status">
-            <dl>
-                <dt><img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}" /></dt>
-                <dd>
-                    {ts}You are not registered for any current or upcoming Events.{/ts}
-                </dd>
-            </dl>
+           <div class="icon inform-icon"></div>&nbsp;
+                 {ts}You are not registered for any current or upcoming Events.{/ts}
+               
         </div>
     {/if}
 </div>

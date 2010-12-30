@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -32,7 +32,7 @@
             <legend>{$membershipBlock.renewal_title}</legend>
         {/if}
         {if $membershipBlock.renewal_text}
-            <div id="membership-intro" class="section membership_renewal_intro-section">
+            <div id="membership-intro" class="crm-section membership_renewal_intro-section">
                 <p>{$membershipBlock.renewal_text}</p>
             </div> 
         {/if}
@@ -42,7 +42,7 @@
             <legend>{$membershipBlock.new_title}</legend>
         {/if}
         {if $membershipBlock.new_text}
-            <div id="membership-intro" class="section membership_new_intro-section">
+            <div id="membership-intro" class="crm-section membership_new_intro-section">
                 <p>{$membershipBlock.new_text}</p>
             </div> 
         {/if}

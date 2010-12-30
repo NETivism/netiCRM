@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -23,13 +23,13 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
+<div class="crm-block crm-form-block crm-url-form-block">
 <div id="help">
     {ts}These settings define the URLs used to access CiviCRM resources (CSS files, Javascript files, images, etc.). Default values will be inserted the first time you access CiviCRM - based on the CIVICRM_UF_BASEURL specified in your installation's settings file (civicrm.settings.php).{/ts}
 </div>
-<div class="form-item">
-<fieldset>
+<div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>
 <table class="form-layout">
-    <tr>
+    <tr class="crm-url-form-block-userFrameworkResourceURL">
         <td class="label">
             {$form.userFrameworkResourceURL.label}
         </td>
@@ -37,7 +37,7 @@
             {$form.userFrameworkResourceURL.html|crmReplace:class:'huge40'} {help id='id-resource_url'}
         </td>
     </tr>
-    <tr>
+    <tr class="crm-url-form-block-imageUploadURL">
         <td class="label">
             {$form.imageUploadURL.label}
         </td>
@@ -45,7 +45,7 @@
             {$form.imageUploadURL.html|crmReplace:class:'huge40'} {help id='id-image_url'}
         </td>
     </tr>
-    <tr>
+    <tr class="crm-url-form-block-customCSSURL">
         <td class="label">
             {$form.customCSSURL.label}
         </td>
@@ -53,7 +53,7 @@
             {$form.customCSSURL.html|crmReplace:class:'huge40'} {help id='id-css_url'}
         </td>
     </tr>
-    <tr>
+    <tr class="crm-url-form-block-enableSSL">
         <td class="label">
             {$form.enableSSL.label}
         </td>
@@ -62,7 +62,5 @@
         </td>
     </tr>
 </table>
-</fieldset>
+<div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
 </div>
-<div class="html-adjust">{$form.buttons.html}</div>
-

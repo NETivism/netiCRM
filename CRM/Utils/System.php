@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -53,7 +53,7 @@ class CRM_Utils_System {
      * @access public
      */
     static function makeURL( $urlVar, $includeReset = false, $includeForce = true ) {
-        $config   =& CRM_Core_Config::singleton( );
+        $config   = CRM_Core_Config::singleton( );
 
         if ( ! isset( $_GET[$config->userFrameworkURLVar] ) ) {
             return '';
@@ -176,7 +176,7 @@ class CRM_Utils_System {
             $query = htmlentities( $query );
         }
 
-        $config   =& CRM_Core_Config::singleton( );
+        $config   = CRM_Core_Config::singleton( );
         require_once( str_replace( '_', DIRECTORY_SEPARATOR, $config->userFrameworkClass ) . '.php' );
         return eval( 'return ' .
                      $config->userFrameworkClass .
@@ -191,20 +191,20 @@ class CRM_Utils_System {
     }
 
     function permissionDenied( ) {
-        $config   =& CRM_Core_Config::singleton( );
+        $config   = CRM_Core_Config::singleton( );
         require_once( str_replace( '_', DIRECTORY_SEPARATOR, $config->userFrameworkClass ) . '.php' );
         return eval( "return {$config->userFrameworkClass}::permissionDenied( );" );
     }
 
     static function logout( ) {
-        $config   =& CRM_Core_Config::singleton( );
+        $config   = CRM_Core_Config::singleton( );
         require_once( str_replace( '_', DIRECTORY_SEPARATOR, $config->userFrameworkClass ) . '.php' );
         return eval( "return {$config->userFrameworkClass}::logout( );" );
     }
 
     // this is a very drupal specific function for now
     static function updateCategories( ) {
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
         if ( $config->userFramework == 'Drupal' ) {
             require_once 'CRM/Utils/System/Drupal.php';
             CRM_Utils_System_Drupal::updateCategories( );
@@ -218,7 +218,7 @@ class CRM_Utils_System {
      * @access public
      */
     static function currentPath( ) {
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
         return trim( CRM_Utils_Array::value($config->userFrameworkURLVar,$_GET), '/' );
     }
 
@@ -254,7 +254,7 @@ class CRM_Utils_System {
      * @access public
      */
     function setTitle( $title, $pageTitle = null ) {
-        $config   =& CRM_Core_Config::singleton( );
+        $config   = CRM_Core_Config::singleton( );
         require_once( str_replace( '_', DIRECTORY_SEPARATOR, $config->userFrameworkClass ) . '.php' );
         return eval( $config->userFrameworkClass . '::setTitle( $title, $pageTitle );' );
     }
@@ -272,7 +272,7 @@ class CRM_Utils_System {
     static function setUserContext( $names, $default = null ) {
         $url = $default;
 
-        $session =& CRM_Core_Session::singleton();
+        $session = CRM_Core_Session::singleton();
         $referer = CRM_Utils_Array::value( 'HTTP_REFERER', $_SERVER );
 
         if ( $referer && ! empty( $names ) ) {
@@ -322,7 +322,7 @@ class CRM_Utils_System {
         // this is kinda hackish but not sure how to do it right
         $url = str_replace( '&amp;', '&', $url );
         header( 'Location: ' . $url );
-        exit( );
+        self::civiExit( );
     }
 
     /**
@@ -336,7 +336,7 @@ class CRM_Utils_System {
      * @static
      */
     static function appendBreadCrumb( $breadCrumbs ) {
-        $config   =& CRM_Core_Config::singleton( );
+        $config   = CRM_Core_Config::singleton( );
         require_once( str_replace( '_', DIRECTORY_SEPARATOR, $config->userFrameworkClass ) . '.php' );
         return eval( 'return ' . $config->userFrameworkClass . '::appendBreadCrumb( $breadCrumbs );' );
     }
@@ -349,7 +349,7 @@ class CRM_Utils_System {
      * @static
      */
     static function resetBreadCrumb( ) {
-        $config   =& CRM_Core_Config::singleton( );
+        $config   = CRM_Core_Config::singleton( );
         require_once( str_replace( '_', DIRECTORY_SEPARATOR, $config->userFrameworkClass ) . '.php' );
         return eval( 'return ' . $config->userFrameworkClass . '::resetBreadCrumb( );' );
     }
@@ -364,7 +364,7 @@ class CRM_Utils_System {
      * @static
      */
     static function addHTMLHead( $bc ) {
-        $config   =& CRM_Core_Config::singleton( );
+        $config   = CRM_Core_Config::singleton( );
         require_once( str_replace( '_', DIRECTORY_SEPARATOR, $config->userFrameworkClass ) . '.php' );
         return eval( 'return ' . $config->userFrameworkClass . '::addHTMLHead( $bc );' );
     }
@@ -379,7 +379,7 @@ class CRM_Utils_System {
      * @static
      */
     static function postURL( $action ) {
-        $config   =& CRM_Core_Config::singleton( );
+        $config   = CRM_Core_Config::singleton( );
         require_once( str_replace( '_', DIRECTORY_SEPARATOR, $config->userFrameworkClass ) . '.php' );
         return eval( 'return ' . $config->userFrameworkClass . '::postURL( $action  ); ' );
     }
@@ -392,7 +392,7 @@ class CRM_Utils_System {
      * @static 
      */ 
     static function mapConfigToSSL( ) {
-        $config   =& CRM_Core_Config::singleton( ); 
+        $config   = CRM_Core_Config::singleton( ); 
         $config->userFrameworkResourceURL = str_replace( 'http://', 'https://', 
                                                          $config->userFrameworkResourceURL );
         $config->resourceBase = $config->userFrameworkResourceURL;
@@ -410,14 +410,14 @@ class CRM_Utils_System {
      * @static
      */
     static function baseURL() {
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
         return $config->userFrameworkBaseURL;
     }
 
     static function authenticateAbort( $message, $abort ) {
         if ( $abort ) {
             echo $message;
-            exit( 0 );
+            self::civiExit( 0 );
         } else {
             return false;
         }
@@ -481,7 +481,7 @@ class CRM_Utils_System {
             // lets store contact id and user id in session
             list( $userID, $ufID, $randomNumber ) = $result;
             if ( $userID && $ufID ) {
-                $session =& CRM_Core_Session::singleton( );
+                $session = CRM_Core_Session::singleton( );
                 $session->set( 'ufID'  , $ufID );
                 $session->set( 'userID', $userID );
             } else {
@@ -505,7 +505,7 @@ class CRM_Utils_System {
      * @static 
      */ 
     static function authenticate( $name, $password ) {
-        $config =& CRM_Core_Config::singleton( ); 
+        $config = CRM_Core_Config::singleton( ); 
         require_once( str_replace( '_', DIRECTORY_SEPARATOR, $config->userFrameworkClass ) . '.php' );
         return  
             eval( 'return ' . $config->userFrameworkClass . '::authenticate($name, $password);' ); 
@@ -521,7 +521,7 @@ class CRM_Utils_System {
      * @static  
      */  
     static function setUFMessage( $message ) {
-        $config =& CRM_Core_Config::singleton( );  
+        $config = CRM_Core_Config::singleton( );  
         require_once( str_replace( '_', DIRECTORY_SEPARATOR, $config->userFrameworkClass ) . '.php' );
         return   
             eval( 'return ' . $config->userFrameworkClass . '::setMessage( $message );' );
@@ -630,15 +630,21 @@ class CRM_Utils_System {
 
         if ( $output ) {
             print $buffer;
-            exit( );
+            self::civiExit( );
         }
     }
 
-    static function xMemory( $title = null ) {
-        $mem = (float ) xdebug_memory_usage( ) / (float ) ( 1024 * 1024 );
+    static function xMemory( $title = null, $log = false ) {
+        $mem = (float ) xdebug_memory_usage( ) / (float ) ( 1024 );
         $mem = number_format( $mem, 5 ) . ", " . time( );
-        echo "$title: $mem<p>";
-        flush( );
+        if ( $log ) {
+            echo "<p>$title: $mem<p>";
+            flush( );
+            CRM_Core_Error::debug_var( $title, $mem );
+        } else {
+            echo "<p>$title: $mem<p>";
+            flush( );
+        }
     }
 
     static function fixURL( $url ) {
@@ -712,7 +718,7 @@ class CRM_Utils_System {
                 $request->addCookie( $name, $value );
             }
         }
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
         if ( $config->userFramework == 'Standalone' ) {
             session_write_close();
         }
@@ -984,7 +990,7 @@ class CRM_Utils_System {
      */
     static function getUFLocale()
     {
-        $config =& CRM_Core_Config::singleton();
+        $config = CRM_Core_Config::singleton();
         require_once(str_replace('_', DIRECTORY_SEPARATOR, $config->userFrameworkClass) . '.php');
         return eval("return {$config->userFrameworkClass}::getUFLocale();");
     }
@@ -1013,7 +1019,7 @@ class CRM_Utils_System {
             $request->setBasicAuth( $_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'] );
         } 
 
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
         if ( $config->userFramework == 'Standalone' ) {
             session_write_close();
         }
@@ -1064,4 +1070,125 @@ class CRM_Utils_System {
 
         return true;
     }
+
+    static function civiExit( $status = 0 ) {
+        // move things to CiviCRM cache as needed
+        require_once 'CRM/Core/Session.php';
+        CRM_Core_Session::storeSessionObjects( );
+        
+        exit( $status );
+    }
+
+    /**
+     * Reset the memory cache, typically memcached
+     */
+    static function flushCache( $daoName = null ) {
+        // flush out all cache entries so we can reload new data
+        // a bit aggressive, but livable for now
+        require_once 'CRM/Utils/Cache.php';
+        $cache =& CRM_Utils_Cache::singleton( );
+        $cache->flush( );
+    }
+
+    /**
+     * load cms bootstrap
+     *
+     * @param $name string  optional username for login
+     * @param $pass string  optional password for login
+     */
+    static function loadBootStrap($name = null, $pass = null)
+    {
+        $config = CRM_Core_Config::singleton();
+        require_once(str_replace('_', DIRECTORY_SEPARATOR, $config->userFrameworkClass) . '.php');
+        return call_user_func("{$config->userFrameworkClass}::loadBootStrap", $name, $pass);
+    }
+    
+    /**
+     * check is user logged in.
+     *
+     * @return boolean.
+     */
+    public static function isUserLoggedIn( ) {
+        $config = CRM_Core_Config::singleton();
+        require_once(str_replace('_', DIRECTORY_SEPARATOR, $config->userFrameworkClass) . '.php');
+        return eval('return '. $config->userFrameworkClass . '::isUserLoggedIn( );');
+    }
+    
+    /**
+     * Get current logged in user id.
+     *
+     * @return int ufId, currently logged in user uf id.
+     */
+    public static function getLoggedInUfID( ) {
+        $config = CRM_Core_Config::singleton( );
+        require_once(str_replace('_', DIRECTORY_SEPARATOR, $config->userFrameworkClass) . '.php');
+        return eval('return '. $config->userFrameworkClass . '::getLoggedInUfID( );');
+    }
+
+    static function baseCMSURL( ) {
+        static $_baseURL = null;
+        if ( ! $_baseURL ) {
+            $config =& CRM_Core_Config::singleton( );
+            $_baseURL = $userFrameworkBaseURL = $config->userFrameworkBaseURL;
+
+            if ( $config->userFramework == 'Joomla' ) {
+                // gross hack
+                // we need to remove the administrator/ from the end
+                $_baseURL = str_replace( "/administrator/", "/", $userFrameworkBaseURL );
+            } else {
+                // Drupal setting
+                global $civicrm_root;
+                if ( strpos( $civicrm_root,
+                             DIRECTORY_SEPARATOR . 'sites' .
+                             DIRECTORY_SEPARATOR . 'all'   .
+                             DIRECTORY_SEPARATOR . 'modules' ) === false ) {
+                    $startPos = strpos( $civicrm_root,
+                                        DIRECTORY_SEPARATOR . 'sites' . DIRECTORY_SEPARATOR );
+                    $endPos   = strpos( $civicrm_root,
+                                        DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR );
+                    if ( $startPos && $endPos ) {
+                        // if component is in sites/SITENAME/modules
+                        $siteName = substr( $civicrm_root,
+                                            $startPos + 7,
+                                            $endPos - $startPos - 7 );
+                        
+                        $_baseURL = $userFrameworkBaseURL . "sites/$siteName/";
+                    }
+                }
+            }
+        }
+        return $_baseURL;
+    }
+
+    static function relativeURL( $url ) {
+        // check if url is relative, if so return immediately
+        if ( substr( $url, 0, 4 ) != 'http' ) {
+            return $url;
+        }
+
+        // make everything relative from the baseFilePath
+        $baseURL = self::baseCMSURL( );
+
+        // check if baseURL is a substr of $url, if so
+        // return rest of string
+        if ( substr( $url, 0, strlen( $baseURL ) ) == $baseURL ) {
+            return substr( $url, strlen( $baseURL ) );
+        }
+        
+        // return the original value
+        return $url;
+    }
+
+    static function absoluteURL( $url ) {
+        // check if url is already absolute, if so return immediately
+        if ( substr( $url, 0, 4 ) == 'http' ) {
+            return $url;
+        }
+
+        // make everything absolute from the baseFileURL
+        $baseURL = self::baseCMSURL( );
+
+        return $baseURL . $url;
+    }
+    
 }

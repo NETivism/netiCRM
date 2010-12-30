@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -191,12 +191,24 @@ function selectValue( val ) {
     {else if $editor eq "tinymce"}
         {literal}
         cj( function( ) {
-            cj("#"+ html_message).keypress( function( ) {
-               if ( isMailing ) { 
-                    verify();
-               }
-               
-            });
+	if ( isMailing ) { 
+ 	  cj('div.html').hover( 
+	  function( ) {
+	     if ( cj('#'+ html_message).tinymce() ) {
+	     cj('#'+ html_message).tinymce().onKeyUp.add(function() {
+ 	        verify( );
+  	     });
+	     }
+          },
+	  function( ) {
+	     if ( cj('#'+ html_message).tinymce() ) {
+	       if ( tinyMCE.get(html_message).getContent() ) {
+                 verify( );
+               } 
+	     }
+          }
+	  );
+        }
         });
         {/literal}
     {/if}
@@ -313,5 +325,47 @@ function selectValue( val ) {
         return false;
     }
 
+    cj(function() {
+        if ( !cj().find('div.crm-error').text() ) {            
+            setSignature( );
+        }
+
+        cj("#fromEmailAddress").change( function( ) {
+            setSignature( );
+        });
+    });
+    function setSignature( ) {
+        var emailID = cj("#fromEmailAddress").val( );
+        if ( !isNaN( emailID ) ) {
+            var dataUrl = {/literal}"{crmURL p='civicrm/ajax/signature' h=0 }"{literal};
+            cj.post( dataUrl, {emailID: emailID}, function( data ) {
+                var editor     = {/literal}"{$editor}"{literal};
+                
+                if ( data.signature_text ) {
+                    // get existing text & html and append signatue
+                    var textMessage =  cj("#"+ text_message).val( ) + '\n\n--\n' + data.signature_text;
+
+                    // append signature
+                    cj("#"+ text_message).val( textMessage ); 
+                }
+                
+                if ( data.signature_html ) {
+                    var htmlMessage =  cj("#"+ html_message).val( ) + '<br/><br/>--<br/>' + data.signature_html;
+
+                    // set wysiwg editor
+                    if ( editor == "ckeditor" ) {
+                        oEditor = CKEDITOR.instances[html_message];
+                        var htmlMessage = oEditor.getData( ) + '<br/><br/>--' + data.signature_html;
+                        oEditor.setData( htmlMessage  );
+                    } else if ( editor == "tinymce" ) {
+                        cj('#'+ html_message).tinymce().execCommand('mceSetContent',false, htmlMessage );
+                    } else {	
+                        cj("#"+ html_message).val( htmlMessage );
+                    }
+                }
+
+            }, 'json'); 
+        } 
+    }
 </script>
 {/literal}

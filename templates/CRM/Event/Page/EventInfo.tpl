@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -25,16 +25,23 @@
 *}
 {* this template is used for displaying event information *}
 
-<div class="vevent">
+{if $registerClosed }
+<div class="spacer"></div>
+<div class="messages status">
+  <div class="icon inform-icon"></div>
+     &nbsp;{ts}Registration is closed for this event{/ts}
+  </div>
+{/if}
+<div class="vevent crm-block crm-event-info-form-block">
 	<div class="event-info">
 	
 	{if $event.summary}
-	    <div class="section event_summary-section">{$event.summary}</div>
+	    <div class="crm-section event_summary-section">{$event.summary}</div>
 	{/if}
 	{if $event.description}
-	    <div class="section event_description-section summary">{$event.description}</div>
+	    <div class="crm-section event_description-section summary">{$event.description}</div>
 	{/if}
-	<div class="section event_date_time-section">
+	<div class="crm-section event_date_time-section">
 	    <div class="label"><label>{ts}When{/ts}</label></div>
 	    <div class="content">
             <abbr class="dtstart" title="{$event.event_start_date|crmDate}">
@@ -59,7 +66,7 @@
 	{if $isShowLocation}
 
         {if $location.address.1}
-            <div class="section event_address-section">
+            <div class="crm-section event_address-section">
                 <div class="label"><label>{ts}Location{/ts}</label></div>
                 <div class="content">{$location.address.1.display|nl2br}</div>
                 <div class="clear"></div>
@@ -69,7 +76,7 @@
 	    {if ( $event.is_map && $config->mapAPIKey && 
 	        ( is_numeric($location.address.1.geo_code_1)  || 
 	        ( $config->mapGeoCoding && $location.address.1.city AND $location.address.1.state_province ) ) ) }
-	        <div class="section event_map-section">
+	        <div class="crm-section event_map-section">
 	            <div class="content">
                     {assign var=showDirectly value="1"}
                     {if $mapProvider eq 'Google'}
@@ -87,7 +94,7 @@
 
 
 	{if $location.phone.1.phone || $location.email.1.email}
-	    <div class="section event_contact-section">
+	    <div class="crm-section event_contact-section">
 	        <div class="label"><label>{ts}Contact{/ts}</label></div>
 	        <div class="content">
 	            {* loop on any phones and emails for this event *}
@@ -110,7 +117,7 @@
 
     
 	{if $event.is_monetary eq 1 && $feeBlock.value}
-	    <div class="section event_fees-section">
+	    <div class="crm-section event_fees-section">
 	        <div class="label"><label>{$event.fee_label}</label></div>
 	        <div class="content">
 	            <table class="form-layout-compressed fee_block-table">
@@ -122,8 +129,8 @@
 	                        {assign var="lClass" value="fee_level-label"}
 	                    {/if}
 	                    <tr>
-	                        <td class="{$lClass}">{$feeBlock.label.$idx}</td>
-	                        <td{if $feeBlock.value.$idx} class="fee_amount-value right"{/if}>{$feeBlock.value.$idx|crmMoney}</td>
+	                        <td class="{$lClass} crm-event-label">{$feeBlock.label.$idx}</td>
+	                        <td class="fee_amount-value right">{$feeBlock.value.$idx|crmMoney}</td>
 	                    </tr>
 	                {/foreach}
 	            </table>
@@ -137,7 +144,7 @@
         
 	{if $allowRegistration}
         <div class="action-link section register_link-section">
-            <strong><a href="{$registerURL}" title="{$registerText}">&raquo; {$registerText}</a></strong>
+            <a href="{$registerURL}" title="{$registerText}" class="button crm-register-button"><span>{$registerText}</span></a>
         </div>
     {/if}
     { if $event.is_public }

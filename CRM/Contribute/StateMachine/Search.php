@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -68,7 +68,9 @@ class CRM_Contribute_StateMachine_Search extends CRM_Core_StateMachine
         } else {
             $this->_pages[$task] = null;
         }
-
+        if ( $result ) {
+            $this->_pages['CRM_Contribute_Form_Task_Result'] = null;
+        }
         $this->addSequentialPages( $this->_pages, $action );
     }
 
@@ -95,43 +97,7 @@ class CRM_Contribute_StateMachine_Search extends CRM_Core_StateMachine
             $value = $this->_controller->get( 'task' );
         }
         $this->_controller->set( 'task', $value );
-        $result = false;
-        switch ( $value ) {
-        case CRM_Contribute_Task::DELETE_CONTRIBUTIONS:
-            $task   = 'CRM_Contribute_Form_Task_Delete';
-            break;
-
-        case CRM_Contribute_Task::EXPORT_CONTRIBUTIONS:
-            $task   = array('CRM_Export_Form_Select',
-                            'CRM_Export_Form_Map');
-            break;
-
-        case CRM_Contribute_Task::EMAIL_CONTACTS:
-            $task   = array('CRM_Contribute_Form_Task_Email',
-                            'CRM_Contribute_Form_Task_Result');
-            break;
-
-        case CRM_Contribute_Task::UPDATE_STATUS:
-            $task   = array('CRM_Contribute_Form_Task_Status',
-                            'CRM_Contribute_Form_Task_Result');
-            break;
-
-        case CRM_Contribute_Task::BATCH_CONTRIBUTIONS:
-            $task   = array( 'CRM_Contribute_Form_Task_PickProfile',
-                             'CRM_Contribute_Form_Task_Batch',
-                             'CRM_Contribute_Form_Task_Result');
-            break;
-
-        case CRM_Contribute_Task::PDF_RECEIPT:
-            $task = 'CRM_Contribute_Form_Task_PDF';
-            break;
-
-        default: // the print task is the default and catch=all task
-            $task = 'CRM_Contribute_Form_Task_Print';
-            break;
-        }
-
-        return array( $task, $result );
+        return CRM_Contribute_Task::getTask( $value );
     }
 
     /**

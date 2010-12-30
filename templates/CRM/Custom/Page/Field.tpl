@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -47,6 +47,7 @@
             <th>{ts}Req?{/ts}</th>
             <th>{ts}Enabled?{/ts}</th>
             <th></th>
+	    <th class="hiddenElement"></th>
         </tr>
         </thead>
         <tbody>
@@ -67,18 +68,16 @@
         {/strip}
         
         <div class="action-link">
-            <a href="{crmURL q="reset=1&action=add&gid=$gid"}" id="newCustomField" class="button"><span>&raquo; {ts}New Custom Field{/ts}</span></a>
+            <a href="{crmURL p='civicrm/admin/custom/group/field/add' q="reset=1&action=add&gid=$gid"}" id="newCustomField" class="button"><span><div class="icon add-icon"></div>{ts}Add Custom Field{/ts}</span></a>
         </div>
      </div>
 
     {else}
         {if $action eq 16}
         <div class="messages status">
-        <dl>
-        <dt><img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}"/></dt>
-        {capture assign=crmURL}{crmURL p='civicrm/admin/custom/group/field q="action=add&reset=1&gid=$gid"}{/capture}
-        <dd>{ts 1=$groupTitle 2=$crmURL}There are no custom fields for custom group '%1', <a href='%2'>add one</a>.{/ts}</dd>
-        </dl>
+        <img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}"/>
+        {capture assign=crmURL}{crmURL p='civicrm/admin/custom/group/field/add' q="action=add&reset=1&gid=$gid"}{/capture}
+        {ts 1=$groupTitle 2=$crmURL}There are no custom fields for custom group '%1', <a href='%2'>add one</a>.{/ts}
         </div>
         {/if}
     {/if}

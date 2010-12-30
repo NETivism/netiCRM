@@ -1,7 +1,7 @@
 <?php
 /*
 +--------------------------------------------------------------------+
-| CiviCRM version 3.1                                                |
+| CiviCRM version 3.3                                                |
 +--------------------------------------------------------------------+
 | Copyright CiviCRM LLC (c) 2004-2010                                |
 +--------------------------------------------------------------------+
@@ -79,7 +79,7 @@ class CRM_Core_DAO_UFField extends CRM_Core_DAO
      * @var boolean
      * @static
      */
-    static $_log = false;
+    static $_log = true;
     /**
      * Unique table ID
      *
@@ -128,6 +128,12 @@ class CRM_Core_DAO_UFField extends CRM_Core_DAO
      * @var text
      */
     public $help_post;
+    /**
+     * Description and/or help text to display before this field.
+     *
+     * @var text
+     */
+    public $help_pre;
     /**
      * In what context(s) is this field visible.
      *
@@ -254,6 +260,11 @@ class CRM_Core_DAO_UFField extends CRM_Core_DAO
                     'name' => 'help_post',
                     'type' => CRM_Utils_Type::T_TEXT,
                     'title' => ts('Help Post') ,
+                ) ,
+                'help_pre' => array(
+                    'name' => 'help_pre',
+                    'type' => CRM_Utils_Type::T_TEXT,
+                    'title' => ts('Help Pre') ,
                 ) ,
                 'visibility' => array(
                     'name' => 'visibility',

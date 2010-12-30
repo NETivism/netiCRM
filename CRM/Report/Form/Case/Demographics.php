@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -179,20 +179,9 @@ class CRM_Report_Form_Case_Demographics extends CRM_Report_Form {
                                         ), 
                                  ), 
                           ),
-                   
-                   'civicrm_tag' => 
-                   array( 'dao'     => 'CRM_Core_DAO_Tag',
-                          'filters' =>             
-                          array( 'tid' => 
-                                 array( 'name'         => 'tag_id',
-                                        'title'        => ts( 'Tag' ),
-                                        'tag'          => true,
-                                        'operatorType' => CRM_Report_Form::OP_MULTISELECT,
-                                        'options'      => CRM_Core_PseudoConstant::tag( ) 
-                                        ), 
-                                 ), 
-                          ),
                    );
+
+        $this->_tagFilter = true;
 
         $open_case_val = CRM_Core_OptionGroup::getValue('activity_type', 'Open Case', 'name' );
 		$crmDAO =& CRM_Core_DAO::executeQuery( "SELECT cg.table_name, cg.extends AS ext, cf.label, cf.column_name FROM civicrm_custom_group cg INNER JOIN civicrm_custom_field cf ON cg.id = cf.custom_group_id
@@ -257,7 +246,7 @@ where (cg.extends='Contact' OR cg.extends='Individual' OR cg.extends_entity_colu
         $this->_select = "SELECT " . implode( ', ', $select ) . " ";
     }
 
-    static function formRule( &$fields, &$files, $self ) {  
+    static function formRule( $fields, $files, $self ) {  
         $errors = $grouping = array( );
         return $errors;
     }
@@ -275,7 +264,7 @@ where (cg.extends='Contact' OR cg.extends='Individual' OR cg.extends_entity_colu
         ";
             
 		foreach($this->_columns as $t => $c) {
-			if (substr($t, 0, 13) == 'civicrm_value') {
+			if (substr($t, 0, 13) == 'civicrm_value' || substr($t, 0, 12) == 'custom_value') {
                 $this->_from .= " LEFT JOIN $t {$this->_aliases[$t]} ON {$this->_aliases[$t]}.entity_id = ";
                 $this->_from .= ($c['ext'] == 'Activity') ? "{$this->_aliases['civicrm_activity']}.id" : "{$this->_aliases['civicrm_contact']}.id";
 			}
@@ -338,12 +327,11 @@ where (cg.extends='Contact' OR cg.extends='Individual' OR cg.extends_entity_colu
             }
         }
         
-        if ( empty( $clauses ) ) {
-            $this->_where = "WHERE ( 1 ) ";
-        } else {
-             
-            $this->_where = "WHERE " . implode( ' AND ', $clauses );
-        }
+        $clauses[] = "(({$this->_aliases['civicrm_case']}.is_deleted = 0) OR ({$this->_aliases['civicrm_case']}.is_deleted Is Null))";
+        $clauses[] = "(({$this->_aliases['civicrm_activity']}.is_deleted = 0) OR ({$this->_aliases['civicrm_activity']}.is_deleted Is Null))";
+        $clauses[] = "(({$this->_aliases['civicrm_activity']}.is_current_revision = 1) OR ({$this->_aliases['civicrm_activity']}.is_deleted Is Null))";
+	
+        $this->_where = "WHERE " . implode( ' AND ', $clauses );
         
     }
 
@@ -405,7 +393,7 @@ where (cg.extends='Contact' OR cg.extends='Individual' OR cg.extends_entity_colu
 
 			// handle custom fields
 			foreach($row as $k => $r) {
-				if (substr($k, 0, 13) == 'civicrm_value') {
+				if (substr($k, 0, 13) == 'civicrm_value' || substr($k, 0, 12) == 'custom_value') {
 					if ( $r || $r=='0' ) {
 						if ($newval = $this->getCustomFieldLabel( $k, $r )) {
 							$rows[$rowNum][$k] = $newval;

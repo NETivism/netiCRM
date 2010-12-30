@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -59,7 +59,7 @@ class CRM_Price_BAO_LineItem extends CRM_Price_DAO_LineItem
      */
     static function create ( &$params )
     {
-        $lineItemBAO =& new CRM_Price_BAO_LineItem( );
+        $lineItemBAO = new CRM_Price_BAO_LineItem( );
         $lineItemBAO->copyValues( $params );
         return $lineItemBAO->save( );
     }
@@ -79,7 +79,7 @@ class CRM_Price_BAO_LineItem extends CRM_Price_DAO_LineItem
      */
     static function retrieve( &$params, &$defaults )
     {
-        $lineItem =& new CRM_Price_BAO_LineItem( );
+        $lineItem = new CRM_Price_BAO_LineItem( );
         $lineItem->copyValues( $params );
         if ( $lineItem->find( true ) ) {
             CRM_Core_DAO::storeValues( $lineItem, $defaults );
@@ -107,14 +107,17 @@ SELECT    li.id,
           li.qty, 
           li.unit_price, 
           li.line_total, 
-          pf.label as description, 
+          pf.label as field_title, 
           pf.html_type, 
-          li.price_field_id, 
-          li.option_group_id";
+          li.price_field_id,
+          li.participant_count,
+          li.price_field_value_id,
+          pfv.description";
 
         $fromClause = "
 FROM      civicrm_%2 as %2 
 LEFT JOIN civicrm_line_item li ON ( li.entity_id = %2.id AND li.entity_table = 'civicrm_%2')
+LEFT JOIN civicrm_price_field_value pfv ON ( pfv.id = li.price_field_value_id )
 LEFT JOIN civicrm_price_field pf ON (pf.id = li.price_field_id )";  
         
         $whereClause = "
@@ -130,17 +133,17 @@ WHERE     %2.id = %1";
         $dao = CRM_Core_DAO::executeQuery( "$selectClause $fromClause $whereClause", $params );
         while ( $dao->fetch() ) {
             if ( !$dao->id ) continue;
-            $lineItems[$dao->id] = array( 'qty'             => $dao->qty,
-                                          'label'           => $dao->label,
-                                          'unit_price'      => $dao->unit_price,
-                                          'line_total'      => $dao->line_total,
-                                          'price_field_id'  => $dao->price_field_id,
-                                          'option_group_id' => $dao->option_group_id
+            $lineItems[$dao->id] = array( 'qty'                  => $dao->qty,
+                                          'label'                => $dao->label,
+                                          'unit_price'           => $dao->unit_price,
+                                          'line_total'           => $dao->line_total,
+                                          'price_field_id'       => $dao->price_field_id,
+                                          'participant_count'    => $dao->participant_count,
+                                          'price_field_value_id' => $dao->price_field_value_id,
+                                          'field_title'          => $dao->field_title,
+                                          'html_type'            => $dao->html_type,
+                                          'description'          => $dao->description,
                                           );
-            $lineItems[$dao->id]['description'] = $dao->description . ' - ' . $dao->label;
-            if ( $dao->html_type == 'Text' ) {
-                $lineItems[$dao->id]['description'] = $dao->label;
-            } 
         }
         return $lineItems;
     }
@@ -164,35 +167,39 @@ WHERE     %2.id = %1";
         if ( empty( $params["price_{$fid}"] ) ) {
             return;
         }
-        
+
         $optionIDs = implode( ',', array_keys( $params["price_{$fid}"] ) );
-        $sql = "
-SELECT id, option_group_id, label, description
-FROM   civicrm_option_value
-WHERE  id IN ($optionIDs)
-";
-        $dao = CRM_Core_DAO::executeQuery( $sql,
-                                           CRM_Core_DAO::$_nullArray );
-        $optionValues = array( );
-        while ( $dao->fetch( ) ) {
-            $optionValues[$dao->id] = array('gid'         => $dao->option_group_id,
-                                            'label'       => $dao->label,
-                                            'description' => $dao->description );
+        
+        //lets first check in fun parameter,
+        //since user might modified w/ hooks.
+        $options = array( );
+        if ( array_key_exists( 'options', $fields ) ) {
+            $options = $fields['options'];
+        } else {
+            require_once 'CRM/Price/BAO/FieldValue.php';
+            CRM_Price_BAO_FieldValue::getValues( $fid, $options, 'weight', true );
         }
-                            
+        $fieldTitle = CRM_Utils_Array::value( 'label', $fields );
+        if ( !$fieldTitle ) {
+            $fieldTitle = CRM_Core_DAO::getFieldValue( 'CRM_Price_DAO_Field', $fid, 'label' );
+        }
+        
         foreach( $params["price_{$fid}"] as $oid => $qty ) {
-            $price        = $fields['options'][$oid]['value'];
-            $values[$oid] = array(
-                                  'price_field_id'   => $fid,
-                                  'option_value_id'  => $oid,
-                                  'option_group_id'  => $optionValues[$oid]['gid'],
-                                  'label'            => $optionValues[$oid]['label'],
-                                  'description'      => $optionValues[$oid]['description'],
-                                  'qty'              => $qty,
-                                  'unit_price'       => $price,
-                                  'line_total'       => $qty * $price,
-                                  'html_type'        => $fields['html_type']
-                                  );
+            require_once 'CRM/Price/BAO/Field.php';
+            $price = $options[$oid]['amount'];
+            $participantsPerField = CRM_Utils_Array::value( 'count', $options[$oid], 0 );
+            
+            $values[$oid] = array( 'price_field_id'       => $fid,
+                                   'price_field_value_id' => $oid,
+                                   'label'                => $options[$oid]['label'],
+                                   'field_title'          => $fieldTitle,
+                                   'description'          => $options[$oid]['description'],
+                                   'qty'                  => $qty,
+                                   'unit_price'           => $price,
+                                   'line_total'           => $qty * $price,
+                                   'participant_count'    => $qty * $participantsPerField,
+                                   'max_value'            => CRM_Utils_Array::value( 'max_value', $options[$oid] ),
+                                   'html_type'            => $fields['html_type'] );
         }
     }
     

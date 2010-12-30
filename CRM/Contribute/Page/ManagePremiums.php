@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -152,7 +152,7 @@ class CRM_Contribute_Page_ManagePremiums extends CRM_Core_Page_Basic
         // get all custom groups sorted by weight
         $premiums = array();
         require_once 'CRM/Contribute/DAO/Product.php';
-        $dao =& new CRM_Contribute_DAO_Product();
+        $dao = new CRM_Contribute_DAO_Product();
         $dao->orderBy('name');
         $dao->find();
 

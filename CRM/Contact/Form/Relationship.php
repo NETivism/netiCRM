@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -121,7 +121,7 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form
             $this->assign('cdType', true);
             return CRM_Custom_Form_CustomData::preProcess( $this );
         }
-        
+
         $this->_contactId      = $this->get('contactId');
         
         $this->_relationshipId = $this->get('id');
@@ -188,21 +188,21 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form
         }
         
         $defaults = array( );
-        
+
         if ( $this->_action & CRM_Core_Action::UPDATE ) {
             if ( !empty( $this->_values ) ) {
                 $defaults['relationship_type_id'] = $this->_rtypeId;
-                if ( $this->_values['start_date'] ) {
+                if ( CRM_Utils_Array::value( 'start_date', $this->_values ) ) {
                     list( $defaults['start_date'] ) = CRM_Utils_Date::setDateDefaults( $this->_values['start_date'] );
                 }
-                if ( $this->_values['end_date'] ) {
+                if ( CRM_Utils_Array::value( 'end_date', $this->_values ) ) {
                     list( $defaults['end_date'] ) = CRM_Utils_Date::setDateDefaults( $this->_values['end_date'] );
                 }
                 $defaults['description'         ] = CRM_Utils_Array::value( 'description', $this->_values );
                 $defaults['is_active'           ] = CRM_Utils_Array::value( 'is_active', $this->_values );
                 $defaults['is_permission_a_b'   ] = CRM_Utils_Array::value( 'is_permission_a_b', $this->_values );
                 $defaults['is_permission_b_a'   ] = CRM_Utils_Array::value( 'is_permission_b_a', $this->_values );
-                $contact =& new CRM_Contact_DAO_Contact( );
+                $contact = new CRM_Contact_DAO_Contact( );
                 if ( $this->_rtype == 'a_b' && $this->_values['contact_id_a'] == $this->_contactId ) {
                     $contact->id = $this->_values['contact_id_b'];
                 } else {
@@ -238,7 +238,7 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form
             $defaults['is_active'           ] = 1;
             $defaults['relationship_type_id'] = $this->_rtypeId;
         }
-        
+
         return $defaults;
     }
     
@@ -296,9 +296,32 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form
                                );
             return;
         }
-                
-        $searchRows = $this->get( 'searchRows' );
-                
+               
+        $callAjax   = $this->get( 'callAjax' );
+        
+        $searchRows = null;
+        if ( !$callAjax ) {
+            $searchRows = $this->get( 'searchRows' );
+        } else {
+
+            $this->addElement( 'hidden', 'store_contacts', '' , array('id'=> 'store_contacts'));
+            $sourceUrl  = 'snippet=4&relType='. $this->get('relType');
+            $sourceUrl .= '&relContact='. $this->get('relContact');
+            $sourceUrl .= '&cid='.$this->_contactId;
+
+            $this->assign( 'searchCount', true );
+            
+            // To handle employee of and employer of
+            if ( !empty($this->_relationshipTypeId) &&
+                 !empty($this->_rtype) ) {
+                $sourceUrl .= '&typeName='.$this->_allRelationshipNames[$this->_relationshipTypeId]["name_{$this->_rtype}"];
+            }    
+            $this->assign( 'sourceUrl', CRM_Utils_System::url( 'civicrm/ajax/relationshipcontacts',  $sourceUrl, false, null, false) );
+        }
+
+        $this->assign( 'callAjax', $callAjax);
+        $this->_callAjax = $callAjax;
+
         $this->addElement('select',
                           'relationship_type_id',
                           ts('Relationship Type'),
@@ -339,8 +362,8 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form
             }
         }
         
+        $employers = $checkBoxes = $employees = array( );
         if ( $searchRows ) {
-            $employers = $checkBoxes = $employees = array( );
             foreach ( $searchRows as $id => $row ) {
                 $checkBoxes[$id] = $this->createElement('checkbox', $id, null, '' );
                 if ( $isEmployeeOf ) {
@@ -349,19 +372,27 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form
                     $employees[$id] = $this->createElement('checkbox', $id, null, '' );
                 }
             }
-            
+
             $this->addGroup($checkBoxes, 'contact_check');
             $this->assign('searchRows', $searchRows );
-            
-            if ( $isEmployeeOf ) {
-                $this->assign('isEmployeeOf', $isEmployeeOf );
+        }
+       
+        if ( $isEmployeeOf ) {
+            $this->assign('isEmployeeOf', $isEmployeeOf );
+            if ( !$callAjax ) { 
                 $this->addGroup($employers, 'employee_of');
-            } else if ( $isEmployerOf ) {
-                $this->assign('isEmployerOf', $isEmployerOf );
+            } 
+        } else if ( $isEmployerOf ) {
+            $this->assign('isEmployerOf', $isEmployerOf );
+            if ( !$callAjax ) { 
                 $this->addGroup($employees, 'employer_of');
             }
         }
         
+        if ( $callAjax && ( $isEmployeeOf || $isEmployerOf ) ) {
+            $this->addElement( 'hidden', 'store_employers', '' , array('id'=> 'store_employers'));
+        }
+
         if ( $this->_action & CRM_Core_Action::UPDATE ) {
             $this->addElement('checkbox', 'is_current_employer' );
         }
@@ -382,23 +413,34 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form
         } else {
             $searchBtn = ts('Search');
         }
-        $this->addElement( 'submit', $this->getButtonName('refresh'), $searchBtn, array( 'class' => 'form-submit' ) );
+        $this->addElement( 'submit', $this->getButtonName('refresh'), $searchBtn, array( 'class' => 'form-submit', 'id' => 'search-button' ) );
+        $this->addElement( 'submit', $this->getButtonName('refresh', 'save'), 'Quick Save', array( 'class' => 'form-submit' , 'id' => 'quick-save') );
         $this->addElement( 'submit', $this->getButtonName('cancel' ), ts('Cancel'), array( 'class' => 'form-submit' ) );
 
+        $this->addElement( 'submit', $this->getButtonName('refresh', 'savedetails'), 'Save Relationship', array( 'class' => 'form-submit hiddenElement' , 'id' => 'details-save') );
+        $this->addElement('checkbox', 'add_current_employer', ts('Current Employer'), null );
+        $this->addElement('checkbox', 'add_current_employee', ts('Current Employee'), null );
+       
         //need to assign custom data type and subtype to the template
         $this->assign('customDataType', 'Relationship');
         $this->assign('customDataSubType',  $this->_relationshipTypeId );
         $this->assign('entityID',  $this->_relationshipId );
        
         // make this form an upload since we dont know if the custom data injected dynamically
-        // is of type file etc $uploadNames = $this->get( 'uploadNames' );
-        $this->addButtons( array(
-                                 array ( 'type'      => 'upload',
-                                         'name'      => ts('Save Relationship'),
-                                         'isDefault' => true   ),
-                                 array ( 'type'      => 'cancel',
-                                         'name'      => ts('Cancel') ),
-                                 )
+        // is of type file etc $uploadNames = $this->get(
+        // 'uploadNames' );
+        $buttonParams =  array ( 'type'      => 'upload',
+                                 'name'      => ts('Save Relationship'),
+                                 'isDefault' => true   );
+        if ( $callAjax ) {
+            $buttonParams['js'] = array( 'onclick' => ' submitAjaxData();');
+        }
+        
+        $this->addButtons( array( $buttonParams
+                                  ,
+                                  array ( 'type'      => 'cancel',
+                                          'name'      => ts('Cancel') ),
+                                  )
                            );
         
     }
@@ -414,18 +456,40 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form
     {
         // store the submitted values in an array
         $params = $this->controller->exportValues( $this->_name );
-        
+        $quickSave = false;
+        if ( CRM_Utils_Array::value( '_qf_Relationship_refresh_save', $_POST ) ||
+             CRM_Utils_Array::value( '_qf_Relationship_refresh_savedetails', $_POST ) ) {
+            $quickSave = true;
+        }      
         $this->set( 'searchDone', 0 );
-        if ( CRM_Utils_Array::value( '_qf_Relationship_refresh', $_POST ) ) {
-            $this->search( $params );
+        $this->set( 'callAjax', false );  
+        if ( CRM_Utils_Array::value( '_qf_Relationship_refresh', $_POST ) || $quickSave ) {
+            if ( is_numeric( $params['rel_contact_id'] ) ) {
+                if ( $quickSave ) {
+                    $params['contact_check'] = array( $params['rel_contact_id'] => 1 );
+                } else {
+                    $this->search( $params );
+                    $quickSave = false;
+                }
+            } else {
+                $this->set( 'callAjax', true );  
+                $this->set( 'relType', $params['relationship_type_id'] );
+                $this->set( 'relContact', $params['rel_contact'] );
+                $quickSave = false;
+            }
             $this->set( 'searchDone', 1 );
-            return;
+            if ( !$quickSave ) {
+                return;
+            }
         }
-        
+
         // action is taken depending upon the mode
         $ids = array( );
         $ids['contact'] = $this->_contactId;
         
+        // modify params for ajax call
+        $this->modifyParams( $params );
+       
         if ($this->_action & CRM_Core_Action::DELETE ){
             CRM_Contact_BAO_Relationship::del($this->_relationshipId);
             return;
@@ -441,12 +505,25 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form
             //if relationship type change and previously it was
             //employer / emplyee relationship with current employer
             //than clear the current employer. CRM-3235.
-            if ( CRM_Utils_Array::value( 'current_employee_id', $this->_values ) &&
-                 $relationshipTypeId != $this->_values['relationship_type_id'] ) {
+            if ( ( CRM_Utils_Array::value( 'current_employee_id', $this->_values ) &&
+                  $relationshipTypeId != $this->_values['relationship_type_id'] ) || 
+                 ( ! $params['is_active'] ) ) {
                 require_once 'CRM/Contact/BAO/Contact/Utils.php';
                 CRM_Contact_BAO_Contact_Utils::clearCurrentEmployer( $this->_values['current_employee_id'] );
             }
+        } elseif ( $quickSave ) {
+            if ( $params['add_current_employee'] &&
+                 $this->_allRelationshipNames[$relationshipTypeId]["name_a_b"] == 'Employee of' ) {
+                $params['employee_of'] = $params['rel_contact_id'];
+            } elseif ( $params['add_current_employer'] &&
+                       $this->_allRelationshipNames[$relationshipTypeId]["name_b_a"] == 'Employer of' ) {
+                $params['employer_of'] = array( $params['rel_contact_id'] => 1 );
+            }
+            if ( !$this->_rtype ) {
+                $this->_rtype = str_replace( $relationshipTypeId. '_', '', $params['relationship_type_id'] );
+            }
         }
+
         $params['start_date'] = CRM_Utils_Date::processDate( $params['start_date'], null, true );
         $params['end_date']   = CRM_Utils_Date::processDate( $params['end_date'], null, true );
 
@@ -481,7 +558,7 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form
             $status .= ts('Relationship record has been updated.');
         }
         
-        $note =& new CRM_Core_DAO_Note( );
+        $note = new CRM_Core_DAO_Note( );
         $note->entity_id = $relationshipIds[0];
         $note->entity_table = 'civicrm_relationship';
         $noteIds = array();
@@ -500,7 +577,7 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form
         
         
         // Membership for related contacts CRM-1657
-        if ( CRM_Core_Permission::access( 'CiviMember' ) ) {
+        if ( CRM_Core_Permission::access( 'CiviMember' ) && ( !$duplicate ) ) {
             CRM_Contact_BAO_Relationship::relatedMemberships( $this->_contactId, 
                                                               $params, $ids, 
                                                               $this->_action );
@@ -563,7 +640,12 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form
             }
         }
         
-        CRM_Core_Session::setStatus( $status );    
+        CRM_Core_Session::setStatus( $status );   
+        if ( $quickSave ) {
+            $session =& CRM_Core_Session::singleton( );
+            CRM_Utils_System::redirect( $session->popUserContext() );
+        }
+
     }//end of function
     
 
@@ -592,7 +674,7 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form
         $excludedContactIds = array( $this->_contactId );
 
         if ( $params['relationship_type_id'] ) {
-            $relationshipType =& new CRM_Contact_DAO_RelationshipType( );
+            $relationshipType = new CRM_Contact_DAO_RelationshipType( );
             list( $rid, $direction ) = explode( '_', $params['relationship_type_id'], 2 );
            
             $relationshipType->id = $rid;
@@ -623,15 +705,15 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form
         }
 
         // get the count of contact
-        $contactBAO  =& new CRM_Contact_BAO_Contact( );
-        $query =& new CRM_Contact_BAO_Query( $searchValues );
+        $contactBAO  = new CRM_Contact_BAO_Contact( );
+        $query = new CRM_Contact_BAO_Query( $searchValues );
         $searchCount = $query->searchQuery(0, 0, null, true );
         $this->set( 'searchCount', $searchCount );
         if ( $searchCount <= self::MAX_RELATIONSHIPS ) {
             // get the result of the search
             $result = $query->searchQuery(0, 50, null);
             
-            $config =& CRM_Core_Config::singleton( );
+            $config = CRM_Core_Config::singleton( );
             $searchRows = array( );
 
             //variable is set if only one record is foun and that record already has relationship with the contact
@@ -681,15 +763,19 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form
    * @access public
    * @static
    */
-    static function formRule( &$params, &$files, &$form ) {
+    static function formRule( $params, $files, $form ) {
         
         // hack, no error check for refresh
-        if ( CRM_Utils_Array::value( '_qf_Relationship_refresh', $_POST ) ) {
+        if ( CRM_Utils_Array::value( '_qf_Relationship_refresh', $_POST ) ||
+             CRM_Utils_Array::value( '_qf_Relationship_refresh_save', $_POST ) ||
+             CRM_Utils_Array::value( '_qf_Relationship_refresh_savedetails', $_POST ) ) {
             return true;
         }
         
+        $form->modifyParams( $params );
+      
         $ids = array( );
-        $session =& CRM_Core_Session::singleton( );
+        $session = CRM_Core_Session::singleton( );
         $ids['contact'     ] = $form->get( 'contactId'     );
         $ids['relationship'] = $form->get( 'relationshipId');
         
@@ -708,20 +794,32 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form
                 } 
             }
         } else {
-            $errors['contact_check'] = ts( 'Please select at least one contact.' );
+            if ( $form->_callAjax ) {
+                $errors['store_contacts'] = ts( 'Select select at least one contact from Target Contact(s).' );   
+            } else {
+                $errors['contact_check'] = ts( 'Please select at least one contact.' );
+            }
         }
         
         if ( CRM_Utils_Array::value('employee_of', $params ) &&
              !$employerId ) {
-            $errors['employee_of'] = ts( 'Current employer should be one of the selected contacts.' );
+            if ( $form->_callAjax ) {
+                $errors['store_employer'] = ts( 'Current employer should be one of the selected contacts.' );
+            } else {
+                $errors['employee_of'] = ts( 'Current employer should be one of the selected contacts.' );
+            }
         }
-        
+
         if ( CRM_Utils_Array::value('employer_of', $params ) && 
              CRM_Utils_Array::value('contact_check', $params ) &&
              array_diff( array_keys( $params['employer_of'] ), array_keys( $params['contact_check'] ) ) ) {
-            $errors['employer_of'] = ts( 'Current employee should be among the selected contacts.' );
+            if ( $form->_callAjax ) {
+                $errors['store_employer'] = ts( 'Current employee should be among the selected contacts.' );
+            } else {
+                $errors['employer_of'] = ts( 'Current employee should be among the selected contacts.' );
+            }
         }
-        
+       
         return empty($errors) ? true : $errors;
     }
     
@@ -734,7 +832,7 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form
      * @access public
      * @static
      */
-    static function dateRule( &$params ) {
+    static function dateRule( $params ) {
         $errors = array( );
 
         // check start and end date
@@ -750,6 +848,37 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form
         return empty($errors) ? true : $errors;
 
     }
+    
+    function modifyParams( &$params ) {
+        if ( !$this->_callAjax ) {
+            return;
+        }
+        
+        if ( CRM_Utils_Array::value('store_contacts', $params) ) {
+            $storedContacts = array( );
+            foreach ( explode( ',', $params['store_contacts'] ) as $value ) {
+                if ($value) {
+                    $storedContacts[$value] = 1;
+                }
+            }
+            $params['contact_check'] = $storedContacts;
+        }
+        
+        if ( CRM_Utils_Array::value('store_employers', $params) ) {
+            $employeeContacts = array( );
+            foreach ( explode( ',', $params['store_employers'] ) as $value ) {
+                if ($value) {
+                    $employeeContacts[$value] = $value;
+                }
+            }
+            if ( $this->_allRelationshipNames[$this->_relationshipTypeId]["name_{$this->_rtype}"] == 'Employee of' ) {
+                $params['employee_of'] = current($employeeContacts); 
+            } else {
+                $params['employer_of'] = $employeeContacts; 
+            }    
+        }
+    } 
+    
 }
 
 

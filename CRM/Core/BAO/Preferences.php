@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -48,7 +48,7 @@ class CRM_Core_BAO_Preferences extends CRM_Core_DAO_Preferences {
 
     static function systemObject( ) {
         if ( ! self::$_systemObject ) {
-            self::$_systemObject =& new CRM_Core_DAO_Preferences( );
+            self::$_systemObject = new CRM_Core_DAO_Preferences( );
             self::$_systemObject->domain_id  = CRM_Core_Config::domainID( );
             self::$_systemObject->is_domain  = true;
             self::$_systemObject->contact_id = null;
@@ -59,7 +59,7 @@ class CRM_Core_BAO_Preferences extends CRM_Core_DAO_Preferences {
 
     static function mailingPreferences( ) {
         if ( ! self::$_mailingPref ) {
-            $mailingPref =& new CRM_Core_DAO_Preferences( );
+            $mailingPref = new CRM_Core_DAO_Preferences( );
             $mailingPref->domain_id  = CRM_Core_Config::domainID( );
             $mailingPref->is_domain  = true;
             $mailingPref->contact_id = null;
@@ -75,10 +75,10 @@ class CRM_Core_BAO_Preferences extends CRM_Core_DAO_Preferences {
     static function userObject( $userID = null ) {
         if ( ! self::$_userObject ) {
             if ( ! $userID ) {
-                $session =& CRM_Core_Session::singleton( );
+                $session = CRM_Core_Session::singleton( );
                 $userID  =  $session->get( 'userID' );
             }
-            self::$_userObject =& new CRM_Core_DAO_Preferences( );
+            self::$_userObject = new CRM_Core_DAO_Preferences( );
             self::$_userObject->domain_id  = CRM_Core_Config::domainID( );
             self::$_userObject->is_domain  = false;
             self::$_userObject->contact_id = $userID;
@@ -143,7 +143,7 @@ class CRM_Core_BAO_Preferences extends CRM_Core_DAO_Preferences {
         $optionValue = $object->$name;
         require_once 'CRM/Core/OptionGroup.php';
         $groupValues = CRM_Core_OptionGroup::values( $name, false, false, $localize, $condition, $returnField );
-        
+
         //enabled name => label require for new contact edit form, CRM-4605
         if ( $returnNameANDLabels ) {
             $names = $labels = $nameAndLabels = array( );
@@ -180,7 +180,139 @@ class CRM_Core_BAO_Preferences extends CRM_Core_DAO_Preferences {
         
         return ( $returnNameANDLabels ) ? $nameAndLabels : $returnValues;
     }
-    
+
+    static function setValue( $name, $value, $system = true, $userID = null, $keyField = 'name' ) {
+        if ( $system ) {
+            $object = self::systemObject( );
+        } else {
+            $object = self::userObject( $userID );
+        }
+
+        if ( empty( $value ) ) {
+            $object->$name = 'NULL';
+        } else if ( is_array( $value ) ) {
+            require_once 'CRM/Core/OptionGroup.php';
+            $groupValues = CRM_Core_OptionGroup::values( $name, false, false, false, null, $keyField );
+            
+            $cbValues = array( );
+            foreach ( $groupValues as $key => $val ) {
+                if ( CRM_Utils_Array::value( $val, $value ) ) {
+                    $cbValues[$key] = 1;
+                }
+            }
+
+            if ( ! empty( $cbValues ) ) {
+                $object->$name = 
+                    CRM_Core_BAO_CustomOption::VALUE_SEPERATOR .
+                    implode( CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
+                             array_keys( $cbValues ) ) .
+                    CRM_Core_BAO_CustomOption::VALUE_SEPERATOR;
+            } else {
+                $object->$name = 'NULL';
+            }
+        } else {
+            $object->$name = $value;
+        }
+
+        $object->save( );
+    }
+
+    static function fixAndStoreDirAndURL( &$params ) {
+        $sql = "
+SELECT v.name as valueName, g.name as optionName
+FROM   civicrm_option_value v,
+       civicrm_option_group g
+WHERE  ( g.name = 'directory_preferences'
+OR       g.name = 'url_preferences' )
+AND    v.option_group_id = g.id
+AND    v.is_active = 1
+";
+
+        $dirParams = array( );
+        $urlParams = array( );
+        $dao    = CRM_Core_DAO::executeQuery( $sql );
+        while ( $dao->fetch( ) ) {
+            if ( ! isset( $params[$dao->valueName] ) ) {
+                continue;
+            }
+            if ( $dao->optionName == 'directory_preferences' ) {
+                $dirParams[$dao->valueName] = CRM_Utils_Array::value( $dao->valueName, $params, '' );
+            } else {
+                $urlParams[$dao->valueName] = CRM_Utils_Array::value( $dao->valueName, $params, '' );
+            }
+            unset( $params[$dao->valueName] );
+        }
+
+        if ( ! empty( $dirParams ) ) {
+            CRM_Core_BAO_Preferences::storeDirectoryOrURLPreferences( $dirParams, 'directory' );
+        }
+
+        if ( ! empty( $urlParams ) ) {
+            CRM_Core_BAO_Preferences::storeDirectoryOrURLPreferences( $urlParams, 'url' );
+        }
+    }
+
+    static function storeDirectoryOrURLPreferences( &$params, $type = 'directory' ) {
+        $optionName = ( $type == 'directory' ) ? 'directory_preferences' : 'url_preferences';
+
+        $sql = "
+UPDATE civicrm_option_value v,
+       civicrm_option_group g
+SET    v.value = %1,
+       v.is_active = 1
+WHERE  g.name = %2
+AND    v.option_group_id = g.id
+AND    v.name = %3
+";
+
+        require_once 'CRM/Utils/File.php';
+        foreach ( $params as $name => $value ) {
+            // always try to store relative directory or url from CMS root
+            if ( $type == 'directory' ) {
+                $value = CRM_Utils_File::relativeDirectory( $value );
+            } else {
+                $value = CRM_Utils_System::relativeURL( $value );
+            }
+            $sqlParams = array( 1 => array( $value     , 'String' ),
+                                2 => array( $optionName, 'String' ),
+                                3 => array( $name      , 'String' ) );
+            CRM_Core_DAO::executeQuery( $sql, $sqlParams );
+        }
+    }
+
+    static function retrieveDirectoryAndURLPreferences( &$params, $setInConfig = false ) {
+        if ( $setInConfig ) {
+            $config =& CRM_Core_Config::singleton( );
+        }
+
+        $sql = "
+SELECT v.name as valueName, v.value, g.name as optionName
+FROM   civicrm_option_value v,
+       civicrm_option_group g
+WHERE  ( g.name = 'directory_preferences'
+OR       g.name = 'url_preferences' )
+AND    v.option_group_id = g.id
+AND    v.is_active = 1
+";
+
+        require_once 'CRM/Utils/File.php';
+
+        $dao    = CRM_Core_DAO::executeQuery( $sql );
+        while ( $dao->fetch( ) ) {
+            if ( ! $dao->value ) {
+                continue;
+            }
+            if ( $dao->optionName == 'directory_preferences' ) {
+                $value = CRM_Utils_File::absoluteDirectory( $dao->value );
+            } else {
+                $value = CRM_Utils_System::absoluteURL( $dao->value );
+            }
+            $params[$dao->valueName] = $value;
+            if ( $setInConfig ) {
+                $config->{$dao->valueName} = $value;
+            }
+        }
+    }
 }
 
 

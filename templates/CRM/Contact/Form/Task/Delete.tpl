@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -24,17 +24,19 @@
  +--------------------------------------------------------------------+
 *}
 {* Confirmation of contact deletes  *}
-<div class="spacer"></div>
+<div class="crm-block crm-form-block crm-contact-task-delete-form-block">
 <div class="messages status">
-  <dl>
-    <dt><img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}" /></dt>
-    <dd>
-        <p>{ts}Are you sure you want to Delete the selected contact(s)? The contact(s) and all related data will be permanently removed. This operation cannot be undone.{/ts}</p>
-        <p>{include file="CRM/Contact/Form/Task.tpl"}</p>
-    </dd>
-  </dl>
-</div>
+  <div class="icon inform-icon"></div>&nbsp;
+      {if $restore}
+		{ts}Are you sure you want to restore the selected contact(s)? The contact(s) and all related data will be fully restored.{/ts}
+      {elseif $trash}
+        {ts}Are you sure you want to delete the selected contact(s)?{/ts} {ts}The contact(s) and all related data will be moved to trash and only users with the relevant permission will be able to restore it.{/ts}
+      {else}
+        {ts}Are you sure you want to delete the selected contact(s)?{/ts} {ts}The contact(s) and all related data will be permanently removed.{/ts} {ts}This operation cannot be undone.{/ts}
+      {/if}
+  </div>
 
-<div class="form-item">
- {$form.buttons.html}
+
+    <h3>{include file="CRM/Contact/Form/Task.tpl"}</h3>
+	<div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl"}</div>
 </div>

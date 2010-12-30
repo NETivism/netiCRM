@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -69,7 +69,7 @@ class CRM_Contribute_BAO_ManagePremiums extends CRM_Contribute_DAO_Product
      */
     static function retrieve( &$params, &$defaults ) 
     {
-        $premium =& new CRM_Contribute_DAO_Product( );
+        $premium = new CRM_Contribute_DAO_Product( );
         $premium->copyValues( $params );
         if ( $premium->find( true ) ) {
             $premium->product_name = $premium->name;
@@ -92,7 +92,7 @@ class CRM_Contribute_BAO_ManagePremiums extends CRM_Contribute_DAO_Product
     {
         if( ! $is_active ) {
             require_once 'CRM/Contribute/DAO/PremiumsProduct.php';
-            $dao = & new CRM_Contribute_DAO_PremiumsProduct();
+            $dao = new CRM_Contribute_DAO_PremiumsProduct();
             $dao->product_id = $id;
             $dao->delete();
         }
@@ -117,10 +117,17 @@ class CRM_Contribute_BAO_ManagePremiums extends CRM_Contribute_DAO_Product
         $params['is_deductible'] =  CRM_Utils_Array::value( 'is_deductible', $params, false );
         
         // action is taken depending upon the mode
-        $premium               =& new CRM_Contribute_DAO_Product( );
+        $premium               = new CRM_Contribute_DAO_Product( );
         $premium->copyValues( $params );
 
         $premium->id = CRM_Utils_Array::value( 'premium', $ids );
+
+	// set currency for CRM-1496
+	if ( ! isset( $premium->currency ) ) {
+	  $config =& CRM_Core_Config::singleton( );
+	  $premium->currency = $config->defaultCurrency;
+	}
+	
         $premium->save( );
         return $premium;
     }
@@ -136,10 +143,10 @@ class CRM_Contribute_BAO_ManagePremiums extends CRM_Contribute_DAO_Product
     {
         //check dependencies
         require_once 'CRM/Contribute/DAO/PremiumsProduct.php';
-        $premiumsProduct =& new CRM_Contribute_DAO_PremiumsProduct( );
+        $premiumsProduct = new CRM_Contribute_DAO_PremiumsProduct( );
         $premiumsProduct->product_id = $productID;
         if ( $premiumsProduct->find( true ) ) {
-            $session =& CRM_Core_Session::singleton();
+            $session = CRM_Core_Session::singleton();
             $message .= ts('This Premium is being linked to <a href=\'%1\'>Online Contribution page</a>. Please remove it in order to delete this Premium.', array(1 => CRM_Utils_System::url('civicrm/admin/contribute', 'reset=1')));
             CRM_Core_Session::setStatus($message);
             return CRM_Utils_System::redirect( CRM_Utils_System::url('civicrm/admin/contribute/managePremiums', 'reset=1&action=browse'));
@@ -147,7 +154,7 @@ class CRM_Contribute_BAO_ManagePremiums extends CRM_Contribute_DAO_Product
 
         //delete from contribution Type table
         require_once 'CRM/Contribute/DAO/Product.php';
-        $premium =& new CRM_Contribute_DAO_Product( );
+        $premium = new CRM_Contribute_DAO_Product( );
         $premium->id = $productID;
         $premium->delete();
     }

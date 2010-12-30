@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -123,7 +123,7 @@ class CRM_SMS_Form_Task_SMS extends CRM_Contact_Form_Task {
             }
         }
 
-        $session =& CRM_Core_Session::singleton( );
+        $session = CRM_Core_Session::singleton( );
         $userID  =  $session->get( 'userID' );
         list( $fromDisplayName, 
               $fromSMS ) = CRM_Contact_BAO_Contact_Location::getPhoneDetails( $userID, 'Mobile' );

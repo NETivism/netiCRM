@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -61,7 +61,7 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group
      */
     static function retrieve( &$params, &$defaults )
     {
-        $group =& new CRM_Contact_DAO_Group( );
+        $group = new CRM_Contact_DAO_Group( );
         $group->copyValues( $params );
         if ( $group->find( true ) ) {
             CRM_Core_DAO::storeValues( $group, $defaults );
@@ -95,17 +95,17 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group
         // added for CRM-1631 and CRM-1794
         // delete all subscribed mails with the selected group id
         require_once 'CRM/Mailing/Event/BAO/Subscribe.php';
-        $subscribe =& new CRM_Mailing_Event_BAO_Subscribe( );
+        $subscribe = new CRM_Mailing_Event_BAO_Subscribe( );
         $subscribe->deleteGroup($id);
 
         // delete all Subscription  records with the selected group id
-        $subHistory =& new CRM_Contact_DAO_SubscriptionHistory( );
+        $subHistory = new CRM_Contact_DAO_SubscriptionHistory( );
         $subHistory->group_id = $id;
         $subHistory->delete();
 
         // delete all crm_group_contact records with the selected group id
         require_once 'CRM/Contact/DAO/GroupContact.php';
-        $groupContact =& new CRM_Contact_DAO_GroupContact( );
+        $groupContact = new CRM_Contact_DAO_GroupContact( );
         $groupContact->group_id = $id;
         $groupContact->delete();
 
@@ -124,7 +124,7 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group
         }
 
         // delete from group table
-        $group =& new CRM_Contact_DAO_Group( );
+        $group = new CRM_Contact_DAO_Group( );
         $group->id = $id;
         $group->delete( );
 
@@ -165,7 +165,7 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group
     static function memberCount( $id, $status = 'Added', $countChildGroups = false ) 
     {
         require_once 'CRM/Contact/DAO/GroupContact.php';
-	    $groupContact =& new CRM_Contact_DAO_GroupContact( );
+	    $groupContact = new CRM_Contact_DAO_GroupContact( );
         $groupIds = array( $id );
         if ( $countChildGroups ) {
             require_once 'CRM/Contact/BAO/GroupNesting.php';
@@ -195,6 +195,7 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group
 	        if ( isset( $status ) ) {
 	            $groupContact->status   = $status;
 	        }
+	        $groupContact->_query['condition'] = 'WHERE contact_id NOT IN (SELECT id FROM civicrm_contact WHERE is_deleted = 1)';
 	        $count += $groupContact->count( );
 	    }
         return $count;
@@ -243,7 +244,7 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group
      */
     static function getGroups( $params = null, $returnProperties = null ) 
     {
-        $dao =& new CRM_Contact_DAO_Group();
+        $dao = new CRM_Contact_DAO_Group();
         $dao->is_active = 1;
         if ( $params ) {
             foreach ( $params as $k => $v ) {
@@ -267,7 +268,7 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group
 
         $groups = array();
         while ( $dao->fetch( ) ) { 
-            $group =& new CRM_Contact_DAO_Group();
+            $group = new CRM_Contact_DAO_Group();
             if ( $flag ) {
                 $dao->member_count = CRM_Contact_BAO_Group::memberCount( $dao->id );
             }
@@ -335,7 +336,7 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group
         }
 
         // form the name only if missing: CRM-627
-        if( !CRM_Utils_Array::value( 'name', $params ) ) {
+        if( !CRM_Utils_Array::value( 'name', $params ) && !CRM_Utils_Array::value( 'id', $params ) ) {
             require_once 'CRM/Utils/String.php';
             $params['name'] = CRM_Utils_String::titleToVar( $params['title'] );
         }
@@ -353,7 +354,7 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group
             $params['group_type'] = '';
         }
         
-        $group =& new CRM_Contact_BAO_Group();
+        $group = new CRM_Contact_BAO_Group();
         $group->copyValues($params);
         $group->save( );
 
@@ -382,13 +383,15 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group
                 // if no parent present and the group doesn't already have any parents, 
                 // make sure site group goes as parent
                 $params['parents'] = array( $domainGroupID => 1 );
-            } else if ( !is_array($params['parents']) ) {
+            } else if ( array_key_exists( 'parents', $params ) && !is_array($params['parents']) ) {
                 $params['parents'] = array( $params['parents'] => 1 );
             }
 
-            foreach ( $params['parents'] as $parentId => $dnc ) {
-                if ( $parentId && !CRM_Contact_BAO_GroupNesting::isParentChild( $parentId, $group->id ) ) {
-                    CRM_Contact_BAO_GroupNesting::add( $parentId, $group->id );
+            if ( !empty($params['parents']) ) {
+                foreach ( $params['parents'] as $parentId => $dnc ) {
+                    if ( $parentId && !CRM_Contact_BAO_GroupNesting::isParentChild( $parentId, $group->id ) ) {
+                        CRM_Contact_BAO_GroupNesting::add( $parentId, $group->id );
+                    }
                 }
             }
 
@@ -423,15 +426,26 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group
         } else {
             CRM_Utils_Hook::post( 'create', 'Group', $group->id, $group ); 
         }
+        
+        $recentOther = array( );
+        if ( CRM_Core_Permission::check('edit groups') ) {
+            $recentOther['editUrl'] = CRM_Utils_System::url( 'civicrm/group', 'reset=1&action=update&id=' . $group->id );
+            // currently same permission we are using for delete a group
+            $recentOther['deleteUrl'] = CRM_Utils_System::url( 'civicrm/group', 'reset=1&action=delete&id=' . $group->id );
+        }
 
         require_once 'CRM/Utils/Recent.php';
-        // add the recently added group
-        CRM_Utils_Recent::add( $group->title,
-                               CRM_Utils_System::url( 'civicrm/group/search', 'reset=1&force=1&context=smog&gid=' . $group->id ),
-                               $group->id,
-                               'Group',
-                               null,
-                               null );
+        // add the recently added group (unless hidden: CRM-6432)
+        if (!$group->is_hidden) {
+            CRM_Utils_Recent::add( $group->title,
+                                   CRM_Utils_System::url( 'civicrm/group/search', 'reset=1&force=1&context=smog&gid=' . $group->id ),
+                                   $group->id,
+                                   'Group',
+                                   null,
+                                   null,
+                                   $recentOther
+                                   );
+        }
         return $group;
     }
 
@@ -469,7 +483,7 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group
     public static function createGroup( &$params ) 
     {
         if ( CRM_Utils_Array::value( 'saved_search_id', $params ) ) {
-            $savedSearch =& new CRM_Contact_BAO_SavedSearch();
+            $savedSearch = new CRM_Contact_BAO_SavedSearch();
             $savedSearch->form_values = CRM_Utils_Array::value( 'formValues', $params );
             $savedSearch->is_active = 1;
             $savedSearch->id = $params['saved_search_id'];
@@ -547,7 +561,7 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group
         
         //add mapping record only for search builder saved search
         $mappingId = null;
-        if ( $params['is_advanced'] == '2' && $params['is_searchBuilder'] == '1' ) {
+        if ( $params['search_context'] == 'builder' ) {
             //save the mapping for search builder
             require_once "CRM/Core/BAO/Mapping.php";
             if ( !$ssId ) {
@@ -559,7 +573,7 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group
             } else {
                 //get the mapping id from saved search
                 require_once "CRM/Contact/BAO/SavedSearch.php";
-                $savedSearch     =& new CRM_Contact_BAO_SavedSearch();
+                $savedSearch     = new CRM_Contact_BAO_SavedSearch();
                 $savedSearch->id = $ssId;
                 $savedSearch->find(true);
                 $mappingId = $savedSearch->mapping_id; 
@@ -570,7 +584,7 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group
         }
         
         //create/update saved search record.
-        $savedSearch                   =& new CRM_Contact_BAO_SavedSearch();
+        $savedSearch                   = new CRM_Contact_BAO_SavedSearch();
         $savedSearch->id               =  $ssId;
         $savedSearch->form_values      =  serialize( $params['form_values'] );
         $savedSearch->mapping_id       =  $mappingId;

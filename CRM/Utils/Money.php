@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -60,19 +60,33 @@ class CRM_Utils_Money {
      *
      * @static
      */
-    static function format($amount, $currency = null, $format = null)
+    static function format($amount, $currency = null, $format = null, $onlyNumber = false )
     {
+
         if ( CRM_Utils_System::isNull( $amount ) ) {
             return '';
         }
 
-        $config =& CRM_Core_Config::singleton();
+        $config = CRM_Core_Config::singleton();
 
+        if (!$format) {
+            $format = $config->moneyformat;
+        }
+
+        // money_format() exists only in certain PHP install (CRM-650)
+        if (is_numeric($amount) and function_exists('money_format')) {
+            $amount = money_format($config->moneyvalueformat, $amount);
+        }
+
+        if ( $onlyNumber ) {
+            return $amount;
+        }
+        
         if ( !self::$_currencySymbols ) {
             require_once "CRM/Core/PseudoConstant.php";
             $currencySymbolName = CRM_Core_PseudoConstant::currencySymbols( 'name' );
             $currencySymbol     = CRM_Core_PseudoConstant::currencySymbols( );
-            
+           
             self::$_currencySymbols =
                 array_combine( $currencySymbolName, $currencySymbol );
         }
@@ -85,17 +99,31 @@ class CRM_Utils_Money {
             $format = $config->moneyformat;
         }
 
+        setlocale(LC_MONETARY, 'en_US.utf8', 'en_US', 'en_US.utf8', 'en_US', 'C');
         // money_format() exists only in certain PHP install (CRM-650)
-        if (is_numeric($amount) and function_exists('money_format')) {
+        if ( is_numeric($amount) &&
+             function_exists('money_format') ) {
             $amount = money_format($config->moneyvalueformat, $amount);
         }
+  
+        $rep = array( ',' => $config->monetaryThousandSeparator,
+                      '.' => $config->monetaryDecimalPoint );
+
+        // If it contains tags, means that HTML was passed and the 
+        // amount is already converted properly,
+        // so don't mess with it again.
+        if ( strip_tags($amount) === $amount ) {
+            $money = strtr($amount, $rep);
+        } else {
+            $money = $amount;
+        }
+
 
         $replacements = array(
-                              '%a' => $amount,
+                              '%a' => $money,
                               '%C' => $currency,
                               '%c' => CRM_Utils_Array::value($currency, self::$_currencySymbols, $currency),
                               );
-
         return strtr($format, $replacements);
     }
 

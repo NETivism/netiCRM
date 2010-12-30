@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -51,9 +51,14 @@ class CRM_Contact_Form_Edit_Phone
      * @access public
      * @static
      */
-    static function buildQuickForm( &$form ) {
+    static function buildQuickForm( &$form, $addressBlockCount = null ) {
         
-        $blockId = ( $form->get( 'Phone_Block_Count' ) ) ? $form->get( 'Phone_Block_Count' ) : 1;
+        // passing this via the session is AWFUL. we need to fix this
+        if ( ! $addressBlockCount ) {
+            $blockId = ( $form->get( 'Phone_Block_Count' ) ) ? $form->get( 'Phone_Block_Count' ) : 1;
+        } else {
+            $blockId = $addressBlockCount;
+        }
         
         $form->applyFilter('__ALL__','trim');
         

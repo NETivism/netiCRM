@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -106,7 +106,7 @@ class CRM_Custom_Form_DeleteField extends CRM_Core_Form {
      * @access public
      */
     public function postProcess( ) {
-        $field = & new CRM_Core_DAO_CustomField();
+        $field = new CRM_Core_DAO_CustomField();
         $field->id = $this->_id;
         $field->find( true );
         

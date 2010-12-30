@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -24,52 +24,51 @@
  +--------------------------------------------------------------------+
 *}
 {* this template is used for adding/editing Contact Type  *}
-<div class="form-item">
-<fieldset><legend>{if $action eq 1}{ts}New Contact Type{/ts}{elseif $action eq 2}{ts}Edit Contact Type{/ts}{else}{ts}Delete Contact Type{/ts}{/if}</legend>
+
+<h3>{if $action eq 1}{ts}New Contact Type{/ts}{elseif $action eq 2}{ts}Edit Contact Type{/ts}{else}{ts}Delete Contact Type{/ts}{/if}</h3>
+<div class="crm-block crm-form-block crm-contact-type-form-block">
 {if $action eq 8}
   <div class="messages status">
-    <dl>
-      <dt><img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}" /></dt>
-      <dd>    
+    <div class="icon inform-icon"></div>
         {ts}WARNING: {ts}This action cannot be undone.{/ts} {ts}Do you want to continue?{/ts}{/ts}
-      </dd>
-    </dl>
- </div>
+    </div>
 {else}
-  <dl>
-    <dt>{$form.label.label}</dt>
-    <dd>
-        {if $action eq 2}
-           {include file='CRM/Core/I18n/Dialog.tpl' table='civicrm_contact_type' field='label' 
-             id= $id }
-        {/if}
-        {$form.label.html}
-    </dd>
-    <dt>{$form.parent_id.label}</dt>
-        {if $is_parent OR $action EQ 1}
-            <dd>&nbsp;{$form.parent_id.html}</dd>
-         {else}
-            <dd>{ts}{$contactTypeName} (built-in){/ts}</dd>
-        {/if}
-     <dt>{$form.image_URL.label}</dt>
-     <dd>
-         {$form.image_URL.html|crmReplace:class:'huge40'}{help id="id-image_URL"}
-     </dd> 
-     <dt>{$form.description.label}</dt>
-     <dd>
-        {if $action eq 2}
-	  {include file='CRM/Core/I18n/Dialog.tpl' table='civicrm_contact_type' field='description' 
-             id= $id }
-        {/if}
-        {$form.description.html}
-     </dd>
-     {if $is_parent OR $action eq 1}
-     <dt>{$form.is_active.label}</dt><dd>{$form.is_active.html}</dd>
+ <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>
+ <table class="form-layout-compressed">
+   <tr class="crm-contact-type-form-block-label">
+      <td class="label">{$form.label.label}
+      {if $action eq 2}
+        {include file='CRM/Core/I18n/Dialog.tpl' table='civicrm_contact_type' field='label' id= $cid }
+      {/if}
+      </td>
+           
+      <td>{$form.label.html}</td>
+   </tr>
+   <tr class="crm-contact-type-form-block-parent_id">
+      <td class="label">{$form.parent_id.label}</td>
+           {if $is_parent OR $action EQ 1}
+             <td>{$form.parent_id.html}</td>
+           {else}
+             <td>{ts}{$contactTypeName} (built-in){/ts}</td>
+           {/if}
+   </tr>
+   <tr class="crm-contact-type-form-block-image_URL">
+      <td class="label">{$form.image_URL.label}</td>
+      <td>{$form.image_URL.html|crmReplace:class:'huge40'}{help id="id-image_URL"}</td>
+   </tr> 
+   <tr class="crm-contact-type-form-block-description">
+     <td class="label">{$form.description.label}
+     {if $action eq 2}
+       {include file='CRM/Core/I18n/Dialog.tpl' table='civicrm_contact_type' field='description' id= $cid}
      {/if}
-  </dl>
+     </td>
+          
+     <td>{$form.description.html}</td>
+   </tr>
+   <tr class="crm-contact-type-form-block-is_active">
+     <td class="label">{$form.is_active.label}</td><td>{$form.is_active.html}</td>
+   </tr>
+ </table>
 {/if}
-  <dl> 
-    <dt></dt><dd>{$form.buttons.html}</dd>
-  </dl> 
-</fieldset>
+<div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
 </div>

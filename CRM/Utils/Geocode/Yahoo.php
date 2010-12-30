@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -72,7 +72,7 @@ class CRM_Utils_Geocode_Yahoo {
             return false;
         }
 
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
 
         $arg = array( );
         $arg[] = "appid=" . urlencode( $config->mapAPIKey );
@@ -115,7 +115,7 @@ class CRM_Utils_Geocode_Yahoo {
         $query = 'http://' . self::$_server . self::$_uri . '?' . $args;
 
         require_once 'HTTP/Request.php';
-        $request =& new HTTP_Request( $query );
+        $request = new HTTP_Request( $query );
         $request->sendRequest( );
         $string = $request->getResponseBody( );
         $xml = simplexml_load_string( $string );

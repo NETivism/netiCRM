@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -75,7 +75,7 @@ class CRM_Event_Form_Task_PickProfile extends CRM_Event_Form_Task
          */
         parent::preProcess( );
 
-        $session =& CRM_Core_Session::singleton();
+        $session = CRM_Core_Session::singleton();
         $this->_userContext = $session->readUserContext( );
 
         CRM_Utils_System::setTitle( ts('Batch Update for Event Participants') );
@@ -134,7 +134,7 @@ class CRM_Event_Form_Task_PickProfile extends CRM_Event_Form_Task
      * @static
      * @access public
      */
-    static function formRule( &$fields ) 
+    static function formRule( $fields ) 
     {
         return true;
     }    

@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -43,8 +43,10 @@
     <input type="text" name="text" id='text' value="" style="width: 10em;" />&nbsp;<input type="submit" name="submit" id="fulltext_submit" value="{ts}Go{/ts}" class="form-submit"/ onclick='submitForm();'>
 	</div>
 	<select class="form-select" id="fulltext_table" name="fulltext_table">
+{if call_user_func(array('CRM_Core_Permission','giveMeAllACLs'))}
     	<option value="">{ts}All{/ts}</option>
     	<option value="Contact">{ts}Contacts{/ts}</option>
+{/if}
     	<option value="Activity">{ts}Activities{/ts}</option>
 {if call_user_func(array('CRM_Core_Permission','access'), 'CiviCase')}
     	<option value="Case">{ts}Cases{/ts}</option>

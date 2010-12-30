@@ -1,7 +1,7 @@
 <?php
 /*
 +--------------------------------------------------------------------+
-| CiviCRM version 3.1                                                |
+| CiviCRM version 3.3                                                |
 +--------------------------------------------------------------------+
 | Copyright CiviCRM LLC (c) 2004-2010                                |
 +--------------------------------------------------------------------+
@@ -166,12 +166,6 @@ class CRM_Contact_DAO_Contact extends CRM_Core_DAO
      */
     public $legal_name;
     /**
-     * optional "home page" URL for this contact.
-     *
-     * @var string
-     */
-    public $home_URL;
-    /**
      * optional URL for preferred image (photo, logo, etc.) to display for this contact.
      *
      * @var string
@@ -183,6 +177,12 @@ class CRM_Contact_DAO_Contact extends CRM_Core_DAO
      * @var string
      */
     public $preferred_communication_method;
+    /**
+     * Which language is preferred for communication. FK to languages in civicrm_option_value.
+     *
+     * @var string
+     */
+    public $preferred_language;
     /**
      * What is the preferred mode of sending an email.
      *
@@ -321,12 +321,6 @@ class CRM_Contact_DAO_Contact extends CRM_Core_DAO
      */
     public $deceased_date;
     /**
-     * OPTIONAL FK to civicrm_contact_household record. If NOT NULL, direct mail communications to household rather than individual location.
-     *
-     * @var int unsigned
-     */
-    public $mail_to_household_id;
-    /**
      * Household Name.
      *
      * @var string
@@ -363,6 +357,11 @@ class CRM_Contact_DAO_Contact extends CRM_Core_DAO
      */
     public $employer_id;
     /**
+     *
+     * @var boolean
+     */
+    public $is_deleted;
+    /**
      * class constructor
      *
      * @access public
@@ -382,7 +381,6 @@ class CRM_Contact_DAO_Contact extends CRM_Core_DAO
     {
         if (!(self::$_links)) {
             self::$_links = array(
-                'mail_to_household_id' => 'civicrm_contact:id',
                 'primary_contact_id' => 'civicrm_contact:id',
                 'employer_id' => 'civicrm_contact:id',
             );
@@ -564,24 +562,11 @@ class CRM_Contact_DAO_Contact extends CRM_Core_DAO
                     'dataPattern' => '',
                     'export' => true,
                 ) ,
-                'home_URL' => array(
-                    'name' => 'home_URL',
-                    'type' => CRM_Utils_Type::T_STRING,
-                    'title' => ts('Website') ,
-                    'maxlength' => 128,
-                    'size' => CRM_Utils_Type::HUGE,
-                    'import' => true,
-                    'where' => 'civicrm_contact.home_URL',
-                    'headerPattern' => '/^(home\sURL)|URL|web|site/i',
-                    'dataPattern' => '/^[\w\/\:\.]+$/',
-                    'export' => true,
-                    'rule' => 'url',
-                ) ,
                 'image_URL' => array(
                     'name' => 'image_URL',
                     'type' => CRM_Utils_Type::T_STRING,
                     'title' => ts('Image Url') ,
-                    'maxlength' => 128,
+                    'maxlength' => 255,
                     'size' => CRM_Utils_Type::HUGE,
                     'import' => true,
                     'where' => 'civicrm_contact.image_URL',
@@ -599,6 +584,18 @@ class CRM_Contact_DAO_Contact extends CRM_Core_DAO
                     'where' => 'civicrm_contact.preferred_communication_method',
                     'headerPattern' => '/^p(ref\w*\s)?c(omm\w*)|( meth\w*)$/i',
                     'dataPattern' => '/^\w+$/',
+                    'export' => true,
+                ) ,
+                'preferred_language' => array(
+                    'name' => 'preferred_language',
+                    'type' => CRM_Utils_Type::T_STRING,
+                    'title' => ts('Preferred Language') ,
+                    'maxlength' => 5,
+                    'size' => CRM_Utils_Type::EIGHT,
+                    'import' => true,
+                    'where' => 'civicrm_contact.preferred_language',
+                    'headerPattern' => '/^lang/i',
+                    'dataPattern' => '',
                     'export' => true,
                 ) ,
                 'preferred_mail_format' => array(
@@ -798,16 +795,6 @@ class CRM_Contact_DAO_Contact extends CRM_Core_DAO
                     'dataPattern' => '',
                     'export' => true,
                 ) ,
-                'mail_to_household_id' => array(
-                    'name' => 'mail_to_household_id',
-                    'type' => CRM_Utils_Type::T_INT,
-                    'title' => ts('Mail to Household ID') ,
-                    'export' => true,
-                    'where' => 'civicrm_contact.mail_to_household_id',
-                    'headerPattern' => '',
-                    'dataPattern' => '',
-                    'FKClassName' => 'CRM_Contact_DAO_Contact',
-                ) ,
                 'household_name' => array(
                     'name' => 'household_name',
                     'type' => CRM_Utils_Type::T_STRING,
@@ -871,6 +858,11 @@ class CRM_Contact_DAO_Contact extends CRM_Core_DAO
                     'headerPattern' => '',
                     'dataPattern' => '',
                     'FKClassName' => 'CRM_Contact_DAO_Contact',
+                ) ,
+                'is_deleted' => array(
+                    'name' => 'is_deleted',
+                    'type' => CRM_Utils_Type::T_BOOLEAN,
+                    'required' => true,
                 ) ,
             );
         }

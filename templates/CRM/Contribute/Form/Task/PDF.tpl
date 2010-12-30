@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -25,16 +25,15 @@
 *}
 {* Confirmation of contribution deletes  *}
 <div class="messages status">
-  <dl>
-    <dt><img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}" /></dt>
-    <dd>
-        <p>{include file="CRM/Contribute/Form/Task.tpl"}</p>
-    </dd>
-  </dl>
+  <div class="icon inform-icon"></div>
+      {include file="CRM/Contribute/Form/Task.tpl"}
 </div>
 <div id="help">
-    {ts}A PDF file containing one receipt per page will be downloaded to your local computer when you click <strong>Download Receipt(s)</strong>. Your browser may display the file for you automatically, or you may need to open it for printing using any PDF reader (such as Adobe&reg; Reader).{/ts}
+    {ts}You may choose to Email receipts to Contributers OR Download a PDF file containing one receipt per page to your local computer by clicking <strong>Process Receipt(s)</strong>. Your browser may display the file for you automatically, or you may need to open it for printing using any PDF reader (such as Adobe&reg; Reader).{/ts}
 </div>
+
+  {$form.output.pdf_receipt.html}
+  {$form.output.email_receipt.html}
 <div class="spacer"></div>
 <div class="form-item">
  {$form.buttons.html}

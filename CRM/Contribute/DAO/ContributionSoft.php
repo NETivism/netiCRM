@@ -1,7 +1,7 @@
 <?php
 /*
 +--------------------------------------------------------------------+
-| CiviCRM version 3.1                                                |
+| CiviCRM version 3.3                                                |
 +--------------------------------------------------------------------+
 | Copyright CiviCRM LLC (c) 2004-2010                                |
 +--------------------------------------------------------------------+
@@ -79,7 +79,7 @@ class CRM_Contribute_DAO_ContributionSoft extends CRM_Core_DAO
      * @var boolean
      * @static
      */
-    static $_log = false;
+    static $_log = true;
     /**
      * Soft Contribution ID
      *
@@ -104,6 +104,12 @@ class CRM_Contribute_DAO_ContributionSoft extends CRM_Core_DAO
      * @var float
      */
     public $amount;
+    /**
+     * 3 character string, value from config setting or input via user.
+     *
+     * @var string
+     */
+    public $currency;
     /**
      * FK to civicrm_pcp.id
      *
@@ -201,6 +207,14 @@ class CRM_Contribute_DAO_ContributionSoft extends CRM_Core_DAO
                     'headerPattern' => '/total(.?am(ou)?nt)?/i',
                     'dataPattern' => '/^\d+(\.\d{2})?$/',
                     'export' => true,
+                ) ,
+                'currency' => array(
+                    'name' => 'currency',
+                    'type' => CRM_Utils_Type::T_STRING,
+                    'title' => ts('Currency') ,
+                    'maxlength' => 3,
+                    'size' => CRM_Utils_Type::FOUR,
+                    'default' => 'UL',
                 ) ,
                 'pcp_id' => array(
                     'name' => 'pcp_id',

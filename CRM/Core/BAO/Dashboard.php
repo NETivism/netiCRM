@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -41,7 +41,7 @@ require_once 'CRM/Core/DAO/Dashboard.php';
 
 class CRM_Core_BAO_Dashboard extends CRM_Core_DAO_Dashboard
 {
-
+    
     /**
      * Function to get the list of ddashlets 
      * ( defaults dashlets defined by admin )
@@ -59,7 +59,7 @@ class CRM_Core_BAO_Dashboard extends CRM_Core_DAO_Dashboard
         if ( !$all ) {
             $dao->is_active = 1;
         }
-
+        
         $dao->domain_id = CRM_Core_Config::domainID( );
         
         $dao->find( );
@@ -75,7 +75,7 @@ class CRM_Core_BAO_Dashboard extends CRM_Core_DAO_Dashboard
         
         return $dashlets;
     }
-
+    
     /**
      * Function to get the list of dashlets for a contact
      * and if there are no dashlets for contact return default dashlets and update 
@@ -106,8 +106,8 @@ class CRM_Core_BAO_Dashboard extends CRM_Core_DAO_Dashboard
                 if ( !$dao->is_active ) {
                     continue;
                 }
-            
-                $dashlets[$dao->column_no][$dao->dashboard_id] = $dao->is_minimized;
+                // append weight so that order is preserved.
+                $dashlets[$dao->column_no]["$dao->weight}-{$dao->dashboard_id}"] = $dao->is_minimized;
             } else {
                 $dashlets[$dao->dashboard_id] = $dao->dashboard_id;
             }
@@ -152,12 +152,30 @@ class CRM_Core_BAO_Dashboard extends CRM_Core_DAO_Dashboard
             $permissions = explode(',', $permission ); 
             $config  = CRM_Core_Config::singleton( );
             
+            static $allComponents;
+            if ( !$allComponents ) {
+                $allComponents = CRM_Core_Component::getNames( );
+            }
+            
             $hasPermission = false;    
             foreach ( $permissions as $key ) {
                 $showDashlet = true;
+                
+                $componentName = null;
+                if ( strpos( $key, 'access' ) === 0 ) { 
+                    $componentName = trim( substr( $key, 6 ) );
+                    if ( !in_array( $componentName, $allComponents ) ) {
+                        $componentName = null;
+                    }
+                }
+
+                // hack to handle case permissions
+                if ( !$componentName && in_array( $key, array( 'access my cases and activities', 'access all cases and activities' ) ) ) { 
+                    $componentName = 'CiviCase';
+                }
+                                
                 //hack to determine if it's a component related permission
-                if ( $key != 'access CiviCRM' && substr( $key, 0, 6 ) === 'access' ) {
-                    $componentName = trim(substr( $key, 6 ));
+                if ( $componentName ) {
                     if ( !in_array( $componentName, $config->enableComponents ) || 
                          !CRM_Core_Permission::check( $key ) ) {
                         $showDashlet = false;
@@ -197,221 +215,226 @@ class CRM_Core_BAO_Dashboard extends CRM_Core_DAO_Dashboard
      * @access public
      * @static  
      */
-     static function getDashletInfo( $dashletID ) {
-         $dashletInfo = array( );
-         $dao = new CRM_Core_DAO_Dashboard( );
-         
-         $dao->id = $dashletID;
-         $dao->find( true );
+    static function getDashletInfo( $dashletID ) {
+        $dashletInfo = array( );
+        $dao = new CRM_Core_DAO_Dashboard( );
 
-         //reset content based on the cache time set in config
-         $currentDate = strtotime( date('Y-m-d h:i:s') );
-         $createdDate = strtotime( $dao->created_date );
-         $dateDiff    = round(abs($currentDate - $createdDate) / 60 );
+        $dao->id = $dashletID;
+        $dao->find( true );
 
-         $config = CRM_Core_Config::singleton( );
-         if ( $config->dashboardCacheTimeout <= $dateDiff ) {
-             $dao->content = NULL;
-         }
-         
-         // if content is empty and url is set, retrieve it from url
-         if ( !$dao->content && $dao->url ) {
-             if ( substr( $dao->url, 0, 4 ) === 'http' ) {
-                $url = $dao->url;
-            } else {
-                $url = CRM_Utils_System::url( $dao->url, null, true, null, false );     
+        //reset content based on the cache time set in config
+        $currentDate = strtotime( date('Y-m-d h:i:s') );
+        $createdDate = strtotime( $dao->created_date );
+        $dateDiff    = round(abs($currentDate - $createdDate) / 60 );
+
+        $config = CRM_Core_Config::singleton( );
+        if ( $config->dashboardCacheTimeout <= $dateDiff ) {
+            $dao->content = NULL;
+        }
+
+        // if content is empty and url is set, retrieve it from url
+        if ( !$dao->content && $dao->url ) {
+            $url = $dao->url;
+            
+            // CRM-7087 
+            // -lets use relative url for internal use.
+            // -make sure relative url should not be htmlize.
+            if ( substr( $dao->url, 0, 4 ) != 'http' ) {
+                if ( $config->userFramework == 'Joomla' ||
+                     ( $config->userFramework == 'Drupal' && !variable_get('clean_url', '0' ) ) ) {
+                    $url = CRM_Utils_System::url( $dao->url, null, false, null, false );
+                }
             }
             
+            //get content from url
+            $dao->content = CRM_Utils_System::getServerResponse( $url );
+            $dao->created_date = date( "YmdHis" );
+            $dao->save( );
+        }
 
-             //get content from url
-             $dao->content = CRM_Utils_System::getServerResponse( $url );
-             $dao->created_date = date( "YmdHis" );
-             $dao->save( );
-         }
-         
-         $dashletInfo = array( 'title'      => $dao->label,
-                               'content'    => $dao->content);
+        $dashletInfo = array( 'title'      => $dao->label,
+            'content'    => $dao->content);
 
-         if ( $dao->is_fullscreen ) {                       
+        if ( $dao->is_fullscreen ) {                       
             $dashletInfo['fullscreen'] = $dao->content;
-         }                     
+        }                     
 
-         return $dashletInfo;
-     }
+        return $dashletInfo;
+    }
      
-     /**
-      * Function to save changes made by use to the Dashlet
-      *
-      * @param array $columns associated array
-      *
-      * @return void
-      * @access public
-      * @static
-      */
-      static function saveDashletChanges( $columns ) {
-          $session   = CRM_Core_Session::singleton( );
-          $contactID = $session->get('userID');
-          
-          // $columns = array( 0 => array( 2 => 0 ),
-          //                   1 => array( 1 => 0 )
-          //                  );
-          
-          //we need to get existing dashletes, so we know when to update or insert
-          $contactDashlets = CRM_Core_BAO_Dashboard::getContactDashlets( true );
-          
-          $dashletIDs = array( );
-          if ( is_array( $columns ) ) {
-              foreach ( $columns as $colNo => $dashlets ) {
-                  if( ! is_integer( $colNo ) ) {
-                      continue;
-                  }
-                  $weight = 1;
-                  foreach ( $dashlets as $dashletID => $isMinimized ) {
-                      $isMinimized = (int) $isMinimized;
-                      if ( in_array( $dashletID, $contactDashlets ) ) {
-                          $query = " UPDATE civicrm_dashboard_contact 
+    /**
+     * Function to save changes made by use to the Dashlet
+     *
+     * @param array $columns associated array
+     *
+     * @return void
+     * @access public
+     * @static
+     */
+    static function saveDashletChanges( $columns ) {
+        $session   = CRM_Core_Session::singleton( );
+        $contactID = $session->get('userID');
+        
+        // $columns = array( 0 => array( 2 => 0 ),
+        //                   1 => array( 1 => 0 )
+        //                  );
+        
+        //we need to get existing dashletes, so we know when to update or insert
+        $contactDashlets = CRM_Core_BAO_Dashboard::getContactDashlets( true );
+        
+        $dashletIDs = array( );
+        if ( is_array( $columns ) ) {
+            foreach ( $columns as $colNo => $dashlets ) {
+                if( ! is_integer( $colNo ) ) {
+                    continue;
+                }
+                $weight = 1;
+                foreach ( $dashlets as $dashletID => $isMinimized ) {
+                    $isMinimized = (int) $isMinimized;
+                    if ( in_array( $dashletID, $contactDashlets ) ) {
+                        $query = " UPDATE civicrm_dashboard_contact 
                                         SET weight = {$weight}, is_minimized = {$isMinimized}, column_no = {$colNo}, is_active = 1
                                       WHERE dashboard_id = {$dashletID} AND contact_id = {$contactID} ";                      
-                      } else {
-                          $query = " INSERT INTO civicrm_dashboard_contact 
+                    } else {
+                        $query = " INSERT INTO civicrm_dashboard_contact 
                                         ( weight, is_minimized, column_no, is_active, dashboard_id, contact_id )
                                      VALUES( {$weight},  {$isMinimized},  {$colNo}, 1, {$dashletID}, {$contactID} )";
-                          
-                      }
-                      // fire update query for each column
-                      $dao = CRM_Core_DAO::executeQuery( $query );
-                      
-                      $dashletIDs[] = $dashletID;
-                      $weight++;
-                  }              
-              }
-          }
+                        
+                    }
+                    // fire update query for each column
+                    $dao = CRM_Core_DAO::executeQuery( $query );
                     
-          if ( !empty( $dashletIDs ) ) {
-              // we need to disable widget that removed
-              $updateQuery = " UPDATE civicrm_dashboard_contact 
+                    $dashletIDs[] = $dashletID;
+                    $weight++;
+                }              
+            }
+        }
+        
+        if ( !empty( $dashletIDs ) ) {
+            // we need to disable widget that removed
+            $updateQuery = " UPDATE civicrm_dashboard_contact 
                                SET is_active = 0
                                WHERE dashboard_id NOT IN  ( " . implode( ',', $dashletIDs ). ") AND contact_id = {$contactID}";
-          } else {
-              // this means all widgets are disabled
-              $updateQuery = " UPDATE civicrm_dashboard_contact 
+        } else {
+            // this means all widgets are disabled
+            $updateQuery = " UPDATE civicrm_dashboard_contact 
                                SET is_active = 0
                                WHERE contact_id = {$contactID}";
-          }
-          
-          CRM_Core_DAO::executeQuery( $updateQuery );
-      }
-      
-     /**
-      * Function to add dashlets
-      *  
-      * @param array $params associated array
-      * 
-      * @return object $dashlet returns dashlet object
-      * @access public
-      * @static
-      */
-      static function addDashlet( &$params ) {
-          
-          // special case to handle duplicate entires for report instances
-          $dashboardID = null;
-          if ( CRM_Utils_Array::value( 'instanceURL', $params ) ) {
-              $query = "SELECT id
+        }
+        
+        CRM_Core_DAO::executeQuery( $updateQuery );
+    }
+    
+    /**
+     * Function to add dashlets
+     *  
+     * @param array $params associated array
+     * 
+     * @return object $dashlet returns dashlet object
+     * @access public
+     * @static
+     */
+    static function addDashlet( &$params ) {
+        
+        // special case to handle duplicate entires for report instances
+        $dashboardID = null;
+        if ( CRM_Utils_Array::value( 'instanceURL', $params ) ) {
+            $query = "SELECT id
                         FROM `civicrm_dashboard`
                         WHERE url LIKE '" . CRM_Utils_Array::value( 'instanceURL', $params ) ."&%'";
-              $dashboardID = CRM_Core_DAO::singleValueQuery( $query );  
-          }
-                    
-          require_once "CRM/Core/DAO/Dashboard.php";
-          $dashlet  = new CRM_Core_DAO_Dashboard( );
-          
-          if ( !$dashboardID ) {
-              // check url is same as exiting entries, if yes just update existing
-              $dashlet->url = CRM_Utils_Array::value( 'url', $params );
-              $dashlet->find( true );
-          } else {
-              $dashlet->id = $dashboardID;
-          }
-
-          if ( is_array( $params['permission'] )) {           
-              $params['permission'] = implode( ',', $params['permission'] );
-          }
-          $dashlet->copyValues( $params );
-
-          $dashlet->created_date = date( "YmdHis" );
-          $dashlet->domain_id = CRM_Core_Config::domainID( );
-          
-          $dashlet->save( );
-          
-          // now we need to make dashlet entries for each contact
-          self::addContactDashlet( $dashlet );
-          
-          return $dashlet;
-      }
-      
-      /**
-       * Update contact dashboard with new dashlet
-       *
-       */
-      static function addContactDashlet( &$dashlet ) {
-          $admin = CRM_Core_Permission::check( 'administer CiviCRM' );
-          
-          // if dashlet is created by admin then you need to add it all contacts.
-          // else just add to contact who is creating this dashlet
-          $contactIDs = array( );
-          if ( $admin ) {
-              $query = "SELECT distinct( contact_id ) 
+            $dashboardID = CRM_Core_DAO::singleValueQuery( $query );  
+        }
+        
+        require_once "CRM/Core/DAO/Dashboard.php";
+        $dashlet  = new CRM_Core_DAO_Dashboard( );
+        
+        if ( !$dashboardID ) {
+            // check url is same as exiting entries, if yes just update existing
+            $dashlet->url = CRM_Utils_Array::value( 'url', $params );
+            $dashlet->find( true );
+        } else {
+            $dashlet->id = $dashboardID;
+        }
+        
+        if ( is_array( $params['permission'] )) {           
+            $params['permission'] = implode( ',', $params['permission'] );
+        }
+        $dashlet->copyValues( $params );
+        
+        $dashlet->created_date = date( "YmdHis" );
+        $dashlet->domain_id = CRM_Core_Config::domainID( );
+        
+        $dashlet->save( );
+        
+        // now we need to make dashlet entries for each contact
+        self::addContactDashlet( $dashlet );
+        
+        return $dashlet;
+    }
+    
+    /**
+     * Update contact dashboard with new dashlet
+     *
+     */
+    static function addContactDashlet( &$dashlet ) {
+        $admin = CRM_Core_Permission::check( 'administer CiviCRM' );
+        
+        // if dashlet is created by admin then you need to add it all contacts.
+        // else just add to contact who is creating this dashlet
+        $contactIDs = array( );
+        if ( $admin ) {
+            $query = "SELECT distinct( contact_id ) 
                         FROM civicrm_dashboard_contact 
                         WHERE contact_id NOT IN ( 
                             SELECT distinct( contact_id ) 
                             FROM civicrm_dashboard_contact WHERE dashboard_id = {$dashlet->id}
                             )";
-                                    
-              $dao = CRM_Core_DAO::executeQuery( $query );
-              while( $dao->fetch( ) ) {
-                  $contactIDs[] = $dao->contact_id;
-              }
-          } else {
-              //Get the id of Logged in User
-              $session = CRM_Core_Session::singleton( );
-              $contactIDs[]  = $session->get( 'userID' );
-          }
-          
-          if ( !empty( $contactIDs ) ) {
-              foreach ( $contactIDs as $contactID ) {
-                  $valuesArray[] = " ( {$dashlet->id}, {$contactID} )";
-              }
-
-              $valuesString = implode( ',', $valuesArray );
-              $query = "
+            
+            $dao = CRM_Core_DAO::executeQuery( $query );
+            while( $dao->fetch( ) ) {
+                $contactIDs[] = $dao->contact_id;
+            }
+        } else {
+            //Get the id of Logged in User
+            $session = CRM_Core_Session::singleton( );
+            $contactIDs[]  = $session->get( 'userID' );
+        }
+        
+        if ( !empty( $contactIDs ) ) {
+            foreach ( $contactIDs as $contactID ) {
+                $valuesArray[] = " ( {$dashlet->id}, {$contactID} )";
+            }
+            
+            $valuesString = implode( ',', $valuesArray );
+            $query = "
                   INSERT INTO civicrm_dashboard_contact ( dashboard_id, contact_id )
                   VALUES {$valuesString}";
-
-              CRM_Core_DAO::executeQuery( $query );
-          } 
-      }
-      
-      /**
-       * Function to reset dashlet cache
-       *
-       * @return void
-       * @static 
-       */
-      static function resetDashletCache( ) {
-          $query = "UPDATE civicrm_dashboard SET content = NULL";
-          $dao = CRM_Core_DAO::executeQuery( $query );
-      }
-      
-      /**
-       * Delete Dashlet
-       *
-       * @return void
-       * @static
-       */
-       static function deleteDashlet( $dashletID ) {
-           require_once "CRM/Core/DAO/Dashboard.php";
-           $dashlet     = new CRM_Core_DAO_Dashboard( );
-           $dashlet->id = $dashletID;
-           $dashlet->delete( );
-       }
+            
+            CRM_Core_DAO::executeQuery( $query );
+        } 
+    }
+    
+    /**
+     * Function to reset dashlet cache
+     *
+     * @return void
+     * @static 
+     */
+    static function resetDashletCache( ) {
+        $query = "UPDATE civicrm_dashboard SET content = NULL";
+        $dao = CRM_Core_DAO::executeQuery( $query );
+    }
+    
+    /**
+     * Delete Dashlet
+     *
+     * @return void
+     * @static
+     */
+    static function deleteDashlet( $dashletID ) {
+        require_once "CRM/Core/DAO/Dashboard.php";
+        $dashlet     = new CRM_Core_DAO_Dashboard( );
+        $dashlet->id = $dashletID;
+        $dashlet->delete( );
+    }
 }

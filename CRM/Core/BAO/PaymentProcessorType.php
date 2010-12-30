@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -67,7 +67,7 @@ class CRM_Core_BAO_PaymentProcessorType extends CRM_Core_DAO_PaymentProcessorTyp
      * @static
      */
     static function retrieve( &$params, &$defaults ) {
-        $paymentProcessorType =& new CRM_Core_DAO_PaymentProcessorType( );
+        $paymentProcessorType = new CRM_Core_DAO_PaymentProcessorType( );
         $paymentProcessorType->copyValues( $params );
         if ( $paymentProcessorType->find( true ) ) {
             CRM_Core_DAO::storeValues( $paymentProcessorType, $defaults );
@@ -132,7 +132,7 @@ class CRM_Core_BAO_PaymentProcessorType extends CRM_Core_DAO_PaymentProcessorTyp
             return;
         }
 
-        $paymentProcessorType = & new CRM_Core_DAO_PaymentProcessorType( );
+        $paymentProcessorType = new CRM_Core_DAO_PaymentProcessorType( );
         $paymentProcessorType->id = $paymentProcessorTypeId;
         $paymentProcessorType->delete();
         CRM_Core_Session::setStatus( ts('Selected Payment Processor type has been deleted.') );

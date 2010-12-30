@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -49,9 +49,9 @@ class CRM_Admin_Form_Setting_Debugging extends CRM_Admin_Form_Setting
      * @access public
      */
     public function buildQuickForm( ) {
-        CRM_Utils_System::setTitle(ts('Settings - Debugging'));
+        CRM_Utils_System::setTitle(ts(' Settings - Debugging and Error Handling '));
 
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
 
         $this->addYesNo( 'debug', ts( 'Enable Debugging' ));
         if ($config->userFramework == 'Drupal') {

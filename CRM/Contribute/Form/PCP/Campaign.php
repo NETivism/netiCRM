@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -42,12 +42,16 @@ require_once 'CRM/Contribute/BAO/PCP.php';
 
 class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form
 {
- 
+    public $_context;
+     
     public function preProcess()  
     {
         // we do not want to display recently viewed items, so turn off
         $this->assign('displayRecent' , false );
-
+        
+        $this->_context = CRM_Utils_Request::retrieve('context', 'String', $this );
+        $this->assign('context', $this->_context );
+        
         $this->_pageId = CRM_Utils_Request::retrieve( 'id', 'Positive', $this, false );        
         $title = ts('Setup a Personal Campaign Page - Step 2');
         
@@ -63,7 +67,7 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form
     {
         require_once 'CRM/Contribute/DAO/PCP.php';
         $dafaults = array( );
-        $dao =& new CRM_Contribute_DAO_PCP( );
+        $dao = new CRM_Contribute_DAO_PCP( );
         
         if( $this->_pageId ) {
             $dao->id = $this->_pageId;
@@ -139,7 +143,7 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form
      * @access public  
      * @static  
      */  
-    static function formRule( &$fields, &$files, $self ) 
+    static function formRule( $fields, $files, $self ) 
     {
         $errors = array();
         if ( $fields['goal_amount'] <= 0 ) {
@@ -174,7 +178,7 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form
                 $params[$key] = 0;
             }
         }
-        $session =& CRM_Core_Session::singleton( );
+        $session = CRM_Core_Session::singleton( );
         $contactID = isset( $this->_contactID ) ? $this->_contactID : $session->get('userID');
         if( ! $contactID ) {
             $contactID = $this->get('contactID');
@@ -304,6 +308,8 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form
                                          array(1 => $pageStatus, 2 => $approvalMessage, 3 => $notifyStatus)) );
         if ( ! $this->_pageId ) {
             $session->pushUserContext( CRM_Utils_System::url( 'civicrm/contribute/pcp/info', "reset=1&id={$pcp->id}&ap={$anonymousPCP}" ) );
-        } 
+        } elseif ( $this->_context == 'dashboard' ) {
+            $session->pushUserContext( CRM_Utils_System::url( 'civicrm/admin/pcp', "reset=1" ) );
+        }
     }
 }

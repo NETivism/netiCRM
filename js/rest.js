@@ -1,6 +1,6 @@
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | This file is a part of CiviCRM.                                    |
  |                                                                    |
@@ -28,41 +28,111 @@
 */
 
 /*
-On the template page that includes this js, you have to define a global variable to set the url of the server to be used for the rest
+TO BE VERIFIED
+If you do not use clean urls on drupal, you have to define a variable to set the url of the server to be used for the rest
 <script type="text/javascript">
-civicrm_resourceURL="{$config->userFrameworkResourceURL}";
+var options {ajaxURL:"{$config->userFrameworkResourceURL}";
 </script>
 
-eg. CiviREST (contact/search,array(...))
-CiviREST(entitytag,add)
 
-It really should be a class (or one class per entity, inherit from a common civicrmEntity ?
-and it really really really should be a post for destructive actions (changes at the server level)
-
-it also should use closure so we can properly interface the result of the call to the called object
-
-    this.loadData = function() {
-        var obj = this;
-        cj.getJSON( url, function( data ) {
-            obj.gotData( data );  // instead of this.gotData( data );
-        });
-    }; 
 */
 
+(function($){
+      var defaults = {
+    	  success: function(result,settings){
+    	      var successMsg = 'Saved &nbsp; <a href="#" id="closerestmsg">'+ settings.closetxt +'</a>'; 
+    	      $(settings.msgbox).addClass('msgok').html( successMsg ).show();
+    	      $("#closerestmsg").click(function(){$(settings.msgbox).fadeOut("slow");return false;});
+    	      return true;
+    	  },
+    	  callBack: function(result,settings){
+    	      if (result.is_error == 1) {
+    		  $(settings.msgbox).addClass('msgnok').html(result.error_message);
+    		  return false;
+    	      }
+    	      return settings.success(result,settings);
+    	  },
+    	  closetxt: "<div class='icon close-icon' title='Close'>[X]</div>",
+    	  ajaxURL: 'civicrm/ajax/rest',
+    	  msgbox: '#restmsg'
+      };
+
+      $.fn.crmAPI = function(entity,action,params,options) {
+    	  params ['fnName'] = "civicrm/"+entity+"/"+action;
+    	  params ['json'] = 1;
+    	  var settings = $.extend({}, defaults, options);
+    	  $(settings.msgbox).removeClass('msgok').removeClass('msgnok').html("");
+    	  $.getJSON(settings.ajaxURL,params,function(result){return settings.callBack(result,settings);});
+      };
+
+      $.fn.crmAutocomplete = function (options) {
+	  var defaultsContact = {
+	        returnParam: ['sort_name','email'],
+	        params: {
+	            rowCount:35,
+		        json:1,
+		        fnName:'civicrm/contact/search'
+		    }
+	  };
+	  
+	  settings = $.extend(true,{},defaultsContact, options);
+	  
+	  var contactUrl = defaults.ajaxURL + "?";
+	  // How to loop on all the attributes ??
+	  for  (param in settings.params) {
+	      contactUrl = contactUrl + param +"="+ settings.params[param] + "&"; 
+	  }
+	  
+	  //    contactUrl = contactUrl + "fnName=civicrm/contact/search&json=1&";
+	  for (var i=0; i < settings.returnParam.length; i++) {
+	      contactUrl = contactUrl + 'return['+settings.returnParam[i] + "]&"; 
+	  }
+	  
+	  //var contactUrl = "/civicrm/ajax/rest?fnName=civicrm/contact/search&json=1&return[sort_name]=1&return[email]&rowCount=25";
+	  
+	  return this.each(function() {
+		  var selector = this;
+		  if (typeof $.fn.autocomplete != 'function') 
+		      $.fn.autocomplete = cj.fn.autocomplete;//to work around the fubar cj
+		      $(this).autocomplete( contactUrl, {
+    			  dataType:"json",
+    			      extraParams:{sort_name:function () {
+    				  return $(selector).val();}//how to fetch the val ?
+    			  },
+    			  formatItem: function(data,i,max,value,term){
+    			      if (data['email'])
+    				    return value + ' ('+ data['email'] + ")";
+    			      else 
+    				    return value;
+    			  },    			
+    			  parse: function(data){
+    			     var acd = new Array();
+    			     for(cid in data){
+    				     acd.push({ data:data[cid], value:data[cid].sort_name, result:data[cid].sort_name });
+    			     }
+    			     return acd;
+    			  },
+    			  
+    			  width: 250,
+    			  delay:100,
+    			  max:25,
+    			  minChars:0,
+    			  selectFirst: true
+    		 });
+       });
+     }
+
+})(jQuery);
+
+/* Depreciated as of 3.2. kept for backward compatibility reason. */
 function civiREST (entity,action,params,close) {
-  params ['fnName']="civicrm/"+entity+"/"+action;
-  params ['json'] = 1;
-  cj('#restmsg').removeClass('msgok').removeClass('msgnok').html("");
-  cj.getJSON(civicrm_ajaxURL,params,function(result){
-  if (result.is_error == 1) {
-    cj('#restmsg').addClass('msgnok').html(result.error_message);
-    return false;
-  }
-  if( !close ){
-	  close = "Hide";
-  }
-  var successMsg = 'Saved &nbsp; <a href="javascript:hideStatus();">'+ close +'</a>'; 
-  cj('#restmsg').addClass('msgok').html( successMsg ).show();
-  return true;
-  });
+    var options = null;
+    if( close ){
+	    options = {closetxt : close}; 
+    }
+    if ( typeof close == "function"){
+	    options = {success : close}; 
+    }
+  
+    cj.fn.crmAPI(entity,action,params,options);
 }

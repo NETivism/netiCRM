@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -61,12 +61,8 @@
   <table class="form-layout-compressed">
   <tr>
     <td class="font-size12pt" style="width: 30%;">
-    {if $savedSearch.name}{$savedSearch.name} ({ts}smart group{/ts}) - {/if}
-    {if $context EQ 'smog' OR $ssID GT 0}
-        {ts count=$pager->_totalItems plural='%count Group Members'}%count Group Member{/ts}
-    {else}
-      {ts count=$pager->_totalItems plural='%count Results'}%count Result{/ts}
-    {/if}
+        {if $savedSearch.name}{$savedSearch.name} ({ts}smart group{/ts}) - {/if}
+        {ts count=$pager->_totalItems plural='%count Contacts'}%count Contact{/ts}
     </td>
     
     {* Search criteria are passed to tpl in the $qill array *}
@@ -79,7 +75,7 @@
   <tr>
     <td class="font-size11pt"> {ts}Select Records{/ts}:</td>
     <td class="nowrap">
-        {$form.radio_ts.ts_all.html} {ts count=$pager->_totalItems plural='All %count records'}The found record{/ts} &nbsp; {if $pager->_totalItems > 1} {$form.radio_ts.ts_sel.html} {ts}Selected records only{/ts}{/if}
+        {$form.radio_ts.ts_all.html} <label for="{$ts_all_id}">{ts count=$pager->_totalItems plural='All %count records'}The found record{/ts}</label> &nbsp; {if $pager->_totalItems > 1} {$form.radio_ts.ts_sel.html} <label for="{$ts_sel_id}">{ts}Selected records only{/ts}</label>{/if}
     </td>
   </tr>
   <tr>
@@ -87,6 +83,7 @@
      {* Hide export and print buttons in 'Add Members to Group' context. *}
      {if $context NEQ 'amtg'}
         {if $action eq 512}
+          <ul>   
           {$form._qf_Advanced_next_print.html}&nbsp; &nbsp;
         {elseif $action eq 8192}
           {$form._qf_Builder_next_print.html}&nbsp; &nbsp;
@@ -95,7 +92,7 @@
           {$form._qf_Custom_next_print.html}&nbsp; &nbsp;
           *}
         {else}
-          {$form._qf_Basic_next_print.html}&nbsp; &nbsp;
+            {$form._qf_Basic_next_print.html}&nbsp; &nbsp;
         {/if}
         {$form.task.html}
      {/if}
@@ -118,4 +115,3 @@
 toggleTaskAction( );
 </script>
 {/literal}
-

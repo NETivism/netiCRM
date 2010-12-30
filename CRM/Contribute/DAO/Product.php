@@ -1,7 +1,7 @@
 <?php
 /*
 +--------------------------------------------------------------------+
-| CiviCRM version 3.1                                                |
+| CiviCRM version 3.3                                                |
 +--------------------------------------------------------------------+
 | Copyright CiviCRM LLC (c) 2004-2010                                |
 +--------------------------------------------------------------------+
@@ -79,7 +79,7 @@ class CRM_Contribute_DAO_Product extends CRM_Core_DAO
      * @var boolean
      * @static
      */
-    static $_log = false;
+    static $_log = true;
     /**
      *
      * @var int unsigned
@@ -127,6 +127,12 @@ class CRM_Contribute_DAO_Product extends CRM_Core_DAO
      * @var float
      */
     public $price;
+    /**
+     * 3 character string, value from config setting or input via user.
+     *
+     * @var string
+     */
+    public $currency;
     /**
      * Minimum contribution required to be eligible to select this premium.
      *
@@ -257,6 +263,14 @@ class CRM_Contribute_DAO_Product extends CRM_Core_DAO
                     'name' => 'price',
                     'type' => CRM_Utils_Type::T_MONEY,
                     'title' => ts('Price') ,
+                ) ,
+                'currency' => array(
+                    'name' => 'currency',
+                    'type' => CRM_Utils_Type::T_STRING,
+                    'title' => ts('Currency') ,
+                    'maxlength' => 3,
+                    'size' => CRM_Utils_Type::FOUR,
+                    'default' => 'UL',
                 ) ,
                 'min_contribution' => array(
                     'name' => 'min_contribution',

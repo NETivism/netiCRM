@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -205,6 +205,10 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
                 $highlightedFields[] = $name;
             }            
         }
+
+        // modify field title for contribution status
+        $this->_mapperFields['contribution_status_id'] = ts('Contribution Status');
+        
         $this->assign( 'highlightedFields', $highlightedFields );
     }
 
@@ -406,10 +410,10 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
             }
         }
         if ( $warning != 0 && $this->get('savedMapping') ) {
-            $session =& CRM_Core_Session::singleton( );
+            $session = CRM_Core_Session::singleton( );
             $session->setStatus( ts( 'The data columns in this import file appear to be different from the saved mapping. Please verify that you have selected the correct saved mapping before continuing.' ) );
         } else {
-            $session =& CRM_Core_Session::singleton( );
+            $session = CRM_Core_Session::singleton( );
             $session->setStatus( null ); 
         }
                     
@@ -437,7 +441,7 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
      * @static
      * @access public
      */
-    static function formRule( &$fields, &$files, &$self ) {
+    static function formRule( $fields, $files, $self ) {
         $errors       = array( );
         $fieldMessage = null;
         
@@ -527,7 +531,7 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
             if (!empty($errors['saveMappingName'])) {
                 $_flag = 1;
                 require_once 'CRM/Core/Page.php';
-                $assignError =& new CRM_Core_Page(); 
+                $assignError = new CRM_Core_Page(); 
                 $assignError->assign('mappingDetailsError', $_flag);
             }
             return $errors;
@@ -557,7 +561,7 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
         $fileName         = $this->controller->exportValue( 'UploadFile', 'uploadFile' );
         $skipColumnHeader = $this->controller->exportValue( 'UploadFile', 'skipColumnHeader' );
 
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
         $seperator = $config->fieldSeparator;
 
         $mapper = $mapperKeys = $mapperKeysMain = $mapperSoftCredit = $softCreditFields = $mapperPhoneType = array( );
@@ -585,7 +589,7 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
         
         //Updating Mapping Records
         if ( CRM_Utils_Array::value('updateMapping', $params)) {
-            $mappingFields =& new CRM_Core_DAO_MappingField();
+            $mappingFields = new CRM_Core_DAO_MappingField();
             $mappingFields->mapping_id = $params['mappingId'];
             $mappingFields->find( );
             
@@ -597,7 +601,7 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
             }
                     
             for ( $i = 0; $i < $this->_columnCount; $i++ ) {
-                $updateMappingFields =& new CRM_Core_DAO_MappingField();
+                $updateMappingFields = new CRM_Core_DAO_MappingField();
                 $updateMappingFields->id = $mappingFieldsId[$i];
                 $updateMappingFields->mapping_id = $params['mappingId'];
                 $updateMappingFields->column_number = $i;
@@ -619,7 +623,7 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
             $saveMapping = CRM_Core_BAO_Mapping::add( $mappingParams );
 
             for ( $i = 0; $i < $this->_columnCount; $i++ ) {                  
-                $saveMappingFields =& new CRM_Core_DAO_MappingField();
+                $saveMappingFields = new CRM_Core_DAO_MappingField();
                 $saveMappingFields->mapping_id = $saveMapping->id;
                 $saveMappingFields->column_number = $i;                             
                 $saveMappingFields->name = $mapper[$i];
@@ -631,7 +635,7 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
             $this->set( 'savedMapping', $saveMappingFields->mapping_id );
         }
 
-        $parser =& new CRM_Contribute_Import_Parser_Contribution( $mapperKeysMain, $mapperSoftCredit ,$mapperPhoneType );
+        $parser = new CRM_Contribute_Import_Parser_Contribution( $mapperKeysMain, $mapperSoftCredit ,$mapperPhoneType );
         $parser->run( $fileName, $seperator, $mapper, $skipColumnHeader,
                       CRM_Contribute_Import_Parser::MODE_PREVIEW, $this->get('contactType') );
         

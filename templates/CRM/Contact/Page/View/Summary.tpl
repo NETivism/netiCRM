@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -24,82 +24,105 @@
  +--------------------------------------------------------------------+
 *}
 {* Contact Summary template for new tabbed interface. Replaces Basic.tpl *}
+{if $imageURL }
+    <div>
+        {include file="CRM/Contact/Page/ContactImage.tpl"}
+    </div>
+{/if}
 {if $action eq 2}
     {include file="CRM/Contact/Form/Contact.tpl"}
 {else}
-    <div id="mainTabContainer" >
-        <ul>
-            <li id="tab_summary"><a href="#contact-summary" title="{ts}Summary{/ts}" >{ts}Summary{/ts}</a></li>
-            {foreach from=$allTabs key=tabName item=tabValue}
-            <li id="tab_{$tabValue.id}"><a href="{$tabValue.url}" title="{$tabValue.title}">{$tabValue.title}&nbsp;({$tabValue.count})</a></li>
-            {/foreach}
-        </ul>
 
-        <div title="Summary" id="contact-summary" class="ui-tabs-panel ui-widget-content ui-corner-bottom">
-            {if $hookContentPlacement neq 3}
-                <div class="buttons ui-corner-all">
+<div class="crm-actions-ribbon">
                     <ul id="actions">
-                        {if $permission EQ 'edit'}
-                        <li>
-                        <a href="{crmURL p='civicrm/contact/add' q="reset=1&action=update&cid=$contactId"}" class="edit button" title="{ts}Edit{/ts}">
-                        <span><div class="icon edit-icon"></div>{ts}Edit{/ts}</span>
+                    	{* CRM-4418 *}
+                        {* user should have edit permission to delete contact *}
+                        {if (call_user_func(array('CRM_Core_Permission','check'), 'delete contacts') and $permission == 'edit') or (call_user_func(array('CRM_Core_Permission','check'), 'access deleted contacts') and $is_deleted)}
+                        {if call_user_func(array('CRM_Core_Permission','check'), 'access deleted contacts') and $is_deleted}
+                        <li class="crm-delete-action crm-contact-restore">
+                        <a href="{crmURL p='civicrm/contact/view/delete' q="reset=1&cid=$contactId&restore=1"}" class="delete button" title="{ts}Restore{/ts}">
+                        <span><div class="icon restore-icon"></div>{ts}Restore from Trash{/ts}</span>
                         </a>
                         </li>
-                        {/if}
-
-                        {* CRM-4418 *}
-                        {* user should have edit permission to delete contact *}
-                        {if (call_user_func(array('CRM_Core_Permission','check'), 'delete contacts')) && ($permission EQ 'edit') }
-                        <li>
+                        
+                        <li class="crm-delete-action crm-contact-permanently-delete">
+                        <a href="{crmURL p='civicrm/contact/view/delete' q="reset=1&delete=1&cid=$contactId&skip_undelete=1"}" class="delete button" title="{ts}Delete Permanently{/ts}">
+                        <span><div class="icon delete-icon"></div>{ts}Delete Permanently{/ts}</span>
+                        </a>
+                        </li>
+                        {else}
+                        <li class="crm-delete-action crm-contact-delete">
                         <a href="{crmURL p='civicrm/contact/view/delete' q="reset=1&delete=1&cid=$contactId"}" class="delete button" title="{ts}Delete{/ts}">
                         <span><div class="icon delete-icon"></div>{ts}Delete{/ts}</span>
                         </a>
                         </li>
                         {/if}
-
-                        {* Include links to enter Activities if session has 'edit' permission *}
-                        {if $permission EQ 'edit'}
-                        <li>
-                            {include file="CRM/Activity/Form/ActivityLinks.tpl"}
-                        </li>
                         {/if}
-                        <li><span class="label">{ts}Go to:{/ts}</span></li>
-                        {if $dashboardURL }
+                    
+                    	{* Include the Actions button with dropdown if session has 'edit' permission *}
+                        {if $permission EQ 'edit' and !$isDeleted}
+                        <li class="crm-contact-activity">
+                            {include file="CRM/Contact/Form/ActionsButton.tpl"}
+                        </li>
                         <li>
-                        <a href="{$dashboardURL}" class="dashboard button" title="{ts}dashboard{/ts}">
-                        	<span><div class="icon dashboard-icon"></div>{ts}Dashboard{/ts}</span>
+			{assign var='urlParams' value="reset=1&action=update&cid=$contactId"}
+		        {if $searchKey}
+		            {assign var='urlParams' value="reset=1&action=update&cid=$contactId&key=$searchKey"}
+ 		        {/if}
+			{if $context}
+			    {assign var='urlParams' value=$urlParams|cat:"&context=$context"}
+			{/if}
+			
+                        <a href="{crmURL p='civicrm/contact/add' q=$urlParams}" class="edit button" title="{ts}Edit{/ts}">
+                        <span><div class="icon edit-icon"></div>{ts}Edit{/ts}</span>
                         </a>
                         </li>
                         {/if}
-                        {if $url }
-                        <li>
-                        <a href="{$url}" class="user-record button" title="{ts}User Record{/ts}">
-                        <span><div class="icon user-record-icon"></div>{ts}User Record{/ts}</span>
-                        </a>
-                        </li>
-                        {/if}
+                        
                         {if $groupOrganizationUrl}
-                        <li>
+                        <li class="crm-contact-associated-groups">
                         <a href="{$groupOrganizationUrl}" class="associated-groups button" title="{ts}Associated Multi-Org Group{/ts}">
                         <span><div class="icon associated-groups-icon"></div>{ts}Associated Multi-Org Group{/ts}</span>
                         </a>   
                         </li>
                         {/if}
                     </ul> 
-                    <span id="icons">
-                        <a title="{ts}vCard record for this contact.{/ts}" href='{crmURL p='civicrm/contact/view/vcard' q="reset=1&cid=$contactId"}'> <img src="{$config->resourceBase}i/vcard-icon.png" alt="vCard record for this contact." /></a>
-                        <a title="{ts}Printer-friendly view of this page.{/ts}" href='{crmURL p='civicrm/contact/view/print' q="reset=1&print=1&cid=$contactId"}'"> <img src="{$config->resourceBase}i/print-icon.png" alt="Printer-friendly view of this page." /></a>
-                    </span>
-                </div><!-- .buttons -->
+                    <div class="clear"></div>
+                        
+                        
+                </div><!-- .crm-actions-ribbon -->
+
+<div class="crm-block crm-content-block crm-contact-page">
+
+    <div id="mainTabContainer" class="ui-tabs ui-widget ui-widget-content ui-corner-all">
+        <ul class="crm-contact-tabs-list">
+            <li id="tab_summary" class="crm-tab-button">
+            	<a href="#contact-summary" title="{ts}Summary{/ts}">
+            	<span> </span> {ts}Summary{/ts}
+            	<em>&nbsp;</em>
+            	</a>
+            </li>
+            {foreach from=$allTabs key=tabName item=tabValue}
+            <li id="tab_{$tabValue.id}" class="crm-tab-button crm-count-{$tabValue.count}">
+            	<a href="{$tabValue.url}" title="{$tabValue.title}">
+            		<span> </span> {$tabValue.title}
+            		<em>{$tabValue.count}</em>
+            	</a>
+            </li>
+            {/foreach}
+        </ul>
+
+        <div title="Summary" id="contact-summary" class="ui-tabs-panel ui-widget-content ui-corner-bottom">
+            {if $hookContentPlacement neq 3}
                 
                 {if $hookContent and $hookContentPlacement eq 2}
                     {include file="CRM/Contact/Page/View/SummaryHook.tpl"}
                 {/if}
                 
                 {if $contact_type_label OR $current_employer_id OR $job_title OR $legal_name OR $sic_code OR $nick_name OR $contactTag OR $source}
-                <div id="contactTopBar" class="ui-corner-all">
+                <div id="contactTopBar">
                     <table>
-                        {if $contact_type_label OR $current_employer_id OR $job_title OR $legal_name OR $sic_code OR $nick_name}
+                        {if $contact_type_label OR $userRecordUrl OR $current_employer_id OR $job_title OR $legal_name OR $sic_code OR $nick_name}
                         <tr>
                             <td class="label">{ts}Contact Type{/ts}</td>
                             <td>{$contact_type_label}</td>
@@ -124,9 +147,14 @@
                             {/if}
                         </tr>
                         {/if}
-                        {if $contactTag OR $source}
+                        {if $contactTag OR $userRecordUrl OR $source}
                         <tr>
+                            {if $contactTag}
                             <td class="label" id="tagLink"><a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=$contactId&selectedChild=tag"}" title="{ts}Edit Tags{/ts}">{ts}Tags{/ts}</a></td><td id="tags">{$contactTag}</td>
+                            {/if}
+                            {if $userRecordUrl}
+                            <td class="label">{ts}User ID{/ts}</td><td><a title="View user record" class="user-record-link" href="{$userRecordUrl}">{$userRecordId}</a></div>
+                            {/if}
                             {if $source}
                             <td class="label">{ts}Source{/ts}</td><td>{$source}</td>
                             {/if}
@@ -137,29 +165,40 @@
                     <div class="clear"></div>
                 </div><!-- #contactTopBar -->
                 {/if}
-
-                <div class="contact_details ui-corner-all">
+                <div class="contact_details">
                     <div class="contact_panel">
                         <div class="contactCardLeft">
                             <table>
-                                {foreach from=$email item=item }
+                                {foreach from=$email key="blockId" item=item}
                                     {if $item.email}
                                     <tr>
                                         <td class="label">{$item.location_type}&nbsp;{ts}Email{/ts}</td>
                                         <td><span class={if $privacy.do_not_email}"do-not-email" title="{ts}Privacy flag: Do Not Email{/ts}" {elseif $item.on_hold}"email-hold" title="{ts}Email on hold - generally due to bouncing.{/ts}" {elseif $item.is_primary eq 1}"primary"{/if}><a href="mailto:{$item.email}">{$item.email}</a>{if $item.on_hold}&nbsp;({ts}On Hold{/ts}){/if}{if $item.is_bulkmail}&nbsp;({ts}Bulk{/ts}){/if}</span></td>
+					                    <td class="description">{if $item.signature_text OR $item.signature_html}<a href="#" title="{ts}Signature{/ts}" onClick="showHideSignature( '{$blockId}' ); return false;">{ts}(signature){/ts}</a>{/if}</td>
+                                    </tr>
+                                    <tr id="Email_Block_{$blockId}_signature" class="hiddenElement">
+                                        <td><strong>{ts}Signature HTML{/ts}</strong><br />{$item.signature_html}<br /><br />
+                                        <strong>{ts}Signature Text{/ts}</strong><br />{$item.signature_text|nl2br}</td>
+                                        <td colspan="2"></td>
                                     </tr>
                                     {/if}
                                 {/foreach}
-                                {if $home_URL}
-                                <tr>
-                                    <td class="label">{ts}Website{/ts}</td>
-                                    <td><a href="{$home_URL}" target="_blank">{$home_URL}</a></td>
-                                </tr>
+                                {if $website}
+                                {foreach from=$website item=item}
+                                    {if $item.url}
+                                    <tr>
+                                        <td class="label">{$item.website_type} {ts}Website{/ts}</td>
+                                        <td><a href="{$item.url}" target="_blank">{$item.url}</a></td>
+                                        <td></td>
+                                    </tr>
+                                    {/if}
+                                {/foreach}
                                 {/if}
                                 {if $user_unique_id}
                                     <tr>
                                         <td class="label">{ts}Unique Id{/ts}</td>
                                         <td>{$user_unique_id}</td>
+                                        <td></td>
                                     </tr>
                                 {/if}
                             </table>
@@ -199,12 +238,11 @@
 
                         <div class="clear"></div>
                     </div><!-- #contact_panel -->
-					{if $address}
-                    <div class="separator"></div>
 
+					{if $address}
                     <div class="contact_panel">
                         {foreach from=$address item=add key=locationIndex}
-                        <div class="{cycle name=location values="contactCardLeft,contactCardRight"}">
+                        <div class="{cycle name=location values="contactCardLeft,contactCardRight"} crm-address_{$locationIndex} crm-address-block crm-address_type_{$add.location_type}">
                             <table>
                                 <tr>
                                     <td class="label">{ts 1=$add.location_type}%1&nbsp;Address{/ts}
@@ -212,22 +250,46 @@
                                             <br /><a href="{crmURL p='civicrm/contact/map' q="reset=1&cid=`$contactId`&lid=`$add.location_type_id`"}" title="{ts 1='&#123;$add.location_type&#125;'}Map %1 Address{/ts}"><span class="geotag">{ts}Map{/ts}</span></a>
                                         {/if}</td>
                                     <td>
-                                        {if $householdName and $locationIndex eq 1}
-                                        <strong>{ts}Household Address:{/ts}</strong><br />
-                                        <a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$mail_to_household_id`"}">{$householdName}</a><br />
-                                        {/if}
-                                        {$add.display|nl2br}
+                                        {if $sharedAddresses.$locationIndex.shared_address_display.name}
+                                             <strong>{ts}Shared with:{/ts}</strong><br />
+                                             {$sharedAddresses.$locationIndex.shared_address_display.name}<br />
+                                         {/if}
+                                         {$add.display|nl2br}
                                     </td>
                                 </tr>
                             </table>
+			    {foreach from=$add.custom item=customGroup key=cgId}
+                            {assign var="isAddressCustomPresent" value=1}
+			        {foreach from=$customGroup item=customValue key=cvId}
+			            <div id="address_custom_{$cgId}_{$locationIndex}" class="crm-accordion-wrapper crm-address-custom-{$cgId}-{$locationIndex}-accordion crm-accordion-closed">
+			                <div class="crm-accordion-header">
+			                    <div class="icon crm-accordion-pointer"></div>
+				            {$customValue.title}
+			                </div>
+			                <div class="crm-accordion-body">
+				            <table>
+				                {foreach from=$customValue.fields item=customField key=cfId}
+					            <tr><td class="label">{$customField.field_title}</td><td>{$customField.field_value}</td></tr>
+	                  	                {/foreach}
+			                    </table>
+			                </div>
+			            </div>
+                                    <script type="text/javascript">
+                                        {if $customValue.collapse_display eq 1 }
+                                            cj('#address_custom_{$cgId}_{$locationIndex}').removeClass('crm-accordion-open').addClass('crm-accordion-closed');
+                                        {else}
+                                            cj('#address_custom_{$cgId}_{$locationIndex}').removeClass('crm-accordion-closed').addClass('crm-accordion-open');
+                                        {/if}
+                                    </script>
+                                {/foreach}
+                            {/foreach}
                         </div>
                         {/foreach}
 
                         <div class="clear"></div>
                     </div>
-
-                    <div class="separator"></div>
 					{/if}
+					
                     <div class="contact_panel">
                         <div class="contactCardLeft">
                             <table>
@@ -236,12 +298,17 @@
                                         {foreach from=$privacy item=priv key=index}
                                             {if $priv}{$privacy_values.$index}<br />{/if}
                                         {/foreach}
-					{if $is_opt_out}{ts}No Bulk Emails (User Opt Out){/ts}{/if}
+                                        {if $is_opt_out}{ts}No Bulk Emails (User Opt Out){/ts}{/if}
                                     </span></td>
                                 </tr>
                                 <tr>
                                     <td class="label">{ts}Preferred Method(s){/ts}</td><td>{$preferred_communication_method_display}</td>
                                 </tr>
+                                {if $preferred_language}
+                                <tr>
+                                    <td class="label">{ts}Preferred Language{/ts}</td><td>{$preferred_language}</td>
+                                </tr>
+                                {/if}
                                 <tr>
                                     <td class="label">{ts}Email Format{/ts}</td><td>{$preferred_mail_format}</td>
                                 </tr>
@@ -250,7 +317,7 @@
 
                         {include file="CRM/Contact/Page/View/Demographics.tpl"}
 						
-		<div class="clear"></div>
+                        <div class="clear"></div>
                         <div class="separator"></div>
 						
 						<div class="contactCardLeft">
@@ -293,7 +360,20 @@
                         <div class="clear"></div>
                     </div>
                 </div>
-                
+                {literal}
+                <script type="text/javascript">
+                    cj('.columnheader').click( function( ) {
+                        var aTagObj = cj(this).find('a');
+                        if ( aTagObj.hasClass( "expanded" ) ) {
+                            cj(this).parent().find('tr:not(".columnheader")').hide( );
+                        } else {    
+                            cj(this).parent().find('tr:not(".columnheader")').show( );
+                        }
+                        aTagObj.toggleClass("expanded");
+                        return false;
+                    });
+                </script>
+                {/literal}
                 {if $hookContent and $hookContentPlacement eq 1}
                     {include file="CRM/Contact/Page/View/SummaryHook.tpl"}
                 {/if}
@@ -301,17 +381,73 @@
                 {include file="CRM/Contact/Page/View/SummaryHook.tpl"}
             {/if}
         </div>
-
+		<div class="clear"></div>
     </div>
+ <script type="text/javascript"> 
+ var selectedTab  = 'summary';
+ var spinnerImage = '<img src="{$config->resourceBase}i/loading.gif" style="width:10px;height:10px"/>';
+ {if $selectedChild}selectedTab = "{$selectedChild}";{/if}  
+ {literal}
+ function fixTabAbort(event,ui){
+//	jQuery(ui.tab).data("cache.tabs",(jQuery(ui.panel).html() == "") ? false : true);
+    }
 
-    <script type="text/javascript"> 
-    var selectedTab = 'summary';
-    {if $selectedChild}selectedTab = "{$selectedChild}";{/if}    
-	{literal}
-	cj( function() {
-        var tabIndex = cj('#tab_' + selectedTab).prevAll().length
-        cj("#mainTabContainer").tabs( {selected: tabIndex} );        
-    });
-    {/literal}
-    </script>
+//explicitly stop spinner
+function stopSpinner( ) {
+ cj('li.crm-tab-button').each(function(){ cj(this).find('span').text(' ');})	 
+}
+ cj( function() {
+     var tabIndex = cj('#tab_' + selectedTab).prevAll().length;
+     cj("#mainTabContainer").tabs({ selected: tabIndex, spinner: spinnerImage,cache: true, select: fixTabAbort, load: stopSpinner});
+     cj(".crm-tab-button").addClass("ui-corner-bottom");     
+ });
+ {/literal}
+ </script>
+
 {/if}
+{literal}
+<script type="text/javascript">
+function showHideSignature( blockId ) {
+	  cj("#Email_Block_" + blockId + "_signature").show( );   
+	  
+	  cj("#Email_Block_" + blockId + "_signature").dialog({
+		title: "Signature",
+		modal: true,
+		bgiframe: true,
+		width: 900,
+		height: 500,
+		overlay: { 
+			opacity: 0.5, 
+			background: "black"
+		},
+
+		beforeclose: function(event, ui) {
+            		cj(this).dialog("destroy");
+        	},
+
+		open:function() {
+		},
+
+		buttons: { 
+			"Done": function() { 
+				cj(this).dialog("destroy"); 
+			} 
+		} 
+		
+	  });
+}
+
+</script>
+{/literal}
+
+{if $isAddressCustomPresent}
+    {literal}
+        <script type="text/javascript">
+            cj(function() {
+                cj().crmaccordions(); 
+            });
+        </script>
+    {/literal}
+{/if}
+<div class="clear"></div>
+</div><!-- /.crm-content-block -->

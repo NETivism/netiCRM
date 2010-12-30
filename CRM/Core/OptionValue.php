@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -82,7 +82,7 @@ class CRM_Core_OptionValue
         $optionGroupID = null;
         if (! isset( $groupParams['id'] ) || ! $groupParams['id'] ) {
             if ( $groupParams['name'] ) {
-                $config =& CRM_Core_Config::singleton( );
+                $config = CRM_Core_Config::singleton( );
                 
                 $optionGroup = CRM_Core_BAO_OptionGroup::retrieve($groupParams, $dnc);
                 $optionGroupID = $optionGroup->id;
@@ -97,7 +97,7 @@ class CRM_Core_OptionValue
                                                       $optionGroupID, 'name', 'id' );
         }
         
-        $dao =& new CRM_Core_DAO_OptionValue();
+        $dao = new CRM_Core_DAO_OptionValue();
         
         if ( $optionGroupID ) {
             $dao->option_group_id = $optionGroupID;
@@ -111,6 +111,13 @@ class CRM_Core_OptionValue
             $dao->find();
         }
         
+        require_once 'CRM/Case/BAO/Case.php';
+        if ( $groupName == 'case_type' ) {
+            $caseTypeIds = CRM_Case_BAO_Case::getUsedCaseType( );
+        } else if ( $groupName == 'case_status' ) {
+            $caseStatusIds = CRM_Case_BAO_Case::getUsedCaseStatuses( );
+        }
+
         require_once 'CRM/Core/Component.php';
         $componentNames = CRM_Core_Component::getNames();
         $visibilityLabels = CRM_Core_PseudoConstant::visibility( );
@@ -129,7 +136,12 @@ class CRM_Core_OptionValue
                 } else {
                     $action -= CRM_Core_Action::DISABLE;
                 }
+                if ( ( ( $groupName == 'case_type' ) && in_array( $dao->value, $caseTypeIds ) ) || 
+                     ( ( $groupName == 'case_status' ) && in_array( $dao->value, $caseStatusIds ) ) ) {
+                    $action -= CRM_Core_Action::DELETE;
+                }
             }
+
             $optionValue[$dao->id]['label']  = htmlspecialchars( $optionValue[$dao->id]['label'] );
             $optionValue[$dao->id]['order']  = $optionValue[$dao->id]['weight'];
             $optionValue[$dao->id]['action'] = CRM_Core_Action::formLink($links, $action, 
@@ -167,10 +179,11 @@ class CRM_Core_OptionValue
      */
     static function addOptionValue( &$params, &$groupParams, &$action, &$optionValueID ) 
     {
+        require_once 'CRM/Utils/Weight.php';        
         $params['is_active'] =  CRM_Utils_Array::value( 'is_active', $params, false );
         // checking if the group name with the given id or name (in $groupParams) exists
         if (! empty($groupParams)) {
-            $config =& CRM_Core_Config::singleton( );
+            $config = CRM_Core_Config::singleton( );
             $groupParams['is_active']   = 1;
             $optionGroup = CRM_Core_BAO_OptionGroup::retrieve($groupParams, $defaults);
         }
@@ -189,7 +202,6 @@ class CRM_Core_OptionValue
                 $oldWeight = CRM_Core_DAO::getFieldValue( 'CRM_Core_DAO_OptionValue', $optionValueID, 'weight', 'id' );
             }
             $fieldValues = array('option_group_id' => $optionGroupID);
-            require_once 'CRM/Utils/Weight.php';        
             $params['weight'] =
                 CRM_Utils_Weight::updateOtherWeights('CRM_Core_DAO_OptionValue', $oldWeight, $params['weight'], $fieldValues);
         }
@@ -236,7 +248,7 @@ class CRM_Core_OptionValue
     static function optionExists( $value, $daoName, $daoID, $optionGroupID, $fieldName = 'name' ) 
     {
         require_once(str_replace('_', DIRECTORY_SEPARATOR, $daoName) . ".php");
-        eval( '$object =& new ' . $daoName . '( );' );
+        eval( '$object = new ' . $daoName . '( );' );
         $object->$fieldName      = $value;
         $object->option_group_id = $optionGroupID;
 

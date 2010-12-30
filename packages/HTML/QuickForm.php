@@ -54,8 +54,9 @@ $GLOBALS['HTML_QUICKFORM_ELEMENT_TYPES'] =
             'hiddenselect'  =>array('HTML/QuickForm/hiddenselect.php','HTML_QuickForm_hiddenselect'),
             'text'          =>array('HTML/QuickForm/text.php','HTML_QuickForm_text'),
             'textarea'      =>array('HTML/QuickForm/textarea.php','HTML_QuickForm_textarea'),
-            'ckeditor'     =>array('HTML/QuickForm/ckeditor.php','HTML_QuickForm_CKEditor'),
+            'ckeditor'      =>array('HTML/QuickForm/ckeditor.php','HTML_QuickForm_CKEditor'),
             'tinymce'       =>array('HTML/QuickForm/tinymce.php','HTML_QuickForm_TinyMCE'),
+            'joomlaeditor'  =>array('HTML/QuickForm/joomlaeditor.php','HTML_QuickForm_JoomlaEditor'),
             'link'          =>array('HTML/QuickForm/link.php','HTML_QuickForm_link'),
             'advcheckbox'   =>array('HTML/QuickForm/advcheckbox.php','HTML_QuickForm_advcheckbox'),
             'date'          =>array('HTML/QuickForm/date.php','HTML_QuickForm_date'),
@@ -1963,10 +1964,13 @@ class HTML_QuickForm extends HTML_Common
                              'pay_later_receipt',
                              'label', // This is needed for FROM Email Address configuration. dgg
                              'url',  // This is needed for navigation items urls
+                             'details',
                              'msg_text', // message templates’ text versions
                              'text_message', // (send an) email to contact’s and CiviMail’s text version
+                             'data', // data i/p of persistent table
+                             'sqlQuery' // CRM-6673
                              );
-                                    
+                                  
         $values = array();
         if (null === $elementList) {
             // iterate over all elements, calling their exportValue() methods
@@ -1984,6 +1988,12 @@ class HTML_QuickForm extends HTML_Common
                     $this->filterValue( $value );
                 }
                 
+                // hack to fix extra <br /> injected by CKEDITOR, we should remove this code
+                // once the bug is fixed and is part of release https://dev.fckeditor.net/ticket/5293
+                if ( is_a( $this->_elements[$key], 'HTML_QuickForm_CKeditor' ) && ( CRM_Utils_Array::value( $fldName, $value ) == '<br />' ) ) {
+                    $value[$fldName] = rtrim( $value[$fldName], '<br />');
+                }
+                
                 if (is_array($value)) {
                     // This shit throws a bogus warning in PHP 4.3.x
                     $values = HTML_QuickForm::arrayMerge($values, $value);
@@ -1995,7 +2005,7 @@ class HTML_QuickForm extends HTML_Common
             }
             foreach ($elementList as $elementName) {
                 $value = $this->exportValue($elementName);
-                
+                                
                 //filter the value across XSS vulnerability issues.
                 if ( !in_array( $elementName, $skipFields ) ) {
                     $this->filterValue( $value );

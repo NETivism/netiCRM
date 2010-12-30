@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.2                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -91,7 +91,7 @@
 {/htxt}
 
 {htxt id='id-is_update_dupe'}
-<p>{ts}If you are using the profile as a contact signup and editing form - this option controls what happens if the data matches an existing contact record. If this option is enabled, the matching contact record is updated. Otherwise the user will get a 'duplicate record' warning, and their input will not be saved. Contact matching is based on your configured 'Strict' rule for identifying duplicate contacts.{/ts} {docURL page="Find and Merge Duplicate Contacts"}</p>
+<p>{ts}If you are using the profile as a contact signup and editing form - this option controls what happens if the data matches an existing contact record. Using this option user can update the matching record or create a duplicate record or otherwise he will get a 'duplicate record' warning, and their input will not be saved. Contact matching is based on your configured 'Strict' rule for identifying duplicate contacts.{/ts} {docURL page="Find and Merge Duplicate Contacts"}</p>
 <p>{ts}This setting is ignored if the profile is embedded in an online contribution, membership signup or event registration form. In this case a contact match always results in the transaction being linked to the matching contact.</p>{/ts}
 <p>{ts}NOTE: If there are multiple matching contacts, the first matching record is used.{/ts}</p>
 {/htxt}
@@ -106,4 +106,10 @@
 
 {htxt id='id-is_uf_link'}
 {ts 1=`$config->userFramework`}Check this box if you want to include a link in the listings to view contacts' %1 user account information (e.g. their 'My Account' page). This link will only be included for contacts who have a user account on your website.{/ts}
+{/htxt}
+
+{htxt id='id-is_proximity_search'}
+{ts}If you are using this profile as a search form, you can choose to include proximity searching. When enabled, a proximity search block will be added to the search criteria. This block will contain fields to set the proximity start address, and a field to set a 'Radius' (distance from that address).{/ts}
+{ts}Set Proximity Search as required if you want all searches using this profile to require the user to enter a start address and a radius.{/ts}
+<p>{ts}IMPORTANT: You must enable a Mapping Provider in order to use the Proximity Search feature (Administer > Configure > Global Settings > Mapping and Geocoding).{/ts}</p>
 {/htxt}

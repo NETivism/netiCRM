@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -50,18 +50,18 @@ class CRM_Import_Page_AJAX
             return;
         }
 
-        $config =& CRM_Core_Config::singleton( );    
+        $config = CRM_Core_Config::singleton( );    
         $file = "{$config->uploadDir}status_{$_GET['id']}.txt";
         if ( file_exists( $file ) ) {
             $str = file_get_contents( $file );
             echo $str;
         } else {
             require_once 'Services/JSON.php';
-            $json =& new Services_JSON( );
+            $json = new Services_JSON( );
             $status = "<div class='description'>&nbsp; " . ts('No processing status reported yet.') . "</div>";
             echo $json->encode( array( 0, $status ) );
         }
-		exit;
+        CRM_Utils_System::civiExit( );
     }
 
 }

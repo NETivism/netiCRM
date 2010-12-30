@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -49,7 +49,7 @@ class CRM_Admin_Form_Setting_UF extends CRM_Admin_Form_Setting
      * @access public
      */
     public function buildQuickForm( ) {
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
         $uf     = $config->userFramework;
         
         CRM_Utils_System::setTitle( ts( 'Settings - %1 Integration',

@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -24,7 +24,7 @@
  +--------------------------------------------------------------------+
 *}
 {if $validCiviCase}
-    <div id="case-search" class="form-item">
+    <div id="case-search">
     <table class="form-layout"> 
        {include file="CRM/Case/Form/Search/Common.tpl"}
     </table>

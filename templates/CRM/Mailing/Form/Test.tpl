@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -23,49 +23,55 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
+<div class="crm-block crm-form-block crm-mailing-test-form-block">
 {include file="CRM/common/WizardHeader.tpl"}
-{include file="CRM/Mailing/Form/Count.tpl"}
 <div id="help">
-{ts}It's a good idea to test your mailing by sending it to yourself and/or a selected group of people in your organization. You can also view your content by clicking (+) Preview Mailing.{/ts} {help id="test-intro"}
+    {ts}It's a good idea to test your mailing by sending it to yourself and/or a selected group of people in your organization. You can also view your content by clicking (+) Preview Mailing.{/ts} {help id="test-intro"}
 </div>
 
-<div class="form-item">
+{include file="CRM/Mailing/Form/Count.tpl"}
+
 <fieldset>
   <legend>Test Mailing</legend>
-  <dl>
-    <dt class="label">{$form.test_email.label}</dt><dd>{$form.test_email.html} {ts}(filled with your contact's token values){/ts}</dd>
-    <dt class="label">{$form.test_group.label}</dt><dd>{$form.test_group.html}</dd>
-    <dt></dt><dd>{$form.sendtest.html}</dd>  
-  </dl>
+  <table class="form-layout">
+    <tr class="crm-mailing-test-form-block-test_email"><td class="label">{$form.test_email.label}</td><td>{$form.test_email.html} {ts}(filled with your contact's token values){/ts}</td></tr>
+    <tr class="crm-mailing-test-form-block-test_group"><td class="label">{$form.test_group.label}</td><td>{$form.test_group.html}</td></tr>
+    <tr><td></td><td>{$form.sendtest.html}</td>  
+  </table>
 </fieldset>
-    <dt></dt><dd>{$form.buttons.html}</dd>
 
-<div class="section-hidden section-hidden-border" id="previewMailing_show">
-  <a href="#" onclick="hide('previewMailing_show'); show('previewMailing'); document.getElementById('previewMailing').style.visibility = 'visible'; return false;"><img src="{$config->resourceBase}i/TreePlus.gif" class="action-icon" alt="{ts}open section{/ts}"/></a><label>{ts}Preview Mailing{/ts}</label><br />
-</div>
+<div class="crm-accordion-wrapper crm-plain_text_email-accordion crm-accordion-closed">
+    <div class="crm-accordion-header">
+        <div class="icon crm-accordion-pointer"></div> 
+        {ts}Preview Mailing{/ts}
+    </div><!-- /.crm-accordion-header -->
+    <div class="crm-accordion-body">
+        <table class="form-layout">
+          <tr class="crm-mailing-test-form-block-subject"><td class="label">{ts}Subject:{/ts}</td><td>{$subject}</td></tr>
+    {if $preview.attachment}
+          <tr class="crm-mailing-test-form-block-attachment"><td class="label">{ts}Attachment(s):{/ts}</td><td>{$preview.attachment}</td></tr>
+    {/if}
+          {if $preview.text_link}
+          <tr><td class="label">{ts}Text Version:{/ts}</td><td><iframe height="300" src="{$preview.text_link}" width="80%"><a href="{$preview.text_link}" onclick="window.open(this.href); return false;">{ts}Text Version{/ts}</a></iframe></td></tr>
+          {/if}
+          {if $preview.html_link}
+          <tr><td class="label">{ts}HTML Version:{/ts}</td><td><iframe height="300" src="{$preview.html_link}" width="80%"><a href="{$preview.html_link}" onclick="window.open(this.href); return false;">{ts}HTML Version{/ts}</a></iframe></td></tr>
+          {/if}
+        </table>
+    </div><!-- /.crm-accordion-body -->
+</div><!-- /.crm-accordion-wrapper -->    
 
-<div id="previewMailing" style="visibility: hidden;">
-  <fieldset>
-    <legend><a href="#" onclick="hide('previewMailing'); show('previewMailing_show'); return false;"><img src="{$config->resourceBase}i/TreeMinus.gif" class="action-icon" alt="{ts}close section{/ts}"/></a>{ts}Preview Mailing{/ts}</legend>
-    <dl>
-      <dt class="label">{ts}Subject:{/ts}</dt><dd>{$subject}</dd></dt>
-{if $preview.attachment}
-      <dt class="label">{ts}Attachment(s):{/ts}</dt><dd>{$preview.attachment}</dd></dt>
-{/if}
-      {if $preview.text_link}
-      <dt class="label">{ts}Text Version:{/ts}</dt><dd><iframe height="300" src="{$preview.text_link}" width="80%"><a href="{$preview.text_link}" onclick="window.open(this.href); return false;">{ts}Text Version{/ts}</a></iframe></dd></dt>
-      {/if}
-      {if $preview.html_link}
-      <dt class="label">{ts}HTML Version:{/ts}</dt><dd><iframe height="300" src="{$preview.html_link}" width="80%"><a href="{$preview.html_link}" onclick="window.open(this.href); return false;">{ts}HTML Version{/ts}</a></iframe></dd></dt>
-      {/if}
-    </dl>
-  </fieldset>
-    <dt></dt><dd>{$form.buttons.html}</dd>
-</div>
+<div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl"}</div>
     
-</div>
+</div><!-- / .crm-form-block -->
 
 {* include jscript to warn if unsaved form field changes *}
 {include file="CRM/common/formNavigate.tpl"}
-
+{literal}
+<script type="text/javascript">
+cj(function() {
+   cj().crmaccordions(); 
+});
+</script>
+{/literal}
 

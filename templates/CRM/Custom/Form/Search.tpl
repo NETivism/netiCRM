@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -25,28 +25,24 @@
 *}
 {if $groupTree}
 {foreach from=$groupTree item=cd_edit key=group_id}
-{if $showHideLinks or $form.formName eq 'Advanced'}
-  <div id="{$cd_edit.name}_show" class="section-hidden section-hidden-border">
-    <a href="#" onclick="hide('{$cd_edit.name}_show'); show('{$cd_edit.name}'); return false;"><img src="{$config->resourceBase}i/TreePlus.gif" class="action-icon" alt="{ts}open section{/ts}" /></a><label>{$cd_edit.title}</label><br />
-  </div>
-{/if}
+  <div class="crm-accordion-wrapper crm-contactDetails-accordion crm-accordion-open" id="{$cd_edit.name}" >
+    <div class="crm-accordion-header">
+    <div class="icon crm-accordion-pointer"></div> 
+        {$cd_edit.title}	
+    </div><!-- /.crm-accordion-header -->
 
-  <div id="{$cd_edit.name}" class="form-item">
-  <fieldset><legend>
-{if $showHideLinks or $form.formName eq 'Advanced'}
-<a href="#" onclick="hide('{$cd_edit.name}'); show('{$cd_edit.name}_show'); return false;"><img src="{$config->resourceBase}i/TreeMinus.gif" class="action-icon" alt="{ts}close section{/ts}" /></a>
-{/if}
-{$cd_edit.title}</legend>
-    <dl>
+    <div class="crm-accordion-body">
+    <table class="form-layout-compressed">
     {foreach from=$cd_edit.fields item=element key=field_id}
       {assign var="element_name" value='custom_'|cat:$field_id}
       {if $element.options_per_line != 0}
-         <dt>{$form.$element_name.label}</dt>
-         <dd>
+         <tr>
+           <td class="label">{$form.$element_name.label}</td>
+           <td>
             {assign var="count" value="1"}
             {strip}
             <table class="form-layout-compressed">
-            <tr>
+             <tr>
                 {* sort by fails for option per line. Added a variable to iterate through the element array*}
                 {assign var="index" value="1"}
                 {foreach name=outer key=key item=item from=$form.$element_name}
@@ -69,33 +65,35 @@
                     {/if}
                 {/if}
                 {/foreach}
-            </tr>
+             </tr>
             {if $element.html_type eq 'Radio'}
                 <tr style="line-height: .75em; margin-top: 1px;">
-                    <td> &nbsp; <a href="#" title="unselect" onclick="unselectRadio('{$element_name}', '{$form.formName}'); return false;">{ts}unselect{/ts}</a></td>
+                    <td> <span class="crm-clear-link">(<a href="#" title="unselect" onclick="unselectRadio('{$element_name}', '{$form.formName}'); return false;">{ts}clear{/ts}</a>)</span></td>
                 </tr>
             {/if}
             </table>
             {/strip}
-            </dd>
+           </td>
+         </tr>
         {else}
             {assign var="type" value=`$element.html_type`}
             {assign var="element_name" value='custom_'|cat:$field_id}
             {if $element.is_search_range}
                 {assign var="element_name_from" value=$element_name|cat:"_from"}
                 {assign var="element_name_to" value=$element_name|cat:"_to"}
+                <tr>
                 {if $element.data_type neq 'Date'}
-                    <dt>{$form.$element_name_from.label}</dt><dd>
+                    <td class="label">{$form.$element_name_from.label}</td><td>
                     {$form.$element_name_from.html|crmReplace:class:six}
                     &nbsp;&nbsp;{$form.$element_name_to.label}&nbsp;&nbsp;{$form.$element_name_to.html|crmReplace:class:six}
                 {elseif $element.skip_calendar NEQ true }
-                    <dt>{$form.$element_name_from.label}</dt><dd>
+                    <td class="label">{$form.$element_name_from.label}</td><td>
                     {include file="CRM/common/jcalendar.tpl" elementName=$element_name_from}
                     &nbsp;&nbsp;{$form.$element_name_to.label}&nbsp;&nbsp;
                     {include file="CRM/common/jcalendar.tpl" elementName=$element_name_to}
-                {/if}
+                {/if}  
             {else}
-                <dt>{$form.$element_name.label}</dt><dd>&nbsp;
+                <td class="label">{$form.$element_name.label}</td><td>
                 {if $element.data_type neq 'Date'}
                     {$form.$element_name.html}
                 {elseif $element.skip_calendar NEQ true }
@@ -107,19 +105,18 @@
             {elseif $element.html_type eq 'Autocomplete-Select'}
                 {include file="CRM/Custom/Form/AutoComplete.tpl"}
             {/if}
-            </dd>
+            </td>
+          </tr>
 	    {/if}
 	    {/foreach}
-	    </dl>
-	 </fieldset>
-    </div>
- 
+	   </table>
+    </div><!-- /.crm-accordion-body -->
+  </div><!-- /.crm-accordion-wrapper -->
+
 {if  $form.formName eq 'Advanced'}
 <script type="text/javascript">
-{if $cd_edit.collapse_adv_display eq 0}
-	hide("{$cd_edit.name}_show"); show("{$cd_edit.name}");
-{else}
-	show("{$cd_edit.name}_show"); hide("{$cd_edit.name}");
+{if $cd_edit.collapse_adv_display eq 1}
+	cj("#{$cd_edit.name}").removeClass('crm-accordion-open').addClass('crm-accordion-closed');
 {/if}
 </script>
 {/if}

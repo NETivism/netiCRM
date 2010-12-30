@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -75,6 +75,9 @@ class CRM_Core_BAO_CustomValue extends CRM_Core_DAO
             
         case 'Boolean':
             return CRM_Utils_Rule::boolean($value);
+            
+        case 'ContactReference':
+            return CRM_Utils_Rule::validContact($value);
             
         case 'StateProvince':
             
@@ -173,6 +176,13 @@ class CRM_Core_BAO_CustomValue extends CRM_Core_DAO
                 $formValues[$key] = '%' .  $formValues[$key] . '%';
                 
             }
+           
+            $dataType = CRM_Core_DAO::getFieldValue( 'CRM_Core_BAO_CustomField', 
+                                                     substr($key,7), 'data_type');
+            if ( ( $dataType == 'ContactReference' ) && ( $htmlType == 'Autocomplete-Select' ) ) {
+                $formValues[$key] = $formValues[$key.'_id'];
+             }
+            
         }
     }
     

@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -29,18 +29,18 @@
           {if ! isset($noForm) || ! $noForm}
             <span class="element-right">
             {if $location eq 'top'}
-              {$pager->_response.titleTop}&nbsp;<input name="{$pager->_response.buttonTop}" value="{ts}Go{/ts}" type="submit"/>
+              {$pager->_response.titleTop}&nbsp;<input class="form-submit" name="{$pager->_response.buttonTop}" value="{ts}Go{/ts}" type="submit"/>
             {else}
-              {$pager->_response.titleBottom}&nbsp;<input name="{$pager->_response.buttonBottom}" value="{ts}Go{/ts}" type="submit"/>
+              {$pager->_response.titleBottom}&nbsp;<input class="form-submit" name="{$pager->_response.buttonBottom}" value="{ts}Go{/ts}" type="submit"/>
             {/if}
             </span>
           {/if}
           <span class="crm-pager-nav">
           {$pager->_response.first}&nbsp;
           {$pager->_response.back}&nbsp;
-          <strong>{$pager->_response.status}</strong>&nbsp;
           {$pager->_response.next}&nbsp;
-          {$pager->_response.last}&nbsp;
+          {$pager->_response.last}&nbsp;          
+          {$pager->_response.status}          
           </span>
 
         </div>
@@ -54,7 +54,7 @@
            {$pager->_response.fifty}&nbsp; | &nbsp;
            {$pager->_response.onehundred}&nbsp; 
      </div>
-     <div class="spacer"></div>
+     <div class="clear"></div>
     {/if}
 
 {/if}

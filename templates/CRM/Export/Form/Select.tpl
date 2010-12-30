@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -25,36 +25,54 @@
 *}
 {* Export Wizard - Step 2 *}
 {* @var $form Contains the array for the form elements and other form associated information assigned to the template by the controller *}
+<div class="crm-block crm-form-block crm-export-form-block">
 
-{* WizardHeader.tpl provides visual display of steps thru the wizard as well as title for current step *}
-{include file="CRM/common/WizardHeader.tpl"}
+ <div id="help">
+    <p>{ts}<strong>Export PRIMARY fields</strong> provides the most commonly used data values. This includes primary address information, preferred phone and email.{/ts}</p>
+    <p>{ts}Click <strong>Select fields for export</strong> and then <strong>Continue</strong> to choose a subset of fields for export. This option allows you to export multiple specific locations (Home, Work, etc.) as well as custom data. You can also save your selections as a 'field mapping' so you can use it again later.{/ts}</p>
+ </div>
 
-<div id="help">
-<p>{ts}<strong>Export PRIMARY fields</strong> provides the most commonly used data values. This includes primary address information, preferred phone and email.{/ts}</p>
-<p>{ts}Click <strong>Select fields for export</strong> and then <strong>Continue</strong> to choose a subset of fields for export. This option allows you to export multiple specific locations (Home, Work, etc.) as well as custom data. You can also save your selections as a 'field mapping' so you can use it again later.{/ts}</p>
-</div>
+ {* WizardHeader.tpl provides visual display of steps thru the wizard as well as title for current step *}
+ {include file="CRM/common/WizardHeader.tpl"}
 
-<fieldset>
-  <div id="export-type" class="form-item">
-    <dl>
-        <dd>
-         {ts count=$totalSelectedRecords plural='%count records selected for export.'}One record selected for export.{/ts}
-        </dd> 
-        <dd>{$form.exportOption.html}</dd>
-    </dl>
-      <div id="map">
-       {if $form.mapping }
-            <table class="form-layout-compressed">
-            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>{$form.mapping.label} &nbsp; {$form.mapping.html}</td></tr></table>
-       {/if}
-      </div>
+ <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>
+ <div id="export-type">
+  <div class="crm-section crm-exportOption-section">
+    <h3>{ts count=$totalSelectedRecords plural='%count records selected for export.'}One record selected for export.{/ts}</h3>
+    <div class="content-no-label crm-content-exportOption">
+        {$form.exportOption.html}
+   </div>
   </div>
-</fieldset>
+  
+  <div id="map" class="crm-section crm-export-mapping-section">
+      {if $form.mapping }
+        <div class="label crm-label-export-mapping">
+            {$form.mapping.label}
+        </div>
+        <div class="content crm-content-export-mapping">
+            {$form.mapping.html}
+        </div>
+		<div class="clear"></div> 
+      {/if}
+  </div>
+  
+  {if $taskName eq 'Export Contacts'}
+  <div class="crm-section crm-export-mergeOptions-section">
+    <div class="label crm-label-mergeOptions">{ts}Merge Options{/ts} {help id="id-export_merge_options"}</div>
+    <div class="content crm-content-mergeSameAddress">
+        &nbsp;{$form.merge_same_address.html}
+    </div>
+    <div class="content crm-content-mergeSameHousehold">
+        &nbsp;{$form.merge_same_household.html}
+    </div>
+	<div class="clear"></div> 
+  </div>
+  {/if}
+    
+ </div>
 
-<div id="crm-submit-buttons">
-    {$form.buttons.html}
+ <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
 </div>
-
 {literal}
   <script type="text/javascript">
      function showMappingOption( )

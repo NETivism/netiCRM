@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -146,7 +146,7 @@ class CRM_Core_BAO_CustomValueTable
 
                         // need to add/update civicrm_entity_file
                         require_once 'CRM/Core/DAO/EntityFile.php'; 
-                        $entityFileDAO =& new CRM_Core_DAO_EntityFile();
+                        $entityFileDAO = new CRM_Core_DAO_EntityFile();
                         $entityFileDAO->file_id = $field['file_id'];
                         $entityFileDAO->find( true );
 

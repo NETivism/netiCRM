@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -53,6 +53,9 @@ class CRM_Grant_Form_GrantView extends CRM_Core_Form
     {
         $this->_contactID = CRM_Utils_Request::retrieve( 'cid', 'Positive', $this );
         $this->_id        = CRM_Utils_Request::retrieve( 'id', 'Positive', $this );
+        $context          = CRM_Utils_Request::retrieve( 'context', 'String', $this );
+        $this->assign( 'context', $context );
+        
         $values = array( ); 
         $params['id'] = $this->_id;
         require_once 'CRM/Grant/BAO/Grant.php';
@@ -72,7 +75,7 @@ class CRM_Grant_Form_GrantView extends CRM_Core_Form
 
         if ( isset( $this->_id ) ) {
             require_once 'CRM/Core/BAO/Note.php';
-            $noteDAO               = & new CRM_Core_BAO_Note();
+            $noteDAO               = new CRM_Core_BAO_Note();
             $noteDAO->entity_table = 'civicrm_grant';
             $noteDAO->entity_id    = $this->_id;
             if ( $noteDAO->find(true) ) {
@@ -96,12 +99,22 @@ class CRM_Grant_Form_GrantView extends CRM_Core_Form
                  CRM_Utils_Money::format( $values['amount_total'] ) . ' (' . 
                  $grantType[$values['grant_type_id']] . ')';
 
+        $recentOther = array( );
+        if ( CRM_Core_Permission::checkActionPermission( 'CiviGrant', CRM_Core_Action::UPDATE ) ) {
+            $recentOther['editUrl'] = CRM_Utils_System::url( 'civicrm/contact/view/grant', 
+                                                             "action=update&reset=1&id={$values['id']}&cid={$values['contact_id']}&context=home" );
+        }
+        if ( CRM_Core_Permission::checkActionPermission( 'CiviGrant', CRM_Core_Action::DELETE ) ) {
+            $recentOther['deleteUrl'] = CRM_Utils_System::url( 'civicrm/contact/view/grant', 
+                                                               "action=delete&reset=1&id={$values['id']}&cid={$values['contact_id']}&context=home" );
+        }
         CRM_Utils_Recent::add( $title,
                                $url,
                                $values['id'],
                                'Grant',
                                $values['contact_id'],
-                               null );
+                               null,
+                               $recentOther );
 
         require_once 'CRM/Core/BAO/File.php';
         $attachment = CRM_Core_BAO_File::attachmentInfo( 'civicrm_grant',
@@ -123,7 +136,7 @@ class CRM_Grant_Form_GrantView extends CRM_Core_Form
     public function buildQuickForm( ) 
     {
         $this->addButtons(array(  
-                                array ( 'type'      => 'next',  
+                                array ( 'type'      => 'cancel',  
                                         'name'      => ts('Done'),  
                                         'spacing'   => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',  
                                         'isDefault' => true   )

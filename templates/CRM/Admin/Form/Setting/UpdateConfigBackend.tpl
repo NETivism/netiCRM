@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -23,29 +23,45 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
-<div class="form-item">
-<fieldset><legend>{ts}Update Directory Path and URL{/ts}</legend>
+<div class="crm-block crm-form-block crm-config-backend-form-block">
 <div id="help">
     <p>
     {ts}Use this form if you need to reset the Base Directory Path and Base URL settings for your CiviCRM installation. These settings are stored in the database, and generally need adjusting after moving a CiviCRM installation to another location in the file system and/or to another URL.{/ts}</p>
     <p>
     {ts}CiviCRM will attempt to detect the new values that should be used. These are provided below as the default values for the <strong>New Base Directory</strong> and <strong>New Base URL</strong> fields.{/ts}</p>
-</div>    
-        <dl>
-            <dt>{ts}Old Base Directory{/ts}</dt><dd>{$oldBaseDir}</dd>
-            <dt>{$form.newBaseDir.label}</dt><dd>{$form.newBaseDir.html|crmReplace:class:'huge'}</dd>
-            <dt>&nbsp;</dt><dd class="description">{ts}For Drupal installs, this is the absolute path to the location of the 'files' directory. For Joomla installs this is the absolute path to the location of the 'media' directory.{/ts}</dd>
-            <dt>{ts}Old Base URL{/ts}</dt><dd>{$oldBaseURL}</dd>
-            <dt>{$form.newBaseURL.label}</dt><dd>{$form.newBaseURL.html|crmReplace:class:'huge'}</dd>
-            <dt>&nbsp;</dt><dd class="description">{ts}This is the URL for your Drupal or Joomla site URL (e.g. http://www.mysite.com/drupal/).{/ts}</dt>
+</div>  
+        <div>{include file="CRM/common/formButtons.tpl" location="top"}</div>  
+        <table>
+            <tr class="crm-config-backend-form-block-oldBaseDir">
+                <td class="label">{ts}Old Base Directory{/ts}</td>
+                <td>{$oldBaseDir}</td>
+            </tr>
+            <tr class="crm-config-backend-form-block-newBaseDir">
+                <td class="label">{$form.newBaseDir.label}</td>
+                <td>{$form.newBaseDir.html|crmReplace:class:'huge'}<br />
+                <span class="description">{ts}For Drupal installs, this is the absolute path to the location of the 'files' directory. For Joomla installs this is the absolute path to the location of the 'media' directory.{/ts}</span></td>
+            </tr>
+            <tr class="crm-config-backend-form-block-oldBaseURL">
+                <td class="label">{ts}Old Base URL{/ts}</td>
+                <td>{$oldBaseURL}</td>
+            </tr>
+            <tr class="crm-config-backend-form-block-newBaseURL">
+                <td class="label">{$form.newBaseURL.label}</td>
+                <td>{$form.newBaseURL.html|crmReplace:class:'huge'}<br />
+                <span class="description">{ts}This is the URL for your Drupal or Joomla site URL (e.g. http://www.mysite.com/drupal/).{/ts}</span></td>
+            </tr>
 {if $oldSiteName}
-            <dt>{ts}Old Site Name{/ts}</dt><dd>{$oldSiteName}</dd>
-            <dt>{$form.newSiteName.label}</dt><dd>{$form.newSiteName.html|crmReplace:class:'huge'}</dd>
-            <dt>&nbsp;</dt><dd class="description">{ts}This is the your site name for a multisite install.{/ts}</dt>
-{/if}
-            <dt></dt><dd>{$form.buttons.html}</dd>
-        </dl>
-   
+            <tr class="crm-config-backend-form-block-oldSiteName">
+                <td class="label">{ts}Old Site Name{/ts}</td>
+                <td>{$oldSiteName}</td>
+            </tr>
+            <tr class="crm-config-backend-form-block-newSiteName">
+                <td class="label">{$form.newSiteName.label}</td>
+                <td>{$form.newSiteName.html|crmReplace:class:'huge'}<br />
+                <span class="description">{ts}This is the your site name for a multisite install.{/ts}</span></td>
+            </tr>
+{/if}  
+        </table>
+        <div>{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
 <div class="spacer"></div>
-</fieldset>
 </div>

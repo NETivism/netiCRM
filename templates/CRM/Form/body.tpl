@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -34,17 +34,18 @@
 {/if}
 
 {if ! $suppressForm and count($form.errors) gt 0}
-   <div class="messages error">
-   {ts}Please correct the following errors in the form fields below:{/ts}
-   <ul id="errorList">
-   {foreach from=$form.errors key=errorName item=error}
-      {if is_array($error)}
-         <li>{$error.label} {$error.message}</li>
-      {else}
-         <li>{$error}</li>
-      {/if}
-   {/foreach}
-   </ul>
+   <div class="messages crm-error">
+   		<div class="icon red-icon alert-icon"></div>
+	   {ts}Please correct the following errors in the form fields below:{/ts}
+	   <ul id="errorList">
+	   {foreach from=$form.errors key=errorName item=error}
+	      {if is_array($error)}
+	         <li>{$error.label} {$error.message}</li>
+	      {else}
+	         <li>{$error}</li>
+	      {/if}
+	   {/foreach}
+	   </ul>
    </div>
 {/if}
 

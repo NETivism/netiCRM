@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -43,7 +43,8 @@ abstract class CRM_Event_Import_Parser
         CONFLICT        =  8,
         STOP            = 16,
         DUPLICATE       = 32,
-        MULTIPLE_DUPE   = 64;
+        MULTIPLE_DUPE   = 64,
+        NO_MATCH        = 128;
 
     /**
      * various parser modes
@@ -308,7 +309,7 @@ abstract class CRM_Event_Import_Parser
             /* trim whitespace around the values */
             $empty = true;
             foreach ($values as $k => $v) {
-                $values[$k] = trim($v, " .\t\r\n");
+                $values[$k] = trim($v, " \t\r\n");
             }
             
             if ( CRM_Utils_System::isNull( $values ) ) {
@@ -407,14 +408,14 @@ abstract class CRM_Event_Import_Parser
                 $headers = array_merge( array(  ts('Line Number'),
                                                 ts('Reason')), 
                                         $customHeaders);
-                $this->_errorFileName = $fileName . '.errors';
+                $this->_errorFileName = self::errorFileName( self::ERROR );
                 self::exportCSV($this->_errorFileName, $headers, $this->_errors);
             }
             if ($this->_conflictCount) {
                 $headers = array_merge( array(  ts('Line Number'),
                                                 ts('Reason')), 
                                         $customHeaders);
-                $this->_conflictFileName = $fileName . '.conflicts';
+                $this->_conflictFileName = self::errorFileName( self::CONFLICT );
                 self::exportCSV($this->_conflictFileName, $headers, $this->_conflicts);
             }
             if ($this->_duplicateCount) {
@@ -422,7 +423,7 @@ abstract class CRM_Event_Import_Parser
                                                 ts('View Participant URL')),
                                         $customHeaders);
                 
-                $this->_duplicateFileName = $fileName . '.duplicates';
+                $this->_duplicateFileName = self::errorFileName( self::DUPLICATE );
                 self::exportCSV($this->_duplicateFileName, $headers, $this->_duplicates);
             }
         }
@@ -451,7 +452,7 @@ abstract class CRM_Event_Import_Parser
         require_once 'CRM/Event/Import/Field.php';
         foreach ( $fieldKeys as $key ) {
             if ( empty( $this->_fields[$key] ) ) {
-                $this->_activeFields[] =& new CRM_Event_Import_Field( '', ts( '- do not import -' ) );
+                $this->_activeFields[] = new CRM_Event_Import_Field( '', ts( '- do not import -' ) );
             } else {
                 $this->_activeFields[] = clone( $this->_fields[$key] );
             }
@@ -559,16 +560,16 @@ abstract class CRM_Event_Import_Parser
     
     function addField( $name, $title, $type = CRM_Utils_Type::T_INT, $headerPattern = '//', $dataPattern = '//') {
         if ( empty( $name ) ) {
-            $this->_fields['doNotImport'] =& new CRM_Event_Import_Field($name, $title, $type, $headerPattern, $dataPattern);
+            $this->_fields['doNotImport'] = new CRM_Event_Import_Field($name, $title, $type, $headerPattern, $dataPattern);
         } else {
             
             //$tempField = CRM_Contact_BAO_Contact::importableFields('Individual', null );
             $tempField = CRM_Contact_BAO_Contact::importableFields('All', null );
             if (! array_key_exists ($name,$tempField) ) {
-                $this->_fields[$name] =& new CRM_Event_Import_Field($name, $title, $type, $headerPattern, $dataPattern);
+                $this->_fields[$name] = new CRM_Event_Import_Field($name, $title, $type, $headerPattern, $dataPattern);
             } else {
                 require_once 'CRM/Import/Field.php';
-                $this->_fields[$name] =& new CRM_Import_Field( $name, $title, $type, $headerPattern, $dataPattern, 
+                $this->_fields[$name] = new CRM_Import_Field( $name, $title, $type, $headerPattern, $dataPattern, 
                                                                CRM_Utils_Array::value( 'hasLocationType', $tempField[$name] ) );
             }
         }
@@ -658,7 +659,7 @@ abstract class CRM_Event_Import_Parser
         foreach ($header as $key => $value) {
             $header[$key] = "\"$value\"";
         }
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
         $output[] = implode($config->fieldSeparator, $header);
         
         foreach ($data as $datum) {
@@ -698,5 +699,20 @@ abstract class CRM_Event_Import_Parser
             $values[$k] = preg_replace("/^$enclosure(.*)$enclosure$/", '$1', $v);
         }
     }
+
+    function errorFileName( $type ) 
+    {
+        require_once 'CRM/Import/Parser.php';
+        $fileName = CRM_Import_Parser::errorFileName( $type );
+        return $fileName;
+    }
+    
+    function saveFileName( $type ) 
+    {
+        require_once 'CRM/Import/Parser.php';
+        $fileName = CRM_Import_Parser::saveFileName( $type );
+        return $fileName;
+    }
+
 }
 

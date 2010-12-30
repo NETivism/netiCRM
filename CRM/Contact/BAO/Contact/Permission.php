@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -54,13 +54,20 @@ class CRM_Contact_BAO_Contact_Permission {
         $tables     = array( );
         $whereTables       = array( );
        
+        # FIXME: push this somewhere below, to not give this permission so many rights
+        $isDeleted = (bool) CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $id, 'is_deleted');
+        if (CRM_Core_Permission::check('access deleted contacts') and $isDeleted) {
+            return true;
+        }
+
         //check permission based on relationship, CRM-2963
         if ( self::relationship( $id ) ) {
             return true;
-        } else {
-            require_once 'CRM/ACL/API.php';
-            $permission = CRM_ACL_API::whereClause( $type, $tables, $whereTables );
         }
+
+        require_once 'CRM/ACL/API.php';
+        $permission = CRM_ACL_API::whereClause( $type, $tables, $whereTables );
+
         require_once "CRM/Contact/BAO/Query.php";
         $from       = CRM_Contact_BAO_Query::fromClause( $whereTables );
 
@@ -145,6 +152,7 @@ WHERE $permission
             $sql = "REPLACE INTO civicrm_acl_contact_cache ( user_id, contact_id, operation ) VALUES $str;";
             CRM_Core_DAO::executeQuery( $sql );
         }
+        CRM_Core_DAO::executeQuery('DELETE FROM civicrm_acl_contact_cache WHERE contact_id IN (SELECT id FROM civicrm_contact WHERE is_deleted = 1)');
 
         $_processed[$userID] = 1;
         return;
@@ -152,7 +160,17 @@ WHERE $permission
 
     static function cacheClause( $contactAlias = 'contact_a', $contactID = null ) {
         if ( CRM_Core_Permission::check( 'view all contacts' ) ) {
-            return array( null, null );
+            if (is_array($contactAlias)) {
+                $wheres = array();
+                foreach ($contactAlias as $alias) {
+                    // CRM-6181
+                    $wheres[] = "$alias.is_deleted = 0";
+                }
+                return array(null, '(' . implode(' AND ', $wheres) . ')');
+            } else {
+                // CRM-6181
+                return array(null, "$contactAlias.is_deleted = 0");
+            }
         }
 
         $session = CRM_Core_Session::singleton( );
@@ -193,9 +211,9 @@ WHERE $permission
       * selected contact record else false
       * @static
       */
-    static function relationship ( $selectedContactID, $contactID = null ) 
+    static function relationship( $selectedContactID, $contactID = null ) 
     {
-        $session   =& CRM_Core_Session::singleton( );
+        $session   = CRM_Core_Session::singleton( );
         if ( ! $contactID ) {
             $contactID =  $session->get( 'userID' );
             if ( ! $contactID ) {
@@ -208,8 +226,10 @@ WHERE $permission
             $query = "
 SELECT id
 FROM   civicrm_relationship
-WHERE  ( contact_id_a = %1 AND contact_id_b = %2 AND is_permission_a_b = 1 ) OR
-       ( contact_id_a = %2 AND contact_id_b = %1 AND is_permission_b_a = 1 )
+WHERE  (( contact_id_a = %1 AND contact_id_b = %2 AND is_permission_a_b = 1 ) OR
+        ( contact_id_a = %2 AND contact_id_b = %1 AND is_permission_b_a = 1 )) AND
+       (contact_id_a NOT IN (SELECT id FROM civicrm_contact WHERE is_deleted = 1)) AND
+       (contact_id_b NOT IN (SELECT id FROM civicrm_contact WHERE is_deleted = 1))
 ";
             $params = array( 1 => array( $contactID        , 'Integer' ),
                              2 => array( $selectedContactID, 'Integer' ) );
@@ -223,7 +243,7 @@ WHERE  ( contact_id_a = %1 AND contact_id_b = %2 AND is_permission_a_b = 1 ) OR
         require_once 'CRM/Contact/BAO/Contact/Utils.php';
         if ( !  CRM_Contact_BAO_Contact_Utils::validChecksum( $contactID,
                                                               CRM_Utils_Request::retrieve( 'cs', 'String' , $form, false ) ) ) {
-            $config =& CRM_Core_Config::singleton( );
+            $config = CRM_Core_Config::singleton( );
             CRM_Core_Error::statusBounce( ts( 'You do not have permission to edit this contact record. Contact the site administrator if you need assistance.' ),
                                           $config->userFrameworkBaseURL );
             // does not come here, we redirect in the above statement

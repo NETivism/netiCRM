@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -164,7 +164,7 @@ class CRM_Event_Form_ManageEvent_Location extends CRM_Event_Form_ManageEvent
      * @static
      * @access public
      */
-    static function formRule( &$fields ) 
+    static function formRule( $fields ) 
     {
         $errors = array( );
         // check for state/country mapping
@@ -243,7 +243,7 @@ class CRM_Event_Form_ManageEvent_Location extends CRM_Event_Form_ManageEvent
     public function postProcess( ) 
     {
         $params = $this->exportValues( );
-        $delteOldBlock = false;
+        $deleteOldBlock = false;
 
         // if 'use existing location' option is selected -
         if ( ( $params['location_option'] == 2 ) &&
@@ -251,7 +251,7 @@ class CRM_Event_Form_ManageEvent_Location extends CRM_Event_Form_ManageEvent
              ( $params['loc_event_id'] != $this->_oldLocBlockId ) ) {
             // if new selected loc is different from old loc, update the loc_block_id 
             // so that loc update would affect the selected loc and not the old one.
-            $delteOldBlock = true;
+            $deleteOldBlock = true;
             CRM_Core_DAO::setFieldValue( 'CRM_Event_DAO_Event', $this->_id, 
                                          'loc_block_id', $params['loc_event_id'] );
         }
@@ -259,7 +259,7 @@ class CRM_Event_Form_ManageEvent_Location extends CRM_Event_Form_ManageEvent
         // if 'create new loc' option is selected, set the loc_block_id for this event to null 
         // so that an update would result in creating a new loc.
         if ( $this->_oldLocBlockId && ($params['location_option'] == 1) ) {
-            $delteOldBlock = true;
+            $deleteOldBlock = true;
             CRM_Core_DAO::setFieldValue( 'CRM_Event_DAO_Event', $this->_id, 
                                          'loc_block_id', 'null' );
         }
@@ -267,7 +267,7 @@ class CRM_Event_Form_ManageEvent_Location extends CRM_Event_Form_ManageEvent
         // if 'create new loc' optioin is selected OR selected new loc is different 
         // from old one, go ahead and delete the old loc provided thats not being 
         // used by any other event
-        if ( $this->_oldLocBlockId && $delteOldBlock ) {
+        if ( $this->_oldLocBlockId && $deleteOldBlock ) {
             CRM_Event_BAO_Event::deleteEventLocBlock($this->_oldLocBlockId, $this->_id);
         }
         

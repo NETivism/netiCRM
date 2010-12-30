@@ -1,7 +1,7 @@
 <?php
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -33,7 +33,7 @@
  * @package CiviCRM_APIv2
  * @subpackage API_Contact
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id: Contact.php 26284 2010-02-17 17:58:00Z shot $
+ * $Id: Contact.php 30757 2010-11-15 14:27:25Z neha $
  *
  */
 
@@ -56,18 +56,31 @@ require_once 'CRM/Contact/BAO/Contact.php';
  * @static void
  * @access public
  */
-function civicrm_contact_create( &$params ) {
+function civicrm_contact_create( &$params )
+{
     // call update and tell it to create a new contact
+  _civicrm_initialize( true );
+  try {
+    civicrm_api_check_permission(__FUNCTION__, $params, true);
     $create_new = true;
     return civicrm_contact_update( $params, $create_new );
+  } catch (Exception $e) {
+    return civicrm_create_error( $e->getMessage() );
+  }
 }
 
 /**
  * @todo Write sth
  * @todo Serious FIXMES in the code! File issues.
  */
-function civicrm_contact_update( &$params, $create_new = false ) {
-    _civicrm_initialize( );
+function civicrm_contact_update( &$params, $create_new = false )
+{
+    _civicrm_initialize();
+    try {
+        civicrm_api_check_permission(__FUNCTION__, $params, true);
+    } catch (Exception $e) {
+        return civicrm_create_error($e->getMessage());
+    }
     require_once 'CRM/Utils/Array.php';
     $contactID = CRM_Utils_Array::value( 'contact_id', $params );
 
@@ -98,6 +111,14 @@ function civicrm_contact_update( &$params, $create_new = false ) {
         }
     }
 
+    if ( $homeUrl = CRM_Utils_Array::value( 'home_url', $params ) ) {  
+        require_once 'CRM/Core/PseudoConstant.php';
+        $websiteTypes = CRM_Core_PseudoConstant::websiteType( );
+        $params['website'] = array( 1 => array( 'website_type_id' => key( $websiteTypes ),
+                                                'url'             => $homeUrl 
+                                                )
+                                    );  
+    }
     // FIXME: Some legacy support cruft, should get rid of this in 3.1
     $change = array( 'individual_prefix' => 'prefix',
                      'prefix'            => 'prefix_id',
@@ -127,7 +148,12 @@ function civicrm_contact_update( &$params, $create_new = false ) {
               && ! ( is_numeric( $params['gender_id'] ) ) ) {
         $params['gender_id'] = array_search( $params['gender_id'] , CRM_Core_PseudoConstant::gender() );
     }
-
+    
+    $error = _civicrm_greeting_format_params( $params );
+    if ( $error['error_message'] ) {
+        return $error['error_message'];
+    }
+    
     $values   = array( );
     $entityId = CRM_Utils_Array::value( 'contact_id', $params, null );
 
@@ -176,7 +202,8 @@ function civicrm_contact_update( &$params, $create_new = false ) {
  * @static void
  * @access public
  */
-function &civicrm_contact_add( &$params ) {
+function &civicrm_contact_add( &$params )
+{
     _civicrm_initialize( );
 
     $contactID = CRM_Utils_Array::value( 'contact_id', $params );
@@ -190,6 +217,126 @@ function &civicrm_contact_add( &$params ) {
 }
 
 /**
+ * Validate the addressee or email or postal greetings 
+ *
+ * @param  $params                   Associative array of property name/value
+ *                                   pairs to insert in new contact.
+ * 
+ * @return array (reference )        null on success, error message otherwise
+ *
+ * @access public
+ */
+function _civicrm_greeting_format_params( &$params ) 
+{
+    $greetingParams = array( '', '_id', '_custom' );
+    foreach ( array( 'email', 'postal', 'addressee' ) as $key ) {
+        $greeting = '_greeting';
+        if ( $key == 'addressee' ) {
+            $greeting = '';   
+        } 
+
+        $formatParams = false;
+        // unset display value from params.
+        if ( isset( $params["{$key}{$greeting}_display"] ) ) {
+            unset( $params["{$key}{$greeting}_display"] );  
+        }
+
+        // check if greetings are present in present
+        foreach ( $greetingParams as $greetingValues ) {
+            if ( array_key_exists( "{$key}{$greeting}{$greetingValues}", $params ) ) {
+                $formatParams = true;
+                break;
+            }
+        }
+
+        if ( !$formatParams ) continue;
+    
+        // format params
+        if ( CRM_Utils_Array::value( 'contact_type', $params ) == 'Organization' && $key != 'addressee' ) {
+            return civicrm_create_error( ts( 'You cannot use email/postal greetings for contact type %1.', 
+                                             array( 1 => $params['contact_type'] ) ) );
+        }
+        
+        $nullValue      = false; 
+        $filter         = array( 'contact_type'  => $params['contact_type'],
+                                 'greeting_type' => "{$key}{$greeting}" );
+        
+        $greetings      = CRM_Core_PseudoConstant::greeting( $filter );
+        $greetingId     = CRM_Utils_Array::value( "{$key}{$greeting}_id",     $params );
+        $greetingVal    = CRM_Utils_Array::value( "{$key}{$greeting}",        $params );
+        $customGreeting = CRM_Utils_Array::value( "{$key}{$greeting}_custom", $params );
+        
+        if ( !$greetingId && $greetingVal ) {
+            $params["{$key}{$greeting}_id"] = CRM_Utils_Array::key( $params["{$key}{$greeting}"], $greetings );
+        }
+        
+        if ( $customGreeting && $greetingId &&
+             ( $greetingId != array_search( 'Customized', $greetings ) ) ) {
+            return civicrm_create_error( ts( 'Provide either %1 greeting id and/or %1 greeting or custom %1 greeting',
+                                             array( 1 => $key ) ) );
+        }
+        
+        if ( $greetingVal && $greetingId &&
+             ( $greetingId != CRM_Utils_Array::key( $greetingVal, $greetings ) ) ) {
+            return civicrm_create_error( ts( 'Mismatch in %1 greeting id and %1 greeting',
+                                             array( 1 => $key ) ) );
+        } 
+        
+        if ( $greetingId ) {
+
+            if ( !array_key_exists( $greetingId, $greetings ) ) {
+                return civicrm_create_error( ts( 'Invalid %1 greeting Id', array( 1 => $key ) ) );
+            }
+            
+            if ( !$customGreeting && ( $greetingId == array_search( 'Customized', $greetings ) ) ) {
+                return civicrm_create_error( ts( 'Please provide a custom value for %1 greeting', 
+                                                 array( 1 => $key ) ) );
+            }
+                        
+        } else if ( $greetingVal ) {
+
+            if ( !in_array( $greetingVal, $greetings ) ) {
+                return civicrm_create_error( ts( 'Invalid %1 greeting', array( 1 => $key ) ) );
+            }
+
+            $greetingId = CRM_Utils_Array::key( $greetingVal, $greetings );
+        }
+                     
+        if ( $customGreeting ) {
+            $greetingId = CRM_Utils_Array::key( 'Customized', $greetings );
+        }
+
+        $customValue = $params['contact_id'] ? CRM_Core_DAO::getFieldValue( 'CRM_Contact_DAO_Contact', 
+                                                                            $params['contact_id'], 
+                                                                            "{$key}{$greeting}_custom" ) : false;
+                
+        if ( array_key_exists( "{$key}{$greeting}_id", $params ) && empty( $params["{$key}{$greeting}_id"] ) ) {
+            $nullValue = true;
+        } else if ( array_key_exists( "{$key}{$greeting}", $params ) && empty( $params["{$key}{$greeting}"] ) ) {
+            $nullValue = true;
+        } else if ( $customValue && array_key_exists( "{$key}{$greeting}_custom", $params ) 
+                    && empty( $params["{$key}{$greeting}_custom"] ) ) {
+            $nullValue = true;
+        }
+
+        $params["{$key}{$greeting}_id"] = $greetingId;
+
+        if ( !$customValue && !$customGreeting && array_key_exists( "{$key}{$greeting}_custom", $params ) ) {
+            unset( $params["{$key}{$greeting}_custom"] );
+        }
+        
+        if ( $nullValue ) {
+            $params["{$key}{$greeting}_id"]     = '';
+            $params["{$key}{$greeting}_custom"] = '';
+        }
+                                
+        if ( isset( $params["{$key}{$greeting}"] ) ) {
+            unset( $params["{$key}{$greeting}"] );
+        }
+    }
+}
+
+/**
  * Retrieve one or more contacts, given a set of search params
  *
  * @param  mixed[]  (reference ) input parameters
@@ -199,7 +346,8 @@ function &civicrm_contact_add( &$params ) {
  * @static void
  * @access public
  */
-function civicrm_contact_get( &$params, $deprecated_behavior = false ) {
+function civicrm_contact_get( &$params, $deprecated_behavior = false )
+{
     _civicrm_initialize( );
     
     if ($deprecated_behavior) {
@@ -251,7 +399,8 @@ function civicrm_contact_get( &$params, $deprecated_behavior = false ) {
  * @static void
  * @access public
  */
-function _civicrm_contact_get_deprecated( &$params ) {
+function _civicrm_contact_get_deprecated( &$params )
+{
     $values = array( );
     if ( empty( $params ) ) {
         return civicrm_create_error( ts( 'No input parameters present' ) );
@@ -286,7 +435,8 @@ function _civicrm_contact_get_deprecated( &$params ) {
  * @static void
  * @access public
  */
-function civicrm_contact_delete( &$params ) {
+function civicrm_contact_delete( &$params )
+{
     require_once 'CRM/Contact/BAO/Contact.php';
 
     $contactID = CRM_Utils_Array::value( 'contact_id', $params );
@@ -294,7 +444,13 @@ function civicrm_contact_delete( &$params ) {
         return civicrm_create_error( ts( 'Could not find contact_id in input parameters' ) );
     }
 
-    if ( CRM_Contact_BAO_Contact::deleteContact( $contactID ) ) {
+    $session =& CRM_Core_Session::singleton( );
+    if ( $contactID ==  $session->get( 'userID' ) ) {
+        return civicrm_create_error( ts( 'This contact record is linked to the currently logged in user account - and cannot be deleted.' ) );
+    }
+    $restore      = CRM_Utils_Array::value( 'restore', $params ) ? $params['restore'] : false;
+    $skipUndelete = CRM_Utils_Array::value( 'skip_undelete', $params ) ? $params['skip_undelete'] : false;
+    if ( CRM_Contact_BAO_Contact::deleteContact( $contactID , $restore, $skipUndelete) ) {
         return civicrm_create_success( );
     } else {
         return civicrm_create_error( ts( 'Could not delete contact' ) );
@@ -315,11 +471,11 @@ function civicrm_contact_delete( &$params ) {
  * @static void
  * @access public
  */
-function &civicrm_contact_search( &$params ) {
+function &civicrm_contact_search( &$params )
+{
     _civicrm_initialize( );
 
-    $inputParams      = array( );
-    $returnProperties = array( );
+    $inputParams = $returnProperties = array( );
     $otherVars = array( 'sort', 'offset', 'rowCount', 'smartGroupCache' );
     
     $sort            = null;
@@ -369,7 +525,8 @@ function &civicrm_contact_search( &$params ) {
  * @return null on success, error message otherwise
  * @access public
  */
-function civicrm_contact_check_params( &$params, $dupeCheck = true, $dupeErrorArray = false, $requiredCheck = true ) {
+function civicrm_contact_check_params( &$params, $dupeCheck = true, $dupeErrorArray = false, $requiredCheck = true )
+{
     if ( $requiredCheck ) {
         $required = array(
                           'Individual'   => array(
@@ -438,6 +595,15 @@ function civicrm_contact_check_params( &$params, $dupeCheck = true, $dupeErrorAr
         // check for record already existing
         require_once 'CRM/Dedupe/Finder.php';
         $dedupeParams = CRM_Dedupe_Finder::formatParams($params, $params['contact_type']);
+
+        // CRM-6431
+        // setting 'check_permission' here means that the dedupe checking will be carried out even if the 
+        // person does not have permission to carry out de-dupes
+        // this is similar to the front end form
+        if (isset($params['check_permission'])){
+            $dedupeParams['check_permission'] = $fields['check_permission'];
+        }
+
         $ids = implode(',', CRM_Dedupe_Finder::dupesByParams($dedupeParams, $params['contact_type']));
         
         if ( $ids != null ) {
@@ -451,6 +617,30 @@ function civicrm_contact_check_params( &$params, $dupeCheck = true, $dupeErrorAr
             return civicrm_create_error( "Found matching contacts: $ids", $ids );
         }
     }
+
+    //check for organisations with same name
+    if ( CRM_Utils_Array::value( 'current_employer', $params ) ) {
+        $organizationParams = array();
+        $organizationParams['organization_name'] = $params['current_employer'];
+        
+        require_once 'CRM/Dedupe/Finder.php';
+        $dedupParams = CRM_Dedupe_Finder::formatParams($organizationParams, 'Organization');
+        
+        $dedupParams['check_permission'] = false;            
+        $dupeIds = CRM_Dedupe_Finder::dupesByParams($dedupParams, 'Organization', 'Fuzzy');
+        
+        // check for mismatch employer name and id
+        if ( CRM_Utils_Array::value( 'employer_id', $params )
+             && !in_array( $params['employer_id'] ,$dupeIds ) ) {
+            return civicrm_create_error('Employer name and Employer id Mismatch');
+        }
+        
+        // show error if multiple organisation with same name exist
+        if ( !CRM_Utils_Array::value( 'employer_id', $params )
+             && (count($dupeIds) > 1) ) {
+            return civicrm_create_error('Found more than one Organisation with same Name.');
+        }
+    }
     
     return null;
 }
@@ -460,7 +650,8 @@ function civicrm_contact_check_params( &$params, $dupeCheck = true, $dupeErrorAr
  *
  * @deprecated deprecated since version 2.2.3
  */
-function civicrm_replace_contact_formatted($contactId, &$params, &$fields) {
+function civicrm_replace_contact_formatted( $contactId, &$params, &$fields )
+{
     //$contact = civcrm_get_contact(array('contact_id' => $contactId));
     
     $delContact = array( 'contact_id' => $contactId );
@@ -505,7 +696,8 @@ function _civicrm_contact_update( &$params, $contactID = null )
 /**
  * @todo Move this to ContactFormat.php 
  */
-function civicrm_contact_format_create( &$params ) {
+function civicrm_contact_format_create( &$params )
+{
     _civicrm_initialize( );
 
     CRM_Core_DAO::freeResult( );
@@ -530,7 +722,7 @@ function civicrm_contact_format_create( &$params ) {
     CRM_Contact_BAO_Contact::resolveDefaults($params, true);
 
     require_once 'CRM/Import/Parser.php';
-    if ( $params['onDuplicate'] != CRM_Import_Parser::DUPLICATE_NOCHECK) {
+    if ( CRM_Utils_Array::value('onDuplicate', $params) != CRM_Import_Parser::DUPLICATE_NOCHECK) {
         CRM_Core_Error::reset( );
         $error = _civicrm_duplicate_formatted_contact($params);
         if (civicrm_error( $error, 'CRM_Core_Error')) {
@@ -555,11 +747,12 @@ function civicrm_contact_format_create( &$params ) {
  * @return int
  * @access public
  */
-function civicrm_contact_search_count( &$params ) {
+function civicrm_contact_search_count( &$params )
+{
     // convert the params to new format
     require_once 'CRM/Contact/Form/Search.php';
     $newP =& CRM_Contact_BAO_Query::convertFormValues( $params );
-    $query =& new CRM_Contact_BAO_Query( $newP );
+    $query = new CRM_Contact_BAO_Query( $newP );
     return $query->searchQuery( 0, 0, null, true );
 }
 
@@ -573,8 +766,8 @@ function civicrm_contact_search_count( &$params ) {
  * @return null on success, error message otherwise
  * @access public
  */
-function civicrm_contact_check_custom_params( $params, $csType = null ) {
-    
+function civicrm_contact_check_custom_params( $params, $csType = null )
+{
     empty($csType) ? $onlyParent = true : $onlyParent = false;
     
     require_once 'CRM/Core/BAO/CustomField.php';

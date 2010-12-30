@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -25,30 +25,17 @@
 *}
 {literal}
 <script type="text/javascript">
-
-cj( function( ) {
-    var funVariable = 'bind';
-    {/literal}
-    {if $isSnippet }
-        cj(".btn-slide").die('click');
-        funVariable = 'live';
-    {/if}
-    {literal}
-    var currentId  = null;
-    var hideAction = false;
-   
-     // Hiding action menu while clicking outside
-    cj(document).click(function( ) {
-     if ( !hideAction ) {
-           cj(".btn-slide").each(function( ) {
-                 cj(this).find("ul").hide( ); 
-            });
-        }
-        hideAction = false;
-    });
-  
-    eval('cj(".btn-slide").'+ funVariable +'( "click", function( ) {currentId = cj(this).find("ul").attr("id");cj(".btn-slide").each(function( ) {if ( currentId == cj(this).find("ul").attr("id") ) {cj(this).find("ul").show( );hideAction = true;} else {cj(this).find("ul").hide( );}});});');
-
-});
+ cj({/literal}{if $isSnippet }document{else}'#crm-container'{/if}{literal})
+ 	.bind('click', function(event) {
+    if (cj(event.target).is('.btn-slide')) {
+      cj('.panel').css('display', 'none');
+      cj(event.target).children().show();
+      cj('.btn-slide-active').removeClass('btn-slide-active');	
+      cj(event.target).addClass('btn-slide-active');
+    } else {
+    	cj('.btn-slide .panel').hide();
+    	cj('.btn-slide-active').removeClass('btn-slide-active');	
+	} 
+  });
 </script>
 {/literal}

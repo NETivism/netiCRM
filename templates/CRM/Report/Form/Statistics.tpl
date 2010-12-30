@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -28,9 +28,8 @@
         <h1>{$reportTitle}</h1>
         <div id="report-date">{$reportDate}</div>
     {/if}
-    <br/>
     {if $statistics and $outputMode}
-        <table class="report-layout">
+        <table class="report-layout statistics-table">
             {foreach from=$statistics.groups item=row}
                 <tr>
                    <th class="statistics" scope="row">{$row.title}</th>
@@ -44,12 +43,10 @@
                 </tr>
             {/foreach}
         </table>
-        <br />
     {/if}
 {/if}
 
 {if $bottom and $rows and $statistics}
-    <br/>
     <table class="report-layout">
         {foreach from=$statistics.counts item=row}
             <tr>

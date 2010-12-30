@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -41,8 +41,8 @@
          </tr>
       {foreach from=$rows item=row}
          <tr class="{cycle values="odd-row,even-row"}">
-            <td>{$row.name}</td>	
-            <td>{$row.email}</td>
+            <td class="crm-participant-name">{$row.name}</td>	
+            <td class="crm-participant-email">{$row.email}</td>
          </tr>
       {/foreach}
       </table>
@@ -50,9 +50,7 @@
 {else}
     <div class='spacer'></div>
     <div class="messages status">
-      <dl>
-        <dt><img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}" /></dt>      
-        <dd>{ts}There are currently no participants registered for this event.{/ts}</dd>
-      </dl>
+      <div class="icon inform-icon"></div>
+        {ts}There are currently no participants registered for this event.{/ts}
     </div>
 {/if}

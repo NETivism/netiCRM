@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -24,22 +24,30 @@
  +--------------------------------------------------------------------+
 *}
 {* this template is used for adding/editing a tag (admin)  *}
-<div class="form-item">
+<div class="crm-block crm-form-block crm-mapping-form-block">
 <fieldset><legend>{if $action eq 1}{ts}New Tag{/ts}{elseif $action eq 2}{ts}Edit Mapping{/ts}{else}{ts}Delete Mapping{/ts}{/if}</legend>
+    <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>                  
     {if $action eq 1 or $action eq 2 }
-        <dl>
-        <dt>{$form.name.label}</dt><dd>{$form.name.html}</dd>
-        <dt>{$form.description.label}</dt><dd>{$form.description.html}</dd>
-        <dt>{$form.mapping_type_id.label}</dt><dd>{$form.mapping_type_id.html}</dd>
-        </dl>
+      <table class="form-layout-compressed">
+       <tr class="crm-mapping-form-block-name">
+          <td class="label">{$form.name.label}</td>
+          <td>{$form.name.html}</td>
+       </tr>
+       <tr class="crm-mapping-form-block-description">
+          <td class="label">{$form.description.label}</td>
+          <td>{$form.description.html}</td>
+       </tr>
+       <tr class="crm-mapping-form-block-mapping_type_id">
+          <td class="label">{$form.mapping_type_id.label}</td>
+          <td>{$form.mapping_type_id.html}</td>
+       </tr>
+      </table>
     {else}
         <div class="status">
         <img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}"/>
-        {ts 1=$mappingName}WARNING: Are you sure you want to delete mapping '<b>%1</b>'? This action cannot be undone.{/ts}</div>
+        {ts 1=$mappingName}WARNING: Are you sure you want to delete mapping '<b>%1</b>'?{/ts} {ts}This action cannot be undone.{/ts}</div>
     {/if}
-    <dl>
-    <dt></dt><dd>{$form.buttons.html}</dd>
-    </dl>
+    <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" loaction="bottom"}</div>
     <div class="spacer"></div>
 </fieldset>
 </div>

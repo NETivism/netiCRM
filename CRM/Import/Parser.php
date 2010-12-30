@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -326,11 +326,11 @@ abstract class CRM_Import_Parser {
         if ( $statusID ) {
             $skip = 50;
             // $skip = 1;
-            $config =& CRM_Core_Config::singleton( );
+            $config = CRM_Core_Config::singleton( );
             $statusFile = "{$config->uploadDir}status_{$statusID}.txt";
             $status = "<div class='description'>&nbsp; " . ts('No processing status reported yet.') . "</div>";
             require_once 'Services/JSON.php';
-            $json =& new Services_JSON( ); 
+            $json = new Services_JSON( ); 
             $contents = $json->encode( array( 0, $status ) );
 
             file_put_contents( $statusFile, $contents );
@@ -399,7 +399,7 @@ abstract class CRM_Import_Parser {
 </div>
 ";
 
-                    $json =& new Services_JSON( ); 
+                    $json = new Services_JSON( ); 
                     $contents = $json->encode( array( $processedPercent, $status ) );
 
                     file_put_contents( $statusFile, $contents );
@@ -495,29 +495,28 @@ abstract class CRM_Import_Parser {
                     $customHeaders[$key] = $customfields[$id][0];
                 }
             }
-            $config =& CRM_Core_Config::singleton( );
-            $fileName = $config->uploadDir . "sqlImport";
+            
             if ($this->_invalidRowCount) {
                 // removed view url for invlaid contacts
                 $headers = array_merge( array(  ts('Line Number'),
                                                 ts('Reason')), 
                                         $customHeaders);
-                $this->_errorFileName = $fileName . '.errors';
+                $this->_errorFileName = self::errorFileName( self::ERROR );
                 self::exportCSV($this->_errorFileName, $headers, $this->_errors);
             }
             if ($this->_conflictCount) {
                 $headers = array_merge( array(  ts('Line Number'),
                                                 ts('Reason')), 
                                         $customHeaders);
-                $this->_conflictFileName = $fileName . '.conflicts';
+                $this->_conflictFileName = self::errorFileName( self::CONFLICT );
                 self::exportCSV($this->_conflictFileName, $headers, $this->_conflicts);
             }
             if ($this->_duplicateCount) {
                 $headers = array_merge( array(  ts('Line Number'), 
                                                 ts('View Contact URL')),
                                         $customHeaders);
-
-                $this->_duplicateFileName = $fileName . '.duplicates';
+                
+                $this->_duplicateFileName = self::errorFileName( self::DUPLICATE );
                 self::exportCSV($this->_duplicateFileName, $headers, $this->_duplicates);
             }
             if ($this->_unMatchCount) {
@@ -525,14 +524,14 @@ abstract class CRM_Import_Parser {
                                                 ts('Reason')),
                                         $customHeaders);
 
-                $this->_misMatchFilemName = $fileName . '.mismatch';
+                $this->_misMatchFilemName = self::errorFileName( self::NO_MATCH );
                 self::exportCSV($this->_misMatchFilemName, $headers,$this->_unMatch);
             }
             if ( $this->_unparsedAddressCount ) {
                 $headers = array_merge( array(  ts('Line Number'),
                                                 ts('Contact Edit URL') ), 
                                         $customHeaders );
-                $this->_errorFileName= $fileName . '.errors';
+                $this->_errorFileName= self::errorFileName( self::UNPARSED_ADDRESS_WARNING );
                 self::exportCSV( $this->_errorFileName, $headers, $this->_unparsedAddresses );
             }
         }
@@ -560,7 +559,7 @@ abstract class CRM_Import_Parser {
         $this->_activeFieldCount = count( $fieldKeys );
         foreach ( $fieldKeys as $key ) {
             if ( empty( $this->_fields[$key] ) ) {
-                $this->_activeFields[] =& new CRM_Import_Field( '', ts( '- do not import -' ) );
+                $this->_activeFields[] = new CRM_Import_Field( '', ts( '- do not import -' ) );
             } else {
                 $this->_activeFields[] = clone( $this->_fields[$key] );
             }
@@ -599,6 +598,12 @@ abstract class CRM_Import_Parser {
     function setActiveFieldPhoneTypes( $elements ) {
         for ($i = 0; $i < count( $elements ); $i++) {
             $this->_activeFields[$i]->_phoneType = $elements[$i];
+        }
+    }
+
+    function setActiveFieldWebsiteTypes( $elements ) {
+        for ($i = 0; $i < count( $elements ); $i++) {
+            $this->_activeFields[$i]->_websiteType = $elements[$i];
         }
     }
 
@@ -643,6 +648,12 @@ abstract class CRM_Import_Parser {
     function setActiveFieldRelatedContactPhoneType( $elements ) {
         for ($i = 0; $i < count( $elements ); $i++) {
             $this->_activeFields[$i]->_relatedContactPhoneType = $elements[$i];
+        }        
+    }
+
+    function setActiveFieldRelatedContactWebsiteType( $elements ) {
+        for ($i = 0; $i < count( $elements ); $i++) {
+            $this->_activeFields[$i]->_relatedContactWebsiteType = $elements[$i];
         }        
     }
 
@@ -697,6 +708,11 @@ abstract class CRM_Import_Parser {
                     }
                     
                     $params[$this->_activeFields[$i]->_name][] = $value;
+                } else if ( isset( $this->_activeFields[$i]->_websiteType ) ) {
+                    $value = array( $this->_activeFields[$i]->_name => $this->_activeFields[$i]->_value,
+                                    'website_type_id'               => $this->_activeFields[$i]->_websiteType );
+                    
+                    $params[$this->_activeFields[$i]->_name][] = $value;
                 }
                 
                 if ( ! isset($params[$this->_activeFields[$i]->_name] ) ) {
@@ -733,10 +749,15 @@ abstract class CRM_Import_Parser {
                         }
                         
                         $params[$this->_activeFields[$i]->_related][$this->_activeFields[$i]->_relatedContactDetails][] = $value;
+                    } else if ( isset( $this->_activeFields[$i]->_relatedContactWebsiteType ) ) {
+                            $params[$this->_activeFields[$i]->_related][$this->_activeFields[$i]->_relatedContactDetails][] 
+                                = array( 'url'             => $this->_activeFields[$i]->_value,
+                                         'website_type_id' => $this->_activeFields[$i]->_relatedContactWebsiteType );
+                            
                     } else {
-                        $params[$this->_activeFields[$i]->_related][$this->_activeFields[$i]->_relatedContactDetails] = 
-                            $this->_activeFields[$i]->_value;                        
-                    }
+                            $params[$this->_activeFields[$i]->_related][$this->_activeFields[$i]->_relatedContactDetails] = 
+                                $this->_activeFields[$i]->_value;
+                    }  
                 }
             }
         }
@@ -779,9 +800,9 @@ abstract class CRM_Import_Parser {
     function addField( $name, $title, $type = CRM_Utils_Type::T_INT,
                        $headerPattern = '//', $dataPattern = '//',
                        $hasLocationType = false) {
-        $this->_fields[$name] =& new CRM_Import_Field($name, $title, $type, $headerPattern, $dataPattern, $hasLocationType);
+        $this->_fields[$name] = new CRM_Import_Field($name, $title, $type, $headerPattern, $dataPattern, $hasLocationType);
         if ( empty( $name ) ) {
-            $this->_fields['doNotImport'] =& new CRM_Import_Field($name, $title, $type, $headerPattern, $dataPattern, $hasLocationType);
+            $this->_fields['doNotImport'] = new CRM_Import_Field($name, $title, $type, $headerPattern, $dataPattern, $hasLocationType);
         }
     }
 
@@ -893,7 +914,7 @@ abstract class CRM_Import_Parser {
         foreach ($header as $key => $value) {
             $header[$key] = "\"$value\"";
         }
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
         $output[] = implode($config->fieldSeparator, $header);
 
         foreach ($data as $datum) {
@@ -935,5 +956,64 @@ abstract class CRM_Import_Parser {
             $db->query( $query, $args );
         }
     }
-
+    
+    function errorFileName( $type ) {
+        $fileName = null;
+        if ( empty( $type ) ) return $fileName; 
+        
+        $config   = CRM_Core_Config::singleton( );
+        $fileName = $config->uploadDir . "sqlImport";
+        switch ( $type ) {
+        case CRM_Import_Parser::ERROR:
+            $fileName .= '.errors';
+            break;
+            
+        case CRM_Import_Parser::CONFLICT:
+            $fileName .= '.conflicts';
+            break;
+            
+        case CRM_Import_Parser::DUPLICATE:
+            $fileName .= '.duplicates';
+            break;
+            
+        case CRM_Import_Parser::NO_MATCH:
+            $fileName .= '.mismatch';
+            break;
+            
+        case CRM_Import_Parser::UNPARSED_ADDRESS_WARNING:
+            $fileName .= '.unparsedAddress';
+            break;
+        }
+        
+        return $fileName;
+    }
+    
+    function saveFileName( $type ) {
+        $fileName = null;
+        if ( empty( $type ) ) return $fileName;
+        switch ( $type ) {
+        case CRM_Import_Parser::ERROR:
+            $fileName = 'Import_Errors.csv';
+            break;
+            
+        case CRM_Import_Parser::CONFLICT:
+            $fileName = 'Import_Conflicts.csv';
+            break;
+            
+        case CRM_Import_Parser::DUPLICATE:
+            $fileName = 'Import_Duplicates.csv';
+            break;
+            
+        case CRM_Import_Parser::NO_MATCH:
+            $fileName = 'Import_Mismatch.csv';
+            break;
+            
+        case CRM_Import_Parser::UNPARSED_ADDRESS_WARNING:
+            $fileName = 'Import_Unparsed_Address.csv';
+            break;
+        }
+        
+        return $fileName;
+    }
+    
 }

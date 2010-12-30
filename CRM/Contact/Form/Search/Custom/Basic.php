@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -63,7 +63,7 @@ class CRM_Contact_Form_Search_Custom_Basic
             $returnProperties[$field] = 1;
         }
 
-        $this->_query =& new CRM_Contact_BAO_Query( $params, $returnProperties, null,
+        $this->_query = new CRM_Contact_BAO_Query( $params, $returnProperties, null,
                                                     false, false, 1, false, false );
     }
 

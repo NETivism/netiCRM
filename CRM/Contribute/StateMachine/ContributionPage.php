@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -54,10 +54,10 @@ class CRM_Contribute_StateMachine_ContributionPage extends CRM_Core_StateMachine
     {
         parent::__construct( $controller, $action );
         
-        $session =& CRM_Core_Session::singleton();
+        $session = CRM_Core_Session::singleton();
         $session->set('singleForm', false);
 
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
         
         $this->_pages = array(
                               'CRM_Contribute_Form_ContributionPage_Settings' => null,

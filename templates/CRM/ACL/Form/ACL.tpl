@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -24,71 +24,98 @@
  +--------------------------------------------------------------------+
 *}
 {* this template is used for adding/editing ACL  *}
-<div class="form-item">
-<fieldset><legend>{if $action eq 1}{ts}New ACL{/ts}{elseif $action eq 2}{ts}Edit ACL{/ts}{else}{ts}Delete ACL{/ts}{/if}</legend>
-
+<h3>{if $action eq 1}{ts}New ACL{/ts}{elseif $action eq 2}{ts}Edit ACL{/ts}{else}{ts}Delete ACL{/ts}{/if}</h3>
+<div class="crm-block crm-form-block crm-acl-form-block">
+ <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>
 {if $action eq 8}
   <div class="messages status">
-    <dl>
-      <dt><img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}" /></dt>
-      <dd>    
+    <img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}" />
         {ts}WARNING: Delete will remove this permission from the specified ACL Role.{/ts} {ts}Do you want to continue?{/ts}
-      </dd>
-    </dl>
   </div>
 {else}
-  <dl>
-    <dt>{$form.object_type.label}</dt><dd>{$form.object_type.html}</dd>
-    <dt class="{$form.object_type.name}">&nbsp;</dt><dd class="description">{ts}Select the type of data this ACL operates on.{/ts}</dd>
+   <table class="form-layout-compressed">
+     <tr class="crm-acl-form-block-object_type">
+         <td class="label">{$form.object_type.label}</td>
+         <td>{$form.object_type.html}</td>
+     </tr>
+     <tr class="crm-acl-form-block-description">
+    <td class="{$form.object_type.name}">&nbsp;</dt><td class="description">{ts}Select the type of data this ACL operates on.{/ts}<br />
     {if $config->userFramework EQ 'Drupal'}
-        <dt>&nbsp;</dt><dd class="description">{ts}IMPORTANT: The Drupal permissions for 'access all custom data' and 'profile listings and forms' override and disable specific ACL settings for custom field groups and profiles respectively. Do not enable those Drupal permissions for a Drupal role if you want to use CiviCRM ACL's to control access.{/ts}</dd>
+       <span class="description">{ts}IMPORTANT: The Drupal permissions for 'access all custom data' and 'profile listings and forms' override and disable specific ACL settings for custom field groups and profiles respectively. Do not enable those Drupal permissions for a Drupal role if you want to use CiviCRM ACL's to control access.{/ts}</td>
     {/if}
-  </dl>
+     </tr>
+  </table>
   <div id="id-group-acl">
-    <dl>
-    <dt>{$form.group_id.label}</dt><dd>{$form.group_id.html}</dd>
-    <dt>&nbsp;</dt><dd class="description">{ts}Select a specific group of contacts, OR apply this permission to ALL groups.{/ts}</dd>
-    </dl>
+   <table  class="form-layout-compressed">
+     <tr class="crm-acl-form-block-group_id">
+         <td class="label">{$form.group_id.label}</td>
+         <td>{$form.group_id.html}<br />
+         <span class="description">{ts}Select a specific group of contacts, OR apply this permission to ALL groups.{/ts}</span>
+         </td>
+     </tr>
+   </table>
   </div>
   <div id="id-profile-acl">
-    <dl>
-    <dt>{$form.uf_group_id.label}</dt><dd>{$form.uf_group_id.html}</dd>
-    <dt>&nbsp;</dt><dd class="description">{ts}Select a specific profile, OR apply this permission to ALL profiles.{/ts}</dd>
-    </dl>
-    <div class="status message">{ts}NOTE: For Profile ACLs, the 'View' and 'Edit' operations currently do the same thing. Either option grants users access to profile-based create, edit, view and listings screens. Neither option grants access to administration of profiles.{/ts}</div>
+   <table class="form-layout-compressed" >
+     <tr class="crm-acl-form-block-uf_group_id">
+        <td class="label">{$form.uf_group_id.label}</td>
+        <td>{$form.uf_group_id.html}<br />
+        <span class="description">{ts}Select a specific profile, OR apply this permission to ALL profiles.{/ts}</span>
+        </td>
+     </tr>
+   </table>
+    <div class="status message">{ts}NOTE: Profile ACL operations affect which modes a profile can be used in (i.e. Create a new contact, Edit your own contact record, View a contact record, etc.). The Create operation is required for profiles embedded in online contribution or event registration forms. None of the operations for Profile ACLs grant access to administration of profiles.{/ts}</div>
   </div>
   <div id="id-custom-acl">
-    <dl>
-    <dt>{$form.custom_group_id.label}</dt><dd>{$form.custom_group_id.html}</dd>
-    <dt>&nbsp;</dt><dd class="description">{ts}Select a specific group of custom fields, OR apply this permission to ALL custom fields.{/ts}</dd>
-    </dl>
-    <div class="status message">{ts}NOTE: For Custom Data ACLs, the 'View' and 'Edit' operations currently do the same thing. Either option grants the right to view AND / OR edit custom data fields (in all groups, or in a specific custom data group). Neither option grants access to administration of custom data fields.{/ts}</div>
+   <table class="form-layout-compressed">
+     <tr class="crm-acl-form-block-custom_group_id">
+         <td class="label">{$form.custom_group_id.label}</td>
+         <td>{$form.custom_group_id.html}<br />
+         <span class="description">{ts}Select a specific group of custom fields, OR apply this permission to ALL custom fields.{/ts}</span>
+         </td>
+     </tr>
+   </table>
+  <div class="status message">{ts}NOTE: For Custom Data ACLs, the 'View' and 'Edit' operations currently do the same thing. Either option grants the right to view AND / OR edit custom data fields (in all groups, or in a specific custom data group). Neither option grants access to administration of custom data fields.{/ts}</div>
   </div>
   <div id="id-event-acl">
-    <dl>
-    <dt>{$form.event_id.label}</dt><dd>{$form.event_id.html}</dd>
-    <dt>&nbsp;</dt><dd class="description">{ts}Select an event, OR apply this permission to ALL events.{/ts}</dt>
-    </dl>
+   <table  class="form-layout-compressed">
+     <tr class="crm-acl-form-block-event_id">
+         <td class="label">{$form.event_id.label}</td>
+         <td>{$form.event_id.html}<br />
+         <span class="description">{ts}Select an event, OR apply this permission to ALL events.{/ts}</span>
+         </td>
+     </tr>
+   </table>
     <div class="status message">{ts}NOTE: For Event ACLs, the 'View' operation allows access to the event information screen. "Edit" allows users to register for the event if online registration is enabled.{/ts}<br /> 
     {if $config->userFramework EQ 'Drupal'}
     {ts}Please remember that Drupal's "register for events" permission overrides CiviCRM's control over event information access.{/ts}
     {/if}
     </div>
   </div>
-  <dl>
-    <dt>{$form.operation.label}</dt><dd>{$form.operation.html}</dd>
-    <dt>&nbsp;</dt><dd class="description">{ts}What type of operation (action) is being permitted?{/ts}</dd>
-    <dt>{$form.entity_id.label}</dt><dd>{$form.entity_id.html}</dd>
-    <dt>&nbsp;</dt><dd class="description">{ts}Select a Role to assign (grant) this permission to. Select the special role 'Everyone' if you want to grant this permission to ALL users. 'Everyone' includes anonymous (i.e. not logged in) users. Select the special role 'Authenticated' if you want to grant it to any logged in user.{/ts}</dd>
-    <dt>{$form.name.label}</dt><dd>{$form.name.html}</dd>
-    <dt>&nbsp;</dt><dd class="description">{ts}Enter a descriptive name for this permission (e.g. 'Edit Advisory Board Contacts').{/ts}</dd>
-    <dt>{$form.is_active.label}</dt><dd>{$form.is_active.html}</dd>
-  </dl>
+   <table  class="form-layout-compressed">
+     <tr class="crm-acl-form-block-operation">
+         <td class="label">{$form.operation.label}</td>
+         <td>{$form.operation.html}<br />
+         <span class="description">{ts}What type of operation (action) is being permitted?{/ts}</span>
+         </td>
+     </tr>
+     <tr class="crm-acl-form-block-entity_id">
+         <td class="label">{$form.entity_id.label}</td><td>{$form.entity_id.html}<br />
+         <span class="description">{ts}Select a Role to assign (grant) this permission to. Select the special role 'Everyone' if you want to grant this permission to ALL users. 'Everyone' includes anonymous (i.e. not logged in) users. Select the special role 'Authenticated' if you want to grant it to any logged in user.{/ts}</span>
+        </td>
+     </tr>
+     <tr class="crm-acl-form-block-name">
+         <td class="label">{$form.name.label}</td><td>{$form.name.html}<br />
+         <span class="description">{ts}Enter a descriptive name for this permission (e.g. 'Edit Advisory Board Contacts').{/ts}</span>
+         </td>
+     </tr>
+     <tr class="crm-acl-form-block-is_active">
+         <td class="label">{$form.is_active.label}</td>
+         <td>{$form.is_active.html}</td>
+     </tr>
+   </table>
 {/if}
-  <dl> 
-    <dt></dt><dd>{$form.buttons.html}</dd>
-  </dl> 
-</fieldset>
+  <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
 </div>
 
 {include file="CRM/common/showHide.tpl"}

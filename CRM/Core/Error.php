@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -26,6 +26,7 @@
  +--------------------------------------------------------------------+
 */
 
+
 /**
  * Start of the Error framework. We should check out and inherit from
  * PEAR_ErrorStack and use that framework
@@ -37,11 +38,20 @@
  */
 
 require_once 'PEAR/ErrorStack.php';
+require_once 'PEAR/Exception.php';
 
 require_once 'CRM/Core/Config.php';
 require_once 'CRM/Core/Smarty.php';
 
 require_once 'Log.php';
+
+class CRM_Exception extends PEAR_Exception {
+    // Redefine the exception so message isn't optional
+    public function __construct($message = null, $code = 0, Exception $previous = null) {
+        parent::__construct($message, $code, $previous);
+    }
+}
+
 
 class CRM_Core_Error extends PEAR_ErrorStack {
 
@@ -70,6 +80,12 @@ class CRM_Core_Error extends PEAR_ErrorStack {
      * @static
      */
     private static $_log       = null;
+
+    /**
+     * If modeException == true, errors are raised as exception instead of returning civicrm_errors
+     * @static
+     */
+    public static $modeException = null;
     
     /**
      * singleton function used to manage this object. This function is not
@@ -92,7 +108,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
     {
         parent::__construct('CiviCRM');
 
-        $log =& CRM_Core_Config::getLog();
+        $log = CRM_Core_Config::getLog();
         $this->setLogger( $log );
 
         // set up error handling for Pear Error Stack
@@ -116,7 +132,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
         $message = self::getMessages( $error, $separator );
         if ( $message ) {
             $status = ts( "Payment Processor Error message" ) . "{$separator}: $message"; 
-            $session =& CRM_Core_Session::singleton( ); 
+            $session = CRM_Core_Session::singleton( ); 
             $session->setStatus( $status ); 
         }
     }
@@ -134,14 +150,10 @@ class CRM_Core_Error extends PEAR_ErrorStack {
      */
     public static function handle( $pearError )
     {
-        // do a hard rollback of any pending transactions
-        // if we've come here, its because of some unexpected PEAR errors
-        require_once 'CRM/Core/Transaction.php';
-        CRM_Core_Transaction::rollback( );
 
         // setup smarty with config, session and template location.
-        $template =& CRM_Core_Smarty::singleton( );
-        $config   =& CRM_Core_Config::singleton( );
+        $template = CRM_Core_Smarty::singleton( );
+        $config   = CRM_Core_Config::singleton( );
 
         if ( $config->backtrace ) {
             self::backtrace( );
@@ -186,21 +198,22 @@ class CRM_Core_Error extends PEAR_ErrorStack {
         }
 
         $template->assign_by_ref('error', $error);
+        $errorDetails = CRM_Core_Error::debug( '', $error, false );
+        $template->assign_by_ref('errorDetails', $errorDetails);
         
         CRM_Core_Error::debug_var( 'Fatal Error Details', $error );
         CRM_Core_Error::backtrace( 'backTrace', true );
 
         if ( $config->initialized ) {
             $content  = $template->fetch( 'CRM/common/fatal.tpl' );
-            $content .= CRM_Core_Error::debug( 'Error Details:', $error, false );
             echo CRM_Utils_System::theme( 'page', $content, true );
         } else {
             echo "Sorry. A non-recoverable error has occurred. The error trace below might help to resolve the issue<p>";
             CRM_Core_Error::debug( null, $error );
         }
-        exit(1);
-    }
 
+        self::abend(1);
+    }
 
     /**
      * Handle errors raised using the PEAR Error Stack.
@@ -234,13 +247,13 @@ class CRM_Core_Error extends PEAR_ErrorStack {
      */
     static function fatal($message = null, $code = null, $email = null) {
         if ( ! $message ) {
-            $message = ts('We experienced an unexpected error. Please post a detailed description and the backtrace on the CiviCRM forums: %1', array(1 => 'http://forum.civicrm.org/'));
+            $message = ts('We experienced an unexpected error. Please post a detailed description and the backtrace on the CiviCRM forums: %1', array(1 => 'http://forum.civicrm.org/')); 
         }
 
         $vars = array( 'message' => $message,
                        'code'    => $code );
 
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
 
         if ( $config->fatalErrorHandler &&
              function_exists( $config->fatalErrorHandler ) ) {
@@ -249,7 +262,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
             if ( $ret ) {
                 // the call has been successfully handled
                 // so we just exit
-                exit( CRM_Core_Error::FATAL_ERROR );
+                self::abend( CRM_Core_Error::FATAL_ERROR );
             }
         }
 
@@ -257,7 +270,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
             self::backtrace( );
         }
 
-        $template =& CRM_Core_Smarty::singleton( );
+        $template = CRM_Core_Smarty::singleton( );
         $template->assign( $vars );
 
         CRM_Core_Error::debug_var( 'Fatal Error Details', $vars );
@@ -265,7 +278,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
         $content = $template->fetch( $config->fatalErrorTemplate );
         echo CRM_Utils_System::theme( 'page', $content );
         // print $content;
-        exit( CRM_Core_Error::FATAL_ERROR );
+        self::abend( CRM_Core_Error::FATAL_ERROR );
     }
 
     /**
@@ -330,9 +343,10 @@ class CRM_Core_Error extends PEAR_ErrorStack {
      * @see CRM_Core_Error::debug_log_message()
      */
     static function debug_var($variable_name,
-                              &$variable,
+                              $variable,
                               $print = true,
-                              $log   = true)
+                              $log   = true,
+                              $comp  = '' )
     {
         // check if variable is set
         if(!isset($variable)) {
@@ -354,7 +368,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
                 reset($variable);
             }
         }
-        return self::debug_log_message($out);
+        return self::debug_log_message($out, false, $comp );
     }
     
     /**
@@ -369,14 +383,35 @@ class CRM_Core_Error extends PEAR_ErrorStack {
      *
      * @static
      */
-    static function debug_log_message( $message, $out = false )
+    static function debug_log_message( $message, $out = false , $comp = '' )
     {
-        $config =& CRM_Core_Config::singleton( );
-        $file_log = Log::singleton( 'file',
-                                    "{$config->configAndLogDir}CiviCRM." . 
-                                    md5( $config->dsn . $config->userFrameworkResourceURL ) .
-                                    ".log"
-                                    );
+        $config = CRM_Core_Config::singleton( );
+
+        if ( $comp ) {
+            $comp = $comp . '.';
+        }
+
+        $fileName =
+            "{$config->configAndLogDir}CiviCRM." . 
+            $comp .
+            md5( $config->dsn . $config->userFrameworkResourceURL ) .
+            '.log';
+
+        // Roll log file monthly or if greater than 256M
+        // note that PHP file functions have a limit of 2G and hence
+        // the alternative was introduce :)
+        if ( file_exists( $fileName ) ) {
+            $fileTime = date ("Ym", filemtime($fileName));
+            $fileSize = filesize($fileName);
+            if ( ( $fileTime < date('Ym') ) ||
+                 ( $fileSize > 256 * 1024 * 1024 ) ||
+                 ( $fileSize < 0 ) ) {
+                rename( $fileName,
+                        $fileName . '.' . date('Ymdhs', mktime(0, 0, 0, date("m")-1, date("d"), date("Y")) ) );
+            }
+        }
+
+        $file_log = Log::singleton( 'file',$fileName );
         $file_log->log("$message\n");
         $str = "<p/><code>$message</code>";
         if ( $out ) {
@@ -428,7 +463,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
      * @static
      */
     public static function statusBounce( $status, $redirect = null ) {
-        $session =& CRM_Core_Session::singleton();
+        $session = CRM_Core_Session::singleton();
         if ( ! $redirect ) {
             $redirect = $session->readUserContext();
         }
@@ -449,6 +484,12 @@ class CRM_Core_Error extends PEAR_ErrorStack {
         $error->_errorsByLevel = array( ) ;
     }
 
+    /* used for the API, rise the exception instead of catching/fatal it */
+    public static function setRaiseException( ) {
+        //deprecated        PEAR::setErrorHandling( PEAR_ERROR_EXCEPTION);
+        PEAR::setErrorHandling( PEAR_ERROR_CALLBACK,  array( 'CRM_Core_Error', 'exceptionHandler' ) );
+    }
+
     public static function ignoreException( $callback = null ) {
         if ( ! $callback ) {
             $callback = array( 'CRM_Core_Error', 'nullHandler' );
@@ -457,6 +498,20 @@ class CRM_Core_Error extends PEAR_ErrorStack {
         PEAR::setErrorHandling( PEAR_ERROR_CALLBACK,
                                 $callback );
     }
+    
+    public static function exceptionHandler ($pearError) {
+        $error = array();
+        $error['code']        = $pearError->getCode();
+        $error['message']     = $pearError->getMessage();
+        $error['mode']        = $pearError->getMode();
+        $error['debug_info']  = $pearError->getDebugInfo();
+        $error['type']        = $pearError->getType();
+        $error['user_info']   = $pearError->getUserInfo();
+        $error['to_string']   = $pearError->toString();
+
+        throw new PEAR_Exception($pearError->getMessage(),$pearError);   
+    }
+    
     
     /**
      * Error handler to quietly catch otherwise fatal smtp transport errors.
@@ -488,6 +543,10 @@ class CRM_Core_Error extends PEAR_ErrorStack {
     }
 
     public static function &createAPIError( $msg, $data = null ) {
+        if (self::$modeException) {
+          throw CRM_Exception ($msg,$data);
+        }
+
         $values = array( );
         
         $values['is_error']      = 1;
@@ -505,7 +564,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
         $values['result'  ] = $result;
         return $values;
     }
-
+ 
     public static function movedSiteError( $file ) {
         $url = CRM_Utils_System::url( 'civicrm/admin/setting/updateConfigBackend',
                                       'reset=1',
@@ -515,6 +574,16 @@ class CRM_Core_Error extends PEAR_ErrorStack {
         exit( );
     }
     
+    /**
+     * Terminate execution abnormally
+     */
+    protected static function abend( $code ) {
+        // do a hard rollback of any pending transactions
+        // if we've come here, its because of some unexpected PEAR errors
+        require_once 'CRM/Core/Transaction.php';
+        CRM_Core_Transaction::forceRollbackIfEnabled( );
+        CRM_Utils_System::civiExit( $code );
+    }
 }
 
 PEAR_ErrorStack::singleton('CRM', false, null, 'CRM_Core_Error');

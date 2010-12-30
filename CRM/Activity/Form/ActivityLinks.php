@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -45,32 +45,28 @@ class CRM_Activity_Form_ActivityLinks extends CRM_Core_Form
     public function buildQuickForm( ) {
         $contactId = CRM_Utils_Request::retrieve( 'cid' , 'Positive', $this );
         $urlParams = "action=add&reset=1&cid={$contactId}&selectedChild=activity&atype=";
-        
+    
         $url = CRM_Utils_System::url( 'civicrm/contact/view/activity', 
                                       $urlParams, false, null, false );
  
-        $activityTypes = CRM_Core_PseudoConstant::activityType( false );
-        
+        $activityTypes = array( );
         require_once 'CRM/Utils/Mail.php';
         if ( CRM_Utils_Mail::validOutBoundMail() && $contactId ) { 
             require_once 'CRM/Contact/BAO/Contact.php';
             list( $name, $email, $doNotEmail, $onHold, $isDeseased ) = CRM_Contact_BAO_Contact::getContactDetails( $contactId );
             if ( !$doNotEmail && $email && !$isDeseased ) {
-                $activityTypes += array( '3' => ts('Send an Email') );
+                $activityTypes = array( '3' => ts('Send an Email') );
             }
         }
-
-        $this->assign( 'showOtherActivityLink', false );
-        if ( !empty( $activityTypes ) ) {
-            $this->assign( 'showOtherActivityLink', true );
-        }
         
-        $this->add('select', 'other_activity', ts('Other Activities'),
-                   array('' => ts('- new activity -')) + $activityTypes,
-                   false, array('onchange' => "if (this.value) window.location='{$url}'+ this.value; else return false"));
+        // this returns activity types sorted by weight
+        $otherTypes = CRM_Core_PseudoConstant::activityType( false );
+        
+        $activityTypes += $otherTypes;
+        
+        $this->assign( 'activityTypes', $activityTypes );
+        $this->assign( 'url', $url );
 
         $this->assign( 'suppressForm', true );
     }
 }
-
-

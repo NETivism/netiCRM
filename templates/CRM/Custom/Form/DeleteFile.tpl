@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -27,7 +27,7 @@
 <fieldset><legend>{ts}Delete Attached File{/ts}</legend>
     <div class="status">
       <dl>
-        <dt><img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}" /></dt>
+        <dt><div class="icon inform-icon"></div></dt>
         <dd>
           {ts}WARNING: Are you sure you want to delete the attached file?{/ts}
         </dd>

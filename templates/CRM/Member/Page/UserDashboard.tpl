@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -85,12 +85,8 @@
 
 {if NOT ($activeMembers or $inActiveMembers)}
    <div class="messages status">
-       <dl>
-       <dt><img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}" /></dt>
-       <dd>
-            {ts}There are no memberships on record for you.{/ts}
-       </dd>
-       </dl>
-  </div>
+       <div class="icon inform-icon"></div></dt>
+           {ts}There are no memberships on record for you.{/ts}
+   </div>
 {/if}
 </div>

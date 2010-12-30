@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -154,7 +154,7 @@ class CRM_Mailing_Form_Component extends CRM_Core_Form
      * @access public
      * @static
      */
-    static function dataRule(&$params, &$files, &$options) 
+    static function dataRule( $params, $files, $options) 
     {
         if ( $params['component_type'] == 'Header' || $params['component_type'] == 'Footer' ) {
             $InvalidTokens = array( );

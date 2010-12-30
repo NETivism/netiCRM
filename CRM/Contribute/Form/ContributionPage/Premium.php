@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -55,7 +55,7 @@ class CRM_Contribute_Form_ContributionPage_Premium extends CRM_Contribute_Form_C
         if ( isset($this->_id ) ) {
             $title = CRM_Core_DAO::getFieldValue( 'CRM_Contribute_DAO_ContributionPage', $this->_id, 'title' );
             CRM_Utils_System::setTitle(ts('Premiums (%1)', array(1 => $title)));
-            $dao =& new CRM_Contribute_DAO_Premium();
+            $dao = new CRM_Contribute_DAO_Premium();
             $dao->entity_table = 'civicrm_contribution_page';
             $dao->entity_id = $this->_id; 
             $dao->find(true);
@@ -79,13 +79,13 @@ class CRM_Contribute_Form_ContributionPage_Premium extends CRM_Contribute_Form_C
         
         $this->add('textarea', 'premiums_intro_text', ts('Introductory Message'), 'rows=5, cols=50');
 
-        $this->add('text','premiums_contact_email',ts('Contact Email') . ' ',CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_Premium', 'premiums_contact_email')); 
+        $this->add('text','premiums_contact_email', ts('Contact Email') . ' ', CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_Premium', 'premiums_contact_email')); 
         
-        $this->addRule('premiums_contact_email',ts('Please enter a valid email address for Contact Email') . ' ','email');
+        $this->addRule('premiums_contact_email', ts('Please enter a valid email address for Contact Email') . ' ','email');
         
-        $this->add('text','premiums_contact_phone',ts('Contact Phone'),CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_Premium', 'premiums_contact_phone'));
+        $this->add('text','premiums_contact_phone', ts('Contact Phone'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_Premium', 'premiums_contact_phone'));
         
-        $this->addRule('premiums_contact_phone',ts('Please enter a valid phone number.'),'phone');
+        $this->addRule('premiums_contact_phone', ts('Please enter a valid phone number.'), 'phone');
 
         $this->addElement('checkbox', 'premiums_display_min_contribution', ts('Display Minimum Contribution Amount?') );
      
@@ -93,7 +93,7 @@ class CRM_Contribute_Form_ContributionPage_Premium extends CRM_Contribute_Form_C
   
         if ( $this->_single ) {
             if ( $this->_id ) {
-                $daoPremium =& new CRM_Contribute_DAO_Premium( );
+                $daoPremium = new CRM_Contribute_DAO_Premium( );
                 $daoPremium->entity_id    = $this->_id;
                 $daoPremium->entity_table = 'civicrm_contribution_page';
                 if ( $daoPremium->find( true ) ) {
@@ -119,7 +119,7 @@ class CRM_Contribute_Form_ContributionPage_Premium extends CRM_Contribute_Form_C
 
         // we do this in case the user has hit the forward/back button
 
-        $dao =& new CRM_Contribute_DAO_Premium();
+        $dao = new CRM_Contribute_DAO_Premium();
         $dao->entity_table = 'civicrm_contribution_page';
         $dao->entity_id = $this->_id; 
         $dao->find(true);
@@ -133,7 +133,7 @@ class CRM_Contribute_Form_ContributionPage_Premium extends CRM_Contribute_Form_C
         $params['entity_table']                      = 'civicrm_contribution_page';
         $params['entity_id']                         =  $this->_id;
        
-        $dao =& new CRM_Contribute_DAO_Premium();
+        $dao = new CRM_Contribute_DAO_Premium();
         $dao->copyValues($params);
         $dao->save();
 
@@ -145,7 +145,8 @@ class CRM_Contribute_Form_ContributionPage_Premium extends CRM_Contribute_Form_C
      * @return string 
      * @access public 
      */ 
-    public function getTitle( ) {
+    public function getTitle( )
+    {
         return ts( 'Premiums' );
     }
 }

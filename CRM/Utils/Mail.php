@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -83,6 +83,11 @@ class CRM_Utils_Mail
         $htmlMessage = CRM_Utils_Array::value( 'html'       , $params );
         $attachments = CRM_Utils_Array::value( 'attachments', $params );
 
+        // CRM-6224
+        if (trim(CRM_Utils_String::htmlToText($htmlMessage)) == '') {
+            $htmlMessage = false;
+        }
+
         $headers = array( );  
         $headers['From']                      = $params['from'];
         $headers['To']                        = "{$params['toName']} <{$params['toEmail']}>";
@@ -95,12 +100,27 @@ class CRM_Utils_Mail
         $headers['Return-Path']               = CRM_Utils_Array::value( 'returnPath', $params );
         $headers['Reply-To']                  = CRM_Utils_Array::value( 'replyTo', $params, $from );
         $headers['Date']                      = date('r');
+        if (CRM_Utils_Array::value( 'autoSubmitted', $params )) {
+          $headers['Auto-Submitted']          = "Auto-Generated";
+        }
+        
+        //make sure we has to have space, CRM-6977
+        foreach ( array( 'From', 'To', 'Cc', 'Bcc', 'Reply-To', 'Return-Path' ) as $fld ) {
+            $headers[$fld] = str_replace( '"<', '" <', $headers[$fld] );
+        }
 
-        // we need to wrap Mail_mime because PEAR is apparently unable to fix
-        // a six-year-old bug (PEAR bug #30) in Mail_mime::_encodeHeaders()
-        // this fixes CRM-4631
-        require_once 'CRM/Utils/Mail/FixedMailMIME.php';
-        $msg = new CRM_Utils_Mail_FixedMailMIME("\n");
+        // quote FROM, if comma is detected AND is not already quoted. CRM-7053
+        if ( strpos( $headers['From'], ',' )  !== false ) {
+            $from = explode( ' <', $headers['From'] );
+            if ( substr( $from[0],  0,  1 ) != '"' || 
+                 substr( $from[0], -1,  1 ) != '"' ) {
+                $from[0] = str_replace( '"', '\"', $from[0] );
+                $headers['From'] = "\"{$from[0]}\" <{$from[1]}";
+            }
+        }
+
+        require_once 'Mail/mime.php';
+        $msg = new Mail_mime("\n");
         if ( $textMessage ) {
             $msg->setTxtBody($textMessage);
         }
@@ -117,10 +137,11 @@ class CRM_Utils_Mail
             }
         }
         
-        $message =  self::setMimeParams( $msg );
+        $message =& self::setMimeParams( $msg );
         $headers =& $msg->headers($headers);
         
         $to = array( $params['toEmail'] );
+
         //get emails from headers, since these are 
         //combination of name and email addresses.
         if ( CRM_Utils_Array::value( 'Cc', $headers ) ) {
@@ -189,7 +210,7 @@ class CRM_Utils_Mail
         $content .= "\n" . $message . "\n";
 
         if ( is_numeric( CIVICRM_MAIL_LOG ) ) {
-            $config =& CRM_Core_Config::singleton( );
+            $config = CRM_Core_Config::singleton( );
             // create the directory if not there
             $dirName = $config->configAndLogDir . 'mail' . DIRECTORY_SEPARATOR;
             CRM_Utils_File::createDir( $dirName );
@@ -223,7 +244,9 @@ class CRM_Utils_Mail
     static function validOutBoundMail() {
         require_once "CRM/Core/BAO/Preferences.php";
         $mailingInfo =& CRM_Core_BAO_Preferences::mailingPreferences();
-        if ( $mailingInfo['outBound_option'] == 0 ) {
+        if ( $mailingInfo['outBound_option'] == 3 ) {
+           return true;
+        } else  if ( $mailingInfo['outBound_option'] == 0 ) {
             if ( !isset( $mailingInfo['smtpServer'] ) || $mailingInfo['smtpServer'] == '' || 
                  $mailingInfo['smtpServer'] == 'YOUR SMTP SERVER'|| 
                  ( $mailingInfo['smtpAuth'] && ( $mailingInfo['smtpUsername'] == '' || $mailingInfo['smtpPassword'] == '' ) ) ) {

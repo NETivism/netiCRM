@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -37,10 +37,8 @@
 require_once 'CRM/Core/Form.php';
 require_once 'CRM/Core/Selector/Base.php';
 require_once 'CRM/Core/Selector/API.php';
-
 require_once 'CRM/Utils/Pager.php';
 require_once 'CRM/Utils/Sort.php';
-
 require_once 'CRM/Activity/BAO/Activity.php';
 
 /**
@@ -112,45 +110,66 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
      * @access public
      *
      */
-    function actionLinks( $activityTypeId, $sourceRecordId = null, $accessMailingReport = false ) 
+    function actionLinks( $activityTypeId, 
+                          $sourceRecordId = null, 
+                          $accessMailingReport = false, 
+                          $activityId = null, 
+                          $key = null,
+                          $compContext = null ) 
     {
         $activityTypes   = CRM_Core_PseudoConstant::activityType( false );
-        $activityTypeIds = array_flip( CRM_Core_PseudoConstant::activityType( true, false, false, 'name' ) );
+        $activityTypeIds = array_flip( CRM_Core_PseudoConstant::activityType( true, true, false, 'name' ) );
         
+        $extraParams = ( $key ) ? "&key={$key}" : null;
+        if ( $compContext ) {
+            $extraParams .= "&compContext={$compContext}";
+        }
+
         //show  edit link only for meeting/phone and other activities
         $showUpdate = false;
         $showDelete = false;
         if ( $activityTypeId == $activityTypeIds['Event Registration'] )  { // event registration
             $url      = 'civicrm/contact/view/participant';
-            $qsView   = "action=view&reset=1&id={$sourceRecordId}&cid=%%cid%%&context=%%cxt%%";
+            $qsView   = "action=view&reset=1&id={$sourceRecordId}&cid=%%cid%%&context=%%cxt%%{$extraParams}";
         } elseif ( $activityTypeId == $activityTypeIds['Contribution'] ) { //contribution
             $url      = 'civicrm/contact/view/contribution';
-            $qsView   = "action=view&reset=1&id={$sourceRecordId}&cid=%%cid%%&context=%%cxt%%";
+            $qsView   = "action=view&reset=1&id={$sourceRecordId}&cid=%%cid%%&context=%%cxt%%{$extraParams}";
         } elseif ( in_array($activityTypeId, 
                             array( $activityTypeIds['Membership Signup'], $activityTypeIds['Membership Renewal'] ) 
                             ) ) {  // membership
             $url      = 'civicrm/contact/view/membership';
-            $qsView   = "action=view&reset=1&id={$sourceRecordId}&cid=%%cid%%&context=%%cxt%%";
+            $qsView   = "action=view&reset=1&id={$sourceRecordId}&cid=%%cid%%&context=%%cxt%%{$extraParams}";
         } elseif ( $activityTypeId == CRM_Utils_Array::value( 'Pledge Acknowledgment', $activityTypeIds ) || 
                    $activityTypeId == CRM_Utils_Array::value( 'Pledge Reminder', $activityTypeIds ) ) { //pledge acknowledgment
             $url      = 'civicrm/contact/view/activity';
-            $qsView   = "atype={$activityTypeId}&action=view&reset=1&id=%%id%%&cid=%%cid%%&context=%%cxt%%";
+            $qsView   = "atype={$activityTypeId}&action=view&reset=1&id=%%id%%&cid=%%cid%%&context=%%cxt%%{$extraParams}";
         } elseif ( $activityTypeId == $activityTypeIds['Email'] ||  $activityTypeId == $activityTypeIds['Bulk Email'] ) {
             $url      = 'civicrm/activity/view';
             $delUrl   = 'civicrm/activity';
-            $qsView   = "atype={$activityTypeId}&action=view&reset=1&id=%%id%%&cid=%%cid%%&context=%%cxt%%";
+            $qsView   = "atype={$activityTypeId}&action=view&reset=1&id=%%id%%&cid=%%cid%%&context=%%cxt%%{$extraParams}";
+            // allow delete of regular outbound emails (CRM-)
+            if ( $activityTypeId == $activityTypeIds['Email'] ) {
+                $showDelete = true;
+            }
         } elseif ( $activityTypeId == $activityTypeIds['Inbound Email'] ) {
             $url      = 'civicrm/contact/view/activity';
-            $qsView   = "atype={$activityTypeId}&action=view&reset=1&id=%%id%%&cid=%%cid%%&context=%%cxt%%";
-        } else {
-            $showUpdate = true;
-            $showDelete = true;
+            $qsView   = "atype={$activityTypeId}&action=view&reset=1&id=%%id%%&cid=%%cid%%&context=%%cxt%%{$extraParams}";
+        } elseif ( $activityTypeId == CRM_Utils_Array::value( 'Open Case', $activityTypeIds ) ||
+                   $activityTypeId == CRM_Utils_Array::value( 'Change Case Type', $activityTypeIds ) ||
+                   $activityTypeId == CRM_Utils_Array::value( 'Change Case Status', $activityTypeIds ) ||
+                   $activityTypeId == CRM_Utils_Array::value( 'Change Case Start Date', $activityTypeIds ) ) {
+            $showUpdate =  $showDelete = false;
             $url      = 'civicrm/contact/view/activity';
-            $qsView   = "atype={$activityTypeId}&action=view&reset=1&id=%%id%%&cid=%%cid%%&context=%%cxt%%";
-            $qsUpdate = "atype={$activityTypeId}&action=update&reset=1&id=%%id%%&cid=%%cid%%&context=%%cxt%%";
+            $qsView   = "atype={$activityTypeId}&action=view&reset=1&id=%%id%%&cid=%%cid%%&context=%%cxt%%{$extraParams}";
+            $qsUpdate = "atype={$activityTypeId}&action=update&reset=1&id=%%id%%&cid=%%cid%%&context=%%cxt%%{$extraParams}";
+        } else {
+            $showUpdate = $showDelete = true;
+            $url      = 'civicrm/contact/view/activity';
+            $qsView   = "atype={$activityTypeId}&action=view&reset=1&id=%%id%%&cid=%%cid%%&context=%%cxt%%{$extraParams}";
+            $qsUpdate = "atype={$activityTypeId}&action=update&reset=1&id=%%id%%&cid=%%cid%%&context=%%cxt%%{$extraParams}";
         }
 
-        $qsDelete  = "atype={$activityTypeId}&action=delete&reset=1&id=%%id%%&cid=%%cid%%&context=%%cxt%%";
+        $qsDelete  = "atype={$activityTypeId}&action=delete&reset=1&id=%%id%%&cid=%%cid%%&context=%%cxt%%{$extraParams}";
         
         if ( $this->_context == 'case' ) {
             $qsView   .= "&caseid=%%caseid%%";
@@ -169,6 +188,7 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
                                           'title'    => ts('View Activity'),
                                           )
                                     );
+        
         if ( $showUpdate ) {
             self::$_actionLinks = self::$_actionLinks +  array ( CRM_Core_Action::UPDATE => 
                                                                  array(
@@ -176,6 +196,16 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
                                                                        'url'      => $url,
                                                                        'qs'       => $qsUpdate,
                                                                        'title'    => ts('Update Activity') ) );
+        }
+
+        require_once 'CRM/Case/BAO/Case.php';
+        if ( CRM_Case_BAO_Case::checkPermission( $activityId, 'File On Case', $activityTypeId ) ) {
+            self::$_actionLinks = self::$_actionLinks +  array ( CRM_Core_Action::ADD =>
+                                                                 array( 
+                                                                       'name'     => ts('File On Case'),
+                                                                       'url'      => CRM_Utils_System::currentPath( ),
+                                                                       'extra'    => 'onClick="Javascript:fileOnCase( \'file\', \'%%id%%\' ); return false;"',
+                                                                       'title'    => ts('File On Case') ) );
         }
 
         if ( $showDelete ) {
@@ -192,7 +222,7 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
         }
         
         if ( $this->_context == 'case' ) {
-            $qsDetach = "atype={$activityTypeId}&action=detach&reset=1&id=%%id%%&cid=%%cid%%&context=%%cxt%%&caseid=%%caseid%%";
+            $qsDetach = "atype={$activityTypeId}&action=detach&reset=1&id=%%id%%&cid=%%cid%%&context=%%cxt%%&caseid=%%caseid%%{$extraParams}";
 
             self::$_actionLinks = self::$_actionLinks +  array ( CRM_Core_Action::DETACH => 
                                                                  array(
@@ -337,7 +367,9 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
             
             $actionLinks = $this->actionLinks( CRM_Utils_Array::value( 'activity_type_id', $row ),
                                                CRM_Utils_Array::value( 'source_record_id', $row ),
-                                               $accessMailingReport );
+                                               $accessMailingReport,
+                                               CRM_Utils_Array::value( 'activity_id', $row ),
+                                               $this->_key );
             
             $actionMask  = array_sum(array_keys($actionLinks)) & $mask;
             
@@ -351,15 +383,11 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
                                                                   ));
             }
             
-            if($config->civiHRD){
-                require_once 'CRM/Core/OptionGroup.php';
-                $caseActivityType = CRM_Core_OptionGroup::values('case_activity_type');
-                $row['activitytag1'] =  $caseActivityType[CRM_Core_DAO::getFieldValue('CRM_Activity_DAO_Activity',$row['id'],'activity_tag1_id' )];
-            }
             unset($row);
         }
-        
+         
         return $rows;
+       
     }
     
     /**
@@ -397,7 +425,7 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
                                                 'direction' => CRM_Utils_Sort::DONTCARE,
                                                 ),
                                           array('name'      => ts('With') ),
-                                          array('name'      => ts('Assigned To') ),
+                                          array('name'      => ts('Assigned') ),
                                           array(
                                                 'name'      => ts('Date'),
                                                 'sort'      => 'activity_date_time',

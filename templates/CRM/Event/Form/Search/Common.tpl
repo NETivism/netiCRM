@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -24,21 +24,21 @@
  +--------------------------------------------------------------------+
 *}
 <tr>
-    <td> {$form.event_name.label}  <br />{$form.event_name.html|crmReplace:class:huge} </td>
-    <td> {$form.event_type.label}<br />{$form.event_type.html} </td>
+    <td class="crm-event-form-block-event_type"> {$form.event_name.label}  <br />{$form.event_name.html|crmReplace:class:huge} </td>
+    <td class="crm-event-form-block-event_type"> {$form.event_type.label}<br />{$form.event_type.html} </td>
 </tr>     
  
 <tr> 
-    <td>  
+    <td class="crm-event-form-block-event_start_date_low">  
        {$form.event_start_date_low.label}<br />{include file="CRM/common/jcalendar.tpl" elementName=event_start_date_low}
     </td>
-    <td> 
+    <td class="crm-event-form-block-event_end_date_high"> 
        {$form.event_end_date_high.label}<br />{include file="CRM/common/jcalendar.tpl" elementName=event_end_date_high}
     </td> 
 </tr>
 
 <tr>
-    <td><label>{ts}Participant Status{/ts}</label> 
+    <td class="crm-event-form-block-participant_status"><label>{ts}Participant Status{/ts}</label> 
     <br />
       <div class="listing-box" style="width: auto; height: 120px">
        {foreach from=$form.participant_status_id item="participant_status_val"} 
@@ -48,7 +48,7 @@
        {/foreach}
       </div>
     </td>
-    <td><label>{ts}Participant Role{/ts}</label>
+    <td class="crm-event-form-block-participant_role_id"><label>{ts}Participant Role{/ts}</label>
     <br />
       <div class="listing-box" style="width: auto; height: 120px">
        {foreach from=$form.participant_role_id item="participant_role_id_val"}
@@ -61,12 +61,12 @@
   
 </tr> 
 <tr>
-    <td>{$form.participant_test.html}&nbsp;{$form.participant_test.label}</td> 
-    <td>{$form.participant_pay_later.html}&nbsp;{$form.participant_pay_later.label}</td> 
+    <td class="crm-event-form-block-participant_test">{$form.participant_test.html}&nbsp;{$form.participant_test.label}</td> 
+    <td class="crm-event-form-block-participant_pay_later">{$form.participant_pay_later.html}&nbsp;{$form.participant_pay_later.label}</td> 
 </tr>
 <tr>
-    <td>{$form.participant_fee_level.label}<br />{$form.participant_fee_level.html}</td>
-     <td><label>{ts}Fee Amount{/ts}</label><br />
+    <td class="crm-event-form-block-participant_fee_level">{$form.participant_fee_level.label}<br />{$form.participant_fee_level.html}</td>
+     <td class="crm-event-form-block-participant_fee_amount"><label>{ts}Fee Amount{/ts}</label><br />
      	{$form.participant_fee_amount_low.label} &nbsp; {$form.participant_fee_amount_low.html} &nbsp;&nbsp; 
 	{$form.participant_fee_amount_high.label} &nbsp; {$form.participant_fee_amount_high.html}
      </td> 

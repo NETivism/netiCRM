@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -29,8 +29,22 @@
 {assign var = "contactId" value= $contact_id }
 {/if}
 
-{* Only display the activity drop-down if there are activity_type entries for this domain. *}
-{if $showOtherActivityLink}{$form.other_activity.html}{/if}
+{if $as_select} {* on 3.2, the activities can be either a drop down select (on the activity tab) or a list (on the action menu) *}
+<select onchange="if (this.value) window.location='{$url}'+ this.value; else return false" name="other_activity" id="other_activity" class="form-select">
+  <option value="">{ts}- new activity -{/ts}</option>
+{foreach from=$activityTypes key=k item=link}
+  <option value="{$k}">{$link}</option>
+{/foreach}
+</select>
+
+{else}
+<ul>
+{foreach from=$activityTypes key=k item=link}
+<li class="crm-activity-type_{$k}"><a href="{$url}{$k}">{$link}</a></li>
+{/foreach}</ul>
+
+{/if}
+
 
 {* add hook links if any *}
 {if $hookLinks}

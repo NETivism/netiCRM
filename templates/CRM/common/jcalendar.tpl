@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -34,6 +34,12 @@
     {assign var='elementId'   value=$form.$elementName.$elementIndex.id}
     {assign var="timeElement" value=$elementName|cat:"_time.$elementIndex"}
     {$form.$elementName.$elementIndex.html|crmReplace:class:dateplugin}
+{elseif $blockId and $blockSection}
+    {assign var='elementId'   value=$form.$blockSection.$blockId.$elementName.id}
+    {assign var="tElement" value=`$elementName`_time}
+    {$form.$blockSection.$blockId.$elementName.html|crmReplace:class:dateplugin}
+    {assign var="timeElement" value=`$blockSection`_`$blockId`_`$elementName`_time}
+    &nbsp;&nbsp;{$form.$blockSection.$blockId.$tElement.label}&nbsp;&nbsp;{$form.$blockSection.$blockId.$tElement.html|crmReplace:class:six}
 {else}
     {assign var='elementId'   value=$form.$elementName.id}
     {assign var="timeElement" value=$elementName|cat:'_time'}
@@ -44,7 +50,7 @@
     &nbsp;&nbsp;{$form.$timeElement.label}&nbsp;&nbsp;{$form.$timeElement.html|crmReplace:class:six}
 {/if}
 {if $action neq 4 && $action neq 1028}
-    (<a href="javascript:clearDateTime( '{$elementId}' );">{ts}clear{/ts}</a>)&nbsp;
+    <span class="crm-clear-link">(<a href="javascript:clearDateTime( '{$elementId}' );">{ts}clear{/ts}</a>)</span>
 {/if}
 <script type="text/javascript">
     {literal}
@@ -65,7 +71,9 @@
           yearRange  += ':';
           yearRange  += currentYear + parseInt( cj( element_date ).attr('endOffset'  ) ); 
       {literal}
- 
+
+      var lcMessage = {/literal}"{$config->lcMessages}"{literal};
+      var localisation = lcMessage.split('_');
       cj(element_date).datepicker({
                                     closeAtTop        : true, 
                                     dateFormat        : date_format,
@@ -73,9 +81,10 @@
                                     changeYear        : true,
                                     altField          : alt_field,
                                     altFormat         : 'mm/dd/yy',
-                                    yearRange         : yearRange
+                                    yearRange         : yearRange,
+                                    regional          : localisation[0]
                                 });
-    
+
       cj(element_date).click( function( ) {
           hideYear( this );
       });  

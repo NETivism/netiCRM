@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -23,64 +23,59 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
-{assign var="showBlock" value="'searchForm'"}
-{assign var="hideBlock" value="'searchForm_show'"}
-
-<div id="searchForm_show" class="form-item">
-  <a href="#" onclick="hide('searchForm_show'); show('searchForm'); return false;"><img src="{$config->resourceBase}i/TreePlus.gif" class="action-icon" alt="{ts}open section{/ts}" /></a>
-  <label>
-        {ts}Edit Search Criteria{/ts}
-  </label>
+<div class="crm-form-block crm-search-form-block">
+	<div class="crm-accordion-wrapper crm-member_search_form-accordion {if $rows}crm-accordion-closed{else}crm-accordion-open{/if}">
+	 <div class="crm-accordion-header crm-master-accordion-header">
+	    <div class="icon crm-accordion-pointer"></div> 
+	    {ts}Edit Search Criteria{/ts}
+ 	 </div><!-- /.crm-accordion-header -->
+	<div class="crm-accordion-body">
+	{strip}
+	     <table class="form-layout">
+	        <tr>
+	            <td class="font-size12pt" colspan="2">
+	                {$form.sort_name.label}&nbsp;&nbsp;{$form.sort_name.html|crmReplace:class:'twenty'}&nbsp;&nbsp;&nbsp;{$form.buttons.html}
+	            </td>       
+	        </tr>
+	      
+	        {include file="CRM/Member/Form/Search/Common.tpl"}
+	      
+	        <tr>
+	            <td colspan="2">{include file="CRM/common/formButtons.tpl"}</td>
+	        </tr>
+	    </table>
+	{/strip} 
+	 </div><!-- /.crm-accordion-body -->
+	</div><!-- /.crm-accordion-wrapper -->
+</div><!-- /.crm-form-block -->
+<div class="crm-content-block">
+	{if $rowsEmpty}
+		<div class="crm-results-block crm-results-block-empty">
+	    {include file="CRM/Member/Form/Search/EmptyResults.tpl"}
+	    </div>
+	{/if}
+	
+	{if $rows}
+	<div class="crm-results-block">
+	    {* Search request has returned 1 or more matching rows. *}
+	    
+	       {* This section handles form elements for action task select and submit *}
+	           <div class="crm-search-tasks">
+	           {include file="CRM/common/searchResultTasks.tpl"}
+	           </div>
+	
+	       {* This section displays the rows along and includes the paging controls *}
+	           <div id ="memberSearch" class="crm-search-results">
+	       		{include file="CRM/Member/Form/Selector.tpl" context="Search"}
+	       		</div>
+	    {* END Actions/Results section *}
+	</div>
+	{/if}
 </div>
-
-<div id="searchForm" class="form-item">
-<fieldset><legend>{ts}Search Criteria{/ts}</legend>
-{strip}
-     <table class="form-layout">
-        <tr>
-            <td class="font-size12pt" colspan="2">
-                {$form.sort_name.label}&nbsp;&nbsp;{$form.sort_name.html|crmReplace:class:'twenty'}&nbsp;&nbsp;&nbsp;{$form.buttons.html}
-            </td>       
-        </tr>
-      
-        {include file="CRM/Member/Form/Search/Common.tpl"}
-      
-        <tr>
-            <td colspan="2">{$form.buttons.html}</td>
-        </tr>
-    </table>
-{/strip} 
-</fieldset>
-</div>
-
-{if $rowsEmpty}
-    {include file="CRM/Member/Form/Search/EmptyResults.tpl"}
-{/if}
-
-{if $rows}
-    {* Search request has returned 1 or more matching rows. Display results and collapse the search criteria fieldset. *}
-    {assign var="showBlock" value="'searchForm_show'"}
-    {assign var="hideBlock" value="'searchForm'"}
-    
-    {* Search request has returned 1 or more matching rows. *}
-    <fieldset>
-    
-       {* This section handles form elements for action task select and submit *}
-       {include file="CRM/common/searchResultTasks.tpl"}
-
-       {* This section displays the rows along and includes the paging controls *}
-       <p></p>
-       {include file="CRM/Member/Form/Selector.tpl" context="Search"}
-       
-    </fieldset>
-    {* END Actions/Results section *}
-
-{/if}
-
+{literal}
 <script type="text/javascript">
-    var showBlock = new Array({$showBlock});
-    var hideBlock = new Array({$hideBlock});
-
-{* hide and display the appropriate blocks *}
-    on_load_init_blocks( showBlock, hideBlock );
+cj(function() {
+   cj().crmaccordions(); 
+});
 </script>
+{/literal}

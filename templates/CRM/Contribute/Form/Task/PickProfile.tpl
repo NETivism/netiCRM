@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -23,14 +23,20 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
-<div class="form-item">
+<div class="form-item crm-block crm-form-block crm-contribution-form-block">
 <fieldset>
     <legend>{ts}Batch Update Contribution via Profile{/ts}</legend>
-    <dl>
-        <dt>{$form.uf_group_id.label}</dt><dd>{$form.uf_group_id.html}</dd>
-        <dt></dt><dd>{include file="CRM/Contribute/Form/Task.tpl"}</dd>
-        <dt></dt><dd>{$form.buttons.html}</dd>
-    </dl>
+     <table class="form-layout-compressed">		      
+       <tr class="crm-contribution-form-block-uf_group_id">
+          <td class="label">{$form.uf_group_id.label}</td>
+	  <td class="html-adjust">{$form.uf_group_id.html}</td>
+       </tr>
+       <tr>
+         <td class="label"></td>
+	 <td> {include file="CRM/Contribute/Form/Task.tpl"}</td>
+       </tr>
+    </table>
+    <div class="crm-submit-buttons">{$form.buttons.html}</td></div>
 </fieldset>
 </div>
 

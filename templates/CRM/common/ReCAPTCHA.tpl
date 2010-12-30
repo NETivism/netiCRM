@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -24,7 +24,7 @@
  +--------------------------------------------------------------------+
 *}
 {if $recaptchaHTML}
-<div class="section recaptcha-section">
+<div class="crm-section recaptcha-section">
     <table class="form-layout-compressed">
         <tr>
           <td class="recaptcha_label">&nbsp;</td>

@@ -1,7 +1,7 @@
 <?php
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -88,7 +88,7 @@ class CRM_Core_ShowHideBlocks {
      */
     static function setIcons( ) {
         if ( !isset (self::$_showIcon)) {
-            $config =& CRM_Core_Config::singleton( );
+            $config = CRM_Core_Config::singleton( );
             self::$_showIcon = '<img src="'.$config->resourceBase.'i/TreePlus.gif" class="action-icon" alt="' . ts('show field or section') . '"/>';
             self::$_hideIcon = '<img src="'.$config->resourceBase.'i/TreeMinus.gif" class="action-icon" alt="' . ts('hide field or section') . '"/>';
         }
@@ -121,7 +121,7 @@ class CRM_Core_ShowHideBlocks {
             $first = false;
         }
 
-        $template =& CRM_Core_Smarty::singleton( );
+        $template = CRM_Core_Smarty::singleton( );
         $template->assign_by_ref( 'hideBlocks', $hide );
         $template->assign_by_ref( 'showBlocks', $show );
     }

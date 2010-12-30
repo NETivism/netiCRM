@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -53,7 +53,7 @@ class CRM_Utils_System_Standalone {
             $pageTitle = $title;
         }
         
-        $template =& CRM_Core_Smarty::singleton( );
+        $template = CRM_Core_Smarty::singleton( );
         $template->assign( 'pageTitle', $pageTitle );
         $template->assign( 'docTitle',  $title );
         return;
@@ -123,7 +123,7 @@ class CRM_Utils_System_Standalone {
      * @static
      */
     static function appendBreadCrumb( $breadCrumbs ) {
-        $template =& CRM_Core_Smarty::singleton( );
+        $template = CRM_Core_Smarty::singleton( );
         $bc = $template->get_template_vars( 'breadcrumb' );
 
         if ( is_array( $breadCrumbs ) ) {
@@ -166,7 +166,7 @@ class CRM_Utils_System_Standalone {
      * @static
      */
     static function addHTMLHead( $head ) {
-        $template =& CRM_Core_Smarty::singleton( );
+        $template = CRM_Core_Smarty::singleton( );
         $template->append( 'pageHTMLHead', $head );
         return;
     }
@@ -221,7 +221,7 @@ class CRM_Utils_System_Standalone {
      *
      */
     function url($path = null, $query = null, $absolute = true, $fragment = null, $htmlize = true ) {
-        $config        =& CRM_Core_Config::singleton( );
+        $config        = CRM_Core_Config::singleton( );
         static $script = 'index.php';
 
         if (isset($fragment)) {
@@ -330,6 +330,27 @@ class CRM_Utils_System_Standalone {
     {
         return null;
     }
+
+    /**
+     * check is user logged in.
+     *
+     * @return boolean true/false.
+     */
+    public static function isUserLoggedIn( ) {
+        return true;
+    }
+    
+    /**
+     * Get currently logged in user uf id.
+     *
+     * @return int logged in user uf id.
+     */
+    public static function getLoggedInUfID( ) {
+        //FIXME :
+        $session = CRM_Core_session::singleton( );
+        return $session->get( 'ufID' );
+    }
+    
 }
 
 

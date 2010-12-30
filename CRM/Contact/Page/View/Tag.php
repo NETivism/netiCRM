@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -45,11 +45,11 @@ class CRM_Contact_Page_View_Tag extends CRM_Core_Page {
      * @access public
      */
     function browse( ) {
-        $controller =& new CRM_Core_Controller_Simple( 'CRM_Tag_Form_Tag', ts('Contact Tags'), $this->_action );
+        $controller = new CRM_Core_Controller_Simple( 'CRM_Tag_Form_Tag', ts('Contact Tags'), $this->_action );
         $controller->setEmbedded( true );
         
         // set the userContext stack
-        $session =& CRM_Core_Session::singleton();
+        $session = CRM_Core_Session::singleton();
         
         $session->pushUserContext( CRM_Utils_System::url('civicrm/contact/view', 'action=browse&selectedChild=tag' ) ,false);
         $controller->reset( );

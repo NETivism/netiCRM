@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -74,8 +74,14 @@ class CRM_Admin_Form_Setting extends CRM_Core_Form
 
             require_once "CRM/Core/BAO/Preferences.php";
             $listEnabled = CRM_Core_BAO_Preferences::valueOptions( 'contact_autocomplete_options' );
+
+            $autoSearchFields = array();
+            if ( !empty( $list ) && !empty( $listEnabled ) ) { 
+                $autoSearchFields = array_combine($list, $listEnabled);
+            }
+            
             //Set sort_name for default
-            $this->_defaults['autocompleteContactSearch'] = array( '1' => 1 ) + array_combine($list, $listEnabled);
+            $this->_defaults['autocompleteContactSearch'] = array( '1' => 1 ) + $autoSearchFields;
         }
         return $this->_defaults;
     }
@@ -122,7 +128,7 @@ class CRM_Admin_Form_Setting extends CRM_Core_Form
 
         // save autocomplete search options
         if ( CRM_Utils_Array::value( 'autocompleteContactSearch', $params ) ) {
-            $config =& new CRM_Core_DAO_Preferences( );
+            $config = new CRM_Core_DAO_Preferences( );
             $config->domain_id  = CRM_Core_Config::domainID( );
             $config->find(true);
             $config->contact_autocomplete_options = 
@@ -146,7 +152,7 @@ class CRM_Admin_Form_Setting extends CRM_Core_Form
 
     public function rebuildMenu( ) {
         // ensure config is set with new values
-        $config =& CRM_Core_Config::singleton(true, true);
+        $config = CRM_Core_Config::singleton(true, true);
 
         // rebuild menu items
         require_once 'CRM/Core/Menu.php';

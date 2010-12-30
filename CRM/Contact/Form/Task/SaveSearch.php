@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -86,7 +86,7 @@ class CRM_Contact_Form_Task_SaveSearch extends CRM_Contact_Form_Task {
     function buildQuickForm()
     {
         // get the qill 
-        $query =& new CRM_Contact_BAO_Query( $this->get( 'queryParams' ) );
+        $query = new CRM_Contact_BAO_Query( $this->get( 'queryParams' ) );
         $qill = $query->qill( );
 
         // need to save qill for the smarty template
@@ -142,9 +142,8 @@ class CRM_Contact_Form_Task_SaveSearch extends CRM_Contact_Form_Task {
         // get form values of all the forms in this controller
         $formValues = $this->controller->exportValues( );
 
-        $session         =& CRM_Core_Session::singleton( );
-        $isAdvanced      = $session->get('isAdvanced');
-        $isSearchBuilder = $session->get('isSearchBuilder');
+        $isAdvanced      = $this->get('isAdvanced');
+        $isSearchBuilder = $this->get('isSearchBuilder');
 
         // add mapping record only for search builder saved search
         $mappingId = null;
@@ -162,7 +161,7 @@ class CRM_Contact_Form_Task_SaveSearch extends CRM_Contact_Form_Task {
                 //get the mapping id from saved search
                 require_once "CRM/Contact/BAO/SavedSearch.php";
                 
-                $savedSearch     =& new CRM_Contact_BAO_SavedSearch();
+                $savedSearch     = new CRM_Contact_BAO_SavedSearch();
                 $savedSearch->id = $this->_id;
                 $savedSearch->find(true);
                 $mappingId = $savedSearch->mapping_id; 
@@ -173,7 +172,7 @@ class CRM_Contact_Form_Task_SaveSearch extends CRM_Contact_Form_Task {
         }
 
         //save the search
-        $savedSearch                   =& new CRM_Contact_BAO_SavedSearch();
+        $savedSearch                   = new CRM_Contact_BAO_SavedSearch();
         $savedSearch->id               =  $this->_id;
         $savedSearch->form_values      =  serialize($this->get( 'formValues' ));
         $savedSearch->mapping_id       =  $mappingId;

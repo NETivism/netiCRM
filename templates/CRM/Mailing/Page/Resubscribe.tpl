@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -25,10 +25,8 @@
 *}
 {if $confirm}
 <div class="messages status">
-    <dl>
-      <dt><img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}" /></dt>
-      <dd><label>{$display_name} ({$email})</label> {ts}has been successfully resubscribed.{/ts}</dd>
-    </dl>
+      <div class="icon inform-icon"></div>&nbsp;
+      <label>{$display_name} ({$email})</label> {ts}has been successfully resubscribed.{/ts}
 </div>
 {else}
 <div>

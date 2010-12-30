@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -51,6 +51,11 @@ function smarty_function_help( $params, &$smarty ) {
         return;
     }
 
+    $help = '';
+    if ( isset( $params['text'] ) ) {
+        $help = '<div class="crm-help">' . $params['text'] . '</div>';
+    }
+    
     if ( isset( $params['file'] ) ) {
         $file = $params['file'];
     } else if ( isset( $smarty->_tpl_vars[ 'tplFile' ] ) ) {
@@ -65,9 +70,11 @@ function smarty_function_help( $params, &$smarty ) {
         $file ='CRM/common/accesskeys.hlp';
     }
     require_once 'CRM/Core/Config.php';
-    $config = CRM_Core_Config::Singleton();
+    $config = CRM_Core_Config::singleton();
     $smarty->assign( 'id', $params['id'] );
-    $help = $smarty->fetch( $file );
+    if ( ! $help ) {
+        $help = $smarty->fetch( $file );
+    }
     return <<< EOT
 <script type="text/javascript"> cj( function() { cj(".helpicon").toolTip(); });</script>
 <div class="helpicon">&nbsp;<span id="{$id}_help" style="display:none">$help</span></div>&nbsp;&nbsp;&nbsp;

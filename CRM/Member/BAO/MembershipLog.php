@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -51,7 +51,7 @@ class CRM_Member_BAO_MembershipLog extends CRM_Member_DAO_MembershipLog
      */
     static function add(&$params, &$ids) 
     {
-        $membershipLog              =& new CRM_Member_DAO_MembershipLog( );
+        $membershipLog              = new CRM_Member_DAO_MembershipLog( );
         $membershipLog->copyValues( $params );
         
         $membershipLog->save( );
@@ -69,7 +69,7 @@ class CRM_Member_BAO_MembershipLog extends CRM_Member_DAO_MembershipLog
     
     static function del( $membershipID ) 
     {
-        $membershipLog  =& new CRM_Member_DAO_MembershipLog( );
+        $membershipLog  = new CRM_Member_DAO_MembershipLog( );
         $membershipLog->membership_id = $membershipID ;
         return $membershipLog->delete();
     }

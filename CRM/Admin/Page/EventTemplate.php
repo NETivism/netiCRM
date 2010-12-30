@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                               |
+ | CiviCRM version 3.3                                               |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -72,8 +72,8 @@ class CRM_Admin_Page_EventTemplate extends CRM_Core_Page_Basic
             self::$_links = array(
                                   CRM_Core_Action::UPDATE  => array(
                                                                     'name'  => ts('Edit'),
-                                                                    'url'   => 'civicrm/event/manage',
-                                                                    'qs'    => 'action=update&id=%%id%%&reset=1&subPage=EventInfo',
+                                                                    'url'   => 'civicrm/event/manage/eventInfo',
+                                                                    'qs'    => 'action=update&id=%%id%%&reset=1',
                                                                     'title' => ts('Edit Event Template') 
                                                                     ),
                                   CRM_Core_Action::DELETE  => array(
@@ -101,7 +101,7 @@ class CRM_Admin_Page_EventTemplate extends CRM_Core_Page_Basic
         $allEventTemplates = array( );
         
         require_once 'CRM/Event/DAO/Event.php';
-        $eventTemplate =& new CRM_Event_DAO_Event( );
+        $eventTemplate = new CRM_Event_DAO_Event( );
         
         require_once 'CRM/Event/PseudoConstant.php';
         $eventTypes          = CRM_Event_PseudoConstant::eventType( );
@@ -137,7 +137,7 @@ class CRM_Admin_Page_EventTemplate extends CRM_Core_Page_Basic
         }
         $this->assign('rows', $allEventTemplates );
 
-        $session =& CRM_Core_Session::singleton();
+        $session = CRM_Core_Session::singleton();
         $session->pushUserContext( CRM_Utils_System::url( CRM_Utils_System::currentPath( ), 
                                                           'reset=1&action=browse' ) );
     }

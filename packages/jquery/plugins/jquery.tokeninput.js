@@ -23,6 +23,7 @@ $.fn.tokenInput = function (url, options) {
         method: "GET",
         contentType: "json",
         queryParam: "name",
+        ajaxCallbackFunction: null,
         onResult: null
     }, options);
 
@@ -82,7 +83,7 @@ $.TokenList = function (input, settings) {
     var timeout;
 
     // Create a new text input an attach keyup events
-    var input_box = $("<input type=\"text\">")
+    var input_box = $("<input type=\"text\" class='token-input-box'>")
         .css({
             outline: "none"
         })
@@ -94,7 +95,7 @@ $.TokenList = function (input, settings) {
         .blur(function () {
             hide_dropdown();
         })
-        .bind("keyup text", function (event) {
+        .bind("keydown text", function (event) {
             var previous_token;
             var next_token;
 
@@ -170,7 +171,6 @@ $.TokenList = function (input, settings) {
                   return true;
 
                 default:
-
                     //if(is_printable_character(event.keyCode)) {
                       // set a timeout just long enough to let this function finish.
                       setTimeout(function(){do_search(false);}, 5);
@@ -252,6 +252,9 @@ $.TokenList = function (input, settings) {
 
     // Pre-populate list if items exist
     function init_list () {
+        //reset tokens, before initialize.
+        hidden_input.val('');
+       
         li_data = settings.prePopulate;
         if(li_data && li_data.length) {
           for(var i in li_data) { 
@@ -353,6 +356,10 @@ $.TokenList = function (input, settings) {
 
         // Save this token id
         var id_string = li_data.id;
+        
+        if ( settings.ajaxCallbackFunction !=  null ) {
+            eval( settings.ajaxCallbackFunction + '( "select", id_string )')
+        }
 
         // IE fixes: Remove extra comma at the end
         if ( hidden_input.val( ) ) {
@@ -414,6 +421,10 @@ $.TokenList = function (input, settings) {
     function delete_token (token) {
         // Remove the id from the saved list
         var token_data = $.data(token.get(0), "tokeninput");
+        
+        if ( settings.ajaxCallbackFunction !=  null ) {
+            eval( settings.ajaxCallbackFunction + '( "delete", token_data.id )')
+        }
 
         // Delete the token
         token.remove();
@@ -463,11 +474,12 @@ $.TokenList = function (input, settings) {
     function hide_dropdown () {
 //         dropdown.hide().empty();
 //         selected_dropdown_item = null;
+
       //here we need to sleep, fix for IE, CRM-6012 
       setTimeout(function( ) { 
 	  dropdown.hide().empty(); 
 	  selected_dropdown_item = null; 
-	}, 300 );      
+	}, 300 );
     }
 
     function show_dropdown_searching () {

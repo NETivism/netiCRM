@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -76,12 +76,20 @@ class CRM_Price_Form_Preview extends CRM_Core_Form
             $groupTree = CRM_Price_BAO_Set::getSetDetail($groupId);
             $this->_groupTree[$groupId]['fields'][$fieldId] = $groupTree[$groupId]['fields'][$fieldId];
             $this->assign('preview_type', 'field');
+            $url = CRM_Utils_System::url( 'civicrm/admin/price/field', "reset=1&action=browse&sid={$groupId}");
+            $breadCrumb     = array( array('title' => ts('Price Set Fields'),
+                                           'url'   => $url) );
         } else {
             // group preview
             require_once 'CRM/Price/BAO/Set.php';
             $this->_groupTree  = CRM_Price_BAO_Set::getSetDetail($groupId);
             $this->assign('preview_type', 'group');
+            $this->assign('setTitle', CRM_Price_BAO_Set::getTitle($groupId));
+            $url = CRM_Utils_System::url( 'civicrm/admin/price', 'reset=1' );
+            $breadCrumb     = array( array('title' => ts('Price Sets'),
+                                           'url'   => $url) );
         }
+        CRM_Utils_System::appendBreadCrumb( $breadCrumb );        
     }
     
     /**
@@ -97,7 +105,7 @@ class CRM_Price_Form_Preview extends CRM_Core_Form
         $defaults = array();
         $groupId  = $this->get('groupId');
         $fieldId  = $this->get('fieldId');
-        if ( $this->_groupTree[$groupId] ) {
+        if ( CRM_Utils_Array::value( 'fields',$this->_groupTree[$groupId] ) ) {
             foreach( $this->_groupTree[$groupId]['fields'] as $key => $val ) {
                 foreach ( $val['options'] as $keys => $values ) {
                     if ( $values['is_default'] ) {

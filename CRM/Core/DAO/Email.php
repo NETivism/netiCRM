@@ -1,7 +1,7 @@
 <?php
 /*
 +--------------------------------------------------------------------+
-| CiviCRM version 3.1                                                |
+| CiviCRM version 3.3                                                |
 +--------------------------------------------------------------------+
 | Copyright CiviCRM LLC (c) 2004-2010                                |
 +--------------------------------------------------------------------+
@@ -79,7 +79,7 @@ class CRM_Core_DAO_Email extends CRM_Core_DAO
      * @var boolean
      * @static
      */
-    static $_log = false;
+    static $_log = true;
     /**
      * Unique Email ID
      *
@@ -140,6 +140,18 @@ class CRM_Core_DAO_Email extends CRM_Core_DAO
      * @var datetime
      */
     public $reset_date;
+    /**
+     * Text formatted signature for the email.
+     *
+     * @var text
+     */
+    public $signature_text;
+    /**
+     * HTML formatted signature for the email.
+     *
+     * @var text
+     */
+    public $signature_html;
     /**
      * class constructor
      *
@@ -239,6 +251,28 @@ class CRM_Core_DAO_Email extends CRM_Core_DAO
                     'name' => 'reset_date',
                     'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
                     'title' => ts('Reset Date') ,
+                ) ,
+                'signature_text' => array(
+                    'name' => 'signature_text',
+                    'type' => CRM_Utils_Type::T_TEXT,
+                    'title' => ts('Signature Text') ,
+                    'import' => true,
+                    'where' => 'civicrm_email.signature_text',
+                    'headerPattern' => '',
+                    'dataPattern' => '',
+                    'export' => true,
+                    'default' => 'UL',
+                ) ,
+                'signature_html' => array(
+                    'name' => 'signature_html',
+                    'type' => CRM_Utils_Type::T_TEXT,
+                    'title' => ts('Signature Html') ,
+                    'import' => true,
+                    'where' => 'civicrm_email.signature_html',
+                    'headerPattern' => '',
+                    'dataPattern' => '',
+                    'export' => true,
+                    'default' => 'UL',
                 ) ,
             );
         }

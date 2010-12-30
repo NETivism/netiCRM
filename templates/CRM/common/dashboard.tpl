@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -51,7 +51,7 @@ cj(function() {
       getWidgetsByColumn: {
         url:  {/literal}'{crmURL p='civicrm/ajax/dashboard' h=0 }'{literal},
         data: {
-          op: 'get_widgets_by_column'
+          op: 'get_widgets_by_column', key: {/literal}"{crmKey name='civicrm/ajax/dashboard'}"{literal}
         }
       },
 
@@ -87,7 +87,7 @@ cj(function() {
         url: {/literal}'{crmURL p='civicrm/ajax/dashboard' h=0 }'{literal},
         data: {
           // id: widgetID,
-          op: 'get_widget'
+          op: 'get_widget', key: {/literal}"{crmKey name='civicrm/ajax/dashboard'}"{literal}
         }
       },
 
@@ -101,7 +101,7 @@ cj(function() {
         url: {/literal}'{crmURL p='civicrm/ajax/dashboard' h=0 }'{literal},
         data: {
           // columns: array(0 => array(widgetId => isMinimized, ...), ...),
-          op: 'save_columns'
+          op: 'save_columns', key: {/literal}"{crmKey name='civicrm/ajax/dashboard'}"{literal}
         }
       },
       
@@ -128,7 +128,7 @@ cj(function() {
         data: {
           // id: widgetId,
           // settings: array(name => value, ...),
-          op: 'widget_settings'
+          op: 'widget_settings', key: {/literal}"{crmKey name='civicrm/ajax/dashboard'}"{literal}
         }
       }
     },

@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -64,7 +64,7 @@ class CRM_Activity_Import_Form_Preview extends CRM_Core_Form
         //get the mapping name displayed if the mappingId is set
         $mappingId = $this->get('loadMappingId');
         if ( $mappingId ) {
-            $mapDAO =& new CRM_Core_DAO_Mapping();
+            $mapDAO = new CRM_Core_DAO_Mapping();
             $mapDAO->id = $mappingId;
             $mapDAO->find( true );
             $this->assign('loadedMapping', $mappingId);
@@ -80,15 +80,18 @@ class CRM_Activity_Import_Form_Preview extends CRM_Core_Form
         }
         
         if ($invalidRowCount) {
-            $this->set('downloadErrorRecordsUrl', CRM_Utils_System::url('civicrm/export', 'type=1&realm=activity'));
+            $urlParams = 'type='.CRM_Activity_Import_Parser::ERROR . '&parser=CRM_Activity_Import_Parser';
+            $this->set('downloadErrorRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
         }
 
         if ($conflictRowCount) {
-            $this->set('downloadConflictRecordsUrl', CRM_Utils_System::url('civicrm/export', 'type=2&realm=activity'));
+            $urlParams = 'type='.CRM_Activity_Import_Parser::CONFLICT . '&parser=CRM_Activity_Import_Parser';
+            $this->set('downloadConflictRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
         }
         
         if ($mismatchCount) {
-            $this->set('downloadMismatchRecordsUrl', CRM_Utils_System::url('civicrm/export', 'type=4&realm=activity'));
+            $urlParams = 'type='.CRM_Activity_Import_Parser::NO_MATCH . '&parser=CRM_Activity_Import_Parser';
+            $this->set('downloadMismatchRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
         }
 
         
@@ -153,7 +156,7 @@ class CRM_Activity_Import_Form_Preview extends CRM_Core_Form
         $conflictRowCount   = $this->get('conflictRowCount');
         $onDuplicate        = $this->get('onDuplicate');
 
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
         $seperator = $config->fieldSeparator;
 
         $mapper = $this->controller->exportValue( 'MapField', 'mapper' );
@@ -178,7 +181,7 @@ class CRM_Activity_Import_Form_Preview extends CRM_Core_Form
 
         }
 
-        $parser =& new CRM_Activity_Import_Parser_Activity( $mapperKeys ,$mapperLocType ,$mapperPhoneType );
+        $parser = new CRM_Activity_Import_Parser_Activity( $mapperKeys ,$mapperLocType ,$mapperPhoneType );
         
         $mapFields = $this->get('fields');
 
@@ -219,9 +222,12 @@ class CRM_Activity_Import_Form_Preview extends CRM_Core_Form
             fclose($fd);
             
             $this->set('errorFile', $errorFile);
-            $this->set('downloadErrorRecordsUrl', CRM_Utils_System::url('civicrm/export', 'type=1&realm=activity'));
-            $this->set('downloadConflictRecordsUrl', CRM_Utils_System::url('civicrm/export', 'type=2&realm=activity'));
-            $this->set('downloadMismatchRecordsUrl', CRM_Utils_System::url('civicrm/export', 'type=4&realm=activity'));
+            $urlParams = 'type='.CRM_Activity_Import_Parser::ERROR . '&parser=CRM_Activity_Import_Parser';
+            $this->set('downloadErrorRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
+            $urlParams = 'type='.CRM_Activity_Import_Parser::CONFLICT . '&parser=CRM_Activity_Import_Parser';
+            $this->set('downloadConflictRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
+            $urlParams = 'type='.CRM_Activity_Import_Parser::NO_MATCH . '&parser=CRM_Activity_Import_Parser';
+            $this->set('downloadMismatchRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams));
         }
     }
 

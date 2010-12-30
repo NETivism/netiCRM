@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -23,29 +23,27 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
-<div class="form-item">
-<fieldset><legend>{ts}Find Contribution Pages{/ts}</legend>
-<table class="form-layout">
+<div class="crm-block crm-form-block crm-contribution-search_contribution-form-block">
+<h3>{ts}Find Contribution Pages{/ts}</h3>
+<table class="form-layout-compressed">
     <tr>
-        <td class="label">{$form.title.label}</td>
         <td>{$form.title.html}
             <div class="description font-italic">
                 {ts}Complete OR partial Contribution Page title.{/ts}
             </div>
+            <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl"}</div>  
         </td>
         
-        <td class="label">{ts}Contribution Type{/ts}</td>
         <td>
-                <div class="listing-box">
-                    {foreach from=$form.contribution_type_id item="contribution_val"}
-                    <div class="{cycle values="odd-row,even-row"}">
-                         {$contribution_val.html}
-                      </div>
-                    {/foreach}
-                </div>
+            <label>{ts}Contribution Type{/ts}</label>
+            <div class="listing-box">
+                {foreach from=$form.contribution_type_id item="contribution_val"}
+                <div class="{cycle values="odd-row,even-row"}">
+                     {$contribution_val.html}
+                  </div>
+                {/foreach}
+            </div>
         </td>
-        <td class="right">&nbsp;{$form.buttons.html}</td>  
     </tr>
  </table>
-</fieldset>
 </div>

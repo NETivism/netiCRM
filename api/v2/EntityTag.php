@@ -1,7 +1,7 @@
 <?php
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -32,7 +32,7 @@
  * @subpackage API_EntityTag
  * 
  * @copyright CiviCRM LLC (c) 2004-2010
- * @version $Id: EntityTag.php 26284 2010-02-17 17:58:00Z shot $
+ * @version $Id: EntityTag.php 30758 2010-11-15 15:09:56Z neha $
  */
 
 /**
@@ -46,12 +46,27 @@ require_once 'api/v2/utils.php';
  * @return <type>
  */
 function civicrm_entity_tag_get( &$params ) {
-    if ( !is_array($params) || ! array_key_exists( 'contact_id', $params ) ) {
-        return civicrm_create_error( ts( 'contact_id is a required field' ) );
+    if ( !is_array($params) ) {
+        return civicrm_create_error( ts( 'params should be an array.' ) );
+    }
+    
+    $entityID    = null;
+    $entityTable = 'civicrm_contact';
+   
+    if ( !( $entityID = CRM_Utils_Array::value( 'entity_id', $params ) ) ) {
+        $entityID = CRM_Utils_Array::value( 'contact_id', $params );
+    }
+    
+    if ( empty($entityID) ) {
+        return civicrm_create_error( ts( 'entity_id is a required field.' ) );  
+    }
+
+    if ( CRM_Utils_Array::value( 'entity_table', $params ) ) {
+        $entityTable = $params['entity_table'];
     }
 
     require_once 'CRM/Core/BAO/EntityTag.php';
-    $values =& CRM_Core_BAO_EntityTag::getTag( $params['contact_id'] );
+    $values =& CRM_Core_BAO_EntityTag::getTag( $entityID, $entityTable );
     $result = array( );
     foreach ( $values as $v ) {
         $result[] = array( 'tag_id' => $v );
@@ -65,12 +80,27 @@ function civicrm_entity_tag_get( &$params ) {
  * @return <type>
  */
 function civicrm_entity_tag_display( &$params ) {
-    if ( ! array_key_exists( 'contact_id', $params ) ) {
-        return civicrm_create_error( ts( 'contact_id is a required field' ) );
+    if ( !is_array($params) ) {
+        return civicrm_create_error( ts( 'params should be an array.' ) );
+    }
+    
+    $entityID    = null;
+    $entityTable = 'civicrm_contact';
+   
+    if ( !( $entityID = CRM_Utils_Array::value( 'entity_id', $params ) ) ) {
+        $entityID = CRM_Utils_Array::value( 'contact_id', $params );
+    }
+    
+    if ( empty($entityID) ) {
+        return civicrm_create_error( ts( 'entity_id is a required field.' ) );  
+    }
+
+    if ( CRM_Utils_Array::value( 'entity_table', $params ) ) {
+        $entityTable = $params['entity_table'];
     }
 
     require_once 'CRM/Core/BAO/EntityTag.php';
-    $values =& CRM_Core_BAO_EntityTag::getTag( $params['contact_id'] );
+    $values =& CRM_Core_BAO_EntityTag::getTag( $entityID, $entityTable );
     $result = array( );
     $tags   = CRM_Core_PseudoConstant::tag( );
     foreach ( $values as $v ) {
@@ -90,7 +120,7 @@ function civicrm_tag_entities_get( &$params )
     require_once 'CRM/Core/BAO/Tag.php';
     require_once 'CRM/Core/BAO/EntityTag.php';
     $tag      = new CRM_Core_BAO_Tag();
-    $tag->id  = $params['tag_id'] ? $params['tag_id'] : null;
+    $tag->id  = CRM_Utils_Array::value( 'tag_id', $params ) ? $params['tag_id'] : null;
     $entities =& CRM_Core_BAO_EntityTag::getEntitiesByTag($tag);    
     return $entities;   
 }
@@ -120,42 +150,45 @@ function civicrm_entity_tag_remove( &$params ) {
  * @return <type> 
  */
 function civicrm_entity_tag_common( &$params, $op = 'add' ) {
-    $contactIDs = array( );
-    $tagsIDs    = array( );
+    $entityIDs    = array( );
+    $tagsIDs      = array( );
+    $entityTable  = 'civicrm_contact';
     if (is_array($params)) {
         foreach ( $params as $n => $v ) {
-            if ( substr( $n, 0, 10 ) == 'contact_id' ) {
-                $contactIDs[] = $v;
+            if ( (substr( $n, 0, 10 ) == 'contact_id') || (substr( $n, 0, 9 ) == 'entity_id') ) {
+                $entityIDs[] = $v;
             } else if ( substr( $n, 0, 6 ) == 'tag_id' ) {
                 $tagIDs[] = $v;
+            } else if ( substr( $n, 0, 12 ) == 'entity_table' ) {
+                $entityTable = $v;
             }
         }
     }
-    if ( empty( $contactIDs ) ) {
+    if ( empty( $entityIDs ) ) {
         return civicrm_create_error( ts( 'contact_id is a required field' ) );
     }
 
     if ( empty( $tagIDs ) ) {
         return civicrm_create_error( ts( 'tag_id is a required field' ) );
     }
-
+  
     require_once 'CRM/Core/BAO/EntityTag.php';
     $values = array( 'is_error' => 0 );
     if ( $op == 'add' ) {
         $values['total_count'] = $values['added'] = $values['not_added'] = 0;
         foreach ( $tagIDs as $tagID ) {
-            list( $tc, $a, $na ) = 
-                CRM_Core_BAO_EntityTag::addContactsToTag( $contactIDs, $tagID );
-            $values['total_count'] += $tc;
+            list( $te, $a, $na ) = 
+                CRM_Core_BAO_EntityTag::addEntitiesToTag( $entityIDs, $tagID, $entityTable );
+            $values['total_count'] += $te;
             $values['added']       += $a;
             $values['not_added']   += $na;
         }
     } else {
         $values['total_count'] = $values['removed'] = $values['not_removed'] = 0;
         foreach ( $tagIDs as $tagID ) {
-            list( $tc, $r, $nr ) = 
-                CRM_Core_BAO_EntityTag::removeContactsFromTag( $contactIDs, $tagID );
-            $values['total_count'] += $tc;
+            list( $te, $r, $nr ) = 
+                CRM_Core_BAO_EntityTag::removeEntitiesFromTag( $entityIDs, $tagID, $entityTable );
+            $values['total_count'] += $te;
             $values['removed']     += $r;
             $values['not_removed'] += $nr;
         }

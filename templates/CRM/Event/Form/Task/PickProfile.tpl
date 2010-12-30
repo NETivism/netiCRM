@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -23,14 +23,21 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
-<div class="form-item">
-<fieldset>
+<div class="crm-block crm-form-block crm-event-pickprofile-form-block">
     <legend>{ts}Batch Update Event via Profile{/ts}</legend>
-    <dl>
-        <dt>{$form.uf_group_id.label}</dt><dd>{$form.uf_group_id.html}</dd>
-        <dt></dt><dd>{include file="CRM/Event/Form/Task.tpl"}</dd>
-        <dt></dt><dd>{$form.buttons.html}</dd>
-    </dl>
-</fieldset>
+    <table class="form-layout">
+        <tr class="crm-event-pickprofile-form-block-uf_group_id">
+           <td class="label">{$form.uf_group_id.label}</td>
+           <td>{$form.uf_group_id.html}</td>
+        </tr>
+        <tr>
+           <td>&nbsp;</td>
+           <td>{include file="CRM/Event/Form/Task.tpl"}</td>
+        </tr>
+        <tr>
+           <td>&nbsp;</td>
+           <td>{include file="CRM/common/formButtons.tpl" location="bottom"}</td>
+        </tr>
+    </table>
 </div>
 

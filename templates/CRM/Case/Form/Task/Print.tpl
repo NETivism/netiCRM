@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -26,8 +26,8 @@
 <p>
 
 {if $rows } 
-<div class="form-item">
-     <span class="element-right">{$form.buttons.html}</span>
+<div class="crm-submit-buttons">
+     <span class="element-right">{include file="CRM/common/formButtons.tpl" location="top"}</span>
 </div>
 <div class="spacer"></div>
 <br />
@@ -44,29 +44,25 @@
 
 {foreach from=$rows item=row}
     <tr class="{cycle values="odd-row,even-row"}">
-        <td>{$row.sort_name}<br /><span class="description">{ts}Case ID{/ts}: {$row.case_id}</span></td>
-        <td>{$row.case_status_id}</td>
-        <td>{$row.case_type_id}</td>
-        <td>{if $row.case_role}{$row.case_role}{else}---{/if}</td>
-        <td>{if $row.case_recent_activity_type}
+        <td class="crm-case-print-sort_name">{$row.sort_name}<br /><span class="description">{ts}Case ID{/ts}: {$row.case_id}</span></td>
+        <td class="crm-case-print-case_status_id">{$row.case_status_id}</td>
+        <td class="crm-case-print-case_type_id">{$row.case_type_id}</td>
+        <td class="crm-case-print-case_role">{if $row.case_role}{$row.case_role}{else}---{/if}</td>
+        <td class="crm-case-print-case_recent_activity_type">{if $row.case_recent_activity_type}
     	{$row.case_recent_activity_type}<br />{$row.case_recent_activity_date|crmDate}{else}---{/if}</td>
-        <td>{if $row.case_scheduled_activity_type}
+        <td class="crm-case-print-case_scheduled_activity_type">{if $row.case_scheduled_activity_type}
     	{$row.case_scheduled_activity_type}<br />{$row.case_scheduled_activity_date|crmDate}{else}---{/if}</td>
     </tr>
 {/foreach}
 </table>
 
-<div class="form-item">
-     <span class="element-right">{$form.buttons.html}</span>
+<div class="crm-submit-buttons">
+     <span class="element-right">{include file="CRM/common/formButtons.tpl" location="bottom"}</span>
 </div>
 
 {else}
    <div class="messages status">
-    <dl>
-    <dt><img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}" /></dt>
-    <dd>
+    <div class="icon inform-icon"></div>
         {ts}There are no records selected for Print.{/ts}
-    </dd>
-    </dl>
-   </div>
+    </div>
 {/if}

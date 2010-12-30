@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -68,7 +68,7 @@ class CRM_Admin_Form_OptionValue extends CRM_Admin_Form
         if( !empty( $this->_gid ) ) {
             $this->_gName = CRM_Core_DAO::getFieldValue( 'CRM_Core_DAO_OptionGroup', $this->_gid, 'name');
         }
-        $session =& CRM_Core_Session::singleton();
+        $session = CRM_Core_Session::singleton();
         $url = CRM_Utils_System::url('civicrm/admin/optionValue', 'reset=1&action=browse&gid='.$this->_gid); 
         $session->pushUserContext( $url );
         $this->assign('id', $this->_id);
@@ -94,7 +94,7 @@ class CRM_Admin_Form_OptionValue extends CRM_Admin_Form
         $defaults = parent::setDefaultValues( );
         if (! CRM_Utils_Array::value( 'weight', $defaults ) ) {
             $query = "SELECT max( `weight` ) as weight FROM `civicrm_option_value` where option_group_id=" . $this->_gid;
-            $dao =& new CRM_Core_DAO( );
+            $dao = new CRM_Core_DAO( );
             $dao->query( $query );
             $dao->fetch();
             $defaults['weight'] = ($dao->weight + 1);   
@@ -139,8 +139,15 @@ class CRM_Admin_Form_OptionValue extends CRM_Admin_Form
                                ts('Description'), 
                                CRM_Core_DAO::getAttribute( 'CRM_Core_DAO_OptionValue', 'description' ) );
         }
-       
-        $this->add('text', 'grouping', ts('Option Grouping Name'), CRM_Core_DAO::getAttribute( 'CRM_Core_DAO_OptionValue', 'grouping' ) );
+        
+        if ( $this->_gName == 'case_status' ) {
+            $grouping = $this->add( 'select', 'grouping', ts('Option Grouping Name'), array( 'Opened' => ts('Opened'),
+                                                                                             'Closed' => ts('Closed') ) );
+            if ( $isReserved ) $grouping->freeze( );
+        } else {
+            $this->add('text', 'grouping', ts('Option Grouping Name'), CRM_Core_DAO::getAttribute( 'CRM_Core_DAO_OptionValue', 'grouping' ) );
+        }
+        
         $this->add('text', 'weight', ts('Weight'), CRM_Core_DAO::getAttribute( 'CRM_Core_DAO_OptionValue', 'weight' ),true );
         $this->add('checkbox', 'is_active', ts('Enabled?'));
         $this->add('checkbox', 'is_default', ts('Default Option?') );
@@ -156,10 +163,42 @@ class CRM_Admin_Form_OptionValue extends CRM_Admin_Form
                 $values[] =  ts('Organization'); 
             }
             $this->add( 'select', 'contactOptions', ts('Contact Type'),array('' => '-select-' ) + $values, true );
-        }  
+        } 
+        
+        $this->addFormRule( array( 'CRM_Admin_Form_OptionValue', 'formRule' ), $this ); 
     }
-
-       
+    
+    /**  
+     * global form rule  
+     *  
+     * @param array $fields  the input form values  
+     * @param array $files   the uploaded files if any  
+     * @param array $self    this object.
+     *  
+     * @return true if no errors, else an array of errors  
+     * @access public  
+     * @static  
+     */  
+    static function formRule( $fields, $files, $self ) 
+    {  
+        $errors = array( );
+        
+        //don't allow duplicate value within group.
+        $optionValues = array( );
+        require_once 'CRM/Core/OptionValue.php';
+        CRM_Core_OptionValue::getValues( array( 'id' => $self->_gid ), $optionValues );
+        foreach ( $optionValues as $values ) {
+            if ( $values['id'] != $self->_id ) {
+                if ( $fields['value'] == $values['value'] ) {
+                    $errors['value'] = ts( 'Value already exist in database.' );
+                    break;
+                }
+            }
+        }
+        
+        return empty( $errors ) ? true : $errors;
+    }
+    
     /**
      * Function to process the form
      *
@@ -168,6 +207,8 @@ class CRM_Admin_Form_OptionValue extends CRM_Admin_Form
      */
     public function postProcess() 
     {
+        CRM_Utils_System::flushCache( );
+
         $params = $this->exportValues();
         require_once 'CRM/Core/BAO/OptionValue.php';
         if($this->_action & CRM_Core_Action::DELETE) {
@@ -179,7 +220,7 @@ class CRM_Admin_Form_OptionValue extends CRM_Admin_Form
             // store the submitted values in an array
             $params = $this->exportValues();
             $params['option_group_id'] = $this->_gid;
-
+            
             if ($this->_action & CRM_Core_Action::UPDATE ) {
                 $ids['optionValue'] = $this->_id;
             }

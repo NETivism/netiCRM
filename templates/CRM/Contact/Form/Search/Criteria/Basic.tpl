@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -25,85 +25,127 @@
 *}
 	<table class="form-layout">
 		<tr>
-            <td class="font-size12pt">{$form.sort_name.label} {help id='id-advanced-intro'}</td>
-            <td>{$form.sort_name.html}
-                <div class="description font-italic">
-                    {ts}Complete OR partial Contact Name.{/ts}
-                </div>
-                {$form.email.html}
-                <div class="description font-italic">
-                    {ts}Complete OR partial Email Address.{/ts}
-                </div>
+            <td><label>{ts}Complete OR Partial Name{/ts}</label>&nbsp;{help id='id-advanced-intro'}<br />
+                {$form.sort_name.html|crmReplace:class:big}
             </td>
             <td>
-                {$form.uf_group_id.label} {$form.uf_group_id.html}
-                <br /><br />
-                <div class="form-item">
-                    {if $form.uf_user}{$form.uf_user.label} {$form.uf_user.html}
-                    &nbsp; <a href="#" title="unselect" onclick="unselectRadio('uf_user', 'Advanced'); return false;" >unselect</a>
-
-                    <div class="description font-italic">
-                        {ts 1=$config->userFramework}Does the contact have a %1 Account?{/ts}
-                    </div>
-                    {/if}
-                </div>
+                <label>{ts}Complete OR Partial Email{/ts}</label><br />
+                {$form.email.html|crmReplace:class:medium}
             </td>
-            <td class="label">{$form.buttons.html}</td>       
+            <td>
+                {if $form.component_mode}  
+                    {$form.component_mode.label} {help id="id-display-results"}<br />{$form.component_mode.html}
+                {else}
+                    &nbsp;
+                {/if}
+            </td>
+            <td>
+                {$form.uf_group_id.label} {help id="id-search-views"}<br />{$form.uf_group_id.html}
+            </td>
+            <td class="label"><div class="crm-submit-buttons" style="margin-top:1em;">{$form.buttons.html}</div></td>       
         </tr>
 		<tr>
 {if $form.contact_type}
             <td><label>{ts}Contact Type(s){/ts}</label><br />
                 {$form.contact_type.html}
+                 {literal}
+					<script type="text/javascript">
+
+								cj("select#contact_type").crmasmSelect({
+									addItemTarget: 'bottom',
+									animate: false,
+									highlight: true,
+									sortable: true,
+									respectParents: true
+								});
+
+						</script>
+					{/literal}
             </td>
 {else}
             <td>&nbsp;</td>
 {/if}
 {if $form.group}
-            {* Choose regular or 'tall' listing-box class for Group select box based on # of groups. *}
-            {if $form.group|@count GT 8}
-                {assign var="boxClass" value="listing-box-tall"}
-            {else}
-                {assign var="boxClass" value="listing-box"}
-            {/if}
             <td><label>{ts}Group(s){/ts}</label>
-                <div class="{$boxClass}">
-                    {foreach from=$form.group item="group_val"}
-                    <div class="{cycle values="even-row,odd-row"}">
-                    {$group_val.html}
-                    </div>
-                    {/foreach}
-                </div>
+                {$form.group.html}
+                {literal}
+                <script type="text/javascript">
+                cj("select#group").crmasmSelect({
+                    addItemTarget: 'bottom',
+                    animate: false,
+                    highlight: true,
+                    sortable: true,
+                    respectParents: true
+                });
+
+                </script>
+                {/literal}
             </td>
 {else}
             <td>&nbsp;</td>
 {/if}
 
-{if $form.tag}
-            <td colspan="2"><label>{ts}Tag(s){/ts}</label>
-                <div id="Tag" class="listing-box">
-                    {foreach from=$form.tag item="tag_val"} 
-                      <div class="{cycle values="odd-row,even-row"}">
-                      {$tag_val.html}
-                      </div>
-                    {/foreach}
-                </div>
+{if $form.contact_tags}
+            <td colspan="3"><label>{ts}Tag(s){/ts}</label>
+                {$form.contact_tags.html}
+                {literal}
+                <script type="text/javascript">
+
+                cj("select#contact_tags").crmasmSelect({
+                    addItemTarget: 'bottom',
+                    animate: false,
+                    highlight: true,
+                    sortable: true,
+                    respectParents: true
+                });
+
+                </script>
+                {/literal}   
             </td>
 {else}
-            <td colspan="2">&nbsp;</td>
+            <td colspan="3">&nbsp;</td>
 {/if}
 	    </tr>
+        <tr>
+            <td>
+            {if $form.uf_user}
+                {$form.uf_user.label} {$form.uf_user.html} <span class="crm-clear-link">(<a href="#" title="unselect" onclick="unselectRadio('uf_user', 'Advanced'); return false;" >{ts}clear{/ts}</a>)</span>
+                <div class="description font-italic">
+                    {ts 1=$config->userFramework}Does the contact have a %1 Account?{/ts}
+                </div>
+            {else}
+                &nbsp;
+            {/if}
+            </td>
+            <td>
+                {$form.preferred_language.label}<br />
+                {$form.preferred_language.html|crmReplace:class:medium}
+            </td> 
+        </tr>
         <tr>
             <td colspan="2">
                 {$form.privacy.label}<br />
                 {$form.privacy.html} {help id="id-privacy"}
             </td>
-            <td colspan="2">
+            <td colspan="3">
                 {$form.preferred_communication_method.label}<br />
-                {$form.preferred_communication_method.html}
+                {$form.preferred_communication_method.html}<br />
+                <div class="spacer"></div>
+                {$form.email_on_hold.html} {$form.email_on_hold.label}
             </td>
         </tr>
         <tr>
-            <td>{$form.contact_source.label}</td>
-            <td colspan="3">{$form.contact_source.html}</td>
+            <td>
+                {$form.contact_source.label}<br />
+                {$form.contact_source.html|crmReplace:class:medium}
+            </td>
+            <td>
+                {$form.job_title.label}<br />
+                {$form.job_title.html|crmReplace:class:medium}
+            </td>
+            <td colspan="3">
+                {if $form.deleted_contacts}<br />{$form.deleted_contacts.html} {$form.deleted_contacts.label}{else}&nbsp;{/if}
+            </td>
         </tr>
+        <tr><td colspan="5">{include file="CRM/common/Tag.tpl"}</td></tr>
     </table>

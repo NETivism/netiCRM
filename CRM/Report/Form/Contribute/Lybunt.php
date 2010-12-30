@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -131,9 +131,9 @@ class CRM_Report_Form_Contribute_Lybunt extends CRM_Report_Form {
                                           'options' => $optionYear,
                                           'default' => date('Y') ,
                                           'clause'  => "contribution_civireport.contact_id NOT IN
-((SELECT distinct contri.contact_id FROM civicrm_contribution contri 
- WHERE   YEAR(contri.receive_date) =  \$value AND contri.is_test = 0) ) AND contribution_civireport.contact_id IN ((SELECT distinct contri.contact_id FROM civicrm_contribution contri 
- WHERE   YEAR(contri.receive_date) =  (\$value-1) AND contri.is_test = 0) ) "
+(SELECT distinct contri.contact_id FROM civicrm_contribution contri 
+ WHERE   YEAR(contri.receive_date) =  \$value AND contri.is_test = 0) AND contribution_civireport.contact_id IN (SELECT distinct contri.contact_id FROM civicrm_contribution contri 
+ WHERE   YEAR(contri.receive_date) =  (\$value-1) AND contri.is_test = 0) "
                                           ), 
                                    'contribution_status_id'         => 
                                    array( 'operatorType' => CRM_Report_Form::OP_MULTISELECT,
@@ -152,21 +152,10 @@ class CRM_Report_Form_Contribute_Lybunt extends CRM_Report_Form {
                                         'operatorType' => CRM_Report_Form::OP_MULTISELECT,
                                         'group'        => true,
                                         'options'      => CRM_Core_PseudoConstant::group( ) ), ), ),
-                   
-                   'civicrm_tag' => 
-                   array( 'dao'     => 'CRM_Core_DAO_Tag',
-                          'filters' =>             
-                          array( 'tid' => 
-                                 array( 'name'         => 'tag_id',
-                                        'title'        => ts( 'Tag' ),
-                                        'tag'          => true,
-                                        'operatorType' => CRM_Report_Form::OP_MULTISELECT,
-                                        'options'      => CRM_Core_PseudoConstant::tag( ) 
-                                        ), 
-                                 ), 
-                          ),
+
                    );
         
+        $this->_tagFilter = true;
         parent::__construct( );
         
     }

@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -23,7 +23,9 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
-<fieldset><legend>{ts}Find Groups{/ts}</legend>
+<div class="crm-block crm-form-block crm-search-form-block">
+
+<h3>{ts}Find Groups{/ts}</h3>
 <div class="form-item">
 <table class="form-layout">
     <tr>
@@ -58,4 +60,4 @@
     </tr>
 </table>
 </div>
-</fieldset>
+</div>

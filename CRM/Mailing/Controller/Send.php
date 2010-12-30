@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -53,7 +53,7 @@ class CRM_Mailing_Controller_Send extends CRM_Core_Controller {
         $htmlFile = CRM_Utils_Request::retrieve( 'htmlFile', 'String',
                                                  CRM_Core_DAO::$_nullObject, false, null );
 
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
         if ( $txtFile &&
              file_exists( $config->uploadDir . $txtFile ) ) {
             $this->set( 'textFilePath', $config->uploadDir . $txtFile );
@@ -64,7 +64,7 @@ class CRM_Mailing_Controller_Send extends CRM_Core_Controller {
             $this->set( 'htmlFilePath', $config->uploadDir . $htmlFile );
         }
 
-        $this->_stateMachine =& new CRM_Mailing_StateMachine_Send( $this, $action, $mailingID);
+        $this->_stateMachine = new CRM_Mailing_StateMachine_Send( $this, $action, $mailingID);
 
         // create and instantiate the pages
         $this->addPages( $this->_stateMachine, $action );
@@ -75,7 +75,7 @@ class CRM_Mailing_Controller_Send extends CRM_Core_Controller {
             array_merge( array( 'textFile', 'htmlFile' ),
                          CRM_Core_BAO_File::uploadNames( ) );
 
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
         $this->addActions( $config->uploadDir,
                            $uploadNames );
     }

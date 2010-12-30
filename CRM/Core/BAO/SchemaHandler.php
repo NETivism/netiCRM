@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -78,6 +78,11 @@ class CRM_Core_BAO_SchemaHandler
         $sql =  self::buildTableSQL( $params );
         $dao =& CRM_Core_DAO::executeQuery( $sql, array(), true, null, false, false ); // do not i18n-rewrite
         $dao->free();
+
+        // logging support
+        require_once 'CRM/Logging/Schema.php';
+        $logging = new CRM_Logging_Schema;
+        $logging->fixSchemaDifferencesFor($params['name']);
 
         return true;
     }
@@ -215,7 +220,8 @@ ALTER TABLE {$tableName}
 $addFKSql = "
 ALTER TABLE {$tableName}
       ADD CONSTRAINT `FK_{$tableName}_entity_id` FOREIGN KEY (`entity_id`) REFERENCES {$fkTableName} (`id`) ON DELETE CASCADE;";
-        $dao = CRM_Core_DAO::executeQuery( $addFKSql );
+        // CRM-7007: do not i18n-rewrite this query
+        $dao = CRM_Core_DAO::executeQuery($addFKSql, array(), true, null, false, false);
         $dao->free();
 
         return true;
@@ -280,8 +286,16 @@ ALTER TABLE {$tableName}
             
         }
 
-        $dao =& CRM_Core_DAO::executeQuery( $sql );
+        // CRM-7007: do not i18n-rewrite this query
+        $dao =& CRM_Core_DAO::executeQuery($sql, array(), true, null, false, false);
         $dao->free();
+
+        // logging support: if we’re adding a column (but only then!) make sure the potential relevant log table gets a column as well
+        if ($params['operation'] == 'add') {
+            require_once 'CRM/Logging/Schema.php';
+            $logging = new CRM_Logging_Schema;
+            $logging->fixSchemaDifferencesFor($params['table_name'], array($params['name']));
+        }
         
         return true;
     }
@@ -322,7 +336,7 @@ ADD UNIQUE INDEX `unique_entity_id` ( `entity_id` )";
             $dao =& CRM_Core_DAO::executeQuery( $sql );
     }
 
-    static function createIndexes(&$tables, $createIndexPrefix = 'index')
+    static function createIndexes(&$tables, $createIndexPrefix = 'index', $substrLenghts = array())
     {
         $queries = array();
 
@@ -349,7 +363,12 @@ ADD UNIQUE INDEX `unique_entity_id` ( `entity_id` )";
 
             // now check for all fields if the index exists
             foreach ( $fields as $field ) {
-                $names = array("index_{$field}", "FK_{$table}_{$field}", "UI_{$field}", "{$createIndexPrefix}_{$field}");
+                // handle indices over substrings, CRM-6245
+                // $lengthName is appended to index name, $lengthSize is the field size modifier
+                $lengthName = isset($substrLenghts[$table][$field]) ? "_{$substrLenghts[$table][$field]}"  : '';
+                $lengthSize = isset($substrLenghts[$table][$field]) ? "({$substrLenghts[$table][$field]})" : '';
+
+                $names = array("index_{$field}{$lengthName}", "FK_{$table}_{$field}{$lengthName}", "UI_{$field}{$lengthName}", "{$createIndexPrefix}_{$field}{$lengthName}");
 
                 // skip to the next $field if one of the above $names exists; handle multilingual for CRM-4126
                 foreach ($names as $name) {
@@ -363,10 +382,10 @@ ADD UNIQUE INDEX `unique_entity_id` ( `entity_id` )";
                 // if we're multilingual and the field is internationalised, do it for every locale
                 if ( !CRM_Utils_System::isNull( $locales ) and isset( $columns[$table][$field] ) ) {
                     foreach ($locales as $locale) {
-                        $queries[] = "CREATE INDEX {$createIndexPrefix}_{$field}_{$locale} ON {$table} ({$field}_{$locale})";
+                        $queries[] = "CREATE INDEX {$createIndexPrefix}_{$field}{$lengthName}_{$locale} ON {$table} ({$field}_{$locale}{$lengthSize})";
                     }
                 } else {
-                    $queries[] = "CREATE INDEX {$createIndexPrefix}_{$field} ON {$table} ({$field})";
+                    $queries[] = "CREATE INDEX {$createIndexPrefix}_{$field}{$lengthName} ON {$table} ({$field}{$lengthSize})";
                 }
             }
         }

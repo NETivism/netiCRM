@@ -1,7 +1,7 @@
 <?php
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -61,7 +61,7 @@ class CRM_Contact_BAO_GroupOrganization extends CRM_Contact_DAO_GroupOrganizatio
         if ( ! $dataExists ) {
             return null;
         }
-        $groupOrganization =& new CRM_Contact_DAO_GroupOrganization( );
+        $groupOrganization = new CRM_Contact_DAO_GroupOrganization( );
         $groupOrganization->copyValues( $formatedValues );
         $groupOrganization->save( );
         return $groupOrganization;
@@ -112,7 +112,7 @@ class CRM_Contact_BAO_GroupOrganization extends CRM_Contact_DAO_GroupOrganizatio
 
     static function &retrieve( $groupID, &$defaults )
     {
-        $dao =& new CRM_Contact_DAO_GroupOrganization();
+        $dao = new CRM_Contact_DAO_GroupOrganization();
         $dao->group_id = $groupID;
         if ( $dao->find(true) ) {
             $defaults['group_organization'] = $dao->id;
@@ -151,7 +151,7 @@ class CRM_Contact_BAO_GroupOrganization extends CRM_Contact_DAO_GroupOrganizatio
     {
         $results = null;           
         require_once 'CRM/Contact/DAO/GroupOrganization.php';
-        $groupOrganization =& new CRM_Contact_DAO_GroupOrganization( );
+        $groupOrganization = new CRM_Contact_DAO_GroupOrganization( );
         $groupOrganization->id = $groupOrganizationID;
 
         $results = $groupOrganization->delete( );

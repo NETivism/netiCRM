@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -23,39 +23,65 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
-<fieldset>
-      <legend>{ts}View Membership{/ts}</legend>
-    <table class="view-layout">
-        <tr><td class="label">{ts}Member{/ts}</td><td class="bold"><a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=$contact_id&context=$context"}" title="{ts}View contact summary{/ts}">{$displayName}&nbsp;</td></tr>
+{* View existing membership record. *}
+<div class="crm-block crm-content-block crm-membership-view-form-block">
+    <h3>{ts}View Membership{/ts}</h3>
+    <div class="crm-submit-buttons">
+        {* Check permissions and make sure this is not an inherited membership (edit and delete not allowed for inherited memberships) *}
+        {if ! $owner_contact_id AND call_user_func(array('CRM_Core_Permission','check'), 'edit memberships') }
+	    {assign var='urlParams' value="reset=1&id=$id&cid=$contact_id&action=update&context=$context"}  
+	    {if ( $context eq 'fulltext' || $context eq 'search' ) && $searchKey}
+	    {assign var='urlParams' value="reset=1&id=$id&cid=$contact_id&action=update&context=$context&key=$searchKey"}  
+	    {/if}
+            <a class="button" href="{crmURL p='civicrm/contact/view/membership' q=$urlParams}" accesskey="e"><span><div class="icon edit-icon"></div> {ts}Edit{/ts}</span></a>
+        {/if}
+        {if ! $owner_contact_id AND call_user_func(array('CRM_Core_Permission','check'), 'delete in CiviMember')}
+            {assign var='urlParams' value="reset=1&id=$id&cid=$contact_id&action=delete&context=$context"}  
+	    {if ( $context eq 'fulltext' || $context eq 'search' ) && $searchKey}
+	    {assign var='urlParams' value="reset=1&id=$id&cid=$contact_id&action=delete&context=$context&key=$searchKey"}  
+	    {/if}
+            <a class="button" href="{crmURL p='civicrm/contact/view/membership' q=$urlParams}"><span><div class="icon delete-icon"></div>{ts}Delete{/ts}</span></a>
+        {/if}
+        {include file="CRM/common/formButtons.tpl" location="bottom"}
+    </div>
+    <table class="crm-info-panel">
+        <tr><td class="label">{ts}Member{/ts}</td><td class="bold"><a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=$contact_id&context=$context"}" title="{ts}View contact summary{/ts}">{$displayName}</td></tr>
         {if $owner_display_name}
             <tr><td class="label">{ts}By Relationship{/ts}</td><td>{$relationship}&nbsp;&nbsp;<a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=$owner_contact_id&context=$context"}" title="{ts}View primary member contact summary{/ts}">{$owner_display_name}</a>&nbsp;</td></tr>
         {/if}
-        <tr><td class="label">{ts}Membership Type{/ts}</td><td>{$membership_type}&nbsp;</td></tr>
-        <tr><td class="label">{ts}Status{/ts}</td><td>{$status}&nbsp;</td></tr>
-        <tr><td class="label">{ts}Source{/ts}</td><td>{$source}&nbsp;</td></tr>
-        <tr><td class="label">{ts}Join date{/ts}</td><td>{$join_date|crmDate}&nbsp;</td></tr>
-        <tr><td class="label">{ts}Start date{/ts}</td><td>{$start_date|crmDate}&nbsp;</td></tr>
-        <tr><td class="label">{ts}End date{/ts}</td><td>{$end_date|crmDate}&nbsp;</td></tr>
-        <tr><td class="label">{ts}Reminder date{/ts}</td><td>{$reminder_date|crmDate}&nbsp;</td></tr>
+        <tr><td class="label">{ts}Membership Type{/ts}</td><td>{$membership_type}</td></tr>
+        <tr><td class="label">{ts}Status{/ts}</td><td>{$status}</td></tr>
+        <tr><td class="label">{ts}Source{/ts}</td><td>{$source}</td></tr>
+        <tr><td class="label">{ts}Join date{/ts}</td><td>{$join_date|crmDate}</td></tr>
+        <tr><td class="label">{ts}Start date{/ts}</td><td>{$start_date|crmDate}</td></tr>
+        <tr><td class="label">{ts}End date{/ts}</td><td>{$end_date|crmDate}</td></tr>
+        <tr><td class="label">{ts}Reminder date{/ts}</td><td>{$reminder_date|crmDate}</td></tr>
     </table>
-        {include file="CRM/Custom/Page/CustomDataView.tpl"}
-    <table class="form-layout buttons">
-       <tr>   
-         <td>&nbsp;</td>
-            <td>
-                {$form.buttons.html}
-                {* Check permissions and make sure this is not an inherited membership (edit and delete not allowed for inherited memberships) *}
-                {if ! $owner_contact_id AND call_user_func(array('CRM_Core_Permission','check'), 'edit memberships') }
-                    &nbsp;|&nbsp;<a href="{crmURL p='civicrm/contact/view/membership' q="reset=1&id=$id&cid=$contact_id&action=update&context=$context"}" accesskey="e">Edit</a>
-                {/if}
-                {if ! $owner_contact_id AND call_user_func(array('CRM_Core_Permission','check'), 'delete in CiviMember')}
-                    &nbsp;|&nbsp;<a href="{crmURL p='civicrm/contact/view/membership' q="reset=1&id=$id&cid=$contact_id&action=delete&context=$context"}">Delete</a>
-                {/if}
-            </td>
-        </tr>
-    </table>
-	{if $accessContribution and $rows.0.contribution_id}
-	    {include file="CRM/Contribute/Form/Selector.tpl" context="Search"}	
-	{/if}
-</fieldset>  
+
+    {include file="CRM/Custom/Page/CustomDataView.tpl"}
+
+    {if $accessContribution and $rows.0.contribution_id}
+        {include file="CRM/Contribute/Form/Selector.tpl" context="Search"}	
+    {/if}
+
+    <div class="crm-submit-buttons">
+        {* Check permissions and make sure this is not an inherited membership (edit and delete not allowed for inherited memberships) *}
+        {if ! $owner_contact_id AND call_user_func(array('CRM_Core_Permission','check'), 'edit memberships') }
+	    {assign var='urlParams' value="reset=1&id=$id&cid=$contact_id&action=update&context=$context"}  
+	    {if ( $context eq 'fulltext' || $context eq 'search' ) && $searchKey}
+	    {assign var='urlParams' value="reset=1&id=$id&cid=$contact_id&action=update&context=$context&key=$searchKey"}  
+	    {/if}
+
+            <a class="button" href="{crmURL p='civicrm/contact/view/membership' q=$urlParams}" accesskey="e"><span><div class="icon edit-icon"></div> {ts}Edit{/ts}</span></a>
+        {/if}
+        {if ! $owner_contact_id AND call_user_func(array('CRM_Core_Permission','check'), 'delete in CiviMember')}
+            {assign var='urlParams' value="reset=1&id=$id&cid=$contact_id&action=delete&context=$context"}  
+	    {if ( $context eq 'fulltext' || $context eq 'search' ) && $searchKey}
+	    {assign var='urlParams' value="reset=1&id=$id&cid=$contact_id&action=delete&context=$context&key=$searchKey"}  
+	    {/if}
+            <a class="button" href="{crmURL p='civicrm/contact/view/membership' q=$urlParams}"><span><div class="icon delete-icon"></div>{ts}Delete{/ts}</span></a>
+        {/if}
+        {include file="CRM/common/formButtons.tpl" location="bottom"}
+    </div>
+</div>  
  

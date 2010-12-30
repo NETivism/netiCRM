@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -113,7 +113,7 @@ class CRM_Core_BAO_UFField extends CRM_Core_DAO_UFField
     public static function del($id) 
     { 
         //delete  field field
-        $field = & new CRM_Core_DAO_UFField();
+        $field = new CRM_Core_DAO_UFField();
         $field->id = $id; 
         $field->delete();
         return true;
@@ -130,7 +130,7 @@ class CRM_Core_BAO_UFField extends CRM_Core_DAO_UFField
      */
     public static function duplicateField($params, $ids)
     {
-        $ufField                   =& new CRM_Core_DAO_UFField();
+        $ufField                   = new CRM_Core_DAO_UFField();
         $ufField->uf_group_id      = CRM_Utils_Array::value( 'uf_group', $ids );
         $ufField->field_type       = $params['field_name'][0];
         $ufField->field_name       = $params['field_name'][1]; 
@@ -160,7 +160,7 @@ class CRM_Core_BAO_UFField extends CRM_Core_DAO_UFField
     static function add( &$params, &$ids) 
     {
         // set values for uf field properties and save
-        $ufField                   =& new CRM_Core_DAO_UFField();
+        $ufField                   = new CRM_Core_DAO_UFField();
         $ufField->field_type       = $params['field_name'][0];
         $ufField->field_name       = $params['field_name'][1];
         
@@ -216,7 +216,7 @@ class CRM_Core_BAO_UFField extends CRM_Core_DAO_UFField
     static function setUFField($customFieldId, $is_active) 
     {
         //find the profile id given custom field
-        $ufField =& new CRM_Core_DAO_UFField();
+        $ufField = new CRM_Core_DAO_UFField();
         $ufField->field_name = "custom_".$customFieldId;
         
         $ufField->find();
@@ -239,7 +239,7 @@ class CRM_Core_BAO_UFField extends CRM_Core_DAO_UFField
      */
     static function copy( $old_id, $new_id ) 
     {
-        $ufField =& new CRM_Core_DAO_UFField( );
+        $ufField = new CRM_Core_DAO_UFField( );
         $ufField->uf_group_id = $old_id;
         $ufField->find( );
         while( $ufField->fetch( ) ) {
@@ -263,7 +263,7 @@ class CRM_Core_BAO_UFField extends CRM_Core_DAO_UFField
     function delUFField($customFieldId)
     {
         //find the profile id given custom field id
-        $ufField =& new CRM_Core_DAO_UFField();
+        $ufField = new CRM_Core_DAO_UFField();
         $ufField->field_name = "custom_".$customFieldId;
         
         $ufField->find();
@@ -318,7 +318,7 @@ class CRM_Core_BAO_UFField extends CRM_Core_DAO_UFField
         } 
 
         require_once "CRM/Core/DAO/CustomField.php";
-        $customField =& new CRM_Core_DAO_CustomField();
+        $customField = new CRM_Core_DAO_CustomField();
         $customField->id = $customFieldId;
         if ( $customField->find(true) ) { // if uf field is custom field
             if ( !$customField->is_active ) {
@@ -343,7 +343,7 @@ class CRM_Core_BAO_UFField extends CRM_Core_DAO_UFField
      */
     static function checkProfileType( $ufGroupId ) 
     {
-        $ufGroup =& new CRM_Core_DAO_UFGroup();
+        $ufGroup = new CRM_Core_DAO_UFGroup();
         $ufGroup->id = $ufGroupId;
         $ufGroup->find( true );
         
@@ -417,7 +417,7 @@ class CRM_Core_BAO_UFField extends CRM_Core_DAO_UFField
         $components   = array( 'Contribution', 'Participant', 'Membership' );
 
         require_once 'CRM/Core/DAO/UFGroup.php';
-        $ufGroup =& new CRM_Core_DAO_UFGroup( );
+        $ufGroup = new CRM_Core_DAO_UFGroup( );
         $ufGroup->id          = $ufGroupId;
         $ufGroup->is_active   = 1;        
 
@@ -508,7 +508,7 @@ class CRM_Core_BAO_UFField extends CRM_Core_DAO_UFField
      */
     static function checkProfileGroupType( $ctype ) 
     {
-        $ufGroup =& new CRM_Core_DAO_UFGroup();
+        $ufGroup = new CRM_Core_DAO_UFGroup();
 
         $query = "
 SELECT ufg.id as id

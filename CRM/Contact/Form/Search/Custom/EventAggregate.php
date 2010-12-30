@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -120,8 +120,8 @@ implements CRM_Contact_Form_Search_Interface {
                                           $this->_formValues );
         if ( $onLine ) {
             $from .= "         
-        inner join civicrm_financial_trxn
-        on civicrm_financial_trxn.contribution_id = civicrm_participant_payment.contribution_id";
+        inner join civicrm_entity_financial_trxn
+        on (civicrm_entity_financial_trxn.entity_id = civicrm_participant_payment.contribution_id and civicrm_entity_financial_trxn.entity_type='contribution')";
         }
 
         $showPayees = CRM_Utils_Array::value( 'show_payees',
@@ -249,8 +249,8 @@ implements CRM_Contact_Form_Search_Interface {
                                           $this->_formValues );
         if ( $onLine ) {
             $from .= "         
-        inner join civicrm_financial_trxn
-        on civicrm_financial_trxn.contribution_id = civicrm_participant_payment.contribution_id";
+        inner join civicrm_entity_financial_trxn
+        on (civicrm_entity_financial_trxn.entity_id = civicrm_participant_payment.contribution_id and civicrm_entity_financial_trxn.entity_type='contribution')";
         }
 
         

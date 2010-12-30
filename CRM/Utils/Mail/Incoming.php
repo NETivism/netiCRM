@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -217,7 +217,8 @@ class CRM_Utils_Mail_Incoming {
         // since we only have one fileset
         $mail = $mail[0];
         
-        return self::parseMailingObject( $mail );
+        $mailParams = self::parseMailingObject( $mail );
+        return $mailParams;
     } 
 
     function parseMailingObject( &$mail ) {
@@ -225,7 +226,7 @@ class CRM_Utils_Mail_Incoming {
         require_once 'api/v2/Activity.php';
         require_once 'api/v2/Contact.php';
         
-        $config =& CRM_Core_Config::singleton();
+        $config = CRM_Core_Config::singleton();
 
         // get ready for collecting data about this email
         // and put it in a standardized format
@@ -254,7 +255,7 @@ class CRM_Utils_Mail_Incoming {
         if ( ! empty( $attachments ) ) {
             require_once 'CRM/Utils/File.php';
             $date   =  date( 'Ymdhis' );
-            $config =& CRM_Core_Config::singleton( );
+            $config = CRM_Core_Config::singleton( );
             for ( $i = 0; $i < count( $attachments ); $i++ ) {
                 $attachNum = $i + 1;
                 $fileName = basename( $attachments[$i]['fullName'] );

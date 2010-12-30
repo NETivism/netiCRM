@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -26,7 +26,7 @@
 {ts 1=$totalSelectedContributions}Number of selected contributions: %1{/ts}
 
 {if $rows } 
-<div class="form-item">
+<div class="crm-block crm-form-block crm-contribution-task-form-block">
 <table width="30%">
   <tr class="columnheader">
     <th>{ts}Name{/ts}</th>

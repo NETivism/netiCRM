@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -23,7 +23,7 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
-<div class="batch-update form-item">
+<div class="batch-update crm-block crm-form-block crm-event-batch-form-block">
 <fieldset>
 <div id="help">
     {if $context EQ 'statusChange'} {* Update Participant Status task *}
@@ -44,16 +44,16 @@
 	  <thead class="sticky">
             <tr class="columnheader">
              {foreach from=$readOnlyFields item=fTitle key=fName}
-	        <th>{$fTitle}</th>
+	        <td>{$fTitle}</td>
 	     {/foreach}
 
-             <th>{ts}Event{/ts}</th>
+             <td>{ts}Event{/ts}</td>
              {foreach from=$fields item=field key=fieldName}
                 {if strpos( $field.name, '_date' ) !== false ||
                     (substr( $field.name, 0, 7 ) == 'custom_' && $field.data_type == 'Date')}   
-                  <th><img  src="{$config->resourceBase}i/copy.png" alt="{ts 1=$field.title}Click to copy %1 from row one to all rows.{/ts}" onclick="copyValuesDate('{$field.name}')" class="action-icon" title="{ts}Click here to copy the value in row one to ALL rows.{/ts}" />{$field.title}</th>
+                  <td><img  src="{$config->resourceBase}i/copy.png" alt="{ts 1=$field.title}Click to copy %1 from row one to all rows.{/ts}" onclick="copyValuesDate('{$field.name}')" class="action-icon" title="{ts}Click here to copy the value in row one to ALL rows.{/ts}" />{$field.title}</td>
                 {else}
-                  <th><img  src="{$config->resourceBase}i/copy.png" alt="{ts 1=$field.title}Click to copy %1 from row one to all rows.{/ts}" onclick="copyValues('{$field.name}')" class="action-icon" title="{ts}Click here to copy the value in row one to ALL rows.{/ts}" />{$field.title}</th>
+                  <td><img  src="{$config->resourceBase}i/copy.png" alt="{ts 1=$field.title}Click to copy %1 from row one to all rows.{/ts}" onclick="copyValues('{$field.name}')" class="action-icon" title="{ts}Click here to copy the value in row one to ALL rows.{/ts}" />{$field.title}</td>
                 {/if}
              {/foreach}
             </tr>
@@ -64,7 +64,7 @@
 	         <td>{$contactDetails.$pid.$fName}</td>
 	      {/foreach}
 
-              <td>{$details.$pid.title}</td>   
+              <td class="crm-event-title">{$details.$pid.title}</td>   
               {foreach from=$fields item=field key=fieldName}
                 {assign var=n value=$field.name}
                 {if ( $fields.$n.data_type eq 'Date') or ( $n eq 'participant_register_date' ) }
@@ -76,10 +76,14 @@
              </tr>
             {/foreach}
            </tr>
+           <tr>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td> {if $fields}{$form._qf_Batch_refresh.html}{/if}{include file="CRM/common/formButtons.tpl"}
+              </td>
+           </tr>
          </table>
-        <dl>
-            <dt></dt><dd>{if $fields}{$form._qf_Batch_refresh.html}{/if} &nbsp; {$form.buttons.html}</dd>
-        </dl>
+        
 </fieldset>
 </div>
 

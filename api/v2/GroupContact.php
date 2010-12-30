@@ -1,7 +1,7 @@
 <?php
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -32,7 +32,7 @@
  * @subpackage API_Group
  *
  * @copyright CiviCRM LLC (c) 2004-2010
- * @version $Id: GroupContact.php 26284 2010-02-17 17:58:00Z shot $
+ * @version $Id: GroupContact.php 30171 2010-10-14 09:11:27Z mover $
  *
  */
 
@@ -90,6 +90,16 @@ function civicrm_group_contact_remove( &$params )
 /**
  *
  * @param <type> $params
+ * @return <type>
+ */
+function civicrm_group_contact_pending( &$params ) 
+{
+    return civicrm_group_contact_common( $params, 'pending' );
+}
+
+/**
+ *
+ * @param <type> $params
  * @param <type> $op
  * @return <type> 
  */
@@ -120,6 +130,8 @@ function civicrm_group_contact_common( &$params, $op = 'add' )
     $method     = CRM_Utils_Array::value( 'method'  , $params, 'API' );
     if ( $op == 'add' ) {
         $status     = CRM_Utils_Array::value( 'status'  , $params, 'Added'  );
+    } elseif ( $op == 'pending') {
+        $status     = CRM_Utils_Array::value( 'status'  , $params, 'Pending');
     } else {
         $status     = CRM_Utils_Array::value( 'status'  , $params, 'Removed');
     }
@@ -127,7 +139,7 @@ function civicrm_group_contact_common( &$params, $op = 'add' )
 
     require_once 'CRM/Contact/BAO/GroupContact.php';
     $values = array( 'is_error' => 0 );
-    if ( $op == 'add' ) {
+    if ( $op == 'add' || $op == 'pending') {
         $values['total_count'] = $values['added'] = $values['not_added'] = 0;
         foreach ( $groupIDs as $groupID ) {
             list( $tc, $a, $na ) = 
@@ -149,4 +161,30 @@ function civicrm_group_contact_common( &$params, $op = 'add' )
         }
     }
     return $values;
+}
+
+function civicrm_group_contact_update_status ( &$params ) {
+  if ( ! is_array( $params ) ) {
+      return civicrm_create_error( ts( 'input parameter should be an array' ) );
+  }
+  
+  if ( empty( $params['contact_id'] ) ) {
+      return civicrm_create_error( ts( 'contact_id is a required field' ) );
+  } else {
+    $contactID = $params['contact_id'];
+  }
+
+  if ( empty( $params['group_id'] ) ) {
+      return civicrm_create_error( ts( 'group_id is a required field' ) );
+  } else {
+    $groupID = $params['group_id'];
+  }
+  $method     = CRM_Utils_Array::value( 'method'  , $params, 'API' );
+  $tracking   = CRM_Utils_Array::value( 'tracking', $params );
+  
+  require_once 'CRM/Contact/BAO/GroupContact.php';
+  
+  CRM_Contact_BAO_GroupContact::updateGroupMembershipStatus( $contactID, $groupID, $method, $tracking );
+  
+  return TRUE;
 }

@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -75,7 +75,7 @@ class CRM_Event_Form_Task_SaveSearch extends CRM_Event_Form_Task
         CRM_Utils_System::setTitle( ts('Smart Group') );
         require_once "CRM/Event/BAO/Query.php";
         // get the qill 
-        $query =& new CRM_Event_BAO_Query( $this->get( 'formValues' ) );
+        $query = new CRM_Event_BAO_Query( $this->get( 'formValues' ) );
         $qill = $query->qill( );
         
         // need to save qill for the smarty template
@@ -117,11 +117,11 @@ class CRM_Event_Form_Task_SaveSearch extends CRM_Event_Form_Task
         // saved search form values
         $formValues = $this->controller->exportValues();
 
-        $session =& CRM_Core_Session::singleton();
+        $session = CRM_Core_Session::singleton();
  
         //save the search
         require_once "CRM/Contact/BAO/SavedSearch.php";
-        $savedSearch =& new CRM_Contact_BAO_SavedSearch();
+        $savedSearch = new CRM_Contact_BAO_SavedSearch();
         $savedSearch->id          = $this->_id;
         $savedSearch->form_values = serialize($this->get( 'formValues' ));
         $savedSearch->mapping_id  = $mappingId;

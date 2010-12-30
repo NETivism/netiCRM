@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -52,8 +52,12 @@ class CRM_UF_Form_AdvanceSetting extends CRM_UF_Form_Group {
         $form->addElement('checkbox', 'is_map', ts('Enable mapping for this profile?') );
         
         // should we allow updates on a exisitng contact
-        $form->addElement('checkbox', 'is_update_dupe', ts('Update contact on a duplicate match?' ) );
+        $options = array(); 
+        $options[] = HTML_QuickForm::createElement('radio', null, null, ts('Issue warning and do not save'), 0 );
+        $options[] = HTML_QuickForm::createElement('radio', null, null, ts('Update the matching contact'), 1 );
+        $options[] = HTML_QuickForm::createElement('radio', null, null, ts('Allow duplicate contact to be created'), 2 );
         
+        $this->addGroup($options, 'is_update_dupe', ts('What to do upon duplicate match'));
         // we do not have any url checks to allow relative urls
         $form->addElement('text', 'post_URL', ts('Redirect URL'), CRM_Core_DAO::getAttribute('CRM_Core_DAO_UFGroup', 'post_URL') );
         $form->addElement('text', 'cancel_URL', ts('Cancel Redirect URL'), CRM_Core_DAO::getAttribute('CRM_Core_DAO_UFGroup', 'cancel_URL') );
@@ -75,23 +79,29 @@ class CRM_UF_Form_AdvanceSetting extends CRM_UF_Form_Group {
         $form->addElement('checkbox', 'is_edit_link', ts('Include profile edit links in search results?'));
 
         // should we display a link to the website profile
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
         $form->addElement('checkbox', 'is_uf_link', ts('Include %1 user account information links in search results?', array( 1 => $config->userFramework )));
         
         // want to create cms user
-        $session =& CRM_Core_Session::singleton( );
+        $session = CRM_Core_Session::singleton( );
         $cmsId = false;
         if ( $form->_cId = $session->get( 'userID' ) ){
             $form->_cmsId = true;
         }
-        //   require_once 'CRM/Member/Import/Parser/Membership.php';
+
         $options = array(); 
         $options[] = HTML_QuickForm::createElement('radio', null, null, ts('No account create option'), 0 );
         $options[] = HTML_QuickForm::createElement('radio', null, null, ts('Give option, but not required'), 1 );
         $options[] = HTML_QuickForm::createElement('radio', null, null, ts('Account creation required'), 2 );
         
         $this->addGroup($options, 'is_cms_user', ts('%1 user account registration option?', array( 1=>$config->userFramework )));
-        //$form->add('checkbox', 'is_cms_user', ts('%1 user account registration option?', array( 1=>$config->userFramework )));
-        // CRM_UF_Form_Group::setDefaultValues();
+
+        // options for including Proximity Search in the profile search form
+        $proxOptions = array(); 
+        $proxOptions[] = HTML_QuickForm::createElement('radio', null, null, ts('None'), 0 );
+        $proxOptions[] = HTML_QuickForm::createElement('radio', null, null, ts('Optional'), 1 );
+        $proxOptions[] = HTML_QuickForm::createElement('radio', null, null, ts('Required'), 2 );
+        
+        $this->addGroup($proxOptions, 'is_proximity_search', ts('Proximity search'));
     }
 }

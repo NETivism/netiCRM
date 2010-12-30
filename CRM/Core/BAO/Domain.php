@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -79,7 +79,7 @@ class CRM_Core_BAO_Domain extends CRM_Core_DAO_Domain {
     static function &getDomain( ) {
         static $domain = null;
         if ( ! $domain ) {
-            $domain =& new CRM_Core_BAO_Domain();
+            $domain = new CRM_Core_BAO_Domain();
             $domain->id = CRM_Core_Config::domainID( );
             if ( ! $domain->find(true) ) {
                 CRM_Core_Error::fatal( );
@@ -124,7 +124,7 @@ class CRM_Core_BAO_Domain extends CRM_Core_DAO_Domain {
      * @access public
      */
     static function edit(&$params, &$id) {
-        $domain     =& new CRM_Core_DAO_Domain( );
+        $domain     = new CRM_Core_DAO_Domain( );
         $domain->id = $id;
         $domain->copyValues( $params );
         $domain->save( );
@@ -145,7 +145,7 @@ class CRM_Core_BAO_Domain extends CRM_Core_DAO_Domain {
     }
 
     static function multipleDomains( ) {
-        $session =& CRM_Core_Session::singleton( );
+        $session = CRM_Core_Session::singleton( );
         
         $numberDomains = $session->get( 'numberDomains' );
         if ( ! $numberDomains ) {

@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -32,17 +32,17 @@ function modifyLinkAttributes( recordID, op, recordBAO ) {
     if ( op == 'enable-disable' ) {
         var fieldID     = "#row_"+ recordID + " a." + "disable-action";
         var operation   = "disable-enable";
-        var htmlContent = {/literal}'{ts}Enable{/ts}'{literal};
+        var htmlContent = {/literal}'{ts escape="js"}Enable{/ts}'{literal};
         var newClass    = 'action-item enable-action';
-        var newTitle    = {/literal}'{ts}Enable{/ts}'{literal};
-        var newText     = {/literal}' {ts}No{/ts} '{literal};
+        var newTitle    = {/literal}'{ts escape="js"}Enable{/ts}'{literal};
+        var newText     = {/literal}' {ts escape="js"}No{/ts} '{literal};
     } else if ( op == 'disable-enable' ) {
         var fieldID     = "#row_"+ recordID + " a." + "enable-action";
         var operation   = "enable-disable";
-        var htmlContent = {/literal}'{ts}Disable{/ts}'{literal};
+        var htmlContent = {/literal}'{ts escape="js"}Disable{/ts}'{literal};
         var newClass    = 'action-item disable-action';
-        var newTitle    = {/literal}'{ts}Disable{/ts}'{literal};
-        var newText     = {/literal}' {ts}Yes{/ts} '{literal};
+        var newTitle    = {/literal}'{ts escape="js"}Disable{/ts}'{literal};
+        var newText     = {/literal}' {ts escape="js"}Yes{/ts} '{literal};
     }
 
     //change html
@@ -79,11 +79,11 @@ function hideEnableDisableStatusMsg( ) {
 }
 
 cj( '#enableDisableStatusMsg' ).hide( );
-function enableDisable( recordID, recordBAO, op ) {
+function enableDisable( recordID, recordBAO, op, reloadPage ) {
     	if ( op == 'enable-disable' ) {
-       	   var st = {/literal}'{ts}Disable Record{/ts}'{literal};
+       	   var st = {/literal}'{ts escape="js"}Disable Record{/ts}'{literal};
     	} else if ( op == 'disable-enable' ) {
-       	   var st = {/literal}'{ts}Enable Record{/ts}'{literal};
+       	   var st = {/literal}'{ts escape="js"}Enable Record{/ts}'{literal};
     	}
 
 	cj("#enableDisableStatusMsg").show( );
@@ -96,10 +96,6 @@ function enableDisable( recordID, recordBAO, op ) {
 			opacity: 0.5, 
 			background: "black" 
 		},
-
-        	beforeclose: function(event, ui) {
-            	        cj(this).dialog("destroy");
-        	},
 
 		open:function() {
        		        var postUrl = {/literal}"{crmURL p='civicrm/ajax/statusmsg' h=0 }"{literal};
@@ -124,16 +120,13 @@ function enableDisable( recordID, recordBAO, op ) {
 		},
 	
 		buttons: { 
-			"OK": function() { 	    
-			        saveEnableDisable( recordID, recordBAO, op );
-			        cj(this).dialog("close"); 
-			        cj(this).dialog("destroy");
-			},
-
 			"Cancel": function() { 
 				cj(this).dialog("close"); 
-				cj(this).dialog("destroy"); 
-			} 
+			},
+			"OK": function() { 	    
+			        saveEnableDisable( recordID, recordBAO, op, reloadPage );
+			        cj(this).dialog("close");			        
+			}
 		} 
 	});
 }
@@ -143,22 +136,25 @@ var responseFromServer = false;
 
 function noServerResponse( ) {
     if ( !responseFromServer ) { 
-        var serverError =  '{/literal}{ts}There is no response from server therefore selected record is not updated.{/ts}{literal}'  + '&nbsp;&nbsp;<a href="javascript:hideEnableDisableStatusMsg();"><img title="{/literal}{ts}close{/ts}{literal}" src="' +resourceBase+'i/close.png"/></a>';
+        var serverError =  '{/literal}{ts escape="js"}There is no response from server therefore selected record is not updated.{/ts}{literal}'  + '&nbsp;&nbsp;<a href="javascript:hideEnableDisableStatusMsg();"><img title="{/literal}{ts escape="js"}close{/ts}{literal}" src="' +resourceBase+'i/close.png"/></a>';
         cj( '#enableDisableStatusMsg' ).show( ).html( serverError ); 
     }
 }
 
-function saveEnableDisable( recordID, recordBAO, op ) {
+function saveEnableDisable( recordID, recordBAO, op, reloadPage ) {
     cj( '#enableDisableStatusMsg' ).hide( );
     var postUrl = {/literal}"{crmURL p='civicrm/ajax/ed' h=0 }"{literal};
 
     //post request and get response
-    cj.post( postUrl, { recordID: recordID, recordBAO: recordBAO, op:op  }, function( html ){
+    cj.post( postUrl, { recordID: recordID, recordBAO: recordBAO, op:op, key: {/literal}"{crmKey name='civicrm/ajax/ed'}"{literal}  }, function( html ){
         responseFromServer = true;      
        
         //this is custom status set when record update success.
         if ( html.status == 'record-updated-success' ) {
            
+            if ( reloadPage ) {
+                document.location.reload( );
+            }
             //change row class and show/hide action links.
             modifySelectorRow( recordID, op );
 

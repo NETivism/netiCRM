@@ -5,7 +5,7 @@ require_once 'CRM/Core/Config.php';
 require_once 'CRM/Core/Error.php';
 require_once 'CRM/Utils/Array.php';
 
-$config =& CRM_Core_Config::singleton();
+$config = CRM_Core_Config::singleton();
 
 // to keep backward compatibility for URLs generated
 // by CiviCRM < 1.7, we check for the q variable as well
@@ -24,6 +24,18 @@ if ( ! $queue_id ||
 
 require_once 'CRM/Mailing/Event/BAO/TrackableURLOpen.php';
 $url = CRM_Mailing_Event_BAO_TrackableURLOpen::track($queue_id, $url_id);
+
+// CRM-7103
+// looking for additional query variables and append them when redirecting
+$query_param = $_GET;
+unset($query_param['q'], $query_param['qid'], $query_param['u']);
+$query_string = http_build_query($query_param);
+
+if(stristr($url, '?')) {
+	$url .= '&'. $query_string;
+} else {
+	$url .= '?'. $query_string;
+}
 
 CRM_Utils_System::redirect($url);
 

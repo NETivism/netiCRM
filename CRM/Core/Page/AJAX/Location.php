@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -58,7 +58,7 @@ class CRM_Core_Page_AJAX_Location
         $entityBlock = array( 'contact_id' => $cid );
         $location    =& CRM_Core_BAO_Location::getValues( $entityBlock );
 
-        $config =& CRM_Core_Config::singleton();
+        $config = CRM_Core_Config::singleton();
         $addressSequence = array_flip($config->addressSequence());
         
         $elements = array( "phone_1_phone" => 
@@ -97,13 +97,13 @@ class CRM_Core_Page_AJAX_Location
         }
 
         echo json_encode( $elements );
-        exit();
+        CRM_Utils_System::civiExit( );
     }
 
-    function jqState( &$config ) {
+    function jqState( $config ) {
         if ( ! isset( $_GET['_value'] ) ||
         empty( $_GET['_value'] ) ) {
-            exit();
+            CRM_Utils_System::civiExit( );
         }
 
         require_once 'CRM/Core/PseudoConstant.php';
@@ -118,7 +118,7 @@ class CRM_Core_Page_AJAX_Location
 
         require_once "CRM/Utils/JSON.php";
         echo json_encode( $elements );
-        exit();
+        CRM_Utils_System::civiExit( );
     }
 
     function getLocBlock( ) {

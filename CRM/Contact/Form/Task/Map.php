@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -70,22 +70,20 @@ class CRM_Contact_Form_Task_Map  extends CRM_Contact_Form_Task
         $profileGID = CRM_Utils_Request::retrieve( 'profileGID', 'Integer',
                                                    $this, false );
         $this->assign( 'profileGID', $profileGID );
-        $seachType = CRM_Utils_Request::retrieve( 'searchType', 'String',
-                                                  $this, false );
-
+        $context = CRM_Utils_Request::retrieve( 'context', 'String', $this );
+        
         $type = 'Contact';
         if ( $cid ) {
             $ids = array( $cid );
             $this->_single     = true;
-            if ( $seachType && ! $profileGID ) {
-                $fragment = '/basic';
-                if ( $seachType == 'advance') {
-                    $fragment = '/advanced';
-                } elseif ( $seachType == 'custom') {
-                    $fragment = '/custom';
-                }
-                $session =& CRM_Core_Session::singleton();
-                $url = CRM_Utils_System::url( 'civicrm/contact/search' . $fragment, 'force=1' );
+            if ( $context && !$profileGID ) {
+                $qfKey = CRM_Utils_Request::retrieve( 'key', 'String', $this );
+                $urlParams = 'force=1';
+                if ( CRM_Utils_Rule::qfKey( $qfKey ) ) $urlParams .= "&qfKey=$qfKey";
+                $session = CRM_Core_Session::singleton( );
+                $urlString = "civicrm/contact/search/$context";
+                if ( $context == 'search' ) $urlString = 'civicrm/contact/search';  
+                $url = CRM_Utils_System::url( $urlString, $urlParams );
                 $session->replaceUserContext( $url );
             }
         } else if ( $eid ) {
@@ -143,7 +141,7 @@ class CRM_Contact_Form_Task_Map  extends CRM_Contact_Form_Task
      */
     static function createMapXML( $ids, $locationId, &$page, $addBreadCrumb, $type = 'Contact' ) 
     {
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
 
         CRM_Utils_System::setTitle( ts('Map Location(s)'));
         $page->assign( 'query', 'CiviCRM Search Query' );
@@ -151,7 +149,13 @@ class CRM_Contact_Form_Task_Map  extends CRM_Contact_Form_Task
         $page->assign( 'mapKey', $config->mapAPIKey );
         if( $type == 'Contact' ) {
             require_once 'CRM/Contact/BAO/Contact/Location.php';
-            $locations =& CRM_Contact_BAO_Contact_Location::getMapInfo( $ids , $locationId );
+            $imageUrlOnly = false;
+            
+            // google needs image url, CRM-6564
+            if ( $config->mapProvider == 'Google' ) {
+                $imageUrlOnly = true;
+            }
+            $locations =& CRM_Contact_BAO_Contact_Location::getMapInfo( $ids, $locationId, $imageUrlOnly );
         } else {
             require_once 'CRM/Event/BAO/Event.php';
             $locations =& CRM_Event_BAO_Event::getMapInfo( $ids );
@@ -162,7 +166,7 @@ class CRM_Contact_Form_Task_Map  extends CRM_Contact_Form_Task
         }
 
         if ( $addBreadCrumb ) {
-            $session =& CRM_Core_Session::singleton(); 
+            $session = CRM_Core_Session::singleton(); 
             $redirect = $session->readUserContext();
             if ( $type == 'Contact') {
                 $bcTitle = ts('Contact');

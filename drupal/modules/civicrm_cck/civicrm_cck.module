@@ -1,7 +1,7 @@
 <?php
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | This file is a part of CiviCRM.                                    |
  |                                                                    |
@@ -124,6 +124,10 @@ function civicrm_cck_field_settings($op, $field)
     if ( ! civicrm_initialize( ) ) {
         return;
     }
+    
+    require_once 'CRM/Contact/BAO/ContactType.php';
+    $contactTypes = CRM_Contact_BAO_ContactType::basicTypePairs( );
+       
     switch ($op) {
     case 'database columns':
         $columns = array(
@@ -149,6 +153,23 @@ function civicrm_cck_field_settings($op, $field)
                   'handler' => 'views_handler_relationship',
                   );
         return $data;
+
+    case 'form':
+        foreach ( $contactTypes as $name => $label ) {
+            $subTypes = CRM_Contact_BAO_ContactType::subTypePairs( $name );
+            $form[$name] = array(
+                                 '#type'          => 'checkboxes',
+                                 '#title'         => ts('CiviCRM Contact Type %1', array( 1 => $label ) ),
+                                 '#options'       => CRM_Utils_Array::crmArrayMerge( array( $name => $label ), $subTypes ),
+                                 '#default_value' => empty( $field[$name] ) ? array( ) : $field[$name],
+                                 '#weight'        => 1,
+                                 );
+        }
+        return $form;
+        
+        
+    case 'save':
+        return array_values( $contactTypes );
     }
 }
 
@@ -654,11 +675,42 @@ function _civicrm_cck_potential_references($field, $string = '', $exact_string =
  * Helper function for _civicrm_cck_potential_references():
  * referenceable nodes defined by content types.
  */
-function _civicrm_cck_potential_references_standard($field, $string = '', $exact_string = FALSE, $limit = '10') {
-    $args = array();
-    $matches = array();
+function _civicrm_cck_potential_references_standard( $field, $string = '', $exact_string = FALSE, $limit = '10' ) {
+    $args = $whereClause = $contactTypes = $contactSubTypes = array();
+    
+    if ( ! civicrm_initialize( ) ) {
+        return;
+    }
 
+    require_once 'CRM/Contact/BAO/ContactType.php';
+    $basicTypes = CRM_Contact_BAO_ContactType::basicTypePairs( );
+      
+    foreach ( $basicTypes as $name => $label ) {
+        if ( is_array( $field[$name] ) ) {
+            $contactNames = array_filter( $field[$name] );
+            if ( !empty( $contactNames ) ) {
+                if ( in_array( $name, $contactNames ) ) {
+                    $contactTypes[] = $name;
+                } else {
+                    $contactSubTypes = array_merge( $contactSubTypes, array_keys( $contactNames ) );
+                }
+            }
+        }
+    } 
+  
+    if ( !empty( $contactTypes ) ) {
+        $contactTypes  = implode( "','", $contactTypes );
+        $whereClause[] = "contact_type IN ( '{$contactTypes}' )";
+    }
+    
+    if ( !empty( $contactSubTypes ) ) {
+        $contactSubTypes = implode( "','", $contactSubTypes );
+        $whereClause[]   = "contact_sub_type IN ( '{$contactSubTypes}' )";
+    }
+   
+    $whereClause = empty( $whereClause ) ? '' : '(' . implode( ' OR ', $whereClause ) . ') AND';
     $related_clause = "";
+
     if (isset($string)) {
         if($exact_string) {
             $string_clause = " AND sort_name = %1";
@@ -668,16 +720,12 @@ function _civicrm_cck_potential_references_standard($field, $string = '', $exact
             $args[] = "%%" . $string ."%";
         }
     }
-    
-    if ( ! civicrm_initialize( ) ) {
-        return;
-    }
-    
+      
     $q = "
     SELECT sort_name, id
     FROM civicrm_contact
-    WHERE contact_type LIKE 'Individual'
-    AND sort_name IS NOT NULL
+    WHERE $whereClause
+    sort_name IS NOT NULL
     AND sort_name NOT LIKE ''
     AND sort_name NOT LIKE '<Last>%%'
     AND sort_name NOT LIKE '%@%%'
@@ -685,9 +733,9 @@ function _civicrm_cck_potential_references_standard($field, $string = '', $exact
     AND sort_name NOT LIKE '- -%%'
     AND sort_name NOT LIKE ',%%'
     AND sort_name NOT LIKE '..%%'
-    ". $string_clause ." LIMIT 10";
-    $params = array(1 => array($args[0], "String"));
-    $dao =& CRM_Core_DAO::executeQuery( $q, $params );
+    ". $string_clause ." LIMIT $limit";
+    $params = array( 1 => array( $args[0], "String" ) );
+    $dao = CRM_Core_DAO::executeQuery( $q, $params );
 
     $references = array();
     while ($dao->fetch()) {
@@ -699,9 +747,6 @@ function _civicrm_cck_potential_references_standard($field, $string = '', $exact
 
     return $references;
 }
-
-
-
 
 /**
  * Implementation of hook_node_types.
@@ -821,7 +866,7 @@ function civicrm_cck_views_handlers() {
                  'handlers' => array(
                                      // filter handlers
                                      'civicrm_cck_handler_filter' => array(
-                                                                           'parent' => 'content_handler_filter_many_to_one',
+                                                                           'parent' => 'views_handler_filter_in_operator',
                                                                            ),
                                      ),
                  );

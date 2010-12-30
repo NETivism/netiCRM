@@ -2,6 +2,8 @@ html>body div.outerbox
 {
 	padding: 0 5px 5px 0;
 	z-index:9998;
+	font-size: 13px;
+	margin-top:2px;
 }
 html>body div.outerbox div.shadowbox1
 {
@@ -67,6 +69,9 @@ html>body .innerbox
     width:100%;
     height:23px;
     z-index:9000;
+    font-size: 12px;
+    font-family: Tahoma, Verdana, Arial, Sans;
+    overflow: hidden;
 }
 
 li.menu-separator.active{
@@ -95,7 +100,7 @@ li.menu-separator.active{
 
 li.menumain {
 	float: left;
-	padding: 1px 10px;
+	padding: 3px 10px;
 	background-image: none;
 	border-right: 1px solid #5D5D5D;
 	margin:0px;	
@@ -332,34 +337,3 @@ li#menu-logout {
     float: right;
     border-left: 1px solid #5D5D5D;
 	}
-
-/** Joomla Admin Menu **/
-
-div.m ul#civicrm-menu {
-    z-index: 1;
-    position:relative;
-    border: none;
-    left:0px;
-    height:0px;
-    padding-top:5px;
-    padding-right:0px;
-    padding-left:2px;
-    padding-bottom:20px !important; /*moz bottom */
-    padding-bottom:2px; /*ie bottom */
-    border-radius      : 4px;	
-    -moz-border-radius : 4px;	
-    -webkit-border-radius : 4px;	
-    -khtml-border-radius : 4px;
-	}
-
-div#toolbar-box div.m{ 
- 	padding: 0px 8px !important;
-	}
-
-div#toolbar-box, div#toolbar-box div.m{
-  	height: auto;
-	}
-
-div.m ul#civicrm-menu li#crm-qsearch {
-    height:0px;
-}

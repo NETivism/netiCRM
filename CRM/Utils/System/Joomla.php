@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -54,7 +54,7 @@ class CRM_Utils_System_Joomla {
             $pageTitle = $title;
         }
 
-        $template =& CRM_Core_Smarty::singleton( );
+        $template = CRM_Core_Smarty::singleton( );
         $template->assign( 'pageTitle', $pageTitle );
 
 		$document=& JFactory::getDocument();
@@ -74,7 +74,7 @@ class CRM_Utils_System_Joomla {
      * @static
      */
     static function appendBreadCrumb( $breadCrumbs ) {
-        $template =& CRM_Core_Smarty::singleton( );
+        $template = CRM_Core_Smarty::singleton( );
         $bc = $template->get_template_vars( 'breadcrumb' );
 
         if ( is_array( $breadCrumbs ) ) {
@@ -127,7 +127,10 @@ class CRM_Utils_System_Joomla {
 
         if ( $includeAll ) {
             require_once 'CRM/Core/Config.php';
-            $config =& CRM_Core_Config::singleton();
+            $config = CRM_Core_Config::singleton();
+
+            $document->addStyleSheet( "{$config->resourceBase}css/deprecate.css" );
+            $document->addStyleSheet( "{$config->resourceBase}css/civicrm.css" );
 
             if ( ! $config->userFrameworkFrontend ) {
                 $document->addStyleSheet( "{$config->resourceBase}css/joomla.css" );
@@ -138,13 +141,20 @@ class CRM_Utils_System_Joomla {
                 $document->addStyleSheet( $config->customCSSURL );
             }
 
-            $document->addStyleSheet( "{$config->resourceBase}css/deprecate.css" );
-            $document->addStyleSheet( "{$config->resourceBase}css/civicrm.css" );
             $document->addStyleSheet( "{$config->resourceBase}css/extras.css" );
 
             $document->addScript( "{$config->resourceBase}js/Common.js" );
     
-            $template =& CRM_Core_Smarty::singleton( );
+            $template = CRM_Core_Smarty::singleton( );
+
+            // CRM-6819 + CRM-7086
+            $lang     = substr($config->lcMessages, 0, 2);
+            $l10nFile = "{$config->smartyDir}../jquery/jquery-ui-1.8.5/development-bundle/ui/i18n/jquery.ui.datepicker-{$lang}.js";
+            $l10nURL  = "{$config->resourceBase}packages/jquery/jquery-ui-1.8.5/development-bundle/ui/i18n/jquery.ui.datepicker-{$lang}.js";
+            if (file_exists($l10nFile)) {
+                $template->assign('l10nURL', $l10nURL);
+            }
+
             $document->addCustomTag( $template->fetch( 'CRM/common/jquery.tpl' ) );
             $document->addCustomTag( $template->fetch( 'CRM/common/action.tpl' ) );
         }
@@ -169,7 +179,7 @@ class CRM_Utils_System_Joomla {
     function url($path = null, $query = null, $absolute = true,
                  $fragment = null, $htmlize = true,
                  $frontend = false ) {
-        $config        =& CRM_Core_Config::singleton( );
+        $config        = CRM_Core_Config::singleton( );
 
         if ( $config->userFrameworkFrontend ) {
             $script = 'index.php';
@@ -261,7 +271,7 @@ class CRM_Utils_System_Joomla {
     static function authenticate( $name, $password ) {
         require_once 'DB.php';
 
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
         
         $dbJoomla = DB::connect( $config->userFrameworkDSN );
         if ( DB::isError( $dbJoomla ) ) {
@@ -335,6 +345,37 @@ class CRM_Utils_System_Joomla {
         return null;
     }
 
+    /* 
+     * load joomla bootstrap
+     *
+     * @param $name string  optional username for login
+     * @param $pass string  optional password for login
+     */
+    static function loadBootStrap($user = null, $pass = null)
+    {
+        return true;
+    }
+    
+    /**
+     * check is user logged in.
+     *
+     * @return boolean true/false.
+     */
+    public static function isUserLoggedIn( ) {
+        $user = JFactory::getUser();
+        return ( $user->guest ) ? false : true; 
+    }
+    
+    /**
+     * Get currently logged in user uf id.
+     *
+     * @return int logged in user uf id.
+     */
+    public static function getLoggedInUfID( ) {
+        $user = JFactory::getUser( );
+        return ( $user->guest ) ? null : $user->id;
+    }
+    
 }
 
 

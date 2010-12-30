@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -111,7 +111,7 @@ class CRM_Upgrade_ThreeZero_ThreeZero extends CRM_Upgrade_Form {
         //We execute some part of php after sql and then again sql
         //So using conditions for skipping some part of sql CRM-4575
                     
-        $upgrade =& new CRM_Upgrade_Form( );
+        $upgrade = new CRM_Upgrade_Form( );
         //Run the SQL file (1)
         $upgrade->processSQL( $rev );
         //replace  with ; in report instance
@@ -189,7 +189,7 @@ class CRM_Upgrade_ThreeZero_ThreeZero extends CRM_Upgrade_Form {
 
             $currencyID = CRM_Core_DAO::singleValueQuery( $query );
             if ( !$currencyID ) {
-                $config     =& CRM_Core_Config::singleton( ); 
+                $config     = CRM_Core_Config::singleton( ); 
                 $currencyID = $config->defaultCurrency;
             }
             

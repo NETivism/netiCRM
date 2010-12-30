@@ -23,13 +23,3 @@
 #crm-container div.form-item dt.extra-long-twenty {
   padding-bottom: 20px;
 }
-
-
-/* table border declarations to be replaced with dclarations for specific elements */
-
- #crm-container table.no-border {
-  margin: 0em;
-  width: 98%;	
-  border-collapse: collapse;
-  border: 0px none;
-}

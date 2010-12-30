@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -25,11 +25,9 @@
 *}
 {* No matches for submitted search request or viewing an empty group. *}
 <div class="messages status">
-  <dl>
-    <dt><img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}" /></dt>
-    <dd>
+  <div class="icon inform-icon"></div>&nbsp;
         {if $context EQ 'smog'}
-            {capture assign=crmURL}{crmURL q="context=amtg&amtgID=`$group.id`&reset=1"}{/capture}{ts 1=$group.title 2=$crmURL}%1 has no members which match your search criteria. You can <a href='%2'>add members here.</a>{/ts}
+            {capture assign=crmURL}{crmURL q="context=amtg&amtgID=`$group.id`&reset=1"}{/capture}{ts 1=$group.title 2=$crmURL}%1 has no contacts which match your search criteria. You can <a href='%2'>add contacts here.</a>{/ts}
         {else}
             {if $qill}{ts}No matches found for:{/ts}
                 {include file="CRM/common/displaySearchCriteria.tpl"}
@@ -51,6 +49,4 @@
             {/if}
             </ul>
         {/if}
-    </dd>
-  </dl>
 </div>

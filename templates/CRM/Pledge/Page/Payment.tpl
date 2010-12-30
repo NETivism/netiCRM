@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -29,9 +29,9 @@
 {if $context eq 'dashboard'}{assign var='context' value='pledgeDashboard'}{/if}
 <table class="nestedSelector">
   <tr class="columnheader">
-    <th>{ts}Scheduled Amount{/ts}</th>
-    <th>{ts}Scheduled Date{/ts}</th>
-    <th>{ts}Paid Amount{/ts}</th>
+    <th>{ts}Amount Due{/ts}</th>
+    <th>{ts}Due Date{/ts}</th>
+    <th>{ts}Amount Paid{/ts}</th>
     <th>{ts}Paid Date{/ts}</th>
     <th>{ts}Last Reminder{/ts}</th>
     <th>{ts}Reminders Sent{/ts}</th>
@@ -46,9 +46,7 @@
     <td>{$row.receive_date|truncate:10:''|crmDate}</td>
     <td>{$row.reminder_date|truncate:10:''|crmDate}</td>
     <td class="right">{if $row.reminder_count}{$row.reminder_count}{/if}</td>
-    <td {if ! ($permission EQ 'edit' and ($row.status eq 'Pending' or $row.status eq 'Overdue' or $row.status eq 'Completed')) } colspan="2"{/if} >
-        {$row.status}
-    </td>	
+    <td {if ! ($permission EQ 'edit' and ($row.status eq 'Pending' or $row.status eq 'Overdue' or $row.status eq 'Completed')) } colspan="2"{/if} >{$row.label}</td>	
 {if $context neq user}
     {if $permission EQ 'edit' and ($row.status eq 'Pending' or $row.status eq 'Overdue' or $row.status eq 'Completed') }
         <td>
@@ -65,7 +63,7 @@
             {/if}
             <br/> 
             {capture assign=editURL}{crmURL p="civicrm/pledge/payment" q="reset=1&action=update&cid=`$contactId`&context=`$context`&ppId=`$row.id`"}{/capture}
-            {ts 1=$editURL}<a href='%1'>Edit Schedule</a>{/ts}
+            {ts 1=$editURL}<a href='%1'>Edit Scheduled Payment</a>{/ts}
         {/if}
         </td>
     {/if}

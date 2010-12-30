@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -58,7 +58,7 @@ class CRM_Contribute_Controller_Contribution extends CRM_Core_Controller {
         parent::__construct( $title, $modal );
 
         require_once 'CRM/Contribute/StateMachine/Contribution.php';
-        $this->_stateMachine =& new CRM_Contribute_StateMachine_Contribution( $this, $action );
+        $this->_stateMachine = new CRM_Contribute_StateMachine_Contribution( $this, $action );
 
         // create and instantiate the pages
         $this->addPages( $this->_stateMachine, $action );
@@ -66,7 +66,7 @@ class CRM_Contribute_Controller_Contribution extends CRM_Core_Controller {
         // add all the actions
         $uploadNames = $this->get( 'uploadNames' );
         if ( ! empty( $uploadNames ) ) {
-            $config =& CRM_Core_Config::singleton( );
+            $config = CRM_Core_Config::singleton( );
             $this->addActions( $config->customFileUploadDir, $uploadNames );
         } else {
             $this->addActions( );

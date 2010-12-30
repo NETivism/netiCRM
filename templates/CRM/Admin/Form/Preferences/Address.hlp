@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.2                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -28,7 +28,7 @@
 <div class="form-item">
 <table style="">
 <tr style="vertical-align:top;"><td style="padding-right:1em;">{literal}{contact.addressee}{/literal}</td><td>{ts}Used for mailing labels only. Replaced by the Addressee option selected on contact add/edit screen.{/ts}</td></tr>
-<tr style="vertical-align:top;"><td style="padding-right:1em;">{literal}{contact.current_employer}{/literal}</td><td>{ts}Current employer name as configured in the individual contact edit form. If you are printing labels for Organizations and Households AS WELL AS Individuals, then consider putting this token in the Individual Name Format field below (rather than here).{/ts}</td></tr>
+<tr style="vertical-align:top;"><td style="padding-right:1em;">{literal}{contact.current_employer}{/literal}</td><td>{ts}Current employer name as configured in the individual contact edit form. Note that this field is only available for contacts which are the contact type individual.{/ts}</td></tr>
 <tr style="vertical-align:top;"><td style="padding-right:1em;">{literal}{contact.address_name}{/literal}</td><td>{ts}Address Name (e.g. Johnson Paviliont).{/ts}</td>
 <tr style="vertical-align:top;"><td style="padding-right:1em;">{literal}{contact.street_address}{/literal}</td><td>{ts}Full street address (e.g. 110 Main Street).{/ts}</td>
 <tr style="vertical-align:top;"><td style="padding-right:1em;">{literal}{contact.supplemental_address_1}{/literal}</td><td>{ts}Supplemental address 1 (line is skipped if empty).{/ts}</td>

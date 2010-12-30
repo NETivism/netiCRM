@@ -47,7 +47,7 @@ class HTML_QuickForm_CKeditor extends HTML_QuickForm_textarea
         $this->_type = 'CKeditor';
         // set editor height smaller if schema defines rows as 4 or less
         if ( is_array($attributes) && array_key_exists( 'rows', $attributes ) && $attributes['rows'] <= 4 ) {
-            $this->height = 200;
+            $this->height = 175;
         }
     }    
 
@@ -71,11 +71,13 @@ class HTML_QuickForm_CKeditor extends HTML_QuickForm_textarea
                     }
                     CKEDITOR.replace( '{$name}' );
                     var editor = CKEDITOR.instances['{$name}'];
-                    editor.on( 'key', function( evt ){
-                        global_formNavigate = false;
-                    } );
-                    editor.config.width  = '".$this->width."';
-                    editor.config.height = '".$this->height."';
+                    if ( editor ) {
+                        editor.on( 'key', function( evt ){
+                            global_formNavigate = false;
+                        } );
+                        editor.config.width  = '".$this->width."';
+                        editor.config.height = '".$this->height."';
+                    }
                 }); 
             </script>";
             return $html;

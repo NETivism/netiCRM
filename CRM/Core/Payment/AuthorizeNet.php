@@ -12,7 +12,7 @@
  *
  * @package CRM
  * @author Marshal Newrock <marshal@idealso.com>
- * $Id: AuthorizeNet.php 24552 2009-10-27 08:46:17Z shot $
+ * $Id: AuthorizeNet.php 30063 2010-10-06 10:33:02Z ashwini $
  */
 
 /* NOTE:
@@ -33,6 +33,15 @@ class CRM_Core_Payment_AuthorizeNet extends CRM_Core_Payment {
     static protected $_mode = null;
 
     static protected $_params = array();
+
+    /**
+     * We only need one instance of this object. So we use the singleton
+     * pattern and cache the instance in this variable
+     *
+     * @var object
+     * @static
+     */
+    static private $_singleton = null;
     
     /**
      * Constructor
@@ -46,7 +55,7 @@ class CRM_Core_Payment_AuthorizeNet extends CRM_Core_Payment {
         $this->_paymentProcessor = $paymentProcessor;
         $this->_processorName    = ts('Authorized .Net');
 
-        $config =& CRM_Core_Config::singleton();
+        $config = CRM_Core_Config::singleton();
         $this->_setParam( 'apiLogin'   , $paymentProcessor['user_name'] );
         $this->_setParam( 'paymentKey' , $paymentProcessor['password']  );
         $this->_setParam( 'paymentType', 'AIM' );
@@ -56,6 +65,23 @@ class CRM_Core_Payment_AuthorizeNet extends CRM_Core_Payment {
         $this->_setParam( 'timestamp', time( ) );
         srand( time( ) );
         $this->_setParam( 'sequence', rand( 1, 1000 ) );
+    }
+
+    /** 
+     * singleton function used to manage this object 
+     * 
+     * @param string $mode the mode of operation: live or test
+     *
+     * @return object 
+     * @static 
+     * 
+     */ 
+    static function &singleton( $mode, &$paymentProcessor ) {
+        $processorName = $paymentProcessor['name'];
+        if (self::$_singleton[$processorName] === null ) {
+            self::$_singleton[$processorName] = new CRM_Core_Payment_AuthorizeNet( $mode, $paymentProcessor );
+        }
+        return self::$_singleton[$processorName];
     }
 
     /**
@@ -159,7 +185,7 @@ class CRM_Core_Payment_AuthorizeNet extends CRM_Core_Payment {
      * @public
      */
     function doRecurPayment( &$params ) {
-        $template =& CRM_Core_Smarty::singleton( );
+        $template = CRM_Core_Smarty::singleton( );
 
         $intervalLength = $this->_getParam('frequency_interval');
         $intervalUnit   = $this->_getParam('frequency_unit');
@@ -301,7 +327,7 @@ class CRM_Core_Payment_AuthorizeNet extends CRM_Core_Payment {
      */
     function _checkDupe( $invoiceId ) {
         require_once 'CRM/Contribute/DAO/Contribution.php';
-        $contribution =& new CRM_Contribute_DAO_Contribution( );
+        $contribution = new CRM_Contribute_DAO_Contribution( );
         $contribution->invoice_id = $invoiceId;
         return $contribution->find( );
     }

@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -49,13 +49,15 @@ class CRM_Admin_Form_Setting_Path extends CRM_Admin_Form_Setting
      * @access public
      */
     public function buildQuickForm( ) {
-        CRM_Utils_System::setTitle(ts('Settings - Directories'));
+        CRM_Utils_System::setTitle(ts('Settings - Upload Directories'));
 
         $directories = array( 'uploadDir'           => ts( 'Temporary Files'  ),
                               'imageUploadDir'      => ts( 'Images'           ),
                               'customFileUploadDir' => ts( 'Custom Files'     ),
                               'customTemplateDir'   => ts( 'Custom Templates' ),
-                              'customPHPPathDir'    => ts( 'Custom PHP Path Directory' )  );
+                              'customPHPPathDir'    => ts( 'Custom PHP Path Directory' ),
+                              'extensionsDir'       => ts( 'CiviCRM Extensions Directory' )
+                              );
         foreach ( $directories as $name => $title ) {
             $this->add('text', $name, $title );
             $this->addRule( $name,

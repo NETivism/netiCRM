@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -110,7 +110,7 @@ class CRM_Utils_ICalendar
     function send( $calendar, $content_type = 'text/calendar', $charset = 'us-ascii', $fileName = null, $disposition = null )
     {
         require_once 'CRM/Core/Config.php';
-        $config =& CRM_Core_Config::singleton();
+        $config = CRM_Core_Config::singleton();
         $lang = $config->lcMessages;
         header( "Content-Language: $lang" );
         // header( "Content-Type: $content_type; charset=$charset; profile=\"ICalendar\"" );

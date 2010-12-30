@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -186,7 +186,7 @@ class CRM_Core_StateMachine {
      * @access public
      */
     function addState( $name, $type, $prev, $next ) {
-        $this->_states[$name] =& new CRM_Core_State( $name, $type, $prev, $next, $this );
+        $this->_states[$name] = new CRM_Core_State( $name, $type, $prev, $next, $this );
     }
 
     /**
@@ -347,7 +347,11 @@ class CRM_Core_StateMachine {
     function getSkipRedirection( ) {
         return $this->_controller->getSkipRedirection( );
     }
-    
+
+    function fini( ) {
+        return $this->_controller->fini( );
+    }
+
 }
 
 

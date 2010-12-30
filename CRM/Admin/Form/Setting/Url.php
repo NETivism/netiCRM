@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -61,7 +61,7 @@ class CRM_Admin_Form_Setting_Url extends CRM_Admin_Form_Setting
         parent::buildQuickForm( );
     }
 
-    static function formRule(&$fields) {
+    static function formRule( $fields) {
         if ( isset( $fields['enableSSL'] ) &&
              $fields['enableSSL'] ) {
             $config = CRM_Core_Config::singleton( );

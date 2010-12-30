@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -55,16 +55,16 @@
         </tr>
         </thead>
         {foreach from=$rows item=row}
-	    <tr id="row_{$row.id}"class="{cycle values="odd-row,even-row"} {$row.class}{if NOT $row.is_active} disabled{/if}">
-            <td>{$row.label}</td>
-	        <td>{$row.value}</td>	
-	        <td>{$row.description}</td>
-            <td class="nowrap">{$row.weight}</td>
+	    <tr id="row_{$row.id}"class="crm-admin-optionValue {cycle values="odd-row,even-row"} {$row.class}{if NOT $row.is_active} disabled{/if}">
+            <td class="crm-admin-optionValue-label">{$row.label}</td>
+            <td class="crm-admin-optionValue-value">{$row.value}</td>	
+            <td class="crm-admin-optionValue-description">{$row.description}</td>
+            <td class="nowrap crm-admin-optionValue-weight">{$row.weight}</td>
            {if $showIsDefault} 
-            <td>{$row.default_value}</td> 
+            <td class="crm-admin-optionValue-default_value">{$row.default_value}</td> 
            {/if}
-	        <td>{if $row.is_reserved eq 1} {ts}Yes{/ts} {else} {ts}No{/ts} {/if}</td>
-	        <td id="row_{$row.id}_status">{if $row.is_active eq 1} {ts}Yes{/ts} {else} {ts}No{/ts} {/if}</td>
+            <td class="crm-admin-optionValue-is_reserved">{if $row.is_reserved eq 1} {ts}Yes{/ts} {else} {ts}No{/ts} {/if}</td>
+	        <td id="row_{$row.id}_status" class="crm-admin-optionValue-is_active">{if $row.is_active eq 1} {ts}Yes{/ts} {else} {ts}No{/ts} {/if}</td>
             <td>{$row.action|replace:'xx':$row.id}</td>
         </tr>
         {/foreach}
@@ -79,10 +79,8 @@
 </div>
 {elseif $action ne 1}
     <div class="messages status">
-    <dl>
-        <dt><img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}"/></dt>
+        <img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}"/>
         {capture assign=crmURL}{crmURL p='civicrm/admin/optionValue' q="action=add&reset=1&gid=$gid"}{/capture}
-        <dd>{ts 1=$crmURL}There are no option choices entered for this option group. You can <a href='%1'>add one</a>.{/ts}</dd>
-        </dl>
+        {ts 1=$crmURL}There are no option choices entered for this option group. You can <a href='%1'>add one</a>.{/ts}
     </div>    
 {/if}

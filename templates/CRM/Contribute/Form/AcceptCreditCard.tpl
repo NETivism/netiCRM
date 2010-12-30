@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -24,29 +24,34 @@
  +--------------------------------------------------------------------+
 *}
 {* this template is used for adding/editing/deleting Credit Card  *}
-<div class="form-item">
+<div class="form-item form-item crm-block crm-form-block crm-contribution-form-block">
 <fieldset><legend>{if $action eq 1}{ts}New Credit Card{/ts}{elseif $action eq 2}{ts}Edit Credit Card{/ts}{else}{ts}Delete Credit Card{/ts}{/if}</legend>
   
    {if $action eq 8}
       <div class="messages status">
-        <dl>
-          <dt><img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}" /></dt>
-          <dd>    
+        <div class="icon inform-icon"></div>    
           {ts}WARNING: If you delete this option, contributors will not be able to use this credit card type on your Online Contribution pages.{/ts} {ts}Do you want to continue?{/ts}
-          </dd>
-       </dl>
       </div>
      {else}
-      <dl>
- 	    <dt>{$form.name.label}</dt><dd>{$form.name.html}</dd>
-        <dt>&nbsp;</dt><dd class="description">{ts}The name for this credit card type as it should be provided to your payment processor.{/ts}</dd>
-    	<dt>{$form.title.label}</dt><dd>{$form.title.html}</dd>
-        <dt>&nbsp;</dt><dd class="description">{ts}The name for this credit card type as it is displayed to contributors. This may be the same value as the Name above, or a localised title.{/ts}</dd>
-        <dt>{$form.is_active.label}</dt><dd>{$form.is_active.html}</dd>
-      </dl> 
+      <table class="form-layout-compressed">
+         <tr class="crm-contribution-form-block-name">
+	    <td class="label">{$form.name.label}</td>
+	    <td class="html-adjust">{$form.name.html}<br />
+	      <span class="description">{ts}The name for this credit card type as it should be provided to your payment processor.{/ts}</span>
+       </td>
+    </tr>
+    <tr class="crm-contribution-form-block-title">
+    	<td class="label">{$form.title.label}</td>
+	<td class="html-adjust">{$form.title.html}<br />
+	      <span class="description">{ts}The name for this credit card type as it is displayed to contributors. This may be the same value as the Name above, or a localised title.{/ts}</span>
+       </td>
+    </tr>
+    <tr class="crm-contribution-form-block-is_active">
+       <td class="label">{$form.is_active.label}</td>
+       <td class="html-adjust">{$form.is_active.html}</td>
+    </tr>
+    </table> 
      {/if}
-    <dl>   
-      <dt></dt><dd>{$form.buttons.html}</dd>
-    </dl>
+    <div class="crm-submit-buttons">{$form.buttons.html}</div>
 </fieldset>
 </div>

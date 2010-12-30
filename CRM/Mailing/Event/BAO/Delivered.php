@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -60,7 +60,7 @@ class CRM_Mailing_Event_BAO_Delivered extends CRM_Mailing_Event_DAO_Delivered {
             return null;
         }
         $q->free( ); 
-        $delivered =& new CRM_Mailing_Event_BAO_Delivered();
+        $delivered = new CRM_Mailing_Event_BAO_Delivered();
         $delivered->time_stamp = date('YmdHis');
         $delivered->copyValues($params);
         $delivered->save();
@@ -70,7 +70,7 @@ class CRM_Mailing_Event_BAO_Delivered extends CRM_Mailing_Event_DAO_Delivered {
         $queue->find(true);
         
         while ( $queue->fetch() ) {
-            $email =& new CRM_Core_BAO_Email();
+            $email = new CRM_Core_BAO_Email();
             $email->id         = $queue->email_id;
             $email->hold_date  = '';
             $email->reset_date = date( 'YmdHis' );
@@ -92,7 +92,7 @@ class CRM_Mailing_Event_BAO_Delivered extends CRM_Mailing_Event_DAO_Delivered {
      */
     public static function getTotalCount($mailing_id, $job_id = null,
                                             $is_distinct = false) {
-        $dao =& new CRM_Core_DAO();
+        $dao = new CRM_Core_DAO();
         
         $delivered  = self::getTableName();
         $bounce     = CRM_Mailing_Event_BAO_Bounce::getTableName();
@@ -150,7 +150,7 @@ class CRM_Mailing_Event_BAO_Delivered extends CRM_Mailing_Event_DAO_Delivered {
     public static function &getRows($mailing_id, $job_id = null, 
         $is_distinct = false, $offset = null, $rowCount = null, $sort = null) {
         
-        $dao =& new CRM_Core_Dao();
+        $dao = new CRM_Core_Dao();
         
         $delivered  = self::getTableName();
         $bounce     = CRM_Mailing_Event_BAO_Bounce::getTableName();
@@ -192,7 +192,16 @@ class CRM_Mailing_Event_BAO_Delivered extends CRM_Mailing_Event_DAO_Delivered {
             $query .= " GROUP BY $queue.id ";
         }
 
-        $query .= " ORDER BY $contact.sort_name, $delivered.time_stamp DESC ";
+        $orderBy = "sort_name ASC, {$delivered}.time_stamp DESC";
+        if ($sort) {
+            if ( is_string( $sort ) ) {
+                $orderBy = $sort;
+            } else {
+                $orderBy = trim( $sort->orderBy() );
+            }
+        }
+
+        $query .= " ORDER BY {$orderBy} ";
 
         if ($offset||$rowCount) {//Added "||$rowCount" to avoid displaying all records on first page
             $query .= ' LIMIT ' 

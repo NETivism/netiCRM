@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -59,8 +59,17 @@ class CRM_Case_Form_ActivityView extends CRM_Core_Form
         $activitySubject =  CRM_Core_DAO::getFieldValue( 'CRM_Activity_DAO_Activity', 
                                                          $activityID,
                                                          'subject' );
+        $type       = CRM_Utils_Request::retrieve('type', 'String', CRM_Core_DAO::$_nullObject ) ;
+        
+        //check for required permissions, CRM-6264 
+        if ( $activityID &&
+             !CRM_Activity_BAO_Activity::checkPermission( $activityID, CRM_Core_Action::VIEW ) ) {
+            CRM_Core_Error::fatal( ts( 'You do not have permission to access this page.' ) );
+        }
+        
         $this->assign('contactID', $contactID );
         $this->assign('caseID', $caseID );
+        $this->assign('type', $type );
 
         require_once 'CRM/Case/XMLProcessor/Report.php';
         $xmlProcessor = new CRM_Case_XMLProcessor_Report( );
@@ -75,23 +84,39 @@ class CRM_Case_Form_ActivityView extends CRM_Core_Form
                                           );
         }  
         
+        require_once 'CRM/Core/BAO/EntityTag.php';
+        $tags = CRM_Core_BAO_EntityTag::getTag( $activityID, 'civicrm_activity' );
+        if ( !empty($tags) ) {
+            $allTag = CRM_Core_PseudoConstant::tag();
+            foreach( $tags as $tid ) {
+                $tags[$tid] = $allTag[$tid];
+            }
+            $report['fields'][] = array ( 'label' => 'Tags',
+                                          'value' => implode( '<br />', $tags ),
+                                          'type'  => 'String'
+                                          );
+        }
+
         $this->assign('report', $report );
 
         $latestRevisionID = CRM_Activity_BAO_Activity::getLatestActivityId( $activityID );
 
+        $viewPriorActivities = array( );
+        $priorActivities = CRM_Activity_BAO_Activity::getPriorAcitivities( $activityID );
+        foreach( $priorActivities as $activityId => $activityValues ) {
+            if ( CRM_Case_BAO_Case::checkPermission( $activityId, 'view', null, $contactID ) ) {
+                $viewPriorActivities[$activityId] = $activityValues;
+            }
+        }
+
         if ( $revs ) {
             $this->assign('revs',$revs);
-            
-            $priorActivities = CRM_Activity_BAO_Activity::getPriorAcitivities( $activityID );
 
-            $this->assign( 'result' , $priorActivities );
+            $this->assign( 'result' , $viewPriorActivities );
             $this->assign( 'subject', $activitySubject );
-            
             $this->assign( 'latestRevisionID', $latestRevisionID );
         } else {
-            $countPriorActivities = CRM_Activity_BAO_Activity::getPriorCount( $activityID );
-
-            if ( $countPriorActivities >= 1 ) {
+            if ( count( $viewPriorActivities ) > 1 ) {
                 $this->assign( 'activityID', $activityID ); 
             }
 
@@ -110,7 +135,7 @@ class CRM_Case_Form_ActivityView extends CRM_Core_Form
         
         $activityTargetContacts = CRM_Activity_BAO_ActivityTarget::retrieveTargetIdsByActivityId( $activityID ); 
         if (!empty( $activityTargetContacts ) ) {
-            $recentContactId = $activityTargetContacts[1];
+            $recentContactId = $activityTargetContacts[0];
         } else {
             $recentContactId = $contactID; 
         }
@@ -135,12 +160,24 @@ class CRM_Case_Form_ActivityView extends CRM_Core_Form
         
         $title =  $title . $recentContactDisplay .' (' . $activityTypes[$activityTypeID] . ')';
         
+        require_once 'CRM/Case/BAO/Case.php';
+        $recentOther = array( );
+        if ( CRM_Case_BAO_Case::checkPermission( $activityID, 'edit' ) ) {
+            $recentOther['editUrl'] = CRM_Utils_System::url( 'civicrm/case/activity',
+                                                             "reset=1&action=update&id={$activityID}&cid={$recentContactId}&caseid={$caseID}&context=home" );
+        }
+        if ( CRM_Case_BAO_Case::checkPermission( $activityID, 'delete' ) ) {
+            $recentOther['deleteUrl'] = CRM_Utils_System::url( 'civicrm/case/activity',
+                                                               "reset=1&action=delete&id={$activityID}&cid={$recentContactId}&caseid={$caseID}&context=home" );
+        }
+
         CRM_Utils_Recent::add( $title,
                                $url,
                                $activityID,
                                'Activity',
                                $recentContactId,
-                               $recentContactDisplay
+                               $recentContactDisplay,
+                               $recentOther
                                );
         
     }

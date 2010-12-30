@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -42,13 +42,13 @@ class CRM_Mailing_Page_AJAX
     /**
      * Function to fetch the template text/html messages
      */
-    function template( &$config ) 
+    function template(  ) 
     {
         require_once 'CRM/Utils/Type.php';
         $templateId = CRM_Utils_Type::escape( $_POST['tid'], 'Integer' );
 
         require_once "CRM/Core/DAO/MessageTemplates.php";
-        $messageTemplate =& new CRM_Core_DAO_MessageTemplates( );
+        $messageTemplate = new CRM_Core_DAO_MessageTemplates( );
         $messageTemplate->id = $templateId;
         $messageTemplate->selectAdd( );
         $messageTemplate->selectAdd( 'msg_text, msg_html, msg_subject' );
@@ -59,7 +59,7 @@ class CRM_Mailing_Page_AJAX
                            );
                             
         echo json_encode( $messages );
-        exit();
+        CRM_Utils_System::civiExit( );
     }
 
 }

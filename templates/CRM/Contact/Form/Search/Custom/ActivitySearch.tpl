@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -24,22 +24,19 @@
  +--------------------------------------------------------------------+
 *}
 {* Template for "Sample" custom search component. *}
-{assign var="showBlock" value="'searchForm'"}
-{assign var="hideBlock" value="'searchForm_show','searchForm_hide'"}
-
-<div id="searchForm_show" class="form-item">
-    <a href="#" onclick="hide('searchForm_show'); show('searchForm'); return false;"><img src="{$config->resourceBase}i/TreePlus.gif" class="action-icon" alt="{ts}open section{/ts}" /></a>
-    <label>{ts}Edit Search Criteria{/ts}</label>
-</div>
-
-<div id="searchForm" class="form-item">
-    <fieldset>
-        <legend><span id="searchForm_hide"><a href="#" onclick="hide('searchForm','searchForm_hide'); show('searchForm_show'); return false;"><img src="{$config->resourceBase}i/TreeMinus.gif" class="action-icon" alt="{ts}close section{/ts}" /></a></span>{ts}Search Criteria{/ts}</legend>
-    
+<div class="crm-form-block crm-search-form-block">
+<div class="crm-accordion-wrapper crm-activity_search-accordion {if $rows}crm-accordion-closed{else}crm-accordion-open{/if}">
+ <div class="crm-accordion-header crm-master-accordion-header">
+  <div class="icon crm-accordion-pointer"></div> 
+   {ts}Edit Search Criteria{/ts}
+</div><!-- /.crm-accordion-header -->
+<div class="crm-accordion-body">
+<div id="searchForm" class="crm-block crm-form-block crm-contact-custom-search-activity-search-form-block">
+      <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>
         <table class="form-layout-compressed">
             {* Loop through all defined search criteria fields (defined in the buildForm() function). *}
             {foreach from=$elements item=element}
-                <tr>
+                <tr class="crm-contact-custom-search-activity-search-form-block-{$element}">
                     <td class="label">{$form.$element.label}</td>
                     <td>
                         {if $element eq 'start_date' OR $element eq 'end_date'}
@@ -50,31 +47,34 @@
                     </td>
                 </tr>
             {/foreach}
-            <tr>
-                <td>&nbsp;</td>
-                <td>{$form.buttons.html}</td>
-            </tr>
         </table>
-    </fieldset>
+      <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
+        </table>
 </div>
+</div><!-- /.crm-accordion-body -->
+</div><!-- /.crm-accordion-wrapper -->
+</div><!-- /.crm-form-block -->
 
-{if $rowsEmpty}
+{if $rowsEmpty || $rows}
+
+<div class="crm-content-block">
+    {if $rowsEmpty}
+	<div class="crm-results-block crm-results-block-empty">
     {include file="CRM/Contact/Form/Search/Custom/EmptyResults.tpl"}
+    </div>
 {/if}
 
 {if $rows}
+	<div class="crm-results-block">
     {* Search request has returned 1 or more matching rows. Display results and collapse the search criteria fieldset. *}
-    {assign var="showBlock" value="'searchForm_show'"}
-    {assign var="hideBlock" value="'searchForm'"}
-    
-    <fieldset>
-    
+        
     {* This section handles form elements for action task select and submit *}
+	<div class="crm-search-tasks">
     {include file="CRM/Contact/Form/Search/ResultTasks.tpl"}
-
+	</div>
     {* This section displays the rows along and includes the paging controls *}
-    <p>
-
+    <div class="crm-search-results">
+    
     {include file="CRM/common/pager.tpl" location="top"}
 
     {include file="CRM/common/pagerAToZ.tpl"}
@@ -112,14 +112,12 @@
                             <td><a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$row.contact_id`"}">{$row.sort_name}</a></td>
                         {elseif $fName eq 'activity_subject'}
                             <td>
-                            {if $row.activity_subject NEQ "NULL"}              
                                 {if $row.case_id }
-                                    <a href="{crmURL p='civicrm/case/activity/view' q="reset=1&aid=`$row.activity_id`&cid=`$row.contact_id`&caseID=`$row.case_id`"}">
+                                    <a href="{crmURL p='civicrm/case/activity/view' q="reset=1&aid=`$row.activity_id`&cid=`$row.contact_id`&caseID=`$row.case_id`"}" title="{ts}View activity details{/ts}">
                                 {else}
-                                    <a href="{crmURL p='civicrm/contact/view/activity' q="atype=`$row.activity_type_id`&action=view&reset=1&id=`$row.activity_id`&cid=`$row.contact_id`"}">
+                                    <a href="{crmURL p='civicrm/contact/view/activity' q="atype=`$row.activity_type_id`&action=view&reset=1&id=`$row.activity_id`&cid=`$row.contact_id`"}" title="{ts}View activity details{/ts}">
                                 {/if}
-                                {$row.activity_subject}</a>
-                            {/if}
+                                {if isset($row.activity_subject) AND $row.activity_subject NEQ 'NULL'}{$row.activity_subject}{else}{ts}(no subject){/ts}{/if}</a>
                             </td>
                         {elseif ($fName eq 'activity_id') or ($fName eq 'activity_type_id') or ($fName eq 'case_id')}   
                         {else}
@@ -141,18 +139,17 @@
 
 {include file="CRM/common/pager.tpl" location="bottom"}
 
-       </p>
 
-    </fieldset>
+    </div>
     {* END Actions/Results section *}
-
+	</div>
 {/if}
-
+</div>
+{/if}
+{literal}
 <script type="text/javascript">
-    var showBlock = new Array({$showBlock});
-    var hideBlock = new Array({$hideBlock});
-
-{* hide and display the appropriate blocks *}
-    on_load_init_blocks( showBlock, hideBlock );
+cj(function() {
+   cj().crmaccordions(); 
+});
 </script>
-
+{/literal}

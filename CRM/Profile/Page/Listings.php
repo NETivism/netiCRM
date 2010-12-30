@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -91,6 +91,12 @@ class CRM_Profile_Page_Listings extends CRM_Core_Page {
     protected $_map;
 
     /**
+     * Store profile ids if multiple profile ids are passed using comma separated.
+     * Currently lets implement this functionality only for dialog mode
+     */
+    protected $_profileIds = array( );
+
+    /**
      * extracts the parameters from the request and constructs information for
      * the selector object to do a query
      *
@@ -104,18 +110,48 @@ class CRM_Profile_Page_Listings extends CRM_Core_Page {
         
         $search = CRM_Utils_Request::retrieve( 'search', 'Boolean',
                                                $this, false, 0, 'GET' );
-        if( isset( $search ) && $search == 0) {
+        if ( isset( $search ) && $search == 0) {
             $this->_search = false;
         }
 
-        $this->_gid = CRM_Utils_Request::retrieve('gid', 'Positive',
-                                                  $this, true, 0, 'GET' );
+        $this->_gid        = $this->get( 'gid' );
+        $this->_profileIds = $this->get( 'profileIds' );
+
+        $gids = explode( ',', CRM_Utils_Request::retrieve('gid', 'String', CRM_Core_DAO::$_nullObject, false, 0, 'GET') );
+ 
+        if ( ( count( $gids ) > 1 ) && !$this->_profileIds && empty( $this->_profileIds ) ) {
+            if ( !empty( $gids ) ) {
+                foreach( $gids as $pfId  ) {
+                   $this->_profileIds[ ] = CRM_Utils_Type::escape( $pfId, 'Positive' ); 
+                }
+            }
+            
+            // check if we are rendering mixed profiles
+            require_once 'CRM/Core/BAO/UFGroup.php';
+            if ( CRM_Core_BAO_UFGroup::checkForMixProfiles( $this->_profileIds ) ) {
+                CRM_Core_Error::fatal( ts( 'You cannot combine profiles of multiple types.' ) );
+            } 
+
+            $this->_gid = $this->_profileIds[0];
+            $this->set( 'profileIds', $this->_profileIds );
+            $this->set( 'gid', $this->_gid );
+        }
+        
+        if ( !$this->_gid ) {
+           $this->_gid = CRM_Utils_Request::retrieve('gid', 'Positive', $this, false, 0, 'GET');
+        } 
         
         require_once 'CRM/Core/BAO/UFGroup.php';
+        if ( empty( $this->_profileIds ) ) {
+            $gids = $this->_gid;
+        } else {
+            $gids = $this->_profileIds; 
+        }
+
         $this->_fields =
             CRM_Core_BAO_UFGroup::getListingFields( CRM_Core_Action::UPDATE,
                                                     CRM_Core_BAO_UFGroup::PUBLIC_VISIBILITY | CRM_Core_BAO_UFGroup::LISTINGS_VISIBILITY,
-                                                    false, $this->_gid, false, 'Profile',
+                                                    false, $gids, false, 'Profile',
                                                     CRM_Core_Permission::SEARCH );
 
         $this->_customFields = CRM_Core_BAO_CustomField::getFieldsForImport( null );
@@ -192,8 +228,22 @@ class CRM_Profile_Page_Listings extends CRM_Core_Page {
             }
         }
 
+        // set the prox params
+        // need to ensure proximity searching is enabled
+        $proximityVars = array( 'street_address', 'city', 'postal_code', 'state_province_id',
+                                'country_id', 'distance', 'distance_unit' );
+        foreach ( $proximityVars as $var ) {
+            $value = CRM_Utils_Request::retrieve( "prox_{$var}",
+                                                  'String',
+                                                  $this, false, null, 'REQUEST' );
+            if ( $value ) {
+                $this->_params["prox_{$var}"] = $value;
+            }
+        }                                     
+        
+        
         // set the params in session
-        $session =& CRM_Core_Session::singleton();
+        $session = CRM_Core_Session::singleton();
         $session->set('profileParams', $this->_params);
    }
 
@@ -222,10 +272,43 @@ class CRM_Profile_Page_Listings extends CRM_Core_Page {
             }
         }
 
-        // do not do any work if we are in reset mode
-        if ( ! CRM_Utils_Array::value( 'reset', $_GET ) ||
-             CRM_Utils_Array::value( 'force', $_GET ) ) {
+
+        $this->assign( 'isReset', true );
+
+
+        $formController = new CRM_Core_Controller_Simple( 'CRM_Profile_Form_Search',
+                                                           ts('Search Profile'),
+                                                           CRM_Core_Action::ADD );
+        $formController->setEmbedded( true );
+        $formController->set( 'gid', $this->_gid );
+        $formController->process( ); 
+        
+        $searchError = false;
+        // check if there is a POST
+        if ( ! empty( $_POST ) ) {
+            if ( $formController->validate( ) !== true ) {
+                $searchError = true;
+            }
+        }
+
+        // also get the search tpl name
+        $this->assign( 'searchTPL', $formController->getTemplateFileName( ) );
+        
+        $this->assign( 'search', $this->_search );
+
+        // search if search returned a form error?
+        if ( ( ! CRM_Utils_Array::value( 'reset', $_GET ) ||
+               CRM_Utils_Array::value( 'force', $_GET ) ) &&
+             ! $searchError ) {
             $this->assign( 'isReset', false );
+
+            $gidString = $this->_gid;    
+            if ( empty( $this->_profileIds ) ) {
+                $gids = $this->_gid;
+            } else {
+                $gids = $this->_profileIds;
+                $gidString = implode( ',', $this->_profileIds );
+            }
 
             $map      = 0;
             $linkToUF = 0;
@@ -239,7 +322,7 @@ class CRM_Profile_Page_Listings extends CRM_Core_Page {
             if ( $map ) {
                 $this->assign( 'mapURL',
                                CRM_Utils_System::url( 'civicrm/profile/map',
-                                                      "map=1&gid={$this->_gid}&reset=1" ) );
+                                                      "map=1&gid={$gidString}&reset=1" ) );
             }
             if ( CRM_Utils_Array::value( 'group', $this->_params ) ) {
                 foreach( $this->_params['group'] as $key => $val ) {
@@ -248,43 +331,32 @@ class CRM_Profile_Page_Listings extends CRM_Core_Page {
                     }
                 }
             }
-
+                
             // the selector will override this if the user does have
             // edit permissions as determined by the mask, CRM-4341
             // do not allow edit for anon users in joomla frontend, CRM-4668
-            $config =& CRM_Core_Config::singleton( );
+            $config = CRM_Core_Config::singleton( );
             if ( ! CRM_Core_Permission::check( 'access CiviCRM' ) ||
                  $config->userFrameworkFrontend == 1 ) {
                 $editLink = false;
             }
-            
-            $selector =& new CRM_Profile_Selector_Listings( $this->_params, $this->_customFields, $this->_gid,
-                                                            $map, $editLink, $linkToUF );
-            
-            $controller =& new CRM_Core_Selector_Controller($selector ,
-                                                            $this->get( CRM_Utils_Pager::PAGE_ID ),
-                                                            $this->get( CRM_Utils_Sort::SORT_ID  ),
-                                                            CRM_Core_Action::VIEW,
-                                                            $this,
-                                                            CRM_Core_Selector_Controller::TEMPLATE );
+
+            $selector = new CRM_Profile_Selector_Listings( $this->_params, $this->_customFields, $gids,
+                                                           $map, $editLink, $linkToUF );
+                
+            $controller = new CRM_Core_Selector_Controller($selector ,
+                                                           $this->get( CRM_Utils_Pager::PAGE_ID ),
+                                                           $this->get( CRM_Utils_Sort::SORT_ID  ),
+                                                           CRM_Core_Action::VIEW,
+                                                           $this,
+                                                           CRM_Core_Selector_Controller::TEMPLATE );
             $controller->setEmbedded( true );
             $controller->run( );
-
-        } else {
-            $this->assign( 'isReset', true );
         }
-
-        $formController =& new CRM_Core_Controller_Simple( 'CRM_Profile_Form_Search',
-                                                           ts('Search Profile'),
-                                                           CRM_Core_Action::ADD );
-        $formController->setEmbedded( true );
-        $formController->process( ); 
+        
+        //CRM-6862 -run form cotroller after
+        //selector, since it erase $_POST         
         $formController->run( ); 
-        
-        // also get the search tpl name
-        $this->assign( 'searchTPL', $formController->getTemplateFileName( ) );
-        
-        $this->assign( 'search', $this->_search );
         
         return parent::run( );
     }
@@ -298,7 +370,7 @@ class CRM_Profile_Page_Listings extends CRM_Core_Page {
      */
     function getProfileContact( $gid ) 
     {
-        $session =& CRM_Core_Session::singleton();
+        $session = CRM_Core_Session::singleton();
         $params = $session->get('profileParams');
         
         $details = array( );
@@ -332,7 +404,7 @@ class CRM_Profile_Page_Listings extends CRM_Core_Page {
         $returnProperties['sort_name'   ] = 1;
 
         $queryParams =& CRM_Contact_BAO_Query::convertFormValues( $params, 1 );
-        $query   =& new CRM_Contact_BAO_Query( $queryParams, $returnProperties, $fields );
+        $query   = new CRM_Contact_BAO_Query( $queryParams, $returnProperties, $fields );
         
         $ids = $query->searchQuery( 0, 0, null, 
                                     false, false, false, 
@@ -349,6 +421,15 @@ class CRM_Profile_Page_Listings extends CRM_Core_Page {
             $template     =& CRM_Core_Page::getTemplate( );
             if ( $template->template_exists( $templateFile ) ) {
                 return $templateFile;
+            }
+
+            // lets see if we have customized by name
+            $ufGroupName = CRM_Core_DAO::getFieldValue( 'CRM_Core_DAO_UFGroup', $this->_gid, 'name' );
+            if ( $ufGroupName ) {
+                $templateFile = "CRM/Profile/Page/{$ufGroupName}/Listings.tpl";
+                if ( $template->template_exists( $templateFile ) ) {
+                    return $templateFile;
+                }
             }
         }
         return parent::getTemplateFileName( );

@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -56,7 +56,7 @@ class CRM_Report_BAO_Instance extends CRM_Report_DAO_Instance
 
     static function retrieve( $params, &$defaults ) 
     {
-        $instance =& new CRM_Report_DAO_Instance( );
+        $instance = new CRM_Report_DAO_Instance( );
         $instance->copyValues( $params );
 
         if ( $instance->find( true ) ) {

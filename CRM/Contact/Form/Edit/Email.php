@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -51,9 +51,14 @@ class CRM_Contact_Form_Edit_Email
      * @access public
      * @static
      */
-    static function buildQuickForm( &$form ) 
+    static function buildQuickForm( &$form, $addressBlockCount = null ) 
     {        
-        $blockId = ( $form->get( 'Email_Block_Count' ) ) ? $form->get( 'Email_Block_Count' ) : 1;
+        // passing this via the session is AWFUL. we need to fix this
+        if ( ! $addressBlockCount ) {
+            $blockId = ( $form->get( 'Email_Block_Count' ) ) ? $form->get( 'Email_Block_Count' ) : 1;
+        } else {
+            $blockId = $addressBlockCount;
+        }
 
         $form->applyFilter('__ALL__','trim');
 
@@ -62,7 +67,7 @@ class CRM_Contact_Form_Edit_Email
         $form->addRule( "email[$blockId][email]", ts('Email is not valid.'), 'email' );
         if ( isset( $form->_contactType ) ) {
             //Block type
-            $form->addElement('select',"email[$blockId][location_type_id]", '' , CRM_Core_PseudoConstant::locationType());
+            $form->addElement('select', "email[$blockId][location_type_id]", '', CRM_Core_PseudoConstant::locationType());
 
             //On-hold checkbox
             $form->addElement('advcheckbox', "email[$blockId][on_hold]",null);
@@ -74,6 +79,15 @@ class CRM_Contact_Form_Edit_Email
             //is_Primary radio
             $js = array( 'id' => "Email_".$blockId."_IsPrimary", 'onClick' => 'singleSelect( this.id );');
             $form->addElement( 'radio', "email[$blockId][is_primary]", '', '', '1', $js );
+            
+            if ( CRM_Utils_System::getClassName( $form ) == 'CRM_Contact_Form_Contact' ) {
+           
+                $form->add('textarea', "email[$blockId][signature_text]", ts('Signature (Text)'), 
+                           array( 'rows' => 2, 'cols' => 40 ) );
+                
+                $form->addWysiwyg( "email[$blockId][signature_html]", ts('Signature (HTML)'), 
+                                   array( 'rows' => 2, 'cols' => 40 ) );
+            }
         }
     }
 }

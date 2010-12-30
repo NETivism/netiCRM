@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -24,10 +24,40 @@
  +--------------------------------------------------------------------+
 *}
 <div class="block-civicrm">
-<select class="form-select" id="civicrm-shortcuts" name="civicrm-shortcuts" onChange="if (this.value) location.href=this.value;">
-	<option value="">{ts}- create new -{/ts}</option>
-	{foreach from=$shortCuts item=short}
-	    <option value="{$short.url}" class="{$short.ref}">{$short.title}</option>
-    {/foreach}
-</select>
+<div id="crm-create-new-wrapper">
+	<div id="crm-create-new-link"><span><div class="icon dropdown-icon"></div>Create New</span></div>
+		<div id="crm-create-new-list" class="ac_results">
+			<div class="crm-create-new-list-inner">
+			<ul>
+			{foreach from=$shortCuts item=short}
+				    <li><a href="{$short.url}" class="crm-{$short.ref}">{$short.title}</a></li>
+			    {/foreach}
+			</ul>
+			</div>
+		</div>
+	</div>
 </div>
+{literal}
+<script>
+
+cj('body').click(function() {
+	 	cj('#crm-create-new-list').hide();
+	 	});
+	
+	 cj('#crm-create-new-list').click(function(event){
+	     event.stopPropagation();
+	 	});
+
+cj('#crm-create-new-list li').hover(
+	function(){ cj(this).addClass('ac_over');},
+	function(){ cj(this).removeClass('ac_over');}
+	);
+
+cj('#crm-create-new-link').click(function(event) {
+	cj('#crm-create-new-list').toggle();
+	event.stopPropagation();
+	});
+
+</script>
+
+{/literal}

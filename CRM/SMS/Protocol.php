@@ -53,7 +53,7 @@ abstract class CRM_SMS_Protocol {
      */  
     static function &singleton( ) {
         if (self::$_singleton === null ) {
-            $config   =& CRM_Core_Config::singleton( );
+            $config   = CRM_Core_Config::singleton( );
             
             $classPath = str_replace( '_', '/', $config->smsClass ) . '.php';
             require_once($classPath);

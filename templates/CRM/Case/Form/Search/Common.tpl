@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -27,7 +27,7 @@
     {include file="CRM/Case/Page/ConfigureError.tpl"}
 {else}
 <tr>
-  <td width="25%"><label>{ts}Case Type{/ts}</label>
+  <td class="crm-case-common-form-block-case_type" width="25%"><label>{ts}Case Type{/ts}</label>
     <br />
       <div class="listing-box" style="width: auto; height: 120px">
        {foreach from=$form.case_type_id item="case_type_id_val"}
@@ -38,15 +38,27 @@
       </div><br />
   </td>
   
-  <td>
+  <td class="crm-case-common-form-block-case_status_id" width="25%">
     {$form.case_status_id.label}<br /> 
     {$form.case_status_id.html}<br /><br />	
-    {$form.case_owner.html} &nbsp;<a href="javascript:unselectRadio('case_owner', '{$form.formName}')">unselect</a><br />
+    {if $accessAllCases}
+    {$form.case_owner.html} <span class="crm-clear-link">(<a href="javascript:unselectRadio('case_owner', '{$form.formName}')">{ts}clear{/ts}</a>)</span><br />
+    {/if}
     {if $form.case_deleted}	
         {$form.case_deleted.html}	
         {$form.case_deleted.label}	
     {/if}
   </td>
-
+  {if $form.case_tags }
+  <td class="crm-case-common-form-block-case_tags">
+  <label>{ts}Case Tag(s){/ts}</label>
+    <div id="Tag" class="listing-box">
+      {foreach from=$form.case_tags item="tag_val"} 
+        <div class="{cycle values="odd-row,even-row"}">
+        	{$tag_val.html} 
+        </div>
+      {/foreach}
+  </td>
+{/if}
 </tr>     
 {/if}

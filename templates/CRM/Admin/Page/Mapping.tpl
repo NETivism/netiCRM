@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -44,10 +44,10 @@
 	        <th></th>
         </tr>
         {foreach from=$rows item=row}
-        <tr class="{cycle values="odd-row,even-row"} {$row.class}">
-            <td>{$row.name}</td>	
-            <td>{$row.description}</td>
-            <td>{$row.mapping_type}</td>
+        <tr class="{cycle values="odd-row,even-row"} {$row.class} crm-mapping">
+            <td class="crm-mapping-name">{$row.name}</td>	
+            <td class="crm-mapping-description">{$row.description}</td>
+            <td class="crm-mapping-mapping_type">{$row.mapping_type}</td>
             <td>{$row.action|replace:'xx':$row.id}</td>
         </tr>
         {/foreach}
@@ -57,9 +57,7 @@
 </div>
 {else}
     <div class="messages status">
-    <dl>
-        <dt><img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}"/></dt>
-        <dd>{ts}There are currently no saved import or export mappings. You create saved mappings as part of an Import or Export task.{/ts}</dd>
-        </dl>
+        <img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}"/>
+        {ts}There are currently no saved import or export mappings. You create saved mappings as part of an Import or Export task.{/ts}
     </div>    
 {/if}

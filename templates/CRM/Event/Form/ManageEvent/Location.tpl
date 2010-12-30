@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -24,33 +24,35 @@
  +--------------------------------------------------------------------+
 *}
 {* this template used to build location block *}
+{if !$addBlock}
+   <div id="help">
+        {ts}Use this form to configure the location and optional contact information for the event. This information will be displayed on the Event Information page. It will also be included in online registration pages and confirmation emails if these features are enabled.{/ts}
+    </div>
+{/if}
+<div class="crm-block crm-form-block crm-event-manage-location-form-block">
 {if $addBlock}
 {include file="CRM/Contact/Form/Edit/$blockName.tpl"}
 {else}
 <div class="crm-submit-buttons">
-    {$form.buttons.html}
+   {include file="CRM/common/formButtons.tpl" location="top"}
 </div>
-<fieldset>
-    <div id="help">
-        {ts}Use this form to configure the location and optional contact information for the event. This information will be displayed on the Event Information page. It will also be included in online registration pages and confirmation emails if these features are enabled.{/ts}
-    </div>
     {if $locEvents}
     	<table class="form-layout-compressed">
-			<tr id="optionType">
+			<tr id="optionType" class="crm-event-manage-location-form-block-location_option">
 				<td class="labels">
 					{$form.location_option.label}
 				</td>
 				{foreach from=$form.location_option key=key item =item}
 					{if $key|is_numeric}
-						<td class="fields"><strong>{$item.html}</strong></td>
+						<td class="value"><strong>{$item.html}</strong></td>
 				    {/if}
                 {/foreach} 
 			 </tr>
-			<tr id="existingLoc">
+			<tr id="existingLoc" class="crm-event-manage-location-form-block-loc_event_id">
 				<td class="labels">
 					{$form.loc_event_id.label}
 				</td>
-				<td class="fields" colspan="2">
+				<td class="value" colspan="2">
 					{$form.loc_event_id.html|crmReplace:class:huge}
 				</td>
 			</tr>
@@ -78,7 +80,7 @@
     {include file="CRM/Contact/Form/Edit/Phone.tpl"} 
     </table>
 	 <table class="form-layout-compressed">
-	 <tr>
+	 <tr class="crm-event-is_show_location">
 		<td colspan="2">{$form.is_show_location.label}</td>
 		<td colspan="2">
 			{$form.is_show_location.html}<br />
@@ -86,9 +88,9 @@
 		</td>
 	</tr>
 	</table>
-</fieldset>
 <div class="crm-submit-buttons">
-    {$form.buttons.html}
+   {include file="CRM/common/formButtons.tpl" location="bottom"}
+</div>
 </div>
     
 {* Include Javascript to hide and display the appropriate blocks as directed by the php code *} 

@@ -1,7 +1,7 @@
 <?php
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -63,7 +63,7 @@ class CRM_Utils_ReCAPTCHA {
      */
     static function &singleton( ) {
         if (self::$_singleton === null ) {
-            self::$_singleton =& new CRM_Utils_ReCAPTCHA( );
+            self::$_singleton = new CRM_Utils_ReCAPTCHA( );
         }
         return self::$_singleton;
     }
@@ -77,7 +77,7 @@ class CRM_Utils_ReCAPTCHA {
      */
     function add( &$form ) {
         $error  = null;
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
         $useSSL = false;
         require_once 'packages/recaptcha/recaptchalib.php';
       
@@ -106,8 +106,8 @@ class CRM_Utils_ReCAPTCHA {
 
     }
 
-    function validate( $value, &$form ) {
-        $config =& CRM_Core_Config::singleton( );
+    function validate( $value, $form ) {
+        $config = CRM_Core_Config::singleton( );
 
         $resp = recaptcha_check_answer( $config->recaptchaPrivateKey,
                                         $_SERVER['REMOTE_ADDR'],

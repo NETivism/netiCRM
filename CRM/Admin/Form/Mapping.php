@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -50,7 +50,7 @@ class CRM_Admin_Form_Mapping extends CRM_Admin_Form
      */
     public function preProcess() {
         parent::preProcess();
-        $mapping =& new CRM_Core_DAO_Mapping(); 
+        $mapping = new CRM_Core_DAO_Mapping(); 
         $mapping->id = $this->_id;
         $mapping->find(true);
         $this->assign('mappingName', $mapping->name);

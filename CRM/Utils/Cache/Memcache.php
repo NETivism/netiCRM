@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -80,12 +80,12 @@ class CRM_Utils_Cache_Memcache {
         $this->_port    = $port;
         $this->_timeout = $timeout;
         
-        $this->_cache =& new Memcache( );
+        $this->_cache = new Memcache( );
         
         if ( ! $this->_cache->connect( $this->_host, $this->_port ) ) {
             // dont use fatal here since we can go in an infinite loop
             echo 'Could not connect to Memcached server';
-            exit( );
+            CRM_Utils_System::civiExit( );
         }
     }
 

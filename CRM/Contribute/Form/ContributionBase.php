@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -192,8 +192,8 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form
      */ 
     public function preProcess()  
     {  
-        $config  =& CRM_Core_Config::singleton( );
-        $session =& CRM_Core_Session::singleton( );
+        $config  = CRM_Core_Config::singleton( );
+        $session = CRM_Core_Session::singleton( );
 
         // current contribution page id 
         $this->_id = CRM_Utils_Request::retrieve( 'id', 'Positive',
@@ -215,7 +215,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form
             $this->_mid = CRM_Utils_Request::retrieve( 'mid', 'Positive', $this );
             if ( $this->_mid ) {
                 require_once 'CRM/Member/DAO/Membership.php';
-                $membership =& new CRM_Member_DAO_Membership( );
+                $membership = new CRM_Member_DAO_Membership( );
                 $membership->id = $this->_mid;
                 
                 if ( $membership->find(true) ) {
@@ -304,7 +304,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form
 
                 // ensure that processor has a valid config
                 $this->_paymentObject =&
-                    CRM_Core_Payment::singleton( $this->_mode, 'Contribute', $this->_paymentProcessor, $this );
+                    CRM_Core_Payment::singleton( $this->_mode, $this->_paymentProcessor, $this );
                 $error = $this->_paymentObject->checkConfig( );
                 if ( ! empty( $error ) ) {
                     CRM_Core_Error::fatal( $error );
@@ -359,10 +359,10 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form
             $pledgeBlock = CRM_Pledge_BAO_PledgeBlock::getPledgeBlock( $this->_id );
 
             if ( $pledgeBlock ) {
-                $this->_values['pledge_block_id'        ] = $pledgeBlock['id'];
-                $this->_values['max_reminders'          ] = $pledgeBlock['max_reminders'];
-                $this->_values['initial_reminder_day'   ] = $pledgeBlock['initial_reminder_day'];
-                $this->_values['additional_reminder_day'] = $pledgeBlock['additional_reminder_day'];
+                $this->_values['pledge_block_id'        ] = CRM_Utils_Array::value( 'id', $pledgeBlock );
+                $this->_values['max_reminders'          ] = CRM_Utils_Array::value( 'max_reminders', $pledgeBlock );
+                $this->_values['initial_reminder_day'   ] = CRM_Utils_Array::value( 'initial_reminder_day', $pledgeBlock );
+                $this->_values['additional_reminder_day'] = CRM_Utils_Array::value( 'additional_reminder_day', $pledgeBlock );
 
                 //set pledge id in values
                 $pledgeId = CRM_Utils_Request::retrieve( 'pledgeId', 'Positive', $this );
@@ -448,8 +448,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form
         if ( $linkText = CRM_Contribute_BAO_PCP::getPcpBlockStatus( $this->_id ) ) {
             $linkTextUrl = CRM_Utils_System::url( 'civicrm/contribute/campaign',
                                                   "action=add&reset=1&pageId={$this->_id}",
-                                                  false, null, true,
-                                                  true );
+                                                  false, null, true );
             $this->assign( 'linkTextUrl', $linkTextUrl );
             $this->assign( 'linkText', $linkText );
         }
@@ -534,6 +533,11 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form
         
         $this->_amount   = $this->get( 'amount' );
         
+        //CRM-6907
+        $config = CRM_Core_Config::singleton( );
+        $config->defaultCurrency = CRM_Utils_Array::value( 'currency', 
+                                                           $this->_values, 
+                                                           $config->defaultCurrency );
     }
 
     /** 
@@ -565,7 +569,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form
         $vars = array( 'amount', 'currencyID',
                        'credit_card_type', 'trxn_id', 'amount_level' );
  
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
         if ( isset($this->_values['is_recur']) && 
              $this->_paymentProcessor['is_recur'] ) {
             $this->assign( 'is_recur_enabled', 1 );
@@ -589,6 +593,12 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form
 
         foreach ( $vars as $v ) {
             if ( CRM_Utils_Array::value( $v, $this->_params ) ) {
+                if ( $v == 'frequency_unit' || $v == 'pledge_frequency_unit' ) {
+                    $frequencyUnits =  CRM_Core_OptionGroup::values( 'recur_frequency_units' );
+                    if ( array_key_exists( $this->_params[$v], $frequencyUnits ) ) {
+                        $this->_params[$v] = $frequencyUnits[$this->_params[$v]];
+                    }
+                }
                 $this->assign( $v, $this->_params[$v] );
             }
         }
@@ -673,7 +683,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form
         if ( $id ) {
             require_once 'CRM/Core/BAO/UFGroup.php';
             require_once 'CRM/Profile/Form.php';
-            $session =& CRM_Core_Session::singleton( );
+            $session = CRM_Core_Session::singleton( );
             $contactID = $this->_userID;
             
             // we don't allow conflicting fields to be
@@ -715,13 +725,14 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form
                     CRM_Core_Session::setStatus("Some of the profile fields cannot be configured for this page.");
                 }
                 
+                $fields = array_diff_assoc( $fields, $this->_fields );
                 $this->assign( $name, $fields );
                 
                 $addCaptcha = false;
                 foreach($fields as $key => $field) {
                     if ( $viewOnly &&
                          isset( $field['data_type'] ) &&
-                         $field['data_type'] == 'File' ) {
+                         $field['data_type'] == 'File' || ( $viewOnly && $field['name'] == 'image_URL' ) ) {
                         // ignore file upload fields
                         continue;
                     }
@@ -787,7 +798,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form
         
         //get all status
         require_once 'CRM/Contribute/PseudoConstant.php';
-        $allStatus = CRM_Contribute_PseudoConstant::contributionStatus( );
+        $allStatus = CRM_Contribute_PseudoConstant::contributionStatus( null, 'name' );
         $validStatus = array( array_search( 'Pending', $allStatus ), 
                               array_search( 'In Progress', $allStatus ),
                               array_search( 'Overdue', $allStatus ), );

@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -53,7 +53,7 @@ class CRM_Import_DataSource_CSV extends CRM_Import_DataSource
     {
         $form->add('hidden', 'hidden_dataSource', 'CRM_Import_DataSource_CSV');
 
-        $config =& CRM_Core_Config::singleton();
+        $config = CRM_Core_Config::singleton();
 
         // FIXME: why do we limit the file size to 8 MiB if it's larger in config?
         $uploadFileSize = $config->maxImportFileSize >= 8388608 ? 8388608 : $config->maxImportFileSize;
@@ -100,7 +100,7 @@ class CRM_Import_DataSource_CSV extends CRM_Import_DataSource
         $fd = fopen($file, 'r');
         if (!$fd) CRM_Core_Error::fatal("Could not read $file");
         
-        $config =& CRM_Core_Config::singleton();
+        $config = CRM_Core_Config::singleton();
         $firstrow = fgetcsv($fd, 0, $config->fieldSeparator);
         
         // create the column names from the CSV header or as col_0, col_1, etc.

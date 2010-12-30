@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -24,41 +24,64 @@
  +--------------------------------------------------------------------+
 *}
 {* this template is used for adding/editing/deleting activity type  *}
-<div class="form-item">
+<div class="crm-block crm-form-block crm-admin-optionvalue-form-block">
 <fieldset><legend>{if $action eq 1}{ts}New Option Value{/ts}{elseif $action eq 2}{ts}Edit Option Value{/ts}{else}{ts}Delete Option Value{/ts}{/if}</legend>
-  
+ <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div> 
    {if $action eq 8}
       <div class="messages status">
-        <dl>
-          <dt><img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}" /></dt>
-          <dd>    
+          <div class="icon inform-icon"></div>
           {ts}WARNING: Deleting this option value will result in the loss of all records which use the option value.{/ts} {ts}This may mean the loss of a substantial amount of data, and the action cannot be undone.{/ts} {ts}Do you want to continue?{/ts}
-          </dd>
-       </dl>
       </div>
-     {else}
-      <dl>
- 	    <dt>{$form.label.label} {if $action == 2}{include file='CRM/Core/I18n/Dialog.tpl' table='civicrm_option_value' field='label' id=$id}{/if}</dt><dd>{$form.label.html}</dd>
-        <dt>{$form.value.label}</dt><dd>{$form.value.html}</dd>
-        {if $config->languageLimit|@count >= 2}
-          <dt></dt><dd class="description">{ts}The same option value is stored for all languages. Changing this value will change it for all languages.{/ts}</dd>
+     {else}    
+      <table class="form-layout-compressed">
+        <tr class="crm-admin-optionvalue-form-block-label">
+            <td class="label">{$form.label.label} 
+              {if $action == 2}{include file='CRM/Core/I18n/Dialog.tpl' table='civicrm_option_value' field='label' id=$id}{/if}</td>
+            <td>{$form.label.html}</td>
+        </tr>    
+        <tr class="crm-admin-optionvalue-form-block-value">
+            <td class="label">{$form.value.label}</td>
+            <td>{$form.value.html}<br /> {if $config->languageLimit|@count >= 2}
+            <span class="description">{ts}The same option value is stored for all languages. Changing this value will change it for all languages.{/ts}</span> {/if} </td>
+        </tr> 
+        <tr class="crm-admin-optionvalue-form-block-name">   
+            <td class="label">{$form.name.label}</td>
+            <td>{$form.name.html}</td>
+        </tr>
+        <tr class="crm-admin-optionvalue-form-block-grouping">
+            <td class="label">{$form.grouping.label}</td>
+            <td>{$form.grouping.html}</td>
+        </tr>
+        <tr class="crm-admin-optionvalue-form-block-description">
+            <td class="label">{$form.description.label}</td>
+            <td>{$form.description.html}</td>
+        </tr>
+        <tr class="crm-admin-optionvalue-form-block-weight">
+            <td class="label">{$form.weight.label}</td>
+            <td>{$form.weight.html}</td>
+        </tr>
+        {if $form.is_default}
+        <tr class="crm-admin-optionvalue-form-block-is_default">
+            <td class="label">{$form.is_default.label}</td>
+            <td>{$form.is_default.html}</td>
+        </tr>
         {/if}
-        <dt>{$form.name.label}</dt><dd>{$form.name.html}</dd>
-        <dt>{$form.grouping.label}</dt><dd>{$form.grouping.html}</dd>
-    	<dt>{$form.description.label}</dt><dd>{$form.description.html}</dd>
-        <dt>{$form.weight.label}</dt><dd>{$form.weight.html}</dd>
-       {if $form.is_default}
-        <dt>{$form.is_default.label}</dt><dd>{$form.is_default.html}</dd>
-       {/if}
-        <dt>{$form.is_active.label}</dt><dd>{$form.is_active.html}</dd>
-        <dt>{$form.is_optgroup.label}</dt><dd>{$form.is_optgroup.html}</dd>
+        <tr class="crm-admin-optionvalue-form-block-is_active">
+            <td class="label">{$form.is_active.label}</td>
+            <td>{$form.is_active.html}</td>
+        </tr>
+        <tr class="crm-admin-optionvalue-form-block-is_optgroup">
+            <td class="label">{$form.is_optgroup.label}</td>
+            <td>{$form.is_optgroup.html}</td>
+        </tr>
        {if $form.contactOptions}{* contactOptions is exposed for email/postal greeting and addressee types to set filter for contact types *}
-        <dt>{$form.contactOptions.label}</dt><dd>{$form.contactOptions.html}</dd>
-       {/if}
-      </dl> 
+        <tr class="crm-admin-optionvalue-form-block-contactOptions">
+            <td class="label">{$form.contactOptions.label}</td>
+            <td>{$form.contactOptions.html}</td>
+        </tr>
+       {/if}  
+      </table> 
      {/if}
-    <dl>   
-      <dt></dt><dd>{$form.buttons.html}</dd>
-    </dl>
+         <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>      
 </fieldset>
 </div>

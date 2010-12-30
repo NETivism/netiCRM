@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -66,6 +66,12 @@ class CRM_Core_Transaction {
      */
     private static $_dao = null;
 
+    /**
+     * Whether commit() has been called on this instance
+     * of CRM_Core_Transaction
+     */
+    private $_pseudoCommitted = false;
+
     function __construct( ) {
         if ( ! self::$_dao ) {
             self::$_dao = new CRM_Core_DAO( );
@@ -83,7 +89,8 @@ class CRM_Core_Transaction {
     }
 
     function commit( ) {
-        if ( self::$_count > 0 ) {
+        if ( self::$_count > 0 && ! $this->_pseudoCommitted ) {
+            $this->_pseudoCommitted = TRUE;
             self::$_count--;
             
             if ( self::$_count == 0 ) {
@@ -106,6 +113,25 @@ class CRM_Core_Transaction {
 
     public function rollback( ) {
         self::$_doCommit = false;
+    }
+    
+    /**
+     * Force an immediate rollback, regardless of how many any
+     * CRM_Core_Transaction objects are waiting for
+     * pseudo-commits.
+     *
+     * Only rollback if the transaction API has been called.
+     *
+     * This is only appropriate when it is _certain_ that the
+     * callstack will not wind-down normally -- e.g. before
+     * a call to exit().
+     */
+    static public function forceRollbackIfEnabled( ) {
+        if (self::$_count > 0) {
+            self::$_dao->query( 'ROLLBACK' );
+            self::$_count = 0;
+            self::$_doCommit = true;
+        }
     }
     
     static public function willCommit( ) {

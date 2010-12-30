@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -24,43 +24,39 @@
  +--------------------------------------------------------------------+
 *}
 {* CiviCase DashBoard (launch page) *}
+
+<div class="crm-block crm-content-block">
 {if $notConfigured} {* Case types not present. Component is not configured for use. *}
     {include file="CRM/Case/Page/ConfigureError.tpl"}
 {else}
 
 {capture assign=newCaseURL}{crmURL p="civicrm/contact/view/case" q="action=add&context=standalone&reset=1"}{/capture}
 
-<div class="float-right">
-  <table class="form-layout-compressed">
-   {if $newClient}	
-    <tr>
-      <td>
-        <a href="{$newCaseURL}" class="button"><span>&raquo; {ts}New Case{/ts}</span></a>
-      </td>
-    </tr>
-   {/if}
-   {if $myCases}
-    <tr>
-      <td class="right">
-        <a href="{crmURL p="civicrm/case" q="reset=1&all=1"}"><span>&raquo; {ts}Show ALL Cases with Upcoming Activities{/ts}</span></a>
-      </td>
-    </tr>
-   {else}	
-    <tr>
-      <td class="right">
-        <a href="{crmURL p="civicrm/case" q="reset=1&all=0"}"><span>&raquo; {ts}Show My Cases with Upcoming Activities{/ts}</span></a>
-      </td>
-    </tr>
-   {/if}
-   <tr>
-     <td class="right">
-       <a href="{crmURL p="civicrm/case/search" q="reset=1&case_owner=1&force=1"}"><span>&raquo; {ts}Show My Cases{/ts}</span></a>
-     </td>
-   </tr>
-  </table>
+<div class="crm-submit-buttons">
+    {if $newClient and $allowToAddNewCase}	
+	    <a href="{$newCaseURL}" class="button"><span><div class="icon add-icon"></div> {ts}Add Case{/ts}</span></a>
+    {/if}
+    <div class="crm-case-dashboard-switch-view-buttons">
+        {if $myCases}
+            {* check for access all cases and activities *}
+            {if call_user_func(array('CRM_Core_Permission','check'), 'access all cases and activities')}
+                <a class="button" href="{crmURL p="civicrm/case" q="reset=1&all=1"}"><span>{ts}All Cases with Upcoming Activities{/ts}</span></a>
+            {/if}
+        {else}
+            <a class="button" href="{crmURL p="civicrm/case" q="reset=1&all=0"}"><span>{ts}My Cases with Upcoming Activities{/ts}</span></a>
+        {/if}
+        <a class="button" href="{crmURL p="civicrm/case/search" q="reset=1&case_owner=1&force=1"}"><span>{ts}My Cases{/ts}</span></a>
+    </div>
 </div>
 
-<h3>{ts}Summary of Case Involvement{/ts}</h3>
+
+<h3>
+{if $myCases}
+  {ts}Summary of Case Involvement{/ts}
+{else}
+  {ts}Summary of All Cases{/ts}
+{/if}
+</h3>
 <table class="report">
   <tr class="columnheader">
     <th>&nbsp;</th>
@@ -69,7 +65,7 @@
     {/foreach}
   </tr>
   {foreach from=$casesSummary.rows item=row key=caseType}
-   <tr>
+   <tr class="crm-case-caseStatus">
    <th><strong>{$caseType}</strong></th>
    {foreach from=$casesSummary.headers item=header}
     {assign var="caseStatus" value=$header.status}
@@ -86,8 +82,10 @@
 </table>
 {capture assign=findCasesURL}<a href="{crmURL p="civicrm/case/search" q="reset=1"}">{ts}Find Cases{/ts}</a>{/capture}
 
+<span id='fileOnCaseStatusMsg' style="display:none;"></span><!-- Displays status from copy to case -->
+
 <div class="spacer"></div>
-    <h2>{if $myCases}{ts}My Cases With Upcoming Activities{/ts}{else}{ts}All Cases With Upcoming Activities{/ts}{/if}</h2>
+    <h3>{if $myCases}{ts}My Cases With Upcoming Activities{/ts}{else}{ts}All Cases With Upcoming Activities{/ts}{/if}</h3>
     {if $upcomingCases}
     <div class="form-item">
         {include file="CRM/Case/Page/DashboardSelector.tpl" context="dashboard" list="upcoming" rows=$upcomingCases}
@@ -99,7 +97,7 @@
     {/if}
 
 <div class="spacer"></div>
-    <h2>{if $myCases}{ts}My Cases With Recently Performed Activities{/ts}{else}{ts}All Cases With Recently Performed Activities{/ts}{/if}</h2>
+    <h3>{if $myCases}{ts}My Cases With Recently Performed Activities{/ts}{else}{ts}All Cases With Recently Performed Activities{/ts}{/if}</h3>
     {if $recentCases}
     <div class="form-item">
         {include file="CRM/Case/Page/DashboardSelector.tpl" context="dashboard" list="recent" rows=$recentCases}
@@ -109,10 +107,5 @@
 	    {ts 1=$findCasesURL}There are no cases with activities scheduled in the past two weeks. Use %1 to expand your search.{/ts}
         </div>
     {/if}
-
-    {*include activity view js file*}
-    {include file="CRM/common/activityView.tpl"}
-    <div id="view-activity">
-        <div id="activity-content"></div>
-    </div>
 {/if}
+</div>

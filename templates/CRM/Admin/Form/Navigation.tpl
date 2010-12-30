@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -24,22 +24,34 @@
  +--------------------------------------------------------------------+
 *}
 {* this template is used for adding/editing CiviCRM Menu *}
-<div class="form-item">
-<div class="crm-submit-buttons">
-    {$form.buttons.html}
-</div>
+<div class="crm-block crm-form-block crm-navigation-form-block">
+<div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>
 <fieldset><legend>{if $action eq 1}{ts}New Menu{/ts}{elseif $action eq 2}{ts}Edit Menu{/ts}{else}{ts}Delete Menu{/ts}{/if}</legend>
 <table class="form-layout-compressed">
-    <tr><td class="label">{$form.label.label}</td><td>{$form.label.html}</td></tr>
-    <tr><td class="label">{$form.url.label}</td><td>{$form.url.html} {help id="id-menu_url" file="CRM/Admin/Form/Navigation.hlp"}</td></tr>
-    <tr><td class="label">{$form.parent_id.label}</td><td>{$form.parent_id.html} {help id="id-parent" file="CRM/Admin/Form/Navigation.hlp"}</td></tr>
-    <tr><td class="label">{$form.has_separator.label}</td><td>{$form.has_separator.html} {help id="id-has_separator" file="CRM/Admin/Form/Navigation.hlp"}</td></tr>
-    <tr><td class="label">{$form.permission.label}<br />{help id="id-menu_permission" file="CRM/Admin/Form/Navigation.hlp"}</td><td>{$form.permission.html}</td></tr>
-    <tr><td class="label">&nbsp;</td><td>{$form.permission_operator.html}&nbsp;{$form.permission_operator.label} {help id="id-permission_operator" file="CRM/Admin/Form/Navigation.hlp"}</td></tr>
-    <tr><td class="label">{$form.is_active.label}</td><td>{$form.is_active.html}</td></tr>
+    <tr class="crm-navigation-form-block-label">
+        <td class="label">{$form.label.label}</td><td>{$form.label.html}</td>
+    </tr>
+    <tr class="crm-navigation-form-block-url">
+        <td class="label">{$form.url.label}</td><td>{$form.url.html} {help id="id-menu_url" file="CRM/Admin/Form/Navigation.hlp"}</td>
+    </tr>
+    { if $form.parent_id.html }
+    <tr class="crm-navigation-form-block-parent_id">
+        <td class="label">{$form.parent_id.label}</td><td>{$form.parent_id.html} {help id="id-parent" file="CRM/Admin/Form/Navigation.hlp"}</td>
+    </tr>
+    {/if}
+    <tr class="crm-navigation-form-block-has_separator">
+        <td class="label">{$form.has_separator.label}</td><td>{$form.has_separator.html} {help id="id-has_separator" file="CRM/Admin/Form/Navigation.hlp"}</td>
+    </tr>
+    <tr class="crm-navigation-form-block-permission">
+        <td class="label">{$form.permission.label}{help id="id-menu_permission" file="CRM/Admin/Form/Navigation.hlp"}</td><td>{$form.permission.html}</td>
+    </tr>
+    <tr class="crm-navigation-form-block-permission_operator">
+        <td class="label">&nbsp;</td><td>{$form.permission_operator.html}&nbsp;{$form.permission_operator.label} {help id="id-permission_operator" file="CRM/Admin/Form/Navigation.hlp"}</td>
+    </tr>
+    <tr class="crm-navigation-form-block-is_active">
+        <td class="label">{$form.is_active.label}</td><td>{$form.is_active.html}</td>
+    </tr>
 </table>   
 </fieldset>
-<div class="crm-submit-buttons">
-    {$form.buttons.html}
-</div>
+<div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
 </div>

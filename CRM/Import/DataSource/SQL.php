@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -55,7 +55,7 @@ class CRM_Import_DataSource_SQL extends CRM_Import_DataSource
         $form->addFormRule(array('CRM_Import_DataSource_SQL', 'formRule'), $form);
     }
 
-    static function formRule(&$fields, &$files, &$form)
+    static function formRule( $fields, $files, $form)
     {
         $errors = array();
 

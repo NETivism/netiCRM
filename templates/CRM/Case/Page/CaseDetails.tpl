@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -30,6 +30,7 @@
       <th>{ts}Date{/ts}</th>
       <th>{ts}Subject{/ts}</th>
       <th>{ts}Type{/ts}</th>
+      <th>{ts}With{/ts}</th>
       <th>{ts}Reporter / Assignee{/ts}</th>
       <th>{ts}Status{/ts}</th>
       <th></th>
@@ -38,11 +39,12 @@
     {counter start=0 skip=1 print=false}
     {foreach from=$rows item=row}
     <tr class="{$row.class}">
-      <td>{$row.display_date}</td>
-      <td>{$row.subject}</td>
-      <td>{$row.type}</td>
-      <td>{$row.reporter}</td>
-      <td>{$row.status}</td>
+      <td class="crm-case-display_date">{$row.display_date}</td>
+      <td class="crm-case-subject">{$row.subject}</td>
+      <td class="crm-case-type">{$row.type}</td>
+      <td class="crm-case-with_contacts">{$row.with_contacts}</td>
+      <td class="crm-case-reporter">{$row.reporter}</td>
+      <td class="crm-case-status">{$row.status}</td>
       <td style="white-space: nowrap;">{$row.links}</td>
     </tr>
     {/foreach}
@@ -52,3 +54,5 @@
     <strong>{ts}There are no activities defined for this case.{/ts}</strong>
 {/if}
 {/strip}
+
+{include file="CRM/Case/Form/ActivityToCase.tpl"}

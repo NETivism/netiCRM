@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -36,20 +36,22 @@
                 <th class="right">{ts}Qty{/ts}</th>
                 <th class="right">{ts}Unit Price{/ts}</th>
                 <th class="right">{ts}Total Price{/ts}</th>
+	 {if $pricesetFieldsCount}<th class="right">{ts}Total Participants{/ts}</th>{/if} 
             </tr>
                 {foreach from=$value item=line}
             <tr>
-                <td>{$line.description}</td>
+                <td>{if $line.html_type eq 'Text'}{$line.label}{else}{$line.field_title} - {$line.label}{/if} {if $line.description}<div class="description">{$line.description}</div>{/if}</td>
                 <td class="right">{$line.qty}</td>
                 <td class="right">{$line.unit_price|crmMoney}</td>
                 <td class="right">{$line.line_total|crmMoney}</td>
+         {if $pricesetFieldsCount}<td class="right">{$line.participant_count}</td> {/if}
             </tr>
             {/foreach}
     </table>
     {/if}
 {/foreach}
 
-<div class="section no-label total_amount-section">
+<div class="crm-section no-label total_amount-section">
     <div class="content bold">
         {if $context EQ "Contribution"}
             {ts}Contribution Total{/ts}:
@@ -58,11 +60,29 @@
         {/if}
     {$totalAmount|crmMoney}
     </div>
-    <div class="clear"></div>
+    <div class="content bold">
+      {if $pricesetFieldsCount}
+      {ts}Total Participants{/ts}:
+      {foreach from=$lineItem item=pcount}
+        {if $pcount neq 'skip'}
+        {assign var="lineItemCount" value=0}
+	
+        {foreach from=$pcount item=p_count}
+          {assign var="lineItemCount" value=$lineItemCount+$p_count.participant_count}
+        {/foreach}
+        {if $lineItemCount < 1 }
+      	  {assign var="lineItemCount" value=1}
+        {/if}
+        {assign var="totalcount" value=$totalcount+$lineItemCount}
+        {/if} 
+      {/foreach}
+      {$totalcount}
+      {/if}
+     </div>    
 </div>
 
 {if $hookDiscount.message}
-    <div class="section hookDiscount-section">
+    <div class="crm-section hookDiscount-section">
         <em>({$hookDiscount.message})</em>
     </div>
 {/if}

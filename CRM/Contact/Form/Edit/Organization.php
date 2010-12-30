@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -64,14 +64,6 @@ class CRM_Contact_Form_Edit_Organization
 
         // sic_code
         $form->addElement('text', 'sic_code', ts('SIC Code'), $attributes['sic_code']);
-
-        // home_URL
-        $form->addElement('text', 'home_URL', ts('Website'),
-                          array_merge( CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Contact', 'home_URL'),
-                                       array('onfocus' => "if (!this.value) this.value='http://'; else return false",
-                                             'onblur' => "if ( this.value == 'http://') this.value=''; else return false")
-                                       ));
-        $form->addRule('home_URL', ts('Enter a valid Website.'), 'url');
         
         $form->addElement('text', 'contact_source', ts('Source'));
         $form->add('text', 'external_identifier', ts('External Id'), CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Contact', 'external_identifier'), false);
@@ -81,7 +73,7 @@ class CRM_Contact_Form_Edit_Organization
 			array( 'CRM_Contact_DAO_Contact', $form->_contactId, 'external_identifier' ) );
     }
 
-    static function formRule( &$fields ,&$files, $contactID = null ) {
+    static function formRule( $fields, $files, $contactID = null ) {
        
         $errors = array( );
         

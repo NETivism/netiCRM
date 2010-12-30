@@ -101,7 +101,7 @@ define('_CRM_PROCESS_AUTHORIZE_REPORT_DEBUG', false);
 
 require_once '../civicrm.config.php';
 require_once 'CRM/Core/Config.php';
-require_once 'api/crm.php';
+require_once 'api/v2/utils.php';
 require_once 'CRM/Core/Payment/AuthorizeNet.php';
 
 require_once 'CRM/Core/DAO.php';
@@ -148,11 +148,16 @@ class CRM_ProcessAuthorizeReport {
     var $email_conn = false;
 
     var $_debug = false;
-
+    
     function CRM_ProcessAuthorizeReport( ) {
-        _crm_initialize( );
+        _civicrm_initialize( );
 
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
+        
+        //load bootstrap to call hooks
+        require_once 'CRM/Utils/System.php';
+        CRM_Utils_System::loadBootStrap(  );
+        
         $config->userFramework          = 'Soap';
         $config->userFrameworkClass     = 'CRM_Utils_System_Soap';
         $config->userHookClass          = 'CRM_Utils_Hook_Soap';
@@ -465,7 +470,7 @@ class CRM_ProcessAuthorizeReport {
 
         $msg = imap_mail_compose( $envelope, $body );
 
-        list( $t_header, $t_body ) = split( "\r\n\r\n", $msg, 2 );
+        list( $t_header, $t_body ) = preg_split( "/\r\n\r\n/", $msg, 2 );
         $t_header = str_replace( "\r", '', $t_header );
 
         $success = imap_mail( _CRM_PROCESS_AUTHORIZE_REPORT_SUMMARY_TO_EMAIL, 'Authorize.net Report Processesing Summary', $t_body, $t_header );
@@ -511,9 +516,9 @@ class CRM_ProcessAuthorizeReport {
             $custLastName         = $row[9];
             $contributionStatus   = $row[10];
 
-            $recur =& new CRM_Contribute_DAO_ContributionRecur( );
+            $recur = new CRM_Contribute_DAO_ContributionRecur( );
             
-            $first_contribution =& new CRM_Contribute_DAO_Contribution( );
+            $first_contribution = new CRM_Contribute_DAO_Contribution( );
             
             // If this is the first payment, load recurring contribution and update
             if ( $paymentNum == 1 ) {
@@ -543,7 +548,7 @@ class CRM_ProcessAuthorizeReport {
                 $first_contribution->contribution_status_id = $this->_get_contribution_status( $contributionStatus );
 
                 // load contribution page
-                $contribution_page =& new CRM_Contribute_DAO_ContributionPage( );
+                $contribution_page = new CRM_Contribute_DAO_ContributionPage( );
                 $contribution_page->id = $first_contribution->contribution_page_id;
                 if ( !$contribution_page->find( true) ) {
                     $this->_addToSummary("COULD NOT FIND CONTRIBUTION PAGE FOR $subscriptionId. PLEASE REVIEW $csv_name");
@@ -573,7 +578,7 @@ class CRM_ProcessAuthorizeReport {
                 }
                 
                 // load contribution page
-                $contribution_page =& new CRM_Contribute_DAO_ContributionPage( );
+                $contribution_page = new CRM_Contribute_DAO_ContributionPage( );
                 $contribution_page->id = $first_contribution->contribution_page_id;
                 if ( !$contribution_page->find( true) ) {
                     $this->_addToSummary("COULD NOT FIND CONTRIBUTION PAGE FOR $subscriptionId. PLEASE REVIEW $csv_name");
@@ -641,7 +646,7 @@ class CRM_ProcessAuthorizeReport {
             }
             else {
                 // create a contribution and then get it processed
-                $contribution =& new CRM_Contribute_DAO_Contribution( );
+                $contribution = new CRM_Contribute_DAO_Contribution( );
 
                 // make sure that the transaction doesn't already exist
                 $contribution->trxn_id = $transactionId;

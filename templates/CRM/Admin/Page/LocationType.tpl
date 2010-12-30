@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -29,7 +29,7 @@
 
 {if $action eq 1 or $action eq 2 or $action eq 8}
    {include file="CRM/Admin/Form/LocationType.tpl"}
-{/if}
+{else}
 
 {if $rows}
 <div id="ltype">
@@ -49,12 +49,12 @@
     </tr>
     </thead>
     {foreach from=$rows item=row}
-    <tr id="row_{$row.id}"class="{cycle values="odd-row,even-row"} {$row.class}{if NOT $row.is_active} disabled{/if}">
-        <td>{$row.name}</td>	
-        <td>{$row.vcard_name}</td>	
-        	<td>{$row.description}</td>
-        <td id="row_{$row.id}_status">{if $row.is_active eq 1} {ts}Yes{/ts} {else} {ts}No{/ts} {/if}</td>
-        	<td>{if $row.is_default eq 1}<img src="{$config->resourceBase}/i/check.gif" alt="{ts}Default{/ts}" />{/if}&nbsp;</td>
+    <tr id="row_{$row.id}"class="{cycle values="odd-row,even-row"} {$row.class} crm-locationType {if NOT $row.is_active} disabled{/if}">
+        <td class="crm-locationType-name">{$row.name}</td>	
+        <td class="crm-locationType-vcard_name">{$row.vcard_name}</td>	
+      	<td class="crm-locationType-description">{$row.description}</td>
+        <td id="row_{$row.id}_status" class="crm-locationType-is_active">{if $row.is_active eq 1} {ts}Yes{/ts} {else} {ts}No{/ts} {/if}</td>
+      	<td class="crm-locationType-is_default" >{if $row.is_default eq 1}<img src="{$config->resourceBase}/i/check.gif" alt="{ts}Default{/ts}" />{/if}&nbsp;</td>
         <td>{$row.action|replace:'xx':$row.id}</td>
     </tr>
     {/foreach}
@@ -69,10 +69,9 @@
 </div>
 {else}
     <div class="messages status">
-    <dl>
-        <dt><img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}"/></dt>
+          <img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}"/>
         {capture assign=crmURL}{crmURL p='civicrm/admin/locationType' q="action=add&reset=1"}{/capture}
-        <dd>{ts 1=$crmURL}There are no Location Types entered for this Contact. You can <a href='%1'>add one</a>.{/ts}</dd>
-        </dl>
+        {ts 1=$crmURL}There are no Location Types entered for this Contact. You can <a href='%1'>add one</a>.{/ts}
     </div>    
+{/if}
 {/if}

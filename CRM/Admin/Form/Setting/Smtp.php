@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -53,7 +53,7 @@ class CRM_Admin_Form_Setting_Smtp extends CRM_Admin_Form_Setting
      */
     public function buildQuickForm( ) {
         
-        $outBoundOption = array( '0' => ts('SMTP'), '1' => ts('Sendmail'), '2' => ts('Disable Outbound Email') );        
+        $outBoundOption = array( '3' => ts('mail()'), '0' => ts('SMTP'), '1' => ts('Sendmail'), '2' => ts('Disable Outbound Email') );        
         $this->addRadio('outBound_option', ts('Select Mailer'),  $outBoundOption );
 
         CRM_Utils_System::setTitle(ts('Settings - Outbound Mail'));
@@ -88,7 +88,7 @@ class CRM_Admin_Form_Setting_Smtp extends CRM_Admin_Form_Setting
             if ( $formValues['outBound_option'] == 2 ) {
                 CRM_Core_Session::setStatus( ts('You have selected "Disable Outbound Email". A test email can not be sent.') );
             } else {
-                $session =& CRM_Core_Session::singleton( );
+                $session = CRM_Core_Session::singleton( );
                 $userID  =  $session->get( 'userID' );
                 require_once 'CRM/Contact/BAO/Contact.php';
                 list( $toDisplayName, $toEmail, $toDoNotEmail ) = CRM_Contact_BAO_Contact::getContactDetails( $userID );
@@ -136,7 +136,12 @@ class CRM_Admin_Form_Setting_Smtp extends CRM_Admin_Form_Setting
                     $params['sendmail_path'] = $formValues['sendmail_path'];
                     $params['sendmail_args'] = $formValues['sendmail_args'];
                     $mailerName = 'sendmail';
-                }
+                } elseif ($formValues['outBound_option'] == 3) {
+                    $subject = "Test for PHP mail settings";
+                    $message = "mail settings are correct.";
+                    $mailerName = 'mail';
+                    
+                } 
 
                 $headers = array(   
                                  'From'                      => $from,
@@ -156,7 +161,7 @@ class CRM_Admin_Form_Setting_Smtp extends CRM_Admin_Form_Setting
                 }
             }
         } 
-        $mailingDomain =& new CRM_Core_DAO_Preferences();
+        $mailingDomain = new CRM_Core_DAO_Preferences();
         $mailingDomain->domain_id  = CRM_Core_Config::domainID( );
         $mailingDomain->is_domain  = true;
         $mailingDomain->find(true);
@@ -184,7 +189,7 @@ class CRM_Admin_Form_Setting_Smtp extends CRM_Admin_Form_Setting
      * @static
      * @access  public
      */
-    static function formRule( &$fields ) 
+    static function formRule( $fields ) 
     {
         if ($fields['outBound_option'] == 0) {
             if ( !$fields['smtpServer'] ) {
@@ -227,7 +232,7 @@ class CRM_Admin_Form_Setting_Smtp extends CRM_Admin_Form_Setting
             $this->_defaults = array( );
 
             require_once "CRM/Core/DAO/Preferences.php";
-            $mailingDomain =& new CRM_Core_DAO_Preferences();
+            $mailingDomain = new CRM_Core_DAO_Preferences();
             $mailingDomain->find(true);
             if ( $mailingDomain->mailing_backend ) {
                 $this->_defaults = unserialize( $mailingDomain->mailing_backend );

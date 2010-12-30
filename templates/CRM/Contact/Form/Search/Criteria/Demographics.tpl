@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -44,7 +44,7 @@
       <tr>
          <td>
             {$form.gender.label}<br />
-            {$form.gender.html} &nbsp;<a href="#" title="unselect" onclick="unselectRadio('gender', 'Advanced'); return false;" >unselect</a>
+            {$form.gender.html}<span class="crm-clear-link">(<a href="#" title="unselect" onclick="unselectRadio('gender', 'Advanced'); return false;" >{ts}clear{/ts}</a>)</span>
          </td>
       </tr>
     </table>            

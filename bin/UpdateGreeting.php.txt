@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                               |
+ | CiviCRM version 3.3                                               |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -44,10 +44,13 @@ class CRM_UpdateGreeting {
     {
         $this->initialize( );
 
-        $config =& CRM_Core_Config::singleton();
+        $config = CRM_Core_Config::singleton();
 
         // this does not return on failure
         CRM_Utils_System::authenticateScript( true );
+
+        //log the execution time of script
+        CRM_Core_Error::debug_log_message( 'UpdateGreeting.php');
     }
 
     function initialize( ) 
@@ -61,7 +64,7 @@ class CRM_UpdateGreeting {
     
     public function updateGreeting( )
     {
-	    $config =& CRM_Core_Config::singleton();
+	    $config = CRM_Core_Config::singleton();
         $contactType = CRM_Utils_Request::retrieve( 'ct', 'String', CRM_Core_DAO::$_nullArray, false, null, 'REQUEST' );
         if ( ! in_array( $contactType,
                          array( 'Individual', 'Household', 'Organization' ) ) ) {
@@ -208,6 +211,6 @@ UPDATE civicrm_contact
     }
   }
 
-$obj =& new CRM_UpdateGreeting( );
+$obj = new CRM_UpdateGreeting( );
 $obj->updateGreeting( );
 echo "\n\n Greeting is updated for contact(s). (Done) \n";

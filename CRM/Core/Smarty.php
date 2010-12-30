@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -74,10 +74,11 @@ class CRM_Core_Smarty extends Smarty {
     function __construct( ) {
         parent::__construct( );
 
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
 
         if ( isset( $config->customTemplateDir ) && $config->customTemplateDir ) {
-            $this->template_dir = array( $config->customTemplateDir, $config->templateDir );
+            $this->template_dir = array_merge( array( $config->customTemplateDir ),
+                                               $config->templateDir );
         } else {
             $this->template_dir = $config->templateDir;
         }
@@ -90,10 +91,27 @@ class CRM_Core_Smarty extends Smarty {
             $this->use_sub_dirs = true;
         }
 
-        $this->plugins_dir  = array ( $config->smartyDir . 'plugins', $config->pluginsDir );
+        $customPluginsDir = null;
+        if ( isset( $config->customPHPPathDir ) ) {
+            $customPluginsDir = 
+                $config->customPHPPathDir . DIRECTORY_SEPARATOR .
+                'CRM'         . DIRECTORY_SEPARATOR . 
+                'Core'        . DIRECTORY_SEPARATOR .
+                'Smarty'      . DIRECTORY_SEPARATOR .
+                'plugins'     . DIRECTORY_SEPARATOR ;
+            if ( ! file_exists( $customPluginsDir ) ) {
+                $customPluginsDir = null;
+            }
+        }
+
+        if ( $customPluginsDir ) {
+            $this->plugins_dir  = array ( $customPluginsDir, $config->smartyDir . 'plugins', $config->pluginsDir );
+        } else {
+            $this->plugins_dir  = array ( $config->smartyDir . 'plugins', $config->pluginsDir );
+        }
 
         // add the session and the config here
-        $session =& CRM_Core_Session::singleton();
+        $session = CRM_Core_Session::singleton();
 
         $this->assign_by_ref( 'config'        , $config  );
         $this->assign_by_ref( 'session'       , $session );
@@ -109,8 +127,12 @@ class CRM_Core_Smarty extends Smarty {
         $this->assign( 'defaultWysiwygEditor', $defaultWysiwygEditor );
  
         global $tsLocale;
-        $this->assign('langSwitch', CRM_Core_I18n::languages(true));
         $this->assign('tsLocale',   $tsLocale);
+        
+        // CRM-7163 hack: we don’t display langSwitch on upgrades anyway
+        if ( CRM_Utils_Array::value( $config->userFrameworkURLVar, $_REQUEST ) != 'civicrm/upgrade' ) {
+            $this->assign('langSwitch', CRM_Core_I18n::languages(true));
+        }
         
         //check if logged in use has access CiviCRM permission and build menu
         require_once 'CRM/Core/Permission.php';
@@ -140,7 +162,7 @@ class CRM_Core_Smarty extends Smarty {
      */
     static function &singleton( ) {
         if ( ! isset( self::$_singleton ) ) {
-            $config =& CRM_Core_Config::singleton( );
+            $config = CRM_Core_Config::singleton( );
             self::$_singleton = new CRM_Core_Smarty( $config->templateDir, $config->templateCompileDir );
         }
         return self::$_singleton;

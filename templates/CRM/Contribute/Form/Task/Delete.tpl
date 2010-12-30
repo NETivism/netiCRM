@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -25,13 +25,9 @@
 *}
 {* Confirmation of contribution deletes  *}
 <div class="messages status">
-  <dl>
-    <dt><img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}" /></dt>
-    <dd>
+    <div class="icon inform-icon"></div>
         <p>{ts}Are you sure you want to delete the selected contributions? This delete operation cannot be undone and will delete all transactions and activity associated with these contributions.{/ts}</p>
         <p>{include file="CRM/Contribute/Form/Task.tpl"}</p>
-    </dd>
-  </dl>
 </div>
 <p>
 <div class="form-item">

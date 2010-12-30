@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -23,12 +23,13 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
-<div class="form-item">
-<fieldset>
-    <legend>{ts}Add Contacts to a Group{/ts}</legend>
+<div class="crm-block crm-form-block crm-contact-task-addtogroup-form-block">
 <table class="form-layout">
     {if $group.id}
-       <tr><td class="label">{ts}Group{/ts}</td><td>{$form.group_id.html}</td></tr>
+       <tr class="crm-contact-task-addtogroup-form-block-group_id">
+          <td class="label">{ts}Group{/ts}</td>
+          <td>{$form.group_id.html}</td>
+       </tr>
     {else}
         <tr><td>{$form.group_option.html}</td></tr>
         <tr id="id_existing_group">
@@ -41,10 +42,18 @@
         <tr id="id_new_group" class="html-adjust">
             <td>
                 <table class="form-layout">
-                <tr><td class="label">{$form.title.label}<span class="marker">*</span></td><td>{$form.title.html}</td><tr>
-                <tr><td class="label">{$form.description.label}</td><td>{$form.description.html}</td></tr>
+                <tr class="crm-contact-task-addtogroup-form-block-title">
+                   <td class="label">{$form.title.label}<span class="marker">*</span></td>
+                   <td>{$form.title.html}</td>
+                <tr>
+                <tr class="crm-contact-task-addtogroup-form-block-description">
+                   <td class="label">{$form.description.label}</td>
+                   <td>{$form.description.html}</td></tr>
                 {if $form.group_type}
-                    <tr><td class="label">{$form.group_type.label}</td><td>{$form.group_type.html}</td></tr>
+                <tr class="crm-contact-task-addtogroup-form-block-group_type">
+		    <td class="label">{$form.group_type.label}</td>
+                    <td>{$form.group_type.html}</td>
+                </tr>
                 {/if}
                 </table>
             </td>
@@ -53,11 +62,9 @@
 </table>
 <table class="form-layout">
         <tr><td>{include file="CRM/Contact/Form/Task.tpl"}</td></tr>
-        <tr><td>{$form.buttons.html}</td></tr>       
 </table>
-</fieldset>
+<div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
 </div>
-
 {include file="CRM/common/showHide.tpl"}
 
 {if !$group.id}

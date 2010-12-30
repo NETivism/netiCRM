@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -86,13 +86,18 @@ class CRM_Member_Form_Task extends CRM_Core_Form
      */
     function preProcess( ) 
     {
-        $this->_memberIds = array();
+        self::preProcessCommon( $this );
+    }
 
-        $values = $this->controller->exportValues( 'Search' );
+    static function preProcessCommon( &$form, $useTable = false )
+    {
+        $form->_memberIds = array();
+
+        $values = $form->controller->exportValues( 'Search' );
         
-        $this->_task = $values['task'];
+        $form->_task = $values['task'];
         $memberTasks = CRM_Member_Task::tasks();
-        $this->assign( 'taskName', $memberTasks[$this->_task] );
+        $form->assign( 'taskName', $memberTasks[$form->_task] );
 
         $ids = array();
         if ( $values['radio_ts'] == 'ts_sel' ) {
@@ -102,8 +107,8 @@ class CRM_Member_Form_Task extends CRM_Core_Form
                 }
             }
         } else {
-            $queryParams =  $this->get( 'queryParams' );
-            $query       =& new CRM_Contact_BAO_Query( $queryParams, null, null, false, false, 
+            $queryParams =  $form->get( 'queryParams' );
+            $query       = new CRM_Contact_BAO_Query( $queryParams, null, null, false, false, 
                                                        CRM_Contact_BAO_Query::MODE_MEMBER);
             $result = $query->searchQuery(0, 0, null);
 
@@ -113,17 +118,23 @@ class CRM_Member_Form_Task extends CRM_Core_Form
         }
         
         if ( ! empty( $ids ) ) {
-            $this->_componentClause =
+            $form->_componentClause =
                 ' civicrm_membership.id IN ( ' .
                 implode( ',', $ids ) . ' ) ';
-            $this->assign( 'totalSelectedMembers', count( $ids ) );
+            $form->assign( 'totalSelectedMembers', count( $ids ) );
         }
         
-        $this->_memberIds = $this->_componentIds = $ids;
+        $form->_memberIds = $form->_componentIds = $ids;
 
         //set the context for redirection for any task actions
-        $session =& CRM_Core_Session::singleton( );
-        $session->replaceUserContext( CRM_Utils_System::url( 'civicrm/member/search', 'force=1' ) );
+        $session = CRM_Core_Session::singleton( );
+        
+        $qfKey = CRM_Utils_Request::retrieve( 'qfKey', 'String', $form );
+        require_once 'CRM/Utils/Rule.php';
+        $urlParams = 'force=1';
+        if ( CRM_Utils_Rule::qfKey( $qfKey ) ) $urlParams .= "&qfKey=$qfKey";
+        
+        $session->replaceUserContext( CRM_Utils_System::url( 'civicrm/member/search', $urlParams ) );
     }
 
     /**

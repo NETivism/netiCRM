@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -58,7 +58,7 @@ class CRM_Admin_Page_Admin extends CRM_Core_Page
                          'Manage'       => ts( 'Manage'    ),
                          'Option Lists' => ts( 'Option Lists' ) );
 
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
         if ( in_array("CiviContribute", $config->enableComponents) ) {
             $groups['CiviContribute'] = ts( 'CiviContribute' );
         }
@@ -83,11 +83,15 @@ class CRM_Admin_Page_Admin extends CRM_Core_Page
             $groups['CiviReport'] = ts( 'CiviReport' );
         }
 
+        if ( in_array("CiviCampaign", $config->enableComponents) ) {
+            $groups['CiviCampaign'] = ts( 'CiviCampaign' );
+        }
+
         require_once 'CRM/Core/Menu.php';
         $values =& CRM_Core_Menu::getAdminLinks( );
         
         require_once 'CRM/Core/ShowHideBlocks.php';
-        $this->_showHide =& new CRM_Core_ShowHideBlocks( );
+        $this->_showHide = new CRM_Core_ShowHideBlocks( );
         foreach ( $groups as $group => $title) {
             $this->_showHide->addShow( "id_{$group}_show" );
             $this->_showHide->addHide( "id_{$group}" );

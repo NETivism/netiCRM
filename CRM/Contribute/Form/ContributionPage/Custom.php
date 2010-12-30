@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -160,14 +160,14 @@ class CRM_Contribute_Form_ContributionPage_Custom extends CRM_Contribute_Form_Co
      * @access public  
      * @static  
      */  
-    static function formRule( &$fields, &$files, $contributionPageId ) 
+    static function formRule( $fields, $files, $contributionPageId ) 
     {  
         $errors = array( );  
         $preProfileType = $postProfileType = null;
         // for membership profile make sure Membership section is enabled
         // get membership section for this contribution page
         require_once 'CRM/Member/DAO/MembershipBlock.php';
-        $dao =& new CRM_Member_DAO_MembershipBlock();
+        $dao = new CRM_Member_DAO_MembershipBlock();
         $dao->entity_table = 'civicrm_contribution_page';
         $dao->entity_id    = $contributionPageId; 
         

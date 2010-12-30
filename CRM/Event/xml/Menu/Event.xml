@@ -127,12 +127,57 @@
      <weight>820</weight>
   </item>
   <item>
+     <path>civicrm/event/badge</path>
+     <title>Print Event Name Badge</title>
+     <page_callback>CRM_Event_Form_Task_Badge</page_callback>
+     <access_arguments>access CiviEvent</access_arguments>
+  </item>
+  <item>
+     <path>civicrm/event/manage/eventInfo</path>
+     <title>Event Info and Settings</title>
+     <page_callback>CRM_Event_Form_ManageEvent_EventInfo</page_callback>
+     <access_arguments>access CiviEvent</access_arguments>
+     <is_ssl>true</is_ssl>
+     <weight>910</weight>
+  </item>
+  <item>
+     <path>civicrm/event/manage/location</path>
+     <title>Event Location</title>
+     <page_callback>CRM_Event_Form_ManageEvent_Location</page_callback>
+     <access_arguments>access CiviEvent</access_arguments>
+     <is_ssl>true</is_ssl>
+     <weight>930</weight>
+  </item>
+  <item>
+     <path>civicrm/event/manage/fee</path>
+     <title>Event Fees</title>
+     <page_callback>CRM_Event_Form_ManageEvent_Fee</page_callback>
+     <access_arguments>access CiviEvent</access_arguments>
+     <is_ssl>true</is_ssl>
+     <weight>920</weight>
+  </item>
+  <item>
+     <path>civicrm/event/manage/registration</path>
+     <title>Event Online Registration</title>
+     <page_callback>CRM_Event_Form_ManageEvent_Registration</page_callback>
+     <access_arguments>access CiviEvent</access_arguments>
+     <is_ssl>true</is_ssl>
+     <weight>930</weight>
+  </item>
+  <item>
+     <path>civicrm/event/manage/friend</path>
+     <title>Tell a Friend</title>
+     <page_callback>CRM_Friend_Form_Event</page_callback>
+     <access_arguments>access CiviEvent</access_arguments>
+     <is_ssl>true</is_ssl>
+     <weight>940</weight>
+  </item>
+  <item>
      <path>civicrm/event/add</path>
      <path_arguments>action=add</path_arguments>
      <title>New Event</title>
-     <page_callback>CRM_Event_Page_ManageEvent</page_callback>
+     <page_callback>CRM_Event_Form_ManageEvent_EventInfo</page_callback>
      <access_arguments>access CiviEvent</access_arguments>
-     <page_type>1</page_type>
      <weight>830</weight>
   </item>
   <item>
@@ -182,6 +227,11 @@
   <item>
      <path>civicrm/ajax/locBlock</path>
      <page_callback>CRM_Core_Page_AJAX_Location::getLocBlock</page_callback>
+     <access_arguments>access CiviCRM,access CiviEvent</access_arguments>
+  </item>
+  <item>
+     <path>civicrm/ajax/eventlist</path>
+     <page_callback>CRM_Event_Page_AJAX::eventList</page_callback>
      <access_arguments>access CiviCRM,access CiviEvent</access_arguments>
   </item>
 </menu>

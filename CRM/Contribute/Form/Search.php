@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -145,6 +145,8 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form
      */ 
     function preProcess( ) 
     {
+        $this->set( 'searchFormName', 'Search' );
+
         /** 
          * set the button names 
          */ 
@@ -198,12 +200,12 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form
 
         require_once 'CRM/Contact/BAO/Query.php';
         $this->_queryParams =& CRM_Contact_BAO_Query::convertFormValues( $this->_formValues );
-        $selector =& new CRM_Contribute_Selector_Search( $this->_queryParams,
-                                                         $this->_action,
-                                                         null,
-                                                         $this->_single,
-                                                         $this->_limit,
-                                                         $this->_context ); 
+        $selector = new CRM_Contribute_Selector_Search( $this->_queryParams,
+                                                        $this->_action,
+                                                        null,
+                                                        $this->_single,
+                                                        $this->_limit,
+                                                        $this->_context ); 
         $prefix = null;
         if ( $this->_context == 'user' ) {
             $prefix = $this->_prefix;
@@ -212,7 +214,7 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form
         $this->assign( "{$prefix}limit", $this->_limit );
         $this->assign( "{$prefix}single", $this->_single );
 
-        $controller =& new CRM_Core_Selector_Controller($selector ,  
+        $controller = new CRM_Core_Selector_Controller($selector ,  
                                                         $this->get( CRM_Utils_Pager::PAGE_ID ),  
                                                         $sortID,  
                                                         CRM_Core_Action::VIEW, 
@@ -272,7 +274,7 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form
             $permission = CRM_Core_Permission::getPermission( );
             
             require_once 'CRM/Contribute/Task.php';
-            $tasks = array( '' => ts('- more actions -') ) + CRM_Contribute_Task::permissionedTaskTitles( $permission );
+            $tasks = array( '' => ts('- actions -') ) + CRM_Contribute_Task::permissionedTaskTitles( $permission );
             $this->add('select', 'task'   , ts('Actions:') . ' '    , $tasks    ); 
             $this->add('submit', $this->_actionButtonName, ts('Go'), 
                        array( 'class'   => 'form-submit',
@@ -371,18 +373,20 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form
 
         require_once 'CRM/Contact/BAO/Query.php';
         $this->_queryParams =& CRM_Contact_BAO_Query::convertFormValues( $this->_formValues );
-        $selector =& new CRM_Contribute_Selector_Search( $this->_queryParams,
-                                                         $this->_action,
-                                                         null,
-                                                         $this->_single,
-                                                         $this->_limit,
-                                                         $this->_context ); 
+        $selector = new CRM_Contribute_Selector_Search( $this->_queryParams,
+                                                        $this->_action,
+                                                        null,
+                                                        $this->_single,
+                                                        $this->_limit,
+                                                        $this->_context ); 
+        $selector->setKey( $this->controller->_key );
+
         $prefix = null;
         if ( $this->_context == 'basic' || $this->_context == 'user' ) {
             $prefix = $this->_prefix;
         }
 
-        $controller =& new CRM_Core_Selector_Controller($selector , 
+        $controller = new CRM_Core_Selector_Controller( $selector , 
                                                         $this->get( CRM_Utils_Pager::PAGE_ID ), 
                                                         $sortID, 
                                                         CRM_Core_Action::VIEW,
@@ -464,6 +468,13 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form
             $this->_formValues['contribution_recur_id']  = $recur;
             $this->_formValues['contribution_recurring'] = 1;
         }
+        
+        //check for contribution page id.
+        $contribPageId = CRM_Utils_Request::retrieve( 'pid', 'Positive', $this );
+        if ( $contribPageId ) $this->_formValues['contribution_page_id'] = $contribPageId;
+    
+        //give values to default.
+        $this->_defaults = $this->_formValues;
     }
     
     /**

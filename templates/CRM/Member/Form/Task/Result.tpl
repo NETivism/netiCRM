@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -26,7 +26,7 @@
 <div class='spacer'></div>
 <div class="form-item">
     <p>
-    {$form.buttons.html}
+    {include file="CRM/common/formButtons.tpl"}
     </p>
 </div>
 

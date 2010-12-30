@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -24,14 +24,13 @@
  +--------------------------------------------------------------------+
 *}
 {* this template is used for adding/editing Honoree Information *}
-<div id="id-honoree" class="section-shown">
-   <fieldset>
+<div id="id-honoree" class="section-shown crm-contribution-additionalinfo-honoree-form-block">
       <table class="form-layout-compressed">
          {if $form.honor_type_id.html}
-	    <tr>
+	    <tr class="crm-contribution-form-block-honor_type_id">
 	       <td colspan="3">
 		  {$form.honor_type_id.html}
-		  &nbsp;&nbsp;&nbsp;&nbsp;(&nbsp;<a href="#" title="unselect" onclick="unselectRadio('honor_type_id', '{$form.formName}'); enableHonorType(); return false;">{ts}unselect{/ts}</a>&nbsp;)<br />
+		  <span class="crm-clear-link">(<a href="#" title="unselect" onclick="unselectRadio('honor_type_id', '{$form.formName}'); enableHonorType(); return false;">{ts}clear{/ts}</a>)</span><br />
 		  <span class="description">{ts}Please include the name, and / or email address of the person you are honoring.{/ts}</span>
 	       </td>
 	    </tr>
@@ -50,7 +49,6 @@
                 <span class="description">{$form.honor_email.label}</td>
          </tr>
       </table>
-   </fieldset>
 </div>
 {if $form.honor_type_id.html}
 {literal}

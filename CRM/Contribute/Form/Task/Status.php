@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -199,7 +199,7 @@ AND    co.id IN ( $contribIDs )";
      * @static
      * @access public
      */
-    static function formRule( &$fields ) 
+    static function formRule( $fields ) 
     {
         $seen = $errors = array( );
         foreach ( $fields as $name => $value ) {
@@ -243,7 +243,7 @@ AND    co.id IN ( $contribIDs )";
         $contribIDs = implode( ',', $this->_contributionIds );
         $details = self::getDetails( $contribIDs );
 
-        $template =& CRM_Core_Smarty::singleton( );
+        $template = CRM_Core_Smarty::singleton( );
 
         // for each contribution id, we just call the baseIPN stuff 
         foreach ( $this->_rows as $row ) {

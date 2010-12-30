@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -43,12 +43,12 @@ class bin_migrate_export {
             array( 'customGroup'  => array( 'data'     => null           ,
                                             'name'     => 'CustomGroup'  ,
                                             'scope'    => 'CustomGroups',
-                                            'required' => true,
+                                            'required' => false,
                                             'map'      => array( ) ),
                    'customField'  => array( 'data'     => null           ,
                                             'name'     => 'CustomField'  ,
                                             'scope'    => 'CustomFields',
-                                            'required' => true,
+                                            'required' => false,
                                             'map'      => array( ) ),
                    'optionGroup'  => array( 'data'     => null           ,
                                             'name'     => 'OptionGroup'  ,
@@ -210,7 +210,7 @@ AND    cg.is_active = 1
         $this->fetch( 'profileGroup',
                       'CRM_Core_DAO_UFGroup',
                       null,
-                      array( 'id', 'name'),
+                      array( 'id', 'title'),
                       null );
 
         $this->fetch( 'profileField',
@@ -312,8 +312,15 @@ AND    entity_id    IS NULL
                 // hack for extends_entity_column_value
                 if ( $name == 'extends_entity_column_value' ) {
                     if ( $object->extends == 'Event' ||
-                         $object->extends == 'Activity' ) {
-                        $key = ( $object->extends == 'Event' ) ? 'event_type' : 'activity_type';
+                         $object->extends == 'Activity' ||
+                         $object->extends == 'Relationship' ) {
+                        if ( $object->extends == 'Event' ) {
+                            $key = 'event_type';
+                        } else if ( $object->extends == 'Activity' ) {
+                            $key = 'activity_type';
+                        } else if ( $object->extends == 'Relationship' ) {
+                            $key = 'relationship_type';
+                        }
                         $xml .= "\n      <extends_entity_column_value_option_group>$key</extends_entity_column_value_option_group>";
                         $types = explode( CRM_Core_DAO::VALUE_SEPARATOR,
                                           substr( $object->$name, 1, -1 ) );
@@ -359,7 +366,7 @@ function run( ) {
 
     require_once '../../civicrm.config.php';
     require_once 'CRM/Core/Config.php'; 
-    $config =& CRM_Core_Config::singleton( );
+    $config = CRM_Core_Config::singleton( );
 
     // this does not return on failure
     CRM_Utils_System::authenticateScript( true );

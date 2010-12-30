@@ -168,7 +168,7 @@ class CRM_SMS_Protocol_Clickatell extends CRM_SMS_Protocol {
      */
     static function &singleton( ) {
         if (self::$_singleton === null ) {
-            self::$_singleton =& new CRM_SMS_Protocol_Clickatell( );
+            self::$_singleton = new CRM_SMS_Protocol_Clickatell( );
         }
         return self::$_singleton;
     }
@@ -181,7 +181,7 @@ class CRM_SMS_Protocol_Clickatell extends CRM_SMS_Protocol {
 	 * @since 1.1
 	 */
 	function authenticate( ) {
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
 		$url = $config->smsAPIServer . "/http/auth";
 
 		$postData = "user=" . $config->smsUsername . "&password=" . $config->smsPassword . "&api_id=" . $config->smsAPIID;
@@ -190,7 +190,7 @@ class CRM_SMS_Protocol_Clickatell extends CRM_SMS_Protocol {
 		if (PEAR::isError($response)) {
 			return $response;
 		}
-		$sess = split(":", $response['data']);
+		$sess = explode(":", $response['data']);
 
 		$this->_sessionID = trim($sess[1]);
 
@@ -202,7 +202,7 @@ class CRM_SMS_Protocol_Clickatell extends CRM_SMS_Protocol {
 	}
 
     function formURLPostData( $url, $id = null ) {
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
 		$url = $config->smsAPIServer . $url;
 		$postData = "session_id=" . $this->_sessionID;
         if ( $id ) {
@@ -229,7 +229,7 @@ class CRM_SMS_Protocol_Clickatell extends CRM_SMS_Protocol {
 		if (PEAR::isError($response)) {
 			return $response;
 		}
-		$sess = split(":", $response['data']);
+		$sess = explode(":", $response['data']);
 
 		$deleted = preg_split("/[\s:]+/", $response['data']);
 		if ($deleted[0] == "ID") {
@@ -252,7 +252,7 @@ class CRM_SMS_Protocol_Clickatell extends CRM_SMS_Protocol {
 		if (PEAR::isError($response)) {
 			return $response;
 		}
-		$send = split(":", $response['data']);
+		$send = explode(":", $response['data']);
 
 		if ($send[0] == "Credit") {
 			return trim($send[1]);
@@ -301,7 +301,7 @@ class CRM_SMS_Protocol_Clickatell extends CRM_SMS_Protocol {
 		if (PEAR::isError($response)) {
 			return $response;
 		}
-		$sess = split(":", $response['data']);
+		$sess = explode(":", $response['data']);
 
 		if ($sess[0] == "OK") {
 			return (true);
@@ -325,7 +325,7 @@ class CRM_SMS_Protocol_Clickatell extends CRM_SMS_Protocol {
 		if (PEAR::isError($response)) {
 			return $response;
 		}
-		$status = split(" ", $response['data']);
+		$status = explode(" ", $response['data']);
 
 		if ($status[0] == "ID:") {
 			return (trim($status[3]));
@@ -421,9 +421,8 @@ class CRM_SMS_Protocol_Clickatell extends CRM_SMS_Protocol {
 		if (PEAR::isError($response)) {
 			return $response;
 		}
-		$send = split(":", $response['data']);
+		$send = explode(":", $response['data']);
         
-        CRM_Core_Error::debug( 's', $send );
 		if ($send[0] == "ID") {
 			return true;
 		} else {
@@ -453,7 +452,7 @@ class CRM_SMS_Protocol_Clickatell extends CRM_SMS_Protocol {
 		if (PEAR::isError($response)) {
 			return $response;
 		}
-		$sess = split(":", $response['data']);
+		$sess = explode(":", $response['data']);
 
 		$paid = preg_split("/[\s:]+/", $response['data']);
  		if ($paid[0] == "OK") {

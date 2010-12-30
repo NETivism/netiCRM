@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -53,7 +53,7 @@
     {assign var=n value=$field.name} 
 
     {if $field.options_per_line != 0} 
-        <div class="section {$form.$n.id}-section"> 
+        <div class="crm-section {$form.$n.id}-section"> 
         <div class="label option-label">{$form.$n.label}</div> 
         <div class="content 3"> 
              {assign var="count" value="1"} 
@@ -87,12 +87,15 @@
         <div class="clear"></div> 
         </div> 
     {else} 
-        <div class="section {$form.$n.id}-section"> 
+        <div class="crm-section {$form.$n.id}-section"> 
            <div class="label">{$form.$n.label}</div>
            <div class="content">
              {if $n|substr:0:3 eq 'im-'}
                {assign var="provider" value=$n|cat:"-provider_id"}
                {$form.$provider.html}&nbsp;
+             {else if $n|substr:0:4 eq 'url-'}
+               {assign var="websiteType" value=$n|cat:"-website_type_id"}
+               {$form.$websiteType.html}&nbsp;
              {/if}
              {if $n eq 'email_greeting' or  $n eq 'postal_greeting' or $n eq 'addressee'}
                 {include file="CRM/Profile/Form/GreetingType.tpl"}  
@@ -106,13 +109,13 @@
    	    	 {else}
                {$form.$n.html}
                {if $n eq 'gender' && $form.$fieldName.frozen neq true}
-                  &nbsp;(&nbsp;<a href="#" title="unselect" onclick="unselectRadio('{$n}', '{$form.formName}');return false;">{ts}unselect{/ts}</a>&nbsp;)
+                  <span class="crm-clear-link">(<a href="#" title="unselect" onclick="unselectRadio('{$n}', '{$form.formName}');return false;">{ts}clear{/ts}</a>)</span>
                {/if}
              {/if}
              {*CRM-4564*}
              {if $field.html_type eq 'Radio' && $form.$fieldName.frozen neq true && $field.is_required neq 1}
                  <span style="line-height: .75em; margin-top: 1px;">
-                  &nbsp;(&nbsp;<a href="#" title="unselect" onclick="unselectRadio('{$n}', '{$form.formName}');return false;">{ts}unselect{/ts}</a>&nbsp;)
+                  <span class="crm-clear-link">(<a href="#" title="unselect" onclick="unselectRadio('{$n}', '{$form.formName}');return false;">{ts}clear{/ts}</a>)</span>
                  </span>
              {elseif $field.html_type eq 'Autocomplete-Select'}
                  {include file="CRM/Custom/Form/AutoComplete.tpl" element_name = $n }

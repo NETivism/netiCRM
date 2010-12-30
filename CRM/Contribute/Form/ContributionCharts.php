@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -36,12 +36,31 @@
 require_once 'CRM/Core/Form.php';
 class CRM_Contribute_Form_ContributionCharts extends CRM_Core_Form
 {
-    /** 
-     * @access protected 
-     * @var boolean 
-     */ 
+    /**
+     *  Year of chart
+     *
+     * @var int
+     */
+    protected $_year = null;
+    
+    /**
+     *  The type of chart
+     *
+     * @var string
+     */
+    protected $_chartType = null;
+    
     function preProcess( ) 
     {
+        $this->_year      = CRM_Utils_Request::retrieve( 'year', 'Int',    $this );
+        $this->_chartType = CRM_Utils_Request::retrieve( 'type', 'String', $this );
+        
+        $buildChart = false;
+        
+        if ( $this->_year || $this->_chartType  ) {
+            $buildChart = true;
+        }
+        $this->assign( 'buildChart', $buildChart );
         $this->postProcess( );
     }
     
@@ -55,7 +74,11 @@ class CRM_Contribute_Form_ContributionCharts extends CRM_Core_Form
     {
         //p3 = Three dimensional pie chart.
         //bvg = Vertical bar chart
-        $this->addElement('select', 'chart_type', ts('Chart Style'), array( 'bvg' => ts('Bar'), 'p3'=> ts('Pie') ) );
+        $this->addElement('select', 'chart_type', ts('Chart Style'), array( 'bvg' => ts('Bar'), 
+                                                                            'p3'=> ts('Pie') ), 
+                          array( 'onchange' => "getChart();" ) );
+        $defaultValues['chart_type'] = $this->_chartType;
+        $this->setDefaults( $defaultValues );
         
         //take available years from database to show in drop down
         $currentYear = date('Y');
@@ -70,15 +93,10 @@ class CRM_Contribute_Form_ContributionCharts extends CRM_Core_Form
             }
         }
         
-        $this->addElement('select', 'select_year', ts('Select Year (for monthly breakdown)'), $years );
-        $this->setDefaults( array( 'select_year' => $currentYear ) );
-        
-        $this->addButtons( array( 
-                                 array ( 'type'      => 'refresh', 
-                                         'name'      => ts('Reload Charts'), 
-                                         'isDefault' => true   ),
-                                 )
-                           );
+        $this->addElement('select', 'select_year', ts('Select Year (for monthly breakdown)'), 
+                          $years , array( 'onchange' => "getChart();" ) );
+        $this->setDefaults( array( 'select_year' => ( $this->_year ) ? $this->_year : $currentYear
+                                   ) );
     }
     
     /**
@@ -89,15 +107,17 @@ class CRM_Contribute_Form_ContributionCharts extends CRM_Core_Form
      */
     public function postProcess() 
     {
-        //get the submitted form values.
-        $submittedValues = $this->controller->exportValues( $this->_name );
-        
-        // get the chart type.
-        $chartType = CRM_Utils_Array::value( 'chart_type', $submittedValues, 'bvg' );
+        $chartType = 'bvg';
+        if ( $this->_chartType ) {
+            $chartType = $this->_chartType;
+        }
+        $selectedYear = date( 'Y' );
+        if ( $this->_year ) {
+            $selectedYear = $this->_year;
+        }
         
         //take contribution information monthly
         require_once 'CRM/Contribute/BAO/Contribution/Utils.php';
-        $selectedYear     = CRM_Utils_Array::value( 'select_year', $submittedValues, date('Y') ); 
         $chartInfoMonthly = CRM_Contribute_BAO_Contribution_Utils::contributionChartMonthly( $selectedYear );
         
         $chartData = $abbrMonthNames = array( );
@@ -135,7 +155,7 @@ class CRM_Contribute_Form_ContributionCharts extends CRM_Core_Form
             
             // handle onclick event.
             $chartData['by_year']['on_click_fun_name'] = 'byYearOnClick';
-            $chartData['by_year']['yname'] = ts( 'Contribution' );
+            $chartData['by_year']['yname'] = ts( 'Total Amount' );
         }
         $this->assign( 'hasContributions', $hasContributions );
         
@@ -186,6 +206,10 @@ class CRM_Contribute_Form_ContributionCharts extends CRM_Core_Form
             if ( $chartType == 'bvg' ) {
                 $ySize = 250;
                 $xSize = 60*count( $chartValues );
+                
+                // reduce x size by 100 for by_month
+                if ( $chartKey == 'by_month' ) $xSize -= 100;
+
                 //hack to show tooltip.
                 if ( $xSize < 150 ) $xSize = 150;
             }

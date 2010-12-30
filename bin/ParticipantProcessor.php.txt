@@ -1,7 +1,7 @@
 <?php
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -37,7 +37,7 @@ class CRM_ParticipantProcessor
 {
     function __construct( ) 
     {
-        $config =& CRM_Core_Config::singleton();
+        $config = CRM_Core_Config::singleton();
         
         //this does not return on failure
         require_once 'CRM/Utils/System.php';
@@ -45,7 +45,15 @@ class CRM_ParticipantProcessor
         
         CRM_Utils_System::authenticateScript( true );
         $config->cleanURL = 1;
-    }
+
+        //log the execution time of script
+        CRM_Core_Error::debug_log_message( 'ParticipantProcessor.php' );
+ 
+	//load bootstrap to call hooks
+	require_once 'CRM/Utils/System.php';
+	CRM_Utils_System::loadBootStrap(  );
+
+   }
     
     public function updateParticipantStatus( )
     {
@@ -158,11 +166,15 @@ LEFT JOIN  civicrm_event event ON ( event.id = participant.event_id )
                         //check the target event having space.
                         require_once 'CRM/Event/BAO/Participant.php';
                         $eventOpenSpaces = CRM_Event_BAO_Participant::eventFull( $values['event_id'], true, false );
+                        
                         if ( $eventOpenSpaces && is_numeric( $eventOpenSpaces ) ||  ( $eventOpenSpaces === null ) ) {
                             
                             //get the additional participant if any.
-                            $additonalParticipants = CRM_Event_BAO_Participant::getAdditionalParticipantIds( $participantId ); 
-                            $requiredSpaces = 1 + count( $additonalParticipants );
+                            $additionalIds = CRM_Event_BAO_Participant::getAdditionalParticipantIds( $participantId );
+                            
+                            $allIds = array( $participantId );
+                            if ( !empty( $additionalIds ) ) $allIds = array_merge( $allIds, $additionalIds );
+                            $requiredSpaces = CRM_Event_BAO_Participant::totalEventSeats( $allIds );
                             
                             //need to check as to see if event has enough speces
                             if ( ( $requiredSpaces <= $eventOpenSpaces ) || ( $eventOpenSpaces === null ) ) {
@@ -226,7 +238,7 @@ LEFT JOIN  civicrm_event event ON ( event.id = participant.event_id )
     }
 }
 
-$obj =& new CRM_ParticipantProcessor( );
+$obj = new CRM_ParticipantProcessor( );
 echo "Updating..";
 $obj->updateParticipantStatus( );
 echo "<br />Participant records updated. (Done)";

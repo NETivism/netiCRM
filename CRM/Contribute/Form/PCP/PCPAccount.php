@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -58,7 +58,7 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form
 
     public function preProcess()  
     {
-        $session =& CRM_Core_Session::singleton( );
+        $session = CRM_Core_Session::singleton( );
         $this->_action = CRM_Utils_Request::retrieve( 'action', 'String', $this, false );
         $this->_pageId = CRM_Utils_Request::retrieve( 'pageId', 'Positive', $this );
         $this->_id     = CRM_Utils_Request::retrieve( 'id', 'Positive', $this );
@@ -75,7 +75,7 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form
                 $this->_pageId = CRM_Core_DAO::getFieldValue( 'CRM_Contribute_DAO_PCP', $this->_id, 'contribution_page_id' );
             }
         }
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
         //redirect back to online Contribution page, we allow only logged in
         //user to configure the PCP account and Page in standalone installation.
         if ( $config->userFramework == 'Standalone' && !$this->_contactID ) {
@@ -212,7 +212,7 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form
      * @access public  
      * @static  
      */  
-    static function formRule( &$fields, &$files, $self ) 
+    static function formRule( $fields, $files, $self ) 
     {
         $errors = array( );
         require_once "CRM/Utils/Rule.php";

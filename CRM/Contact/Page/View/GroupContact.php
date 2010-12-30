@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -67,13 +67,13 @@ class CRM_Contact_Page_View_GroupContact extends CRM_Core_Page {
      * @access public
      */
     function edit( $groupId = null ) {
-        $controller =& new CRM_Core_Controller_Simple( 'CRM_Contact_Form_GroupContact',
+        $controller = new CRM_Core_Controller_Simple( 'CRM_Contact_Form_GroupContact',
                                                        ts('Contact\'s Groups'),
                                                        $this->_action );
         $controller->setEmbedded( true );
 
         // set the userContext stack
-        $session =& CRM_Core_Session::singleton();
+        $session = CRM_Core_Session::singleton();
 
         $session->pushUserContext( CRM_Utils_System::url( 'civicrm/contact/view',
                                                           "action=browse&selectedChild=group&cid={$this->_contactId}" ),
@@ -119,7 +119,7 @@ class CRM_Contact_Page_View_GroupContact extends CRM_Core_Page {
             if ( is_numeric($groupContactId) && $status ) {
                 $this->del( $groupContactId, $status, $this->_contactId);
             }
-            $session =& CRM_Core_Session::singleton();
+            $session = CRM_Core_Session::singleton();
             CRM_Utils_System::redirect( $session->popUserContext() );
         }
 
@@ -164,7 +164,7 @@ class CRM_Contact_Page_View_GroupContact extends CRM_Core_Page {
         $ids = array($contactID);
         $method = 'Admin';
 
-        $session =& CRM_Core_Session::singleton();
+        $session = CRM_Core_Session::singleton();
         $userID  = $session->get( 'userID' );
 
         if ( $userID == $contactID ) {

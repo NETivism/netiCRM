@@ -2,7 +2,7 @@
  
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -41,6 +41,15 @@ class CRM_Core_Payment_Moneris extends CRM_Core_Payment {
     const
         CHARSET  = 'UFT-8'; # (not used, implicit in the API, might need to convert?)
          
+    /**
+     * We only need one instance of this object. So we use the singleton
+     * pattern and cache the instance in this variable
+     *
+     * @var object
+     * @static
+     */
+    static private $_singleton = null;
+    
     /** 
      * Constructor 
      *
@@ -57,7 +66,7 @@ class CRM_Core_Payment_Moneris extends CRM_Core_Payment {
             CRM_Core_Error::fatal( ts( 'Please download and put the Moneris mpgClasses.php file in packages/Services directory to enable Moneris Support.' ) );
         }
 
-        $config =& CRM_Core_Config::singleton( ); // get merchant data from config
+        $config = CRM_Core_Config::singleton( ); // get merchant data from config
         $this->_profile['mode']     = $mode; // live or test
         $this->_profile['storeid']  = $this->_paymentProcessor['signature'];
         $this->_profile['apitoken'] = $this->_paymentProcessor['password' ];
@@ -66,6 +75,23 @@ class CRM_Core_Payment_Moneris extends CRM_Core_Payment {
             return self::error('Invalid configuration:'.$currencyID.', you must use currency $CAD with Moneris');
             // Configuration error: default currency must be CAD
         }
+    }
+
+    /** 
+     * singleton function used to manage this object 
+     * 
+     * @param string $mode the mode of operation: live or test
+     *
+     * @return object 
+     * @static 
+     * 
+     */ 
+    static function &singleton( $mode, &$paymentProcessor ) {
+        $processorName = $paymentProcessor['name'];
+        if (self::$_singleton[$processorName] === null ) {
+            self::$_singleton[$processorName] = new CRM_Core_Payment_Moneris( $mode, $paymentProcessor );
+        }
+        return self::$_singleton[$processorName];
     }
 
     function doDirectPayment( &$params ) {

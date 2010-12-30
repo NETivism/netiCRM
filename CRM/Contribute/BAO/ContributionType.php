@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -69,7 +69,7 @@ class CRM_Contribute_BAO_ContributionType extends CRM_Contribute_DAO_Contributio
      */
     static function retrieve( &$params, &$defaults ) 
     {
-        $contributionType =& new CRM_Contribute_DAO_ContributionType( );
+        $contributionType = new CRM_Contribute_DAO_ContributionType( );
         $contributionType->copyValues( $params );
         if ( $contributionType->find( true ) ) {
             CRM_Core_DAO::storeValues( $contributionType, $defaults );
@@ -109,7 +109,7 @@ class CRM_Contribute_BAO_ContributionType extends CRM_Contribute_DAO_Contributio
         $params['is_deductible'] =  CRM_Utils_Array::value( 'is_deductible', $params, false );
         
         // action is taken depending upon the mode
-        $contributionType               =& new CRM_Contribute_DAO_ContributionType( );
+        $contributionType               = new CRM_Contribute_DAO_ContributionType( );
         $contributionType->copyValues( $params );;
         
         $contributionType->id = CRM_Utils_Array::value( 'contributionType', $ids );
@@ -145,7 +145,7 @@ class CRM_Contribute_BAO_ContributionType extends CRM_Contribute_DAO_Contributio
         }
         
         if ($check) {
-            $session =& CRM_Core_Session::singleton();
+            $session = CRM_Core_Session::singleton();
             CRM_Core_Session::setStatus( ts(
                 'This contribution type cannot be deleted because it is being referenced by one or more of the following types of records: Contributions, Contribution Pages, or Membership Types. Consider disabling this type instead if you no longer want it used.') );
             return CRM_Utils_System::redirect( CRM_Utils_System::url( 'civicrm/admin/contribute/contributionType', "reset=1&action=browse" ));
@@ -153,7 +153,7 @@ class CRM_Contribute_BAO_ContributionType extends CRM_Contribute_DAO_Contributio
         
         //delete from contribution Type table
         require_once 'CRM/Contribute/DAO/Contribution.php';
-        $contributionType =& new CRM_Contribute_DAO_ContributionType( );
+        $contributionType = new CRM_Contribute_DAO_ContributionType( );
         $contributionType->id = $contributionTypeId;
         $contributionType->delete();
     }

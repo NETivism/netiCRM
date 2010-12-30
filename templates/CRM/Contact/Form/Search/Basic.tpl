@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -23,40 +23,52 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
+
 {* Main template for basic search (Find Contacts) *}
 {include file="CRM/Contact/Form/Search/Intro.tpl"}
-
-{if $context eq 'smog'}
-    {if $rowsEmpty}
-        {assign var="showBlock" value=""}
-        {assign var="hideBlock" value="'searchForm','searchForm_show'"}
-    {else}
-        {assign var="showBlock" value="'searchForm_show'"}
-        {assign var="hideBlock" value="'searchForm'"}
-    {/if}
-{/if}
-
+<div class="crm-form-block crm-search-form-block">
 {* This section handles form elements for search criteria *}
 <div id="searchForm">
     {include file="CRM/Contact/Form/Search/BasicCriteria.tpl"}
 </div>
-
+</div>
+<div class="crm-content-block">
 {if $rowsEmpty}
-    {include file="CRM/Contact/Form/Search/EmptyResults.tpl"}
+	<div class="crm-results-block crm-results-block-empty">
+          {include file="CRM/Contact/Form/Search/EmptyResults.tpl"}
+	</div>
 {elseif $rows}    
+	<div class="crm-results-block">
     {* Search request has returned 1 or more matching rows. *}
-    <fieldset>
-    
        {* This section handles form elements for action task select and submit *}
-       {include file="CRM/Contact/Form/Search/ResultTasks.tpl"}
+       <div class="crm-search-tasks">
+       {if $taskFile}
+          {if $taskContext}
+            {include file=$taskFile context=$taskContext}
+          {else}
+            {include file=$taskFile}
+          {/if}
+       {else}
+         {include file="CRM/Contact/Form/Search/ResultTasks.tpl"}
+       {/if}
+       </div>
 
        {* This section displays the rows along and includes the paging controls *}
-       <br />
-       {include file="CRM/Contact/Form/Selector.tpl"}
+       <div class="crm-search-results">
+       {if $resultFile}
+          {if $resultContext}
+             {include file=$resultFile context=$resultContext}
+          {else}
+             {include file=$resultFile}
+          {/if}
+       {else}
+         {include file="CRM/Contact/Form/Selector.tpl"}
+       {/if}
+       </div>
        
-
-    </fieldset>
     {* END Actions/Results section *}
+    </div>
 {else}
     <div class="spacer">&nbsp;</div>
 {/if}
+</div>

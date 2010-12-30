@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -90,7 +90,7 @@ class CRM_Core_Permission_Standalone {
     static function check( $str ) {
         static $isAdmin = null;
         if ( $isAdmin === null ) {
-            $session =& CRM_Core_Session::singleton( );
+            $session = CRM_Core_Session::singleton( );
             if ( $session->get( 'new_install' ) == 1 && $session->get( 'goahead' ) == 'yes' ) {
                 return true;
             }

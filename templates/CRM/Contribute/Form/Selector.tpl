@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -49,7 +49,7 @@
 
   {counter start=0 skip=1 print=false}
   {foreach from=$rows item=row}
-  <tr id='rowid{$row.contribution_id}' class="{cycle values="odd-row,even-row"}{if $row.cancel_date} disabled{/if}">
+  <tr id="rowid{$row.contribution_id}" class="{cycle values="odd-row,even-row"}{if $row.cancel_date} disabled{/if} crm-contribution_{$row.contribution_id}">
     {if !$single }
         {if $context eq 'Search' }       
     	    {assign var=cbName value=$row.checkbox}
@@ -58,22 +58,22 @@
   	<td>{$row.contact_type}</td>	
     	<td><a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$row.contact_id`"}">{$row.sort_name}</a></td>
     {/if}
-    <td class="right bold"><span class="nowrap">{$row.total_amount|crmMoney:$row.currency}</span> {if $row.amount_level }<br /> ({$row.amount_level}){/if}
+    <td class="right bold crm-contribution-amount"><span class="nowrap">{$row.total_amount|crmMoney:$row.currency}</span> {if $row.amount_level }<br /> ({$row.amount_level}){/if}
     {if $row.contribution_recur_id}
      <br /> {ts}(Recurring Contribution){/ts}
     {/if}
     </td>
-    <td>{$row.contribution_type}</td>
-    <td>{$row.contribution_source}</td>
-    <td>{$row.receive_date|truncate:10:''|crmDate}</td>
-    <td>{$row.thankyou_date|truncate:10:''|crmDate}</td>
-    <td> 
-        {$row.contribution_status_id}<br />
+    <td class="crm-contribution-type crm-contribution-type_{$row.contribution_type_id}">{$row.contribution_type}</td>
+    <td class="crm-contribution-source">{$row.contribution_source}</td>
+    <td class="crm-contribution-receive_date">{$row.receive_date|crmDate}</td>
+    <td class="crm-contribution-thankyou_date">{$row.thankyou_date|crmDate}</td>
+    <td class="crm-contribution-status"> 
+        {$row.contribution_status}<br />
         {if $row.cancel_date}    
-        {$row.cancel_date|truncate:10:''|crmDate}
+        {$row.cancel_date|crmDate}
         {/if}
     </td>
-    <td>{$row.product_name}</td>
+    <td class="crm-contribution-product_name">{$row.product_name}</td>
     <td>{$row.action|replace:'xx':$row.contribution_id}</td>
   </tr>
   {/foreach}

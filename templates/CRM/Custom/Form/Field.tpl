@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -123,10 +123,10 @@ function custom_option_html_type( ) {
 }
 </script>
 {/literal}
-<fieldset><legend>{ts}Custom Data Field{/ts}</legend>
-
+<div class="crm-block crm-form-block crm-custom-field-form-block">
+<div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>
     <table class="form-layout">
-        <tr>
+        <tr class="crm-custom-field-form-block-label">
             <td class="label">{$form.label.label}
             {if $action == 2}
                 {include file='CRM/Core/I18n/Dialog.tpl' table='civicrm_custom_field' field='label' id=$id}
@@ -134,7 +134,7 @@ function custom_option_html_type( ) {
             </td>
             <td class="html-adjust">{$form.label.html}</td>
         </tr>
-        <tr>
+        <tr class="crm-custom-field-form-block-data_type">
             <td class="label">{$form.data_type.label}</td>
             <td class="html-adjust">{$form.data_type.html}
                 {if $action neq 4 and $action neq 2}
@@ -142,7 +142,7 @@ function custom_option_html_type( ) {
                 {/if}
             </td>
         </tr>
-        <tr id="textLength" {if !( $action eq 1 || $action eq 2 ) && ($form.data_type.value.0.0 != 0)}class="hide-block"{/if}>
+        <tr class="crm-custom-field-form-block-text_length"  id="textLength" {if !( $action eq 1 || $action eq 2 ) && ($form.data_type.value.0.0 != 0)}class="hide-block"{/if}>
             <td class="label">{$form.text_length.label}</td>
             <td class="html-adjust">{$form.text_length.html}</td> 
         </tr>
@@ -155,31 +155,31 @@ function custom_option_html_type( ) {
             </table>
             </td>
         </tr>
-        <tr id="optionsPerLine" {if $action neq 2 && ($form.data_type.value.0.0 >= 4 && $form.data_type.value.1.0 neq 'CheckBox' || $form.data_type.value.1.0 neq 'Radio' )}class="hide-block"{/if}>
+        <tr  class="crm-custom-field-form-block-options_per_line" id="optionsPerLine" {if $action neq 2 && ($form.data_type.value.0.0 >= 4 && $form.data_type.value.1.0 neq 'CheckBox' || $form.data_type.value.1.0 neq 'Radio' )}class="hide-block"{/if}>
             <td class="label">{$form.options_per_line.label}</td>	
             <td class="html-adjust">{$form.options_per_line.html|crmReplace:class:two}</td>
         </tr>
-	    <tr id="startDateRange" {if $action neq 2 && ($form.data_type.value.0.0 != 5)}class="hide-block"{/if}>
+	    <tr  class="crm-custom-field-form-block-start_date_years" id="startDateRange" {if $action neq 2 && ($form.data_type.value.0.0 != 5)}class="hide-block"{/if}>
             <td class="label">{$form.start_date_years.label}</td>
             <td class="html-adjust">{$form.start_date_years.html} {ts}years prior to current date.{/ts}</td> 
         </tr>
-        <tr id="endDateRange" {if $action neq 2 && ($form.data_type.value.0.0 != 5)}class="hide-block"{/if}>
+        <tr class="crm-custom-field-form-block-end_date_years" id="endDateRange" {if $action neq 2 && ($form.data_type.value.0.0 != 5)}class="hide-block"{/if}>
             <td class="label">{$form.end_date_years.label}</td>
             <td class="html-adjust">{$form.end_date_years.html} {ts}years after the current date.{/ts}</td> 
         </tr>
-        <tr id="includedDatePart" {if $action neq 2 && ($form.data_type.value.0.0 != 5)}class="hide-block"{/if}>
+        <tr  class="crm-custom-field-form-block-date_format"  id="includedDatePart" {if $action neq 2 && ($form.data_type.value.0.0 != 5)}class="hide-block"{/if}>
             <td class="label">{$form.date_format.label}</td>
             <td class="html-adjust">{$form.date_format.html}&nbsp;&nbsp;&nbsp;{$form.time_format.label}&nbsp;&nbsp;{$form.time_format.html}</td> 
         </tr>
-        <tr id="noteRows" {if $action neq 2 && ($form.data_type.value.0.0 != 4)}class="hide-block"{/if}>
+        <tr  class="crm-custom-field-form-block-note_rows"  id="noteRows" {if $action neq 2 && ($form.data_type.value.0.0 != 4)}class="hide-block"{/if}>
             <td class="label">{$form.note_rows.label}</td>
             <td class="html-adjust">{$form.note_rows.html}</td> 
         </tr>
-	    <tr id="noteColumns" {if $action neq 2 && ($form.data_type.value.0.0 != 4)}class="hide-block"{/if}>
+	    <tr class="crm-custom-field-form-block-note_columns" id="noteColumns" {if $action neq 2 && ($form.data_type.value.0.0 != 4)}class="hide-block"{/if}>
             <td class="label">{$form.note_columns.label}</td>
             <td class="html-adjust">{$form.note_columns.html}</td>
         </tr>
-        <tr>
+        <tr class="crm-custom-field-form-block-weight" >
             <td class="label">{$form.weight.label}</td>
             <td>{$form.weight.html|crmReplace:class:two}
                 {if $action neq 4}
@@ -187,31 +187,31 @@ function custom_option_html_type( ) {
                 {/if}
             </td>
         </tr>
-        <tr id="hideDefault" {if $action eq 2 && ($form.data_type.value.0.0 < 4 && $form.data_type.value.1.0 NEQ 'Text')}class="hide-block"{/if}>
+        <tr class="crm-custom-field-form-block-default_value" id="hideDefault" {if $action eq 2 && ($form.data_type.value.0.0 < 4 && $form.data_type.value.1.0 NEQ 'Text')}class="hide-block"{/if}>
             <td title="hideDefaultValTxt" class="label">{$form.default_value.label}</td>
             <td title="hideDefaultValDef" class="html-adjust">{$form.default_value.html}</td>
         </tr>
-        <tr id="hideDesc" {if $action neq 4 && $action eq 2 && ($form.data_type.value.0.0 < 4 && $form.data_type.value.1.0 NEQ 'Text')}class="hide-block"{/if}>
+        <tr  class="crm-custom-field-form-block-description"  id="hideDesc" {if $action neq 4 && $action eq 2 && ($form.data_type.value.0.0 < 4 && $form.data_type.value.1.0 NEQ 'Text')}class="hide-block"{/if}>
             <td title="hideDescTxt" class="label">&nbsp;</td>
             <td title="hideDescDef" class="html-adjust"><span class="description">{ts}If you want to provide a default value for this field, enter it here. For date fields, format is YYYY-MM-DD.{/ts}</span></td>
         </tr>
-        <tr>
+        <tr class="crm-custom-field-form-block-help_pre">
             <td class="label">{$form.help_pre.label} {if $action == 2}{include file='CRM/Core/I18n/Dialog.tpl' table='civicrm_custom_field' field='help_pre' id=$id}{/if}</td>
             <td class="html-adjust">{$form.help_pre.html|crmReplace:class:huge}</td>
         </tr>
-        <tr>
+        <tr class="crm-custom-field-form-block-help_post">
             <td class="label">{$form.help_post.label} {if $action == 2}{include file='CRM/Core/I18n/Dialog.tpl' table='civicrm_custom_field' field='help_post' id=$id}{/if}</td>
             <td class="html-adjust">{$form.help_post.html|crmReplace:class:huge}
                 {if $action neq 4}
-                    <span class="description">{ts}Explanatory text displayed to users for this field.{/ts}</span>
+                    <span class="description">{ts}Explanatory text displayed for this field. Pre help is displayed inline on the form (above the field). Post help is displayed in a pop-up - users click the help balloon to view help text.{/ts}</span>
                 {/if}
             </td>
         </tr>
-        <tr>
+        <tr class="crm-custom-field-form-block-is_required">
             <td class="label">{$form.is_required.label}</td>
             <td class="html-adjust">{$form.is_required.html}</td>
         </tr>
-        <tr id ="searchable">
+        <tr id ="searchable" class="crm-custom-field-form-block-is_searchable">
             <td class="label">{$form.is_searchable.label}</td>
             <td class="html-adjust">{$form.is_searchable.html}
                 {if $action neq 4}
@@ -219,34 +219,27 @@ function custom_option_html_type( ) {
                 {/if}        
             </td>
         </tr>
-        <tr id="searchByRange">
+        <tr id="searchByRange" class="crm-custom-field-form-block-is_search_range">
 	    <td class="label">{$form.is_search_range.label}</td>
             <td class="html-adjust">{$form.is_search_range.html}</td>
         </tr>
-        <tr>
+        <tr class="crm-custom-field-form-block-is_active">
             <td class="label">{$form.is_active.label}</td>
             <td class="html-adjust">{$form.is_active.html}</td>
         </tr>    
-        <tr>
+        <tr class="crm-custom-field-form-block-is_view">
             <td class="label">{$form.is_view.label}</td>
             <td class="html-adjust">{$form.is_view.html}
                 <span class="description">{ts}Is this field set by PHP code (via a custom hook). This field will not be updated by CiviCRM.{/ts}</span>
             </td>
         </tr>
     </table>
-    <div id="crm-submit-buttons" class="form-item">
-        <dl>
-	    {if $action ne 4}
-		<dt>&nbsp;</dt>
-		<dd>{$form.buttons.html}</dd>
+   	    {if $action ne 4}
+	       <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
 	    {else}
-	        <dt>&nbsp;</dt>
-		<dd>{$form.done.html}</dd>
+	       <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
 	    {/if} {* $action ne view *}
-	</dl>    
     </div> 
-</fieldset>
-
 {literal}
 <script type="text/javascript">
     //when page is reload, build show hide boxes

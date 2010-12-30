@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -91,7 +91,7 @@ class CRM_Custom_Page_Option extends CRM_Core_Page {
                                         CRM_Core_Action::VIEW    => array(
                                                                           'name'  => ts('View'),
                                                                           'url'   => 'civicrm/admin/custom/group/field/option',
-                                                                          'qs'    => 'action=view&id=%%id%%',
+                                                                          'qs'    => 'action=view&id=%%id%%&fid=%%fid%%',
                                                                           'title' => ts('View Multiple Choice Option'),
                                                                           ),
                                         CRM_Core_Action::DISABLE => array(
@@ -109,7 +109,7 @@ class CRM_Custom_Page_Option extends CRM_Core_Page {
                                         CRM_Core_Action::DELETE  => array(
                                                                           'name'  => ts('Delete'),
                                                                           'url'   => 'civicrm/admin/custom/group/field/option',
-                                                                          'qs'    => 'action=delete&id=%%id%%',
+                                                                          'qs'    => 'action=delete&id=%%id%%&fid=%%fid%%',
                                                                           'title' => ts('Disable Multiple Choice Option'),
                                                                           ),
                                         );
@@ -128,7 +128,7 @@ class CRM_Custom_Page_Option extends CRM_Core_Page {
     function browse()
     {
         //get the default value from custom fields
-        $customFieldBAO =& new CRM_Core_BAO_CustomField();
+        $customFieldBAO = new CRM_Core_BAO_CustomField();
         $customFieldBAO->id = $this->_fid;
         if ( $customFieldBAO->find( true ) ) {
             $defaultValue  = $customFieldBAO->default_value;
@@ -174,7 +174,7 @@ ORDER BY weight, label
 
         $customOption = array( );
         $fields = array( 'label', 'value', 'is_active', 'weight' );
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
         while ($dao->fetch()) {
             $customOption[$dao->id] = array( ); 
             foreach ( $fields as $field ) {
@@ -214,14 +214,14 @@ ORDER BY weight, label
         }
         
         // Add order changing widget to selector
-        $returnURL = CRM_Utils_System::url( 'civicrm/admin/custom/group/field/option', "reset=1&action=browse&gid={$this->_gid}&fid={$this->_fid}" );
+        $returnURL = CRM_Utils_System::url( 'civicrm/admin/custom/group/field/option', 
+                                            "reset=1&action=browse&gid={$this->_gid}&fid={$this->_fid}" );
         $filter    = "option_group_id = {$optionGroupID}";
         require_once 'CRM/Utils/Weight.php';
         CRM_Utils_Weight::addOrder( $customOption, 'CRM_Core_DAO_OptionValue',
                                     'id', $returnURL, $filter );
         $this->assign('customOption', $customOption);
     }
-
 
     /**
      * edit custom Option.
@@ -236,20 +236,17 @@ ORDER BY weight, label
     function edit($action)
     {
         // create a simple controller for editing custom data
-        $controller =& new CRM_Core_Controller_Simple('CRM_Custom_Form_Option', ts('Custom Option'), $action);
+        $controller = new CRM_Core_Controller_Simple('CRM_Custom_Form_Option', ts('Custom Option'), $action);
 
         // set the userContext stack
-        $session =& CRM_Core_Session::singleton();
-        $session->pushUserContext(CRM_Utils_System::url('civicrm/admin/custom/group/field/option', "reset=1&action=browse&fid={$this->_fid}&gid={$this->_gid}"));
-       
-        $controller->set('gid', $this->_gid);
-        $controller->set('fid', $this->_fid);
+        $session = CRM_Core_Session::singleton();
+        $session->pushUserContext(CRM_Utils_System::url( 'civicrm/admin/custom/group/field/option', 
+                                                         "reset=1&action=browse&fid={$this->_fid}&gid={$this->_gid}"));
         $controller->setEmbedded(true);
         $controller->process();
         $controller->run();
         $this->browse();
     }
-
 
     /**
      * Run the page.
@@ -294,9 +291,16 @@ ORDER BY weight, label
 
         $id = CRM_Utils_Request::retrieve('id', 'Positive',
                                           $this, false, 0);
-        
+
+
+        CRM_Core_Error::debug_var( 'ACTION', $action );
+
         // what action to take ?
-        if ($action & (CRM_Core_Action::UPDATE | CRM_Core_Action::ADD | CRM_Core_Action::VIEW | CRM_Core_Action::DELETE)) {
+        if ( ( $action & 
+               (CRM_Core_Action::UPDATE | CRM_Core_Action::ADD |
+                CRM_Core_Action::VIEW | CRM_Core_Action::DELETE) ) ||
+             ! empty( $_POST ) ) {
+            CRM_Core_Error::debug_var( 'ACTION EDIT', $action );
             $this->edit($action);   // no browse for edit/update/view
         } else {
             require_once 'CRM/Core/BAO/OptionValue.php';

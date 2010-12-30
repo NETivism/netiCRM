@@ -1,7 +1,7 @@
 <?php
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -32,7 +32,7 @@
  * @subpackage API_UF
  * 
  * @copyright CiviCRM LLC (c) 2004-2010
- * @version $Id: UFGroup.php 26284 2010-02-17 17:58:00Z shot $
+ * @version $Id: UFGroup.php 30171 2010-10-14 09:11:27Z mover $
  *
  */
 
@@ -166,8 +166,8 @@ function civicrm_uf_create_html_get($gid, $reset = false)
     if ((int) $gid < 1) return civicrm_create_error('Param needs to be a positive integer.');
 
     require_once 'CRM/Core/Controller/Simple.php';
-    $session =& CRM_Core_Session::singleton( ); 
-    $controller =& new CRM_Core_Controller_Simple( 'CRM_Profile_Form_Edit', '', CRM_Core_Action::ADD ); 
+    $session = CRM_Core_Session::singleton( ); 
+    $controller = new CRM_Core_Controller_Simple( 'CRM_Profile_Form_Edit', '', CRM_Core_Action::ADD ); 
     if ( $reset ) { 
         unset( $_POST['_qf_default'] ); 
         unset( $_REQUEST['_qf_default'] );
@@ -178,7 +178,7 @@ function civicrm_uf_create_html_get($gid, $reset = false)
     $controller->setEmbedded( true ); 
     $controller->run( ); 
  
-    $template =& CRM_Core_Smarty::singleton( ); 
+    $template = CRM_Core_Smarty::singleton( ); 
     return trim( $template->fetch( 'CRM/Profile/Form/Dynamic.tpl' ) );
 } 
 
@@ -354,7 +354,7 @@ function civicrm_uf_field_update( $params , $fieldId ) {
     $params['field_name'] =  array( $field_type, $field_name, $location_type_id, $phone_type);
     
     require_once 'CRM/Core/BAO/UFField.php';
-    $UFField = &new CRM_core_BAO_UFField();
+    $UFField = new CRM_core_BAO_UFField();
     $UFField->id = $fieldId;
     
     if ( !( CRM_Utils_Array::value('group_id', $params) ) && $UFField->find(true) ) {

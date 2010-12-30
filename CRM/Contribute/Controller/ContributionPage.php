@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -60,7 +60,7 @@ class CRM_Contribute_Controller_ContributionPage extends CRM_Core_Controller {
         parent::__construct( $title, $modal );
 
         
-        $this->_stateMachine =& new CRM_Contribute_StateMachine_ContributionPage( $this, $action );
+        $this->_stateMachine = new CRM_Contribute_StateMachine_ContributionPage( $this, $action );
 
         // create and instantiate the pages
         $this->addPages( $this->_stateMachine, $action );

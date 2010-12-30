@@ -1,7 +1,7 @@
 <?php
 /*
 +--------------------------------------------------------------------+
-| CiviCRM version 3.1                                                |
+| CiviCRM version 3.3                                                |
 +--------------------------------------------------------------------+
 | Copyright CiviCRM LLC (c) 2004-2010                                |
 +--------------------------------------------------------------------+
@@ -79,7 +79,7 @@ class CRM_Contribute_DAO_PCP extends CRM_Core_DAO
      * @var boolean
      * @static
      */
-    static $_log = false;
+    static $_log = true;
     /**
      * Personal Campaign Page ID
      *
@@ -139,6 +139,12 @@ class CRM_Contribute_DAO_PCP extends CRM_Core_DAO
      * @var float
      */
     public $goal_amount;
+    /**
+     * 3 character string, value from config setting or input via user.
+     *
+     * @var string
+     */
+    public $currency;
     /**
      *
      * @var string
@@ -251,6 +257,14 @@ class CRM_Contribute_DAO_PCP extends CRM_Core_DAO
                     'name' => 'goal_amount',
                     'type' => CRM_Utils_Type::T_MONEY,
                     'title' => ts('Goal Amount') ,
+                ) ,
+                'currency' => array(
+                    'name' => 'currency',
+                    'type' => CRM_Utils_Type::T_STRING,
+                    'title' => ts('Currency') ,
+                    'maxlength' => 3,
+                    'size' => CRM_Utils_Type::FOUR,
+                    'default' => 'UL',
                 ) ,
                 'referer' => array(
                     'name' => 'referer',

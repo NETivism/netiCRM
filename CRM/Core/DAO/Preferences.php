@@ -1,7 +1,7 @@
 <?php
 /*
 +--------------------------------------------------------------------+
-| CiviCRM version 3.1                                                |
+| CiviCRM version 3.3                                                |
 +--------------------------------------------------------------------+
 | Copyright CiviCRM LLC (c) 2004-2010                                |
 +--------------------------------------------------------------------+
@@ -79,7 +79,7 @@ class CRM_Core_DAO_Preferences extends CRM_Core_DAO
      * @var boolean
      * @static
      */
-    static $_log = false;
+    static $_log = true;
     /**
      *
      * @var int unsigned
@@ -145,6 +145,18 @@ class CRM_Core_DAO_Preferences extends CRM_Core_DAO
      * @var text
      */
     public $mailing_format;
+    /**
+     * Format to display contact display name
+     *
+     * @var text
+     */
+    public $display_name_format;
+    /**
+     * Format to display contact sort name
+     *
+     * @var text
+     */
+    public $sort_name_format;
     /**
      * object name of provider for address standarization
      *
@@ -287,6 +299,16 @@ class CRM_Core_DAO_Preferences extends CRM_Core_DAO
                     'name' => 'mailing_format',
                     'type' => CRM_Utils_Type::T_TEXT,
                     'title' => ts('Mailing Format') ,
+                ) ,
+                'display_name_format' => array(
+                    'name' => 'display_name_format',
+                    'type' => CRM_Utils_Type::T_TEXT,
+                    'title' => ts('Display Name Format') ,
+                ) ,
+                'sort_name_format' => array(
+                    'name' => 'sort_name_format',
+                    'type' => CRM_Utils_Type::T_TEXT,
+                    'title' => ts('Sort Name Format') ,
                 ) ,
                 'address_standardization_provider' => array(
                     'name' => 'address_standardization_provider',

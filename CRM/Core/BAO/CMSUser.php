@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -55,7 +55,7 @@ class CRM_Core_BAO_CMSUser
     static function synchronize( ) 
     {
         //start of schronization code
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
 
         CRM_Core_Error::ignoreException( );
         $db_uf =& self::dbHandle( $config );
@@ -87,7 +87,7 @@ class CRM_Core_BAO_CMSUser
             $user->$mail = $row[$mail];
             $user->$name = $row[$name];
             $contactCount++;
-            if ($match = CRM_Core_BAO_UFMatch::synchronizeUFMatch( $user, $row[$id], $row[$mail], $uf, 1 ) ) {
+            if ($match = CRM_Core_BAO_UFMatch::synchronizeUFMatch( $user, $row[$id], $row[$mail], $uf, 1, null, true ) ) {
                 $contactCreated++;
             } else {
                 $contactMatching++;
@@ -122,7 +122,7 @@ class CRM_Core_BAO_CMSUser
      */
     static function create( &$params, $mail ) 
     {
-        $config  =& CRM_Core_Config::singleton( );
+        $config  = CRM_Core_Config::singleton( );
         
         $isDrupal = ucfirst($config->userFramework) == 'Drupal' ? TRUE : FALSE;
         $isJoomla = ucfirst($config->userFramework) == 'Joomla' ? TRUE : FALSE;
@@ -142,7 +142,7 @@ class CRM_Core_BAO_CMSUser
         if ( $ufID !== false &&
              isset( $params['contactID'] ) ) {
             // create the UF Match record
-            $ufmatch                 =& new CRM_Core_DAO_UFMatch( );
+            $ufmatch                 = new CRM_Core_DAO_UFMatch( );
             $ufmatch->domain_id      =  CRM_Core_Config::domainID( );
             $ufmatch->uf_id          =  $ufID;
             $ufmatch->contact_id     =  $params['contactID'];
@@ -152,7 +152,7 @@ class CRM_Core_BAO_CMSUser
             // Simulate user login by storing details in session.
             // Might break if we ever allow admins to create CMS users.
             // This allows anonymous creator of PCP to see their page after they create it.
-            //$session =& CRM_Core_Session::singleton();
+            //$session = CRM_Core_Session::singleton();
             //$session->set( 'userID'  , $ufmatch->contact_id );
         }
         
@@ -171,7 +171,7 @@ class CRM_Core_BAO_CMSUser
      */ 
     static function buildForm ( &$form, $gid, $emailPresent, $action = CRM_Core_Action::NONE) 
     {                                    
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
         $showCMS = false;
         
         $isDrupal = ucfirst($config->userFramework) == 'Drupal' ? TRUE : FALSE;
@@ -194,7 +194,7 @@ class CRM_Core_BAO_CMSUser
                 $isCMSUser = CRM_Core_DAO::getFieldValue( 'CRM_Core_DAO_UFGroup', $gid, 'is_cms_user' );
             } 
             // $cms is true when there is email(primary location) is set in the profile field.
-            $session =& CRM_Core_Session::singleton( );                         
+            $session = CRM_Core_Session::singleton( );                         
             $userID  = $session->get( 'userID' );      
             $showUserRegistration = false;
             if ( $action ) { 
@@ -269,12 +269,12 @@ class CRM_Core_BAO_CMSUser
         $form->assign( 'showCMS', $showCMS ); 
     } 
     
-    static function formRule( &$fields, &$files, &$self ) {
+    static function formRule( $fields, $files, $self ) {
         if ( ! CRM_Utils_Array::value( 'cms_create_account', $fields ) ) {
             return true;
         }
 
-        $config  =& CRM_Core_Config::singleton( );
+        $config  = CRM_Core_Config::singleton( );
             
         $isDrupal = ucfirst($config->userFramework) == 'Drupal' ? TRUE : FALSE;
         $isJoomla = ucfirst($config->userFramework) == 'Joomla' ? TRUE : FALSE;
@@ -346,14 +346,15 @@ class CRM_Core_BAO_CMSUser
      */
     static function checkUserNameEmailExists( &$params, &$errors, $emailName = 'email' )
     {
-        $config  =& CRM_Core_Config::singleton( );
+        $config  = CRM_Core_Config::singleton( );
 
         $isDrupal = ucfirst($config->userFramework) == 'Drupal' ? true : false;
         $isJoomla = ucfirst($config->userFramework) == 'Joomla' ? true : false;
         
-        $dao =& new CRM_Core_DAO( );
-        $name  = $dao->escape( $params['name'] );
-        $email = $dao->escape( $params['mail'] );
+        $dao = new CRM_Core_DAO( );
+        $name  = $dao->escape( CRM_Utils_Array::value( 'name', $params ) );
+        $email = $dao->escape( CRM_Utils_Array::value( 'mail', $params ) );
+
 
         if ( $isDrupal ) {
             _user_edit_validate(null, $params );
@@ -380,10 +381,9 @@ class CRM_Core_BAO_CMSUser
             }
         
             $sql = "
-SELECT count(*)
+SELECT name, mail
   FROM {$config->userFrameworkUsersTableName}
- WHERE LOWER(name) = LOWER('$name')
-";
+ WHERE (LOWER(name) = LOWER('$name')) OR (LOWER(mail) = LOWER('$email'))";
         } elseif ( $isJoomla ) {
             //don't allow the special characters and min. username length is two
             //regex \\ to match a single backslash would become '/\\\\/' 
@@ -397,7 +397,7 @@ SELECT username, email
  WHERE (LOWER(username) = LOWER('$name')) OR (LOWER(email) = LOWER('$email'))
 ";
         }
-
+        
         $db_cms = DB::connect($config->userFrameworkDSN);
         if ( DB::isError( $db_cms ) ) { 
             die( "Cannot connect to UF db via $dsn, " . $db_cms->getMessage( ) ); 
@@ -405,10 +405,15 @@ SELECT username, email
         $query = $db_cms->query( $sql );
         $row = $query->fetchRow( );
         if ( !empty( $row ) ) {
-            if ( $row[0] == $name ) {
-                $errors['cms_name'] = ts( 'The username %1 is already taken. Please select another username.', array( 1 => $name) );
-            } else if ( $row[1] == $email ) {
-                $errors['email-5'] = ts( 'This email %1 is already registered. Please select another email.', array( 1 => $email) );
+            $dbName  = CRM_Utils_Array::value( 0, $row );
+            $dbEmail = CRM_Utils_Array::value( 1, $row );
+            if ( strtolower( $dbName ) == strtolower( $name ) ) {
+                $errors['cms_name'] = ts( 'The username %1 is already taken. Please select another username.', 
+                                          array( 1 => $name ) );
+            }
+            if ( strtolower( $dbEmail ) == strtolower( $email ) ) {
+                $errors[$emailName] = ts( 'This email %1 is already registered. Please select another email.', 
+                                          array( 1 => $email) );
             }
         }
     }
@@ -425,7 +430,7 @@ SELECT username, email
      */
     static function userExists( &$contact ) 
     {        
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
 
         $isDrupal = ucfirst($config->userFramework) == 'Drupal' ? true : false;
         $isJoomla = ucfirst($config->userFramework) == 'Joomla' ? true : false;
@@ -490,7 +495,7 @@ SELECT username, email
             $values['values']['pass']['pass2'] = $params['cms_pass'];
         }
 
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
 
         // we also need to redirect b
         $config->inCiviCRM = true;
@@ -547,7 +552,7 @@ SELECT username, email
         $values['password2']    = $params['cms_confirm_pass'];
         $values['email']        = trim($params[$mail]);
         $values['gid']          = $acl->get_group_id( '', $userType);
-        $values['sendEmail']    = 1; 
+        $values['sendEmail']    = 0; 
         
         $useractivation = $userParams->get( 'useractivation' );
         if ( $useractivation == 1 ) { 
@@ -580,7 +585,7 @@ SELECT username, email
 
     static function updateUFName( $ufID, $ufName ) 
     {
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
         
         if ( $config->userFramework == 'Drupal' ) {
             if ( function_exists( 'user_load' ) ) { // CRM-5555
@@ -611,7 +616,7 @@ WHERE  id    = $ufID";
         CRM_Core_Error::setCallback();
         if ( ! $db_uf ||
              DB::isError( $db_uf ) ) { 
-            $session =& CRM_Core_Session::singleton( );
+            $session = CRM_Core_Session::singleton( );
             $session->pushUserContext( CRM_Utils_System::url('civicrm/admin', 'reset=1' ) );
             CRM_Core_Error::statusBounce( ts( "Cannot connect to UF db via %1. Please check the CIVICRM_UF_DSN value in your civicrm.settings.php file",
                                               array( 1 => $db_uf->getMessage( ) ) ) );

@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -91,6 +91,7 @@ class CRM_Admin_Form_LocationType extends CRM_Admin_Form
      * @return None
      */
     public function postProcess() {
+        CRM_Utils_System::flushCache( 'CRM_Core_DAO_LocationType' );
 
         if ( $this->_action & CRM_Core_Action::DELETE ) {
             CRM_Core_BAO_LocationType::del( $this->_id );
@@ -104,7 +105,7 @@ class CRM_Admin_Form_LocationType extends CRM_Admin_Form
         $params['is_default'] =  CRM_Utils_Array::value( 'is_default', $params, false );
             
         // action is taken depending upon the mode
-        $locationType               =& new CRM_Core_DAO_LocationType( );
+        $locationType               = new CRM_Core_DAO_LocationType( );
         $locationType->name         = $params['name'];
         $locationType->vcard_name   = $params['vcard_name'];
         $locationType->description  = $params['description'];

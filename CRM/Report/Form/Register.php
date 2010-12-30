@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -46,14 +46,17 @@ class CRM_Report_Form_Register extends CRM_Core_Form {
     {  
         $this->_action = CRM_Utils_Request::retrieve( 'action','String',$this, false );
         $this->_id = CRM_Utils_Request::retrieve( 'id','String',$this, false );        
-         if ( $this->_action & CRM_Core_Action::DELETE ) {
+     
+        CRM_Utils_System::setTitle(ts('Report Template'));
+
+        if ( $this->_action & CRM_Core_Action::DELETE ) {
             return;
-         }    
+        }    
         
         //   crm_core_error::debug("$this->_actions", $this->_action);
         $this->_opID = CRM_Core_DAO::getFieldValue( 'CRM_Core_DAO_OptionGroup',
                                                     'report_template', 'id', 'name' );
-        CRM_Utils_System::setTitle(ts('Report Template'));
+
         $instanceInfo = array( );      
     }
 
@@ -121,7 +124,7 @@ class CRM_Report_Form_Register extends CRM_Core_Form {
             $this->addFormRule( array( 'CRM_Report_Form_Register', 'formRule' ), $this );
         }
     
-    static function formRule( &$fields, &$files, $self ) 
+    static function formRule( $fields, $files, $self ) 
         {  
             $errors = array( );
             $dupeClass = false;
@@ -173,6 +176,7 @@ class CRM_Report_Form_Register extends CRM_Core_Form {
                 // get the submitted form values.                 
                 $params = $this->controller->exportValues( $this->_name );
                 $ids    = array( );
+                             
                 $groupParams = array( 'name' => ('report_template') );
                 require_once 'CRM/Core/OptionValue.php';
                 $optionValue = CRM_Core_OptionValue::addOptionValue($params, $groupParams, $this->_action, $this->_id);

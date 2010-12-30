@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -23,14 +23,20 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
-<div class="form-item">
-<fieldset>
-    <legend>{ts}Batch Update via Profile{/ts}</legend>
-    <dl>
-        <dt>{$form.uf_group_id.label}</dt><dd>{$form.uf_group_id.html}</dd>
-        <dt></dt><dd>{include file="CRM/Contact/Form/Task.tpl"}</dd>
-        <dt></dt><dd>{$form.buttons.html}</dd>
-    </dl>
-</fieldset>
+{*Batch update for contact via profile*}
+<div class="crm-block crm-form-block crm-contact-task-pickprofile-form-block">
+ <table class="form-layout-compressed">
+    <tr class="crm-contact-task-pickprofile-form-block-uf_group_id">
+       <td class="label">{$form.uf_group_id.label}</td>
+       <td>{$form.uf_group_id.html}</td>
+    </tr>
+    <tr> 
+        <td class="label"></td>
+        <td>
+            {include file="CRM/Contact/Form/Task.tpl"}
+        </td>
+    </tr>
+</table>
+<div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl"}</div>
 </div>
 

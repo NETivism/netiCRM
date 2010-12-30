@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -61,10 +61,10 @@ class CRM_Admin_Page_CMSUser extends CRM_Core_Page
             CRM_Core_BAO_CMSUser::synchronize();
             return;
         }
-        $controller =& new CRM_Core_Controller_Simple( 'CRM_Admin_Form_CMSUser', 'Synchronize CMS Users' );
+        $controller = new CRM_Core_Controller_Simple( 'CRM_Admin_Form_CMSUser', 'Synchronize CMS Users' );
         
         // set the userContext stack
-        $session =& CRM_Core_Session::singleton();
+        $session = CRM_Core_Session::singleton();
         $session->pushUserContext( CRM_Utils_System::url( 'civicrm/admin', 'reset=1') );
         
         $controller->setEmbedded( true );

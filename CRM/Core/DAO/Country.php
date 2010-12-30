@@ -1,7 +1,7 @@
 <?php
 /*
 +--------------------------------------------------------------------+
-| CiviCRM version 3.1                                                |
+| CiviCRM version 3.3                                                |
 +--------------------------------------------------------------------+
 | Copyright CiviCRM LLC (c) 2004-2010                                |
 +--------------------------------------------------------------------+
@@ -105,6 +105,12 @@ class CRM_Core_DAO_Country extends CRM_Core_DAO
      */
     public $country_code;
     /**
+     * Foreign key to civicrm_address_format.id.
+     *
+     * @var int unsigned
+     */
+    public $address_format_id;
+    /**
      * International direct dialing prefix from within the country TO another country
      *
      * @var string
@@ -148,6 +154,7 @@ class CRM_Core_DAO_Country extends CRM_Core_DAO
     {
         if (!(self::$_links)) {
             self::$_links = array(
+                'address_format_id' => 'civicrm_address_format:id',
                 'region_id' => 'civicrm_worldregion:id',
             );
         }
@@ -193,6 +200,11 @@ class CRM_Core_DAO_Country extends CRM_Core_DAO
                     'title' => ts('Country Code') ,
                     'maxlength' => 4,
                     'size' => CRM_Utils_Type::FOUR,
+                ) ,
+                'address_format_id' => array(
+                    'name' => 'address_format_id',
+                    'type' => CRM_Utils_Type::T_INT,
+                    'FKClassName' => 'CRM_Core_DAO_AddressFormat',
                 ) ,
                 'idd_prefix' => array(
                     'name' => 'idd_prefix',

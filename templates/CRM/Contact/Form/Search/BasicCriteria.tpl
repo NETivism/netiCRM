@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -23,22 +23,9 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
-{* Search criteria form elements *}
-<fieldset>
-    <div class="form-item">
-    {if $rows}
-        {if $context EQ 'smog'}
-            <h3>{ts}Find Members within this Group{/ts}</h3>
-        {/if}
-    {else}
-        {if $context EQ 'smog'}
-            <h3>{ts}Find Members within this Group{/ts}</h3>
-        {elseif $context EQ 'amtg'}
-            <h3>{ts}Find Contacts to Add to this Group{/ts}</h3>
-        {/if}
-    {/if}
+{* Search criteria form elements - Find Contacts *}
 
-{ if $config->groupTree }
+{ if $config->groupTree }{*This code supports nested group display in search - needs to be updated to jquery. *}
 {literal}
 <script type="text/javascript">
 dojo.require("dojo.parser");
@@ -136,21 +123,56 @@ dojo.addOnLoad( function( ) {
 {/literal}
 {/if}
 
-    {strip}
-	<table class="{$form.sort_name.name}">
-        <tr>
-            <td class="label">{$form.sort_name.label} {$form.sort_name.html}</td>
-{if $form.contact_type}
-            <td class="label">{$form.contact_type.label} {$form.contact_type.html}</td>
+{* Set title for search criteria accordion *}
+{if $context EQ 'smog'}
+    {capture assign=editTitle}{ts}Find Contacts within this Group{/ts}{/capture}
+{elseif $context EQ 'amtg' AND !$rows}
+    {capture assign=editTitle}{ts}Find Contacts to Add to this Group{/ts}{/capture}
+{else}
+    {capture assign=editTitle}{ts}Edit Search Criteria{/ts}{/capture}
 {/if}
-{if $form.group}
-            <td class="label">
-                {if $context EQ 'smog'}
-                    {$form.group_contact_status.label}<br />
+
+{strip}
+<div class="crm-block crm-form-block crm-basic-criteria-form-block">
+    <div class="crm-accordion-wrapper crm-case_search-accordion {if $rows}crm-accordion-closed{else}crm-accordion-open{/if}">
+     <div class="crm-accordion-header crm-master-accordion-header">
+      <div class="icon crm-accordion-pointer"></div> 
+        {$editTitle}
+    </div><!-- /.crm-accordion-header -->
+    <div class="crm-accordion-body">
+        <div class="crm-section sort_name-section">	
+        	<div class="label">
+        		{$form.sort_name.label}
+        	</div>
+        	<div class="content">
+        		{$form.sort_name.html}
+        	</div>
+        	<div class="clear"></div> 
+        </div>
+
+        {if $form.contact_type}    
+        	<div class="crm-section contact_type-section">	
+        		<div class="label">
+        			{$form.contact_type.label}
+        		</div>
+            	<div class="content">
+            		{$form.contact_type.html}
+            	</div>
+            	<div class="clear"></div> 
+        	</div>
+        {/if}
+
+        {if $form.group}
+        <div class="crm-section group_selection-section">	
+        	<div class="label">
+        		{if $context EQ 'smog'}
+                    {$form.group_contact_status.label}
                 {else}
                     {ts}in{/ts} &nbsp;
                 {/if}
-                {if $context EQ 'smog'}
+        	</div>
+        	<div class="content">
+        		{if $context EQ 'smog'}
                     {$form.group_contact_status.html}
                 {else}
                     { if $config->groupTree }
@@ -161,17 +183,32 @@ dojo.addOnLoad( function( ) {
                     {else}
                         {$form.group.html|crmReplace:class:big}
                     {/if}
-                {/if}
-            </td>
-{/if}
-{if $form.tag}
-            <td class="label">{$form.tag.label} {$form.tag.html|crmReplace:class:medium}</td>
-{/if}
-            <td style="vertical-align: bottom;">
-                {$form.buttons.html}
-            </td>
-        </tr>
-    </table>
-    {/strip}
-    </div>
-</fieldset>
+                 {/if}
+        	</div>
+        	<div class="clear"></div> 
+        </div>
+        {/if}
+
+        {if $form.tag}
+            <div class="crm-section tag-section">	
+            	<div class="label">
+            		{$form.tag.label}
+            	</div>
+            	<div class="content">
+            		{$form.tag.html|crmReplace:class:medium}
+            	</div>
+            	<div class="clear"></div> 
+            </div>
+        {/if}
+        <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl"}</div>
+    </div><!-- /.crm-accordion-body -->
+    </div><!-- /.crm-accordion-wrapper -->
+</div><!-- /.crm-form-block -->
+{/strip}
+{literal}
+<script type="text/javascript">
+cj(function() {
+   cj().crmaccordions(); 
+});
+</script>
+{/literal}

@@ -1,7 +1,7 @@
 <?php
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | This file is a part of CiviCRM.                                    |
  |                                                                    |
@@ -34,7 +34,7 @@ function com_uninstall()
         require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'civicrm.settings.php';
     
         require_once 'CRM/Core/Config.php';
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
     
         require_once 'CRM/Core/DAO.php';
         CRM_Core_DAO::dropAllTables( );

@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -192,20 +192,9 @@ class CRM_Report_Form_Contribute_Summary extends CRM_Report_Form {
                                         'group'         => true,
                                         'options'       => CRM_Core_PseudoConstant::group( ) ), ), ),
                    
-                   'civicrm_tag' => 
-                   array( 'dao'     => 'CRM_Core_DAO_Tag',
-                          'filters' =>             
-                          array( 'tid' => 
-                                 array( 'name'         => 'tag_id',
-                                        'title'        => ts( 'Tag' ),
-                                        'tag'          => true,
-                                        'operatorType' => CRM_Report_Form::OP_MULTISELECT,
-                                        'options'      => CRM_Core_PseudoConstant::tag( ) 
-                                        ), 
-                                 ), 
-                          ),
                    );
       
+        $this->_tagFilter = true;
         parent::__construct( );
     }
 
@@ -322,7 +311,7 @@ class CRM_Report_Form_Contribute_Summary extends CRM_Report_Form {
         $this->_select = "SELECT " . implode( ', ', $select ) . " ";
     }
 
-    static function formRule( &$fields, &$files, $self ) {  
+    static function formRule( $fields, $files, $self ) {  
         $errors = $grouping = array( );
         //check for searching combination of dispaly columns and
         //grouping criteria
@@ -343,7 +332,7 @@ class CRM_Report_Form_Contribute_Summary extends CRM_Report_Form {
             }
             if ( !empty( $grouping ) ) {
                 $temp = 'and '. implode(', ', $grouping );
-                $errors['fields'] = ts("Please Do not use combination of received date %1", array( 1 => $temp ));    
+                $errors['fields'] = ts("Please do not use combination of Receive Date %1", array( 1 => $temp ));    
             }
         }
          
@@ -351,7 +340,7 @@ class CRM_Report_Form_Contribute_Summary extends CRM_Report_Form {
             if ( CRM_Utils_Array::value( 'receive_date_relative', $fields ) || 
                  CRM_Utils_Date::isDate( $fields['receive_date_from'] ) || 
                  CRM_Utils_Date::isDate( $fields['receive_date_to'] ) ) {
-                $errors['receive_date_relative'] = ts("Do not use filter on Date if group by received date not used ");      
+                $errors['receive_date_relative'] = ts("Do not use filter on Date if group by Receive Date is not used ");      
             }
         }         
         if ( !CRM_Utils_Array::value( 'total_amount', $fields['fields'] ) ) {

@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -47,7 +47,7 @@
 
   {counter start=0 skip=1 print=false}
   {foreach from=$rows item=row}
-  <tr id='rowid{$row.membership_id}' class="{cycle values="odd-row,even-row"}{*if $row.cancel_date} disabled{/if*}">
+  <tr id='rowid{$row.membership_id}' class="{cycle values="odd-row,even-row"} {*if $row.cancel_date} disabled{/if*} crm-membership_{$row.membership_id}">
      {if ! $single }
        {if $context eq 'Search' }       
           {assign var=cbName value=$row.checkbox}
@@ -58,15 +58,15 @@
             <a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$row.contact_id`"}" title="{ts}View contact record{/ts}">{$row.sort_name}</a>
         </td> 
     {/if}
-    <td>
-        {$row.membership_type_id}
+    <td class="crm-membership-type crm-membership-type_{$row.membership_type}">
+        {$row.membership_type}
         {if $row.owner_membership_id}<br />({ts}by relationship{/ts}){/if}
     </td>
-    <td>{$row.join_date|truncate:10:''|crmDate}</td>
-    <td>{$row.membership_start_date|truncate:10:''|crmDate}</td>
-    <td>{$row.membership_end_date|truncate:10:''|crmDate}</td>
-    <td>{$row.membership_source}</td>
-    <td>{$row.status_id}</td>
+    <td class="crm-membership-join_date">{$row.join_date|truncate:10:''|crmDate}</td>
+    <td class="crm-membership-start_date">{$row.membership_start_date|truncate:10:''|crmDate}</td>
+    <td class="crm-membership-end_date">{$row.membership_end_date|truncate:10:''|crmDate}</td>
+    <td class="crm-membership-source">{$row.membership_source}</td>
+    <td class="crm-membership-status crm-membership-status_{$row.membership_status}">{$row.membership_status}</td>
     <td>
         {$row.action|replace:'xx':$row.membership_id}
         {if $row.owner_membership_id}

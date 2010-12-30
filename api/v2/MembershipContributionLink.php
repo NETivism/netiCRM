@@ -1,7 +1,7 @@
 <?php
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -34,7 +34,7 @@
  * @subpackage API_Membership
  * 
  * @copyright CiviCRM LLC (c) 2004-2010
- * @version $Id: MembershipContributionLink.php 26284 2010-02-17 17:58:00Z shot $
+ * @version $Id: MembershipContributionLink.php 30171 2010-10-14 09:11:27Z mover $
  */
 
 /**
@@ -71,7 +71,7 @@ function &civicrm_membershipcontributionlink_create( &$params ) {
     $transaction = new CRM_Core_Transaction( );
 
     require_once 'CRM/Member/DAO/MembershipPayment.php';
-    $mpDAO =& new CRM_Member_DAO_MembershipPayment();    
+    $mpDAO = new CRM_Member_DAO_MembershipPayment();    
     $mpDAO->copyValues($params);
     $result = $mpDAO->save();
     
@@ -109,7 +109,7 @@ function &civicrm_membershipcontributionlink_get( &$params ) {
     }
 
     require_once 'CRM/Member/DAO/MembershipPayment.php';
-    $mpDAO =& new CRM_Member_DAO_MembershipPayment();    
+    $mpDAO = new CRM_Member_DAO_MembershipPayment();    
     $mpDAO->copyValues($params);
     $mpDAO->id = CRM_Utils_Array::value( 'membership_contribution_id', $params );
     $mpDAO->find();

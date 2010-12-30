@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -175,7 +175,7 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser
         //end                                 
        
         //for date-Formats
-        $session =& CRM_Core_Session::singleton();
+        $session = CRM_Core_Session::singleton();
         $dateType = $session->get("dateTypes");
         foreach ($params as $key => $val) {
 
@@ -266,7 +266,7 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser
             $params['join_date'] = $params['membership_start_date'];
         }
                
-        $session =& CRM_Core_Session::singleton();
+        $session = CRM_Core_Session::singleton();
         $dateType = $session->get("dateTypes");
         $formatted = array();
         $customFields = CRM_Core_BAO_CustomField::getFields( CRM_Utils_Array::value( 'contact_type',$params ) );

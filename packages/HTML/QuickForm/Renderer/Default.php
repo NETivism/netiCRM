@@ -291,6 +291,10 @@ class HTML_QuickForm_Renderer_Default extends HTML_QuickForm_Renderer
     */
     function renderElement(&$element, $required, $error)
     {
+        // make sure that all elements are id'ed even in a group!
+        
+        CRM_Core_Form_Renderer::updateAttributes( $element, $required, $error );
+
         if (!$this->_inGroup) {
             $html = $this->_prepareTemplate($element->getName(), $element->getLabel(), $required, $error);
             $this->_html .= str_replace('{element}', $element->toHtml(), $html);

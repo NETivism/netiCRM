@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -28,7 +28,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="{$config->lcMessages|truncate:2:"":true}" xml:lang="{$config->lcMessages|truncate:2:"":true}">
 
 <head>
-  <title>{$pageTitle}</title>
+  <title>{if $pageTitle}{$pageTitle|strip_tags}{else}{ts}Printer-Friendly View{/ts}{/if}</title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <base href="{crmURL p="" a=true}" /><!--[if IE]></base><![endif]-->
   <style type="text/css" media="screen, print">@import url({$config->resourceBase}css/civicrm.css);</style>
@@ -47,10 +47,8 @@
 {* Check for Status message for the page (stored in session->getStatus). Status is cleared on retrieval. *}
 {if $session->getStatus(false)}
 <div class="messages status">
-  <dl>
-  <dt><img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}" /></dt>
-  <dd>{$session->getStatus(true)}</dd>
-  </dl>
+  <div class="icon inform-icon"></div>
+  {$session->getStatus(true)}
 </div>
 {/if}
 

@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -24,30 +24,39 @@
  +--------------------------------------------------------------------+
 *}
 {* this template is used for adding/editing location type  *}
-<div class="form-item">
-<fieldset><legend>{if $action eq 1}{ts}New Location Type{/ts}{elseif $action eq 2}{ts}Edit Location Type{/ts}{else}{ts}Delete Location Type{/ts}{/if}</legend>
-
+<h3>{if $action eq 1}{ts}New Location Type{/ts}{elseif $action eq 2}{ts}Edit Location Type{/ts}{else}{ts}Delete Location Type{/ts}{/if}</h3>
+<div class="crm-block crm-form-block crm-location-type-form-block">
+<div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>
 {if $action eq 8}
   <div class="messages status">
-    <dl>
-      <dt><img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}" /></dt>
-      <dd>    
+     <div class="icon inform-icon"></div>
         {ts}WARNING: Deleting this option will result in the loss of all location type records which use the option.{/ts} {ts}This may mean the loss of a substantial amount of data, and the action cannot be undone.{/ts} {ts}Do you want to continue?{/ts}
-      </dd>
-    </dl>
-  </div>
+      </div>
 {else}
-  <dl>
-    <dt>{$form.name.label}</dt><dd>{$form.name.html}</dd>
-    <dt>&nbsp;</dt><dd class="description">{ts}WARNING: Do NOT use spaces in the Location Name.{/ts}</dd>
-    <dt>{$form.vcard_name.label}</dt><dd>{$form.vcard_name.html}</dd>
-    <dt>{$form.description.label}</dt><dd>{$form.description.html}</dd>
-    <dt>{$form.is_active.label}</dt><dd>{$form.is_active.html}</dd>
-    <dt>{$form.is_default.label}</dt><dd>{$form.is_default.html}</dd>
-  </dl>
+  <table class="form-layout-compressed">
+      <tr class="crm-location-type-form-block-label">
+          <td class="label">{$form.name.label}</td>
+          <td>{$form.name.html}<br />
+               <span class="description">{ts}WARNING: Do NOT use spaces in the Location Name.{/ts}</span>
+          </td>
+      </tr>
+      <tr class="crm-location-type-form-block-vcard_name">
+          <td class="label">{$form.vcard_name.label}</td>
+          <td>{$form.vcard_name.html}</td>
+      </tr>
+      <tr class="crm-location-type-form-block-description">
+          <td class="label">{$form.description.label}</td>
+          <td>{$form.description.html}</td>
+      </tr>
+      <tr class="crm-location-type-form-block-is_active">
+          <td class="label">{$form.is_active.label}</td>
+          <td>{$form.is_active.html}</td>
+      </tr>
+      <tr  class="crm-location-type-form-block-is_default">
+           <td class="label">{$form.is_default.label}</td>
+           <td>{$form.is_default.html}</td>
+      </tr>
+  </table>
 {/if}
-  <dl> 
-    <dt></dt><dd>{$form.buttons.html}</dd>
-  </dl> 
-</fieldset>
+    <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
 </div>

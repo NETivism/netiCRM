@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -142,10 +142,15 @@ class CRM_Contact_Form_Search_Custom_DateAdded
             print "$sql;";
             print "</pre>";
         }
-        CRM_Core_DAO::executeQuery( $sql, CRM_Core_DAO::$_nullArray );
+        CRM_Core_DAO::executeQuery( $sql );
         
-        $startDate = CRM_Utils_Date::mysqlToIso( CRM_Utils_Date::processDate( $this->_formValues['start_date'] ) );
-        $endDate   = CRM_Utils_Date::mysqlToIso( CRM_Utils_Date::processDate( $this->_formValues['end_date'] ) );
+        $startDate  = CRM_Utils_Date::mysqlToIso( CRM_Utils_Date::processDate( $this->_formValues['start_date'] ) );
+        $endDateFix = NULL;
+        if ( !empty($this->_formValues['end_date']) ){
+            $endDate    = CRM_Utils_Date::mysqlToIso( CRM_Utils_Date::processDate( $this->_formValues['end_date'] ) );
+            # tack 11:59pm on to make search inclusive of the end date
+            $endDateFix = "AND date_added <= '" . substr($endDate,0,10) . " 23:59:00'";            
+        }
         
         $dateRange =
          "INSERT INTO dates_{$this->_tableName} ( id, date_added )
@@ -159,8 +164,8 @@ class CRM_Contact_Form_Search_Custom_DateAdded
           GROUP BY
               civicrm_contact.id
           HAVING
-              date_added >= '$startDate 00:00:00' AND
-              date_added <= '$endDate 23:59:59'"; # tack 11:59pm on to make search inclusive of the end date
+              date_added >= '$startDate' 
+              $endDateFix";
 
         if ($this->_debug > 0) {
             print "-- Date range query: <pre>";
@@ -170,168 +175,176 @@ class CRM_Contact_Form_Search_Custom_DateAdded
         
         CRM_Core_DAO::executeQuery( $dateRange, CRM_Core_DAO::$_nullArray );
 
-        //block for Group search
-        $smartGroup = array( );
-        require_once 'CRM/Contact/DAO/Group.php';
-        $group = new CRM_Contact_DAO_Group( );
-        $group->is_active = 1;
-        $group->find();
-        while( $group->fetch( ) ) {
-            $allGroups[] = $group->id;
-            if ( $group->saved_search_id ) {
-                $smartGroup[$group->saved_search_id] = $group->id;     
+        // Only include groups in the search query of one or more Include OR Exclude groups has been selected. 
+        // CRM-6356
+        if ( $this->_groups ){
+            //block for Group search
+            $smartGroup = array( );
+            require_once 'CRM/Contact/DAO/Group.php';
+            $group = new CRM_Contact_DAO_Group( );
+            $group->is_active = 1;
+            $group->find();
+            while( $group->fetch( ) ) {
+                $allGroups[] = $group->id;
+                if ( $group->saved_search_id ) {
+                    $smartGroup[$group->saved_search_id] = $group->id;     
+                }
             }
-        }
-        $includedGroups = implode( ',',$allGroups );
-        
-        if ( ! empty( $this->_includeGroups ) ) { 
-            $iGroups = implode( ',', $this->_includeGroups );
-        } else {
-            //if no group selected search for all groups
-            $iGroups = $includedGroups;
-        }
-        if ( is_array( $this->_excludeGroups ) ) {
-            $xGroups = implode( ',', $this->_excludeGroups );
-        } else {
-            $xGroups = 0;
-        }
-        
-        $sql = "DROP TEMPORARY TABLE IF EXISTS Xg_{$this->_tableName}";
-        CRM_Core_DAO::executeQuery( $sql, CRM_Core_DAO::$_nullArray );           
-        $sql = "CREATE TEMPORARY TABLE Xg_{$this->_tableName} ( contact_id int primary key) ENGINE=HEAP";  
-        CRM_Core_DAO::executeQuery( $sql, CRM_Core_DAO::$_nullArray );
-        
-        //used only when exclude group is selected 
-        if( $xGroups != 0 ) {
-            $excludeGroup = 
-             "INSERT INTO  Xg_{$this->_tableName} ( contact_id )
-              SELECT  DISTINCT civicrm_group_contact.contact_id
-              FROM civicrm_group_contact, dates_{$this->_tableName} AS d
-              WHERE 
-                 d.id = civicrm_group_contact.contact_id AND 
-                 civicrm_group_contact.status = 'Added' AND
-                 civicrm_group_contact.group_id IN( {$xGroups})";
-            
-            CRM_Core_DAO::executeQuery( $excludeGroup, CRM_Core_DAO::$_nullArray );
+            $includedGroups = implode( ',',$allGroups );
+
+            if ( ! empty( $this->_includeGroups ) ) { 
+                $iGroups = implode( ',', $this->_includeGroups );
+            } else {
+                //if no group selected search for all groups
+                $iGroups = $includedGroups;
+            }
+            if ( is_array( $this->_excludeGroups ) ) {
+                $xGroups = implode( ',', $this->_excludeGroups );
+            } else {
+                $xGroups = 0;
+            }
+
+            $sql = "DROP TEMPORARY TABLE IF EXISTS Xg_{$this->_tableName}";
+            CRM_Core_DAO::executeQuery( $sql, CRM_Core_DAO::$_nullArray );           
+            $sql = "CREATE TEMPORARY TABLE Xg_{$this->_tableName} ( contact_id int primary key) ENGINE=HEAP";  
+            CRM_Core_DAO::executeQuery( $sql, CRM_Core_DAO::$_nullArray );
+
+            //used only when exclude group is selected 
+            if( $xGroups != 0 ) {
+                $excludeGroup = 
+                 "INSERT INTO  Xg_{$this->_tableName} ( contact_id )
+                  SELECT  DISTINCT civicrm_group_contact.contact_id
+                  FROM civicrm_group_contact, dates_{$this->_tableName} AS d
+                  WHERE 
+                     d.id = civicrm_group_contact.contact_id AND 
+                     civicrm_group_contact.status = 'Added' AND
+                     civicrm_group_contact.group_id IN( {$xGroups})";
+
+                CRM_Core_DAO::executeQuery( $excludeGroup, CRM_Core_DAO::$_nullArray );
+
+                //search for smart group contacts
+                foreach( $this->_excludeGroups as $keys => $values ) {
+                    if ( in_array( $values, $smartGroup ) ) {
+                        $ssId = CRM_Utils_Array::key( $values, $smartGroup );
+
+                        $smartSql = CRM_Contact_BAO_SavedSearch::contactIDsSQL( $ssId );
+
+                        $smartSql = $smartSql. " AND contact_a.id NOT IN ( 
+                              SELECT contact_id FROM civicrm_group_contact 
+                              WHERE civicrm_group_contact.group_id = {$values} AND civicrm_group_contact.status = 'Removed')";
+
+                        $smartGroupQuery = " INSERT IGNORE INTO Xg_{$this->_tableName}(contact_id) $smartSql";
+
+                        CRM_Core_DAO::executeQuery( $smartGroupQuery, CRM_Core_DAO::$_nullArray );
+                    }
+                }
+
+            }
+
+            $sql = "DROP TEMPORARY TABLE IF EXISTS Ig_{$this->_tableName}";
+            CRM_Core_DAO::executeQuery( $sql, CRM_Core_DAO::$_nullArray );
+            $sql = "CREATE TEMPORARY TABLE Ig_{$this->_tableName}
+                ( id int PRIMARY KEY AUTO_INCREMENT,
+                  contact_id int,
+                  group_names varchar(64)) ENGINE=HEAP";
+
+            if ($this->_debug > 0) {
+                print "-- Include groups query: <pre>";
+                print "$sql;";
+                print "</pre>";
+            }
+
+            CRM_Core_DAO::executeQuery( $sql, CRM_Core_DAO::$_nullArray );
+
+            $includeGroup = 
+                "INSERT INTO Ig_{$this->_tableName} (contact_id, group_names)
+                 SELECT      d.id as contact_id, civicrm_group.name as group_name
+                 FROM        dates_{$this->_tableName} AS d
+                 INNER JOIN  civicrm_group_contact
+                 ON          civicrm_group_contact.contact_id = d.id
+                 LEFT JOIN   civicrm_group
+                 ON          civicrm_group_contact.group_id = civicrm_group.id";
+
+            //used only when exclude group is selected
+            if( $xGroups != 0 ) {
+                $includeGroup .= " LEFT JOIN        Xg_{$this->_tableName}
+                                          ON        d.id = Xg_{$this->_tableName}.contact_id";
+            }
+            $includeGroup .= " WHERE           
+                                     civicrm_group_contact.status = 'Added'  AND
+                                     civicrm_group_contact.group_id IN($iGroups)";
+
+            //used only when exclude group is selected
+            if ( $xGroups != 0 ) {
+                $includeGroup .=" AND  Xg_{$this->_tableName}.contact_id IS null";
+            }
+
+            if ($this->_debug > 0) {
+                print "-- Include groups query: <pre>";
+                print "$includeGroup;";
+                print "</pre>";
+            }
+
+            CRM_Core_DAO::executeQuery( $includeGroup, CRM_Core_DAO::$_nullArray );
 
             //search for smart group contacts
-            foreach( $this->_excludeGroups as $keys => $values ) {
+            foreach( $this->_includeGroups as $keys => $values ) {
                 if ( in_array( $values, $smartGroup ) ) {
-                    $ssId = CRM_Utils_Array::key( $values, $smartGroup );
-                    
-                    $smartSql = CRM_Contact_BAO_SavedSearch::contactIDsSQL( $ssId );
-                    
-                    $smartSql = $smartSql. " AND contact_a.id NOT IN ( 
-                          SELECT contact_id FROM civicrm_group_contact 
-                          WHERE civicrm_group_contact.group_id = {$values} AND civicrm_group_contact.status = 'Removed')";
-                    
-                    $smartGroupQuery = " INSERT IGNORE INTO Xg_{$this->_tableName}(contact_id) $smartSql";
-                    
-                    CRM_Core_DAO::executeQuery( $smartGroupQuery, CRM_Core_DAO::$_nullArray );
-                }
-            }
-            
-        }
-        
-        $sql = "DROP TEMPORARY TABLE IF EXISTS Ig_{$this->_tableName}";
-        CRM_Core_DAO::executeQuery( $sql, CRM_Core_DAO::$_nullArray );
-        $sql = "CREATE TEMPORARY TABLE Ig_{$this->_tableName}
-            ( id int PRIMARY KEY AUTO_INCREMENT,
-              contact_id int,
-              group_names varchar(64)) ENGINE=HEAP";
-        
-        if ($this->_debug > 0) {
-            print "-- Include groups query: <pre>";
-            print "$sql;";
-            print "</pre>";
-        }
-        
-        CRM_Core_DAO::executeQuery( $sql, CRM_Core_DAO::$_nullArray );
-        
-        $includeGroup = 
-            "INSERT INTO Ig_{$this->_tableName} (contact_id, group_names)
-             SELECT      d.id as contact_id, civicrm_group.name as group_name
-             FROM        dates_{$this->_tableName} AS d
-             INNER JOIN  civicrm_group_contact
-             ON          civicrm_group_contact.contact_id = d.id
-             LEFT JOIN   civicrm_group
-             ON          civicrm_group_contact.group_id = civicrm_group.id";
-         
-        //used only when exclude group is selected
-        if( $xGroups != 0 ) {
-            $includeGroup .= " LEFT JOIN        Xg_{$this->_tableName}
-                                      ON        d.id = Xg_{$this->_tableName}.contact_id";
-        }
-        $includeGroup .= " WHERE           
-                                 civicrm_group_contact.status = 'Added'  AND
-                                 civicrm_group_contact.group_id IN($iGroups)";
 
-        //used only when exclude group is selected
-        if ( $xGroups != 0 ) {
-            $includeGroup .=" AND  Xg_{$this->_tableName}.contact_id IS null";
-        }
-        
-        if ($this->_debug > 0) {
-            print "-- Include groups query: <pre>";
-            print "$includeGroup;";
-            print "</pre>";
-        }
-        
-        CRM_Core_DAO::executeQuery( $includeGroup, CRM_Core_DAO::$_nullArray );
-        
-        //search for smart group contacts
-        foreach( $this->_includeGroups as $keys => $values ) {
-            if ( in_array( $values, $smartGroup ) ) {
-            
-                $ssId = CRM_Utils_Array::key( $values, $smartGroup );
-        
-                $smartSql = CRM_Contact_BAO_SavedSearch::contactIDsSQL( $ssId );
-  
-                $smartSql .= " AND contact_a.id IN (
-                               SELECT id AS contact_id
-                               FROM dates_{$this->_tableName} )";
-  
-                $smartSql .= " AND contact_a.id NOT IN ( 
-                               SELECT contact_id FROM civicrm_group_contact
-                               WHERE civicrm_group_contact.group_id = {$values} AND civicrm_group_contact.status = 'Removed')";
-        
-                //used only when exclude group is selected
-                if ( $xGroups != 0 ) {
-                    $smartSql .= " AND contact_a.id NOT IN (SELECT contact_id FROM  Xg_{$this->_tableName})";
-                }
-       
-                $smartGroupQuery = " INSERT IGNORE INTO
-                    Ig_{$this->_tableName}(contact_id) 
-                    $smartSql";
-        
-                CRM_Core_DAO::executeQuery( $smartGroupQuery, CRM_Core_DAO::$_nullArray );
-                if ($this->_debug > 0) {
-                    print "-- Smart group query: <pre>";
-                    print "$smartGroupQuery;";
-                    print "</pre>";
-                }
-                $insertGroupNameQuery = 
-                   "UPDATE IGNORE Ig_{$this->_tableName}
-                    SET group_names = (SELECT title FROM civicrm_group
-                        WHERE civicrm_group.id = $values)
-                    WHERE Ig_{$this->_tableName}.contact_id IS NOT NULL 
-                        AND Ig_{$this->_tableName}.group_names IS NULL";
-                CRM_Core_DAO::executeQuery( $insertGroupNameQuery, CRM_Core_DAO::$_nullArray );
-                if ($this->_debug > 0) {
-                    print "-- Smart group query: <pre>";
-                    print "$insertGroupNameQuery;";
-                    print "</pre>";
+                    $ssId = CRM_Utils_Array::key( $values, $smartGroup );
+
+                    $smartSql = CRM_Contact_BAO_SavedSearch::contactIDsSQL( $ssId );
+
+                    $smartSql .= " AND contact_a.id IN (
+                                   SELECT id AS contact_id
+                                   FROM dates_{$this->_tableName} )";
+
+                    $smartSql .= " AND contact_a.id NOT IN ( 
+                                   SELECT contact_id FROM civicrm_group_contact
+                                   WHERE civicrm_group_contact.group_id = {$values} AND civicrm_group_contact.status = 'Removed')";
+
+                    //used only when exclude group is selected
+                    if ( $xGroups != 0 ) {
+                        $smartSql .= " AND contact_a.id NOT IN (SELECT contact_id FROM  Xg_{$this->_tableName})";
+                    }
+
+                    $smartGroupQuery = " INSERT IGNORE INTO
+                        Ig_{$this->_tableName}(contact_id) 
+                        $smartSql";
+
+                    CRM_Core_DAO::executeQuery( $smartGroupQuery, CRM_Core_DAO::$_nullArray );
+                    if ($this->_debug > 0) {
+                        print "-- Smart group query: <pre>";
+                        print "$smartGroupQuery;";
+                        print "</pre>";
+                    }
+                    $insertGroupNameQuery = 
+                       "UPDATE IGNORE Ig_{$this->_tableName}
+                        SET group_names = (SELECT title FROM civicrm_group
+                            WHERE civicrm_group.id = $values)
+                        WHERE Ig_{$this->_tableName}.contact_id IS NOT NULL 
+                            AND Ig_{$this->_tableName}.group_names IS NULL";
+                    CRM_Core_DAO::executeQuery( $insertGroupNameQuery, CRM_Core_DAO::$_nullArray );
+                    if ($this->_debug > 0) {
+                        print "-- Smart group query: <pre>";
+                        print "$insertGroupNameQuery;";
+                        print "</pre>";
+                    }
                 }
             }
-        }
+            
+        } // end if( $this->_groups ) condition
         
         $from = "FROM civicrm_contact contact_a";
         
         /* We need to join to this again to get the date_added value */
         $from .= " INNER JOIN dates_{$this->_tableName} d ON (contact_a.id = d.id)";
         
-        $from .= " INNER JOIN Ig_{$this->_tableName} temptable1 ON (contact_a.id = temptable1.contact_id)";
-        
+        // Only include groups in the search query of one or more Include OR Exclude groups has been selected. 
+        // CRM-6356
+        if ( $this->_groups ){
+            $from .= " INNER JOIN Ig_{$this->_tableName} temptable1 ON (contact_a.id = temptable1.contact_id)";
+        }
         //this makes smart groups using this search compatible w/ CiviMail
         $from .= " LEFT JOIN civicrm_email ON (contact_a.id = civicrm_email.contact_id)";
         
@@ -343,7 +356,7 @@ class CRM_Contact_Form_Search_Custom_DateAdded
     }
 
     function templateFile( ) {
-        return 'CRM/Contact/Form/Search/Custom/Sample.tpl';
+        return 'CRM/Contact/Form/Search/Custom.tpl';
     }
     
     function setTitle( $title ) {

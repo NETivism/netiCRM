@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -25,7 +25,7 @@
 *}
 {* Contribution Import Wizard - Step 2 (map incoming data fields) *}
 {* @var $form Contains the array for the form elements and other form associated information assigned to the template by the controller *}
-
+<div class="crm-block crm-form-block crm-contribution-import-form-block id="upload-file">
  {* WizardHeader.tpl provides visual display of steps thru the wizard as well as title for current step *}
  {include file="CRM/common/WizardHeader.tpl"}
 
@@ -36,14 +36,13 @@
     {/if}
     <p>{ts}If you think you may be importing additional data from the same data source, check 'Save this field mapping' at the bottom of the page before continuing. The saved mapping can then be easily reused the next time data is imported.{/ts}</p>
 </div>
+<div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>
  {* Table for mapping data to CRM fields *}
  {include file="CRM/Contribute/Import/Form/MapTable.tpl}
  
- <div id="crm-submit-buttons">
-    {$form.buttons.html}
- </div>
+<div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
  {$initHideBoxes}
-
+</div>
 {literal}
 <script type="text/javascript" >
 if ( document.getElementsByName("saveMapping")[0].checked ) {

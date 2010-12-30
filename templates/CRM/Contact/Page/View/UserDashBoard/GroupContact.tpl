@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -27,10 +27,8 @@
     <div class="view-content"> 
         {if $groupCount eq 0 }
             <div class="messages status">
-                <dl>
-                    <dt><img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}" /></dt>
-                    <dd>{ts}You are not currently subscribed to any Groups.{/ts}</dd>
-                </dl>
+                    <div class="icon inform-icon"></div>
+                    {ts}You are not currently subscribed to any Groups.{/ts}
             </div>
         {/if}
     

@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -52,10 +52,8 @@
 </div>
 {else}
 <div class="messages status">
-<dl>
-	<dt><img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}" /></dt>
-	<dd>{ts}You do not have any active Personal Campaign pages.{/ts}</dd>
-</dl>
+	<div class="icon inform-icon"></div>
+	{ts}You do not have any active Personal Campaign pages.{/ts}
 </div>
 {/if}
 

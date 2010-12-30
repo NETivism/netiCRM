@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                               |
+ | CiviCRM version 3.3                                               |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -43,6 +43,10 @@ require_once 'CRM/Event/Form/Registration.php';
  */
 class CRM_Event_Form_Registration_ParticipantConfirm extends CRM_Event_Form_Registration
 {
+    // optional credit card return status code
+    // CRM-6060
+    protected $_cc = null;
+
     /** 
      * Function to set variables up before form is built 
      *                                                           
@@ -53,6 +57,8 @@ class CRM_Event_Form_Registration_ParticipantConfirm extends CRM_Event_Form_Regi
     {
         $this->_participantId = CRM_Utils_Request::retrieve( 'participantId', 'Positive', $this );
         
+        $this->_cc = CRM_Utils_Request::retrieve( 'cc', 'String', $this );
+
         //get the contact and event id and assing to session.
         $values = array( );
         $csContactID = $eventId = null;
@@ -70,7 +76,7 @@ class CRM_Event_Form_Registration_ParticipantConfirm extends CRM_Event_Form_Regi
         // make sure we have right permission to edit this user
         $this->_csContactID = null;
         if ( $csContactId && $this->_eventId ) {
-            $session =& CRM_Core_Session::singleton( );
+            $session = CRM_Core_Session::singleton( );
             if ( $csContactId == $session->get( 'userID' ) ) {
                 $this->_csContactID = $csContactId;
             } else {
@@ -84,7 +90,7 @@ class CRM_Event_Form_Registration_ParticipantConfirm extends CRM_Event_Form_Regi
         }
         
         if ( !$this->_csContactID ) {
-            $config =& CRM_Core_Config::singleton( );
+            $config = CRM_Core_Config::singleton( );
             CRM_Core_Error::statusBounce( ts( 'You do not have permission to access this event registration. Contact the site administrator if you need assistance.' ),$config->userFrameworkBaseURL );
         }
     }
@@ -121,8 +127,13 @@ class CRM_Event_Form_Registration_ParticipantConfirm extends CRM_Event_Form_Regi
             if ( $emptySeats !== null && ( $requireSpace > $emptySeats ) ) {
                 $statusMsg =  ts( "Oops, it looks like there are currently no available spaces for the %1 event.", array(1 => $values['title']) );
             } else {
-                $statusMsg = '<div class="bold">' . ts( 'Confirm your registration for %1.', array(1 => $values['title'])) .
-                             '</div><div><br />' .  ts('Click the "Confirm Registration" button to begin, or click "Cancel Registration" if you are no longer interested in attending this event.' ) . '</div>';
+                if ($this->_cc == 'fail') {
+                    $statusMsg = '<div class="bold">' . ts( 'Your Credit Card transaction was not successful. No money has yet been charged to your card.') .
+                        '</div><div><br />' . ts('Click the "Confirm Registration" button to complete your registration in %1, or click "Cancel Registration" if you are no longer interested in attending this event.', array(1 => $values['title']) ) . '</div>'; 
+                } else {
+                    $statusMsg = '<div class="bold">' . ts( 'Confirm your registration for %1.', array(1 => $values['title'])) .
+                        '</div><div><br />' .  ts('Click the "Confirm Registration" button to begin, or click "Cancel Registration" if you are no longer interested in attending this event.' ) . '</div>';
+                }
                 $buttons = array_merge( $buttons, array( array( 'type'      => 'next',
                                                                 'name'      => ts('Confirm Registration'), 
                                                                 'spacing'   => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;', 
@@ -166,7 +177,7 @@ class CRM_Event_Form_Registration_ParticipantConfirm extends CRM_Event_Form_Regi
         
         if ( $buttonName == '_qf_ParticipantConfirm_next' ) {
             //lets get contact id in session.
-            $session =& CRM_Core_Session::singleton( );
+            $session = CRM_Core_Session::singleton( );
             $session->set( 'userID', $this->_csContactID );
             
             //check user registration status is from pending class

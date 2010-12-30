@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -48,7 +48,7 @@ class CRM_Core_Key {
      */
     static function privateKey( ) {
         if ( ! self::$_key ) {
-            $session =& CRM_Core_Session::singleton( );
+            $session = CRM_Core_Session::singleton( );
             self::$_key     =  $session->get( 'qfPrivateKey' );
             if ( ! self::$_key ) {
                 self::$_key =
@@ -62,7 +62,7 @@ class CRM_Core_Key {
 
     static function sessionID( ) {
         if ( ! self::$_sessionID ) {
-            $session =& CRM_Core_Session::singleton( );
+            $session = CRM_Core_Session::singleton( );
             self::$_sessionID = $session->get( 'qfSessionID' );
             if ( ! self::$_sessionID ) {
                 self::$_sessionID = session_id( );
@@ -124,6 +124,25 @@ class CRM_Core_Key {
         return $key;
     }
 
+    static function valid( $key ) {
+        // a valid key is a 32 digit hex number
+        // followed by an optional _ and a number between 1 and 10000
+        if ( strpos( '_', $key ) !== false ) {
+            list( $hash, $seq ) = explode( '_', $key );
+
+            // ensure seq is between 1 and 10000
+            if ( ! is_numeric( $seq ) ||
+                 $seq < 1 ||
+                 $seq > 10000 ) {
+                return false;
+            }
+        } else {
+            $hash = $key;
+        }
+
+        // ensure that hash is a 32 digit hex number
+        return preg_match( '#[0-9a-f]{32}#i', $hash ) ? true : false;
+    }
 }
 
 

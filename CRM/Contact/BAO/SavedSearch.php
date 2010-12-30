@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -62,7 +62,7 @@ class CRM_Contact_BAO_SavedSearch extends CRM_Contact_DAO_SavedSearch
      */
     function getAll()
     {
-        $savedSearch =& new CRM_Contact_DAO_SavedSearch ();
+        $savedSearch = new CRM_Contact_DAO_SavedSearch ();
         $savedSearch->selectAdd();
         $savedSearch->selectAdd('id, name');
         $savedSearch->find();
@@ -84,7 +84,7 @@ class CRM_Contact_BAO_SavedSearch extends CRM_Contact_DAO_SavedSearch
      * @static
      */
     static function retrieve( &$params, &$defaults ) {
-        $savedSearch =& new CRM_Contact_DAO_SavedSearch( );
+        $savedSearch = new CRM_Contact_DAO_SavedSearch( );
         $savedSearch->copyValues( $params );
         if ( $savedSearch->find( true ) ) {
             CRM_Core_DAO::storeValues( $savedSearch, $defaults );
@@ -234,7 +234,7 @@ WHERE  $where";
      */
     static function getName( $id, $value = 'name' ) {
         require_once 'CRM/Contact/DAO/Group.php';
-        $group                   =& new CRM_Contact_DAO_Group( );
+        $group                   = new CRM_Contact_DAO_Group( );
         $group->saved_search_id = $id;
         if ( $group->find( true ) ) {
             return $group->$value;

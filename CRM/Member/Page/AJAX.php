@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -63,7 +63,7 @@ class CRM_Member_Page_AJAX
                           'total_amount'         => $totalAmount );                                         
         
         echo json_encode( $details );
-        exit();
+        CRM_Utils_System::civiExit( );
     }
     
 }

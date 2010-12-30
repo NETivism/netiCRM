@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -81,7 +81,7 @@ class CRM_Report_Form_Instance {
 
         $form->addElement( 'checkbox', 'addToDashboard', ts('Available for Dashboard?') );
         
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
         if ( $config->userFramework != 'Joomla' ) {
             $form->addElement( 'select',
                                'permission',
@@ -105,7 +105,7 @@ class CRM_Report_Form_Instance {
         $form->addFormRule( array( 'CRM_Report_Form_Instance', 'formRule' ), $form );
     }
 
-    static function formRule( &$fields, &$errors, &$self ) {
+    static function formRule( $fields, $errors, $self ) {
         $buttonName = $self->controller->getButtonName( );
         $selfButtonName = $self->getVar( '_instanceButtonName' );
         
@@ -124,7 +124,7 @@ class CRM_Report_Form_Instance {
         $instanceID = $form->getVar( '_id' );
         $navigationDefaults = array();
         require_once 'CRM/Core/Config.php';
-        $config =& CRM_Core_Config::singleton(); 
+        $config = CRM_Core_Config::singleton(); 
         $defaults['report_header'] = $report_header = "<html>
   <head>
     <title>CiviCRM Report</title>
@@ -171,7 +171,7 @@ class CRM_Report_Form_Instance {
 
     static function postProcess( &$form ) {
         $params = $form->getVar( '_params' );
-        $config =& CRM_Core_Config::singleton(); 
+        $config = CRM_Core_Config::singleton(); 
         $params['header']    = $params['report_header'];
         $params['footer']    = $params['report_footer'];
         $params['domain_id'] = CRM_Core_Config::domainID( );

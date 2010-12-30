@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -135,7 +135,7 @@ class CRM_Group_Form_Edit extends CRM_Core_Form
                 
                 CRM_Utils_System::setTitle( ts('Group Settings: %1', array( 1 => $this->_title ) ) );
             }
-            $session =& CRM_Core_Session::singleton( );
+            $session = CRM_Core_Session::singleton( );
             $session->pushUserContext(CRM_Utils_System::url('civicrm/group', 'reset=1'));
         }
 
@@ -210,15 +210,14 @@ class CRM_Group_Form_Edit extends CRM_Core_Form
         $this->applyFilter('__ALL__', 'trim');
         $this->add('text', 'title'       , ts('Name') . ' ' ,
                    CRM_Core_DAO::getAttribute( 'CRM_Contact_DAO_Group', 'title' ),true );
-        $this->addRule( 'title', ts('Name already exists in Database.'),
-                        'objectExists', array( 'CRM_Contact_DAO_Group', $this->_id, 'title' ) );
+        $this->addFormRule( array( 'CRM_Group_Form_Edit', 'formRule' ), $this );
         
         $this->add('textarea', 'description', ts('Description') . ' ', 
                    CRM_Core_DAO::getAttribute( 'CRM_Contact_DAO_Group', 'description' ) );
 
         require_once 'CRM/Core/OptionGroup.php';
         $groupTypes = CRM_Core_OptionGroup::values( 'group_type', true );
-        $config=& CRM_Core_Config::singleton( );
+        $config= CRM_Core_Config::singleton( );
         if ( (isset( $this->_id ) &&
              CRM_Utils_Array::value( 'saved_search_id', $this->_groupValues ) ) 
              || ( $config->userFramework == 'Joomla' ) ) {
@@ -324,7 +323,7 @@ class CRM_Group_Form_Edit extends CRM_Core_Form
      * @static
      * @access public
      */
-    static function formRule( &$fields, $fileParams, $parentGroups ) 
+    static function formRule( $fields, $fileParams, $parentGroups ) 
     {
         $errors = array( );
 
@@ -343,6 +342,25 @@ class CRM_Group_Form_Edit extends CRM_Core_Form
         if ( (count($parentGroups) >= 1) && (($grpRemove - $grpAdd) >=  count($parentGroups)) ) {
             $errors['parents'] = ts( 'Make sure at least one parent group is set.' );
         }
+        
+        // do check for both name and title uniqueness
+        if ( CRM_Utils_Array::value( 'title', $fields ) ) {
+            $title = trim( $fields['title'] );
+            $name  = CRM_Utils_String::titleToVar( $title, 63 );
+            $query  = "
+SELECT count(*)
+FROM   civicrm_group 
+WHERE  (name LIKE %1 OR title LIKE %2) 
+AND    id <> %3
+";
+            $grpCnt = CRM_Core_DAO::singleValueQuery( $query, array( 1 => array( $name,  'String' ),
+                                                                     2 => array( $title, 'String' ),
+                                                                     3 => array( (int)$parentGroups->_id, 'Integer' ) ) );
+            if ( $grpCnt ) {
+                $errors['title'] = ts( 'Group \'%1\' already exists.', array( 1 => $fields['title']) );
+            }
+        }
+
         return empty($errors) ? true : $errors;
     }    
 
@@ -354,6 +372,8 @@ class CRM_Group_Form_Edit extends CRM_Core_Form
      */
     public function postProcess( ) 
 	{
+        CRM_Utils_System::flushCache( 'CRM_Core_DAO_Group' );
+
         $updateNestingCache = false;
         if ($this->_action & CRM_Core_Action::DELETE ) {
             CRM_Contact_BAO_Group::discard( $this->_id );
@@ -363,7 +383,7 @@ class CRM_Group_Form_Edit extends CRM_Core_Form
             // store the submitted values in an array
             $params = $this->controller->exportValues( $this->_name );
 
-            $params['is_active'] = 1;
+            $params['is_active'] = CRM_Utils_Array::value( 'is_active', $this->_groupValues, 1 );
 
             if ($this->_action & CRM_Core_Action::UPDATE ) {
                 $params['id'] = $this->_id;
@@ -404,7 +424,7 @@ class CRM_Group_Form_Edit extends CRM_Core_Form
                 $this->set( 'context', 'amtg' );
                 $this->set( 'amtgID' , $group->id );
                 
-                $session =& CRM_Core_Session::singleton( );
+                $session = CRM_Core_Session::singleton( );
                 $session->pushUserContext( CRM_Utils_System::url( 'civicrm/group/search', 'reset=1&force=1&context=smog&gid=' . $group->id ) );
             }
         }

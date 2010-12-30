@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -135,7 +135,7 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
     function setShowHide( &$defaults) 
     {
         require_once 'CRM/Core/ShowHideBlocks.php';
-        $this->_showHide =& new CRM_Core_ShowHideBlocks( array('registration' => 1 ),
+        $this->_showHide = new CRM_Core_ShowHideBlocks( array('registration' => 1 ),
                                                          '') ;
         if ( empty($defaults)) {
             $this->_showHide->addShow( 'registration_screen_show' );
@@ -238,8 +238,10 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
     function buildRegistrationBlock(&$form ) 
     {
         $attributes = CRM_Core_DAO::getAttribute('CRM_Event_DAO_Event');
-        $form->add('textarea','intro_text',ts('Introductory Text'), $attributes['intro_text']);
-        $form->add('textarea','footer_text',ts('Footer Text'), $attributes['footer_text']);
+        $form->addWysiwyg('intro_text',ts('Introductory Text'), $attributes['intro_text']);
+        // FIXME: This hack forces height of editor to 175px. Need to modify QF classes for editors to allow passing
+        // explicit height and width.
+        $form->addWysiwyg('footer_text',ts('Footer Text'), array( 'rows' => 2, 'cols' => 40 ));
 
         require_once "CRM/Core/BAO/UFGroup.php";
         require_once "CRM/Contact/BAO/ContactType.php";
@@ -268,8 +270,10 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
     {
         $attributes = CRM_Core_DAO::getAttribute('CRM_Event_DAO_Event');
         $form->add('text','confirm_title',ts('Title'), $attributes['confirm_title']);
-        $form->add('textarea','confirm_text',ts('Introductory Text'), $attributes['confirm_text']);
-        $form->add('textarea','confirm_footer_text',ts('Footer Text'), $attributes['confirm_footer_text']);     
+        $form->addWysiwyg('confirm_text',ts('Introductory Text'), $attributes['confirm_text']);
+        // FIXME: This hack forces height of editor to 175px. Need to modify QF classes for editors to allow passing
+        // explicit height and width.
+        $form->addWysiwyg('confirm_footer_text',ts('Footer Text'), array( 'rows' => 2, 'cols' => 40 ));
     }
 
     /**
@@ -297,8 +301,10 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
     {
         $attributes = CRM_Core_DAO::getAttribute('CRM_Event_DAO_Event');
         $form->add('text','thankyou_title',ts('Title'), $attributes['thankyou_title']);
-        $form->add('textarea','thankyou_text',ts('Introductory Text'), $attributes['thankyou_text']);
-        $form->add('textarea','thankyou_footer_text',ts('Footer Text'), $attributes['thankyou_footer_text']);
+        $form->addWysiwyg('thankyou_text',ts('Introductory Text'), $attributes['thankyou_text']);
+        // FIXME: This hack forces height of editor to 175px. Need to modify QF classes for editors to allow passing
+        // explicit height and width.
+        $form->addWysiwyg('thankyou_footer_text',ts('Footer Text'), array( 'rows' => 2, 'cols' => 40 ));
     }
     /**
      * Add local and global form rules
@@ -320,7 +326,7 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
      * @static
      * @access public
      */
-    static function formRule( &$values ) 
+    static function formRule( $values ) 
     {
         if ( $values['is_online_registration'] ) {
             if ( !$values['confirm_title'] ) {

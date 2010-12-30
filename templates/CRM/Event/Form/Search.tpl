@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -26,19 +26,17 @@
 {* Search form and results for Event Participants *}
 {assign var="showBlock" value="'searchForm'"}
 {assign var="hideBlock" value="'searchForm_show'"}
-
-  <div id="searchForm_show" class="form-item">
-  <a href="#" onclick="hide('searchForm_show'); show('searchForm'); return false;"><img src="{$config->resourceBase}i/TreePlus.gif" class="action-icon" alt="{ts}open section{/ts}" /></a>
-  <label>
+<div class="crm-block crm-form-block crm-event-search-form-block">
+<div class="crm-accordion-wrapper crm-advanced_search_form-accordion {if $ssID or $rows}crm-accordion-closed{else}crm-accordion-open{/if}">
+ <div class="crm-accordion-header crm-master-accordion-header">
+  <div class="icon crm-accordion-pointer"></div>
         {ts}Edit Search Criteria{/ts}
-  </label>
-</div>
-
-<div id="searchForm" class="form-item">
-<fieldset><legend>{ts}Search Criteria{/ts}</legend>
+  </div>
+ <div class="crm-accordion-body">
+<div id="searchForm">
     {strip} 
         <table class="form-layout">
-        <tr>
+        <tr class="crm-event-search-form-block-sort_name">
            <td class="font-size12pt" colspan="2">
                {$form.sort_name.label}&nbsp;&nbsp;{$form.sort_name.html|crmReplace:class:'twenty'}&nbsp;&nbsp;&nbsp;{$form.buttons.html}
            </td>       
@@ -47,42 +45,43 @@
         {include file="CRM/Event/Form/Search/Common.tpl"}
      
         <tr>
-           <td colspan="2">{$form.buttons.html}</td>
+           <td colspan="2">{include file="CRM/common/formButtons.tpl"}</td>
         </tr>
         </table>
     {/strip}
-</fieldset>
-
 </div>
-
+</div>
+</div>
+</div>
+{if $rowsEmpty|| $rows}
+<div class="crm-block crm-content-block">
 {if $rowsEmpty}
+	<div class="crm-results-block crm-results-block-empty">
     {include file="CRM/Event/Form/Search/EmptyResults.tpl"}
+	</div>
 {/if}
 
 {if $rows}
-    {* Search request has returned 1 or more matching rows. Display results and collapse the search criteria fieldset. *}
-    {assign var="showBlock" value="'searchForm_show'"}
-    {assign var="hideBlock" value="'searchForm'"}
-    
+<div class="crm-results-block">
     {* Search request has returned 1 or more matching rows. *}
-    <fieldset>
-    
-       {* This section handles form elements for action task select and submit *}
-       {include file="CRM/common/searchResultTasks.tpl"}
-
-       {* This section displays the rows along and includes the paging controls *}
-       <p></p>
-       {include file="CRM/Event/Form/Selector.tpl" context="Search"}
-       
-    </fieldset>
+        {* This section handles form elements for action task select and submit *}
+        <div class="crm-search-tasks crm-event-search-tasks">
+           {include file="CRM/common/searchResultTasks.tpl" context='Event'}
+	    </div>
+        {* This section displays the rows along and includes the paging controls *}
+    	<div id='participantSearch' class="crm-event-search-results">
+	        {include file="CRM/Event/Form/Selector.tpl" context="Search"}
+        </div>
     {* END Actions/Results section *}
-
+</div>
 {/if}
 
+</div>
+{/if}
+{literal}
 <script type="text/javascript">
-    var showBlock = new Array({$showBlock});
-    var hideBlock = new Array({$hideBlock});
-
-{* hide and display the appropriate blocks *}
-    on_load_init_blocks( showBlock, hideBlock );
+cj(function() {
+   cj().crmaccordions(); 
+});
 </script>
+{/literal}

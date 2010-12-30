@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -44,7 +44,6 @@ function encryptDB( ) {
                                           'last_name' => CRM_ENCRYPT,
                                           'organization_name' => CRM_ENCRYPT,
                                           'household_name' => CRM_ENCRYPT,
-                                          'home_URL' => CRM_ENCRYPT,
                                           'sort_name' => CRM_ENCRYPT,
                                           'display_name' => CRM_ENCRYPT,
                                           'legal_name' => CRM_ENCRYPT, ),
@@ -56,6 +55,7 @@ function encryptDB( ) {
                                           'postal_code_suffix' => CRM_SETNULL,
                                           'geo_code_1' => CRM_SETNULL,
                                           'geo_code_2' => CRM_SETNULL, ),
+              'civicrm_website' => array( 'url' => CRM_ENCRYPT, ),
               'civicrm_email' => array( 'email' => CRM_ENCRYPT, ),
               'civicrm_phone' => array( 'phone' => CRM_ENCRYPT, ),
               );
@@ -86,7 +86,7 @@ function run( ) {
 
     require_once '../civicrm.config.php';
     require_once 'CRM/Core/Config.php'; 
-    $config =& CRM_Core_Config::singleton( );
+    $config = CRM_Core_Config::singleton( );
 
     // this does not return on failure
     CRM_Utils_System::authenticateScript( true );

@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -49,13 +49,19 @@ class CRM_Pledge_Page_Tab extends CRM_Core_Page
      */
     function browse( ) 
     {
-        $controller =& new CRM_Core_Controller_Simple( 'CRM_Pledge_Form_Search', ts('Pledges'), $this->_action );
+        $controller = new CRM_Core_Controller_Simple( 'CRM_Pledge_Form_Search', ts('Pledges'), $this->_action );
         $controller->setEmbedded( true );
         $controller->reset( );
         $controller->set( 'cid'  , $this->_contactId );
         $controller->set( 'context', 'pledge' ); 
         $controller->process( );
         $controller->run( );
+        
+        if ( $this->_contactId ) {
+            require_once 'CRM/Contact/BAO/Contact.php';
+            $displayName = CRM_Contact_BAO_Contact::displayName( $this->_contactId );
+            $this->assign( 'displayName', $displayName );
+        }
     }
     
     /** 
@@ -66,7 +72,7 @@ class CRM_Pledge_Page_Tab extends CRM_Core_Page
      */ 
     function view( ) 
     {    
-        $controller =& new CRM_Core_Controller_Simple( 'CRM_Pledge_Form_PledgeView',  
+        $controller = new CRM_Core_Controller_Simple( 'CRM_Pledge_Form_PledgeView',  
                                                        'View Pledge',  
                                                        $this->_action ); 
         $controller->setEmbedded( true );  
@@ -84,7 +90,7 @@ class CRM_Pledge_Page_Tab extends CRM_Core_Page
      */ 
     function edit( ) 
     { 
-        $controller =& new CRM_Core_Controller_Simple( 'CRM_Pledge_Form_Pledge', 
+        $controller = new CRM_Core_Controller_Simple( 'CRM_Pledge_Form_Pledge', 
                                                        'Create Pledge', 
                                                        $this->_action );
         $controller->setEmbedded( true ); 
@@ -149,9 +155,12 @@ class CRM_Pledge_Page_Tab extends CRM_Core_Page
         } else if ( $this->_action & CRM_Core_Action::DETACH ) { 
             require_once 'CRM/Pledge/BAO/Payment.php';
             require_once 'CRM/Contribute/PseudoConstant.php';
-            CRM_Pledge_BAO_Payment::updatePledgePaymentStatus( $this->_id, null, null, array_search( 'Cancelled', CRM_Contribute_PseudoConstant::contributionStatus() ) );
-
-            $session =& CRM_Core_Session::singleton();
+            CRM_Pledge_BAO_Payment::updatePledgePaymentStatus( $this->_id, null, null, 
+                                                               array_search( 'Cancelled', 
+                                                                             CRM_Contribute_PseudoConstant::contributionStatus( null, 
+                                                                                                                                'name' ) ) );
+            
+            $session = CRM_Core_Session::singleton();
             $session->setStatus( ts('Pledge has been Cancelled and all scheduled (not completed) payments have been cancelled.<br />') );
             CRM_Utils_System::redirect( $session->popUserContext() );
            
@@ -165,7 +174,12 @@ class CRM_Pledge_Page_Tab extends CRM_Core_Page
     function setContext( ) 
     {
         $context = CRM_Utils_Request::retrieve( 'context', 'String', $this, false, 'search' );
-
+        
+        $qfKey = CRM_Utils_Request::retrieve( 'key', 'String', $this );
+        //validate the qfKey
+        require_once 'CRM/Utils/Rule.php';
+        if ( !CRM_Utils_Rule::qfKey( $qfKey ) ) $qfKey = null;        
+        
         switch ( $context ) {
             
         case 'dashboard':           
@@ -174,7 +188,10 @@ class CRM_Pledge_Page_Tab extends CRM_Core_Page
             break;
             
         case 'search':
-            $url = CRM_Utils_System::url( 'civicrm/pledge/search', 'force=1' );
+            $urlParams = 'force=1';
+            if ( $qfKey ) $urlParams .= "&qfKey=$qfKey";
+            
+            $url = CRM_Utils_System::url( 'civicrm/pledge/search', $urlParams );
             break;
             
         case 'user':
@@ -208,7 +225,7 @@ class CRM_Pledge_Page_Tab extends CRM_Core_Page
                                           'force=1' . $cid );
             break;
         }
-        $session =& CRM_Core_Session::singleton( ); 
+        $session = CRM_Core_Session::singleton( ); 
         $session->pushUserContext( $url );
     }
 }

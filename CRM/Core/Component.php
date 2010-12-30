@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -54,7 +54,7 @@ class CRM_Core_Component
             self::$_info = array( );
             $c = array();
             
-            $config =& CRM_Core_Config::singleton( );
+            $config = CRM_Core_Config::singleton( );
             $c      =& self::getComponents();
 
             foreach( $c as $name => $comp ) {
@@ -124,7 +124,7 @@ class CRM_Core_Component
     static function invoke( &$args, $type ) 
     {
         $info =& self::_info( );
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
 
         $firstArg  = CRM_Utils_Array::value( 1, $args, '' ); 
         $secondArg = CRM_Utils_Array::value( 2, $args, '' ); 
@@ -134,7 +134,7 @@ class CRM_Core_Component
                    ( $comp->info['url'] === $secondArg && $type == 'admin' ) ) ) {
                 if ( $type == 'main' ) {
                     // also set the smarty variables to the current component
-                    $template =& CRM_Core_Smarty::singleton( );
+                    $template = CRM_Core_Smarty::singleton( );
                     $template->assign( 'activeComponent', $name );
                     if( CRM_Utils_Array::value( 'formTpl', $comp->info[$name] ) ) {
                         $template->assign( 'formTpl', $comp->info[$name]['formTpl'] );

@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -43,7 +43,7 @@ require_once 'CRM/Core/Page/Basic.php';
 class CRM_Admin_Page_Access extends CRM_Core_Page 
 {
     function run( ) {
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
         $ufAccessURL = CRM_Utils_System::url( 'admin/user/permissions' );
         
         $this->assign('ufAccessURL', $ufAccessURL);

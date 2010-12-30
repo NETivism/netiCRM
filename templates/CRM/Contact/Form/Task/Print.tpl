@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -24,12 +24,10 @@
  +--------------------------------------------------------------------+
 *}
 {if $rows}
-<div class="form-item">
-     <span class="element-right">{$form.buttons.html}</span>
+<div class="crm-submit-buttons element-right">
+     {include file="CRM/common/formButtons.tpl"}
 </div>
-
 <div class="spacer"></div>
-
 <div>
 <br />
 <table>
@@ -39,14 +37,14 @@
      <th>{$header}</th>
   {/foreach}
 {else}
-    <th>{ts}Name{/ts}</th>
-    <th>{ts}Address{/ts}</th>
-    <th>{ts}City{/ts}</th>
-    <th>{ts}State{/ts}</th>
-    <th>{ts}Postal{/ts}</th>
-    <th>{ts}Country{/ts}</th>
-    <th>{ts}Email{/ts}</th>
-    <th>{ts}Phone{/ts}</th>
+    <td>{ts}Name{/ts}</td>
+    <td>{ts}Address{/ts}</td>
+    <td>{ts}City{/ts}</td>
+    <td>{ts}State{/ts}</td>
+    <td>{ts}Postal{/ts}</td>
+    <td>{ts}Country{/ts}</td>
+    <td>{ts}Email{/ts}</td>
+    <td>{ts}Phone{/ts}</td>
 {/if}
   </tr>
 {foreach from=$rows item=row}
@@ -74,17 +72,13 @@
 </table>
 </div>
 
-<div class="form-item">
-     <span class="element-right">{$form.buttons.html}</span>
+<div class="crm-submit-buttons element-right">
+     {include file="CRM/common/formButtons.tpl"}
 </div>
 
 {else}
    <div class="messages status">
-    <dl>
-    <dt><img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}" /></dt>
-    <dd>
-        {ts}There are no records selected for Print.{/ts}
-    </dd>
-    </dl>
-   </div>
+  <div class="icon inform-icon"></div>
+       {ts}There are no records selected for Print.{/ts}
+  </div>
 {/if}

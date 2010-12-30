@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -33,7 +33,7 @@
  * @subpackage API_Activity
  *
  * @copyright CiviCRM LLC (c) 2004-2010
- * @version $Id: ActivityContact.php 26284 2010-02-17 17:58:00Z shot $
+ * @version $Id: ActivityContact.php 30171 2010-10-14 09:11:27Z mover $
  *
  */
  
@@ -60,12 +60,18 @@ function civicrm_activity_contact_get( $params ) {
       return civicrm_create_error( ts ( "Required parameter not found" ) );
   }
   
-  if ( !is_numeric( $contactId ) ) {
+  //check if $contactId is valid
+  if ( !is_numeric( $contactId ) || !preg_match( '/^\d+$/', $contactId ) ) {
       return civicrm_create_error( ts ( "Invalid contact Id" ) );
   }
   
   $activities =  & _civicrm_activities_get( $contactId );
      
+  //show success for empty $activities array 
+  if ( empty( $activities ) ) { 
+      return civicrm_create_success( ts( "0 activity record matching input params" ) );
+  }
+   
   if ( $activities ) {
       return civicrm_create_success( $activities );
   } else {

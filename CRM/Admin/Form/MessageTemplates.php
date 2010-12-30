@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -46,6 +46,17 @@ class CRM_Admin_Form_MessageTemplates extends CRM_Admin_Form
     // which (and whether) mailing workflow this template belongs to
     protected $_workflow_id = null;
 
+    function preProcess( ) {
+        $this->_id      = CRM_Utils_Request::retrieve('id', 'Positive', $this);
+        $this->_action  = CRM_Utils_Request::retrieve( 'action', 'String',
+                                                       $this, false, 'add' );
+        $this->assign( 'action', $this->_action );
+                
+        $this->_BAOName = 'CRM_Core_BAO_MessageTemplates';
+        $this->set( 'BAOName', $this->_BAOName );
+        parent::preProcess( );
+    }
+
     /**
      * This function sets the default values for the form. 
      * the default values are retrieved from the database
@@ -54,14 +65,27 @@ class CRM_Admin_Form_MessageTemplates extends CRM_Admin_Form
      * @return None
      */
     public function setDefaultValues( ) {
-        $defaults = array( );
-        $defaults =& parent::setDefaultValues( );
+        $defaults = $this->_values;
+        
         $this->_workflow_id = CRM_Utils_Array::value( 'workflow_id', $defaults );
         $this->assign( 'workflow_id', $this->_workflow_id );
-
+        if ($this->_action & CRM_Core_Action::ADD) {
+            $defaults['is_active'] = 1;
+            //set the context for redirection after form submit or cancel
+            require_once 'CRM/Core/Session.php';
+            $session = CRM_Core_Session::singleton( );
+            $session->replaceUserContext(CRM_Utils_System::url('civicrm/admin/messageTemplates', 
+                                                               'selectedChild=user&reset=1') );
+        }
+        
         // FIXME: we need to fix the Cancel button here as we don’t know whether it’s a workflow template in buildQuickForm()
-        if ($this->_workflow_id and $this->_action & CRM_Core_Action::UPDATE) {
-            $cancelURL = CRM_Utils_System::url('civicrm/admin/messageTemplates', 'selectedChild=workflow&reset=1');
+        if ($this->_action & CRM_Core_Action::UPDATE) {
+            if ($this->_workflow_id){
+                $selectedChild = 'workflow';
+            } else {
+                $selectedChild = 'user';
+            }
+            $cancelURL = CRM_Utils_System::url('civicrm/admin/messageTemplates', "selectedChild={$selectedChild}&reset=1");
             $cancelURL = str_replace('&amp;', '&', $cancelURL);
             $this->addButtons(
                 array(
@@ -120,8 +144,8 @@ class CRM_Admin_Form_MessageTemplates extends CRM_Admin_Form
         $this->applyFilter('__ALL__', 'trim');
         $this->add('text', 'msg_title', ts('Message Title'), CRM_Core_DAO::getAttribute( 'CRM_Core_DAO_MessageTemplates', 'msg_title' ),true );
         
-        $this->add('text', 'msg_subject', ts('Message Subject'), 
-
+        $this->add('text', 'msg_subject',
+                   ts('Message Subject'), 
                    CRM_Core_DAO::getAttribute( 'CRM_Core_DAO_MessageTemplates', 'msg_subject' ) );
 
         //get the tokens.
@@ -160,8 +184,20 @@ class CRM_Admin_Form_MessageTemplates extends CRM_Admin_Form
         
         $this->add('textarea', 'msg_text', ts('Text Message'), 
                    "cols=50 rows=6" );
-        $this->add('textarea', 'msg_html', ts('HTML Message'),
-                   "cols=50 rows=6" );
+
+        // if not a system message use a wysiwyg editor, CRM-5971
+        if ( $this->_id &&
+             CRM_Core_DAO::getFieldValue( 'CRM_Core_DAO_MessageTemplates',
+                                          $this->_id,
+                                          'workflow_id' ) ) {
+            $this->add('textarea', 'msg_html', ts('HTML Message'),
+                       "cols=50 rows=6" );
+        } else {
+            $this->addWysiwyg( 'msg_html', ts('HTML Message'),
+                               array('cols' => '80', 'rows' => '8',
+                                     'onkeyup' =>"return verify(this)" ) );
+        }
+
      
         $this->add('checkbox', 'is_active', ts('Enabled?'));
 
@@ -207,6 +243,8 @@ class CRM_Admin_Form_MessageTemplates extends CRM_Admin_Form
 
             if ($this->_workflow_id) {
                 CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/admin/messageTemplates', 'selectedChild=workflow&reset=1'));
+            } else {
+                CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/admin/messageTemplates', 'selectedChild=user&reset=1'));
             }
         }
     }

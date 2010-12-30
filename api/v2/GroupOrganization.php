@@ -1,7 +1,7 @@
 <?php
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -142,7 +142,7 @@ function civicrm_group_organization_remove( &$params )
         return $error;
     }
     require_once 'CRM/Contact/BAO/GroupOrganization.php';
-    $result = CRM_Contact_BAO_GroupOrganization::delete( $params );
+    $result = CRM_Contact_BAO_GroupOrganization::delete( $params['id'] );
     return $result ? civicrm_create_success( ts( 'Deleted Group Organization successfully' ) ):civicrm_create_error( ts( 'Could not delete Group Organization' ) );
     
 }

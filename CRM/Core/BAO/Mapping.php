@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -63,7 +63,7 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping
      */
     static function retrieve( &$params, &$defaults ) 
     {
-        $mapping =& new CRM_Core_DAO_Mapping( );
+        $mapping = new CRM_Core_DAO_Mapping( );
         $mapping->copyValues( $params );
         if ( $mapping->find( true ) ) {
             CRM_Core_DAO::storeValues( $mapping, $defaults );
@@ -86,7 +86,7 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping
     {
         // delete from mapping_field table
         require_once "CRM/Core/DAO/MappingField.php";
-        $mappingField =& new CRM_Core_DAO_MappingField( );
+        $mappingField = new CRM_Core_DAO_MappingField( );
         $mappingField->mapping_id = $id;
         $mappingField->find();
         while ( $mappingField->fetch() ) {
@@ -94,7 +94,7 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping
         }
         
         // delete from mapping table
-        $mapping =& new CRM_Core_DAO_Mapping( );
+        $mapping = new CRM_Core_DAO_Mapping( );
         $mapping->id = $id;
         $mapping->delete();
         CRM_Core_Session::setStatus( ts('Selected Mapping has been Deleted Successfuly.') );
@@ -117,7 +117,7 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping
      */
     static function add( &$params ) 
     {
-        $mapping            =& new CRM_Core_DAO_Mapping( );
+        $mapping            = new CRM_Core_DAO_Mapping( );
         $mapping->copyValues( $params );
         $mapping->save( );
 
@@ -161,13 +161,13 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping
     {
         //mapping is to be loaded from database
         require_once "CRM/Core/DAO/MappingField.php";
-        $mapping =& new CRM_Core_DAO_MappingField();
+        $mapping = new CRM_Core_DAO_MappingField();
         $mapping->mapping_id = $mappingId;
         $mapping->orderBy('column_number');
         $mapping->find();
         
         $mappingName = $mappingLocation = $mappingContactType = $mappingPhoneType = array( );
-        $mappingImProvider = $mappingRelation = $mappingOperator = $mappingValue = array( );
+        $mappingImProvider = $mappingRelation = $mappingOperator = $mappingValue = $mappingWebsiteType = array( );
         while($mapping->fetch()) {
             $mappingName[$mapping->grouping][$mapping->column_number] = $mapping->name;
             $mappingContactType[$mapping->grouping][$mapping->column_number] = $mapping->contact_type;                
@@ -185,6 +185,10 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping
                 $mappingImProvider[$mapping->grouping][$mapping->column_number] = $mapping->im_provider_id;
             }
             
+            if ( !empty( $mapping->website_type_id ) ) {
+                $mappingWebsiteType[$mapping->grouping][$mapping->column_number] = $mapping->website_type_id;
+            }
+            
             if ( !empty($mapping->relationship_type_id) ) {
                 $mappingRelation[$mapping->grouping][$mapping->column_number] = 
                     "{$mapping->relationship_type_id}_{$mapping->relationship_direction}";
@@ -200,7 +204,7 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping
         }
         
         return array ($mappingName, $mappingContactType, $mappingLocation, $mappingPhoneType,
-                      $mappingImProvider, $mappingRelation, $mappingOperator, $mappingValue);   
+                      $mappingImProvider, $mappingRelation, $mappingOperator, $mappingValue, $mappingWebsiteType );   
     }
 
     /**
@@ -215,7 +219,7 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping
      */
     static function checkMapping( $nameField, $mapTypeId )
     {
-        $mapping =& new CRM_Core_DAO_Mapping();
+        $mapping = new CRM_Core_DAO_Mapping();
         $mapping->name = $nameField;
         $mapping->mapping_type_id = $mapTypeId;
         if ( $mapping->find(true) ) {
@@ -240,7 +244,7 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping
         $returnFields = array();
 
         //get the fields from mapping table
-        $dao =& new CRM_Core_DAO_MappingField( );
+        $dao = new CRM_Core_DAO_MappingField( );
         $dao->mapping_id = $smartGroupId;
         $dao->find();
         while ( $dao->fetch( ) ) {
@@ -330,11 +334,13 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping
             $required = false;
         }
 
+        require_once 'CRM/Core/BAO/Address.php';
         $contactType = array('Individual','Household','Organization');
         foreach ($contactType as $value) {
-
-            $relationfields[$value] = $fields[$value] = & CRM_Contact_BAO_Contact::exportableFields( $value, false, 
-                                                                                                     $required);
+            $contactFields  = CRM_Contact_BAO_Contact::exportableFields( $value, false, $required);
+            // exclude the address options disabled in the Address Settings
+            $fields[$value] = CRM_Core_BAO_Address::validateAddressOptions( $contactFields );
+            
             if ( $mappingType == 'Export' ) {
                 $relationships     = array( );
                 $relationshipTypes = CRM_Contact_BAO_Relationship::getContactRelationshipType( null, null, null, $value );
@@ -426,7 +432,7 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping
                 $compArray['Case'] = ts('Case');
                 
                 require_once 'CRM/Activity/BAO/Activity.php';
-                $fields['Activity']    =& CRM_Activity_BAO_Activity::exportableFields( );
+                $fields['Activity']    =& CRM_Activity_BAO_Activity::exportableFields( 'Case' );
                 $compArray['Activity'] = ts('Case Activity');
                 
                 unset($fields['Case']['case_contact_id']);
@@ -439,6 +445,12 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping
                 unset( $fields['Grant']['grant_contact_id'] );
                 $compArray['Grant'] = ts('Grant');
             }
+        }
+
+        if ( ( $mappingType == 'Search Builder' ) || ( $exportMode == CRM_Export_Form_Select::ACTIVITY_EXPORT ) ) {
+            require_once 'CRM/Activity/BAO/Activity.php';
+            $fields['Activity'] =& CRM_Activity_BAO_Activity::exportableFields( 'Activity' );
+            $compArray['Activity'] = ts('Activity');
         }
 
         //Contact Sub Type For export
@@ -579,7 +591,7 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping
                             asort( $relationshipCustomFields ) ;
                             
                             require_once 'CRM/Contact/BAO/RelationshipType.php';
-                            $relationshipType =& new CRM_Contact_BAO_RelationshipType( ); 
+                            $relationshipType = new CRM_Contact_BAO_RelationshipType( ); 
                             $relationshipType->id = $id;
                             if ( $relationshipType->find( true ) ) {
                                 $direction = "contact_sub_type_$second";
@@ -633,8 +645,6 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping
                                  'city', 'postal_code', 'postal_code_suffix', 'geo_code_1', 'geo_code_2', 
                                  'state_province', 'country', 'phone', 'email', 'im' );
         
-        $relationFields = array() ;
-        
         if ( isset($mappingId) ) {
             $colCnt = 0;
             
@@ -652,6 +662,12 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping
                 }
             }
         }
+        
+        $form->_blockCount  = $blockCount;
+        $form->_columnCount = $columnCount;
+
+        $form->set( 'blockCount',  $form->_blockCount );
+        $form->set( 'columnCount', $form->_columnCount );
         
         $defaults = array();
         
@@ -831,9 +847,11 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping
             $js .= implode( ', ', $elements );
             $js .= "]";
             $js .= "
-for(var i=0;i<nullArray.length;i++) {
-  {$formName}['mapper['+nullArray[i][0]+']['+nullArray[i][1]+']['+nullArray[i][2]+']'].style.display = '';
-}
+                for(var i=0;i<nullArray.length;i++) {
+                    if ( {$formName}['mapper['+nullArray[i][0]+']['+nullArray[i][1]+']['+nullArray[i][2]+']'] ) {
+                        {$formName}['mapper['+nullArray[i][0]+']['+nullArray[i][1]+']['+nullArray[i][2]+']'].style.display = '';
+                    }
+                }
 ";
         }
         if ( ! empty( $noneArray ) ) {
@@ -850,9 +868,11 @@ for(var i=0;i<nullArray.length;i++) {
             $js .= implode( ', ', $elements );
             $js .= "]";
             $js .= "
-for(var i=0;i<noneArray.length;i++) {
+                for(var i=0;i<noneArray.length;i++) {
+                    if ( {$formName}['mapper['+noneArray[i][0]+']['+noneArray[i][1]+']['+noneArray[i][2]+']'] ) {  
   {$formName}['mapper['+noneArray[i][0]+']['+noneArray[i][1]+']['+noneArray[i][2]+']'].style.display = 'none';  
-}
+                    }
+                } 
 ";
         }
         $js .= "</script>\n"; 
@@ -935,11 +955,11 @@ for(var i=0;i<noneArray.length;i++) {
                 }
                 if ( CRM_Utils_Array::value('1',$v) ) {
                     $fldName = $v[1];
-                    if ( CRM_Utils_Array::value('2',$v ) ) {
+                    if ( $v2 = CRM_Utils_Array::value( '2', $v ) && trim( $v2 ) ) {
                         $fldName .= "-{$v[2]}";
                     }
                     
-                    if ( CRM_Utils_Array::value('3',$v) ) {
+                    if ( $v3 = CRM_Utils_Array::value( '3', $v )  && trim( $v3 ) ) {
                         $fldName .= "-{$v[3]}";
                     }
                     
@@ -1063,7 +1083,7 @@ for(var i=0;i<noneArray.length;i++) {
     {
         //delete mapping fields records for exixting mapping
         require_once "CRM/Core/DAO/MappingField.php";
-        $mappingFields =& new CRM_Core_DAO_MappingField();
+        $mappingFields = new CRM_Core_DAO_MappingField();
         $mappingFields->mapping_id = $mappingId;
         $mappingFields->delete( );
         
@@ -1077,7 +1097,7 @@ for(var i=0;i<noneArray.length;i++) {
             foreach ($value as $k => $v) {
                 
                 if ( CRM_Utils_Array::value( '1' ,$v ) ) {
-                    $saveMappingFields =& new CRM_Core_DAO_MappingField();
+                    $saveMappingFields = new CRM_Core_DAO_MappingField();
                                        
                     $saveMappingFields->mapping_id       = $mappingId;
                     $saveMappingFields->name             = CRM_Utils_Array::value( '1' ,$v );

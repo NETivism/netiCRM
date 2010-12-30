@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -82,7 +82,7 @@ class CRM_Contact_Form_Search_Custom_TagContributions
    * Define the smarty template used to layout the search form and results listings.
    */
   function templateFile( ) {
-     return 'CRM/Contact/Form/Search/Custom/Sample.tpl';
+     return 'CRM/Contact/Form/Search/Custom.tpl';
   }
 
   /**
@@ -135,7 +135,8 @@ GROUP BY civicrm_contact.id
       return "
       civicrm_contribution,
       civicrm_contact
-      LEFT JOIN civicrm_entity_tag ON civicrm_entity_tag.contact_id = civicrm_contact.id
+      LEFT JOIN civicrm_entity_tag ON ( civicrm_entity_tag.entity_table = 'civicrm_contact' AND
+                                        civicrm_entity_tag.entity_id = civicrm_contact.id )
       LEFT JOIN civicrm_tag ON civicrm_tag.id = civicrm_entity_tag.tag_id
 ";
   }

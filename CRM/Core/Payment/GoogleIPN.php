@@ -200,7 +200,7 @@ class CRM_Core_Payment_GoogleIPN extends CRM_Core_Payment_BaseIPN {
         $orderNo   = $dataRoot['google-order-number']['VALUE'];
         
         require_once 'CRM/Contribute/DAO/Contribution.php';
-        $contribution =& new CRM_Contribute_DAO_Contribution( );
+        $contribution = new CRM_Contribute_DAO_Contribution( );
         $contribution->invoice_id = $orderNo;
         if ( ! $contribution->find( true ) ) {
             CRM_Core_Error::debug_log_message( "Could not find contribution record with invoice id: $orderNo" );
@@ -285,7 +285,7 @@ class CRM_Core_Payment_GoogleIPN extends CRM_Core_Payment_BaseIPN {
      */  
     function getAmount($orderNo) {
         require_once 'CRM/Contribute/DAO/Contribution.php';
-        $contribution =& new CRM_Contribute_DAO_Contribution( );
+        $contribution = new CRM_Contribute_DAO_Contribution( );
         $contribution->invoice_id = $orderNo;
         if ( ! $contribution->find( true ) ) {
             CRM_Core_Error::debug_log_message( "Could not find contribution record with invoice id: $orderNo" );
@@ -313,7 +313,7 @@ class CRM_Core_Payment_GoogleIPN extends CRM_Core_Payment_BaseIPN {
         $module = null;
         if ($root == 'new-order-notification') {
             $contributionID   = $privateData['contributionID'];
-            $contribution     =& new CRM_Contribute_DAO_Contribution( );
+            $contribution     = new CRM_Contribute_DAO_Contribution( );
             $contribution->id = $contributionID;
             if ( ! $contribution->find( true ) ) {
                 CRM_Core_Error::debug_log_message( "Could not find contribution record: $contributionID" );
@@ -327,7 +327,7 @@ class CRM_Core_Payment_GoogleIPN extends CRM_Core_Payment_BaseIPN {
             }
             $isTest = $contribution->is_test;
         } else {
-            $contribution =& new CRM_Contribute_DAO_Contribution( );
+            $contribution = new CRM_Contribute_DAO_Contribution( );
             $contribution->invoice_id = $orderNo;
             if ( ! $contribution->find( true ) ) {
                 CRM_Core_Error::debug_log_message( "Could not find contribution record with invoice id: $orderNo" );
@@ -375,7 +375,7 @@ class CRM_Core_Payment_GoogleIPN extends CRM_Core_Payment_BaseIPN {
             // we are in event mode
             // make sure event exists and is valid
             require_once 'CRM/Event/DAO/Event.php';
-            $event =& new CRM_Event_DAO_Event( );
+            $event = new CRM_Event_DAO_Event( );
             $event->id = $eventID;
             if ( ! $event->find( true ) ) {
                 CRM_Core_Error::debug_log_message( "Could not find event: $eventID" );
@@ -408,17 +408,8 @@ class CRM_Core_Payment_GoogleIPN extends CRM_Core_Payment_BaseIPN {
         require_once('Google/library/googleresult.php');
         require_once('Google/library/xml-processing/xmlparser.php');
         
-        $config =& CRM_Core_Config::singleton();
-        
-        if ( GOOGLE_DEBUG_PP ) {
-            define('RESPONSE_HANDLER_LOG_FILE', $config->uploadDir . 'CiviCRM.Google.log');
-            //Setup the log file
-            if (! $message_log = fopen(RESPONSE_HANDLER_LOG_FILE, "a")) {
-                echo "Cannot open " . RESPONSE_HANDLER_LOG_FILE . " file.\n";
-                exit(1);
-            }
-        }
-        
+        $config = CRM_Core_Config::singleton();
+               
         // Retrieve the XML sent in the HTTP POST request to the ResponseHandler
         if (get_magic_quotes_gpc()) {
             $xml_response = stripslashes($xml_response);
@@ -428,8 +419,7 @@ class CRM_Core_Payment_GoogleIPN extends CRM_Core_Payment_BaseIPN {
         $headers = CRM_Utils_System::getAllHeaders();
 
         if ( GOOGLE_DEBUG_PP ) {
-            fwrite($message_log, sprintf("\n\r%s:- %s\n",date("D M j G:i:s T Y"),
-                                         $xml_response));
+            CRM_Core_Error::debug_var( 'RESPONSE', $xml_response, true, true, 'Google' );
         }
         
         // Retrieve the root and data from the xml response
@@ -460,8 +450,7 @@ class CRM_Core_Payment_GoogleIPN extends CRM_Core_Payment_BaseIPN {
         $response = new GoogleResponse($merchant_id, $merchant_key,
                                        $xml_response, $server_type);
         if ( GOOGLE_DEBUG_PP ) {
-            fwrite($message_log, sprintf("\n\r%s:- %s\n",date("D M j G:i:s T Y"),
-                                         $response->root));
+            CRM_Core_Error::debug_var( 'RESPONSE-ROOT', $response->root, true, true, 'Google' );
         }
 
         //Check status and take appropriate action

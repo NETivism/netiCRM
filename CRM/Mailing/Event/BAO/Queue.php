@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -58,7 +58,7 @@ class CRM_Mailing_Event_BAO_Queue extends CRM_Mailing_Event_DAO_Queue {
      * @static
      */
     public static function &create(&$params) {
-        $eq =& new CRM_Mailing_Event_BAO_Queue();
+        $eq = new CRM_Mailing_Event_BAO_Queue();
         $eq->copyValues($params);
         $eq->hash = self::hash($params);
         $eq->save();
@@ -94,16 +94,17 @@ class CRM_Mailing_Event_BAO_Queue extends CRM_Mailing_Event_DAO_Queue {
      * @static
      */
     public static function &verify($job_id, $queue_id, $hash) {
-        $q =& new CRM_Mailing_Event_BAO_Queue();
+        $success = null;
+        $q = new CRM_Mailing_Event_BAO_Queue();
         if (!empty($job_id) && !empty($queue_id) && !empty($hash)) {
             $q->id = $queue_id;
             $q->job_id = $job_id;
             $q->hash = $hash;
             if ($q->find(true)) {
-                return $q;
+                $success = $q;
             }
         }
-        return null;
+        return $success;
     }
 
 
@@ -125,7 +126,7 @@ class CRM_Mailing_Event_BAO_Queue extends CRM_Mailing_Event_DAO_Queue {
                     WHERE       $eq.id = " 
                                 . CRM_Utils_Type::rule($queue_id, 'Integer');
 
-        $q =& new CRM_Mailing_Event_BAO_Queue();
+        $q = new CRM_Mailing_Event_BAO_Queue();
         $q->query($query);
         if (! $q->fetch()) {
             return null;
@@ -144,7 +145,7 @@ class CRM_Mailing_Event_BAO_Queue extends CRM_Mailing_Event_DAO_Queue {
      * @static
      */
     public static function getTotalCount($mailing_id, $job_id = null) {
-        $dao =& new CRM_Core_DAO();
+        $dao = new CRM_Core_DAO();
 
         $queue      = self::getTableName();
         $mailing    = CRM_Mailing_BAO_Mailing::getTableName();
@@ -182,13 +183,22 @@ class CRM_Mailing_Event_BAO_Queue extends CRM_Mailing_Event_DAO_Queue {
      */
     public static function &getRows($mailing_id, $job_id = null, $offset = null,
                                     $rowCount = null, $sort = null) {
-        $dao =& new CRM_Core_Dao();
+        $dao = new CRM_Core_Dao();
         
         $queue      = self::getTableName();
         $mailing    = CRM_Mailing_BAO_Mailing::getTableName();
         $job        = CRM_Mailing_BAO_Job::getTableName();
         $contact    = CRM_Contact_BAO_Contact::getTableName();
         $email      = CRM_Core_BAO_Email::getTableName();
+
+        $orderBy = "sort_name ASC, {$job}.start_date DESC";
+        if ($sort) {
+            if ( is_string( $sort ) ) {
+                $orderBy = $sort;
+            } else {
+                $orderBy = trim( $sort->orderBy() );
+            }
+        }
 
         $query =    "
             SELECT      $contact.display_name as display_name,
@@ -213,7 +223,7 @@ class CRM_Mailing_Event_BAO_Queue extends CRM_Mailing_Event_DAO_Queue {
                     . CRM_Utils_Type::escape($job_id, 'Integer');
         }
 
-        $query .= " ORDER BY $contact.sort_name, $job.start_date DESC ";
+        $query .= " ORDER BY {$orderBy} ";
 
         if ($offset||$rowCount) {//Added "||$rowCount" to avoid displaying all records on first page
             $query .= ' LIMIT ' 
@@ -245,7 +255,7 @@ class CRM_Mailing_Event_BAO_Queue extends CRM_Mailing_Event_DAO_Queue {
      * @access public
      */
     public function &getMailing() {
-        $mailing    =& new CRM_Mailing_BAO_Mailing();
+        $mailing    = new CRM_Mailing_BAO_Mailing();
         $jobs       = CRM_Mailing_BAO_Job::getTableName();
         $mailings   = CRM_Mailing_BAO_Mailing::getTableName();
         $queue      = self::getTableName();

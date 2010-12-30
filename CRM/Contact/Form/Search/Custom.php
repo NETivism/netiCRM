@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -41,6 +41,9 @@ class CRM_Contact_Form_Search_Custom extends CRM_Contact_Form_Search {
     protected $_customClass = null;
 
     public function preProcess( ) {
+        $this->set( 'searchFormName', 'Custom' );
+
+        $this->set('context', 'custom' );
         require_once 'CRM/Contact/BAO/SearchCustom.php';
 
         $csID = CRM_Utils_Request::retrieve( 'csid', 'Integer', $this );
@@ -95,15 +98,23 @@ class CRM_Contact_Form_Search_Custom extends CRM_Contact_Form_Search {
     }
 
     function getTemplateFileName( ) {
-        $fileName = $this->_customClass->templateFile( );
+
+        require_once( 'CRM/Core/Extensions.php' );
+        $ext = new CRM_Core_Extensions();
+        
+        if( $ext->isExtensionClass( CRM_Utils_System::getClassName( $this->_customClass ) ) ) {
+            $filename =  $ext->getTemplatePath( CRM_Utils_System::getClassName( $this->_customClass ) );
+        } else {
+            $fileName = $this->_customClass->templateFile( );
+        }
+
         return $fileName ? $fileName : parent::getTemplateFileName( );
     }
 
     function postProcess( ) 
     {
-        $session =& CRM_Core_Session::singleton();
-        $session->set('isAdvanced', '3');
-        $session->set('isCustom'  , '1');
+        $this->set('isAdvanced', '3');
+        $this->set('isCustom'  , '1');
 
         // get user submitted values
         // get it from controller only if form has been submitted, else preProcess has set this
@@ -113,7 +124,10 @@ class CRM_Contact_Form_Search_Custom extends CRM_Contact_Form_Search {
             $this->_formValues['customSearchID'   ] = $this->_customSearchID   ;
             $this->_formValues['customSearchClass'] = $this->_customSearchClass;
         }            
-
+        
+        //use the custom selector
+        $this->_selectorName = 'CRM_Contact_Selector_Custom';
+        
         parent::postProcess( );
     }
 

@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -23,7 +23,7 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
-<script type="text/javascript" src="{$config->resourceBase}packages/OpenFlashChart/js/json/json2.js"></script>
+<script type="text/javascript" src="{$config->resourceBase}packages/OpenFlashChart/js/json/openflashchart.packed.js"></script>
 <script type="text/javascript" src="{$config->resourceBase}packages/OpenFlashChart/js/swfobject.js"></script>
 {literal}
 <script type="text/javascript">
@@ -34,7 +34,9 @@
        swfobject.embedSWF( flashFilePath, divName,
     		                 xSize, ySize, "9.0.0",
     		                 "expressInstall.swf",
-    		                 {"get-data":loadDataFunction, "id":chartID}
+    		                 {"get-data":loadDataFunction, "id":chartID},
+    		                 null,
+    		                 {"wmode": 'transparent'}
     		                );
     }
 </script>

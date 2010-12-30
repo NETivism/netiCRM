@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -42,7 +42,7 @@ function run( ) {
     require_once '../civicrm.config.php'; 
     require_once 'CRM/Core/Config.php'; 
     
-    $config =& CRM_Core_Config::singleton(); 
+    $config = CRM_Core_Config::singleton(); 
     
     require_once 'Console/Getopt.php';
     $shortOptions = "n:p:s:e:k:g:parse";
@@ -80,7 +80,14 @@ function run( ) {
     // this does not return on failure
     // require_once 'CRM/Utils/System.php';
     CRM_Utils_System::authenticateScript( true, $name, $pass );
+
+    //log the execution of script
+    CRM_Core_Error::debug_log_message( 'UpdateAddress.php' );
     
+    // load bootstrap to call hooks
+    require_once 'CRM/Utils/System.php';
+    CRM_Utils_System::loadBootStrap(  );
+
     // do check for geocoding.
     $processGeocode = false;
     if ( empty( $config->geocodeMethod ) ) {

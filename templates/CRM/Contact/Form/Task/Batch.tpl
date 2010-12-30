@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -23,22 +23,20 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
-<div class="batch-update form-item">
-<fieldset>
+<div class="batch-update crm-form-block crm-contact-task-batch-form-block">
 <div id="help">
     {ts}Update field values for each contact as needed. Click <strong>Update Contacts</strong> below to save all your changes. To set a field to the same value for ALL rows, enter that value for the first contact and then click the <strong>Copy icon</strong> (next to the column title).{/ts}
-</div>
-    <legend>{$profileTitle}</legend>
-         <table>
-	  <thead class="sticky">
-            <tr class="columnheader">
-             <th>{ts}Name{/ts}</th>
+</div>  
+   <table>
+     <thead class="sticky">
+         <tr class="columnheader">
+         <td>{ts}Name{/ts}</td>
              {foreach from=$fields item=field key=fieldName}
                 {if strpos( $field.name, '_date' ) !== false || 
                    (substr( $field.name, 0, 7 ) == 'custom_' && $field.data_type == 'Date') }
-                  <th><img  src="{$config->resourceBase}i/copy.png" alt="{ts 1=$field.title}Click to copy %1 from row one to all rows.{/ts}" onclick="copyValuesDate('{$field.name}')" class="action-icon" title="{ts}Click here to copy the value in row one to ALL rows.{/ts}" />{$field.title}</th>
+                  <td><img  src="{$config->resourceBase}i/copy.png" alt="{ts 1=$field.title}Click to copy %1 from row one to all rows.{/ts}" onclick="copyValuesDate('{$field.name}')" class="action-icon" title="{ts}Click here to copy the value in row one to ALL rows.{/ts}" />{$field.title}</td>
                 {else}
-                  <th><img  src="{$config->resourceBase}i/copy.png" alt="{ts 1=$field.title}Click to copy %1 from row one to all rows.{/ts}" onclick="copyValues('{$field.name}')" class="action-icon" title="{ts}Click here to copy the value in row one to ALL rows.{/ts}" />{$field.title}</th>             
+                  <td><img  src="{$config->resourceBase}i/copy.png" alt="{ts 1=$field.title}Click to copy %1 from row one to all rows.{/ts}" onclick="copyValues('{$field.name}')" class="action-icon" title="{ts}Click here to copy the value in row one to ALL rows.{/ts}" />{$field.title}</td>             
                 {/if}
              {/foreach}
             </tr>
@@ -80,14 +78,12 @@
 					<td class="compressed">{$form.field.$cid.$n.html}</td>
 				{/if}
               {/foreach}
-             </tr>
             {/foreach}
            </tr>
          </table>
-        <dl>
-            <dt></dt><dd>{if $fields}{$form._qf_BatchUpdateProfile_refresh.html}{/if} &nbsp; {$form.buttons.html}</dd>
-        </dl>
-</fieldset>
+       
+        {if $fields}{$form._qf_BatchUpdateProfile_refresh.html}{/if} &nbsp;<div class="crm-submit-buttons">{$form.buttons.html}</div>
+        
 </div>
 
 {*include batch copy js js file*}

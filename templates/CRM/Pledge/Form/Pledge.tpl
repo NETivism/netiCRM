@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -31,148 +31,158 @@
 {else}
 {if !$email and $action neq 8 and $context neq 'standalone'}
 <div class="messages status">
-  <dl>
-    <dt><img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}" /></dt>
-    <dd>
+  <div class="icon inform-icon"></div>
         <p>{ts}You will not be able to send an acknowledgment for this pledge because there is no email address recorded for this contact. If you want a acknowledgment to be sent when this pledge is recorded, click Cancel and then click Edit from the Summary tab to add an email address before recording the pledge.{/ts}</p>
-    </dd>
-  </dl>
 </div>
 {/if}
-<div class="form-item">
-<div class=""crm-submit-buttons">{$form.buttons.html}</div>
-<fieldset><legend>{if $action eq 1 or $action eq 1024}{ts}New Pledge{/ts}{elseif $action eq 8}{ts}Delete Pledge{/ts}{else}{ts}Edit Pledge{/ts}{/if}</legend> 
+{if $action EQ 1}
+    <h3>{ts}New Pledge{/ts}</h3>
+{elseif $action EQ 2}
+    <h3>{ts}Edit Pledge{/ts}</h3>
+    {* Check if current Total Pledge Amount is different from original pledge amount. *}
+    {math equation="x / y" x=$amount y=$installments format="%.2f" assign="currentInstallment"}
+    {* Check if current Total Pledge Amount is different from original pledge amount. *}
+    {if $currentInstallment NEQ $eachPaymentAmount}
+    	{assign var=originalPledgeAmount value=`$installments*$eachPaymentAmount`}
+    {/if}
+{elseif $action EQ 8}
+    <h3>{ts}Delete Pledge{/ts}</h3>
+{/if}
+<div class="crm-block crm-form-block crm-pledge-form-block">
+ <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div> 
    {if $action eq 8} 
       <div class="messages status"> 
-        <dl> 
-          <dt><img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}" /></dt> 
-          <dd> 
-          {ts}WARNING: Deleting this pledge will result in the loss of the associated financial transactions (if any).{/ts} {ts}Do you want to continue?{/ts} 
-          </dd> 
-       </dl> 
+          <div class="icon inform-icon"></div>
+          {ts}WARNING: Deleting this pledge will result in the loss of the associated financial transactions (if any).{/ts} {ts}Do you want to continue?{/ts}
       </div> 
    {else}
       <table class="form-layout-compressed">
         {if $context eq 'standalone'}
             {include file="CRM/Contact/Form/NewContact.tpl"}
         {else}
-          <tr>
+          <tr class="crm-pledge-form-block-displayName">
               <td class="font-size12pt right"><strong>{ts}Pledge by{/ts}</strong></td>
               <td class="font-size12pt"><strong>{$displayName}</strong></td>
           </tr>
         {/if}
-	<tr><td class="font-size12pt right">{$form.amount.label}</td><td class="font-size12pt">{$form.amount.html|crmMoney}</td></tr>
-        <tr><td class="label">{$form.installments.label}</td><td>{$form.installments.html} {ts}installments of{/ts} {if $action eq 1 or $isPending}{$form.eachPaymentAmount.html|crmMoney}{elseif $action eq 2 and !$isPending}{$eachPaymentAmount|crmMoney}{/if}&nbsp;{ts}every{/ts}&nbsp;{$form.frequency_interval.html}&nbsp;{$form.frequency_unit.html}</td></tr>
-        <tr><td class="label nowrap">{$form.frequency_day.label}</td><td>{$form.frequency_day.html} {ts}day of the period{/ts}<br />
+	<tr class="crm-pledge-form-block-amount">
+	    <td class="font-size12pt right">{$form.amount.label}</td>
+	    <td><span class="font-size12pt">{$form.amount.html|crmMoney}</span> {if $originalPledgeAmount}<div class="messages status"><div class="icon inform-icon"></div>&nbsp;{ts 1=$originalPledgeAmount|crmMoney} Pledge total has changed due to payment adjustments. Original pledge amount was %1.{/ts}</div>{/if}</td>
+	</tr>
+        <tr class="crm-pledge-form-block-installments"><td class="label">{$form.installments.label}</td><td>{$form.installments.html} {ts}installments of{/ts} {if $action eq 1 or $isPending}{$form.eachPaymentAmount.html|crmMoney}{elseif $action eq 2 and !$isPending}{$eachPaymentAmount|crmMoney}{/if}&nbsp;{ts}every{/ts}&nbsp;{$form.frequency_interval.html}&nbsp;{$form.frequency_unit.html}</td></tr>
+        <tr class="crm-pledge-form-block-frequency_day"><td class="label nowrap">{$form.frequency_day.label}</td><td>{$form.frequency_day.html} {ts}day of the period{/ts}<br />
             <span class="description">{ts}This applies to weekly, monthly and yearly payments.{/ts}</td></tr>
         {if $form.create_date}	
-        <tr>
+        <tr class="crm-pledge-form-block-create_date">
             <td class="label">{$form.create_date.label}</td>
             <td>{include file="CRM/common/jcalendar.tpl" elementName=create_date}<br />
         {/if}
         {if $create_date}
-            <tr><td class="label">Pledge Made</td><td class="view-value">{$create_date|truncate:10:''|crmDate}
+            <tr class="crm-pledge-form-block-create_date"><td class="label">{ts}Pledge Made{/ts}</td><td class="view-value">{$create_date|truncate:10:''|crmDate}
         {/if}<br />
             <span class="description">{ts}Date when pledge was made by the contributor.{/ts}</span></td></tr>
        
         {if $form.start_date}	
-            <tr>
+            <tr class="crm-pledge-form-block-start_date">
                 <td class="label">{$form.start_date.label}</td>
                 <td>{include file="CRM/common/jcalendar.tpl" elementName=start_date}<br />
         {/if}
         {if $start_date}
-            <tr><td class="label">Payments Start</td><td class="view-value">{$start_date|truncate:10:''|crmDate}
+            <tr class="crm-pledge-form-block-start_date"><td class="label">{ts}Payments Start{/ts}</td><td class="view-value">{$start_date|truncate:10:''|crmDate}
         {/if}<br />
             <span class="description">{ts}Date of first pledge payment.{/ts}</span></td></tr>
        
         {if $email and $outBound_option != 2}
             {if $form.is_acknowledge }
-                <tr><td class="label">{$form.is_acknowledge.label}</td><td>{$form.is_acknowledge.html}<br />
+                <tr class="crm-pledge-form-block-is_acknowledge"><td class="label">{$form.is_acknowledge.label}</td><td>{$form.is_acknowledge.html}<br />
                 <span class="description">{ts 1=$email}Automatically email an acknowledgment of this pledge to %1?{/ts}</span></td></tr>
             {/if}
 	    {elseif $context eq 'standalone' and $outBound_option != 2 }
                 <tr id="acknowledgment-receipt" style="display:none;"><td class="label">{$form.is_acknowledge.label}</td><td>{$form.is_acknowledge.html} <span class="description">{ts}Automatically email an acknowledgment of this pledge to {/ts}<span id="email-address"></span>?</span></td></tr>
         {/if}
-        <tr id="acknowledgeDate"><td class="label">{$form.acknowledge_date.label}</td>
+        <tr id="acknowledgeDate"><td class="label" class="crm-pledge-form-block-acknowledge_date">{$form.acknowledge_date.label}</td>
             <td>{include file="CRM/common/jcalendar.tpl" elementName=acknowledge_date}<br />
             <span class="description">{ts}Date when an acknowledgment of the pledge was sent.{/ts}</span></td></tr>
-            <tr><td class="label">{$form.contribution_type_id.label}</td><td>{$form.contribution_type_id.html}<br />
+            <tr class="crm-pledge-form-block-contribution_type_id"><td class="label">{$form.contribution_type_id.label}</td><td>{$form.contribution_type_id.html}<br />
             <span class="description">{ts}Sets the default contribution type for payments against this pledge.{/ts}</span></td></tr>
-	    <tr><td class="label">{$form.contribution_page_id.label}</td><td>{$form.contribution_page_id.html}<br />
+	    <tr class="crm-pledge-form-block-contribution_page_id"><td class="label">{$form.contribution_page_id.label}</td><td>{$form.contribution_page_id.html}<br />
             <span class="description">{ts}Select an Online Contribution page that the user can access to make self-service pledge payments. (Only Online Contribution pages configured to include the Pledge option are listed.){/ts}</span></td></tr>
         
-	    <tr><td class="label">{ts}Pledge Status{/ts}</td><td class="view-value">{$status}<br />
+	    <tr class="crm-pledge-form-block-status"><td class="label">{ts}Pledge Status{/ts}</td><td class="view-value">{$status}<br />
             <span class="description">{ts}Pledges are "Pending" until the first payment is received. Once a payment is received, status is "In Progress" until all scheduled payments are completed. Overdue pledges are ones with payment(s) past due.{/ts}</span></td></tr>
 		<tr><td colspan=2>{include file="CRM/Custom/Form/CustomData.tpl"}</td></tr>
        </table>
-</fieldset>
 {literal}
 <script type="text/javascript">
-var showPane = "";
-cj(function() {
-  cj('.accordion .head').addClass( "ui-accordion-header ui-helper-reset ui-state-default ui-corner-all ");
-
-  cj('.accordion .head').hover( function() { cj(this).addClass( "ui-state-hover");
-                             }, function() { cj(this).removeClass( "ui-state-hover");
-               }).bind('click', function() { 
-		                             var checkClass = cj(this).find('span').attr( 'class' );
-					     var len        = checkClass.length;
-					     if( checkClass.substring( len - 1, len ) == 's' ) {
-					       cj(this).find('span').removeClass().addClass('ui-icon ui-icon-triangle-1-e');
-					     } else {
-					       cj(this).find('span').removeClass().addClass('ui-icon ui-icon-triangle-1-s');
-					     }
-					     cj(this).next().toggle(); return false; }).next().hide();
-  if( showPane.length > 1 ) {
-    eval("showPane =[ '" + showPane.substring( 0,showPane.length - 2 ) +"]");
-    cj.each( showPane, function( index, value ) {
-       cj('span#'+value).removeClass().addClass('ui-icon ui-icon-triangle-1-s');
-       loadPanes( value )  ;
-       cj("div."+value).show();
-    });
-  }
-});
-
-
+// bind first click of accordion header to load crm-accordion-body with snippet
+// everything else taken care of by cj().crm-accordions()
 cj(document).ready( function() {
-    cj('.head').one( 'click', function() { loadPanes( cj(this).children().attr('id') );  });
+    cj('.crm-ajax-accordion .crm-accordion-header').one('click', function() { 
+    	loadPanes(cj(this).attr('id')); 
+    });
+    cj('.crm-ajax-accordion.crm-accordion-open .crm-accordion-header').each(function(index) { 
+    	loadPanes(cj(this).attr('id')); 
+    	});
 });
-
-function loadPanes( id ) {
+// load panes function calls for snippet based on id of crm-accordion-header
+function loadPanes( id ) {   
     var url = "{/literal}{crmURL p='civicrm/contact/view/pledge' q='snippet=4&formType=' h=0}{literal}" + id;
-    if ( ! cj('div.'+id).html() ) {
-  var loading = '<img src="{/literal}{$config->resourceBase}i/loading.gif{literal}" alt="{/literal}{ts}loading{/ts}{literal}" />&nbsp;{/literal}{ts}Loading{/ts}{literal}...';
-    cj('div.'+id).html(loading);
-    }
-    cj.ajax({
-        url    : url,
-        success: function(data) { 
-                    cj('div.'+id).html(data);
-                 }
-         });
-}
+    {/literal}
+        {if $contributionMode}
+            url = url + "&mode={$contributionMode}";
+        {/if}
+    {literal}
+   if ( ! cj('div.'+id).html() ) {
+	    var loading = '<img src="{/literal}{$config->resourceBase}i/loading.gif{literal}" alt="{/literal}{ts}loading{/ts}{literal}" />&nbsp;{/literal}{ts}Loading{/ts}{literal}...';
+	    cj('div.'+id).html(loading);
+	    cj.ajax({
+	        url    : url,
+	        success: function(data) { cj('div.'+id).html(data); }
+	        });
+    	}
+	}
 </script>
 {/literal}
-{* jQuery pane *}
+
+
 <div class="accordion ui-accordion ui-widget ui-helper-reset">
 {foreach from=$allPanes key=paneName item=paneValue}
-<h3 class="head"><span class="ui-icon ui-icon-triangle-1-e" id="{$paneValue.id}"></span><a href="#">{$paneName}</a></h3>
-<div class={$paneValue.id}></div>
-{if $paneValue.open eq 'true'}
-{literal}<script type="text/javascript"> showPane += "{/literal}{$paneValue.id}{literal}"+"','";</script>{/literal}
-{/if}
+<div class="crm-accordion-wrapper crm-ajax-accordion crm-{$paneValue.id}-accordion {if $paneValue.open eq 'true'}crm-accordion-open{else}crm-accordion-closed{/if}">
+<div class="crm-accordion-header" id="{$paneValue.id}">
+  <div class="icon crm-accordion-pointer"></div> 
+
+        {$paneName}
+  </div><!-- /.crm-accordion-header -->
+ <div class="crm-accordion-body">
+       <div class="{$paneValue.id}"></div>
+ </div><!-- /.crm-accordion-body -->
+</div><!-- /.crm-accordion-wrapper -->
+
 {/foreach}
+</div>
 {/if} {* not delete mode if*}   
-</div> 
+
 <br />
-<div class="crm-submit-buttons">{$form.buttons.html}</div>
-     {literal}
+<div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
+</div>
+{literal}   
+<script type="text/javascript">
+cj(function() {
+   cj().crmaccordions(); 
+});
+</script>
+{/literal}
+{literal}
      <script type="text/javascript">
 
      function verify( ) {
        var element = document.getElementsByName("is_acknowledge");
         if ( element[0].checked ) {
-            var message = '{/literal}{ts 1=$email}Click OK to save this Pledge record AND send an acknowledgment to %1 now{/ts}{literal}.';
+            var emailAddress = '{/literal}{$email}{literal}';
+	    if ( !emailAddress ) {
+	    var emailAddress = cj('#email-address').html(); 
+	    }
+	    var message = '{/literal}{ts 1="'+emailAddress+'"}Click OK to save this Pledge record AND send an acknowledgment to %1 now{/ts}{literal}.';
             if (!confirm( message) ) {
                 return false;
             }

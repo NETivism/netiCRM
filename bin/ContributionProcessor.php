@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -51,7 +51,7 @@ class CiviContributeProcessor {
                                      'shiptostreet'  => 'street_address',
                                      'shiptostreet2' => 'supplemental_address_1',
                                      'shiptocity'    => 'city',
-                                     'shiptostate'   => 'state',
+                                     'shiptostate'   => 'state_province',
                                      'shiptozip'     => 'postal_code',
                                      'countrycode'   => 'country',
                                      ),
@@ -59,7 +59,7 @@ class CiviContributeProcessor {
                                      'amt'              => 'total_amount',
                                      'feeamt'           => 'fee_amount',
                                      'transactionid'    => 'trxn_id',
-                                     'currencycode'     => 'currencyID',
+                                     'currencycode'     => 'currency',
                                      'l_name0'          => 'source',
                                      'ordertime'        => 'receive_date',
                                      'note'             => 'note',
@@ -70,6 +70,7 @@ class CiviContributeProcessor {
                                      'l_period2'        => 'lol',
                                      'invnum'           => 'invoice_id',
                                      'subscriptiondate' => 'start_date',
+                                     'subscriptionid'   => 'processor_id',
                                      'timestamp'        => 'modified_date',
                                      ),
               );
@@ -78,8 +79,9 @@ class CiviContributeProcessor {
         array(
               //category    => array(google_param    => civicrm_field);
               'contact'     => array(
+                                     'first-name'    => 'first_name',
+                                     'last-name'     => 'last_name',
                                      'contact-name'  => 'display_name',
-                                     'contact-name'  => 'sort_name',
                                      'email'         => 'email',
                                      ),
               'location'    => array(
@@ -145,55 +147,85 @@ class CiviContributeProcessor {
                         'enddate'   => $end );
 
         require_once 'CRM/Core/Payment/PayPalImpl.php';
-        $result = CRM_Core_Payment_PayPalImpl::invokeAPI( $args, $url );
-
-        require_once "CRM/Contribute/BAO/Contribution/Utils.php";
-
-        $keyArgs['method'] = 'GetTransactionDetails';
-        foreach ( $result as $name => $value ) {
-            if ( substr( $name, 0, 15 ) == 'l_transactionid' ) {
-
-                // We don't/can't process subscription notifications, which appear
-                // to be identified by transaction ids beginning with S-
-                if ( substr( $value, 0, 2 ) == 'S-' )  {
-                    continue;
-                }
+        
+        // as invokeAPI fetch only last 100 transactions.
+        // we should require recursive calls to process more than 100.
+        // first fetch transactions w/ give date intervals.
+        // if we get error code w/ result, which means we do have more than 100
+        // manipulate date interval accordingly and fetch again.
+        
+        do {
+            $result = CRM_Core_Payment_PayPalImpl::invokeAPI( $args, $url );
+            require_once "CRM/Contribute/BAO/Contribution/Utils.php";
             
-                $keyArgs['transactionid'] = $value;
-                $trxnDetails = CRM_Core_Payment_PayPalImpl::invokeAPI( $keyArgs, $url );
-                if ( is_a( $trxnDetails, 'CRM_Core_Error' ) ) {
-                    echo "PAYPAL ERROR: Skipping transaction id: $value<p>";
-                    continue;
-                }
+            $keyArgs['method'] = 'GetTransactionDetails';
+            foreach ( $result as $name => $value ) {
+                if ( substr( $name, 0, 15 ) == 'l_transactionid' ) {
+                    
+                    // We don't/can't process subscription notifications, which appear
+                    // to be identified by transaction ids beginning with S-
+                    if ( substr( $value, 0, 2 ) == 'S-' )  {
+                        continue;
+                    }
 
-                // only process completed payments
-                if ( strtolower( $trxnDetails['paymentstatus'] ) != 'completed' ) {
-                    continue;
-                }
-
-                // only process receipts, not payments
-                if ( strtolower( $trxnDetails['transactiontype'] ) == 'sendmoney' ) {
-                    continue;
-                }
-
-                $params = CRM_Contribute_BAO_Contribution_Utils::formatAPIParams( $trxnDetails, 
-                                                                                  self::$_paypalParamsMapper,
-                                                                                  'paypal' );
-                if ( $paymentMode == 'test' ) {
-                    $params['is_test'] = 1;
-                } else {
-                    $params['is_test'] = 0;
-                }
-
-                if ( CRM_Contribute_BAO_Contribution_Utils::processAPIContribution( $params ) ) {
-                    CRM_Core_Error::debug_log_message( "Processed - {$trxnDetails['email']}, {$trxnDetails['amt']}, {$value} ..<p>", true );
-                } else {
-                    CRM_Core_Error::debug_log_message( "Skipped - {$trxnDetails['email']}, {$trxnDetails['amt']}, {$value} ..<p>", true );
+                    // Before we bother making a remote API call to PayPal to lookup
+                    // details about a transaction, let's make sure that it doesn't
+                    // already exist in the database.
+                    require_once 'CRM/Contribute/DAO/Contribution.php';
+                    $dao = new CRM_Contribute_DAO_Contribution;
+                    $dao->trxn_id = $value;
+                    if ( $dao->find(true) ) {
+                        preg_match('/(\d+)$/', $name, $matches);
+                        $seq = $matches[1];
+                        $email = $result["l_email{$seq}"];
+                        $amt = $result["l_amt{$seq}"];
+                        CRM_Core_Error::debug_log_message( "Skipped (already recorded) - $email, $amt, $value ..<p>", true );
+                        continue;
+                    }
+                    
+                    $keyArgs['transactionid'] = $value;
+                    $trxnDetails = CRM_Core_Payment_PayPalImpl::invokeAPI( $keyArgs, $url );
+                    if ( is_a( $trxnDetails, 'CRM_Core_Error' ) ) {
+                        echo "PAYPAL ERROR: Skipping transaction id: $value<p>";
+                        continue;
+                    }
+                    
+                    // only process completed payments
+                    if ( strtolower( $trxnDetails['paymentstatus'] ) != 'completed' ) {
+                        continue;
+                    }
+                    
+                    // only process receipts, not payments
+                    if ( strtolower( $trxnDetails['transactiontype'] ) == 'sendmoney' ) {
+                        continue;
+                    }
+                    
+                    $params = CRM_Contribute_BAO_Contribution_Utils::formatAPIParams( $trxnDetails, 
+                                                                                      self::$_paypalParamsMapper,
+                                                                                      'paypal' );
+                    if ( $paymentMode == 'test' ) {
+                        $params['transaction']['is_test'] = 1;
+                    } else {
+                        $params['transaction']['is_test'] = 0;
+                    }
+                    
+                    if ( CRM_Contribute_BAO_Contribution_Utils::processAPIContribution( $params ) ) {
+                        CRM_Core_Error::debug_log_message( "Processed - {$trxnDetails['email']}, {$trxnDetails['amt']}, {$value} ..<p>", true );
+                    } else {
+                        CRM_Core_Error::debug_log_message( "Skipped - {$trxnDetails['email']}, {$trxnDetails['amt']}, {$value} ..<p>", true );
+                    }
                 }
             }
-        }
+            if ( $result['l_errorcode0'] == '11002' ) {
+                $end = $result['l_timestamp99'];
+                $end_time  = strtotime("{$end}", time());
+                $end_date = date('Y-m-d\T00:00:00.00\Z', $end_time );
+                $args['enddate'] = $end_date;
+                
+            }
+        } while ( $result['l_errorcode0'] == '11002' );
     }
-
+    
     static function google( $paymentProcessor, $paymentMode, $start, $end ) {
         require_once "CRM/Contribute/BAO/Contribution/Utils.php";
         require_once 'CRM/Core/Payment/Google.php';
@@ -338,9 +370,16 @@ class CiviContributeProcessor {
 session_start();
 require_once '../civicrm.config.php';
 require_once 'CRM/Core/Config.php';
-$config =& CRM_Core_Config::singleton();
+$config = CRM_Core_Config::singleton();
 
 CRM_Utils_System::authenticateScript(true);
+
+//log the execution of script
+CRM_Core_Error::debug_log_message( 'ContributionProcessor.php');
+
+//load bootstrap to call hooks
+require_once 'CRM/Utils/System.php';
+CRM_Utils_System::loadBootStrap(  );
 
 require_once 'CRM/Core/Lock.php';
 $lock = new CRM_Core_Lock('CiviContributeProcessor');

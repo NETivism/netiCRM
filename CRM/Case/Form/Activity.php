@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -85,7 +85,10 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity
     function preProcess( ) 
     { 
         $this->_caseId  = CRM_Utils_Request::retrieve( 'caseid', 'Positive', $this );
-        $this->_context = 'caseActivity';
+        $this->_context = CRM_Utils_Request::retrieve( 'context', 'String', $this );
+        if ( !$this->_context ) {
+            $this->_context = 'caseActivity';
+        } 
         $this->_crmDir  = 'Case';
         $this->assign( 'context', $this->_context );
         
@@ -105,23 +108,75 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity
         if ( $this->_caseId ) {
             $this->assign( 'caseId', $this->_caseId );
         }
-
+        
         if ( !$this->_caseId ||
              (!$this->_activityId && !$this->_activityTypeId) ) {
             CRM_Core_Error::fatal('required params missing.');            
         }
-
-        $caseType  = CRM_Case_PseudoConstant::caseTypeName( $this->_caseId );
-        $this->_caseType  = $caseType['name'];
+        
+        //check for case activity access.
+        if ( !CRM_Case_BAO_Case::accessCiviCase( ) ) {
+            CRM_Core_Error::fatal( ts( 'You are not authorized to access this page.' ) );
+        }
+        //validate case id.
+        if ( $this->_caseId && 
+             !CRM_Core_Permission::check( 'access all cases and activities' ) ) {
+            $session  = CRM_Core_Session::singleton( );
+            $allCases = CRM_Case_BAO_Case::getCases( true, $session->get( 'userID' ) );
+            if ( !array_key_exists( $this->_caseId, $allCases ) ) {
+                CRM_Core_Error::fatal( ts( 'You are not authorized to access this page.' ) );
+            }
+        }
+        
+        //validate case activity id.
+        if ( $this->_activityId &&
+             ($this->_action & CRM_Core_Action::UPDATE) ) {
+            $valid = CRM_Case_BAO_Case::checkPermission( $this->_activityId, 'edit', 
+                                                         $this->_activityTypeId );
+            if ( !$valid ) {
+                CRM_Core_Error::fatal( ts( 'You are not authorized to access this page.' ) ); 
+            }
+        }
+        
+        $this->_caseType = CRM_Case_BAO_Case::getCaseType( $this->_caseId, 'name' );
         $this->assign('caseType', $this->_caseType);
 
-        $clientName = $this->_getDisplayNameById( $this->_currentlyViewedContactId );
-        $this->assign( 'client_name', $clientName );
+        require_once 'CRM/Case/XMLProcessor/Process.php';
+        $xmlProcessorProcess = new CRM_Case_XMLProcessor_Process( );
+        $isMultiClient = $xmlProcessorProcess->getAllowMultipleCaseClients( );
+        $this->assign( 'multiClient', $isMultiClient );
+
+        if ( $isMultiClient ) {
+            $clients = CRM_Case_BAO_Case::getContactNames( $this->_caseId );
+            $this->assign( 'client_names', $clients );
+        } else {
+            $clientName = $this->_getDisplayNameById( $this->_currentlyViewedContactId );
+            $this->assign( 'client_name', $clientName );
+        }
         // set context for pushUserContext and for statusBounce
-        $url = CRM_Utils_System::url( 'civicrm/contact/view/case',
-                                     "reset=1&action=view&cid={$this->_currentlyViewedContactId}&id={$this->_caseId}&show=1" );
-        
-        if ( !$this->_activityId ) { 
+        if ( $this->_context == 'fulltext' ) { 
+            if ( $this->_action == CRM_Core_Action::UPDATE || $this->_action == CRM_Core_Action::DELETE ) { 
+                $url = CRM_Utils_System::url( 'civicrm/contact/view/case',
+                                              "reset=1&action=view&cid={$this->_currentlyViewedContactId}&id={$this->_caseId}&show=1&context={$this->_context}" );
+            } else {
+                $url = CRM_Utils_System::url( 'civicrm/contact/search/custom', 'force=1' );
+            }
+        } else {
+            $url = CRM_Utils_System::url( 'civicrm/contact/view/case',
+                                          "reset=1&action=view&cid={$this->_currentlyViewedContactId}&id={$this->_caseId}&show=1" );
+        }
+        if ( !$this->_activityId ) {
+            require_once 'CRM/Case/PseudoConstant.php';
+            $caseTypes = CRM_Case_PseudoConstant::caseType( );
+            
+            if ( empty( $caseTypes ) && ( $this->_activityTypeName == 'Change Case Type' ) && !$this->_caseId ) {
+                $url = CRM_Utils_System::url( 'civicrm/contact/view/case',
+                                              "reset=1&action=view&cid={$this->_currentlyViewedContactId}&id={$this->_caseId}&show=1" );
+                $session = CRM_Core_Session::singleton( );
+                $session->pushUserContext( $url );
+                CRM_Core_Error::statusBounce( ts("You do not have any active Case Types" ) );
+            }
+
             // check if activity count is within the limit
             $xmlProcessor  = new CRM_Case_XMLProcessor_Process( );
             $activityInst  = $xmlProcessor->getMaxInstance($this->_caseType);
@@ -153,7 +208,7 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity
 
         CRM_Utils_System::setTitle( $this->_activityTypeName );
 
-        $session =& CRM_Core_Session::singleton( );
+        $session = CRM_Core_Session::singleton( );
         $session->pushUserContext( $url );
     }
     
@@ -167,13 +222,34 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity
     function setDefaultValues( ) 
     {
         $this->_defaults = parent::setDefaultValues( );
+        $targetContactValues = array( );
+
+        //get all clients.
+        $clients = CRM_Case_BAO_Case::getContactNames( $this->_caseId );
+        if ( isset( $this->_activityId ) && empty( $_POST ) ) {
+            if ( !CRM_Utils_Array::crmIsEmptyArray( $this->_defaults['target_contact'] ) ) {
+                $targetContactValues = array_combine( array_unique( $this->_defaults['target_contact'] ), 
+                                                      explode(';', trim($this->_defaults['target_contact_value'] ) ) );
+                
+                //exclude all clients.
+                foreach ( $clients as $clientId => $vals ) {
+                    if ( array_key_exists ( $clientId, $targetContactValues ) ) {
+                        unset( $targetContactValues[$clientId] );
+                    }
+                }
+            }
+        }
+        $this->assign( 'targetContactValues', empty( $targetContactValues ) ? false : $targetContactValues );
         
         //return form for ajax
         if ( $this->_cdType  || $this->_addAssigneeContact || $this->_addTargetContact ) {
             return $this->_defaults;
         }
-        // set default encounter medium CRM-4816
-        if ( empty($this->_defaults['medium_id']) ) {
+        
+        if ( $this->_encounterMedium ) {
+            $this->_defaults['medium_id'] = $this->_encounterMedium;
+        } else if ( empty($this->_defaults['medium_id']) ) {
+            // set default encounter medium CRM-4816
             require_once "CRM/Core/OptionGroup.php";
             $medium = CRM_Core_OptionGroup::values('encounter_medium', false, false, false, 'AND is_default = 1');
             if ( count($medium) == 1 ) {
@@ -187,6 +263,11 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity
     public function buildQuickForm( ) 
     {
         // modify core Activity fields
+        $this->add( 'text', 'target_contact_id', ts('target') );
+        
+        //FIXME : ideally hidden element should work.
+        $this->addElement('advcheckbox', "hidden_target_contact" ); 
+ 
         $this->_fields['source_contact_id']['label']     = ts('Reported By'); 
         $this->_fields['status_id']['attributes']        =  array( '' => ts('- select -')) + CRM_Core_PseudoConstant::activityStatus( ); 
     
@@ -213,13 +294,28 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity
         }
 
         $this->assign( 'urlPath', 'civicrm/case/activity' );
+                                               
+        $encounterMediums = CRM_Case_PseudoConstant::encounterMedium( );
+        if ( $this->_activityTypeFile == 'OpenCase' ) {
+            $this->_encounterMedium = CRM_Core_DAO::getFieldValue( 'CRM_Activity_DAO_Activity', $this->_activityId, 
+                                                                   'medium_id' );
+            if ( !array_key_exists( $this->_encounterMedium, $encounterMediums ) ) {
+                $encounterMediums[$this->_encounterMedium] = CRM_Core_OptionGroup::getLabel( 'encounter_medium', 
+                                                                                             $this->_encounterMedium,
+                                                                                             false );
+            }
+        }
 
-        $this->add('select', 'medium_id',  ts( 'Medium' ), 
-                   CRM_Core_OptionGroup::values('encounter_medium'), true);
+        $this->add( 'select', 'medium_id',  ts( 'Medium' ), $encounterMediums, true );
                       
         $this->_relatedContacts = CRM_Case_BAO_Case::getRelatedAndGlobalContacts( $this->_caseId );
         //add case client in send a copy selector.CRM-4438.
-        $this->_relatedContacts[] = CRM_Case_BAO_Case::getcontactNames( $this->_caseId );
+        $relatedContacts = CRM_Case_BAO_Case::getContactNames( $this->_caseId );
+        if ( !empty( $relatedContacts ) ) { 
+            foreach ( $relatedContacts as $relatedContact) { 
+                $this->_relatedContacts[] = $relatedContact;
+            }
+        }
         
         if ( ! empty($this->_relatedContacts) ) {
             $checkBoxes = array( );
@@ -248,7 +344,7 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity
      * @access public  
      * @static  
      */  
-    static function formRule( &$fields, &$files, $self ) 
+    static function formRule( $fields, $files, $self ) 
     {  
         // skip form rule if deleting
         if  ( CRM_Utils_Array::value( '_qf_Activity_next_',$fields) == 'Delete' || CRM_Utils_Array::value( '_qf_Activity_next_',$fields) == 'Restore' ) {
@@ -283,6 +379,11 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity
             } else {
                 $statusMsg = ts("Selected Activity cannot be deleted.");
             }
+
+            require_once 'CRM/Core/BAO/EntityTag.php';
+            $tagParams = array( 'entity_table' => 'civicrm_activity',
+                                'entity_id'    => $this->_activityId );
+            CRM_Core_BAO_EntityTag::del( $tagParams );
             
             CRM_Core_Session::setStatus( $statusMsg );
             return;
@@ -316,8 +417,19 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity
         // store the dates with proper format
         $params['activity_date_time'] = CRM_Utils_Date::processDate( $params['activity_date_time'], $params['activity_date_time_time'] );
         $params['activity_type_id']   = $this->_activityTypeId;
-        $params['target_contact_id']  = $this->_currentlyViewedContactId;
 
+        require_once 'CRM/Case/XMLProcessor/Process.php';
+        $xmlProcessorProcess = new CRM_Case_XMLProcessor_Process( );
+        $isMultiClient = $xmlProcessorProcess->getAllowMultipleCaseClients( );
+        $this->assign( 'multiClient', $isMultiClient );
+        
+        $targetContacts =  array( $this->_currentlyViewedContactId );
+        if ( CRM_Utils_Array::value( 'hidden_target_contact', $params ) && 
+             CRM_Utils_Array::value( 'target_contact_id', $params ) ) {
+            $targetContacts = array_unique( explode( ',', $params['target_contact_id'] ) );
+        }
+        $params['target_contact_id'] = $targetContacts;
+        
         // format activity custom data
         if ( CRM_Utils_Array::value( 'hidden_custom', $params ) ) {
             if ( $this->_activityId ) {
@@ -367,11 +479,16 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity
             
             // always create a revision of an case activity. CRM-4533
             $newActParams = $params;
+            
+            // add target contact values in update mode
+            if ( empty($params['target_contact_id']) && !empty( $this->_defaults['target_contact'] ) ) {
+                $newActParams['target_contact_id'] = $this->_defaults['target_contact'];
+            }
                       
             // record status for status msg
             $recordStatus = 'updated';
         }
-        
+                
         if ( ! isset($newActParams) ) {
             // add more attachments if needed for old activity
             CRM_Core_BAO_File::formatAttachment( $params,
@@ -391,11 +508,11 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity
             // work done by bao create method , lets use dao object to make the changes 
             $params = array('id' => $this->_activityId);
             $params['is_current_revision'] = 0;
-            $activity =& new CRM_Activity_DAO_Activity( );
+            $activity = new CRM_Activity_DAO_Activity( );
             $activity->copyValues( $params );
             $activity->save( );        
         }
-
+       
         // create a new version of activity if activity was found to
         // have been modified/created by user
         if ( isset($newActParams) ) {
@@ -416,6 +533,7 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity
             // call begin post process, before the activity is created/updated.
             $this->beginPostProcess( $newActParams );
             $newActParams['case_id'] = $this->_caseId;
+                        
             $activity = CRM_Activity_BAO_Activity::create( $newActParams );
             
             // call end post process, after the activity has been created/updated.
@@ -431,7 +549,27 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity
             // copy back params to original var
             $params = $newActParams;
         }
+        
+        if ( $activity->id ) {
+            // add tags if exists
+            $tagParams = array( );
+            if ( !empty($params['tag']) ) {
+                foreach( $params['tag'] as $tag ) {
+                    $tagParams[$tag] = 1;
+                }
+            }
 
+            //save static tags
+            require_once 'CRM/Core/BAO/EntityTag.php';
+            CRM_Core_BAO_EntityTag::create( $tagParams, 'civicrm_activity',  $activity->id );
+
+            //save free tags
+            if ( isset( $params['taglist'] ) && !empty( $params['taglist'] ) ) {
+                require_once 'CRM/Core/Form/Tag.php';
+                CRM_Core_Form_Tag::postProcess( $params['taglist'], $activity->id, 'civicrm_activity', $this );
+            }
+        }
+ 
         $params['assignee_contact_id'] = $assineeContacts;
         // update existing case record if needed
         $caseParams       = $params;

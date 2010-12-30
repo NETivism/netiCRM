@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -216,11 +216,11 @@ class CRM_Core_Selector_Controller {
 
         // let the constructor initialize this, should happen only once
         if ( ! isset( self::$_template ) ) {
-            self::$_template =& CRM_Core_Smarty::singleton( );
+            self::$_template = CRM_Core_Smarty::singleton( );
         }
 
         $this->_sortOrder =& $this->_object->getSortOrder($action);
-        $this->_sort      =& new CRM_Utils_Sort( $this->_sortOrder, $this->_sortID );
+        $this->_sort      = new CRM_Utils_Sort( $this->_sortOrder, $this->_sortID );
 
         /*
          * if we are in transfer mode, do not goto database, use the 
@@ -245,7 +245,7 @@ class CRM_Core_Selector_Controller {
             $params['rowCount'] = CRM_Utils_Pager::ROWCOUNT;
         }
 
-        $this->_pager =& new CRM_Utils_Pager( $params );
+        $this->_pager = new CRM_Utils_Pager( $params );
         list($this->_pagerOffset, $this->_pagerRowCount) = $this->_pager->getOffsetAndRowCount();
 
     }
@@ -310,7 +310,7 @@ class CRM_Core_Selector_Controller {
                 CRM_Core_Report_Excel::writeCSVFile( $this->_object->getExportFileName( ),
                                                      $columnHeaders,
                                                      $rows );
-                exit(1);
+                CRM_Utils_System::civiExit( );
             } else {
                 // assign to template and display them.
                 self::$_template->assign_by_ref( 'rows'         , $rows          );
@@ -443,7 +443,7 @@ class CRM_Core_Selector_Controller {
         if ( $this->_print ) {
             $content = self::$_template->fetch( 'CRM/common/print.tpl' );
         } else {
-            $config =& CRM_Core_Config::singleton();
+            $config = CRM_Core_Config::singleton();
             $content = self::$_template->fetch( 'CRM/common/'. strtolower($config->userFramework) .'.tpl' );
         }
         echo CRM_Utils_System::theme( 'page', $content, true, $this->_print );

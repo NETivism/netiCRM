@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -26,15 +26,14 @@
 {if $action eq 8}
   {include file="CRM/Contribute/Form/PCP/Delete.tpl"}
 {else}
-  <fieldset><legend>{ts}Filter the list below by:{/ts}</legend>
-     <div id="pcp" class="form-item">
-         <table class="form-layout">
+    <div id="pcp" class="crm-block crm-form-block crm-pcp-search-form-block">
+        <h3>{ts}Find Campaign Pages{/ts}</h3>
+        <table class="form-layout-compressed">
 	    <tr>
-		<td>{$form.status_id.label}<br />{$form.status_id.html}</td>
-		<td>{$form.contibution_page_id.label}<br />{$form.contibution_page_id.html}</td>
-		<td><br />{$form.buttons.html}</td>
+		    <td>{$form.status_id.label}<br />{$form.status_id.html}</td>
+		    <td>{$form.contibution_page_id.label}<br />{$form.contibution_page_id.html}</td>
 	    </tr>
-         </table>
-     </div>
-  </fieldset>
+        </table>
+        <div class="crm-submit-buttons">{$form.buttons.html}</div>
+    </div>
 {/if}

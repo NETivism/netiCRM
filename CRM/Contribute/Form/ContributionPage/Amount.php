@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -87,24 +87,38 @@ class CRM_Contribute_Form_ContributionPage_Amount extends CRM_Contribute_Form_Co
 
         $this->addGroup( $default, 'default' );
         
-        
         $this->addElement('checkbox', 'amount_block_is_active', ts('Contribution Amounts section enabled'), null, array( 'onclick' => "showHideAmountBlock( this, 'amount_block_is_active' );" ) );
 
         $this->addElement('checkbox', 'is_monetary', ts('Execute real-time monetary transactions') );
         
         $paymentProcessor =& CRM_Core_PseudoConstant::paymentProcessor( );
+        $recurringPaymentProcessor = array( );
+
+        if ( !empty( $paymentProcessor ) ) {
+            $paymentProcessorIds = implode( ',', array_keys( $paymentProcessor ) );
+            $query = "
+SELECT id
+  FROM civicrm_payment_processor
+ WHERE id IN ({$paymentProcessorIds})
+   AND is_recur = 1";
+            $dao =& CRM_Core_DAO::executeQuery( $query );
+            while ( $dao->fetch( ) ) {
+                $recurringPaymentProcessor[] = $dao->id;
+            } 
+        }
+        $this->assign( 'recurringPaymentProcessor', $recurringPaymentProcessor );
         if ( count($paymentProcessor) ) {
             $this->assign('paymentProcessor',$paymentProcessor);
         }
         $this->add( 'select', 'payment_processor_id', ts( 'Payment Processor' ),
-                    array(''=>ts( '- select -' )) + $paymentProcessor );
+                    array(''=>ts( '- select -' )) + $paymentProcessor, null, array( 'onchange' => "showRecurring( this.value );" ) );
         
         require_once "CRM/Contribute/BAO/ContributionPage.php";
         
         //check if selected payment processor supports recurring payment
-        if ( CRM_Contribute_BAO_ContributionPage::checkRecurPaymentProcessor( $this->_id ) ) {
+        if ( !empty( $recurringPaymentProcessor ) ) {
             $this->addElement( 'checkbox', 'is_recur', ts('Recurring contributions'), null, 
-                               array('onclick' => "return showHideByValue('is_recur',true,'recurFields','table-row','radio',false);") );
+                               array('onclick' => "showHideByValue('is_recur',true,'recurFields','table-row','radio',false); showRecurInterval( );") );
             require_once 'CRM/Core/OptionGroup.php';
             $this->addCheckBox( 'recur_frequency_unit', ts('Supported recurring units'), 
                                 CRM_Core_OptionGroup::values( 'recur_frequency_units', false, false, false, null, 'name' ),
@@ -135,7 +149,7 @@ class CRM_Contribute_Form_ContributionPage_Amount extends CRM_Contribute_Form_Co
                    null, array('onchange' => "showHideAmountBlock( this.value, 'price_set_id' );")
                    );
         //CiviPledge fields.
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
         if ( in_array('CiviPledge', $config->enableComponents) ) {
             $this->assign('civiPledge', true );
             require_once 'CRM/Core/OptionGroup.php';
@@ -150,6 +164,9 @@ class CRM_Contribute_Form_ContributionPage_Amount extends CRM_Contribute_Form_Co
             $this->addElement( 'text', 'max_reminders', ts('Send up to'), array('size'=>3) );
             $this->addElement( 'text', 'additional_reminder_day', ts('Send additional reminders'), array('size'=>3) );
         }
+        
+        //add currency element.
+        $this->addCurrency( 'currency', ts( 'Currency' ) );
         
         $this->addFormRule( array( 'CRM_Contribute_Form_ContributionPage_Amount', 'formRule' ), $this );
         
@@ -230,7 +247,7 @@ class CRM_Contribute_Form_ContributionPage_Amount extends CRM_Contribute_Form_Co
      * @access public  
      * @static  
      */  
-    static function formRule( &$fields, &$files, $self ) 
+    static function formRule( $fields, $files, $self ) 
     {  
         $errors = array( );
 
@@ -260,7 +277,7 @@ class CRM_Contribute_Form_ContributionPage_Amount extends CRM_Contribute_Form_Co
         //then disable contribution amount section. CRM-3801,
         
         require_once 'CRM/Member/DAO/MembershipBlock.php';
-        $membershipBlock =& new CRM_Member_DAO_MembershipBlock( );
+        $membershipBlock = new CRM_Member_DAO_MembershipBlock( );
         $membershipBlock->entity_table = 'civicrm_contribution_page';
         $membershipBlock->entity_id = $self->_id;
         $membershipBlock->is_active = 1;
@@ -301,13 +318,11 @@ class CRM_Contribute_Form_ContributionPage_Amount extends CRM_Contribute_Form_Co
             if ( CRM_Utils_Array::value( 'amount_block_is_active', $fields ) ) {
                 if ( !CRM_Utils_Array::value( 'is_allow_other_amount', $fields ) &&
                      !$priceSetId ) {
-                    //get the values and labels of amount block
-                    $labels  = CRM_Utils_Array::value( 'label'  , $fields );
+                    //get the values of amount block
                     $values  = CRM_Utils_Array::value( 'value'  , $fields );
                     $isSetRow = false;
                     for ( $i = 1; $i < self::NUM_OPTION; $i++ ) {
-                        if ( ( isset( $values[$i] ) && ( strlen( trim( $values[$i] ) ) > 0 ) ) &&
-                             ( CRM_Utils_Array::value( $i, $labels ) ) ) { 
+                        if ( ( isset( $values[$i] ) && ( strlen( trim( $values[$i] ) ) > 0 ) ) ) { 
                             $isSetRow = true;
                         }
                     }
@@ -332,7 +347,7 @@ class CRM_Contribute_Form_ContributionPage_Amount extends CRM_Contribute_Form_Co
     {
         // get the submitted form values.
         $params = $this->controller->exportValues( $this->_name );
-        
+       
         // check for price set.
         $priceSetID = CRM_Utils_Array::value( 'price_set_id', $params );
         
@@ -343,7 +358,7 @@ class CRM_Contribute_Form_ContributionPage_Amount extends CRM_Contribute_Form_Co
                          'max_amount'             => "null",
                          'is_monetary'            => false,
                          'is_pay_later'           => false,
-                         'is_recur_interval'      => "null",
+                         'is_recur_interval'      => false,
                          'recur_frequency_unit'   => "null",
                          'default_amount_id'      => "null",
                          'is_allow_other_amount'  => false,
@@ -354,6 +369,10 @@ class CRM_Contribute_Form_ContributionPage_Amount extends CRM_Contribute_Form_Co
             $resetFields = array( 'min_amount', 'max_amount', 'is_allow_other_amount' );
         }
         
+        if ( !CRM_Utils_Array::value( 'is_recur', $params ) ) {
+            $resetFields = array_merge( $resetFields, array( 'is_recur_interval', 'recur_frequency_unit' ) );
+        }
+
         foreach ( $fields as $field => $defaultVal ) {
             $val = CRM_Utils_Array::value( $field, $params, $defaultVal );
             if ( in_array( $field, $resetFields ) ) $val = $defaultVal;

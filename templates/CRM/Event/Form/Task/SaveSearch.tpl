@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -23,7 +23,7 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
-<div class="form-item">
+<div class="crm-block crm-form-block crm-event-savesearch-form-block">
 <fieldset>
     <legend>{ts}Smart Group{/ts}</legend>
 
@@ -37,14 +37,24 @@
     <br />
 </div>
 {/if}
- <div class="form-item">
- <dl>
-   <dt>{$form.title.label}</dt><dd>{$form.title.html}</dd>
-   <dt>{$form.description.label}</dt><dd>{$form.description.html}</dd>
-   <dt></dt><dd>{include file="CRM/Event/Form/Task.tpl"}</dd>
-   <dt></dt><dd>{$form.buttons.html}</dd>
- </dl>
- </div>
+
+ <table class="form-layout-compressed">
+   <tr class="crm-event-savesearch-form-block-title">
+      <td class="label">{$form.title.label}</td>
+      <td>{$form.title.html}</td>
+   </tr>
+   <tr class="crm-event-savesearch-form-block-description">
+      <td class="label">{$form.description.label}</td>
+      <td>{$form.description.html}</td>
+   </tr>
+   <tr>
+      <td colspan="2" class="label">{include file="CRM/Event/Form/Task.tpl"}</td>
+   </tr>
+   <tr>
+      <td colspan="2">{include file="CRM/common/formButtons.tpl" location="bottom"}</td>
+   </tr>
+</table>
+
 </fieldset>
 </div>
 

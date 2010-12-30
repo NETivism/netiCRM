@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -74,9 +74,9 @@ class CRM_Mailing_BAO_TrackableURL extends CRM_Mailing_DAO_TrackableURL {
         } else {
             
             $hrefExists = false;
-            $config =& CRM_Core_Config::singleton( );
+            $config = CRM_Core_Config::singleton( );
             
-            $tracker =& new CRM_Mailing_BAO_TrackableURL();
+            $tracker = new CRM_Mailing_BAO_TrackableURL();
             if (preg_match('/^href/i',$url)) {
                 $url = preg_replace('/^href[ ]*=[ ]*[\'"](.*?)[\'"]$/i','$1',$url);
                 $hrefExists = true;

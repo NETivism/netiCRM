@@ -49,7 +49,9 @@ define('DB_OK', 1);
 /**
  * Unkown error
  */
-define('DB_ERROR', -1);
+if (!defined('DB_ERROR')) {
+    define('DB_ERROR', -1);
+}
 
 /**
  * Syntax error

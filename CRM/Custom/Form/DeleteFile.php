@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -86,7 +86,7 @@ class CRM_Custom_Form_DeleteFile extends CRM_Core_Form {
         CRM_Core_BAO_File::delete($this->_id, $this->_eid);
         CRM_Core_Session::setStatus( ts('The attached file has been deleted.') );
         
-        $session =& CRM_Core_Session::singleton();   
+        $session = CRM_Core_Session::singleton();   
         $toUrl   = $session->popUserContext();
         CRM_Utils_System::redirect($toUrl);
     }

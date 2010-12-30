@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -42,8 +42,10 @@ class CRM_Report_Form_Member_Lapse extends CRM_Report_Form {
     protected $_summary      = null;
     protected $_addressField = false;
     protected $_emailField   = false;
+    protected $_phoneField   = false;
     protected $_charts       = array( '' => 'Tabular' );
-    
+    protected $_customGroupExtends = array( 'Membership' );
+
     function __construct( ) {
         // UI for selecting columns to appear in the report list
         // array conatining the columns, group_bys and filters build and provided to Form
@@ -122,6 +124,13 @@ class CRM_Report_Form_Member_Lapse extends CRM_Report_Form {
                           'grouping'=> 'contact-fields',
                           ),
                    
+                   'civicrm_phone'    =>
+                   array( 'dao'       => 'CRM_Core_DAO_Phone',
+                          'alias'	  => 'phone',
+                          'fields'    =>
+                          array( 'phone' => null ),
+                          'grouping'     => 'contact-fields',
+                          ),
                    'civicrm_email' => 
                    array( 'dao'    => 'CRM_Core_DAO_Email',
                           'fields' =>
@@ -138,20 +147,10 @@ class CRM_Report_Form_Member_Lapse extends CRM_Report_Form {
                                         'operatorType' => CRM_Report_Form::OP_MULTISELECT,
                                         'group'        => true,
                                         'options'      => CRM_Core_PseudoConstant::group( ) ), ), ),
-                   'civicrm_tag' => 
-                   array( 'dao'     => 'CRM_Core_DAO_Tag',
-                          'filters' =>             
-                          array( 'tagid' => 
-                                 array( 'name'         => 'tag_id',
-                                        'title'        => ts( 'Tag' ),
-                                        'tag'          => true,
-                                        'operatorType' => CRM_Report_Form::OP_MULTISELECT,
-                                        'options'      => CRM_Core_PseudoConstant::tag( ) 
-                                        ), 
-                                 ), 
-                          ),
                    
                    );
+
+        $this->_tagFilter = true;
         parent::__construct( );
     }
     
@@ -167,12 +166,13 @@ class CRM_Report_Form_Member_Lapse extends CRM_Report_Form {
                 foreach ( $table['fields'] as $fieldName => $field ) {
                     if ( CRM_Utils_Array::value( 'required', $field ) ||
                          CRM_Utils_Array::value( $fieldName, $this->_params['fields'] ) ) {
-                        // to include optional columns address and email, only if checked
+                        // to include optional columns address ,email and phone only if checked
                         if ( $tableName == 'civicrm_address' ) {
                             $this->_addressField = true;
-                            $this->_emailField = true; 
                         } else if ( $tableName == 'civicrm_email' ) { 
                             $this->_emailField = true;  
+                        } else if ( $tableName == 'civicrm_phone' ) {
+                            $this->_phoneField = true;
                         }
                         $select[] = "{$field['dbAlias']} as {$tableName}_{$fieldName}";
                         $this->_columnHeaders["{$tableName}_{$fieldName}"]['type']  = CRM_Utils_Array::value( 'type', $field );
@@ -184,7 +184,7 @@ class CRM_Report_Form_Member_Lapse extends CRM_Report_Form {
         $this->_select = "SELECT " . implode( ', ', $select ) . " ";
     }
     
-    static function formRule( &$fields, &$files, $self ) {  
+    static function formRule( $fields, $files, $self ) {  
         $errors = $grouping = array( );
         //check for searching combination of dispaly columns and
         //grouping criteria
@@ -219,6 +219,14 @@ class CRM_Report_Form_Member_Lapse extends CRM_Report_Form {
             $this->_from .= "
             LEFT JOIN civicrm_email {$this->_aliases['civicrm_email']} 
                       ON {$this->_aliases['civicrm_contact']}.id = {$this->_aliases['civicrm_email']}.contact_id AND {$this->_aliases['civicrm_email']}.is_primary = 1\n";     
+        }
+
+        // include phone field if phone column is to be included
+        if ( $this->_phoneField ) { 
+            $this->_from .= "
+            LEFT JOIN civicrm_phone {$this->_aliases['civicrm_phone']} 
+                      ON {$this->_aliases['civicrm_contact']}.id = {$this->_aliases['civicrm_phone']}.contact_id 
+                     AND {$this->_aliases['civicrm_phone']}.is_primary = 1\n";
         }
     }      
     

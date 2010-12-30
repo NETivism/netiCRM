@@ -60,7 +60,7 @@
   </item>
   <item>
      <path>civicrm/member/import</path>
-     <title>Import Members</title>
+     <title>Import Memberships</title>
      <page_callback>CRM_Member_Import_Controller</page_callback>
      <access_arguments>access CiviMember,edit memberships</access_arguments>
      <page_type>1</page_type>

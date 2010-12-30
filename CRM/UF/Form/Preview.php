@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -80,7 +80,7 @@ class CRM_UF_Form_Preview extends CRM_Core_Form
         if( $field ) {
             $this->_fields = CRM_Core_BAO_UFGroup::getFields( $this->_gid, false, null, null, null, true);
             require_once 'CRM/Core/DAO/UFField.php';
-            $fieldDAO = & new CRM_Core_DAO_UFField();
+            $fieldDAO = new CRM_Core_DAO_UFField();
             $fieldDAO->id = $this->get( 'fieldId' );
             $fieldDAO->find(true);
             
@@ -177,7 +177,6 @@ class CRM_UF_Form_Preview extends CRM_Core_Form
             if ( ! CRM_Utils_Array::value( 'is_view', $field ) ) {
                 CRM_Core_BAO_UFGroup::buildProfile($this, $field, CRM_Profile_Form::MODE_CREATE );
             }
-            
         }
         
         $this->addButtons(array(

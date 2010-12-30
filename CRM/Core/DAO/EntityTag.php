@@ -1,7 +1,7 @@
 <?php
 /*
 +--------------------------------------------------------------------+
-| CiviCRM version 3.1                                                |
+| CiviCRM version 3.3                                                |
 +--------------------------------------------------------------------+
 | Copyright CiviCRM LLC (c) 2004-2010                                |
 +--------------------------------------------------------------------+
@@ -79,7 +79,7 @@ class CRM_Core_DAO_EntityTag extends CRM_Core_DAO
      * @var boolean
      * @static
      */
-    static $_log = false;
+    static $_log = true;
     /**
      * primary key
      *
@@ -87,11 +87,17 @@ class CRM_Core_DAO_EntityTag extends CRM_Core_DAO
      */
     public $id;
     /**
-     * FK to contact table.
+     * physical tablename for entity being joined to file, e.g. civicrm_contact
+     *
+     * @var string
+     */
+    public $entity_table;
+    /**
+     * FK to entity table specified in entity_table column.
      *
      * @var int unsigned
      */
-    public $contact_id;
+    public $entity_id;
     /**
      * FK to civicrm_tag
      *
@@ -118,7 +124,6 @@ class CRM_Core_DAO_EntityTag extends CRM_Core_DAO
     {
         if (!(self::$_links)) {
             self::$_links = array(
-                'contact_id' => 'civicrm_contact:id',
                 'tag_id' => 'civicrm_tag:id',
             );
         }
@@ -139,11 +144,17 @@ class CRM_Core_DAO_EntityTag extends CRM_Core_DAO
                     'type' => CRM_Utils_Type::T_INT,
                     'required' => true,
                 ) ,
-                'contact_id' => array(
-                    'name' => 'contact_id',
+                'entity_table' => array(
+                    'name' => 'entity_table',
+                    'type' => CRM_Utils_Type::T_STRING,
+                    'title' => ts('Entity Table') ,
+                    'maxlength' => 64,
+                    'size' => CRM_Utils_Type::BIG,
+                ) ,
+                'entity_id' => array(
+                    'name' => 'entity_id',
                     'type' => CRM_Utils_Type::T_INT,
                     'required' => true,
-                    'FKClassName' => 'CRM_Contact_DAO_Contact',
                 ) ,
                 'tag_id' => array(
                     'name' => 'tag_id',

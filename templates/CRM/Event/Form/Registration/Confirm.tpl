@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -29,7 +29,7 @@
 
 {include file="CRM/common/TrackingFields.tpl"}
 
-<div class="event_confirmation-page">
+<div class="crm-block crm-event-confirm-form-block">
     {if $isOnWaitlist}
         <div class="help">
             {ts}Please verify the information below. <span class="bold">Then click 'Continue' to be added to the WAIT LIST for this event</span>. If space becomes available you will receive an email with a link to a web page where you can complete your registration.{/ts}
@@ -57,7 +57,7 @@
     {/if}
 
     {if $event.confirm_text}
-        <div id="intro_text" class="section event_confirm_text-section">
+        <div id="intro_text" class="crm-section event_confirm_text-section">
 	        <p>{$event.confirm_text}</p>
         </div>
     {/if}
@@ -79,7 +79,7 @@
             {if $lineItem}
                 {include file="CRM/Price/Page/LineItem.tpl" context="Event"}
             {elseif $amount || $amount == 0}
-			    <div class="section no-label amount-item-section">
+			    <div class="crm-section no-label amount-item-section">
                     {foreach from= $amount item=amount key=level}  
     					<div class="content">
     					    {$amount.amount|crmMoney}&nbsp;&nbsp;{$amount.label}
@@ -88,13 +88,13 @@
                     {/foreach}
     		    </div>	
                 {if $totalAmount}
-        			<div class="section no-label total-amount-section">
+        			<div class="crm-section no-label total-amount-section">
                 		<div class="content bold">{ts}Total Amount{/ts}:&nbsp;&nbsp;{$totalAmount|crmMoney}</div>
                 		<div class="clear"></div>
                 	</div>
                 {/if}	 		
                 {if $hookDiscount.message}
-                    <div class="section hookDiscount-section">
+                    <div class="crm-section hookDiscount-section">
                         <em>({$hookDiscount.message})</em>
                     </div>
                 {/if}
@@ -106,7 +106,7 @@
         <div class="header-dark">
         	{ts}Registered Email{/ts}
         </div>
-        <div class="section no-label registered_email-section">
+        <div class="crm-section no-label registered_email-section">
             <div class="content">{$email}</div>
 		    <div class="clear"></div>
 		</div>
@@ -117,7 +117,7 @@
             <div class="header-dark">
                 {ts}Participant Role{/ts}
             </div>
-            <div class="section no-label participant_role-section">
+            <div class="crm-section no-label participant_role-section">
                 <div class="content">
                     {$event.participant_role}
                 </div>
@@ -169,7 +169,7 @@
                 {if $participant.additionalCustomPre}
                     <fieldset class="label-left"><legend>{$participant.additionalCustomPreGroupTitle}</legend>
                         {foreach from=$participant.additionalCustomPre item=value key=field}
-                            <div class="section {$field}-section">
+                            <div class="crm-section {$field}-section">
                                 <div class="label">{$field}</div>
                                 <div class="content">{$value}</div>
                                 <div class="clear"></div>
@@ -181,7 +181,7 @@
                 {if $participant.additionalCustomPost}
                     <fieldset class="label-left"><legend>{$participant.additionalCustomPostGroupTitle}</legend>
                         {foreach from=$participant.additionalCustomPost item=value key=field}
-                            <div class="section {$field}-section">
+                            <div class="crm-section {$field}-section">
                                 <div class="label">{$field}</div>
                                 <div class="content">{$value}</div>
                                 <div class="clear"></div>
@@ -199,11 +199,11 @@
             <div class="header-dark">
                 {ts}Billing Name and Address{/ts}
             </div>
-        	<div class="section no-label billing_name-section">
+        	<div class="crm-section no-label billing_name-section">
         		<div class="content">{$billingName}</div>
         		<div class="clear"></div>
         	</div>
-        	<div class="section no-label billing_address-section">
+        	<div class="crm-section no-label billing_address-section">
         		<div class="content">{$address|nl2br}</div>
         		<div class="clear"></div>
         	</div>
@@ -215,7 +215,7 @@
             <div class="header-dark">
                 {ts}Credit Card Information{/ts}
             </div>
-            <div class="section no-label credit_card_details-section">
+            <div class="crm-section no-label credit_card_details-section">
                 <div class="content">{$credit_card_type}</div>
         		<div class="content">{$credit_card_number}</div>
         		<div class="content">{ts}Expires{/ts}: {$credit_card_exp_date|truncate:7:''|crmDate}</div>
@@ -234,7 +234,7 @@
    
     {if $paymentProcessor.payment_processor_type EQ 'Google_Checkout' and $paidEvent and !$is_pay_later and ! $isAmountzero and !$isOnWaitlist and !$isRequireApproval}
         <fieldset><legend>{ts}Checkout with Google{/ts}</legend>
-            <div class="section google_checkout-section">
+            <div class="crm-section google_checkout-section">
                 <table class="form-layout-compressed">
             	    <tr>
             		    <td class="description">{ts}Click the Google Checkout button to continue.{/ts}</td>
@@ -247,12 +247,12 @@
         </fieldset>    
     {/if}
 
-    <div id="crm-submit-buttons">
-	    {$form.buttons.html}
+    <div id="crm-submit-buttons" class="crm-submit-buttons">
+	    {include file="CRM/common/formButtons.tpl" location="bottom"}
     </div>
 
     {if $event.confirm_footer_text}
-        <div id="footer_text" class="section event_confirm_footer-section">
+        <div id="footer_text" class="crm-section event_confirm_footer-section">
             <p>{$event.confirm_footer_text}</p>
         </div>
     {/if}

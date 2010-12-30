@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -25,18 +25,14 @@
 *}
 <div id="groupContact">
 <div class="view-content">
-<div class="spacer"></div>
 {if $groupCount eq 0 }
   <div class="messages status">
-    <dl>
-      <dt><img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}" /></dt>
-      <dd>{ts}This contact does not currently belong to any groups.{/ts}</dd>
-    </dl>
+    <div class="icon inform-icon"></div>&nbsp;{ts}This contact does not currently belong to any groups.{/ts}  
   </div>
  {/if}
     {include file="CRM/common/jsortable.tpl"}
   	{if $groupIn }
-	<div><label>{ts}Current Groups{/ts}</label></div>
+	<h3>{ts}Current Groups{/ts}</h3>
 	{strip}
     <table id="current_group" class="display">
     <thead>
@@ -65,7 +61,7 @@
     {/if}
     
     {if $groupPending }
-        <div class="label status-pending">{ts}Pending{/ts}</div> 
+        <h3 class="status-pending">{ts}Pending{/ts}</h3> 
         <div class="description">{ts}Joining these group(s) is pending confirmation by this contact.{/ts}</div>	
 	{strip}
     <table id="pending_group" class="display">
@@ -90,7 +86,7 @@
 	{/if}
 
 	{if $groupOut }
-	<div class="label status-removed">{ts}Past Groups{/ts}</div>
+	<h3 class="status-removed">{ts}Past Groups{/ts}</h3>
     <div class="description">{ts 1=$displayName}%1 is no longer part of these group(s).{/ts}</div>
     {strip}
     <table id="past_group" class="display">

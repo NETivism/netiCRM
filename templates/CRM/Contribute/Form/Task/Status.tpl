@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -23,16 +23,16 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
-<div class="form-item">
+<div class="form-item crm-block crm-form-block crm-contribution-form-block">
 <div id="help">
     {ts}Use this form to record received payments for 'pay later' online contributions, membership signups and event registrations. You can use the Transaction ID field to record account+check number, bank transfer identifier, or other unique payment identifier.{/ts}
 </div>
 <fieldset>
     <legend>{ts}Update Contribution Status{/ts}</legend>
-    <dl>
-        <dt>{$form.contribution_status_id.label}</dt><dd>{$form.contribution_status_id.html}<br />
-            <span class="description">{ts}Assign the selected status to all contributions listed below.{/ts}</dd>
-    </dl>
+     <table class="form-layout-compressed">
+     <tr class="crm-contribution-form-block-contribution_status_id"><td class="label">{$form.contribution_status_id.label}</td><td class="html-adjust">{$form.contribution_status_id.html}<br />
+            <span class="description">{ts}Assign the selected status to all contributions listed below.{/ts}</td></tr>
+     </table>
 <table>
 <tr class="columnheader">
     <th>{ts}Name{/ts}</th>
@@ -63,8 +63,6 @@
 </tr>
 {/foreach}
 </table>
-    <dl>
-        <dt>&nbsp;</dt><dd>{$form.buttons.html}</dd>
-    </dl>
+  <div class="crm-submit-buttons">{$form.buttons.html}</div>
 </fieldset>
 </div>

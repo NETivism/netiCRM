@@ -1,7 +1,7 @@
 <?php
 /*
 +--------------------------------------------------------------------+
-| CiviCRM version 3.1                                                |
+| CiviCRM version 3.3                                                |
 +--------------------------------------------------------------------+
 | Copyright CiviCRM LLC (c) 2004-2010                                |
 +--------------------------------------------------------------------+
@@ -123,6 +123,12 @@ class CRM_Core_DAO_Domain extends CRM_Core_DAO
      */
     public $locales;
     /**
+     * Locale specific string overrides
+     *
+     * @var text
+     */
+    public $locale_custom_strings;
+    /**
      * class constructor
      *
      * @access public
@@ -183,6 +189,13 @@ class CRM_Core_DAO_Domain extends CRM_Core_DAO
                     'name' => 'locales',
                     'type' => CRM_Utils_Type::T_TEXT,
                     'title' => ts('Locales') ,
+                ) ,
+                'locale_custom_strings' => array(
+                    'name' => 'locale_custom_strings',
+                    'type' => CRM_Utils_Type::T_TEXT,
+                    'title' => ts('Locale Custom Strings') ,
+                    'rows' => 20,
+                    'cols' => 80,
                 ) ,
             );
         }

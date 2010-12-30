@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -24,21 +24,7 @@
  +--------------------------------------------------------------------+
 *}
 {* CiviContribute DashBoard (launch page) *}
-{if $isAdmin}
-    {capture assign=newPageURL}{crmURL p="civicrm/admin/contribute" q="action=add&reset=1"}{/capture}
-    {capture assign=configPagesURL}{crmURL p="civicrm/admin/contribute" q="reset=1"}{/capture}
-<div class="float-right">
-<table class="form-layout-compressed">
-<tr>
-    <td><a href="{$configPagesURL}" class="button"><span>&raquo; {ts}Manage Contribution Pages{/ts}</span></a></td>
-    <td><a href="{$newPageURL}" class="button"><span>&raquo; {ts}New Contribution Page{/ts}</span></a></td>
-</tr>
-</table>
-</div>
-{/if}
-{capture assign=chartURL}{crmURL p="civicrm/contribute/chart" q="reset=1"}{/capture}
-
-<h3>{ts}Contribution Summary{/ts} {help id="id-contribute-intro"}</h3>
+{if $buildTabularView}
 <table class="report">
 <tr class="columnheader-dark">
     <th scope="col">{ts}Period{/ts}</th>
@@ -61,10 +47,40 @@
     <td class="label">{if NOT $startToDate.Valid.amount}{ts}(n/a){/ts}{else}{$startToDate.Valid.amount}{/if}</td>
     <td class="label">{$startToDate.Valid.count}</td>
     <td><a href="{$startToDate.Valid.url}">{ts}view details{/ts}...</a></td>
-<tr><td colspan="4" class="right" style="padding: 8px 10px 0px 4px; vertical-align: middle;"><a href="{$chartURL}" title="{ts}View contribution summary as bar or pie chart using the Google Chart API{/ts}"><img src="{$config->resourceBase}/i/BarGraph.png" alt="{ts}View contribution summary as bar or pie chart using the Google Chart API{/ts}" /></a> <a href="{$chartURL}" title="{ts}View contribution summary as bar or pie chart{/ts}">{ts}Bar or Pie Chart...{/ts}</a></td></tr>
 </tr>
 </table>
+{elseif $buildChart}
+  {include file = "CRM/Contribute/Form/ContributionCharts.tpl"}
+{else} 
+  <h3>{ts}Contribution Summary{/ts} {help id="id-contribute-intro"}</h3>
+      <div id="mainTabContainer" class="ui-tabs ui-widget ui-widget-content ui-corner-all">
+        <ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
+           <li id="chart_view"   class="crm-tab-button ui-state-active ui-corner-top ui-corner-bottom ui-tabs-selected" > 
+             <a href="#chart_layout"><span>&nbsp;</span>&nbsp;{ts}Chart Layout{/ts}&nbsp;</a> </li>&nbsp;
+           <li id ="table_view"  class="crm-tab-button ui-corner-top ui-corner-bottom ui-state-default" >
+             <a href="#table_layout"><span>&nbsp;</span>&nbsp;{ts}Table Layout{/ts}&nbsp;</a>
+           </li>
+{if $isAdmin}
+ {capture assign=newPageURL}{crmURL p="civicrm/admin/contribute/add" q="action=add&reset=1"}{/capture}
+ {capture assign=configPagesURL}{crmURL p="civicrm/admin/contribute" q="reset=1"}{/capture}
 
+<div class="float-right">
+<table class="form-layout-compressed">
+<tr>
+    <td>
+     <a href="{$configPagesURL}" class="button"><span>{ts}Manage Contribution Pages{/ts}
+       </span></a>
+    </td>
+    <td><a href="{$newPageURL}" class="button"><span><div class="icon add-icon"></div>{ts}Add Contribution Page{/ts}
+        </span></a>
+    </td>
+</tr>
+</table>
+</div>
+{/if}
+</ul>
+<div id="chartData"></div>
+<div id="tableData"></div></div>
 <div class="spacer"></div>
 
 {if $pager->_totalItems}
@@ -72,4 +88,63 @@
     <div>
         {include file="CRM/Contribute/Form/Selector.tpl" context="dashboard"}
     </div>
+{/if}{literal}
+<script type="text/javascript">
+       
+cj(document).ready( function( ) {
+    getChart( );
+    cj('#chart_view').click(function( ) {
+        if ( cj('#chart_view').hasClass('ui-state-default') ) { 
+            cj('#chart_view').removeClass('ui-state-default').addClass('ui-state-active ui-tabs-selected');
+            cj('#table_view').removeClass('ui-state-active ui-tabs-selected').addClass('ui-state-default');
+            getChart( );
+            cj('#tableData').children().html('');
+        }
+    });
+    cj('#table_view').click(function( ) {
+        if ( cj('#table_view').hasClass('ui-state-default') ) {
+            cj('#table_view').removeClass('ui-state-default').addClass('ui-state-active ui-tabs-selected');
+            cj('#chart_view').removeClass('ui-state-active ui-tabs-selected').addClass('ui-state-default');
+            buildTabularView();
+            cj('#chartData').children().html('');
+        }
+    });
+});        
+           
+function getChart( ) {
+   var year        = cj('#select_year').val( );
+   var charttype   = cj('#chart_type').val( );
+   var date        = new Date()
+   var currentYear = date.getFullYear( );
+   if ( !charttype ) charttype = 'bvg';     
+   if ( !year ) year           = currentYear;
+
+   var chartUrl = {/literal}"{crmURL p='civicrm/ajax/chart' h=0}"{literal};
+   chartUrl    += "&year=" + year + "&type=" + charttype + "&snippet=" + 4;
+
+   cj.ajax({
+       url     : chartUrl,
+       async    : false,
+       success  : function(html){
+           cj( "#chartData" ).html( html );
+       }	 
+   });
+
+}
+
+function buildTabularView( ) {
+    var tableUrl = {/literal}"{crmURL p='civicrm/contribute/ajax/tableview' h=0}"{literal};
+    tableUrl    += "&showtable=1&snippet=" + 4;
+    cj.ajax({
+        url      : tableUrl,
+        async    : false,
+        success  : function(html){
+            cj( "#tableData" ).html( html );
+        }	 
+    });
+}
+
+</script>
+{/literal}
+
 {/if}

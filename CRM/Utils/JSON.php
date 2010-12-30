@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -99,5 +99,35 @@ class CRM_Utils_JSON
      
         return $json;
     } 
+
+    static function encodeDataTableSelector( $params, $sEcho, $iTotal, $iFilteredTotal, $selectorElements )
+    {
+
+    $sOutput  = '{';
+	$sOutput .= '"sEcho": '.intval($sEcho).', ';
+	$sOutput .= '"iTotalRecords": '.$iTotal.', ';
+	$sOutput .= '"iTotalDisplayRecords": '.$iFilteredTotal.', ';
+	$sOutput .= '"aaData": [ ';
+    foreach( $params as $key => $value) {
+        $addcomma = false;
+        $sOutput .= "[";
+        foreach ( $selectorElements as $element ) {
+            if ( $addcomma )  $sOutput .= ",";
+            //$sOutput .= '"'.addslashes($value[$element]).'"';
+            
+            //CRM-7130 --lets addslashes to only double quotes, 
+            //since we are using it to quote the field value.
+            $sOutput .= '"'. addcslashes( $value[$element], '"\\') . '"';
+            
+            $addcomma = true;
+        }
+        $sOutput .= "],";
+    }
+    $sOutput  = substr_replace( $sOutput, "", -1 );
+	$sOutput .= '] }';
+
+    return $sOutput;
+
+    }  
 
 }

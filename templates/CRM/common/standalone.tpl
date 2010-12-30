@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -75,7 +75,7 @@
       </div>
       {/if}
     
-      <h1 class="title">{$pageTitle}</h1>
+      <h1 class="title">{if $isDeleted}<del>{/if}{$pageTitle}{if $isDeleted}</del>{/if}</h1>
       
       {if $browserPrint}
       {* Javascript window.print link. Used for public pages where we can't do printer-friendly view. *}

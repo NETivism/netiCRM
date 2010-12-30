@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -78,6 +78,11 @@ class CRM_Custom_Form_CustomData
 
         $form->assign('cgCount', $form->_groupCount);
 
+        //carry qf key, since this form is not inhereting core form.
+        if ( $qfKey = CRM_Utils_Request::retrieve( 'qfKey', 'String', CRM_Core_DAO::$_nullObject ) ) {
+            $form->assign( 'qfKey', $qfKey );
+        }
+
         if ( $entityID ) {
             $form->_entityId = $entityID;
         } else {
@@ -109,7 +114,7 @@ class CRM_Custom_Form_CustomData
     static function setDefaultValues( &$form ) 
     {
         $defaults = array( );
-        CRM_Core_BAO_CustomGroup::setDefaults( $form->_groupTree, $defaults);
+        CRM_Core_BAO_CustomGroup::setDefaults( $form->_groupTree, $defaults, false, false, $form->get('action') );
         return $defaults;
     }
     

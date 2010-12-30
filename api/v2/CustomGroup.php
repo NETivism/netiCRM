@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -33,7 +33,7 @@
  * @subpackage API_CustomGroup
  *
  * @copyright CiviCRM LLC (c) 2004-2010
- * @version $Id: CustomGroup.php 26284 2010-02-17 17:58:00Z shot $
+ * @version $Id: CustomGroup.php 30758 2010-11-15 15:09:56Z neha $
  */
 
 /**
@@ -142,7 +142,7 @@ function civicrm_custom_group_delete($params)
     }
     // convert params array into Object
     require_once 'CRM/Core/DAO/CustomGroup.php';
-    $values =& new CRM_Core_DAO_CustomGroup( );
+    $values = new CRM_Core_DAO_CustomGroup( );
     $values->id = $params['id'];
     $values->find(true);
     
@@ -171,11 +171,11 @@ function civicrm_custom_field_create( $params )
         return civicrm_create_error("params is not an array ");
     }
     
-    if ( !( CRM_Utils_Array::value('custom_group_id', $params ) ) ) {                        
+    if ( ! CRM_Utils_Array::value( 'custom_group_id', $params ) ) {                        
         return civicrm_create_error("Missing Required field :custom_group_id");
     }
     
-    if (!($params['label']) ) {                                     
+    if ( !( CRM_Utils_Array::value( 'label', $params ) ) ) {                                     
         return civicrm_create_error("Missing Required field :label");
     }
     
@@ -234,7 +234,7 @@ function civicrm_custom_field_delete( $params )
     }
 
     require_once 'CRM/Core/DAO/CustomField.php';
-    $field =& new CRM_Core_DAO_CustomField( );
+    $field = new CRM_Core_DAO_CustomField( );
     $field->id = $params['result']['customFieldId'];
     $field->find(true);
     

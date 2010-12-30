@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -200,7 +200,7 @@ class CRM_Contribute_Form_ManagePremiums extends CRM_Contribute_Form
      * @access public
      * @static
      */
-    public function formRule(&$params, &$files) {
+    public function formRule( $params, $files) {
         if ( isset ( $params['imageOption'] ) ) {
             if ( $params['imageOption'] == 'thumbnail' ) {
                 if ( ! $params['imageUrl']) {

@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -46,7 +46,7 @@
                     <td>{$row.contribution_type}</td>
                     <td>{$row.receive_date|truncate:10:''|crmDate}</td>
                     <td>{$row.receipt_date|truncate:10:''|crmDate}</td>
-                    <td>{$row.contribution_status_id}</td>
+                    <td>{$row.contribution_status}</td>
                 </tr>
             {/foreach}
         </table>
@@ -56,12 +56,8 @@
         {/if}
     {else}
         <div class="messages status">
-            <dl>
-                <dt><img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}" /></dt>
-                <dd>
+           <div class="icon inform-icon"></div>
                     {ts}There are no contributions on record for you.{/ts}
-                </dd>
-            </dl>
         </div>
     {/if}
      

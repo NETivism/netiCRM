@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -65,18 +65,25 @@ class CRM_Case_Form_Activity_ChangeCaseType
         
         $defaults['reset_date_time'] = array( );
         list( $defaults['reset_date_time'], $defaults['reset_date_time_time'] ) = CRM_Utils_Date::setDateDefaults( null, 'activityDateTime' );
-        $caseType  = CRM_Case_PseudoConstant::caseTypeName( $form->_caseId );
-        $defaults['case_type_id'] = $caseType['id'];
+        $defaults['case_type_id'] = $form->_caseTypeId;
 
         return $defaults;
     }
 
     static function buildQuickForm( &$form ) 
     { 
-        require_once 'CRM/Core/OptionGroup.php';        
-        $caseType = CRM_Core_OptionGroup::values('case_type');
+        require_once 'CRM/Case/PseudoConstant.php';
+        $form->_caseType   = CRM_Case_PseudoConstant::caseType( );
+        $caseTypeId        = explode( CRM_Case_BAO_Case::VALUE_SEPARATOR, CRM_Core_DAO::getFieldValue( 'CRM_Case_DAO_Case',
+                                                                                                       $form->_caseId,
+                                                                                                       'case_type_id' ) );
+        $form->_caseTypeId = $caseTypeId[1];
+        if ( !in_array( $form->_caseTypeId, $form->_caseType ) ) {
+            $form->_caseType[$form->_caseTypeId] = CRM_Core_OptionGroup::getLabel( 'case_type', $form->_caseTypeId, false );
+        }
+
         $form->add('select', 'case_type_id',  ts( 'New Case Type' ),  
-                   $caseType , true);
+                   $form->_caseType , true);
 
         // timeline
         $form->addYesNo( 'is_reset_timeline', ts( 'Reset Case Timeline?' ),null, true, array('onclick' =>"return showHideByValue('is_reset_timeline','','resetTimeline','table-row','radio',false);") );
@@ -92,7 +99,7 @@ class CRM_Case_Form_Activity_ChangeCaseType
      * @static
      * @access public
      */
-    static function formRule( &$values, $files, &$form ) 
+    static function formRule( $values, $files, $form ) 
     {
         return true;
     }
@@ -123,14 +130,16 @@ class CRM_Case_Form_Activity_ChangeCaseType
      * @access public
      * @return None
      */
-    public function endPostProcess( &$form, &$params ) 
+    public function endPostProcess( &$form, &$params, $activity ) 
     {
         if ( !$form->_caseId ) {
             // always expecting a change, so case-id is a must.
             return;
         }
 
-        $caseTypes = CRM_Case_PseudoConstant::caseType( 'name' );
+        require_once 'CRM/Case/PseudoConstant.php';
+        $caseTypes    = CRM_Case_PseudoConstant::caseType( 'name' );
+        $allCaseTypes = CRM_Case_PseudoConstant::caseType( 'label', false );
         
         if ( CRM_Utils_Array::value($params['case_type_id'], $caseTypes) ) {
             $caseType  = $caseTypes[$params['case_type_id']];
@@ -143,6 +152,15 @@ class CRM_Case_Form_Activity_ChangeCaseType
              ) {
             CRM_Core_Error::fatal('Required parameter missing for ChangeCaseType - end post processing');
         }
+        
+        if ($activity->subject == 'null'){
+            $activity->subject = ts( 'Case type changed from %1 to %2', 
+                                     array( 1 => CRM_Utils_Array::value( $form->_defaults['case_type_id'], $allCaseTypes ),
+                                            2 => CRM_Utils_Array::value( $params['case_type_id'], $allCaseTypes ) )
+                                     );
+            $activity->save();            
+        }
+        
         // 1. initiate xml processor
         $xmlProcessor = new CRM_Case_XMLProcessor_Process( );
         $xmlProcessorParams = array( 'clientID'           => $form->_currentlyViewedContactId,

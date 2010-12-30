@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -65,7 +65,7 @@ class bin_Email2Activity {
             exit( );
         }
         
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
         $dir = $config->uploadDir . DIRECTORY_SEPARATOR . 'mail';
 
         $this->_processedDir = $dir . DIRECTORY_SEPARATOR . 'processed';
@@ -140,10 +140,17 @@ function run( $supportedArgs, $context ) {
 
     require_once '../civicrm.config.php';
     require_once 'CRM/Core/Config.php'; 
-    $config =& CRM_Core_Config::singleton( );
+    $config = CRM_Core_Config::singleton( );
 
     // this does not return on failure
     CRM_Utils_System::authenticateScript( true );
+
+    //log the execution of script
+    CRM_Core_Error::debug_log_message( 'Email2Activity.php' );
+    
+    // load bootstrap to call hooks
+    require_once 'CRM/Utils/System.php';
+    CRM_Utils_System::loadBootStrap(  );
 
     $mailDir = MAIL_DIR_DEFAULT;
     if ( isset( $_GET['mailDir'] ) ) {

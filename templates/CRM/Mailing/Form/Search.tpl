@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -23,17 +23,16 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
-<fieldset class="form-layout"><legend>{ts}Find Mailings{/ts}</legend>
-<div class="form-item">
+<div class="crm-block crm-form-block crm-search-form-block">
 <table class="form-layout">
     <tr>
         <td>{$form.mailing_name.label}<br />
             {$form.mailing_name.html|crmReplace:class:big} {help id="id-mailing_name"}
         </td>
-        <td class="nowrap">{$form.mailing_from.label}
+        <td class="nowrap">{$form.mailing_from.label}<br />
             {include file="CRM/common/jcalendar.tpl" elementName=mailing_from}
         </td>
-        <td class="nowrap">{$form.mailing_to.label}
+        <td class="nowrap">{$form.mailing_to.label}<br />
             {include file="CRM/common/jcalendar.tpl" elementName=mailing_to}
         </td> 
     </tr>
@@ -47,4 +46,3 @@
     </tr>
 </table>
 </div>
-</fieldset>

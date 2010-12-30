@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -24,44 +24,96 @@
  +--------------------------------------------------------------------+
 *}
 {* this template is used for adding/editing available Payment Processors  *}
-<div class="form-item">
+<div class="crm-block crm-form-block crm-paymentProcessor-type-form-block">
 <fieldset><legend>{if $action eq 1}{ts}New Payment Procesor Type{/ts}{elseif $action eq 2}{ts}Edit Payment Procesor Type{/ts}{else}{ts}Delete Payment Procesor Type{/ts}{/if}</legend>
-
+ <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>
 {if $action eq 8}
   <div class="messages status">
-    <dl>
-      <dt><img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}" /></dt>
-      <dd>    
-        {ts}Do you want to continue?{/ts}
-      </dd>
-    </dl>
+      <div class="icon inform-icon"></div>
+      {ts}Do you want to continue?{/ts}
   </div>
 {else}
-  <dl>
-    <dt>{$form.title.label}</dt><dd>{$form.title.html}</dd>
-    <dt>{$form.name.label}</dt><dd>{$form.name.html}</dd>
-    <dt>{$form.description.label}</dt><dd>{$form.description.html}</dd>
-    <dt>{$form.billing_mode.label}</dt><dd>{$form.billing_mode.html}</dd>
-    <dt>{$form.class_name.label}</dt><dd>{$form.class_name.html}</dd>
-    <dt>&nbsp;</dt><dd>{$form.is_active.html} {$form.is_active.label}</dd>
-    <dt>&nbsp;</dt><dd>{$form.is_default.html} {$form.is_default.label}</dd>
-    <dt>&nbsp;</dt><dd>{$form.is_recur.html} {$form.is_recur.label}</dd>
-    <dt>{$form.user_name_label.label}</dt><dd>{$form.user_name_label.html}</dd>
-    <dt>{$form.password_label.label}</dt><dd>{$form.password_label.html}</dd>
-    <dt>{$form.signature_label.label}</dt><dd>{$form.signature_label.html}</dd>
-    <dt>{$form.subject_label.label}</dt><dd>{$form.subject_label.html}</dd>
-    <dt>{$form.url_site_default.label}</dt><dd>{$form.url_site_default.html}</dd>
-    <dt>{$form.url_api_default.label}</dt><dd>{$form.url_api_default.html}</dd>
-    <dt>{$form.url_recur_default.label}</dt><dd>{$form.url_recur_default.html}</dd>
-    <dt>{$form.url_button_default.label}</dt><dd>{$form.url_button_default.html}</dd>
-    <dt>{$form.url_site_test_default.label}</dt><dd>{$form.url_site_test_default.html}</dd>
-    <dt>{$form.url_api_test_default.label}</dt><dd>{$form.url_api_test_default.html}</dd>
-    <dt>{$form.url_recur_test_default.label}</dt><dd>{$form.url_recur_test_default.html}</dd>
-    <dt>{$form.url_button_test_default.label}</dt><dd>{$form.url_button_test_default.html}</dd>
-</dl>
+  
+  <table class="form-layout-compressed">
+    <tr class="crm-paymentProcessor-type-form-block-title">
+        <td class="label">{$form.title.label}</td>
+        <td>{$form.title.html}</td>
+    </tr>
+    <tr class="crm-paymentProcessor-type-form-block-name">
+        <td class="label">{$form.name.label}</td>
+        <td>{$form.name.html}</td>
+    </tr>
+    <tr class="crm-paymentProcessor-type-form-block-description">
+        <td class="label">{$form.description.label}</td>
+        <td>{$form.description.html}</td>
+    </tr>
+    <tr class="crm-paymentProcessor-type-form-block-billing_mode">
+        <td class="label">{$form.billing_mode.label}</td>
+        <td>{$form.billing_mode.html}</td>
+    </tr>
+    <tr class="crm-paymentProcessor-type-form-block-class_name">
+        <td class="label">{$form.class_name.label}</td>
+        <td>{$form.class_name.html}</td>
+    </tr>
+    <tr class="crm-paymentProcessor-type-form-block-is_active">
+        <td class="label"></td><td>{$form.is_active.html} {$form.is_active.label}</td>
+    </tr>
+    <tr class="crm-paymentProcessor-type-form-block-is_default">
+        <td class="label"></td><td>{$form.is_default.html} {$form.is_default.label}</td>
+    </tr>
+    <tr class="crm-paymentProcessor-type-form-block-is_recur">
+        <td class="label"></td><td>{$form.is_recur.html} {$form.is_recur.label}</td>
+    </tr>
+    <tr class="crm-paymentProcessor-type-form-block-user_name_label">
+        <td class="label">{$form.user_name_label.label}</td>
+        <td>{$form.user_name_label.html}</td>
+    </tr>
+    <tr class="crm-paymentProcessor-type-form-block-password_label">
+        <td class="label">{$form.password_label.label}</td>
+        <td>{$form.password_label.html}</td>
+    </tr>
+    <tr class="crm-paymentProcessor-type-form-block-signature_label">
+        <td class="label">{$form.signature_label.label}</td>
+        <td>{$form.signature_label.html}</td>
+    </tr>
+    <tr class="crm-paymentProcessor-type-form-block-subject_label">
+        <td class="label">{$form.subject_label.label}</td>
+        <td>{$form.subject_label.html}</td>
+    </tr>
+    <tr class="crm-paymentProcessor-type-form-block-url_site_default">
+        <td class="label">{$form.url_site_default.label}</td>
+        <td>{$form.url_site_default.html}</td>
+    </tr>
+    <tr class="crm-paymentProcessor-type-form-block-url_api_default">
+        <td class="label">{$form.url_api_default.label}</td>
+        <td>{$form.url_api_default.html}</td>
+    </tr>
+    <tr class="crm-paymentProcessor-type-form-block-url_recur_default">
+        <td class="label">{$form.url_recur_default.label}</td>
+        <td>{$form.url_recur_default.html}</td>
+    </tr>
+    <tr class="crm-paymentProcessor-type-form-block-url_button_default">
+        <td class="label">{$form.url_button_default.label}</td>
+        <td>{$form.url_button_default.html}</td>
+    </tr>
+    <tr class="crm-paymentProcessor-type-form-block-url_site_test_default">
+        <td class="label">{$form.url_site_test_default.label}</td>
+        <td>{$form.url_site_test_default.html}</td>
+    </tr>
+    <tr class="crm-paymentProcessor-type-form-block-url_api_test_default">
+        <td class="label">{$form.url_api_test_default.label}</td>
+        <td>{$form.url_api_test_default.html}</td>
+    </tr>
+    <tr class="crm-paymentProcessor-type-form-block-url_recur_test_default">
+        <td class="label">{$form.url_recur_test_default.label}</td>
+        <td>{$form.url_recur_test_default.html}</td>
+    </tr>
+    <tr class="crm-paymentProcessor-type-form-block-url_button_test_default">
+        <td class="label">{$form.url_button_test_default.label}</td>
+        <td>{$form.url_button_test_default.html}</td>
+    </tr>
+</table>
 {/if}
-  <dl> 
-    <dt></dt><dd>{$form.buttons.html}</dd>
-  </dl> 
 </fieldset>
+<div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div> 
 </div>

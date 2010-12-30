@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -35,7 +35,7 @@
  *
  * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
+ * $Id: $
  *
  */
 
@@ -81,7 +81,7 @@ class CRM_Utils_Wrapper
             $addSequence = $ignoreKey = $imageUpload = $attachUpload = false;
         }
 
-        $this->_controller =& new CRM_Core_Controller_Simple( $formName    ,
+        $this->_controller = new CRM_Core_Controller_Simple( $formName    ,
                                                               $formLabel   ,
                                                               $mode        ,
                                                               $imageUpload ,
@@ -113,5 +113,8 @@ class CRM_Utils_Wrapper
 
         $this->_controller->process();
         $this->_controller->run();
+        
+
+        
     }
 }

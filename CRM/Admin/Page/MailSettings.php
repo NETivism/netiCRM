@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -100,7 +100,7 @@ class CRM_Admin_Page_MailSettings extends CRM_Core_Page_Basic
         //get all mail settings.
         $allMailSettings = array( );
         require_once 'CRM/Core/DAO/MailSettings.php';
-        $mailSetting =& new CRM_Core_DAO_MailSettings( );
+        $mailSetting = new CRM_Core_DAO_MailSettings( );
         
         require_once 'CRM/Core/PseudoConstant.php';
         $allProtocols = CRM_Core_PseudoConstant::mailProtocol( );

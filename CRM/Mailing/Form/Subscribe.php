@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -134,7 +134,7 @@ ORDER BY title";
         $addCaptcha = true;
 
         // if recaptcha is not set, then dont add it
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
         if ( empty( $config->recaptchaPublicKey ) ||
              empty( $config->recaptchaPrivateKey ) ) {
             $addCaptcha = false;
@@ -166,17 +166,7 @@ ORDER BY title";
                            );
     }
     
-    static function formRule( &$fields ) {
-        $groups = CRM_Mailing_Event_BAO_Subscribe::getContactGroups($fields['email']);
-        foreach ( $fields as $name => $dontCare ) {
-            if ( substr( $name, 0, CRM_Core_Form::CB_PREFIX_LEN ) == CRM_Core_Form::CB_PREFIX ) {
-                $gid = substr( $name, CRM_Core_Form::CB_PREFIX_LEN );
-                if ( array_key_exists( $gid, $groups ) ) {
-                    $errors[$name] = ts('You are already subscribed in %1, your subscription is %2.', array(1 => $groups[$gid]['title'], 2 => $groups[$gid]['status']));
-                }
-            }
-        }
-            
+    static function formRule( $fields ) {
         if ( $errors ) {
             return $errors;
         } else {

@@ -1,7 +1,7 @@
 <?php
 /*
 +--------------------------------------------------------------------+
-| CiviCRM version 3.1                                                |
+| CiviCRM version 3.3                                                |
 +--------------------------------------------------------------------+
 | Copyright CiviCRM LLC (c) 2004-2010                                |
 +--------------------------------------------------------------------+
@@ -79,7 +79,7 @@ class CRM_Pledge_DAO_Payment extends CRM_Core_DAO
      * @var boolean
      * @static
      */
-    static $_log = false;
+    static $_log = true;
     /**
      *
      * @var int unsigned
@@ -103,6 +103,18 @@ class CRM_Pledge_DAO_Payment extends CRM_Core_DAO
      * @var float
      */
     public $scheduled_amount;
+    /**
+     * Actual amount that is paid as the Pledged installment amount.
+     *
+     * @var float
+     */
+    public $actual_amount;
+    /**
+     * 3 character string, value from config setting or input via user.
+     *
+     * @var string
+     */
+    public $currency;
     /**
      * The date the pledge payment is supposed to happen.
      *
@@ -195,6 +207,24 @@ class CRM_Pledge_DAO_Payment extends CRM_Core_DAO
                     'dataPattern' => '',
                     'export' => true,
                 ) ,
+                'pledge_payment_actual_amount' => array(
+                    'name' => 'actual_amount',
+                    'type' => CRM_Utils_Type::T_MONEY,
+                    'title' => ts('Actual Amount') ,
+                    'import' => true,
+                    'where' => 'civicrm_pledge_payment.actual_amount',
+                    'headerPattern' => '',
+                    'dataPattern' => '',
+                    'export' => true,
+                ) ,
+                'currency' => array(
+                    'name' => 'currency',
+                    'type' => CRM_Utils_Type::T_STRING,
+                    'title' => ts('Currency') ,
+                    'maxlength' => 3,
+                    'size' => CRM_Utils_Type::FOUR,
+                    'default' => 'UL',
+                ) ,
                 'pledge_payment_scheduled_date' => array(
                     'name' => 'scheduled_date',
                     'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
@@ -234,7 +264,7 @@ class CRM_Pledge_DAO_Payment extends CRM_Core_DAO
                     'where' => 'civicrm_pledge_payment.status_id',
                     'headerPattern' => '',
                     'dataPattern' => '',
-                    'export' => true,
+                    'export' => false,
                 ) ,
             );
         }

@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -55,16 +55,16 @@
   {counter start=0 skip=1 print=false}
   {foreach from=$rows item=row}
 
-  <tr id='rowid{$list}{$row.case_id}'>
+  <tr id='rowid{$list}{$row.case_id}' class="{cycle values="odd-row,even-row"} crm-case crm-case-status_{$row.case_status_id} crm-case-type_{$row.case_type_id}">
     {if $context eq 'Search' && !$single}
         {assign var=cbName value=$row.checkbox}
         <td>{$form.$cbName.html}</td> 
     {/if}
     {if $single }
-        <td>{$row.case_id}</td>
+        <td class="crm-case-id crm-case-id_{$row.case_id}">{$row.case_id}</td>
     {/if}
     {if $context != 'case'}	
-        <td>
+        <td class="crm-case-id crm-case-id_{$row.case_id}">
         <span id="{$list}{$row.case_id}_show">
             <a href="#" onclick="show('caseDetails{$list}{$row.case_id}', 'table-row'); 
                                  buildCaseDetails('{$list}{$row.case_id}','{$row.contact_id}'); 
@@ -83,16 +83,16 @@
     {/if}	
   
     {if !$single}
-    	<td><a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$row.contact_id`"}" title="{ts}view contact details{/ts}">{$row.sort_name}</a>{if $row.phone}<br /><span class="description">{$row.phone}</span>{/if}<br /><span class="description">{ts}Case ID{/ts}: {$row.case_id}</span></td>
+    	<td class="crm-case-id crm-case-id_{$row.case_id}"><a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$row.contact_id`"}" title="{ts}view contact details{/ts}">{$row.sort_name}</a>{if $row.phone}<br /><span class="description">{$row.phone}</span>{/if}<br /><span class="description">{ts}Case ID{/ts}: {$row.case_id}</span></td>
     {/if}
     
-    <td class="{$row.class}">{$row.case_status_id}</td>
-    <td>{$row.case_type_id}</td>
-    <td>{if $row.case_role}{$row.case_role}{else}---{/if}</td>
-    <td>{if $row.casemanager_id}<a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$row.casemanager_id`"}">{$row.casemanager}</a>{else}---{/if}</td>
-    <td>{if $row.case_recent_activity_type}
+    <td class="{$row.class} crm-case-status_{$row.case_status}">{$row.case_status}</td>
+    <td class="crm-case-case_type">{$row.case_type}</td>
+    <td class="crm-case-case_role">{if $row.case_role}{$row.case_role}{else}---{/if}</td>
+    <td class="crm-case-case_manager">{if $row.casemanager_id}<a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$row.casemanager_id`"}">{$row.casemanager}</a>{else}---{/if}</td>
+    <td class="crm-case-case_recent_activity_type">{if $row.case_recent_activity_type}
 	{$row.case_recent_activity_type}<br />{$row.case_recent_activity_date|crmDate}{else}---{/if}</td>
-    <td>{if $row.case_scheduled_activity_type}
+    <td class="crm-case-case_scheduled_activity_type">{if $row.case_scheduled_activity_type}
 	{$row.case_scheduled_activity_type}<br />{$row.case_scheduled_activity_date|crmDate}{else}---{/if}</td>
     <td>{$row.action|replace:'xx':$row.case_id}</td>
    </tr>
@@ -115,7 +115,7 @@
 {/if}
   {/foreach}
 
-    {* Dashboard only lists 10 most recent casess. *}
+    {* Dashboard only lists 10 most recent cases. *}
     {if $context EQ 'dashboard' and $limit and $pager->_totalItems GT $limit }
       <tr class="even-row">
         <td colspan="10"><a href="{crmURL p='civicrm/case/search' q='reset=1'}">&raquo; {ts}Find more cases{/ts}... </a></td>

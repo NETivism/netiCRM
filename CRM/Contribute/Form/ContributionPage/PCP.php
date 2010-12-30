@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -95,7 +95,7 @@ class CRM_Contribute_Form_ContributionPage_PCP extends CRM_Contribute_Form_Contr
         
         $profile        = array( );
         $isUserRequired = null;
-        $config         =& CRM_Core_Config::singleton( );
+        $config         = CRM_Core_Config::singleton( );
         if ( $config->userFramework != 'Standalone' ) {
             $isUserRequired = 2;            
         } 
@@ -137,7 +137,7 @@ class CRM_Contribute_Form_ContributionPage_PCP extends CRM_Contribute_Form_Contr
      * @access public
      * @static
      */
-    public static function formRule( &$params, &$files, $self ) 
+    public static function formRule( $params, $files, $self ) 
     { 
         $errors = array( );
         if ( CRM_Utils_Array::value( 'is_active', $params ) ) {
@@ -181,7 +181,7 @@ class CRM_Contribute_Form_ContributionPage_PCP extends CRM_Contribute_Form_Contr
         $params['entity_id'] = $this->_id;
         $params['entity_table'] = 'civicrm_contribution_page';
        
-        $dao =& new CRM_Contribute_DAO_PCPBlock();
+        $dao = new CRM_Contribute_DAO_PCPBlock();
         $dao->entity_table = 'civicrm_contribution_page';
         $dao->entity_id = $this->_id; 
         $dao->find(true);

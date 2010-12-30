@@ -3,7 +3,7 @@ include_once '../../../../../includes/unicode.inc';
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -36,9 +36,12 @@ include_once '../../../../../includes/unicode.inc';
  * this script using a web url or from the command line
  */
 
-function processQueue( ) {
+function processQueue($batch_size) {
     require_once 'CRM/Mailing/BAO/Job.php';
-    CRM_Mailing_BAO_Job::runJobs();
+	// Split up the parent jobs into multiple child jobs
+	CRM_Mailing_BAO_Job::runJobs_pre($batch_size);
+	CRM_Mailing_BAO_Job::runJobs();
+	CRM_Mailing_BAO_Job::runJobs_post();
 }
 
 function run( ) {
@@ -52,10 +55,24 @@ function run( ) {
     // this does not return on failure
     CRM_Utils_System::authenticateScript( true );
 
+    //log the execution of script
+    CRM_Core_Error::debug_log_message( 'civimail.cronjob.php');
+    
+    // load bootstrap to call hooks
+    require_once 'CRM/Utils/System.php';
+    CRM_Utils_System::loadBootStrap(  );
+
     // we now use DB locks on a per job basis
-    processQueue( );
+    processQueue($config->mailerJobSize);
 }
 
-run( );
-
+// you can run this program either from an apache command, or from the cli
+if (isset($argv)) {
+  require_once ("bin/cli.php");
+  $cli=new civicrm_cli ();
+  //if it doesn't die, it's authenticated 
+  processQueue( );
+} else  { //from the webserver
+  run( );
+}
 

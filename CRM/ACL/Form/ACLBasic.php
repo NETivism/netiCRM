@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -115,7 +115,7 @@ SELECT object_table
     }
 
 
-    static function formRule( &$params ) {
+    static function formRule( $params ) {
         if ( $params['entity_id'] == -1 ) {
             $errors = array( 'entity_id' => ts( 'Role is a required field' ) );
             return $errors;

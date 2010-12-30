@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -23,34 +23,33 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
-<div class="form-item">
-<fieldset>
-<legend>{ts}Forward Mailing{/ts}</legend>
-<dt class="label">From</dt><dd>{$fromEmail}</dd>      
-<br />{ts}Please enter up to 5 email addresses to receive the mailing.{/ts}
-<dl>
-<dt class="label">{$form.email_0.label}</dt><dd>{$form.email_0.html}</dd>
-<dt class="label">{$form.email_1.label}</dt><dd>{$form.email_1.html}</dd>
-<dt class="label">{$form.email_2.label}</dt><dd>{$form.email_2.html}</dd>
-<dt class="label">{$form.email_3.label}</dt><dd>{$form.email_3.html}</dd>
-<dt class="label">{$form.email_4.label}</dt><dd>{$form.email_4.html}</dd>
-</dl>
+<div class="crm-block crm-mailing-forward-form-block">
+<br />
+<div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl"}</div><br />
+<table class="form-layout">
+<tr class="crm-mailing-forward-form-block-fromEmail"><td class="label">From</td><td>{$fromEmail}</td></tr>
+<tr><td colspan="2">{ts}Please enter up to 5 email addresses to receive the mailing.{/ts}</td></tr>
+<tr class="crm-mailing-forward-form-block-email_0"><td class="label" >{$form.email_0.label}</td><td>{$form.email_0.html}</td></tr>
+<tr class="crm-mailing-forward-form-block-email_1"><td class="label" >{$form.email_1.label}</td><td>{$form.email_1.html}</td></tr>
+<tr class="crm-mailing-forward-form-block-email_2"><td class="label" >{$form.email_2.label}</td><td>{$form.email_2.html}</td></tr>
+<tr class="crm-mailing-forward-form-block-email_3"><td class="label" >{$form.email_3.label}</td><td>{$form.email_3.html}</td></tr>
+<tr class="crm-mailing-forward-form-block-email_4"><td class="label" >{$form.email_4.label}</td><td>{$form.email_4.html}</td></tr>
+
+</table>
 <div id="comment_show">
     <a href="#" class="button" onclick="hide('comment_show'); show('comment'); document.getElementById('forward_comment').focus(); return false;"><span>&raquo; {ts}Add Comment{/ts}</span></a>
 </div><div class="spacer"></div>
 <div id="comment" style="display:none">
-        <div class="form-item">
             <table class="form-layout">
-            <tr><td><a href="#" onclick="hide('comment'); show('comment_show'); return false;"><img src="{$config->resourceBase}i/TreeMinus.gif" class="action-icon" alt="{ts}close section{/ts}"/></a></a>
+            <tr class="crm-mailing-forward-form-block-forward_comment"><td><a href="#" onclick="hide('comment'); show('comment_show'); return false;"><img src="{$config->resourceBase}i/TreeMinus.gif" class="action-icon" alt="{ts}close section{/ts}"/></a>
                 <label>{$form.forward_comment.label}</label></td>
                 <td>{$form.forward_comment.html}<br /><br />
               &nbsp;{$form.html_comment.html}<br /></td>
        	    </tr>
             </table>
-        </div>
 </div> 
-<dt></dt><dd>{$form.buttons.html}</dd>
-</fieldset>
+<br />
+<div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl"}</div>
 </div>
 
 {literal}

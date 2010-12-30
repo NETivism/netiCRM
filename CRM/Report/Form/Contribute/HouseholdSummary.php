@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -307,7 +307,7 @@ class CRM_Report_Form_Contribute_HouseholdSummary extends CRM_Report_Form {
     }
 
     function validRelationships( ) {
-        require_once("api/v2/Relationship.php");
+        require_once("api/v2/RelationshipType.php");
         $this->relationTypes = $relationTypes = array( );
         
         $params = array( 'contact_type_b' => 'Household' );

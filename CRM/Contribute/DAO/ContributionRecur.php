@@ -1,7 +1,7 @@
 <?php
 /*
 +--------------------------------------------------------------------+
-| CiviCRM version 3.1                                                |
+| CiviCRM version 3.3                                                |
 +--------------------------------------------------------------------+
 | Copyright CiviCRM LLC (c) 2004-2010                                |
 +--------------------------------------------------------------------+
@@ -79,7 +79,7 @@ class CRM_Contribute_DAO_ContributionRecur extends CRM_Core_DAO
      * @var boolean
      * @static
      */
-    static $_log = false;
+    static $_log = true;
     /**
      * Contribution Recur ID
      *
@@ -98,6 +98,12 @@ class CRM_Contribute_DAO_ContributionRecur extends CRM_Core_DAO
      * @var float
      */
     public $amount;
+    /**
+     * 3 character string, value from config setting or input via user.
+     *
+     * @var string
+     */
+    public $currency;
     /**
      * Time units for recurrence of payment.
      *
@@ -255,6 +261,14 @@ class CRM_Contribute_DAO_ContributionRecur extends CRM_Core_DAO
                     'type' => CRM_Utils_Type::T_MONEY,
                     'title' => ts('Amount') ,
                     'required' => true,
+                ) ,
+                'currency' => array(
+                    'name' => 'currency',
+                    'type' => CRM_Utils_Type::T_STRING,
+                    'title' => ts('Currency') ,
+                    'maxlength' => 3,
+                    'size' => CRM_Utils_Type::FOUR,
+                    'default' => 'UL',
                 ) ,
                 'frequency_unit' => array(
                     'name' => 'frequency_unit',

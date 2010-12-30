@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -23,6 +23,10 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
+{if $config->debug}
+    {include file="CRM/common/debug.tpl"}
+{/if}
+
 {if $smarty.get.snippet eq 4}
     {if $isForm}
         {include file="CRM/Form/default.tpl"}
@@ -38,10 +42,8 @@
     {* Check for Status message for the page (stored in session->getStatus). Status is cleared on retrieval. *}
     {if $session->getStatus(false)}
     <div class="messages status">
-      <dl>
-      <dt><img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}" /></dt>
-      <dd>{$session->getStatus(true)}</dd>
-      </dl>
+      <div class="icon alert-icon"></div>
+      {$session->getStatus(true)}
     </div>
     {/if}
 

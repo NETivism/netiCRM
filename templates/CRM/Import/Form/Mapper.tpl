@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -23,8 +23,9 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
-<fieldset>
-<legend>Mapper - 4 Selectors</legend>
+<div class="crm-block crm-form-block">
+
+<h3>Mapper - 4 Selectors</h3>
 
 <div class="form-item">
    <dl>
@@ -53,7 +54,6 @@
 </dl>
 </div>
 
-</fieldset>
 
 {literal}
 <script type="text/javascript">
@@ -83,3 +83,4 @@
       }
 </script>
 {/literal}
+</div>

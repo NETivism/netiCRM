@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -153,7 +153,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
 
         // let the constructor initialize this, should happen only once
         if ( ! isset( self::$_template ) ) {
-            self::$_template =& CRM_Core_Smarty::singleton( );
+            self::$_template = CRM_Core_Smarty::singleton( );
         }
 
     }
@@ -175,7 +175,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
                                'domain','numberOfDigit',
                                'date', 'currentDate',
                                'asciiFile', 'htmlFile', 'utf8File',
-                               'objectExists', 'optionExists', 'postalCode', 'money', 'moneySigned', 'positiveInteger',
+                               'objectExists', 'optionExists', 'postalCode', 'money', 'positiveInteger',
                                'xssString', 'fileExists', 'autocomplete', 'validContact' );
 
         foreach ( $rules as $rule ) {
@@ -297,10 +297,9 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
                                                 $this->_submitValues, $this->_submitFiles, $this );
         if ( $hookErrors !== true && is_array($hookErrors) && !empty($hookErrors) ) {
             $this->_errors += $hookErrors;
-            $error = false;
         }
 
-        return $error;
+        return (0 == count($this->_errors));
     }
 
     /**
@@ -473,7 +472,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
      * @access public
      */     
     function getLink( ) {
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
         return CRM_Utils_System::url( $_GET[$config->userFrameworkURLVar],
                                       '_qf_' . $this->_name . '_display=true' );
     }
@@ -544,9 +543,17 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
      * @access public
      */
     function getTemplateFileName() {
-        return str_replace( '_',
-                            DIRECTORY_SEPARATOR,
-                            CRM_Utils_System::getClassName( $this ) ) .'.tpl';
+        require_once( 'CRM/Core/Extensions.php' );
+        $ext = new CRM_Core_Extensions();
+        if( $ext->isExtensionClass( CRM_Utils_System::getClassName( $this ) ) ) {
+            $filename = $ext->getTemplateName( CRM_Utils_System::getClassName( $this ) );
+            $tplname =  $ext->getTemplatePath( CRM_Utils_System::getClassName( $this ) ) . DIRECTORY_SEPARATOR . $filename;
+        } else {
+            $tplname = str_replace( '_',
+                                    DIRECTORY_SEPARATOR,
+                                    CRM_Utils_System::getClassName( $this ) ) .'.tpl';
+        }
+        return $tplname;
     }
 
     /**
@@ -730,10 +737,11 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
         }
         if ( $nextType != null ) {
             $nextButton = array ( 'type'      => $nextType,
-                                 'name'      => $title,
-                                 'isDefault' => true   );
+                                  'name'      => $title,
+                                  'isDefault' => true   );
             if ( $submitOnce ) {
-	      $nextButton['js'] = array( 'onclick' => "return submitOnce(this,'{$this->_name}','" . ts('Processing') ."');" );
+                $nextButton['js'] = 
+                    array( 'onclick' => "return submitOnce(this,'{$this->_name}','" . ts('Processing') ."');" );
             }
             $buttons[] = $nextButton;
         }
@@ -775,7 +783,10 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
         if ( !$editor || $forceTextarea ) {
             $editor = 'textarea';
         }
-      
+        if ( $editor == 'joomla default editor' ) {
+            $editor = 'joomlaeditor';
+        }
+        
         $this->addElement( $editor, $name, $label, $attributes );
         $this->assign('editor', $editor);
     }    
@@ -806,7 +817,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
             $locationName = "location";
         }
         
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
         $attributes = CRM_Core_DAO::getAttribute('CRM_Core_DAO_Address');
 
         $location[$locationId]['address']['street_address']         =
@@ -916,7 +927,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
         }
         $this->set( 'uploadNames', $uploadNames );
 
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
         if ( ! empty( $uploadNames ) ) {
             $this->controller->addUploadAction( $config->customFileUploadDir, $uploadNames );
         }
@@ -967,7 +978,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
             $attributes['endOffset']   = $values['end'];
         }
         
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
         if ( !CRM_Utils_Array::value( 'format', $attributes ) ) {
             $attributes['format']  = $config->dateInputFormat;
         }
@@ -998,25 +1009,23 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
                 $show24Hours = true;
                 if ( $timeFormat == 1 ) {
                     $show24Hours = false;
-                } 
-                $elemetName = $name;
-                if( is_a($this, 'CRM_Contact_Form_Task_Batch') 
-                	|| is_a($this, 'CRM_Contribute_Form_Task_Batch') 
-                	|| is_a($this, 'CRM_Event_Form_Task_Batch') 
-                	|| is_a($this, 'CRM_Member_Form_Task_Batch')) { 
-                	$elemetName  = substr( $name, 0, $name.length - 1);
-                	$elemetName .= '_time]' ;
-				}else {
-					$elemetName .= '_time' ;
-				}
-                $this->add('text', $elemetName, ts('Time'), array( 'timeFormat' => $show24Hours ) );
-            }            
-        }
+                }
                 
+                //CRM-6664 -we are having time element name 
+                //in either flat string or an array format. 
+                $elementName = $name.'_time';
+                if ( substr( $name, -1 ) == ']' ) {
+                    $elementName = substr( $name, 0, $name.length - 1).'_time]';
+                }
+                
+                $this->add('text', $elementName, ts('Time'), array( 'timeFormat' => $show24Hours ) );
+            } 
+        }
+        
         if ( $required ) {
             $this->addRule( $name, ts('Please select %1', array(1 => $label)), 'required');
             if ( CRM_Utils_Array::value( 'addTime', $attributes ) ) {
-                $this->addRule( $elemetName, ts('Please select Time'), 'required'); 
+                $this->addRule( $elementName, ts('Please select Time'), 'required'); 
             }
         }
     }
@@ -1034,6 +1043,43 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
         
         $this->addDate( $name, $label, $required, $attributes );
     }
+
+    /**
+     * add a currency and money element to the form
+     */
+    function addMoney( $name,
+                       $label,
+                       $required = false,
+                       $attributes = null,
+                       $addCurrency = true,
+                       $currencyName = 'currency',
+                       $defaultCurrency = null ) {
+        $element = $this->add( 'text', $name, $label, $attributes, $required );
+        $this->addRule( $name, ts('Please enter a valid amount.'), 'money');
+        
+        if ( $addCurrency ) {
+            $this->addCurrency( $currencyName, null, true, $defaultCurrency );
+        }
+        
+        return $element;
+    }
+    
+    /**
+     * add currency element to the form
+     */
+    function addCurrency( $name  = 'currency', 
+                          $label = null,
+                          $required = true,
+                          $defaultCurrency = null ) {
+        require_once 'CRM/Core/OptionGroup.php';
+        $currencies = CRM_Core_OptionGroup::values( 'currencies_enabled' );
+        if ( !$required ) $currencies = array( ''=> ts( '- select -' ) ) + $currencies;
+        $this->add( 'select', $name, $label, $currencies, $required );
+        if ( !$defaultCurrency ) {
+            $config = CRM_Core_Config::singleton( );
+            $defaultCurrency = $config->defaultCurrency;
+        }
+        $this->setDefaults( array( $name => $defaultCurrency ) );
+    }
+
 }
-
-

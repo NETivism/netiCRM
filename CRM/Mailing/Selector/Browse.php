@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -180,26 +180,27 @@ class CRM_Mailing_Selector_Browse   extends CRM_Core_Selector_Base
      * @return int Total number of rows 
      * @access public
      */
-    function getTotalCount( $action, $mailingType = null )
+    function getTotalCount( $action )
     {
-        $condition = null;
-        // get count as per mailing type - CRM-4882
-        if ( $mailingType ) {
-            switch ( $mailingType ) {
-            case 'unscheduled' :
-                $condition = " AND m.scheduled_id IS NULL";
-                break;
-            case 'scheduled' :
-                $condition = " AND m.scheduled_id IS NOT NULL AND ( m.is_archived IS NULL OR m.is_archived != 1 )"; 
-                break;
-            case 'archived' :
-                $condition = " AND m.is_archived = 1";
-                break;
-            }
-        }
-        
+        require_once 'CRM/Mailing/BAO/Job.php';
         require_once 'CRM/Mailing/BAO/Mailing.php';
-        return CRM_Mailing_BAO_Mailing::mailingACLIDs( true, $condition );
+        $job        = CRM_Mailing_BAO_Job::getTableName( );
+        $mailing    = CRM_Mailing_BAO_Mailing::getTableName( );
+        $mailingACL = CRM_Mailing_BAO_Mailing::mailingACL( );
+        
+        //get the where clause.
+        $params = array( );
+        $whereClause = "$mailingACL AND " . $this->whereClause( $params );
+        
+        $query = "
+   SELECT  COUNT( DISTINCT $mailing.id ) as count
+     FROM  $mailing
+LEFT JOIN  $job ON ( $mailing.id = $job.mailing_id) 
+LEFT JOIN  civicrm_contact createdContact   ON ( $mailing.created_id   = createdContact.id )
+LEFT JOIN  civicrm_contact scheduledContact ON ( $mailing.scheduled_id = scheduledContact.id ) 
+    WHERE  $whereClause";
+        
+        return CRM_Core_DAO::singleValueQuery( $query, $params );
     }
 
     /**
@@ -263,7 +264,7 @@ class CRM_Mailing_Selector_Browse   extends CRM_Core_Selector_Base
         }
 
         
-        $mailing =& new CRM_Mailing_BAO_Mailing();
+        $mailing = new CRM_Mailing_BAO_Mailing();
         
         $params = array( );
         $whereClause = ' AND ' . $this->whereClause( $params );
@@ -373,19 +374,22 @@ class CRM_Mailing_Selector_Browse   extends CRM_Core_Selector_Base
             $clauses[] = 'start_date <= %3';
             $params[3] = array( $to, 'String' );
         }
-
+        
         if ( $this->_parent->get( 'unscheduled' ) ) {
             $clauses[] = "civicrm_mailing_job.status is null";
+            $clauses[] = "civicrm_mailing.scheduled_id IS NULL";
         }
 
         if ( $this->_parent->get( 'archived' ) ) {
-            $clauses[] = "civicrm_mailing.is_archived = 1";
+            // CRM-6446: archived view should also show cancelled mailings
+            $clauses[] = "(civicrm_mailing.is_archived = 1 OR civicrm_mailing_job.status = 'Canceled')";
         }
-
+        
         // CRM-4290, do not show archived or unscheduled mails 
         // on 'Scheduled and Sent Mailing' page selector 
         if( $this->_parent->get( 'scheduled' ) ) { 
-            $clauses[] = "civicrm_mailing.is_archived = 0";
+            $clauses[] = "civicrm_mailing.scheduled_id IS NOT NULL";
+            $clauses[] = "( civicrm_mailing.is_archived IS NULL OR civicrm_mailing.is_archived = 0 )";
             $clauses[] = "civicrm_mailing_job.status IN ('Scheduled', 'Complete', 'Running')";
         }
             
@@ -409,6 +413,12 @@ class CRM_Mailing_Selector_Browse   extends CRM_Core_Selector_Base
         if ( !CRM_Utils_System::isNull( $createOrSentBy ) ) {
             $clauses[] = '(createdContact.sort_name LIKE %4 OR scheduledContact.sort_name LIKE %4)';
             $params[4] = array( '%' . $createOrSentBy . '%', 'String' );
+        }
+        
+        $createdId = $this->_parent->get( 'createdId' );
+        if ( $createdId ) {
+            $clauses[] = "(created_id = {$createdId})";
+            $params[5] = array( $createdId, 'Integer' );
         }
         
         if ( empty( $clauses ) ) {

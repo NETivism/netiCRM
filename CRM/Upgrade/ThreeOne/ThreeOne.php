@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -107,7 +107,7 @@ class CRM_Upgrade_ThreeOne_ThreeOne extends CRM_Upgrade_Form {
     
     function upgrade( $rev ) {
 
-        $upgrade =& new CRM_Upgrade_Form( );
+        $upgrade = new CRM_Upgrade_Form( );
 
         //Run the SQL file
         $upgrade->processSQL( $rev );
@@ -115,7 +115,7 @@ class CRM_Upgrade_ThreeOne_ThreeOne extends CRM_Upgrade_Form {
         // fix for CRM-5162
         // we need to encrypt all smtpPasswords if present
         require_once "CRM/Core/DAO/Preferences.php";
-        $mailingDomain =& new CRM_Core_DAO_Preferences();
+        $mailingDomain = new CRM_Core_DAO_Preferences();
         $mailingDomain->find( );
         while ( $mailingDomain->fetch( ) ) {
             if ( $mailingDomain->mailing_backend ) {
@@ -131,7 +131,7 @@ class CRM_Upgrade_ThreeOne_ThreeOne extends CRM_Upgrade_Form {
         }
         
         require_once "CRM/Core/DAO/Domain.php";
-        $domain =& new CRM_Core_DAO_Domain();
+        $domain = new CRM_Core_DAO_Domain();
         $domain->selectAdd( );
         $domain->selectAdd( 'config_backend' );
         $domain->find(true);

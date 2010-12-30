@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -26,13 +26,13 @@
 {ts 1=$totalSelectedCases}Number of selected cases: %1{/ts}
 
 {if $rows } 
-<div class="form-item">
+<div class="crm-block-crm-form-block crm-case-task-form-block">
 <table width="30%">
   <tr class="columnheader">
     <th>{ts}Name{/ts}</th>
   </tr>
 {foreach from=$rows item=row}
-<tr class="{cycle values="odd-row,even-row"}">
+<tr class="{cycle values="odd-row,even-row"} crm-case-task-displayName">
 <td>{$row.displayName}</td>
 </tr>
 {/foreach}

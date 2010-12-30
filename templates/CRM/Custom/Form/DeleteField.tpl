@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -24,15 +24,11 @@
  +--------------------------------------------------------------------+
 *}
 {* this template is used for confirmation of delete for a Fields  *}
+<h3>{ts}Delete Custom Field{/ts} - {$title}</h3>
+<div class="crm-block crm-form-block crm-custom-deletefield-form-block">
     <div class="messages status">
-      <dl>
-        <dt><img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}" /></dt>
-        <dd>
-          {ts 1=$title}WARNING: Deleting this custom field will result in the loss of all '%1' data. Any Profile form and listings field(s) linked with '%1' will also be deleted.{/ts} {ts}This action cannot be undone.{/ts} {ts}Do you want to continue?{/ts}
-        </dd>
-      </dl>
-    </div>
-
-<div class="form-item">
-    {$form.buttons.html}
+         <div class="icon inform-icon"></div>
+            {ts 1=$title}WARNING: Deleting this custom field will result in the loss of all '%1' data. Any Profile form and listings field(s) linked with '%1' will also be deleted.{/ts} {ts}This action cannot be undone.{/ts} {ts}Do you want to continue?{/ts}
+         </div>
+ <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
 </div>

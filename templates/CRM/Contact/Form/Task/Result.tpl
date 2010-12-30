@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -23,10 +23,12 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
-<div class='spacer'></div>
-<div class="form-item">
+<div class="crm-block crm-form-block">
+
+<div class="crm-submit-buttons">
     <p>
     {$form.buttons.html}
     </p>
 </div>
 
+</div>

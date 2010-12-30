@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -50,7 +50,7 @@ class CRM_Member_Import_Form_UploadFile extends CRM_Core_Form
      */
     public function preProcess()
     { 
-      $session =& CRM_Core_Session::singleton( );
+      $session = CRM_Core_Session::singleton( );
       $session->pushUserContext( CRM_Utils_System::url('civicrm/member/import', 'reset=1') );
     }
 
@@ -63,7 +63,7 @@ class CRM_Member_Import_Form_UploadFile extends CRM_Core_Form
     public function buildQuickForm( ) 
     {
         //Setting Upload File Size
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
         if ($config->maxImportFileSize >= 8388608 ) {
             $uploadFileSize = 8388608;
         } else {
@@ -166,15 +166,15 @@ class CRM_Member_Import_Form_UploadFile extends CRM_Core_Form
         $this->set('dateFormats', $dateFormats);
         $this->set('savedMapping', $savedMapping);
 
-        $session =& CRM_Core_Session::singleton();
+        $session = CRM_Core_Session::singleton();
         $session->set("dateTypes",$dateFormats);
 
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
         $seperator = $config->fieldSeparator;
         
         $mapper = array( );
 
-        $parser =& new CRM_Member_Import_Parser_Membership( $mapper );
+        $parser = new CRM_Member_Import_Parser_Membership( $mapper );
         $parser->setMaxLinesToProcess( 100 );
         $parser->run( $fileName, $seperator,
                       $mapper,

@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -119,12 +119,19 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
                    array( 'dao'     => 'CRM_Contribute_DAO_Contribution',
                           'fields'  =>
                           array(
+                                 'contribution_id' => array( 
+                                                            'name' => 'id',
+                                                            'no_display' => true,
+                                                            'required'   => true,
+                                                ),
                                  'contribution_type_id' => array( 'title'   => ts('Contribution Type'),
                                                                   'default' => true,
                                                                 ),
                                  'trxn_id'              => null,
                                  'receive_date'         => array( 'default' => true ),
                                  'receipt_date'         => null,
+                                 'fee_amount'           => null,
+                                 'net_amount'           => null,
                                  'total_amount'         => array( 'title'        => ts( 'Amount' ),
                                                                     'required'     => true,
                                                                     'statistics'   => 
@@ -162,19 +169,6 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
                                         'group'        => true,
                                         'options'      => CRM_Core_PseudoConstant::group( ) ), ), ),
                    
-                   'civicrm_tag' => 
-                   array( 'dao'     => 'CRM_Core_DAO_Tag',
-                          'filters' =>             
-                          array( 'tid' => 
-                                 array( 'name'         => 'tag_id',
-                                        'title'        => ts( 'Tag' ),
-                                        'tag'          => true,
-                                        'operatorType' => CRM_Report_Form::OP_MULTISELECT,
-                                        'options'      => CRM_Core_PseudoConstant::tag( ) 
-                                        ), 
-                                 ), 
-                          ),
-
                    'civicrm_contribution_ordinality' =>                    
                    array( 'dao'    => 'CRM_Contribute_DAO_Contribution',
                           'alias'  => 'cordinality',
@@ -185,7 +179,8 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
                                         'options'      => array( 0 => 'First by Contributor', 
                                                                  1 => 'Second or Later by Contributor') ), ), ),
                    );
-        
+
+        $this->_tagFilter = true;
         parent::__construct( );
     }
 
@@ -402,6 +397,17 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
                 $entryFound = true;
             }
 
+            if ( ( $value = CRM_Utils_Array::value( 'civicrm_contribution_total_amount_sum', $row ) ) && 
+                 CRM_Core_Permission::check( 'access CiviContribute' ) ) {
+                $url = CRM_Utils_System::url( "civicrm/contact/view/contribution" , 
+                                              "reset=1&id=".$row['civicrm_contribution_contribution_id']."&cid=".$row['civicrm_contact_id']."&action=view&context=contribution&selectedChild=contribute",
+                                              $this->_absoluteUrl );
+                $rows[$rowNum]['civicrm_contribution_total_amount_sum_link'] = $url;
+                $rows[$rowNum]['civicrm_contribution_total_amount_sum_hover'] =  
+                    ts("View Details of this Contribution.");
+                $entryFound = true;
+            }
+            
             // skip looking further in rows, if first row itself doesn't 
             // have the column we need
             if ( !$entryFound ) {

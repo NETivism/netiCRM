@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -123,7 +123,7 @@ class CRM_Admin_Page_Options extends CRM_Core_Page_Basic
             $this->assign( 'showCounted', true );
         }
         require_once 'CRM/Core/Config.php';
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
         if ( in_array("CiviCase", $config->enableComponents) && self::$_gName == 'activity_type' ) {
             $this->assign( 'showComponent', true );
         }

@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -51,8 +51,18 @@ class CRM_Admin_Form_Setting_Miscellaneous extends  CRM_Admin_Form_Setting
     public function buildQuickForm( ) {
         CRM_Utils_System::setTitle(ts('Settings - Miscellaneous'));
 
+        $this->addYesNo('contactUndelete', ts('Contact Trash & Undelete'));
+
+        // FIXME: for now, disable logging for multilingual sites
+        $domain = new CRM_Core_DAO_Domain;
+        $domain->find(true);
+        $attribs = $domain->locales ? array('disabled' => 'disabled') : null;
+        $this->addYesNo('logging', ts('Logging'), null, null, $attribs);
+
         $this->addYesNo( 'versionCheck'           , ts( 'Version Check & Statistics Reporting' ));
         $this->addElement('text', 'maxAttachments' , ts('Maximum Attachments'),
+                          array( 'size' => 2, 'maxlength' => 8 ) );
+        $this->addElement('text', 'maxFileSize' , ts('Maximum File Size'),
                           array( 'size' => 2, 'maxlength' => 8 ) );
         $this->addElement('text','recaptchaPublicKey' , ts('Public Key'),
                           array( 'size' => 64, 'maxlength' => 64 ) );
@@ -61,9 +71,22 @@ class CRM_Admin_Form_Setting_Miscellaneous extends  CRM_Admin_Form_Setting
 
         $this->addElement('text', 'dashboardCacheTimeout', ts('Dashboard cache timeout'),
                           array( 'size' => 3, 'maxlength' => 5 ) );
+
+        $this->addRule('maxAttachments', ts('Value should be a positive number') , 'positiveInteger');
+        $this->addRule('maxFileSize', ts('Value should be a positive number') , 'positiveInteger');
        
         parent::buildQuickForm();    
     }
+
+    public function postProcess()
+    {
+        parent::postProcess();
+
+        // handle logging
+        // FIXME: do it only if the setting changed
+        require_once 'CRM/Logging/Schema.php';
+        $values = $this->exportValues();
+        $logging = new CRM_Logging_Schema;
+        $values['logging'] ? $logging->enableLogging() : $logging->disableLogging();
+    }
 }
-
-

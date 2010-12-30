@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -24,31 +24,41 @@
  +--------------------------------------------------------------------+
 *}
 {* this template is used for adding/editing/deleting contribution type  *}
-<div class="form-item">
-<fieldset><legend>{if $action eq 1}{ts}New Contribution Type{/ts}{elseif $action eq 2}{ts}Edit Contribution Type{/ts}{else}{ts}Delete Contribution Type{/ts}{/if}</legend>
-  
+<h3>{if $action eq 1}{ts}New Contribution Type{/ts}{elseif $action eq 2}{ts}Edit Contribution Type{/ts}{else}{ts}Delete Contribution Type{/ts}{/if}</h3>
+<div class="crm-block crm-form-block crm-contribution_type-form-block">
    {if $action eq 8}
       <div class="messages status">
-        <dl>
-          <dt><img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}" /></dt>
-          <dd>    
+          <div class="icon inform-icon"></div>    
           {ts}WARNING: You cannot delete a contribution type if it is currently used by any Contributions, Contribution Pages or Membership Types. Consider disabling this option instead.{/ts} {ts}Deleting a contribution type cannot be undone.{/ts} {ts}Do you want to continue?{/ts}
-          </dd>
-       </dl>
       </div>
-     {else}
-      <dl>
- 	    <dt>{$form.name.label}</dt><dd>{$form.name.html}</dd>
-    	<dt>{$form.description.label}</dt><dd>{$form.description.html}</dd>
-    	<dt>{$form.accounting_code.label}</dt><dd>{$form.accounting_code.html}</dd>
-        <dt>&nbsp;</dt><dd class="description">{ts}Use this field to flag contributions of this type with the corresponding code used in your accounting system. This code will be included when you export contribution data to your accounting package.{/ts}</dd>
-    	<dt>{$form.is_deductible.label}</dt><dd>{$form.is_deductible.html}</dd>
-        <dt>&nbsp;</dt><dd class="description">{ts}Are contributions of this type tax-deductible?{/ts}</dd>
-        <dt>{$form.is_active.label}</dt><dd>{$form.is_active.html}</dd>
-      </dl> 
-     {/if}
-    <dl>   
-      <dt></dt><dd>{$form.buttons.html}</dd>
-    </dl>
-</fieldset>
+   {else}
+     <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>
+     <table class="form-layout-compressed">
+      <tr class="crm-contribution-form-block-name">
+ 	  <td class="label">{$form.name.label}</td>
+	  <td class="html-adjust">{$form.name.html}</td>	
+       </tr>
+       <tr class="crm-contribution-form-block-description">	 
+    	  <td class="label">{$form.description.label}</td>
+	  <td class="html-adjust">{$form.description.html}</td>
+       </tr>
+       <tr class="crm-contribution-form-block-accounting_code">
+    	  <td class="label">{$form.accounting_code.label}</td>
+	  <td class="html-adjust">{$form.accounting_code.html}<br />
+       	      <span class="description">{ts}Use this field to flag contributions of this type with the corresponding code used in your accounting system. This code will be included when you export contribution data to your accounting package.{/ts}</span>
+	  </td>
+       </tr>
+       <tr class="crm-contribution-form-block-is_deductible">
+    	  <td class="label">{$form.is_deductible.label}</td>
+	  <td class="html-adjust">{$form.is_deductible.html}<br />
+	      <span class="description">{ts}Are contributions of this type tax-deductible?{/ts}</span>
+	  </td>
+       </tr>
+       <tr class="crm-contribution-form-block-is_active">	 
+    	  <td class="label">{$form.is_active.label}</td>
+	  <td class="html-adjust">{$form.is_active.html}</td>
+       </tr>
+      </table> 
+   {/if}
+   <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="botttom"}</div>
 </div>

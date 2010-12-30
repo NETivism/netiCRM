@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -40,7 +40,7 @@ require_once '../civicrm.config.php';
 require_once 'CRM/Core/Config.php';
 
 /* Cache the real UF, override it with the SOAP environment */
-$config =& CRM_Core_Config::singleton();
+$config = CRM_Core_Config::singleton();
 
 if ( empty( $_GET ) ) {
     $rpInvoiceArray = array();
@@ -73,5 +73,6 @@ switch ( $value ) {
      echo "Could not get module name from request url<p>";
      break;
  }
+
 
 

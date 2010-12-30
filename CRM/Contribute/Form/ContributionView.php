@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -94,7 +94,7 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form
         $premiumId = null;
         if ( $id ) {
             require_once 'CRM/Contribute/DAO/ContributionProduct.php';
-            $dao = & new CRM_Contribute_DAO_ContributionProduct();
+            $dao = new CRM_Contribute_DAO_ContributionProduct();
             $dao->contribution_id = $id;
             if ( $dao->find(true) ) {
                $premiumId = $dao->id;
@@ -104,7 +104,7 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form
         
         if ( $premiumId ) {
             require_once 'CRM/Contribute/DAO/Product.php';
-            $productDAO = & new CRM_Contribute_DAO_Product();
+            $productDAO = new CRM_Contribute_DAO_Product();
             $productDAO->id  = $productID;
             $productDAO->find(true);
            
@@ -115,7 +115,15 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form
 
         // Get Note
         $noteValue = CRM_Core_BAO_Note::getNote( $values['id'], 'civicrm_contribution' );
-        $values['note'] =  array_values($noteValue);
+        // FIXME need to use civicrm format
+        if(function_exists('_filter_autop')){
+          foreach($noteValue as $v){
+            $values['note'][] = _filter_autop($v);
+          }
+        }
+        else{
+          $values['note'] =  array_values($noteValue);
+        }
 
 		// show billing address location details, if exists
 		if ( CRM_Utils_Array::value( 'address_id', $values ) ) {
@@ -163,12 +171,23 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form
             ' - (' . CRM_Utils_Money::format( $values['total_amount'] ) . ' ' . 
             ' - ' . $values['contribution_type'] . ')';
         
+        $recentOther = array( );
+        if ( CRM_Core_Permission::checkActionPermission('CiviContribute', CRM_Core_Action::UPDATE) ) {
+            $recentOther['editUrl'] = CRM_Utils_System::url( 'civicrm/contact/view/contribution', 
+                                                             "action=update&reset=1&id={$values['id']}&cid={$values['contact_id']}&context=home" );
+        }
+        if ( CRM_Core_Permission::checkActionPermission('CiviContribute', CRM_Core_Action::DELETE) ) {
+            $recentOther['deleteUrl'] = CRM_Utils_System::url( 'civicrm/contact/view/contribution', 
+                                                               "action=delete&reset=1&id={$values['id']}&cid={$values['contact_id']}&context=home" );
+        }
         CRM_Utils_Recent::add( $title,
                                $url,
                                $values['id'],
                                'Contribution',
                                $values['contact_id'],
-                               null );
+                               null,
+                               $recentOther
+                               );
     }
 
     /**

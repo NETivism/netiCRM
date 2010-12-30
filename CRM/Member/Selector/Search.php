@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -74,14 +74,15 @@ class CRM_Member_Selector_Search extends CRM_Core_Selector_Base implements CRM_C
     static $_properties = array( 'contact_id', 'membership_id',
                                  'contact_type',
                                  'sort_name',
-                                 'membership_type_id',
+                                 'membership_type',
                                  'join_date',
                                  'membership_start_date',
                                  'membership_end_date',
                                  'membership_source',
                                  'status_id',
                                  'member_is_test',
-                                 'owner_membership_id'
+                                 'owner_membership_id',
+                                 'membership_status',
                                  );
 
     /** 
@@ -169,7 +170,7 @@ class CRM_Member_Selector_Search extends CRM_Core_Selector_Base implements CRM_C
         
         // type of selector
         $this->_action = $action;
-        $this->_query =& new CRM_Contact_BAO_Query( $this->_queryParams, null, null, false, false,
+        $this->_query = new CRM_Contact_BAO_Query( $this->_queryParams, null, null, false, false,
                                                     CRM_Contact_BAO_Query::MODE_MEMBER );
         // CRM_Core_Error::debug( 'q', $this->_query );
        
@@ -188,15 +189,22 @@ class CRM_Member_Selector_Search extends CRM_Core_Selector_Base implements CRM_C
      * @access public
      *
      */
-    static function &links( $status = 'all', $isPaymentProcessor = null, $accessContribution = null )
+    static function &links( $status = 'all', 
+                            $isPaymentProcessor = null, 
+                            $accessContribution = null, 
+                            $qfKey = null, 
+                            $context = null  )
     {
+        $extraParams = null;
+        if ( $context == 'search' ) $extraParams .= '&compContext=membership';
+        if ( $qfKey ) $extraParams .= "&key={$qfKey}";
         
         if ( !self::$_links['view'] ) {
             self::$_links['view'] = array(
                                           CRM_Core_Action::VIEW   => array(
                                                                    'name'     => ts('View'),
                                                                    'url'      => 'civicrm/contact/view/membership',
-                                                                   'qs'       => 'reset=1&id=%%id%%&cid=%%cid%%&action=view&context=%%cxt%%&selectedChild=member',
+                                                                   'qs'       => 'reset=1&id=%%id%%&cid=%%cid%%&action=view&context=%%cxt%%&selectedChild=member'.$extraParams,
                                                                    'title'    => ts('View Membership'),
                                                                    )
                                   );
@@ -206,26 +214,26 @@ class CRM_Member_Selector_Search extends CRM_Core_Selector_Base implements CRM_C
                                 CRM_Core_Action::UPDATE => array(
                                                                  'name'  => ts('Edit'),
                                                                  'url'   => 'civicrm/contact/view/membership',
-                                                                 'qs'    => 'reset=1&action=update&id=%%id%%&cid=%%cid%%&context=%%cxt%%',
+                                                                 'qs'    => 'reset=1&action=update&id=%%id%%&cid=%%cid%%&context=%%cxt%%'.$extraParams,
                                                                  'title' => ts('Edit Membership'),
                                                                  ),
                                 CRM_Core_Action::DELETE => array(
                                                                  'name'  => ts('Delete'),
                                                                  'url'   => 'civicrm/contact/view/membership',
-                                                                 'qs'    => 'reset=1&action=delete&id=%%id%%&cid=%%cid%%&context=%%cxt%%',
+                                                                 'qs'    => 'reset=1&action=delete&id=%%id%%&cid=%%cid%%&context=%%cxt%%'.$extraParams,
                                                                  'title' => ts('Delete Membership'),
                                                                  ),
                                 
                                 CRM_Core_Action::RENEW => array(
                                                                 'name'  => ts('Renew'),
                                                                 'url'   => 'civicrm/contact/view/membership',
-                                                                'qs'    => 'reset=1&action=renew&id=%%id%%&cid=%%cid%%&context=%%cxt%%',
+                                                                'qs'    => 'reset=1&action=renew&id=%%id%%&cid=%%cid%%&context=%%cxt%%'.$extraParams,
                                                                 'title' => ts('Renew Membership')
                                                                 ),
                                 CRM_Core_Action::FOLLOWUP => array(
                                                                    'name'  => ts('Renew-Credit Card'),
                                                                    'url'   => 'civicrm/contact/view/membership',
-                                                                   'qs'    => 'action=renew&reset=1&cid=%%cid%%&id=%%id%%&context=%%cxt%%&mode=live',
+                                                                   'qs'    => 'action=renew&reset=1&cid=%%cid%%&id=%%id%%&context=%%cxt%%&mode=live'.$extraParams,
                                                                    'title' => ts('Renew Membership Using Credit Card')
                                                                    ),
                                 );
@@ -333,17 +341,29 @@ class CRM_Member_Selector_Search extends CRM_Core_Selector_Base implements CRM_C
 
              // the columns we are interested in
              foreach (self::$_properties as $property) {             
-                 $row[$property] = $result->$property;
+                 if ( property_exists( $result, $property ) ) {
+                     $row[$property] = $result->$property;
+                 }
              }
              
-             if ( $row['member_is_test'] ) {
+             if ( CRM_Utils_Array::value('member_is_test', $row) ) {
                  $row['membership_type'] = $row['membership_type'] . " (test)";
              }
 
              $row['checkbox'] = CRM_Core_Form::CB_PREFIX . $result->membership_id;
             
              if ( ! isset( $result->owner_membership_id ) ) {
-                 $row['action']   = CRM_Core_Action::formLink( self::links( 'all', $this->_isPaymentProcessor, $this->_accessContribution ), $mask,
+                 // unset renew and followup link for deceased membership
+                 $currentMask = $mask;
+                 if ( $result->membership_status == 'Deceased' ) {
+                     $currentMask = $currentMask & ~CRM_Core_Action::RENEW & ~CRM_Core_Action::FOLLOWUP;
+                 }
+                 $row['action']   = CRM_Core_Action::formLink( self::links( 'all', 
+                                                                            $this->_isPaymentProcessor, 
+                                                                            $this->_accessContribution, 
+                                                                            $this->_key,
+                                                                            $this->_context ), 
+                                                               $currentMask,
                                                                array( 'id'  => $result->membership_id,
                                                                       'cid' => $result->contact_id,
                                                                       'cxt' => $this->_context ) );
@@ -358,7 +378,7 @@ class CRM_Member_Selector_Search extends CRM_Core_Selector_Base implements CRM_C
              require_once( 'CRM/Contact/BAO/Contact/Utils.php' );
              $row['contact_type' ] = 
                  CRM_Contact_BAO_Contact_Utils::getImage( $result->contact_sub_type ? 
-                                                          $result->contact_sub_type : $result->contact_type );
+                                                          $result->contact_sub_type : $result->contact_type ,false,$result->contact_id);
              
              $rows[] = $row;
          }

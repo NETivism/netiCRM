@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -29,6 +29,8 @@
 {capture assign=infoMessage}<strong>{ts}Profile Preview{/ts}</strong>{/capture}
 {/if}
 {include file="CRM/common/info.tpl"}
+<div class="crm-form-block">
+
 {if ! empty( $fields )}
 {if $viewOnly }
 {* wrap in crm-container div so crm styles are used *}
@@ -50,7 +52,7 @@
            {/if}
         {/if}   
        {if $mode ne 8}
-            <fieldset><legend>{$field.groupTitle}</legend>
+            <h3>{$field.groupTitle}</h3>
        {/if}
         {assign var=fieldset  value=`$field.groupTitle`}
         {assign var=groupHelpPost  value=`$field.groupHelpPost`}
@@ -86,7 +88,7 @@
           {/foreach}
         </table>
 	{if $field.html_type eq 'Radio' and $form.formName eq 'Preview'}
-            &nbsp;&nbsp;(&nbsp;<a href="#" title="unselect" onclick="unselectRadio('{$n}', '{$form.formName}'); return false;">{ts}unselect{/ts}</a>&nbsp;)
+           <span class="crm-clear-link">(<a href="#" title="unselect" onclick="unselectRadio('{$n}', '{$form.formName}'); return false;">{ts}clear{/ts}</a>)</span>
 	{/if}
         {/strip}
         </td>
@@ -94,21 +96,25 @@
 	{else}
         <tr><td class="label">{$form.$n.label}</td>
 	<td>
-        {if $n|substr:0:3 eq 'im-'}
-           {assign var="provider" value=$n|cat:"-provider_id"}
-           {$form.$provider.html}&nbsp;
-        {elseif $n eq 'group' && $form.group || ( $n eq 'tag' && $form.tag )}
+        {if $n eq 'group' && $form.group || ( $n eq 'tag' && $form.tag )}
            {include file="CRM/Contact/Form/Edit/TagsAndGroups.tpl" type=$n}
         {elseif $n eq 'email_greeting' or  $n eq 'postal_greeting' or $n eq 'addressee'}
                {include file="CRM/Profile/Form/GreetingType.tpl"}  
         {elseif ( $field.data_type eq 'Date' AND $element.skip_calendar NEQ true ) or
-                ( $n eq 'birth_date' ) or ( $n eq 'deceased_date' ) } 
+                ( $n eq 'birth_date' ) or ( $n eq 'deceased_date' ) or ( $field.name eq 'activity_date_time' )  } 
                {include file="CRM/common/jcalendar.tpl" elementName=$form.$n.name}
         {else}
+            {if $n|substr:0:4 eq 'url-'}
+                 {assign var="websiteType" value=$n|cat:"-website_type_id"}
+                 {$form.$websiteType.html}&nbsp;
+            {elseif $n|substr:0:3 eq 'im-'}
+               {assign var="provider" value=$n|cat:"-provider_id"}
+               {$form.$provider.html}&nbsp;
+            {/if}
             {$form.$n.html}
             {if $field.is_view eq 0}
                {if ( $field.html_type eq 'Radio' or  $n eq 'gender') and $form.formName eq 'Preview'}
-                       &nbsp;&nbsp;(&nbsp;<a href="#" title="unselect" onclick="unselectRadio('{$n}', '{$form.formName}'); return false;">{ts}unselect{/ts}</a>&nbsp;)
+                       <span class="crm-clear-link">(<a href="#" title="unselect" onclick="unselectRadio('{$n}', '{$form.formName}'); return false;">{ts}clear{/ts}</a>)</span>
                {elseif $field.html_type eq 'Autocomplete-Select'}
                        {include file="CRM/Custom/Form/AutoComplete.tpl" element_name = $n }
                 {/if}
@@ -125,7 +131,7 @@
     {if $addCAPTCHA }
         {include file='CRM/common/ReCAPTCHA.tpl'}
     {/if}   
-    </table></fieldset>
+    </table>
     {if $field.groupHelpPost}
     <div class="messages help">{$field.groupHelpPost}</div>
     {/if}
@@ -138,7 +144,7 @@
 {/if} {* fields array is not empty *}
 
 
-<div class=" horizontal-center "> 
-	{$form.buttons.html}
+<div class="crm-submit-buttons"> 
+	{include file="CRM/common/formButtons.tpl"}
 </div>
-
+</div>

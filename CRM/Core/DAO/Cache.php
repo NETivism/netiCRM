@@ -1,7 +1,7 @@
 <?php
 /*
 +--------------------------------------------------------------------+
-| CiviCRM version 3.1                                                |
+| CiviCRM version 3.3                                                |
 +--------------------------------------------------------------------+
 | Copyright CiviCRM LLC (c) 2004-2010                                |
 +--------------------------------------------------------------------+
@@ -173,8 +173,8 @@ class CRM_Core_DAO_Cache extends CRM_Core_DAO
                     'name' => 'path',
                     'type' => CRM_Utils_Type::T_STRING,
                     'title' => ts('Path') ,
-                    'maxlength' => 64,
-                    'size' => CRM_Utils_Type::BIG,
+                    'maxlength' => 255,
+                    'size' => CRM_Utils_Type::HUGE,
                 ) ,
                 'data' => array(
                     'name' => 'data',

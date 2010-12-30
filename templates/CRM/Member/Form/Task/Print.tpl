@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -26,7 +26,7 @@
 <p>
 {if $rows } 
 <div class="form-item">
-     <span class="element-right">{$form.buttons.html}</span>
+     <span class="element-right">{include file="CRM/common/formButtons.tpl"}</span>
 </div>
 <div class="spacer"></div>
 <br />
@@ -42,29 +42,25 @@
     <th>{ts}Status{/ts}</th>
   </tr>
 {foreach from=$rows item=row}
-    <tr class="{cycle values="odd-row,even-row"}">
-        <td>{$row.sort_name}</td>
-	<td>{$row.membership_type_id}</td>
-        <td>{$row.join_date|truncate:10:''|crmDate}</td>
-        <td>{$row.membership_start_date|truncate:10:''|crmDate}</td>
-        <td>{$row.membership_end_date|truncate:10:''|crmDate}</td>
-        <td>{$row.membership_source}</td>
-        <td>{$row.status_id}</td>
+    <tr class="{cycle values="odd-row,even-row"} crm-membership">
+        <td class="crm-membership-sort_name">{$row.sort_name}</td>
+        <td class="crm-membership-type crm-membership-type_{$row.membership_type_id}">{$row.membership_type_id}</td>
+        <td class="crm-membership-join_date">{$row.join_date|truncate:10:''|crmDate}</td>
+        <td class="crm-membership-start_date">{$row.membership_start_date|truncate:10:''|crmDate}</td>
+        <td class="crm-membership-membership_end_date">{$row.membership_end_date|truncate:10:''|crmDate}</td>
+        <td class="crm-membership-source">{$row.membership_source}</td>
+        <td class="crm-membership-status crm-membership-status_{$row.status_id}">{$row.status_id}</td>
     </tr>
 {/foreach}
 </table>
 
 <div class="form-item">
-     <span class="element-right">{$form.buttons.html}</span>
+     <span class="element-right">{include file="CRM/common/formButtons.tpl"}</span>
 </div>
 
 {else}
    <div class="messages status">
-    <dl>
-    <dt><img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}"></dt>
-    <dd>
+    <img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}">
         {ts}There are no records selected for Print.{/ts}
-    </dd>
-    </dl>
    </div>
 {/if}

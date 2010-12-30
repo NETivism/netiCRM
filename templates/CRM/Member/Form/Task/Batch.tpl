@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -23,12 +23,13 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
-<div class="batch-update form-item">
-<fieldset>
+<div class="crm-block crm-form-block crm-member-task-batch-form-block">
 <div id="help">
     {ts}Update field values for each member as needed. Click <strong>Update Memberships</strong> below to save all your changes. To set a field to the same value for ALL rows, enter that value for the first member and then click the <strong>Copy icon</strong> (next to the column title).{/ts}
 </div>
-    <legend>{$profileTitle}</legend>
+         <div class="crm-submit-buttons">
+            {if $fields}{$form._qf_Batch_refresh.html}{/if} &nbsp;{include file="CRM/common/formButtons.tpl" location="top"}
+         </div>
          <table>
 	  <thead class="sticky">
             <tr class="columnheader">
@@ -65,10 +66,9 @@
             {/foreach}
            </tr>
          </table>
-        <dl>
-            <dt></dt><dd>{if $fields}{$form._qf_Batch_refresh.html}{/if} &nbsp; {$form.buttons.html}</dd>
-        </dl>
-</fieldset>
+         <div class="crm-submit-buttons">
+            {if $fields}{$form._qf_Batch_refresh.html}{/if} &nbsp;{include file="CRM/common/formButtons.tpl" location="bottom"}
+         </div>
 </div>
 
 {*include batch copy js js file*}

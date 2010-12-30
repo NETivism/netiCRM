@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -69,7 +69,7 @@ class CRM_Utils_REST
      * @access public
      */
     public function ping($var = NULL) {
-        $session =& CRM_Core_Session::singleton();
+        $session = CRM_Core_Session::singleton();
         $key = $session->get('key');
         //$session->set( 'key', $var );
         return self::simple( array( 'message' => "PONG: $key" ) );
@@ -95,24 +95,24 @@ class CRM_Utils_REST
             return self::error( 'Could not authenticate user, invalid name or password.' );
         }
 	
-        $session =& CRM_Core_Session::singleton();
-	$api_key = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $result[0], 'api_key');
-	
-	if ( empty($api_key) ) {
-	    // These two lines can be used to set the initial value of the key.  A better means is needed.
-	    //CRM_Core_DAO::setFieldValue('CRM_Contact_DAO_Contact', $result[0], 'api_key', sha1($result[2]) );
-	    //$api_key = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $result[0], 'api_key');
-	    return self::error("This user does not have a valid API key in the database, and therefore cannot authenticate through this interface");
-	}
-	
-	// Test to see if I can pull the data I need, since I know I have a good value.
-	$user =& CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $api_key, 'id', $api_key);
-	
+        $session = CRM_Core_Session::singleton();
+        $api_key = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $result[0], 'api_key');
+
+        if ( empty($api_key) ) {
+            // These two lines can be used to set the initial value of the key.  A better means is needed.
+            //CRM_Core_DAO::setFieldValue('CRM_Contact_DAO_Contact', $result[0], 'api_key', sha1($result[2]) );
+            //$api_key = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $result[0], 'api_key');
+            return self::error("This user does not have a valid API key in the database, and therefore cannot authenticate through this interface");
+        }
+
+        // Test to see if I can pull the data I need, since I know I have a good value.
+        $user =& CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $api_key, 'id', $api_key);
+
         $session->set('api_key', $api_key);
-	$session->set('key', $result[2]);
+        $session->set('key', $result[2]);
         $session->set('rest_time', time());
-	$session->set('PHPSESSID', session_id() );
-        
+        $session->set('PHPSESSID', session_id() );
+
         return self::simple( array( 'api_key' => $api_key, 'PHPSESSID' => session_id(), 'key' => sha1($result[2]) ) );
     }
     
@@ -153,9 +153,10 @@ class CRM_Utils_REST
             $result = self::error( 'Could not interpret return values from function.' );
         }
 
-        if ( CRM_Utils_Array::value( 'json', $_GET ) ) {
+        if ( CRM_Utils_Array::value( 'json', $_REQUEST ) ) {
             header( 'Content-Type: text/javascript' );
-            return json_encode(array_merge($result));
+            $json = json_encode(array_merge($result));
+            return str_replace (",{","\n,{",$json);
         }
         
         $xml = "<?xml version=\"1.0\"?>
@@ -178,7 +179,7 @@ class CRM_Utils_REST
     function handle( $config ) {
         
         // Get the function name being called from the q parameter in the query string
-        $q = CRM_Utils_array::value( 'q', $_GET );
+        $q = CRM_Utils_array::value( 'q', $_REQUEST );
         $args = explode( '/', $q );
         // If the function isn't in the civicrm namespace, reject the request.
         if ( $args[0] != 'civicrm' ) {
@@ -203,8 +204,8 @@ class CRM_Utils_REST
 
         $store = null;
         if ( $args[1] == 'login' ) {
-            $name = CRM_Utils_Request::retrieve( 'name', 'String', $store, false, 'GET' );
-            $pass = CRM_Utils_Request::retrieve( 'pass', 'String', $store, false, 'GET' );
+            $name = CRM_Utils_Request::retrieve( 'name', 'String', $store, false, null, 'REQUEST' );
+            $pass = CRM_Utils_Request::retrieve( 'pass', 'String', $store, false, null, 'REQUEST' );
             if ( empty( $name ) ||
                  empty( $pass ) ) {
                 return self::error( 'Invalid name / password.' );
@@ -227,7 +228,7 @@ class CRM_Utils_REST
         // Check for valid session.  Session ID's only appear here if you have
         // run the rest_api login function.  That might be a problem for the 
         // AJAX methods.  
-        $session =& CRM_Core_Session::singleton();
+        $session = CRM_Core_Session::singleton();
         if ($session->get('PHPSESSID') ) {
             $valid_user = true;
         }
@@ -237,7 +238,7 @@ class CRM_Utils_REST
         // secret key.
         if ( !$valid_user ) {
             require_once 'CRM/Core/DAO.php';
-            $api_key = CRM_Utils_Request::retrieve( 'api_key', 'String', $store, false, 'GET' );
+            $api_key = CRM_Utils_Request::retrieve( 'api_key', 'String', $store, false, null, 'REQUEST' );
             $valid_user = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $api_key, 'id', 'api_key');
         }
 	
@@ -251,14 +252,49 @@ class CRM_Utils_REST
 
     function process( &$args, $restInterface = true ) {
         $params =& self::buildParamList( );
-	
-        $fnGroup = ucfirst($args[1]);
-        if ( strpos( $fnGroup, '_' ) ) {
-            $fnGroup    = explode( '_', $fnGroup );
-            $fnGroup[1] = ucfirst( $fnGroup[1] );
-            $fnGroup    = implode( '', $fnGroup );
+        $params['check_permissions'] = true;
+        $fnName = $apiFile = null;
+
+        require_once 'CRM/Utils/String.php';
+        // clean up all function / class names. they should be alphanumeric and _ only
+        for ( $i = 1 ; $i <= 3; $i++ ) {
+            if ( ! empty( $args[$i] ) ) {
+                $args[$i] = CRM_Utils_String::munge( $args[$i] );
+            }
         }
-        $apiFile = "api/v2/{$fnGroup}.php";
+        
+        // incase of ajax functions className is passed in url
+        if ( isset( $params['className'] ) ) {
+            $params['className'] = CRM_Utils_String::munge( $params['className'] );
+
+            // functions that are defined only in AJAX.php can be called via
+            // rest interface
+            $class = explode( '_', $params['className'] );
+            if ( $class[ 0 ] != 'CRM' ||
+                 count($class) < 4    ||
+                 $class[ count($class) - 1 ] != 'AJAX' ) {
+                return self::error( 'Unknown function invocation.' );
+            } 
+
+            $params['fnName'] = CRM_Utils_String::munge( $params['fnName'] );
+
+            // evaluate and call the AJAX function
+	        require_once( str_replace('_', DIRECTORY_SEPARATOR, $params['className'] ) . ".php");
+            if ( ! method_exists( $params['className'], $params['fnName'] ) ) {
+                return self::error( 'Unknown function invocation.' );
+            }
+
+            return call_user_func( array( $params['className'], $params['fnName'] ), $params );
+	    } else {
+            $fnGroup = ucfirst($args[1]);
+            if ( strpos( $fnGroup, '_' ) ) {
+                $fnGroup    = explode( '_', $fnGroup );
+                $fnGroup[1] = ucfirst( $fnGroup[1] );
+                $fnGroup    = implode( '', $fnGroup );
+            }
+            $apiFile = "api/v2/{$fnGroup}.php";
+        }
+
         if ( $restInterface ) {
             $apiPath = substr( $_SERVER['SCRIPT_FILENAME'] , 0 ,-15 );
             // check to ensure file exists, else die
@@ -268,7 +304,7 @@ class CRM_Utils_REST
         } else {
             $apiPath = null;
         }
-        
+
         require_once $apiPath . $apiFile;
         $fnName = "civicrm_{$args[1]}_{$args[2]}";
         if ( ! function_exists( $fnName ) ) {
@@ -293,14 +329,14 @@ class CRM_Utils_REST
                            'json' => 1,
                            'return' => 1,
                            'key' => 1 );
-        foreach ( $_GET as $n => $v ) {
+        foreach ( $_REQUEST as $n => $v ) {
             if ( ! array_key_exists( $n, $skipVars ) ) {
                 $params[$n] = $v;
             }
-
         }
-        if (array_key_exists('return',$_GET)) {
-            foreach ( $_GET['return'] as $key => $v) 
+
+        if (array_key_exists('return',$_REQUEST)) {
+            foreach ( $_REQUEST['return'] as $key => $v) 
                 $params['return.'.$key]=1;
         }
         return $params;
@@ -320,7 +356,8 @@ class CRM_Utils_REST
 
         $config = CRM_Core_Config::singleton( );
         echo self::output( $config, $error );
-        exit( );
+
+        CRM_Utils_System::civiExit( );
     }
 
     static function ajax( ) {
@@ -329,10 +366,13 @@ class CRM_Utils_REST
 
         $q = CRM_Utils_Array::value( 'fnName', $_REQUEST );
         $args = explode( '/', $q );
-
+        
+        // get the class name, since all ajax functions pass className
+        $className = CRM_Utils_Array::value( 'className', $_REQUEST );
+        
         // If the function isn't in the civicrm namespace, reject the request.
-        if ( $args[0] != 'civicrm' &&
-             count( $args ) != 3 ) {
+        if ( ( $args[0] != 'civicrm' &&
+             count( $args ) != 3 ) && !$className ) {
             return self::error( 'Unknown function invocation.' );
         }
 
@@ -340,7 +380,8 @@ class CRM_Utils_REST
 
         $config = CRM_Core_Config::singleton( );
         echo self::output( $config, $result );
-        exit( );
+
+        CRM_Utils_System::civiExit( );
     }
 
 }

@@ -1,7 +1,7 @@
 <?php
 /*
 +--------------------------------------------------------------------+
-| CiviCRM version 3.1                                                |
+| CiviCRM version 3.3                                                |
 +--------------------------------------------------------------------+
 | Copyright CiviCRM LLC (c) 2004-2010                                |
 +--------------------------------------------------------------------+
@@ -79,7 +79,7 @@ class CRM_Core_DAO_Tag extends CRM_Core_DAO
      * @var boolean
      * @static
      */
-    static $_log = false;
+    static $_log = true;
     /**
      * Tag ID
      *
@@ -110,6 +110,21 @@ class CRM_Core_DAO_Tag extends CRM_Core_DAO
      * @var boolean
      */
     public $is_selectable;
+    /**
+     *
+     * @var boolean
+     */
+    public $is_reserved;
+    /**
+     *
+     * @var boolean
+     */
+    public $is_tagset;
+    /**
+     *
+     * @var string
+     */
+    public $used_for;
     /**
      * class constructor
      *
@@ -174,6 +189,22 @@ class CRM_Core_DAO_Tag extends CRM_Core_DAO
                     'name' => 'is_selectable',
                     'type' => CRM_Utils_Type::T_BOOLEAN,
                     'default' => '',
+                ) ,
+                'is_reserved' => array(
+                    'name' => 'is_reserved',
+                    'type' => CRM_Utils_Type::T_BOOLEAN,
+                ) ,
+                'is_tagset' => array(
+                    'name' => 'is_tagset',
+                    'type' => CRM_Utils_Type::T_BOOLEAN,
+                ) ,
+                'used_for' => array(
+                    'name' => 'used_for',
+                    'type' => CRM_Utils_Type::T_STRING,
+                    'title' => ts('Used For') ,
+                    'maxlength' => 64,
+                    'size' => CRM_Utils_Type::BIG,
+                    'default' => 'UL',
                 ) ,
             );
         }

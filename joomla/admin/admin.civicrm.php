@@ -1,7 +1,7 @@
 <?php
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | This file is a part of CiviCRM.                                    |
  |                                                                    |
@@ -45,7 +45,7 @@ require_once 'CRM/Core/Invoke.php';
 civicrm_invoke( );
 
 function civicrm_init( ) {
-    $config =& CRM_Core_Config::singleton();
+    $config = CRM_Core_Config::singleton();
 }
 
 function plugin_init( ) {
@@ -69,12 +69,12 @@ function civicrm_invoke( ) {
 
     if ( isset( $_GET['task'] ) ) { 
         $args = explode( '/', trim( $_GET['task'] ) );
-        CRM_Core_Invoke::invoke( $args );
     } else {
         $_GET['task'] = 'civicrm/dashboard';
         $_GET['reset'] = 1;
-        $args = array( 'civicrm', 'dashboard' ); CRM_Core_Invoke::invoke( $args );
+        $args = array( 'civicrm', 'dashboard' );
     }
+    CRM_Core_Invoke::invoke( $args );
 }
 
 

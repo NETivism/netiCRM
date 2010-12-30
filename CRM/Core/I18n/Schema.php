@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -47,7 +47,7 @@ class CRM_Core_I18n_Schema
      */
     static function dropAllViews()
     {
-        $domain =& new CRM_Core_DAO_Domain();
+        $domain = new CRM_Core_DAO_Domain();
         $domain->find(true);
         if (!$domain->locales) return;
 
@@ -70,13 +70,13 @@ class CRM_Core_I18n_Schema
      */
     function makeMultilingual($locale)
     {
-        $domain =& new CRM_Core_DAO_Domain();
+        $domain = new CRM_Core_DAO_Domain();
         $domain->find(true);
 
         // break early if the db is already multi-lang
         if ($domain->locales) return;
 
-        $dao =& new CRM_Core_DAO();
+        $dao = new CRM_Core_DAO();
 
         // build the column-adding SQL queries
         $columns =& CRM_Core_I18n_SchemaStructure::columns();
@@ -174,6 +174,10 @@ class CRM_Core_I18n_Schema
         // update civicrm_domain.locales
         $domain->locales = 'NULL';
         $domain->save();
+        
+        //CRM-6963 -fair assumption. 
+        global $dbLocale;
+        $dbLocale = '';
     }
 
     /**
@@ -187,14 +191,14 @@ class CRM_Core_I18n_Schema
     function addLocale($locale, $source)
     {
         // get the current supported locales 
-        $domain =& new CRM_Core_DAO_Domain();
+        $domain = new CRM_Core_DAO_Domain();
         $domain->find(true);
         $locales = explode(CRM_Core_DAO::VALUE_SEPARATOR, $domain->locales);
 
         // break early if the locale is already supported
         if (in_array($locale, $locales)) return;
 
-        $dao =& new CRM_Core_DAO();
+        $dao = new CRM_Core_DAO();
 
         // build the required SQL queries
         $columns =& CRM_Core_I18n_SchemaStructure::columns();
@@ -428,7 +432,7 @@ class CRM_Core_I18n_Schema
             }
 
             if ($table == 'civicrm_contact') {
-                $trigger = array_merge($trigger, $namesTrigger);
+                $trigger = array_merge($trigger, $namesTrigger, $individualNamesTrigger);
             }
             $trigger[] = 'END';
 

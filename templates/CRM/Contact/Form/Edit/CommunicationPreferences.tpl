@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -26,11 +26,12 @@
 {* This file provides the plugin for the communication preferences in all the three types of contact *}
 {* @var $form Contains the array for the form elements and other form associated information assigned to the template by the controller *}
 
-<h3 class="head"> 
-    <span class="ui-icon ui-icon-triangle-1-e"></span><a href="#">{$title}</a>
-</h3>
-<div id="commPrefs" class="ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom">
-    <fieldset>
+<div class="crm-accordion-wrapper crm-commPrefs-accordion crm-accordion-closed">
+ <div class="crm-accordion-header">
+  <div class="icon crm-accordion-pointer"></div> 
+	{$title} 
+  </div><!-- /.crm-accordion-header -->
+<div id="commPrefs" class="crm-accordion-body">
     <table class="form-layout-compressed" >
         <tr>
             {if $form.email_greeting_id}
@@ -43,7 +44,7 @@
                 <td>{$form.addressee_id.label}</td>
             {/if}
 	    {if $form.email_greeting_id OR $form.postal_greeting_id OR $form.addressee_id}
-                <td>&nbsp;&nbsp;{help id="id-greeting"}</td>
+                <td>&nbsp;&nbsp;{help id="id-greeting" file="CRM/Contact/Form/Contact.hlp"}</td>
 	    {/if}
         </tr>
         <tr>
@@ -97,23 +98,29 @@
         <tr>
             {foreach key=key item=item from=$commPreference}
                 <td>
-                    <br /><span class="label"{$form.$key.label}</span> {help id="id-$key"}
+                    <br /><span class="label">{$form.$key.label}</span> {help id="id-$key" file="CRM/Contact/Form/Contact.hlp"}
                     {foreach key=k item=i from=$item}
                      <br />{$form.$key.$k.html}
                     {/foreach}
                 </td>
             {/foreach}
+                 <td>
+                     <br /><span class="label">{$form.preferred_language.label}</span>
+                     <br />{$form.preferred_language.html}
+                </td>
         </tr>
         <tr>
-            <td>{$form.is_opt_out.html} {$form.is_opt_out.label} {help id="id-optOut"}</td>
+            <td>{$form.is_opt_out.html} {$form.is_opt_out.label} {help id="id-optOut" file="CRM/Contact/Form/Contact.hlp"}</td>
             <td>{$form.preferred_mail_format.label} &nbsp;
-                {$form.preferred_mail_format.html} {help id="id-emailFormat"}
+                {$form.preferred_mail_format.html} {help id="id-emailFormat" file="CRM/Contact/Form/Contact.hlp"}
             </td>
 
         </tr>
     </table>
-    </fieldset>
-</div>
+ </div><!-- /.crm-accordion-body -->
+</div><!-- /.crm-accordion-wrapper -->
+
+
 {literal}
 <script type="text/javascript">
 cj( function( ) {

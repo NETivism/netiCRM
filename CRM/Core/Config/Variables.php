@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -197,12 +197,6 @@ class CRM_Core_Config_Variables extends CRM_Core_Config_Defaults
      * Format for monetary amounts
      * @var string
      */
-    public $lcMonetary = 'en_US';
-
-    /**
-     * Format for monetary amounts
-     * @var string
-     */
     public $currencySymbols = '';
     
     /**
@@ -262,7 +256,14 @@ class CRM_Core_Config_Variables extends CRM_Core_Config_Defaults
      */
     public $maxImportFileSize = 1048576;
     public $maxAttachments    = 3;
-    public $civiHRD           = 0;
+    public $maxFileSize       = 2;
+
+    /**
+     * The custom locale strings. Note that these locale strings are stored
+     * in a separate column in civicrm_domain
+     * @var array
+     */
+    public $localeCustomStrings = null;
 
     /**
      * Map Provider 
@@ -292,6 +293,17 @@ class CRM_Core_Config_Variables extends CRM_Core_Config_Defaults
      */
     public $mapGeoCoding = 1;
     
+    /**
+     * Whether deleted contacts should be moved to trash instead
+     * @var boolean
+     */
+    public $contactUndelete = true;
+
+    /**
+     * Whether database-level logging should be performed
+     * @var boolean
+     */
+    public $logging = false;
 
     /**
      * Whether CiviCRM should check for newer versions
@@ -521,31 +533,6 @@ class CRM_Core_Config_Variables extends CRM_Core_Config_Defaults
         return $cachedProvinceLimit;
     }
 
-    /**
-     * Provide cached default monetary decimal point and monetary thousand separator.
-     *
-     * @param
-     * @return string
-     */
-    public function defaultMonetaryPointSeparator( $lcMonetary ) 
-    {
-        static $cachedDecPoint = null;
-
-        if (is_null($cachedDecPoint)) {
-            // first set the defaults, then alter them if the system supports locales and localeconv() returned something sane, CRM-5554
-            $cachedDecPoint = array('decimal_point' => '.', 'thousands_sep' => ',');
-            if ($this->defaultCurrency and setlocale(LC_MONETARY, $lcMonetary . '.utf8', $lcMonetary, 'en_US.utf8', 'en_US', 'C')) {
-                $localeInfo = localeconv();
-                if (CRM_Utils_Array::value('mon_decimal_point', $localeInfo) and CRM_Utils_Array::value('mon_thousands_sep', $localeInfo)) {
-                    $cachedDecPoint['decimal_point'] = $this->monetaryDecimalPoint      = CRM_Utils_Array::value('mon_decimal_point', $localeInfo);
-                    $cachedDecPoint['thousands_sep'] = $this->monetaryThousandSeparator = CRM_Utils_Array::value('mon_thousands_sep', $localeInfo);
-                }
-            }
-        }
-
-        return $cachedDecPoint;
-    }
-    
 } // end CRM_Core_Config
 
 

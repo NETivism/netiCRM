@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -51,7 +51,7 @@ class CRM_Contact_Form_Search_Simple extends CRM_Core_Form {
     }
 
     public function buildQuickForm( ) { 
-        $config   =& CRM_Core_Config::singleton( );
+        $config   = CRM_Core_Config::singleton( );
         
         $this->add('select',
                    'country_id',
@@ -89,7 +89,7 @@ class CRM_Contact_Form_Search_Simple extends CRM_Core_Form {
     public function postProcess( ) {
         $this->_params = $this->controller->exportValues( $this->_name );
         CRM_Core_Error::debug( $this->_params );
-        exit( );
+        CRM_Utils_System::civiExit( );
     }
 }
 

@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -23,6 +23,10 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
+
+{if $action eq 1 or $action eq 2 or $action eq 8}
+   {include file="CRM/Admin/Form/Options.tpl"}
+{else}	
 
 <div id="help">
   {if $gName eq "gender"}
@@ -61,11 +65,13 @@
   {/if}
 </div>
 
-{if $action eq 1 or $action eq 2 or $action eq 8}
-   {include file="CRM/Admin/Form/Options.tpl"}
-{/if}	
-
+<div class="crm-content-block crm-block">
 {if $rows}
+{if $action ne 1 and $action ne 2}
+    <div class="action-link">
+        <a href="{crmURL q="group="|cat:$gName|cat:"&action=add&reset=1"}" id="new"|cat:$GName class="button"><span><div class="icon add-icon"></div>{ts 1=$GName}Add %1{/ts}</span></a>
+    </div>
+{/if}
 <div id={$gName}>
         {strip}
 	{* handle enable/disable actions*} 
@@ -84,6 +90,11 @@
                     {ts}Label{/ts}
                 {/if}
             </th>
+	    {if $gName eq "case_status"}
+	    	<th>
+		    {ts}Status Class{/ts}
+		</th>	    
+            {/if}
             <th>
                 {if $gName eq "redaction_rule"}
                     {ts}Replacement{/ts}
@@ -98,26 +109,31 @@
 	        {if $showIsDefault}<th>{ts}Default{/ts}</th>{/if}
             <th>{ts}Reserved{/ts}</th>
             <th>{ts}Enabled?{/ts}</th>
+            <th class="hiddenElement"></th>
             <th></th>
             </tr>
             </thead>
             <tbody>
         {foreach from=$rows item=row}
-        <tr id="row_{$row.id}" class="{if NOT $row.is_active} disabled{/if}">
+        <tr id="row_{$row.id}" class="crm-admin-options crm-admin-options_{$row.id} {cycle values="odd-row,even-row"}{if NOT $row.is_active} disabled{/if}">
             {if $showComponent}
-                <td>{$row.component_name}</td>
+                <td class="crm-admin-options-component_name">{$row.component_name}</td>
             {/if}
-	        <td>{$row.label}</td>	
-	        <td>{$row.value}</td>
+	        <td class="crm-admin-options-label">{$row.label}</td>
+	    {if $gName eq "case_status"}				
+		<td class="crm-admin-options-grouping">{$row.grouping}</td>
+            {/if}	
+	        <td class="crm-admin-options-value">{$row.value}</td>
 		{if $showCounted}
-		<td class="yes-no">{if $row.filter eq 1}<img src="{$config->resourceBase}/i/check.gif" alt="{ts}Counted{/ts}" />{/if}</td>
+		<td class="yes-no crm-admin-options-filter">{if $row.filter eq 1}<img src="{$config->resourceBase}/i/check.gif" alt="{ts}Counted{/ts}" />{/if}</td>
 		{/if}
-            {if $showVisibility}<td>{$row.visibility_label}</td>{/if}
-	        <td>{$row.description}</td>	
-	        <td class="nowrap">{$row.order}</td>
-            {if $showIsDefault}<td align="center">{if $row.is_default eq 1}<img src="{$config->resourceBase}/i/check.gif" alt="{ts}Default{/ts}" />{/if}&nbsp;</td>{/if}
-	        <td>{if $row.is_reserved eq 1} {ts}Yes{/ts} {else} {ts}No{/ts} {/if}</td>
-	        <td id="row_{$row.id}_status">{if $row.is_active eq 1} {ts}Yes{/ts} {else} {ts}No{/ts} {/if}</td>
+            {if $showVisibility}<td class="crm-admin-visibility_label">{$row.visibility_label}</td>{/if}
+	        <td class="crm-admin-options-description">{$row.description}</td>	
+	        <td class="nowrap crm-admin-options-order">{$row.order}</td>
+            {if $showIsDefault}
+	    	<td class="crm-admin-options-is_default" align="center">{if $row.is_default eq 1}<img src="{$config->resourceBase}/i/check.gif" alt="{ts}Default{/ts}" />{/if}&nbsp;</td>{/if}
+	        <td class="crm-admin-options-is_reserved">{if $row.is_reserved eq 1} {ts}Yes{/ts} {else} {ts}No{/ts} {/if}</td>
+	        <td class="crm-admin-options-is_active" id="row_{$row.id}_status">{if $row.is_active eq 1} {ts}Yes{/ts} {else} {ts}No{/ts} {/if}</td>
 	        <td>{$row.action|replace:'xx':$row.id}</td>
 	        <td class="order hiddenElement">{$row.weight}</td>
         </tr>
@@ -128,16 +144,16 @@
 
         {if $action ne 1 and $action ne 2}
             <div class="action-link">
-                <a href="{crmURL q="group="|cat:$gName|cat:"&action=add&reset=1"}" id="new"|cat:$GName class="button"><span>&raquo; {ts 1=$GName}New %1{/ts}</span></a>
+                <a href="{crmURL q="group="|cat:$gName|cat:"&action=add&reset=1"}" id="new"|cat:$GName class="button"><span><div class="icon add-icon"></div>{ts 1=$GName}Add %1{/ts}</span></a>
             </div>
         {/if}
 </div>
 {else}
     <div class="messages status">
-    <dl>
-        <dt><img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}"/></dt>
+         <div class="icon inform-icon"></div>
         {capture assign=crmURL}{crmURL  q="group="|cat:$gName|cat:"&action=add&reset=1"}{/capture}
-        <dd>{ts 1=$crmURL}There are no option values entered. You can <a href='%1'>add one</a>.{/ts}</dd>
-        </dl>
+        {ts 1=$crmURL}There are no option values entered. You can <a href='%1'>add one</a>.{/ts}
     </div>    
+{/if}
+</div>
 {/if}

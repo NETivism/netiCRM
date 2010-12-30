@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -39,8 +39,24 @@
 	{/if}
     </tr>
 {/if}
+ 
 <tr id="Email_Block_{$blockId}">
-    <td>{$form.email.$blockId.email.html|crmReplace:class:twenty}&nbsp;{$form.email.$blockId.location_type_id.html}</td>
+    <td style="width: 50%;">{$form.email.$blockId.email.html|crmReplace:class:twenty}&nbsp;{$form.email.$blockId.location_type_id.html}
+    <div class="clear"></div>
+{if $className eq 'CRM_Contact_Form_Contact'}
+<div class="crm-accordion-wrapper crm-accordion-email-signature crm-accordion_title-accordion crm-accordion-closed">
+ <div class="crm-accordion-header">
+  <div class="icon crm-accordion-pointer"></div> 
+{ts}Signature{/ts} 
+  </div><!-- /.crm-accordion-header -->
+  <div id="signatureBlock{$blockId}" class="crm-accordion-body">
+            {$form.email.$blockId.signature_html.label}<br />{$form.email.$blockId.signature_html.html}<br />
+            {$form.email.$blockId.signature_text.label}<br />{$form.email.$blockId.signature_text.html}
+  </div><!-- /.crm-accordion-body -->
+</div><!-- /.crm-accordion-wrapper -->
+
+{/if}
+    </td>
     <td align="center">{$form.email.$blockId.on_hold.html}</td>
     <td align="center" id="Email-Bulkmail-html">{$form.email.$blockId.is_bulkmail.html}</td>
     <td align="center" id="Email-Primary-html" {if $blockId eq 1}class="hiddenElement"{/if}>{$form.email.$blockId.is_primary.1.html}</td>

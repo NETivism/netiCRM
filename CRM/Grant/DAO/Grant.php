@@ -1,7 +1,7 @@
 <?php
 /*
 +--------------------------------------------------------------------+
-| CiviCRM version 3.1                                                |
+| CiviCRM version 3.3                                                |
 +--------------------------------------------------------------------+
 | Copyright CiviCRM LLC (c) 2004-2010                                |
 +--------------------------------------------------------------------+
@@ -79,7 +79,7 @@ class CRM_Grant_DAO_Grant extends CRM_Core_DAO
      * @var boolean
      * @static
      */
-    static $_log = false;
+    static $_log = true;
     /**
      * Unique Grant id
      *
@@ -146,6 +146,12 @@ class CRM_Grant_DAO_Grant extends CRM_Core_DAO
      * @var float
      */
     public $amount_granted;
+    /**
+     * 3 character string, value from config setting or input via user.
+     *
+     * @var string
+     */
+    public $currency;
     /**
      * Grant rationale.
      *
@@ -262,9 +268,9 @@ class CRM_Grant_DAO_Grant extends CRM_Core_DAO
                 'grant_type_id' => array(
                     'name' => 'grant_type_id',
                     'type' => CRM_Utils_Type::T_INT,
-                    'title' => ts('Grant Type') ,
+                    'title' => ts('Grant Type Id') ,
                     'required' => true,
-                    'export' => true,
+                    'export' => false,
                     'where' => 'civicrm_grant.grant_type_id',
                     'headerPattern' => '',
                     'dataPattern' => '',
@@ -295,6 +301,14 @@ class CRM_Grant_DAO_Grant extends CRM_Core_DAO
                     'dataPattern' => '/^\d+(\.\d{2})?$/',
                     'export' => true,
                 ) ,
+                'currency' => array(
+                    'name' => 'currency',
+                    'type' => CRM_Utils_Type::T_STRING,
+                    'title' => ts('Currency') ,
+                    'maxlength' => 8,
+                    'size' => CRM_Utils_Type::EIGHT,
+                    'default' => 'UL',
+                ) ,
                 'rationale' => array(
                     'name' => 'rationale',
                     'type' => CRM_Utils_Type::T_TEXT,
@@ -310,13 +324,13 @@ class CRM_Grant_DAO_Grant extends CRM_Core_DAO
                 'grant_status_id' => array(
                     'name' => 'status_id',
                     'type' => CRM_Utils_Type::T_INT,
-                    'title' => ts('Grant status') ,
+                    'title' => ts('Grant Status Id') ,
                     'required' => true,
                     'import' => true,
                     'where' => 'civicrm_grant.status_id',
                     'headerPattern' => '',
                     'dataPattern' => '',
-                    'export' => true,
+                    'export' => false,
                 ) ,
             );
         }

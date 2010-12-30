@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -24,4 +24,4 @@
  +--------------------------------------------------------------------+
 *}
 {* template for displaying date formats on the import - Upload File page *}
-<dt class="">{$form.dateFormats.label}</dt><dd>{$form.dateFormats.html}</dd>
+<td class="label">{$form.dateFormats.label}</td><td>{$form.dateFormats.html}</td>

@@ -3,7 +3,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -73,7 +73,7 @@ class CRM_Utils_Geocode_Google {
             return false;
         }
         
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
         
         // CRM-1439: Google (sometimes?) returns data in ISO-8859-1
         // hence we use oe to ensure we get utf-8
@@ -122,7 +122,7 @@ class CRM_Utils_Geocode_Google {
         $query = 'http://' . self::$_server . self::$_uri . $add . $arg;
         
         require_once 'HTTP/Request.php';
-        $request =& new HTTP_Request( $query );
+        $request = new HTTP_Request( $query );
         $request->sendRequest( );
         $string = $request->getResponseBody( );
 

@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -25,9 +25,7 @@
 *}
 {* Custom searches. Default template for NO MATCHES on submitted search request. *}
 <div class="messages status">
-    <dl>
-        <dt><img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}" /></dt>
-        <dd>
+  			<div class="icon inform-icon"></div>&nbsp;
             {if $qill}{ts}No matches found for:{/ts}
                 {include file="CRM/common/displaySearchCriteria.tpl"}
                 <br />
@@ -35,7 +33,9 @@
                 {ts}No matches found.{/ts}
                 <br />
             {/if}
-            {ts}Suggestions:{/ts}
+</div>
+<div class="crm-suggestions">
+            <h3>{ts}Suggestions:{/ts}</h3>
             <ul>
                 <li>{ts}check your spelling{/ts}</li>
                 <li>{ts}try a different spelling or use fewer letters{/ts}</li>

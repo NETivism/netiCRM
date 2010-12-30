@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -46,13 +46,13 @@ class CRM_Activity_Import_Controller extends CRM_Core_Controller
         parent::__construct( $title, $modal );
 
         require_once 'CRM/Activity/Import/StateMachine.php';
-        $this->_stateMachine =& new CRM_Activity_Import_StateMachine( $this, $action );
+        $this->_stateMachine = new CRM_Activity_Import_StateMachine( $this, $action );
         
         // create and instantiate the pages
         $this->addPages( $this->_stateMachine, $action );
 
         // add all the actions
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
         $this->addActions( $config->uploadDir, array( 'uploadFile' ) );
     }
     

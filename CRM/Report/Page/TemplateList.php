@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -64,7 +64,7 @@ LEFT  JOIN civicrm_component comp
 
         $dao  = CRM_Core_DAO::executeQuery( $sql );
         $rows = array();
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
         while ( $dao->fetch( ) ) {
             if ($dao->component_name != 'Contact' &&
                 ! in_array( "Civi{$dao->component_name}", $config->enableComponents ) ) {

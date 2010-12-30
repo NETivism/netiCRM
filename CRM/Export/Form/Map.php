@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -113,7 +113,7 @@ class CRM_Export_Form_Map extends CRM_Core_Form
      * @static
      * @access public
      */
-    static function formRule( &$fields, $values, $mappingTypeId ) 
+    static function formRule( $fields, $values, $mappingTypeId ) 
     {
         $errors  = array( );
 
@@ -132,7 +132,7 @@ class CRM_Export_Form_Map extends CRM_Core_Form
         if ( !empty($errors) ) {
             $_flag = 1;
             require_once 'CRM/Core/Page.php';
-            $assignError =& new CRM_Core_Page(); 
+            $assignError = new CRM_Core_Page(); 
             $assignError->assign('mappingDetailsError', $_flag);
             return $errors;
         } else {
@@ -151,14 +151,19 @@ class CRM_Export_Form_Map extends CRM_Core_Form
         $params = $this->controller->exportValues( $this->_name );
         
         $currentPath = CRM_Utils_System::currentPath( );
-
+        
+        $urlParams = null;
+        $qfKey = CRM_Utils_Request::retrieve( 'qfKey', 'String', $this );
+        require_once 'CRM/Utils/Rule.php';
+        if ( CRM_Utils_Rule::qfKey( $qfKey ) ) $urlParams = "&qfKey=$qfKey"; 
+        
         //get the button name
         $buttonName = $this->controller->getButtonName('done');
         $buttonName1 = $this->controller->getButtonName('next');
         if ( $buttonName == '_qf_Map_done') {
             $this->set('exportColumnCount',null);
             $this->controller->resetPage( $this->_name );
-            return CRM_Utils_System::redirect( CRM_Utils_System::url($currentPath, 'force=1') );
+            return CRM_Utils_System::redirect( CRM_Utils_System::url($currentPath, 'force=1'.$urlParams ) );
         }
 
         if ( $this->controller->exportValue( $this->_name, 'addMore' ) )  {
@@ -178,7 +183,7 @@ class CRM_Export_Form_Map extends CRM_Core_Form
         if ( !$checkEmpty ) {
             $this->set('mappingId', null);
             require_once 'CRM/Utils/System.php';            
-            CRM_Utils_System::redirect( CRM_Utils_System::url( $currentPath, '_qf_Map_display=true' ) );
+            CRM_Utils_System::redirect( CRM_Utils_System::url( $currentPath, '_qf_Map_display=true'.$urlParams ) );
         }
 
         if ( $buttonName1 == '_qf_Map_next' ) {
@@ -208,7 +213,10 @@ class CRM_Export_Form_Map extends CRM_Core_Form
                                                  $mapperKeys,
                                                  $this->get( 'returnProperties' ),
                                                  $this->get( 'exportMode' ),
-                                                 $this->get( 'componentClause' )
+                                                 $this->get( 'componentClause' ),
+                                                 $this->get( 'componentTable' ),
+                                                 $this->get( 'mergeSameAddress' ),
+                                                 $this->get( 'mergeSameHousehold' )
                                                  );
     }
     

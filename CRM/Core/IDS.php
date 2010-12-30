@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -78,16 +78,21 @@ class CRM_Core_IDS {
 
       // init the PHPIDS and pass the REQUEST array
       $config =& CRM_Core_Config::singleton( );
+
       $configFile = $config->configAndLogDir . 'Config.IDS.ini';
-        if ( ! file_exists( $configFile ) ) {
-            global $civicrm_root;
-            $contents = "
+      if ( ! file_exists( $configFile ) ) {
+          $tmpDir = empty( $config->uploadDir ) ? CIVICRM_TEMPLATE_COMPILEDIR : $config->uploadDir;
+          // also clear the stat cache in case we are upgrading
+          clearstatcache( );
+
+          global $civicrm_root;
+          $contents = "
 [General]
     filter_type         = xml
     filter_path         = {$civicrm_root}/packages/IDS/default_filter.xml
-    tmp_path            = $config->uploadDir
+    tmp_path            = $tmpDir
     HTML_Purifier_Path  = IDS/vendors/htmlpurifier/HTMLPurifier.auto.php
-    HTML_Purifier_Cache = $config->uploadDir
+    HTML_Purifier_Cache = $tmpDir
     scan_keys           = false
     exceptions[]        = __utmz
     exceptions[]        = __utmc
@@ -95,7 +100,9 @@ class CRM_Core_IDS {
     exceptions[]        = html_message
     exceptions[]        = body_html
     exceptions[]        = msg_html
-    html[]              = description
+    exceptions[]        = msg_text
+    exceptions[]        = msg_subject
+    exceptions[]        = description
     html[]              = intro
     html[]              = thankyou_text
     html[]              = intro_text
@@ -103,17 +110,19 @@ class CRM_Core_IDS {
     html[]              = footer_text
     html[]              = thankyou_text
     html[]              = thankyou_footer
+    html[]              = thankyou_footer_text
     html[]              = new_text
     html[]              = renewal_text
     html[]              = help_pre
     html[]              = help_post
-    html[]              = msg_html
     html[]              = confirm_title
     html[]              = confirm_text
     html[]              = confirm_footer_text
     html[]              = confirm_email_text
     html[]              = report_header
     html[]              = report_footer
+    html[]              = data
+    html[]              = instructions
 ";
             if ( file_put_contents( $configFile, $contents ) === false ) {
                 require_once 'CRM/Core/Error.php';
@@ -123,19 +132,8 @@ class CRM_Core_IDS {
 
             // also create the .htaccess file so we prevent the reading of the log and ini files
             // via a browser, CRM-3875
-            $htaccessFile = $config->configAndLogDir . '.htaccess';
-            if ( ! file_exists( $htaccessFile ) ) {
-                $contents = '
-# Protect files and directories from prying eyes.
-<FilesMatch "\.(log|ini)$">
- Order allow,deny
-</FilesMatch>
-';
-                if ( file_put_contents( $htaccessFile, $contents ) === false ) {
-                    require_once 'CRM/Core/Error.php';
-                    CRM_Core_Error::movedSiteError( $htaccessFile );
-                }
-            }
+            require_once 'CRM/Utils/File.php';
+            CRM_Utils_File::restrictAccess($config->configAndLogDir);
         }
 
         $init    = IDS_Init::init( $configFile );
@@ -194,7 +192,7 @@ class CRM_Core_IDS {
              '127.0.0.1');
 
         $data = array( );
-        $session =& CRM_Core_Session::singleton( );
+        $session = CRM_Core_Session::singleton( );
         foreach ($result as $event) {
             $data[] = array(
                             'name'      => $event->getName(),
@@ -227,7 +225,7 @@ class CRM_Core_IDS {
      *
      */
     private function kick($result) {
-        $session =& CRM_Core_Session::singleton( );
+        $session = CRM_Core_Session::singleton( );
         $session->reset( 2 );
 
         CRM_Core_Error::fatal( ts( 'There is a validation error with your HTML input. Your activity is a bit suspicious, hence aborting' ) );

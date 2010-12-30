@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -25,7 +25,7 @@
 *}
 {* Contribution Import Wizard - Step 3 (preview import results prior to actual data loading) *}
 {* @var $form Contains the array for the form elements and other form associated information assigned to the template by the controller *}
-
+<div class="crm-block crm-form-block crm-contribution-import-preview-form-block id="upload-file">
  {* WizardHeader.tpl provides visual display of steps thru the wizard as well as title for current step *}
  {include file="CRM/common/WizardHeader.tpl"}
  
@@ -49,7 +49,7 @@
 
     <p>{ts}Click 'Import Now' if you are ready to proceed.{/ts}</p>
  </div>
-    
+  <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>  
  {* Summary Preview (record counts) *}
  <table id="preview-counts" class="report">
     <tr><td class="label">{ts}Total Rows{/ts}</td>
@@ -88,9 +88,5 @@
 
  {* Table for mapping preview *}
  {include file="CRM/Contribute/Import/Form/MapTable.tpl"}
- 
- 
- <div id="crm-submit-buttons">
-    {$form.buttons.html}
+  <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div> 
  </div>
- 

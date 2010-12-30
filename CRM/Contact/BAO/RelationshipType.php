@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -60,7 +60,7 @@ class CRM_Contact_BAO_RelationshipType extends CRM_Contact_DAO_RelationshipType 
      * @static
      */
     static function retrieve( &$params, &$defaults ) {
-        $relationshipType =& new CRM_Contact_DAO_RelationshipType( );
+        $relationshipType = new CRM_Contact_DAO_RelationshipType( );
         $relationshipType->copyValues( $params );
         if ( $relationshipType->find( true ) ) {
             CRM_Core_DAO::storeValues( $relationshipType, $defaults );
@@ -117,7 +117,7 @@ class CRM_Contact_BAO_RelationshipType extends CRM_Contact_DAO_RelationshipType 
         }
         
         // action is taken depending upon the mode
-        $relationshipType =& new CRM_Contact_DAO_RelationshipType( );
+        $relationshipType = new CRM_Contact_DAO_RelationshipType( );
         
         $relationshipType->copyValues( $params );
 
@@ -151,7 +151,7 @@ class CRM_Contact_BAO_RelationshipType extends CRM_Contact_DAO_RelationshipType 
         //check dependencies
 
         // delete all relationships
-        $relationship = & new CRM_Contact_DAO_Relationship();
+        $relationship = new CRM_Contact_DAO_Relationship();
         $relationship->relationship_type_id = $relationshipTypeId;
         $relationship->delete();
 
@@ -166,14 +166,14 @@ UPDATE civicrm_membership_type
 
         //fixed for CRM-3323
         require_once "CRM/Core/DAO/MappingField.php";
-        $mappingField =& new CRM_Core_DAO_MappingField( );            
+        $mappingField = new CRM_Core_DAO_MappingField( );            
         $mappingField->relationship_type_id = $relationshipTypeId;
         $mappingField->find();
         while ( $mappingField->fetch() ) {
             $mappingField->delete();
         }
 
-        $relationshipType = & new CRM_Contact_DAO_RelationshipType();
+        $relationshipType = new CRM_Contact_DAO_RelationshipType();
         $relationshipType->id = $relationshipTypeId;
         return $relationshipType->delete();
 

@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -35,6 +35,8 @@
  */ 
 
 require_once 'CRM/Core/Payment.php';
+require_once 'Google/library/googlecart.php';
+require_once 'Google/library/googleitem.php';
 
 class CRM_Core_Payment_Google extends CRM_Core_Payment { 
     /**
@@ -44,6 +46,15 @@ class CRM_Core_Payment_Google extends CRM_Core_Payment {
      * @static
      */
     static protected $_mode = null;
+
+    /**
+     * We only need one instance of this object. So we use the singleton
+     * pattern and cache the instance in this variable
+     *
+     * @var object
+     * @static
+     */
+    static private $_singleton = null;
 
     /** 
      * Constructor 
@@ -59,13 +70,30 @@ class CRM_Core_Payment_Google extends CRM_Core_Payment {
     }
 
     /** 
+     * singleton function used to manage this object 
+     * 
+     * @param string $mode the mode of operation: live or test
+     *
+     * @return object 
+     * @static 
+     * 
+     */ 
+    static function &singleton( $mode, &$paymentProcessor ) {
+        $processorName = $paymentProcessor['name'];
+        if (self::$_singleton[$processorName] === null ) {
+            self::$_singleton[$processorName] = new CRM_Core_Payment_Google( $mode, $paymentProcessor );
+        }
+        return self::$_singleton[$processorName];
+    }
+
+    /** 
      * This function checks to see if we have the right config values 
      * 
      * @return string the error message if any 
      * @public 
      */ 
     function checkConfig( ) {
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
 
         $error = array( );
 
@@ -159,7 +187,7 @@ class CRM_Core_Payment_Google extends CRM_Core_Payment {
         require_once 'HTTP/Request.php';
         $params = array( 'method' => HTTP_REQUEST_METHOD_POST,
                          'allowRedirects' => false );
-        $request =& new HTTP_Request( $url, $params );
+        $request = new HTTP_Request( $url, $params );
         foreach ( $googleParams as $key => $value ) {
             $request->addPostData($key, $value);
         }

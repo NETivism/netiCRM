@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -47,6 +47,8 @@ class CRM_Report_Form_Member_Detail extends CRM_Report_Form {
     
     protected $_summary      = null;
     
+    protected $_customGroupExtends = array( 'Membership' );
+    protected $_customGroupGroupBy = false;
     function __construct( ) {
         $this->_columns = 
             array( 'civicrm_contact' =>
@@ -117,7 +119,7 @@ class CRM_Report_Form_Member_Detail extends CRM_Report_Form {
                                                       'title'        => ts( 'Status' ),
                                                       'type'         => CRM_Utils_Type::T_INT,
                                                       'operatorType' => CRM_Report_Form::OP_MULTISELECT,
-                                                      'options'      => CRM_Member_PseudoConstant::membershipStatus( ) ), ),
+                                                      'options'      => CRM_Member_PseudoConstant::membershipStatus( null, null, 'label') ), ),
                           'grouping' => 'member-fields',		
                           ),
                    
@@ -160,20 +162,9 @@ class CRM_Report_Form_Member_Detail extends CRM_Report_Form {
                                         'group'        => true,
                                         'options'      => CRM_Core_PseudoConstant::group( ) ), ), ),
                    
-                   'civicrm_tag' => 
-                   array( 'dao'     => 'CRM_Core_DAO_Tag',
-                          'filters' =>             
-                          array( 'tagid' => 
-                                 array( 'name'         => 'tag_id',
-                                        'title'        => ts( 'Tag' ),
-                                        'tag'          => true,
-                                        'operatorType' => CRM_Report_Form::OP_MULTISELECT,
-                                        'options'      => CRM_Core_PseudoConstant::tag( ) 
-                                        ), 
-                                 ), 
-                          ),
                    );
         
+        $this->_tagFilter = true;
         parent::__construct( );
     }
     

@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -51,10 +51,10 @@ class CRM_Core_I18n
      * @param  $locale string  the base of this certain object's existence
      * @return         void
      */
-    private function __construct($locale)
+    function __construct($locale)
     {
         if ($locale != '' and $locale != 'en_US') {
-            $config =& CRM_Core_Config::singleton();
+            $config = CRM_Core_Config::singleton();
             $streamer = new FileReader(implode(DIRECTORY_SEPARATOR, array($config->gettextResourceDir, $locale, 'civicrm.mo')));
             $this->_phpgettext = new gettext_reader($streamer);
         }
@@ -76,7 +76,7 @@ class CRM_Core_I18n
             $all =& CRM_Core_I18n_PseudoConstant::languages();
 
             // check which ones are available; add them to $all if not there already
-            $config =& CRM_Core_Config::singleton();
+            $config = CRM_Core_Config::singleton();
             $codes = array();
             if (is_dir($config->gettextResourceDir)) {
                 $dir = opendir($config->gettextResourceDir);
@@ -97,7 +97,7 @@ class CRM_Core_I18n
         }
 
         if ($enabled === null) {
-            $config =& CRM_Core_Config::singleton();
+            $config = CRM_Core_Config::singleton();
             $enabled = array();
             if (isset($config->languageLimit) and $config->languageLimit) {
                 foreach ($all as $code => $name) {
@@ -146,6 +146,7 @@ class CRM_Core_I18n
      *       - 'no'/'off'/0 - turns off escaping
      *   - plural - The plural version of the text (2nd parameter of ngettext())
      *   - count - The item count for plural mode (3rd parameter of ngettext())
+     *   - context - gettext context of that string (for homonym handling)
      *
      * @param $text   string  the original string
      * @param $params array   the params of the translation (if any)
@@ -158,6 +159,16 @@ class CRM_Core_I18n
             unset($params['escape']);
         }
 
+        // sometimes we need to {ts}-tag a string, but don’t want to
+        // translate it in the template (like civicrm_navigation.tpl),
+        // because we handle the translation in a different way (CRM-6998)
+        // in such cases we return early, only doing SQL/JS escaping
+        if (isset($params['skip']) and $params['skip']) {
+            if (isset($escape) and ($escape == 'sql')) $text = mysql_escape_string($text);
+            if (isset($escape) and ($escape == 'js'))  $text = addcslashes($text, "'");
+            return $text;
+        }
+
         if (isset($params['plural'])) {
             $plural = $params['plural'];
             unset($params['plural']);
@@ -166,23 +177,63 @@ class CRM_Core_I18n
             }
         }
 
-        // use plural if required parameters are set
-        if (isset($count) && isset($plural)) {
+        if (isset($params['context'])) {
+            $context = $params['context'];
+            unset($params['context']);
+        } else {
+            $context = null;
+        }
 
-            if ($this->_phpgettext) {
-                $text = $this->_phpgettext->ngettext($text, $plural, $count);
-            } else {
-                // if the locale's not set, we do ngettext work by hand
-                // if $count == 1 then $text = $text, else $text = $plural
-                if ($count != 1) $text = $plural;
+        // do all wildcard translations first
+        require_once 'CRM/Utils/Array.php';
+        $config =& CRM_Core_Config::singleton( );
+        $stringTable = CRM_Utils_Array::value( $config->lcMessages,
+                                               $config->localeCustomStrings );
+        
+        $exactMatch = false;
+        if ( isset( $stringTable['enabled']['exactMatch'] ) ) {
+            foreach ( $stringTable['enabled']['exactMatch'] as $search => $replace ) {
+                if ( $search === $text ) {
+                    $exactMatch = true;
+                    $text = $replace;
+                    break;
+                }
             }
+        }
+        
+        if ( ! $exactMatch &&
+             isset( $stringTable['enabled']['wildcardMatch'] ) ) {
+            $search  = array_keys  ( $stringTable['enabled']['wildcardMatch'] );
+            $replace = array_values( $stringTable['enabled']['wildcardMatch'] );
+            $text = str_replace( $search,
+                                 $replace,
+                                 $text );
+        }
 
-            // expand %count in translated string to $count
-            $text = strtr($text, array('%count' => $count));
-
-        // if not plural, but the locale's set, translate
-        } elseif ($this->_phpgettext) {
-            $text = $this->_phpgettext->translate($text);
+        // dont translate if we've done exactMatch already
+        if ( ! $exactMatch ) {
+            // use plural if required parameters are set
+            if (isset($count) && isset($plural)) {
+                
+                if ($this->_phpgettext) {
+                    $text = $this->_phpgettext->ngettext($text, $plural, $count);
+                } else {
+                    // if the locale's not set, we do ngettext work by hand
+                    // if $count == 1 then $text = $text, else $text = $plural
+                    if ($count != 1) $text = $plural;
+                }
+                
+                // expand %count in translated string to $count
+                $text = strtr($text, array('%count' => $count));
+                
+                // if not plural, but the locale's set, translate
+            } elseif ($this->_phpgettext) {
+                if ($context) {
+                    $text = $this->_phpgettext->pgettext($context, $text);
+                } else {
+                    $text = $this->_phpgettext->translate($text);
+                }
+            }
         }
 
         // replace the numbered %1, %2, etc. params if present
@@ -192,6 +243,9 @@ class CRM_Core_I18n
 
         // escape SQL if we were asked for it
         if (isset($escape) and ($escape == 'sql')) $text = mysql_escape_string($text);
+
+        // escape for JavaScript (if requested)
+        if (isset($escape) and ($escape == 'js'))  $text = addcslashes($text, "'");
 
         return $text;
     }
@@ -211,12 +265,13 @@ class CRM_Core_I18n
      * Localize (destructively) array values.
      *
      * @param  $array array  the array for localization (in place)
+     * @param  $params array an array of additional parameters
      * @return        void
      */
-    function localizeArray(&$array)
+    function localizeArray(&$array, $params = array())
     {
-        foreach ($array as $key => $value) {
-            if ($value) $array[$key] = ts($value);
+        foreach ($array as &$value) {
+            if ($value) $value = ts($value, $params);
         }
     }
 
@@ -292,7 +347,7 @@ function ts($text, $params = array())
     }
 
     if (!$config) {
-        $config =& CRM_Core_Config::singleton();
+        $config = CRM_Core_Config::singleton();
     }
 
     global $tsLocale;

@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -81,7 +81,7 @@ class CRM_Contact_Form_Task_PickProfile extends CRM_Contact_Form_Task {
          */
         parent::preProcess( );
     
-        $session =& CRM_Core_Session::singleton();
+        $session = CRM_Core_Session::singleton();
         $this->_userContext = $session->readUserContext( );
     
         $validate = false;
@@ -110,18 +110,18 @@ class CRM_Contact_Form_Task_PickProfile extends CRM_Contact_Form_Task {
      */
     function buildQuickForm( ) 
     {
-        CRM_Utils_System::setTitle( ts('Batch Profile Update') );
+        CRM_Utils_System::setTitle( ts('Batch Profile Update for Contact') );
         
         if ( CRM_Core_Permission::access( 'Quest' ) ) {
             $this->_contactTypes['Student'] = 'Student';            
         }
-        
-        //add Contact type profiles
-        $this->_contactTypes[] = 'Contact';
-        
+                
         foreach($this->_contactIds as $id) {
             $this->_contactTypes   = CRM_Contact_BAO_Contact::getContactTypes( $id );
         }
+        
+        //add Contact type profiles
+        $this->_contactTypes[] = 'Contact';
         
         require_once "CRM/Core/BAO/UFGroup.php";
         $profiles = CRM_Core_BAO_UFGroup::getProfiles($this->_contactTypes);
@@ -156,7 +156,7 @@ class CRM_Contact_Form_Task_PickProfile extends CRM_Contact_Form_Task {
      * @static
      * @access public
      */
-    static function formRule( &$fields ) 
+    static function formRule( $fields ) 
     {
         require_once "CRM/Core/BAO/UFField.php";
         if ( CRM_Core_BAO_UFField::checkProfileType( $fields['uf_group_id'] ) ) {

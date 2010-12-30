@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -23,23 +23,11 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
-<div class="form-item">
-<fieldset>
-<legend>{ts}Create Printable PDF Letters{/ts}</legend>
-<table class="form-layout-compressed">
-</table>
-
-{include file="CRM/Contact/Form/Task/PDFLetterCommon.tpl"}
-
-<div class="spacer"> </div>
-
-<dl>
+<div class="crm-form-block crm-block crm-contact-task-pdf-form-block">
+<h3>{ts}Create Printable Letters (PDF){/ts}</h3>
 {if $single eq false}
-    <dt></dt><dd>{include file="CRM/Contact/Form/Task.tpl"}</dd>
+    <div class="messages status">{include file="CRM/Contact/Form/Task.tpl"}</div>
 {/if}
-</dl>
-<dl>
-<dt></dt><dd>{$form.buttons.html}</dd>
-</dl>
-</fieldset>
+{include file="CRM/Contact/Form/Task/PDFLetterCommon.tpl"}
+<div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
 </div>

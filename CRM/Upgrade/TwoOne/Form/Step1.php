@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -39,11 +39,11 @@ require_once 'CRM/Upgrade/Form.php';
 class CRM_Upgrade_TwoOne_Form_Step1 extends CRM_Upgrade_Form {
 
     function verifyPreDBState( &$errorMessage ) {
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
 
         // Let's first update the config defaults
         require_once "CRM/Core/DAO/Domain.php";
-        $domain =& new CRM_Core_DAO_Domain();
+        $domain = new CRM_Core_DAO_Domain();
         $domain->selectAdd( );
         $domain->selectAdd( 'config_backend' );
         $domain->find(true);
@@ -61,7 +61,7 @@ class CRM_Upgrade_TwoOne_Form_Step1 extends CRM_Upgrade_Form {
             if ( $config->userFramework == 'Joomla' ) {
                 $defaults['userFrameworkVersion'] = '1.5';
                 if ( class_exists('JVersion') ) {
-                    $version =& new JVersion;
+                    $version = new JVersion;
                     $defaults['userFrameworkVersion'] = $version->getShortVersion();
                 }
             } else if ( $config->userFramework == 'Drupal' ) {
@@ -74,7 +74,7 @@ class CRM_Upgrade_TwoOne_Form_Step1 extends CRM_Upgrade_Form {
             require_once "CRM/Core/BAO/Setting.php";
             CRM_Core_BAO_Setting::add($defaults);            
             
-            $config =& CRM_Core_Config::singleton( );
+            $config = CRM_Core_Config::singleton( );
         }
         
         // check if log file is writable

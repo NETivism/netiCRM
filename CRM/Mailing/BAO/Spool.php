@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -74,7 +74,7 @@ class CRM_Mailing_BAO_Spool extends CRM_Mailing_DAO_Spool {
         }
         $headerStr = implode("\n", $headerStr);
         
-        $session =& CRM_Core_Session::singleton();
+        $session = CRM_Core_Session::singleton();
         
         $params = array(
                         'job_id'          => $job_id,
@@ -85,7 +85,7 @@ class CRM_Mailing_BAO_Spool extends CRM_Mailing_DAO_Spool {
                         'removed_at'      => null 
                         );
 
-        $spoolMail =& new CRM_Mailing_DAO_Spool();
+        $spoolMail = new CRM_Mailing_DAO_Spool();
         $spoolMail->copyValues($params);
         $spoolMail->save();
         

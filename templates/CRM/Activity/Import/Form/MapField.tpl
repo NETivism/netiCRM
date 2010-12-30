@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -23,6 +23,7 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
+<div class="crm-block crm-form-block crm-activity-import-mapfield-form-block">
 {* Activity Import Wizard - Step 2 (map incoming data fields) *}
 {* @var $form Contains the array for the form elements and other form associated information assigned to the template by the controller *}
 
@@ -36,13 +37,12 @@
     {/if}
     <p>{ts}If you think you may be importing additional data from the same data source, check 'Save this field mapping' at the bottom of the page before continuing. The saved mapping can then be easily reused the next time data is imported.{/ts}</p>
 </div>
+<div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>
  {* Table for mapping data to CRM fields *}
  {include file="CRM/Activity/Import/Form/MapTable.tpl}
  <br />
 
- <div id="crm-submit-buttons">
-    {$form.buttons.html}
- </div>
+<div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
  {$initHideBoxes}
 {literal}
 <script type="text/javascript" >
@@ -52,3 +52,4 @@ if ( document.getElementsByName("saveMapping")[0].checked ) {
 } 
 </script>
 {/literal}
+</div>

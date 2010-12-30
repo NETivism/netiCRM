@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -23,30 +23,41 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
-<div class="form-item">
-<dl>{$form.buttons.html}</dl>
-<fieldset>
+<div class="crm-block crm-form-block crm-contactEmail-form-block">
+<div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>
 {if $suppressedEmails > 0}
     <div class="status">
         <p>{ts count=$suppressedEmails plural='Email will NOT be sent to %count contacts - (no email address on file, or communication preferences specify DO NOT EMAIL, or contact is deceased).'}Email will NOT be sent to %count contact - (no email address on file, or communication preferences specify DO NOT EMAIL, or contact is deceased).{/ts}</p>
     </div>
 {/if}
 <table class="form-layout-compressed">
-<tr>
-    <td class="label">{$form.fromEmailAddress.label}</td><td>{$form.fromEmailAddress.html} {help id ="id-from_email" file="CRM/Contact/Form/Task/Email.hlp"}</td>
-</tr>
-<tr>
-    <td class="label">{if $single eq false}{ts}Recipient(s){/ts}{else}{$form.to.label}{/if}</td>
-    <td>{$form.to.html}{if $noEmails eq true}&nbsp;&nbsp;{$form.emailAddress.html}{/if}
+    <tr class="crm-contactEmail-form-block-fromEmailAddress">
+       <td class="label">{$form.fromEmailAddress.label}</td>
+       <td>{$form.fromEmailAddress.html} {help id ="id-from_email" file="CRM/Contact/Form/Task/Email.hlp"}</td>
+    </tr>
+    <tr class="crm-contactEmail-form-block-recipient">
+       <td class="label">{if $single eq false}{ts}Recipient(s){/ts}{else}{$form.to.label}{/if}</td>
+       <td>{$form.to.html}{if $noEmails eq true}&nbsp;&nbsp;{$form.emailAddress.html}{/if}
     <div class="spacer"></div>
-    <span class="bold"><a href="#" id="addcc">{ts}Add CC{/ts}</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="#" id="addbcc">{ts}Add BCC{/ts}</a></span></td>
-</tr>
-<tr id="cc" {if ! $form.cc_id.value}style="display:none;"{/if}><td class="label">{$form.cc_id.label}</td><td>{$form.cc_id.html}</td></tr>
-<tr id="bcc" {if ! $form.bcc_id.value}style="display:none;"{/if}><td class="label">{$form.bcc_id.label}</td><td>{$form.bcc_id.html}</td></tr>
-<tr>
-    <td class="label">{$form.subject.label}</td>
-    <td>
-        {$form.subject.html|crmReplace:class:huge}&nbsp;
+       <span class="bold"><a href="#" id="addcc">{ts}Add CC{/ts}</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="#" id="addbcc">{ts}Add BCC{/ts}</a></span>
+       </td>
+    </tr>
+    <tr class="crm-contactEmail-form-block-cc_id" id="cc" {if ! $form.cc_id.value}style="display:none;"{/if}>
+        <td class="label">{$form.cc_id.label}</td><td>{$form.cc_id.html}</td>
+    </tr>
+    <tr class="crm-contactEmail-form-block-bcc_id" id="bcc" {if ! $form.bcc_id.value}style="display:none;"{/if}>
+        <td class="label">{$form.bcc_id.label}</td><td>{$form.bcc_id.html}</td>
+    </tr>
+
+{if $emailTask}
+    <tr class="crm-contactEmail-form-block-template">
+        <td class="label">{$form.template.label}</td>
+        <td>{$form.template.html}</td>
+    </tr>
+{/if}
+    <tr class="crm-contactEmail-form-block-subject">
+       <td class="label">{$form.subject.label}</td>
+       <td>{$form.subject.html|crmReplace:class:huge}&nbsp;
         <a href="#" onClick="return showToken('Subject', 3);">{$form.token3.label}</a>
 	    {help id="id-token-subject" file="CRM/Contact/Form/Task/Email.hlp"}
         <div id='tokenSubject' style="display:none">
@@ -54,24 +65,21 @@
 	      <span class="description">{ts}Begin typing to filter list of tokens{/ts}</span><br/>
 	      {$form.token3.html}
         </div>
-    </td>
-</tr>
+       </td>
+    </tr>
 </table>
 
 {include file="CRM/Contact/Form/Task/EmailCommon.tpl"}
 
 <div class="spacer"> </div>
 
-<dl>
 {if $single eq false}
-    <dt></dt><dd>{include file="CRM/Contact/Form/Task.tpl"}</dd>
+  {include file="CRM/Contact/Form/Task.tpl"}
 {/if}
 {if $suppressedEmails > 0}
-    <dt></dt><dd>{ts count=$suppressedEmails plural='Email will NOT be sent to %count contacts.'}Email will NOT be sent to %count contact.{/ts}</dd>
+   {ts count=$suppressedEmails plural='Email will NOT be sent to %count contacts.'}Email will NOT be sent to %count contact.{/ts}
 {/if}
-</dl>
-</fieldset>
-<dl>{$form.buttons.html}</dl>
+<div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
 </div>
 <script type="text/javascript">
 var toContact = ccContact = bccContact = '';

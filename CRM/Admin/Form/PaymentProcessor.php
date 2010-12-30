@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -71,7 +71,7 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form
 
         $this->assign( 'ppType', $this->_ppType );
         require_once 'CRM/Core/DAO/PaymentProcessorType.php';
-        $this->_ppDAO =& new CRM_Core_DAO_PaymentProcessorType( );
+        $this->_ppDAO = new CRM_Core_DAO_PaymentProcessorType( );
         $this->_ppDAO->name = $this->_ppType;
 
         if ( ! $this->_ppDAO->find( true ) ) {
@@ -189,7 +189,7 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form
 
     }
 
-    static function formRule( &$fields ) {
+    static function formRule( $fields ) {
 
         // make sure that at least one of live or test is present
         // and we have at least name and url_site 
@@ -251,7 +251,7 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form
         }
         $domainID = CRM_Core_Config::domainID( );
         
-        $dao =& new CRM_Core_DAO_PaymentProcessor( );
+        $dao = new CRM_Core_DAO_PaymentProcessor( );
         $dao->id        = $this->_id;
         $dao->domain_id = $domainID;
         if ( ! $dao->find( true ) ) {
@@ -261,7 +261,7 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form
         CRM_Core_DAO::storeValues( $dao, $defaults );
         
         // now get testID
-        $testDAO =& new CRM_Core_DAO_PaymentProcessor( );
+        $testDAO = new CRM_Core_DAO_PaymentProcessor( );
         $testDAO->name      = $dao->name;
         $testDAO->is_test   = 1;
         $testDAO->domain_id = $domainID;
@@ -289,6 +289,8 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form
      */
     public function postProcess() 
     {
+        CRM_Utils_System::flushCache( 'CRM_Core_DAO_PaymentProcessor' );
+
         if ( $this->_action & CRM_Core_Action::DELETE ) {
             CRM_Core_BAO_PaymentProcessor::del( $this->_id );
             CRM_Core_Session::setStatus( ts('Selected Payment Processor has been deleted.') );
@@ -309,7 +311,7 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form
     }//end of function
 
     function updatePaymentProcessor( &$values, $domainID, $test ) {
-        $dao =& new CRM_Core_DAO_PaymentProcessor( );
+        $dao = new CRM_Core_DAO_PaymentProcessor( );
 
         $dao->id         = $test ? $this->_testID : $this->_id;
         $dao->domain_id  = $domainID;

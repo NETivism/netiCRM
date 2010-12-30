@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -23,44 +23,45 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
-<h3 class="head"> 
-    <span class="ui-icon ui-icon-triangle-1-e"></span><a href="#">{$title}</a>
-</h3>
-
-<div id="demographics" class="ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom">
-  <fieldset>
+<div class="crm-accordion-wrapper crm-demographics-accordion crm-accordion-closed">
+ <div class="crm-accordion-header">
+  <div class="icon crm-accordion-pointer"></div> 
+	{$title} 
+  </div><!-- /.crm-accordion-header -->
+  <div id="demographics" class="crm-accordion-body">
   <div class="form-item">
-        <span class="labels">{$form.gender_id.label}</span>
+        <span class="label">{$form.gender_id.label}</span>
         
-	<span class="fields">
+	<span class="value">
         {$form.gender_id.html}
-        &nbsp;&nbsp;(&nbsp;<a href="#" title="unselect" onclick="unselectRadio('gender_id', '{$form.formName}'); return false;">{ts}unselect{/ts}</a>&nbsp;)
+        <span class="crm-clear-link">(<a href="#" title="unselect" onclick="unselectRadio('gender_id', '{$form.formName}'); return false;">{ts}clear{/ts}</a>)</span>
         </span>
   </div>
   <div class="form-item">
-        <span class="labels">{$form.birth_date.label}</span>
-        <span class="fields">{include file="CRM/common/jcalendar.tpl" elementName=birth_date}</span>
+        <span class="label">{$form.birth_date.label}</span>
+        <span class="value">{include file="CRM/common/jcalendar.tpl" elementName=birth_date}</span>
   </div>
   <div class="form-item">
        {$form.is_deceased.html}
        {$form.is_deceased.label}
   </div>
   <div id="showDeceasedDate" class="form-item">
-       <span class="labels">{$form.deceased_date.label}</span>
-       <span class="fields">{include file="CRM/common/jcalendar.tpl" elementName=deceased_date}</span>
+       <span class="label">{$form.deceased_date.label}</span>
+       <span class="value">{include file="CRM/common/jcalendar.tpl" elementName=deceased_date}</span>
   </div> 
-  </fieldset>
-</div>
+ </div><!-- /.crm-accordion-body -->
+</div><!-- /.crm-accordion-wrapper -->
 
 {literal}
 <script type="text/javascript">
     showDeceasedDate( );    
     function showDeceasedDate( )
     {
-        if (document.getElementsByName("is_deceased")[0].checked) {
-      	    show('showDeceasedDate');
+        if ( cj("#is_deceased").is(':checked') ) {
+      	    cj("#showDeceasedDate").show( );
         } else {
-	    hide('showDeceasedDate');
+	  cj("#showDeceasedDate").hide( );
+         cj("#deceased_date").val('');
         }
     }     
 </script>

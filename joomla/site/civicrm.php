@@ -24,7 +24,7 @@ require_once 'CRM/Core/Invoke.php';
 civicrm_invoke( );
 
 function civicrm_init( ) {
-    $config =& CRM_Core_Config::singleton();
+    $config = CRM_Core_Config::singleton();
 
     // this is the front end, so let others know
     $config->userFrameworkFrontend = 1;
@@ -42,7 +42,7 @@ function civicrm_invoke( ) {
         if ( count( $_SESSION ) <= 1 ) {
             require_once 'CRM/Utils/System.php';
 
-            $config =& CRM_Core_Config::singleton( );
+            $config = CRM_Core_Config::singleton( );
             CRM_Utils_System::redirect( $config->userFrameworkBaseURL );
         }
     }

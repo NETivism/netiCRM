@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -50,7 +50,7 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
      */
     public function preProcess()
     {
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
         parent::preProcess( );
         // lineItem isn't set until Register postProcess
         $this->_lineItem = $this->get( 'lineItem' );
@@ -61,7 +61,7 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
                                                 CRM_Core_DAO::$_nullObject, false, null, 'GET' );
             if ( $rfp ) {
                 require_once 'CRM/Core/Payment.php'; 
-                $payment =& CRM_Core_Payment::singleton( $this->_mode, 'Contribute', $this->_paymentProcessor, $this );
+                $payment =& CRM_Core_Payment::singleton( $this->_mode, $this->_paymentProcessor, $this );
                 $expressParams = $payment->getExpressCheckoutDetails( $this->get( 'token' ) );
 
                 $this->_params['payer'       ] = $expressParams['payer'       ];
@@ -234,7 +234,7 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
             $this->set('productID',$productID);
             $this->set('option',$option);
         }
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
         if ( in_array("CiviMember", $config->enableComponents) ) {
             if ( isset( $params['selectMembership'] ) &&
                  $params['selectMembership'] != 'no_thanks' ) {
@@ -274,7 +274,7 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
                  $this->_amount <= 0.0              || $this->_params['is_pay_later'] ||
                  ( $this->_separateMembershipPayment && $this->_amount <= 0.0 ) ) {
                 $contribButton = ts('Continue >>');
-                $this->assign( 'button', 'Continue' );
+                $this->assign( 'button', ts('Continue') );
             } else {
                 $contribButton = ts('Make Contribution');
                 $this->assign( 'button', 'Make Contribution' );
@@ -287,7 +287,7 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
                                             'js'        => array( 'onclick' => "return submitOnce(this,'" . $this->_name . "','" . ts('Processing') ."');" )
                                             ),
                                     array ( 'type'      => 'back',
-                                            'name'      => ts('<< Go Back')
+                                            'name'      => ts('Go Back')
                                             )
                                     )
                               );
@@ -312,6 +312,9 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
                     $timeField = "{$name}_time";
                     if ( isset( $contact[ $timeField ] ) ) {
                         $defaults[ $timeField ] = $contact[ $timeField ];
+                    }
+                    if ( isset( $contact["{$name}_id"] ) ) {
+                        $defaults["{$name}_id"] = $contact["{$name}_id"];
                     }
                 } else if ( in_array($name, array('addressee', 'email_greeting', 'postal_greeting') )
                          && CRM_Utils_Array::value($name.'_custom', $contact) ) { 
@@ -365,7 +368,7 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
      */
     public function postProcess( )
     {
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
         require_once "CRM/Contact/BAO/Contact.php";
 
         $contactID = $this->_userID;
@@ -385,6 +388,10 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
         $now = date( 'YmdHis' );
         $fields = array( );
         
+        if ( CRM_Utils_Array::value( 'image_URL', $params  ) ) {
+            CRM_Contact_BAO_Contact::processImageParams( $params ) ;
+        }
+
         // set email for primary location.
         $fields["email-Primary"] = 1;
         
@@ -462,7 +469,22 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
         // check for profile double opt-in and get groups to be subscribed
         require_once 'CRM/Core/BAO/UFGroup.php';
         $subscribeGroupIds = CRM_Core_BAO_UFGroup::getDoubleOptInGroupIds( $params, $contactID );
-                
+
+        // since we are directly adding contact to group lets unset it from mailing
+        if ( !empty( $addToGroups ) ) {
+            foreach( $addToGroups as $groupId ) {
+                if ( isset( $subscribeGroupIds[$groupId] ) ) {
+                    unset( $subscribeGroupIds[$groupId] );
+                }
+            }
+        }
+                        
+        foreach ( $addToGroups as $k ) {
+            if ( array_key_exists( $k, $subscribeGroupIds ) ) {
+                unset( $addToGroups[$k] );
+            }
+        }
+
         if ( ! isset( $contactID ) ) {
             require_once 'CRM/Dedupe/Finder.php';
             $dedupeParams = CRM_Dedupe_Finder::formatParams($params, 'Individual');
@@ -498,7 +520,7 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
 
         // lets store the contactID in the session
         // for things like tell a friend
-        $session =& CRM_Core_Session::singleton( );
+        $session = CRM_Core_Session::singleton( );
         if ( ! $session->get( 'userID' ) ) {
             $session->set( 'transaction.userID', $contactID );
         } else {
@@ -564,7 +586,7 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
             $startDate = $endDate = "";
             $this->assign('selectPremium',  true );
             require_once 'CRM/Contribute/DAO/Product.php';
-            $productDAO =& new CRM_Contribute_DAO_Product();
+            $productDAO = new CRM_Contribute_DAO_Product();
             $productDAO->id = $selectProduct;
             $productDAO->find(true);
             $this->assign('product_name',  $productDAO->name );
@@ -616,7 +638,7 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
             }
             
             require_once 'CRM/Contribute/DAO/Premium.php';
-            $dao = & new CRM_Contribute_DAO_Premium();
+            $dao = new CRM_Contribute_DAO_Premium();
             $dao->entity_table = 'civicrm_contribution_page';
             $dao->entity_id    = $this->_id;
             $dao->find(true);
@@ -636,7 +658,7 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
 
             //Fixed For CRM-3901
             require_once 'CRM/Contribute/DAO/ContributionProduct.php';
-            $daoContrProd = & new CRM_Contribute_DAO_ContributionProduct();
+            $daoContrProd = new CRM_Contribute_DAO_ContributionProduct();
             $daoContrProd->contribution_id = $contribution->id;
             if ( $daoContrProd->find(true) ) {
                 $params['id'] = $daoContrProd->id;
@@ -647,7 +669,7 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
         } else if ( $selectProduct == 'no_thanks' ) {
             //Fixed For CRM-3901
             require_once 'CRM/Contribute/DAO/ContributionProduct.php';
-            $daoContrProd = & new CRM_Contribute_DAO_ContributionProduct();
+            $daoContrProd = new CRM_Contribute_DAO_ContributionProduct();
             $daoContrProd->contribution_id = $contribution->id;
             if ( $daoContrProd->find(true) ) {
                 $daoContrProd->delete();  
@@ -679,7 +701,7 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
             $honorCId = $params['honor_contact_id'];
         }
         
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
         if ( ! $online && isset($params['non_deductible_amount'] ) ) {
             $nonDeductibleAmount = $params['non_deductible_amount'];
         } else {
@@ -690,7 +712,7 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
             if ( $selectProduct &&
                  $selectProduct != 'no_thanks' ) {
                 require_once 'CRM/Contribute/DAO/Product.php';
-                $productDAO =& new CRM_Contribute_DAO_Product();
+                $productDAO = new CRM_Contribute_DAO_Product();
                 $productDAO->id = $selectProduct;
                 $productDAO->find(true);
                 if( $params['amount'] < $productDAO->price ){
@@ -834,13 +856,20 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
                 
                 //when user doing pledge payments.
                 //update the schedule when payment(s) are made 
-                
                 require_once 'CRM/Pledge/BAO/Payment.php';
                 foreach ( $form->_params['pledge_amount'] as $paymentId => $dontCare ) {
+                    $scheduledAmount  =  CRM_Core_DAO::getFieldValue( 'CRM_Pledge_DAO_Payment', 
+                                                                       $paymentId,
+                                                                       'scheduled_amount', 
+                                                                       'id'
+                                                                       );
+                    
                     $pledgePaymentParams = array('id'              => $paymentId,
                                                  'contribution_id' => $contribution->id,
-                                                 'status_id'       => $contribution->contribution_status_id
+                                                 'status_id'       => $contribution->contribution_status_id,
+                                                 'actual_amount'   => $scheduledAmount
                                                  );
+                    
                     
                     CRM_Pledge_BAO_Payment::add( $pledgePaymentParams );
                 }
@@ -852,7 +881,7 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
                 //when user creating pledge record.
                 $pledgeParams                            = array( );
                 $pledgeParams['contact_id'             ] = $contribution->contact_id;
-                $pledgeParams['installment_amount'     ] = $contribution->total_amount;
+                $pledgeParams['installment_amount'     ] = $pledgeParams['actual_amount'] = $contribution->total_amount;
                 $pledgeParams['contribution_id'        ] = $contribution->id;
                 $pledgeParams['contribution_page_id'   ] = $contribution->contribution_page_id;
                 $pledgeParams['contribution_type_id'   ] = $contribution->contribution_type_id;
@@ -867,7 +896,8 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
                 $pledgeParams['additional_reminder_day'] = $form->_values['additional_reminder_day'];
                 $pledgeParams['is_test'                ] = $contribution->is_test;
                 $pledgeParams['acknowledge_date'       ] = date( 'Ymd' );
-                
+                $pledgeParams['original_installment_amount'] = $pledgeParams['installment_amount'] ;
+
                 require_once 'CRM/Pledge/BAO/Pledge.php';
                 $pledge = CRM_Pledge_BAO_Pledge::create( $pledgeParams );
                 
@@ -943,8 +973,8 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
                                 'trxn_result_code'  => $result['trxn_result_code'],
                                 );
             
-            require_once 'CRM/Contribute/BAO/FinancialTrxn.php';
-            $trxn =& CRM_Contribute_BAO_FinancialTrxn::create( $trxnParams );
+            require_once 'CRM/Core/BAO/FinancialTrxn.php';
+            $trxn =& CRM_Core_BAO_FinancialTrxn::create( $trxnParams );
         }
         
         //create contribution activity w/ individual and target
@@ -978,7 +1008,7 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
 
         $recurParams = array( );
 
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
         $recurParams['contact_id']         = $contactID;
         $recurParams['amount']             = $params['amount'];
         $recurParams['frequency_unit']     = $params['frequency_unit'];
@@ -1077,7 +1107,7 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
         
         // get the relationship type id
         require_once "CRM/Contact/DAO/RelationshipType.php";
-        $relType =& new CRM_Contact_DAO_RelationshipType();
+        $relType = new CRM_Contact_DAO_RelationshipType();
         $relType->name_a_b = "Employee of";
         $relType->find(true);
         $relTypeId = $relType->id;

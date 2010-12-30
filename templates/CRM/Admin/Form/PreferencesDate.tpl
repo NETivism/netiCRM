@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -24,33 +24,31 @@
  +--------------------------------------------------------------------+
 *}
 {* this template is used for adding/editing location type  *}
-<div class="form-item">
+<div class="crm-block crm-form-block crm-preferences-date-form-block">
     <fieldset><legend>{ts}Edit Date Settings{/ts}</legend>
-        <table class='form-layout'>
-            <tr>
+        <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>
+        <table class='form-layout-compressed'>
+            <tr class="crm-preferences-date-form-block-name">
                 <td class="label">{$form.name.label}</td><td>{$form.name.html}</td>
             </tr>
-            <tr>
+            <tr class="crm-preferences-date-form-block-description">
                 <td class="label">{$form.description.label}</td><td>{$form.description.html}</td>
             </tr>
-            <tr>    
+            <tr class="crm-preferences-date-form-block-date_format">    
                 <td class="label">{$form.date_format.label}</td><td>{$form.date_format.html}</td>
             </tr>
             {if $form.time_format.label}
-            <tr>    
+            <tr class="crm-preferences-date-form-block-time_format">    
                 <td class="label">{$form.time_format.label}</td><td>{$form.time_format.html}</td>
             </tr>
             {/if}
-            <tr>    
+            <tr class="crm-preferences-date-form-block-start">    
                 <td class="label">{$form.start.label}</td><td>{$form.start.html}</td>
             </tr>
-            <tr>    
+            <tr class="crm-preferences-date-form-block-end">    
                 <td class="label">{$form.end.label}</td><td>{$form.end.html}</td>
             </tr>
-
-            <tr> 
-                <td>&nbsp;</td><td>{$form.buttons.html}</td>
-            </tr>
-        </table> 
+        </table>
+        <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
     </fieldset>
 </div>

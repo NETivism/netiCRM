@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -30,26 +30,32 @@
 {include file="CRM/common/TrackingFields.tpl"}
 
 {capture assign='reqMark'}<span class="marker"  title="{ts}This field is required.{/ts}">*</span>{/capture}
-<div class="form-item">
+<div class="crm-block crm-event-register-form-block">
 
 {* moved to tpl since need to show only for primary participant page *}
 {if $requireApprovalMsg || $waitlistMsg}
   <div id = "id-waitlist-approval-msg" class="messages status">
-    <dl>
-	{if $requireApprovalMsg}<dd id="id-req-approval-msg">{$requireApprovalMsg}</dd>{/if}
-        {if $waitlistMsg}<dd id="id-waitlist-msg">{$waitlistMsg}</dd>{/if} 
-    </dl>
+    	{if $requireApprovalMsg}
+	    <div id="id-req-approval-msg">{$requireApprovalMsg}</div>
+	{/if}
+        {if $waitlistMsg}
+	    <div id="id-waitlist-msg">{$waitlistMsg}</div>
+	{/if} 
   </div>
 {/if}
 
+{if $contact_id}
+<div class="messages status">
+    {ts 1=$display_name}Welcome %1{/ts}. (<a href="{crmURL p='civicrm/event/register' q="&cid=0&reset=1&id=`$event.id`"}" title="{ts}Click here to register a different person for this event.{/ts}">{ts 1=$display_name}Not %1, or want to register a different person{/ts}</a>?)</div>
+{/if}
 {if $event.intro_text}
-    <div id="intro_text" class="section intro_text-section">
+    <div id="intro_text" class="crm-section intro_text-section">
         <p>{$event.intro_text}</p>
     </div>
 {/if}
 
 {if $form.additional_participants.html}
-    <div class="section additional_participants-section" id="noOfparticipants">
+    <div class="crm-section additional_participants-section" id="noOfparticipants">
         <div class="label">{$form.additional_participants.label}</div>
         <div class="content">
             {$form.additional_participants.html} &nbsp; ({ts}including yourself{/ts})<br />
@@ -62,9 +68,10 @@
 {if $priceSet}
     <fieldset id="priceset" class="crm-group priceset-group"><legend>{$event.fee_label}</legend>
         {include file="CRM/Price/Form/PriceSet.tpl"}
+	{include file="CRM/Price/Form/ParticipantCount.tpl"}
     </fieldset>
     {if $form.is_pay_later}
-        <div class="section pay_later-section">
+        <div class="crm-section pay_later-section">
 	        <div class="label">&nbsp;</div>
             <div class="content">{$form.is_pay_later.html}&nbsp;{$form.is_pay_later.label}</div>
             <div class="clear"></div>
@@ -73,13 +80,13 @@
 
 {else}
     {if $paidEvent}
-        <div class="section paid_event-section">
+        <div class="crm-section paid_event-section">
     	    <div class="label">{$event.fee_label} <span class="marker">*</span></div>
     		<div class="content">{$form.amount.html}</div>
             <div class="clear"></div>
      	</div>
         {if $form.is_pay_later}
-            <div class="section pay_later-section">
+            <div class="crm-section pay_later-section">
     	        <div class="label">&nbsp;</div>
                 <div class="content">{$form.is_pay_later.html}&nbsp;{$form.is_pay_later.label}</div>
                 <div class="clear"></div>
@@ -89,7 +96,7 @@
 {/if}
 
 {assign var=n value=email-$bltID}
-    <div class="section email-section">
+    <div class="crm-section email-section">
         <div class="label">{$form.$n.label}</div>
         <div class="content">{$form.$n.html}</div>
         <div class="clear"></div>
@@ -123,12 +130,12 @@
 {/if}
 </div>
 
-<div id="crm-submit-buttons">
-    {$form.buttons.html}
+<div id="crm-submit-buttons" class="crm-submit-buttons">
+    {include file="CRM/common/formButtons.tpl" location="bottom"}
 </div>
 
 {if $event.footer_text}
-    <div id="footer_text" class="section event_footer_text-section">
+    <div id="footer_text" class="crm-section event_footer_text-section">
         <p>{$event.footer_text}</p>
     </div>
 {/if}
@@ -139,8 +146,13 @@
 
     function allowParticipant( ) { 		
 	{/literal}{if $allowGroupOnWaitlist}{literal}
-	    var additionalParticipants = cj('#additional_participants').val();	
-	    allowGroupOnWaitlist( additionalParticipants );
+	    var additionalParticipants = cj('#additional_participants').val();
+	    var pricesetParticipantCount = 0;
+	    {/literal}{if $priceSet}{literal}
+	      pricesetParticipantCount = pPartiCount;
+	    {/literal}{/if}{literal}
+	
+	    allowGroupOnWaitlist( additionalParticipants, pricesetParticipantCount );
 	{/literal}{/if}{literal}
     }
 
@@ -179,20 +191,31 @@
     }
     
     {/literal}{if $allowGroupOnWaitlist}{literal}
-       allowGroupOnWaitlist( 0 );
+       allowGroupOnWaitlist( 0, 0 );
     {/literal}{/if}{literal}
     
-    function allowGroupOnWaitlist( additionalParticipants )
+    function allowGroupOnWaitlist( additionalParticipants, pricesetParticipantCount )
     {	
+      {/literal}{if $isAdditionalParticipants}{literal}
       if ( !additionalParticipants ) {
       	additionalParticipants = cj('#additional_participants').val();
       }
-      if ( additionalParticipants == '' ) {
-           additionalParticipants = 0;
-      }
+      {/literal}{else}{literal}
+        additionalParticipants = 0;
+      {/literal}{/if}{literal}
+
+      additionalParticipants = parseInt( additionalParticipants );
+      if ( ! additionalParticipants ) {
+      	 additionalParticipants = 0;
+      }     
+
       var availableRegistrations = {/literal}'{$availableRegistrations}'{literal};
       var totalParticipants = parseInt( additionalParticipants ) + 1;
-
+      
+      if ( pricesetParticipantCount ) {
+      	// add priceset count if any 
+      	totalParticipants += parseInt(pricesetParticipantCount) - 1;
+      }
       var isrequireApproval = {/literal}'{$requireApprovalMsg}'{literal};
  
       if ( totalParticipants > availableRegistrations ) {

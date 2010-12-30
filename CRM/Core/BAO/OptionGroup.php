@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -62,7 +62,7 @@ class CRM_Core_BAO_OptionGroup extends CRM_Core_DAO_OptionGroup
      */
     static function retrieve( &$params, &$defaults ) 
     {
-        $optionGroup =& new CRM_Core_DAO_OptionGroup( );
+        $optionGroup = new CRM_Core_DAO_OptionGroup( );
         $optionGroup->copyValues( $params );
         if ( $optionGroup->find( true ) ) {
             CRM_Core_DAO::storeValues( $optionGroup, $defaults );
@@ -101,7 +101,7 @@ class CRM_Core_BAO_OptionGroup extends CRM_Core_DAO_OptionGroup
         $params['is_default'] =  CRM_Utils_Array::value( 'is_default', $params, false );
         
         // action is taken depending upon the mode
-        $optionGroup               =& new CRM_Core_DAO_OptionGroup( );
+        $optionGroup               = new CRM_Core_DAO_OptionGroup( );
         $optionGroup->copyValues( $params );;
         
         if ($params['is_default']) {
@@ -128,11 +128,11 @@ class CRM_Core_BAO_OptionGroup extends CRM_Core_DAO_OptionGroup
     {
         // need to delete all option value field before deleting group 
         require_once 'CRM/Core/DAO/OptionValue.php';
-        $optionValue =& new CRM_Core_DAO_OptionValue( );
+        $optionValue = new CRM_Core_DAO_OptionValue( );
         $optionValue->option_group_id = $optionGroupId;
         $optionValue->delete();
 
-        $optionGroup =& new CRM_Core_DAO_OptionGroup( );
+        $optionGroup = new CRM_Core_DAO_OptionGroup( );
         $optionGroup->id = $optionGroupId;
         $optionGroup->delete();
     }
@@ -148,7 +148,7 @@ class CRM_Core_BAO_OptionGroup extends CRM_Core_DAO_OptionGroup
      * @static
      */
     static function getTitle( $optionGroupId ) {
-        $optionGroup               =& new CRM_Core_DAO_OptionGroup( );
+        $optionGroup               = new CRM_Core_DAO_OptionGroup( );
         $optionGroup->id = $optionGroupId;
         $optionGroup->find(true);
         return $optionGroup->name;

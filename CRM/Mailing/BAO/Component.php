@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -59,7 +59,7 @@ class CRM_Mailing_BAO_Component extends CRM_Mailing_DAO_Component {
      * @static
      */
     static function retrieve( &$params, &$defaults ) {
-        $component =& new CRM_Mailing_DAO_Component( );
+        $component = new CRM_Mailing_DAO_Component( );
         $component->copyValues( $params );
         if ( $component->find( true ) ) {
             CRM_Core_DAO::storeValues( $component, $defaults );
@@ -95,7 +95,7 @@ class CRM_Mailing_BAO_Component extends CRM_Mailing_DAO_Component {
     static function add( &$params, &$ids )
     {
         // action is taken depending upon the mode
-        $component                 =& new CRM_Mailing_DAO_Component( );
+        $component                 = new CRM_Mailing_DAO_Component( );
         $component->name           =  $params['name'];
         $component->component_type =  $params['component_type'];
         $component->subject        =  $params['subject'];

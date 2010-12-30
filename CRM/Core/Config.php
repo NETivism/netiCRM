@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -174,16 +174,22 @@ class CRM_Core_Config extends CRM_Core_Config_Variables
     static function &singleton($loadFromDB = true, $force = false)
     {
         if ( self::$_singleton === null || $force ) {
+            // lets ensure we set E_DEPRECATED to minimize errors
+            // CRM-6327
+            if ( defined( 'E_DEPRECATED' ) ) {
+                error_reporting( error_reporting( ) & ~E_DEPRECATED );
+            }
 
             // first, attempt to get configuration object from cache
             require_once 'CRM/Utils/Cache.php';
             $cache =& CRM_Utils_Cache::singleton( );
             self::$_singleton = $cache->get( 'CRM_Core_Config' );
 
+
             // if not in cache, fire off config construction
             if ( ! self::$_singleton ) {
                 self::$_singleton = new CRM_Core_Config;
-                self::$_singleton->_initialize( );
+                self::$_singleton->_initialize( $loadFromDB );
                 
                 //initialize variables. for gencode we cannot load from the
                 //db since the db might not be initialized
@@ -196,12 +202,11 @@ class CRM_Core_Config extends CRM_Core_Config_Variables
                 $cache->set( 'CRM_Core_Config', self::$_singleton );
             } else {
                 // we retrieve the object from memcache, so we now initialize the objects
-                self::$_singleton->_initialize( );
+                self::$_singleton->_initialize( $loadFromDB );
                 
                 // add component specific settings
                 self::$_singleton->componentRegistry->addConfig( $this );
             }
-
             
             self::$_singleton->initialized = 1;
 
@@ -219,8 +224,10 @@ class CRM_Core_Config extends CRM_Core_Config_Variables
             // again doing this at the very very end
             require_once 'CRM/Utils/Hook.php';
             CRM_Utils_Hook::config( self::$_singleton );
-        }
 
+            // make sure session is always initialised            
+            $session = CRM_Core_Session::singleton();
+        }
         return self::$_singleton;
     }
 
@@ -237,18 +244,22 @@ class CRM_Core_Config extends CRM_Core_Config_Variables
 
         if ( defined( 'CIVICRM_UF_BASEURL' ) ) {
             $this->userFrameworkBaseURL = CRM_Utils_File::addTrailingSlash( CIVICRM_UF_BASEURL, '/' );
-            if ( isset( $_SERVER['HTTPS'] ) &&
-                 strtolower( $_SERVER['HTTPS'] ) != 'off' ) {
-                $this->userFrameworkBaseURL     = str_replace( 'http://', 'https://', 
-                                                               $this->userFrameworkBaseURL );
-            }
             if ($userFramework == 'Drupal' and function_exists('variable_get')) {
                 global $language;
-                if (module_exists('locale') && $mode = variable_get('language_negotiation', LANGUAGE_NEGOTIATION_NONE))
+                if (module_exists('locale') && $mode = variable_get('language_negotiation', LANGUAGE_NEGOTIATION_NONE)) {
                     if (isset($language->prefix) and $language->prefix
                         and ($mode == LANGUAGE_NEGOTIATION_PATH_DEFAULT or $mode == LANGUAGE_NEGOTIATION_PATH)) {
                         $this->userFrameworkBaseURL .= $language->prefix . '/';
                 }
+                    if (isset($language->domain) and $language->domain and $mode == LANGUAGE_NEGOTIATION_DOMAIN) {
+                        $this->userFrameworkBaseURL = CRM_Utils_File::addTrailingSlash( $language->domain, '/' );
+                    }
+                }
+            }
+            if ( isset( $_SERVER['HTTPS'] ) &&
+                 strtolower( $_SERVER['HTTPS'] ) != 'off' ) {
+                $this->userFrameworkBaseURL     = str_replace( 'http://', 'https://', 
+                                                               $this->userFrameworkBaseURL );
             }
         }
 
@@ -289,7 +300,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables
      * @return void
      * @access public
      */
-    private function _initialize( ) 
+    private function _initialize( $loadFromDB = true ) 
     {
 
         // following variables should be set in CiviCRM settings and
@@ -297,6 +308,10 @@ class CRM_Core_Config extends CRM_Core_Config_Variables
         // instead of in CRM_Core_Config_Defaults
         if (defined( 'CIVICRM_DSN' )) {
             $this->dsn = CIVICRM_DSN;
+        } else if ( $loadFromDB ) {
+            // bypass when calling from gencode
+            echo 'You need to define CIVICRM_DSN in civicrm.settings.php';
+            exit( );
         }
 
         if (defined('CIVICRM_TEMPLATE_COMPILEDIR')) {
@@ -314,6 +329,9 @@ class CRM_Core_Config extends CRM_Core_Config_Variables
             // the below statement will create both the templates directory and the config and log directory
             $this->configAndLogDir = $this->templateCompileDir . 'ConfigAndLog' . DIRECTORY_SEPARATOR;
             CRM_Utils_File::createDir( $this->configAndLogDir );
+        } else if ( $loadFromDB ) {
+            echo 'You need to define CIVICRM_TEMPLATE_COMPILEDIR in civicrm.settings.php';
+            exit( );
         }
 
         if ( defined( 'CIVICRM_UF' ) ) {
@@ -391,13 +409,17 @@ class CRM_Core_Config extends CRM_Core_Config_Variables
             require_once 'CRM/Core/Config/Defaults.php';
             CRM_Core_Config_Defaults::setValues( $variables );
 
+            // retrieve directory and url preferences also
+            require_once 'CRM/Core/BAO/Preferences.php';
+            CRM_Core_BAO_Preferences::retrieveDirectoryAndURLPreferences( $defaults );
+
             // add component specific settings
             $this->componentRegistry->addConfig( $this );
-            
+
             // serialise settings 
             CRM_Core_BAO_Setting::add($variables);            
         }
-        
+
         $urlArray     = array('userFrameworkResourceURL', 'imageUploadURL');
         $dirArray     = array('uploadDir','customFileUploadDir');
         
@@ -418,8 +440,10 @@ class CRM_Core_Config extends CRM_Core_Config_Variables
                 }
             } else if ( $key == 'lcMessages' ) {
                 // reset the templateCompileDir to locale-specific and make sure it exists
-                $this->templateCompileDir .= CRM_Utils_File::addTrailingSlash($value);
-                CRM_Utils_File::createDir( $this->templateCompileDir );
+                if ( substr( $this->templateCompileDir, -1 * strlen( $value ) - 1, -1 ) != $value ) {
+                    $this->templateCompileDir .= CRM_Utils_File::addTrailingSlash($value);
+                    CRM_Utils_File::createDir( $this->templateCompileDir );
+                }
             }
             
             $this->$key = $value;
@@ -497,6 +521,9 @@ class CRM_Core_Config extends CRM_Core_Config_Variables
                 $params['sendmail_args'] = $mailingInfo['sendmail_args'];
                 
                 self::$_mail =& Mail::factory( 'sendmail', $params );
+            } elseif ($mailingInfo['outBound_option'] == 3) {
+                $params = array( );
+                self::$_mail =& Mail::factory( 'mail', $params );
             } else {
                 CRM_Core_Session::setStatus( ts( 'There is no valid SMTP server Setting Or SendMail path setting. Click <a href=\'%1\'>Administer CiviCRM >> Global Settings</a> to set the OutBound Email.', array( 1 => CRM_Utils_System::url('civicrm/admin/setting', 'reset=1'))));
  
@@ -526,6 +553,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables
             // clean upload dir
             CRM_Utils_File::cleanDir ( $this->uploadDir );
             CRM_Utils_File::createDir( $this->uploadDir );
+            CRM_Utils_File::restrictAccess($this->uploadDir);
         }
     }
 
@@ -576,7 +604,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables
                           'UPDATE civicrm_group SET cache_date = NULL',
                           'TRUNCATE TABLE civicrm_group_contact_cache',
                           'TRUNCATE TABLE civicrm_menu',
-                          'UPDATE civicrm_preferences SET navigation = NULL',
+                          'UPDATE civicrm_preferences SET navigation = NULL WHERE contact_id IS NOT NULL',
                           );
 
         foreach ( $queries as $query ) {
@@ -584,6 +612,31 @@ class CRM_Core_Config extends CRM_Core_Config_Variables
         }
     }
 
+    /**
+     * clear leftover temporary tables
+     */
+    function clearTempTables( ) {
+        // CRM-5645
+        require_once 'CRM/Contact/DAO/Contact.php';
+        $dao = new CRM_Contact_DAO_Contact( );
+        $query = "
+ SELECT TABLE_NAME as import_table
+   FROM INFORMATION_SCHEMA.TABLES
+  WHERE TABLE_SCHEMA = %1 AND TABLE_NAME LIKE 'civicrm_import_job_%'";
+        $params = array( 1 => array( $dao->database(), 'String' ) );
+        $tableDAO = CRM_Core_DAO::executeQuery( $query, $params );
+        $importTables = array();
+        while ( $tableDAO->fetch() ) {
+            $importTables[] = $tableDAO->import_table;
+        }
+        if ( !empty( $importTables ) ) {
+                $importTable = implode(',', $importTables);
+                // drop leftover import temporary tables
+                CRM_Core_DAO::executeQuery( "DROP TABLE $importTable" );
+        }
+
+    }
+    
     /**
      * function to check if running in upgrade mode
      */
@@ -601,8 +654,8 @@ class CRM_Core_Config extends CRM_Core_Config_Variables
     /**
      * Wrapper function to allow unit tests to switch user framework on the fly
      */    
-    public function setUserFramework( $userFramework ) {
-        $this->userFramework       = $userFrameWork;
+    public function setUserFramework( $userFramework = null ) {
+        $this->userFramework       = $userFramework;
         $this->_setUserFrameworkConfig( $userFramework );
     }
     

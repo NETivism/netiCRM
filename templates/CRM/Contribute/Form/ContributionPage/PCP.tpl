@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -24,8 +24,7 @@
  +--------------------------------------------------------------------+
 *}
 {include file="CRM/common/WizardHeader.tpl"}
-<div id="pcp-form" class="form-item">
-<fieldset>
+<div id="pcp-form" class="crm-block crm-form-block crm-contribution-contributionpage-pcp-form-block">
 {if !$profile}
 	{capture assign=pUrl}{crmURL p='civicrm/admin/uf/group' q="reset=1"}{/capture}
 	<div class="status message">
@@ -35,9 +34,9 @@
 <div id="help">
 {ts}Allow constituents to create their own personal fundraising pages linked to this contribution page.{/ts}
 </div>
-
+<div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>
 <table class="form-layout">
-	<tr>
+	<tr  class="crm-contribution-contributionpage-pcp-form-block-is_active">
 	    <td class="label">&nbsp;</td>
 	    <td>{$form.is_active.html} {$form.is_active.label}</td>
 	</tr>
@@ -47,45 +46,33 @@
 
 <div id="pcpFields">
 <table class="form-layout">
-    <tr>
+   <tr class="crm-contribution-contributionpage-pcp-form-block-is_approval_needed">
 	    <td class="label">{$form.is_approval_needed.label}</td>
 	    <td>{$form.is_approval_needed.html} {help id="id-approval_needed"}</td>
    </tr>
-
-    <tr>
+   <tr class="crm-contribution-contributionpage-pcp-form-block-notify_email">
 	    <td class="label">{$form.notify_email.label}</td>
 	    <td>{$form.notify_email.html} {help id="id-notify"}</td>
-   </tr>
-          
-    <tr>
+   </tr>       
+   <tr class="crm-contribution-contributionpage-pcp-form-block-supporter_profile_id">
 	    <td class="label">{$form.supporter_profile_id.label} <span class="marker"> *</span></td>
 	    <td>{$form.supporter_profile_id.html} {help id="id-supporter_profile"}</td>
-    </tr>
-
-    <tr>
+   </tr>
+   <tr class="crm-contribution-contributionpage-pcp-form-block-is_tellfriend_enabled">
 	    <td class="label">{$form.is_tellfriend_enabled.label}</td>
 	    <td>{$form.is_tellfriend_enabled.html} {help id="id-is_tellfriend"}</td>
-	</tr>
-
-	<tr id="tflimit">
+   </tr>
+   <tr id="tflimit" class="crm-contribution-contributionpage-pcp-form-block-tellfriend_limit">
 	    <td class="label">{$form.tellfriend_limit.label}</td>
 	    <td>{$form.tellfriend_limit.html|crmReplace:class:four} {help id="id-tellfriend_limit"}</td>
-	</tr>
-
-	<tr>
+   </tr>
+   <tr class="crm-contribution-contributionpage-pcp-form-block-link_text">
 	    <td class="label">{$form.link_text.label}</td>
 	    <td>{$form.link_text.html|crmReplace:class:huge} {help id="id-link_text"}</td>
-	</tr>
+   </tr>
 </table>
 </div>
-<div class="spacer"></div>
-<div id="crm-submit-buttons">
-<dl>
-	<dt>&nbsp;</dt>
-	<dd>{$form.buttons.html}</dd>
-</dl>
-</div>
-</fieldset>
+<div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
 </div>
 {include file="CRM/common/showHideByFieldValue.tpl" 
     trigger_field_id    = "is_active"

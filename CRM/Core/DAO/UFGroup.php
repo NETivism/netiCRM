@@ -1,7 +1,7 @@
 <?php
 /*
 +--------------------------------------------------------------------+
-| CiviCRM version 3.1                                                |
+| CiviCRM version 3.3                                                |
 +--------------------------------------------------------------------+
 | Copyright CiviCRM LLC (c) 2004-2010                                |
 +--------------------------------------------------------------------+
@@ -79,7 +79,7 @@ class CRM_Core_DAO_UFGroup extends CRM_Core_DAO
      * @var boolean
      * @static
      */
-    static $_log = false;
+    static $_log = true;
     /**
      * Unique table ID
      *
@@ -178,7 +178,7 @@ class CRM_Core_DAO_UFGroup extends CRM_Core_DAO
     public $is_cms_user;
     /**
      *
-     * @var string
+     * @var text
      */
     public $notify;
     /**
@@ -205,6 +205,12 @@ class CRM_Core_DAO_UFGroup extends CRM_Core_DAO
      * @var datetime
      */
     public $created_date;
+    /**
+     * Should we include proximity search feature in this profile search form?
+     *
+     * @var boolean
+     */
+    public $is_proximity_search;
     /**
      * class constructor
      *
@@ -336,10 +342,8 @@ class CRM_Core_DAO_UFGroup extends CRM_Core_DAO
                 ) ,
                 'notify' => array(
                     'name' => 'notify',
-                    'type' => CRM_Utils_Type::T_STRING,
+                    'type' => CRM_Utils_Type::T_TEXT,
                     'title' => ts('Notify') ,
-                    'maxlength' => 255,
-                    'size' => CRM_Utils_Type::HUGE,
                 ) ,
                 'is_reserved' => array(
                     'name' => 'is_reserved',
@@ -361,6 +365,10 @@ class CRM_Core_DAO_UFGroup extends CRM_Core_DAO
                     'name' => 'created_date',
                     'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
                     'title' => ts('UF Group Created Date') ,
+                ) ,
+                'is_proximity_search' => array(
+                    'name' => 'is_proximity_search',
+                    'type' => CRM_Utils_Type::T_BOOLEAN,
                 ) ,
             );
         }

@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -63,8 +63,8 @@ class CRM_Core_QuickForm_Action extends HTML_QuickForm_Action {
      * @access public
      */
     function popUserContext( ) {
-        $session =& CRM_Core_Session::singleton( );
-        $config  =& CRM_Core_Config::singleton( );
+        $session = CRM_Core_Session::singleton( );
+        $config  = CRM_Core_Config::singleton( );
 
         // check if destination is set, if so goto destination
         $destination = $this->_stateMachine->getDestination( );

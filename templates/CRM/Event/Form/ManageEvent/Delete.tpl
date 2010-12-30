@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -24,19 +24,22 @@
  +--------------------------------------------------------------------+
 *}
 {* this template is used for confirmation of delete for event  *}
+<div class="crm-block crm-form-block crm-event-manage-delete-form-block">
+<div class="crm-submit-buttons">
+    {include file="CRM/common/formButtons.tpl" location="top"}
+</div>
 <div class="messages status">
-    <dl>
-        <dt><img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}" /></dt>
-        <dd>
-          {if $isTemplate}
-            {ts}Warning: Deleting this event template will also delete associated Event Registration Page and Event Fee configurations.{/ts} {ts}This operation cannot be undone.{/ts} {ts}Do you want to continue?{/ts}
-          {else}
+   <div class="icon inform-icon"></div>
+   <div>
+       {if $isTemplate}
+         {ts}Warning: Deleting this event template will also delete associated Event Registration Page and Event Fee configurations.{/ts} {ts}This operation cannot be undone.{/ts} {ts}Do you want to continue?{/ts}
+       {else}
             {ts}Warning: Deleting this event will also delete associated Event Registration Page and Event Fee configurations.{/ts} {ts}This operation cannot be undone.{/ts} {ts}Do you want to continue?{/ts}
-          {/if}
-        </dd>
-    </dl>
+       {/if}
+   </div>
 </div>
 
-<div class="form-item">
-    {$form.buttons.html}
+<div class="crm-submit-buttons">
+    {include file="CRM/common/formButtons.tpl" location="bottom"}
+</div>
 </div>

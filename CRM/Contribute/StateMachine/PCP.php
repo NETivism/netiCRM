@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -53,7 +53,7 @@ class CRM_Contribute_StateMachine_PCP extends CRM_Core_StateMachine {
     function __construct( $controller, $action = CRM_Core_Action::NONE ) {
         parent::__construct( $controller, $action );
 
-        $session =& CRM_Core_Session::singleton();
+        $session = CRM_Core_Session::singleton();
         $session->set('singleForm', false);
 
         $this->_pages = array(

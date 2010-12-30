@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -88,7 +88,7 @@ SELECT acl_id
 
     static function store( $id, &$cache ) {
         foreach ( $cache as $aclID => $data ) {
-            $dao =& new CRM_ACL_DAO_Cache( );
+            $dao = new CRM_ACL_DAO_Cache( );
             if ( $id ) {
                 $dao->contact_id = $id;
             }

@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -30,7 +30,7 @@
  *
  * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
+ * $Id: $
  *
  */
 
@@ -77,7 +77,7 @@ class CRM_Utils_VersionCheck
     function __construct()
     {
         global $civicrm_root;
-        $config =& CRM_Core_Config::singleton();
+        $config = CRM_Core_Config::singleton();
 
         $localfile = $civicrm_root . DIRECTORY_SEPARATOR . self::LOCALFILE_NAME;
         $cachefile = $config->uploadDir . self::CACHEFILE_NAME;
@@ -180,7 +180,7 @@ class CRM_Utils_VersionCheck
     static function &singleton()
     {
         if (!isset(self::$_singleton)) {
-            self::$_singleton =& new CRM_Utils_VersionCheck();
+            self::$_singleton = new CRM_Utils_VersionCheck();
         }
         return self::$_singleton;
     }

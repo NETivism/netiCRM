@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -60,23 +60,41 @@ class CRM_Upgrade_Form extends CRM_Core_Form {
      */ 
     public $locales;
 
+    /**
+     * number to string mapper
+     *
+     * @var array
+     * @public
+     */
+    static $_numberMap = array( 0 => 'Zero',
+                                1 => 'One',
+                                2 => 'Two',
+                                3 => 'Three',
+                                4 => 'Four',
+                                5 => 'Five',
+                                6 => 'Fix',
+                                7 => 'Seven',
+                                8 => 'Eight',
+                                9 => 'Nine'
+                                );
+    
     function __construct( $state = null,
                           $action = CRM_Core_Action::NONE,
                           $method = 'post',
                           $name = null ) {
-        $this->_config =& CRM_Core_Config::singleton( );
+        $this->_config = CRM_Core_Config::singleton( );
 
         // this->latestVersion is legacy code, only used for 2.0 -> 2.1 upgrade
         $this->latestVersion = '2.1.6'; // latest ver in 2.1 series               
 
         require_once "CRM/Core/DAO/Domain.php";                        
-        $domain =& new CRM_Core_DAO_Domain();
+        $domain = new CRM_Core_DAO_Domain();
         $domain->find(true);
         
         $this->multilingual = (bool) $domain->locales;
         $this->locales      = explode(CRM_Core_DAO::VALUE_SEPARATOR, $domain->locales);
         
-        $smarty =& CRM_Core_Smarty::singleton( );        
+        $smarty = CRM_Core_Smarty::singleton( );        
         $smarty->compile_dir = $this->_config->templateCompileDir;
         $smarty->assign('multilingual', $this->multilingual);
         $smarty->assign('locales',      $this->locales);
@@ -89,6 +107,28 @@ class CRM_Upgrade_Form extends CRM_Core_Form {
 
         parent::__construct( $state, $action, $method, $name );
     }
+
+    static function &incrementalPhpObject( $version )
+    {
+        static $incrementalPhpObject = array( );
+        
+        $versionParts = explode( '.', $version );
+        $versionName  = self::$_numberMap[$versionParts[0]].self::$_numberMap[$versionParts[1]];
+
+        if ( !array_key_exists( $versionName, $incrementalPhpObject ) ) {
+            require_once "CRM/Upgrade/Incremental/php/{$versionName}.php";
+            eval( "\$incrementalPhpObject['$versionName'] = new CRM_Upgrade_Incremental_php_{$versionName};" );
+        }
+        return $incrementalPhpObject[$versionName];
+    }
+   
+    function checkVersionRelease( $version, $release ) {
+        $versionParts = explode( '.', $version );
+        if ( $versionParts[2] == $release ) {
+            return true;
+        }
+        return false;
+    } 
 
     function checkSQLConstraints( &$constraints ) {
         $pass = $fail = 0;
@@ -183,7 +223,7 @@ SET    version = '$version'
             $oldVersion = CRM_Core_BAO_Domain::version();
 
             require_once 'CRM/Core/BAO/Log.php';
-            $session   =& CRM_Core_Session::singleton();
+            $session   = CRM_Core_Session::singleton();
             $logParams = array(
                                'entity_table'  => 'civicrm_domain',
                                'entity_id'     => 1,
@@ -230,7 +270,7 @@ SET    version = '$version'
     }
 
     function processLocales($tplFile, $rev) {
-        $smarty =& CRM_Core_Smarty::singleton( );                                
+        $smarty = CRM_Core_Smarty::singleton( );                                
         
         $this->source( $smarty->fetch($tplFile), true );
 

@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -68,16 +68,17 @@
  {if $contactEditMode}
  	<fieldset><legend></legend>
  {/if}
-	<div class="section organizationName-section">
+	<div class="crm-section organizationName-section">
       {if $relatedOrganizationFound}
-      <div class="section">
+      <div class="section crm-section">
 		<div class="content">{$form.org_option.html}</div>
       </div>
-      <div id="select_org" class="section select_org-section">
+      <div id="select_org" class="crm-section select_org-section">
+        <div class="label">{$form.organization_name.label}</div>	   
         <div class="content">{$form.organization_id.html|crmReplace:class:big}</div>
       </div>
       {/if}  
-      <div id="create_org" class="section create_org-section">
+      <div id="create_org" class="crm-section create_org-section">
 		<div class="label">{$form.organization_name.label}</div>
         <div class="content">{$form.organization_name.html|crmReplace:class:big}</div>
         <div class="clear"></div>
@@ -108,21 +109,21 @@
 {/if}
 
     {if $contactEditMode}<fieldset><legend>{ts}Address{/ts}</legend>{/if}
-    <div class="section address-section">
+    <div class="crm-section address-section">
         {if !$contactEditMode}
-		<div class="section {$form.phone.$index.phone.id}-section">
+		<div class="crm-section {$form.phone.$index.phone.id}-section">
             <div class="label">{$form.phone.$index.phone.label}</div>
             <div class="content">{$form.phone.$index.phone.html}</div>
             <div class="clear"></div>
         </div>
-		<div class="section {$form.email.$index.email.id}-section">
+		<div class="crm-section {$form.email.$index.email.id}-section">
             <div class="label">{$form.email.$index.email.label}</div>
             <div class="content">{$form.email.$index.email.html}</div>
             <div class="clear"></div>
         </div>
         {/if}
         {if $addressSequence.street_address}
-		<div class="section {$form.address.$index.street_address.id}-section">
+		<div class="crm-section {$form.address.$index.street_address.id}-section">
             <div class="label">{$form.address.$index.street_address.label}</div>
             <div class="content">{$form.address.$index.street_address.html}    
                 <br class="spacer"/>
@@ -132,7 +133,7 @@
         </div>
         {/if}
         {if $addressSequence.supplemental_address_1}
-		<div class="section {$form.address.$index.supplemental_address_1.id}-section">
+		<div class="crm-section {$form.address.$index.supplemental_address_1.id}-section">
             <div class="label">{$form.address.$index.supplemental_address_1.label}</div>
             <div class="content">{$form.address.$index.supplemental_address_1.html}    
                 <br class="spacer"/>
@@ -142,21 +143,21 @@
         </div>
         {/if}
         {if $addressSequence.supplemental_address_2}
-		<div class="section {$form.address.$index.supplemental_address_2.id}-section">
+		<div class="crm-section {$form.address.$index.supplemental_address_2.id}-section">
             <div class="label">{$form.address.$index.supplemental_address_2.label}</div>
             <div class="content">{$form.address.$index.supplemental_address_2.html}</div>
             <div class="clear"></div>
         </div>
         {/if}
         {if $addressSequence.city}
-		<div class="section {$form.address.$index.city.id}<-section">
+		<div class="crm-section {$form.address.$index.city.id}<-section">
             <div class="label">{$form.address.$index.city.label}</div>
             <div class="content">{$form.address.$index.city.html}</div>
             <div class="clear"></div>
         </div>
         {/if}
         {if $addressSequence.postal_code}
-		<div class="section {$form.address.$index.postal_code.id}-section">
+		<div class="crm-section {$form.address.$index.postal_code.id}-section">
             <div class="label">{$form.address.$index.postal_code.label}</div>
             <div class="content">{$form.address.$index.postal_code.html}
                 {if $form.address.$index.postal_code_suffix.html}
@@ -169,21 +170,21 @@
         </div>
         {/if}
         {if $addressSequence.country}
-		<div class="section {$form.address.$index.country_id.id}-section">
+		<div class="crm-section {$form.address.$index.country_id.id}-section">
             <div class="label">{$form.address.$index.country_id.label}</div>
             <div class="content">{$form.address.$index.country_id.html}</div>
             <div class="clear"></div>
         </div>
         {/if}
         {if $addressSequence.state_province}
-		<div class="section {$form.address.$index.state_province_id.id}-section">
+		<div class="crm-section {$form.address.$index.state_province_id.id}-section">
             <div class="label">{$form.address.$index.state_province_id.label}</div>
             <div class="content">{$form.address.$index.state_province_id.html}</div>
             <div class="clear"></div>
         </div>
         {/if}
         {if $contactEditMode and $form.location.$index.address.geo_code_1.label}
-		<div class="section {$form.address.$index.geo_code_1.id}-{$form.address.$index.geo_code_2.id}-section">
+		<div class="crm-section {$form.address.$index.geo_code_1.id}-{$form.address.$index.geo_code_2.id}-section">
             <div class="label">{$form.address.$index.geo_code_1.label}, {$form.address.$index.geo_code_2.label}</div>
             <div class="content">{$form.address.$index.geo_code_1.html}, {$form.address.$index.geo_code_2.html}    
                 <br class="spacer"/>

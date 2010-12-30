@@ -39,25 +39,19 @@
 /* Spacing inside widgets. */
 #crm-container .widget-wrapper { 
     padding: 0px;
-    -moz-border-radius : 4px;	
-    -webkit-border-radius : 4px;	
-    -khtml-border-radius : 4px;
-    border: 4px solid #DFDFDF;
     overflow-x:auto;
     margin-right: .25em    
 }
 
 /* wodget header / title */
 #crm-container .widget-header {
-    color: black;
-    height: 30px;
-    line-height: 30px;
-    cursor: move;
-    background: #DFDFDF;
-    width: 100%;
-    font-size: 1.2em;
-    margin: 0px;
-}
+	background:#CDE8FE none repeat scroll 0 0;
+	color:#000;
+	cursor:move;
+	display:inline;
+	font-size:1.2em;
+	margin:0;
+	}
 
 /* widget content / body*/
 #crm-container .widget-content {
@@ -67,23 +61,23 @@
 
 /* Standards-browsers do this anyway because all inner block elements are floated.  IE doesn't because it's crap. */
 #crm-container .widget-controls { 
-    display: inline; 
-    padding:0px;
-}
+	background-color:#CDE8FE;
+	display:block;
+	padding:5px 0px;
+	}
 
 #crm-container .widget-icon, #crm-container .full-screen-close-icon img {
     display: block;
     float: right;
     margin-left: 2px;
-    margin-top: 5px;
+    margin-top: 2px;
     cursor: pointer;
 }
 
 #full-screen-header {
     display: block;
     padding: .2em .4em;
-    border: 1px solid black;
-    background: #eee;
+    background: #F0F0E8;
     /* Although this is an <a> link, it doesn't have an href="" attribute. */
     cursor: pointer;
 }
@@ -92,41 +86,43 @@
 #crm-container .throbber {
     text-align: right;    
     background:url("images/throbber.gif") no-repeat scroll 0 0 transparent;
-    height:40px;
-    width:39px;
+    height:20px;
+    width:20px;
 }
 
 #crm-container p.loadtext {
-    margin:1.6em 0 0 4em;
+    margin:1.6em 0 0 26px;
 }
 
 #crm-container .minimize-icon {
-    background-position:-62px -191px;
-    background-image:url('../themes/smoothness/images/ui-icons_454545_256x240.png');
+    background-position:-63px -17px;
+    background-image:url('../jquery-ui-1.8.5/css/custom-theme/images/ui-icons_222222_256x240.png');
     height:16px;
     width:16px;
     padding-right:2px;
+    float: left;
 }
 
 #crm-container .maximize-icon {
-    background-position:-46px -191px;
-    background-image:url('../themes/smoothness/images/ui-icons_454545_256x240.png');
+    background-position:-31px -18px;
+    background-image:url('../jquery-ui-1.8.5/css/custom-theme/images/ui-icons_222222_256x240.png');
     height:16px;
     width:16px;
     padding-right:2px;
+    float: left;
 }
 
 #crm-container .close-icon {
-    background-position:-32px -191px;
-    background-image:url('../themes/smoothness/images/ui-icons_454545_256x240.png');
+    background-position:-81px -129px;
+    background-image:url('../jquery-ui-1.8.5/css/custom-theme/images/ui-icons_222222_256x240.png');
     height:16px;
     width:16px;
     padding-right:2px;
 }
 
 #crm-container .fullscreen-icon {
-    background-position:-176px -191px;
-    background-image:url('../themes/smoothness/images/ui-icons_454545_256x240.png');
+    background-position:-159px -113px;
+    background-image:url('../jquery-ui-1.8.5/css/custom-theme/images/ui-icons_222222_256x240.png');
     height:16px;
     width:16px;
 }

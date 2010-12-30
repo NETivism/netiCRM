@@ -2,7 +2,7 @@
 
  /*
   +--------------------------------------------------------------------+
-  | CiviCRM version 3.1                                                |
+  | CiviCRM version 3.3                                                |
   +--------------------------------------------------------------------+
   | Copyright CiviCRM LLC (c) 2004-2010                                |
   +--------------------------------------------------------------------+
@@ -39,7 +39,19 @@
   */
  class CRM_Mailing_Form_Schedule extends CRM_Core_Form 
  {
-
+     /** 
+      * Function to set variables up before form is built 
+      *                                                           
+      * @return void 
+      * @access public 
+      */ 
+     public function preProcess()  
+     {
+         //when user come from search context.
+         require_once 'CRM/Contact/Form/Search.php';
+         $this->_searchBasedMailing = CRM_Contact_Form_Search::isSearchContext( $this->get( 'context' ) );
+     }
+     
      /**
       * This function sets the default values for the form.
       * 
@@ -81,7 +93,7 @@
                            array(  'type'  => 'cancel',
                                    'name'  => ts('Continue Later')),
                            );
-         if ( $this->get( 'context' ) == 'search' && $this->get( 'ssID' ) ) {
+         if ( $this->_searchBasedMailing && $this->get( 'ssID' ) ) {
              $buttons = array( array(  'type'  => 'back',
                                        'name'  => ts('<< Previous')),
                                array(  'type'  => 'next',
@@ -105,14 +117,13 @@
       *                          date is properly set.
       * @static
       */
-     public static function formRule(&$params, &$files, &$self) 
+     public static function formRule($params, $files, $self) 
      {
          if ( $params['_qf_Schedule_submit'] ) {
              //when user perform mailing from search context 
              //redirect it to search result CRM-3711.
              $ssID    = $self->get( 'ssID' );
-             $context = $self->get( 'context' );
-             if ( $ssID && $context == 'search' ) {
+             if ( $ssID && $self->_searchBasedMailing ) {
                  if ( $self->_action == CRM_Core_Action::BASIC ) {
                      $fragment = 'search';
                  } else if ( $self->_action == CRM_Core_Action::PROFILE ) {
@@ -126,8 +137,14 @@
                  $draftURL = CRM_Utils_System::url( 'civicrm/mailing/browse/unscheduled', 'scheduled=false&reset=1' );
                  $status = ts("Your mailing has been saved. You can continue later by clicking the 'Continue' action to resume working on it.<br /> From <a href='%1'>Draft and Unscheduled Mailings</a>.", array( 1 => $draftURL ) );
                  CRM_Core_Session::setStatus( $status );
-
+                 
                  //replace user context to search.
+                 $context = $self->get( 'context' );
+                 if ( !CRM_Contact_Form_Search::isSearchContext( $context ) ) $context = 'search';
+                 $urlParams = "force=1&reset=1&ssID={$ssID}&context={$context}";
+                 $qfKey = CRM_Utils_Request::retrieve( 'qfKey', 'String', $this );
+                 if ( CRM_Utils_Rule::qfKey( $qfKey ) ) $urlParams .= "&qfKey=$qfKey";
+                 
                  $url = CRM_Utils_System::url( "civicrm/contact/" . $fragment, "force=1&reset=1&ssID={$ssID}" );
                  CRM_Utils_System::redirect( $url );
              } else {
@@ -166,12 +183,12 @@
         }
         
         require_once 'CRM/Mailing/BAO/Mailing.php';
-        $mailing =& new CRM_Mailing_BAO_Mailing();
+        $mailing = new CRM_Mailing_BAO_Mailing();
         $mailing->id = $ids['mailing_id'];
         
         if ($mailing->find(true)) {
             
-            $job =& new CRM_Mailing_BAO_Job();
+            $job = new CRM_Mailing_BAO_Job();
             $job->mailing_id = $mailing->id;
             
             if ( ! $mailing->is_template) {
@@ -185,7 +202,7 @@
             } 
 
             // also set the scheduled_id 
-            $session =& CRM_Core_Session::singleton( );
+            $session = CRM_Core_Session::singleton( );
             $mailing->scheduled_id = $session->get( 'userID' );
             $mailing->created_date = CRM_Utils_Date::isoToMysql( $mailing->created_date );
             $mailing->save( );
@@ -195,8 +212,7 @@
         //when user perform mailing from search context 
         //redirect it to search result CRM-3711.
         $ssID    = $this->get( 'ssID' );
-        $context = $this->get( 'context' );
-        if ( $ssID && $context == 'search' ) {
+        if ( $ssID && $this->_searchBasedMailing ) {
             if ( $this->_action == CRM_Core_Action::BASIC ) {
                 $fragment = 'search';
             } else if ( $this->_action == CRM_Core_Action::PROFILE ) {
@@ -206,11 +222,17 @@
             } else {
                 $fragment = 'search/custom';
             }
-            $url = CRM_Utils_System::url( 'civicrm/contact/' . $fragment, "force=1&reset=1&ssID={$ssID}" );
+            $context = $this->get( 'context' );
+            if ( !CRM_Contact_Form_Search::isSearchContext( $context ) ) $context = 'search';
+            $urlParams = "force=1&reset=1&ssID={$ssID}&context={$context}";
+            $qfKey = CRM_Utils_Request::retrieve( 'qfKey', 'String', $this );
+            if ( CRM_Utils_Rule::qfKey( $qfKey ) ) $urlParams .= "&qfKey=$qfKey";
+            
+            $url = CRM_Utils_System::url( 'civicrm/contact/' . $fragment, $urlParams );
             CRM_Utils_System::redirect( $url );
         }
         
-        $session =& CRM_Core_Session::singleton( );
+        $session = CRM_Core_Session::singleton( );
         $session->pushUserContext( CRM_Utils_System::url( 'civicrm/mailing/browse/scheduled', 
                                                              'reset=1&scheduled=true' ) );
     }

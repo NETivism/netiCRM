@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -57,11 +57,11 @@
           </thead>
         {foreach from=$rows item=row}
 	      <tr id="row_{$row.id}"class="{cycle values="odd-row,even-row"} {$row.class}{if NOT $row.is_active} disabled{/if}">        
-	        <td>{$row.name}</td>	
-	        <td>{$row.sku}</td>
-                <td>{$row.price }</td>
-	        <td>{$row.min_contribution}</td>
-	        <td id="row_{$row.id}_status">{if $row.is_active eq 1} {ts}Yes{/ts} {else} {ts}No{/ts} {/if}</td>
+	        <td class="crm-contribution-form-block-name">{$row.name}</td>	
+	        <td class="crm-contribution-form-block-sku">{$row.sku}</td>
+                <td class="crm-contribution-form-block-price">{$row.price }</td>
+	        <td class="crm-contribution-form-block-min_contribution">{$row.min_contribution}</td>
+	        <td id="row_{$row.id}_status" >{if $row.is_active eq 1} {ts}Yes{/ts} {else} {ts}No{/ts} {/if}</td>
 	        <td id={$row.id}>{$row.action|replace:'xx':$row.id}</td>
           </tr>
         {/foreach}
@@ -69,18 +69,16 @@
     {/strip}
     {if $action ne 1 and $action ne 2}
 	    <div class="action-link">
-    	<a href="{crmURL q="action=add&reset=1"}" id="newManagePremium" class="button"><span>&raquo; {ts}New Premium{/ts}</span></a>
+    	<a href="{crmURL q="action=add&reset=1"}" id="newManagePremium" class="button"><span><div class="icon add-icon"></div>{ts}Add Premium{/ts}</span></a>
         </div>
     {/if}
 </div>
 {else}
     {if $action ne 1 and $action ne 2}
     <div class="messages status">
-    <dl>
-        <dt><img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}"/></dt>
+        <img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}"/>
         {capture assign=crmURL}{crmURL p='civicrm/admin/contribute/managePremiums' q="action=add&reset=1"}{/capture}
-        <dd>{ts 1=$crmURL}No premium products have been created for your site. You can <a href='%1'>add one</a>.{/ts}</dd>
-        </dl>
+        {ts 1=$crmURL}No premium products have been created for your site. You can <a href='%1'>add one</a>.{/ts}
     </div>  
     {/if}	  
 {/if}

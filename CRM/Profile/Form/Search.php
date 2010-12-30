@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -59,7 +59,6 @@ class CRM_Profile_Form_Search extends CRM_Profile_Form
     function preProcess() 
     { 
         $this->_mode = CRM_Profile_Form::MODE_SEARCH; 
-      
         parent::preProcess( );
     } 
     
@@ -109,6 +108,16 @@ class CRM_Profile_Form_Search extends CRM_Profile_Form
      */
     public function buildQuickForm( ) 
     {
+        // Is proximity search enabled for this profile?
+        require_once 'CRM/Core/DAO.php';
+        $proxSearch = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_UFGroup',
+                                                  $this->get( 'gid' ),
+                                                  'is_proximity_search', 'id');
+        if ( $proxSearch ) {
+            require_once 'CRM/Contact/Form/Task/ProximityCommon.php';
+            CRM_Contact_Form_Task_ProximityCommon::buildQuickForm( $this, $proxSearch );
+        }
+
         $this->addButtons(array( 
                                 array ('type'      => 'refresh', 
                                        'name'      => ts('Search'), 
@@ -116,6 +125,7 @@ class CRM_Profile_Form_Search extends CRM_Profile_Form
                                 ) );
 
         parent::buildQuickForm( );
+
      }
 
        

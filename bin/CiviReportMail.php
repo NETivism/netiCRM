@@ -1,7 +1,7 @@
 <?php
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -54,7 +54,7 @@ class CiviReportMail {
                 $obj->assign( 'reportTitle', $templateInfo['label'] );
             }
             
-            $wrapper =& new CRM_Utils_Wrapper( );
+            $wrapper = new CRM_Utils_Wrapper( );
             $arguments['urlToSession'] = array( array( 'urlVar'     => 'instanceId',
                                                        'type'       => 'Positive',
                                                        'sessionVar' => 'instanceId',
@@ -70,9 +70,13 @@ require_once 'CRM/Core/Config.php';
 require_once 'CRM/Report/Page/Instance.php';
 require_once 'CRM/Utils/Wrapper.php';
 
-$config =& CRM_Core_Config::singleton();
+$config = CRM_Core_Config::singleton();
 
 CRM_Utils_System::authenticateScript(true);
+
+// load bootstrap to call hooks
+require_once 'CRM/Utils/System.php';
+CRM_Utils_System::loadBootStrap(  );
 
 require_once 'CRM/Core/Lock.php';
 $lock = new CRM_Core_Lock('CiviReportMail');
@@ -80,7 +84,9 @@ $lock = new CRM_Core_Lock('CiviReportMail');
 if ($lock->isAcquired()) {
     // try to unset any time limits
     if (!ini_get('safe_mode')) set_time_limit(0);
-    
+
+    //log the execution of script
+    CRM_Core_Error::debug_log_message( 'CiviReportMail.php' );
     // if there are named sets of settings, use them - otherwise use the default (null)
     CiviReportMail::processReport();
     

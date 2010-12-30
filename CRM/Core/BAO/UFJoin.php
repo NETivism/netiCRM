@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -57,7 +57,7 @@ class CRM_Core_BAO_UFJoin extends CRM_Core_DAO_UFJoin {
             $params['id'] = $id;
         }
 
-        $dao =& new CRM_Core_DAO_UFJoin( ); 
+        $dao = new CRM_Core_DAO_UFJoin( ); 
         $dao->copyValues( $params ); 
         if ( $params['uf_group_id'] ) {
             $dao->save( ); 
@@ -79,7 +79,7 @@ class CRM_Core_BAO_UFJoin extends CRM_Core_DAO_UFJoin {
             return;
         }
 
-        $dao =& new CRM_Core_DAO_UFJoin( );
+        $dao = new CRM_Core_DAO_UFJoin( );
         $dao->module       = $module;
         $dao->entity_table = $entityTable;
         $dao->entity_id    = $entityID;
@@ -101,7 +101,7 @@ class CRM_Core_BAO_UFJoin extends CRM_Core_DAO_UFJoin {
             return $params['id'];
         }
 
-        $dao =& new CRM_Core_DAO_UFJoin( );
+        $dao = new CRM_Core_DAO_UFJoin( );
         
         // CRM-4377 (ab)uses the module column
         if (isset($params['module'])) {
@@ -134,7 +134,7 @@ class CRM_Core_BAO_UFJoin extends CRM_Core_DAO_UFJoin {
      */
     public static function findUFGroupId(&$params) { 
     
-        $dao =& new CRM_Core_DAO_UFJoin( ); 
+        $dao = new CRM_Core_DAO_UFJoin( ); 
          
         $dao->entity_table = CRM_Utils_Array::value( 'entity_table', $params );
         $dao->entity_id    = CRM_Utils_Array::value( 'entity_id'   , $params );
@@ -147,7 +147,7 @@ class CRM_Core_BAO_UFJoin extends CRM_Core_DAO_UFJoin {
 
     public static function getUFGroupIds(&$params) { 
     
-        $dao =& new CRM_Core_DAO_UFJoin( ); 
+        $dao = new CRM_Core_DAO_UFJoin( ); 
          
         // CRM-4377 (ab)uses the module column
         if (isset($params['module'])) {

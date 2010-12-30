@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -65,9 +65,16 @@ class CRM_Core_Controller_Simple extends CRM_Core_Controller {
         // by definition a single page is modal :). We use the form name as the scope for this controller
         parent::__construct( $title, true, $mode, $path, $addSequence, $ignoreKey );
 
-        $this->_stateMachine =& new CRM_Core_StateMachine( $this );
+        $this->_stateMachine = new CRM_Core_StateMachine( $this );
 
         $params = array($path => null);
+
+        $savedAction = CRM_Utils_Request::retrieve('action', 'String', $this, false, null );
+        if ( ! empty( $savedAction ) &&
+             $savedAction != $mode ) {
+            $mode = $savedAction;
+        }
+
 
         $this->_stateMachine->addSequentialPages($params, $mode);
 
@@ -76,7 +83,7 @@ class CRM_Core_Controller_Simple extends CRM_Core_Controller {
         //changes for custom data type File
         $uploadNames = $this->get( 'uploadNames' );
         
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
         
         if ( is_array( $uploadNames ) && ! empty ( $uploadNames ) ) {
             $uploadArray = $uploadNames;

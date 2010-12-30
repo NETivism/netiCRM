@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -364,7 +364,7 @@ abstract class CRM_Contribute_Import_Parser
             /* trim whitespace around the values */
             $empty = true;
             foreach ($values as $k => $v) {
-                $values[$k] = trim($v, " .\t\r\n");
+                $values[$k] = trim($v, " \t\r\n");
             }
 
             if ( CRM_Utils_System::isNull( $values ) ) {
@@ -500,7 +500,7 @@ abstract class CRM_Contribute_Import_Parser
                 $headers = array_merge( array(  ts('Line Number'),
                                                 ts('Reason')), 
                                         $customHeaders);
-                $this->_errorFileName = $fileName . '.errors';
+                $this->_errorFileName = self::errorFileName( self::ERROR );
                 self::exportCSV($this->_errorFileName, $headers, $this->_errors);
             }
             
@@ -509,7 +509,7 @@ abstract class CRM_Contribute_Import_Parser
                 $headers = array_merge( array(  ts('Line Number'),
                                                 ts('Reason')), 
                                         $customHeaders);
-                $this->_pledgePaymentErrorsFileName = $fileName . '.pledgePaymentErrors';
+                $this->_pledgePaymentErrorsFileName = self::errorFileName( self::PLEDGE_PAYMENT_ERROR );
                 self::exportCSV( $this->_pledgePaymentErrorsFileName, $headers, $this->_pledgePaymentErrors );
             }
             
@@ -518,7 +518,7 @@ abstract class CRM_Contribute_Import_Parser
                 $headers = array_merge( array(  ts('Line Number'),
                                                 ts('Reason')), 
                                         $customHeaders);
-                $this->_softCreditErrorsFileName = $fileName . '.softCreditErrors';
+                $this->_softCreditErrorsFileName = self::errorFileName( self::SOFT_CREDIT_ERROR );
                 self::exportCSV( $this->_softCreditErrorsFileName, $headers, $this->_softCreditErrors );
             }
             
@@ -526,15 +526,15 @@ abstract class CRM_Contribute_Import_Parser
                 $headers = array_merge( array(  ts('Line Number'),
                                                 ts('Reason')), 
                                         $customHeaders);
-                $this->_conflictFileName = $fileName . '.conflicts';
+                $this->_conflictFileName = self::errorFileName( self::CONFLICT );
                 self::exportCSV($this->_conflictFileName, $headers, $this->_conflicts);
             }
             if ($this->_duplicateCount) {
                 $headers = array_merge( array(  ts('Line Number'), 
                                                 ts('View Contribution URL')),
                                         $customHeaders);
-
-                $this->_duplicateFileName = $fileName . '.duplicates';
+                
+                $this->_duplicateFileName = self::errorFileName( self::DUPLICATE );
                 self::exportCSV($this->_duplicateFileName, $headers, $this->_duplicates);
             }
         }
@@ -563,7 +563,7 @@ abstract class CRM_Contribute_Import_Parser
         require_once 'CRM/Contribute/Import/Field.php';
         foreach ( $fieldKeys as $key ) {
             if ( empty( $this->_fields[$key] ) ) {
-                $this->_activeFields[] =& new CRM_Contribute_Import_Field( '', ts( '- do not import -' ) );
+                $this->_activeFields[] = new CRM_Contribute_Import_Field( '', ts( '- do not import -' ) );
             } else {
                 $this->_activeFields[] = clone( $this->_fields[$key] );
             }
@@ -665,14 +665,14 @@ abstract class CRM_Contribute_Import_Parser
 
     function addField( $name, $title, $type = CRM_Utils_Type::T_INT, $headerPattern = '//', $dataPattern = '//') {
         if ( empty( $name ) ) {
-            $this->_fields['doNotImport'] =& new CRM_Contribute_Import_Field($name, $title, $type, $headerPattern, $dataPattern);
+            $this->_fields['doNotImport'] = new CRM_Contribute_Import_Field($name, $title, $type, $headerPattern, $dataPattern);
         } else {
             $tempField = CRM_Contact_BAO_Contact::importableFields('All', null );
             if (! array_key_exists ($name,$tempField) ) {
-                $this->_fields[$name] =& new CRM_Contribute_Import_Field($name, $title, $type, $headerPattern, $dataPattern);
+                $this->_fields[$name] = new CRM_Contribute_Import_Field($name, $title, $type, $headerPattern, $dataPattern);
             } else {
                 require_once 'CRM/Import/Field.php';
-                $this->_fields[$name] =& new CRM_Import_Field( $name, $title, $type, $headerPattern, $dataPattern,
+                $this->_fields[$name] = new CRM_Import_Field( $name, $title, $type, $headerPattern, $dataPattern,
                                                                CRM_Utils_Array::value( 'hasLocationType', $tempField[$name] ) );
             }
                 
@@ -773,7 +773,7 @@ abstract class CRM_Contribute_Import_Parser
         foreach ($header as $key => $value) {
             $header[$key] = "\"$value\"";
         }
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
         $output[] = implode($config->fieldSeparator, $header);
         
         foreach ($data as $datum) {
@@ -812,7 +812,81 @@ abstract class CRM_Contribute_Import_Parser
             $values[$k] = preg_replace("/^$enclosure(.*)$enclosure$/", '$1', $v);
         }
     }
-
+    
+    function errorFileName( $type ) {
+        $fileName = null;
+        if ( empty( $type ) ) return $fileName; 
+        
+        $config   = CRM_Core_Config::singleton( );
+        $fileName = $config->uploadDir . "sqlImport";
+        
+        switch ( $type ) {
+        case CRM_Contribute_Import_Parser::ERROR:
+        case CRM_Contribute_Import_Parser::NO_MATCH: 
+        case CRM_Contribute_Import_Parser::CONFLICT:
+        case CRM_Contribute_Import_Parser::DUPLICATE:
+            //here constants get collides.
+            require_once 'CRM/Import/Parser.php';
+            if ( $type == CRM_Contribute_Import_Parser::ERROR ) {
+                $type = CRM_Import_Parser::ERROR;
+            } else if ( $type == CRM_Contribute_Import_Parser::NO_MATCH ) {
+                $type = CRM_Import_Parser::NO_MATCH;
+            } else if ( $type == CRM_Contribute_Import_Parser::CONFLICT ) {
+                $type = CRM_Import_Parser::CONFLICT;
+            } else {
+                $type = CRM_Import_Parser::DUPLICATE;
+            }
+            $fileName = CRM_Import_Parser::errorFileName( $type );
+            break;
+            
+        case CRM_Contribute_Import_Parser::SOFT_CREDIT_ERROR :
+            $fileName .= '.softCreditErrors';
+            break;
+            
+        case CRM_Contribute_Import_Parser::PLEDGE_PAYMENT_ERROR :
+            $fileName .= '.pledgePaymentErrors';
+            break;
+        }
+        
+        return $fileName;
+    }
+    
+    function saveFileName( $type ) {
+        $fileName = null;
+        if ( empty( $type ) ) return $fileName;
+        
+        switch ( $type ) {
+            
+        case CRM_Contribute_Import_Parser::ERROR:
+        case CRM_Contribute_Import_Parser::NO_MATCH: 
+        case CRM_Contribute_Import_Parser::CONFLICT:
+        case CRM_Contribute_Import_Parser::DUPLICATE:
+            //here constants get collides.
+            require_once 'CRM/Import/Parser.php';
+            if ( $type == CRM_Contribute_Import_Parser::ERROR ) {
+                $type = CRM_Import_Parser::ERROR;
+            } else if ( $type == CRM_Contribute_Import_Parser::NO_MATCH ) {
+                $type = CRM_Import_Parser::NO_MATCH;
+            } else if ( $type == CRM_Contribute_Import_Parser::CONFLICT ) {
+                $type = CRM_Import_Parser::CONFLICT;
+            } else {
+                $type = CRM_Import_Parser::DUPLICATE;
+            }
+            $fileName = CRM_Import_Parser::saveFileName( $type );
+            break;
+            
+        case CRM_Contribute_Import_Parser::SOFT_CREDIT_ERROR :
+            $fileName = 'Import_Soft_Credit_Errors.csv';
+            break;
+            
+        case CRM_Contribute_Import_Parser::PLEDGE_PAYMENT_ERROR :
+            $fileName = 'Import_Pledge_Payment_Errors.csv';
+            break;
+        }
+        
+        return $fileName;
+    }
+    
 }
 
 

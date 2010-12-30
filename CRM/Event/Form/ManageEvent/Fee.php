@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -221,7 +221,7 @@ class CRM_Event_Form_ManageEvent_Fee extends CRM_Event_Form_ManageEvent
         }
 
         require_once 'CRM/Core/ShowHideBlocks.php';
-        $this->_showHide =& new CRM_Core_ShowHideBlocks( );
+        $this->_showHide = new CRM_Core_ShowHideBlocks( );
         if ( !$defaults['is_monetary'] ) {
             $this->_showHide->addHide( 'event-fees' );
         }
@@ -250,6 +250,9 @@ class CRM_Event_Form_ManageEvent_Fee extends CRM_Event_Form_ManageEvent
                          null, 
                          null,
                          array( 'onclick' => "return showHideByValue('is_monetary','0','event-fees','block','radio',false);" ) );
+        
+        //add currency element.
+        $this->addCurrency( 'currency', ts( 'Currency' ), false );
         
         require_once 'CRM/Contribute/PseudoConstant.php';
         $paymentProcessor =& CRM_Core_PseudoConstant::paymentProcessor( );
@@ -302,12 +305,13 @@ class CRM_Event_Form_ManageEvent_Fee extends CRM_Event_Form_ManageEvent
                           array( 'onclick' => "warnDiscountDel(); return showHideByValue('is_discount','','discount','block','radio',false);" ));
         
         $discountSection = $this->get( 'discountSection' );
+        
         $this->assign('discountSection', $discountSection);
         
         require_once 'CRM/Core/ShowHideBlocks.php';
         // form fields of Discount sets
         $defaultOption = array();
-        $_showHide =& new CRM_Core_ShowHideBlocks('','');
+        $_showHide = new CRM_Core_ShowHideBlocks('','');
         
         for($i = 1; $i <= self::NUM_DISCOUNT; $i++) {
             //the show hide blocks
@@ -386,7 +390,7 @@ class CRM_Event_Form_ManageEvent_Fee extends CRM_Event_Form_ManageEvent
      * @static
      * @access public
      */
-    static function formRule( &$values ) 
+    static function formRule( $values ) 
     {
         $errors = array( );
         if ( CRM_Utils_Array::value( 'is_discount', $values ) ) {
@@ -394,25 +398,28 @@ class CRM_Event_Form_ManageEvent_Fee extends CRM_Event_Form_ManageEvent
             $countemptyrows  = 0;
             $countemptyvalue = 0;
             for ( $i = 1; $i <= self::NUM_DISCOUNT; $i++ ) {
+                $start_date = $end_date = null;
                 if ( CRM_Utils_Array::value( $i,  $values['discount_name'] ) ) {
                     if ( CRM_Utils_Array::value( $i, $values['discount_start_date'] ) ) {
                         $start_date = ( $values['discount_start_date'][$i] ) ? CRM_Utils_Date::processDate( $values['discount_start_date'][$i] ) : 0;
                     }
-                    
                     if ( CRM_Utils_Array::value( $i, $values['discount_end_date'] ) ) {
                         $end_date   = ( $values['discount_end_date'][$i] ) ? CRM_Utils_Date::processDate( $values['discount_end_date'][$i] ) : 0;
                     }
                     
-                    if ( $start_date && $end_date && strcmp( $end_date, $start_date ) == -1 ) {
-                        $errors["discount_end_date[$i]"] = ts( 'The discount end date cannot be prior to the start date.' );
+                    if ( $start_date && $end_date && strcmp( $end_date, $start_date ) < 0 ) {
+                        $errors["discount_end_date[$i]"] = 
+                            ts( 'The discount end date cannot be prior to the start date.' );
                     }
                     
                     if ( ! $start_date && ! $end_date ) {
-                        $errors["discount_start_date[$i]"] = $errors["discount_end_date[$i]"] = ts( 'Please specify either start date or end date.' );
+                        $errors["discount_start_date[$i]"] = $errors["discount_end_date[$i]"] 
+                                                           = ts( 'Please specify either start date or end date.' );
                     }
                     
                     if ( $i > 1 ) {
-                        $end_date_1 = ( $values['discount_end_date'][$i-1] ) ? CRM_Utils_Date::processDate( $values['discount_end_date'][$i-1] ) : 0;
+                        $end_date_1 = ( $values['discount_end_date'][$i-1] ) ? 
+                                      CRM_Utils_Date::processDate( $values['discount_end_date'][$i-1] ) : 0;
                         if ( $start_date && $end_date_1 && strcmp( $end_date_1, $start_date ) >= 0 ) {
                             $errors["discount_start_date[$i]"] = ts( 'Select non-overlapping discount start date.' );
                         } elseif ( ! $start_date && ! $end_date_1 ) {
@@ -471,24 +478,31 @@ class CRM_Event_Form_ManageEvent_Fee extends CRM_Event_Form_ManageEvent
                 $errors['fee_label'] = ts( "Please enter the fee label for the paid event." );
             }
             
-            //check fee label and amount
-            $check = 0;
-            foreach ( $values['label'] as $key => $val ) {
-                if ( trim($val) && trim($values['value'][$key]) ) {
-                    $check++;
-                    break;
+            if ( !CRM_Utils_Array::value( 'price_set_id', $values ) ) {
+                //check fee label and amount
+                $check = 0;
+                $optionKeys = array( );
+                foreach ( $values['label'] as $key => $val ) {
+                    if ( trim($val) && trim($values['value'][$key]) ) {
+                        $optionKeys[$key] = $key;
+                        $check++;
+                    }
+                }
+                
+                $default = CRM_Utils_Array::value( 'default', $values );
+                if ( $default && !in_array( $default, $optionKeys ) ) {
+                    $errors['default'] = ts( "Please select an appropriate option as default." );
+                }
+                
+                if ( !$check ) {
+                    if ( !$values['label'][1] ) {
+                        $errors['label[1]'] = ts( "Please enter a label for at least one fee level." );
+                    }
+                    if ( !$values['value'][1] ) {
+                        $errors['value[1]'] = ts( "Please enter an amount for at least one fee level." );
+                    }
                 }
             }
-            
-            if ( !$check && !$values['price_set_id'] ) {
-                if ( !$values['label'][1] ) {
-                    $errors['label[1]'] = "Please enter a label for at least one fee level.";
-                }
-                if ( !$values['value'][1] ) {
-                    $errors['value[1]'] = "Please enter an amount for at least one fee level.";
-                }
-            }
-            
             if ( isset( $values['is_pay_later'] ) ) {
                 if ( empty( $values['pay_later_text'] ) ) {
                     $errors['pay_later_text'] = ts( 'Please enter the Pay Later prompt to be displayed on the Registration form.' );
@@ -539,8 +553,7 @@ class CRM_Event_Form_ManageEvent_Fee extends CRM_Event_Form_ManageEvent
         
         if ( CRM_Utils_Array::value( '_qf_Fee_submit', $_POST ) ) {
             $this->buildAmountLabel( );
-            $this->set( 'discountSection', 1 );
-            CRM_Utils_System::redirect( CRM_Utils_System::url( 'civicrm/event/manage','#isDiscount') );
+            $this->set( 'discountSection', 2 );
             return;
         }
         

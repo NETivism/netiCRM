@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -25,15 +25,11 @@
 *}
 {* Confirmation of contribution deletes  *}
 <div class="messages status">
-  <dl>
-    <dt><img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}" /></dt>
-    <dd>
-        <p>{ts}Are you sure you want to restore the selected cases? This operation will retrieve the case(s) and all associated activities from Trash.{/ts}</p>
+  <div class="icon inform-icon"></div>
+        &nbsp;{ts}Are you sure you want to restore the selected cases? This operation will retrieve the case(s) and all associated activities from Trash.{/ts}</p>
         <p>{include file="CRM/Case/Form/Task.tpl"}</p>
-    </dd>
-  </dl>
-</div>
+  </div>
 <p>
-<div class="form-item">
- {$form.buttons.html}
+<div class="crm-submit-buttons">
+  {include file="CRM/common/formButtons.tpl" location="bottom"}
 </div>

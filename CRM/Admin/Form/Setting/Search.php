@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -49,7 +49,7 @@ class CRM_Admin_Form_Setting_Search extends  CRM_Admin_Form_Setting
      * @access public
      */
     public function buildQuickForm( ) {
-        CRM_Utils_System::setTitle(ts('Settings - Search'));
+        CRM_Utils_System::setTitle(ts('Settings - Contacts Search'));
 
         $this->addYesNo( 'includeWildCardInName'   , ts( 'Automatic Wildcard' ));
         $this->addYesNo( 'includeEmailInName'      , ts( 'Include Email' ));

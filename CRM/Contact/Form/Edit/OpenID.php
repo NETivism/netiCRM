@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -63,7 +63,7 @@ class CRM_Contact_Form_Edit_OpenID
         //Block type
         $form->addElement('select',"openid[$blockId][location_type_id]", '' , CRM_Core_PseudoConstant::locationType());
         
-        $config=& CRM_Core_Config::singleton( );
+        $config= CRM_Core_Config::singleton( );
         if ( $config->userFramework == 'Standalone' ) { 
             $js = array( 'id' => "OpenID_".$blockId."_IsLogin", 'onClick' => 'singleSelect( this.id );');
 			$form->addElement('advcheckbox', "openid[$blockId][allowed_to_login]", null, '', $js);

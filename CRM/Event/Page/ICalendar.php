@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -69,8 +69,8 @@ class CRM_Event_Page_ICalendar extends CRM_Core_Page
         $this->assign( 'events', $info );
         
         // Send data to the correct template for formatting (iCal vs. gData)
-        $template =& CRM_Core_Smarty::singleton( );
-        $config =& CRM_Core_Config::singleton( );
+        $template = CRM_Core_Smarty::singleton( );
+        $config = CRM_Core_Config::singleton( );
         if ( $rss ) {
             // rss 2.0 requires lower case dash delimited locale
             $this->assign( 'rssLang', str_replace( '_', '-', strtolower($config->lcMessages) ) );
@@ -94,7 +94,7 @@ class CRM_Event_Page_ICalendar extends CRM_Core_Page
         } else {
             CRM_Utils_ICalendar::send( $calendar, 'text/calendar', 'utf-8', 'civicrm_ical.ics', 'attachment' );
         }
-        exit( );
+        CRM_Utils_System::civiExit( );
     }
 }
 

@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -24,17 +24,17 @@
  +--------------------------------------------------------------------+
 *}
 {* this template is used for adding/editing a mailing component  *}
-<div class="form-item">
+<div class="crm-block crm-form-block crm-mailing-component-form-block">
 <fieldset><legend>{if $action eq 1}{ts}New Mailing Component{/ts}{else}{ts}Edit Mailing Component{/ts}{/if}</legend>
-  <dl class="html-adjust">
-    <dt>{$form.name.label}</dt><dd>{$form.name.html}</dd>
-    <dt>{$form.component_type.label}</dt><dd>{$form.component_type.html}</dd>
-    <dt>{$form.subject.label}</dt><dd>{$form.subject.html}</dd>
-    <dt>{$form.body_text.label}</dt><dd>{$form.body_text.html}</dd>
-    <dt>{$form.body_html.label}</dt><dd>{$form.body_html.html}</dd>
-    <dt>{$form.is_default.label}</dt><dd>{$form.is_default.html}</dd>
-    <dt>{$form.is_active.label}</dt><dd>{$form.is_active.html}</dd>
-    <dt></dt><dd>{$form.buttons.html}</dd>
-  </dl>
+  <table class="form-layout">
+    <tr class="crm-mailing-component-form-block-name"><td class="label">{$form.name.label}</td><td>{$form.name.html}</td>
+    <tr class="crm-mailing-component-form-block-component_type"><td class="label">{$form.component_type.label}</td><td>{$form.component_type.html}</td>
+    <tr class="crm-mailing-component-form-block-subject"><td class="label">{$form.subject.label}</td><td>{$form.subject.html}</td>
+    <tr class="crm-mailing-component-form-block-body_text"><td class="label">{$form.body_text.label}</td><td>{$form.body_text.html}</td>
+    <tr class="crm-mailing-component-form-block-body_html"><td class="label">{$form.body_html.label}</td><td>{$form.body_html.html}</td>
+    <tr class="crm-mailing-component-form-block-is_default"><td class="label">{$form.is_default.label}</td><td>{$form.is_default.html}</td>
+    <tr class="crm-mailing-component-form-block-is_active"><td class="label">{$form.is_active.label}</td><td>{$form.is_active.html}</td>
+  </table>
 </fieldset>
+<div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl"}</div>
 </div>

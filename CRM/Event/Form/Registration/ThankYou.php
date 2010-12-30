@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -134,6 +134,9 @@ class CRM_Event_Form_Registration_ThankYou extends CRM_Event_Form_Registration
                 }
             }
         }
+       
+        $this->_submitValues = array_merge( $this->_submitValues, $defaults );
+              
         $this->setDefaults( $defaults );
 
         require_once 'CRM/Friend/BAO/Friend.php';
@@ -167,6 +170,10 @@ class CRM_Event_Form_Registration_ThankYou extends CRM_Event_Form_Registration
         }
         $this->assign( 'isOnWaitlist', $isOnWaitlist );
         $this->assign( 'isRequireApproval', $isRequireApproval );
+        
+        // Assign Participant Count to Lineitem Table
+        require_once "CRM/Price/BAO/Set.php";
+        $this->assign( 'pricesetFieldsCount', CRM_Price_BAO_Set::getPricesetCount( $this->_priceSetId ) );    
         
         // can we blow away the session now to prevent hackery
         $this->controller->reset( );

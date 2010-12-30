@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -80,7 +80,7 @@ class CRM_Friend_BAO_Friend extends CRM_Friend_DAO_Friend
      */
     static function retrieve( &$params, &$values ) 
     {
-        $friend =& new CRM_Friend_DAO_Friend( );
+        $friend = new CRM_Friend_DAO_Friend( );
 
         $friend->copyValues( $params );
 
@@ -149,6 +149,7 @@ class CRM_Friend_BAO_Friend extends CRM_Friend_DAO_Friend
             
             //create contact only if it does not exits in db
             $value['email'] = $value['email-Primary'];
+            $value['check_permission'] = false;
             $contact = CRM_Core_BAO_UFGroup::findContact( $value, null, 'Individual' );
 
             if ( !$contact ) {
@@ -172,7 +173,7 @@ class CRM_Friend_BAO_Friend extends CRM_Friend_DAO_Friend
         // get domain
         require_once 'CRM/Core/BAO/Domain.php';
         $domainDetails = CRM_Core_BAO_Domain::getNameAndEmail( );
-        list( $username, $mailParams['domain'] ) = split( '@', $domainDetails[1] );
+        list( $username, $mailParams['domain'] ) = explode( '@', $domainDetails[1] );
         
         $default          = array( );
         $findProperties   = array('id'=> $params['entity_id']);
@@ -263,7 +264,7 @@ class CRM_Friend_BAO_Friend extends CRM_Friend_DAO_Friend
         if ( empty( $defaults ) ) {
             return null;
         }
-        $friend =& new CRM_Friend_BAO_Friend( );
+        $friend = new CRM_Friend_BAO_Friend( );
         $friend->copyValues( $defaults );        
         $found = $friend->find(true);
         CRM_Core_DAO::storeValues( $friend, $defaults );
@@ -334,7 +335,7 @@ class CRM_Friend_BAO_Friend extends CRM_Friend_DAO_Friend
      */
     static function addTellAFriend( &$params ) 
     {
-        $friendDAO =& new CRM_Friend_DAO_Friend();
+        $friendDAO = new CRM_Friend_DAO_Friend();
        
         $friendDAO->copyValues($params);
         $friendDAO->is_active  = CRM_Utils_Array::value( 'is_active', $params, false );

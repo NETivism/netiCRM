@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -47,7 +47,7 @@ class CRM_Contact_Page_View_Log extends CRM_Core_Page {
     function browse( ) {
         require_once 'CRM/Core/DAO/Log.php';
 
-        $log =& new CRM_Core_DAO_Log( );
+        $log = new CRM_Core_DAO_Log( );
         
         $log->entity_table = 'civicrm_contact';
         $log->entity_id    = $this->_contactId;

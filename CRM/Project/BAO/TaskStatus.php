@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -60,7 +60,7 @@ class CRM_Project_BAO_TaskStatus {
 
             // get the task status object, if not there create one
             require_once 'CRM/Project/DAO/TaskStatus.php';
-            $dao =& new CRM_Project_DAO_TaskStatus( );
+            $dao = new CRM_Project_DAO_TaskStatus( );
             $dao->responsible_entity_table = $ret;
             $dao->responsible_entity_id    = $reid;
             $dao->target_entity_table      = $tet;
@@ -94,7 +94,7 @@ class CRM_Project_BAO_TaskStatus {
 
         // update the task record
         require_once 'CRM/Project/DAO/TaskStatus.php';
-        $dao =& new CRM_Project_DAO_TaskStatus( );
+        $dao = new CRM_Project_DAO_TaskStatus( );
         $dao->id = $form->get( "{$prefix}ID" );
         if ( ! $dao->id || ! $dao->find( true ) ) {
             CRM_Core_Error::fatal( "The task status table is inconsistent" );
@@ -128,7 +128,7 @@ class CRM_Project_BAO_TaskStatus {
 
         // update the task record
         require_once 'CRM/Project/DAO/TaskStatus.php';
-        $dao =& new CRM_Project_DAO_TaskStatus( );
+        $dao = new CRM_Project_DAO_TaskStatus( );
         $dao->id = $form->get( "{$prefix}ID" );
         if ( ! $dao->id || ! $dao->find( true ) ) {
             CRM_Core_Error::fatal( "The task status table is inconsistent" );
@@ -168,7 +168,7 @@ class CRM_Project_BAO_TaskStatus {
         }
         
         require_once 'CRM/Project/DAO/TaskStatus.php';
-        $dao =& new CRM_Project_DAO_TaskStatus( );
+        $dao = new CRM_Project_DAO_TaskStatus( );
         $dao->target_entity_id         = $params['target_entity_id'];
         $dao->responsible_entity_id    = $params['responsible_entity_id'];
         $dao->target_entity_table      = $params['target_entity_table'];

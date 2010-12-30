@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -26,13 +26,16 @@
 {* Displays Administer CiviCRM Control Panel *}
 {if $newVersion}
     <div class="messages status">
-        <dl>
-        <dt><img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}"/></dt>
-        <dd>
-            <p>{ts 1=$newVersion 2=$localVersion}A newer version of CiviCRM is available: %1 (this site is currently running %2).{/ts}</p>
-            <p>{ts 1='http://civicrm.org/' 2='http://civicrm.org/download/'}Read about the new version on <a href='%1'>our website</a> and <a href='%2'>download it here</a>.{/ts}</p>
-        </dd>
-      </dl>
+        <div class="icon inform-icon"></div>&nbsp;
+        {ts 1=$newVersion 2=$localVersion}A newer version of CiviCRM is available: %1 (this site is currently running %2).{/ts}
+        {ts 1='http://civicrm.org/' 2='http://civicrm.org/download/'}Read about the new version on <a href='%1'>our website</a> and <a href='%2'>download it here</a>.{/ts}
+        <div class="messages status">
+          <table>
+	    <tr><td class="tasklist">
+              {ts 1='http://civicrm.org/civicrm/profile/create?reset=1&gid=15'}Have you registered this site at CiviCRM.org? If not, please help strengthen the CiviCRM ecosystem by taking a few minutes to <a href="%1" target="_blank">fill out the site registration form</a>. The information collected will help us prioritize improvements, target our communications and build the community. If you have a technical role for this site, be sure to check "Keep in Touch" to receive technical updates (a low volume mailing list).{/ts}</td>
+	    </tr>
+	  </table>
+        </div>
     </div>
 {/if}
 
@@ -42,12 +45,13 @@
 </div>
 
 {strip}
+<div class="crm-content-block">
 {foreach from=$adminPanel key=groupName item=group name=adminLoop}
  <div id = "id_{$groupName}_show" class="section-hidden label{if $smarty.foreach.adminLoop.last eq false} section-hidden-border{/if}">
     <table class="form-layout">
     <tr>
-        <td width="20%" class="font-size11pt" style="vertical-align: top; padding: 0px;">{$group.show} {$group.title}</td>
-        <td width="80%" style="white-space: nowrap; padding: 0px;">
+        <td width="20%" class="font-size11pt" style="vertical-align: top;">{$group.show} {$group.title}</td>
+        <td width="80%" style="white-space: nowrap;;">
 
             <table class="form-layout" width="100%">
             <tr>
@@ -93,3 +97,4 @@
 
 {* Include Javascript to hide and display the appropriate blocks as directed by the php code *}
 {include file="CRM/common/showHide.tpl"}
+</div>

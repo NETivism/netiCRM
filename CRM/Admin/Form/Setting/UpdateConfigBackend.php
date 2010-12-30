@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -88,7 +88,7 @@ class CRM_Admin_Form_Setting_UpdateConfigBackend extends CRM_Admin_Form_Setting
         return $this->_defaults;
     }
 
-    static function formRule(&$fields) {
+    static function formRule( $fields) {
         $tmpDir = trim( $fields['newBaseDir'] );
 
         $errors = array( );
@@ -101,7 +101,7 @@ class CRM_Admin_Form_Setting_UpdateConfigBackend extends CRM_Admin_Form_Setting
 
     function postProcess( ) {
         // redirect to admin page after saving
-        $session =& CRM_Core_Session::singleton();
+        $session = CRM_Core_Session::singleton();
         $session->pushUserContext( CRM_Utils_System::url( 'civicrm/admin') );
 
         $params = $this->controller->exportValues( $this->_name );

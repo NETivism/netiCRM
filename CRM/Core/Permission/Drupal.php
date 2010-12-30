@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -246,7 +246,7 @@ class CRM_Core_Permission_Drupal {
          * lets introduce acl in 2.1
         static $isAdmin = null;
         if ( $isAdmin === null ) {
-            $session =& CRM_Core_Session::singleton( );
+            $session = CRM_Core_Session::singleton( );
             $isAdmin = $session->get( 'ufID' ) == 1 ? true : false;
         }
         require_once 'CRM/ACL/API.php';

@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -214,7 +214,7 @@ UPDATE  civicrm_option_value
                     //update label/name found record w/ manupulated values.
                     require_once 'CRM/Core/DAO/OptionValue.php';
                     $updateValues['is_active'] = $updateValues['is_default'] = 1;
-                    $optionValue =& new CRM_Core_DAO_OptionValue( );
+                    $optionValue = new CRM_Core_DAO_OptionValue( );
                     $optionValue->copyValues( $updateValues );
                     $optionValue->save( );
                 }
@@ -278,7 +278,7 @@ ALTER TABLE `civicrm_domain`
         
         //get the mailer preferences from backend 
         //store in civicrm_preferences and unset from backend.
-        $domain =& new CRM_Core_DAO_Domain( );
+        $domain = new CRM_Core_DAO_Domain( );
         $domain->find( true );
         if ( $domain->config_backend ) {
             $backendValues = unserialize( $domain->config_backend );
@@ -292,7 +292,7 @@ ALTER TABLE `civicrm_domain`
             $domain->config_backend = serialize( $backendValues );
             $domain->save( ); 
             
-            $mailingDomain =& new CRM_Core_DAO_Preferences( );
+            $mailingDomain = new CRM_Core_DAO_Preferences( );
             $mailingDomain->find( true );
             $mailingDomain->mailing_backend = serialize( $mailerValues );
             $mailingDomain->save( );

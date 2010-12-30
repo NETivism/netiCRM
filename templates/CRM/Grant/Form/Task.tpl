@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -30,7 +30,7 @@
 <div class="form-item">
 <table width="30%">
   <tr class="columnheader">
-    <th>{ts}Name{/ts}</th>
+    <td>{ts}Name{/ts}</td>
   </tr>
 {foreach from=$rows item=row}
 <tr class="{cycle values="odd-row,even-row"}">

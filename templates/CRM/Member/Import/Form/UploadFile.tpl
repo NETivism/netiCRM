@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -23,49 +23,57 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
-{* Membership Import Wizard - Step 1 (upload data file) *}
-{* @var $form Contains the array for the form elements and other form associated information assigned to the template by the controller *}
-
- {* WizardHeader.tpl provides visual display of steps thru the wizard as well as title for current step *}
+ <div class="crm-block crm-form-block crm-member-import-uploadfile-form-block">
+{* WizardHeader.tpl provides visual display of steps thru the wizard as well as title for current step *}
  {include file="CRM/common/WizardHeader.tpl"}
- 
- <div id="help">
+<div id="help">
     {ts}The Membership Import Wizard allows you to easily upload memberships from other applications into CiviCRM.{/ts}
     {ts}Files to be imported must be in the 'comma-separated-values' format (CSV) and must contain data needed to match the membership data to an existing contact in your CiviCRM database.{/ts} {help id='upload'}
- </div>    
-
- <div id="upload-file" class="form-item">
- <fieldset>
-    <dl>
-        <dt>{$form.uploadFile.label}</dt>
-            <dd>{$form.uploadFile.html}<br />
+ </div> 
+{* Membership Import Wizard - Step 1 (upload data file) *}
+{* @var $form Contains the array for the form elements and other form associated information assigned to the template by the controller *}
+ 
+<div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>   
+   <table class="form-layout">
+      <div id="upload-file" class="form-item">
+       <tr class="crm-member-import-uploadfile-from-block-uploadFile">
+           <td class="label">{$form.uploadFile.label}</td>
+           <td>{$form.uploadFile.html}<br />
                 <span class="description">{ts}File format must be comma-separated-values (CSV).{/ts}</span>
-            </dd>
-        <dt>&nbsp;</dt>
-	    <dd>{ts 1=$uploadSize}Maximum Upload File Size: %1 MB{/ts}</dd>
-        <dt> </dt>
-            <dd>{$form.skipColumnHeader.html} {$form.skipColumnHeader.label}<br />
-                <span class="description">
+                 <br /><span>{ts 1=$uploadSize}Maximum Upload File Size: %1 MB{/ts}</span>
+           </td>
+       </tr>
+       <tr class="crm-member-import-uploadfile-from-block-skipColumnHeader">
+           <td class="label">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{$form.skipColumnHeader.html} </td>
+	   <td>{$form.skipColumnHeader.label}<br />
+               <span class="description">
                 {ts}Check this box if the first row of your file consists of field names (Example: 'Contact ID', 'Amount').{/ts}</span>
-            </dd>
-        <dt class="">{$form.contactType.label}</dt><dd>{$form.contactType.html}<br />
-            <span class="description">
-            {ts}Select 'Individual' if you are importing memberships for individual persons.{/ts}
-            {ts}Select 'Organization' or 'Household' if you are importing memberships made by contacts of that type. (NOTE: Some built-in contact types may not be enabled for your site.){/ts}
-            </span>
-        </dd> 
-        <dt>{$form.onDuplicate.label}</dt><dd>{$form.onDuplicate.html} {help id="id-onDuplicate"}</dd>
-        {include file="CRM/Core/Date.tpl"}  
+           </td>
+       <tr class="crm-member-import-uploadfile-from-block-contactType">
+           <td class="label">{$form.contactType.label}</tdt>
+	   <td>{$form.contactType.html}<br />
+                <span class="description">
+                {ts}Select 'Individual' if you are importing memberships for individual persons.{/ts}
+                {ts}Select 'Organization' or 'Household' if you are importing memberships made by contacts of that type. (NOTE: Some built-in contact types may not be enabled for your site.){/ts}
+                </span>
+           </td>
+       </tr>
+       <tr class="crm-member-import-uploadfile-from-block-onDuplicate">
+           <td class="label" >{$form.onDuplicate.label}</td>
+           <td>{$form.onDuplicate.html} {help id="id-onDuplicate"}</td>
+       </tr>
+       <tr class="crm-member-import-uploadfile-from-block-date">{include file="CRM/Core/Date.tpl"}</tr>  
 {if $savedMapping}
-    <dt>{if $loadedMapping}{ts}Select a Different Field Mapping{/ts}{else}{ts}Load Saved Field Mapping{/ts}{/if}</dt>
-    <dd><span>{$form.savedMapping.html}</span> </dd>
-    <dt>&nbsp;</dt>
-    <dd class="description">{ts}If you want to use a previously saved import field mapping - select it here.{/ts}</dd>
-{/if}
-    </dl>
-    <div class="spacer"></div>
- </fieldset>
- </div>
- <div id="crm-submit-buttons">
-    {$form.buttons.html}
- </div>
+       <tr  class="crm-member-import-uploadfile-from-block-savedMapping">
+         <td>{if $loadedMapping}{ts}Select a Different Field Mapping{/ts}{else}{ts}Load Saved Field Mapping{/ts}{/if}</td>
+         <td>{$form.savedMapping.html}<br />
+           <span class="description">{ts}If you want to use a previously saved import field mapping - select it here.{/ts}</span>
+         </td>
+       </tr>
+{/if} 
+</div>
+</table>
+<div class="spacer"></div>
+
+<div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
+</div>

@@ -1,7 +1,7 @@
 <?php
 /*
 +--------------------------------------------------------------------+
-| CiviCRM version 3.1                                                |
+| CiviCRM version 3.3                                                |
 +--------------------------------------------------------------------+
 | Copyright CiviCRM LLC (c) 2004-2010                                |
 +--------------------------------------------------------------------+
@@ -79,7 +79,7 @@ class CRM_Price_DAO_Field extends CRM_Core_DAO
      * @var boolean
      * @static
      */
-    static $_log = false;
+    static $_log = true;
     /**
      * Price Field
      *
@@ -175,6 +175,12 @@ class CRM_Price_DAO_Field extends CRM_Core_DAO
      * @var string
      */
     public $javascript;
+    /**
+     * Implicit FK to civicrm_option_group with name = \'visibility\'
+     *
+     * @var int unsigned
+     */
+    public $visibility_id;
     /**
      * class constructor
      *
@@ -307,6 +313,11 @@ class CRM_Price_DAO_Field extends CRM_Core_DAO
                     'title' => ts('Javascript') ,
                     'maxlength' => 255,
                     'size' => CRM_Utils_Type::HUGE,
+                ) ,
+                'visibility_id' => array(
+                    'name' => 'visibility_id',
+                    'type' => CRM_Utils_Type::T_INT,
+                    'default' => '',
                 ) ,
             );
         }

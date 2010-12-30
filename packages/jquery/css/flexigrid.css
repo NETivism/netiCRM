@@ -1,7 +1,7 @@
 @charset "UTF-8";
 /* CSS Document */
 
-.flexigrid
+#crm-container .flexigrid
 	{
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 11px;
@@ -11,7 +11,7 @@
 	color: #000;
 	}
 
-	.flexigrid.hideBody
+	#crm-container .flexigrid.hideBody
 		{
 		height: 26px !important;
 		border-bottom: 1px solid #ccc;
@@ -23,7 +23,7 @@
 		padding-right: 2px;	
 		}
 
-.flexigrid div.nDiv
+#crm-container .flexigrid div.nDiv
 	{
 	background: #eee url(images/line.gif) repeat-y -1px top;
 	border: 1px solid #ccc;
@@ -35,63 +35,63 @@
 	float: left;
 	}
 
-	.flexigrid div.nDiv table
+	#crm-container .flexigrid div.nDiv table
 		{
 		margin: 2px;
 		}
 
-.flexigrid div.hDivBox
+#crm-container .flexigrid div.hDivBox
 	{
 	float: left; 
 	padding-right: 40px;
 	}
 
-.flexigrid div.bDiv table
+#crm-container .flexigrid div.bDiv table
 	{
 	margin-bottom: 10px;
 	}
 	
-	.flexigrid div.bDiv table.autoht
+	#crm-container .flexigrid div.bDiv table.autoht
 		{
 		border-bottom: 0px;
 		margin-bottom: 0px;
 		}
 	
-.flexigrid div.nDiv td
+#crm-container .flexigrid div.nDiv td
 	{
 	padding: 2px 3px;
 	border: 1px solid #eee;
 	cursor: default;
 	}
 
-.flexigrid div.nDiv tr:hover td, .flexigrid div.nDiv tr.ndcolover td
+#crm-container .flexigrid div.nDiv tr:hover td, #crm-container .flexigrid div.nDiv tr.ndcolover td
 	{
 	background: #d5effc url(images/hl.png) repeat-x top;
 	border: 1px solid #a8d8eb;
 	}
 	
-	.flexigrid div.nDiv td.ndcol1
+	#crm-container .flexigrid div.nDiv td.ndcol1
 		{
 		border-right: 1px solid #ccc;
 		}
 		
-	.flexigrid div.nDiv td.ndcol2
+	#crm-container .flexigrid div.nDiv td.ndcol2
 		{
 		border-left: 1px solid #fff;
 		padding-right: 10px;
 		}
 
-	.flexigrid div.nDiv tr:hover td.ndcol1, .flexigrid div.nDiv tr.ndcolover td.ndcol1
+	#crm-container .flexigrid div.nDiv tr:hover td.ndcol1, #crm-container .flexigrid div.nDiv tr.ndcolover td.ndcol1
 		{
 		border-right: 1px solid #d2e3ec;
 		}
 		
-	.flexigrid div.nDiv tr:hover td.ndcol2, .flexigrid div.nDiv tr.ndcolover td.ndcol2
+	#crm-container .flexigrid div.nDiv tr:hover td.ndcol2, #crm-container .flexigrid div.nDiv tr.ndcolover td.ndcol2
 		{
 		border-left: 1px solid #eef8ff;
 		}
 	
-	.flexigrid div.nBtn
+	#crm-container .flexigrid div.nBtn
 		{
 		position: absolute;
 		height: 24px;
@@ -107,7 +107,7 @@
 		display: none;
 		}
 		
-		.flexigrid div.nBtn div
+		#crm-container .flexigrid div.nBtn div
 			{
 			height: 24px;
 			width: 12px;
@@ -116,13 +116,13 @@
 			background: url(images/ddn.png) no-repeat center;
 			}		
 		
-		.flexigrid div.nBtn.srtd
+		#crm-container .flexigrid div.nBtn.srtd
 			{
 			background: url(images/wbg.gif) repeat-x 0px -1px;
 			}
 		
 
-.flexigrid div.mDiv
+#crm-container .flexigrid div.mDiv
 	{
 	background: url(images/wbg.gif) repeat-x top;
 	border: 1px solid #ccc;
@@ -135,13 +135,13 @@
 	position: relative;
 	}
 
-.flexigrid div.mDiv div
+#crm-container .flexigrid div.mDiv div
 	{
 	padding: 6px;
 	white-space: nowrap;
 	}
 	
-		.flexigrid div.mDiv div.ptogtitle
+		#crm-container .flexigrid div.mDiv div.ptogtitle
 			{
 			position: absolute;
 			top: 4px;
@@ -154,13 +154,13 @@
 			cursor: pointer;
 			}
 
-			.flexigrid div.mDiv div.ptogtitle:hover
+			#crm-container .flexigrid div.mDiv div.ptogtitle:hover
 			{
 			background-position: left -2px;
 			border-color: #bbb;
 			}
 			
-			.flexigrid div.mDiv div.ptogtitle span
+			#crm-container .flexigrid div.mDiv div.ptogtitle span
 			{
 			display: block;
 			border-left: 1px solid #eee;
@@ -171,12 +171,12 @@
 			background: url(images/uup.png) no-repeat center;
 			}
 			
-			.flexigrid div.mDiv div.ptogtitle.vsble span
+			#crm-container .flexigrid div.mDiv div.ptogtitle.vsble span
 			{
 			background: url(images/ddn.png) no-repeat center;			
 			}			
 
-.flexigrid div.tDiv /*toolbar*/
+#crm-container .flexigrid div.tDiv /*toolbar*/
 	{
 	background: #fafafa url(images/bg.gif) repeat-x top;
 	position: relative;			
@@ -185,14 +185,14 @@
 	overflow: hidden;
 	}
 
-	.flexigrid div.tDiv2
+	#crm-container .flexigrid div.tDiv2
 		{
 		float: left;
 		clear: both;
 		padding: 1px;
 		}
 
-.flexigrid div.sDiv /*toolbar*/
+#crm-container .flexigrid div.sDiv /*toolbar*/
 	{
 	background: #fafafa url(images/bg.gif) repeat-x top;
 	position: relative;
@@ -202,7 +202,7 @@
 	display: none;
 	}
 
-	.flexigrid div.sDiv2
+	#crm-container .flexigrid div.sDiv2
 		{
 		float: left;
 		clear: both;
@@ -211,12 +211,12 @@
 		width: 1024px;
 		}
 
-		.flexigrid div.sDiv2 input, .flexigrid div.sDiv2 select
+		#crm-container .flexigrid div.sDiv2 input, #crm-container .flexigrid div.sDiv2 select
 		{
 		vertical-align: middle;
 		}
 			
-	.flexigrid div.btnseparator
+	#crm-container .flexigrid div.btnseparator
 		{
 		float: left;
 		height: 22px;
@@ -225,7 +225,7 @@
 		margin: 1px;
 		}
 	
-	.flexigrid div.fbutton
+	#crm-container .flexigrid div.fbutton
 		{
 			float: left;
 			display: block;
@@ -233,26 +233,26 @@
 			padding: 1px;
 		}
 
-	.flexigrid div.fbutton div
+	#crm-container .flexigrid div.fbutton div
 		{
 			float: left;
 			padding: 1px 3px;
 		}		
 		
-	.flexigrid div.fbutton span
+	#crm-container .flexigrid div.fbutton span
 		{
 		float: left;
 		display: block;
 		padding: 3px;
 		}
 
-	.flexigrid div.fbutton:hover, .flexigrid div.fbutton.fbOver
+	#crm-container .flexigrid div.fbutton:hover, #crm-container .flexigrid div.fbutton.fbOver
 		{
 			padding: 0px;
 			border: 1px solid #ccc;
 		}
 
-	.flexigrid div.fbutton:hover div, .flexigrid div.fbutton.fbOver div
+	#crm-container .flexigrid div.fbutton:hover div, #crm-container .flexigrid div.fbutton.fbOver div
 		{
 			padding: 0px 2px;
 			border-left: 1px solid #fff;
@@ -264,7 +264,7 @@
 	
 /* end toolbar*/
 
-.flexigrid div.hDiv
+#crm-container .flexigrid div.hDiv
 	{
 	background: #fafafa url(images/fhbg.gif) repeat-x bottom;
 	position: relative;
@@ -273,12 +273,12 @@
 	overflow: hidden;
 	}	
 
-.flexigrid div.hDiv table
+#crm-container .flexigrid div.hDiv table
 	{
 	border-right: 1px solid #fff;
 	}
 
-	.flexigrid div.cDrag
+	#crm-container .flexigrid div.cDrag
 		{
 		float: left;
 		position: absolute;
@@ -286,7 +286,7 @@
 		overflow: visible;
 		}
 
-		.flexigrid div.cDrag div
+		#crm-container .flexigrid div.cDrag div
 			{
 			float: left;
 			background: none;
@@ -297,12 +297,12 @@
 			cursor: col-resize;
 			}
 			
-		.flexigrid div.cDrag div:hover, .flexigrid div.cDrag div.dragging
+		#crm-container .flexigrid div.cDrag div:hover, #crm-container .flexigrid div.cDrag div.dragging
 			{
 			background: url(images/line.gif) repeat-y 2px center;
 			}
 
-.flexigrid div.iDiv
+#crm-container .flexigrid div.iDiv
 	{
 		border: 1px solid #316ac5;
 		position: absolute;
@@ -310,13 +310,13 @@
 		background: none;
 	}
 	
-	.flexigrid div.iDiv input, .flexigrid div.iDiv select, .flexigrid div.iDiv textarea
+	#crm-container .flexigrid div.iDiv input, #crm-container .flexigrid div.iDiv select, #crm-container .flexigrid div.iDiv textarea
 		{
 		font-family: Arial, Helvetica, sans-serif;
 		font-size: 11px;
 		}
 		
-	.flexigrid div.iDiv input.tb
+	#crm-container .flexigrid div.iDiv input.tb
 		{
 		border: 0px;
 		padding: 0px;
@@ -326,7 +326,7 @@
 		background: none;
 		}			
 					
-.flexigrid div.bDiv
+#crm-container .flexigrid div.bDiv
 	{
 	border: 1px solid #ccc;
 	border-top: 0px;
@@ -335,12 +335,12 @@
 	position: relative;
 	}
 	
-.flexigrid div.bDiv table
+#crm-container .flexigrid div.bDiv table
 	{
 	border-bottom: 1px solid #ccc;
 	}
 	
-	.flexigrid div.hGrip
+	#crm-container .flexigrid div.hGrip
 	{
 	position: absolute;
 	top: 0px;
@@ -352,13 +352,13 @@
 	cursor: col-resize;
 	}
 	
-		.flexigrid div.hGrip:hover, .flexigrid div.hGrip.hgOver
+		#crm-container .flexigrid div.hGrip:hover, #crm-container .flexigrid div.hGrip.hgOver
 			{
 				border-right: 1px solid #999;				
 				margin-right: 0px;
 			}
 	
-	.flexigrid div.vGrip
+	#crm-container .flexigrid div.vGrip
 		{
 		height: 5px;
 		overflow: hidden;
@@ -370,7 +370,7 @@
 		cursor: row-resize;
 		}
 			
-			.flexigrid div.vGrip span
+			#crm-container .flexigrid div.vGrip span
 					{
 					display: block;
 					margin: 1px auto;
@@ -382,7 +382,7 @@
 					background: none;
 					}
 
-.flexigrid div.hDiv th, .flexigrid  div.bDiv td  /* common cell properties*/
+#crm-container .flexigrid div.hDiv th, #crm-container .flexigrid  div.bDiv td  /* common cell properties*/
 	{
 	text-align: left;
 	border-right: 1px solid #ddd;
@@ -391,19 +391,20 @@
 	vertical-align: top !important;
 	}
 
-		.flexigrid div.hDiv th div, .flexigrid  div.bDiv td  div, div.colCopy div/* common inner cell properties*/
+		#crm-container .flexigrid div.hDiv th div, #crm-container .flexigrid  div.bDiv td  div, div.colCopy div/* common inner cell properties*/
 			{
 			padding: 5px;
 			border-left: 0px solid #fff;
 			}
 
-.flexigrid div.hDiv th, div.colCopy
+#crm-container .flexigrid div.hDiv th, div.colCopy
 	{
 	font-weight: normal;
 	height: 24px;
 	cursor: default;
 	white-space: nowrap;
 	overflow: hidden;
+	width:75px;
 	}	
 
 div.colCopy {
@@ -415,67 +416,67 @@ div.colCopy {
 	overflow: hidden;
 	}
 
-.flexigrid div.hDiv th.sorted
+#crm-container .flexigrid div.hDiv th.sorted
 	{
 	background: url(images/wbg.gif) repeat-x 0px -1px;
 	border-bottom: 0px solid #ccc;
 	}
 	
-	.flexigrid div.hDiv th.thOver
+	#crm-container .flexigrid div.hDiv th.thOver
 	{
 	}
 
-	.flexigrid div.hDiv th.thOver div, .flexigrid div.hDiv th.sorted.thOver div
+	#crm-container .flexigrid div.hDiv th.thOver div, #crm-container .flexigrid div.hDiv th.sorted.thOver div
 	{
 	border-bottom: 1px solid orange;
 	padding-bottom: 4px;
 	}
 	
-	.flexigrid div.hDiv th.sorted div
+	#crm-container .flexigrid div.hDiv th.sorted div
 	{
 	border-bottom: 0px solid #ccc;
 	padding-bottom: 5px;
 	}
 
-	.flexigrid div.hDiv th.thMove
+	#crm-container .flexigrid div.hDiv th.thMove
 	{
 	background: #fff;
 	color: #fff;
 	}
 	
-	.flexigrid div.hDiv th.sorted.thMove div
+	#crm-container .flexigrid div.hDiv th.sorted.thMove div
 		{
 		border-bottom: 1px solid #fff;
 		padding-bottom: 4px
 		}
 	
-	.flexigrid div.hDiv th.thMove div
+	#crm-container .flexigrid div.hDiv th.thMove div
 	{
 		background: #fff !important;
 	}	
 	
-	.flexigrid div.hDiv th div.sdesc
+	#crm-container .flexigrid div.hDiv th div.sdesc
 		{
 		background: url(images/dn.png) no-repeat center top;
 		}	
 
-	.flexigrid div.hDiv th div.sasc
+	#crm-container .flexigrid div.hDiv th div.sasc
 		{
 		background: url(images/up.png) no-repeat center top;
 		}	
 		
-.flexigrid div.bDiv td
+#crm-container .flexigrid div.bDiv td
 	{
 	border-bottom: 1px solid #fff;
 	vertical-align: top;
 	white-space: nowrap;
 	}
 
-		.flexigrid div.hDiv th div
+		#crm-container .flexigrid div.hDiv th div
 			{
 			}
 			
-			.flexigrid span.cdropleft
+			#crm-container .flexigrid span.cdropleft
 			{
 			display: block;
 			background: url(images/prev.gif) no-repeat -4px center;
@@ -487,7 +488,7 @@ div.colCopy {
 			z-index: 3;
 			}
 
-			.flexigrid div.hDiv span.cdropright
+			#crm-container .flexigrid div.hDiv span.cdropright
 			{
 			display: block;
 			background: url(images/next.gif) no-repeat 12px center;
@@ -500,57 +501,57 @@ div.colCopy {
 			}
 
 
-		.flexigrid div.bDiv td div
+		#crm-container .flexigrid div.bDiv td div
 			{
 			border-top: 0px solid #fff;
 			padding-bottom: 4px;
 			}
 	
 				
-		.flexigrid tr td.sorted
+		#crm-container .flexigrid tr td.sorted
 				{
 				background: #f3f3f3;
 				border-right: 1px solid #ddd;
 				border-bottom: 1px solid #f3f3f3;
 				}		
 
-				.flexigrid tr td.sorted div
+				#crm-container .flexigrid tr td.sorted div
 					{
 					}
 
 
-		.flexigrid tr.erow td
+		#crm-container .flexigrid tr.erow td
 				{
 				background: #f7f7f7;
 				border-bottom: 1px solid #f7f7f7;
 				}
 				
-		.flexigrid tr.erow td.sorted
+		#crm-container .flexigrid tr.erow td.sorted
 				{
 				background: #e3e3e3;
 				border-bottom: 1px solid #e3e3e3;
 				}						
 
-				.flexigrid tr.erow td.sorted div
+				#crm-container .flexigrid tr.erow td.sorted div
 					{
 					}
 
-		.flexigrid div.bDiv tr:hover td, 
-		.flexigrid div.bDiv tr:hover td.sorted,
-		.flexigrid div.bDiv tr.trOver td.sorted, 
-		.flexigrid div.bDiv tr.trOver td
+		#crm-container .flexigrid div.bDiv tr:hover td, 
+		#crm-container .flexigrid div.bDiv tr:hover td.sorted,
+		#crm-container .flexigrid div.bDiv tr.trOver td.sorted, 
+		#crm-container .flexigrid div.bDiv tr.trOver td
 			{
 			background: #d9ebf5;
 			border-left: 1px solid #eef8ff;
 			border-bottom: 1px dotted #a8d8eb;
 			}
 					
-		.flexigrid div.bDiv tr.trSelected:hover td, 
-		.flexigrid div.bDiv tr.trSelected:hover td.sorted,
-		.flexigrid div.bDiv tr.trOver.trSelected td.sorted, 
-		.flexigrid div.bDiv tr.trOver.trSelected td,
-		.flexigrid tr.trSelected td.sorted, 
-		.flexigrid tr.trSelected td
+		#crm-container .flexigrid div.bDiv tr.trSelected:hover td, 
+		#crm-container .flexigrid div.bDiv tr.trSelected:hover td.sorted,
+		#crm-container .flexigrid div.bDiv tr.trOver.trSelected td.sorted, 
+		#crm-container .flexigrid div.bDiv tr.trOver.trSelected td,
+		#crm-container .flexigrid tr.trSelected td.sorted, 
+		#crm-container .flexigrid tr.trSelected td
 			{
 			background: #d5effc url(images/hl.png) repeat-x top;
 			border-right: 1px solid #d2e3ec;
@@ -560,45 +561,45 @@ div.colCopy {
 
 	/* novstripe adjustments */
 
-	.flexigrid.novstripe .bDiv table
+	#crm-container .flexigrid.novstripe .bDiv table
 	{
 		border-bottom: 1px solid #ccc;
 		border-right: 1px solid #ccc;
 	}
 
-	.flexigrid.novstripe  div.bDiv td  
+	#crm-container .flexigrid.novstripe  div.bDiv td  
 		{
 		border-right-color: #fff;
 		}
 		
-	.flexigrid.novstripe div.bDiv tr.erow td.sorted
+	#crm-container .flexigrid.novstripe div.bDiv tr.erow td.sorted
 		{
 		border-right-color: #e3e3e3;
 		}
 
-	.flexigrid.novstripe div.bDiv tr td.sorted
+	#crm-container .flexigrid.novstripe div.bDiv tr td.sorted
 		{
 		border-right-color: #f3f3f3;
 		}
 
-	.flexigrid.novstripe  div.bDiv tr.erow td  
+	#crm-container .flexigrid.novstripe  div.bDiv tr.erow td  
 		{
 		border-right-color: #f7f7f7;
 		border-left-color: #f7f7f7;
 		}
 		
-		.flexigrid.novstripe div.bDiv tr.trSelected:hover td, 
-		.flexigrid.novstripe div.bDiv tr.trSelected:hover td.sorted,
-		.flexigrid.novstripe div.bDiv tr.trOver.trSelected td.sorted, 
-		.flexigrid.novstripe div.bDiv tr.trOver.trSelected td,
-		.flexigrid.novstripe tr.trSelected td.sorted, 
-		.flexigrid.novstripe tr.trSelected td
+		#crm-container .flexigrid.novstripe div.bDiv tr.trSelected:hover td, 
+		#crm-container .flexigrid.novstripe div.bDiv tr.trSelected:hover td.sorted,
+		#crm-container .flexigrid.novstripe div.bDiv tr.trOver.trSelected td.sorted, 
+		#crm-container .flexigrid.novstripe div.bDiv tr.trOver.trSelected td,
+		#crm-container .flexigrid.novstripe tr.trSelected td.sorted, 
+		#crm-container .flexigrid.novstripe tr.trSelected td
 			{
 			border-right: 1px solid #0066FF;
 			border-left: 1px solid #0066FF;
 			}		
 
-	.flexigrid.novstripe div.bDiv tr.trOver td, .flexigrid.novstripe div.bDiv tr:hover td
+	#crm-container .flexigrid.novstripe div.bDiv tr.trOver td, #crm-container .flexigrid.novstripe div.bDiv tr:hover td
 		{
 		border-left-color: #d9ebf5;
 		border-right-color: #d9ebf5;
@@ -606,7 +607,7 @@ div.colCopy {
 
 	/* end novstripe */
 
-.flexigrid div.pDiv
+#crm-container .flexigrid div.pDiv
 	{
 	background: url(images/wbg.gif) repeat-x 0 -1px;
 	border: 1px solid #ccc;
@@ -616,7 +617,7 @@ div.colCopy {
 	position: relative;
 	}
 
-.flexigrid div.pDiv div.pDiv2
+#crm-container .flexigrid div.pDiv div.pDiv2
 	{
 	margin: 3px;
 	margin-left: -2px;
@@ -632,7 +633,7 @@ div.colCopy {
 		margin: 0px 5px;
 		}
 	
-	.flexigrid div.pDiv .pPageStat, .flexigrid div.pDiv .pcontrol
+	#crm-container .flexigrid div.pDiv .pPageStat, #crm-container .flexigrid div.pDiv .pcontrol
 		{
 		position: relative;
 
@@ -640,14 +641,14 @@ div.colCopy {
 		overflow: visible;
 		}
 		
-	.flexigrid div.pDiv input
+	#crm-container .flexigrid div.pDiv input
 		{
 		vertical-align: text-top;
 		position: relative;
 		top: -5px;
 		}
 	
-	.flexigrid div.pDiv  div.pButton
+	#crm-container .flexigrid div.pDiv  div.pButton
 		{
 		float: left;
 		width: 22px;
@@ -657,7 +658,7 @@ div.colCopy {
 		overflow: hidden;
 		}
 
-		.flexigrid div.pDiv  div.pButton:hover, .flexigrid div.pDiv  div.pButton.pBtnOver
+		#crm-container .flexigrid div.pDiv  div.pButton:hover, #crm-container .flexigrid div.pDiv  div.pButton.pBtnOver
 			{
 			width: 20px;
 			height: 20px;
@@ -665,7 +666,7 @@ div.colCopy {
 			cursor: pointer;
 			}
 		
-	.flexigrid div.pDiv  div.pButton span
+	#crm-container .flexigrid div.pDiv  div.pButton span
 		{
 		width: 20px;
 		height: 20px;
@@ -673,7 +674,7 @@ div.colCopy {
 		float: left;
 		}		
 	
-		.flexigrid div.pDiv  div.pButton:hover span, .flexigrid div.pDiv  div.pButton.pBtnOver span
+		#crm-container .flexigrid div.pDiv  div.pButton:hover span, #crm-container .flexigrid div.pDiv  div.pButton.pBtnOver span
 			{
 			width: 19px;
 			height: 19px;
@@ -682,44 +683,44 @@ div.colCopy {
 			}		
 		
 
-		.flexigrid .pSearch
+		#crm-container .flexigrid .pSearch
 			{
 			background: url(images/magnifier.png) no-repeat center;
 			}
 	
-		.flexigrid .pFirst
+		#crm-container .flexigrid .pFirst
 			{
 			background: url(images/first.gif) no-repeat center;
 			}
 			
-		.flexigrid .pPrev
+		#crm-container .flexigrid .pPrev
 			{
 			background: url(images/prev.gif) no-repeat center;
 			}
 
-		.flexigrid .pNext
+		#crm-container .flexigrid .pNext
 			{
 			background: url(images/next.gif) no-repeat center;
 			}
 
-		.flexigrid .pLast
+		#crm-container .flexigrid .pLast
 			{
 			background: url(images/last.gif) no-repeat center;
 			}
 			
-		.flexigrid .pReload
+		#crm-container .flexigrid .pReload
 			{
 			background: url(images/load.png) no-repeat center;
 			}
 			
-		.flexigrid .pReload.loading
+		#crm-container .flexigrid .pReload.loading
 			{
 			background: url(images/load.gif) no-repeat center;
 			}															
 
 /* ie adjustments */
 			
-		.flexigrid.ie div.hDiv th div, .flexigrid.ie  div.bDiv td  div, div.colCopy.ie div/* common inner cell properties*/
+		#crm-container .flexigrid.ie div.hDiv th div, #crm-container .flexigrid.ie  div.bDiv td  div, div.colCopy.ie div/* common inner cell properties*/
 			{
 			overflow: hidden;
 			}			

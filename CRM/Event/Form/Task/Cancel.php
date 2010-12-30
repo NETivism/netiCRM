@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -60,7 +60,7 @@ class CRM_Event_Form_Task_Cancel extends CRM_Event_Form_Task
          */
         parent::preProcess( );
 
-        $session =& CRM_Core_Session::singleton();
+        $session = CRM_Core_Session::singleton();
         $this->_userContext = $session->readUserContext( );
     }
   
@@ -73,7 +73,7 @@ class CRM_Event_Form_Task_Cancel extends CRM_Event_Form_Task
     function buildQuickForm( ) 
     {
         CRM_Utils_System::setTitle( ts('Cancel Registration for Event Participation') );        
-        $session =& CRM_Core_Session::singleton( );
+        $session = CRM_Core_Session::singleton( );
         $this->addDefaultButtons( ts('Continue'), 'done' );
     }
     

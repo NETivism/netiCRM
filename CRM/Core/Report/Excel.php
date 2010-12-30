@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -46,7 +46,7 @@ class CRM_Core_Report_Excel {
      *
      * @access  public
      */
-    function makeCSVTable( &$header, &$rows, $titleHeader = null, $print = true )
+    function makeCSVTable( &$header, &$rows, $titleHeader = null, $print = true, $outputHeader = true )
     {
         if ( $titleHeader ) {
             echo $titleHeader;
@@ -54,7 +54,7 @@ class CRM_Core_Report_Excel {
         
         $result = '';
 
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
         $seperator     = $config->fieldSeparator;
         $enclosed      = '"';
         $escaped       = $enclosed;
@@ -73,13 +73,15 @@ class CRM_Core_Report_Excel {
             $schema_insert     .= $seperator;
         } // end while
 
-        // need to add PMA_exportOutputHandler functionality out here, rather than
-        // doing it the moronic way of assembling a buffer
-        $out = trim(substr($schema_insert, 0, -1)) . $add_character;
-        if ( $print ) {
-            echo $out;
-        } else {
-            $result .= $out;
+        if ( $outputHeader ) {
+            // need to add PMA_exportOutputHandler functionality out here, rather than
+            // doing it the moronic way of assembling a buffer
+            $out = trim(substr($schema_insert, 0, -1)) . $add_character;
+            if ( $print ) {
+                echo $out;
+            } else {
+                $result .= $out;
+            }
         }
 
         $i = 0;
@@ -94,7 +96,8 @@ class CRM_Core_Report_Excel {
                     $schema_insert .= '';
                 } else if ($value == '0' || $value != '') {
                     // loic1 : always enclose fields
-                    $value = ereg_replace("\015(\012)?", "\012", $value);
+                    //$value = ereg_replace("\015(\012)?", "\012", $value);
+                    $value = preg_replace("/\015(\012)?/", "\012", $value);
                     if ($enclosed == '') {
                         $schema_insert .= $value;
                     } else {
@@ -145,19 +148,47 @@ class CRM_Core_Report_Excel {
         }
     } // end of the 'getTableCsv()' function
 
-    function writeCSVFile( $fileName, &$header, &$rows, $titleHeader = null ) {
-        
-        require_once 'CRM/Utils/System.php';
-        CRM_Utils_System::download( CRM_Utils_String::munge( $fileName ),
-                                    'text/x-csv',
-                                    CRM_Core_DAO::$_nullObject,
-                                    'csv',
-                                    false );
+    function writeHTMLFile ( $fileName, &$header, &$rows, $titleHeader = null, $outputHeader = true ) {
+        if ( $outputHeader ) {
+            require_once 'CRM/Utils/System.php';
+            CRM_Utils_System::download( CRM_Utils_String::munge( $fileName ),
+                                        'application/vnd.ms-excel',
+                                        CRM_Core_DAO::$_nullObject,
+                                        'xls',
+                                        false );
+        }
+        echo "<table><thead><tr>";
+        foreach ( $header as $field ) {
+          echo "<th>$field</th>";
+        } // end while
+        echo "</tr></thead><tbody>";
+        $i = 0;
+        $fields_cnt = count($header);
 
-        self::makeCSVTable( $header, $rows, $titleHeader, true );
+        foreach ( $rows as $row ) {
+            $schema_insert = '';
+            $colNo = 0;
+            echo "<tr>";
+            foreach ( $row as $j => $value ) {
+                echo "<td>".htmlentities ($value,ENT_COMPAT,'UTF-8')."</td>";
+            } // end for
+            echo "</tr>";
+        } // end for
+        echo "</tbody></table>";
+    } 
 
-        
+    function writeCSVFile( $fileName, &$header, &$rows, $titleHeader = null, $outputHeader = true ) {
+        if ( $outputHeader ) {
+            require_once 'CRM/Utils/System.php';
+            CRM_Utils_System::download( CRM_Utils_String::munge( $fileName ),
+                                        'text/x-csv',
+                                        CRM_Core_DAO::$_nullObject,
+                                        'csv',
+                                        false );
+        }
+
+        if ( ! empty( $rows ) ) {
+            self::makeCSVTable( $header, $rows, $titleHeader, true, $outputHeader );
+        }
     }
 }
-
-

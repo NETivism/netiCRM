@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -65,7 +65,7 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
         //get the mapping name displayed if the mappingId is set
         $mappingId = $this->get('loadMappingId');
         if ( $mappingId ) {
-            $mapDAO =& new CRM_Core_DAO_Mapping();
+            $mapDAO = new CRM_Core_DAO_Mapping();
             $mapDAO->id = $mappingId;
             $mapDAO->find( true );
             $this->assign('loadedMapping', $mappingId);
@@ -83,17 +83,19 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
         }
         
         if ($invalidRowCount) {
-            $this->set('downloadErrorRecordsUrl', CRM_Utils_System::url('civicrm/export', 'type=1'));
+            $urlParams = 'type='.CRM_Import_Parser::ERROR . '&parser=CRM_Import_Parser';
+            $this->set('downloadErrorRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams ) ); 
         }
-
+        
         if ($conflictRowCount) {
-            $this->set('downloadConflictRecordsUrl', CRM_Utils_System::url('civicrm/export', 'type=2'));
+            $urlParams = 'type='.CRM_Import_Parser::CONFLICT . '&parser=CRM_Import_Parser';
+            $this->set('downloadConflictRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams ) );
         }
         
         if ($mismatchCount) {
-            $this->set('downloadMismatchRecordsUrl', CRM_Utils_System::url('civicrm/export', 'type=4'));
+            $urlParams = 'type='.CRM_Import_Parser::NO_MATCH . '&parser=CRM_Import_Parser';
+            $this->set('downloadMismatchRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams ) );
         }
-
         
         $properties = array( 'mapper', 'locations', 'phones', 'ims',
                              'dataValues', 'columnCount',
@@ -103,9 +105,10 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
                              'downloadConflictRecordsUrl',
                              'downloadMismatchRecordsUrl',
                              'related', 'relatedContactDetails', 'relatedContactLocType',
-                             'relatedContactPhoneType', 'relatedContactImProvider'
+                             'relatedContactPhoneType', 'relatedContactImProvider', 'websites',
+                             'relatedContactWebsiteType'
                              );
-                             
+        
         foreach ( $properties as $property ) {
             $this->assign( $property, $this->get( $property ) );
         }
@@ -135,13 +138,9 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
     public function buildQuickForm( ) {
         $this->addElement( 'text', 'newGroupName', ts('Name for new group'));
         $this->addElement( 'text', 'newGroupDesc', ts('Description of new group'));
-        $this->addRule( 'newGroupName',
-                        ts('Name already exists in Database.'),
-                        'objectExists',
-                        array( 'CRM_Contact_DAO_Group', null, 'title' ) );
-
-        $groups =& $this->get('groups');
         
+        $groups = $this->get('groups');
+                
         if ( ! empty( $groups ) ) {
             $this->addElement( 'select', 'groups', ts('Add imported records to existing group(s)'), $groups, array('multiple' => "multiple", 'size' => 5));
         }
@@ -149,16 +148,19 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
         //display new tag
         $this->addElement( 'text', 'newTagName', ts('Tag'));
         $this->addElement( 'text', 'newTagDesc', ts('Description'));
-        $this->addFormRule(array('CRM_Import_Form_Preview','newTagRule'));    
-    
-        $tag =& $this->get('tag');
+        
+        $tag = $this->get('tag');
         if (! empty($tag) ) {
             foreach ($tag as $tagID => $tagName) {
                 $this->addElement('checkbox', "tag[$tagID]", null, $tagName);
             }
         }
         
-        $previousURL = CRM_Utils_System::url('civicrm/import/contact', '_qf_MapField_display=true', false, null , false);
+        $path = "_qf_MapField_display=true";
+        $qfKey = CRM_Utils_Request::retrieve( 'qfKey', 'String', $form );
+        if ( CRM_Utils_Rule::qfKey( $qfKey ) ) $path .= "&qfKey=$qfKey";
+        
+        $previousURL = CRM_Utils_System::url('civicrm/import/contact', $path, false, null, false);
         $cancelURL   = CRM_Utils_System::url('civicrm/import/contact', 'reset=1');
         
         $buttons = array(
@@ -178,8 +180,50 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
                          );
         
         $this->addButtons( $buttons );
+
+        $this->addFormRule( array( 'CRM_Import_Form_Preview', 'formRule' ), $this );
     }
 
+    /**
+     * global validation rules for the form
+     *
+     * @param array $fields posted values of the form
+     *
+     * @return array list of errors to be posted back to the form
+     * @static
+     * @access public
+     */
+    static function formRule( $fields, $files, $self ) 
+    {
+        $errors         = array( );
+        $invalidTagName = $invalidGroupName = false;
+                
+        if ( CRM_Utils_Array::value( 'newTagName', $fields ) ) {
+            if (!CRM_Utils_Rule::objectExists( trim( $fields['newTagName'] ), 
+                                               array( 'CRM_Core_DAO_Tag' ) ) ) {
+                $errors['newTagName'] = ts( 'Tag \'%1\' already exists.',
+                                            array( 1 => $fields['newTagName']));
+                $invalidTagName = true;
+            }
+        }
+
+        if ( CRM_Utils_Array::value( 'newGroupName', $fields ) ) {
+            $title = trim( $fields['newGroupName'] );
+            $name  = CRM_Utils_String::titleToVar( $title );
+            $query  = 'select count(*) from civicrm_group where name like %1 OR title like %2';
+            $grpCnt = CRM_Core_DAO::singleValueQuery( $query, array( 1 => array( $name,  'String' ),
+                                                                     2 => array( $title, 'String' ) ) );
+            if ( $grpCnt ) {
+                $invalidGroupName = true;
+                $errors['newGroupName'] = ts( 'Group \'%1\' already exists.', array( 1 => $fields['newGroupName']));
+            }
+        }
+
+        $self->assign( 'invalidTagName', $invalidTagName );
+        $self->assign( 'invalidGroupName', $invalidGroupName );
+
+        return empty( $errors ) ? true : $errors;
+    }
     /**
      * Return a descriptive name for the page, used in wizard header
      *
@@ -256,7 +300,7 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
     
             // there is no fileName since this is a sql import
             // so fudge it
-            $config =& CRM_Core_Config::singleton( );
+            $config = CRM_Core_Config::singleton( );
             $errorFile =$config->uploadDir . "sqlImport.error.log"; 
             if ( $fd = fopen( $errorFile, 'w' ) ) {
                 fwrite($fd, implode('\n', $errorMessage));
@@ -264,9 +308,15 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
             fclose($fd);
             
             $this->set('errorFile', $errorFile);
-            $this->set('downloadErrorRecordsUrl', CRM_Utils_System::url('civicrm/export', 'type=1'));
-            $this->set('downloadConflictRecordsUrl', CRM_Utils_System::url('civicrm/export', 'type=2'));
-            $this->set('downloadMismatchRecordsUrl', CRM_Utils_System::url('civicrm/export', 'type=4'));
+            
+            $urlParams = 'type='. CRM_Import_Parser::ERROR .'&parser=CRM_Import_Parser'; 
+            $this->set('downloadErrorRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams ) );
+            
+            $urlParams = 'type='. CRM_Import_Parser::CONFLICT . '&parser=CRM_Import_Parser';
+            $this->set('downloadConflictRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams ) );
+            
+            $urlParams = 'type='. CRM_Import_Parser::NO_MATCH . '&parser=CRM_Import_Parser';
+            $this->set('downloadMismatchRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams ) );
         }
         
         //hack to clean db
@@ -314,7 +364,7 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
             } else {
                 $mapperLocTypes[$key] = null;
             }
-            
+                        
             if ( CRM_Utils_Array::value($key,$mapperKeys) == 'phone' ) {
                 $mapperPhoneTypes[$key] = $mapper[$key][2];
             } else {
@@ -323,7 +373,7 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
 
             list($id, $first, $second) = explode('_', $mapper[$key][0]);
             if ( ($first == 'a' && $second == 'b') || ($first == 'b' && $second == 'a') ) {
-                $relationType =& new CRM_Contact_DAO_RelationshipType();
+                $relationType = new CRM_Contact_DAO_RelationshipType();
                 $relationType->id = $id;
                 $relationType->find(true);
                 eval( '$mapperRelatedContactType[$key] = $relationType->contact_type_'.$second.';');
@@ -340,10 +390,10 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
             }
         }
         
-        $parser =& new CRM_Import_Parser_Contact( $mapperKeys, $mapperLocTypes,
-                                                  $mapperPhoneTypes, $mapperRelated, $mapperRelatedContactType,
-                                                  $mapperRelatedContactDetails, $mapperRelatedContactLocType, 
-                                                  $mapperRelatedContactPhoneType);
+        $parser = new CRM_Import_Parser_Contact( $mapperKeys, $mapperLocTypes,
+                                                 $mapperPhoneTypes, $mapperRelated, $mapperRelatedContactType,
+                                                 $mapperRelatedContactDetails, $mapperRelatedContactLocType, 
+                                                 $mapperRelatedContactPhoneType );
         
         $mapFields = $this->get('fields');
       
@@ -354,7 +404,7 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
             $header = array();
             list($id, $first, $second) = explode('_', $mapper[$key][0]);
             if ( ($first == 'a' && $second == 'b') || ($first == 'b' && $second == 'a') ) {
-                $relationType =& new CRM_Contact_DAO_RelationshipType();
+                $relationType = new CRM_Contact_DAO_RelationshipType();
                 $relationType->id = $id;
                 $relationType->find(true);
                 
@@ -508,7 +558,7 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
     
             // there is no fileName since this is a sql import
             // so fudge it
-            $config =& CRM_Core_Config::singleton( );
+            $config = CRM_Core_Config::singleton( );
             $errorFile =$config->uploadDir . "sqlImport.error.log"; 
             if ( $fd = fopen( $errorFile, 'w' ) ) {
                 fwrite($fd, implode('\n', $errorMessage));
@@ -516,71 +566,15 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
             fclose($fd);
             
             $this->set('errorFile', $errorFile);
-            $this->set('downloadErrorRecordsUrl', CRM_Utils_System::url('civicrm/export', 'type=1'));
-            $this->set('downloadConflictRecordsUrl', CRM_Utils_System::url('civicrm/export', 'type=2'));
-            $this->set('downloadMismatchRecordsUrl', CRM_Utils_System::url('civicrm/export', 'type=4'));
+            
+            $urlParams = 'type='. CRM_Import_Parser::ERROR .'&parser=CRM_Import_Parser'; 
+            $this->set('downloadErrorRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlparams ));
+            
+            $urlParams = 'type='. CRM_Import_Parser::CONFLICT . '&parser=CRM_Import_Parser';
+            $this->set('downloadConflictRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams ));
+            
+            $urlParams = 'type='. CRM_Import_Parser::NO_MATCH . '&parser=CRM_Import_Parser';
+            $this->set('downloadMismatchRecordsUrl', CRM_Utils_System::url('civicrm/export', $urlParams ));
         }
-    }
-
-
-    /**
-     * function for validation
-     *
-     * @param array $params (reference) an assoc array of name/value pairs
-     *
-     * @return mixed true or array of errors
-     * @access public
-     * @static
-     */
-    static function newGroupRule( &$params ) {
-        if (CRM_Utils_Array::value('_qf_Import_refresh', $_POST)) {
-            return true;
-        }
-        
-        /* If we're not creating a new group, accept */
-        if (! $params['newGroupName']) {
-            return true;
-        }
-        
-        $errors = array();
-        
-        if ( $params['newGroupName'] &&
-             ( ! CRM_Utils_Rule::objectExists( trim( $params['newGroupName'] ),
-                                               array( 'CRM_Contact_DAO_Group') ) ) ) {
-            $errors['newGroupName'] = ts( 'Group \'%1\' already exists.',
-                                          array( 1 => $params['newGroupName']));
-        }
-        return empty($errors) ? true : $errors;
-    }
-
-    /**
-     * function for validation
-     *
-     * @param array $params (reference) an assoc array of name/value pairs
-     *
-     * @return mixed true or array of errors
-     * @access public
-     * @static
-     */
-    static function newTagRule( &$params ) {
-        if (CRM_Utils_Array::value('_qf_Import_refresh', $_POST)) {
-            return true;
-        }
-        
-        /* If we're not creating a new Tag, accept */
-        if (! $params['newTagName']) {
-            return true;
-        }
-        
-        $errors = array();
-        
-        if ($params['newTagName']) {
-            if (!CRM_Utils_Rule::objectExists(trim($params['newTagName']),array('CRM_Core_DAO_Tag')))
-            {
-                $errors['newTagName'] = ts( 'Tag \'%1\' already exists.',
-                        array( 1 => $params['newTagName']));
-            }
-        }
-        return empty($errors) ? true : $errors;
     }
 }

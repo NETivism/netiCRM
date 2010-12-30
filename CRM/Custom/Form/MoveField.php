@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -132,7 +132,7 @@ class CRM_Custom_Form_MoveField extends CRM_Core_Form {
         $this->addFormRule( array( 'CRM_Custom_Form_MoveField', 'formRule' ), $this );
     }
 
-    static function formRule(&$fields, &$files, &$self) {
+    static function formRule( $fields, $files, $self) {
         $errors = array( );
 
         $query = "

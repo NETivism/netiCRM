@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | This file is a part of CiviCRM.                                    |
  |                                                                    |
@@ -48,6 +48,15 @@ class CRM_Core_Payment_Realex extends CRM_Core_Payment {
     static protected $_mode   = null;
     
     static protected $_params = array();
+
+    /**
+     * We only need one instance of this object. So we use the singleton
+     * pattern and cache the instance in this variable
+     *
+     * @var object
+     * @static
+     */
+    static private $_singleton = null;
     
     /**
      * Constructor
@@ -71,6 +80,23 @@ class CRM_Core_Payment_Realex extends CRM_Core_Payment {
         $this->_setParam( 'sequence',     rand( 1, 1000 ) );
     }
     
+    /** 
+     * singleton function used to manage this object 
+     * 
+     * @param string $mode the mode of operation: live or test
+     *
+     * @return object 
+     * @static 
+     * 
+     */ 
+    static function &singleton( $mode, &$paymentProcessor ) {
+        $processorName = $paymentProcessor['name'];
+        if (self::$_singleton[$processorName] === null ) {
+            self::$_singleton[$processorName] = new CRM_Core_Payment_Realex( $mode, $paymentProcessor );
+        }
+        return self::$_singleton[$processorName];
+    }
+
     function setExpressCheckOut( &$params ) {
         CRM_Core_Error::fatal( ts( 'This function is not implemented' ) );
     }
@@ -174,8 +200,8 @@ class CRM_Core_Payment_Realex extends CRM_Core_Payment {
         curl_close( $submit );
         
         // Tidy up the responce xml
-        $response_xml = eregi_replace ( "[[:space:]]+", " ", $response_xml );
-        $response_xml = eregi_replace ( "[\n\r]", "", $response_xml );
+        $response_xml = preg_replace( "/[\s\t]/", " ", $response_xml );
+        $response_xml = preg_replace( "/[\n\r]/", "",  $response_xml );
         
         // Parse the response xml
         $xml_parser   = xml_parser_create();
@@ -354,7 +380,7 @@ class CRM_Core_Payment_Realex extends CRM_Core_Payment {
         //$this->_setParam('currency',      $params['currencyID']);
         
         // set the currency to the default which can be overrided.
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
         $this->_setParam('currency', $config->defaultCurrency);
         
         // Format the expiry date to MMYY
@@ -385,7 +411,7 @@ class CRM_Core_Payment_Realex extends CRM_Core_Payment {
      */
     function _checkDupe( $invoiceId ) {
         require_once 'CRM/Contribute/DAO/Contribution.php';
-        $contribution =& new CRM_Contribute_DAO_Contribution( );
+        $contribution = new CRM_Contribute_DAO_Contribution( );
         $contribution->invoice_id = $invoiceId;
         return $contribution->find( );
     }

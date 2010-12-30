@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -110,13 +110,13 @@ class CRM_Admin_Form_RelationshipType extends CRM_Admin_Form
             eval( $this->_BAOName . '::retrieve( $params, $defaults );' );
 
             $defaults['contact_types_a'] = $defaults['contact_type_a'];
-            if ( $defaults['contact_sub_type_a'] ) {
+            if ( CRM_Utils_Array::value( 'contact_sub_type_a', $defaults ) ) {
                 $defaults['contact_types_a'] .=
                     CRM_Core_DAO::VALUE_SEPARATOR . $defaults['contact_sub_type_a'];
             }
 
             $defaults['contact_types_b'] = $defaults['contact_type_b'];
-            if ( $defaults['contact_sub_type_b'] ) {
+            if ( CRM_Utils_Array::value( 'contact_sub_type_b', $defaults ) ) {
                 $defaults['contact_types_b'] .=
                     CRM_Core_DAO::VALUE_SEPARATOR . $defaults['contact_sub_type_b'];
             }

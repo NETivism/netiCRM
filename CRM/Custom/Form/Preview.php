@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -75,7 +75,7 @@ class CRM_Custom_Form_Preview extends CRM_Core_Form
             // field preview
             $defaults = array();
             $params   = array( 'id' => $this->_fieldId );
-            $fieldDAO =& new CRM_Core_DAO_CustomField();                    
+            $fieldDAO = new CRM_Core_DAO_CustomField();                    
             CRM_Core_DAO::commonRetrieve( 'CRM_Core_DAO_CustomField', $params, $defaults );
             
             if ( CRM_Utils_Array::value( 'is_view', $defaults ) ) {
@@ -85,9 +85,9 @@ class CRM_Custom_Form_Preview extends CRM_Core_Form
             }
             
             $groupTree = array();
-            $groupTree[$groupId]['id']     = 0;
-            $groupTree[$groupId]['fields'] = array();
-            $groupTree[$groupId]['fields'][$fieldId] = $defaults;
+            $groupTree[$this->_groupId]['id']     = 0;
+            $groupTree[$this->_groupId]['fields'] = array();
+            $groupTree[$this->_groupId]['fields'][$this->_fieldId] = $defaults;
             $this->_groupTree = CRM_Core_BAO_CustomGroup::formatGroupTree( $groupTree, 1, $this );
             $this->assign('preview_type', 'field');
         } else {

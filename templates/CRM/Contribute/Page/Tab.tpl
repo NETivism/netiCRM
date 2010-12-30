@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -30,7 +30,6 @@
 {else}
     <div class="view-content">
         <div id="help">
-            {ts 1=$displayName}Contributions received from %1 since inception.{/ts} 
             {if $permission EQ 'edit'}
                 {capture assign=newContribURL}{crmURL p="civicrm/contact/view/contribution" q="reset=1&action=add&cid=`$contactId`&context=contribution"}{/capture}
                 {ts 1=$newContribURL}Click <a href='%1'>Record Contribution (Check, Cash, EFT ...)</a> to record a new contribution received from this contact.{/ts}
@@ -38,14 +37,16 @@
                     {capture assign=newCreditURL}{crmURL p="civicrm/contact/view/contribution" q="reset=1&action=add&cid=`$contactId`&context=contribution&mode=live"}{/capture}
                     {ts 1=$newCreditURL}Click <a href='%1'>Submit Credit Card Contribution</a> to process a new contribution on behalf of the contributor using their credit card.{/ts}
                 {/if}
+            {else}
+                {ts 1=$displayName}Contributions received from %1 since inception.{/ts} 
             {/if}
         </div>
     
         {if $action eq 16 and $permission EQ 'edit'}
             <div class="action-link">
-                <a accesskey="N" href="{$newContribURL}" class="button"><span>&raquo; {ts}Record Contribution (Check, Cash, EFT ...){/ts}</span></a>
+                <a accesskey="N" href="{$newContribURL}" class="button"><span><div class="icon add-icon"></div>{ts}Record Contribution (Check, Cash, EFT ...){/ts}</span></a>
                 {if $newCredit}
-                    <a accesskey="N" href="{$newCreditURL}" class="button"><span>&raquo; {ts}Submit Credit Card Contribution{/ts}</span></a>
+                    <a accesskey="N" href="{$newCreditURL}" class="button"><span><div class="icon add-icon"></div>{ts}Submit Credit Card Contribution{/ts}</span></a>
                 {/if}
                 <br /><br />
             </div>
@@ -58,11 +59,9 @@
             {include file="CRM/Contribute/Form/Selector.tpl"}            
         {else}
             <div class="messages status">
-                <dl>
-                    <dt><img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}" /></dt>
-                    <dd>{ts}No contributions have been recorded from this contact.{/ts}</dd>
-               </dl>
-          </div>
+                    <div class="icon inform-icon"></div>
+                    {ts}No contributions have been recorded from this contact.{/ts}
+            </div>
         {/if}
 
         {if $honor}	

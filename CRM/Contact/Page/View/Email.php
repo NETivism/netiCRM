@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -59,14 +59,14 @@ class CRM_Contact_Page_View_Email extends CRM_Core_Page
         $id     = CRM_Utils_Request::retrieve('id', 'Positive',
                                               $this);
         
-        $dao =& new CRM_Core_DAO_ActivityHistory();
+        $dao = new CRM_Core_DAO_ActivityHistory();
         $dao->activity_id = $id;
         $dao->activity_type = ts( 'Email Sent' );
         if ( $dao->find(true) ) {
             $cid = $dao->entity_id;
         }
 
-        $dao =& new CRM_Core_DAO_EmailHistory();
+        $dao = new CRM_Core_DAO_EmailHistory();
         $dao->id = $id;
         
         if ( $dao->find(true) ) {

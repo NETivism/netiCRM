@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -68,7 +68,7 @@ class CRM_Contact_BAO_GroupContact extends CRM_Contact_DAO_GroupContact {
             return null;
         }
 
-        $groupContact =& new CRM_Contact_BAO_GroupContact( );
+        $groupContact = new CRM_Contact_BAO_GroupContact( );
         $groupContact->copyValues( $params );
         CRM_Contact_BAO_SubscriptionHistory::create($params);
         $groupContact->save( );
@@ -149,7 +149,7 @@ class CRM_Contact_BAO_GroupContact extends CRM_Contact_DAO_GroupContact {
        
         foreach ( $contactIds as $contactId ) {
             
-            $groupContact =& new CRM_Contact_DAO_GroupContact( );
+            $groupContact = new CRM_Contact_DAO_GroupContact( );
             $groupContact->group_id   = $groupId;
             $groupContact->contact_id = $contactId;
             // check if the selected contact id already a member
@@ -236,12 +236,12 @@ class CRM_Contact_BAO_GroupContact extends CRM_Contact_DAO_GroupContact {
         $numContactsNotRemoved = 0;
         
         require_once "CRM/Contact/DAO/Group.php";
-        $group =& new CRM_Contact_DAO_Group();
+        $group = new CRM_Contact_DAO_Group();
         $group->id = $groupId;
         $group->find(true);
         
         foreach ( $contactIds as $contactId ) {
-            $groupContact =& new CRM_Contact_DAO_GroupContact( );
+            $groupContact = new CRM_Contact_DAO_GroupContact( );
             $groupContact->group_id   = $groupId;
             $groupContact->contact_id = $contactId;
             // check if the selected contact id already a member, or if this is
@@ -295,7 +295,7 @@ class CRM_Contact_BAO_GroupContact extends CRM_Contact_DAO_GroupContact {
      */
     static function getGroupList( $contactId = 0, $visibility = false ) {
         require_once 'CRM/Contact/DAO/Group.php';
-        $group =& new CRM_Contact_DAO_Group( );
+        $group = new CRM_Contact_DAO_Group( );
 
         $select = $from = $where = '';
         
@@ -464,7 +464,7 @@ class CRM_Contact_BAO_GroupContact extends CRM_Contact_DAO_GroupContact {
                                      $row_count= null,
                                      $includeChildGroups = false )
     {
-        $groupDAO =& new CRM_Contact_DAO_Group();
+        $groupDAO = new CRM_Contact_DAO_Group();
         $groupDAO->id = $group->id;
         if ( ! $groupDAO->find( true ) ) {
             return CRM_Core_Error::createError( "Could not locate group with id: $id" );
@@ -523,7 +523,7 @@ class CRM_Contact_BAO_GroupContact extends CRM_Contact_DAO_GroupContact {
             $query .= " LIMIT $offset, $row_count";        
         }
 
-        $dao =& new CRM_Contact_DAO_Contact( );
+        $dao = new CRM_Contact_DAO_Contact( );
         $dao->query( $query );
         
         // this is quite inefficient, we need to change the return
@@ -617,7 +617,7 @@ AND civicrm_group_contact.group_id = %2";
      * @static
      */
     public static function getGroupId($groupContactID){
-        $dao =& new CRM_Contact_DAO_GroupContact();
+        $dao = new CRM_Contact_DAO_GroupContact();
         $dao->id = $groupContactID;
         $dao->find(true);
         return $dao->group_id; 

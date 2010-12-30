@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -52,6 +52,13 @@ class CRM_Core_Selector_Base {
      * @var string
      */
     protected $_permission = null;
+
+    /**
+     * The qfKey of the underlying search
+     *
+     * @var string
+     */
+    protected $_key;
 
     /**
      * This function gets the attribute for the action that
@@ -164,6 +171,14 @@ class CRM_Core_Selector_Base {
 
     public function getSummary( ) {
         return null;
+    }
+
+    public function setKey( $key ) {
+        $this->_key = $key;
+    }
+
+    public function getKey( ) {
+        return $this->_key;
     }
 
 }

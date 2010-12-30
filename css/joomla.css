@@ -11,12 +11,6 @@ div#toolbar-box {
   height: 26px;
 }
 
-div#toolbar-box div.t, div#toolbar-box div.t div.t, div#toolbar-box div.t div.t div.t, div#toolbar-box div.m, div#toolbar-box div.b div.b, div#toolbar-box div.b, div#toolbar-box div.b div.b div.b {
-  background-image: none;
-  border-left: 0px;
-  border-right: 0px;
-}
-
 fieldset {
   margin-bottom: 1em;
   padding: .5em;
@@ -33,7 +27,7 @@ img {
   border: 0;
 }
 /* Added in CiviCRM 2.0 to alleviate tiny font issues. */
-#crm-container #content tr, #crm-container #content tr td {
+#crm-container tr, #crm-container tr td {
   font-size: 1em;
 }
 
@@ -411,10 +405,13 @@ table {
 ** See .comment .title for an example.
 */
 .title, .title a {
-  font-weight: bold;
-  font-size: 1.3em;
-  color: #777;
+  font-weight: normal;
+  font-size: 1.6em;
+  color: #666;
   margin: 0 auto 0 auto;  /* decrease default margins for h<x>.title */
+}
+.block-civicrm #recently-viewed .crm-icon, .crm-icon {
+	margin-top: 0 !important;
 }
 .submitted {
   color: #999;
@@ -430,6 +427,7 @@ table {
   padding: 0 0 1.5em 0;
 }
 .block {
+  min-height: 25px;
   border-bottom: 1px solid #bbb;
   padding-bottom: 0.75em;
   margin-bottom: 1.5em;
@@ -451,3 +449,54 @@ table {
 	text-align:left;
 }
 
+/* Joomla Admin Menu alterations */
+/* Moved from civicrm.css in v3.2 */
+
+ul#civicrm-menu {
+    z-index: 1;
+    position:relative;
+    border: none;
+    left:0px;
+    height:0px;
+    padding: 2px 0px 22px 2px !important;
+    padding-bottom:22px !important; /*moz bottom */
+    padding-bottom:2px; /*ie bottom */
+	}
+
+
+div#toolbar-box div.m{
+    padding: 0px 8px !important;
+}
+
+div#toolbar-box, div#toolbar-box div.m{
+    height: auto;
+}
+
+ul#civicrm-menu li#crm-qsearch {
+    height:0px;
+}
+.crm-tab-button,
+.ui-tabs .ui-tabs-nav li {
+	border: 1px;
+	font-size: 110%;
+}
+.ui-tabs .ui-tabs-nav {
+	padding: 0.2em 3px 1px;
+}
+#mainTabContainer li.crm-tab-button {
+	margin:0 3px 3px 0;
+	border: 1px solid #F5F6F1 !important;
+}
+#mainTabContainer li.crm-tab-button.ui-tabs-selected {
+	padding-bottom: 0;
+	border: 1px solid #999 !important;
+}
+#crm-container .col1 {
+	margin: 0;
+}
+#crm-container .footer {
+	font-size: 1em;
+}
+.ac_results .ac_odd {
+	background-color: #444;
+}

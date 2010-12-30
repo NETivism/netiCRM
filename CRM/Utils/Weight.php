@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -80,7 +80,7 @@ class CRM_Utils_Weight {
     static function delWeight($daoName, $fieldID, $fieldValues = null, $weightField = 'weight') 
     {
         require_once(str_replace('_', DIRECTORY_SEPARATOR, $daoName) . ".php");
-        eval( '$object   =& new ' . $daoName . '( );' );
+        eval( '$object   = new ' . $daoName . '( );' );
         $object->id = $fieldID;
         if ( !$object->find( true ) ) {
             return false;
@@ -259,7 +259,7 @@ class CRM_Utils_Weight {
 
         require_once(str_replace('_', DIRECTORY_SEPARATOR, $daoName) . ".php");
 
-        $dao =& new $daoName;
+        $dao = new $daoName;
         $table = $dao->getTablename();
         $fields =& $dao->fields();
         $fieldlist = array_keys($fields);
@@ -384,7 +384,7 @@ class CRM_Utils_Weight {
         $dir       = CRM_Utils_Request::retrieve( 'dir'   , 'String' , CRM_Core_DAO::$_nullObject );
 
         require_once(str_replace('_', DIRECTORY_SEPARATOR, $daoName) . ".php");
-        eval( '$object   =& new ' . $daoName . '( );' );
+        eval( '$object   = new ' . $daoName . '( );' );
         $srcWeight = CRM_Core_DAO::getFieldValue( $daoName,
                                                   $src,
                                                   'weight',

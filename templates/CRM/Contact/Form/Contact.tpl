@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -27,84 +27,93 @@
 {if $addBlock}
 {include file="CRM/Contact/Form/Edit/$blockName.tpl"}
 {else}
-<div class="crm-submit-buttons">
-   {$form.buttons.html}
-</div>
+<div class="crm-form-block crm-search-form-block">
+{if call_user_func(array('CRM_Core_Permission','check'), 'administer CiviCRM') }
+    <a href='{crmURL p="civicrm/admin/setting/preferences/display" q="reset=1"}' title="{ts}Click here to configure the panes.{/ts}"><span class="icon settings-icon"></span></a>
+{/if}
 <span style="float:right;"><a href="#expand" id="expand">{ts}Expand all tabs{/ts}</a></span>
-<br/>
-<div class="accordion ui-accordion ui-widget ui-helper-reset">
-    <h3 class="head"> 
-        <span class="ui-icon ui-icon-triangle-1-e" id='contact'></span><a href="#">{ts}Contact Details{/ts}</a>
-    </h3>
-    <div id="contactDetails" class="ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom">
-        <fieldset>
-        {include file="CRM/Contact/Form/Edit/$contactType.tpl"}
-        <br/>
-        <table class="form-layout-compressed">
+<div class="crm-submit-buttons">
+   {include file="CRM/common/formButtons.tpl"}
+</div>
+<div class="crm-accordion-wrapper crm-contactDetails-accordion crm-accordion-open">
+ <div class="crm-accordion-header">
+  <div class="icon crm-accordion-pointer"></div> 
+	{ts}Contact Details{/ts}
+	
+ </div><!-- /.crm-accordion-header -->
+ <div class="crm-accordion-body" id="contactDetails">
+    <div id="contactDetails">
+        <div class="crm-section contact_basic_information-section">
+            {include file="CRM/Contact/Form/Edit/$contactType.tpl"}
+        </div>
+        <table class="crm-section contact_information-section form-layout-compressed">
             {foreach from=$blocks item="label" key="block"}
                {include file="CRM/Contact/Form/Edit/$block.tpl"}
             {/foreach}
 		</table>
-		<table class="form-layout-compressed">
+		<table class="crm-section contact_source-section form-layout-compressed">
             <tr class="last-row">
-            {if $form.home_URL}
-              <td>{$form.home_URL.label}<br />
-                  {$form.home_URL.html}
-              </td>
-            {/if}
               <td>{$form.contact_source.label}<br />
-                  {$form.contact_source.html}
+                  {$form.contact_source.html|crmReplace:class:twenty}
               </td>
-              <td>{$form.external_identifier.label}<br />
-                  {$form.external_identifier.html}
+              <td>{$form.external_identifier.label}{help id="id-external-id" file="CRM/Contact/Form/Contact.hlp"}&nbsp;<br />
+                  {$form.external_identifier.html|crmReplace:class:six}
               </td>
               {if $contactId}
 				<td><label for="internal_identifier">{ts}Internal Id{/ts}</label><br />{$contactId}</td>
 			  {/if}
             </tr>            
         </table>
+	   <table class="image_URL-section form-layout-compressed">
+	    <tr>
+	        <td>
+    	        {$form.image_URL.label}&nbsp;&nbsp;{help id="id-upload-image" file="CRM/Contact/Form/Contact.hlp"}<br />
+    	        {$form.image_URL.html|crmReplace:class:twenty}
+     	        {if $imageURL}
+     	            {include file="CRM/Contact/Page/ContactImage.tpl"}
+     	        {/if}
+ 	        </td>
+ 	    </tr>
+        </table>
 
         {*  add dupe buttons *}
-        {$form._qf_Contact_refresh_dedupe.html}
-        {if $isDuplicate}&nbsp;&nbsp;{$form._qf_Contact_upload_duplicate.html}{/if}
+        <span class="crm-button crm-button_qf_Contact_refresh_dedupe">
+            {$form._qf_Contact_refresh_dedupe.html}
+        </span>
+        {if $isDuplicate}
+            &nbsp;&nbsp;
+            <span class="crm-button crm-button_qf_Contact_upload_duplicate">
+                {$form._qf_Contact_upload_duplicate.html}
+            </span>
+        {/if}
         <div class="spacer"></div>
-        </fieldset>
-    </div>
-    
+   </div>
+ </div><!-- /.crm-accordion-body -->
+</div><!-- /.crm-accordion-wrapper -->
+<div id='customData'></div>  
     {foreach from = $editOptions item = "title" key="name"}
         {include file="CRM/Contact/Form/Edit/$name.tpl"}
     {/foreach}
-</div>
-<br />
 <div class="crm-submit-buttons">
-   {$form.buttons.html}
+    {include file="CRM/common/formButtons.tpl"}
 </div>
 
+</div>
 {literal}
 <script type="text/javascript" >
 var action = "{/literal}{$action}{literal}";
+var removeCustomData = true;
+showTab[0] = {"spanShow":"span#contact","divShow":"div#contactDetails"};
 cj(function( ) {
-    cj('.accordion .head').addClass( "ui-accordion-header ui-helper-reset ui-state-default ui-corner-all");
-
-    cj('.accordion .head').hover( function( ) { 
-        cj(this).addClass( "ui-state-hover");
-    }, function() { 
-        cj(this).removeClass( "ui-state-hover");
-    }).bind('click', function( ) { 
-        var checkClass = cj(this).find('span').attr( 'class' );
-        var len        = checkClass.length;
-        if ( checkClass.substring( len - 1, len ) == 's' ) {
-            cj(this).find('span').removeClass( ).addClass('ui-icon ui-icon-triangle-1-e');
-        } else {
-            cj(this).find('span').removeClass( ).addClass('ui-icon ui-icon-triangle-1-s');
+    cj().crmaccordions( ); 
+	cj(showTab).each( function(){ 
+        if( this.spanShow ) {
+            cj(this.spanShow).removeClass( ).addClass('crm-accordion-open');
+            cj(this.divShow).show( );
         }
-        cj(this).next( ).toggle(); return false; 
-    }).next( ).hide( );
-    
-    cj('span#contact').removeClass( ).addClass('ui-icon ui-icon-triangle-1-s');
-    cj("#contactDetails").show( );
-	
-	cj('div.accordion div.ui-accordion-content').each( function() {
+    });
+
+	cj('.crm-accordion-body').each( function() {
 		//remove tab which doesn't have any element
 		if ( ! cj.trim( cj(this).text() ) ) { 
 			ele     = cj(this);
@@ -113,87 +122,84 @@ cj(function( ) {
 			cj( prevEle).remove();
 		}
 		//open tab if form rule throws error
-		if ( cj(this).children().find('span.error').text() ) {
-			cj(this).show().prev().children('span:first').removeClass( ).addClass('ui-icon ui-icon-triangle-1-s');
+		if ( cj(this).children( ).find('span.crm-error').text( ).length > 0 ) {
+			cj(this).parent( ).removeClass( 'crm-accordion-closed' ).addClass('crm-accordion-open');
 		}
 	});
-	if ( action == 2 ) {
-		//highlight the tab having data inside.
-		cj('div.accordion div.ui-accordion-content :input').each( function() { 
-			var element = cj(this).closest("div.ui-accordion-content").attr("id");
-			eval('var ' + element + ' = "";');
-			switch( cj(this).attr('type') ) {
-			case 'checkbox':
-			case 'radio':
-			  if( cj(this).is(':checked') ) {
-			    eval( element + ' = true;'); 
-			  }
-			  break;
-			  
-			case 'text':
-			case 'textarea':
-			  if( cj(this).val() ) {
-			    eval( element + ' = true;');
-			  }
-			  break;
-			  
-			case 'select-one':
-			case 'select-multiple':
-			  if( cj('select option:selected' ) && cj(this).val() ) {
-			    eval( element + ' = true;');
-			  }
-			  break;		
-			  
-			case 'file':
-			  if( cj(this).next().html() ) eval( element + ' = true;');
-			  break;
-			}
-			if( eval( element + ';') ) { 
-			  cj(this).closest("div.ui-accordion-content").prev().children('a:first').css( 'font-weight', 'bold' );
-			}
-		});
-	}
+
+	highlightTabs( );
 });
 
 cj('a#expand').click( function( ){
     if( cj(this).attr('href') == '#expand') {   
         var message     = {/literal}"{ts}Collapse all tabs{/ts}"{literal};
-        var className   = 'ui-icon ui-icon-triangle-1-s';
-        var event       = 'show';
         cj(this).attr('href', '#collapse');
+        cj('.crm-accordion-closed').removeClass('crm-accordion-closed').addClass('crm-accordion-open');
     } else {
         var message     = {/literal}"{ts}Expand all tabs{/ts}"{literal};
-        var className   = 'ui-icon ui-icon-triangle-1-e';
-        var event       = 'hide';
+        cj('.crm-accordion-open').removeClass('crm-accordion-open').addClass('crm-accordion-closed');
         cj(this).attr('href', '#expand');
     }
-    
     cj(this).html(message);
-    cj('div.accordion div.ui-accordion-content').each(function() {
-        cj(this).parent().find('h3 span').removeClass( ).addClass(className);
-        eval( " var showHide = cj(this)." + event + "();" );
-    }); 
+    return false;
 });
 
-//current employer default setting
-var employerId = "{/literal}{$currentEmployer}{literal}";
-if ( employerId ) {
-    var dataUrl = "{/literal}{crmURL p='civicrm/ajax/contactlist' h=0 q="org=1&id=" }{literal}" + employerId ;
-    cj.ajax({ 
-        url     : dataUrl,   
-        async   : false,
-        success : function(html){
-            //fixme for showing address in div
-            htmlText = html.split( '|' , 2);
-            cj('input#current_employer').val(htmlText[0]);
-            cj('input#current_employer_id').val(htmlText[1]);
-        }
-    }); 
+function showHideSignature( blockId ) {
+    cj('#Email_Signature_' + blockId ).toggle( );   
 }
 
-cj("input#current_employer").click( function( ) {
-    cj("input#current_employer_id").val('');
-});
+function highlightTabs( ) {
+    if ( action == 2 ) {
+	//highlight the tab having data inside.
+	cj('.crm-accordion-body :input').each( function() { 
+		var element = cj(this).closest(".crm-accordion-body").attr("id");
+		if (element) {
+		eval('var ' + element + ' = "";');
+		switch( cj(this).attr('type') ) {
+		case 'checkbox':
+		case 'radio':
+		  if( cj(this).is(':checked') ) {
+		    eval( element + ' = true;'); 
+		  }
+		  break;
+		  
+		case 'text':
+		case 'textarea':
+		  if( cj(this).val() ) {
+		    eval( element + ' = true;');
+		  }
+		  break;
+		  
+		case 'select-one':
+		case 'select-multiple':
+		  if( cj('select option:selected' ) && cj(this).val() ) {
+		    eval( element + ' = true;');
+		  }
+		  break;		
+		  
+		case 'file':
+		  if( cj(this).next().html() ) eval( element + ' = true;');
+		  break;
+  		}
+		if( eval( element + ';') ) { 
+		  cj(this).closest(".crm-accordion-wrapper").addClass('crm-accordion-hasContent');
+		}
+	     }
+       });
+    }
+}
+
+function removeDefaultCustomFields( ) {
+     //execute only once
+     if (removeCustomData) {
+	 cj(".crm-accordion-wrapper").children().each( function() {
+	    var eleId = cj(this).attr("id");
+	    if ( eleId.substr(0,10) == "customData" ) { cj(this).parent("div").remove(); }
+	 });
+	 removeCustomData = false;
+     }
+}
+ 
 </script>
 {/literal}
 

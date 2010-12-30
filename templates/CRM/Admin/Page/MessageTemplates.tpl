@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -23,7 +23,7 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
-{capture assign=crmURL}{crmURL p='civicrm/admin/messageTemplates' q="action=add&reset=1"}{/capture}
+{capture assign=crmURL}{crmURL p='civicrm/admin/messageTemplates/add' q="action=add&reset=1"}{/capture}
 {if $action eq 1 or $action eq 2 or $action eq 8}
    {include file="CRM/Admin/Form/MessageTemplates.tpl"}
    
@@ -35,10 +35,10 @@
   </div>
 
   <fieldset>
-  <div class="section msg_title-section">
+  <div class="crm-section msg_title-section">
     <div class="bold">{$form.msg_title.value}</div>
   </div>
-  <div class="section msg_subject-section">
+  <div class="crm-section msg_subject-section">
   <h3 class="header-dark">{$form.msg_subject.label}</h3>
     <div class="text">
       <textarea name="msg-subject" id="msg_subject" style="height: 6em; width: 45em;">{$form.msg_subject.value}</textarea>
@@ -50,7 +50,7 @@
     </div>
   </div>
   
-  <div class="section msg_txt-section">
+  <div class="crm-section msg_txt-section">
   <h3 class="header-dark">{$form.msg_text.label}</h3>
     <div class="text">
       <textarea class="huge" name='msg_text' id='msg_text'>{$form.msg_text.value|htmlentities}</textarea>
@@ -62,7 +62,7 @@
     </div>
   </div>
 
-  <div class="section msg_html-section">
+  <div class="crm-section msg_html-section">
   <h3 class="header-dark">{$form.msg_html.label}</h3>
     <div class='text'>
       <textarea class="huge" name='msg_html' id='msg_html'>{$form.msg_html.value|htmlentities}</textarea>
@@ -129,17 +129,15 @@
 
             {if $action ne 1 and $action ne 2 and $type eq 'userTemplates'}
               <div class="action-link">
-                <a href="{crmURL q="action=add&reset=1"}" id="newMessageTemplates" class="button"><span>&raquo; {ts}New Message Template{/ts}</span></a>
+                <a href="{crmURL p='civicrm/admin/messageTemplates/add' q="action=add&reset=1"}" id="newMessageTemplates" class="button"><span><div class="icon add-icon"></div>{ts}Add Message Template{/ts}</span></a>
               </div>
               <div class="spacer"></div>
             {/if}
             
             {if empty( $template_row) }
                 <div class="messages status">
-                  <dl>
-                    <dt><img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}"/></dt>
-                    <dd>{ts 1=$crmURL}There are no User-driven Message Templates entered. You can <a href='%1'>add one</a>.{/ts}</dd>
-                  </dl>
+                    <div class="icon inform-icon"></div>&nbsp;
+                    {ts 1=$crmURL}There are no User-driven Message Templates entered. You can <a href='%1'>add one</a>.{/ts}
                 </div>
             {/if}
          </div>
@@ -158,11 +156,9 @@
     {/literal}
   </script>
 
-{elseif $action ne 1 and $action ne 2 and $action ne 4}
+{elseif $action ne 1 and $action ne 2 and $action ne 4 and $action ne 8}
   <div class="messages status">
-    <dl>
-      <dt><img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}"/></dt>
-      <dd>{ts 1=$crmURL}There are no Message Templates entered. You can <a href='%1'>add one</a>.{/ts}</dd>
-    </dl>
+      <img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}"/>
+      {ts 1=$crmURL}There are no Message Templates entered. You can <a href='%1'>add one</a>.{/ts}
   </div>
 {/if}

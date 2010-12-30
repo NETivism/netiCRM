@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -99,55 +99,8 @@ class CRM_Event_StateMachine_Search extends CRM_Core_StateMachine
             $value = $this->_controller->get( 'task' );
         }
         $this->_controller->set( 'task', $value );
+        return CRM_Event_Task::getTask( $value );
         
-        $result = false;
-
-        switch ( $value ) {
-        case CRM_Event_Task::DELETE_EVENTS:
-            $task   = 'CRM_Event_Form_Task_Delete';
-            break;
-            
-        case CRM_Event_Task::EXPORT_EVENTS:
-            $task   = array('CRM_Export_Form_Select',
-                            'CRM_Export_Form_Map');
-            break;
-            
-        case CRM_Event_Task::BATCH_EVENTS:
-            $task   = array( 'CRM_Event_Form_Task_PickProfile',
-                             'CRM_Event_Form_Task_Batch',
-                             'CRM_Event_Form_Task_Result' );
-            break;
-
-        case CRM_Event_Task::CANCEL_REGISTRATION:
-            $task   = 'CRM_Event_Form_Task_Cancel';
-            break;
-
-        case CRM_Event_Task::EMAIL_CONTACTS:
-            $task   = array('CRM_Event_Form_Task_Email',
-                            'CRM_Event_Form_Task_Result');
-            break;
-
-        case CRM_Event_Task::SAVE_SEARCH:
-            $task   = 'CRM_Event_Form_Task_SaveSearch';
-            $result = true;
-            break;
-
-        case CRM_Event_Task::SAVE_SEARCH_UPDATE:
-            $task   = 'CRM_Event_Form_Task_SaveSearch_Update';
-            $result = true;
-            break;
-
-        case CRM_Event_Task::PARTICIPANT_STATUS:
-            $task = array('CRM_Event_Form_Task_ParticipantStatus',
-                          'CRM_Event_Form_Task_Result');
-            break;
-            
-        default: // the print task is the default and catch=all task
-            $task = 'CRM_Event_Form_Task_Print';
-            break;
-        }
-        
-        return array( $task, $result );
     }
     
     /**

@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -50,7 +50,7 @@ class CRM_Core_Standalone {
      * @static
      */
     static function sidebarLeft( ) {
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
 
         require_once 'CRM/Core/Block.php';
         $blockIds = array( 
@@ -69,7 +69,7 @@ class CRM_Core_Standalone {
         }
 
         require_once 'CRM/Core/Smarty.php';
-        $template =& CRM_Core_Smarty::singleton( );
+        $template = CRM_Core_Smarty::singleton( );
         $template->assign_by_ref( 'blocks', $blocks );
         $sidebarLeft = $template->fetch( 'CRM/Block/blocks.tpl' );
         $template->assign_by_ref( 'sidebarLeft', $sidebarLeft );

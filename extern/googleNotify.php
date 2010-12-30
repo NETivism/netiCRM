@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -39,7 +39,7 @@ session_start( );
 require_once '../civicrm.config.php';
 require_once 'CRM/Core/Config.php';
 
-$config =& CRM_Core_Config::singleton();
+$config = CRM_Core_Config::singleton();
 
 require_once 'CRM/Core/Payment/GoogleIPN.php';
 $rawPostData = file_get_contents( 'php://input' );

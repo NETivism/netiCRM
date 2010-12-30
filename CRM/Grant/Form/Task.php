@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -80,13 +80,18 @@ class CRM_Grant_Form_Task extends CRM_Core_Form
      */
     function preProcess( ) 
     {
-        $this->_grantIds = array();
-        
-        $values = $this->controller->exportValues( 'Search' );
+        self::preProcessCommon( $this );
+    }
 
-        $this->_task = $values['task'];
+    static function preProcessCommon( &$form, $useTable = false )
+    {
+        $form->_grantIds = array();
+        
+        $values = $form->controller->exportValues( 'Search' );
+
+        $form->_task = $values['task'];
         $grantTasks = CRM_Grant_Task::tasks();
-        $this->assign( 'taskName', $grantTasks[$this->_task] );
+        $form->assign( 'taskName', $grantTasks[$form->_task] );
         
         $ids = array();
         if ( $values['radio_ts'] == 'ts_sel' ) {
@@ -96,8 +101,8 @@ class CRM_Grant_Form_Task extends CRM_Core_Form
                 }
             }
         } else {
-            $queryParams =  $this->get( 'queryParams' );
-            $query       =& new CRM_Contact_BAO_Query( $queryParams, null, null, false, false, 
+            $queryParams =  $form->get( 'queryParams' );
+            $query       = new CRM_Contact_BAO_Query( $queryParams, null, null, false, false, 
                                                        CRM_Contact_BAO_Query::MODE_GRANT);
             $result = $query->searchQuery(0, 0, null);
             while ($result->fetch()) {
@@ -106,17 +111,22 @@ class CRM_Grant_Form_Task extends CRM_Core_Form
         }
 
         if ( ! empty( $ids ) ) {
-            $this->_componentClause =
+            $form->_componentClause =
                 ' civicrm_grant.id IN ( ' .
                 implode( ',', $ids ) . ' ) ';
-            $this->assign( 'totalSelectedGrants', count( $ids ) );             
+            $form->assign( 'totalSelectedGrants', count( $ids ) );             
         }
         
-        $this->_grantIds = $this->_componentIds = $ids;
+        $form->_grantIds = $form->_componentIds = $ids;
 
         //set the context for redirection for any task actions
-        $session =& CRM_Core_Session::singleton( );
-        $session->replaceUserContext( CRM_Utils_System::url( 'civicrm/grant/search', 'force=1' ) );
+        $qfKey = CRM_Utils_Request::retrieve( 'qfKey', 'String', $this );
+        require_once 'CRM/Utils/Rule.php';
+        $urlParams = 'force=1';
+        if ( CRM_Utils_Rule::qfKey( $qfKey ) ) $urlParams .= "&qfKey=$qfKey";
+        
+        $session = CRM_Core_Session::singleton( );
+        $session->replaceUserContext( CRM_Utils_System::url( 'civicrm/grant/search', $urlParams ) );
     }
 
     /**

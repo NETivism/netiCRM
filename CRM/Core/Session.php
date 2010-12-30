@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -31,6 +31,11 @@ require_once "PEAR.php";
 require_once "CRM/Core/Error.php";
 
 class CRM_Core_Session {
+
+    /**
+     * Cache of all the session names that we manage
+     */
+    static $_managedNames = null;
 
     /**
      * key is used to allow the application to have multiple top
@@ -248,12 +253,13 @@ class CRM_Core_Session {
         $this->createScope( $prefix );
 
         if ( empty( $prefix ) ) {
-            $session =& $this->_session[$this->_key];
+            $values =& $this->_session[$this->_key];
         } else {
-            $session =& $this->_session[$this->_key][$prefix];
+            require_once 'CRM/Core/BAO/Cache.php';
+            $values = CRM_Core_BAO_Cache::getItem( 'CiviCRM Session', "CiviCRM_{$prefix}" );
         }
 
-        foreach ($session as $name => $value) {
+        foreach ($values as $name => $value) {
             $vars[$name] = $value;
         }
     }
@@ -343,7 +349,7 @@ class CRM_Core_Session {
     function readUserContext( ) {
         $this->createScope( self::USER_CONTEXT );
 
-        $config =& CRM_Core_Config::singleton( );
+        $config = CRM_Core_Config::singleton( );
         $lastElement = count( $this->_session[$this->_key][self::USER_CONTEXT] ) - 1;
         return $lastElement >= 0 ? 
             $this->_session[$this->_key][self::USER_CONTEXT][$lastElement] :
@@ -413,6 +419,31 @@ class CRM_Core_Session {
         }
     }
 
+    static function registerAndRetrieveSessionObjects( $names ) {
+        if ( ! is_array( $names ) ) {
+            $names = array( $names );
+        }
+
+        if ( ! self::$_managedNames ) {
+            self::$_managedNames = $names;
+        } else {
+            self::$_managedNames = array_merge( self::$_managedNames, $names );
+        }
+
+        require_once 'CRM/Core/BAO/Cache.php';
+        CRM_Core_BAO_Cache::restoreSessionFromCache( $names );
+    }
+
+    static function storeSessionObjects( $reset = true ) {
+        if ( empty( self::$_managedNames ) ) {
+            return;
+        }
+
+        self::$_managedNames = array_unique( self::$_managedNames );
+        require_once 'CRM/Core/BAO/Cache.php';
+        CRM_Core_BAO_Cache::storeSessionToCache( self::$_managedNames, $reset );
+
+        self::$_managedNames = null;
+    }
+
 }
-
-

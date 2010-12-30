@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -79,13 +79,13 @@ class CRM_Upgrade_Page_Upgrade extends CRM_Core_Page {
 
         // This could be removed in later rev
         if ( $currentVer == '2.1.6' ) {
-            $config =& CRM_Core_Config::singleton( );
+            $config = CRM_Core_Config::singleton( );
             // also cleanup the templates_c directory
             $config->cleanup( 1 , false);
             
             if ( $config->userFramework !== 'Standalone' ) {
                 // clean the session
-                $session =& CRM_Core_Session::singleton( );
+                $session = CRM_Core_Session::singleton( );
                 $session->reset( 2 );
             }
         }
@@ -94,9 +94,9 @@ class CRM_Upgrade_Page_Upgrade extends CRM_Core_Page {
         CRM_Utils_System::setTitle(ts('Upgrade CiviCRM to Version %1', 
                                       array( 1 => $latestVer )));
         
-        $upgrade  =& new CRM_Upgrade_Form( );
+        $upgrade  = new CRM_Upgrade_Form( );
 
-        $template =& CRM_Core_Smarty::singleton( );
+        $template = CRM_Core_Smarty::singleton( );
         $template->assign( 'pageTitle', ts('Upgrade CiviCRM to Version %1', 
                                            array( 1 => $latestVer )));
         $template->assign( 'menuRebuildURL', 
@@ -116,6 +116,51 @@ class CRM_Upgrade_Page_Upgrade extends CRM_Core_Page {
             $template->assign( 'upgraded', true );
         } else {
             $message   = ts('CiviCRM upgrade was successful.');
+            if ( $latestVer == '3.2.alpha1' ) {
+                $message .= '<br />' . ts("We have reset the COUNTED flag to false for the event participant status 'Pending from incomplete transaction'. This change ensures that people who have a problem during registration can try again.");
+            } else if ( $latestVer == '3.2.beta3' && ( version_compare($currentVer, '3.1.alpha1') >= 0 ) ) {
+                require_once 'CRM/Contact/BAO/ContactType.php';
+                $subTypes = CRM_Contact_BAO_ContactType::subTypes( );
+                                
+                if ( is_array( $subTypes ) && !empty( $subTypes ) ) {
+                    $config = CRM_Core_Config::singleton( );
+                    $subTypeTemplates = array( );
+                    
+                    if ( isset( $config->customTemplateDir ) ) {
+                        foreach( $subTypes as $key => $subTypeName ) {
+                            $customContactSubTypeEdit = $config->customTemplateDir . "CRM/Contact/Form/Edit/" . $subTypeName . ".tpl";
+                            $customContactSubTypeView = $config->customTemplateDir . "CRM/Contact/Page/View/" . $subTypeName . ".tpl";
+                            if ( file_exists( $customContactSubTypeEdit ) || file_exists( $customContactSubTypeView ) ) {
+                                $subTypeTemplates[$subTypeName] = $subTypeName;
+                            }
+                        }
+                    } 
+                    
+                    foreach( $subTypes as $key => $subTypeName ) {
+                        $customContactSubTypeEdit = $config->templateDir . "CRM/Contact/Form/Edit/" . $subTypeName . ".tpl";
+                        $customContactSubTypeView = $config->templateDir . "CRM/Contact/Page/View/" . $subTypeName . ".tpl";
+                            if ( file_exists( $customContactSubTypeEdit ) || file_exists( $customContactSubTypeView ) ) {
+                                $subTypeTemplates[$subTypeName] = $subTypeName;
+                            }
+                    }
+                                        
+                    if ( !empty( $subTypeTemplates ) ) {
+                        $subTypeTemplates = implode( ',', $subTypeTemplates );
+                        $message .= '<br />' . ts('You are using custom template for contact subtypes: %1.', array(1 => $subTypeTemplates)) . '<br />' . ts('You need to move these subtype templates to the SubType directory in %1 and %2 respectively.', array(1 => 'CRM/Contact/Form/Edit', 2 => 'CRM/Contact/Page/View'));
+                    }
+                }
+            } else if ( $latestVer == '3.2.beta4' ) {
+                $statuses = array( 'New', 'Current', 'Grace', 'Expired', 'Pending', 'Cancelled', 'Deceased' );
+                $sql = "
+SELECT  count( id ) as statusCount 
+  FROM  civicrm_membership_status 
+ WHERE  name IN ( '" . implode( "' , '", $statuses )  .  "' ) ";
+                $count = CRM_Core_DAO::singleValueQuery( $sql );
+                if ( $count < count( $statuses ) ) {
+                    $message .= '<br />' . ts( "One or more Membership Status Rules was disabled during the upgrade because it did not match a recognized status name. if custom membership status rules were added to this site - review the disabled statuses and re-enable any that are still needed (Administer > CiviMember > Membership Status Rules)." );
+                }
+            }
+            
             $template->assign( 'currentVersion',  $currentVer);
             $template->assign( 'newVersion',      $latestVer );
             $template->assign( 'upgradeTitle',   ts('Upgrade CiviCRM from v %1 To v %2', 
@@ -132,10 +177,40 @@ class CRM_Upgrade_Page_Upgrade extends CRM_Core_Page {
                         $upgrade->setVersion( $rev . '.upgrade' );
 
                         $phpFunctionName = 'upgrade_' . str_replace( '.', '_', $rev );
-                        if ( is_callable(array($this, $phpFunctionName)) ) {
-                            eval("\$this->{$phpFunctionName}('$rev');");
+
+                        // follow old upgrade process for all version
+                        // below 3.2.alpha1 
+                        if ( version_compare( $rev , '3.2.alpha1' ) < 0 ) {
+                            if ( is_callable(array($this, $phpFunctionName)) ) {
+                                eval("\$this->{$phpFunctionName}('$rev');");
+                            } else {
+                                $upgrade->processSQL( $rev );
+                            }
                         } else {
-                            $upgrade->processSQL( $rev );
+                            // new upgrade process from version
+                            // 3.2.alpha1 
+                            $versionObject = $upgrade->incrementalPhpObject( $rev );
+                            
+                            // predb check for major release.
+                            if ( $upgrade->checkVersionRelease( $rev, 'alpha1' ) ) {
+                                if ( !(is_callable(array($versionObject, 'verifyPreDBstate'))) ) {
+                                    CRM_Core_Error::fatal("verifyPreDBstate method was not found for $rev");
+                                }
+                                
+                                $error = null;
+                                if ( !($versionObject->verifyPreDBstate($error)) ) {
+                                    if ( ! isset( $error ) ) {
+                                        $error = "post-condition failed for current upgrade for $rev";
+                                    }
+                                    CRM_Core_Error::fatal( $error );
+                                }
+                            }
+                            
+                            if ( is_callable(array($versionObject, $phpFunctionName)) ) {
+                                $versionObject->$phpFunctionName( $rev );
+                            } else {
+                                $upgrade->processSQL( $rev );
+                            }
                         }
 
                         // after an successful intermediate upgrade, set the complete version
@@ -146,16 +221,19 @@ class CRM_Upgrade_Page_Upgrade extends CRM_Core_Page {
                 $template->assign( 'upgraded', true );
                 
                 // also cleanup the templates_c directory
-                $config =& CRM_Core_Config::singleton( );
+                $config = CRM_Core_Config::singleton( );
                 $config->cleanup( 1 , false );
 
                 // clear db caching
                 $config->clearDBCache( );
 
+                // clear temporary tables
+                $config->clearTempTables( );
+
                 // clean the session. Note: In case of standalone this makes the user logout. 
                 // So skip this step for standalone. 
                 if ( $config->userFramework !== 'Standalone' ) {
-                    $session =& CRM_Core_Session::singleton( );
+                    $session = CRM_Core_Session::singleton( );
                     $session->reset( 2 );
                 }
             }
@@ -184,7 +262,7 @@ class CRM_Upgrade_Page_Upgrade extends CRM_Core_Page {
                 return;
             }
 
-            $template =& CRM_Core_Smarty::singleton( );
+            $template = CRM_Core_Smarty::singleton( );
 
             $eventFees = array( );
             $query = "SELECT og.id ogid FROM civicrm_option_group og WHERE og.name LIKE  %1";
@@ -237,7 +315,7 @@ class CRM_Upgrade_Page_Upgrade extends CRM_Core_Page {
     function upgrade_2_2_alpha3( $rev ) {
         // skip processing sql file, if fresh install -
         if ( ! CRM_Core_DAO::getFieldValue( 'CRM_Core_DAO_OptionGroup','mail_protocol','id','name' ) ) {
-            $upgrade  =& new CRM_Upgrade_Form( );
+            $upgrade  = new CRM_Upgrade_Form( );
             $upgrade->processSQL( $rev );
         }
         return true;
@@ -245,15 +323,15 @@ class CRM_Upgrade_Page_Upgrade extends CRM_Core_Page {
 
     function upgrade_2_2_beta1( $rev ) {
         if ( ! CRM_Core_DAO::checkFieldExists( 'civicrm_pcp_block', 'notify_email' ) ) {
-            $template =& CRM_Core_Smarty::singleton( );
+            $template = CRM_Core_Smarty::singleton( );
             $template->assign( 'notifyAbsent', true );
         }
-        $upgrade =& new CRM_Upgrade_Form( );
+        $upgrade = new CRM_Upgrade_Form( );
         $upgrade->processSQL( $rev );
     }
 
     function upgrade_2_2_beta2( $rev ) {
-        $template =& CRM_Core_Smarty::singleton( );
+        $template = CRM_Core_Smarty::singleton( );
         if ( ! CRM_Core_DAO::getFieldValue( 'CRM_Core_DAO_OptionValue', 
                                             'CRM_Contact_Form_Search_Custom_ZipCodeRange','id','name' ) ) {
             $template->assign( 'customSearchAbsentAll', true );
@@ -261,17 +339,17 @@ class CRM_Upgrade_Page_Upgrade extends CRM_Core_Page {
                                                    'CRM_Contact_Form_Search_Custom_MultipleValues','id','name' ) ) {
             $template->assign( 'customSearchAbsent', true );
         }
-        $upgrade =& new CRM_Upgrade_Form( );
+        $upgrade = new CRM_Upgrade_Form( );
         $upgrade->processSQL( $rev );
     }
     
     function upgrade_2_2_beta3( $rev ) {
-        $template =& CRM_Core_Smarty::singleton( );
+        $template = CRM_Core_Smarty::singleton( );
         if ( ! CRM_Core_DAO::getFieldValue( 'CRM_Core_DAO_OptionGroup','custom_data_type','id','name' ) ) {
             $template->assign( 'customDataType', true );
         }
         
-        $upgrade =& new CRM_Upgrade_Form( );
+        $upgrade = new CRM_Upgrade_Form( );
         $upgrade->processSQL( $rev );
     }
     
@@ -308,7 +386,7 @@ class CRM_Upgrade_Page_Upgrade extends CRM_Core_Page {
     }
     
     function upgrade_2_2_7( $rev ) {
-        $upgrade =& new CRM_Upgrade_Form( );
+        $upgrade = new CRM_Upgrade_Form( );
         $upgrade->processSQL( $rev );
         $sql = "UPDATE civicrm_report_instance 
                        SET form_values = REPLACE(form_values,'#',';') ";
@@ -316,7 +394,7 @@ class CRM_Upgrade_Page_Upgrade extends CRM_Core_Page {
 
         // make report component enabled by default
         require_once "CRM/Core/DAO/Domain.php";
-        $domain =& new CRM_Core_DAO_Domain();
+        $domain = new CRM_Core_DAO_Domain();
         $domain->selectAdd( );
         $domain->selectAdd( 'config_backend' );
         $domain->find(true);
@@ -339,7 +417,7 @@ class CRM_Upgrade_Page_Upgrade extends CRM_Core_Page {
   
     function upgrade_3_0_2( $rev ) {
         
-        $template =& CRM_Core_Smarty::singleton( );
+        $template = CRM_Core_Smarty::singleton( );
         require_once 'CRM/Core/OptionGroup.php';
         //check whether upgraded from 2.1.x or 2.2.x 
         $inboundEmailID = CRM_Core_OptionGroup::getValue('activity_type', 'Inbound Email', 'name' );
@@ -350,14 +428,14 @@ class CRM_Upgrade_Page_Upgrade extends CRM_Core_Page {
             $template->assign( 'addInboundEmail', true ); 
         }
 
-        $upgrade =& new CRM_Upgrade_Form( );
+        $upgrade = new CRM_Upgrade_Form( );
         $upgrade->processSQL( $rev );
     }
 
     function upgrade_3_0_4( $rev ) 
     {
         //make sure 'Deceased' membership status present in db,CRM-5636
-        $template =& CRM_Core_Smarty::singleton( );
+        $template = CRM_Core_Smarty::singleton( );
         
         $addDeceasedStatus = false;
         $sql = "SELECT max(id) FROM civicrm_membership_status where name = 'Deceased'"; 
@@ -366,7 +444,7 @@ class CRM_Upgrade_Page_Upgrade extends CRM_Core_Page {
         }
         $template->assign( 'addDeceasedStatus', $addDeceasedStatus ); 
         
-        $upgrade =& new CRM_Upgrade_Form( );
+        $upgrade = new CRM_Upgrade_Form( );
         $upgrade->processSQL( $rev );
     }
 

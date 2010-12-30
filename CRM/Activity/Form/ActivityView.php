@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -35,6 +35,7 @@
  */
 
 require_once 'CRM/Core/Form.php';
+require_once "CRM/Activity/BAO/Activity.php";
 
 /**
  * This class handle activity view mode
@@ -55,7 +56,13 @@ class CRM_Activity_Form_ActivityView extends CRM_Core_Form
         $context    = CRM_Utils_Request::retrieve( 'context', 'String', $this );
         $cid        = CRM_Utils_Request::retrieve('cid','Positive', $this);
         
-        $session =& CRM_Core_Session::singleton();
+        //check for required permissions, CRM-6264 
+        if ( $activityId &&
+             !CRM_Activity_BAO_Activity::checkPermission( $activityId, CRM_Core_Action::VIEW ) ) {
+            CRM_Core_Error::fatal( ts( 'You do not have permission to access this page.' ) );
+        }
+        
+        $session = CRM_Core_Session::singleton();
         if ( $context != 'home' ) {
             $url = CRM_Utils_System::url( 'civicrm/contact/view', "reset=1&cid={$cid}&selectedChild=activity");
         } else {
@@ -65,8 +72,6 @@ class CRM_Activity_Form_ActivityView extends CRM_Core_Form
         $session->pushUserContext( $url );
 
         $params = array( 'id' => $activityId );
-            
-        require_once "CRM/Activity/BAO/Activity.php";
         CRM_Activity_BAO_Activity::retrieve( $params, $defaults );
 
         //set activity type name and description to template

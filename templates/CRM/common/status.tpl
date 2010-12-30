@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -27,11 +27,8 @@
 
 {if $session->getStatus(false)}
     {assign var="status" value=$session->getStatus(true)}
-    <div class='spacer'></div>
     <div class="messages status">
-      <dl>
-      <dt><img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}" /></dt>      
-      <dd>
+    	<div class="icon inform-icon"></div>&nbsp;
         {if is_array($status)}
             {foreach name=statLoop item=statItem from=$status}
                 {if $smarty.foreach.statLoop.first}
@@ -43,19 +40,12 @@
         {else}
             {$status}
         {/if}
-      </dd>
-      </dl>
     </div>
 {/if}
 
 {if ! $urlIsPublic AND $config->debug}
-    <div class='spacer'></div>
     <div class="messages status">
-      <dl>
-      <dt><img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}" /></dt>      
-      <dd class="font-red">
-        {ts}WARNING: Debug is currently enabled in Global Settings.{/ts} {docURL page="Debugging"}
-      </dd>
-      </dl>
+      <div class="icon inform-icon"></div>
+        &nbsp;{ts}WARNING: Debug is currently enabled in Global Settings.{/ts} {docURL page="Debugging"}
     </div>
 {/if}

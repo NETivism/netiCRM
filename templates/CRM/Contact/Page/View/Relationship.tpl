@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -30,22 +30,20 @@
  <div class="view-content">
    {if $action eq 1 or $action eq 2 or $action eq 4 or $action eq 8} {* add, update or view *}
     {include file="CRM/Contact/Form/Relationship.tpl"}
-    <div class="spacer"></div>
   {/if}
+<div class="crm-block crm-content-block">
   {if $action NEQ 1 AND $action NEQ 2 AND $permission EQ 'edit'}
         <div class="action-link">
-            <a accesskey="N" href="{crmURL p='civicrm/contact/view/rel' q="cid=`$contactId`&action=add&reset=1"}" class="button"><span>&raquo; {ts}New Relationship{/ts}</span></a>
+            <a accesskey="N" href="{crmURL p='civicrm/contact/view/rel' q="cid=`$contactId`&action=add&reset=1"}" class="button"><span><div class="icon add-icon"></div>{ts}Add Relationship{/ts}</span></a>
         </div>
-        <div class="clear"></div>
   {/if}
-  {include file="CRM/common/jsortable.tpl"}   
+  {include file="CRM/common/jsortable.tpl" useAjax=0}   
   {* start of code to show current relationships *}
   {if $currentRelationships}
     {* show browse table for any action *}
       <div id="current-relationships">
-        <p></p>
         {if $relationshipTabContext} {*to show the title and links only when viewed from relationship tab, not from dashboard*}
-         <div><label>{ts}Current Relationships{/ts}</label></div>
+         <h3>{ts}Current Relationships{/ts}</h3>
         {/if}
         {strip}
         <table id="current_relationship" class="display">
@@ -69,10 +67,24 @@
             {else}
                 {assign var = "rtype" value = "b_a" }
             {/if*}
-            <tr id="rel_{$rel.id}" class="{cycle values="odd-row,even-row"}">
+            
+            <tr id="rel_{$rel.id}" class="{cycle values="odd-row,even-row"} row-relationship {if $rel.is_permission_a_b eq 1 or $rel.is_permission_b_a eq 1}row-highlight{/if}">
+
             {if $relationshipTabContext}
-                <td class="bold"><a href="{crmURL p='civicrm/contact/view/rel' q="action=view&reset=1&selectedChild=rel&cid=`$contactId`&id=`$rel.id`&rtype=`$rel.rtype`"}">{$rel.relation}</a></td>
-                <td><a href="{crmURL p='civicrm/contact/view' q="action=view&reset=1&cid=`$rel.cid`"}">{$rel.name}</a></td>
+                <td class="bold">
+                   <a href="{crmURL p='civicrm/contact/view/rel' q="action=view&reset=1&selectedChild=rel&cid=`$contactId`&id=`$rel.id`&rtype=`$rel.rtype`"}">{$rel.relation}</a>
+			{if ($rel.cid eq $rel.contact_id_a and $rel.is_permission_a_b eq 1) OR
+			    ($rel.cid eq $rel.contact_id_b and $rel.is_permission_b_a eq 1) }
+		            <span id="permission-b-a" class="crm-marker permission-relationship"> *</span>
+		        {/if}
+		</td>
+                <td>
+		   <a href="{crmURL p='civicrm/contact/view' q="action=view&reset=1&cid=`$rel.cid`"}">{$rel.name}</a>
+		        {if ($contactId eq $rel.contact_id_a and $rel.is_permission_a_b eq 1) OR
+			    ($contactId eq $rel.contact_id_b and $rel.is_permission_b_a eq 1) } 
+		    	    <span id="permission-a-b" class="crm-marker permission-relationship"> *</span>
+		        {/if}
+		</td>
             {else}
                 <td class="bold">{$rel.relation}</strong></td>
                 <td>{$rel.name}</td>
@@ -89,6 +101,10 @@
         </table>
         {/strip}
         </div>
+
+        <div id="permission-legend" class="crm-content-block">
+	     <span class="crm-marker">* </span>{ts}Indicates a permissioned relationship. This contact can be viewed and updated by the other.{/ts}
+        </div>
 {/if}
 {* end of code to show current relationships *}
 
@@ -96,20 +112,16 @@
 
   {if $action NEQ 1} {* show 'no relationships' message - unless already in 'add' mode. *}
        <div class="messages status">
-           <dl>
-           <dt><img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}" /></dt>
+            <div class="icon inform-icon"></div>
            {capture assign=crmURL}{crmURL p='civicrm/contact/view/rel' q="cid=`$contactId`&action=add&reset=1"}{/capture}
-           <dd>
-                {if $permission EQ 'edit'}
+           {if $permission EQ 'edit'}
                     {ts 1=$crmURL}There are no Relationships entered for this contact. You can <a accesskey="N" href='%1'>add one</a>.{/ts}
                 {elseif ! $relationshipTabContext}
                     {ts}There are no related contacts / organizations on record for you.{/ts}
                 {else}
                     {ts}There are no Relationships entered for this contact.{/ts}
                 {/if}
-           </dd>
-           </dl>
-      </div>
+        </div>
   {/if}
 {/if}
 </div>
@@ -160,6 +172,7 @@
 {* end of code to show inactive relationships *}
 
 
+</div>
 {/if} {* close of custom data else*}
 
 {if $searchRows }

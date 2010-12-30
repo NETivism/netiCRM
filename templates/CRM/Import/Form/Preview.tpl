@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -23,16 +23,22 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
+<div class="crm-block crm-form-block crm-import-preview-form-block">
+
 {literal}
 <script type="text/javascript">
 function setIntermediate( ) {
 	var dataUrl = "{/literal}{$statusUrl}{literal}";
 	cj.getJSON( dataUrl, function( response ) {
+	
 	   var dataStr = response.toString();
 	   var result  = dataStr.split(",");
 	   cj("#intermediate").html( result[1] );
-	   cj("#importProgressBar").progressBar( result[0] );
-	});
+           if( result[0] < 100 ){ 
+	        cj("#importProgressBar .ui-progressbar-value").animate({width: result[0]+"%"}, 500);
+		cj("#status").text( result[0]+"% Completed");
+             }
+ 	});
 }
 
 function pollLoop( ){
@@ -58,17 +64,8 @@ function verify( ) {
 		    cj("#id-processing").dialog().parents(".ui-dialog").find(".ui-dialog-titlebar").remove();
 		}
 	});
-	
-	var imageBase = "{/literal}{$config->resourceBase}{literal}packages/jquery/plugins/images/";
-    cj("#importProgressBar").progressBar({
-        boxImage:       imageBase + 'progressbar.gif',
-        barImage: { 0 : imageBase + 'progressbg_red.gif',
-                    20: imageBase + 'progressbg_orange.gif',
-                    50: imageBase + 'progressbg_yellow.gif',
-                    70: imageBase + 'progressbg_green.gif'
-                  }
-	}); 
-	cj("#importProgressBar").show( );
+	cj("#importProgressBar" ).progressbar({value:0});
+    	cj("#importProgressBar").show( );
 	pollLoop( );
 }
 </script>
@@ -79,8 +76,7 @@ function verify( ) {
 
  {* WizardHeader.tpl provides visual display of steps thru the wizard as well as title for current step *}
  {include file="CRM/common/WizardHeader.tpl"}
- 
- <div id="help">
+<div id="help">
     <p>
     {ts}The information below previews the results of importing your data in CiviCRM. Review the totals to ensure that they represent your expected results.{/ts}         
     </p>
@@ -98,12 +94,13 @@ function verify( ) {
     {/if}
     
     <p>{ts}Click 'Import Now' if you are ready to proceed.{/ts}</p>
- </div>
-
+</div> 
+<div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div> 
 {* Import Progress Bar and Info *}
 <div id="id-processing" class="hiddenElement">
 	<h3>Importing records...</h3><br />
-	<div class="progressBar" id="importProgressBar" style="margin-left:45px;display:none;"></div>
+       <div id="status" style="margin-left:6px;"></div>
+	<div class="progressBar" id="importProgressBar" style="margin-left:6px;display:none;"></div>
 	<div id="intermediate"></div>
 	<div id="error_status"></div>
 </div>
@@ -150,74 +147,104 @@ function verify( ) {
  
  {* Group options *}
  {* New Group *}
-    <div id="newGroup_show" class="section-hidden section-hidden-border">
-        <a href="#" onclick="hide('newGroup_show'); show('newGroup'); return false;">&raquo; <label>{ts}Add imported records to a new group{/ts}</label>{*$form.newGroup.label*}</a>
-    </div>
+<div id="new-group" class="crm-accordion-wrapper crm-accordion_title-accordion crm-accordion-closed">
+ <div class="crm-accordion-header">
+  <div class="icon crm-accordion-pointer"></div> 
+    {ts}Add imported records to a new group{/ts}
+ </div><!-- /.crm-accordion-header -->
+ <div class="crm-accordion-body">
+            <table class="form-layout-compressed">
+             <tr>
+               <td class="description label">{$form.newGroupName.label}</td>
+               <td>{$form.newGroupName.html}</td>
+             </tr>
+             <tr>
+               <td class="description label">{$form.newGroupDesc.label}</td>
+               <td>{$form.newGroupDesc.html}</td>
+             </tr>
+            </table>
+ </div><!-- /.crm-accordion-body -->
+</div><!-- /.crm-accordion-wrapper -->
 
-    <div id="newGroup" class="section-hidden section-hidden-border">
-        <a href="#" onclick="hide('newGroup'); show('newGroup_show'); return false;">&raquo; <label>{ts}Add imported records to a new group{/ts}</label></a>
-        <div class="form-item">
-            <dl>
-            <dt class="description">{$form.newGroupName.label}</dt><dd>{$form.newGroupName.html}</dd>
-            <dt class="description">{$form.newGroupDesc.label}</dt><dd>{$form.newGroupDesc.html}</dd>
-            </dl>
-        </div>
-    </div>
+
       {* Existing Group *}
-    {if $form.groups}
-    <div id="existingGroup_show" class="section-hidden section-hidden-border">
-        <a href="#" onclick="hide('existingGroup_show'); show('existingGroup'); return false;">&raquo; {$form.groups.label}</a>
-    </div>
-    {/if}
 
-    <div id="existingGroup" class="section-hidden section-hidden-border">
-        <a href="#" onclick="hide('existingGroup'); show('existingGroup_show'); return false;">&raquo; {$form.groups.label}</a>
+<div class="crm-accordion-wrapper crm-existing_group-accordion {if $form.groups}crm-accordion-open{else}crm-accordion-closed{/if}">
+ <div class="crm-accordion-header">
+  <div class="icon crm-accordion-pointer"></div>
+  {$form.groups.label}
+ </div><!-- /.crm-accordion-header -->
+ <div class="crm-accordion-body">
+  
         <div class="form-item">
-            <dl>
-            <dt></dt><dd>{$form.groups.html}</dd>
-            </dl>
+        <table><tr><td style="width: 14em;"></td><td>{$form.groups.html}</td></tr></table>
         </div>
-    </div>
+ </div><!-- /.crm-accordion-body -->
+</div><!-- /.crm-accordion-wrapper -->
 
     {* Tag options *}
     {* New Tag *}
-    <div id="newTag_show" class="section-hidden section-hidden-border">
-        <a href="#" onclick="hide('newTag_show'); show('newTag'); return false;">&raquo; <label>{ts}Create a new tag and assign it to imported records{/ts}</label></a>
-    </div> 
-    <div id="newTag" class="section-hidden section-hidden-border">
-        <a href="#" onclick="hide('newTag'); show('newTag_show'); return false;">&raquo; <label>{ts}Create a new tag and assign it to imported records{/ts}</label></a>
-            <div class="form-item">
-				<dl>
-				<dt class="description">{$form.newTagName.label}</dt><dd>{$form.newTagName.html}</dd>
-				<dt class="description">{$form.newTagDesc.label}</dt><dd>{$form.newTagDesc.html}</dd>
-            </dl>
-        </div>
+<div id="new-tag" class="crm-accordion-wrapper crm-accordion_title-accordion crm-accordion-closed">
+ <div class="crm-accordion-header">
+  <div class="icon crm-accordion-pointer"></div>
+  {ts}Create a new tag and assign it to imported records{/ts}            
+ </div><!-- /.crm-accordion-header -->
+ <div class="crm-accordion-body">
+  
+  <div class="form-item">
+	<table class="form-layout-compressed">
+           <tr>
+       	      <td class="description label">{$form.newTagName.label}</td>
+              <td>{$form.newTagName.html}</td>
+           </tr>
+           <tr>
+	      <td class="description label">{$form.newTagDesc.label}</td>
+              <td>{$form.newTagDesc.html}</td>
+           </tr>
+        </table>
     </div>
+ </div><!-- /.crm-accordion-body -->
+</div><!-- /.crm-accordion-wrapper -->
     {* Existing Tag Imported Contact *}
 
-    <div id="tag_show" class="section-hidden section-hidden-border">
-        <a href="#" onclick="hide('tag_show'); show('tag'); return false;">&raquo; <label>{ts}Tag imported records{/ts}</label></a>
-    </div>
+<div class="crm-accordion-wrapper crm-accordion_title-accordion crm-accordion-closed">
+ <div class="crm-accordion-header">
+  <div class="icon crm-accordion-pointer"></div>
+  {ts}Tag imported records{/ts}
+</div><!-- /.crm-accordion-header -->
+ <div class="crm-accordion-body">
 
-    <div id="tag" class="section-hidden section-hidden-border">
-        <a href="#" onclick="hide('tag'); show('tag_show'); return false;">&raquo; <label>{ts}Tag imported records{/ts}</label></a>
-        <dl>
-            <dt></dt>
-			<dd class="listing-box" style="margin-bottom: 0em; width: 15em;">
+        <table class="form-layout-compressed">
+            <tr><td style="width: 14em;"></td>
+             <td class="listing-box" style="margin-bottom: 0em; width: 15em;">
 				{foreach from=$form.tag item="tag_val"} 
 					<div>{$tag_val.html}</div>
 				{/foreach}
-            </dd>
-        </dl>
-    </div>
+            </td>
+          </tr>
+        </table>
+ </div><!-- /.crm-accordion-body -->
+</div><!-- /.crm-accordion-wrapper -->
 </div> {* End of preview-info div. We hide this on form submit. *}
 
-<div id="crm-submit-buttons">
-   {$form.buttons.html}
+<div class="crm-submit-buttons">
+   {include file="CRM/common/formButtons.tpl" location="bottom"}
 </div>
+</div>
+
+{literal}
 <script type="text/javascript">
-hide('newGroup');
-hide('existingGroup');
-hide('newTag');
-hide('tag');
+cj(function() {
+   cj().crmaccordions(); 
+});
+
+{/literal}{if $invalidGroupName}{literal}
+cj("#new-group").removeClass( 'crm-accordion-closed' ).addClass( 'crm-accordion-open' );
+{/literal}{/if}{literal}
+
+{/literal}{if $invalidTagName}{literal}
+cj("#new-tag").removeClass( 'crm-accordion-closed' ).addClass( 'crm-accordion-open' );
+{/literal}{/if}{literal}
+
 </script>
+{/literal} 

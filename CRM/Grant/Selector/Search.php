@@ -1,7 +1,7 @@
 <?php
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -75,7 +75,9 @@ class CRM_Grant_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
                                  'sort_name',
                                  'grant_id',
                                  'grant_status_id',
+                                 'grant_status',
                                  'grant_type_id',
+                                 'grant_type',
                                  'grant_amount_total',
                                  'grant_amount_requested',
                                  'grant_amount_granted',
@@ -171,7 +173,7 @@ class CRM_Grant_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
         // type of selector
         $this->_action = $action;
 
-        $this->_query =& new CRM_Contact_BAO_Query( $this->_queryParams, null, null, false, false,
+        $this->_query = new CRM_Contact_BAO_Query( $this->_queryParams, null, null, false, false,
                                                     CRM_Contact_BAO_Query::MODE_GRANT );
         
     }//end of constructor
@@ -188,22 +190,23 @@ class CRM_Grant_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
      * @access public
      *
      */
-    static function &links()
+    static function &links( $key = null )
     {       
         $cid = CRM_Utils_Request::retrieve('cid', 'Integer', $this);
+        $extraParams = ( $key ) ? "&key={$key}" : null;
         
         if (!(self::$_links)) {
             self::$_links = array(
                                   CRM_Core_Action::VIEW   => array(
                                                                    'name'     => ts('View'),
                                                                    'url'      => 'civicrm/contact/view/grant',
-                                                                   'qs'       => 'reset=1&id=%%id%%&cid=%%cid%%&action=view&context=%%cxt%%&selectedChild=grant',
+                                                                   'qs'       => 'reset=1&id=%%id%%&cid=%%cid%%&action=view&context=%%cxt%%&selectedChild=grant'.$extraParams,
                                                                    'title'    => ts('View Grant'),
                                                                    ),
                                   CRM_Core_Action::UPDATE => array(
                                                                    'name'     => ts('Edit'),
                                                                    'url'      => 'civicrm/contact/view/grant',
-                                                                   'qs'       => 'reset=1&action=update&id=%%id%%&cid=%%cid%%&context=%%cxt%%',
+                                                                   'qs'       => 'reset=1&action=update&id=%%id%%&cid=%%cid%%&context=%%cxt%%'.$extraParams,
                                                                    'title'    => ts('Edit Grant'),
                                                                   ),
                                   );
@@ -214,7 +217,7 @@ class CRM_Grant_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
                   $delLink = array( 
                                  CRM_Core_Action::DELETE => array( 'name'  => ts('Delete'),
                                                                    'url'   => 'civicrm/contact/view/grant',
-                                                                   'qs'    => 'action=delete&reset=1&cid=%%cid%%&id=%%id%%&selectedChild=grant',
+                                                                   'qs'    => 'action=delete&reset=1&cid=%%cid%%&id=%%id%%&selectedChild=grant'.$extraParams,
                                                                    'extra' => 'onclick = "if (confirm(\'' . $deleteExtra . '\') ) this.href+=\'&amp;confirmed=1\'; else return false;"',
                                                                    'title' => ts('Delete Grant')
                                                                    )
@@ -301,23 +304,21 @@ class CRM_Grant_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
                      $row[$property] = $result->$property;
                  }
              }
-             //fix status display
-             $row['grant_status'] = $row['grant_status_id'];
-             $row['grant_type']   = $row['grant_type_id'];
-             
+            
              if ($this->_context == 'search') {
                  $row['checkbox'] = CRM_Core_Form::CB_PREFIX . $result->grant_id;
              }
              
-             $row['action']   = CRM_Core_Action::formLink( self::links(), $mask,
+             $row['action']   = CRM_Core_Action::formLink( self::links( $this->_key ), 
+                                                           $mask,
                                                            array( 'id'  => $result->grant_id,
                                                                   'cid' => $result->contact_id,
                                                                   'cxt' => $this->_context ) );
-
+             
              require_once( 'CRM/Contact/BAO/Contact/Utils.php' );
              $row['contact_type' ] = 
                  CRM_Contact_BAO_Contact_Utils::getImage( $result->contact_sub_type ? 
-                                                          $result->contact_sub_type : $result->contact_type );
+                                                          $result->contact_sub_type : $result->contact_type ,false,$result->contact_id);
 
              $rows[] = $row;
          }
@@ -353,7 +354,7 @@ class CRM_Grant_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
         if ( ! isset( self::$_columnHeaders ) ) {
             self::$_columnHeaders = array(
                                           array('name'      => ts('Status'),
-                                                'sort'      => 'grant_status_id',
+                                                'sort'      => 'grant_status',
                                                 'direction' => CRM_Utils_Sort::DONTCARE,
                                                 ),
                                           array(

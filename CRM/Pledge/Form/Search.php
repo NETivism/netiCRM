@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -188,7 +188,7 @@ class CRM_Pledge_Form_Search extends CRM_Core_Form
         require_once 'CRM/Contact/BAO/Query.php';
        
         $this->_queryParams =& CRM_Contact_BAO_Query::convertFormValues( $this->_formValues ); 
-        $selector =& new CRM_Pledge_Selector_Search( $this->_queryParams,
+        $selector = new CRM_Pledge_Selector_Search( $this->_queryParams,
                                                      $this->_action,
                                                      null,
                                                      $this->_single,
@@ -202,7 +202,7 @@ class CRM_Pledge_Form_Search extends CRM_Core_Form
         $this->assign( "{$prefix}limit", $this->_limit );
         $this->assign( "{$prefix}single", $this->_single );
         
-        $controller =& new CRM_Core_Selector_Controller($selector ,  
+        $controller = new CRM_Core_Selector_Controller($selector ,  
                                                         $this->get( CRM_Utils_Pager::PAGE_ID ),  
                                                         $sortID,  
                                                         CRM_Core_Action::VIEW, 
@@ -252,7 +252,7 @@ class CRM_Pledge_Form_Search extends CRM_Core_Form
             $permission = CRM_Core_Permission::getPermission( );
             
             require_once 'CRM/Pledge/Task.php';
-            $tasks = array( '' => ts('- more actions -') ) + CRM_Pledge_Task::permissionedTaskTitles( $permission );
+            $tasks = array( '' => ts('- actions -') ) + CRM_Pledge_Task::permissionedTaskTitles( $permission );
  
             $this->add('select', 'task'   , ts('Actions:') . ' '    , $tasks    ); 
             $this->add('submit', $this->_actionButtonName, ts('Go'), 
@@ -348,12 +348,14 @@ class CRM_Pledge_Form_Search extends CRM_Core_Form
         require_once 'CRM/Contact/BAO/Query.php';
         $this->_queryParams =& CRM_Contact_BAO_Query::convertFormValues( $this->_formValues );
         
-        $selector =& new CRM_Pledge_Selector_Search( $this->_queryParams,
-                                                     $this->_action,
-                                                     null,
-                                                     $this->_single,
-                                                     $this->_limit,
-                                                     $this->_context ); 
+        $selector = new CRM_Pledge_Selector_Search( $this->_queryParams,
+                                                    $this->_action,
+                                                    null,
+                                                    $this->_single,
+                                                    $this->_limit,
+                                                    $this->_context ); 
+        $selector->setKey( $this->controller->_key );
+        
         $prefix = null;
         if ( $this->_context == 'user') {
             $prefix = $this->_prefix;
@@ -362,7 +364,7 @@ class CRM_Pledge_Form_Search extends CRM_Core_Form
         $this->assign( "{$prefix}limit", $this->_limit );
         $this->assign( "{$prefix}single", $this->_single );
 
-        $controller =& new CRM_Core_Selector_Controller($selector , 
+        $controller = new CRM_Core_Selector_Controller($selector , 
                                                         $this->get( CRM_Utils_Pager::PAGE_ID ), 
                                                         $sortID, 
                                                         CRM_Core_Action::VIEW,
@@ -401,7 +403,7 @@ class CRM_Pledge_Form_Search extends CRM_Core_Form
      * @static
      * @access public
      */
-    static function formRule( &$fields )
+    static function formRule( $fields )
     {
         $errors = array( );
 

@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -35,7 +35,6 @@
      */
 
 require_once 'tcpdf/tcpdf.php';
-
 class CRM_Utils_PDF_Label extends TCPDF {
 
     // make these properties public due to
@@ -115,6 +114,7 @@ class CRM_Utils_PDF_Label extends TCPDF {
        
        parent::__construct('P', $tFormat['metric'], $tFormat['paper-size']);
        $this->SetFormat($tFormat);
+       $this->generatorMethod = null;
 //     $this->SetFontName('Arial'); uncomment this to use non-default font
        $this->SetMargins(0,0);
        $this->SetAutoPageBreak(false);
@@ -163,6 +163,17 @@ class CRM_Utils_PDF_Label extends TCPDF {
             return 100; // There is a prob..
         }
     }
+
+
+    function SetGenerator ($objectinstance, $methodname = 'generateLabel') {
+       $this->generatorMethod = $methodname;
+       $this->generatorObject = $objectinstance; 
+    }
+
+    function getFormat ($averyName) {
+        return self::$averyLabels[$averyName];
+    }
+
     /*
      * function to convert units (in to mm, mm to in)
      * $format Type of $averyName
@@ -202,7 +213,17 @@ class CRM_Utils_PDF_Label extends TCPDF {
             $this->SetFont($this->fontName);
         }
     }
-    
+   
+    /*
+     * function to Generate the pdf of one label (can be modified using SetGenerator)
+     */
+    function generateLabel($var) {
+        //wrap the text if it's width is greater than maxwidth 
+//      $this->wordWrap( $texte, $maxwidth); not supported by TCPDF, which does its own wrapping
+        $this->MultiCell($this->width, $this->lineHeight, $var, '', 'L');
+    }
+
+ 
     /*
      * function to Print a label
      */
@@ -211,9 +232,11 @@ class CRM_Utils_PDF_Label extends TCPDF {
         $posY = $this->marginTop+($this->countY*($this->height+$this->ySpace));
         $this->SetXY($posX+3, $posY+3);
         $maxwidth = $this->width;
-        //wrap the text if it's width is greater than maxwidth 
-//      $this->wordWrap( $texte, $maxwidth); not supported by TCPDF, which does its own wrapping
-        $this->MultiCell($this->width, $this->lineHeight, $texte);
+        if ($this->generatorMethod) {
+          call_user_func_array (array($this->generatorObject, $this->generatorMethod),array($texte) );
+        } else {  
+           $this->generateLabel($texte);
+        }
         $this->countY++;
         
         if ($this->countY == $this->yNumber) {

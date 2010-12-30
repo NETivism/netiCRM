@@ -1,5 +1,5 @@
 -- +--------------------------------------------------------------------+
--- | CiviCRM version 3.1                                                |
+-- | CiviCRM version 3.3                                                |
 -- +--------------------------------------------------------------------+
 -- | Copyright CiviCRM LLC (c) 2004-2010                                |
 -- +--------------------------------------------------------------------+
@@ -41,7 +41,10 @@ VALUES
 ('Core ACL', 0, 'civicrm_acl_role', 1, 'All', 'access CiviMail subscribe/unsubscribe pages', NULL, NULL, NULL, 1),
 ('Core ACL', 0, 'civicrm_acl_role', 1, 'All', 'access CiviMember', NULL, NULL, NULL, 1),
 ('Core ACL', 0, 'civicrm_acl_role', 1, 'All', 'access CiviPledge', NULL, NULL, NULL, 1),
-('Core ACL', 0, 'civicrm_acl_role', 1, 'All', 'access CiviCase', NULL, NULL, NULL, 1),
+('Core ACL', 0, 'civicrm_acl_role', 1, 'All', 'administer CiviCase', NULL, NULL, NULL, 1),
+('Core ACL', 0, 'civicrm_acl_role', 1, 'All', 'access my cases and activities', NULL, NULL, NULL, 1),
+('Core ACL', 0, 'civicrm_acl_role', 1, 'All', 'access all cases and activities', NULL, NULL, NULL, 1),
+('Core ACL', 0, 'civicrm_acl_role', 1, 'All', 'delete in CiviCase', NULL, NULL, NULL, 1),
 ('Core ACL', 0, 'civicrm_acl_role', 1, 'All', 'access CiviGrant', NULL, NULL, NULL, 1),
 ('Core ACL', 0, 'civicrm_acl_role', 1, 'All', 'access Contact Dashboard', NULL, NULL, NULL, 1),
 ('Core ACL', 0, 'civicrm_acl_role', 1, 'All', 'administer Multiple Organizations', NULL, NULL, NULL, 1),

@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -40,7 +40,8 @@ class CRM_Report_Form_Pledge_Summary extends CRM_Report_Form {
 
     protected $_summary = null;
     protected $_totalPaid = false;
-    
+    protected $_customGroupExtends = array( 'Pledge' );
+
     function __construct( ) {
         $this->_columns = 
             array(
@@ -106,13 +107,13 @@ class CRM_Report_Form_Pledge_Summary extends CRM_Report_Form {
                               'installments'=>
                               array( 'title'=> ts('Installments'),),
                               
+                              'pledge_create_date' =>
+                              array( 'title'=> ts('Pledge Made Date'), ),                                        
+
                               'start_date'  =>
-                              array( 'title'=> ts('Peldge Start Date'),
+                              array( 'title'=> ts('Pledge Start Date'),
                                      'type' => CRM_Utils_Type::T_DATE ),
                               
-                              'pledge_create_date' =>
-                              array( 'title'=> ts('Pledge Create Date'), ),                                        
-
                               'end_date'    =>   
                               array( 'title'=> ts('Pledge End Date'),
                                      'type' => CRM_Utils_Type::T_DATE ),
@@ -128,7 +129,7 @@ class CRM_Report_Form_Pledge_Summary extends CRM_Report_Form {
                         'filters'   => 
                         array(
                               'pledge_create_date' => 
-                              array( 'title'        => 'Pledge Create Date',
+                              array( 'title'        => 'Pledge Made Date',
                                      'operatorType' => CRM_Report_Form::OP_DATE ),
                               'pledge_amount'  => 
                               array( 'title'        => ts( 'Pledged Amount' ),
@@ -151,20 +152,9 @@ class CRM_Report_Form_Pledge_Summary extends CRM_Report_Form {
                                        'group'   => true,
                                        'options' => CRM_Core_PseudoConstant::group( ) ) ), ),
                   
-                  'civicrm_tag' => 
-                  array( 'dao'     => 'CRM_Core_DAO_Tag',
-                         'filters' =>             
-                         array( 'tid' => 
-                                array( 'name'         => 'tag_id',
-                                       'title'        => ts( 'Tag' ),
-                                       'tag'          => true,
-                                       'operatorType' => CRM_Report_Form::OP_MULTISELECT,
-                                       'options'      => CRM_Core_PseudoConstant::tag( ) 
-                                       ), 
-                                ), 
-                         ),
-                  
                   );
+
+        $this->_tagFilter = true;
         parent::__construct( );
     }
     
@@ -286,7 +276,8 @@ class CRM_Report_Form_Pledge_Summary extends CRM_Report_Form {
         // get the acl clauses built before we assemble the query
         $this->buildACLClause( $this->_aliases['civicrm_contact'] );
         $this->select ( );
-        $this->from   ( null, true );
+        $this->from   ( );
+        $this->customDataFrom( );
         $this->where  ( ); 
         $this->limit( );  
         
@@ -314,9 +305,9 @@ class CRM_Report_Form_Pledge_Summary extends CRM_Report_Form {
         
         // Pledge- Payment Detail Headers 
         $tableHeader = array( 'scheduled_date'  => array ( 'type'  => CRM_Utils_Type::T_DATE , 
-                                                           'title' => 'Payment Scheduled Date'),
+                                                           'title' => 'Next Payment Due'),
                               'scheduled_amount'=> array ( 'type'  => CRM_Utils_Type::T_MONEY , 
-                                                           'title' => 'Payment Amount'),  
+                                                           'title' => 'Next Payment Amount'),  
                               'total_paid'      => array ( 'type'  => CRM_Utils_Type::T_MONEY , 
                                                            'title' => 'Total Amount Paid'),
                               'balance_due'     => array ( 'type'  => CRM_Utils_Type::T_MONEY , 
@@ -371,7 +362,7 @@ class CRM_Report_Form_Pledge_Summary extends CRM_Report_Form {
 
                 // Get Sum of all the payments made
                 $payDetailsSQL = "
-                    SELECT SUM( payment.scheduled_amount ) as total_amount 
+                    SELECT SUM( payment.actual_amount ) as total_amount 
                        FROM civicrm_pledge_payment payment 
                        WHERE payment.pledge_id = {$pledgeID} AND
                              payment.status_id = 1";
@@ -398,10 +389,10 @@ class CRM_Report_Form_Pledge_Summary extends CRM_Report_Form {
         // Displaying entire data on the form
         if( ! empty( $display ) ) {
             foreach( $display as $key => $value ) {                
-                $row = array( );  
+                $row = array( );
                 foreach ( $this->_columnHeaders as $columnKey => $columnValue ) {
-                    if ( CRM_Utils_Array::value( $columnKey, $value ) ) {
-                        $row[ $columnKey ] = $value [ $columnKey ];
+                    if ( array_key_exists( $columnKey, $value ) ) {
+                        $row[$columnKey] = CRM_Utils_Array::value( $columnKey, $value )? $value[$columnKey] : '';
                     }
                 } 
                 $rows[ ] = $row;

@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -47,6 +47,10 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form
         if ( CRM_Core_Permission::check( 'administer CiviCRM' ) ) {
             $this->assign( 'isAdmin', 1 );
         }
+        
+        //when user come from search context.
+        require_once 'CRM/Contact/Form/Search.php';
+        $this->_searchBasedMailing = CRM_Contact_Form_Search::isSearchContext( $this->get( 'context' ) );
     }
 
     /**
@@ -79,7 +83,7 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form
         $htmlMessage = null;
         if ( $mailingID  ) {
             require_once "CRM/Mailing/DAO/Mailing.php";
-            $dao =& new  CRM_Mailing_DAO_Mailing();
+            $dao = new  CRM_Mailing_DAO_Mailing();
             $dao->id = $mailingID; 
             $dao->find(true);
             $dao->storeValues($dao, $defaults);
@@ -90,7 +94,7 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form
             $this->assign('templateSelected', $templateId ? $templateId : 0 );
             if ( isset($defaults['msg_template_id']) && !$templateId ) {
                 $defaults['template'] = $defaults['msg_template_id'];
-                $messageTemplate =& new CRM_Core_DAO_MessageTemplates( );
+                $messageTemplate = new CRM_Core_DAO_MessageTemplates( );
                 $messageTemplate->id = $defaults['msg_template_id'];
                 $messageTemplate->selectAdd( );
                 $messageTemplate->selectAdd( 'msg_text, msg_html' );
@@ -183,7 +187,7 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form
      */
     public function buildQuickForm( ) 
     {
-        $session =& CRM_Core_Session::singleton();
+        $session = CRM_Core_Session::singleton();
         
         require_once 'CRM/Core/PseudoConstant.php';
         $formEmailAddress = CRM_Core_PseudoConstant::fromEmailAddress( "from_email_address" );
@@ -216,7 +220,6 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form
         $this->setMaxFileSize( 1024 * 1024 );
         $this->addRule( 'textFile', ts('File size should be less than 1 MByte'), 'maxfilesize', 1024 * 1024 );
         $this->addRule( 'textFile', ts('File must be in UTF-8 encoding'), 'utf8File' );
-        $this->addElement('checkbox', 'override_verp', ts('Override VERP address?'));
         
         $this->addElement( 'file', 'htmlFile', ts('Upload HTML Message'), 'size=30 maxlength=60' );
         $this->setMaxFileSize( 1024 * 1024 );
@@ -229,8 +232,7 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form
         
         //fix upload files when context is search. CRM-3711
         $ssID    = $this->get( 'ssID' );
-        $context = $this->get( 'context' );
-        if ( $context == 'search' && $ssID ) {
+        if ( $this->_searchBasedMailing && $ssID ) {
             $this->set( 'uploadNames', array( 'textFile', 'htmlFile' ) );
         }
         
@@ -257,11 +259,12 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form
                                   'spacing' => '&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;',
                                   'isDefault' => true   ),
                           array ( 'type'      => 'upload',
-                                  'name'      => ts('Save & Continue Later') ),
+                                  'name'      => ts('Save & Continue Later'),
+                                  'subName'   => 'save'),
                           array ( 'type'      => 'cancel',
                                   'name'      => ts('Cancel') ),
                           );
-        if ( $context == 'search' && $ssID ) {
+        if ( $this->_searchBasedMailing && $ssID ) {
             $buttons = array( array ( 'type'      => 'back',
                                       'name'      => ts('<< Previous') ),
                               array ( 'type'      => 'upload',
@@ -279,7 +282,7 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form
     public function postProcess() 
     {
         $params = $ids = array( );
-        $uploadParams  = array( 'header_id', 'footer_id', 'subject', 'from_name', 'from_email', 'override_verp' );
+        $uploadParams  = array( 'header_id', 'footer_id', 'subject', 'from_name', 'from_email' );
         $fileType      = array( 'textFile', 'htmlFile' );
 
         $formValues    = $this->controller->exportValues( $this->_name );
@@ -326,7 +329,7 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form
 
         $params['name'] = $this->get('name');
 
-        $session =& CRM_Core_Session::singleton();
+        $session = CRM_Core_Session::singleton();
         $params['contact_id'] = $session->get('userID');
         $composeFields        = array ( 'template', 'saveTemplate',
                                         'updateTemplate', 'saveTemplateName' );
@@ -393,12 +396,11 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form
         require_once 'CRM/Mailing/BAO/Mailing.php';
         CRM_Mailing_BAO_Mailing::create($params, $ids);
      
-        if ( $this->_submitValues['_qf_Upload_upload'] == 'Save & Continue Later' ) {
+        if ( $this->_submitValues['_qf_Upload_upload_save'] == 'Save & Continue Later' ) {
             //when user perform mailing from search context 
             //redirect it to search result CRM-3711.
             $ssID    = $this->get( 'ssID' );
-            $context = $this->get( 'context' );
-            if ( $ssID && $context == 'search' ) {
+            if ( $ssID && $this->_searchBasedMailing ) {
                 if ( $this->_action == CRM_Core_Action::BASIC ) {
                     $fragment = 'search';
                 } else if ( $this->_action == CRM_Core_Action::PROFILE ) {
@@ -409,13 +411,19 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form
                     $fragment = 'search/custom';
                 }
                 
-                $session =& CRM_Core_Session::singleton( );
+                $context = $this->get( 'context' );
+                if ( !CRM_Contact_Form_Search::isSearchContext( $context ) ) $context = 'search';
+                $urlParams = "force=1&reset=1&ssID={$ssID}&context={$context}";
+                $qfKey = CRM_Utils_Request::retrieve( 'qfKey', 'String', $this );
+                if ( CRM_Utils_Rule::qfKey( $qfKey ) ) $urlParams .= "&qfKey=$qfKey";
+                
+                $session = CRM_Core_Session::singleton( );
                 $draftURL = CRM_Utils_System::url( 'civicrm/mailing/browse/unscheduled', 'scheduled=false&reset=1' );
                 $status = ts("Your mailing has been saved. You can continue later by clicking the 'Continue' action to resume working on it.<br /> From <a href='%1'>Draft and Unscheduled Mailings</a>.", array( 1 => $draftURL ) );
                 CRM_Core_Session::setStatus( $status );
                 
                 //replace user context to search.
-                $url = CRM_Utils_System::url( 'civicrm/contact/' . $fragment, "force=1&reset=1&ssID={$ssID}" );
+                $url = CRM_Utils_System::url( 'civicrm/contact/' . $fragment, $urlParams );
                 CRM_Utils_System::redirect( $url );
             } else { 
                 $status = ts("Your mailing has been saved. Click the 'Continue' action to resume working on it.");
@@ -435,13 +443,13 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form
      * @access public
      * @static
      */
-    static function formRule( &$params, &$files, &$self )
+    static function formRule( $params, $files, $self )
     {
         if (CRM_Utils_Array::value('_qf_Import_refresh', $_POST)) {
             return true;
         }
         $errors = array();
-        $template =& CRM_Core_Smarty::singleton( );
+        $template = CRM_Core_Smarty::singleton( );
        
 
         if (isset($params['html_message'])){
@@ -454,11 +462,11 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form
         $domain =& CRM_Core_BAO_Domain::getDomain();
 
         require_once 'CRM/Mailing/BAO/Mailing.php';
-        $mailing = & new CRM_Mailing_BAO_Mailing();
+        $mailing = new CRM_Mailing_BAO_Mailing();
         $mailing->id = $self->_mailingID;
         $mailing->find(true);
 
-        $session =& CRM_Core_Session::singleton();
+        $session = CRM_Core_Session::singleton();
         $values = array('contact_id' => $session->get('userID'));
         require_once 'api/v2/Contact.php';
         $contact =& civicrm_contact_get( $values );
@@ -483,7 +491,7 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form
             $$part = array( );
             if ($params["{$part}_id"]) {
 	        //echo "found<p>";
-                $component =& new CRM_Mailing_BAO_Component();
+                $component = new CRM_Mailing_BAO_Component();
                 $component->id = $params["{$part}_id"];
                 $component->find(true);
                 ${$part}['textFile'] = $component->body_text;

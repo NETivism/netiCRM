@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -143,7 +143,7 @@ class CRM_Member_Page_MembershipStatus extends CRM_Core_Page_Basic
         // get all custom groups sorted by weight
         $membershipStatus = array();
         require_once 'CRM/Member/DAO/MembershipStatus.php';
-        $dao =& new CRM_Member_DAO_MembershipStatus();
+        $dao = new CRM_Member_DAO_MembershipStatus();
 
         $dao->orderBy('weight');
         $dao->find();

@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -23,13 +23,16 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
-<div class="form-item">
-<fieldset>
-    <legend>{ts}Remove Members{/ts}</legend>
-    <dl>
-        <dt>{if $group.id}{ts}Group{/ts}{else}{$form.group_id.label}{/if}</dt><dd>{$form.group_id.html}</dd>
-        <dt></dt><dd>{include file="CRM/Contact/Form/Task.tpl"}</dd>
-        <dt></dt><dd>{$form.buttons.html}</dd>
-    </dl>
-</fieldset>
+<div class="crm-form-block crm-block crm-contact-task-removefromgroup-form-block">
+<div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>
+ <table class="form-layout-compressed">
+     <tr class="crm-contact-task-removefromgroupform-block-group_id">  
+        <td class="label">{if $group.id}{ts}Group{/ts}{else}{$form.group_id.label}{/if}</td>
+        <td>{$form.group_id.html}</td>
+      </tr>
+      <tr>
+        <td></td><td>{include file="CRM/Contact/Form/Task.tpl"}</td>
+      </tr>
+ </table>
+<div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
 </div>

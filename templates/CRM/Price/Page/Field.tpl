@@ -1,6 +1,6 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -34,29 +34,26 @@
  {if $usedBy}
     <div class='spacer'></div>
     <div id="price_set_used_by" class="messages status">
-      <dl>
-      <dt><img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}" /></dt>      
-      <dd>
+      <div class="icon inform-icon"></div>     
         {if $action eq 8}
             {ts 1=$usedPriceSetTitle}Unable to delete the '%1' Price Field - it is currently in use by one or more active events or contribution pages or contributions.{/ts}
        	{/if}<br />        
         
-	{if $usedBy.civicrm_event or $usedBy.civicrm_contribution_page} 
+	    {if $usedBy.civicrm_event or $usedBy.civicrm_contribution_page} 
             {include file="CRM/Price/Page/table.tpl"} 
         {/if}
-
-      </dd>
-      </dl>
     </div>
-    {/if}
+  {/if}
 
 
 
-    {if $priceField}
-    
+  {if $priceField}
+    <div class="action-link">
+        <a href="{crmURL q="reset=1&action=add&sid=$sid"}" id="newPriceField" class="button"><span><div class="icon add-icon"></div>{ts}Add Price Field{/ts}</span></a>
+        <a href="{crmURL p="civicrm/admin/price" q="action=preview&sid=`$sid`&reset=1&context=field"}" class="button"><span><div class="icon preview-icon"></div>{ts}Preview (all fields){/ts}</span></a>
+    </div>
     <div id="field_page">
-     <p></p>
-        {strip}
+    {strip}
 	{* handle enable/disable actions*}
  	{include file="CRM/common/enableDisable.tpl"}
     {include file="CRM/common/jsortable.tpl"}
@@ -74,6 +71,7 @@
 *}
             <th id="nosort">{ts}Price{/ts}</th>
             <th></th>
+            <th class="hiddenElement"></th>
         </tr>
         </thead>
         {foreach from=$priceField key=fid item=row}
@@ -87,30 +85,26 @@
             <td>{if $row.active_on}{$row.active_on|date_format:"%Y-%m-%d"}{/if}</td>
             <td>{if $row.expire_on}{$row.expire_on|date_format:"%Y-%m-%d"}{/if}</td>
 *}
-            <td>{if $row.html_type eq "Text"}{$row.price|crmMoney}{else}<a href="{crmURL p="civicrm/admin/price/field/option" q="action=browse&reset=1&sid=$sid&fid=$fid"}">{ts}Edit Price Options{/ts}</a>{/if}</td>
+            <td>{if $row.html_type eq "Text / Numeric Quantity"}{$row.price|crmMoney}{else}<a href="{crmURL p="civicrm/admin/price/field/option" q="action=browse&reset=1&sid=$sid&fid=$fid"}">{ts}Edit Price Options{/ts}</a>{/if}</td>
             <td>{$row.action|replace:'xx':$row.id}</td>
             <td class="order hiddenElement">{$row.weight}</td>
         </tr>
         {/foreach}
         </table>
         {/strip}
-        <table class="form-layout-compressed">
-            <tr>
-                <td><a href="{crmURL q="reset=1&action=add&sid=$sid"}" id="newPriceField" class="button"><span>&raquo; {ts}New Price Field{/ts}</span></a></td>
-                <td style="vertical-align: top"><a href="{crmURL p="civicrm/admin/price" q="action=preview&sid=`$sid`&reset=1&context=field"}">&raquo; {ts}Preview this Price Set (all fields){/ts}</a></td>
-            </tr>
-        </table>
+     </div>
+     <div class="action-link">
+         <a href="{crmURL q="reset=1&action=add&sid=$sid"}" id="newPriceField" class="button"><span><div class="icon add-icon"></div>{ts}Add Price Field{/ts}</span></a>
+         <a href="{crmURL p="civicrm/admin/price" q="action=preview&sid=`$sid`&reset=1&context=field"}" class="button"><span><div class="icon preview-icon"></div>{ts}Preview (all fields){/ts}</span></a>
      </div>
 
-    {else}
+  {else}
         {if $action eq 16}
         <div class="messages status">
-        <dl>
-        <dt><img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}"/></dt>
-        {capture assign=crmURL}{crmURL p='civicrm/admin/price/field q="action=add&reset=1&sid=$sid"}{/capture}
-        <dd>{ts 1=$groupTitle 2=$crmURL}There are no fields for price set '%1', <a href='%2'>add one</a>.{/ts}</dd>
-        </dl>
+            <div class="icon inform-icon"></div>
+            {capture assign=crmURL}{crmURL p='civicrm/admin/price/field q="action=add&reset=1&sid=$sid"}{/capture}
+            {ts 1=$groupTitle 2=$crmURL}There are no fields for price set '%1', <a href='%2'>add one</a>.{/ts}
         </div>
         {/if}
-    {/if}
+  {/if}
 {/if}

@@ -25,6 +25,8 @@
 			// 0 needs to be -1 for expected results (no fade)
 			if( o.inSpeed == 0 ) o.inSpeed = -1;
 			if( o.outSpeed == 0 ) o.outSpeed = -1;
+            // move contextmenu elements to end of DOM so that they get positioned correctly
+        	$(".contextMenu").addClass('crm-contextmenu').remove().appendTo('body');
 			// Loop each context menu
 			$(this).each( function() {
 				var el = $(this);
@@ -34,7 +36,9 @@
 				// Simulate a true right click
 				$(this).mousedown( function(e) {
 					var evt = e;
+					evt.stopPropagation();
 					$(this).mouseup( function(e) {
+					    e.stopPropagation();
 						var srcElement = $(this);
 						$(this).unbind('mouseup');
 						if( evt.button == 2 ) {
@@ -66,7 +70,6 @@
 							}
 							(e.pageX) ? x = e.pageX : x = e.clientX + d.scrollLeft;
 							(e.pageY) ? y = e.pageY : x = e.clientY + d.scrollTop;
-							
 							// Show the menu
 							$(document).unbind('click');
 							$(menu).css({ top: y, left: x }).fadeIn(o.inSpeed);

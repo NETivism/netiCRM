@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -45,7 +45,7 @@ class CRM_Admin_Page_AJAX
     static function getNavigationList( ) {
         require_once 'CRM/Core/BAO/Navigation.php';
         echo CRM_Core_BAO_Navigation::buildNavigation( true );           
-        exit();
+        CRM_Utils_System::civiExit();
     }
     
     /**
@@ -54,14 +54,14 @@ class CRM_Admin_Page_AJAX
     static function menuTree( ) {
         require_once 'CRM/Core/BAO/Navigation.php';
         echo CRM_Core_BAO_Navigation::processNavigation( $_GET );           
-        exit();
+        CRM_Utils_System::civiExit();
     }
 
     /**
      * Function to build status message while 
      * enabling/ disabling various objects
      */
-    static function getStatusMsg( &$config ) 
+    static function getStatusMsg( ) 
     {        
         $recordID  = CRM_Utils_Type::escape( $_POST['recordID'], 'Integer' );
         $recordBAO = CRM_Utils_Type::escape( $_POST['recordBAO'], 'String' );
@@ -91,7 +91,7 @@ class CRM_Admin_Page_AJAX
                 $priceSet = CRM_Price_BAO_Set::getTitle( $recordID );
                 
                 if ( !CRM_Utils_System::isNull( $usedBy ) ) {
-                    $template =& CRM_Core_Smarty::singleton( );
+                    $template = CRM_Core_Smarty::singleton( );
                     $template->assign( 'usedBy', $usedBy );
                     $comps = array( "Event"        => "civicrm_event", 
                                     "Contribution" => "civicrm_contribution_page" );
@@ -189,6 +189,7 @@ class CRM_Admin_Page_AJAX
             case 'CRM_Core_BAO_OptionGroup':
                 $status = ts('Are you sure you want to disable this Option?');
                 break;
+
             case 'CRM_Contact_BAO_ContactType':
                 $status = ts('Are you sure you want to disable this Contact Type?');
                 break;
@@ -210,5 +211,96 @@ class CRM_Admin_Page_AJAX
         echo json_encode( $statusMessage );
         
         exit;
+    }
+    
+    static function getTagList( ) {
+        $name     = CRM_Utils_Type::escape( $_GET['name'], 'String' );
+        $parentId = CRM_Utils_Type::escape( $_GET['parentId'], 'Integer' );
+        
+        $tags = array( );
+        
+        $query = "SELECT id, name FROM civicrm_tag WHERE parent_id = {$parentId} and name LIKE '%{$name}%'";
+        $dao = CRM_Core_DAO::executeQuery( $query );
+        
+        while( $dao->fetch( ) ) {
+            $tags[] = array( 'name' => $dao->name,
+                             'id'   => $dao->id );
+        }
+        
+        if ( empty( $tags ) ) {
+            $tags[] = array( 'name' => $name,
+                             'id'   => $name );            
+        }
+        
+        echo json_encode( $tags ); 
+        CRM_Utils_System::civiExit( );
+    }
+    
+    static function processTags( ) {
+        $skipTagCreate = $skipEntityAction = $entityId = null;
+        $action           = CRM_Utils_Type::escape( $_POST['action'], 'String' );
+        $parentId         = CRM_Utils_Type::escape( $_POST['parentId'], 'Integer' );
+        if ( $_POST['entityId'] ) {
+            $entityId     = CRM_Utils_Type::escape( $_POST['entityId'], 'Integer' );
+        }
+        
+        $entityTable       = CRM_Utils_Type::escape( $_POST['entityTable'], 'String' );
+
+        if ( $_POST['skipTagCreate'] ) {
+            $skipTagCreate = CRM_Utils_Type::escape( $_POST['skipTagCreate'], 'Integer' );
+        }
+        
+        if ( $_POST['skipEntityAction'] ) {
+            $skipEntityAction = CRM_Utils_Type::escape( $_POST['skipEntityAction'], 'Integer' );
+        }
+        
+        $tagID = $_POST['tagID' ];
+        
+        require_once 'CRM/Core/BAO/EntityTag.php';
+        $tagInfo = array( );
+        // if action is select
+        if ( $action == 'select' ) {
+            // check the value of tagID
+            // if numeric that means existing tag
+            // else create new tag
+            if ( !$skipTagCreate && !is_numeric( $tagID ) ) {
+                $params = array( 'name'      => $tagID, 
+                                 'parent_id' => $parentId );
+
+                require_once 'CRM/Core/BAO/Tag.php';
+                $tagObject = CRM_Core_BAO_Tag::add( $params, CRM_Core_DAO::$_nullArray );
+                
+                $tagInfo = array( 'name'   => $tagID,
+                                  'id'     => $tagObject->id,
+                                  'action' => $action );
+                $tagID = $tagObject->id;                         
+            }
+            
+            if ( !$skipEntityAction && $entityId ) {
+                // save this tag to contact
+                $params = array( 'entity_table' => $entityTable,
+                                 'entity_id'    => $entityId,
+                                 'tag_id'       => $tagID);
+                             
+                CRM_Core_BAO_EntityTag::add( $params );
+            }
+        } elseif ( $action == 'delete' ) {  // if action is delete
+            if ( !is_numeric( $tagID ) ) {
+                $tagID = CRM_Core_DAO::getFieldValue( 'CRM_Core_DAO_Tag', $tagID, 'id',  'name' );
+            }
+            if ( $entityId ) {
+                // delete this tag entry for the entity
+                $params = array( 'entity_table' => $entityTable,
+                                 'entity_id'    => $entityId,
+                                 'tag_id'       => $tagID);
+                             
+                CRM_Core_BAO_EntityTag::del( $params );
+            }
+            $tagInfo = array( 'id'     => $tagID,
+                              'action' => $action );
+        }
+        
+        echo json_encode( $tagInfo );
+        CRM_Utils_System::civiExit( );
     } 
 }

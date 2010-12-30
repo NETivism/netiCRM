@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -64,8 +64,8 @@ class CRM_Pledge_Form_Task_Print extends CRM_Pledge_Form_Task
                                                    $this->get( CRM_Utils_Sort::SORT_DIRECTION ) );
         }
 
-        $selector   =& new CRM_Pledge_Selector_Search($queryParams, $this->_action, $this->_componentClause );
-        $controller =& new CRM_Core_Selector_Controller($selector , null, $sortID, CRM_Core_Action::VIEW, $this, CRM_Core_Selector_Controller::SCREEN);
+        $selector   = new CRM_Pledge_Selector_Search($queryParams, $this->_action, $this->_componentClause );
+        $controller = new CRM_Core_Selector_Controller($selector , null, $sortID, CRM_Core_Action::VIEW, $this, CRM_Core_Selector_Controller::SCREEN);
         $controller->setEmbedded( true );
         $controller->run();
     }

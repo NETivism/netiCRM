@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -54,7 +54,7 @@ class CRM_Contact_BAO_SubscriptionHistory extends CRM_Contact_DAO_SubscriptionHi
      * @static
      */
     public static function &create(&$params) {
-        $history =& new CRM_Contact_BAO_SubscriptionHistory();
+        $history = new CRM_Contact_BAO_SubscriptionHistory();
         $history->date = date('Ymd');
         $history->copyValues($params);
         $history->save();
@@ -70,7 +70,7 @@ class CRM_Contact_BAO_SubscriptionHistory extends CRM_Contact_DAO_SubscriptionHi
      * @static
      */
     public static function deleteContact($id) {
-        $history =& new CRM_Contact_BAO_SubscriptionHistory();
+        $history = new CRM_Contact_BAO_SubscriptionHistory();
         $history->contact_id = $id;
         $history->delete();
     }

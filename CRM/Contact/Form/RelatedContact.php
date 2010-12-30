@@ -1,7 +1,7 @@
 <?php
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -82,12 +82,12 @@ class CRM_Contact_Form_RelatedContact extends CRM_Core_Form
 
         $rcid = CRM_Utils_Request::retrieve( 'rcid', 'Positive', $this );
         $rcid = $rcid ? "&id={$rcid}" : '';
-        $session =& CRM_Core_Session::singleton( );
+        $session = CRM_Core_Session::singleton( );
         $session->pushUserContext(CRM_Utils_System::url( "civicrm/user","reset=1{$rcid}" ));
 
         if ( $this->_contactId ) {
             require_once 'CRM/Contact/BAO/Contact.php';
-            $contact =& new CRM_Contact_DAO_Contact( );
+            $contact = new CRM_Contact_DAO_Contact( );
             $contact->id = $this->_contactId;
             if ( ! $contact->find( true ) ) {
                 CRM_Core_Error::statusBounce( ts('contact does not exist: %1', array(1 => $this->_contactId)) );
@@ -166,8 +166,13 @@ class CRM_Contact_Form_RelatedContact extends CRM_Core_Form
         require_once "CRM/Core/BAO/LocationType.php";
         $locType = CRM_Core_BAO_LocationType::getDefault();
         foreach ( array('phone', 'email', 'address') as $locFld ) {
-            $params[$locFld][1]['is_primary']       = 1;
-            $params[$locFld][1]['location_type_id'] = $locType->id;
+            if ( ! empty($this->_defaults[$locFld]) && $this->_defaults[$locFld][1]['location_type_id'] ) {
+                $params[$locFld][1]['is_primary']       = $this->_defaults[$locFld][1]['is_primary'];
+                $params[$locFld][1]['location_type_id'] = $this->_defaults[$locFld][1]['location_type_id'];
+            } else {
+                $params[$locFld][1]['is_primary']       = 1;
+                $params[$locFld][1]['location_type_id'] = $locType->id;
+            }
         }
 
 	    $params['contact_type'] = $this->_contactType;

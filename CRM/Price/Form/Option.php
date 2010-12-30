@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -39,7 +39,8 @@ require_once 'CRM/Core/Form.php';
 /**
  * form to process actions on the field aspect of Custom
  */
-class CRM_Price_Form_Option extends CRM_Core_Form {
+class CRM_Price_Form_Option extends CRM_Core_Form
+{
     /**
      * the price field id saved to the session for an update
      *
@@ -55,15 +56,6 @@ class CRM_Price_Form_Option extends CRM_Core_Form {
      * @access protected
      */
     protected $_oid;
-    
-    /**
-     * option group  id, used when editing the Option
-     *
-     * @var int
-     * @access protected
-     */
-    protected $_ogId;
-
 
     /**
      * Function to set variables up before form is built
@@ -74,17 +66,14 @@ class CRM_Price_Form_Option extends CRM_Core_Form {
      * @access public
      */
     public function preProcess()
-    {
+    { 
+        
         $this->_fid  = CRM_Utils_Request::retrieve('fid', 'Positive',
                                                    $this);
         $this->_oid  = CRM_Utils_Request::retrieve('oid' , 'Positive',
                                                    $this);
         
-        $this->_ogId  = CRM_Core_DAO::getFieldValue( 'CRM_Core_DAO_OptionGroup',
-                                                     "civicrm_price_field.amount.{$this->_fid}",
-                                                     'id',
-                                                     'name' );
-    }
+     }
 
     /**
      * This function sets the default values for the form. Note that in edit/view mode
@@ -95,16 +84,15 @@ class CRM_Price_Form_Option extends CRM_Core_Form {
      * @return array   array of default values
      * @access public
      */
-
     function setDefaultValues()
     {
         $defaults = array();
         
+        require_once 'CRM/Price/BAO/FieldValue.php';
         if (isset($this->_oid)) {
-            $params = array('id' => $this->_oid);
+            $params = array('id' =>  $this->_oid );
             
-            CRM_Core_DAO::commonRetrieve( 'CRM_Core_DAO_OptionValue', 
-                                          $params, $defaults );
+            CRM_Price_BAO_FieldValue::retrieve( $params, $defaults );
 
             // fix the display of the monetary value, CRM-4038
             require_once 'CRM/Utils/Money.php';
@@ -113,13 +101,13 @@ class CRM_Price_Form_Option extends CRM_Core_Form {
         
         require_once 'CRM/Core/DAO.php';
         require_once 'CRM/Utils/Weight.php';
-        
+       
         if (! isset($defaults['weight']) || ! $defaults['weight']) {
-            $fieldValues = array('option_group_id' => $this->_ogId);
-            $defaults['weight'] = CRM_Utils_Weight::getDefaultWeight('CRM_Core_DAO_OptionValue', $fieldValues);
+            $fieldValues = array( 'price_field_id' => $this->_fid );
+            $defaults['weight'] = CRM_Utils_Weight::getDefaultWeight('CRM_Price_DAO_FieldValue', $fieldValues);
             $defaults['is_active'] = 1;
         }
-        
+
         return $defaults;
        
     }
@@ -155,19 +143,32 @@ class CRM_Price_Form_Option extends CRM_Core_Form {
             
             // label
             $this->add('text', 'label', ts('Option Label'),null, true);
+            
+            // FIX ME: duplicate rule?
+            /*
             $this->addRule( 'label',
                             ts('Duplicate option label.'),
                             'optionExists',
                             array( 'CRM_Core_DAO_OptionValue', $this->_oid, $this->_ogId, 'label' ) );
-            
+            */
+
             // value
-            $this->add('text', 'value', ts('Option Amount'),null, true);
+            $this->add('text', 'amount', ts('Option Amount'),null, true);
                       
             // the above value is used directly by QF, so the value has to be have a rule
             // please check with Lobo before u comment this
-            $this->registerRule( 'value', 'callback', 'moneySigned', 'CRM_Utils_Rule' );
-            $this->addRule('value', ts('Please enter a monetary value for this field.'), 'moneySigned');
-            
+            $this->registerRule( 'amount', 'callback', 'money', 'CRM_Utils_Rule' );
+            $this->addRule('amount', ts('Please enter a monetary value for this field.'), 'money');
+
+            $this->add( 'textarea', 'description', ts('Description') );
+ 
+            // count
+            $this->add('text', 'count', ts('Participants Count') );
+            $this->addRule('count' , ts('Please enter a valid Max Participants.'), 'positiveInteger');
+
+            $this->add('text', 'max_value', ts('Max Participants') );
+            $this->addRule('max_value' , ts('Please enter a valid Max Participants.'), 'positiveInteger');
+
             // weight
             $this->add('text', 'weight', ts('Order'), null, true);
             $this->addRule('weight', ts('is a numeric field') , 'numeric');
@@ -195,7 +196,6 @@ class CRM_Price_Form_Option extends CRM_Core_Form {
                                     )
                               );
             
-            
             // if view mode pls freeze it with the done button.
             if ($this->_action & CRM_Core_Action::VIEW) {
                 $this->freeze();
@@ -221,11 +221,14 @@ class CRM_Price_Form_Option extends CRM_Core_Form {
      * @static
      * @access public
      */
-
-    static function formRule( &$fields, &$files, &$form ) 
+    static function formRule( $fields, $files, $form ) 
     {
         $errors = array( );
-
+        if ( $fields['count'] && $fields['max_value'] &&
+             $fields['count'] > $fields['max_value'] ) {
+            $errors['count'] = ts( 'Participant count can not be greater than max participants.' );
+        }
+        
         return empty($errors) ? true : $errors;
     }
     
@@ -237,18 +240,17 @@ class CRM_Price_Form_Option extends CRM_Core_Form {
      * @return void
      * @access public
      */
-
     public function postProcess()
     {
-        require_once 'CRM/Core/OptionValue.php';
+        require_once 'CRM/Price/BAO/FieldValue.php';
         if ( $this->_action == CRM_Core_Action::DELETE ) {
-            $fieldValues = array('option_group_id' => $this->_ogId);
-            $wt = CRM_Utils_Weight::delWeight('CRM_Core_DAO_OptionValue', $this->_oid, $fieldValues);
-            $label = CRM_Core_DAO::getFieldValue( "CRM_Core_DAO_OptionValue",
+            $fieldValues = array( 'price_field_id' => $this->_fid );
+            $wt    = CRM_Utils_Weight::delWeight('CRM_Price_DAO_FieldValue', $this->_oid, $fieldValues);
+            $label = CRM_Core_DAO::getFieldValue( "CRM_Price_DAO_FieldValue",
                                                   $this->_oid,
                                                   'label', 'id' );
    
-            if( CRM_Core_BAO_OptionValue::del($this->_oid) ) {
+            if ( CRM_Price_BAO_FieldValue::del($this->_oid) ) {
                 CRM_Core_Session::setStatus( ts('%1 option has been deleted.', array(1 => $label)) );
             }
             return;
@@ -256,15 +258,17 @@ class CRM_Price_Form_Option extends CRM_Core_Form {
             $params = $ids = array( );
             $params = $this->controller->exportValues( 'Option' );
             $fieldLabel = CRM_Core_DAO::getFieldValue( 'CRM_Price_DAO_Field', $this->_fid, 'label') ;
-            $params['description'] = $fieldLabel.' - '.$params['label'] ;
-            $params['value'] = CRM_Utils_Rule::cleanMoney( trim($params['value']) );
-            
-            $groupParams = array( 'id' => $this->_ogId );
-           
-            // make name value consistant.
-            $params['name'] = $params['value'];
-            
-            $optionValue = CRM_Core_OptionValue::addOptionValue($params, $groupParams, $this->_action, $this->_oid);
+
+            $params['amount']         = CRM_Utils_Rule::cleanMoney( trim($params['amount']) );
+            $params['price_field_id'] = $this->_fid;
+            $params['is_default']     = CRM_Utils_Array::value( 'is_default', $params, false );
+
+            $ids = array( );
+            if ( $this->_oid ) {
+                $ids['id'] = $this->_oid;
+            }
+
+            $optionValue = CRM_Price_BAO_FieldValue::create($params, $ids);
             
             CRM_Core_Session::setStatus( ts('The option \'%1\' has been saved.', array(1 => $params['label'])) );
         }

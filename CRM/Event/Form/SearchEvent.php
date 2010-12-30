@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -45,7 +45,7 @@ class CRM_Event_Form_SearchEvent extends CRM_Core_Form
         $defaults['eventsByDates'] = 0;
 
         require_once 'CRM/Core/ShowHideBlocks.php';
-        $this->_showHide =& new CRM_Core_ShowHideBlocks( );
+        $this->_showHide = new CRM_Core_ShowHideBlocks( );
         if ( !CRM_Utils_Array::value('eventsByDates',$defaults) ) {
             $this->_showHide->addHide( 'id_fromToDates' );
         }

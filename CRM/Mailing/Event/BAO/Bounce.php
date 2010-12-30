@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -55,13 +55,15 @@ class CRM_Mailing_Event_BAO_Bounce extends CRM_Mailing_Event_DAO_Bounce {
         $q =& CRM_Mailing_Event_BAO_Queue::verify($params['job_id'],
                                                   $params['event_queue_id'],
                                                   $params['hash']);
+        $success = null;
+
         if (! $q) {
-            return null;
+            return $success;
         }
 
         require_once 'CRM/Core/Transaction.php';
         $transaction = new CRM_Core_Transaction( );
-        $bounce =& new CRM_Mailing_Event_BAO_Bounce();
+        $bounce = new CRM_Mailing_Event_BAO_Bounce();
         $bounce->time_stamp = date('YmdHis');
 
         // if we dont have a valid bounce type, we should set it
@@ -74,6 +76,7 @@ class CRM_Mailing_Event_BAO_Bounce extends CRM_Mailing_Event_DAO_Bounce {
              
         $bounce->copyValues($params);
         $bounce->save();
+        $success = true;
 
         $bounceTable    = CRM_Mailing_Event_BAO_Bounce::getTableName();
         $bounceType     = CRM_Mailing_DAO_BounceType::getTableName();
@@ -102,7 +105,7 @@ class CRM_Mailing_Event_BAO_Bounce extends CRM_Mailing_Event_DAO_Bounce {
 
         while ($bounce->fetch()) {
             if ($bounce->bounces >= $bounce->threshold) {
-                $email =& new CRM_Core_BAO_Email();
+                $email = new CRM_Core_BAO_Email();
                 $email->id = $q->email_id;
                 $email->on_hold = true;
                 $email->hold_date = date('YmdHis');
@@ -111,6 +114,8 @@ class CRM_Mailing_Event_BAO_Bounce extends CRM_Mailing_Event_DAO_Bounce {
             }
         }
         $transaction->commit( );
+
+        return $success;
     }
 
     /**
@@ -125,7 +130,7 @@ class CRM_Mailing_Event_BAO_Bounce extends CRM_Mailing_Event_DAO_Bounce {
      */
     public static function getTotalCount($mailing_id, $job_id = null,
                                             $is_distinct = false) {
-        $dao =& new CRM_Core_DAO();
+        $dao = new CRM_Core_DAO();
         
         $bounce     = self::getTableName();
         $queue      = CRM_Mailing_Event_BAO_Queue::getTableName();
@@ -180,7 +185,7 @@ class CRM_Mailing_Event_BAO_Bounce extends CRM_Mailing_Event_DAO_Bounce {
     public static function &getRows($mailing_id, $job_id = null, 
         $is_distinct = false, $offset = null, $rowCount = null, $sort = null) {
        
-        $dao =& new CRM_Core_Dao();
+        $dao = new CRM_Core_Dao();
         
         $bounce     = self::getTableName();
         $bounceType = CRM_Mailing_DAO_BounceType::getTableName();
@@ -223,8 +228,16 @@ class CRM_Mailing_Event_BAO_Bounce extends CRM_Mailing_Event_DAO_Bounce {
             $query .= " GROUP BY $queue.id ";
         }
 
-        $query .= " ORDER BY $contact.sort_name, $bounce.time_stamp DESC ";
-
+        $orderBy = "sort_name ASC, {$bounce}.time_stamp DESC";
+        if ($sort) {
+            if ( is_string( $sort ) ) {
+                $orderBy = $sort;
+            } else {
+                $orderBy = trim( $sort->orderBy() );
+            }
+        }
+        $query .= " ORDER BY {$orderBy} ";
+        
         if ($offset||$rowCount) {//Added "||$rowCount" to avoid displaying all records on first page
             $query .= ' LIMIT ' 
                     . CRM_Utils_Type::escape($offset, 'Integer') . ', ' 

@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -46,7 +46,7 @@ class CRM_Pledge_Page_UserDashboard extends CRM_Contact_Page_View_UserDashBoard
     */
     function listPledges( ) 
     {
-        $controller =& new CRM_Core_Controller_Simple( 'CRM_Pledge_Form_Search', ts('Pledges'), null );
+        $controller = new CRM_Core_Controller_Simple( 'CRM_Pledge_Form_Search', ts('Pledges'), null );
         $controller->setEmbedded( true );
         $controller->reset( );
         $controller->set( 'limit', 12 ); 
@@ -65,6 +65,9 @@ class CRM_Pledge_Page_UserDashboard extends CRM_Contact_Page_View_UserDashBoard
             $this->assign( 'pledgeHonorRows', $honorParams );
             $this->assign( 'pledgeHonor', true );
         }
+        $session = CRM_Core_Session::singleton( );
+        $loggedUserID = $session->get( 'userID' );
+        $this->assign( 'loggedUserID', $loggedUserID );
     }
     
     /**

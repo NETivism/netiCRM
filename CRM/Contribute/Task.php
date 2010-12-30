@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -39,7 +39,8 @@
  * used by the search forms
  *
  */
-class CRM_Contribute_Task {
+class CRM_Contribute_Task 
+{
     const
         DELETE_CONTRIBUTIONS =  1,
         PRINT_CONTRIBUTIONS  =  2,
@@ -73,16 +74,33 @@ class CRM_Contribute_Task {
      * @static
      * @access public
      */
-    static function &tasks()
+    static function &tasks( )
     {
-        if (!(self::$_tasks)) {
+        if ( !( self::$_tasks ) ) {
             self::$_tasks = array(
-                                  3 => ts( 'Export Contributions'   ),
-                                  1 => ts( 'Delete Contributions'   ),
-                                  5 => ts( 'Send Email to Contacts' ),
-                                  7 => ts( 'Print Contribution Receipts' ),
-                                  6 => ts( 'Update Pending Contribution Status' ),
-                                  4 => ts( 'Batch Update Contributions Via Profile' ),
+                                  1 => array( 'title'  => ts( 'Delete Contributions' ),
+                                              'class'  => 'CRM_Contribute_Form_Task_Delete',
+                                              'result' => false ),
+                                  2 => array( 'title'  => ts( 'Print Contributions' ),
+                                              'class'  => 'CRM_Contribute_Form_Task_Print',
+                                              'result' => false ),
+                                  3 => array( 'title'  => ts( 'Export Contributions' ),
+                                              'class'  => array( 'CRM_Export_Form_Select',
+                                                                 'CRM_Export_Form_Map' ),
+                                              'result' => false ),
+                                  4 => array( 'title'  => ts( 'Batch Update Contributions Via Profile' ),
+                                              'class'  => array( 'CRM_Contribute_Form_Task_PickProfile',
+                                                                 'CRM_Contribute_Form_Task_Batch' ),
+                                              'result' => true ),
+                                  5 => array( 'title'  => ts( 'Send Email to Contacts' ),
+                                              'class'  => 'CRM_Contribute_Form_Task_Email',         
+                                              'result' => true ),
+                                  6 => array( 'title'  => ts( 'Update Pending Contribution Status' ),
+                                              'class'  => 'CRM_Contribute_Form_Task_Status',
+                                              'result' => true ),                                             
+                                  7 => array( 'title'  => ts( 'Print or Email Contribution Receipts' ),
+                                              'class'  => 'CRM_Contribute_Form_Task_PDF',
+                                              'result' => false ),
                                   );
             
             //CRM-4418, check for delete 
@@ -90,7 +108,31 @@ class CRM_Contribute_Task {
                 unset( self::$_tasks[1] );
             }
         }
+        require_once 'CRM/Utils/Hook.php';
+        CRM_Utils_Hook::searchTasks( 'contribution', self::$_tasks );
+        asort( self::$_tasks );
         return self::$_tasks;
+    }
+
+     /**
+     * These tasks are the core set of task titles
+     * on contributors
+     *
+     * @return array the set of task titles 
+     * @static
+     * @access public
+     */
+    static function &taskTitles()
+    {
+        self::tasks( );
+        $titles = array( );
+        foreach ( self::$_tasks as $id => $value ) {
+            // skip Print Contribution task
+            if ( $id != 2 ) {
+                $titles[$id] = $value['title'];
+            }
+        }      
+        return $titles;
     }
 
     /**
@@ -104,24 +146,44 @@ class CRM_Contribute_Task {
      */
     static function &permissionedTaskTitles( $permission ) 
     {
-        $allTasks = self::tasks( );
-        if ( ( $permission == CRM_Core_Permission::EDIT ) 
+        $tasks = array( );
+        if ( ( $permission == CRM_Core_Permission::EDIT )
              || CRM_Core_Permission::check( 'edit contributions' ) ) {
-            return $allTasks; 
+            $tasks = self::taskTitles( );
         } else {
             $tasks = array( 
-                           3  => self::$_tasks[3],
-                           5  => self::$_tasks[5],
-                           7  => self::$_tasks[7],
+                           3  => self::$_tasks[3]['title'],
+                           5  => self::$_tasks[5]['title'],
+                           7  => self::$_tasks[7]['title'],
                            );
             
             //CRM-4418,
             if ( CRM_Core_Permission::check( 'delete in CiviContribute' ) ) {
-                $tasks[1] = self::$_tasks[1]; 
-            }
-            
-            return $tasks;
+                $tasks[1] = self::$_tasks[1]['title']; 
+            }   
         }
+        return $tasks;
+    }
+    
+    /**
+     * These tasks are the core set of tasks that the user can perform
+     * on contributors
+     *
+     * @param int $value
+     *
+     * @return array the set of tasks for a group of contributors
+     * @static
+     * @access public
+     */
+    static function getTask( $value ) 
+    {
+        self::tasks( );
+        if ( ! $value  || ! CRM_Utils_Array::value( $value, self::$_tasks ) ) {
+            // make the print task by default
+            $value = 2; 
+        }
+        return array( self::$_tasks[$value]['class' ],
+                      self::$_tasks[$value]['result'] );
     }
 }
 

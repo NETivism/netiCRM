@@ -1,7 +1,7 @@
 <?php
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | This file is a part of CiviCRM.                                    |
  |                                                                    |
@@ -37,7 +37,7 @@ class civicrm_handler_filter_activityType extends civicrm_handler_filter_option 
     }
 
     function title( ) {
-        return t('State/Province');
+        return t('Activity Type');
     }
 }
 ?>

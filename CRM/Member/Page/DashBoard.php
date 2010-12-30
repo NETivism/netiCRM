@@ -2,7 +2,7 @@
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.1                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
@@ -202,7 +202,7 @@ class CRM_Member_Page_DashBoard extends CRM_Core_Page
     function run( ) { 
         $this->preProcess( );
         
-        $controller =& new CRM_Core_Controller_Simple( 'CRM_Member_Form_Search', ts('Member'), null ); 
+        $controller = new CRM_Core_Controller_Simple( 'CRM_Member_Form_Search', ts('Member'), null ); 
         $controller->setEmbedded( true ); 
         $controller->reset( ); 
         $controller->set( 'limit', 20 );
