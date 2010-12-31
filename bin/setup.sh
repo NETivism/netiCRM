@@ -22,7 +22,7 @@ PHP5PATH=
 # If a filename is passed, civicrm_data.mysql AND the 
 # passed file will be loaded instead of civicrm_generated.mysql.
 # The DBLOAD file must be in the sql directory.
-DBLOAD=civicrm_navigation.mysql
+DBLOAD=
 # Set a special SQL filename here which you want to load
 # IN ADDITION TO either civicrm_generated or civicrm_data.
 # The DBADD file must be in the sql directory.
