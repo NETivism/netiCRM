@@ -1,0 +1,3158 @@
+# #-#-#-#-#  calendar.po (CiviCRM 3.0)  #-#-#-#-#
+# Copyright CiviCRM LLC (c) 2004-2007
+# This file is distributed under the same license as the CiviCRM package.
+# If you contribute heavily to a translation and deem your work copyrightable,
+# make sure you license it to CiviCRM LLC under Academic Free License 3.0.
+msgid ""
+msgstr ""
+"Project-Id-Version: CiviCRM 2.1\n"
+"Report-Msgid-Bugs-To: http://issues.civicrm.org/\n"
+"POT-Creation-Date: 2010-12-10 16:13+0100\n"
+"PO-Revision-Date: 2010-02-03 22:35+0800\n"
+"Last-Translator: Charles Chuang <charles>\n"
+"Language-Team: CiviCRM Translators <civicrm-translators@lists.civicrm.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Pootle 1.0.2\n"
+"X-Poedit-Language: Chinese\n"
+"X-Poedit-Country: TAIWAN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Pootle 1.0.2\n"
+"X-Generator: Pootle 1.0.2\n"
+"X-Generator: Pootle 0.10\n"
+"X-Generator: Pootle 0.10\n"
+"X-Poedit-Bookmarks: 4212,-1,-1,-1,-1,-1,-1,-1,-1,-1\n"
+
+#: CRM/Event/BAO/Query.php CRM/Event/DAO/Participant.php
+msgid "Fee level"
+msgstr "費用級別"
+
+#: CRM/Event/BAO/Query.php CRM/Event/DAO/Participant.php
+msgid "Participant Source"
+msgstr "參加者來源"
+
+#: CRM/Event/DAO/Event.php CRM/Event/Form/ManageEvent/EventInfo.php
+#: templates/CRM/Event/Page/DashBoard.tpl
+msgid "Event Summary"
+msgstr "活動概況"
+
+#: CRM/Event/DAO/Event.php CRM/Event/Form/ManageEvent/Registration.php
+msgid "Registration Start Date"
+msgstr "報名開始日期"
+
+#: CRM/Event/DAO/Event.php CRM/Event/Form/ManageEvent/Registration.php
+msgid "Registration End Date"
+msgstr "報名截止日期"
+
+#: CRM/Event/DAO/Event.php CRM/Event/Form/ManageEvent/Registration.php
+msgid "Confirm From Name"
+msgstr "確認寄件者名稱"
+
+#: CRM/Event/DAO/Event.php CRM/Event/Form/ManageEvent/Registration.php
+msgid "Confirm From Email"
+msgstr "確認寄件者 Email"
+
+#: CRM/Event/Form/EventFees.php CRM/Event/Form/ManageEvent/Fee.php
+#: CRM/Event/Form/Registration/Register.php
+msgid "Event Fee(s)"
+msgstr "活動費用"
+
+#: CRM/Event/Form/ManageEvent/Delete.php CRM/Event/Page/ManageEvent.php
+msgid "Delete Event"
+msgstr "刪除活動"
+
+#: CRM/Event/Form/ManageEvent/EventInfo.php
+#: CRM/Event/Form/Registration/Register.php
+msgid ""
+"This event is currently full. However you can register now and get added to "
+"a waiting list. You will be notified if spaces become available."
+msgstr ""
+"此活動已報名額滿。不過現在你可以註冊並列入等候名單，並在可報名時通知你。"
+
+#: CRM/Event/Form/ManageEvent/EventInfo.php CRM/Event/Form/ManageEvent.php
+msgid "'%1' information has been saved."
+msgstr "'%1'資料已被儲存。"
+
+#: CRM/Event/Form/ManageEvent/Location.php
+#: CRM/Event/Form/ManageEvent/TabHeader.php
+msgid "Event Location"
+msgstr "活動地點"
+
+#: CRM/Event/Form/ManageEvent.php CRM/Event/Page/ManageEvent.php
+#: templates/CRM/Event/Page/DashBoard.tpl
+msgid "Manage Events"
+msgstr "管理活動"
+
+#: CRM/Event/Form/ManageEvent/Registration.php CRM/Event/Page/EventInfo.php
+msgid "Register Now"
+msgstr "立刻報名"
+
+#: CRM/Event/Form/ManageEvent/Registration.php
+#: CRM/Event/Form/ManageEvent/TabHeader.php
+#: templates/CRM/Event/Form/ManageEvent/Tab.hlp
+#: templates/CRM/Event/Page/DashBoard.tpl
+#: templates/CRM/Event/Page/ManageEvent.tpl
+msgid "Online Registration"
+msgstr "線上報名"
+
+#: CRM/Event/Form/Participant.php CRM/Event/Selector/Search.php
+msgid "Registered"
+msgstr "巳登記"
+
+#: CRM/Event/Form/Participant.php CRM/Event/Form/Task/Delete.php
+msgid ""
+"Delete this participant record along with associated participant record(s)."
+msgstr ""
+
+#: CRM/Event/Form/Participant.php CRM/Event/Form/Task/Delete.php
+#, fuzzy
+msgid "Delete only this participant record."
+msgstr "刪除此記錄"
+
+#: CRM/Event/Form/Participant.php CRM/Event/Form/Task/Delete.php
+msgid ""
+"The following participants no longer have an event fee recorded. You can "
+"edit their registration and record a replacement contribution by clicking "
+"the links below:"
+msgstr ""
+
+#: CRM/Event/Form/Registration/ParticipantConfirm.php CRM/Event/Task.php
+msgid "Cancel Registration"
+msgstr "取消報名"
+
+#: CRM/Event/Form/Registration/Register.php CRM/Event/Info.php
+msgid "Event Registration"
+msgstr "活動報名"
+
+#: CRM/Event/Form/Registration/Register.php CRM/Event/Page/EventInfo.php
+msgid ""
+"Oops. It looks like you are already registered for this event. If you want "
+"to change your registration, or you feel that you've gotten this message in "
+"error, please contact the site administrator."
+msgstr ""
+"糟糕！在紀錄中您巳報名這項活動，不需要重複報名。如果您想變更您的報名，或您覺"
+"得您的報名出現錯誤，請聯絡網站管理者。"
+
+#: CRM/Event/Page/ParticipantListing/NameStatusAndDate.php
+#: CRM/Event/Page/ParticipantListing.php
+msgid ""
+"The Participant Listing feature is not currently enabled for this event."
+msgstr "此活動尚未啟用參加者列表功能。"
+
+#: CRM/Event/Page/ParticipantListing/NameStatusAndDate.php
+#: CRM/Event/Page/ParticipantListing.php
+#: CRM/Event/Page/ParticipantListing/Simple.php
+msgid "%1 - Participants"
+msgstr "%1 - 參加者"
+
+#: CRM/Event/BAO/Event.php
+msgid "Cannot find participant ID"
+msgstr "找不到此參加者編號"
+
+#: CRM/Event/BAO/Participant.php
+msgid "This event is full !!!"
+msgstr "此活動已額滿！"
+
+#: CRM/Event/BAO/Participant.php
+msgid "- Participant Fields -"
+msgstr "- 參加者欄位 -"
+
+#: CRM/Event/BAO/Participant.php
+#, fuzzy
+msgid ""
+"Participant status has been updated to '%1'. An email has been sent to %2."
+msgstr "<br /> 參加者的狀態已更新為 '%1' 。Email已寄給%2。"
+
+#: CRM/Event/BAO/Participant.php
+#, fuzzy
+msgid ""
+"This event currently has the maximum number of participants registered (%1). "
+"However, you can still override this limit and register additional "
+"participants using this form."
+msgstr ""
+"此活動報名人數目前已達到參加人數的上限 (%1人)。\n"
+"不過你仍然可以利用報名表單進行報名。<br>"
+
+#: CRM/Event/BAO/Participant.php
+msgid ""
+"There are %2 people currently on the waiting list for this event. You can <a "
+"href='%1'>view waitlisted registrations here</a>, or you can continue and "
+"register additional participants using this form."
+msgstr ""
+"這個活動目前有%2人在候補名單。你可以<a href='%1'>在此查看候補名單</a>，或繼"
+"續，用這個表單新增另一筆報名資料。"
+
+#: CRM/Event/BAO/Query.php
+msgid "Event Type - %1"
+msgstr "活動類型 - %1"
+
+#: CRM/Event/BAO/Query.php
+msgid "Find Test Participants"
+msgstr "搜尋測試的參加者"
+
+#: CRM/Event/BAO/Query.php
+msgid "Find Pay Later Participants"
+msgstr "搜尋稍後付款參加者"
+
+#: CRM/Event/BAO/Query.php
+msgid "Participant Status %1"
+msgstr "參加者狀態 %1"
+
+#: CRM/Event/BAO/Query.php
+msgid "Participant Role %1"
+msgstr "參加者角色 %1"
+
+#: CRM/Event/BAO/Query.php
+msgid "Event Dates - From"
+msgstr "活動日期 - 從"
+
+#: CRM/Event/BAO/Query.php
+msgid "Find Test Participants?"
+msgstr "搜尋測試參加者？"
+
+#: CRM/Event/BAO/Query.php
+msgid "Find Pay Later Participants?"
+msgstr "搜尋稍後付款參加者？"
+
+#: CRM/Event/DAO/Event.php
+msgid "Event Description"
+msgstr "活動描述"
+
+#: CRM/Event/DAO/Event.php
+msgid "Event Type ID"
+msgstr "活動類型編號"
+
+#: CRM/Event/DAO/Event.php
+msgid "Participant Listing ID"
+msgstr "參加者清單編號"
+
+#: CRM/Event/DAO/Event.php
+msgid "Is Event Public"
+msgstr "公開活動"
+
+#: CRM/Event/DAO/Event.php
+msgid "Is Online Registration"
+msgstr "進行線上報名"
+
+#: CRM/Event/DAO/Event.php
+msgid "Event Registration Link Text"
+msgstr "活動報名連結文字"
+
+#: CRM/Event/DAO/Event.php templates/CRM/Event/Form/Registration/Confirm.tpl
+#: templates/CRM/Event/Form/Registration/ThankYou.tpl
+msgid "Event Information"
+msgstr "活動資訊"
+
+#: CRM/Event/DAO/Event.php
+msgid "show location"
+msgstr "顯示地點"
+
+#: CRM/Event/DAO/Event.php
+msgid "Confirmation Title"
+msgstr "確認標題"
+
+#: CRM/Event/DAO/Event.php
+msgid "Confirm Text"
+msgstr "確定文字"
+
+#: CRM/Event/DAO/Event.php
+msgid "Is confirm email"
+msgstr "確認 Email"
+
+#: CRM/Event/DAO/Event.php
+msgid "Confirmation Email Text"
+msgstr "確認 Email 文字"
+
+#: CRM/Event/DAO/Event.php
+msgid "Cc Confirm"
+msgstr "確認副本"
+
+#: CRM/Event/DAO/Event.php
+msgid "Bcc Confirm"
+msgstr "確認密件副本"
+
+#: CRM/Event/DAO/Event.php
+msgid "ThankYou Title"
+msgstr "致謝標題"
+
+#: CRM/Event/DAO/Event.php
+msgid "ThankYou Text"
+msgstr "致謝文字"
+
+#: CRM/Event/DAO/Event.php
+msgid "Does Event allow multiple registrations from same email address?"
+msgstr "活動允許同一個Email 重複報名？"
+
+#: CRM/Event/DAO/Event.php
+msgid "Has Waitlist"
+msgstr "有候補名單"
+
+#: CRM/Event/DAO/Event.php
+msgid "Requires Approval"
+msgstr "需要審核"
+
+#: CRM/Event/DAO/Event.php
+msgid "Expiration Time"
+msgstr "到期時間"
+
+#: CRM/Event/DAO/Event.php
+msgid "Waitlist Text"
+msgstr "候補名單內文"
+
+#: CRM/Event/DAO/Event.php
+msgid "Approval Req Text"
+msgstr ""
+
+#: CRM/Event/DAO/Event.php
+msgid "Event Template Title"
+msgstr "活動範本標題"
+
+#: CRM/Event/DAO/Event.php
+msgid "Event Created Date"
+msgstr "活動建立日期"
+
+#: CRM/Event/DAO/Participant.php
+#, fuzzy
+msgid "Participant Status Id"
+msgstr "參加者狀態"
+
+#: CRM/Event/DAO/Participant.php
+#, fuzzy
+msgid "Participant Role Id"
+msgstr "參加者身分"
+
+#: CRM/Event/DAO/Participant.php
+msgid "Register date"
+msgstr "報名日期"
+
+#: CRM/Event/DAO/Participant.php
+msgid "Registered By ID"
+msgstr "以編號報名"
+
+#: CRM/Event/DAO/Participant.php
+msgid "Discount ID"
+msgstr "折扣編號"
+
+#: CRM/Event/DAO/Participant.php
+msgid "Fee Currency"
+msgstr "費用貨幣"
+
+#: CRM/Event/DAO/ParticipantStatusType.php
+msgid "Positive"
+msgstr "正"
+
+#: CRM/Event/DAO/ParticipantStatusType.php
+msgid "Waiting"
+msgstr "等候中"
+
+#: CRM/Event/DAO/ParticipantStatusType.php
+msgid "Negative"
+msgstr "負"
+
+#: CRM/Event/Form/EventFees.php templates/CRM/Event/Form/EventFees.tpl
+#: templates/CRM/Event/Form/ManageEvent/Fee.tpl
+msgid "Discount Set"
+msgstr "折扣設定"
+
+#: CRM/Event/Form/EventFees.php
+msgid "Record Payment?"
+msgstr "記錄付款？"
+
+#: CRM/Event/Form/EventFees.php
+msgid "Send Confirmation?"
+msgstr "寄送確認信函？"
+
+#: CRM/Event/Form/EventFees.php
+msgid "Confirmation Message"
+msgstr "確認訊息內容"
+
+#: CRM/Event/Form/ManageEvent/Delete.php
+msgid ""
+"This event cannot be deleted because there are participant records linked to "
+"it. If you want to delete this event, you must first find the participants "
+"linked to this event and delete them. You can use use <a href='%1'> "
+"CiviEvent >> Find Participants page </a>."
+msgstr ""
+"此活動無法刪除，因為已經與參加者紀錄連結。若你想刪除此活動，您必需先找到連結"
+"的參加者，並將他們刪除。您可以用<a href='%1'> Civi活動  >>  搜尋參加者頁面 </"
+"a>來尋找這些參加者。"
+
+#: CRM/Event/Form/ManageEvent/Delete.php
+msgid "Event template '%1' has been deleted."
+msgstr "活動範本%1已刪除。"
+
+#: CRM/Event/Form/ManageEvent/Delete.php
+msgid "Event '%1' has been deleted."
+msgstr "活動'%1'已刪除。"
+
+#: CRM/Event/Form/ManageEvent/EventInfo.php
+msgid "This event is currently full."
+msgstr "此活動目前已報名額滿。"
+
+#: CRM/Event/Form/ManageEvent/EventInfo.php
+msgid "From Template"
+msgstr "從範本"
+
+#: CRM/Event/Form/ManageEvent/EventInfo.php
+#, fuzzy
+msgid "Complete Description"
+msgstr "活動描述"
+
+#: CRM/Event/Form/ManageEvent/EventInfo.php
+msgid "Public Event?"
+msgstr "公開活動？"
+
+#: CRM/Event/Form/ManageEvent/EventInfo.php
+msgid "Include Map to Event Location?"
+msgstr "使用電子地圖顯示活動地點？"
+
+#: CRM/Event/Form/ManageEvent/EventInfo.php
+msgid "End Date / Time"
+msgstr "結束日期 / 時間"
+
+#: CRM/Event/Form/ManageEvent/EventInfo.php
+msgid "Max Number of Participants"
+msgstr "參加人數上限"
+
+#: CRM/Event/Form/ManageEvent/EventInfo.php
+msgid "Max participants should be a positive number"
+msgstr "參加者上限值必須為正整數值"
+
+#: CRM/Event/Form/ManageEvent/EventInfo.php
+msgid "Offer a Waitlist?"
+msgstr "提供候補名單？"
+
+#: CRM/Event/Form/ManageEvent/EventInfo.php
+msgid "Waitlist Message"
+msgstr "候補名單訊息"
+
+#: CRM/Event/Form/ManageEvent/EventInfo.php
+msgid "Message if Event Is Full"
+msgstr "如果活動已滿的訊息"
+
+#: CRM/Event/Form/ManageEvent/EventInfo.php
+msgid "Is this Event Active?"
+msgstr "此活動是否啟用？"
+
+#: CRM/Event/Form/ManageEvent/EventInfo.php
+msgid "Start Date and Time are required fields"
+msgstr "開始日期 / 時間是必填欄位"
+
+#: CRM/Event/Form/ManageEvent/EventInfo.php
+msgid "End date should be after Start date"
+msgstr "結束日期必須在開始日期之後"
+
+#: CRM/Event/Form/ManageEvent/EventInfo.php
+msgid "Please do not use '/' in Event Title."
+msgstr "活動標題請勿輸入「/」"
+
+#: CRM/Event/Form/ManageEvent/EventInfo.php
+#: templates/CRM/Event/Form/ManageEvent/Tab.hlp
+msgid "Event Information and Settings"
+msgstr "活動資料及設定"
+
+#: CRM/Event/Form/ManageEvent/Fee.php
+msgid "Enable Pay Later option?"
+msgstr "開啟稍後付款選項？"
+
+#: CRM/Event/Form/ManageEvent/Fee.php
+msgid "Pay Later Label"
+msgstr "稍後付款標籤"
+
+#: CRM/Event/Form/ManageEvent/Fee.php
+msgid "Pay Later Instructions"
+msgstr "稍後付款操作指引"
+
+#: CRM/Event/Form/ManageEvent/Fee.php
+msgid "Please enter a valid money value for this field (e.g. %1)."
+msgstr "請在此欄位輸入有效幣值(例如：%1)。"
+
+#: CRM/Event/Form/ManageEvent/Fee.php
+msgid "Discounts by Signup Date?"
+msgstr "註冊日期的折扣？"
+
+#: CRM/Event/Form/ManageEvent/Fee.php
+msgid "Discount Start Date"
+msgstr "折扣開始日期"
+
+#: CRM/Event/Form/ManageEvent/Fee.php
+msgid "Discount End Date"
+msgstr "折扣結束日期"
+
+#: CRM/Event/Form/ManageEvent/Fee.php
+msgid "Add Discount Set to Fee Table"
+msgstr "增加折扣設定到費用表"
+
+#: CRM/Event/Form/ManageEvent/Fee.php
+msgid "The discount end date cannot be prior to the start date."
+msgstr "折扣結束日期要在開始日期後面。"
+
+#: CRM/Event/Form/ManageEvent/Fee.php
+msgid "Please specify either start date or end date."
+msgstr "請列明開始日期或結束日期。"
+
+#: CRM/Event/Form/ManageEvent/Fee.php
+msgid "Select non-overlapping discount start date."
+msgstr "選擇沒有重複的折扣開始日期。"
+
+#: CRM/Event/Form/ManageEvent/Fee.php
+msgid "Select either of the dates."
+msgstr "選擇其中一種日期。"
+
+#: CRM/Event/Form/ManageEvent/Fee.php
+msgid "%1 is already used for Discount Name."
+msgstr "%1 已用作折扣名稱。"
+
+#: CRM/Event/Form/ManageEvent/Fee.php
+msgid ""
+"At least one fee should be entered for your Discount Set. If you do not see "
+"the table to enter discount fees, click the \"Add Discount Set to Fee Table"
+"\" button."
+msgstr ""
+"在折扣設定中需至少輸入一個費用。若您未能看到輸入折扣費用的表格，按「新增折扣"
+"設定到費用表格」按鍵。"
+
+#: CRM/Event/Form/ManageEvent/Fee.php
+msgid "Please select contribution type."
+msgstr "請選擇捐款類型。"
+
+#: CRM/Event/Form/ManageEvent/Fee.php
+msgid "Please enter the fee label for the paid event."
+msgstr "請為付費活動輸入費用標籤。"
+
+#: CRM/Event/Form/ManageEvent/Fee.php
+#, fuzzy
+msgid "Please select an appropriate option as default."
+msgstr "請選擇郵寄群組。"
+
+#: CRM/Event/Form/ManageEvent/Fee.php
+#, fuzzy
+msgid "Please enter a label for at least one fee level."
+msgstr "請為付費活動輸入費用標籤。"
+
+#: CRM/Event/Form/ManageEvent/Fee.php
+#, fuzzy
+msgid "Please enter an amount for at least one fee level."
+msgstr "請為此欄位輸入一個有效的金額。"
+
+#: CRM/Event/Form/ManageEvent/Fee.php
+msgid ""
+"Please enter the Pay Later prompt to be displayed on the Registration form."
+msgstr "請輸入在報名表中「稍後付款」的顯示名稱。"
+
+#: CRM/Event/Form/ManageEvent/Fee.php
+msgid "Please enter the Pay Later instructions to be displayed to your users."
+msgstr "請輸入「稍後付款操作指引」，這個訊息會顯示給要報名的使用者。"
+
+#: CRM/Event/Form/ManageEvent/Fee.php templates/CRM/Event/Form/EventFees.tpl
+#: templates/CRM/Event/Form/ParticipantView.tpl
+msgid "Event Fees"
+msgstr "活動費用"
+
+#: CRM/Event/Form/ManageEvent/Location.php
+msgid "Create new location"
+msgstr "建立新地點"
+
+#: CRM/Event/Form/ManageEvent/Location.php
+msgid "Use existing location"
+msgstr "使用現有地點"
+
+#: CRM/Event/Form/ManageEvent/Location.php
+msgid "Choose Location"
+msgstr "選擇地點"
+
+#: CRM/Event/Form/ManageEvent/Location.php
+msgid "Use Location"
+msgstr "使用地點"
+
+#: CRM/Event/Form/ManageEvent/Location.php
+msgid "Show Location?"
+msgstr "顯示位置？"
+
+#: CRM/Event/Form/ManageEvent.php
+msgid "Configure Event"
+msgstr "活動設定"
+
+#: CRM/Event/Form/ManageEvent.php
+msgid "New Event Template"
+msgstr "新建活動範本"
+
+#: CRM/Event/Form/ManageEvent.php templates/CRM/Event/Page/DashBoard.tpl
+msgid "New Event"
+msgstr "新增活動"
+
+#: CRM/Event/Form/ManageEvent.php
+msgid "Manage Event Templates"
+msgstr "活動範本管理"
+
+#: CRM/Event/Form/ManageEvent.php
+msgid "Save and Done"
+msgstr "儲存並結束"
+
+#: CRM/Event/Form/ManageEvent/Registration.php
+msgid "Confirm Your Registration Information"
+msgstr "確認你的報名資訊"
+
+#: CRM/Event/Form/ManageEvent/Registration.php
+msgid "Thank You for Registering"
+msgstr "感謝您的報名"
+
+#: CRM/Event/Form/ManageEvent/Registration.php
+msgid ""
+"Participation in this event requires approval. Submit your registration "
+"request here. Once approved, you will receive an email with a link to a web "
+"page where you can complete the registration process."
+msgstr ""
+"參加此活動需要審核批准。請在此提交您的報名要求。一旦通過，您將會收到系統所發"
+"出的Email，請點擊郵件內的網址，以完成註冊程序。"
+
+#: CRM/Event/Form/ManageEvent/Registration.php
+msgid "Allow Online Registration?"
+msgstr "允許線上報名？"
+
+#: CRM/Event/Form/ManageEvent/Registration.php
+msgid "Registration Link Text"
+msgstr "報名連結文字"
+
+#: CRM/Event/Form/ManageEvent/Registration.php
+msgid "Register multiple participants?"
+msgstr "報名多位參加者？"
+
+#: CRM/Event/Form/ManageEvent/Registration.php
+msgid "Allow multiple registrations from the same email address?"
+msgstr "允許使用同一Email報名多位參加者？"
+
+#: CRM/Event/Form/ManageEvent/Registration.php
+msgid "Require participant approval?"
+msgstr "需要批准參加者？"
+
+#: CRM/Event/Form/ManageEvent/Registration.php
+msgid "Approval message"
+msgstr "批准訊息"
+
+#: CRM/Event/Form/ManageEvent/Registration.php
+msgid "Pending participant expiration (hours)"
+msgstr ""
+
+#: CRM/Event/Form/ManageEvent/Registration.php
+msgid "Please enter the number of hours (as an integer)."
+msgstr "請輸入整數值(小時)"
+
+#: CRM/Event/Form/ManageEvent/Registration.php
+msgid "Introductory Text"
+msgstr "介紹文字"
+
+#: CRM/Event/Form/ManageEvent/Registration.php
+msgid "- same as for main contact -"
+msgstr "- 與主要聯絡人相同 -"
+
+#: CRM/Event/Form/ManageEvent/Registration.php
+msgid "- no profile -"
+msgstr "- 沒有概況 -"
+
+#: CRM/Event/Form/ManageEvent/Registration.php
+msgid "Profile for Additional Participants"
+msgstr "額外參加者的設定檔"
+
+#: CRM/Event/Form/ManageEvent/Registration.php
+msgid "Send Confirmation Email?"
+msgstr "傳送確認Email信函？"
+
+#: CRM/Event/Form/ManageEvent/Registration.php
+msgid "CC Confirmation To"
+msgstr "確認信函副本"
+
+#: CRM/Event/Form/ManageEvent/Registration.php
+msgid "BCC Confirmation To"
+msgstr "確認信函密件副本"
+
+#: CRM/Event/Form/ManageEvent/Registration.php
+msgid "Please enter a Title for the registration Confirmation Page"
+msgstr "請輸入報名確認頁的標題"
+
+#: CRM/Event/Form/ManageEvent/Registration.php
+msgid "Please enter a Title for the registration Thank-you Page"
+msgstr "請輸入報名成功感謝頁面的標題"
+
+#: CRM/Event/Form/ManageEvent/Registration.php
+msgid "Please enter Confirmation Email FROM Name."
+msgstr "請輸入確認信函裡的寄件者。"
+
+#: CRM/Event/Form/ManageEvent/Registration.php
+msgid "Please enter Confirmation Email FROM Email Address."
+msgstr "請輸入確認信函寄件者Email。"
+
+#: CRM/Event/Form/ManageEvent/Registration.php
+#, fuzzy
+msgid ""
+"Allow multiple registrations from the same email address requires a profile "
+"of type 'Individual'"
+msgstr "允許使用同一Email報名多位參加者？"
+
+#: CRM/Event/Form/ManageEvent/TabHeader.php
+#: templates/CRM/Event/Page/DashBoard.tpl
+#: templates/CRM/Event/Page/ManageEvent.tpl
+msgid "Info and Settings"
+msgstr "資訊及設定"
+
+#: CRM/Event/Form/ManageEvent/TabHeader.php
+#: templates/CRM/Event/Form/ManageEvent/Tab.hlp
+#: templates/CRM/Event/Page/DashBoard.tpl
+#: templates/CRM/Event/Page/ManageEvent.tpl
+msgid "Fees"
+msgstr "活動費用"
+
+#: CRM/Event/Form/Participant.php
+msgid "CiviEvent Dashboard"
+msgstr "Civi活動總覽頁面"
+
+#: CRM/Event/Form/Participant.php
+#, fuzzy
+msgid "Role is required"
+msgstr "角色是必填欄位"
+
+#: CRM/Event/Form/Participant.php
+msgid "Send Notification"
+msgstr "寄送通知"
+
+#: CRM/Event/Form/Participant.php templates/CRM/Event/Form/ParticipantView.tpl
+msgid "Event Source"
+msgstr "活動來源"
+
+#: CRM/Event/Form/Participant.php
+msgid "Please enter the associated Contribution Type"
+msgstr "請輸入相關的捐款類型"
+
+#: CRM/Event/Form/Participant.php
+msgid "Selected Event is not Paid Event "
+msgstr "選擇的活動不是付費活動"
+
+#: CRM/Event/Form/Participant.php
+msgid "Submit Credit Card for Event Registration by: %1"
+msgstr "以信用卡報名活動： %1"
+
+#: CRM/Event/Form/Participant.php
+msgid "Event registration information for %1 has been updated."
+msgstr "活動報名資料 %1 已更新。"
+
+#: CRM/Event/Form/Participant.php
+msgid "A confirmation email has been sent to %1"
+msgstr "活動確認信已傳送給%1"
+
+#: CRM/Event/Form/Participant.php
+msgid "Event registration for %1 has been added."
+msgstr "%1 的活動報名資料已加入。"
+
+#: CRM/Event/Form/Participant.php
+msgid "A confirmation email has been sent to %1."
+msgstr "活動確定信已寄給%1。"
+
+#: CRM/Event/Form/Participant.php
+msgid "Total Participant(s) added to event: %1."
+msgstr "加入到活動的參加者總數： %1"
+
+#: CRM/Event/Form/Participant.php
+#, fuzzy
+msgid ""
+"Email has NOT been sent to %1 contact(s) - communication preferences specify "
+"DO NOT EMAIL OR valid Email is NOT present. "
+msgstr ""
+"Email 無法寄送給%1聯絡人，原因是連絡偏好選項中選擇了「不要傳送Email」，或是"
+"「不是正確的Email信箱」。"
+
+#: CRM/Event/Form/Participant.php
+msgid "A confirmation email has been sent to ALL participants"
+msgstr "活動確認 Email 已寄給所有參加者"
+
+#: CRM/Event/Form/ParticipantView.php
+msgid ""
+"The requested participant record does not exist (possibly the record was "
+"deleted)."
+msgstr "您所要求的參與紀錄不存在（可能已被刪除）。"
+
+#: CRM/Event/Form/Registration/AdditionalParticipant.php
+msgid "Register Participant %1 of %2"
+msgstr "報名參加者 %1 / %2"
+
+#: CRM/Event/Form/Registration/AdditionalParticipant.php
+msgid ""
+"It looks like you are now registering a group of %1 participants. The event "
+"has %2 available spaces (you will not be wait listed). Registration for this "
+"event requires approval. You will receive an email once your registration "
+"has been reviewed."
+msgstr ""
+"你註冊了%1人參與此活動，然而此活動只能接受%2人報名(你的名單將不會列入候補名"
+"單)。你將在註冊通過後收到註冊確認信函。"
+
+#: CRM/Event/Form/Registration/AdditionalParticipant.php
+msgid ""
+"It looks like you are now registering a group of %1 participants. The event "
+"has %2 available spaces (you will not be wait listed)."
+msgstr ""
+"你註冊了%1人參與此活動，然而此活動只能接受%2人報名(你的名單將不會列入候補名"
+"單)。"
+
+#: CRM/Event/Form/Registration/AdditionalParticipant.php
+msgid ""
+"It looks like you are now registering a group of %1 participants. The event "
+"has %2 available spaces (you will not be wait listed). Please go back to the "
+"main registration page and reduce the number of additional people. You will "
+"also need to complete payment information."
+msgstr ""
+"你註冊了%1人參與此活動，然而此活動只能接受%2人報名(你的名單將不會列入等候清"
+"單)。請你回到上一個頁面，並減少活動報名人數，同時你也必須修改付款資訊。"
+
+#: CRM/Event/Form/Registration/AdditionalParticipant.php
+msgid ""
+"If you skip this participant there will be enough spaces in the event for "
+"your group (you will not be wait listed). Registration for this event "
+"requires approval. You will receive an email once your registration has been "
+"reviewed."
+msgstr ""
+"如果你略過這位參加者，那麼剩餘可供報名的人數便能接受你的報名請求（也就是不必"
+"列入等候清單）。註冊這個活動需要審查，一旦你的註冊審查通過，你將會收到一封"
+"Email。"
+
+#: CRM/Event/Form/Registration/AdditionalParticipant.php
+msgid ""
+"If you skip this participant there will be enough spaces in the event for "
+"your group (you will not be wait listed)."
+msgstr ""
+"如果您略過這位參加者，那麼剩餘可供報名的人數便能接受你的報名請求（也就是不必"
+"列入候補名單）。"
+
+#: CRM/Event/Form/Registration/AdditionalParticipant.php
+msgid ""
+"If you skip this participant there will be enough spaces in the event for "
+"your group (you will not be wait listed). Please go back to the main "
+"registration page and reduce the number of additional people. You will also "
+"need to complete payment information."
+msgstr ""
+"如果您略過這位參加者，那麼剩餘可供報名的人數便能接受你的報名請求（也就是不必"
+"列入候補名單）。請返回主註冊頁面，減少一些額外的報名人數。同時你必須完成付款"
+"資訊。"
+
+#: CRM/Event/Form/Registration/AdditionalParticipant.php
+#, fuzzy
+msgid ""
+"This event is currently full. You are registering in a waiting list. You "
+"will be notified if spaces become available."
+msgstr ""
+"此活動已報名額滿。不過現在你可以註冊並列入等候名單，並在可報名時通知你。"
+
+#: CRM/Event/Form/Registration/AdditionalParticipant.php
+#, fuzzy
+msgid ""
+"It looks like you are now registering a group participants which are "
+"extending the event availability. All participant will be listed in the "
+"waiting list and you will be notified if spaces become available."
+msgstr ""
+"你註冊了%1人參與此活動，然而此活動只能接受%2人報名(你的名單將不會列入候補名"
+"單)。"
+
+#: CRM/Event/Form/Registration/AdditionalParticipant.php
+#, fuzzy
+msgid ""
+"It look like that total participant recoreded will fit in the event "
+"availability (you will not be wait listed)."
+msgstr ""
+"如果您略過這位參加者，那麼剩餘可供報名的人數便能接受你的報名請求（也就是不必"
+"列入候補名單）。"
+
+#: CRM/Event/Form/Registration/AdditionalParticipant.php
+#, fuzzy
+msgid ""
+"It look like that total participant recoreded will fit in the event "
+"availability (you will not be wait listed). Registration for this event "
+"requires approval. You will receive an email once your registration has been "
+"reviewed."
+msgstr ""
+"如果你略過這位參加者，那麼剩餘可供報名的人數便能接受你的報名請求（也就是不必"
+"列入等候清單）。註冊這個活動需要審查，一旦你的註冊審查通過，你將會收到一封"
+"Email。"
+
+#: CRM/Event/Form/Registration/AdditionalParticipant.php
+msgid ""
+"Please go back to the main registration page, to complete payment "
+"information."
+msgstr ""
+
+#: CRM/Event/Form/Registration/AdditionalParticipant.php
+msgid "Skip Participant >>|"
+msgstr "略過參加者 >>|"
+
+#: CRM/Event/Form/Registration/AdditionalParticipant.php
+#, fuzzy
+msgid "A person is already registered for this event."
+msgstr "這個Email已經報名過這個活動了。"
+
+#: CRM/Event/Form/Registration/AdditionalParticipant.php
+msgid "A person with this email address is already registered for this event."
+msgstr "這個Email已經報名過這個活動了。"
+
+#: CRM/Event/Form/Registration/AdditionalParticipant.php
+msgid "The email address must be unique for each participant."
+msgstr "每一個參加者的Email必須是沒有重複的。"
+
+#: CRM/Event/Form/Registration/AdditionalParticipant.php
+msgid ""
+"Your event registration will be confirmed. Please go back to the main "
+"registration page, to complete payment information."
+msgstr ""
+
+#: CRM/Event/Form/Registration/AdditionalParticipant.php
+msgid ""
+"It looks like event has only %2 seats available and you are trying to "
+"register %1 participants, so could you please select price options "
+"accordingly."
+msgstr ""
+
+#: CRM/Event/Form/Registration/AdditionalParticipant.php
+#, fuzzy
+msgid ""
+"You are goinng to skip the last participant, your event registration will be "
+"confirmed. Please go back to the main registration page, to complete payment "
+"information."
+msgstr ""
+"如果您略過這位參加者，那麼剩餘可供報名的人數便能接受你的報名請求（也就是不必"
+"列入候補名單）。請返回主註冊頁面，減少一些額外的報名人數。同時你必須完成付款"
+"資訊。"
+
+#: CRM/Event/Form/Registration/AdditionalParticipant.php
+msgid ""
+"You have skipped last participant and which result into event having enough "
+"spaces, but your registration require approval, Once your registration has "
+"been reviewed, you will receive an email with a link to a web page where you "
+"can complete the registration process."
+msgstr ""
+"您已經略過最後的參加者，剩餘可供報名的人數已足夠，但是你的註冊需要審查，一旦"
+"你的註冊審查通過，你將會收到一封Email，你可以點選信件中的鏈結網址以完成註冊程"
+"序。"
+
+#: CRM/Event/Form/Registration/AdditionalParticipant.php
+msgid ""
+"You have skipped last participant and which result into event having enough "
+"spaces, hence your group become as register participants though you selected "
+"on wait list."
+msgstr ""
+"您已略過最後的參加者，剩餘可供報名的人數已足夠，因此，你在等候清單所選擇的名"
+"單都已成功註冊此活動。"
+
+#: CRM/Event/Form/Registration/AdditionalParticipant.php
+msgid "Registration information for participant %1 has been saved."
+msgstr "參加者%1的報名資料已儲存。"
+
+#: CRM/Event/Form/Registration/Confirm.php
+msgid " (multiple participants)"
+msgstr "(多位參加者)"
+
+#: CRM/Event/Form/Registration/ParticipantConfirm.php
+msgid ""
+"You do not have permission to access this event registration. Contact the "
+"site administrator if you need assistance."
+msgstr "您沒有報名此活動的權限。如果你需要幫助，請聯繫網站管理員。"
+
+#: CRM/Event/Form/Registration/ParticipantConfirm.php
+msgid ""
+"Oops, it looks like there are currently no available spaces for the %1 event."
+msgstr "噢，目前%1活動報名已額滿。"
+
+#: CRM/Event/Form/Registration/ParticipantConfirm.php
+#, fuzzy
+msgid ""
+"Your Credit Card transaction was not successful. No money has yet been "
+"charged to your card."
+msgstr "交易完成，請列印這頁留為記錄。"
+
+#: CRM/Event/Form/Registration/ParticipantConfirm.php
+#, fuzzy
+msgid ""
+"Click the \"Confirm Registration\" button to complete your registration in %"
+"1, or click \"Cancel Registration\" if you are no longer interested in "
+"attending this event."
+msgstr "你可以按\"確認報名\"鍵。如果你不是要參與此一活動，請按\"取消確認\"鍵。"
+
+#: CRM/Event/Form/Registration/ParticipantConfirm.php
+msgid "Confirm your registration for %1."
+msgstr "請確認你的%1活動報名。"
+
+#: CRM/Event/Form/Registration/ParticipantConfirm.php
+msgid ""
+"Click the \"Confirm Registration\" button to begin, or click \"Cancel "
+"Registration\" if you are no longer interested in attending this event."
+msgstr "你可以按\"確認報名\"鍵。如果你不是要參與此一活動，請按\"取消確認\"鍵。"
+
+#: CRM/Event/Form/Registration/ParticipantConfirm.php
+#: templates/CRM/Event/Page/UserDashboard.tpl
+msgid "Confirm Registration"
+msgstr "確認報名"
+
+#: CRM/Event/Form/Registration/ParticipantConfirm.php
+msgid "Are you sure you want to cancel your registration for this event?"
+msgstr "你確定要取消報名此活動？"
+
+#: CRM/Event/Form/Registration/ParticipantConfirm.php
+msgid ""
+"You can cancel your registration for %1 by clicking \"Cancel Registration\"."
+msgstr "您可點擊「取消報名」來取消%1。"
+
+#: CRM/Event/Form/Registration/ParticipantConfirm.php
+msgid ""
+"Oops, it looks like your registration for %1 has already been cancelled."
+msgstr "噢，你%1活動的報名已取消。"
+
+#: CRM/Event/Form/Registration/ParticipantConfirm.php
+msgid "%1 Event registration(s) have been cancelled."
+msgstr "%1活動報名已取消。"
+
+#: CRM/Event/Form/Registration/ParticipantConfirm.php
+msgid "Your event registration has been cancelled."
+msgstr "你的活動報名已取消。"
+
+#: CRM/Event/Form/Registration/ParticipantConfirm.php
+msgid "Email has been sent to : %1"
+msgstr "Email已寄送至：%1"
+
+#: CRM/Event/Form/Registration.php
+msgid "You do not have permission to register for this event"
+msgstr "您沒有權限報名此活動"
+
+#: CRM/Event/Form/Registration.php
+msgid ""
+"The event you requested is currently unavailable (contact the site "
+"administrator for assistance)."
+msgstr "你選擇的活動目前無法使用（請聯絡網站管理者以取得進一步協助）。"
+
+#: CRM/Event/Form/Registration.php
+msgid ""
+"Online registration is not currently available for this event (contact the "
+"site administrator for assistance)."
+msgstr "這個活動的線上報名無法使用（請聯絡網站管理者以取得進一步協助）。"
+
+#: CRM/Event/Form/Registration.php
+msgid "Event templates are not meant to be registered."
+msgstr "活動範本不能被用來報名。"
+
+#: CRM/Event/Form/Registration.php
+msgid "Registration for this event begins on %1"
+msgstr "活動報名開始於 %1"
+
+#: CRM/Event/Form/Registration.php
+msgid "Registration for this event ended on %1"
+msgstr "活動報名結束於%1"
+
+#: CRM/Event/Form/Registration.php
+msgid ""
+"A payment processor must be selected for this event registration page, or "
+"the event must be configured to give users the option to pay later (contact "
+"the site administrator for assistance)."
+msgstr ""
+"此活動必須選擇一個金流機制，或設定給使用者「稍後付款」選項。（請聯絡網站管理"
+"者以取得進一步協助）。"
+
+#: CRM/Event/Form/Registration.php
+msgid ""
+"The site administrator must set a Payment Processor for this event in order "
+"to use online registration."
+msgstr "為了使用線上報名，網站管理者必須指定一種金流機制給活動。"
+
+#: CRM/Event/Form/Registration.php
+msgid ""
+"No Fee Level(s) or Price Set is configured for this event.<br />Click <a "
+"href='%1'>CiviEvent >> Manage Event >> Configure >> Event Fees</a> to "
+"configure the Fee Level(s) or Price Set for this event."
+msgstr ""
+"此活動尚未設定活動費用或價目表。<br />請按<a href='%1'>Civi活動 >> 管理活動 "
+">> 設定 >> 活動費用</a>以進行此活動的活動費用或價目表設定。"
+
+#: CRM/Event/Form/Registration.php
+msgid "It looks like this field participant count extending its maximum limit."
+msgstr ""
+
+#: CRM/Event/Form/Registration.php
+msgid "Select at least one option from Event Fee(s)."
+msgstr "請從活動費用至少選擇一個選項。"
+
+#: CRM/Event/Form/Registration/Register.php
+msgid "1"
+msgstr "1"
+
+#: CRM/Event/Form/Registration/Register.php
+msgid "2"
+msgstr "2"
+
+#: CRM/Event/Form/Registration/Register.php
+msgid "3"
+msgstr "3"
+
+#: CRM/Event/Form/Registration/Register.php
+msgid "4"
+msgstr "4"
+
+#: CRM/Event/Form/Registration/Register.php
+msgid "5"
+msgstr "5"
+
+#: CRM/Event/Form/Registration/Register.php
+msgid "6"
+msgstr "6"
+
+#: CRM/Event/Form/Registration/Register.php
+msgid "7"
+msgstr "7"
+
+#: CRM/Event/Form/Registration/Register.php
+msgid "8"
+msgstr "8"
+
+#: CRM/Event/Form/Registration/Register.php
+msgid "9"
+msgstr "9"
+
+#: CRM/Event/Form/Registration/Register.php
+msgid "10"
+msgstr "10"
+
+#: CRM/Event/Form/Registration/Register.php
+msgid "How many people are you registering?"
+msgstr "多少人是由您報名的？"
+
+#: CRM/Event/Form/Registration/Register.php
+msgid ""
+"This event has only %1 space(s) left. If you continue and register more than "
+"%1 people (including yourself ), the whole group will be wait listed. Or, "
+"you can reduce the number of people you are registering to %1 to avoid being "
+"put on the waiting list."
+msgstr ""
+"此活動還可報名%1人。如果你報名的人數（包括你自己）超過%1人，那麼全部的人將一"
+"併列入等候清單。或是你可以減少報名人數至%1人，以完成報名動作並避免進到候補名"
+"單。"
+
+#: CRM/Event/Form/Registration/Register.php
+msgid ""
+"Registration for this event requires approval. Once your registration(s) "
+"have been reviewed, you will receive an email with a link to a web page "
+"where you can complete the registration process."
+msgstr ""
+"您的報名已通過。當您的申請審核後，您將會收到一封Email，請點擊郵件內的連結，以"
+"完成報名程序。"
+
+#: CRM/Event/Form/Registration/Register.php
+msgid ""
+"Registration for this event requires approval. Once your registration has "
+"been reviewed, you will receive an email with a link to a web page where you "
+"can complete the registration process."
+msgstr ""
+"註冊此活動需要經過審查。一旦你的註冊審查通過，你將會收到一封Email，你可以點選"
+"信件中的鏈結網址以完成註冊。"
+
+#: CRM/Event/Form/Registration/Register.php
+msgid "Fee Level is a required field."
+msgstr "費用級別是必填欄位。"
+
+#: CRM/Event/Form/Registration/Register.php
+msgid "There is only enough space left on this event for %1 participant(s)."
+msgstr "此活動只剩%1個名額。"
+
+#: CRM/Event/Form/Registration/Register.php
+msgid ""
+"Oops. It looks like you are trying to increase the number of additional "
+"people you are registering for. You can confirm registration for a maximum "
+"of %1 additional people."
+msgstr "噢。你似乎正試圖增加額外的報名人數。你最多只能額外報名%1人。"
+
+#: CRM/Event/Form/Registration/Register.php
+msgid ""
+"Oops. There are enough available spaces in this event. You can not add "
+"yourself to the waiting list."
+msgstr "噢。此活動仍可接受報名。你無法將你自己加入候補名單。"
+
+#: CRM/Event/Form/Registration/Register.php
+msgid "Please enter a whole number for Number of additional people."
+msgstr "請輸入你想額外報名的人數。"
+
+#: CRM/Event/Form/Registration/Register.php
+#, fuzzy
+msgid "Only %1 Registrations available."
+msgstr "連結到報名頁"
+
+#: CRM/Event/Form/Registration/Register.php
+msgid ""
+"Event Fee(s) can not be less than zero. Please select the options accordingly"
+msgstr "活動費不可低於零。請選擇相應的選項。"
+
+#: CRM/Event/Form/Registration/Register.php
+msgid "Registration information for participant 1 has been saved."
+msgstr "參加者1已儲存報名資料。"
+
+#: CRM/Event/Form/Registration/Register.php
+#, fuzzy
+msgid "You can also <a href=\"%1\">register another participant</a>."
+msgstr "您現在可以<a href=\"%1\">建立一個新活動</a>。"
+
+#: CRM/Event/Form/Registration/Register.php
+#, fuzzy
+msgid ""
+"Oops. It looks like this participant is already registered for this event. "
+"If you want to change your registration, or you feel that you've gotten this "
+"message in error, please contact the site administrator."
+msgstr ""
+"糟糕！看來這位參加者已報名完成，若您想變更您的報名，或您覺得您的報名出現錯"
+"誤，請聯絡網站管理者。"
+
+#: CRM/Event/Form/Registration/ThankYou.php
+msgid "Thank You Page"
+msgstr "致謝頁"
+
+#: CRM/Event/Form/SearchEvent.php
+msgid "Show Current and Upcoming Events"
+msgstr "顯示現在和即將舉辦的活動"
+
+#: CRM/Event/Form/SearchEvent.php
+#, fuzzy
+msgid "Search All or by Date Range"
+msgstr "以距離來搜尋？"
+
+#: CRM/Event/Form/SearchEvent.php
+msgid "Events by Dates"
+msgstr "活動日期"
+
+#: CRM/Event/Form/Search.php
+msgid "Participant Name or Email"
+msgstr "參加者姓名或Email"
+
+#: CRM/Event/Form/Search.php
+msgid "Please select valid event."
+msgstr "請選擇有效的活動。"
+
+#: CRM/Event/Form/Search.php
+msgid "Please select valid event type."
+msgstr "請選擇有效的活動類別。"
+
+#: CRM/Event/Form/Search.php templates/CRM/Event/Form/ManageEvent/Tab.tpl
+msgid "Find Participants"
+msgstr "搜尋活動參加者"
+
+#: CRM/Event/Form/Task/Badge.php
+msgid "Make Name Badges"
+msgstr ""
+
+#: CRM/Event/Form/Task/Badge.php
+#, fuzzy
+msgid "Name Badge Format"
+msgstr "電子報格式"
+
+#: CRM/Event/Form/Task/Batch.php
+msgid "Batch Update for Events"
+msgstr "批量更新活動"
+
+#: CRM/Event/Form/Task/Batch.php
+msgid "Update Participant(s)"
+msgstr "更新參加者"
+
+#: CRM/Event/Form/Task/Batch.php
+msgid "The updates have been saved."
+msgstr "更新已儲存。"
+
+#: CRM/Event/Form/Task/Batch.php
+msgid "No updates have been saved."
+msgstr "更新未儲存。"
+
+#: CRM/Event/Form/Task/Cancel.php
+msgid "Cancel Registration for Event Participation"
+msgstr "取消活動報名"
+
+#: CRM/Event/Form/Task/Delete.php
+msgid "Delete Participations"
+msgstr "刪除報名"
+
+#: CRM/Event/Form/Task/Delete.php
+msgid "Deleted Participation(s): %1"
+msgstr "刪除報名 ：%1"
+
+#: CRM/Event/Form/Task/Delete.php
+msgid "Total Selected Participation(s): %1"
+msgstr "總選取報名：%1"
+
+#: CRM/Event/Form/Task/ParticipantStatus.php
+msgid "Change All Statuses"
+msgstr "變更所有狀態"
+
+#: CRM/Event/Form/Task/ParticipantStatus.php
+msgid "- select status -"
+msgstr "- 選擇狀態 -"
+
+#: CRM/Event/Form/Task/ParticipantStatus.php
+msgid "Expired"
+msgstr "已清除"
+
+#: CRM/Event/Form/Task/ParticipantStatus.php
+msgid "Cancelled"
+msgstr "已取消"
+
+#: CRM/Event/Form/Task/PickProfile.php
+msgid "Batch Update for Event Participants"
+msgstr "批量更新活動參加者"
+
+#: CRM/Event/Form/Task/Print.php
+msgid "Print Participant List"
+msgstr "列印參加者名單"
+
+#: CRM/Event/Import/Form/MapField.php
+msgid "Event ID"
+msgstr "活動編號"
+
+#: CRM/Event/Import/Form/MapField.php
+msgid "Missing required field: Provide Particiapnt ID"
+msgstr "遺失所需欄位：提供參加者編號"
+
+#: CRM/Event/Import/Form/MapField.php
+msgid "Or Provide Contact Id or External Identifier."
+msgstr "或提供聯絡人編號或外部驗證碼"
+
+#: CRM/Event/Import/Form/MapField.php
+msgid "Duplicate Import Participant Mapping Name"
+msgstr "複製匯入參加者配對名稱"
+
+#: CRM/Event/Import/Form/MapField.php
+msgid "Select saved mapping"
+msgstr "選擇已儲存配對"
+
+#: CRM/Event/Import/Form/UploadFile.php
+msgid "On Duplicate Entries"
+msgstr ""
+
+#: CRM/Event/Import/Parser/Participant.php
+msgid "Select either EventID OR Event Title"
+msgstr "選擇活動編號或活動標題"
+
+#: CRM/Event/Import/Parser/Participant.php
+msgid "Missing required field(s) :"
+msgstr "遺失所需欄位："
+
+#: CRM/Event/Import/Parser/Participant.php
+msgid "Invalid value for Event ID"
+msgstr "無效活動編號"
+
+#: CRM/Event/Import/Parser.php
+msgid "View Participant URL"
+msgstr "瀏覽參加者網址"
+
+#: CRM/Event/Info.php
+msgid "CiviCRM Event Engine"
+msgstr "CiviCRM活動引擎"
+
+#: CRM/Event/Info.php
+msgid "Your Event(s)"
+msgstr "您的活動"
+
+#: CRM/Event/Page/DashBoard.php
+msgid "events"
+msgstr "活動"
+
+#: CRM/Event/Page/EventInfo.php
+msgid "You do not have permission to view this event"
+msgstr "您沒有權限瀏覽此活動"
+
+#: CRM/Event/Page/EventInfo.php
+#, fuzzy
+msgid ""
+"Event is currently full, but you can register and be a part of waiting list."
+msgstr ""
+"此活動已報名額滿。不過現在你可以註冊並列入等候名單，並在可報名時通知你。"
+
+#: CRM/Event/Page/ManageEvent.php
+msgid "Are you sure you want to make a copy of this Event?"
+msgstr "您是否確定複製此活動？"
+
+#: CRM/Event/Page/ManageEvent.php
+msgid "Are you sure you want to delete this Event?"
+msgstr "您是否確定刪除此活動？"
+
+#: CRM/Event/Page/ManageEvent.php
+msgid "Disable Event"
+msgstr "停用活動"
+
+#: CRM/Event/Page/ManageEvent.php
+msgid "Enable Event"
+msgstr "啟動活動"
+
+#: CRM/Event/Page/ManageEvent.php
+#, fuzzy
+msgid "Copy"
+msgstr "複製？"
+
+#: CRM/Event/Page/ManageEvent.php
+msgid "Copy Event"
+msgstr "複製活動"
+
+#: CRM/Event/Page/ManageEvent.php
+msgid "Search Events"
+msgstr "搜尋活動"
+
+#: CRM/Event/Page/ManageEvent.php
+msgid "Event %%StatusMessage%%"
+msgstr "活動 %%狀態訊息%%"
+
+#: CRM/Event/Page/ParticipantListing.php
+msgid "Participant listing code file cannot be '%1'"
+msgstr "參加者列表代碼檔案無法是'%1'"
+
+#: CRM/Event/Selector/Search.php
+msgid "View Participation"
+msgstr "瀏覽參加者"
+
+#: CRM/Event/Selector/Search.php
+msgid "Edit Participation"
+msgstr "編輯參加者"
+
+#: CRM/Event/Selector/Search.php
+msgid "Delete Participation"
+msgstr "刪除參加者"
+
+#: CRM/Event/Selector/Search.php
+msgid "test"
+msgstr "測試"
+
+#: CRM/Event/Selector/Search.php templates/CRM/Event/Page/UserDashboard.tpl
+msgid "Event Date(s)"
+msgstr "活動日期"
+
+#: CRM/Event/Selector/Search.php
+msgid "CiviCRM Event Search"
+msgstr "CiviCRM活動搜尋"
+
+#: CRM/Event/Task.php
+msgid "Delete Participants"
+msgstr "刪除參加者"
+
+#: CRM/Event/Task.php
+#, fuzzy
+msgid "Print Participants"
+msgstr "列印參加者名單"
+
+#: CRM/Event/Task.php
+msgid "Export Participants"
+msgstr "匯出參加者"
+
+#: CRM/Event/Task.php
+msgid "Batch Update Participants Via Profile"
+msgstr "從個人檔案批次更新參加者"
+
+#: CRM/Event/Task.php
+msgid "Change Participant Status"
+msgstr "變更參加者狀態"
+
+#: CRM/Event/Task.php
+#, fuzzy
+msgid "Print Event Name Badges"
+msgstr "參加者（活動名稱）"
+
+#: templates/CRM/Event/Form/EventFees.tpl
+#: templates/CRM/Event/Form/ParticipantView.tpl
+msgid "Event Level"
+msgstr "活動級別"
+
+#: templates/CRM/Event/Form/EventFees.tpl
+msgid "Event Fee Level (if applicable)."
+msgstr "活動費用級別（如適用）。"
+
+#: templates/CRM/Event/Form/EventFees.tpl
+msgid "Payment Information"
+msgstr "付款資料"
+
+#: templates/CRM/Event/Form/EventFees.tpl
+msgid "Actual payment amount for this registration."
+msgstr "此活動註冊的實際付款金額。"
+
+#: templates/CRM/Event/Form/EventFees.tpl
+msgid "Registration Confirmation and Receipt"
+msgstr "註冊確認及收據"
+
+#: templates/CRM/Event/Form/EventFees.tpl
+#, fuzzy
+msgid "Registration Confirmation"
+msgstr "註冊確認及收據"
+
+#: templates/CRM/Event/Form/EventFees.tpl
+msgid "Send Confirmation and Receipt"
+msgstr "傳送確認及收據"
+
+#: templates/CRM/Event/Form/EventFees.tpl
+msgid "Send Confirmation"
+msgstr "傳送確認"
+
+#: templates/CRM/Event/Form/EventFees.tpl
+msgid "Automatically email a confirmation and receipt to %1?"
+msgstr "自動寄送確認函及收據給%1？"
+
+#: templates/CRM/Event/Form/EventFees.tpl
+msgid "Automatically email a confirmation to %1?"
+msgstr "自動寄送確認函給%1？"
+
+#: templates/CRM/Event/Form/EventFees.tpl
+msgid ""
+"Enter a message you want included at the beginning of the confirmation "
+"email. EXAMPLE: 'Thanks for registering for this event.'"
+msgstr "輸入一個您想在確認email開頭包含的訊息。例如：「謝謝您報名此活動」。"
+
+#: templates/CRM/Event/Form/EventFees.tpl
+msgid ""
+"The Payment Status for this participant is Completed. The Participant Status "
+"is set to Pending from pay later. Click Cancel if you want to review or "
+"modify these values before saving this record"
+msgstr ""
+"此參加者的付款狀態為已完成。此參加者狀態設定為等候付款。如果你要在儲存記錄之"
+"前查看或修改這些設定，請按取消鍵。"
+
+#: templates/CRM/Event/Form/ManageEvent/Delete.tpl
+msgid ""
+"Warning: Deleting this event template will also delete associated Event "
+"Registration Page and Event Fee configurations."
+msgstr "警告：刪除此活動範本會刪除相關活動登記頁及活動費用設定。"
+
+#: templates/CRM/Event/Form/ManageEvent/Delete.tpl
+msgid ""
+"Warning: Deleting this event will also delete associated Event Registration "
+"Page and Event Fee configurations."
+msgstr "警告：刪除此活動會刪除相關活動登記頁及活動費用設定。"
+
+#: templates/CRM/Event/Form/ManageEvent/EventInfo.hlp
+msgid ""
+"This is the title that users will see when they are selecting an event "
+"template to clone for a new event. It is NOT the title of the event itself."
+msgstr ""
+"使用者看到的這個標題並非活動本身的標題，而是他們選擇一個活動範本來新增此活"
+"動。"
+
+#: templates/CRM/Event/Form/ManageEvent/EventInfo.hlp
+msgid ""
+"You can select an existing Event Template as the basis for the new template "
+"you are creating, or you can create the template from scratch."
+msgstr ""
+"您可選擇一個現有的活動範本作為建立新活動的基礎，或者您也可從頭開始建立一個新"
+"的範本。"
+
+#: templates/CRM/Event/Form/ManageEvent/EventInfo.hlp
+#, fuzzy
+msgid ""
+"You can select a pre-configured Event Template to streamline setting up your "
+"new event. The information and configuration settings from the selected "
+"template will be automatically copied to this new event. You can then add "
+"and modify as needed for this specific event instance. Event templates do "
+"NOT store the event date and time - so you will definitely need to set those "
+"on this page."
+msgstr ""
+"您可選擇一個預先配置的活動範本，以簡化新活動的設定。這個從您所選的範本而來的"
+"資訊與配置設置，將會\n"
+"自動建立一個新活動的內容雛型。您可新增與修改這個活動的詳細內容。活動範本不會"
+"儲存活動日期與時間 - 所以您\n"
+"一定要在這一頁做設定。"
+
+#: templates/CRM/Event/Form/ManageEvent/EventInfo.hlp
+#: templates/CRM/Event/Form/ManageEvent/EventInfo.tpl
+msgid ""
+"The Role you select here is automatically assigned to people when they "
+"register online for this event (usually the default 'Attendee' role)."
+msgstr ""
+"您在此選擇的角色會被自動指派到線上登記此活動的人(通常預設'出席者'角色)。"
+
+#: templates/CRM/Event/Form/ManageEvent/EventInfo.hlp
+msgid ""
+"You can also allow people to choose a Role by creating a Profile with the "
+"Participant Role field. Then include that Profile when you configure the "
+"Online Registration page for this event."
+msgstr ""
+"您也可以允許別人去選擇一個角色，透過建立一個在參加者角色欄位的個人檔案。然後"
+"當您為此活動設線上登記頁時，將包括個人檔案。"
+
+#: templates/CRM/Event/Form/ManageEvent/EventInfo.hlp
+#: templates/CRM/Event/Form/ManageEvent/EventInfo.tpl
+#, fuzzy
+msgid ""
+"To allow users to see a listing of participants, set this field to "
+"'Name' (list names only), 'Name and Email', or 'Name, Status and Register "
+"Date'."
+msgstr ""
+"允許用戶者觀看參加者列表，設定此欄位為「姓名」(只列出姓名)，或「姓名及Email」"
+"(列出姓名及Email)。"
+
+#: templates/CRM/Event/Form/ManageEvent/EventInfo.hlp
+msgid ""
+"You will need to set Drupal Access Control permissions to include 'view "
+"event participants' for any Roles you want to access this listing."
+msgstr ""
+"如果您希望任何人都可以查看參加者列表，您需要設定 Drupal 的「查看活動參加者」"
+"的存取權限。"
+
+#: templates/CRM/Event/Form/ManageEvent/EventInfo.hlp
+msgid ""
+"Create links to the listing page by copying the following URL, and adding it "
+"to the Event Description below and / or as a menu item or links elsewhere on "
+"your site:"
+msgstr ""
+
+#: templates/CRM/Event/Form/ManageEvent/EventInfo.hlp
+msgid ""
+"After adding your event, create links to the listing page by copying the URL "
+"provided in the 'Participant Listing' section of the Configure Event page."
+msgstr ""
+
+#: templates/CRM/Event/Form/ManageEvent/EventInfo.hlp
+msgid ""
+"Then create front-end links to the Participant Listing page using the Menu "
+"Manager. Select <strong>Participant Listing Page</strong> and enter <strong>%"
+"1</strong> for the Event ID."
+msgstr ""
+"然後使用目錄管理者去建立前端連結到參加者列表頁。選擇<strong>參加者列表頁</"
+"strong>及輸入 <strong>%1</strong>作為活動編號。"
+
+#: templates/CRM/Event/Form/ManageEvent/EventInfo.hlp
+msgid "Optionally set a maximum number of participants for this event."
+msgstr "可選擇為此活動設置參加者上限。"
+
+#: templates/CRM/Event/Form/ManageEvent/EventInfo.hlp
+msgid ""
+"You may allow users to join a waitlist when the event is full (by checking "
+"the box below)."
+msgstr "當活動額滿，您可允許使用者列候補名單（勾選下方的核取方塊）。"
+
+#: templates/CRM/Event/Form/ManageEvent/EventInfo.hlp
+msgid ""
+"You may allow users to join a waitlist when the event is full. To enable "
+"this feature you must first enable the Participant Statuses used by the "
+"waitlist work-flow (Administer » CiviEvent » Participant Statuses). Then "
+"reload this form and check 'Offer a Waitlist?'."
+msgstr ""
+"當活動額滿，您可允許使用者列候補名單。要啟用這項功能前，您必須先啟用參加者狀"
+"態以設定候補的工作流程（管理員 » Civi活動 » 參加者狀態）。然後重新載入此表"
+"格，並勾選「提供候補？」。"
+
+#: templates/CRM/Event/Form/ManageEvent/EventInfo.hlp
+msgid ""
+"Otherwise, the registration link is hidden and the &quot;Event Full "
+"Message&quot' is displayed when the maximum number of registrations is "
+"reached. Only participants with status types marked as 'counted' are "
+"included when checking if the event is full."
+msgstr ""
+
+#: templates/CRM/Event/Form/ManageEvent/EventInfo.hlp
+msgid ""
+"Text displayed on the Event Information page when the maximum number of "
+"registrations is reached (unless you are offering a waitlist). If online "
+"registration is enabled, this message will also be displayed if users "
+"attempt to register."
+msgstr ""
+"當報名人數達到上限時，顯示在活動資訊頁的文字（除非您開放候補）。若線上報名已"
+"開通，用戶嘗試報名時，將會顯示此訊息。"
+
+#: templates/CRM/Event/Form/ManageEvent/EventInfo.hlp
+msgid ""
+"Check this box to allow users to join a waitlist if the event is full. If a "
+"space becomes available, the first participant from the waitlist will move "
+"to 'Pending from waitlist' status, and will be sent an email with a link to "
+"complete their registration (including paying event fees - if any)."
+msgstr ""
+"當活動額滿，您可允許使用者列候補名單。當有人數可接受報名時，候補名單中的第一"
+"個參加者將會移到「待處理候補」，然後會收到一封提供有報名連結的 Email，以完成"
+"報名（還有支付參加費用，如果有的話）。"
+
+#: templates/CRM/Event/Form/ManageEvent/EventInfo.hlp
+msgid ""
+"This message is displayed on the event information and event registration "
+"pages when the event is full AND the waitlist feature is enabled."
+msgstr ""
+"當活動額滿，與候補功能啟用的狀況下，這個訊息會顯示在活動資訊與活動報名頁面"
+"裡。"
+
+#: templates/CRM/Event/Form/ManageEvent/EventInfo.hlp
+msgid ""
+"Include map presenting event location on event information page? (A map "
+"provider must be configured under <a href='%1'>Global Settings &raquo; "
+"Mapping</a>)"
+msgstr ""
+"活動資訊頁面包含顯示地點的地圖？（必須在<a href='%1'>設定總覽&raquo; 地圖</a>"
+"設定地圖提供者）"
+
+#: templates/CRM/Event/Form/ManageEvent/EventInfo.tpl
+msgid ""
+"If you find that you are creating multiple events with similar settings, you "
+"may want to use the <a href='%1'>Event Templates</a> feature to streamline "
+"your workflow."
+msgstr ""
+"如果你發現你正在建立多個類似的活動設定，你可以使用<a href='%1'>活動範本</a>的"
+"功能，以簡化工作流程。"
+
+#: templates/CRM/Event/Form/ManageEvent/EventInfo.tpl
+msgid ""
+"After selecting an Event Type, this page will display any custom event "
+"fields for that type."
+msgstr "選擇活動類別之後，此頁會展示任何自定活動欄位給那類別。"
+
+#: templates/CRM/Event/Form/ManageEvent/EventInfo.tpl
+msgid ""
+"Please use only alphanumeric, spaces, hyphens and dashes for event names."
+msgstr "活動名稱僅能輸入字母、數字、空格、連字符及破折號。"
+
+#: templates/CRM/Event/Form/ManageEvent/EventInfo.tpl
+msgid "Include this event in iCalendar feeds?"
+msgstr "將此活動包含在iCalendar訂閱？"
+
+#: templates/CRM/Event/Form/ManageEvent/EventInfo.tpl
+msgid ""
+"When this Event is active, create links to the Event Information page by "
+"copying and pasting the following URL:"
+msgstr "當此活動為啓用，欲建立連結到活動資料頁，可透過複製及貼上以下URL："
+
+#: templates/CRM/Event/Form/ManageEvent/EventInfo.tpl
+msgid ""
+"When this Event is active, create front-end links to the Event Information "
+"page using the Menu Manager. Select <strong>Event Info Page</strong> and "
+"enter <strong>%1</strong> for the Event ID."
+msgstr ""
+"當此活動為啓用狀態，使用選單管理建立前端連結到活動資料頁。選擇<strong>活動資"
+"料頁</strong>及輸入<strong>%1</strong>給活動編號。"
+
+#: templates/CRM/Event/Form/ManageEvent/Fee.tpl
+msgid ""
+"No Payment Processor has been configured / enabled for your site. If this is "
+"a <strong>paid event</strong> AND you want users to be able to "
+"<strong>register and pay online</strong>, you will need to <a href='%"
+"1'>configure a Payment Processor</a> first. Then return to this screen and "
+"assign the processor to this event."
+msgstr ""
+"您的網站尚未設定/啓用金流機制。如果這是一個<strong>已付款活動</strong>及您想"
+"使用者能夠<strong>登記及線上付款</strong>，您會先需要<a href='%1'>設定一個付"
+"款處理機</a>。然後回到此螢幕及指派處理器到此活動。"
+
+#: templates/CRM/Event/Form/ManageEvent/Fee.tpl
+#, fuzzy
+msgid "Select the currency to be used for event registration."
+msgstr "選擇用在此募款頁的金流機制。"
+
+#: templates/CRM/Event/Form/ManageEvent/Fee.tpl
+msgid ""
+"If this is a paid event and you want users to be able to register and pay "
+"online, select a payment processor to use."
+msgstr ""
+"如果這是一個付款活動，及您想讓使用者報名及線上付款，請選擇一個付款處理器。"
+
+#: templates/CRM/Event/Form/ManageEvent/Fee.tpl
+msgid ""
+"NOTE: Alternatively, you can enable the <strong>Pay Later</strong> feature "
+"below without setting up a payment processor. All users will then be asked "
+"to submit payment offline (e.g. mail in a check, call in a credit card, "
+"etc.)."
+msgstr ""
+"注意：或者，您可以在沒有設立付款處理機的情況下，啓用下方<strong>後續付款</"
+"strong>功能。所有用戶者會被要求提交離線付款(例如支票Email、信用卡來電等)。"
+
+#: templates/CRM/Event/Form/ManageEvent/Fee.tpl
+msgid ""
+"This contribution type will be assigned to payments made by participants "
+"when they register online."
+msgstr "此捐款類型會被指派為參加者線上報名時的付款。"
+
+#: templates/CRM/Event/Form/ManageEvent/Fee.tpl
+msgid "This label is displayed with the list of event fees."
+msgstr ""
+
+#: templates/CRM/Event/Form/ManageEvent/Fee.tpl
+msgid ""
+"Instructions added to Confirmation and Thank-you pages when the user selects "
+"the 'pay later' option (e.g. 'Mail your check to ... within 3 business "
+"days.')."
+msgstr ""
+
+#: templates/CRM/Event/Form/ManageEvent/Fee.tpl
+msgid ""
+"No Price Set has been configured / enabled for your site. Price sets allow "
+"you to meet the complex demands of your event registration structure.(e.g. "
+"\"Pay $15 more for lunch.\"). Click <a href='%1'>here</a> if you want to "
+"configure price sets for your site."
+msgstr ""
+"您的網站尚未設定/啟用價目表。價目表能讓你為活動報名設定不同的價錢，以滿足不同"
+"的需求（例如\"午餐 $50\"）。如果你要設定價目表請<a href='%1'>按此</a>。"
+
+#: templates/CRM/Event/Form/ManageEvent/Fee.tpl
+msgid ""
+"Select a pre-configured Price Set to offer multiple individually priced "
+"options for event registrants. Otherwise, select &quot;-none-&quot; and "
+"enter one or more fee levels in the table below. Create or edit Price Sets "
+"<a href='%1'>here</a>."
+msgstr ""
+"選擇一個預先設定的價目表去提供多項個人價格選項給活動登記。否則，選擇&quot;-"
+"none-&quot; 及輸入一個或更多費用級別在以下表格。建立或編輯價錢設定 <a href='%"
+"1'>在此</a>。"
+
+#: templates/CRM/Event/Form/ManageEvent/Fee.tpl
+msgid "Regular Fees"
+msgstr "正常費用"
+
+#: templates/CRM/Event/Form/ManageEvent/Fee.tpl
+msgid ""
+"Use the table below to enter descriptive labels and amounts for up to ten "
+"event fee levels. These will be presented as a list of radio button options. "
+"Both the label and dollar amount will be displayed. You can also configure "
+"one or more sets of discounted fees by checking \"Discounts by Signup Date\" "
+"below."
+msgstr ""
+"使用以下表格去輸入描述標籤及金額，可有最多十個的活動費用級別。這些會顯示為一"
+"列單選按鈕的選項。標籤及金額皆會展示。您也可以設一個或更多折扣費用設定，請透"
+"過勾選下方的\"報名日期折扣\"。"
+
+#: templates/CRM/Event/Form/ManageEvent/Fee.tpl
+msgid ""
+"Check this box if you want to offer discounted fees based on registration "
+"date (e.g. 'early-registration discounts')."
+msgstr "若您想提供一個基於報名日期的折扣費用(例如'早鳥優惠')，請勾選此框。"
+
+#: templates/CRM/Event/Form/ManageEvent/Fee.tpl
+msgid "another discount set"
+msgstr "另外的折扣設定"
+
+#: templates/CRM/Event/Form/ManageEvent/Fee.tpl
+msgid "Discounted Fees"
+msgstr "已折扣費用"
+
+#: templates/CRM/Event/Form/ManageEvent/Fee.tpl
+msgid ""
+"Use the table below to enter descriptive labels and amounts for up to ten "
+"discounted event fees for each discount set. <strong>Don't forget to click "
+"'Save' when you are finished.</strong>"
+msgstr ""
+
+#: templates/CRM/Event/Form/ManageEvent/Fee.tpl
+#, fuzzy
+msgid ""
+"If you uncheck \"Discounts by Signup Date\" and Save this form, any existing "
+"discount sets will be deleted."
+msgstr ""
+"如果你取消勾選\"註冊日期折扣\"並儲存此表單，任何已設定的折扣設定都將被刪除。"
+"此動作無法還原。如果這不是你想要進行的動作，你可以再次勾選\"註冊日期折扣\"。"
+
+#: templates/CRM/Event/Form/ManageEvent/Fee.tpl
+msgid ""
+"If this is NOT what you want to do, you can check \"Discounts by Signup Date"
+"\" again."
+msgstr ""
+
+#: templates/CRM/Event/Form/ManageEvent/Location.tpl
+msgid ""
+"Use this form to configure the location and optional contact information for "
+"the event. This information will be displayed on the Event Information page. "
+"It will also be included in online registration pages and confirmation "
+"emails if these features are enabled."
+msgstr ""
+"使用此表格去為活動設定地點及聯絡人資料。此資料會被展示在活動資料頁。它會被包"
+"括在線上報名頁面及確認Email，如果這些功能被允許。"
+
+#: templates/CRM/Event/Form/ManageEvent/Location.tpl
+msgid ""
+"Uncheck this box if you want to HIDE the event Address on Event Information "
+"and Registration pages as well as on email confirmations."
+msgstr ""
+"如果您想在活動資料、報名頁面及Email確定信中「隱藏」活動地址，請取消勾選此框。"
+
+#: templates/CRM/Event/Form/ManageEvent/Registration.hlp
+msgid ""
+"If you want to provide an Online Registration page for this event, check the "
+"first box below and then complete the fields on this form. You can offer "
+"online registration for both Paid and Free events. Paid events require that "
+"you have configured a <a href=\"%1\">payment processor</a> for your site."
+msgstr ""
+"若您想提供一個此活動的線上報名頁，請勾選下方第一個核取方塊，然後完成此表格。"
+"包括免費或付費活動，皆可提供線上報名。付費活動必須指定<a href=\"%1\">金流機制"
+"</a>。"
+
+#: templates/CRM/Event/Form/ManageEvent/Registration.hlp
+msgid ""
+"You may also configure events to require administrative approval prior to "
+"participants completing the registration process. To enable this feature you "
+"must first enable the Participant Statuses used by the approval work-flow "
+"(Administer » CiviEvent » Participant Statuses). Then reload this form and "
+"check 'Require participant approval?'."
+msgstr ""
+"在參加者完成報名程序之前，您可能還需要將活動配置成符合行政程序需求。要啟用這"
+"個功能，您必須先啟用參加者狀態以設定批准的工作流程（管理員 » Civi活動 » 參加"
+"者狀態）。然後重新載入此表格，並勾選「必須批准參加者？」。"
+
+#: templates/CRM/Event/Form/ManageEvent/Registration.hlp
+msgid ""
+"If you want collect additional information during event registration, you "
+"will need to configure one or two CiviCRM Profiles - which are collections "
+"of standard or custom fields. For event registration, you may need to "
+"collect additional information specific to a person's <strong>participation</"
+"strong> in an Event. Examples include meal and/or volunteer preferences."
+msgstr ""
+
+#: templates/CRM/Event/Form/ManageEvent/Registration.hlp
+msgid ""
+"If you haven't already configured custom fields and a profile for this, you "
+"can save this screen without selecting a Profile, complete the steps below "
+"and then return to <strong>Manage Events</strong> and select your new "
+"profile."
+msgstr ""
+
+#: templates/CRM/Event/Form/ManageEvent/Registration.hlp
+msgid ""
+"Create a custom field group which is 'Used for' <strong>Participants</"
+"strong>."
+msgstr ""
+
+#: templates/CRM/Event/Form/ManageEvent/Registration.hlp
+msgid "Create a profile (e.g. 'Participant Information')."
+msgstr "建立個人檔案（例如：參加者資料）。"
+
+#: templates/CRM/Event/Form/ManageEvent/Registration.hlp
+msgid ""
+"Return to this screen (<strong>Administer CiviCRM &raquo; Manage Events "
+"&raquo; Configure &raquo; Online Registration</strong>) and select your "
+"profile."
+msgstr ""
+"返回到此畫面（<strong>CiviCRM管理員&raquo; 管理活動&raquo; 設定&raquo; 線上登"
+"記</strong>），並選擇您的個人檔案。"
+
+#: templates/CRM/Event/Form/ManageEvent/Registration.hlp
+msgid ""
+"Display text for link from Event Information to Event Registration pages (e."
+"g. 'Register Now!')."
+msgstr "連結顯示文字，連結將連到報名頁面 （例如：立即報名！）。"
+
+#: templates/CRM/Event/Form/ManageEvent/Registration.hlp
+msgid ""
+"Check this box to allow users to register themselves AND additional "
+"participants for an event. When this feature is enabled, users have the "
+"option to specify the number of additional participants they are registering "
+"for. If this is a paid event, they can select a different event fees for "
+"each participant - and will be charged the total of those fees. If a profile "
+"is included - they will complete the profile information for each "
+"participant."
+msgstr ""
+"勾選此核取方塊以允許使用者為自己報名外也可為其他人報名。當啟用此功能，使用者"
+"可以選擇要為多少人報名。若此活動為付費活動，他們可為每個參加者選擇不同的報名"
+"費 - 然後將由他們幫所有代為報名者付費。如果須包含個人檔案 - 他們將須為每個參"
+"加者完成這份個人檔案。"
+
+#: templates/CRM/Event/Form/ManageEvent/Registration.hlp
+msgid ""
+"Check this box to allow a user to register multiple participants using the "
+"same email address. If you want additional participants to be registered "
+"<strong>without requiring an email address to be entered for each person</"
+"strong> - check the \"Register multiple participants\" option, AND include a "
+"profile in this registration form which <strong>includes First Name and Last "
+"Name fields</strong>."
+msgstr ""
+"勾選此核取方塊，可允許使用者使用同一個 Email 帳號來報名多個參加名額。若您想要"
+"更多的參加者來報名而<strong>不需一定要每個報名者都要有一個個別的 Email 帳號</"
+"strong> ，請勾選\"Register multiple participants\"，並在報名表格裡包含"
+"<strong>名字與姓別欄位</strong>。"
+
+#: templates/CRM/Event/Form/ManageEvent/Registration.hlp
+msgid ""
+"You will also need to update the default strict duplicate contact matching "
+"rule for Individuals to include First Name and Last Name fields (Administer "
+"&raquo; Manage &raquo; Find and Merge Duplicate Contacts)."
+msgstr ""
+
+#: templates/CRM/Event/Form/ManageEvent/Registration.hlp
+msgid ""
+"Check this box to require administrative approval for all the participants "
+"who self-register, prior to being able to complete the registration process. "
+"Participants will be placed in 'Awaiting Approval' status. You can review "
+"and approve participants from 'Find Participants' - select the 'Change "
+"Participant Status' task. Approved participants will move to 'Pending from "
+"approval' status, and will be sent an email with a link to complete their "
+"registration (including paying event fees - if any). "
+msgstr ""
+"勾選此核取方塊，可批准所有自己來報名的但尚未完成報名程序的參加者。參加者將會"
+"被歸在「等待批准」狀態。您可從「尋找參加者」中選擇「改變參加者狀態」，來審閱"
+"與核准報名。已核准的參加者將會被移到「尚待批准」狀態，系統將會對他們寄出一封"
+"包含報名確認連結的 Email（若有的話，會包含支付活動費用）。"
+
+#: templates/CRM/Event/Form/ManageEvent/Registration.hlp
+msgid ""
+"Time limit <strong>in hours</strong> for confirming/finishing registration "
+"by participants with any of the pending statuses. Enter 0 (or leave empty) "
+"to disable this feature."
+msgstr ""
+"時間限制在<strong>數小時之後</strong>來確認/完成還在處理程序中的報名程序。輸"
+"入 0 （或留空）來取消此功能。"
+
+#: templates/CRM/Event/Form/ManageEvent/Registration.tpl
+msgid ""
+"If you want to provide an Online Registration page for this event, check the "
+"first box below and then complete the fields on this form."
+msgstr ""
+"如果您想為此活動提供一個線上報名頁，請勾選以下第一個核取方塊，然後完成此表格"
+"的欄位。"
+
+#: templates/CRM/Event/Form/ManageEvent/Registration.tpl
+msgid "Enable or disable online registration for this event."
+msgstr "啓用或停用此活動的線上報名。"
+
+#: templates/CRM/Event/Form/ManageEvent/Registration.tpl
+msgid "Registration Screen"
+msgstr "報名畫面"
+
+#: templates/CRM/Event/Form/ManageEvent/Registration.tpl
+msgid ""
+"Introductory message / instructions for online event registration page (may "
+"include HTML formatting tags)."
+msgstr "活動的線上報名頁面介紹訊息/ 指示(可能包括HTML語言格式標籤)。"
+
+#: templates/CRM/Event/Form/ManageEvent/Registration.tpl
+msgid "Optional footer text for registration screen."
+msgstr ""
+
+#: templates/CRM/Event/Form/ManageEvent/Registration.tpl
+msgid ""
+"Include additional fields on this registration form by configuring and "
+"selecting a CiviCRM Profile to be included at the top of the page "
+"(immediately after the introductory message)."
+msgstr ""
+
+#: templates/CRM/Event/Form/ManageEvent/Registration.tpl
+msgid ""
+"Include additional fields on this registration form by configuring and "
+"selecting a CiviCRM Profile to be included at the bottom of the page."
+msgstr ""
+
+#: templates/CRM/Event/Form/ManageEvent/Registration.tpl
+msgid ""
+"Change this if you want to use a different profile for additional "
+"participants."
+msgstr "若您欲換用其他身份報名參加，請改此處。"
+
+#: templates/CRM/Event/Form/ManageEvent/Registration.tpl
+msgid "Confirmation Screen"
+msgstr "確認畫面"
+
+#: templates/CRM/Event/Form/ManageEvent/Registration.tpl
+msgid ""
+"Page title for screen where user reviews and confirms their registration "
+"information."
+msgstr ""
+
+#: templates/CRM/Event/Form/ManageEvent/Registration.tpl
+msgid "Optional instructions / message for Confirmation screen."
+msgstr ""
+
+#: templates/CRM/Event/Form/ManageEvent/Registration.tpl
+msgid "Optional page footer text for Confirmation screen."
+msgstr ""
+
+#: templates/CRM/Event/Form/ManageEvent/Registration.tpl
+msgid "Thank-you Screen"
+msgstr "感謝畫面"
+
+#: templates/CRM/Event/Form/ManageEvent/Registration.tpl
+msgid "Page title for registration Thank-you screen."
+msgstr "報名致謝畫面的頁面標題。"
+
+#: templates/CRM/Event/Form/ManageEvent/Registration.tpl
+msgid "Optional message for Thank-you screen (may include HTML formatting)."
+msgstr ""
+
+#: templates/CRM/Event/Form/ManageEvent/Registration.tpl
+msgid ""
+"Optional footer text for Thank-you screen (often used to include links to "
+"other pages/activities on your site)."
+msgstr ""
+
+#: templates/CRM/Event/Form/ManageEvent/Registration.tpl
+msgid "Confirmation Email"
+msgstr "確認Email"
+
+#: templates/CRM/Event/Form/ManageEvent/Registration.tpl
+msgid ""
+"Do you want a registration confirmation email sent automatically to the "
+"user? This email includes event date(s), location and contact information. "
+"For paid events, this email is also a receipt for their payment."
+msgstr ""
+"您是否想要讓報名確認信自動寄給使用者？此Email包括活動日期、地點及聯絡人資料。"
+"若為付款活動，此Email也會是他們的付款收據。"
+
+#: templates/CRM/Event/Form/ManageEvent/Registration.tpl
+msgid "Additional message or instructions to include in confirmation email."
+msgstr "另外訊息或指示包括在確認Email。"
+
+#: templates/CRM/Event/Form/ManageEvent/Registration.tpl
+msgid "FROM name for email."
+msgstr "Email寄件者姓名"
+
+#: templates/CRM/Event/Form/ManageEvent/Registration.tpl
+msgid ""
+"FROM email address (this must be a valid email account with your SMTP email "
+"service provider)."
+msgstr "寄件者的Email（這必需是你的SMTP Email服務商提供的有效Email)。"
+
+#: templates/CRM/Event/Form/ManageEvent/Registration.tpl
+msgid ""
+"You can notify event organizers of each online registration by specifying "
+"one or more email addresses to receive a carbon copy (cc). Multiple email "
+"addresses should be separated by a comma (e.g. jane@example.org, "
+"paula@example.org)."
+msgstr ""
+"你可以在每一個線上報名時，使用副本（CC）通知活動舉辦人。若你輸入多個Email地"
+"址，應以逗號分隔（例如jane@example.org, paula@example.org）。"
+
+#: templates/CRM/Event/Form/ManageEvent/Registration.tpl
+msgid ""
+"You may specify one or more email addresses to receive a blind carbon copy "
+"(bcc) of the confirmation email. Multiple email addresses should be "
+"separated by a comma (e.g. jane@example.org, paula@example.org)."
+msgstr ""
+"你可以指定一個或多個Email地址，收到密件副本（BCC）Email。若你輸入多個Email地"
+"址，應以逗號分隔（例如jane@example.org, paula@example.org）。"
+
+#: templates/CRM/Event/Form/ManageEvent/Registration.tpl
+msgid ""
+"In order to allow multiple registrations with the same email address, the "
+"default \"Fuzzy\" Dedupe Rule will be used to check for matching contact "
+"records and prevent duplicate registrations. This rule currently uses the "
+"following fields: %1"
+msgstr ""
+
+#: templates/CRM/Event/Form/ManageEvent/Tab.hlp
+#, fuzzy
+msgid "Info &amp; Settings"
+msgstr "資訊及設定"
+
+#: templates/CRM/Event/Form/ManageEvent/Tab.hlp
+msgid ""
+"Set event title, type (conference, performance etc.), description, start and "
+"end dates, maximum number of participants, and activate the event. Enable "
+"the public participant listing feature."
+msgstr ""
+"設定活動標題、類別(會議、表演等)、描述、開始及結束日期、最高參加者人數、及啟"
+"用活動。啓用公開參加者列表功能。"
+
+#: templates/CRM/Event/Form/ManageEvent/Tab.hlp
+msgid "Set event location and event contact information (email and phone)."
+msgstr "設定活動地點及活動聯絡人資料（Email及電話）。"
+
+#: templates/CRM/Event/Form/ManageEvent/Tab.hlp
+msgid ""
+"Determine if the event is free or paid. For paid events, set the payment "
+"processor, fee level(s) and discounts. Give online registrants the option to "
+"'pay later' (e.g. mail in a check, call in a credit card, etc.)."
+msgstr ""
+"決定活動是免費還是要付費。付款活動，設定金流機制、費用級別及折扣。提供線上報"
+"名者「後續付款」的選項（例如郵寄支票、信用卡電話等)。"
+
+#: templates/CRM/Event/Form/ManageEvent/Tab.hlp
+msgid ""
+"Determine whether an online registration page is available. If so, configure "
+"registration, confirmation and thank you page elements and confirmation "
+"email details."
+msgstr ""
+"決定是否可以線上報名。如果是，設定報名、確認及致謝頁面的原素及確認信的詳情。"
+
+#: templates/CRM/Event/Form/ManageEvent/Tab.hlp
+msgid ""
+"Make it easy for participants to spread the word about this event to friends "
+"and colleagues."
+msgstr "讓參加者更容易散播此活動給朋友及同事。"
+
+#: templates/CRM/Event/Form/ManageEvent/Tab.hlp
+msgid ""
+"The following URL will display a list of registered participants for this "
+"event to users whose role includes \"view event participants\" permission: "
+"<a href=\"%1\">%1</a>"
+msgstr ""
+"下面的URL將顯示註冊此活動中具有\"查看活動參加者\"權限的參加者名單：<a href="
+"\"%1\">%1</a>"
+
+#: templates/CRM/Event/Form/ManageEvent/Tab.hlp
+msgid ""
+"The following URL will display a list of registered participants for this "
+"event: <a href=\"%1\">%1</a>"
+msgstr "下面的URL將顯示註冊此活動的參加者名單：<a href=\"%1\">%1</a>"
+
+#: templates/CRM/Event/Form/ManageEvent/Tab.hlp
+msgid ""
+"Participant Listing is not enabled for this event. You can enable it from"
+msgstr "此活動沒啓用餐加者列表。您可以啓用它從"
+
+#: templates/CRM/Event/Form/ManageEvent/Tab.hlp
+msgid ""
+"View the Event Information page as it will be displayed to site visitors."
+msgstr "觀看活動資料頁面，它會被展示給網站的訪客。"
+
+#: templates/CRM/Event/Form/ManageEvent/Tab.hlp
+#, fuzzy
+msgid "Registration"
+msgstr "報名頁"
+
+#: templates/CRM/Event/Form/ManageEvent/Tab.hlp
+#, fuzzy
+msgid "test-drive"
+msgstr "測試"
+
+#: templates/CRM/Event/Form/ManageEvent/Tab.hlp
+msgid ""
+"Test-drive the entire online registration process - including custom fields, "
+"confirmation, thank-you page, and receipting. Fee payment transactions will "
+"be directed to your payment processor's test server. <strong>No live "
+"financial transactions will be submitted. However, a contact record will be "
+"created or updated and participant and contribution records will be saved to "
+"the database. Use obvious test contact names so you can review and delete "
+"these records as needed.</strong>"
+msgstr ""
+"測試整個線上報名過程 - 包括自定欄位、確定、致謝頁及製作收據。費用付款交易會被"
+"指到您付款處理機的測試伺服器。<strong>沒有活財政交易會被提交。但是，一個聯絡"
+"人記錄會被建立或上載及參加者及捐款記錄會被儲存到資料庫。使用明顯易辨的測試聯"
+"絡人姓名，以便您需要時容易察看或刪除這些測試紀錄。</strong>"
+
+#: templates/CRM/Event/Form/ManageEvent/Tab.hlp
+#, fuzzy
+msgid "live"
+msgstr "Sliven"
+
+#: templates/CRM/Event/Form/ManageEvent/Tab.hlp
+msgid ""
+"Review your customized <strong>LIVE</strong> online event registration page "
+"here. Use the following URL in links and buttons on any website to send "
+"visitors to this live page"
+msgstr ""
+
+#: templates/CRM/Event/Form/ManageEvent/Tab.tpl
+#: templates/CRM/Event/Page/ManageEvent.tpl
+#, fuzzy
+msgid "Event Links"
+msgstr "活動地點"
+
+#: templates/CRM/Event/Form/ManageEvent/Tab.tpl
+#: templates/CRM/Event/Page/ManageEvent.tpl
+#, fuzzy
+msgid "Register Participant"
+msgstr "登記新的活動參加者"
+
+#: templates/CRM/Event/Form/ManageEvent/Tab.tpl
+#, fuzzy
+msgid "Online Registration (Test-drive)"
+msgstr "線上報名"
+
+#: templates/CRM/Event/Form/ManageEvent/Tab.tpl
+#, fuzzy
+msgid "Online Registration (Live)"
+msgstr "線上報名"
+
+#: templates/CRM/Event/Form/ManageEvent/Tab.tpl
+#: templates/CRM/Event/Page/ManageEvent.tpl
+msgid "Public Participant Listing"
+msgstr "公開參加者列表"
+
+#: templates/CRM/Event/Form/Participant.tpl
+#, fuzzy
+msgid "This Option is already full for this event."
+msgstr "為此活動下載iCalendar。"
+
+#: templates/CRM/Event/Form/Participant.tpl
+msgid "New Event Registration"
+msgstr "新增活動報名"
+
+#: templates/CRM/Event/Form/Participant.tpl
+msgid "Delete Event Registration"
+msgstr "刪除活動報名"
+
+#: templates/CRM/Event/Form/Participant.tpl
+msgid "Edit Event Registration"
+msgstr "編輯活動報名"
+
+#: templates/CRM/Event/Form/Participant.tpl
+msgid ""
+"Use this form to submit an event registration on behalf of %1. <strong>A %2 "
+"transaction will be submitted</strong> using the selected payment processor."
+msgstr ""
+"使用此表格代替%1提交一個活動報名。<strong>%2交易會被提交<strong>使用已選擇的"
+"付款處理器。"
+
+#: templates/CRM/Event/Form/Participant.tpl
+msgid ""
+"If you are accepting offline payment from this participant, check "
+"<strong>Record Payment</strong>. You will be able to fill in the payment "
+"information, and optionally send a receipt."
+msgstr ""
+"如果您接受此位參加者的離線付款，勾選<strong>記錄付款</strong>。您將能填寫付款"
+"資料，及可選擇性地傳送一份收據。"
+
+#: templates/CRM/Event/Form/Participant.tpl
+msgid ""
+"WARNING: Deleting this registration will result in the loss of related "
+"payment records (if any)."
+msgstr "警告：刪除此報名，將會遺失有關的付款記錄（若有的話）。"
+
+#: templates/CRM/Event/Form/Participant.tpl
+#, fuzzy
+msgid " There are %1 more Participant(s) registered by this participant."
+msgstr "報名此活動的參加者的數字編號"
+
+#: templates/CRM/Event/Form/Participant.tpl
+#: templates/CRM/Event/Form/ParticipantView.tpl
+#, fuzzy
+msgid "Also Registered by this Participant"
+msgstr "登記活動參加者"
+
+#: templates/CRM/Event/Form/Participant.tpl
+#: templates/CRM/Event/Form/ParticipantView.tpl
+#, fuzzy
+msgid "view additional participant"
+msgstr "額外參加者的設定檔"
+
+#: templates/CRM/Event/Form/Participant.tpl
+#: templates/CRM/Event/Form/ParticipantView.tpl
+#, fuzzy
+msgid "Registered By"
+msgstr "以編號報名"
+
+#: templates/CRM/Event/Form/Participant.tpl
+#: templates/CRM/Event/Form/ParticipantView.tpl
+#, fuzzy
+msgid "view primary participant"
+msgstr "瀏覽參加者"
+
+#: templates/CRM/Event/Form/Participant.tpl
+msgid "Include past event(s) in this select list."
+msgstr "這選取列表包含過去的活動。"
+
+#: templates/CRM/Event/Form/Participant.tpl
+msgid "Source for this registration (if applicable)."
+msgstr "報名來源（如適用）。"
+
+#: templates/CRM/Event/Form/ParticipantView.tpl
+msgid "View Participant"
+msgstr "瀏覽參加者"
+
+#: templates/CRM/Event/Form/ParticipantView.tpl
+#, fuzzy
+msgid "Print Event Name Badge"
+msgstr "參加者（活動名稱）"
+
+#: templates/CRM/Event/Form/ParticipantView.tpl
+#, fuzzy
+msgid "Print Name Badge"
+msgstr "列印此頁"
+
+#: templates/CRM/Event/Form/ParticipantView.tpl
+msgid "Configure this event"
+msgstr "設定此活動"
+
+#: templates/CRM/Event/Form/ParticipantView.tpl
+msgid "Registration Date and Time"
+msgstr "報名日期及時間"
+
+#: templates/CRM/Event/Form/Registration/AdditionalParticipant.tpl
+#, fuzzy
+msgid "Total Participants : %1"
+msgstr "加入到活動的參加者總數： %1"
+
+#: templates/CRM/Event/Form/Registration/AdditionalParticipant.tpl
+msgid "Event Availability : %1"
+msgstr ""
+
+#: templates/CRM/Event/Form/Registration/Confirm.tpl
+msgid ""
+"Please verify the information below. <span class=\"bold\">Then click "
+"'Continue' to be added to the WAIT LIST for this event</span>. If space "
+"becomes available you will receive an email with a link to a web page where "
+"you can complete your registration."
+msgstr ""
+"請確認下方資訊。<span class=\"bold\">繼續列於候補名單</span>。若活動有名額，"
+"您將收到Email通知您上線完成報名。"
+
+#: templates/CRM/Event/Form/Registration/Confirm.tpl
+msgid ""
+"Please verify the information below. Then click 'Continue' to submit your "
+"registration. <span class=\"bold\">Once approved, you will receive an email "
+"with a link to a web page where you can complete the registration process.</"
+"span>"
+msgstr ""
+"請確認下方資訊。接著點擊「繼續」以完成註冊。通過申請後，您將收到一封系統發出"
+"的Email，請連上郵件裡提供的網址即可完成註冊。"
+
+#: templates/CRM/Event/Form/Registration/Confirm.tpl
+msgid ""
+"Please verify the information below. Click <strong>Go Back</strong> if you "
+"need to make changes."
+msgstr "請確定輸入資料正確。如要作出修改，請按<strong>返回</strong>。"
+
+#: templates/CRM/Event/Form/Registration/Confirm.tpl
+msgid ""
+"Click the <strong>%1</strong> button to checkout to Google, where you will "
+"select your payment method and complete the registration."
+msgstr ""
+"按<strong>繼續</strong>鍵以使用Google進行結帳流程，然後選擇你的付款方式及完成"
+"註冊。"
+
+#: templates/CRM/Event/Form/Registration/Confirm.tpl
+msgid ""
+"Click the <strong>Continue</strong> button to checkout to %1, where you will "
+"select your payment method and complete the registration."
+msgstr ""
+"按<strong>繼續</strong>鍵以使用%1進行結帳流程，然後選擇你的付款方式及完成註"
+"冊。"
+
+#: templates/CRM/Event/Form/Registration/Confirm.tpl
+msgid ""
+"Otherwise, click the <strong>Continue</strong> button below to complete your "
+"registration."
+msgstr "請按下方<strong>繼續</strong>去完成這項報名。"
+
+#: templates/CRM/Event/Form/Registration/Confirm.tpl
+#: templates/CRM/Event/Form/Registration/ThankYou.tpl
+#, fuzzy
+msgid "Registered Email"
+msgstr "巳登記"
+
+#: templates/CRM/Event/Form/Registration/Confirm.tpl
+#: templates/CRM/Event/Form/Registration/ThankYou.tpl
+msgid "Participant Information - Participant %1"
+msgstr "參加者資料 - 參加者 %1"
+
+#: templates/CRM/Event/Form/Registration/Confirm.tpl
+msgid ""
+"Your registration will not be submitted until you click the "
+"<strong>Continue</strong> button. Please click the button one time only."
+msgstr ""
+"在你按下<strong>繼續</strong>鍵之前，你的註冊還未完成。請按「一次」此鍵。"
+
+#: templates/CRM/Event/Form/Registration/EventInfoBlock.tpl
+msgid "View complete event information."
+msgstr "瀏覽全部活動資訊。"
+
+#: templates/CRM/Event/Form/Registration/EventInfoBlock.tpl
+msgid "Map this Address"
+msgstr "標記此地址於地圖"
+
+#: templates/CRM/Event/Form/Registration/EventInfoBlock.tpl
+msgid "Map this Location"
+msgstr "標記此地點於地圖"
+
+#: templates/CRM/Event/Form/Registration/PreviewHeader.tpl
+msgid "Test-drive Your Event Registration Page"
+msgstr "測試您的活動報名頁"
+
+#: templates/CRM/Event/Form/Registration/PreviewHeader.tpl
+msgid ""
+"This page is currently running in <strong>test-drive mode</strong>. If this "
+"is a paid event, transactions will be sent to your payment processor's test "
+"server. <strong>No live financial transactions will be submitted. However, a "
+"contact record will be created or updated and test event registration and "
+"contribution records will be saved to the database. Use obvious test contact "
+"names so you can review and delete these records as needed. </strong> Refer "
+"to your payment processor's documentation for information on values to use "
+"for test credit card number, security code, postal code, etc."
+msgstr ""
+"此頁現執行<strong>測試驅動模式</strong>。如果這是付款活動，交易會被傳送到您的"
+"金流機制伺服器。<strong>沒有活的交易會被提交。但是，一個聯絡人記錄會被建立或"
+"上傳，測試活動登記及捐款記錄也會被儲存到資料庫。使用明顯易辨的測試聯絡人，以"
+"便在您需要時方便察看或刪除這些紀錄。參考您付款處理器的文件獲得更多關於測試用"
+"信用卡卡號、安全碼、郵遞區號等的資訊。"
+
+#: templates/CRM/Event/Form/Registration/Register.tpl
+#, fuzzy
+msgid "Welcome %1"
+msgstr "歡迎"
+
+#: templates/CRM/Event/Form/Registration/Register.tpl
+#, fuzzy
+msgid "Click here to register a different person for this event."
+msgstr "啓用或停用此活動的線上報名。"
+
+#: templates/CRM/Event/Form/Registration/Register.tpl
+msgid "Not %1, or want to register a different person"
+msgstr ""
+
+#: templates/CRM/Event/Form/Registration/Register.tpl
+msgid "including yourself"
+msgstr "包括自己"
+
+#: templates/CRM/Event/Form/Registration/Register.tpl
+msgid ""
+"Fill in your registration information on this page. If you are registering "
+"additional people, you will be able to enter their registration information "
+"after you complete this page and click &quot;Continue&quot;."
+msgstr ""
+"請在此頁填寫你的註冊資訊。如果你是代替其他人註冊，你可以在完成此頁註冊資訊"
+"後，點擊&quot;繼續&quot;鍵後，再為他們填寫註冊資訊。"
+
+#: templates/CRM/Event/Form/Registration/ThankYou.tpl
+msgid "You have been added to the WAIT LIST for this event."
+msgstr "您已經被加入了這項目的等候名單。"
+
+#: templates/CRM/Event/Form/Registration/ThankYou.tpl
+msgid ""
+"If space becomes available you will receive an email with a link to a web "
+"page where you can complete your registration."
+msgstr "若活動尚有名額，您將會收到Email，通知您上線完成報名。"
+
+#: templates/CRM/Event/Form/Registration/ThankYou.tpl
+msgid "Your registration has been submitted."
+msgstr "你的註冊訊息已經送出。"
+
+#: templates/CRM/Event/Form/Registration/ThankYou.tpl
+msgid ""
+"Once your registration has been reviewed, you will receive an email with a "
+"link to a web page where you can complete the registration process."
+msgstr ""
+"一旦你的註冊審查通過，你將會收到一封Email，你可以點選信件中的鏈結網址以完成註"
+"冊。"
+
+#: templates/CRM/Event/Form/Registration/ThankYou.tpl
+msgid "An email with event details has been sent to %1."
+msgstr "活動詳情已被傳送到 %1。"
+
+#: templates/CRM/Event/Form/Registration/ThankYou.tpl
+msgid ""
+"Your registration payment has been submitted to %1 for processing. Please "
+"print this page for your records."
+msgstr "您的%1註冊費已處理成功。請列印此頁留為記錄。"
+
+#: templates/CRM/Event/Form/Registration/ThankYou.tpl
+msgid ""
+"A registration confirmation email will be sent to %1 once the transaction is "
+"processed successfully."
+msgstr "當交易成功，一個報名確認Email會被傳送到%1。"
+
+#: templates/CRM/Event/Form/Registration/ThankYou.tpl
+msgid ""
+"Your registration has been processed successfully. Please print this page "
+"for your records."
+msgstr "您的報名巳成功處理。請列印此頁做為記錄。"
+
+#: templates/CRM/Event/Form/Registration/ThankYou.tpl
+msgid "A registration confirmation email has also been sent to %1"
+msgstr "一個報名確認Email已被傳送到%1"
+
+#: templates/CRM/Event/Form/Registration/ThankYou.tpl
+msgid "Additional Participant Email(s)"
+msgstr "另外參加者Email"
+
+#: templates/CRM/Event/Form/Registration/ThankYou.tpl
+msgid "Back to \"%1\" event information"
+msgstr "返回 \"%1\" 活動資料"
+
+#: templates/CRM/Event/Form/Search/EmptyResults.tpl
+msgid "if you are searching by participant name, check your spelling"
+msgstr "如果您用參加者姓名搜尋，請檢查您的字串。"
+
+#: templates/CRM/Event/Form/SearchEvent.tpl
+msgid "Find Events"
+msgstr "搜尋活動"
+
+#: templates/CRM/Event/Form/SearchEvent.tpl
+msgid "Complete OR partial Event name."
+msgstr "全部或部分活動名稱。"
+
+#: templates/CRM/Event/Form/Selector.tpl
+#: templates/CRM/Event/Page/ManageEvent.tpl
+msgid "View event info page"
+msgstr "瀏覽活動資訊頁"
+
+#: templates/CRM/Event/Form/Selector.tpl
+msgid "List participants for this event (all statuses)"
+msgstr "列出此活動的參加者 (所有狀態)"
+
+#: templates/CRM/Event/Form/Selector.tpl
+msgid "participants"
+msgstr "參加者"
+
+#: templates/CRM/Event/Form/Selector.tpl
+#: templates/CRM/Event/Form/Task/Print.tpl
+msgid "(no fee)"
+msgstr "(免費)"
+
+#: templates/CRM/Event/Form/Selector.tpl
+msgid "Find more event participants"
+msgstr "搜尋更多活動參加者"
+
+#: templates/CRM/Event/Form/Selector.tpl
+msgid "View all events for this contact"
+msgstr "瀏覽此聯絡人的全部活動"
+
+#: templates/CRM/Event/Form/Task/Batch.tpl
+msgid ""
+"Update the status for each participant individually, OR change all statuses "
+"to:"
+msgstr "更新單一參加者的狀態，或變更所有參加者的狀態為："
+
+#: templates/CRM/Event/Form/Task/Batch.tpl
+msgid ""
+"Participants whose status is changed TO any of the following will be "
+"automatically notified via email: %1."
+msgstr "將寄送自動通知Email給變更狀態到下列的參加者：%1。"
+
+#: templates/CRM/Event/Form/Task/Batch.tpl
+msgid ""
+"Update field values for each participant as needed. To set a field to the "
+"same value for ALL rows, enter that value for the first participation and "
+"then click the <strong>Copy icon</strong> (next to the column title)."
+msgstr ""
+
+#: templates/CRM/Event/Form/Task/Batch.tpl
+msgid ""
+"Click <strong>Update Participant(s)</strong> below to save all your changes."
+msgstr "請按下方的<strong>更新參加者</strong>鍵以儲存變更設定。"
+
+#: templates/CRM/Event/Form/Task/Cancel.tpl
+msgid ""
+"Are you sure you want to set status to Cancelled for the selected "
+"participants?"
+msgstr ""
+
+#: templates/CRM/Event/Form/Task/Delete.tpl
+msgid ""
+"Are you sure you want to delete the selected participations? This delete "
+"operation cannot be undone and will delete all transactions and activity "
+"associated with these participations."
+msgstr ""
+"您是否確定刪除選取的參加者？這項操作無法回復，並且會刪除與這些參加者相關的所"
+"有交易與動態。"
+
+#: templates/CRM/Event/Form/Task/ParticipantStatus.hlp
+msgid "Enabling Waitlisting and Registration Approval"
+msgstr "啟用候補名單與批准報名"
+
+#: templates/CRM/Event/Form/Task/ParticipantStatus.hlp
+msgid ""
+"This screen is particularly useful for managing events with Waitlisting "
+"and / or Registration Approval features enabled. In order to use these "
+"features you must first enable the related Participant Statuses (Administer "
+"&raquo; CiviEvent &raquo; Participant Statuses)."
+msgstr ""
+"此畫面專為管理有候補名單的活動，與/或為了啟用註冊批核的功能。要使用這些功能，"
+"您必須先啟用相關的參加者的狀態（管理員&raquo; Civi活動&raquo; 參加者狀態）。"
+
+#: templates/CRM/Event/Form/Task/ParticipantStatus.hlp
+msgid "Tip: Managing waitlisted participants"
+msgstr "提示：管理候補名單"
+
+#: templates/CRM/Event/Form/Task/ParticipantStatus.hlp
+msgid ""
+"If you are moving participants from \"On waitlist\" to \"Pending from "
+"waitlist\" status, make sure there are available spaces for the event. An "
+"email with a link to confirm their registration will be automatically sent. "
+"However, they will only be allowed to complete their registration if the "
+"event is not full (e.g. the number of registered participants is less than "
+"the maximum number of participants configured for the event)."
+msgstr ""
+"若您正將參加者從「候補」移到「等待候補」，請確定這個活動還有可供報名的人數。"
+"包含報名確認連結的 Email 會自動寄出。若活動尚未額滿，他們將可完成報名程序（例"
+"如：報名參加的人數未達名額上限）。"
+
+#: templates/CRM/Event/Form/Task/PickProfile.tpl
+msgid "Batch Update Event via Profile"
+msgstr "從個人檔案批次更新活動"
+
+#: templates/CRM/Event/Form/Task/Print.tpl
+msgid "Event Date"
+msgstr "活動日期"
+
+#: templates/CRM/Event/Form/Task.tpl
+msgid "Number of selected participants: %1"
+msgstr "已選取參與人數: %1"
+
+#: templates/CRM/Event/Import/Form/Preview.tpl
+#: templates/CRM/Event/Import/Form/Summary.tpl
+msgid "Total rows (participant records) in uploaded file."
+msgstr "上傳的檔案裡的總行數(參加者記錄)。"
+
+#: templates/CRM/Event/Import/Form/Summary.tpl
+msgid ""
+"CiviCRM has detected mismatched participant ID. This record have not been "
+"updated."
+msgid_plural ""
+"CiviCRM has detected mismatched participant IDs. These records have not been "
+"Updated."
+msgstr[0] "CiviCRM已偵測到不符的參加者編號。這記錄沒有被更新。"
+
+#: templates/CRM/Event/Import/Form/Summary.tpl
+msgid ""
+"You can <a href=\"%1\">Download Mismatched Participantss</a>. You may then "
+"correct them, and import the new file with the corrected data."
+msgstr ""
+"您可以<a href=\"%1\">下載不相符參加者</a>。您可以更正他們，及匯入已修正數據的"
+"新檔案。"
+
+#: templates/CRM/Event/Import/Form/Summary.tpl
+msgid ""
+"CiviCRM has detected one record with conflicting transaction ID within this "
+"data file or relative to existing particpant records. This record have not "
+"been imported."
+msgid_plural ""
+"CiviCRM has detected %count records with conflicting transaction IDs within "
+"this data file or relative to existing participant records. These records "
+"have not been imported."
+msgstr[0] ""
+"CiviCRM已在此資料檔案或相關的現有參加者記錄中偵測到一個有衝突交易編號的紀錄。"
+"此記錄未被匯入。"
+
+#: templates/CRM/Event/Import/Form/Summary.tpl
+msgid ""
+"CiviCRM has detected one record which is a duplicate of existing CiviCRM "
+"participant record."
+msgid_plural ""
+"CiviCRM has detected %count records which are duplicates of existing CiviCRM "
+"participant records."
+msgstr[0] "CiviCRM已偵測到一個紀錄，是為現有的CiviCRM參加者記錄的複製。"
+
+#: templates/CRM/Event/Import/Form/Summary.tpl
+msgid "Rows with mismatched participant IDs... (NOT updated)."
+msgstr "不相符參加者編號的行…(沒有更新)。"
+
+#: templates/CRM/Event/Import/Form/Summary.tpl
+msgid "Download Mismatched participants"
+msgstr "下載不相符的參加者"
+
+#: templates/CRM/Event/Import/Form/Summary.tpl
+msgid "Rows which are duplicates of existing CiviCRM participant records."
+msgstr ""
+
+#: templates/CRM/Event/Import/Form/UploadFile.hlp
+msgid "Required Participant Data"
+msgstr "必填的參加者資料"
+
+#: templates/CRM/Event/Import/Form/UploadFile.hlp
+msgid "Participant import data MUST include the following columns:"
+msgstr "匯入的參加者資料必須包含以下欄位："
+
+#: templates/CRM/Event/Import/Form/UploadFile.hlp
+msgid ""
+"Event Title OR Event ID (a unique integer assigned by CiviEvent, displayed "
+"in the Manage Events listing)"
+msgstr "活動標題或活動編號（由Civi活動指派的獨一編號，顯示在管理活動列表中）"
+
+#: templates/CRM/Event/Import/Form/UploadFile.hlp
+msgid "Participant Status (ie. Registered, Attended, Cancelled, etc.)"
+msgstr "參加者狀態（例如：已登記、已出席、已取消等）"
+
+#: templates/CRM/Event/Import/Form/UploadFile.hlp
+msgid "Participant Role (ie. Attendee, Volunteer, Host, etc.)"
+msgstr "參加者角色（例如：出席者、義工、主持人等）"
+
+#: templates/CRM/Event/Import/Form/UploadFile.hlp
+msgid ""
+"Valid values for Status and Role can be found in the CiviEvent section of "
+"the Administer CiviCRM screen. You can also import Fee Level, Registration "
+"Date and any other standard or custom Participant fields."
+msgstr ""
+"在 CiviCRM管理員畫面中的 Civi活動區，可看到參加者狀態及參加者角色。您也可以匯"
+"入收費標準、報名日期及任何預設或自訂的參加者資料。"
+
+#: templates/CRM/Event/Import/Form/UploadFile.hlp
+msgid "Contact Records for Event Participants"
+msgstr "活動參加者聯絡記錄"
+
+#: templates/CRM/Event/Import/Form/UploadFile.hlp
+msgid ""
+"Participant import requires that each person, household or organization "
+"already exists as a contact record in your CiviCRM database. If you need to "
+"import participant information for contact records which haven't been added "
+"to CiviCRM yet - you will do this in 2 steps. First, use <strong>Import "
+"Contacts</strong> to add the contact records. If possible, include a unique "
+"'External ID' for each new contact which you can then use to match "
+"participant info such as event registration to the corresponding contact "
+"record. Then return to this screen and import the participant records."
+msgstr ""
+
+#: templates/CRM/Event/Import/Form/UploadFile.hlp
+msgid "Matching Participant Data to Contacts"
+msgstr "參加者資料合併到聯絡人"
+
+#: templates/CRM/Event/Import/Form/UploadFile.hlp
+msgid ""
+"Participant import files must contain data needed to <strong>match the "
+"participant to a contact record in your CiviCRM database</strong>. This "
+"'matching' can be handled in several different ways:"
+msgstr ""
+
+#: templates/CRM/Event/Import/Form/UploadFile.hlp
+msgid ""
+"If you've stored a unique <strong>External Identifier</strong> for each "
+"contact in CiviCRM, you can include that value as a column in your import "
+"file. Participant data will then be matched to contact records using their "
+"External ID."
+msgstr ""
+
+#: templates/CRM/Event/Import/Form/UploadFile.hlp
+msgid ""
+"Save the CSV file with your participant data and 'contact matching' data to "
+"your local hard drive (or an accessible drive on your network) - and you are "
+"now ready for step 1 (Upload Data)."
+msgstr ""
+"將您的參加者資料與聯絡人配對資料儲存為 CSV 檔，並下載至您的電腦硬碟（或是網路"
+"硬碟） - 您現在已經準備好了第一步（上傳資料）。"
+
+#: templates/CRM/Event/Import/Form/UploadFile.hlp
+msgid ""
+"For each import, you can either INSERT new participant records, or UPDATE "
+"existing records during the import session. If you are UPDATING existing "
+"records (to update participant status after an event, for example), you will "
+"need to include a column containing the unique CiviCRM-assigned participant "
+"ID to match to the existing record. This value is included whenever you "
+"Export participant records from Find Participants."
+msgstr ""
+
+#: templates/CRM/Event/Import/Form/UploadFile.tpl
+msgid ""
+"The Event Import Wizard allows you to easily upload event participation data "
+"such as event registrations from other applications into CiviCRM."
+msgstr ""
+"活動匯入嚮導允許您容易地上載活動參與資料，例如從其他應用程式中匯入活動報名資"
+"料到CiviCRM。"
+
+#: templates/CRM/Event/Import/Form/UploadFile.tpl
+msgid ""
+"Files to be imported must be in the 'comma-separated-values' format (CSV) "
+"and must contain data needed to match the participant data to an existing "
+"contact in your CiviCRM database."
+msgstr ""
+
+#: templates/CRM/Event/Import/Form/UploadFile.tpl
+msgid ""
+"Check this box if the first row of your file consists of field names "
+"(Example: \"Contact ID\", \"Participant Role\")."
+msgstr ""
+"如果您檔案的第一行包含欄位名稱(例如：\"聯絡人編號\"、\"參加者角色\")，請勾選"
+"此框。"
+
+#: templates/CRM/Event/Import/Form/UploadFile.tpl
+msgid ""
+"Select 'Individual' if you are importing event participation data for "
+"individual persons."
+msgstr "選擇「個人」。如果您在為個人匯入活動報名資料。"
+
+#: templates/CRM/Event/Import/Form/UploadFile.tpl
+msgid ""
+"Select 'Organization' or 'Household' if you are importing event "
+"participation data for contacts of that type. (NOTE: Some built-in contact "
+"types may not be enabled for your site.)"
+msgstr ""
+"請為你匯入的活動參加者選擇適當的聯絡人資料類型，例如「組織」或「家庭」。（注"
+"意：有些內建的聯絡人類型可能並未被啟用。）"
+
+#: templates/CRM/Event/Import/Form/UploadFile.tpl
+msgid "Select Saved Mapping, or leave blank to create a new mapping."
+msgstr "選擇已儲存配對，或留空以建立新的配對。"
+
+#: templates/CRM/Event/Page/DashBoard.hlp
+msgid ""
+"CiviEvent allows you to create customized page(s) for constituents to learn "
+"about events and optionally register online. You can create <a href='%"
+"1'><strong>new events</strong></a> and <a href='%2'><strong>manage existing "
+"events</strong></a>."
+msgstr ""
+"Civi活動允許您建立自定化的頁面給民眾學習活動的線上登記。您可以按<a href='%"
+"1'><strong>新增活動</strong></a>及<a href='%2'><strong>管理現存活動</"
+"strong></a>來建立新活動。"
+
+#: templates/CRM/Event/Page/DashBoard.hlp
+msgid ""
+"You can also input and track offline Events. To enter events manually for "
+"individual contacts, use <a href='%1'>Find Contacts</a> to locate the "
+"contact. Then click <strong>View</strong> to go to their summary page and "
+"click on the <strong>New Event</strong> link. You can also <a href='%"
+"2'><strong>import batches of participants</strong></a> from other sources."
+msgstr ""
+
+#: templates/CRM/Event/Page/DashBoard.hlp
+msgid ""
+"The Event Summary table provides a summary of up to ten scheduled and recent "
+"<strong>Events</strong>. Click the <strong>Event name</strong> to view the "
+"event as it will be displayed to site visitors. Click the "
+"<strong>Participants count</strong> to see a list of participants. To run "
+"your own customized searches - click <a href='%1'>Find Participants</a>. You "
+"can search by Participant Name, Event, Date Range and Status."
+msgstr ""
+
+#: templates/CRM/Event/Page/DashBoard.tpl
+#: templates/CRM/Event/Page/ManageEvent.tpl
+msgid "HTML listing of current and future public events."
+msgstr ""
+
+#: templates/CRM/Event/Page/DashBoard.tpl
+#: templates/CRM/Event/Page/ManageEvent.tpl
+msgid "Get RSS 2.0 feed for current and future public events."
+msgstr "為現在及將來公開活動取得自動播放流入"
+
+#: templates/CRM/Event/Page/DashBoard.tpl
+#: templates/CRM/Event/Page/ManageEvent.tpl
+msgid "Download iCalendar file for current and future public events."
+msgstr "為目前及將來的公開活動下載iCalendar檔案。"
+
+#: templates/CRM/Event/Page/DashBoard.tpl
+#: templates/CRM/Event/Page/ManageEvent.tpl
+msgid "Get iCalendar feed for current and future public events."
+msgstr "為目前與未來的公開活動訂閱iCalendar。"
+
+#: templates/CRM/Event/Page/DashBoard.tpl
+msgid "View event info page\""
+msgstr "瀏覽活動資訊頁\""
+
+#: templates/CRM/Event/Page/DashBoard.tpl
+msgid "List %1 participants"
+msgstr "列出 %1 參加者"
+
+#: templates/CRM/Event/Page/DashBoard.tpl
+msgid "Not&nbsp;Counted"
+msgstr ""
+
+#: templates/CRM/Event/Page/DashBoard.tpl
+msgid "Not&nbsp;Counted&nbsp;Due&nbsp;To&nbsp;Status"
+msgstr ""
+
+#: templates/CRM/Event/Page/DashBoard.tpl
+msgid "Not&nbsp;Counted&nbsp;Due&nbsp;To&nbsp;Role"
+msgstr ""
+
+#: templates/CRM/Event/Page/DashBoard.tpl
+msgid "(max %1)"
+msgstr "(最高 %1)"
+
+#: templates/CRM/Event/Page/DashBoard.tpl
+msgid "Map event location"
+msgstr "、"
+
+#: templates/CRM/Event/Page/DashBoard.tpl
+msgid "Browse more events"
+msgstr "瀏覽更多活動"
+
+#: templates/CRM/Event/Page/DashBoard.tpl
+msgid "There are no active Events to display."
+msgstr "沒有啓用中的活動。"
+
+#: templates/CRM/Event/Page/DashBoard.tpl
+msgid "You can <a href=\"%1\">Create a New Event</a> now."
+msgstr "您現在可以<a href=\"%1\">建立一個新活動</a>。"
+
+#: templates/CRM/Event/Page/DashBoard.tpl
+msgid "Recent Registrations"
+msgstr ""
+
+#: templates/CRM/Event/Page/EventInfo.tpl
+#, fuzzy
+msgid "Registration is closed for this event"
+msgstr "活動報名結束於%1"
+
+#: templates/CRM/Event/Page/EventInfo.tpl
+msgid "Show large map"
+msgstr "顯示地圖(大)"
+
+#: templates/CRM/Event/Page/ICalendar.tpl
+msgid "Category"
+msgstr "類別"
+
+#: templates/CRM/Event/Page/ICalendar.tpl
+msgid "read more"
+msgstr "閱讀更多"
+
+#: templates/CRM/Event/Page/ICalendar.tpl
+msgid "details..."
+msgstr "詳情..."
+
+#: templates/CRM/Event/Page/ICalendar.tpl
+msgid "(not available)"
+msgstr "(無效)"
+
+#: templates/CRM/Event/Page/iCalLinks.tpl
+msgid "Download iCalendar entry for this event."
+msgstr "為此活動下載iCalendar。"
+
+#: templates/CRM/Event/Page/iCalLinks.tpl
+msgid "iCalendar feed for this event."
+msgstr ""
+
+#: templates/CRM/Event/Page/ManageEvent.hlp
+msgid "ICalendar Downloads and Feeds"
+msgstr "iCalendar 下載及訂閱"
+
+#: templates/CRM/Event/Page/ManageEvent.hlp
+msgid ""
+"iCalendar is a standard format for representing information about "
+"calendaring and scheduling. CiviEvent allows you to output your current and "
+"upcoming 'public' events in the iCalendar format - so this information can "
+"be shared with other iCalendar-enabled applications."
+msgstr ""
+"iCalendar 是一個標準格式，可儲存日歷及活動計劃的資料。Civi活動允許您去以 "
+"iCalendar 格式輸出進行中及即將舉辦的「公開」活動 - 如此活動資料便可與其他支"
+"援 iCalendar 格式的應用軟體共用。"
+
+#: templates/CRM/Event/Page/ManageEvent.hlp
+msgid "Depending on how you want to use the iCalendar data - you can:"
+msgstr "取決於您要如何使用 iCalendar 資料 - 您可以："
+
+#: templates/CRM/Event/Page/ManageEvent.hlp
+msgid ""
+"Download an iCalendar file (with a *.ics extension) to your local computer."
+msgstr "下載 iCalendar 檔案（副檔名為 .ics）到您的電腦硬碟。"
+
+#: templates/CRM/Event/Page/ManageEvent.hlp
+msgid ""
+"Access the data using an HTTP GET request from a specific URL. (This is the "
+"'ICAL' icon on the Manage Events page.)"
+msgstr ""
+"從特定的 URL 利用 HTTP GET 模式來存取資料（就是管理活動頁的 ICAL 圖示）。"
+
+#: templates/CRM/Event/Page/ManageEvent.hlp
+msgid "The iCalendar Feed URL for CiviEvent on this site:"
+msgstr "Civi活動的 iCalendar 訂閱 URL："
+
+#: templates/CRM/Event/Page/ManageEvent.hlp
+msgid ""
+"By default, both methods get all events whose starting date is greater than "
+"or equal to the current date. However, you can modify this by passing "
+"additional parameters in the URL:"
+msgstr ""
+"兩種方式預設取得的所有活動資料，都是開始日期大於或等於目前日期。不過，您可以"
+"透過此 URL 修改參數："
+
+#: templates/CRM/Event/Page/ManageEvent.hlp
+msgid ""
+"start=YYYYMMDD - Specify a different starting date range for the events to "
+"be listed."
+msgstr "開始=YYYYMMDD - 指定一個不同的日期範圍給被列出的活動。"
+
+#: templates/CRM/Event/Page/ManageEvent.hlp
+msgid ""
+"type=N - Specify a particular Event Type using the event_type_id value. (You "
+"can find these values by browsing the listing at Administer CiviCRM &raquo; "
+"Event Types.)"
+msgstr ""
+"輸入=N - 指定一個活動類別的 event_type_id 值（您可以透過 CiviCRM管理員"
+"&raquo; 活動類別，來查看活動類別的 event_type_id 值）。"
+
+#: templates/CRM/Event/Page/ManageEvent.hlp
+msgid ""
+"EXAMPLE: Given the default event types, this URL will retrieve all events "
+"with start dates on or after January 1, 2007 whose event type is "
+"'Fundraiser':"
+msgstr ""
+
+#: templates/CRM/Event/Page/ManageEvent.hlp
+msgid "HTML Listing"
+msgstr "HTML 列表"
+
+#: templates/CRM/Event/Page/ManageEvent.hlp
+msgid ""
+"CiviEvent provides a page which lists your current and future public events "
+"in a table layout for display in a browser. Point people to this page using "
+"the following URL:"
+msgstr ""
+"Civi活動提供一個以表格方式，在瀏覽器列出您現在及將來公開活動的頁面。您可提供"
+"以下的 URL 來給民眾查看："
+
+#: templates/CRM/Event/Page/ManageEvent.hlp
+msgid ""
+"You can add links to this page in your Drupal or Joomla menus and on any "
+"content page. You can also use the additional parameters shown above to "
+"filter the events included on the page."
+msgstr ""
+"您可以在 Drupal 或 Joomla 加入連結到此頁的 URL。您還可以使用其他參數來篩選顯"
+"示哪些活動在頁面上。"
+
+#: templates/CRM/Event/Page/ManageEvent.hlp
+msgid "RSS 2.0 Feeds"
+msgstr "RSS 2.0 訂閱"
+
+#: templates/CRM/Event/Page/ManageEvent.hlp
+msgid ""
+"CiviEvent also creates an RSS 2.0 formatted feed which can be subscribed to "
+"people using RSS readers and can be displayed in most modern browsers. The "
+"RSS Feed URL for CiviEvent on this site:"
+msgstr ""
+"Civi活動也能建立 RSS 2.0 格式的訊息，可讓使用 RSS 訂閱的讀者使用瀏覽器查看這"
+"些訊息（大多數的瀏覽器都有支援）。Civi活動的 RSS 訂閱網址如下："
+
+#: templates/CRM/Event/Page/ManageEvent.hlp
+msgid ""
+"You can also use the additional parameters shown above to filter the events "
+"included in the RSS feed."
+msgstr "您還可以使用其他參數來篩選顯示哪些活動在 RSS 訂閱。"
+
+#: templates/CRM/Event/Page/ManageEvent.tpl
+#, fuzzy
+msgid "Add Event"
+msgstr "結束日期"
+
+#: templates/CRM/Event/Page/ManageEvent.tpl
+#, fuzzy
+msgid "Public?"
+msgstr "公開"
+
+#: templates/CRM/Event/Page/ManageEvent.tpl
+#, fuzzy
+msgid "ID:"
+msgstr "ID"
+
+#: templates/CRM/Event/Page/ManageEvent.tpl
+#, fuzzy
+msgid "Registration (Test-drive)"
+msgstr "報名畫面"
+
+#: templates/CRM/Event/Page/ManageEvent.tpl
+#, fuzzy
+msgid "Registration (Live)"
+msgstr "報名連結文字"
+
+#: templates/CRM/Event/Page/ManageEvent.tpl
+msgid "No available Events match your search criteria. Suggestions:"
+msgstr "沒有可用的活動符合您的搜尋條件。建議："
+
+#: templates/CRM/Event/Page/ManageEvent.tpl
+msgid "Or you can <a href='%1'>browse all available Current Events</a>."
+msgstr "或您可以<a href='%1'>瀏覽所有可用的當前活動</a>。"
+
+#: templates/CRM/Event/Page/ManageEvent.tpl
+msgid ""
+"There are no events scheduled for the date range. You can <a href='%1'>add "
+"one</a>."
+msgstr "此期間沒有任何活動。您可以<a href='%1'>新增一個</a>。"
+
+#: templates/CRM/Event/Page/ParticipantListing/NameAndEmail.tpl
+#: templates/CRM/Event/Page/ParticipantListing/NameStatusAndDate.tpl
+#: templates/CRM/Event/Page/ParticipantListing/Name.tpl
+msgid "There are currently no participants registered for this event."
+msgstr "目前沒有參加者報名此活動。"
+
+#: templates/CRM/Event/Page/Tab.tpl
+msgid "This page lists all event registrations for %1 since inception."
+msgstr "此頁列出所有%1的報名者。"
+
+#: templates/CRM/Event/Page/Tab.tpl
+#, fuzzy
+msgid ""
+"Click <a accesskey=\"N\" href='%1'>Add Event Registration</a> to register "
+"this contact for an event."
+msgstr ""
+"按<a accesskey=\"N\" href='%1'>報名新的活動</a> 為這個聯絡人報名新的活動。"
+
+#: templates/CRM/Event/Page/Tab.tpl
+msgid ""
+"Click <a href='%1'>Submit Credit Card Event Registration</a> to process a "
+"new New Registration on behalf of the participant using their credit card."
+msgstr ""
+
+#: templates/CRM/Event/Page/Tab.tpl
+#, fuzzy
+msgid "Add Event Registration"
+msgstr "活動報名"
+
+#: templates/CRM/Event/Page/Tab.tpl
+msgid "Submit Credit Card Event Registration"
+msgstr "提交信用卡活動報名"
+
+#: templates/CRM/Event/Page/Tab.tpl
+msgid "No event registrations have been recorded for this contact."
+msgstr "此聯絡人沒有任何活動報名記錄。"
+
+#: templates/CRM/Event/Page/UserDashboard.tpl
+msgid "Click on the event name for more information."
+msgstr "按活動名稱以得到更多資訊。"
+
+#: templates/CRM/Event/Page/UserDashboard.tpl
+msgid "You are not registered for any current or upcoming Events."
+msgstr "您沒有報名任何現在或即將舉行的活動。"

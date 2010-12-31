@@ -1,0 +1,3057 @@
+# #-#-#-#-#  calendar.po (CiviCRM 3.0)  #-#-#-#-#
+# Copyright CiviCRM LLC (c) 2004-2007
+# This file is distributed under the same license as the CiviCRM package.
+# If you contribute heavily to a translation and deem your work copyrightable,
+# make sure you license it to CiviCRM LLC under Academic Free License 3.0.
+msgid ""
+msgstr ""
+"Project-Id-Version: CiviCRM 2.1\n"
+"Report-Msgid-Bugs-To: http://issues.civicrm.org/\n"
+"POT-Creation-Date: 2010-12-10 16:13+0100\n"
+"PO-Revision-Date: 2010-02-03 22:35+0800\n"
+"Last-Translator: Charles Chuang <charles>\n"
+"Language-Team: CiviCRM Translators <civicrm-translators@lists.civicrm.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Pootle 1.0.2\n"
+"X-Poedit-Language: Chinese\n"
+"X-Poedit-Country: TAIWAN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Pootle 1.0.2\n"
+"X-Generator: Pootle 1.0.2\n"
+"X-Generator: Pootle 0.10\n"
+"X-Generator: Pootle 0.10\n"
+"X-Poedit-Bookmarks: 4212,-1,-1,-1,-1,-1,-1,-1,-1,-1\n"
+
+#: drupal/modules/views/civicrm/civicrm_handler_field_mail.inc
+#: drupal/modules/views/civicrm/civicrm_handler_field_email.inc
+msgid "Link this field"
+msgstr "連結此欄位"
+
+#: drupal/modules/views/civicrm/civicrm_handler_field_mail.inc
+#: drupal/modules/views/civicrm/civicrm_handler_field_email.inc
+msgid "No link"
+msgstr "沒有連結"
+
+#: drupal/modules/views/civicrm/civicrm_handler_field_mail.inc
+#: drupal/modules/views/civicrm/civicrm_handler_field_email.inc
+msgid "With a mailto:"
+msgstr "包含一個 mailto:"
+
+#: drupal/modules/views/civicrm/civicrm_handler_filter_priority.inc
+#: drupal/modules/views/civicrm.views.inc
+msgid "Priority"
+msgstr "優先次序"
+
+#: drupal/modules/views/civicrm/civicrm_handler_filter_event_type.inc
+#: drupal/modules/views/civicrm.views.inc
+msgid "Event Type"
+msgstr "活動類型"
+
+#: drupal/modules/views/civicrm/civicrm_handler_filter_payment_instrument.inc
+#: drupal/modules/views/civicrm/civicrm_handler_filter_contribution_type.inc
+#: drupal/modules/views/civicrm.views.inc
+msgid "Contribution Type"
+msgstr "捐款類別"
+
+#: drupal/modules/views/civicrm/civicrm_handler_field_link_event.inc
+#: drupal/modules/views/civicrm/civicrm_handler_field_link_relationship.inc
+#: drupal/modules/views/civicrm/civicrm_handler_field_link_contribution.inc
+#: drupal/modules/views/civicrm/civicrm_handler_field_link_contact.inc
+#: drupal/modules/views/civicrm/civicrm_handler_field_link_activity.inc
+#: drupal/modules/views/civicrm/civicrm_handler_field_event_link.inc
+#: drupal/modules/views/civicrm/civicrm_handler_field_link_participant.inc
+msgid "Choose where to link this field"
+msgstr "選擇從哪裡連結此欄位"
+
+#: drupal/modules/views/civicrm/civicrm_handler_field_link_event.inc
+#: drupal/modules/views/civicrm/civicrm_handler_field_event_link.inc
+msgid "Link to Event Page"
+msgstr "連結到活動頁"
+
+#: drupal/modules/views/civicrm/civicrm_handler_field_link_event.inc
+#: drupal/modules/views/civicrm/civicrm_handler_field_event_link.inc
+msgid "Link to Event Configuration"
+msgstr "連結到活動設定"
+
+#: drupal/modules/views/civicrm/civicrm_handler_field_link_event.inc
+#: drupal/modules/views/civicrm/civicrm_handler_field_link_relationship.inc
+#: drupal/modules/views/civicrm/civicrm_handler_field_link_contribution.inc
+#: drupal/modules/views/civicrm/civicrm_handler_field_link_contact.inc
+#: drupal/modules/views/civicrm/civicrm_handler_field_link_activity.inc
+#: drupal/modules/views/civicrm/civicrm_handler_field_event_link.inc
+#: drupal/modules/views/civicrm/civicrm_handler_field_link_participant.inc
+msgid "Link to a Custom Node"
+msgstr "連結到自訂節點"
+
+#: drupal/modules/views/civicrm/civicrm_handler_field_link_event.inc
+#: drupal/modules/views/civicrm/civicrm_handler_field_link_relationship.inc
+#: drupal/modules/views/civicrm/civicrm_handler_field_link_contribution.inc
+#: drupal/modules/views/civicrm/civicrm_handler_field_link_contact.inc
+#: drupal/modules/views/civicrm/civicrm_handler_field_link_activity.inc
+#: drupal/modules/views/civicrm/civicrm_handler_field_event_link.inc
+#: drupal/modules/views/civicrm/civicrm_handler_field_link_participant.inc
+msgid "Custom Link to a Drupal Node"
+msgstr "自訂連結到 Drupal 節點"
+
+#: drupal/modules/views/civicrm/civicrm_handler_field_link_event.inc
+#: drupal/modules/views/civicrm/civicrm_handler_field_event_link.inc
+msgid ""
+"Link to a Drupal Node or View, from the base path. The Event ID will be "
+"appended to the end of the link."
+msgstr "從基礎路徑連結到Drupal節點或頁面檢視。活動編號會被附加到連結後面。"
+
+#: drupal/modules/views/civicrm/civicrm_handler_field_link_event.inc
+#: drupal/modules/views/civicrm/civicrm_handler_field_link_relationship.inc
+#: drupal/modules/views/civicrm/civicrm_handler_field_link_contribution.inc
+#: drupal/modules/views/civicrm/civicrm_handler_field_link_contact.inc
+#: drupal/modules/views/civicrm/civicrm_handler_field_link_activity.inc
+#: drupal/modules/views/civicrm/civicrm_handler_field_link_participant.inc
+msgid "Links Text"
+msgstr "連結文字"
+
+#: drupal/modules/views/civicrm/civicrm_handler_field_link_event.inc
+#: drupal/modules/views/civicrm/civicrm_handler_field_link_relationship.inc
+#: drupal/modules/views/civicrm/civicrm_handler_field_link_contribution.inc
+#: drupal/modules/views/civicrm/civicrm_handler_field_link_contact.inc
+#: drupal/modules/views/civicrm/civicrm_handler_field_link_activity.inc
+#: drupal/modules/views/civicrm/civicrm_handler_field_link_participant.inc
+msgid "The text that will display in the field with the link."
+msgstr "連結所顯示的文字。"
+
+#: drupal/modules/views/civicrm/civicrm_handler_filter_location_type.inc
+#: drupal/modules/views/civicrm/civicrm_handler_filter_location.inc
+msgid "Location type"
+msgstr "地點類別"
+
+#: drupal/modules/views/civicrm/civicrm_handler_filter_country.inc
+#: drupal/modules/views/civicrm.views.inc
+#: drupal/modules/civicrm_engage/Engage/Contact/Form/Search/Custom/FindVoters.php
+#: drupal/modules/civicrm_engage/Engage/Report/Form/CallList.php
+#: drupal/modules/civicrm_engage/Engage/Report/Form/WalkList.php
+msgid "Country"
+msgstr "國家"
+
+#: drupal/modules/views/civicrm/civicrm_handler_filter_activityType.inc
+#: drupal/modules/views/civicrm/civicrm_handler_filter_activity_type.inc
+#: drupal/modules/views/civicrm.views.inc
+msgid "Activity Type"
+msgstr "動態類型"
+
+#: drupal/modules/views/civicrm/civicrm_handler_filter_membership_type.inc
+#: drupal/modules/views/civicrm/civicrm_handler_filter_membership_status.inc
+#: drupal/modules/views/civicrm.views.inc
+msgid "Membership Type"
+msgstr "會員類型"
+
+#: drupal/modules/views/civicrm/civicrm_handler_field_link_edit.inc
+#: drupal/modules/civicrm_member_roles/civicrm_member_roles.module
+#: drupal/modules/civicrm_group_roles/civicrm_group_roles.module
+msgid "edit"
+msgstr "編輯"
+
+#: drupal/modules/views/civicrm/civicrm_handler_filter_county.inc
+#: drupal/modules/views/civicrm.views.inc
+msgid "County"
+msgstr "縣"
+
+#: drupal/modules/views/civicrm/civicrm_handler_filter_gender.inc
+#: drupal/modules/views/civicrm.views.inc
+msgid "Gender"
+msgstr "性別"
+
+#: drupal/modules/views/civicrm/civicrm_handler_filter_contribution_status.inc
+#: drupal/modules/views/civicrm.views.inc
+msgid "Contribution Status"
+msgstr "捐款狀態"
+
+#: drupal/modules/views/civicrm/civicrm_handler_filter_group_status.inc
+#: drupal/modules/views/civicrm.views.inc
+#, fuzzy
+msgid "Contact Group Status"
+msgstr "聯絡人群組"
+
+#: drupal/modules/views/civicrm/civicrm_handler_filter_contribution_page.inc
+#: drupal/modules/views/civicrm.views.inc
+msgid "Contribution Page"
+msgstr "募款頁面"
+
+#: drupal/modules/views/civicrm/civicrm_handler_filter_activity_status.inc
+#: drupal/modules/views/civicrm.views.inc
+msgid "Activity Status"
+msgstr "動態狀態"
+
+#: drupal/modules/views/civicrm/civicrm_handler_filter_participant_role.inc
+#: drupal/modules/views/civicrm/civicrm_handler_filter_participant_status.inc
+#: drupal/modules/views/civicrm.views.inc
+msgid "Participant Status"
+msgstr "參加者狀態"
+
+#: drupal/modules/views/civicrm/civicrm_handler_field_link_delete.inc
+#: drupal/modules/civicrm_member_roles/civicrm_member_roles.module
+#: drupal/modules/civicrm_group_roles/civicrm_group_roles.module
+msgid "delete"
+msgstr "刪除"
+
+#: drupal/modules/views/civicrm.views.inc
+#: drupal/modules/civicrm_engage/Engage/Report/Form/CallList.php
+#: drupal/modules/civicrm_engage/Engage/Report/Form/WalkList.php
+msgid "Contact ID"
+msgstr "聯絡人編號"
+
+#: drupal/modules/civicrm_cck/civicrm_cck_handler_filter.inc
+#: drupal/modules/civicrm_engage/Engage/Contact/Form/Search/Custom/FindVoters.php
+#: drupal/modules/civicrm_engage/Engage/Report/Form/CallList.php
+#: drupal/modules/civicrm_engage/Engage/Report/Form/WalkList.php
+msgid "Contact Name"
+msgstr "聯絡人姓名"
+
+#: drupal/modules/civicrm_member_roles/civicrm_member_roles.module
+#: drupal/modules/civicrm_group_roles/civicrm_group_roles.module
+msgid ""
+"Add/remove association rules and configure settings. Also perform manual "
+"synchronization."
+msgstr "新增/移除連結規則和設定。也執行手動同步。"
+
+#: drupal/modules/civicrm_member_roles/civicrm_member_roles.module
+#: drupal/modules/civicrm_group_roles/civicrm_group_roles.module
+msgid "List Association Rule(s)"
+msgstr "列出連結規則"
+
+#: drupal/modules/civicrm_member_roles/civicrm_member_roles.module
+#: drupal/modules/civicrm_group_roles/civicrm_group_roles.module
+msgid "Add Association Rule"
+msgstr "新增連結規則"
+
+#: drupal/modules/civicrm_member_roles/civicrm_member_roles.module
+#: drupal/modules/civicrm_group_roles/civicrm_group_roles.module
+msgid "Rule ID !1 was successfully deleted."
+msgstr "規則編號!1已被成功刪除。"
+
+#: drupal/modules/civicrm_member_roles/civicrm_member_roles.module
+#: drupal/modules/civicrm_group_roles/civicrm_group_roles.module
+msgid "Rule ID"
+msgstr "規則編號"
+
+#: drupal/modules/civicrm_member_roles/civicrm_member_roles.module
+#: drupal/modules/civicrm_group_roles/civicrm_group_roles.module
+msgid "Operation"
+msgstr "操作"
+
+#: drupal/modules/civicrm_member_roles/civicrm_member_roles.module
+#: drupal/modules/civicrm_group_roles/civicrm_group_roles.module
+#, fuzzy
+msgid "Use the 'Add Association Rule' form to add new rules."
+msgstr "使用\"新增連結規則\"表格來新增新規則。"
+
+#: drupal/modules/civicrm_member_roles/civicrm_member_roles.module
+#: drupal/modules/civicrm_group_roles/civicrm_group_roles.module
+msgid "Association Rule"
+msgstr "連結規則"
+
+#: drupal/modules/civicrm_member_roles/civicrm_member_roles.module
+#: drupal/modules/civicrm_group_roles/civicrm_group_roles.module
+msgid "Add association rule"
+msgstr "新增連結規則"
+
+#: drupal/modules/civicrm_member_roles/civicrm_member_roles.module
+#: drupal/modules/civicrm_group_roles/civicrm_group_roles.module
+msgid "Edit association rule"
+msgstr "編輯連結規則"
+
+#: drupal/modules/civicrm_member_roles/civicrm_member_roles.module
+#: drupal/modules/civicrm_group_roles/civicrm_group_roles.module
+msgid "Edit flag was not numeric."
+msgstr "編輯標記並不是數字。"
+
+#: drupal/modules/civicrm_member_roles/civicrm_member_roles.module
+#: drupal/modules/civicrm_group_roles/civicrm_group_roles.module
+msgid "Your association rule has been edited."
+msgstr "您的連結規則已編輯完成。"
+
+#: drupal/modules/civicrm_member_roles/civicrm_member_roles.module
+#: drupal/modules/civicrm_group_roles/civicrm_group_roles.module
+msgid "Your association rule has been added."
+msgstr "您的連結規則已新增。"
+
+#: drupal/modules/civicrm_engage/Engage/Contact/Form/Task/VoterReservation.php
+#: drupal/modules/civicrm_engage/Engage/Contact/Form/Search/Custom/FindVoters.php
+msgid "Survey"
+msgstr ""
+
+#: drupal/modules/civicrm_engage/Engage/Contact/Form/Task/VoterReservation.php
+#: drupal/modules/civicrm_engage/Engage/Contact/Form/Search/Custom/FindVoters.php
+msgid "- select -"
+msgstr "- 選擇 -"
+
+#: drupal/modules/civicrm_engage/Engage/Contact/Form/Search/Custom/FindVoters.php
+#: drupal/modules/civicrm_engage/Engage/Report/Form/WalkList.php
+msgid "Street Address"
+msgstr "街道地址"
+
+#: drupal/modules/civicrm_engage/Engage/Contact/Form/Search/Custom/FindVoters.php
+#: drupal/modules/civicrm_engage/Engage/Report/Form/CallList.php
+msgid "Phone"
+msgstr "電話"
+
+#: drupal/modules/civicrm_engage/Engage/Report/Form/CallList.php
+#: drupal/modules/civicrm_engage/Engage/Report/Form/WalkList.php
+msgid "State/Province"
+msgstr "州/省"
+
+#: drupal/modules/civicrm_engage/Engage/Report/Form/CallList.php
+#: drupal/modules/civicrm_engage/Engage/Report/Form/WalkList.php
+msgid "Sex"
+msgstr ""
+
+#: drupal/modules/civicrm_engage/Engage/Report/Form/CallList.php
+#: drupal/modules/civicrm_engage/Engage/Report/Form/WalkList.php
+msgid "Age"
+msgstr "年齡"
+
+#: drupal/modules/civicrm_engage/Engage/Report/Form/CallList.php
+#: drupal/modules/civicrm_engage/Engage/Report/Form/WalkList.php
+msgid "Language"
+msgstr "語言"
+
+#: drupal/modules/civicrm_engage/Engage/Report/Form/CallList.php
+#: drupal/modules/civicrm_engage/Engage/Report/Form/WalkList.php
+#, fuzzy
+msgid "Constituent Type"
+msgstr "選區名稱"
+
+#: drupal/modules/civicrm_engage/Engage/Report/Form/CallList.php
+#: drupal/modules/civicrm_engage/Engage/Report/Form/WalkList.php
+msgid "Group"
+msgstr "群組"
+
+#: CRM/Core/Permission.php
+msgid "add contacts"
+msgstr "新增聯絡人"
+
+#: CRM/Core/Permission.php
+msgid "view all contacts"
+msgstr "查看所有聯絡人"
+
+#: CRM/Core/Permission.php
+msgid "edit all contacts"
+msgstr "編輯所有聯絡人"
+
+#: CRM/Core/Permission.php
+msgid "delete contacts"
+msgstr "刪除聯絡人"
+
+#: CRM/Core/Permission.php
+#, fuzzy
+msgid "access deleted contacts"
+msgstr "已刪除的聯絡人"
+
+#: CRM/Core/Permission.php
+msgid "import contacts"
+msgstr "匯入聯絡人"
+
+#: CRM/Core/Permission.php
+msgid "edit groups"
+msgstr "編輯群組"
+
+#: CRM/Core/Permission.php
+msgid "administer CiviCRM"
+msgstr "管理 CiviCRM "
+
+#: CRM/Core/Permission.php
+msgid "access uploaded files"
+msgstr "存取上傳檔案"
+
+#: CRM/Core/Permission.php
+msgid "profile listings and forms"
+msgstr "個人資訊列表及表單"
+
+#: CRM/Core/Permission.php
+msgid "profile listings"
+msgstr "個人資訊列表"
+
+#: CRM/Core/Permission.php
+msgid "profile create"
+msgstr "建立個人檔案"
+
+#: CRM/Core/Permission.php
+msgid "profile edit"
+msgstr "編輯資料檔案"
+
+#: CRM/Core/Permission.php
+msgid "profile view"
+msgstr "瀏覽個人檔案"
+
+#: CRM/Core/Permission.php
+msgid "access all custom data"
+msgstr "存取所有自訂資料"
+
+#: CRM/Core/Permission.php
+msgid "view all activities"
+msgstr "查看所有動態"
+
+#: CRM/Core/Permission.php
+msgid "delete activities"
+msgstr "刪除動態"
+
+#: CRM/Core/Permission.php
+msgid "access CiviCRM"
+msgstr "存取 CiviCRM"
+
+#: CRM/Core/Permission.php
+msgid "access Contact Dashboard"
+msgstr "存取聯絡人總覽"
+
+#: CRM/Core/Permission.php
+msgid "translate CiviCRM"
+msgstr "翻譯 CiviCRM"
+
+#: CRM/Core/Permission.php
+#, fuzzy
+msgid "administer Tagsets"
+msgstr "管理員"
+
+#: CRM/Core/Permission.php
+msgid "administer reserved tags"
+msgstr ""
+
+#: CRM/Core/Permission.php
+#, fuzzy
+msgid "administer dedupe rules"
+msgstr "管理多個組織"
+
+#: CRM/Core/Permission.php
+#, fuzzy
+msgid "merge duplicate contacts"
+msgstr "針對重複的聯絡人"
+
+#: CRM/Core/Permission.php
+#, fuzzy
+msgid "view all notes"
+msgstr "查看所有聯絡人"
+
+#: CRM/Core/Permission.php
+msgid "administer Multiple Organizations"
+msgstr "管理多個組織"
+
+#: drupal/modules/views/civicrm/civicrm_handler_field_contact_link.inc
+msgid "Link this field to its CiviCRM Contact"
+msgstr "連結此欄位到 CiviCRM 聯絡人"
+
+#: drupal/modules/views/civicrm/civicrm_handler_field_mail.inc
+msgid "To the user"
+msgstr "到使用者"
+
+#: drupal/modules/views/civicrm/civicrm_handler_filter_relationship_type.inc
+msgid "Relationship Type"
+msgstr "關係類型"
+
+#: drupal/modules/views/civicrm/civicrm_handler_filter_encounter_medium.inc
+msgid "Encounter Medium"
+msgstr "接觸的媒介"
+
+#: drupal/modules/views/civicrm/views_handler_argument_civicrm_week.inc
+msgid "Week %week"
+msgstr "週 %week"
+
+#: drupal/modules/views/civicrm/civicrm_handler_field_link_event.inc
+msgid "Link to Registration Page"
+msgstr "連結到報名頁"
+
+#: drupal/modules/views/civicrm/civicrm_handler_field_link_event.inc
+msgid "Link to Participant Listing"
+msgstr "連結到參加者列表"
+
+#: drupal/modules/views/civicrm/civicrm_handler_field_link_event.inc
+msgid "Link to Edit Event Participants"
+msgstr "連結到編輯活動參加者"
+
+#: drupal/modules/views/civicrm/civicrm_handler_field_link_event.inc
+msgid "Link to Delete Event"
+msgstr "連結到刪除活動"
+
+#: drupal/modules/views/civicrm/civicrm_handler_filter_activity.inc
+msgid "Activity type"
+msgstr "動態類別"
+
+#: drupal/modules/views/civicrm/civicrm_handler_field_link_relationship.inc
+msgid "Link to View Relationship A-B"
+msgstr "連結到查看關係 A-B"
+
+#: drupal/modules/views/civicrm/civicrm_handler_field_link_relationship.inc
+msgid "Link to Edit Relationship A-B"
+msgstr "連結到編輯關係 A-B"
+
+#: drupal/modules/views/civicrm/civicrm_handler_field_link_relationship.inc
+msgid "Link to View Relationship B-A"
+msgstr "連結到查看關係 B-A"
+
+#: drupal/modules/views/civicrm/civicrm_handler_field_link_relationship.inc
+msgid "Link to Edit Relationship B-A"
+msgstr "連結到編輯關係 B-A"
+
+#: drupal/modules/views/civicrm/civicrm_handler_field_link_relationship.inc
+msgid "Link to Delete Relationship"
+msgstr "連結到刪除關係"
+
+#: drupal/modules/views/civicrm/civicrm_handler_field_link_relationship.inc
+msgid ""
+"Link to a Drupal Node or View, from the base path. The relationship ID will "
+"be appended to the end of the link."
+msgstr "從其礎路徑連結到 Drupal 節點或頁面檢視。關係編號會被附加到連結的後面。"
+
+#: drupal/modules/views/civicrm/civicrm_handler_filter_contact_type.inc
+msgid "Contact type"
+msgstr "聯絡人類型"
+
+#: drupal/modules/views/civicrm/civicrm_handler_filter_phone_type.inc
+msgid "Phone type"
+msgstr "電話類別"
+
+#: drupal/modules/views/civicrm/civicrm_handler_field_link.inc
+msgid "Text to display"
+msgstr "顯示的文字"
+
+#: drupal/modules/views/civicrm/civicrm_handler_field_link.inc
+msgid "view"
+msgstr "查看"
+
+#: drupal/modules/views/civicrm/civicrm_handler_filter_group_title.inc
+msgid "Group Name"
+msgstr "群組名稱"
+
+#: drupal/modules/views/civicrm/civicrm_handler_field_link_contribution.inc
+msgid "Link to View Contribution"
+msgstr "連結到查看捐款資料"
+
+#: drupal/modules/views/civicrm/civicrm_handler_field_link_contribution.inc
+msgid "Link to Edit Contribution"
+msgstr "連結到編輯捐款資料"
+
+#: drupal/modules/views/civicrm/civicrm_handler_field_link_contribution.inc
+msgid "Link to Delete Contribution"
+msgstr "連結到刪除捐款資料"
+
+#: drupal/modules/views/civicrm/civicrm_handler_field_link_contribution.inc
+msgid ""
+"Link to a Drupal Node or View, from the base path. The Contribution ID will "
+"be appended to the end of the link."
+msgstr "從基礎路徑連結到 Drupal 節點或頁面檢視。捐款編號會被附加到連結的後面。"
+
+#: drupal/modules/views/civicrm/civicrm_handler_filter_state.inc
+msgid "State province"
+msgstr "省份"
+
+#: drupal/modules/views/civicrm/civicrm_handler_filter_mailing_name.inc
+msgid "Mailing Name"
+msgstr "電子報名稱"
+
+#: drupal/modules/views/civicrm/civicrm_handler_filter_website_type.inc
+#, fuzzy
+msgid "Website type"
+msgstr "網站"
+
+#: drupal/modules/views/civicrm/civicrm_plugin_argument_default.inc
+msgid "Also look for a node and use the node author"
+msgstr "尋找節點並使用節點作者"
+
+#: drupal/modules/views/civicrm/civicrm_handler_field_event.inc
+msgid "Link this field to its event page"
+msgstr "連結此欄位到活動頁"
+
+#: drupal/modules/views/civicrm/civicrm_handler_field.inc
+msgid "Link this field to its user"
+msgstr "連結此欄位到使用者"
+
+#: drupal/modules/views/civicrm/civicrm_handler_field_link_contact.inc
+msgid "Link to View Contact"
+msgstr "連結到查看聯絡人"
+
+#: drupal/modules/views/civicrm/civicrm_handler_field_link_contact.inc
+msgid "Link to Edit Contact"
+msgstr "連結到編輯聯絡人"
+
+#: drupal/modules/views/civicrm/civicrm_handler_field_link_contact.inc
+msgid "Link to Delete Contact"
+msgstr "連結到刪除聯絡人"
+
+#: drupal/modules/views/civicrm/civicrm_handler_field_link_contact.inc
+msgid ""
+"Link to a Drupal Node or View, from the base path. The Contact ID will be "
+"appended to the end of the link."
+msgstr ""
+"從基礎路徑連結到 Drupal 節點或頁面檢視。聯絡人編號會被附加到連結的後面。"
+
+#: drupal/modules/views/civicrm/civicrm_handler_filter_tag_title.inc
+msgid "Tag Name"
+msgstr "Tag名稱"
+
+#: drupal/modules/views/civicrm/civicrm_handler_field_link_activity.inc
+msgid "Link to View Activity"
+msgstr "連結到查看動態"
+
+#: drupal/modules/views/civicrm/civicrm_handler_field_link_activity.inc
+msgid "Link to Edit Activity"
+msgstr "連結到編輯動態"
+
+#: drupal/modules/views/civicrm/civicrm_handler_field_link_activity.inc
+msgid "Link to Delete Activity"
+msgstr "連結到刪除動態"
+
+#: drupal/modules/views/civicrm/civicrm_handler_field_link_activity.inc
+msgid ""
+"Link to a Drupal Node or View, from the base path. The Activity ID will be "
+"appended to the end of the link."
+msgstr "從基礎路徑連結到 Drupal 節點或頁面檢視。動態編號會被附加到連結的後面。"
+
+#: drupal/modules/views/civicrm/civicrm_handler_field_event_link.inc
+msgid "Don't Link this Field"
+msgstr "不要連結此欄位"
+
+#: drupal/modules/views/civicrm/civicrm_handler_field_event_link.inc
+#, fuzzy
+msgid "Link to Event Registration"
+msgstr "編輯活動報名"
+
+#: drupal/modules/views/civicrm/civicrm_handler_field_event_link.inc
+msgid "Link to Event Participants"
+msgstr "連結到活動參加者"
+
+#: drupal/modules/views/civicrm/civicrm_handler_field_link_participant.inc
+msgid "Link to View Participant"
+msgstr "連結到查看參加者"
+
+#: drupal/modules/views/civicrm/civicrm_handler_field_link_participant.inc
+msgid "Link to Edit Participant"
+msgstr "連結到編輯參加者"
+
+#: drupal/modules/views/civicrm/civicrm_handler_field_link_participant.inc
+msgid "Link to Delete Participant"
+msgstr "連結到刪除參加者"
+
+#: drupal/modules/views/civicrm/civicrm_handler_field_link_participant.inc
+msgid ""
+"Link to a Drupal Node or View, from the base path. The Participant ID will "
+"be appended to the end of the link."
+msgstr ""
+"從基礎路徑連結到 Drupal 的節點或頁面檢視。參加者的編號會被附加到連結的後面。"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "CiviCRM Contacts"
+msgstr "CiviCRM 聯絡人"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "View displays CiviCRM Contacts, of people, organizations, etc."
+msgstr "顯示 CiviCRM 聯絡人、組織等資訊的檢視。"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The numeric ID of the Contact"
+msgstr "聯絡人的數字編號"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Drupal ID"
+msgstr "Drupal 編號"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Relates a CiviCRM Contact to the Druapl User Record"
+msgstr "將一筆 CiviCRM 聯絡人連結到 Druapl 的使用者資料"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Drupal User"
+msgstr "Drupal 使用者"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Sort Name"
+msgstr "排序名稱"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The Contact Name for sorting purposes, Last Name then First"
+msgstr "作為排序用途的聯絡人名稱，姓氏優先，然後是名字"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Display Name"
+msgstr "顯示名稱"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Full Name of the Contact with prefixes and suffixes"
+msgstr "聯絡人全名，加上稱呼及字尾"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Contact's Gender"
+msgstr "聯絡人性別"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "First Name"
+msgstr "名"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Middle Name"
+msgstr "中間名"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Last Name"
+msgstr "姓氏"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Is Deceased"
+msgstr "已故"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Is the contact deceased?"
+msgstr "這位聯絡人過世了嗎？"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Do Not E-mail"
+msgstr "不要寄電子郵件"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Does this contact not want to be emailed?"
+msgstr "此聯絡人是否不想收到電子郵件？"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Do Not Phone"
+msgstr "不要打電話"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Does this contact not want to be phoned?"
+msgstr "此聯絡人是否不想接到電話？"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Do Not Mail"
+msgstr "不要寄Email"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Does this contact not want to be mailed?"
+msgstr "此聯絡人是否不想收到實體郵件？"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Do Not Sms"
+msgstr "不要寄簡訊"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Does this contact not want to receive messages?"
+msgstr "此聯絡人是否不想收到簡訊？"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Do Not Trade"
+msgstr "不要交易"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Does this contact not want trade?"
+msgstr "此聯絡人是否不想收到傳真？"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Opted Out of Bulk Mail"
+msgstr "選擇退出大量郵件"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Has this contact opted out of bulk mail?"
+msgstr "此聯絡人是否選擇退出大量郵件名單？"
+
+#: drupal/modules/views/civicrm.views.inc
+#, fuzzy
+msgid "Is Deleted"
+msgstr "刪除？"
+
+#: drupal/modules/views/civicrm.views.inc
+#, fuzzy
+msgid "Has this contact been deleted?"
+msgstr "刪除了聯絡人"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Organization Name"
+msgstr "組織名稱"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The display name of the contact's organizations."
+msgstr "聯絡人的組織的顯示名稱。"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Contact Type"
+msgstr "聯絡人類型"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Contact Sub Type"
+msgstr "聯絡人次類別"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The Sub-type for the Contact"
+msgstr "聯絡人的次類別"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "CiviCRM Address"
+msgstr "CiviCRM 地址"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Is Primary Address"
+msgstr "主要地址"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Is this address the contact's primary address?"
+msgstr "此地址是否為聯絡人的主要地址？"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Is Billing Address"
+msgstr "帳單地址"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Is this address the contact's billing address?"
+msgstr "此地址是否為聯絡人的帳單地址？"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Location Type"
+msgstr "地點類別"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The Location of the Address for the Contact"
+msgstr "聯絡人的地址的位置"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Full Street Address"
+msgstr "完整的街道地址"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Full Street Address without Country, State or Postcode"
+msgstr "完整的街道地址，不包括國家、州省或郵遞區號"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Supplemental Street Address"
+msgstr "補充地址"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid ""
+"Supplemental Street Address such as Apartment or Suite Number or Department"
+msgstr "補充街道地址，例如公寓名稱或套房號碼"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "City / Suburb"
+msgstr "城市/市郊"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The City or Suburb the address is at"
+msgstr "地址所在之城市或市郊"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "State / Province"
+msgstr "州/省"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The State or Province of the Address"
+msgstr "地址所在之國家或省份"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "ZIP / Postal Code"
+msgstr "郵遞區號"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "ZIP / Postal Code of the Address"
+msgstr "地址的郵遞區號"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Latitude"
+msgstr "緯度"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Latitude of the Address for mapping"
+msgstr "地址的緯度"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Longitude"
+msgstr "經度"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Longitude of the Address for mapping"
+msgstr "地址的經度"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The Country of the Address"
+msgstr "地址的國家別"
+
+#: drupal/modules/views/civicrm.views.inc
+#, fuzzy
+msgid "The County of the Address"
+msgstr "地址的國家別"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "In Global Settings"
+msgstr "在全域設定"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Address Name"
+msgstr "地址名稱"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Be sure addres name is enabled %link"
+msgstr "請確定地址名稱已啓用 %link"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "CiviCRM Email"
+msgstr "CiviCRM 電子郵件"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Is Primary Email"
+msgstr "主要電子郵件"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Is this address the contact's primary email?"
+msgstr "是否為聯絡人的主要電子郵件位址？"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Is Billing Email"
+msgstr "是帳單電子郵件"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Is this address the contact's billing email?"
+msgstr "是否為聯絡人的帳單電子郵件位址？"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Email Address"
+msgstr "Email位址"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "CiviCRM Phone Details"
+msgstr "CiviCRM 電話詳細資訊"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Is Primary Phone"
+msgstr "主要電話"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Is this the contact's primary phone?"
+msgstr "是否為聯絡人的主要電話？"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Is Billing Phone"
+msgstr "帳單電話"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Is this the contact's billing phone?"
+msgstr "是否為聯絡人的帳單電話？"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The Location of the Phone for the Contact"
+msgstr "聯絡人的電話的位置"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Phone Number"
+msgstr "電話號碼"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Full Phone Number"
+msgstr "完整的電話號碼"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Phone Type"
+msgstr "電話類型"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The Type, either Phone, Mobile, Fax or Pager"
+msgstr "類別，室內電話、行動電話、傳真或傳呼器"
+
+#: drupal/modules/views/civicrm.views.inc
+#, fuzzy
+msgid "CiviCRM Website"
+msgstr "CiviCRM 動態"
+
+#: drupal/modules/views/civicrm.views.inc
+#, fuzzy
+msgid "Website Type"
+msgstr "網站"
+
+#: drupal/modules/views/civicrm.views.inc
+#, fuzzy
+msgid "The type of website for the contact"
+msgstr "聯絡人的次類別"
+
+#: drupal/modules/views/civicrm.views.inc
+#, fuzzy
+msgid "Website URL"
+msgstr "網站"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "CiviCRM Events"
+msgstr "CiviCRM 活動"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "View displays CiviCRM Events"
+msgstr "顯示 CiviCRM 活動的檢視"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Event ID"
+msgstr "活動編號"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The numeric ID of the Event"
+msgstr "活動的數字編號"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The Event Type"
+msgstr "活動類別"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Is Public"
+msgstr "公開"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Has this event been made public?"
+msgstr "此活動是否公開？"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Is Active"
+msgstr "啟用中"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Has this event been made active?"
+msgstr "此活動是否啟用？"
+
+#: drupal/modules/views/civicrm.views.inc
+#, fuzzy
+msgid "Include Template"
+msgstr "使用範本"
+
+#: drupal/modules/views/civicrm.views.inc
+#, fuzzy
+msgid "Include Event templates?"
+msgstr "活動範本管理"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Title"
+msgstr "標題"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The Event's Title"
+msgstr "活動的標題"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Summary"
+msgstr "總覽"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The Event's Summary"
+msgstr "活動的概況"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Description"
+msgstr "說明"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The Event's Full Description"
+msgstr "活動的詳細資訊"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Start Date"
+msgstr "開始日期"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The Event's Start Date"
+msgstr "活動的開始日期"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "End Date"
+msgstr "結束日期"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The Event's End Date"
+msgstr "活動的結束日期"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Is Online Registration On"
+msgstr "線上報名"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Is Online Registration enabled for the event?"
+msgstr "此活動是否開啟線上報名？"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Registration Start Date"
+msgstr "報名開始日期"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The Event's Online Registration Start Date"
+msgstr "活動的線上報名開始日期"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Registration End Date"
+msgstr "報名截止日期"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The Event's Online Registration End Date"
+msgstr "活動的線上報名結束日期"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Registration Link Text"
+msgstr "報名連結文字"
+
+#: drupal/modules/views/civicrm.views.inc
+#, fuzzy
+msgid "Text for the Registration Link"
+msgstr "活動報名連結文字"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "CiviCRM Locations"
+msgstr "CiviCRM 地點"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "CiviCRM Participants"
+msgstr "CiviCRM 參加者"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid ""
+"View displays CiviCRM Participants, often in conjunction with Event Filters"
+msgstr "檢視 CiviCRM 活動參加者，通常會連結活動過濾器"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Participant ID"
+msgstr "參加者編號"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The numeric ID of the Participant"
+msgstr "參加者的數字編號"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Participant's Contact ID"
+msgstr "參加者的聯絡人編號"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The numeric ID of the Contact of the Participant"
+msgstr "參加者的聯絡人數字編號"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "CiviCRM Contact, with custom fields"
+msgstr "CiviCRM 聯絡人，附有自訂欄位"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The Status of the Participant's Booking and Attendance"
+msgstr "參加者預約及出席狀態"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Participant Role"
+msgstr "參加者身分"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The Role the Participant is registered for."
+msgstr "參加者所報名的角色。"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Source"
+msgstr "來源"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Where did this registration come from?"
+msgstr "此報名來自那裡？"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Register Date"
+msgstr "報名日期"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The Date the participant Registered for the Event"
+msgstr "參加者報名活動的日期"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Is Pay Later"
+msgstr "後續付款"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Opted to Pay Later after Registration, and is still pending payment."
+msgstr "選擇報名後才繳費，目前仍是待繳費。"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Registered by ID"
+msgstr "報名編號"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The numeric ID of the Participant who registered this Participant"
+msgstr "報名此活動的參加者的數字編號"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "CiviCRM Source Record Contact"
+msgstr "CiviCRM Source Record Contact"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Fee Level"
+msgstr "費用等級"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The Fee Level the Participant is registered for."
+msgstr "參加者所報名的費用等級。"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Fee Amount"
+msgstr "收費金額"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The amount the Participant has paid or will have to pay."
+msgstr "參加者已支付或需支付的金額。"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "CiviCRM Contributions"
+msgstr "CiviCRM 捐款"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "View displays CiviCRM Contributions, with relation to contacts."
+msgstr "檢視 CiviCRM 捐款，連結到聯絡人。"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Contribution ID"
+msgstr "捐款編號"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The numeric ID of the Contribution"
+msgstr "捐款的數字編號"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The Type of Contribution made, ie Member Dues, Event Fees etc"
+msgstr "捐款的類別，例如會費、活動費用等"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The Page this Contribution came from"
+msgstr "本次捐款來自於某頁面"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Payment Instrument"
+msgstr "付款工具"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The Payment Instrument Used for the Contribution"
+msgstr "捐款所使用的付款工具"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Receive Date"
+msgstr "收到日期"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The Date the Contribution was received / paid"
+msgstr "接收/支付捐款的日期"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Non Deductible Amount"
+msgstr "非可扣除額"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The Non Deductible Part of the Contribution"
+msgstr "捐款裡不可扣除的部分"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Total Amount"
+msgstr "總金額"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The Total Contribution made by the Contact"
+msgstr "該聯絡人的所有捐款"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The fee charged by the Payment Processor for the transaction."
+msgstr "由金流機制所收取的交易費用"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Net Amount"
+msgstr "淨額"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The Full Contribution minus Payment Processor Fees."
+msgstr "總捐款額減掉付款處理費用。"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Transaction ID"
+msgstr "交易編號"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Unique Transaction ID from Payment Processor / Bank etc"
+msgstr "金流機制 / 銀行等提供的唯一交易編號"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Invoice ID"
+msgstr "收據編號"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Unique Invoice ID from system"
+msgstr "系統提供的唯一收據編號"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Currency"
+msgstr "貨幣"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Currency used for the Contribution"
+msgstr "捐款的貨幣別"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Cancellation Date"
+msgstr "取消日期"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The Date the Contribution was cancelled (if it was)"
+msgstr "取消捐款的日期（如果有的話）"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Cancellation Reason"
+msgstr "取消原因"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The Reason for the Contribution Cancellation"
+msgstr "取消捐款的原因"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Receipt Date"
+msgstr "收據開立日期"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The Date a receipt for the contribution was sent."
+msgstr "捐款收據寄送的日期"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Thank You Date"
+msgstr "致謝的日期"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The Date a thank you to the donor for the contribution was sent."
+msgstr "傳送捐款致謝給捐款人的日期。"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Where the Contribution came through."
+msgstr "捐款的來源。"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The Status of this Contribution"
+msgstr "此捐款狀態"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Is Test"
+msgstr "測試"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Is the contribution a test entry?"
+msgstr "本次捐款是一個測試項目嗎？"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Opted to Pay Contribution Later, and is still pending payment."
+msgstr "選擇稍候才支付捐款，目前仍是待付款。"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "CiviCRM  Soft Credits"
+msgstr "CiviCRM  Soft Credits"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Contribution Soft Credit ID"
+msgstr "Contribution Soft Credit 標號"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The numeric ID of the Soft Credit"
+msgstr "Soft Credit 的數字編號"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Amount"
+msgstr "金額"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The amount of the soft credit"
+msgstr "soft credit 的金額"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Personal Campaign Page Nickname"
+msgstr "個人募款活動頁別名"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Personal Campaign Page Personal Note"
+msgstr "個人募款活動頁個人註記"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The Personal note form PCP"
+msgstr "個人註記表單（個人募款活動頁）"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "CiviCRM  Recurring Contributions"
+msgstr "CiviCRM 經常性捐款"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Recurring Contribution ID"
+msgstr "定期捐款編號"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The numeric ID of the  Recurring Contribution"
+msgstr "定期捐款的數字編號"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The amunt of the recurring contribution"
+msgstr "定期捐款的金額"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Frequency Unit"
+msgstr "頻率單位"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Day, Week, Month, Year"
+msgstr "日、週、月、年"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Frequency Interval"
+msgstr "頻率區間"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The Interval of the Frequency Unit"
+msgstr "頻率間隔的單位"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Installments"
+msgstr "定期定額期數"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Number of Installments"
+msgstr "定期捐款的期數"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The Date the recurring contribution started."
+msgstr "定期捐款的開始日期。"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Create Date"
+msgstr "建立日期"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The Date the recurring contribution was created."
+msgstr "定期捐款的建立日期。"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Modified Date"
+msgstr "修改日期"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The Date the recurring contribution was modified."
+msgstr "定期捐款的修改日期。"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Cancel Date"
+msgstr "取消日期"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The Date the recurring contribution was cancelled."
+msgstr "定期捐款的取消日期。"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The Date the recurring contribution ended."
+msgstr "定期捐款的結束日期。"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Unique Transaction ID"
+msgstr "唯一的交易編號"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The Transaction ID of the  Recurring Contribution"
+msgstr "定期捐款的交易編號"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The Unique CiviCRM Generated Invoice ID"
+msgstr "CiviCRM 產生的唯一的收據編號"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The Contribution's Status"
+msgstr "捐款狀態"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Is the recurring contribution a test entry?"
+msgstr "此定期捐款是否為測試項目？"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Cycle Day"
+msgstr "週期"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "What day in the contribution will the debit occur"
+msgstr "此捐款的實際撥款日期"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Next Contribution Date"
+msgstr "下一次捐款日期"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The Next Contribution Date."
+msgstr "下一次捐款的日期。"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Failure Count"
+msgstr ""
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "How many times has theis recurring contribution failed?"
+msgstr "此定期捐款失敗過多少次？"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Failed retry date"
+msgstr "失敗重試日期"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "When will the failed contribution be retried?"
+msgstr "何時會為失敗的定期捐款再次嘗試請款？"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Auto-renew"
+msgstr "自動更新"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Will this recurring contribution automayically renew?"
+msgstr "此定期捐款會自動更新（展期）嗎？"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "CiviCRM Activities"
+msgstr "CiviCRM 動態"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "View displays CiviCRM Activities"
+msgstr "檢視 CiviCRM 動態"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Activity ID"
+msgstr "動態 ID"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The numeric ID of the Activity Instance"
+msgstr "動態情況的數字 ID"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Source Contact"
+msgstr "來源聯絡人"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The contact who scheduled this activity"
+msgstr "安排此動態的聯絡人"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "CiviCRM Source Contact"
+msgstr "CiviCRM Source Contact"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Source Record ID"
+msgstr "Source Record ID"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The contact who made this activity"
+msgstr "執行此動態的聯絡人"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The Type of Activity"
+msgstr "動態的類型"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The Status of this Activity"
+msgstr "此動態的狀態"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The Priority of this Activity"
+msgstr "此動態的優先性"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Parent Activity ID"
+msgstr "上層動態 ID"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The numeric ID of the Parent Activity "
+msgstr "上層動態的數字編號"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Subject"
+msgstr "主旨"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "A short description of the activity.."
+msgstr "動態的簡短描述"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Scheduled Activity Date"
+msgstr "已安排的動態日期"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The Date and Time the activity is scheduled to happen."
+msgstr "動態所安排的日期及時間。"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Duration (min)"
+msgstr "持續時間（分鐘）"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The Activity's Duration in Minutes"
+msgstr "動態的進行時間"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Location"
+msgstr "地點"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Activity's Location in a text string."
+msgstr "動態的地點（文字描述）"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Details"
+msgstr "詳情"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Details and Notes regarding the activity."
+msgstr "關於本動態的詳情及註記。"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Is the activity a test entry?"
+msgstr "此動態是否為測試項目？"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Medium"
+msgstr "中等"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The Medium of this Activity (ie phone, e-mail, etc..."
+msgstr "此動態的媒介（例如電話、Email等..."
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Is Automaticaly created"
+msgstr "自動建立"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Is the activity created by the system?"
+msgstr "此動態是由系統自動建立的嗎？"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "CiviCRM Activity Assignments"
+msgstr "CiviCRM 動態指派"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Assignee Contact ID"
+msgstr "被指派者的聯絡人編號"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The contact who is assigned the activity."
+msgstr "被指派此動態的聯絡人。"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "CiviCRM Assignee Contact ID"
+msgstr "CiviCRM 被指派的聯絡人編號"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "CiviCRM Activity Targets"
+msgstr "CiviCRM 動態的對象"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Target Contact ID"
+msgstr "對象的聯絡人編號"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The contact who is the activity's target."
+msgstr "這個聯絡人是此動態的對象。"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "CiviCRM Target Contact ID"
+msgstr "CiviCRM 對象的聯絡人編號"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Text Link"
+msgstr "文字連結"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Creates a Text Link for various contact actions."
+msgstr "為各種聯絡人動作建立文字連結。"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Creates a Text Link for various event actions."
+msgstr "為各種活動事件建立文字連結。"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Creates a Text Link for various participant actions."
+msgstr "為各種參加者動作建立文字連結。"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Creates a Text Link for various contribution actions."
+msgstr "為各種捐款行動建立文字連結。"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "CiviCRM Relationships"
+msgstr "CiviCRM 關係"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "View displays CiviCRM Relationships, with connection to contacts."
+msgstr "檢視 CiviCRM 關係，連結到聯絡人。"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Relationship ID"
+msgstr "關係編號"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The numeric ID of the Relationship"
+msgstr "關係的數字編號"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Relationship Type A-to-B"
+msgstr "關係類別 A到B"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The Type of Relationship, i.e. Employee of, Household Head for..."
+msgstr "關係類別，例如誰的員工、哪個家庭的一家之主"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Contact ID A"
+msgstr "聯絡人編號 A"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The contact A"
+msgstr "聯絡人 A"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "CiviCRM Contact A"
+msgstr "CiviCRM 聯絡人A"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Contact ID B"
+msgstr "聯絡人編號 B"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The contact B"
+msgstr "聯絡人 B"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "CiviCRM Contact B"
+msgstr "CiviCRM 聯絡人 B"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Description of the relationship"
+msgstr "關係的說明"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The Relationship's Start Date"
+msgstr "關係的開始日期"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The Relationship's End Date"
+msgstr "關係的結束日期"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Is Relationship Active"
+msgstr "此關係是否進行中"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Is the Relationship active?"
+msgstr "此關係是否在進行中？"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "CiviCRM Member"
+msgstr "CiviCRM 會員"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "CiviCRM Memberships"
+msgstr "CiviCRM 會員會籍"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "View displays CiviCRM Memberships, with connection to contacts."
+msgstr "檢視 CiviCRM 會員會籍，連結到聯絡人。"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Membership ID"
+msgstr "會員編號"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The numeric ID of the Membership"
+msgstr "會員會籍的數字編號"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The Type of Membership"
+msgstr "會員會籍的類別"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Join Date"
+msgstr "加入日期"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The Membership's Start Date"
+msgstr "會員會籍的開始日期"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The Membership's End Date"
+msgstr "會員會籍的結束日期"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Source of the relationship"
+msgstr "關係的來源"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Status"
+msgstr "狀態"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The Status of the Membership"
+msgstr "會員會籍的狀態"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Status overridden?"
+msgstr "覆蓋現有狀態？"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Is the membership status overridden?"
+msgstr "會員會籍狀態是否可以被覆蓋？"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Reminder Date"
+msgstr "提示日期"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The Membership's Reminder Date"
+msgstr "會員會籍的提醒日期"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Membership Owner ID"
+msgstr "會員擁有者編號"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The numeric ID Contact that owns the membership"
+msgstr "擁有此會員會籍的聯絡人的數字編號"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Test Membership?"
+msgstr "測試會員會籍？"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Is this a test membership?"
+msgstr "這是一個測試會員會籍？"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Is the Membership pay later?"
+msgstr "此會員資格可以在稍後進行非線上付款嗎？"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "CiviCRM Groups"
+msgstr "CiviCRM 群組"
+
+#: drupal/modules/views/civicrm.views.inc
+#, fuzzy
+msgid "Contact Status"
+msgstr "聯絡人 Tag"
+
+#: drupal/modules/views/civicrm.views.inc
+#, fuzzy
+msgid "The group status of the contact"
+msgstr "一個聯絡人的群組"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Group ID"
+msgstr "群組編號"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The numeric ID of the Group"
+msgstr "群組的數字編號"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Is the Group Active"
+msgstr "群組是否啟用中"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Group Title"
+msgstr "群組標題"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Description of the Group"
+msgstr "群組的說明"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "CiviCRM Tags"
+msgstr "CiviCRM 標籤"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Tag ID"
+msgstr "標籤編號"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Name"
+msgstr "名稱"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Name of Tag"
+msgstr "標籤名稱"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Description of the Tag"
+msgstr "標籤的說明"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "CiviCRM Mailings"
+msgstr "CiviCRM 電子郵件"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "View displays CiviCRM Mailing Results."
+msgstr "檢視 CiviCRM 電子郵件的寄送結果。"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "ID"
+msgstr "ID"
+
+#: drupal/modules/views/civicrm.views.inc
+#, fuzzy
+msgid "The mailing's ID in the database."
+msgstr "Email: %1 已經存在資料庫。"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Title of the mailing"
+msgstr "郵件的標題"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Subject Line"
+msgstr "主旨"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Subject Line of the mailing"
+msgstr "郵件的主旨"
+
+#: drupal/modules/views/civicrm.views.inc
+#, fuzzy
+msgid "Body - Text"
+msgstr "純文字的內文"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Plaintext mailing message"
+msgstr ""
+
+#: drupal/modules/views/civicrm.views.inc
+#, fuzzy
+msgid "Body - HTML"
+msgstr "主文HTML"
+
+#: drupal/modules/views/civicrm.views.inc
+#, fuzzy
+msgid "HTML mailing message"
+msgstr "電子報 %%狀態訊息%%"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "From Email"
+msgstr "寄件者Email"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "From Email of the mailing"
+msgstr "郵件的寄件者"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Reply to Email"
+msgstr "郵件回覆位址"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Reply Email of the mailing"
+msgstr "郵件的回覆信箱位址"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Track URLs?"
+msgstr "追蹤網址？"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Does the mailing track click throughs?"
+msgstr "此郵件要追蹤點選次數嗎？"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Track Opens?"
+msgstr "追蹤開信次數？"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Does the mailing track Open Rate?"
+msgstr "此郵件要追蹤開信率嗎？"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Complete?"
+msgstr "寄送完成？"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Is the mailing completely sent?"
+msgstr "此郵件全部寄送出了嗎？"
+
+#: drupal/modules/views/civicrm.views.inc
+#, fuzzy
+msgid "Mailing Header - HTML"
+msgstr "電子報頁首"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The HTML header for this mailing."
+msgstr ""
+
+#: drupal/modules/views/civicrm.views.inc
+#, fuzzy
+msgid "Mailing Header - Plaintext"
+msgstr "電子報頁首"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The plaintext header for this mailing."
+msgstr ""
+
+#: drupal/modules/views/civicrm.views.inc
+#, fuzzy
+msgid "Mailing Footer - HTML"
+msgstr "電子報頁尾"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The HTML footer for this mailing."
+msgstr ""
+
+#: drupal/modules/views/civicrm.views.inc
+#, fuzzy
+msgid "Mailing Footer - Plaintext"
+msgstr "電子報頁尾"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The plaintext footer for this mailing."
+msgstr ""
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "CiviCRM Mailing Job"
+msgstr "CiviCRM 郵件工作"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Scheduled Date"
+msgstr "排程日期"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The Mailing's Scheduled Date"
+msgstr "郵件的排程日期"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The Mailing's Start Date"
+msgstr "郵件的開始日期"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The Mailing's End Date"
+msgstr "郵件的結束日期"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Is Test?"
+msgstr "這是測試嗎？"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Is this the test mailing?"
+msgstr "這是測試郵件嗎？"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "CiviCRM Mailing Forwards"
+msgstr "CiviCRM 郵件轉寄"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Date forwaded"
+msgstr "轉寄日期"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Date user forwarded the e-mail"
+msgstr "使用者轉寄此郵件的日期"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "CiviCRM Mailing Click Throughs"
+msgstr "CiviCRM 郵件點選次數"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Date of click through"
+msgstr "點選的日期"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Date user clicked a link in the e-mail"
+msgstr "使用者點選郵件裡的連結的日期"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Mailing click through ID"
+msgstr "郵件點選編號"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The numeric ID click through record"
+msgstr "點選記錄的數字編號"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "CiviCRM Mailing Click Throughs URL"
+msgstr "CiviCRM 郵件點選網址"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "URL"
+msgstr "URL"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "What URL was clicked"
+msgstr "哪個網址被點選"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "CiviCRM Mailing Bounced"
+msgstr "CiviCRM 郵件退信"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Date of bounce"
+msgstr "退信日期"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Date user e-mail bounced"
+msgstr "郵件被退回的日期"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Mailing bounced ID"
+msgstr "郵件退信編號"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The numeric ID of the bounce record"
+msgstr "退信記錄的數字編號"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Reason"
+msgstr "原因"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Reason the e-mail bounced"
+msgstr "退信的原因"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "CiviCRM Mailing  Delivered"
+msgstr "CiviCRM 郵件寄送"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Date of delivery"
+msgstr "寄送日期"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Date user e-mail delivered"
+msgstr "郵件寄送的日期"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Mailing delivered ID"
+msgstr "郵件寄送編號"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The numeric ID of the delivery record"
+msgstr "寄送記錄的數字編號"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "CiviCRM Mailing Opened"
+msgstr "CiviCRM 郵件開啟統計"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Date e-mail opened"
+msgstr "電子郵件開啟日期"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Mailing opened ID"
+msgstr "郵件開啟編號"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The numeric ID of the opened record"
+msgstr "開啟記錄的數字編號"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "CiviCRM Mailing Replied"
+msgstr "CiviCRM 郵件回覆"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Date of reply"
+msgstr "回覆日期"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Date user replied"
+msgstr "使用者回覆的日期"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Mailing reply ID"
+msgstr "郵件回覆編號"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The numeric ID of the reply record"
+msgstr "回覆記錄的數字編號"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "CiviCRM Mailing Unsubscribe"
+msgstr "CiviCRM 郵件取消訂閱"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Date of unsubscribe"
+msgstr "取消訂閱的日期"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Date user unsubscribed"
+msgstr "使用者取消訂閱的日期"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Mailing unsubscribeded ID"
+msgstr "郵件取消訂閱的編號"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "The numeric ID of the unsubscribe record"
+msgstr "取消訂閱記錄的數字編號"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Creates a Text Link for various activity actions."
+msgstr "為各種動態動作建立文字連結"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Creates a Text Link for various relationship actions."
+msgstr "為各種關係動作建立文字連結"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "In the form of CCYYMMDD."
+msgstr "採用 CCYYMMDD 的格式。"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "%title year + month"
+msgstr "%title 年 + 月"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "In the form of YYYYMM."
+msgstr "採用 YYYYMM 的格式。"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "%title year"
+msgstr "%title 年"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "In the form of YYYY."
+msgstr "採用 YYYY 的格式。"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "%title month"
+msgstr "%title 月"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "In the form of MM (01 - 12)."
+msgstr "採用 MM (01 - 12)的月份格式。"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "%title day"
+msgstr "%title 日"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "In the form of DD (01 - 31)."
+msgstr "採用 DD (01 - 31)的日期格式。"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "%title week"
+msgstr "%title 週"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "In the form of WW (01 - 53)."
+msgstr "採用 WW (01 - 53)的週格式。"
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "CiviCRM Custom: "
+msgstr "CiviCRM 自訂："
+
+#: drupal/modules/views/civicrm.views.inc
+msgid "Custom Data Field"
+msgstr "自訂資料欄位"
+
+#: drupal/modules/civicrm_cck/civicrm_cck_handler_filter.inc
+#, fuzzy
+msgid "Enter a contact name."
+msgstr "輸入一個有效的國家名稱"
+
+#: drupal/modules/civicrm_cck/civicrm_cck.module
+msgid "Contacts"
+msgstr "聯絡人"
+
+#: drupal/modules/civicrm_cck/civicrm_cck.module
+msgid "CiviCRM Contact"
+msgstr "CiviCRM 聯絡人"
+
+#: drupal/modules/civicrm_cck/civicrm_cck.module
+msgid "Reference a CiviCRM contact."
+msgstr "指向一個 CiviCRM 聯絡人。"
+
+#: drupal/modules/civicrm_cck/civicrm_cck.module
+#, fuzzy
+msgid "CiviCRM Contact Type %1"
+msgstr "CiviCRM 聯絡人A"
+
+#: drupal/modules/civicrm_cck/civicrm_cck.module
+msgid "Please ensure that the CiviCRM Contact exists"
+msgstr "請確定該 CiviCRM 聯絡人的存在"
+
+#: drupal/modules/civicrm_cck/civicrm_cck.module
+msgid "Title (link)"
+msgstr "標題（連結）"
+
+#: drupal/modules/civicrm_cck/civicrm_cck.module
+msgid "Title (plain)"
+msgstr "標題（純文字）"
+
+#: drupal/modules/civicrm_cck/civicrm_cck.module
+msgid "Select list"
+msgstr "選擇列表"
+
+#: drupal/modules/civicrm_cck/civicrm_cck.module
+msgid "Check boxes/radio buttons"
+msgstr "單選框/多選按鈕"
+
+#: drupal/modules/civicrm_cck/civicrm_cck.module
+msgid "Autocomplete text field"
+msgstr "隨打即找文字欄位"
+
+#: drupal/modules/civicrm_cck/civicrm_cck.module
+msgid "%name: found no valid post with that title."
+msgstr "%name：找不到符合該標題的文章。"
+
+#: drupal/modules/civicrm_cck/civicrm_cck.module
+msgid "CiviCRM Contact ID"
+msgstr "CiviCRM 聯絡人編號"
+
+#: drupal/modules/civicrm_cck/civicrm_cck.module
+msgid "CiviCRM Contact Display"
+msgstr "CiviCRM 聯絡人顯示"
+
+#: drupal/modules/civicrm_member_roles/civicrm_member_roles.module
+msgid "CiviMember Roles Sync"
+msgstr "CiviMember 角色同步"
+
+#: drupal/modules/civicrm_member_roles/civicrm_member_roles.module
+msgid "Configure"
+msgstr "設定"
+
+#: drupal/modules/civicrm_member_roles/civicrm_member_roles.module
+msgid "Manually Synchronize"
+msgstr "手動同步"
+
+#: drupal/modules/civicrm_member_roles/civicrm_member_roles.module
+msgid ""
+"There was an error deleting the association rule. Please check your database "
+"settings and try again. If you continue to get this error message then try "
+"to reinstall CiviMember Roles Sync."
+msgstr ""
+"刪除連結規則時發生錯誤。請檢查您的資料庫設定，再嘗試一次。如果持續出現此錯誤"
+"訊息，請嘗試重新裝置 CiviCRM 角色同步。"
+
+#: drupal/modules/civicrm_member_roles/civicrm_member_roles.module
+msgid "Rule Name (\"CiviMember Membership Type\" --> \"Drupal Role\")"
+msgstr "規則名稱（\"CiviMember 會員籍類別\" --> \"Drupal角色\"）"
+
+#: drupal/modules/civicrm_member_roles/civicrm_member_roles.module
+msgid "Current Codes"
+msgstr "目前的編碼"
+
+#: drupal/modules/civicrm_member_roles/civicrm_member_roles.module
+msgid "Expired Codes"
+msgstr "過期的編碼"
+
+#: drupal/modules/civicrm_member_roles/civicrm_member_roles.module
+#, fuzzy
+msgid ""
+"There are no rules currently set. Use the 'Add Association Rule' form to add "
+"one."
+msgstr "目前沒有設定規則。使用\"新增連結規則\"的表格來新增。"
+
+#: drupal/modules/civicrm_member_roles/civicrm_member_roles.module
+msgid "Manual Synchronization:"
+msgstr "手動同步："
+
+#: drupal/modules/civicrm_member_roles/civicrm_member_roles.module
+msgid "Synchronize CiviMember Membership Types to Drupal Roles now"
+msgstr "馬上同步 CiviMember 會員會籍類別到 Drupal 角色"
+
+#: drupal/modules/civicrm_member_roles/civicrm_member_roles.module
+msgid ""
+"CiviMember Memberships and Drupal Roles have been synchronized using "
+"available rules. Note: if no association rules exist then synchronization "
+"has not been completed."
+msgstr ""
+"CiviCRM 會員會籍與 Drupal 角色，已使用有效規則進行同步。注意：如果沒有連結規"
+"則存在，則同步並未完成。"
+
+#: drupal/modules/civicrm_member_roles/civicrm_member_roles.module
+msgid ""
+"There was an error. CiviMember Memberships and Drupal Roles could not be "
+"synchronized."
+msgstr "發生錯誤。CiviMember 會員會籍與 Drupal 角色無法同步。"
+
+#: drupal/modules/civicrm_member_roles/civicrm_member_roles.module
+msgid "Settings"
+msgstr "設定"
+
+#: drupal/modules/civicrm_member_roles/civicrm_member_roles.module
+msgid "Automatic Synchronization Method"
+msgstr "自動同步方法"
+
+#: drupal/modules/civicrm_member_roles/civicrm_member_roles.module
+msgid ""
+"Select which method CiviMember Roles Sync will use to automatically "
+"synchronize Memberships and Roles. If you choose user login/logout, you will "
+"have to run an initial \"Manual Synchronization\" after you create a new "
+"rule for it to be applied to all users and contacts. Leave the default "
+"setting if you are unsure which method to use."
+msgstr ""
+"選擇 CiviMember 角色同步要使用哪一種方式來自動同步會員會籍和角色。如果您選擇"
+"使用者登入/登出，您需要在為所有使用者及聯絡人建立新規則之後，執行一個初始的"
+"\"手動同步\"。如果您不確定要使用哪種方法，就保留預設設定。"
+
+#: drupal/modules/civicrm_member_roles/civicrm_member_roles.module
+msgid ""
+"Synchronize whenever a user logs in or logs out. This action is performed "
+"only on the user logging in or out."
+msgstr "在使用者登入或登出時進行同步。此動作只會在使用者登入或登出時執行。"
+
+#: drupal/modules/civicrm_member_roles/civicrm_member_roles.module
+msgid ""
+"Synchronize when Drupal cron is ran. This action will be performed on all "
+"users and contacts."
+msgstr "當 Drupal 自動排程執行時，進行同步。此動作會影響所有使用者及聯絡人。"
+
+#: drupal/modules/civicrm_member_roles/civicrm_member_roles.module
+msgid ""
+"Disable automatic synchronization. You will have to use the \"Manually "
+"Synchronize\" form to synchronize memberships and roles yourself."
+msgstr "停用自動同步。您需要使用\"手動同步\"表單，以同步會員會籍和角色。"
+
+#: drupal/modules/civicrm_member_roles/civicrm_member_roles.module
+msgid ""
+"Choose a CiviMember Membership Type and a Drupal Role below. This will "
+"associate that Membership with the Role. If you would like the have the same "
+"Membership be associated with more than one role, you will need to add a "
+"second association rule after you have completed this one."
+msgstr ""
+"選擇 CiviMember 會員會籍類別與 Drupal 角色。這樣會將會員會籍與角色進行連結。"
+"如果您想將相同的會員籍與一個以上的角色進行連結，您需要在完成此步驟後，另行新"
+"增第二個連結規則。"
+
+#: drupal/modules/civicrm_member_roles/civicrm_member_roles.module
+msgid "Select a CiviMember Membership Type"
+msgstr "選擇 CiviMember 會員會籍類別"
+
+#: drupal/modules/civicrm_member_roles/civicrm_member_roles.module
+msgid "Select a Drupal Role"
+msgstr "選擇一個 Drupal 角色"
+
+#: drupal/modules/civicrm_member_roles/civicrm_member_roles.module
+msgid "CiviMember Status Rules"
+msgstr "CiviMember 狀態規則"
+
+#: drupal/modules/civicrm_member_roles/civicrm_member_roles.module
+msgid ""
+"Select which CiviMember Status Rules will be used for \"Current\" and "
+"\"Expired\" status. A \"Current\" status rule will add the above role to a "
+"user account. An \"Expired\" status rule will remove the above role from a "
+"user account."
+msgstr ""
+"選擇作為\"目前\"及\"過期\"狀態的 CiviMember 狀能規則。\"目前\"狀態規則會新增"
+"以上的角色到使用者帳號。\"過期\"狀態規則，會從使用者帳號裡移除以上角色。"
+
+#: drupal/modules/civicrm_member_roles/civicrm_member_roles.module
+msgid "Current Status"
+msgstr "目前狀態"
+
+#: drupal/modules/civicrm_member_roles/civicrm_member_roles.module
+msgid "Select all CiviMember Status Rule(s) that represent current status."
+msgstr "選擇所有代表目前狀態的 CiviMember 狀態規則。"
+
+#: drupal/modules/civicrm_member_roles/civicrm_member_roles.module
+msgid "Expired Status"
+msgstr "過期狀態"
+
+#: drupal/modules/civicrm_member_roles/civicrm_member_roles.module
+msgid "Select all CiviMember Status Rule(s) that represent expired status."
+msgstr "選擇所有代表過期狀態的 CiviMember 狀態規則。"
+
+#: drupal/modules/civicrm_member_roles/civicrm_member_roles.module
+msgid ""
+"There was an error in obtaining the association rule for edit. Please check "
+"your database settings and try again. If you continue to get this error "
+"message then try to reinstall CiviMember Roles Sync."
+msgstr ""
+"在取得連結規則以進行編輯時發生錯誤。請檢查您的資料庫設定並再次嘗試。如果還是"
+"出現此錯誤訊息，請嘗試重新安裝 CiviMember 角色同步。"
+
+#: drupal/modules/civicrm_member_roles/civicrm_member_roles.module
+msgid ""
+"You must select both a CiviMember Membership Type and a Drupal Role from the "
+"\"Association Rule\" section."
+msgstr "您必需從\"連結規則\"裡選擇 CiviMember 會員會籍類別，以及 Drupal 角色。"
+
+#: drupal/modules/civicrm_member_roles/civicrm_member_roles.module
+msgid "CiviMember Membership Type and Drupal Role values were not numeric."
+msgstr "CiviMember 會員會籍類別與 Drupal 角色的值不是數字。"
+
+#: drupal/modules/civicrm_member_roles/civicrm_member_roles.module
+msgid ""
+"You can not have the same Status Rule registered as both \"Current\" and "
+"\"Expired\"."
+msgstr "您不能將同一個狀態規則同時登記為 \"目前\" 與 \"過期\"。"
+
+#: drupal/modules/civicrm_member_roles/civicrm_member_roles.module
+msgid "Status Rules values were not numeric."
+msgstr "狀態規則的值不是數字。"
+
+#: drupal/modules/civicrm_member_roles/civicrm_member_roles.module
+#, fuzzy
+msgid "This rule set is already exist in data base."
+msgstr "此個人檔案標題已存在資料庫中。"
+
+#: drupal/modules/civicrm_member_roles/civicrm_member_roles.module
+msgid ""
+"There was an error editing the association rule. Please check your database "
+"settings and try again. If you continue to get this error message then try "
+"to reinstall CiviMember Roles Sync."
+msgstr ""
+"編輯連結規則時發生錯誤。請檢查您的資料庫設定並再次嘗試。如果還是出現此錯誤訊"
+"息，請嘗試重新安裝 CiviMember 角色同步。"
+
+#: drupal/modules/civicrm_member_roles/civicrm_member_roles.module
+msgid ""
+"There was an error adding the association rule. Please check your database "
+"settings and try again. If you continue to get this error message then try "
+"to reinstall CiviMember Roles Sync."
+msgstr ""
+"新增連結規則時發生錯誤。請檢查您的資料庫設定並再次嘗試。如果還是出現此錯誤訊"
+"息，請嘗試重新安裝 CiviMember 角色同步。"
+
+#: drupal/modules/civicrm_member_roles/civicrm_member_roles.module
+msgid ""
+"Invalid parameter was given to _civicrm_member_roles_get_data(). Param: \"!1"
+"\"."
+msgstr "無效的參數被傳遞給 _civicrm_member_roles_get_data()。參數： \"!1\"。"
+
+#: drupal/modules/civicrm_member_roles/civicrm_member_roles.module
+msgid ""
+"CiviMember Membership Types or Status Rules have not been configured. Please "
+"do so on the \"Administer CiviCRM\" page."
+msgstr ""
+"沒有設定 CiviMember 會員會籍類別或狀態規則。請在\"管理 CiviCRM\" 裡進行設定。"
+
+#: drupal/modules/civicrm_group_roles/civicrm_group_roles.install
+msgid "here"
+msgstr "此（here）"
+
+#: drupal/modules/civicrm_group_roles/civicrm_group_roles.install
+msgid "CiviGroup Roles Sync installed. You will need to specify sync rules !1."
+msgstr "CiviGroup 角色同步已安裝完成。您需要指定同步規則!1。"
+
+#: drupal/modules/civicrm_group_roles/civicrm_group_roles.module
+msgid ""
+"Adds users to a matching CiviCRM group on account creation, update, or login "
+"for each of their Drupal roles."
+msgstr ""
+"在帳號建立、更新，或登入時，將使用者的 Drupal 角色加到一個對應的 CiviCRM 群"
+"組。"
+
+#: drupal/modules/civicrm_group_roles/civicrm_group_roles.module
+msgid "CiviGroup Roles Sync"
+msgstr "CiviGroup 群組同步"
+
+#: drupal/modules/civicrm_group_roles/civicrm_group_roles.module
+msgid ""
+"There was an error deleting the association rule. Please check your database "
+"settings and try again. If you continue to get this error message then try "
+"to reinstall CiviGroup Roles Sync."
+msgstr ""
+"有一個刪除連結規則的錯誤。請檢查您的資料庫設定並再次嘗試。如果還是出現此錯誤"
+"訊息，請重新安裝 CiviGroup Roles Sync。"
+
+#: drupal/modules/civicrm_group_roles/civicrm_group_roles.module
+#, fuzzy
+msgid "Rule Name ('CiviCRM Group' <--> 'Drupal Role')"
+msgstr "規則名稱 （\"CiviCRM 群組\" <--> \"Drupal角色\"）"
+
+#: drupal/modules/civicrm_group_roles/civicrm_group_roles.module
+#, fuzzy
+msgid "There are no rules currently set."
+msgstr "目前沒有報表。"
+
+#: drupal/modules/civicrm_group_roles/civicrm_group_roles.module
+#, fuzzy
+msgid "Use the 'Add Association Rule' form to add one."
+msgstr "使用\"新增連結規則\"表格來新增新規則。"
+
+#: drupal/modules/civicrm_group_roles/civicrm_group_roles.module
+msgid "Choose a CiviCRM Group and a Drupal Role below."
+msgstr "選擇 CiviCRM 群組以及 Drupal 角色。"
+
+#: drupal/modules/civicrm_group_roles/civicrm_group_roles.module
+msgid "CiviCRM Group"
+msgstr "CiviCRM 群組"
+
+#: drupal/modules/civicrm_group_roles/civicrm_group_roles.module
+msgid "-- Select --"
+msgstr "-- 選擇 --"
+
+#: drupal/modules/civicrm_group_roles/civicrm_group_roles.module
+msgid "Drupal Role"
+msgstr "Drupal 角色"
+
+#: drupal/modules/civicrm_group_roles/civicrm_group_roles.module
+msgid ""
+"There was an error in obtaining the association rule for edit. Please check "
+"your database settings and try again. If you continue to get this error "
+"message then try to reinstall CiviGroup Roles Sync."
+msgstr ""
+"取得連結規則已進行編輯時，發生了錯誤。請檢查您的資料庫設定，再試一次。如果還"
+"是出現此錯誤訊息，請重新安裝 CiviCRM 角色同步。"
+
+#: drupal/modules/civicrm_group_roles/civicrm_group_roles.module
+msgid ""
+"You must select both a CiviCRM Group and a Drupal Role from the "
+"\"Association Rule\" section."
+msgstr "您必需從 \"連結規則\" 裡選擇 CiviCRM 群組和 Drupal 角色。"
+
+#: drupal/modules/civicrm_group_roles/civicrm_group_roles.module
+msgid "Please select CiviCRM Group and Drupal Role."
+msgstr "請選擇 CiviCRM 群組以及 Drupal 角色。"
+
+#: drupal/modules/civicrm_group_roles/civicrm_group_roles.module
+msgid ""
+"There was an error editing the association rule. Please check your database "
+"settings and try again. If you continue to get this error message then try "
+"to reinstall CiviGroup Roles Sync."
+msgstr ""
+"編輯連結規則時發生錯誤。請檢查您的資料庫設定，再嘗試一次。如果持續出現此錯誤"
+"訊息，請嘗試重新裝置 CiviCRM 角色同步。"
+
+#: drupal/modules/civicrm_group_roles/civicrm_group_roles.module
+msgid ""
+"There was an error adding the association rule. Please check your database "
+"settings and try again. If you continue to get this error message then try "
+"to reinstall CiviGroup Roles Sync."
+msgstr ""
+"新增連結規則時發生錯誤。請檢查您的資料庫設定，再嘗試一次。如果持續出現此錯誤"
+"訊息，請嘗試重新裝置 CiviCRM 角色同步。"
+
+#: drupal/modules/civicrm_group_roles/civicrm_group_roles.module
+msgid "Error: Unable to sync role %role"
+msgstr "錯誤：無法同步角色 %role"
+
+#: drupal/modules/civicrm_group_roles/civicrm_group_roles.module
+msgid "CiviCRM contact not found for %mail"
+msgstr "找不到電子郵件為 %mail 的 CiviCRM 聯絡人"
+
+#: drupal/modules/civicrm_rules/civicrm_rules.rules.inc
+msgid "Contact has been created"
+msgstr "已建立聯絡人"
+
+#: drupal/modules/civicrm_rules/civicrm_rules.rules.inc
+#, fuzzy
+msgid "Created contact"
+msgstr "已建立聯絡人"
+
+#: drupal/modules/civicrm_rules/civicrm_rules.rules.inc
+msgid "Contact has been updated"
+msgstr "已更新聯絡人"
+
+#: drupal/modules/civicrm_rules/civicrm_rules.rules.inc
+#, fuzzy
+msgid "Updated contact"
+msgstr "更新聯絡人"
+
+#: drupal/modules/civicrm_rules/civicrm_rules.rules.inc
+msgid "Contact has been viewed"
+msgstr "已查看聯絡人"
+
+#: drupal/modules/civicrm_rules/civicrm_rules.rules.inc
+#, fuzzy
+msgid "Viewed contact"
+msgstr "已查看的聯絡人"
+
+#: drupal/modules/civicrm_rules/civicrm_rules.rules.inc
+msgid "Contact has been deleted"
+msgstr "刪除了聯絡人"
+
+#: drupal/modules/civicrm_rules/civicrm_rules.rules.inc
+#, fuzzy
+msgid "Deleted contact"
+msgstr "已刪除的聯絡人"
+
+#: drupal/modules/civicrm_rules/civicrm_rules.rules.inc
+msgid "Logged in User"
+msgstr "登入的使用者"
+
+#: drupal/modules/civicrm_rules/civicrm_rules.rules.inc
+msgid "Add Contact to CiviCRM Group"
+msgstr "增加聯絡人到 CiviCRM 群組"
+
+#: drupal/modules/civicrm_rules/civicrm_rules.rules.inc
+msgid "Contact who should be added to the group"
+msgstr "要增加到群組的聯絡人"
+
+#: drupal/modules/civicrm_rules/civicrm_rules.rules.inc
+msgid "Remove Contact from CiviCRM Group"
+msgstr "從群組裡移除聯絡人"
+
+#: drupal/modules/civicrm_rules/civicrm_rules.rules.inc
+msgid "Contact who should be removed from the group"
+msgstr "要從群組裡移除的聯絡人"
+
+#: drupal/modules/civicrm_rules/civicrm_rules.rules.inc
+msgid "Send Email"
+msgstr "傳送 Email"
+
+#: drupal/modules/civicrm_rules/civicrm_rules.rules.inc
+#, fuzzy
+msgid "Send an email"
+msgstr "寄送 Email"
+
+#: drupal/modules/civicrm_rules/civicrm_rules.rules.inc
+msgid "Send an Email"
+msgstr "寄送 Email"
+
+#: drupal/modules/civicrm_rules/civicrm_rules.rules.inc
+msgid ""
+"Enter e-mail address of recipient. (Use a comma to separate multiple e-mail "
+"addresses.)"
+msgstr ""
+
+#: drupal/modules/civicrm_rules/civicrm_rules.rules.inc
+msgid "Message Subject"
+msgstr "訊息主旨"
+
+#: drupal/modules/civicrm_rules/civicrm_rules.rules.inc
+#, fuzzy
+msgid "Enter subject for the email"
+msgstr "Email 標題。"
+
+#: drupal/modules/civicrm_rules/civicrm_rules.rules.inc
+#, fuzzy
+msgid "Select the group"
+msgstr "選擇產品"
+
+#: drupal/modules/civicrm_rules/civicrm_rules.rules.inc
+#, fuzzy
+msgid "Contact will be added to selected group."
+msgstr "聯絡人已被新增到所選擇的群組。"
+
+#: drupal/modules/civicrm_rules/civicrm_rules.rules.inc
+#, fuzzy
+msgid "Contact will be removed from selected group."
+msgstr "要從群組裡移除的聯絡人"
+
+#: drupal/modules/civicrm_rules/civicrm_rules.rules.inc
+msgid "contact"
+msgstr "聯絡"
+
+#: drupal/modules/civicrm_engage/Engage/Contact/Form/Task/ReleaseVoters.php
+msgid ""
+"Please search with 'Is Held' and 'Survey Id' filters to apply this action."
+msgstr ""
+
+#: drupal/modules/civicrm_engage/Engage/Contact/Form/Task/ReleaseVoters.php
+msgid ""
+"Could not find contacts for release voters resevation Or Missing Interviewer "
+"contact."
+msgstr ""
+
+#: drupal/modules/civicrm_engage/Engage/Contact/Form/Task/ReleaseVoters.php
+#, fuzzy
+msgid "All voters held by you are already released for this survey."
+msgstr "這個Email已經報名過這個活動了。"
+
+#: drupal/modules/civicrm_engage/Engage/Contact/Form/Task/ReleaseVoters.php
+msgid "Release Voters"
+msgstr ""
+
+#: drupal/modules/civicrm_engage/Engage/Contact/Form/Task/ReleaseVoters.php
+#, fuzzy
+msgid "%1 voters has been released."
+msgstr "已刪除%1 選項。"
+
+#: drupal/modules/civicrm_engage/Engage/Contact/Form/Task/ReleaseVoters.php
+msgid "%1 voters did not release."
+msgstr ""
+
+#: drupal/modules/civicrm_engage/Engage/Contact/Form/Task/VoterReservation.php
+msgid ""
+"Could not find contacts for voter reservation Or Missing Interviewer contact."
+msgstr ""
+
+#: drupal/modules/civicrm_engage/Engage/Contact/Form/Task/VoterReservation.php
+#, fuzzy
+msgid "Add Voter Reservation"
+msgstr "新增到組織"
+
+#: drupal/modules/civicrm_engage/Engage/Contact/Form/Task/VoterReservation.php
+msgid "Voter Reservation is full for this survey."
+msgstr ""
+
+#: drupal/modules/civicrm_engage/Engage/Contact/Form/Task/VoterReservation.php
+msgid ""
+"You can select maximum %1 contact(s) at a time for voter reservation of this "
+"survey."
+msgstr ""
+
+#: drupal/modules/civicrm_engage/Engage/Contact/Form/Task/VoterReservation.php
+#, fuzzy
+msgid "Voter Reservation"
+msgstr "其他關係"
+
+#: drupal/modules/civicrm_engage/Engage/Contact/Form/Task/VoterReservation.php
+#, fuzzy
+msgid "Voter Reservation has been added for %1 Contact(s)."
+msgstr "此聯絡人沒有任何活動報名記錄。"
+
+#: drupal/modules/civicrm_engage/Engage/Contact/Form/Task/VoterReservation.php
+msgid "Voter Reservation did not add for %1 Contact(s)."
+msgstr ""
+
+#: drupal/modules/civicrm_engage/Engage/Contact/Form/Search/Custom/FindVoters.php
+#, fuzzy
+msgid "Could not find Interviewer Id."
+msgstr "無法找到 Email 位址。"
+
+#: drupal/modules/civicrm_engage/Engage/Contact/Form/Search/Custom/FindVoters.php
+msgid "Street Number"
+msgstr "街道號碼"
+
+#: drupal/modules/civicrm_engage/Engage/Contact/Form/Search/Custom/FindVoters.php
+msgid "City"
+msgstr "城市"
+
+#: drupal/modules/civicrm_engage/Engage/Contact/Form/Search/Custom/FindVoters.php
+msgid "Postal Code"
+msgstr "郵遞區號"
+
+#: drupal/modules/civicrm_engage/Engage/Contact/Form/Search/Custom/FindVoters.php
+msgid "State"
+msgstr "州"
+
+#: drupal/modules/civicrm_engage/Engage/Contact/Form/Search/Custom/FindVoters.php
+msgid "Email"
+msgstr "Email"
+
+#: drupal/modules/civicrm_engage/Engage/Contact/Form/Search/Custom/FindVoters.php
+msgid "Is Held"
+msgstr ""
+
+#: drupal/modules/civicrm_engage/Engage/Report/Form/List.php
+msgid "Is one of"
+msgstr "其中之一"
+
+#: drupal/modules/civicrm_engage/Engage/Report/Form/List.php
+msgid "Is equal to"
+msgstr "等於"
+
+#: drupal/modules/civicrm_engage/Engage/Report/Form/WalkList.php
+#, fuzzy
+msgid "Other Name"
+msgstr "使用者名稱"
+
+#: drupal/modules/civicrm_engage/Engage/Report/Form/WalkList.php
+#, fuzzy
+msgid "Street#"
+msgstr "街道名稱"
+
+#: drupal/modules/civicrm_engage/Engage/Report/Form/WalkList.php
+msgid "Street Name"
+msgstr "街道名稱"
+
+#: drupal/modules/civicrm_engage/Engage/Report/Form/WalkList.php
+msgid "Apt."
+msgstr ""
+
+#: drupal/modules/civicrm_engage/Engage/Report/Form/WalkList.php
+#, fuzzy
+msgid "Party Reg"
+msgstr "黨派"
+
+#: drupal/modules/civicrm_engage/Engage/Report/Form/WalkList.php
+msgid "VH"
+msgstr ""
+
+#: drupal/civicrm.module
+msgid ""
+"The CiviCRM module stores information on the universe of people associated "
+"with a community and on their interactions such as emails, donations, "
+"petitions, events, etc. It can act as a stand alone contact management "
+"system or it can be integrated with mass mailer, volunteer management, "
+"petition, and event finding. CiviCRM enables organizations to maintain all "
+"these activities in a single database, creating efficiencies and new "
+"opportunities for communities to better communicate and benefit from "
+"relationships with their community members."
+msgstr ""
+"CiviCRM 模組儲存所有與社群相關的人員資料，以及彼此的互動資訊，例如電子郵件、"
+"捐款、請願、活動等。可以把 CiviCRM 當成是一個獨立的聯絡人管理系統，也可以和其"
+"他郵件軟體、志工管理、請願和活動系統進行整合。CiviCRM 讓組織可以在單一資料庫"
+"裡管理所有的活動，替組織建立有效的、新的機會，以更好地與社群成員溝通。"
+
+#: drupal/civicrm.module
+msgid ""
+"The CiviCRM module allows you to create contacts, or import them from other "
+"sources. You can record relationships between contacts, such as indicating "
+"they live in the same household. There are two types of groups of contacts. "
+"You can create static groups which have a set list of contacts. You can also "
+"create dynamic (smart) groups based on characteristics that contacts have in "
+"common. For example, you could create a group of all contacts who live in "
+"California AND who have volunteered for your organization within the past "
+"year. The CiviCRM module also allows for tagging for less formal "
+"categorization of contacts or groups. You can easily extend CiviCRM to "
+"record community member information which is specific to your community or "
+"organization using custom fields. For example, you can create a set of "
+"fields to track volunteer skills and preferences. CiviCRM profile gives you "
+"a way to allow community members ('users') to update their own information, "
+"as well as share some of that information with others. Finally, you can "
+"configure custom activity types such as volunteering or attending events."
+msgstr ""
+"CiviCRM 模組讓你可以建立聯絡人，或是從其他來源匯入。你可以記錄聯絡人之間的關"
+"係，例如是否是同一個家庭。有兩種聯絡人群組，一種是靜態的聯絡人群組，或是根據"
+"聯絡人的特性來建立動態的聯絡人群組。例如：你可建立一個住在台北市、並且都曾經"
+"在去年擔任過志工的聯絡人群組。CiviCRM 也可以使用標籤功能，針對聯絡人或群組進"
+"行比較非正式的分類方式。你也可以使用 CiviCRM 的客製化欄位，來記錄與社群或組織"
+"相關的特定資料。例如：建立一組欄位來追蹤志工的技能或喜好。CiviCRM 的個人檔"
+"案，可以讓社群成員自行更新他們的資訊，並與他人分享一些資訊。你還可以自訂動態"
+"類型，例如擔任志工或參與活動。"
+
+#: drupal/civicrm.module
+msgid "You can:"
+msgstr "你可以："
+
+#: drupal/civicrm.module
+msgid "read the <a href=\"!1\">CiviCRM Administrator Guide</a>."
+msgstr "閱讀 <a href=\"!1\">CiviCRM 管理者手冊</a>。"
+
+#: drupal/civicrm.module
+msgid ""
+"enable CiviCRM blocks at <a href=\"!1\">Administer &raquo; Site Building "
+"&raquo; Blocks</a>."
+msgstr ""
+"在 <a href=\"!1\">管理 &raquo; 網站建置 &raquo; 區塊</a>裡啟用 CiviCRM 區塊。"
+
+#: drupal/civicrm.module
+msgid ""
+"read about <a href=\"!1\">CiviCRM access permissions</a> and set access "
+"permissions at <a href=\"!2\">Administer CiviCRM &raquo; Access Control</a>."
+msgstr ""
+"閱讀 <a href=\"!1\">CiviCRM 存取權限</a>，並在<a href=\"!2\">管理 CiviCRM "
+"&raquo; 存取控制</a>裡進行設定。 "
+
+#: drupal/civicrm.module
+msgid ""
+"find contacts by name, email address, group membership and or tagging at <a "
+"href=\"!1\">Find Contacts</a>."
+msgstr ""
+"在<a href=\"!1\">搜尋聯絡人</a>，依據姓名、電子郵件、群組或標籤進行搜尋。"
+
+#: drupal/civicrm.module
+msgid ""
+"do complex searches based on tags, group membership, location, activities "
+"and custom fields at <a href=\"!1\">Advanced Search</a>."
+msgstr ""
+"在<a href=\"!1\">進階搜尋</a>裡，依據標籤、群組、位置、動態和自訂欄位，進行複"
+"雜的搜尋。"
+
+#: drupal/civicrm.module
+msgid "create or manage groups at <a href=\"!1\">Manage Groups</a>."
+msgstr "在<a href=\"!1\">管理群組</a>裡新增或管理群組。"
+
+#: drupal/civicrm.module
+msgid ""
+"import contacts from other sources at <a href=\"!1\">Import Contacts</a>."
+msgstr "在<a href=\"!1\">匯入聯絡人</a>裡從其他來源匯入聯絡人。"
+
+#: drupal/civicrm.module
+msgid ""
+"create or administer tags (e.g. organizer, foundation, environment...) at <a "
+"href=\"!1\">CiviCRM &raquo; Administer &raquo; Tags</a>."
+msgstr ""
+"在 <a href=\"!1\">CiviCRM &raquo; 管理 &raquo; 標籤</a>裡新增或管理標籤（例如"
+"組織者、基金會、環境...）。"
+
+#: drupal/civicrm.module
+msgid ""
+"create or administer relationship types (e.g. household member, board "
+"member, spouse...) <a href=\"!1\">CiviCRM &raquo; Administer &raquo; "
+"Relationship Types</a>."
+msgstr ""
+"在 <a href=\"!1\">CiviCRM &raquo; 管理 &raquo; 關係類別</a>裡新增或管理關係類"
+"別（例如家庭成員、董事會成員、配偶...） "
+
+#: drupal/civicrm.module
+msgid ""
+"create or administer location types (e.g. home, work, school...) <a href=\"!1"
+"\">CiviCRM &raquo; Administer &raquo; Location Types</a>."
+msgstr ""
+"在 <a href=\"!1\">CiviCRM &raquo; 管理 &raquo; 位置類別</a>裡新增或管理位置類"
+"別（例如住家、工作地點、學校...） "
+
+#: drupal/civicrm.module
+msgid ""
+"create or administer activity types (e.g. house meeting, intake "
+"interview...) at <a href=\"!1\">CiviCRM &raquo; Administer &raquo; Activity "
+"Types</a>."
+msgstr ""
+"在 <a href=\"!1\">CiviCRM &raquo; 管理 &raquo; 動態類別</a>裡新增或管理動態類"
+"別（例如家庭聚會、招募面談等...）"
+
+#: drupal/civicrm.module
+msgid ""
+"create or administer custom data fields (e.g. volunteer skills, emergency "
+"contact info...) <a href=\"!1\">CiviCRM &raquo; Administer &raquo; Custom "
+"Data</a>."
+msgstr ""
+"在 <a href=\"!1\">CiviCRM &raquo; 管理 &raquo; 自訂資料</a>裡新增或管理自訂資"
+"料欄位（例如志工技能、緊急聯絡資訊...）"
+
+#: drupal/civicrm.module
+msgid ""
+"create or administer CiviCRM profiles (i.e. what contact data is collected "
+"during user registration and included in My Account) at <a href=\"!1"
+"\">CiviCRM &raquo; Administer &raquo; CiviCRM Profiles</a>."
+msgstr ""
+"在 <a href=\"!1\">CiviCRM &raquo; 管理 &raquo; CiviCRM 個人檔案</a>裡新增或管"
+"理 CiviCRM 個人檔案（例如在會員註冊時所輸入的資料） "
+
+#: drupal/civicrm.module
+msgid ""
+"For more information please refer to the <a href=\"!1\">CiviCRM web-site</a> "
+"which includes project information, documentation and support resources and "
+"more."
+msgstr ""
+"若想知道 CiviCRM 更多資訊，請瀏覽 <a href=\"!1\">CiviCRM 網站</a>，包括了專案"
+"資訊、文件資料、支援資源等資訊。"
+
+#: drupal/civicrm.module
+msgid ""
+"Constituent Relationship Management (CiviCRM !1). Allows sites to manage "
+"contacts, relationships and groups, and track contact activities, "
+"contributions, memberships and events. For more information please refer to "
+"the <a href=\"!2\">CiviCRM web-site</a> which includes project information, "
+"documentation and support resources and more."
+msgstr ""
+"支持者關係管理 (Constituent Relationship Management，CiviCRM !1)。可以讓網站"
+"得以管理聯絡人、關係及群組，並追蹤聯絡人動態、捐款、會員會籍及活動。更多資"
+"訊，請瀏覽 <a href=\"!1\">CiviCRM 網站</a>，包括了專案資訊、文件資料、支援資"
+"源等資訊。"
+
+#: drupal/civicrm.module
+msgid ""
+"Please review the <a href='!1'>Drupal Installation Guide</a> and the <a "
+"href='!2'>Trouble-shooting page</a> for assistance. If you still need help "
+"installing, you can often find solutions to your issue by searching for the "
+"error message in the <a href='!3'>installation support section of the "
+"community forum</a>.</strong></p>"
+msgstr ""
+"請參考 <a href='!1'>Drupal 安裝指南</a>和<a href='!2'>障礙排除頁面</a>，以取"
+"得相關協助。如果你還需要安裝方面的幫助，可以在<a href='!3'>社群論壇裡的安裝支"
+"援單元</a>裡搜尋所出現的錯誤訊息，以找出解決辦法。</strong></p>"
+
+#: drupal/civicrm.module
+msgid ""
+"Oops! - The CiviCRM settings file (civicrm.settings.php) was not found in "
+"the expected location "
+msgstr "哦！ - 無法在預期的地方找到CiviCRM 設定檔案 (civicrm.settings.php) "
+
+#: drupal/civicrm.module
+msgid ""
+"Oops! - The path for including CiviCRM code files is not set properly. Most "
+"likely there is an error in the <em>civicrm_root</em> setting in your "
+"CiviCRM settings file (!1)."
+msgstr ""
+"哦！ - 包含 CiviCRM 的程式檔案的路徑，設定不正確。很可能是有錯誤發生在你的 "
+"CiviCRM 設定檔案(!1)裡的<em>civicrm_root</em>設定。"
+
+#: drupal/civicrm.module
+msgid "civicrm_root is currently set to: <em>!1</em>."
+msgstr "civicrm_root 目前設定為：<em>!1</em>"
+
+#: drupal/civicrm.module
+msgid ""
+"The requested Profile (gid=%1) is disabled OR it is not configured to be "
+"used for 'Profile' listings in its Settings OR there is no Profile with that "
+"ID OR you do not have permission to access this profile. Please contact the "
+"site administrator if you need assistance."
+msgstr ""
+"已停用要求的個人資訊 (gid=%1) ，或是該資訊設定為不顯示於個人資訊列表中，或是"
+"沒有該編號的個人資訊，或是您沒有存取此個人資訊的權限。如您需要更多幫助，請聯"
+"絡管理者。"
+
+#: drupal/civicrm.module
+msgid "View Contact Record"
+msgstr "檢視聯絡人記錄"
+
+#: drupal/civicrm.module
+#, fuzzy
+msgid "View Contact Dashboard"
+msgstr "聯絡人總覽"
+
+#: drupal/civicrm.module
+#, fuzzy
+msgid "Edit '!1'"
+msgstr "編輯 %1"

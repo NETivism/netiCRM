@@ -1,0 +1,341 @@
+# #-#-#-#-#  calendar.po (CiviCRM 3.0)  #-#-#-#-#
+# Copyright CiviCRM LLC (c) 2004-2007
+# This file is distributed under the same license as the CiviCRM package.
+# If you contribute heavily to a translation and deem your work copyrightable,
+# make sure you license it to CiviCRM LLC under Academic Free License 3.0.
+msgid ""
+msgstr ""
+"Project-Id-Version: CiviCRM 2.1\n"
+"Report-Msgid-Bugs-To: http://issues.civicrm.org/\n"
+"POT-Creation-Date: 2010-12-10 16:13+0100\n"
+"PO-Revision-Date: 2010-02-03 22:35+0800\n"
+"Last-Translator: Charles Chuang <charles>\n"
+"Language-Team: CiviCRM Translators <civicrm-translators@lists.civicrm.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Pootle 1.0.2\n"
+"X-Poedit-Language: Chinese\n"
+"X-Poedit-Country: TAIWAN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Pootle 1.0.2\n"
+"X-Generator: Pootle 1.0.2\n"
+"X-Generator: Pootle 0.10\n"
+"X-Generator: Pootle 0.10\n"
+"X-Poedit-Bookmarks: 4212,-1,-1,-1,-1,-1,-1,-1,-1,-1\n"
+
+#: CRM/Grant/Form/Grant.php CRM/Grant/Selector/Search.php
+#: templates/CRM/Grant/Form/GrantView.tpl
+msgid "Application Received"
+msgstr "已收到的申請"
+
+#: CRM/Grant/Form/Grant.php CRM/Grant/Selector/Search.php
+#: templates/CRM/Grant/Form/GrantView.tpl
+#: templates/CRM/Grant/Form/Task/Print.tpl
+msgid "Money Transferred"
+msgstr "金額已轉賬"
+
+#: CRM/Grant/Form/Task/Delete.php CRM/Grant/Task.php
+msgid "Delete Grants"
+msgstr "刪除贊助"
+
+#: CRM/Grant/BAO/Grant.php
+#, fuzzy
+msgid "Grant Note"
+msgstr "已贊助"
+
+#: CRM/Grant/BAO/Query.php
+#, fuzzy
+msgid "Grant Money Transfer Date is NULL"
+msgstr "贊助款匯款日期"
+
+#: CRM/Grant/BAO/Query.php
+#, fuzzy
+msgid "Grant Application Received Date is NULL"
+msgstr "收到申請的日期"
+
+#: CRM/Grant/BAO/Query.php
+#, fuzzy
+msgid "Grant Due Date is NULL"
+msgstr "贊助有限日期"
+
+#: CRM/Grant/BAO/Query.php
+#, fuzzy
+msgid "Grant Decision Date is NULL"
+msgstr "贊助決定日期 - 從"
+
+#: CRM/Grant/BAO/Query.php
+msgid "Grant Type %2 %1"
+msgstr "贊助類別 %2 %1"
+
+#: CRM/Grant/BAO/Query.php
+msgid "Grant Status %2 %1"
+msgstr "贊助狀態 %2 %1"
+
+#: CRM/Grant/BAO/Query.php
+msgid "App. Received Date - From"
+msgstr "申請接收日期 - 從"
+
+#: CRM/Grant/BAO/Query.php
+msgid "Money Sent Date - From"
+msgstr "款項寄出日期 - 從"
+
+#: CRM/Grant/BAO/Query.php
+msgid "Report Due Date - From"
+msgstr "報表有限日期 - 從"
+
+#: CRM/Grant/BAO/Query.php
+msgid "Grant Decision Date - From"
+msgstr "贊助決定日期 - 從"
+
+#: CRM/Grant/BAO/Query.php
+msgid "Grant report received?"
+msgstr "是否收到贊助報表？"
+
+#: CRM/Grant/DAO/Grant.php
+msgid "Grant ID"
+msgstr "贊助編號"
+
+#: CRM/Grant/DAO/Grant.php
+msgid "Application received date"
+msgstr "收到申請的日期"
+
+#: CRM/Grant/DAO/Grant.php
+msgid "Decision date"
+msgstr "決定日期"
+
+#: CRM/Grant/DAO/Grant.php
+msgid "Grant Money transfer date"
+msgstr "贊助款匯款日期"
+
+#: CRM/Grant/DAO/Grant.php
+msgid "Grant report received"
+msgstr "已收到贊助報表"
+
+#: CRM/Grant/DAO/Grant.php
+#, fuzzy
+msgid "Grant Type Id"
+msgstr "贊助類型"
+
+#: CRM/Grant/DAO/Grant.php
+msgid "Amount granted"
+msgstr "已撥款總額"
+
+#: CRM/Grant/DAO/Grant.php
+#, fuzzy
+msgid "Grant Status Id"
+msgstr "贊助狀態"
+
+#: CRM/Grant/Form/Grant.php templates/CRM/Grant/Form/GrantView.tpl
+msgid "Grant Decision"
+msgstr "贊助決定"
+
+#: CRM/Grant/Form/Grant.php templates/CRM/Grant/Form/GrantView.tpl
+msgid "Grant Report Due"
+msgstr "贊助報表限期"
+
+#: CRM/Grant/Form/Grant.php templates/CRM/Grant/Form/GrantView.tpl
+msgid "Grant Report Received?"
+msgstr "是否收到贊助報表？"
+
+#: CRM/Grant/Form/Grant.php
+msgid "Amount Requested<br />(original currency)"
+msgstr "所需金額<br/>(原本貨幣)"
+
+#: CRM/Grant/Form/Search.php
+msgid "Find Grants"
+msgstr "搜尋贊助"
+
+#: CRM/Grant/Form/Task/Delete.php
+msgid "Deleted Grant(s): %1"
+msgstr "已刪除贊助： %1"
+
+#: CRM/Grant/Form/Task/Delete.php
+msgid "Total Selected Grant(s): %1"
+msgstr "總選取贊助： %1"
+
+#: CRM/Grant/Form/Task/Print.php
+msgid "Print Grant List"
+msgstr "列印贊助清單"
+
+#: CRM/Grant/Info.php
+msgid "CiviGrant"
+msgstr "Civi贊助"
+
+#: CRM/Grant/Page/DashBoard.php
+msgid "grants"
+msgstr "贊助"
+
+#: CRM/Grant/Selector/Search.php templates/CRM/Grant/Form/GrantView.tpl
+msgid "View Grant"
+msgstr "瀏覽贊助"
+
+#: CRM/Grant/Selector/Search.php templates/CRM/Grant/Form/Grant.tpl
+msgid "Edit Grant"
+msgstr "編輯贊助"
+
+#: CRM/Grant/Selector/Search.php
+msgid "Are you sure you want to delete this grant?"
+msgstr "您是否確定刪除這項贊助？"
+
+#: CRM/Grant/Selector/Search.php templates/CRM/Grant/Form/Grant.tpl
+msgid "Delete Grant"
+msgstr "刪除贊助"
+
+#: CRM/Grant/Selector/Search.php
+msgid "Requested"
+msgstr "所要求的金額"
+
+#: CRM/Grant/Selector/Search.php
+msgid "Granted"
+msgstr "已贊助"
+
+#: CRM/Grant/Selector/Search.php
+msgid "Report Received"
+msgstr "已接收報表"
+
+#: CRM/Grant/Task.php
+#, fuzzy
+msgid "Print Grants"
+msgstr "列印贊助清單"
+
+#: CRM/Grant/Task.php
+msgid "Export Grants"
+msgstr "匯出贊助資料"
+
+#: templates/CRM/Grant/Form/Grant.tpl
+msgid "New Grant"
+msgstr "新增贊助"
+
+#: templates/CRM/Grant/Form/Grant.tpl
+#, fuzzy
+msgid "Are you sure you want to delete this Grant?"
+msgstr "您是否確定刪除這項贊助？"
+
+#: templates/CRM/Grant/Form/Grant.tpl
+msgid "Amount requested for grant in original currency (if different)."
+msgstr "金額要求原本貨幣（如不同）。"
+
+#: templates/CRM/Grant/Form/Grant.tpl
+msgid "Date on which the grant decision was finalized."
+msgstr ""
+
+#: templates/CRM/Grant/Form/Grant.tpl
+msgid "Date on which the grant money was transferred."
+msgstr "撥款金額匯款日期。"
+
+#: templates/CRM/Grant/Form/GrantView.tpl
+msgid "(original currency)"
+msgstr "（原本貨幣）"
+
+#: templates/CRM/Grant/Form/Search/Common.tpl
+msgid "Date is not set"
+msgstr "未設定日期"
+
+#: templates/CRM/Grant/Form/Search/EmptyResults.tpl
+msgid "if you are searching by Contact name, check your spelling"
+msgstr "如果您搜尋聯絡人姓名，請檢查拼字"
+
+#: templates/CRM/Grant/Form/Search.tpl
+msgid ""
+"Use this form to find Grant(s) by Contact name, Grant Status, Grant Type, "
+"Total Amount , etc ."
+msgstr "使用此表格，透過聯絡人姓名、撥款狀態、撥款類別、總金額等搜尋撥款。"
+
+#: templates/CRM/Grant/Form/Selector.tpl
+msgid "List more Grants"
+msgstr "列出更多撥款"
+
+#: templates/CRM/Grant/Form/Task/Delete.tpl
+msgid ""
+"Are you sure you want to delete the selected Grants? This delete operation "
+"cannot be undone and will delete all transactions associated with these "
+"grants."
+msgstr ""
+"您是否確定刪除選取的撥款？此動作不能回復，與此撥款相關的所有交易也會一併被刪"
+"除。"
+
+#: templates/CRM/Grant/Form/Task/Print.tpl
+msgid "Amount Requested(orig. currency)"
+msgstr "要求的金額（原本貨幣）"
+
+#: templates/CRM/Grant/Form/Task/Print.tpl
+msgid "Application Recieved"
+msgstr "已接收申請"
+
+#: templates/CRM/Grant/Form/Task/SearchTaskHookSample.tpl
+#, fuzzy
+msgid "Decision Date"
+msgstr "決定日期"
+
+#: templates/CRM/Grant/Form/Task.tpl
+msgid "Number of selected grants: %1"
+msgstr "已選取的撥款數目： %1"
+
+#: templates/CRM/Grant/Page/DashBoard.tpl
+msgid ""
+"CiviGrant allows you to input and track grants to Organizations, Individuals "
+"or Households. The grantee must first be entered as a contact in CiviCRM. "
+"Use <a href='%1'>Find Contacts</a> to see if there's already a record for "
+"the grantee. Once you've located or created the contact record, click "
+"<strong>View</strong> to go to their summary page, select the "
+"<strong>Grants</strong> tab and click <strong>New Grant</strong>."
+msgstr ""
+"Civi撥款允許您匯入及跟蹤撥款到組織、個人或家庭。撥款人必需先在CiviCRM被輸入為"
+"聯絡人。使用<a href='%1'>尋找聯絡人</a>去看那裡是否已有撥款人的記錄。一旦您定"
+"位或建立聯絡人記錄， 按<strong>查看</strong>到他們的概況頁面，選擇<strong>撥"
+"款</strong>鍵及按<strong>新撥款</strong>。"
+
+#: templates/CRM/Grant/Page/DashBoard.tpl
+msgid "Grants Summary"
+msgstr "撥款概況"
+
+#: templates/CRM/Grant/Page/DashBoard.tpl
+msgid ""
+"This table provides a summary of <strong>Grant Totals</strong>, and includes "
+"shortcuts to view the Grant details for these commonly used search periods. "
+"Click the Grant Status to see a list of Contacts for that grant status. To "
+"run your own customized searches - click <a href='%1'>Find Grants</a>. You "
+"can search by Contact Name, Amount, Grant type and a variety of other "
+"criteria."
+msgstr ""
+"此表格提供一個<strong>總撥款</strong>概況，及包括捷徑去為這些經常使用的搜尋期"
+"限查看撥款。按撥款狀態去看那個撥款狀態的聯絡人列表。要執行您的自定搜尋 - 按"
+"<a href='%1'>尋找撥款</a>。您可以以聯絡人姓名、金額、撥款類別及多種其他條件來"
+"搜尋。"
+
+#: templates/CRM/Grant/Page/DashBoard.tpl
+msgid "Grant status"
+msgstr "贊助狀態"
+
+#: templates/CRM/Grant/Page/DashBoard.tpl
+msgid "Number of grants"
+msgstr "撥款數目"
+
+#: templates/CRM/Grant/Page/DashBoard.tpl
+msgid "TOTAL"
+msgstr "總"
+
+#: templates/CRM/Grant/Page/DashBoard.tpl
+msgid "You have no Grants registered in your database."
+msgstr "您的資料庫中沒有撥款記錄。"
+
+#: templates/CRM/Grant/Page/DashBoard.tpl
+msgid "Recent Grants"
+msgstr "最近撥款"
+
+#: templates/CRM/Grant/Page/Tab.tpl
+msgid "This page lists all grants for %1 since inception."
+msgstr "本頁面列出所有%1的撥款記錄。"
+
+#: templates/CRM/Grant/Page/Tab.tpl
+#, fuzzy
+msgid ""
+"Click <a accesskey='N' href='%1'>Add Grant</a> to record a Grant for this "
+"contact."
+msgstr "按 <a accesskey=\"N\" href='%1'>新撥款</a>為此聯絡人建立一筆撥款資料。"
+
+#: templates/CRM/Grant/Page/Tab.tpl
+msgid "No grants have been recorded for this contact."
+msgstr "此聯絡人沒有撥款紀錄。"

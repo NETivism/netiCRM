@@ -1,0 +1,1419 @@
+# #-#-#-#-#  calendar.po (CiviCRM 3.0)  #-#-#-#-#
+# Copyright CiviCRM LLC (c) 2004-2007
+# This file is distributed under the same license as the CiviCRM package.
+# If you contribute heavily to a translation and deem your work copyrightable,
+# make sure you license it to CiviCRM LLC under Academic Free License 3.0.
+msgid ""
+msgstr ""
+"Project-Id-Version: CiviCRM 2.1\n"
+"Report-Msgid-Bugs-To: http://issues.civicrm.org/\n"
+"POT-Creation-Date: 2010-12-10 16:13+0100\n"
+"PO-Revision-Date: 2010-02-03 22:35+0800\n"
+"Last-Translator: Charles Chuang <charles>\n"
+"Language-Team: CiviCRM Translators <civicrm-translators@lists.civicrm.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Pootle 1.0.2\n"
+"X-Poedit-Language: Chinese\n"
+"X-Poedit-Country: TAIWAN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Pootle 1.0.2\n"
+"X-Generator: Pootle 1.0.2\n"
+"X-Generator: Pootle 0.10\n"
+"X-Generator: Pootle 0.10\n"
+"X-Poedit-Bookmarks: 4212,-1,-1,-1,-1,-1,-1,-1,-1,-1\n"
+
+#: CRM/Mailing/BAO/Job.php CRM/Mailing/DAO/Job.php
+#: CRM/Mailing/Selector/Browse.php
+msgid "Scheduled"
+msgstr "已排定"
+
+#: CRM/Mailing/BAO/Job.php CRM/Mailing/DAO/Job.php
+msgid "Running"
+msgstr "載入中"
+
+#: CRM/Mailing/BAO/Job.php CRM/Mailing/DAO/Job.php
+msgid "Complete"
+msgstr "完成"
+
+#: CRM/Mailing/BAO/Job.php CRM/Mailing/DAO/Job.php
+msgid "Paused"
+msgstr "已暫停"
+
+#: CRM/Mailing/BAO/Job.php CRM/Mailing/DAO/Job.php
+msgid "Canceled"
+msgstr "已取消"
+
+#: CRM/Mailing/BAO/Mailing.php CRM/Mailing/DAO/Component.php
+msgid "Reply"
+msgstr "回覆"
+
+#: CRM/Mailing/BAO/Mailing.php CRM/Mailing/Selector/Event.php
+msgid "Opt-Out"
+msgstr "選擇退出"
+
+#: CRM/Mailing/DAO/BounceType.php CRM/Mailing/Event/BAO/Bounce.php
+msgid "Unknown"
+msgstr "未知"
+
+#: CRM/Mailing/DAO/Component.php CRM/Mailing/Form/Component.php
+msgid "Component Type"
+msgstr "元件類別"
+
+#: CRM/Mailing/DAO/Component.php CRM/Mailing/DAO/Mailing.php
+msgid "Body Html"
+msgstr "HTML格式的內文"
+
+#: CRM/Mailing/DAO/Component.php CRM/Mailing/DAO/Mailing.php
+#: templates/CRM/Mailing/Page/Component.tpl
+msgid "Body Text"
+msgstr "純文字的內文"
+
+#: CRM/Mailing/DAO/Component.php CRM/Mailing/Form/Subscribe.php
+msgid "Subscribe"
+msgstr "訂閱"
+
+#: CRM/Mailing/Event/DAO/Bounce.php CRM/Mailing/Event/DAO/Confirm.php
+#: CRM/Mailing/Event/DAO/Delivered.php CRM/Mailing/Event/DAO/Forward.php
+#: CRM/Mailing/Event/DAO/Opened.php CRM/Mailing/Event/DAO/Reply.php
+#: CRM/Mailing/Event/DAO/Subscribe.php
+#: CRM/Mailing/Event/DAO/TrackableURLOpen.php
+#: CRM/Mailing/Event/DAO/Unsubscribe.php
+msgid "Time Stamp"
+msgstr "時間替代符號（token）"
+
+#: CRM/Mailing/Form/Group.php CRM/Mailing/Form/Settings.php
+#: CRM/Mailing/Form/Test.php CRM/Mailing/Form/Upload.php
+msgid "Next >>"
+msgstr "下一頁"
+
+#: CRM/Mailing/Form/Group.php CRM/Mailing/Form/Settings.php
+#: CRM/Mailing/Form/Test.php CRM/Mailing/Form/Upload.php
+msgid "Save & Continue Later"
+msgstr "儲存後繼續"
+
+#: CRM/Mailing/Form/Group.php CRM/Mailing/Form/Schedule.php
+#: CRM/Mailing/Form/Settings.php CRM/Mailing/Form/Test.php
+#: CRM/Mailing/Form/Upload.php
+msgid ""
+"Your mailing has been saved. You can continue later by clicking the "
+"'Continue' action to resume working on it.<br /> From <a href='%1'>Draft and "
+"Unscheduled Mailings</a>."
+msgstr ""
+"您的Email內容已儲存。您可以按 「繼續」按鈕繼續編輯您的郵件。<br />  - <a "
+"href='%1'>草稿 / 未排程發送的郵件</a>。"
+
+#: CRM/Mailing/Form/Group.php CRM/Mailing/Form/Schedule.php
+#: CRM/Mailing/Form/Settings.php CRM/Mailing/Form/Test.php
+#: CRM/Mailing/Form/Upload.php
+msgid ""
+"Your mailing has been saved. Click the 'Continue' action to resume working "
+"on it."
+msgstr "您的Email內容已儲存。您可以按 「繼續」按鈕繼續編輯您的郵件。"
+
+#: CRM/Mailing/Page/Browse.php CRM/Mailing/Selector/Browse.php
+msgid "Cancel Mailing"
+msgstr "取消電子報"
+
+#: CRM/Mailing/Page/Browse.php CRM/Mailing/Selector/Browse.php
+msgid "Delete Mailing"
+msgstr "刪除電子報"
+
+#: CRM/Mailing/Page/Browse.php CRM/Mailing/Selector/Browse.php
+msgid "Archive Mailing"
+msgstr "封存電子報"
+
+#: CRM/Mailing/BAO/Component.php
+msgid "The mailing component '%1' has been saved."
+msgstr "郵件組件 '%1'已儲存。"
+
+#: CRM/Mailing/BAO/Job.php
+msgid "CiviCRM Test Mailer (%1)"
+msgstr "CiviCRM測試郵件(%1)"
+
+#: CRM/Mailing/BAO/Job.php
+msgid "Test Mailing:"
+msgstr "測試郵件："
+
+#: CRM/Mailing/BAO/Job.php
+msgid "The mailing has been canceled."
+msgstr "郵件已被取消。"
+
+#: CRM/Mailing/BAO/Job.php
+msgid "Not scheduled"
+msgstr "沒排程"
+
+#: CRM/Mailing/BAO/Mailing.php
+msgid "You do not have permission to access this mailing report"
+msgstr "您沒有取用此郵件報表的權限"
+
+#: CRM/Mailing/BAO/Mailing.php
+msgid "Selected mailing has been deleted."
+msgstr "選取的電子報已刪除。"
+
+#: CRM/Mailing/BAO/Mailing.php
+msgid "Insert Token"
+msgstr "插入替代符號（token）"
+
+#: CRM/Mailing/BAO/Mailing.php
+msgid "Use Template"
+msgstr "使用範本"
+
+#: CRM/Mailing/BAO/Mailing.php
+msgid "Update Template"
+msgstr "更新範本"
+
+#: CRM/Mailing/BAO/Mailing.php
+msgid "Save As New Template"
+msgstr "儲存為新範本"
+
+#: CRM/Mailing/BAO/Mailing.php
+msgid "Plain-text format"
+msgstr "純文字格式"
+
+#: CRM/Mailing/BAO/Mailing.php
+msgid "HTML format"
+msgstr "HTML格式"
+
+#: CRM/Mailing/BAO/Mailing.php
+msgid "Select Template"
+msgstr "選擇範本"
+
+#: CRM/Mailing/BAO/Mailing.php
+msgid "Your Letter"
+msgstr ""
+
+#: CRM/Mailing/DAO/BouncePattern.php
+msgid "Pattern"
+msgstr "模式"
+
+#: CRM/Mailing/DAO/BounceType.php
+msgid "Hold Threshold"
+msgstr ""
+
+#: CRM/Mailing/DAO/BounceType.php
+msgid "AOL"
+msgstr "美國線上"
+
+#: CRM/Mailing/DAO/BounceType.php
+msgid "Away"
+msgstr "遠離"
+
+#: CRM/Mailing/DAO/BounceType.php
+msgid "DNS"
+msgstr ""
+
+#: CRM/Mailing/DAO/BounceType.php
+msgid "Host"
+msgstr "主辦人"
+
+#: CRM/Mailing/DAO/BounceType.php
+msgid "Inactive"
+msgstr "未啟用"
+
+#: CRM/Mailing/DAO/BounceType.php
+msgid "Invalid"
+msgstr "無效的"
+
+#: CRM/Mailing/DAO/BounceType.php
+msgid "Loop"
+msgstr "線路"
+
+#: CRM/Mailing/DAO/BounceType.php
+msgid "Quota"
+msgstr "限額"
+
+#: CRM/Mailing/DAO/BounceType.php
+msgid "Relay"
+msgstr ""
+
+#: CRM/Mailing/DAO/BounceType.php
+msgid "Spam"
+msgstr "垃圾郵件"
+
+#: CRM/Mailing/DAO/BounceType.php
+msgid "Syntax"
+msgstr "語法"
+
+#: CRM/Mailing/DAO/Component.php
+msgid "Component Name"
+msgstr "組件名稱"
+
+#: CRM/Mailing/DAO/Component.php
+msgid "OptOut"
+msgstr "選擇退出"
+
+#: CRM/Mailing/DAO/Component.php templates/CRM/Mailing/Page/Resubscribe.tpl
+msgid "Resubscribe"
+msgstr "重新訂閱"
+
+#: CRM/Mailing/DAO/Group.php
+msgid "Search Args"
+msgstr "搜尋參數"
+
+#: CRM/Mailing/DAO/Group.php
+msgid "Base"
+msgstr "基礎"
+
+#: CRM/Mailing/DAO/Job.php
+#, fuzzy
+msgid "Job Type"
+msgstr "職稱"
+
+#: CRM/Mailing/DAO/Job.php
+#, fuzzy
+msgid "Job Offset"
+msgstr "位移"
+
+#: CRM/Mailing/DAO/Job.php
+#, fuzzy
+msgid "Job Limit"
+msgstr "職稱"
+
+#: CRM/Mailing/DAO/Mailing.php
+msgid "From Name"
+msgstr "寄件者名稱"
+
+#: CRM/Mailing/DAO/Mailing.php
+msgid "From Email"
+msgstr "寄件者Email"
+
+#: CRM/Mailing/DAO/Mailing.php
+msgid "Replyto Email"
+msgstr "回覆Email"
+
+#: CRM/Mailing/DAO/Mailing.php
+msgid "Url Tracking"
+msgstr "網址追蹤"
+
+#: CRM/Mailing/DAO/Mailing.php
+msgid "Forward Replies"
+msgstr "轉寄回覆"
+
+#: CRM/Mailing/DAO/Mailing.php
+msgid "Auto Responder"
+msgstr "自動回應"
+
+#: CRM/Mailing/DAO/Mailing.php
+msgid "Open Tracking"
+msgstr "開啟追蹤"
+
+#: CRM/Mailing/DAO/Mailing.php
+msgid "Override Verp"
+msgstr "複蓋 Verp"
+
+#: CRM/Mailing/DAO/Mailing.php
+msgid "Mailing Created Date"
+msgstr "電子報建立日期"
+
+#: CRM/Mailing/DAO/Spool.php
+msgid "Recipient Email"
+msgstr "收件人Email"
+
+#: CRM/Mailing/DAO/Spool.php
+msgid "Headers"
+msgstr "頁首"
+
+#: CRM/Mailing/DAO/Spool.php
+msgid "Body"
+msgstr "本文"
+
+#: CRM/Mailing/DAO/Spool.php
+msgid "Added At"
+msgstr "新增自"
+
+#: CRM/Mailing/DAO/Spool.php
+msgid "Removed At"
+msgstr "刪除於"
+
+#: CRM/Mailing/Event/BAO/Bounce.php
+msgid "Unknown bounce type: Could not parse bounce email"
+msgstr "未知的退信類型：退回Email無法分析"
+
+#: CRM/Mailing/Event/BAO/Subscribe.php
+msgid "You are already subscribed in %1, your subscription is %2."
+msgstr "您已在%1訂閱，您的訂閱狀態是 %2。"
+
+#: CRM/Mailing/Event/BAO/Subscribe.php
+#, fuzzy
+msgid ""
+"Your subscription request has been submitted for group %1. Check your inbox "
+"shortly for the confirmation email(s). If you do not see a confirmation "
+"email, please check your spam/junk mail folder."
+msgstr ""
+"已提交你的訂閱申請。請檢查你的收件匣是否有訂閱確認信函。如果你沒有看到確認信"
+"函，請檢查信件是否被誤判為垃圾郵件。"
+
+#: CRM/Mailing/Event/BAO/Subscribe.php
+#, fuzzy
+msgid ""
+"We had a problem processing your subscription request for group %1. You have "
+"tried to subscribe to a private group and/or we encountered a database "
+"error. Please contact the site administrator."
+msgstr ""
+"抱歉，我們在處理您的訂閱過程中出現問題。您訂閱的可能是不公開群組，未開放給一"
+"般人訂閱，或是網站資料庫的錯誤。請你與網站管理員聯繫。"
+
+#: CRM/Mailing/Event/DAO/Unsubscribe.php
+msgid "Org Unsubscribe"
+msgstr "組織取消訂閱"
+
+#: CRM/Mailing/Form/Component.php
+msgid "Body - TEXT Format"
+msgstr "主體 - 文字格式"
+
+#: CRM/Mailing/Form/Component.php
+msgid "Body - HTML Format"
+msgstr "主體 - HTML格式"
+
+#: CRM/Mailing/Form/Component.php
+msgid ""
+"This token can only be used in send mailing context (body, header, footer).."
+msgstr "此替代符號（token）只可使用在郵件上下文（主體、頁首、頁尾…）"
+
+#: CRM/Mailing/Form/Component.php
+msgid "This message is having a invalid token - %1: %2"
+msgstr "此訊息有一個無效替代符號（token） - %1：%2"
+
+#: CRM/Mailing/Form/Component.php
+msgid "The following errors were detected in %1 message:"
+msgstr "以下錯誤在%1訊息被偵測到："
+
+#: CRM/Mailing/Form/Component.php
+msgid "More information on tokens..."
+msgstr "關於替代符號（token）的更多資料…"
+
+#: CRM/Mailing/Form/ForwardMailing.php
+msgid "Invalid form parameters."
+msgstr "無效表格參數。"
+
+#: CRM/Mailing/Form/ForwardMailing.php
+msgid "Forward Mailing: %1"
+msgstr "轉寄郵件：%1"
+
+#: CRM/Mailing/Form/ForwardMailing.php
+msgid "Email %1"
+msgstr "郵件 %1"
+
+#: CRM/Mailing/Form/ForwardMailing.php
+msgid "Forward"
+msgstr "轉寄"
+
+#: CRM/Mailing/Form/ForwardMailing.php
+msgid "Mailing is not forwarded to the given email address."
+msgid_plural "Mailing is not forwarded to the given email addresses."
+msgstr[0] "郵件沒有被轉寄到您提供的Email。"
+
+#: CRM/Mailing/Form/ForwardMailing.php
+msgid "Mailing is forwarded successfully to %count email address."
+msgid_plural "Mailing is forwarded successfully to %count email addresses."
+msgstr[0] ""
+
+#: CRM/Mailing/Form/Group.php
+msgid "Copy of %1"
+msgstr "副本 %1"
+
+#: CRM/Mailing/Form/Group.php
+msgid "Name Your Mailing"
+msgstr "您的電子報名稱"
+
+#: CRM/Mailing/Form/Group.php
+msgid "Base Group"
+msgstr "基礎群組"
+
+#: CRM/Mailing/Form/Group.php
+msgid "Please select a group to be mailed."
+msgstr "請選擇郵寄群組。"
+
+#: CRM/Mailing/Form/Group.php
+msgid "INCLUDE Recipients of These Mailing(s)"
+msgstr "包括這些電子報的收件人"
+
+#: CRM/Mailing/Form/Group.php
+msgid "EXCLUDE Recipients of These Mailing(s)"
+msgstr "不包括這些電子報的收件人"
+
+#: CRM/Mailing/Form/Group.php
+msgid "CiviCRM Search"
+msgstr "CiviCRM搜尋"
+
+#: CRM/Mailing/Form/Group.php
+msgid "Select Recipients"
+msgstr "選取收件人"
+
+#: CRM/Mailing/Form/Group.php
+msgid "Cannot have same groups in Include Group(s) and Exclude Group(s)."
+msgstr "一個群組不能同時存在包括群組與不包括群組中。"
+
+#: CRM/Mailing/Form/Group.php
+msgid "Cannot have same mail in Include mailing(s) and Exclude mailing(s)."
+msgstr "同一郵件不能同時為包括的電子報及不包括的電子報。"
+
+#: CRM/Mailing/Form/Group.php
+msgid "You must select a group to filter on"
+msgstr "您必需選擇要過濾的群組"
+
+#: CRM/Mailing/Form/Group.php
+msgid "You must select a search to filter"
+msgstr "您必需選擇要過濾的搜尋"
+
+#: CRM/Mailing/Form/Schedule.php
+msgid "Schedule Mailing"
+msgstr "電子報排程"
+
+#: CRM/Mailing/Form/Schedule.php
+msgid "Send Immediately"
+msgstr "立即傳送"
+
+#: CRM/Mailing/Form/Schedule.php
+msgid "Submit Mailing"
+msgstr "提交電子報"
+
+#: CRM/Mailing/Form/Schedule.php
+msgid "Continue Later"
+msgstr "稍後繼續"
+
+#: CRM/Mailing/Form/Schedule.php
+msgid "Start date cannot be earlier than the current time."
+msgstr "開始日期不得早於目前時間。"
+
+#: CRM/Mailing/Form/Schedule.php
+msgid "Schedule or Send"
+msgstr "排程或傳送"
+
+#: CRM/Mailing/Form/Search.php
+msgid "Created or Sent by"
+msgstr "建立或傳送由"
+
+#: CRM/Mailing/Form/Settings.php
+#, fuzzy
+msgid "Track Replies?"
+msgstr "追蹤開信次數？"
+
+#: CRM/Mailing/Form/Settings.php
+msgid "Forward Replies?"
+msgstr "轉寄回覆？"
+
+#: CRM/Mailing/Form/Settings.php
+msgid "Track Click-throughs?"
+msgstr "跟蹤點擊次數？"
+
+#: CRM/Mailing/Form/Settings.php
+msgid "Track Opens?"
+msgstr "追蹤開信次數？"
+
+#: CRM/Mailing/Form/Settings.php
+msgid "Auto-respond to Replies?"
+msgstr "自動回覆回信？"
+
+#: CRM/Mailing/Form/Settings.php
+msgid "Auto-responder"
+msgstr "自動回覆"
+
+#: CRM/Mailing/Form/Settings.php
+msgid "Track and Respond"
+msgstr "追蹤及回應"
+
+#: CRM/Mailing/Form/Subscribe.php
+msgid "Subscribe to Mailing List - %1"
+msgstr "訂閱電子報 - %1"
+
+#: CRM/Mailing/Form/Subscribe.php
+msgid "Mailing List Subscription"
+msgstr "電子報訂閱"
+
+#: CRM/Mailing/Form/Subscribe.php
+msgid "Please enter a valid email address (e.g. 'yourname@example.com')."
+msgstr "請輸入一個有效的Email地址  (例如 'yourname@example.com')"
+
+#: CRM/Mailing/Form/Subscribe.php
+msgid "There are no public mailing list groups to display."
+msgstr "無公開的電子報訂閱群組。"
+
+#: CRM/Mailing/Form/Test.php
+msgid "Send to This Address"
+msgstr "傳送到這個郵件地址"
+
+#: CRM/Mailing/Form/Test.php
+msgid "Send to This Group"
+msgstr "傳送到這個群組"
+
+#: CRM/Mailing/Form/Test.php
+msgid "Send a Test Mailing"
+msgstr "寄送測試郵件"
+
+#: CRM/Mailing/Form/Test.php
+msgid ""
+"Your did not provided any email address or selected any group. No test mail "
+"is sent."
+msgstr "您沒有提供Email地址或選取任何群組。測試郵件沒有寄出。"
+
+#: CRM/Mailing/Form/Test.php
+msgid "Please enter valid email addresses only"
+msgstr "請輸入有效的Email地址"
+
+#: CRM/Mailing/Form/Test.php
+msgid ""
+"Your test message has been sent. Click 'Next' when you are ready to Schedule "
+"or Send your live mailing (you will still have a chance to confirm or cancel "
+"sending this mailing on the next page)."
+msgstr ""
+"您的測試訊息已傳送。當您要排程或傳送郵件，請按「下一步」（下一步仍可再確認或"
+"取消郵寄)。"
+
+#: CRM/Mailing/Form/Upload.php
+msgid ""
+"There is no valid from email address present. You can add here <a href='%"
+"1'>Add From Email Address.</a>"
+msgstr "沒有有效的Email地址。您可以在此新增 <a href='%1'>從Email新增</a>。"
+
+#: CRM/Mailing/Form/Upload.php
+msgid "From Email Address"
+msgstr "寄件者 Email"
+
+#: CRM/Mailing/Form/Upload.php
+msgid "Mailing Subject"
+msgstr "電子報主旨"
+
+#: CRM/Mailing/Form/Upload.php templates/CRM/Mailing/Form/Upload.tpl
+msgid "Upload Content"
+msgstr "上傳內容"
+
+#: CRM/Mailing/Form/Upload.php templates/CRM/Mailing/Form/Upload.tpl
+msgid "Compose On-screen"
+msgstr "在螢幕上編寫"
+
+#: CRM/Mailing/Form/Upload.php
+msgid "I want to"
+msgstr "我想"
+
+#: CRM/Mailing/Form/Upload.php
+msgid "Upload TEXT Message"
+msgstr "上傳文字訊息"
+
+#: CRM/Mailing/Form/Upload.php
+msgid "File size should be less than 1 MByte"
+msgstr "檔案大小不能超過 1 MBytes"
+
+#: CRM/Mailing/Form/Upload.php
+msgid "File must be in UTF-8 encoding"
+msgstr "檔案必需是UTF-8編碼"
+
+#: CRM/Mailing/Form/Upload.php
+msgid "Upload HTML Message"
+msgstr "上傳HTML格式訊息"
+
+#: CRM/Mailing/Form/Upload.php
+msgid "Mailing Header"
+msgstr "電子報頁首"
+
+#: CRM/Mailing/Form/Upload.php
+msgid "Mailing Footer"
+msgstr "電子報頁尾"
+
+#: CRM/Mailing/Form/Upload.php
+msgid "Please provide either a Text or HTML formatted message - or both."
+msgstr "請提供純文字或HTML - 或皆提供。"
+
+#: CRM/Mailing/Form/Upload.php
+msgid "Please provide a Template Name."
+msgstr "請提供範本名稱。"
+
+#: CRM/Mailing/Form/Upload.php
+msgid "This message is missing a required token - {%1}: %2"
+msgstr "此訊息遺失所需替代符號（token） -{%1}：%2"
+
+#: CRM/Mailing/Form/Upload.php
+msgid "Invalid token code"
+msgstr "無效替代符號（token）編碼"
+
+#: CRM/Mailing/Form/Upload.php
+msgid "The following errors were detected in %1:"
+msgstr "以下錯誤在%1被偵測到："
+
+#: CRM/Mailing/Form/Upload.php
+msgid "More information on required tokens..."
+msgstr "關於必須替代符號（token）的更多資料…"
+
+#: CRM/Mailing/Form/Upload.php
+msgid "Duplicate Template Name."
+msgstr "複製範本名稱。"
+
+#: CRM/Mailing/Form/Upload.php
+msgid "Mailing Content"
+msgstr "電子報內容"
+
+#: CRM/Mailing/Page/Browse.php
+msgid "Draft and Unscheduled Mailings"
+msgstr "草稿與未排程的電子報"
+
+#: CRM/Mailing/Page/Browse.php
+msgid "Archived Mailings"
+msgstr "封存電子報"
+
+#: CRM/Mailing/Page/Browse.php
+msgid "Scheduled and Sent Mailings"
+msgstr "已排定與已寄送的電子報"
+
+#: CRM/Mailing/Page/Browse.php
+msgid "Find Mailings"
+msgstr "尋找郵件"
+
+#: CRM/Mailing/Page/Browse.php
+msgid "Search Mailings"
+msgstr "搜尋電子報"
+
+#: CRM/Mailing/Page/Common.php
+msgid "There was an error in your request"
+msgstr "您的要求出現錯誤"
+
+#: CRM/Mailing/Page/Component.php templates/CRM/Mailing/Form/Component.tpl
+msgid "Edit Mailing Component"
+msgstr "編輯電子報組件"
+
+#: CRM/Mailing/Page/Component.php
+msgid "Disable Mailing Component"
+msgstr "停用電子報組件"
+
+#: CRM/Mailing/Page/Component.php
+msgid "Enable Mailing Component"
+msgstr "啟用電子報組件"
+
+#: CRM/Mailing/Page/Report.php
+msgid "Back to Activities"
+msgstr "回到動態"
+
+#: CRM/Mailing/Page/Report.php
+msgid "Back to Activity"
+msgstr "回到動態"
+
+#: CRM/Mailing/Page/Report.php
+msgid "Back to CiviMail"
+msgstr "返回Civi電子報"
+
+#: CRM/Mailing/Page/Report.php
+msgid "CiviMail Report: %1"
+msgstr "電子報報表： %1"
+
+#: CRM/Mailing/Selector/Browse.php
+msgid "Mailings %%StatusMessage%%"
+msgstr "電子報 %%狀態訊息%%"
+
+#: CRM/Mailing/Selector/Browse.php
+msgid "Sent By"
+msgstr "寄送由"
+
+#: CRM/Mailing/Selector/Browse.php
+msgid "Started"
+msgstr "開始"
+
+#: CRM/Mailing/Selector/Browse.php
+msgid "Completed"
+msgstr "已完成"
+
+#: CRM/Mailing/Selector/Browse.php
+msgid "Are you sure you want to cancel this mailing?"
+msgstr "您是否確定要取消此電子報？"
+
+#: CRM/Mailing/Selector/Browse.php
+msgid "Are you sure you want to delete this mailing?"
+msgstr "您是否確定要刪除此電子報？"
+
+#: CRM/Mailing/Selector/Browse.php
+msgid "Are you sure you want to archive this mailing?"
+msgstr "您是否確定要封存此電子報？"
+
+#: CRM/Mailing/Selector/Browse.php
+msgid "Report"
+msgstr "報表"
+
+#: CRM/Mailing/Selector/Browse.php
+msgid "Re-Use"
+msgstr "重新使用"
+
+#: CRM/Mailing/Selector/Browse.php
+msgid "Re-Send Mailing"
+msgstr "重新寄送電子報"
+
+#: CRM/Mailing/Selector/Browse.php
+msgid "Continue Mailing"
+msgstr "繼續電子報"
+
+#: CRM/Mailing/Selector/Browse.php
+msgid "Archive"
+msgstr "封存"
+
+#: CRM/Mailing/Selector/Browse.php
+msgid "CiviMail Mailings"
+msgstr ""
+
+#: CRM/Mailing/Selector/Event.php
+msgid "%1 %%StatusMessage%%"
+msgstr "%1 %%狀態訊息%%"
+
+#: CRM/Mailing/Selector/Event.php
+msgid "Forwarded Email"
+msgstr "已轉寄的郵件"
+
+#: CRM/Mailing/Selector/Event.php templates/CRM/Mailing/Page/Report.tpl
+#, fuzzy
+msgid "Successful Deliveries"
+msgstr "成功遞送"
+
+#: CRM/Mailing/Selector/Event.php templates/CRM/Mailing/Page/Report.tpl
+msgid "Bounces"
+msgstr "退回"
+
+#: CRM/Mailing/Selector/Event.php templates/CRM/Mailing/Page/Report.tpl
+msgid "Forwards"
+msgstr "轉寄"
+
+#: CRM/Mailing/Selector/Event.php
+msgid "Unique Replies"
+msgstr "特別回覆"
+
+#: CRM/Mailing/Selector/Event.php templates/CRM/Mailing/Page/Report.tpl
+msgid "Replies"
+msgstr "回覆"
+
+#: CRM/Mailing/Selector/Event.php templates/CRM/Mailing/Page/Report.tpl
+msgid "Unsubscribe Requests"
+msgstr "退訂要求"
+
+#: CRM/Mailing/Selector/Event.php
+msgid "Unique Click-throughs"
+msgstr "不重複點擊次數"
+
+#: CRM/Mailing/Selector/Event.php templates/CRM/Mailing/Page/Report.tpl
+msgid "Click-throughs"
+msgstr "點擊次數"
+
+#: CRM/Mailing/Selector/Event.php
+msgid "Unique Tracked Opens"
+msgstr "不重複開信次數"
+
+#: CRM/Mailing/Selector/Event.php templates/CRM/Mailing/Page/Report.tpl
+msgid "Tracked Opens"
+msgstr "追蹤的開信次數"
+
+#: templates/CRM/Mailing/Form/Component.tpl
+msgid "New Mailing Component"
+msgstr "新增電子報組件"
+
+#: templates/CRM/Mailing/Form/Count.tpl
+msgid "Total Recipients:"
+msgstr "收件者總數："
+
+#: templates/CRM/Mailing/Form/ForwardMailing.tpl
+msgid "Please enter up to 5 email addresses to receive the mailing."
+msgstr "請輸入最多5個Email來接收電子報。"
+
+#: templates/CRM/Mailing/Form/Group.hlp
+msgid ""
+"Assign a unique name to each of your mailings. Select a naming convention "
+"that will help keep your mailings organized and easy to find when you want "
+"to review and compare mailing results. For example, if you do a monthly "
+"general-interest newsletter - you might use the following naming convention:"
+msgstr ""
+
+#: templates/CRM/Mailing/Form/Group.hlp
+msgid "General Monthly Newsletter: 200709"
+msgstr ""
+
+#: templates/CRM/Mailing/Form/Group.hlp
+msgid ""
+"Determine the contacts in your database who should receive this mailing by "
+"first selecting one or more <strong>Included Groups</strong>. (Groups must "
+"be assigned the <strong>Mailing List</strong> type to be available on this "
+"screen - you can update this for an existing group from <strong>Manage "
+"Groups &raquo; Settings</strong>.)"
+msgstr ""
+
+#: templates/CRM/Mailing/Form/Group.hlp
+msgid ""
+"You also have the option to <strong>Exclude</strong> some contacts from your "
+"included groups by selecting one or more <strong>Excluded Groups</strong>. "
+"Contacts who are in both groups will NOT receive the mailing (they are "
+"'excluded')."
+msgstr ""
+
+#: templates/CRM/Mailing/Form/Group.hlp
+msgid ""
+"If you have sent other mailings - you can additionally Include (or Exclude) "
+"contacts who received those mailings. CiviCRM will eliminate any "
+"duplications so that contacts who are in an Included Group AND were "
+"recipients of an Included Mailing will only be sent one copy of this mailing."
+msgstr ""
+
+#: templates/CRM/Mailing/Form/Group.hlp
+msgid ""
+"After you click <strong>Next</strong> - the total number of selected "
+"recipients will be displayed on the next screen. Use this as a 'reality-"
+"check' to help you confirm that you've targeted (and excluded) the desired "
+"recipients."
+msgstr ""
+"在您按<strong>下一步</strong>以 - 已選取接收人的總數目會被展示在下一個畫面。"
+"請以此作為「實質檢查」，確定您已選取了您欲發送的接收人。"
+
+#: templates/CRM/Mailing/Form/Group.hlp
+msgid ""
+"You also have the option to <strong>Exclude</strong> some contacts in your "
+"included groups by selecting on or more <strong>Excluded Groups</strong>. "
+"Contacts who are in both groups will NOT receive the mailing (they are "
+"'excluded')."
+msgstr ""
+"您也可以選擇<strong>不包括</strong>某些聯絡人在您被包括的群組，透過選擇一個或"
+"更多<strong>不被包括群組</strong>。在兩個群組的聯絡人不會接收郵件（他們不被包"
+"括）。"
+
+#: templates/CRM/Mailing/Form/Group.tpl
+msgid ""
+"To send a mailing, you must have a valid group of recipients - either at "
+"least one group that's a Mailing List or at least one previous mailing."
+msgstr ""
+"要傳送郵件，您必需有一個有效的收件人群組 - 最少一個電子報群組或最少一個先前電"
+"子報。"
+
+#: templates/CRM/Mailing/Form/Group.tpl
+msgid "Additional Mailing Recipients"
+msgstr "額外電子報收件人"
+
+#: templates/CRM/Mailing/Form/Group.tpl
+msgid "Mailing Recipients"
+msgstr "電子報收件人"
+
+#: templates/CRM/Mailing/Form/Schedule.hlp
+msgid "Scheduling and Sending Mailings"
+msgstr "排程及傳送郵件"
+
+#: templates/CRM/Mailing/Form/Schedule.hlp
+msgid ""
+"You can schedule mailings to be sent starting at a specific date and time, "
+"OR you can request that they be sent as soon as possible by checking &quot;"
+"Send Immediately&quot;."
+msgstr ""
+"您可以為排程列表中的電子報設定指定日期及時間寄送，或是您也可以透過檢查&quot;"
+"立即傳送&quot;，來立即寄送排程列表中的電子報。"
+
+#: templates/CRM/Mailing/Form/Schedule.hlp
+msgid ""
+"Click <strong>Submit Mailing</strong> to add this mailing to the mailing "
+"queue. An automated task which runs periodically on your server processes "
+"mailings in the queue, and starts actually sending out your mail."
+msgstr ""
+"按<strong>寄送</strong>，將此電子報到新增至排程列表中。系統會定期處理在排程列"
+"表中的電子報，並實際寄送。"
+
+#: templates/CRM/Mailing/Form/Schedule.hlp
+msgid ""
+"Click <strong>Continue Later</strong> if you're not ready to schedule or "
+"send this mailing. Click the <strong>Continue</strong> link from Unscheduled "
+"and Draft Mailings when you are ready to schedule or send it."
+msgstr ""
+"如果您未準備好計劃或傳送此電子報，按<strong>稍後繼續</strong>。當您準備設定排"
+"程列表或直接寄送此電子報，請按<strong>繼續</strong>。"
+
+#: templates/CRM/Mailing/Form/Schedule.hlp
+msgid ""
+"<strong>Trouble-shooting Tip</strong> - If you find that your mailings are "
+"not being sent, ask the system administrator or technical support contact "
+"for your site to verify that the automated task (&quot;cron job&quot;) is "
+"running - and how frequently."
+msgstr ""
+
+#: templates/CRM/Mailing/Form/Schedule.tpl
+msgid ""
+"You can schedule this mailing to be sent starting at a specific date and "
+"time, OR you can request that it be sent as soon as possible by checking "
+"&quot;Send Immediately&quot;."
+msgstr ""
+"您可以排程，在指定日期及時間寄出郵件，或您可以勾選「立即傳送」，馬上寄出電子"
+"報。"
+
+#: templates/CRM/Mailing/Form/Schedule.tpl
+msgid ""
+"Set a date and time when you want CiviMail to start sending this mailing."
+msgstr "設定日期及時間，系統將為您寄出。"
+
+#: templates/CRM/Mailing/Form/Settings.tpl
+msgid ""
+"These settings control tracking and responses to recipient actions. The "
+"number of recipients selected to receive this mailing is shown in the box to "
+"the right. If this count doesn't match your expectations, click "
+"<strong>Previous</strong> to review your selection(s)."
+msgstr ""
+
+#: templates/CRM/Mailing/Form/Settings.tpl
+msgid ""
+"Track the number of times recipients click each link in this mailing. NOTE: "
+"When this feature is enabled, all links in the message body will be "
+"automaticallly re-written to route through your CiviCRM server prior to "
+"redirecting to the target page."
+msgstr ""
+"追蹤收件者在此郵件中點擊連結的次數。提醒：當您啟用此功能，在重新導向目標頁面"
+"前，郵件內文中的所有連結將會先自動重新寫入路由，通過您的CiviCRM伺服器。"
+
+#: templates/CRM/Mailing/Form/Settings.tpl
+msgid ""
+"Track the number of times recipients open this mailing in their email "
+"software."
+msgstr "追蹤收件者在他們的收件軟體中開啟此郵件的次數。"
+
+#: templates/CRM/Mailing/Form/Settings.tpl
+msgid "Responding"
+msgstr "回應"
+
+#: templates/CRM/Mailing/Form/Settings.tpl
+msgid ""
+"Recipients' replies are sent to a CiviMail specific address instead of the "
+"sender's address so they can be stored within CiviCRM."
+msgstr ""
+
+#: templates/CRM/Mailing/Form/Settings.tpl
+msgid ""
+"If a recipient replies to this mailing, forward the reply to the FROM Email "
+"address specified for the mailing."
+msgstr "如果收件者回覆到此郵件，轉寄回覆到指定的寄件者Email。"
+
+#: templates/CRM/Mailing/Form/Settings.tpl
+msgid ""
+"If a recipient replies to this mailing, send an automated reply using the "
+"selected message."
+msgstr "如果收件者回覆到此郵件，使用選取訊息傳送自動回覆。"
+
+#: templates/CRM/Mailing/Form/Settings.tpl
+msgid ""
+"Select the automated message to be sent when a recipient unsubscribes from "
+"this mailing."
+msgstr "當收件人退訂電子報，請選擇一個自動回覆訊息回覆給對方。"
+
+#: templates/CRM/Mailing/Form/Settings.tpl
+msgid ""
+"Select the automated message to be sent when a recipient resubscribes to "
+"this mailing."
+msgstr "當收件者重新訂閱此電子報，請選擇一個自動回覆訊息回覆給對方。"
+
+#: templates/CRM/Mailing/Form/Settings.tpl
+msgid ""
+"Select the automated message to be sent when a recipient opts out of all "
+"mailings from your site."
+msgstr "當收件者選擇退訂您網站的所有電子報，請選擇一個自動回覆訊息回覆給對方。"
+
+#: templates/CRM/Mailing/Form/Subscribe.tpl
+msgid ""
+"Enter your email address and click <strong>Subscribe</strong>. You will "
+"receive a confirmation request via email shortly. Your subscription will be "
+"activated after you respond to that email."
+msgstr ""
+"輸入Email及按 <strong>訂閱</strong>。您將很快地收到確認信，在您回覆該信件後將"
+"可成功訂閱。"
+
+#: templates/CRM/Mailing/Form/Subscribe.tpl
+msgid ""
+"Enter your email address and check the box next to each mailing list you "
+"want to join. Then click the <strong>Subscribe</strong> button. You will "
+"receive a confirmation request via email for each selected list. Activate "
+"your subscription to each list by responding to the corresponding "
+"confirmation email."
+msgstr ""
+"輸入您的Email，並勾選您欲訂閱的電子報。然後按<strong>訂閱</strong>鍵。您將收"
+"到確認信，請在確認信中回應個別電子報相對應的Email。"
+
+#: templates/CRM/Mailing/Form/Subscribe.tpl
+msgid "Group Listings."
+msgstr "群組列表。"
+
+#: templates/CRM/Mailing/Form/Test.hlp templates/CRM/Mailing/Form/Test.tpl
+msgid ""
+"It's a good idea to test your mailing by sending it to yourself and/or a "
+"selected group of people in your organization. You can also view your "
+"content by clicking (+) Preview Mailing."
+msgstr ""
+"測試您的郵件，您可寄測試信給您自己，及/或您組織中一群被選取的人。您也可以透過"
+"按(+)預覽郵件查看您的內容。"
+
+#: templates/CRM/Mailing/Form/Test.hlp
+msgid ""
+"Verify the test email address and/or test recipient group. Then click "
+"<strong>Next</strong> with 'Send Test Mailing' checked to generate the test "
+"mailing. Once you receive the test mailing:"
+msgstr ""
+
+#: templates/CRM/Mailing/Form/Test.hlp
+msgid "Verify the content and formattting."
+msgstr "驗證內容及格式。"
+
+#: templates/CRM/Mailing/Form/Test.hlp
+msgid ""
+"If you are using mail-merge tokens, check that they have been replaced with "
+"expected values."
+msgstr "如果您使用合併郵件的替代符號（token），請檢查是否已被替換為實際資料。"
+
+#: templates/CRM/Mailing/Form/Test.hlp
+msgid ""
+"Click on each included link to make sure they go to the expected web pages."
+msgstr "按每一個被包括的連結去確保他們到達預期的網頁。"
+
+#: templates/CRM/Mailing/Form/Test.hlp
+msgid ""
+"If you need to make changes, you can click <strong>Previous</strong> from "
+"the next screen, and again from this screen to return to step 3. After "
+"making your changes, you can send another test and repeat as needed."
+msgstr ""
+"如果您需要作出更變，您可以按<strong>之前</strong>從下一個螢幕，及再次從此螢幕"
+"返回到步驟3。作出您的更變之後，您可版傳送另外的測試及重複為所需。"
+
+#: templates/CRM/Mailing/Form/Test.tpl
+msgid "(filled with your contact's token values)"
+msgstr "（填入您聯絡人的替代符號Token值）"
+
+#: templates/CRM/Mailing/Form/Test.tpl
+msgid "Preview Mailing"
+msgstr "預覽電子報"
+
+#: templates/CRM/Mailing/Form/Test.tpl
+msgid "Attachment(s):"
+msgstr "附件："
+
+#: templates/CRM/Mailing/Form/Test.tpl
+msgid "Text Version:"
+msgstr "文字版本："
+
+#: templates/CRM/Mailing/Form/Test.tpl
+msgid "Text Version"
+msgstr "文字版本"
+
+#: templates/CRM/Mailing/Form/Test.tpl
+msgid "HTML Version:"
+msgstr "HTML版本："
+
+#: templates/CRM/Mailing/Form/Test.tpl
+msgid "HTML Version"
+msgstr "HTML版本："
+
+#: templates/CRM/Mailing/Form/Upload.hlp
+msgid ""
+"Select the \"FROM\" Email Address for this mailing from the dropdown list. "
+"Available email addresses are configurable by users with Administer CiviCRM "
+"permission. EXAMPLE: \"Client Services\" &lt;clientservices@example.org&gt;"
+msgstr ""
+
+#: templates/CRM/Mailing/Form/Upload.hlp
+#, fuzzy
+msgid ""
+"Go to <a href='%1'>Administer CiviCRM &raquo; Configure &raquo; FROM Email "
+"Addresses</a> to add or edit email addresses. Make sure these email "
+"addresses are valid email accounts with your email service provider."
+msgstr ""
+"前往<a href='%1'>CiviCRM管理員&raquo; 選項清單 &raquo; Email寄件者</a>，並輸"
+"入一個有效的 Email寄件者。請確認 Email 設定是正確的寄件者。"
+
+#: templates/CRM/Mailing/Form/Upload.hlp
+msgid ""
+"Contact your site administrator if you need to use a \"FROM\" Email Address "
+"which is not in the dropdown list."
+msgstr ""
+"若您欲使用的 \"FROM\" Email 不存在這個下拉式選單中，請與您的網站管理員聯絡。"
+
+#: templates/CRM/Mailing/Form/Upload.hlp
+msgid "Message Formats"
+msgstr "電子報格式"
+
+#: templates/CRM/Mailing/Form/Upload.hlp
+msgid ""
+"You can choose to send BOTH an <strong>HTML</strong> and a plain "
+"<strong>TEXT</strong> version of your mailing, OR you can send a "
+"<strong>TEXT</strong> version only."
+msgstr ""
+"您可以選擇寄送一個包含<strong>HTML</strong>版和<strong>純文字</strong>版的 "
+"Email，或是您也可以選擇只傳送<strong>文字</strong>版的 Email。"
+
+#: templates/CRM/Mailing/Form/Upload.hlp
+msgid ""
+"If you create only an <strong>HTML</strong> version, CiviMail will "
+"automatically create a <strong>TEXT</strong> version for your recipients who "
+"have chosen NOT to receive HTML email."
+msgstr ""
+"如果您僅建立<strong>HTML</strong>版的 Email，Civi電子報會自動產生<strong>純文"
+"字</strong>版的 Email 給一些無法開啟 HTML 版 Email 的收件者。"
+
+#: templates/CRM/Mailing/Form/Upload.hlp
+msgid "Required Elements"
+msgstr "所需元件"
+
+#: templates/CRM/Mailing/Form/Upload.hlp
+msgid ""
+"CiviMail email messages must include an <strong>opt-out</strong> link (\"Opt "
+"out via web page\"), and the <strong>postal address</strong> of your "
+"organization. These elements help reduce the chances of your email being "
+"categorized as SPAM. They can be included in the main message body OR in a "
+"re-usable <strong>message footer</strong>. Refer to the online documentation "
+"for details on how to include required links and contact information as well "
+"as sample messages."
+msgstr ""
+"使用Civi電子報寄送的 Email 必需包含一個<strong>選擇退出</strong>的連結（\"透"
+"過網頁選擇退出\"），及您組織的<strong>郵政地址</strong>。這個設定是為了減低您"
+"郵件被歸為垃圾郵件的機率。他們可被包含在郵件主文，或在一個重複使用的<strong>"
+"電子報頁尾</strong>。參考線上檔案以尋找如何操作的詳情。"
+
+#: templates/CRM/Mailing/Form/Upload.hlp
+msgid "Upload or Compose On-screen"
+msgstr "上傳或在螢幕上撰寫"
+
+#: templates/CRM/Mailing/Form/Upload.hlp
+msgid ""
+"You can use your favorite editor to create content on your local computer "
+"and then <strong>Upload</strong> the files. OR you can <strong>Compose</"
+"strong> content directly on the screen."
+msgstr ""
+"您可以在您的電腦使用您慣用的編輯器建立內容，然後<strong>上傳</strong>檔案。或"
+"您可以直在螢幕上<strong>撰寫</strong>內容。"
+
+#: templates/CRM/Mailing/Form/Upload.hlp
+msgid ""
+"If you choose to compose on the screen, a basic WYSIWYG (what-you-see-is-"
+"what-you-get) editor is provided which you can use create simple HTML "
+"messages. However, if you are planning on creating HTML messages with "
+"complex layouts - it is best to use an HTML editor on your local computer. "
+"Then locate and upload the saved file(s) by clicking the <strong>Browse</"
+"strong> button."
+msgstr ""
+"如果您選擇直接在螢幕上撰寫信件，您可以使用一個簡易版的所見即所得編輯器，來建"
+"立簡單的 HTML 信件。但是，如果您在計劃設計複雜的 HTML 信件 - 最好使用在您電腦"
+"的 HTML 語言編輯器。然後按<strong>瀏覽</strong>鍵來上傳並儲存此 HTML 信件。"
+
+#: templates/CRM/Mailing/Form/Upload.tpl
+#, fuzzy
+msgid ""
+"You can either <strong>upload</strong> the mailing content from your "
+"computer OR <strong>compose</strong> the content on this screen."
+msgstr ""
+"您可以<strong>上載</strong>郵件內容從您的電腦或在此螢幕<strong>編寫</strong>"
+"內容。按幫助(?)以得到更多格式及要求的資料。"
+
+#: templates/CRM/Mailing/Form/Upload.tpl
+msgid ""
+"Browse to the <strong>TEXT</strong> message file you have prepared for this "
+"mailing."
+msgstr "瀏覽您為此郵件準備的<strong>文字</strong>訊息檔案。"
+
+#: templates/CRM/Mailing/Form/Upload.tpl
+msgid ""
+"Browse to the <strong>HTML</strong> message file you have prepared for this "
+"mailing."
+msgstr "瀏覽您為此郵件準備的<strong>HTML</strong>訊息檔案。"
+
+#: templates/CRM/Mailing/Form/Upload.tpl
+msgid "Header / Footer"
+msgstr "頁首 / 頁尾"
+
+#: templates/CRM/Mailing/Form/Upload.tpl
+msgid ""
+"You may choose to include a pre-configured Header block above your message."
+msgstr "您可以選擇一個預先設置好的頁首，置於您電子報主文之上。"
+
+#: templates/CRM/Mailing/Form/Upload.tpl
+msgid ""
+"You may choose to include a pre-configured Footer block below your message. "
+"This is a good place to include the required unsubscribe, opt-out and postal "
+"address tokens."
+msgstr ""
+"您可以選擇一個預先設置好的頁尾，置於您電子報主文之下。這是一個適當位置，可置"
+"放系統所要求的退訂、選擇退出，及郵政地址替代符號（token）。"
+
+#: templates/CRM/Mailing/Form/Upload.tpl
+msgid "More information and sample messages..."
+msgstr "更多資訊及訊息範例..."
+
+#: templates/CRM/Mailing/Page/Browse.hlp
+msgid ""
+"Find mailings by mailing name. You can enter a partial or complete name."
+msgstr "用電子報標題來尋找電子報。您可以輸入部分或完整標題。"
+
+#: templates/CRM/Mailing/Page/Browse.hlp
+msgid ""
+"Find mailings by the name of the person who created or sent them. You can "
+"enter a complete OR partial name (last name, first name format)."
+msgstr "用建立或傳送郵件者的姓名來尋找電子報。您可以輸入完整或部分姓名。"
+
+#: templates/CRM/Mailing/Page/Browse.tpl
+msgid "New Mailing"
+msgstr "新增電子報"
+
+#: templates/CRM/Mailing/Page/Browse.tpl
+msgid "No Mailings match your search criteria. Suggestions:"
+msgstr "沒有郵件符合你的搜尋。建議："
+
+#: templates/CRM/Mailing/Page/Browse.tpl
+msgid "Or you can <a href='%1'>browse all %2 mailings</a>."
+msgstr "或您可以<a href='%1'>瀏覽所有 %2 電子報</a>。"
+
+#: templates/CRM/Mailing/Page/Browse.tpl
+msgid ""
+"There are no Unscheduled Mailings. You can <a href='%1'>create and send one</"
+"a>."
+msgstr "沒有未排程的電子報。您可以<a href='%1'>建立及傳送一個</a>。"
+
+#: templates/CRM/Mailing/Page/Browse.tpl
+msgid ""
+"There are no Archived Mailings. You can archive mailings from <a href='%"
+"1'>Scheduled or Sent Mailings</a>."
+msgstr ""
+"沒有已封存的電子報。您可以封存電子報，從<a href='%1'>計劃及傳送郵件</a>。"
+
+#: templates/CRM/Mailing/Page/Browse.tpl
+#, fuzzy
+msgid ""
+"There are no Scheduled or Sent Mailings. You can <a href='%1'>create and "
+"send one</a> OR you can search the <a href='%2'>Archived Mailings</a>."
+msgstr ""
+"沒有已排定或已傳送電子報。您可以<a href='%1'>建立及傳送一個</a> \n"
+"\t或您可以搜尋<a href='%2'>已封存電子報</a>。"
+
+#: templates/CRM/Mailing/Page/Component.tpl
+msgid "Body HTML"
+msgstr "主文HTML"
+
+#: templates/CRM/Mailing/Page/Component.tpl
+#, fuzzy
+msgid "Add Mailing Component"
+msgstr "編輯電子報組件"
+
+#: templates/CRM/Mailing/Page/Confirm.tpl
+msgid ""
+"<strong>%1 (%2)</strong> has been successfully subscribed to the <strong>%3</"
+"strong> mailing list."
+msgstr "<strong>%1 (%2)</strong>已成功訂閱<strong>%3</strong>電子報。"
+
+#: templates/CRM/Mailing/Page/Confirm.tpl
+msgid ""
+"Oops. We encountered a problem in processing your subscription confirmation. "
+"Please contact the site administrator."
+msgstr "噢。我們在處理您的訂閱確認時遇到問題。請聯絡網站管理者。"
+
+#: templates/CRM/Mailing/Page/Event.tpl
+msgid "There are currently no %1."
+msgstr "目前沒有%1。"
+
+#: templates/CRM/Mailing/Page/Event.tpl
+msgid "Back to Report"
+msgstr "回到報表"
+
+#: templates/CRM/Mailing/Page/Optout.tpl
+#, fuzzy
+msgid "has been successfully opted out."
+msgstr "重新訂閱已成功。"
+
+#: templates/CRM/Mailing/Page/Optout.tpl
+msgid "Are you sure you want to optout: %1 (%2)"
+msgstr "您是否確定要選擇退出：%1 (%2)"
+
+#: templates/CRM/Mailing/Page/Optout.tpl
+msgid "Optout"
+msgstr "選擇退出"
+
+#: templates/CRM/Mailing/Page/Report.tpl
+msgid "Delivery Summary"
+msgstr "遞送概況"
+
+#: templates/CRM/Mailing/Page/Report.tpl
+msgid ""
+"<strong>Delivery has not yet begun for this mailing.</strong> If the "
+"scheduled delivery date and time is past, ask the system administrator or "
+"technical support contact for your site to verify that the automated mailer "
+"task ('cron job') is running - and how frequently."
+msgstr ""
+"<strong>此電子報的傳送尚未開始。</strong>如果已排定的傳送日期及時間已過，請詢"
+"問系統管理者或您網站的技術支持聯絡人去驗證自動Email工作('作流程排序') - 與寄"
+"送頻率。"
+
+#: templates/CRM/Mailing/Page/Report.tpl
+msgid "Recipients"
+msgstr "收件人"
+
+#: templates/CRM/Mailing/Page/Report.tpl
+msgid "Included"
+msgstr "包括"
+
+#: templates/CRM/Mailing/Page/Report.tpl
+msgid "Recipients of <a href=\"%1\">%2</a>"
+msgstr "收件者：<a href=\"%1\">%2</a>"
+
+#: templates/CRM/Mailing/Page/Report.tpl
+msgid "Members of <a href=\"%1\">%2</a>"
+msgstr "會員：<a href=\"%1\">%2</a>"
+
+#: templates/CRM/Mailing/Page/Report.tpl
+msgid "Excluded"
+msgstr "不包括"
+
+#: templates/CRM/Mailing/Page/Report.tpl
+msgid "Click-through Summary"
+msgstr "點擊次數概況"
+
+#: templates/CRM/Mailing/Page/Report.tpl
+msgid "Unique Clicks"
+msgstr "不重複點擊數"
+
+#: templates/CRM/Mailing/Page/Report.tpl
+msgid "Success Rate"
+msgstr "成功率"
+
+#: templates/CRM/Mailing/Page/Report.tpl
+msgid "Mailing Settings"
+msgstr "電子報設定"
+
+#: templates/CRM/Mailing/Page/Report.tpl
+msgid "Reply-to email"
+msgstr "回覆email"
+
+#: templates/CRM/Mailing/Page/Report.tpl
+msgid "Forward replies"
+msgstr "轉寄回覆"
+
+#: templates/CRM/Mailing/Page/Report.tpl
+msgid "On"
+msgstr "開啟"
+
+#: templates/CRM/Mailing/Page/Report.tpl
+msgid "Off"
+msgstr "關閉"
+
+#: templates/CRM/Mailing/Page/Report.tpl
+msgid "Auto-respond to replies"
+msgstr "自動回覆"
+
+#: templates/CRM/Mailing/Page/Report.tpl
+msgid "Open tracking"
+msgstr "開信追蹤"
+
+#: templates/CRM/Mailing/Page/Report.tpl
+msgid "URL Click-through tracking"
+msgstr "URL點擊跟蹤"
+
+#: templates/CRM/Mailing/Page/Resubscribe.tpl
+msgid "has been successfully resubscribed."
+msgstr "重新訂閱已成功。"
+
+#: templates/CRM/Mailing/Page/Resubscribe.tpl
+msgid "Are you sure you want to resubscribe: %1 (%2)"
+msgstr "您是否確定重新訂閱：%1 (%2)"
+
+#: templates/CRM/Mailing/Page/Unsubscribe.tpl
+msgid "has been successfully unsubscribed."
+msgstr "已退訂成功。"
+
+#: templates/CRM/Mailing/Page/Unsubscribe.tpl
+msgid " %1 (%2)"
+msgstr " %1 (%2)"
+
+#: templates/CRM/Mailing/Page/Unsubscribe.tpl
+msgid "Are you sure you want to be unsubscribed from mailing lists:"
+msgstr "您是否確定退訂此份電子報："
+
+#: templates/CRM/Mailing/Page/Unsubscribe.tpl
+msgid ""
+"Sorry you are not on the mailing list. Probably you are already unsubscribed."
+msgstr "對不起，您不在訂閱名單中。可能您已退訂。"

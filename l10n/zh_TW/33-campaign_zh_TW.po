@@ -1,0 +1,980 @@
+# #-#-#-#-#  calendar.po (CiviCRM 3.0)  #-#-#-#-#
+# Copyright CiviCRM LLC (c) 2004-2007
+# This file is distributed under the same license as the CiviCRM package.
+# If you contribute heavily to a translation and deem your work copyrightable,
+# make sure you license it to CiviCRM LLC under Academic Free License 3.0.
+msgid ""
+msgstr ""
+"Project-Id-Version: CiviCRM 2.1\n"
+"Report-Msgid-Bugs-To: http://issues.civicrm.org/\n"
+"POT-Creation-Date: 2010-12-10 16:13+0100\n"
+"PO-Revision-Date: 2010-02-03 22:35+0800\n"
+"Last-Translator: Charles Chuang <charles>\n"
+"Language-Team: CiviCRM Translators <civicrm-translators@lists.civicrm.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Pootle 1.0.2\n"
+"X-Poedit-Language: Chinese\n"
+"X-Poedit-Country: TAIWAN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Pootle 1.0.2\n"
+"X-Generator: Pootle 1.0.2\n"
+"X-Generator: Pootle 0.10\n"
+"X-Generator: Pootle 0.10\n"
+"X-Poedit-Bookmarks: 4212,-1,-1,-1,-1,-1,-1,-1,-1,-1\n"
+
+#: CRM/Campaign/BAO/Survey.php CRM/Campaign/Form/Task/Reserve.php
+#: CRM/Campaign/Page/Vote.php CRM/Campaign/Task.php
+msgid "Reserve Respondents"
+msgstr ""
+
+#: CRM/Campaign/BAO/Survey.php CRM/Campaign/Page/Vote.php
+#, fuzzy
+msgid "Interview Respondents"
+msgstr "報表預覽"
+
+#: CRM/Campaign/BAO/Survey.php CRM/Campaign/Form/Task/Release.php
+#: CRM/Campaign/Task.php templates/CRM/Campaign/Form/Task/Release.tpl
+msgid "Release Respondents"
+msgstr ""
+
+#: CRM/Campaign/DAO/Campaign.php CRM/Campaign/DAO/Survey.php
+#, fuzzy
+msgid "Campaign Created Date"
+msgstr "電子報建立日期"
+
+#: CRM/Campaign/DAO/Campaign.php CRM/Campaign/DAO/Survey.php
+#, fuzzy
+msgid "Last Modified Date"
+msgstr "修改日期"
+
+#: CRM/Campaign/DAO/Survey.php CRM/Campaign/Form/Survey.php
+#: templates/CRM/Campaign/Form/ResultOptions.tpl
+#: templates/CRM/Campaign/Page/DashBoard.tpl
+#, fuzzy
+msgid "Recontact Interval"
+msgstr "頻率區間"
+
+#: CRM/Campaign/Form/Gotv.php CRM/Campaign/Form/Search.php
+#: CRM/Campaign/Form/Task/Interview.php CRM/Campaign/Form/Task/Release.php
+#: CRM/Campaign/Form/Task/Reserve.php
+msgid "Survey(s)"
+msgstr ""
+
+#: CRM/Campaign/Form/Gotv.php CRM/Campaign/Form/Task/Interview.php
+#, fuzzy
+msgid "Could not find Survey."
+msgstr "無法找到 Email 位址。"
+
+#: CRM/Campaign/Form/Petition.php CRM/Campaign/Page/DashBoard.php
+#, fuzzy
+msgid "Delete Petition"
+msgstr "刪除參加者"
+
+#: CRM/Campaign/Form/Search.php CRM/Campaign/Form/Task/Interview.php
+msgid "Record %1 Responses"
+msgstr ""
+
+#: CRM/Campaign/Form/Survey.php CRM/Campaign/Page/DashBoard.php
+#: CRM/Campaign/Page/Survey.php
+#, fuzzy
+msgid "Delete Survey"
+msgstr "刪除價格"
+
+#: CRM/Campaign/Form/Task/Interview.php CRM/Campaign/Form/Task/Reserve.php
+#: CRM/Campaign/Page/AJAX.php templates/CRM/Campaign/Form/Task/Interview.tpl
+#, fuzzy
+msgid "%1"
+msgstr "1"
+
+#: CRM/Campaign/Form/Task/Print.php CRM/Campaign/Task.php
+#, fuzzy
+msgid "Print Respondents"
+msgstr "列印報表"
+
+#: CRM/Campaign/Form/Task/Release.php CRM/Campaign/Form/Task/Reserve.php
+#, fuzzy
+msgid "Missing Interviewer contact."
+msgstr "已查看的聯絡人"
+
+#: CRM/Campaign/Form/Task/Reserve.php CRM/Campaign/Page/AJAX.php
+#, fuzzy
+msgid "Respondent Reservation"
+msgstr "活動報名"
+
+#: CRM/Campaign/Page/Campaign.php CRM/Campaign/Page/DashBoard.php
+#: templates/CRM/Campaign/Form/Campaign.tpl
+#, fuzzy
+msgid "Are you sure you want to delete this Campaign?"
+msgstr "您確定要刪除此募款專頁嗎？"
+
+#: CRM/Campaign/Page/Campaign.php CRM/Campaign/Page/DashBoard.php
+#, fuzzy
+msgid "Update Campaign"
+msgstr "刪除個人募款專業"
+
+#: CRM/Campaign/Page/Campaign.php CRM/Campaign/Page/DashBoard.php
+#, fuzzy
+msgid "Disable Campaign"
+msgstr "刪除個人募款專業"
+
+#: CRM/Campaign/Page/Campaign.php CRM/Campaign/Page/DashBoard.php
+#, fuzzy
+msgid "Enable Campaign"
+msgstr "刪除個人募款專業"
+
+#: CRM/Campaign/Page/DashBoard.php CRM/Campaign/Page/Survey.php
+#, fuzzy
+msgid "Update Survey"
+msgstr "更新動態"
+
+#: CRM/Campaign/Page/DashBoard.php CRM/Campaign/Page/Survey.php
+#, fuzzy
+msgid "Disable Survey"
+msgstr "停用價格"
+
+#: CRM/Campaign/Page/DashBoard.php CRM/Campaign/Page/Survey.php
+#, fuzzy
+msgid "Enable Survey"
+msgstr "啟用價格"
+
+#: CRM/Campaign/BAO/Petition.php
+msgid "No survey sid parameter. Cannot process signature."
+msgstr ""
+
+#: CRM/Campaign/BAO/Query.php
+#, fuzzy
+msgid "Survey - %1"
+msgstr "活動類型 - %1"
+
+#: CRM/Campaign/BAO/Query.php
+#, fuzzy
+msgid "Survey Status - %1"
+msgstr "個案狀態 %2 %1"
+
+#: CRM/Campaign/BAO/Query.php
+#, fuzzy
+msgid "Survey Interviewer - %1"
+msgstr "預覽頁面 - %1"
+
+#: CRM/Campaign/BAO/Query.php
+#, fuzzy
+msgid "Select Interviewer"
+msgstr "選擇州/省"
+
+#: CRM/Campaign/BAO/Query.php
+#, fuzzy
+msgid "Could not find survey for %1 respondents."
+msgstr "無法找到金流機制的使用者名稱"
+
+#: CRM/Campaign/DAO/Campaign.php
+#, fuzzy
+msgid "Campaign ID"
+msgstr "募款串連"
+
+#: CRM/Campaign/DAO/Campaign.php
+#, fuzzy
+msgid "Campaign Name"
+msgstr "個人募款串連"
+
+#: CRM/Campaign/DAO/Campaign.php templates/CRM/Campaign/Page/Campaign.tpl
+#, fuzzy
+msgid "Campaign Title"
+msgstr "個人募款串連"
+
+#: CRM/Campaign/DAO/Campaign.php
+#, fuzzy
+msgid "Campaign Description"
+msgstr "競選捐款"
+
+#: CRM/Campaign/DAO/Campaign.php
+#, fuzzy
+msgid "Campaign Start Date"
+msgstr "個案開始日期"
+
+#: CRM/Campaign/DAO/Campaign.php
+#, fuzzy
+msgid "Campaign End Date"
+msgstr "活動終止日期"
+
+#: CRM/Campaign/DAO/Campaign.php
+#, fuzzy
+msgid "Campaign Type ID"
+msgstr "個人募款串連"
+
+#: CRM/Campaign/DAO/Campaign.php
+#, fuzzy
+msgid "Campaign Status ID"
+msgstr "個人募款串連"
+
+#: CRM/Campaign/DAO/Survey.php
+#, fuzzy
+msgid "Instructions"
+msgstr "簡介"
+
+#: CRM/Campaign/DAO/Survey.php templates/CRM/Campaign/Page/DashBoard.tpl
+#: templates/CRM/Campaign/Page/Petition.tpl
+#: templates/CRM/Campaign/Page/Survey.tpl
+#, fuzzy
+msgid "Release Frequency"
+msgstr "頻率"
+
+#: CRM/Campaign/DAO/Survey.php
+#, fuzzy
+msgid "Maximum number of contacts"
+msgstr "最高提醒次數"
+
+#: CRM/Campaign/DAO/Survey.php
+#, fuzzy
+msgid "Default number of contacts"
+msgstr "一個聯絡人的群組"
+
+#: CRM/Campaign/Form/Campaign.php
+#, fuzzy
+msgid "Edit Campaign"
+msgstr "募款串連"
+
+#: CRM/Campaign/Form/Campaign.php templates/CRM/Campaign/Page/Campaign.tpl
+#, fuzzy
+msgid "Campaign Type"
+msgstr "個人募款串連"
+
+#: CRM/Campaign/Form/Campaign.php
+#, fuzzy
+msgid "Campaign Status"
+msgstr "個人募款串連"
+
+#: CRM/Campaign/Form/Campaign.php
+#, fuzzy
+msgid "Parent Id"
+msgstr "上層"
+
+#: CRM/Campaign/Form/Campaign.php
+#, fuzzy
+msgid "- select Parent -"
+msgstr "- 選擇角色 -"
+
+#: CRM/Campaign/Form/Campaign.php
+#, fuzzy
+msgid " Campaign has been deleted."
+msgstr "已刪除%1 選項。"
+
+#: CRM/Campaign/Form/Campaign.php
+#, fuzzy
+msgid "Campaign %1 has been saved."
+msgstr "已儲存個案'%1'。"
+
+#: CRM/Campaign/Form/Campaign.php
+#, fuzzy
+msgid " You can add another Campaign."
+msgstr "您可以新增其他的選項。"
+
+#: CRM/Campaign/Form/Gotv.php
+#, fuzzy
+msgid "GOTV (Voter Tracking)"
+msgstr "開啟追蹤"
+
+#: CRM/Campaign/Form/Gotv.php
+msgid ""
+"Oops, It looks like there is no survey created. <a href='%1'>Click here to "
+"create new.</a>"
+msgstr ""
+
+#: CRM/Campaign/Form/Petition.php
+#, fuzzy
+msgid "Edit Petition"
+msgstr "編輯參加者"
+
+#: CRM/Campaign/Form/Petition.php
+#, fuzzy
+msgid "Petition Dashboard"
+msgstr "Civi活動總覽頁面"
+
+#: CRM/Campaign/Form/Petition.php
+#, fuzzy
+msgid "Petition Title"
+msgstr "底部標題"
+
+#: CRM/Campaign/Form/Petition.php
+#, fuzzy
+msgid "Contact Profile"
+msgstr "聯絡電話"
+
+#: CRM/Campaign/Form/Petition.php
+#, fuzzy
+msgid "Activity Profile"
+msgstr "動態檢視"
+
+#: CRM/Campaign/Form/Petition.php
+#, fuzzy
+msgid "Is Default?"
+msgstr "預設？"
+
+#: CRM/Campaign/Form/Petition.php
+#, fuzzy
+msgid " Petition has been deleted."
+msgstr "已刪除%1 選項。"
+
+#: CRM/Campaign/Form/Petition.php
+#, fuzzy
+msgid "Petition has been saved."
+msgstr "已儲存選項'%1'。"
+
+#: CRM/Campaign/Form/Petition.php
+#, fuzzy
+msgid " You can add another Petition."
+msgstr "您可以新增其他的選項。"
+
+#: CRM/Campaign/Form/Petition/Signature.php
+msgid "Sign the Petition"
+msgstr ""
+
+#: CRM/Campaign/Form/Petition/Signature.php
+#, fuzzy
+msgid "Petition Signature"
+msgstr "簽名"
+
+#: CRM/Campaign/Form/Search.php
+msgid "Find Respondents To %1"
+msgstr ""
+
+#: CRM/Campaign/Form/Search.php
+#, fuzzy
+msgid "Find Respondents"
+msgstr "搜尋活動"
+
+#: CRM/Campaign/Form/Survey.php
+#, fuzzy
+msgid "Edit Survey"
+msgstr "編輯規則"
+
+#: CRM/Campaign/Form/Survey.php
+#, fuzzy
+msgid "Survey Dashboard"
+msgstr "總覽"
+
+#: CRM/Campaign/Form/Survey.php
+#, fuzzy
+msgid "Create new response set"
+msgstr "建立新的選項系列"
+
+#: CRM/Campaign/Form/Survey.php
+#, fuzzy
+msgid "Create a new response set"
+msgstr "建立新的選項系列"
+
+#: CRM/Campaign/Form/Survey.php
+#, fuzzy
+msgid "Use existing response set"
+msgstr "使用現有地點"
+
+#: CRM/Campaign/Form/Survey.php
+#, fuzzy
+msgid "Select Response Set"
+msgstr "選擇記錄"
+
+#: CRM/Campaign/Form/Survey.php
+#, fuzzy
+msgid "Survey Responses"
+msgstr "自動回應"
+
+#: CRM/Campaign/Form/Survey.php
+msgid "Instructions for interviewers"
+msgstr ""
+
+#: CRM/Campaign/Form/Survey.php
+#, fuzzy
+msgid "Release frequency"
+msgstr "認捐頻率單位"
+
+#: CRM/Campaign/Form/Survey.php
+#, fuzzy
+msgid "Release Frequency interval should be a positive number."
+msgstr "參加者上限值必須為正整數值"
+
+#: CRM/Campaign/Form/Survey.php
+msgid "Maximum reserved at one time"
+msgstr ""
+
+#: CRM/Campaign/Form/Survey.php
+#, fuzzy
+msgid "Maximum reserved at one time should be a positive number"
+msgstr "參加者上限值必須為正整數值"
+
+#: CRM/Campaign/Form/Survey.php
+msgid "Total reserved per interviewer"
+msgstr ""
+
+#: CRM/Campaign/Form/Survey.php
+#, fuzzy
+msgid "Total reserved contacts should be a positive number"
+msgstr "值必需是一個正數"
+
+#: CRM/Campaign/Form/Survey.php
+msgid "Enter atleast one response option."
+msgstr ""
+
+#: CRM/Campaign/Form/Survey.php
+#, fuzzy
+msgid "Please select Survey Response set."
+msgstr "請至少選擇一個Tag。"
+
+#: CRM/Campaign/Form/Survey.php
+#, fuzzy
+msgid " Survey has been deleted."
+msgstr "活動'%1'已刪除。"
+
+#: CRM/Campaign/Form/Survey.php
+#, fuzzy
+msgid "Survey %1 has been saved."
+msgstr "選單  '%1' 已儲存。"
+
+#: CRM/Campaign/Form/Survey.php
+#, fuzzy
+msgid " You can add another Survey."
+msgstr "您可以新增其他的選項。"
+
+#: CRM/Campaign/Form/SurveyType.php
+#, fuzzy
+msgid "Selected Survey type has been deleted."
+msgstr "已刪除所選擇的%1類型。"
+
+#: CRM/Campaign/Form/SurveyType.php
+#, fuzzy
+msgid "The Survey type '%1' has been saved."
+msgstr "已儲存資料類型「%1」。"
+
+#: CRM/Campaign/Form/Task/Interview.php
+#, fuzzy
+msgid "Could not find Interviewer."
+msgstr "無法在路徑樹裡找到 %1"
+
+#: CRM/Campaign/Form/Task/Interview.php
+msgid "No respondents are currently reserved for you to interview."
+msgstr ""
+
+#: CRM/Campaign/Form/Task/Interview.php
+#, fuzzy
+msgid "Oops. It looks like there is no response option configured."
+msgstr "噢，看來沒有有效的線上付款付款狀態。"
+
+#: CRM/Campaign/Form/Task/Interview.php
+msgid "Release Respondents >>"
+msgstr ""
+
+#: CRM/Campaign/Form/Task/Interview.php
+msgid "Reserve More Respondents >>"
+msgstr ""
+
+#: CRM/Campaign/Form/Task/Interview.php
+msgid "Respondent Interview"
+msgstr ""
+
+#: CRM/Campaign/Form/Task/Release.php
+msgid "Please search with 'Survey', to apply this action."
+msgstr ""
+
+#: CRM/Campaign/Form/Task/Release.php
+#, fuzzy
+msgid "Could not find respondents to release."
+msgstr "無法在路徑樹裡找到 %1"
+
+#: CRM/Campaign/Form/Task/Release.php
+msgid "We could not found respondent for this survey to release."
+msgstr ""
+
+#: CRM/Campaign/Form/Task/Release.php
+#, fuzzy
+msgid "%1 respondent(s) have been released."
+msgstr "%1活動報名已取消。"
+
+#: CRM/Campaign/Form/Task/Release.php
+msgid "%1 respondents did not release."
+msgstr ""
+
+#: CRM/Campaign/Form/Task/Reserve.php
+#, fuzzy
+msgid "Could not find Survey Id."
+msgstr "無法找到 Email 位址。"
+
+#: CRM/Campaign/Form/Task/Reserve.php
+#, fuzzy
+msgid "Could not find contacts for reservation."
+msgstr "找不到適合此選項的範本。"
+
+#: CRM/Campaign/Form/Task/Reserve.php
+msgid ""
+"The maximum number of contacts is already reserved for this interviewer."
+msgstr ""
+
+#: CRM/Campaign/Form/Task/Reserve.php
+#, fuzzy
+msgid "You can reserve a maximum of %1 contact(s) at a time for this survey."
+msgstr "您最多可有 %1 附件。"
+
+#: CRM/Campaign/Form/Task/Reserve.php
+#: templates/CRM/Campaign/Form/Task/Interview.tpl
+#, fuzzy
+msgid "Reserve"
+msgstr "預留"
+
+#: CRM/Campaign/Form/Task/Reserve.php
+#, fuzzy
+msgid "Reserve and Interview"
+msgstr "儲存及預覽"
+
+#: CRM/Campaign/Form/Task/Reserve.php
+#, fuzzy
+msgid "Reservation has been added for %1 Contact(s)."
+msgstr "此聯絡人沒有任何活動報名記錄。"
+
+#: CRM/Campaign/Form/Task/Reserve.php
+msgid "Reservation did not add for %1 Contact(s)."
+msgstr ""
+
+#: CRM/Campaign/Page/AJAX.php
+#, fuzzy
+msgid "Respondent Reserved."
+msgstr "已預留"
+
+#: CRM/Campaign/Page/AJAX.php
+#, fuzzy
+msgid "Vote Recorded"
+msgstr "使用者記錄"
+
+#: CRM/Campaign/Page/DashBoard.php
+#, fuzzy
+msgid "Update Petition"
+msgstr "更新捐款"
+
+#: CRM/Campaign/Page/DashBoard.php
+#, fuzzy
+msgid "Disable Petition"
+msgstr "停用選項"
+
+#: CRM/Campaign/Page/DashBoard.php
+#, fuzzy
+msgid "Enable Petition"
+msgstr "啟用選項"
+
+#: CRM/Campaign/Page/DashBoard.php
+#, fuzzy
+msgid "Sign"
+msgstr "簽名"
+
+#: CRM/Campaign/Page/DashBoard.php
+msgid "Sign Petition"
+msgstr ""
+
+#: CRM/Campaign/Page/DashBoard.php
+#, fuzzy
+msgid "Signatures"
+msgstr "簽名"
+
+#: CRM/Campaign/Page/DashBoard.php
+msgid "List the signatures"
+msgstr ""
+
+#: CRM/Campaign/Page/DashBoard.php
+#, fuzzy
+msgid "Campaigns"
+msgstr "募款串連"
+
+#: CRM/Campaign/Page/DashBoard.php
+msgid "Surveys"
+msgstr ""
+
+#: CRM/Campaign/Page/DashBoard.php
+#, fuzzy
+msgid "Petitions"
+msgstr "動作"
+
+#: CRM/Campaign/Selector/Search.php
+#, fuzzy
+msgid "Respondents"
+msgstr "回應"
+
+#: CRM/Campaign/Selector/Search.php
+#, fuzzy
+msgid "CiviCRM Respondent Search"
+msgstr "CiviCRM活動搜尋"
+
+#: CRM/Campaign/Task.php
+msgid "Record Respondents Interview"
+msgstr ""
+
+#: templates/CRM/Campaign/Form/Gotv.tpl
+msgid "Is Interview Conducted?"
+msgstr ""
+
+#: templates/CRM/Campaign/Form/Gotv.tpl
+#, fuzzy
+msgid "Voted?"
+msgstr "已計算?"
+
+#: templates/CRM/Campaign/Form/Gotv.tpl
+#, fuzzy
+msgid "Is Reserved?"
+msgstr "已預留"
+
+#: templates/CRM/Campaign/Form/Gotv.tpl
+#, fuzzy
+msgid "Save as voted."
+msgstr "儲存並結束"
+
+#: templates/CRM/Campaign/Form/Gotv.tpl
+#, fuzzy
+msgid "Save as non voted."
+msgstr "儲存並結束"
+
+#: templates/CRM/Campaign/Form/Gotv.tpl
+#, fuzzy
+msgid "Vote Recorded."
+msgstr "使用者記錄"
+
+#: templates/CRM/Campaign/Form/Gotv.tpl
+#, fuzzy
+msgid "Vote Cancelled."
+msgstr "已取消"
+
+#: templates/CRM/Campaign/Form/Gotv.tpl
+#, fuzzy
+msgid "Reserved."
+msgstr "預留"
+
+#: templates/CRM/Campaign/Form/Gotv.tpl
+#: templates/CRM/Campaign/Form/Task/Interview.tpl
+#, fuzzy
+msgid "Released."
+msgstr "已故"
+
+#: templates/CRM/Campaign/Form/Petition/Signature.tpl
+msgid "You have already signed this petition."
+msgstr ""
+
+#: templates/CRM/Campaign/Form/Petition/Signature.tpl
+msgid ""
+"You have already signed this petition but you still <b>need to verify your "
+"email address</b>.</br>\n"
+"Please check your email inbox for the confirmation email. If you don't find "
+"it, verify if it isn't in your spam folder."
+msgstr ""
+
+#: templates/CRM/Campaign/Form/Petition/Signature.tpl
+#, fuzzy
+msgid "Thank you for your support."
+msgstr "多謝您的支持"
+
+#: templates/CRM/Campaign/Form/Petition.tpl
+#, fuzzy
+msgid "Are you sure you want to delete this Petition?"
+msgstr "您確定要刪除此拍賣？"
+
+#: templates/CRM/Campaign/Form/Petition.tpl
+#: templates/CRM/Campaign/Form/Survey.tpl
+msgid ""
+"Use this form to Add new Survey. You can create a new Activity type, "
+"specific to this Survey or select an existing activity type for this Survey."
+msgstr ""
+
+#: templates/CRM/Campaign/Form/Petition.tpl
+msgid "Fields about the contact you want to collect."
+msgstr ""
+
+#: templates/CRM/Campaign/Form/Petition.tpl
+msgid "Fields about the petition."
+msgstr ""
+
+#: templates/CRM/Campaign/Form/Petition.tpl
+#, fuzzy
+msgid "Is this petition active?"
+msgstr "此活動是否啟用？"
+
+#: templates/CRM/Campaign/Form/Petition.tpl
+#, fuzzy
+msgid "Is this the default petition?"
+msgstr "這是測試郵件嗎？"
+
+#: templates/CRM/Campaign/Form/ResultOptions.tpl
+#, fuzzy
+msgid ""
+"You can create new response options for this survey, or select an existing "
+"survey response set which you've already created for another survey."
+msgstr ""
+"您可以建立新多重選擇選項給此欄位，或選擇一個您已為另外自訂欄位建立的現存選項"
+"系列。"
+
+#: templates/CRM/Campaign/Form/ResultOptions.tpl
+#, fuzzy
+msgid "Response Options"
+msgstr "性別選項"
+
+#: templates/CRM/Campaign/Form/ResultOptions.tpl
+msgid ""
+"Enter up to ten (10) multiple choice options in this table (click 'another "
+"choice' for each additional choice).You can use existing response options "
+"set options by selecting survey response set."
+msgstr ""
+
+#: templates/CRM/Campaign/Form/Search/EmptyResults.tpl
+#, fuzzy
+msgid "No matching respondent found."
+msgstr "未找到相關的個案。"
+
+#: templates/CRM/Campaign/Form/Search/EmptyResults.tpl
+#, fuzzy
+msgid "if you are searching by respondent name, check your spelling"
+msgstr "如果您用客戶姓名搜尋，檢查您的字串。"
+
+#: templates/CRM/Campaign/Form/Survey.tpl
+#, fuzzy
+msgid "Are you sure you want to delete this Survey?"
+msgstr "你確定要刪除此規則？"
+
+#: templates/CRM/Campaign/Form/Survey.tpl
+#, fuzzy
+msgid "Title of the survey."
+msgstr "郵件的標題"
+
+#: templates/CRM/Campaign/Form/Survey.tpl
+#, fuzzy
+msgid "Select the campaign for which survey is created."
+msgstr "為此個案選擇狀態"
+
+#: templates/CRM/Campaign/Form/Survey.tpl
+#, fuzzy
+msgid "Select the Activity Type."
+msgstr "刪除動態類別"
+
+#: templates/CRM/Campaign/Form/Survey.tpl
+#, fuzzy
+msgid "Select the Profile for Survey."
+msgstr "選擇與聯絡人偏好的隱私聯繫方式"
+
+#: templates/CRM/Campaign/Form/Survey.tpl
+msgid ""
+"Maximum number of contacts that can be reserved for an interviewer at one "
+"time."
+msgstr ""
+
+#: templates/CRM/Campaign/Form/Survey.tpl
+msgid ""
+"Maximum total number of contacts that can be in a reserved state for an "
+"interviewer."
+msgstr ""
+
+#: templates/CRM/Campaign/Form/Survey.tpl
+msgid ""
+"Reserved respondents are released if they haven't been surveyed within this "
+"number of days. The Respondent Processor script must be run periodically to "
+"release respondents."
+msgstr ""
+
+#: templates/CRM/Campaign/Form/Survey.tpl
+#, fuzzy
+msgid "Is this survey active?"
+msgstr "此活動是否啟用？"
+
+#: templates/CRM/Campaign/Form/Survey.tpl
+#, fuzzy
+msgid "Is this the default survey?"
+msgstr "此金流機制是否為預設值？"
+
+#: templates/CRM/Campaign/Form/Task/Interview.tpl
+#, fuzzy
+msgid ""
+"Click <strong>record response</strong> button to update values for each "
+"respondent as needed."
+msgstr "請按下方的<strong>更新參加者</strong>鍵以儲存變更設定。"
+
+#: templates/CRM/Campaign/Form/Task/Interview.tpl
+msgid ""
+"Click <strong>record response</strong> button to update values for each "
+"respondent as needed. <br />Click <strong>Release Respondents >></strong> "
+"button below to release any respondents for whon you haven't recorded a "
+"response. <br />Click <strong>Reserve More Respondents >></strong> button if "
+"you need to get more respondents to interview."
+msgstr ""
+
+#: templates/CRM/Campaign/Form/Task/Interview.tpl
+msgid "Vote"
+msgstr ""
+
+#: templates/CRM/Campaign/Form/Task/Interview.tpl
+msgid "record response"
+msgstr ""
+
+#: templates/CRM/Campaign/Form/Task/Interview.tpl
+msgid "Release"
+msgstr ""
+
+#: templates/CRM/Campaign/Form/Task/Interview.tpl
+msgid "release"
+msgstr ""
+
+#: templates/CRM/Campaign/Form/Task/Interview.tpl
+msgid "Response Saved."
+msgstr ""
+
+#: templates/CRM/Campaign/Form/Task/Interview.tpl
+#, fuzzy
+msgid "Update Response"
+msgstr "更新報表"
+
+#: templates/CRM/Campaign/Form/Task/Interview.tpl
+#, fuzzy
+msgid "reserve"
+msgstr "預留"
+
+#: templates/CRM/Campaign/Form/Task/Release.tpl
+#, fuzzy
+msgid "Do you want to release respondents for '%1' ?"
+msgstr "您是否確定要刪除筆記 '%1'？"
+
+#: templates/CRM/Campaign/Form/Task/Reserve.tpl
+msgid "Add Respondent Reservation(s)"
+msgstr ""
+
+#: templates/CRM/Campaign/Form/Task/Reserve.tpl
+msgid "Do you want to reserve respondents for '%1' ?"
+msgstr ""
+
+#: templates/CRM/Campaign/Page/Campaign.tpl
+#: templates/CRM/Campaign/Page/DashBoard.tpl
+#, fuzzy
+msgid "Add Campaign"
+msgstr "募款串連"
+
+#: templates/CRM/Campaign/Page/Campaign.tpl
+#, fuzzy
+msgid "No Campaigns found."
+msgstr "沒有相關搜尋"
+
+#: templates/CRM/Campaign/Page/DashBoard.tpl
+#, fuzzy
+msgid "No campaigns found."
+msgstr "沒有相關搜尋"
+
+#: templates/CRM/Campaign/Page/DashBoard.tpl
+#: templates/CRM/Campaign/Page/Petition.tpl
+#: templates/CRM/Campaign/Page/Survey.tpl
+#, fuzzy
+msgid "Add Survey"
+msgstr "新增更多"
+
+#: templates/CRM/Campaign/Page/DashBoard.tpl
+#: templates/CRM/Campaign/Page/Petition.tpl
+#: templates/CRM/Campaign/Page/Survey.tpl
+#, fuzzy
+msgid "Survey Type"
+msgstr "街道類型"
+
+#: templates/CRM/Campaign/Page/DashBoard.tpl
+msgid "Reserve Each Time"
+msgstr ""
+
+#: templates/CRM/Campaign/Page/DashBoard.tpl
+#, fuzzy
+msgid "Total Reserve"
+msgstr "總列數"
+
+#: templates/CRM/Campaign/Page/DashBoard.tpl
+msgid "Response Set"
+msgstr ""
+
+#: templates/CRM/Campaign/Page/DashBoard.tpl
+#, fuzzy
+msgid "No surveys found."
+msgstr "沒有相關搜尋"
+
+#: templates/CRM/Campaign/Page/DashBoard.tpl
+#, fuzzy
+msgid "Add Petition"
+msgstr "新增拍賣"
+
+#: templates/CRM/Campaign/Page/DashBoard.tpl
+#, fuzzy
+msgid "No petitions found."
+msgstr "搜尋不到符合的捐款。"
+
+#: templates/CRM/Campaign/Page/DashBoard.tpl
+#, fuzzy
+msgid "Create New Petition"
+msgstr "建立新地點"
+
+#: templates/CRM/Campaign/Page/DashBoard.tpl
+#, fuzzy
+msgid "Create New Survey"
+msgstr "建立新群組"
+
+#: templates/CRM/Campaign/Page/DashBoard.tpl
+#, fuzzy
+msgid "Create New Campaign"
+msgstr "刪除個人募款專業"
+
+#: templates/CRM/Campaign/Page/DashBoard.tpl
+#, fuzzy
+msgid "Response Options for"
+msgstr "性別選項"
+
+#: templates/CRM/Campaign/Page/Petition/Confirm.tpl
+msgid ""
+"<strong>%1 - your email address '%2' has been successfully verified.</strong>"
+msgstr ""
+
+#: templates/CRM/Campaign/Page/Petition/Confirm.tpl
+#, fuzzy
+msgid ""
+"Oops. We encountered a problem in processing your email verification. Please "
+"contact the site administrator."
+msgstr "噢。我們在處理您的訂閱確認時遇到問題。請聯絡網站管理者。"
+
+#: templates/CRM/Campaign/Page/Petition/Confirm.tpl
+#, fuzzy
+msgid "Thank you for signing the petition."
+msgstr "感謝您使用 CiviCRM！"
+
+#: templates/CRM/Campaign/Page/Petition/SocialNetwork.tpl
+msgid ""
+"Please help us and let your friends, colleagues and followers know about our "
+"campaign."
+msgstr ""
+
+#: templates/CRM/Campaign/Page/Petition/SocialNetwork.tpl
+msgid "Share it on Facebook or tweet it on Twitter."
+msgstr ""
+
+#: templates/CRM/Campaign/Page/Petition/SocialNetwork.tpl
+msgid "Do you have a website for your organisation or yourself?"
+msgstr ""
+
+#: templates/CRM/Campaign/Page/Petition/SocialNetwork.tpl
+msgid ""
+"You can write a story about it - don't forget to add the link to <a href=\"%1"
+"\">%1.</a>"
+msgstr ""
+
+#: templates/CRM/Campaign/Page/Petition.tpl
+#: templates/CRM/Campaign/Page/Survey.tpl
+#, fuzzy
+msgid "Max Number Of Contacts"
+msgstr "參加人數上限"
+
+#: templates/CRM/Campaign/Page/Petition.tpl
+#: templates/CRM/Campaign/Page/Survey.tpl
+#, fuzzy
+msgid "Default Number Of Contacts"
+msgstr "刪除聯絡人"
+
+#: templates/CRM/Campaign/Page/Petition.tpl
+#: templates/CRM/Campaign/Page/Survey.tpl
+#, fuzzy
+msgid "No survey found."
+msgstr "沒有相關搜尋"
+
+#: templates/CRM/Campaign/Page/SurveyType.tpl
+#, fuzzy
+msgid "There are no survey type entered. You can <a href='%1'>add one</a>."
+msgstr "尚未設定權限。您可以 <a href='%1'>新增一個</a>。"

@@ -1,0 +1,999 @@
+# #-#-#-#-#  calendar.po (CiviCRM 3.0)  #-#-#-#-#
+# Copyright CiviCRM LLC (c) 2004-2007
+# This file is distributed under the same license as the CiviCRM package.
+# If you contribute heavily to a translation and deem your work copyrightable,
+# make sure you license it to CiviCRM LLC under Academic Free License 3.0.
+msgid ""
+msgstr ""
+"Project-Id-Version: CiviCRM 2.1\n"
+"Report-Msgid-Bugs-To: http://issues.civicrm.org/\n"
+"POT-Creation-Date: 2010-12-10 16:13+0100\n"
+"PO-Revision-Date: 2010-02-03 22:35+0800\n"
+"Last-Translator: Charles Chuang <charles>\n"
+"Language-Team: CiviCRM Translators <civicrm-translators@lists.civicrm.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Pootle 1.0.2\n"
+"X-Poedit-Language: Chinese\n"
+"X-Poedit-Country: TAIWAN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Pootle 1.0.2\n"
+"X-Generator: Pootle 1.0.2\n"
+"X-Generator: Pootle 0.10\n"
+"X-Generator: Pootle 0.10\n"
+"X-Poedit-Bookmarks: 4212,-1,-1,-1,-1,-1,-1,-1,-1,-1\n"
+
+#: CRM/Case/DAO/Case.php CRM/Case/Form/Activity/OpenCase.php
+msgid "Case Start Date"
+msgstr "個案開始日期"
+
+#: CRM/Case/Form/Activity/ChangeCaseStartDate.php
+#: CRM/Case/Form/Activity/ChangeCaseStatus.php
+#: CRM/Case/Form/Activity/ChangeCaseType.php
+#: CRM/Case/Form/Activity/LinkCases.php
+msgid "Case Id not found."
+msgstr "找不到個案編號"
+
+#: CRM/Case/Form/Activity/OpenCase.php CRM/Case/Form/Activity.php
+msgid "Medium"
+msgstr "中等"
+
+#: CRM/Case/Form/CaseView.php CRM/Case/Selector/Search.php
+#: templates/CRM/Case/Page/DashboardSelector.tpl
+msgid "Case Manager"
+msgstr "個案管理者"
+
+#: CRM/Case/Form/CaseView.php CRM/Case/Form/EditClient.php
+#, fuzzy
+msgid "Reassign Case"
+msgstr "個案中的角色"
+
+#: CRM/Case/Form/Task/Delete.php CRM/Case/Task.php
+msgid "Delete Cases"
+msgstr "刪除個案"
+
+#: CRM/Case/Form/Task/Delete.php CRM/Case/Form/Task/Restore.php
+msgid "Total Selected Case(s): %1"
+msgstr "總選取個案：%1"
+
+#: CRM/Case/Form/Task/Restore.php CRM/Case/Task.php
+msgid "Restore Cases"
+msgstr "回復個案"
+
+#: CRM/Case/BAO/Case.php templates/CRM/Case/Page/DashboardSelector.tpl
+msgid "View this activity."
+msgstr "瀏覽這個動態"
+
+#: CRM/Case/BAO/Case.php
+#, fuzzy
+msgid "no subject"
+msgstr "主旨"
+
+#: CRM/Case/BAO/Case.php
+msgid "(multiple)"
+msgstr "(多重選擇)"
+
+#: CRM/Case/BAO/Case.php
+#, fuzzy
+msgid "Move To Case"
+msgstr "個案中的角色"
+
+#: CRM/Case/BAO/Case.php
+#, fuzzy
+msgid "Copy To Case"
+msgstr "關閉個案"
+
+#: CRM/Case/BAO/Case.php
+msgid "File %1 does not exist or is not readable"
+msgstr "檔案 %1 不存在或權限不正確"
+
+#: CRM/Case/BAO/Case.php
+msgid "Invalid case ID ( %1 ) in TO: field."
+msgstr "在「收件者」欄位有無效的個案編號( %1 ) "
+
+#: CRM/Case/BAO/Case.php
+msgid ""
+"FROM email contact %1 doesn't have a relationship to the referenced case."
+msgstr "Email 寄件者 %1 與選擇的個案沒有關聯。"
+
+#: CRM/Case/BAO/Case.php
+msgid "Role in Case"
+msgstr "個案中的角色"
+
+#: CRM/Case/BAO/Case.php
+#, fuzzy
+msgid "View Case"
+msgstr "新增個案"
+
+#: CRM/Case/BAO/Case.php
+msgid "Case %1 reassigned client from %2 to %3. New Case ID is %4."
+msgstr ""
+
+#: CRM/Case/BAO/Case.php
+msgid ""
+"Case %1 copied from contact id %2 to contact id %3 via merge. New Case ID is "
+"%4."
+msgstr ""
+
+#: CRM/Case/BAO/Case.php
+msgid "Case %1 merged into case %2"
+msgstr ""
+
+#: CRM/Case/BAO/Query.php
+msgid "Case Status %2 %1"
+msgstr "個案狀態 %2 %1"
+
+#: CRM/Case/BAO/Query.php
+msgid "Case Type %1"
+msgstr "個案類型 %1"
+
+#: CRM/Case/BAO/Query.php
+msgid "Case %1 My Cases"
+msgstr "個案 %1 -我的個案"
+
+#: CRM/Case/BAO/Query.php
+msgid "Case %1 All Cases"
+msgstr "個案 %1 -全部個案"
+
+#: CRM/Case/BAO/Query.php
+#, fuzzy
+msgid "Find Deleted Cases"
+msgstr "已刪除的個案"
+
+#: CRM/Case/BAO/Query.php
+msgid "Activity Subject %1 '%2'"
+msgstr "動態名稱%1 '%2'"
+
+#: CRM/Case/BAO/Query.php
+msgid "Activity Reporter %1 '%2'"
+msgstr "動態報表者%1 '%2'"
+
+#: CRM/Case/BAO/Query.php
+msgid "Activity Actual Date %1 %2"
+msgstr "動態預定日期%1 %2"
+
+#: CRM/Case/BAO/Query.php
+msgid "Activity Schedule Date %1 %2"
+msgstr "動態排程日期%1 %2"
+
+#: CRM/Case/BAO/Query.php
+msgid "Activity Type %1 %2"
+msgstr "動態類型%1 %2"
+
+#: CRM/Case/BAO/Query.php
+msgid "Activity Duration %1 %2"
+msgstr "動態區間 %1 %2"
+
+#: CRM/Case/BAO/Query.php
+msgid "Activity Medium %1 %2"
+msgstr "動態媒介 %1 %2"
+
+#: CRM/Case/BAO/Query.php
+msgid "Activity Details %1 '%2'"
+msgstr "動態詳情 %1 '%2'"
+
+#: CRM/Case/BAO/Query.php
+msgid "Activity Auto Genrated %1 '%2'"
+msgstr "動態自動產生於 %1 '%2'"
+
+#: CRM/Case/BAO/Query.php
+msgid "Role in Case  %1 '%2'"
+msgstr "在個案的角色%1 '%2'"
+
+#: CRM/Case/BAO/Query.php
+#, fuzzy
+msgid "Case Tags %1"
+msgstr "個案類型 %1"
+
+#: CRM/Case/BAO/Query.php
+msgid "- any status -"
+msgstr "- 任何狀態 -"
+
+#: CRM/Case/BAO/Query.php
+msgid "All Cases"
+msgstr "全部個案"
+
+#: CRM/Case/BAO/Query.php
+msgid "Deleted Cases"
+msgstr "已刪除的個案"
+
+#: CRM/Case/DAO/Case.php
+#, fuzzy
+msgid "Case Type Id"
+msgstr "個案類型"
+
+#: CRM/Case/DAO/Case.php
+msgid "Case End Date"
+msgstr "個案結束日期"
+
+#: CRM/Case/DAO/Case.php
+#, fuzzy
+msgid "Case Status Id"
+msgstr "個案狀態"
+
+#: CRM/Case/DAO/Case.php
+msgid "Case is in the Trash"
+msgstr "垃圾筒中的個案"
+
+#: CRM/Case/Form/Activity/ChangeCaseStartDate.php
+msgid "New Start Date"
+msgstr "新增開始日期"
+
+#: CRM/Case/Form/Activity/ChangeCaseStartDate.php
+msgid "Case Start Date changed successfully."
+msgstr "已成功更改個案開始日期。"
+
+#: CRM/Case/Form/Activity/ChangeCaseStatus.php
+#, fuzzy
+msgid "Case status changed from %1 to %2"
+msgstr "已成功更改個案狀態。"
+
+#: CRM/Case/Form/Activity/ChangeCaseStatus.php
+msgid "Case Status changed successfully."
+msgstr "已成功更改個案狀態。"
+
+#: CRM/Case/Form/Activity/ChangeCaseType.php
+msgid "New Case Type"
+msgstr "新個案類型"
+
+#: CRM/Case/Form/Activity/ChangeCaseType.php
+msgid "Reset Case Timeline?"
+msgstr "重設個案時間？"
+
+#: CRM/Case/Form/Activity/ChangeCaseType.php
+msgid "Reset Start Date"
+msgstr "重設開始日期"
+
+#: CRM/Case/Form/Activity/ChangeCaseType.php
+msgid "Case type changed from %1 to %2"
+msgstr ""
+
+#: CRM/Case/Form/Activity/ChangeCaseType.php
+msgid "Case Type changed successfully."
+msgstr "個案類別更改成功。"
+
+#: CRM/Case/Form/Activity/LinkCases.php
+#, fuzzy
+msgid "Link To Case"
+msgstr "連結文字"
+
+#: CRM/Case/Form/Activity/LinkCases.php
+#, fuzzy
+msgid "Please select a case to link."
+msgstr "請從列表中選擇個案"
+
+#: CRM/Case/Form/Activity/LinkCases.php
+#, fuzzy
+msgid "Please select some other case to link."
+msgstr "請從列表中選擇個案"
+
+#: CRM/Case/Form/Activity/LinkCases.php
+msgid "It looks like selected case is already linked."
+msgstr ""
+
+#: CRM/Case/Form/Activity/OpenCase.php
+msgid "Please select a valid contact or create new contact"
+msgstr "請選擇有效的聯絡人或創建新的聯絡人資料"
+
+#: CRM/Case/Form/Activity/OpenCase.php
+msgid "Case opened successfully."
+msgstr "個案開啟成功。"
+
+#: CRM/Case/Form/Activity.php
+#, fuzzy
+msgid "You do not have any active Case Types"
+msgstr "您沒有任何啓用中的個人募款串連。"
+
+#: CRM/Case/Form/Activity.php
+msgid "You can not add another '%1' activity to this case. %2"
+msgstr "您不能增加另一個 「%1」動態到此個案。 %2"
+
+#: CRM/Case/Form/Activity.php
+msgid "Reported By"
+msgstr "報表作者："
+
+#: CRM/Case/Form/Activity.php
+msgid ""
+"The selected activity has been moved to the Trash. You can view and / or "
+"restore deleted activities by checking \"Deleted Activities\" from the Case "
+"Activities search filter (under Manage Case).<br />"
+msgstr ""
+"你選擇的動態已經移到垃圾桶。之後若想回復，您可以從檢查個案動態搜尋清單中，篩"
+"選「已刪除的動態」來瀏覽及 / 回復刪除的動態。"
+
+#: CRM/Case/Form/Activity.php
+msgid "Selected Activity cannot be deleted."
+msgstr "選取的動態無法被刪除"
+
+#: CRM/Case/Form/Activity.php
+msgid "The selected activity has been restored.<br />"
+msgstr "選擇的動態已成功回復。<br />"
+
+#: CRM/Case/Form/Activity.php
+msgid "A copy of the activity has also been sent to selected contacts(s)."
+msgstr "動態的副本已寄給選擇的聯絡人。"
+
+#: CRM/Case/Form/Activity.php
+msgid "A followup activity has been scheduled."
+msgstr "一個接續動態已經排程。"
+
+#: CRM/Case/Form/Activity.php
+msgid "'%1' activity has been %2. %3 %4"
+msgstr "'%1' 動態已被 %2。 %3 %4"
+
+#: CRM/Case/Form/ActivityToCase.php
+#, fuzzy
+msgid "Select Case"
+msgstr "選擇日期"
+
+#: CRM/Case/Form/Case.php
+#, fuzzy
+msgid "You do not have any active %1"
+msgstr "您沒有任何啓用中的個人募款串連。"
+
+#: CRM/Case/Form/Case.php
+msgid "Client contact does not exist: %1"
+msgstr "客戶聯絡人不存在: %1"
+
+#: CRM/Case/Form/Case.php
+#, fuzzy
+msgid "Select Tags"
+msgstr "Select資料表"
+
+#: CRM/Case/Form/Case.php
+msgid ""
+"The selected case has been moved to the Trash. You can view and / or restore "
+"deleted cases by checking the \"Deleted Cases\" option under Find Cases.<br /"
+">"
+msgstr ""
+"你選擇的個案已經移到垃圾桶。之後若想回復，您可以從檢查個案搜尋清單，篩選「已"
+"刪除的個案」來瀏覽及 / 回復刪除的個案。"
+
+#: CRM/Case/Form/Case.php
+msgid "The selected case has been restored.<br />"
+msgstr "選取的個案已回復。<br />"
+
+#: CRM/Case/Form/CaseView.php
+msgid "New Activity"
+msgstr "新增動態"
+
+#: CRM/Case/Form/CaseView.php
+msgid "- select activity type -"
+msgstr "- 選擇動態類型 -"
+
+#: CRM/Case/Form/CaseView.php
+msgid "Run QA Audit / Redact"
+msgstr ""
+
+#: CRM/Case/Form/CaseView.php
+msgid "- select activity set -"
+msgstr "- 選擇動態設定 -"
+
+#: CRM/Case/Form/CaseView.php
+msgid "Add Timeline"
+msgstr "增加時程"
+
+#: CRM/Case/Form/CaseView.php
+#, fuzzy
+msgid "Select Case for Merge"
+msgstr "選擇要匯出的欄位"
+
+#: CRM/Case/Form/CaseView.php
+msgid "- select case -"
+msgstr "- 選擇適當個案類別 -"
+
+#: CRM/Case/Form/CaseView.php
+#, fuzzy
+msgid "Assign to another Client"
+msgstr "指派個案角色"
+
+#: CRM/Case/Form/CaseView.php
+msgid " - any status - "
+msgstr "- 任何狀態 -"
+
+#: CRM/Case/Form/CaseView.php
+msgid "Deleted Activities"
+msgstr "已刪除的動態‘"
+
+#: CRM/Case/Form/CaseView.php
+msgid " - any reporter - "
+msgstr "- 任何報表者 -"
+
+#: CRM/Case/Form/CaseView.php templates/CRM/Case/Form/CaseView.tpl
+msgid "Reporter/Role"
+msgstr "報表者 / 角色"
+
+#: CRM/Case/Form/CaseView.php
+msgid "- select type -"
+msgstr "- 選取類別 -"
+
+#: CRM/Case/Form/CaseView.php
+msgid "Activities from the %1 activity set have been added to this case."
+msgstr "這組動態 -  %1 - 已增加到此個案。"
+
+#: CRM/Case/Form/Report.php
+msgid "Include All Activities"
+msgstr "包括全部動態"
+
+#: CRM/Case/Form/Report.php
+msgid "Include Missing Activities Only"
+msgstr "只包括缺少的動態"
+
+#: CRM/Case/Form/Report.php
+msgid "Redact (hide) Client and Service Provider Data"
+msgstr "隱藏客戶與服務提供者資料"
+
+#: CRM/Case/Form/Report.php
+msgid "Generate Report"
+msgstr "產生報表"
+
+#: CRM/Case/Form/Search.php
+msgid "Client Name or Email"
+msgstr "客戶姓名或Email"
+
+#: CRM/Case/Form/Search.php templates/CRM/Case/Page/DashBoard.tpl
+msgid "Find Cases"
+msgstr "搜尋個案"
+
+#: CRM/Case/Form/Task/Delete.php
+msgid "Deleted Case(s): %1"
+msgstr "已刪除的個案：%1"
+
+#: CRM/Case/Form/Task/Print.php
+msgid "Print Case List"
+msgstr "列印個案清單"
+
+#: CRM/Case/Form/Task/Restore.php
+msgid "Restored Case(s): %1"
+msgstr "已回復個案: %1"
+
+#: CRM/Case/Info.php
+msgid "CiviCase Engine"
+msgstr "Civi個案引擎"
+
+#: CRM/Case/Page/DashBoard.php
+msgid "CiviCase Dashboard"
+msgstr "Civi個案 總覽頁面"
+
+#: CRM/Case/Page/DashBoard.php
+msgid "You are not authorized to access all cases and activities."
+msgstr ""
+
+#: CRM/Case/Selector/Search.php templates/CRM/Case/Form/CaseView.tpl
+msgid "Assign to Another Client"
+msgstr ""
+
+#: CRM/Case/Selector/Search.php templates/CRM/Case/Form/Task/Print.tpl
+#: templates/CRM/Case/Page/DashboardSelector.tpl
+msgid "My Role"
+msgstr "我的角色"
+
+#: CRM/Case/Selector/Search.php templates/CRM/Case/Page/DashboardSelector.tpl
+msgid "Most Recent"
+msgstr "最新"
+
+#: CRM/Case/Selector/Search.php templates/CRM/Case/Page/DashboardSelector.tpl
+msgid "Next Sched."
+msgstr "下一個附表。"
+
+#: CRM/Case/Selector/Search.php
+msgid "Case Search"
+msgstr "個案搜尋"
+
+#: CRM/Case/Task.php
+#, fuzzy
+msgid "Print Cases"
+msgstr "列印個案清單"
+
+#: CRM/Case/Task.php
+msgid "Export Cases"
+msgstr "匯出個案"
+
+#: CRM/Case/XMLProcessor/Process.php
+msgid "Configuration file could not be retrieved for case type = '%1' %2."
+msgstr "無法取得這些個案類型的設定檔 = '%1' %2。"
+
+#: CRM/Case/XMLProcessor/Process.php
+msgid ""
+"Unable to load configuration file for the referenced case type: '%1' %2."
+msgstr "無法載入下列個案類型的設定檔： '%1' %2。"
+
+#: CRM/Case/XMLProcessor/Process.php
+msgid ""
+"Activity type %1, found in case configuration file, is not present in the "
+"database %2"
+msgstr "找到了動態類型 %1 的設定檔，但並不存在資料庫 %2"
+
+#: CRM/Case/XMLProcessor/Report.php
+#, fuzzy
+msgid "Recipient"
+msgstr "收件人"
+
+#: templates/CRM/Case/Audit/Audit.tpl
+msgid "Incomplete"
+msgstr "未完成"
+
+#: templates/CRM/Case/Audit/Report.tpl templates/CRM/Case/Form/CaseView.tpl
+msgid "Case Summary"
+msgstr "個案概況"
+
+#: templates/CRM/Case/Audit/Report.tpl templates/CRM/Case/Form/CaseView.tpl
+msgid "Case Roles"
+msgstr ""
+
+#: templates/CRM/Case/Audit/Report.tpl
+msgid "(not assigned)"
+msgstr "(尚未指派)"
+
+#: templates/CRM/Case/Audit/Report.tpl templates/CRM/Case/Form/CaseView.tpl
+msgid "Client Relationship"
+msgstr "客戶關係"
+
+#: templates/CRM/Case/Audit/Report.tpl templates/CRM/Case/Form/CaseView.tpl
+msgid "Case Activities"
+msgstr "個案動態"
+
+#: templates/CRM/Case/Form/Activity/ChangeCaseStartDate.tpl
+msgid "Current Start Date"
+msgstr "目前開始日期"
+
+#: templates/CRM/Case/Form/ActivityToCase.tpl
+#, fuzzy
+msgid "Begin typing client name for a list of open cases."
+msgstr "打一些字即可篩選下列的替代符號（token）"
+
+#: templates/CRM/Case/Form/ActivityToCase.tpl
+msgid "You can modify the activity subject before filing."
+msgstr ""
+
+#: templates/CRM/Case/Form/ActivityToCase.tpl
+msgid "Please select a case from the list"
+msgstr "請從列表中選擇個案"
+
+#: templates/CRM/Case/Form/ActivityToCase.tpl
+msgid "Unable to file on case"
+msgstr "無法儲存個案"
+
+#: templates/CRM/Case/Form/Activity.tpl
+msgid "Click Delete to move this &quot;%1&quot; activity to the Trash."
+msgstr "按刪除將此 &quot;%1&quot; 動態移到垃圾桶。"
+
+#: templates/CRM/Case/Form/Activity.tpl
+msgid "Click Restore to retrieve this &quot;%1&quot; activity from the Trash."
+msgstr "按回復，將動態 &quot;%1&quot; 從垃圾桶中拉回。"
+
+#: templates/CRM/Case/Form/Activity.tpl
+#, fuzzy
+msgid "Clients"
+msgstr "客戶名稱"
+
+#: templates/CRM/Case/Form/Activity.tpl
+#, fuzzy
+msgid "With other contact(s)"
+msgstr "與聯絡人"
+
+#: templates/CRM/Case/Form/Activity.tpl
+#, fuzzy
+msgid "With client"
+msgstr "與聯絡人"
+
+#: templates/CRM/Case/Form/Activity.tpl
+#, fuzzy
+msgid "With client(s)"
+msgstr "與聯絡人"
+
+#: templates/CRM/Case/Form/Activity.tpl
+msgid "You can optionally assign this activity to someone."
+msgstr "你可以選擇指派此動態給其他人。"
+
+#: templates/CRM/Case/Form/Activity.tpl
+msgid "Send a Copy"
+msgstr "傳送副本"
+
+#: templates/CRM/Case/Form/Activity.tpl
+msgid ""
+"Email a complete copy of this activity record to other people involved with "
+"the case. Click the top left box to select all."
+msgstr "Email完整的動態記錄副本到其他與此個案相關的人。按左上的方框選擇全部。"
+
+#: templates/CRM/Case/Form/ActivityView.tpl
+msgid "all revisions"
+msgstr "所有修定版本"
+
+#: templates/CRM/Case/Form/ActivityView.tpl
+msgid "Created On"
+msgstr "建立於"
+
+#: templates/CRM/Case/Form/ActivityView.tpl
+msgid "View this revision of the activity record."
+msgstr "瀏覽此動態記錄的修定版本。"
+
+#: templates/CRM/Case/Form/ActivityView.tpl
+msgid "List all revisions"
+msgstr "列出所有修訂本"
+
+#: templates/CRM/Case/Form/ActivityView.tpl
+msgid "(this is the current revision)"
+msgstr "(這是現修訂本)"
+
+#: templates/CRM/Case/Form/ActivityView.tpl
+msgid "View current revision"
+msgstr "查看現在版本"
+
+#: templates/CRM/Case/Form/ActivityView.tpl
+msgid "(this is not the current revision)"
+msgstr "(這不是現修訂本)"
+
+#: templates/CRM/Case/Form/ActivityView.tpl
+msgid "Prompted by"
+msgstr "提示由"
+
+#: templates/CRM/Case/Form/ActivityView.tpl
+msgid "This activity might not be attached to any case. Please investigate."
+msgstr "此動態可能沒有附屬於任何個案，請察看。"
+
+#: templates/CRM/Case/Form/Case.hlp
+msgid "Introduce yourself and your role within our organization."
+msgstr "在我們的組織介紹您及您的角色。"
+
+#: templates/CRM/Case/Form/Case.hlp
+msgid ""
+"&quot;All of the information that you provide to us or any of our "
+"representatives and service providers will be held in strictest confidence. "
+"It will not be used for any purpose other than to help you, and for any "
+"other purpose that you authorize in writing, or which is required by law."
+"&quot;"
+msgstr ""
+"&quot;所有您提供給我們的資料或任何我們代表及服務提供者會以嚴密地保密。它不會"
+"被使用在任何幫助您、您授權書寫、或法律需要以外的其他用途。&quot;"
+
+#: templates/CRM/Case/Form/Case.hlp
+msgid "&quot;Please tell me what you would like to discuss.&quot;"
+msgstr "&quot;請告訴我您想討論什麼。&quot;"
+
+#: templates/CRM/Case/Form/Case.hlp
+msgid "Reflect client's story back to them."
+msgstr "反映客戶的故事給他們。"
+
+#: templates/CRM/Case/Form/Case.hlp
+msgid "Guess client's feelings and needs."
+msgstr "猜測客戶的感受和需求。"
+
+#: templates/CRM/Case/Form/Case.hlp
+msgid "&quot;May I now ask you some screening questions?&quot;"
+msgstr "&quot;我可否問您一些基本資料？&quot;"
+
+#: templates/CRM/Case/Form/Case.hlp
+msgid "Record details about this activity here."
+msgstr "關於此動態的記錄詳情。"
+
+#: templates/CRM/Case/Form/Case.hlp
+msgid "Provide a one-line summary of what this case is about."
+msgstr "提供一個關於個案的單向概況。"
+
+#: templates/CRM/Case/Form/Case.hlp
+msgid ""
+"Offer the appropriate service from the list. If the service requires "
+"coordination, contact the Director."
+msgstr "從列表中提供一個適當的服務。如果此服務需要協同工作，請聯絡指導者。"
+
+#: templates/CRM/Case/Form/Case.tpl
+msgid ""
+"Click Delete to move this case and all associated activities to the Trash."
+msgstr "按刪除，去移動此個案及所有相關動態到垃圾箱。"
+
+#: templates/CRM/Case/Form/Case.tpl
+msgid ""
+"Click Restore to retrieve this case and all associated activities from the "
+"Trash."
+msgstr "按修復去垃圾箱收回此個案及所有相關動態。"
+
+#: templates/CRM/Case/Form/CaseView.tpl
+#, fuzzy
+msgid "Clients:"
+msgstr "客戶名稱"
+
+#: templates/CRM/Case/Form/CaseView.tpl
+msgid "add new client to the case"
+msgstr ""
+
+#: templates/CRM/Case/Form/CaseView.tpl
+#, fuzzy
+msgid "Related Cases"
+msgstr "已刪除的個案"
+
+#: templates/CRM/Case/Form/CaseView.tpl
+msgid "DOB"
+msgstr ""
+
+#: templates/CRM/Case/Form/CaseView.tpl
+#, fuzzy
+msgid "Merge Case"
+msgstr "個案管理"
+
+#: templates/CRM/Case/Form/CaseView.tpl
+msgid "Add new role"
+msgstr "建立新角色"
+
+#: templates/CRM/Case/Form/CaseView.tpl
+msgid "compose and send an email"
+msgstr "撰寫並寄出郵件"
+
+#: templates/CRM/Case/Form/CaseView.tpl
+msgid "Are you sure you want to remove this person from their case role"
+msgstr "你確定要移除這個人的個案角色嗎？"
+
+#: templates/CRM/Case/Form/CaseView.tpl
+msgid "Begin typing last name of contact."
+msgstr "開始輸入聯絡人的姓氏。"
+
+#: templates/CRM/Case/Form/CaseView.tpl
+msgid "Select valid contact from the list"
+msgstr "請從名單中選擇有效的聯絡人"
+
+#: templates/CRM/Case/Form/CaseView.tpl
+msgid "Are you sure you want to delete this relationship"
+msgstr "您確定要刪除此關係？"
+
+#: templates/CRM/Case/Form/CaseView.tpl
+msgid ""
+"The relationship type definition for the %1 case role is not valid. Both "
+"sides of the relationship type must be an Individual or a subtype of "
+"Individual. You can review and edit relationship types at <a href=\"%2"
+"\">Administer >> Option Lists >> Relationship Types</a>"
+msgstr ""
+
+#: templates/CRM/Case/Form/CaseView.tpl
+msgid "Other Relationships"
+msgstr "其他關係"
+
+#: templates/CRM/Case/Form/CaseView.tpl
+msgid "Add client relationship"
+msgstr "新增客戶關係"
+
+#: templates/CRM/Case/Form/CaseView.tpl
+msgid ""
+"There are no Relationships entered for this client. You can <a accesskey=\"N"
+"\" href='%1'>add one</a>."
+msgstr "此客戶尚無關係建立。您可以<a accesskey=\"N\" href='%1'>新增一個</a>。"
+
+#: templates/CRM/Case/Form/CaseView.tpl
+msgid "Add members to %1"
+msgstr "新增會員到%1"
+
+#: templates/CRM/Case/Form/CaseView.tpl
+msgid "The group %2 has no members. You can <a href='%1'>add one</a>."
+msgstr "群組%2目前沒有任何會員。你可以<a href='%1'>新增一個</a>。"
+
+#: templates/CRM/Case/Form/CaseView.tpl
+msgid "Select valid type from the list"
+msgstr "請從清單中選擇有效的類型"
+
+#: templates/CRM/Case/Form/CaseView.tpl
+#, fuzzy
+msgid "Case Tags"
+msgstr "個案類型"
+
+#: templates/CRM/Case/Form/CaseView.tpl
+#, fuzzy
+msgid "There are no tags currently assigend to this case."
+msgstr "這個個案沒有動態。"
+
+#: templates/CRM/Case/Form/CaseView.tpl
+#, fuzzy
+msgid "Add Tags"
+msgstr "編輯 Tag"
+
+#: templates/CRM/Case/Form/CaseView.tpl
+msgid "Search Filters"
+msgstr "搜尋過濾器"
+
+#: templates/CRM/Case/Form/CaseView.tpl
+#: templates/CRM/Case/Page/CaseDetails.tpl
+msgid "Reporter / Assignee"
+msgstr "報表者 / 指派者"
+
+#: templates/CRM/Case/Form/CaseView.tpl
+#, fuzzy
+msgid "Please select an activity set from the list."
+msgstr "請從列表中選擇個案"
+
+#: templates/CRM/Case/Form/CaseView.tpl
+#, fuzzy
+msgid ""
+"Are you sure you want to add a set of scheduled activities to this case?"
+msgstr "你確定要為此個案新增一系列排程的動態？"
+
+#: templates/CRM/Case/Form/CaseView.tpl
+#, fuzzy
+msgid "Please select an activity type from the list."
+msgstr "請從列表中選擇個案"
+
+#: templates/CRM/Case/Form/CaseView.tpl
+#, fuzzy
+msgid "Please select a report from the list."
+msgstr "請從列表中選擇個案"
+
+#: templates/CRM/Case/Form/CaseView.tpl
+#, fuzzy
+msgid "Please select a case from the list to merge with."
+msgstr "請從列表中選擇個案"
+
+#: templates/CRM/Case/Form/CaseView.tpl
+#, fuzzy
+msgid "Please select a client for this case."
+msgstr "請至少選擇一個Tag。"
+
+#: templates/CRM/Case/Form/CaseView.tpl templates/CRM/Case/Form/EditClient.tpl
+#, fuzzy
+msgid ""
+"%1 is already assigned to this case. Please select some other client for "
+"this case."
+msgstr "已被其他地址採用。請為您的地址選用其他位置類型。"
+
+#: templates/CRM/Case/Form/CaseView.tpl templates/CRM/Case/Form/EditClient.tpl
+#, fuzzy
+msgid ""
+"Are you sure you want to reassign this case and all related activities and "
+"relationships to %1?"
+msgstr "您確定要重新啟用此關係？"
+
+#: templates/CRM/Case/Form/EditClient.tpl
+#, fuzzy
+msgid "This is case is currently assigned to %1."
+msgstr "此個入檔案目前不是為%1所用。"
+
+#: templates/CRM/Case/Form/EditClient.tpl
+#, fuzzy
+msgid "Please select another client for this case."
+msgstr "請選擇感謝禮圖片選項。"
+
+#: templates/CRM/Case/Form/Report.tpl
+msgid "Report Parameters"
+msgstr "報表參數"
+
+#: templates/CRM/Case/Form/Search/Common.tpl
+#, fuzzy
+msgid "Case Tag(s)"
+msgstr "Tag"
+
+#: templates/CRM/Case/Form/Search/EmptyResults.tpl
+msgid "No matching cases found."
+msgstr "未找到相關的個案。"
+
+#: templates/CRM/Case/Form/Search/EmptyResults.tpl
+msgid "if you are searching by client name, check your spelling"
+msgstr "如果您用客戶姓名搜尋，檢查您的字串。"
+
+#: templates/CRM/Case/Form/Selector.tpl
+msgid "view contact details"
+msgstr "查看聯絡人詳情"
+
+#: templates/CRM/Case/Form/Selector.tpl
+#: templates/CRM/Case/Page/DashboardSelector.tpl
+msgid "Find more cases"
+msgstr "搜尋更多個案"
+
+#: templates/CRM/Case/Form/Task/Delete.tpl
+msgid ""
+"Are you sure you want to delete the selected cases? This will move the case"
+"(s) and all associated activities to the Trash."
+msgstr "您是否確定刪除已選取的個案？這將會移動個案及所有相關活動到垃圾箱。"
+
+#: templates/CRM/Case/Form/Task/Print.tpl
+msgid "Most Recent Activity"
+msgstr "最新動態"
+
+#: templates/CRM/Case/Form/Task/Print.tpl
+msgid "Next Scheduled Activity"
+msgstr "下個排程動態"
+
+#: templates/CRM/Case/Form/Task/Restore.tpl
+msgid ""
+"Are you sure you want to restore the selected cases? This operation will "
+"retrieve the case(s) and all associated activities from Trash."
+msgstr ""
+"您是否確定修復已選取的個案？這操作會把個案及所有相關活動從垃圾箱裡拉回。"
+
+#: templates/CRM/Case/Form/Task.tpl
+msgid "Number of selected cases: %1"
+msgstr "已選取檔案數目: %1"
+
+#: templates/CRM/Case/Page/CaseDetails.tpl
+msgid "There are no activities defined for this case."
+msgstr "這個個案沒有動態。"
+
+#: templates/CRM/Case/Page/ConfigureError.tpl
+msgid ""
+"You need to setup and load Case and Activity configuration files before you "
+"can begin using the CiviCase component."
+msgstr "在您開始使用個案模組之前，您要設置與載入 Civi個案的指定檔。"
+
+#: templates/CRM/Case/Page/ConfigureError.tpl
+msgid "Refer to the %1 to learn about this process."
+msgstr "參考%1以學習此過程。"
+
+#: templates/CRM/Case/Page/ConfigureError.tpl
+msgid "CiviCase Administration Documentation"
+msgstr "Civi個案管理文檔"
+
+#: templates/CRM/Case/Page/DashboardSelector.tpl
+msgid "Edit this activity."
+msgstr "編輯這個動態。"
+
+#: templates/CRM/Case/Page/DashBoard.tpl
+#, fuzzy
+msgid "All Cases with Upcoming Activities"
+msgstr "即將有動態的<strong>所有個案</strong>"
+
+#: templates/CRM/Case/Page/DashBoard.tpl
+#, fuzzy
+msgid "My Cases with Upcoming Activities"
+msgstr "即將有動態的<strong>我的個案</strong>"
+
+#: templates/CRM/Case/Page/DashBoard.tpl
+msgid "Summary of Case Involvement"
+msgstr ""
+
+#: templates/CRM/Case/Page/DashBoard.tpl
+#, fuzzy
+msgid "Summary of All Cases"
+msgstr "個案 %1 -全部個案"
+
+#: templates/CRM/Case/Page/DashBoard.tpl
+msgid "My Cases With Upcoming Activities"
+msgstr "即將有動態的<strong>我的個案</strong>"
+
+#: templates/CRM/Case/Page/DashBoard.tpl
+msgid "All Cases With Upcoming Activities"
+msgstr "即將有動態的<strong>所有個案</strong>"
+
+#: templates/CRM/Case/Page/DashBoard.tpl
+msgid ""
+"There are no open cases with activities scheduled in the next two weeks. Use "
+"%1 to expand your search."
+msgstr ""
+"在未來兩個星期內，找不到任何個案有安排動態。你可以使用%1來擴大搜尋範圍。"
+
+#: templates/CRM/Case/Page/DashBoard.tpl
+msgid "My Cases With Recently Performed Activities"
+msgstr "最近有動態的<strong>我的個案</strong>"
+
+#: templates/CRM/Case/Page/DashBoard.tpl
+msgid "All Cases With Recently Performed Activities"
+msgstr "最近有動態的<strong>所有個案</strong>"
+
+#: templates/CRM/Case/Page/DashBoard.tpl
+msgid ""
+"There are no cases with activities scheduled in the past two weeks. Use %1 "
+"to expand your search."
+msgstr "在過去的兩個星期中，找不到有排程動態的個案。使用%1擴大搜尋範圍。"
+
+#: templates/CRM/Case/Page/Tab.tpl
+#, fuzzy
+msgid "Oops, It looks like there are no active case types."
+msgstr "噢，目前%1活動報名已額滿。"
+
+#: templates/CRM/Case/Page/Tab.tpl
+#, fuzzy
+msgid "Enable <a href='%1'>case types</a>."
+msgstr "您可以立即<a href='%1'>新增一個</a>。"
+
+#: templates/CRM/Case/Page/Tab.tpl
+msgid "This page lists all case records for %1."
+msgstr "此頁列出%1所有個案記錄。"
+
+#: templates/CRM/Case/Page/Tab.tpl
+#, fuzzy
+msgid "Click <a href='%1'>Add Case</a> to add a case record for this contact."
+msgstr "按<a href='%1'>新個案</a>為此聯絡人新增個案記錄。"
+
+#: templates/CRM/Case/Page/Tab.tpl
+msgid "There are no case records for this contact."
+msgstr "此聯絡人沒有個案記錄。"
+
+#: templates/CRM/Case/Page/Tab.tpl
+msgid "You can <a href='%1'>open one now</a>."
+msgstr "您可以<a href='%1'>立即開啟一個</a>。"

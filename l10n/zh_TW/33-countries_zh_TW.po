@@ -1,0 +1,1281 @@
+# #-#-#-#-#  calendar.po (CiviCRM 3.0)  #-#-#-#-#
+# Copyright CiviCRM LLC (c) 2004-2007
+# This file is distributed under the same license as the CiviCRM package.
+# If you contribute heavily to a translation and deem your work copyrightable,
+# make sure you license it to CiviCRM LLC under Academic Free License 3.0.
+msgid ""
+msgstr ""
+"Project-Id-Version: CiviCRM 2.1\n"
+"Report-Msgid-Bugs-To: http://issues.civicrm.org/\n"
+"POT-Creation-Date: 2010-12-10 16:13+0100\n"
+"PO-Revision-Date: 2010-02-03 22:35+0800\n"
+"Last-Translator: Charles Chuang <charles>\n"
+"Language-Team: CiviCRM Translators <civicrm-translators@lists.civicrm.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Pootle 1.0.2\n"
+"X-Poedit-Language: Chinese\n"
+"X-Poedit-Country: TAIWAN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Pootle 1.0.2\n"
+"X-Generator: Pootle 1.0.2\n"
+"X-Generator: Pootle 0.10\n"
+"X-Generator: Pootle 0.10\n"
+"X-Poedit-Bookmarks: 4212,-1,-1,-1,-1,-1,-1,-1,-1,-1\n"
+
+#, fuzzy
+msgctxt "country"
+msgid "Europe and Central Asia"
+msgstr "歐洲, 中亞"
+
+#, fuzzy
+msgctxt "country"
+msgid "America South, Central, North and Caribbean"
+msgstr "南美洲，中美洲，, 北美洲, 加勒比海"
+
+#, fuzzy
+msgctxt "country"
+msgid "Middle East and North Africa"
+msgstr "中東, 北非"
+
+#, fuzzy
+msgctxt "country"
+msgid "Asia-Pacific"
+msgstr "亞洲—太平洋"
+
+#, fuzzy
+msgctxt "country"
+msgid "Africa West, East, Central and Southern"
+msgstr "西非, 東非, 中非, 南非"
+
+#, fuzzy
+msgctxt "country"
+msgid "unassigned"
+msgstr "未指定"
+
+#, fuzzy
+msgctxt "country"
+msgid "Afghanistan"
+msgstr "阿富汗"
+
+#, fuzzy
+msgctxt "country"
+msgid "Albania"
+msgstr "阿爾巴尼亞"
+
+#, fuzzy
+msgctxt "country"
+msgid "Algeria"
+msgstr "阿爾及利亞"
+
+#, fuzzy
+msgctxt "country"
+msgid "American Samoa"
+msgstr "美屬薩摩亞"
+
+#, fuzzy
+msgctxt "country"
+msgid "Andorra"
+msgstr "安道爾"
+
+#, fuzzy
+msgctxt "country"
+msgid "Angola"
+msgstr "安哥拉"
+
+#, fuzzy
+msgctxt "country"
+msgid "Anguilla"
+msgstr "安圭拉島"
+
+#, fuzzy
+msgctxt "country"
+msgid "Antarctica"
+msgstr "南極州"
+
+#, fuzzy
+msgctxt "country"
+msgid "Antigua and Barbuda"
+msgstr "安地瓜島和巴布達島"
+
+#, fuzzy
+msgctxt "country"
+msgid "Argentina"
+msgstr "阿根廷"
+
+#, fuzzy
+msgctxt "country"
+msgid "Armenia"
+msgstr "亞美尼亞"
+
+#, fuzzy
+msgctxt "country"
+msgid "Aruba"
+msgstr "阿魯巴"
+
+#, fuzzy
+msgctxt "country"
+msgid "Australia"
+msgstr "澳大利亞"
+
+#, fuzzy
+msgctxt "country"
+msgid "Austria"
+msgstr "奧地利"
+
+#, fuzzy
+msgctxt "country"
+msgid "Azerbaijan"
+msgstr "阿塞拜然"
+
+#, fuzzy
+msgctxt "country"
+msgid "Bahrain"
+msgstr "巴林"
+
+#, fuzzy
+msgctxt "country"
+msgid "Bangladesh"
+msgstr "孟加拉"
+
+#, fuzzy
+msgctxt "country"
+msgid "Barbados"
+msgstr "巴巴多斯"
+
+#, fuzzy
+msgctxt "country"
+msgid "Belarus"
+msgstr "白俄羅斯"
+
+#, fuzzy
+msgctxt "country"
+msgid "Belgium"
+msgstr "比利時"
+
+#, fuzzy
+msgctxt "country"
+msgid "Belize"
+msgstr "貝里斯"
+
+#, fuzzy
+msgctxt "country"
+msgid "Benin"
+msgstr "貝南"
+
+#, fuzzy
+msgctxt "country"
+msgid "Bermuda"
+msgstr "百慕達"
+
+#, fuzzy
+msgctxt "country"
+msgid "Bhutan"
+msgstr "不丹"
+
+#, fuzzy
+msgctxt "country"
+msgid "Bolivia"
+msgstr "波利維亞"
+
+#, fuzzy
+msgctxt "country"
+msgid "Bosnia and Herzegovina"
+msgstr "波士尼亞和赫塞哥維那"
+
+#, fuzzy
+msgctxt "country"
+msgid "Botswana"
+msgstr "博茨瓦納"
+
+#, fuzzy
+msgctxt "country"
+msgid "Bouvet Island"
+msgstr "布韋群島"
+
+#, fuzzy
+msgctxt "country"
+msgid "Brazil"
+msgstr "巴西"
+
+#, fuzzy
+msgctxt "country"
+msgid "British Indian Ocean Territory"
+msgstr "英屬印度洋領地"
+
+#, fuzzy
+msgctxt "country"
+msgid "Virgin Islands, British"
+msgstr "維京群島, 大不列顛"
+
+#, fuzzy
+msgctxt "country"
+msgid "Brunei Darussalam"
+msgstr "汶萊"
+
+#, fuzzy
+msgctxt "country"
+msgid "Bulgaria"
+msgstr "保加利亞"
+
+#, fuzzy
+msgctxt "country"
+msgid "Burkina Faso"
+msgstr "布吉納法索國"
+
+#, fuzzy
+msgctxt "country"
+msgid "Myanmar"
+msgstr "緬甸"
+
+#, fuzzy
+msgctxt "country"
+msgid "Burundi"
+msgstr "布隆迪"
+
+#, fuzzy
+msgctxt "country"
+msgid "Cambodia"
+msgstr "柬埔寨"
+
+#, fuzzy
+msgctxt "country"
+msgid "Cameroon"
+msgstr "卡麥隆"
+
+#, fuzzy
+msgctxt "country"
+msgid "Canada"
+msgstr "加拿大"
+
+#, fuzzy
+msgctxt "country"
+msgid "Cape Verde"
+msgstr "維得角"
+
+#, fuzzy
+msgctxt "country"
+msgid "Cayman Islands"
+msgstr "開曼群島"
+
+#, fuzzy
+msgctxt "country"
+msgid "Central African Republic"
+msgstr "中非共和國"
+
+#, fuzzy
+msgctxt "country"
+msgid "Chad"
+msgstr "查德"
+
+#, fuzzy
+msgctxt "country"
+msgid "Chile"
+msgstr "智利"
+
+#, fuzzy
+msgctxt "country"
+msgid "China"
+msgstr "中國"
+
+#, fuzzy
+msgctxt "country"
+msgid "Christmas Island"
+msgstr "聖誕島"
+
+#, fuzzy
+msgctxt "country"
+msgid "Cocos (Keeling) Islands"
+msgstr "可可斯群島(椰子島)"
+
+#, fuzzy
+msgctxt "country"
+msgid "Colombia"
+msgstr "哥倫比亞"
+
+#, fuzzy
+msgctxt "country"
+msgid "Comoros"
+msgstr "科摩羅"
+
+#, fuzzy
+msgctxt "country"
+msgid "Congo, The Democratic Republic of the"
+msgstr "剛果民主共和國"
+
+#, fuzzy
+msgctxt "country"
+msgid "Congo"
+msgstr "剛果"
+
+#, fuzzy
+msgctxt "country"
+msgid "Cook Islands"
+msgstr "庫克群島"
+
+#, fuzzy
+msgctxt "country"
+msgid "Costa Rica"
+msgstr "哥斯大黎加"
+
+#, fuzzy
+msgctxt "country"
+msgid "Côte d'Ivoire"
+msgstr "象牙海岸"
+
+#, fuzzy
+msgctxt "country"
+msgid "Croatia"
+msgstr "克羅埃西亞"
+
+#, fuzzy
+msgctxt "country"
+msgid "Cuba"
+msgstr "古巴"
+
+#, fuzzy
+msgctxt "country"
+msgid "Cyprus"
+msgstr "塞浦路斯"
+
+#, fuzzy
+msgctxt "country"
+msgid "Czech Republic"
+msgstr "捷克共和國"
+
+#, fuzzy
+msgctxt "country"
+msgid "Denmark"
+msgstr "丹麥"
+
+#, fuzzy
+msgctxt "country"
+msgid "Djibouti"
+msgstr "吉布地"
+
+#, fuzzy
+msgctxt "country"
+msgid "Dominica"
+msgstr "多明尼加"
+
+#, fuzzy
+msgctxt "country"
+msgid "Dominican Republic"
+msgstr "多明尼加共和國"
+
+#, fuzzy
+msgctxt "country"
+msgid "Timor-Leste"
+msgstr "東帝汶"
+
+#, fuzzy
+msgctxt "country"
+msgid "Ecuador"
+msgstr "厄瓜多爾"
+
+#, fuzzy
+msgctxt "country"
+msgid "Egypt"
+msgstr "埃及"
+
+#, fuzzy
+msgctxt "country"
+msgid "El Salvador"
+msgstr "薩爾瓦多"
+
+#, fuzzy
+msgctxt "country"
+msgid "Equatorial Guinea"
+msgstr "赤道幾內亞"
+
+#, fuzzy
+msgctxt "country"
+msgid "Eritrea"
+msgstr "厄立特里亞"
+
+#, fuzzy
+msgctxt "country"
+msgid "Estonia"
+msgstr "愛沙尼亞"
+
+#, fuzzy
+msgctxt "country"
+msgid "Ethiopia"
+msgstr "衣索比亞"
+
+#, fuzzy
+msgctxt "country"
+msgid "Falkland Islands (Malvinas)"
+msgstr "福克蘭群島"
+
+#, fuzzy
+msgctxt "country"
+msgid "Faroe Islands"
+msgstr "法羅島"
+
+#, fuzzy
+msgctxt "country"
+msgid "Fiji"
+msgstr "斐濟"
+
+#, fuzzy
+msgctxt "country"
+msgid "Finland"
+msgstr "芬蘭"
+
+#, fuzzy
+msgctxt "country"
+msgid "France"
+msgstr "法國"
+
+#, fuzzy
+msgctxt "country"
+msgid "French Guiana"
+msgstr "法屬圭亞那"
+
+#, fuzzy
+msgctxt "country"
+msgid "French Polynesia"
+msgstr "法屬波利尼西亞"
+
+#, fuzzy
+msgctxt "country"
+msgid "French Southern Territories"
+msgstr "法屬南半球領地"
+
+#, fuzzy
+msgctxt "country"
+msgid "Gabon"
+msgstr "加彭"
+
+#, fuzzy
+msgctxt "country"
+msgid "Georgia"
+msgstr "喬治亞"
+
+#, fuzzy
+msgctxt "country"
+msgid "Germany"
+msgstr "德國"
+
+#, fuzzy
+msgctxt "country"
+msgid "Ghana"
+msgstr "迦納"
+
+#, fuzzy
+msgctxt "country"
+msgid "Gibraltar"
+msgstr "直布羅陀"
+
+#, fuzzy
+msgctxt "country"
+msgid "Greece"
+msgstr "希臘"
+
+#, fuzzy
+msgctxt "country"
+msgid "Greenland"
+msgstr "格陵蘭"
+
+#, fuzzy
+msgctxt "country"
+msgid "Grenada"
+msgstr "格林納達"
+
+#, fuzzy
+msgctxt "country"
+msgid "Guadeloupe"
+msgstr "瓜德羅普島"
+
+#, fuzzy
+msgctxt "country"
+msgid "Guam"
+msgstr "關島"
+
+#, fuzzy
+msgctxt "country"
+msgid "Guatemala"
+msgstr "瓜地馬拉"
+
+#, fuzzy
+msgctxt "country"
+msgid "Guinea"
+msgstr "幾內亞"
+
+#, fuzzy
+msgctxt "country"
+msgid "Guinea-Bissau"
+msgstr "幾內亞比紹"
+
+#, fuzzy
+msgctxt "country"
+msgid "Guyana"
+msgstr "圭亞那"
+
+#, fuzzy
+msgctxt "country"
+msgid "Haiti"
+msgstr "海地"
+
+#, fuzzy
+msgctxt "country"
+msgid "Heard Island and McDonald Islands"
+msgstr "赫德島和麥當勞群島"
+
+#, fuzzy
+msgctxt "country"
+msgid "Holy See (Vatican City State)"
+msgstr "梵帝岡"
+
+#, fuzzy
+msgctxt "country"
+msgid "Honduras"
+msgstr "洪都拉斯"
+
+#, fuzzy
+msgctxt "country"
+msgid "Hong Kong"
+msgstr "香港"
+
+#, fuzzy
+msgctxt "country"
+msgid "Hungary"
+msgstr "匈牙利"
+
+#, fuzzy
+msgctxt "country"
+msgid "Iceland"
+msgstr "冰島"
+
+#, fuzzy
+msgctxt "country"
+msgid "India"
+msgstr "印度"
+
+#, fuzzy
+msgctxt "country"
+msgid "Indonesia"
+msgstr "印度尼西亞"
+
+#, fuzzy
+msgctxt "country"
+msgid "Iran, Islamic Republic of"
+msgstr "伊朗"
+
+#, fuzzy
+msgctxt "country"
+msgid "Iraq"
+msgstr "伊拉克"
+
+#, fuzzy
+msgctxt "country"
+msgid "Ireland"
+msgstr "愛爾蘭"
+
+#, fuzzy
+msgctxt "country"
+msgid "Israel"
+msgstr "以色列"
+
+#, fuzzy
+msgctxt "country"
+msgid "Italy"
+msgstr "意大利"
+
+#, fuzzy
+msgctxt "country"
+msgid "Jamaica"
+msgstr "牙買加"
+
+#, fuzzy
+msgctxt "country"
+msgid "Japan"
+msgstr "日本"
+
+#, fuzzy
+msgctxt "country"
+msgid "Jordan"
+msgstr "約旦"
+
+#, fuzzy
+msgctxt "country"
+msgid "Kazakhstan"
+msgstr "哈薩克"
+
+#, fuzzy
+msgctxt "country"
+msgid "Kenya"
+msgstr "肯亞"
+
+#, fuzzy
+msgctxt "country"
+msgid "Kiribati"
+msgstr "吉里巴斯"
+
+#, fuzzy
+msgctxt "country"
+msgid "Korea, Democratic People's Republic of"
+msgstr "南韓"
+
+#, fuzzy
+msgctxt "country"
+msgid "Korea, Republic of"
+msgstr "北韓"
+
+#, fuzzy
+msgctxt "country"
+msgid "Kuwait"
+msgstr "科威特"
+
+#, fuzzy
+msgctxt "country"
+msgid "Kyrgyzstan"
+msgstr "吉爾吉斯坦"
+
+#, fuzzy
+msgctxt "country"
+msgid "Lao People's Democratic Republic"
+msgstr "寮國"
+
+#, fuzzy
+msgctxt "country"
+msgid "Latvia"
+msgstr "拉脫維亞"
+
+#, fuzzy
+msgctxt "country"
+msgid "Lebanon"
+msgstr "黎巴嫩"
+
+#, fuzzy
+msgctxt "country"
+msgid "Lesotho"
+msgstr "賴索托"
+
+#, fuzzy
+msgctxt "country"
+msgid "Liberia"
+msgstr "賴比瑞亞"
+
+#, fuzzy
+msgctxt "country"
+msgid "Libyan Arab Jamahiriya"
+msgstr "利比亞"
+
+#, fuzzy
+msgctxt "country"
+msgid "Liechtenstein"
+msgstr "列支敦斯登"
+
+#, fuzzy
+msgctxt "country"
+msgid "Lithuania"
+msgstr "立陶宛"
+
+#, fuzzy
+msgctxt "country"
+msgid "Luxembourg"
+msgstr "盧森堡"
+
+#, fuzzy
+msgctxt "country"
+msgid "Macao"
+msgstr "澳門"
+
+#, fuzzy
+msgctxt "country"
+msgid "Macedonia, Republic of"
+msgstr "馬其頓共和國"
+
+#, fuzzy
+msgctxt "country"
+msgid "Madagascar"
+msgstr "馬達加斯加"
+
+#, fuzzy
+msgctxt "country"
+msgid "Malawi"
+msgstr "馬拉威"
+
+#, fuzzy
+msgctxt "country"
+msgid "Malaysia"
+msgstr "馬來西亞"
+
+#, fuzzy
+msgctxt "country"
+msgid "Maldives"
+msgstr "馬爾地夫"
+
+#, fuzzy
+msgctxt "country"
+msgid "Mali"
+msgstr "馬利"
+
+#, fuzzy
+msgctxt "country"
+msgid "Malta"
+msgstr "馬爾他"
+
+#, fuzzy
+msgctxt "country"
+msgid "Marshall Islands"
+msgstr "馬紹爾群島"
+
+#, fuzzy
+msgctxt "country"
+msgid "Martinique"
+msgstr "馬丁尼克島"
+
+#, fuzzy
+msgctxt "country"
+msgid "Mauritania"
+msgstr "茅利塔尼亞"
+
+#, fuzzy
+msgctxt "country"
+msgid "Mauritius"
+msgstr "模里西斯"
+
+#, fuzzy
+msgctxt "country"
+msgid "Mayotte"
+msgstr "馬約特島"
+
+#, fuzzy
+msgctxt "country"
+msgid "Mexico"
+msgstr "墨西哥"
+
+#, fuzzy
+msgctxt "country"
+msgid "Micronesia, Federated States of"
+msgstr "密克羅西亞島"
+
+#, fuzzy
+msgctxt "country"
+msgid "Moldova"
+msgstr "摩爾多瓦"
+
+#, fuzzy
+msgctxt "country"
+msgid "Monaco"
+msgstr "摩納哥"
+
+#, fuzzy
+msgctxt "country"
+msgid "Mongolia"
+msgstr "蒙古"
+
+#, fuzzy
+msgctxt "country"
+msgid "Montserrat"
+msgstr "蒙特塞拉特"
+
+#, fuzzy
+msgctxt "country"
+msgid "Morocco"
+msgstr "摩洛哥"
+
+#, fuzzy
+msgctxt "country"
+msgid "Mozambique"
+msgstr "莫三比克"
+
+#, fuzzy
+msgctxt "country"
+msgid "Namibia"
+msgstr "那米比亞"
+
+#, fuzzy
+msgctxt "country"
+msgid "Nauru"
+msgstr "諾魯"
+
+#, fuzzy
+msgctxt "country"
+msgid "Nepal"
+msgstr "尼泊爾"
+
+#, fuzzy
+msgctxt "country"
+msgid "Netherlands Antilles"
+msgstr "荷屬安地列斯"
+
+#, fuzzy
+msgctxt "country"
+msgid "Netherlands"
+msgstr "荷蘭"
+
+#, fuzzy
+msgctxt "country"
+msgid "New Caledonia"
+msgstr "新加勒多尼亞"
+
+#, fuzzy
+msgctxt "country"
+msgid "New Zealand"
+msgstr "紐西蘭"
+
+#, fuzzy
+msgctxt "country"
+msgid "Nicaragua"
+msgstr "尼加拉瓜"
+
+#, fuzzy
+msgctxt "country"
+msgid "Niger"
+msgstr "尼日"
+
+#, fuzzy
+msgctxt "country"
+msgid "Nigeria"
+msgstr "奈及利亞"
+
+#, fuzzy
+msgctxt "country"
+msgid "Niue"
+msgstr "紐埃"
+
+#, fuzzy
+msgctxt "country"
+msgid "Norfolk Island"
+msgstr "諾福克島"
+
+#, fuzzy
+msgctxt "country"
+msgid "Northern Mariana Islands"
+msgstr "北馬力安那群島"
+
+#, fuzzy
+msgctxt "country"
+msgid "Norway"
+msgstr "挪威"
+
+#, fuzzy
+msgctxt "country"
+msgid "Oman"
+msgstr "阿曼"
+
+#, fuzzy
+msgctxt "country"
+msgid "Pakistan"
+msgstr "巴基斯坦"
+
+#, fuzzy
+msgctxt "country"
+msgid "Palau"
+msgstr "帛琉"
+
+#, fuzzy
+msgctxt "country"
+msgid "Palestinian Territory, Occupied"
+msgstr "巴勒斯坦"
+
+#, fuzzy
+msgctxt "country"
+msgid "Panama"
+msgstr "巴拿馬"
+
+#, fuzzy
+msgctxt "country"
+msgid "Papua New Guinea"
+msgstr "巴布新幾內亞"
+
+#, fuzzy
+msgctxt "country"
+msgid "Paraguay"
+msgstr "巴拉圭"
+
+#, fuzzy
+msgctxt "country"
+msgid "Peru"
+msgstr "秘魯"
+
+#, fuzzy
+msgctxt "country"
+msgid "Philippines"
+msgstr "菲律賓"
+
+#, fuzzy
+msgctxt "country"
+msgid "Pitcairn"
+msgstr "皮特凱恩群島"
+
+#, fuzzy
+msgctxt "country"
+msgid "Poland"
+msgstr "波蘭"
+
+#, fuzzy
+msgctxt "country"
+msgid "Portugal"
+msgstr "葡萄牙"
+
+#, fuzzy
+msgctxt "country"
+msgid "Puerto Rico"
+msgstr "波多黎各"
+
+#, fuzzy
+msgctxt "country"
+msgid "Qatar"
+msgstr "卡達"
+
+#, fuzzy
+msgctxt "country"
+msgid "Romania"
+msgstr "羅馬尼亞"
+
+#, fuzzy
+msgctxt "country"
+msgid "Russian Federation"
+msgstr "俄羅斯聯邦"
+
+#, fuzzy
+msgctxt "country"
+msgid "Rwanda"
+msgstr "盧安達"
+
+#, fuzzy
+msgctxt "country"
+msgid "Reunion"
+msgstr "留尼旺島"
+
+#, fuzzy
+msgctxt "country"
+msgid "Saint Helena"
+msgstr "聖赫勒拿"
+
+#, fuzzy
+msgctxt "country"
+msgid "Saint Kitts and Nevis"
+msgstr "聖克里斯多福"
+
+#, fuzzy
+msgctxt "country"
+msgid "Saint Lucia"
+msgstr "聖路西亞"
+
+#, fuzzy
+msgctxt "country"
+msgid "Saint Pierre and Miquelon"
+msgstr "聖皮埃爾和密克隆群島"
+
+#, fuzzy
+msgctxt "country"
+msgid "Saint Vincent and the Grenadines"
+msgstr "聖文森"
+
+#, fuzzy
+msgctxt "country"
+msgid "Samoa"
+msgstr "薩摩亞"
+
+#, fuzzy
+msgctxt "country"
+msgid "San Marino"
+msgstr "聖馬利諾"
+
+#, fuzzy
+msgctxt "country"
+msgid "Saudi Arabia"
+msgstr "沙烏地阿拉伯"
+
+#, fuzzy
+msgctxt "country"
+msgid "Senegal"
+msgstr "塞內加爾"
+
+#, fuzzy
+msgctxt "country"
+msgid "Seychelles"
+msgstr "塞席爾群島"
+
+#, fuzzy
+msgctxt "country"
+msgid "Sierra Leone"
+msgstr "獅子山"
+
+#, fuzzy
+msgctxt "country"
+msgid "Singapore"
+msgstr "新加坡"
+
+#, fuzzy
+msgctxt "country"
+msgid "Slovakia"
+msgstr "斯洛伐克"
+
+#, fuzzy
+msgctxt "country"
+msgid "Slovenia"
+msgstr "斯洛凡尼亞"
+
+#, fuzzy
+msgctxt "country"
+msgid "Solomon Islands"
+msgstr "索羅門群島"
+
+#, fuzzy
+msgctxt "country"
+msgid "Somalia"
+msgstr "索馬利亞"
+
+#, fuzzy
+msgctxt "country"
+msgid "South Africa"
+msgstr "南非"
+
+#, fuzzy
+msgctxt "country"
+msgid "South Georgia and the South Sandwich Islands"
+msgstr "南喬治亞南桑威奇群島"
+
+#, fuzzy
+msgctxt "country"
+msgid "Spain"
+msgstr "西班牙"
+
+#, fuzzy
+msgctxt "country"
+msgid "Sri Lanka"
+msgstr "斯里蘭卡"
+
+#, fuzzy
+msgctxt "country"
+msgid "Sudan"
+msgstr "蘇丹"
+
+#, fuzzy
+msgctxt "country"
+msgid "Suriname"
+msgstr "蘇利南莫"
+
+#, fuzzy
+msgctxt "country"
+msgid "Svalbard and Jan Mayen"
+msgstr "斯瓦爾巴群島"
+
+#, fuzzy
+msgctxt "country"
+msgid "Swaziland"
+msgstr "史瓦濟蘭"
+
+#, fuzzy
+msgctxt "country"
+msgid "Sweden"
+msgstr "瑞典"
+
+#, fuzzy
+msgctxt "country"
+msgid "Switzerland"
+msgstr "瑞士"
+
+#, fuzzy
+msgctxt "country"
+msgid "Syrian Arab Republic"
+msgstr "敘利亞"
+
+#, fuzzy
+msgctxt "country"
+msgid "Sao Tome and Principe"
+msgstr "聖多美及普林西比島"
+
+#, fuzzy
+msgctxt "country"
+msgid "Taiwan"
+msgstr "台灣"
+
+#, fuzzy
+msgctxt "country"
+msgid "Tajikistan"
+msgstr "塔吉克斯坦"
+
+#, fuzzy
+msgctxt "country"
+msgid "Tanzania, United Republic of"
+msgstr "坦尚尼亞"
+
+#, fuzzy
+msgctxt "country"
+msgid "Thailand"
+msgstr "泰國"
+
+#, fuzzy
+msgctxt "country"
+msgid "Bahamas"
+msgstr "巴哈馬"
+
+#, fuzzy
+msgctxt "country"
+msgid "Gambia"
+msgstr "甘比亞"
+
+#, fuzzy
+msgctxt "country"
+msgid "Togo"
+msgstr "多哥"
+
+#, fuzzy
+msgctxt "country"
+msgid "Tokelau"
+msgstr "托克勞"
+
+#, fuzzy
+msgctxt "country"
+msgid "Tonga"
+msgstr "東加"
+
+#, fuzzy
+msgctxt "country"
+msgid "Trinidad and Tobago"
+msgstr "千里達"
+
+#, fuzzy
+msgctxt "country"
+msgid "Tunisia"
+msgstr "突尼西亞"
+
+#, fuzzy
+msgctxt "country"
+msgid "Turkey"
+msgstr "土耳其"
+
+#, fuzzy
+msgctxt "country"
+msgid "Turkmenistan"
+msgstr "土庫曼"
+
+#, fuzzy
+msgctxt "country"
+msgid "Turks and Caicos Islands"
+msgstr "特克斯和凱科斯群島"
+
+#, fuzzy
+msgctxt "country"
+msgid "Tuvalu"
+msgstr "吐瓦魯"
+
+#, fuzzy
+msgctxt "country"
+msgid "Uganda"
+msgstr "烏干達"
+
+#, fuzzy
+msgctxt "country"
+msgid "Ukraine"
+msgstr "烏克蘭"
+
+#, fuzzy
+msgctxt "country"
+msgid "United Arab Emirates"
+msgstr "阿拉伯聯合大公國"
+
+#, fuzzy
+msgctxt "country"
+msgid "United Kingdom"
+msgstr "英國"
+
+#, fuzzy
+msgctxt "country"
+msgid "United States Minor Outlying Islands"
+msgstr "美屬邊疆群島"
+
+#, fuzzy
+msgctxt "country"
+msgid "United States"
+msgstr "美國"
+
+#, fuzzy
+msgctxt "country"
+msgid "Uruguay"
+msgstr "烏拉圭"
+
+#, fuzzy
+msgctxt "country"
+msgid "Uzbekistan"
+msgstr "烏茲別克斯坦"
+
+#, fuzzy
+msgctxt "country"
+msgid "Vanuatu"
+msgstr "萬那杜"
+
+#, fuzzy
+msgctxt "country"
+msgid "Venezuela"
+msgstr "委內瑞拉"
+
+#, fuzzy
+msgctxt "country"
+msgid "Viet Nam"
+msgstr "越南"
+
+#, fuzzy
+msgctxt "country"
+msgid "Virgin Islands, U.S."
+msgstr "美屬維京群島"
+
+#, fuzzy
+msgctxt "country"
+msgid "Wallis and Futuna"
+msgstr "華里斯福他納"
+
+#, fuzzy
+msgctxt "country"
+msgid "Western Sahara"
+msgstr "西撒哈拉"
+
+#, fuzzy
+msgctxt "country"
+msgid "Yemen"
+msgstr "葉門"
+
+#, fuzzy
+msgctxt "country"
+msgid "Serbia and Montenegro"
+msgstr "塞爾維亞和蒙特內哥羅"
+
+#, fuzzy
+msgctxt "country"
+msgid "Zambia"
+msgstr "尚比亞"
+
+#, fuzzy
+msgctxt "country"
+msgid "Zimbabwe"
+msgstr "辛巴威"
+
+#, fuzzy
+msgctxt "country"
+msgid "Åland Islands"
+msgstr "奧蘭群島"
+
+#, fuzzy
+msgctxt "country"
+msgid "Serbia"
+msgstr "塞爾維亞"
+
+#, fuzzy
+msgctxt "country"
+msgid "Montenegro"
+msgstr "蒙特內哥羅"
+
+#, fuzzy
+msgctxt "country"
+msgid "Jersey"
+msgstr "澤西"
+
+#, fuzzy
+msgctxt "country"
+msgid "Guernsey"
+msgstr "格恩希"
+
+#, fuzzy
+msgctxt "country"
+msgid "Isle of Man"
+msgstr "男島"
