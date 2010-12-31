@@ -269,7 +269,7 @@ class CRM_Core_Payment_BaseIPN {
     function pending( &$objects, &$transaction ) {
         $transaction->commit( );
         CRM_Core_Error::debug_log_message( "returning since contribution status is pending" );
-        echo "Success: Returning since contribution status is pending<p>";
+        //echo "Success: Returning since contribution status is pending<p>";
         return true;
     }
 
@@ -323,7 +323,7 @@ class CRM_Core_Payment_BaseIPN {
         if ( $input['component'] == 'contribute' ) {
             require_once 'CRM/Contribute/BAO/ContributionPage.php';
             CRM_Contribute_BAO_ContributionPage::setValues( $contribution->contribution_page_id, $values );
-            $contribution->source                  = ts( 'Online Contribution' ) . ': ' . $values['title'];
+            $contribution->source = $values['title'];
             
             if ( $values['is_email_receipt'] ) {
                 $contribution->receipt_date = self::$_now;

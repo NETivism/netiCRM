@@ -290,8 +290,7 @@ class CRM_Pledge_BAO_PledgeBlock extends CRM_Pledge_DAO_PledgeBlock
             $frequencyUnits = CRM_Core_OptionGroup::values( 'recur_frequency_units' );
             foreach ( $freqUnitVals as $key => $val ) {
                 if ( array_key_exists( $val, $frequencyUnits )  ) { 
-                    $freqUnits[$val] = CRM_Utils_Array::value('is_pledge_interval', $pledgeBlock) ? 
-                        "{$frequencyUnits[$val]}(s)" : $frequencyUnits[$val];
+                  $freqUnits[$val] = CRM_Utils_Array::value('is_pledge_interval', $pledgeBlock) ? ts($val) : ts($val);
                 }
             }
             $form->addElement( 'select', 'pledge_frequency_unit', null, $freqUnits ); 

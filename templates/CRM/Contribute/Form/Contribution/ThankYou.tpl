@@ -96,6 +96,10 @@
             {if !$membershipBlock AND $amount OR ( $priceSetID and $lineItem )}{ts}Contribution Information{/ts}{else}{ts}Membership Fee{/ts}{/if}
         </div>
         <div class="display-block">
+          {ts}Transaction ID{/ts}: <strong>{$trxn_id}</strong><br />
+          {if $payment_instrument}
+          {ts}Payment Instrument{/ts}: <strong>{$payment_instrument}</strong><br />
+          {/if}
         	{if $lineItem and $priceSetID}
     	    {if !$amount}{assign var="amount" value=0}{/if}
     	    {assign var="totalAmount" value=$amount}
@@ -117,11 +121,8 @@
             {if $receive_date}
             {ts}Date{/ts}: <strong>{$receive_date|crmDate}</strong><br />
             {/if}
-            {if $contributeMode ne 'notify' and $is_monetary and ! $is_pay_later and $trxn_id}
-    	    {ts}Transaction #{/ts}: {$trxn_id}<br />
-            {/if}
             {if $membership_trx_id}
-    	    {ts}Membership Transaction #{/ts}: {$membership_trx_id}
+            {ts}Membership Transaction #{/ts}: {$membership_trx_id}
             {/if}
         
             {* Recurring contribution / pledge information *}

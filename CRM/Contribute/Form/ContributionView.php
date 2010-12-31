@@ -115,7 +115,15 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form
 
         // Get Note
         $noteValue = CRM_Core_BAO_Note::getNote( $values['id'], 'civicrm_contribution' );
-        $values['note'] =  array_values($noteValue);
+        // FIXME need to use civicrm format
+        if(function_exists('_filter_autop')){
+          foreach($noteValue as $v){
+            $values['note'][] = _filter_autop($v);
+          }
+        }
+        else{
+          $values['note'] =  array_values($noteValue);
+        }
 
 		// show billing address location details, if exists
 		if ( CRM_Utils_Array::value( 'address_id', $values ) ) {
