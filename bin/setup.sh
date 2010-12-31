@@ -4,13 +4,13 @@
 SCHEMA=schema/Schema.xml 
 # define your database name here, will be overriden by 
 # FIRST command line argument if given
-DBNAME=
+DBNAME=netivism_civicrm
 # define your database usernamename here, will be overriden by 
 # SECOND command line argument if given
-DBUSER=
+DBUSER=netivism
 # define your database password here, will be overriden by 
 # THIRD command line argument if given
-DBPASS=
+DBPASS=netivism123
 # any extra args you need in your mysql connect string
 # number of arguments should be specified within "" 
 # FOURTH command line argument if given
@@ -22,7 +22,7 @@ PHP5PATH=
 # If a filename is passed, civicrm_data.mysql AND the 
 # passed file will be loaded instead of civicrm_generated.mysql.
 # The DBLOAD file must be in the sql directory.
-DBLOAD=
+DBLOAD=civicrm_navigation.mysql
 # Set a special SQL filename here which you want to load
 # IN ADDITION TO either civicrm_generated or civicrm_data.
 # The DBADD file must be in the sql directory.
