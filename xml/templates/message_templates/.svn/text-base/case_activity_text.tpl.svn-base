@@ -3,9 +3,6 @@
 ===========================================================
 {if $isCaseActivity}
 {ts}Your Case Role(s){/ts} : {$contact.role}
-{if $manageCaseURL}
-{ts}Manage Case{/ts} : {$manageCaseURL}
-{/if}
 {/if}
 
 {if $editActURL}

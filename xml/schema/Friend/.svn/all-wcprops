@@ -1,17 +1,17 @@
 K 25
 svn:wc:ra_dav:version-url
-V 55
-/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Friend
+V 61
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Friend
 END
 files.xml
 K 25
 svn:wc:ra_dav:version-url
-V 65
-/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Friend/files.xml
+V 71
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Friend/files.xml
 END
 Friend.xml
 K 25
 svn:wc:ra_dav:version-url
-V 66
-/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Friend/Friend.xml
+V 72
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Friend/Friend.xml
 END

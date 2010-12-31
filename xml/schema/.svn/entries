@@ -1,15 +1,15 @@
 9
 
 dir
-31541
-http://svn.civicrm.org/civicrm/branches/v3.3/xml/schema
+31546
+http://svn.civicrm.org/civicrm/tags/tarballs/3.3.1/xml/schema
 http://svn.civicrm.org/civicrm
 
 
 
-2010-12-27T14:25:47.764725Z
-31455
-kiran
+2010-12-09T08:28:06.145058Z
+31142
+neha
 has-props
 
 svn:special svn:externals svn:needs-lock
@@ -41,7 +41,7 @@ file
 
 
 
-2010-12-31T11:12:11.000000Z
+2010-12-31T21:01:33.000000Z
 e19e88ee4ba52ffffc4d97c8e3ea057d
 2007-06-26T04:29:36.997398Z
 10136
@@ -90,7 +90,7 @@ file
 
 
 
-2010-12-31T11:12:11.000000Z
+2010-12-31T21:01:33.000000Z
 4a591b97cdc67bdea9cf6738f9d2244f
 2009-04-03T13:03:57.776915Z
 20535
@@ -127,7 +127,7 @@ file
 
 
 
-2010-12-31T11:12:11.000000Z
+2010-12-31T21:01:33.000000Z
 2909a4659a779783a4e7956b145543be
 2010-09-23T20:31:20.292469Z
 29808
@@ -194,7 +194,7 @@ file
 
 
 
-2010-12-31T11:12:11.000000Z
+2010-12-31T21:01:33.000000Z
 b31ab8bf5a3284c42ce05de6371dc7bf
 2009-04-03T13:03:57.776915Z
 20535

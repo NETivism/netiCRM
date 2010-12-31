@@ -1,29 +1,29 @@
 K 25
 svn:wc:ra_dav:version-url
-V 57
-/civicrm/!svn/ver/30478/branches/v3.3/xml/schema/Activity
+V 63
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Activity
 END
 files.xml
 K 25
 svn:wc:ra_dav:version-url
-V 67
-/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Activity/files.xml
+V 73
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Activity/files.xml
 END
 ActivityTarget.xml
 K 25
 svn:wc:ra_dav:version-url
-V 76
-/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Activity/ActivityTarget.xml
+V 82
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Activity/ActivityTarget.xml
 END
 ActivityAssignment.xml
 K 25
 svn:wc:ra_dav:version-url
-V 80
-/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Activity/ActivityAssignment.xml
+V 86
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Activity/ActivityAssignment.xml
 END
 Activity.xml
 K 25
 svn:wc:ra_dav:version-url
-V 70
-/civicrm/!svn/ver/30478/branches/v3.3/xml/schema/Activity/Activity.xml
+V 76
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Activity/Activity.xml
 END

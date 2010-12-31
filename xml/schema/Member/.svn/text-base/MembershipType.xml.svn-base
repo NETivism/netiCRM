@@ -195,25 +195,6 @@
       <comment>Receipt Text for membership renewal</comment>
       <add>2.0</add>
   </field>
-  <field>
-      <name>autorenewal_msg_id</name>
-      <type>int unsigned</type>
-      <comment>FK to civicrm_msg_template.id</comment>
-      <add>3.3</add>
-  </field>
-  <foreignKey> 
-      <name>renewal_msg_id</name> 
-      <table>civicrm_msg_template</table> 
-      <key>id</key> 
-      <add>3.3</add>
-  </foreignKey>
-  <field> 
-      <name>auto_renew</name>     
-      <type>boolean</type>
-      <default>0</default>
-      <comment>0 = No auto-renew option; 1 = Give option, but not required; 2 = Auto-renew required;</comment>                
-      <add>3.3</add>  
-  </field> 
   <field> 
       <name>is_active</name>     
       <title>Is Active</title>

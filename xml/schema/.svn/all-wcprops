@@ -1,29 +1,29 @@
 K 25
 svn:wc:ra_dav:version-url
-V 48
-/civicrm/!svn/ver/31455/branches/v3.3/xml/schema
+V 54
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema
 END
 Schema.xml
 K 25
 svn:wc:ra_dav:version-url
-V 59
-/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Schema.xml
+V 65
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Schema.xml
 END
 QuestSchema.xml
 K 25
 svn:wc:ra_dav:version-url
-V 64
-/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/QuestSchema.xml
+V 70
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/QuestSchema.xml
 END
 GccSchema.xml
 K 25
 svn:wc:ra_dav:version-url
-V 62
-/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/GccSchema.xml
+V 68
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/GccSchema.xml
 END
 KabissaSchema.xml
 K 25
 svn:wc:ra_dav:version-url
-V 66
-/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/KabissaSchema.xml
+V 72
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/KabissaSchema.xml
 END

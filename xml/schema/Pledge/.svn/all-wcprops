@@ -1,29 +1,29 @@
 K 25
 svn:wc:ra_dav:version-url
-V 55
-/civicrm/!svn/ver/30712/branches/v3.3/xml/schema/Pledge
+V 61
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Pledge
 END
 Pledge.xml
 K 25
 svn:wc:ra_dav:version-url
-V 66
-/civicrm/!svn/ver/30537/branches/v3.3/xml/schema/Pledge/Pledge.xml
+V 72
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Pledge/Pledge.xml
 END
 files.xml
 K 25
 svn:wc:ra_dav:version-url
-V 65
-/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Pledge/files.xml
+V 71
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Pledge/files.xml
 END
 PledgeBlock.xml
 K 25
 svn:wc:ra_dav:version-url
-V 71
-/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Pledge/PledgeBlock.xml
+V 77
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Pledge/PledgeBlock.xml
 END
 Payment.xml
 K 25
 svn:wc:ra_dav:version-url
-V 67
-/civicrm/!svn/ver/30712/branches/v3.3/xml/schema/Pledge/Payment.xml
+V 73
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Pledge/Payment.xml
 END

@@ -1,29 +1,29 @@
 K 25
 svn:wc:ra_dav:version-url
-V 53
-/civicrm/!svn/ver/30478/branches/v3.3/xml/schema/Case
+V 59
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Case
 END
 files.xml
 K 25
 svn:wc:ra_dav:version-url
-V 63
-/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Case/files.xml
+V 69
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Case/files.xml
 END
 CaseContact.xml
 K 25
 svn:wc:ra_dav:version-url
-V 69
-/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Case/CaseContact.xml
+V 75
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Case/CaseContact.xml
 END
 CaseActivity.xml
 K 25
 svn:wc:ra_dav:version-url
-V 70
-/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Case/CaseActivity.xml
+V 76
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Case/CaseActivity.xml
 END
 Case.xml
 K 25
 svn:wc:ra_dav:version-url
-V 62
-/civicrm/!svn/ver/30478/branches/v3.3/xml/schema/Case/Case.xml
+V 68
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Case/Case.xml
 END

@@ -1,83 +1,83 @@
 K 25
 svn:wc:ra_dav:version-url
-V 59
-/civicrm/!svn/ver/31455/branches/v3.3/xml/schema/Contribute
+V 65
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Contribute
 END
 ContributionProduct.xml
 K 25
 svn:wc:ra_dav:version-url
-V 83
-/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Contribute/ContributionProduct.xml
+V 89
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Contribute/ContributionProduct.xml
 END
 ContributionRecur.xml
 K 25
 svn:wc:ra_dav:version-url
-V 81
-/civicrm/!svn/ver/31455/branches/v3.3/xml/schema/Contribute/ContributionRecur.xml
+V 87
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Contribute/ContributionRecur.xml
 END
 Product.xml
 K 25
 svn:wc:ra_dav:version-url
-V 71
-/civicrm/!svn/ver/30712/branches/v3.3/xml/schema/Contribute/Product.xml
+V 77
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Contribute/Product.xml
 END
 ContributionType.xml
 K 25
 svn:wc:ra_dav:version-url
-V 80
-/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Contribute/ContributionType.xml
+V 86
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Contribute/ContributionType.xml
 END
 PCP.xml
 K 25
 svn:wc:ra_dav:version-url
-V 67
-/civicrm/!svn/ver/30537/branches/v3.3/xml/schema/Contribute/PCP.xml
+V 73
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Contribute/PCP.xml
 END
 PremiumsProduct.xml
 K 25
 svn:wc:ra_dav:version-url
-V 79
-/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Contribute/PremiumsProduct.xml
+V 85
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Contribute/PremiumsProduct.xml
 END
 files.xml
 K 25
 svn:wc:ra_dav:version-url
-V 69
-/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Contribute/files.xml
+V 75
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Contribute/files.xml
 END
 Widget.xml
 K 25
 svn:wc:ra_dav:version-url
-V 70
-/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Contribute/Widget.xml
+V 76
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Contribute/Widget.xml
 END
 ContributionSoft.xml
 K 25
 svn:wc:ra_dav:version-url
-V 80
-/civicrm/!svn/ver/30712/branches/v3.3/xml/schema/Contribute/ContributionSoft.xml
+V 86
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Contribute/ContributionSoft.xml
 END
 ContributionPage.xml
 K 25
 svn:wc:ra_dav:version-url
-V 80
-/civicrm/!svn/ver/30712/branches/v3.3/xml/schema/Contribute/ContributionPage.xml
+V 86
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Contribute/ContributionPage.xml
 END
 PCPBlock.xml
 K 25
 svn:wc:ra_dav:version-url
-V 72
-/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Contribute/PCPBlock.xml
+V 78
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Contribute/PCPBlock.xml
 END
 Premium.xml
 K 25
 svn:wc:ra_dav:version-url
-V 71
-/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Contribute/Premium.xml
+V 77
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Contribute/Premium.xml
 END
 Contribution.xml
 K 25
 svn:wc:ra_dav:version-url
-V 76
-/civicrm/!svn/ver/30569/branches/v3.3/xml/schema/Contribute/Contribution.xml
+V 82
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Contribute/Contribution.xml
 END

@@ -1,47 +1,47 @@
 K 25
 svn:wc:ra_dav:version-url
-V 55
-/civicrm/!svn/ver/31413/branches/v3.3/xml/schema/Member
+V 61
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Member
 END
 files.xml
 K 25
 svn:wc:ra_dav:version-url
-V 65
-/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Member/files.xml
+V 71
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Member/files.xml
 END
 MembershipBlock.xml
 K 25
 svn:wc:ra_dav:version-url
-V 75
-/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Member/MembershipBlock.xml
+V 81
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Member/MembershipBlock.xml
 END
 MembershipPayment.xml
 K 25
 svn:wc:ra_dav:version-url
-V 77
-/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Member/MembershipPayment.xml
+V 83
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Member/MembershipPayment.xml
 END
 Membership.xml
 K 25
 svn:wc:ra_dav:version-url
-V 70
-/civicrm/!svn/ver/31413/branches/v3.3/xml/schema/Member/Membership.xml
+V 76
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Member/Membership.xml
 END
 MembershipLog.xml
 K 25
 svn:wc:ra_dav:version-url
-V 73
-/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Member/MembershipLog.xml
+V 79
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Member/MembershipLog.xml
 END
 MembershipType.xml
 K 25
 svn:wc:ra_dav:version-url
-V 74
-/civicrm/!svn/ver/31413/branches/v3.3/xml/schema/Member/MembershipType.xml
+V 80
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Member/MembershipType.xml
 END
 MembershipStatus.xml
 K 25
 svn:wc:ra_dav:version-url
-V 76
-/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Member/MembershipStatus.xml
+V 82
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Member/MembershipStatus.xml
 END

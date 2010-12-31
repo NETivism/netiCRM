@@ -1,29 +1,29 @@
 K 25
 svn:wc:ra_dav:version-url
-V 52
-/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/ACL
+V 58
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/ACL
 END
 files.xml
 K 25
 svn:wc:ra_dav:version-url
-V 62
-/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/ACL/files.xml
+V 68
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/ACL/files.xml
 END
 Cache.xml
 K 25
 svn:wc:ra_dav:version-url
-V 62
-/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/ACL/Cache.xml
+V 68
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/ACL/Cache.xml
 END
 EntityRole.xml
 K 25
 svn:wc:ra_dav:version-url
-V 67
-/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/ACL/EntityRole.xml
+V 73
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/ACL/EntityRole.xml
 END
 ACL.xml
 K 25
 svn:wc:ra_dav:version-url
-V 60
-/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/ACL/ACL.xml
+V 66
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/ACL/ACL.xml
 END

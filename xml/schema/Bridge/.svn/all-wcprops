@@ -1,23 +1,23 @@
 K 25
 svn:wc:ra_dav:version-url
-V 55
-/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Bridge
+V 61
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Bridge
 END
 Role.xml
 K 25
 svn:wc:ra_dav:version-url
-V 64
-/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Bridge/Role.xml
+V 70
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Bridge/Role.xml
 END
 files.xml
 K 25
 svn:wc:ra_dav:version-url
-V 65
-/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Bridge/files.xml
+V 71
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Bridge/files.xml
 END
 OG.xml
 K 25
 svn:wc:ra_dav:version-url
-V 62
-/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Bridge/OG.xml
+V 68
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Bridge/OG.xml
 END

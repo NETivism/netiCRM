@@ -1,23 +1,23 @@
 K 25
 svn:wc:ra_dav:version-url
-V 66
-/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Standalone/OpenID
+V 72
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Standalone/OpenID
 END
 files.xml
 K 25
 svn:wc:ra_dav:version-url
-V 76
-/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Standalone/OpenID/files.xml
+V 82
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Standalone/OpenID/files.xml
 END
 Nonces.xml
 K 25
 svn:wc:ra_dav:version-url
-V 77
-/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Standalone/OpenID/Nonces.xml
+V 83
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Standalone/OpenID/Nonces.xml
 END
 Associations.xml
 K 25
 svn:wc:ra_dav:version-url
-V 83
-/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Standalone/OpenID/Associations.xml
+V 89
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Standalone/OpenID/Associations.xml
 END

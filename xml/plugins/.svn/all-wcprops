@@ -1,11 +1,11 @@
 K 25
 svn:wc:ra_dav:version-url
-V 49
-/civicrm/!svn/ver/30282/branches/v3.3/xml/plugins
+V 55
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/plugins
 END
 block.ts.php
 K 25
 svn:wc:ra_dav:version-url
-V 62
-/civicrm/!svn/ver/30282/branches/v3.3/xml/plugins/block.ts.php
+V 68
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/plugins/block.ts.php
 END

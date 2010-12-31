@@ -214,15 +214,6 @@ $sample  = $smarty->fetch('civicrm_sample.tpl');
 $sample .= $smarty->fetch('civicrm_acl.tpl');
 file_put_contents($sqlCodePath . 'civicrm_sample.mysql', $sample);
 
-// CRM-7161: generate install/langs.php from the languages template
-// grep it for enabled languages and create a 'xx_YY' => 'Language name' $langs mapping
-$matches = array();
-preg_match_all('/, 1, \'([a-z][a-z]_[A-Z][A-Z])\', \'..\', \'([^\']+)\', /', file_get_contents('templates/languages.tpl'), $matches);
-$langs = array();
-for ($i = 0; $i < count($matches[0]); $i++) {
-    $langs[$matches[1][$i]] = $matches[2][$i];
-}
-file_put_contents('../install/langs.php', "<?php \$langs = unserialize('" . serialize($langs) . "');");
 
 $beautifier = new PHP_Beautifier(); // create a instance
 $beautifier->addFilter('ArrayNested');

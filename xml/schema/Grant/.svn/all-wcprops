@@ -1,17 +1,17 @@
 K 25
 svn:wc:ra_dav:version-url
-V 54
-/civicrm/!svn/ver/30537/branches/v3.3/xml/schema/Grant
+V 60
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Grant
 END
 files.xml
 K 25
 svn:wc:ra_dav:version-url
-V 64
-/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Grant/files.xml
+V 70
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Grant/files.xml
 END
 Grant.xml
 K 25
 svn:wc:ra_dav:version-url
-V 64
-/civicrm/!svn/ver/30537/branches/v3.3/xml/schema/Grant/Grant.xml
+V 70
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Grant/Grant.xml
 END

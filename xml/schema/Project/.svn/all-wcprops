@@ -1,29 +1,29 @@
 K 25
 svn:wc:ra_dav:version-url
-V 56
-/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Project
+V 62
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Project
 END
 Task.xml
 K 25
 svn:wc:ra_dav:version-url
-V 65
-/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Project/Task.xml
+V 71
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Project/Task.xml
 END
 files.xml
 K 25
 svn:wc:ra_dav:version-url
-V 66
-/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Project/files.xml
+V 72
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Project/files.xml
 END
 Project.xml
 K 25
 svn:wc:ra_dav:version-url
-V 68
-/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Project/Project.xml
+V 74
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Project/Project.xml
 END
 TaskStatus.xml
 K 25
 svn:wc:ra_dav:version-url
-V 71
-/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Project/TaskStatus.xml
+V 77
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Project/TaskStatus.xml
 END

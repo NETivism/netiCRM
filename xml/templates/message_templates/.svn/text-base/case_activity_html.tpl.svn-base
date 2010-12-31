@@ -36,13 +36,6 @@
         {$contact.role}
        </td>
       </tr>
-      {if $manageCaseURL}
-       <tr>
-       <td colspan="2" {$valueStyle}>
-	   <a href="{$manageCaseURL}" title="{ts}Manage Case{/ts}">{ts}Manage Case{/ts}</a>
-       </td>
-       </tr>
-      {/if}
      {/if}
      {if $editActURL} 
      <tr>

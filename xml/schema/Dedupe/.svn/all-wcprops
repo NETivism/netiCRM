@@ -1,29 +1,29 @@
 K 25
 svn:wc:ra_dav:version-url
-V 55
-/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Dedupe
+V 61
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Dedupe
 END
 files.xml
 K 25
 svn:wc:ra_dav:version-url
-V 65
-/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Dedupe/files.xml
+V 71
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Dedupe/files.xml
 END
 RuleGroup.xml
 K 25
 svn:wc:ra_dav:version-url
-V 69
-/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Dedupe/RuleGroup.xml
+V 75
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Dedupe/RuleGroup.xml
 END
 Rule.xml
 K 25
 svn:wc:ra_dav:version-url
-V 64
-/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Dedupe/Rule.xml
+V 70
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Dedupe/Rule.xml
 END
 Exception.xml
 K 25
 svn:wc:ra_dav:version-url
-V 69
-/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Dedupe/Exception.xml
+V 75
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Dedupe/Exception.xml
 END

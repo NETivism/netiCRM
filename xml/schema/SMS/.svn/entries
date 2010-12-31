@@ -1,8 +1,8 @@
 9
 
 dir
-31541
-http://svn.civicrm.org/civicrm/branches/v3.3/xml/schema/SMS
+31546
+http://svn.civicrm.org/civicrm/tags/tarballs/3.3.1/xml/schema/SMS
 http://svn.civicrm.org/civicrm
 
 
@@ -32,7 +32,7 @@ file
 
 
 
-2010-12-31T11:12:11.000000Z
+2010-12-31T21:01:32.000000Z
 13999a21a59a53f502adf9d73ba37994
 2007-08-13T23:21:35.012150Z
 10875
@@ -66,7 +66,7 @@ file
 
 
 
-2010-12-31T11:12:11.000000Z
+2010-12-31T21:01:32.000000Z
 220416322bd02b7277e2e3fad0cca9f4
 2005-12-27T22:52:25.176480Z
 4282

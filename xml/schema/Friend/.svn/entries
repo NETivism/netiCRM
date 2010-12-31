@@ -1,8 +1,8 @@
 9
 
 dir
-31541
-http://svn.civicrm.org/civicrm/branches/v3.3/xml/schema/Friend
+31546
+http://svn.civicrm.org/civicrm/tags/tarballs/3.3.1/xml/schema/Friend
 http://svn.civicrm.org/civicrm
 
 
@@ -32,7 +32,7 @@ file
 
 
 
-2010-12-31T11:12:11.000000Z
+2010-12-31T21:01:32.000000Z
 6c806089c5f190d8ba09acb1741f9d55
 2007-08-27T14:52:47.760981Z
 11053
@@ -66,7 +66,7 @@ file
 
 
 
-2010-12-31T11:12:11.000000Z
+2010-12-31T21:01:32.000000Z
 b5ab283a1bcc9cfd9b9c02af50a06352
 2008-08-07T10:20:24.173181Z
 16510

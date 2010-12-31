@@ -1,41 +1,41 @@
 K 25
 svn:wc:ra_dav:version-url
-V 54
-/civicrm/!svn/ver/30884/branches/v3.3/xml/schema/Price
+V 60
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Price
 END
 FieldValue.xml
 K 25
 svn:wc:ra_dav:version-url
-V 69
-/civicrm/!svn/ver/30474/branches/v3.3/xml/schema/Price/FieldValue.xml
+V 75
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Price/FieldValue.xml
 END
 files.xml
 K 25
 svn:wc:ra_dav:version-url
-V 64
-/civicrm/!svn/ver/30474/branches/v3.3/xml/schema/Price/files.xml
+V 70
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Price/files.xml
 END
 Field.xml
 K 25
 svn:wc:ra_dav:version-url
-V 64
-/civicrm/!svn/ver/30474/branches/v3.3/xml/schema/Price/Field.xml
+V 70
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Price/Field.xml
 END
 LineItem.xml
 K 25
 svn:wc:ra_dav:version-url
-V 67
-/civicrm/!svn/ver/30884/branches/v3.3/xml/schema/Price/LineItem.xml
+V 73
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Price/LineItem.xml
 END
 SetEntity.xml
 K 25
 svn:wc:ra_dav:version-url
-V 68
-/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Price/SetEntity.xml
+V 74
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Price/SetEntity.xml
 END
 Set.xml
 K 25
 svn:wc:ra_dav:version-url
-V 62
-/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Price/Set.xml
+V 68
+/civicrm/!svn/ver/31144/tags/tarballs/3.3.1/xml/schema/Price/Set.xml
 END
