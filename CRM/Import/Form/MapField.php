@@ -488,7 +488,6 @@ class CRM_Import_Form_MapField extends CRM_Core_Form
 
         $js = "<script type='text/javascript'>\n";
         $formName = 'document.forms.' . $this->_name;
-        
         //used to warn for mismatch column count or mismatch mapping      
         $warning = 0;
         for ( $i = 0; $i < $this->_columnCount; $i++ ) {
@@ -621,13 +620,21 @@ class CRM_Import_Form_MapField extends CRM_Core_Form
             } else {
                 $js .= "swapOptions($formName, 'mapper[$i]', 0, 3, 'hs_mapper_0_');\n";
                 if ($hasColumnNames) {
-                    // Infer the default from the column names if we have them
-                    $defaults["mapper[$i]"] = array(
-                                                           $this->defaultFromColumnName($this->_columnNames[$i], 
-                                                                                    $columnPatterns),
-                                                           0
-                                                           );
-                    
+                    // do array search first to see if has mapped key
+                    $columnKey = '';
+                    $columnKey = array_search($this->_columnNames[$i], $this->_mapperFields);
+                    if(isset($this->_fieldUsed[$columnKey])){
+                      $defaults["mapper[$i]"] = $columnKey;
+                      $this->_fieldUsed[$key] = true;
+                    }
+                    else{
+                      // Infer the default from the column names if we have them
+                      $defaults["mapper[$i]"] = array(
+                                                          $this->defaultFromColumnName($this->_columnNames[$i], 
+                                                          $columnPatterns),
+                                                          0
+                      );
+                    }
                 } else {
                     // Otherwise guess the default from the form of the data
                     $defaults["mapper[$i]"] = array(

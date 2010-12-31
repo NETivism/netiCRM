@@ -171,10 +171,10 @@ $.TokenList = function (input, settings) {
                   return true;
 
                 default:
-                    //if(is_printable_character(event.keyCode)) {
+                    if(is_printable_character(event.keyCode)) {
                       // set a timeout just long enough to let this function finish.
                       setTimeout(function(){do_search(false);}, 5);
-                    //}
+                    }
                     break;
             }
         });
