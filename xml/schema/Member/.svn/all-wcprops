@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/civicrm/!svn/ver/31413/branches/v3.3/xml/schema/Member
+END
+files.xml
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Member/files.xml
+END
+MembershipBlock.xml
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Member/MembershipBlock.xml
+END
+MembershipPayment.xml
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Member/MembershipPayment.xml
+END
+Membership.xml
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/civicrm/!svn/ver/31413/branches/v3.3/xml/schema/Member/Membership.xml
+END
+MembershipLog.xml
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Member/MembershipLog.xml
+END
+MembershipType.xml
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/civicrm/!svn/ver/31413/branches/v3.3/xml/schema/Member/MembershipType.xml
+END
+MembershipStatus.xml
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Member/MembershipStatus.xml
+END

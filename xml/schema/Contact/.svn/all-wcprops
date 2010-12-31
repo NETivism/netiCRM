@@ -1,0 +1,107 @@
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Contact
+END
+GroupOrganization.xml
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Contact/GroupOrganization.xml
+END
+GroupNesting.xml
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Contact/GroupNesting.xml
+END
+SavedSearch.xml
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Contact/SavedSearch.xml
+END
+Individual.xml
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Contact/Individual.xml
+END
+Household.xml
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Contact/Household.xml
+END
+Contact.xml
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Contact/Contact.xml
+END
+GroupContactCache.xml
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Contact/GroupContactCache.xml
+END
+Group.xml
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Contact/Group.xml
+END
+ContactType.xml
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Contact/ContactType.xml
+END
+ACLContactCache.xml
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Contact/ACLContactCache.xml
+END
+Relationship.xml
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Contact/Relationship.xml
+END
+files.xml
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Contact/files.xml
+END
+RelationshipType.xml
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Contact/RelationshipType.xml
+END
+DashboardContact.xml
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Contact/DashboardContact.xml
+END
+Organization.xml
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Contact/Organization.xml
+END
+SubscriptionHistory.xml
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Contact/SubscriptionHistory.xml
+END
+GroupContact.xml
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Contact/GroupContact.xml
+END

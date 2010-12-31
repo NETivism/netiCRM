@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Mailing/Event
+END
+Subscribe.xml
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Mailing/Event/Subscribe.xml
+END
+files.xml
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Mailing/Event/files.xml
+END
+Delivered.xml
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Mailing/Event/Delivered.xml
+END
+Forward.xml
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Mailing/Event/Forward.xml
+END
+Queue.xml
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Mailing/Event/Queue.xml
+END
+Unsubscribe.xml
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Mailing/Event/Unsubscribe.xml
+END
+Opened.xml
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Mailing/Event/Opened.xml
+END
+Bounce.xml
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Mailing/Event/Bounce.xml
+END
+Reply.xml
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Mailing/Event/Reply.xml
+END
+Confirm.xml
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Mailing/Event/Confirm.xml
+END
+TrackableURLOpen.xml
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/civicrm/!svn/ver/30282/branches/v3.3/xml/schema/Mailing/Event/TrackableURLOpen.xml
+END

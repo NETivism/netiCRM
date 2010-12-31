@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<table>
+  <base>CRM/Contribute</base>
+  <class>ContributionType</class>
+  <name>civicrm_contribution_type</name>
+  <add>1.3</add>
+  <log>true</log>
+  <field>
+      <name>id</name>
+      <type>int unsigned</type>
+      <required>true</required>
+      <comment>Contribution Type ID</comment>
+       <add>1.3</add>
+  </field>
+  <primaryKey>
+       <name>id</name>
+       <autoincrement>true</autoincrement>
+  </primaryKey>
+  <field>
+       <name>name</name>
+       <uniqueName>contribution_type</uniqueName> 
+       <title>Contribution Type</title>
+       <type>varchar</type>
+       <length>64</length>
+       <import>true</import>
+       <headerPattern>/(contrib(ution)?)?type/i</headerPattern>
+       <dataPattern>/donation|member|campaign/i</dataPattern>
+       <comment>Contribution Type Name.</comment>
+       <add>1.3</add>
+  </field>
+  <field>
+       <name>accounting_code</name>
+       <title>Accounting Code</title>
+       <type>varchar</type>
+       <length>64</length>
+       <export>true</export>
+       <comment>Optional value for mapping contributions to accounting system codes for each type/category of contribution.</comment>
+       <add>1.3</add>
+  </field>
+  <field>
+       <name>description</name>
+       <type>varchar</type>
+       <length>255</length>
+       <comment>Contribution Type Description.</comment>
+       <add>1.3</add>
+  </field>
+  <field>
+       <name>is_deductible</name>
+       <type>boolean</type>
+       <default>1</default>
+       <comment>Is this contribution type tax-deductible? If true, contributions of this type may be fully OR partially deductible - non-deductible amount is stored in the Contribution record.</comment>
+       <add>1.3</add>
+  </field>
+  <field>
+       <name>is_reserved</name>
+       <type>boolean</type>
+       <comment>Is this a predefined system object?</comment>
+       <add>1.3</add>
+  </field>
+  <field>
+       <name>is_active</name>
+       <type>boolean</type>
+       <comment>Is this property active?</comment>
+       <add>1.3</add>
+  </field>
+  <index>
+    <name>UI_name</name>
+    <fieldName>name</fieldName>
+    <unique>true</unique>
+    <add>2.1</add>
+  </index>
+</table>

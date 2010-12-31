@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<table>
+  <base>CRM/Core</base>
+  <class>Batch</class>
+  <name>civicrm_batch</name>
+  <comment>Stores the details of a batch operation Used primarily when doing batch operations with an external system.</comment>
+  <add>3.3</add>
+  <field>
+      <name>id</name>
+      <type>int unsigned</type>
+      <required>true</required>
+      <comment>Unique Address ID</comment>
+       <add>3.3</add>
+  </field>
+  <primaryKey>
+       <name>id</name>
+       <autoincrement>true</autoincrement>
+  </primaryKey>
+  <field>
+     <name>name</name>
+     <type>varchar</type>
+     <length>64</length>
+     <comment>Variable name/programmatic handle for this batch.</comment>
+     <add>3.3</add>
+  </field>
+  <field>
+     <name>label</name>
+     <type>varchar</type>
+     <length>64</length>
+     <localizable>true</localizable>
+     <comment>Friendly Name.</comment>
+     <add>3.3</add>
+  </field>
+  <field>
+     <name>description</name>
+     <type>text</type>
+     <comment>Description of this batch set.</comment>
+     <localizable>true</localizable>
+     <htmlType>textarea</htmlType>
+     <rows>4</rows>
+     <cols>80</cols>
+     <add>3.3</add>
+  </field>
+  <field>
+      <name>created_id</name>
+      <type>int unsigned</type>
+      <comment>FK to Contact ID</comment>
+      <add>2.0</add>
+  </field>
+  <foreignKey>
+       <name>created_id</name>
+       <table>civicrm_contact</table>
+       <key>id</key>
+       <add>2.0</add>
+       <onDelete>SET NULL</onDelete>
+  </foreignKey>
+  <field>
+    <name>created_date</name>
+    <type>datetime</type>
+    <comment>When was this item created</comment>
+    <add>3.3</add>
+  </field>
+  <field>
+      <name>modified_id</name>
+      <type>int unsigned</type>
+      <comment>FK to Contact ID</comment>
+      <add>2.0</add>
+  </field>
+  <field>
+    <name>modified_date</name>
+    <type>datetime</type>
+    <comment>When was this item created</comment>
+    <add>3.3</add>
+  </field>
+  <foreignKey>
+       <name>modified_id</name>
+       <table>civicrm_contact</table>
+       <key>id</key>
+       <add>2.0</add>
+       <onDelete>SET NULL</onDelete>
+  </foreignKey>
+</table>
