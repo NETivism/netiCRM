@@ -120,10 +120,35 @@ class CRM_Utils_PDF_Utils {
                               $orientation = 'landscape',
                               $paperSize   = 'a3',
                               $output = false ) {
-        require_once 'packages/dompdf/dompdf_config.inc.php';
-        spl_autoload_register('DOMPDF_autoload');
-        $dompdf = new DOMPDF( );
+        require_once 'tcpdf/tcpdf.php';
+        $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, $paperSize, true, 'UTF-8', false);
+
+        // set default header data
+        //$pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.' 049', PDF_HEADER_STRING);
+
+        // set header and footer fonts
+        //$pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+        //$pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+        // set default monospaced font
+        //$pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+
+        //set margins
+        //$pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+        //$pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+        //$pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
         
+        //set auto page breaks
+        $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+
+        //set image scale factor
+        $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+
+        // set font
+        $pdf->SetFont('arialunicid0', '', 10);
+
+        // add a page
+        $pdf->AddPage();
+
         $values = array( );
         if ( ! is_array( $text ) ) {
             $values =  array( $text );
@@ -131,128 +156,42 @@ class CRM_Utils_PDF_Utils {
             $values =& $text;
         }
 
-        $html = "
-<style>
-.page_break {
-  page-break-before: always;
-}
-</style>
-";
 
+        $htmlElementstoStrip = array(
+          '@<script[^>]*?>.*?</script>@si',
+          '@<head[^>]*?>.*?</head>@siu',
+          '@<style[^>]*?>.*?</style>@siU', 
+          '@<body>@siu',
+          '@</body>@siu',
+          '@<html[^>]*?>@siu',
+          '@</html>@siu',
+          '@<!DOCTYPE[^>]*?>@siu',
+        );
+        
         foreach ( $values as $value ) {
             $html .= "{$value}\n";
+            $html = preg_replace( $htmlElementstoStrip, "", $value );
         }
-        $dompdf->load_html( $html );
-        $dompdf->set_paper ($paperSize, $orientation);
-        $dompdf->render( );
-        if ( $output ) {
-            return $dompdf->output( );
-        } else {
-            $dompdf->stream( $fileName );
-        }
-    }
+        $html = str_replace('src="http://'.$_SERVER['HTTP_HOST']."/", 'src="', $html);
+        $style = '
+<style>
+table { 
+  border: 1px solid #777; 
+}
+table thead td {
+  background: #CCC;
+}
+table td {
+  padding: 5px; border: 1px solid #777;
+}
+</style>';
+        $html = $style."\n".$html;
+//        print htmlspecialchars($html);
+//        exit();
 
-    static function &pdflib( $fileName,
-                             $searchPath,
-                             &$values,
-                             $numPages = 1,
-                             $echo    = true,
-                             $output  = 'College_Match_App',
-                             $creator = 'CiviCRM',
-                             $author  = 'http://www.civicrm.org/',
-                             $title   = '2006 College Match Scholarship Application' ) {
-        try {
-            $pdf = new PDFlib( );
-            $pdf->set_parameter( "compatibility", "1.6");
-            $pdf->set_parameter( "licensefile", "/home/paras/bin/license/pdflib.txt");
+        $pdf->writeHTML($html, true, false, true, false, '');
+        $pdf->lastPage();
 
-            if ( $pdf->begin_document( '', '' ) == 0 ) {
-                CRM_Core_Error::statusBounce( "PDFlib Error: " . $pdf->get_errmsg( ) );
-            }
-
-            $config = CRM_Core_Config::singleton( );
-            $pdf->set_parameter( 'resourcefile', $config->templateDir . '/Quest/pdf/pdflib.upr' );
-            $pdf->set_parameter( 'textformat', 'utf8' );
-
-            /* Set the search path for fonts and PDF files */
-            $pdf->set_parameter( 'SearchPath', $searchPath );
-
-            /* This line is required to avoid problems on Japanese systems */
-            $pdf->set_parameter( 'hypertextencoding', 'winansi' );
-
-            $pdf->set_info( 'Creator', $creator );
-            $pdf->set_info( 'Author' , $author  );
-            $pdf->set_info( 'Title'  , $title   );
-
-            $blockContainer = $pdf->open_pdi( $fileName, '', 0 );
-            if ( $blockContainer == 0 ) {
-                CRM_Core_Error::statusBounce( 'PDFlib Error: ' . $pdf->get_errmsg( ) );
-            }
-
-            for ( $i = 1; $i  <= $numPages; $i++ ) {
-                $page = $pdf->open_pdi_page( $blockContainer, $i, '' );
-                if ( $page == 0 ) {
-                    CRM_Core_Error::statusBounce( 'PDFlib Error: ' . $pdf->get_errmsg( ) );
-                }
-                
-                $pdf->begin_page_ext( 20, 20, '' ); /* dummy page size */
-                
-                /* This will adjust the page size to the block container's size. */
-                $pdf->fit_pdi_page( $page, 0, 0, 'adjustpage' );
-
-             
-                $status = array( );
-                /* Fill all text blocks with dynamic data */
-                foreach ( $values as $key => $value ) {
-                    if ( is_array( $value ) ) {
-                        continue;
-                    }
-
-                    // pdflib does like the forward slash character, hence convert
-                    $value = str_replace( '/', '_', $value );
-
-                    $res = $pdf->fill_textblock( $page,
-                                                 $key,
-                                                 $value,
-                                                 'embedding encoding=winansi' );
-                    /**
-                    if ( $res == 0 ) {
-                        CRM_Core_Error::debug( "$key, $value: $res", $pdf->get_errmsg( ) );
-                    } else {
-                        CRM_Core_Error::debug( "SUCCESS: $key, $value", null );
-                    }
-                    **/
-                }
-                
-                $pdf->end_page_ext( '' );
-                $pdf->close_pdi_page( $page );
-            }
-
-            $pdf->end_document( '' );
-            $pdf->close_pdi( $blockContainer );
-
-            $buf = $pdf->get_buffer();
-            $len = strlen($buf);
-
-            if ( $echo ) {
-                header('Content-type: application/pdf');
-                header("Content-Length: $len");
-                header("Content-Disposition: inline; filename={$output}.pdf");
-                echo $buf;
-                CRM_Utils_System::civiExit( ); 
-            } else {
-                return $buf;
-            }
-        }
-        catch ( PDFlibException $excp ) {
-            CRM_Core_Error::statusBounce( 'PDFlib Error: Exception' .
-                                          "[" . $excp->get_errnum( ) . "] " . $excp->get_apiname( ) . ": " .
-                                          $excp->get_errmsg( ) );
-        }
-        catch (Exception $excp) {
-            CRM_Core_Error::statusBounce( "PDFlib Error: " . $excp->get_errmsg( ) );
-        }
+        $pdf->Output( $fileName ,'D');
     }
 }
-
-
