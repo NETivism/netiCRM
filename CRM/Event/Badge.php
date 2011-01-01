@@ -167,8 +167,8 @@ class CRM_Event_Badge {
         $this->pdf->setPrintHeader( false );
 	 $this->pdf->setPrintFooter( false );
         $this->pdf->AddPage();
-        $this->pdf->AddFont( 'DejaVu Sans', '', 'DejaVuSans.php' );
-        $this->pdf->SetFont( 'DejaVu Sans' );
+        //$this->pdf->AddFont( 'DejaVu Sans', '', 'DejaVuSans.php' );
+        //$this->pdf->SetFont( 'DejaVu Sans' );
         $this->pdf->SetGenerator( $this, "generateLabel" );
        
         foreach ( $participants as $participant ) {

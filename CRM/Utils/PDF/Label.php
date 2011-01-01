@@ -52,7 +52,7 @@ class CRM_Utils_PDF_Label extends TCPDF {
     public $lineHeight = 10;       // Default line height
     public $metric     = 'mm';     // Type of metric for labels.. Will help to calculate good values
     public $metricDoc  = 'mm';     // Type of metric for the document
-    public $fontName   = 'symbol'; // Name of the font
+    public $fontName   = 'arialunicid0'; // Name of the font
     public $countX     = 0;
     public $countY     = 0;
     
@@ -115,7 +115,7 @@ class CRM_Utils_PDF_Label extends TCPDF {
        parent::__construct('P', $tFormat['metric'], $tFormat['paper-size']);
        $this->SetFormat($tFormat);
        $this->generatorMethod = null;
-//     $this->SetFontName('Arial'); uncomment this to use non-default font
+       $this->SetFontName('arialunicid0'); //uncomment this to use non-default font
        $this->SetMargins(0,0);
        $this->SetAutoPageBreak(false);
        

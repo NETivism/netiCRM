@@ -374,8 +374,8 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task
         $pdf = new CRM_Utils_PDF_Label($format,'mm');
         $pdf->Open();
         $pdf->AddPage();
-        $pdf->AddFont('DejaVu Sans', '', 'DejaVuSans.php');
-        $pdf->SetFont('DejaVu Sans');
+        //$pdf->AddFont('DejaVu Sans', '', 'DejaVuSans.php');
+        //$pdf->SetFont('DejaVu Sans');
         
         //build contact string that needs to be printed
         $val = null;
