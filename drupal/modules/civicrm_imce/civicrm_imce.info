@@ -1,0 +1,8 @@
+; $Id$
+name = CiviCRM IMCE
+description = Integrates Drupal IMCE module with CiviCRM build in Editors CKeditor and TinyMCE.
+core = 6.x
+package = "CiviCRM"
+version = "6.x-1.0-dev"
+dependencies[] = civicrm
+dependencies[] = imce

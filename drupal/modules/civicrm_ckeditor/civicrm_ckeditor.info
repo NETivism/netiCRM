@@ -1,0 +1,7 @@
+name = CKEditor for civicrm
+description = CiviCRM ckeditor config.
+package = CiviCRM
+dependencies[] = civicrm
+dependencies[] = imce
+core = 6.x
+version = dev

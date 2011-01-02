@@ -1,0 +1,37 @@
+Index: HTML/QuickForm/tinymce.php
+===================================================================
+--- HTML/QuickForm/tinymce.php	(revision 30282)
++++ HTML/QuickForm/tinymce.php	(working copy)
+@@ -172,7 +172,7 @@
+                 ed.onKeyUp.add(function(ed, l) {
+                     global_formNavigate = false;
+                 });
+-        }
++        }'.$this->getConfigString().'
+         }];
+  
+         tinyMCE.settings = configArray[0];
+@@ -201,6 +201,22 @@
+     {
+         return $this->getValue();
+     }
++    
++    /**
++     * Returns the config variables for TinyMCE as a string
++     * 
++     * @access public
++     * @return string
++     */
++    function getConfigString()
++    {
++      $appdend = ",\n        ";
++      $config_string = $appdend;
++      foreach ($this->Config as $k => $v) {
++        $config_string .= $k . ' : ' . $v . $appdend;
++      }
++      return rtrim($config_string, $appdend);
++    }
+ }
+ 
+ ?>
+\ No newline at end of file

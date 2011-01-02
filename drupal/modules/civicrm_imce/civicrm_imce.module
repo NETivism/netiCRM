@@ -1,0 +1,51 @@
+<?php
+// $Id$
+
+/**
+ * Implementation of hook_civicrm_buildForm().
+ * 
+ * 
+ */
+function civicrm_imce_civicrm_buildForm($formName, &$form) {
+  $editor = 'none';
+  if (!module_invoke('imce', 'access')) {
+    return;
+  }
+  
+  foreach ($form->_elements as $element) {
+    if($element->_type == 'CKeditor') {
+      $editor = 'ckeditor';
+    }
+    elseif($element->_type == 'TinyMCE') {
+      $editor = 'tinymce';
+      $element->SetConfig('file_browser_callback', '"civicrmImceImageBrowser"');
+    }
+  }
+  
+  if ($editor != 'none') {
+    $imcepath = drupal_get_path('module', 'imce');
+    $path = drupal_get_path('module', 'civicrm_imce');
+    drupal_add_js($imcepath . '/js/imce.js');
+    drupal_add_js($imcepath . '/js/imce_set_app.js');
+    drupal_add_js($path . '/js/civicrm_imce.js');
+  }
+  
+  if ($editor == 'ckeditor') {
+    $ckeditor_inline_js = "
+      cj( document ).ready( function( ) {
+        CKEDITOR.config.filebrowserBrowseUrl = '/index.php?q=imce&app=ckeditor|sendto@civicrmImceCkeditSendTo|params@';
+        CKEDITOR.config.filebrowserImageBrowseUrl = '/index.php?q=imce&app=ckeditor|sendto@civicrmImceCkeditSendTo|params@';
+        CKEDITOR.config.filebrowserFlashBrowseUrl = '/index.php?q=imce&app=ckeditor|sendto@civicrmImceCkeditSendTo|params@';
+      });
+      ";
+    drupal_add_js($ckeditor_inline_js, 'inline');
+  }
+  elseif ($editor == 'tinymce') {
+    $settings = array(
+      'imce' => array('url' => url('imce', array('query' => array('app' => $editor . '|url@')))),
+    );
+    drupal_add_js($settings, 'setting');
+  }
+}
+
+?>
