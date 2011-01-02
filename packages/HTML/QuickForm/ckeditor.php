@@ -59,6 +59,12 @@ class HTML_QuickForm_CKeditor extends HTML_QuickForm_textarea
      */
     function toHtml()
     {
+        // using function_exists not module_exists to prevent non-drupal conflit
+        if(function_exists('module_exists')){
+          if(module_exists('civicrm_ckeditor')){
+            $ckeditor_config = base_path().drupal_get_path('module', 'civicrm_ckeditor')."/ckeditor.config.js";
+          }
+        }
         if ($this->_flagFrozen) {
             return $this->getFrozenHtml();
         } else {
@@ -68,8 +74,19 @@ class HTML_QuickForm_CKeditor extends HTML_QuickForm_textarea
                     cj('#{$name}').removeClass();
                     if ( CKEDITOR.instances['{$name}'] ) {
                         CKEDITOR.remove(CKEDITOR.instances['{$name}']);
+                    }";
+                    if($ckeditor_config){
+                      $html .="
+                      CKEDITOR.replace( '{$name}',
+                      {
+                        customConfig : '{$ckeditor_config}',
+                        toolbar: 'CiviCRM'
+                      });";
                     }
-                    CKEDITOR.replace( '{$name}' );
+                    else{
+                      $html .= "CKEDITOR.replace( '{$name}' )";
+                    }
+                    $html .= "
                     var editor = CKEDITOR.instances['{$name}'];
                     if ( editor ) {
                         editor.on( 'key', function( evt ){
