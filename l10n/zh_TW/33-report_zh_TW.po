@@ -127,7 +127,6 @@ msgstr "容許量"
 
 #: CRM/Report/Form/Event/IncomeCountSummary.php
 #: CRM/Report/Form/Event/ParticipantListCount.php
-#, fuzzy
 msgid "Income"
 msgstr "未完成"
 
@@ -162,12 +161,10 @@ msgstr "瀏覽這個活動的收入詳情。"
 
 #: CRM/Report/Form/Mailing/Bounce.php CRM/Report/Form/Mailing/Clicks.php
 #: CRM/Report/Form/Mailing/Opened.php CRM/Report/Form/Mailing/Summary.php
-#, fuzzy
 msgid "Mailing"
 msgstr "電子報"
 
 #: CRM/Report/Form/Mailing/Bounce.php CRM/Report/Form/Mailing/Summary.php
-#, fuzzy
 msgid "Bounce"
 msgstr "退回"
 
@@ -232,7 +229,6 @@ msgid "Target Contact Email"
 msgstr "目標聯絡人 Email"
 
 #: CRM/Report/Form/Activity.php
-#, fuzzy
 msgid "Survey Result"
 msgstr "搜尋結果"
 
@@ -273,32 +269,26 @@ msgid "Case End"
 msgstr "個案結束"
 
 #: CRM/Report/Form/Case/Detail.php
-#, fuzzy
 msgid "WorldRegion"
 msgstr "世界區域"
 
 #: CRM/Report/Form/Case/Detail.php
-#, fuzzy
 msgid "Last Action Date"
 msgstr "拍賣結束日期"
 
 #: CRM/Report/Form/Case/Detail.php
-#, fuzzy
 msgid "Total Number of Cases "
 msgstr "撥款數目"
 
 #: CRM/Report/Form/Case/Detail.php
-#, fuzzy
 msgid "Total Number of Countries "
 msgstr "可選用的國家"
 
 #: CRM/Report/Form/Case/Detail.php
-#, fuzzy
 msgid "View Details of Case."
 msgstr "查看這個區域的重複。"
 
 #: CRM/Report/Form/Case/Summary.php
-#, fuzzy
 msgid "Client"
 msgstr "客戶名稱"
 
@@ -367,37 +357,30 @@ msgid "View Event Income details for this Event."
 msgstr "查看此活動的活動收入細節。"
 
 #: CRM/Report/Form/Contact/LoggingDetail.php
-#, fuzzy
 msgid "Changed From"
 msgstr "修改自"
 
 #: CRM/Report/Form/Contact/LoggingDetail.php
-#, fuzzy
 msgid "Changed To"
 msgstr "修改自"
 
 #: CRM/Report/Form/Contact/LoggingSummary.php
-#, fuzzy
 msgid "Altered Contact"
 msgstr "合併聯絡人"
 
 #: CRM/Report/Form/Contact/LoggingSummary.php
-#, fuzzy
 msgid "Insert"
 msgstr "插入替代符號（token）"
 
 #: CRM/Report/Form/Contact/LoggingSummary.php
-#, fuzzy
 msgid "Altered By"
 msgstr "新增自"
 
 #: CRM/Report/Form/Contact/LoggingSummary.php
-#, fuzzy
 msgid "Go to contact summary."
 msgstr "查看聯絡人概況"
 
 #: CRM/Report/Form/Contact/LoggingSummary.php
-#, fuzzy
 msgid "View details for this update."
 msgstr "查看這個區域的重複。"
 
@@ -450,12 +433,10 @@ msgid "Relationship End Date"
 msgstr "關係結束日期"
 
 #: CRM/Report/Form/Contribute/Bookkeeping.php
-#, fuzzy
 msgid "Membership #"
 msgstr "會員編號"
 
 #: CRM/Report/Form/Contribute/Bookkeeping.php
-#, fuzzy
 msgid "Trans #"
 msgstr "交易編號"
 
@@ -464,7 +445,6 @@ msgid "Cheque #"
 msgstr ""
 
 #: CRM/Report/Form/Contribute/Bookkeeping.php
-#, fuzzy
 msgid "Contribution #"
 msgstr "捐款編號"
 
@@ -481,7 +461,6 @@ msgid "List all contribution(s) for this Country."
 msgstr "列出此國家的所有捐款。"
 
 #: CRM/Report/Form/Contribute/Detail.php
-#, fuzzy
 msgid "View Details of this Contribution."
 msgstr "此捐款狀態"
 
@@ -607,12 +586,10 @@ msgid "List direct contribution(s) from this contact."
 msgstr "列出本聯絡人的直接捐款。"
 
 #: CRM/Report/Form/Contribute/Summary.php
-#, fuzzy
 msgid "Please do not use combination of Receive Date %1"
 msgstr "請不要使用此收到日期的組合：%1"
 
 #: CRM/Report/Form/Contribute/Summary.php
-#, fuzzy
 msgid "Do not use filter on Date if group by Receive Date is not used "
 msgstr "如果以收到時間為群組的選項沒有使用，請不要將日期加入篩選條件"
 
@@ -653,17 +630,14 @@ msgid "Please enter positive number"
 msgstr "請輸入正值。"
 
 #: CRM/Report/Form/Event/IncomeCountSummary.php
-#, fuzzy
 msgid "Income Statistics"
 msgstr "金額統計"
 
 #: CRM/Report/Form/Event/IncomeCountSummary.php
-#, fuzzy
 msgid "View Event Participants For this Event"
 msgstr "查看本活動的活動收入"
 
 #: CRM/Report/Form/Event/ParticipantListCount.php
-#, fuzzy
 msgid "View Participant Record for this Contact."
 msgstr "查看此聯絡人的聯絡總覽。"
 
@@ -672,17 +646,14 @@ msgid "View Event Income For this Event"
 msgstr "查看本活動的活動收入"
 
 #: CRM/Report/Form/Grant.php
-#, fuzzy
 msgid "Application Received Date"
 msgstr "收到申請的日期"
 
 #: CRM/Report/Form/Grant.php
-#, fuzzy
 msgid "Money Transfer Date"
 msgstr "金額已轉賬"
 
 #: CRM/Report/Form/Grant.php
-#, fuzzy
 msgid "Grant Report Received"
 msgstr "是否收到贊助報表？"
 
@@ -734,82 +705,66 @@ msgid "Report \"%1\" has been updated."
 msgstr "已更新報表 %1 。"
 
 #: CRM/Report/Form/Mailing/Bounce.php
-#, fuzzy
 msgid "Bounce Count"
 msgstr "拒絕原因"
 
 #: CRM/Report/Form/Mailing/Bounce.php
-#, fuzzy
 msgid "Mail Bounce Report"
 msgstr "郵件報表"
 
 #: CRM/Report/Form/Mailing/Bounce.php
-#, fuzzy
 msgid "Mail Bounce: %1"
 msgstr "郵件退信編號"
 
 #: CRM/Report/Form/Mailing/Clicks.php
-#, fuzzy
 msgid "Click through URL"
 msgstr "點擊次數"
 
 #: CRM/Report/Form/Mailing/Clicks.php
-#, fuzzy
 msgid "Click Count"
 msgstr "選擇國家"
 
 #: CRM/Report/Form/Mailing/Clicks.php
-#, fuzzy
 msgid "Mail Clickthrough Report"
 msgstr "郵件點選編號"
 
 #: CRM/Report/Form/Mailing/Clicks.php
-#, fuzzy
 msgid "Clicks: %1"
 msgstr "點擊"
 
 #: CRM/Report/Form/Mailing/Opened.php
-#, fuzzy
 msgid "Opened Count"
 msgstr "會員計次"
 
 #: CRM/Report/Form/Mailing/Opened.php
-#, fuzzy
 msgid "Mail Opened Report"
 msgstr "郵件報表"
 
 #: CRM/Report/Form/Mailing/Opened.php
-#, fuzzy
 msgid "Mail Opened: %1"
 msgstr "郵件開啟編號"
 
 #: CRM/Report/Form/Mailing/Summary.php
-#, fuzzy
 msgid "Date Created"
 msgstr "已建立"
 
 #: CRM/Report/Form/Mailing/Summary.php
-#, fuzzy
 msgid "Mailing Status"
 msgstr "電子報設定"
 
 #: CRM/Report/Form/Mailing/Summary.php
-#, fuzzy
 msgid "Delivered"
 msgstr "巳登記"
 
 #: CRM/Report/Form/Mailing/Summary.php
-#, fuzzy
 msgid "For Chart view, please select at least one field from %1."
 msgstr "請選擇價格表"
 
 #: CRM/Report/Form/Mailing/Summary.php
-#, fuzzy
 msgid "Mail Summary"
 msgstr "個案概況"
 
 #: CRM/Report/Form/Mailing/Summary.php
-#, fuzzy
 msgid "Statistics"
 msgstr "靜態"
 
@@ -882,7 +837,6 @@ msgid "Chart"
 msgstr "圖表"
 
 #: CRM/Report/Form.php
-#, fuzzy
 msgid "Group by columns"
 msgstr "以欄位為群組"
 
@@ -959,7 +913,6 @@ msgid "Is not between"
 msgstr "不介於"
 
 #: CRM/Report/Form.php
-#, fuzzy
 msgid "Is empty (Null)"
 msgstr "等於空值"
 
@@ -1012,7 +965,6 @@ msgid "Constituent Name"
 msgstr "選區名稱"
 
 #: CRM/Report/Form/Pledge/Pbnp.php
-#, fuzzy
 msgid "Next Payment Due"
 msgstr "下一次付款日"
 
@@ -1025,12 +977,10 @@ msgid "View Pledge Details for this contact"
 msgstr "查看本聯絡人的認捐詳情"
 
 #: CRM/Report/Form/Pledge/Summary.php
-#, fuzzy
 msgid "Pledge Made Date"
 msgstr "認捐日期"
 
 #: CRM/Report/Form/Pledge/Summary.php
-#, fuzzy
 msgid "Pledge Start Date"
 msgstr "認捐開始日期"
 
@@ -1111,7 +1061,6 @@ msgid ""
 msgstr ""
 
 #: templates/CRM/Report/Form/Contact/LoggingDetail.tpl
-#, fuzzy
 msgid "Back to Logging Summary"
 msgstr "返回列表"
 
@@ -1204,7 +1153,6 @@ msgid "Report Url must be like \"contribute/summary\""
 msgstr "報表 URL 使用如 \"contribute/summary\" 格式"
 
 #: templates/CRM/Report/Form/Register.tpl
-#, fuzzy
 msgid ""
 "Report Class must be present before adding the report here, e.g. "
 "'CRM_Report_Form_Contribute_Summary'"
@@ -1251,7 +1199,6 @@ msgstr ""
 "映報表的預設標準。舉例：捐款概況 - 今年起到今日"
 
 #: templates/CRM/Report/Form/Settings.hlp
-#, fuzzy
 msgid ""
 "The Report Header contains HTML code that will be output at the beginning of "
 "the document whenever this report is printed or downloaded in PDF format. "
@@ -1326,7 +1273,6 @@ msgid "Run this report"
 msgstr "產生報表"
 
 #: templates/CRM/Report/Page/InstanceList.tpl
-#, fuzzy
 msgid "Are you sure you want delete this report?"
 msgstr "您是否確定刪除此記錄？"
 
@@ -1357,7 +1303,6 @@ msgid "Instance(s)"
 msgstr "實例"
 
 #: templates/CRM/Report/Page/List.tpl
-#, fuzzy
 msgid "There are currently no Reports."
 msgstr "目前沒有報表。"
 
@@ -1370,7 +1315,6 @@ msgid "There are no option values entered. You can <a href=\"%1\">add one</a>."
 msgstr "尚未有任何選項。您可以<a href=\"%1\">新增一個</a>。"
 
 #: templates/CRM/Report/Page/TemplateList.tpl
-#, fuzzy
 msgid ""
 "Create reports for your users from any of the report templates listed below. "
 "Click on a template titles to get started. Click Existing Report(s) to see "
@@ -1388,6 +1332,5 @@ msgid "Existing Report(s)"
 msgstr "現存的報表"
 
 #: templates/CRM/Report/Page/TemplateList.tpl
-#, fuzzy
 msgid "There are currently no Report Templates."
 msgstr "目前沒有報表。"

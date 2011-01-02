@@ -27,7 +27,6 @@ msgstr ""
 
 #: CRM/Admin/Form/Options.php CRM/Admin/Form/OptionValue.php
 #: CRM/Report/Form/Mailing/Opened.php CRM/Report/Form/Mailing/Summary.php
-#, fuzzy
 msgid "Opened"
 msgstr "OpenID"
 
@@ -39,7 +38,6 @@ msgid "Configure"
 msgstr "設定"
 
 #: CRM/Admin/Form/ContactType.php CRM/Contribute/Form/ManagePremiums.php
-#, fuzzy
 msgid "Image URL"
 msgstr "圖片網址"
 
@@ -108,7 +106,6 @@ msgid "CiviReport"
 msgstr "Civi報表"
 
 #: CRM/Admin/Page/Admin.php CRM/Campaign/Info.php
-#, fuzzy
 msgid "CiviCampaign"
 msgstr "募款串連"
 
@@ -178,7 +175,6 @@ msgstr "參加者列表"
 
 #: templates/CRM/Admin/Page/EventTemplate.tpl
 #: CRM/Event/Form/ManageEvent/Fee.php
-#, fuzzy
 msgid "Paid Event"
 msgstr "搜尋活動"
 
@@ -195,7 +191,6 @@ msgstr "現存可供%1群組選擇的選項如下，您可以新增、編輯或�
 
 #: templates/CRM/Admin/Page/Options.tpl
 #: templates/CRM/Campaign/Page/SurveyType.tpl
-#, fuzzy
 msgid "Add %1"
 msgstr "新增 >>"
 
@@ -306,7 +301,6 @@ msgstr "請輸入一個有效金額(例如%1)。"
 #: templates/CRM/Contribute/Form/ContributionView.tpl
 #: CRM/Event/Form/EventFees.php CRM/Member/Form/Membership.php
 #: CRM/Member/Form/MembershipRenewal.php
-#, fuzzy
 msgid "Check Number"
 msgstr "電話號碼"
 
@@ -374,7 +368,6 @@ msgid "Paid By"
 msgstr "付款方式"
 
 #: CRM/Contribute/BAO/ContributionPage.php CRM/Event/BAO/Event.php
-#, fuzzy
 msgid "Copy of"
 msgstr "副本 %1"
 
@@ -485,7 +478,6 @@ msgstr "請輸入信用卡背後的CCV查核碼"
 
 #: CRM/Contribute/Form/Contribution/Main.php
 #: CRM/Event/Form/Registration/Register.php
-#, fuzzy
 msgid "Custom %1 is a required field if %1 is of type Customized."
 msgstr "如果%1是自定的類別，自定%1為必需的欄位。"
 
@@ -538,12 +530,10 @@ msgid "Cancelled Date"
 msgstr "取消日期"
 
 #: CRM/Contribute/Form/Contribution.php CRM/Pledge/Form/Payment.php
-#, fuzzy
 msgid "Adjust Pledge Payment Schedule?"
 msgstr "編輯認捐付款"
 
 #: CRM/Contribute/Form/Contribution.php CRM/Pledge/Form/Payment.php
-#, fuzzy
 msgid "Adjust Total Pledge Amount?"
 msgstr "總取消金頞"
 
@@ -592,7 +582,6 @@ msgstr "總計"
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 #: templates/CRM/Event/Form/Registration/Confirm.tpl
 #: templates/CRM/Event/Form/Registration/ThankYou.tpl
-#, fuzzy
 msgid "Expires"
 msgstr "已清除"
 
@@ -699,21 +688,18 @@ msgstr "瀏覽聯絡記錄"
 
 #: templates/CRM/Contribute/Form/Task/Status.tpl
 #: templates/CRM/Event/Form/Registration/ThankYou.tpl
-#, fuzzy
 msgid "Transaction Date"
 msgstr "交易編號"
 
 #: templates/CRM/Contribute/Import/Form/Summary.tpl
 #: templates/CRM/Event/Import/Form/Summary.tpl
 #: templates/CRM/Member/Import/Form/Summary.tpl
-#, fuzzy
 msgid "Import has completed successfully."
 msgstr "個案開啟成功。"
 
 #: templates/CRM/Contribute/Import/Form/Summary.tpl
 #: templates/CRM/Event/Import/Form/Summary.tpl
 #: templates/CRM/Member/Import/Form/Summary.tpl
-#, fuzzy
 msgid "The information below summarizes the results."
 msgstr "<strong>已被成功匯入</strong>。以下為結果摘要報告。"
 
@@ -796,19 +782,16 @@ msgstr "(從最初)"
 
 #: templates/CRM/Contribute/Page/PCP.tpl
 #: templates/CRM/Event/Page/ManageEvent.tpl
-#, fuzzy
 msgid "Starts"
 msgstr "開始"
 
 #: templates/CRM/Contribute/Page/PCP.tpl
 #: templates/CRM/Contribute/Page/PcpUserDashboard.tpl
 #: templates/CRM/Event/Page/ManageEvent.tpl
-#, fuzzy
 msgid "Ends"
 msgstr "結束於"
 
 #: templates/CRM/Contribute/Page/Tab.hlp templates/CRM/Pledge/Page/Payment.hlp
-#, fuzzy
 msgid "Adjust Pledge Payment Schedule"
 msgstr "編輯認捐付款"
 
@@ -825,7 +808,6 @@ msgid ""
 msgstr ""
 
 #: templates/CRM/Contribute/Page/Tab.hlp templates/CRM/Pledge/Page/Payment.hlp
-#, fuzzy
 msgid "Adjust Total Pledge Amount"
 msgstr "認捐金額"
 
@@ -852,14 +834,12 @@ msgid "Created"
 msgstr "已建立"
 
 #: templates/CRM/Contribute/Page/Widget.tpl CRM/Project/DAO/Project.php
-#, fuzzy
 msgid "Logo"
 msgstr "登出"
 
 #: CRM/Event/DAO/Event.php CRM/Event/Form/ManageEvent/EventInfo.php
 #: CRM/Report/Form/Event/IncomeCountSummary.php
 #: CRM/Report/Form/Event/Income.php CRM/Report/Form/Event/Summary.php
-#, fuzzy
 msgid "Event Title"
 msgstr "設定標題"
 
@@ -867,7 +847,6 @@ msgstr "設定標題"
 #: templates/CRM/Event/Form/ManageEvent/Fee.tpl
 #: CRM/Report/Form/Event/IncomeCountSummary.php
 #: CRM/Report/Form/Event/Summary.php
-#, fuzzy
 msgid "Fee Label"
 msgstr "欄位標籤"
 
@@ -894,7 +873,6 @@ msgstr "活動開始日期"
 #: CRM/Event/DAO/Event.php CRM/Report/Form/Event/IncomeCountSummary.php
 #: CRM/Report/Form/Event/ParticipantListCount.php
 #: CRM/Report/Form/Event/Summary.php
-#, fuzzy
 msgid "Event End Date"
 msgstr "活動日期"
 
@@ -924,7 +902,6 @@ msgstr "找不到有效的付款處理器"
 #: CRM/Event/Form/Participant.php CRM/Report/Form/Event/IncomeCountSummary.php
 #: CRM/Report/Form/Event/ParticipantListCount.php
 #: CRM/Report/Form/Event/ParticipantListing.php
-#, fuzzy
 msgid "Registration Date"
 msgstr "報名截止日期"
 
@@ -948,7 +925,6 @@ msgstr "為此付款選擇適當的捐款類型。"
 #: templates/CRM/Event/Form/ParticipantView.tpl
 #: CRM/Report/Form/Event/ParticipantListCount.php
 #: CRM/Report/Form/Event/ParticipantListing.php
-#, fuzzy
 msgid "Participant Name"
 msgstr "參加者的姓名"
 
@@ -1059,7 +1035,6 @@ msgstr "已作出的認捐"
 #: templates/CRM/Pledge/Form/PledgeView.tpl
 #: templates/CRM/Pledge/Form/Search/Common.tpl
 #: CRM/Report/Form/Pledge/Summary.php
-#, fuzzy
 msgid "Pledge Status"
 msgstr "認捐狀態 %1"
 
@@ -1069,6 +1044,5 @@ msgid "Pledge Amount"
 msgstr "認捐金額"
 
 #: templates/CRM/Pledge/Page/Payment.tpl CRM/Project/DAO/Task.php
-#, fuzzy
 msgid "Due Date"
 msgstr "已過日期"

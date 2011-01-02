@@ -46,7 +46,6 @@ msgid "Case Manager"
 msgstr "個案管理者"
 
 #: CRM/Case/Form/CaseView.php CRM/Case/Form/EditClient.php
-#, fuzzy
 msgid "Reassign Case"
 msgstr "個案中的角色"
 
@@ -67,7 +66,6 @@ msgid "View this activity."
 msgstr "瀏覽這個動態"
 
 #: CRM/Case/BAO/Case.php
-#, fuzzy
 msgid "no subject"
 msgstr "主旨"
 
@@ -76,12 +74,10 @@ msgid "(multiple)"
 msgstr "(多重選擇)"
 
 #: CRM/Case/BAO/Case.php
-#, fuzzy
 msgid "Move To Case"
 msgstr "個案中的角色"
 
 #: CRM/Case/BAO/Case.php
-#, fuzzy
 msgid "Copy To Case"
 msgstr "關閉個案"
 
@@ -103,7 +99,6 @@ msgid "Role in Case"
 msgstr "個案中的角色"
 
 #: CRM/Case/BAO/Case.php
-#, fuzzy
 msgid "View Case"
 msgstr "新增個案"
 
@@ -138,7 +133,6 @@ msgid "Case %1 All Cases"
 msgstr "個案 %1 -全部個案"
 
 #: CRM/Case/BAO/Query.php
-#, fuzzy
 msgid "Find Deleted Cases"
 msgstr "已刪除的個案"
 
@@ -183,7 +177,6 @@ msgid "Role in Case  %1 '%2'"
 msgstr "在個案的角色%1 '%2'"
 
 #: CRM/Case/BAO/Query.php
-#, fuzzy
 msgid "Case Tags %1"
 msgstr "個案類型 %1"
 
@@ -200,7 +193,6 @@ msgid "Deleted Cases"
 msgstr "已刪除的個案"
 
 #: CRM/Case/DAO/Case.php
-#, fuzzy
 msgid "Case Type Id"
 msgstr "個案類型"
 
@@ -209,7 +201,6 @@ msgid "Case End Date"
 msgstr "個案結束日期"
 
 #: CRM/Case/DAO/Case.php
-#, fuzzy
 msgid "Case Status Id"
 msgstr "個案狀態"
 
@@ -226,7 +217,6 @@ msgid "Case Start Date changed successfully."
 msgstr "已成功更改個案開始日期。"
 
 #: CRM/Case/Form/Activity/ChangeCaseStatus.php
-#, fuzzy
 msgid "Case status changed from %1 to %2"
 msgstr "已成功更改個案狀態。"
 
@@ -255,17 +245,14 @@ msgid "Case Type changed successfully."
 msgstr "個案類別更改成功。"
 
 #: CRM/Case/Form/Activity/LinkCases.php
-#, fuzzy
 msgid "Link To Case"
 msgstr "連結文字"
 
 #: CRM/Case/Form/Activity/LinkCases.php
-#, fuzzy
 msgid "Please select a case to link."
 msgstr "請從列表中選擇個案"
 
 #: CRM/Case/Form/Activity/LinkCases.php
-#, fuzzy
 msgid "Please select some other case to link."
 msgstr "請從列表中選擇個案"
 
@@ -282,7 +269,6 @@ msgid "Case opened successfully."
 msgstr "個案開啟成功。"
 
 #: CRM/Case/Form/Activity.php
-#, fuzzy
 msgid "You do not have any active Case Types"
 msgstr "您沒有任何啓用中的個人募款串連。"
 
@@ -324,12 +310,10 @@ msgid "'%1' activity has been %2. %3 %4"
 msgstr "'%1' 動態已被 %2。 %3 %4"
 
 #: CRM/Case/Form/ActivityToCase.php
-#, fuzzy
 msgid "Select Case"
 msgstr "選擇日期"
 
 #: CRM/Case/Form/Case.php
-#, fuzzy
 msgid "You do not have any active %1"
 msgstr "您沒有任何啓用中的個人募款串連。"
 
@@ -338,7 +322,6 @@ msgid "Client contact does not exist: %1"
 msgstr "客戶聯絡人不存在: %1"
 
 #: CRM/Case/Form/Case.php
-#, fuzzy
 msgid "Select Tags"
 msgstr "Select資料表"
 
@@ -376,7 +359,6 @@ msgid "Add Timeline"
 msgstr "增加時程"
 
 #: CRM/Case/Form/CaseView.php
-#, fuzzy
 msgid "Select Case for Merge"
 msgstr "選擇要匯出的欄位"
 
@@ -385,7 +367,6 @@ msgid "- select case -"
 msgstr "- 選擇適當個案類別 -"
 
 #: CRM/Case/Form/CaseView.php
-#, fuzzy
 msgid "Assign to another Client"
 msgstr "指派個案角色"
 
@@ -483,7 +464,6 @@ msgid "Case Search"
 msgstr "個案搜尋"
 
 #: CRM/Case/Task.php
-#, fuzzy
 msgid "Print Cases"
 msgstr "列印個案清單"
 
@@ -507,7 +487,6 @@ msgid ""
 msgstr "找到了動態類型 %1 的設定檔，但並不存在資料庫 %2"
 
 #: CRM/Case/XMLProcessor/Report.php
-#, fuzzy
 msgid "Recipient"
 msgstr "收件人"
 
@@ -540,7 +519,6 @@ msgid "Current Start Date"
 msgstr "目前開始日期"
 
 #: templates/CRM/Case/Form/ActivityToCase.tpl
-#, fuzzy
 msgid "Begin typing client name for a list of open cases."
 msgstr "打一些字即可篩選下列的替代符號（token）"
 
@@ -565,22 +543,18 @@ msgid "Click Restore to retrieve this &quot;%1&quot; activity from the Trash."
 msgstr "按回復，將動態 &quot;%1&quot; 從垃圾桶中拉回。"
 
 #: templates/CRM/Case/Form/Activity.tpl
-#, fuzzy
 msgid "Clients"
 msgstr "客戶名稱"
 
 #: templates/CRM/Case/Form/Activity.tpl
-#, fuzzy
 msgid "With other contact(s)"
 msgstr "與聯絡人"
 
 #: templates/CRM/Case/Form/Activity.tpl
-#, fuzzy
 msgid "With client"
 msgstr "與聯絡人"
 
 #: templates/CRM/Case/Form/Activity.tpl
-#, fuzzy
 msgid "With client(s)"
 msgstr "與聯絡人"
 
@@ -691,7 +665,6 @@ msgid ""
 msgstr "按修復去垃圾箱收回此個案及所有相關動態。"
 
 #: templates/CRM/Case/Form/CaseView.tpl
-#, fuzzy
 msgid "Clients:"
 msgstr "客戶名稱"
 
@@ -700,7 +673,6 @@ msgid "add new client to the case"
 msgstr ""
 
 #: templates/CRM/Case/Form/CaseView.tpl
-#, fuzzy
 msgid "Related Cases"
 msgstr "已刪除的個案"
 
@@ -709,7 +681,6 @@ msgid "DOB"
 msgstr ""
 
 #: templates/CRM/Case/Form/CaseView.tpl
-#, fuzzy
 msgid "Merge Case"
 msgstr "個案管理"
 
@@ -772,17 +743,14 @@ msgid "Select valid type from the list"
 msgstr "請從清單中選擇有效的類型"
 
 #: templates/CRM/Case/Form/CaseView.tpl
-#, fuzzy
 msgid "Case Tags"
 msgstr "個案類型"
 
 #: templates/CRM/Case/Form/CaseView.tpl
-#, fuzzy
 msgid "There are no tags currently assigend to this case."
 msgstr "這個個案沒有動態。"
 
 #: templates/CRM/Case/Form/CaseView.tpl
-#, fuzzy
 msgid "Add Tags"
 msgstr "編輯 Tag"
 
@@ -796,57 +764,47 @@ msgid "Reporter / Assignee"
 msgstr "報表者 / 指派者"
 
 #: templates/CRM/Case/Form/CaseView.tpl
-#, fuzzy
 msgid "Please select an activity set from the list."
 msgstr "請從列表中選擇個案"
 
 #: templates/CRM/Case/Form/CaseView.tpl
-#, fuzzy
 msgid ""
 "Are you sure you want to add a set of scheduled activities to this case?"
 msgstr "你確定要為此個案新增一系列排程的動態？"
 
 #: templates/CRM/Case/Form/CaseView.tpl
-#, fuzzy
 msgid "Please select an activity type from the list."
 msgstr "請從列表中選擇個案"
 
 #: templates/CRM/Case/Form/CaseView.tpl
-#, fuzzy
 msgid "Please select a report from the list."
 msgstr "請從列表中選擇個案"
 
 #: templates/CRM/Case/Form/CaseView.tpl
-#, fuzzy
 msgid "Please select a case from the list to merge with."
 msgstr "請從列表中選擇個案"
 
 #: templates/CRM/Case/Form/CaseView.tpl
-#, fuzzy
 msgid "Please select a client for this case."
 msgstr "請至少選擇一個Tag。"
 
 #: templates/CRM/Case/Form/CaseView.tpl templates/CRM/Case/Form/EditClient.tpl
-#, fuzzy
 msgid ""
 "%1 is already assigned to this case. Please select some other client for "
 "this case."
 msgstr "已被其他地址採用。請為您的地址選用其他位置類型。"
 
 #: templates/CRM/Case/Form/CaseView.tpl templates/CRM/Case/Form/EditClient.tpl
-#, fuzzy
 msgid ""
 "Are you sure you want to reassign this case and all related activities and "
 "relationships to %1?"
 msgstr "您確定要重新啟用此關係？"
 
 #: templates/CRM/Case/Form/EditClient.tpl
-#, fuzzy
 msgid "This is case is currently assigned to %1."
 msgstr "此個入檔案目前不是為%1所用。"
 
 #: templates/CRM/Case/Form/EditClient.tpl
-#, fuzzy
 msgid "Please select another client for this case."
 msgstr "請選擇感謝禮圖片選項。"
 
@@ -855,7 +813,6 @@ msgid "Report Parameters"
 msgstr "報表參數"
 
 #: templates/CRM/Case/Form/Search/Common.tpl
-#, fuzzy
 msgid "Case Tag(s)"
 msgstr "Tag"
 
@@ -924,12 +881,10 @@ msgid "Edit this activity."
 msgstr "編輯這個動態。"
 
 #: templates/CRM/Case/Page/DashBoard.tpl
-#, fuzzy
 msgid "All Cases with Upcoming Activities"
 msgstr "即將有動態的<strong>所有個案</strong>"
 
 #: templates/CRM/Case/Page/DashBoard.tpl
-#, fuzzy
 msgid "My Cases with Upcoming Activities"
 msgstr "即將有動態的<strong>我的個案</strong>"
 
@@ -938,7 +893,6 @@ msgid "Summary of Case Involvement"
 msgstr ""
 
 #: templates/CRM/Case/Page/DashBoard.tpl
-#, fuzzy
 msgid "Summary of All Cases"
 msgstr "個案 %1 -全部個案"
 
@@ -972,12 +926,10 @@ msgid ""
 msgstr "在過去的兩個星期中，找不到有排程動態的個案。使用%1擴大搜尋範圍。"
 
 #: templates/CRM/Case/Page/Tab.tpl
-#, fuzzy
 msgid "Oops, It looks like there are no active case types."
 msgstr "噢，目前%1活動報名已額滿。"
 
 #: templates/CRM/Case/Page/Tab.tpl
-#, fuzzy
 msgid "Enable <a href='%1'>case types</a>."
 msgstr "您可以立即<a href='%1'>新增一個</a>。"
 
@@ -986,7 +938,6 @@ msgid "This page lists all case records for %1."
 msgstr "此頁列出%1所有個案記錄。"
 
 #: templates/CRM/Case/Page/Tab.tpl
-#, fuzzy
 msgid "Click <a href='%1'>Add Case</a> to add a case record for this contact."
 msgstr "按<a href='%1'>新個案</a>為此聯絡人新增個案記錄。"
 

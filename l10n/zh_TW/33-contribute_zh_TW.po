@@ -99,7 +99,6 @@ msgstr "底部標題"
 
 #: CRM/Contribute/DAO/Widget.php
 #: CRM/Contribute/Form/ContributionPage/Widget.php
-#, fuzzy
 msgid "About"
 msgstr "吉布地"
 
@@ -252,7 +251,6 @@ msgstr ""
 "募款頁。"
 
 #: CRM/Contribute/BAO/PCP.php
-#, fuzzy
 msgid "Are you sure you want to delete this Personal Campaign Page?"
 msgstr "您確定要刪除此募款專頁嗎？"
 
@@ -305,52 +303,42 @@ msgid "Contribution Status %1"
 msgstr "捐款狀態 %1"
 
 #: CRM/Contribute/BAO/Query.php
-#, fuzzy
 msgid "Contribution Source %1 %2"
 msgstr "捐款來源"
 
 #: CRM/Contribute/BAO/Query.php
-#, fuzzy
 msgid "Transaction ID %1 %2"
 msgstr "交易編號"
 
 #: CRM/Contribute/BAO/Query.php
-#, fuzzy
 msgid "Check Number %1 %2"
 msgstr "電話號碼"
 
 #: CRM/Contribute/BAO/Query.php
-#, fuzzy
 msgid "Find Test Contributions"
 msgstr "搜尋測試捐款？"
 
 #: CRM/Contribute/BAO/Query.php
-#, fuzzy
 msgid "Find Pay Later Contributions"
 msgstr "搜尋後續付款者？"
 
 #: CRM/Contribute/BAO/Query.php
-#, fuzzy
 msgid "Displaying Recurring Contributions"
 msgstr "搜尋定期捐款？"
 
 #: CRM/Contribute/BAO/Query.php
-#, fuzzy
 msgid "Contribution ID %1 %2"
 msgstr "捐款編號"
 
 #: CRM/Contribute/BAO/Query.php
-#, fuzzy
 msgid "Contribution Note %1 %2"
 msgstr "捐款註記"
 
 #: CRM/Contribute/BAO/Query.php
-#, fuzzy
 msgid "Display in Roll"
 msgstr "顯示在名單？"
 
 #: CRM/Contribute/BAO/Query.php
-#, fuzzy
 msgid "Currency Type - %1"
 msgstr "活動類型 - %1"
 
@@ -359,7 +347,6 @@ msgid "Contribution Dates - From"
 msgstr "捐款日期 - 自"
 
 #: CRM/Contribute/BAO/Query.php
-#, fuzzy
 msgid "Currency Type"
 msgstr "貨幣"
 
@@ -388,37 +375,30 @@ msgid "Display In Roll ?"
 msgstr "顯示在名單？"
 
 #: CRM/Contribute/BAO/Widget.php
-#, fuzzy
 msgid "Campaign is ongoing"
 msgstr "競選捐款"
 
 #: CRM/Contribute/BAO/Widget.php
-#, fuzzy
 msgid "Campaign starts on %1"
 msgstr "競選捐款"
 
 #: CRM/Contribute/BAO/Widget.php
-#, fuzzy
 msgid "Campaign ends on %1"
 msgstr "活動終止日期"
 
 #: CRM/Contribute/BAO/Widget.php
-#, fuzzy
 msgid "Raised %1 of %2"
 msgstr "第%1頁，共%2頁"
 
 #: CRM/Contribute/BAO/Widget.php
-#, fuzzy
 msgid "Raised %1"
 msgstr "已加入Tag %1"
 
 #: CRM/Contribute/BAO/Widget.php
-#, fuzzy
 msgid "Donors"
 msgstr "捐款人"
 
 #: CRM/Contribute/BAO/Widget.php
-#, fuzzy
 msgid "Learn more."
 msgstr "(學習更多…)"
 
@@ -496,7 +476,6 @@ msgid "Amount Label"
 msgstr "金額標示"
 
 #: CRM/Contribute/DAO/Contribution.php
-#, fuzzy
 msgid "Contribution Status Id"
 msgstr "捐款狀態"
 
@@ -829,7 +808,6 @@ msgid "Make Contribution"
 msgstr "捐款"
 
 #: CRM/Contribute/Form/Contribution/Confirm.php
-#, fuzzy
 msgid "Go Back"
 msgstr "<< 返回"
 
@@ -859,7 +837,6 @@ msgid "List my contribution anonymously"
 msgstr "以匿名方式列出我的捐款"
 
 #: CRM/Contribute/Form/Contribution/Main.php
-#, fuzzy
 msgid "Confirm Contribution"
 msgstr "設定募款頁"
 
@@ -870,7 +847,6 @@ msgstr "其它金額"
 #: CRM/Contribute/Form/Contribution/Main.php
 #: templates/CRM/Contribute/Form/Contribution/Confirm.tpl
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
-#, fuzzy
 msgid "Additional Contribution"
 msgstr "編輯捐款"
 
@@ -957,12 +933,10 @@ msgid "Amount is required field."
 msgstr "金額欄位為必填。"
 
 #: CRM/Contribute/Form/Contribution/Main.php
-#, fuzzy
 msgid "Contribution amount must be at least %1"
 msgstr "捐款金額要大於 %1"
 
 #: CRM/Contribute/Form/Contribution/Main.php
-#, fuzzy
 msgid "Contribution amount cannot be more than %1."
 msgstr "捐款金額不能大於 %1"
 
@@ -1199,7 +1173,6 @@ msgstr "支持者個人檔案為必要欄位。"
 
 #: CRM/Contribute/Form/ContributionPage/PCP.php
 #: templates/CRM/Contribute/Form/PCP/PCPAccount.tpl
-#, fuzzy
 msgid "Profile is not configured with Email address."
 msgstr "此個人資訊未被所選擇的動作所設定。"
 
@@ -1340,12 +1313,10 @@ msgid "Additional Text Color"
 msgstr "其他文字顏色"
 
 #: CRM/Contribute/Form/ContributionPage/Widget.php
-#, fuzzy
 msgid "Background Color"
 msgstr "按鈕顏色"
 
 #: CRM/Contribute/Form/ContributionPage/Widget.php
-#, fuzzy
 msgid "Background Color Top Area"
 msgstr "上方區域背景色"
 
@@ -1354,12 +1325,10 @@ msgid "Border Color"
 msgstr "邊框顏色"
 
 #: CRM/Contribute/Form/ContributionPage/Widget.php
-#, fuzzy
 msgid "Button Link Color"
 msgstr "按鈕顏色"
 
 #: CRM/Contribute/Form/ContributionPage/Widget.php
-#, fuzzy
 msgid "Button Background Color"
 msgstr "按鈕顏色"
 
@@ -1407,7 +1376,6 @@ msgstr ""
 "a>，確認是否有任何捐款資料被誤登，需修正為認捐資料。"
 
 #: CRM/Contribute/Form/Contribution.php
-#, fuzzy
 msgid ""
 "This contact has a pending or overdue pledge payment of %2 which is "
 "scheduled for %3. <a href=\"%1\">Click here to apply this contribution as a "
@@ -1417,12 +1385,10 @@ msgstr ""
 "此將捐款資料更正為認捐資料</a>。"
 
 #: CRM/Contribute/Form/Contribution.php
-#, fuzzy
 msgid "Additional Details"
 msgstr "編輯聯絡人詳細資訊"
 
 #: CRM/Contribute/Form/Contribution.php
-#, fuzzy
 msgid "Honoree Information"
 msgstr "更多資訊"
 
@@ -1717,12 +1683,10 @@ msgid "The Campaign Page '%1' has been deleted."
 msgstr "募款專頁 「%1」已刪除。"
 
 #: CRM/Contribute/Form/PCP/PCP.php
-#, fuzzy
 msgid "The Campaign Page '%1' has been disabled."
 msgstr "募款專頁 「%1」已刪除。"
 
 #: CRM/Contribute/Form/PCP/PCP.php
-#, fuzzy
 msgid "The Campaign Page '%1' has been enabled."
 msgstr "募款專頁 「%1」已刪除。"
 
@@ -1759,22 +1723,18 @@ msgid "Print Contribution Receipts"
 msgstr "列印捐款收據"
 
 #: CRM/Contribute/Form/Task/PDF.php
-#, fuzzy
 msgid "PDF Receipts"
 msgstr "收據"
 
 #: CRM/Contribute/Form/Task/PDF.php
-#, fuzzy
 msgid "Email Receipts"
 msgstr "副本"
 
 #: CRM/Contribute/Form/Task/PDF.php
-#, fuzzy
 msgid "Process Receipt(s)"
 msgstr "下載收據"
 
 #: CRM/Contribute/Form/Task/PDF.php
-#, fuzzy
 msgid ""
 "Email was NOT sent to %1 contacts (no email address on file, or "
 "communication preferences specify DO NOT EMAIL, or contact is deceased)."
@@ -1783,7 +1743,6 @@ msgstr ""
 "Email，或聯絡人已故)。"
 
 #: CRM/Contribute/Form/Task/PDF.php
-#, fuzzy
 msgid "Your mail has been sent."
 msgstr "已寄出報表 Mail。"
 
@@ -1871,7 +1830,6 @@ msgid "Are you sure you want to make a copy of this Contribution page?"
 msgstr "您確定要複製此募款頁？"
 
 #: CRM/Contribute/Page/ContributionPage.php
-#, fuzzy
 msgid "Make a Copy"
 msgstr "傳送副本"
 
@@ -1910,7 +1868,6 @@ msgid "Current Month-To-Date"
 msgstr "本月至今"
 
 #: CRM/Contribute/Page/ContributionPage.php
-#, fuzzy
 msgid "Fiscal Year-To-Date"
 msgstr "本會計年度至今"
 
@@ -1924,12 +1881,10 @@ msgid "Manage Contribution Page"
 msgstr "管理募款頁"
 
 #: CRM/Contribute/Page/ContributionPage.php
-#, fuzzy
 msgid "A copy of the contribution page has been created"
 msgstr "募款頁 '%1' 已刪除。"
 
 #: CRM/Contribute/Page/ContributionPage.php
-#, fuzzy
 msgid ""
 "The '%1' cannot be deleted! You must Delete all Personal Campaign Page(s) "
 "related with this contribution page prior to deleting the page."
@@ -1937,7 +1892,6 @@ msgstr ""
 "群組 '%1' 無法被刪除！您必須刪除所有在此群組裡的自訂欄位，才能刪除此群組。"
 
 #: CRM/Contribute/Page/ContributionPage.php
-#, fuzzy
 msgid "Links"
 msgstr "連結"
 
@@ -1968,7 +1922,6 @@ msgid "Delete Contribution Type"
 msgstr "刪除捐款類型"
 
 #: CRM/Contribute/Page/DashBoard.php
-#, fuzzy
 msgid "Contributions Charts"
 msgstr "捐款狀態"
 
@@ -2026,12 +1979,10 @@ msgid "Are you sure you want to delete this Campaign Page ?"
 msgstr "您確定要刪除此募款專頁嗎？"
 
 #: CRM/Contribute/Page/PCP.php
-#, fuzzy
 msgid "Edit Personal Campaign Page"
 msgstr "編輯個人募款串連"
 
 #: CRM/Contribute/Page/PCP.php
-#, fuzzy
 msgid "Approve"
 msgstr "巳允許"
 
@@ -2040,7 +1991,6 @@ msgid "Approve Personal Campaign Page"
 msgstr "批准個人募款串連"
 
 #: CRM/Contribute/Page/PCP.php
-#, fuzzy
 msgid "Reject"
 msgstr "已被拒絕"
 
@@ -2073,7 +2023,6 @@ msgid "Update Pending Contribution Status"
 msgstr "更新「等待中」的捐款狀態"
 
 #: CRM/Contribute/Task.php
-#, fuzzy
 msgid "Print or Email Contribution Receipts"
 msgstr "列印捐款收據"
 
@@ -2441,7 +2390,6 @@ msgstr ""
 "請勿勾選此框。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/Amount.tpl
-#, fuzzy
 msgid ""
 "Select the currency to be used for contributions submitted from this "
 "contribution page."
@@ -2524,7 +2472,6 @@ msgid "days after the last one sent, up to the maximum number of reminders."
 msgstr "天後（於上一個付款通知之後的相隔天數）"
 
 #: templates/CRM/Contribute/Form/ContributionPage/Amount.tpl
-#, fuzzy
 msgid ""
 "Check this box if you want to give users the option to make recurring "
 "contributions. (This feature requires that you use a payment processor with "
@@ -2638,7 +2585,6 @@ msgstr ""
 "底部。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/Custom.tpl
-#, fuzzy
 msgid ""
 "No Profile(s) have been configured / enabled for your site. You need to "
 "first configure <a href=\"%1\"><strong>&raquo; %2</a>(s)."
@@ -2659,7 +2605,6 @@ msgstr ""
 "檔案(您可以在任何時間回來或更新此頁的個人檔案)。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/Custom.tpl
-#, fuzzy
 msgid ""
 "Include additional fields in this online contribution page by configuring "
 "and selecting a CiviCRM Profile to be included above the billing information "
@@ -2699,7 +2644,6 @@ msgid ""
 msgstr ""
 
 #: templates/CRM/Contribute/Form/ContributionPage/PCP.hlp
-#, fuzzy
 msgid ""
 "The person who created the personal campaign page will be automatically "
 "notified via email when their page is approved so that they can begin "
@@ -2736,7 +2680,6 @@ msgid ""
 msgstr ""
 
 #: templates/CRM/Contribute/Form/ContributionPage/PCP.hlp
-#, fuzzy
 msgid ""
 "Can the 'owner' of a Personal Campaign Page use the Tell-a-Friend function "
 "to send emails to people inviting them to visit their page and make a "
@@ -2880,7 +2823,6 @@ msgid ""
 msgstr ""
 
 #: templates/CRM/Contribute/Form/ContributionPage/Settings.hlp
-#, fuzzy
 msgid ""
 "Enter content for the introductory message. This will be displayed below the "
 "page title. You can include images, as long as they are already uploaded to "
@@ -2961,7 +2903,6 @@ msgstr ""
 "此標題將顯示在頁面頂端。<br />標題僅能輸入字母、數字、空格、連字符及破折號。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/Settings.tpl
-#, fuzzy
 msgid ""
 "Select the corresponding contribution type for contributions made using this "
 "page."
@@ -3276,7 +3217,6 @@ msgid "Contribution Information"
 msgstr "捐款資訊"
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
-#, fuzzy
 msgid "Membership Transaction #"
 msgstr "會員組織"
 
@@ -3493,7 +3433,6 @@ msgid "Receipt Sent"
 msgstr "收據發送日期"
 
 #: templates/CRM/Contribute/Form/ContributionView.tpl
-#, fuzzy
 msgid "Option"
 msgstr "選項"
 
@@ -3534,7 +3473,6 @@ msgid "Delete Premium Product"
 msgstr "刪除感謝禮"
 
 #: templates/CRM/Contribute/Form/ManagePremiums.tpl
-#, fuzzy
 msgid "Are you sure you want to delete this premium?"
 msgstr "您確定要刪除此項目？"
 
@@ -3659,7 +3597,6 @@ msgid "Delete Payment Instrument"
 msgstr "刪除付款工具"
 
 #: templates/CRM/Contribute/Form/PaymentInstrument.tpl
-#, fuzzy
 msgid ""
 "WARNING: Deleting this optionsss will result in the loss of all contribution "
 "records which use this option."
@@ -3723,7 +3660,6 @@ msgid "Are you sure you want to delete Campaign Page '%1'?"
 msgstr "您確定要刪除%1募款頁？"
 
 #: templates/CRM/Contribute/Form/PCP/PCPAccount.tpl
-#, fuzzy
 msgid ""
 "Creating your own fundraising page is simple. Fill in some basic information "
 "below, which will allow you to manage your page and invite friends to make a "
@@ -3733,7 +3669,6 @@ msgstr ""
 "請按「繼續」以個人化與公佈您的頁面。"
 
 #: templates/CRM/Contribute/Form/PCP/PCP.tpl
-#, fuzzy
 msgid "Find Campaign Pages"
 msgstr "個人募款串連"
 
@@ -3992,7 +3927,6 @@ msgstr ""
 "碟） - 您現在已經準備好了第一步（上傳資料）。"
 
 #: templates/CRM/Contribute/Import/Form/UploadFile.hlp
-#, fuzzy
 msgid ""
 "For each import, you can either INSERT new contribution records, or UPDATE "
 "existing records. You can not do both types of operations in a single import "
@@ -4051,7 +3985,6 @@ msgid ""
 msgstr "透過複製及貼上以下URL到任何網頁，來建立連結到此募款頁。"
 
 #: templates/CRM/Contribute/Page/ContributionPageEdit.tpl
-#, fuzzy
 msgid ""
 "Create front-end links to this contribution page using the Menu Manager. "
 "Select <strong>Online Contribution</strong> and choose your desired "
@@ -4188,7 +4121,6 @@ msgid ""
 msgstr "使用以下連結的URL及按鍵，引導參觀者到這個活的頁面"
 
 #: templates/CRM/Contribute/Page/ContributionPageEdit.tpl
-#, fuzzy
 msgid ""
 "When your page is active, create front-end links to the contribution page "
 "using the Menu Manager. Select <strong>Online Contribution</strong> and "
@@ -4245,12 +4177,10 @@ msgstr ""
 
 #: templates/CRM/Contribute/Page/ContributionPage.tpl
 #: templates/CRM/Contribute/Page/DashBoard.tpl
-#, fuzzy
 msgid "Add Contribution Page"
 msgstr "募款頁面"
 
 #: templates/CRM/Contribute/Page/ContributionPage.tpl
-#, fuzzy
 msgid "Manage Personal Campaign Pages"
 msgstr "啟用個人募款串連"
 
@@ -4338,7 +4268,6 @@ msgid "Deductible?"
 msgstr "可扣除？"
 
 #: templates/CRM/Contribute/Page/ContributionType.tpl
-#, fuzzy
 msgid "Add Contribution Type"
 msgstr "捐款類別"
 
@@ -4387,12 +4316,10 @@ msgid "Contribution Summary"
 msgstr "捐款概況"
 
 #: templates/CRM/Contribute/Page/DashBoard.tpl
-#, fuzzy
 msgid "Chart Layout"
 msgstr "圖表樣式"
 
 #: templates/CRM/Contribute/Page/DashBoard.tpl
-#, fuzzy
 msgid "Table Layout"
 msgstr "表格名稱"
 
@@ -4428,7 +4355,6 @@ msgid "Min Contribution"
 msgstr "最少捐款"
 
 #: templates/CRM/Contribute/Page/ManagePremiums.tpl
-#, fuzzy
 msgid "Add Premium"
 msgstr "編輯感謝禮"
 
@@ -4540,7 +4466,6 @@ msgid "Page Title"
 msgstr "頁面標題"
 
 #: templates/CRM/Contribute/Page/PCP.tpl
-#, fuzzy
 msgid "Supporter"
 msgstr "親愛的支持者"
 
@@ -4633,7 +4558,6 @@ msgid "Select the appropriate contribution type for this transaction."
 msgstr "選擇適當的捐款類別給此交易。"
 
 #: templates/CRM/Contribute/Page/Tab.hlp
-#, fuzzy
 msgid ""
 "Unique payment ID for this transaction. The Payment Processor's transaction "
 "ID will be automatically stored here on online contributions."

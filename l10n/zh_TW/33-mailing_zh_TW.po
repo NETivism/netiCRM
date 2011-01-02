@@ -258,17 +258,14 @@ msgid "Base"
 msgstr "基礎"
 
 #: CRM/Mailing/DAO/Job.php
-#, fuzzy
 msgid "Job Type"
 msgstr "職稱"
 
 #: CRM/Mailing/DAO/Job.php
-#, fuzzy
 msgid "Job Offset"
 msgstr "位移"
 
 #: CRM/Mailing/DAO/Job.php
-#, fuzzy
 msgid "Job Limit"
 msgstr "職稱"
 
@@ -337,7 +334,6 @@ msgid "You are already subscribed in %1, your subscription is %2."
 msgstr "您已在%1訂閱，您的訂閱狀態是 %2。"
 
 #: CRM/Mailing/Event/BAO/Subscribe.php
-#, fuzzy
 msgid ""
 "Your subscription request has been submitted for group %1. Check your inbox "
 "shortly for the confirmation email(s). If you do not see a confirmation "
@@ -347,7 +343,6 @@ msgstr ""
 "函，請檢查信件是否被誤判為垃圾郵件。"
 
 #: CRM/Mailing/Event/BAO/Subscribe.php
-#, fuzzy
 msgid ""
 "We had a problem processing your subscription request for group %1. You have "
 "tried to subscribe to a private group and/or we encountered a database "
@@ -488,7 +483,6 @@ msgid "Created or Sent by"
 msgstr "建立或傳送由"
 
 #: CRM/Mailing/Form/Settings.php
-#, fuzzy
 msgid "Track Replies?"
 msgstr "追蹤開信次數？"
 
@@ -758,7 +752,6 @@ msgid "Forwarded Email"
 msgstr "已轉寄的郵件"
 
 #: CRM/Mailing/Selector/Event.php templates/CRM/Mailing/Page/Report.tpl
-#, fuzzy
 msgid "Successful Deliveries"
 msgstr "成功遞送"
 
@@ -1101,7 +1094,6 @@ msgid ""
 msgstr ""
 
 #: templates/CRM/Mailing/Form/Upload.hlp
-#, fuzzy
 msgid ""
 "Go to <a href='%1'>Administer CiviCRM &raquo; Configure &raquo; FROM Email "
 "Addresses</a> to add or edit email addresses. Make sure these email "
@@ -1185,7 +1177,6 @@ msgstr ""
 "的 HTML 語言編輯器。然後按<strong>瀏覽</strong>鍵來上傳並儲存此 HTML 信件。"
 
 #: templates/CRM/Mailing/Form/Upload.tpl
-#, fuzzy
 msgid ""
 "You can either <strong>upload</strong> the mailing content from your "
 "computer OR <strong>compose</strong> the content on this screen."
@@ -1264,7 +1255,6 @@ msgstr ""
 "沒有已封存的電子報。您可以封存電子報，從<a href='%1'>計劃及傳送郵件</a>。"
 
 #: templates/CRM/Mailing/Page/Browse.tpl
-#, fuzzy
 msgid ""
 "There are no Scheduled or Sent Mailings. You can <a href='%1'>create and "
 "send one</a> OR you can search the <a href='%2'>Archived Mailings</a>."
@@ -1277,7 +1267,6 @@ msgid "Body HTML"
 msgstr "主文HTML"
 
 #: templates/CRM/Mailing/Page/Component.tpl
-#, fuzzy
 msgid "Add Mailing Component"
 msgstr "編輯電子報組件"
 
@@ -1302,7 +1291,6 @@ msgid "Back to Report"
 msgstr "回到報表"
 
 #: templates/CRM/Mailing/Page/Optout.tpl
-#, fuzzy
 msgid "has been successfully opted out."
 msgstr "重新訂閱已成功。"
 

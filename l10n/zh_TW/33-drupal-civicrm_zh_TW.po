@@ -169,7 +169,6 @@ msgstr "捐款狀態"
 
 #: drupal/modules/views/civicrm/civicrm_handler_filter_group_status.inc
 #: drupal/modules/views/civicrm.views.inc
-#, fuzzy
 msgid "Contact Group Status"
 msgstr "聯絡人群組"
 
@@ -242,7 +241,6 @@ msgstr "操作"
 
 #: drupal/modules/civicrm_member_roles/civicrm_member_roles.module
 #: drupal/modules/civicrm_group_roles/civicrm_group_roles.module
-#, fuzzy
 msgid "Use the 'Add Association Rule' form to add new rules."
 msgstr "使用\"新增連結規則\"表格來新增新規則。"
 
@@ -318,7 +316,6 @@ msgstr "語言"
 
 #: drupal/modules/civicrm_engage/Engage/Report/Form/CallList.php
 #: drupal/modules/civicrm_engage/Engage/Report/Form/WalkList.php
-#, fuzzy
 msgid "Constituent Type"
 msgstr "選區名稱"
 
@@ -344,7 +341,6 @@ msgid "delete contacts"
 msgstr "刪除聯絡人"
 
 #: CRM/Core/Permission.php
-#, fuzzy
 msgid "access deleted contacts"
 msgstr "已刪除的聯絡人"
 
@@ -409,7 +405,6 @@ msgid "translate CiviCRM"
 msgstr "翻譯 CiviCRM"
 
 #: CRM/Core/Permission.php
-#, fuzzy
 msgid "administer Tagsets"
 msgstr "管理員"
 
@@ -418,17 +413,14 @@ msgid "administer reserved tags"
 msgstr ""
 
 #: CRM/Core/Permission.php
-#, fuzzy
 msgid "administer dedupe rules"
 msgstr "管理多個組織"
 
 #: CRM/Core/Permission.php
-#, fuzzy
 msgid "merge duplicate contacts"
 msgstr "針對重複的聯絡人"
 
 #: CRM/Core/Permission.php
-#, fuzzy
 msgid "view all notes"
 msgstr "查看所有聯絡人"
 
@@ -549,7 +541,6 @@ msgid "Mailing Name"
 msgstr "電子報名稱"
 
 #: drupal/modules/views/civicrm/civicrm_handler_filter_website_type.inc
-#, fuzzy
 msgid "Website type"
 msgstr "網站"
 
@@ -611,7 +602,6 @@ msgid "Don't Link this Field"
 msgstr "不要連結此欄位"
 
 #: drupal/modules/views/civicrm/civicrm_handler_field_event_link.inc
-#, fuzzy
 msgid "Link to Event Registration"
 msgstr "編輯活動報名"
 
@@ -751,12 +741,10 @@ msgid "Has this contact opted out of bulk mail?"
 msgstr "此聯絡人是否選擇退出大量郵件名單？"
 
 #: drupal/modules/views/civicrm.views.inc
-#, fuzzy
 msgid "Is Deleted"
 msgstr "刪除？"
 
 #: drupal/modules/views/civicrm.views.inc
-#, fuzzy
 msgid "Has this contact been deleted?"
 msgstr "刪除了聯絡人"
 
@@ -870,7 +858,6 @@ msgid "The Country of the Address"
 msgstr "地址的國家別"
 
 #: drupal/modules/views/civicrm.views.inc
-#, fuzzy
 msgid "The County of the Address"
 msgstr "地址的國家別"
 
@@ -951,22 +938,18 @@ msgid "The Type, either Phone, Mobile, Fax or Pager"
 msgstr "類別，室內電話、行動電話、傳真或傳呼器"
 
 #: drupal/modules/views/civicrm.views.inc
-#, fuzzy
 msgid "CiviCRM Website"
 msgstr "CiviCRM 動態"
 
 #: drupal/modules/views/civicrm.views.inc
-#, fuzzy
 msgid "Website Type"
 msgstr "網站"
 
 #: drupal/modules/views/civicrm.views.inc
-#, fuzzy
 msgid "The type of website for the contact"
 msgstr "聯絡人的次類別"
 
 #: drupal/modules/views/civicrm.views.inc
-#, fuzzy
 msgid "Website URL"
 msgstr "網站"
 
@@ -1007,12 +990,10 @@ msgid "Has this event been made active?"
 msgstr "此活動是否啟用？"
 
 #: drupal/modules/views/civicrm.views.inc
-#, fuzzy
 msgid "Include Template"
 msgstr "使用範本"
 
 #: drupal/modules/views/civicrm.views.inc
-#, fuzzy
 msgid "Include Event templates?"
 msgstr "活動範本管理"
 
@@ -1085,7 +1066,6 @@ msgid "Registration Link Text"
 msgstr "報名連結文字"
 
 #: drupal/modules/views/civicrm.views.inc
-#, fuzzy
 msgid "Text for the Registration Link"
 msgstr "活動報名連結文字"
 
@@ -1819,12 +1799,10 @@ msgid "CiviCRM Groups"
 msgstr "CiviCRM 群組"
 
 #: drupal/modules/views/civicrm.views.inc
-#, fuzzy
 msgid "Contact Status"
 msgstr "聯絡人 Tag"
 
 #: drupal/modules/views/civicrm.views.inc
-#, fuzzy
 msgid "The group status of the contact"
 msgstr "一個聯絡人的群組"
 
@@ -1881,7 +1859,6 @@ msgid "ID"
 msgstr "ID"
 
 #: drupal/modules/views/civicrm.views.inc
-#, fuzzy
 msgid "The mailing's ID in the database."
 msgstr "Email: %1 已經存在資料庫。"
 
@@ -1898,7 +1875,6 @@ msgid "Subject Line of the mailing"
 msgstr "郵件的主旨"
 
 #: drupal/modules/views/civicrm.views.inc
-#, fuzzy
 msgid "Body - Text"
 msgstr "純文字的內文"
 
@@ -1907,12 +1883,10 @@ msgid "Plaintext mailing message"
 msgstr ""
 
 #: drupal/modules/views/civicrm.views.inc
-#, fuzzy
 msgid "Body - HTML"
 msgstr "主文HTML"
 
 #: drupal/modules/views/civicrm.views.inc
-#, fuzzy
 msgid "HTML mailing message"
 msgstr "電子報 %%狀態訊息%%"
 
@@ -1957,7 +1931,6 @@ msgid "Is the mailing completely sent?"
 msgstr "此郵件全部寄送出了嗎？"
 
 #: drupal/modules/views/civicrm.views.inc
-#, fuzzy
 msgid "Mailing Header - HTML"
 msgstr "電子報頁首"
 
@@ -1966,7 +1939,6 @@ msgid "The HTML header for this mailing."
 msgstr ""
 
 #: drupal/modules/views/civicrm.views.inc
-#, fuzzy
 msgid "Mailing Header - Plaintext"
 msgstr "電子報頁首"
 
@@ -1975,7 +1947,6 @@ msgid "The plaintext header for this mailing."
 msgstr ""
 
 #: drupal/modules/views/civicrm.views.inc
-#, fuzzy
 msgid "Mailing Footer - HTML"
 msgstr "電子報頁尾"
 
@@ -1984,7 +1955,6 @@ msgid "The HTML footer for this mailing."
 msgstr ""
 
 #: drupal/modules/views/civicrm.views.inc
-#, fuzzy
 msgid "Mailing Footer - Plaintext"
 msgstr "電子報頁尾"
 
@@ -2229,7 +2199,6 @@ msgid "Custom Data Field"
 msgstr "自訂資料欄位"
 
 #: drupal/modules/civicrm_cck/civicrm_cck_handler_filter.inc
-#, fuzzy
 msgid "Enter a contact name."
 msgstr "輸入一個有效的國家名稱"
 
@@ -2246,7 +2215,6 @@ msgid "Reference a CiviCRM contact."
 msgstr "指向一個 CiviCRM 聯絡人。"
 
 #: drupal/modules/civicrm_cck/civicrm_cck.module
-#, fuzzy
 msgid "CiviCRM Contact Type %1"
 msgstr "CiviCRM 聯絡人A"
 
@@ -2320,7 +2288,6 @@ msgid "Expired Codes"
 msgstr "過期的編碼"
 
 #: drupal/modules/civicrm_member_roles/civicrm_member_roles.module
-#, fuzzy
 msgid ""
 "There are no rules currently set. Use the 'Add Association Rule' form to add "
 "one."
@@ -2466,7 +2433,6 @@ msgid "Status Rules values were not numeric."
 msgstr "狀態規則的值不是數字。"
 
 #: drupal/modules/civicrm_member_roles/civicrm_member_roles.module
-#, fuzzy
 msgid "This rule set is already exist in data base."
 msgstr "此個人檔案標題已存在資料庫中。"
 
@@ -2531,17 +2497,14 @@ msgstr ""
 "訊息，請重新安裝 CiviGroup Roles Sync。"
 
 #: drupal/modules/civicrm_group_roles/civicrm_group_roles.module
-#, fuzzy
 msgid "Rule Name ('CiviCRM Group' <--> 'Drupal Role')"
 msgstr "規則名稱 （\"CiviCRM 群組\" <--> \"Drupal角色\"）"
 
 #: drupal/modules/civicrm_group_roles/civicrm_group_roles.module
-#, fuzzy
 msgid "There are no rules currently set."
 msgstr "目前沒有報表。"
 
 #: drupal/modules/civicrm_group_roles/civicrm_group_roles.module
-#, fuzzy
 msgid "Use the 'Add Association Rule' form to add one."
 msgstr "使用\"新增連結規則\"表格來新增新規則。"
 
@@ -2611,7 +2574,6 @@ msgid "Contact has been created"
 msgstr "已建立聯絡人"
 
 #: drupal/modules/civicrm_rules/civicrm_rules.rules.inc
-#, fuzzy
 msgid "Created contact"
 msgstr "已建立聯絡人"
 
@@ -2620,7 +2582,6 @@ msgid "Contact has been updated"
 msgstr "已更新聯絡人"
 
 #: drupal/modules/civicrm_rules/civicrm_rules.rules.inc
-#, fuzzy
 msgid "Updated contact"
 msgstr "更新聯絡人"
 
@@ -2629,7 +2590,6 @@ msgid "Contact has been viewed"
 msgstr "已查看聯絡人"
 
 #: drupal/modules/civicrm_rules/civicrm_rules.rules.inc
-#, fuzzy
 msgid "Viewed contact"
 msgstr "已查看的聯絡人"
 
@@ -2638,7 +2598,6 @@ msgid "Contact has been deleted"
 msgstr "刪除了聯絡人"
 
 #: drupal/modules/civicrm_rules/civicrm_rules.rules.inc
-#, fuzzy
 msgid "Deleted contact"
 msgstr "已刪除的聯絡人"
 
@@ -2667,7 +2626,6 @@ msgid "Send Email"
 msgstr "傳送 Email"
 
 #: drupal/modules/civicrm_rules/civicrm_rules.rules.inc
-#, fuzzy
 msgid "Send an email"
 msgstr "寄送 Email"
 
@@ -2686,22 +2644,18 @@ msgid "Message Subject"
 msgstr "訊息主旨"
 
 #: drupal/modules/civicrm_rules/civicrm_rules.rules.inc
-#, fuzzy
 msgid "Enter subject for the email"
 msgstr "Email 標題。"
 
 #: drupal/modules/civicrm_rules/civicrm_rules.rules.inc
-#, fuzzy
 msgid "Select the group"
 msgstr "選擇產品"
 
 #: drupal/modules/civicrm_rules/civicrm_rules.rules.inc
-#, fuzzy
 msgid "Contact will be added to selected group."
 msgstr "聯絡人已被新增到所選擇的群組。"
 
 #: drupal/modules/civicrm_rules/civicrm_rules.rules.inc
-#, fuzzy
 msgid "Contact will be removed from selected group."
 msgstr "要從群組裡移除的聯絡人"
 
@@ -2721,7 +2675,6 @@ msgid ""
 msgstr ""
 
 #: drupal/modules/civicrm_engage/Engage/Contact/Form/Task/ReleaseVoters.php
-#, fuzzy
 msgid "All voters held by you are already released for this survey."
 msgstr "這個Email已經報名過這個活動了。"
 
@@ -2730,7 +2683,6 @@ msgid "Release Voters"
 msgstr ""
 
 #: drupal/modules/civicrm_engage/Engage/Contact/Form/Task/ReleaseVoters.php
-#, fuzzy
 msgid "%1 voters has been released."
 msgstr "已刪除%1 選項。"
 
@@ -2744,7 +2696,6 @@ msgid ""
 msgstr ""
 
 #: drupal/modules/civicrm_engage/Engage/Contact/Form/Task/VoterReservation.php
-#, fuzzy
 msgid "Add Voter Reservation"
 msgstr "新增到組織"
 
@@ -2759,12 +2710,10 @@ msgid ""
 msgstr ""
 
 #: drupal/modules/civicrm_engage/Engage/Contact/Form/Task/VoterReservation.php
-#, fuzzy
 msgid "Voter Reservation"
 msgstr "其他關係"
 
 #: drupal/modules/civicrm_engage/Engage/Contact/Form/Task/VoterReservation.php
-#, fuzzy
 msgid "Voter Reservation has been added for %1 Contact(s)."
 msgstr "此聯絡人沒有任何活動報名記錄。"
 
@@ -2773,7 +2722,6 @@ msgid "Voter Reservation did not add for %1 Contact(s)."
 msgstr ""
 
 #: drupal/modules/civicrm_engage/Engage/Contact/Form/Search/Custom/FindVoters.php
-#, fuzzy
 msgid "Could not find Interviewer Id."
 msgstr "無法找到 Email 位址。"
 
@@ -2810,12 +2758,10 @@ msgid "Is equal to"
 msgstr "等於"
 
 #: drupal/modules/civicrm_engage/Engage/Report/Form/WalkList.php
-#, fuzzy
 msgid "Other Name"
 msgstr "使用者名稱"
 
 #: drupal/modules/civicrm_engage/Engage/Report/Form/WalkList.php
-#, fuzzy
 msgid "Street#"
 msgstr "街道名稱"
 
@@ -2828,7 +2774,6 @@ msgid "Apt."
 msgstr ""
 
 #: drupal/modules/civicrm_engage/Engage/Report/Form/WalkList.php
-#, fuzzy
 msgid "Party Reg"
 msgstr "黨派"
 
@@ -3047,11 +2992,9 @@ msgid "View Contact Record"
 msgstr "檢視聯絡人記錄"
 
 #: drupal/civicrm.module
-#, fuzzy
 msgid "View Contact Dashboard"
 msgstr "聯絡人總覽"
 
 #: drupal/civicrm.module
-#, fuzzy
 msgid "Edit '!1'"
 msgstr "編輯 %1"

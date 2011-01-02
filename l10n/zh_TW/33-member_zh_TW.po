@@ -152,17 +152,14 @@ msgid "Please select one of the memberships"
 msgstr "請選擇其中一個會員"
 
 #: CRM/Member/BAO/Membership.php
-#, fuzzy
 msgid "do not import"
 msgstr "- 不要匯入 -"
 
 #: CRM/Member/BAO/Membership.php
-#, fuzzy
 msgid "Membership Fields"
 msgstr "- 會員區 -"
 
 #: CRM/Member/BAO/Membership.php
-#, fuzzy
 msgid "(match to contact)"
 msgstr "聯絡人編號(與聯絡人對應)"
 
@@ -228,12 +225,10 @@ msgid "Membership Status %1"
 msgstr "會籍狀態 %1"
 
 #: CRM/Member/BAO/Query.php
-#, fuzzy
 msgid "Find Test Memberships"
 msgstr "是否搜尋測試會籍？"
 
 #: CRM/Member/BAO/Query.php
-#, fuzzy
 msgid "Find Pay Later Memberships"
 msgstr "是否搜尋延期付款會籍？"
 
@@ -242,7 +237,6 @@ msgid "Membership Type %1"
 msgstr "會籍類別 %1"
 
 #: CRM/Member/BAO/Query.php
-#, fuzzy
 msgid "Primary AND Related Members"
 msgstr "只選有關聯的會員"
 
@@ -319,7 +313,6 @@ msgid "Membership ID"
 msgstr "會員編號"
 
 #: CRM/Member/DAO/Membership.php
-#, fuzzy
 msgid "Membership Type Id"
 msgstr "會員類型"
 
@@ -328,7 +321,6 @@ msgid "Membership Expiration Date"
 msgstr "會藉到期日"
 
 #: CRM/Member/DAO/Membership.php
-#, fuzzy
 msgid "Membership Status Id"
 msgstr "會員狀態"
 
@@ -564,7 +556,6 @@ msgid "A renewal confirmation and receipt has been sent to %1."
 msgstr "更新確定以及收據已被傳送給 %1。"
 
 #: CRM/Member/Form/MembershipStatus.php
-#, fuzzy
 msgid ""
 "A membership status with this label already exists. Please select another "
 "label."
@@ -783,7 +774,6 @@ msgid "Members"
 msgstr "會員"
 
 #: CRM/Member/Task.php
-#, fuzzy
 msgid "Print Memberships"
 msgstr "列印會員"
 
@@ -805,7 +795,6 @@ msgstr ""
 "用可以成為與此筆費用分開。"
 
 #: templates/CRM/Member/Form/MembershipBlock.hlp
-#, fuzzy
 msgid ""
 "With this configuration, the membership fee is automatically charged, and "
 "users have an option to make an additional contribution (two separate "
@@ -1075,7 +1064,6 @@ msgstr ""
 "Email。"
 
 #: templates/CRM/Member/Form/Membership.tpl
-#, fuzzy
 msgid "New Membership"
 msgstr "瀏覽會員資料"
 
@@ -1088,14 +1076,12 @@ msgstr ""
 "的金流機制。"
 
 #: templates/CRM/Member/Form/Membership.tpl
-#, fuzzy
 msgid ""
 "WARNING: Deleting this membership will also delete related membership log "
 "and payment records."
 msgstr "警告：刪除此報名，將會遺失有關的付款記錄（若有的話）。"
 
 #: templates/CRM/Member/Form/Membership.tpl
-#, fuzzy
 msgid ""
 "Consider modifying the membership status instead if you want to maintain a "
 "record of this membership."
@@ -1491,7 +1477,6 @@ msgstr ""
 "碟） - 您現在已經準備好了第一步（上傳資料）。"
 
 #: templates/CRM/Member/Import/Form/UploadFile.hlp
-#, fuzzy
 msgid ""
 "For each import, you can either INSERT new membership records, or UPDATE "
 "existing records. You can not do both types of operations in a single import "
@@ -1639,7 +1624,6 @@ msgid ""
 msgstr ""
 
 #: templates/CRM/Member/Page/MembershipStatus.tpl
-#, fuzzy
 msgid "Add Membership Status"
 msgstr "會員狀態"
 
@@ -1758,7 +1742,6 @@ msgid "Fixed Start"
 msgstr ""
 
 #: templates/CRM/Member/Page/MembershipType.tpl
-#, fuzzy
 msgid "Add Membership Type"
 msgstr "會員類型"
 
@@ -1783,7 +1766,6 @@ msgid ""
 msgstr ""
 
 #: templates/CRM/Member/Page/Tab.tpl
-#, fuzzy
 msgid "Click <a href='%1'>Add Membership</a> to record a new membership."
 msgstr "按<a href='%1'>新會籍</a>以記錄一個新會籍。"
 

@@ -26,7 +26,6 @@ msgstr ""
 "X-Poedit-Bookmarks: 4212,-1,-1,-1,-1,-1,-1,-1,-1,-1\n"
 
 #: CRM/Project/DAO/Project.php CRM/Project/DAO/Task.php
-#, fuzzy
 msgid "Owner Entity Table"
 msgstr "表格"
 
@@ -35,56 +34,45 @@ msgid "Project Owner ID"
 msgstr ""
 
 #: CRM/Project/DAO/Task.php
-#, fuzzy
 msgid "Task Type"
 msgstr "個案類型"
 
 #: CRM/Project/DAO/Task.php
-#, fuzzy
 msgid "Task Owner ID"
 msgstr "會員擁有者編號"
 
 #: CRM/Project/DAO/Task.php
-#, fuzzy
 msgid "Parent Entity Table"
 msgstr "表格"
 
 #: CRM/Project/DAO/Task.php
-#, fuzzy
 msgid "Task Parent"
 msgstr "上層"
 
 #: CRM/Project/DAO/Task.php
-#, fuzzy
 msgid "Task Class"
 msgstr "日期分類"
 
 #: CRM/Project/DAO/TaskStatus.php
-#, fuzzy
 msgid "Responsible Entity Table"
 msgstr "表格"
 
 #: CRM/Project/DAO/TaskStatus.php
-#, fuzzy
 msgid "Responsible"
 msgstr "回應"
 
 #: CRM/Project/DAO/TaskStatus.php
-#, fuzzy
 msgid "Target Entity Table"
 msgstr "表格"
 
 #: CRM/Project/DAO/TaskStatus.php
-#, fuzzy
 msgid "Target"
 msgstr "目標聯絡人"
 
 #: CRM/Project/DAO/TaskStatus.php
-#, fuzzy
 msgid "Status Details"
 msgstr "個案詳情"
 
 #: CRM/Project/DAO/TaskStatus.php
-#, fuzzy
 msgid "Last Modified"
 msgstr "修改自"

@@ -41,27 +41,22 @@ msgid "Delete Grants"
 msgstr "刪除贊助"
 
 #: CRM/Grant/BAO/Grant.php
-#, fuzzy
 msgid "Grant Note"
 msgstr "已贊助"
 
 #: CRM/Grant/BAO/Query.php
-#, fuzzy
 msgid "Grant Money Transfer Date is NULL"
 msgstr "贊助款匯款日期"
 
 #: CRM/Grant/BAO/Query.php
-#, fuzzy
 msgid "Grant Application Received Date is NULL"
 msgstr "收到申請的日期"
 
 #: CRM/Grant/BAO/Query.php
-#, fuzzy
 msgid "Grant Due Date is NULL"
 msgstr "贊助有限日期"
 
 #: CRM/Grant/BAO/Query.php
-#, fuzzy
 msgid "Grant Decision Date is NULL"
 msgstr "贊助決定日期 - 從"
 
@@ -114,7 +109,6 @@ msgid "Grant report received"
 msgstr "已收到贊助報表"
 
 #: CRM/Grant/DAO/Grant.php
-#, fuzzy
 msgid "Grant Type Id"
 msgstr "贊助類型"
 
@@ -123,7 +117,6 @@ msgid "Amount granted"
 msgstr "已撥款總額"
 
 #: CRM/Grant/DAO/Grant.php
-#, fuzzy
 msgid "Grant Status Id"
 msgstr "贊助狀態"
 
@@ -196,7 +189,6 @@ msgid "Report Received"
 msgstr "已接收報表"
 
 #: CRM/Grant/Task.php
-#, fuzzy
 msgid "Print Grants"
 msgstr "列印贊助清單"
 
@@ -209,7 +201,6 @@ msgid "New Grant"
 msgstr "新增贊助"
 
 #: templates/CRM/Grant/Form/Grant.tpl
-#, fuzzy
 msgid "Are you sure you want to delete this Grant?"
 msgstr "您是否確定刪除這項贊助？"
 
@@ -265,7 +256,6 @@ msgid "Application Recieved"
 msgstr "已接收申請"
 
 #: templates/CRM/Grant/Form/Task/SearchTaskHookSample.tpl
-#, fuzzy
 msgid "Decision Date"
 msgstr "決定日期"
 
@@ -330,7 +320,6 @@ msgid "This page lists all grants for %1 since inception."
 msgstr "本頁面列出所有%1的撥款記錄。"
 
 #: templates/CRM/Grant/Page/Tab.tpl
-#, fuzzy
 msgid ""
 "Click <a accesskey='N' href='%1'>Add Grant</a> to record a Grant for this "
 "contact."

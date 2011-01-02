@@ -107,7 +107,6 @@ msgid ""
 msgstr ""
 
 #: CRM/Event/Form/Participant.php CRM/Event/Form/Task/Delete.php
-#, fuzzy
 msgid "Delete only this participant record."
 msgstr "刪除此記錄"
 
@@ -160,13 +159,11 @@ msgid "- Participant Fields -"
 msgstr "- 參加者欄位 -"
 
 #: CRM/Event/BAO/Participant.php
-#, fuzzy
 msgid ""
 "Participant status has been updated to '%1'. An email has been sent to %2."
 msgstr "<br /> 參加者的狀態已更新為 '%1' 。Email已寄給%2。"
 
 #: CRM/Event/BAO/Participant.php
-#, fuzzy
 msgid ""
 "This event currently has the maximum number of participants registered (%1). "
 "However, you can still override this limit and register additional "
@@ -314,12 +311,10 @@ msgid "Event Created Date"
 msgstr "活動建立日期"
 
 #: CRM/Event/DAO/Participant.php
-#, fuzzy
 msgid "Participant Status Id"
 msgstr "參加者狀態"
 
 #: CRM/Event/DAO/Participant.php
-#, fuzzy
 msgid "Participant Role Id"
 msgstr "參加者身分"
 
@@ -396,7 +391,6 @@ msgid "From Template"
 msgstr "從範本"
 
 #: CRM/Event/Form/ManageEvent/EventInfo.php
-#, fuzzy
 msgid "Complete Description"
 msgstr "活動描述"
 
@@ -523,17 +517,14 @@ msgid "Please enter the fee label for the paid event."
 msgstr "請為付費活動輸入費用標籤。"
 
 #: CRM/Event/Form/ManageEvent/Fee.php
-#, fuzzy
 msgid "Please select an appropriate option as default."
 msgstr "請選擇郵寄群組。"
 
 #: CRM/Event/Form/ManageEvent/Fee.php
-#, fuzzy
 msgid "Please enter a label for at least one fee level."
 msgstr "請為付費活動輸入費用標籤。"
 
 #: CRM/Event/Form/ManageEvent/Fee.php
-#, fuzzy
 msgid "Please enter an amount for at least one fee level."
 msgstr "請為此欄位輸入一個有效的金額。"
 
@@ -685,7 +676,6 @@ msgid "Please enter Confirmation Email FROM Email Address."
 msgstr "請輸入確認信函寄件者Email。"
 
 #: CRM/Event/Form/ManageEvent/Registration.php
-#, fuzzy
 msgid ""
 "Allow multiple registrations from the same email address requires a profile "
 "of type 'Individual'"
@@ -709,7 +699,6 @@ msgid "CiviEvent Dashboard"
 msgstr "Civi活動總覽頁面"
 
 #: CRM/Event/Form/Participant.php
-#, fuzzy
 msgid "Role is required"
 msgstr "角色是必填欄位"
 
@@ -754,7 +743,6 @@ msgid "Total Participant(s) added to event: %1."
 msgstr "加入到活動的參加者總數： %1"
 
 #: CRM/Event/Form/Participant.php
-#, fuzzy
 msgid ""
 "Email has NOT been sent to %1 contact(s) - communication preferences specify "
 "DO NOT EMAIL OR valid Email is NOT present. "
@@ -835,7 +823,6 @@ msgstr ""
 "資訊。"
 
 #: CRM/Event/Form/Registration/AdditionalParticipant.php
-#, fuzzy
 msgid ""
 "This event is currently full. You are registering in a waiting list. You "
 "will be notified if spaces become available."
@@ -843,7 +830,6 @@ msgstr ""
 "此活動已報名額滿。不過現在你可以註冊並列入等候名單，並在可報名時通知你。"
 
 #: CRM/Event/Form/Registration/AdditionalParticipant.php
-#, fuzzy
 msgid ""
 "It looks like you are now registering a group participants which are "
 "extending the event availability. All participant will be listed in the "
@@ -853,7 +839,6 @@ msgstr ""
 "單)。"
 
 #: CRM/Event/Form/Registration/AdditionalParticipant.php
-#, fuzzy
 msgid ""
 "It look like that total participant recoreded will fit in the event "
 "availability (you will not be wait listed)."
@@ -862,7 +847,6 @@ msgstr ""
 "列入候補名單）。"
 
 #: CRM/Event/Form/Registration/AdditionalParticipant.php
-#, fuzzy
 msgid ""
 "It look like that total participant recoreded will fit in the event "
 "availability (you will not be wait listed). Registration for this event "
@@ -884,7 +868,6 @@ msgid "Skip Participant >>|"
 msgstr "略過參加者 >>|"
 
 #: CRM/Event/Form/Registration/AdditionalParticipant.php
-#, fuzzy
 msgid "A person is already registered for this event."
 msgstr "這個Email已經報名過這個活動了。"
 
@@ -910,7 +893,6 @@ msgid ""
 msgstr ""
 
 #: CRM/Event/Form/Registration/AdditionalParticipant.php
-#, fuzzy
 msgid ""
 "You are goinng to skip the last participant, your event registration will be "
 "confirmed. Please go back to the main registration page, to complete payment "
@@ -960,14 +942,12 @@ msgid ""
 msgstr "噢，目前%1活動報名已額滿。"
 
 #: CRM/Event/Form/Registration/ParticipantConfirm.php
-#, fuzzy
 msgid ""
 "Your Credit Card transaction was not successful. No money has yet been "
 "charged to your card."
 msgstr "交易完成，請列印這頁留為記錄。"
 
 #: CRM/Event/Form/Registration/ParticipantConfirm.php
-#, fuzzy
 msgid ""
 "Click the \"Confirm Registration\" button to complete your registration in %"
 "1, or click \"Cancel Registration\" if you are no longer interested in "
@@ -1174,7 +1154,6 @@ msgid "Please enter a whole number for Number of additional people."
 msgstr "請輸入你想額外報名的人數。"
 
 #: CRM/Event/Form/Registration/Register.php
-#, fuzzy
 msgid "Only %1 Registrations available."
 msgstr "連結到報名頁"
 
@@ -1188,12 +1167,10 @@ msgid "Registration information for participant 1 has been saved."
 msgstr "參加者1已儲存報名資料。"
 
 #: CRM/Event/Form/Registration/Register.php
-#, fuzzy
 msgid "You can also <a href=\"%1\">register another participant</a>."
 msgstr "您現在可以<a href=\"%1\">建立一個新活動</a>。"
 
 #: CRM/Event/Form/Registration/Register.php
-#, fuzzy
 msgid ""
 "Oops. It looks like this participant is already registered for this event. "
 "If you want to change your registration, or you feel that you've gotten this "
@@ -1211,7 +1188,6 @@ msgid "Show Current and Upcoming Events"
 msgstr "顯示現在和即將舉辦的活動"
 
 #: CRM/Event/Form/SearchEvent.php
-#, fuzzy
 msgid "Search All or by Date Range"
 msgstr "以距離來搜尋？"
 
@@ -1240,7 +1216,6 @@ msgid "Make Name Badges"
 msgstr ""
 
 #: CRM/Event/Form/Task/Badge.php
-#, fuzzy
 msgid "Name Badge Format"
 msgstr "電子報格式"
 
@@ -1357,7 +1332,6 @@ msgid "You do not have permission to view this event"
 msgstr "您沒有權限瀏覽此活動"
 
 #: CRM/Event/Page/EventInfo.php
-#, fuzzy
 msgid ""
 "Event is currently full, but you can register and be a part of waiting list."
 msgstr ""
@@ -1380,7 +1354,6 @@ msgid "Enable Event"
 msgstr "啟動活動"
 
 #: CRM/Event/Page/ManageEvent.php
-#, fuzzy
 msgid "Copy"
 msgstr "複製？"
 
@@ -1429,7 +1402,6 @@ msgid "Delete Participants"
 msgstr "刪除參加者"
 
 #: CRM/Event/Task.php
-#, fuzzy
 msgid "Print Participants"
 msgstr "列印參加者名單"
 
@@ -1446,7 +1418,6 @@ msgid "Change Participant Status"
 msgstr "變更參加者狀態"
 
 #: CRM/Event/Task.php
-#, fuzzy
 msgid "Print Event Name Badges"
 msgstr "參加者（活動名稱）"
 
@@ -1472,7 +1443,6 @@ msgid "Registration Confirmation and Receipt"
 msgstr "註冊確認及收據"
 
 #: templates/CRM/Event/Form/EventFees.tpl
-#, fuzzy
 msgid "Registration Confirmation"
 msgstr "註冊確認及收據"
 
@@ -1536,7 +1506,6 @@ msgstr ""
 "的範本。"
 
 #: templates/CRM/Event/Form/ManageEvent/EventInfo.hlp
-#, fuzzy
 msgid ""
 "You can select a pre-configured Event Template to streamline setting up your "
 "new event. The information and configuration settings from the selected "
@@ -1570,7 +1539,6 @@ msgstr ""
 
 #: templates/CRM/Event/Form/ManageEvent/EventInfo.hlp
 #: templates/CRM/Event/Form/ManageEvent/EventInfo.tpl
-#, fuzzy
 msgid ""
 "To allow users to see a listing of participants, set this field to "
 "'Name' (list names only), 'Name and Email', or 'Name, Status and Register "
@@ -1728,7 +1696,6 @@ msgstr ""
 "款處理機</a>。然後回到此螢幕及指派處理器到此活動。"
 
 #: templates/CRM/Event/Form/ManageEvent/Fee.tpl
-#, fuzzy
 msgid "Select the currency to be used for event registration."
 msgstr "選擇用在此募款頁的金流機制。"
 
@@ -1825,7 +1792,6 @@ msgid ""
 msgstr ""
 
 #: templates/CRM/Event/Form/ManageEvent/Fee.tpl
-#, fuzzy
 msgid ""
 "If you uncheck \"Discounts by Signup Date\" and Save this form, any existing "
 "discount sets will be deleted."
@@ -2117,7 +2083,6 @@ msgid ""
 msgstr ""
 
 #: templates/CRM/Event/Form/ManageEvent/Tab.hlp
-#, fuzzy
 msgid "Info &amp; Settings"
 msgstr "資訊及設定"
 
@@ -2183,12 +2148,10 @@ msgid ""
 msgstr "觀看活動資料頁面，它會被展示給網站的訪客。"
 
 #: templates/CRM/Event/Form/ManageEvent/Tab.hlp
-#, fuzzy
 msgid "Registration"
 msgstr "報名頁"
 
 #: templates/CRM/Event/Form/ManageEvent/Tab.hlp
-#, fuzzy
 msgid "test-drive"
 msgstr "測試"
 
@@ -2208,7 +2171,6 @@ msgstr ""
 "絡人姓名，以便您需要時容易察看或刪除這些測試紀錄。</strong>"
 
 #: templates/CRM/Event/Form/ManageEvent/Tab.hlp
-#, fuzzy
 msgid "live"
 msgstr "Sliven"
 
@@ -2221,23 +2183,19 @@ msgstr ""
 
 #: templates/CRM/Event/Form/ManageEvent/Tab.tpl
 #: templates/CRM/Event/Page/ManageEvent.tpl
-#, fuzzy
 msgid "Event Links"
 msgstr "活動地點"
 
 #: templates/CRM/Event/Form/ManageEvent/Tab.tpl
 #: templates/CRM/Event/Page/ManageEvent.tpl
-#, fuzzy
 msgid "Register Participant"
 msgstr "登記新的活動參加者"
 
 #: templates/CRM/Event/Form/ManageEvent/Tab.tpl
-#, fuzzy
 msgid "Online Registration (Test-drive)"
 msgstr "線上報名"
 
 #: templates/CRM/Event/Form/ManageEvent/Tab.tpl
-#, fuzzy
 msgid "Online Registration (Live)"
 msgstr "線上報名"
 
@@ -2247,7 +2205,6 @@ msgid "Public Participant Listing"
 msgstr "公開參加者列表"
 
 #: templates/CRM/Event/Form/Participant.tpl
-#, fuzzy
 msgid "This Option is already full for this event."
 msgstr "為此活動下載iCalendar。"
 
@@ -2287,31 +2244,26 @@ msgid ""
 msgstr "警告：刪除此報名，將會遺失有關的付款記錄（若有的話）。"
 
 #: templates/CRM/Event/Form/Participant.tpl
-#, fuzzy
 msgid " There are %1 more Participant(s) registered by this participant."
 msgstr "報名此活動的參加者的數字編號"
 
 #: templates/CRM/Event/Form/Participant.tpl
 #: templates/CRM/Event/Form/ParticipantView.tpl
-#, fuzzy
 msgid "Also Registered by this Participant"
 msgstr "登記活動參加者"
 
 #: templates/CRM/Event/Form/Participant.tpl
 #: templates/CRM/Event/Form/ParticipantView.tpl
-#, fuzzy
 msgid "view additional participant"
 msgstr "額外參加者的設定檔"
 
 #: templates/CRM/Event/Form/Participant.tpl
 #: templates/CRM/Event/Form/ParticipantView.tpl
-#, fuzzy
 msgid "Registered By"
 msgstr "以編號報名"
 
 #: templates/CRM/Event/Form/Participant.tpl
 #: templates/CRM/Event/Form/ParticipantView.tpl
-#, fuzzy
 msgid "view primary participant"
 msgstr "瀏覽參加者"
 
@@ -2328,12 +2280,10 @@ msgid "View Participant"
 msgstr "瀏覽參加者"
 
 #: templates/CRM/Event/Form/ParticipantView.tpl
-#, fuzzy
 msgid "Print Event Name Badge"
 msgstr "參加者（活動名稱）"
 
 #: templates/CRM/Event/Form/ParticipantView.tpl
-#, fuzzy
 msgid "Print Name Badge"
 msgstr "列印此頁"
 
@@ -2346,7 +2296,6 @@ msgid "Registration Date and Time"
 msgstr "報名日期及時間"
 
 #: templates/CRM/Event/Form/Registration/AdditionalParticipant.tpl
-#, fuzzy
 msgid "Total Participants : %1"
 msgstr "加入到活動的參加者總數： %1"
 
@@ -2404,7 +2353,6 @@ msgstr "請按下方<strong>繼續</strong>去完成這項報名。"
 
 #: templates/CRM/Event/Form/Registration/Confirm.tpl
 #: templates/CRM/Event/Form/Registration/ThankYou.tpl
-#, fuzzy
 msgid "Registered Email"
 msgstr "巳登記"
 
@@ -2454,12 +2402,10 @@ msgstr ""
 "信用卡卡號、安全碼、郵遞區號等的資訊。"
 
 #: templates/CRM/Event/Form/Registration/Register.tpl
-#, fuzzy
 msgid "Welcome %1"
 msgstr "歡迎"
 
 #: templates/CRM/Event/Form/Registration/Register.tpl
-#, fuzzy
 msgid "Click here to register a different person for this event."
 msgstr "啓用或停用此活動的線上報名。"
 
@@ -2934,7 +2880,6 @@ msgid "Recent Registrations"
 msgstr ""
 
 #: templates/CRM/Event/Page/EventInfo.tpl
-#, fuzzy
 msgid "Registration is closed for this event"
 msgstr "活動報名結束於%1"
 
@@ -3074,27 +3019,22 @@ msgid ""
 msgstr "您還可以使用其他參數來篩選顯示哪些活動在 RSS 訂閱。"
 
 #: templates/CRM/Event/Page/ManageEvent.tpl
-#, fuzzy
 msgid "Add Event"
 msgstr "結束日期"
 
 #: templates/CRM/Event/Page/ManageEvent.tpl
-#, fuzzy
 msgid "Public?"
 msgstr "公開"
 
 #: templates/CRM/Event/Page/ManageEvent.tpl
-#, fuzzy
 msgid "ID:"
 msgstr "ID"
 
 #: templates/CRM/Event/Page/ManageEvent.tpl
-#, fuzzy
 msgid "Registration (Test-drive)"
 msgstr "報名畫面"
 
 #: templates/CRM/Event/Page/ManageEvent.tpl
-#, fuzzy
 msgid "Registration (Live)"
 msgstr "報名連結文字"
 
@@ -3123,7 +3063,6 @@ msgid "This page lists all event registrations for %1 since inception."
 msgstr "此頁列出所有%1的報名者。"
 
 #: templates/CRM/Event/Page/Tab.tpl
-#, fuzzy
 msgid ""
 "Click <a accesskey=\"N\" href='%1'>Add Event Registration</a> to register "
 "this contact for an event."
@@ -3137,7 +3076,6 @@ msgid ""
 msgstr ""
 
 #: templates/CRM/Event/Page/Tab.tpl
-#, fuzzy
 msgid "Add Event Registration"
 msgstr "活動報名"
 

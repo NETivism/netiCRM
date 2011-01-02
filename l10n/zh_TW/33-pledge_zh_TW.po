@@ -31,7 +31,6 @@ msgid "Pledged"
 msgstr "已認捐"
 
 #: CRM/Pledge/BAO/Pledge.php CRM/Pledge/Selector/Search.php
-#, fuzzy
 msgid "Total Paid"
 msgstr "已付款總額"
 
@@ -128,7 +127,6 @@ msgid "Pledge Payment Status %1"
 msgstr "認捐付款狀態 %1"
 
 #: CRM/Pledge/BAO/Query.php
-#, fuzzy
 msgid "Find Test Pledges"
 msgstr "搜尋測試認捐？"
 
@@ -153,12 +151,10 @@ msgid "Find Test Pledges?"
 msgstr "搜尋測試認捐？"
 
 #: CRM/Pledge/BAO/Query.php
-#, fuzzy
 msgid "Pledge Frequency"
 msgstr "認捐頻率單位"
 
 #: CRM/Pledge/DAO/Payment.php
-#, fuzzy
 msgid "Actual Amount"
 msgstr "總金額"
 
@@ -183,7 +179,6 @@ msgid "Total Pledged"
 msgstr "總認捐"
 
 #: CRM/Pledge/DAO/Pledge.php
-#, fuzzy
 msgid "Original Installment Amount"
 msgstr "期"
 
@@ -196,7 +191,6 @@ msgid "Acknowledge Date"
 msgstr "寄送感謝函日期"
 
 #: CRM/Pledge/DAO/Pledge.php
-#, fuzzy
 msgid "Pledge Status Id"
 msgstr "認捐狀態 %1"
 
@@ -205,7 +199,6 @@ msgid "Pledge Payment Schedule has been updated.<br />"
 msgstr "認捐付款排程已被更新。<br/>"
 
 #: CRM/Pledge/Form/Pledge.php templates/CRM/Pledge/Form/PledgeView.tpl
-#, fuzzy
 msgid "Total Pledge Amount"
 msgstr "認捐金額"
 
@@ -329,7 +322,6 @@ msgid ""
 msgstr "認捐被取消，所有已排定(尚未完成)的付款已被取消。<br/>"
 
 #: CRM/Pledge/Selector/Search.php
-#, fuzzy
 msgid ""
 "Cancelling this pledge will also cancel any scheduled (and not completed) "
 "pledge payments."
@@ -370,7 +362,6 @@ msgid "Pledge Search"
 msgstr "認捐搜尋"
 
 #: CRM/Pledge/Task.php
-#, fuzzy
 msgid "Print Pledges"
 msgstr "列印認捐清單"
 
@@ -379,7 +370,6 @@ msgid "Export Pledges"
 msgstr "匯出認捐"
 
 #: templates/CRM/Pledge/Form/Payment.tpl
-#, fuzzy
 msgid "Edit Scheduled Pledge Payment"
 msgstr "編輯認捐付款"
 
@@ -482,12 +472,10 @@ msgid "Pledge By"
 msgstr "認捐由"
 
 #: templates/CRM/Pledge/Form/PledgeView.tpl
-#, fuzzy
 msgid " installments of "
 msgstr "期"
 
 #: templates/CRM/Pledge/Form/PledgeView.tpl
-#, fuzzy
 msgid " every "
 msgstr "每"
 
@@ -544,7 +532,6 @@ msgid "Begining Date"
 msgstr "開始日期"
 
 #: templates/CRM/Pledge/Form/Task/SearchTaskHookSample.tpl
-#, fuzzy
 msgid "Pledge made"
 msgstr "已作出的認捐"
 
@@ -591,12 +578,10 @@ msgid ""
 msgstr ""
 
 #: templates/CRM/Pledge/Page/Payment.tpl
-#, fuzzy
 msgid "Amount Due"
 msgstr "金額"
 
 #: templates/CRM/Pledge/Page/Payment.tpl
-#, fuzzy
 msgid "Amount Paid"
 msgstr "已付款總額"
 
@@ -613,12 +598,10 @@ msgid "<a href='%1'>Submit Credit Card Payment</a>"
 msgstr "<a href='%1'>提交信用卡付款</a>"
 
 #: templates/CRM/Pledge/Page/Payment.tpl
-#, fuzzy
 msgid "<a href='%1'>Edit Scheduled Payment</a>"
 msgstr "<a href='%1'>編輯排程</a>"
 
 #: templates/CRM/Pledge/Page/Tab.hlp
-#, fuzzy
 msgid ""
 "One or more payment reminders can be emailed to this contributor based on "
 "the values entered in this section. If a 'Self-service Payments Page' has "
@@ -656,7 +639,6 @@ msgid "Pledges received from %1 since inception."
 msgstr "%1做出的所有認捐。"
 
 #: templates/CRM/Pledge/Page/Tab.tpl
-#, fuzzy
 msgid ""
 "Click <a href='%1'>Add Pledge</a> to record a new pledge received from this "
 "contact."

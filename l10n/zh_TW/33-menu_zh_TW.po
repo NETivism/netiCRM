@@ -25,87 +25,70 @@ msgstr ""
 "X-Generator: Pootle 0.10\n"
 "X-Poedit-Bookmarks: 4212,-1,-1,-1,-1,-1,-1,-1,-1,-1\n"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Access Control"
 msgstr "權限控制"
 
-#, fuzzy
 msgctxt "menu"
 msgid "ACL"
 msgstr "權限管理"
 
-#, fuzzy
 msgctxt "menu"
 msgid "ACL Roles"
 msgstr "權限管理 - 角色"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Activities"
 msgstr "動態"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Activity Dashlet"
 msgstr "動態日期"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Activity Types"
 msgstr "動態類型"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Activity View"
 msgstr "動態檢視"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Add Field"
 msgstr "地址欄位"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Additional Info"
 msgstr "額外資訊"
 
-#, fuzzy
 msgctxt "menu"
 msgid "AdditionalInfo Form"
 msgstr "額外資訊表單"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Add Products to This Page"
 msgstr "新增產品到此頁"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Addressee"
 msgstr "收件人"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Address Preferences"
 msgstr "地址參數選擇"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Administer CiviCRM"
 msgstr "管理CiviCRM"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Advanced Search"
 msgstr "進階搜尋"
 
-#, fuzzy
 msgctxt "menu"
 msgid "All Cases Dashlet"
 msgstr "全部個案"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Archived Mailings"
 msgstr "封存電子報"
@@ -114,447 +97,358 @@ msgctxt "menu"
 msgid "Assign to Another Client"
 msgstr ""
 
-#, fuzzy
 msgctxt "menu"
 msgid "Assign Users to ACL Roles"
 msgstr "指派使用者為權限角色"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Browse Uploaded files"
 msgstr "瀏覽已上傳檔案"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Build Activity To Case"
 msgstr "從個案分離動態"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Campaign Dashboard"
 msgstr "Civi活動總覽頁面"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Campaign Status"
 msgstr "個人募款串連"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Campaign Types"
 msgstr "個人募款串連"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Case"
 msgstr "個案"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Case Activity"
 msgstr "個案動態"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Case Dashlet"
 msgstr "個案詳情"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Case Details"
 msgstr "個案詳情"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Case Report"
 msgstr "個案報表"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Case Statuses"
 msgstr "個案狀態"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Case Types"
 msgstr "個案類型"
 
-#, fuzzy
 msgctxt "menu"
 msgid "CiviCase Dashboard"
 msgstr "Civi個案 總覽頁面"
 
-#, fuzzy
 msgctxt "menu"
 msgid "CiviContribute"
 msgstr "Civi捐款"
 
-#, fuzzy
 msgctxt "menu"
 msgid "CiviContribute Dashboard"
 msgstr "Civi捐款 總覽頁面"
 
-#, fuzzy
 msgctxt "menu"
 msgid "CiviCRM"
 msgstr "存取 CiviCRM"
 
-#, fuzzy
 msgctxt "menu"
 msgid "CiviCRM Dashlets"
 msgstr "CiviCRM 總覽"
 
-#, fuzzy
 msgctxt "menu"
 msgid "CiviCRM Extensions"
 msgstr "CiviCRM 拍賣"
 
-#, fuzzy
 msgctxt "menu"
 msgid "CiviCRM Home"
 msgstr "CiviCRM首頁"
 
-#, fuzzy
 msgctxt "menu"
 msgid "CiviCRM Profile"
 msgstr "CiviCRM 個人檔案"
 
-#, fuzzy
 msgctxt "menu"
 msgid "CiviCRM Profile Create"
 msgstr "CiviCRM 建立個人檔案"
 
-#, fuzzy
 msgctxt "menu"
 msgid "CiviCRM Profile Fields"
 msgstr "CiviCRM 個人檔案欄位"
 
-#, fuzzy
 msgctxt "menu"
 msgid "CiviCRM Reports"
 msgstr "CiviCRM 報表"
 
-#, fuzzy
 msgctxt "menu"
 msgid "CiviEvent Dashboard"
 msgstr "Civi活動總覽頁面"
 
-#, fuzzy
 msgctxt "menu"
 msgid "CiviGrant Dashboard"
 msgstr "Civi贊助總覽頁面"
 
-#, fuzzy
 msgctxt "menu"
 msgid "CiviMail"
 msgstr "Civi電子報"
 
-#, fuzzy
 msgctxt "menu"
 msgid "CiviMember Dashboard"
 msgstr "Civi會員總覽頁面"
 
-#, fuzzy
 msgctxt "menu"
 msgid "CiviPledge Dashboard"
 msgstr "Civi認捐總覽頁面"
 
-#, fuzzy
 msgctxt "menu"
 msgid "CiviReport"
 msgstr "Civi報表"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Components"
 msgstr "組件"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Conduct Survey"
 msgstr "聯絡人來源"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Configuration Checklist"
 msgstr "系統設定檢查表"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Configure Widget"
 msgstr "設置小工具"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Confirm"
 msgstr "確認"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Confirm Event Registration"
 msgstr "確認活動報名"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Contact Dashboard"
 msgstr "聯絡人總覽"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Contact Summary"
 msgstr "聯絡人概況"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Contact Types"
 msgstr "聯絡人類型"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Contribution Amounts"
 msgstr "捐款金額"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Contributions"
 msgstr "捐款"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Contribution Summary - Chart View"
 msgstr "捐款概況 - 圖表查看"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Contribution Types"
 msgstr "捐款類型"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Create Reports from Templates"
 msgstr "從範本新增報表"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Current and Upcoming Events"
 msgstr "目前及即將舉行的活動"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Custom Data"
 msgstr "自訂資料"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Custom Data Fields"
 msgstr "自訂資料欄位"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Custom Field - Add"
 msgstr "自訂欄位 - 移動"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Custom Field - Edit"
 msgstr "自訂欄位 - 移動"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Custom Field - Move"
 msgstr "自訂欄位 - 移動"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Custom Field - Options"
 msgstr "自訂欄位 - 選項"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Custom Searches"
 msgstr "自訂搜尋"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Date Formatting"
 msgstr "日期格式"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Debugging"
 msgstr "除錯"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Dedupe Exceptions"
 msgstr "性別選項"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Delete Contact"
 msgstr "刪除聯絡人"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Domain Information"
 msgstr "網域資訊頁"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Download Errors"
 msgstr "下載錯誤"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Draft and Unscheduled Mailings"
 msgstr "草稿與未排程的電子報"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Edit Field"
 msgstr "編輯欄位"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Edit Related Contact"
 msgstr "編輯相關聯絡人"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Email a Contact"
 msgstr "寄email給聯絡人"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Email address verified"
 msgstr "Email 位址無效"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Email Greetings"
 msgstr "Email問候語"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Event Fees"
 msgstr "活動費用"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Event Info and Settings"
 msgstr "活動資料及設定"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Event Information"
 msgstr "活動資訊"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Event Location"
 msgstr "活動地點"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Event Name Badge Templates"
 msgstr "活動範本"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Event Online Registration"
 msgstr "線上報名"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Event Participants List"
 msgstr "活動參加者列表"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Event Registration"
 msgstr "活動報名"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Event Templates"
 msgstr "活動範本"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Event Types"
 msgstr "活動類型"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Export Contacts"
 msgstr "匯出聯絡人"
 
-#, fuzzy
 msgctxt "menu"
 msgid "File System Paths"
 msgstr "檔案系統路徑"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Find Activities"
 msgstr "尋找測試動態"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Find and Merge Duplicate Contacts"
 msgstr "搜尋並合併重複的聯絡人"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Find Cases"
 msgstr "搜尋個案"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Find Contacts"
 msgstr "搜尋聯絡人"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Find Contributions"
 msgstr "搜尋捐款"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Find Grants"
 msgstr "搜尋贊助"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Find Members"
 msgstr "搜尋會員"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Find Participants"
 msgstr "搜尋活動參加者"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Find Pledges"
 msgstr "搜尋認捐"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Forward Mailing"
 msgstr "轉寄電子報"
 
-#, fuzzy
 msgctxt "menu"
 msgid "From Email Addresses"
 msgstr "Email寄件者"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Gender Options"
 msgstr "性別選項"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Global Settings"
 msgstr "全域設定"
@@ -563,447 +457,358 @@ msgctxt "menu"
 msgid "GOTV (Track Voters)"
 msgstr ""
 
-#, fuzzy
 msgctxt "menu"
 msgid "Grant Types"
 msgstr "補助款類型"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Group Members"
 msgstr "群組會員"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Groups"
 msgstr "群組"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Headers, Footers, and Automated Messages"
 msgstr "頁首、頁尾、自動回覆訊息"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Import"
 msgstr "匯入"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Import Activities"
 msgstr "匯入動態記錄"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Import Contacts"
 msgstr "匯入聯絡人資料"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Import Contributions"
 msgstr "匯入捐款資料"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Import/Export Mappings"
 msgstr "匯入/匯出對應"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Import Memberships"
 msgstr "匯入會員"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Import Participants"
 msgstr "匯入參加者"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Include Profiles"
 msgstr "包括個人檔案"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Individual Prefixes (Ms, Mr...)"
 msgstr "個人稱銜(女士、先生…)"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Individual Suffixes (Jr, Sr...)"
 msgstr "個人稱呼字尾(Jr, Sr...)"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Instant Messenger Services"
 msgstr "即時通訊服務"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Localization"
 msgstr "地區及語系"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Location Types (Home, Work...)"
 msgstr "地點類型（住家、工作場所）"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Log out"
 msgstr "登出"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Mail Accounts"
 msgstr "郵件帳號"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Mailer Settings"
 msgstr "郵件設定"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Mailing Event"
 msgstr "郵件活動"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Mailing Report"
 msgstr "郵件報表"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Manage ACLs"
 msgstr "管理權限"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Manage Contribution Pages"
 msgstr "管理募款頁"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Manage Custom Searches"
 msgstr "管理自訂搜尋"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Manage Events"
 msgstr "管理活動"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Manage Groups"
 msgstr "管理群組"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Manage Premiums"
 msgstr "管理感謝禮"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Manage Price Sets"
 msgstr "管理價格表"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Manage Tags (Categories)"
 msgstr "管理 Tags（分類）"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Manage Templates"
 msgstr "管理範本"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Map Event Location"
 msgstr "標記活動地點在地圖上"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Map Location(s)"
 msgstr "地圖位置"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Mapping and Geocoding"
 msgstr "地圖與經緯度對應"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Memberships"
 msgstr "會員"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Membership Section"
 msgstr "會籍設定"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Membership Status Rules"
 msgstr "會員狀態規則"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Membership Types"
 msgstr "會員類型"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Merge Contact"
 msgstr "合併聯絡人"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Message Templates"
 msgstr "訊息範本"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Miscellaneous"
 msgstr "其他"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Mobile Phone Providers"
 msgstr "電信業者"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Navigation Menu"
 msgstr "導覽選單"
 
-#, fuzzy
 msgctxt "menu"
 msgid "New Activity"
 msgstr "新增動態"
 
-#, fuzzy
 msgctxt "menu"
 msgid "New Campaign"
 msgstr "募款串連"
 
-#, fuzzy
 msgctxt "menu"
 msgid "New CiviCRM Profile"
 msgstr "建立 CiviCRM 個人檔案"
 
-#, fuzzy
 msgctxt "menu"
 msgid "New Contact"
 msgstr "新增聯絡人"
 
-#, fuzzy
 msgctxt "menu"
 msgid "New Contribution"
 msgstr "新增捐款"
 
-#, fuzzy
 msgctxt "menu"
 msgid "New Contribution Page"
 msgstr "新增募款頁"
 
-#, fuzzy
 msgctxt "menu"
 msgid "New Event"
 msgstr "新增活動"
 
-#, fuzzy
 msgctxt "menu"
 msgid "New Grant"
 msgstr "新增贊助"
 
-#, fuzzy
 msgctxt "menu"
 msgid "New Group"
 msgstr "新增群組"
 
-#, fuzzy
 msgctxt "menu"
 msgid "New Household"
 msgstr "新增家庭"
 
-#, fuzzy
 msgctxt "menu"
 msgid "New Individual"
 msgstr "新增個人"
 
-#, fuzzy
 msgctxt "menu"
 msgid "New Mailing"
 msgstr "新增電子報"
 
-#, fuzzy
 msgctxt "menu"
 msgid "New Member"
 msgstr "新增會員"
 
-#, fuzzy
 msgctxt "menu"
 msgid "New Organization"
 msgstr "新增組織"
 
-#, fuzzy
 msgctxt "menu"
 msgid "New Petition"
 msgstr "新增捐款"
 
-#, fuzzy
 msgctxt "menu"
 msgid "New Pledge"
 msgstr "新增認捐"
 
-#, fuzzy
 msgctxt "menu"
 msgid "New Price Set"
 msgstr "新增價格表"
 
-#, fuzzy
 msgctxt "menu"
 msgid "New Survey"
 msgstr "New Jersey"
 
-#, fuzzy
 msgctxt "menu"
 msgid "New Tag"
 msgstr "新增Tag"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Notes"
 msgstr "註記"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Open Case"
 msgstr "開啟個案"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Option Groups"
 msgstr "選項群組"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Option Values"
 msgstr "選項值"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Optout"
 msgstr "選擇退出"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Participant Listing Templates"
 msgstr "參加者列表範本"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Participant Role"
 msgstr "參加者身分"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Participant Status"
 msgstr "參加者狀態"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Payment Instruments"
 msgstr "付款工具"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Payment Processor"
 msgstr "金流機制"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Payment Processor Type"
 msgstr "金流機制類型"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Personal Campaign Pages"
 msgstr "個人募款活動頁"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Personal Campaign Page Settings"
 msgstr "個人募款串連設定 （%1）"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Phone Type"
 msgstr "電話類型"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Pledge Payments"
 msgstr "認捐付款"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Pledges"
 msgstr "認捐"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Postal Greetings"
 msgstr "信件問候"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Preferred Communication Methods"
 msgstr "偏好聯絡方式"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Preferred Languages"
 msgstr "新增語言"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Premiums"
 msgstr "感謝禮"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Preview Mailing"
 msgstr "預覽電子報"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Price Field Options"
 msgstr "價格欄位選項"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Price Fields"
 msgstr "價格欄位"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Price Sets"
 msgstr "價格設定"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Print Event Name Badge"
 msgstr "參加者（活動名稱）"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Process Uploaded Images"
 msgstr "存取上傳檔案"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Profile Settings"
 msgstr "設定個人檔案"
@@ -1012,32 +817,26 @@ msgctxt "menu"
 msgid "Record Respondents Interview"
 msgstr ""
 
-#, fuzzy
 msgctxt "menu"
 msgid "Redaction Rules"
 msgstr "擬訂規條"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Register New Participant"
 msgstr "登記新的活動參加者"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Register Report"
 msgstr "報名者報表"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Registration Page"
 msgstr "報名頁"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Relationships"
 msgstr "關係"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Relationship Types"
 msgstr "關係類型"
@@ -1046,12 +845,10 @@ msgctxt "menu"
 msgid "Release Respondents"
 msgstr ""
 
-#, fuzzy
 msgctxt "menu"
 msgid "Report"
 msgstr "報表"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Reports Listing"
 msgstr "報表清單"
@@ -1060,37 +857,30 @@ msgctxt "menu"
 msgid "Reserve Respondents"
 msgstr ""
 
-#, fuzzy
 msgctxt "menu"
 msgid "Resubscribe"
 msgstr "重新訂閱"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Safe File Extension Options"
 msgstr "安全檔案延伸選項"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Scheduled and Sent Mailings"
 msgstr "已排定與已寄送的電子報"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Search"
 msgstr "搜尋"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Search Builder"
 msgstr "搜尋產生器"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Sending Mail"
 msgstr "傳送郵件"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Setup a Personal Campaign Page - Account Information"
 msgstr "建立個人募款活動頁 - 帳號資訊"
@@ -1099,117 +889,94 @@ msgctxt "menu"
 msgid "Sign Petition"
 msgstr ""
 
-#, fuzzy
 msgctxt "menu"
 msgid "Simple Search"
 msgstr "簡易搜尋"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Site URLs"
 msgstr "網站網址"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Smtp Server"
 msgstr "SMTP 伺服器"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Subscribe"
 msgstr "訂閱"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Sunlight"
 msgstr "規則權重"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Survey Types"
 msgstr "活動類型"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Synchronize Users to Contacts"
 msgstr "同步使用者到聯絡人"
 
-#, fuzzy
 msgctxt "menu"
 msgid "System Preferences"
 msgstr "系統設定"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Tags"
 msgstr "Tag"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Tell a Friend"
 msgstr "轉寄朋友"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Thank You"
 msgstr "致謝頁"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Thank-you and Receipting"
 msgstr "致謝及收據"
 
-#, fuzzy
 msgctxt "menu"
 msgid "This should never be seen"
 msgstr "此不應被看見"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Title and Settings"
 msgstr "標題及設定 "
 
-#, fuzzy
 msgctxt "menu"
 msgid "Unsubscribe"
 msgstr "取消訂閱"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Update Directory Path and URL"
 msgstr "更新目錄路徑和網址"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Upgrade CiviCRM"
 msgstr "升級 CiviCRM"
 
-#, fuzzy
 msgctxt "menu"
 msgid "User Framework Settings"
 msgstr "使用者架構設定"
 
-#, fuzzy
 msgctxt "menu"
 msgid "View Activity"
 msgstr "查看動態"
 
-#, fuzzy
 msgctxt "menu"
 msgid "View Date Prefences"
 msgstr "查看日期設定"
 
-#, fuzzy
 msgctxt "menu"
 msgid "View Petition Signatures"
 msgstr "瀏覽募款頁面"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Website Types"
 msgstr "ase 類型"
 
-#, fuzzy
 msgctxt "menu"
 msgid "Word Replacements"
 msgstr "置換"
