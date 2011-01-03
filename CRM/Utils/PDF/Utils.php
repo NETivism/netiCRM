@@ -118,7 +118,7 @@ class CRM_Utils_PDF_Utils {
     static function html2pdf( $text,
                               $fileName = 'civicrm.pdf',
                               $orientation = 'landscape',
-                              $paperSize   = 'a3',
+                              $paperSize   = 'a4',
                               $output = false ) {
         require_once 'tcpdf/tcpdf.php';
         $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, $paperSize, true, 'UTF-8', false);
@@ -127,15 +127,15 @@ class CRM_Utils_PDF_Utils {
         //$pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.' 049', PDF_HEADER_STRING);
 
         // set header and footer fonts
-        //$pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
-        //$pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+        $pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+        $pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
         // set default monospaced font
-        //$pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+        $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
 
         //set margins
-        //$pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
-        //$pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
-        //$pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+        $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+        $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+        $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
         
         //set auto page breaks
         $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
@@ -175,14 +175,30 @@ class CRM_Utils_PDF_Utils {
         $html = str_replace('src="http://'.$_SERVER['HTTP_HOST']."/", 'src="', $html);
         $style = '
 <style>
+h1 {
+  color: #000000;
+  font-size: 18pt;
+  text-decoration: underline;
+  text-align: center;
+  padding: 0;
+  margin: 0;
+}
 table { 
-  border: 1px solid #777; 
+  color: #333333;
+  font-size: 10pt;
+  border: 1px solid #aaaaaa;
+  background-color: #efefef;
 }
-table thead td {
-  background: #CCC;
+td {
+  font-size: 10pt;
+  padding: 3px;
+  border: 1px solid #cccccc;
+  background-color: #ffffff;
 }
-table td {
-  padding: 5px; border: 1px solid #777;
+th {
+  font-size: 10pt;
+  text-align: center;
+  padding: 3px;
 }
 </style>';
         $html = $style."\n".$html;
