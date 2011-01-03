@@ -228,11 +228,11 @@ class CRM_Core_I18n
                 
                 // if not plural, but the locale's set, translate
             } elseif ($this->_phpgettext) {
-                if ($context) {
-                    $text = $this->_phpgettext->pgettext($context, $text);
-                } else {
+                //if ($context) {
+                //    $text = $this->_phpgettext->pgettext($context, $text);
+                //} else {
                     $text = $this->_phpgettext->translate($text);
-                }
+                //}
             }
         }
 
