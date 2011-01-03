@@ -4,13 +4,13 @@
 SCHEMA=schema/Schema.xml 
 # define your database name here, will be overriden by 
 # FIRST command line argument if given
-DBNAME=netivism_civicrm
+#DBNAME=netivism_civicrm
 # define your database usernamename here, will be overriden by 
 # SECOND command line argument if given
-DBUSER=netivism
+#DBUSER=netivism
 # define your database password here, will be overriden by 
 # THIRD command line argument if given
-DBPASS=netivism123
+#DBPASS=netivism123
 # any extra args you need in your mysql connect string
 # number of arguments should be specified within "" 
 # FOURTH command line argument if given
@@ -26,7 +26,7 @@ DBLOAD=
 # Set a special SQL filename here which you want to load
 # IN ADDITION TO either civicrm_generated or civicrm_data.
 # The DBADD file must be in the sql directory.
-# DBADD=
+DBADD="civicrm_data.zh_TW.mysql"
 
 # ==========================================================
 # No changes below, please.
@@ -86,15 +86,15 @@ mysql -u $DBUSER $PASSWDSECTION $DBARGS $DBNAME < civicrm.mysql
 #mysql -u $DBUSER $PASSWDSECTION $DBARGS $DBNAME < trigger.mysql
 
 # load civicrm_generated.mysql sample data unless special DBLOAD is passed
-if [ -z $DBLOAD ]; then
-    echo; echo Populating database with example data - civicrm_generated.mysql
-    mysql -u $DBUSER $PASSWDSECTION $DBNAME < civicrm_generated.mysql
-else
-    echo; echo Populating database with required data - civicrm_data.mysql
-    mysql -u $DBUSER $PASSWDSECTION $DBNAME < civicrm_data.mysql
-    echo; echo Populating database with $DBLOAD data
-    mysql -u $DBUSER $PASSWDSECTION $DBNAME < $DBLOAD
-fi
+#if [ -z $DBLOAD ]; then
+#    echo; echo Populating database with example data - civicrm_generated.mysql
+#    mysql -u $DBUSER $PASSWDSECTION $DBNAME < civicrm_generated.mysql
+#else
+#    echo; echo Populating database with required data - civicrm_data.mysql
+#    mysql -u $DBUSER $PASSWDSECTION $DBNAME < civicrm_data.mysql
+#    echo; echo Populating database with $DBLOAD data
+#    mysql -u $DBUSER $PASSWDSECTION $DBNAME < $DBLOAD
+#fi
 
 # load additional script if DBADD defined
 if [ ! -z $DBADD ]; then
