@@ -3379,7 +3379,7 @@ msgstr "- 選擇國家 -"
 
 #: CRM/Contact/Form/Edit/Address.php
 msgid "Share Address With"
-msgstr "分享地址"
+msgstr "共享地址"
 
 #: CRM/Contact/Form/Edit/Address.php
 msgid "Your install is missing required \"Shared Address\" profile."
