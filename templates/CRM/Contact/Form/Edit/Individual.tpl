@@ -71,12 +71,13 @@ var checkSimilar =  {$checkSimilar};
 
 <table class="form-layout-compressed">
     <tr>
-        {if $form.prefix_id}
-	    <td>
-                {$form.prefix_id.label}<br/>
-                {$form.prefix_id.html}
-            </td>    
-        {/if}
+        <td>
+            {$form.last_name.label}<br />
+            {if $action == 2}
+                {include file='CRM/Core/I18n/Dialog.tpl' table='civicrm_contact' field='last_name' id=$contactId}
+            {/if}
+            {$form.last_name.html}
+        </td>
         <td>
             {$form.first_name.label}<br /> 
             {if $action == 2}
@@ -84,19 +85,18 @@ var checkSimilar =  {$checkSimilar};
             {/if}
             {$form.first_name.html}
         </td>
+        {if $form.prefix_id}
+	    <td>
+                {$form.prefix_id.label}<br/>
+                {$form.prefix_id.html}
+            </td>    
+        {/if}
         <td>
             {$form.middle_name.label}<br />
             {if $action == 2}
                 {include file='CRM/Core/I18n/Dialog.tpl' table='civicrm_contact' field='middle_name' id=$contactId}
             {/if}
             {$form.middle_name.html}
-        </td>
-        <td>
-            {$form.last_name.label}<br />
-            {if $action == 2}
-                {include file='CRM/Core/I18n/Dialog.tpl' table='civicrm_contact' field='last_name' id=$contactId}
-            {/if}
-            {$form.last_name.html}
         </td>
 	{if $form.suffix_id}
             <td>
@@ -107,11 +107,6 @@ var checkSimilar =  {$checkSimilar};
     </tr>
     
     <tr>
-        <td colspan="2">
-            {$form.current_employer.label}&nbsp;{help id="id-current-employer" file="CRM/Contact/Form/Contact.hlp"}<br />
-            {$form.current_employer.html|crmReplace:class:twenty}
-            <div id="employer_address" style="display:none;"></div>
-        </td>
         <td>
             {$form.job_title.label}<br />
             {$form.job_title.html}
@@ -125,6 +120,11 @@ var checkSimilar =  {$checkSimilar};
                {$form.contact_sub_type.label}<br />
                {$form.contact_sub_type.html}
             {/if}
+        </td>
+        <td colspan="2">
+            {$form.current_employer.label}&nbsp;{help id="id-current-employer" file="CRM/Contact/Form/Contact.hlp"}<br />
+            {$form.current_employer.html|crmReplace:class:twenty}
+            <div id="employer_address" style="display:none;"></div>
         </td>
     </tr>
 </table>
