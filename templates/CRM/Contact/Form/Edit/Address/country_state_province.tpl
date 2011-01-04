@@ -23,8 +23,6 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
-<tr><td colspan="3" style="padding:0;">
-<table style="border:none;">
 <tr>
    {if $form.address.$blockId.country_id}
      <td>
@@ -32,13 +30,29 @@
         {$form.address.$blockId.country_id.html}
      </td>
    {/if}
+</tr>
+<tr>
+  <table>
+    <tr>
    {if $form.address.$blockId.state_province_id} 
-     <td>
+     <td width="50px">
         {$form.address.$blockId.state_province_id.label}<br />
         {$form.address.$blockId.state_province_id.html}
      </td>
    {/if}
-   <td colspan="2">&nbsp;&nbsp;</td>
+    {if $form.address.$blockId.city}
+       <td width="50px">
+          {$form.address.$blockId.city.label}<br />
+          {$form.address.$blockId.city.html}
+       </td>
+    {/if}
+    {if $form.address.$blockId.postal_code}
+       <td>
+          {$form.address.$blockId.postal_code.label}<br />
+          {$form.address.$blockId.postal_code.html}
+          {$form.address.$blockId.postal_code_suffix.html}<br />
+       </td>
+    {/if}
+    </tr>
+  </table>
 </tr>
-</table>
-</td></tr>

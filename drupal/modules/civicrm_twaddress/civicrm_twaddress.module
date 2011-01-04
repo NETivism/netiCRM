@@ -1,0 +1,77 @@
+<?php
+/**
+ * Implementation of hook_civicrm_buildForm().
+ */
+function civicrm_twaddress_civicrm_buildForm($formName, &$form) {
+  static $add;
+  $enable = TRUE;
+  $form_name = $form->_attributes['name'];
+  foreach ($form->_elements as $k => $e) {
+    $name = $e->_attributes['name'];
+    if(strstr($name, 'postal_code')){
+      $override['zipName']['key'] = $name;
+      $override['zipName']['default'] = $form->getElement($name)->_findValue($form->_defaultValues);
+    }
+    if(strstr($name, 'state_province')){
+      $override['countyName']['key'] = $name;
+      foreach($e->_options as $v){
+        if($v['attr']['value']){
+          $county_options[$v['attr']['value']] = $v['text'];
+        }
+      }
+      $default = $form->getElement($name)->_findValue($form->_defaultValues);
+      $override['countyName']['default'] = $county_options[$default];
+      $form->_elements[$k]->_label = '縣市';
+    }
+    if(strstr($name, 'city')){
+      $label = $form->getElement($name)->_label;
+      $default = $form->getElement($name)->_findValue($form->_defaultValues);
+      $form->removeElement($name);
+      $form->addElement('select', $name, '鄉鎮市區', array( 0=>'鄉鎮市區'));
+      $override['areaName']['key'] = $name;
+      $override['areaName']['default'] = $default;
+    }
+    if(strstr($name, 'country')){
+      $enable = FALSE;
+    }
+  }
+
+  if(count($override)>=3 && $enable){
+    $path = drupal_get_path("module",'civicrm_twaddress');
+    if(!$add){
+      drupal_add_js($path."/twzipcode.js");
+      $add = 1;
+    }
+    foreach($county_options as $v => $l){
+      $cjs .= 'county['.$v.']="'.$l.'";'."\n";
+    }
+    $js = '
+    var county = new Array();
+    '.$cjs.'
+    function getcounty(n){
+      return county[n] ? county[n] : n;
+    }
+    cj(document).ready(function(){
+      cj("form[name='.$form_name.']").twzipcode({
+        zipName:"'.$override['zipName']['key'].'",
+        countyName:"'.$override['countyName']['key'].'",
+        areaName:"'.$override['areaName']['key'].'",
+        zipSel:"'.$override['zipName']['default'].'",
+        countySel:"'.$override['countyName']['default'].'",
+        areaSel:"'.$override['areaName']['default'].'"
+      });
+
+      var x;
+      for(x in county){
+        var county_name = county[x];
+        var county_id = x;
+        cj("select[name=\''.$override['countyName']['key'].'\'] option[value=\'"+county_name +"\']").each(function(){
+          $(this).val(county_id);
+        });
+      }
+    });
+    ';
+    drupal_add_js($js , 'inline');
+  }
+}
+
