@@ -24,7 +24,7 @@
  *
  * Wed, 25 August 2010 10:58:54 GMT
  */
-(function($) {
+;(function($) {
 
   $.fn.extend({
 

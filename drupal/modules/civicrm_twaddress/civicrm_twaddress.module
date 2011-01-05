@@ -4,6 +4,11 @@
  */
 function civicrm_twaddress_civicrm_buildForm($formName, &$form) {
   static $add;
+  // we don't support outside of civicrm yet
+  if(arg(0) != 'civicrm'){
+    return;
+  }
+  //
   $enable = TRUE;
   $form_name = $form->_attributes['name'];
   foreach ($form->_elements as $k => $e) {
@@ -37,8 +42,13 @@ function civicrm_twaddress_civicrm_buildForm($formName, &$form) {
   }
 
   if(count($override)>=3 && $enable){
-    $path = drupal_get_path("module",'civicrm_twaddress');
     if(!$add){
+      /*
+      if(arg(0) != 'civicrm'){
+        drupal_add_js( 'var cj = jQuery.noConflict(); $ = cj;', 'inline' );
+      }
+      */
+      $path = drupal_get_path("module",'civicrm_twaddress');
       drupal_add_js($path."/twzipcode.js");
       $add = 1;
     }
@@ -75,3 +85,41 @@ function civicrm_twaddress_civicrm_buildForm($formName, &$form) {
   }
 }
 
+/**
+ * Implementation of hook_civicrm_postProcess()
+ */
+function civicrm_twaddress_civicrm_postProcess($formName, &$form){
+  foreach($form->_elementIndex as $n => $i){
+    if(strstr($n, 'city')){
+      $city = $form->getElement($n);
+      if(is_array($_POST['address'])){
+        $addr = $_POST['address'];
+      }
+      else{
+        $city_value = $city->_findValue($_POST);
+        $addr = array(1=> array(
+          'location_type_id' => 1,
+          'city' => $city_value,
+        ));
+      }
+      break;
+    }
+  }
+  if(!empty($addr)){
+    foreach($addr as $i => $a){
+      foreach($a as $name => $value){
+        if(!strstr($name ,'city') && $name != 'location_type_id'){
+          unset($addr[$i][$name]);
+        }
+      }
+    }
+    global $civicrm_root;
+    require_once 'api/v2/Location.php';
+    $params = array(
+      'version' => '3.0',
+      'contact_id'    => $form->_contactId,
+      'address'     => $addr
+    );
+    $location =& civicrm_location_update( $params );
+  } 
+}
