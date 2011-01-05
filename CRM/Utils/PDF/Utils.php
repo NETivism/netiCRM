@@ -42,6 +42,8 @@ class CRM_Utils_PDF_Utils {
                             $output = false,
                             $orientation = 'landscape',
                             $paperSize   = 'a3' ) {
+                            print 'domlib!!!!!!!!!!!!!!!!!!!!!!';
+        /*
         require_once 'packages/dompdf/dompdf_config.inc.php';
         $dompdf = new DOMPDF( );
         
@@ -113,6 +115,7 @@ class CRM_Utils_PDF_Utils {
         } else {
             $dompdf->stream( $fileName );
         }
+        */
     }
 
     static function html2pdf( $text,
@@ -159,13 +162,9 @@ class CRM_Utils_PDF_Utils {
 
         $htmlElementstoStrip = array(
           '@<script[^>]*?>.*?</script>@si',
-          '@<head[^>]*?>.*?</head>@siu',
           '@<style[^>]*?>.*?</style>@siU', 
-          '@<body>@siu',
-          '@</body>@siu',
-          '@<html[^>]*?>@siu',
-          '@</html>@siu',
-          '@<!DOCTYPE[^>]*?>@siu',
+          '/font-family:[^;]+;/iU',
+          '/font:[^;]+;/iU',
         );
         
         foreach ( $values as $value ) {
@@ -199,15 +198,19 @@ th {
   font-size: 10pt;
   text-align: center;
   padding: 3px;
+  background-color: #efefef;
 }
 </style>';
         $html = $style."\n".$html;
-//        print htmlspecialchars($html);
-//        exit();
 
         $pdf->writeHTML($html, true, false, true, false, '');
         $pdf->lastPage();
 
-        $pdf->Output( $fileName ,'D');
+        if($output){
+          return $pdf->Output( $fileName ,'S');
+        }
+        else{
+          $pdf->Output( $fileName ,'D');
+        }
     }
 }
