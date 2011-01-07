@@ -113,9 +113,9 @@ class CRM_Utils_PDF_Label extends TCPDF {
        }
        
        parent::__construct('P', $tFormat['metric'], $tFormat['paper-size']);
+       $this->SetFont('arialunicid0', '', 10); //uncomment this to use non-default font
        $this->SetFormat($tFormat);
        $this->generatorMethod = null;
-       $this->SetFontName('arialunicid0'); //uncomment this to use non-default font
        $this->SetMargins(0,0);
        $this->SetAutoPageBreak(false);
        

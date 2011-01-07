@@ -43,6 +43,11 @@ class CRM_Utils_PDF_Utils {
                             $orientation = 'landscape',
                             $paperSize   = 'a3' ) {
                             print 'domlib!!!!!!!!!!!!!!!!!!!!!!';
+    return $this->html2pdf( $text,
+                              $fileName,
+                              $orientation,
+                              $paperSize,
+                              $output);
         /*
         require_once 'packages/dompdf/dompdf_config.inc.php';
         $dompdf = new DOMPDF( );
