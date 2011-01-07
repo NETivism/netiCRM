@@ -8,6 +8,10 @@ function civicrm_twaddress_civicrm_buildForm($formName, &$form) {
   if(arg(0) != 'civicrm'){
     return;
   }
+  // we don't change form on step 2 / 3 / 4
+  if(strpos($formName, 'Confirm') || strpos($formName, 'ThankYou')){
+    return;
+  }
   //
   $enable = TRUE;
   $form_name = $form->_attributes['name'];
@@ -29,11 +33,12 @@ function civicrm_twaddress_civicrm_buildForm($formName, &$form) {
       $form->_elements[$k]->_label = '縣市';
     }
     if(strstr($name, 'city')){
-      $label = $form->getElement($name)->_label;
+      // hide field
+      $form->_elements[$k]->_label = '鄉鎮市區';
+
       $default = $form->getElement($name)->_findValue($form->_defaultValues);
-      $form->removeElement($name);
-      $form->addElement('select', $name, '鄉鎮市區', array( 0=>'鄉鎮市區'));
-      $override['areaName']['key'] = $name;
+      $override['areaName']['key'] = '_'.$name;
+      $override['areaName']['name'] = $name;
       $override['areaName']['default'] = $default;
     }
     if(strstr($name, 'country')){
@@ -55,6 +60,8 @@ function civicrm_twaddress_civicrm_buildForm($formName, &$form) {
     foreach($county_options as $v => $l){
       $cjs .= 'county['.$v.']="'.$l.'";'."\n";
     }
+    $insert = "<select name='{$override['areaName']['key']}' class='form-select'></select>";
+
     $js = '
     var county = new Array();
     '.$cjs.'
@@ -62,6 +69,13 @@ function civicrm_twaddress_civicrm_buildForm($formName, &$form) {
       return county[n] ? county[n] : n;
     }
     cj(document).ready(function(){
+      cj("'.$insert.'").insertAfter("input[name=\''.$override['areaName']['name'].'\']");
+      cj("input[name=\''.$override['areaName']['name'].'\']").hide();
+      cj("select[name=\''.$override['areaName']['key'].'\']").change(function(){
+        var v = $(this).val();
+        cj("input[name=\''.$override['areaName']['name'].'\']").val(v);
+      });
+
       cj("form[name='.$form_name.']").twzipcode({
         zipName:"'.$override['zipName']['key'].'",
         countyName:"'.$override['countyName']['key'].'",
@@ -83,43 +97,4 @@ function civicrm_twaddress_civicrm_buildForm($formName, &$form) {
     ';
     drupal_add_js($js , 'inline');
   }
-}
-
-/**
- * Implementation of hook_civicrm_postProcess()
- */
-function civicrm_twaddress_civicrm_postProcess($formName, &$form){
-  foreach($form->_elementIndex as $n => $i){
-    if(strstr($n, 'city')){
-      $city = $form->getElement($n);
-      if(is_array($_POST['address'])){
-        $addr = $_POST['address'];
-      }
-      else{
-        $city_value = $city->_findValue($_POST);
-        $addr = array(1=> array(
-          'location_type_id' => 1,
-          'city' => $city_value,
-        ));
-      }
-      break;
-    }
-  }
-  if(!empty($addr)){
-    foreach($addr as $i => $a){
-      foreach($a as $name => $value){
-        if(!strstr($name ,'city') && $name != 'location_type_id'){
-          unset($addr[$i][$name]);
-        }
-      }
-    }
-    global $civicrm_root;
-    require_once 'api/v2/Location.php';
-    $params = array(
-      'version' => '3.0',
-      'contact_id'    => $form->_contactId,
-      'address'     => $addr
-    );
-    $location =& civicrm_location_update( $params );
-  } 
 }
