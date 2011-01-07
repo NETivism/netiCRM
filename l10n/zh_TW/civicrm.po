@@ -48917,9 +48917,6 @@ msgstr "花蓮縣"
 msgid "Ilan County"
 msgstr "宜蘭縣"
 
-msgid "Kaohsiung County"
-msgstr "高雄縣"
-
 msgid "Miaoli County"
 msgstr "苗栗縣"
 
@@ -48932,14 +48929,8 @@ msgstr "澎湖縣"
 msgid "Pingtung County"
 msgstr "屏東縣"
 
-msgid "Taichung County"
-msgstr "台中縣"
-
-msgid "Tainan County"
-msgstr "台南縣"
-
 msgid "Taipei County"
-msgstr "台北縣"
+msgstr "新北市"
 
 msgid "Taitung County"
 msgstr "台東縣"
@@ -48952,6 +48943,12 @@ msgstr "雲林縣"
 
 msgid "Keelung City"
 msgstr "基隆市"
+
+msgid "Lienchiang County"
+msgstr "連江縣"
+
+msgid "Kinmen County"
+msgstr "金門縣"
 
 msgid "Arusha"
 msgstr "Arusha"
