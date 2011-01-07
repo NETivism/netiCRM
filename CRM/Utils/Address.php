@@ -117,7 +117,7 @@ class CRM_Utils_Address
                       'supplemental_address_1' => CRM_Utils_Array::value( 'supplemental_address_1', $fields ),
                       'supplemental_address_2' => CRM_Utils_Array::value( 'supplemental_address_2', $fields ),
                       'city'                   => CRM_Utils_Array::value( 'city', $fields ),
-                      'state_province_name'    => CRM_Utils_Array::value( 'state_province_name', $fields ),
+                      'state_province_name'    => ts(CRM_Utils_Array::value( 'state_province_name', $fields )),
                       'county'                 => CRM_Utils_Array::value( 'county', $fields ),
                       'state_province'         => CRM_Utils_Array::value( 'state_province', $fields ),
                       'postal_code'            => $fullPostalCode,
