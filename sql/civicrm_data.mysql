@@ -3617,13 +3617,10 @@ INSERT INTO civicrm_state_province (id, country_id, abbreviation, name) VALUES
 (4850, 1208, "HSQ", "Hsinchu County"),
 (4851, 1208, "HUA", "Hualien County"),
 (4852, 1208, "ILA", "Ilan County"),
-(4853, 1208, "KHQ", "Kaohsiung County"),
 (4854, 1208, "MIA", "Miaoli County"),
 (4855, 1208, "NAN", "Nantou County"),
 (4856, 1208, "PEN", "Penghu County"),
 (4857, 1208, "PIF", "Pingtung County"),
-(4858, 1208, "TXQ", "Taichung County"),
-(4859, 1208, "TNQ", "Tainan County"),
 (4860, 1208, "TPQ", "Taipei County"),
 (4861, 1208, "TTT", "Taitung County"),
 (4862, 1208, "TAO", "Taoyuan County"),
@@ -3993,6 +3990,9 @@ INSERT INTO civicrm_state_province (id, country_id, abbreviation, name) VALUES
 (5222, 1208, "CYI", "Chiayi City"),
 (5223, 1208, "HSZ", "Hsinchu City"),
 (5224, 1208, "TNN", "Tainan City"),
+(5225, 1208, "LCI", "Lienchiang County"),
+(5226, 1208, "KMN", "Kinmen County"),
+
 (9000, 1196, "NW", "North West"), 
 
 (9986, 1226, "TWR", "Tyne and Wear"),
