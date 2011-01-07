@@ -8,6 +8,11 @@ function civicrm_twaddress_civicrm_buildForm($formName, &$form) {
   if(arg(0) != 'civicrm'){
     return;
   }
+  
+  // we don't process report form
+  if(strpos($formName, 'Report_Form')){
+    return;
+  }
   // we don't change form on step 2 / 3 / 4
   if(strpos($formName, 'Confirm') || strpos($formName, 'ThankYou')){
     return;
