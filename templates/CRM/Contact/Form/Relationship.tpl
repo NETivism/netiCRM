@@ -33,8 +33,8 @@
         <table class="crm-info-panel">
 	    {foreach from=$viewRelationship item="row"}
             <tr>
-                <td class="label">{$row.relation}</td> 
                 <td><a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$row.cid`"}">{$row.name}</a></td>
+                <td class="label">的{$row.relation}</td> 
             </tr>
             {if $isCurrentEmployer}
                 <tr><td class="label">{ts}Current Employee?{/ts}</td><td>{ts}Yes{/ts}</td></tr>
@@ -84,10 +84,10 @@
                 {ts}Select the relationship type. Then locate target contact(s) for this relationship by entering a complete or partial name and clicking 'Search'.{/ts}
                 </div>
             {/if}
+            {if $action EQ 2} {* action = update *}
             <table class="form-layout-compressed">
              <tr class="crm-relationship-form-block-relationship_type_id">
-               <td class="label">{$form.relationship_type_id.label}</td><td>{$form.relationship_type_id.html}</td>
-            {if $action EQ 2} {* action = update *}
+               <td class="label">{$form.relationship_type_id.label}</td><td><label>{$sort_name_b}</label></td><td>的{$form.relationship_type_id.html}</td>
                 {literal}
                 <script type="text/javascript">
                     var relType = 0;
@@ -101,7 +101,8 @@
                     });
                 </script>
                 {/literal} 
-                <td><label>{$sort_name_b}</label></td></tr>
+                
+                </tr>
                 <tr class="crm-relationship-form-block-is_current_employer">
                   <td class="label">
                      <span id="employee"><label>{ts}Current Employee?{/ts}</label></span>
@@ -111,9 +112,9 @@
                 </tr>
              </table>  
             {else} {* action = add *}
-             </tr>
-             <tr class="crm-relationship-form-block-rel_contact">
-               <td class="label">{$form.rel_contact.label}</td>
+            <table class="form-layout-compressed">
+             <tr class="crm-relationship-form-block-relationship_type_id">
+               <td class="label">{$form.relationship_type_id.label}</td>
                 {literal}
                   <script type="text/javascript">
                     var relType = 0;
@@ -154,6 +155,7 @@
 				  </script>
                 {/literal}
                 <td>{$form.rel_contact.html}</td>
+                <td>的{$form.relationship_type_id.html}</td>
               </tr>
               </table>
                 <div class="crm-submit-buttons">
@@ -274,14 +276,14 @@
                             {if $action eq 1}
                                 <strong>'{$sort_name_a}'</strong> {ts}can view and update information for selected contact(s){/ts}
                             {else}
-                                <strong>'{$sort_name_a}'</strong> {ts}can view and update information for {/ts} <strong>'{$sort_name_b}'</strong>
+                                <strong>'{$sort_name_a}'</strong> 可以查看或更新 <strong>'{$sort_name_b}'</strong> 的資訊
                             {/if}
                         </span>
                         <span id ='permision_a_b-b_a' class="hiddenElement">
                             {if $action eq 1}
-                                <strong>{ts}Selected contact(s)</strong> can view and update information for {/ts} <strong>'{$sort_name_a}'</strong>
+                                <strong> 所選擇的聯絡人</strong>可以查看或更新 <strong>'{$sort_name_a}'</strong> 的資訊
                             {else}
-                                <strong>'{$sort_name_b}'</strong> {ts}can view and update information for {/ts} <strong>'{$sort_name_a}'</strong>
+                                <strong>'{$sort_name_b}'</strong> 可以查看或更新 <strong>'{$sort_name_a}'</strong> 的資訊
                             {/if}
                         </span>
                         </td>
@@ -292,14 +294,14 @@
                             {if $action eq 1}
                                 <strong>'{$sort_name_a}'</strong> {ts}can view and update information for selected contact(s){/ts}
                             {else}
-                                <strong>'{$sort_name_a}'</strong> {ts}can view and update information for {/ts} <strong>'{$sort_name_b}'</strong>
+                                <strong>'{$sort_name_a}'</strong> 可以查看或更新 <strong>'{$sort_name_b}'</strong> 的資訊
                             {/if}
                         </span>
                         <span id ='permision_b_a-a_b' class="hiddenElement">
                             {if $action eq 1}
-                                <strong>{ts}Selected contact(s)</strong> can view and update information for {/ts} <strong>'{$sort_name_a}'</strong>
+                                <strong> 所選擇的聯絡人</strong>可以查看或更新 <strong>'{$sort_name_a}'</strong> 的資訊
                             {else}
-                                <strong>'{$sort_name_b}'</strong> {ts}can view and update information for {/ts} <strong>'{$sort_name_a}'</strong>
+                                <strong>'{$sort_name_b}'</strong> 可以查看或更新  <strong>'{$sort_name_a}'</strong> 的資訊
                             {/if}
                         </span>
                         </td>
