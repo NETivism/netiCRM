@@ -1667,7 +1667,7 @@ msgstr "合併"
 #: templates/CRM/Contact/Form/Task/Print.tpl
 #: drupal/modules/civicrm_engage/Engage/Contact/Form/Search/Custom/FindVoters.php
 msgid "State"
-msgstr "州"
+msgstr "縣市"
 
 #: CRM/Contact/BAO/Query.php CRM/Contact/Form/Edit/Address.php
 #: CRM/Contact/Form/Search/Criteria.php
@@ -1773,7 +1773,7 @@ msgstr "註記"
 #: drupal/modules/civicrm_engage/Engage/Report/Form/CallList.php
 #: drupal/modules/civicrm_engage/Engage/Report/Form/WalkList.php
 msgid "State/Province"
-msgstr "州/省"
+msgstr "縣市"
 
 #: CRM/Contact/BAO/Query.php CRM/Contact/DAO/Contact.php
 #: CRM/Import/Parser/Contact.php
@@ -2029,7 +2029,7 @@ msgstr "郵遞區號末碼"
 #: CRM/Import/Parser/Contact.php CRM/Report/Form/Contact/Summary.php
 #: xml/templates/civicrm_data.tpl drupal/modules/views/civicrm.views.inc
 msgid "State / Province"
-msgstr "州/省"
+msgstr "縣市"
 
 #: CRM/Contact/Form/Edit/Address.php CRM/Core/DAO/Address.php
 #: CRM/Report/Form/Walklist.php
@@ -2192,7 +2192,7 @@ msgstr "聯絡人來源"
 #: CRM/Contact/Form/Search/Custom/EmployerListing.php
 #: CRM/Contact/Form/Search/Custom/Sample.php
 msgid "- any state/province -"
-msgstr "- 任何州/省 -"
+msgstr "- 任何縣市 -"
 
 #: CRM/Contact/Form/Search/Criteria.php CRM/Report/Form/Contact/Log.php
 msgid "Modified By"
@@ -2656,7 +2656,7 @@ msgstr "選擇日期"
 
 #: CRM/Core/DAO/CustomField.php CRM/Custom/Form/Field.php
 msgid "Select State/Province"
-msgstr "選擇州/省"
+msgstr "選擇縣市"
 
 #: CRM/Core/DAO/CustomField.php CRM/Custom/Form/Field.php
 msgid "Select Country"
@@ -2664,7 +2664,7 @@ msgstr "選擇國家"
 
 #: CRM/Core/DAO/CustomField.php CRM/Custom/Form/Field.php
 msgid "Multi-Select State/Province"
-msgstr "多選擇州/省"
+msgstr "多選 縣市"
 
 #: CRM/Core/DAO/CustomGroup.php CRM/Price/DAO/Set.php
 msgid "Extends"
@@ -4161,7 +4161,7 @@ msgstr "可選用的國家"
 
 #: CRM/Admin/Form/Setting/Localization.php
 msgid "Available States and Provinces"
-msgstr "可選用的州和省"
+msgstr "可選用的縣市"
 
 #: CRM/Admin/Form/Setting/Localization.php
 msgid "Default Country"
@@ -5919,7 +5919,7 @@ msgstr "個人名稱"
 
 #: CRM/Contact/Form/Search/Custom/EmployerListing.php
 msgid "Individual State"
-msgstr "個人所在州/省"
+msgstr "個人所在縣市"
 
 #: CRM/Contact/Form/Search/Custom/EmployerListing.php
 #: templates/CRM/Contact/Page/View/Summary.tpl
@@ -5928,7 +5928,7 @@ msgstr "雇主"
 
 #: CRM/Contact/Form/Search/Custom/EmployerListing.php
 msgid "Employer State"
-msgstr "雇主所在州/省"
+msgstr "雇主所在縣市"
 
 #: CRM/Contact/Form/Search/Custom/EmployerListing.php
 msgid "Individual's Name (last, first)"
@@ -5936,7 +5936,7 @@ msgstr "個人姓名 （姓氏, 名字）"
 
 #: CRM/Contact/Form/Search/Custom/EmployerListing.php
 msgid "Individual's Home State"
-msgstr "個人之出生州/省"
+msgstr "個人之出生縣市"
 
 #: CRM/Contact/Form/Search/Custom/EventAggregate.php
 msgid "Number of<br />Participant"
@@ -6092,7 +6092,7 @@ msgstr "列印"
 
 #: CRM/Contact/Form/Search/Simple.php
 msgid "- select a state -"
-msgstr "- 選擇州/省 -"
+msgstr "- 選擇縣市 -"
 
 #: CRM/Contact/Form/Search/Simple.php
 msgid "- select a country first -"
@@ -6356,7 +6356,7 @@ msgstr "您的智慧群組已被儲存為 「%1」。"
 
 #: CRM/Contact/Form/Test.php
 msgid "State / Province Id"
-msgstr "州 / 省編號"
+msgstr "縣市編號"
 
 #: CRM/Contact/Page/Dashlet.php
 msgid "Dashlets"
@@ -7060,7 +7060,7 @@ msgstr "布林值"
 
 #: CRM/Core/DAO/CustomField.php
 msgid "StateProvince"
-msgstr "州/省"
+msgstr "縣市"
 
 #: CRM/Core/DAO/CustomField.php
 msgid "ContactReference"
@@ -7438,7 +7438,7 @@ msgstr "聯絡人隨打即找選項"
 
 #: CRM/Core/DAO/StateProvince.php
 msgid "State Abbreviation"
-msgstr "州/省縮寫"
+msgstr "縣市縮寫"
 
 #: CRM/Core/DAO/Timezone.php
 msgid "Abbreviation"
@@ -7758,7 +7758,7 @@ msgstr "無法在路徑樹裡找到 %1"
 
 #: CRM/Core/Page/AJAX/Location.php
 msgid "- select a state-"
-msgstr "- 選擇州/省 -"
+msgstr "- 選擇縣市 -"
 
 #: CRM/Core/Page/Basic.php
 msgid "You do not have permission to make changes to the record"
@@ -8198,7 +8198,7 @@ msgstr "日期選擇器"
 
 #: CRM/Core/SelectValues.php
 msgid "State / Province selector"
-msgstr "州/省選擇器"
+msgstr "縣市選擇器"
 
 #: CRM/Core/SelectValues.php
 msgid "Country selector"
@@ -8525,7 +8525,7 @@ msgstr "如果您想設定一個預設值，請輸入 1（是）或 0（否）�
 
 #: CRM/Custom/Form/Field.php
 msgid "The invalid default value for State/Province data type"
-msgstr "州/省資料類別的預設值無效"
+msgstr "縣市資料類別的預設值無效"
 
 #: CRM/Custom/Form/Field.php
 msgid "Please select a date format."
@@ -8685,7 +8685,7 @@ msgstr "請輸入 1 或 0。"
 
 #: CRM/Custom/Form/Option.php
 msgid "The invalid value for State/Province data type"
-msgstr "州/省資料類別的值有誤"
+msgstr "縣市資料類別的值有誤"
 
 #: CRM/Custom/Form/Option.php
 msgid "Your multiple choice option has been deleted"
@@ -9859,7 +9859,7 @@ msgstr "捐款序號"
 
 #: CRM/Report/Form/Contribute/Detail.php
 msgid "List all contribution(s) for this State."
-msgstr "列出此州的所有捐款者。"
+msgstr "列出此縣市的所有捐款者。"
 
 #: CRM/Report/Form/Contribute/Detail.php
 msgid "List all contribution(s) for this Country."
@@ -12079,7 +12079,7 @@ msgstr "格式化聯絡人摘要，與活動資訊畫面中顯示的地址。"
 
 #: templates/CRM/Admin/Form/Preferences/Address.tpl
 msgid "Use %1 for state/province abbreviation or %2 for state province name."
-msgstr "使用%1來簡寫州/省，或%2即為州省名稱。"
+msgstr "使用%1來簡寫縣市，或%2即為縣市名稱。"
 
 #: templates/CRM/Admin/Form/Preferences/Address.tpl
 msgid "Address Editing"
@@ -17104,11 +17104,11 @@ msgstr "國家（住家）"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Your state/province and country of residence will be shared with others so folks can find others in their community."
-msgstr "你所在的州/省和居住國將與他人共享，以便人們可以找到其他住在他們社區的聯絡人。"
+msgstr "你所在的縣市和居住國將與他人共享，以便人們可以找到其他住在他們社區的聯絡人。"
 
 #: xml/templates/civicrm_data.tpl
 msgid "State (Home)"
-msgstr "州（住家）"
+msgstr "縣市（住家）"
 
 #: xml/templates/civicrm_data.tpl CRM/Event/Form/Participant.php
 #: CRM/Event/Selector/Search.php
@@ -20439,7 +20439,7 @@ msgstr "當您要抓取HTML碼，請確保此個人檔案的CAPTCHA驗證功能�
 
 #: templates/CRM/UF/Page/Group.hlp
 msgid "If the web page you are pasting the snippet code to is hosted in a different domain from your CiviCRM site, you may NOT be able to include Country and State fields in the form (the script which dynamically loads the states based on selected country may not be able to execute across domains)."
-msgstr "若您正在黏貼片段代碼的網頁，與您CiviCRM網站是不同的域名，您在這個表格中就不能包含國家與州名的欄位（意即這自動載入的以州為基礎的腳本，不能跨域名執行）"
+msgstr "若您正在黏貼片段代碼的網頁，與您CiviCRM網站是不同的域名，您在這個表格中就不能包含國家與縣市的欄位（依據縣市選擇各地區和郵遞區號的程式，將會無法作用）"
 
 #: CRM/ACL/Page/ACLBasic.php CRM/ACL/Page/ACL.php CRM/ACL/Page/EntityRole.php
 msgid "Access Control"
@@ -31225,7 +31225,7 @@ msgstr "完整的街道地址"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "Full Street Address without Country, State or Postcode"
-msgstr "完整的街道地址，不包括國家、州省或郵遞區號"
+msgstr "完整的街道地址，不包括國家、縣市或郵遞區號"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "Supplemental Street Address"
@@ -45417,7 +45417,7 @@ msgstr "預覽頁面 - %1"
 
 #: CRM/Campaign/BAO/Query.php
 msgid "Select Interviewer"
-msgstr "選擇州/省"
+msgstr "選擇面談者"
 
 #: CRM/Campaign/BAO/Query.php
 msgid "Could not find survey for %1 respondents."
@@ -48403,13 +48403,13 @@ msgstr "<< 返回"
 
 #: CRM/Contribute/Form/Contribution/Main.php
 msgid "Confirm Contribution"
-msgstr "設定募款頁"
+msgstr "確認捐款"
 
 #: CRM/Contribute/Form/Contribution/Main.php
 #: templates/CRM/Contribute/Form/Contribution/Confirm.tpl
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid "Additional Contribution"
-msgstr "編輯捐款"
+msgstr "再捐另一筆"
 
 #: CRM/Contribute/Form/Contribution/Main.php
 msgid "Contribution amount must be at least %1"
