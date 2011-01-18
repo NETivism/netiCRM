@@ -2012,7 +2012,7 @@ msgstr "街道地址"
 #: xml/templates/civicrm_data.tpl CRM/Contact/Form/Task/ProximityCommon.php
 #: drupal/modules/civicrm_engage/Engage/Contact/Form/Search/Custom/FindVoters.php
 msgid "City"
-msgstr "城市"
+msgstr "鄉鎮市區"
 
 #: CRM/Contact/Form/Edit/Address.php CRM/Contact/Form/Search/Criteria.php
 #: CRM/Core/Form.php xml/templates/civicrm_data.tpl
@@ -7706,7 +7706,7 @@ msgstr "額外地址 2"
 
 #: CRM/Core/Form.php
 msgid "Please enter the City for %1."
-msgstr "請為 %1 輸入城市。"
+msgstr "請為 %1 輸入鄉鎮市區。"
 
 #: CRM/Core/Form.php
 msgid "Please enter the Zip/Postal Code for %1."
@@ -17092,7 +17092,7 @@ msgstr "街道地址（住家）"
 
 #: xml/templates/civicrm_data.tpl
 msgid "City (Home)"
-msgstr "縣市（住家）"
+msgstr "鄉鎮市區（住家）"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Postal Code (Home)"
@@ -31237,15 +31237,15 @@ msgstr "補充街道地址，例如公寓名稱或套房號碼"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "City / Suburb"
-msgstr "城市/市郊"
+msgstr "鄉鎮市區"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "The City or Suburb the address is at"
-msgstr "地址所在之城市或市郊"
+msgstr "地址所在之鄉鎮市區"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "The State or Province of the Address"
-msgstr "地址所在之國家或省份"
+msgstr "地址所在之縣市"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "ZIP / Postal Code"
@@ -46746,11 +46746,11 @@ msgstr "批次更新捐款檔案"
 
 #: CRM/Contact/Form/Task/ProximityCommon.php
 msgid "Country AND State/Province are required to search by distance."
-msgstr ""
+msgstr "如果想要以距離為條件進行搜尋，國家或縣市是必填選項。"
 
 #: CRM/Contact/Form/Task/ProximityCommon.php
 msgid "City OR Postal Code are required to search by distance."
-msgstr ""
+msgstr "如果想要以距離為條件進行搜尋，鄉鎮區，或是郵遞區號是必填選項。"
 
 #: CRM/Contact/Form/Task/Unhold.php
 msgid "Unhold Email"
