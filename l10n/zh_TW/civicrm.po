@@ -27246,15 +27246,15 @@ msgstr "試用您的募款頁"
 
 #: templates/CRM/Contribute/Form/Contribution/PreviewHeader.tpl
 msgid "This page is currently running in <strong>test-drive mode</strong>. Transactions will be sent to your payment processor's test server. <strong>No live financial transactions will be submitted. However, a contact record will be created or updated and a test contribution record will be saved to the database. Use obvious test contact names so you can review and delete these records as needed. Test contributions are not visible on the Contributions tab, but can be viewed by searching for 'Test Contributions' in the CiviContribute search form.</strong> Refer to your payment processor's documentation for information on values to use for test credit card number, security code, postal code, etc."
-msgstr "此頁現執行<strong>試用模式</strong>。交易會被傳送到您的金流機制的測試伺服器。<strong>沒有正式的財務交易會被提交。但是，會建立或更新一個聯絡人記錄，也會有一個測試捐款記錄儲存到資料庫。進行測試交易時，使用明顯易辨的測試用聯絡人姓名，可方便您需要的時候察看與刪除測試紀錄。測試捐款不會在捐款表格上看見，但是透過在Civi捐款搜尋功能，搜尋「測試捐款」就會被看見。</strong>請參閱您金流機制的處理文件，以獲得更多使用測試信用卡號碼、安全碼、郵政電碼等的資料。"
+msgstr "目前為<strong>試用模式</strong>。交易會送到測試的金留交易平台。<strong>本次交易不會扣取任何款項，但會建立、更新您在下列填寫的聯絡人資訊，也會增加一筆測試的交易到資料庫。進行試用模式時，請使用明顯易辨的測試用聯絡人姓名，可方便您需要的時候察看與刪除測試紀錄。類似這種的測試捐款不會出現在統計報表，若您需要搜尋，請至捐款搜尋中，勾選「測試捐款」的選項即可找到。</strong>請參閱金流機制的文件，以獲得更多使用測試信用卡號碼、安全碼、郵政電碼等的資料。"
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid "An email confirmation with these payment instructions has been sent to %1 and to %2."
-msgstr "這些付款指令的確認信已Email到%1與%2。"
+msgstr "付款確認信已Email到%1與%2。"
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid "An email confirmation with these payment instructions has been sent to %1."
-msgstr "這些付款指令的確認信已Email到%1。"
+msgstr "付款確認信已Email到%1。"
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid "Your contribution has been submitted to %1 for processing. Please print this page for your records."
