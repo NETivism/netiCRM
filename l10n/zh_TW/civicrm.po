@@ -44638,11 +44638,11 @@ msgstr "連接dispatcher 做信用卡交易時，dispatcher 部分發生的錯�
 
 #: CRM/Admin/Form/Extensions.php CRM/Admin/Page/Extensions.php
 msgid "Uninstall"
-msgstr "期"
+msgstr "解除安裝"
 
 #: CRM/Admin/Form/Extensions.php CRM/Admin/Page/Extensions.php
 msgid "Install"
-msgstr "定期定額期數"
+msgstr "安裝"
 
 #: CRM/Admin/Form/Options.php CRM/Admin/Form/OptionValue.php
 msgid "Closed"
@@ -44654,11 +44654,11 @@ msgstr "範本列表"
 
 #: CRM/Admin/Form/Extensions.php
 msgid "Extension has been uninstalled."
-msgstr "您的活動報名已經取消"
+msgstr "套件已解除安裝。"
 
 #: CRM/Admin/Form/Extensions.php
 msgid "Extension has been installed."
-msgstr "已刪除%1 選項。"
+msgstr "套件已成功安裝。"
 
 #: CRM/Admin/Form/MailSettings.php
 msgid "Bounce Processing"
@@ -44822,11 +44822,11 @@ msgstr "您確定要停用此訊息範本？"
 
 #: CRM/Admin/Page/Extensions.php
 msgid "CiviCRM Extensions"
-msgstr "CiviCRM 拍賣"
+msgstr "CiviCRM 套件"
 
 #: CRM/Admin/Page/Extensions.php templates/CRM/Admin/Form/Extensions.tpl
 msgid "Uninstall Extension"
-msgstr "列出所有修訂本"
+msgstr "解除安裝套件"
 
 #: CRM/Admin/Page/Mapping.php
 msgid "Are you sure you want to delete this mapping?"
@@ -44845,19 +44845,19 @@ msgstr ""
 
 #: templates/CRM/Admin/Form/Extensions.tpl
 msgid "Install Extension"
-msgstr "定期定額期數"
+msgstr "安裝套件"
 
 #: templates/CRM/Admin/Form/Extensions.tpl
 msgid "Edit Extension"
-msgstr "編輯選項"
+msgstr "編輯套件"
 
 #: templates/CRM/Admin/Form/Extensions.tpl
 msgid "WARNING: Uninstalling this extension might result in the loss of all records which use the extension."
-msgstr "警告：刪除此選項群組會遺失所有使用選項的記錄. "
+msgstr "警告：刪除此套件會遺失所有此套件的相關記錄. "
 
 #: templates/CRM/Admin/Form/Extensions.tpl
 msgid "This may mean the loss of a substantial amount of data, and the action cannot be undone. Please review the extension information below before you make final decision."
-msgstr "這可能遺失大量資料，而且無法復原。"
+msgstr "這可能遺失大量資料，而且無法復原。請檢查下面的套件資訊，一進行最後確認。"
 
 #: templates/CRM/Admin/Form/Extensions.tpl
 msgid "Installing this extension will provide you with new functionality. Please make sure that the extension you're installing comes from trusted source."
@@ -45110,31 +45110,31 @@ msgstr ""
 
 #: templates/CRM/Admin/Page/Extensions.tpl
 msgid "Installed extensions"
-msgstr "安全及檔案副檔名"
+msgstr "已安裝的套件"
 
 #: templates/CRM/Admin/Page/Extensions.tpl
 msgid "Extension name"
-msgstr "不包括結束日期"
+msgstr "套件名稱"
 
 #: templates/CRM/Admin/Page/Extensions.tpl
 msgid "You have not installed any extensions."
-msgstr "你有未儲存的修改。"
+msgstr "你並沒有安裝任何套件。"
 
 #: templates/CRM/Admin/Page/Extensions.tpl
 msgid "Uploaded extensions"
-msgstr "安全及檔案副檔名"
+msgstr "已上傳的套件"
 
 #: templates/CRM/Admin/Page/Extensions.tpl
 msgid "There are no uploaded extensions to be installed."
-msgstr "沒有啓用中的活動。"
+msgstr "沒有啓用中的套件。"
 
 #: templates/CRM/Admin/Page/MailSettings.tpl
 msgid "Bounce Processing <strong>(Default)</strong>"
-msgstr "縣市<strong>全名</strong>"
+msgstr "跳離處理機制<strong>(預設)</strong>"
 
 #: templates/CRM/Admin/Page/MailSettings.tpl
 msgid "Email-to-Activity"
-msgstr "回到動態"
+msgstr "Email至動態"
 
 #: templates/CRM/Admin/Page/MessageTemplates.hlp
 msgid "Message templates allow you to save and re-use messages with layouts. You can use them when sending email to one or more contacts. If you are using the CiviMail component - you can use templates for your messages. If you are using the CiviMember component, you will need to create one or more message templates for membership renewal reminders."
