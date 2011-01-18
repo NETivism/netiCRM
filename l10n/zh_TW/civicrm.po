@@ -16409,7 +16409,7 @@ msgstr "支票"
 
 #: xml/templates/civicrm_data.tpl
 msgid "EFT"
-msgstr "電子資金轉帳"
+msgstr "電子轉帳(EFT)"
 
 #: xml/templates/civicrm_data.tpl CRM/Mailing/Selector/Browse.php
 msgid "Completed"
@@ -44341,8 +44341,8 @@ msgstr "網路ATM"
 msgid "Convenient Store"
 msgstr "超商繳款單"
 
-msgid "7-11 iBon / Family FamiPort / HiLife Life-ET"
-msgstr "超商代號付款(iBon / FamiPort / Life-ET)"
+msgid "Convenient Store code"
+msgstr "超商代號付款"
 
 msgid "AliPay"
 msgstr "支付寶"
@@ -46407,7 +46407,7 @@ msgstr "網址路徑"
 #: CRM/Price/DAO/LineItem.php CRM/Price/Form/Field.php
 #: templates/CRM/Price/Form/OptionFields.tpl
 msgid "Participant Count"
-msgstr "參加者來源"
+msgstr "參加者數量"
 
 #: CRM/Price/Form/Field.php CRM/Price/Form/Preview.php
 msgid "Price Set Fields"
@@ -48058,7 +48058,7 @@ msgstr "在此表格可輸入最多到十個的選項（按「其他選項」來
 
 #: templates/CRM/Price/Form/OptionFields.tpl
 msgid "Max Participant"
-msgstr "參加者最高人數"
+msgstr "參加者人數限制"
 
 #: templates/CRM/Price/Form/Set.tpl
 msgid "Use this form to edit the title and group-level help for a set of Price fields."
@@ -48078,7 +48078,7 @@ msgstr "價格欄位"
 
 #: templates/CRM/Price/Page/Field.tpl templates/CRM/UF/Page/Field.tpl
 msgid "Preview (all fields)"
-msgstr "預覽此個人檔案（所有欄位）"
+msgstr "預覽（所有欄位）"
 
 #: templates/CRM/Price/Page/LineItem.tpl
 msgid "Total Price"
@@ -48086,7 +48086,7 @@ msgstr "啟用價格"
 
 #: templates/CRM/Price/Page/LineItem.tpl
 msgid "Total Participants"
-msgstr "參加者最高人數"
+msgstr "參加者總計"
 
 #: templates/CRM/Price/Page/LineItem.tpl
 msgid "Event Total"
@@ -50184,5 +50184,8 @@ msgid "View Petition Signatures"
 msgstr "瀏覽募款頁面"
 
 msgid "Website Types"
-msgstr "ase 類型"
+msgstr "網站類型"
+
+msgid "Total Fee(s)"
+msgstr "費用總計"
 
