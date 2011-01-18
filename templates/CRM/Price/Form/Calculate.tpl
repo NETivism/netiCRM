@@ -24,7 +24,7 @@
  +--------------------------------------------------------------------+
 *}
 <div id="pricesetTotal" class="crm-section section-pricesetTotal">
-	<div class="label" id="pricelabel"><label>Total Fee(s)</label></div>
+	<div class="label" id="pricelabel"><label>{ts}Total Fee(s){/ts}</label></div>
 	<div class="content view-value" id="pricevalue" ></div>
 </div>
 
