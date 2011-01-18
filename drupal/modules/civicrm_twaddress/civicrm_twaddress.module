@@ -8,6 +8,12 @@ function civicrm_twaddress_civicrm_buildForm($formName, &$form) {
   if(arg(0) != 'civicrm'){
     return;
   }
+
+  // we don't support ajax form
+  $deny = array('CRM_Event_Form_ManageEvent_Location');
+  if(in_array($formName,$deny)){
+    return;
+  }
   
   // we don't process report form
   if(strpos($formName, 'Report_Form')){
