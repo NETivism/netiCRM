@@ -19413,7 +19413,7 @@ msgstr ""
 #: xml/templates/message_templates/contribution_online_receipt_subject.tpl
 #: xml/templates/message_templates/membership_online_receipt_subject.tpl
 msgid "Invoice"
-msgstr "發票"
+msgstr "帳單"
 
 #: xml/templates/message_templates/contribution_online_receipt_text.tpl
 #: xml/templates/message_templates/membership_online_receipt_text.tpl
@@ -25059,7 +25059,7 @@ msgstr "淨額"
 #: drupal/modules/views/civicrm.views.inc
 #: CRM/Report/Form/Contribute/Bookkeeping.php
 msgid "Invoice ID"
-msgstr "收據編號"
+msgstr "帳單編號"
 
 #: CRM/Contribute/DAO/Contribution.php
 #: CRM/Contribute/DAO/ContributionRecur.php CRM/Pledge/DAO/Pledge.php
@@ -26450,7 +26450,7 @@ msgstr "補貨"
 
 #: CRM/Contribute/Form/AdditionalInfo.php
 msgid "This Invoice ID already exists in the database."
-msgstr "此發票號碼已存在資料庫中。"
+msgstr "此帳單號碼已存在資料庫中。"
 
 #: CRM/Contribute/Form/AdditionalInfo.php
 msgid "Send Initial Reminder"
@@ -27569,7 +27569,7 @@ msgid ""
 "Invoice ID or Transaction ID or Contribution ID are required to match to the "
 "existing contribution records in Update mode."
 msgstr ""
-"在更新狀態時，發票編號 / 交易編號 / 捐款編號 必須存在於既存的捐款紀錄。"
+"在更新狀態時，帳單編號 / 交易編號 / 捐款編號 必須存在於既存的捐款紀錄。"
 
 #: CRM/Contribute/Import/Form/MapField.php
 msgid ""
@@ -31802,19 +31802,19 @@ msgstr "這些付款指令的確認信已Email到%1。"
 msgid ""
 "Your contribution has been submitted to %1 for processing. Please print this "
 "page for your records."
-msgstr "你的捐款已提交至%1進行處理。請列印此頁留存記錄。"
+msgstr "感謝！您的捐款已開始進行處理。請列印此頁留存記錄。"
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid ""
 "An email receipt will be sent to %1 and to %2 once the transaction is "
 "processed successfully."
-msgstr "一旦交易成功，便會寄送Email收據至%1與%2。"
+msgstr "一旦捐款程序完成，系統會寄送確認信件至%1與%2。"
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid ""
 "An email receipt will be sent to %1 once the transaction is processed "
 "successfully."
-msgstr "Email收據將會寄到這個信箱 %1。"
+msgstr "一旦捐款程序完成，系統會寄送確認信件至 %1。"
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid ""
@@ -37067,7 +37067,7 @@ msgstr "金流機制 / 銀行等提供的唯一交易編號"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "Unique Invoice ID from system"
-msgstr "系統提供的唯一收據編號"
+msgstr "系統提供的唯一帳單編號"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "Currency used for the Contribution"
@@ -37203,7 +37203,7 @@ msgstr "定期捐款的交易編號"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "The Unique CiviCRM Generated Invoice ID"
-msgstr "CiviCRM 產生的唯一的收據編號"
+msgstr "CiviCRM 產生的唯一的帳單編號"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "The Contribution's Status"
@@ -53878,15 +53878,15 @@ msgstr "請選擇一關係類型。"
 
 #: templates/CRM/Contact/Form/Relationship.tpl
 msgid "can view and update information for selected contact(s)"
-msgstr "可以查看和更新訊息為了"
+msgstr "可以查看和更新選取的使用者的資訊"
 
 #: templates/CRM/Contact/Form/Relationship.tpl
 msgid "can view and update information for "
-msgstr "可以查看和更新訊息為了"
+msgstr "可以查看和更新資訊"
 
 #: templates/CRM/Contact/Form/Relationship.tpl
 msgid "Selected contact(s)</strong> can view and update information for "
-msgstr "可以查看和更新訊息為了"
+msgstr "可以查看和更新資訊"
 
 #: templates/CRM/Contact/Form/Search/AdvancedCriteria.tpl
 #: templates/CRM/Contact/Form/Search/BasicCriteria.tpl
