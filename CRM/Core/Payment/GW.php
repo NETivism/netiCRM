@@ -11,7 +11,15 @@ class CRM_Core_Payment_GW extends CRM_Core_Payment {
      */
     static protected $_mode = null;
 
-    static protected $_params = array();
+    /**
+     * We only need one instance of this object. So we use the singleton
+     * pattern and cache the instance in this variable
+     *
+     * @var object
+     * @static
+     */
+    static private $_singleton = null;
+
 
     /**
      * Constructor
@@ -28,6 +36,49 @@ class CRM_Core_Payment_GW extends CRM_Core_Payment {
       $this->_config = $config;
     }
 
+    /** 
+     * singleton function used to manage this object 
+     * 
+     * @param string $mode the mode of operation: live or test
+     *
+     * @return object 
+     * @static 
+     * 
+     */ 
+    static function &singleton( $mode, &$paymentProcessor ) {
+        $processorName = $paymentProcessor['name'];
+        if (self::$_singleton[$processorName] === null ) {
+            self::$_singleton[$processorName] = new CRM_Core_Payment_GW( $mode, $paymentProcessor );
+        }
+        return self::$_singleton[$processorName];
+    }
+
+    /** 
+     * This function checks to see if we have the right config values 
+     * 
+     * @return string the error message if any 
+     * @public 
+     */ 
+    function checkConfig( ) {
+        $config = CRM_Core_Config::singleton( );
+
+        $error = array( );
+
+        if ( empty( $this->_paymentProcessor['user_name'] ) ) {
+            $error[] = ts( 'User Name is not set in the Administer CiviCRM &raquo; Payment Processor.' );
+        }
+        
+        if ( empty( $this->_paymentProcessor['signature'] ) ) {
+            $error[] = ts( 'Signature is not set in the Administer CiviCRM &raquo; Payment Processor.' );
+        }
+        
+        if ( ! empty( $error ) ) {
+            return implode( '<p>', $error );
+        } else {
+            return null;
+        }
+    }
+
     function setExpressCheckOut( &$params ) {
       CRM_Core_Error::fatal( ts( 'This function is not implemented' ) ); 
     }
@@ -39,9 +90,6 @@ class CRM_Core_Payment_GW extends CRM_Core_Payment {
     }
     function doDirectPayment( &$params ) {
       CRM_Core_Error::fatal( ts( 'This function is not implemented' ) );
-    }
-    function checkConfig() {
-      return null;
     }
 
     /**  

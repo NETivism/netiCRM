@@ -165,10 +165,10 @@ function civicrm_newweb_cron(){
 function _civicrm_newweb_instrument(){
   return array(
     'ATM' => array('name' => 'ATM', 'desc' => ''),
-    'WEBATM' => array('name' => 'Web ATM', 'desc' => ''),
-    'CS' => array('name'=>'Convenient Store', 'desc'=>''),
-    'MMK' => array('name'=>'7-11 iBon / Family FamiPort / HiLife Life-ET','desc' => ''),
-    'ALIPAY' => array('name' => 'AliPay', 'desc' => ''),
+    'WEBATM' => array('name' => '網路ATM', 'desc' => ''),
+    'CS' => array('name'=>'超商繳款單', 'desc'=>''),
+    'MMK' => array('name'=>'超商代號付款','desc' => ''),
+    'ALIPAY' => array('name' => '支付寶', 'desc' => ''),
   );
 }
 
