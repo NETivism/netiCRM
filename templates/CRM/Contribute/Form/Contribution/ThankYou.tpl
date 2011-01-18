@@ -96,7 +96,9 @@
             {if !$membershipBlock AND $amount OR ( $priceSetID and $lineItem )}{ts}Contribution Information{/ts}{else}{ts}Membership Fee{/ts}{/if}
         </div>
         <div class="display-block">
+          {if $trxn_id}
           {ts}Transaction ID{/ts}: <strong>{$trxn_id}</strong><br />
+          {/if}
           {if $payment_instrument}
           {ts}Payment Instrument{/ts}: <strong>{$payment_instrument}</strong><br />
           {/if}
