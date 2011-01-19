@@ -15,7 +15,7 @@ function civicrm_gw_install() {
 
   // new payment processor
   $sql = "INSERT INTO civicrm_payment_processor_type (id, name, title, description, is_active, is_default, user_name_label, signature_label, subject_label, class_name, url_site_default, url_api_default, url_recur_default, url_button_default, url_site_test_default, url_api_test_default, url_recur_test_default, url_button_test_default, billing_mode, is_recur, payment_type) VALUES
-(16, 'GW', 'Green World', NULL, 1, 0, 'Store ID', 'Signature (Checksum)', NULL, 'Payment_GW', 'https://ecpay.com.tw/form_Sc_to5.php', NULL, NULL, NULL, 'https://ecpay.com.tw/form_Sc_to5.php', NULL, NULL, NULL, 4, 0, 1)";
+(16, 'GW', 'Green World', NULL, 1, 0, '商店代號(信用卡)', '商家檢查碼(信用卡)', NULL, 'Payment_GW', 'https://ecpay.com.tw/form_Sc_to5.php', NULL, NULL, NULL, 'https://ecpay.com.tw/form_Sc_to5.php', NULL, NULL, NULL, 4, 0, 1)";
 
   CRM_Core_DAO::executeQuery($sql);
   /* // we don't need this, yet.

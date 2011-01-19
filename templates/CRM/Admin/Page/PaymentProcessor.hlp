@@ -459,3 +459,80 @@
 <strong>{ts}The URL for First Data TEST Gateway (TEST account):{/ts}</strong>
 <p>{ts}The URL for First Data's TEST Payment server. Use the default value (unless otherwise advised by First Data):{/ts}<br />https://staging.linkpt.net</p>
 {/htxt}
+
+{htxt id='GW-test-user-name'} 
+綠界科技的信用卡測試用資訊如下：<br />
+商店代號:3<br />
+帳號: eptest<br />
+密碼: eptest<br />
+商家登入網址: https://ecpay.com.tw/<br />
+測試卡號: 4311952222222222<br />
+商家檢查碼: 94499380<br />
+信用卡交易平台網址: https://ecpay.com.tw/form_Sc_to5.php
+{/htxt}
+
+{htxt id='GW-test-signature'} 
+請輸入綠界科技的商家檢查碼。測試的商家檢查碼: 94499380
+{/htxt}
+
+{htxt id='GW-test-url-site'} 
+請輸入綠界科技的信用卡交易平台網址。測試的交易網址為<br>
+https://ecpay.com.tw/form_Sc_to5.php
+{/htxt}
+
+{htxt id='GW-live-user-name'} 
+請輸入綠界科技信用卡交易的商店代號。
+{/htxt}
+
+{htxt id='GW-live-signature'} 
+請輸入綠界科技的商家檢查碼。
+{/htxt}
+
+{htxt id='GW-live-url-site'} 
+請輸入綠界科技的信用卡交易平台網址。預設的交易網址為<br>
+https://ecpay.com.tw/form_Sc_to5.php
+{/htxt}
+
+{htxt id='Newweb-test-user-name'} 
+藍新科技的信用卡測試用帳號密碼如下：<br />
+商城編號:758200<br />
+驗證碼(checksum,r_code,Code):abcd1234 <br />
+管理者及密碼 :  netivism / net123 (請注意大小寫)<br />
+付款管理網址 : https://maple.neweb.com.tw/webapp/PaymentManager/PaymentServerUI/Start<br />
+報表下載位置 : ftp://61.221.66.144 (帳號同管理者，無密碼)<br />
+信用卡交易平台網址: https://maple.neweb.com.tw/NewebmPP/cdcard.jsp <br />
+測試卡號(驗證碼3碼為 000)：<br />
+  VISA                Expiry Date<br />
+  正常卡片  4344-1173-3945-1014 2020/12<br />
+  過期卡片  4329-4819-2212-5347 2020/12<br />
+  失效卡片  4563-1773-6837-4572 2020/12<br />
+  餘額不足  4029-0078-0109-9296 2020/12<br />
+
+  MASTERCARD          Expiry Date<br />
+  正常卡片  5143-6137-7253-7541 2020/12<br />
+  過期卡片  5430-4502-0000-2000 2020/12<br />
+  失效卡片  5430-4503-0000-2009 2020/12<br />
+  餘額不足  5430-4504-0000-2008 2020/12<br />
+{/htxt}
+
+{htxt id='Newweb-test-signature'} 
+請輸入驗證碼(checksum)。測試的驗證碼: abcd1234
+{/htxt}
+
+{htxt id='Newweb-test-url-site'} 
+信用卡交易平台網址，測試的交易網址為<br>
+https://maple.neweb.com.tw/NewebmPP/cdcard.jsp
+{/htxt}
+
+{htxt id='Newweb-live-user-name'} 
+請輸入商城編號（開通後由藍新提供）
+{/htxt}
+
+{htxt id='Newweb-live-signature'} 
+請輸入商城檢查碼（開通後由藍新提供）。
+{/htxt}
+
+{htxt id='Newweb-live-url-site'} 
+信用卡交易平台網址。預設的交易網址為<br>
+https://mpp.neweb.com.tw/NewebmPP/cdcard.jsp
+{/htxt}
