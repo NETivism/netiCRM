@@ -74,8 +74,8 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
      * @static
      */
     static $_properties = array('contact_id', 'contact_type', 'contact_sub_type', 
-                                'sort_name', 'street_address',
-                                'city', 'state_province', 'postal_code', 'country',
+                                'sort_name', 'country', 'postal_code',
+                                'state_province', 'city', 'street_address',
                                 'geo_code_1', 'geo_code_2',
                                 'email', 'on_hold', 'phone', 'status' );
 
@@ -788,20 +788,9 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
                                                 'sort'      => 'sort_name',
                                                 'direction' => CRM_Utils_Sort::ASCENDING,
                                                 ),
-                                          array('name' => ts('Address') ),
                                           array(
-                                                'name'      => ts('City'),
-                                                'sort'      => 'city',
-                                                'direction' => CRM_Utils_Sort::DONTCARE,
-                                                ),
-                                          array(
-                                                'name'      => ts('State'),
-                                                'sort'      => 'state_province',
-                                                'direction' => CRM_Utils_Sort::DONTCARE,
-                                                ),
-                                          array(
-                                                'name'      => ts('Postal'),
-                                                'sort'      => 'postal_code',
+                                                'name'      => ts('Email'),
+                                                'sort'      => 'email',
                                                 'direction' => CRM_Utils_Sort::DONTCARE,
                                                 ),
                                           array(
@@ -810,10 +799,21 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
                                                 'direction' => CRM_Utils_Sort::DONTCARE,
                                                 ),
                                           array(
-                                                'name'      => ts('Email'),
-                                                'sort'      => 'email',
+                                                'name'      => ts('Postal'),
+                                                'sort'      => 'postal_code',
                                                 'direction' => CRM_Utils_Sort::DONTCARE,
                                                 ),
+                                          array(
+                                                'name'      => ts('State'),
+                                                'sort'      => 'state_province',
+                                                'direction' => CRM_Utils_Sort::DONTCARE,
+                                                ),
+                                          array(
+                                                'name'      => ts('City'),
+                                                'sort'      => 'city',
+                                                'direction' => CRM_Utils_Sort::DONTCARE,
+                                                ),
+                                          array('name' => ts('Address') ),
                                           array('name' => ts('Phone') )
                 );
         }

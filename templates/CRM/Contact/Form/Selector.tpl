@@ -95,12 +95,12 @@
             <td>{$row.contact_type}</td>	
             <td><a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$row.contact_id`"}">{if $row.is_deleted}<del>{/if}{$row.sort_name}{if $row.is_deleted}</del>{/if}</a></td>
             {if $action eq 512 or $action eq 256}
-              <td>{$row.street_address|mb_truncate:22:"...":true}</td>
-              <td>{$row.city}</td>
-              <td>{$row.state_province}</td>
-              <td>{$row.postal_code}</td>
-              <td>{$row.country}</td>
               <td {if $row.on_hold}class="status-hold"{/if}>{$row.email|mb_truncate:17:"...":true}{if $row.on_hold}&nbsp;(On Hold){/if}</td>
+              <td>{$row.country}</td>
+              <td>{$row.postal_code}</td>
+              <td>{$row.state_province}</td>
+              <td>{$row.city}</td>
+              <td>{$row.street_address|mb_truncate:22:"...":true}</td>
               <td>{$row.phone}</td> 
            {else}
               {foreach from=$row item=value key=key}
