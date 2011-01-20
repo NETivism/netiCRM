@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CiviCRM 3.0\n"
 "POT-Creation-Date: 2007-04-18 07:33+0200\n"
-"PO-Revision-Date: 2011-01-18 16:03+0800\n"
-"Last-Translator: Fu-yuan Cheng <gloomcheng@gmail.com>\n"
+"PO-Revision-Date: 2011-01-20 18:21+0800\n"
+"Last-Translator: Karen Yeh <hunter771222@gmail.com>\n"
 "Language-Team: CiviCRM Translators <civicrm-translators@lists.civicrm.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2365,7 +2365,7 @@ msgstr "請輸入名稱以儲存訊息範本"
 
 #: CRM/Contact/Form/Task/Label.php CRM/Core/BAO/Mapping.php
 msgid "Primary"
-msgstr "主要的"
+msgstr "預設"
 
 #: CRM/Contact/Form/Task/RemoveFromGroup.php CRM/Contact/Task.php
 msgid "Remove Contacts from Group"
@@ -5140,11 +5140,11 @@ msgstr "- 字尾 -"
 
 #: CRM/Contact/BAO/Contact/Utils.php
 msgid "Primary Phone"
-msgstr "主要電話"
+msgstr "預設電話"
 
 #: CRM/Contact/BAO/Contact/Utils.php
 msgid "Primary Email"
-msgstr "主要Email位址"
+msgstr "預設Email位址"
 
 #: CRM/Contact/BAO/GroupNestingCache.php
 msgid "We detected a cycle which we cant handle. aborting"
@@ -5438,7 +5438,7 @@ msgstr "已儲存「%1」網域資訊。"
 
 #: CRM/Contact/Form/Edit/Address.php
 msgid "Primary location for this contact"
-msgstr "聯絡人的主要地址"
+msgstr "聯絡人的預設地址"
 
 #: CRM/Contact/Form/Edit/Address.php
 msgid "Billing location for this contact"
@@ -5528,7 +5528,7 @@ msgstr "請輸入一個有效的網頁位址，以 'http://' 或 'https://' 為�
 
 #: CRM/Contact/Form/Edit/Individual.php
 msgid "First Name and Last Name OR an email OR an OpenID in the Primary Location should be set."
-msgstr "必須在主要地址裡設定姓名、或Email位址、或是OpenID。"
+msgstr "必須在預設地址裡設定姓名、或Email位址、或是OpenID。"
 
 #: CRM/Contact/Form/Edit/Individual.php
 msgid "Please select a household from the 'Select Household' list"
@@ -6225,7 +6225,7 @@ msgstr "密件副本"
 
 #: CRM/Contact/Form/Task/EmailCommon.php
 msgid "Selected contact(s) do not have a valid email address, or communication preferences specify DO NOT EMAIL, or they are deceased or Primary email address is On Hold)."
-msgstr "選擇的聯絡人沒有正確的Email地址，或者偏好的聯絡方式中有「不要寄Email」，或聯絡人已故，或者聯絡人的主 Email 標記為凍結。"
+msgstr "選擇的聯絡人沒有正確的Email地址，或者偏好的聯絡方式中有「不要寄Email」，或聯絡人已故，或者聯絡人的預設 Email 標記為凍結。"
 
 #: CRM/Contact/Form/Task/EmailCommon.php
 #: drupal/modules/civicrm_rules/civicrm_rules.rules.inc
@@ -6242,7 +6242,7 @@ msgstr "您的訊息已送出。"
 
 #: CRM/Contact/Form/Task/EmailCommon.php
 msgid "Email not sent to contact(s) (no email address on file or communication preferences specify DO NOT EMAIL or Contact is deceased or Primary email address is On Hold): %1"
-msgstr "沒有寄 Email 給聯絡人（因為沒有Email位址，或是其設定為「不要寄送Email」，或是因為聯絡人已過世，或是因為主要的Email位址被凍結）：%1"
+msgstr "沒有寄 Email 給聯絡人（因為沒有Email位址，或是其設定為「不要寄送Email」，或是因為聯絡人已過世，或是因為預設Email位址被凍結）：%1"
 
 #: CRM/Contact/Form/Task/EmailCommon.php
 msgid "Email was not sent to %1 because primary email address (%2) is On Hold."
@@ -13745,7 +13745,7 @@ msgstr "大宗信件？"
 #: templates/CRM/Contact/Form/Edit/OpenID.tpl
 #: templates/CRM/Contact/Form/Edit/Phone.tpl
 msgid "Primary?"
-msgstr "主要的？"
+msgstr "預設值？"
 
 #: templates/CRM/Contact/Form/Edit/Email.tpl
 msgid "Delete Email Block"
@@ -15527,7 +15527,7 @@ msgstr "返回列表"
 
 #: templates/CRM/Profile/Page/View.tpl
 msgid "Map Primary Address"
-msgstr "地圖主要地址"
+msgstr "對應預設地址"
 
 #: templates/CRM/Report/Form/ErrorMessage.tpl
 msgid "Sorry. No results found."
@@ -18083,7 +18083,7 @@ msgstr "地址名稱(例如： Johnson Paviliont)"
 
 #: templates/CRM/Admin/Form/Preferences/Address.hlp
 msgid "Full street address (e.g. 110 Main Street)."
-msgstr "街道及巷弄號碼(例如：110 Main Street)"
+msgstr "街道及巷弄號碼(例如：中山路2段3號5樓)"
 
 #: templates/CRM/Admin/Form/Preferences/Address.hlp
 msgid "Supplemental address 1 (line is skipped if empty)."
@@ -19937,7 +19937,7 @@ msgstr ""
 
 #: templates/CRM/Mailing/Form/Group.hlp
 msgid "Determine the contacts in your database who should receive this mailing by first selecting one or more <strong>Included Groups</strong>. (Groups must be assigned the <strong>Mailing List</strong> type to be available on this screen - you can update this for an existing group from <strong>Manage Groups &raquo; Settings</strong>.)"
-msgstr ""
+msgstr "請確定應首先收到這封電子報，且在您資料庫中已有的一個或<strong>包涵多個</strong>的收件人群組。(該群組必須是在有效的<strong>電子報類型</strong>當中 - 您可以到<strong>管理群組 &raquo; 設定</strong>中，新增新的群組。)"
 
 #: templates/CRM/Mailing/Form/Group.hlp
 msgid "You also have the option to <strong>Exclude</strong> some contacts from your included groups by selecting one or more <strong>Excluded Groups</strong>. Contacts who are in both groups will NOT receive the mailing (they are 'excluded')."
@@ -19949,7 +19949,7 @@ msgstr ""
 
 #: templates/CRM/Mailing/Form/Group.hlp
 msgid "After you click <strong>Next</strong> - the total number of selected recipients will be displayed on the next screen. Use this as a 'reality-check' to help you confirm that you've targeted (and excluded) the desired recipients."
-msgstr "在您按<strong>下一步</strong>以 - 已選取接收人的總數目會被展示在下一個畫面。請以此作為「實質檢查」，確定您已選取了您欲發送的接收人。"
+msgstr "在您按<strong>下一步</strong>以前 - 已選取接收人的總數目會被展示在下一個畫面。請以此作「確實檢查」，確定您已選取了您欲發送的接收人。"
 
 #: templates/CRM/Mailing/Form/Group.hlp
 msgid "You also have the option to <strong>Exclude</strong> some contacts in your included groups by selecting on or more <strong>Excluded Groups</strong>. Contacts who are in both groups will NOT receive the mailing (they are 'excluded')."
@@ -28343,7 +28343,7 @@ msgstr "如果你發現你正在建立多個類似的活動設定，你可以使
 
 #: templates/CRM/Event/Form/ManageEvent/EventInfo.tpl
 msgid "After selecting an Event Type, this page will display any custom event fields for that type."
-msgstr "選擇活動類別之後，此頁會展示任何自定活動欄位給那類別。"
+msgstr "選擇活動類別之後，此頁會展示自定活動欄位給該類別。"
 
 #: templates/CRM/Event/Form/ManageEvent/EventInfo.tpl
 #: templates/CRM/Event/Form/ManageEvent/EventInfo.hlp
@@ -29179,11 +29179,11 @@ msgstr "設定日期及時間，系統將為您寄出。"
 
 #: templates/CRM/Mailing/Form/Settings.tpl
 msgid "These settings control tracking and responses to recipient actions. The number of recipients selected to receive this mailing is shown in the box to the right. If this count doesn't match your expectations, click <strong>Previous</strong> to review your selection(s)."
-msgstr ""
+msgstr "這些設定可以追縱收件人在收件後的行為與反應。而收件人的數量會顯示在右邊的方框中，如不符合您的預期，請點擊 <strong>上一步</strong>檢查您剛才的設定。"
 
 #: templates/CRM/Mailing/Form/Settings.tpl
 msgid "Track the number of times recipients click each link in this mailing. NOTE: When this feature is enabled, all links in the message body will be automaticallly re-written to route through your CiviCRM server prior to redirecting to the target page."
-msgstr "追蹤收件者在此郵件中點擊連結的次數。提醒：當您啟用此功能，在重新導向目標頁面前，郵件內文中的所有連結將會先自動重新寫入路由，通過您的CiviCRM伺服器。"
+msgstr "追蹤收件者在此郵件中點擊連結的次數。提醒：當您啟用此功能，在重新導向目標頁面前，郵件內文中的所有連結將會先藉由您的CiviCRM伺服器，自動重新寫入路徑當中。"
 
 #: templates/CRM/Mailing/Form/Settings.tpl
 msgid "Track the number of times recipients open this mailing in their email software."
@@ -29255,7 +29255,7 @@ msgstr "HTML版本："
 
 #: templates/CRM/Mailing/Form/Upload.tpl
 msgid "You can either <strong>upload</strong> the mailing content from your computer OR <strong>compose</strong> the content on this screen. Click the help (?) icon for more information on formats and requirements."
-msgstr "您可以<strong>上載</strong>郵件內容從您的電腦或在此螢幕<strong>編寫</strong>內容。按幫助(?)以得到更多格式及要求的資料。"
+msgstr "您可以從您的電腦<strong>上載</strong>郵件內容或在此螢幕<strong>編寫</strong>內容。按幫助(?)以得到更多格式及要求的資料。"
 
 #: templates/CRM/Mailing/Form/Upload.tpl
 msgid "Browse to the <strong>TEXT</strong> message file you have prepared for this mailing."
@@ -29761,7 +29761,7 @@ msgstr "查看基本會員紀錄"
 
 #: templates/CRM/Member/Form/Selector.tpl templates/CRM/Member/Page/Tab.tpl
 msgid "View Primary"
-msgstr ""
+msgstr "查看"
 
 #: templates/CRM/Member/Form/Selector.tpl
 msgid "View all memberships for this contact"
@@ -31201,7 +31201,7 @@ msgstr "CiviCRM 地址"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "Is Primary Address"
-msgstr "主要地址"
+msgstr "預設地址"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "Is this address the contact's primary address?"
@@ -31281,7 +31281,7 @@ msgstr "CiviCRM 電子郵件"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "Is Primary Email"
-msgstr "主要電子郵件"
+msgstr "預設電子郵件"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "Is this address the contact's primary email?"
@@ -31301,7 +31301,7 @@ msgstr "CiviCRM 電話詳細資訊"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "Is Primary Phone"
-msgstr "主要電話"
+msgstr "預設電話"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "Is this the contact's primary phone?"
@@ -46730,7 +46730,7 @@ msgstr ""
 
 #: CRM/Contact/Form/Task/EmailCommon.php
 msgid "Selected contact(s) do not have a valid email address, or communication preferences specify DO NOT EMAIL, or they are deceased or Primary email address is On Hold."
-msgstr "選擇的聯絡人沒有正確的Email地址，或者偏好的聯絡方式中有「不要寄Email」，或聯絡人已故，或者聯絡人的主 Email 標記為凍結。"
+msgstr "選擇的聯絡人沒有正確的Email地址，或者偏好的聯絡方式中有「不要寄Email」，或聯絡人已故，或者聯絡人的預設 Email 標記為凍結。"
 
 #: CRM/Contact/Form/Task/Label.php
 msgid "Merge labels for contacts belonging to the same household"
@@ -47050,7 +47050,7 @@ msgstr "查看所有聯絡人"
 
 #: CRM/Core/SelectValues.php
 msgid "Addresses"
-msgstr "收件人"
+msgstr "地址"
 
 #: CRM/Core/SelectValues.php
 msgid "dd/mm/yyyy (31/12/2009)"
@@ -48225,7 +48225,7 @@ msgstr "<strong>已被成功匯入</strong>。以下為結果摘要報告。"
 #: templates/CRM/Contribute/Page/PCP.tpl
 #: templates/CRM/Event/Page/ManageEvent.tpl
 msgid "Starts"
-msgstr "開始"
+msgstr "開始於"
 
 #: templates/CRM/Contribute/Page/PCP.tpl
 #: templates/CRM/Contribute/Page/PcpUserDashboard.tpl
@@ -49110,7 +49110,7 @@ msgstr "糟糕！看來這位參加者已報名完成，若您想變更您的報
 
 #: CRM/Event/Form/SearchEvent.php
 msgid "Search All or by Date Range"
-msgstr "以距離來搜尋？"
+msgstr "以時間範圍來搜尋"
 
 #: CRM/Event/Form/Task/Badge.php
 msgid "Make Name Badges"
@@ -49150,7 +49150,7 @@ msgstr ""
 #: templates/CRM/Event/Form/ManageEvent/EventInfo.hlp
 #: templates/CRM/Event/Form/ManageEvent/EventInfo.tpl
 msgid "To allow users to see a listing of participants, set this field to 'Name' (list names only), 'Name and Email', or 'Name, Status and Register Date'."
-msgstr "允許用戶者觀看參加者列表，設定此欄位為「姓名」(只列出姓名)，或「姓名及Email」(列出姓名及Email)。"
+msgstr "允許用戶者觀看參加者列表，設定此欄位為「姓名」(只列出姓名)、「姓名及Email」(列出姓名及Email)，或「姓名、狀態及報名日期」。"
 
 #: templates/CRM/Event/Form/ManageEvent/EventInfo.hlp
 msgid "After adding your event, create links to the listing page by copying the URL provided in the 'Participant Listing' section of the Configure Event page."
@@ -49195,7 +49195,7 @@ msgstr "Sliven"
 #: templates/CRM/Event/Form/ManageEvent/Tab.tpl
 #: templates/CRM/Event/Page/ManageEvent.tpl
 msgid "Event Links"
-msgstr "活動地點"
+msgstr "活動相關連結"
 
 #: templates/CRM/Event/Form/ManageEvent/Tab.tpl
 #: templates/CRM/Event/Page/ManageEvent.tpl
@@ -49277,7 +49277,7 @@ msgstr "活動報名結束於%1"
 
 #: templates/CRM/Event/Page/ManageEvent.tpl
 msgid "Add Event"
-msgstr "結束日期"
+msgstr "新增活動"
 
 #: templates/CRM/Event/Page/ManageEvent.tpl
 msgid "Public?"
@@ -49369,7 +49369,7 @@ msgstr "抱歉，我們在處理您的訂閱過程中出現問題。您訂閱的
 
 #: CRM/Mailing/Form/Settings.php
 msgid "Track Replies?"
-msgstr "追蹤開信次數？"
+msgstr "追蹤回覆？"
 
 #: CRM/Mailing/Selector/Event.php templates/CRM/Mailing/Page/Report.tpl
 msgid "Successful Deliveries"
@@ -49377,7 +49377,7 @@ msgstr "成功遞送"
 
 #: templates/CRM/Mailing/Form/Settings.tpl
 msgid "Recipients' replies are sent to a CiviMail specific address instead of the sender's address so they can be stored within CiviCRM."
-msgstr "收件者的回信將被寄送至 CiviMail 所設定的特定電子郵件信箱，而非寄件者的電子郵件信箱，因此這些信箱可以儲存在 CiviCRM 裡。"
+msgstr "收件者的回信將被寄送至 CiviMail 所設定的特定電子郵件信箱，而非寄件者的電子郵件信箱，因此這些信箱可以被儲存在 CiviCRM 裡。"
 
 #: templates/CRM/Mailing/Form/Upload.hlp
 msgid "Go to <a href='%1'>Administer CiviCRM &raquo; Configure &raquo; FROM Email Addresses</a> to add or edit email addresses. Make sure these email addresses are valid email accounts with your email service provider."
@@ -49385,7 +49385,7 @@ msgstr "前往<a href='%1'>CiviCRM管理員&raquo; 選項清單 &raquo; Email寄
 
 #: templates/CRM/Mailing/Form/Upload.tpl
 msgid "You can either <strong>upload</strong> the mailing content from your computer OR <strong>compose</strong> the content on this screen."
-msgstr "您可以<strong>上載</strong>郵件內容從您的電腦或在此螢幕<strong>編寫</strong>內容。按幫助(?)以得到更多格式及要求的資料。"
+msgstr "您可以從您的電腦<strong>上載</strong>郵件內容或在此螢幕<strong>編寫</strong>內容。按幫助(?)以得到更多格式及要求的資料。"
 
 #: templates/CRM/Mailing/Page/Browse.tpl
 msgid "There are no Scheduled or Sent Mailings. You can <a href='%1'>create and send one</a> OR you can search the <a href='%2'>Archived Mailings</a>."
