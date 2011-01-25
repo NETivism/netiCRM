@@ -1,0 +1,6 @@
+name = PCP List
+description = Provide Personal Contribution Page directory in drupal.
+package = CiviCRM
+core = 6.x
+version = 3.1-dev
+dependencies[] = civicrm
