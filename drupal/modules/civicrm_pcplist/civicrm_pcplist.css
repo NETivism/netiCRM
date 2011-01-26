@@ -1,0 +1,38 @@
+.pcplist-image {
+  width: 100px;
+  height: 100px;
+  float: left;
+  overflow: hidden;
+  padding: 5px;
+  border: 1px solid #EFEFEF;
+}
+.pcplist-image img {
+  height: 100px;
+}
+.pcplist-count {
+  margin-left: 120px;
+}
+.pcplist-intro {
+  margin-left: 120px;
+}
+.pcplist-contrib {
+  margin-left: 120px;
+}
+.pcplist-achievement {
+  float: right;
+  width: 150px;
+}
+
+.pcplist-fill-wrapper {
+  border-left: 30px solid #EEE;
+  width: 120px;
+  position: relative;
+  height: 60px;
+}
+.phplist-fill-height {
+  border-left: 30px solid #7da141;
+  width: 120px;
+  position: absolute;
+  bottom: 0px;
+  left: -30px;
+}

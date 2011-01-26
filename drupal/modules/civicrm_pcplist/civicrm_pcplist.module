@@ -56,9 +56,12 @@ function civicrm_pcplist_page($contribution_page_id){
     $data['donate_link_text'] = $rows->donate_link_text;
     $data['donate_link_url'] = CRM_Utils_System::url('civicrm/contribute/transact', "id={$rows->contribution_page_id}&pcpId={$rows->id}&reset=1", true, null, true, true);
     $data['contribution_page_id '] = $rows->contribution_page_id;
-    $data['goal_amount'] = $rows->goal_amount;
-    $data['achieved_amount'] = $rows->achieved_amount;
+    $data['goal_amount'] = round($rows->goal_amount);
+    $data['achieved_amount'] = round($rows->achieved_amount);
     $data['contribution_count'] = $rows->contribution_count;
+    $data['achieved_percentage'] = round(($data['achieved_amount'] / $data['goal_amount'] ) * 100) . '%';
+    $data['view_url'] = CRM_Utils_System::url('civicrm/contribute/pcp/info', 'reset=1&id='.$data['pcp_id'], true, null, true, true);
+    $data['contribution_link'] = l($data['donate_link_text'], 'civicrm/contribute/transact', array('query' => "id={$rows->contribution_page_id}&pcpId={$rows->id}&reset=1", 'absolute' => TRUE) );
 
     if ( $file_id = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_EntityFile', $rows->id , 'file_id', 'entity_id') ) {
       $data['image_src'] = CRM_Utils_System::url( 'civicrm/file', "reset=1&id=$file_id&eid=$rows->id"); 
@@ -66,6 +69,7 @@ function civicrm_pcplist_page($contribution_page_id){
     $output .= theme("civicrm_pcplist_item", $data);
   }
   //$pager = _civicrm_pcplist_pager($count_sql);
+  drupal_add_css(drupal_get_path('module', 'civicrm_pcplist')."/civicrm_pcplist.css");
   return theme("civicrm_pcplist", $output);
 }
 
@@ -89,9 +93,7 @@ function template_preprocess_civicrm_pcplist_item(&$vars, $hook) {
   foreach($vars['data'] as $k => $v){
     $vars[$k] = $v;
   }
-  $vars['achieve_percentage'] = round($vars['achieved_amount'] / $vars['goal_amount']);
-  $vars['view_url'] = url('civicrm/contribution/pcp/info', array('query' => 'reset=1&id='.$vars['pcp_id']));
-  $vars['contribution_link'] = l($vars['donate_link_text'], $vars['donate_link_url']);
 }
+
 function template_preprocess_civicrm_pcplist(&$vars, $hook) {
 }
