@@ -494,6 +494,7 @@ SELECT username, email
             $values['values']['pass']['pass1'] = $params['cms_pass'];
             $values['values']['pass']['pass2'] = $params['cms_pass'];
         }
+        $values['values']['civicrm_register'] = TRUE;
 
         $config = CRM_Core_Config::singleton( );
 
