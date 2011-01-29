@@ -23782,6 +23782,10 @@ msgstr "移除專頁（這個操作不能回復！）"
 msgid "Contribute Now"
 msgstr "立即捐款"
 
+#: templates/CRM/Contribute/Page/PCPInfo.tpl
+msgid "towards our goal"
+msgstr "目標達成"
+
 #: CRM/Contribute/Page/PCP.php
 msgid "Are you sure you want to delete this Campaign Page ?"
 msgstr "您確定要刪除此募款專頁嗎？"
