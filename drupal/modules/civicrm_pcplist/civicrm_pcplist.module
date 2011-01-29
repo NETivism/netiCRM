@@ -40,10 +40,23 @@ function civicrm_pcplist_page($contribution_page_id){
   if(is_numeric($contribution_page_id)){
     // limited by contribution id
     $where = " AND p.contribution_page_id = $contribution_page_id ";
+
+    // set title
+    require_once 'CRM/Contribute/DAO/ContributionPage.php';
+    $contrib_page =& new CRM_Contribute_DAO_ContributionPage();
+    $contrib_page->id = $contribution_page_id;
+    if ( $contrib_page->find( true ) ) { 
+      drupal_set_title($contrib_page->title. ' - ' . t('Personal Campaign Page'));
+    }   
+    else{
+      // 404
+      drupal_not_found();
+      return;
+    }
   }
   $sql = "SELECT p.id, p.contact_id, p.title, p.intro_text, p.donate_link_text, p.contribution_page_id, p.goal_amount, SUM(cc.total_amount) as achieved_amount, COUNT(cc.total_amount) as contribution_count 
   FROM civicrm_pcp p LEFT JOIN civicrm_contribution_soft cs ON (p.id = cs.pcp_id) LEFT JOIN civicrm_contribution cc ON (cs.contribution_id = cc.id) 
-  WHERE p.status_id = 2 AND p.is_active = 1 AND cc.is_test = 0 AND cc.contribution_status_id = 1".$where ." GROUP BY p.id";
+  WHERE p.status_id = 2 AND p.is_active = 1 AND (cc.is_test = 0 OR cc.is_test IS NULL) AND (cc.contribution_status_id = 1 OR cc.contribution_status_id IS NULL)".$where ." GROUP BY p.id ORDER BY p.id DESC";
   //$count_sql = "SELECT COUNT(*) FROM civicrm_pcp WHERE status_id = 2 AND is_active = 1".$where;
 
   $rows = CRM_Core_DAO::executeQuery($sql);
@@ -92,6 +105,9 @@ function _civicrm_pcplist_pager($query) {
 function template_preprocess_civicrm_pcplist_item(&$vars, $hook) {
   foreach($vars['data'] as $k => $v){
     $vars[$k] = $v;
+  }
+  if(!$vars['image_src']){
+    $vars['image_src'] = '/sites/default/files/imagecache/news_thumb/imagefield_default_images/news_default.gif';
   }
 }
 

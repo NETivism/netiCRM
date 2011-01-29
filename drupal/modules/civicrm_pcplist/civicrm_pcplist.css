@@ -1,10 +1,14 @@
+.pcplist-item {
+  border-bottom: 1px dotted #CCC;
+  padding: 10px;
+}
+
 .pcplist-image {
   width: 100px;
   height: 100px;
   float: left;
   overflow: hidden;
-  padding: 5px;
-  border: 1px solid #EFEFEF;
+  border: 1px solid #CCC;
 }
 .pcplist-image img {
   height: 100px;
@@ -15,24 +19,37 @@
 .pcplist-intro {
   margin-left: 120px;
 }
-.pcplist-contrib {
-  margin-left: 120px;
-}
 .pcplist-achievement {
   float: right;
   width: 150px;
+  height: 100px;
 }
 
 .pcplist-fill-wrapper {
-  border-left: 30px solid #EEE;
-  width: 120px;
+  background: #EEE;
+  width: 100px;
   position: relative;
-  height: 60px;
+  height: 25px;
 }
-.phplist-fill-height {
-  border-left: 30px solid #7da141;
-  width: 120px;
+.pcplist-fill-height {
+  background: #7da141;
+  width: 100px;
+  height: 25px;
   position: absolute;
-  bottom: 0px;
-  left: -30px;
+  left: 0px;
+  text-align: right;
+  color: #FFF;
+}
+.pcplist-fill-pointer {
+  position: absolute;
+}
+.pcplist-contrib {
+  margin: 5px 0;
+}
+.pcplist-goal, .pcplist-achieved {
+  display: none;
+}
+/* hide unecessery link in pcp page */
+.pcp-create-your-own {
+  display: none;
 }
