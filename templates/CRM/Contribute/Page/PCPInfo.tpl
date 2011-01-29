@@ -65,7 +65,7 @@
 		    </div>
 		    <div class="thermometer-fill-wrapper">
 		        <div style="height: {$achieved}%;" class="thermometer-fill">
-		        	<div class="thermometer-pointer"><span class="pcp-percent-raised">{$achieved}%</span> towards our goal</div>
+		        	<div class="thermometer-pointer"><span class="pcp-percent-raised">{$achieved}%</span> {ts}towards our goal{ts}</div>
 		        </div><!-- /.thermometer-fill -->
 		    </div><!-- /.thermometer-fill-wrapper -->
 		    <div class="pcp-amount-raised">
@@ -111,9 +111,11 @@
       
 
    {if $linkText}
+   <!-- remove unecessery link
    <div class="pcp-create-your-own"> 
         <a href={$linkTextUrl} class="pcp-create-link"><span>{$linkText}</span></a>
    </div>     
+   -->
    {/if}
 </div><!-- /.campaign -->
 
