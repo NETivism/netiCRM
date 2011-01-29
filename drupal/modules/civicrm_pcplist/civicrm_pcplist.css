@@ -49,7 +49,3 @@
 .pcplist-goal, .pcplist-achieved {
   display: none;
 }
-/* hide unecessery link in pcp page */
-.pcp-create-your-own {
-  display: none;
-}
