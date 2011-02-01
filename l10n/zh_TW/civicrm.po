@@ -15953,15 +15953,15 @@ msgstr "兄弟姊妹關係。"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Employee of"
-msgstr "員工"
+msgstr "雇員"
 
 #: xml/templates/civicrm_data.tpl templates/CRM/Member/Page/MembershipType.hlp
 msgid "Employer of"
-msgstr "員工"
+msgstr "雇主"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Employment relationship."
-msgstr "雇員關係。"
+msgstr "聘僱關係。"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Volunteer for"
@@ -15969,7 +15969,7 @@ msgstr "志工"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Volunteer is"
-msgstr "志工是"
+msgstr "志工單位"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Volunteer relationship."
@@ -15981,11 +15981,11 @@ msgstr "家戶主人"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Head of Household is"
-msgstr "一家之主是"
+msgstr "家戶"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Head of household."
-msgstr "一家之主。"
+msgstr "家戶主人。"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Household Member of"
@@ -15993,11 +15993,27 @@ msgstr "家庭成員"
 
 #: xml/templates/civicrm_data.tpl templates/CRM/Member/Page/MembershipType.hlp
 msgid "Household Member is"
-msgstr "家庭成員是"
+msgstr "家庭"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Household membership."
 msgstr "家庭成員。"
+
+#: xml/templates/civicrm_data.tpl
+msgid "Supervised by"
+msgstr "主管"
+
+#: xml/templates/civicrm_data.tpl
+msgid "Supervisor"
+msgstr "下屬"
+
+#: xml/templates/civicrm_data.tpl
+msgid "Case Coordinator is"
+msgstr "個案負責人"
+
+#: xml/templates/civicrm_data.tpl
+msgid "Case Coordinator"
+msgstr "個案"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Non-profit"
