@@ -3626,7 +3626,7 @@ msgstr "OK"
 
 #: CRM/Admin/Form/ContactType.php
 msgid "Basic Contact Type"
-msgstr "基本聯絡人類型"
+msgstr "基礎類型"
 
 #: CRM/Admin/Form/ContactType.php
 msgid "This contact type name already exists in database. Contact type names must be unique."
@@ -12829,15 +12829,15 @@ msgstr "管理用作分辨有潛質複製聯絡人記錄的規測。使用已選
 
 #: templates/CRM/Admin/Page/DedupeRules.tpl
 msgid "New Dedupe Rule for Individuals"
-msgstr "新個人消除重複記錄規測"
+msgstr "建立個人合併規則"
 
 #: templates/CRM/Admin/Page/DedupeRules.tpl
 msgid "New Dedupe Rule for Households"
-msgstr "新家庭消除重複記錄規測"
+msgstr "建立家庭合併規則"
 
 #: templates/CRM/Admin/Page/DedupeRules.tpl
 msgid "New Dedupe Rule for Organizations"
-msgstr "新組織消除重複記錄規測"
+msgstr "建立組織合併規則"
 
 #: templates/CRM/Admin/Page/EventTemplate.tpl xml/templates/civicrm_data.tpl
 #: CRM/Event/Form/ManageEvent/EventInfo.php
@@ -45882,7 +45882,7 @@ msgstr "您可以建立新多重選擇選項給此欄位，或選擇一個您已
 
 #: templates/CRM/Campaign/Form/ResultOptions.tpl
 msgid "Response Options"
-msgstr "性別選項"
+msgstr "回應選項"
 
 #: templates/CRM/Campaign/Form/ResultOptions.tpl
 msgid "Enter up to ten (10) multiple choice options in this table (click 'another choice' for each additional choice).You can use existing response options set options by selecting survey response set."
@@ -46047,7 +46047,7 @@ msgstr "刪除個人募款專業"
 
 #: templates/CRM/Campaign/Page/DashBoard.tpl
 msgid "Response Options for"
-msgstr "性別選項"
+msgstr "回應選項"
 
 #: templates/CRM/Campaign/Page/Petition/Confirm.tpl
 msgid "<strong>%1 - your email address '%2' has been successfully verified.</strong>"
@@ -47587,11 +47587,11 @@ msgstr "街道地址"
 
 #: templates/CRM/Contact/Form/Edit/Individual.tpl
 msgid "There is a contact with a similar last name. If the person you were trying to add is listed below, click on their name to view or edit their record"
-msgstr ""
+msgstr "如果你想要新增的聯絡人與下列姓名相符，建議您先點入觀看下列聯絡人的資料進行查看和編輯，以避免重複新增聯絡人"
 
 #: templates/CRM/Contact/Form/Edit/Individual.tpl
 msgid "There are contacts with a similar last name. If the person you were trying to add is listed below, click on their name to view or edit their record"
-msgstr ""
+msgstr "如果你想要新增的聯絡人與下列姓名相符，建議您先點入觀看下列聯絡人的資料進行查看和編輯，以避免重複新增聯絡人"
 
 #: templates/CRM/Contact/Form/Edit/Website.tpl
 msgid "Delete Website Block"
@@ -47607,7 +47607,7 @@ msgstr "複製"
 
 #: templates/CRM/Contact/Form/Merge.tpl
 msgid "There are Drupal user accounts associated with both the original and duplicate contacts. If you continue with the merge, the user record associated with the duplicate contact will not be deleted, but will be un-linked from the associated contact record (which will be deleted). If that user logs in again, a new contact record will be created for them."
-msgstr ""
+msgstr "這些想要合併的聯絡人，已經跟網站裡不同帳戶有所連結。如果你繼續進行合併聯絡人的動作，網站帳戶將會取消與目前聯絡人連結，雖然此動作不會刪除網站帳戶，但是當下次使用者用其網站帳戶登入後，將會連結至新的聯絡人。"
 
 #: templates/CRM/Contact/Form/Relationship.tpl
 msgid "Please select a relationship type first."
@@ -47815,7 +47815,7 @@ msgstr "新組織消除重複記錄規測"
 
 #: templates/CRM/Contact/Page/DedupeRules.tpl
 msgid "Dedupe Exceptions"
-msgstr "性別選項"
+msgstr "排除規則"
 
 #: templates/CRM/Contact/Page/View/Note.tpl
 msgid "Comments"
