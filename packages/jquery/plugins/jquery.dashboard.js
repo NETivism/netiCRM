@@ -426,7 +426,7 @@
 
       // Removes the widget from the dashboard, and saves columns.
       widget.remove = function() {
-          if ( confirm( 'Are you sure you want to remove "' + widget.title + '"?') ) {  
+          if ( confirm( '你確定要移除 "' + widget.title + '"?') ) {  
               invokeCallback(opts.widgetCallbacks.remove, widget);
               widget.element.fadeOut(opts.animationSpeed, function() {
                   $(this).remove();
