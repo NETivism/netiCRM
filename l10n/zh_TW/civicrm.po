@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CiviCRM 3.0\n"
 "POT-Creation-Date: 2007-04-18 07:33+0200\n"
-"PO-Revision-Date: 2011-01-20 18:21+0800\n"
-"Last-Translator: Karen Yeh <hunter771222@gmail.com>\n"
+"PO-Revision-Date: 2011-01-27 22:42+0800\n"
+"Last-Translator: Charles Chuang <charles>\n"
 "Language-Team: CiviCRM Translators <civicrm-translators@lists.civicrm.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -406,7 +406,7 @@ msgstr "贊助"
 
 #: CRM/ACL/DAO/ACL.php CRM/Contact/DAO/ACLContactCache.php
 msgid "Revoke"
-msgstr ""
+msgstr "取消"
 
 #: CRM/ACL/DAO/Cache.php CRM/Core/DAO/Log.php CRM/Core/DAO/Note.php
 #: CRM/Report/Form/Contact/Log.php drupal/modules/views/civicrm.views.inc
@@ -3097,7 +3097,7 @@ msgstr "金額統計"
 #: CRM/Report/Form/Contribute/Summary.php
 #: CRM/Report/Form/Contribute/TopDonor.php
 msgid "Aggregate Amount"
-msgstr ""
+msgstr "總金額"
 
 #: CRM/Report/Form/Contribute/SoftCredit.php
 #: CRM/Report/Form/Contribute/Summary.php
@@ -6787,7 +6787,7 @@ msgstr "登出"
 
 #: CRM/Core/BAO/Navigation.php xml/templates/civicrm_data.tpl
 msgid "Home"
-msgstr "家"
+msgstr "管理首頁"
 
 #: CRM/Core/BAO/Navigation.php
 msgid "Drupal Menu"
@@ -14991,7 +14991,7 @@ msgstr "加入圖片"
 
 #: templates/CRM/Form/attachment.tpl
 msgid "You can upload a picture or image to include on your page. Your file should be in .jpg, .gif, or .png format. Recommended image size is 250 x 250 pixels. Maximum size is 360 x 360 pixels."
-msgstr "您可以上傳一張圖片至您的個人募款串連。圖檔必須是 .jpg，.gif 或 .png 格式。建議大小為 250 x 250 像素。最大 360 x 360 像素。"
+msgstr "您可以上傳一張圖片至您的個人募款頁。圖檔必須是 .jpg，.gif 或 .png 格式。建議大小為 250 x 250 像素。最大 360 x 360 像素。"
 
 #: templates/CRM/Form/attachment.tpl
 msgid "Browse to the <strong>file</strong> you want to upload."
@@ -15527,7 +15527,7 @@ msgstr "返回列表"
 
 #: templates/CRM/Profile/Page/View.tpl
 msgid "Map Primary Address"
-msgstr "對應預設地址"
+msgstr "地圖主要地址"
 
 #: templates/CRM/Report/Form/ErrorMessage.tpl
 msgid "Sorry. No results found."
@@ -17207,15 +17207,15 @@ msgstr "捐款 - 定期捐款的開始和結束通知"
 
 #: xml/templates/civicrm_msg_template.tpl
 msgid "Personal Campaign Pages - Admin Notification"
-msgstr "個人募款串連 - 管理通知"
+msgstr "個人募款頁 - 管理通知"
 
 #: xml/templates/civicrm_msg_template.tpl
 msgid "Personal Campaign Pages - Supporter Status Change Notification"
-msgstr "個人募款串連 - 支持者狀態更改提示"
+msgstr "個人募款頁 - 支持者狀態更改提示"
 
 #: xml/templates/civicrm_msg_template.tpl
 msgid "Personal Campaign Pages - Supporter Welcome"
-msgstr "個人募款串連 - 歡迎支持者"
+msgstr "個人募款頁 - 歡迎支持者"
 
 #: xml/templates/civicrm_msg_template.tpl
 msgid "Events - Registration Confirmation and Receipt (off-line)"
@@ -17497,7 +17497,7 @@ msgstr "這是一個定期定額捐款。您可以修改或取消未來的捐款
 #: CRM/Contribute/BAO/Query.php CRM/Contribute/Form/Contribution.php
 #: CRM/Contribute/Page/PCP.php
 msgid "Personal Campaign Page"
-msgstr "個人募款串連"
+msgstr "個人募款頁"
 
 #: xml/templates/message_templates/contribution_online_receipt_html.tpl
 #: xml/templates/message_templates/contribution_online_receipt_text.tpl
@@ -17745,35 +17745,33 @@ msgstr "項目登記已經過期因為 %1 "
 #: xml/templates/message_templates/pcp_notify_subject.tpl
 #: xml/templates/message_templates/pcp_notify_text.tpl
 msgid "Personal Campaign Page Notification"
-msgstr "個人募款串連提示"
+msgstr "個人募款頁 - 通知"
 
 #: xml/templates/message_templates/pcp_notify_html.tpl
 #: xml/templates/message_templates/pcp_notify_text.tpl
 msgid "Updated personal campaign page"
-msgstr "更新您的個人募款串連"
+msgstr "更新個人募款頁"
 
 #: xml/templates/message_templates/pcp_notify_html.tpl
 #: xml/templates/message_templates/pcp_notify_text.tpl
 msgid "New personal campaign page"
-msgstr "新增個人募款串連"
+msgstr "新增個人募款頁"
 
 #: xml/templates/message_templates/pcp_notify_html.tpl
 #: xml/templates/message_templates/pcp_notify_text.tpl
 #: CRM/Contribute/DAO/PCP.php
 msgid "Personal Campaign Page Title"
-msgstr "個人募款專業標題"
+msgstr "個人募款頁標題"
 
 #: xml/templates/message_templates/pcp_notify_html.tpl
 #: xml/templates/message_templates/pcp_notify_text.tpl
 msgid "View Page"
-msgstr "查看頁面"
+msgstr "檢視頁面"
 
 #: xml/templates/message_templates/pcp_status_change_html.tpl
 #: xml/templates/message_templates/pcp_status_change_text.tpl
 msgid "Your personal campaign page has been approved and is now live."
-msgstr ""
-"您的個人募款串連巳審核通過。#-#-#-#-#  civicrm-modules.po (CiviCRM 2.1)  #-#-#-#-#\n"
-"您的個人募款串連巳被審批。"
+msgstr "您的個人募款頁巳審核通過，上線了！"
 
 #: xml/templates/message_templates/pcp_status_change_html.tpl
 #: xml/templates/message_templates/pcp_status_change_text.tpl
@@ -17811,14 +17809,14 @@ msgstr "登入後，您可以使用此表格去宣傳您的募款頁。"
 #: xml/templates/message_templates/pcp_supporter_notify_html.tpl
 #: xml/templates/message_templates/pcp_supporter_notify_text.tpl
 msgid "Questions? Send email to"
-msgstr "有任何問題？Email到"
+msgstr "我們將儘速確認並發佈您的個人募款頁，請靜待通知。若有任何問題？ 請 email 到"
 
 #: xml/templates/message_templates/pcp_status_change_html.tpl
 #: xml/templates/message_templates/pcp_status_change_text.tpl
 msgid ""
 "Your personal campaign page has been reviewed. There were some issues with the content\n"
 "which prevented us from approving the page. We are sorry for any inconvenience."
-msgstr "您的個人募款串連已被重新檢查。而其中有一些內容問題，因而無法允許您的專頁。非常抱歉造成你的不便。"
+msgstr "您的個人募款頁已經過檢視，因為一些問題，無法核准通過。非常抱歉。"
 
 #: xml/templates/message_templates/pcp_status_change_html.tpl
 #: xml/templates/message_templates/pcp_status_change_text.tpl
@@ -17828,7 +17826,7 @@ msgstr "請聯絡網站管理者"
 #: xml/templates/message_templates/pcp_status_change_subject.tpl
 #: xml/templates/message_templates/pcp_supporter_notify_subject.tpl
 msgid "Your Personal Campaign Page for %1"
-msgstr "您的個人募款串連為%1"
+msgstr "您為 %1 所建立的個人募款頁"
 
 #: xml/templates/message_templates/pcp_status_change_text.tpl
 #: xml/templates/message_templates/pcp_supporter_notify_text.tpl
@@ -17843,7 +17841,7 @@ msgstr "親愛的支持者"
 #: xml/templates/message_templates/pcp_supporter_notify_html.tpl
 #: xml/templates/message_templates/pcp_supporter_notify_text.tpl
 msgid "Thanks for creating a personal campaign page in support of %1."
-msgstr "謝謝建立個人募款串連在支持 %1"
+msgstr "謝謝您建立個人募款頁，以支持 %1。"
 
 #: xml/templates/message_templates/pcp_supporter_notify_html.tpl
 #: xml/templates/message_templates/pcp_supporter_notify_text.tpl
@@ -18171,7 +18169,7 @@ msgstr "<strong>Civi捐款</strong> - 線上募款及捐款人管理模組讓您
 
 #: templates/CRM/Admin/Form/Setting/Component.hlp
 msgid "<strong>CiviPledge</strong> - Record and track pledges received from contributors. Send pledge acknowledgements and payment reminders. Configure online contribution pages to support self-service pledging and pledge payments."
-msgstr "<strong>Civi認捐</strong> - 記錄及追蹤捐款者的認捐，傳送認捐感謝函及付款提醒，安裝捐款網頁到自助認捐服務和認捐付款，並支援建立個人募款串連。"
+msgstr "<strong>Civi認捐</strong> - 記錄及追蹤捐款者的認捐，傳送認捐感謝函及付款提醒，安裝捐款網頁到自助認捐服務和認捐付款，並支援建立個人募款頁。"
 
 #: templates/CRM/Admin/Form/Setting/Component.hlp
 msgid "<strong>CiviMail</strong> - A robust mass-mailing component which allows you to engage your constituents with personalized email blasts and newsletters."
@@ -19313,8 +19311,8 @@ msgid ""
 "Can the \"owner\" of a Personal Campaign Page use the Tell-a-Friend function to send emails to people inviting them to visit their page and make a contribution?\n"
 "NOTE: Tell a Friend emails will automatically include a link to the sender's campaign page."
 msgstr ""
-"個人募款串連的\"owner\"可否使用以 Email 告知朋友的功能，邀請他們來查看募款頁並捐款？\n"
-"註記：以 Email 告知朋友的連結會自動包含在寄送者的個人募款串連中。"
+"個人募款頁的\"owner\"可否使用以 Email 告知朋友的功能，邀請他們來查看募款頁並捐款？\n"
+"註記：以 Email 告知朋友的連結會自動包含在寄送者的個人募款頁中。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/PCP.hlp
 msgid "How many recipients can they send emails to at one time? You may want to limit this to prevent large mail blasts from being sent."
@@ -19572,7 +19570,7 @@ msgstr "當活動額滿，您可允許使用者列候補名單。要啟用這項
 
 #: templates/CRM/Event/Form/ManageEvent/EventInfo.hlp
 msgid "Otherwise, the registration link is hidden and the &quot;Event Full Message&quot' is displayed when the maximum number of registrations is reached. Only participants with status types marked as 'counted' are included when checking if the event is full."
-msgstr ""
+msgstr "否則，當參加人數上限額滿時，該報名連結會被隱藏，同時顯示出「活動額滿訊息」。當確認活動已額滿時，標示為「已計算」的參加者才會被包括在內。"
 
 #: templates/CRM/Event/Form/ManageEvent/EventInfo.hlp
 msgid "Text displayed on the Event Information page when the maximum number of registrations is reached (unless you are offering a waitlist). If online registration is enabled, this message will also be displayed if users attempt to register."
@@ -19929,7 +19927,7 @@ msgstr ""
 
 #: templates/CRM/Mailing/Form/Group.hlp
 msgid "Assign a unique name to each of your mailings. Select a naming convention that will help keep your mailings organized and easy to find when you want to review and compare mailing results. For example, if you do a monthly general-interest newsletter - you might use the following naming convention:"
-msgstr ""
+msgstr "為您的電子報指定獨立的名字。獨立的名稱將會幫助您管理電子報，並且讓您更容易得找到想要檢視的電子報。例如當您做了一份每月廣受關注的通訊 - 您可以使用以下的命名慣例："
 
 #: templates/CRM/Mailing/Form/Group.hlp
 msgid "General Monthly Newsletter: 200709"
@@ -19941,11 +19939,11 @@ msgstr "請確定應首先收到這封電子報，且在您資料庫中已有的
 
 #: templates/CRM/Mailing/Form/Group.hlp
 msgid "You also have the option to <strong>Exclude</strong> some contacts from your included groups by selecting one or more <strong>Excluded Groups</strong>. Contacts who are in both groups will NOT receive the mailing (they are 'excluded')."
-msgstr ""
+msgstr "您也可以選擇<strong>排除</strong>某些聯絡人在您被包含的群組中，透過選擇一個或更多<strong>排除群組</strong>。而同時被列入「包含群組」與「排除群組」的聯絡人將不會接收到郵件（他們不被包含）。"
 
 #: templates/CRM/Mailing/Form/Group.hlp
 msgid "If you have sent other mailings - you can additionally Include (or Exclude) contacts who received those mailings. CiviCRM will eliminate any duplications so that contacts who are in an Included Group AND were recipients of an Included Mailing will only be sent one copy of this mailing."
-msgstr ""
+msgstr "如果您已經發送過其他的電子報 - 您可以再增加包括(或不包括)這些曾收過電子報的聯絡人。CiviCRM將會排除已列入在「包含群組」的重複聯絡人，並只發送一封電子報給聯絡人。"
 
 #: templates/CRM/Mailing/Form/Group.hlp
 msgid "After you click <strong>Next</strong> - the total number of selected recipients will be displayed on the next screen. Use this as a 'reality-check' to help you confirm that you've targeted (and excluded) the desired recipients."
@@ -19953,7 +19951,7 @@ msgstr "在您按<strong>下一步</strong>以前 - 已選取接收人的總數�
 
 #: templates/CRM/Mailing/Form/Group.hlp
 msgid "You also have the option to <strong>Exclude</strong> some contacts in your included groups by selecting on or more <strong>Excluded Groups</strong>. Contacts who are in both groups will NOT receive the mailing (they are 'excluded')."
-msgstr "您也可以選擇<strong>不包括</strong>某些聯絡人在您被包括的群組，透過選擇一個或更多<strong>不被包括群組</strong>。在兩個群組的聯絡人不會接收郵件（他們不被包括）。"
+msgstr "您也可以選擇<strong>排除</strong>某些聯絡人在您被包含的群組中，透過選擇一個或更多<strong>排除群組</strong>。而同時被列入「包含群組」與「排除群組」的聯絡人將不會接收到郵件（他們不被包含）。"
 
 #: templates/CRM/Mailing/Form/Schedule.hlp
 msgid "Scheduling and Sending Mailings"
@@ -19973,7 +19971,7 @@ msgstr "如果您未準備好計劃或傳送此電子報，按<strong>稍後繼�
 
 #: templates/CRM/Mailing/Form/Schedule.hlp
 msgid "<strong>Trouble-shooting Tip</strong> - If you find that your mailings are not being sent, ask the system administrator or technical support contact for your site to verify that the automated task (&quot;cron job&quot;) is running - and how frequently."
-msgstr ""
+msgstr "<strong>故障排除提示</strong> - 如果您發現您的電子報還未發送，詢問系統管理員或相關技術人員，以確認自動排程作業的設定頻率，及是否有正確進行。"
 
 #: templates/CRM/Mailing/Form/Test.hlp
 msgid "Verify the test email address and/or test recipient group. Then click <strong>Next</strong> with 'Send Test Mailing' checked to generate the test mailing. Once you receive the test mailing:"
@@ -19997,7 +19995,7 @@ msgstr "如果您需要作出更變，您可以按<strong>之前</strong>從下�
 
 #: templates/CRM/Mailing/Form/Upload.hlp
 msgid "Select the \"FROM\" Email Address for this mailing from the dropdown list. Available email addresses are configurable by users with Administer CiviCRM permission. EXAMPLE: \"Client Services\" &lt;clientservices@example.org&gt;"
-msgstr ""
+msgstr "從下拉選單選擇\"寄件者\"Email地址。有用的Email地址會藉由CiviCRM管理權限的用戶做配置。例如：\"服務信箱\" &lt;service@example.org&gt;"
 
 #: templates/CRM/Mailing/Form/Upload.hlp
 msgid "Go to <a href=\"%1\">Administer CiviCRM &raquo; Option Lists &raquo; FROM Email Addresses</a> to add or edit email addresses. Make sure these email addresses are valid email accounts with your email service provider."
@@ -22305,12 +22303,12 @@ msgid ""
 "Are you sure you want to delete this Personal Campaign Page ?\\n"
 " This action can not be undone."
 msgstr ""
-"確認刪除此個人募款串連？\\n"
+"確認刪除此個人募款頁？\\n"
 "提醒您，此操作無法回復。"
 
 #: CRM/Contribute/BAO/PCP.php
 msgid "Create a Personal Campaign Page"
-msgstr "建立個人募款串連"
+msgstr "建立個人募款頁"
 
 #: CRM/Contribute/BAO/PCP.php
 msgid "Edit Your Page"
@@ -22322,7 +22320,7 @@ msgstr "分享給朋友"
 
 #: CRM/Contribute/BAO/PCP.php
 msgid "Supporter profile is not set for this Personal Campaign Page or the profile is disabled. Please contact the site administrator if you need assistance."
-msgstr "支持者檔案在此個人募款串連沒有設定，或檔案被停用。如果你需要協助請與網站管理者聯繫。"
+msgstr "支持者檔案在此個人募款頁沒有設定，或檔案被停用。如果你需要協助請與網站管理者聯繫。"
 
 #: CRM/Contribute/BAO/Premium.php
 msgid "Selected Option"
@@ -22350,7 +22348,7 @@ msgstr "捐款收據日期是空的"
 
 #: CRM/Contribute/BAO/Query.php
 msgid "Personal Campaign Page - %1"
-msgstr "個人募款串連 - %1"
+msgstr "個人募款頁 - %1"
 
 #: CRM/Contribute/BAO/Query.php
 msgid "Paid By - %1"
@@ -22551,11 +22549,11 @@ msgstr "連結文字"
 
 #: CRM/Contribute/DAO/PCP.php
 msgid "Personal Campaign Page ID"
-msgstr "個人募款串連編號"
+msgstr "個人募款頁編號"
 
 #: CRM/Contribute/DAO/PCP.php
 msgid "Personal Campaign Page Status"
-msgstr "個人募款串連狀態"
+msgstr "個人募款頁狀態"
 
 #: CRM/Contribute/DAO/PCP.php
 msgid "Page Text"
@@ -22700,31 +22698,31 @@ msgstr "此頁包含一個個人檔案以及會員資料欄位 - 但封鎖會員
 
 #: CRM/Contribute/Form/ContributionBase.php
 msgid "This contribution page is not related to the Personal Campaign Page you have just visited. However you can still make a contribution here."
-msgstr "此募款頁與你剛剛看的個人募款串連無關，但是您仍可在此捐款。"
+msgstr "此募款頁與你剛剛看的個人募款頁無關，但是您仍可在此捐款。"
 
 #: CRM/Contribute/Form/ContributionBase.php
 msgid "The Personal Campaign Page you have just visited is currently %1. However you can still support the campaign by making a contribution here."
-msgstr "您剛看見的個人募款串連目前 %1。但您仍可以在這裡捐款支持這個募款活動。"
+msgstr "您剛看見的個人募款頁目前 %1。但您仍可以在這裡捐款支持這個募款活動。"
 
 #: CRM/Contribute/Form/ContributionBase.php
 msgid "Personal Campaign Pages are currently not enabled for this contribution page. However you can still support the campaign by making a contribution here."
-msgstr "個人募款串連目前並無在這個募款頁面啟用。但您仍可在這裡捐款來表達你的支持。"
+msgstr "個人募款頁目前並無在這個募款頁面啟用。但您仍可在這裡捐款來表達你的支持。"
 
 #: CRM/Contribute/Form/ContributionBase.php
 msgid "The Personal Campaign Page you have just visited is current inactive. However you can still make a contribution here."
-msgstr "您瀏覽的個人募款串連目前停用中。但您仍可在此捐款。"
+msgstr "您瀏覽的個人募款頁目前停用中。但您仍可在此捐款。"
 
 #: CRM/Contribute/Form/ContributionBase.php
 msgid "The Personal Campaign Page you have just visited is only active between %1 to %2. However you can still support the campaign by making a contribution here."
-msgstr "您瀏覽的個人募款串連只於%1和 %2提供服務。但您仍可在此捐款來表達你的支持。"
+msgstr "您瀏覽的個人募款頁只於%1和 %2提供服務。但您仍可在此捐款來表達你的支持。"
 
 #: CRM/Contribute/Form/ContributionBase.php
 msgid "The Personal Campaign Page you have just visited will be active beginning on %1. However you can still support the campaign by making a contribution here."
-msgstr "您剛瀏覽的個人募款串連會於 %1啟用。但您仍可在此捐款來表達你的支持。"
+msgstr "您剛瀏覽的個人募款頁會於 %1啟用。但您仍可在此捐款來表達你的支持。"
 
 #: CRM/Contribute/Form/ContributionBase.php
 msgid "The Personal Campaign Page you have just visited is not longer active (as of %1). However you can still support the campaign by making a contribution here."
-msgstr "您剛瀏覽的個人募款串連已不再提供服務 (像 %1)。但您仍可在此捐款來表達您的支持。"
+msgstr "您剛瀏覽的個人募款頁已不再提供服務 (像 %1)。但您仍可在此捐款來表達您的支持。"
 
 #: CRM/Contribute/Form/ContributionBase.php
 msgid "Payment processor is not set for this page"
@@ -22780,7 +22778,7 @@ msgstr "混合的個人檔案不允許代為註冊/登記。"
 
 #: CRM/Contribute/Form/Contribution/Main.php
 msgid "This contribution is being made thanks to effort of <strong>%1</strong>, who supports our campaign. You can support it as well - once you complete the donation, you will be able to create your own Personal Campaign Page!"
-msgstr "這捐款是為了對 <strong>%1</strong>支持我們的募款活動所作的感謝。一旦您完成捐款，您將可以建立自己的個人募款串連！"
+msgstr "這捐款是為了對 <strong>%1</strong>支持我們的募款活動所作的感謝。一旦您完成捐款，您將可以建立自己的個人募款頁！"
 
 #: CRM/Contribute/Form/Contribution/Main.php
 msgid "Show my contribution in the public honor roll"
@@ -23051,15 +23049,15 @@ msgstr "募款頁 '%1' 已刪除。"
 
 #: CRM/Contribute/Form/ContributionPage/PCP.php
 msgid "Personal Campaign Page Settings (%1)"
-msgstr "個人募款串連設定 （%1）"
+msgstr "個人募款頁設定 （%1）"
 
 #: CRM/Contribute/Form/ContributionPage/PCP.php
 msgid "Create your own fundraising page"
-msgstr "建立您的個人募款串連"
+msgstr "建立您的個人募款頁"
 
 #: CRM/Contribute/Form/ContributionPage/PCP.php
 msgid "Enable Personal Campaign Pages (for this contribution page)?"
-msgstr "啟用個人募款串連（在這個募款頁）？"
+msgstr "啟用個人募款頁（在這個募款頁）？"
 
 #: CRM/Contribute/Form/ContributionPage/PCP.php
 msgid "Approval required"
@@ -23083,7 +23081,7 @@ msgstr "請輸入一個有效數值。"
 
 #: CRM/Contribute/Form/ContributionPage/PCP.php
 msgid "'Create Personal Campaign Page' link text"
-msgstr "「建立個人募款串連」連結文字"
+msgstr "「建立個人募款頁」連結文字"
 
 #: CRM/Contribute/Form/ContributionPage/PCP.php
 msgid "if Tell Friend is enable, Maximum recipients limit should be greater than zero."
@@ -23099,7 +23097,7 @@ msgstr "必須指定一個有效的通知信寄送Email地址"
 
 #: CRM/Contribute/Form/ContributionPage/PCP.php
 msgid "Enable Personal Campaign Pages"
-msgstr "啟用個人募款串連"
+msgstr "啟用個人募款頁"
 
 #: CRM/Contribute/Form/ContributionPage.php
 msgid "Configure Page - %1"
@@ -23504,11 +23502,11 @@ msgstr "感謝禮「%1」已儲存。"
 
 #: CRM/Contribute/Form/PCP/Campaign.php
 msgid "Setup a Personal Campaign Page - Step 2"
-msgstr "設定個人募款串連 - 第二步"
+msgstr "設定個人募款頁 - 第二步"
 
 #: CRM/Contribute/Form/PCP/Campaign.php
 msgid "Edit Your Personal Campaign Page"
-msgstr "編輯個人募款串連"
+msgstr "編輯您的個人募款頁"
 
 #: CRM/Contribute/Form/PCP/Campaign.php
 msgid "Your Goal"
@@ -23568,11 +23566,11 @@ msgstr "專頁審核完成後，您會立刻收到Email通知。"
 
 #: CRM/Contribute/Form/PCP/Campaign.php
 msgid "Your Personal Campaign Page has been %1 %2 %3"
-msgstr "您的個人募款串連巳被 %1 %2 %3"
+msgstr "您的個人募款頁巳被 %1 %2 %3"
 
 #: CRM/Contribute/Form/PCP/PCPAccount.php
 msgid "You must login with your OpenID provider before you can create a Personal Campaign Page."
-msgstr "在您建立個人募款串連之前，您必需以您的 OpenID 登入。"
+msgstr "在您建立個人募款頁之前，您必需以您的 OpenID 登入。"
 
 #: CRM/Contribute/Form/PCP/PCP.php
 msgid "The Campaign Page '%1' has been deleted."
@@ -23585,7 +23583,7 @@ msgstr "刪除個人募款專業"
 
 #: CRM/Contribute/Form/PCP/PCP.php
 msgid "Personal Campaign Pages Status"
-msgstr "個人募款串連狀態"
+msgstr "個人募款頁狀態"
 
 #: CRM/Contribute/Form/PCP/PCP.php
 msgid "Show"
@@ -23748,7 +23746,7 @@ msgstr "刪除感謝禮"
 
 #: CRM/Contribute/Page/PCPInfo.php
 msgid "The personal campaign page you requested is currently unavailable."
-msgstr "此個人募款串連目前停用中。"
+msgstr "此個人募款頁目前停用中。"
 
 #: CRM/Contribute/Page/PCPInfo.php
 msgid "Once you've received your new account welcome email, you can <a href=%1>click here</a> to login and promote your campaign page."
@@ -23756,7 +23754,7 @@ msgstr "當您收到帳號啟用Email，您可以<a href=%1>按此</a>登入及�
 
 #: CRM/Contribute/Page/PCPInfo.php
 msgid "The personal campaign page you requested is currently unavailable. However you can still support the campaign by making a contribution here."
-msgstr "此個人募款串連暫時停用。但您仍可在這裡捐款支持這個活動。"
+msgstr "此個人募款頁暫時停用。但您仍可在這裡捐款支持這個活動。"
 
 #: CRM/Contribute/Page/PCPInfo.php
 msgid "Change the content and appearance of your page"
@@ -23782,25 +23780,21 @@ msgstr "移除專頁（這個操作不能回復！）"
 msgid "Contribute Now"
 msgstr "立即捐款"
 
-#: templates/CRM/Contribute/Page/PCPInfo.tpl
-msgid "towards our goal"
-msgstr "目標達成"
-
 #: CRM/Contribute/Page/PCP.php
 msgid "Are you sure you want to delete this Campaign Page ?"
 msgstr "您確定要刪除此募款專頁嗎？"
 
 #: CRM/Contribute/Page/PCP.php
 msgid "Approve Personal Campaign Page"
-msgstr "批准個人募款串連"
+msgstr "批准個人募款頁"
 
 #: CRM/Contribute/Page/PCP.php
 msgid "Reject Personal Campaign Page"
-msgstr "拒絕個人募款串連"
+msgstr "拒絕個人募款頁"
 
 #: CRM/Contribute/Page/PCP.php
 msgid "Delete Personal Campaign Page"
-msgstr "刪除個人募款串連"
+msgstr "刪除個人募款頁"
 
 #: CRM/Contribute/Page/PCP.php
 msgid "Search Campaign Pages"
@@ -27044,11 +27038,11 @@ msgstr "您無法刪除此募款頁，因為它已被用作提交捐款或會員
 
 #: templates/CRM/Contribute/Form/ContributionPage/PCP.tpl
 msgid "No Profile with a user account registration option has been configured / enabled for your site. You need to <a href='%1'>configure a Supporter profile</a> first. It will be used to collect or update basic information from users while they are creating a Personal Campaign Page."
-msgstr "您的網站沒有個人檔案有設置/啓用使用者註冊選項。您需要先到<a href='%1'>設置一個支持者檔案</a>。當使用者建立一個個人募款串連時，它會被用來收集或更新基本資料。"
+msgstr "您的網站沒有個人檔案有設置/啓用使用者註冊選項。您需要先到<a href='%1'>設置一個支持者檔案</a>。當使用者建立一個個人募款頁時，它會被用來收集或更新基本資料。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/PCP.tpl
 msgid "Allow constituents to create their own personal fundraising pages linked to this contribution page."
-msgstr "允許使用者建立他們自己的個人募款串連，連結到此募款頁。"
+msgstr "允許使用者建立他們自己的個人募款頁，連結到此募款頁。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/Premium.tpl
 msgid "Edit <strong>Premiums Settings</strong> to enable the Premiums section for this Online Contribution Page, and customize the title and introductory message (e.g ...in appreciation of your support, you will be able to select from a number of exciting thank-you gifts...). You can optionally provide a contact email address and/or phone number for inquiries."
@@ -27456,15 +27450,15 @@ msgstr "瀏覽聯絡記錄"
 
 #: templates/CRM/Contribute/Form/ContributionView.tpl
 msgid "Personal Campaign Page Contribution Information"
-msgstr "個人募款串連資訊"
+msgstr "個人募款頁資訊"
 
 #: templates/CRM/Contribute/Form/ContributionView.tpl
 msgid "Campaign Page"
-msgstr "個人募款串連"
+msgstr "個人募款頁"
 
 #: templates/CRM/Contribute/Form/ContributionView.tpl
 msgid "Contribution was made through this personal campaign page."
-msgstr "已透過此個人募款串連捐款。"
+msgstr "已透過此個人募款頁捐款。"
 
 #: templates/CRM/Contribute/Form/ContributionView.tpl
 msgid "In Public Honor Roll?"
@@ -27593,15 +27587,15 @@ msgstr "告訴人們此捐款活動對您的重要性。"
 
 #: templates/CRM/Contribute/Form/PCP/Campaign.tpl
 msgid "If this option is checked, an \"honor roll\" will be displayed with the names (or nicknames) of the people who donated through your fundraising page. (Donors will have the option to remain anonymous. Their names will NOT be listed.)"
-msgstr ""
+msgstr "如果勾選此項，會顯示一個捐款名單，列出所有在您的個人捐款頁貢獻金錢的人。（捐款者也可以選擇匿名，不顯示名稱）"
 
 #: templates/CRM/Contribute/Form/PCP/Campaign.tpl
 msgid "Is your Personal Campaign Page active? You can activate/de-activate it any time during it's lifecycle."
-msgstr "您的個人募款串連是否啓用中？您可以隨時啓用/停用它。"
+msgstr "您的個人募款頁是否啓用中？您可以隨時啓用/停用它。"
 
 #: templates/CRM/Contribute/Form/PCP/Delete.tpl
 msgid "Delete Campaign Page "
-msgstr "刪除個人募款串連"
+msgstr "刪除個人募款頁"
 
 #: templates/CRM/Contribute/Form/PCP/Delete.tpl
 msgid "Are you sure you want to delete Campaign Page '%1'?"
@@ -27612,7 +27606,7 @@ msgid ""
 "Creating your own fundraising page is simple. Fill in some basic information below, which will allow you to manage your page and invite friends to make a contribution.\n"
 "        Then click 'Continue' to personalize and announce your page."
 msgstr ""
-"您只需填寫一些基本資料，便能建立自己的個人募款串連，邀請您的朋友響應捐款。\n"
+"您只需填寫一些基本資料，便能建立自己的個人募款頁，邀請您的朋友響應捐款。\n"
 "請按「繼續」以個人化與公佈您的頁面。"
 
 #: templates/CRM/Contribute/Form/PCP/PCP.tpl
@@ -27883,7 +27877,7 @@ msgstr "使捐款人更容易把字散布給朋友及同事。"
 
 #: templates/CRM/Contribute/Page/ContributionPageEdit.tpl
 msgid "Allow constituents to create their own personal fundraising pages and drive traffic to this contribution page. (<a href=\"%1\">Or you can view and manage existing Personal Campaign Pages.</a>)"
-msgstr "允許組成者去建立他們自己的個人募款串連及驅動流量到此募款頁。(<a href=\"%1\">或您可以查看及管理現存個人募款串連</a>)"
+msgstr "允許組成者去建立他們自己的個人募款頁及驅動流量到此募款頁。(<a href=\"%1\">或您可以查看及管理現存個人募款頁</a>)"
 
 #: templates/CRM/Contribute/Page/ContributionPageEdit.tpl
 #: CRM/Contribute/Page/ContributionPage.php
@@ -27904,7 +27898,7 @@ msgstr "測試驅動器在整個捐款過程 - 包括自定欄位、確定、致
 
 #: templates/CRM/Contribute/Page/ContributionPageEdit.tpl
 msgid "Live Contribution Page"
-msgstr ""
+msgstr "前往捐款頁"
 
 #: templates/CRM/Contribute/Page/ContributionPageEdit.tpl
 msgid "Review your customized <strong>LIVE</strong> online contribution page here."
@@ -27912,7 +27906,7 @@ msgstr ""
 
 #: templates/CRM/Contribute/Page/ContributionPageEdit.tpl
 msgid "Use the following URL in links and buttons on any website to send visitors to this live page"
-msgstr "使用以下連結的URL及按鍵，引導參觀者到這個活的頁面"
+msgstr "使用以下連結的URL及按鍵，引導參觀者到該頁面"
 
 #: templates/CRM/Contribute/Page/ContributionPageEdit.tpl
 msgid "When your page is active, create front-end links to the contribution page using the Menu Manager. Select <strong>Online Contribution</strong> and enter <strong>%1</strong> for the Contribution id."
@@ -27949,7 +27943,7 @@ msgstr ""
 
 #: templates/CRM/Contribute/Page/ContributionSoft.tpl
 msgid "Personal Campaign Page?"
-msgstr "個人募款串連？"
+msgstr "個人募款頁？"
 
 #: templates/CRM/Contribute/Page/ContributionSoft.tpl
 msgid "View contributor contact record"
@@ -27958,7 +27952,7 @@ msgstr "瀏覽捐款人聯絡記錄"
 #: templates/CRM/Contribute/Page/ContributionSoft.tpl
 #: templates/CRM/Contribute/Page/PCP.tpl
 msgid "View Personal Campaign Page"
-msgstr "瀏覽個人募款串連"
+msgstr "瀏覽個人募款頁"
 
 #: templates/CRM/Contribute/Page/ContributionSoft.tpl
 msgid "( n/a )"
@@ -28073,11 +28067,11 @@ msgstr "您的網站尚未建立感謝禮。您可以<a href='%1'>新增一個</
 
 #: templates/CRM/Contribute/Page/PCPInfo.tpl
 msgid "Personal Fundraiser View"
-msgstr ""
+msgstr "檢視個人募款頁"
 
 #: templates/CRM/Contribute/Page/PCPInfo.tpl
 msgid "This is a preview of your Personal Campaign Page in support of <a href=\"%1\"><strong>\"%2\"</strong></a>."
-msgstr ""
+msgstr "這是您的個人募款頁的預覽畫面（為了支持<a href=\"%1\"><strong>\"%2\"</strong></a>線上捐款活動）"
 
 #: templates/CRM/Contribute/Page/PCPInfo.tpl
 msgid "The current status of your page is"
@@ -28133,7 +28127,7 @@ msgstr "停止滾動"
 
 #: templates/CRM/Contribute/Page/PCP.tpl
 msgid "This screen shows all the Personal Campaign Pages created in the system and allows administrator to review them and change their status."
-msgstr "此螢幕顯示所有在系統被建立的個人募款串連，及允許管理者去重新檢查它們及更變它們的狀態。"
+msgstr "此螢幕顯示所有在系統被建立的個人募款頁，及允許管理者去重新檢查它們及更變它們的狀態。"
 
 #: templates/CRM/Contribute/Page/PCP.tpl
 msgid "Page Title"
@@ -28150,11 +28144,11 @@ msgstr "繼續"
 
 #: templates/CRM/Contribute/Page/PCP.tpl
 msgid "There are no Personal Campaign Pages which match your search criteria."
-msgstr "沒有個人募款串連符合你的搜尋條件。"
+msgstr "沒有個人募款頁符合你的搜尋條件。"
 
 #: templates/CRM/Contribute/Page/PCP.tpl
 msgid "There are currently no Personal Campaign Pages."
-msgstr "現時沒有個人募款串連。"
+msgstr "現時沒有個人募款頁。"
 
 #: templates/CRM/Contribute/Page/PcpUserDashboard.tpl
 msgid "Your Page"
@@ -28170,19 +28164,19 @@ msgstr "活動終止日期"
 
 #: templates/CRM/Contribute/Page/PcpUserDashboard.tpl
 msgid "Preview your Personal Campaign Page"
-msgstr "預覽您的個人募款串連"
+msgstr "預覽您的個人募款頁"
 
 #: templates/CRM/Contribute/Page/PcpUserDashboard.tpl
 msgid "You do not have any active Personal Campaign pages."
-msgstr "您沒有任何啓用中的個人募款串連。"
+msgstr "您沒有任何啓用中的個人募款頁。"
 
 #: templates/CRM/Contribute/Page/PcpUserDashboard.tpl
 msgid "Create a Personal Campaign Page for another campaign:"
-msgstr "為另外募款建立一個個人募款串連："
+msgstr "為另外募款建立一個個人募款頁："
 
 #: templates/CRM/Contribute/Page/PcpUserDashboard.tpl
 msgid "Become a supporter by creating a Personal Campaign Page:"
-msgstr "透過建立一個個人募款串連成為一個支持者："
+msgstr "透過建立一個個人募款頁成為一個支持者："
 
 #: templates/CRM/Contribute/Page/PcpUserDashboard.tpl
 #: CRM/Campaign/Form/Petition.php CRM/Campaign/Form/Survey.php
@@ -28194,7 +28188,7 @@ msgstr "募款串連"
 
 #: templates/CRM/Contribute/Page/PcpUserDashboard.tpl
 msgid "View campaign page"
-msgstr "檢視個人募款串連"
+msgstr "檢視個人募款頁"
 
 #: templates/CRM/Contribute/Page/Premium.tpl
 msgid "The premiums listed below are currently offered on this Contribution Page. If you have other premiums which are not already being offered on this page, you will see a link below to offer another premium. Use <a href='%1'>Administer CiviCRM &raquo; Manage Premiums</a> to create or enable additional premium choices which can be used on any Contribution page."
@@ -28352,7 +28346,7 @@ msgstr "選擇活動類別之後，此頁會展示自定活動欄位給該類別
 #: templates/CRM/Event/Form/ManageEvent/EventInfo.tpl
 #: templates/CRM/Event/Form/ManageEvent/EventInfo.hlp
 msgid "The Role you select here is automatically assigned to people when they register online for this event (usually the default 'Attendee' role)."
-msgstr "您在此選擇的角色會被自動指派到線上登記此活動的人(通常預設'出席者'角色)。"
+msgstr "您在此選擇的角色會被自動指派到線上登記此活動的人(通常預設'參加者'角色)。"
 
 #: templates/CRM/Event/Form/ManageEvent/EventInfo.tpl
 msgid "To allow users to see a listing of participants, set this field to 'Name' (list names only), or 'Name and Email' (list names and emails)."
@@ -45433,11 +45427,11 @@ msgstr "募款串連"
 
 #: CRM/Campaign/DAO/Campaign.php
 msgid "Campaign Name"
-msgstr "個人募款串連"
+msgstr "個人募款頁"
 
 #: CRM/Campaign/DAO/Campaign.php templates/CRM/Campaign/Page/Campaign.tpl
 msgid "Campaign Title"
-msgstr "個人募款串連"
+msgstr "個人募款頁"
 
 #: CRM/Campaign/DAO/Campaign.php
 msgid "Campaign Description"
@@ -45453,11 +45447,11 @@ msgstr "活動終止日期"
 
 #: CRM/Campaign/DAO/Campaign.php
 msgid "Campaign Type ID"
-msgstr "個人募款串連"
+msgstr "個人募款頁"
 
 #: CRM/Campaign/DAO/Campaign.php
 msgid "Campaign Status ID"
-msgstr "個人募款串連"
+msgstr "個人募款頁"
 
 #: CRM/Campaign/DAO/Survey.php
 msgid "Instructions"
@@ -45483,11 +45477,11 @@ msgstr "募款串連"
 
 #: CRM/Campaign/Form/Campaign.php templates/CRM/Campaign/Page/Campaign.tpl
 msgid "Campaign Type"
-msgstr "個人募款串連"
+msgstr "個人募款頁"
 
 #: CRM/Campaign/Form/Campaign.php
 msgid "Campaign Status"
-msgstr "個人募款串連"
+msgstr "個人募款頁"
 
 #: CRM/Campaign/Form/Campaign.php
 msgid "Parent Id"
@@ -46160,7 +46154,7 @@ msgstr ""
 
 #: CRM/Case/Form/Activity.php
 msgid "You do not have any active Case Types"
-msgstr "您沒有任何啓用中的個人募款串連。"
+msgstr "您沒有任何啓用中的個人募款頁。"
 
 #: CRM/Case/Form/ActivityToCase.php
 msgid "Select Case"
@@ -46168,7 +46162,7 @@ msgstr "選擇日期"
 
 #: CRM/Case/Form/Case.php
 msgid "You do not have any active %1"
-msgstr "您沒有任何啓用中的個人募款串連。"
+msgstr "您沒有任何啓用中的個人募款頁。"
 
 #: CRM/Case/Form/Case.php
 msgid "Select Tags"
@@ -46454,7 +46448,7 @@ msgstr "來源聯絡人不存在！"
 
 #: CRM/Activity/Form/Search.php
 msgid "With (name or email)"
-msgstr "Email寄件者姓名"
+msgstr "Email或姓名"
 
 #: CRM/Activity/Form/Search.php
 msgid "Find Activities"
@@ -47406,7 +47400,7 @@ msgstr "動態類型"
 
 #: templates/CRM/Activity/Form/Search/Common.tpl
 msgid "Complete OR partial Name of the Source Contact or the Assignee Contact."
-msgstr ""
+msgstr "來源聯絡人或指派聯絡人完整或部份的名稱。"
 
 #: templates/CRM/Activity/Form/Search/EmptyResults.tpl
 msgid "No matching activity results found."
@@ -48510,7 +48504,7 @@ msgstr "捐款狀態"
 
 #: CRM/Contribute/Page/PCP.php
 msgid "Edit Personal Campaign Page"
-msgstr "編輯個人募款串連"
+msgstr "編輯個人募款頁"
 
 #: CRM/Contribute/Page/PCP.php
 msgid "Approve"
@@ -48559,8 +48553,8 @@ msgstr ""
 #: templates/CRM/Contribute/Form/ContributionPage/PCP.hlp
 msgid "Can the 'owner' of a Personal Campaign Page use the Tell-a-Friend function to send emails to people inviting them to visit their page and make a contribution? NOTE: Tell a Friend emails will automatically include a link to the sender's campaign page."
 msgstr ""
-"個人募款串連的\"owner\"可否使用以 Email 告知朋友的功能，邀請他們來查看募款頁並捐款？\n"
-"註記：以 Email 告知朋友的連結會自動包含在寄送者的個人募款串連中。"
+"個人募款頁的\"owner\"可否使用以 Email 告知朋友的功能，邀請他們來查看募款頁並捐款？\n"
+"註記：以 Email 告知朋友的連結會自動包含在寄送者的個人募款頁中。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/Settings.hlp
 msgid ""
@@ -48627,12 +48621,12 @@ msgstr "警告：刪除此選項會導致捐款記錄遺失。"
 #: templates/CRM/Contribute/Form/PCP/PCPAccount.tpl
 msgid "Creating your own fundraising page is simple. Fill in some basic information below, which will allow you to manage your page and invite friends to make a contribution. Then click 'Continue' to personalize and announce your page."
 msgstr ""
-"您只需填寫一些基本資料，便能建立自己的個人募款串連，邀請您的朋友響應捐款。\n"
+"您只需填寫一些基本資料，便能建立自己的個人募款頁，邀請您的朋友響應捐款。\n"
 "請按「繼續」以個人化與公佈您的頁面。"
 
 #: templates/CRM/Contribute/Form/PCP/PCP.tpl
 msgid "Find Campaign Pages"
-msgstr "個人募款串連"
+msgstr "個人募款頁"
 
 #: templates/CRM/Contribute/Form/Task/PDF.tpl
 msgid "You may choose to Email receipts to Contributers OR Download a PDF file containing one receipt per page to your local computer by clicking <strong>Process Receipt(s)</strong>. Your browser may display the file for you automatically, or you may need to open it for printing using any PDF reader (such as Adobe&reg; Reader)."
@@ -48659,7 +48653,7 @@ msgstr "募款頁面"
 
 #: templates/CRM/Contribute/Page/ContributionPage.tpl
 msgid "Manage Personal Campaign Pages"
-msgstr "啟用個人募款串連"
+msgstr "管理個人募款頁"
 
 #: templates/CRM/Contribute/Page/ContributionType.tpl
 msgid "Add Contribution Type"
@@ -48996,7 +48990,7 @@ msgstr "編輯 %1"
 
 #: CRM/Event/Form/Participant.php CRM/Event/Form/Task/Delete.php
 msgid "Delete this participant record along with associated participant record(s)."
-msgstr ""
+msgstr "刪除此參加者的相關記錄。"
 
 #: CRM/Event/Form/Participant.php CRM/Event/Form/Task/Delete.php
 msgid "Delete only this participant record."
@@ -49070,7 +49064,7 @@ msgstr "如果你略過這位參加者，那麼剩餘可供報名的人數便能
 
 #: CRM/Event/Form/Registration/AdditionalParticipant.php
 msgid "Please go back to the main registration page, to complete payment information."
-msgstr ""
+msgstr "請返回主註冊頁面，完成付款資訊。"
 
 #: CRM/Event/Form/Registration/AdditionalParticipant.php
 msgid "A person is already registered for this event."
@@ -49078,7 +49072,7 @@ msgstr "這個Email已經報名過這個活動了。"
 
 #: CRM/Event/Form/Registration/AdditionalParticipant.php
 msgid "Your event registration will be confirmed. Please go back to the main registration page, to complete payment information."
-msgstr ""
+msgstr "將接受您的報名請求。請返回主註冊頁面，完成付款資訊。"
 
 #: CRM/Event/Form/Registration/AdditionalParticipant.php
 msgid "It looks like event has only %2 seats available and you are trying to register %1 participants, so could you please select price options accordingly."
@@ -49098,7 +49092,7 @@ msgstr "你可以按\"確認報名\"鍵。如果你不是要參與此一活動�
 
 #: CRM/Event/Form/Registration.php
 msgid "It looks like this field participant count extending its maximum limit."
-msgstr ""
+msgstr "參加者數量似乎已達到最大的限制。"
 
 #: CRM/Event/Form/Registration/Register.php
 msgid "Only %1 Registrations available."
@@ -49158,7 +49152,7 @@ msgstr "允許用戶者觀看參加者列表，設定此欄位為「姓名」(�
 
 #: templates/CRM/Event/Form/ManageEvent/EventInfo.hlp
 msgid "After adding your event, create links to the listing page by copying the URL provided in the 'Participant Listing' section of the Configure Event page."
-msgstr ""
+msgstr "在新增完您的活動後，創建新的列表頁面，並將該網址複製在「參加者列表」的活動設定頁面中。"
 
 #: templates/CRM/Event/Form/ManageEvent/Fee.tpl
 msgid "Select the currency to be used for event registration."
@@ -49170,7 +49164,7 @@ msgstr "如果你取消勾選\"註冊日期折扣\"並儲存此表單，任何�
 
 #: templates/CRM/Event/Form/ManageEvent/Fee.tpl
 msgid "If this is NOT what you want to do, you can check \"Discounts by Signup Date\" again."
-msgstr ""
+msgstr "當此並非您想要的，您可以再次檢查\"報名日期折扣\"。"
 
 #: templates/CRM/Event/Form/ManageEvent/Registration.hlp
 msgid "You will also need to update the default strict duplicate contact matching rule for Individuals to include First Name and Last Name fields (Administer &raquo; Manage &raquo; Find and Merge Duplicate Contacts)."
@@ -49256,7 +49250,7 @@ msgstr "加入到活動的參加者總數： %1"
 
 #: templates/CRM/Event/Form/Registration/AdditionalParticipant.tpl
 msgid "Event Availability : %1"
-msgstr ""
+msgstr "報名請求 : %1"
 
 #: templates/CRM/Event/Form/Registration/Confirm.tpl
 #: templates/CRM/Event/Form/Registration/ThankYou.tpl
@@ -49467,23 +49461,23 @@ msgstr "警告：刪除此會員籍會同時刪除會員籍日誌及付款記錄
 
 #: templates/CRM/Member/Form/Membership.tpl
 msgid "If you need to include a special message for this member, enter it here. Otherwise, the confirmation email will include the standard receipt message configured under System Message Templates."
-msgstr ""
+msgstr "如果您需要包含一項特別的訊息給此會員，請在此輸入。否則，該確認信將會包含系統訊息範本裡的標準收據訊息。"
 
 #: templates/CRM/Member/Form/Search.hlp
 msgid "Indicate whether you want the search results to include:"
-msgstr ""
+msgstr "請指明您的搜尋結果是否要包括："
 
 #: templates/CRM/Member/Form/Search.hlp
 msgid "all members, regardless of whether they are the direct member or inherit it through a relationship,"
-msgstr ""
+msgstr "所有成員，不論為直接加入或由其他關係繼承，"
 
 #: templates/CRM/Member/Form/Search.hlp
 msgid "only primary members (those contacts who have a membership directly attached to their record), or"
-msgstr ""
+msgstr "僅有最初成員（那些在聯絡人紀錄中有直接會員紀錄），或"
 
 #: templates/CRM/Member/Form/Search.hlp
 msgid "only related records (those who inherit membership through a relationship as defined in the membership type configuration)."
-msgstr ""
+msgstr "僅有相關紀錄（那些透過現存會員的管道，再經由會員類型確認過的）。"
 
 #: templates/CRM/Member/Import/Form/UploadFile.hlp
 msgid "For each import, you can either INSERT new membership records, or UPDATE existing records. You can not do both types of operations in a single import session. If you are UPDATING existing memberships, you will need to include a column containing the unique CiviCRM-assigned membership ID to match to the existing membership records."
@@ -49534,7 +49528,7 @@ msgstr "編輯認捐付款"
 #: templates/CRM/Pledge/Form/Pledge.tpl
 #: templates/CRM/Pledge/Form/PledgeView.tpl
 msgid " Pledge total has changed due to payment adjustments. Original pledge amount was %1."
-msgstr ""
+msgstr "由於調整付款，總計認捐做了更動。原始認捐金額為%1。"
 
 #: templates/CRM/Pledge/Form/PledgeView.tpl
 msgid " installments of "
@@ -49550,7 +49544,7 @@ msgstr "已作出的認捐"
 
 #: templates/CRM/Pledge/Page/Payment.hlp
 msgid "If you enter an amount which is different than the current scheduled amount, choose one of these options:"
-msgstr ""
+msgstr "當您輸入一項不同於目前預訂的金額時，請選擇一個選項："
 
 #: templates/CRM/Pledge/Page/Payment.tpl
 msgid "Amount Due"
@@ -49572,19 +49566,19 @@ msgstr ""
 
 #: templates/CRM/Pledge/Page/Tab.hlp
 msgid "In order for reminders to be sent:"
-msgstr ""
+msgstr "傳送提醒信函的順序："
 
 #: templates/CRM/Pledge/Page/Tab.hlp
 msgid "Your site administrator must configure the provided script which updates pledge payment statuses and sends the reminders (UpdatePledgeRecord.php)."
-msgstr ""
+msgstr "您的網站管理者必須設定給定的腳本，以便認捐狀態更新時與提醒信寄送時使用。(UpdatePledgeRecord.php)."
 
 #: templates/CRM/Pledge/Page/Tab.hlp
 msgid "Your site administrator must also configure a \"cron job\" (scheduled server task) to run this script."
-msgstr ""
+msgstr "您的網站管理者也必須設定一個 \"排程工作\" 去執行此背景作業程式。"
 
 #: templates/CRM/Pledge/Page/Tab.hlp
 msgid "This contributor must have a valid email address (and must not have the \"Do Not Email\" flag checked)."
-msgstr ""
+msgstr "此捐款人必須有一個有效Email地址 (及不能為\"不要Email\" 標示的Email)。"
 
 #: templates/CRM/Pledge/Page/Tab.tpl
 msgid "Click <a href='%1'>Add Pledge</a> to record a new pledge received from this contact."
@@ -49596,7 +49590,7 @@ msgstr "表格"
 
 #: CRM/Project/DAO/Project.php
 msgid "Project Owner ID"
-msgstr ""
+msgstr "專案擁有者編號"
 
 #: CRM/Project/DAO/Task.php
 msgid "Task Type"
@@ -49646,13 +49640,13 @@ msgid "Durrës"
 msgstr "Durrsës"
 
 msgid "Korçë"
-msgstr ""
+msgstr "Korçë"
 
 msgid "Sofia"
 msgstr "Sofija"
 
 msgid "Bahia"
-msgstr ""
+msgstr "Bahia"
 
 msgid "Tocantins"
 msgstr "Tocatins"
@@ -49661,7 +49655,7 @@ msgid "Guizhou"
 msgstr "貴州省"
 
 msgid "Gwent"
-msgstr ""
+msgstr "Gwent"
 
 msgid "Bristol, City of"
 msgstr "London, City of"
@@ -49688,7 +49682,7 @@ msgid "Nord-Est"
 msgstr "Nord-Eat"
 
 msgid "Haifa"
-msgstr ""
+msgstr "Haifa"
 
 msgid "Ulaanbaatar"
 msgstr "Ulanbaatar"
@@ -49715,7 +49709,7 @@ msgid "Bonaire"
 msgstr "Zaire"
 
 msgid "Curaçao"
-msgstr ""
+msgstr "Curaçao"
 
 msgid "Saba"
 msgstr "Sabah"
@@ -49727,40 +49721,40 @@ msgid "St. Maarten"
 msgstr "開始"
 
 msgid "Barletta-Andria-Trani"
-msgstr ""
+msgstr "Barletta-Andria-Trani"
 
 msgid "Fermo"
 msgstr "Vermont"
 
 msgid "Monza e Brianza"
-msgstr ""
+msgstr "Monza e Brianza"
 
 msgid "Clwyd"
-msgstr ""
+msgstr "Clwyd"
 
 msgid "Dyfed"
-msgstr ""
+msgstr "Dyfed"
 
 msgid "South Glamorgan"
 msgstr "West Glamorgan"
 
 msgid "Artibonite"
-msgstr ""
+msgstr "Artibonite"
 
 msgid "Nippes"
-msgstr ""
+msgstr "Nippes"
 
 msgid "Andorra la Vella"
 msgstr "安道爾"
 
 msgid "Canillo"
-msgstr ""
+msgstr "Canillo"
 
 msgid "Encamp"
-msgstr ""
+msgstr "Encamp"
 
 msgid "Escaldes-Engordany"
-msgstr ""
+msgstr "Escaldes-Engordany"
 
 msgid "La Massana"
 msgstr "La Manouba"
@@ -49781,13 +49775,13 @@ msgid "Berry Islands"
 msgstr "Baker Island"
 
 msgid "Eleuthera"
-msgstr ""
+msgstr "Eleuthera"
 
 msgid "Grand Bahama"
 msgstr "Grand Basaa"
 
 msgid "Rum Cay"
-msgstr ""
+msgstr "Rum Cay"
 
 msgid "San Salvador Island"
 msgstr "San Salvador"
@@ -49799,22 +49793,22 @@ msgid "Kwango"
 msgstr "Yangon"
 
 msgid "Kwilu"
-msgstr ""
+msgstr "Kwilu"
 
 msgid "Mai-Ndombe"
-msgstr ""
+msgstr "Mai-Ndombe"
 
 msgid "Kasai"
-msgstr ""
+msgstr "Kasai"
 
 msgid "Lulua"
-msgstr ""
+msgstr "Lulua"
 
 msgid "Lomami"
-msgstr ""
+msgstr "Lomami"
 
 msgid "Sankuru"
-msgstr ""
+msgstr "Sankuru"
 
 msgid "Ituri"
 msgstr "Asturias"
@@ -49823,10 +49817,10 @@ msgid "Haut-Uele"
 msgstr "Haute-Vienne"
 
 msgid "Tshopo"
-msgstr ""
+msgstr "Tshopo"
 
 msgid "Bas-Uele"
-msgstr ""
+msgstr "Bas-Uele"
 
 msgid "Nord-Ubangi"
 msgstr "Noord-Brabant"
@@ -49835,10 +49829,10 @@ msgid "Mongala"
 msgstr "Monaragala"
 
 msgid "Sud-Ubangi"
-msgstr ""
+msgstr "Sud-Ubangi"
 
 msgid "Tshuapa"
-msgstr ""
+msgstr "Tshuapa"
 
 msgid "Haut-Lomami"
 msgstr "Haute-Loire"
@@ -49868,7 +49862,7 @@ msgstr "退回"
 
 #: CRM/Report/DAO/Instance.php
 msgid "Args"
-msgstr ""
+msgstr "參數"
 
 #: CRM/Report/Form/Activity.php
 msgid "Survey Result"
@@ -49936,7 +49930,7 @@ msgstr "交易編號"
 
 #: CRM/Report/Form/Contribute/Bookkeeping.php
 msgid "Cheque #"
-msgstr ""
+msgstr "支票 #"
 
 #: CRM/Report/Form/Contribute/Bookkeeping.php
 msgid "Contribution #"
@@ -50052,7 +50046,7 @@ msgstr "等於空值"
 
 #: CRM/Report/Form.php
 msgid "Is not empty (Null)"
-msgstr ""
+msgstr "不是空的(空值)"
 
 #: CRM/Report/Form/Pledge/Pbnp.php
 msgid "Next Payment Due"
@@ -50072,7 +50066,7 @@ msgstr ""
 
 #: templates/CRM/Report/Form/Contact/LoggingDetail.tpl
 msgid "This report can not be displayed because there are no entries in the logging tables yet."
-msgstr ""
+msgstr "這份報表無法被顯示出來。因為目前還沒有任何相關記錄。"
 
 #: templates/CRM/Report/Form/Contact/LoggingDetail.tpl
 msgid "Back to Logging Summary"
@@ -50080,7 +50074,7 @@ msgstr "返回列表"
 
 #: templates/CRM/Report/Form/Instance.tpl
 msgid "You have chosen to include this report in the Navigation Menu without selecting a Parent Menu item from the dropdown. This will add the report to the top level menu bar. Are you sure you want to continue?"
-msgstr ""
+msgstr "你把這份報表拉到主選單中，即該報表將會新增為最上層選單列。確定要繼續？"
 
 #: templates/CRM/Report/Form/Register.tpl
 msgid "Report Class must be present before adding the report here, e.g. 'CRM_Report_Form_Contribute_Summary'"
@@ -50122,7 +50116,7 @@ msgid "Campaign Dashboard"
 msgstr "Civi活動總覽頁面"
 
 msgid "Campaign Types"
-msgstr "個人募款串連"
+msgstr "個人募款頁"
 
 msgid "Case Dashlet"
 msgstr "個案詳情"
@@ -50170,7 +50164,7 @@ msgid "New Survey"
 msgstr "New Jersey"
 
 msgid "Personal Campaign Page Settings"
-msgstr "個人募款串連設定 （%1）"
+msgstr "個人募款頁設定 （%1）"
 
 msgid "Preferred Languages"
 msgstr "新增語言"
