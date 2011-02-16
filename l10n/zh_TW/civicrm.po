@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CiviCRM 3.0\n"
 "POT-Creation-Date: 2007-04-18 07:33+0200\n"
-"PO-Revision-Date: 2011-01-27 22:42+0800\n"
-"Last-Translator: Charles Chuang <charles>\n"
+"PO-Revision-Date: 2011-02-11 18:19+0800\n"
+"Last-Translator: \n"
 "Language-Team: CiviCRM Translators <civicrm-translators@lists.civicrm.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1789,7 +1789,7 @@ msgstr "去世日期"
 #: CRM/Contact/Form/Search/Criteria.php CRM/Import/Parser/Contact.php
 #: xml/templates/civicrm_data.tpl
 msgid "Preferred Communication Method"
-msgstr "偏好的溝通方式"
+msgstr "偏好的連絡方式"
 
 #: CRM/Contact/BAO/Query.php CRM/Contact/Form/Search/Criteria.php
 msgid "Task"
@@ -1821,7 +1821,7 @@ msgstr "暱稱"
 #: CRM/Contact/DAO/Contact.php CRM/Contact/Form/Edit/Organization.php
 #: templates/CRM/Contact/Page/View/Summary.tpl
 msgid "Legal Name"
-msgstr "合法名稱"
+msgstr "向主管單位登記名稱"
 
 #: CRM/Contact/DAO/Contact.php CRM/Contact/Form/Edit/Individual.php
 #: CRM/Contact/Form/Edit/Organization.php CRM/Import/Parser/Contact.php
@@ -3626,7 +3626,7 @@ msgstr "OK"
 
 #: CRM/Admin/Form/ContactType.php
 msgid "Basic Contact Type"
-msgstr "基礎類型"
+msgstr "基本聯絡人類型"
 
 #: CRM/Admin/Form/ContactType.php
 msgid "This contact type name already exists in database. Contact type names must be unique."
@@ -5196,7 +5196,7 @@ msgstr "修改自"
 
 #: CRM/Contact/BAO/Query.php
 msgid "Activity with"
-msgstr ""
+msgstr "動態為"
 
 #: CRM/Contact/BAO/Query.php CRM/Activity/BAO/Query.php
 msgid "Activity created by"
@@ -5406,7 +5406,7 @@ msgstr "，或者與現有聯絡人合併"
 
 #: CRM/Contact/Form/Contact.php
 msgid "Complete street address(es) have been saved. However we were unable to split the address in the %1 address block(s) into address elements (street number, street name, street unit) due to an unrecognized address format. You can set the address elements manually by clicking 'Edit Address Elements' next to the Street Address field while in edit mode."
-msgstr "完整的街道地址已儲存。然而因為這個地址格式無法辨識，所以我們無法把在1%的地址分割成地址分項（街道號碼，街道名稱，街道單位）。您可於編輯模式裡街道地址欄位旁，按下「編輯地址分項」，以手動方式設定地址元素。"
+msgstr "完整的街道地址已儲存。然而因為這個地址格式無法辨識，所以我們無法把在%1的地址分割成地址分項（街道號碼，街道名稱，街道單位）。您可於編輯模式裡街道地址欄位旁，按下「編輯地址分項」，以手動方式設定地址元素。"
 
 #: CRM/Contact/Form/CustomData.php
 msgid "Please select valid custom value."
@@ -6016,7 +6016,7 @@ msgstr "自訂搜尋"
 
 #: CRM/Contact/Form/Search/Custom/PriceSet.php
 msgid "There are no events with Price Sets"
-msgstr "缺乏具有價的活動"
+msgstr "現無活動包含價格表"
 
 #: CRM/Contact/Form/Search/Custom/PriceSet.php
 msgid "Participant Id"
@@ -6197,7 +6197,7 @@ msgstr "您的更新已儲存。"
 
 #: CRM/Contact/Form/Task/Batch.php
 msgid "Contact SubType field of %1 nunber of contact(s) has not been updated."
-msgstr "1% 個聯絡人子類型沒有更新。"
+msgstr "%1 個聯絡人子類型沒有更新。"
 
 #: CRM/Contact/Form/Task/Delete.php
 msgid "Deleted Contact(s): %1"
@@ -6360,7 +6360,7 @@ msgstr "縣市編號"
 
 #: CRM/Contact/Page/Dashlet.php
 msgid "Dashlets"
-msgstr ""
+msgstr "總覽"
 
 #: CRM/Contact/Page/View/Email.php
 msgid "Email Sent"
@@ -6735,7 +6735,7 @@ msgstr "所選擇的對應已經成功刪除。"
 
 #: CRM/Core/BAO/Mapping.php templates/CRM/Contact/Form/Search/table.tpl
 msgid "Also include contacts where"
-msgstr ""
+msgstr "也包括聯絡人的"
 
 #: CRM/Core/BAO/Mapping.php
 msgid "- select record type -"
@@ -7240,7 +7240,7 @@ msgstr "路徑呼叫函式"
 
 #: CRM/Core/DAO/Menu.php
 msgid "Access Callback"
-msgstr ""
+msgstr "存取呼叫函式"
 
 #: CRM/Core/DAO/Menu.php
 msgid "Access Arguments"
@@ -7454,7 +7454,7 @@ msgstr "位移"
 
 #: CRM/Core/DAO/UFField.php
 msgid "In Selector"
-msgstr ""
+msgstr "用選擇器"
 
 #: CRM/Core/DAO/UFField.php templates/CRM/Custom/Page/Field.tpl
 #: templates/CRM/Price/Page/Field.tpl
@@ -7686,7 +7686,7 @@ msgstr "處理中"
 
 #: CRM/Core/Form.php
 msgid "To:"
-msgstr ""
+msgstr "給:"
 
 #: CRM/Core/Form.php
 msgid "Please select %1"
@@ -7802,7 +7802,7 @@ msgstr "在點選 / 認捐裡頭，網址必須設定為絕對路徑，請在 <a
 
 #: CRM/Core/Payment/Elavon.php
 msgid "Elavon"
-msgstr ""
+msgstr "Elavon"
 
 #: CRM/Core/Payment/Elavon.php
 msgid "Elavon - recurring payments not implemented"
@@ -8251,7 +8251,7 @@ msgstr "選擇退出收信訊息"
 
 #: CRM/Core/SelectValues.php xml/templates/civicrm_data.tpl
 msgid "Subscription Confirmation Request"
-msgstr "訂閱確認請求"
+msgstr "確認訂閱"
 
 #: CRM/Core/SelectValues.php xml/templates/civicrm_data.tpl
 msgid "Welcome Message"
@@ -9867,7 +9867,7 @@ msgstr "列出此國家的所有捐款。"
 
 #: CRM/Report/Form/Contribute/Lybunt.php
 msgid "Lybunt Report"
-msgstr ""
+msgstr "Lybunt 報表"
 
 #: CRM/Report/Form/Contribute/Lybunt.php
 msgid "Amount (%1)"
@@ -9879,7 +9879,7 @@ msgstr "查看本組織的聯絡人概況"
 
 #: CRM/Report/Form/Contribute/Repeat.php
 msgid "Range One Stat"
-msgstr ""
+msgstr "一個數據範圍"
 
 #: CRM/Report/Form/Contribute/Repeat.php CRM/Price/DAO/FieldValue.php
 msgid "Count"
@@ -9887,7 +9887,7 @@ msgstr "次"
 
 #: CRM/Report/Form/Contribute/Repeat.php
 msgid "Range Two Stat"
-msgstr ""
+msgstr "兩個數據範圍"
 
 #: CRM/Report/Form/Contribute/Repeat.php
 msgid "Date Range One"
@@ -9899,19 +9899,19 @@ msgstr "日期區間 2"
 
 #: CRM/Report/Form/Contribute/Repeat.php
 msgid "Range One Amount"
-msgstr ""
+msgstr "一個金額範圍"
 
 #: CRM/Report/Form/Contribute/Repeat.php
 msgid "Range Two Amount"
-msgstr ""
+msgstr "兩個金額範圍"
 
 #: CRM/Report/Form/Contribute/Repeat.php
 msgid "Please select at least one Group by field."
-msgstr ""
+msgstr "請至少輸入一項群組欄位。"
 
 #: CRM/Report/Form/Contribute/Repeat.php
 msgid "You can not use other Group by with Contribution type or Contribution source."
-msgstr ""
+msgstr "您不能使用其他捐款類型或捐款來源的群組。"
 
 #: CRM/Report/Form/Contribute/Repeat.php
 msgid "Do not select field %1 with Group by %2."
@@ -10318,7 +10318,7 @@ msgstr "總列數"
 
 #: CRM/Report/Form.php
 msgid "Grouping(s)"
-msgstr ""
+msgstr "群組"
 
 #: CRM/Report/Form.php
 msgid "Is"
@@ -10605,6 +10605,9 @@ msgid ""
 "                             of  Household or Organization or any subtypes of Household or \n"
 "                             Organisation."
 msgstr ""
+"無法新增或更新個人檔案的聯絡人次類型欄位，\n"
+"                             因為個人檔案的類型並非個人、家庭或\n"
+"                             組織的其中一種。"
 
 #: CRM/UF/Form/Field.php
 msgid ""
@@ -10626,7 +10629,7 @@ msgstr "請選擇欄位名稱"
 
 #: CRM/UF/Form/Field.php
 msgid "'In Selector' cannot be checked for %1 fields."
-msgstr ""
+msgstr "「用選擇器」無法勾選%1個欄位。"
 
 #: CRM/UF/Form/Field.php
 msgid "Cannot set this field \"Active\" since the selected custom field is disabled."
@@ -11297,7 +11300,7 @@ msgstr ""
 
 #: templates/CRM/ACL/Form/ACL.tpl
 msgid "Please remember that Drupal's \"register for events\" permission overrides CiviCRM's control over event information access."
-msgstr ""
+msgstr "請記得Drupal的 \"報名活動\" 權限覆蓋於CiviCRM的活動資訊存取控制。"
 
 #: templates/CRM/ACL/Form/ACL.tpl
 msgid "What type of operation (action) is being permitted?"
@@ -11317,7 +11320,7 @@ msgstr "指派權限角色"
 
 #: templates/CRM/ACL/Form/EntityRole.tpl
 msgid "WARNING: Deleting this option will remove this ACL Role Assignment."
-msgstr "警告：刪除此選項會去除此權限色工作。"
+msgstr "警告：刪除此選項會去除此權限角色工作。"
 
 #: templates/CRM/ACL/Form/EntityRole.tpl
 msgid "Select an ACL Role to assign."
@@ -11363,11 +11366,11 @@ msgstr "一個權限角色代表一個權限&rsquo;s 收集(允許0。您可以�
 
 #: templates/CRM/ACL/Page/EntityRole.tpl
 msgid "New Role Assignment"
-msgstr ""
+msgstr "新指派角色"
 
 #: templates/CRM/ACL/Page/EntityRole.tpl
 msgid "There are no Role Assignments. You can <a href='%1'>add one</a> now."
-msgstr ""
+msgstr "這裡沒有任何的指派角色。您現在可以<a href='%1'>增加一個</a>。"
 
 #: templates/CRM/Activity/Form/Activity.tpl
 #: templates/CRM/Contact/Form/NewContact.tpl
@@ -11404,7 +11407,7 @@ msgstr "花在此動態的時間（以分鐘計）。"
 
 #: templates/CRM/Activity/Form/Activity.tpl
 msgid "Schedule Follow-up"
-msgstr "排程接續行動"
+msgstr "後續動作排程"
 
 #: templates/CRM/Activity/Form/Activity.tpl
 msgid "Schedule Follow-up Activity"
@@ -11743,7 +11746,7 @@ msgstr "此動作無法復原。"
 #: templates/CRM/Admin/Form/DedupeFind.tpl
 #: templates/CRM/Contact/Form/DedupeFind.tpl
 msgid "You can search all contacts for duplicates or limit the search to a specific group."
-msgstr ""
+msgstr "您可以搜尋所有重複或限制到指定群組搜尋的聯絡人。"
 
 #: templates/CRM/Admin/Form/DedupeRules.tpl
 #: templates/CRM/Contact/Form/DedupeRules.tpl
@@ -12021,7 +12024,7 @@ msgstr "這個狀態類型的名稱，為這個代碼的使用。"
 
 #: templates/CRM/Admin/Form/ParticipantStatus.tpl
 msgid "Display label for this status."
-msgstr ""
+msgstr "顯示此狀態的標籤。"
 
 #: templates/CRM/Admin/Form/ParticipantStatus.tpl
 msgid "The general class of this status. Participant counts are grouped by class on the CiviEvent Dashboard. Participants with a 'Pending' class status will be moved to 'Expired' status if Pending Participant Hours has elapsed (when the ParticipantProcessor.php background processing script is run)."
@@ -12392,7 +12395,7 @@ msgstr "文件及圖像這些聯絡人記錄附件被儲存的路線(例如聯�
 
 #: templates/CRM/Admin/Form/Setting/Path.tpl
 msgid "Path where site specific templates are stored if any. This directory is searched first if set."
-msgstr "網址指定樣板被儲存的路線。此資料夾會先被搜尋如果被設。"
+msgstr "特定範本的路徑已儲存（如有的話）。此目錄會優先被搜尋（若有設定）。"
 
 #: templates/CRM/Admin/Form/Setting/Path.tpl
 msgid "Path where site specific PHP code files are stored if any. This directory is searched first if set."
@@ -12797,7 +12800,7 @@ msgstr "CiviCRM配備了三種基本（內建）的聯絡人類型：個人，�
 
 #: templates/CRM/Admin/Page/ContactType.tpl
 msgid "Based On"
-msgstr ""
+msgstr "基於"
 
 #: templates/CRM/Admin/Page/ContactType.tpl
 msgid "(built-in)"
@@ -12829,15 +12832,15 @@ msgstr "管理用作分辨有潛質複製聯絡人記錄的規測。使用已選
 
 #: templates/CRM/Admin/Page/DedupeRules.tpl
 msgid "New Dedupe Rule for Individuals"
-msgstr "建立個人合併規則"
+msgstr "新個人消除重複記錄規測"
 
 #: templates/CRM/Admin/Page/DedupeRules.tpl
 msgid "New Dedupe Rule for Households"
-msgstr "建立家庭合併規則"
+msgstr "新家庭消除重複記錄規測"
 
 #: templates/CRM/Admin/Page/DedupeRules.tpl
 msgid "New Dedupe Rule for Organizations"
-msgstr "建立組織合併規則"
+msgstr "新組織消除重複記錄規測"
 
 #: templates/CRM/Admin/Page/EventTemplate.tpl xml/templates/civicrm_data.tpl
 #: CRM/Event/Form/ManageEvent/EventInfo.php
@@ -12896,15 +12899,15 @@ msgstr "您正在觀看的是這個系統工作流程中的預設訊息範本。
 
 #: templates/CRM/Admin/Page/MessageTemplates.tpl
 msgid "User-driven Messages"
-msgstr ""
+msgstr "個人化訊息範本"
 
 #: templates/CRM/Admin/Page/MessageTemplates.tpl
 msgid "System Workflow Messages"
-msgstr ""
+msgstr "系統工作流程範本"
 
 #: templates/CRM/Admin/Page/MessageTemplates.tpl
 msgid "User-driven message templates allow you to save and re-use messages with layouts. They are useful if you need to send similar emails to contacts on a recurring basis. You can also use them in CiviMail Mailings and they are required for CiviMember membership renewal reminders."
-msgstr ""
+msgstr "個人化訊息範本可以讓您在儲存後重複的使用該訊息。當您經常發送許多類似的電子報給予聯絡人時，這些範本將會非常有用。您還可以在Civi電子報中運用它們，這對Civi會員的更新提示來說，也相當的必要。"
 
 #: templates/CRM/Admin/Page/MessageTemplates.tpl
 #: templates/CRM/Admin/Page/MessageTemplates.hlp
@@ -12917,7 +12920,7 @@ msgstr "工作流程"
 
 #: templates/CRM/Admin/Page/MessageTemplates.tpl
 msgid "There are no User-driven Message Templates entered. You can <a href='%1'>add one</a>."
-msgstr ""
+msgstr "這裡沒有任何的訊息範本。您可以<a href='%1'>新增一個</a>範本。"
 
 #: templates/CRM/Admin/Page/MessageTemplates.tpl
 msgid "There are no Message Templates entered. You can <a href='%1'>add one</a>."
@@ -13144,11 +13147,11 @@ msgstr "設定日期欄位的輸入及顯示格式"
 
 #: templates/CRM/Admin/Page/Setting.tpl
 msgid "%1 Integration Settings"
-msgstr ""
+msgstr "%1整合設定"
 
 #: templates/CRM/Admin/Page/Setting.tpl
 msgid "%1 version and user table name."
-msgstr ""
+msgstr "%1版本和使用者表格名稱。"
 
 #: templates/CRM/Admin/Page/Setting.tpl
 msgid "Miscellaneous Settings"
@@ -13984,7 +13987,7 @@ msgstr "編輯 %1智慧群組條件"
 #: templates/CRM/Contact/Form/Search/Custom/MultipleValuesCriteria.tpl
 #: templates/CRM/Contact/Form/Search/Custom/Proximity.tpl
 msgid "Edit Search Criteria"
-msgstr "編輯搜尋條件"
+msgstr "設定搜尋條件"
 
 #: templates/CRM/Contact/Form/Search/BasicCriteria.tpl
 msgid "Select Group(s)"
@@ -14010,7 +14013,7 @@ msgstr "全部或部分Email位址"
 
 #: templates/CRM/Contact/Form/Search/Criteria/Basic.tpl
 msgid "Does the contact have a %1 Account?"
-msgstr "聯絡人是否有%1使用者？"
+msgstr "聯絡人是否有%1帳號？"
 
 #: templates/CRM/Contact/Form/Search/Criteria/Location.tpl
 msgid "Location search uses the PRIMARY location for each contact by default."
@@ -14163,7 +14166,7 @@ msgstr[0] "%計算個群組會員"
 
 #: templates/CRM/Contact/Form/Search/table.tpl
 msgid "Include contacts where"
-msgstr "那裡包括群組"
+msgstr "包括聯絡人的"
 
 #: templates/CRM/Contact/Form/Selector.tpl
 msgid "Click contact name to view a summary. Right-click anywhere in the row for an actions menu.\""
@@ -14307,6 +14310,8 @@ msgid ""
 "Your dashboard provides a one-screen view of the data that's most important to you. Graphical or tabular data is pulled from the reports you select,\n"
 "            and is displayed in 'dashlets' (sections of the dashboard)."
 msgstr ""
+"您可在您的總覽首頁中瀏覽您最重要的訊息。您在報表功能中選定的報表會以圖像或表格呈現在此，\n"
+"以組件的方式顯示。"
 
 #: templates/CRM/Contact/Page/DashBoardDashlet.tpl
 msgid "Javascript must be enabled in your browser in order to use the dashboard features."
@@ -14659,7 +14664,7 @@ msgstr "此聯絡人沒有可用的資料。請檢查城市/國家/郵遞區號"
 
 #: templates/CRM/Contact/Page/View/UserDashBoard/GroupContact.tpl
 msgid "You are not currently subscribed to any Groups."
-msgstr ""
+msgstr "您目前沒有訂閱任何群組。"
 
 #: templates/CRM/Contact/Page/View/UserDashBoard/GroupContact.tpl
 msgid "Are you sure you want to unsubscribe from %1?"
@@ -14667,19 +14672,19 @@ msgstr "您確定要離開%1？"
 
 #: templates/CRM/Contact/Page/View/UserDashBoard/GroupContact.tpl
 msgid "Pending Subscriptions"
-msgstr ""
+msgstr "待訂閱"
 
 #: templates/CRM/Contact/Page/View/UserDashBoard/GroupContact.tpl
 msgid "Your subscription to these group(s) is pending confirmation."
-msgstr ""
+msgstr "您所訂閱的群組正等待確認。"
 
 #: templates/CRM/Contact/Page/View/UserDashBoard/GroupContact.tpl
 msgid "Are you sure you want to confirm subscription for %1?"
-msgstr ""
+msgstr "您確定要訂閱%1?"
 
 #: templates/CRM/Contact/Page/View/UserDashBoard/GroupContact.tpl
 msgid "Unsubscribed Groups"
-msgstr ""
+msgstr "退訂群組"
 
 #: templates/CRM/Contact/Page/View/UserDashBoard/GroupContact.tpl
 msgid "You are no longer subscribed to these group(s). Click Rejoin Group if you want to re-subscribe."
@@ -15096,7 +15101,7 @@ msgstr "相關組織"
 
 #: templates/CRM/Group/Form/Edit.tpl
 msgid "Edit Smart Group Criteria"
-msgstr ""
+msgstr "編輯智慧群組條件"
 
 #: templates/CRM/Group/Form/Search.tpl
 msgid "Find Groups"
@@ -15515,7 +15520,7 @@ msgstr "顯示聯絡人在："
 
 #: templates/CRM/Profile/Page/Listings.tpl
 msgid "Map these contacts"
-msgstr ""
+msgstr "對應這些聯絡人"
 
 #: templates/CRM/Profile/Page/Listings.tpl
 msgid "No fields in this Profile have been configured to display as a result column in the search results table. Ask the site administrator to check the Profile setup."
@@ -15713,7 +15718,7 @@ msgstr "傳送簡訊"
 
 #: templates/CRM/Standalone/Form/Register.tpl
 msgid "Standalone Registration Form"
-msgstr ""
+msgstr "獨立報名於"
 
 #: templates/CRM/Tag/Form/Tag.tpl
 msgid "Current tags for <strong>%1</strong> are highlighted. You can add or remove tags from <a href='%2'>Edit Tags</a>."
@@ -15737,7 +15742,7 @@ msgstr "警告：刪除此個人檔案欄位會從個人檔案表格及列表中
 
 #: templates/CRM/UF/Form/Field.tpl
 msgid "Select the type of CiviCRM record and the field you want to include in this Profile."
-msgstr ""
+msgstr "選擇CiviCRM紀錄類型，以及您所想包含的個人資訊。"
 
 #: templates/CRM/UF/Form/Field.tpl
 msgid "The field label displayed on the form (over-ride the default field label here, if desired)."
@@ -15837,7 +15842,7 @@ msgstr "CiviCRM 欄位名稱"
 
 #: templates/CRM/UF/Page/Field.tpl
 msgid "In Selector?"
-msgstr ""
+msgstr "用選擇器?"
 
 #: templates/CRM/UF/Page/Field.tpl
 msgid "Active"
@@ -16077,7 +16082,7 @@ msgstr "電子報頁尾"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Descriptive Title for this Footer."
-msgstr "頁尾標題。"
+msgstr "頁尾標題"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Sample Footer for HTML formatted content."
@@ -16093,11 +16098,11 @@ msgstr "訂閱訊息"
 
 #: xml/templates/civicrm_data.tpl
 msgid "You have a pending subscription to the %1 mailing list. To confirm this subscription, reply to this email or click <a href=\"%2\">here</a>."
-msgstr "您有一個1%電子報的訂閱待確認。要確認此訂閱，請回覆此信件或按<a href=\"%2\">這裡</a>。"
+msgstr "您有一個%1電子報的訂閱待確認。要確認此訂閱，請回覆此信件或按<a href=\"%2\">這裡</a>。"
 
 #: xml/templates/civicrm_data.tpl
 msgid "You have a pending subscription to the %1 mailing list. To confirm this subscription, reply to this email or click on this link: %2"
-msgstr "您有一個1%電子報的訂閱待確認。要確認此訂閱，請回覆此信件或按此連結：%2"
+msgstr "您有一個%1電子報的訂閱待確認。要確認此訂閱，請回覆此信件或按此連結：%2"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Your Subscription has been Activated"
@@ -16109,7 +16114,7 @@ msgstr "歡迎，您已完成 %1 電子報的訂閱。"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Un-subscribe Confirmation"
-msgstr "取消捐款確認"
+msgstr "取消訂閱"
 
 #: xml/templates/civicrm_data.tpl
 msgid "You have been un-subscribed from the following groups: %1. You can re-subscribe by mailing %2 or clicking <a href=\"%3\">here</a>."
@@ -16208,7 +16213,7 @@ msgstr "榮譽類型"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Safe File Extension"
-msgstr ""
+msgstr "安全的副檔名"
 
 #: xml/templates/civicrm_data.tpl CRM/Mailing/Form/Upload.php
 msgid "From Email Address"
@@ -16216,7 +16221,7 @@ msgstr "寄件者 Email"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Recurring Frequency Units"
-msgstr ""
+msgstr "週期頻率單位"
 
 #: xml/templates/civicrm_data.tpl drupal/modules/views/civicrm.views.inc
 msgid "Phone Type"
@@ -16232,7 +16237,7 @@ msgstr "Mail Protocol"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Redaction Rule"
-msgstr ""
+msgstr "擬訂規條"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Email Greeting Type"
@@ -16610,7 +16615,7 @@ msgstr "提供支持者動態的清單，包括在指定日期範圍內，聯絡
 
 #: xml/templates/civicrm_data.tpl
 msgid "Walk / Phone List Report"
-msgstr ""
+msgstr "步行/電話名單報表"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Provides a detailed report for your walk/phonelist for targetted contacts"
@@ -16947,7 +16952,7 @@ msgstr "現在"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Grace"
-msgstr ""
+msgstr "寬限"
 
 #: xml/templates/civicrm_data.tpl CRM/Event/Form/Task/ParticipantStatus.php
 msgid "Expired"
@@ -17299,7 +17304,7 @@ msgstr "聯絡人依建立日期"
 
 #: xml/templates/civicrm_navigation.tpl
 msgid "Contributors by Aggregate Totals"
-msgstr "捐款者依整併總額"
+msgstr "捐款者依捐款總額"
 
 #: xml/templates/civicrm_navigation.tpl
 msgid "New Email"
@@ -18999,7 +19004,7 @@ msgstr "此選項被設計透過聯絡人他們自己設定，若他們不想從
 
 #: templates/CRM/Contact/Form/Contact.hlp
 msgid "This flag is most commonly used to mark an email address that is bouncing. If you are using the CiviMail component, emails that bounce excessively are automatically placed on hold and mailings are not sent to this address as long as it is marked hold. You can also set (or unset) this option manually - but remember that emails will not be sent to this address as long as it is marked 'On Hold'."
-msgstr ""
+msgstr "這個標誌通常被用來標記一個重新啓用的email地址。若您正使用Civi電子報，那些突然重新啓用的email會自動標記「凍結」，將暫時不會收到任何信件。您也可手動設定這個選項（或解除設定），但請留意，信件不會被寄到那些被標記為「凍結」的郵件地址。"
 
 #: templates/CRM/Contact/Form/Contact.hlp
 msgid "Select the preferred method(s) of communicating with this contact."
@@ -19015,7 +19020,7 @@ msgstr "如果您想分享家庭地址給此個人，請選擇此選項。您可
 
 #: templates/CRM/Contact/Form/Contact.hlp
 msgid "Use the greeting/address options to determine how you would like the contact's salutation and name displayed for different communication methods. When you send an email or export a list of records to a .csv file for mail merging, the greeting and addressee fields will reflect your preferences."
-msgstr ""
+msgstr "使用問候語/地址選項，可為不同的連絡方式設定不同的稱呼名稱。當您傳送一封電子郵件時，或把聯絡人名單匯出成.csv檔案以便合併資料時，問候語與地址欄位將會顯示出您的使用偏好。"
 
 #: templates/CRM/Contact/Form/Contact.hlp
 msgid "You may also create a customized greeting and use field tokens to insert fields of your choice. For more information on available tokens, see the online documentation %1."
@@ -19037,7 +19042,7 @@ msgstr "按這裡回到編輯街道地址在單一欄位。不符合預期格式
 
 #: templates/CRM/Contact/Form/Domain.hlp
 msgid "Enter the name of the organization or entity which owns this CiviCRM domain. Use the %1 token to include this value in mailing content. It is used in the default Opt-out Message."
-msgstr "輸入組織名稱或實際擁有此 CiviCRM 網域的擁有者。使用替代符號（Token) 1%，來將這個值包含在電子報內容中。這將會在預設的「選擇退出」訊息中使用到。"
+msgstr "輸入組織名稱或實際擁有此 CiviCRM 網域的擁有者。使用替代符號（Token) %1，來將這個值包含在電子報內容中。這將會在預設的「選擇退出」訊息中使用到。"
 
 #: templates/CRM/Contact/Form/Domain.hlp
 msgid "The FROM Name and Email Address are used when automated emails are sent from this domain (e.g. subscribe and unsubscribe confirmations...). This Name and Email Address are also used as the default 'sender' values when you create a new CiviMail Mailing."
@@ -19061,7 +19066,7 @@ msgstr "複製聯絡人記錄及所有相關資料會在合併完成後被刪除
 
 #: templates/CRM/Contact/Form/Search/Advanced.hlp
 msgid "Use <strong>&#37;</strong> wildcard(s) for partial matches. EXAMPLE: Enter 'Volunteer&#37;' as your Activity Type to match any activity whose type is 'Volunteer' + any other words (e.g. Volunteer for Open House)."
-msgstr ""
+msgstr "使用 <strong>&#37;</strong> 萬用字元 for partial matches. EXAMPLE: Enter 'Volunteer&#37;' as your Activity Type to match any activity whose type is 'Volunteer' + any other words (e.g. Volunteer for Open House)."
 
 #: templates/CRM/Contact/Form/Search/Advanced.hlp
 msgid "If multiple boxes are checked for Contact Types, Groups, Tags and Location Types, the selections are combined as <strong>OR</strong> criteria (e.g. checking 'Group A' and 'Group B' will find contacts who are either in 'Group A' OR 'Group B'). All other search fields are combined as <strong>AND</strong> criteria (e.g. selecting Tag is 'Major Donor' AND Country is 'Mexico' returns only those contacts who meet both criteria)."
@@ -19831,17 +19836,17 @@ msgstr "您也可在<strong>A-to-Z bar</strong>按任一個字母，以快速查
 
 #: templates/CRM/Group/Page/Group.hlp
 msgid "Check 'Access Control' if you want to use this group to assign access permissions to a set of contacts. %1"
-msgstr "勾選「存取控制」，如果您想使此群組具有存取聯絡人資料的權限。%1"
+msgstr "如果您想使此群組具有存取聯絡人資料的權限，請勾選「存取控制」。%1"
 
 #: templates/CRM/Group/Page/Group.hlp
 msgid "Check 'Mailing List' if you are using this group as a mailing list in the %1."
-msgstr "勾選「電子報訂戶」，若您想將此群組列為%1的電子報訂戶。"
+msgstr "若您想將此群組列為%1的電子報訂戶，請勾選「電子報訂戶」。"
 
 #: templates/CRM/Group/Page/Group.hlp
 msgid ""
 "Select 'User and User Admin Only' if membership in this group is controlled by authorized CiviCRM users only. If you want to allow contacts to join and remove themselves from this\n"
 "    group via the Registration and Account Profile forms, select 'Public Pages'."
-msgstr "如該群組只可由已授權的使用者控制，請選 'User and User Admin Only'。如你容許聯絡人自由參加群組，請選 'Public User Pages'. "
+msgstr "若該群組只可由已授權的使用者控制，請選「使用者語使用者管理員」。如你容許聯絡人自由參加群組，請選「公開頁面」。"
 
 #: templates/CRM/Group/Page/Group.hlp
 msgid ""
@@ -20457,7 +20462,7 @@ msgstr "若您正在黏貼片段代碼的網頁，與您CiviCRM網站是不同�
 
 #: CRM/ACL/Page/ACLBasic.php CRM/ACL/Page/ACL.php CRM/ACL/Page/EntityRole.php
 msgid "Access Control"
-msgstr "權限控制"
+msgstr "存取控制"
 
 msgid "ACL"
 msgstr "權限管理"
@@ -22392,7 +22397,7 @@ msgstr "搜尋測試捐款？"
 
 #: CRM/Contribute/BAO/Query.php
 msgid "Find Pay Later Contributions?"
-msgstr "搜尋後續付款者？"
+msgstr "搜尋稍後付款的捐款者？"
 
 #: CRM/Contribute/BAO/Query.php
 msgid "Find Recurring Contributions?"
@@ -25455,7 +25460,7 @@ msgstr "封存"
 
 #: CRM/Mailing/Selector/Browse.php
 msgid "CiviMail Mailings"
-msgstr ""
+msgstr "Civi電子報"
 
 #: CRM/Mailing/Selector/Event.php
 msgid "%1 %%StatusMessage%%"
@@ -25617,7 +25622,7 @@ msgstr "是否搜尋測試會籍？"
 
 #: CRM/Member/BAO/Query.php
 msgid "Find Pay Later Memberships?"
-msgstr "是否搜尋延期付款會籍？"
+msgstr "是否搜尋稍後付款的會員？（預付但尚未付款）"
 
 #: CRM/Member/DAO/MembershipBlock.php
 msgid "Membership Type Default"
@@ -27348,7 +27353,7 @@ msgstr ""
 
 #: templates/CRM/Contribute/Form/Contribution.tpl
 msgid "WARNING: Deleting this contribution will result in the loss of the associated financial transactions (if any)."
-msgstr "警告：刪除此捐款將會導致相關的財務交易遺失（如果其中任一）。"
+msgstr "警告：刪除此捐款將會導致相關的交易資料一併刪除（如果有的話）。"
 
 #: templates/CRM/Contribute/Form/Contribution.tpl
 #: templates/CRM/Contribute/Page/ContributionHonor.tpl
@@ -27947,7 +27952,7 @@ msgstr "或您可以<a href='%1'>瀏覽所有可用的募款頁</a>。"
 
 #: templates/CRM/Contribute/Page/ContributionPage.tpl
 msgid "No contribution pages have been created yet. Click <a accesskey=\"N\" href='%1'>here</a> to create a new contribution page using the step-by-step wizard."
-msgstr "沒有募款頁被建立。按<a accesskey=\"N\" href='%1'>這裡</a>建立一個新募款頁，透過逐步導引。"
+msgstr "尚無已建立的募款頁。按<a accesskey=\"N\" href='%1'>這裡</a>將逐步引導您建立一個新募款頁。"
 
 #: templates/CRM/Contribute/Page/ContributionSoft.tpl
 msgid "Total Soft Credits"
@@ -44980,7 +44985,7 @@ msgstr "可以附到Email或活動的最高檔案(文件、圖像等)數目"
 
 #: templates/CRM/Admin/Form/Setting/Path.tpl
 msgid "Path where site specific templates are stored if any. This directory is searched first if set. CiviCase configuration files can also be stored in this custom path."
-msgstr "網址指定樣板被儲存的路線。此資料夾會先被搜尋如果被設。"
+msgstr "特定範本的路徑已儲存（若有的話）。此目錄會優先被搜尋（如果設定）。Civi個案的設定檔也可儲存在此自定的路徑中。"
 
 #: templates/CRM/Admin/Form/Setting/Path.tpl
 msgid "Path where CiviCRM extensions are stored."
@@ -45096,7 +45101,7 @@ msgstr ""
 
 #: templates/CRM/Admin/Page/ExtensionDetails.tpl
 msgid "Released on"
-msgstr ""
+msgstr "發佈於"
 
 #: templates/CRM/Admin/Page/ExtensionDetails.tpl
 msgid "Development stage"
@@ -45112,7 +45117,7 @@ msgstr ""
 
 #: templates/CRM/Admin/Page/Extensions.tpl
 msgid "Refresh"
-msgstr ""
+msgstr "重新整理"
 
 #: templates/CRM/Admin/Page/Extensions.tpl
 msgid "CiviCRM extensions mechanism allow you to install small functional additions. They provide new functionality in three areas: Custom Searches, Report Templates and Payment Processors. In order to install the extension, you need to upload it manually to Extensions Directory, reload this page and click Install. It will also become available on Custom Reports, Report Templates and Payment Processor Types management screens."
@@ -47522,7 +47527,7 @@ msgstr "撥款概況"
 
 #: templates/CRM/Contact/Form/Contact.hlp
 msgid "Check this option if you want to use a shared address for this contact. For example, you might want to share a \"Work\" address for an individual with the address of their employer. Or, you might want to share a household address with household members. You can select an existing contact to share an address with, or create a new contact and share that address."
-msgstr ""
+msgstr "若這個聯絡人要與其他人共用地址，請勾選此選項。舉例，您可能會要與雇主共享一個工作地址。或者您可能會與其他家庭成員共享住家地址。您可選擇一個現有的聯絡人與之共用地址，或建立一個新的聯絡人以共用地址。"
 
 #: templates/CRM/Contact/Form/Contact.hlp
 msgid "CiviCRM will attempt to split street addresses into separate elements (street number, street name and unit/apt) to help you make lists and reports where you need to sort by street number (and/or separate addresses with odd and even numbers). For most addresses, this is done for you automatically. However, you can manually edit these elements, and potentially handle addresses that are in unusual formats, by clicking 'Edit Address Elements'."
@@ -47537,15 +47542,15 @@ msgstr ""
 
 #: templates/CRM/Contact/Form/Contact.hlp
 msgid "Record one or more web addresses (URLs) associated with this contact. Examples include personal web addresses like a Facebook or Twitter page, as well as links to a company or organization web site or page."
-msgstr ""
+msgstr "可紀錄一兩個與此聯絡人有關的網址。例如Facebook或Twitter，及公司或組織網頁。"
 
 #: templates/CRM/Contact/Form/Contact.hlp
 msgid "Upload a photo or icon that you want to be displayed when viewing this contact."
-msgstr ""
+msgstr "上傳這個聯絡人的圖片或頭像。"
 
 #: templates/CRM/Contact/Form/Contact.hlp
 msgid "Use this field to store a unique identifier. This is generally used to link contacts with records in a related or legacy application. When migrating data from another system, import the unique contact identifier from the old system to this field. You can then use it to match imported contributions and other transactional data to the corresponding contact record."
-msgstr ""
+msgstr "使用此欄位紀錄一個獨特的記號。這通常用來連結與聯絡人有關的紀錄或舊有的應用程式。尤其當資料從其他系統匯入的時候。您可使用這個記號來為匯入的捐款與交易資料，找到相應的聯絡人做配對。"
 
 #: templates/CRM/Contact/Form/Contact.tpl
 msgid "Click here to configure the panes."
@@ -47636,11 +47641,11 @@ msgstr "搜尋條件"
 
 #: templates/CRM/Contact/Form/Search/Advanced.hlp
 msgid "Advanced Search returns your results as Contact records by default. However, you may want to get another record type instead. For example, you may want to see all the Contribution records which match your search criteria."
-msgstr ""
+msgstr "進階搜尋預設會將結果以聯絡人紀錄呈現。若您想以其他方式顯示搜尋結果（例如您想看到的是符合您搜尋條件的捐款紀錄）可在此設定。"
 
 #: templates/CRM/Contact/Form/Search/Advanced.hlp
 msgid "You can modify the columns displayed in your search results by creating a Profile containing a different set of contact fields and then selecting that Profile here. For example you may want to include columns for Gender and Date of Birth, while eliminating Country."
-msgstr ""
+msgstr "如要在您的搜尋結果顯示不同的欄位內容，您可建立一個檔案包含不同的聯絡人資料欄位，並在此選擇使用此檔案。舉例來說，您可設計欄位包含性別與生日，但不要顯示國家。"
 
 #: templates/CRM/Contact/Form/Search/Basic.hlp
 msgid "Find contacts by partial or full name or email, type of contact, group, and/or tag. You can then view or edit contact details, print a contact list, or use the <strong>- more actions -</strong> drop down list to assign tags, add contacts to groups, create smart groups, export contact data to a spreadsheet, and more."
@@ -47776,7 +47781,7 @@ msgstr "您確定要刪除此個案？"
 
 #: templates/CRM/Contact/Page/DashBoardDashlet.tpl
 msgid "Your dashboard provides a one-screen view of the data that's most important to you. Graphical or tabular data is pulled from the reports you select, and is displayed in 'dashlets' (sections of the dashboard)."
-msgstr ""
+msgstr "您可在您的總覽首頁中瀏覽您最重要的訊息。您在報表功能中選定的報表會以圖像或表格呈現在此，以組件的方式顯示。"
 
 #: templates/CRM/Contact/Page/Dashlet.tpl
 msgid "Available dashboard elements - dashlets - are displayed in the dark gray top bar. Drag and drop dashlets onto the left or right columns below to add them to your dashboard. Changes are automatically saved. Click 'Done' to return to the normal dashboard view."
@@ -47839,7 +47844,7 @@ msgstr "查看這個國家的捐款。"
 
 #: templates/CRM/Contact/Page/View/Relationship.tpl
 msgid "Indicates a permissioned relationship. This contact can be viewed and updated by the other."
-msgstr ""
+msgstr "指定一個允許的關係。此聯絡人將可以與被連結關係的另一聯絡人查看與更新。"
 
 #: templates/CRM/Contact/Page/View/Summary.tpl
 msgid "Restore from Trash"
@@ -47859,7 +47864,7 @@ msgstr "地址"
 
 #: templates/CRM/Contact/Page/View/Summary.tpl
 msgid "Shared with:"
-msgstr ""
+msgstr "分享:"
 
 #: templates/CRM/Custom/Form/DeleteGroup.tpl
 msgid "WARNING: Deleting this custom field set will result in the loss of all '%1' data."
@@ -48349,7 +48354,7 @@ msgstr "搜尋測試捐款？"
 
 #: CRM/Contribute/BAO/Query.php
 msgid "Find Pay Later Contributions"
-msgstr "搜尋後續付款者？"
+msgstr "搜尋非網路付款者？"
 
 #: CRM/Contribute/BAO/Query.php
 msgid "Displaying Recurring Contributions"
@@ -48409,7 +48414,7 @@ msgstr "捐款狀態"
 
 #: CRM/Contribute/DAO/ContributionProduct.php
 msgid "Quantity"
-msgstr ""
+msgstr "數量"
 
 #: CRM/Contribute/Form/Contribution/Confirm.php
 msgid "Go Back"
@@ -48733,7 +48738,7 @@ msgstr "使用\"新增連結規則\"表格來新增新規則。"
 #: drupal/modules/civicrm_engage/Engage/Report/Form/CallList.php
 #: drupal/modules/civicrm_engage/Engage/Report/Form/WalkList.php
 msgid "Sex"
-msgstr ""
+msgstr "性別"
 
 #: drupal/modules/civicrm_engage/Engage/Report/Form/CallList.php
 #: drupal/modules/civicrm_engage/Engage/Report/Form/WalkList.php
@@ -48806,7 +48811,7 @@ msgstr "純文字的內文"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "Plaintext mailing message"
-msgstr ""
+msgstr "純文字電子報訊息"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "Body - HTML"
@@ -48822,7 +48827,7 @@ msgstr "電子報頁首"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "The HTML header for this mailing."
-msgstr ""
+msgstr "這封電子報的HTML頁首。"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "Mailing Header - Plaintext"
@@ -48830,7 +48835,7 @@ msgstr "電子報頁首"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "The plaintext header for this mailing."
-msgstr ""
+msgstr "這封電子報的純文字頁首。"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "Mailing Footer - HTML"
@@ -48838,7 +48843,7 @@ msgstr "電子報頁尾"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "The HTML footer for this mailing."
-msgstr ""
+msgstr "這封電子報的HTML頁尾。"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "Mailing Footer - Plaintext"
@@ -48846,7 +48851,7 @@ msgstr "電子報頁尾"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "The plaintext footer for this mailing."
-msgstr ""
+msgstr "這封電子報的純文字頁尾。"
 
 #: drupal/modules/civicrm_cck/civicrm_cck_handler_filter.inc
 msgid "Enter a contact name."
@@ -48898,7 +48903,7 @@ msgstr "寄送 Email"
 
 #: drupal/modules/civicrm_rules/civicrm_rules.rules.inc
 msgid "Enter e-mail address of recipient. (Use a comma to separate multiple e-mail addresses.)"
-msgstr ""
+msgstr "輸入收件者的e-mail位址。(使用逗號來分隔多個e-mail位址。)"
 
 #: drupal/modules/civicrm_rules/civicrm_rules.rules.inc
 msgid "Enter subject for the email"
@@ -48918,7 +48923,7 @@ msgstr "要從群組裡移除的聯絡人"
 
 #: drupal/modules/civicrm_engage/Engage/Contact/Form/Task/ReleaseVoters.php
 msgid "Please search with 'Is Held' and 'Survey Id' filters to apply this action."
-msgstr ""
+msgstr "請套用搜尋條件為'已經舉行'和' Email 位址'。"
 
 #: drupal/modules/civicrm_engage/Engage/Contact/Form/Task/ReleaseVoters.php
 msgid "Could not find contacts for release voters resevation Or Missing Interviewer contact."
@@ -48930,7 +48935,7 @@ msgstr "這個Email已經報名過這個活動了。"
 
 #: drupal/modules/civicrm_engage/Engage/Contact/Form/Task/ReleaseVoters.php
 msgid "Release Voters"
-msgstr ""
+msgstr "刪除選項"
 
 #: drupal/modules/civicrm_engage/Engage/Contact/Form/Task/ReleaseVoters.php
 msgid "%1 voters has been released."
@@ -48938,7 +48943,7 @@ msgstr "已刪除%1 選項。"
 
 #: drupal/modules/civicrm_engage/Engage/Contact/Form/Task/ReleaseVoters.php
 msgid "%1 voters did not release."
-msgstr ""
+msgstr "%1選項尚未刪除。"
 
 #: drupal/modules/civicrm_engage/Engage/Contact/Form/Task/VoterReservation.php
 msgid "Could not find contacts for voter reservation Or Missing Interviewer contact."
@@ -48974,7 +48979,7 @@ msgstr "無法找到 Email 位址。"
 
 #: drupal/modules/civicrm_engage/Engage/Contact/Form/Search/Custom/FindVoters.php
 msgid "Is Held"
-msgstr ""
+msgstr "已經舉行"
 
 #: drupal/modules/civicrm_engage/Engage/Report/Form/WalkList.php
 msgid "Other Name"
@@ -49184,7 +49189,7 @@ msgstr "當此並非您想要的，您可以再次檢查\"報名日期折扣\"�
 
 #: templates/CRM/Event/Form/ManageEvent/Registration.hlp
 msgid "You will also need to update the default strict duplicate contact matching rule for Individuals to include First Name and Last Name fields (Administer &raquo; Manage &raquo; Find and Merge Duplicate Contacts)."
-msgstr ""
+msgstr "您還需要更新默認為完全重複的聯絡人，個人對應標準包含名字和姓氏欄位(管理員&raquo;管理&raquo; 尋找和合併重複的聯絡人) 。"
 
 #: templates/CRM/Event/Form/ManageEvent/Registration.tpl
 msgid "In order to allow multiple registrations with the same email address, the default \"Fuzzy\" Dedupe Rule will be used to check for matching contact records and prevent duplicate registrations. This rule currently uses the following fields: %1"
@@ -49283,7 +49288,7 @@ msgstr "啓用或停用此活動的線上報名。"
 
 #: templates/CRM/Event/Form/Registration/Register.tpl
 msgid "Not %1, or want to register a different person"
-msgstr ""
+msgstr "不是%1, 或者想要報名另一個人"
 
 #: templates/CRM/Event/Page/EventInfo.tpl
 msgid "Registration is closed for this event"
@@ -49465,7 +49470,7 @@ msgstr ""
 
 #: templates/CRM/Member/Form/Membership.tpl
 msgid "New Membership"
-msgstr "瀏覽會員資料"
+msgstr "新增會員資料"
 
 #: templates/CRM/Member/Form/Membership.tpl
 msgid "WARNING: Deleting this membership will also delete related membership log and payment records."
@@ -50078,7 +50083,7 @@ msgstr "認捐開始日期"
 
 #: templates/CRM/Report/Form/Contact/LoggingDetail.tpl
 msgid "Change to <a href='%1'>%2</a> made by <a href='%3'>%4</a> on %5:"
-msgstr ""
+msgstr "改變<a href='%1'>%2</a>由<a href='%3'>%4</a>在%5:"
 
 #: templates/CRM/Report/Form/Contact/LoggingDetail.tpl
 msgid "This report can not be displayed because there are no entries in the logging tables yet."
