@@ -48325,7 +48325,7 @@ msgstr "已過日期"
 #: CRM/Contribute/DAO/Widget.php
 #: CRM/Contribute/Form/ContributionPage/Widget.php
 msgid "About"
-msgstr "吉布地"
+msgstr "關於"
 
 #: CRM/Contribute/Form/ContributionBase.php
 #: CRM/Contribute/Form/PCP/PCPAccount.php
@@ -50216,3 +50216,12 @@ msgstr "Email遞送報表（概況）"
 
 msgid "Grant Report"
 msgstr "補助報表"
+
+msgid "Online Support"
+msgstr "線上支援"
+
+msgid "About NETivism"
+msgstr "關於網絡行動科技"
+
+msgid "About CiviCRM"
+msgstr "關於CiviCRM"
