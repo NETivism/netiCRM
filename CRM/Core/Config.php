@@ -204,6 +204,9 @@ class CRM_Core_Config extends CRM_Core_Config_Variables
                 // we retrieve the object from memcache, so we now initialize the objects
                 self::$_singleton->_initialize( $loadFromDB );
                 
+                if ( $loadFromDB ) {
+                    self::$_singleton->_initVariables( );
+                }
                 // add component specific settings
                 self::$_singleton->componentRegistry->addConfig( $this );
             }
