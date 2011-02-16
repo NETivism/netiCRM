@@ -4357,7 +4357,7 @@ INSERT INTO civicrm_domain (name, version, loc_block_id) VALUES (@domainName, '2
 SELECT @domainID := id FROM civicrm_domain where name = 'Default Domain Name';
 
 -- Sample location types
-INSERT INTO civicrm_location_type( name, vcard_name, description, is_reserved, is_active, is_default ) VALUES( '家', 'HOME', '居住地點', 0, 1, 1 );
+INSERT INTO civicrm_location_type( name, vcard_name, description, is_reserved, is_active, is_default ) VALUES( '管理首頁', 'HOME', '居住地點', 0, 1, 1 );
 INSERT INTO civicrm_location_type( name, vcard_name, description, is_reserved, is_active ) VALUES( '工作', 'WORK', '工作地點', 0, 1 );
 INSERT INTO civicrm_location_type( name, vcard_name, description, is_reserved, is_active ) VALUES( '主要', NULL, '主要辦公地點', 0, 1 );
 INSERT INTO civicrm_location_type( name, vcard_name, description, is_reserved, is_active ) VALUES( '其他', NULL, '其他地點', 0, 1 );
@@ -4369,10 +4369,10 @@ INSERT INTO civicrm_relationship_type( name_a_b,label_a_b, name_b_a,label_b_a, d
     VALUES( 'Child of', '孩子', 'Parent of', '家長', '親子關係', 'Individual', 'Individual', 0 ),
           ( 'Spouse of', '配偶', 'Spouse of', '配偶', '配偶關係。', 'Individual', 'Individual', 0 ),
           ( 'Sibling of', '兄弟姊妹', 'Sibling of', '兄弟姊妹', '兄弟姊妹關係。', 'Individual','Individual', 0 ),
-          ( 'Employee of', '員工', 'Employer of', '員工', '雇員關係。','Individual','Organization', 1 ),
-          ( 'Volunteer for', '志工', 'Volunteer is', '志工是', '志工關係。','Individual','Organization', 0 ),
-          ( 'Head of Household for', '家戶主人', 'Head of Household is', '一家之主是', '一家之主。','Individual','Household', 1 ),
-          ( 'Household Member of', '家庭成員', 'Household Member is', '家庭成員是', '家庭成員。','Individual','Household', 1 );
+          ( 'Employee of', '雇員', 'Employer of', '雇主', '聘僱關係。','Individual','Organization', 1 ),
+          ( 'Volunteer for', '志工', 'Volunteer is', '志工單位', '志工關係。','Individual','Organization', 0 ),
+          ( 'Head of Household for', '家戶主人', 'Head of Household is', '家戶', '家戶主人。','Individual','Household', 1 ),
+          ( 'Household Member of', '家庭成員', 'Household Member is', '家庭', '家庭成員。','Individual','Household', 1 );
 
 -- Relationship Types for CiviCase
 INSERT INTO civicrm_relationship_type( name_a_b,label_a_b, name_b_a,label_b_a, description, contact_type_a, contact_type_b, is_reserved )
@@ -4396,10 +4396,10 @@ INSERT INTO civicrm_mailing_component
     (name,component_type,subject,body_html,body_text,is_default,is_active)
 VALUES
     ('電子報頁首','Header','頁首標題','HTML 格式的頁首範本。','文字格式的頁首範本。',1,1),
-    ('電子報頁尾','Footer','頁尾標題。','Sample Footer for HTML formatted content<br/><a href=\"{action.optOutUrl}\">Unsubscribe</a>  <br/> {domain.address}','to unsubscribe: {action.optOutUrl}\n{domain.address}',1,1),
-    ('訂閱訊息','Subscribe','訂閱確認請求','您有一個1%電子報的訂閱待確認。要確認此訂閱，請回覆此信件或按<a href=\"{subscribe.url}\">這裡</a>。','您有一個1%電子報的訂閱待確認。要確認此訂閱，請回覆此信件或按此連結：{subscribe.url}',1,1),
+    ('電子報頁尾','Footer','頁尾標題','Sample Footer for HTML formatted content<br/><a href=\"{action.optOutUrl}\">Unsubscribe</a>  <br/> {domain.address}','to unsubscribe: {action.optOutUrl}\n{domain.address}',1,1),
+    ('訂閱訊息','Subscribe','確認訂閱','您有一個{subscribe.group}電子報的訂閱待確認。要確認此訂閱，請回覆此信件或按<a href=\"{subscribe.url}\">這裡</a>。','您有一個{subscribe.group}電子報的訂閱待確認。要確認此訂閱，請回覆此信件或按此連結：{subscribe.url}',1,1),
     ('歡迎訊息','Welcome','您的訂閱已被啟用','歡迎，您已完成 {welcome.group} 電子報的訂閱。','歡迎，您已完成 {welcome.group} 電子報的訂閱。',1,1),
-    ('退訂訊息','Unsubscribe','取消捐款確認','您已取消訂閱：{unsubscribe.group}。您欲重新訂閱，可以寄信給{action.resubscribe}或按 <a href=\"{action.resubscribeUrl}\">這裡</a>。','您已取消訂閱：{unsubscribe.group}。如您要重新訂閱，可寄信到{action.resubscribe}或按%3',1,1),
+    ('退訂訊息','Unsubscribe','取消訂閱','您已取消訂閱：{unsubscribe.group}。您欲重新訂閱，可以寄信給{action.resubscribe}或按 <a href=\"{action.resubscribeUrl}\">這裡</a>。','您已取消訂閱：{unsubscribe.group}。如您要重新訂閱，可寄信到{action.resubscribe}或按%3',1,1),
     ('再次訂閱訊息','Resubscribe','再次訂閱確認','您已重新訂閱以下電子報：{resubscribe.group}。如您要取消訂閱，可寄信給{action.unsubscribe}或按<a href=\"{action.unsubscribeUrl}\">這裡</a>。','您已重新訂閱以下電子報：{resubscribe.group}。如您要取消訂閱，可寄信給{action.unsubscribe}或按{action.unsubscribeUrl}',1,1),
     ('選擇退出收信訊息','OptOut','退出確認','您這個 Email 將不會再收到從 {domain.name} 寄出的電子報。','您這個 Email 將不會再收到從 {domain.name} 寄出的電子報。',1,1),
     ('自動回覆','Reply','請將您的問題寄送到我們的 Email','這是自動回覆訊息，請勿回覆至此信箱。如有任何問題，請寄信至我們的 Email。','這是自動回覆訊息，請勿回覆至此信箱。如有任何問題，請寄信至我們的 Email。',1,1);
@@ -4420,7 +4420,7 @@ VALUES
 INSERT INTO 
    `civicrm_option_group` (`name`, `description`, `is_reserved`, `is_active`) 
 VALUES 
-   ('preferred_communication_method', '偏好的溝通方式'     , 0, 1),
+   ('preferred_communication_method', '偏好的連絡方式'     , 0, 1),
    ('activity_type'                 , '動態類型'                      , 0, 1),
    ('gender'                        , '性別'                             , 0, 1),
    ('instant_messenger_service'     , 'Instant Messenger (IM) screen-names', 0, 1),
@@ -4448,17 +4448,17 @@ VALUES
    ('case_type'                     , '個案類型'                          , 0, 1),
    ('case_status'                   , '個案狀態'                        , 0, 1),
    ('participant_listing'           , '參加者列表'                , 0, 1),
-   ('safe_file_extension'           , 'Safe File Extension'                , 0, 1),
+   ('safe_file_extension'           , '安全的副檔名'                , 0, 1),
    ('from_email_address'            , '寄件者 Email'                 , 0, 1),
    ('mapping_type'                  , '對應類型'                       , 0, 1),
    ('wysiwyg_editor'                , '所見即所得編輯器'                     , 0, 1),
-   ('recur_frequency_units'         , 'Recurring Frequency Units'          , 0, 1), 
+   ('recur_frequency_units'         , '週期頻率單位'          , 0, 1), 
    ('phone_type'                    , '電話類型'                         , 0, 1),
    ('custom_data_type'              , '自訂資料類型'                   , 0, 1),  
    ('visibility'                    , '顯示'                         , 0, 1),
    ('mail_protocol'                 , 'Mail Protocol'                      , 0, 1),
    ('priority'                      , '優先次序'                           , 0, 1),
-   ('redaction_rule'                , 'Redaction Rule'                     , 0, 1),	
+   ('redaction_rule'                , '擬訂規條'                     , 0, 1),	
    ('report_template'               , '報表範本'                    , 0, 1),
    ('email_greeting'                , 'Email 問候語類型'                , 0, 1),
    ('postal_greeting'               , '郵件問候語類型'               , 0, 1),
@@ -4470,9 +4470,9 @@ VALUES
    ('currencies_enabled'            , 'List of currencies enabled for this site', 0, 1),
    ('event_badge'                   , 'Event Name Badge'                   , 0, 1),
    ('note_privacy'                  , 'Privacy levels for notes'           , 0, 1),
-   ('campaign_type'                 , '個人募款串連'                      , 0, 1),
-   ('campaign_status'               , '個人募款串連'                    , 0, 1),
-   ('system_extensions'             , 'CiviCRM 拍賣'                 , 0, 1),
+   ('campaign_type'                 , '個人募款頁'                      , 0, 1),
+   ('campaign_status'               , '個人募款頁'                    , 0, 1),
+   ('system_extensions'             , 'CiviCRM 套件'                 , 0, 1),
    ('directory_preferences'         , 'Directory Preferences'              , 0, 1),
    ('url_preferences'               , 'URL Preferences'                    , 0, 1);
 
@@ -4627,7 +4627,7 @@ VALUES
   (@option_group_id_pi, '簽帳卡',  2, 'Debit Card', NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_pi, '現金',  3, 'Cash', NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_pi, '支票',  4, 'Check', NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_pi, '電子資金轉帳',  5, 'EFT', NULL, 0, NULL, 5, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_pi, '電子轉帳(EFT)',  5, 'EFT', NULL, 0, NULL, 5, NULL, 0, 0, 1, NULL, NULL),
 
   (@option_group_id_cs, '已完成'  , 1, 'Completed'  , NULL, 0, NULL, 1, NULL, 0, 1, 1, NULL, NULL),
   (@option_group_id_cs, '待處理'    , 2, 'Pending'    , NULL, 0, NULL, 2, NULL, 0, 1, 1, NULL, NULL),
@@ -4707,18 +4707,18 @@ VALUES
   (@option_group_id_acsOpt, 'Email位址'   , 2, 'email'         , NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_acsOpt, '電話'           , 3, 'phone'         , NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_acsOpt, '街道地址'  , 4, 'street_address', NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_acsOpt, '城市'            , 5, 'city'          , NULL, 0, NULL, 5, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_acsOpt, '州/省'  , 6, 'state_province', NULL, 0, NULL, 6, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_acsOpt, '鄉鎮市區'            , 5, 'city'          , NULL, 0, NULL, 5, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_acsOpt, '縣市'  , 6, 'state_province', NULL, 0, NULL, 6, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_acsOpt, '國家'         , 7, 'country'       , NULL, 0, NULL, 7, NULL, 0, 0, 1, NULL, NULL),
 
   (@option_group_id_adOpt, '街道地址'    ,  1, 'street_address', NULL, 0, NULL,  1, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_adOpt, '額外地址 1'  ,  2, 'supplemental_address_1', NULL, 0, NULL,  2, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_adOpt, '額外地址 2'  ,  3, 'supplemental_address_2', NULL, 0, NULL,  3, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_adOpt, '城市'              ,  4, 'city'          , NULL, 0, NULL,  4, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_adOpt, '鄉鎮市區'              ,  4, 'city'          , NULL, 0, NULL,  4, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_adOpt, '郵遞區號' ,  5, 'postal_code'   , NULL, 0, NULL,  5, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_adOpt, '郵遞區號末碼',  6, 'postal_code_suffix', NULL, 0, NULL,  6, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_adOpt, '縣'            ,  7, 'county'        , NULL, 0, NULL,  7, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_adOpt, '州/省'  ,  8, 'state_province', NULL, 0, NULL,  8, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_adOpt, '縣市'  ,  8, 'state_province', NULL, 0, NULL,  8, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_adOpt, '國家'           ,  9, 'country'       , NULL, 0, NULL,  9, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_adOpt, '緯度'          , 10, 'geo_code_1'    , NULL, 0, NULL, 10, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_adOpt, '經度'         , 11, 'geo_code_2', NULL, 0, NULL, 11, NULL, 0, 0, 1, NULL, NULL),
@@ -4754,7 +4754,7 @@ VALUES
   (@option_group_id_report , '支持者報表（概況）',            'contact/summary',                'CRM_Report_Form_Contact_Summary',                NULL, 0, NULL, 1,  '在您的系統上，為支持者記錄提供地址和電話訊息組成的名單。', 0, 0, 1, NULL, NULL),
   (@option_group_id_report , '支持者報表（詳情）',             'contact/detail',                 'CRM_Report_Form_Contact_Detail',                 NULL, 0, NULL, 2,  '提供在捐款、會員、項目和活動有關的聯絡資訊',   0, 0, 1, NULL, NULL),
   (@option_group_id_report , '動態報表',                         'activity',                       'CRM_Report_Form_Activity',                       NULL, 0, NULL, 3,  '提供支持者動態的清單，包括在指定日期範圍內，聯絡人的動態統計。（必填）', 0, 0, 1, NULL, NULL),
-  (@option_group_id_report , 'Walk / Phone List Report',                'walklist',                       'CRM_Report_Form_Walklist',                       NULL, 0, NULL, 4,  '為步行/電話名單報表的指定聯絡人提供一份詳細報表。', 0, 0, 0, NULL, NULL),
+  (@option_group_id_report , '步行/電話名單報表',                'walklist',                       'CRM_Report_Form_Walklist',                       NULL, 0, NULL, 4,  '為步行/電話名單報表的指定聯絡人提供一份詳細報表。', 0, 0, 0, NULL, NULL),
   (@option_group_id_report , '目前的員工報表',                 'contact/currentEmployer',        'CRM_Report_Form_Contact_CurrentEmployer',        NULL, 0, NULL, 5,  '透過加入日期的詳細細節，提供詳細的雇主與僱員關係列表。', 0, 0, 0, NULL, NULL),
   (@option_group_id_report , '捐款者報表（概況）',                  'contribute/summary',             'CRM_Report_Form_Contribute_Summary',             NULL, 0, NULL, 6,  '依月 / 星期 / 年 ... 國家 / 州等分類顯示捐款統計資料', 0, 0, 1, @contributeCompId, NULL),
   (@option_group_id_report , '捐款者報表（詳情）',                   'contribute/detail',              'CRM_Report_Form_Contribute_Detail',              NULL, 0, NULL, 7,  '列出一個 / 全部聯絡人的詳細捐款資料。捐款總結報表指出這個報表的具體細節。', 0, 0, 1, @contributeCompId, NULL),
@@ -4955,7 +4955,7 @@ VALUES
   (@option_group_id_directory_pref, '暫時檔案' , '', 'uploadDir', NULL, 0, 0, 1, 'CiviCRM 的暫存檔上傳路徑 - 例如匯入資料檔案。', 0, 1, 1, NULL, @domainID, NULL),
   (@option_group_id_directory_pref, '影像' , '', 'imageUploadDir', NULL, 0, 0, 2, 'File system path where image files are uploaded. Currently, this path is used for images associated with premiums (CiviContribute thank-you gifts).', 0, 1, 1, NULL, @domainID, NULL),
   (@option_group_id_directory_pref, '自訂檔案' , '', 'customFileUploadDir', NULL, 0, 0, 3, '文件及圖像這些聯絡人記錄附件被儲存的路線(例如聯絡人相片、重新開始、聯絡人等)。這些附件被定義使用\'檔案\'類別自訂欄位。', 0, 1, 1, NULL, @domainID, NULL),
-  (@option_group_id_directory_pref, '自訂範本' , '', 'customTemplateDir', NULL, 0, 0, 4, '網址指定樣板被儲存的路線。此資料夾會先被搜尋如果被設。', 0, 1, 1, NULL, @domainID, NULL),
+  (@option_group_id_directory_pref, '自訂範本' , '', 'customTemplateDir', NULL, 0, 0, 4, '特定範本的路徑已儲存（若有的話）。此目錄會優先被搜尋（如果設定）。Civi個案的設定檔也可儲存在此自定的路徑中。', 0, 1, 1, NULL, @domainID, NULL),
   (@option_group_id_directory_pref, 'Custom PHP' , '', 'customPHPPathDir', NULL, 0, 0, 5, '網址指定服務器端編程語言電碼檔案被儲存的路線。此資料夾會先被搜尋如果被設。', 0, 1, 1, NULL, @domainID, NULL),
   (@option_group_id_directory_pref, 'Custom Extensions' , '', 'extensionsDir', NULL, 0, 0, 6, 'Path where Custom extensions are stored.', 0, 1, 1, NULL, @domainID, NULL),
 
@@ -5198,7 +5198,7 @@ INSERT INTO
 VALUES
     ('New',       '新增', 'join_date', null, null,'join_date','month',3, 1, 0, 1, 0, 1, 0),
     ('Current',   '現在', 'start_date', null, null,'end_date', null, null, 1, 0, 2, 1, 1, 0),
-    ('Grace',     'Grace', 'end_date', null, null,'end_date','month', 1, 1, 0, 3, 0, 1, 0),
+    ('Grace',     '寬限', 'end_date', null, null,'end_date','month', 1, 1, 0, 3, 0, 1, 0),
     ('Expired',   '已清除', 'end_date', 'month', 1, null, null, null, 0, 0, 4, 0, 1, 0),
     ('Pending',   '待處理', 'join_date', null, null,'join_date',null,null, 0, 0, 5, 0, 1, 1),
     ('Cancelled', '已取消', 'join_date', null, null,'join_date',null,null, 0, 0, 6, 0, 1, 0),
@@ -5540,18 +5540,18 @@ VALUES
    
 INSERT INTO civicrm_uf_field
        (id, uf_group_id, field_name,              is_required, is_reserved, weight, visibility,                  in_selector, is_searchable, location_type_id, label,                                         		field_type,    help_post, phone_type_id ) VALUES
-       (1,  1,           'first_name',            1,           0,           1,      'Public Pages and Listings', 0,           1,             NULL,             '名',            		'Individual',  NULL,  NULL),
+       (1,  1,           'first_name',            1,           0,           1,      'Public Pages and Listings', 0,           1,             NULL,             '名字 ',            		'Individual',  NULL,  NULL),
        (2,  1,           'last_name',             1,           0,           2,      'Public Pages and Listings', 0,           1,             NULL,             '姓氏',             		'Individual',  '其他人將可瀏覽您的姓名。',  NULL),
        (3,  1,           'street_address',        0,           0,           3,      'User and User Admin Only',  0,           0,             1,                '街道地址（住家）', 		'Contact',     NULL,  NULL),
-       (4,  1,           'city',                  0,           0,           4,      'User and User Admin Only',  0,           0,             1,                '縣市（住家）',           		'Contact',     NULL,  NULL),
+       (4,  1,           'city',                  0,           0,           4,      'User and User Admin Only',  0,           0,             1,                '鄉鎮市區（住家）',           		'Contact',     NULL,  NULL),
        (5,  1,           'postal_code',           0,           0,           5,      'User and User Admin Only',  0,           0,             1,                '郵遞區號（住家）',    		'Contact',     NULL,  NULL),
-       (6,  1,           'country',               0,           0,           6,      'Public Pages and Listings', 0,           1,             1,                '國家（住家）',        		'Contact',     '你所在的州/省和居住國將與他人共享，以便人們可以找到其他住在他們社區的聯絡人。',  NULL),
-       (7,  1,           'state_province',        0,           0,           7,      'Public Pages and Listings', 1,           1,             1,                '州（住家）',          		'Contact',     NULL,  NULL),
-       (8,  2,           'first_name',            1,           0,           1,      'User and User Admin Only',  0,           0,             NULL,             '名',            		'Individual',  NULL,  NULL),
+       (6,  1,           'country',               0,           0,           6,      'Public Pages and Listings', 0,           1,             1,                '國家（住家）',        		'Contact',     '你所在的縣市和居住國將與他人共享，以便人們可以找到其他住在他們社區的聯絡人。',  NULL),
+       (7,  1,           'state_province',        0,           0,           7,      'Public Pages and Listings', 1,           1,             1,                '縣市（住家）',          		'Contact',     NULL,  NULL),
+       (8,  2,           'first_name',            1,           0,           1,      'User and User Admin Only',  0,           0,             NULL,             '名字 ',            		'Individual',  NULL,  NULL),
        (9,  2,           'last_name',             1,           0,           2,      'User and User Admin Only',  0,           0,             NULL,             '姓氏',             		'Individual',  NULL,  NULL),
        (10, 2,           'email',                 1,           0,           3,      'User and User Admin Only',  0,           0,             NULL,             'Email位址',         		'Contact',     NULL,  NULL),
        (11, 3,           'participant_status_id', 1,           1,           1,      'User and User Admin Only',  0,           0,             NULL,             '參加者狀態',    		'Participant', NULL,  NULL),
-       (12, 4,           'first_name',            1,           0,           1,      'User and User Admin Only',  0,           0,             NULL,             '名',            		'Individual',  NULL,  NULL),
+       (12, 4,           'first_name',            1,           0,           1,      'User and User Admin Only',  0,           0,             NULL,             '名字 ',            		'Individual',  NULL,  NULL),
        (13, 4,           'last_name',             1,           0,           2,      'User and User Admin Only',  0,           0,             NULL,             '姓氏',             		'Individual',  NULL,  NULL),
        (14, 4,           'email',                 0,           0,           3,      'User and User Admin Only',  0,           0,             NULL,             'Email位址',         		'Contact',     NULL,  NULL),
        (15, 5,           'organization_name',     1,           0,           2,      'User and User Admin Only',  0,           0,             NULL,             '組織名稱',     		'Organization',NULL,  NULL),
@@ -5561,19 +5561,19 @@ INSERT INTO civicrm_uf_field
 	   (19 	,7 		    ,'phone' 				 ,1  	      ,0 			,1 	,'User and User Admin Only' ,0 		 	 ,0 			,1 				  ,'Home Phone' 					,'Contact' 	  ,NULL,  1 ),
 	   (20 	,7 		    ,'phone' 				 ,1  	      ,0 			,2 	,'User and User Admin Only' ,0 		 	 ,0 			,1 				  ,'Home Mobile' 					,'Contact' 	  ,NULL, 2 ),
 	   (21, 7, 			 'street_address', 		  1, 		   0, 			3, 	  	'User and User Admin Only',  0, 		  0, 			 NULL, 			   'Primary Address',		'Contact', 	   NULL,  NULL),
-	   (22, 7, 			 'city',				  1, 		   0, 			4, 	  	'User and User Admin Only',  0, 		  0, 			 NULL, 			   '城市',  						'Contact', 	   NULL,  NULL),
-	   (23, 7, 			 'state_province', 		  1, 		   0, 			5, 	  	'User and User Admin Only',  0, 		  0, 			 NULL, 			   '州',  						'Contact', 	   NULL,  NULL),
+	   (22, 7, 			 'city',				  1, 		   0, 			4, 	  	'User and User Admin Only',  0, 		  0, 			 NULL, 			   '鄉鎮市區',  						'Contact', 	   NULL,  NULL),
+	   (23, 7, 			 'state_province', 		  1, 		   0, 			5, 	  	'User and User Admin Only',  0, 		  0, 			 NULL, 			   '縣市',  						'Contact', 	   NULL,  NULL),
 	   (24, 7, 			 'postal_code', 		  1, 		   0, 			6, 	  	'User and User Admin Only',  0, 		  0, 			 NULL, 			   '郵遞區號',  				'Contact', 	   NULL,  NULL),
-	   (25, 7, 			 'email', 				  1, 		   0, 			7, 	  	'User and User Admin Only',  0, 		  0, 			 NULL, 			   '主要Email位址',  				'Contact', 	   NULL,  NULL),
+	   (25, 7, 			 'email', 				  1, 		   0, 			7, 	  	'User and User Admin Only',  0, 		  0, 			 NULL, 			   '預設Email位址',  				'Contact', 	   NULL,  NULL),
 	   (26, 7, 			 'group', 				  1, 		   0, 			8, 	  	'User and User Admin Only',  0, 		  0, 			 NULL, 			   '群組',  					'Contact', 	   NULL,  NULL),
 	   (27, 7, 			 'tag', 				  1, 		   0, 			9, 	  	'User and User Admin Only',  0, 	      0, 		     NULL, 			   'Tag', 						'Contact', 	   NULL,  NULL),
 	   (28  ,7  	    ,'gender'  				 ,1  	      ,0  			,10  	,'User and User Admin Only' ,0  		 ,0  			,NULL,  			 '性別'  						,'Individual' ,NULL,  NULL),
 	   (29 	,7 		    ,'birth_date' 			 ,1  	      ,0 			,11 	,'User and User Admin Only' ,0 		 	 ,0 			,NULL, 			  'Date of Birth' 			    ,'Individual' ,NULL,  NULL),
 	   (30,  8,           'street_address',        1,           1,           1,      'User and User Admin Only',  0,           0,             1,                '街道地址（住家）', 		'Contact',     NULL,  NULL),
-       (31,  8,           'city',                  1,           1,           2,      'User and User Admin Only',  0,           0,             1,                '縣市（住家）',           		'Contact',     NULL,  NULL),
+       (31,  8,           'city',                  1,           1,           2,      'User and User Admin Only',  0,           0,             1,                '鄉鎮市區（住家）',           		'Contact',     NULL,  NULL),
        (32,  8,           'postal_code',           0,           0,           3,      'User and User Admin Only',  0,           0,             1,                '郵遞區號（住家）',    		'Contact',     NULL,  NULL),
        (33,  8,           'country',               0,           0,           4,      'Public Pages and Listings', 0,           1,             1,                '國家（住家）',        		'Contact',     NULL,  NULL),
-       (34,  8,           'state_province',        0,           0,           5,      'Public Pages and Listings', 1,           1,             1,                '州（住家）',          		'Contact',     NULL,  NULL);
+       (34,  8,           'state_province',        0,           0,           5,      'Public Pages and Listings', 1,           1,             1,                '縣市（住家）',          		'Contact',     NULL,  NULL);
 
 INSERT INTO civicrm_participant_status_type
   (id, name,                                  label,                                                       class,      is_reserved, is_active, is_counted, weight, visibility_id) VALUES
@@ -5636,7 +5636,7 @@ INSERT INTO civicrm_option_group
 
 INSERT INTO civicrm_option_value
   (option_group_id,        name,       label,   value,                                  weight) VALUES
-      (@tpl_ogid_case, 'case_activity', '個案 - 寄出動態複本',            1, 1) ,      (@tpl_ogid_contribution, 'contribution_dupalert', '捐款 - 重複組織警示',            1, 1) ,      (@tpl_ogid_contribution, 'contribution_offline_receipt', '捐款 - 收據（離線）',            2, 2) ,      (@tpl_ogid_contribution, 'contribution_online_receipt', '捐款 - 收據（在線）',            3, 3) ,      (@tpl_ogid_contribution, 'contribution_recurring_notify', '捐款 - 定期捐款的開始和結束通知',            4, 4) ,      (@tpl_ogid_contribution, 'pcp_notify', '個人募款串連 - 管理通知',            5, 5) ,      (@tpl_ogid_contribution, 'pcp_status_change', '個人募款串連 - 支持者狀態更改提示',            6, 6) ,      (@tpl_ogid_contribution, 'pcp_supporter_notify', '個人募款串連 - 歡迎支持者',            7, 7) ,      (@tpl_ogid_event, 'event_offline_receipt', '活動 - 登記確認與收據（離線）',            1, 1) ,      (@tpl_ogid_event, 'event_online_receipt', '活動 - 登記確認與收據（在線）',            2, 2) ,      (@tpl_ogid_event, 'participant_cancelled', '活動 - 登記取消通知',            3, 3) ,      (@tpl_ogid_event, 'participant_confirm', '活動 - 登記確認邀請',            4, 4) ,      (@tpl_ogid_event, 'participant_expired', '活動- 等候登記過期通知',            5, 5) ,      (@tpl_ogid_friend, 'friend', 'Email 推薦給朋友',            1, 1) ,      (@tpl_ogid_membership, 'membership_offline_receipt', '會員 - 註冊與資格更新收據（非網路）',            1, 1) ,      (@tpl_ogid_membership, 'membership_online_receipt', '會員 - 收據（網路）',            2, 2) ,      (@tpl_ogid_meta, 'test_preview', 'Test-drive - Receipt Header',            1, 1) ,      (@tpl_ogid_pledge, 'pledge_acknowledge', '認捐 - 感謝函',            1, 1) ,      (@tpl_ogid_pledge, 'pledge_reminder', '認捐 - 付款提醒',            2, 2) ,      (@tpl_ogid_uf, 'uf_notify', '個人檔案 - 管理提示',            1, 1) ,      (@tpl_ogid_petition, 'petition_sign', 'Petition - signature added',            1, 1) ,      (@tpl_ogid_petition, 'petition_confirmation_needed', 'Petition - need verification',            2, 2) ;
+      (@tpl_ogid_case, 'case_activity', '個案 - 寄出動態複本',            1, 1) ,      (@tpl_ogid_contribution, 'contribution_dupalert', '捐款 - 重複組織警示',            1, 1) ,      (@tpl_ogid_contribution, 'contribution_offline_receipt', '捐款 - 收據（離線）',            2, 2) ,      (@tpl_ogid_contribution, 'contribution_online_receipt', '捐款 - 收據（在線）',            3, 3) ,      (@tpl_ogid_contribution, 'contribution_recurring_notify', '捐款 - 定期捐款的開始和結束通知',            4, 4) ,      (@tpl_ogid_contribution, 'pcp_notify', '個人募款頁 - 管理通知',            5, 5) ,      (@tpl_ogid_contribution, 'pcp_status_change', '個人募款頁 - 支持者狀態更改提示',            6, 6) ,      (@tpl_ogid_contribution, 'pcp_supporter_notify', '個人募款頁 - 歡迎支持者',            7, 7) ,      (@tpl_ogid_event, 'event_offline_receipt', '活動 - 登記確認與收據（離線）',            1, 1) ,      (@tpl_ogid_event, 'event_online_receipt', '活動 - 登記確認與收據（在線）',            2, 2) ,      (@tpl_ogid_event, 'participant_cancelled', '活動 - 登記取消通知',            3, 3) ,      (@tpl_ogid_event, 'participant_confirm', '活動 - 登記確認邀請',            4, 4) ,      (@tpl_ogid_event, 'participant_expired', '活動- 等候登記過期通知',            5, 5) ,      (@tpl_ogid_friend, 'friend', 'Email 推薦給朋友',            1, 1) ,      (@tpl_ogid_membership, 'membership_offline_receipt', '會員 - 註冊與資格更新收據（非網路）',            1, 1) ,      (@tpl_ogid_membership, 'membership_online_receipt', '會員 - 收據（網路）',            2, 2) ,      (@tpl_ogid_meta, 'test_preview', 'Test-drive - Receipt Header',            1, 1) ,      (@tpl_ogid_pledge, 'pledge_acknowledge', '認捐 - 感謝函',            1, 1) ,      (@tpl_ogid_pledge, 'pledge_reminder', '認捐 - 付款提醒',            2, 2) ,      (@tpl_ogid_uf, 'uf_notify', '個人檔案 - 管理提示',            1, 1) ,      (@tpl_ogid_petition, 'petition_sign', 'Petition - signature added',            1, 1) ,      (@tpl_ogid_petition, 'petition_confirmation_needed', 'Petition - need verification',            2, 2) ;
     SELECT @tpl_ovid_case_activity := MAX(id) FROM civicrm_option_value WHERE option_group_id = @tpl_ogid_case AND name = 'case_activity';
     SELECT @tpl_ovid_contribution_dupalert := MAX(id) FROM civicrm_option_value WHERE option_group_id = @tpl_ogid_contribution AND name = 'contribution_dupalert';
     SELECT @tpl_ovid_contribution_offline_receipt := MAX(id) FROM civicrm_option_value WHERE option_group_id = @tpl_ogid_contribution AND name = 'contribution_offline_receipt';
@@ -8221,7 +8221,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
 ', @tpl_ovid_contribution_recurring_notify, 0,          1) ,      
       
       
-      ('個人募款串連 - 管理通知', '{ts}Personal Campaign Page Notification{/ts}
+      ('個人募款頁 - 管理通知', '{ts}Personal Campaign Page Notification{/ts}
 ', '===========================================================
 {ts}Personal Campaign Page Notification{/ts}
 
@@ -8337,7 +8337,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
 </body>
 </html>
 ', @tpl_ovid_pcp_notify, 1,          0),
-      ('個人募款串連 - 管理通知', '{ts}Personal Campaign Page Notification{/ts}
+      ('個人募款頁 - 管理通知', '{ts}Personal Campaign Page Notification{/ts}
 ', '===========================================================
 {ts}Personal Campaign Page Notification{/ts}
 
@@ -8455,7 +8455,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
 ', @tpl_ovid_pcp_notify, 0,          1) ,      
       
       
-      ('個人募款串連 - 支持者狀態更改提示', '{ts 1=$contribPageTitle}Your Personal Campaign Page for %1{/ts}
+      ('個人募款頁 - 支持者狀態更改提示', '{ts 1=$contribPageTitle}Your Personal Campaign Page for %1{/ts}
 ', '{if $pcpStatus eq \'Approved\'}
 ============================
 {ts}Your Personal Campaign Page{/ts}
@@ -8563,7 +8563,7 @@ which prevented us from approving the page. We are sorry for any inconvenience.{
 </body>
 </html>
 ', @tpl_ovid_pcp_status_change, 1,          0),
-      ('個人募款串連 - 支持者狀態更改提示', '{ts 1=$contribPageTitle}Your Personal Campaign Page for %1{/ts}
+      ('個人募款頁 - 支持者狀態更改提示', '{ts 1=$contribPageTitle}Your Personal Campaign Page for %1{/ts}
 ', '{if $pcpStatus eq \'Approved\'}
 ============================
 {ts}Your Personal Campaign Page{/ts}
@@ -8673,7 +8673,7 @@ which prevented us from approving the page. We are sorry for any inconvenience.{
 ', @tpl_ovid_pcp_status_change, 0,          1) ,      
       
       
-      ('個人募款串連 - 歡迎支持者', '{ts 1=$contribPageTitle}Your Personal Campaign Page for %1{/ts}
+      ('個人募款頁 - 歡迎支持者', '{ts 1=$contribPageTitle}Your Personal Campaign Page for %1{/ts}
 ', '{ts}Dear supporter{/ts},
 {ts 1="$contribPageTitle"}Thanks for creating a personal campaign page in support of %1.{/ts}
 
@@ -8833,7 +8833,7 @@ your page, tell friends, and update your contact info.{/ts}</p>
 </body>
 </html>
 ', @tpl_ovid_pcp_supporter_notify, 1,          0),
-      ('個人募款串連 - 歡迎支持者', '{ts 1=$contribPageTitle}Your Personal Campaign Page for %1{/ts}
+      ('個人募款頁 - 歡迎支持者', '{ts 1=$contribPageTitle}Your Personal Campaign Page for %1{/ts}
 ', '{ts}Dear supporter{/ts},
 {ts 1="$contribPageTitle"}Thanks for creating a personal campaign page in support of %1.{/ts}
 
