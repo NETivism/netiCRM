@@ -16673,7 +16673,7 @@ msgstr "提供一份有家庭資料（或家庭本身）的捐款詳細報表（
 #: xml/templates/civicrm_data.tpl xml/templates/civicrm_navigation.tpl
 #: xml/templates/civicrm_sample.tpl
 msgid "Top Donors Report"
-msgstr "Top 捐款名錄報表"
+msgstr "最高捐款者名錄報表"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Provides a list of the top donors during a time period you define. You can include as many donors as you want (for example, top 100 of your donors)."
@@ -16681,7 +16681,7 @@ msgstr "提供一個您指定期間內捐款最多的人的名單。您可搜尋
 
 #: xml/templates/civicrm_data.tpl xml/templates/civicrm_navigation.tpl
 msgid "SYBUNT Report"
-msgstr "SYBUNT 報表"
+msgstr "本年未捐款報表 (以過去捐款為基礎)"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Some year(s) but not this year. Provides a list of constituents who donated at some time in the history of your organization but did not donate during the time period you specify."
@@ -16689,7 +16689,7 @@ msgstr "某幾年但不是今年。提供一份曾經捐款給您的組織，但
 
 #: xml/templates/civicrm_data.tpl xml/templates/civicrm_navigation.tpl
 msgid "LYBUNT Report"
-msgstr "LYBUNT 報表"
+msgstr "本年未捐款報表 (與去年捐款為基礎)"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Last year but not this year. Provides a list of constituents who donated last year but did not donate during the time period you specify as the current year."
@@ -49999,7 +49999,7 @@ msgstr "拒絕原因"
 
 #: CRM/Report/Form/Mailing/Bounce.php
 msgid "Mail Bounce Report"
-msgstr "郵件報表"
+msgstr "Email退信報表"
 
 #: CRM/Report/Form/Mailing/Bounce.php
 msgid "Mail Bounce: %1"
@@ -50007,15 +50007,15 @@ msgstr "郵件退信編號"
 
 #: CRM/Report/Form/Mailing/Clicks.php
 msgid "Click through URL"
-msgstr "點擊次數"
+msgstr "點擊來源(URL)"
 
 #: CRM/Report/Form/Mailing/Clicks.php
 msgid "Click Count"
-msgstr "選擇國家"
+msgstr "點擊次數"
 
 #: CRM/Report/Form/Mailing/Clicks.php
 msgid "Mail Clickthrough Report"
-msgstr "郵件點選編號"
+msgstr "Email點擊流程報表"
 
 #: CRM/Report/Form/Mailing/Clicks.php
 msgid "Clicks: %1"
@@ -50027,7 +50027,7 @@ msgstr "會員計次"
 
 #: CRM/Report/Form/Mailing/Opened.php
 msgid "Mail Opened Report"
-msgstr "郵件報表"
+msgstr "Email開信率報表"
 
 #: CRM/Report/Form/Mailing/Opened.php
 msgid "Mail Opened: %1"
@@ -50208,3 +50208,8 @@ msgstr "網站類型"
 msgid "Total Fee(s)"
 msgstr "費用總計"
 
+msgid "Bookkeeping Transactions Report"
+msgstr "記帳報表"
+
+msgid "Mail Summary Report"
+msgstr "Email遞送報表（概況）"
