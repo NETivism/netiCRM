@@ -38,6 +38,6 @@
 {/if}
 
 <div class="footer" id="civicrm-footer">
-Powered by <a href="http://civicrm.org">CiviCRM</a>. 中文增進版由<a href="http://netivism.com.tw/projects/civicrm">NETivism</a>製作.<br> 
-{ts 1='http://www.gnu.org/licenses/agpl-3.0.html'}CiviCRM is openly available under the <a href='%1'>GNU Affero General Public License (GNU AGPL)</a>.{/ts}
+Powered by <a href="http://drupal.org">Drupal</a>+<a href="http://civicrm.org">CiviCRM</a>. {ts 1='http://www.gnu.org/licenses/agpl-3.0.html'}CiviCRM is openly available under the <a href='%1'>GNU Affero General Public License (GNU AGPL)</a>.{/ts}<br>
+中文增進版由<a href="http://netivism.com.tw/projects/civicrm"><abbr title="NETivism-由數位公益出發的社會企業">網絡行動科技</abbr></a>改造
 </div>
