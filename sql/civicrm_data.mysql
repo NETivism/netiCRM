@@ -16806,10 +16806,9 @@ SET @adminHelplastID:=LAST_INSERT_ID();
 INSERT INTO civicrm_navigation
     ( domain_id, url, label, name, permission, permission_operator, parent_id, is_active, has_separator, weight )
 VALUES    
-    ( @domainID, 'http://documentation.civicrm.org',   'Documentation',      'Documentation',    NULL, 'AND', @adminHelplastID, '1', NULL, 1 ), 
-    ( @domainID, 'http://forum.civicrm.org',           'Community Forums',   'Community Forums', NULL, 'AND', @adminHelplastID, '1', NULL, 2 ), 
-    ( @domainID, 'http://civicrm.org/participate',     'Participate',        'Participate',      NULL, 'AND', @adminHelplastID, '1', NULL, 3 ), 
-    ( @domainID, 'http://civicrm.org/aboutcivicrm',    'About',              'About',            NULL, 'AND', @adminHelplastID, '1', NULL, 4 );
+    ( @domainID, 'http://civicrm.netivism.com.tw/support',   'Online Support',      'Support',    NULL, 'AND', @adminHelplastID, '1', NULL, 1 ), 
+    ( @domainID, 'http://civicrm.netivism.com.tw/about', 'About NETivism',   'About NETivism', NULL, 'AND', @adminHelplastID, '1', NULL, 2 ), 
+    ( @domainID, 'http://civicrm.org/aboutcivicrm',    'About CiviCRM',      'About',            NULL, 'AND', @adminHelplastID, '1', NULL, 3 );
 
 INSERT INTO civicrm_navigation
     ( domain_id, url, label, name, permission, permission_operator, parent_id, is_active, has_separator, weight )

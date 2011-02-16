@@ -4440,8 +4440,8 @@ VALUES
    ('user_dashboard_options'        , '使用者總覽選項'             , 0, 1),
    ('address_options'               , '地址選項'                 , 0, 1),
    ('group_type'                    , '群組類別'                         , 0, 1),
-   ('grant_status'                  , '贊助狀態'                       , 0, 1),
-   ('grant_type'                    , '贊助類型'                         , 0, 1),
+   ('grant_status'                  , '補助狀態'                       , 0, 1),
+   ('grant_type'                    , '補助類型'                         , 0, 1),
    ('honor_type'                    , '榮譽類型'                         , 0, 1),
    ('custom_search'                 , '自訂搜尋'                      , 0, 1),
    ('activity_status'               , '動態狀態'                    , 0, 1),
@@ -4664,7 +4664,7 @@ VALUES
   (@option_group_id_cvOpt, '會員'  ,   8, 'CiviMember', NULL, 0, NULL,  8,  NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_cvOpt, '活動'       ,   9, 'CiviEvent', NULL, 0, NULL,  9,  NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_cvOpt, '個案'        ,  10, 'CiviCase', NULL, 0, NULL,  10, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_cvOpt, '贊助'       ,  11, 'CiviGrant', NULL, 0, NULL,  11, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_cvOpt, '補助'       ,  11, 'CiviGrant', NULL, 0, NULL,  11, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_cvOpt, '認捐'      ,  13, 'CiviPledge', NULL, 0, NULL,  13, NULL, 0, 0, 1, NULL, NULL),
 
   (@option_group_id_ceOpt, '自訂資料'              ,   1, 'CustomData', NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
@@ -4729,7 +4729,7 @@ VALUES
   (@option_group_id_gType, 'Mailing List'    , 2, NULL, NULL, 0, NULL, 2, NULL, 0, 1, 1, NULL, NULL),
 
   (@option_group_id_grantSt, '待處理',  1, 'Pending',  NULL, 0, 1,    1, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_grantSt, '已贊助',  2, 'Granted',  NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_grantSt, '已補助',  2, 'Granted',  NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_grantSt, '已被拒絕', 3, 'Rejected', NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_honorTyp, '致敬'        , 1, 'In Honor of'       , NULL, 0, 1,    1, NULL, 0, 1, 1, NULL, NULL),
   (@option_group_id_honorTyp, '悼念'       , 2, 'In Memory of'      , NULL, 0, NULL, 2, NULL, 0, 1, 1, NULL, NULL),
@@ -4769,10 +4769,10 @@ VALUES
   (@option_group_id_report , '會員報表（詳情）',              'member/detail',                  'CRM_Report_Form_Member_Detail',                  NULL, 0, NULL, 16, '提供會員名單以及他們的會員資格和成員詳細資料（加入的日期，開始日期，結束日期）。', 0, 0, 1, @memberCompId, NULL),
   (@option_group_id_report , '會員報表 (已失效)',              'member/lapse',                   'CRM_Report_Form_Member_Lapse',                   NULL, 0, NULL, 17, '提供已失敗或在指定日期前失效的會員名單。', 0, 0, 1, @memberCompId, NULL),
   (@option_group_id_report , '活動參加者報表（清單）',         'event/participantListing',       'CRM_Report_Form_Event_ParticipantListing',       NULL, 0, NULL, 18, '提供此項目的參加者名單', 0, 0, 1, @eventCompId, NULL),
-  (@option_group_id_report , '項目收入報表（摘要）',           'event/summary',                  'CRM_Report_Form_Event_Summary',                  NULL, 0, NULL, 19, '提供了項目收入的概述。您可以包括一些關鍵信息如活動編號、登記、出席和產生的收入來幫助您去確定這個項目是否成功。', 0, 0, 1, @eventCompId, NULL),			
-  (@option_group_id_report , '項目收入報表（詳情）',            'event/income',                   'CRM_Report_Form_Event_Income',                   NULL, 0, NULL, 20, '幫助您去分析項目所帶來的收入。該報表可包括詳細的參加者類型，狀態和付款方式。', 0, 0, 1, @eventCompId, NULL),
+  (@option_group_id_report , '活動收入報表（摘要）',           'event/summary',                  'CRM_Report_Form_Event_Summary',                  NULL, 0, NULL, 19, '提供了項目收入的概述。您可以包括一些關鍵信息如活動編號、登記、出席和產生的收入來幫助您去確定這個項目是否成功。', 0, 0, 1, @eventCompId, NULL),			
+  (@option_group_id_report , '活動收入報表（詳情）',            'event/income',                   'CRM_Report_Form_Event_Income',                   NULL, 0, NULL, 20, '幫助您去分析項目所帶來的收入。該報表可包括詳細的參加者類型，狀態和付款方式。', 0, 0, 1, @eventCompId, NULL),
   (@option_group_id_report , '認捐報表',                           'pledge/summary',                 'CRM_Report_Form_Pledge_Summary',                 NULL, 0, NULL, 21, '認捐報表', 0, 0, 1, @pledgeCompId, NULL),			
-  (@option_group_id_report , '未有付款的定期捐款報表',             'pledge/pbnp',                    'CRM_Report_Form_Pledge_Pbnp',                    NULL, 0, NULL, 22, '未有付款的定期捐款報表', 0, 0, 1, @pledgeCompId, NULL),  
+  (@option_group_id_report , '認捐但未付款報表',             'pledge/pbnp',                    'CRM_Report_Form_Pledge_Pbnp',                    NULL, 0, NULL, 22, '認捐但未付款報表', 0, 0, 1, @pledgeCompId, NULL),  
   (@option_group_id_report , '關係報表',                     'contact/relationship',           'CRM_Report_Form_Contact_Relationship',           NULL, 0, NULL, 23, '關係報表', 0, 0, 1, NULL, NULL),
   (@option_group_id_report , '個案概況報表',                     'case/summary',                   'CRM_Report_Form_Case_Summary',                   NULL, 0, NULL, 24, '提供案件和所以時間的概況，包括日期範圍、狀態、工作人員和/或案件角色。', 0, 0, 1, @caseCompId, NULL),
   (@option_group_id_report , '個案所需時間報表',                  'case/timespent',                 'CRM_Report_Form_Case_TimeSpent',                 NULL, 0, NULL, 25, '統整個案所花的時間 和/或 非個案動態的動態類型及聯絡人。', 0, 0, 1, @caseCompId, NULL),
@@ -4780,7 +4780,7 @@ VALUES
   (@option_group_id_report , '資料庫記錄報表',                     'contact/log',                    'CRM_Report_Form_Contact_Log',                    NULL, 0, NULL, 27, '聯絡人和動態記錄，可用日期指定範圍檢視。', 0, 0, 1, NULL, NULL),
   (@option_group_id_report , '動態報表（概況）',               'activitySummary',                'CRM_Report_Form_ActivitySummary',                NULL, 0, NULL, 28, '以類型 /日期顯示動態統計', 0, 0, 1, NULL, NULL),
   (@option_group_id_report, '記帳報表',          'contribute/bookkeeping',         'CRM_Report_Form_Contribute_Bookkeeping',         NULL, 0, 0, 29,    'Shows Bookkeeping Transactions Report', 0, 0, 1, 2, NULL),
-  (@option_group_id_report , 'Grant Report', 'grant', 'CRM_Report_Form_Grant', NULL, 0, 0, 30,  'Grant Report', 0, 0, 1, @grantCompId, NULL),
+  (@option_group_id_report , '補助報表', 'grant', 'CRM_Report_Form_Grant', NULL, 0, 0, 30,  '補助報表', 0, 0, 1, @grantCompId, NULL),
   (@option_group_id_report, 'Participant list Count Report', 'event/participantlist', 'CRM_Report_Form_Event_ParticipantListCount', NULL, 0, 0, 31, 'Shows the Participant list with Participant Count.', 0, 0, 1, @eventCompId, NULL),
   (@option_group_id_report, 'Income Count Summary Report', 'event/incomesummary', 'CRM_Report_Form_Event_IncomeCountSummary', NULL, 0, 0, 32, 'Shows the Income Summary of events with Count.', 0, 0, 1, @eventCompId, NULL),
   (@option_group_id_report, 'Case Detail Report', 'case/detail', 'CRM_Report_Form_Case_Detail', NULL, 0, 0, 33, '個案詳情', 0, 0, 1, @caseCompId, NULL),
@@ -4837,7 +4837,7 @@ VALUES
   (@option_group_id_mt, '匯出參加者', 10, 'Export Participant',  NULL, 0, 0,   10, NULL, 0, 1, 1, NULL, NULL),
   (@option_group_id_mt, '匯出認捐',      11, 'Export Pledge',       NULL, 0, 0,   11, NULL, 0, 1, 1, NULL, NULL),
   (@option_group_id_mt, '匯出個案',        12, 'Export Case',         NULL, 0, 0,   12, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_mt, '匯出贊助',       13, 'Export Grant',        NULL, 0, 0,   13, NULL, 0, 1, 1, NULL, NULL),
+  (@option_group_id_mt, '匯出補助',       13, 'Export Grant',        NULL, 0, 0,   13, NULL, 0, 1, 1, NULL, NULL),
   (@option_group_id_mt, 'Export Activity',    14, 'Export Activity',     NULL, 0, 0,   14, NULL, 0, 1, 1, NULL, NULL),
 
   (@option_group_id_fu, '日'    , 'day'  ,    'day',  NULL, 0, NULL, 1, NULL, 0, 1, 1, NULL, NULL),
@@ -16806,10 +16806,9 @@ SET @adminHelplastID:=LAST_INSERT_ID();
 INSERT INTO civicrm_navigation
     ( domain_id, url, label, name, permission, permission_operator, parent_id, is_active, has_separator, weight )
 VALUES    
-    ( @domainID, 'http://documentation.civicrm.org',   'Documentation',      'Documentation',    NULL, 'AND', @adminHelplastID, '1', NULL, 1 ), 
-    ( @domainID, 'http://forum.civicrm.org',           'Community Forums',   'Community Forums', NULL, 'AND', @adminHelplastID, '1', NULL, 2 ), 
-    ( @domainID, 'http://civicrm.org/participate',     'Participate',        'Participate',      NULL, 'AND', @adminHelplastID, '1', NULL, 3 ), 
-    ( @domainID, 'http://civicrm.org/aboutcivicrm',    'About',              'About',            NULL, 'AND', @adminHelplastID, '1', NULL, 4 );
+    ( @domainID, 'http://civicrm.netivism.com.tw/support',   'Online Support',      'Support',    NULL, 'AND', @adminHelplastID, '1', NULL, 1 ), 
+    ( @domainID, 'http://civicrm.netivism.com.tw/about', 'About NETivism',   'About NETivism', NULL, 'AND', @adminHelplastID, '1', NULL, 2 ), 
+    ( @domainID, 'http://civicrm.org/aboutcivicrm',    'About CiviCRM',      'About',            NULL, 'AND', @adminHelplastID, '1', NULL, 3 );
 
 INSERT INTO civicrm_navigation
     ( domain_id, url, label, name, permission, permission_operator, parent_id, is_active, has_separator, weight )
