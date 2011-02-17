@@ -87,9 +87,11 @@ class CRM_Utils_Cache_Memcache {
             echo 'Could not connect to Memcached server';
             CRM_Utils_System::civiExit( );
         }
+        $this->_prefix = defined( 'MEMCACHE_PREFIX' ) ? MEMCACHE_PREFIX : '';
     }
 
     function set( $key, &$value ) {
+        $key = $this->_prefix."_".$key;
         if ( ! $this->_cache->set( $key, $value, false, $this->_timeout ) ) {
             return false;
         }
@@ -97,11 +99,13 @@ class CRM_Utils_Cache_Memcache {
     }
 
     function &get( $key ) {
+        $key = $this->_prefix."_".$key;
         $result =& $this->_cache->get( $key );
         return $result;
     }
 
     function delete( $key ) {
+        $key = $this->_prefix."_".$key;
         return $this->_cache->delete( $key );
     }
 
