@@ -1,6 +1,10 @@
 <?php
-if($argv[4]){
-  define("CIVICRM_CONFDIR", rtrim($argv[4], '/'));
+define("CIVICRM_CONFDIR", rtrim($argv[1], '/'));
+if($argv[2]){
+  define("CIVICRM_CODEBASE", rtrim($argv[2]));
+}
+else{
+  define("CIVICRM_CODEBASE", '/var/www/civicrm_dev');
 }
 
 ini_set( 'include_path', '.' . PATH_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'packages' . PATH_SEPARATOR . '..' );
@@ -10,10 +14,6 @@ $versionFile = "version.xml";
 $versionXML  =& parseInput( $versionFile );
 $db_version  = $versionXML->version_no;
 $build_version = preg_replace('/^(\d{1,2}\.\d{1,2})\.(\d{1,2}|\w{4,7})$/i', '$1', $db_version);
-if ( isset($argv[2]) ) {
-    // change the version to that explicitly passed, if any 
-    $db_version = $argv[2];
-}
 if ($build_version < 1.1) {
     echo "The Database is not compatible for this version";
     exit();
@@ -30,13 +30,8 @@ Alternatively you can get a version of CiviCRM that matches your PHP version
 }
 
 // default cms is 'drupal', if not specified 
-$cms = isset($argv[3]) ? strtolower($argv[3]) : 'drupal';
-if ( !in_array($cms, array('drupal', 'standalone', 'joomla')) ) {
-    echo "Config file for '{$cms}' not known.";
-    exit();
-} else if ( $cms !== 'joomla' ) {
-    copy("../{$cms}/civicrm.config.php.{$cms}", '../civicrm.config.php');
-}
+$cms = 'drupal';
+copy(CIVICRM_CODEBASE."/{$cms}/civicrm.config.php.{$cms}", '../civicrm.config.php');
 
 require_once 'Smarty/Smarty.class.php';
 require_once 'PHP/Beautifier.php';
@@ -77,15 +72,11 @@ createDir( $smarty->compile_dir );
 
 $smarty->clear_all_cache();
 
-if ( isset( $argv[1] ) && ! empty( $argv[1] ) ) {
-    $file = $argv[1];
-} else {
-    $file = 'schema/Schema.xml';
-}
+$file = 'schema/Schema.xml';
 
-$sqlCodePath = '../sql/';
-$phpCodePath = '../';
-$tplCodePath = '../templates/';
+$sqlCodePath = CIVICRM_CODEBASE.'/sql/';
+$phpCodePath = CIVICRM_CODEBASE.'/';
+$tplCodePath = CIVICRM_CODEBASE.'/templates/';
 
 echo "Parsing input file $file\n";
 $dbXML = parseInput( $file );
