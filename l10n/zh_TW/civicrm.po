@@ -50225,3 +50225,28 @@ msgstr "關於網絡行動科技"
 
 msgid "About CiviCRM"
 msgstr "關於CiviCRM"
+
+msgid "FIXME"
+msgstr "待設定"
+
+msgid "Name Tent"
+msgstr "名牌"
+
+msgid "With Logo"
+msgstr "加上Logo"
+
+msgid "Author Only"
+msgstr "只有作者"
+
+msgid "Direct Mail"
+msgstr "直接信件"
+
+msgid "Referral Program"
+msgstr "關聯專案"
+
+msgid "Constituent Engagement"
+msgstr "支持者承諾"
+
+msgid "Planned"
+msgstr "已規劃"
+
