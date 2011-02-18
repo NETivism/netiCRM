@@ -3,5 +3,5 @@
 CALLEDPATH=`dirname $0`
 if [ -d $CALLEDPATH/../xml ]; then
   cd $CALLEDPATH/../xml
-  "$PHP5PATH"php GenCode.php $SCHEMA
+  php GenCode.php schema/Schema.xml 3.3.1 drupal $1 
 fi
