@@ -636,7 +636,7 @@ VALUES
    (@option_group_id_tuf, 'Activities', 'civicrm_activity', 'Activities',  NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
    (@option_group_id_tuf, 'Cases',      'civicrm_case',     'Cases',       NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL),
 
-   (@option_group_id_currency, 'USD ($)',      'USD',     'USD',       NULL, 0, 1, 1, NULL, 0, 0, 1, NULL, NULL),
+   (@option_group_id_currency, 'TWD (NT$)',      'TWD',     'TWD',       NULL, 0, 1, 1, NULL, 0, 0, 1, NULL, NULL),
 
 -- event name badges
   (@option_group_id_eventBadge, '{ts escape="sql"}Name Only{/ts}'     , 1, 'CRM_Event_Badge_Simple',  NULL, 0, 0, 1, '{ts escape="sql"}Simple Event Name Badge{/ts}', 0, 1, 1, NULL, NULL),
@@ -665,7 +665,7 @@ INSERT INTO
    `civicrm_option_value` (`option_group_id`, `label`, `value`, `name`, `grouping`, `filter`, `is_default`, `weight`, `description`, `is_optgroup`, `is_reserved`, `is_active`, `component_id`, `domain_id`, `visibility_id`) 
 VALUES
 -- from email address.
-  (@option_group_id_fma, '"FIXME" <info@FIXME.ORG>', '1', '"FIXME" <info@FIXME.ORG>', NULL, 0, 1, 1, '{ts escape="sql"}Default domain email address and from name.{/ts}', 0, 0, 1, NULL, @domainID, NULL ),
+  (@option_group_id_fma, '"{ts escape="sql"}FIXME{/ts}" <info@FIXME.ORG>', '1', '"{ts escape="sql"}FIXME{/ts}" <info@FIXME.ORG>', NULL, 0, 1, 1, '{ts escape="sql"}Default domain email address and from name.{/ts}', 0, 0, 1, NULL, @domainID, NULL ),
 
 -- grant types
   (@option_group_id_grantTyp, '{ts escape="sql"}Emergency{/ts}'          , 1, 'Emergency'         , NULL, 0, 1,    1, NULL, 0, 0, 1, NULL, @domainID, NULL),    
