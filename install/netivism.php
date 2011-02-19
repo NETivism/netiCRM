@@ -1,21 +1,24 @@
 <?php
 
-function neti_run_install(){
+function neticrm_run_install(){
   civicrm_initialize( );
-  neti_domain_set_default();
-  neti_enable_custom_modules();
-  neti_translate_report();
+  neticrm_domain_set_default();
+  neticrm_enable_custom_modules();
+  neticrm_translate_report();
 }
 
-function neti_enable_custom_modules(){
+function neticrm_enable_custom_modules(){
   module_rebuild_cache( );
   // now enable civicrm related module.
-  module_enable( array('civicrm_ckeditor','civicrm_imce','civicrm_twaddress','civicrm_gw','civicrm_newweb') );
+  module_enable(_neticrm_custom_modules());
   // clear block and page cache, to make sure civicrm link is present in navigation block
   cache_clear_all();
 }
+function _neticrm_custom_modules(){
+  return array('civicrm_ckeditor','civicrm_imce','civicrm_twaddress','civicrm_gw','civicrm_newweb');
+}
 
-function neti_translate_report(){
+function neticrm_translate_report(){
   require_once "CRM/Report/DAO/Instance.php";
   $sql = "SELECT id FROM civicrm_report_instance WHERE 1";
   $rows = CRM_Core_DAO::executeQuery($sql);
@@ -33,7 +36,7 @@ function neti_translate_report(){
   }
 }
 
-function neti_domain_set_default(){
+function neticrm_domain_set_default(){
   require_once "CRM/Core/Component.php";
   require_once "CRM/Core/BAO/Setting.php";
   $params = array (

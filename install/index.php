@@ -841,7 +841,7 @@ class Installer extends InstallRequirements {
 
                 // now, start to doing netivism installation job
                 include_once 'netivism.php';
-                neti_run_install();
+                neticrm_run_install();
                 
             } elseif ( $installType == 'standalone' ) {
                 $standaloneURL = civicrm_cms_base( ) . 'standalone/index.php';

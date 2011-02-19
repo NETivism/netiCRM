@@ -36,7 +36,6 @@
 
 
 
-
 function civicrm_setup( $filesDirectory ) {
     global $crmPath, $sqlPath, $pkgPath, $tplPath;
     global $compileDir;
@@ -79,10 +78,9 @@ function civicrm_write_file( $name, &$buffer ) {
 function civicrm_main( &$config ) {
     global $sqlPath, $crmPath, $cmsPath;
     
-    $siteDir = isset( $config['site_dir'] ) ? $config['site_dir'] : getSiteDir( $cmsPath, $_SERVER['SCRIPT_FILENAME'] );
+    $siteDir = isset( $config['site_dir'] ) ? $config['site_dir'] : getSiteDir_( $cmsPath, $_SERVER['SCRIPT_FILENAME'] );
 
-    civicrm_setup( $cmsPath . DIRECTORY_SEPARATOR . 'sites' . DIRECTORY_SEPARATOR . 
-                   $siteDir . DIRECTORY_SEPARATOR . 'files' );
+    civicrm_setup( $cmsPath . DIRECTORY_SEPARATOR . 'sites' . DIRECTORY_SEPARATOR . $siteDir . DIRECTORY_SEPARATOR . 'files' );
 
     $dsn = "mysql://{$config['mysql']['username']}:{$config['mysql']['password']}@{$config['mysql']['server']}/{$config['mysql']['database']}?new_link=true";
 
@@ -245,4 +243,39 @@ function civicrm_cms_base( ) {
 function civicrm_home_url( ) {
     $drupalURL = civicrm_cms_base( );
     return $drupalURL . 'index.php?q=civicrm';
+}
+
+function getSiteDir_( $cmsPath, $str ) {
+    static $siteDir = '';
+    
+    if ( $siteDir ) {
+        return $siteDir;
+    }
+    
+    $sites   = CIVICRM_DIRECTORY_SEPARATOR . 'sites'   . CIVICRM_DIRECTORY_SEPARATOR;
+    $modules = CIVICRM_DIRECTORY_SEPARATOR . 'modules' . CIVICRM_DIRECTORY_SEPARATOR;
+    preg_match( "/" . preg_quote($sites, CIVICRM_DIRECTORY_SEPARATOR) . 
+                "([a-zA-Z0-9_.]+)" . 
+                preg_quote($modules, CIVICRM_DIRECTORY_SEPARATOR) . "/",
+                $_SERVER['SCRIPT_FILENAME'], $matches );
+    $siteDir = isset($matches[1]) ? $matches[1] : 'default';
+    
+    if ( strtolower( $siteDir ) == 'all' ) {
+        // For this case - use drupal's way of finding out multi-site directory
+        $uri    = explode(CIVICRM_DIRECTORY_SEPARATOR, $_SERVER['SCRIPT_FILENAME']);
+        $server = explode('.', implode('.', array_reverse(explode(':', rtrim($_SERVER['HTTP_HOST'], '.')))));
+        for ($i = count($uri) - 1; $i > 0; $i--) {
+            for ($j = count($server); $j > 0; $j--) {
+                $dir = implode('.', array_slice($server, -$j)) . implode('.', array_slice($uri, 0, $i));
+                if (file_exists($cmsPath  . CIVICRM_DIRECTORY_SEPARATOR . 
+                                'sites'   . CIVICRM_DIRECTORY_SEPARATOR . $dir)) {
+                    $siteDir = $dir;
+                    return $siteDir;
+                }
+            }
+        }
+        $siteDir = 'default';
+    }
+
+    return $siteDir;
 }
