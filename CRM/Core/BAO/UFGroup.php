@@ -767,9 +767,16 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup
                     $name = $name . '_id';
                     $params[$index] = $details->$name;
                 } else if ( in_array( $name, array( 'state_province', 'country', 'county' ) ) ) {
-                    $values[$index] = $details->$name;
-                    $idx = $name . '_id';
-                    $params[$index] = $details->$idx;
+                    if($name == 'state_province'){
+                      $values[$index] = ts($details->$name);
+                      $idx = $name . '_id';
+                      $params[$index] = $details->$idx;
+                    }
+                    else{
+                      $values[$index] = $details->$name;
+                      $idx = $name . '_id';
+                      $params[$index] = $details->$idx;
+                    }
                 } else if ( $name === 'preferred_communication_method' ) {
                     $communicationFields = CRM_Core_PseudoConstant::pcm();
                     $pref = $compref = array();
@@ -916,9 +923,16 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup
                     }
 
                     if ( in_array( $fieldName, array( 'state_province', 'country', 'county' ) ) ) {
-                        $values[$index] = $details->$detailName;
-                        $idx = $detailName . '_id';
-                        $params[$index] = $details->$idx;
+                        if($fieldName == 'state_province'){
+                          $values[$index] = ts($details->$detailName);
+                          $idx = $detailName . '_id';
+                          $params[$index] = $details->$idx;
+                        }
+                        else{
+                          $values[$index] = $details->$detailName;
+                          $idx = $detailName . '_id';
+                          $params[$index] = $details->$idx;
+                        }
                     } else if ( $fieldName == 'im'){
                         $providerId     = $detailName . '-provider_id';
                         $providerName   = $imProviders[$details->$providerId];
