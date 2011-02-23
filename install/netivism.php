@@ -4,7 +4,7 @@ function neticrm_run_install(){
   civicrm_initialize( );
   neticrm_domain_set_default();
   neticrm_enable_custom_modules();
-  neticrm_translate_report();
+  // neticrm_translate_report();
 }
 
 function neticrm_enable_custom_modules(){
@@ -150,4 +150,13 @@ function neticrm_domain_set_default(){
   // start saving
   $setting = new CRM_Core_BAO_Setting();
   $setting->add($params);
+
+  // trick to update correct userFrameworkResourceURL
+  if(function_exists('d')){
+    $site = basename(d()->site_path);
+    $path = 'http://'.$site.'/sites/all/modules/civicrm';
+    require_once "CRM/Report/DAO/Instance.php";
+    $sql = "UPDATE civicrm_option_value SET value = '$path' WHERE name = 'userFrameworkResourceURL'";
+    CRM_Core_DAO::executeQuery($sql);
+  }
 }
