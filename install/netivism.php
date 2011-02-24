@@ -4,7 +4,8 @@ function neticrm_run_install(){
   civicrm_initialize( );
   neticrm_domain_set_default();
   neticrm_enable_custom_modules();
-  neticrm_translate_report();
+  neticrm_fix_group();
+  // neticrm_translate_report();
 }
 
 function neticrm_enable_custom_modules(){
@@ -15,7 +16,7 @@ function neticrm_enable_custom_modules(){
   cache_clear_all();
 }
 function _neticrm_custom_modules(){
-  return array('civicrm_ckeditor','civicrm_imce','civicrm_twaddress','civicrm_gw','civicrm_newweb');
+  return array('civicrm_ckeditor','civicrm_imce','civicrm_twaddress');
 }
 
 function neticrm_translate_report(){
@@ -150,4 +151,20 @@ function neticrm_domain_set_default(){
   // start saving
   $setting = new CRM_Core_BAO_Setting();
   $setting->add($params);
+
+  // trick to update correct userFrameworkResourceURL
+  if(function_exists('d')){
+    $site = basename(d()->site_path);
+    $path = 'http://'.$site.'/sites/all/modules/civicrm';
+    require_once "CRM/Report/DAO/Instance.php";
+    $sql = "UPDATE civicrm_option_value SET value = '$path' WHERE name = 'userFrameworkResourceURL'";
+    CRM_Core_DAO::executeQuery($sql);
+  }
 }
+
+function neticrm_fix_group(){
+  require_once "CRM/Report/DAO/Instance.php";
+  $sql = "UPDATE civicrm_group SET title = 'Administrator', description = 'Site administrator.' WHERE id = 1";
+  CRM_Core_DAO::executeQuery($sql);
+}
+

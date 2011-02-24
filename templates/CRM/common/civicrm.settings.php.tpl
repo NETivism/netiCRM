@@ -169,7 +169,7 @@ define( 'CIVICRM_UF_BASEURL'      , '%%baseURL%%' );
  * We recommend using a 16-32 bit alphanumeric/punctuation key. 
  * More info at http://wiki.civicrm.org/confluence/display/CRMDOC/Command-line+Script+Configuration
  */
-define( 'CIVICRM_SITE_KEY', null );
+define( 'CIVICRM_SITE_KEY', '%%siteKey%%' );
 
 /*
  * If you want to disable IDS, set this to 0.
