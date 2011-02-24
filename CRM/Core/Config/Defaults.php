@@ -205,7 +205,12 @@ class CRM_Core_Config_Defaults
                 //for standalone no need of sites/defaults directory
                 $defaults['imageUploadURL'] = $baseURL . "files/civicrm/persist/contribute/";
             } else {
-                $defaults['imageUploadURL'] = $baseURL . "sites/default/files/civicrm/persist/contribute/";
+                if(function_exists('file_directory_path')){
+                  $defaults['imageUploadURL'] = $baseURL . file_directory_path()."/civicrm/persist/contribute/";
+                }
+                else{
+                  $defaults['imageUploadURL'] = $baseURL . "sites/default/files/civicrm/persist/contribute/";
+                }
             }
         }
 
