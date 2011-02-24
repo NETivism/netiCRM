@@ -33,6 +33,7 @@
   * $Id$
   *
   */
+require_once 'CRM/Core/Form.php';
 
  /**
   *
