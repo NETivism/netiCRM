@@ -75,12 +75,7 @@ class CRM_Mailing_BAO_Job extends CRM_Mailing_DAO_Job {
             $job->query($query);
         } else {
             $currentTime = date( 'YmdHis' );
-            if($_SERVER['SERVER_ADDR'] == $_SERVER['REMOTE_ADDR']){
-              $mailingACL  = 1;
-            }
-            else{
-              $mailingACL  = CRM_Mailing_BAO_Mailing::mailingACL( 'm' );
-            }
+            $mailingACL  = CRM_Mailing_BAO_Mailing::mailingACL( 'm' ); 
 
 			// SELECT THE First Child Job that's scheduled
 			// CRM-6835
