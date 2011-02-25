@@ -48038,7 +48038,7 @@ msgstr ""
 
 #: templates/CRM/Group/Page/Group.tpl
 msgid "Add Group"
-msgstr "新增到群組"
+msgstr "新增群組"
 
 #: templates/CRM/Group/Page/Group.tpl
 msgid "Use Groups to organize contacts (e.g. these contacts are part of our 'Steering Committee'). You can also create 'smart' groups based on contact characteristics (e.g. this group consists of all people in our database who live in a specific locality)."
