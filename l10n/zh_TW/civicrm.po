@@ -6785,9 +6785,13 @@ msgstr "沒有這個訊息範本：選項組 %1，選項值 %2。"
 msgid "Logout"
 msgstr "登出"
 
-#: CRM/Core/BAO/Navigation.php xml/templates/civicrm_data.tpl
+#: xml/templates/civicrm_data.tpl
 msgid "Home"
-msgstr "管理首頁"
+msgstr "宅"
+
+#: CRM/Core/BAO/Navigation.php 
+msgid "Homepage"
+msgstr "首頁"
 
 #: CRM/Core/BAO/Navigation.php
 msgid "Drupal Menu"
@@ -50250,3 +50254,5 @@ msgstr "支持者承諾"
 msgid "Planned"
 msgstr "已規劃"
 
+msgid "Billing"
+msgstr "帳單"
