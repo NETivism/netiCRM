@@ -1,4 +1,3 @@
-TEST from jimmy
 *************************
 README file for CiviCRM
 *************************
