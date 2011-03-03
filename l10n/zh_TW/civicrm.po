@@ -6787,7 +6787,7 @@ msgstr "登出"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Home"
-msgstr "宅"
+msgstr "住家"
 
 #: CRM/Core/BAO/Navigation.php 
 msgid "Homepage"
