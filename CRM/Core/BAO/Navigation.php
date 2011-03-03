@@ -562,10 +562,10 @@ ORDER BY parent_id, weight";
             self::retrieve( $homeParams, $homeNav );
             if ( $homeNav ) {
                 $homeURL     = CRM_Utils_System::url( $homeNav['url'] );
-                $homeLabel   = $homeNav['label'];
+                $homeLabel   = ts($homeNav['label']);
             } else {
                 $homeURL     = CRM_Utils_System::url( 'civicrm/dashboard', 'reset=1');
-                $homeLabel   = ts('Home');
+                $homeLabel   = ts('Homepage');
             }
 
             if ( ( $config->userFramework == 'Drupal' ) && 
