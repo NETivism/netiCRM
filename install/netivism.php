@@ -4,8 +4,7 @@ function neticrm_run_install(){
   civicrm_initialize( );
   neticrm_domain_set_default();
   neticrm_enable_custom_modules();
-  neticrm_fix_group();
-  // neticrm_translate_report();
+  neticrm_sql_update_1000();
 }
 
 function neticrm_enable_custom_modules(){
@@ -17,24 +16,6 @@ function neticrm_enable_custom_modules(){
 }
 function _neticrm_custom_modules(){
   return array('civicrm_ckeditor','civicrm_imce','civicrm_twaddress');
-}
-
-function neticrm_translate_report(){
-  require_once "CRM/Report/DAO/Instance.php";
-  $sql = "SELECT id FROM civicrm_report_instance WHERE 1";
-  $rows = CRM_Core_DAO::executeQuery($sql);
-  while($rows->fetch()){
-    $report = new CRM_Report_DAO_Instance();
-    $report->id = $rows->id;
-    if($report->find(true)){
-      $report->title = ts($report->title);
-      $report->description = ts($report->description);
-      $form_values = unserialize($report->form_values);
-      $form_values['description'] = ts($form_values['description']);
-      $report->form_values = serialize($form_values);
-      $report->save();
-    }
-  }
 }
 
 function neticrm_domain_set_default(){
@@ -162,9 +143,51 @@ function neticrm_domain_set_default(){
   }
 }
 
-function neticrm_fix_group(){
-  require_once "CRM/Report/DAO/Instance.php";
-  $sql = "UPDATE civicrm_group SET title = 'Administrator', description = 'Site administrator.' WHERE id = 1";
-  CRM_Core_DAO::executeQuery($sql);
+function neticrm_source($fileName, $lineMode = false ) {
+  global $crmPath, $sqlPath;
+  if($sqlPath){
+    $fileName = $sqlPath.'/'.$fileName;
+    require_once "CRM/Report/DAO/Instance.php";
+    require_once "packages/DB.php";
+
+    if ( ! $lineMode ) {
+      $string = file_get_contents( $fileName );
+      // change \r\n to fix windows issues
+      $string = str_replace("\r\n", "\n", $string );
+      //get rid of comments starting with # and --
+      $string = preg_replace("/^#[^\n]*$/m",   "\n", $string );
+      $string = preg_replace("/^(--[^-]).*/m", "\n", $string );
+
+      $queries  = preg_split('/;$/m', $string);
+      foreach ( $queries as $query ) {
+        $query = trim( $query );
+        if ( ! empty( $query ) ) {
+          $res =& CRM_Core_DAO::executeQuery($query);
+          if ( PEAR::isError( $res ) ) {
+            die( "Cannot execute $query: " . $res->getMessage( ) );
+          }
+        }
+      }
+    }
+    else {
+      $fd = fopen( $fileName, "r" );
+      while ( $string = fgets( $fd ) ) {
+        $string = preg_replace("/^#[^\n]*$/m",   "\n", $string );
+        $string = preg_replace("/^(--[^-]).*/m", "\n", $string );
+
+        $string = trim( $string );
+        if ( ! empty( $string ) ) {
+          $res =& $db->query( $string );
+          $res =& CRM_Core_DAO::executeQuery($string);
+          if ( PEAR::isError( $res ) ) {
+            die( "Cannot execute $string: " . $res->getMessage( ) );
+          }
+        }
+      }
+    }
+  }
 }
 
+function neticrm_sql_update_1000(){
+  neticrm_source('neticrm_1000.mysql');
+}
