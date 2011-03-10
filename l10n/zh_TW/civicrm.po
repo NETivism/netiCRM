@@ -50256,3 +50256,6 @@ msgstr "已規劃"
 
 msgid "Billing"
 msgstr "帳單"
+
+msgid "Create New"
+msgstr "新增"
