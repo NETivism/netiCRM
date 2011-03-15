@@ -4,4 +4,4 @@ package = CiviCRM
 dependencies[] = civicrm
 dependencies[] = imce
 core = 6.x
-version = dev
+version = 3.3.1-netivism
