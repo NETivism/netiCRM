@@ -7,7 +7,7 @@ function civicrm_event_cck_menu(){
     'page callback' => 'drupal_get_form',
     'page arguments' => array('civicrm_event_cck_admin_settings'),
     'access callback' => 'user_access',
-    'access arguments' => array('administer site configurations'),
+    'access arguments' => array('administer site configuration'),
     'type' => MENU_NORMAL_ITEM,
   );
   return $items;
@@ -15,15 +15,34 @@ function civicrm_event_cck_menu(){
 
 function civicrm_event_cck_admin_settings(){
   $types = node_get_types('names');
-  $form['civicrm_event_cck_enabled_type'] = array(
+  $form['civiec_enabled_type'] = array(
     '#type' => 'checkboxes',
     '#title' => 'Content type to enable for sync',
-    '#default_value' => variable_get('civicrm_event_cck_enabled_type', array()),
+    '#default_value' => variable_get('civiec_enabled_type', array()),
     '#options' => $types,
     '#required' => TRUE,
   );
+  $fields = content_fields();
+  foreach($fields as $name => $f){
+    if($f['type'] != 'filefield' && $f['type'] != 'content_taxonomy')
+      $option_fields[$name] = $f['type'].":".$f['widget']['label']." ($name)";
+  }
+  $form['civiec_fields'] = array(
+    '#type' => 'fieldset',
+    '#title' => 'CiviEvent / CCK field mapping',
+  );
+  $civiec_fields = civicrm_event_cck_fields();
+  foreach($civiec_fields as $f => $name){
+    $form['civiec_fields']['civiec_'.$f] = array(
+      '#type' => 'select',
+      '#title' => $name,
+      '#default_value' => variable_get('civiec_'.$f, ''),
+      '#options' => $option_fields,
+      '#required' => TRUE,
+    );
+  }
 
-  return $form;
+  return system_settings_form($form);
 }
 
 function civicrm_event_cck_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL){
@@ -41,9 +60,58 @@ function civicrm_event_cck_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL){
 function civicrm_event_cck_form_alter(&$form, &$form_state, $form_id){
   if (isset($form['type']) && isset($form['#node']) && $form['type']['#value'] . '_node_form' == $form_id){
     $available_types = variable_get('civicrm_event_cck_enabled_type', array());
-    if(in_array($form['#node']->type, $available_types)) {
+    if(in_array($form['#node']->type, $available_types) && variable_get('civiec_id', '')) {
+      $event_id_field = variable_get('civiec_id', ''); 
       // add drop down select list of "event type" and "attender type"
+      civicrm_initialize();
+      /*
+      // get default value 
+      if($event_id = $form['#node']->{$event_id_field}[0]['value']){
+        $event_type_id = CRM_Core_DAO::getFieldValue('CRM_Event_DAO_Event', $event_id, 'event_type_id');
+        $default_role_id = CRM_Core_DAO::getFieldValue('CRM_Event_DAO_Event', $event_id, 'default_role_id');
+      }
+      */
+      require_once 'CRM/Core/OptionGroup.php';
+
+      // from http://drupal.org/node/339730#comment-2871966
+      // Add "- Select One -" to the allowed values for this field.
+      // (This is necessary to avoid the "An illegal choice has been detected. Please contact the site administrator." error.
+
+      $civiec_fields = civicrm_event_cck_fields();
+      foreach($civiec_fields as $k => $name){
+        if($field = variable_get('civiec_'.$k, '')){
+          // now start to get default option / value from civicrm
+          $options = array();
+          switch($k) {
+            case 'default_role_id':
+              $options = CRM_Core_OptionGroup::values('participant_role');
+              break;
+            case 'event_type_id':
+              $options = CRM_Core_OptionGroup::values('event_type'); 
+              break;
+          }
+          if(!empty($options)){
+            foreach($options as $k => $v){
+              $option_str .= $k.'|'.$v."\n";
+            }
+            $form['#field_info'][$field]['allowed_values'] = $option_str;
+          }
+        }
+      }
 
     }
   }
+}
+
+function civicrm_event_cck_fields(){
+  return array(
+    'id' => 'Event ID',
+    'is_online_registration' => 'Is online registration',
+    'default_role_id' => 'Default participant role',
+    'event_type_id' => 'Event type',
+    //'participant_listing_id' => 'Participant listing',
+    'max_participants' => 'Max participants',
+    'date' => 'Start / End date of event',
+    'registration_date' => 'Start / End date of registration',
+  );
 }
