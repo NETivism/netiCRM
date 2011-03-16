@@ -5,173 +5,21 @@
 # make sure you license it to CiviCRM LLC under Academic Free License 3.0.
 msgid ""
 msgstr ""
-"Project-Id-Version: CiviCRM 3.0\n"
-"POT-Creation-Date: 2007-04-18 07:33+0200\n"
-"PO-Revision-Date: 2011-02-11 18:19+0800\n"
-"Last-Translator: \n"
-"Language-Team: CiviCRM Translators <civicrm-translators@lists.civicrm.org>\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"Project-Id-Version: CiviCRM 3.1\n"
-"POT-Creation-Date: 2010-01-28 12:05+0100\n"
-"PO-Revision-Date: 2010-02-16 20:23+0800\n"
-"Last-Translator: Charles Chuang <charles>\n"
-"Language-Team: CiviCRM Translators <civicrm-translators@lists.civicrm.org>\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Pootle 1.0.2\n"
-"X-Poedit-Language: Chinese\n"
-"X-Poedit-Country: TAIWAN\n"
-"Project-Id-Version: CiviCRM 2.1\n"
-"POT-Creation-Date: 2010-01-28 12:05+0100\n"
-"PO-Revision-Date: 2010-03-01 17:40+0430\n"
-"Last-Translator: Yuting,Hua <klavier1976@netivism.com.tw>\n"
-"Language-Team: CiviCRM Translators <civicrm-translators@lists.civicrm.org>\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"Project-Id-Version: CiviCRM 3.0\n"
-"POT-Creation-Date: 2010-01-28 12:05+0100\n"
-"PO-Revision-Date: 2010-02-02 20:34+0800\n"
-"Last-Translator: Charles Chuang <charles>\n"
-"Language-Team: CiviCRM Taiwan <translators@civicrm.netivism.tw>\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"Project-Id-Version: CiviCRM 2.1\n"
-"POT-Creation-Date: 2010-01-28 12:05+0100\n"
-"PO-Revision-Date: 2010-02-20 01:14+0800\n"
-"Last-Translator: Fu-yuan Cheng <gloomcheng@gmail.com>\n"
-"Language-Team: CiviCRM Translators <civicrm-translators@lists.civicrm.org>\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Pootle 1.0.2\n"
-"Project-Id-Version: CiviCRM 2.1\n"
-"POT-Creation-Date: 2009-02-24 16:25+0100\n"
-"PO-Revision-Date: 2008-11-20 17:07-0800\n"
-"Last-Translator: Tiffany Lee <pink4ever@gmail.com>\n"
-"Language-Team: CiviCRM Translators <civicrm-translators@lists.civicrm.org>\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Pootle 1.0.2\n"
-"Project-Id-Version: CiviCRM 3.0\n"
-"POT-Creation-Date: 2010-01-28 12:05+0100\n"
-"PO-Revision-Date: 2010-02-03 12:56+0800\n"
-"Last-Translator: Charles Chuang <charles>\n"
-"Language-Team: CiviCRM Translators <civicrm-translators@lists.civicrm.org>\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Pootle 0.10\n"
-"Project-Id-Version: CiviCRM 2.1\n"
-"POT-Creation-Date: 2009-02-24 16:25+0100\n"
-"PO-Revision-Date: 2010-02-03 22:35+0800\n"
-"Last-Translator: Charles Chuang <charles>\n"
-"Language-Team: CiviCRM Translators <civicrm-translators@lists.civicrm.org>\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Pootle 0.10\n"
-"X-Poedit-Bookmarks: 4212,-1,-1,-1,-1,-1,-1,-1,-1,-1\n"
-"Project-Id-Version: CiviCRM 3.0\n"
-"POT-Creation-Date: 2007-04-18 07:33+0200\n"
-"PO-Revision-Date: 2010-07-30 16:11+0800\n"
-"Last-Translator: Jimmy Huang <jimmy@netivism.com.tw>\n"
-"Language-Team: CiviCRM Translators <civicrm-translators@lists.civicrm.org>\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"Project-Id-Version: CiviCRM 3.1\n"
-"POT-Creation-Date: 2010-01-28 12:05+0100\n"
-"PO-Revision-Date: 2010-02-16 20:23+0800\n"
-"Last-Translator: Charles Chuang <charles>\n"
-"Language-Team: CiviCRM Translators <civicrm-translators@lists.civicrm.org>\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Pootle 1.0.2\n"
-"X-Poedit-Language: Chinese\n"
-"X-Poedit-Country: TAIWAN\n"
-"Project-Id-Version: CiviCRM 2.1\n"
-"POT-Creation-Date: 2010-01-28 12:05+0100\n"
-"PO-Revision-Date: 2010-03-01 17:40+0430\n"
-"Last-Translator: Yuting,Hua <klavier1976@netivism.com.tw>\n"
-"Language-Team: CiviCRM Translators <civicrm-translators@lists.civicrm.org>\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"Project-Id-Version: CiviCRM 3.0\n"
-"POT-Creation-Date: 2010-01-28 12:05+0100\n"
-"PO-Revision-Date: 2010-02-02 20:34+0800\n"
-"Last-Translator: Charles Chuang <charles>\n"
-"Language-Team: CiviCRM Taiwan <translators@civicrm.netivism.tw>\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"Project-Id-Version: CiviCRM 2.1\n"
-"POT-Creation-Date: 2010-01-28 12:05+0100\n"
-"PO-Revision-Date: 2010-02-20 01:14+0800\n"
-"Last-Translator: Fu-yuan Cheng <gloomcheng@gmail.com>\n"
-"Language-Team: CiviCRM Translators <civicrm-translators@lists.civicrm.org>\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Pootle 1.0.2\n"
-"Project-Id-Version: CiviCRM 2.1\n"
-"POT-Creation-Date: 2009-02-24 16:25+0100\n"
-"PO-Revision-Date: 2008-11-20 17:07-0800\n"
-"Last-Translator: Tiffany Lee <pink4ever@gmail.com>\n"
-"Language-Team: CiviCRM Translators <civicrm-translators@lists.civicrm.org>\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Pootle 1.0.2\n"
-"Project-Id-Version: CiviCRM 3.0\n"
-"POT-Creation-Date: 2010-01-28 12:05+0100\n"
-"PO-Revision-Date: 2010-02-03 12:56+0800\n"
-"Last-Translator: Charles Chuang <charles>\n"
-"Language-Team: CiviCRM Translators <civicrm-translators@lists.civicrm.org>\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Pootle 0.10\n"
-"Project-Id-Version: CiviCRM 2.1\n"
-"POT-Creation-Date: 2009-02-24 16:25+0100\n"
-"PO-Revision-Date: 2010-02-03 22:35+0800\n"
-"Last-Translator: Charles Chuang <charles>\n"
-"Language-Team: CiviCRM Translators <civicrm-translators@lists.civicrm.org>\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Pootle 0.10\n"
-"X-Poedit-Bookmarks: 4212,-1,-1,-1,-1,-1,-1,-1,-1,-1\n"
-"Project-Id-Version: CiviCRM 2.1\n"
+"Project-Id-Version: crmofchinese\n"
 "Report-Msgid-Bugs-To: http://issues.civicrm.org/\n"
 "POT-Creation-Date: 2010-12-10 16:13+0100\n"
-"PO-Revision-Date: 2010-02-03 22:35+0800\n"
-"Last-Translator: Charles Chuang <charles>\n"
-"Language-Team: CiviCRM Translators <civicrm-translators@lists.civicrm.org>\n"
+"PO-Revision-Date: 2011-03-15 18:04+0800\n"
+"Last-Translator: \n"
+"Language-Team: Chinese (Taiwan) <>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Pootle 1.0.2\n"
-"X-Poedit-Language: Chinese\n"
-"X-Poedit-Country: TAIWAN\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Pootle 1.0.2\n"
-"X-Generator: Pootle 1.0.2\n"
-"X-Generator: Pootle 0.10\n"
+"Language: zh_TW\n"
+"Plural-Forms: nplurals=1; plural=0\n"
 "X-Generator: Pootle 0.10\n"
 "X-Poedit-Bookmarks: 4212,-1,-1,-1,-1,-1,-1,-1,-1,-1\n"
+"X-Poedit-Country: TAIWAN\n"
+"X-Poedit-Language: Chinese\n"
 
 #: js/lang/calendar-lang.php
 msgid "About the calendar"
@@ -2071,7 +1919,7 @@ msgstr "自定普通信件問候"
 #: CRM/Contact/Form/Edit/Household.php CRM/Contact/Form/Edit/Individual.php
 #: CRM/Contact/Form/Edit/Organization.php
 msgid "External Id"
-msgstr "外部編號"
+msgstr "身分證字號"
 
 #: CRM/Contact/Form/Edit/Household.php CRM/Contact/Form/Edit/Individual.php
 #: CRM/Contact/Form/Edit/Organization.php CRM/Core/BAO/UFGroup.php
@@ -10493,7 +10341,7 @@ msgstr "存在時間"
 
 #: CRM/Standalone/OpenID/DAO/Associations.php
 msgid "Assoc Type"
-msgstr ""
+msgstr "協會類型"
 
 #: CRM/Standalone/OpenID/DAO/Nonce.php
 msgid "Timestamp"
@@ -10623,7 +10471,7 @@ msgstr ""
 
 #: CRM/UF/Form/Field.php
 msgid "View Only cannot be selected if this field is to be included on the registration form"
-msgstr ""
+msgstr "當這個欄位被包含在報名表單內時，該欄位不能選擇為「唯讀」。"
 
 #: CRM/UF/Form/Field.php
 msgid "A View Only field cannot be required"
@@ -11762,7 +11610,7 @@ msgstr "配對條件對%1聯絡人"
 #: templates/CRM/Admin/Form/DedupeRules.tpl
 #: templates/CRM/Contact/Form/DedupeRules.tpl
 msgid "Configure up to five fields to evaluate when searching for 'suspected' duplicate contact records."
-msgstr ""
+msgstr "您最多可設定5個欄位，來做重複聯絡人的偵測規則。"
 
 #: templates/CRM/Admin/Form/DomainDump.tpl
 msgid "Backup Database"
@@ -11831,7 +11679,7 @@ msgstr "Email 網域名稱（即@之後的部分）。"
 
 #: templates/CRM/Admin/Form/MailSettings.tpl
 msgid "Contents of the Return-Path header."
-msgstr ""
+msgstr "在回覆位址(Return-Path)的頁首內容。"
 
 #: templates/CRM/Admin/Form/MailSettings.tpl
 msgid "Name of the protocol to use for polling."
@@ -11972,7 +11820,7 @@ msgstr "一個「字符串值」或定期表達式被節錄（替換）。"
 
 #: templates/CRM/Admin/Form/Options.tpl
 msgid "The option label is displayed to users."
-msgstr ""
+msgstr "該選項標籤顯示於使用者。"
 
 #: templates/CRM/Admin/Form/Options.tpl
 msgid "Search Title"
@@ -16172,7 +16020,7 @@ msgstr "會員限期"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Campaign Contribution"
-msgstr "競選捐款"
+msgstr "募款捐款"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Event Fee"
@@ -45061,7 +44909,7 @@ msgstr "原本"
 
 #: templates/CRM/Admin/Form/WordReplacements.tpl
 msgid "Exact Match?"
-msgstr ""
+msgstr "精確配對?"
 
 #: templates/CRM/Admin/Form/WordReplacements.tpl
 msgid "Add row"
@@ -45083,7 +44931,7 @@ msgstr ""
 
 #: templates/CRM/Admin/Page/ContactType.hlp
 msgid "Relative URL for a default Drupal site:"
-msgstr ""
+msgstr "在Drupal網站中的相關網址:"
 
 #: templates/CRM/Admin/Page/ContactType.hlp
 msgid "Complete URL for icon accessible from an external location:"
@@ -45099,11 +44947,11 @@ msgstr "編輯活動範本"
 
 #: templates/CRM/Admin/Page/ExtensionDetails.tpl
 msgid "Author"
-msgstr ""
+msgstr "作者"
 
 #: templates/CRM/Admin/Page/ExtensionDetails.tpl
 msgid "License"
-msgstr ""
+msgstr "版權"
 
 #: templates/CRM/Admin/Page/ExtensionDetails.tpl
 msgid "Released on"
@@ -45111,11 +44959,11 @@ msgstr "發佈於"
 
 #: templates/CRM/Admin/Page/ExtensionDetails.tpl
 msgid "Development stage"
-msgstr ""
+msgstr "開發階段"
 
 #: templates/CRM/Admin/Page/ExtensionDetails.tpl
 msgid "Compatible with"
-msgstr ""
+msgstr "相容於"
 
 #: templates/CRM/Admin/Page/Extensions.tpl
 msgid "Your extensions directory is not set. Click <a href='%1'>here</a> to set the extension directory."
@@ -45211,11 +45059,11 @@ msgstr "參加者狀態"
 
 #: templates/CRM/Admin/Page/PaymentProcessor.hlp
 msgid "This is the TEST %1 used solely for testing."
-msgstr ""
+msgstr "這是測試用的%1。"
 
 #: templates/CRM/Admin/Page/PaymentProcessor.hlp
 msgid "Use %1 unless otherwise advised by eWAY."
-msgstr ""
+msgstr "除非eWAY有特別設定，否則請使用%1。"
 
 #: templates/CRM/Admin/Page/PaymentProcessor.hlp
 msgid "The test Credit Card number is %1 - this is the only credit card number that will work on the test gateway."
@@ -45301,7 +45149,7 @@ msgstr "字串"
 
 #: templates/CRM/Admin/Page/Persistent.tpl
 msgid "Add New Config"
-msgstr ""
+msgstr "新增設定"
 
 #: templates/CRM/Admin/Page/RelationshipType.tpl
 msgid "Add Relationship Type"
@@ -45330,7 +45178,7 @@ msgstr "Tag名稱"
 #: CRM/Campaign/BAO/Survey.php CRM/Campaign/Form/Task/Reserve.php
 #: CRM/Campaign/Page/Vote.php CRM/Campaign/Task.php
 msgid "Reserve Respondents"
-msgstr ""
+msgstr "保留受訪者"
 
 #: CRM/Campaign/BAO/Survey.php CRM/Campaign/Page/Vote.php
 msgid "Interview Respondents"
@@ -45339,7 +45187,7 @@ msgstr "報表預覽"
 #: CRM/Campaign/BAO/Survey.php CRM/Campaign/Form/Task/Release.php
 #: CRM/Campaign/Task.php templates/CRM/Campaign/Form/Task/Release.tpl
 msgid "Release Respondents"
-msgstr ""
+msgstr "刪除受訪者"
 
 #: CRM/Campaign/DAO/Campaign.php CRM/Campaign/DAO/Survey.php
 msgid "Campaign Created Date"
@@ -45371,7 +45219,7 @@ msgstr "刪除參加者"
 
 #: CRM/Campaign/Form/Search.php CRM/Campaign/Form/Task/Interview.php
 msgid "Record %1 Responses"
-msgstr ""
+msgstr "紀錄%1受訪者"
 
 #: CRM/Campaign/Form/Survey.php CRM/Campaign/Page/DashBoard.php
 #: CRM/Campaign/Page/Survey.php
@@ -45576,7 +45424,7 @@ msgstr "您可以新增其他的選項。"
 
 #: CRM/Campaign/Form/Petition/Signature.php
 msgid "Sign the Petition"
-msgstr ""
+msgstr "登記該選項"
 
 #: CRM/Campaign/Form/Petition/Signature.php
 msgid "Petition Signature"
@@ -45584,7 +45432,7 @@ msgstr "簽名"
 
 #: CRM/Campaign/Form/Search.php
 msgid "Find Respondents To %1"
-msgstr ""
+msgstr "尋找受訪者至%1"
 
 #: CRM/Campaign/Form/Search.php
 msgid "Find Respondents"
@@ -45620,7 +45468,7 @@ msgstr "自動回應"
 
 #: CRM/Campaign/Form/Survey.php
 msgid "Instructions for interviewers"
-msgstr ""
+msgstr "面試指示"
 
 #: CRM/Campaign/Form/Survey.php
 msgid "Release frequency"
@@ -45640,7 +45488,7 @@ msgstr "參加者上限值必須為正整數值"
 
 #: CRM/Campaign/Form/Survey.php
 msgid "Total reserved per interviewer"
-msgstr ""
+msgstr "所有被保留的每一位面試者"
 
 #: CRM/Campaign/Form/Survey.php
 msgid "Total reserved contacts should be a positive number"
@@ -45688,11 +45536,11 @@ msgstr "噢，看來沒有有效的線上付款付款狀態。"
 
 #: CRM/Campaign/Form/Task/Interview.php
 msgid "Release Respondents >>"
-msgstr ""
+msgstr "刪除受訪者>>"
 
 #: CRM/Campaign/Form/Task/Interview.php
 msgid "Reserve More Respondents >>"
-msgstr ""
+msgstr "保留更多受訪者>>"
 
 #: CRM/Campaign/Form/Task/Interview.php
 msgid "Respondent Interview"
@@ -45708,7 +45556,7 @@ msgstr "無法在路徑樹裡找到 %1"
 
 #: CRM/Campaign/Form/Task/Release.php
 msgid "We could not found respondent for this survey to release."
-msgstr ""
+msgstr "我們找不到該項受訪者。"
 
 #: CRM/Campaign/Form/Task/Release.php
 msgid "%1 respondent(s) have been released."
@@ -45777,7 +45625,7 @@ msgstr "簽名"
 
 #: CRM/Campaign/Page/DashBoard.php
 msgid "Sign Petition"
-msgstr ""
+msgstr "登記選項"
 
 #: CRM/Campaign/Page/DashBoard.php
 msgid "Signatures"
@@ -45785,7 +45633,7 @@ msgstr "簽名"
 
 #: CRM/Campaign/Page/DashBoard.php
 msgid "List the signatures"
-msgstr ""
+msgstr "列出簽名"
 
 #: CRM/Campaign/Page/DashBoard.php
 msgid "Campaigns"
@@ -45813,7 +45661,7 @@ msgstr ""
 
 #: templates/CRM/Campaign/Form/Gotv.tpl
 msgid "Is Interview Conducted?"
-msgstr ""
+msgstr "面試舉辦?"
 
 #: templates/CRM/Campaign/Form/Gotv.tpl
 msgid "Voted?"
@@ -45850,13 +45698,16 @@ msgstr "已故"
 
 #: templates/CRM/Campaign/Form/Petition/Signature.tpl
 msgid "You have already signed this petition."
-msgstr ""
+msgstr "您已經登記該請願。"
 
 #: templates/CRM/Campaign/Form/Petition/Signature.tpl
 msgid ""
 "You have already signed this petition but you still <b>need to verify your email address</b>.</br>\n"
 "Please check your email inbox for the confirmation email. If you don't find it, verify if it isn't in your spam folder."
 msgstr ""
+"您已經登記該請願，但您仍<b>需要確認您的email</b>。</br>\n"
+"\n"
+"請檢察您email信箱的確認通知信函。當您無法找到通知信時，請確認是否您的在垃圾郵件當中。"
 
 #: templates/CRM/Campaign/Form/Petition/Signature.tpl
 msgid "Thank you for your support."
@@ -45961,7 +45812,7 @@ msgstr ""
 
 #: templates/CRM/Campaign/Form/Task/Interview.tpl
 msgid "record response"
-msgstr ""
+msgstr "紀錄受訪者"
 
 #: templates/CRM/Campaign/Form/Task/Interview.tpl
 msgid "Release"
@@ -45973,7 +45824,7 @@ msgstr ""
 
 #: templates/CRM/Campaign/Form/Task/Interview.tpl
 msgid "Response Saved."
-msgstr ""
+msgstr "受訪者已儲存。"
 
 #: templates/CRM/Campaign/Form/Task/Interview.tpl
 msgid "Update Response"
@@ -45989,11 +45840,11 @@ msgstr "您是否確定要刪除筆記 '%1'？"
 
 #: templates/CRM/Campaign/Form/Task/Reserve.tpl
 msgid "Add Respondent Reservation(s)"
-msgstr ""
+msgstr "新增受訪者預約"
 
 #: templates/CRM/Campaign/Form/Task/Reserve.tpl
 msgid "Do you want to reserve respondents for '%1' ?"
-msgstr ""
+msgstr "您要保留 %1 的受訪者嗎?"
 
 #: templates/CRM/Campaign/Page/Campaign.tpl
 #: templates/CRM/Campaign/Page/DashBoard.tpl
@@ -46062,7 +45913,7 @@ msgstr "回應選項"
 
 #: templates/CRM/Campaign/Page/Petition/Confirm.tpl
 msgid "<strong>%1 - your email address '%2' has been successfully verified.</strong>"
-msgstr ""
+msgstr "<strong>%1 - 您的email '%2' 已成功驗證。</strong>"
 
 #: templates/CRM/Campaign/Page/Petition/Confirm.tpl
 msgid "Oops. We encountered a problem in processing your email verification. Please contact the site administrator."
@@ -46074,19 +45925,19 @@ msgstr "感謝您使用 CiviCRM！"
 
 #: templates/CRM/Campaign/Page/Petition/SocialNetwork.tpl
 msgid "Please help us and let your friends, colleagues and followers know about our campaign."
-msgstr ""
+msgstr "請幫助我們，並讓您的朋友、同事和粉絲們知道我們的募款活動。"
 
 #: templates/CRM/Campaign/Page/Petition/SocialNetwork.tpl
 msgid "Share it on Facebook or tweet it on Twitter."
-msgstr ""
+msgstr "分享或發表這個資訊到Facebook或Twitter上。"
 
 #: templates/CRM/Campaign/Page/Petition/SocialNetwork.tpl
 msgid "Do you have a website for your organisation or yourself?"
-msgstr ""
+msgstr "請問您有自己或組織的網站嗎?"
 
 #: templates/CRM/Campaign/Page/Petition/SocialNetwork.tpl
 msgid "You can write a story about it - don't forget to add the link to <a href=\"%1\">%1.</a>"
-msgstr ""
+msgstr "您可以寫下一些描述在此，也別忘了新增連結到<a href=\"%1\">%1。</a>"
 
 #: templates/CRM/Campaign/Page/Petition.tpl
 #: templates/CRM/Campaign/Page/Survey.tpl
@@ -46137,7 +45988,7 @@ msgstr ""
 
 #: CRM/Case/BAO/Case.php
 msgid "Case %1 merged into case %2"
-msgstr ""
+msgstr "個案 %1 被合併至個案 %2"
 
 #: CRM/Case/BAO/Query.php
 msgid "Find Deleted Cases"
@@ -46161,7 +46012,7 @@ msgstr "已成功更改個案狀態。"
 
 #: CRM/Case/Form/Activity/ChangeCaseType.php
 msgid "Case type changed from %1 to %2"
-msgstr ""
+msgstr "個案類型從 %1 更換成 %2"
 
 #: CRM/Case/Form/Activity/LinkCases.php
 msgid "Link To Case"
@@ -46177,7 +46028,7 @@ msgstr "請從列表中選擇個案"
 
 #: CRM/Case/Form/Activity/LinkCases.php
 msgid "It looks like selected case is already linked."
-msgstr ""
+msgstr "所選擇的個案已經連結。"
 
 #: CRM/Case/Form/Activity.php
 msgid "You do not have any active Case Types"
@@ -46205,11 +46056,11 @@ msgstr "指派個案角色"
 
 #: CRM/Case/Page/DashBoard.php
 msgid "You are not authorized to access all cases and activities."
-msgstr ""
+msgstr "您沒有權限存取所有個案及動態。"
 
 #: CRM/Case/Selector/Search.php templates/CRM/Case/Form/CaseView.tpl
 msgid "Assign to Another Client"
-msgstr ""
+msgstr "指派給另一個客戶"
 
 #: CRM/Case/Task.php
 msgid "Print Cases"
@@ -46225,7 +46076,7 @@ msgstr "打一些字即可篩選下列的替代符號（token）"
 
 #: templates/CRM/Case/Form/ActivityToCase.tpl
 msgid "You can modify the activity subject before filing."
-msgstr ""
+msgstr "您可以在存檔前，修改這個動態主題。"
 
 #: templates/CRM/Case/Form/Activity.tpl
 msgid "Clients"
@@ -46249,7 +46100,7 @@ msgstr "客戶名稱"
 
 #: templates/CRM/Case/Form/CaseView.tpl
 msgid "add new client to the case"
-msgstr ""
+msgstr "新增這個個案的客戶"
 
 #: templates/CRM/Case/Form/CaseView.tpl
 msgid "Related Cases"
@@ -46386,7 +46237,7 @@ msgstr "個人檔案"
 #: CRM/Contact/Form/Search/Custom/Proximity.php
 #: CRM/Contact/Form/Task/ProximityCommon.php
 msgid "km"
-msgstr ""
+msgstr "公里"
 
 #: CRM/Contact/DAO/Contact.php
 #: CRM/Contact/Form/Edit/CommunicationPreferences.php
@@ -46406,7 +46257,7 @@ msgstr "刪除聯絡人"
 #: CRM/Contact/Form/Search/Custom/Proximity.php
 #: CRM/Contact/Form/Task/ProximityCommon.php
 msgid "Units"
-msgstr ""
+msgstr "單位"
 
 #: CRM/Contact/Form/Task/Delete.php CRM/Contact/Selector.php
 msgid "Restore Contact"
@@ -46449,7 +46300,7 @@ msgstr "捐款金額不能大於 %1"
 #: CRM/Profile/Form.php CRM/Profile/Page/Listings.php
 #: CRM/Profile/Page/View.php
 msgid "You cannot combine profiles of multiple types."
-msgstr ""
+msgstr "您不能結合多重類型的個人檔案。"
 
 #: CRM/Upgrade/Page/Upgrade.php CRM/Utils/System.php
 msgid "Database is marked with invalid version format. You may want to investigate this before you proceed further."
@@ -46538,7 +46389,7 @@ msgstr "從個人檔案批次更新參加者"
 
 #: CRM/Contact/BAO/Contact.php
 msgid "Image could not be uploaded due to invalid type extension."
-msgstr ""
+msgstr "該圖片為無效的檔案類型，無法上傳。"
 
 #: CRM/Contact/BAO/Contact.php
 msgid "Contact Image is deleted successfully"
@@ -46859,15 +46710,15 @@ msgstr ""
 
 #: CRM/Core/BAO/Setting.php
 msgid "Template cache and upload directory have been cleared."
-msgstr ""
+msgstr "已清除樣板暫存和上傳暫存。"
 
 #: CRM/Core/BAO/Setting.php
 msgid "Database cache tables cleared."
-msgstr ""
+msgstr "已清除暫存。"
 
 #: CRM/Core/BAO/Setting.php
 msgid "Drupal session table cleared."
-msgstr ""
+msgstr "Drupal session table cleared。"
 
 #: CRM/Core/BAO/Setting.php
 msgid "Session has been reset."
@@ -46959,7 +46810,7 @@ msgstr "上一天"
 
 #: CRM/Core/Form/Date.php
 msgid "To End of Prior Year"
-msgstr ""
+msgstr "結束前一年"
 
 #: CRM/Core/Form/Date.php
 msgid "To End of Prior Quarter"
@@ -46967,15 +46818,15 @@ msgstr "往上一季"
 
 #: CRM/Core/Form/Date.php
 msgid "To End of Prior Month"
-msgstr ""
+msgstr "結束前一月"
 
 #: CRM/Core/Form/Date.php
 msgid "To End of Prior Week"
-msgstr ""
+msgstr "結束前一週"
 
 #: CRM/Core/Form/Date.php
 msgid "To End of Prior Day"
-msgstr ""
+msgstr "結束前一天"
 
 #: CRM/Core/Form/Date.php
 msgid "Current Year to-date"
@@ -47003,15 +46854,15 @@ msgstr "上上個月"
 
 #: CRM/Core/Form/Date.php
 msgid "From 3 Months Ago"
-msgstr ""
+msgstr "來3個月前"
 
 #: CRM/Core/Form/Date.php
 msgid "From 1 Month Ago"
-msgstr ""
+msgstr "從1個月前"
 
 #: CRM/Core/Form/Date.php
 msgid "From 1 Week Ago"
-msgstr ""
+msgstr "從1週前"
 
 #: CRM/Core/Payment/Dummy.php
 msgid "Dummy Processor"
@@ -47059,7 +46910,7 @@ msgstr "管理員"
 
 #: CRM/Core/Permission.php
 msgid "administer reserved tags"
-msgstr ""
+msgstr "管理預留的Tag"
 
 #: CRM/Core/Permission.php
 msgid "administer dedupe rules"
@@ -47159,7 +47010,7 @@ msgstr "來源聯絡人"
 
 #: CRM/Dedupe/Merger.php
 msgid "%1 User: %2; user id: %3"
-msgstr ""
+msgstr "%1 使用者:%2; 使用者ID: %3"
 
 #: CRM/Dedupe/Merger.php
 msgid "Contribution Pages"
@@ -47199,7 +47050,7 @@ msgstr ""
 
 #: CRM/Import/Parser/Contact.php
 msgid "Related contact required fields are missing."
-msgstr ""
+msgstr "遺失相關聯絡人必要欄位。"
 
 #: CRM/Import/Parser/Contact.php
 msgid "County input value not in county table: The County value appears to be invalid. It does not match any value in CiviCRM table of counties."
@@ -47219,7 +47070,7 @@ msgstr "隱私"
 
 #: CRM/Price/BAO/Field.php
 msgid "Participant count for this option is full."
-msgstr ""
+msgstr "該選項中的參加者已額滿。"
 
 #: CRM/Price/DAO/FieldValue.php
 msgid "Max Value"
@@ -47247,7 +47098,7 @@ msgstr "CiviCRM 中現存重複聯絡人記錄的列數。"
 
 #: CRM/Profile/Page/Dynamic.php
 msgid "Profile View - Permission Denied"
-msgstr ""
+msgstr "瀏覽個人檔案 - 權限已被拒絕"
 
 #: CRM/UF/Form/AdvanceSetting.php
 msgid "Issue warning and do not save"
@@ -47586,7 +47437,7 @@ msgstr "刪除此記錄"
 
 #: templates/CRM/Contact/Form/Edit/Address.tpl
 msgid "Change current shared address"
-msgstr ""
+msgstr "改變目前分享的地址"
 
 #: templates/CRM/Contact/Form/Edit/Address.tpl
 msgid "Selected contact does not have an address. Please select a contact with address else add an address to the existing selected contact.\""
@@ -47718,7 +47569,7 @@ msgstr "瀏覽此聯絡人的全部活動"
 
 #: templates/CRM/Contact/Form/Search/Custom/FullText.tpl
 msgid "View all results for contributions"
-msgstr ""
+msgstr "查看所有捐款結果"
 
 #: templates/CRM/Contact/Form/Search/Custom/FullText.tpl
 msgid "View all results for participants"
@@ -47779,7 +47630,7 @@ msgstr "建立可供列印的 PDF 信件。"
 
 #: templates/CRM/Contact/Form/Task/ProximityCommon.tpl
 msgid "By Distance from a Location"
-msgstr ""
+msgstr "自一個位置的距離"
 
 #: templates/CRM/Contact/Form/Task/Unhold.tpl
 msgid "Are you sure you want to unhold email of selected contact(s)?."
@@ -47952,7 +47803,7 @@ msgstr "注意：「唯讀欄位」不能放進個人檔案搜尋欄位中。"
 
 #: templates/CRM/Custom/Page/Group.hlp
 msgid "They can not be Imported or Exported"
-msgstr ""
+msgstr "這些不能被匯入或匯出"
 
 #: templates/CRM/Custom/Page/Group.hlp
 msgid "If they are included in a report as a display column, only the first set of values are shown."
@@ -50161,7 +50012,7 @@ msgid "Custom Field - Edit"
 msgstr "自訂欄位 - 移動"
 
 msgid "Email address verified"
-msgstr "Email 位址無效"
+msgstr "Email 位址驗證"
 
 msgid "Event Info and Settings"
 msgstr "活動資料及設定"
@@ -50261,3 +50112,4 @@ msgstr "帳單"
 
 msgid "Create New"
 msgstr "新增"
+
