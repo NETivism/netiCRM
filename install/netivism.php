@@ -15,7 +15,7 @@ function neticrm_enable_custom_modules(){
   cache_clear_all();
 }
 function _neticrm_custom_modules(){
-  return array('civicrm_ckeditor','civicrm_imce','civicrm_twaddress');
+  return array('civicrm_ckeditor','civicrm_imce','civicrm_twaddress','civicrm_alter_translation');
 }
 
 function neticrm_domain_set_default(){
@@ -93,7 +93,7 @@ function neticrm_domain_set_default(){
     'defaultContactCountry' => '1208',
     'defaultCurrency' => 'TWD',
     'legacyEncoding' => 'Big5',
-    'customTranslateFunction' => '',
+    'customTranslateFunction' => 'civicrm_alter_translation',
     'fieldSeparator' => ',',
     '_qf_default' => 'Localization:next',
     '_qf_Localization_next' => 'Save',
