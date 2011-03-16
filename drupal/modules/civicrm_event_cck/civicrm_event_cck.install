@@ -4,6 +4,7 @@
  * Implementation of hook_install().
  */
 function civicrm_event_cck_install() {
+  // later for content module
   db_query("UPDATE {system} SET weight = 99 WHERE name = 'civicrm_event_cck'");
 }
 
