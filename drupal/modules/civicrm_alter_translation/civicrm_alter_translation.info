@@ -1,0 +1,6 @@
+name = CiviCRM Alternativ Translation
+description = Custom translation function for replace of CiviCRM internal translation.
+package = CiviCRM
+dependencies[] = civicrm
+core = 6.x
+version = 3.3.1-netivism
