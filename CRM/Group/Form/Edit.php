@@ -229,9 +229,13 @@ class CRM_Group_Form_Edit extends CRM_Core_Form
         }
 
         if ( ! empty( $groupTypes ) ) {
+            foreach($groupTypes as $k => $v){
+              $gt = ts($k);
+              $tsGroupTypes[$gt] = $v;
+            }
             $this->addCheckBox( 'group_type',
                                 ts( 'Group Type' ),
-                                $groupTypes,
+                                $tsGroupTypes,
                                 null, null, null, null, '&nbsp;&nbsp;&nbsp;' );
         }
 
