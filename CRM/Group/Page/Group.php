@@ -335,11 +335,12 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic
                 if ( isset( $values[$object->id]['group_type'] ) ) {
                     $groupTypes = explode( CRM_Core_DAO::VALUE_SEPARATOR,
                                            substr( $values[$object->id]['group_type'], 1, -1 ) );
-                    $types = array( );
+                    $types = $tsTypes = array( );
                     foreach ( $groupTypes as $type ) {
                         $types[] = $allTypes[$type];
+                        $tsTypes[] = ts($allTypes[$type]);
                     }
-                    $values[$object->id]['group_type'] = implode( ', ', $types );
+                    $values[$object->id]['group_type'] = implode( ', ', $tsTypes );
                 }
                 $values[$object->id]['action'] = CRM_Core_Action::formLink( $newLinks,
                                                                             $action,

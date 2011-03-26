@@ -54,6 +54,10 @@ class CRM_Group_Form_Search extends CRM_Core_Form {
 
         require_once 'CRM/Core/OptionGroup.php';
         $groupTypes = CRM_Core_OptionGroup::values( 'group_type', true );
+        foreach($groupTypes as $g => $v){
+          $tsg = ts($g);
+          $tsGroupTypes[$tsg] = $v;
+        }
         $config= CRM_Core_Config::singleton( );
         if ( $config->userFramework == 'Joomla' ) {
             unset( $groupTypes['Access Control'] );
@@ -61,7 +65,7 @@ class CRM_Group_Form_Search extends CRM_Core_Form {
         
         $this->addCheckBox( 'group_type',
                             ts( 'Type' ),
-                            $groupTypes,
+                            $tsGroupTypes,
                             null, null, null, null, '&nbsp;&nbsp;&nbsp;' );
         
         $this->add( 'select', 'visibility', ts('Visibility'        ),
