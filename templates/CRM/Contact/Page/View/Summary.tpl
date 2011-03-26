@@ -310,7 +310,7 @@
                                 </tr>
                                 {/if}
                                 <tr>
-                                    <td class="label">{ts}Email Format{/ts}</td><td>{$preferred_mail_format}</td>
+                                    <td class="label">{ts}Email Format{/ts}</td><td>{$preferred_mail_format_display}</td>
                                 </tr>
                             </table>
                         </div>
