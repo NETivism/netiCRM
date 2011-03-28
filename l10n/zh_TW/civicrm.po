@@ -6635,7 +6635,7 @@ msgstr "登出"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Home"
-msgstr "管理首頁"
+msgstr "住家"
 
 #: CRM/Core/BAO/Navigation.php 
 msgid "Homepage"
@@ -16332,7 +16332,7 @@ msgstr "講者"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Conference"
-msgstr "會議"
+msgstr "研討會"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Exhibition"
