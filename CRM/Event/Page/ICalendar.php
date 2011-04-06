@@ -87,12 +87,12 @@ class CRM_Event_Page_ICalendar extends CRM_Core_Page
         require_once "CRM/Utils/ICalendar.php";
         if( $iCalPage == 1) {
             if ( $gData || $rss ) {
-                CRM_Utils_ICalendar::send( $calendar, 'text/xml', 'utf-8' );
+                CRM_Utils_ICalendar::send( $calendar, 'text/xml', 'UTF-8' );
             } else {
-                CRM_Utils_ICalendar::send( $calendar, 'text/plain', 'utf-8' );
+                CRM_Utils_ICalendar::send( $calendar, 'text/plain', 'UTF-8' );
             }
         } else {
-            CRM_Utils_ICalendar::send( $calendar, 'text/calendar', 'utf-8', 'civicrm_ical.ics', 'attachment' );
+            CRM_Utils_ICalendar::send( $calendar, 'text/calendar', 'UTF-8', 'civicrm_ical.ics', 'attachment' );
         }
         CRM_Utils_System::civiExit( );
     }

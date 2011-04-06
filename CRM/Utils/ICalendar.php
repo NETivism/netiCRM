@@ -113,8 +113,8 @@ class CRM_Utils_ICalendar
         $config = CRM_Core_Config::singleton();
         $lang = $config->lcMessages;
         header( "Content-Language: $lang" );
-        // header( "Content-Type: $content_type; charset=$charset; profile=\"ICalendar\"" );
-        header( "Content-Type: $content_type" );
+        header( "Content-Type: $content_type; charset=$charset;" );
+        //header( "Content-Type: $content_type" );
         
         if ( $content_type == 'text/calendar') {
             header('Content-Length: ' . strlen($calendar));
