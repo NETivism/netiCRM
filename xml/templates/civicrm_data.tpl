@@ -84,9 +84,9 @@ INSERT INTO civicrm_relationship_type( name_a_b,label_a_b, name_b_a,label_b_a, d
 
 -- Relationship Types for CiviCase
 INSERT INTO civicrm_relationship_type( name_a_b,label_a_b, name_b_a,label_b_a, description, contact_type_a, contact_type_b, is_reserved )
-    VALUES( 'Case Coordinator is', 'Case Coordinator is', 'Case Coordinator', 'Case Coordinator', 'Case Coordinator', 'Individual', 'Individual', 0 );
+    VALUES( 'Case Coordinator is', '{ts escape="sql"}Case Coordinator is{/ts}', 'Case Coordinator', '{ts escape="sql"}Case Coordinator{/ts}', 'Case Coordinator', 'Individual', 'Individual', 0 );
 INSERT INTO civicrm_relationship_type( name_a_b,label_a_b, name_b_a,label_b_a, description, contact_type_a, contact_type_b, is_reserved )
-    VALUES( 'Supervised by', 'Supervised by', 'Supervisor', 'Supervisor', 'Immediate workplace supervisor', 'Individual', 'Individual', 0 );
+    VALUES( 'Supervised by', '{ts escape="sql"}Supervised by{/ts}', 'Supervisor', '{ts escape="sql"}Supervisor{/ts}', 'Immediate workplace supervisor', 'Individual', 'Individual', 0 );
 
 
 -- Sample Tags
