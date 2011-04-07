@@ -289,8 +289,7 @@ class CRM_UF_Form_Group extends CRM_Core_Form
         
         //validate profile title as well as name.
         $title  = $fields['title'];
-        // fix issue-#2759, unecessery munge for display title of UF group.
-        // $name   = CRM_Utils_String::munge( $title, '_', 64 );
+        $name   = CRM_Utils_String::munge( $title, '_', 64 );
         $query  = 'select count(*) from civicrm_uf_group where ( name like %1 OR title like %2 ) and id != %3';
         $pCnt   = CRM_Core_DAO::singleValueQuery( $query, array( 1 => array( $name,           'String'  ),
                                                                  2 => array( $title,          'String'  ),
