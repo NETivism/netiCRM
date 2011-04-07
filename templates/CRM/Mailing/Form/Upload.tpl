@@ -57,8 +57,10 @@
 <fieldset id="compose_id"><legend>{ts}Compose On-screen{/ts}</legend>
 {include file="CRM/Contact/Form/Task/EmailCommon.tpl" upload=1 noAttach=1}
 </fieldset>
-
-  {capture assign=docLink}{docURL page="Sample CiviMail Messages" text="More information and sample messages..."}{/capture}
+  {php}
+    $this->assign('sample_message', ts('More information and sample messages...'));
+  {/php}
+  {capture assign=docLink}{docURL page="Sample CiviMail Messages" text=$sample_message}{/capture}
   <fieldset id="upload_id"><legend>{ts}Upload Content{/ts}</legend>
     <table class="form-layout-compressed">
         <tr class="crm-mailing-upload-form-block-textFile">
