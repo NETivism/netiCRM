@@ -47,7 +47,7 @@
        {foreach from=$rows item=row}
          <tr id="row_{$row.id}" class="{cycle values="odd-row,even-row"} {$row.class}{if NOT $row.is_active} disabled{/if}">
            <td>{$row.name}</td>	
-           <td>{$row.component_type}</td>
+           <td>{ts}{$row.component_type}{/ts}</td>
            <td>{$row.subject}</td>
            <td>{$row.body_text}</td>
            <td>{$row.body_html|escape}</td>
