@@ -58,8 +58,9 @@
 			</tr>
 			<tr>
 				<td id="locUsedMsg" colspan="3">
-				{ts}<strong>Note:</strong> This location is used by multiple events. Modifying location information will change values for all events.{/ts}
-				{assign var=locUsedMsgTxt value="<strong>Note:</strong> This location is used by multiple events. Modifying location information will change values for all events."}
+        {php}
+          $this->assign('locUsedMsgTxt', ts('<strong>Note:</strong> This location is used by multiple events. Modifying location information will change values for all events.'));
+        {/php}
 				</td>
 			</tr>
 			
