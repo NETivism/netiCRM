@@ -49,7 +49,7 @@
                   <tr class="{cycle values="odd-row,even-row"}">
                     <td>{if isset($row.name)}{$row.name}{/if}</td>
                     <td>{$row.contact_type_display}</td>	
-                    <td>{$row.level}</td>	
+                    <td>{ts}{$row.level}{/ts}</td>	
                     {if $row.is_default}
                         <td><img src="{$config->resourceBase}/i/check.gif" alt="{ts}Default{/ts}" /></td>    
                     {else}
