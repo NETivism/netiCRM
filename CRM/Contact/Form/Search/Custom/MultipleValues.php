@@ -92,10 +92,13 @@ class CRM_Contact_Form_Search_Custom_MultipleValues
     }
 
     function buildForm( &$form ) {
-        /**
-         * You can define a custom title for the search form
-         */
-        $this->setTitle('Multiple Value Custom Group Search and Export');
+        CRM_Core_OptionValue::getValues(array('name' => 'custom_search'), &$custom_search);
+        foreach($custom_search as $c){
+          if($c['value'] == $_GET['csid']){
+            $this->setTitle($c['description']);
+            break;
+          }
+        }
 
         $form->add( 'text', 'sort_name', ts( 'Contact Name' ), true );
 

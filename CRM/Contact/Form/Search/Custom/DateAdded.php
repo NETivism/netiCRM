@@ -55,6 +55,13 @@ class CRM_Contact_Form_Search_Custom_DateAdded
     }
 
     function buildForm( &$form ) {
+        CRM_Core_OptionValue::getValues(array('name' => 'custom_search'), &$custom_search);
+        foreach($custom_search as $c){
+          if($c['value'] == $_GET['csid']){
+            $this->setTitle($c['description']);
+            break;
+          }
+        }
         $form->addDate( 'start_date', ts('Start Date'), false, array( 'formatType' => 'custom') );    
         $form->addDate( 'end_date', ts('End Date'), false, array( 'formatType' => 'custom') );
         

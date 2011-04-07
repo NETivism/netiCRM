@@ -181,6 +181,13 @@ AND    p.entity_id    = e.id
     }
 
     function buildForm( &$form ) {
+        CRM_Core_OptionValue::getValues(array('name' => 'custom_search'), &$custom_search);
+        foreach($custom_search as $c){
+          if($c['value'] == $_GET['csid']){
+            $this->setTitle($c['description']);
+            break;
+          }
+        }
         $dao = $this->priceSetDAO( );
 
         $event = array( );
