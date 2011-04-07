@@ -88,11 +88,8 @@ implements CRM_Contact_Form_Search_Interface {
 	}
     
     function buildForm( &$form ) {
-        /**
-         * You can define a custom title for the search form
-         */
-        $this->setTitle('Find Latest Activities');
-
+        //CRM_Core_OptionValue::getValues(array('name' => 'custom_search'), &$values);
+        
         /**
          * Define the search form fields here
          */
