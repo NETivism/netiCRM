@@ -70,8 +70,10 @@ LEFT  JOIN civicrm_component comp
                 ! in_array( "Civi{$dao->component_name}", $config->enableComponents ) ) {
                 continue;
             }
+            if(preg_match('/^[a-zA-Z0-9\s]+$/i', $dao->label)) $dao->label = ts($dao->label); 
+            if(preg_match('/^[a-zA-Z0-9\s]+$/i', $dao->description)) $dao->description = ts($dao->description); 
             $rows[$dao->component_name][$dao->value]['title']       = $dao->label;
-            $rows[$dao->component_name][$dao->value]['description'] = $dao->description;               
+            $rows[$dao->component_name][$dao->value]['description'] = ts($dao->description);
             $rows[$dao->component_name][$dao->value]['url']         = 
                 CRM_Utils_System::url( 'civicrm/report/' . trim($dao->value, '/'), 'reset=1');
             if ( $dao->instance_id ) {
