@@ -4910,9 +4910,9 @@ VALUES
    (@option_group_id_website, '主要',     6, 'Main',     NULL, 0, NULL, 6, NULL, 0, 0, 1, NULL, NULL),
 
 -- Tag used for
-   (@option_group_id_tuf, 'Contacts',   'civicrm_contact',  'Contacts',    NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_tuf, 'Activities', 'civicrm_activity', 'Activities',  NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_tuf, 'Cases',      'civicrm_case',     'Cases',       NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL),
+   (@option_group_id_tuf, '聯絡人',   'civicrm_contact',  'Contacts',    NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
+   (@option_group_id_tuf, '動態', 'civicrm_activity', 'Activities',  NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
+   (@option_group_id_tuf, '個案',      'civicrm_case',     'Cases',       NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL),
 
    (@option_group_id_currency, 'TWD (NT$)',      'TWD',     'TWD',       NULL, 0, 1, 1, NULL, 0, 0, 1, NULL, NULL),
 
