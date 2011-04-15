@@ -91,3 +91,7 @@ VALUES
 
 
 UPDATE civicrm_group SET title = '管理員', description = '網站最高權限管理員.' WHERE id = 1;
+
+INSERT INTO `civicrm_option_value` (`option_group_id`, `label`, `value`, `name`, `grouping`, `filter`, `is_default`, `weight`, `description`, `is_optgroup`, `is_reserved`, `is_active`, `component_id`, `domain_id`, `visibility_id`) VALUES
+(24, 'CRM_Contact_Form_Search_Custom_LegalId', '16', 'CRM_Contact_Form_Search_Custom_LegalId', NULL, 0, 0, 16, '身分證字號搜尋', 0, 0, 1, NULL, NULL, NULL);
+
