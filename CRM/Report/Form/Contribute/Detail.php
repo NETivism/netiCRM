@@ -176,8 +176,8 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
                           array( 'ordinality' => 
                                  array( 'title'   => ts( 'Contribution Ordinality' ),
                                         'operatorType' => CRM_Report_Form::OP_MULTISELECT,
-                                        'options'      => array( 0 => 'First by Contributor', 
-                                                                 1 => 'Second or Later by Contributor') ), ), ),
+                                        'options'      => array( 0 => ts('First by Contributor'), 
+                                                                 1 => ts('Second or Later by Contributor')) ), ), ),
                    );
 
         $this->_tagFilter = true;
