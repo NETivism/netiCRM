@@ -27,7 +27,7 @@
 {include file="CRM/common/accesskeys.tpl"}
 {if isset($contactId) and $contactId} {* Display contact-related footer. *}
     <div class="footer" id="record-log">
-    <span class="col1">{if isset($external_identifier) and $external_identifier}{ts}External ID{/ts}:&nbsp;{$external_identifier}{/if}{if $action NEQ 2}&nbsp; &nbsp;{ts}CiviCRM ID{/ts}:&nbsp;{$contactId}{/if}</span>
+    <span class="col1">{if isset($legal_identifier) and $legal_identifier}{ts}Legal Identifier{/ts}: {$legal_identifier}{/if}{if isset($external_identifier) and $external_identifier}{ts}External ID{/ts}:&nbsp;{$external_identifier}{/if}{if $action NEQ 2}&nbsp; &nbsp;{ts}CiviCRM ID{/ts}:&nbsp;{$contactId}{/if}</span>
     {if isset($lastModified) and $lastModified}
         {ts}Last Change by{/ts} <a href="{crmURL p='civicrm/contact/view' q="action=view&reset=1&cid=`$lastModified.id`"}">{$lastModified.name}</a> ({$lastModified.date|crmDate}) &nbsp;
 	{if $changeLog != '0'}

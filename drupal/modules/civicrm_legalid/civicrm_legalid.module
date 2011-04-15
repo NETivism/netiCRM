@@ -1,0 +1,94 @@
+<?php
+
+/**
+ * Implementation of hook_buildForm()
+ */
+function civicrm_legalid_civicrm_buildForm( $formName, &$form ) {
+  if ($formName == 'CRM_Contact_Form_Contact') {
+    // ssn
+    $form->addElement('text', 'legal_identifier', ts('Legal Identifier'));
+
+    // this will retrieve the contact id
+    $contactID = $form->getVar( '_contactId' );
+
+    if ( $contactID ) {
+      // setdefault if legal_identifier is saved
+      $defaults['legal_identifier'] = CRM_Core_DAO::singleValueQuery( "SELECT legal_identifier FROM civicrm_contact WHERE id = {$contactID}" );
+      $form->setdefaults( $defaults );
+    }
+  }
+}
+
+/**
+ * Implementation of hook_validate()
+ */
+function civicrm_legalid_civicrm_validate( $formName, &$fields, &$files, &$form ) {
+  $errors = array( );
+  if ($formName == 'CRM_Contact_Form_Contact') {
+    if ( !empty( $fields['legal_identifier'] ) ) {
+      $contactID = $form->getVar( '_contactId' );
+/* TODO: need to change to Taiwan id verify
+      $preg = "/^\\d{3}[- ]?\\d{2}[- ]?\\d{4}$/";
+      $match = preg_match($preg, $fields['legal_identifier'] ) ? true : false;
+      if ( !$match ) {
+        $errors['legal_identifier'] = ts('Enter valid SSN number.');
+      }
+*/
+      // length
+      if(strlen($fields['legal_identifier']) < 10){
+        $errors['legal_identifier'] = ts('Enter valid personal identifier number.');
+      }
+
+      // duplicate
+      $exists = CRM_Core_DAO::singleValueQuery( "SELECT id FROM civicrm_contact WHERE legal_identifier = '{$fields['legal_identifier']}' AND id != {$contactID}" );
+      if($exists){
+        $errors['legal_identifier'] = "Duplicate personal identifier with $exists.";
+      }
+
+    }
+  }
+  return empty( $errors ) ? true : $errors;
+}
+
+/**
+ * Implementation of hook_postProcess()
+ */
+function civicrm_legalid_civicrm_postProcess( $formName, &$form ) {
+  if ($formName == 'CRM_Contact_Form_Contact') {
+    // this will give you the SSN submitted value
+    $values = $form->exportValues( );
+    $legalid = $values['legal_identifier'];
+
+    // this will retrieve the contact id
+    $contactID = $form->getVar( '_contactId' );
+
+    // we need to check if entry exists for current contact in training_ssn table
+    // if yes then update else insert
+    $exists_legalid = CRM_Core_DAO::singleValueQuery( "SELECT id FROM civicrm_contact WHERE id = {$contactID}" );
+
+    if ( $exists_legalid) {
+        $query = "UPDATE civicrm_contact SET legal_identifier = '{$legalid}' WHERE id = {$contactID}";
+    }
+    else {
+      // drop here.
+      // it's not possible to save non conatact table
+    }
+
+    CRM_Core_DAO::executeQuery( $query );
+  }
+}
+
+/**
+ * Implementation of hook_pageRun()
+ */
+function civicrm_legalid_civicrm_pageRun( &$page ) {
+  if ( is_a( $page, 'CRM_Contact_Page_View_Summary' ) ) {
+     // this will retrieve the contact id
+    $contactID = $page->getVar( '_contactId' );
+    // get the ssn number and set it to the templaet
+    $legalid = CRM_Core_DAO::singleValueQuery( "SELECT legal_identifier FROM civicrm_contact WHERE id = {$contactID}" );
+    $page->assign('legal_identifier', $legalid);
+  }
+}
+
+
