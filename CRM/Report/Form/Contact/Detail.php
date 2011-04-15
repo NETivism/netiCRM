@@ -145,7 +145,7 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
                                  'membership_status_id'  => array( 'name'    => 'status_id',
                                                                    'title'   => ts('Membership Status'),
                                                                    'default' => true ),
-                                 'source'                => array( 'title'   => 'Membership Source'),
+                                 'source'                => array( 'title'   => ts('Membership Source')),
                                  ),
                           ),
                    'civicrm_participant'   =>
@@ -190,11 +190,11 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
                                 array( 'title'      => ts('Relationship With'),
                                        'default'    => true ),
                                 'start_date' => 
-                                array( 'title'   => 'Start Date ',
+                                array( 'title'   => ts('Start Date'),
                                        'type'    => CRM_Report_Form::OP_DATE
                                  ),
                                 'end_date' => 
-                                array( 'title'   => 'End Date ',
+                                array( 'title'   => ts('End Date'),
                                        'type'    => CRM_Report_Form::OP_DATE
                                  ),
                                 ),),
