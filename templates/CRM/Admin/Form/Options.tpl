@@ -24,6 +24,9 @@
  +--------------------------------------------------------------------+
 *}
 {* this template is used for adding/editing options *}
+{php}
+  $this->assign('GName', ts($GName));
+{/php}
 <h3>{if $action eq 1}{ts 1=$GName}New %1 Option{/ts}{elseif $action eq 8}{ts 1=$GName}Delete %1 Option{/ts}{else}{ts 1=$GName}Edit %1 Option{/ts}{/if}</h3>
 <div class="crm-block crm-form-block crm-admin-options-form-block">
 <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>		      
