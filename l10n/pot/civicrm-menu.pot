@@ -1,0 +1,972 @@
+# Copyright CiviCRM LLC (c) 2004-2010
+# This file is distributed under the same license as the CiviCRM package.
+# If you contribute heavily to a translation and deem your work copyrightable,
+# make sure you license it to CiviCRM LLC under Academic Free License 3.0.
+msgid ""
+msgstr ""
+"Project-Id-Version: CiviCRM 3.2\n"
+"POT-Creation-Date: 2011-04-16 01:33+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: CiviCRM Translators <civicrm-translators@lists.civicrm.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+msgctxt "menu"
+msgid "Access Control"
+msgstr ""
+
+msgctxt "menu"
+msgid "ACL"
+msgstr ""
+
+msgctxt "menu"
+msgid "ACL Roles"
+msgstr ""
+
+msgctxt "menu"
+msgid "Activities"
+msgstr ""
+
+msgctxt "menu"
+msgid "Activity Dashlet"
+msgstr ""
+
+msgctxt "menu"
+msgid "Activity Types"
+msgstr ""
+
+msgctxt "menu"
+msgid "Activity View"
+msgstr ""
+
+msgctxt "menu"
+msgid "Add Field"
+msgstr ""
+
+msgctxt "menu"
+msgid "Additional Info"
+msgstr ""
+
+msgctxt "menu"
+msgid "AdditionalInfo Form"
+msgstr ""
+
+msgctxt "menu"
+msgid "Add Products to This Page"
+msgstr ""
+
+msgctxt "menu"
+msgid "Addressee"
+msgstr ""
+
+msgctxt "menu"
+msgid "Address Preferences"
+msgstr ""
+
+msgctxt "menu"
+msgid "Administer CiviCRM"
+msgstr ""
+
+msgctxt "menu"
+msgid "Advanced Search"
+msgstr ""
+
+msgctxt "menu"
+msgid "All Cases Dashlet"
+msgstr ""
+
+msgctxt "menu"
+msgid "Archived Mailings"
+msgstr ""
+
+msgctxt "menu"
+msgid "Assign to Another Client"
+msgstr ""
+
+msgctxt "menu"
+msgid "Assign Users to ACL Roles"
+msgstr ""
+
+msgctxt "menu"
+msgid "Browse Uploaded files"
+msgstr ""
+
+msgctxt "menu"
+msgid "Build Activity To Case"
+msgstr ""
+
+msgctxt "menu"
+msgid "Campaign Dashboard"
+msgstr ""
+
+msgctxt "menu"
+msgid "Campaign Status"
+msgstr ""
+
+msgctxt "menu"
+msgid "Campaign Types"
+msgstr ""
+
+msgctxt "menu"
+msgid "Case"
+msgstr ""
+
+msgctxt "menu"
+msgid "Case Activity"
+msgstr ""
+
+msgctxt "menu"
+msgid "Case Dashlet"
+msgstr ""
+
+msgctxt "menu"
+msgid "Case Details"
+msgstr ""
+
+msgctxt "menu"
+msgid "Case Report"
+msgstr ""
+
+msgctxt "menu"
+msgid "Case Statuses"
+msgstr ""
+
+msgctxt "menu"
+msgid "Case Types"
+msgstr ""
+
+msgctxt "menu"
+msgid "CiviCase Dashboard"
+msgstr ""
+
+msgctxt "menu"
+msgid "CiviContribute"
+msgstr ""
+
+msgctxt "menu"
+msgid "CiviContribute Dashboard"
+msgstr ""
+
+msgctxt "menu"
+msgid "CiviCRM"
+msgstr ""
+
+msgctxt "menu"
+msgid "CiviCRM Dashlets"
+msgstr ""
+
+msgctxt "menu"
+msgid "CiviCRM Extensions"
+msgstr ""
+
+msgctxt "menu"
+msgid "CiviCRM Home"
+msgstr ""
+
+msgctxt "menu"
+msgid "CiviCRM Profile"
+msgstr ""
+
+msgctxt "menu"
+msgid "CiviCRM Profile Create"
+msgstr ""
+
+msgctxt "menu"
+msgid "CiviCRM Profile Fields"
+msgstr ""
+
+msgctxt "menu"
+msgid "CiviCRM Reports"
+msgstr ""
+
+msgctxt "menu"
+msgid "CiviEvent Dashboard"
+msgstr ""
+
+msgctxt "menu"
+msgid "CiviGrant Dashboard"
+msgstr ""
+
+msgctxt "menu"
+msgid "CiviMail"
+msgstr ""
+
+msgctxt "menu"
+msgid "CiviMember Dashboard"
+msgstr ""
+
+msgctxt "menu"
+msgid "CiviPledge Dashboard"
+msgstr ""
+
+msgctxt "menu"
+msgid "CiviReport"
+msgstr ""
+
+msgctxt "menu"
+msgid "Components"
+msgstr ""
+
+msgctxt "menu"
+msgid "Conduct Survey"
+msgstr ""
+
+msgctxt "menu"
+msgid "Configuration Checklist"
+msgstr ""
+
+msgctxt "menu"
+msgid "Configure Widget"
+msgstr ""
+
+msgctxt "menu"
+msgid "Confirm"
+msgstr ""
+
+msgctxt "menu"
+msgid "Confirm Event Registration"
+msgstr ""
+
+msgctxt "menu"
+msgid "Contact Dashboard"
+msgstr ""
+
+msgctxt "menu"
+msgid "Contact Summary"
+msgstr ""
+
+msgctxt "menu"
+msgid "Contact Types"
+msgstr ""
+
+msgctxt "menu"
+msgid "Contribution Amounts"
+msgstr ""
+
+msgctxt "menu"
+msgid "Contributions"
+msgstr ""
+
+msgctxt "menu"
+msgid "Contribution Summary - Chart View"
+msgstr ""
+
+msgctxt "menu"
+msgid "Contribution Types"
+msgstr ""
+
+msgctxt "menu"
+msgid "Create Reports from Templates"
+msgstr ""
+
+msgctxt "menu"
+msgid "Current and Upcoming Events"
+msgstr ""
+
+msgctxt "menu"
+msgid "Custom Data"
+msgstr ""
+
+msgctxt "menu"
+msgid "Custom Data Fields"
+msgstr ""
+
+msgctxt "menu"
+msgid "Custom Field - Add"
+msgstr ""
+
+msgctxt "menu"
+msgid "Custom Field - Edit"
+msgstr ""
+
+msgctxt "menu"
+msgid "Custom Field - Move"
+msgstr ""
+
+msgctxt "menu"
+msgid "Custom Field - Options"
+msgstr ""
+
+msgctxt "menu"
+msgid "Custom Searches"
+msgstr ""
+
+msgctxt "menu"
+msgid "Date Formatting"
+msgstr ""
+
+msgctxt "menu"
+msgid "Debugging"
+msgstr ""
+
+msgctxt "menu"
+msgid "Dedupe Exceptions"
+msgstr ""
+
+msgctxt "menu"
+msgid "Delete Contact"
+msgstr ""
+
+msgctxt "menu"
+msgid "Domain Information"
+msgstr ""
+
+msgctxt "menu"
+msgid "Download Errors"
+msgstr ""
+
+msgctxt "menu"
+msgid "Draft and Unscheduled Mailings"
+msgstr ""
+
+msgctxt "menu"
+msgid "Edit Field"
+msgstr ""
+
+msgctxt "menu"
+msgid "Edit Related Contact"
+msgstr ""
+
+msgctxt "menu"
+msgid "Email a Contact"
+msgstr ""
+
+msgctxt "menu"
+msgid "Email address verified"
+msgstr ""
+
+msgctxt "menu"
+msgid "Email Greetings"
+msgstr ""
+
+msgctxt "menu"
+msgid "Event Fees"
+msgstr ""
+
+msgctxt "menu"
+msgid "Event Info and Settings"
+msgstr ""
+
+msgctxt "menu"
+msgid "Event Information"
+msgstr ""
+
+msgctxt "menu"
+msgid "Event Location"
+msgstr ""
+
+msgctxt "menu"
+msgid "Event Name Badge Templates"
+msgstr ""
+
+msgctxt "menu"
+msgid "Event Online Registration"
+msgstr ""
+
+msgctxt "menu"
+msgid "Event Participants List"
+msgstr ""
+
+msgctxt "menu"
+msgid "Event Registration"
+msgstr ""
+
+msgctxt "menu"
+msgid "Event Templates"
+msgstr ""
+
+msgctxt "menu"
+msgid "Event Types"
+msgstr ""
+
+msgctxt "menu"
+msgid "Export Contacts"
+msgstr ""
+
+msgctxt "menu"
+msgid "File System Paths"
+msgstr ""
+
+msgctxt "menu"
+msgid "Find Activities"
+msgstr ""
+
+msgctxt "menu"
+msgid "Find and Merge Duplicate Contacts"
+msgstr ""
+
+msgctxt "menu"
+msgid "Find Cases"
+msgstr ""
+
+msgctxt "menu"
+msgid "Find Contacts"
+msgstr ""
+
+msgctxt "menu"
+msgid "Find Contributions"
+msgstr ""
+
+msgctxt "menu"
+msgid "Find Grants"
+msgstr ""
+
+msgctxt "menu"
+msgid "Find Members"
+msgstr ""
+
+msgctxt "menu"
+msgid "Find Participants"
+msgstr ""
+
+msgctxt "menu"
+msgid "Find Pledges"
+msgstr ""
+
+msgctxt "menu"
+msgid "Forward Mailing"
+msgstr ""
+
+msgctxt "menu"
+msgid "From Email Addresses"
+msgstr ""
+
+msgctxt "menu"
+msgid "Gender Options"
+msgstr ""
+
+msgctxt "menu"
+msgid "Global Settings"
+msgstr ""
+
+msgctxt "menu"
+msgid "GOTV (Track Voters)"
+msgstr ""
+
+msgctxt "menu"
+msgid "Grant Types"
+msgstr ""
+
+msgctxt "menu"
+msgid "Group Members"
+msgstr ""
+
+msgctxt "menu"
+msgid "Groups"
+msgstr ""
+
+msgctxt "menu"
+msgid "Headers, Footers, and Automated Messages"
+msgstr ""
+
+msgctxt "menu"
+msgid "Import"
+msgstr ""
+
+msgctxt "menu"
+msgid "Import Activities"
+msgstr ""
+
+msgctxt "menu"
+msgid "Import Contacts"
+msgstr ""
+
+msgctxt "menu"
+msgid "Import Contributions"
+msgstr ""
+
+msgctxt "menu"
+msgid "Import/Export Mappings"
+msgstr ""
+
+msgctxt "menu"
+msgid "Import Memberships"
+msgstr ""
+
+msgctxt "menu"
+msgid "Import Participants"
+msgstr ""
+
+msgctxt "menu"
+msgid "Include Profiles"
+msgstr ""
+
+msgctxt "menu"
+msgid "Individual Prefixes (Ms, Mr...)"
+msgstr ""
+
+msgctxt "menu"
+msgid "Individual Suffixes (Jr, Sr...)"
+msgstr ""
+
+msgctxt "menu"
+msgid "Instant Messenger Services"
+msgstr ""
+
+msgctxt "menu"
+msgid "Localization"
+msgstr ""
+
+msgctxt "menu"
+msgid "Location Types (Home, Work...)"
+msgstr ""
+
+msgctxt "menu"
+msgid "Log out"
+msgstr ""
+
+msgctxt "menu"
+msgid "Mail Accounts"
+msgstr ""
+
+msgctxt "menu"
+msgid "Mailer Settings"
+msgstr ""
+
+msgctxt "menu"
+msgid "Mailing Event"
+msgstr ""
+
+msgctxt "menu"
+msgid "Mailing Report"
+msgstr ""
+
+msgctxt "menu"
+msgid "Manage ACLs"
+msgstr ""
+
+msgctxt "menu"
+msgid "Manage Contribution Pages"
+msgstr ""
+
+msgctxt "menu"
+msgid "Manage Custom Searches"
+msgstr ""
+
+msgctxt "menu"
+msgid "Manage Events"
+msgstr ""
+
+msgctxt "menu"
+msgid "Manage Groups"
+msgstr ""
+
+msgctxt "menu"
+msgid "Manage Premiums"
+msgstr ""
+
+msgctxt "menu"
+msgid "Manage Price Sets"
+msgstr ""
+
+msgctxt "menu"
+msgid "Manage Tags (Categories)"
+msgstr ""
+
+msgctxt "menu"
+msgid "Manage Templates"
+msgstr ""
+
+msgctxt "menu"
+msgid "Map Event Location"
+msgstr ""
+
+msgctxt "menu"
+msgid "Map Location(s)"
+msgstr ""
+
+msgctxt "menu"
+msgid "Mapping and Geocoding"
+msgstr ""
+
+msgctxt "menu"
+msgid "Memberships"
+msgstr ""
+
+msgctxt "menu"
+msgid "Membership Section"
+msgstr ""
+
+msgctxt "menu"
+msgid "Membership Status Rules"
+msgstr ""
+
+msgctxt "menu"
+msgid "Membership Types"
+msgstr ""
+
+msgctxt "menu"
+msgid "Merge Contact"
+msgstr ""
+
+msgctxt "menu"
+msgid "Message Templates"
+msgstr ""
+
+msgctxt "menu"
+msgid "Miscellaneous"
+msgstr ""
+
+msgctxt "menu"
+msgid "Mobile Phone Providers"
+msgstr ""
+
+msgctxt "menu"
+msgid "Navigation Menu"
+msgstr ""
+
+msgctxt "menu"
+msgid "New Activity"
+msgstr ""
+
+msgctxt "menu"
+msgid "New Campaign"
+msgstr ""
+
+msgctxt "menu"
+msgid "New CiviCRM Profile"
+msgstr ""
+
+msgctxt "menu"
+msgid "New Contact"
+msgstr ""
+
+msgctxt "menu"
+msgid "New Contribution"
+msgstr ""
+
+msgctxt "menu"
+msgid "New Contribution Page"
+msgstr ""
+
+msgctxt "menu"
+msgid "New Event"
+msgstr ""
+
+msgctxt "menu"
+msgid "New Grant"
+msgstr ""
+
+msgctxt "menu"
+msgid "New Group"
+msgstr ""
+
+msgctxt "menu"
+msgid "New Household"
+msgstr ""
+
+msgctxt "menu"
+msgid "New Individual"
+msgstr ""
+
+msgctxt "menu"
+msgid "New Mailing"
+msgstr ""
+
+msgctxt "menu"
+msgid "New Member"
+msgstr ""
+
+msgctxt "menu"
+msgid "New Organization"
+msgstr ""
+
+msgctxt "menu"
+msgid "New Petition"
+msgstr ""
+
+msgctxt "menu"
+msgid "New Pledge"
+msgstr ""
+
+msgctxt "menu"
+msgid "New Price Set"
+msgstr ""
+
+msgctxt "menu"
+msgid "New Survey"
+msgstr ""
+
+msgctxt "menu"
+msgid "New Tag"
+msgstr ""
+
+msgctxt "menu"
+msgid "Notes"
+msgstr ""
+
+msgctxt "menu"
+msgid "Open Case"
+msgstr ""
+
+msgctxt "menu"
+msgid "Option Groups"
+msgstr ""
+
+msgctxt "menu"
+msgid "Option Values"
+msgstr ""
+
+msgctxt "menu"
+msgid "Optout"
+msgstr ""
+
+msgctxt "menu"
+msgid "Participant Listing Templates"
+msgstr ""
+
+msgctxt "menu"
+msgid "Participant Role"
+msgstr ""
+
+msgctxt "menu"
+msgid "Participant Status"
+msgstr ""
+
+msgctxt "menu"
+msgid "Payment Instruments"
+msgstr ""
+
+msgctxt "menu"
+msgid "Payment Processor"
+msgstr ""
+
+msgctxt "menu"
+msgid "Payment Processor Type"
+msgstr ""
+
+msgctxt "menu"
+msgid "Personal Campaign Pages"
+msgstr ""
+
+msgctxt "menu"
+msgid "Personal Campaign Page Settings"
+msgstr ""
+
+msgctxt "menu"
+msgid "Phone Type"
+msgstr ""
+
+msgctxt "menu"
+msgid "Pledge Payments"
+msgstr ""
+
+msgctxt "menu"
+msgid "Pledges"
+msgstr ""
+
+msgctxt "menu"
+msgid "Postal Greetings"
+msgstr ""
+
+msgctxt "menu"
+msgid "Preferred Communication Methods"
+msgstr ""
+
+msgctxt "menu"
+msgid "Preferred Languages"
+msgstr ""
+
+msgctxt "menu"
+msgid "Premiums"
+msgstr ""
+
+msgctxt "menu"
+msgid "Preview Mailing"
+msgstr ""
+
+msgctxt "menu"
+msgid "Price Field Options"
+msgstr ""
+
+msgctxt "menu"
+msgid "Price Fields"
+msgstr ""
+
+msgctxt "menu"
+msgid "Price Sets"
+msgstr ""
+
+msgctxt "menu"
+msgid "Print Event Name Badge"
+msgstr ""
+
+msgctxt "menu"
+msgid "Process Uploaded Images"
+msgstr ""
+
+msgctxt "menu"
+msgid "Profile Settings"
+msgstr ""
+
+msgctxt "menu"
+msgid "Record Respondents Interview"
+msgstr ""
+
+msgctxt "menu"
+msgid "Redaction Rules"
+msgstr ""
+
+msgctxt "menu"
+msgid "Register New Participant"
+msgstr ""
+
+msgctxt "menu"
+msgid "Register Report"
+msgstr ""
+
+msgctxt "menu"
+msgid "Registration Page"
+msgstr ""
+
+msgctxt "menu"
+msgid "Relationships"
+msgstr ""
+
+msgctxt "menu"
+msgid "Relationship Types"
+msgstr ""
+
+msgctxt "menu"
+msgid "Release Respondents"
+msgstr ""
+
+msgctxt "menu"
+msgid "Report"
+msgstr ""
+
+msgctxt "menu"
+msgid "Reports Listing"
+msgstr ""
+
+msgctxt "menu"
+msgid "Reserve Respondents"
+msgstr ""
+
+msgctxt "menu"
+msgid "Resubscribe"
+msgstr ""
+
+msgctxt "menu"
+msgid "Safe File Extension Options"
+msgstr ""
+
+msgctxt "menu"
+msgid "Scheduled and Sent Mailings"
+msgstr ""
+
+msgctxt "menu"
+msgid "Search"
+msgstr ""
+
+msgctxt "menu"
+msgid "Search Builder"
+msgstr ""
+
+msgctxt "menu"
+msgid "Sending Mail"
+msgstr ""
+
+msgctxt "menu"
+msgid "Setup a Personal Campaign Page - Account Information"
+msgstr ""
+
+msgctxt "menu"
+msgid "Sign Petition"
+msgstr ""
+
+msgctxt "menu"
+msgid "Simple Search"
+msgstr ""
+
+msgctxt "menu"
+msgid "Site URLs"
+msgstr ""
+
+msgctxt "menu"
+msgid "Smtp Server"
+msgstr ""
+
+msgctxt "menu"
+msgid "Subscribe"
+msgstr ""
+
+msgctxt "menu"
+msgid "Sunlight"
+msgstr ""
+
+msgctxt "menu"
+msgid "Survey Types"
+msgstr ""
+
+msgctxt "menu"
+msgid "Synchronize Users to Contacts"
+msgstr ""
+
+msgctxt "menu"
+msgid "System Preferences"
+msgstr ""
+
+msgctxt "menu"
+msgid "Tags"
+msgstr ""
+
+msgctxt "menu"
+msgid "Tell a Friend"
+msgstr ""
+
+msgctxt "menu"
+msgid "Thank You"
+msgstr ""
+
+msgctxt "menu"
+msgid "Thank-you and Receipting"
+msgstr ""
+
+msgctxt "menu"
+msgid "This should never be seen"
+msgstr ""
+
+msgctxt "menu"
+msgid "Title and Settings"
+msgstr ""
+
+msgctxt "menu"
+msgid "Unsubscribe"
+msgstr ""
+
+msgctxt "menu"
+msgid "Update Directory Path and URL"
+msgstr ""
+
+msgctxt "menu"
+msgid "Upgrade CiviCRM"
+msgstr ""
+
+msgctxt "menu"
+msgid "User Framework Settings"
+msgstr ""
+
+msgctxt "menu"
+msgid "View Activity"
+msgstr ""
+
+msgctxt "menu"
+msgid "View Date Prefences"
+msgstr ""
+
+msgctxt "menu"
+msgid "View Petition Signatures"
+msgstr ""
+
+msgctxt "menu"
+msgid "Website Types"
+msgstr ""
+
+msgctxt "menu"
+msgid "Word Replacements"
+msgstr ""
+
