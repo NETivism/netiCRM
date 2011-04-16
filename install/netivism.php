@@ -15,7 +15,7 @@ function neticrm_enable_custom_modules(){
   cache_clear_all();
 }
 function _neticrm_custom_modules(){
-  return array('civicrm_ckeditor','civicrm_imce','civicrm_twaddress','civicrm_alter_translation');
+  return array('civicrm_ckeditor','civicrm_imce','civicrm_twaddress','civicrm_alter_translation', 'civicrm_legalid');
 }
 
 function neticrm_domain_set_default(){
