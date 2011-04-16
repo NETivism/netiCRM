@@ -90,23 +90,9 @@ VALUES
   (27, 1, 'Email點擊流程報表', 'civicrm/report/instance/28&reset=1&section=2&snippet=4', NULL, 'access CiviMail', NULL, 0, 0, 1, 1, 0, 0, '2011-03-10 16:52:25');
 
 
-UPDATE civicrm_group SET title = '管理員', description = '網站最高權限管理員.' WHERE id = 1;
-
-INSERT INTO `civicrm_option_value` (`option_group_id`, `label`, `value`, `name`, `grouping`, `filter`, `is_default`, `weight`, `description`, `is_optgroup`, `is_reserved`, `is_active`, `component_id`, `domain_id`, `visibility_id`) VALUES
-(24, 'CRM_Contact_Form_Search_Custom_LegalId', '16', 'CRM_Contact_Form_Search_Custom_LegalId', NULL, 0, 0, 16, '身分證字號搜尋', 0, 0, 1, NULL, NULL, NULL);
-
-
-REPLACE INTO `civicrm_uf_group` (`id`, `is_active`, `group_type`, `title`, `help_pre`, `help_post`, `limit_listings_group_id`, `post_URL`, `add_to_group_id`, `add_captcha`, `is_map`, `is_edit_link`, `is_uf_link`, `is_update_dupe`, `cancel_URL`, `is_cms_user`, `notify`, `is_reserved`, `name`, `created_id`, `created_date`, `is_proximity_search`) VALUES
-(1, 1, 'Individual,Contact', '姓名及地址', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, NULL, 0, NULL, 0, 'name_and_address', NULL, NULL, 0),
-(2, 1, 'Individual,Contact', '支持者個人檔案', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, NULL, 2, NULL, 0, 'supporter_profile', NULL, NULL, 0),
-(3, 1, 'Participant', '參加者狀態', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, NULL, 0, NULL, 1, 'participant_status', NULL, NULL, 0),
-(4, 1, 'Individual,Contact', '新增個人', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, NULL, 0, NULL, 1, 'new_individual', NULL, NULL, 0),
-(5, 1, 'Organization,Contact', '新增組織', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, NULL, 0, NULL, 1, 'new_organization', NULL, NULL, 0),
-(6, 1, 'Household,Contact', '新增家庭', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, NULL, 0, NULL, 1, 'new_household', NULL, NULL, 0),
-(7, 1, 'Contact,Individual', '概況', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, NULL, 0, NULL, 1, 'summary_overlay', NULL, NULL, 0),
-(8, 1, 'Contact', '已分享的地址', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, NULL, 0, NULL, 1, 'shared_address', NULL, NULL, 0);
-
-
+UPDATE `civicrm_group` SET `title` = '管理員', `description` = '網站最高權限管理員.' WHERE id = 1;
+UPDATE  `civicrm_uf_group` SET  `help_post` =  '' WHERE `id` = 2 LIMIT 1 ;
+DELETE FROM `civicrm_uf_join` WHERE id = 1 OR id = 2;
 REPLACE INTO `civicrm_uf_field` (`id`, `uf_group_id`, `field_name`, `is_active`, `is_view`, `is_required`, `weight`, `help_post`, `help_pre`, `visibility`, `in_selector`, `is_searchable`, `location_type_id`, `phone_type_id`, `label`, `field_type`, `is_reserved`) VALUES
 (1, 1, 'first_name', 1, 0, 1, 2, '其他人將無法看見您輸入的資訊，請您放心。', NULL, 'User and User Admin Only', 0, 0, NULL, NULL, '名字', 'Individual', 0),
 (2, 1, 'last_name', 1, 0, 1, 1, '', NULL, 'User and User Admin Only', 0, 0, NULL, NULL, '姓氏', 'Individual', 0),
@@ -142,6 +128,4 @@ REPLACE INTO `civicrm_uf_field` (`id`, `uf_group_id`, `field_name`, `is_active`,
 (32, 8, 'postal_code', 1, 0, 0, 4, '', NULL, 'User and User Admin Only', 0, 0, 1, NULL, '郵遞區號', 'Contact', 0),
 (33, 8, 'country', 0, 0, 0, 1, NULL, NULL, 'Public Pages and Listings', 0, 1, 1, NULL, '國家（住家）', 'Contact', 0),
 (34, 8, 'state_province', 1, 0, 0, 2, '', NULL, 'User and User Admin Only', 0, 0, 1, NULL, '縣市', 'Contact', 0);
-
-DELETE FROM `civicrm_uf_join` WHERE id = 1 OR id = 2;
 
