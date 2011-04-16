@@ -4955,7 +4955,7 @@ VALUES
   (@option_group_id_directory_pref, '暫時檔案' , '', 'uploadDir', NULL, 0, 0, 1, 'CiviCRM 的暫存檔上傳路徑 - 例如匯入資料檔案。', 0, 1, 1, NULL, @domainID, NULL),
   (@option_group_id_directory_pref, '影像' , '', 'imageUploadDir', NULL, 0, 0, 2, 'File system path where image files are uploaded. Currently, this path is used for images associated with premiums (CiviContribute thank-you gifts).', 0, 1, 1, NULL, @domainID, NULL),
   (@option_group_id_directory_pref, '自訂檔案' , '', 'customFileUploadDir', NULL, 0, 0, 3, '文件及圖像這些聯絡人記錄附件被儲存的路線(例如聯絡人相片、重新開始、聯絡人等)。這些附件被定義使用\'檔案\'類別自訂欄位。', 0, 1, 1, NULL, @domainID, NULL),
-  (@option_group_id_directory_pref, '自訂範本' , '', 'customTemplateDir', NULL, 0, 0, 4, '特定範本的路徑已儲存（若有的話）。此目錄會優先被搜尋（如果設定）。Civi個案的設定檔也可儲存在此的路徑中。', 0, 1, 1, NULL, @domainID, NULL),
+  (@option_group_id_directory_pref, '自訂範本' , '', 'customTemplateDir', NULL, 0, 0, 4, '特定範本的路徑已儲存（若有的話）。此目錄會優先被搜尋（如果設定）。個案的設定檔也可儲存在此的路徑中。', 0, 1, 1, NULL, @domainID, NULL),
   (@option_group_id_directory_pref, 'Custom PHP' , '', 'customPHPPathDir', NULL, 0, 0, 5, '網址指定服務器端編程語言電碼檔案被儲存的路線。此資料夾會先被搜尋如果被設。', 0, 1, 1, NULL, @domainID, NULL),
   (@option_group_id_directory_pref, 'Custom Extensions' , '', 'extensionsDir', NULL, 0, 0, 6, 'Path where Custom extensions are stored.', 0, 1, 1, NULL, @domainID, NULL),
 
