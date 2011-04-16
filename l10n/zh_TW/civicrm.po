@@ -35028,7 +35028,7 @@ msgstr "管理後台總覽"
 
 #: xml/templates/civicrm_navigation.tpl
 msgid "Enable CiviCRM Components"
-msgstr "啟用的 CiviCRM 模組"
+msgstr "啟用的模組"
 
 #: xml/templates/civicrm_navigation.tpl
 msgid "Site Preferences (screen and form configuration)"
