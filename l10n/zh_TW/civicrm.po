@@ -402,7 +402,7 @@ msgstr "所有活動"
 #: CRM/ACL/Form/ACL.php CRM/Contact/Page/View/CustomData.php
 #: templates/CRM/Admin/Page/ConfigTaskList.tpl msgctxt "menu"
 msgid "Custom Data"
-msgstr "自訂資料"
+msgstr "自訂欄位"
 
 #: CRM/ACL/Form/ACL.php CRM/ACL/Page/ACL.php CRM/Campaign/Form/Survey.php
 #: CRM/Core/SelectValues.php templates/CRM/Contribute/Form/PCP/PCPAccount.tpl
@@ -2930,19 +2930,19 @@ msgstr "隱私"
 
 #: CRM/Contact/Form/Edit/CommunicationPreferences.php CRM/Profile/Form.php
 msgid "Custom  %1 is a required field if %1 is of type Customized."
-msgstr "如果%1是自定的類別，自定%1為必需的欄位。"
+msgstr "如果%1是的類別，自定%1為必需的欄位。"
 
 #: CRM/Contact/Form/Edit/CommunicationPreferences.php CRM/Core/BAO/UFGroup.php
 msgid "Custom Addressee"
-msgstr "自定收件人"
+msgstr "收件人"
 
 #: CRM/Contact/Form/Edit/CommunicationPreferences.php CRM/Core/BAO/UFGroup.php
 msgid "Custom Email Greeting"
-msgstr "自定Email問候"
+msgstr "Email問候"
 
 #: CRM/Contact/Form/Edit/CommunicationPreferences.php CRM/Core/BAO/UFGroup.php
 msgid "Custom Postal Greeting"
-msgstr "自定普通信件問候"
+msgstr "普通信件問候"
 
 #: CRM/Contact/Form/Edit/Email.php CRM/Contribute/Form/AdditionalInfo.php
 #: CRM/Contribute/Form/Contribution/Main.php
@@ -3975,7 +3975,7 @@ msgstr "請輸入信用卡背後的CCV查核碼"
 #: CRM/Contribute/Form/Contribution/Main.php
 #: CRM/Event/Form/Registration/Register.php
 msgid "Custom %1 is a required field if %1 is of type Customized."
-msgstr "如果%1是自定的類別，自定%1為必需的欄位。"
+msgstr "如果%1是的類別，自定%1為必需的欄位。"
 
 #: CRM/Contribute/Form/ContributionPage/AddProduct.php
 #: CRM/Contribute/Form/ManagePremiums.php CRM/Custom/Form/Preview.php
@@ -4338,7 +4338,7 @@ msgstr "輸入一個有效的網址。"
 
 #: CRM/Core/BAO/CustomField.php CRM/Core/BAO/File.php
 msgid "Could not move custom file to custom upload directory"
-msgstr "無法移動自定檔案到上傳目錄"
+msgstr "無法移動檔案到上傳目錄"
 
 #: CRM/Core/BAO/File.php CRM/Mailing/Form/Upload.php
 msgid "File size should be less than %1 MByte(s)"
@@ -4705,7 +4705,7 @@ msgstr "預設"
 
 #: CRM/Custom/Page/Field.php CRM/Custom/Page/Group.php CRM/UF/Page/Field.php
 msgid "Preview Custom Data"
-msgstr "預覽自訂資料"
+msgstr "預覽自訂欄位"
 
 #: CRM/Custom/Page/Group.php CRM/Group/Page/Group.php CRM/Price/Page/Set.php
 #: CRM/UF/Page/Group.php
@@ -5706,7 +5706,7 @@ msgstr "個人資訊"
 
 #: CRM/ACL/Form/ACL.php
 msgid "A set of custom data fields"
-msgstr "自定資料欄位集"
+msgstr "資料欄位集"
 
 #: CRM/ACL/Form/ACL.php templates/CRM/ACL/Page/ACL.tpl
 msgid "Type of Data"
@@ -5730,7 +5730,7 @@ msgstr "請選擇一個個人資訊（或所有資訊）。"
 
 #: CRM/ACL/Form/ACL.php
 msgid "Please select a set of Custom Data (or ALL Custom Data)."
-msgstr "請選擇一個（或所有）自定資料集。"
+msgstr "請選擇一個（或所有）資料集。"
 
 #: CRM/ACL/Form/ACL.php
 msgid "Please select an Event (or ALL Events)."
@@ -6079,7 +6079,7 @@ msgstr "選擇的聯絡人類型已刪除。"
 
 #: CRM/Admin/Form/ContactType.php
 msgid "Selected contact type can not be deleted. Make sure contact type doesn't have any associated custom data or group."
-msgstr "您選擇的聯絡人類型無法刪除。請確定這個聯絡人類型與自訂資料或群組沒有關聯性。"
+msgstr "您選擇的聯絡人類型無法刪除。請確定這個聯絡人類型與自訂欄位或群組沒有關聯性。"
 
 #: CRM/Admin/Form/ContactType.php
 msgid "The Contact Type '%1' has been saved."
@@ -7080,11 +7080,11 @@ msgstr "你確定要停用此選項？"
 
 #: CRM/Admin/Page/AJAX.php
 msgid "Are you sure you want to disable this custom data field?"
-msgstr "您確定要停用此自訂資料欄位？"
+msgstr "您確定要停用此自訂欄位欄位？"
 
 #: CRM/Admin/Page/AJAX.php
 msgid "Are you sure you want to disable this custom data group? Any profile fields that are linked to custom fields of this group will be disabled."
-msgstr "您確定要停用此自訂資料群組？任何已連結到此群組自訂欄位的個人資訊欄位都會被停用。"
+msgstr "您確定要停用此自訂欄位群組？任何已連結到此群組自訂欄位的個人資訊欄位都會被停用。"
 
 #: CRM/Admin/Page/AJAX.php
 msgid "Are you sure you want to disable this message tempate?"
@@ -7209,7 +7209,7 @@ msgstr ""
 
 #: CRM/Admin/Page/MessageTemplates.php
 msgid "We recommend that you save a copy of the your customized Text and HTML message content to a text file before reverting so you can combine your changes with the system default messages as needed."
-msgstr "您確定要將這個範本到這個工作流程的預設？所有的自定設定將會消失。\\n\\n我們建議您在執行回復前，先備份這些HTML和文字訊息，使您所做的更動可以回復。"
+msgstr "您確定要將這個範本到這個工作流程的預設？所有的設定將會消失。\\n\\n我們建議您在執行回復前，先備份這些HTML和文字訊息，使您所做的更動可以回復。"
 
 #: CRM/Admin/Page/MessageTemplates.php
 msgid "Edit this message template"
@@ -11864,7 +11864,7 @@ msgstr "選取的 Tag 已成功被刪除。"
 
 #: CRM/Core/BAO/UFField.php
 msgid "Cannot enable this UF field since the used custom field is disabled."
-msgstr "無法啟用此UF欄位，因為所使用的自定欄位已停用。"
+msgstr "無法啟用此UF欄位，因為所使用的欄位已停用。"
 
 #: CRM/Core/BAO/UFGroup.php
 msgid "The requested Profile (gid=%1) is disabled OR it is not configured to be used for 'Profile' listings in its Settings OR there is no Profile with that ID OR you do not have permission to access this profile. Please contact the site administrator if you need assistance."
@@ -13580,7 +13580,7 @@ msgstr "瀏覽資料表單"
 
 #: CRM/Core/Permission.php
 msgid "access all custom data"
-msgstr "存取所有自訂資料"
+msgstr "存取所有自訂欄位"
 
 #: CRM/Core/Permission.php
 msgid "view all activities"
@@ -14123,11 +14123,11 @@ msgstr "進階搜尋中將此群組收合"
 
 #: CRM/Custom/Form/Group.php
 msgid "Is this Custom Data Set active?"
-msgstr "此自訂資料群組是否在啟用中？"
+msgstr "此自訂欄位群組是否在啟用中？"
 
 #: CRM/Custom/Form/Group.php
 msgid "Does this Custom Field Set allow multiple records?"
-msgstr "此自訂資料群組是否允許多筆記錄？"
+msgstr "此自訂欄位群組是否允許多筆記錄？"
 
 #: CRM/Custom/Form/Group.php
 msgid "Maximum number of multiple records"
@@ -14139,7 +14139,7 @@ msgstr "已儲存您的自訂欄位'%1。"
 
 #: CRM/Custom/Form/Group.php
 msgid "Your custom field set '%1' has been added. You can add it custom fields now."
-msgstr "已新增您的自訂資料群組'%1'。您現在可以增加自訂欄位到此群組。"
+msgstr "已新增您的自訂欄位群組'%1'。您現在可以增加自訂欄位到此群組。"
 
 #: CRM/Custom/Form/Group.php
 msgid "Note:To ensure that all of your custom data groups are available to Views, you may need to add the following key(s) to the $db_prefix array in your settings.php file: '%1'."
@@ -14223,7 +14223,7 @@ msgstr "此欄位未啟用，所以它不會顯示在編輯表單。"
 
 #: CRM/Custom/Page/Field.php
 msgid "Are you sure you want to delete this custom data field?"
-msgstr "您確定要刪除此自訂資料的欄位？"
+msgstr "您確定要刪除此自訂欄位的欄位？"
 
 #: CRM/Custom/Page/Field.php templates/CRM/Price/Form/Field.tpl
 #: templates/CRM/UF/Form/Field.tpl msgctxt "menu"
@@ -14272,7 +14272,7 @@ msgstr "查看並編輯自訂欄位"
 
 #: CRM/Custom/Page/Group.php
 msgid "Preview Custom Data Set"
-msgstr "預覽自訂資料"
+msgstr "預覽自訂欄位"
 
 #: CRM/Custom/Page/Group.php
 msgid "Edit Custom Set"
@@ -14328,7 +14328,7 @@ msgstr "自訂選項"
 
 #: CRM/Custom/Page/Option.php msgctxt "menu"
 msgid "Custom Data Fields"
-msgstr "自訂資料欄位"
+msgstr "自訂欄位欄位"
 
 #: CRM/Dedupe/DAO/Exception.php
 msgid "First Dupe Contact ID"
@@ -16057,7 +16057,7 @@ msgstr "信件的問候詞 - 自訂"
 
 #: CRM/Import/Parser/Contact.php
 msgid "Addressee - Custom"
-msgstr "收件者地址 - 自定"
+msgstr "收件者地址 - "
 
 #: CRM/Import/Parser/Contact.php
 msgid "Record imported successfully but unable to parse the street address: "
@@ -19782,7 +19782,7 @@ msgstr "選擇此權限可操作的資料類別。"
 
 #: templates/CRM/ACL/Form/ACL.tpl
 msgid "IMPORTANT: The Drupal permissions for 'access all custom data' and 'profile listings and forms' override and disable specific ACL settings for custom field groups and profiles respectively. Do not enable those Drupal permissions for a Drupal role if you want to use CiviCRM ACL's to control access."
-msgstr "重要：Drupal在access all custom data和profile listing and forms這兩種權限將會覆蓋掉元現在CiviCRM ACL設定的自定欄位群組。如果你想要使用CiviCRM的權限控制機制（ACL），請不要在Drupal Role中啟用這些Drupal的權限。"
+msgstr "重要：Drupal在access all custom data和profile listing and forms這兩種權限將會覆蓋掉元現在CiviCRM ACL設定的欄位群組。如果你想要使用CiviCRM的權限控制機制（ACL），請不要在Drupal Role中啟用這些Drupal的權限。"
 
 #: templates/CRM/ACL/Form/ACL.tpl
 msgid "Select a specific group of contacts, OR apply this permission to ALL groups."
@@ -21476,7 +21476,7 @@ msgstr "文件及圖像這些聯絡人記錄附件被儲存的路線(例如聯�
 
 #: templates/CRM/Admin/Form/Setting/Path.tpl
 msgid "Path where site specific templates are stored if any. This directory is searched first if set. CiviCase configuration files can also be stored in this custom path."
-msgstr "特定範本的路徑已儲存（若有的話）。此目錄會優先被搜尋（如果設定）。Civi個案的設定檔也可儲存在此自定的路徑中。"
+msgstr "特定範本的路徑已儲存（若有的話）。此目錄會優先被搜尋（如果設定）。Civi個案的設定檔也可儲存在此的路徑中。"
 
 #: templates/CRM/Admin/Form/Setting/Path.tpl
 msgid "Path where site specific PHP code files are stored if any. This directory is searched first if set."
@@ -21637,7 +21637,7 @@ msgstr "您也可定義額外的CSS樣式應用在所有或特定的頁面元素
 
 #: templates/CRM/Admin/Form/Setting/Url.tpl
 msgid "These settings define the URLs used to access CiviCRM resources (CSS files, Javascript files, images, etc.). Default values will be inserted the first time you access CiviCRM - based on the CIVICRM_UF_BASEURL specified in your installation's settings file (civicrm.settings.php)."
-msgstr "請在此設定 CiviCRM、圖片上傳、自定 CSS 樣式表的存取網址。CiviCRM 預設使用 civicrm.settings.php 檔案中 CIVICRM_UF_BASEURL 的參數內容，來設定這些資源的存取網址。"
+msgstr "請在此設定 CiviCRM、圖片上傳、 CSS 樣式表的存取網址。CiviCRM 預設使用 civicrm.settings.php 檔案中 CIVICRM_UF_BASEURL 的參數內容，來設定這些資源的存取網址。"
 
 #: templates/CRM/Admin/Form/Tag.tpl
 msgid "You can change the types of records which this tag can be used for by editing the 'Parent' tag."
@@ -21707,7 +21707,7 @@ msgstr "<strong>例如：</strong>「團隊領導人」（<em>權限角色</em>�
 
 #: templates/CRM/Admin/Page/Access.tpl
 msgid "Use <a href='%1'>Drupal Access Control</a> to manage basic access to CiviCRM components and menu items. Use CiviCRM ACLs to control access to specific CiviCRM contact groups. You can also configure ACLs to grant or deny access to specific Profiles, and/or Custom Data Fields."
-msgstr "使用 <a href='%1'>Drupal 存取控制</a>管理 CiviCRM 模組與選單項目的基本存取功能。使用 CiviCRM 權限管理特定 CiviCRM 聯絡人群組存取功能。您可以設定權限去給予或拒絕特定資料表單，及/或自訂資料欄位的存取功能。"
+msgstr "使用 <a href='%1'>Drupal 存取控制</a>管理 CiviCRM 模組與選單項目的基本存取功能。使用 CiviCRM 權限管理特定 CiviCRM 聯絡人群組存取功能。您可以設定權限去給予或拒絕特定資料表單，及/或自訂欄位欄位的存取功能。"
 
 #: templates/CRM/Admin/Page/Access.tpl
 msgid "ACLs can be used to control access to contacts in CiviCRM 'static' or 'smart' groups. You can also configure ACLs to grant or deny access to specific Profiles, and/or Custom Data Fields."
@@ -21723,7 +21723,7 @@ msgstr "使用<strong>Drupal 角色</strong>來設定存取 CiviCRM 模組與查
 
 #: templates/CRM/Admin/Page/Access.tpl
 msgid "Use following steps if you need to control View and/or Edit permissions for specific contact groups, specific profiles or specific custom data fields."
-msgstr "如果您需要控制查看/編輯特定聯絡人群組的權限，請依照下列的步驟，來指定資料表單或指定自訂資料欄位。"
+msgstr "如果您需要控制查看/編輯特定聯絡人群組的權限，請依照下列的步驟，來指定資料表單或指定自訂欄位欄位。"
 
 #: templates/CRM/Admin/Page/Access.tpl
 msgid "1. Manage Roles"
@@ -21935,11 +21935,11 @@ msgstr "使用群組去組織聯絡人(例如這些聯絡人是我們'指導委�
 
 #: templates/CRM/Admin/Page/ConfigTaskList.tpl
 msgid "Customize Data, Forms and Screens"
-msgstr "自訂資料、表格及螢幕"
+msgstr "自訂欄位、表格及螢幕"
 
 #: templates/CRM/Admin/Page/ConfigTaskList.tpl
 msgid "Configure custom fields to collect and store custom data which is not included in the standard CiviCRM forms."
-msgstr "設自訂欄位去收集及儲存，那些不包括在標準 CiviCRM 表格的自訂資料。"
+msgstr "設自訂欄位去收集及儲存，那些不包括在標準 CiviCRM 表格的自訂欄位。"
 
 #: templates/CRM/Admin/Page/ConfigTaskList.tpl
 msgid "Profiles allow you to aggregate groups of fields and include them in your site as input forms, contact display pages, and search and listings features."
@@ -21981,7 +21981,7 @@ msgstr "開始"
 msgid "CiviCRM comes with 3 basic (built-in) contact types: Individual, Household, and Organization. You can create additional contact types based on these basic types to further differentiate contacts (for example you might create Student, Parent, Staff, and /or Volunteer \"subtypes\" from the basic Individual type...). You can also re-name the built-in types. Contact subtypes are especially useful when you need to collect and display different sets of custom data for different types of contacts."
 msgstr ""
 "CiviCRM 提供三種主要的聯絡人類型（內建）：個人，家庭，與組織。您可建立額外的類型，以進一步區別聯絡人（例如您可在基本類型之下建立學生、家長、職員與/或志工等\"subtypes\"...）您也可以重新命名這些內建的類型。\n"
-"聯絡人次類型在收集與展示不同類型聯絡人的自訂資料時特別有用。"
+"聯絡人次類型在收集與展示不同類型聯絡人的自訂欄位時特別有用。"
 
 #: templates/CRM/Admin/Page/ContactType.hlp
 msgid "Use this field to set your own icon for this Contact Type. Icon images should be 16 x 16 pixels for best fit. Enter a relative or complete URL to the image file location. Use a location outside of your CiviCRM code directory to reduce the likelihood of losing your image files during an upgrade. (For Drupal sites, you might want to use the %1 directory. For Joomla sites, the consider using the %2 directory.)"
@@ -22240,7 +22240,7 @@ msgstr "任務是系統中你想要追蹤記錄的「聯絡人的動作」'。Ci
 
 #: templates/CRM/Admin/Page/Options.hlp
 msgid "Subject, location, date/time and description fields are provided for all activity types. You can add custom fields for tracking additional information about activities <a href='%1'>here</a>."
-msgstr "主題、地點、日期/時間及描述欄位被提供給所有任務類型。您可以<a href='%1'>在此</a>新增自定欄位作為任務追蹤的資料。"
+msgstr "主題、地點、日期/時間及描述欄位被提供給所有任務類型。您可以<a href='%1'>在此</a>新增欄位作為任務追蹤的資料。"
 
 #: templates/CRM/Admin/Page/Options.hlp
 msgid "Scheduled and Completed Activities are searchable by type and/or activity date using 'Advanced Search'. Other applications may record activities for CiviCRM contacts using our APIs. For more information, refer to the online %1."
@@ -22252,11 +22252,11 @@ msgstr "API 文件"
 
 #: templates/CRM/Admin/Page/Options.tpl
 msgid "CiviCRM is pre-configured with standard options for individual gender (e.g. Male, Female, Transgender). You can use this page to customize these options and add new options as needed for your installation."
-msgstr "CiviCRM 已預先設定個人性別的標準選項（例如：男、女、跨性別）。您可以使用此頁自定這些選項，並根據您網站的需要添加新的選項。"
+msgstr "CiviCRM 已預先設定個人性別的標準選項（例如：男、女、跨性別）。您可以使用此頁這些選項，並根據您網站的需要添加新的選項。"
 
 #: templates/CRM/Admin/Page/Options.tpl
 msgid "CiviCRM is pre-configured with standard options for individual contact prefixes (e.g. Ms., Mr., Dr. etc.). You can use this page to customize these options and add new ones as needed for your installation."
-msgstr "CiviCRM 已預先設定個人稱謂的標準選項（例如：女士、先生、博士等）。您可以使用此頁自定這些選項，並根據您網站的需要添加新的選項。"
+msgstr "CiviCRM 已預先設定個人稱謂的標準選項（例如：女士、先生、博士等）。您可以使用此頁這些選項，並根據您網站的需要添加新的選項。"
 
 #: templates/CRM/Admin/Page/Options.tpl
 msgid "When recording mobile phone numbers for contacts, it may be useful to include the Mobile Phone Service Provider (e.g. Cingular, Sprint, etc.). CiviCRM is installed with the most commonly encountered service providers. Administrators may define as many additional providers as needed."
@@ -22268,7 +22268,7 @@ msgstr ""
 
 #: templates/CRM/Admin/Page/Options.tpl
 msgid "CiviCRM is pre-configured with standard options for individual contact name suffixes (e.g. Jr., Sr., II etc.). You can use this page to customize these options and add new ones as needed for your installation."
-msgstr "CiviCRM 已預先設定聯絡人字尾的標準選項（例如：Jr.、Sr.、II等）。您可以使用此頁自定這些選項，並根據您網站的需要添加新的選項。"
+msgstr "CiviCRM 已預先設定聯絡人字尾的標準選項（例如：Jr.、Sr.、II等）。您可以使用此頁這些選項，並根據您網站的需要添加新的選項。"
 
 #: templates/CRM/Admin/Page/Options.tpl
 msgid "Activities are 'interactions with contacts' which you want to record and track."
@@ -22962,7 +22962,7 @@ msgstr "關係類型可描述個人、家庭及組織的關係。關係類型用
 
 #: templates/CRM/Admin/Page/RelationshipType.tpl
 msgid "You can define as many additional relationships types as needed to cover the types of relationships you want to track. Once a relationship type is created, you may also define custom fields to extend relationship information for that type from <a href='%1'>Administer CiviCRM &raquo; Custom Data</a>."
-msgstr "您可以定義很多另外關係類別為需要去覆蓋您想跟蹤的關係類別。當關係粳別被建立，您也可以定義自訂欄位去伸延關係資料給那類別從<a href='%1'>管理者 CiviCRM &raquo; 自訂資料</a>。"
+msgstr "您可以定義很多另外關係類別為需要去覆蓋您想跟蹤的關係類別。當關係粳別被建立，您也可以定義自訂欄位去伸延關係資料給那類別從<a href='%1'>管理者 CiviCRM &raquo; 自訂欄位</a>。"
 
 #: templates/CRM/Admin/Page/RelationshipType.tpl
 msgid "Add Relationship Type"
@@ -24689,7 +24689,7 @@ msgstr "使用部分或全部的項目名稱或Email、聯絡人類型、群組�
 #: templates/CRM/Contact/Form/Search/Basic.hlp
 msgid "Click <strong>Advanced Search</strong> to search by address, demographics, custom fields, notes, and / or relationships. If you are using CiviContribute, CiviEvent or CiviMember - you can also search based on information stored by these components. For example - you can find all contacts who live in a specific city AND have contributed at least %1 within the past 6 months."
 msgstr ""
-"按<strong>快速搜尋</strong>，以地址、人口統計資料、自定欄位、筆記及/或關係搜尋。如果您使用Civi捐款、\n"
+"按<strong>快速搜尋</strong>，以地址、人口統計資料、欄位、筆記及/或關係搜尋。如果您使用Civi捐款、\n"
 "Civi活動或Civi會員 - 您也可以搜尋以這些模組儲存的資料。例如 - 您可以搜尋所有住在指定城市\n"
 "及在近6個月至少捐款%1的聯絡人。"
 
@@ -24930,7 +24930,7 @@ msgstr "進階搜尋"
 
 #: templates/CRM/Contact/Form/Search/ResultTasks.tpl msgctxt "menu"
 msgid "Search Builder"
-msgstr "自定搜尋產生器"
+msgstr "搜尋產生器"
 
 #: templates/CRM/Contact/Form/Search/ResultTasks.tpl
 msgid "%count Contact"
@@ -26043,7 +26043,7 @@ msgstr "捐款標籤"
 
 #: templates/CRM/Contribute/Form/ContributionPage/Custom.hlp
 msgid "If you want collect additional information from contributors, you will need to configure one or two CiviCRM Profiles - which are collections of standard or custom fields. You may need to information about the person (e.g. name and address if these are not already required by your payment processor, interest in subscribing to a newsletter or volunteering). You might also want to collect information specific to this contribution (e.g. target one or several projects or funds to support with this contribution)."
-msgstr "如果您想從捐款人收集資料，您會需要先設置一個或兩個CiviCRM資料表單 - 有內建的表單項目，您也可自定。可能會需要收集的個人資料（例如姓名及地址，或者也可提供電子報訂閱選項、或詢問是否加入志工)。甚至是特定的捐款資訊（例如詢問是否對某些專案有興趣、或是否想要一起宣傳此募款活動)。"
+msgstr "如果您想從捐款人收集資料，您會需要先設置一個或兩個CiviCRM資料表單 - 有內建的表單項目，您也可。可能會需要收集的個人資料（例如姓名及地址，或者也可提供電子報訂閱選項、或詢問是否加入志工)。甚至是特定的捐款資訊（例如詢問是否對某些專案有興趣、或是否想要一起宣傳此募款活動)。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/Custom.hlp
 msgid "If you haven't already configured custom fields and a profile for this, you can save this screen without selecting a Profile, complete the steps below and then return to <strong>Manage Contribution Page</strong> and select your new profile."
@@ -26051,12 +26051,12 @@ msgstr "如果您尚未預先設定好資料表單，或現有資料表單中沒
 
 #: templates/CRM/Contribute/Form/ContributionPage/Custom.hlp
 msgid "Create a custom field group which is 'Used for' <strong>Contacts</strong> or <strong>Contributions</strong> depending on what type of information you're collecting."
-msgstr "為您的特定募款頁建立一組自定欄位，收集您需要的資訊，'用於'<strong>聯絡人</strong>或<strong>捐款</strong>。"
+msgstr "為您的特定募款頁建立一組欄位，收集您需要的資訊，'用於'<strong>聯絡人</strong>或<strong>捐款</strong>。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/Custom.hlp
 #: templates/CRM/Event/Form/ManageEvent/Registration.hlp
 msgid "Add your field(s) this custom field group."
-msgstr "在這一組自定欄位中，加入您自定的欄位。"
+msgstr "在這一組欄位中，加入您自定的欄位。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/Custom.hlp
 msgid "Create a profile (e.g. 'Contribution Information')."
@@ -26069,7 +26069,7 @@ msgstr "將您的自訂欄位加入至此資料表單，以做為資料表單的
 
 #: templates/CRM/Contribute/Form/ContributionPage/Custom.hlp
 msgid "Return to this screen (<strong>Administer CiviCRM &raquo; Manage Contribution Page &raquo; Configure &raquo; Custom Elements</strong>) and select your profile."
-msgstr "返回到此畫面（<strong>CiviCRM管理員&raquo; 管理募款頁&raquo; 設定&raquo; 自定元素</strong>），並選擇您的資料表單。"
+msgstr "返回到此畫面（<strong>CiviCRM管理員&raquo; 管理募款頁&raquo; 設定&raquo; 元素</strong>），並選擇您的資料表單。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/Custom.hlp
 #: templates/CRM/Event/Form/ManageEvent/Registration.hlp
@@ -26079,7 +26079,7 @@ msgstr "更多關於建立%1及%2的詳情，請參考線上說明文件。"
 #: templates/CRM/Contribute/Form/ContributionPage/Custom.hlp
 #: templates/CRM/Event/Form/ManageEvent/Registration.hlp
 msgid "custom fields"
-msgstr "自定欄位"
+msgstr "欄位"
 
 #: templates/CRM/Contribute/Form/ContributionPage/Custom.hlp
 #: templates/CRM/Event/Form/ManageEvent/Registration.hlp
@@ -26128,7 +26128,7 @@ msgstr "若您要讓組織的管理者收到個人募款頁的通知信，請在
 
 #: templates/CRM/Contribute/Form/ContributionPage/PCP.hlp
 msgid "The Supporter Profile is used to collect or update basic information (e.g. name and email address) from users while they are creating a Personal Campaign Page. The profile you select must be configured with 'Account creation required' (under Profile Settings &raquo; Advanced Settings). You must include an Email address field - and you may include any number of other fields in the profile. If you don't yet have an appropriate Profile configured, you will need to <a href='%1'>create one first</a>, and then return to this form to select it."
-msgstr "在您的支持者建立他的個人募款頁時，申請頁面中嵌入支持者個人資料表單，可用來收集或更新支持者的基本資料（例如姓名、電子郵件地址）。您必須預先在「管理員>自定>個人資料表單」下建立一個「個人資料表單」（建議：此個人資料表單可能的名稱為「建立帳號」），才能在這個選單選用。個人資料表單必須包括一個Email郵件地址欄位，與其他您想收集的個人資料。若您尚未設置適用的個人資料表單，您必須先<a href='%1'>建立一個</a>，然後回到此頁面重新選擇它。"
+msgstr "在您的支持者建立他的個人募款頁時，申請頁面中嵌入支持者個人資料表單，可用來收集或更新支持者的基本資料（例如姓名、電子郵件地址）。您必須預先在「管理員>>個人資料表單」下建立一個「個人資料表單」（建議：此個人資料表單可能的名稱為「建立帳號」），才能在這個選單選用。個人資料表單必須包括一個Email郵件地址欄位，與其他您想收集的個人資料。若您尚未設置適用的個人資料表單，您必須先<a href='%1'>建立一個</a>，然後回到此頁面重新選擇它。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/PCP.hlp
 msgid "Can the 'owner' of a Personal Campaign Page use the Tell-a-Friend function to send emails to people inviting them to visit their page and make a contribution? NOTE: Tell a Friend emails will automatically include a link to the sender's campaign page."
@@ -26162,7 +26162,7 @@ msgstr "允許使用者建立他們自己的個人募款頁，連結到此募款
 
 #: templates/CRM/Contribute/Form/ContributionPage/Premium.tpl
 msgid "Edit <strong>Premiums Settings</strong> to enable the Premiums section for this Online Contribution Page, and customize the title and introductory message (e.g ...in appreciation of your support, you will be able to select from a number of exciting thank-you gifts...). You can optionally provide a contact email address and/or phone number for inquiries."
-msgstr "編輯 <strong>感謝禮設定</strong>以啓用這個獻上募款頁面的感謝禮區域，及自定標題及介紹訊息(例如…感謝您的支持，您可從致謝感謝禮中選擇…)。您可以選擇提供一個聯絡人Email及/或電話號碼以作查詢。"
+msgstr "編輯 <strong>感謝禮設定</strong>以啓用這個獻上募款頁面的感謝禮區域，及標題及介紹訊息(例如…感謝您的支持，您可從致謝感謝禮中選擇…)。您可以選擇提供一個聯絡人Email及/或電話號碼以作查詢。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/Premium.tpl
 msgid "Then select and review the premiums that you want to offer on this contribution page."
@@ -26232,7 +26232,7 @@ msgstr "若你允許捐款者讓該筆捐款用其他人之名義捐贈，請勾
 
 #: templates/CRM/Contribute/Form/ContributionPage/Settings.tpl
 msgid "This is the first step in creating a new online Contribution Page. You can create one or more different Contribution Pages for different purposes, audiences, campaigns, etc. Each page can have it's own introductory message, pre-configured contribution amounts, custom data collection fields, etc."
-msgstr "這是建立新的線上募款頁面的第一個步驟。您可以建立一個或更多不同的募款頁給不同的計劃、觀眾、募款等。每一頁可以有自己的介紹訊息、預設捐款金額、自定數據收集欄位等。"
+msgstr "這是建立新的線上募款頁面的第一個步驟。您可以建立一個或更多不同的募款頁給不同的計劃、觀眾、募款等。每一頁可以有自己的介紹訊息、預設捐款金額、數據收集欄位等。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/Settings.tpl
 msgid "In this step, you will configure the page title, contribution type (donation, campaign contribution, etc.), goal amount, and introductory message. You will be able to go back and modify all aspects of this page at any time after completing the setup wizard."
@@ -26276,7 +26276,7 @@ msgstr "當您的頁是啓用狀態，您可使用選單管理，建立前端連
 
 #: templates/CRM/Contribute/Form/ContributionPage/ThankYou.tpl
 msgid "Use this form to configure the thank-you message and receipting options. Contributors will see a confirmation and thank-you page after whenever an online contribution is successfully processed. You provide the content and layout of the thank-you section below. You also control whether an electronic receipt is automatically emailed to each contributor - and can add a custom message to that receipt."
-msgstr "使用此表格去設置致謝訊息及收據選項。捐款人會在線上捐款完成後，看到一個確認及致謝頁面。您在下方提供致謝部分的格式及設計。您亦控制電子收據是否自動地Email到每一個捐款人 - 及可以在收據中加入自定訊息。"
+msgstr "使用此表格去設置致謝訊息及收據選項。捐款人會在線上捐款完成後，看到一個確認及致謝頁面。您在下方提供致謝部分的格式及設計。您亦控制電子收據是否自動地Email到每一個捐款人 - 及可以在收據中加入訊息。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/ThankYou.tpl
 msgid "This title will be displayed at the top of the thank-you / transaction confirmation page."
@@ -27120,7 +27120,7 @@ msgstr "為您的募款頁面啓用感謝禮功能（捐款感謝禮，贈送禮
 
 #: templates/CRM/Contribute/Page/ContributionPageEdit.tpl
 msgid "Test-drive the entire contribution process - including custom fields, confirmation, thank-you page, and receipting. Transactions will be directed to your payment processor's test server. <strong>No live financial transactions will be submitted. However, a contact record will be created or updated and a test contribution record will be saved to the database. Use obvious test contact names so you can review and delete these records as needed. Test contributions are not visible on the Contributions tab, but can be viewed by searching for 'Test Contributions' in the CiviContribute search form.</strong>"
-msgstr "提供一個測試用的募款頁面，讓您可以測試整個募款頁的流程 - 包括自定欄位、捐款確認信、致謝頁，及製作收據。在這個測試頁面中所進行的交易，會被指引到您租用的金流服務商提供的測試伺服器。<strong>也就是說，在測試捐款頁所作的交易不會正式成立。但是測試的交易仍會被紀錄在測試的聯絡人檔案中，測試的捐款也會記錄在資料庫中。建議您，註冊一個測試帳號（需容易辨別此帳號為測試用），以在您需要時查看或要刪除測試記錄時更容易找到。在個別聯絡人頁面裡的捐款頁簽，您不會看到測試的捐款紀錄，但您可以透過在Civi捐款搜尋表格搜尋「測試捐款」看到測試資料。</strong>"
+msgstr "提供一個測試用的募款頁面，讓您可以測試整個募款頁的流程 - 包括欄位、捐款確認信、致謝頁，及製作收據。在這個測試頁面中所進行的交易，會被指引到您租用的金流服務商提供的測試伺服器。<strong>也就是說，在測試捐款頁所作的交易不會正式成立。但是測試的交易仍會被紀錄在測試的聯絡人檔案中，測試的捐款也會記錄在資料庫中。建議您，註冊一個測試帳號（需容易辨別此帳號為測試用），以在您需要時查看或要刪除測試記錄時更容易找到。在個別聯絡人頁面裡的捐款頁簽，您不會看到測試的捐款紀錄，但您可以透過在Civi捐款搜尋表格搜尋「測試捐款」看到測試資料。</strong>"
 
 #: templates/CRM/Contribute/Page/ContributionPageEdit.tpl
 msgid "Live Contribution Page"
@@ -27145,7 +27145,7 @@ msgstr "Civi捐款管理文件"
 #: templates/CRM/Contribute/Page/ContributionPage.hlp
 #: templates/CRM/Contribute/Page/ContributionPage.tpl
 msgid "CiviContribute allows you to create and maintain any number of Online Contribution Pages. You can create different pages for different programs or campaigns - and customize text, amounts, types of information collected from contributors, etc."
-msgstr "Civi捐款幫助您建立及維護線上捐款活動頁面。您可為個別計畫或募款建立不同的募款頁面 - 及自定文字、金額、從捐款者收集的資料等。"
+msgstr "Civi捐款幫助您建立及維護線上捐款活動頁面。您可為個別計畫或募款建立不同的募款頁面 - 及文字、金額、從捐款者收集的資料等。"
 
 #: templates/CRM/Contribute/Page/ContributionPage.hlp
 msgid "For existing pages"
@@ -27267,11 +27267,11 @@ msgstr "沒有捐款類別被輸入。您可以<a href='%1'>新增一個</a>。"
 
 #: templates/CRM/Contribute/Page/DashBoard.hlp
 msgid "CiviContribute allows you to create customized page(s) for collecting online contributions. You can also input and track offline contributions. To enter contributions manually for individual contacts, use <a href='%1'>Find Contacts</a> to locate the contact. Then click <strong>View</strong> to go to their summary page and click on the <strong>New Contribution</strong> link. You can also <a href='%2'>import batches of offline contributions</a> from other sources."
-msgstr "Civi捐款可讓您建立並自定一個線上捐款頁面。您也可以輸入並追蹤非線上的捐款。利用<a href='%1'>搜尋聯絡人</a>找出聯絡人，接著點擊<strong>檢視</strong>他們的總覽頁面，再點擊<strong>新增募款頁</strong>，即可以手動輸入聯絡人的捐款紀錄。您也可以直接使用<a href='%2'>匯入的方式輸入非線上的捐款資料</a>。 "
+msgstr "Civi捐款可讓您建立並一個線上捐款頁面。您也可以輸入並追蹤非線上的捐款。利用<a href='%1'>搜尋聯絡人</a>找出聯絡人，接著點擊<strong>檢視</strong>他們的總覽頁面，再點擊<strong>新增募款頁</strong>，即可以手動輸入聯絡人的捐款紀錄。您也可以直接使用<a href='%2'>匯入的方式輸入非線上的捐款資料</a>。 "
 
 #: templates/CRM/Contribute/Page/DashBoard.hlp
 msgid "The <strong>Contribution Summary</strong> table provides a summary of month and year-to-date contribution totals, and includes shortcuts to view the contribution details for these commonly used search periods. To run your own customized searches - click <a href='%1'>Find Contributions</a>. You can search by Contributor Name, Amount Range, and a variety of other criteria."
-msgstr "<strong>捐款概況</strong>表格提供一個每月概況及年到日的捐款總金額，及包括捷徑去為這些常常被使用的搜尋期限查看捐款詳情。去執行您的自定化搜尋 -  按<a href='%1'>搜尋捐款</a>。您可以用捐款人名稱、金額範圍、及多種其他條件。"
+msgstr "<strong>捐款概況</strong>表格提供一個每月概況及年到日的捐款總金額，及包括捷徑去為這些常常被使用的搜尋期限查看捐款詳情。去執行您的化搜尋 -  按<a href='%1'>搜尋捐款</a>。您可以用捐款人名稱、金額範圍、及多種其他條件。"
 
 #: templates/CRM/Contribute/Page/DashBoard.tpl
 #: templates/CRM/Member/Page/MembershipType.tpl
@@ -27784,7 +27784,7 @@ msgstr ""
 
 #: templates/CRM/Custom/Page/Group.hlp
 msgid "NOTE: This setting applies only to custom sets used for Contact records (e.g. Individuals, Households, Organizations, or ALL contact types)."
-msgstr "註記：此設定只適用於自定群組，用作聯絡人記錄（例如：個人、家庭、組織、或所有聯絡人類別）。"
+msgstr "註記：此設定只適用於群組，用作聯絡人記錄（例如：個人、家庭、組織、或所有聯絡人類別）。"
 
 #: templates/CRM/Custom/Page/Group.hlp
 msgid "Select the type of record that this set of custom fields is applicable for. You can configure custom data for a specific type of contact (e.g. Individuals but NOT Organizations), ANY type of contact, or other record types such as activities, contributions, memberships and event participants."
@@ -27805,7 +27805,7 @@ msgstr "勾選此核取方塊，可讓您為聯絡人輸入多個設定值。"
 #: templates/CRM/Custom/Page/Group.hlp
 msgid "<strong>EXAMPLE:</strong> When creating a set of custom fields used to collect <strong>Employment History</strong> - you might have fields for Job Title, Start Date, End Date, and Reason for Leaving. Checking the \"multiple records\" box allows you to collect information for multiple jobs."
 msgstr ""
-"<strong>例子：</strong>當建立自定欄位群組，用作收集<strong>雇員歷史</strong> - 您可能會有\n"
+"<strong>例子：</strong>當建立欄位群組，用作收集<strong>雇員歷史</strong> - 您可能會有\n"
 "職稱、開始日期、結束日期，及離職原因等欄位。勾選 \"multiple records\"核取方塊，可讓您收集多個工作的相關資訊。"
 
 #: templates/CRM/Custom/Page/Group.hlp
@@ -27834,7 +27834,7 @@ msgstr "如果您想在記錄數目設定一個指定限額。輸入那個數字
 
 #: templates/CRM/Custom/Page/Group.hlp
 msgid "Weight controls the order in which custom field sets are presented when there are more than one. Enter a positive or negative integer - lower numbers are displayed ahead of higher numbers."
-msgstr "權重可控制多個自定資料群組的出現次序。您可輸入正整數或負整數 - 數值越小，出現依序越高。"
+msgstr "權重可控制多個資料群組的出現次序。您可輸入正整數或負整數 - 數值越小，出現依序越高。"
 
 #: templates/CRM/Custom/Page/Group.hlp
 msgid "Check this box if you want only the title for this fieldset to be displayed when the page is initially loaded (fields are hidden)."
@@ -27866,11 +27866,11 @@ msgstr "所有聯絡類別"
 
 #: templates/CRM/Custom/Page/Group.tpl
 msgid "Add Set of Custom Fields"
-msgstr "自定資料欄位集"
+msgstr "資料欄位集"
 
 #: templates/CRM/Custom/Page/Group.tpl
 msgid "No custom data groups have been created yet. You can <a href='%1'>add one</a>."
-msgstr "沒有自訂資料群組被建立。您可以<a href='%1'>新增一個</a>。"
+msgstr "沒有自訂欄位群組被建立。您可以<a href='%1'>新增一個</a>。"
 
 #: templates/CRM/Custom/Page/Option.tpl
 msgid "These Multiple Choice Options are shared by the following custom fields: %1"
@@ -27904,7 +27904,7 @@ msgstr "活動費用級別（如適用）。"
 #: templates/CRM/Event/Form/EventFees.tpl
 #: templates/CRM/Member/Form/MembershipRenewal.tpl
 msgid "Check this box to enter payment information. You will also be able to generate a customized receipt."
-msgstr "勾選此框以輸入付款資料。您也能產生一個自定的收據。"
+msgstr "勾選此框以輸入付款資料。您也能產生一個的收據。"
 
 #: templates/CRM/Event/Form/EventFees.tpl
 msgid "Payment Information"
@@ -28043,7 +28043,7 @@ msgstr "如果你發現你正在建立多個類似的活動設定，你可以使
 
 #: templates/CRM/Event/Form/ManageEvent/EventInfo.tpl
 msgid "After selecting an Event Type, this page will display any custom event fields for that type."
-msgstr "選擇活動類型之後，將在此頁面顯示與此活動類型相關的自定欄位。"
+msgstr "選擇活動類型之後，將在此頁面顯示與此活動類型相關的欄位。"
 
 #: templates/CRM/Event/Form/ManageEvent/EventInfo.tpl
 msgid "Please use only alphanumeric, spaces, hyphens and dashes for event names."
@@ -28151,15 +28151,15 @@ msgstr "在參加者完成報名程序之前，您可能還需要將活動配置
 
 #: templates/CRM/Event/Form/ManageEvent/Registration.hlp
 msgid "If you want collect additional information during event registration, you will need to configure one or two CiviCRM Profiles - which are collections of standard or custom fields. For event registration, you may need to collect additional information specific to a person's <strong>participation</strong> in an Event. Examples include meal and/or volunteer preferences."
-msgstr "如果您希望收集活動報名者額外的個人資訊，您必須設定一或兩組的「CiviCRM資料表單」- 也就是可以透過系統預設或自定的欄位來收集報名者的個人資訊。在活動報名時，您可能需要收集特定<strong>參加者</strong>更詳盡的個人資訊，例如飲食偏好以及成為志工意願調查等。"
+msgstr "如果您希望收集活動報名者額外的個人資訊，您必須設定一或兩組的「CiviCRM資料表單」- 也就是可以透過系統預設或的欄位來收集報名者的個人資訊。在活動報名時，您可能需要收集特定<strong>參加者</strong>更詳盡的個人資訊，例如飲食偏好以及成為志工意願調查等。"
 
 #: templates/CRM/Event/Form/ManageEvent/Registration.hlp
 msgid "If you haven't already configured custom fields and a profile for this, you can save this screen without selecting a Profile, complete the steps below and then return to <strong>Manage Events</strong> and select your new profile."
-msgstr "如果您尚未設定「資料表單」，您可以先不要加入任何資料表單，在完成活動報名的相關設定之後，再依循下列的步驟建立自定的資料表單，然後再按<strong>管理活動</strong>，將新建立的資料表單加入至活動報名表單內。"
+msgstr "如果您尚未設定「資料表單」，您可以先不要加入任何資料表單，在完成活動報名的相關設定之後，再依循下列的步驟建立的資料表單，然後再按<strong>管理活動</strong>，將新建立的資料表單加入至活動報名表單內。"
 
 #: templates/CRM/Event/Form/ManageEvent/Registration.hlp
 msgid "Create a custom field group which is 'Used for' <strong>Participants</strong>."
-msgstr "為<strong>參加者</strong>建立自定欄位群組。"
+msgstr "為<strong>參加者</strong>建立欄位群組。"
 
 #: templates/CRM/Event/Form/ManageEvent/Registration.hlp
 msgid "Create a profile (e.g. 'Participant Information')."
@@ -28215,11 +28215,11 @@ msgstr "活動報名頁面的頁尾訊息（可選）。"
 
 #: templates/CRM/Event/Form/ManageEvent/Registration.tpl
 msgid "Include additional fields on this registration form by configuring and selecting a CiviCRM Profile to be included at the top of the page (immediately after the introductory message)."
-msgstr "在報名表單的頁首加入額外的個人資料欄位，可在「CiviCRM資料表單」自定資料表單，並設定表單內的欄位（會出現介紹文字之後）。"
+msgstr "在報名表單的頁首加入額外的個人資料欄位，可在「CiviCRM資料表單」資料表單，並設定表單內的欄位（會出現介紹文字之後）。"
 
 #: templates/CRM/Event/Form/ManageEvent/Registration.tpl
 msgid "Include additional fields on this registration form by configuring and selecting a CiviCRM Profile to be included at the bottom of the page."
-msgstr "在報名表單的頁尾加入額外的個人資料欄位，可在「CiviCRM資料表單」自定資料表單，並設定表單內的欄位。"
+msgstr "在報名表單的頁尾加入額外的個人資料欄位，可在「CiviCRM資料表單」資料表單，並設定表單內的欄位。"
 
 #: templates/CRM/Event/Form/ManageEvent/Registration.tpl
 msgid "Change this if you want to use a different profile for additional participants."
@@ -28335,7 +28335,7 @@ msgstr "測試"
 
 #: templates/CRM/Event/Form/ManageEvent/Tab.hlp
 msgid "Test-drive the entire online registration process - including custom fields, confirmation, thank-you page, and receipting. Fee payment transactions will be directed to your payment processor's test server. <strong>No live financial transactions will be submitted. However, a contact record will be created or updated and participant and contribution records will be saved to the database. Use obvious test contact names so you can review and delete these records as needed.</strong>"
-msgstr "測試整個線上報名過程 - 包括自定欄位、確認頁面、致謝頁面及收據。所有費用付款交易會交由金流機制設定中的測試伺服器處理。<strong>在測試線上報名過程中，不會產生或支付實際的費用。但是，測試時所輸入的參加者記錄及捐款記錄（即活動費用付款記錄）仍會被儲存到資料庫。您可以使用明顯易辨的測試聯絡人姓名，以便您可容易察看或刪除這些測試紀錄。</strong>"
+msgstr "測試整個線上報名過程 - 包括欄位、確認頁面、致謝頁面及收據。所有費用付款交易會交由金流機制設定中的測試伺服器處理。<strong>在測試線上報名過程中，不會產生或支付實際的費用。但是，測試時所輸入的參加者記錄及捐款記錄（即活動費用付款記錄）仍會被儲存到資料庫。您可以使用明顯易辨的測試聯絡人姓名，以便您可容易察看或刪除這些測試紀錄。</strong>"
 
 #: templates/CRM/Event/Form/ManageEvent/Tab.hlp
 msgid "live"
@@ -29086,7 +29086,7 @@ msgstr "<strong>匯出主要欄位</strong>提供最常使用的資料值。此�
 
 #: templates/CRM/Export/Form/Select.tpl
 msgid "Click <strong>Select fields for export</strong> and then <strong>Continue</strong> to choose a subset of fields for export. This option allows you to export multiple specific locations (Home, Work, etc.) as well as custom data. You can also save your selections as a 'field mapping' so you can use it again later."
-msgstr "按<strong>選擇匯出欄位</strong>然後<strong>繼續<strong>選擇匯出集合欄位。此選項允許您匯出多個指定地點(家中、工作等)和自訂資料。您可儲存您的選擇為'欄位配對'所以您可以之後再次使用它。"
+msgstr "按<strong>選擇匯出欄位</strong>然後<strong>繼續<strong>選擇匯出集合欄位。此選項允許您匯出多個指定地點(家中、工作等)和自訂欄位。您可儲存您的選擇為'欄位配對'所以您可以之後再次使用它。"
 
 #: templates/CRM/Export/Form/Select.tpl
 msgid "One record selected for export."
@@ -29239,7 +29239,7 @@ msgstr "撥款概況"
 
 #: templates/CRM/Grant/Page/DashBoard.tpl
 msgid "This table provides a summary of <strong>Grant Totals</strong>, and includes shortcuts to view the Grant details for these commonly used search periods. Click the Grant Status to see a list of Contacts for that grant status. To run your own customized searches - click <a href='%1'>Find Grants</a>. You can search by Contact Name, Amount, Grant type and a variety of other criteria."
-msgstr "此表格提供一個<strong>總撥款</strong>概況，及包括捷徑去為這些經常使用的搜尋期限查看撥款。按撥款狀態去看那個撥款狀態的聯絡人列表。要執行您的自定搜尋 - 按<a href='%1'>尋找撥款</a>。您可以以聯絡人姓名、金額、撥款類別及多種其他條件來搜尋。"
+msgstr "此表格提供一個<strong>總撥款</strong>概況，及包括捷徑去為這些經常使用的搜尋期限查看撥款。按撥款狀態去看那個撥款狀態的聯絡人列表。要執行您的搜尋 - 按<a href='%1'>尋找撥款</a>。您可以以聯絡人姓名、金額、撥款類別及多種其他條件來搜尋。"
 
 #: templates/CRM/Grant/Page/DashBoard.tpl
 msgid "Grant status"
@@ -30692,7 +30692,7 @@ msgstr "會員狀態"
 
 #: templates/CRM/Member/Page/MembershipStatus.tpl
 msgid "There are no custom membership status entered. You can <a href='%1'>add one</a>."
-msgstr "沒有自定的會籍狀態被輸入。您可以<a href='%1'>新增一個</a>。"
+msgstr "沒有的會籍狀態被輸入。您可以<a href='%1'>新增一個</a>。"
 
 #: templates/CRM/Member/Page/MembershipType.hlp
 msgid "Use the <strong>Relationship Type</strong> field to configure Membership Types where memberships are automatically granted to related contacts. Examples are listed below:"
@@ -31797,7 +31797,7 @@ msgstr ""
 
 #: templates/CRM/UF/Page/Group.hlp
 msgid "<strong>CiviContribute</strong> - When you want to collect information from Contributors via online contribution pages, you can create a profile and link it to to your contribution page as a 'custom page element' (<a href='%1'>Configure Online Contribution Pages</a>)."
-msgstr "<strong>Civi捐款</strong> - 當您想透過線上募款頁收集捐款人資料，您可以建立一個資料表單，以連結到您的募款頁並設定為「自定頁元素」（<a href='%1'>設定線上募款頁</a>）。"
+msgstr "<strong>Civi捐款</strong> - 當您想透過線上募款頁收集捐款人資料，您可以建立一個資料表單，以連結到您的募款頁並設定為「頁元素」（<a href='%1'>設定線上募款頁</a>）。"
 
 #: templates/CRM/UF/Page/Group.hlp
 msgid "<strong>Contact Search and Listings</strong> - When you want to provide a search form and search result listings for some or all of your contacts you can create a profile with the desired search fields and link users to the path for that search form. When creating a link to search and listings profiles, add the corresponding profile ID to the end of your query string using the 'gid' parameter. For example, the link to display a search and listings page for a Profile with ID = 3 would be:"
@@ -32655,7 +32655,7 @@ msgstr "您確定您想刪除此對應？此操作無法回復。"
 
 #: CRM/Admin/Page/MessageTemplates.php
 msgid "Are you sure you want to revert this template to the default for this workflow? You will lose any customizations you have made.\\n\\nWe recommend that you save a copy of the your customized Text and HTML message content to a text file before reverting so you can combine your changes with the system default messages as needed."
-msgstr "您確定要將這個範本到這個工作流程的預設？所有的自定設定將會消失。\\n\\n我們建議您在執行回復前，先備份這些HTML和文字訊息，使您所做的更動可以回復。"
+msgstr "您確定要將這個範本到這個工作流程的預設？所有的設定將會消失。\\n\\n我們建議您在執行回復前，先備份這些HTML和文字訊息，使您所做的更動可以回復。"
 
 #: CRM/Auction/Form/Auction.php
 msgid "Auction Title"
@@ -32991,7 +32991,7 @@ msgstr "往下一天"
 
 #: CRM/Custom/Form/Group.php
 msgid "New Custom Data Group"
-msgstr "新的自訂資料群組"
+msgstr "新的自訂欄位群組"
 
 #: CRM/Custom/Form/Group.php
 msgid "You need to select the type of record that this group of custom fields is applicable for."
@@ -33011,23 +33011,23 @@ msgstr "進階搜尋中將此群組收合"
 
 #: CRM/Custom/Form/Group.php
 msgid "Is this Custom Data Group active?"
-msgstr "此自訂資料群組是否在啟用中？"
+msgstr "此自訂欄位群組是否在啟用中？"
 
 #: CRM/Custom/Form/Group.php
 msgid "Does this Custom Data Group allow multiple records?"
-msgstr "此自訂資料群組是否允許多筆記錄？"
+msgstr "此自訂欄位群組是否允許多筆記錄？"
 
 #: CRM/Custom/Form/Group.php
 msgid "Your custom data group '%1 ' has been saved."
-msgstr "已儲存您的自訂資料群組'%1'。"
+msgstr "已儲存您的自訂欄位群組'%1'。"
 
 #: CRM/Custom/Form/Group.php
 msgid "Your custom data group '%1' has been added. You can add custom fields to this group now."
-msgstr "已新增您的自訂資料群組'%1'。您現在可以增加自訂欄位到此群組。"
+msgstr "已新增您的自訂欄位群組'%1'。您現在可以增加自訂欄位到此群組。"
 
 #: CRM/Custom/Page/Group.php
 msgid "Preview Custom Data Group"
-msgstr "預覽自訂資料群組"
+msgstr "預覽自訂欄位群組"
 
 #: CRM/Custom/Page/Group.php
 msgid "Edit Custom Group"
@@ -33558,11 +33558,11 @@ msgstr "警告：刪除此自訂群組會遺失所有 '%1'資料。"
 
 #: templates/CRM/Custom/Form/Field.tpl drupal/modules/views/civicrm.views.inc
 msgid "Custom Data Field"
-msgstr "自訂資料欄位"
+msgstr "自訂欄位欄位"
 
 #: templates/CRM/Custom/Form/Group.tpl
 msgid "Custom Data Group"
-msgstr "自訂資料群組"
+msgstr "自訂欄位群組"
 
 #: templates/CRM/Custom/Form/Group.tpl
 msgid "Use Custom Data Groups to add sets of logically related fields to a specific type of CiviCRM record (e.g. contact records, contribution records, etc.)."
@@ -34008,7 +34008,7 @@ msgstr "週期頻率單位"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Custom Data Type"
-msgstr "自訂資料類型"
+msgstr "自訂欄位類型"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Mail Protocol"
@@ -35000,7 +35000,7 @@ msgstr "搜尋聯絡人 - 進階搜尋"
 
 #: xml/templates/civicrm_navigation.tpl
 msgid "Custom Searches..."
-msgstr "自定搜尋 ... "
+msgstr "搜尋 ... "
 
 #: xml/templates/civicrm_navigation.tpl
 msgid "Contacts by Date Added"
@@ -35658,7 +35658,7 @@ msgid ""
 "Contact subtypes are especially useful when you need to collect and display different sets of custom data for different types of contacts."
 msgstr ""
 "CiviCRM 提供三種主要的聯絡人類型（內建）：個人，家庭，與組織。您可建立額外的類型，以進一步區別聯絡人（例如您可在基本類型之下建立學生、家長、職員與/或志工等\"subtypes\"...）您也可以重新命名這些內建的類型。\n"
-"聯絡人次類型在收集與展示不同類型聯絡人的自訂資料時特別有用。"
+"聯絡人次類型在收集與展示不同類型聯絡人的自訂欄位時特別有用。"
 
 #: templates/CRM/Admin/Page/MessageTemplates.hlp
 msgid "Message templates allow you to save and re-use messages with layouts. You can use them when sending email to one or more contacts. If you are using the CiviMail component - you can use templates for your messages. If you are using the CiviMember component, you will need to create one or more message templates for membership renewal reminders.\n"
@@ -35771,7 +35771,7 @@ msgid ""
 "    CiviEvent or CiviMember - you can also search based on information stored by these components. For example - you can find all contacts who live in a specific city\n"
 "    AND have contributed at least %1 within the past 6 months."
 msgstr ""
-"按<strong>快速搜尋</strong>，以地址、人口統計資料、自定欄位、筆記及/或關係搜尋。如果您使用Civi捐款\n"
+"按<strong>快速搜尋</strong>，以地址、人口統計資料、欄位、筆記及/或關係搜尋。如果您使用Civi捐款\n"
 "Civi活動或Civi會員 - 您也可以搜尋以這些模組儲存的資料。例如 - 您可以搜尋所有住在指定城市\n"
 "及在近6個月至少捐款％１的聯絡人。"
 
@@ -35864,7 +35864,7 @@ msgstr ""
 
 #: templates/CRM/Custom/Page/Group.hlp
 msgid "NOTE: This setting applies only to custom groups used for Contact records (e.g. Individuals, Households, Organizations, or ALL contact types)."
-msgstr "註記：此設定只適用於自定群組，用作聯絡人記錄（例如：個人、家庭、組織、或所有聯絡人類別）。"
+msgstr "註記：此設定只適用於群組，用作聯絡人記錄（例如：個人、家庭、組織、或所有聯絡人類別）。"
 
 #: templates/CRM/Custom/Page/Group.hlp
 msgid "Select the type of record that this group of custom fields is applicable for. You can configure custom data for a specific type of contact (e.g. Individuals but NOT Organizations), ANY type of contact, or other record types such as activities, contributions, memberships and event participants."
@@ -35879,7 +35879,7 @@ msgid ""
 "<strong>EXAMPLE:</strong> When creating a group of custom fields used to collect <strong>Employment History</strong> - you might have fields\n"
 "    for Job Title, Start Date, End Date, and Reason for Leaving. Checking the \"multiple records\" box allows you to collect information for multiple jobs."
 msgstr ""
-"<strong>例子：</strong>當建立自定欄位群組，用作收集<strong>雇員歷史</strong> - 您可能會有\n"
+"<strong>例子：</strong>當建立欄位群組，用作收集<strong>雇員歷史</strong> - 您可能會有\n"
 "職稱、開始日期、結束日期，及離職原因等欄位。勾選 \"multiple records\"核取方塊，可讓您收集多個工作的相關資訊。"
 
 #: templates/CRM/Custom/Page/Group.hlp
@@ -35890,7 +35890,7 @@ msgstr "您也可以設定可以記錄每一個聯絡人的最多記錄數目。
 
 #: templates/CRM/Custom/Page/Group.hlp
 msgid "Weight controls the order in which custom data groups are presented when there are more than one. Enter a positive or negative integer - lower numbers are displayed ahead of higher numbers."
-msgstr "權重可控制多個自定資料群組的出現次序。您可輸入正整數或負整數 - 數值越小，出現依序越高。"
+msgstr "權重可控制多個資料群組的出現次序。您可輸入正整數或負整數 - 數值越小，出現依序越高。"
 
 #: templates/CRM/Event/Form/ManageEvent/EventInfo.hlp
 msgid ""
@@ -39030,7 +39030,7 @@ msgstr "在 <a href=\"!1\">CiviCRM &raquo; 管理 &raquo; 任務類型</a>裡新
 
 #: drupal/civicrm.module
 msgid "create or administer custom data fields (e.g. volunteer skills, emergency contact info...) <a href=\"!1\">CiviCRM &raquo; Administer &raquo; Custom Data</a>."
-msgstr "在 <a href=\"!1\">CiviCRM &raquo; 管理 &raquo; 自訂資料</a>裡新增或管理自訂資料欄位（例如志工技能、緊急聯絡資訊...）"
+msgstr "在 <a href=\"!1\">CiviCRM &raquo; 管理 &raquo; 自訂欄位</a>裡新增或管理自訂欄位欄位（例如志工技能、緊急聯絡資訊...）"
 
 #: drupal/civicrm.module
 msgid "create or administer CiviCRM profiles (i.e. what contact data is collected during user registration and included in My Account) at <a href=\"!1\">CiviCRM &raquo; Administer &raquo; CiviCRM Profiles</a>."
