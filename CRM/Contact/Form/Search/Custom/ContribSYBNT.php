@@ -84,7 +84,6 @@ implements CRM_Contact_Form_Search_Interface {
     }
         
     function buildForm( &$form ) {
-        
         foreach ( $this->_amounts as $name => $title ) {
             $form->add( 'text',
                         $name,

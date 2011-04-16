@@ -39,6 +39,11 @@
             {assign var=pageType value="Pledge Information page"}
             {ts}Tell a Friend gives registering pledge signers an easy way to spread the word about this pledge. The registration thank-you page will include a link to a form where they can enter their friends' email addresses, along with a personalized message. CiviCRM will record these solicitation activities, and will add the friends to your database.{/ts}	
         {/if}
+         {php}
+         $vars = $this->get_template_vars();
+         $this->assign('pageType', ts($vars['pageType']));
+         $this->assign('enduser', ts($vars['enduser']));
+         {/php}
 </div>  
    <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>
     <table class="form-layout">

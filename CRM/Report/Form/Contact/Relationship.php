@@ -158,16 +158,16 @@ class CRM_Report_Form_Contact_Relationship extends CRM_Report_Form {
                                array( 'title'        => ts( 'Relationship Status' ),
                                       'operatorType' => CRM_Report_Form::OP_SELECT,
                                       'options'      => 
-                                      array( ''  => '- Any -',
-                                             1   => 'Active',
-                                             0   => 'Inactive',
+                                      array( ''  => ts('- Any -'),
+                                             1   => ts('Active'),
+                                             0   => ts('Inactive'),
                                              ), 
                                       'type'     => CRM_Utils_Type::T_INT ),
                                'relationship_type_id' =>
                                array( 'title'        => ts( 'Relationship' ),
                                       'operatorType' => CRM_Report_Form::OP_SELECT,
                                       'options'      => 
-                                      array( ''     => '- any relationship type -') +
+                                      array( ''     => ts('- any relationship type -')) +
                                       CRM_Contact_BAO_Relationship::getContactRelationshipType( null, 'null', null, null, true),
                                       'type'        => CRM_Utils_Type::T_INT
                                       ),

@@ -37,10 +37,10 @@
      <page_type>1</page_type>
   </item>
   <item>
-    <path>civicrm/contact/image</path>
-    <title>Process Uploaded Images</title>
-    <page_callback>CRM_Contact_BAO_Contact::processImage</page_callback>
-    <access_arguments>access uploaded files</access_arguments>
+     <path>civicrm/contact/image</path>
+     <title>Process Uploaded Images</title>
+     <page_callback>CRM_Contact_BAO_Contact::processImage</page_callback>
+     <access_arguments>access uploaded files</access_arguments>
   </item>
   <item>
      <path>civicrm/contact/search/basic</path>
@@ -236,19 +236,19 @@
     <path>civicrm/ajax/search</path>
     <page_callback>CRM_Contact_Page_AJAX::search</page_callback>
     <access_arguments>access CiviCRM</access_arguments>
-</item>
-<item>
+  </item>
+  <item>
      <path>civicrm/ajax/relation</path>
      <page_callback>CRM_Contact_Page_AJAX::relationship</page_callback>
      <access_arguments>access CiviCRM</access_arguments>
      <page_type>3</page_type>
-</item>
-<item>
+  </item>
+  <item>
      <path>civicrm/ajax/groupTree</path>
      <page_callback>CRM_Contact_Page_AJAX::groupTree</page_callback>
      <access_arguments>access CiviCRM</access_arguments>
-</item>
-<item>
+  </item>
+  <item>
      <path>civicrm/ajax/contact</path>
      <page_callback>CRM_Contact_Page_AJAX::contact</page_callback>
      <access_arguments>access CiviCRM</access_arguments>
@@ -257,87 +257,87 @@
      <path>civicrm/ajax/custom</path>
      <page_callback>CRM_Contact_Page_AJAX::customField</page_callback>
      <access_arguments>access CiviCRM</access_arguments>
-</item>
-<item>
+  </item>
+  <item>
      <path>civicrm/ajax/customvalue</path>
      <page_callback>CRM_Contact_Page_AJAX::deleteCustomValue</page_callback>
      <access_arguments>access CiviCRM</access_arguments>
      <page_type>3</page_type>
-</item>
-<item>
+  </item>
+  <item>
      <path>civicrm/ajax/ed</path>
      <page_callback>CRM_Contact_Page_AJAX::enableDisable</page_callback>
      <access_arguments>access CiviCRM</access_arguments>
      <page_type>3</page_type>
-</item>
-<item>
+  </item>
+  <item>
      <path>civicrm/ajax/cmsuser</path>
      <page_callback>CRM_Contact_Page_AJAX::checkUserName</page_callback>
      <access_callback>1</access_callback>
-</item>
-<item>
+  </item>
+  <item>
      <path>civicrm/ajax/checkemail</path>
      <page_callback>CRM_Contact_Page_AJAX::getContactEmail</page_callback>
      <access_callback>1</access_callback>
-</item>
-<item>
+  </item>
+  <item>
      <path>civicrm/ajax/auto</path>
      <page_callback>CRM_Contact_Page_AJAX::autocomplete</page_callback>
      <access_callback>1</access_callback>
-</item>
-<item>
+  </item>
+  <item>
      <path>civicrm/ajax/subtype</path>
      <page_callback>CRM_Contact_Page_AJAX::buildSubTypes</page_callback>
      <access_arguments>access CiviCRM</access_arguments>
-</item>
-<item>
+  </item>
+  <item>
      <path>civicrm/ajax/dashboard</path>
      <page_callback>CRM_Contact_Page_AJAX::dashboard</page_callback>
      <access_arguments>access CiviCRM</access_arguments>
      <page_type>3</page_type>
-</item>
-<item>
+  </item>
+  <item>
      <path>civicrm/ajax/signature</path>
      <page_callback>CRM_Contact_Page_AJAX::getSignature</page_callback>
      <access_arguments>access CiviCRM</access_arguments>
-</item>
-<item>
+  </item>
+  <item>
      <path>civicrm/ajax/relationshipcontacts</path>
      <page_callback>CRM_Contact_Page_AJAX::relationshipContacts</page_callback>
      <access_arguments>access CiviCRM</access_arguments>
-</item>
-<item>
-   <path>civicrm/dashlet/myCases</path>
-   <title>Case Dashlet</title>
-   <page_callback>CRM_Dashlet_Page_MyCases</page_callback>
-</item>
-<item>
-   <path>civicrm/dashlet/allCases</path>
-   <title>All Cases Dashlet</title>
-   <page_callback>CRM_Dashlet_Page_AllCases</page_callback>
-   <access_arguments>access all cases and activities</access_arguments>
-</item> 
-<item>
-   <path>civicrm/contact/deduperules</path>
-   <title>Find and Merge Duplicate Contacts</title>
-   <desc>Manage the rules used to identify potentially duplicate contact records. Scan for duplicates using a selected rule and merge duplicate contact data as needed.</desc>
-   <page_callback>CRM_Contact_Page_DedupeRules</page_callback>
-   <access_arguments>administer dedupe rules;merge duplicate contacts</access_arguments>
-   <adminGroup>Manage</adminGroup>
-   <icon>admin/small/duplicate_matching.png</icon>
-   <weight>105</weight>
-</item>
-<item>
-   <path>civicrm/contact/dedupefind</path>
-   <title>Find and Merge Duplicate Contacts</title>
-   <page_callback>CRM_Contact_Page_DedupeFind</page_callback>
-   <access_arguments>merge duplicate contacts</access_arguments>
-</item>
-<item>
-   <path>civicrm/dedupe/exception</path>
-   <title>Dedupe Exceptions</title>
-   <adminGroup>Manage</adminGroup>
-   <page_callback>CRM_Contact_Page_DedupeException</page_callback>
-   <weight>110</weight>
-</item>
+  </item>
+  <item>
+     <path>civicrm/dashlet/myCases</path>
+     <title>Case Dashlet</title>
+     <page_callback>CRM_Dashlet_Page_MyCases</page_callback>
+  </item>
+  <item>
+     <path>civicrm/dashlet/allCases</path>
+     <title>All Cases Dashlet</title>
+     <page_callback>CRM_Dashlet_Page_AllCases</page_callback>
+     <access_arguments>access all cases and activities</access_arguments>
+  </item> 
+  <item>
+     <path>civicrm/contact/deduperules</path>
+     <title>Find and Merge Duplicate Contacts</title>
+     <desc>Manage the rules used to identify potentially duplicate contact records. Scan for duplicates using a selected rule and merge duplicate contact data as needed.</desc>
+     <page_callback>CRM_Contact_Page_DedupeRules</page_callback>
+     <access_arguments>administer dedupe rules;merge duplicate contacts</access_arguments>
+     <adminGroup>Manage</adminGroup>
+     <icon>admin/small/duplicate_matching.png</icon>
+     <weight>105</weight>
+  </item>
+  <item>
+     <path>civicrm/contact/dedupefind</path>
+     <title>Find and Merge Duplicate Contacts</title>
+     <page_callback>CRM_Contact_Page_DedupeFind</page_callback>
+     <access_arguments>merge duplicate contacts</access_arguments>
+  </item>
+  <item>
+     <path>civicrm/dedupe/exception</path>
+     <title>Dedupe Exceptions</title>
+     <adminGroup>Manage</adminGroup>
+     <page_callback>CRM_Contact_Page_DedupeException</page_callback>
+     <weight>110</weight>
+  </item>
 </menu>

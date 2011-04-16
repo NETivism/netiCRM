@@ -51,6 +51,7 @@ class CRM_Contact_Form_Search_Custom_PostalMailing
     }
 
     function buildForm( &$form ) {
+
         $groups = array('' => ts('- select group -')) + CRM_Core_PseudoConstant::allGroup( );
         $form->addElement('select', 'group_id', ts('Group'), $groups);
         

@@ -1,0 +1,14964 @@
+# Copyright CiviCRM LLC (c) 2004-2010
+# This file is distributed under the same license as the CiviCRM package.
+# If you contribute heavily to a translation and deem your work copyrightable,
+# make sure you license it to CiviCRM LLC under Academic Free License 3.0.
+msgid ""
+msgstr ""
+"Project-Id-Version: CiviCRM 3.2\n"
+"POT-Creation-Date: 2011-04-16 01:33+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: CiviCRM Translators <civicrm-translators@lists.civicrm.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+msgctxt "province"
+msgid "Alabama"
+msgstr ""
+
+msgctxt "province"
+msgid "Alaska"
+msgstr ""
+
+msgctxt "province"
+msgid "Arizona"
+msgstr ""
+
+msgctxt "province"
+msgid "Arkansas"
+msgstr ""
+
+msgctxt "province"
+msgid "California"
+msgstr ""
+
+msgctxt "province"
+msgid "Colorado"
+msgstr ""
+
+msgctxt "province"
+msgid "Connecticut"
+msgstr ""
+
+msgctxt "province"
+msgid "Delaware"
+msgstr ""
+
+msgctxt "province"
+msgid "Florida"
+msgstr ""
+
+msgctxt "province"
+msgid "Georgia"
+msgstr ""
+
+msgctxt "province"
+msgid "Hawaii"
+msgstr ""
+
+msgctxt "province"
+msgid "Idaho"
+msgstr ""
+
+msgctxt "province"
+msgid "Illinois"
+msgstr ""
+
+msgctxt "province"
+msgid "Indiana"
+msgstr ""
+
+msgctxt "province"
+msgid "Iowa"
+msgstr ""
+
+msgctxt "province"
+msgid "Kansas"
+msgstr ""
+
+msgctxt "province"
+msgid "Kentucky"
+msgstr ""
+
+msgctxt "province"
+msgid "Louisiana"
+msgstr ""
+
+msgctxt "province"
+msgid "Maine"
+msgstr ""
+
+msgctxt "province"
+msgid "Maryland"
+msgstr ""
+
+msgctxt "province"
+msgid "Massachusetts"
+msgstr ""
+
+msgctxt "province"
+msgid "Michigan"
+msgstr ""
+
+msgctxt "province"
+msgid "Minnesota"
+msgstr ""
+
+msgctxt "province"
+msgid "Mississippi"
+msgstr ""
+
+msgctxt "province"
+msgid "Missouri"
+msgstr ""
+
+msgctxt "province"
+msgid "Montana"
+msgstr ""
+
+msgctxt "province"
+msgid "Nebraska"
+msgstr ""
+
+msgctxt "province"
+msgid "Nevada"
+msgstr ""
+
+msgctxt "province"
+msgid "New Hampshire"
+msgstr ""
+
+msgctxt "province"
+msgid "New Jersey"
+msgstr ""
+
+msgctxt "province"
+msgid "New Mexico"
+msgstr ""
+
+msgctxt "province"
+msgid "New York"
+msgstr ""
+
+msgctxt "province"
+msgid "North Carolina"
+msgstr ""
+
+msgctxt "province"
+msgid "North Dakota"
+msgstr ""
+
+msgctxt "province"
+msgid "Ohio"
+msgstr ""
+
+msgctxt "province"
+msgid "Oklahoma"
+msgstr ""
+
+msgctxt "province"
+msgid "Oregon"
+msgstr ""
+
+msgctxt "province"
+msgid "Pennsylvania"
+msgstr ""
+
+msgctxt "province"
+msgid "Rhode Island"
+msgstr ""
+
+msgctxt "province"
+msgid "South Carolina"
+msgstr ""
+
+msgctxt "province"
+msgid "South Dakota"
+msgstr ""
+
+msgctxt "province"
+msgid "Tennessee"
+msgstr ""
+
+msgctxt "province"
+msgid "Texas"
+msgstr ""
+
+msgctxt "province"
+msgid "Utah"
+msgstr ""
+
+msgctxt "province"
+msgid "Vermont"
+msgstr ""
+
+msgctxt "province"
+msgid "Virginia"
+msgstr ""
+
+msgctxt "province"
+msgid "Washington"
+msgstr ""
+
+msgctxt "province"
+msgid "West Virginia"
+msgstr ""
+
+msgctxt "province"
+msgid "Wisconsin"
+msgstr ""
+
+msgctxt "province"
+msgid "Wyoming"
+msgstr ""
+
+msgctxt "province"
+msgid "District of Columbia"
+msgstr ""
+
+msgctxt "province"
+msgid "American Samoa"
+msgstr ""
+
+msgctxt "province"
+msgid "Guam"
+msgstr ""
+
+msgctxt "province"
+msgid "Northern Mariana Islands"
+msgstr ""
+
+msgctxt "province"
+msgid "Puerto Rico"
+msgstr ""
+
+msgctxt "province"
+msgid "Virgin Islands"
+msgstr ""
+
+msgctxt "province"
+msgid "United States Minor Outlying Islands"
+msgstr ""
+
+msgctxt "province"
+msgid "Armed Forces Europe"
+msgstr ""
+
+msgctxt "province"
+msgid "Armed Forces Americas"
+msgstr ""
+
+msgctxt "province"
+msgid "Armed Forces Pacific"
+msgstr ""
+
+msgctxt "province"
+msgid "Alberta"
+msgstr ""
+
+msgctxt "province"
+msgid "British Columbia"
+msgstr ""
+
+msgctxt "province"
+msgid "Manitoba"
+msgstr ""
+
+msgctxt "province"
+msgid "New Brunswick"
+msgstr ""
+
+msgctxt "province"
+msgid "Newfoundland and Labrador"
+msgstr ""
+
+msgctxt "province"
+msgid "Northwest Territories"
+msgstr ""
+
+msgctxt "province"
+msgid "Nova Scotia"
+msgstr ""
+
+msgctxt "province"
+msgid "Nunavut"
+msgstr ""
+
+msgctxt "province"
+msgid "Ontario"
+msgstr ""
+
+msgctxt "province"
+msgid "Prince Edward Island"
+msgstr ""
+
+msgctxt "province"
+msgid "Quebec"
+msgstr ""
+
+msgctxt "province"
+msgid "Saskatchewan"
+msgstr ""
+
+msgctxt "province"
+msgid "Yukon Territory"
+msgstr ""
+
+msgctxt "province"
+msgid "Maharashtra"
+msgstr ""
+
+msgctxt "province"
+msgid "Karnataka"
+msgstr ""
+
+msgctxt "province"
+msgid "Andhra Pradesh"
+msgstr ""
+
+msgctxt "province"
+msgid "Arunachal Pradesh"
+msgstr ""
+
+msgctxt "province"
+msgid "Assam"
+msgstr ""
+
+msgctxt "province"
+msgid "Bihar"
+msgstr ""
+
+msgctxt "province"
+msgid "Chhattisgarh"
+msgstr ""
+
+msgctxt "province"
+msgid "Goa"
+msgstr ""
+
+msgctxt "province"
+msgid "Gujarat"
+msgstr ""
+
+msgctxt "province"
+msgid "Haryana"
+msgstr ""
+
+msgctxt "province"
+msgid "Himachal Pradesh"
+msgstr ""
+
+msgctxt "province"
+msgid "Jammu and Kashmir"
+msgstr ""
+
+msgctxt "province"
+msgid "Jharkhand"
+msgstr ""
+
+msgctxt "province"
+msgid "Kerala"
+msgstr ""
+
+msgctxt "province"
+msgid "Madhya Pradesh"
+msgstr ""
+
+msgctxt "province"
+msgid "Manipur"
+msgstr ""
+
+msgctxt "province"
+msgid "Meghalaya"
+msgstr ""
+
+msgctxt "province"
+msgid "Mizoram"
+msgstr ""
+
+msgctxt "province"
+msgid "Nagaland"
+msgstr ""
+
+msgctxt "province"
+msgid "Orissa"
+msgstr ""
+
+msgctxt "province"
+msgid "Punjab"
+msgstr ""
+
+msgctxt "province"
+msgid "Rajasthan"
+msgstr ""
+
+msgctxt "province"
+msgid "Sikkim"
+msgstr ""
+
+msgctxt "province"
+msgid "Tamil Nadu"
+msgstr ""
+
+msgctxt "province"
+msgid "Tripura"
+msgstr ""
+
+msgctxt "province"
+msgid "Uttaranchal"
+msgstr ""
+
+msgctxt "province"
+msgid "Uttar Pradesh"
+msgstr ""
+
+msgctxt "province"
+msgid "West Bengal"
+msgstr ""
+
+msgctxt "province"
+msgid "Andaman and Nicobar Islands"
+msgstr ""
+
+msgctxt "province"
+msgid "Dadra and Nagar Haveli"
+msgstr ""
+
+msgctxt "province"
+msgid "Daman and Diu"
+msgstr ""
+
+msgctxt "province"
+msgid "Delhi"
+msgstr ""
+
+msgctxt "province"
+msgid "Lakshadweep"
+msgstr ""
+
+msgctxt "province"
+msgid "Pondicherry"
+msgstr ""
+
+msgctxt "province"
+msgid "mazowieckie"
+msgstr ""
+
+msgctxt "province"
+msgid "pomorskie"
+msgstr ""
+
+msgctxt "province"
+msgid "dolnośląskie"
+msgstr ""
+
+msgctxt "province"
+msgid "kujawsko-pomorskie"
+msgstr ""
+
+msgctxt "province"
+msgid "lubelskie"
+msgstr ""
+
+msgctxt "province"
+msgid "lubuskie"
+msgstr ""
+
+msgctxt "province"
+msgid "łódzkie"
+msgstr ""
+
+msgctxt "province"
+msgid "małopolskie"
+msgstr ""
+
+msgctxt "province"
+msgid "opolskie"
+msgstr ""
+
+msgctxt "province"
+msgid "podkarpackie"
+msgstr ""
+
+msgctxt "province"
+msgid "podlaskie"
+msgstr ""
+
+msgctxt "province"
+msgid "śląskie"
+msgstr ""
+
+msgctxt "province"
+msgid "świętokrzyskie"
+msgstr ""
+
+msgctxt "province"
+msgid "warmińsko-mazurskie"
+msgstr ""
+
+msgctxt "province"
+msgid "wielkopolskie"
+msgstr ""
+
+msgctxt "province"
+msgid "zachodniopomorskie"
+msgstr ""
+
+msgctxt "province"
+msgid "Abu Zaby"
+msgstr ""
+
+msgctxt "province"
+msgid "'Ajman"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Fujayrah"
+msgstr ""
+
+msgctxt "province"
+msgid "Ash Shariqah"
+msgstr ""
+
+msgctxt "province"
+msgid "Dubayy"
+msgstr ""
+
+msgctxt "province"
+msgid "Ra's al Khaymah"
+msgstr ""
+
+msgctxt "province"
+msgid "Dac Lac"
+msgstr ""
+
+msgctxt "province"
+msgid "Umm al Qaywayn"
+msgstr ""
+
+msgctxt "province"
+msgid "Badakhshan"
+msgstr ""
+
+msgctxt "province"
+msgid "Badghis"
+msgstr ""
+
+msgctxt "province"
+msgid "Baghlan"
+msgstr ""
+
+msgctxt "province"
+msgid "Balkh"
+msgstr ""
+
+msgctxt "province"
+msgid "Bamian"
+msgstr ""
+
+msgctxt "province"
+msgid "Farah"
+msgstr ""
+
+msgctxt "province"
+msgid "Faryab"
+msgstr ""
+
+msgctxt "province"
+msgid "Ghazni"
+msgstr ""
+
+msgctxt "province"
+msgid "Ghowr"
+msgstr ""
+
+msgctxt "province"
+msgid "Helmand"
+msgstr ""
+
+msgctxt "province"
+msgid "Herat"
+msgstr ""
+
+msgctxt "province"
+msgid "Jowzjan"
+msgstr ""
+
+msgctxt "province"
+msgid "Kabul"
+msgstr ""
+
+msgctxt "province"
+msgid "Kandahar"
+msgstr ""
+
+msgctxt "province"
+msgid "Kapisa"
+msgstr ""
+
+msgctxt "province"
+msgid "Khowst"
+msgstr ""
+
+msgctxt "province"
+msgid "Konar"
+msgstr ""
+
+msgctxt "province"
+msgid "Kondoz"
+msgstr ""
+
+msgctxt "province"
+msgid "Laghman"
+msgstr ""
+
+msgctxt "province"
+msgid "Lowgar"
+msgstr ""
+
+msgctxt "province"
+msgid "Nangrahar"
+msgstr ""
+
+msgctxt "province"
+msgid "Nimruz"
+msgstr ""
+
+msgctxt "province"
+msgid "Nurestan"
+msgstr ""
+
+msgctxt "province"
+msgid "Oruzgan"
+msgstr ""
+
+msgctxt "province"
+msgid "Paktia"
+msgstr ""
+
+msgctxt "province"
+msgid "Paktika"
+msgstr ""
+
+msgctxt "province"
+msgid "Parwan"
+msgstr ""
+
+msgctxt "province"
+msgid "Samangan"
+msgstr ""
+
+msgctxt "province"
+msgid "Sar-e Pol"
+msgstr ""
+
+msgctxt "province"
+msgid "Takhar"
+msgstr ""
+
+msgctxt "province"
+msgid "Wardak"
+msgstr ""
+
+msgctxt "province"
+msgid "Zabol"
+msgstr ""
+
+msgctxt "province"
+msgid "Berat"
+msgstr ""
+
+msgctxt "province"
+msgid "Bulqizë"
+msgstr ""
+
+msgctxt "province"
+msgid "Delvinë"
+msgstr ""
+
+msgctxt "province"
+msgid "Devoll"
+msgstr ""
+
+msgctxt "province"
+msgid "Dibër"
+msgstr ""
+
+msgctxt "province"
+msgid "Durrës"
+msgstr ""
+
+msgctxt "province"
+msgid "Elbasan"
+msgstr ""
+
+msgctxt "province"
+msgid "Fier"
+msgstr ""
+
+msgctxt "province"
+msgid "Gramsh"
+msgstr ""
+
+msgctxt "province"
+msgid "Gjirokastër"
+msgstr ""
+
+msgctxt "province"
+msgid "Has"
+msgstr ""
+
+msgctxt "province"
+msgid "Kavajë"
+msgstr ""
+
+msgctxt "province"
+msgid "Kolonjë"
+msgstr ""
+
+msgctxt "province"
+msgid "Korçë"
+msgstr ""
+
+msgctxt "province"
+msgid "Krujë"
+msgstr ""
+
+msgctxt "province"
+msgid "Kuçovë"
+msgstr ""
+
+msgctxt "province"
+msgid "Kukës"
+msgstr ""
+
+msgctxt "province"
+msgid "Kurbin"
+msgstr ""
+
+msgctxt "province"
+msgid "Lezhë"
+msgstr ""
+
+msgctxt "province"
+msgid "Librazhd"
+msgstr ""
+
+msgctxt "province"
+msgid "Lushnjë"
+msgstr ""
+
+msgctxt "province"
+msgid "Malësi e Madhe"
+msgstr ""
+
+msgctxt "province"
+msgid "Mallakastër"
+msgstr ""
+
+msgctxt "province"
+msgid "Mat"
+msgstr ""
+
+msgctxt "province"
+msgid "Mirditë"
+msgstr ""
+
+msgctxt "province"
+msgid "Peqin"
+msgstr ""
+
+msgctxt "province"
+msgid "Përmet"
+msgstr ""
+
+msgctxt "province"
+msgid "Pogradec"
+msgstr ""
+
+msgctxt "province"
+msgid "Pukë"
+msgstr ""
+
+msgctxt "province"
+msgid "Sarandë"
+msgstr ""
+
+msgctxt "province"
+msgid "Skrapar"
+msgstr ""
+
+msgctxt "province"
+msgid "Shkodër"
+msgstr ""
+
+msgctxt "province"
+msgid "Tepelenë"
+msgstr ""
+
+msgctxt "province"
+msgid "Tiranë"
+msgstr ""
+
+msgctxt "province"
+msgid "Tropojë"
+msgstr ""
+
+msgctxt "province"
+msgid "Vlorë"
+msgstr ""
+
+msgctxt "province"
+msgid "Erevan"
+msgstr ""
+
+msgctxt "province"
+msgid "Aragacotn"
+msgstr ""
+
+msgctxt "province"
+msgid "Ararat"
+msgstr ""
+
+msgctxt "province"
+msgid "Armavir"
+msgstr ""
+
+msgctxt "province"
+msgid "Gegarkunik'"
+msgstr ""
+
+msgctxt "province"
+msgid "Kotayk'"
+msgstr ""
+
+msgctxt "province"
+msgid "Lory"
+msgstr ""
+
+msgctxt "province"
+msgid "Sirak"
+msgstr ""
+
+msgctxt "province"
+msgid "Syunik'"
+msgstr ""
+
+msgctxt "province"
+msgid "Tavus"
+msgstr ""
+
+msgctxt "province"
+msgid "Vayoc Jor"
+msgstr ""
+
+msgctxt "province"
+msgid "Bengo"
+msgstr ""
+
+msgctxt "province"
+msgid "Benguela"
+msgstr ""
+
+msgctxt "province"
+msgid "Bie"
+msgstr ""
+
+msgctxt "province"
+msgid "Cabinda"
+msgstr ""
+
+msgctxt "province"
+msgid "Cuando-Cubango"
+msgstr ""
+
+msgctxt "province"
+msgid "Cuanza Norte"
+msgstr ""
+
+msgctxt "province"
+msgid "Cuanza Sul"
+msgstr ""
+
+msgctxt "province"
+msgid "Cunene"
+msgstr ""
+
+msgctxt "province"
+msgid "Huambo"
+msgstr ""
+
+msgctxt "province"
+msgid "Huila"
+msgstr ""
+
+msgctxt "province"
+msgid "Luanda"
+msgstr ""
+
+msgctxt "province"
+msgid "Lunda Norte"
+msgstr ""
+
+msgctxt "province"
+msgid "Lunda Sul"
+msgstr ""
+
+msgctxt "province"
+msgid "Malange"
+msgstr ""
+
+msgctxt "province"
+msgid "Moxico"
+msgstr ""
+
+msgctxt "province"
+msgid "Namibe"
+msgstr ""
+
+msgctxt "province"
+msgid "Uige"
+msgstr ""
+
+msgctxt "province"
+msgid "Zaire"
+msgstr ""
+
+msgctxt "province"
+msgid "Capital federal"
+msgstr ""
+
+msgctxt "province"
+msgid "Buenos Aires"
+msgstr ""
+
+msgctxt "province"
+msgid "Catamarca"
+msgstr ""
+
+msgctxt "province"
+msgid "Cordoba"
+msgstr ""
+
+msgctxt "province"
+msgid "Corrientes"
+msgstr ""
+
+msgctxt "province"
+msgid "Chaco"
+msgstr ""
+
+msgctxt "province"
+msgid "Chubut"
+msgstr ""
+
+msgctxt "province"
+msgid "Entre Rios"
+msgstr ""
+
+msgctxt "province"
+msgid "Formosa"
+msgstr ""
+
+msgctxt "province"
+msgid "Jujuy"
+msgstr ""
+
+msgctxt "province"
+msgid "La Pampa"
+msgstr ""
+
+msgctxt "province"
+msgid "Mendoza"
+msgstr ""
+
+msgctxt "province"
+msgid "Misiones"
+msgstr ""
+
+msgctxt "province"
+msgid "Neuquen"
+msgstr ""
+
+msgctxt "province"
+msgid "Rio Negro"
+msgstr ""
+
+msgctxt "province"
+msgid "Salta"
+msgstr ""
+
+msgctxt "province"
+msgid "San Juan"
+msgstr ""
+
+msgctxt "province"
+msgid "San Luis"
+msgstr ""
+
+msgctxt "province"
+msgid "Santa Cruz"
+msgstr ""
+
+msgctxt "province"
+msgid "Santa Fe"
+msgstr ""
+
+msgctxt "province"
+msgid "Santiago del Estero"
+msgstr ""
+
+msgctxt "province"
+msgid "Tierra del Fuego"
+msgstr ""
+
+msgctxt "province"
+msgid "Tucuman"
+msgstr ""
+
+msgctxt "province"
+msgid "Burgenland"
+msgstr ""
+
+msgctxt "province"
+msgid "Kärnten"
+msgstr ""
+
+msgctxt "province"
+msgid "Niederosterreich"
+msgstr ""
+
+msgctxt "province"
+msgid "Oberosterreich"
+msgstr ""
+
+msgctxt "province"
+msgid "Salzburg"
+msgstr ""
+
+msgctxt "province"
+msgid "Steiermark"
+msgstr ""
+
+msgctxt "province"
+msgid "Tirol"
+msgstr ""
+
+msgctxt "province"
+msgid "Vorarlberg"
+msgstr ""
+
+msgctxt "province"
+msgid "Wien"
+msgstr ""
+
+msgctxt "province"
+msgid "Australian Antarctic Territory"
+msgstr ""
+
+msgctxt "province"
+msgid "Australian Capital Territory"
+msgstr ""
+
+msgctxt "province"
+msgid "Northern Territory"
+msgstr ""
+
+msgctxt "province"
+msgid "New South Wales"
+msgstr ""
+
+msgctxt "province"
+msgid "Queensland"
+msgstr ""
+
+msgctxt "province"
+msgid "South Australia"
+msgstr ""
+
+msgctxt "province"
+msgid "Tasmania"
+msgstr ""
+
+msgctxt "province"
+msgid "Victoria"
+msgstr ""
+
+msgctxt "province"
+msgid "Western Australia"
+msgstr ""
+
+msgctxt "province"
+msgid "Naxcivan"
+msgstr ""
+
+msgctxt "province"
+msgid "Ali Bayramli"
+msgstr ""
+
+msgctxt "province"
+msgid "Baki"
+msgstr ""
+
+msgctxt "province"
+msgid "Ganca"
+msgstr ""
+
+msgctxt "province"
+msgid "Lankaran"
+msgstr ""
+
+msgctxt "province"
+msgid "Mingacevir"
+msgstr ""
+
+msgctxt "province"
+msgid "Naftalan"
+msgstr ""
+
+msgctxt "province"
+msgid "Saki"
+msgstr ""
+
+msgctxt "province"
+msgid "Sumqayit"
+msgstr ""
+
+msgctxt "province"
+msgid "Susa"
+msgstr ""
+
+msgctxt "province"
+msgid "Xankandi"
+msgstr ""
+
+msgctxt "province"
+msgid "Yevlax"
+msgstr ""
+
+msgctxt "province"
+msgid "Abseron"
+msgstr ""
+
+msgctxt "province"
+msgid "Agcabadi"
+msgstr ""
+
+msgctxt "province"
+msgid "Agdam"
+msgstr ""
+
+msgctxt "province"
+msgid "Agdas"
+msgstr ""
+
+msgctxt "province"
+msgid "Agstafa"
+msgstr ""
+
+msgctxt "province"
+msgid "Agsu"
+msgstr ""
+
+msgctxt "province"
+msgid "Astara"
+msgstr ""
+
+msgctxt "province"
+msgid "Babak"
+msgstr ""
+
+msgctxt "province"
+msgid "Balakan"
+msgstr ""
+
+msgctxt "province"
+msgid "Barda"
+msgstr ""
+
+msgctxt "province"
+msgid "Beylagan"
+msgstr ""
+
+msgctxt "province"
+msgid "Bilasuvar"
+msgstr ""
+
+msgctxt "province"
+msgid "Cabrayll"
+msgstr ""
+
+msgctxt "province"
+msgid "Calilabad"
+msgstr ""
+
+msgctxt "province"
+msgid "Culfa"
+msgstr ""
+
+msgctxt "province"
+msgid "Daskasan"
+msgstr ""
+
+msgctxt "province"
+msgid "Davaci"
+msgstr ""
+
+msgctxt "province"
+msgid "Fuzuli"
+msgstr ""
+
+msgctxt "province"
+msgid "Gadabay"
+msgstr ""
+
+msgctxt "province"
+msgid "Goranboy"
+msgstr ""
+
+msgctxt "province"
+msgid "Goycay"
+msgstr ""
+
+msgctxt "province"
+msgid "Haciqabul"
+msgstr ""
+
+msgctxt "province"
+msgid "Imisli"
+msgstr ""
+
+msgctxt "province"
+msgid "Ismayilli"
+msgstr ""
+
+msgctxt "province"
+msgid "Kalbacar"
+msgstr ""
+
+msgctxt "province"
+msgid "Kurdamir"
+msgstr ""
+
+msgctxt "province"
+msgid "Lacin"
+msgstr ""
+
+msgctxt "province"
+msgid "Lerik"
+msgstr ""
+
+msgctxt "province"
+msgid "Masalli"
+msgstr ""
+
+msgctxt "province"
+msgid "Neftcala"
+msgstr ""
+
+msgctxt "province"
+msgid "Oguz"
+msgstr ""
+
+msgctxt "province"
+msgid "Ordubad"
+msgstr ""
+
+msgctxt "province"
+msgid "Qabala"
+msgstr ""
+
+msgctxt "province"
+msgid "Qax"
+msgstr ""
+
+msgctxt "province"
+msgid "Qazax"
+msgstr ""
+
+msgctxt "province"
+msgid "Qobustan"
+msgstr ""
+
+msgctxt "province"
+msgid "Quba"
+msgstr ""
+
+msgctxt "province"
+msgid "Qubadli"
+msgstr ""
+
+msgctxt "province"
+msgid "Qusar"
+msgstr ""
+
+msgctxt "province"
+msgid "Saatli"
+msgstr ""
+
+msgctxt "province"
+msgid "Sabirabad"
+msgstr ""
+
+msgctxt "province"
+msgid "Sadarak"
+msgstr ""
+
+msgctxt "province"
+msgid "Sahbuz"
+msgstr ""
+
+msgctxt "province"
+msgid "Salyan"
+msgstr ""
+
+msgctxt "province"
+msgid "Samaxi"
+msgstr ""
+
+msgctxt "province"
+msgid "Samkir"
+msgstr ""
+
+msgctxt "province"
+msgid "Samux"
+msgstr ""
+
+msgctxt "province"
+msgid "Sarur"
+msgstr ""
+
+msgctxt "province"
+msgid "Siyazan"
+msgstr ""
+
+msgctxt "province"
+msgid "Tartar"
+msgstr ""
+
+msgctxt "province"
+msgid "Tovuz"
+msgstr ""
+
+msgctxt "province"
+msgid "Ucar"
+msgstr ""
+
+msgctxt "province"
+msgid "Xacmaz"
+msgstr ""
+
+msgctxt "province"
+msgid "Xanlar"
+msgstr ""
+
+msgctxt "province"
+msgid "Xizi"
+msgstr ""
+
+msgctxt "province"
+msgid "Xocali"
+msgstr ""
+
+msgctxt "province"
+msgid "Xocavand"
+msgstr ""
+
+msgctxt "province"
+msgid "Yardimli"
+msgstr ""
+
+msgctxt "province"
+msgid "Zangilan"
+msgstr ""
+
+msgctxt "province"
+msgid "Zaqatala"
+msgstr ""
+
+msgctxt "province"
+msgid "Zardab"
+msgstr ""
+
+msgctxt "province"
+msgid "Federacija Bosna i Hercegovina"
+msgstr ""
+
+msgctxt "province"
+msgid "Republika Srpska"
+msgstr ""
+
+msgctxt "province"
+msgid "Bagerhat zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Bandarban zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Barguna zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Barisal zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Bhola zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Bogra zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Brahmanbaria zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Chandpur zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Chittagong zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Chuadanga zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Comilla zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Cox's Bazar zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Dhaka zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Dinajpur zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Faridpur zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Feni zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Gaibandha zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Gazipur zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Gopalganj zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Habiganj zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Jaipurhat zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Jamalpur zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Jessore zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Jhalakati zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Jhenaidah zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Khagrachari zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Khulna zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Kishorganj zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Kurigram zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Kushtia zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Lakshmipur zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Lalmonirhat zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Madaripur zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Magura zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Manikganj zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Meherpur zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Moulvibazar zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Munshiganj zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Mymensingh zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Naogaon zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Narail zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Narayanganj zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Narsingdi zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Natore zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Nawabganj zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Netrakona zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Nilphamari zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Noakhali zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Pabna zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Panchagarh zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Patuakhali zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Pirojpur zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Rajbari zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Rajshahi zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Rangamati zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Rangpur zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Satkhira zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Shariatpur zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Sherpur zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Sirajganj zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Sunamganj zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Sylhet zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Tangail zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Thakurgaon zila"
+msgstr ""
+
+msgctxt "province"
+msgid "Antwerpen"
+msgstr ""
+
+msgctxt "province"
+msgid "Brabant Wallon"
+msgstr ""
+
+msgctxt "province"
+msgid "Hainaut"
+msgstr ""
+
+msgctxt "province"
+msgid "Liege"
+msgstr ""
+
+msgctxt "province"
+msgid "Limburg"
+msgstr ""
+
+msgctxt "province"
+msgid "Luxembourg"
+msgstr ""
+
+msgctxt "province"
+msgid "Namur"
+msgstr ""
+
+msgctxt "province"
+msgid "Oost-Vlaanderen"
+msgstr ""
+
+msgctxt "province"
+msgid "Vlaams-Brabant"
+msgstr ""
+
+msgctxt "province"
+msgid "West-Vlaanderen"
+msgstr ""
+
+msgctxt "province"
+msgid "Bale"
+msgstr ""
+
+msgctxt "province"
+msgid "Bam"
+msgstr ""
+
+msgctxt "province"
+msgid "Banwa"
+msgstr ""
+
+msgctxt "province"
+msgid "Bazega"
+msgstr ""
+
+msgctxt "province"
+msgid "Bougouriba"
+msgstr ""
+
+msgctxt "province"
+msgid "Boulgou"
+msgstr ""
+
+msgctxt "province"
+msgid "Boulkiemde"
+msgstr ""
+
+msgctxt "province"
+msgid "Comoe"
+msgstr ""
+
+msgctxt "province"
+msgid "Ganzourgou"
+msgstr ""
+
+msgctxt "province"
+msgid "Gnagna"
+msgstr ""
+
+msgctxt "province"
+msgid "Gourma"
+msgstr ""
+
+msgctxt "province"
+msgid "Houet"
+msgstr ""
+
+msgctxt "province"
+msgid "Ioba"
+msgstr ""
+
+msgctxt "province"
+msgid "Kadiogo"
+msgstr ""
+
+msgctxt "province"
+msgid "Kenedougou"
+msgstr ""
+
+msgctxt "province"
+msgid "Komondjari"
+msgstr ""
+
+msgctxt "province"
+msgid "Kompienga"
+msgstr ""
+
+msgctxt "province"
+msgid "Kossi"
+msgstr ""
+
+msgctxt "province"
+msgid "Koulpulogo"
+msgstr ""
+
+msgctxt "province"
+msgid "Kouritenga"
+msgstr ""
+
+msgctxt "province"
+msgid "Kourweogo"
+msgstr ""
+
+msgctxt "province"
+msgid "Leraba"
+msgstr ""
+
+msgctxt "province"
+msgid "Loroum"
+msgstr ""
+
+msgctxt "province"
+msgid "Mouhoun"
+msgstr ""
+
+msgctxt "province"
+msgid "Nahouri"
+msgstr ""
+
+msgctxt "province"
+msgid "Namentenga"
+msgstr ""
+
+msgctxt "province"
+msgid "Nayala"
+msgstr ""
+
+msgctxt "province"
+msgid "Noumbiel"
+msgstr ""
+
+msgctxt "province"
+msgid "Oubritenga"
+msgstr ""
+
+msgctxt "province"
+msgid "Oudalan"
+msgstr ""
+
+msgctxt "province"
+msgid "Passore"
+msgstr ""
+
+msgctxt "province"
+msgid "Poni"
+msgstr ""
+
+msgctxt "province"
+msgid "Sanguie"
+msgstr ""
+
+msgctxt "province"
+msgid "Sanmatenga"
+msgstr ""
+
+msgctxt "province"
+msgid "Seno"
+msgstr ""
+
+msgctxt "province"
+msgid "Siasili"
+msgstr ""
+
+msgctxt "province"
+msgid "Soum"
+msgstr ""
+
+msgctxt "province"
+msgid "Sourou"
+msgstr ""
+
+msgctxt "province"
+msgid "Tapoa"
+msgstr ""
+
+msgctxt "province"
+msgid "Tui"
+msgstr ""
+
+msgctxt "province"
+msgid "Yagha"
+msgstr ""
+
+msgctxt "province"
+msgid "Yatenga"
+msgstr ""
+
+msgctxt "province"
+msgid "Ziro"
+msgstr ""
+
+msgctxt "province"
+msgid "Zondoma"
+msgstr ""
+
+msgctxt "province"
+msgid "Zoundweogo"
+msgstr ""
+
+msgctxt "province"
+msgid "Blagoevgrad"
+msgstr ""
+
+msgctxt "province"
+msgid "Burgas"
+msgstr ""
+
+msgctxt "province"
+msgid "Dobric"
+msgstr ""
+
+msgctxt "province"
+msgid "Gabrovo"
+msgstr ""
+
+msgctxt "province"
+msgid "Haskovo"
+msgstr ""
+
+msgctxt "province"
+msgid "Jambol"
+msgstr ""
+
+msgctxt "province"
+msgid "Kardzali"
+msgstr ""
+
+msgctxt "province"
+msgid "Kjstendil"
+msgstr ""
+
+msgctxt "province"
+msgid "Lovec"
+msgstr ""
+
+msgctxt "province"
+msgid "Montana"
+msgstr ""
+
+msgctxt "province"
+msgid "Pazardzik"
+msgstr ""
+
+msgctxt "province"
+msgid "Pernik"
+msgstr ""
+
+msgctxt "province"
+msgid "Pleven"
+msgstr ""
+
+msgctxt "province"
+msgid "Plovdiv"
+msgstr ""
+
+msgctxt "province"
+msgid "Razgrad"
+msgstr ""
+
+msgctxt "province"
+msgid "Ruse"
+msgstr ""
+
+msgctxt "province"
+msgid "Silistra"
+msgstr ""
+
+msgctxt "province"
+msgid "Sliven"
+msgstr ""
+
+msgctxt "province"
+msgid "Smoljan"
+msgstr ""
+
+msgctxt "province"
+msgid "Sofia"
+msgstr ""
+
+msgctxt "province"
+msgid "Stara Zagora"
+msgstr ""
+
+msgctxt "province"
+msgid "Sumen"
+msgstr ""
+
+msgctxt "province"
+msgid "Targoviste"
+msgstr ""
+
+msgctxt "province"
+msgid "Varna"
+msgstr ""
+
+msgctxt "province"
+msgid "Veliko Tarnovo"
+msgstr ""
+
+msgctxt "province"
+msgid "Vidin"
+msgstr ""
+
+msgctxt "province"
+msgid "Vraca"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Hadd"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Manamah"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Mintaqah al Gharbiyah"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Mintagah al Wusta"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Mintaqah ash Shamaliyah"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Muharraq"
+msgstr ""
+
+msgctxt "province"
+msgid "Ar Rifa"
+msgstr ""
+
+msgctxt "province"
+msgid "Jidd Hafs"
+msgstr ""
+
+msgctxt "province"
+msgid "Madluat Jamad"
+msgstr ""
+
+msgctxt "province"
+msgid "Madluat Isa"
+msgstr ""
+
+msgctxt "province"
+msgid "Mintaqat Juzur tawar"
+msgstr ""
+
+msgctxt "province"
+msgid "Sitrah"
+msgstr ""
+
+msgctxt "province"
+msgid "Bubanza"
+msgstr ""
+
+msgctxt "province"
+msgid "Bujumbura"
+msgstr ""
+
+msgctxt "province"
+msgid "Bururi"
+msgstr ""
+
+msgctxt "province"
+msgid "Cankuzo"
+msgstr ""
+
+msgctxt "province"
+msgid "Cibitoke"
+msgstr ""
+
+msgctxt "province"
+msgid "Gitega"
+msgstr ""
+
+msgctxt "province"
+msgid "Karuzi"
+msgstr ""
+
+msgctxt "province"
+msgid "Kayanza"
+msgstr ""
+
+msgctxt "province"
+msgid "Makamba"
+msgstr ""
+
+msgctxt "province"
+msgid "Muramvya"
+msgstr ""
+
+msgctxt "province"
+msgid "Mwaro"
+msgstr ""
+
+msgctxt "province"
+msgid "Ngozi"
+msgstr ""
+
+msgctxt "province"
+msgid "Rutana"
+msgstr ""
+
+msgctxt "province"
+msgid "Ruyigi"
+msgstr ""
+
+msgctxt "province"
+msgid "Alibori"
+msgstr ""
+
+msgctxt "province"
+msgid "Atakora"
+msgstr ""
+
+msgctxt "province"
+msgid "Atlantique"
+msgstr ""
+
+msgctxt "province"
+msgid "Borgou"
+msgstr ""
+
+msgctxt "province"
+msgid "Collines"
+msgstr ""
+
+msgctxt "province"
+msgid "Donga"
+msgstr ""
+
+msgctxt "province"
+msgid "Kouffo"
+msgstr ""
+
+msgctxt "province"
+msgid "Littoral"
+msgstr ""
+
+msgctxt "province"
+msgid "Mono"
+msgstr ""
+
+msgctxt "province"
+msgid "Oueme"
+msgstr ""
+
+msgctxt "province"
+msgid "Plateau"
+msgstr ""
+
+msgctxt "province"
+msgid "Zou"
+msgstr ""
+
+msgctxt "province"
+msgid "Belait"
+msgstr ""
+
+msgctxt "province"
+msgid "Brunei-Muara"
+msgstr ""
+
+msgctxt "province"
+msgid "Temburong"
+msgstr ""
+
+msgctxt "province"
+msgid "Tutong"
+msgstr ""
+
+msgctxt "province"
+msgid "Cochabamba"
+msgstr ""
+
+msgctxt "province"
+msgid "Chuquisaca"
+msgstr ""
+
+msgctxt "province"
+msgid "El Beni"
+msgstr ""
+
+msgctxt "province"
+msgid "La Paz"
+msgstr ""
+
+msgctxt "province"
+msgid "Oruro"
+msgstr ""
+
+msgctxt "province"
+msgid "Pando"
+msgstr ""
+
+msgctxt "province"
+msgid "Potosi"
+msgstr ""
+
+msgctxt "province"
+msgid "Tarija"
+msgstr ""
+
+msgctxt "province"
+msgid "Acre"
+msgstr ""
+
+msgctxt "province"
+msgid "Alagoas"
+msgstr ""
+
+msgctxt "province"
+msgid "Amazonas"
+msgstr ""
+
+msgctxt "province"
+msgid "Amapa"
+msgstr ""
+
+msgctxt "province"
+msgid "Bahia"
+msgstr ""
+
+msgctxt "province"
+msgid "Ceara"
+msgstr ""
+
+msgctxt "province"
+msgid "Distrito Federal"
+msgstr ""
+
+msgctxt "province"
+msgid "Espirito Santo"
+msgstr ""
+
+msgctxt "province"
+msgid "Fernando de Noronha"
+msgstr ""
+
+msgctxt "province"
+msgid "Goias"
+msgstr ""
+
+msgctxt "province"
+msgid "Maranhao"
+msgstr ""
+
+msgctxt "province"
+msgid "Minas Gerais"
+msgstr ""
+
+msgctxt "province"
+msgid "Mato Grosso do Sul"
+msgstr ""
+
+msgctxt "province"
+msgid "Mato Grosso"
+msgstr ""
+
+msgctxt "province"
+msgid "Para"
+msgstr ""
+
+msgctxt "province"
+msgid "Paraiba"
+msgstr ""
+
+msgctxt "province"
+msgid "Pernambuco"
+msgstr ""
+
+msgctxt "province"
+msgid "Piaui"
+msgstr ""
+
+msgctxt "province"
+msgid "Parana"
+msgstr ""
+
+msgctxt "province"
+msgid "Rio de Janeiro"
+msgstr ""
+
+msgctxt "province"
+msgid "Rio Grande do Norte"
+msgstr ""
+
+msgctxt "province"
+msgid "Rondonia"
+msgstr ""
+
+msgctxt "province"
+msgid "Roraima"
+msgstr ""
+
+msgctxt "province"
+msgid "Rio Grande do Sul"
+msgstr ""
+
+msgctxt "province"
+msgid "Santa Catarina"
+msgstr ""
+
+msgctxt "province"
+msgid "Sergipe"
+msgstr ""
+
+msgctxt "province"
+msgid "Sao Paulo"
+msgstr ""
+
+msgctxt "province"
+msgid "Tocantins"
+msgstr ""
+
+msgctxt "province"
+msgid "Acklins and Crooked Islands"
+msgstr ""
+
+msgctxt "province"
+msgid "Bimini"
+msgstr ""
+
+msgctxt "province"
+msgid "Cat Island"
+msgstr ""
+
+msgctxt "province"
+msgid "Exuma"
+msgstr ""
+
+msgctxt "province"
+msgid "Inagua"
+msgstr ""
+
+msgctxt "province"
+msgid "Long Island"
+msgstr ""
+
+msgctxt "province"
+msgid "Mayaguana"
+msgstr ""
+
+msgctxt "province"
+msgid "New Providence"
+msgstr ""
+
+msgctxt "province"
+msgid "Ragged Island"
+msgstr ""
+
+msgctxt "province"
+msgid "Bumthang"
+msgstr ""
+
+msgctxt "province"
+msgid "Chhukha"
+msgstr ""
+
+msgctxt "province"
+msgid "Dagana"
+msgstr ""
+
+msgctxt "province"
+msgid "Gasa"
+msgstr ""
+
+msgctxt "province"
+msgid "Ha"
+msgstr ""
+
+msgctxt "province"
+msgid "Lhuentse"
+msgstr ""
+
+msgctxt "province"
+msgid "Monggar"
+msgstr ""
+
+msgctxt "province"
+msgid "Paro"
+msgstr ""
+
+msgctxt "province"
+msgid "Pemagatshel"
+msgstr ""
+
+msgctxt "province"
+msgid "Punakha"
+msgstr ""
+
+msgctxt "province"
+msgid "Samdrup Jongkha"
+msgstr ""
+
+msgctxt "province"
+msgid "Samtee"
+msgstr ""
+
+msgctxt "province"
+msgid "Sarpang"
+msgstr ""
+
+msgctxt "province"
+msgid "Thimphu"
+msgstr ""
+
+msgctxt "province"
+msgid "Trashigang"
+msgstr ""
+
+msgctxt "province"
+msgid "Trashi Yangtse"
+msgstr ""
+
+msgctxt "province"
+msgid "Trongsa"
+msgstr ""
+
+msgctxt "province"
+msgid "Tsirang"
+msgstr ""
+
+msgctxt "province"
+msgid "Wangdue Phodrang"
+msgstr ""
+
+msgctxt "province"
+msgid "Zhemgang"
+msgstr ""
+
+msgctxt "province"
+msgid "Central"
+msgstr ""
+
+msgctxt "province"
+msgid "Ghanzi"
+msgstr ""
+
+msgctxt "province"
+msgid "Kgalagadi"
+msgstr ""
+
+msgctxt "province"
+msgid "Kgatleng"
+msgstr ""
+
+msgctxt "province"
+msgid "Kweneng"
+msgstr ""
+
+msgctxt "province"
+msgid "Ngamiland"
+msgstr ""
+
+msgctxt "province"
+msgid "North-East"
+msgstr ""
+
+msgctxt "province"
+msgid "North-West"
+msgstr ""
+
+msgctxt "province"
+msgid "South-East"
+msgstr ""
+
+msgctxt "province"
+msgid "Southern"
+msgstr ""
+
+msgctxt "province"
+msgid "Brèsckaja voblasc'"
+msgstr ""
+
+msgctxt "province"
+msgid "Homel'skaja voblasc'"
+msgstr ""
+
+msgctxt "province"
+msgid "Hrodzenskaja voblasc'"
+msgstr ""
+
+msgctxt "province"
+msgid "Mahilëuskaja voblasc'"
+msgstr ""
+
+msgctxt "province"
+msgid "Minskaja voblasc'"
+msgstr ""
+
+msgctxt "province"
+msgid "Vicebskaja voblasc'"
+msgstr ""
+
+msgctxt "province"
+msgid "Belize"
+msgstr ""
+
+msgctxt "province"
+msgid "Cayo"
+msgstr ""
+
+msgctxt "province"
+msgid "Corozal"
+msgstr ""
+
+msgctxt "province"
+msgid "Orange Walk"
+msgstr ""
+
+msgctxt "province"
+msgid "Stann Creek"
+msgstr ""
+
+msgctxt "province"
+msgid "Toledo"
+msgstr ""
+
+msgctxt "province"
+msgid "Kinshasa"
+msgstr ""
+
+msgctxt "province"
+msgid "Equateur"
+msgstr ""
+
+msgctxt "province"
+msgid "Kasai-Oriental"
+msgstr ""
+
+msgctxt "province"
+msgid "Maniema"
+msgstr ""
+
+msgctxt "province"
+msgid "Nord-Kivu"
+msgstr ""
+
+msgctxt "province"
+msgid "Sud-Kivu"
+msgstr ""
+
+msgctxt "province"
+msgid "Bangui"
+msgstr ""
+
+msgctxt "province"
+msgid "Bamingui-Bangoran"
+msgstr ""
+
+msgctxt "province"
+msgid "Basse-Kotto"
+msgstr ""
+
+msgctxt "province"
+msgid "Haute-Kotto"
+msgstr ""
+
+msgctxt "province"
+msgid "Haut-Mbomou"
+msgstr ""
+
+msgctxt "province"
+msgid "Kemo"
+msgstr ""
+
+msgctxt "province"
+msgid "Lobaye"
+msgstr ""
+
+msgctxt "province"
+msgid "Mambere-Kadei"
+msgstr ""
+
+msgctxt "province"
+msgid "Mbomou"
+msgstr ""
+
+msgctxt "province"
+msgid "Nana-Grebizi"
+msgstr ""
+
+msgctxt "province"
+msgid "Nana-Mambere"
+msgstr ""
+
+msgctxt "province"
+msgid "Ombella-Mpoko"
+msgstr ""
+
+msgctxt "province"
+msgid "Ouaka"
+msgstr ""
+
+msgctxt "province"
+msgid "Ouham"
+msgstr ""
+
+msgctxt "province"
+msgid "Ouham-Pende"
+msgstr ""
+
+msgctxt "province"
+msgid "Sangha-Mbaere"
+msgstr ""
+
+msgctxt "province"
+msgid "Vakaga"
+msgstr ""
+
+msgctxt "province"
+msgid "Brazzaville"
+msgstr ""
+
+msgctxt "province"
+msgid "Bouenza"
+msgstr ""
+
+msgctxt "province"
+msgid "Cuvette"
+msgstr ""
+
+msgctxt "province"
+msgid "Cuvette-Ouest"
+msgstr ""
+
+msgctxt "province"
+msgid "Kouilou"
+msgstr ""
+
+msgctxt "province"
+msgid "Lekoumou"
+msgstr ""
+
+msgctxt "province"
+msgid "Likouala"
+msgstr ""
+
+msgctxt "province"
+msgid "Niari"
+msgstr ""
+
+msgctxt "province"
+msgid "Plateaux"
+msgstr ""
+
+msgctxt "province"
+msgid "Pool"
+msgstr ""
+
+msgctxt "province"
+msgid "Sangha"
+msgstr ""
+
+msgctxt "province"
+msgid "Aargau"
+msgstr ""
+
+msgctxt "province"
+msgid "Appenzell Innerrhoden"
+msgstr ""
+
+msgctxt "province"
+msgid "Appenzell Ausserrhoden"
+msgstr ""
+
+msgctxt "province"
+msgid "Bern"
+msgstr ""
+
+msgctxt "province"
+msgid "Basel-Landschaft"
+msgstr ""
+
+msgctxt "province"
+msgid "Basel-Stadt"
+msgstr ""
+
+msgctxt "province"
+msgid "Fribourg"
+msgstr ""
+
+msgctxt "province"
+msgid "Geneva"
+msgstr ""
+
+msgctxt "province"
+msgid "Glarus"
+msgstr ""
+
+msgctxt "province"
+msgid "Graubunden"
+msgstr ""
+
+msgctxt "province"
+msgid "Jura"
+msgstr ""
+
+msgctxt "province"
+msgid "Luzern"
+msgstr ""
+
+msgctxt "province"
+msgid "Neuchatel"
+msgstr ""
+
+msgctxt "province"
+msgid "Nidwalden"
+msgstr ""
+
+msgctxt "province"
+msgid "Obwalden"
+msgstr ""
+
+msgctxt "province"
+msgid "Sankt Gallen"
+msgstr ""
+
+msgctxt "province"
+msgid "Schaffhausen"
+msgstr ""
+
+msgctxt "province"
+msgid "Solothurn"
+msgstr ""
+
+msgctxt "province"
+msgid "Schwyz"
+msgstr ""
+
+msgctxt "province"
+msgid "Thurgau"
+msgstr ""
+
+msgctxt "province"
+msgid "Ticino"
+msgstr ""
+
+msgctxt "province"
+msgid "Uri"
+msgstr ""
+
+msgctxt "province"
+msgid "Vaud"
+msgstr ""
+
+msgctxt "province"
+msgid "Valais"
+msgstr ""
+
+msgctxt "province"
+msgid "Zug"
+msgstr ""
+
+msgctxt "province"
+msgid "Zurich"
+msgstr ""
+
+msgctxt "province"
+msgid "18 Montagnes"
+msgstr ""
+
+msgctxt "province"
+msgid "Agnebi"
+msgstr ""
+
+msgctxt "province"
+msgid "Bas-Sassandra"
+msgstr ""
+
+msgctxt "province"
+msgid "Denguele"
+msgstr ""
+
+msgctxt "province"
+msgid "Haut-Sassandra"
+msgstr ""
+
+msgctxt "province"
+msgid "Lacs"
+msgstr ""
+
+msgctxt "province"
+msgid "Lagunes"
+msgstr ""
+
+msgctxt "province"
+msgid "Marahoue"
+msgstr ""
+
+msgctxt "province"
+msgid "Moyen-Comoe"
+msgstr ""
+
+msgctxt "province"
+msgid "Nzi-Comoe"
+msgstr ""
+
+msgctxt "province"
+msgid "Savanes"
+msgstr ""
+
+msgctxt "province"
+msgid "Sud-Bandama"
+msgstr ""
+
+msgctxt "province"
+msgid "Sud-Comoe"
+msgstr ""
+
+msgctxt "province"
+msgid "Vallee du Bandama"
+msgstr ""
+
+msgctxt "province"
+msgid "Worodouqou"
+msgstr ""
+
+msgctxt "province"
+msgid "Zanzan"
+msgstr ""
+
+msgctxt "province"
+msgid "Aisen del General Carlos Ibanez del Campo"
+msgstr ""
+
+msgctxt "province"
+msgid "Antofagasta"
+msgstr ""
+
+msgctxt "province"
+msgid "Araucania"
+msgstr ""
+
+msgctxt "province"
+msgid "Atacama"
+msgstr ""
+
+msgctxt "province"
+msgid "Bio-Bio"
+msgstr ""
+
+msgctxt "province"
+msgid "Coquimbo"
+msgstr ""
+
+msgctxt "province"
+msgid "Libertador General Bernardo O'Higgins"
+msgstr ""
+
+msgctxt "province"
+msgid "Los Lagos"
+msgstr ""
+
+msgctxt "province"
+msgid "Magallanes"
+msgstr ""
+
+msgctxt "province"
+msgid "Maule"
+msgstr ""
+
+msgctxt "province"
+msgid "Region Metropolitana de Santiago"
+msgstr ""
+
+msgctxt "province"
+msgid "Tarapaca"
+msgstr ""
+
+msgctxt "province"
+msgid "Valparaiso"
+msgstr ""
+
+msgctxt "province"
+msgid "Adamaoua"
+msgstr ""
+
+msgctxt "province"
+msgid "Centre"
+msgstr ""
+
+msgctxt "province"
+msgid "East"
+msgstr ""
+
+msgctxt "province"
+msgid "Far North"
+msgstr ""
+
+msgctxt "province"
+msgid "North"
+msgstr ""
+
+msgctxt "province"
+msgid "South"
+msgstr ""
+
+msgctxt "province"
+msgid "South-West"
+msgstr ""
+
+msgctxt "province"
+msgid "West"
+msgstr ""
+
+msgctxt "province"
+msgid "Beijing"
+msgstr ""
+
+msgctxt "province"
+msgid "Chongqing"
+msgstr ""
+
+msgctxt "province"
+msgid "Shanghai"
+msgstr ""
+
+msgctxt "province"
+msgid "Tianjin"
+msgstr ""
+
+msgctxt "province"
+msgid "Anhui"
+msgstr ""
+
+msgctxt "province"
+msgid "Fujian"
+msgstr ""
+
+msgctxt "province"
+msgid "Gansu"
+msgstr ""
+
+msgctxt "province"
+msgid "Guangdong"
+msgstr ""
+
+msgctxt "province"
+msgid "Guizhou"
+msgstr ""
+
+msgctxt "province"
+msgid "Hainan"
+msgstr ""
+
+msgctxt "province"
+msgid "Hebei"
+msgstr ""
+
+msgctxt "province"
+msgid "Heilongjiang"
+msgstr ""
+
+msgctxt "province"
+msgid "Henan"
+msgstr ""
+
+msgctxt "province"
+msgid "Hubei"
+msgstr ""
+
+msgctxt "province"
+msgid "Hunan"
+msgstr ""
+
+msgctxt "province"
+msgid "Jiangsu"
+msgstr ""
+
+msgctxt "province"
+msgid "Jiangxi"
+msgstr ""
+
+msgctxt "province"
+msgid "Jilin"
+msgstr ""
+
+msgctxt "province"
+msgid "Liaoning"
+msgstr ""
+
+msgctxt "province"
+msgid "Qinghai"
+msgstr ""
+
+msgctxt "province"
+msgid "Shaanxi"
+msgstr ""
+
+msgctxt "province"
+msgid "Shandong"
+msgstr ""
+
+msgctxt "province"
+msgid "Shanxi"
+msgstr ""
+
+msgctxt "province"
+msgid "Sichuan"
+msgstr ""
+
+msgctxt "province"
+msgid "Taiwan"
+msgstr ""
+
+msgctxt "province"
+msgid "Yunnan"
+msgstr ""
+
+msgctxt "province"
+msgid "Zhejiang"
+msgstr ""
+
+msgctxt "province"
+msgid "Guangxi"
+msgstr ""
+
+msgctxt "province"
+msgid "Neia Mongol (mn)"
+msgstr ""
+
+msgctxt "province"
+msgid "Xinjiang"
+msgstr ""
+
+msgctxt "province"
+msgid "Xizang"
+msgstr ""
+
+msgctxt "province"
+msgid "Hong Kong"
+msgstr ""
+
+msgctxt "province"
+msgid "Macau"
+msgstr ""
+
+msgctxt "province"
+msgid "Distrito Capital de Bogotá"
+msgstr ""
+
+msgctxt "province"
+msgid "Amazonea"
+msgstr ""
+
+msgctxt "province"
+msgid "Antioquia"
+msgstr ""
+
+msgctxt "province"
+msgid "Arauca"
+msgstr ""
+
+msgctxt "province"
+msgid "Atlántico"
+msgstr ""
+
+msgctxt "province"
+msgid "Bolívar"
+msgstr ""
+
+msgctxt "province"
+msgid "Boyacá"
+msgstr ""
+
+msgctxt "province"
+msgid "Caldea"
+msgstr ""
+
+msgctxt "province"
+msgid "Caquetá"
+msgstr ""
+
+msgctxt "province"
+msgid "Casanare"
+msgstr ""
+
+msgctxt "province"
+msgid "Cauca"
+msgstr ""
+
+msgctxt "province"
+msgid "Cesar"
+msgstr ""
+
+msgctxt "province"
+msgid "Córdoba"
+msgstr ""
+
+msgctxt "province"
+msgid "Cundinamarca"
+msgstr ""
+
+msgctxt "province"
+msgid "Chocó"
+msgstr ""
+
+msgctxt "province"
+msgid "Guainía"
+msgstr ""
+
+msgctxt "province"
+msgid "Guaviare"
+msgstr ""
+
+msgctxt "province"
+msgid "La Guajira"
+msgstr ""
+
+msgctxt "province"
+msgid "Magdalena"
+msgstr ""
+
+msgctxt "province"
+msgid "Meta"
+msgstr ""
+
+msgctxt "province"
+msgid "Nariño"
+msgstr ""
+
+msgctxt "province"
+msgid "Norte de Santander"
+msgstr ""
+
+msgctxt "province"
+msgid "Putumayo"
+msgstr ""
+
+msgctxt "province"
+msgid "Quindio"
+msgstr ""
+
+msgctxt "province"
+msgid "Risaralda"
+msgstr ""
+
+msgctxt "province"
+msgid "San Andrés, Providencia y Santa Catalina"
+msgstr ""
+
+msgctxt "province"
+msgid "Santander"
+msgstr ""
+
+msgctxt "province"
+msgid "Sucre"
+msgstr ""
+
+msgctxt "province"
+msgid "Tolima"
+msgstr ""
+
+msgctxt "province"
+msgid "Valle del Cauca"
+msgstr ""
+
+msgctxt "province"
+msgid "Vaupés"
+msgstr ""
+
+msgctxt "province"
+msgid "Vichada"
+msgstr ""
+
+msgctxt "province"
+msgid "Alajuela"
+msgstr ""
+
+msgctxt "province"
+msgid "Cartago"
+msgstr ""
+
+msgctxt "province"
+msgid "Guanacaste"
+msgstr ""
+
+msgctxt "province"
+msgid "Heredia"
+msgstr ""
+
+msgctxt "province"
+msgid "Limon"
+msgstr ""
+
+msgctxt "province"
+msgid "Puntarenas"
+msgstr ""
+
+msgctxt "province"
+msgid "San Jose"
+msgstr ""
+
+msgctxt "province"
+msgid "Camagey"
+msgstr ""
+
+msgctxt "province"
+msgid "Ciego de `vila"
+msgstr ""
+
+msgctxt "province"
+msgid "Cienfuegos"
+msgstr ""
+
+msgctxt "province"
+msgid "Ciudad de La Habana"
+msgstr ""
+
+msgctxt "province"
+msgid "Granma"
+msgstr ""
+
+msgctxt "province"
+msgid "Guantanamo"
+msgstr ""
+
+msgctxt "province"
+msgid "Holquin"
+msgstr ""
+
+msgctxt "province"
+msgid "La Habana"
+msgstr ""
+
+msgctxt "province"
+msgid "Las Tunas"
+msgstr ""
+
+msgctxt "province"
+msgid "Matanzas"
+msgstr ""
+
+msgctxt "province"
+msgid "Pinar del Rio"
+msgstr ""
+
+msgctxt "province"
+msgid "Sancti Spiritus"
+msgstr ""
+
+msgctxt "province"
+msgid "Santiago de Cuba"
+msgstr ""
+
+msgctxt "province"
+msgid "Villa Clara"
+msgstr ""
+
+msgctxt "province"
+msgid "Isla de la Juventud"
+msgstr ""
+
+msgctxt "province"
+msgid "Pinar del Roo"
+msgstr ""
+
+msgctxt "province"
+msgid "Ciego de Avila"
+msgstr ""
+
+msgctxt "province"
+msgid "Camagoey"
+msgstr ""
+
+msgctxt "province"
+msgid "Holgun"
+msgstr ""
+
+msgctxt "province"
+msgid "Sancti Spritus"
+msgstr ""
+
+msgctxt "province"
+msgid "Municipio Especial Isla de la Juventud"
+msgstr ""
+
+msgctxt "province"
+msgid "Boa Vista"
+msgstr ""
+
+msgctxt "province"
+msgid "Brava"
+msgstr ""
+
+msgctxt "province"
+msgid "Calheta de Sao Miguel"
+msgstr ""
+
+msgctxt "province"
+msgid "Fogo"
+msgstr ""
+
+msgctxt "province"
+msgid "Maio"
+msgstr ""
+
+msgctxt "province"
+msgid "Mosteiros"
+msgstr ""
+
+msgctxt "province"
+msgid "Paul"
+msgstr ""
+
+msgctxt "province"
+msgid "Porto Novo"
+msgstr ""
+
+msgctxt "province"
+msgid "Praia"
+msgstr ""
+
+msgctxt "province"
+msgid "Ribeira Grande"
+msgstr ""
+
+msgctxt "province"
+msgid "Sal"
+msgstr ""
+
+msgctxt "province"
+msgid "Sao Domingos"
+msgstr ""
+
+msgctxt "province"
+msgid "Sao Filipe"
+msgstr ""
+
+msgctxt "province"
+msgid "Sao Nicolau"
+msgstr ""
+
+msgctxt "province"
+msgid "Sao Vicente"
+msgstr ""
+
+msgctxt "province"
+msgid "Tarrafal"
+msgstr ""
+
+msgctxt "province"
+msgid "Ammochostos Magusa"
+msgstr ""
+
+msgctxt "province"
+msgid "Keryneia"
+msgstr ""
+
+msgctxt "province"
+msgid "Larnaka"
+msgstr ""
+
+msgctxt "province"
+msgid "Lefkosia"
+msgstr ""
+
+msgctxt "province"
+msgid "Lemesos"
+msgstr ""
+
+msgctxt "province"
+msgid "Pafos"
+msgstr ""
+
+msgctxt "province"
+msgid "Jihočeský kraj"
+msgstr ""
+
+msgctxt "province"
+msgid "Jihomoravský kraj"
+msgstr ""
+
+msgctxt "province"
+msgid "Karlovarský kraj"
+msgstr ""
+
+msgctxt "province"
+msgid "Královéhradecký kraj"
+msgstr ""
+
+msgctxt "province"
+msgid "Liberecký kraj"
+msgstr ""
+
+msgctxt "province"
+msgid "Moravskoslezský kraj"
+msgstr ""
+
+msgctxt "province"
+msgid "Olomoucký kraj"
+msgstr ""
+
+msgctxt "province"
+msgid "Pardubický kraj"
+msgstr ""
+
+msgctxt "province"
+msgid "Plzeňský kraj"
+msgstr ""
+
+msgctxt "province"
+msgid "Praha, hlavní město"
+msgstr ""
+
+msgctxt "province"
+msgid "Středočeský kraj"
+msgstr ""
+
+msgctxt "province"
+msgid "Ústecký kraj"
+msgstr ""
+
+msgctxt "province"
+msgid "Vysočina"
+msgstr ""
+
+msgctxt "province"
+msgid "Zlínský kraj"
+msgstr ""
+
+msgctxt "province"
+msgid "Baden-Wuerttemberg"
+msgstr ""
+
+msgctxt "province"
+msgid "Bayern"
+msgstr ""
+
+msgctxt "province"
+msgid "Bremen"
+msgstr ""
+
+msgctxt "province"
+msgid "Hamburg"
+msgstr ""
+
+msgctxt "province"
+msgid "Hessen"
+msgstr ""
+
+msgctxt "province"
+msgid "Niedersachsen"
+msgstr ""
+
+msgctxt "province"
+msgid "Nordrhein-Westfalen"
+msgstr ""
+
+msgctxt "province"
+msgid "Rheinland-Pfalz"
+msgstr ""
+
+msgctxt "province"
+msgid "Saarland"
+msgstr ""
+
+msgctxt "province"
+msgid "Schleswig-Holstein"
+msgstr ""
+
+msgctxt "province"
+msgid "Berlin"
+msgstr ""
+
+msgctxt "province"
+msgid "Brandenburg"
+msgstr ""
+
+msgctxt "province"
+msgid "Mecklenburg-Vorpommern"
+msgstr ""
+
+msgctxt "province"
+msgid "Sachsen"
+msgstr ""
+
+msgctxt "province"
+msgid "Sachsen-Anhalt"
+msgstr ""
+
+msgctxt "province"
+msgid "Thueringen"
+msgstr ""
+
+msgctxt "province"
+msgid "Ali Sabiah"
+msgstr ""
+
+msgctxt "province"
+msgid "Dikhil"
+msgstr ""
+
+msgctxt "province"
+msgid "Djibouti"
+msgstr ""
+
+msgctxt "province"
+msgid "Obock"
+msgstr ""
+
+msgctxt "province"
+msgid "Tadjoura"
+msgstr ""
+
+msgctxt "province"
+msgid "Frederiksberg"
+msgstr ""
+
+msgctxt "province"
+msgid "Copenhagen City"
+msgstr ""
+
+msgctxt "province"
+msgid "Copenhagen"
+msgstr ""
+
+msgctxt "province"
+msgid "Frederiksborg"
+msgstr ""
+
+msgctxt "province"
+msgid "Roskilde"
+msgstr ""
+
+msgctxt "province"
+msgid "Vestsjælland"
+msgstr ""
+
+msgctxt "province"
+msgid "Storstrøm"
+msgstr ""
+
+msgctxt "province"
+msgid "Bornholm"
+msgstr ""
+
+msgctxt "province"
+msgid "Fyn"
+msgstr ""
+
+msgctxt "province"
+msgid "South Jutland"
+msgstr ""
+
+msgctxt "province"
+msgid "Ribe"
+msgstr ""
+
+msgctxt "province"
+msgid "Vejle"
+msgstr ""
+
+msgctxt "province"
+msgid "Ringkjøbing"
+msgstr ""
+
+msgctxt "province"
+msgid "Århus"
+msgstr ""
+
+msgctxt "province"
+msgid "Viborg"
+msgstr ""
+
+msgctxt "province"
+msgid "North Jutland"
+msgstr ""
+
+msgctxt "province"
+msgid "Distrito Nacional (Santo Domingo)"
+msgstr ""
+
+msgctxt "province"
+msgid "Azua"
+msgstr ""
+
+msgctxt "province"
+msgid "Bahoruco"
+msgstr ""
+
+msgctxt "province"
+msgid "Barahona"
+msgstr ""
+
+msgctxt "province"
+msgid "Dajabón"
+msgstr ""
+
+msgctxt "province"
+msgid "Duarte"
+msgstr ""
+
+msgctxt "province"
+msgid "El Seybo [El Seibo]"
+msgstr ""
+
+msgctxt "province"
+msgid "Espaillat"
+msgstr ""
+
+msgctxt "province"
+msgid "Hato Mayor"
+msgstr ""
+
+msgctxt "province"
+msgid "Independencia"
+msgstr ""
+
+msgctxt "province"
+msgid "La Altagracia"
+msgstr ""
+
+msgctxt "province"
+msgid "La Estrelleta [Elias Pina]"
+msgstr ""
+
+msgctxt "province"
+msgid "La Romana"
+msgstr ""
+
+msgctxt "province"
+msgid "La Vega"
+msgstr ""
+
+msgctxt "province"
+msgid "Maroia Trinidad Sánchez"
+msgstr ""
+
+msgctxt "province"
+msgid "Monseñor Nouel"
+msgstr ""
+
+msgctxt "province"
+msgid "Monte Cristi"
+msgstr ""
+
+msgctxt "province"
+msgid "Monte Plata"
+msgstr ""
+
+msgctxt "province"
+msgid "Pedernales"
+msgstr ""
+
+msgctxt "province"
+msgid "Peravia"
+msgstr ""
+
+msgctxt "province"
+msgid "Puerto Plata"
+msgstr ""
+
+msgctxt "province"
+msgid "Salcedo"
+msgstr ""
+
+msgctxt "province"
+msgid "Samaná"
+msgstr ""
+
+msgctxt "province"
+msgid "San Cristóbal"
+msgstr ""
+
+msgctxt "province"
+msgid "San Pedro de Macorís"
+msgstr ""
+
+msgctxt "province"
+msgid "Sánchez Ramírez"
+msgstr ""
+
+msgctxt "province"
+msgid "Santiago"
+msgstr ""
+
+msgctxt "province"
+msgid "Santiago Rodríguez"
+msgstr ""
+
+msgctxt "province"
+msgid "Valverde"
+msgstr ""
+
+msgctxt "province"
+msgid "Adrar"
+msgstr ""
+
+msgctxt "province"
+msgid "Ain Defla"
+msgstr ""
+
+msgctxt "province"
+msgid "Ain Tmouchent"
+msgstr ""
+
+msgctxt "province"
+msgid "Alger"
+msgstr ""
+
+msgctxt "province"
+msgid "Annaba"
+msgstr ""
+
+msgctxt "province"
+msgid "Batna"
+msgstr ""
+
+msgctxt "province"
+msgid "Bechar"
+msgstr ""
+
+msgctxt "province"
+msgid "Bejaia"
+msgstr ""
+
+msgctxt "province"
+msgid "Biskra"
+msgstr ""
+
+msgctxt "province"
+msgid "Blida"
+msgstr ""
+
+msgctxt "province"
+msgid "Bordj Bou Arreridj"
+msgstr ""
+
+msgctxt "province"
+msgid "Bouira"
+msgstr ""
+
+msgctxt "province"
+msgid "Boumerdes"
+msgstr ""
+
+msgctxt "province"
+msgid "Chlef"
+msgstr ""
+
+msgctxt "province"
+msgid "Constantine"
+msgstr ""
+
+msgctxt "province"
+msgid "Djelfa"
+msgstr ""
+
+msgctxt "province"
+msgid "El Bayadh"
+msgstr ""
+
+msgctxt "province"
+msgid "El Oued"
+msgstr ""
+
+msgctxt "province"
+msgid "El Tarf"
+msgstr ""
+
+msgctxt "province"
+msgid "Ghardaia"
+msgstr ""
+
+msgctxt "province"
+msgid "Guelma"
+msgstr ""
+
+msgctxt "province"
+msgid "Illizi"
+msgstr ""
+
+msgctxt "province"
+msgid "Jijel"
+msgstr ""
+
+msgctxt "province"
+msgid "Khenchela"
+msgstr ""
+
+msgctxt "province"
+msgid "Laghouat"
+msgstr ""
+
+msgctxt "province"
+msgid "Mascara"
+msgstr ""
+
+msgctxt "province"
+msgid "Medea"
+msgstr ""
+
+msgctxt "province"
+msgid "Mila"
+msgstr ""
+
+msgctxt "province"
+msgid "Mostaganem"
+msgstr ""
+
+msgctxt "province"
+msgid "Msila"
+msgstr ""
+
+msgctxt "province"
+msgid "Naama"
+msgstr ""
+
+msgctxt "province"
+msgid "Oran"
+msgstr ""
+
+msgctxt "province"
+msgid "Ouargla"
+msgstr ""
+
+msgctxt "province"
+msgid "Oum el Bouaghi"
+msgstr ""
+
+msgctxt "province"
+msgid "Relizane"
+msgstr ""
+
+msgctxt "province"
+msgid "Saida"
+msgstr ""
+
+msgctxt "province"
+msgid "Setif"
+msgstr ""
+
+msgctxt "province"
+msgid "Sidi Bel Abbes"
+msgstr ""
+
+msgctxt "province"
+msgid "Skikda"
+msgstr ""
+
+msgctxt "province"
+msgid "Souk Ahras"
+msgstr ""
+
+msgctxt "province"
+msgid "Tamanghasset"
+msgstr ""
+
+msgctxt "province"
+msgid "Tebessa"
+msgstr ""
+
+msgctxt "province"
+msgid "Tiaret"
+msgstr ""
+
+msgctxt "province"
+msgid "Tindouf"
+msgstr ""
+
+msgctxt "province"
+msgid "Tipaza"
+msgstr ""
+
+msgctxt "province"
+msgid "Tissemsilt"
+msgstr ""
+
+msgctxt "province"
+msgid "Tizi Ouzou"
+msgstr ""
+
+msgctxt "province"
+msgid "Tlemcen"
+msgstr ""
+
+msgctxt "province"
+msgid "Azuay"
+msgstr ""
+
+msgctxt "province"
+msgid "Bolivar"
+msgstr ""
+
+msgctxt "province"
+msgid "Canar"
+msgstr ""
+
+msgctxt "province"
+msgid "Carchi"
+msgstr ""
+
+msgctxt "province"
+msgid "Cotopaxi"
+msgstr ""
+
+msgctxt "province"
+msgid "Chimborazo"
+msgstr ""
+
+msgctxt "province"
+msgid "El Oro"
+msgstr ""
+
+msgctxt "province"
+msgid "Esmeraldas"
+msgstr ""
+
+msgctxt "province"
+msgid "Galapagos"
+msgstr ""
+
+msgctxt "province"
+msgid "Guayas"
+msgstr ""
+
+msgctxt "province"
+msgid "Imbabura"
+msgstr ""
+
+msgctxt "province"
+msgid "Loja"
+msgstr ""
+
+msgctxt "province"
+msgid "Los Rios"
+msgstr ""
+
+msgctxt "province"
+msgid "Manabi"
+msgstr ""
+
+msgctxt "province"
+msgid "Morona-Santiago"
+msgstr ""
+
+msgctxt "province"
+msgid "Napo"
+msgstr ""
+
+msgctxt "province"
+msgid "Orellana"
+msgstr ""
+
+msgctxt "province"
+msgid "Pastaza"
+msgstr ""
+
+msgctxt "province"
+msgid "Pichincha"
+msgstr ""
+
+msgctxt "province"
+msgid "Sucumbios"
+msgstr ""
+
+msgctxt "province"
+msgid "Tungurahua"
+msgstr ""
+
+msgctxt "province"
+msgid "Zamora-Chinchipe"
+msgstr ""
+
+msgctxt "province"
+msgid "Harjumsa"
+msgstr ""
+
+msgctxt "province"
+msgid "Hitumea"
+msgstr ""
+
+msgctxt "province"
+msgid "Ida-Virumsa"
+msgstr ""
+
+msgctxt "province"
+msgid "Jogevamsa"
+msgstr ""
+
+msgctxt "province"
+msgid "Jarvamsa"
+msgstr ""
+
+msgctxt "province"
+msgid "Lasnemsa"
+msgstr ""
+
+msgctxt "province"
+msgid "Laane-Virumaa"
+msgstr ""
+
+msgctxt "province"
+msgid "Polvamea"
+msgstr ""
+
+msgctxt "province"
+msgid "Parnumsa"
+msgstr ""
+
+msgctxt "province"
+msgid "Raplamsa"
+msgstr ""
+
+msgctxt "province"
+msgid "Saaremsa"
+msgstr ""
+
+msgctxt "province"
+msgid "Tartumsa"
+msgstr ""
+
+msgctxt "province"
+msgid "Valgamaa"
+msgstr ""
+
+msgctxt "province"
+msgid "Viljandimsa"
+msgstr ""
+
+msgctxt "province"
+msgid "Vorumaa"
+msgstr ""
+
+msgctxt "province"
+msgid "Ad Daqahllyah"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Bahr al Ahmar"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Buhayrah"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Fayym"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Gharbiyah"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Iskandarlyah"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Isma illyah"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Jizah"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Minuflyah"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Minya"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Qahirah"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Qalyublyah"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Wadi al Jadid"
+msgstr ""
+
+msgctxt "province"
+msgid "Ash Sharqiyah"
+msgstr ""
+
+msgctxt "province"
+msgid "As Suways"
+msgstr ""
+
+msgctxt "province"
+msgid "Aswan"
+msgstr ""
+
+msgctxt "province"
+msgid "Asyut"
+msgstr ""
+
+msgctxt "province"
+msgid "Bani Suwayf"
+msgstr ""
+
+msgctxt "province"
+msgid "Bur Sa'id"
+msgstr ""
+
+msgctxt "province"
+msgid "Dumyat"
+msgstr ""
+
+msgctxt "province"
+msgid "Janub Sina'"
+msgstr ""
+
+msgctxt "province"
+msgid "Kafr ash Shaykh"
+msgstr ""
+
+msgctxt "province"
+msgid "Matruh"
+msgstr ""
+
+msgctxt "province"
+msgid "Qina"
+msgstr ""
+
+msgctxt "province"
+msgid "Shamal Sina'"
+msgstr ""
+
+msgctxt "province"
+msgid "Suhaj"
+msgstr ""
+
+msgctxt "province"
+msgid "Anseba"
+msgstr ""
+
+msgctxt "province"
+msgid "Debub"
+msgstr ""
+
+msgctxt "province"
+msgid "Debubawi Keyih Bahri [Debub-Keih-Bahri]"
+msgstr ""
+
+msgctxt "province"
+msgid "Gash-Barka"
+msgstr ""
+
+msgctxt "province"
+msgid "Maakel [Maekel]"
+msgstr ""
+
+msgctxt "province"
+msgid "Semenawi Keyih Bahri [Semien-Keih-Bahri]"
+msgstr ""
+
+msgctxt "province"
+msgid "Álava"
+msgstr ""
+
+msgctxt "province"
+msgid "Albacete"
+msgstr ""
+
+msgctxt "province"
+msgid "Alicante"
+msgstr ""
+
+msgctxt "province"
+msgid "Almería"
+msgstr ""
+
+msgctxt "province"
+msgid "Asturias"
+msgstr ""
+
+msgctxt "province"
+msgid "Ávila"
+msgstr ""
+
+msgctxt "province"
+msgid "Badajoz"
+msgstr ""
+
+msgctxt "province"
+msgid "Baleares"
+msgstr ""
+
+msgctxt "province"
+msgid "Barcelona"
+msgstr ""
+
+msgctxt "province"
+msgid "Burgos"
+msgstr ""
+
+msgctxt "province"
+msgid "Cáceres"
+msgstr ""
+
+msgctxt "province"
+msgid "Cádiz"
+msgstr ""
+
+msgctxt "province"
+msgid "Cantabria"
+msgstr ""
+
+msgctxt "province"
+msgid "Castellón"
+msgstr ""
+
+msgctxt "province"
+msgid "Ciudad Real"
+msgstr ""
+
+msgctxt "province"
+msgid "Cuenca"
+msgstr ""
+
+msgctxt "province"
+msgid "Girona [Gerona]"
+msgstr ""
+
+msgctxt "province"
+msgid "Granada"
+msgstr ""
+
+msgctxt "province"
+msgid "Guadalajara"
+msgstr ""
+
+msgctxt "province"
+msgid "Guipúzcoa"
+msgstr ""
+
+msgctxt "province"
+msgid "Huelva"
+msgstr ""
+
+msgctxt "province"
+msgid "Huesca"
+msgstr ""
+
+msgctxt "province"
+msgid "Jaén"
+msgstr ""
+
+msgctxt "province"
+msgid "La Coruña"
+msgstr ""
+
+msgctxt "province"
+msgid "La Rioja"
+msgstr ""
+
+msgctxt "province"
+msgid "Las Palmas"
+msgstr ""
+
+msgctxt "province"
+msgid "León"
+msgstr ""
+
+msgctxt "province"
+msgid "Lleida [Lérida]"
+msgstr ""
+
+msgctxt "province"
+msgid "Lugo"
+msgstr ""
+
+msgctxt "province"
+msgid "Madrid"
+msgstr ""
+
+msgctxt "province"
+msgid "Málaga"
+msgstr ""
+
+msgctxt "province"
+msgid "Murcia"
+msgstr ""
+
+msgctxt "province"
+msgid "Navarra"
+msgstr ""
+
+msgctxt "province"
+msgid "Ourense"
+msgstr ""
+
+msgctxt "province"
+msgid "Palencia"
+msgstr ""
+
+msgctxt "province"
+msgid "Pontevedra"
+msgstr ""
+
+msgctxt "province"
+msgid "Salamanca"
+msgstr ""
+
+msgctxt "province"
+msgid "Santa Cruz de Tenerife"
+msgstr ""
+
+msgctxt "province"
+msgid "Segovia"
+msgstr ""
+
+msgctxt "province"
+msgid "Sevilla"
+msgstr ""
+
+msgctxt "province"
+msgid "Soria"
+msgstr ""
+
+msgctxt "province"
+msgid "Tarragona"
+msgstr ""
+
+msgctxt "province"
+msgid "Teruel"
+msgstr ""
+
+msgctxt "province"
+msgid "Valencia"
+msgstr ""
+
+msgctxt "province"
+msgid "Valladolid"
+msgstr ""
+
+msgctxt "province"
+msgid "Vizcaya"
+msgstr ""
+
+msgctxt "province"
+msgid "Zamora"
+msgstr ""
+
+msgctxt "province"
+msgid "Zaragoza"
+msgstr ""
+
+msgctxt "province"
+msgid "Ceuta"
+msgstr ""
+
+msgctxt "province"
+msgid "Melilla"
+msgstr ""
+
+msgctxt "province"
+msgid "Addis Ababa"
+msgstr ""
+
+msgctxt "province"
+msgid "Dire Dawa"
+msgstr ""
+
+msgctxt "province"
+msgid "Afar"
+msgstr ""
+
+msgctxt "province"
+msgid "Amara"
+msgstr ""
+
+msgctxt "province"
+msgid "Benshangul-Gumaz"
+msgstr ""
+
+msgctxt "province"
+msgid "Gambela Peoples"
+msgstr ""
+
+msgctxt "province"
+msgid "Harari People"
+msgstr ""
+
+msgctxt "province"
+msgid "Oromia"
+msgstr ""
+
+msgctxt "province"
+msgid "Somali"
+msgstr ""
+
+msgctxt "province"
+msgid "Southern Nations, Nationalities and Peoples"
+msgstr ""
+
+msgctxt "province"
+msgid "Tigrai"
+msgstr ""
+
+msgctxt "province"
+msgid "Eastern"
+msgstr ""
+
+msgctxt "province"
+msgid "Northern"
+msgstr ""
+
+msgctxt "province"
+msgid "Western"
+msgstr ""
+
+msgctxt "province"
+msgid "Rotuma"
+msgstr ""
+
+msgctxt "province"
+msgid "Chuuk"
+msgstr ""
+
+msgctxt "province"
+msgid "Kosrae"
+msgstr ""
+
+msgctxt "province"
+msgid "Pohnpei"
+msgstr ""
+
+msgctxt "province"
+msgid "Yap"
+msgstr ""
+
+msgctxt "province"
+msgid "Ain"
+msgstr ""
+
+msgctxt "province"
+msgid "Aisne"
+msgstr ""
+
+msgctxt "province"
+msgid "Allier"
+msgstr ""
+
+msgctxt "province"
+msgid "Alpes-de-Haute-Provence"
+msgstr ""
+
+msgctxt "province"
+msgid "Alpes-Maritimes"
+msgstr ""
+
+msgctxt "province"
+msgid "Ardèche"
+msgstr ""
+
+msgctxt "province"
+msgid "Ardennes"
+msgstr ""
+
+msgctxt "province"
+msgid "Ariège"
+msgstr ""
+
+msgctxt "province"
+msgid "Aube"
+msgstr ""
+
+msgctxt "province"
+msgid "Aude"
+msgstr ""
+
+msgctxt "province"
+msgid "Aveyron"
+msgstr ""
+
+msgctxt "province"
+msgid "Bas-Rhin"
+msgstr ""
+
+msgctxt "province"
+msgid "Bouches-du-Rhône"
+msgstr ""
+
+msgctxt "province"
+msgid "Calvados"
+msgstr ""
+
+msgctxt "province"
+msgid "Cantal"
+msgstr ""
+
+msgctxt "province"
+msgid "Charente"
+msgstr ""
+
+msgctxt "province"
+msgid "Charente-Maritime"
+msgstr ""
+
+msgctxt "province"
+msgid "Cher"
+msgstr ""
+
+msgctxt "province"
+msgid "Corrèze"
+msgstr ""
+
+msgctxt "province"
+msgid "Corse-du-Sud"
+msgstr ""
+
+msgctxt "province"
+msgid "Côte-d'Or"
+msgstr ""
+
+msgctxt "province"
+msgid "Côtes-d'Armor"
+msgstr ""
+
+msgctxt "province"
+msgid "Creuse"
+msgstr ""
+
+msgctxt "province"
+msgid "Deux-Sèvres"
+msgstr ""
+
+msgctxt "province"
+msgid "Dordogne"
+msgstr ""
+
+msgctxt "province"
+msgid "Doubs"
+msgstr ""
+
+msgctxt "province"
+msgid "Drôme"
+msgstr ""
+
+msgctxt "province"
+msgid "Essonne"
+msgstr ""
+
+msgctxt "province"
+msgid "Eure"
+msgstr ""
+
+msgctxt "province"
+msgid "Eure-et-Loir"
+msgstr ""
+
+msgctxt "province"
+msgid "Finistère"
+msgstr ""
+
+msgctxt "province"
+msgid "Gard"
+msgstr ""
+
+msgctxt "province"
+msgid "Gers"
+msgstr ""
+
+msgctxt "province"
+msgid "Gironde"
+msgstr ""
+
+msgctxt "province"
+msgid "Haut-Rhin"
+msgstr ""
+
+msgctxt "province"
+msgid "Haute-Corse"
+msgstr ""
+
+msgctxt "province"
+msgid "Haute-Garonne"
+msgstr ""
+
+msgctxt "province"
+msgid "Haute-Loire"
+msgstr ""
+
+msgctxt "province"
+msgid "Haute-Saône"
+msgstr ""
+
+msgctxt "province"
+msgid "Haute-Savoie"
+msgstr ""
+
+msgctxt "province"
+msgid "Haute-Vienne"
+msgstr ""
+
+msgctxt "province"
+msgid "Hautes-Alpes"
+msgstr ""
+
+msgctxt "province"
+msgid "Hautes-Pyrénées"
+msgstr ""
+
+msgctxt "province"
+msgid "Hauts-de-Seine"
+msgstr ""
+
+msgctxt "province"
+msgid "Hérault"
+msgstr ""
+
+msgctxt "province"
+msgid "Indre"
+msgstr ""
+
+msgctxt "province"
+msgid "Ille-et-Vilaine"
+msgstr ""
+
+msgctxt "province"
+msgid "Indre-et-Loire"
+msgstr ""
+
+msgctxt "province"
+msgid "Isère"
+msgstr ""
+
+msgctxt "province"
+msgid "Landes"
+msgstr ""
+
+msgctxt "province"
+msgid "Loir-et-Cher"
+msgstr ""
+
+msgctxt "province"
+msgid "Loire"
+msgstr ""
+
+msgctxt "province"
+msgid "Loire-Atlantique"
+msgstr ""
+
+msgctxt "province"
+msgid "Loiret"
+msgstr ""
+
+msgctxt "province"
+msgid "Lot"
+msgstr ""
+
+msgctxt "province"
+msgid "Lot-et-Garonne"
+msgstr ""
+
+msgctxt "province"
+msgid "Lozère"
+msgstr ""
+
+msgctxt "province"
+msgid "Maine-et-Loire"
+msgstr ""
+
+msgctxt "province"
+msgid "Manche"
+msgstr ""
+
+msgctxt "province"
+msgid "Marne"
+msgstr ""
+
+msgctxt "province"
+msgid "Mayenne"
+msgstr ""
+
+msgctxt "province"
+msgid "Meurthe-et-Moselle"
+msgstr ""
+
+msgctxt "province"
+msgid "Meuse"
+msgstr ""
+
+msgctxt "province"
+msgid "Morbihan"
+msgstr ""
+
+msgctxt "province"
+msgid "Moselle"
+msgstr ""
+
+msgctxt "province"
+msgid "Nièvre"
+msgstr ""
+
+msgctxt "province"
+msgid "Nord"
+msgstr ""
+
+msgctxt "province"
+msgid "Oise"
+msgstr ""
+
+msgctxt "province"
+msgid "Orne"
+msgstr ""
+
+msgctxt "province"
+msgid "Paris"
+msgstr ""
+
+msgctxt "province"
+msgid "Pas-de-Calais"
+msgstr ""
+
+msgctxt "province"
+msgid "Puy-de-Dôme"
+msgstr ""
+
+msgctxt "province"
+msgid "Pyrénées-Atlantiques"
+msgstr ""
+
+msgctxt "province"
+msgid "Pyrénées-Orientales"
+msgstr ""
+
+msgctxt "province"
+msgid "Rhône"
+msgstr ""
+
+msgctxt "province"
+msgid "Saône-et-Loire"
+msgstr ""
+
+msgctxt "province"
+msgid "Sarthe"
+msgstr ""
+
+msgctxt "province"
+msgid "Savoie"
+msgstr ""
+
+msgctxt "province"
+msgid "Seine-et-Marne"
+msgstr ""
+
+msgctxt "province"
+msgid "Seine-Maritime"
+msgstr ""
+
+msgctxt "province"
+msgid "Seine-Saint-Denis"
+msgstr ""
+
+msgctxt "province"
+msgid "Somme"
+msgstr ""
+
+msgctxt "province"
+msgid "Tarn"
+msgstr ""
+
+msgctxt "province"
+msgid "Tarn-et-Garonne"
+msgstr ""
+
+msgctxt "province"
+msgid "Val d'Oise"
+msgstr ""
+
+msgctxt "province"
+msgid "Territoire de Belfort"
+msgstr ""
+
+msgctxt "province"
+msgid "Val-de-Marne"
+msgstr ""
+
+msgctxt "province"
+msgid "Var"
+msgstr ""
+
+msgctxt "province"
+msgid "Vaucluse"
+msgstr ""
+
+msgctxt "province"
+msgid "Vendée"
+msgstr ""
+
+msgctxt "province"
+msgid "Vienne"
+msgstr ""
+
+msgctxt "province"
+msgid "Vosges"
+msgstr ""
+
+msgctxt "province"
+msgid "Yonne"
+msgstr ""
+
+msgctxt "province"
+msgid "Yvelines"
+msgstr ""
+
+msgctxt "province"
+msgid "Aberdeen City"
+msgstr ""
+
+msgctxt "province"
+msgid "Aberdeenshire"
+msgstr ""
+
+msgctxt "province"
+msgid "Angus"
+msgstr ""
+
+msgctxt "province"
+msgid "Co Antrim"
+msgstr ""
+
+msgctxt "province"
+msgid "Argyll and Bute"
+msgstr ""
+
+msgctxt "province"
+msgid "Co Armagh"
+msgstr ""
+
+msgctxt "province"
+msgid "Bedfordshire"
+msgstr ""
+
+msgctxt "province"
+msgid "Gwent"
+msgstr ""
+
+msgctxt "province"
+msgid "Bristol, City of"
+msgstr ""
+
+msgctxt "province"
+msgid "Buckinghamshire"
+msgstr ""
+
+msgctxt "province"
+msgid "Cambridgeshire"
+msgstr ""
+
+msgctxt "province"
+msgid "Cheshire"
+msgstr ""
+
+msgctxt "province"
+msgid "Clackmannanshire"
+msgstr ""
+
+msgctxt "province"
+msgid "Cornwall"
+msgstr ""
+
+msgctxt "province"
+msgid "Cumbria"
+msgstr ""
+
+msgctxt "province"
+msgid "Derbyshire"
+msgstr ""
+
+msgctxt "province"
+msgid "Co Londonderry"
+msgstr ""
+
+msgctxt "province"
+msgid "Devon"
+msgstr ""
+
+msgctxt "province"
+msgid "Dorset"
+msgstr ""
+
+msgctxt "province"
+msgid "Co Down"
+msgstr ""
+
+msgctxt "province"
+msgid "Dumfries and Galloway"
+msgstr ""
+
+msgctxt "province"
+msgid "Dundee City"
+msgstr ""
+
+msgctxt "province"
+msgid "County Durham"
+msgstr ""
+
+msgctxt "province"
+msgid "East Ayrshire"
+msgstr ""
+
+msgctxt "province"
+msgid "East Dunbartonshire"
+msgstr ""
+
+msgctxt "province"
+msgid "East Lothian"
+msgstr ""
+
+msgctxt "province"
+msgid "East Renfrewshire"
+msgstr ""
+
+msgctxt "province"
+msgid "East Riding of Yorkshire"
+msgstr ""
+
+msgctxt "province"
+msgid "East Sussex"
+msgstr ""
+
+msgctxt "province"
+msgid "Edinburgh, City of"
+msgstr ""
+
+msgctxt "province"
+msgid "Na h-Eileanan Siar"
+msgstr ""
+
+msgctxt "province"
+msgid "Essex"
+msgstr ""
+
+msgctxt "province"
+msgid "Falkirk"
+msgstr ""
+
+msgctxt "province"
+msgid "Co Fermanagh"
+msgstr ""
+
+msgctxt "province"
+msgid "Fife"
+msgstr ""
+
+msgctxt "province"
+msgid "Glasgow City"
+msgstr ""
+
+msgctxt "province"
+msgid "Gloucestershire"
+msgstr ""
+
+msgctxt "province"
+msgid "Gwynedd"
+msgstr ""
+
+msgctxt "province"
+msgid "Hampshire"
+msgstr ""
+
+msgctxt "province"
+msgid "Herefordshire"
+msgstr ""
+
+msgctxt "province"
+msgid "Hertfordshire"
+msgstr ""
+
+msgctxt "province"
+msgid "Highland"
+msgstr ""
+
+msgctxt "province"
+msgid "Inverclyde"
+msgstr ""
+
+msgctxt "province"
+msgid "Isle of Wight"
+msgstr ""
+
+msgctxt "province"
+msgid "Kent"
+msgstr ""
+
+msgctxt "province"
+msgid "Lancashire"
+msgstr ""
+
+msgctxt "province"
+msgid "Leicestershire"
+msgstr ""
+
+msgctxt "province"
+msgid "Lincolnshire"
+msgstr ""
+
+msgctxt "province"
+msgid "Midlothian"
+msgstr ""
+
+msgctxt "province"
+msgid "Moray"
+msgstr ""
+
+msgctxt "province"
+msgid "Norfolk"
+msgstr ""
+
+msgctxt "province"
+msgid "North Ayrshire"
+msgstr ""
+
+msgctxt "province"
+msgid "North Lanarkshire"
+msgstr ""
+
+msgctxt "province"
+msgid "North Yorkshire"
+msgstr ""
+
+msgctxt "province"
+msgid "Northamptonshire"
+msgstr ""
+
+msgctxt "province"
+msgid "Northumberland"
+msgstr ""
+
+msgctxt "province"
+msgid "Nottinghamshire"
+msgstr ""
+
+msgctxt "province"
+msgid "Oldham"
+msgstr ""
+
+msgctxt "province"
+msgid "Omagh"
+msgstr ""
+
+msgctxt "province"
+msgid "Orkney Islands"
+msgstr ""
+
+msgctxt "province"
+msgid "Oxfordshire"
+msgstr ""
+
+msgctxt "province"
+msgid "Perth and Kinross"
+msgstr ""
+
+msgctxt "province"
+msgid "Powys"
+msgstr ""
+
+msgctxt "province"
+msgid "Renfrewshire"
+msgstr ""
+
+msgctxt "province"
+msgid "Rutland"
+msgstr ""
+
+msgctxt "province"
+msgid "Scottish Borders"
+msgstr ""
+
+msgctxt "province"
+msgid "Shetland Islands"
+msgstr ""
+
+msgctxt "province"
+msgid "Shropshire"
+msgstr ""
+
+msgctxt "province"
+msgid "Somerset"
+msgstr ""
+
+msgctxt "province"
+msgid "South Ayrshire"
+msgstr ""
+
+msgctxt "province"
+msgid "South Gloucestershire"
+msgstr ""
+
+msgctxt "province"
+msgid "South Lanarkshire"
+msgstr ""
+
+msgctxt "province"
+msgid "Staffordshire"
+msgstr ""
+
+msgctxt "province"
+msgid "Stirling"
+msgstr ""
+
+msgctxt "province"
+msgid "Suffolk"
+msgstr ""
+
+msgctxt "province"
+msgid "Surrey"
+msgstr ""
+
+msgctxt "province"
+msgid "Mid Glamorgan"
+msgstr ""
+
+msgctxt "province"
+msgid "Warwickshire"
+msgstr ""
+
+msgctxt "province"
+msgid "West Dunbartonshire"
+msgstr ""
+
+msgctxt "province"
+msgid "West Lothian"
+msgstr ""
+
+msgctxt "province"
+msgid "West Sussex"
+msgstr ""
+
+msgctxt "province"
+msgid "Wiltshire"
+msgstr ""
+
+msgctxt "province"
+msgid "Worcestershire"
+msgstr ""
+
+msgctxt "province"
+msgid "Ashanti"
+msgstr ""
+
+msgctxt "province"
+msgid "Brong-Ahafo"
+msgstr ""
+
+msgctxt "province"
+msgid "Greater Accra"
+msgstr ""
+
+msgctxt "province"
+msgid "Upper East"
+msgstr ""
+
+msgctxt "province"
+msgid "Upper West"
+msgstr ""
+
+msgctxt "province"
+msgid "Volta"
+msgstr ""
+
+msgctxt "province"
+msgid "Banjul"
+msgstr ""
+
+msgctxt "province"
+msgid "Lower River"
+msgstr ""
+
+msgctxt "province"
+msgid "MacCarthy Island"
+msgstr ""
+
+msgctxt "province"
+msgid "North Bank"
+msgstr ""
+
+msgctxt "province"
+msgid "Upper River"
+msgstr ""
+
+msgctxt "province"
+msgid "Beyla"
+msgstr ""
+
+msgctxt "province"
+msgid "Boffa"
+msgstr ""
+
+msgctxt "province"
+msgid "Boke"
+msgstr ""
+
+msgctxt "province"
+msgid "Coyah"
+msgstr ""
+
+msgctxt "province"
+msgid "Dabola"
+msgstr ""
+
+msgctxt "province"
+msgid "Dalaba"
+msgstr ""
+
+msgctxt "province"
+msgid "Dinguiraye"
+msgstr ""
+
+msgctxt "province"
+msgid "Dubreka"
+msgstr ""
+
+msgctxt "province"
+msgid "Faranah"
+msgstr ""
+
+msgctxt "province"
+msgid "Forecariah"
+msgstr ""
+
+msgctxt "province"
+msgid "Fria"
+msgstr ""
+
+msgctxt "province"
+msgid "Gaoual"
+msgstr ""
+
+msgctxt "province"
+msgid "Guekedou"
+msgstr ""
+
+msgctxt "province"
+msgid "Kankan"
+msgstr ""
+
+msgctxt "province"
+msgid "Kerouane"
+msgstr ""
+
+msgctxt "province"
+msgid "Kindia"
+msgstr ""
+
+msgctxt "province"
+msgid "Kissidougou"
+msgstr ""
+
+msgctxt "province"
+msgid "Koubia"
+msgstr ""
+
+msgctxt "province"
+msgid "Koundara"
+msgstr ""
+
+msgctxt "province"
+msgid "Kouroussa"
+msgstr ""
+
+msgctxt "province"
+msgid "Labe"
+msgstr ""
+
+msgctxt "province"
+msgid "Lelouma"
+msgstr ""
+
+msgctxt "province"
+msgid "Lola"
+msgstr ""
+
+msgctxt "province"
+msgid "Macenta"
+msgstr ""
+
+msgctxt "province"
+msgid "Mali"
+msgstr ""
+
+msgctxt "province"
+msgid "Mamou"
+msgstr ""
+
+msgctxt "province"
+msgid "Mandiana"
+msgstr ""
+
+msgctxt "province"
+msgid "Nzerekore"
+msgstr ""
+
+msgctxt "province"
+msgid "Pita"
+msgstr ""
+
+msgctxt "province"
+msgid "Siguiri"
+msgstr ""
+
+msgctxt "province"
+msgid "Telimele"
+msgstr ""
+
+msgctxt "province"
+msgid "Tougue"
+msgstr ""
+
+msgctxt "province"
+msgid "Yomou"
+msgstr ""
+
+msgctxt "province"
+msgid "Region Continental"
+msgstr ""
+
+msgctxt "province"
+msgid "Region Insular"
+msgstr ""
+
+msgctxt "province"
+msgid "Annobon"
+msgstr ""
+
+msgctxt "province"
+msgid "Bioko Norte"
+msgstr ""
+
+msgctxt "province"
+msgid "Bioko Sur"
+msgstr ""
+
+msgctxt "province"
+msgid "Centro Sur"
+msgstr ""
+
+msgctxt "province"
+msgid "Kie-Ntem"
+msgstr ""
+
+msgctxt "province"
+msgid "Litoral"
+msgstr ""
+
+msgctxt "province"
+msgid "Wele-Nzas"
+msgstr ""
+
+msgctxt "province"
+msgid "Achaïa"
+msgstr ""
+
+msgctxt "province"
+msgid "Aitolia-Akarnania"
+msgstr ""
+
+msgctxt "province"
+msgid "Argolis"
+msgstr ""
+
+msgctxt "province"
+msgid "Arkadia"
+msgstr ""
+
+msgctxt "province"
+msgid "Arta"
+msgstr ""
+
+msgctxt "province"
+msgid "Attiki"
+msgstr ""
+
+msgctxt "province"
+msgid "Chalkidiki"
+msgstr ""
+
+msgctxt "province"
+msgid "Chania"
+msgstr ""
+
+msgctxt "province"
+msgid "Chios"
+msgstr ""
+
+msgctxt "province"
+msgid "Dodekanisos"
+msgstr ""
+
+msgctxt "province"
+msgid "Drama"
+msgstr ""
+
+msgctxt "province"
+msgid "Evros"
+msgstr ""
+
+msgctxt "province"
+msgid "Evrytania"
+msgstr ""
+
+msgctxt "province"
+msgid "Evvoia"
+msgstr ""
+
+msgctxt "province"
+msgid "Florina"
+msgstr ""
+
+msgctxt "province"
+msgid "Fokis"
+msgstr ""
+
+msgctxt "province"
+msgid "Fthiotis"
+msgstr ""
+
+msgctxt "province"
+msgid "Grevena"
+msgstr ""
+
+msgctxt "province"
+msgid "Ileia"
+msgstr ""
+
+msgctxt "province"
+msgid "Imathia"
+msgstr ""
+
+msgctxt "province"
+msgid "Ioannina"
+msgstr ""
+
+msgctxt "province"
+msgid "Irakleion"
+msgstr ""
+
+msgctxt "province"
+msgid "Karditsa"
+msgstr ""
+
+msgctxt "province"
+msgid "Kastoria"
+msgstr ""
+
+msgctxt "province"
+msgid "Kavalla"
+msgstr ""
+
+msgctxt "province"
+msgid "Kefallinia"
+msgstr ""
+
+msgctxt "province"
+msgid "Kerkyra"
+msgstr ""
+
+msgctxt "province"
+msgid "Kilkis"
+msgstr ""
+
+msgctxt "province"
+msgid "Korinthia"
+msgstr ""
+
+msgctxt "province"
+msgid "Kozani"
+msgstr ""
+
+msgctxt "province"
+msgid "Kyklades"
+msgstr ""
+
+msgctxt "province"
+msgid "Lakonia"
+msgstr ""
+
+msgctxt "province"
+msgid "Larisa"
+msgstr ""
+
+msgctxt "province"
+msgid "Lasithion"
+msgstr ""
+
+msgctxt "province"
+msgid "Lefkas"
+msgstr ""
+
+msgctxt "province"
+msgid "Lesvos"
+msgstr ""
+
+msgctxt "province"
+msgid "Magnisia"
+msgstr ""
+
+msgctxt "province"
+msgid "Messinia"
+msgstr ""
+
+msgctxt "province"
+msgid "Pella"
+msgstr ""
+
+msgctxt "province"
+msgid "Preveza"
+msgstr ""
+
+msgctxt "province"
+msgid "Rethymnon"
+msgstr ""
+
+msgctxt "province"
+msgid "Rodopi"
+msgstr ""
+
+msgctxt "province"
+msgid "Samos"
+msgstr ""
+
+msgctxt "province"
+msgid "Serrai"
+msgstr ""
+
+msgctxt "province"
+msgid "Thesprotia"
+msgstr ""
+
+msgctxt "province"
+msgid "Thessaloniki"
+msgstr ""
+
+msgctxt "province"
+msgid "Trikala"
+msgstr ""
+
+msgctxt "province"
+msgid "Voiotia"
+msgstr ""
+
+msgctxt "province"
+msgid "Xanthi"
+msgstr ""
+
+msgctxt "province"
+msgid "Zakynthos"
+msgstr ""
+
+msgctxt "province"
+msgid "Agio Oros"
+msgstr ""
+
+msgctxt "province"
+msgid "Alta Verapez"
+msgstr ""
+
+msgctxt "province"
+msgid "Baja Verapez"
+msgstr ""
+
+msgctxt "province"
+msgid "Chimaltenango"
+msgstr ""
+
+msgctxt "province"
+msgid "Chiquimula"
+msgstr ""
+
+msgctxt "province"
+msgid "El Progreso"
+msgstr ""
+
+msgctxt "province"
+msgid "Escuintla"
+msgstr ""
+
+msgctxt "province"
+msgid "Guatemala"
+msgstr ""
+
+msgctxt "province"
+msgid "Huehuetenango"
+msgstr ""
+
+msgctxt "province"
+msgid "Izabal"
+msgstr ""
+
+msgctxt "province"
+msgid "Jalapa"
+msgstr ""
+
+msgctxt "province"
+msgid "Jutiapa"
+msgstr ""
+
+msgctxt "province"
+msgid "Peten"
+msgstr ""
+
+msgctxt "province"
+msgid "Quetzaltenango"
+msgstr ""
+
+msgctxt "province"
+msgid "Quiche"
+msgstr ""
+
+msgctxt "province"
+msgid "Reta.thuleu"
+msgstr ""
+
+msgctxt "province"
+msgid "Sacatepequez"
+msgstr ""
+
+msgctxt "province"
+msgid "San Marcos"
+msgstr ""
+
+msgctxt "province"
+msgid "Santa Rosa"
+msgstr ""
+
+msgctxt "province"
+msgid "Solol6"
+msgstr ""
+
+msgctxt "province"
+msgid "Suchitepequez"
+msgstr ""
+
+msgctxt "province"
+msgid "Totonicapan"
+msgstr ""
+
+msgctxt "province"
+msgid "Zacapa"
+msgstr ""
+
+msgctxt "province"
+msgid "Bissau"
+msgstr ""
+
+msgctxt "province"
+msgid "Bafata"
+msgstr ""
+
+msgctxt "province"
+msgid "Biombo"
+msgstr ""
+
+msgctxt "province"
+msgid "Bolama"
+msgstr ""
+
+msgctxt "province"
+msgid "Cacheu"
+msgstr ""
+
+msgctxt "province"
+msgid "Gabu"
+msgstr ""
+
+msgctxt "province"
+msgid "Oio"
+msgstr ""
+
+msgctxt "province"
+msgid "Quloara"
+msgstr ""
+
+msgctxt "province"
+msgid "Tombali S"
+msgstr ""
+
+msgctxt "province"
+msgid "Barima-Waini"
+msgstr ""
+
+msgctxt "province"
+msgid "Cuyuni-Mazaruni"
+msgstr ""
+
+msgctxt "province"
+msgid "Demerara-Mahaica"
+msgstr ""
+
+msgctxt "province"
+msgid "East Berbice-Corentyne"
+msgstr ""
+
+msgctxt "province"
+msgid "Essequibo Islands-West Demerara"
+msgstr ""
+
+msgctxt "province"
+msgid "Mahaica-Berbice"
+msgstr ""
+
+msgctxt "province"
+msgid "Pomeroon-Supenaam"
+msgstr ""
+
+msgctxt "province"
+msgid "Potaro-Siparuni"
+msgstr ""
+
+msgctxt "province"
+msgid "Upper Demerara-Berbice"
+msgstr ""
+
+msgctxt "province"
+msgid "Upper Takutu-Upper Essequibo"
+msgstr ""
+
+msgctxt "province"
+msgid "Atlantida"
+msgstr ""
+
+msgctxt "province"
+msgid "Colon"
+msgstr ""
+
+msgctxt "province"
+msgid "Comayagua"
+msgstr ""
+
+msgctxt "province"
+msgid "Copan"
+msgstr ""
+
+msgctxt "province"
+msgid "Cortes"
+msgstr ""
+
+msgctxt "province"
+msgid "Choluteca"
+msgstr ""
+
+msgctxt "province"
+msgid "El Paraiso"
+msgstr ""
+
+msgctxt "province"
+msgid "Francisco Morazan"
+msgstr ""
+
+msgctxt "province"
+msgid "Gracias a Dios"
+msgstr ""
+
+msgctxt "province"
+msgid "Intibuca"
+msgstr ""
+
+msgctxt "province"
+msgid "Islas de la Bahia"
+msgstr ""
+
+msgctxt "province"
+msgid "Lempira"
+msgstr ""
+
+msgctxt "province"
+msgid "Ocotepeque"
+msgstr ""
+
+msgctxt "province"
+msgid "Olancho"
+msgstr ""
+
+msgctxt "province"
+msgid "Santa Barbara"
+msgstr ""
+
+msgctxt "province"
+msgid "Valle"
+msgstr ""
+
+msgctxt "province"
+msgid "Yoro"
+msgstr ""
+
+msgctxt "province"
+msgid "Bjelovarsko-bilogorska zupanija"
+msgstr ""
+
+msgctxt "province"
+msgid "Brodsko-posavska zupanija"
+msgstr ""
+
+msgctxt "province"
+msgid "Dubrovacko-neretvanska zupanija"
+msgstr ""
+
+msgctxt "province"
+msgid "Istarska zupanija"
+msgstr ""
+
+msgctxt "province"
+msgid "Karlovacka zupanija"
+msgstr ""
+
+msgctxt "province"
+msgid "Koprivnickco-krizevacka zupanija"
+msgstr ""
+
+msgctxt "province"
+msgid "Krapinako-zagorska zupanija"
+msgstr ""
+
+msgctxt "province"
+msgid "Licko-senjska zupanija"
+msgstr ""
+
+msgctxt "province"
+msgid "Medimurska zupanija"
+msgstr ""
+
+msgctxt "province"
+msgid "Osjecko-baranjska zupanija"
+msgstr ""
+
+msgctxt "province"
+msgid "Pozesko-slavonska zupanija"
+msgstr ""
+
+msgctxt "province"
+msgid "Primorsko-goranska zupanija"
+msgstr ""
+
+msgctxt "province"
+msgid "Sisacko-moelavacka Iupanija"
+msgstr ""
+
+msgctxt "province"
+msgid "Splitako-dalmatinska zupanija"
+msgstr ""
+
+msgctxt "province"
+msgid "Sibenako-kninska zupanija"
+msgstr ""
+
+msgctxt "province"
+msgid "Varaidinska zupanija"
+msgstr ""
+
+msgctxt "province"
+msgid "VirovitiEko-podravska zupanija"
+msgstr ""
+
+msgctxt "province"
+msgid "VuRovarako-srijemska zupanija"
+msgstr ""
+
+msgctxt "province"
+msgid "Zadaraka"
+msgstr ""
+
+msgctxt "province"
+msgid "Zagrebacka zupanija"
+msgstr ""
+
+msgctxt "province"
+msgid "Grande-Anse"
+msgstr ""
+
+msgctxt "province"
+msgid "Nord-Est"
+msgstr ""
+
+msgctxt "province"
+msgid "Nord-Ouest"
+msgstr ""
+
+msgctxt "province"
+msgid "Ouest"
+msgstr ""
+
+msgctxt "province"
+msgid "Sud"
+msgstr ""
+
+msgctxt "province"
+msgid "Sud-Est"
+msgstr ""
+
+msgctxt "province"
+msgid "Budapest"
+msgstr ""
+
+msgctxt "province"
+msgid "Bács-Kiskun"
+msgstr ""
+
+msgctxt "province"
+msgid "Baranya"
+msgstr ""
+
+msgctxt "province"
+msgid "Békés"
+msgstr ""
+
+msgctxt "province"
+msgid "Borsod-Abaúj-Zemplén"
+msgstr ""
+
+msgctxt "province"
+msgid "Csongrád"
+msgstr ""
+
+msgctxt "province"
+msgid "Fejér"
+msgstr ""
+
+msgctxt "province"
+msgid "Győr-Moson-Sopron"
+msgstr ""
+
+msgctxt "province"
+msgid "Hajdu-Bihar"
+msgstr ""
+
+msgctxt "province"
+msgid "Heves"
+msgstr ""
+
+msgctxt "province"
+msgid "Jász-Nagykun-Szolnok"
+msgstr ""
+
+msgctxt "province"
+msgid "Komárom-Esztergom"
+msgstr ""
+
+msgctxt "province"
+msgid "Nográd"
+msgstr ""
+
+msgctxt "province"
+msgid "Pest"
+msgstr ""
+
+msgctxt "province"
+msgid "Somogy"
+msgstr ""
+
+msgctxt "province"
+msgid "Szabolcs-Szatmár-Bereg"
+msgstr ""
+
+msgctxt "province"
+msgid "Tolna"
+msgstr ""
+
+msgctxt "province"
+msgid "Vas"
+msgstr ""
+
+msgctxt "province"
+msgid "Veszprém"
+msgstr ""
+
+msgctxt "province"
+msgid "Zala"
+msgstr ""
+
+msgctxt "province"
+msgid "Békéscsaba"
+msgstr ""
+
+msgctxt "province"
+msgid "Debrecen"
+msgstr ""
+
+msgctxt "province"
+msgid "Dunaújváros"
+msgstr ""
+
+msgctxt "province"
+msgid "Eger"
+msgstr ""
+
+msgctxt "province"
+msgid "Győr"
+msgstr ""
+
+msgctxt "province"
+msgid "Hódmezővásárhely"
+msgstr ""
+
+msgctxt "province"
+msgid "Kaposvár"
+msgstr ""
+
+msgctxt "province"
+msgid "Kecskemét"
+msgstr ""
+
+msgctxt "province"
+msgid "Miskolc"
+msgstr ""
+
+msgctxt "province"
+msgid "Nagykanizsa"
+msgstr ""
+
+msgctxt "province"
+msgid "Nyiregyháza"
+msgstr ""
+
+msgctxt "province"
+msgid "Pécs"
+msgstr ""
+
+msgctxt "province"
+msgid "Salgótarján"
+msgstr ""
+
+msgctxt "province"
+msgid "Sopron"
+msgstr ""
+
+msgctxt "province"
+msgid "Szeged"
+msgstr ""
+
+msgctxt "province"
+msgid "Székesfehérvár"
+msgstr ""
+
+msgctxt "province"
+msgid "Szekszárd"
+msgstr ""
+
+msgctxt "province"
+msgid "Szolnok"
+msgstr ""
+
+msgctxt "province"
+msgid "Szombathely"
+msgstr ""
+
+msgctxt "province"
+msgid "Tatabánya"
+msgstr ""
+
+msgctxt "province"
+msgid "Zalaegerszeg"
+msgstr ""
+
+msgctxt "province"
+msgid "Bali"
+msgstr ""
+
+msgctxt "province"
+msgid "Bangka Belitung"
+msgstr ""
+
+msgctxt "province"
+msgid "Banten"
+msgstr ""
+
+msgctxt "province"
+msgid "Bengkulu"
+msgstr ""
+
+msgctxt "province"
+msgid "Gorontalo"
+msgstr ""
+
+msgctxt "province"
+msgid "Irian Jaya"
+msgstr ""
+
+msgctxt "province"
+msgid "Jambi"
+msgstr ""
+
+msgctxt "province"
+msgid "Jawa Barat"
+msgstr ""
+
+msgctxt "province"
+msgid "Jawa Tengah"
+msgstr ""
+
+msgctxt "province"
+msgid "Jawa Timur"
+msgstr ""
+
+msgctxt "province"
+msgid "Kalimantan Barat"
+msgstr ""
+
+msgctxt "province"
+msgid "Kalimantan Timur"
+msgstr ""
+
+msgctxt "province"
+msgid "Kalimantan Selatan"
+msgstr ""
+
+msgctxt "province"
+msgid "Kepulauan Riau"
+msgstr ""
+
+msgctxt "province"
+msgid "Lampung"
+msgstr ""
+
+msgctxt "province"
+msgid "Maluku"
+msgstr ""
+
+msgctxt "province"
+msgid "Maluku Utara"
+msgstr ""
+
+msgctxt "province"
+msgid "Nusa Tenggara Barat"
+msgstr ""
+
+msgctxt "province"
+msgid "Nusa Tenggara Timur"
+msgstr ""
+
+msgctxt "province"
+msgid "Papua"
+msgstr ""
+
+msgctxt "province"
+msgid "Riau"
+msgstr ""
+
+msgctxt "province"
+msgid "Sulawesi Selatan"
+msgstr ""
+
+msgctxt "province"
+msgid "Sulawesi Tengah"
+msgstr ""
+
+msgctxt "province"
+msgid "Sulawesi Tenggara"
+msgstr ""
+
+msgctxt "province"
+msgid "Sulawesi Utara"
+msgstr ""
+
+msgctxt "province"
+msgid "Sumatra Barat"
+msgstr ""
+
+msgctxt "province"
+msgid "Sumatra Selatan"
+msgstr ""
+
+msgctxt "province"
+msgid "Sumatera Utara"
+msgstr ""
+
+msgctxt "province"
+msgid "Jakarta Raya"
+msgstr ""
+
+msgctxt "province"
+msgid "Aceh"
+msgstr ""
+
+msgctxt "province"
+msgid "Yogyakarta"
+msgstr ""
+
+msgctxt "province"
+msgid "Cork"
+msgstr ""
+
+msgctxt "province"
+msgid "Clare"
+msgstr ""
+
+msgctxt "province"
+msgid "Cavan"
+msgstr ""
+
+msgctxt "province"
+msgid "Carlow"
+msgstr ""
+
+msgctxt "province"
+msgid "Dublin"
+msgstr ""
+
+msgctxt "province"
+msgid "Donegal"
+msgstr ""
+
+msgctxt "province"
+msgid "Galway"
+msgstr ""
+
+msgctxt "province"
+msgid "Kildare"
+msgstr ""
+
+msgctxt "province"
+msgid "Kilkenny"
+msgstr ""
+
+msgctxt "province"
+msgid "Kerry"
+msgstr ""
+
+msgctxt "province"
+msgid "Longford"
+msgstr ""
+
+msgctxt "province"
+msgid "Louth"
+msgstr ""
+
+msgctxt "province"
+msgid "Limerick"
+msgstr ""
+
+msgctxt "province"
+msgid "Leitrim"
+msgstr ""
+
+msgctxt "province"
+msgid "Laois"
+msgstr ""
+
+msgctxt "province"
+msgid "Meath"
+msgstr ""
+
+msgctxt "province"
+msgid "Monaghan"
+msgstr ""
+
+msgctxt "province"
+msgid "Mayo"
+msgstr ""
+
+msgctxt "province"
+msgid "Offaly"
+msgstr ""
+
+msgctxt "province"
+msgid "Roscommon"
+msgstr ""
+
+msgctxt "province"
+msgid "Sligo"
+msgstr ""
+
+msgctxt "province"
+msgid "Tipperary"
+msgstr ""
+
+msgctxt "province"
+msgid "Waterford"
+msgstr ""
+
+msgctxt "province"
+msgid "Westmeath"
+msgstr ""
+
+msgctxt "province"
+msgid "Wicklow"
+msgstr ""
+
+msgctxt "province"
+msgid "Wexford"
+msgstr ""
+
+msgctxt "province"
+msgid "HaDarom"
+msgstr ""
+
+msgctxt "province"
+msgid "HaMerkaz"
+msgstr ""
+
+msgctxt "province"
+msgid "HaZafon"
+msgstr ""
+
+msgctxt "province"
+msgid "Haifa"
+msgstr ""
+
+msgctxt "province"
+msgid "Tel-Aviv"
+msgstr ""
+
+msgctxt "province"
+msgid "Jerusalem"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Anbar"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Ba,rah"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Muthanna"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Qadisiyah"
+msgstr ""
+
+msgctxt "province"
+msgid "An Najef"
+msgstr ""
+
+msgctxt "province"
+msgid "Arbil"
+msgstr ""
+
+msgctxt "province"
+msgid "As Sulaymaniyah"
+msgstr ""
+
+msgctxt "province"
+msgid "At Ta'mim"
+msgstr ""
+
+msgctxt "province"
+msgid "Babil"
+msgstr ""
+
+msgctxt "province"
+msgid "Baghdad"
+msgstr ""
+
+msgctxt "province"
+msgid "Dahuk"
+msgstr ""
+
+msgctxt "province"
+msgid "Dhi Qar"
+msgstr ""
+
+msgctxt "province"
+msgid "Diyala"
+msgstr ""
+
+msgctxt "province"
+msgid "Karbala'"
+msgstr ""
+
+msgctxt "province"
+msgid "Maysan"
+msgstr ""
+
+msgctxt "province"
+msgid "Ninawa"
+msgstr ""
+
+msgctxt "province"
+msgid "Salah ad Din"
+msgstr ""
+
+msgctxt "province"
+msgid "Wasit"
+msgstr ""
+
+msgctxt "province"
+msgid "Ardabil"
+msgstr ""
+
+msgctxt "province"
+msgid "Azarbayjan-e Gharbi"
+msgstr ""
+
+msgctxt "province"
+msgid "Azarbayjan-e Sharqi"
+msgstr ""
+
+msgctxt "province"
+msgid "Bushehr"
+msgstr ""
+
+msgctxt "province"
+msgid "Chahar Mahall va Bakhtiari"
+msgstr ""
+
+msgctxt "province"
+msgid "Esfahan"
+msgstr ""
+
+msgctxt "province"
+msgid "Fars"
+msgstr ""
+
+msgctxt "province"
+msgid "Gilan"
+msgstr ""
+
+msgctxt "province"
+msgid "Golestan"
+msgstr ""
+
+msgctxt "province"
+msgid "Hamadan"
+msgstr ""
+
+msgctxt "province"
+msgid "Hormozgan"
+msgstr ""
+
+msgctxt "province"
+msgid "Iiam"
+msgstr ""
+
+msgctxt "province"
+msgid "Kerman"
+msgstr ""
+
+msgctxt "province"
+msgid "Kermanshah"
+msgstr ""
+
+msgctxt "province"
+msgid "Khorasan"
+msgstr ""
+
+msgctxt "province"
+msgid "Khuzestan"
+msgstr ""
+
+msgctxt "province"
+msgid "Kohjiluyeh va Buyer Ahmad"
+msgstr ""
+
+msgctxt "province"
+msgid "Kordestan"
+msgstr ""
+
+msgctxt "province"
+msgid "Lorestan"
+msgstr ""
+
+msgctxt "province"
+msgid "Markazi"
+msgstr ""
+
+msgctxt "province"
+msgid "Mazandaran"
+msgstr ""
+
+msgctxt "province"
+msgid "Qazvin"
+msgstr ""
+
+msgctxt "province"
+msgid "Qom"
+msgstr ""
+
+msgctxt "province"
+msgid "Semnan"
+msgstr ""
+
+msgctxt "province"
+msgid "Sistan va Baluchestan"
+msgstr ""
+
+msgctxt "province"
+msgid "Tehran"
+msgstr ""
+
+msgctxt "province"
+msgid "Yazd"
+msgstr ""
+
+msgctxt "province"
+msgid "Zanjan"
+msgstr ""
+
+msgctxt "province"
+msgid "Austurland"
+msgstr ""
+
+msgctxt "province"
+msgid "Hofuoborgarsvaeoi utan Reykjavikur"
+msgstr ""
+
+msgctxt "province"
+msgid "Norourland eystra"
+msgstr ""
+
+msgctxt "province"
+msgid "Norourland vestra"
+msgstr ""
+
+msgctxt "province"
+msgid "Reykjavik"
+msgstr ""
+
+msgctxt "province"
+msgid "Suourland"
+msgstr ""
+
+msgctxt "province"
+msgid "Suournes"
+msgstr ""
+
+msgctxt "province"
+msgid "Vestfirolr"
+msgstr ""
+
+msgctxt "province"
+msgid "Vesturland"
+msgstr ""
+
+msgctxt "province"
+msgid "Agrigento"
+msgstr ""
+
+msgctxt "province"
+msgid "Alessandria"
+msgstr ""
+
+msgctxt "province"
+msgid "Ancona"
+msgstr ""
+
+msgctxt "province"
+msgid "Aosta"
+msgstr ""
+
+msgctxt "province"
+msgid "Arezzo"
+msgstr ""
+
+msgctxt "province"
+msgid "Ascoli Piceno"
+msgstr ""
+
+msgctxt "province"
+msgid "Asti"
+msgstr ""
+
+msgctxt "province"
+msgid "Avellino"
+msgstr ""
+
+msgctxt "province"
+msgid "Bari"
+msgstr ""
+
+msgctxt "province"
+msgid "Belluno"
+msgstr ""
+
+msgctxt "province"
+msgid "Benevento"
+msgstr ""
+
+msgctxt "province"
+msgid "Bergamo"
+msgstr ""
+
+msgctxt "province"
+msgid "Biella"
+msgstr ""
+
+msgctxt "province"
+msgid "Bologna"
+msgstr ""
+
+msgctxt "province"
+msgid "Bolzano"
+msgstr ""
+
+msgctxt "province"
+msgid "Brescia"
+msgstr ""
+
+msgctxt "province"
+msgid "Brindisi"
+msgstr ""
+
+msgctxt "province"
+msgid "Cagliari"
+msgstr ""
+
+msgctxt "province"
+msgid "Caltanissetta"
+msgstr ""
+
+msgctxt "province"
+msgid "Campobasso"
+msgstr ""
+
+msgctxt "province"
+msgid "Caserta"
+msgstr ""
+
+msgctxt "province"
+msgid "Catania"
+msgstr ""
+
+msgctxt "province"
+msgid "Catanzaro"
+msgstr ""
+
+msgctxt "province"
+msgid "Chieti"
+msgstr ""
+
+msgctxt "province"
+msgid "Como"
+msgstr ""
+
+msgctxt "province"
+msgid "Cosenza"
+msgstr ""
+
+msgctxt "province"
+msgid "Cremona"
+msgstr ""
+
+msgctxt "province"
+msgid "Crotone"
+msgstr ""
+
+msgctxt "province"
+msgid "Cuneo"
+msgstr ""
+
+msgctxt "province"
+msgid "Enna"
+msgstr ""
+
+msgctxt "province"
+msgid "Ferrara"
+msgstr ""
+
+msgctxt "province"
+msgid "Firenze"
+msgstr ""
+
+msgctxt "province"
+msgid "Foggia"
+msgstr ""
+
+msgctxt "province"
+msgid "Forlì-Cesena"
+msgstr ""
+
+msgctxt "province"
+msgid "Frosinone"
+msgstr ""
+
+msgctxt "province"
+msgid "Genova"
+msgstr ""
+
+msgctxt "province"
+msgid "Gorizia"
+msgstr ""
+
+msgctxt "province"
+msgid "Grosseto"
+msgstr ""
+
+msgctxt "province"
+msgid "Imperia"
+msgstr ""
+
+msgctxt "province"
+msgid "Isernia"
+msgstr ""
+
+msgctxt "province"
+msgid "L'Aquila"
+msgstr ""
+
+msgctxt "province"
+msgid "La Spezia"
+msgstr ""
+
+msgctxt "province"
+msgid "Latina"
+msgstr ""
+
+msgctxt "province"
+msgid "Lecce"
+msgstr ""
+
+msgctxt "province"
+msgid "Lecco"
+msgstr ""
+
+msgctxt "province"
+msgid "Livorno"
+msgstr ""
+
+msgctxt "province"
+msgid "Lodi"
+msgstr ""
+
+msgctxt "province"
+msgid "Lucca"
+msgstr ""
+
+msgctxt "province"
+msgid "Macerata"
+msgstr ""
+
+msgctxt "province"
+msgid "Mantova"
+msgstr ""
+
+msgctxt "province"
+msgid "Massa-Carrara"
+msgstr ""
+
+msgctxt "province"
+msgid "Matera"
+msgstr ""
+
+msgctxt "province"
+msgid "Messina"
+msgstr ""
+
+msgctxt "province"
+msgid "Milano"
+msgstr ""
+
+msgctxt "province"
+msgid "Modena"
+msgstr ""
+
+msgctxt "province"
+msgid "Napoli"
+msgstr ""
+
+msgctxt "province"
+msgid "Novara"
+msgstr ""
+
+msgctxt "province"
+msgid "Nuoro"
+msgstr ""
+
+msgctxt "province"
+msgid "Oristano"
+msgstr ""
+
+msgctxt "province"
+msgid "Padova"
+msgstr ""
+
+msgctxt "province"
+msgid "Palermo"
+msgstr ""
+
+msgctxt "province"
+msgid "Parma"
+msgstr ""
+
+msgctxt "province"
+msgid "Pavia"
+msgstr ""
+
+msgctxt "province"
+msgid "Perugia"
+msgstr ""
+
+msgctxt "province"
+msgid "Pesaro e Urbino"
+msgstr ""
+
+msgctxt "province"
+msgid "Pescara"
+msgstr ""
+
+msgctxt "province"
+msgid "Piacenza"
+msgstr ""
+
+msgctxt "province"
+msgid "Pisa"
+msgstr ""
+
+msgctxt "province"
+msgid "Pistoia"
+msgstr ""
+
+msgctxt "province"
+msgid "Pordenone"
+msgstr ""
+
+msgctxt "province"
+msgid "Potenza"
+msgstr ""
+
+msgctxt "province"
+msgid "Prato"
+msgstr ""
+
+msgctxt "province"
+msgid "Ragusa"
+msgstr ""
+
+msgctxt "province"
+msgid "Ravenna"
+msgstr ""
+
+msgctxt "province"
+msgid "Reggio Calabria"
+msgstr ""
+
+msgctxt "province"
+msgid "Reggio Emilia"
+msgstr ""
+
+msgctxt "province"
+msgid "Rieti"
+msgstr ""
+
+msgctxt "province"
+msgid "Rimini"
+msgstr ""
+
+msgctxt "province"
+msgid "Roma"
+msgstr ""
+
+msgctxt "province"
+msgid "Rovigo"
+msgstr ""
+
+msgctxt "province"
+msgid "Salerno"
+msgstr ""
+
+msgctxt "province"
+msgid "Sassari"
+msgstr ""
+
+msgctxt "province"
+msgid "Savona"
+msgstr ""
+
+msgctxt "province"
+msgid "Siena"
+msgstr ""
+
+msgctxt "province"
+msgid "Siracusa"
+msgstr ""
+
+msgctxt "province"
+msgid "Sondrio"
+msgstr ""
+
+msgctxt "province"
+msgid "Taranto"
+msgstr ""
+
+msgctxt "province"
+msgid "Teramo"
+msgstr ""
+
+msgctxt "province"
+msgid "Terni"
+msgstr ""
+
+msgctxt "province"
+msgid "Torino"
+msgstr ""
+
+msgctxt "province"
+msgid "Trapani"
+msgstr ""
+
+msgctxt "province"
+msgid "Trento"
+msgstr ""
+
+msgctxt "province"
+msgid "Treviso"
+msgstr ""
+
+msgctxt "province"
+msgid "Trieste"
+msgstr ""
+
+msgctxt "province"
+msgid "Udine"
+msgstr ""
+
+msgctxt "province"
+msgid "Varese"
+msgstr ""
+
+msgctxt "province"
+msgid "Venezia"
+msgstr ""
+
+msgctxt "province"
+msgid "Verbano-Cusio-Ossola"
+msgstr ""
+
+msgctxt "province"
+msgid "Vercelli"
+msgstr ""
+
+msgctxt "province"
+msgid "Verona"
+msgstr ""
+
+msgctxt "province"
+msgid "Vibo Valentia"
+msgstr ""
+
+msgctxt "province"
+msgid "Vicenza"
+msgstr ""
+
+msgctxt "province"
+msgid "Viterbo"
+msgstr ""
+
+msgctxt "province"
+msgid "Aichi"
+msgstr ""
+
+msgctxt "province"
+msgid "Akita"
+msgstr ""
+
+msgctxt "province"
+msgid "Aomori"
+msgstr ""
+
+msgctxt "province"
+msgid "Chiba"
+msgstr ""
+
+msgctxt "province"
+msgid "Ehime"
+msgstr ""
+
+msgctxt "province"
+msgid "Fukui"
+msgstr ""
+
+msgctxt "province"
+msgid "Fukuoka"
+msgstr ""
+
+msgctxt "province"
+msgid "Fukusima"
+msgstr ""
+
+msgctxt "province"
+msgid "Gifu"
+msgstr ""
+
+msgctxt "province"
+msgid "Gunma"
+msgstr ""
+
+msgctxt "province"
+msgid "Hiroshima"
+msgstr ""
+
+msgctxt "province"
+msgid "Hokkaido"
+msgstr ""
+
+msgctxt "province"
+msgid "Hyogo"
+msgstr ""
+
+msgctxt "province"
+msgid "Ibaraki"
+msgstr ""
+
+msgctxt "province"
+msgid "Ishikawa"
+msgstr ""
+
+msgctxt "province"
+msgid "Iwate"
+msgstr ""
+
+msgctxt "province"
+msgid "Kagawa"
+msgstr ""
+
+msgctxt "province"
+msgid "Kagoshima"
+msgstr ""
+
+msgctxt "province"
+msgid "Kanagawa"
+msgstr ""
+
+msgctxt "province"
+msgid "Kochi"
+msgstr ""
+
+msgctxt "province"
+msgid "Kumamoto"
+msgstr ""
+
+msgctxt "province"
+msgid "Kyoto"
+msgstr ""
+
+msgctxt "province"
+msgid "Mie"
+msgstr ""
+
+msgctxt "province"
+msgid "Miyagi"
+msgstr ""
+
+msgctxt "province"
+msgid "Miyazaki"
+msgstr ""
+
+msgctxt "province"
+msgid "Nagano"
+msgstr ""
+
+msgctxt "province"
+msgid "Nagasaki"
+msgstr ""
+
+msgctxt "province"
+msgid "Nara"
+msgstr ""
+
+msgctxt "province"
+msgid "Niigata"
+msgstr ""
+
+msgctxt "province"
+msgid "Oita"
+msgstr ""
+
+msgctxt "province"
+msgid "Okayama"
+msgstr ""
+
+msgctxt "province"
+msgid "Okinawa"
+msgstr ""
+
+msgctxt "province"
+msgid "Osaka"
+msgstr ""
+
+msgctxt "province"
+msgid "Saga"
+msgstr ""
+
+msgctxt "province"
+msgid "Saitama"
+msgstr ""
+
+msgctxt "province"
+msgid "Shiga"
+msgstr ""
+
+msgctxt "province"
+msgid "Shimane"
+msgstr ""
+
+msgctxt "province"
+msgid "Shizuoka"
+msgstr ""
+
+msgctxt "province"
+msgid "Tochigi"
+msgstr ""
+
+msgctxt "province"
+msgid "Tokushima"
+msgstr ""
+
+msgctxt "province"
+msgid "Tokyo"
+msgstr ""
+
+msgctxt "province"
+msgid "Tottori"
+msgstr ""
+
+msgctxt "province"
+msgid "Toyama"
+msgstr ""
+
+msgctxt "province"
+msgid "Wakayama"
+msgstr ""
+
+msgctxt "province"
+msgid "Yamagata"
+msgstr ""
+
+msgctxt "province"
+msgid "Yamaguchi"
+msgstr ""
+
+msgctxt "province"
+msgid "Yamanashi"
+msgstr ""
+
+msgctxt "province"
+msgid "Clarendon"
+msgstr ""
+
+msgctxt "province"
+msgid "Hanover"
+msgstr ""
+
+msgctxt "province"
+msgid "Kingston"
+msgstr ""
+
+msgctxt "province"
+msgid "Portland"
+msgstr ""
+
+msgctxt "province"
+msgid "Saint Andrew"
+msgstr ""
+
+msgctxt "province"
+msgid "Saint Ann"
+msgstr ""
+
+msgctxt "province"
+msgid "Saint Catherine"
+msgstr ""
+
+msgctxt "province"
+msgid "Saint Elizabeth"
+msgstr ""
+
+msgctxt "province"
+msgid "Saint James"
+msgstr ""
+
+msgctxt "province"
+msgid "Saint Mary"
+msgstr ""
+
+msgctxt "province"
+msgid "Saint Thomas"
+msgstr ""
+
+msgctxt "province"
+msgid "Trelawny"
+msgstr ""
+
+msgctxt "province"
+msgid "Westmoreland"
+msgstr ""
+
+msgctxt "province"
+msgid "Ajln"
+msgstr ""
+
+msgctxt "province"
+msgid "Al 'Aqaba"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Balqa'"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Karak"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Mafraq"
+msgstr ""
+
+msgctxt "province"
+msgid "Amman"
+msgstr ""
+
+msgctxt "province"
+msgid "At Tafilah"
+msgstr ""
+
+msgctxt "province"
+msgid "Az Zarga"
+msgstr ""
+
+msgctxt "province"
+msgid "Irbid"
+msgstr ""
+
+msgctxt "province"
+msgid "Jarash"
+msgstr ""
+
+msgctxt "province"
+msgid "Ma'an"
+msgstr ""
+
+msgctxt "province"
+msgid "Madaba"
+msgstr ""
+
+msgctxt "province"
+msgid "Nairobi Municipality"
+msgstr ""
+
+msgctxt "province"
+msgid "Coast"
+msgstr ""
+
+msgctxt "province"
+msgid "North-Eastern Kaskazini Mashariki"
+msgstr ""
+
+msgctxt "province"
+msgid "Rift Valley"
+msgstr ""
+
+msgctxt "province"
+msgid "Western Magharibi"
+msgstr ""
+
+msgctxt "province"
+msgid "Bishkek"
+msgstr ""
+
+msgctxt "province"
+msgid "Batken"
+msgstr ""
+
+msgctxt "province"
+msgid "Chu"
+msgstr ""
+
+msgctxt "province"
+msgid "Jalal-Abad"
+msgstr ""
+
+msgctxt "province"
+msgid "Naryn"
+msgstr ""
+
+msgctxt "province"
+msgid "Osh"
+msgstr ""
+
+msgctxt "province"
+msgid "Talas"
+msgstr ""
+
+msgctxt "province"
+msgid "Ysyk-Kol"
+msgstr ""
+
+msgctxt "province"
+msgid "Krong Kaeb"
+msgstr ""
+
+msgctxt "province"
+msgid "Krong Pailin"
+msgstr ""
+
+msgctxt "province"
+msgid "Xrong Preah Sihanouk"
+msgstr ""
+
+msgctxt "province"
+msgid "Phnom Penh"
+msgstr ""
+
+msgctxt "province"
+msgid "Baat Dambang"
+msgstr ""
+
+msgctxt "province"
+msgid "Banteay Mean Chey"
+msgstr ""
+
+msgctxt "province"
+msgid "Rampong Chaam"
+msgstr ""
+
+msgctxt "province"
+msgid "Kampong Chhnang"
+msgstr ""
+
+msgctxt "province"
+msgid "Kampong Spueu"
+msgstr ""
+
+msgctxt "province"
+msgid "Kampong Thum"
+msgstr ""
+
+msgctxt "province"
+msgid "Kampot"
+msgstr ""
+
+msgctxt "province"
+msgid "Kandaal"
+msgstr ""
+
+msgctxt "province"
+msgid "Kach Kong"
+msgstr ""
+
+msgctxt "province"
+msgid "Krachoh"
+msgstr ""
+
+msgctxt "province"
+msgid "Mondol Kiri"
+msgstr ""
+
+msgctxt "province"
+msgid "Otdar Mean Chey"
+msgstr ""
+
+msgctxt "province"
+msgid "Pousaat"
+msgstr ""
+
+msgctxt "province"
+msgid "Preah Vihear"
+msgstr ""
+
+msgctxt "province"
+msgid "Prey Veaeng"
+msgstr ""
+
+msgctxt "province"
+msgid "Rotanak Kiri"
+msgstr ""
+
+msgctxt "province"
+msgid "Siem Reab"
+msgstr ""
+
+msgctxt "province"
+msgid "Stueng Traeng"
+msgstr ""
+
+msgctxt "province"
+msgid "Svaay Rieng"
+msgstr ""
+
+msgctxt "province"
+msgid "Taakaev"
+msgstr ""
+
+msgctxt "province"
+msgid "Gilbert Islands"
+msgstr ""
+
+msgctxt "province"
+msgid "Line Islands"
+msgstr ""
+
+msgctxt "province"
+msgid "Phoenix Islands"
+msgstr ""
+
+msgctxt "province"
+msgid "Anjouan Ndzouani"
+msgstr ""
+
+msgctxt "province"
+msgid "Grande Comore Ngazidja"
+msgstr ""
+
+msgctxt "province"
+msgid "Moheli Moili"
+msgstr ""
+
+msgctxt "province"
+msgid "Kaesong-si"
+msgstr ""
+
+msgctxt "province"
+msgid "Nampo-si"
+msgstr ""
+
+msgctxt "province"
+msgid "Pyongyang-ai"
+msgstr ""
+
+msgctxt "province"
+msgid "Chagang-do"
+msgstr ""
+
+msgctxt "province"
+msgid "Hamgyongbuk-do"
+msgstr ""
+
+msgctxt "province"
+msgid "Hamgyongnam-do"
+msgstr ""
+
+msgctxt "province"
+msgid "Hwanghaebuk-do"
+msgstr ""
+
+msgctxt "province"
+msgid "Hwanghaenam-do"
+msgstr ""
+
+msgctxt "province"
+msgid "Kangwon-do"
+msgstr ""
+
+msgctxt "province"
+msgid "Pyonganbuk-do"
+msgstr ""
+
+msgctxt "province"
+msgid "Pyongannam-do"
+msgstr ""
+
+msgctxt "province"
+msgid "Yanggang-do"
+msgstr ""
+
+msgctxt "province"
+msgid "Najin Sonbong-si"
+msgstr ""
+
+msgctxt "province"
+msgid "Seoul Teugbyeolsi"
+msgstr ""
+
+msgctxt "province"
+msgid "Busan Gwang'yeogsi"
+msgstr ""
+
+msgctxt "province"
+msgid "Daegu Gwang'yeogsi"
+msgstr ""
+
+msgctxt "province"
+msgid "Daejeon Gwang'yeogsi"
+msgstr ""
+
+msgctxt "province"
+msgid "Gwangju Gwang'yeogsi"
+msgstr ""
+
+msgctxt "province"
+msgid "Incheon Gwang'yeogsi"
+msgstr ""
+
+msgctxt "province"
+msgid "Ulsan Gwang'yeogsi"
+msgstr ""
+
+msgctxt "province"
+msgid "Chungcheongbugdo"
+msgstr ""
+
+msgctxt "province"
+msgid "Chungcheongnamdo"
+msgstr ""
+
+msgctxt "province"
+msgid "Gang'weondo"
+msgstr ""
+
+msgctxt "province"
+msgid "Gyeonggido"
+msgstr ""
+
+msgctxt "province"
+msgid "Gyeongsangbugdo"
+msgstr ""
+
+msgctxt "province"
+msgid "Gyeongsangnamdo"
+msgstr ""
+
+msgctxt "province"
+msgid "Jejudo"
+msgstr ""
+
+msgctxt "province"
+msgid "Jeonrabugdo"
+msgstr ""
+
+msgctxt "province"
+msgid "Jeonranamdo"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Ahmadi"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Farwanlyah"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Jahrah"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Kuwayt"
+msgstr ""
+
+msgctxt "province"
+msgid "Hawalli"
+msgstr ""
+
+msgctxt "province"
+msgid "Almaty"
+msgstr ""
+
+msgctxt "province"
+msgid "Astana"
+msgstr ""
+
+msgctxt "province"
+msgid "Almaty oblysy"
+msgstr ""
+
+msgctxt "province"
+msgid "Aqmola oblysy"
+msgstr ""
+
+msgctxt "province"
+msgid "Aqtobe oblysy"
+msgstr ""
+
+msgctxt "province"
+msgid "Atyrau oblyfiy"
+msgstr ""
+
+msgctxt "province"
+msgid "Batys Quzaqstan oblysy"
+msgstr ""
+
+msgctxt "province"
+msgid "Mangghystau oblysy"
+msgstr ""
+
+msgctxt "province"
+msgid "Ongtustik Quzaqstan oblysy"
+msgstr ""
+
+msgctxt "province"
+msgid "Pavlodar oblysy"
+msgstr ""
+
+msgctxt "province"
+msgid "Qaraghandy oblysy"
+msgstr ""
+
+msgctxt "province"
+msgid "Qostanay oblysy"
+msgstr ""
+
+msgctxt "province"
+msgid "Qyzylorda oblysy"
+msgstr ""
+
+msgctxt "province"
+msgid "Shyghys Quzaqstan oblysy"
+msgstr ""
+
+msgctxt "province"
+msgid "Soltustik Quzaqstan oblysy"
+msgstr ""
+
+msgctxt "province"
+msgid "Zhambyl oblysy Zhambylskaya oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Vientiane"
+msgstr ""
+
+msgctxt "province"
+msgid "Attapu"
+msgstr ""
+
+msgctxt "province"
+msgid "Bokeo"
+msgstr ""
+
+msgctxt "province"
+msgid "Bolikhamxai"
+msgstr ""
+
+msgctxt "province"
+msgid "Champasak"
+msgstr ""
+
+msgctxt "province"
+msgid "Houaphan"
+msgstr ""
+
+msgctxt "province"
+msgid "Khammouan"
+msgstr ""
+
+msgctxt "province"
+msgid "Louang Namtha"
+msgstr ""
+
+msgctxt "province"
+msgid "Louangphabang"
+msgstr ""
+
+msgctxt "province"
+msgid "Oudomxai"
+msgstr ""
+
+msgctxt "province"
+msgid "Phongsali"
+msgstr ""
+
+msgctxt "province"
+msgid "Salavan"
+msgstr ""
+
+msgctxt "province"
+msgid "Savannakhet"
+msgstr ""
+
+msgctxt "province"
+msgid "Xaignabouli"
+msgstr ""
+
+msgctxt "province"
+msgid "Xiasomboun"
+msgstr ""
+
+msgctxt "province"
+msgid "Xekong"
+msgstr ""
+
+msgctxt "province"
+msgid "Xiangkhoang"
+msgstr ""
+
+msgctxt "province"
+msgid "Beirout"
+msgstr ""
+
+msgctxt "province"
+msgid "El Begsa"
+msgstr ""
+
+msgctxt "province"
+msgid "Jabal Loubnane"
+msgstr ""
+
+msgctxt "province"
+msgid "Loubnane ech Chemali"
+msgstr ""
+
+msgctxt "province"
+msgid "Loubnane ej Jnoubi"
+msgstr ""
+
+msgctxt "province"
+msgid "Nabatiye"
+msgstr ""
+
+msgctxt "province"
+msgid "Ampara"
+msgstr ""
+
+msgctxt "province"
+msgid "Anuradhapura"
+msgstr ""
+
+msgctxt "province"
+msgid "Badulla"
+msgstr ""
+
+msgctxt "province"
+msgid "Batticaloa"
+msgstr ""
+
+msgctxt "province"
+msgid "Colombo"
+msgstr ""
+
+msgctxt "province"
+msgid "Galle"
+msgstr ""
+
+msgctxt "province"
+msgid "Gampaha"
+msgstr ""
+
+msgctxt "province"
+msgid "Hambantota"
+msgstr ""
+
+msgctxt "province"
+msgid "Jaffna"
+msgstr ""
+
+msgctxt "province"
+msgid "Kalutara"
+msgstr ""
+
+msgctxt "province"
+msgid "Kandy"
+msgstr ""
+
+msgctxt "province"
+msgid "Kegalla"
+msgstr ""
+
+msgctxt "province"
+msgid "Kilinochchi"
+msgstr ""
+
+msgctxt "province"
+msgid "Kurunegala"
+msgstr ""
+
+msgctxt "province"
+msgid "Mannar"
+msgstr ""
+
+msgctxt "province"
+msgid "Matale"
+msgstr ""
+
+msgctxt "province"
+msgid "Matara"
+msgstr ""
+
+msgctxt "province"
+msgid "Monaragala"
+msgstr ""
+
+msgctxt "province"
+msgid "Mullaittivu"
+msgstr ""
+
+msgctxt "province"
+msgid "Nuwara Eliya"
+msgstr ""
+
+msgctxt "province"
+msgid "Polonnaruwa"
+msgstr ""
+
+msgctxt "province"
+msgid "Puttalum"
+msgstr ""
+
+msgctxt "province"
+msgid "Ratnapura"
+msgstr ""
+
+msgctxt "province"
+msgid "Trincomalee"
+msgstr ""
+
+msgctxt "province"
+msgid "VavunLya"
+msgstr ""
+
+msgctxt "province"
+msgid "Bomi"
+msgstr ""
+
+msgctxt "province"
+msgid "Bong"
+msgstr ""
+
+msgctxt "province"
+msgid "Grand Basaa"
+msgstr ""
+
+msgctxt "province"
+msgid "Grand Cape Mount"
+msgstr ""
+
+msgctxt "province"
+msgid "Grand Gedeh"
+msgstr ""
+
+msgctxt "province"
+msgid "Grand Kru"
+msgstr ""
+
+msgctxt "province"
+msgid "Lofa"
+msgstr ""
+
+msgctxt "province"
+msgid "Margibi"
+msgstr ""
+
+msgctxt "province"
+msgid "Maryland"
+msgstr ""
+
+msgctxt "province"
+msgid "Montserrado"
+msgstr ""
+
+msgctxt "province"
+msgid "Nimba"
+msgstr ""
+
+msgctxt "province"
+msgid "Rivercess"
+msgstr ""
+
+msgctxt "province"
+msgid "Sinoe"
+msgstr ""
+
+msgctxt "province"
+msgid "Berea"
+msgstr ""
+
+msgctxt "province"
+msgid "Butha-Buthe"
+msgstr ""
+
+msgctxt "province"
+msgid "Leribe"
+msgstr ""
+
+msgctxt "province"
+msgid "Mafeteng"
+msgstr ""
+
+msgctxt "province"
+msgid "Maseru"
+msgstr ""
+
+msgctxt "province"
+msgid "Mohale's Hoek"
+msgstr ""
+
+msgctxt "province"
+msgid "Mokhotlong"
+msgstr ""
+
+msgctxt "province"
+msgid "Qacha's Nek"
+msgstr ""
+
+msgctxt "province"
+msgid "Quthing"
+msgstr ""
+
+msgctxt "province"
+msgid "Thaba-Tseka"
+msgstr ""
+
+msgctxt "province"
+msgid "Alytaus Apskritis"
+msgstr ""
+
+msgctxt "province"
+msgid "Kauno Apskritis"
+msgstr ""
+
+msgctxt "province"
+msgid "Klaipedos Apskritis"
+msgstr ""
+
+msgctxt "province"
+msgid "Marijampoles Apskritis"
+msgstr ""
+
+msgctxt "province"
+msgid "Panevezio Apskritis"
+msgstr ""
+
+msgctxt "province"
+msgid "Sisuliu Apskritis"
+msgstr ""
+
+msgctxt "province"
+msgid "Taurages Apskritis"
+msgstr ""
+
+msgctxt "province"
+msgid "Telsiu Apskritis"
+msgstr ""
+
+msgctxt "province"
+msgid "Utenos Apskritis"
+msgstr ""
+
+msgctxt "province"
+msgid "Vilniaus Apskritis"
+msgstr ""
+
+msgctxt "province"
+msgid "Diekirch"
+msgstr ""
+
+msgctxt "province"
+msgid "GreveNmacher"
+msgstr ""
+
+msgctxt "province"
+msgid "Aizkraukles Apripkis"
+msgstr ""
+
+msgctxt "province"
+msgid "Alkanes Apripkis"
+msgstr ""
+
+msgctxt "province"
+msgid "Balvu Apripkis"
+msgstr ""
+
+msgctxt "province"
+msgid "Bauskas Apripkis"
+msgstr ""
+
+msgctxt "province"
+msgid "Cesu Aprikis"
+msgstr ""
+
+msgctxt "province"
+msgid "Daugavpile Apripkis"
+msgstr ""
+
+msgctxt "province"
+msgid "Dobeles Apripkis"
+msgstr ""
+
+msgctxt "province"
+msgid "Gulbenes Aprlpkis"
+msgstr ""
+
+msgctxt "province"
+msgid "Jelgavas Apripkis"
+msgstr ""
+
+msgctxt "province"
+msgid "Jekabpils Apripkis"
+msgstr ""
+
+msgctxt "province"
+msgid "Kraslavas Apripkis"
+msgstr ""
+
+msgctxt "province"
+msgid "Kuldlgas Apripkis"
+msgstr ""
+
+msgctxt "province"
+msgid "Limbazu Apripkis"
+msgstr ""
+
+msgctxt "province"
+msgid "Liepajas Apripkis"
+msgstr ""
+
+msgctxt "province"
+msgid "Ludzas Apripkis"
+msgstr ""
+
+msgctxt "province"
+msgid "Madonas Apripkis"
+msgstr ""
+
+msgctxt "province"
+msgid "Ogres Apripkis"
+msgstr ""
+
+msgctxt "province"
+msgid "Preilu Apripkis"
+msgstr ""
+
+msgctxt "province"
+msgid "Rezaknes Apripkis"
+msgstr ""
+
+msgctxt "province"
+msgid "Rigas Apripkis"
+msgstr ""
+
+msgctxt "province"
+msgid "Saldus Apripkis"
+msgstr ""
+
+msgctxt "province"
+msgid "Talsu Apripkis"
+msgstr ""
+
+msgctxt "province"
+msgid "Tukuma Apriplcis"
+msgstr ""
+
+msgctxt "province"
+msgid "Valkas Apripkis"
+msgstr ""
+
+msgctxt "province"
+msgid "Valmieras Apripkis"
+msgstr ""
+
+msgctxt "province"
+msgid "Ventspils Apripkis"
+msgstr ""
+
+msgctxt "province"
+msgid "Daugavpils"
+msgstr ""
+
+msgctxt "province"
+msgid "Jelgava"
+msgstr ""
+
+msgctxt "province"
+msgid "Jurmala"
+msgstr ""
+
+msgctxt "province"
+msgid "Liepaja"
+msgstr ""
+
+msgctxt "province"
+msgid "Rezekne"
+msgstr ""
+
+msgctxt "province"
+msgid "Riga"
+msgstr ""
+
+msgctxt "province"
+msgid "Ventspils"
+msgstr ""
+
+msgctxt "province"
+msgid "Ajdābiyā"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Buţnān"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Hizām al Akhdar"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Jabal al Akhdar"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Jifārah"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Jufrah"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Kufrah"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Marj"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Marqab"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Qaţrūn"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Qubbah"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Wāhah"
+msgstr ""
+
+msgctxt "province"
+msgid "An Nuqaţ al Khams"
+msgstr ""
+
+msgctxt "province"
+msgid "Ash Shāţi'"
+msgstr ""
+
+msgctxt "province"
+msgid "Az Zāwiyah"
+msgstr ""
+
+msgctxt "province"
+msgid "Banghāzī"
+msgstr ""
+
+msgctxt "province"
+msgid "Banī Walīd"
+msgstr ""
+
+msgctxt "province"
+msgid "Darnah"
+msgstr ""
+
+msgctxt "province"
+msgid "Ghadāmis"
+msgstr ""
+
+msgctxt "province"
+msgid "Gharyān"
+msgstr ""
+
+msgctxt "province"
+msgid "Ghāt"
+msgstr ""
+
+msgctxt "province"
+msgid "Jaghbūb"
+msgstr ""
+
+msgctxt "province"
+msgid "Mişrātah"
+msgstr ""
+
+msgctxt "province"
+msgid "Mizdah"
+msgstr ""
+
+msgctxt "province"
+msgid "Murzuq"
+msgstr ""
+
+msgctxt "province"
+msgid "Nālūt"
+msgstr ""
+
+msgctxt "province"
+msgid "Sabhā"
+msgstr ""
+
+msgctxt "province"
+msgid "Şabrātah Şurmān"
+msgstr ""
+
+msgctxt "province"
+msgid "Surt"
+msgstr ""
+
+msgctxt "province"
+msgid "Tājūrā' wa an Nawāhī al Arbāh"
+msgstr ""
+
+msgctxt "province"
+msgid "Ţarābulus"
+msgstr ""
+
+msgctxt "province"
+msgid "Tarhūnah-Masallātah"
+msgstr ""
+
+msgctxt "province"
+msgid "Wādī al hayāt"
+msgstr ""
+
+msgctxt "province"
+msgid "Yafran-Jādū"
+msgstr ""
+
+msgctxt "province"
+msgid "Agadir"
+msgstr ""
+
+msgctxt "province"
+msgid "Aït Baha"
+msgstr ""
+
+msgctxt "province"
+msgid "Aït Melloul"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Haouz"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Hoceïma"
+msgstr ""
+
+msgctxt "province"
+msgid "Assa-Zag"
+msgstr ""
+
+msgctxt "province"
+msgid "Azilal"
+msgstr ""
+
+msgctxt "province"
+msgid "Beni Mellal"
+msgstr ""
+
+msgctxt "province"
+msgid "Ben Sllmane"
+msgstr ""
+
+msgctxt "province"
+msgid "Berkane"
+msgstr ""
+
+msgctxt "province"
+msgid "Boujdour"
+msgstr ""
+
+msgctxt "province"
+msgid "Boulemane"
+msgstr ""
+
+msgctxt "province"
+msgid "Casablanca  [Dar el Beïda]"
+msgstr ""
+
+msgctxt "province"
+msgid "Chefchaouene"
+msgstr ""
+
+msgctxt "province"
+msgid "Chichaoua"
+msgstr ""
+
+msgctxt "province"
+msgid "El Hajeb"
+msgstr ""
+
+msgctxt "province"
+msgid "El Jadida"
+msgstr ""
+
+msgctxt "province"
+msgid "Errachidia"
+msgstr ""
+
+msgctxt "province"
+msgid "Essaouira"
+msgstr ""
+
+msgctxt "province"
+msgid "Es Smara"
+msgstr ""
+
+msgctxt "province"
+msgid "Fès"
+msgstr ""
+
+msgctxt "province"
+msgid "Figuig"
+msgstr ""
+
+msgctxt "province"
+msgid "Guelmim"
+msgstr ""
+
+msgctxt "province"
+msgid "Ifrane"
+msgstr ""
+
+msgctxt "province"
+msgid "Jerada"
+msgstr ""
+
+msgctxt "province"
+msgid "Kelaat Sraghna"
+msgstr ""
+
+msgctxt "province"
+msgid "Kénitra"
+msgstr ""
+
+msgctxt "province"
+msgid "Khemisaet"
+msgstr ""
+
+msgctxt "province"
+msgid "Khenifra"
+msgstr ""
+
+msgctxt "province"
+msgid "Khouribga"
+msgstr ""
+
+msgctxt "province"
+msgid "Laâyoune (EH)"
+msgstr ""
+
+msgctxt "province"
+msgid "Larache"
+msgstr ""
+
+msgctxt "province"
+msgid "Marrakech"
+msgstr ""
+
+msgctxt "province"
+msgid "Meknsès"
+msgstr ""
+
+msgctxt "province"
+msgid "Nador"
+msgstr ""
+
+msgctxt "province"
+msgid "Ouarzazate"
+msgstr ""
+
+msgctxt "province"
+msgid "Oued ed Dahab (EH)"
+msgstr ""
+
+msgctxt "province"
+msgid "Oujda"
+msgstr ""
+
+msgctxt "province"
+msgid "Rabat-Salé"
+msgstr ""
+
+msgctxt "province"
+msgid "Safi"
+msgstr ""
+
+msgctxt "province"
+msgid "Sefrou"
+msgstr ""
+
+msgctxt "province"
+msgid "Settat"
+msgstr ""
+
+msgctxt "province"
+msgid "Sidl Kacem"
+msgstr ""
+
+msgctxt "province"
+msgid "Tanger"
+msgstr ""
+
+msgctxt "province"
+msgid "Tan-Tan"
+msgstr ""
+
+msgctxt "province"
+msgid "Taounate"
+msgstr ""
+
+msgctxt "province"
+msgid "Taroudannt"
+msgstr ""
+
+msgctxt "province"
+msgid "Tata"
+msgstr ""
+
+msgctxt "province"
+msgid "Taza"
+msgstr ""
+
+msgctxt "province"
+msgid "Tétouan"
+msgstr ""
+
+msgctxt "province"
+msgid "Tiznit"
+msgstr ""
+
+msgctxt "province"
+msgid "Gagauzia, Unitate Teritoriala Autonoma"
+msgstr ""
+
+msgctxt "province"
+msgid "Chisinau"
+msgstr ""
+
+msgctxt "province"
+msgid "Stinga Nistrului, unitatea teritoriala din"
+msgstr ""
+
+msgctxt "province"
+msgid "Balti"
+msgstr ""
+
+msgctxt "province"
+msgid "Cahul"
+msgstr ""
+
+msgctxt "province"
+msgid "Edinet"
+msgstr ""
+
+msgctxt "province"
+msgid "Lapusna"
+msgstr ""
+
+msgctxt "province"
+msgid "Orhei"
+msgstr ""
+
+msgctxt "province"
+msgid "Soroca"
+msgstr ""
+
+msgctxt "province"
+msgid "Taraclia"
+msgstr ""
+
+msgctxt "province"
+msgid "Tighina [Bender]"
+msgstr ""
+
+msgctxt "province"
+msgid "Ungheni"
+msgstr ""
+
+msgctxt "province"
+msgid "Antananarivo"
+msgstr ""
+
+msgctxt "province"
+msgid "Antsiranana"
+msgstr ""
+
+msgctxt "province"
+msgid "Fianarantsoa"
+msgstr ""
+
+msgctxt "province"
+msgid "Mahajanga"
+msgstr ""
+
+msgctxt "province"
+msgid "Toamasina"
+msgstr ""
+
+msgctxt "province"
+msgid "Toliara"
+msgstr ""
+
+msgctxt "province"
+msgid "Ailinglapalap"
+msgstr ""
+
+msgctxt "province"
+msgid "Ailuk"
+msgstr ""
+
+msgctxt "province"
+msgid "Arno"
+msgstr ""
+
+msgctxt "province"
+msgid "Aur"
+msgstr ""
+
+msgctxt "province"
+msgid "Ebon"
+msgstr ""
+
+msgctxt "province"
+msgid "Eniwetok"
+msgstr ""
+
+msgctxt "province"
+msgid "Jaluit"
+msgstr ""
+
+msgctxt "province"
+msgid "Kili"
+msgstr ""
+
+msgctxt "province"
+msgid "Kwajalein"
+msgstr ""
+
+msgctxt "province"
+msgid "Lae"
+msgstr ""
+
+msgctxt "province"
+msgid "Lib"
+msgstr ""
+
+msgctxt "province"
+msgid "Likiep"
+msgstr ""
+
+msgctxt "province"
+msgid "Majuro"
+msgstr ""
+
+msgctxt "province"
+msgid "Maloelap"
+msgstr ""
+
+msgctxt "province"
+msgid "Mejit"
+msgstr ""
+
+msgctxt "province"
+msgid "Mili"
+msgstr ""
+
+msgctxt "province"
+msgid "Namorik"
+msgstr ""
+
+msgctxt "province"
+msgid "Namu"
+msgstr ""
+
+msgctxt "province"
+msgid "Rongelap"
+msgstr ""
+
+msgctxt "province"
+msgid "Ujae"
+msgstr ""
+
+msgctxt "province"
+msgid "Ujelang"
+msgstr ""
+
+msgctxt "province"
+msgid "Utirik"
+msgstr ""
+
+msgctxt "province"
+msgid "Wotho"
+msgstr ""
+
+msgctxt "province"
+msgid "Wotje"
+msgstr ""
+
+msgctxt "province"
+msgid "Bamako"
+msgstr ""
+
+msgctxt "province"
+msgid "Gao"
+msgstr ""
+
+msgctxt "province"
+msgid "Kayes"
+msgstr ""
+
+msgctxt "province"
+msgid "Kidal"
+msgstr ""
+
+msgctxt "province"
+msgid "Xoulikoro"
+msgstr ""
+
+msgctxt "province"
+msgid "Mopti"
+msgstr ""
+
+msgctxt "province"
+msgid "S69ou"
+msgstr ""
+
+msgctxt "province"
+msgid "Sikasso"
+msgstr ""
+
+msgctxt "province"
+msgid "Tombouctou"
+msgstr ""
+
+msgctxt "province"
+msgid "Ayeyarwady"
+msgstr ""
+
+msgctxt "province"
+msgid "Bago"
+msgstr ""
+
+msgctxt "province"
+msgid "Magway"
+msgstr ""
+
+msgctxt "province"
+msgid "Mandalay"
+msgstr ""
+
+msgctxt "province"
+msgid "Sagaing"
+msgstr ""
+
+msgctxt "province"
+msgid "Tanintharyi"
+msgstr ""
+
+msgctxt "province"
+msgid "Yangon"
+msgstr ""
+
+msgctxt "province"
+msgid "Chin"
+msgstr ""
+
+msgctxt "province"
+msgid "Kachin"
+msgstr ""
+
+msgctxt "province"
+msgid "Kayah"
+msgstr ""
+
+msgctxt "province"
+msgid "Kayin"
+msgstr ""
+
+msgctxt "province"
+msgid "Mon"
+msgstr ""
+
+msgctxt "province"
+msgid "Rakhine"
+msgstr ""
+
+msgctxt "province"
+msgid "Shan"
+msgstr ""
+
+msgctxt "province"
+msgid "Ulaanbaatar"
+msgstr ""
+
+msgctxt "province"
+msgid "Arhangay"
+msgstr ""
+
+msgctxt "province"
+msgid "Bayanhongor"
+msgstr ""
+
+msgctxt "province"
+msgid "Bayan-Olgiy"
+msgstr ""
+
+msgctxt "province"
+msgid "Bulgan"
+msgstr ""
+
+msgctxt "province"
+msgid "Darhan uul"
+msgstr ""
+
+msgctxt "province"
+msgid "Dornod"
+msgstr ""
+
+msgctxt "province"
+msgid "Dornogov,"
+msgstr ""
+
+msgctxt "province"
+msgid "DundgovL"
+msgstr ""
+
+msgctxt "province"
+msgid "Dzavhan"
+msgstr ""
+
+msgctxt "province"
+msgid "Govi-Altay"
+msgstr ""
+
+msgctxt "province"
+msgid "Govi-Smber"
+msgstr ""
+
+msgctxt "province"
+msgid "Hentiy"
+msgstr ""
+
+msgctxt "province"
+msgid "Hovd"
+msgstr ""
+
+msgctxt "province"
+msgid "Hovsgol"
+msgstr ""
+
+msgctxt "province"
+msgid "Omnogovi"
+msgstr ""
+
+msgctxt "province"
+msgid "Orhon"
+msgstr ""
+
+msgctxt "province"
+msgid "Ovorhangay"
+msgstr ""
+
+msgctxt "province"
+msgid "Selenge"
+msgstr ""
+
+msgctxt "province"
+msgid "Shbaatar"
+msgstr ""
+
+msgctxt "province"
+msgid "Tov"
+msgstr ""
+
+msgctxt "province"
+msgid "Uvs"
+msgstr ""
+
+msgctxt "province"
+msgid "Nouakchott"
+msgstr ""
+
+msgctxt "province"
+msgid "Assaba"
+msgstr ""
+
+msgctxt "province"
+msgid "Brakna"
+msgstr ""
+
+msgctxt "province"
+msgid "Dakhlet Nouadhibou"
+msgstr ""
+
+msgctxt "province"
+msgid "Gorgol"
+msgstr ""
+
+msgctxt "province"
+msgid "Guidimaka"
+msgstr ""
+
+msgctxt "province"
+msgid "Hodh ech Chargui"
+msgstr ""
+
+msgctxt "province"
+msgid "Hodh el Charbi"
+msgstr ""
+
+msgctxt "province"
+msgid "Inchiri"
+msgstr ""
+
+msgctxt "province"
+msgid "Tagant"
+msgstr ""
+
+msgctxt "province"
+msgid "Tiris Zemmour"
+msgstr ""
+
+msgctxt "province"
+msgid "Trarza"
+msgstr ""
+
+msgctxt "province"
+msgid "Beau Bassin-Rose Hill"
+msgstr ""
+
+msgctxt "province"
+msgid "Curepipe"
+msgstr ""
+
+msgctxt "province"
+msgid "Port Louis"
+msgstr ""
+
+msgctxt "province"
+msgid "Quatre Bornes"
+msgstr ""
+
+msgctxt "province"
+msgid "Vacosa-Phoenix"
+msgstr ""
+
+msgctxt "province"
+msgid "Black River"
+msgstr ""
+
+msgctxt "province"
+msgid "Flacq"
+msgstr ""
+
+msgctxt "province"
+msgid "Grand Port"
+msgstr ""
+
+msgctxt "province"
+msgid "Moka"
+msgstr ""
+
+msgctxt "province"
+msgid "Pamplemousses"
+msgstr ""
+
+msgctxt "province"
+msgid "Plaines Wilhems"
+msgstr ""
+
+msgctxt "province"
+msgid "Riviere du Rempart"
+msgstr ""
+
+msgctxt "province"
+msgid "Savanne"
+msgstr ""
+
+msgctxt "province"
+msgid "Agalega Islands"
+msgstr ""
+
+msgctxt "province"
+msgid "Cargados Carajos Shoals"
+msgstr ""
+
+msgctxt "province"
+msgid "Rodrigues Island"
+msgstr ""
+
+msgctxt "province"
+msgid "Male"
+msgstr ""
+
+msgctxt "province"
+msgid "Alif"
+msgstr ""
+
+msgctxt "province"
+msgid "Baa"
+msgstr ""
+
+msgctxt "province"
+msgid "Dhaalu"
+msgstr ""
+
+msgctxt "province"
+msgid "Faafu"
+msgstr ""
+
+msgctxt "province"
+msgid "Gaaf Alif"
+msgstr ""
+
+msgctxt "province"
+msgid "Gaefu Dhaalu"
+msgstr ""
+
+msgctxt "province"
+msgid "Gnaviyani"
+msgstr ""
+
+msgctxt "province"
+msgid "Haa Alif"
+msgstr ""
+
+msgctxt "province"
+msgid "Haa Dhaalu"
+msgstr ""
+
+msgctxt "province"
+msgid "Kaafu"
+msgstr ""
+
+msgctxt "province"
+msgid "Laamu"
+msgstr ""
+
+msgctxt "province"
+msgid "Lhaviyani"
+msgstr ""
+
+msgctxt "province"
+msgid "Meemu"
+msgstr ""
+
+msgctxt "province"
+msgid "Noonu"
+msgstr ""
+
+msgctxt "province"
+msgid "Raa"
+msgstr ""
+
+msgctxt "province"
+msgid "Seenu"
+msgstr ""
+
+msgctxt "province"
+msgid "Shaviyani"
+msgstr ""
+
+msgctxt "province"
+msgid "Thaa"
+msgstr ""
+
+msgctxt "province"
+msgid "Vaavu"
+msgstr ""
+
+msgctxt "province"
+msgid "Balaka"
+msgstr ""
+
+msgctxt "province"
+msgid "Blantyre"
+msgstr ""
+
+msgctxt "province"
+msgid "Chikwawa"
+msgstr ""
+
+msgctxt "province"
+msgid "Chiradzulu"
+msgstr ""
+
+msgctxt "province"
+msgid "Chitipa"
+msgstr ""
+
+msgctxt "province"
+msgid "Dedza"
+msgstr ""
+
+msgctxt "province"
+msgid "Dowa"
+msgstr ""
+
+msgctxt "province"
+msgid "Karonga"
+msgstr ""
+
+msgctxt "province"
+msgid "Kasungu"
+msgstr ""
+
+msgctxt "province"
+msgid "Likoma Island"
+msgstr ""
+
+msgctxt "province"
+msgid "Lilongwe"
+msgstr ""
+
+msgctxt "province"
+msgid "Machinga"
+msgstr ""
+
+msgctxt "province"
+msgid "Mangochi"
+msgstr ""
+
+msgctxt "province"
+msgid "Mchinji"
+msgstr ""
+
+msgctxt "province"
+msgid "Mulanje"
+msgstr ""
+
+msgctxt "province"
+msgid "Mwanza"
+msgstr ""
+
+msgctxt "province"
+msgid "Mzimba"
+msgstr ""
+
+msgctxt "province"
+msgid "Nkhata Bay"
+msgstr ""
+
+msgctxt "province"
+msgid "Nkhotakota"
+msgstr ""
+
+msgctxt "province"
+msgid "Nsanje"
+msgstr ""
+
+msgctxt "province"
+msgid "Ntcheu"
+msgstr ""
+
+msgctxt "province"
+msgid "Ntchisi"
+msgstr ""
+
+msgctxt "province"
+msgid "Phalomba"
+msgstr ""
+
+msgctxt "province"
+msgid "Rumphi"
+msgstr ""
+
+msgctxt "province"
+msgid "Salima"
+msgstr ""
+
+msgctxt "province"
+msgid "Thyolo"
+msgstr ""
+
+msgctxt "province"
+msgid "Zomba"
+msgstr ""
+
+msgctxt "province"
+msgid "Aguascalientes"
+msgstr ""
+
+msgctxt "province"
+msgid "Baja California"
+msgstr ""
+
+msgctxt "province"
+msgid "Baja California Sur"
+msgstr ""
+
+msgctxt "province"
+msgid "Campeche"
+msgstr ""
+
+msgctxt "province"
+msgid "Coahuila"
+msgstr ""
+
+msgctxt "province"
+msgid "Colima"
+msgstr ""
+
+msgctxt "province"
+msgid "Chiapas"
+msgstr ""
+
+msgctxt "province"
+msgid "Chihuahua"
+msgstr ""
+
+msgctxt "province"
+msgid "Durango"
+msgstr ""
+
+msgctxt "province"
+msgid "Guanajuato"
+msgstr ""
+
+msgctxt "province"
+msgid "Guerrero"
+msgstr ""
+
+msgctxt "province"
+msgid "Hidalgo"
+msgstr ""
+
+msgctxt "province"
+msgid "Jalisco"
+msgstr ""
+
+msgctxt "province"
+msgid "Mexico"
+msgstr ""
+
+msgctxt "province"
+msgid "Michoacin"
+msgstr ""
+
+msgctxt "province"
+msgid "Morelos"
+msgstr ""
+
+msgctxt "province"
+msgid "Nayarit"
+msgstr ""
+
+msgctxt "province"
+msgid "Nuevo Leon"
+msgstr ""
+
+msgctxt "province"
+msgid "Oaxaca"
+msgstr ""
+
+msgctxt "province"
+msgid "Puebla"
+msgstr ""
+
+msgctxt "province"
+msgid "Queretaro"
+msgstr ""
+
+msgctxt "province"
+msgid "Quintana Roo"
+msgstr ""
+
+msgctxt "province"
+msgid "San Luis Potosi"
+msgstr ""
+
+msgctxt "province"
+msgid "Sinaloa"
+msgstr ""
+
+msgctxt "province"
+msgid "Sonora"
+msgstr ""
+
+msgctxt "province"
+msgid "Tabasco"
+msgstr ""
+
+msgctxt "province"
+msgid "Tamaulipas"
+msgstr ""
+
+msgctxt "province"
+msgid "Tlaxcala"
+msgstr ""
+
+msgctxt "province"
+msgid "Veracruz"
+msgstr ""
+
+msgctxt "province"
+msgid "Yucatan"
+msgstr ""
+
+msgctxt "province"
+msgid "Zacatecas"
+msgstr ""
+
+msgctxt "province"
+msgid "Wilayah Persekutuan Kuala Lumpur"
+msgstr ""
+
+msgctxt "province"
+msgid "Wilayah Persekutuan Labuan"
+msgstr ""
+
+msgctxt "province"
+msgid "Wilayah Persekutuan Putrajaya"
+msgstr ""
+
+msgctxt "province"
+msgid "Johor"
+msgstr ""
+
+msgctxt "province"
+msgid "Kedah"
+msgstr ""
+
+msgctxt "province"
+msgid "Kelantan"
+msgstr ""
+
+msgctxt "province"
+msgid "Melaka"
+msgstr ""
+
+msgctxt "province"
+msgid "Negeri Sembilan"
+msgstr ""
+
+msgctxt "province"
+msgid "Pahang"
+msgstr ""
+
+msgctxt "province"
+msgid "Perak"
+msgstr ""
+
+msgctxt "province"
+msgid "Perlis"
+msgstr ""
+
+msgctxt "province"
+msgid "Pulau Pinang"
+msgstr ""
+
+msgctxt "province"
+msgid "Sabah"
+msgstr ""
+
+msgctxt "province"
+msgid "Sarawak"
+msgstr ""
+
+msgctxt "province"
+msgid "Selangor"
+msgstr ""
+
+msgctxt "province"
+msgid "Terengganu"
+msgstr ""
+
+msgctxt "province"
+msgid "Maputo"
+msgstr ""
+
+msgctxt "province"
+msgid "Cabo Delgado"
+msgstr ""
+
+msgctxt "province"
+msgid "Gaza"
+msgstr ""
+
+msgctxt "province"
+msgid "Inhambane"
+msgstr ""
+
+msgctxt "province"
+msgid "Manica"
+msgstr ""
+
+msgctxt "province"
+msgid "Numpula"
+msgstr ""
+
+msgctxt "province"
+msgid "Niaaea"
+msgstr ""
+
+msgctxt "province"
+msgid "Sofala"
+msgstr ""
+
+msgctxt "province"
+msgid "Tete"
+msgstr ""
+
+msgctxt "province"
+msgid "Zambezia"
+msgstr ""
+
+msgctxt "province"
+msgid "Caprivi"
+msgstr ""
+
+msgctxt "province"
+msgid "Erongo"
+msgstr ""
+
+msgctxt "province"
+msgid "Hardap"
+msgstr ""
+
+msgctxt "province"
+msgid "Karas"
+msgstr ""
+
+msgctxt "province"
+msgid "Khomas"
+msgstr ""
+
+msgctxt "province"
+msgid "Kunene"
+msgstr ""
+
+msgctxt "province"
+msgid "Ohangwena"
+msgstr ""
+
+msgctxt "province"
+msgid "Okavango"
+msgstr ""
+
+msgctxt "province"
+msgid "Omaheke"
+msgstr ""
+
+msgctxt "province"
+msgid "Omusati"
+msgstr ""
+
+msgctxt "province"
+msgid "Oshana"
+msgstr ""
+
+msgctxt "province"
+msgid "Oshikoto"
+msgstr ""
+
+msgctxt "province"
+msgid "Otjozondjupa"
+msgstr ""
+
+msgctxt "province"
+msgid "Niamey"
+msgstr ""
+
+msgctxt "province"
+msgid "Agadez"
+msgstr ""
+
+msgctxt "province"
+msgid "Diffa"
+msgstr ""
+
+msgctxt "province"
+msgid "Dosso"
+msgstr ""
+
+msgctxt "province"
+msgid "Maradi"
+msgstr ""
+
+msgctxt "province"
+msgid "Tahoua"
+msgstr ""
+
+msgctxt "province"
+msgid "Tillaberi"
+msgstr ""
+
+msgctxt "province"
+msgid "Zinder"
+msgstr ""
+
+msgctxt "province"
+msgid "Abuja Capital Territory"
+msgstr ""
+
+msgctxt "province"
+msgid "Abia"
+msgstr ""
+
+msgctxt "province"
+msgid "Adamawa"
+msgstr ""
+
+msgctxt "province"
+msgid "Akwa Ibom"
+msgstr ""
+
+msgctxt "province"
+msgid "Anambra"
+msgstr ""
+
+msgctxt "province"
+msgid "Bauchi"
+msgstr ""
+
+msgctxt "province"
+msgid "Bayelsa"
+msgstr ""
+
+msgctxt "province"
+msgid "Benue"
+msgstr ""
+
+msgctxt "province"
+msgid "Borno"
+msgstr ""
+
+msgctxt "province"
+msgid "Cross River"
+msgstr ""
+
+msgctxt "province"
+msgid "Delta"
+msgstr ""
+
+msgctxt "province"
+msgid "Ebonyi"
+msgstr ""
+
+msgctxt "province"
+msgid "Edo"
+msgstr ""
+
+msgctxt "province"
+msgid "Ekiti"
+msgstr ""
+
+msgctxt "province"
+msgid "Enugu"
+msgstr ""
+
+msgctxt "province"
+msgid "Gombe"
+msgstr ""
+
+msgctxt "province"
+msgid "Imo"
+msgstr ""
+
+msgctxt "province"
+msgid "Jigawa"
+msgstr ""
+
+msgctxt "province"
+msgid "Kaduna"
+msgstr ""
+
+msgctxt "province"
+msgid "Kano"
+msgstr ""
+
+msgctxt "province"
+msgid "Katsina"
+msgstr ""
+
+msgctxt "province"
+msgid "Kebbi"
+msgstr ""
+
+msgctxt "province"
+msgid "Kogi"
+msgstr ""
+
+msgctxt "province"
+msgid "Kwara"
+msgstr ""
+
+msgctxt "province"
+msgid "Lagos"
+msgstr ""
+
+msgctxt "province"
+msgid "Nassarawa"
+msgstr ""
+
+msgctxt "province"
+msgid "Niger"
+msgstr ""
+
+msgctxt "province"
+msgid "Ogun"
+msgstr ""
+
+msgctxt "province"
+msgid "Ondo"
+msgstr ""
+
+msgctxt "province"
+msgid "Osun"
+msgstr ""
+
+msgctxt "province"
+msgid "Oyo"
+msgstr ""
+
+msgctxt "province"
+msgid "Rivers"
+msgstr ""
+
+msgctxt "province"
+msgid "Sokoto"
+msgstr ""
+
+msgctxt "province"
+msgid "Taraba"
+msgstr ""
+
+msgctxt "province"
+msgid "Yobe"
+msgstr ""
+
+msgctxt "province"
+msgid "Zamfara"
+msgstr ""
+
+msgctxt "province"
+msgid "Boaco"
+msgstr ""
+
+msgctxt "province"
+msgid "Carazo"
+msgstr ""
+
+msgctxt "province"
+msgid "Chinandega"
+msgstr ""
+
+msgctxt "province"
+msgid "Chontales"
+msgstr ""
+
+msgctxt "province"
+msgid "Esteli"
+msgstr ""
+
+msgctxt "province"
+msgid "Jinotega"
+msgstr ""
+
+msgctxt "province"
+msgid "Leon"
+msgstr ""
+
+msgctxt "province"
+msgid "Madriz"
+msgstr ""
+
+msgctxt "province"
+msgid "Managua"
+msgstr ""
+
+msgctxt "province"
+msgid "Masaya"
+msgstr ""
+
+msgctxt "province"
+msgid "Matagalpa"
+msgstr ""
+
+msgctxt "province"
+msgid "Nueva Segovia"
+msgstr ""
+
+msgctxt "province"
+msgid "Rio San Juan"
+msgstr ""
+
+msgctxt "province"
+msgid "Rivas"
+msgstr ""
+
+msgctxt "province"
+msgid "Atlantico Norte"
+msgstr ""
+
+msgctxt "province"
+msgid "Atlantico Sur"
+msgstr ""
+
+msgctxt "province"
+msgid "Drente"
+msgstr ""
+
+msgctxt "province"
+msgid "Flevoland"
+msgstr ""
+
+msgctxt "province"
+msgid "Friesland"
+msgstr ""
+
+msgctxt "province"
+msgid "Gelderland"
+msgstr ""
+
+msgctxt "province"
+msgid "Groningen"
+msgstr ""
+
+msgctxt "province"
+msgid "Noord-Brabant"
+msgstr ""
+
+msgctxt "province"
+msgid "Noord-Holland"
+msgstr ""
+
+msgctxt "province"
+msgid "Overijssel"
+msgstr ""
+
+msgctxt "province"
+msgid "Utrecht"
+msgstr ""
+
+msgctxt "province"
+msgid "Zuid-Holland"
+msgstr ""
+
+msgctxt "province"
+msgid "Zeeland"
+msgstr ""
+
+msgctxt "province"
+msgid "Akershus"
+msgstr ""
+
+msgctxt "province"
+msgid "Aust-Agder"
+msgstr ""
+
+msgctxt "province"
+msgid "Buskerud"
+msgstr ""
+
+msgctxt "province"
+msgid "Finumark"
+msgstr ""
+
+msgctxt "province"
+msgid "Hedmark"
+msgstr ""
+
+msgctxt "province"
+msgid "Hordaland"
+msgstr ""
+
+msgctxt "province"
+msgid "Mire og Romsdal"
+msgstr ""
+
+msgctxt "province"
+msgid "Nordland"
+msgstr ""
+
+msgctxt "province"
+msgid "Nord-Trindelag"
+msgstr ""
+
+msgctxt "province"
+msgid "Oppland"
+msgstr ""
+
+msgctxt "province"
+msgid "Oslo"
+msgstr ""
+
+msgctxt "province"
+msgid "Rogaland"
+msgstr ""
+
+msgctxt "province"
+msgid "Sogn og Fjordane"
+msgstr ""
+
+msgctxt "province"
+msgid "Sir-Trindelag"
+msgstr ""
+
+msgctxt "province"
+msgid "Telemark"
+msgstr ""
+
+msgctxt "province"
+msgid "Troms"
+msgstr ""
+
+msgctxt "province"
+msgid "Vest-Agder"
+msgstr ""
+
+msgctxt "province"
+msgid "Vestfold"
+msgstr ""
+
+msgctxt "province"
+msgid "Ostfold"
+msgstr ""
+
+msgctxt "province"
+msgid "Jan Mayen"
+msgstr ""
+
+msgctxt "province"
+msgid "Svalbard"
+msgstr ""
+
+msgctxt "province"
+msgid "Auckland"
+msgstr ""
+
+msgctxt "province"
+msgid "Bay of Plenty"
+msgstr ""
+
+msgctxt "province"
+msgid "Canterbury"
+msgstr ""
+
+msgctxt "province"
+msgid "Gisborne"
+msgstr ""
+
+msgctxt "province"
+msgid "Hawkes Bay"
+msgstr ""
+
+msgctxt "province"
+msgid "Manawatu-Wanganui"
+msgstr ""
+
+msgctxt "province"
+msgid "Marlborough"
+msgstr ""
+
+msgctxt "province"
+msgid "Nelson"
+msgstr ""
+
+msgctxt "province"
+msgid "Northland"
+msgstr ""
+
+msgctxt "province"
+msgid "Otago"
+msgstr ""
+
+msgctxt "province"
+msgid "Southland"
+msgstr ""
+
+msgctxt "province"
+msgid "Taranaki"
+msgstr ""
+
+msgctxt "province"
+msgid "Tasman"
+msgstr ""
+
+msgctxt "province"
+msgid "waikato"
+msgstr ""
+
+msgctxt "province"
+msgid "Wellington"
+msgstr ""
+
+msgctxt "province"
+msgid "West Coast"
+msgstr ""
+
+msgctxt "province"
+msgid "Ad Dakhillyah"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Batinah"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Janblyah"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Wusta"
+msgstr ""
+
+msgctxt "province"
+msgid "Ash Sharqlyah"
+msgstr ""
+
+msgctxt "province"
+msgid "Az Zahirah"
+msgstr ""
+
+msgctxt "province"
+msgid "Masqat"
+msgstr ""
+
+msgctxt "province"
+msgid "Musandam"
+msgstr ""
+
+msgctxt "province"
+msgid "Bocas del Toro"
+msgstr ""
+
+msgctxt "province"
+msgid "Cocle"
+msgstr ""
+
+msgctxt "province"
+msgid "Chiriqui"
+msgstr ""
+
+msgctxt "province"
+msgid "Darien"
+msgstr ""
+
+msgctxt "province"
+msgid "Herrera"
+msgstr ""
+
+msgctxt "province"
+msgid "Loa Santoa"
+msgstr ""
+
+msgctxt "province"
+msgid "Panama"
+msgstr ""
+
+msgctxt "province"
+msgid "Veraguas"
+msgstr ""
+
+msgctxt "province"
+msgid "Comarca de San Blas"
+msgstr ""
+
+msgctxt "province"
+msgid "El Callao"
+msgstr ""
+
+msgctxt "province"
+msgid "Ancash"
+msgstr ""
+
+msgctxt "province"
+msgid "Apurimac"
+msgstr ""
+
+msgctxt "province"
+msgid "Arequipa"
+msgstr ""
+
+msgctxt "province"
+msgid "Ayacucho"
+msgstr ""
+
+msgctxt "province"
+msgid "Cajamarca"
+msgstr ""
+
+msgctxt "province"
+msgid "Cuzco"
+msgstr ""
+
+msgctxt "province"
+msgid "Huancavelica"
+msgstr ""
+
+msgctxt "province"
+msgid "Huanuco"
+msgstr ""
+
+msgctxt "province"
+msgid "Ica"
+msgstr ""
+
+msgctxt "province"
+msgid "Junin"
+msgstr ""
+
+msgctxt "province"
+msgid "La Libertad"
+msgstr ""
+
+msgctxt "province"
+msgid "Lambayeque"
+msgstr ""
+
+msgctxt "province"
+msgid "Lima"
+msgstr ""
+
+msgctxt "province"
+msgid "Loreto"
+msgstr ""
+
+msgctxt "province"
+msgid "Madre de Dios"
+msgstr ""
+
+msgctxt "province"
+msgid "Moquegua"
+msgstr ""
+
+msgctxt "province"
+msgid "Pasco"
+msgstr ""
+
+msgctxt "province"
+msgid "Piura"
+msgstr ""
+
+msgctxt "province"
+msgid "Puno"
+msgstr ""
+
+msgctxt "province"
+msgid "San Martin"
+msgstr ""
+
+msgctxt "province"
+msgid "Tacna"
+msgstr ""
+
+msgctxt "province"
+msgid "Tumbes"
+msgstr ""
+
+msgctxt "province"
+msgid "Ucayali"
+msgstr ""
+
+msgctxt "province"
+msgid "National Capital District (Port Moresby)"
+msgstr ""
+
+msgctxt "province"
+msgid "Chimbu"
+msgstr ""
+
+msgctxt "province"
+msgid "Eastern Highlands"
+msgstr ""
+
+msgctxt "province"
+msgid "East New Britain"
+msgstr ""
+
+msgctxt "province"
+msgid "East Sepik"
+msgstr ""
+
+msgctxt "province"
+msgid "Enga"
+msgstr ""
+
+msgctxt "province"
+msgid "Gulf"
+msgstr ""
+
+msgctxt "province"
+msgid "Madang"
+msgstr ""
+
+msgctxt "province"
+msgid "Manus"
+msgstr ""
+
+msgctxt "province"
+msgid "Milne Bay"
+msgstr ""
+
+msgctxt "province"
+msgid "Morobe"
+msgstr ""
+
+msgctxt "province"
+msgid "New Ireland"
+msgstr ""
+
+msgctxt "province"
+msgid "North Solomons"
+msgstr ""
+
+msgctxt "province"
+msgid "Santaun"
+msgstr ""
+
+msgctxt "province"
+msgid "Southern Highlands"
+msgstr ""
+
+msgctxt "province"
+msgid "Western Highlands"
+msgstr ""
+
+msgctxt "province"
+msgid "West New Britain"
+msgstr ""
+
+msgctxt "province"
+msgid "Abra"
+msgstr ""
+
+msgctxt "province"
+msgid "Agusan del Norte"
+msgstr ""
+
+msgctxt "province"
+msgid "Agusan del Sur"
+msgstr ""
+
+msgctxt "province"
+msgid "Aklan"
+msgstr ""
+
+msgctxt "province"
+msgid "Albay"
+msgstr ""
+
+msgctxt "province"
+msgid "Antique"
+msgstr ""
+
+msgctxt "province"
+msgid "Apayao"
+msgstr ""
+
+msgctxt "province"
+msgid "Aurora"
+msgstr ""
+
+msgctxt "province"
+msgid "Basilan"
+msgstr ""
+
+msgctxt "province"
+msgid "Batasn"
+msgstr ""
+
+msgctxt "province"
+msgid "Batanes"
+msgstr ""
+
+msgctxt "province"
+msgid "Batangas"
+msgstr ""
+
+msgctxt "province"
+msgid "Benguet"
+msgstr ""
+
+msgctxt "province"
+msgid "Biliran"
+msgstr ""
+
+msgctxt "province"
+msgid "Bohol"
+msgstr ""
+
+msgctxt "province"
+msgid "Bukidnon"
+msgstr ""
+
+msgctxt "province"
+msgid "Bulacan"
+msgstr ""
+
+msgctxt "province"
+msgid "Cagayan"
+msgstr ""
+
+msgctxt "province"
+msgid "Camarines Norte"
+msgstr ""
+
+msgctxt "province"
+msgid "Camarines Sur"
+msgstr ""
+
+msgctxt "province"
+msgid "Camiguin"
+msgstr ""
+
+msgctxt "province"
+msgid "Capiz"
+msgstr ""
+
+msgctxt "province"
+msgid "Catanduanes"
+msgstr ""
+
+msgctxt "province"
+msgid "Cavite"
+msgstr ""
+
+msgctxt "province"
+msgid "Cebu"
+msgstr ""
+
+msgctxt "province"
+msgid "Compostela Valley"
+msgstr ""
+
+msgctxt "province"
+msgid "Davao"
+msgstr ""
+
+msgctxt "province"
+msgid "Davao del Sur"
+msgstr ""
+
+msgctxt "province"
+msgid "Davao Oriental"
+msgstr ""
+
+msgctxt "province"
+msgid "Eastern Samar"
+msgstr ""
+
+msgctxt "province"
+msgid "Guimaras"
+msgstr ""
+
+msgctxt "province"
+msgid "Ifugao"
+msgstr ""
+
+msgctxt "province"
+msgid "Ilocos Norte"
+msgstr ""
+
+msgctxt "province"
+msgid "Ilocos Sur"
+msgstr ""
+
+msgctxt "province"
+msgid "Iloilo"
+msgstr ""
+
+msgctxt "province"
+msgid "Isabela"
+msgstr ""
+
+msgctxt "province"
+msgid "Kalinga-Apayso"
+msgstr ""
+
+msgctxt "province"
+msgid "Laguna"
+msgstr ""
+
+msgctxt "province"
+msgid "Lanao del Norte"
+msgstr ""
+
+msgctxt "province"
+msgid "Lanao del Sur"
+msgstr ""
+
+msgctxt "province"
+msgid "La Union"
+msgstr ""
+
+msgctxt "province"
+msgid "Leyte"
+msgstr ""
+
+msgctxt "province"
+msgid "Maguindanao"
+msgstr ""
+
+msgctxt "province"
+msgid "Marinduque"
+msgstr ""
+
+msgctxt "province"
+msgid "Masbate"
+msgstr ""
+
+msgctxt "province"
+msgid "Mindoro Occidental"
+msgstr ""
+
+msgctxt "province"
+msgid "Mindoro Oriental"
+msgstr ""
+
+msgctxt "province"
+msgid "Misamis Occidental"
+msgstr ""
+
+msgctxt "province"
+msgid "Misamis Oriental"
+msgstr ""
+
+msgctxt "province"
+msgid "Mountain Province"
+msgstr ""
+
+msgctxt "province"
+msgid "Negroe Occidental"
+msgstr ""
+
+msgctxt "province"
+msgid "Negros Oriental"
+msgstr ""
+
+msgctxt "province"
+msgid "North Cotabato"
+msgstr ""
+
+msgctxt "province"
+msgid "Northern Samar"
+msgstr ""
+
+msgctxt "province"
+msgid "Nueva Ecija"
+msgstr ""
+
+msgctxt "province"
+msgid "Nueva Vizcaya"
+msgstr ""
+
+msgctxt "province"
+msgid "Palawan"
+msgstr ""
+
+msgctxt "province"
+msgid "Pampanga"
+msgstr ""
+
+msgctxt "province"
+msgid "Pangasinan"
+msgstr ""
+
+msgctxt "province"
+msgid "Quezon"
+msgstr ""
+
+msgctxt "province"
+msgid "Quirino"
+msgstr ""
+
+msgctxt "province"
+msgid "Rizal"
+msgstr ""
+
+msgctxt "province"
+msgid "Romblon"
+msgstr ""
+
+msgctxt "province"
+msgid "Sarangani"
+msgstr ""
+
+msgctxt "province"
+msgid "Siquijor"
+msgstr ""
+
+msgctxt "province"
+msgid "Sorsogon"
+msgstr ""
+
+msgctxt "province"
+msgid "South Cotabato"
+msgstr ""
+
+msgctxt "province"
+msgid "Southern Leyte"
+msgstr ""
+
+msgctxt "province"
+msgid "Sultan Kudarat"
+msgstr ""
+
+msgctxt "province"
+msgid "Sulu"
+msgstr ""
+
+msgctxt "province"
+msgid "Surigao del Norte"
+msgstr ""
+
+msgctxt "province"
+msgid "Surigao del Sur"
+msgstr ""
+
+msgctxt "province"
+msgid "Tarlac"
+msgstr ""
+
+msgctxt "province"
+msgid "Tawi-Tawi"
+msgstr ""
+
+msgctxt "province"
+msgid "Western Samar"
+msgstr ""
+
+msgctxt "province"
+msgid "Zambales"
+msgstr ""
+
+msgctxt "province"
+msgid "Zamboanga del Norte"
+msgstr ""
+
+msgctxt "province"
+msgid "Zamboanga del Sur"
+msgstr ""
+
+msgctxt "province"
+msgid "Zamboanga Sibiguey"
+msgstr ""
+
+msgctxt "province"
+msgid "Islamabad"
+msgstr ""
+
+msgctxt "province"
+msgid "Baluchistan (en)"
+msgstr ""
+
+msgctxt "province"
+msgid "North-West Frontier"
+msgstr ""
+
+msgctxt "province"
+msgid "Sind (en)"
+msgstr ""
+
+msgctxt "province"
+msgid "Federally Administered Tribal Aresa"
+msgstr ""
+
+msgctxt "province"
+msgid "Azad Rashmir"
+msgstr ""
+
+msgctxt "province"
+msgid "Northern Areas"
+msgstr ""
+
+msgctxt "province"
+msgid "Aveiro"
+msgstr ""
+
+msgctxt "province"
+msgid "Beja"
+msgstr ""
+
+msgctxt "province"
+msgid "Braga"
+msgstr ""
+
+msgctxt "province"
+msgid "Braganca"
+msgstr ""
+
+msgctxt "province"
+msgid "Castelo Branco"
+msgstr ""
+
+msgctxt "province"
+msgid "Colmbra"
+msgstr ""
+
+msgctxt "province"
+msgid "Ovora"
+msgstr ""
+
+msgctxt "province"
+msgid "Faro"
+msgstr ""
+
+msgctxt "province"
+msgid "Guarda"
+msgstr ""
+
+msgctxt "province"
+msgid "Leiria"
+msgstr ""
+
+msgctxt "province"
+msgid "Lisboa"
+msgstr ""
+
+msgctxt "province"
+msgid "Portalegre"
+msgstr ""
+
+msgctxt "province"
+msgid "Porto"
+msgstr ""
+
+msgctxt "province"
+msgid "Santarem"
+msgstr ""
+
+msgctxt "province"
+msgid "Setubal"
+msgstr ""
+
+msgctxt "province"
+msgid "Viana do Castelo"
+msgstr ""
+
+msgctxt "province"
+msgid "Vila Real"
+msgstr ""
+
+msgctxt "province"
+msgid "Viseu"
+msgstr ""
+
+msgctxt "province"
+msgid "Regiao Autonoma dos Acores"
+msgstr ""
+
+msgctxt "province"
+msgid "Regiao Autonoma da Madeira"
+msgstr ""
+
+msgctxt "province"
+msgid "Asuncion"
+msgstr ""
+
+msgctxt "province"
+msgid "Alto Paraguay"
+msgstr ""
+
+msgctxt "province"
+msgid "Alto Parana"
+msgstr ""
+
+msgctxt "province"
+msgid "Amambay"
+msgstr ""
+
+msgctxt "province"
+msgid "Boqueron"
+msgstr ""
+
+msgctxt "province"
+msgid "Caeguazu"
+msgstr ""
+
+msgctxt "province"
+msgid "Caazapl"
+msgstr ""
+
+msgctxt "province"
+msgid "Canindeyu"
+msgstr ""
+
+msgctxt "province"
+msgid "Concepcion"
+msgstr ""
+
+msgctxt "province"
+msgid "Cordillera"
+msgstr ""
+
+msgctxt "province"
+msgid "Guaira"
+msgstr ""
+
+msgctxt "province"
+msgid "Itapua"
+msgstr ""
+
+msgctxt "province"
+msgid "Miaiones"
+msgstr ""
+
+msgctxt "province"
+msgid "Neembucu"
+msgstr ""
+
+msgctxt "province"
+msgid "Paraguari"
+msgstr ""
+
+msgctxt "province"
+msgid "Presidente Hayes"
+msgstr ""
+
+msgctxt "province"
+msgid "San Pedro"
+msgstr ""
+
+msgctxt "province"
+msgid "Ad Dawhah"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Ghuwayriyah"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Jumayliyah"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Khawr"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Wakrah"
+msgstr ""
+
+msgctxt "province"
+msgid "Ar Rayyan"
+msgstr ""
+
+msgctxt "province"
+msgid "Jariyan al Batnah"
+msgstr ""
+
+msgctxt "province"
+msgid "Madinat ash Shamal"
+msgstr ""
+
+msgctxt "province"
+msgid "Umm Salal"
+msgstr ""
+
+msgctxt "province"
+msgid "Bucuresti"
+msgstr ""
+
+msgctxt "province"
+msgid "Alba"
+msgstr ""
+
+msgctxt "province"
+msgid "Arad"
+msgstr ""
+
+msgctxt "province"
+msgid "Arges"
+msgstr ""
+
+msgctxt "province"
+msgid "Bacau"
+msgstr ""
+
+msgctxt "province"
+msgid "Bihor"
+msgstr ""
+
+msgctxt "province"
+msgid "Bistrita-Nasaud"
+msgstr ""
+
+msgctxt "province"
+msgid "Boto'ani"
+msgstr ""
+
+msgctxt "province"
+msgid "Bra'ov"
+msgstr ""
+
+msgctxt "province"
+msgid "Braila"
+msgstr ""
+
+msgctxt "province"
+msgid "Buzau"
+msgstr ""
+
+msgctxt "province"
+msgid "Caras-Severin"
+msgstr ""
+
+msgctxt "province"
+msgid "Ca la ras'i"
+msgstr ""
+
+msgctxt "province"
+msgid "Cluj"
+msgstr ""
+
+msgctxt "province"
+msgid "Constant'a"
+msgstr ""
+
+msgctxt "province"
+msgid "Covasna"
+msgstr ""
+
+msgctxt "province"
+msgid "Dambovit'a"
+msgstr ""
+
+msgctxt "province"
+msgid "Dolj"
+msgstr ""
+
+msgctxt "province"
+msgid "Galat'i"
+msgstr ""
+
+msgctxt "province"
+msgid "Giurgiu"
+msgstr ""
+
+msgctxt "province"
+msgid "Gorj"
+msgstr ""
+
+msgctxt "province"
+msgid "Harghita"
+msgstr ""
+
+msgctxt "province"
+msgid "Hunedoara"
+msgstr ""
+
+msgctxt "province"
+msgid "Ialomit'a"
+msgstr ""
+
+msgctxt "province"
+msgid "Ias'i"
+msgstr ""
+
+msgctxt "province"
+msgid "Ilfov"
+msgstr ""
+
+msgctxt "province"
+msgid "Maramures"
+msgstr ""
+
+msgctxt "province"
+msgid "Mehedint'i"
+msgstr ""
+
+msgctxt "province"
+msgid "Mures"
+msgstr ""
+
+msgctxt "province"
+msgid "Neamt"
+msgstr ""
+
+msgctxt "province"
+msgid "Olt"
+msgstr ""
+
+msgctxt "province"
+msgid "Prahova"
+msgstr ""
+
+msgctxt "province"
+msgid "Satu Mare"
+msgstr ""
+
+msgctxt "province"
+msgid "Sa laj"
+msgstr ""
+
+msgctxt "province"
+msgid "Sibiu"
+msgstr ""
+
+msgctxt "province"
+msgid "Suceava"
+msgstr ""
+
+msgctxt "province"
+msgid "Teleorman"
+msgstr ""
+
+msgctxt "province"
+msgid "Timis"
+msgstr ""
+
+msgctxt "province"
+msgid "Tulcea"
+msgstr ""
+
+msgctxt "province"
+msgid "Vaslui"
+msgstr ""
+
+msgctxt "province"
+msgid "Valcea"
+msgstr ""
+
+msgctxt "province"
+msgid "Vrancea"
+msgstr ""
+
+msgctxt "province"
+msgid "Adygeya, Respublika"
+msgstr ""
+
+msgctxt "province"
+msgid "Altay, Respublika"
+msgstr ""
+
+msgctxt "province"
+msgid "Bashkortostan, Respublika"
+msgstr ""
+
+msgctxt "province"
+msgid "Buryatiya, Respublika"
+msgstr ""
+
+msgctxt "province"
+msgid "Chechenskaya Respublika"
+msgstr ""
+
+msgctxt "province"
+msgid "Chuvashskaya Respublika"
+msgstr ""
+
+msgctxt "province"
+msgid "Dagestan, Respublika"
+msgstr ""
+
+msgctxt "province"
+msgid "Ingushskaya Respublika"
+msgstr ""
+
+msgctxt "province"
+msgid "Kabardino-Balkarskaya"
+msgstr ""
+
+msgctxt "province"
+msgid "Kalmykiya, Respublika"
+msgstr ""
+
+msgctxt "province"
+msgid "Karachayevo-Cherkesskaya Respublika"
+msgstr ""
+
+msgctxt "province"
+msgid "Kareliya, Respublika"
+msgstr ""
+
+msgctxt "province"
+msgid "Khakasiya, Respublika"
+msgstr ""
+
+msgctxt "province"
+msgid "Komi, Respublika"
+msgstr ""
+
+msgctxt "province"
+msgid "Mariy El, Respublika"
+msgstr ""
+
+msgctxt "province"
+msgid "Mordoviya, Respublika"
+msgstr ""
+
+msgctxt "province"
+msgid "Sakha, Respublika [Yakutiya]"
+msgstr ""
+
+msgctxt "province"
+msgid "Severnaya Osetiya, Respublika"
+msgstr ""
+
+msgctxt "province"
+msgid "Tatarstan, Respublika"
+msgstr ""
+
+msgctxt "province"
+msgid "Tyva, Respublika [Tuva]"
+msgstr ""
+
+msgctxt "province"
+msgid "Udmurtskaya Respublika"
+msgstr ""
+
+msgctxt "province"
+msgid "Altayskiy kray"
+msgstr ""
+
+msgctxt "province"
+msgid "Khabarovskiy kray"
+msgstr ""
+
+msgctxt "province"
+msgid "Krasnodarskiy kray"
+msgstr ""
+
+msgctxt "province"
+msgid "Krasnoyarskiy kray"
+msgstr ""
+
+msgctxt "province"
+msgid "Primorskiy kray"
+msgstr ""
+
+msgctxt "province"
+msgid "Stavropol'skiy kray"
+msgstr ""
+
+msgctxt "province"
+msgid "Amurskaya oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Arkhangel'skaya oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Astrakhanskaya oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Belgorodskaya oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Bryanskaya oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Chelyabinskaya oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Chitinskaya oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Irkutskaya oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Ivanovskaya oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Kaliningradskaya oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Kaluzhskaya oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Kamchatskaya oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Kemerovskaya oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Kirovskaya oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Kostromskaya oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Kurganskaya oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Kurskaya oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Leningradskaya oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Lipetskaya oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Magadanskaya oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Moskovskaya oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Murmanskaya oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Nizhegorodskaya oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Novgorodskaya oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Novosibirskaya oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Omskaya oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Orenburgskaya oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Orlovskaya oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Penzenskaya oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Permskaya oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Pskovskaya oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Rostovskaya oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Ryazanskaya oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Sakhalinskaya oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Samarskaya oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Saratovskaya oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Smolenskaya oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Sverdlovskaya oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Tambovskaya oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Tomskaya oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Tul'skaya oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Tverskaya oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Tyumenskaya oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Ul'yanovskaya oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Vladimirskaya oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Volgogradskaya oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Vologodskaya oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Voronezhskaya oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Yaroslavskaya oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Moskva"
+msgstr ""
+
+msgctxt "province"
+msgid "Sankt-Peterburg"
+msgstr ""
+
+msgctxt "province"
+msgid "Yevreyskaya avtonomnaya oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Aginskiy Buryatskiy avtonomnyy"
+msgstr ""
+
+msgctxt "province"
+msgid "Chukotskiy avtonomnyy okrug"
+msgstr ""
+
+msgctxt "province"
+msgid "Evenkiyskiy avtonomnyy okrug"
+msgstr ""
+
+msgctxt "province"
+msgid "Khanty-Mansiyskiy avtonomnyy okrug"
+msgstr ""
+
+msgctxt "province"
+msgid "Komi-Permyatskiy avtonomnyy okrug"
+msgstr ""
+
+msgctxt "province"
+msgid "Koryakskiy avtonomnyy okrug"
+msgstr ""
+
+msgctxt "province"
+msgid "Nenetskiy avtonomnyy okrug"
+msgstr ""
+
+msgctxt "province"
+msgid "Taymyrskiy (Dolgano-Nenetskiy)"
+msgstr ""
+
+msgctxt "province"
+msgid "Ust'-Ordynskiy Buryatskiy"
+msgstr ""
+
+msgctxt "province"
+msgid "Yamalo-Nenetskiy avtonomnyy okrug"
+msgstr ""
+
+msgctxt "province"
+msgid "Butare"
+msgstr ""
+
+msgctxt "province"
+msgid "Byumba"
+msgstr ""
+
+msgctxt "province"
+msgid "Cyangugu"
+msgstr ""
+
+msgctxt "province"
+msgid "Gikongoro"
+msgstr ""
+
+msgctxt "province"
+msgid "Gisenyi"
+msgstr ""
+
+msgctxt "province"
+msgid "Gitarama"
+msgstr ""
+
+msgctxt "province"
+msgid "Kibungo"
+msgstr ""
+
+msgctxt "province"
+msgid "Kibuye"
+msgstr ""
+
+msgctxt "province"
+msgid "Kigali-Rural Kigali y' Icyaro"
+msgstr ""
+
+msgctxt "province"
+msgid "Kigali-Ville Kigali Ngari"
+msgstr ""
+
+msgctxt "province"
+msgid "Mutara"
+msgstr ""
+
+msgctxt "province"
+msgid "Ruhengeri"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Batah"
+msgstr ""
+
+msgctxt "province"
+msgid "Al H,udd ash Shamallyah"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Jawf"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Madinah"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Qasim"
+msgstr ""
+
+msgctxt "province"
+msgid "Ar Riyad"
+msgstr ""
+
+msgctxt "province"
+msgid "Asir"
+msgstr ""
+
+msgctxt "province"
+msgid "Ha'il"
+msgstr ""
+
+msgctxt "province"
+msgid "Jlzan"
+msgstr ""
+
+msgctxt "province"
+msgid "Makkah"
+msgstr ""
+
+msgctxt "province"
+msgid "Najran"
+msgstr ""
+
+msgctxt "province"
+msgid "Tabuk"
+msgstr ""
+
+msgctxt "province"
+msgid "Capital Territory (Honiara)"
+msgstr ""
+
+msgctxt "province"
+msgid "Guadalcanal"
+msgstr ""
+
+msgctxt "province"
+msgid "Isabel"
+msgstr ""
+
+msgctxt "province"
+msgid "Makira"
+msgstr ""
+
+msgctxt "province"
+msgid "Malaita"
+msgstr ""
+
+msgctxt "province"
+msgid "Temotu"
+msgstr ""
+
+msgctxt "province"
+msgid "A'ali an Nil"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Bah al Ahmar"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Buhayrat"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Jazirah"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Khartum"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Qadarif"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Wahdah"
+msgstr ""
+
+msgctxt "province"
+msgid "An Nil"
+msgstr ""
+
+msgctxt "province"
+msgid "An Nil al Abyaq"
+msgstr ""
+
+msgctxt "province"
+msgid "An Nil al Azraq"
+msgstr ""
+
+msgctxt "province"
+msgid "Ash Shamallyah"
+msgstr ""
+
+msgctxt "province"
+msgid "Bahr al Jabal"
+msgstr ""
+
+msgctxt "province"
+msgid "Gharb al Istiwa'iyah"
+msgstr ""
+
+msgctxt "province"
+msgid "Gharb Ba~r al Ghazal"
+msgstr ""
+
+msgctxt "province"
+msgid "Gharb Darfur"
+msgstr ""
+
+msgctxt "province"
+msgid "Gharb Kurdufan"
+msgstr ""
+
+msgctxt "province"
+msgid "Janub Darfur"
+msgstr ""
+
+msgctxt "province"
+msgid "Janub Rurdufan"
+msgstr ""
+
+msgctxt "province"
+msgid "Jnqall"
+msgstr ""
+
+msgctxt "province"
+msgid "Kassala"
+msgstr ""
+
+msgctxt "province"
+msgid "Shamal Batr al Ghazal"
+msgstr ""
+
+msgctxt "province"
+msgid "Shamal Darfur"
+msgstr ""
+
+msgctxt "province"
+msgid "Shamal Kurdufan"
+msgstr ""
+
+msgctxt "province"
+msgid "Sharq al Istiwa'iyah"
+msgstr ""
+
+msgctxt "province"
+msgid "Sinnar"
+msgstr ""
+
+msgctxt "province"
+msgid "Warab"
+msgstr ""
+
+msgctxt "province"
+msgid "Blekinge lan"
+msgstr ""
+
+msgctxt "province"
+msgid "Dalarnas lan"
+msgstr ""
+
+msgctxt "province"
+msgid "Gotlands lan"
+msgstr ""
+
+msgctxt "province"
+msgid "Gavleborge lan"
+msgstr ""
+
+msgctxt "province"
+msgid "Hallands lan"
+msgstr ""
+
+msgctxt "province"
+msgid "Jamtlande lan"
+msgstr ""
+
+msgctxt "province"
+msgid "Jonkopings lan"
+msgstr ""
+
+msgctxt "province"
+msgid "Kalmar lan"
+msgstr ""
+
+msgctxt "province"
+msgid "Kronoberge lan"
+msgstr ""
+
+msgctxt "province"
+msgid "Norrbottena lan"
+msgstr ""
+
+msgctxt "province"
+msgid "Skane lan"
+msgstr ""
+
+msgctxt "province"
+msgid "Stockholms lan"
+msgstr ""
+
+msgctxt "province"
+msgid "Sodermanlands lan"
+msgstr ""
+
+msgctxt "province"
+msgid "Uppsala lan"
+msgstr ""
+
+msgctxt "province"
+msgid "Varmlanda lan"
+msgstr ""
+
+msgctxt "province"
+msgid "Vasterbottens lan"
+msgstr ""
+
+msgctxt "province"
+msgid "Vasternorrlands lan"
+msgstr ""
+
+msgctxt "province"
+msgid "Vastmanlanda lan"
+msgstr ""
+
+msgctxt "province"
+msgid "Vastra Gotalands lan"
+msgstr ""
+
+msgctxt "province"
+msgid "Orebro lan"
+msgstr ""
+
+msgctxt "province"
+msgid "Ostergotlands lan"
+msgstr ""
+
+msgctxt "province"
+msgid "Saint Helena"
+msgstr ""
+
+msgctxt "province"
+msgid "Ascension"
+msgstr ""
+
+msgctxt "province"
+msgid "Tristan da Cunha"
+msgstr ""
+
+msgctxt "province"
+msgid "Ajdovscina"
+msgstr ""
+
+msgctxt "province"
+msgid "Beltinci"
+msgstr ""
+
+msgctxt "province"
+msgid "Benedikt"
+msgstr ""
+
+msgctxt "province"
+msgid "Bistrica ob Sotli"
+msgstr ""
+
+msgctxt "province"
+msgid "Bled"
+msgstr ""
+
+msgctxt "province"
+msgid "Bloke"
+msgstr ""
+
+msgctxt "province"
+msgid "Bohinj"
+msgstr ""
+
+msgctxt "province"
+msgid "Borovnica"
+msgstr ""
+
+msgctxt "province"
+msgid "Bovec"
+msgstr ""
+
+msgctxt "province"
+msgid "Braslovce"
+msgstr ""
+
+msgctxt "province"
+msgid "Brda"
+msgstr ""
+
+msgctxt "province"
+msgid "Brezovica"
+msgstr ""
+
+msgctxt "province"
+msgid "Brezica"
+msgstr ""
+
+msgctxt "province"
+msgid "Cankova"
+msgstr ""
+
+msgctxt "province"
+msgid "Celje"
+msgstr ""
+
+msgctxt "province"
+msgid "Cerklje na Gorenjskem"
+msgstr ""
+
+msgctxt "province"
+msgid "Cerknica"
+msgstr ""
+
+msgctxt "province"
+msgid "Cerkno"
+msgstr ""
+
+msgctxt "province"
+msgid "Cerkvenjak"
+msgstr ""
+
+msgctxt "province"
+msgid "Crensovci"
+msgstr ""
+
+msgctxt "province"
+msgid "Crna na Koroskem"
+msgstr ""
+
+msgctxt "province"
+msgid "Crnomelj"
+msgstr ""
+
+msgctxt "province"
+msgid "Destrnik"
+msgstr ""
+
+msgctxt "province"
+msgid "Divaca"
+msgstr ""
+
+msgctxt "province"
+msgid "Dobje"
+msgstr ""
+
+msgctxt "province"
+msgid "Dobrepolje"
+msgstr ""
+
+msgctxt "province"
+msgid "Dobrna"
+msgstr ""
+
+msgctxt "province"
+msgid "Dobrova-Polhov Gradec"
+msgstr ""
+
+msgctxt "province"
+msgid "Dobrovnik"
+msgstr ""
+
+msgctxt "province"
+msgid "Dol pri Ljubljani"
+msgstr ""
+
+msgctxt "province"
+msgid "Dolenjske Toplice"
+msgstr ""
+
+msgctxt "province"
+msgid "Domzale"
+msgstr ""
+
+msgctxt "province"
+msgid "Dornava"
+msgstr ""
+
+msgctxt "province"
+msgid "Dravograd"
+msgstr ""
+
+msgctxt "province"
+msgid "Duplek"
+msgstr ""
+
+msgctxt "province"
+msgid "Gorenja vas-Poljane"
+msgstr ""
+
+msgctxt "province"
+msgid "Gorsnica"
+msgstr ""
+
+msgctxt "province"
+msgid "Gornja Radgona"
+msgstr ""
+
+msgctxt "province"
+msgid "Gornji Grad"
+msgstr ""
+
+msgctxt "province"
+msgid "Gornji Petrovci"
+msgstr ""
+
+msgctxt "province"
+msgid "Grad"
+msgstr ""
+
+msgctxt "province"
+msgid "Grosuplje"
+msgstr ""
+
+msgctxt "province"
+msgid "Hajdina"
+msgstr ""
+
+msgctxt "province"
+msgid "Hoce-Slivnica"
+msgstr ""
+
+msgctxt "province"
+msgid "Hodos"
+msgstr ""
+
+msgctxt "province"
+msgid "Jorjul"
+msgstr ""
+
+msgctxt "province"
+msgid "Hrastnik"
+msgstr ""
+
+msgctxt "province"
+msgid "Hrpelje-Kozina"
+msgstr ""
+
+msgctxt "province"
+msgid "Idrija"
+msgstr ""
+
+msgctxt "province"
+msgid "Ig"
+msgstr ""
+
+msgctxt "province"
+msgid "IIrska Bistrica"
+msgstr ""
+
+msgctxt "province"
+msgid "Ivancna Gorica"
+msgstr ""
+
+msgctxt "province"
+msgid "Izola"
+msgstr ""
+
+msgctxt "province"
+msgid "Jesenice"
+msgstr ""
+
+msgctxt "province"
+msgid "Jezersko"
+msgstr ""
+
+msgctxt "province"
+msgid "Jursinci"
+msgstr ""
+
+msgctxt "province"
+msgid "Kamnik"
+msgstr ""
+
+msgctxt "province"
+msgid "Kanal"
+msgstr ""
+
+msgctxt "province"
+msgid "Kidricevo"
+msgstr ""
+
+msgctxt "province"
+msgid "Kobarid"
+msgstr ""
+
+msgctxt "province"
+msgid "Kobilje"
+msgstr ""
+
+msgctxt "province"
+msgid "Jovevje"
+msgstr ""
+
+msgctxt "province"
+msgid "Komen"
+msgstr ""
+
+msgctxt "province"
+msgid "Komenda"
+msgstr ""
+
+msgctxt "province"
+msgid "Koper"
+msgstr ""
+
+msgctxt "province"
+msgid "Kostel"
+msgstr ""
+
+msgctxt "province"
+msgid "Kozje"
+msgstr ""
+
+msgctxt "province"
+msgid "Kranj"
+msgstr ""
+
+msgctxt "province"
+msgid "Kranjska Gora"
+msgstr ""
+
+msgctxt "province"
+msgid "Krizevci"
+msgstr ""
+
+msgctxt "province"
+msgid "Krsko"
+msgstr ""
+
+msgctxt "province"
+msgid "Kungota"
+msgstr ""
+
+msgctxt "province"
+msgid "Kuzma"
+msgstr ""
+
+msgctxt "province"
+msgid "Lasko"
+msgstr ""
+
+msgctxt "province"
+msgid "Lenart"
+msgstr ""
+
+msgctxt "province"
+msgid "Lendava"
+msgstr ""
+
+msgctxt "province"
+msgid "Litija"
+msgstr ""
+
+msgctxt "province"
+msgid "Ljubljana"
+msgstr ""
+
+msgctxt "province"
+msgid "Ljubno"
+msgstr ""
+
+msgctxt "province"
+msgid "Ljutomer"
+msgstr ""
+
+msgctxt "province"
+msgid "Logatec"
+msgstr ""
+
+msgctxt "province"
+msgid "Loska dolina"
+msgstr ""
+
+msgctxt "province"
+msgid "Loski Potok"
+msgstr ""
+
+msgctxt "province"
+msgid "Lovrenc na Pohorju"
+msgstr ""
+
+msgctxt "province"
+msgid "Luce"
+msgstr ""
+
+msgctxt "province"
+msgid "Lukovica"
+msgstr ""
+
+msgctxt "province"
+msgid "Majsperk"
+msgstr ""
+
+msgctxt "province"
+msgid "Maribor"
+msgstr ""
+
+msgctxt "province"
+msgid "Markovci"
+msgstr ""
+
+msgctxt "province"
+msgid "Medvode"
+msgstr ""
+
+msgctxt "province"
+msgid "Menges"
+msgstr ""
+
+msgctxt "province"
+msgid "Metlika"
+msgstr ""
+
+msgctxt "province"
+msgid "Mezica"
+msgstr ""
+
+msgctxt "province"
+msgid "Miklavz na Dravskern polju"
+msgstr ""
+
+msgctxt "province"
+msgid "Miren-Kostanjevica"
+msgstr ""
+
+msgctxt "province"
+msgid "Mirna Pec"
+msgstr ""
+
+msgctxt "province"
+msgid "Mislinja"
+msgstr ""
+
+msgctxt "province"
+msgid "Moravce"
+msgstr ""
+
+msgctxt "province"
+msgid "Moravske Toplice"
+msgstr ""
+
+msgctxt "province"
+msgid "Mozirje"
+msgstr ""
+
+msgctxt "province"
+msgid "Murska Sobota"
+msgstr ""
+
+msgctxt "province"
+msgid "Muta"
+msgstr ""
+
+msgctxt "province"
+msgid "Naklo"
+msgstr ""
+
+msgctxt "province"
+msgid "Nazarje"
+msgstr ""
+
+msgctxt "province"
+msgid "Nova Gorica"
+msgstr ""
+
+msgctxt "province"
+msgid "Nova mesto"
+msgstr ""
+
+msgctxt "province"
+msgid "Sveta Ana"
+msgstr ""
+
+msgctxt "province"
+msgid "Sveti Andraz v Slovenskih goricah"
+msgstr ""
+
+msgctxt "province"
+msgid "Sveti Jurij"
+msgstr ""
+
+msgctxt "province"
+msgid "Salovci"
+msgstr ""
+
+msgctxt "province"
+msgid "Sempeter-Vrtojba"
+msgstr ""
+
+msgctxt "province"
+msgid "Sencur"
+msgstr ""
+
+msgctxt "province"
+msgid "Sentilj"
+msgstr ""
+
+msgctxt "province"
+msgid "Sentjernej"
+msgstr ""
+
+msgctxt "province"
+msgid "Sentjur pri Celju"
+msgstr ""
+
+msgctxt "province"
+msgid "Skocjan"
+msgstr ""
+
+msgctxt "province"
+msgid "Skofja Loka"
+msgstr ""
+
+msgctxt "province"
+msgid "Skoftjica"
+msgstr ""
+
+msgctxt "province"
+msgid "Smarje pri Jelsah"
+msgstr ""
+
+msgctxt "province"
+msgid "Smartno ob Paki"
+msgstr ""
+
+msgctxt "province"
+msgid "Smartno pri Litiji"
+msgstr ""
+
+msgctxt "province"
+msgid "Sostanj"
+msgstr ""
+
+msgctxt "province"
+msgid "Store"
+msgstr ""
+
+msgctxt "province"
+msgid "Tabor"
+msgstr ""
+
+msgctxt "province"
+msgid "Tisina"
+msgstr ""
+
+msgctxt "province"
+msgid "Tolmin"
+msgstr ""
+
+msgctxt "province"
+msgid "Trbovje"
+msgstr ""
+
+msgctxt "province"
+msgid "Trebnje"
+msgstr ""
+
+msgctxt "province"
+msgid "Trnovska vas"
+msgstr ""
+
+msgctxt "province"
+msgid "Trzic"
+msgstr ""
+
+msgctxt "province"
+msgid "Trzin"
+msgstr ""
+
+msgctxt "province"
+msgid "Turnisce"
+msgstr ""
+
+msgctxt "province"
+msgid "Velenje"
+msgstr ""
+
+msgctxt "province"
+msgid "Velika Polana"
+msgstr ""
+
+msgctxt "province"
+msgid "Velika Lasce"
+msgstr ""
+
+msgctxt "province"
+msgid "Verzej"
+msgstr ""
+
+msgctxt "province"
+msgid "Videm"
+msgstr ""
+
+msgctxt "province"
+msgid "Vipava"
+msgstr ""
+
+msgctxt "province"
+msgid "Vitanje"
+msgstr ""
+
+msgctxt "province"
+msgid "Vojnik"
+msgstr ""
+
+msgctxt "province"
+msgid "Vransko"
+msgstr ""
+
+msgctxt "province"
+msgid "Vrhnika"
+msgstr ""
+
+msgctxt "province"
+msgid "Vuzenica"
+msgstr ""
+
+msgctxt "province"
+msgid "Zagorje ob Savi"
+msgstr ""
+
+msgctxt "province"
+msgid "Zavrc"
+msgstr ""
+
+msgctxt "province"
+msgid "Zrece"
+msgstr ""
+
+msgctxt "province"
+msgid "Zalec"
+msgstr ""
+
+msgctxt "province"
+msgid "Zelezniki"
+msgstr ""
+
+msgctxt "province"
+msgid "Zetale"
+msgstr ""
+
+msgctxt "province"
+msgid "Ziri"
+msgstr ""
+
+msgctxt "province"
+msgid "Zirovnica"
+msgstr ""
+
+msgctxt "province"
+msgid "Zuzemberk"
+msgstr ""
+
+msgctxt "province"
+msgid "Banskobystrický kraj"
+msgstr ""
+
+msgctxt "province"
+msgid "Bratislavský kraj"
+msgstr ""
+
+msgctxt "province"
+msgid "Košický kraj"
+msgstr ""
+
+msgctxt "province"
+msgid "Nitriansky kraj"
+msgstr ""
+
+msgctxt "province"
+msgid "Prešovský kraj"
+msgstr ""
+
+msgctxt "province"
+msgid "Trenčiansky kraj"
+msgstr ""
+
+msgctxt "province"
+msgid "Trnavský kraj"
+msgstr ""
+
+msgctxt "province"
+msgid "Žilinský kraj"
+msgstr ""
+
+msgctxt "province"
+msgid "Western Area (Freetown)"
+msgstr ""
+
+msgctxt "province"
+msgid "Dakar"
+msgstr ""
+
+msgctxt "province"
+msgid "Diourbel"
+msgstr ""
+
+msgctxt "province"
+msgid "Fatick"
+msgstr ""
+
+msgctxt "province"
+msgid "Kaolack"
+msgstr ""
+
+msgctxt "province"
+msgid "Kolda"
+msgstr ""
+
+msgctxt "province"
+msgid "Louga"
+msgstr ""
+
+msgctxt "province"
+msgid "Matam"
+msgstr ""
+
+msgctxt "province"
+msgid "Saint-Louis"
+msgstr ""
+
+msgctxt "province"
+msgid "Tambacounda"
+msgstr ""
+
+msgctxt "province"
+msgid "Thies"
+msgstr ""
+
+msgctxt "province"
+msgid "Ziguinchor"
+msgstr ""
+
+msgctxt "province"
+msgid "Awdal"
+msgstr ""
+
+msgctxt "province"
+msgid "Bakool"
+msgstr ""
+
+msgctxt "province"
+msgid "Banaadir"
+msgstr ""
+
+msgctxt "province"
+msgid "Bay"
+msgstr ""
+
+msgctxt "province"
+msgid "Galguduud"
+msgstr ""
+
+msgctxt "province"
+msgid "Gedo"
+msgstr ""
+
+msgctxt "province"
+msgid "Hiirsan"
+msgstr ""
+
+msgctxt "province"
+msgid "Jubbada Dhexe"
+msgstr ""
+
+msgctxt "province"
+msgid "Jubbada Hoose"
+msgstr ""
+
+msgctxt "province"
+msgid "Mudug"
+msgstr ""
+
+msgctxt "province"
+msgid "Nugaal"
+msgstr ""
+
+msgctxt "province"
+msgid "Saneag"
+msgstr ""
+
+msgctxt "province"
+msgid "Shabeellaha Dhexe"
+msgstr ""
+
+msgctxt "province"
+msgid "Shabeellaha Hoose"
+msgstr ""
+
+msgctxt "province"
+msgid "Sool"
+msgstr ""
+
+msgctxt "province"
+msgid "Togdheer"
+msgstr ""
+
+msgctxt "province"
+msgid "Woqooyi Galbeed"
+msgstr ""
+
+msgctxt "province"
+msgid "Brokopondo"
+msgstr ""
+
+msgctxt "province"
+msgid "Commewijne"
+msgstr ""
+
+msgctxt "province"
+msgid "Coronie"
+msgstr ""
+
+msgctxt "province"
+msgid "Marowijne"
+msgstr ""
+
+msgctxt "province"
+msgid "Nickerie"
+msgstr ""
+
+msgctxt "province"
+msgid "Paramaribo"
+msgstr ""
+
+msgctxt "province"
+msgid "Saramacca"
+msgstr ""
+
+msgctxt "province"
+msgid "Sipaliwini"
+msgstr ""
+
+msgctxt "province"
+msgid "Wanica"
+msgstr ""
+
+msgctxt "province"
+msgid "Principe"
+msgstr ""
+
+msgctxt "province"
+msgid "Sao Tome"
+msgstr ""
+
+msgctxt "province"
+msgid "Ahuachapan"
+msgstr ""
+
+msgctxt "province"
+msgid "Cabanas"
+msgstr ""
+
+msgctxt "province"
+msgid "Cuscatlan"
+msgstr ""
+
+msgctxt "province"
+msgid "Chalatenango"
+msgstr ""
+
+msgctxt "province"
+msgid "Morazan"
+msgstr ""
+
+msgctxt "province"
+msgid "San Miguel"
+msgstr ""
+
+msgctxt "province"
+msgid "San Salvador"
+msgstr ""
+
+msgctxt "province"
+msgid "Santa Ana"
+msgstr ""
+
+msgctxt "province"
+msgid "San Vicente"
+msgstr ""
+
+msgctxt "province"
+msgid "Sonsonate"
+msgstr ""
+
+msgctxt "province"
+msgid "Usulutan"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Hasakah"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Ladhiqiyah"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Qunaytirah"
+msgstr ""
+
+msgctxt "province"
+msgid "Ar Raqqah"
+msgstr ""
+
+msgctxt "province"
+msgid "As Suwayda'"
+msgstr ""
+
+msgctxt "province"
+msgid "Dar'a"
+msgstr ""
+
+msgctxt "province"
+msgid "Dayr az Zawr"
+msgstr ""
+
+msgctxt "province"
+msgid "Dimashq"
+msgstr ""
+
+msgctxt "province"
+msgid "Halab"
+msgstr ""
+
+msgctxt "province"
+msgid "Hamah"
+msgstr ""
+
+msgctxt "province"
+msgid "Jim'"
+msgstr ""
+
+msgctxt "province"
+msgid "Idlib"
+msgstr ""
+
+msgctxt "province"
+msgid "Rif Dimashq"
+msgstr ""
+
+msgctxt "province"
+msgid "Tarts"
+msgstr ""
+
+msgctxt "province"
+msgid "Hhohho"
+msgstr ""
+
+msgctxt "province"
+msgid "Lubombo"
+msgstr ""
+
+msgctxt "province"
+msgid "Manzini"
+msgstr ""
+
+msgctxt "province"
+msgid "Shiselweni"
+msgstr ""
+
+msgctxt "province"
+msgid "Batha"
+msgstr ""
+
+msgctxt "province"
+msgid "Biltine"
+msgstr ""
+
+msgctxt "province"
+msgid "Borkou-Ennedi-Tibesti"
+msgstr ""
+
+msgctxt "province"
+msgid "Chari-Baguirmi"
+msgstr ""
+
+msgctxt "province"
+msgid "Guera"
+msgstr ""
+
+msgctxt "province"
+msgid "Kanem"
+msgstr ""
+
+msgctxt "province"
+msgid "Lac"
+msgstr ""
+
+msgctxt "province"
+msgid "Logone-Occidental"
+msgstr ""
+
+msgctxt "province"
+msgid "Logone-Oriental"
+msgstr ""
+
+msgctxt "province"
+msgid "Mayo-Kebbi"
+msgstr ""
+
+msgctxt "province"
+msgid "Moyen-Chari"
+msgstr ""
+
+msgctxt "province"
+msgid "Ouaddai"
+msgstr ""
+
+msgctxt "province"
+msgid "Salamat"
+msgstr ""
+
+msgctxt "province"
+msgid "Tandjile"
+msgstr ""
+
+msgctxt "province"
+msgid "Kara"
+msgstr ""
+
+msgctxt "province"
+msgid "Maritime (Region)"
+msgstr ""
+
+msgctxt "province"
+msgid "Savannes"
+msgstr ""
+
+msgctxt "province"
+msgid "Krung Thep Maha Nakhon Bangkok"
+msgstr ""
+
+msgctxt "province"
+msgid "Phatthaya"
+msgstr ""
+
+msgctxt "province"
+msgid "Amnat Charoen"
+msgstr ""
+
+msgctxt "province"
+msgid "Ang Thong"
+msgstr ""
+
+msgctxt "province"
+msgid "Buri Ram"
+msgstr ""
+
+msgctxt "province"
+msgid "Chachoengsao"
+msgstr ""
+
+msgctxt "province"
+msgid "Chai Nat"
+msgstr ""
+
+msgctxt "province"
+msgid "Chaiyaphum"
+msgstr ""
+
+msgctxt "province"
+msgid "Chanthaburi"
+msgstr ""
+
+msgctxt "province"
+msgid "Chiang Mai"
+msgstr ""
+
+msgctxt "province"
+msgid "Chiang Rai"
+msgstr ""
+
+msgctxt "province"
+msgid "Chon Buri"
+msgstr ""
+
+msgctxt "province"
+msgid "Chumphon"
+msgstr ""
+
+msgctxt "province"
+msgid "Kalasin"
+msgstr ""
+
+msgctxt "province"
+msgid "Kamphasng Phet"
+msgstr ""
+
+msgctxt "province"
+msgid "Kanchanaburi"
+msgstr ""
+
+msgctxt "province"
+msgid "Khon Kaen"
+msgstr ""
+
+msgctxt "province"
+msgid "Krabi"
+msgstr ""
+
+msgctxt "province"
+msgid "Lampang"
+msgstr ""
+
+msgctxt "province"
+msgid "Lamphun"
+msgstr ""
+
+msgctxt "province"
+msgid "Loei"
+msgstr ""
+
+msgctxt "province"
+msgid "Lop Buri"
+msgstr ""
+
+msgctxt "province"
+msgid "Mae Hong Son"
+msgstr ""
+
+msgctxt "province"
+msgid "Maha Sarakham"
+msgstr ""
+
+msgctxt "province"
+msgid "Mukdahan"
+msgstr ""
+
+msgctxt "province"
+msgid "Nakhon Nayok"
+msgstr ""
+
+msgctxt "province"
+msgid "Nakhon Pathom"
+msgstr ""
+
+msgctxt "province"
+msgid "Nakhon Phanom"
+msgstr ""
+
+msgctxt "province"
+msgid "Nakhon Ratchasima"
+msgstr ""
+
+msgctxt "province"
+msgid "Nakhon Sawan"
+msgstr ""
+
+msgctxt "province"
+msgid "Nakhon Si Thammarat"
+msgstr ""
+
+msgctxt "province"
+msgid "Nan"
+msgstr ""
+
+msgctxt "province"
+msgid "Narathiwat"
+msgstr ""
+
+msgctxt "province"
+msgid "Nong Bua Lam Phu"
+msgstr ""
+
+msgctxt "province"
+msgid "Nong Khai"
+msgstr ""
+
+msgctxt "province"
+msgid "Nonthaburi"
+msgstr ""
+
+msgctxt "province"
+msgid "Pathum Thani"
+msgstr ""
+
+msgctxt "province"
+msgid "Pattani"
+msgstr ""
+
+msgctxt "province"
+msgid "Phangnga"
+msgstr ""
+
+msgctxt "province"
+msgid "Phatthalung"
+msgstr ""
+
+msgctxt "province"
+msgid "Phayao"
+msgstr ""
+
+msgctxt "province"
+msgid "Phetchabun"
+msgstr ""
+
+msgctxt "province"
+msgid "Phetchaburi"
+msgstr ""
+
+msgctxt "province"
+msgid "Phichit"
+msgstr ""
+
+msgctxt "province"
+msgid "Phitsanulok"
+msgstr ""
+
+msgctxt "province"
+msgid "Phrae"
+msgstr ""
+
+msgctxt "province"
+msgid "Phra Nakhon Si Ayutthaya"
+msgstr ""
+
+msgctxt "province"
+msgid "Phaket"
+msgstr ""
+
+msgctxt "province"
+msgid "Prachin Buri"
+msgstr ""
+
+msgctxt "province"
+msgid "Prachuap Khiri Khan"
+msgstr ""
+
+msgctxt "province"
+msgid "Ranong"
+msgstr ""
+
+msgctxt "province"
+msgid "Ratchaburi"
+msgstr ""
+
+msgctxt "province"
+msgid "Rayong"
+msgstr ""
+
+msgctxt "province"
+msgid "Roi Et"
+msgstr ""
+
+msgctxt "province"
+msgid "Sa Kaeo"
+msgstr ""
+
+msgctxt "province"
+msgid "Sakon Nakhon"
+msgstr ""
+
+msgctxt "province"
+msgid "Samut Prakan"
+msgstr ""
+
+msgctxt "province"
+msgid "Samut Sakhon"
+msgstr ""
+
+msgctxt "province"
+msgid "Samut Songkhram"
+msgstr ""
+
+msgctxt "province"
+msgid "Saraburi"
+msgstr ""
+
+msgctxt "province"
+msgid "Satun"
+msgstr ""
+
+msgctxt "province"
+msgid "Sing Buri"
+msgstr ""
+
+msgctxt "province"
+msgid "Si Sa Ket"
+msgstr ""
+
+msgctxt "province"
+msgid "Songkhla"
+msgstr ""
+
+msgctxt "province"
+msgid "Sukhothai"
+msgstr ""
+
+msgctxt "province"
+msgid "Suphan Buri"
+msgstr ""
+
+msgctxt "province"
+msgid "Surat Thani"
+msgstr ""
+
+msgctxt "province"
+msgid "Surin"
+msgstr ""
+
+msgctxt "province"
+msgid "Tak"
+msgstr ""
+
+msgctxt "province"
+msgid "Trang"
+msgstr ""
+
+msgctxt "province"
+msgid "Trat"
+msgstr ""
+
+msgctxt "province"
+msgid "Ubon Ratchathani"
+msgstr ""
+
+msgctxt "province"
+msgid "Udon Thani"
+msgstr ""
+
+msgctxt "province"
+msgid "Uthai Thani"
+msgstr ""
+
+msgctxt "province"
+msgid "Uttaradit"
+msgstr ""
+
+msgctxt "province"
+msgid "Yala"
+msgstr ""
+
+msgctxt "province"
+msgid "Yasothon"
+msgstr ""
+
+msgctxt "province"
+msgid "Sughd"
+msgstr ""
+
+msgctxt "province"
+msgid "Khatlon"
+msgstr ""
+
+msgctxt "province"
+msgid "Gorno-Badakhshan"
+msgstr ""
+
+msgctxt "province"
+msgid "Ahal"
+msgstr ""
+
+msgctxt "province"
+msgid "Balkan"
+msgstr ""
+
+msgctxt "province"
+msgid "Dasoguz"
+msgstr ""
+
+msgctxt "province"
+msgid "Lebap"
+msgstr ""
+
+msgctxt "province"
+msgid "Mary"
+msgstr ""
+
+msgctxt "province"
+msgid "Béja"
+msgstr ""
+
+msgctxt "province"
+msgid "Ben Arous"
+msgstr ""
+
+msgctxt "province"
+msgid "Bizerte"
+msgstr ""
+
+msgctxt "province"
+msgid "Gabès"
+msgstr ""
+
+msgctxt "province"
+msgid "Gafsa"
+msgstr ""
+
+msgctxt "province"
+msgid "Jendouba"
+msgstr ""
+
+msgctxt "province"
+msgid "Kairouan"
+msgstr ""
+
+msgctxt "province"
+msgid "Rasserine"
+msgstr ""
+
+msgctxt "province"
+msgid "Kebili"
+msgstr ""
+
+msgctxt "province"
+msgid "L'Ariana"
+msgstr ""
+
+msgctxt "province"
+msgid "Le Ref"
+msgstr ""
+
+msgctxt "province"
+msgid "Mahdia"
+msgstr ""
+
+msgctxt "province"
+msgid "La Manouba"
+msgstr ""
+
+msgctxt "province"
+msgid "Medenine"
+msgstr ""
+
+msgctxt "province"
+msgid "Moneatir"
+msgstr ""
+
+msgctxt "province"
+msgid "Naboul"
+msgstr ""
+
+msgctxt "province"
+msgid "Sfax"
+msgstr ""
+
+msgctxt "province"
+msgid "Sidi Bouxid"
+msgstr ""
+
+msgctxt "province"
+msgid "Siliana"
+msgstr ""
+
+msgctxt "province"
+msgid "Sousse"
+msgstr ""
+
+msgctxt "province"
+msgid "Tataouine"
+msgstr ""
+
+msgctxt "province"
+msgid "Tozeur"
+msgstr ""
+
+msgctxt "province"
+msgid "Tunis"
+msgstr ""
+
+msgctxt "province"
+msgid "Zaghouan"
+msgstr ""
+
+msgctxt "province"
+msgid "Adana"
+msgstr ""
+
+msgctxt "province"
+msgid "Ad yaman"
+msgstr ""
+
+msgctxt "province"
+msgid "Afyon"
+msgstr ""
+
+msgctxt "province"
+msgid "Ag r"
+msgstr ""
+
+msgctxt "province"
+msgid "Aksaray"
+msgstr ""
+
+msgctxt "province"
+msgid "Amasya"
+msgstr ""
+
+msgctxt "province"
+msgid "Ankara"
+msgstr ""
+
+msgctxt "province"
+msgid "Antalya"
+msgstr ""
+
+msgctxt "province"
+msgid "Ardahan"
+msgstr ""
+
+msgctxt "province"
+msgid "Artvin"
+msgstr ""
+
+msgctxt "province"
+msgid "Aydin"
+msgstr ""
+
+msgctxt "province"
+msgid "Bal kesir"
+msgstr ""
+
+msgctxt "province"
+msgid "Bartin"
+msgstr ""
+
+msgctxt "province"
+msgid "Batman"
+msgstr ""
+
+msgctxt "province"
+msgid "Bayburt"
+msgstr ""
+
+msgctxt "province"
+msgid "Bilecik"
+msgstr ""
+
+msgctxt "province"
+msgid "Bingol"
+msgstr ""
+
+msgctxt "province"
+msgid "Bitlis"
+msgstr ""
+
+msgctxt "province"
+msgid "Bolu"
+msgstr ""
+
+msgctxt "province"
+msgid "Burdur"
+msgstr ""
+
+msgctxt "province"
+msgid "Bursa"
+msgstr ""
+
+msgctxt "province"
+msgid "Canakkale"
+msgstr ""
+
+msgctxt "province"
+msgid "Cankir"
+msgstr ""
+
+msgctxt "province"
+msgid "Corum"
+msgstr ""
+
+msgctxt "province"
+msgid "Denizli"
+msgstr ""
+
+msgctxt "province"
+msgid "Diyarbakir"
+msgstr ""
+
+msgctxt "province"
+msgid "Duzce"
+msgstr ""
+
+msgctxt "province"
+msgid "Edirne"
+msgstr ""
+
+msgctxt "province"
+msgid "Elazig"
+msgstr ""
+
+msgctxt "province"
+msgid "Erzincan"
+msgstr ""
+
+msgctxt "province"
+msgid "Erzurum"
+msgstr ""
+
+msgctxt "province"
+msgid "Eskis'ehir"
+msgstr ""
+
+msgctxt "province"
+msgid "Gaziantep"
+msgstr ""
+
+msgctxt "province"
+msgid "Giresun"
+msgstr ""
+
+msgctxt "province"
+msgid "Gms'hane"
+msgstr ""
+
+msgctxt "province"
+msgid "Hakkari"
+msgstr ""
+
+msgctxt "province"
+msgid "Hatay"
+msgstr ""
+
+msgctxt "province"
+msgid "Igidir"
+msgstr ""
+
+msgctxt "province"
+msgid "Isparta"
+msgstr ""
+
+msgctxt "province"
+msgid "Icel"
+msgstr ""
+
+msgctxt "province"
+msgid "Istanbul"
+msgstr ""
+
+msgctxt "province"
+msgid "Izmir"
+msgstr ""
+
+msgctxt "province"
+msgid "Kahramanmaras"
+msgstr ""
+
+msgctxt "province"
+msgid "Karabk"
+msgstr ""
+
+msgctxt "province"
+msgid "Karaman"
+msgstr ""
+
+msgctxt "province"
+msgid "Kars"
+msgstr ""
+
+msgctxt "province"
+msgid "Kastamonu"
+msgstr ""
+
+msgctxt "province"
+msgid "Kayseri"
+msgstr ""
+
+msgctxt "province"
+msgid "Kirikkale"
+msgstr ""
+
+msgctxt "province"
+msgid "Kirklareli"
+msgstr ""
+
+msgctxt "province"
+msgid "Kirs'ehir"
+msgstr ""
+
+msgctxt "province"
+msgid "Kilis"
+msgstr ""
+
+msgctxt "province"
+msgid "Kocaeli"
+msgstr ""
+
+msgctxt "province"
+msgid "Konya"
+msgstr ""
+
+msgctxt "province"
+msgid "Ktahya"
+msgstr ""
+
+msgctxt "province"
+msgid "Malatya"
+msgstr ""
+
+msgctxt "province"
+msgid "Manisa"
+msgstr ""
+
+msgctxt "province"
+msgid "Mardin"
+msgstr ""
+
+msgctxt "province"
+msgid "Mugila"
+msgstr ""
+
+msgctxt "province"
+msgid "Mus"
+msgstr ""
+
+msgctxt "province"
+msgid "Nevs'ehir"
+msgstr ""
+
+msgctxt "province"
+msgid "Nigide"
+msgstr ""
+
+msgctxt "province"
+msgid "Ordu"
+msgstr ""
+
+msgctxt "province"
+msgid "Osmaniye"
+msgstr ""
+
+msgctxt "province"
+msgid "Rize"
+msgstr ""
+
+msgctxt "province"
+msgid "Sakarya"
+msgstr ""
+
+msgctxt "province"
+msgid "Samsun"
+msgstr ""
+
+msgctxt "province"
+msgid "Siirt"
+msgstr ""
+
+msgctxt "province"
+msgid "Sinop"
+msgstr ""
+
+msgctxt "province"
+msgid "Sivas"
+msgstr ""
+
+msgctxt "province"
+msgid "S'anliurfa"
+msgstr ""
+
+msgctxt "province"
+msgid "S'rnak"
+msgstr ""
+
+msgctxt "province"
+msgid "Tekirdag"
+msgstr ""
+
+msgctxt "province"
+msgid "Tokat"
+msgstr ""
+
+msgctxt "province"
+msgid "Trabzon"
+msgstr ""
+
+msgctxt "province"
+msgid "Tunceli"
+msgstr ""
+
+msgctxt "province"
+msgid "Us'ak"
+msgstr ""
+
+msgctxt "province"
+msgid "Van"
+msgstr ""
+
+msgctxt "province"
+msgid "Yalova"
+msgstr ""
+
+msgctxt "province"
+msgid "Yozgat"
+msgstr ""
+
+msgctxt "province"
+msgid "Zonguldak"
+msgstr ""
+
+msgctxt "province"
+msgid "Couva-Tabaquite-Talparo"
+msgstr ""
+
+msgctxt "province"
+msgid "Diego Martin"
+msgstr ""
+
+msgctxt "province"
+msgid "Eastern Tobago"
+msgstr ""
+
+msgctxt "province"
+msgid "Penal-Debe"
+msgstr ""
+
+msgctxt "province"
+msgid "Princes Town"
+msgstr ""
+
+msgctxt "province"
+msgid "Rio Claro-Mayaro"
+msgstr ""
+
+msgctxt "province"
+msgid "Sangre Grande"
+msgstr ""
+
+msgctxt "province"
+msgid "San Juan-Laventille"
+msgstr ""
+
+msgctxt "province"
+msgid "Siparia"
+msgstr ""
+
+msgctxt "province"
+msgid "Tunapuna-Piarco"
+msgstr ""
+
+msgctxt "province"
+msgid "Western Tobago"
+msgstr ""
+
+msgctxt "province"
+msgid "Arima"
+msgstr ""
+
+msgctxt "province"
+msgid "Chaguanas"
+msgstr ""
+
+msgctxt "province"
+msgid "Point Fortin"
+msgstr ""
+
+msgctxt "province"
+msgid "Port of Spain"
+msgstr ""
+
+msgctxt "province"
+msgid "San Fernando"
+msgstr ""
+
+msgctxt "province"
+msgid "Aileu"
+msgstr ""
+
+msgctxt "province"
+msgid "Ainaro"
+msgstr ""
+
+msgctxt "province"
+msgid "Bacucau"
+msgstr ""
+
+msgctxt "province"
+msgid "Bobonaro"
+msgstr ""
+
+msgctxt "province"
+msgid "Cova Lima"
+msgstr ""
+
+msgctxt "province"
+msgid "Dili"
+msgstr ""
+
+msgctxt "province"
+msgid "Ermera"
+msgstr ""
+
+msgctxt "province"
+msgid "Laulem"
+msgstr ""
+
+msgctxt "province"
+msgid "Liquica"
+msgstr ""
+
+msgctxt "province"
+msgid "Manatuto"
+msgstr ""
+
+msgctxt "province"
+msgid "Manafahi"
+msgstr ""
+
+msgctxt "province"
+msgid "Oecussi"
+msgstr ""
+
+msgctxt "province"
+msgid "Viqueque"
+msgstr ""
+
+msgctxt "province"
+msgid "Changhua County"
+msgstr ""
+
+msgctxt "province"
+msgid "Chiayi County"
+msgstr ""
+
+msgctxt "province"
+msgid "Hsinchu County"
+msgstr ""
+
+msgctxt "province"
+msgid "Hualien County"
+msgstr ""
+
+msgctxt "province"
+msgid "Ilan County"
+msgstr ""
+
+msgctxt "province"
+msgid "Miaoli County"
+msgstr ""
+
+msgctxt "province"
+msgid "Nantou County"
+msgstr ""
+
+msgctxt "province"
+msgid "Penghu County"
+msgstr ""
+
+msgctxt "province"
+msgid "Pingtung County"
+msgstr ""
+
+msgctxt "province"
+msgid "Taipei County"
+msgstr ""
+
+msgctxt "province"
+msgid "Taitung County"
+msgstr ""
+
+msgctxt "province"
+msgid "Taoyuan County"
+msgstr ""
+
+msgctxt "province"
+msgid "Yunlin Conuty"
+msgstr ""
+
+msgctxt "province"
+msgid "Keelung City"
+msgstr ""
+
+msgctxt "province"
+msgid "Arusha"
+msgstr ""
+
+msgctxt "province"
+msgid "Dar-es-Salaam"
+msgstr ""
+
+msgctxt "province"
+msgid "Dodoma"
+msgstr ""
+
+msgctxt "province"
+msgid "Iringa"
+msgstr ""
+
+msgctxt "province"
+msgid "Kagera"
+msgstr ""
+
+msgctxt "province"
+msgid "Kaskazini Pemba"
+msgstr ""
+
+msgctxt "province"
+msgid "Kaskazini Unguja"
+msgstr ""
+
+msgctxt "province"
+msgid "Xigoma"
+msgstr ""
+
+msgctxt "province"
+msgid "Kilimanjaro"
+msgstr ""
+
+msgctxt "province"
+msgid "Rusini Pemba"
+msgstr ""
+
+msgctxt "province"
+msgid "Kusini Unguja"
+msgstr ""
+
+msgctxt "province"
+msgid "Lindi"
+msgstr ""
+
+msgctxt "province"
+msgid "Manyara"
+msgstr ""
+
+msgctxt "province"
+msgid "Mara"
+msgstr ""
+
+msgctxt "province"
+msgid "Mbeya"
+msgstr ""
+
+msgctxt "province"
+msgid "Mjini Magharibi"
+msgstr ""
+
+msgctxt "province"
+msgid "Morogoro"
+msgstr ""
+
+msgctxt "province"
+msgid "Mtwara"
+msgstr ""
+
+msgctxt "province"
+msgid "Pwani"
+msgstr ""
+
+msgctxt "province"
+msgid "Rukwa"
+msgstr ""
+
+msgctxt "province"
+msgid "Ruvuma"
+msgstr ""
+
+msgctxt "province"
+msgid "Shinyanga"
+msgstr ""
+
+msgctxt "province"
+msgid "Singida"
+msgstr ""
+
+msgctxt "province"
+msgid "Tabora"
+msgstr ""
+
+msgctxt "province"
+msgid "Tanga"
+msgstr ""
+
+msgctxt "province"
+msgid "Cherkas'ka Oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Chernihivs'ka Oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Chernivets'ka Oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Dnipropetrovs'ka Oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Donets'ka Oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Ivano-Frankivs'ka Oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Kharkivs'ka Oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Khersons'ka Oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Khmel'nyts'ka Oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Kirovohrads'ka Oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Kyivs'ka Oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Luhans'ka Oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "L'vivs'ka Oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Mykolaivs'ka Oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Odes 'ka Oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Poltavs'ka Oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Rivnens'ka Oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Sums 'ka Oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Ternopil's'ka Oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Vinnyts'ka Oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Volyos'ka Oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Zakarpats'ka Oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Zaporiz'ka Oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Zhytomyrs'ka Oblast'"
+msgstr ""
+
+msgctxt "province"
+msgid "Respublika Krym"
+msgstr ""
+
+msgctxt "province"
+msgid "Kyiv"
+msgstr ""
+
+msgctxt "province"
+msgid "Sevastopol"
+msgstr ""
+
+msgctxt "province"
+msgid "Adjumani"
+msgstr ""
+
+msgctxt "province"
+msgid "Apac"
+msgstr ""
+
+msgctxt "province"
+msgid "Arua"
+msgstr ""
+
+msgctxt "province"
+msgid "Bugiri"
+msgstr ""
+
+msgctxt "province"
+msgid "Bundibugyo"
+msgstr ""
+
+msgctxt "province"
+msgid "Bushenyi"
+msgstr ""
+
+msgctxt "province"
+msgid "Busia"
+msgstr ""
+
+msgctxt "province"
+msgid "Gulu"
+msgstr ""
+
+msgctxt "province"
+msgid "Hoima"
+msgstr ""
+
+msgctxt "province"
+msgid "Iganga"
+msgstr ""
+
+msgctxt "province"
+msgid "Jinja"
+msgstr ""
+
+msgctxt "province"
+msgid "Kabale"
+msgstr ""
+
+msgctxt "province"
+msgid "Kabarole"
+msgstr ""
+
+msgctxt "province"
+msgid "Kaberamaido"
+msgstr ""
+
+msgctxt "province"
+msgid "Kalangala"
+msgstr ""
+
+msgctxt "province"
+msgid "Kampala"
+msgstr ""
+
+msgctxt "province"
+msgid "Kamuli"
+msgstr ""
+
+msgctxt "province"
+msgid "Kamwenge"
+msgstr ""
+
+msgctxt "province"
+msgid "Kanungu"
+msgstr ""
+
+msgctxt "province"
+msgid "Kapchorwa"
+msgstr ""
+
+msgctxt "province"
+msgid "Kasese"
+msgstr ""
+
+msgctxt "province"
+msgid "Katakwi"
+msgstr ""
+
+msgctxt "province"
+msgid "Kayunga"
+msgstr ""
+
+msgctxt "province"
+msgid "Kibaale"
+msgstr ""
+
+msgctxt "province"
+msgid "Kiboga"
+msgstr ""
+
+msgctxt "province"
+msgid "Kisoro"
+msgstr ""
+
+msgctxt "province"
+msgid "Kitgum"
+msgstr ""
+
+msgctxt "province"
+msgid "Kotido"
+msgstr ""
+
+msgctxt "province"
+msgid "Kumi"
+msgstr ""
+
+msgctxt "province"
+msgid "Kyenjojo"
+msgstr ""
+
+msgctxt "province"
+msgid "Lira"
+msgstr ""
+
+msgctxt "province"
+msgid "Luwero"
+msgstr ""
+
+msgctxt "province"
+msgid "Masaka"
+msgstr ""
+
+msgctxt "province"
+msgid "Masindi"
+msgstr ""
+
+msgctxt "province"
+msgid "Mayuge"
+msgstr ""
+
+msgctxt "province"
+msgid "Mbale"
+msgstr ""
+
+msgctxt "province"
+msgid "Mbarara"
+msgstr ""
+
+msgctxt "province"
+msgid "Moroto"
+msgstr ""
+
+msgctxt "province"
+msgid "Moyo"
+msgstr ""
+
+msgctxt "province"
+msgid "Mpigi"
+msgstr ""
+
+msgctxt "province"
+msgid "Mubende"
+msgstr ""
+
+msgctxt "province"
+msgid "Mukono"
+msgstr ""
+
+msgctxt "province"
+msgid "Nakapiripirit"
+msgstr ""
+
+msgctxt "province"
+msgid "Nakasongola"
+msgstr ""
+
+msgctxt "province"
+msgid "Nebbi"
+msgstr ""
+
+msgctxt "province"
+msgid "Ntungamo"
+msgstr ""
+
+msgctxt "province"
+msgid "Pader"
+msgstr ""
+
+msgctxt "province"
+msgid "Pallisa"
+msgstr ""
+
+msgctxt "province"
+msgid "Rakai"
+msgstr ""
+
+msgctxt "province"
+msgid "Rukungiri"
+msgstr ""
+
+msgctxt "province"
+msgid "Sembabule"
+msgstr ""
+
+msgctxt "province"
+msgid "Sironko"
+msgstr ""
+
+msgctxt "province"
+msgid "Soroti"
+msgstr ""
+
+msgctxt "province"
+msgid "Tororo"
+msgstr ""
+
+msgctxt "province"
+msgid "Wakiso"
+msgstr ""
+
+msgctxt "province"
+msgid "Yumbe"
+msgstr ""
+
+msgctxt "province"
+msgid "Baker Island"
+msgstr ""
+
+msgctxt "province"
+msgid "Howland Island"
+msgstr ""
+
+msgctxt "province"
+msgid "Jarvis Island"
+msgstr ""
+
+msgctxt "province"
+msgid "Johnston Atoll"
+msgstr ""
+
+msgctxt "province"
+msgid "Kingman Reef"
+msgstr ""
+
+msgctxt "province"
+msgid "Midway Islands"
+msgstr ""
+
+msgctxt "province"
+msgid "Navassa Island"
+msgstr ""
+
+msgctxt "province"
+msgid "Palmyra Atoll"
+msgstr ""
+
+msgctxt "province"
+msgid "Wake Ialand"
+msgstr ""
+
+msgctxt "province"
+msgid "Artigsa"
+msgstr ""
+
+msgctxt "province"
+msgid "Canelones"
+msgstr ""
+
+msgctxt "province"
+msgid "Cerro Largo"
+msgstr ""
+
+msgctxt "province"
+msgid "Colonia"
+msgstr ""
+
+msgctxt "province"
+msgid "Durazno"
+msgstr ""
+
+msgctxt "province"
+msgid "Flores"
+msgstr ""
+
+msgctxt "province"
+msgid "Lavalleja"
+msgstr ""
+
+msgctxt "province"
+msgid "Maldonado"
+msgstr ""
+
+msgctxt "province"
+msgid "Montevideo"
+msgstr ""
+
+msgctxt "province"
+msgid "Paysandu"
+msgstr ""
+
+msgctxt "province"
+msgid "Rivera"
+msgstr ""
+
+msgctxt "province"
+msgid "Rocha"
+msgstr ""
+
+msgctxt "province"
+msgid "Salto"
+msgstr ""
+
+msgctxt "province"
+msgid "Soriano"
+msgstr ""
+
+msgctxt "province"
+msgid "Tacuarembo"
+msgstr ""
+
+msgctxt "province"
+msgid "Treinta y Tres"
+msgstr ""
+
+msgctxt "province"
+msgid "Toshkent (city)"
+msgstr ""
+
+msgctxt "province"
+msgid "Qoraqalpogiston Respublikasi"
+msgstr ""
+
+msgctxt "province"
+msgid "Andijon"
+msgstr ""
+
+msgctxt "province"
+msgid "Buxoro"
+msgstr ""
+
+msgctxt "province"
+msgid "Farg'ona"
+msgstr ""
+
+msgctxt "province"
+msgid "Jizzax"
+msgstr ""
+
+msgctxt "province"
+msgid "Khorazm"
+msgstr ""
+
+msgctxt "province"
+msgid "Namangan"
+msgstr ""
+
+msgctxt "province"
+msgid "Navoiy"
+msgstr ""
+
+msgctxt "province"
+msgid "Qashqadaryo"
+msgstr ""
+
+msgctxt "province"
+msgid "Samarqand"
+msgstr ""
+
+msgctxt "province"
+msgid "Sirdaryo"
+msgstr ""
+
+msgctxt "province"
+msgid "Surxondaryo"
+msgstr ""
+
+msgctxt "province"
+msgid "Toshkent"
+msgstr ""
+
+msgctxt "province"
+msgid "Xorazm"
+msgstr ""
+
+msgctxt "province"
+msgid "Diatrito Federal"
+msgstr ""
+
+msgctxt "province"
+msgid "Anzoategui"
+msgstr ""
+
+msgctxt "province"
+msgid "Apure"
+msgstr ""
+
+msgctxt "province"
+msgid "Aragua"
+msgstr ""
+
+msgctxt "province"
+msgid "Barinas"
+msgstr ""
+
+msgctxt "province"
+msgid "Carabobo"
+msgstr ""
+
+msgctxt "province"
+msgid "Cojedes"
+msgstr ""
+
+msgctxt "province"
+msgid "Falcon"
+msgstr ""
+
+msgctxt "province"
+msgid "Guarico"
+msgstr ""
+
+msgctxt "province"
+msgid "Lara"
+msgstr ""
+
+msgctxt "province"
+msgid "Merida"
+msgstr ""
+
+msgctxt "province"
+msgid "Miranda"
+msgstr ""
+
+msgctxt "province"
+msgid "Monagas"
+msgstr ""
+
+msgctxt "province"
+msgid "Nueva Esparta"
+msgstr ""
+
+msgctxt "province"
+msgid "Portuguesa"
+msgstr ""
+
+msgctxt "province"
+msgid "Tachira"
+msgstr ""
+
+msgctxt "province"
+msgid "Trujillo"
+msgstr ""
+
+msgctxt "province"
+msgid "Vargas"
+msgstr ""
+
+msgctxt "province"
+msgid "Yaracuy"
+msgstr ""
+
+msgctxt "province"
+msgid "Zulia"
+msgstr ""
+
+msgctxt "province"
+msgid "Delta Amacuro"
+msgstr ""
+
+msgctxt "province"
+msgid "Dependencias Federales"
+msgstr ""
+
+msgctxt "province"
+msgid "An Giang"
+msgstr ""
+
+msgctxt "province"
+msgid "Ba Ria - Vung Tau"
+msgstr ""
+
+msgctxt "province"
+msgid "Bac Can"
+msgstr ""
+
+msgctxt "province"
+msgid "Bac Giang"
+msgstr ""
+
+msgctxt "province"
+msgid "Bac Lieu"
+msgstr ""
+
+msgctxt "province"
+msgid "Bac Ninh"
+msgstr ""
+
+msgctxt "province"
+msgid "Ben Tre"
+msgstr ""
+
+msgctxt "province"
+msgid "Binh Dinh"
+msgstr ""
+
+msgctxt "province"
+msgid "Binh Duong"
+msgstr ""
+
+msgctxt "province"
+msgid "Binh Phuoc"
+msgstr ""
+
+msgctxt "province"
+msgid "Binh Thuan"
+msgstr ""
+
+msgctxt "province"
+msgid "Ca Mau"
+msgstr ""
+
+msgctxt "province"
+msgid "Can Tho"
+msgstr ""
+
+msgctxt "province"
+msgid "Cao Bang"
+msgstr ""
+
+msgctxt "province"
+msgid "Da Nang, thanh pho"
+msgstr ""
+
+msgctxt "province"
+msgid "Dong Nai"
+msgstr ""
+
+msgctxt "province"
+msgid "Dong Thap"
+msgstr ""
+
+msgctxt "province"
+msgid "Gia Lai"
+msgstr ""
+
+msgctxt "province"
+msgid "Ha Giang"
+msgstr ""
+
+msgctxt "province"
+msgid "Ha Nam"
+msgstr ""
+
+msgctxt "province"
+msgid "Ha Noi, thu do"
+msgstr ""
+
+msgctxt "province"
+msgid "Ha Tay"
+msgstr ""
+
+msgctxt "province"
+msgid "Ha Tinh"
+msgstr ""
+
+msgctxt "province"
+msgid "Hai Duong"
+msgstr ""
+
+msgctxt "province"
+msgid "Hai Phong, thanh pho"
+msgstr ""
+
+msgctxt "province"
+msgid "Hoa Binh"
+msgstr ""
+
+msgctxt "province"
+msgid "Ho Chi Minh, thanh pho [Sai Gon]"
+msgstr ""
+
+msgctxt "province"
+msgid "Hung Yen"
+msgstr ""
+
+msgctxt "province"
+msgid "Khanh Hoa"
+msgstr ""
+
+msgctxt "province"
+msgid "Kien Giang"
+msgstr ""
+
+msgctxt "province"
+msgid "Kon Tum"
+msgstr ""
+
+msgctxt "province"
+msgid "Lai Chau"
+msgstr ""
+
+msgctxt "province"
+msgid "Lam Dong"
+msgstr ""
+
+msgctxt "province"
+msgid "Lang Son"
+msgstr ""
+
+msgctxt "province"
+msgid "Lao Cai"
+msgstr ""
+
+msgctxt "province"
+msgid "Long An"
+msgstr ""
+
+msgctxt "province"
+msgid "Nam Dinh"
+msgstr ""
+
+msgctxt "province"
+msgid "Nghe An"
+msgstr ""
+
+msgctxt "province"
+msgid "Ninh Binh"
+msgstr ""
+
+msgctxt "province"
+msgid "Ninh Thuan"
+msgstr ""
+
+msgctxt "province"
+msgid "Phu Tho"
+msgstr ""
+
+msgctxt "province"
+msgid "Phu Yen"
+msgstr ""
+
+msgctxt "province"
+msgid "Quang Binh"
+msgstr ""
+
+msgctxt "province"
+msgid "Quang Nam"
+msgstr ""
+
+msgctxt "province"
+msgid "Quang Ngai"
+msgstr ""
+
+msgctxt "province"
+msgid "Quang Ninh"
+msgstr ""
+
+msgctxt "province"
+msgid "Quang Tri"
+msgstr ""
+
+msgctxt "province"
+msgid "Soc Trang"
+msgstr ""
+
+msgctxt "province"
+msgid "Son La"
+msgstr ""
+
+msgctxt "province"
+msgid "Tay Ninh"
+msgstr ""
+
+msgctxt "province"
+msgid "Thai Binh"
+msgstr ""
+
+msgctxt "province"
+msgid "Thai Nguyen"
+msgstr ""
+
+msgctxt "province"
+msgid "Thanh Hoa"
+msgstr ""
+
+msgctxt "province"
+msgid "Thua Thien-Hue"
+msgstr ""
+
+msgctxt "province"
+msgid "Tien Giang"
+msgstr ""
+
+msgctxt "province"
+msgid "Tra Vinh"
+msgstr ""
+
+msgctxt "province"
+msgid "Tuyen Quang"
+msgstr ""
+
+msgctxt "province"
+msgid "Vinh Long"
+msgstr ""
+
+msgctxt "province"
+msgid "Vinh Phuc"
+msgstr ""
+
+msgctxt "province"
+msgid "Yen Bai"
+msgstr ""
+
+msgctxt "province"
+msgid "Malampa"
+msgstr ""
+
+msgctxt "province"
+msgid "Penama"
+msgstr ""
+
+msgctxt "province"
+msgid "Sanma"
+msgstr ""
+
+msgctxt "province"
+msgid "Shefa"
+msgstr ""
+
+msgctxt "province"
+msgid "Tafea"
+msgstr ""
+
+msgctxt "province"
+msgid "Torba"
+msgstr ""
+
+msgctxt "province"
+msgid "A'ana"
+msgstr ""
+
+msgctxt "province"
+msgid "Aiga-i-le-Tai"
+msgstr ""
+
+msgctxt "province"
+msgid "Atua"
+msgstr ""
+
+msgctxt "province"
+msgid "Fa'aaaleleaga"
+msgstr ""
+
+msgctxt "province"
+msgid "Gaga'emauga"
+msgstr ""
+
+msgctxt "province"
+msgid "Gagaifomauga"
+msgstr ""
+
+msgctxt "province"
+msgid "Palauli"
+msgstr ""
+
+msgctxt "province"
+msgid "Satupa'itea"
+msgstr ""
+
+msgctxt "province"
+msgid "Tuamasaga"
+msgstr ""
+
+msgctxt "province"
+msgid "Va'a-o-Fonoti"
+msgstr ""
+
+msgctxt "province"
+msgid "Vaisigano"
+msgstr ""
+
+msgctxt "province"
+msgid "Crna Gora"
+msgstr ""
+
+msgctxt "province"
+msgid "Srbija"
+msgstr ""
+
+msgctxt "province"
+msgid "Kosovo-Metohija"
+msgstr ""
+
+msgctxt "province"
+msgid "Vojvodina"
+msgstr ""
+
+msgctxt "province"
+msgid "Abyan"
+msgstr ""
+
+msgctxt "province"
+msgid "Adan"
+msgstr ""
+
+msgctxt "province"
+msgid "Ad Dali"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Bayda'"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Hudaydah"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Mahrah"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Mahwit"
+msgstr ""
+
+msgctxt "province"
+msgid "Amran"
+msgstr ""
+
+msgctxt "province"
+msgid "Dhamar"
+msgstr ""
+
+msgctxt "province"
+msgid "Hadramawt"
+msgstr ""
+
+msgctxt "province"
+msgid "Hajjah"
+msgstr ""
+
+msgctxt "province"
+msgid "Ibb"
+msgstr ""
+
+msgctxt "province"
+msgid "Lahij"
+msgstr ""
+
+msgctxt "province"
+msgid "Ma'rib"
+msgstr ""
+
+msgctxt "province"
+msgid "Sa'dah"
+msgstr ""
+
+msgctxt "province"
+msgid "San'a'"
+msgstr ""
+
+msgctxt "province"
+msgid "Shabwah"
+msgstr ""
+
+msgctxt "province"
+msgid "Ta'izz"
+msgstr ""
+
+msgctxt "province"
+msgid "Eastern Cape"
+msgstr ""
+
+msgctxt "province"
+msgid "Free State"
+msgstr ""
+
+msgctxt "province"
+msgid "Gauteng"
+msgstr ""
+
+msgctxt "province"
+msgid "Kwazulu-Natal"
+msgstr ""
+
+msgctxt "province"
+msgid "Mpumalanga"
+msgstr ""
+
+msgctxt "province"
+msgid "Northern Cape"
+msgstr ""
+
+msgctxt "province"
+msgid "Limpopo"
+msgstr ""
+
+msgctxt "province"
+msgid "Western Cape"
+msgstr ""
+
+msgctxt "province"
+msgid "Copperbelt"
+msgstr ""
+
+msgctxt "province"
+msgid "Luapula"
+msgstr ""
+
+msgctxt "province"
+msgid "Lusaka"
+msgstr ""
+
+msgctxt "province"
+msgid "North-Western"
+msgstr ""
+
+msgctxt "province"
+msgid "Bulawayo"
+msgstr ""
+
+msgctxt "province"
+msgid "Harare"
+msgstr ""
+
+msgctxt "province"
+msgid "Manicaland"
+msgstr ""
+
+msgctxt "province"
+msgid "Mashonaland Central"
+msgstr ""
+
+msgctxt "province"
+msgid "Mashonaland East"
+msgstr ""
+
+msgctxt "province"
+msgid "Mashonaland West"
+msgstr ""
+
+msgctxt "province"
+msgid "Masvingo"
+msgstr ""
+
+msgctxt "province"
+msgid "Matabeleland North"
+msgstr ""
+
+msgctxt "province"
+msgid "Matabeleland South"
+msgstr ""
+
+msgctxt "province"
+msgid "Midlands"
+msgstr ""
+
+msgctxt "province"
+msgid "South Karelia"
+msgstr ""
+
+msgctxt "province"
+msgid "South Ostrobothnia"
+msgstr ""
+
+msgctxt "province"
+msgid "Etelä-Savo"
+msgstr ""
+
+msgctxt "province"
+msgid "Häme"
+msgstr ""
+
+msgctxt "province"
+msgid "Itä-Uusimaa"
+msgstr ""
+
+msgctxt "province"
+msgid "Kainuu"
+msgstr ""
+
+msgctxt "province"
+msgid "Central Ostrobothnia"
+msgstr ""
+
+msgctxt "province"
+msgid "Central Finland"
+msgstr ""
+
+msgctxt "province"
+msgid "Kymenlaakso"
+msgstr ""
+
+msgctxt "province"
+msgid "Lapland"
+msgstr ""
+
+msgctxt "province"
+msgid "Tampere Region"
+msgstr ""
+
+msgctxt "province"
+msgid "Ostrobothnia"
+msgstr ""
+
+msgctxt "province"
+msgid "North Karelia"
+msgstr ""
+
+msgctxt "province"
+msgid "Nothern Ostrobothnia"
+msgstr ""
+
+msgctxt "province"
+msgid "Northern Savo"
+msgstr ""
+
+msgctxt "province"
+msgid "Päijät-Häme"
+msgstr ""
+
+msgctxt "province"
+msgid "Satakunta"
+msgstr ""
+
+msgctxt "province"
+msgid "Uusimaa"
+msgstr ""
+
+msgctxt "province"
+msgid "South-West Finland"
+msgstr ""
+
+msgctxt "province"
+msgid "Åland"
+msgstr ""
+
+msgctxt "province"
+msgid "Limburg"
+msgstr ""
+
+msgctxt "province"
+msgid "Central and Western"
+msgstr ""
+
+msgctxt "province"
+msgid "Eastern"
+msgstr ""
+
+msgctxt "province"
+msgid "Southern"
+msgstr ""
+
+msgctxt "province"
+msgid "Wan Chai"
+msgstr ""
+
+msgctxt "province"
+msgid "Kowloon City"
+msgstr ""
+
+msgctxt "province"
+msgid "Kwun Tong"
+msgstr ""
+
+msgctxt "province"
+msgid "Sham Shui Po"
+msgstr ""
+
+msgctxt "province"
+msgid "Wong Tai Sin"
+msgstr ""
+
+msgctxt "province"
+msgid "Yau Tsim Mong"
+msgstr ""
+
+msgctxt "province"
+msgid "Islands"
+msgstr ""
+
+msgctxt "province"
+msgid "Kwai Tsing"
+msgstr ""
+
+msgctxt "province"
+msgid "North"
+msgstr ""
+
+msgctxt "province"
+msgid "Sai Kung"
+msgstr ""
+
+msgctxt "province"
+msgid "Sha Tin"
+msgstr ""
+
+msgctxt "province"
+msgid "Tai Po"
+msgstr ""
+
+msgctxt "province"
+msgid "Tsuen Wan"
+msgstr ""
+
+msgctxt "province"
+msgid "Tuen Mun"
+msgstr ""
+
+msgctxt "province"
+msgid "Yuen Long"
+msgstr ""
+
+msgctxt "province"
+msgid "Manchester"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Manāmah (Al ‘Āşimah)"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Janūbīyah"
+msgstr ""
+
+msgctxt "province"
+msgid "Al Wusţá"
+msgstr ""
+
+msgctxt "province"
+msgid "Ash Shamālīyah"
+msgstr ""
+
+msgctxt "province"
+msgid "Jenin"
+msgstr ""
+
+msgctxt "province"
+msgid "Tubas"
+msgstr ""
+
+msgctxt "province"
+msgid "Tulkarm"
+msgstr ""
+
+msgctxt "province"
+msgid "Nablus"
+msgstr ""
+
+msgctxt "province"
+msgid "Qalqilya"
+msgstr ""
+
+msgctxt "province"
+msgid "Salfit"
+msgstr ""
+
+msgctxt "province"
+msgid "Ramallah and Al-Bireh"
+msgstr ""
+
+msgctxt "province"
+msgid "Jericho"
+msgstr ""
+
+msgctxt "province"
+msgid "Jerusalem"
+msgstr ""
+
+msgctxt "province"
+msgid "Bethlehem"
+msgstr ""
+
+msgctxt "province"
+msgid "Hebron"
+msgstr ""
+
+msgctxt "province"
+msgid "North Gaza"
+msgstr ""
+
+msgctxt "province"
+msgid "Gaza"
+msgstr ""
+
+msgctxt "province"
+msgid "Deir el-Balah"
+msgstr ""
+
+msgctxt "province"
+msgid "Khan Yunis"
+msgstr ""
+
+msgctxt "province"
+msgid "Rafah"
+msgstr ""
+
+msgctxt "province"
+msgid "Brussels"
+msgstr ""
+
+msgctxt "province"
+msgid "Distrito Federal"
+msgstr ""
+
+msgctxt "province"
+msgid "Taichung City"
+msgstr ""
+
+msgctxt "province"
+msgid "Kaohsiung City"
+msgstr ""
+
+msgctxt "province"
+msgid "Taipei City"
+msgstr ""
+
+msgctxt "province"
+msgid "Chiayi City"
+msgstr ""
+
+msgctxt "province"
+msgid "Hsinchu City"
+msgstr ""
+
+msgctxt "province"
+msgid "Tainan City"
+msgstr ""
+
+msgctxt "province"
+msgid "Lienchiang County"
+msgstr ""
+
+msgctxt "province"
+msgid "Kinmen County"
+msgstr ""
+
+msgctxt "province"
+msgid "North West"
+msgstr ""
+
+msgctxt "province"
+msgid "Tyne and Wear"
+msgstr ""
+
+msgctxt "province"
+msgid "Greater Manchester"
+msgstr ""
+
+msgctxt "province"
+msgid "Co Tyrone"
+msgstr ""
+
+msgctxt "province"
+msgid "West Yorkshire"
+msgstr ""
+
+msgctxt "province"
+msgid "South Yorkshire"
+msgstr ""
+
+msgctxt "province"
+msgid "Merseyside"
+msgstr ""
+
+msgctxt "province"
+msgid "Berkshire"
+msgstr ""
+
+msgctxt "province"
+msgid "West Midlands"
+msgstr ""
+
+msgctxt "province"
+msgid "West Glamorgan"
+msgstr ""
+
+msgctxt "province"
+msgid "Greater London"
+msgstr ""
+
+msgctxt "province"
+msgid "Carbonia-Iglesias"
+msgstr ""
+
+msgctxt "province"
+msgid "Olbia-Tempio"
+msgstr ""
+
+msgctxt "province"
+msgid "Medio Campidano"
+msgstr ""
+
+msgctxt "province"
+msgid "Ogliastra"
+msgstr ""
+
+msgctxt "province"
+msgid "Bonaire"
+msgstr ""
+
+msgctxt "province"
+msgid "Curaçao"
+msgstr ""
+
+msgctxt "province"
+msgid "Saba"
+msgstr ""
+
+msgctxt "province"
+msgid "St. Eustatius"
+msgstr ""
+
+msgctxt "province"
+msgid "St. Maarten"
+msgstr ""
+
+msgctxt "province"
+msgid "Jura"
+msgstr ""
+
+msgctxt "province"
+msgid "Barletta-Andria-Trani"
+msgstr ""
+
+msgctxt "province"
+msgid "Fermo"
+msgstr ""
+
+msgctxt "province"
+msgid "Monza e Brianza"
+msgstr ""
+
+msgctxt "province"
+msgid "Clwyd"
+msgstr ""
+
+msgctxt "province"
+msgid "Dyfed"
+msgstr ""
+
+msgctxt "province"
+msgid "South Glamorgan"
+msgstr ""
+
+msgctxt "province"
+msgid "Artibonite"
+msgstr ""
+
+msgctxt "province"
+msgid "Centre"
+msgstr ""
+
+msgctxt "province"
+msgid "Nippes"
+msgstr ""
+
+msgctxt "province"
+msgid "Nord"
+msgstr ""
+
+msgctxt "province"
+msgid "La Rioja"
+msgstr ""
+
+msgctxt "province"
+msgid "Andorra la Vella"
+msgstr ""
+
+msgctxt "province"
+msgid "Canillo"
+msgstr ""
+
+msgctxt "province"
+msgid "Encamp"
+msgstr ""
+
+msgctxt "province"
+msgid "Escaldes-Engordany"
+msgstr ""
+
+msgctxt "province"
+msgid "La Massana"
+msgstr ""
+
+msgctxt "province"
+msgid "Ordino"
+msgstr ""
+
+msgctxt "province"
+msgid "Sant Julia de Loria"
+msgstr ""
+
+msgctxt "province"
+msgid "Abaco Islands"
+msgstr ""
+
+msgctxt "province"
+msgid "Andros Island"
+msgstr ""
+
+msgctxt "province"
+msgid "Berry Islands"
+msgstr ""
+
+msgctxt "province"
+msgid "Eleuthera"
+msgstr ""
+
+msgctxt "province"
+msgid "Grand Bahama"
+msgstr ""
+
+msgctxt "province"
+msgid "Rum Cay"
+msgstr ""
+
+msgctxt "province"
+msgid "San Salvador Island"
+msgstr ""
+
+msgctxt "province"
+msgid "Kongo central"
+msgstr ""
+
+msgctxt "province"
+msgid "Kwango"
+msgstr ""
+
+msgctxt "province"
+msgid "Kwilu"
+msgstr ""
+
+msgctxt "province"
+msgid "Mai-Ndombe"
+msgstr ""
+
+msgctxt "province"
+msgid "Kasai"
+msgstr ""
+
+msgctxt "province"
+msgid "Lulua"
+msgstr ""
+
+msgctxt "province"
+msgid "Lomami"
+msgstr ""
+
+msgctxt "province"
+msgid "Sankuru"
+msgstr ""
+
+msgctxt "province"
+msgid "Ituri"
+msgstr ""
+
+msgctxt "province"
+msgid "Haut-Uele"
+msgstr ""
+
+msgctxt "province"
+msgid "Tshopo"
+msgstr ""
+
+msgctxt "province"
+msgid "Bas-Uele"
+msgstr ""
+
+msgctxt "province"
+msgid "Nord-Ubangi"
+msgstr ""
+
+msgctxt "province"
+msgid "Mongala"
+msgstr ""
+
+msgctxt "province"
+msgid "Sud-Ubangi"
+msgstr ""
+
+msgctxt "province"
+msgid "Tshuapa"
+msgstr ""
+
+msgctxt "province"
+msgid "Haut-Lomami"
+msgstr ""
+
+msgctxt "province"
+msgid "Lualaba"
+msgstr ""
+
+msgctxt "province"
+msgid "Haut-Katanga"
+msgstr ""
+
+msgctxt "province"
+msgid "Tanganyika"
+msgstr ""
+

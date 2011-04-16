@@ -1,0 +1,176 @@
+<?php
+
+function civicrm_event_cck_menu(){
+  $items['admin/settings/civicrm_event_cck'] = array(
+    'title' => 'CiviCRM Event Sync',
+    'description' => 'Auto create CiviCRM event when updating specific content type.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('civicrm_event_cck_admin_settings'),
+    'access callback' => 'user_access',
+    'access arguments' => array('administer site configuration'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  return $items;
+}
+
+function civicrm_event_cck_admin_settings(){
+  $types = node_get_types('names');
+  $form['civiec_enabled_type'] = array(
+    '#type' => 'checkboxes',
+    '#title' => 'Content type to enable for sync',
+    '#default_value' => variable_get('civiec_enabled_type', array()),
+    '#options' => $types,
+    '#required' => TRUE,
+  );
+  $fields = content_fields();
+  foreach($fields as $name => $f){
+    if($f['type'] != 'filefield' && $f['type'] != 'content_taxonomy')
+      $option_fields[$name] = $f['type'].":".$f['widget']['label']." ($name)";
+  }
+  $form['civiec_fields'] = array(
+    '#type' => 'fieldset',
+    '#title' => 'CiviEvent / CCK field mapping',
+  );
+  $civiec_fields = civicrm_event_cck_fields();
+  foreach($civiec_fields as $f => $name){
+    $form['civiec_fields']['civiec_'.$f] = array(
+      '#type' => 'select',
+      '#title' => $name,
+      '#default_value' => variable_get('civiec_'.$f, ''),
+      '#options' => $option_fields,
+      '#required' => TRUE,
+    );
+  }
+
+  return system_settings_form($form);
+}
+
+function civicrm_event_cck_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL){
+  $available_types = variable_get('civicrm_event_cck_enabled_type', array());
+  if($op == 'view' && in_array($node->type, $available_types)){
+  }
+  if($op == 'presave' && in_array($node->type, $available_types)){
+    civicrm_event_cck_save($node, $op);
+  }
+  if($op == 'delete'){
+    civicrm_event_cck_save($node, $op);
+  }
+}
+
+function civicrm_event_cck_save(&$node, $op){
+  civicrm_initialize();
+  $event_fields = civicrm_event_cck_fields();
+  require_once "api/v2/Event.php";
+  $params = array();
+  foreach($event_fields as $f => $name){
+    $fieldname = variable_get("civiec_".$f, '');
+    if($fieldname){
+        $field = $node->$fieldname;
+      if($f == 'id'){
+        $event_id = $field[0]['value'];
+        $event_id_field = $fieldname;
+      }
+      if($f == 'date'){
+        //list($start) = explode(' ', $field[0]['value']);
+        //list($end) = explode(' ', $field[0]['value2']);
+        $params['start_date'] = preg_replace("/[^0-9]*/", '', $field[0]['value']);
+        $params['end_date'] = preg_replace("/[^0-9]*/", '', $field[0]['value2']);
+      }
+      elseif($f == 'registration_date'){
+        //list($start) = explode(' ', $field[0]['value']);
+        //list($end) = explode(' ', $field[0]['value2']);
+        $params['registration_start_date'] = preg_replace("/[^0-9]*/", '', $field[0]['value']);
+        $params['registration_end_date'] = preg_replace("/[^0-9]*/", '', $field[0]['value2']);
+      }
+      else{
+        $params[$f] = $field[0]['value'];
+      }
+    }
+  }
+  $params['title'] = $node->title;
+  $params['summary'] = $node->teaser;
+  $params['description'] = $node->body;
+  $params['is_active'] = $op == 'delete' ? 0 : 1;
+  $params['is_monetory'] = 0;
+  $params['is_show_location'] = 0;
+
+  // call event api here. http://wiki.civicrm.org/confluence/display/CRMDOC33/Event+APIs
+  $result = civicrm_event_create($params);
+  if(!$event_id){
+    $event_id = $result['event_id'];
+  }
+
+  // we need to save the event_id back to node. 
+  $node->{$event_id_field}[0]['value'] = $event_id;
+}
+
+function civicrm_event_cck_form_alter(&$form, &$form_state, $form_id){
+  if (isset($form['type']) && isset($form['#node']) && $form['type']['#value'] . '_node_form' == $form_id){
+    $available_types = variable_get('civicrm_event_cck_enabled_type', array());
+    if(in_array($form['#node']->type, $available_types) && variable_get('civiec_id', '')) {
+      $event_id_field = variable_get('civiec_id', ''); 
+      // add drop down select list of "event type" and "attender type"
+      civicrm_initialize();
+      /*
+      // get default value 
+      if($event_id = $form['#node']->{$event_id_field}[0]['value']){
+        $event_type_id = CRM_Core_DAO::getFieldValue('CRM_Event_DAO_Event', $event_id, 'event_type_id');
+        $default_role_id = CRM_Core_DAO::getFieldValue('CRM_Event_DAO_Event', $event_id, 'default_role_id');
+      }
+      */
+      require_once 'CRM/Core/OptionGroup.php';
+
+      // from http://drupal.org/node/339730#comment-2871966
+      // need to make sure the weight of this module will after the content.module
+      // Add "- Select One -" to the allowed values for this field.
+      // (This is necessary to avoid the "An illegal choice has been detected. Please contact the site administrator." error.
+
+      $civiec_fields = civicrm_event_cck_fields();
+      foreach($civiec_fields as $k => $name){
+        if($field = variable_get('civiec_'.$k, '')){
+          // now start to get default option / value from civicrm
+          $options = array();
+          switch($k) {
+            case 'default_role_id':
+              $options = CRM_Core_OptionGroup::values('participant_role');
+              break;
+            case 'event_type_id':
+              $options = CRM_Core_OptionGroup::values('event_type'); 
+              break;
+            case 'id':
+              // doing form alter job 
+              $form['#after_build'] = array('civicrm_event_cck_hide_field');
+              break;
+          }
+          if(!empty($options)){
+            foreach($options as $k => $v){
+              $option_str .= $k.'|'.$v."\n";
+            }
+            $form['#field_info'][$field]['allowed_values'] = $option_str;
+          }
+        }
+      }
+
+    }
+  }
+}
+
+function civicrm_event_cck_hide_field(&$form, &$form_state){
+  $event_id_field = variable_get('civiec_id', ''); 
+  $form[$event_id_field]['#prefix'] = '<div style="display:none">';
+  $form[$event_id_field]['#suffix'] = '</div>';
+  return $form;
+}
+
+function civicrm_event_cck_fields(){
+  return array(
+    'id' => 'Event ID',
+    'is_online_registration' => 'Is online registration',
+    'default_role_id' => 'Default participant role',
+    'event_type_id' => 'Event type',
+    //'participant_listing_id' => 'Participant listing',
+    'max_participants' => 'Max participants',
+    'date' => 'Start / End date of event',
+    'registration_date' => 'Start / End date of registration',
+  );
+}

@@ -264,3 +264,9 @@ if ($memLimit >= 0 and $memLimit < 67108864) {
     ini_set('memory_limit', '64M');
 }
 
+if(class_exists('Memcache')){
+  $prefix = sprintf("%u", crc32(CIVICRM_UF_BASEURL));
+  define('CIVICRM_USE_MEMCACHE', 1);
+  define('MEMCACHE_PREFIX', $prefix);
+}
+

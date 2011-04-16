@@ -82,7 +82,7 @@ class CRM_Mailing_Form_Test extends CRM_Core_Form
         //FIXME : currently we are hiding save an continue later when
         //search base mailing, we should handle it when we fix CRM-3876
         $buttons = array( array(  'type'  => 'back',
-                                  'name'  => '<< Previous'),
+                                  'name'  => ts('<< Previous')),
                           array(  'type'  => 'next',
                                   'name'  => ts('Next >>'),
                                   'spacing' => '&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;',
@@ -94,7 +94,7 @@ class CRM_Mailing_Form_Test extends CRM_Core_Form
                           );
         if ( $this->_searchBasedMailing && $this->get( 'ssID' ) ) {
             $buttons = array( array(  'type'  => 'back',
-                                      'name'  => '<< Previous'),
+                                      'name'  => ts('<< Previous')),
                               array(  'type'  => 'next',
                                       'name'  => ts('Next >>'),
                                       'spacing' => '&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;',

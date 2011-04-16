@@ -31,7 +31,7 @@
 <div class="crm-accordion-wrapper crm-accordion_title-accordion crm-accordion_{$report}-accordion crm-accordion-open">
  <div class="crm-accordion-header">
   <div class="icon crm-accordion-pointer"></div> 
-  	{if $title}{$title}{elseif $report EQ 'Contribute'}{ts}Contribution Reports{/ts}{else}{$report} {ts}Reports{/ts}{/if}</a>
+    {if $report}{if $report EQ 'Contribute'}{ts}Contribution{/ts}{elseif $report EQ 'Mail'}{ts}Mailing{/ts}{else}{ts}{$report}{/ts}{/if}{/if} {ts}Report{/ts}
  </div><!-- /.crm-accordion-header -->
  <div class="crm-accordion-body">
 	<div id="{$report}" class="boxBlock">

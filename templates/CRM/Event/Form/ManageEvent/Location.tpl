@@ -58,7 +58,9 @@
 			</tr>
 			<tr>
 				<td id="locUsedMsg" colspan="3">
-				{assign var=locUsedMsgTxt value="<strong>Note:</strong> This location is used by multiple events. Modifying location information will change values for all events."}
+        {php}
+          $this->assign('locUsedMsgTxt', ts('<strong>Note:</strong> This location is used by multiple events. Modifying location information will change values for all events.'));
+        {/php}
 				</td>
 			</tr>
 			
@@ -68,7 +70,7 @@
     
 
     <div id="newLocation">
-	<fieldset><legend>Address</legend>
+	<fieldset><legend>{ts}Address{/ts}</legend>
 		{* Display the address block *}
 		{include file="CRM/Contact/Form/Edit/Address.tpl"} 
 	</fieldset>

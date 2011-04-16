@@ -50,6 +50,13 @@ class CRM_Contact_Form_Search_Custom_ZipCodeRange
     }
 
     function buildForm( &$form ) {
+        CRM_Core_OptionValue::getValues(array('name' => 'custom_search'), &$custom_search);
+        foreach($custom_search as $c){
+          if($c['value'] == $_GET['csid']){
+            $this->setTitle($c['description']);
+            break;
+          }
+        }
         $form->add( 'text',
                     'postal_code_low',
                     ts( 'Postal Code Start' ),

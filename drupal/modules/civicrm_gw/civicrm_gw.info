@@ -3,4 +3,4 @@ description = GreenWorld GW payment functions for civicrm. Include ecpay and ecb
 package = CiviCRM
 dependencies[] = civicrm
 core = 6.x
-version = 3.15-dev
+version = 3.3.1-netivism

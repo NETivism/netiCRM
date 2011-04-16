@@ -1,0 +1,20 @@
+<?php
+
+/**
+ * Implementation of hook_install().
+ */
+function civicrm_event_cck_install() {
+  // later for content module
+  db_query("UPDATE {system} SET weight = 99 WHERE name = 'civicrm_event_cck'");
+}
+
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function civicrm_event_cck_uninstall() {
+  $result = db_query("SELECT * FROM {variables} WHERE name IS LIKE civiec_%%'");
+  while($v = db_fetch_object($result)){
+    variable_del($v->name);
+  }
+}

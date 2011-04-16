@@ -25,7 +25,7 @@
 *}
 {* Report form criteria section *}
     {if $colGroups}
-	    <h3>Display Columns</h3>
+	    <h3>{ts}Display Columns{/ts}</h3>
         {foreach from=$colGroups item=grpFields key=dnc}
             {assign  var="count" value="0"}
             {* Wrap custom field sets in collapsed accordion pane. *}
@@ -59,7 +59,7 @@
     {/if}
     
     {if $groupByElements}
-        <h3>Group by Columns</h3>
+        <h3>{ts}Group by Columns{/ts}</h3>
         {assign  var="count" value="0"}
         <table class="report-layout">
             <tr class="crm-report crm-report-criteria-groupby">
@@ -83,7 +83,7 @@
     {/if}
 
     {if $form.options.html || $form.options.html}
-        <h3>Other Options</h3>
+        <h3>{ts}Other Options{/ts}</h3>
         <table class="report-layout">
             <tr class="crm-report crm-report-criteria-groupby">
 	        <td>{$form.options.html}</td>
@@ -95,7 +95,7 @@
     {/if}
   
     {if $filters}
-        <h3>Set Filters</h3>
+        <h3>{ts}Set Filters{/ts}</h3>
         <table class="report-layout">
             {foreach from=$filters     item=table key=tableName}
  	        {assign  var="filterCount" value=$table|@count}

@@ -32,9 +32,9 @@
 {include file="CRM/Mailing/Form/Count.tpl"}
 
 <fieldset>
-  <legend>Test Mailing</legend>
+  <legend>{ts}Test Mailing:{/ts}</legend>
   <table class="form-layout">
-    <tr class="crm-mailing-test-form-block-test_email"><td class="label">{$form.test_email.label}</td><td>{$form.test_email.html} {ts}(filled with your contact's token values){/ts}</td></tr>
+    <tr class="crm-mailing-test-form-block-test_email"><td class="label">{$form.test_email.label}</td><td>{$form.test_email.html}</td></tr>
     <tr class="crm-mailing-test-form-block-test_group"><td class="label">{$form.test_group.label}</td><td>{$form.test_group.html}</td></tr>
     <tr><td></td><td>{$form.sendtest.html}</td>  
   </table>

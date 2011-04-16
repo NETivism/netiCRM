@@ -106,8 +106,8 @@ class CRM_Contact_Form_Edit_Address
                           'county_id'              => array( ts('County')            ,  $attributes['county_id'], 'county' ),
                           'state_province_id'      => array( ts('State / Province')  ,  $attributes['state_province_id'],null ),
                           'country_id'             => array( ts('Country')           ,  $attributes['country_id'], null ), 
-                          'geo_code_1'             => array( ts('Latitude') ,  array( 'size' => 9, 'maxlength' => 10 ), null ),
-                          'geo_code_2'             => array( ts('Longitude'),  array( 'size' => 9, 'maxlength' => 10 ), null ),
+                          'geo_code_1'             => array( ts('Latitude') ,  array( 'size' => 9, 'maxlength' => 12 ), null ),
+                          'geo_code_2'             => array( ts('Longitude'),  array( 'size' => 9, 'maxlength' => 12 ), null ),
                           'street_number'          => array( ts('Street Number')       , $attributes['street_number'], null ),
                           'street_name'            => array( ts('Street Name')         , $attributes['street_name'], null ),
                           'street_unit'            => array( ts('Apt/Unit/Suite')         , $attributes['street_unit'], null )

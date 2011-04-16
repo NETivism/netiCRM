@@ -51,6 +51,13 @@
                {include file="CRM/Contact/Form/Edit/$block.tpl"}
             {/foreach}
 		</table>
+		<table class="crm-section contact_legal_identifier-section form-layout-compressed">
+      {if $contactType eq 'Individual'}
+      <tr>
+        <td>{$form.legal_identifier.label}<br/>{$form.legal_identifier.html}<td>
+      </tr>
+      {/if}
+    </table>
 		<table class="crm-section contact_source-section form-layout-compressed">
             <tr class="last-row">
               <td>{$form.contact_source.label}<br />

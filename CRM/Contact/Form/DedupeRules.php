@@ -60,6 +60,7 @@ class CRM_Contact_Form_DedupeRules extends CRM_Admin_Form
     {
         // Ensure user has permission to be here
         require_once 'CRM/Core/Permission.php';
+            require_once 'CRM/Contact/BAO/ContactType.php';
         if ( ! CRM_Core_Permission::check('administer dedupe rules') ) {
             CRM_Utils_System::permissionDenied( );
             CRM_Utils_System::civiExit( );
@@ -68,11 +69,17 @@ class CRM_Contact_Form_DedupeRules extends CRM_Admin_Form
         $this->_rgid        = CRM_Utils_Request::retrieve('id', 'Positive', $this, false, 0);
         $this->_contactType = CRM_Utils_Request::retrieve('contact_type', 'String', $this, false, 0);
         if ($this->_rgid) {
+            $contactType = new CRM_Contact_BAO_ContactType();
+
             $rgDao            = new CRM_Dedupe_DAO_RuleGroup();
             $rgDao->id        = $this->_rgid;
             $rgDao->find(true);
             $this->_defaults['threshold']  = $rgDao->threshold;
             $this->_contactType            = $rgDao->contact_type;
+            $params = array('name' => $rgDao->contact_type);
+            $_contactType = $contactType->retrieve($params, $defaults);
+            $this->_contactTypeDisplay = $_contactType->label;
+
             $this->_defaults['level']      = $rgDao->level;
             $this->_defaults['name']       = $rgDao->name;
             $this->_defaults['is_default'] = $rgDao->is_default;
@@ -129,7 +136,7 @@ class CRM_Contact_Form_DedupeRules extends CRM_Admin_Form
             array('type' => 'next',   'name' => ts('Save'), 'isDefault' => true),
             array('type' => 'cancel', 'name' => ts('Cancel')),
         ));
-        $this->assign('contact_type', $this->_contactType);
+        $this->assign('contact_type', $this->_contactTypeDisplay);
     }
 
     function setDefaultValues()

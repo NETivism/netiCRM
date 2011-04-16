@@ -93,13 +93,19 @@ class CRM_Utils_String {
      */
     static function munge( $name, $char = '_', $len = 63 ) {
         // replace all white space and non-alpha numeric with $char
-        $name = preg_replace('/\s+|\W+/', $char, trim($name) );
+        $purged_name = preg_replace('/\s+|\W+/', $char, trim($name) );
+        if(!trim($purged_name, $char)){
+          if(function_exists('transliteration_clean_filename') && function_exists('language_default')){
+            $purged_name = transliteration_clean_filename($name);
+            $purged_name = trim($purged_name, '_');
+          }
+        }
 
         if ( $len ) {
             // lets keep variable names short
-            return substr( $name, 0, $len );
+            return substr( $purged_name, 0, $len );
         } else {
-            return $name;
+            return $purged_name;
         }
     }
 

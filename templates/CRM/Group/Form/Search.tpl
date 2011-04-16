@@ -48,7 +48,7 @@
             </span>
         </td>
 	<td>
-            <label> Status</label><br />		
+            <label> {ts}Status{/ts}</label><br />		
 	    {$form.active_status.html}
 	    {$form.active_status.label}&nbsp;
 	    {$form.inactive_status.html}

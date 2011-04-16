@@ -108,7 +108,7 @@ class CRM_Report_Form_Contribute_HouseholdSummary extends CRM_Report_Form {
                          'fields'  =>
                          array( 'total_amount'  => array( 'title'      => ts( 'Amount' ),
                                                           'required'   => true, ),
-                                'contribution_status_id' =>  array( 'title'   => 'Contribution Status', 
+                                'contribution_status_id' =>  array( 'title'   => ts('Contribution Status'), 
                                                                     'default' => true, ),
                                 'trxn_id'       => null,
                                 'receive_date'  => array( 'default' => true ),

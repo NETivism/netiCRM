@@ -119,7 +119,7 @@ class CRM_Contact_Form_Edit_TagsandGroups
                 }
             
     	        if ( ! empty( $elements ) ) {
-                    $form->addGroup( $elements, $fName, $groupName, '&nbsp;<br />' );
+                    $form->addGroup( $elements, $fName, ts($groupName), '&nbsp;<br />' );
                     $form->assign('groupCount', count($elements));
                     if ( $isRequired ) {
                         $form->addRule( $fName , ts('%1 is a required field.', array(1 => $groupName)) , 'required');   
@@ -142,7 +142,7 @@ class CRM_Contact_Form_Edit_TagsandGroups
                 $elements[] =& HTML_QuickForm::createElement('checkbox', $id, null, $name);
             }
             if ( ! empty( $elements ) ) { 
-                $form->addGroup( $elements, $fName, $tagName, '<br />' );
+                $form->addGroup( $elements, $fName, ts($tagName), '<br />' );
                 $form->assign('tagCount', count($elements));
             }
             

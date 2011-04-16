@@ -1,0 +1,6 @@
+name = Event sync from cck
+description = Create / update CiviCRM Event for specific content type.
+package = CiviCRM
+dependencies[] = civicrm
+core = 6.x
+version = 3.3.1-netivism

@@ -86,10 +86,12 @@
               <td class="label"></td><td class="html-adjust">{$form.is_required.html}&nbsp;{$form.is_required.label}<br />
               <span class="description">{ts}If checked, user must signup for one of the displayed membership options before continuing.{/ts}</span></td>
           </tr>
+         <!--
           <tr class="crm-member-membershipblock-form-block-is_separate_payment">
               <td class="label"></td><td class="html-adjust">{$form.is_separate_payment.html}&nbsp;{$form.is_separate_payment.label} {help id="id-separate-pay"}<br />
               <span class="description">{ts}Check this box if you are including both Membership Signup/Renewal AND a Contribution Amount section, AND you want the membership fee to be charged separately from any additional contribution amount.{/ts}</span></td>
           </tr>
+          -->
           <tr class="crm-member-membershipblock-form-block-display_min_fee">
               <td class="label"></td><td class="html-adjust">{$form.display_min_fee.html}&nbsp;{$form.display_min_fee.label} {help id="id-display-fee"}<br />
               <span class="description">{ts}Display the membership fee along with the membership name and description for each membership option?{/ts}</span></td>

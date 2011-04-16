@@ -29,7 +29,7 @@
     <tr class="columnheader-dark">
         <th scope="col">{ts}Members by Type{/ts}</th>
         {if $preMonth}
-            <th scope="col">{$premonth} &ndash; {ts}New/Renew (Last Month){/ts}</th>
+            <th scope="col">{ts}{$premonth}{/ts} &ndash; {ts}New/Renew (Last Month){/ts}</th>
         {/if}
         <th scope="col">{$month} &ndash; {if $isCurrent}{ts}New/Renew (MTD){/ts}{else}{ts}New/Renew{/ts}{/if}</th>
         <th scope="col">
