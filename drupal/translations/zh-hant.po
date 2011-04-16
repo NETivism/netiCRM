@@ -1928,7 +1928,7 @@ msgstr "設定"
 #: CRM/Contribute/Page/DashBoard.php
 #: templates/CRM/Admin/Page/ConfigTaskList.tpl msgctxt "menu"
 msgid "CiviContribute"
-msgstr "Civi捐款"
+msgstr "捐款"
 
 #: CRM/Admin/Page/Admin.php CRM/Member/Info.php CRM/Member/Page/DashBoard.php
 #: templates/CRM/Admin/Page/ConfigTaskList.tpl
@@ -1938,7 +1938,7 @@ msgstr "會員"
 #: CRM/Admin/Page/Admin.php CRM/Event/Info.php CRM/Event/Page/DashBoard.php
 #: templates/CRM/Admin/Page/ConfigTaskList.tpl
 msgid "CiviEvent"
-msgstr "Civi活動"
+msgstr "活動"
 
 #: CRM/Admin/Page/Admin.php CRM/Mailing/Info.php
 #: templates/CRM/Admin/Page/ConfigTaskList.tpl msgctxt "menu"
@@ -1948,11 +1948,11 @@ msgstr "電子報"
 #: CRM/Admin/Page/Admin.php CRM/Case/Info.php
 #: templates/CRM/Admin/Page/ConfigTaskList.tpl
 msgid "CiviCase"
-msgstr "Civi個案"
+msgstr "個案"
 
 #: CRM/Admin/Page/Admin.php CRM/Report/Info.php msgctxt "menu"
 msgid "CiviReport"
-msgstr "Civi報表"
+msgstr "報表"
 
 #: CRM/Admin/Page/Admin.php CRM/Campaign/Info.php
 msgid "CiviCampaign"
@@ -5366,7 +5366,7 @@ msgstr "刪除認捐"
 #: CRM/Pledge/Info.php CRM/Pledge/Page/DashBoard.php
 #: templates/CRM/Admin/Page/ConfigTaskList.tpl
 msgid "CiviPledge"
-msgstr "Civi認捐"
+msgstr "認捐"
 
 #: CRM/Price/DAO/Field.php CRM/Price/Form/Field.php
 #: templates/CRM/Price/Page/Field.tpl
@@ -6528,7 +6528,7 @@ msgstr "<< 停用"
 
 #: CRM/Admin/Form/Setting/Component.php
 msgid "You need to enable CiviContribute before enabling CiviPledge."
-msgstr "您啟用Civi認捐前，需先啟用Civi捐款模組。"
+msgstr "您啟用認捐前，需先啟用捐款模組。"
 
 #: CRM/Admin/Form/Setting/Date.php
 msgid "Settings - Date"
@@ -7516,11 +7516,11 @@ msgstr "編輯參加者"
 
 #: CRM/Campaign/Form/Petition.php
 msgid "Petition Dashboard"
-msgstr "Civi活動總覽頁面"
+msgstr "請願總覽頁面"
 
 #: CRM/Campaign/Form/Petition.php
 msgid "Petition Title"
-msgstr "底部標題"
+msgstr "請願標題"
 
 #: CRM/Campaign/Form/Petition.php
 msgid "Contact Profile"
@@ -8142,11 +8142,11 @@ msgstr "已回復個案: %1"
 
 #: CRM/Case/Info.php
 msgid "CiviCase Engine"
-msgstr "Civi個案引擎"
+msgstr "個案引擎"
 
 #: CRM/Case/Page/DashBoard.php msgctxt "menu"
 msgid "CiviCase Dashboard"
-msgstr "Civi個案 總覽頁面"
+msgstr "個案 總覽頁面"
 
 #: CRM/Case/Page/DashBoard.php
 msgid "You are not authorized to access all cases and activities."
@@ -14592,7 +14592,7 @@ msgstr "確認訊息內容"
 
 #: CRM/Event/Form/ManageEvent/Delete.php
 msgid "This event cannot be deleted because there are participant records linked to it. If you want to delete this event, you must first find the participants linked to this event and delete them. You can use use <a href='%1'> CiviEvent >> Find Participants page </a>."
-msgstr "此活動無法刪除，因為已經與參加者紀錄連結。若你想刪除此活動，您必需先找到連結的參加者，並將他們刪除。您可以用<a href='%1'> Civi活動  >>  搜尋參加者頁面 </a>來尋找這些參加者。"
+msgstr "此活動無法刪除，因為已經與參加者紀錄連結。若你想刪除此活動，您必需先找到連結的參加者，並將他們刪除。您可以用<a href='%1'> 活動  >>  搜尋參加者頁面 </a>來尋找這些參加者。"
 
 #: CRM/Event/Form/ManageEvent/Delete.php
 msgid "Event template '%1' has been deleted."
@@ -14911,7 +14911,7 @@ msgstr "活動費用"
 
 #: CRM/Event/Form/Participant.php msgctxt "menu"
 msgid "CiviEvent Dashboard"
-msgstr "Civi活動總覽頁面"
+msgstr "活動總覽"
 
 #: CRM/Event/Form/Participant.php
 msgid "Role is required"
@@ -15148,7 +15148,7 @@ msgstr "為了使用線上報名，網站管理者必須指定一種金流機制
 
 #: CRM/Event/Form/Registration.php
 msgid "No Fee Level(s) or Price Set is configured for this event.<br />Click <a href='%1'>CiviEvent >> Manage Event >> Configure >> Event Fees</a> to configure the Fee Level(s) or Price Set for this event."
-msgstr "此活動尚未設定活動費用或價目表。<br />請按<a href='%1'>Civi活動 >> 管理活動 >> 設定 >> 活動費用</a>以進行此活動的活動費用或價目表設定。"
+msgstr "此活動尚未設定活動費用或價目表。<br />請按<a href='%1'>活動 >> 管理活動 >> 設定 >> 活動費用</a>以進行此活動的活動費用或價目表設定。"
 
 #: CRM/Event/Form/Registration.php
 msgid "It looks like this field participant count extending its maximum limit."
@@ -15795,7 +15795,7 @@ msgstr "列印補助清單"
 
 #: CRM/Grant/Info.php
 msgid "CiviGrant"
-msgstr "Civi補助"
+msgstr "補助"
 
 #: CRM/Grant/Page/DashBoard.php
 msgid "grants"
@@ -16631,7 +16631,7 @@ msgstr "回到任務"
 
 #: CRM/Mailing/Page/Report.php
 msgid "Back to CiviMail"
-msgstr "返回Civi電子報"
+msgstr "返回電子報"
 
 #: CRM/Mailing/Page/Report.php
 msgid "CiviMail Report: %1"
@@ -16689,7 +16689,7 @@ msgstr "封存"
 
 #: CRM/Mailing/Selector/Browse.php
 msgid "CiviMail Mailings"
-msgstr "Civi電子報"
+msgstr "電子報"
 
 #: CRM/Mailing/Selector/Event.php
 msgid "%1 %%StatusMessage%%"
@@ -16793,7 +16793,7 @@ msgstr "此會員類型無法刪除，原因如下："
 
 #: CRM/Member/BAO/MembershipType.php
 msgid "%2. There are some contacts who have this membership type assigned to them. Search for contacts with this membership type on the <a href='%1'>CiviMember >> Find Members</a> page. If you delete all memberships of this type, you will then be able to delete the membership type on this page. To delete the membership type, all memberships of this type should be deleted."
-msgstr "%2。這個會籍類別有指派到某些聯絡人。在 <a href='%1'>Civi會員 >> 搜尋會員</a>頁搜尋有此會籍類別的聯絡人。如果您刪除所有此類別的聯絡人，您將可以在此頁刪除會籍類別。刪除會員籍類別，所有此類別的會員籍都會被刪除。"
+msgstr "%2。這個會籍類別有指派到某些聯絡人。在 <a href='%1'>會員 >> 搜尋會員</a>頁搜尋有此會籍類別的聯絡人。如果您刪除所有此類別的聯絡人，您將可以在此頁刪除會籍類別。刪除會員籍類別，所有此類別的會員籍都會被刪除。"
 
 #: CRM/Member/BAO/MembershipType.php
 msgid "%2. This Membership Type is being link to <a href='%1'>Online Contribution page</a>. Please change/delete it in order to delete this Membership Type."
@@ -19509,7 +19509,7 @@ msgstr "此過程會更新您 v2.1 CiviCRM 資料庫到 v2.2 資料庫格式。"
 
 #: CRM/Upgrade/TwoTwo/Form/Step2.php
 msgid "CiviCRM 2.2 Upgrade: Step Two (Merge CiviEvent Tables)"
-msgstr "CiviCRM 2.2 更新：步驟二（合併Civi活動資料表）"
+msgstr "CiviCRM 2.2 更新：步驟二（合併CiviEvent資料表）"
 
 #: CRM/Upgrade/TwoTwo/Form/Step2.php
 msgid "Step Two will merge the table EventPage into Event table in your database."
@@ -20728,13 +20728,13 @@ msgstr "勾選此框，以在這個選單項目與下一個項目之間新增分
 msgid "You can assign one or more permissions to this menu item. Multiple permissions are additive by default. EXAMPLE: If you assign <em>access CiviContribute</em> and <em>administer CiviCRM</em> to a menu item, a user will need to have BOTH permissions to access it. You can change this behavior to \"either / or\" by changing the Operator below."
 msgstr ""
 "您可以指派一個或多個權限到這個選單項目。預設上，多重權限是可以的。舉例：若您指派\n"
-"<em>存取Civi捐款</em>與<em>CiviCRM管理員</em>到選單項目，使用者需要具有兩者的權限才能存取。\n"
+"<em>存取捐款</em>與<em>CiviCRM管理員</em>到選單項目，使用者需要具有兩者的權限才能存取。\n"
 "You can change this behavior to \"either / or\" by changing the Operator below."
 
 #: templates/CRM/Admin/Form/Navigation.hlp
 msgid "Set the Operator to \"OR\" if you've assigned multiple permissions and want access to be granted for any one of them. EXAMPLE: If you assign <em>access CiviContribute</em> and <em>administer CiviCRM</em> to a menu item, and set the Operator to \"OR\", users who have either of those permissions will have access."
 msgstr ""
-"若您指定多個權限並想要被授予訪問其中任何一個，請設定操作子到「或」。舉例：若您指派<em>存取Civi捐款</em>與<em>CiviCRM管理員</em>到選單項目，並設置操作子為「或」，使用者\n"
+"若您指定多個權限並想要被授予訪問其中任何一個，請設定操作子到「或」。舉例：若您指派<em>存取捐款</em>與<em>CiviCRM管理員</em>到選單項目，並設置操作子為「或」，使用者\n"
 "將有權限存取。"
 
 #: templates/CRM/Admin/Form/Navigation.tpl
@@ -20869,7 +20869,7 @@ msgstr "顯示此狀態的標籤。"
 
 #: templates/CRM/Admin/Form/ParticipantStatus.tpl
 msgid "The general class of this status. Participant counts are grouped by class on the CiviEvent Dashboard. Participants with a 'Pending' class status will be moved to 'Expired' status if Pending Participant Hours has elapsed (when the ParticipantProcessor.php background processing script is run)."
-msgstr "這個狀態的一般層級。參加者數量由 Civi活動總覽所分組。狀態為「等待中」的參加者將被移到「過期」狀態，若參加者等候時數已過（當ParticipantProcessor.php背景程序腳本運作）。"
+msgstr "這個狀態的一般層級。參加者數量由狀態分組呈現在活動總覽中。若參加者等候時數已過狀態為，「等待中」的參加者將被移到「過期」狀態。（需要 ParticipantProcessor.php 系統程式在背景運作）。"
 
 #: templates/CRM/Admin/Form/ParticipantStatus.tpl
 msgid "Should a person with this status be counted as a participant for the purpose of controlling the Maximum Number of Participants?"
@@ -21132,27 +21132,27 @@ msgstr "這些選項模組讓您有更多工具去連結及經營您的支持者
 
 #: templates/CRM/Admin/Form/Setting/Component.hlp
 msgid "<strong>CiviContribute</strong> - An online fundraising and donor management component which enables you to track and manage contributions to your organization. It also allows you to quickly and easily create customized web pages to accept online donations."
-msgstr "<strong>Civi捐款</strong> - 線上募款及捐款人管理模組讓您追蹤及管理組織的捐款，它也讓您快速及容易地建立自訂網頁來接受線上捐款。"
+msgstr "<strong>捐款</strong> - 線上募款及捐款人管理模組讓您追蹤及管理組織的捐款，它也讓您快速及容易地建立自訂網頁來接受線上捐款。"
 
 #: templates/CRM/Admin/Form/Setting/Component.hlp
 msgid "<strong>CiviPledge</strong> - Record and track pledges received from contributors. Send pledge acknowledgements and payment reminders. Configure online contribution pages to support self-service pledging and pledge payments."
-msgstr "<strong>Civi認捐</strong> - 記錄及追蹤捐款者的認捐，傳送認捐感謝函及付款提醒，安裝捐款網頁到自助認捐服務和認捐付款，並支援建立個人募款頁。"
+msgstr "<strong>認捐</strong> - 記錄及追蹤捐款者的認捐，傳送認捐感謝函及付款提醒，安裝捐款網頁到自助認捐服務和認捐付款，並支援建立個人募款頁。"
 
 #: templates/CRM/Admin/Form/Setting/Component.hlp
 msgid "<strong>CiviMail</strong> - A robust mass-mailing component which allows you to engage your constituents with personalized email blasts and newsletters."
-msgstr "<strong>Civi電子報</strong> - 強大的大量郵件模組，您可以用來傳送個人化的大量郵件和報紙通訊。"
+msgstr "<strong>電子報</strong> - 強大的大量郵件模組，您可以用來傳送個人化的大量郵件和報紙通訊。"
 
 #: templates/CRM/Admin/Form/Setting/Component.hlp
 msgid "<strong>CiviMember</strong> - A flexible membership management component which includes convenient online signup and renewal."
-msgstr "<strong>Civi會員</strong> - 靈活會員管理模組，包括便利的線上報名會員資格更新功能。"
+msgstr "<strong>會員</strong> - 靈活會員管理模組，包括便利的線上報名會員資格更新功能。"
 
 #: templates/CRM/Admin/Form/Setting/Component.hlp
 msgid "<strong>CiviEvent</strong> - Provides integrated online event registration and management for paid and free events. It allows you to quickly and easily create customized web pages to for event registration, and then track participants."
-msgstr "<strong>Civi活動</strong> - 為付費及免費活動提供整合性線上活動登記及管理，讓您輕鬆快速地建立自訂的活動報名網頁，並用來追蹤參加者。"
+msgstr "<strong>活動</strong> - 為付費及免費活動提供整合性線上活動登記及管理，讓您輕鬆快速地建立自訂的活動報名網頁，並用來追蹤參加者。"
 
 #: templates/CRM/Admin/Form/Setting/Component.hlp
 msgid "<strong>CiviCase</strong> - Integrated case management component, including a dashboard with \"my cases\", automated case timelines and configurable audit reports."
-msgstr "<strong>Civi個案</strong> - 整合性個案管理模組，包括\"我的個案\"總覽，自動個案時間表及自設的審核報表。"
+msgstr "<strong>個案</strong> - 整合性個案管理模組，包括\"我的個案\"總覽，自動個案時間表及自設的審核報表。"
 
 #: templates/CRM/Admin/Form/Setting/Component.tpl
 msgid "CiviCRM includes several optional components which give you more tools to connect with and engage your constituents."
@@ -21384,7 +21384,7 @@ msgstr "CiviMail 產生 VERP 寄件位址時所使用的分隔字元。"
 
 #: templates/CRM/Admin/Form/Setting/Mail.tpl
 msgid "CiviMail Administration Guide"
-msgstr "Civi電子報管理指南"
+msgstr "電子報管理指南"
 
 #: templates/CRM/Admin/Form/Setting/Mapping.hlp
 msgid "<strong>For GOOGLE mapping</strong> - request an API key for your site at %1"
@@ -21476,7 +21476,7 @@ msgstr "文件及圖像這些聯絡人記錄附件被儲存的路線(例如聯�
 
 #: templates/CRM/Admin/Form/Setting/Path.tpl
 msgid "Path where site specific templates are stored if any. This directory is searched first if set. CiviCase configuration files can also be stored in this custom path."
-msgstr "特定範本的路徑已儲存（若有的話）。此目錄會優先被搜尋（如果設定）。Civi個案的設定檔也可儲存在此的路徑中。"
+msgstr "特定範本的路徑已儲存（若有的話）。此目錄會優先被搜尋（如果設定）。個案的設定檔也可儲存在此的路徑中。"
 
 #: templates/CRM/Admin/Form/Setting/Path.tpl
 msgid "Path where site specific PHP code files are stored if any. This directory is searched first if set."
@@ -22131,7 +22131,7 @@ msgstr ""
 
 #: templates/CRM/Admin/Page/MessageTemplates.hlp
 msgid "Message templates allow you to save and re-use messages with layouts. You can use them when sending email to one or more contacts. If you are using the CiviMail component - you can use templates for your messages. If you are using the CiviMember component, you will need to create one or more message templates for membership renewal reminders."
-msgstr "訊息樣板允許您用設計去儲存及重新使用訊息。您可以在傳送Email到一個或更多聯絡人使用它們。如果您在使用CiviEmail模組 - 您可以使用樣板給您的訊息。如果您在使用Civi會員模組，您會需要建立一個或更多訊息樣板給會員資格更新提示。"
+msgstr "訊息樣板允許您用設計去儲存及重新使用訊息。您可以在傳送Email到一個或更多聯絡人使用它們。如果您在使用CiviEmail模組 - 您可以使用樣板給您的訊息。如果您在使用會員模組，您會需要建立一個或更多訊息樣板給會員資格更新提示。"
 
 #: templates/CRM/Admin/Page/MessageTemplates.hlp
 #: templates/CRM/Admin/Page/MessageTemplates.tpl
@@ -22994,7 +22994,7 @@ msgstr "啟用模組"
 
 #: templates/CRM/Admin/Page/Setting.tpl
 msgid "Enable CiviContribute, CiviPledge, CiviEvent, CiviMember, CiviMail, CiviCase, CiviReport and/or CiviGrant components."
-msgstr "您可以在此啟用Civi捐款、Civi認捐、Civi活動、Civi會員、Civi電子報、Civi個案、Civi報表、及Civi補助等模組。"
+msgstr "您可以在此啟用捐款、認捐、活動、會員、電子報、個案、報表、及補助等模組。"
 
 #: templates/CRM/Admin/Page/Setting.tpl
 msgid "Directories"
@@ -23823,7 +23823,7 @@ msgstr "這個個案沒有任務。"
 
 #: templates/CRM/Case/Page/ConfigureError.tpl
 msgid "You need to setup and load Case and Activity configuration files before you can begin using the CiviCase component."
-msgstr "在您開始使用個案模組之前，您要設置與載入 Civi個案的指定檔。"
+msgstr "在您開始使用個案模組之前，您要設置與載入個案的指定檔。"
 
 #: templates/CRM/Case/Page/ConfigureError.tpl
 msgid "Refer to the %1 to learn about this process."
@@ -23831,7 +23831,7 @@ msgstr "參考%1以學習此過程。"
 
 #: templates/CRM/Case/Page/ConfigureError.tpl
 msgid "CiviCase Administration Documentation"
-msgstr "Civi個案管理文檔"
+msgstr "個案管理文件"
 
 #: templates/CRM/Case/Page/DashboardSelector.tpl
 msgid "Edit this activity."
@@ -24304,7 +24304,7 @@ msgstr "輸入組織名稱或實際擁有此 CiviCRM 網域的擁有者。使用
 
 #: templates/CRM/Contact/Form/Domain.hlp
 msgid "The FROM Name and Email Address are used when automated emails are sent from this domain (e.g. subscribe and unsubscribe confirmations...). This Name and Email Address are also used as the default 'sender' values when you create a new CiviMail Mailing."
-msgstr "當系統自動發送Email時(例如發送訂閱及取消訂閱確認信...等)，系統將會使用寄件者的名稱與Email。而當您在建立一個新的Civi電子報郵件時，該名稱與Email同樣也會被預設為「寄件者」。"
+msgstr "當系統自動發送Email時(例如發送訂閱及取消訂閱確認信...等)，系統將會使用寄件者的名稱與Email。而當您在建立一個新的電子報郵件時，該名稱與Email同樣也會被預設為「寄件者」。"
 
 #: templates/CRM/Contact/Form/Domain.hlp
 msgid "Use the Return Path field if you need to populate the <code>Return-Path</code> mail header element with a fixed value (e.g., <code>myuser@example.org</code>). Enter a fully qualified email address which belongs to a valid SMTP account in your domain. This address will not be seen by 'typical' email clients. Consult with your SMTP provider what address to put in here so that the SMTP server accepts outgoing mail from CiviMail. If this field is left blank, the <code>From</code> email address will be used as the <code>Return-Path</code>."
@@ -24332,7 +24332,7 @@ msgstr "組織地址"
 
 #: templates/CRM/Contact/Form/Domain.tpl
 msgid "CiviMail mailings must include the sending organization's address. This is done by putting the %1 token in either the body or footer of the mailing. This token may also be used in regular 'Send Email to Contacts' messages and in other Message Templates. The token is replaced by the address entered below when the message is sent."
-msgstr "Civi電子報必須包含寄送組織的地址。您把替代符號（Token)%1置放在信件主文或郵件頁尾即可達到這個需求。這個替代符號（Token）通常也被用在要經常寄送的訊息，與其他訊息範本。這個替代符號（Token）在郵件送出的時候，會被您在下方所輸入的地址所取代。"
+msgstr "電子報必須包含寄送組織的地址。您把替代符號（Token)%1置放在信件主文或郵件頁尾即可達到這個需求。這個替代符號（Token）通常也被用在要經常寄送的訊息，與其他訊息範本。這個替代符號（Token）在郵件送出的時候，會被您在下方所輸入的地址所取代。"
 
 #: templates/CRM/Contact/Form/Domain.tpl
 msgid "Additional Domain Contact Information"
@@ -24689,8 +24689,8 @@ msgstr "使用部分或全部的項目名稱或Email、聯絡人類型、群組�
 #: templates/CRM/Contact/Form/Search/Basic.hlp
 msgid "Click <strong>Advanced Search</strong> to search by address, demographics, custom fields, notes, and / or relationships. If you are using CiviContribute, CiviEvent or CiviMember - you can also search based on information stored by these components. For example - you can find all contacts who live in a specific city AND have contributed at least %1 within the past 6 months."
 msgstr ""
-"按<strong>快速搜尋</strong>，以地址、人口統計資料、欄位、筆記及/或關係搜尋。如果您使用Civi捐款、\n"
-"Civi活動或Civi會員 - 您也可以搜尋以這些模組儲存的資料。例如 - 您可以搜尋所有住在指定城市\n"
+"按<strong>快速搜尋</strong>，以地址、人口統計資料、欄位、筆記及/或關係搜尋。如果您使用捐款、\n"
+"活動或會員的功能 - 您也可以搜尋以這些模組儲存的資料。例如 - 您可以搜尋所有住在指定城市\n"
 "及在近6個月至少捐款%1的聯絡人。"
 
 #: templates/CRM/Contact/Form/Search/Basic.hlp
@@ -25940,7 +25940,7 @@ msgstr "使用此表格去設置捐款金額選項。您可以提供捐款者自
 
 #: templates/CRM/Contribute/Form/ContributionPage/Amount.tpl
 msgid "No Payment Processor has been configured / enabled for your site. Unless you are only using CiviContribute to solicit non-monetary / in-kind contributions, you will need to <a href='%1'>configure a Payment Processor</a>. Then return to this screen and assign the processor to this Contribution Page."
-msgstr "您的網站尚未設定或啓用金流機制。除非您使用Civi捐款只處理非金錢/實物捐助，否則您會需要<a href='%1'>設置金流機制</a>。然後返回到此畫面，並指派處理器給這個募款頁。"
+msgstr "您的網站尚未設定或啓用金流機制。除非您使用捐款只處理非金錢/實物捐助，否則您會需要<a href='%1'>設置金流機制</a>。然後返回到此畫面，並指派處理器給這個募款頁。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/Amount.tpl
 #: templates/CRM/Event/Form/ManageEvent/Fee.tpl
@@ -26108,7 +26108,7 @@ msgstr "在此選擇您欲在募款頁面底部嵌入的資料表單。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/Delete.tpl
 msgid "You cannot delete this Contribution Page because it has already been used to submit a contribution or membership payment. It is recommended that your disable the page instead of deleting it, to preserve the integrity of your contribution records. If you do want to completely delete this contribution page, you first need to search for and delete all of the contribution transactions associated with this page in CiviContribute."
-msgstr "您無法刪除此募款頁，因為它已被用作提交捐款或會員付款。建議您不要刪除但停用此頁，去保護您捐款記錄的完整性。如果您想完全地刪除此募款頁，您需要先搜尋及刪除所有在Civi捐款與此頁相關的捐款交易。"
+msgstr "您無法刪除此募款頁，因為它已被用作提交捐款或會員付款。建議您不要刪除但停用此頁，去保護您捐款記錄的完整性。如果您想完全地刪除此募款頁，您需要先搜尋及刪除所有在捐款與此頁相關的捐款交易。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/PCP.hlp
 msgid "If checked, an administrator will need to approve new personal campaign pages before they are available to the public. We recommend using the \"Notify Email\" feature if you are requiring approval to ensure that the appropriate staff person is informed when a new Personal Campaign page is 'Waiting Review'."
@@ -26201,7 +26201,7 @@ msgid ""
 "Select the corresponding contribution type for contributions made using this page (e.g. donation, capital campaign, etc.).\n"
 "Contribution types (and associated accounting codes) are included when contributions are exported, so it can helpful to set up\n"
 "specific types for accounting purposes. You can add or modify contribution available types from Administer &gt; CiviContribute &gt; Contribution Types."
-msgstr "請選擇符合該募款頁面的捐款類型（例如捐款、募款活動等）。當要匯出捐款資料，捐款類型（以其會計代碼）也會包含在內，因此這在設定捐款的用途上相當有幫助。您可以在「管理員」&gt; 「Civi捐款」&gt; 「捐款類型」中增加或修改捐款類型。"
+msgstr "請選擇符合該募款頁面的捐款類型（例如捐款、募款活動等）。當要匯出捐款資料，捐款類型（以其會計代碼）也會包含在內，因此這在設定捐款的用途上相當有幫助。您可以在「管理員」&gt; 「捐款」&gt; 「捐款類型」中增加或修改捐款類型。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/Settings.hlp
 msgid ""
@@ -26340,7 +26340,7 @@ msgstr ""
 
 #: templates/CRM/Contribute/Form/ContributionPage/Widget.tpl
 msgid "CiviContribute widgets allow you and your supporters to easily promote this fund-raising campaign. Widget code can be added to any web page - and will provide a real-time display of current contribution results, and a direct link to this contribution page."
-msgstr "Civi捐款嚮導可讓您及您的支持者容易宣傳這個募款。小工具的語法可加入到任何網頁 - 它會提供一個顯示即時捐款結果的展示小工具，及一個連結可直接到此募款頁。"
+msgstr "捐款嚮導可讓您及您的支持者容易宣傳這個募款。小工具的語法可加入到任何網頁 - 它會提供一個顯示即時捐款結果的展示小工具，及一個連結可直接到此募款頁。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/Widget.tpl
 msgid "Enter content for the about message. You may include HTML formatting tags. You can also include images, as long as they are already uploaded to a server - reference them using complete URLs."
@@ -27120,7 +27120,7 @@ msgstr "為您的募款頁面啓用感謝禮功能（捐款感謝禮，贈送禮
 
 #: templates/CRM/Contribute/Page/ContributionPageEdit.tpl
 msgid "Test-drive the entire contribution process - including custom fields, confirmation, thank-you page, and receipting. Transactions will be directed to your payment processor's test server. <strong>No live financial transactions will be submitted. However, a contact record will be created or updated and a test contribution record will be saved to the database. Use obvious test contact names so you can review and delete these records as needed. Test contributions are not visible on the Contributions tab, but can be viewed by searching for 'Test Contributions' in the CiviContribute search form.</strong>"
-msgstr "提供一個測試用的募款頁面，讓您可以測試整個募款頁的流程 - 包括欄位、捐款確認信、致謝頁，及製作收據。在這個測試頁面中所進行的交易，會被指引到您租用的金流服務商提供的測試伺服器。<strong>也就是說，在測試捐款頁所作的交易不會正式成立。但是測試的交易仍會被紀錄在測試的聯絡人檔案中，測試的捐款也會記錄在資料庫中。建議您，註冊一個測試帳號（需容易辨別此帳號為測試用），以在您需要時查看或要刪除測試記錄時更容易找到。在個別聯絡人頁面裡的捐款頁簽，您不會看到測試的捐款紀錄，但您可以透過在Civi捐款搜尋表格搜尋「測試捐款」看到測試資料。</strong>"
+msgstr "提供一個測試用的募款頁面，讓您可以測試整個募款頁的流程 - 包括欄位、捐款確認信、致謝頁，及製作收據。在這個測試頁面中所進行的交易，會被指引到您租用的金流服務商提供的測試伺服器。<strong>也就是說，在測試捐款頁所作的交易不會正式成立。但是測試的交易仍會被紀錄在測試的聯絡人檔案中，測試的捐款也會記錄在資料庫中。建議您，註冊一個測試帳號（需容易辨別此帳號為測試用），以在您需要時查看或要刪除測試記錄時更容易找到。在個別聯絡人頁面裡的捐款頁簽，您不會看到測試的捐款紀錄，但您可以透過在捐款搜尋表格搜尋「測試捐款」看到測試資料。</strong>"
 
 #: templates/CRM/Contribute/Page/ContributionPageEdit.tpl
 msgid "Live Contribution Page"
@@ -27140,12 +27140,12 @@ msgstr "當您的頁面是啓用中，透過選單管理建立前端連結到募
 
 #: templates/CRM/Contribute/Page/ContributionPageEdit.tpl
 msgid "CiviContribute Administration Documentation"
-msgstr "Civi捐款管理文件"
+msgstr "捐款管理文件"
 
 #: templates/CRM/Contribute/Page/ContributionPage.hlp
 #: templates/CRM/Contribute/Page/ContributionPage.tpl
 msgid "CiviContribute allows you to create and maintain any number of Online Contribution Pages. You can create different pages for different programs or campaigns - and customize text, amounts, types of information collected from contributors, etc."
-msgstr "Civi捐款幫助您建立及維護線上捐款活動頁面。您可為個別計畫或募款建立不同的募款頁面 - 及文字、金額、從捐款者收集的資料等。"
+msgstr "捐款幫助您建立及維護線上捐款活動頁面。您可為個別計畫或募款建立不同的募款頁面 - 及文字、金額、從捐款者收集的資料等。"
 
 #: templates/CRM/Contribute/Page/ContributionPage.hlp
 msgid "For existing pages"
@@ -27267,7 +27267,7 @@ msgstr "沒有捐款類別被輸入。您可以<a href='%1'>新增一個</a>。"
 
 #: templates/CRM/Contribute/Page/DashBoard.hlp
 msgid "CiviContribute allows you to create customized page(s) for collecting online contributions. You can also input and track offline contributions. To enter contributions manually for individual contacts, use <a href='%1'>Find Contacts</a> to locate the contact. Then click <strong>View</strong> to go to their summary page and click on the <strong>New Contribution</strong> link. You can also <a href='%2'>import batches of offline contributions</a> from other sources."
-msgstr "Civi捐款可讓您建立並一個線上捐款頁面。您也可以輸入並追蹤非線上的捐款。利用<a href='%1'>搜尋聯絡人</a>找出聯絡人，接著點擊<strong>檢視</strong>他們的總覽頁面，再點擊<strong>新增募款頁</strong>，即可以手動輸入聯絡人的捐款紀錄。您也可以直接使用<a href='%2'>匯入的方式輸入非線上的捐款資料</a>。 "
+msgstr "捐款可讓您建立並一個線上捐款頁面。您也可以輸入並追蹤非線上的捐款。利用<a href='%1'>搜尋聯絡人</a>找出聯絡人，接著點擊<strong>檢視</strong>他們的總覽頁面，再點擊<strong>新增募款頁</strong>，即可以手動輸入聯絡人的捐款紀錄。您也可以直接使用<a href='%2'>匯入的方式輸入非線上的捐款資料</a>。 "
 
 #: templates/CRM/Contribute/Page/DashBoard.hlp
 msgid "The <strong>Contribution Summary</strong> table provides a summary of month and year-to-date contribution totals, and includes shortcuts to view the contribution details for these commonly used search periods. To run your own customized searches - click <a href='%1'>Find Contributions</a>. You can search by Contributor Name, Amount Range, and a variety of other criteria."
@@ -27314,7 +27314,7 @@ msgstr "最新捐款"
 
 #: templates/CRM/Contribute/Page/ManagePremiums.tpl
 msgid "CiviContribute allows you to configure any number of <strong>Premiums</strong> which can be offered to contributors as incentives / thank-you gifts. Premiums may be tangible items (i.e. a coffee mug or t-shirt), or they may be a membership or subscription with a pre-determined duration."
-msgstr "Civi捐款允許您去設定任何<strong>感謝禮</strong>數目，可提供給捐款人為動機/致謝感謝禮。感謝禮可能是可觸摸的物件(即，咖啡杯或T恤)，或它們可能是一個會籍或預先確定時間的訂閱。"
+msgstr "捐款允許您去設定任何<strong>感謝禮</strong>數目，可提供給捐款人為動機/致謝感謝禮。感謝禮可能是可觸摸的物件(即，咖啡杯或T恤)，或它們可能是一個會籍或預先確定時間的訂閱。"
 
 #: templates/CRM/Contribute/Page/ManagePremiums.tpl
 msgid "Use this section to enter and update all premiums that you want to offer on any of your Online Contribution pages. Then you can assign one or more premiums to a specific Contribution page from <a href='%1'>Configure Online Contribution Pages</a> <strong>&raquo; Configure &raquo; Premiums</strong>."
@@ -27339,7 +27339,7 @@ msgstr "個人募款頁(PCPs)可讓外部使用者建立募款頁面，用來為
 
 #: templates/CRM/Contribute/Page/PCP.hlp
 msgid "When someone donates through a personal campaign page, a soft credit is given to the owner of the page to recognize the role she played in the contribution. CiviContribute has a section that allows you to administer all of the PCPs for your organization. You can require approval before a PCP goes 'live', and disable or delete any campaign pages you don't approve of."
-msgstr "當有人透過一個「個人募款頁」進行捐款時，建立這個個人募款頁的使用者會有soft credit，以感謝她對募款活動的幫助與扮演的角色。Civi捐款有提供管理界面，供您管理所有的個人募款頁，您可在建立個人募款頁之後先行審核，再讓頁面正式上線。若個人募款頁有任何不妥或疑義，您也可停用或刪除。"
+msgstr "當有人透過一個「個人募款頁」進行捐款時，建立這個個人募款頁的使用者會有soft credit，以感謝她對募款活動的幫助與扮演的角色。捐款有提供管理界面，供您管理所有的個人募款頁，您可在建立個人募款頁之後先行審核，再讓頁面正式上線。若個人募款頁有任何不妥或疑義，您也可停用或刪除。"
 
 #: templates/CRM/Contribute/Page/PCPInfo.tpl
 msgid "Personal Fundraiser View"
@@ -27629,7 +27629,7 @@ msgstr "輸入您信用卡或簽帳卡的名稱，及帳單地址。"
 
 #: templates/CRM/Core/Calendar/GData.tpl templates/CRM/Core/Calendar/Rss.tpl
 msgid "CiviEvent Public Calendar"
-msgstr "Civi活動公開日曆"
+msgstr "活動公開日曆"
 
 #: templates/CRM/Core/Calendar/GData.tpl templates/CRM/Core/Calendar/Rss.tpl
 msgid "Listing of current and upcoming public events."
@@ -27792,7 +27792,7 @@ msgstr ""
 
 #: templates/CRM/Custom/Page/Group.hlp
 msgid "EXAMPLE: If you are using CiviEvent, and you want to collect information from people registering for your events, select \"Participants\". If the information is specific to one type of participant (e.g. event volunteers), select \"Participants (role)\" and then select the role (e.g. 'Volunteer')."
-msgstr "範例：如果你使用 Civi活動，並且您想要蒐集報名的參加者資訊，請選擇 \"Participants\"。如果此資訊是與特定某一類型的參加者相關（例如：活動志工），可選擇 \"Participants (role)\"，然後再選擇角色（例如 ：志工）。"
+msgstr "範例：如果你使用活動，並且您想要蒐集報名的參加者資訊，請選擇 \"Participants\"。如果此資訊是與特定某一類型的參加者相關（例如：活動志工），可選擇 \"Participants (role)\"，然後再選擇角色（例如 ：志工）。"
 
 #: templates/CRM/Custom/Page/Group.hlp
 msgid "If your site uses Contact Subtypes, you can assign this set of custom fields to a specific subtype (e.g. 'Student'), OR you can select '- Any -' which makes the fields available to contacts of the parent type (e.g. 'Individual') as well as to any subtypes."
@@ -28015,7 +28015,7 @@ msgstr "當活動額滿，您可允許使用者列候補名單（勾選下方的
 
 #: templates/CRM/Event/Form/ManageEvent/EventInfo.hlp
 msgid "You may allow users to join a waitlist when the event is full. To enable this feature you must first enable the Participant Statuses used by the waitlist work-flow (Administer » CiviEvent » Participant Statuses). Then reload this form and check 'Offer a Waitlist?'."
-msgstr "當活動額滿，您可允許使用者列候補名單。要啟用這項功能前，您必須先啟用參加者狀態以設定候補的工作流程（管理員 » Civi活動 » 參加者狀態）。然後重新載入此表格，並勾選「提供候補？」。"
+msgstr "當活動額滿，您可允許使用者列候補名單。要啟用這項功能前，您必須先啟用參加者狀態以設定候補的工作流程（管理者 » 活動 » 參加者狀態）。然後重新載入此表格，並勾選「提供候補？」。"
 
 #: templates/CRM/Event/Form/ManageEvent/EventInfo.hlp
 msgid "Otherwise, the registration link is hidden and the &quot;Event Full Message&quot' is displayed when the maximum number of registrations is reached. Only participants with status types marked as 'counted' are included when checking if the event is full."
@@ -28147,7 +28147,7 @@ msgstr "若您想提供此活動的線上報名頁，請勾選下方第一個核
 
 #: templates/CRM/Event/Form/ManageEvent/Registration.hlp
 msgid "You may also configure events to require administrative approval prior to participants completing the registration process. To enable this feature you must first enable the Participant Statuses used by the approval work-flow (Administer » CiviEvent » Participant Statuses). Then reload this form and check 'Require participant approval?'."
-msgstr "在參加者完成報名程序之前，您可能還需要將活動配置成符合行政程序需求。要啟用這個功能，您必須先啟用參加者狀態以設定批准的工作流程（管理 » Civi活動 » 參加者狀態）。然後重新載入此頁面，並勾選「必須批准參加者？」。"
+msgstr "在參加者完成報名程序之前，您可能還需要將活動配置成符合行政程序需求。要啟用這個功能，您必須先啟用參加者狀態以設定批准的工作流程（管理者 » 活動 » 參加者狀態）。然後重新載入此頁面，並勾選「必須批准參加者？」。"
 
 #: templates/CRM/Event/Form/ManageEvent/Registration.hlp
 msgid "If you want collect additional information during event registration, you will need to configure one or two CiviCRM Profiles - which are collections of standard or custom fields. For event registration, you may need to collect additional information specific to a person's <strong>participation</strong> in an Event. Examples include meal and/or volunteer preferences."
@@ -28661,7 +28661,7 @@ msgstr "啟用候補名單與批准報名"
 
 #: templates/CRM/Event/Form/Task/ParticipantStatus.hlp
 msgid "This screen is particularly useful for managing events with Waitlisting and / or Registration Approval features enabled. In order to use these features you must first enable the related Participant Statuses (Administer &raquo; CiviEvent &raquo; Participant Statuses)."
-msgstr "此畫面專為管理有候補名單的活動，與/或為了啟用註冊批核的功能。要使用這些功能，您必須先啟用相關的參加者的狀態（管理員&raquo; Civi活動&raquo; 參加者狀態）。"
+msgstr "此畫面專為管理有候補名單的活動，與/或為了啟用註冊批核的功能。要使用這些功能，您必須先啟用相關的參加者的狀態（管理者 &raquo; 活動 &raquo; 參加者狀態）。"
 
 #: templates/CRM/Event/Form/Task/ParticipantStatus.hlp
 msgid "Tip: Managing waitlisted participants"
@@ -28729,7 +28729,7 @@ msgstr "匯入的參加者資料必須包含以下欄位："
 
 #: templates/CRM/Event/Import/Form/UploadFile.hlp
 msgid "Event Title OR Event ID (a unique integer assigned by CiviEvent, displayed in the Manage Events listing)"
-msgstr "活動標題或活動編號（由Civi活動指派的獨一編號，顯示在管理活動列表中）"
+msgstr "活動標題或活動編號（由活動系統指派的獨一編號，顯示在管理活動列表中）"
 
 #: templates/CRM/Event/Import/Form/UploadFile.hlp
 msgid "Participant Status (ie. Registered, Attended, Cancelled, etc.)"
@@ -28741,7 +28741,7 @@ msgstr "參加者角色（例如：出席者、義工、主持人等）"
 
 #: templates/CRM/Event/Import/Form/UploadFile.hlp
 msgid "Valid values for Status and Role can be found in the CiviEvent section of the Administer CiviCRM screen. You can also import Fee Level, Registration Date and any other standard or custom Participant fields."
-msgstr "在 CiviCRM管理員畫面中的 Civi活動區，可看到參加者狀態及參加者角色。您也可以匯入收費標準、報名日期及任何預設或自訂的參加者資料。"
+msgstr "在管理者介面中的活動管理，可看到參加者狀態及參加者角色。您也可以匯入收費標準、報名日期及任何預設或自訂的參加者資料。"
 
 #: templates/CRM/Event/Import/Form/UploadFile.hlp
 msgid "Contact Records for Event Participants"
@@ -28802,7 +28802,7 @@ msgstr "選擇已儲存配對，或留空以建立新的配對。"
 
 #: templates/CRM/Event/Page/DashBoard.hlp
 msgid "CiviEvent allows you to create customized page(s) for constituents to learn about events and optionally register online. You can create <a href='%1'><strong>new events</strong></a> and <a href='%2'><strong>manage existing events</strong></a>."
-msgstr "您可以利用Civi活動建立一個虛擬的活動頁面，讓您的支持者學習線上報名活動。您可以按<a href='%1'><strong>新增活動</strong></a>建立新活動，或按<a href='%2'><strong>管理活動</strong></a>來管理現有活動。"
+msgstr "您可以利用活動建立一個虛擬的活動頁面，讓您的支持者學習線上報名活動。您可以按<a href='%1'><strong>新增活動</strong></a>建立新活動，或按<a href='%2'><strong>管理活動</strong></a>來管理現有活動。"
 
 #: templates/CRM/Event/Page/DashBoard.hlp
 msgid "You can also input and track offline Events. To enter events manually for individual contacts, use <a href='%1'>Find Contacts</a> to locate the contact. Then click <strong>View</strong> to go to their summary page and click on the <strong>New Event</strong> link. You can also <a href='%2'><strong>import batches of participants</strong></a> from other sources."
@@ -28918,7 +28918,7 @@ msgstr "iCalendar 下載及訂閱"
 
 #: templates/CRM/Event/Page/ManageEvent.hlp
 msgid "iCalendar is a standard format for representing information about calendaring and scheduling. CiviEvent allows you to output your current and upcoming 'public' events in the iCalendar format - so this information can be shared with other iCalendar-enabled applications."
-msgstr "iCalendar 是一個標準格式，可儲存日歷及活動計劃的資料。Civi活動允許您去以 iCalendar 格式輸出進行中及即將舉辦的「公開」活動 - 如此活動資料便可與其他支援 iCalendar 格式的應用軟體共用。"
+msgstr "iCalendar 是一個標準格式，可儲存日歷及活動計劃的資料。活動允許您去以 iCalendar 格式輸出進行中及即將舉辦的「公開」活動 - 如此活動資料便可與其他支援 iCalendar 格式的應用軟體共用。"
 
 #: templates/CRM/Event/Page/ManageEvent.hlp
 msgid "Depending on how you want to use the iCalendar data - you can:"
@@ -28934,7 +28934,7 @@ msgstr "從特定的 URL 利用 HTTP GET 模式來存取資料（就是管理活
 
 #: templates/CRM/Event/Page/ManageEvent.hlp
 msgid "The iCalendar Feed URL for CiviEvent on this site:"
-msgstr "Civi活動的 iCalendar 訂閱 URL："
+msgstr "活動的 iCalendar 訂閱 URL："
 
 #: templates/CRM/Event/Page/ManageEvent.hlp
 msgid "By default, both methods get all events whose starting date is greater than or equal to the current date. However, you can modify this by passing additional parameters in the URL:"
@@ -28958,7 +28958,7 @@ msgstr "HTML 列表"
 
 #: templates/CRM/Event/Page/ManageEvent.hlp
 msgid "CiviEvent provides a page which lists your current and future public events in a table layout for display in a browser. Point people to this page using the following URL:"
-msgstr "Civi活動提供一個以表格方式，在瀏覽器列出您現在及將來公開活動的頁面。您可提供以下的 URL 來給民眾查看："
+msgstr "活動提供一個以表格方式，在瀏覽器列出您現在及將來公開活動的頁面。您可提供以下的 URL 來給民眾查看："
 
 #: templates/CRM/Event/Page/ManageEvent.hlp
 msgid "You can add links to this page in your Drupal or Joomla menus and on any content page. You can also use the additional parameters shown above to filter the events included on the page."
@@ -28970,7 +28970,7 @@ msgstr "RSS 2.0 訂閱"
 
 #: templates/CRM/Event/Page/ManageEvent.hlp
 msgid "CiviEvent also creates an RSS 2.0 formatted feed which can be subscribed to people using RSS readers and can be displayed in most modern browsers. The RSS Feed URL for CiviEvent on this site:"
-msgstr "Civi活動也能建立 RSS 2.0 格式的訊息，可讓使用 RSS 訂閱的讀者使用瀏覽器查看這些訊息（大多數的瀏覽器都有支援）。Civi活動的 RSS 訂閱網址如下："
+msgstr "活動也能建立 RSS 2.0 格式的訊息，可讓使用 RSS 訂閱的讀者使用瀏覽器查看這些訊息（大多數的瀏覽器都有支援）。活動的 RSS 訂閱網址如下："
 
 #: templates/CRM/Event/Page/ManageEvent.hlp
 msgid "You can also use the additional parameters shown above to filter the events included in the RSS feed."
@@ -29394,7 +29394,7 @@ msgstr "一些組織認為，將組織聯絡人連結成群組（個人對個人
 
 #: templates/CRM/Group/Page/Group.hlp
 msgid "CiviMail component"
-msgstr "Civi電子報模組"
+msgstr "電子報模組"
 
 #: templates/CRM/Group/Page/Group.tpl
 msgid "Add Group"
@@ -29494,7 +29494,7 @@ msgstr "您可以使用<strong>CSV</strong>檔案，或<strong>SQL 查詢語言<
 
 #: templates/CRM/Import/Form/DataSource.hlp
 msgid "After importing contacts, you may also want to import <strong>contributions, membership info and/or event participation</strong> data for these contacts. If so, first make sure that the corresponding CiviCRM component is enabled from Administer CiviCRM &raquo; Global Settings &raquo; Enable Components. Enable CiviContribute, CiviMember, and/or CiviEvent. Then navigate to the Import option found in each component's menu (e.g. CiviContribute &raquo; Import Contributions)."
-msgstr "在匯入聯絡人之後，您也可能想匯入這些聯絡人的<strong>捐款、會員及/或活動參加人</strong>等相關資料。如果這樣，首先確定您已在 CiviCRM管理員&raquo;設定總覽&raquo;啟用模組 啟用相關的 CiviCRM 模組。啟用 Civi捐款、Civi會員、及/或 Civi活動等模組後，然後連結至每一個模組選單下的匯入選項（例如：Civi捐款&raquo;匯入捐款）。"
+msgstr "在匯入聯絡人之後，您也可能想匯入這些聯絡人的<strong>捐款、會員及/或活動參加人</strong>等相關資料。如果這樣，首先確定您已在 CiviCRM管理員&raquo;設定總覽&raquo;啟用模組 啟用相關的 CiviCRM 模組。啟用 捐款、會員、及/或 活動等模組後，然後連結至每一個模組選單下的匯入選項（例如：捐款&raquo;匯入捐款）。"
 
 #: templates/CRM/Import/Form/DataSource.hlp
 msgid "Select <strong>Individual</strong> for Contact Type if each record in your file represents and individual person - even if the file also contains related Organization data (e.g. Employer Name, Employer Address, etc.)."
@@ -29910,7 +29910,7 @@ msgstr "您可以選擇寄送一個包含<strong>HTML</strong>版和<strong>純�
 
 #: templates/CRM/Mailing/Form/Upload.hlp
 msgid "If you create only an <strong>HTML</strong> version, CiviMail will automatically create a <strong>TEXT</strong> version for your recipients who have chosen NOT to receive HTML email."
-msgstr "如果您僅建立<strong>HTML</strong>版的 Email，Civi電子報會自動產生<strong>純文字</strong>版的 Email 給一些無法開啟 HTML 版 Email 的收件者。"
+msgstr "如果您僅建立<strong>HTML</strong>版的 Email，電子報會自動產生<strong>純文字</strong>版的 Email 給一些無法開啟 HTML 版 Email 的收件者。"
 
 #: templates/CRM/Mailing/Form/Upload.hlp
 msgid "Required Elements"
@@ -29918,7 +29918,7 @@ msgstr "所需元件"
 
 #: templates/CRM/Mailing/Form/Upload.hlp
 msgid "CiviMail email messages must include an <strong>opt-out</strong> link (\"Opt out via web page\"), and the <strong>postal address</strong> of your organization. These elements help reduce the chances of your email being categorized as SPAM. They can be included in the main message body OR in a re-usable <strong>message footer</strong>. Refer to the online documentation for details on how to include required links and contact information as well as sample messages."
-msgstr "使用Civi電子報寄送的 Email 必需包含一個<strong>選擇退出</strong>的連結（\"透過網頁選擇退出\"），及您組織的<strong>郵政地址</strong>。這個設定是為了減低您郵件被歸為垃圾郵件的機率。他們可被包含在郵件主文，或在一個重複使用的<strong>電子報頁尾</strong>。參考線上檔案以尋找如何操作的詳情。"
+msgstr "使用電子報寄送的 Email 必需包含一個<strong>選擇退出</strong>的連結（\"透過網頁選擇退出\"），及您組織的<strong>郵政地址</strong>。這個設定是為了減低您郵件被歸為垃圾郵件的機率。他們可被包含在郵件主文，或在一個重複使用的<strong>電子報頁尾</strong>。參考線上檔案以尋找如何操作的詳情。"
 
 #: templates/CRM/Mailing/Form/Upload.hlp
 msgid "Upload or Compose On-screen"
@@ -30280,7 +30280,7 @@ msgstr "此狀態是否被視為有效的會員。舉例來說：新加入會員
 
 #: templates/CRM/Member/Form/MembershipStatus.tpl
 msgid "Check this box if this status is for use by administrative staff only. If checked, this status is never automatically assigned by CiviMember. It is assigned to a contact's Membership by checking the <strong>Status Override</strong> flag when adding or editing the Membership record. Start and End Event settings are ignored for Administrator statuses. EXAMPLE: This setting can be useful for special case statuses like 'Non-expiring', 'Barred' or 'Expelled', etc."
-msgstr "如果此狀態只讓管理工作人員使用，請勾選此框。如果已勾選，此狀態不會自動被Civi會員指派。當新增或編輯會籍記錄，它會被指派到一個聯絡人會員籍，透過勾選<strong>狀態撤銷</strong>標誌。管理者狀態的開始及結束活動設定會被忽略。例如：此設定可以被用於特別個案狀態如「非過期」、「禁止」或「開除」等。"
+msgstr "如果此狀態只讓管理工作人員使用，請勾選此框。如果已勾選，此狀態不會自動被會員指派。當新增或編輯會籍記錄，它會被指派到一個聯絡人會員籍，透過勾選<strong>狀態撤銷</strong>標誌。管理者狀態的開始及結束活動設定會被忽略。例如：此設定可以被用於特別個案狀態如「非過期」、「禁止」或「開除」等。"
 
 #: templates/CRM/Member/Form/MembershipStatus.tpl
 msgid "Weight sets the order of precedence for automatic assignment of status to a membership. It also sets the order for status displays. EXAMPLE: The default 'New' and 'Current' statuses have overlapping ranges. Memberships that meet both status range criteria are assigned the status with the lower weight."
@@ -30632,7 +30632,7 @@ msgstr "您也可以離線輸入及追蹤會員註冊資料。要為個別聯絡
 
 #: templates/CRM/Member/Page/DashBoard.hlp
 msgid "Refer to CiviMember Guide for more information."
-msgstr "參閱 Civi會員操作指南，以獲得更多資訊。"
+msgstr "參閱 會員操作指南，以獲得更多資訊。"
 
 #: templates/CRM/Member/Page/DashBoard.tpl
 msgid "Membership Summary"
@@ -31169,7 +31169,7 @@ msgstr "價目表名稱"
 
 #: templates/CRM/Price/Form/Set.tpl
 msgid "No Components have been enabled for your site that can be configured with the price sets. Click <a href='%1'>here</a> if you want to enable CiviEvent/CiviContribute for your site."
-msgstr "您的網站裡沒有啟用任何須配置價格組的模組。若您想要為您的網站啟用Civi活動 / Civi捐款模組，請按 <a href='%1'>這裡</a> 。"
+msgstr "您的網站裡沒有啟用任何須配置價格組的模組。若您想要為您的網站啟用活動 / 捐款模組，請按 <a href='%1'>這裡</a> 。"
 
 #: templates/CRM/Price/Form/Set.tpl
 msgid "Explanatory text displayed at the beginning of this group of fields."
@@ -31411,7 +31411,7 @@ msgstr ""
 
 #: templates/CRM/Report/Form/Register.tpl
 msgid "Specify the Report if it is belongs to any component like \"CiviContribute\""
-msgstr "屬於任何模組（如Civi捐款）的特定報表"
+msgstr "屬於任何模組（如捐款）的特定報表"
 
 #: templates/CRM/Report/Form/Settings.hlp
 msgid "A copy of this report can be automatically generated and delivered via email to specified recipients. Use the settings in this section to control Subject of the email containing the report, as well as the recipient list (To and Cc fields). Multiple email addresses should be separated by commas."
@@ -31441,7 +31441,7 @@ msgstr "報表的頁尾 HTML code 將會輸出到文件尾端。您可以加入�
 
 #: templates/CRM/Report/Form/Settings.hlp
 msgid "You can control access to this report by selecting a 'Permission' from the list. For example, you might select <em>access CiviContribute</em> for contribution reports (e.g. the same people who can see contribution data would also have access to the report). You can also prevent users from modifying the default report criteria and filters for reports by NOT giving them <em>access Report Criteria</em> permission. Those users will be able to run the report - but only with the criteria and filters that you've established for them."
-msgstr "您要控制取得這份報表的權限，可從這個清單中選擇「權限」。舉例來說，為了獲得捐款報表，您選擇<em>存取Civi捐款</em>（例如，可以看到捐款資料的人，也同樣可以看到捐款報表）。您要防止使用者修改預設的報表規範與過濾器，就不要讓他們有<em>存取關鍵報表</em>的權限。那些使用者還是可以執行報表的功能 - 但僅能使用您提供給他們的規範與過濾器。"
+msgstr "您要控制取得這份報表的權限，可從這個清單中選擇「權限」。舉例來說，為了獲得捐款報表，您選擇<em>存取捐款</em>（例如，可以看到捐款資料的人，也同樣可以看到捐款報表）。您要防止使用者修改預設的報表規範與過濾器，就不要讓他們有<em>存取關鍵報表</em>的權限。那些使用者還是可以執行報表的功能 - 但僅能使用您提供給他們的規範與過濾器。"
 
 #: templates/CRM/Report/Form/Settings.hlp
 msgid "You can make this report instance available for users to include in their CiviCRM 'Home Dashboard' by checking this box. Users with appropriate permissions will see the report in the 'Available Dashlets' box when they 'Configure' their dashboard. If you want to make a graphic version of the report available, select the desired 'View' and click 'Update Report'. You may want to create a set of report instances specifically for use as dashlets (and you can choose to NOT include them in the navigation menu if you want to distinguish these from the reports that users typically utilize in full screen mode)."
@@ -31797,7 +31797,7 @@ msgstr ""
 
 #: templates/CRM/UF/Page/Group.hlp
 msgid "<strong>CiviContribute</strong> - When you want to collect information from Contributors via online contribution pages, you can create a profile and link it to to your contribution page as a 'custom page element' (<a href='%1'>Configure Online Contribution Pages</a>)."
-msgstr "<strong>Civi捐款</strong> - 當您想透過線上募款頁收集捐款人資料，您可以建立一個資料表單，以連結到您的募款頁並設定為「頁元素」（<a href='%1'>設定線上募款頁</a>）。"
+msgstr "<strong>捐款</strong> - 當您想透過線上募款頁收集捐款人資料，您可以建立一個資料表單，以連結到您的募款頁並設定為「頁元素」（<a href='%1'>設定線上募款頁</a>）。"
 
 #: templates/CRM/UF/Page/Group.hlp
 msgid "<strong>Contact Search and Listings</strong> - When you want to provide a search form and search result listings for some or all of your contacts you can create a profile with the desired search fields and link users to the path for that search form. When creating a link to search and listings profiles, add the corresponding profile ID to the end of your query string using the 'gid' parameter. For example, the link to display a search and listings page for a Profile with ID = 3 would be:"
@@ -31917,7 +31917,7 @@ msgstr "從個案分離任務"
 
 #: msgctxt "menu"
 msgid "Campaign Dashboard"
-msgstr "Civi活動總覽頁面"
+msgstr "活動總覽頁面"
 
 #: msgctxt "menu"
 msgid "Campaign Types"
@@ -31945,15 +31945,15 @@ msgstr "個案類型"
 
 #: msgctxt "menu"
 msgid "CiviContribute Dashboard"
-msgstr "Civi捐款 總覽頁面"
+msgstr "捐款 總覽頁面"
 
 #: msgctxt "menu"
 msgid "CiviCRM Dashlets"
-msgstr "CiviCRM 總覽"
+msgstr "總覽"
 
 #: msgctxt "menu"
 msgid "CiviCRM Profile Create"
-msgstr "CiviCRM 建立資料表單"
+msgstr "建立資料表單"
 
 #: msgctxt "menu"
 msgid "CiviCRM Reports"
@@ -31961,7 +31961,7 @@ msgstr "CiviCRM 報表"
 
 #: msgctxt "menu"
 msgid "CiviGrant Dashboard"
-msgstr "Civi補助總覽頁面"
+msgstr "補助總覽頁面"
 
 #: msgctxt "menu"
 msgid "CiviMember Dashboard"
@@ -31969,7 +31969,7 @@ msgstr "會員總覽頁"
 
 #: msgctxt "menu"
 msgid "CiviPledge Dashboard"
-msgstr "Civi認捐總覽頁面"
+msgstr "認捐總覽頁面"
 
 #: msgctxt "menu"
 msgid "Conduct Survey"
@@ -33243,7 +33243,7 @@ msgstr ""
 
 #: templates/CRM/Admin/Form/Setting/Mail.tpl
 msgid "CiviMail Configuration"
-msgstr "Civi電子報設定"
+msgstr "電子報設定"
 
 #: templates/CRM/Admin/Form/Setting/Mail.tpl
 msgid "Number of seconds between delivery attempts for new outgoing mailings."
@@ -35028,7 +35028,7 @@ msgstr "管理後台總覽"
 
 #: xml/templates/civicrm_navigation.tpl
 msgid "Enable CiviCRM Components"
-msgstr "啟用的 CiviCRM 模組"
+msgstr "啟用的模組"
 
 #: xml/templates/civicrm_navigation.tpl
 msgid "Site Preferences (screen and form configuration)"
@@ -35143,7 +35143,7 @@ msgstr ""
 
 #: xml/templates/message_templates/contribution_dupalert_subject.tpl
 msgid "CiviContribute Alert: Possible Duplicate Contact Record"
-msgstr "Civi捐款提醒：可能有重複的聯絡人"
+msgstr "捐款提醒：可能有重複的聯絡人"
 
 #: xml/templates/message_templates/contribution_offline_receipt_html.tpl
 #: xml/templates/message_templates/contribution_offline_receipt_text.tpl
@@ -35636,7 +35636,7 @@ msgid ""
 "You can change this behavior to \"either / or\" by changing the Operator below."
 msgstr ""
 "您可以指派一個或多個權限到這個選單項目。預設上，多重權限是可以的。舉例：若您指派\n"
-"<em>存取Civi捐款</em>與<em>CiviCRM管理員</em>到選單項目，使用者需要具有兩者的權限才能存取。\n"
+"<em>存取捐款</em>與<em>CiviCRM管理員</em>到選單項目，使用者需要具有兩者的權限才能存取。\n"
 "You can change this behavior to \"either / or\" by changing the Operator below."
 
 #: templates/CRM/Admin/Form/Navigation.hlp
@@ -35645,7 +35645,7 @@ msgid ""
 "If you assign <em>access CiviContribute</em> and <em>administer CiviCRM</em> to a menu item, and set the Operator to \"OR\", users\n"
 "who have either of those permissions will have access."
 msgstr ""
-"若您指定多個權限並想要被授予訪問其中任何一個，請設定操作子到「或」。舉例：若您指派<em>存取Civi捐款</em>與<em>CiviCRM管理員</em>到選單項目，並設置操作子為「或」，使用者\n"
+"若您指定多個權限並想要被授予訪問其中任何一個，請設定操作子到「或」。舉例：若您指派<em>存取捐款</em>與<em>CiviCRM管理員</em>到選單項目，並設置操作子為「或」，使用者\n"
 "將有權限存取。"
 
 #: templates/CRM/Admin/Form/Preferences/Address.hlp
@@ -35662,7 +35662,7 @@ msgstr ""
 
 #: templates/CRM/Admin/Page/MessageTemplates.hlp
 msgid "Message templates allow you to save and re-use messages with layouts. You can use them when sending email to one or more contacts. If you are using the CiviMail component - you can use templates for your messages. If you are using the CiviMember component, you will need to create one or more message templates for membership renewal reminders.\n"
-msgstr "訊息樣板允許您用設計去儲存及重新使用訊息。您可以在傳送Email到一個或更多聯絡人使用它們。如果您在使用CiviEmail模組 - 您可以使用樣板給您的訊息。如果您在使用Civi會員模組，您會需要建立一個或更多訊息樣板給會員資格更新提示。\n"
+msgstr "訊息樣板允許您用設計去儲存及重新使用訊息。您可以在傳送Email到一個或更多聯絡人使用它們。如果您在使用CiviEmail模組 - 您可以使用樣板給您的訊息。如果您在使用會員模組，您會需要建立一個或更多訊息樣板給會員資格更新提示。\n"
 
 #: templates/CRM/Admin/Page/Navigation.hlp
 msgid ""
@@ -35771,8 +35771,8 @@ msgid ""
 "    CiviEvent or CiviMember - you can also search based on information stored by these components. For example - you can find all contacts who live in a specific city\n"
 "    AND have contributed at least %1 within the past 6 months."
 msgstr ""
-"按<strong>快速搜尋</strong>，以地址、人口統計資料、欄位、筆記及/或關係搜尋。如果您使用Civi捐款\n"
-"Civi活動或Civi會員 - 您也可以搜尋以這些模組儲存的資料。例如 - 您可以搜尋所有住在指定城市\n"
+"按<strong>快速搜尋</strong>，以地址、人口統計資料、欄位、筆記及/或關係搜尋。如果您使用捐款\n"
+"活動或會員系統 - 您也可以搜尋以這些模組儲存的資料。例如 - 您可以搜尋所有住在指定城市\n"
 "及在近6個月至少捐款％１的聯絡人。"
 
 #: templates/CRM/Contact/Form/Search/Basic.hlp
@@ -36348,7 +36348,7 @@ msgstr "線上註冊"
 
 #: templates/CRM/Event/Page/ManageEventEdit.tpl
 msgid "CiviEvent Administration Documentation"
-msgstr "Civi活動管理文件"
+msgstr "活動管理文件"
 
 #: templates/CRM/Event/Page/Tab.tpl
 msgid "Click <a accesskey=\"N\" href='%1'>New Event Registration</a> to register this contact for an event."
