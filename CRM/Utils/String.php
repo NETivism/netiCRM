@@ -96,7 +96,7 @@ class CRM_Utils_String {
         $purged_name = preg_replace('/\s+|\W+/', $char, trim($name) );
         if(!trim($purged_name, $char)){
           if(function_exists('transliteration_clean_filename') && function_exists('language_default')){
-            $purged_name = transliteration_clean_filename($name);
+            $purged_name = strtolower(transliteration_clean_filename($name));
             $purged_name = trim($purged_name, '_');
           }
         }
