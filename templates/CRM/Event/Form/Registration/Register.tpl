@@ -58,7 +58,7 @@
     <div class="crm-section additional_participants-section" id="noOfparticipants">
         <div class="label">{$form.additional_participants.label}</div>
         <div class="content">
-            {$form.additional_participants.html} &nbsp; ({ts}including yourself{/ts})<br />
+            {$form.additional_participants.html}<br />
             <span class="description">{ts}Fill in your registration information on this page. If you are registering additional people, you will be able to enter their registration information after you complete this page and click &quot;Continue&quot;.{/ts}</span>
         </div>
         <div class="clear"></div>
