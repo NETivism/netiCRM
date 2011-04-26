@@ -15200,7 +15200,7 @@ msgstr "10"
 
 #: CRM/Event/Form/Registration/Register.php
 msgid "How many people are you registering?"
-msgstr "多少人是由您報名的？"
+msgstr "有幾位參加者？"
 
 #: CRM/Event/Form/Registration/Register.php
 msgid "This event has only %1 space(s) left. If you continue and register more than %1 people (including yourself ), the whole group will be wait listed. Or, you can reduce the number of people you are registering to %1 to avoid being put on the waiting list."
@@ -27267,11 +27267,11 @@ msgstr "沒有捐款類別被輸入。您可以<a href='%1'>新增一個</a>。"
 
 #: templates/CRM/Contribute/Page/DashBoard.hlp
 msgid "CiviContribute allows you to create customized page(s) for collecting online contributions. You can also input and track offline contributions. To enter contributions manually for individual contacts, use <a href='%1'>Find Contacts</a> to locate the contact. Then click <strong>View</strong> to go to their summary page and click on the <strong>New Contribution</strong> link. You can also <a href='%2'>import batches of offline contributions</a> from other sources."
-msgstr "捐款可讓您建立並一個線上捐款頁面。您也可以輸入並追蹤非線上的捐款。利用<a href='%1'>搜尋聯絡人</a>找出聯絡人，接著點擊<strong>檢視</strong>他們的總覽頁面，再點擊<strong>新增募款頁</strong>，即可以手動輸入聯絡人的捐款紀錄。您也可以直接使用<a href='%2'>匯入的方式輸入非線上的捐款資料</a>。 "
+msgstr "捐款可讓您建立一個客製化的線上捐款頁面。您也可以輸入並追蹤非線上的捐款。利用<a href='%1'>搜尋聯絡人</a>找出聯絡人，接著點擊<strong>檢視</strong>他們的總覽頁面，再點擊<strong>新增募款頁</strong>，即可以手動輸入聯絡人的捐款紀錄。您也可以直接使用<a href='%2'>匯入的方式輸入非線上的捐款資料</a>。 "
 
 #: templates/CRM/Contribute/Page/DashBoard.hlp
 msgid "The <strong>Contribution Summary</strong> table provides a summary of month and year-to-date contribution totals, and includes shortcuts to view the contribution details for these commonly used search periods. To run your own customized searches - click <a href='%1'>Find Contributions</a>. You can search by Contributor Name, Amount Range, and a variety of other criteria."
-msgstr "<strong>捐款概況</strong>表格提供一個每月概況及年到日的捐款總金額，及包括捷徑去為這些常常被使用的搜尋期限查看捐款詳情。去執行您的化搜尋 -  按<a href='%1'>搜尋捐款</a>。您可以用捐款人名稱、金額範圍、及多種其他條件。"
+msgstr "<strong>捐款概況</strong>表格提供一個每月概況及年到日的捐款總金額，及包括捷徑去為這些常常被使用的搜尋期限查看捐款詳情。去執行您的個人化搜尋 -  按<a href='%1'>搜尋捐款</a>。您可以用捐款人名稱、金額範圍、及多種其他條件。"
 
 #: templates/CRM/Contribute/Page/DashBoard.tpl
 #: templates/CRM/Member/Page/MembershipType.tpl
@@ -28990,11 +28990,11 @@ msgstr "ID"
 
 #: templates/CRM/Event/Page/ManageEvent.tpl
 msgid "Registration (Test-drive)"
-msgstr "報名畫面"
+msgstr "活動報名 (測試)"
 
 #: templates/CRM/Event/Page/ManageEvent.tpl
 msgid "Registration (Live)"
-msgstr "報名連結文字"
+msgstr "活動報名 (線上)"
 
 #: templates/CRM/Event/Page/ManageEvent.tpl
 msgid "No available Events match your search criteria. Suggestions:"
