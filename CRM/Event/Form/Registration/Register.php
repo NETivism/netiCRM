@@ -1171,29 +1171,20 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration
             //CRM-6996
             //as we are allowing w/ same email address,
             //lets check w/ other contact params.
-            if ( $self->_values['event']['allow_same_participant_emails'] ) {
-                $params = $fields;
+            $params = $fields;
 
-                // unset email from dedupe params for 'additional participant wizard' case only
-                if ( isset( $params["email-{$self->_bltID}"] ) && $isAdditional ) {
-                    unset( $params["email-{$self->_bltID}"] );
-                }
-                require_once 'CRM/Dedupe/Finder.php';                
-                $dedupeParams = CRM_Dedupe_Finder::formatParams( $params, 'Individual' );
-                
-                // disable permission based on cache since event registration is public page/feature.
-                $dedupeParams['check_permission'] = false;
-                $ids = CRM_Dedupe_Finder::dupesByParams( $dedupeParams, 'Individual' );
-                $contactID = CRM_Utils_Array::value( 0, $ids );
-            } else if ( isset( $fields["email-{$self->_bltID}"] ) ) {
-                $emailString = trim( $fields["email-{$self->_bltID}"] );
-                if ( ! empty( $emailString ) ) {
-                    $contactID = CRM_Core_DAO::getFieldValue( 'CRM_Core_DAO_Email',
-                                                              $emailString,
-                                                              'contact_Id',
-                                                              'email' );
-                }
+            // respect dedupe rule for all registeration. pervent too email centeralized registeration
+            // unset email from dedupe params for 'additional participant wizard' case only
+            if ( isset( $params["email-{$self->_bltID}"] ) && $isAdditional ) {
+                unset( $params["email-{$self->_bltID}"] );
             }
+            require_once 'CRM/Dedupe/Finder.php';                
+            $dedupeParams = CRM_Dedupe_Finder::formatParams( $params, 'Individual' );
+            
+            // disable permission based on cache since event registration is public page/feature.
+            $dedupeParams['check_permission'] = false;
+            $ids = CRM_Dedupe_Finder::dupesByParams( $dedupeParams, 'Individual' );
+            $contactID = CRM_Utils_Array::value( 0, $ids );
         }
         
         if ( $contactID ) {
