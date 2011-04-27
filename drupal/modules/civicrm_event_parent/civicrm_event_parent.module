@@ -177,7 +177,7 @@ function civicrm_event_parent_civicrm_buildForm_regRegister( $formName, &$form )
             // redirect to parent profile create form
             global $user;
             if($_GET['action'] != 'preview' && !$user->uid){
-              drupal_goto('civicrm/profile/create','gid=13&reset=1&event_id='.$event_id);
+              drupal_goto('civicrm/profile/create','gid='.$civicrm_event_parent_gid[$event_id].'&reset=1&event_id='.$event_id);
             }
         }
     }
