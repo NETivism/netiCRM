@@ -42,8 +42,7 @@ class CRM_Utils_PDF_Utils {
                             $output = false,
                             $orientation = 'landscape',
                             $paperSize   = 'a3' ) {
-                            print 'domlib!!!!!!!!!!!!!!!!!!!!!!';
-    return $this->html2pdf( $text,
+    return self::html2pdf( $text,
                               $fileName,
                               $orientation,
                               $paperSize,
@@ -171,10 +170,31 @@ class CRM_Utils_PDF_Utils {
           '/font-family:[^;]+;/iU',
           '/font:[^;]+;/iU',
         );
+        $htmlElementstoStripStrict = array(
+                                     '@<head[^>]*?>.*?</head>@siu',
+                                     '@<body>@siu',
+                                     '@</body>@siu',
+                                     '@<html[^>]*?>@siu',
+                                     '@</html>@siu',
+                                     '@<!DOCTYPE[^>]*?>@siu',
+          '@<script[^>]*?>.*?</script>@si',
+          '@<style[^>]*?>.*?</style>@siU', 
+          '/font-family:[^;]+;/iU',
+          '/font:[^;]+;/iU',
+                                     );
         
-        foreach ( $values as $value ) {
-            $html .= "{$value}\n";
-            $html = preg_replace( $htmlElementstoStrip, "", $value );
+        foreach ( $values as $k => $value ) {
+            if($value['html']){
+              if($k){
+                $html .= '<br pagebreak="true"/>'."\n";
+              }
+              $html .= "<h2>{$value['to']}: {$value['subject']}</h2>"; //If needed it should be generated through the message template
+              $html .= preg_replace( $htmlElementstoStripStrict, "", $value['html'] );
+            }
+            else{
+              $html .= "{$value}\n";
+              $html = preg_replace( $htmlElementstoStrip, "", $value );
+            }
         }
         $html = str_replace('src="http://'.$_SERVER['HTTP_HOST']."/", 'src="', $html);
         $style = '

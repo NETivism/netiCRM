@@ -252,7 +252,10 @@ class CRM_Contact_Form_Search_Builder extends CRM_Contact_Form_Search
                         } else if ( trim($v[2]) ) {
                             //else check value for rest of the Operators
                             $error = CRM_Utils_Type::validate( $v[2], $type, false );
-                            if ( $error != $v[2]  ) {
+                            if($type == 'Date' && $error){
+                            
+                            }
+                            elseif ( $error != $v[2]  ) {
                                 $errorMsg["value[$v[3]][$v[4]]"] = ts("Please enter valid value.");
                             }
                         }

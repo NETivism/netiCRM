@@ -155,14 +155,19 @@ class CRM_Utils_Type
             if ( strlen( trim( $data ) ) == 0 ) {
                 return trim( $data );
             }
-                
+            
+            if (strtotime($data)) {
+                $timestamp = strtotime($data);
+                $yyyymmdd = date('Ymd',$timestamp);
+                return $yyyymmdd;
+            }
             if ( ( preg_match('/^\d{8}$/', $data) ||
-                   preg_match('/^\d{14}$/', $data) ) &&
-                 CRM_Utils_Rule::mysqlDate($data) ) {
+                preg_match('/^\d{14}$/', $data) ) &&
+                CRM_Utils_Rule::mysqlDate($data) ) {
                 return $data;
             }
             break;
-        
+             
         case 'ContactReference':
             if ( strlen( trim( $data ) ) == 0 ) {
                 return trim( $data );
@@ -238,9 +243,14 @@ class CRM_Utils_Type
             if ( strlen( trim( $data ) ) == 0 ) {
                 return trim( $data );
             }
-
+ 
+            if (strtotime($data)) {
+                $timestamp = strtotime($data);
+                $yyyymmdd = date('Ymd',$timestamp);
+                return $yyyymmdd;
+            }
             if ( preg_match('/^\d{8}$/', $data) &&
-                 CRM_Utils_Rule::mysqlDate( $data ) ) {
+                CRM_Utils_Rule::mysqlDate( $data ) ) {
                 return $data;
             }
             break;
@@ -251,6 +261,11 @@ class CRM_Utils_Type
                 return trim( $data );
             }
             
+            if (strtotime($data)) {
+                $timestamp = strtotime($data);
+                $yyyymmdd = date('Ymd',$timestamp);
+                return $yyyymmdd;
+            }
             if ( ( preg_match('/^\d{14}$/', $data) ||
                    preg_match('/^\d{8}$/', $data) ) &&
                  CRM_Utils_Rule::mysqlDate($data) ) {

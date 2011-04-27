@@ -106,6 +106,10 @@
             <td>{$form.footer_text.html}
             <div class="description">{ts}Optional footer text for registration screen.{/ts}</div></td>
          </tr>
+         <tr class="crm-event-manage-registration-form-block-parent_gid">
+            <td scope="row" class="label" width="20%">{$form.parent_gid.label}</td>
+            <td>{$form.parent_gid.html}</td>
+      	 </tr>
          <tr class="crm-event-manage-registration-form-block-custom_pre_id">
             <td scope="row" class="label" width="20%">{$form.custom_pre_id.label}</td>
             <td>{$form.custom_pre_id.html}<br />

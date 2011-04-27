@@ -15200,7 +15200,7 @@ msgstr "10"
 
 #: CRM/Event/Form/Registration/Register.php
 msgid "How many people are you registering?"
-msgstr "多少人是由您報名的？"
+msgstr "有幾位參加者？"
 
 #: CRM/Event/Form/Registration/Register.php
 msgid "This event has only %1 space(s) left. If you continue and register more than %1 people (including yourself ), the whole group will be wait listed. Or, you can reduce the number of people you are registering to %1 to avoid being put on the waiting list."
@@ -15248,11 +15248,11 @@ msgstr "參加者1已儲存報名資料。"
 
 #: CRM/Event/Form/Registration/Register.php
 msgid "You can also <a href=\"%1\">register another participant</a>."
-msgstr "您現在可以<a href=\"%1\">建立一個新活動</a>。"
+msgstr "您還是可以<a href=\"%1\">為他人報名</a>。"
 
 #: CRM/Event/Form/Registration/Register.php
 msgid "Oops. It looks like this participant is already registered for this event. If you want to change your registration, or you feel that you've gotten this message in error, please contact the site administrator."
-msgstr "糟糕！看來這位參加者已報名完成，若您想變更您的報名，或您覺得您的報名出現錯誤，請聯絡網站管理者。"
+msgstr "喔！看來參加者已報名完成，若您想變更您的報名，或您覺得您的報名出現錯誤，請聯絡網站管理者。"
 
 #: CRM/Event/Form/Registration/ThankYou.php
 msgid "Thank You Page"
@@ -19049,7 +19049,7 @@ msgstr "顯示重複的提醒但不要儲存"
 
 #: CRM/UF/Form/AdvanceSetting.php
 msgid "Update the matching contact"
-msgstr "找到 %count 筆符合的聯絡人資料。"
+msgstr "更新對應的聯絡人。"
 
 #: CRM/UF/Form/AdvanceSetting.php
 msgid "Allow duplicate contact to be created"
@@ -23923,7 +23923,7 @@ msgstr "請輸入一個使用者名稱以建立帳號"
 
 #: templates/CRM/common/CMSUser.tpl
 msgid "If you already have an account, <a href='%1'>please login</a> before completing this form."
-msgstr "您已經有一個帳號，完成此表格前<a href='%1'>請登入</a>。"
+msgstr "若您已經註冊過，請您先<a href='%1'>登入</a>可省下寶貴時間。"
 
 #: templates/CRM/common/CMSUser.tpl
 msgid "<strong>Check Availability</strong>"
@@ -27267,11 +27267,11 @@ msgstr "沒有捐款類別被輸入。您可以<a href='%1'>新增一個</a>。"
 
 #: templates/CRM/Contribute/Page/DashBoard.hlp
 msgid "CiviContribute allows you to create customized page(s) for collecting online contributions. You can also input and track offline contributions. To enter contributions manually for individual contacts, use <a href='%1'>Find Contacts</a> to locate the contact. Then click <strong>View</strong> to go to their summary page and click on the <strong>New Contribution</strong> link. You can also <a href='%2'>import batches of offline contributions</a> from other sources."
-msgstr "捐款可讓您建立並一個線上捐款頁面。您也可以輸入並追蹤非線上的捐款。利用<a href='%1'>搜尋聯絡人</a>找出聯絡人，接著點擊<strong>檢視</strong>他們的總覽頁面，再點擊<strong>新增募款頁</strong>，即可以手動輸入聯絡人的捐款紀錄。您也可以直接使用<a href='%2'>匯入的方式輸入非線上的捐款資料</a>。 "
+msgstr "捐款可讓您建立一個客製化的線上捐款頁面。您也可以輸入並追蹤非線上的捐款。利用<a href='%1'>搜尋聯絡人</a>找出聯絡人，接著點擊<strong>檢視</strong>他們的總覽頁面，再點擊<strong>新增募款頁</strong>，即可以手動輸入聯絡人的捐款紀錄。您也可以直接使用<a href='%2'>匯入的方式輸入非線上的捐款資料</a>。 "
 
 #: templates/CRM/Contribute/Page/DashBoard.hlp
 msgid "The <strong>Contribution Summary</strong> table provides a summary of month and year-to-date contribution totals, and includes shortcuts to view the contribution details for these commonly used search periods. To run your own customized searches - click <a href='%1'>Find Contributions</a>. You can search by Contributor Name, Amount Range, and a variety of other criteria."
-msgstr "<strong>捐款概況</strong>表格提供一個每月概況及年到日的捐款總金額，及包括捷徑去為這些常常被使用的搜尋期限查看捐款詳情。去執行您的化搜尋 -  按<a href='%1'>搜尋捐款</a>。您可以用捐款人名稱、金額範圍、及多種其他條件。"
+msgstr "<strong>捐款概況</strong>表格提供一個每月概況及年到日的捐款總金額，及包括捷徑去為這些常常被使用的搜尋期限查看捐款詳情。去執行您的個人化搜尋 -  按<a href='%1'>搜尋捐款</a>。您可以用捐款人名稱、金額範圍、及多種其他條件。"
 
 #: templates/CRM/Contribute/Page/DashBoard.tpl
 #: templates/CRM/Member/Page/MembershipType.tpl
@@ -28990,11 +28990,11 @@ msgstr "ID"
 
 #: templates/CRM/Event/Page/ManageEvent.tpl
 msgid "Registration (Test-drive)"
-msgstr "報名畫面"
+msgstr "活動報名 (測試)"
 
 #: templates/CRM/Event/Page/ManageEvent.tpl
 msgid "Registration (Live)"
-msgstr "報名連結文字"
+msgstr "活動報名 (線上)"
 
 #: templates/CRM/Event/Page/ManageEvent.tpl
 msgid "No available Events match your search criteria. Suggestions:"
