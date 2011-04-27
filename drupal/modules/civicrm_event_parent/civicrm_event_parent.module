@@ -32,7 +32,8 @@
  * @copyright CiviCRM LLC (c) 2004-2010
  * $Id$
  *
- */
+*/
+define('CIVICRM_PARENT_RID', 1); // relationship id
 
 function _civicrm_event_parent_get_children_info( $contactID ) {
     $sql = "
@@ -44,7 +45,7 @@ INNER JOIN civicrm_contact       p ON p.id = r.contact_id_a
 LEFT  JOIN civicrm_email        ce ON c.id = ce.contact_id AND ce.is_primary = 1
 LEFT  JOIN civicrm_email        pe ON p.id = pe.contact_id AND pe.is_primary = 1
 WHERE      p.id = %1
-AND        r.relationship_type_id = 1
+AND        r.relationship_type_id = ".CIVICRM_PARENT_RID."
 AND        r.is_active = 1
 ";
     $params = array( 1 => array( $contactID, 'Integer' ) );
@@ -75,7 +76,26 @@ function civicrm_event_parent_civicrm_buildForm( $formName, &$form ) {
 
     if ( is_a( $form, 'CRM_Profile_Form_Edit' ) ) {
         if($_GET['event_id'] && is_numeric($_GET['event_id'])){
+            $_SESSION['civicrm']['event_id'] = $_GET['event_id'];
             $form->addElement( 'hidden', 'event_id', $_GET['event_id']);
+        }
+        elseif($_SESSION['civicrm']['event_id']){
+            $event_id = $_SESSION['civicrm']['event_id'];
+            global $user;
+            if($user->uid){
+                $sql = "SELECT contact_id FROM civicrm_uf_match WHERE uf_id = {$user->uid}";
+                $dao = CRM_Core_DAO::executeQuery($sql);
+                $dao->fetch();
+                if($dao->contact_id){
+                    $mainID = $dao->contact_id;
+                    $url = CRM_Utils_System::url( 'civicrm/event/register', "reset=1&id={$event_id}&cid=0&mainID={$mainID}&rTypeID=".CIVICRM_PARENT_RID."&rTypeDir=b_a&cid=0" );
+                    CRM_Utils_System::redirect( $url );
+                }
+            
+            }
+            else{
+                $form->addElement( 'hidden', 'event_id', $_SESSION['civicrm']['event_id']);
+            }
         }
     }
 
@@ -101,12 +121,14 @@ function civicrm_event_parent_civicrm_buildForm_regRegister( $formName, &$form )
     $event_id = $form->getVar( '_eventId' );
     $civicrm_event_parent_gid = variable_get('civicrm_event_parent_gid', array());
     $mainID = CRM_Utils_Request::retrieve( 'mainID', 'Integer', $form, false, null, $_REQUEST );
+    $cid = CRM_Utils_Request::retrieve( 'cid', 'Integer', $form, false, null, $_REQUEST);
+
     if(!empty($civicrm_event_parent_gid[$event_id])){
         if ( $mainID ) {
             $rTypeID  = CRM_Utils_Request::retrieve( 'rTypeID', 'Integer', $form,
                                                     false, null, $_REQUEST );
             $rTypeDir = CRM_Utils_Request::retrieve( 'rTypeDir', 'String', $form,
-                                                     false, 'a_b', $_REQUEST );
+                                                     false, 'b_a', $_REQUEST );
             if ( $rTypeID ) {
                 $form->set( 'mainID'  , $mainID   );
                 $form->set( 'rTypeID' , $rTypeID  );
@@ -118,24 +140,46 @@ function civicrm_event_parent_civicrm_buildForm_regRegister( $formName, &$form )
             $children = _civicrm_event_parent_get_children_info( $mainID );
             $form->set( 'parentChildren', $children );
 
-            if ( ! empty( $children ) ) {
+            if ( empty( $children ) ) {
+                // fetch parent profile
+                require_once("api/v2/Contact.php");
+                $params = array('contact_id' => $mainID);
+                $retrieved = & civicrm_contact_get( $params );
+                if ( !civicrm_error( $retrieved ) ) {
+                    $parent = $retrieved[$mainID];
+                    $defaults = array( );
+                    $defaults['email-5'] = '';
+                    $defaults['postal_code-1'] = $parent['postal_code'];
+                    $defaults['state_province-1'] = $parent['state_province_id'];
+                    $defaults['_city-1'] = $parent['city'];
+                    $defaults['street_address-1'] = $parent['street_address'];
+                    $form->setDefaults( $defaults );
+                }
+            }
+            else{
                 $defaults = array( );
                 $defaults['additional_participants'] = count( $children ) - 1;
                 $defaults['first_name'] = $children[0]['first_name'];
                 $defaults['last_name' ] = $children[0]['last_name' ];
-                $defaults['email-5'   ] = $children[0]['email'     ];
+                $defaults['email-5'   ] = '';
                 $form->setDefaults( $defaults );
             }
+            unset($_SESSION['civicrm']['event_id']);
         }
         else{
-          // redirect to parent profile create form
-          drupal_goto('civicrm/profile/create','gid=13&reset=1&event_id='.$event_id);
+            // redirect to parent profile create form
+            global $user;
+            if($_GET['action'] != 'preview' && !$user->uid){
+              drupal_goto('civicrm/profile/create','gid=13&reset=1&event_id='.$event_id);
+            }
         }
     }
 }
 
 function civicrm_event_parent_civicrm_buildForm_regAdditional( $formName, &$form ) {
-    if ( $form->getVar( '_eventId' ) == PARENT_EVENT_ID ) {
+    $event_id = $form->getVar( '_eventId' );
+    $civicrm_event_parent_gid = variable_get('civicrm_event_parent_gid', array());
+    if(!empty($civicrm_event_parent_gid[$event_id])){
         $children = $form->get( 'parentChildren' );
         if ( ! empty( $children ) ) {
             $childNum = substr( $form->getVar( '_name' ), 12 );
@@ -163,8 +207,7 @@ function civicrm_event_parent_civicrm_postProcess( $class, &$form ) {
 }
 
 function civicrm_event_parent_civicrm_postProcess_regConfirm( $class, &$form ) {
-    if ( $form->getVar( '_eventId' ) == PARENT_EVENT_ID &&
-         $form->get( 'mainID' ) ) {
+    if ( $form->get( 'mainID' ) ) {
         $mainID   = $form->get( 'mainID'   );
         $rTypeID  = $form->get( 'rTypeID'  );
         $rTypeDir = $form->get( 'rTypeDir' );
@@ -210,7 +253,8 @@ function civicrm_event_parent_civicrm_postProcess_profileEdit( $class, &$form ) 
     $event_id = CRM_Utils_Request::retrieve( 'event_id', 'Integer', $form, false, null, $_REQUEST);
 
     if ( $mainID && $event_id) {
-        $url = CRM_Utils_System::url( 'civicrm/event/register', "reset=1&id={$event_id}&cid=0&mainID={$mainID}&rTypeID=1&rTypeDir=b_a" );
+        unset($_SESSION['civicrm']['event_id']);
+        $url = CRM_Utils_System::url( 'civicrm/event/register', "reset=1&id={$event_id}&cid=0&mainID={$mainID}&rTypeID=".CIVICRM_PARENT_RID."&rTypeDir=b_a" );
         CRM_Utils_System::redirect( $url );
     }
 }
@@ -218,10 +262,15 @@ function civicrm_event_parent_civicrm_postProcess_profileEdit( $class, &$form ) 
 function civicrm_event_parent_civicrm_postProcess_parentProfile( $class, &$form ) {
     $params = $form->exportValues();
     $event_id = $form->getVar( '_id' );
+    $civicrm_event_parent_gid = variable_get('civicrm_event_parent_gid', array());
 
     if ( $event_id && $params['parent_gid']){
-        $civicrm_event_parent_gid = variable_get('civicrm_event_parent_gid', array());
         $civicrm_event_parent_gid[$event_id] = $params['parent_gid'];
         variable_set('civicrm_event_parent_gid', $civicrm_event_parent_gid);
+    }
+    else{
+        unset($civicrm_event_parent_gid[$event_id]);
+        variable_set('civicrm_event_parent_gid', $civicrm_event_parent_gid);
+    
     }
 }
