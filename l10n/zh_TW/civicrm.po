@@ -15248,11 +15248,11 @@ msgstr "參加者1已儲存報名資料。"
 
 #: CRM/Event/Form/Registration/Register.php
 msgid "You can also <a href=\"%1\">register another participant</a>."
-msgstr "您現在可以<a href=\"%1\">建立一個新活動</a>。"
+msgstr "您還是可以<a href=\"%1\">為他人報名</a>。"
 
 #: CRM/Event/Form/Registration/Register.php
 msgid "Oops. It looks like this participant is already registered for this event. If you want to change your registration, or you feel that you've gotten this message in error, please contact the site administrator."
-msgstr "糟糕！看來這位參加者已報名完成，若您想變更您的報名，或您覺得您的報名出現錯誤，請聯絡網站管理者。"
+msgstr "喔！看來參加者已報名完成，若您想變更您的報名，或您覺得您的報名出現錯誤，請聯絡網站管理者。"
 
 #: CRM/Event/Form/Registration/ThankYou.php
 msgid "Thank You Page"
@@ -19049,7 +19049,7 @@ msgstr "顯示重複的提醒但不要儲存"
 
 #: CRM/UF/Form/AdvanceSetting.php
 msgid "Update the matching contact"
-msgstr "找到 %count 筆符合的聯絡人資料。"
+msgstr "更新對應的聯絡人。"
 
 #: CRM/UF/Form/AdvanceSetting.php
 msgid "Allow duplicate contact to be created"
@@ -23923,7 +23923,7 @@ msgstr "請輸入一個使用者名稱以建立帳號"
 
 #: templates/CRM/common/CMSUser.tpl
 msgid "If you already have an account, <a href='%1'>please login</a> before completing this form."
-msgstr "您已經有一個帳號，完成此表格前<a href='%1'>請登入</a>。"
+msgstr "若您已經註冊過，請您先<a href='%1'>登入</a>可省下寶貴時間。"
 
 #: templates/CRM/common/CMSUser.tpl
 msgid "<strong>Check Availability</strong>"
