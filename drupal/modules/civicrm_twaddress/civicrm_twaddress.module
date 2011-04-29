@@ -28,7 +28,7 @@ function civicrm_twaddress_civicrm_buildForm($formName, &$form) {
   $form_name = $form->_attributes['name'];
   foreach ($form->_elements as $k => $e) {
     $name = $e->_attributes['name'];
-    if(strstr($name, 'postal_code')){
+    if(strstr($name, 'postal_code') && !strstr($name,'postal_code_suffix')){
       $override['zipName']['key'] = $name;
       $override['zipName']['default'] = $form->getElement($name)->_findValue($form->_defaultValues);
     }
