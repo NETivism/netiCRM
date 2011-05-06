@@ -93,7 +93,7 @@ class CRM_Utils_String {
      */
     static function munge( $name, $char = '_', $len = 63 ) {
         // replace all white space and non-alpha numeric with $char
-        $purged_name = preg_replace('/\s+|\W+/', $char, trim($name) );
+        $purged_name = preg_replace('/\s+|\W+|[-_]+/', $char, trim($name) );
         if(!trim($purged_name, $char)){
           if(function_exists('transliteration_clean_filename') && function_exists('language_default')){
             $purged_name = strtolower(transliteration_clean_filename($name));
