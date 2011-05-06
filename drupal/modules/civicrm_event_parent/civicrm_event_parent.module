@@ -38,14 +38,10 @@ define('CIVICRM_PARENT_DIR', 'b_a'); // relationship id
 
 function _civicrm_event_parent_get_children_info( $contactID ) {
     $sql = "
-SELECT     c.id as child_id, c.first_name, c.last_name, ce.email,
-           p.id as parent_id, pe.email as parent_email
+SELECT     r.contact_id_a as child_id
 FROM       civicrm_contact c
 INNER JOIN civicrm_relationship  r ON c.id = r.contact_id_b
-INNER JOIN civicrm_contact       p ON p.id = r.contact_id_a
-LEFT  JOIN civicrm_email        ce ON c.id = ce.contact_id AND ce.is_primary = 1
-LEFT  JOIN civicrm_email        pe ON p.id = pe.contact_id AND pe.is_primary = 1
-WHERE      p.id = %1
+WHERE      c.id = %1
 AND        r.relationship_type_id = ".CIVICRM_PARENT_RID."
 AND        r.is_active = 1
 ";
@@ -54,12 +50,7 @@ AND        r.is_active = 1
 
     $children = array( );
     while ( $dao->fetch( ) ) {
-        $children[] = array( 'child_id'     => $dao->child_id  ,
-                             'first_name'   => $dao->first_name,
-                             'last_name'    => $dao->last_name ,
-                             'email'        => $dao->email     ,
-                             'parent_id'    => $dao->parent_id ,
-                             'parent_email' => $dao->parent_email );
+        $children[] = $dao->child_id;
     }
     
     return $children;
@@ -117,70 +108,54 @@ function civicrm_event_parent_civicrm_buildForm( $formName, &$form ) {
 }
 
 function civicrm_event_parent_civicrm_buildForm_regRegister( $formName, &$form ) {
-    $cid = CRM_Utils_Request::retrieve( 'cid', 'Integer', $form, false, null, $_REQUEST);
-    $session = CRM_Core_Session::singleton( );
-    $contact_id = $session->get( 'userID' );
-    $uid = $session->get( 'ufID' );
+  $cid = CRM_Utils_Request::retrieve( 'cid', 'Integer', $form, false, null, $_REQUEST);
+  $session = CRM_Core_Session::singleton( );
+  $contact_id = $session->get( 'userID' );
+  $uid = $session->get( 'ufID' );
 
-    $event_id = $form->getVar( '_eventId' );
-    $civicrm_event_parent_gid = variable_get('civicrm_event_parent_gid', array());
-    $mainID = CRM_Utils_Request::retrieve( 'mainID', 'Integer', $form, false, null, $_REQUEST );
+  $event_id = $form->getVar( '_eventId' );
+  $civicrm_event_parent_gid = variable_get('civicrm_event_parent_gid', array());
+  $mainID = CRM_Utils_Request::retrieve( 'mainID', 'Integer', $form, false, null, $_REQUEST );
 
-    if(!empty($civicrm_event_parent_gid[$event_id])){
-        if($cid === NULL && $contact_id && $uid){
-            drupal_goto('civicrm/event/register', 'reset=1&cid=0&mainID='.$contact_id.'&id='.$event_id);
-        }
-        if ( $mainID ) {
-            $statusMessage = "請您在下面填入孩子的資訊。若您不是家長，請不要填寫資料，直接".l("到這裡進行報名", "civicrm/event/register", array("query" => "reset=1&cid=$contact_id&id=$event_id"));
-            CRM_Core_Session::setStatus( $statusMessage );
-            drupal_set_title(drupal_get_title()." - 學員資料填寫");
-            $rTypeID  = CIVICRM_PARENT_RID; 
-            $rTypeDir = CIVICRM_PARENT_DIR;
-            if ( $rTypeID ) {
-                $form->set( 'mainID'  , $mainID   );
-                $form->set( 'rTypeID' , $rTypeID  );
-                $form->set( 'rTypeDir', $rTypeDir );
-            }
-
-            // now set the various defaults
-            // basically name and email and number of children
-            $children = _civicrm_event_parent_get_children_info( $mainID );
-            $form->set( 'parentChildren', $children );
-
-            if ( empty( $children ) ) {
-                // fetch parent profile
-                require_once("api/v2/Contact.php");
-                $params = array('contact_id' => $mainID);
-                $retrieved = & civicrm_contact_get( $params );
-                if ( !civicrm_error( $retrieved ) ) {
-                    $parent = $retrieved[$mainID];
-                    $defaults = array( );
-                    $defaults['email-5'] = '';
-                    $defaults['postal_code-1'] = $parent['postal_code'];
-                    $defaults['state_province-1'] = $parent['state_province_id'];
-                    $defaults['_city-1'] = $parent['city'];
-                    $defaults['street_address-1'] = $parent['street_address'];
-                    $form->setDefaults( $defaults );
-                }
-            }
-            else{
-                $defaults = array( );
-                $defaults['additional_participants'] = count( $children ) - 1;
-                $defaults['first_name'] = $children[0]['first_name'];
-                $defaults['last_name' ] = $children[0]['last_name' ];
-                $defaults['email-5'   ] = '';
-                $form->setDefaults( $defaults );
-            }
-            $session->resetScope('profile');
-        }
-        else{
-            // redirect to parent profile create form
-            global $user;
-            if($_GET['action'] != 'preview' && !$user->uid){
-              drupal_goto('civicrm/profile/create','gid='.$civicrm_event_parent_gid[$event_id].'&reset=1&event_id='.$event_id);
-            }
-        }
+  if(!empty($civicrm_event_parent_gid[$event_id])){
+    if($cid === NULL && $contact_id && $uid){
+        drupal_goto('civicrm/event/register', 'reset=1&cid=0&mainID='.$contact_id.'&id='.$event_id);
     }
+    if ( $mainID) {
+      $statusMessage = "請您在下面填入孩子的資訊。若您不是家長，請不要填寫資料，直接".l("到這裡進行報名", "civicrm/event/register", array("query" => "reset=1&cid=$contact_id&id=$event_id"));
+      CRM_Core_Session::setStatus( $statusMessage );
+      drupal_set_title(drupal_get_title()." - 學員資料填寫");
+      $rTypeID  = CIVICRM_PARENT_RID; 
+      $rTypeDir = CIVICRM_PARENT_DIR;
+      if ( $rTypeID ) {
+        $form->set( 'mainID'  , $mainID   );
+        $form->set( 'rTypeID' , $rTypeID  );
+        $form->set( 'rTypeDir', $rTypeDir );
+      }
+
+      // now set the various defaults
+      // basically name and email and number of children
+      $children = _civicrm_event_parent_get_children_info( $mainID );
+      $form->set( 'parentChildren', $children );
+
+      if ( empty( $children ) ) {
+        $defaults = civicrm_event_parent_set_default($mainID, $form, 'parent');
+        $form->setDefaults( $defaults);
+      }
+      elseif($uid){
+        $defaults = civicrm_event_parent_set_default($children[0], $form, 'child');
+        $form->setDefaults( $defaults );
+      }
+      $session->resetScope('profile');
+    }
+    else{
+      // redirect to parent profile create form
+      global $user;
+      if($_GET['action'] != 'preview' && !$user->uid){
+        drupal_goto('civicrm/profile/create','gid='.$civicrm_event_parent_gid[$event_id].'&reset=1&event_id='.$event_id);
+      }
+    }
+  }
 }
 
 function civicrm_event_parent_civicrm_buildForm_regAdditional( $formName, &$form ) {
@@ -267,17 +242,54 @@ function civicrm_event_parent_civicrm_postProcess_profileEdit( $class, &$form ) 
 }
 
 function civicrm_event_parent_civicrm_postProcess_parentProfile( $class, &$form ) {
-    $params = $form->exportValues();
-    $event_id = $form->getVar( '_id' );
-    $civicrm_event_parent_gid = variable_get('civicrm_event_parent_gid', array());
+  $params = $form->exportValues();
+  $event_id = $form->getVar( '_id' );
+  $civicrm_event_parent_gid = variable_get('civicrm_event_parent_gid', array());
 
-    if ( $event_id && $params['parent_gid']){
-        $civicrm_event_parent_gid[$event_id] = $params['parent_gid'];
-        variable_set('civicrm_event_parent_gid', $civicrm_event_parent_gid);
+  if ( $event_id && $params['parent_gid']){
+      $civicrm_event_parent_gid[$event_id] = $params['parent_gid'];
+      variable_set('civicrm_event_parent_gid', $civicrm_event_parent_gid);
+  }
+  else{
+      unset($civicrm_event_parent_gid[$event_id]);
+      variable_set('civicrm_event_parent_gid', $civicrm_event_parent_gid);
+  
+  }
+}
+
+function civicrm_event_parent_set_default($cid, &$form, $type){
+  require_once("api/v2/Contact.php");
+  $fields = array_keys($form->_fields);
+  $params = array('contact_id' => $cid);
+  /*
+  foreach($fields as $f){
+    if(strpos($f, 'custom') === 0){
+      $params['return_'.$f] = 1;
+    }
+  }
+  */
+  $retrieved = & civicrm_contact_get( $params );
+
+  if ( !civicrm_error( $retrieved ) ) {
+    $contact = $retrieved[$cid];
+    $defaults = array(); 
+    if($type == 'child'){
+      foreach($contact as $k => $v){
+        if($k == 'phone') continue;
+        foreach($fields as $f){
+          if(strpos($f, $k) === 0){
+            $defaults[$f] = $v;
+          }
+        }
+      }
+      $defaults['gender'] = $contact['gender_id'];
     }
     else{
-        unset($civicrm_event_parent_gid[$event_id]);
-        variable_set('civicrm_event_parent_gid', $civicrm_event_parent_gid);
-    
+      $defaults['postal_code-1'] = $contact['postal_code'];
+      $defaults['state_province-1'] = $contact['state_province_id'];
+      $defaults['_city-1'] = $contact['city'];
+      $defaults['street_address-1'] = $contact['street_address'];
     }
+    return $defaults;
+  }
 }
