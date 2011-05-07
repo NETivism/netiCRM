@@ -1,0 +1,6 @@
+name = CiviCRM Group and Tag Import
+description = Support to import CiviCRM contact by contact_id or external_id
+package = CiviCRM
+core = 6.x
+version = 3.3-netivism
+dependencies[] = civicrm
