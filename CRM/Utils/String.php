@@ -67,7 +67,6 @@ class CRM_Utils_String {
      * @static
      */
     static function titleToVar( $title, $maxLength = 31 ) {
-        $title = str_replace("-", '_', $title);
         $variable = self::munge( $title, '_', $maxLength );
       
         require_once "CRM/Utils/Rule.php";
@@ -94,6 +93,7 @@ class CRM_Utils_String {
      */
     static function munge( $name, $char = '_', $len = 63 ) {
         // replace all white space and non-alpha numeric with $char
+        $name = str_replace("-", $char, $name);
         $purged_name = preg_replace('/\s+|\W+|[-_]+/', $char, trim($name) );
         if(!trim($purged_name, $char)){
           if(function_exists('transliteration_clean_filename') && function_exists('language_default')){
