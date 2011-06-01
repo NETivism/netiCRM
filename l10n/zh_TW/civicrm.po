@@ -12020,7 +12020,7 @@ msgstr "時區"
 
 #: CRM/Core/DAO/Address.php
 msgid "Master Address ID"
-msgstr "街道地址"
+msgstr "主要地址編號"
 
 #: CRM/Core/DAO/Cache.php
 msgid "Expired Date"
@@ -12204,11 +12204,11 @@ msgstr "重設日期"
 
 #: CRM/Core/DAO/Email.php templates/CRM/Contact/Page/View/Summary.tpl
 msgid "Signature Text"
-msgstr "簽名"
+msgstr "簽名(純文字)"
 
 #: CRM/Core/DAO/Email.php
 msgid "Signature Html"
-msgstr "簽名"
+msgstr "簽名(HTML)"
 
 #: CRM/Core/DAO/File.php
 msgid "Mime Type"
