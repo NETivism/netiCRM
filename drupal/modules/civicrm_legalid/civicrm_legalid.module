@@ -27,7 +27,8 @@ function civicrm_legalid_civicrm_validate( $formName, &$fields, &$files, &$form 
   if ($formName == 'CRM_Contact_Form_Contact') {
     if ( !empty( $fields['legal_identifier'] ) ) {
       $contactID = $form->getVar( '_contactId' );
-/* TODO: need to change to Taiwan id verify
+/*
+TODO: need to change to Taiwan id verify
       $preg = "/^\\d{3}[- ]?\\d{2}[- ]?\\d{4}$/";
       $match = preg_match($preg, $fields['legal_identifier'] ) ? true : false;
       if ( !$match ) {
@@ -35,16 +36,24 @@ function civicrm_legalid_civicrm_validate( $formName, &$fields, &$files, &$form 
       }
 */
       // length
+      /*
       if(strlen($fields['legal_identifier']) < 10){
         $errors['legal_identifier'] = ts('Enter valid personal identifier number.');
       }
+      */
 
       // duplicate
-      $exists = CRM_Core_DAO::singleValueQuery( "SELECT id FROM civicrm_contact WHERE legal_identifier = '{$fields['legal_identifier']}' AND id != {$contactID}" );
-      if($exists){
-        $errors['legal_identifier'] = "Duplicate personal identifier with $exists.";
+      $sql = "SELECT id, display_name FROM civicrm_contact WHERE legal_identifier = '{$fields['legal_identifier']}'";
+      if($contactID){
+        // when update
+        $sql .= " id != {$contactID}";
       }
-
+      $dao = CRM_Core_DAO::executeQuery( $sql );
+      $dao->fetch();
+      if($dao->id){
+        $link = CRM_Utils_System::href($dao->display_name, 'civicrm/contact/add', 'reset=1&action=update&context=search&cid='.$dao->id);
+        $errors['legal_identifier'] = ts("Duplicate legal identifier with %1", array(1 => $link));
+      }
     }
   }
   return empty( $errors ) ? true : $errors;
@@ -67,7 +76,7 @@ function civicrm_legalid_civicrm_postProcess( $formName, &$form ) {
     $exists_legalid = CRM_Core_DAO::singleValueQuery( "SELECT id FROM civicrm_contact WHERE id = {$contactID}" );
 
     if ( $exists_legalid) {
-        $query = "UPDATE civicrm_contact SET legal_identifier = '{$legalid}' WHERE id = {$contactID}";
+      $query = "UPDATE civicrm_contact SET legal_identifier = '{$legalid}' WHERE id = {$contactID}";
     }
     else {
       // drop here.
