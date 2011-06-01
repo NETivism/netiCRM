@@ -1,0 +1,136 @@
+<?php
+
+/**
+ * Implementation of hook_install().
+ */
+function civicrm_dmenu_install() {
+  // loading defined menu structure.
+  include_once('update_1.inc');
+  foreach($menu_links as $menu_name => $m){
+    civicrm_dmenu_menu_items($menu_name, $m, 0);
+  }
+
+  // set default variable.
+  variable_set('menu_primary_links_source', 'primary-links');
+  variable_set('menu_secondary_links_source', 'primary-links');
+  variable_set('menu_default_node_menu', 'primary-links');
+}
+
+function civicrm_dmenu_uninstall(){
+  // just a placeholder for system module uninstall
+}
+
+function civicrm_dmenu_menu_items($menu_name, $items, $plid = 0) {
+  civicrm_dmenu_create_menu($menu_name);
+  foreach ($items as $item) {
+    // Format the data to send.
+    $path = ($item['path']) ? $item['path'] : FALSE;
+    $title = ($item['title']) ? $item['title'] : FALSE;
+    $desc  = ($item['description']) ? $item['description'] : '';
+    $menu  = ($item['menu']) ? $item['menu'] : 'navigation';
+    $plid  = ($plid) ? $plid : 0;
+    $weight = ($item['weight']) ? $item['weight'] : 0;
+    $module = ($item['module']) ? $item['module'] : 'menu';
+    $children = (isset($item['children'])) ? $item['children'] : FALSE;
+    $has_children = $children ? 1 : 0;
+    $query = ($item['query']) ? $item['query'] : NULL;
+    $hidden = $item['hidden'];
+    $expanded = $item['expanded'] ? $item['expanded'] : 0;
+
+    // Create the menu link.
+    $mlid = civicrm_dmenu_menu_item($path, $title, $desc, $menu, $plid, $weight, $module, $query, $hidden, $has_children, $expanded);
+
+    // If there are children do them too.
+    if ($children) {
+      civicrm_dmenu_menu_items($menu_name, $children, $mlid);
+    }
+  }
+}
+
+function civicrm_dmenu_menu_item($path, $title, $description = '', $menu = 'navigation', $plid = 0, $weight = 0, $module = 'civicrm', $query = NULL, $hidden = 0, $has_children = 0, $expanded = 0, $customized = 0, $updated = 0) {
+  $option_arr = array();
+  // If a description is present.
+  if (!empty($description)) {
+    $option_arr['attributes'] = array('title' => $description);
+  }
+  if($query){
+    $option_arr['query'] = $query;
+  }
+
+  $exists = db_fetch_array(db_query("SELECT * FROM {menu_links} WHERE menu_name = '%s' AND link_path = '%s'", $menu, $path));
+  if(empty($exists)){
+    $link = array(
+      'menu_name'     => $menu,
+      'weight'        => $weight,
+      'link_title'    => $title,
+      'options'       => $option_arr,
+      'module'        => $module,
+      'link_path'     => $path,
+      'hidden'        => $hidden,
+      'has_children'  => $has_children,
+      'expanded'      => $expanded,
+      'customized'    => $customized,
+      'updated'       => $updated,
+      'plid'          => $plid ? $plid : 0,
+    );
+  }
+  else{
+    $exists['options'] = unserialize($exists['options']);
+    $exists['options'] = array_merge($exists['options'], $option_arr);
+    $exists['hidden'] = ($exists['hidden'] == -1) ? -1 :$hidden;
+    $exists['title'] = $title;
+    $exists['weight'] = $weight;
+    $link = $exists;
+  }
+
+  $return = menu_link_save($link);
+
+  if(!$return){
+    return 0;
+  }
+  return $return;
+}
+
+function civicrm_dmenu_create_menu($title, $menu_name = '', $desc = '') {
+  $return = FALSE;
+
+  if (module_exists('menu')) {
+    $title            = $title;
+    $description      = $desc;
+    $mn               = (empty($menu_name)) ? $title : $menu_name;
+    $menu_name        = str_replace(array(' ', '_'), '-', strtolower($mn));
+    $menu_name_custom = 'menu-' . $menu_name;
+
+    // Check the db for an existing menu by the same name.
+    $menu = db_result(db_query_range("SELECT menu_name FROM {menu_custom} WHERE menu_name = '%s' OR menu_name = '%s'", $menu_name, $menu_name_custom, 0, 1));
+
+    // If a menu does not exists then we create it.
+    // Appending 'menu-' to the beginning is standard for the menu module
+    // so we do the same thing.
+    if (!$menu) {
+      $menu = $menu_name_custom;
+      
+      // Set up data for menu_link table.
+      $path = 'admin/build/menu-customize/';
+      $link = array(
+        'link_title'  => $title,
+        'link_path'   => $path . $menu,
+        'router_path' => $path . '%',
+        'module'      => 'menu',
+        'plid'        => db_result(db_query("SELECT mlid FROM {menu_links} WHERE link_path = '%s' AND module = '%s'", 'admin/build/menu', 'system')),
+      );
+      // Save link to menu_link table.
+      menu_link_save($link);
+      
+      // Save menu to menu_custom table.
+      db_query("INSERT INTO {menu_custom} (menu_name, title, description) VALUES ('%s', '%s', '%s')", $menu_name_custom, $title, $description);
+    }
+    
+    $return = $menu;
+  } else {
+    drupal_set_message('Custom menu was not created. Please be sure that the menu module is a dependancy.');
+  }
+
+  return $return;
+}
+

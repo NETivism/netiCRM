@@ -1,0 +1,7 @@
+name = Dmenu
+description = "Build drupal menu from utilized civicrm."
+dependencies[] = menu
+dependencies[] = civicrm 
+package = CiviCRM
+core = 6.x
+version = 3.3-netivism-dev
