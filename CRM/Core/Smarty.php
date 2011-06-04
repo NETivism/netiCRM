@@ -138,7 +138,7 @@ class CRM_Core_Smarty extends Smarty {
         require_once 'CRM/Core/Permission.php';
         global $user;
         if(isset($user)){
-          $buildNavigation = $user->uid == 1 ? TRUE : FALSE;
+          $buildNavigation = $user->uid == 1 || CRM_Core_Permission::check('administer CiviCRM') ? TRUE : FALSE;
         }
         else{
           $buildNavigation = CRM_Core_Permission::check( 'access CiviCRM' );
