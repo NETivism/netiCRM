@@ -161,7 +161,7 @@ function civicrm_event_cck_form_alter(&$form, &$form_state, $form_id){
               break;
             case 'id':
               // doing form alter job 
-              //$form['#after_build'] = array('civicrm_event_cck_hide_field');
+              $form['#after_build'] = array('civicrm_event_cck_hide_field');
               break;
           }
           if(!empty($options)){
