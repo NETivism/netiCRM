@@ -157,8 +157,14 @@ function civicrm_event_cck_form_alter(&$form, &$form_state, $form_id){
 
 function civicrm_event_cck_hide_field(&$form, &$form_state){
   $event_id_field = variable_get('civiec_id', ''); 
-  $form[$event_id_field]['#prefix'] = '<div style="display:none">';
-  $form[$event_id_field]['#suffix'] = '</div>';
+  if($parent = $form['#field_info'][$event_id_field]['display_settings']['parent']){
+    $form[$parent][$event_id_field]['#prefix'] = '<div style="display:none">';
+    $form[$parent][$event_id_field]['#suffix'] = '</div>';
+  }
+  else{
+    $form[$event_id_field]['#prefix'] = '<div style="display:none">';
+    $form[$event_id_field]['#suffix'] = '</div>';
+  }
   return $form;
 }
 
@@ -173,4 +179,17 @@ function civicrm_event_cck_fields(){
     'date' => 'Start / End date of event',
     'registration_date' => 'Start / End date of registration',
   );
+}
+
+function civicrm_event_cck_check(&$node, $fieldname = 'id'){
+  $available_types = variable_get('civicrm_event_cck_enabled_type', array());
+  $fieldname = variable_get('civiec_'.$fieldname, '');
+  if(in_array($node->type, $available_types) && $fieldname) {
+    if(isset($node->$fieldname)){
+      $field = $node->$fieldname;
+      $value = $field[0]['value'];
+      return $value ? $value : 0;
+    }
+  }
+  return FALSE;
 }
