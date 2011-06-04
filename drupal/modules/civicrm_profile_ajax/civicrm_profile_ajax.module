@@ -1,0 +1,16 @@
+<?php
+function civicrm_profile_ajax_civicrm_buildForm( $form_name, &$form ) {
+  if($form_name == 'CRM_Profile_Form_Edit'){
+    if(array_key_exists('current_employer', $form->_fields)){
+      $config = CRM_Core_Config::singleton();
+      $path = drupal_get_path('module', 'civicrm');
+      drupal_add_js(drupal_get_path("module", "civicrm_profile_ajax")."/civicrm_profile_ajax.js");
+      $js = '
+      cj(document).ready(function($){
+        cj("#current_employer").orgAutocomplete();
+        });';
+      drupal_add_js($js, 'inline', 'footer');
+    }
+  }
+
+}
