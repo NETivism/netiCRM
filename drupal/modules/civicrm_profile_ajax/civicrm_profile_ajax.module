@@ -1,6 +1,6 @@
 <?php
 function civicrm_profile_ajax_civicrm_buildForm( $form_name, &$form ) {
-  if($form_name == 'CRM_Profile_Form_Edit'){
+  if($form_name == 'CRM_Profile_Form_Edit' || $form_name == 'CRM_Event_Form_Registration_Register'){
     if(array_key_exists('current_employer', $form->_fields)){
       $config = CRM_Core_Config::singleton();
       $path = drupal_get_path('module', 'civicrm');
