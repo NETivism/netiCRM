@@ -213,19 +213,30 @@ class CRM_Contact_BAO_Individual extends CRM_Contact_DAO_Contact
             require_once 'CRM/Utils/Address.php';
             require_once 'CRM/Core/BAO/Preferences.php';
             
+
             //build the sort name.
+            //check if display name is english, then apply default format
             $format = CRM_Core_BAO_Preferences::value( 'sort_name_format' );
             $format = str_replace( 'contact.', '', $format );
             $sortName = CRM_Utils_Address::format( $formatted, $format,
                                                    false, false, true, $tokenFields );
             $sortName = trim( $sortName );
             
-            //build the display name.
+            // build the display name.
+            //check if display name is english, then apply default format
             $format = CRM_Core_BAO_Preferences::value( 'display_name_format' );
             $format = str_replace( 'contact.', '', $format );
             $displayName = CRM_Utils_Address::format( $formatted, $format,
                                                       false, false, true, $tokenFields );
             $displayName = trim( $displayName );
+
+            $default_format = "{first_name}{ }{last_name}";
+            if(!preg_replace('/\w+|[-_]+/', '', $sortName)){
+              $sortName = CRM_Utils_Address::format($formatted, $default_format, false, false, true, $tokenFields);
+            }
+            if(!preg_replace('/\w+|[-_]+/', '', $displayName)){
+              $displayName = CRM_Utils_Address::format($formatted, $default_format, false, false, true, $tokenFields);
+            }
         }
         
         //start further check for email.
