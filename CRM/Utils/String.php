@@ -96,7 +96,8 @@ class CRM_Utils_String {
         $name = str_replace("-", $char, $name);
         $purged_name = preg_replace('/\s+|\W+|[-_]+/', $char, trim($name) );
         if(!trim($purged_name, $char)){
-          if(function_exists('transliteration_clean_filename') && function_exists('language_default')){
+          if(module_exists('transliteration')){
+            require_once (drupal_get_path('module', 'transliteration') . '/transliteration.inc');
             $purged_name = strtolower(transliteration_clean_filename($name));
             $purged_name = trim($purged_name, '_');
           }
