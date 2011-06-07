@@ -69,7 +69,10 @@ function civicrm_event_cck_admin_settings(){
 }
 
 function civicrm_event_cck_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL){
-  $event_id = civicrm_event_cck_check($node);
+  static $event_id;
+  if(!$event_id){
+    $event_id = civicrm_event_cck_check($node);
+  }
   if($event_id){
     if($op == 'view'){
       drupal_add_css(drupal_get_path('module', 'civicrm_event_cck')."/civicrm_event_cck.css");
@@ -79,12 +82,9 @@ function civicrm_event_cck_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL){
       civicrm_event_cck_save($node, $op);
     }
   }
-  if($event_id === 0){
-    if($op == 'presave'){
-      civicrm_event_cck_save($node, $op);
-    }
+  if($op == 'presave' && $event_id === 0){
+    civicrm_event_cck_save($node, $op);
   }
-
 }
 
 function civicrm_event_cck_view(&$node, $event_id){
