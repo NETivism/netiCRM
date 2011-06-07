@@ -15,6 +15,11 @@ function civicrm_event_cck_menu(){
 
 function civicrm_event_cck_admin_settings(){
   $types = node_get_types('names');
+  $form['civiec_enable_register_button'] = array(
+    '#type' => 'checkbox',
+    '#title' => 'Enable Registion links',
+    '#default_value' => variable_get('civiec_enable_register_button', 0),
+  );
   $form['civiec_enabled_type'] = array(
     '#type' => 'checkboxes',
     '#title' => 'Content type to enable for sync',
@@ -64,14 +69,18 @@ function civicrm_event_cck_admin_settings(){
 }
 
 function civicrm_event_cck_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL){
-  if($event_id = civicrm_event_cck_check($node)){
+  $event_id = civicrm_event_cck_check($node);
+  if($event_id){
     if($op == 'view'){
+      drupal_add_css(drupal_get_path('module', 'civicrm_event_cck')."/civicrm_event_cck.css");
       civicrm_event_cck_view($node, $event_id);
     }
-    if($op == 'presave'){
+    if($op == 'delete'){
       civicrm_event_cck_save($node, $op);
     }
-    if($op == 'delete'){
+  }
+  if($event_id === 0){
+    if($op == 'presave'){
       civicrm_event_cck_save($node, $op);
     }
   }
@@ -81,14 +90,55 @@ function civicrm_event_cck_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL){
 function civicrm_event_cck_view(&$node, $event_id){
   // admin
   civicrm_initialize();
-  $admin_participants = l(ts("Participants"), "civicrm/event/search", array('query' => "reset=1&force=1&event=$event_id"));
-  $admin_event = l(ts("Configure Event"), "civicrm/event/manage/registration", array('query' => "reset=1&action=update&id=$event_id"));
+  $admin['participants'] = array(
+    'title' => ts("Participants"),
+    'href' => "civicrm/event/search",
+    'query' => "reset=1&force=1&event=$event_id",
+    'class' => '',
+  );
+  $admin['event'] = array(
+    'title' => ts("Configure Event"),
+    'href' => "civicrm/event/manage/registration",
+    'query' => "reset=1&action=update&id=$event_id",
+    'attributes' => array('class' => ''),
+  );
 
   // open
-  $register = l(ts("Event Online Registration"), "civicrm/event/register", array('query' => "reset=1&id=$event_id"));
+  $button['register'] = array(
+    'title' => ts("Event Online Registration"),
+    'href' => "civicrm/event/register",
+    'query' => "reset=1&id=$event_id",
+    'attributes' => array('class' => 'orange bigrounded'),
+  );
   //$participants_list = l();
 
   // now build the correct view
+  $show_field = variable_get("civiec_is_online_registration", 0);
+  if(node_access('update', $node)){
+    $node->content['civicrm_event_cck_admin'] = array(
+      '#value' => civicrm_event_cck_button($admin, $node, 'admin'),
+      '#weight' => -100,
+    );
+  }
+  if(variable_get('civiec_enable_register_button', 0)){
+    if($node->$show_field){
+    /*
+      $node->content['civicrm_event_cck_top'] = array(
+        //'#value' => ,
+        '#value' => civicrm_event_cck_button($button, $node, 'button'),
+        '#weight' => -90,
+      );
+    */
+      $node->content['civicrm_event_cck_bottom'] = array(
+        //'#value' => ,
+        '#value' => civicrm_event_cck_button($button, $node, 'button'),
+        '#weight' => 100,
+      );
+    }
+  }
+}
+function civicrm_event_cck_button($button, $node, $type){
+  return '<div class="civiec-'.$type.'">'.theme('links', $button, array('class' => "links links-$type")).'</div>';
 }
 
 function civicrm_event_cck_save(&$node, $op){
