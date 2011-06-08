@@ -1,0 +1,761 @@
+<?php
+
+/**
+ * @file
+ * Exposes CiviCRM components as Ubercart product features.
+ */
+
+/**
+ * Implementation of hook_product_feature().
+ */
+function uc_civicrm_product_product_feature() {
+  $features = array();
+  $features[] = array(
+    'id' => 'civimember',
+    'title' => 'CiviMember',
+    'callback' => 'uc_civicrm_product_civimember_feature_form',
+    'delete' => 'uc_civicrm_product_civimember_feature_delete',
+  );
+  $features[] = array(
+    'id' => 'civicontribute',
+    'title' => 'CiviContribute',
+    'callback' => 'uc_civicrm_product_civicontribute_feature_form',
+    'delete' => 'uc_civicrm_product_civicontribute_feature_delete',
+  );
+  $features[] = array(
+    'id' => 'civievent',
+    'title' => 'CiviEvent',
+    'callback' => 'uc_civicrm_product_civievent_feature_form',
+    'delete' => 'uc_civicrm_product_civievent_feature_delete',
+  );
+  return $features;
+}
+
+/**
+ * Form builder for hook_product_feature.
+ *
+ * @ingroup forms
+ * @see uc_file_feature_form_validate()
+ * @see uc_file_feature_form_submit()
+ */
+function uc_civicrm_product_civimember_feature_form($form_state, $node, $feature) {
+  $form = array();
+  if (!empty($feature)) {
+    $product = db_fetch_object(db_query("SELECT * FROM {uc_civimember} WHERE pfid = %d", $feature['pfid']));
+    $form['pfid'] = array(
+      '#type' => 'value',
+      '#value' => $feature['pfid'],
+    );
+    $form['id'] = array(
+      '#type' => 'value',
+      '#value' => $product->id,
+    );
+  }
+  $form['nid'] = array(
+    '#type' => 'value',
+    '#value' => $node->nid,
+  );
+  $form['membership_type_id'] = array(
+    '#type' => 'select',
+    '#title' => 'Membership Type',
+    '#options' => uc_civicrm_product_civicrm_options('civicrm_membership_type'),
+    '#default_value' => !empty($feature) ? $product->membership_type_id : NULL,
+  );
+  $form['membership_status_id'] = array(
+    '#type' => 'select',
+    '#title' => 'Membership Status',
+    '#options' => uc_civicrm_product_civicrm_options('civicrm_membership_status'),
+    '#default_value' => !empty($feature) ? $product->membership_status_id : NULL,
+  );
+  return uc_product_feature_form($form);
+}
+
+/**
+ * Submit handler for civimember product features.
+ */
+function uc_civicrm_product_civimember_feature_form_submit($form, &$form_state) {
+  $product = array(
+    'pfid'                 => $form_state['values']['pfid'],
+    'id'                   => $form_state['values']['id'],
+    'nid'                  => $form_state['values']['nid'],
+    'membership_status_id' => $form_state['values']['membership_status_id'],
+    'membership_type_id'   => $form_state['values']['membership_type_id'],
+  );
+
+  $types = uc_civicrm_product_civicrm_options('civicrm_membership_type');
+  $statuses = uc_civicrm_product_civicrm_options('civicrm_membership_status');
+
+  $description = '<strong>'. t('Membership Type') .':</strong> '. $types[$product['membership_type_id']] .'<br/>';
+  $description .= '<strong>'. t('Membership Status') .':</strong> '. $statuses[$product['membership_status_id']];
+
+  $data = array(
+    'pfid' => $product['pfid'],
+    'nid' => $product['nid'],
+    'fid' => 'civimember',
+    'description' => $description,
+  );
+
+  $form_state['redirect'] = uc_product_feature_save($data);
+
+  $key = NULL;
+  if ($product['id']) {
+    $key = 'id';
+  }
+
+  if (empty($product['pfid'])) {
+    $product['pfid'] = db_last_insert_id('uc_product_features', 'pfid');
+  }
+
+  drupal_write_record('uc_civimember', $product, $key);
+}
+
+/**
+ * Delete all data associated with a given product feature.
+ *
+ * @param $pfid
+ *   An Ubercart product feature ID.
+ */
+function uc_civicrm_product_civimember_feature_delete($pfid) {
+  db_query("DELETE FROM {uc_civimember} WHERE pfid = %d", $pfid);
+}
+
+/**
+ * Form builder for hook_product_feature.
+ *
+ * @ingroup forms
+ * @see uc_file_feature_form_validate()
+ * @see uc_file_feature_form_submit()
+ */
+function uc_civicrm_product_civicontribute_feature_form($form_state, $node, $feature) {
+  $form = array();
+  if (!empty($feature)) {
+    $product = db_fetch_object(db_query("SELECT * FROM {uc_civicontribute} WHERE pfid = %d", $feature['pfid']));
+    $product->statuses = unserialize($product->statuses);
+    $form['pfid'] = array(
+      '#type' => 'value',
+      '#value' => $feature['pfid'],
+    );
+    $form['id'] = array(
+      '#type' => 'value',
+      '#value' => $product->id,
+    );
+  }
+  else{
+    // build up default status mapping from last submitted
+    $product = db_fetch_object(db_query_range("SELECT * FROM {uc_civicontribute} ORDER BY id DESC", 0, 1));
+    $product->statuses = unserialize($product->statuses);
+  }
+  $form['nid'] = array(
+    '#type' => 'value',
+    '#value' => $node->nid,
+  );
+  $form['contribution_type_id'] = array(
+    '#type' => 'select',
+    '#title' => t('Contribution Type'),
+    '#options' => uc_civicrm_product_civicrm_options('civicrm_contribution_type'),
+    '#default_value' => $product->contribution_type_id ? $product->contribution_type_id : NULL,
+  );
+  $form['non_deductible_amount'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Non-deductible Amount'),
+    '#default_value' => $product->non_deductible_amount ? $product->non_deductible_amount : NULL,
+  );
+  $form['fee_amount'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Fee Amount'),
+    '#default_value' => $product->fee_amount ? $product->fee_amount : NULL,
+  );
+  $form['net_amount'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Net Amount'),
+    '#default_value' => $product->net_amount ? $product->net_amount : NULL,
+  );
+  $form['statuses'] = array(
+    '#type' => 'fieldset',
+    '#tree' => TRUE,
+    '#title' => t('Status synchronization'),
+    '#description' => t('Select a CiviContribution status for each Ubercart order state.'),
+  );
+  foreach (uc_order_state_list() as $state) {
+    $form['statuses'][$state['id']] = array(
+      '#type' => 'select',
+      '#title' => t('@title', array('@title' => $state['title'])),
+      '#options' => uc_civicrm_product_civicrm_option_group('contribution_status'),
+      '#default_value' => $product->statuses[$state['id']] ? $product->statuses[$state['id']] : NULL,
+    );
+  }
+  $form = uc_product_feature_form($form);
+  if(module_exists('civicrm_event_cck')){
+    $node = node_load($form['nid']['#value']);
+    $event_id = civicrm_event_cck_check($node);
+    if($event_id){
+      $form['submit']['#submit'][] = 'uc_civicrm_product_civicontribute_feature_form_submit';
+      $form['submit']['#submit'][] = 'uc_civicrm_product_go_civievent';
+    }
+  }
+  return $form;
+}
+
+/**
+ * Submit handler for civicontribute product features.
+ */
+function uc_civicrm_product_civicontribute_feature_form_submit($form, &$form_state) {
+  $product = array(
+    'pfid'                 => $form_state['values']['pfid'],
+    'id'                   => $form_state['values']['id'],
+    'nid'                  => $form_state['values']['nid'],
+    'contribution_type_id' => $form_state['values']['contribution_type_id'],
+    'non_deductible_amount' => $form_state['values']['non_deductible_amount'],
+    'fee_amount'           => $form_state['values']['fee_amount'],
+    'net_amount'           => $form_state['values']['net_amount'],
+    'statuses'             => array_filter($form_state['values']['statuses']),
+  );
+
+  $types = uc_civicrm_product_civicrm_options('civicrm_contribution_type');
+  $statuses = uc_civicrm_product_civicrm_option_group('contribution_status');
+
+  $description = '<strong>'. t('Contribution Type') .':</strong> '. $types[$product['contribution_type_id']] .'<br/>';
+  $description .= '<strong>'. t('Non-deductible Amount') .':</strong> '. $product['non_deductible_amount'] .'<br/>';
+  $description .= '<strong>'. t('Fee Amount') .':</strong> '. $product['fee_amount'] .'<br/>';
+  $description .= '<strong>'. t('Net Amount') .':</strong> '. $product['net_amount'];
+
+  $data = array(
+    'pfid' => $product['pfid'],
+    'nid' => $product['nid'],
+    'fid' => 'civicontribute',
+    'description' => $description,
+  );
+
+  $form_state['redirect'] = uc_product_feature_save($data);
+
+  $key = NULL;
+  if ($product['id']) {
+    $key = 'id';
+  }
+
+  if (empty($product['pfid'])) {
+    $product['pfid'] = db_last_insert_id('uc_product_features', 'pfid');
+  }
+
+  drupal_write_record('uc_civicontribute', $product, $key);
+}
+
+/**
+ * Delete all data associated with a given product feature.
+ *
+ * @param $pfid
+ *   An Ubercart product feature ID.
+ */
+function uc_civicrm_product_civicontribute_feature_delete($pfid) {
+  db_query("DELETE FROM {uc_civicontribute} WHERE pfid = %d", $pfid);
+}
+
+/**
+ * Form builder for hook_product_feature.
+ *
+ * @ingroup forms
+ * @see uc_file_feature_form_validate()
+ * @see uc_file_feature_form_submit()
+ */
+function uc_civicrm_product_civievent_feature_form($form_state, $node, $feature) {
+  $form = array();
+  if (!empty($feature)) {
+    $product = db_fetch_object(db_query("SELECT * FROM {uc_civievent} WHERE pfid = %d", $feature['pfid']));
+    $product->statuses = unserialize($product->statuses);
+    $form['pfid'] = array(
+      '#type' => 'value',
+      '#value' => $feature['pfid'],
+    );
+    $form['id'] = array(
+      '#type' => 'value',
+      '#value' => $product->id,
+    );
+  }
+  else{
+    // build up default status mapping from last submitted
+    $product = db_fetch_object(db_query_range("SELECT * FROM {uc_civievent} ORDER BY id DESC", 0, 1));
+    $product->statuses = unserialize($product->statuses);
+  }
+  $form['nid'] = array(
+    '#type' => 'value',
+    '#value' => $node->nid,
+  );
+
+  if(module_exists('civicrm_event_cck')){
+    $event_id = civicrm_event_cck_check($node);
+    $form['event_id'] = array(
+      '#type' => $event_id ? 'hidden' : 'select',
+      '#title' => 'Event',
+      '#default_value' => !empty($feature) ? $product->event_id : $event_id,
+    );
+    if(!$event_id){
+      $form['event_id']['#options'] = uc_civicrm_product_civicrm_events();
+    }
+  }
+  else{
+    $form['event_id'] = array(
+      '#type' => 'select',
+      '#title' => 'Event',
+      '#options' => uc_civicrm_product_civicrm_events(),
+      '#default_value' => !empty($feature) ? $product->event_id : NULL,
+    );
+  }
+
+  if(module_exists('civicrm_event_cck')){
+    $role_id = civicrm_event_cck_check($node, 'default_role_id');
+    $form['role_id'] = array(
+      '#type' => $role_id ? 'hidden' : 'select',
+      '#title' => 'Role',
+      '#options' => uc_civicrm_product_civicrm_option_group('participant_role'),
+      '#default_value' => !empty($feature) ? $product->role_id : $role_id,
+    );
+  }
+  else{
+    $form['role_id'] = array(
+      '#type' => 'select',
+      '#title' => 'Role',
+      '#options' => uc_civicrm_product_civicrm_option_group('participant_role'),
+      '#default_value' => $product->role_id ? $product->role_id : NULL,
+    );
+  }
+  $form['statuses'] = array(
+    '#type' => 'fieldset',
+    '#tree' => TRUE,
+    '#title' => t('Status synchronization'),
+    '#description' => t('Select a CiviEvent status for each Ubercart order state.'),
+  );
+  foreach (uc_order_state_list() as $state) {
+    $form['statuses'][$state['id']] = array(
+      '#type' => 'select',
+      '#title' => t('@title', array('@title' => $state['title'])),
+      '#options' => uc_civicrm_product_civicrm_options('civicrm_participant_status_type'),
+      '#default_value' => $product->statuses[$state['id']] ? $product->statuses[$state['id']] : NULL,
+    );
+  }
+  return uc_product_feature_form($form);
+}
+
+/**
+ * Submit handler for civievent product features.
+ *
+ * @todo Let old values persist when event is in the past.
+ */
+function uc_civicrm_product_civievent_feature_form_submit($form, &$form_state) {
+  $product = array(
+    'pfid'                 => $form_state['values']['pfid'],
+    'id'                   => $form_state['values']['id'],
+    'nid'                  => $form_state['values']['nid'],
+    'event_id'             => $form_state['values']['event_id'],
+    'role_id'              => $form_state['values']['role_id'],
+    'statuses'             => array_filter($form_state['values']['statuses']),
+  );
+
+  $events = uc_civicrm_product_civicrm_events(TRUE);
+  $roles = uc_civicrm_product_civicrm_option_group('participant_role');
+  $statuses = uc_civicrm_product_civicrm_options('civicrm_participant_status_type');
+
+  $description = '<strong>'. t('Event') .':</strong> '. $events[$product['event_id']] .'<br/>';
+  $description .= '<strong>'. t('Role') .':</strong> '. $roles[$product['role_id']] .'<br/>';
+
+  $data = array(
+    'pfid' => $product['pfid'],
+    'nid' => $product['nid'],
+    'fid' => 'civievent',
+    'description' => $description,
+  );
+
+  $form_state['redirect'] = uc_product_feature_save($data);
+
+  $key = NULL;
+  if ($product['id']) {
+    $key = 'id';
+  }
+
+  if (empty($product['pfid'])) {
+    $product['pfid'] = db_last_insert_id('uc_product_features', 'pfid');
+  }
+
+  drupal_write_record('uc_civievent', $product, $key);
+}
+
+/**
+ * Delete all data associated with a given product feature.
+ *
+ * @param $pfid
+ *   An Ubercart product feature ID.
+ */
+function uc_civicrm_product_civievent_feature_delete($pfid) {
+  db_query("DELETE FROM {uc_civievent} WHERE pfid = %d", $pfid);
+}
+
+/**
+ * Shortcut function to make options from CiviCRM tables with id/name columns.
+ */
+function uc_civicrm_product_civicrm_options($table) {
+  civicrm_initialize();
+  $query = "SELECT * FROM ". $table;
+  $params = array();
+  $dao =& CRM_Core_DAO::executeQuery($query, $params);
+  $results = array();
+  $results[''] = t('<none>');
+  while ($dao->fetch()) {
+    $results[$dao->id] = t($dao->name);
+  }
+  return $results;
+}
+
+/**
+ * Shortcut function to make options from CiviCRM option group with id/name
+ * columns.
+ */
+function uc_civicrm_product_civicrm_option_group($group) {
+  civicrm_initialize();
+  $query = "SELECT ov.value AS value,ov.label AS name FROM civicrm_option_value ov JOIN civicrm_option_group og ON ov.option_group_id = og.id WHERE og.name = %1";
+  $params = array(1 => array($group, 'String'));
+  $dao =& CRM_Core_DAO::executeQuery($query, $params);
+  $results = array();
+  $results[''] = t('<none>');
+  while ($dao->fetch()) {
+    $results[$dao->value] = t($dao->name);
+  }
+  return $results;
+}
+
+/**
+ * List all current and future CiviEvent items.
+ *
+ * @see CRM_Event_BAO_Event::getEvents()
+ */
+function uc_civicrm_product_civicrm_events($all = FALSE) {
+  civicrm_initialize();
+  $query = "SELECT `id`, `title`, `start_date` FROM `civicrm_event`";
+  if (!$all) {
+    $endDate = date( 'YmdHis' );
+    $query .= " WHERE `end_date` >= {$endDate} OR end_date IS NULL";
+  }
+  $query .= " ORDER BY title asc";
+
+  $dao =& CRM_Core_DAO::executeQuery( $query, CRM_Core_DAO::$_nullArray );
+  $events = array();
+  while ($dao->fetch()) {
+    if ($dao->title) {
+      $events[$dao->id] = $dao->title .' - '. CRM_Utils_Date::customFormat($dao->start_date);
+    }
+  }
+  return $events;
+}
+
+/**
+ * Implementation of hook_add_to_cart_data().
+ */
+function uc_civicrm_product_add_to_cart_data($form_values) {
+  $data = array();
+  $results = db_query('SELECT * FROM {uc_product_features} WHERE nid = %d ORDER BY pfid ASC', $form_values['nid']);
+  while ($feature = db_fetch_object($results)) {
+    switch ($feature->fid) {
+    case 'civimember':
+      $query = db_query('SELECT * FROM {uc_civimember} WHERE pfid = %d', $feature->pfid);
+      $feature = db_fetch_array($query);
+      $data['civimember'] = $feature;
+      break;
+    case 'civicontribute':
+      $query = db_query('SELECT * FROM {uc_civicontribute} WHERE pfid = %d', $feature->pfid);
+      $feature = db_fetch_array($query);
+      $feature['statuses'] = unserialize($feature['statuses']);
+      $data['civicontribute'] = $feature;
+      break;
+    case 'civievent':
+      $query = db_query('SELECT * FROM {uc_civievent} WHERE pfid = %d', $feature->pfid);
+      $feature = db_fetch_array($query);
+      $feature['statuses'] = unserialize($feature['statuses']);
+      $data['civievent'] = $feature;
+      break;
+    }
+  }
+  return $data;
+}
+
+/*
+ * Implementation of Ubercart's hook_order
+ */
+function uc_civicrm_product_order($op, $order, $arg2) {
+  switch ($op) {
+    // When an order is saved
+    case 'save':
+      $arg2 = $order->order_status;
+    case 'update':
+      civicrm_initialize();
+      require_once 'api/v2/UFGroup.php';
+
+      $state = uc_order_status_data($arg2, 'state');
+
+      // Since in our case, we know that they've got to log in before they can
+      // checkout, we know that they will have a uf_id (drupal user id).
+      $uf_id = $order->uid;
+
+      // Since in our case, a user has to create a civicrm account
+      // (via a drupal registration profile) when they register,
+      // we know that they will have a civicrm contact id as well
+      $contact_id = civicrm_uf_match_id_get($uf_id);
+
+      foreach ($order->products as $product) {
+        $api_results = array();
+
+        // This section writes certain purchases into the civicrm database as
+        // contributions
+        foreach ($product->data as $fid => $data) {
+          switch ($fid) {
+
+          // See what type of product it is so that
+          // we can set the appropriate member type
+          case 'civimember':
+            if ($state == 'completed') {
+              require_once 'api/v2/MembershipContact.php';
+              require_once 'CRM/Member/BAO/MembershipType.php';
+
+              // Check for an existing membership.
+              $params = array(
+                'active_only' => TRUE,
+                'contact_id' => $contact_id,
+                'membership_type_id' => $data['membership_type_id'],
+              );
+              $memberships = civicrm_membership_contact_get($params);
+
+              if ($memberships['record_count']) {
+                $membership = array_pop($memberships[$contact_id]);
+
+                $params = $membership;
+
+                $calcDates = CRM_Member_BAO_MembershipType::getRenewalDatesForMembershipType($params['id']);
+                $params['start_date'] = $calcDates['start_date'];
+                $params['end_date'] = $calcDates['end_date'];
+              }
+              else {
+                $params = array(
+                  'membership_type_id' => $data['membership_type_id'],
+                  'contact_id' => $contact_id,
+                  'join_date' =>  date('Ymd'),
+                  'start_date' => date('Ymd'),
+                );
+                $calcDates = CRM_Member_BAO_MembershipType::getDatesForMembershipType($data['membership_type_id'], $params['join_date'], $params['start_date']);
+                $params['end_date'] = $calcDates['end_date'];
+              }
+              $api_results[$fid] =& civicrm_membership_contact_create($params);
+            }
+            break;
+
+          // This is a product that requires a civicrm contribution record
+          case 'civicontribute':
+
+            if (!empty($data['statuses'][$state])) {
+              require_once 'api/v2/Contribute.php';
+
+              // Find an existing contribution for the order product.
+              $contribution_id = db_result(db_query('SELECT contribution_id FROM {uc_civicontribute_order_products} WHERE order_product_id = %d', array($product->order_product_id)));
+
+              // The contribution is not new, so update the contribution.
+              if ($contribution_id) {
+
+                // For the get API function to work, the contribution ID has to
+                // be named with the 'contribution_id' key of the params array.
+                $params = array(
+                  'contribution_id' => $contribution_id,
+                );
+                $params = civicrm_contribution_get($params);
+
+                // However, when saving, the contribution ID needs to be the
+                // 'id' key of the params array.
+                $params['id'] = $contribution_id;
+                $params['total_amount'] = round($product->price, 2);
+                $params['contribution_status_id'] = $data['statuses'][$state];
+                $params['order_product_id'] = $product->order_product_id;
+
+                drupal_alter('uc_civicrm_product', $params, $order, $fid);
+
+                $api_results[$fid] =& civicrm_contribution_add($params);
+              }
+
+              // It's a new contribution.
+              else {
+                require_once 'CRM/Contribute/PseudoConstant.php';
+
+                $payment_instruments = CRM_Contribute_PseudoConstant::paymentInstrument('name');
+                foreach ($payment_instruments as &$payment_instrument) {
+                  $payment_instrument = strtoupper($payment_instrument);
+                  if ($payment_instrument == 'CREDIT CARD') {
+                    $payment_instrument = 'CREDIT';
+                  }
+                }
+
+                // Set up the params array for creating a new contribution record
+                $params = array(
+                  'contact_id' => $contact_id,
+                  'receive_date' => date('Ymd'),
+                  'total_amount' => round($product->price, 2),
+                  'source' => 'Ubercart Order',
+                  'fee_amount' => round($data['fee_amount'], 2),
+                  'net_amount' => round($data['net_amount'], 2),
+                  'non_deductible_amount' => round($data['non_deductible_amount'], 2),
+                  'contribution_type_id' => $data['contribution_type_id'],
+                  'contribution_status_id' => $data['statuses'][$state],
+                  // TODO: Prevent warnings when payment method
+                  'payment_instrument_id' => array_search($order->payment_method, $payment_instruments),
+                );
+
+                $comments = uc_order_comments_load($order->order_id);
+                if (!empty($comments) && !empty($comments[0]->message)) {
+                  $params['note'] = $comments[0]->message;
+                }
+
+                $params['order_product_id'] = $product->order_product_id;
+
+                drupal_alter('uc_civicrm_product', $params, $order, $fid);
+
+                $params['total_amount'] = sprintf("%01.2f", round($params['total_amount'], 2));
+
+                // Make the API call to create the new contribution record
+                $api_results[$fid] =& civicrm_contribution_add($params);
+                $row = array(
+                  'contribution_id' => $api_results['civicontribute']['id'],
+                  'order_product_id' => $product->order_product_id,
+                );
+                drupal_write_record('uc_civicontribute_order_products', $row);
+              }
+            }
+            break;
+
+          case 'civievent':
+            if (!empty($data['statuses'][$state])) {
+              require_once 'api/v2/Participant.php';
+              // Why is this necessary?
+              require_once 'CRM/Event/PseudoConstant.php';
+
+              // Find an existing contribution for the order product.
+              $participant_id = db_result(db_query('SELECT participant_id FROM {uc_civievent_order_products} WHERE order_product_id = %d', array($product->order_product_id)));
+
+              // The contribution is not new, so update the contribution.
+              if ($participant_id) {
+
+                // However, when saving, the contribution ID needs to be the
+                // 'id' key of the params array.
+                $params = array();
+                $params['id'] = $participant_id;
+                $params['participant_status_id'] = $data['statuses'][$state];
+                $result =& civicrm_participant_update($params);
+
+                $params = array(
+                  'participant_id' => $result['id'],
+                );
+                $api_results[$fid] = civicrm_participant_get($params);
+              }
+
+              // It's a new contribution.
+              else {
+                // Set up the params array for creating a new contribution record
+                $params = array(
+                  'contact_id' => $contact_id,
+                  'event_id' => $data['event_id'],
+                  'role_id' => $data['role_id'],
+                  'status_id' => $data['statuses'][$state],
+                  'fee_amount' => $product->price,
+                );
+
+                $comments = uc_order_comments_load($order->order_id);
+                if (!empty($comments) && !empty($comments[0]->message)) {
+                  $params['note'] = $comments[0]->message;
+                }
+
+                drupal_alter('uc_civicrm_product', $params, $order, $fid);
+
+                // Make the API call to create the new contribution record
+                $result =& civicrm_participant_create($params);
+
+                // CiviCRM Participant API doesn't return a participation record.
+                // TODO: Handle errors.
+                $params = array(
+                  'participant_id' => $result['result'],
+                );
+                $api_results[$fid] = civicrm_participant_get($params);
+                $row = array(
+                  'participant_id' => $api_results['civievent']['participant_id'],
+                  'order_product_id' => $product->order_product_id,
+                );
+                drupal_write_record('uc_civievent_order_products', $row);
+              }
+            }
+            break;
+          }
+        }
+
+        // When a single product creates a membership and contribution record,
+        // create a link between those two records.
+        if ((!empty($api_results['civimember'])) && (!empty($api_results['civicontribute']))) {
+          require_once 'api/v2/MembershipContributionLink.php';
+          $params = array(
+            'contribution_id' => $api_results['civicontribute']['id'],
+            'membership_id' => $api_results['civimember']['id'],
+          );
+          $api_results['link'] = civicrm_membershipcontributionlink_create($params);
+        }
+
+        // When a single product creates a particpant and contribution record,
+        // create a link between those two records.
+        if ((!empty($api_results['civievent'])) && (!empty($api_results['civicontribute']))) {
+          require_once 'api/v2/Participant.php';
+          $params = array(
+            'contribution_id' => $api_results['civicontribute']['id'],
+
+            // civicrm_participant_get() doesn't return the basic database record.
+            'participant_id' => $api_results['civievent']['participant_id'],
+          );
+          $api_results['link'] = civicrm_participant_payment_create($params);
+        }
+      }
+      break;
+  }
+}
+
+/**
+ * Implementation of hook_form_alter().
+ *
+ * @see uc_civicrm_product_submit()
+ */
+function uc_civicrm_product_form_alter(&$form, $form_state, $form_id) {
+  // Add a new submit handler to edit CiviContribute product feature.
+  // Module weight must be heavier than UC Product.
+  if (uc_product_is_product_form($form)) {
+    $form['buttons']['submit']['#submit'][] = 'uc_civicrm_product_submit';
+    //$form['buttons']['save_continue']['#submit'][] = 'uc_civicrm_product_submit';
+  }
+}
+
+/**
+ * Submit handler redirects to create a new CiviContribute product feature.
+ */
+function uc_civicrm_product_submit($form, &$form_state) {
+  $count = db_result(db_query("SELECT COUNT(*) FROM {uc_product_features} WHERE nid = %d AND fid = '%s'", $form_state['nid'], 'civicontribute'));
+  if (empty($count)) {
+    $form_state['redirect'] = 'node/'. $form_state['nid'] .'/edit/features/civicontribute/add';
+  }
+}
+
+/**
+ * Submit handler redirects to create a new CiviContribute product feature.
+ */
+function uc_civicrm_product_go_civievent($form, &$form_state){
+  $nid = $form_state['nid'] ? $form_state['nid'] : $form_state['values']['nid'];
+  $count = db_result(db_query("SELECT COUNT(*) FROM {uc_product_features} WHERE nid = %d AND fid = '%s'", $nid, 'civievent'));
+  if (empty($count)) {
+    $form_state['redirect'] = 'node/'. $nid .'/edit/features/civievent/add';
+  }
+}
+
+
+/**
+ * Implementation of hook_views_api().
+ */
+function uc_civicrm_product_views_api() {
+  return array(
+    'api' => '2',
+  );
+}

@@ -1,0 +1,322 @@
+<?php
+
+/**
+ * @file
+ * Installation and schema for UC CiviCRM Products module.
+ */
+
+/**
+ * Implementation of hook_install().
+ */
+function uc_civicrm_product_install() {
+  // Create tables.
+  drupal_install_schema('uc_civicrm_product');
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function uc_civicrm_product_uninstall() {
+  // Remove tables.
+  drupal_uninstall_schema('uc_civicrm_product');
+}
+
+/**
+ * Implementation of hook_schema().
+ */
+function uc_civicrm_product_schema() {
+  $schema = array();
+  $schema['uc_civicontribute'] = array(
+    'description' => 'Ubercart CiviContribute',
+    'fields' => array(
+      'id' => array(
+        'type' => 'serial',
+        'size' => 'normal',
+        'not null' => TRUE,
+        'description' => 'Ubercart CiviContribute ID',
+      ),
+      'pfid' => array(
+        'type' => 'int',
+        'size' => 'normal',
+        'not null' => FALSE,
+        'description' => 'product feature ID',
+      ),
+      'nid' => array(
+        'type' => 'int',
+        'size' => 'normal',
+        'not null' => FALSE,
+        'description' => 'Node ID',
+      ),
+      'contribution_type_id' => array(
+        'type' => 'int',
+        'size' => 'normal',
+        'not null' => FALSE,
+        'description' => 'CiviContribute Type ID',
+      ),
+      'non_deductible_amount' => array(
+        'type' => 'numeric',
+        'size' => 'normal',
+        'not null' => FALSE,
+        'precision' => 20,
+        'scale' => 2,
+        'description' => 'Non deductible amount',
+      ),
+      'fee_amount' => array(
+        'type' => 'numeric',
+        'size' => 'normal',
+        'not null' => FALSE,
+        'precision' => 20,
+        'scale' => 2,
+        'description' => 'Fee amount',
+      ),
+      'net_amount' => array(
+        'type' => 'numeric',
+        'size' => 'normal',
+        'not null' => FALSE,
+        'precision' => 20,
+        'scale' => 2,
+        'description' => 'Net amount',
+      ),
+      'statuses' => array(
+        'type' => 'text',
+        'size' => 'big',
+        'not null' => TRUE,
+        'description' => 'Serialized array map of order states and contribution statuses',
+        'serialize' => TRUE,
+      ),
+    ),
+    'name' => 'uc_civicontribute',
+    'indexes' => array(
+      'nid' => array(
+        0 => 'nid',
+      ),
+      'pfid' => array(
+        0 => 'pfid',
+      ),
+    ),
+    'primary key' => array(
+      0 => 'id',
+    ),
+  );
+  $schema['uc_civimember'] = array(
+    'description' => 'Ubercart CiviMember',
+    'fields' => array(
+      'membership_type_id' => array(
+        'type' => 'int',
+        'size' => 'normal',
+        'not null' => FALSE,
+        'description' => 'Membership Type ID',
+      ),
+      'pfid' => array(
+        'type' => 'int',
+        'size' => 'normal',
+        'unsigned' => FALSE,
+        'description' => 'pfid',
+      ),
+      'nid' => array(
+        'type' => 'int',
+        'size' => 'normal',
+        'unsigned' => FALSE,
+        'description' => 'Node ID',
+      ),
+      'membership_status_id' => array(
+        'type' => 'int',
+        'size' => 'normal',
+        'unsigned' => FALSE,
+        'description' => 'Membership Status ID',
+      ),
+      'id' => array(
+        'type' => 'serial',
+        'size' => 'normal',
+        'unsigned' => FALSE,
+        'not null' => TRUE,
+        'description' => 'UC CiviMember ID',
+      ),
+    ),
+    'name' => 'uc_civimember',
+    'primary key' => array(
+      0 => 'id',
+    ),
+  );
+  $schema['uc_civievent'] = array(
+    'description' => 'Ubercart CiviEvent',
+    'fields' => array(
+      'event_id' => array(
+        'type' => 'int',
+        'size' => 'normal',
+        'not null' => FALSE,
+        'description' => 'Event ID',
+      ),
+      'pfid' => array(
+        'type' => 'int',
+        'size' => 'normal',
+        'unsigned' => FALSE,
+        'description' => 'pfid',
+      ),
+      'nid' => array(
+        'type' => 'int',
+        'size' => 'normal',
+        'unsigned' => FALSE,
+        'description' => 'Node ID',
+      ),
+      'id' => array(
+        'type' => 'serial',
+        'size' => 'normal',
+        'unsigned' => FALSE,
+        'not null' => TRUE,
+        'description' => 'UC CiviEvent ID',
+      ),
+      'role_id' => array(
+        'type' => 'int',
+        'size' => 'normal',
+        'unsigned' => FALSE,
+        'not null' => TRUE,
+        'description' => 'Event role ID',
+      ),
+      'statuses' => array(
+        'type' => 'text',
+        'size' => 'big',
+        'not null' => TRUE,
+        'description' => 'Serialized array map of order states and participation statuses',
+        'serialize' => TRUE,
+      ),
+    ),
+    'name' => 'uc_civievent',
+    'primary key' => array(
+      0 => 'id',
+    ),
+  );
+  $schema['uc_civievent_order_products'] = array(
+    'description' => 'Relationship of UC order products and participation',
+    'fields' => array(
+      'order_product_id' => array(
+        'type' => 'int',
+        'size' => 'normal',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => '',
+      ),
+      'participant_id' => array(
+        'type' => 'int',
+        'size' => 'normal',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => '',
+      ),
+    ),
+    'name' => 'uc_civievent_order_products',
+    'primary key' => array(
+      0 => 'order_product_id',
+      1 => 'participant_id',
+    ),
+  );
+  $schema['uc_civicontribute_order_products'] = array(
+    'description' => 'Relationship of UC order products and contributions',
+    'fields' => array(
+      'order_product_id' => array(
+        'type' => 'int',
+        'size' => 'normal',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => '',
+      ),
+      'contribution_id' => array(
+        'type' => 'int',
+        'size' => 'normal',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => '',
+      ),
+    ),
+    'name' => 'uc_civicontribute_order_products',
+    'primary key' => array(
+      0 => 'order_product_id',
+      1 => 'contribution_id',
+    ),
+  );
+  return $schema;
+}
+
+/**
+ * Implements hook_update_N().
+ */
+function uc_civicrm_product_update_6201() {
+  $ret = array();
+  $schema = uc_civicrm_product_schema();
+  db_add_field($ret, 'uc_civicontribute', 'non_deductible_amount', $schema['uc_civicontribute']['fields']['non_deductible_amount']);
+  db_add_field($ret, 'uc_civicontribute', 'fee_amount', $schema['uc_civicontribute']['fields']['fee_amount']);
+  db_add_field($ret, 'uc_civicontribute', 'net_amount', $schema['uc_civicontribute']['fields']['net_amount']);
+  db_add_field($ret, 'uc_civievent', 'role_id', $schema['uc_civievent']['fields']['role_id']);
+  db_add_field($ret, 'uc_civievent', 'status_id', $schema['uc_civievent']['fields']['status_id']);
+  return $ret;
+}
+
+/**
+ * Implements hook_update_N().
+ */
+function uc_civicrm_product_update_6202() {
+  $ret = array();
+  $schema = uc_civicrm_product_schema();
+  db_create_table($ret, 'uc_civievent_order_products', $schema['uc_civievent_order_products']);
+  db_create_table($ret, 'uc_civicontribute_order_products', $schema['uc_civicontribute_order_products']);
+  return $ret;
+}
+
+/**
+ * Support synchronization of CiviCRM statuses over all Ubercart order statuses.
+ */
+function uc_civicrm_product_update_6203() {
+  $ret = array();
+  $schema = uc_civicrm_product_schema();
+
+  // Add new serialized statuses field.
+  db_add_field($ret, 'uc_civievent', 'statuses', $schema['uc_civievent']['fields']['statuses']);
+
+  // Migrate uc_civievent status_id to statuses.
+  $query = db_query('SELECT * FROM {uc_civievent}');
+  while ($row = db_fetch_object($query)) {
+
+    // 'completed' is a core Ubercart order state, and it's what triggered the
+    // creation of CiviCRM records in earlier versions of this module.
+    $row->statuses = array(
+      'completed' => $row->status_id,
+    );
+    drupal_write_record('uc_civievent', $row, 'ucceid');
+  }
+
+  // Drop status_id column from uc_civievent.
+  db_drop_field($ret, 'uc_civievent', 'status_id');
+
+  // Add new serialized statuses field.
+  db_add_field($ret, 'uc_civicontribute', 'statuses', $schema['uc_civicontribute']['fields']['statuses']);
+
+  // Create statuses for CiviContribute product features.
+  $query = db_query('SELECT * FROM {uc_civicontribute}');
+  while ($row = db_fetch_object($query)) {
+
+    // 'completed' is a core Ubercart order state, and it's what triggered the
+    // creation of CiviCRM records in earlier versions of this module.
+    $row->statuses = array(
+
+      // completed contributions have status ID 1 in CiviCRM.
+      'completed' => '1',
+    );
+    drupal_write_record('uc_civicontribute', $row, 'ucccid');
+  }
+
+  return $ret;
+}
+
+/**
+ * Simplify naming of primary key columns on product feature tables.
+ */
+function uc_civicrm_product_update_6204() {
+  $ret = array();
+  $schema = uc_civicrm_product_schema();
+
+  db_change_field($ret, 'uc_civicontribute', 'ucccid', 'id', $schema['uc_civicontribute']['fields']['id']);
+  db_change_field($ret, 'uc_civievent', 'ucceid', 'id', $schema['uc_civievent']['fields']['id']);
+  db_change_field($ret, 'uc_civimember', 'uccmid', 'id', $schema['uc_civimember']['fields']['id']);
+
+  return $ret;
+}
