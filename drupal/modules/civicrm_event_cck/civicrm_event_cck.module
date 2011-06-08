@@ -10,15 +10,77 @@ function civicrm_event_cck_menu(){
     'access arguments' => array('administer site configuration'),
     'type' => MENU_NORMAL_ITEM,
   );
+  $items['node/%node/civiec_participants'] = array(
+    'title' => 'Participants',
+    'page callback' => 'civicrm_event_cck_goto',
+    'page arguments' => array(1, 'node'),
+    'access callback' => 'civicrm_event_cck_access_check',
+    'access arguments' => array('edit event participants'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 90,
+  );
+  $items['node/%node/civiec_admin_event'] = array(
+    'title' => 'Event Configure',
+    'page callback' => 'civicrm_event_cck_goto',
+    'page arguments' => array(1, 'node'),
+    'access callback' => 'civicrm_event_cck_access_check',
+    'access arguments' => array('edit all events'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 90,
+  );
   return $items;
+}
+
+function civicrm_event_cck_access_check($perm){
+  switch($perm){ 
+    case 'edit event participants':
+      if(variable_get('civiec_enable_admin_participants', 0)){
+        if(user_access($perm)){
+          return TRUE;
+        }
+      }
+      break;
+    case 'edit all events':
+      if(variable_get('civiec_enable_admin_event', 0)){
+        if(user_access($perm)){
+          return TRUE;
+        }
+      }
+      break;
+  }
+  return FALSE;
+}
+
+function civicrm_event_cck_goto(&$node){
+  $event_id = civicrm_event_cck_check($node);
+  if($event_id){
+    switch(arg(2)){
+      case 'civiec_participants':
+        drupal_goto('civicrm/event/search', "reset=1&force=1&event=$event_id");
+        break;
+      case 'civiec_admin_event':
+        drupal_goto('civicrm/event/manage/registration', "reset=1&action=update&id=$event_id");
+        break;
+    }
+  }
 }
 
 function civicrm_event_cck_admin_settings(){
   $types = node_get_types('names');
   $form['civiec_enable_register_button'] = array(
     '#type' => 'checkbox',
-    '#title' => 'Enable Registion links',
+    '#title' => 'Enable Registion link',
     '#default_value' => variable_get('civiec_enable_register_button', 0),
+  );
+  $form['civiec_enable_admin_participants'] = array(
+    '#type' => 'checkbox',
+    '#title' => 'Enable Participants Admin Link',
+    '#default_value' => variable_get('civiec_enable_admin_participants', 0),
+  );
+  $form['civiec_enable_admin_event'] = array(
+    '#type' => 'checkbox',
+    '#title' => 'Enable CiviCRM Event Admin Link',
+    '#default_value' => variable_get('civiec_enable_admin_event', 0),
   );
   $form['civiec_enabled_type'] = array(
     '#type' => 'checkboxes',
@@ -88,53 +150,30 @@ function civicrm_event_cck_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL){
 }
 
 function civicrm_event_cck_view(&$node, $event_id){
-  // admin
   civicrm_initialize();
-  $admin['participants'] = array(
-    'title' => ts("Participants"),
-    'href' => "civicrm/event/search",
-    'query' => "reset=1&force=1&event=$event_id",
-    'class' => '',
-  );
-  $admin['event'] = array(
-    'title' => ts("Configure Event"),
-    'href' => "civicrm/event/manage/registration",
-    'query' => "reset=1&action=update&id=$event_id",
-    'attributes' => array('class' => ''),
-  );
-
-  // open
   $button['register'] = array(
     'title' => ts("Event Online Registration"),
     'href' => "civicrm/event/register",
     'query' => "reset=1&id=$event_id",
     'attributes' => array('class' => 'orange bigrounded'),
   );
-  //$participants_list = l();
 
-  // now build the correct view
   $show_field = variable_get("civiec_is_online_registration", 0);
-  if(node_access('update', $node)){
-    $node->content['civicrm_event_cck_admin'] = array(
-      '#value' => civicrm_event_cck_button($admin, $node, 'admin'),
-      '#weight' => -100,
-    );
-  }
   if(variable_get('civiec_enable_register_button', 0)){
     if($node->$show_field){
-    /*
-      $node->content['civicrm_event_cck_top'] = array(
-        //'#value' => ,
-        '#value' => civicrm_event_cck_button($button, $node, 'button'),
-        '#weight' => -90,
-      );
-    */
       $node->content['civicrm_event_cck_bottom'] = array(
         //'#value' => ,
         '#value' => civicrm_event_cck_button($button, $node, 'button'),
         '#weight' => 100,
       );
     }
+  }
+
+  // add javascript for admin links
+  if(variable_get('civiec_enable_admin_participants', 0)){
+    drupal_add_js('$(document).ready(function(){ $("a[href*=civiec_participants]").attr("target","_blank"); });','inline', 'footer');
+  }
+  if(variable_get('civiec_enable_admin_event', 0)){
   }
 }
 function civicrm_event_cck_button($button, $node, $type){
