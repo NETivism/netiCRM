@@ -190,24 +190,18 @@ function civicrm_event_cck_save(&$node, $op){
   foreach($event_fields as $f => $name){
     $fieldname = variable_get("civiec_".$f, '');
     if($fieldname){
-        $field = $node->$fieldname;
+      $field = $node->$fieldname;
       if($f == 'id'){
         $event_id = $field[0]['value'];
         $event_id_field = $fieldname;
       }
       if($f == 'date'){
-        $field_info = content_fields($fieldname);
-        print_r($field_info);
-        //list($start) = explode(' ', $field[0]['value']);
-        //list($end) = explode(' ', $field[0]['value2']);
-        $params['start_date'] = preg_replace("/[^0-9]*/", '', $field[0]['value']);
-        $params['end_date'] = preg_replace("/[^0-9]*/", '', $field[0]['value2']);
+        $params['start_date'] = date('YmdHis',strtotime($field[0]['value']) + $field[0]['offset']);
+        $params['end_date'] = date('YmdHis',strtotime($field[0]['value2']) + $field[0]['offset2']);
       }
       elseif($f == 'registration_date'){
-        //list($start) = explode(' ', $field[0]['value']);
-        //list($end) = explode(' ', $field[0]['value2']);
-        $params['registration_start_date'] = preg_replace("/[^0-9]*/", '', $field[0]['value']);
-        $params['registration_end_date'] = preg_replace("/[^0-9]*/", '', $field[0]['value2']);
+        $params['registration_start_date'] = date('YmdHis',strtotime($field[0]['value']) + $field[0]['offset']);
+        $params['registration_end_date'] = date('YmdHis',strtotime($field[0]['value2']) + $field[0]['offset2']);
       }
       else{
         $params[$f] = $field[0]['value'];
@@ -382,4 +376,8 @@ function civicrm_event_cck_check(&$node, $fieldname = 'id'){
     }
   }
   return FALSE;
+}
+
+function civicrm_event_cck_timezone($a, $b){
+
 }
