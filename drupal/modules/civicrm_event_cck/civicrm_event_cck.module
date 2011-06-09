@@ -74,14 +74,15 @@ function civicrm_event_cck_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL){
     $event_id = civicrm_event_cck_check($node);
   }
   if($event_id){
-    if($op == 'view'){
+    if($op == 'view' && $a4){
       drupal_add_css(drupal_get_path('module', 'civicrm_event_cck')."/civicrm_event_cck.css");
       civicrm_event_cck_view($node, $event_id);
     }
-    if($op == 'delete'){
+    if($op == 'delete' || $op == 'presave'){
       civicrm_event_cck_save($node, $op);
     }
   }
+
   if($op == 'presave' && $event_id === 0){
     civicrm_event_cck_save($node, $op);
   }
@@ -156,6 +157,8 @@ function civicrm_event_cck_save(&$node, $op){
         $event_id_field = $fieldname;
       }
       if($f == 'date'){
+        $field_info = content_fields($fieldname);
+        print_r($field_info);
         //list($start) = explode(' ', $field[0]['value']);
         //list($end) = explode(' ', $field[0]['value2']);
         $params['start_date'] = preg_replace("/[^0-9]*/", '', $field[0]['value']);
@@ -177,7 +180,7 @@ function civicrm_event_cck_save(&$node, $op){
     }
   }
   $params['title'] = $node->title;
-  $params['summary'] = $node->teaser;
+  $params['summary'] = '';
   $params['description'] = $node->body;
   $params['is_active'] = $op == 'delete' ? 0 : 1;
   $params['is_monetory'] = 0;
