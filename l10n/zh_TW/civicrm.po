@@ -39487,7 +39487,7 @@ msgstr "聯絡人總覽"
 
 #: drupal/civicrm.module
 msgid "Edit '!1'"
-msgstr "編輯 %1"
+msgstr "編輯!1"
 
 #: CRM/Event/Form/ManageEvent/Registration.php
 msgid "Allow multiple registrations from the same email address requires a profile of type 'Individual'"
