@@ -15136,7 +15136,7 @@ msgstr "活動報名開始於 %1"
 
 #: CRM/Event/Form/Registration.php
 msgid "Registration for this event ended on %1"
-msgstr "活動報名結束於%1"
+msgstr "活動報名截止日：%1"
 
 #: CRM/Event/Form/Registration.php
 msgid "A payment processor must be selected for this event registration page, or the event must be configured to give users the option to pay later (contact the site administrator for assistance)."
@@ -34248,7 +34248,7 @@ msgstr "籌款者"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Performance"
-msgstr "表演"
+msgstr "效能"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Workshop"
