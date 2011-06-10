@@ -164,11 +164,13 @@ WHERE  inst.report_id = %1";
     }
 
     static function export2csv( &$form, &$rows ) {
+    /*
         //Mark as a CSV file.
         header('Content-Type: text/csv');
 
         //Force a download and name the file using the current timestamp.
         header('Content-Disposition: attachment; filename=Report_' . $_SERVER['REQUEST_TIME'] . '.csv');
+    */
                   
         require_once 'CRM/Utils/Money.php';
         $config    = CRM_Core_Config::singleton( );
@@ -183,7 +185,7 @@ WHERE  inst.report_id = %1";
             }
         }
         //Output the headers.
-        echo implode(',', $headers) . "\n";
+        $output .= implode(',', $headers) . "\n";
 
         $displayRows = array();
         $value       = null;
@@ -212,8 +214,26 @@ WHERE  inst.report_id = %1";
                 }  
             }
             //Output the data row.
-            echo implode(',', $displayRows) . "\n";
+            $output .= implode(',', $displayRows) . "\n";
         }
+        // convert csv output to excel
+        require_once 'packages/PHPExcel/PHPExcel.php';
+        require_once 'packages/PHPExcel/PHPExcel/IOFactory.php';
+        $tmp_filename = tempnam("/tmp", "csv");
+        file_put_contents($tmp_filename, $output);
+        $objReader = PHPExcel_IOFactory::createReader('CSV');
+        $objPHPExcel = $objReader->load($tmp_filename);
+        $sheet = $objPHPExcel->getActiveSheet();
+        $highest_column = $sheet->getHighestColumn();
+        $highest_row = $sheet->getHighestRow();
+        $sheet->getStyle('A1:'.$highest_column.$highest_row)->getNumberFormat()->setFormatCode('@');
+
+        $filename = 'report-'.$_SERVER['REQUEST_TIME'].'.xls';
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="'.$filename.'"');
+        header('Cache-Control: max-age=0');
+        $writer = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+        $writer->save('php://output');
         CRM_Utils_System::civiExit( );
     }
 
