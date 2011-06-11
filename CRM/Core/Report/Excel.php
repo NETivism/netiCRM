@@ -191,4 +191,33 @@ class CRM_Core_Report_Excel {
             self::makeCSVTable( $header, $rows, $titleHeader, true, $outputHeader );
         }
     }
+
+    function writeExcelFile( $fileName, &$header, &$rows, $titleHeader = null, $outputHeader = true ){
+        if ( ! empty( $rows ) ) {
+            ob_start();
+            self::makeCSVTable( $header, $rows, $titleHeader, true, $outputHeader );
+            $output = ob_get_contents();
+            ob_end_clean();
+        }
+        // convert csv output to excel
+        require_once 'packages/PHPExcel/PHPExcel.php';
+        require_once 'packages/PHPExcel/PHPExcel/IOFactory.php';
+        $tmp_filename = tempnam("/tmp", "csv");
+        file_put_contents($tmp_filename, $output);
+        $objReader = PHPExcel_IOFactory::createReader('CSV');
+        $objPHPExcel = $objReader->load($tmp_filename);
+        $sheet = $objPHPExcel->getActiveSheet();
+        $highest_column = $sheet->getHighestColumn();
+        $highest_row = $sheet->getHighestRow();
+        $sheet->getStyle('A1:'.$highest_column.$highest_row)->getNumberFormat()->setFormatCode('@');
+
+        CRM_Utils_System::download( CRM_Utils_String::munge( $fileName ),
+                                    'application/vnd.ms-excel',
+                                    CRM_Core_DAO::$_nullObject,
+                                    'xls',
+                                    false );
+        $writer = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+        $writer->save('php://output');
+        CRM_Utils_System::civiExit( );
+    }
 }

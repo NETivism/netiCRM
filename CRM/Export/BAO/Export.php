@@ -842,6 +842,7 @@ class CRM_Export_BAO_Export
      */
     function getExportFileName( $output = 'csv', $mode = CRM_Export_Form_Select::CONTACT_EXPORT ) 
     {
+        return "civicrm_export_".$_SERVER['REQUEST_TIME'];
         switch ( $mode ) {
         case CRM_Export_Form_Select::CONTACT_EXPORT : 
             return ts('CiviCRM Contact Search');
@@ -952,7 +953,7 @@ class CRM_Export_BAO_Export
         }
 
         require_once 'CRM/Core/Report/Excel.php';
-        CRM_Core_Report_Excel::writeCSVFile( self::getExportFileName( ), $header, $rows );
+        CRM_Core_Report_Excel::writeExcelFile( self::getExportFileName( ), $header, $rows );
         CRM_Utils_System::civiExit( );
     }
 
@@ -1352,7 +1353,7 @@ LIMIT $offset, $limit
 
                 $componentDetails[] = $row;
             }
-            CRM_Core_Report_Excel::writeCSVFile( self::getExportFileName( 'csv', $exportMode ), $headerRows,
+            CRM_Core_Report_Excel::writeExcelFile( self::getExportFileName( 'csv', $exportMode ), $headerRows,
                                                  $componentDetails, null, $writeHeader );
             $writeHeader = false;
             $offset += $limit;
