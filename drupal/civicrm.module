@@ -215,11 +215,11 @@ function civicrm_menu( )
     return array(
                  'civicrm' => array(
                                     'title'            => 'CiviCRM',
-                                    'access callback'  => true,
+                                    'access callback'  => 'civicrm_checkmenu',
                                     'page callback'    => 'civicrm_invoke',
                                     'type'             => 4,
                                     'weight'           => 0,
-                                    )
+                                    ),
                  );
 }
 
@@ -874,4 +874,23 @@ function civicrm_preprocess_page(&$variables) {
   	}
 }
 
+function civicrm_checkmenu(){
+  civicrm_initialize();
+  require_once 'CRM/Core/Menu.php';
+  require_once 'CRM/Core/Component.php';
+  require_once 'CRM/Core/Permission.php';
 
+  $path = $_GET['q'];
+  static $checked;
+
+  if($checked[$path]) return true;
+  
+  $item =& CRM_Core_Menu::get( $path );
+  if($item){
+    if ( CRM_Core_Permission::checkMenuItem( $item ) ) {
+      $checked[$path] = true;
+      return true;
+    }
+  }
+  return false;
+}
