@@ -1749,6 +1749,7 @@ $menu_links['primary-links'] =array (
     'weight' => '-49',
     'module' => 'menu',
     'hidden' => '0',
+    'expanded' => 1,
     'children' => 
     array (
       0 => 
@@ -1892,6 +1893,7 @@ $menu_links['primary-links'] =array (
     'weight' => '-48',
     'module' => 'menu',
     'hidden' => '0',
+    'expanded' => 1,
     'children' => 
     array (
       0 => 
@@ -2055,6 +2057,7 @@ $menu_links['primary-links'] =array (
     'weight' => '-47',
     'module' => 'menu',
     'hidden' => '0',
+    'expanded' => 1,
     'children' => 
     array (
       0 => 
@@ -2181,12 +2184,13 @@ $menu_links['primary-links'] =array (
   ),
   3 => 
   array (
-    'path' => 'civicrm/mailing/browse/scheduled',
+    'path' => 'civicrm/mailing/browse',
     'query' => 'reset=1&scheduled=true',
     'title' => '電子報',
     'menu' => 'primary-links',
     'weight' => '-46',
     'module' => 'menu',
+    'expanded' => 1,
     'hidden' => '0',
     'children' => 
     array (
@@ -2281,6 +2285,7 @@ $menu_links['primary-links'] =array (
     'weight' => '-45',
     'module' => 'menu',
     'hidden' => '0',
+    'expanded' => 1,
     'children' => 
     array (
       0 => 
@@ -2344,6 +2349,7 @@ $menu_links['primary-links'] =array (
     'weight' => '-44',
     'module' => 'menu',
     'hidden' => '0',
+    'expanded' => 1,
     'children' => 
     array (
       0 => 
