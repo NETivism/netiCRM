@@ -1,4 +1,5 @@
 <?php
+global $menu_links;
 $menu_links['navigation'] = array (
   0 => 
   array (
