@@ -5,12 +5,6 @@
  */
 function civicrm_dmenu_install() {
   db_query("UPDATE {system} SET weight = 100 WHERE name = 'civicrm_dmenu'");
-
-  // set default variable.
-  variable_set('menu_primary_links_source', 'primary-links');
-  variable_set('menu_secondary_links_source', 'primary-links');
-  variable_set('menu_default_node_menu', 'primary-links');
-
 }
 
 function civicrm_dmenu_uninstall(){

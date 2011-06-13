@@ -8,8 +8,12 @@ function civicrm_dmenu_init(){
     foreach($menu_links as $menu_name => $m){
       civicrm_dmenu_menu_items($menu_name, $m, 0);
     }
-    menu_cache_clear_all();
+    variable_set('menu_primary_links_source', 'primary-links');
+    variable_set('menu_secondary_links_source', 'primary-links');
+    variable_set('menu_default_node_menu', 'primary-links');
+
     variable_set('civicrm_dmenu_installed', 1);
+    cache_clear_all();
   }
 }
 
