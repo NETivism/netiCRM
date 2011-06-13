@@ -283,7 +283,11 @@ $beautifier->save();
 if (isset($argv[2]) and $argv[2] != '') {
     $svnversion = $argv[2];
 } else {
-    $svnversion = `svnversion .`;
+//    $svnversion = `svnversion .`;
+    $gitversion = `git describe`;
+    $gitversion = explode('-', $gitversion);
+    array_pop($gitversion);
+    $svnversion = implode('-', $gitversion);
 }
 file_put_contents("$tplCodePath/CRM/common/version.tpl", $svnversion);
 
