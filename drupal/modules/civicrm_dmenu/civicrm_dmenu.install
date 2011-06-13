@@ -5,7 +5,7 @@
  */
 function civicrm_dmenu_install() {
   // loading defined menu structure.
-  include_once('update_1.inc');
+  require_once('update_1.inc');
   foreach($menu_links as $menu_name => $m){
     civicrm_dmenu_menu_items($menu_name, $m, 0);
   }
