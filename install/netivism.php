@@ -4,6 +4,7 @@ function neticrm_run_install(){
   civicrm_initialize( );
   neticrm_domain_set_default();
   neticrm_enable_custom_modules();
+  neticrm_disable_civicrm_blocks();
   neticrm_sql_update_1000();
 }
 
@@ -15,7 +16,16 @@ function neticrm_enable_custom_modules(){
   cache_clear_all();
 }
 function _neticrm_custom_modules(){
-  return array('civicrm_ckeditor','civicrm_imce','civicrm_twaddress','civicrm_alter_translation', 'civicrm_legalid');
+  return array('civicrm_ckeditor','civicrm_imce','civicrm_twaddress','civicrm_alter_translation', 'civicrm_legalid', 'civicrm_dmenu');
+}
+function neticrm_disable_civicrm_blocks(){
+  install_include(array('block'));
+  install_set_block('civicrm', 2, 'neticrm', 'left', -10, 0, "civicrm\ncivicrm/dashboard\nadmin\nadmin/*");
+
+  install_disable_block('civicrm', 1, 'neticrm');
+  install_disable_block('civicrm', 3, 'neticrm');
+  install_disable_block('civicrm', 4, 'neticrm');
+  install_disable_block('civicrm', 5, 'neticrm');
 }
 
 function neticrm_domain_set_default(){
