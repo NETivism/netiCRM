@@ -8228,7 +8228,7 @@ msgstr "- 聯絡人欄位 -"
 
 #: CRM/Contact/BAO/Contact.php
 msgid "Master Address Belongs To"
-msgstr "刪除地址區塊"
+msgstr "主要地址屬於"
 
 #: CRM/Contact/BAO/Contact.php
 msgid "IM Provider"
@@ -24488,7 +24488,7 @@ msgstr "刪除電話區塊"
 
 #: templates/CRM/Contact/Form/Edit/Website.tpl
 msgid "Delete Website Block"
-msgstr "刪除地址區塊"
+msgstr "刪除網址區塊"
 
 #: templates/CRM/Contact/Form/Merge.hlp templates/CRM/Contact/Form/Merge.tpl
 msgid "Click <strong>Merge</strong> to move data from the Duplicate Contact on the left into the Main Contact. In addition to the contact data (address, phone, email...), you may choose to move all or some of the related activity records (groups, contributions, memberships, etc.)."
@@ -39557,3 +39557,9 @@ msgstr "支持者承諾"
 
 msgid "Planned"
 msgstr "已規劃"
+
+msgid "to unsubscribe: {action.optOutUrl}\n{domain.address}"
+msgstr "取消訂閱連結: {action.optOutUrl}\n{domain.address}"
+
+msgid "Sample Footer for HTML formatted content<br/><a href="{action.optOutUrl}">Unsubscribe</a>  <br/> {domain.address}"
+msgstr "電子報頁尾的HTML範本<br/><a href="{action.optOutUrl}">取消訂閱</a><br/> {domain.address}"
