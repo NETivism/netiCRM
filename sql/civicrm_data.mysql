@@ -17166,4 +17166,4 @@ VALUES
 
 UPDATE civicrm_report_instance SET navigation_id = LAST_INSERT_ID() WHERE id = @instanceID;
 
- UPDATE civicrm_domain SET version = '3.3.neticrm';
+ UPDATE civicrm_domain SET version = '3.3.1';

@@ -4396,7 +4396,7 @@ INSERT INTO civicrm_mailing_component
     (name,component_type,subject,body_html,body_text,is_default,is_active)
 VALUES
     ('電子報頁首','Header','頁首標題','HTML 格式的頁首範本。','文字格式的頁首範本。',1,1),
-    ('電子報頁尾','Footer','頁尾標題','Sample Footer for HTML formatted content<br/><a href=\"{action.optOutUrl}\">Unsubscribe</a>  <br/> {domain.address}','to unsubscribe: {action.optOutUrl}\n{domain.address}',1,1),
+    ('電子報頁尾','Footer','頁尾標題','電子報頁尾的HTML範本<br/><a href=\"{action.optOutUrl}\">取消訂閱</a><br/> {domain.address}','取消訂閱連結: {action.optOutUrl}\n{domain.address}',1,1),
     ('訂閱訊息','Subscribe','確認訂閱','您有一個{subscribe.group}電子報的訂閱待確認。要確認此訂閱，請回覆此信件或按<a href=\"{subscribe.url}\">這裡</a>。','您有一個{subscribe.group}電子報的訂閱待確認。要確認此訂閱，請回覆此信件或按此連結：{subscribe.url}',1,1),
     ('歡迎訊息','Welcome','您的訂閱已被啟用','歡迎，您已完成 {welcome.group} 電子報的訂閱。','歡迎，您已完成 {welcome.group} 電子報的訂閱。',1,1),
     ('退訂訊息','Unsubscribe','取消訂閱','您已取消訂閱：{unsubscribe.group}。您欲重新訂閱，可以寄信給{action.resubscribe}或按 <a href=\"{action.resubscribeUrl}\">這裡</a>。','您已取消訂閱：{unsubscribe.group}。如您要重新訂閱，可寄信到{action.resubscribe}或按%3',1,1),
@@ -4649,7 +4649,7 @@ VALUES
   (@option_group_id_etype, '展覽', 2, 'Exhibition',  NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_etype, '籌款者', 3, 'Fundraiser',  NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_etype, '會議',    4, 'Meeting',     NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_etype, '表演',5, 'Performance', NULL, 0, NULL, 5, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_etype, '效能',5, 'Performance', NULL, 0, NULL, 5, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_etype, '工作坊',   6, 'Workshop',    NULL, 0, NULL, 6, NULL, 0, 0, 1, NULL, NULL),
 
 -- note that these are not ts'ed since they are used for logic in most cases and not display
@@ -17166,4 +17166,4 @@ VALUES
 
 UPDATE civicrm_report_instance SET navigation_id = LAST_INSERT_ID() WHERE id = @instanceID;
 
- UPDATE civicrm_domain SET version = '3.3.neticrm';
+ UPDATE civicrm_domain SET version = '3.3.1';

@@ -39558,8 +39558,11 @@ msgstr "支持者承諾"
 msgid "Planned"
 msgstr "已規劃"
 
-msgid "to unsubscribe: {action.optOutUrl}\n{domain.address}"
-msgstr "取消訂閱連結: {action.optOutUrl}\n{domain.address}"
+msgid "Sample Footer for HTML formatted content<br/><a href=\"{action.optOutUrl}\">Unsubscribe</a>  <br/> {domain.address}"
+msgstr "電子報頁尾的HTML範本<br/><a href=\"{action.optOutUrl}\">取消訂閱</a><br/> {domain.address}"
 
-msgid "Sample Footer for HTML formatted content<br/><a href="{action.optOutUrl}">Unsubscribe</a>  <br/> {domain.address}"
-msgstr "電子報頁尾的HTML範本<br/><a href="{action.optOutUrl}">取消訂閱</a><br/> {domain.address}"
+msgid "to unsubscribe: {action.optOutUrl}\n"
+"{domain.address}"
+msgstr "取消訂閱連結: {action.optOutUrl}\n"
+"{domain.address}"
+
