@@ -24,7 +24,7 @@ define('CIVICRM_TAG_UNCONFIRMED', 'Unconfirmed');
 define('CIVICRM_PETITION_CONTACTS','Petition Contacts');
 
 global $civicrm_root;
-$civicrm_root = getcwd()."/sites/all/modules/civicrm";
+$civicrm_root = $_SERVER['DOCUMENT_ROOT']."/sites/all/modules/civicrm";
 $include_path = '.'        . PATH_SEPARATOR .
                 $civicrm_root . PATH_SEPARATOR . 
                 $civicrm_root . DIRECTORY_SEPARATOR . 'packages' . PATH_SEPARATOR .
@@ -52,9 +52,6 @@ if ($memLimit >= 0 and $memLimit < 67108864) {
     ini_set('memory_limit', '64M');
 }
 
-if(class_exists('Memcache')){
-  define('CIVICRM_USE_MEMCACHE', 1);
-  define('MEMCACHE_PREFIX', 'civi_'.CIVICRM_SITE_KEY);
-}
-
+define('CIVICRM_USE_MEMCACHE', 1);
+define('MEMCACHE_PREFIX', 'civi_'.CIVICRM_SITE_KEY);
 
