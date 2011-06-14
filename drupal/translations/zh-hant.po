@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2011-06-13 13:00+0800\n"
-"PO-Revision-Date: 2011-06-13 13:00+0800\n"
+"POT-Creation-Date: 2011-06-14 09:45+0800\n"
+"PO-Revision-Date: 2011-06-14 09:45+0800\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "MIME-Version: 1.0\n"
@@ -3904,10 +3904,6 @@ msgid ""
 msgstr ""
 
 #: /civicrm/admin/setting/preferences/address&reset=1
-msgid "街道地址"
-msgstr ""
-
-#: /civicrm/admin/setting/preferences/address&reset=1
 msgid "額外地址 1"
 msgstr ""
 
@@ -3949,10 +3945,6 @@ msgstr ""
 
 #: /civicrm/admin/setting/preferences/address&reset=1
 msgid "地址名稱"
-msgstr ""
-
-#: /civicrm/admin/setting/preferences/address&reset=1
-msgid "街道地址解析"
 msgstr ""
 
 #: /index.php
@@ -15919,7 +15911,7 @@ msgstr "聯絡人總覽"
 
 #:  drupal/civicrm.module
 msgid "Edit '!1'"
-msgstr "編輯 %1"
+msgstr "Edit '!1'"
 
 #:  js/lang/calendar-lang.php; profiles/neticrmp/modules/imce/js/imce.js
 msgid "Close"
@@ -20586,7 +20578,7 @@ msgstr "不要寄送大量郵件（使用者取消訂閱）"
 
 #:  CRM/Contact/DAO/Contact.php
 msgid "Legal Identifier"
-msgstr "身分證或統一編號"
+msgstr "身分證字號"
 
 #:  CRM/Contact/DAO/Contact.php
 msgid "External Identifier"
@@ -63167,7 +63159,7 @@ msgstr "選取的聯絡人已成功刪除。"
 
 #:  CRM/Contact/BAO/Contact.php
 msgid "Master Address Belongs To"
-msgstr "刪除地址區塊"
+msgstr "主要地址屬於"
 
 #:  CRM/Contact/BAO/Contact.php
 msgid "Add Contribution"
@@ -63243,11 +63235,11 @@ msgstr "請選擇有效的聯絡人或創建新的聯絡人資料"
 
 #:  CRM/Contact/Form/Edit/Email.php
 msgid "Signature (Text)"
-msgstr "簽名"
+msgstr "簽名(純文字)"
 
 #:  CRM/Contact/Form/Edit/Email.php
 msgid "Signature (HTML)"
-msgstr "簽名"
+msgstr "簽名(HTML)"
 
 #:  CRM/Contact/Form/Relationship.php
 msgid "Current Employee"
@@ -63428,15 +63420,15 @@ msgstr "無法找到 Email 位址。"
 
 #:  CRM/Core/DAO/Address.php
 msgid "Master Address ID"
-msgstr "街道地址"
+msgstr "主要地址編號"
 
 #:  CRM/Core/DAO/Email.php templates/CRM/Contact/Page/View/Summary.tpl
 msgid "Signature Text"
-msgstr "簽名"
+msgstr "簽名(純文字)"
 
 #:  CRM/Core/DAO/Email.php
 msgid "Signature Html"
-msgstr "簽名"
+msgstr "簽名(HTML)"
 
 #:  CRM/Core/DAO/Persistent.php
 msgid "Context"
@@ -63629,7 +63621,7 @@ msgstr "那家庭的'家庭會員'"
 
 #:  CRM/Export/Form/Select.php
 msgid "Merge Same Address"
-msgstr "街道地址"
+msgstr "合併同樣的地址"
 
 #:  CRM/Export/Form/Select.php
 msgid "Merge Same Household"
@@ -63988,7 +63980,7 @@ msgid ""
 "identifier from the old system to this field. You can then use it to "
 "match imported contributions and other transactional data to the "
 "corresponding contact record."
-msgstr "外部的編號。此欄位記錄使用者獨一無二的編號，通常用作資訊匯入時的比對用途，或是辨識使用者的身分。（例如身分證字號）"
+msgstr "外部的編號。此欄位記錄使用者獨一無二的編號，通常用作資訊匯入時的比對用途，或是辨識使用者的身分。"
 
 msgid "Click here to configure the panes."
 msgstr "點選以設定下列面板"
@@ -64012,7 +64004,7 @@ msgstr "刪除此記錄"
 
 #:  templates/CRM/Contact/Form/Edit/Address.tpl
 msgid "Another Address"
-msgstr "街道地址"
+msgstr "另外的地址"
 
 #:  templates/CRM/Contact/Form/Edit/Individual.tpl
 msgid ""
@@ -64030,7 +64022,7 @@ msgstr "如果你想要新增的聯絡人與下列姓名相符，建議您先點
 
 #:  templates/CRM/Contact/Form/Edit/Website.tpl
 msgid "Delete Website Block"
-msgstr "刪除地址區塊"
+msgstr "刪除網址區塊"
 
 #:  templates/CRM/Contact/Form/Merge.tpl
 msgid "duplicate"
@@ -64272,7 +64264,7 @@ msgstr "簽名"
 
 #:  templates/CRM/Contact/Page/View/Summary.tpl
 msgid "Signature HTML"
-msgstr "簽名"
+msgstr "簽名(HTML)"
 
 #:  templates/CRM/Contact/Page/View/Summary.tpl
 msgid "%1&nbsp;Address"

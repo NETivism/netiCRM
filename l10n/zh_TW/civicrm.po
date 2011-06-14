@@ -2715,7 +2715,7 @@ msgstr "內部聯絡人 ID"
 #: templates/CRM/common/footer.tpl
 #: templates/CRM/Contact/Form/Search/Custom/LegalId.tpl
 msgid "Legal Identifier"
-msgstr "身分證或統一編號"
+msgstr "身分證字號"
 
 #: CRM/Contact/DAO/Contact.php CRM/Contact/Form/Search/Custom/LegalId.php
 #: CRM/Report/Form/Case/TimeSpent.php
