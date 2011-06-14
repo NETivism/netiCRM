@@ -1,22 +1,14 @@
 <?php
 // civimail run
 function run_civimail() {
-  session_start();
-  require_once '../../../../../includes/unicode.inc';
-  require_once '../civicrm.config.php'; 
-  require_once 'CRM/Core/Config.php'; 
+  $cmspath = $_SERVER['DOCUMENT_ROOT'];
+  chdir($cmspath);
+  require_once 'includes/bootstrap.inc';
+  drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
+  civicrm_initialize();
   require_once 'CRM/Mailing/BAO/Job.php';
   $config =& CRM_Core_Config::singleton(); 
-
-  //log the execution of script
-  CRM_Core_Error::debug_log_message( 'civimail_cron.php');
     
-  require_once "CRM/Utils/System/Drupal.php";
-  $cmsPath = CRM_Utils_System_Drupal::cmsRootPath( );
-  chdir($cmsPath);
-  require_once 'includes/bootstrap.inc';
-  @drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
-
   $user = user_load(array('uid' => 1));
   $originalpass = $user->pass;
   $newpass = 'password';
