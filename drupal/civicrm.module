@@ -876,6 +876,7 @@ function civicrm_preprocess_page(&$variables) {
 }
 
 function civicrm_checkmenu( ){
+  global $user; 
   $args = func_get_args();
   $path = trim(implode('/', $args), '/');
 
@@ -888,7 +889,14 @@ function civicrm_checkmenu( ){
   require_once 'CRM/Core/Permission.php';
   $item =& CRM_Core_Menu::get( $path );
   if($item){
-    if ( CRM_Core_Permission::checkMenuItem( $item ) ) {
+    if($item['access_callback'] && is_numeric($item['access_callback']) && !$user->uid){
+      if($access = $item['access_arguments'][0][0]){
+        if(user_access($access)){
+          return true;
+        }
+      }
+    }
+    elseif ( CRM_Core_Permission::checkMenuItem( $item ) ) {
       $checked[$path] = true;
       return true;
     }
