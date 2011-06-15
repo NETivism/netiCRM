@@ -46,7 +46,7 @@ TODO: need to change to Taiwan id verify
       $sql = "SELECT id, display_name FROM civicrm_contact WHERE legal_identifier = '{$fields['legal_identifier']}'";
       if($contactID){
         // when update
-        $sql .= " id != {$contactID}";
+        $sql .= " AND id != {$contactID}";
       }
       $dao = CRM_Core_DAO::executeQuery( $sql );
       $dao->fetch();
@@ -77,13 +77,12 @@ function civicrm_legalid_civicrm_postProcess( $formName, &$form ) {
 
     if ( $exists_legalid) {
       $query = "UPDATE civicrm_contact SET legal_identifier = '{$legalid}' WHERE id = {$contactID}";
+      CRM_Core_DAO::executeQuery( $query );
     }
     else {
       // drop here.
       // it's not possible to save non conatact table
     }
-
-    CRM_Core_DAO::executeQuery( $query );
   }
 }
 
