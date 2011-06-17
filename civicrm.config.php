@@ -107,4 +107,7 @@ function civicrm_conf_init() {
     return $conf;
 }
 
+if( file_exists(civicrm_conf_init( ) . '/settings.php')){
+  include_once civicrm_conf_init( ) . '/settings.php';
+}
 include_once civicrm_conf_init( ) . '/civicrm.settings.php';
