@@ -178,7 +178,8 @@ class CRM_Admin_Form_PaymentProcessorType extends CRM_Admin_Form
      */
     public function postProcess() 
     {
-        CRM_Utils_System::flushCache( 'CRM_Core_DAO_PaymentProcessorType' );
+        $cache =& CRM_Utils_Cache::singleton();
+        $cache->delete('*CRM_Core_DAO_PaymentProcessor*');
 
         if ( $this->_action & CRM_Core_Action::DELETE ) {
             CRM_Core_BAO_PaymentProcessorType::del( $this->_id );

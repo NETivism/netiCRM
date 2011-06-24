@@ -86,9 +86,6 @@ class CRM_Core_BAO_Cache extends CRM_Core_DAO_Cache
         // also reset ACL Cache
         require_once 'CRM/ACL/BAO/Cache.php';
         CRM_ACL_BAO_Cache::resetCache( );
-
-        // also reset memory cache if any
-        CRM_Utils_System::flushCache( );
     }
 
     static function storeSessionToCache( $names,

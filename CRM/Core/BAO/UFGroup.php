@@ -1069,6 +1069,9 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup
     public static function del( $id ) 
     {                
         //check whether this group contains  any profile fields
+        $cache =& CRM_Utils_Cache::singleton();
+        $cache->delete('*CRM_Core_DAO*');
+
         require_once 'CRM/Core/BAO/UFField.php';
         $profileField = new CRM_Core_DAO_UFField();
         $profileField->uf_group_id = $id;
@@ -1102,6 +1105,8 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup
      */
     static function add( &$params, &$ids ) 
     {
+        $cache =& CRM_Utils_Cache::singleton();
+        $cache->delete('*CRM_Core_DAO*');
         require_once 'CRM/Utils/Array.php';
         $fields = array( 'is_active', 'add_captcha', 'is_map', 'is_update_dupe', 'is_edit_link', 'is_uf_link', 'is_cms_user' );
         foreach( $fields as $field ) {
@@ -2072,6 +2077,9 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
      */
     static function copy( $id ) 
     {
+        $cache =& CRM_Utils_Cache::singleton();
+        $cache->delete('*CRM_Core_DAO*');
+
         $fieldsFix = array ( 'prefix' => array( 'title' => ts( 'Copy of ' ) ) );
         $copy        =& CRM_Core_DAO::copyGeneric( 'CRM_Core_DAO_UFGroup', 
                                                    array( 'id' => $id ), 
