@@ -1,0 +1,6 @@
+name = CiviCRM Statistics 
+description = Check statistics data from netivism to see the average number.
+package = CiviCRM
+core = 6.x
+version = 3.3.1-netivism
+dependencies[] = civicrm
