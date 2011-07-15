@@ -13,7 +13,6 @@ function civicrm_statistics_check_update(){
     'civicrm_contact' => 'cc',
     'civicrm_contribution' => 'ccb',
     'civicrm_contribution.amount' => 'ccb.a',
-    'civicrm_contribution_page' => 'ccp',
     'civicrm_mailing_event_delivered' => 'cmed',
     'civicrm_mailing_event_opened' => 'cmeo',
     'civicrm_mailing_event_trackable_url_open' => 'cmet',
