@@ -1,6 +1,6 @@
-name = Newweb functions
-description = Newweb payment functions for civicrm.
-package = CiviCRM
+name = Payment of Neweb
+description = Neweb payment functions for civicrm.
+package = NetiCRM
 dependencies[] = civicrm
 core = 6.x
-version = 3.3.1-netivism
+version = 6.x-1.0

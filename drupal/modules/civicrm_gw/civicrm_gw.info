@@ -1,6 +1,6 @@
-name = GreenWorld Payment
+name = Payment of GreenWorld
 description = GreenWorld GW payment functions for civicrm. Include ecpay and ecbank.
-package = CiviCRM
+package = NetiCRM
 dependencies[] = civicrm
 core = 6.x
-version = 3.3.1-netivism
+version = 6.x-1.0
