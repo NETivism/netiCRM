@@ -203,13 +203,14 @@ function neticrm_preset_update_6104(){
     'Credit Card Recurring (Offline)' => '信用卡定期定額（非線上）',
     'Post Office Transfer' => '郵政劃撥',
     'Post Office Recurring (Offline)' => '郵局自動轉帳授權',
+    'Convenient Store' => '便利商店',
+    'Convenient Store (Code)' => '便利商店（代碼）',
     'WebATM' => 'WebATM',
     'EFT' => '轉帳',
     'Yahoo' => 'Yahoo公益',
   );
 
   $values = array();
-//  require_once("CRM/Core/OptionGroup.php");
   $values = CRM_Core_OptionGroup::values('payment_instrument', TRUE);
   $group_params = array('name' => 'payment_instrument');
   $params = array(
