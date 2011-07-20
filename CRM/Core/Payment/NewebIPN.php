@@ -3,7 +3,7 @@ define("NEWWEB_RECUR_DAY", 20); // day of month
 require_once 'CRM/Core/Payment/BaseIPN.php';
 require_once "CRM/Core/DAO.php";
 
-class CRM_Core_Payment_NewwebIPN extends CRM_Core_Payment_BaseIPN {
+class CRM_Core_Payment_NewebIPN extends CRM_Core_Payment_BaseIPN {
     static $_paymentProcessor = null;
 
     function __construct( ) {
@@ -96,9 +96,7 @@ class CRM_Core_Payment_NewwebIPN extends CRM_Core_Payment_BaseIPN {
       }
 
       if($input['PRC'] || $input['SRC']){
-        require_once('CRM/Core/Payment/NewwebResponse.php');
-        $e = new CRM_Core_Payment_NewwebResponse;
-        $error = $e->response($input['PRC'], $input['SRC'], $input['BankResponseCode']);
+        $error = civicrm_neweb_response($input['PRC'], $input['SRC'], $input['BankResponseCode'], 'detail');
         $note .= implode("\n",$error);
         $note .= " (Error code: PRC-{$input['PRC']},SRC-{$input['SRC']},BRC-{$input['BRC']})\n";
         $this->failed( $objects, $transaction );
@@ -158,7 +156,7 @@ class CRM_Core_Payment_NewwebIPN extends CRM_Core_Payment_BaseIPN {
         $recur->cycle_day = NEWWEB_RECUR_DAY;
         $recur->save();
         CRM_Core_Error::debug_log_message( "Done the recurring object save." );
-        CRM_Core_DAO::executeQuery("INSERT INTO civicrm_contribution_newweb_recur (recur_id,order_num,cycle) VALUES ($recur->id, $order_num, 0)");
+        CRM_Core_DAO::executeQuery("INSERT INTO civicrm_contribution_neweb_recur (recur_id,order_num,cycle) VALUES ($recur->id, $order_num, 0)");
 
         //send recurring Notification email for user
         require_once 'CRM/Contribute/BAO/ContributionPage.php';
@@ -204,9 +202,7 @@ class CRM_Core_Payment_NewwebIPN extends CRM_Core_Payment_BaseIPN {
       }
 
       if($input['PRC'] || $input['SRC']){
-        require_once('CRM/Core/Payment/NewwebResponse.php');
-        $e = new CRM_Core_Payment_NewwebResponse;
-        $error = $e->response($input['PRC'], $input['SRC'], $input['BankResponseCode']);
+        $error = civicrm_neweb_response($input['PRC'], $input['SRC'], $input['BankResponseCode'], 'detail');
         $note .= implode("\n",$error);
         $note .= " (Error code: PRC-{$input['PRC']},SRC-{$input['SRC']},BRC-{$input['BRC']})\n";
         $this->failed( $objects, $transaction );
