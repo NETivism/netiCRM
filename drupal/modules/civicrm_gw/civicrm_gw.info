@@ -1,4 +1,4 @@
-name = Payment of GreenWorld
+name = Payment Method of GreenWorld
 description = GreenWorld GW payment functions for civicrm. Include ecpay and ecbank.
 package = NetiCRM
 dependencies[] = civicrm
