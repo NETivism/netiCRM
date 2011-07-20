@@ -1,9 +1,8 @@
 <?php
 date_default_timezone_set('Asia/Taipei');
 require_once 'CRM/Core/Payment.php';
-require_once 'CRM/Core/Payment/NewwebResponse.php';
 
-class CRM_Core_Payment_Newweb extends CRM_Core_Payment {
+class CRM_Core_Payment_Neweb extends CRM_Core_Payment {
     /**
      * mode of operation: live or test
      *
@@ -31,7 +30,7 @@ class CRM_Core_Payment_Newweb extends CRM_Core_Payment {
     function __construct( $mode, &$paymentProcessor ) {
       $this->_mode             = $mode;
       $this->_paymentProcessor = $paymentProcessor;
-      $this->_processorName    = ts('Newweb');
+      $this->_processorName    = ts('Neweb');
       $config =& CRM_Core_Config::singleton( );
       $this->_config = $config;
     }
@@ -48,7 +47,7 @@ class CRM_Core_Payment_Newweb extends CRM_Core_Payment {
     static function &singleton( $mode, &$paymentProcessor ) {
         $processorName = $paymentProcessor['name'];
         if (self::$_singleton[$processorName] === null ) {
-            self::$_singleton[$processorName] = new CRM_Core_Payment_Newweb( $mode, $paymentProcessor );
+            self::$_singleton[$processorName] = new CRM_Core_Payment_Neweb( $mode, $paymentProcessor );
         }
         return self::$_singleton[$processorName];
     }
@@ -102,22 +101,22 @@ class CRM_Core_Payment_Newweb extends CRM_Core_Payment {
         CRM_Core_Error::fatal( ts('Component is invalid') );
       }
 
-      // to see what instrument for newweb
-      $newweb_instrument_id = $params['newweb_instrument_id'];
-      $newweb_instrument = $this->getInstrument($newweb_instrument_id);
-      
+      // to see what instrument for neweb
+      $neweb_instrument_id = $params['neweb_instrument_id'];
+      $neweb_instrument = $this->getInstrument($neweb_instrument_id);
+
       $is_pay_later = TRUE;
-      switch($newweb_instrument){
+      switch($neweb_instrument){
         case 'Credit Card':
-          $redirect = $this->newwebCreditCard($params, $component, $newweb_instrument);
+          $params_form = $this->newebCreditCard($params, $component, $neweb_instrument);
           $is_pay_later = FALSE;
           break;
-        case 'WEBATM':
-        case 'ATM':
-        case 'CS':
-        case 'MMK':
-        case 'ALIPAY':
-          $redirect = $this->newwebEZPay($params, $component, $newweb_instrument);
+        case 'Web ATM':
+        case 'Convenient Store':
+        case 'Convenient Store (Code)':
+        case 'Alipay':
+        case 'EFT':
+          $params_form = $this->newebEZPay($params, $component, $neweb_instrument);
           break;
       }
 
@@ -126,33 +125,36 @@ class CRM_Core_Payment_Newweb extends CRM_Core_Payment {
       $contribution =& new CRM_Contribute_DAO_Contribution();
       $contribution->id = $params['contributionID'];
       $contribution->find(true);
-      if($contribution->payment_instrument_id != $params['newweb_instrument_id']){
-        $contribution->payment_instrument_id = $params['newweb_instrument_id'];
+      if($contribution->payment_instrument_id != $params['neweb_instrument_id']){
+        $contribution->payment_instrument_id = $params['neweb_instrument_id'];
       }
       if($contribution->is_pay_later != $is_pay_later){
         $contribution->is_pay_later = $is_pay_later;
       }
-      $contribution->trxn_id = $params['contributionID'];
+      $contribution->trxn_id = $params['is_recur'] ? $params['contributionID'] + 990000000  : $params['contributionID'];
       $contribution->save();
 
-      // record for thank you display
-      $_SESSION['newweb']['trxn_id'] = $params['contributionID'];
-      $_SESSION['newweb']['is_pay_later'] = $is_pay_later;
-      $newweb_instrument_label = $this->getInstrument($newweb_instrument_id, 'label');
-      $_SESSION['newweb']['payment_instrument'] = $newweb_instrument_label;
+      // Inject in quickform sessions
+      // Special hacking for display trxn_id after thank you page.
+      $_SESSION['CiviCRM']['CRM_Contribute_Controller_Contribution_'.$params['qfKey']]['params']['trxn_id'] = $contribution->trxn_id;
 
-      // doing redirect
-      CRM_Utils_System::redirect($redirect);
+      // making redirect form
+      print $this->formRedirect($params_form);
+
+      // move things to CiviCRM cache as needed
+      require_once 'CRM/Core/Session.php';
+      CRM_Core_Session::storeSessionObjects( );
+      exit();
     }
 
-    function newwebCreditCard(&$params, $component, $newweb_instrument){
+    function newebCreditCard(&$params, $component, $neweb_instrument){
       $config = $this->_config;
       $civi_base_url = $component == 'event' ? 'civicrm/event/register' : 'civicrm/contribute/transact';
       $cancel_url = CRM_Utils_System::url($civi_base_url,"_qf_Confirm_display=true&qfKey={$params['qfKey']}",false, null, false );
       $return_url = CRM_Utils_System::url($civi_base_url,"_qf_ThankYou_display=1&qfKey={$params['qfKey']}",true, null, false );
 
       // notify url for receive payment result
-      $notify_url = $config->userFrameworkResourceURL."extern/newwebipn.php?reset=1&contactID={$params['contactID']}"."&contributionID={$params['contributionID']}"."&module={$component}";
+      $notify_url = "http://".$_SERVER['HTTP_HOST']."/neweb/ipn?reset=1&contactID={$params['contactID']}"."&contributionID={$params['contributionID']}"."&module={$component}";
 
       if ( $component == 'event' ) {
         $notify_url .= "&eventID={$params['eventID']}&participantID={$params['participantID']}";
@@ -180,37 +182,31 @@ class CRM_Core_Payment_Newweb extends CRM_Core_Payment {
            CRM_Core_Error::fatal( ts( 'Recurring contribution, but no database id' ) );
          }
       }
-      else {
-      }
 
       // building params
       $amount = $params['currencyID'] == 'TWD' && strstr($params['amount'], '.') ? substr($params['amount'], 0, strpos($params['amount'],'.')) .'.00' : $params['amount'];
       $name = function_exists('truncate_utf8') ? truncate_utf8($params['item_name'], 10) : $params['item_name'];
 
-      $newweb_params = array(
+      $neweb_params = array(
         "MerchantNumber" => $this->_paymentProcessor['user_name'],
-        "OrderNumber"    => $params['contributionID'],
+        "OrderNumber"    => $params['is_recur'] ? $params['contributionID'] + 990000000  : $params['contributionID'],
         "Amount"         => $amount,
         "OrgOrderNumber" => $params['contributionID'],
         "ApproveFlag"    => 1,
-        "DepositFlag"    => $params['is_recur'] ? 1 : 0,
+        "DepositFlag"    => 0,
         "Englishmode"    => 0,
         "OrderURL"       => $notify_url,
         "ReturnURL"      => $return_url,
-        "checksum"       => md5($this->_paymentProcessor['user_name'].$params['contributionID'].$this->_paymentProcessor['signature'].$amount),
         "op"             => "AcceptPayment",
         "#action"        => $this->_paymentProcessor['url_site'],
-        "#params"         => $params,
         "#paymentProcessor" => $this->_paymentProcessor,
-        "#redirect" => $_SERVER['HTTP_REFERER'],
       );
-      $_SESSION['newweb_form'] = $newweb_params;
+      $neweb_params["checksum"] = md5($this->_paymentProcessor['user_name'].$neweb_params['OrderNumber'].$this->_paymentProcessor['signature'].$amount);
 
-      $redirect = CRM_Utils_System::url("civicrm_newweb?qfKey={$params['qfKey']}");
-      return $redirect;
+      return $neweb_params;
     }
 
-    function newwebEZPay(&$params, $component, $newweb_instrument){
+    function newebEZPay(&$params, $component, $neweb_instrument){
       require_once 'CRM/Contact/DAO/Contact.php';
       $contact =& new CRM_Contact_DAO_Contact( );
       $contact->id = $params['contact'];
@@ -227,11 +223,11 @@ class CRM_Core_Payment_Newweb extends CRM_Core_Payment {
       $post['merchantnumber'] = $this->_paymentProcessor['password'];
       $post['ordernumber'] = $params['contributionID'];
       $post['amount'] = $amount;
-      $post['paymenttype'] = $newweb_instrument;
+      $post['paymenttype'] = $neweb_instrument;
       $post['paytitle'] = $params['item_name'];
       $post['bankid'] = '004';
       $post['duedate'] = date('Ymd', time()+86400*7);
-      if($newweb_instrument == 'CS'){
+      if($neweb_instrument == 'CS'){
         $post['payname'] = $params['last_name']." ".$params['first_name'];
         $post['payphone'] = preg_replace("/[^\d]+/i", $params['phone']);
       }
@@ -245,45 +241,8 @@ class CRM_Core_Payment_Newweb extends CRM_Core_Payment {
       $post["#action"] = rtrim($this->_paymentProcessor['url_api'],'/')."/Payment";
       $post["#paymentProcessor"] = $this->_paymentProcessor;
       $post['returnvalue'] = 0;
-      $_SESSION['newweb_form'] = $post;
-      $redirect = CRM_Utils_System::url("civicrm_newweb?qfKey={$params['qfKey']}&instrument=$newweb_instrument");   
-      return $redirect;
-      /*
-      if($newweb_instrument == 'WEBATM' || $newweb_instrument == 'CS' || $newweb_instrument == 'MMK'){
-        $post["#redirect"] = $_SERVER['HTTP_REFERER'];
-        $post["#params"] = $params;
-        $post["#action"] = rtrim($this->_paymentProcessor['url_api'],'/')."/Payment";
-        $post["#paymentProcessor"] = $this->_paymentProcessor;
-        $post['returnvalue'] = 0;
-        $_SESSION['newweb_form'] = $post;
-        $redirect = CRM_Utils_System::url("civicrm_newweb?qfKey={$params['qfKey']}&instrument=$newweb_instrument");   
-        return $redirect;
-      }
-      else{
-        $result = $this->postData($post);
-      }
 
-      if($result === FALSE){
-        // false message here.
-      }
-      else{
-        // checksum
-        if($this->checkSum($result)){
-          if($newweb_instrument == 'ATM'){
-            $result_note = $newweb_instrument. ' ('.$result['bankid'].ts('Taiwan Bank').', '.ts('Account Number').': '.$result['virtualaccount'].')';
-            $_SESSION['newweb']['payment_instrument'] = $result_note;
-            $this->addNote($result_note, $params);
-            dpm($result_note);
-          }
-        }
-        else{
-          dpm('error here');
-        }
-      }
-
-      $redirect = CRM_Utils_System::url($civi_base_url,"_qf_ThankYou_display=1&qfKey={$params['qfKey']}",true,null,false);
-      return $redirect;
-      */
+      return $post;
     }
 
     function vars2array($str){
@@ -504,6 +463,38 @@ class CRM_Core_Payment_Newweb extends CRM_Core_Payment {
           }
         }
       }
+    }
+
+    function formRedirect($redirect_params){
+      if(is_array($redirect_params)){
+        $o .= '<form action="'.$redirect_params['#action'].'" name="redirect" method="post" id="redirect-form">';
+        foreach($redirect_params as $k=>$p){
+          if($k[0] != '#'){
+            $o .= '<input type="hidden" name="'.$k.'" value="'.$p.'" />';
+          }
+        }
+        $o .= '</form>';
+      }
+
+      header('Pragma: no-cache');
+      header('Cache-Control: no-store, no-cache, must-revalidate');
+      header('Expires: 0');
+      return '
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr"> 
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>'.ts('Redirect to Payment Page').'</title>
+</head>
+<body>
+  '.$o.'
+  <script type="text/javascript">
+  document.forms.redirect.submit();
+  </script>
+</body>
+<html>
+';
     }
 }
 

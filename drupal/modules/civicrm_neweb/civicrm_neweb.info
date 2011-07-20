@@ -1,4 +1,4 @@
-name = Payment of Neweb
+name = Payment Method of Neweb
 description = Neweb payment functions for civicrm.
 package = NetiCRM
 dependencies[] = civicrm
