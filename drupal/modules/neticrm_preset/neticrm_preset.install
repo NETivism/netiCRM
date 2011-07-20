@@ -205,8 +205,8 @@ function neticrm_preset_update_6104(){
     'Post Office Recurring (Offline)' => '郵局自動轉帳授權',
     'Convenient Store' => '便利商店',
     'Convenient Store (Code)' => '便利商店（代碼）',
-    'WebATM' => 'WebATM',
-    'EFT' => '轉帳',
+    'Web ATM' => 'Web ATM',
+    'EFT' => '轉帳（ATM）',
     'Yahoo' => 'Yahoo公益',
   );
 
