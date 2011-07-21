@@ -61,23 +61,6 @@ function civicrm_neweb_civicrm_buildForm($form_name, &$form){
         drupal_add_js(_civicrm_neweb_js_form($radios), 'inline');
       }
       break;
-    case 'CRM_Contribute_Form_Contribution_ThankYou':
-      if(isset($_POST['final_result'])){
-        if($_POST['final_result'] == 1 && $_POST['final_return_PRC'] == 0 && $_POST['final_return_SRC'] == 0){
-          drupal_set_message(t("Success. Thank you."));
-        }
-        else{
-          // error here
-          require_once('civicrm_neweb.extern.inc');
-          dpm($_POST);
-          $prc = $_POST['final_return_PRC'];
-          $src = $_POST['final_return_SRC'];
-          $brc = $_POST['final_return_BankRC'];
-          $error = civicrm_neweb_response($prc, $src, $brc);
-          drupal_set_message(implode("<br>", $error), 'error');
-        }
-      }
-      break;
     case 'CRM_Event_Form_Registration_Register':
       // add neweb payment method selection
       require_once "CRM/Core/DAO.php";
@@ -97,6 +80,23 @@ function civicrm_neweb_civicrm_buildForm($form_name, &$form){
         drupal_add_js(_civicrm_neweb_js_form($radios), 'inline');
       }
       break;
+    case 'CRM_Contribute_Form_Contribution_ThankYou':
+      // credit card
+      if(isset($_POST['final_result'])){
+        if($_POST['final_result'] == 1 && $_POST['final_return_PRC'] == 0 && $_POST['final_return_SRC'] == 0){
+          drupal_set_message(t("Success. Thank you."));
+        }
+        else{
+          // error here
+          require_once('civicrm_neweb.extern.inc');
+          $prc = $_POST['final_return_PRC'];
+          $src = $_POST['final_return_SRC'];
+          $brc = $_POST['final_return_BankRC'];
+          $error = civicrm_neweb_response($prc, $src, $brc);
+          drupal_set_message(implode("<br>", $error), 'error');
+        }
+      }
+      break;
     case 'CRM_Contribute_Form_ContributionPage_Amount':
       _civicrm_neweb_js_contritweak();
       break;
@@ -107,7 +107,7 @@ function civicrm_neweb_civicrm_buildForm($form_name, &$form){
  * Implementation of hook_cron()
  */
 function civicrm_neweb_cron(){
-  require_once("civicrm_neweb.inc");
+  require_once("civicrm_neweb.cron.inc");
   $is_test = 1;
   $hour = date('G');
   $now = time();
@@ -119,6 +119,7 @@ function civicrm_neweb_cron(){
 
 
 function _civicrm_neweb_process_all($is_test, $now, $hour, $yesterday){
+  // recurring contributions
   $test = $is_test ? '_test' : '';
   if($hour >= 18 && $hour <= 23 && variable_get('civicrm_neweb_response'.$test, 0) < $yesterday){
     // get yesterday modification result
@@ -137,6 +138,11 @@ function _civicrm_neweb_process_all($is_test, $now, $hour, $yesterday){
     if(civicrm_neweb_process_upload($is_test)){
       variable_set('civicrm_neweb_uploaded'.$test, $now);
     }
+  }
+
+  // ezpay contributions
+  if(1){
+    civicrm_neweb_process_ezpay($is_test, $now);
   }
 }
 

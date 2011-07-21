@@ -415,3 +415,180 @@ function _civicrm_neweb_path($is_test){
   file_check_directory($newebpath, FILE_CREATE_DIRECTORY);
   return $newebpath;
 }
+
+
+function civicrm_neweb_process_ezpay($is_test, $now){
+  $time = date('YmdHis');
+  civicrm_initialize();
+  require_once 'CRM/Contribute/DAO/Contribution.php';
+  require_once 'CRM/Core/BAO/PaymentProcessor.php';
+  require_once 'CRM/Core/Payment/BaseIPN.php';
+  require_once 'CRM/Core/Transaction.php';
+  require_once "CRM/Core/DAO.php";
+
+  $instrument = _civicrm_neweb_instrument();
+  $gid = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_option_group WHERE name LIKE 'payment_instrument'");
+
+  foreach($instrument as $name => $obj){
+    $vid = CRM_Core_DAO::singleValueQuery("SELECT value FROM civicrm_option_value WHERE name = '{$name}' AND option_group_id = {$gid} AND is_active = 1");
+    $instrument_id[$vid] = $vid;
+  }
+  $instrument_str = implode(',', $instrument_id);
+  $dao = CRM_Core_DAO::executeQuery("SELECT * FROM civicrm_contribution WHERE contribution_status_id = 2 AND payment_instrument_id IN ($instrument_str) AND is_test = $is_test ORDER BY RAND() LIMIT 0, 10");
+  while($dao->fetch()){
+    if(!isset($p[$dao->contribution_page_id])){
+      $pid = CRM_Core_DAO::getFieldValue( 'CRM_Contribute_DAO_ContributionPage',$dao->contribution_page_id, 'payment_processor_id');
+      $p[$dao->contribution_page_id] = CRM_Core_BAO_PaymentProcessor::getPayment( $pid, $is_test ? 'test' : 'live' );
+    }
+    $payment_processor = $p[$dao->contribution_page_id];
+    $post = array();
+    $post['merchantnumber'] = $payment_processor['password'];
+    $post['ordernumber'] = $dao->id;
+    $post['operation'] = 'queryorders';
+    $post['time'] = $time;
+    $post['hash'] = md5($post['operation'].$payment_processor['subject'].$time);
+
+    // initialize objects and ids
+    $input = $object = $ids = $result = array();
+    $note = '';
+    $c =& new CRM_Contribute_DAO_Contribution();
+    $c->id = $dao->id;
+    $c->find(true);
+    $ids['contact'] = $c->contact_id;
+    $ids['contribution'] = $c->id;
+    $input['component'] = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_participant_payment WHERE contribution_id = {$c->id}") ? 'event' : 'contribute'; // FIXME need to detect mode of contribute or event
+
+    // fetch result and object
+    $result = civicrm_neweb_postdata($post, $payment_processor);
+
+    $transaction = new CRM_Core_Transaction();
+    $ipn = & new CRM_Core_Payment_BaseIPN();
+
+    if($ipn->validateData($input, $ids, $objects) && $result){
+      // check result
+      if($result['rc'] == 0 && $result['status'] == 1){
+        // after validate, start to complete some transaction
+        $input['trxn_id'] = $c->trxn_id;
+        $input['payment_instrument_id'] = $c->payment_instrument_id;
+        $input['check_number'] = $result['writeoffnumber'];
+        $input['amount'] = $result['amount'];
+        if($result['timepaid']){
+          $objects['contribution']->receive_date = $result['timepaid'];
+        }
+        else{
+          $objects['contribution']->receive_date = date('YmdHis');
+        }
+        $ipn->completeTransaction($input, $ids, $objects, $transaction);
+
+        // note here;
+        $note .= ts("Serial number").": ".$result['serialnumber']."\n";
+        $note .= ts("Payment Instrument").": ". $result['paymenttype']."\n";
+        $note .= ts("External order number").": ".$result['writeoffnumber']."\n";
+        $note .= ts("Create date").": ".$result['timecreated']."\n";
+        $note .= ts("Paid date").": ".$result['timepaid']."\n";
+        $note .= ts("Pay count").": ".$result['paycount']."\n";
+        $note .= ts("Completed");
+        _civicrm_neweb_addnote($note, $c->id, $c->contact_id);
+      }
+      elseif(!isset($result['status']) && $result['rc'] == 0) {
+        // cancel contribution
+        $input['reasonCode'] = ts('Overdue');
+        $input['trxn_id'] = $c->trxn_id;
+        $input['payment_instrument_id'] = $c->payment_instrument_id;
+        $ipn->cancelled($objects, $transaction);
+        $note .= ts("Canceled").": ".ts('Overdue')."\n";
+        _civicrm_neweb_addnote($note, $c->id, $c->contact_id);
+      }
+      elseif($result['rc']){
+        // FIXME to see if cancel contribution
+        $note .= ts("Error").": ".$result['rc']."/".$result['rc2']."\n";
+        _civicrm_neweb_addnote($note, $c->id, $c->contact_id);
+      }
+    }
+  }
+}
+
+function civicrm_neweb_postdata($post, $payment_processor){
+  $postdata = _civicrm_neweb_vars2str($post);
+  $url = rtrim($payment_processor['url_api'],'/')."/Query"; 
+
+  $ch = curl_init($url);
+  curl_setopt($ch, CURLOPT_POST, 1);
+  curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
+  curl_setopt($ch, CURLOPT_HEADER, 0);  // DO NOT RETURN HTTP HEADERS
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);  // RETURN THE CONTENTS OF THE CALL
+  $receive = curl_exec($ch);
+  if(curl_errno($ch)){
+    $ch2 = curl_init($url);
+    curl_setopt($ch2, CURLOPT_POST, 1);
+    curl_setopt($ch2, CURLOPT_POSTFIELDS, $postdata);
+    curl_setopt($ch2, CURLOPT_HEADER, 0);  // DO NOT RETURN HTTP HEADERS
+    curl_setopt($ch2, CURLOPT_RETURNTRANSFER, 1);  // RETURN THE CONTENTS OF THE CALL
+    $receive = curl_exec($ch2);
+  }
+  curl_close($ch);
+
+  if($receive){
+    $vars = _civicrm_neweb_vars2array($receive);
+    if($vars['rc'] == 70){
+      $regetorder = curl_init($query_url);
+      $post['operation'] = "regetorder";
+      $postdata = _civicrm_neweb_vars2str($post);
+      curl_setopt($regetorder, CURLOPT_POST, 1);
+      curl_setopt($regetorder, CURLOPT_POSTFIELDS, $postdata);
+      curl_setopt($regetorder, CURLOPT_HEADER, 0);
+      curl_setopt($regetorder, CURLOPT_RETURNTRANSFER, 1);
+      $receive2 = curl_exec($regetorder);
+      curl_close($regetorder);
+      $vars2 = _civicrm_neweb_vars2array($receive2);
+      return $vars2;
+    }
+    return $vars;
+  }
+  else{
+    return FALSE;
+  }
+}
+
+function _civicrm_neweb_vars2str($post){
+  $array = array();
+  foreach($post as $name => $value){
+    if($value){
+      $array[] = $name."=".urlencode($value);
+    }
+  }
+  return implode('&', $array);
+}
+
+function _civicrm_neweb_vars2array($str){
+  $vars = explode('&', $str);
+  foreach($vars as $var){
+    list($name, $value) = explode('=', $var, 2);
+    if($name == 'errormessage'){
+      $value = iconv("Big5","UTF-8",$value);
+    }
+    $params[$name] = $value;
+  }
+  return $params;
+}
+
+function _civicrm_neweb_addnote($note, $contribution_id, $contact_id){
+  require_once 'CRM/Core/BAO/Note.php';
+  $note = date("Y/m/d H:i:s")." ". ts("Transaction record").": \n".$note."\n===============================\n";
+  $note_exists = CRM_Core_BAO_Note::getNote( $contribution_id, 'civicrm_contribution' );
+  if(count($note_exists)){
+    $note_id = array( 'id' => reset(array_keys($note_exists)) );
+    $note = $note . reset($note_exists);
+  }
+  else{
+    $note_id = NULL;
+  }
+  
+  $noteParams = array(
+    'entity_table'  => 'civicrm_contribution',
+    'note'          => $note,
+    'entity_id'     => $contribution_id,
+    'contact_id'    => $contact_id,
+  );
+  CRM_Core_BAO_Note::add( $noteParams, $note_id );
+}
