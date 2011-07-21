@@ -111,11 +111,11 @@ class CRM_Core_Payment_Neweb extends CRM_Core_Payment {
           $params_form = $this->newebCreditCard($params, $component, $neweb_instrument);
           $is_pay_later = FALSE;
           break;
-        case 'Web ATM':
-        case 'Convenient Store':
-        case 'Convenient Store (Code)':
-        case 'Alipay':
-        case 'EFT':
+        case 'ATM':
+        case 'WEBATM':
+        case 'CS':
+        case 'MMK':
+        case 'ALIPAY':
           $params_form = $this->newebEZPay($params, $component, $neweb_instrument);
           break;
       }
@@ -139,7 +139,7 @@ class CRM_Core_Payment_Neweb extends CRM_Core_Payment {
       $_SESSION['CiviCRM']['CRM_Contribute_Controller_Contribution_'.$params['qfKey']]['params']['trxn_id'] = $contribution->trxn_id;
 
       // making redirect form
-      print $this->formRedirect($params_form);
+      print $this->formRedirect($params_form, $neweb_instrument);
 
       // move things to CiviCRM cache as needed
       require_once 'CRM/Core/Session.php';
@@ -231,266 +231,90 @@ class CRM_Core_Payment_Neweb extends CRM_Core_Payment {
         $post['payname'] = $params['last_name']." ".$params['first_name'];
         $post['payphone'] = preg_replace("/[^\d]+/i", $params['phone']);
       }
-      $post['returnvalue'] = 1;
-      $post['hash'] = md5($post['merchantnumber'].$this->_paymentProcessor['url_button'].$amount.$post['ordernumber']);
-      $civi_base_url = $component == 'event' ? 'civicrm/event/register' : 'civicrm/contribute/transact';
-      $post['nexturl'] = CRM_Utils_System::url($civi_base_url,"_qf_ThankYou_display=1&qfKey={$params['qfKey']}",true, null, false );
-    
-      $post["#redirect"] = $_SERVER['HTTP_REFERER'];
-      $post["#params"] = $params;
-      $post["#action"] = rtrim($this->_paymentProcessor['url_api'],'/')."/Payment";
-      $post["#paymentProcessor"] = $this->_paymentProcessor;
       $post['returnvalue'] = 0;
+      $post['hash'] = md5($post['merchantnumber'].$this->_paymentProcessor['subject'].$amount.$post['ordernumber']);
+      $civi_base_url = $component == 'event' ? 'civicrm/event/register' : 'civicrm/contribute/transact';
+      $post['nexturl'] = CRM_Utils_System::url($civi_base_url,"_qf_ThankYou_display=1&qfKey={$params['qfKey']}&instrument={$neweb_instrument}",true, null, false );
+      $post["#action"] = rtrim($this->_paymentProcessor['url_api'],'/')."/Payment";
 
       return $post;
     }
 
-    function vars2array($str){
-      $vars = explode('&', $str);
-      foreach($vars as $var){
-        list($name, $value) = explode('=', $var, 2);
-        if($name == 'errormessage'){
-          $value = iconv("Big5","UTF-8",$value);
-        }
-        $params[$name] = $value;
-      }
-      return $params;
-    }
-
-    function vars2str($post){
-      $array = array();
-      foreach($post as $name => $value){
-        if($value){
-          $array[] = $name."=".urlencode($value);
-        }
-      }
-      return implode('&', $array);
-    }
-
-    function postData($post, $type = 0){
-      $postdata = $this->vars2str($post);
-      $payment_url = rtrim($this->_paymentProcessor['url_api'],'/')."/Payment";
-      $query_url = rtrim($this->_paymentProcessor['url_api'],'/')."/Query"; 
-
-      $url = $type ? $query_url : $payment_url;
-
-      $ch = curl_init($url);
-      curl_setopt($ch, CURLOPT_POST, 1);
-      curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
-//      curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-      curl_setopt($ch, CURLOPT_HEADER, 0);  // DO NOT RETURN HTTP HEADERS
-      curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);  // RETURN THE CONTENTS OF THE CALL
-      $receive = curl_exec($ch);
-      if(curl_errno($ch)){
-        $ch2 = curl_init($url);
-        curl_setopt($ch2, CURLOPT_POST, 1);
-        curl_setopt($ch2, CURLOPT_POSTFIELDS, $postdata);
-//        curl_setopt($ch2, CURLOPT_FOLLOWLOCATION, 1);
-        curl_setopt($ch2, CURLOPT_HEADER, 0);  // DO NOT RETURN HTTP HEADERS
-        curl_setopt($ch2, CURLOPT_RETURNTRANSFER, 1);  // RETURN THE CONTENTS OF THE CALL
-        $receive = curl_exec($ch2);
-      }
-      curl_close($ch);
-
-      if($receive){
-        $vars = $this->vars2array($receive);
-        if($vars['rc'] == 70){
-          $regetorder = curl_init($query_url);
-          $post['operation'] = "regetorder";
-          $postdata = $this->vars2str($post);
-          curl_setopt($regetorder, CURLOPT_POST, 1);
-          curl_setopt($regetorder, CURLOPT_POSTFIELDS, $postdata);
-//          curl_setopt($regetorder, CURLOPT_FOLLOWLOCATION, 1);
-          curl_setopt($regetorder, CURLOPT_HEADER, 0);
-          curl_setopt($regetorder, CURLOPT_RETURNTRANSFER, 1);
-          $receive2 = curl_exec($regetorder);
-          curl_close($regetorder);
-          $vars2 = $this->vars2array($receive2);
-          return $vars2;
-        }
-        return $vars;
-      }
-      else{
-        return FALSE;
-      }
-    }
-
-    function checkSum($array){
-      $checksum = $array['checksum'];
-      unset($array['checksum']);
-      foreach($array as $n => $v){
-        $str .= $n."=".$v.'&';
-      }
-      $str .= 'code='.$this->_paymentProcessor['url_button'];
-      if($checksum == md5($str)){
-        return TRUE;
-      }
-      else{
-        return FALSE;
-      }
-    }
-
-    function addNote($note, &$params){
-      require_once 'CRM/Core/BAO/Note.php';
-      $note = date("Y/m/d H:i:s")." ". ts("Transaction record").": \n".$note."\n===============================\n";
-      $note_exists = CRM_Core_BAO_Note::getNote( $params['contributionID'], 'civicrm_contribution' );
-      if(count($note_exists)){
-        $note_id = array( 'id' => reset(array_keys($note_exists)) );
-        $note = $note . reset($note_exists);
-      }
-      else{
-        $note_id = NULL;
-      }
-      
-      $noteParams = array(
-        'entity_table'  => 'civicrm_contribution',
-        'note'          => $note,
-        'entity_id'     => $params['contributionID'],
-        'contact_id'    => $params['contactID'],
-      );
-      CRM_Core_BAO_Note::add( $noteParams, $note_id );
-    }
-
     function getInstrument($id = NULL, $type = 'name'){
-      static $instruments;
-      if(empty($instruments)){
-        require_once "CRM/Core/DAO.php";
-        $dao = CRM_Core_DAO::executeQuery("SELECT * FROM civicrm_option_group cog INNER JOIN civicrm_option_value cov ON cog.id = cov.option_group_id WHERE cog.name LIKE 'payment_instrument' AND (cov.value = 1 OR cov.filter != 0 ) ORDER BY cov.value ASC");
-        while($dao->fetch()){
-          $instruments[$dao->value] = array('name' => $dao->name, 'label' => $dao->label);
-        }
-      }
-
-      if(is_numeric($id)){
-        return $instruments[$id][$type];
-      }
-      else{
-        return $instruments;
-      }
+      $instruments = array(
+        'Credit Card' => 'Credit Card',
+        'EFT' => 'ATM',
+        'Web ATM' => 'WEBATM',
+        'Convenient Store' => 'CS',
+        'Convenient Store (Code)' => 'MMK',
+        'Alipay' => 'ALIPAY',
+      );
+      $name = CRM_Core_DAO::singleValueQuery("SELECT cov.name FROM civicrm_option_group cog INNER JOIN civicrm_option_value cov ON cog.id = cov.option_group_id WHERE cog.name LIKE 'payment_instrument' AND cov.value = $id");
+      return $instruments[$name];
     }
 
-    function notify($contact, $content){
-    
-    }
-
-    function cron(){
-      require_once 'CRM/Contribute/DAO/Contribution.php';
-      require_once 'CRM/Core/Payment/BaseIPN.php';
-      require_once 'CRM/Core/Transaction.php';
-      require_once "CRM/Core/DAO.php";
-
-      print "Strat to process:$this->_mode \n=========================== \n"; 
-
-      $instruments = $this->getInstrument();
-      unset($instruments[1]);
-      $instrument_str = implode(',', array_keys($instruments));
-      $time = date('YmdHis');
-      $is_test = $this->_mode == 'test' ? 1 : 0;
-      $dao = CRM_Core_DAO::executeQuery("SELECT * FROM civicrm_contribution WHERE contribution_status_id = 2 AND payment_instrument_id IN ($instrument_str) AND is_test = $is_test ORDER BY RAND() LIMIT 0, 6");
-      while($dao->fetch()){
-        $post = array();
-        $post['merchantnumber'] = $this->_paymentProcessor['password'];
-        $post['ordernumber'] = $dao->id;
-        //$post['amount'] = (int)$dao->total_amount;
-        //$post['paymenttype'] = $instruments[$dao->payment_instrument_id]['name'];
-        //$post['status'] = 0;
-        $post['operation'] = 'queryorders';
-        $post['time'] = $time;
-        $post['hash'] = md5($post['operation'].$this->_paymentProcessor['url_button'].$time);
-
-        // initialize objects and ids
-        $input = $object = $ids = $result = array();
-        $note = '';
-        $c =& new CRM_Contribute_DAO_Contribution();
-        $c->id = $post['ordernumber'];
-        $c->find(true);
-        $note_array = array(
-          'contributionID' => $c->id,
-          'contactID' => $c->contact_id,
-        );
-        $ipn = & new CRM_Core_Payment_BaseIPN();
-        $transaction = new CRM_Core_Transaction();
-        $ids['contact'] = $c->contact_id;
-        $ids['contribution'] = $c->id;
-        $input['component'] = 'contribute'; // FIXME need to detect mode of contribute or event
-
-        // fetch result and object
-        $result = $this->postData($post, 1);
-        // debug here
-        print $c->id."\n";
-        print_r($post);
-        print_r($result);
-        // 
-        if($ipn->validateData($input, $ids, $objects) && $result){
-          // check result
-          if($result['rc'] == 0 && $result['status'] == 1){
-            // after validate, start to complete some transaction
-            $input['trxn_id'] = $c->trxn_id;
-            $input['payment_instrument_id'] = $c->payment_instrument_id;
-            $input['check_number'] = $result['writeoffnumber'];
-            $input['amount'] = $result['amount'];
-            if($result['timepaid']){
-              $objects['contribution']->receive_date = $result['timepaid'];
-            }
-            else{
-              $objects['contribution']->receive_date = date('YmdHis');
-            }
-            $ipn->completeTransaction($input, $ids, $objects, $transaction);
-
-            // note here;
-            $note .= ts("Serial number").": ".$result['serialnumber']."\n";
-            $note .= ts("Payment Instrument").": ". $result['paymenttype'];
-            $note .= ts("External order number").": ".$result['writeoffnumber']."\n";
-            $note .= ts("Create date").": ".$result['timecreated']."\n";
-            $note .= ts("Paid date").": ".$result['timepaid']."\n";
-            $note .= ts("Pay count").": ".$result['paycount']."\n";
-            $note .= ts("Completed");
-            $this->addNote($note, $note_array);
-          }
-          elseif(!isset($result['status']) && $result['rc'] == 0) {
-            // cancel contribution
-            $input['reasonCode'] = ts('Overdue');
-            $input['trxn_id'] = $c->trxn_id;
-            $input['payment_instrument_id'] = $c->payment_instrument_id;
-            $ipn->cancelled($objects, $transaction);
-            $note .= ts("Canceled").": ".ts('Overdue')."\n";
-            $this->addNote($note, $note_array);
-          }
-          elseif($result['rc']){
-            // FIXME to see if cancel contribution
-            $note .= ts("Error").": ".$result['rc']."/".$result['rc2']."\n";
-            $this->addNote($note, $note_array);
-          }
-        }
-      }
-    }
-
-    function formRedirect($redirect_params){
-      if(is_array($redirect_params)){
-        $o .= '<form action="'.$redirect_params['#action'].'" name="redirect" method="post" id="redirect-form">';
-        foreach($redirect_params as $k=>$p){
-          if($k[0] != '#'){
-            $o .= '<input type="hidden" name="'.$k.'" value="'.$p.'" />';
-          }
-        }
-        $o .= '</form>';
-      }
-
+    function formRedirect($redirect_params, $instrument){
       header('Pragma: no-cache');
       header('Cache-Control: no-store, no-cache, must-revalidate');
       header('Expires: 0');
+
+      switch($instrument){
+        case 'Credit Card':
+        case 'WEBATM':
+        case 'ALIPAY':
+          $js = 'document.forms.redirect.submit();';
+          $o .= '<form action="'.$redirect_params['#action'].'" name="redirect" method="post" id="redirect-form">';
+          foreach($redirect_params as $k=>$p){
+            if($k[0] != '#'){
+              $o .= '<input type="hidden" name="'.$k.'" value="'.$p.'" />';
+            }
+          }
+          $o .= '</form>';
+          break;
+        case 'ATM':
+        case 'CS':
+        case 'MMK':
+          $js = '
+    function print_redirect(){
+      // creating the "newebresult" window with custom features prior to submitting the form
+      window.open("", "newebresult", "scrollbars=yes,menubar=no,height=600,width=800,resizable=yes,toolbar=no,status=no,left=150,top=150");
+      document.forms.print.submit();
+      window.location = "'.$redirect_params['nexturl'].'";
+    }
+    var t = 6;
+    var timeout;
+    function showtime(){
+      t -= 1;
+      document.getElementById("showtime").innerHTML= t;
+      timeout = setTimeout("showtime()",1000);
+      if(t == 0){
+        clearTimeout(timeout);
+      }
+    }
+    showtime();
+          ';
+
+          $o .= '<form action="'.$redirect_params['#action'].'" name="print" method="post" id="redirect-form" target="newebresult">';
+          foreach($redirect_params as $k=>$p){
+            if($k[0] != '#'){
+              $o .= '<input type="hidden" name="'.$k.'" value="'.$p.'" />';
+            }
+          }
+          $o .= '</form>';
+          $o .= '<div align="center"><p>若網頁沒有自動轉向，您可自行按下「列印」按鈕以取得付款資訊</p><div id="showtime"></div><div><input type="button" value="列印" onclick="print_redirect();" /></div></div>';
+          break;
+      }
       return '
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr"> 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>'.ts('Redirect to Payment Page').'</title>
 </head>
 <body>
   '.$o.'
   <script type="text/javascript">
-  document.forms.redirect.submit();
+  '.$js.'
   </script>
 </body>
 <html>
