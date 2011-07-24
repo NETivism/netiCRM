@@ -1,6 +1,6 @@
 <?php
 /**
- * Page wrapper for newweb in civicrm + drupal
+ * Implementation of hook_init()
  */
 function civicrm_gw_init(){
   $path = drupal_get_path('module', 'civicrm_gw');
@@ -11,16 +11,21 @@ function civicrm_gw_init(){
   }
 }
 
+/**
+ * Implementation of hook_menu()
+ */
 function civicrm_gw_menu(){
   return array(
-    'civicrm_gw_error' => array(
+    'gw/ipn' => array(
       'access callback' => true,
-      'page callback' => 'civicrm_gw_error',
+      'page callback' => 'civicrm_gw_ipn',
       'type' => MENU_CALLBACK,
       'weight' => 0,
-    )
+      'file' => 'civicrm_gw.ipn.inc',
+    ),
   );
 }
+
 
 function civicrm_gw_error(){
   $msg = $_SESSION['gw']['error'];
@@ -111,19 +116,6 @@ function civicrm_gw_cron(){
 /**
  * Helper function for CiviCRM
  */
-function _civicrm_gw_instrument(){
-  // description need to lower than 256 char.(civicrm db limitation.)
-  /*
-  return array(
-    'ATM' => array('name' => 'ATM', 'desc' => 'Using ATM payment instrument, you will get the virtual ATM code, after you paid the correct amount to this virtual ATM account, we will receive your payment, and will connect to your account here.'),
-    'WEBATM' => array('name' => 'Web ATM', 'desc' => 'Using Web ATM payment instrument, you need to have card reader, then you can insert card and pay it online. We will receive payment on next available work day, then send an email to you.'),
-    'CS' => array('name'=>'Convenient Store', 'desc'=>'Using Convenient Store payment instrument, you meed to use printer to print out invoice on the screen. After that, go to nearest convenient store, show the invoice and paid on that.'),
-    'MMK' => array('name'=>'Convenient Store Code','desc' => 'Using Convenient Store code, you can just write out the payment code, then go to one of convenient sotre of 7-11 (iBon), Family (FamiPort), or HiLife (Life-ET). Enter code in their machine, they will print out invoice for you, then pay on it.'),
-    'ALIPAY' => array('name' => 'AliPay', 'desc' => 'Only when you have AliPay service account and virtual points, you can use this service.'),
-  );
-   */
-}
-
 function _civicrm_gw_js_redirect(){
   $js = '
 $(document).ready(function(){
@@ -175,3 +167,13 @@ $(document).ready(function(){
 }
 */
 
+function _civicrm_gw_instrument(){
+  return array(
+    'Credit Card' => array('label' => '信用卡', 'desc' => '', 'code' => 'Credit Card'),
+    'Virtual ATM' => array('label' => '轉帳（ATM/銀行）', 'desc' => '', 'code' => 'vacc'),
+    '' => array('label' => '轉帳（ATM/銀行）', 'desc' => '', 'code' => 'vacc'),
+    'Web ATM' => array('label' => 'Web ATM', 'desc' => '', 'code' => 'web_atm'),
+    'Convenient Store' => array('label' => '便利商店', 'desc'=>'', 'code' => 'barcode'),
+    'Convenient Store (Code)' => array('label'=>'便利商店 (代碼)','desc' => '', 'code' => 'ibon'),
+  );
+}
