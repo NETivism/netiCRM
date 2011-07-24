@@ -68,8 +68,8 @@ class CRM_Core_Payment_GW extends CRM_Core_Payment {
             $error[] = ts( 'User Name is not set in the Administer CiviCRM &raquo; Payment Processor.' );
         }
         
-        if ( empty( $this->_paymentProcessor['signature'] ) ) {
-            $error[] = ts( 'Signature is not set in the Administer CiviCRM &raquo; Payment Processor.' );
+        if ( empty( $this->_paymentProcessor['password'] ) ) {
+            $error[] = ts( 'Password is not set in the Administer CiviCRM &raquo; Payment Processor.' );
         }
         
         if ( ! empty( $error ) ) {
@@ -102,12 +102,17 @@ class CRM_Core_Payment_GW extends CRM_Core_Payment {
      *  
      */  
     function doTransferCheckout( &$params, $component ) {
-      $output = '';
       $component = strtolower( $component );
       if ( $component != 'contribute' && $component != 'event' ) {
         CRM_Core_Error::fatal( ts('Component is invalid') );
       }
-
+      if(module_load_include('inc', 'civicrm_gw', 'civicrm_gw.checkout') === FALSE){
+        CRM_Core_Error::fatal( 'Module civicrm_gw doesn\'t exists.' );
+      }
+      else{
+        civicrm_gw_do_transfer_checkout($params, $component, $this->_paymentProcessor);
+      }
+      return;
       // to see what instrument for newweb
       //$gw_instrument_id = $params['gw_instrument_id'];
       //$gw_instrument = $this->getInstrument($gw_instrument_id);
