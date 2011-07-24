@@ -41427,7 +41427,7 @@ msgstr "郵件沒有被轉寄到您提供的Email。"
 
 #:  CRM/Mailing/Form/Group.php
 msgid "Copy of %1"
-msgstr "副本 %1"
+msgstr "複製-%1"
 
 msgid "Name Your Mailing"
 msgstr "電子報名稱"
@@ -63401,7 +63401,7 @@ msgstr "已重建選單"
 
 #:  CRM/Core/BAO/UFGroup.php
 msgid "Copy of "
-msgstr "副本 %1"
+msgstr "複製-"
 
 #:  CRM/Core/Controller.php
 msgid ""
@@ -64562,7 +64562,7 @@ msgstr "電話號碼"
 
 #:  CRM/Contribute/BAO/ContributionPage.php CRM/Event/BAO/Event.php
 msgid "Copy of"
-msgstr "副本 %1"
+msgstr "複製-"
 
 #:  CRM/Contribute/Form/Contribution/Main.php,  CRM/Event/Form/Registration/Register.php
 msgid "Custom %1 is a required field if %1 is of type Customized."
