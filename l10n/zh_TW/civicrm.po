@@ -3442,7 +3442,7 @@ msgstr "新增智慧群組"
 
 #: CRM/Contribute/BAO/ContributionPage.php CRM/Event/BAO/Event.php
 msgid "Copy of"
-msgstr "副本 %1"
+msgstr "複製-"
 
 #: CRM/Contribute/BAO/Contribution.php CRM/Contribute/Form/Task/Status.php
 #: CRM/Core/Payment/BaseIPN.php CRM/Core/Payment/GoogleIPN.php
@@ -11880,7 +11880,7 @@ msgstr "請輸人一個有效的 %1"
 
 #: CRM/Core/BAO/UFGroup.php
 msgid "Copy of "
-msgstr "副本 %1"
+msgstr "複製-"
 
 #: CRM/Core/BAO/UFMatch.php
 msgid "Please set the user framework variable"
@@ -16363,7 +16363,7 @@ msgstr[1] ""
 
 #: CRM/Mailing/Form/Group.php
 msgid "Copy of %1"
-msgstr "副本 %1"
+msgstr "複製-%1"
 
 #: CRM/Mailing/Form/Group.php
 msgid "Name Your Mailing"
