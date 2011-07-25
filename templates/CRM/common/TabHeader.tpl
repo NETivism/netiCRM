@@ -41,6 +41,7 @@
 
 
 <script type="text/javascript"> 
+/*
    var selectedTab = 'EventInfo';
    {if $selectedTab}selectedTab = "{$selectedTab}";{/if}
    var spinnerImage = '<img src="{$config->resourceBase}i/loading.gif" style="width:10px;height:10px"/>';    
@@ -81,5 +82,6 @@ function stopSpinner( ) {
 	    load: stopSpinner
         });        
     });
+    */
 {/literal}
 </script>
