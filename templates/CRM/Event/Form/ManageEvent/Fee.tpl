@@ -32,6 +32,7 @@
                 <p>{ts}NOTE: Alternatively, you can enable the <strong>Pay Later</strong> option below without setting up a payment processor. All users will then be asked to submit payment offline (e.g. mail in a check, call in a credit card, etc.).{/ts}</p>
         </div>
     {/if}
+{include file="CRM/Event/Form/ManageEvent/Tab.tpl"}
 <div class="crm-block crm-form-block crm-event-manage-fee-form-block">
 <div class="crm-submit-buttons">
    {include file="CRM/common/formButtons.tpl" location="top"}

@@ -325,6 +325,15 @@ class CRM_Event_Form_ManageEvent extends CRM_Core_Form
     
     function getTemplateFileName( )
     {
+        if( $this->_id ){
+            $templateFile = "CRM/Event/Form/ManageEvent/{$this->_id}/{$this->_name}.tpl";
+            $template =& CRM_Core_Form::getTemplate( );
+            if ( $template->template_exists( $templateFile ) ) {
+                return $templateFile;
+            }
+        }
+        return parent::getTemplateFileName( );
+    /*
         if ( $this->controller->getPrint( ) == CRM_Core_Smarty::PRINT_NOFORM ||
              $this->getVar( '_id' ) <= 0 ||
              ( $this->_action & CRM_Core_Action::DELETE ) ) {
@@ -332,6 +341,7 @@ class CRM_Event_Form_ManageEvent extends CRM_Core_Form
         } else {
             return 'CRM/Event/Form/ManageEvent/Tab.tpl';
         }
+    */
     }
 
 }
