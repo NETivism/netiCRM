@@ -45,66 +45,23 @@ function civicrm_gw_error(){
 /**
  * Implementation of hook_civicrm_buildForm()
  */
-/*
 function civicrm_gw_civicrm_buildForm($form_name, &$form){
   switch($form_name){
     case 'CRM_Contribute_Form_Contribution_ThankYou':
-      if(isset($_POST['final_result'])){
-        if($_POST['final_result'] == 1 && $_POST['final_return_PRC'] == 0 && $_POST['final_return_SRC'] == 0){
-          // success here
-        }
-        else{
-          // error handling here
-          require_once "CRM/Core/Payment/NewwebResponse.php";
-          $e = new CRM_Core_Payment_NewwebResponse;
-          $prc = $_POST['final_return_PRC'];
-          $src = $_POST['final_return_SRC'];
-          $brc = $_POST['final_return_BankRC'];
-          $order_num = $_POST['P_OrderNumber'];
-          $error = $e->response($prc,$src,$brc, $order_num);
-          // simulate message
-          $_SESSION['newweb']['error'] = $error;
-          drupal_goto('civicrm_gw_error', "id=$order_num");
-        }
-      }
       break;
     case 'CRM_Contribute_Form_Contribution_Main':
-      // add newweb payment method selection
-      require_once "CRM/Core/DAO.php";
-      if($form->_paymentProcessor['payment_processor_type'] == 'Newweb'){
-        unset($_SESSION['newweb']);
-        unset($_SESSION['newweb_form']);
-        $dao = CRM_Core_DAO::executeQuery("SELECT id FROM civicrm_payment_processor_type WHERE name LIKE 'Newweb'");
-        $dao->fetch();
-        $ppt_id = $dao->id;
-        $dao = CRM_Core_DAO::executeQuery("SELECT * FROM civicrm_option_value WHERE filter = $ppt_id AND is_active = 1");
-        $default = 'Credit Card';
-        $radios[1] = array('name' => $default, 'label' => ts($default));
-        while($dao->fetch()){
-          $radios[$dao->value] = array('name'=> $dao->name, 'label' => ts($dao->label), 'description' => $dao->description);
-
-        }
-        $form->addElement('hidden', 'newweb_instrument_id', 1);
-        drupal_add_js(_civicrm_gw_js_form($radios), 'inline');
+      if($form->_paymentProcessor['payment_processor_type'] == 'GW'){
+        drupal_add_js(_civicrm_gw_instrument_page($radios), 'inline');
       }
       break;
   }
 }
-*/
 
 /**
- * Implementation of hook_civicrm_pageRun
- */
-function civicrm_gw_civicrm_pageRun( &$page ) {
-    // You can assign variables to the template using:
-    // $page->assign( 'varName', $varValue );
-    // in your template, {$varName} will output the contents of $varValue
-    // you should customize your template if doing so
-
-// $page->assign( 'varName', 'This is a variable assigned by the hook' );
+ * Implementation of hook_civicrm_postProcess()
+function civicrm_gw_civicrm_postProcess($form_name, &$form){
 }
-
-  
+ */
 
 /**
  * Implementation of hook_cron()
@@ -114,19 +71,11 @@ function civicrm_gw_cron(){
 }
 
 /**
- * Helper function for CiviCRM
- */
-function _civicrm_gw_js_redirect(){
-  $js = '
-$(document).ready(function(){
-  $("#redirect-form").submit();
-});
-';
-  drupal_add_js($js, 'inline');
-}
-
-/* we don't need multiple payment yet.
-function _civicrm_gw_js_form($radios){
+ * Payment instrument javascript
+ *
+ * Provide payment instrument functions for contribution / event page
+ */ 
+function _civicrm_gw_instrument_page($radios){
   $output = "<div class='section'>";
   $output .= "<div class='label'>".ts('Payment Instrument').'</div>';
   $output .= "<div class='content'>";
@@ -165,15 +114,21 @@ $(document).ready(function(){
 });  
   ';
 }
-*/
 
-function _civicrm_gw_instrument(){
-  return array(
+function _civicrm_gw_instrument($type = 'normal'){
+  $i = array(
     'Credit Card' => array('label' => '信用卡', 'desc' => '', 'code' => 'Credit Card'),
     'Virtual ATM' => array('label' => '轉帳（ATM/銀行）', 'desc' => '', 'code' => 'vacc'),
-    '' => array('label' => '轉帳（ATM/銀行）', 'desc' => '', 'code' => 'vacc'),
     'Web ATM' => array('label' => 'Web ATM', 'desc' => '', 'code' => 'web_atm'),
     'Convenient Store' => array('label' => '便利商店', 'desc'=>'', 'code' => 'barcode'),
     'Convenient Store (Code)' => array('label'=>'便利商店 (代碼)','desc' => '', 'code' => 'ibon'),
   );
+  if($type == 'form_name'){
+    foreach($i as $name => $data){
+      $form_name = preg_replace('/[^0-9a-z]+/i', '_', strtolower($name));
+      $instrument[$form_name] = $data;
+    }
+    return $instrument;
+  }
+  return $i;
 }
