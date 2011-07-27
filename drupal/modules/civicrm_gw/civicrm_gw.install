@@ -12,7 +12,7 @@ function civicrm_gw_schema(){
   $schema['civicrm_contribution_gw'] = array(
     'fields' => array(
       'cid' => array(
-        'description' => 'The id of civicrm_contribution.',
+        'description' => 'Contribution id for civicrm',
         'type' => 'int',
         'length' => '11',
         'not null' => TRUE,
@@ -54,11 +54,17 @@ function civicrm_gw_schema(){
 
   $schema['civicrm_contribution_page_gw'] = array(
     'fields' => array(
-      'cid' => array(
-        'description' => 'The id of civicrm_contribution.',
+      'entity_id' => array(
+        'description' => 'Foregin-key to the referenced item.',
         'type' => 'int',
         'length' => '11',
         'not null' => TRUE,
+      ),
+      'entity_table' => array(
+        'description' => 'Name of table where item being referenced is stored.',
+        'type' => 'varchar',
+        'length' => '64',
+        'not null' => FALSE,
       ),
       'payment_instruments' => array(
         'description' => 'Allowed instruments from contribution page',
@@ -67,7 +73,7 @@ function civicrm_gw_schema(){
         'not null' => FALSE,
       ),
     ),
-    'primary key' => array('cid'),
+    'primary key' => array('entity_id', 'entity_table'),
     'mysql_suffix' => 'ENGINE = InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci',
   );
   return $schema;
