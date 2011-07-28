@@ -42,6 +42,12 @@ function civicrm_instrument_schema() {
 function civicrm_instrument_install() {
   // Create tables.
   drupal_install_schema('civicrm_instrument');
+
+  // Save variables
+  civicrm_initialize( );
+  require_once "CRM/Core/DAO.php";
+  $gid = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_option_group WHERE name LIKE 'payment_instrument'");
+  variable_set('civicrm_instrument_gid', $gid);
 }
 
 /**
@@ -50,5 +56,8 @@ function civicrm_instrument_install() {
 function civicrm_instrument_uninstall() {
   // Remove tables.
   drupal_uninstall_schema('civicrm_instrument');
+
+  // Remove variable;
+  variable_del('civicrm_instrument_gid');
 }
 
