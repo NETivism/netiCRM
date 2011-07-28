@@ -47,20 +47,9 @@ function civicrm_neweb_civicrm_buildForm($form_name, &$form){
   switch($form_name){
     case 'CRM_Contribute_Form_Contribution_Main':
       // add neweb payment method selection
-      require_once "CRM/Core/DAO.php";
-      if($form->_paymentProcessor['payment_processor_type'] == 'Neweb'){
-        $instruments = _civicrm_neweb_instrument();
-        foreach($instruments as $name => $obj){
-          $dao = CRM_Core_DAO::executeQuery("SELECT * FROM civicrm_option_value WHERE name = '{$name}' AND is_active = 1");
-          $dao->fetch();
-          if($dao->value){
-            $radios[$dao->value] = array('name'=> $name, 'label' => $dao->label, 'description' => $dao->description);
-          }
-        }
-        $form->addElement('hidden', 'neweb_instrument_id', 1);
-        drupal_add_js(_civicrm_neweb_js_form($radios), 'inline');
-      }
+      drupal_add_js(_civicrm_neweb_js_form(), 'inline');
       break;
+  /*
     case 'CRM_Event_Form_Registration_Register':
       // add neweb payment method selection
       require_once "CRM/Core/DAO.php";
@@ -76,10 +65,11 @@ function civicrm_neweb_civicrm_buildForm($form_name, &$form){
         while($dao->fetch()){
           $radios[$dao->value] = array('name'=> $dao->name, 'label' => ts($dao->label), 'description' => $dao->description);
         }
-        $form->addElement('hidden', 'neweb_instrument_id', 1);
-        drupal_add_js(_civicrm_neweb_js_form($radios), 'inline');
+        //$form->addElement('hidden', 'neweb_instrument_id', 1);
+        //drupal_add_js(_civicrm_neweb_js_form($radios), 'inline');
       }
       break;
+    */
     case 'CRM_Contribute_Form_Contribution_ThankYou':
       // credit card
       if(isset($_POST['final_result'])){
@@ -146,27 +136,13 @@ function _civicrm_neweb_process_all($is_test, $now, $hour, $yesterday){
   }
 }
 
-function _civicrm_neweb_js_form($radios){
-  $output = "<div class='section'>";
-  $output .= "<div class='label'>".ts('Payment Instrument').'</div>';
-  $output .= "<div class='content'>";
-  foreach($radios as $value => $radio){
-    $checked = $value == 1 ? "checked='checked'" : '';
-    $radio['description'] = str_replace(array("\n","\r"), array('',''), $radio['description']);
-    $output .= "<div class='neweb-dummy-wrapper'><label><input type='radio' name='neweb_dummy' value='".$value."' class='form-radio' $checked />".$radio['label']."</label><div class='hover-item'>".$radio['description']."</div></div>";
-  }
-  $output .= '</div>';
-  $output .= "<div class='clear'></div>";
-  $output .= '</div>';
+/**
+ * Correction recurring contribution only for credit card.
+ */
+function _civicrm_neweb_js_form(){
   return '
 $(document).ready(function(){
-  // add radios
-  $("#crm-container form[name=Main] #intro_text, #crm-container form[name=Register] .paid_event-section").after("'.$output.'");
-  // modified exists recurring input
-
-  $("input[name=neweb_dummy]").click(function(){
-    var v = $(this).val();
-    $("input[name=neweb_instrument_id]").val(v);
+  $("input[name=civicrm_instrument_id_dummy]").click(function(){
     if(v != 1){
       $("#crm-container input[name=is_recur][value=0]").click();
       $("#crm-container input[name=is_recur][value=1]").attr("disabled","disabled");
@@ -199,12 +175,12 @@ $(document).ready(function(){
 
 function _civicrm_neweb_instrument(){
   return array(
-    'Credit Card' => array('label' => '信用卡', 'desc' => ''),
-    'EFT' => array('label' => '轉帳（ATM/銀行）', 'desc' => ''),
-    'Web ATM' => array('label' => 'Web ATM', 'desc' => ''),
-    'Convenient Store' => array('label' => '便利商店', 'desc'=>''),
+    'Credit Card' => array('label' => '信用卡', 'description' => ''),
+    'Virtual ATM' => array('label' => 'ATM', 'description' => ''),
+    'Web ATM' => array('label' => '網路 ATM', 'description' => ''),
+    'Convenient Store' => array('label' => '便利商店', 'description'=>''),
     'Convenient Store (Code)' => array('label'=>'便利商店 (代碼)','desc' => ''),
-    'Alipay' => array('label' => '支付寶', 'desc' => ''),
+    'Alipay' => array('label' => '支付寶', 'description' => ''),
   );
 }
 
