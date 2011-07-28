@@ -13,16 +13,96 @@ function civicrm_instrument_civicrm_buildForm($form_name, &$form){
         $payment_instruments = CRM_Core_DAO::singleValueQuery("SELECT payment_instruments FROM civicrm_instrument WHERE entity_id = {$entity_id} AND entity_table = '{$entity_table}'");
         $payment_instruments = unserialize($payment_instruments);
 
-        $gid = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_option_group WHERE name LIKE 'payment_instrument'");
+        $gid = variable_get('civicrm_instrument_gid', 0);
         $option = CRM_Core_DAO::executeQuery("SELECT * FROM civicrm_option_value WHERE option_group_id = {$gid} AND is_active = 1");
         while($option->fetch()){
-          $form_name = preg_replace('/[^0-9a-z]+/i', '_', strtolower($option->name));
-          $options[$form_name] = array(
-            'default' => $payment_instruments[$form_name] ? 1: 0,
+          $checkbox_name = _civicrm_instrument_form_name($option->name);
+          $options[$checkbox_name] = array(
+            'default' => $payment_instruments[$checkbox_name] ? 1: 0,
             'label' => $option->label,
           );
         }
-        drupal_add_js(civicrm_instrument_js($options, $entity_table), 'inline');
+        drupal_add_js(_civicrm_instrument_js_admin($options, $entity_table), 'inline');
+      }
+      break;
+    case 'CRM_Contribute_Form_Contribution_Main':
+    case 'CRM_Event_Form_Registration_Register':
+      // ok, now check the payment limitation.
+      $entity_id = $form->getVar('_id');;
+      $entity_table = $form_name == 'CRM_Contribute_Form_Contribution_Main' ? 'civicrm_contribution_page' : 'civicrm_event';
+      $gid = variable_get('civicrm_instrument_gid', 0);
+
+      $query = CRM_Core_DAO::executeQuery("SELECT payment_instruments FROM civicrm_instrument WHERE entity_id = {$entity_id} AND entity_table = '{$entity_table}'");
+      $query->fetch();
+      $active_instruments = unserialize($query->payment_instruments);
+
+      $dao = CRM_Core_DAO::executeQuery("SELECT * FROM civicrm_option_value WHERE option_group_id = {$gid} AND is_active = 1 ORDER BY weight ASC");
+      while($dao->fetch()){
+        $all_instruments[$dao->name] = array(
+          'label' => $dao->label,
+          'description' => $dao->description,
+          'value' => $dao->value,
+          'id' => $dao->id,
+        );
+      }
+
+      if(module_exists('civicrm_gw') && $form->_paymentProcessor['payment_processor_type'] == 'GW'){
+      
+      }
+      elseif(module_exists('civicrm_neweb') && $form->_paymentProcessor['payment_processor_type'] == 'Neweb'){
+        $enabled_instruments = _civicrm_neweb_instrument();
+        $enabled_instruments = array_intersect_key($all_instruments, $enabled_instruments);
+
+        foreach($enabled_instruments as $name => $i){
+          $radio_name = _civicrm_instrument_form_name($name);
+          if($active_instruments[$radio_name]){
+            $radios[$i['value']] = array(
+              'form_name'=> $radio_name,
+              'name'=> $name, 
+              'label' => $i['label'],
+              'description' => $i['description'],
+            );
+          }
+        }
+      }
+      elseif(!$form->_paymentProcessor['payment_processor_type']){
+        foreach($all_instruments as $name => $i){
+          $radio_name = _civicrm_instrument_form_name($name);
+          if($active_instruments[$radio_name]){
+            $radios[$i['value']] = array(
+              'form_name'=> $radio_name,
+              'name'=> $name, 
+              'label' => $i['label'],
+              'description' => $i['description'],
+            );
+          }
+        }
+      }
+
+      // we have real active instruments in radios array
+      if(!empty($radios)){
+        if(count($radios) == 1){
+          $form->addElement('hidden', 'civicrm_instrument_id', key($radios));
+        }
+        else{ // > 1
+          $form->addElement('hidden', 'civicrm_instrument_id', 0);
+          drupal_add_js(_civicrm_instrument_js_page($radios), 'inline');
+        }
+      }
+      break;
+  }
+}
+
+/**
+ * Implementation of hook_civicrm_validate()
+ */
+function civicrm_instrument_civicrm_validate($form_name, &$fields, &$files, &$form){
+  switch($form_name){
+    case 'CRM_Contribute_Form_Contribution_Main':
+    case 'CRM_Event_Form_Registration_Register':
+      if(!$fields['civicrm_instrument_id']){
+        drupal_set_message(ts('This field is required'), 'error');
+        return array('civicrm_instrument_id_dummy' => ts('This field is required.'));
       }
       break;
   }
@@ -43,6 +123,16 @@ function civicrm_instrument_civicrm_postProcess($form_name, &$form){
         CRM_Core_DAO::executeQuery("REPLACE INTO civicrm_instrument SET entity_id = {$entity_id}, entity_table='{$entity_table}', payment_instruments='".serialize($payment_instrument)."'");
       }
       break;
+    // save instrument
+    case 'CRM_Event_Form_Registration_Register':
+      break;
+    case 'CRM_Contribute_Form_Contribution_Confirm':
+      $cid = $form->_values['contribution_id'];
+      $iid = $form->_params['civicrm_instrument_id'];
+      if($cid && $iid){
+        CRM_Core_DAO::executeQuery("UPDATE civicrm_contribution SET payment_instrument_id = {$iid} WHERE id = {$cid}");
+      }
+      break;
   }
 }
 
@@ -52,7 +142,7 @@ function civicrm_instrument_civicrm_postProcess($form_name, &$form){
  * Provide payment instrument optoins for contribution and 
  * event page administration.
  */ 
-function civicrm_instrument_js($options, $entity_table){
+function _civicrm_instrument_js_admin($options, $entity_table){
   switch($entity_table){
     case 'civicrm_contribution_page':
       $css_id = 'amountFields';
@@ -75,3 +165,35 @@ function civicrm_instrument_js($options, $entity_table){
     $("#crm-container #'.$css_id.'").before("'.$o.'");
   });';
 }
+/**
+ * Javascript generate helper function for page
+ */
+function _civicrm_instrument_js_page($radios){
+// eat launch
+  $output = "<div class='crm-section'>";
+  $output .= "<div class='label'>".ts('Payment Instrument')."<span class='crm-marker' title='此欄位不可空白。'>*</span></div>";
+  $output .= "<div class='content'>";
+  foreach($radios as $value => $radio){
+    // $checked = $value == 1 ? "checked='checked'" : '';
+    $radio['description'] = str_replace(array("\n","\r"), array('',''), $radio['description']);
+    $output .= "<div class='civicrm-instrument-dummy'><label><input type='radio' name='civicrm_instrument_id_dummy' value='".$value."' class='form-radio' />".$radio['label']."</label><div class='hover-item'>".$radio['description']."</div></div>";
+  }
+  $output .= '</div>';
+  $output .= "<div class='clear'></div>";
+  $output .= '</div>';
+  return '
+$(document).ready(function(){
+  $("#crm-container form[name=Main] #intro_text, #crm-container form[name=Register] .paid_event-section").after("'.$output.'");
+  $("input[name=civicrm_instrument_id_dummy]").click(function(){
+    $("input[name=civicrm_instrument_id]").val($(this).val());
+  });
+});  
+  ';
+}
+/**
+ * Helper function to generate correct instrument form name
+ */
+function _civicrm_instrument_form_name($name){
+  return preg_replace('/[^0-9a-z]+/i', '_', strtolower($name));
+}
+
