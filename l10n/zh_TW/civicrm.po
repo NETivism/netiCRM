@@ -2433,7 +2433,7 @@ msgstr "找不到個案編號"
 
 #: CRM/Case/Form/Activity/OpenCase.php CRM/Case/Form/Activity.php
 msgid "Medium"
-msgstr "中等"
+msgstr "溝通媒介"
 
 #: CRM/Case/Form/Activity/OpenCase.php CRM/Contribute/Form/Contribution.php
 #: CRM/Event/Form/Participant.php CRM/Grant/Form/Grant.php
@@ -5878,7 +5878,7 @@ msgstr "受指派者"
 
 #: CRM/Activity/Form/Activity.php
 msgid "File on case"
-msgstr "檔案裡的檔案"
+msgstr "歸檔至個案"
 
 #: CRM/Activity/Form/Activity.php
 msgid "Are you sure? This is a COMPLETED activity with the DATE in the FUTURE. Click Cancel to change the date / status. Otherwise, click OK to save."
@@ -6014,7 +6014,7 @@ msgstr "更新任務"
 
 #: CRM/Activity/Selector/Activity.php
 msgid "File On Case"
-msgstr "檔案裡的檔案"
+msgstr "個案歷程"
 
 #: CRM/Activity/Selector/Activity.php
 msgid "Delete Activity"
@@ -6768,7 +6768,7 @@ msgstr "自訂檔案"
 
 #: CRM/Admin/Form/Setting/Path.php
 msgid "Custom Templates"
-msgstr "自訂範本"
+msgstr "自訂樣板"
 
 #: CRM/Admin/Form/Setting/Path.php
 msgid "Custom PHP Path Directory"
@@ -6776,7 +6776,7 @@ msgstr "自訂 PHP 路徑目錄"
 
 #: CRM/Admin/Form/Setting/Path.php
 msgid "CiviCRM Extensions Directory"
-msgstr "CiviCRM套件目錄"
+msgstr "CiviCRM 套件目錄"
 
 #: CRM/Admin/Form/Setting/Path.php
 msgid "'%1' directory does not exist"
@@ -6920,7 +6920,7 @@ msgstr "新基礎目錄"
 
 #: CRM/Admin/Form/Setting/UpdateConfigBackend.php
 msgid "New Site Name"
-msgstr "街道名稱"
+msgstr "新網站名稱"
 
 #: CRM/Admin/Form/Setting/UpdateConfigBackend.php
 msgid "%1 directory does not exist or cannot be written by webserver"
@@ -8025,7 +8025,7 @@ msgstr "'%1' 任務已被 %2。 %3 %4"
 
 #: CRM/Case/Form/ActivityToCase.php
 msgid "Select Case"
-msgstr "選擇日期"
+msgstr "選擇個案"
 
 #: CRM/Case/Form/Case.php
 msgid "You do not have any active %1"
@@ -8265,7 +8265,7 @@ msgstr "編輯會員資料"
 #: CRM/Contact/BAO/Contact.php templates/CRM/Case/Page/DashBoard.tpl
 #: templates/CRM/Case/Page/Tab.tpl
 msgid "Add Case"
-msgstr "新增副本"
+msgstr "新增個案"
 
 #: CRM/Contact/BAO/Contact.php templates/CRM/Grant/Page/Tab.tpl
 msgid "Add Grant"
@@ -8358,7 +8358,7 @@ msgstr "姓名如"
 
 #: CRM/Contact/BAO/Query.php
 msgid "Street"
-msgstr "街道名稱"
+msgstr "街道"
 
 #: CRM/Contact/BAO/Query.php
 msgid "Showing only Contacts starting with: '%1'"
@@ -21480,7 +21480,7 @@ msgstr "特定範本的路徑已儲存（若有的話）。此目錄會優先被
 
 #: templates/CRM/Admin/Form/Setting/Path.tpl
 msgid "Path where site specific PHP code files are stored if any. This directory is searched first if set."
-msgstr "網址指定服務器端編程語言電碼檔案被儲存的路線。此資料夾會先被搜尋如果被設。"
+msgstr "網站自行存放的PHP程式碼位置。這個位置將會預先被包含進來。"
 
 #: templates/CRM/Admin/Form/Setting/Path.tpl
 msgid "Path where CiviCRM extensions are stored."
@@ -21593,7 +21593,7 @@ msgstr "您的 Drupal 或 Joomla 的 URL（例如：http://www.mysite.com/drupal
 
 #: templates/CRM/Admin/Form/Setting/UpdateConfigBackend.tpl
 msgid "Old Site Name"
-msgstr "街道名稱"
+msgstr "舊網站名稱"
 
 #: templates/CRM/Admin/Form/Setting/UpdateConfigBackend.tpl
 msgid "This is the your site name for a multisite install."
@@ -24823,7 +24823,7 @@ msgstr "例如：您可以輸入<em>fiesta</em>，篩選出聯絡人說明欄位
 
 #: templates/CRM/Contact/Form/Search/Custom/FullText.tpl
 msgid "in..."
-msgstr "位置"
+msgstr "在..."
 
 #: templates/CRM/Contact/Form/Search/Custom/FullText.tpl
 msgid "of"
@@ -34560,7 +34560,7 @@ msgstr "留下訊息"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Unreachable"
-msgstr "找不到人"
+msgstr "找沒有"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Not Required"
@@ -34568,11 +34568,11 @@ msgstr "非必要"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Ongoing"
-msgstr "繼續"
+msgstr "進行中"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Resolved"
-msgstr "解決"
+msgstr "已解決"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Urgent"
