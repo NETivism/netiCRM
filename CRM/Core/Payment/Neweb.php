@@ -102,7 +102,7 @@ class CRM_Core_Payment_Neweb extends CRM_Core_Payment {
       }
 
       // to see what instrument for neweb
-      $neweb_instrument_id = $params['neweb_instrument_id'];
+      $neweb_instrument_id = $params['civicrm_instrument_id'];
       $neweb_instrument = $this->getInstrument($neweb_instrument_id);
 
       $is_pay_later = TRUE;
@@ -125,9 +125,11 @@ class CRM_Core_Payment_Neweb extends CRM_Core_Payment {
       $contribution =& new CRM_Contribute_DAO_Contribution();
       $contribution->id = $params['contributionID'];
       $contribution->find(true);
-      if($contribution->payment_instrument_id != $params['neweb_instrument_id']){
-        $contribution->payment_instrument_id = $params['neweb_instrument_id'];
+      /*
+      if($contribution->payment_instrument_id != $params['civicrm_instrument_id']){
+        $contribution->payment_instrument_id = $params['civicrm_instrument_id'];
       }
+      */
       if($contribution->is_pay_later != $is_pay_later){
         $contribution->is_pay_later = $is_pay_later;
       }
