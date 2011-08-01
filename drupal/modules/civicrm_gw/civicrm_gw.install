@@ -42,6 +42,60 @@ function civicrm_gw_schema(){
         'length' => '8',
         'not null' => FALSE,
       ),
+      'bank_code' => array(
+        'description' => '',
+        'type' => 'varchar',
+        'length' => '',
+        'not null' => FALSE,
+      ),
+      'vaccno' => array(
+        'description' => 'Pay code for vacc.',
+        'type' => 'varchar',
+        'length' => '50',
+        'not null' => FALSE,
+      ),
+      'payno' => array(
+        'description' => 'Pay number of convenient store code method(ibon)',
+        'type' => 'varchar',
+        'length' => '14',
+        'not null' => FALSE,
+      ),
+      'expire_datetime' => array(
+        'description' => 'Expire datetime unix timestamp for fetching result.',
+        'type' => 'int',
+        'length' => '11',
+        'not null' => FALSE,
+      ),
+      'payfrom' => array(
+        'description' => 'Pay from of convenient store code method.',
+        'type' => 'varchar',
+        'length' => '20',
+        'not null' => FALSE,
+      ),
+      'payer_bank' => array(
+        'description' => '',
+        'type' => 'varchar',
+        'length' => '3',
+        'not null' => FALSE,
+      ),
+      'payer_acc' => array(
+        'description' => 'Bank last 5 code from payer',
+        'type' => 'varchar',
+        'length' => '5',
+        'not null' => FALSE,
+      ),
+      'paid_date' => array(
+        'description' => 'Only for return of the barcode.',
+        'type' => 'varchar',
+        'length' => '8',
+        'not null' => FALSE,
+      ),
+      'proc_datetime' => array(
+        'description' => 'Process date time timestamp.',
+        'type' => 'int',
+        'length' => '11',
+        'not null' => FALSE,
+      ),
       'data' => array(
         'description' => 'Serialized data of response.',
         'type' => 'blob',
@@ -49,31 +103,6 @@ function civicrm_gw_schema(){
       ),
     ),
     'primary key' => array('cid'),
-    'mysql_suffix' => 'ENGINE = InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci',
-  );
-
-  $schema['civicrm_contribution_page_gw'] = array(
-    'fields' => array(
-      'entity_id' => array(
-        'description' => 'Foregin-key to the referenced item.',
-        'type' => 'int',
-        'length' => '11',
-        'not null' => TRUE,
-      ),
-      'entity_table' => array(
-        'description' => 'Name of table where item being referenced is stored.',
-        'type' => 'varchar',
-        'length' => '64',
-        'not null' => FALSE,
-      ),
-      'payment_instruments' => array(
-        'description' => 'Allowed instruments from contribution page',
-        'type' => 'varchar',
-        'length' => '255',
-        'not null' => FALSE,
-      ),
-    ),
-    'primary key' => array('entity_id', 'entity_table'),
     'mysql_suffix' => 'ENGINE = InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci',
   );
   return $schema;
