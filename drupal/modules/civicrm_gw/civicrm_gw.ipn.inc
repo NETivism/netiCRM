@@ -79,7 +79,15 @@ class CRM_Core_Payment_GWIPN extends CRM_Core_Payment_BaseIPN {
 
   function saveResponse($cid, &$input){
     $sql = "REPLACE INTO civicrm_contribution_gw SET cid={$cid},succ={$input['succ']},response_code='{$input['response_code']}',response_msg='{$input['response_msg']}',auth_code='{$input['auth_code']}',data='%s'";
-    db_query($sql, serialize($input));
+    $record = array(
+      'cid' => $cid,
+      'succ' => $input['succ'],
+      'response_code' => $input['response_code'],
+      'response_msg' => $input['response_msg'],
+      'auth_code' => $input['auth_code'],
+      'data' => serialize($input),
+    );
+    drupal_write_record('civicrm_contribution_gw', $record, 'cid');
   }
 
   function getInput( &$input) {

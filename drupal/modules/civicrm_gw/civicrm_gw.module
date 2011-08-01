@@ -121,7 +121,8 @@ function _civicrm_gw_instrument($type = 'normal'){
     'Virtual ATM' => array('label' => '轉帳（ATM/銀行）', 'desc' => '', 'code' => 'vacc'),
     'Web ATM' => array('label' => 'Web ATM', 'desc' => '', 'code' => 'web_atm'),
     'Convenient Store' => array('label' => '便利商店', 'desc'=>'', 'code' => 'barcode'),
-    'Convenient Store (Code)' => array('label'=>'便利商店 (代碼)','desc' => '', 'code' => 'ibon'),
+    'Convenient Store (FamilyMart)' => array('label'=>'便利商店 (全家/萊爾富)','desc' => '', 'code' => 'cvs'),
+    'Convenient Store (7-11 ibon)' => array('label'=>'便利商店 (7-11 ibon)','desc' => '', 'code' => 'ibon'),
   );
   if($type == 'form_name'){
     foreach($i as $name => $data){
@@ -130,5 +131,41 @@ function _civicrm_gw_instrument($type = 'normal'){
     }
     return $instrument;
   }
-  return $i;
+  elseif($type == 'code'){
+    foreach($i as $name =>  $data){
+      $instrument[$name] = $data['code'];
+    }
+    return $instrument;
+  }
+  else{
+    return $i;
+  }
+}
+
+/**
+ * Help function for generate post string
+ */
+function _civicrm_gw_vars2str($post){
+  $array = array();
+  foreach($post as $name => $value){
+    if($value){
+      $array[] = $name."=".urlencode($value);
+    }
+  }
+  return implode('&', $array);
+}
+
+/**
+ * Help function for convert string to array
+ */
+function _civicrm_gw_vars2array($str){
+  $vars = explode('&', $str);
+  foreach($vars as $var){
+    list($name, $value) = explode('=', $var, 2);
+    if($name == 'errormessage'){
+      $value = iconv("Big5","UTF-8",$value);
+    }
+    $params[$name] = $value;
+  }
+  return $params;
 }
