@@ -47,7 +47,20 @@ function civicrm_instrument_civicrm_buildForm($form_name, &$form){
       }
 
       if(module_exists('civicrm_gw') && $form->_paymentProcessor['payment_processor_type'] == 'GW'){
+        $enabled_instruments = _civicrm_gw_instrument();
+        $enabled_instruments = array_intersect_key($all_instruments, $enabled_instruments);
       
+        foreach($enabled_instruments as $name => $i){
+          $radio_name = _civicrm_instrument_form_name($name);
+          if($active_instruments[$radio_name]){
+            $radios[$i['value']] = array(
+              'form_name'=> $radio_name,
+              'name'=> $name, 
+              'label' => $i['label'],
+              'description' => $i['description'],
+            );
+          }
+        }
       }
       elseif(module_exists('civicrm_neweb') && $form->_paymentProcessor['payment_processor_type'] == 'Neweb'){
         $enabled_instruments = _civicrm_neweb_instrument();
@@ -197,3 +210,24 @@ function _civicrm_instrument_form_name($name){
   return preg_replace('/[^0-9a-z]+/i', '_', strtolower($name));
 }
 
+function civicrm_instrument_by_id($id, $field = NULL){
+  $gid = variable_get('civicrm_instrument_gid', 0);
+  if(!$field){
+    $query = CRM_Core_DAO::exetuteQuery("SELECT * FROM civicrm_option_value WHERE id = {$id} AND option_group_id = {$gid}");
+    return $query->fetch();
+  }
+  else{
+    return CRM_Core_DAO::singleValueQuery("SELECT $field FROM civicrm_option_value WHERE id = {$id} AND option_group_id = {$gid}");
+  }
+}
+
+function civicrm_instrument_by_name($name, $field = NULL){
+  $gid = variable_get('civicrm_instrument_gid', 0);
+  if(!$field){
+    $query = CRM_Core_DAO::exetuteQuery("SELECT * FROM civicrm_option_value WHERE name = {$name} AND option_group_id = {$gid}");
+    return $query->fetch();
+  }
+  else{
+    return CRM_Core_DAO::singleValueQuery("SELECT $field FROM civicrm_option_value WHERE name = {$name} AND option_group_id = {$gid}");
+  }
+}
