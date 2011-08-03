@@ -1,0 +1,248 @@
+<?php
+
+/**
+ * Implementation of hook_install
+ */
+function neticrm_preset_install(){
+  civicrm_initialize();
+  // start standard installation process
+  neticrm_preset_domain_default();
+  neticrm_preset_disable_blocks();
+  neticrm_preset_replace_sql('neticrm_preset.sql');
+}
+
+/**
+ * Implementation of hook_uninstall
+ */
+function neticrm_preset_uninstall(){
+  // We have nothing to uninstall. Just a zombile to remove record in system table.
+}
+
+function neticrm_preset_domain_default(){
+  require_once "CRM/Core/Component.php";
+  require_once "CRM/Core/BAO/Setting.php";
+  $params = array (
+    'verpSeparator' => '.',
+    'mailerBatchLimit' => '300',
+    'mailerJobSize' => '',
+    'civiRelativeURL' => '/',
+    'dateformatDatetime' => '%Y-%m-%d %H:%M',
+    'dateformatFull' => '%Y-%m-%d',
+    'dateformatPartial' => '%Y-%m',
+    'dateformatYear' => '%Y',
+    'dateformatTime' => '%H:%M',
+    'dateInputFormat' => 'yy-mm-dd',
+    'timeInputFormat' => '2',
+    'fiscalYearStart' => 
+      array (
+        'M' => '1',
+        'd' => '1',
+      ),
+    'contactUndelete' => '1',
+    'logging' => '0',
+    'versionCheck' => '0',
+    'maxAttachments' => '3',
+    'maxFileSize' => '2',
+    'recaptchaPublicKey' => '',
+    'recaptchaPrivateKey' => '',
+    'dashboardCacheTimeout' => '1440',
+    'includeWildCardInName' => '1',
+    'includeEmailInName' => '1',
+    'includeNickNameInName' => '1',
+    'includeAlphabeticalPager' => '0',
+    'includeOrderByClause' => '1',
+    'smartGroupCacheTimeout' => '3',
+    'defaultSearchProfileID' => '',
+    'autocompleteContactSearch' => 
+      array (
+        1 => '1',
+        2 => '1',
+      ),
+    'mapProvider' => 'Google',
+    'mapAPIKey' => 'ABQIAAAAI0lzbp5MgOdeDMWG1cr9-BQZAY_qI7JFiArrU6Wsi_s48IuOrxSPDjSQeXkQ18oC3N608PKHjmNV-A',
+    'enableComponents' => 
+      array (
+        0 => 'CiviContribute',
+        1 => 'CiviMember',
+        2 => 'CiviEvent',
+        3 => 'CiviMail',
+        4 => 'CiviReport',
+      ),
+    'enableComponentIDs' => 
+      array (
+        0 => '2',
+        1 => '3',
+        2 => '1',
+        3 => '4',
+        4 => '8',
+      ),
+    'lcMessages' => 'zh_TW',
+    'inheritLocale' => '1',
+    'monetaryThousandSeparator' => ',',
+    'monetaryDecimalPoint' => '.',
+    'moneyformat' => '%c %a',
+    'moneyvalueformat' => '%!i',
+    'countryLimit' => 
+      array (
+        0 => '1208',
+      ),
+    'provinceLimit' => 
+      array (
+        0 => '1208',
+      ),
+    'defaultContactCountry' => '1208',
+    'defaultCurrency' => 'TWD',
+    'legacyEncoding' => 'Big5',
+    'customTranslateFunction' => 'civicrm_alter_translation',
+    'fieldSeparator' => ',',
+    '_qf_default' => 'Localization:next',
+    '_qf_Localization_next' => 'Save',
+    'defaultCurrencySymbol' => 'NT$',
+    'userFramework' => 'Drupal',
+    'initialized' => 0,
+    'DAOFactoryClass' => 'CRM_Contact_DAO_Factory',
+    'inCiviCRM' => false,
+    'debug' => 0,
+    'backtrace' => 0,
+    'resourceBase' => NULL,
+    'currencySymbols' => '',
+    'gettextCodeset' => 'utf-8',
+    'gettextDomain' => 'civicrm',
+    'userFrameworkVersion' => '6.20',
+    'userFrameworkUsersTableName' => 'users',
+    'userFrameworkFrontend' => false,
+    'userFrameworkLogging' => false,
+    'maxImportFileSize' => 1048576,
+    'geocodeMethod' => '',
+    'mapGeoCoding' => 1,
+    'enableSSL' => false,
+    'fatalErrorTemplate' => 'CRM/common/fatal.tpl',
+    'fatalErrorHandler' => NULL,
+    'maxLocationBlocks' => 2,
+    'captchaFontPath' => '/usr/X11R6/lib/X11/fonts/',
+    'captchaFont' => 'HelveticaBold.ttf',
+    'doNotResetCache' => 0,
+    'oldInputStyle' => 1,
+    'formKeyDisable' => false,
+    'mailerPeriod' => 180,
+    'mailerSpoolLimit' => 0,
+  ); 
+  $params['componentRegistry'] = new CRM_Core_Component();
+
+  // start saving
+  $setting = new CRM_Core_BAO_Setting();
+  $setting->add($params);
+
+  // trick to update correct userFrameworkResourceURL
+  if(function_exists('d')){
+    $site = basename(d()->site_path);
+    $path = 'http://'.$site.'/sites/all/modules/civicrm';
+    require_once "CRM/Report/DAO/Instance.php";
+    $sql = "UPDATE civicrm_option_value SET value = '$path' WHERE name = 'userFrameworkResourceURL'";
+    CRM_Core_DAO::executeQuery($sql);
+  }
+}
+
+function neticrm_preset_disable_blocks(){
+  install_include(array('block'));
+  install_set_block('civicrm', 2, 'neticrm', 'left', -10, 0, "civicrm\ncivicrm/dashboard\nadmin\nadmin/*");
+
+  install_disable_block('civicrm', 1, 'neticrm');
+  install_disable_block('civicrm', 3, 'neticrm');
+  install_disable_block('civicrm', 4, 'neticrm');
+  install_disable_block('civicrm', 5, 'neticrm');
+}
+
+function neticrm_preset_replace_sql($filename){
+  $filename = dirname(__FILE__).'/'.$filename;
+  require_once "CRM/Report/DAO/Instance.php";
+  require_once "packages/DB.php";
+
+  $string = file_get_contents( $filename );
+  // change \r\n to fix windows issues
+  $string = str_replace("\r\n", "\n", $string );
+  //get rid of comments starting with # and --
+  $string = preg_replace("/^#[^\n]*$/m",   "\n", $string );
+  $string = preg_replace("/^(--[^-]).*/m", "\n", $string );
+
+  $queries  = preg_split('/;$/m', $string);
+  foreach ( $queries as $query ) {
+    $query = trim( $query );
+    if ( ! empty( $query ) ) {
+      $res =& CRM_Core_DAO::executeQuery($query);
+      /*
+      if ( PEAR::isError( $res ) ) {
+        die( "Cannot execute $query: " . $res->getMessage( ) );
+      }
+      */
+    }
+  }
+}
+
+/**
+ * Implementation of hook_update_N()
+ */
+function neticrm_preset_update_6103(){
+
+}
+
+/**
+ * Update for drupal 6.x-1.4
+ */
+/*
+function neticrm_preset_update_6104(){
+  civicrm_initialize();
+  require_once('CRM/Core/OptionGroup.php');
+  require_once('CRM/Core/OptionValue.php');
+  require_once('CRM/Core/Action.php');
+  // Add contribution instruments
+  $definition = array(
+    'Credit Card' => '信用卡',
+    'Credit Card (Offline)' => '信用卡（非線上）',
+    'Credit Card Recurring' => '信用卡定期定額',
+    'Credit Card Recurring (Offline)' => '信用卡定期定額（非線上）',
+    'Post Office Transfer' => '郵政劃撥',
+    'Post Office Recurring (Offline)' => '郵局自動轉帳授權',
+    'Convenient Store' => '便利商店',
+    'Convenient Store (Code)' => '便利商店（代碼）',
+    'Web ATM' => 'Web ATM',
+    'EFT' => '轉帳（ATM）',
+    'Yahoo' => 'Yahoo公益',
+  );
+
+  $values = array();
+  $values = CRM_Core_OptionGroup::values('payment_instrument', TRUE);
+  $group_params = array('name' => 'payment_instrument');
+  $params = array(
+    'is_active' => 1,
+  );
+  foreach($definition as $name => $label){
+    $params = array();
+    $params['label'] = $label;
+    $params['name'] = $name;
+    $params['is_active'] = 1;
+    if($name == 'EFT'){
+      // update to 轉帳
+      $dao = CRM_Core_DAO::executeQuery("SELECT ov.id, ov.value FROM civicrm_option_value ov INNER JOIN civicrm_option_group og ON og.id= ov.option_group_id WHERE og.name = 'payment_instrument' AND ov.name = 'EFT'");
+      $dao->fetch();
+      $params['value'] = $dao->value;
+      $action = CRM_Core_Action::UPDATE;
+      CRM_Core_OptionValue::addOptionValue($params, $group_params, $action, $dao->id);
+    }
+    elseif($values[$label]){
+      // skipped
+    }
+    else{
+      $action = CRM_Core_Action::ADD;
+      $option_value_id = 0;
+      CRM_Core_OptionValue::addOptionValue($params, $group_params, $action, $option_value_id);
+    }
+  }
+  $ret[] =  _neticrm_preset_message('Successful update payment instrument.', TRUE);
+  return $ret;
+}
+*/
+
+function _neticrm_preset_message($message, $success){
+  return array('success' => $success, 'query' => check_plain($message));
+}

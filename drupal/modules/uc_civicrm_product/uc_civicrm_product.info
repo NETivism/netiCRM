@@ -4,7 +4,7 @@ dependencies[] = "civicrm"
 dependencies[] = "uc_product"
 description = "Customized integration for civicrm and ubercart."
 name = "Ubercart CiviCRM Products"
-package = "CiviCRM"
+package = "NetiCRM"
 
 ; Information added by drupal.org packaging script on 2011-05-25
 version = "6.x-1.x-dev"

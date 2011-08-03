@@ -10,7 +10,7 @@ function civicrm_twaddress_civicrm_buildForm($formName, &$form) {
   }
 
   // we don't support ajax form
-  $deny = array('CRM_Event_Form_ManageEvent_Location');
+  $deny = array();
   if(in_array($formName,$deny)){
     return;
   }
