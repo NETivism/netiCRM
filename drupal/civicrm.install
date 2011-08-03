@@ -26,6 +26,8 @@
  +--------------------------------------------------------------------+
 */
 
+define( 'CIVICRM_DIRECTORY_SEPARATOR', DIRECTORY_SEPARATOR );
+
 /**
  *
  * @package CRM
@@ -35,6 +37,33 @@
  */
 
 function civicrm_install( ) {
+  // got to doing real install here.
+  // prepare variables first.
+  $crm_root = rtrim(dirname(__FILE__), "/drupal");
+  $conf_path = conf_path();
+  global $db_url;
+  $include_path = '.'.PATH_SEPARATOR.$crm_root.PATH_SEPARATOR.$crm_root.'/packages'.PATH_SEPARATOR.get_include_path();
+  set_include_path( $include_path );
+
+  // step 1: import databases
+  require_once "$crm_root/packages/DB.php";
+  $dsn = str_replace("mysqli", "mysql", $db_url['default'])."?new_link=true";
+  $success = _civicrm_import_sql( $dsn, $crm_root.'/sql/civicrm.mysql');
+  if($success){
+    _civicrm_import_sql( $dsn, $crm_root.'/sql/civicrm_data.zh_TW.mysql');
+    _civicrm_import_sql( $dsn, $crm_root.'/sql/civicrm_acl.zh_TW.mysql');
+  }
+
+  // step 2: create file directory
+  // Oh we can't create civicrm directory here. Leave it for initialize auto create script.
+  /* 
+  file_check_directory(file_create_path('civicrm'), FILE_CREATE_DIRECTORY);
+  */
+
+  // step 3: copy civicrm.settings.php to correct directory
+  $filename = $crm_root.'/templates/CRM/common/civicrm.settings.php.tpl';
+  file_put_contents("$conf_path/civicrm.settings.php", file_get_contents($filename));
+  drupal_set_message("CiviCRM for Drupal Installation Successful.");
 }
 
 /**
@@ -53,3 +82,36 @@ function civicrm_uninstall( ) {
     require_once 'CRM/Core/DAO.php';
     CRM_Core_DAO::dropAllTables( );
 }
+
+/**
+ * Helper function for import sql
+ */
+function _civicrm_import_sql($dsn, $fileName){
+  $db =& DB::connect( $dsn );
+  if(PEAR::isError( $db )) {
+    watchdog("civicrm", "Cannot open $dsn: " . $db->getMessage( ) );
+    return FALSE;
+  }
+  $string = file_get_contents( $fileName );
+
+  // change \r\n to fix windows issues
+  $string = str_replace("\r\n", "\n", $string );
+
+  //get rid of comments starting with # and --
+  $string = preg_replace("/^#[^\n]*$/m",   "\n", $string );
+  $string = preg_replace("/^(--[^-]).*/m", "\n", $string );
+
+  $queries  = preg_split('/;$/m', $string);
+  foreach ( $queries as $query ) {
+    $query = trim( $query );
+    if ( ! empty( $query ) ) {
+      $res =& $db->query( $query );
+      if ( PEAR::isError( $res ) ) {
+        watchdog("civicrm", "Cannot execute $query: " . $res->getMessage( ) );
+        return FALSE;
+      }
+    }
+  }
+  return TRUE;
+}
+

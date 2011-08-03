@@ -1,6 +1,6 @@
-name = CiviCRM Summer Camp Event Module
+name = Event Parent Register 
 description = "Allow a parent to register children to an event"
 dependencies[] = civicrm
-package = CiviCRM
+package = NetiCRM
 core = 6.x
-version = 3.3-netivism-dev
+version = 6.x-1.0

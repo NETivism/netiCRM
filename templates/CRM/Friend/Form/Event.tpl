@@ -23,5 +23,6 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
+{include file="CRM/Event/Form/ManageEvent/Tab.tpl"}
 {include file="CRM/Friend/Form/Friend.tpl" context="Event"}
 
