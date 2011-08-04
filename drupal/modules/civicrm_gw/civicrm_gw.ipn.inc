@@ -5,7 +5,7 @@ require_once 'CRM/Core/Payment/BaseIPN.php';
 /**
  * Helper function for receive pingback from payment server
  */
-function civicrm_gw_ipn(){
+function civicrm_gw_ipn($instrument){
   // detect variables
   if(empty($_POST)){
     watchdog("civicrm_gw", "Could not find POST data from payment server");
@@ -78,7 +78,6 @@ class CRM_Core_Payment_GWIPN extends CRM_Core_Payment_BaseIPN {
   }
 
   function saveResponse($cid, &$input){
-    $sql = "REPLACE INTO civicrm_contribution_gw SET cid={$cid},succ={$input['succ']},response_code='{$input['response_code']}',response_msg='{$input['response_msg']}',auth_code='{$input['auth_code']}',data='%s'";
     $record = array(
       'cid' => $cid,
       'succ' => $input['succ'],
