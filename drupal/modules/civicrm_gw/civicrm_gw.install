@@ -42,10 +42,10 @@ function civicrm_gw_schema(){
         'length' => '8',
         'not null' => FALSE,
       ),
-      'bank_code' => array(
+      'bankcode' => array(
         'description' => '',
         'type' => 'varchar',
-        'length' => '',
+        'length' => '3',
         'not null' => FALSE,
       ),
       'vaccno' => array(
