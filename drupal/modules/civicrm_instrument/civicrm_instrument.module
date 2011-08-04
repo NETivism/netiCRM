@@ -217,17 +217,17 @@ function civicrm_instrument_by_id($id, $field = NULL){
     return $query->fetch();
   }
   else{
-    return CRM_Core_DAO::singleValueQuery("SELECT $field FROM civicrm_option_value WHERE id = {$id} AND option_group_id = {$gid}");
+    return CRM_Core_DAO::singleValueQuery("SELECT $field FROM civicrm_option_value WHERE value = '{$id}' AND option_group_id = {$gid}");
   }
 }
 
 function civicrm_instrument_by_name($name, $field = NULL){
   $gid = variable_get('civicrm_instrument_gid', 0);
   if(!$field){
-    $query = CRM_Core_DAO::exetuteQuery("SELECT * FROM civicrm_option_value WHERE name = {$name} AND option_group_id = {$gid}");
+    $query = CRM_Core_DAO::exetuteQuery("SELECT * FROM civicrm_option_value WHERE name = '{$name}' AND option_group_id = {$gid}");
     return $query->fetch();
   }
   else{
-    return CRM_Core_DAO::singleValueQuery("SELECT $field FROM civicrm_option_value WHERE name = {$name} AND option_group_id = {$gid}");
+    return CRM_Core_DAO::singleValueQuery("SELECT $field FROM civicrm_option_value WHERE name = '{$name}' AND option_group_id = {$gid}");
   }
 }
