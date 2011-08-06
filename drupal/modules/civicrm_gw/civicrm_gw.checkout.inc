@@ -74,7 +74,7 @@ function _civicrm_gw_ecpay(&$vars, $component, &$payment_processor, $instrument_
     "od_sob" => $vars['contributionID'],
     "amount" => $amount,
     "roturl" => $notify_url,
-    "bk_posturl" => $notify_url.'&bk_posturl=1',
+    "bk_posturl" => $notify_url.'&bg=1',
     "qfKey" => $vars['qfKey'],
     "#action" => $payment_processor['url_site'],
   );
@@ -94,7 +94,7 @@ function _civicrm_gw_ecbank(&$vars, $component, &$payment_processor, $instrument
   $post['amt'] = ($vars['currencyID'] == 'TWD' && strstr($vars['amount'], '.') ) ? substr($vars['amount'], 0, strpos($vars['amount'],'.'))  : $vars['amount'];
   if($instrument_code != 'web_atm'){
     $post['enc_key'] = $payment_processor['subject'];
-    $post['ok_url'] = _civicrm_gw_notify_url($vars, "gw/ipn/$instrument_code", $component);
+    $post['ok_url'] = _civicrm_gw_notify_url($vars, "gw/ipn/$instrument_code", $component).'&bg=1';
   }
 
   // prepare option variables
@@ -128,11 +128,10 @@ function _civicrm_gw_ecbank(&$vars, $component, &$payment_processor, $instrument
   $api = url($payment_processor['url_api'], array('query'=>$http_query));
   $return = file_get_contents($api);
   parse_str($return, $res);
-  dpr($res);
 
   // save fetched result
   $record = array('cid' => $vars['contributionID']);
-  $save = array('bankcode', 'vaccno', 'payno', 'expire_datetime');
+  $save = array('error', 'bankcode', 'vaccno', 'payno', 'expire_datetime');
   foreach($save as $k){
     $record[$k] = $res[$k];
     if($k == 'expire_datetime'){
@@ -146,22 +145,22 @@ function _civicrm_gw_ecbank(&$vars, $component, &$payment_processor, $instrument
   // After saving the record, we only return the popup javascript for these method
   $civi_base_url = $component == 'event' ? 'civicrm/event/register' : 'civicrm/contribute/transact';
   $thankyou_url = url($civi_base_url, array( 'query' => "_qf_ThankYou_display=1&qfKey={$vars['qfKey']}", 'absolute'=>true));
-  $redirect_vars = array(
-    "#action" => $thankyou_url,
-  );
 
   if($res['tsr']){
+    $redirect_vars = array(
+      "#action" => $thankyou_url,
+    );
     if($instrument_code == 'barcode'){
       $redirect_vars['#popup'] = "https://ecbank.com.tw/order/barcode_print.php?mer_id={$payment_processor['signature']}&tsr={$res['tsr']}";
     }
     else{
       // cvs vacc ibon
-      $redirect_vars['#popup'] = url('gw/popup/'.$instrument_code, array('absolute' => TRUE));
+      $redirect_vars['#popup'] = url('gw/popup/'.$instrument_code, array('absolute' => TRUE, 'query' => "cid={$vars['contributionID']}"));
     }
     return $redirect_vars;
   }
   else{
-    // failure
+    drupal_set_message("Error on fetch response. Code number #{$res['error']}", 'error');
   }
 }
 
@@ -273,5 +272,33 @@ function _civicrm_gw_notify_url(&$vars, $path, $component){
 }
 
 function civicrm_gw_popup($instrument){
-  return $instrument;
+  $cid = $_GET['cid'];
+  if(!$cid){
+    drupal_goto();
+  }
+  else{
+    $gw = db_fetch_object(db_query("SELECT * FROM {civicrm_contribution_gw} WHERE cid = %d", $cid));
+    civicrm_initialize();
+    $amount = CRM_Core_DAO::singleValueQuery("SELECT total_amount FROM civicrm_contribution WHERE id = {$cid}");
+    $output = '
+<style>
+  #content { text-align: center;}
+  #content table {text-align: left; width: 300px; margin: 0 auto;}
+  #sidebar {display:none;}
+  #navigation, #branding, #admin-menu { display: none !important; }
+</style>
+    ';
+    if($gw){
+      $rows = _civicrm_gw_payment_info($cid, $instrument);
+      $output .= '<h3>付款資訊</h3>';
+      $output .= theme('table', NULL, $rows, array('align' => 'center', 'width' =>' 300', 'id' => 'payment-info'));
+      $output .= '<div class="function">';
+      $output .= '<input type="button" onclick="print();" value="列印">';
+      $output .= '</div>';
+    }
+    else{
+      $output = 'database not found error';
+    }
+  }
+  return $output;
 }

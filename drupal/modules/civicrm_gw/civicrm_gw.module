@@ -79,11 +79,11 @@ function civicrm_gw_cron(){
 function _civicrm_gw_instrument($type = 'normal'){
   $i = array(
     'Credit Card' => array('label' => '信用卡', 'desc' => '', 'code' => 'Credit Card'),
-    'Virtual ATM' => array('label' => '轉帳（ATM/銀行）', 'desc' => '', 'code' => 'vacc'),
+    'ATM' => array('label' => 'ATM 轉帳', 'desc' => '', 'code' => 'vacc'),
     'Web ATM' => array('label' => 'Web ATM', 'desc' => '', 'code' => 'web_atm'),
     'Convenient Store' => array('label' => '便利商店', 'desc'=>'', 'code' => 'barcode'),
-    'Convenient Store (FamilyMart)' => array('label'=>'便利商店 (全家/萊爾富)','desc' => '', 'code' => 'cvs'),
-    'Convenient Store (7-11 ibon)' => array('label'=>'便利商店 (7-11 ibon)','desc' => '', 'code' => 'ibon'),
+    'Convenient Store (FamilyMart)' => array('label'=>'便利商店代碼 (全家/萊爾富)','desc' => '', 'code' => 'cvs'),
+    'Convenient Store (7-11 ibon)' => array('label'=>'便利商店代碼 (7-11 ibon)','desc' => '', 'code' => 'ibon'),
   );
   if($type == 'form_name'){
     foreach($i as $name => $data){
@@ -129,4 +129,29 @@ function _civicrm_gw_vars2array($str){
     $params[$name] = $value;
   }
   return $params;
+}
+
+/**
+ * Help funtion for printing payment info
+ */
+function _civicrm_gw_payment_info($cid, $instrument){
+  civicrm_initialize();
+  $gw = db_fetch_object(db_query("SELECT * FROM {civicrm_contribution_gw} WHERE cid = %d", $cid));
+  $amount = CRM_Core_DAO::singleValueQuery("SELECT total_amount FROM civicrm_contribution WHERE id = {$cid}");
+  $data = array();
+  switch($instrument){
+    case 'cvs':
+    case 'ibon':
+      $data[] = array('付款代碼', $gw->payno);
+      $data[] = array('付款金額', $amount);
+      $data[] = array('付款期限', format_date($gw->expire_datetime, 'short'));
+      break;
+    case 'vacc':
+      $data[] = array('轉帳銀行代碼', $gw->bankcode);
+      $data[] = array('轉帳銀行帳號', $gw->vaccno);
+      $data[] = array('付款金額', $amount);
+      $data[] = array('付款期限', format_date($gw->expire_datetime, 'custom', 'Y/m/d'));
+      break;
+  }
+  return $data;
 }

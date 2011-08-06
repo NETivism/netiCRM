@@ -11,29 +11,23 @@ function civicrm_gw_ipn($instrument){
     watchdog("civicrm_gw", "Could not find POST data from payment server");
   }
   else{
-    $component = $_GET['module'];
-    $ipn = new CRM_Core_Payment_GWIPN();
-    switch ( $component) {
-      case 'contribute':
-       $ipn->main('contribute');
-       break;
-      case 'event':
-       $ipn->main('event');
-       break;
-      default:
-       watchdog('civicrm_gw', "Could not get module name from request url");
-       break;
+    if($component = $_GET['module']){
+      $ipn = new CRM_Core_Payment_GWIPN();
+      $ipn->main($component, $instrument);
+    }
+    else{
+      watchdog('civicrm_gw', "Could not get module name from request url");
     }
   }
 }
 
 class CRM_Core_Payment_GWIPN extends CRM_Core_Payment_BaseIPN {
-  static $_paymentProcessor = null;
+  static $payment_processor= null;
   function __construct( ) {
     parent::__construct( );
   }
 
-  function main(  $component = 'contribute'  ){
+  function main(  $component = 'contribute', $instrument){
     // get the contribution and contact ids from the GET params
     require_once 'CRM/Utils/Request.php';
     $objects = $ids = $input = array();
@@ -42,9 +36,7 @@ class CRM_Core_Payment_GWIPN extends CRM_Core_Payment_BaseIPN {
     $input['component'] = $component;
     $qfKey = $_GET['qfKey'] ? $_GET['qfKey'] : $input['od_hoho']['qfKey'];
     $civi_base_url = $component == 'event' ? 'civicrm/event/register' : 'civicrm/contribute/transact';
-
-    // save response
-    $this->saveResponse($_GET['cid'], $input);
+    $this->saveRecord($input['cid'], $input);
     
     // now, retrieve full object by validateData, or false fallback
     if ( ! $this->validateData( $input, $ids, $objects ) ) {
@@ -52,10 +44,12 @@ class CRM_Core_Payment_GWIPN extends CRM_Core_Payment_BaseIPN {
     }
 
     // set global variable for paymentProcessor
-    self::$_paymentProcessor =& $objects['paymentProcessor'];
+    self::$payment_processor =& $objects['paymentProcessor'];
     if($objects['contribution']->contribution_status_id == 1){
       // already completed. skip and redirect to thank you page
-      drupal_goto($civi_base_url, "_qf_ThankYou_display=true&qfKey={$qfKey}");
+      if($qfKey){
+        drupal_goto($civi_base_url, "_qf_ThankYou_display=true&qfKey={$qfKey}");
+      }
     }
     else{
       // start validation
@@ -63,29 +57,52 @@ class CRM_Core_Payment_GWIPN extends CRM_Core_Payment_BaseIPN {
       $transaction = new CRM_Core_Transaction();
       $note = '';
       if( $this->validateOthers($input, $ids, $objects, $transaction, $note) ){
-        if($this->go($input, $ids, $objects, $transaction, $note) && !$_GET['bk_posturl']){
+        $contribution =& $objects['contribution'];
+
+        $contribution->receive_date = date('YmdHis');
+        $input['trxn_id'] = $contribution->id;
+        $this->completeTransaction( $input, $ids, $objects, $transaction, $recur );
+        $note .= ts('Completed')."\n";
+        $this->addNote($note, $contribution);
+        if(!$_GET['bg']){
           drupal_goto($civi_base_url, "_qf_ThankYou_display=true&qfKey={$qfKey}");
         }
       }
     }
     
     // error stage: doesn't goto and not the background posturl
-    if(!$_GET['bk_posturl']){
+    /* Still need to define the best way to handle this
+    if(!$_GET['bg']){
       $error_base_url =  $component == 'event' ? 'civicrm/event/confirm' : 'civicrm/contribute/transact';
       $error_argument = $component == 'event' ? "reset=1&cc=fail&participantId={$ids['participant']}" : "_qf_Main_display=1&cancel=1&qfKey=$qfKey";
       drupal_goto($error_base_url, $error_argument);
     }
+    */
   }
 
-  function saveResponse($cid, &$input){
-    $record = array(
-      'cid' => $cid,
-      'succ' => $input['succ'],
-      'response_code' => $input['response_code'],
-      'response_msg' => $input['response_msg'],
-      'auth_code' => $input['auth_code'],
-      'data' => serialize($input),
+  function saveRecord($cid, &$input){
+    $save = array(
+      'succ',
+      'response_code', 'response_msg', 'auth_code', // credit card
+      'payno', 'payfrom', 'payer_bank', 'payer_acc', 'paid_date', // non credit card
+      'proc_datetime', 'expire_datetime', // special case
+      '',
     );
+    foreach($save as $n){
+      if($n == 'proc_datetiem'){
+        if($input['proc_date'] && $input['proc_time']){
+          $record[$n] = $input['proc_date'] . $input['proc_time'] .' +0800';
+        }
+      }
+      elseif($n == 'expire_datetime' && $input['expire_date']){
+        $record[$n] = $input['expire_date'] .'000000 +0800';
+      }
+      elseif($input[$n]){
+        $record[$n] = $input[$n];
+      }
+    }
+    $record['cid'] = $cid;
+    $record['data'] = serialize($input);
     drupal_write_record('civicrm_contribution_gw', $record, 'cid');
   }
 
@@ -127,7 +144,7 @@ class CRM_Core_Payment_GWIPN extends CRM_Core_Payment_BaseIPN {
   }
 
   // Greenworld check 
-  function gwSpcheck($process_time,$gwsr,$amount,$spcheck,$check_sum){
+  function gwEcpayCheck($process_time,$gwsr,$amount,$spcheck,$check_sum){
     $T = $process_time+$gwsr+$amount;	
     $a = substr($T,0,1).substr($T,2,1).substr($T,4,1);
     $b = substr($T,1,1).substr($T,3,1).substr($T,5,1);
@@ -139,6 +156,23 @@ class CRM_Core_Payment_GWIPN extends CRM_Core_Payment_BaseIPN {
     else {
       return FALSE;
     }  
+  }
+
+  /**
+   * Validation success message
+   *
+   * Borrow from ecbank api.
+   */
+  function gwEcbankCheck(&$input){
+    $key = self::$payment_processor['subject'];
+    
+    $serial = trim($input['proc_date'].$input['proc_time'].$input['tsr']);
+    $tac = trim($input['tac']);
+    $ws_url = 'https://ecbank.com.tw/web_service/get_outmac_valid.php?key='.$key.
+              '&serial='.$serial.
+              '&tac='.$tac;
+    $pass = file_get_contents($ws_url);
+    return $pass;  
   }
 
   function validateOthers( &$input, &$ids, &$objects, &$transaction, &$note){
@@ -153,21 +187,31 @@ class CRM_Core_Payment_GWIPN extends CRM_Core_Payment_BaseIPN {
     } 
 
     // check amount
-    if ($ids['contributionRecur']) {
-      $contribution->total_amount = $input['amount'];
-    }
-    elseif ( $contribution->total_amount != $input['amount'] ) {
+    $amount = $input['amount'] ? $input['amount'] : $input['amt'];
+    if ( $contribution->total_amount != $amount ) {
       watchdog("civicrm_gw", "Amount values dont match between database and IPN request" );
       $note .= ts("Failuare: Amount values dont match between database and IPN request")."\n";
       $pass = FALSE;
     }
 
-    // checksum
-    if(! $this->gwSpcheck($input["process_time"],$input["gwsr"],$input["amount"],$input["spcheck"], $objects['paymentProcessor']['password']) ){
-      watchdog("civicrm_gw", "Checksum Error" );
-      $note .= ts("Failuare: Transaction number and system response number doesn't match. Please contact us for further assistant.")."\n";
-      $this->failed( $objects, $transaction );
-      $pass = FALSE;
+    // non-credit card validation
+    if($input['payment_type']){
+      if(! $this->gwEcbankCheck($input){
+        watchdog("civicrm_gw", "Checksum Error" );
+        $note .= ts("Failuare: Transaction number and system response number doesn't match. Please contact us for further assistant.")."\n";
+        $this->failed( $objects, $transaction );
+        $pass = FALSE;
+      }
+      
+    }
+    // credit card validation
+    else{
+      if(! $this->gwEcpayCheck($input["process_time"],$input["gwsr"],$input["amount"],$input["spcheck"], $objects['paymentProcessor']['password']) ){
+        watchdog("civicrm_gw", "Checksum Error" );
+        $note .= ts("Failuare: Transaction number and system response number doesn't match. Please contact us for further assistant.")."\n";
+        $this->failed( $objects, $transaction );
+        $pass = FALSE;
+      }
     }
 
     // process fail response
@@ -204,15 +248,4 @@ class CRM_Core_Payment_GWIPN extends CRM_Core_Payment_BaseIPN {
     CRM_Core_BAO_Note::add( $noteParams, $note_id );
   }
 
-  function go( &$input, &$ids, &$objects, &$transaction, $note) {
-    $contribution =& $objects['contribution'];
-
-    $contribution->receive_date = date('YmdHis');
-    $input['trxn_id'] = $contribution->id;
-    $this->completeTransaction( $input, $ids, $objects, $transaction, $recur );
-
-    $note .= ts('Completed')."\n";
-    $this->addNote($note, $contribution);
-    return TRUE;
-  }
 }
