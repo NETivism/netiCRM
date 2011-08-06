@@ -42,6 +42,12 @@ function civicrm_gw_schema(){
         'length' => '8',
         'not null' => FALSE,
       ),
+      'error' => array(
+        'description' => 'Error number for response of non-credit card',
+        'type' => 'int',
+        'length' => '5',
+        'not null' => FALSE,
+      ),
       'bankcode' => array(
         'description' => '',
         'type' => 'varchar',
@@ -115,6 +121,8 @@ function civicrm_gw_install() {
   drupal_install_schema('civicrm_gw');
   civicrm_initialize( );
   require_once "CRM/Core/DAO.php";
+  require_once('CRM/Core/OptionValue.php');
+  require_once('CRM/Core/Action.php');
 
   // new payment processor
   $sql = "INSERT INTO civicrm_payment_processor_type (name, title, description, is_active, is_default, user_name_label, password_label, signature_label, subject_label, class_name, url_site_default, url_api_default, url_recur_default, url_button_default, url_site_test_default, url_api_test_default, url_recur_test_default, url_button_test_default, billing_mode, is_recur, payment_type) VALUES ('GW', 'Green World', NULL, 1, 0, '商店代號（ECPay）', '商家檢查碼（ECPay）', '商店代號（ECBank）', '加密私鑰（ECBank）', 'Payment_GW', 'https://ecpay.com.tw/form_Sc_to5.php', 'https://ecbank.com.tw/gateway.php', NULL, NULL, 'https://ecpay.com.tw/form_Sc_to5.php', 'https://ecbank.com.tw/gateway.php', NULL, NULL, 4, 0, 1)";
@@ -128,13 +136,25 @@ function civicrm_gw_install() {
   $gid = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_option_group WHERE name LIKE 'payment_instrument'");
   $next = CRM_Core_DAO::singleValueQuery("SELECT value FROM civicrm_option_value WHERE option_group_id = {$gid} ORDER BY value DESC");
   
+  $group_params = array('name' => 'payment_instrument');
   foreach($new_instrument as $k => $v){
-    $next++;
-    $exists_id = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_option_value WHERE option_group_id = {$gid} AND name = '$k'");
-    if(!$exists_id){
-      $sql = "INSERT INTO civicrm_option_value (option_group_id, label, value, name, grouping, filter, is_default, weight, description, is_optgroup, is_reserved, is_active, component_id, visibility_id) VALUES ({$gid}, '{$v['label']}', {$next}, '{$k}', NULL, $ppt_id, NULL, $next, '{$v['desc']}', 0, 0, 1, NULL, NULL)";
-      CRM_Core_DAO::executeQuery($sql);
+    $params = array(
+      'name' => $k,
+      'label' => $v['label'],
+      'is_active' => 1,
+    );
+    $dao = CRM_Core_DAO::executeQuery("SELECT id, value FROM civicrm_option_value WHERE option_group_id = {$gid} AND name = '$k'");
+    $dao->fetch();
+    if($dao->id){
+      $params['value'] = $dao->value;
+      $action = CRM_Core_Action::UPDATE;
+      $option_value_id = $dao->id;
     }
+    else{
+      $action = CRM_Core_Action::ADD;
+      $option_value_id = 0;
+    }
+    CRM_Core_OptionValue::addOptionValue($params, $group_params, $action, $option_value_id);
   }
 }
 
