@@ -206,7 +206,7 @@ function neticrm_preset_update_6104(){
     'Convenient Store' => '便利商店',
     'Convenient Store (Code)' => '便利商店（代碼）',
     'Web ATM' => 'Web ATM',
-    'EFT' => '轉帳（ATM）',
+    'ATM' => 'ATM 轉帳',
     'Yahoo' => 'Yahoo公益',
   );
 
@@ -221,15 +221,7 @@ function neticrm_preset_update_6104(){
     $params['label'] = $label;
     $params['name'] = $name;
     $params['is_active'] = 1;
-    if($name == 'EFT'){
-      // update to 轉帳
-      $dao = CRM_Core_DAO::executeQuery("SELECT ov.id, ov.value FROM civicrm_option_value ov INNER JOIN civicrm_option_group og ON og.id= ov.option_group_id WHERE og.name = 'payment_instrument' AND ov.name = 'EFT'");
-      $dao->fetch();
-      $params['value'] = $dao->value;
-      $action = CRM_Core_Action::UPDATE;
-      CRM_Core_OptionValue::addOptionValue($params, $group_params, $action, $dao->id);
-    }
-    elseif($values[$label]){
+    if($values[$label]){
       // skipped
     }
     else{
