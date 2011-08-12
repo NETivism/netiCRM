@@ -3,4 +3,5 @@ description = Provide CiviCRM / NetiCRM database update script. This is handled 
 package = NetiCRM
 dependencies[] = civicrm
 core = 6.x
-version = 6.x-1.3
+version = 6.x-1.0
+;version = 6.x-1.0
