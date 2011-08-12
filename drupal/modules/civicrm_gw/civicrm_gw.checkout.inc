@@ -156,6 +156,7 @@ function _civicrm_gw_ecbank(&$vars, $component, &$payment_processor, $instrument
     else{
       // cvs vacc ibon
       $redirect_vars['#popup'] = url('gw/popup/'.$instrument_code, array('absolute' => TRUE, 'query' => "cid={$vars['contributionID']}"));
+      //dpr($_SESSION['CiviCRM']['CRM_Contribute_Controller_Contribution_'.$vars['qfKey']]['values']['thankyou_text']);
     }
     return $redirect_vars;
   }
