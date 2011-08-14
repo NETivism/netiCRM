@@ -329,7 +329,7 @@ class CRM_Contact_Page_View extends CRM_Core_Page {
         }
         
         // set page title
-        $title = "{$contactImage} {$displayName}";
+        $title = $displayName;
         if ( $isDeleted ) {
             $title = "<del>{$title}</del>";
         }
