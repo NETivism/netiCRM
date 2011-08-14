@@ -41,7 +41,7 @@ function civicrm_html_head()
     }
 
     $head = null;
-    if ( arg(0) == 'civicrm' ) {
+    if ( arg(0) == 'civicrm' || arg(0) == 'user') {
         require_once 'CRM/Core/Config.php';
         $config = CRM_Core_Config::singleton();
 
@@ -169,22 +169,12 @@ function civicrm_perm()
 
 function civicrm_block($op='list', $delta='0')
 {
-    if ( $op == 'configure' ) {
-        return;
-    }
-
-    if ( ! civicrm_initialize( ) ) {
-        return;
-    }
-
-    // The $op parameter determines what piece of information is being requested.
     require_once 'CRM/Core/Block.php';
-    
-    // CRM_Core_Error::backtrace( "$op, $delta" );
 
-    if ($op == 'list') {
+    if($op == 'list') {
         $block = CRM_Core_Block::getInfo();
-    } else {
+    }
+    if($op == 'view') {
         $block = CRM_Core_Block::getContent ($delta);
     }
     return $block;
