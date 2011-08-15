@@ -22,14 +22,14 @@
      <path>civicrm/event/info</path>
      <page_callback>CRM_Event_Page_EventInfo</page_callback>
      <title>Event Information</title>
-     <access_callback>1</access_callback>
+     <access_arguments>view event info</access_arguments>
      <is_public>true</is_public>
   </item>
   <item>
      <path>civicrm/event/register</path>
      <title>Event Registration</title>
      <page_callback>CRM_Event_Controller_Registration</page_callback>
-     <access_callback>1</access_callback>
+     <access_arguments>register for events</access_arguments>
      <is_public>true</is_public>
      <is_ssl>true</is_ssl>
   </item>
@@ -38,6 +38,7 @@
      <title>Confirm Event Registration</title>
      <page_callback>CRM_Event_Form_Registration_ParticipantConfirm</page_callback>
      <access_callback>1</access_callback>
+     <access_arguments>access CiviEvent</access_arguments>
      <is_public>true</is_public>
      <is_ssl>true</is_ssl>
   </item>
