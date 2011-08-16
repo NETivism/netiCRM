@@ -286,9 +286,9 @@ $menu_links['navigation'] = array (
   ),
   27 => 
   array (
-    'path' => 'http://netivism.com.tw/support',
+    'path' => 'http://civicrm.netivism.com.tw/support',
     'query' => NULL,
-    'title' => '說明',
+    'title' => '線上支援',
     'menu' => 'navigation',
     'weight' => '-44',
     'module' => 'menu',
@@ -2390,7 +2390,7 @@ $menu_links['menu-footer'] =array (
   ),
   1 => 
   array (
-    'path' => 'http://civicrm.org/aboutcivicrm',
+    'path' => 'http://civicrm.tw/civicrm/what-is-civicrm',
     'query' => NULL,
     'title' => '關於CiviCRM',
     'menu' => 'menu-footer',
