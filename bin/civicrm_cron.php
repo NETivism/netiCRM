@@ -11,8 +11,10 @@ if($_SERVER['SERVER_ADDR'] == $_SERVER['REMOTE_ADDR']){
   run_civimail();
 
   // process aborting mail
-  // only process mail in midnight
-  if(date('G')%2 == 0 && date('i')%2==0 ){
+  // check mailbox in percentage
+  $now = time();
+  $rand = rand(1,2);
+  if(date('G')%2 == 0 && $rand%2 == 0){
     run_civimail_process();
   }
 }
