@@ -30889,7 +30889,7 @@ msgstr ""
 
 #:  templates/CRM/Price/Page/LineItem.tpl
 msgid "Contribution Total"
-msgstr "總捐款金額"
+msgstr "捐款總計"
 
 #:  templates/CRM/Price/Page/Option.tpl
 msgid ""
@@ -37959,7 +37959,7 @@ msgstr "時間替代符號（token）"
 
 #:  CRM/Mailing/Form/Group.php CRM/Mailing/Form/Settings.php,  CRM/Mailing/Form/Test.php CRM/Mailing/Form/Upload.php
 msgid "Next >>"
-msgstr "下一頁"
+msgstr "下一步 >>"
 
 msgid "Save & Continue Later"
 msgstr "儲存，以後再繼續"

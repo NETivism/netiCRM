@@ -65,7 +65,7 @@ function clearAmountOther() {
 {if $priceSet}
     <div id="priceset">
         <fieldset>
-            <legend>{ts}Contribution{/ts}</legend>
+            <legend>&nbsp;</legend>
             {include file="CRM/Price/Form/PriceSet.tpl"}
         </fieldset>
     </div>
