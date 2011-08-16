@@ -5108,7 +5108,7 @@ msgstr "時間替代符號（token）"
 #: CRM/Mailing/Form/Group.php CRM/Mailing/Form/Settings.php
 #: CRM/Mailing/Form/Test.php CRM/Mailing/Form/Upload.php
 msgid "Next >>"
-msgstr "下一頁"
+msgstr "下一步 >>"
 
 #: CRM/Mailing/Form/Group.php CRM/Mailing/Form/Settings.php
 #: CRM/Mailing/Form/Test.php CRM/Mailing/Form/Upload.php
@@ -31229,7 +31229,7 @@ msgstr "參加者總計"
 
 #: templates/CRM/Price/Page/LineItem.tpl
 msgid "Contribution Total"
-msgstr "總捐款金額"
+msgstr "捐款總計"
 
 #: templates/CRM/Price/Page/Option.tpl
 msgid "Unable to delete the '%1' Price Field Option - it is currently in use by one or more active events  or contribution pages or contributions."
