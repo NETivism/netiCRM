@@ -113,7 +113,7 @@ class CRM_Event_Form_ManageEvent_TabHeader {
             
             foreach ( $tabs as $key => $value ) {
                 $tabs[$key]['link'] = CRM_Utils_System::url( "civicrm/event/manage/{$key}",
-                                                             "{$reset}action=update&snippet=4&id={$eventID}&qfKey={$qfKey}" );
+                                                             "{$reset}action=update&id={$eventID}&qfKey={$qfKey}" );
                 $tabs[$key]['active'] = $tabs[$key]['valid'] = true;
             }
             

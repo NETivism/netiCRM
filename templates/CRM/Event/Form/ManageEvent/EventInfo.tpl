@@ -23,6 +23,7 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
+
 {* Step 1 of New Event Wizard, and Edit Event Info form. *} 
 {if $noEventTemplates}
 	{capture assign=etUrl}{crmURL p='civicrm/admin/eventTemplate' q="reset=1"}{/capture}
@@ -38,6 +39,7 @@
 {if $cdType} 
 	{include file="CRM/Custom/Form/CustomData.tpl"} 
 {else} 
+{include file="CRM/Event/Form/ManageEvent/Tab.tpl"}
 	{assign var=eventID value=$id}
         <div class="crm-submit-buttons">
         {include file="CRM/common/formButtons.tpl" location="top"}

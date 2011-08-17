@@ -112,8 +112,6 @@ class CRM_Admin_Form_ContactType extends CRM_Admin_Form
      * @return None
      */
     public function postProcess( ) {
-        CRM_Utils_System::flushCache( );
-        
         if( $this->_action & CRM_Core_Action::DELETE ) { 
             $isDelete = CRM_Contact_BAO_ContactType::del( $this->_id );
             if ( $isDelete ) {

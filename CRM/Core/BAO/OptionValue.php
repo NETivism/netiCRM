@@ -132,6 +132,9 @@ class CRM_Core_BAO_OptionValue extends CRM_Core_DAO_OptionValue
 
         $optionValue->id = CRM_Utils_Array::value( 'optionValue', $ids );
         $optionValue->save( );
+
+        $cache =& CRM_Utils_Cache::singleton( );
+        $cache->delete('CRM_OG_*');
         return $optionValue;
     }
     
@@ -153,6 +156,8 @@ class CRM_Core_BAO_OptionValue extends CRM_Core_DAO_OptionValue
         if ( self::updateRecords($optionValueId, CRM_Core_Action::DELETE) ){
             return $optionValue->delete();        
         }
+        $cache =& CRM_Utils_Cache::singleton( );
+        $cache->delete('CRM_OG_*');
         return false;
     }
 

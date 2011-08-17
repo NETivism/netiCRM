@@ -98,7 +98,8 @@ class CRM_Event_BAO_Event extends CRM_Event_DAO_Event
     static function add( &$params )
     {
         require_once 'CRM/Utils/System.php';
-        CRM_Utils_System::flushCache( );
+        $cache =& CRM_Utils_Cache::singleton( );
+        $cache->delete('*CRM_Event_DAO_Event*');
 
         require_once 'CRM/Utils/Hook.php';
         
@@ -186,6 +187,8 @@ class CRM_Event_BAO_Event extends CRM_Event_DAO_Event
         if ( !$id ) {
             return null;
         }
+        $cache =& CRM_Utils_Cache::singleton( );
+        $cache->delete('*CRM_Event_DAO_Event*');
 
         require_once 'CRM/Utils/Hook.php';
         CRM_Utils_Hook::pre( 'delete', 'Event', $id, CRM_Core_DAO::$_nullArray );
@@ -888,6 +891,8 @@ WHERE civicrm_event.is_active = 1
      */
     static function copy( $id )
     {
+        $cache =& CRM_Utils_Cache::singleton( );
+        $cache->delete('*CRM_Event_DAO_Event*');
         $defaults = $eventValues = array( );
         
         //get the require event values.

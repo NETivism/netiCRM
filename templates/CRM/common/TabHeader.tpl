@@ -24,10 +24,10 @@
  +--------------------------------------------------------------------+
 *}
 {if $tabHeader and count($tabHeader) gt 1}
-<div id="mainTabContainer">
-<ul>
+<div id="mainTabContainer" class="clear-block">
+<ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
    {foreach from=$tabHeader key=tabName item=tabValue}
-      <li id="tab_{$tabName}" class="crm-tab-button ui-corner-all {if !$tabValue.valid}disabled{/if}">
+      <li id="tab_{$tabName}" class="crm-tab-button ui-state-default ui-corner-top ui-tabs-selected ui-corner-bottom {if !$tabValue.valid}disabled{/if}">
       {if $tabValue.link and $tabValue.active}
          <a href="{$tabValue.link}" title="{$tabValue.title}{if !$tabValue.valid} ({ts}disabled{/ts}){/if}"><span> </span> {$tabValue.title}</a>
       {else}
@@ -41,6 +41,7 @@
 
 
 <script type="text/javascript"> 
+/*
    var selectedTab = 'EventInfo';
    {if $selectedTab}selectedTab = "{$selectedTab}";{/if}
    var spinnerImage = '<img src="{$config->resourceBase}i/loading.gif" style="width:10px;height:10px"/>';    
@@ -81,5 +82,6 @@ function stopSpinner( ) {
 	    load: stopSpinner
         });        
     });
+    */
 {/literal}
 </script>

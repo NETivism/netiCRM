@@ -114,6 +114,9 @@ class CRM_Contribute_BAO_ContributionType extends CRM_Contribute_DAO_Contributio
         
         $contributionType->id = CRM_Utils_Array::value( 'contributionType', $ids );
         $contributionType->save( );
+
+        $cache =& CRM_Utils_Cache::singleton( );
+        $cache->delete('CRM_PC_CRM_Contribute_DAO_ContributionType*');
         return $contributionType;
     }
     
@@ -156,6 +159,8 @@ class CRM_Contribute_BAO_ContributionType extends CRM_Contribute_DAO_Contributio
         $contributionType = new CRM_Contribute_DAO_ContributionType( );
         $contributionType->id = $contributionTypeId;
         $contributionType->delete();
+        $cache =& CRM_Utils_Cache::singleton( );
+        $cache->delete('CRM_PC_CRM_Contribute_DAO_ContributionType*');
     }
 }
 

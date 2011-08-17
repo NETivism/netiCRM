@@ -91,8 +91,6 @@ class CRM_Admin_Form_LocationType extends CRM_Admin_Form
      * @return None
      */
     public function postProcess() {
-        CRM_Utils_System::flushCache( 'CRM_Core_DAO_LocationType' );
-
         if ( $this->_action & CRM_Core_Action::DELETE ) {
             CRM_Core_BAO_LocationType::del( $this->_id );
             CRM_Core_Session::setStatus( ts('Selected Location type has been deleted.') );
@@ -120,8 +118,10 @@ class CRM_Admin_Form_LocationType extends CRM_Admin_Form
         if ($this->_action & CRM_Core_Action::UPDATE ) {
             $locationType->id = $this->_id;
         }
-            
         $locationType->save( );
+        // clear cache
+        $cache =& CRM_Utils_Cache::singleton( );
+        $cache->delete('*CRM_Core_DAO_LocationType*');
         
         CRM_Core_Session::setStatus( ts('The location type \'%1\' has been saved.',
                                         array( 1 => $locationType->name )) );

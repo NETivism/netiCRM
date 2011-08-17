@@ -84,7 +84,7 @@
 	
 	{if $action eq 2 and $lineItem}
 	    <tr>
-            <td class="label">{ts}Contribution Amount{/ts}</td>
+            <td class="label">{ts}Amount{/ts}</td>
             <td>{include file="CRM/Price/Page/LineItem.tpl" context="Contribution"}</td>
         </tr>
 	{else}

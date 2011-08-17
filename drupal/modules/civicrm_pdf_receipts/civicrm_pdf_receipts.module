@@ -1,0 +1,332 @@
+<?php
+
+/**
+ * This CiviCRM module supports CRA-compliant tax receipting:
+ *    - email a PDF receipt when a contribution is submitted
+ *    - button to print a PDF receipt for a processed contribution
+ *    - button to email a new copy of the PDF receipt for a processed contribution
+ *
+ * It replaces CiviCRM's default receipting for tax-deductible contributions.
+ *
+ * Contributed by PeaceWorks Computer Consulting
+ * http://www.peaceworks.ca
+ */
+
+require_once('civicrm_pdf_receipts.inc');
+
+/**
+ * Implements hook_civicrm_alterMailParams().
+ *
+ * Intercepts outgoing confirmation emails.  If the confirmation email is for a
+ * tax-deductable receipt, we modify the email to include an attached tax receipt;
+ * otherwise, we let it pass through untouched.
+ *
+ */
+function civicrm_pdf_receipts_civicrm_alterMailParams(&$params) {
+
+  if ($params['groupName'] == 'msg_tpl_workflow_contribution' &&
+      $params['valueName'] == 'contribution_online_receipt') {
+
+    // get the contribution object
+    $contributionID = $params['tplParams']['contributionID'];
+    if ( ! contributionID ) return;
+
+    $contribution = & new CRM_Contribute_DAO_Contribution();
+    $contribution->id = $contributionID;
+
+    if ( ! $contribution->find( true ) ) {
+      CRM_Core_Error::fatal( "Could not retrieve details for this contribution" );
+      return;
+    }
+
+    // check if the contribution is receiptable
+    $contributionType = & new CRM_Contribute_DAO_ContributionType();
+    $contributionType->id = $contribution->contribution_type_id;
+    if ( ! $contributionType->find( true ) ) {
+      CRM_Core_Error::fatal( "Could not find corresponding contribution type." );
+      return;
+    }
+
+    // grab the contribution page (for receipt text)
+    $contributionPage = & new CRM_Contribute_DAO_ContributionPage();
+    $contributionPage->id = $contribution->contribution_page_id;
+    if ( ! $contributionPage->find( true ) ) {
+      CRM_Core_Error::fatal( "Could not find corresponding contribution page." );
+      return;
+    }
+
+    // modify the receipt if the contribution is successful and a receipt hasn't already been sent
+    if ( $contributionType->is_deductible ) {
+      if ( $contribution->contribution_status_id == 1 && ! civicrm_pdf_receipts_taxReceiptSent( $contribution ) ) {
+        civicrm_pdf_receipts_recordTaxReceipt( $contribution );
+        list($pdf_file, $user_friendly) = civicrm_pdf_receipts_generateTaxReceipt( $contribution );
+        $attachment = array(
+          'fullPath' => $pdf_file,
+          'mime_type' => 'application/pdf',
+          'cleanName' => $user_friendly,
+        );
+        $params['attachments'][] = $attachment;
+        // remove transaction details from email -- send receipt text only
+        $params['text'] = $contributionPage->receipt_text;
+        unset( $params['html'] );
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_civicrm_buildform().
+ * 
+ * Injects elements into a form being built so we can print and/or manually
+ * send a tax reciept from the admin interface.
+ * 
+ */
+function civicrm_pdf_receipts_civicrm_buildForm( $formName, &$form ) {
+
+    if ( is_a( $form, 'CRM_Contribute_Form_ContributionView' ) ) {
+
+        // inject "print receipt" and "send tax receipt" buttons into the "view contribution" page
+
+        $buttons = array( array ( 'type'      => 'submit',  
+                                  'subName'   => 'print_receipt',
+                                  'name'      => ts('Print Receipt'),  
+                                  'spacing'   => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',  
+                                  'isDefault' => true ),
+                          array ( 'type'      => 'submit',  
+                                  'subName'   => 'send_receipt',
+                                  'name'      => ts('Send Tax Receipt'),  
+                                  'spacing'   => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',  
+                                  'isDefault' => false ), );
+
+        $form->addButtons( $buttons );
+
+    }
+}
+
+/**
+ * Implements hook_civicrm_postProcess().
+ * 
+ * Called when a form comes back for processing. Basically, we want to process
+ * the two buttons we added in civicrm_pdf_receipts_civicrm_buildForm().
+ * 
+ */
+function civicrm_pdf_receipts_civicrm_postProcess( $formName, &$form ) {
+    require_once("CRM/Contribute/DAO/ContributionType.php");
+
+    if ( ! is_a( $form, 'CRM_Contribute_Form_ContributionView' ) ) return;
+
+    // get the contribution
+    $contributionId = $form->get( 'id' );
+    $contribution = & new CRM_Contribute_DAO_Contribution();
+    $contribution->id = $contributionId;
+
+    if ( ! $contribution->find( true ) ) {
+        CRM_Core_Error::fatal( "Could not retrieve details for this contribution" );
+        return;
+    }
+
+    // check the contribution is receiptable
+    $contributionType = & new CRM_Contribute_DAO_ContributionType();
+    $contributionType->id = $contribution->contribution_type_id;
+    if ( ! $contributionType->find( true ) ) {
+        CRM_Core_Error::fatal( "Could not find corresponding contribution type." );
+    }
+
+    // check if it's the original receipt or a duplicate
+    $original_receipt = ! civicrm_pdf_receipts_taxReceiptSent( $contribution );
+
+    if ( $contributionType->is_deductible ) {
+        // print the receipt or send it, depending on which button was submitted
+        if ( $original_receipt ) civicrm_pdf_receipts_recordTaxReceipt( $contribution );
+
+        if ( $_POST['_qf_ContributionView_submit_send_receipt'] == 'Send Tax Receipt' ) {
+            civicrm_pdf_receipts_sendTaxReceipt( $contribution, $original_receipt );
+            $statusMsg = ts('A tax receipt has been emailed to the contributor.');
+            CRM_Core_Session::setStatus( $statusMsg );
+        } elseif ( $_POST['_qf_ContributionView_submit_print_receipt'] == 'Print Receipt' ) {
+            civicrm_pdf_receipts_generateTaxReceipt( $contribution, $original_receipt, $print_instead_of_email=true );
+        }
+    } else {
+        $statusMsg = ts('This contribution is not tax deductible. No receipt has been sent.');
+        CRM_Core_Session::setStatus( $statusMsg );
+    }
+}
+
+/**
+ * Drupal configuration
+ * (CiviCRM doesn't let us dynamically inject fields into templates.  Avoid forcing template changes
+ * during installation by moving configuration to the Drupal side.)
+ */
+function civicrm_pdf_receipts_menu()
+{
+  $items = array();
+  $items['admin/settings/pdf_receipts'] = array(
+    'title' => 'CiviCRM PDF Receipts',
+    'description' => 'Configure PDF receipting for CiviCRM',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('civicrm_pdf_receipts_admin_form'),
+    'access arguments' => array('administer CiviCRM'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  return $items;
+}
+
+function civicrm_pdf_receipts_admin_form()
+{
+  $form = array();
+
+  $form['org'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Organization details'),
+  );
+  $form['org']['pdf_receipts_org_name'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Organization Name'),
+    '#size' => 50,
+    '#default_value' => variable_get('pdf_receipts_org_name', ''),
+    '#maxlength' => 50,
+    '#required' => TRUE,
+  );
+  $form['org']['pdf_receipts_address_line1'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Address Line 1'),
+    '#size' => 50,
+    '#maxlength' => 50,
+    '#default_value' => variable_get('pdf_receipts_address_line1', ''),
+    '#description' => '101 Anywhere Drive',
+    '#required' => TRUE,
+  );
+  $form['org']['pdf_receipts_address_line2'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Address Line 2'),
+    '#size' => 50,
+    '#maxlength' => 50,
+    '#default_value' => variable_get('pdf_receipts_address_line2', ''),
+    '#description' => 'Toronto ON A1B 2C3',
+    '#required' => TRUE,
+  );
+  $form['org']['pdf_receipts_tel'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Telephone'),
+    '#size' => 16,
+    '#maxlength' => 16,
+    '#default_value' => variable_get('pdf_receipts_tel', ''),
+    '#description' => '(555) 555-5555',
+    '#required' => TRUE,
+  );
+  $form['org']['pdf_receipts_fax'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Fax'),
+    '#size' => 16,
+    '#maxlength' => 16,
+    '#default_value' => variable_get('pdf_receipts_fax', ''),
+    '#description' => '(555) 555-5555',
+    '#required' => TRUE,
+  );
+  $form['org']['pdf_receipts_email'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Email'),
+    '#size' => 40,
+    '#maxlength' => 40,
+    '#default_value' => variable_get('pdf_receipts_email', ''),
+    '#description' => 'info@my.org',
+    '#required' => TRUE,
+  );
+  $form['org']['pdf_receipts_web'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Website'),
+    '#size' => 40,
+    '#maxlength' => 40,
+    '#default_value' => variable_get('pdf_receipts_web', ''),
+    '#description' => 'www.my.org',
+    '#required' => TRUE,
+  );
+  $form['org']['pdf_receipts_charitable_no'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Charitable Registration Number'),
+    '#size' => 20,
+    '#maxlength' => 20,
+    '#default_value' => variable_get('pdf_receipts_charitable_no', ''),
+    '#description' => '10000-000-RR0000',
+    '#required' => TRUE,
+  );
+
+
+  $form['receipt'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Receipt configuration'),
+  );
+  $form['receipt']['pdf_receipts_prefix'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Receipt Prefix'),
+    '#size' => 10,
+    '#maxlength' => 10,
+    '#default_value' => variable_get('pdf_receipts_prefix', 'WEB-'),
+    '#description' => t('Receipt numbers are formed by appending the CiviCRM Contribution ID to this prefix. Receipt numbers must be unique within your organization.'),
+  );
+
+  $form['#attributes'] = array('enctype' => "multipart/form-data");
+  $form['receipt']['pdf_receipts_logo'] = array(
+    '#type' => 'file',
+    '#title' => t('Logo'),
+    '#size' => 60,
+    '#description' => 'For best results, center your logo in a 280px x 120px canvas.',
+  );
+  $form['receipt']['pdf_receipts_signature'] = array(
+    '#type' => 'file',
+    '#title' => t('Signature'),
+    '#size' => 60,
+  );
+ 
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save configuration'),
+  );
+
+  return $form;
+}
+
+function civicrm_pdf_receipts_admin_form_submit($form, &$form_state)
+{
+  // save data to Drupal vars
+  foreach ( $form_state['values'] as $key => $value ) {
+    if ( $key != 'pdf_receipts_logo' && $key != 'pdf_receipts_signature' ) {
+      variable_set($key, $value);
+    }
+  }
+
+  // save logo and signature files
+  foreach ( array('pdf_receipts_logo', 'pdf_receipts_signature') as $key ) {
+    if ( is_uploaded_file( $_FILES['files']['tmp_name'][$key] ) ) {
+      $directory = file_directory_path();
+      $validators = array( 'file_validate_is_image' => array() );
+      $file = file_save_upload( $key, $validators, $directory, FILE_EXISTS_REPLACE );
+
+      if ( $file ) {
+        file_set_status( $file, FILE_STATUS_PERMANENT );
+        $filepath = $directory . '/' . $file->filename;
+        variable_set( $key, $filepath );
+        drupal_set_message( 'Uploaded file to ' . $filepath );
+      } else {
+        drupal_set_message( 'Error uploading the file.' );
+      }
+    }
+  }
+}
+
+/**
+ * Implementation of hook_cron()
+ *
+ * To clean up PDF files that are hanging around in the temp directory...
+ */
+function civicrm_pdf_receipts_cron()
+{
+    $temp_dir = file_directory_temp();
+    $files = $temp_dir . '/pdf-receipt-*.pdf';
+
+    foreach ( glob( $files ) as $f ) {
+      unlink( $f );
+    }
+}
+

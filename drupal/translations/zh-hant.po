@@ -9599,7 +9599,7 @@ msgstr "導覽"
 
 #:  CRM/Case/Form/Activity/OpenCase.php CRM/Case/Form/Activity.php,  drupal/modules/views/civicrm.views.inc
 msgid "Medium"
-msgstr "中等"
+msgstr "溝通媒介"
 
 msgid "user"
 msgstr "使用者"
@@ -18786,7 +18786,7 @@ msgstr "受指派者"
 
 #:  CRM/Activity/Form/Activity.php
 msgid "File on case"
-msgstr "檔案裡的檔案"
+msgstr "歸檔至個案"
 
 #:  CRM/Activity/Form/Activity.php
 msgid "Open Cases"
@@ -19576,7 +19576,7 @@ msgstr "自訂檔案"
 
 #:  CRM/Admin/Form/Setting/Path.php
 msgid "Custom Templates"
-msgstr "自訂範本"
+msgstr "自訂樣版"
 
 #:  CRM/Admin/Form/Setting/Path.php
 msgid "Custom PHP Path Directory"
@@ -21047,7 +21047,7 @@ msgstr "請輸入有效的 %1 編號。"
 
 #:  CRM/Contact/Form/Search/Builder.php
 msgid "Please enter correct Data ( in valid format )."
-msgstr "請輸入正確日期（以有效格式）。"
+msgstr "請輸入正確格式"
 
 #:  CRM/Contact/Form/Search/Builder.php
 msgid "Please enter the values correctly."
@@ -22472,7 +22472,7 @@ msgstr "="
 
 #:  CRM/Core/DAO/MappingField.php
 msgid "!="
-msgstr "!="
+msgstr "不等於"
 
 #:  CRM/Core/DAO/MappingField.php
 msgid ">"
@@ -22492,11 +22492,11 @@ msgstr "<="
 
 #:  CRM/Core/DAO/MappingField.php
 msgid "IN"
-msgstr "在"
+msgstr "在選項中"
 
 #:  CRM/Core/DAO/MappingField.php
 msgid "NOT IN"
-msgstr "不在"
+msgstr "不在選項中"
 
 #:  CRM/Core/DAO/MappingField.php
 msgid "LIKE"
@@ -22505,6 +22505,14 @@ msgstr "類似"
 #:  CRM/Core/DAO/MappingField.php
 msgid "NOT LIKE"
 msgstr "不類似"
+
+#: CRM/Core/DAO/MappingField.php
+msgid "IS NULL"
+msgstr "無資料"
+
+#: CRM/Core/DAO/MappingField.php
+msgid "IS NOT NULL"
+msgstr "有資料"
 
 #:  CRM/Core/DAO/MessageTemplates.php
 msgid "Msg Title"
@@ -27710,7 +27718,7 @@ msgstr "特定範本的路徑已儲存（如有的話）。此目錄會優先被
 msgid ""
 "Path where site specific PHP code files are stored if any. This "
 "directory is searched first if set."
-msgstr "網址指定服務器端編程語言電碼檔案被儲存的路線。此資料夾會先被搜尋如果被設。"
+msgstr "網站自行存放的PHP程式碼位置。這個位置將會預先被包含進來。"
 
 #:  templates/CRM/Admin/Form/Setting/Search.tpl
 msgid ""
@@ -29409,7 +29417,7 @@ msgid "make sure you have enough privileges in the access control system"
 msgstr "請確認您有足夠權限進入控制系統"
 
 msgid "in..."
-msgstr "位置"
+msgstr "在..."
 
 #:  templates/CRM/Contact/Form/Search/Custom/FullText.tpl
 msgid "Contact listings."
@@ -30889,7 +30897,7 @@ msgstr ""
 
 #:  templates/CRM/Price/Page/LineItem.tpl
 msgid "Contribution Total"
-msgstr "總捐款金額"
+msgstr "捐款總計"
 
 #:  templates/CRM/Price/Page/Option.tpl
 msgid ""
@@ -32343,7 +32351,7 @@ msgstr "留下訊息"
 
 #:  xml/templates/civicrm_data.tpl
 msgid "Unreachable"
-msgstr "找不到人"
+msgstr "找沒有"
 
 #:  xml/templates/civicrm_data.tpl
 msgid "Not Required"
@@ -32351,11 +32359,11 @@ msgstr "非必要"
 
 #:  xml/templates/civicrm_data.tpl
 msgid "Ongoing"
-msgstr "繼續"
+msgstr "進行中"
 
 #:  xml/templates/civicrm_data.tpl
 msgid "Resolved"
-msgstr "解決"
+msgstr "已解決"
 
 #:  xml/templates/civicrm_data.tpl
 msgid "Urgent"
@@ -37959,7 +37967,7 @@ msgstr "時間替代符號（token）"
 
 #:  CRM/Mailing/Form/Group.php CRM/Mailing/Form/Settings.php,  CRM/Mailing/Form/Test.php CRM/Mailing/Form/Upload.php
 msgid "Next >>"
-msgstr "下一頁"
+msgstr "下一步 >>"
 
 msgid "Save & Continue Later"
 msgstr "儲存，以後再繼續"
@@ -41427,7 +41435,7 @@ msgstr "郵件沒有被轉寄到您提供的Email。"
 
 #:  CRM/Mailing/Form/Group.php
 msgid "Copy of %1"
-msgstr "副本 %1"
+msgstr "複製-%1"
 
 msgid "Name Your Mailing"
 msgstr "電子報名稱"
@@ -61789,7 +61797,7 @@ msgstr "設定 - 資料夾"
 
 #:  CRM/Admin/Form/Setting/Path.php
 msgid "CiviCRM Extensions Directory"
-msgstr "CiviCRM套件目錄"
+msgstr "CiviCRM 套件目錄"
 
 #:  CRM/Admin/Form/Setting/Search.php
 msgid "Settings - Contacts Search"
@@ -61801,7 +61809,7 @@ msgstr "Email"
 
 #:  CRM/Admin/Form/Setting/UpdateConfigBackend.php
 msgid "New Site Name"
-msgstr "街道名稱"
+msgstr "新網站名稱"
 
 #:  CRM/Admin/Form/WordReplacements.php
 msgid "Word Replacements"
@@ -62032,7 +62040,7 @@ msgstr ""
 
 #:  templates/CRM/Admin/Form/Setting/UpdateConfigBackend.tpl
 msgid "Old Site Name"
-msgstr "街道名稱"
+msgstr "舊網站名稱"
 
 #:  templates/CRM/Admin/Form/Setting/UpdateConfigBackend.tpl
 msgid "This is the your site name for a multisite install."
@@ -62869,7 +62877,7 @@ msgstr "您沒有任何啓用中的個人募款頁。"
 
 #:  CRM/Case/Form/ActivityToCase.php
 msgid "Select Case"
-msgstr "選擇日期"
+msgstr "選擇個案"
 
 #:  CRM/Case/Form/Case.php
 msgid "You do not have any active %1"
@@ -63135,7 +63143,7 @@ msgstr "製作 PDF 信件"
 
 #:  CRM/Activity/Selector/Activity.php
 msgid "File On Case"
-msgstr "檔案裡的檔案"
+msgstr "個案歷程"
 
 #:  CRM/Activity/Selector/Activity.php,  templates/CRM/Activity/Form/ActivityView.tpl,  templates/CRM/Activity/Form/Selector.tpl,  templates/CRM/Activity/Selector/Activity.tpl
 msgid "View Mailing Report"
@@ -63171,7 +63179,7 @@ msgstr "編輯會員資料"
 
 #:  CRM/Contact/BAO/Contact.php
 msgid "Add Case"
-msgstr "新增副本"
+msgstr "新增個案"
 
 #:  CRM/Contact/BAO/Contact.php
 msgid "Add Grant"
@@ -63401,7 +63409,7 @@ msgstr "已重建選單"
 
 #:  CRM/Core/BAO/UFGroup.php
 msgid "Copy of "
-msgstr "副本 %1"
+msgstr "複製-"
 
 #:  CRM/Core/Controller.php
 msgid ""
@@ -64562,7 +64570,7 @@ msgstr "電話號碼"
 
 #:  CRM/Contribute/BAO/ContributionPage.php CRM/Event/BAO/Event.php
 msgid "Copy of"
-msgstr "副本 %1"
+msgstr "複製-"
 
 #:  CRM/Contribute/Form/Contribution/Main.php,  CRM/Event/Form/Registration/Register.php
 msgid "Custom %1 is a required field if %1 is of type Customized."
@@ -65585,7 +65593,7 @@ msgstr "不是%1, 或者想要報名另一個人"
 
 #:  templates/CRM/Event/Page/EventInfo.tpl
 msgid "Registration is closed for this event"
-msgstr "活動報名結束於%1"
+msgstr "活動報名已經截止了"
 
 #:  templates/CRM/Event/Page/ManageEvent.tpl
 msgid "Add Event"

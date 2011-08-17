@@ -103,26 +103,26 @@ class CRM_Core_IDS {
     exceptions[]        = msg_text
     exceptions[]        = msg_subject
     exceptions[]        = description
-    html[]              = intro
-    html[]              = thankyou_text
-    html[]              = intro_text
-    html[]              = body_text
-    html[]              = footer_text
-    html[]              = thankyou_text
-    html[]              = thankyou_footer
-    html[]              = thankyou_footer_text
-    html[]              = new_text
-    html[]              = renewal_text
-    html[]              = help_pre
-    html[]              = help_post
-    html[]              = confirm_title
-    html[]              = confirm_text
-    html[]              = confirm_footer_text
-    html[]              = confirm_email_text
-    html[]              = report_header
-    html[]              = report_footer
-    html[]              = data
-    html[]              = instructions
+    exceptions[]        = intro
+    exceptions[]        = thankyou_text
+    exceptions[]        = intro_text
+    exceptions[]        = body_text
+    exceptions[]        = footer_text
+    exceptions[]        = thankyou_text
+    exceptions[]        = thankyou_footer
+    exceptions[]        = thankyou_footer_text
+    exceptions[]        = new_text
+    exceptions[]        = renewal_text
+    exceptions[]        = help_pre
+    exceptions[]        = help_post
+    exceptions[]        = confirm_title
+    exceptions[]        = confirm_text
+    exceptions[]        = confirm_footer_text
+    exceptions[]        = confirm_email_text
+    exceptions[]        = report_header
+    exceptions[]        = report_footer
+    exceptions[]        = data
+    exceptions[]        = instructions
 ";
             if ( file_put_contents( $configFile, $contents ) === false ) {
                 require_once 'CRM/Core/Error.php';

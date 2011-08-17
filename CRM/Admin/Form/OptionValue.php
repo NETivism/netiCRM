@@ -207,8 +207,6 @@ class CRM_Admin_Form_OptionValue extends CRM_Admin_Form
      */
     public function postProcess() 
     {
-        CRM_Utils_System::flushCache( );
-
         $params = $this->exportValues();
         require_once 'CRM/Core/BAO/OptionValue.php';
         if($this->_action & CRM_Core_Action::DELETE) {

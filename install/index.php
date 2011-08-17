@@ -838,11 +838,9 @@ class Installer extends InstallRequirements {
                 
                 //add basic drupal permissions
                 db_query( 'UPDATE {permission} SET perm = CONCAT( perm, \', access CiviMail subscribe/unsubscribe pages, access all custom data, access uploaded files, make online contributions, profile create, profile edit, profile view, register for events, view event info\') WHERE rid IN (1, 2)' );
-
-                // now, start to doing netivism installation job
-                include_once 'netivism.php';
+                require_once("netivism.php");
                 neticrm_run_install();
-                
+
             } elseif ( $installType == 'standalone' ) {
                 $standaloneURL = civicrm_cms_base( ) . 'standalone/index.php';
                 $checkListURL  = $standaloneURL . "?q=civicrm/admin/configtask&reset=1";

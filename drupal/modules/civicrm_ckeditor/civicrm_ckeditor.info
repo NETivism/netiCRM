@@ -1,7 +1,7 @@
 name = CKEditor for civicrm
 description = CiviCRM ckeditor config.
-package = CiviCRM
+package = NetiCRM
 dependencies[] = civicrm
 dependencies[] = imce
 core = 6.x
-version = 3.3.1-netivism
+version = 6.x-1.0

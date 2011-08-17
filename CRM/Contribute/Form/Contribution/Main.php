@@ -428,7 +428,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
                 !$this->_values['is_pay_later'] ) ) {
             $this->addButtons(array( 
                                     array ( 'type'      => 'upload',
-                                            'name'      => ts('Confirm Contribution'), 
+                                            'name'      => ts('Next >>'), 
                                             'spacing'   => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;', 
                                             'isDefault' => true   ), 
                                     ) 

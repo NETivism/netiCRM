@@ -1,0 +1,122 @@
+<?php
+// $Id: devel.install,v 1.24.2.7 2009/07/30 19:38:48 weitzman Exp $
+/**
+ * @file
+ *   Install file for civicrm_neweb module.
+ */
+
+/**
+ * Implementation of hook_schema()
+ */
+function civicrm_neweb_schema(){
+  $schema['civicrm_contribution_neweb'] = array(
+    'fields' => array(
+      'cid' => array(
+        'description' => 'The id of civicrm_contribution.',
+        'type' => 'int',
+        'length' => '11',
+        'not null' => TRUE,
+      ),
+      'prc' => array(
+        'description' => 'Primary code returned from credit card transaction.',
+        'type' => 'int',
+        'length' => '11',
+        'not null' => FALSE,
+      ),
+      'src' => array(
+        'description' => 'Secondary code returned from neweb credit card transaction.',
+        'type' => 'int',
+        'length' => '11',
+        'not null' => FALSE,
+      ),
+      'bankrc' => array(
+        'description' => t('Bank code returned from neweb credit card transaction.'),
+        'type' => 'varchar',
+        'length' => '4',
+        'not null' => FALSE,
+      ),
+      'approvalcode' => array(
+        'description' => t('Approval code returned from neweb credit card transaction.'),
+        'type' => 'varchar',
+        'length' => '6',
+        'not null' => FALSE,
+      ),
+    ),
+    'primary key' => array('cid'),
+    'mysql_suffix' => 'ENGINE = InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci',
+  );
+  return $schema;
+}
+
+ 
+/**
+ * Implementation of hook_install()
+ */
+function civicrm_neweb_install() {
+  drupal_install_schema('civicrm_neweb');
+  civicrm_initialize( );
+  require_once "CRM/Core/DAO.php";
+
+  // new payment processor
+  $sql = "INSERT INTO civicrm_payment_processor_type (id, name, title, description, is_active, is_default, user_name_label, password_label, signature_label, subject_label, class_name, url_site_default, url_api_default, url_recur_default, url_button_default, url_site_test_default, url_api_test_default, url_recur_test_default, url_button_test_default, billing_mode, is_recur, payment_type) VALUES (16, 'Neweb', '藍新', NULL, 1, 0, '商店編號 (Credit Card)', '商店編號 (EzPay)', 'R_Code (Credit Card)', '交易密碼 (EzPay)', 'Payment_Neweb', 'https://mpp.neweb.com.tw/NewebmPP/cdcard.jsp', 'https://aquarius.neweb.com.tw/CashSystemFrontEnd/', '', '', 'https://maple.neweb.com.tw/NewebmPP/cdcard.jsp', 'http://maple2.neweb.com.tw/CashSystemFrontEnd/', '', '', 4, 1, 1)";
+  CRM_Core_DAO::executeQuery($sql);
+  $dao = CRM_Core_DAO::executeQuery("SELECT id FROM civicrm_payment_processor_type WHERE name LIKE 'Neweb'");
+  $dao->fetch();
+  $ppt_id = $dao->id;
+
+  // new payment instrument
+  include_once "civicrm_neweb.module";
+  $new_instrument = _civicrm_neweb_instrument();
+  $dao = CRM_Core_DAO::executeQuery("SELECT id FROM civicrm_option_group WHERE name LIKE 'payment_instrument'");
+  $dao->fetch();
+  $instrument_id = $dao->id;
+  $dao = CRM_Core_DAO::executeQuery("SELECT value FROM civicrm_option_value WHERE option_group_id = $instrument_id ORDER BY value DESC");
+  $dao->fetch();
+  $next = $dao->value;
+  
+  foreach($new_instrument as $k => $v){
+    $next++;
+    $dao = CRM_Core_DAO::executeQuery("SELECT * FROM civicrm_option_value WHERE option_group_id = $instrument_id AND name = '$k'");
+    $dao->fetch();
+    if(!$dao->id){
+      $sql = "INSERT INTO civicrm_option_value (option_group_id, label, value, name, grouping, filter, is_default, weight, description, is_optgroup, is_reserved, is_active, component_id, visibility_id) VALUES ($instrument_id, '{$v['label']}', $next, '$k', NULL, $ppt_id, NULL, $next, '{$v['description']}', 0, 0, 1, NULL, NULL)";
+      CRM_Core_DAO::executeQuery($sql);
+    }
+  }
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function civicrm_neweb_uninstall() {
+  civicrm_initialize();
+  require_once "CRM/Core/DAO.php";
+  CRM_Core_DAO::executeQuery("DELETE FROM civicrm_payment_processor_type WHERE name LIKE 'Neweb'");
+  CRM_Core_DAO::executeQuery("DELETE FROM civicrm_payment_processor WHERE payment_processor_type LIKE 'Neweb'");
+  CRM_Core_DAO::executeQuery("OPTIMIZE TABLE civicrm_payment_processor_type");
+
+  // we won't delete instrument for preserve contribution record
+  // delete schema from drupal
+  drupal_uninstall_schema('civicrm_neweb');
+}
+
+/**
+ * Implementation of hook_enable().
+ */
+function civicrm_neweb_enable() {
+  civicrm_initialize();
+  require_once "CRM/Core/DAO.php";
+  CRM_Core_DAO::executeQuery("UPDATE civicrm_payment_processor_type SET is_active = 1 WHERE name LIKE 'Neweb'");
+  CRM_Core_DAO::executeQuery("UPDATE civicrm_payment_processor SET is_active = 1 WHERE payment_processor_type LIKE 'Neweb'");
+}
+
+/**
+ * Implementation of hook_disable().
+ */
+function civicrm_neweb_disable() {
+  civicrm_initialize();
+  require_once "CRM/Core/DAO.php";
+  CRM_Core_DAO::executeQuery("UPDATE civicrm_payment_processor_type SET is_active = 0 WHERE name LIKE 'Neweb'");
+  CRM_Core_DAO::executeQuery("UPDATE civicrm_payment_processor SET is_active = 0 WHERE payment_processor_type LIKE 'Neweb'");
+}
+

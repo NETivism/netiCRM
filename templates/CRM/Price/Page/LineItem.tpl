@@ -54,9 +54,9 @@
 <div class="crm-section no-label total_amount-section">
     <div class="content bold">
         {if $context EQ "Contribution"}
-            {ts}Contribution Total{/ts}:
+            {ts}Total Amount{/ts}:
         {elseif $context EQ "Event"}
-            {ts}Event Total{/ts}: 
+            {ts}Total Amount{/ts}: 
         {/if}
     {$totalAmount|crmMoney}
     </div>
