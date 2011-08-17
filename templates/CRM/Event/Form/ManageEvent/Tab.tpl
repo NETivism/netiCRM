@@ -64,7 +64,6 @@
         </div></li>
 	
     	<li><div>
-    	    {help id="id-configure-events"}
     	</div></li>
     	</ul>
     	<div class="clear"></div>
@@ -72,6 +71,7 @@
 {/if}
 
 {include file="CRM/common/TabHeader.tpl"}
+<div class="clear"></div>
 
 {literal}
 <script>

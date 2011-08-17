@@ -1,0 +1,103 @@
+<?php
+/**
+ * @file
+ * Installation and schema for UC CiviCRM Products module.
+ */
+
+/**
+ * Implementation of hook_schema().
+ */
+function civicrm_instrument_schema() {
+  $schema = array();
+  $schema['civicrm_instrument'] = array(
+    'fields' => array(
+      'entity_id' => array(
+        'description' => 'Foregin-key to the referenced item.',
+        'type' => 'int',
+        'length' => '11',
+        'not null' => TRUE,
+      ),
+      'entity_table' => array(
+        'description' => 'Name of table where item being referenced is stored.',
+        'type' => 'varchar',
+        'length' => '64',
+        'not null' => FALSE,
+      ),
+      'payment_instruments' => array(
+        'description' => 'Allowed instruments from contribution page or event page.',
+        'type' => 'blob',
+        'length' => '1000',
+        'not null' => FALSE,
+      ),
+    ),
+    'primary key' => array('entity_id', 'entity_table'),
+    'mysql_suffix' => 'ENGINE = InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci',
+  );
+  return $schema;
+}
+
+/**
+ * Implementation of hook_install().
+ */
+function civicrm_instrument_install() {
+  // Create tables.
+  drupal_install_schema('civicrm_instrument');
+
+  // Save variables
+  civicrm_initialize( );
+  require_once "CRM/Core/DAO.php";
+  $gid = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_option_group WHERE name LIKE 'payment_instrument'");
+  variable_set('civicrm_instrument_gid', $gid);
+
+  // Setup definition of instrument
+  require_once('CRM/Core/OptionGroup.php');
+  require_once('CRM/Core/OptionValue.php');
+  require_once('CRM/Core/Action.php');
+  // Add contribution instruments
+  $definition = array(
+    'Credit Card' => '信用卡',
+    'Credit Card (Offline)' => '信用卡（非線上）',
+    'Credit Card Recurring' => '信用卡定期定額',
+    'Credit Card Recurring (Offline)' => '信用卡定期定額（非線上）',
+    'Post Office Transfer' => '郵政劃撥',
+    'Post Office Recurring (Offline)' => '郵局自動轉帳授權',
+    'Convenient Store' => '便利商店',
+    'Convenient Store (Code)' => '便利商店（代碼）',
+    'Web ATM' => 'Web ATM',
+    'ATM' => 'ATM 轉帳',
+    'Yahoo' => 'Yahoo公益',
+  );
+
+  $values = array();
+  $values = CRM_Core_OptionGroup::values('payment_instrument', TRUE);
+  $group_params = array('name' => 'payment_instrument');
+  $params = array(
+    'is_active' => 1,
+  );
+  foreach($definition as $name => $label){
+    $params = array();
+    $params['label'] = $label;
+    $params['name'] = $name;
+    $params['is_active'] = 1;
+    if($values[$label]){
+      // skipped, won't update.
+    }
+    else{
+      $action = CRM_Core_Action::ADD;
+      $option_value_id = 0;
+      CRM_Core_OptionValue::addOptionValue($params, $group_params, $action, $option_value_id);
+    }
+  }
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function civicrm_instrument_uninstall() {
+  // Remove tables.
+  drupal_uninstall_schema('civicrm_instrument');
+
+  // Remove variable;
+  variable_del('civicrm_instrument_gid');
+}
+

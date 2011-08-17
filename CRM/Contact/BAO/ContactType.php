@@ -520,6 +520,8 @@ WHERE  subtype.name IN ('".implode("','",$subType)."' )";
      * @static
      */
     static function del( $contactTypeId ) {
+        $cache =& CRM_Utils_Cache::singleton( );
+        $cache->delete('CRM_CT_*');
         
         if ( !$contactTypeId  ) {
             return false;
@@ -561,6 +563,8 @@ WHERE name = %1";
             $dao = CRM_Core_DAO::executeQuery( $sql , $params );
             CRM_Core_BAO_Navigation::resetNavigation( );
         }
+        $cache =& CRM_Utils_Cache::singleton( );
+        $cache->delete('CRM_CT_*');
         return true; 
     }
     /**
@@ -572,6 +576,8 @@ WHERE name = %1";
      * @static
      */
     static function add( $params ) {
+        $cache =& CRM_Utils_Cache::singleton( );
+        $cache->delete('CRM_CT_*');
 
         // null if empty params or doesn't contain parent_id
         if ( !CRM_Utils_Array::value( 'parent_id', $params ) ) {
@@ -639,6 +645,9 @@ WHERE name = %1";
      * @static
      */
     static function setIsActive( $id, $is_active ) {
+        $cache =& CRM_Utils_Cache::singleton( );
+        $cache->delete('CRM_CT_*');
+
         $params = array( 'id'=> $id );
         self::retrieve( $params , $contactinfo );
         $params    = array ( 'name'=> "New $contactinfo[name]" );

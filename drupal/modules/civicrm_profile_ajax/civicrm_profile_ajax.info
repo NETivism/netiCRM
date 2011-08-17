@@ -1,6 +1,6 @@
 name = AJAX List for Profile Field
 description = "Provide AJAX popup contacts functions for CiviCRM profile."
 dependencies[] = civicrm
-package = CiviCRM
+package = NetiCRM
 core = 6.x
-version = 3.3-netivism-dev
+version = 6.x-1.0

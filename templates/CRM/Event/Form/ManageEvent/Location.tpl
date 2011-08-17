@@ -29,6 +29,7 @@
         {ts}Use this form to configure the location and optional contact information for the event. This information will be displayed on the Event Information page. It will also be included in online registration pages and confirmation emails if these features are enabled.{/ts}
     </div>
 {/if}
+{include file="CRM/Event/Form/ManageEvent/Tab.tpl"}
 <div class="crm-block crm-form-block crm-event-manage-location-form-block">
 {if $addBlock}
 {include file="CRM/Contact/Form/Edit/$blockName.tpl"}

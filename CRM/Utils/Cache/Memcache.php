@@ -33,6 +33,7 @@
  * $Id$
  *
  */
+require_once 'CRM/Core/BAO/Cache.php';
 
 class CRM_Utils_Cache_Memcache {
 
@@ -91,10 +92,14 @@ class CRM_Utils_Cache_Memcache {
     }
 
     function set( $key, &$value ) {
+        $k = $key;
         $key = $this->_prefix."_".$key;
         if ( ! $this->_cache->set( $key, $value, false, $this->_timeout ) ) {
             return false;
         }
+        $dummy = array('dummy');
+        CRM_Core_BAO_Cache::setItem( $dummy, 'memcache index', substr($k, 0, 255));
+
         return true;
     }
 
@@ -105,8 +110,21 @@ class CRM_Utils_Cache_Memcache {
     }
 
     function delete( $key ) {
-        $key = $this->_prefix."_".$key;
-        return $this->_cache->delete( $key );
+        $wildcard = strpos($key, '*');
+        if($wildcard !== false){
+          // search for delete cache record
+          $search = str_replace('*', '%', $key);
+          $q = CRM_Core_DAO::executeQuery( "SELECT path FROM civicrm_cache WHERE path LIKE '$search'");
+          while($q->fetch()){
+            $k = $this->_prefix."_".$q->path;
+            $this->_cache->delete( $k );
+          }
+          return true;
+        }
+        else{
+          $key = $this->_prefix."_".$key;
+          return $this->_cache->delete( $key );
+        }
     }
 
     function flush( ) {

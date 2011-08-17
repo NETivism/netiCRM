@@ -1,0 +1,31 @@
+<?php
+// placeholder
+/**
+ * Implementation of hook_menu
+ */
+function neticrm_preset_menu(){
+  return array(
+    'home' => array(
+      'access callback' => true,
+      'page callback' => 'neticrm_preset_home',
+      'type' => MENU_CALLBACK,
+      'weight' => 0,
+      'file' => 'neticrm_preset.pages.inc',
+    ),
+  );
+}
+/**
+ * Implementation of hook_theme
+ */
+function neticrm_preset_theme($existing, $type, $theme, $path){
+  return array(
+    'neticrm_preset_home' => array(
+      'arguments' => array('items' => NULL),
+      'file' => 'neticrm_preset.pages.inc',
+    ),
+    'neticrm_preset_home_item' => array(
+      'arguments' => array('item' => NULL),
+      'file' => 'neticrm_preset.pages.inc',
+    ),
+  );
+}

@@ -1,0 +1,186 @@
+<?php
+define('NEWWEB_TEST_HOST', '61.221.66.144');
+define('NEWWEB_TEST_USER', 'rp_nncf');
+define('NEWWEB_TEST_PASS', '');
+
+define('NEWWEB_HOST', '211.20.58.96');
+define('NEWWEB_USER', 'nncf');
+define('NEWWEB_PASS', 'tcder5cf');
+
+/**
+ * Implementation of hook_init
+ */
+function civicrm_neweb_init(){
+  $path = drupal_get_path('module', 'civicrm_neweb');
+  drupal_add_css("$path/civicrm_neweb.css");
+
+  if(strstr($_GET['q'], 'neweb/ipn')){
+    $GLOBALS['conf']['cache'] = FALSE;
+  }
+}
+
+/**
+ * Implementation of hook_menu
+ */
+function civicrm_neweb_menu(){
+  return array(
+    'neweb/ipn' => array(
+      'access callback' => true,
+      'page callback' => 'civicrm_neweb_ipn',
+      'type' => MENU_CALLBACK,
+      'file' => 'civicrm_neweb.extern.inc',
+    ),
+    'civicrm/contribute/recurring_nw' => array(
+      'title' => 'Neweb Recurring contribution management',
+      'access arguments' => array('edit contributions'),
+      'page callback' => 'civicrm_neweb_recurring_page',
+      'type' => MENU_CALLBACK,
+      'file' => 'civicrm_neweb.pages.inc',
+    ),
+  );
+}
+
+/**
+ * Implementation of hook_civicrm_buildForm()
+ */
+function civicrm_neweb_civicrm_buildForm($form_name, &$form){
+  switch($form_name){
+    case 'CRM_Contribute_Form_Contribution_Main':
+      // add neweb payment method selection
+      drupal_add_js(_civicrm_neweb_js_form(), 'inline');
+      break;
+  /*
+    case 'CRM_Event_Form_Registration_Register':
+      // add neweb payment method selection
+      require_once "CRM/Core/DAO.php";
+      if($form->_paymentProcessor['payment_processor_type'] == 'Neweb'){
+        unset($_SESSION['neweb']);
+        unset($_SESSION['neweb_form']);
+        $dao = CRM_Core_DAO::executeQuery("SELECT id FROM civicrm_payment_processor_type WHERE name LIKE 'Neweb'");
+        $dao->fetch();
+        $ppt_id = $dao->id;
+        $dao = CRM_Core_DAO::executeQuery("SELECT * FROM civicrm_option_value WHERE filter = $ppt_id AND is_active = 1");
+        $default = 'Credit Card';
+        $radios[1] = array('name' => $default, 'label' => ts($default));
+        while($dao->fetch()){
+          $radios[$dao->value] = array('name'=> $dao->name, 'label' => ts($dao->label), 'description' => $dao->description);
+        }
+        //$form->addElement('hidden', 'neweb_instrument_id', 1);
+        //drupal_add_js(_civicrm_neweb_js_form($radios), 'inline');
+      }
+      break;
+    */
+    case 'CRM_Contribute_Form_Contribution_ThankYou':
+      // credit card
+      if(isset($_POST['final_result'])){
+        if($_POST['final_result'] == 1 && $_POST['final_return_PRC'] == 0 && $_POST['final_return_SRC'] == 0){
+          drupal_set_message(t("Success. Thank you."));
+        }
+        else{
+          // error here
+          require_once('civicrm_neweb.extern.inc');
+          $prc = $_POST['final_return_PRC'];
+          $src = $_POST['final_return_SRC'];
+          $brc = $_POST['final_return_BankRC'];
+          $error = civicrm_neweb_response($prc, $src, $brc);
+          drupal_set_message(implode("<br>", $error), 'error');
+        }
+      }
+      break;
+    case 'CRM_Contribute_Form_ContributionPage_Amount':
+      _civicrm_neweb_js_contritweak();
+      break;
+  }
+}
+
+/**
+ * Implementation of hook_cron()
+ */
+function civicrm_neweb_cron(){
+  require_once("civicrm_neweb.cron.inc");
+  $is_test = 1;
+  $hour = date('G');
+  $now = time();
+  $yesterday = $now - 86400;
+  _civicrm_neweb_process_all($is_test, $now, $hour, $yesterday);
+  $is_test = 0;
+  _civicrm_neweb_process_all($is_test, $now, $hour, $yesterday);
+}
+
+
+function _civicrm_neweb_process_all($is_test, $now, $hour, $yesterday){
+  // recurring contributions
+  $test = $is_test ? '_test' : '';
+  if($hour >= 18 && $hour <= 23 && variable_get('civicrm_neweb_response'.$test, 0) < $yesterday){
+    // get yesterday modification result
+    if(civicrm_neweb_process_response($is_test)){
+      variable_set('civicrm_neweb_response'.$test, $now);
+    }
+  }
+  if($hour >= 11 && $hour <= 15 && variable_get('civicrm_neweb_transaction'.$test, 0) < $yesterday){
+    // get yesterday transaction result
+    if(civicrm_neweb_process_transaction($is_test)){
+      variable_set('civicrm_neweb_transaction'.$test, $now);
+    }
+  }
+  if($hour >= 13 && $hour <= 15 && variable_get('civicrm_neweb_uploaded'.$test, 0) < $yesterday){
+    // doing upload stuff
+    if(civicrm_neweb_process_upload($is_test)){
+      variable_set('civicrm_neweb_uploaded'.$test, $now);
+    }
+  }
+
+  // ezpay contributions
+  if(1){
+    civicrm_neweb_process_ezpay($is_test, $now);
+  }
+}
+
+/**
+ * Correction recurring contribution only for credit card.
+ */
+function _civicrm_neweb_js_form(){
+  return '
+$(document).ready(function(){
+  $("input[name=civicrm_instrument_id_dummy]").click(function(){
+    if(v != 1){
+      $("#crm-container input[name=is_recur][value=0]").click();
+      $("#crm-container input[name=is_recur][value=1]").attr("disabled","disabled");
+    }
+    else{
+      $("#crm-container input[name=is_recur][value=1]").removeAttr("disabled");
+    }
+  });
+});  
+  ';
+}
+function _civicrm_neweb_js_contritweak(){
+  $js = '
+$(document).ready(function(){
+  $("input[name=\'recur_frequency_unit[week]\']").hide();
+  $("label[for=\'recur_frequency_unit[week]\']").hide();
+  $("input[name=\'recur_frequency_unit[day]\']").hide();
+  $("label[for=\'recur_frequency_unit[day]\']").hide();
+  $("input[name=\'recur_frequency_unit[year]\']").hide();
+  $("label[for=\'recur_frequency_unit[year]\']").hide();
+  $("#is_recur").click(function(){
+    $("#is_recur_interval").attr( "checked", false );
+  });
+  $("#is_recur_interval").parents("tr").hide();
+
+});  
+';
+  drupal_add_js($js, 'inline', 'footer');
+}
+
+function _civicrm_neweb_instrument(){
+  return array(
+    'Credit Card' => array('label' => '信用卡', 'description' => ''),
+    'ATM' => array('label' => 'ATM 轉帳', 'description' => ''),
+    'Web ATM' => array('label' => '網路 ATM', 'description' => ''),
+    'Convenient Store' => array('label' => '便利商店', 'description'=>''),
+    'Convenient Store (Code)' => array('label'=>'便利商店 (代碼)','desc' => ''),
+    'Alipay' => array('label' => '支付寶', 'description' => ''),
+  );
+}
+

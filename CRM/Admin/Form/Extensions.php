@@ -139,8 +139,6 @@ class CRM_Admin_Form_Extensions extends CRM_Admin_Form
      */
     public function postProcess() 
     {
-        CRM_Utils_System::flushCache( );
-
         if ( $this->_action & CRM_Core_Action::DELETE ) {
             require_once('CRM/Core/Extensions.php');
             $ext = new CRM_Core_Extensions();

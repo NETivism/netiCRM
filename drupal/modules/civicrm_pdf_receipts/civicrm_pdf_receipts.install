@@ -1,0 +1,50 @@
+<?php
+
+/**
+ * @file
+ * Install file for civicrm_pdf_receipts
+ */
+
+/**
+ * Implementation of hook_install().
+ */
+function civicrm_pdf_receipts_install() {
+  require_once drupal_get_path('module', 'civicrm') . '/civicrm.module';
+
+  if ( ! civicrm_initialize( ) ) {
+    return;
+  }
+
+  require_once 'CRM/Core/Config.php';
+  $config =& CRM_Core_Config::singleton();
+
+  $sql = "CREATE TABLE civicrm_pdf_receipts (" .
+            " contribution_id INT UNSIGNED NOT NULL, " .
+            " tax_receipt_date datetime NULL, ".
+            " PRIMARY KEY (contribution_id), " .
+            " FOREIGN KEY (contribution_id) REFERENCES civicrm_contribution(id) ON DELETE CASCADE " .
+         ")";
+
+  require_once 'CRM/Core/DAO.php';
+  CRM_Core_DAO::executeQuery( $sql );
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function civicrm_pdf_receipts_uninstall() {
+  require_once drupal_get_path('module', 'civicrm') . '/civicrm.module';
+
+  if ( ! civicrm_initialize( ) ) {
+    return;
+  }
+
+  require_once 'CRM/Core/Config.php';
+  $config =& CRM_Core_Config::singleton();
+
+  $sql = "DROP TABLE civicrm_pdf_receipts";
+
+  require_once 'CRM/Core/DAO.php';
+  CRM_Core_DAO::executeQuery( $sql );
+}
+

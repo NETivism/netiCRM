@@ -40,7 +40,7 @@
  */
 class CRM_Export_BAO_Export
 {
-    const EXPORT_ROW_COUNT = 100;
+    const EXPORT_ROW_COUNT = 1000;
 
     /**
      * Function to get the list the export fields

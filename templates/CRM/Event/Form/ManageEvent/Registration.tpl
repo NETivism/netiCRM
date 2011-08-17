@@ -28,6 +28,7 @@
 {ts}If you want to provide an Online Registration page for this event, check the first box below and then complete the fields on this form.{/ts} 
 {help id="id-event-reg"}
 </div>
+{include file="CRM/Event/Form/ManageEvent/Tab.tpl"}
 <div class="crm-block crm-form-block crm-event-manage-registration-form-block">
 <div class="crm-submit-buttons">
    {include file="CRM/common/formButtons.tpl" location="top"}
