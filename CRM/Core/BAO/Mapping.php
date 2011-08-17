@@ -812,9 +812,9 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping
                 
                 if ($mappingType == 'Search Builder') {
                     //CRM -2292, restricted array set
-                    $operatorArray = array ('' => ts('-operator-'), '=' => '=', '!=' => '!=', '>' => '>', '<' => '<', 
-                                            '>=' => '>=', '<=' => '<=', 'IN' => 'IN',
-                                            'LIKE' => 'LIKE', 'IS NULL' => 'IS NULL', 'IS NOT NULL' => 'IS NOT NULL' );
+                    $operatorArray = array ('' => ts('-operator-'), '=' => ts('='), '!=' => ts('!='), '>' => ts('>'), '<' => ts('<'), 
+                                            '>=' => '>=', '<=' => '<=', 
+                                            'LIKE' => ts('LIKE'), 'IS NULL' => ts('IS NULL'), 'IS NOT NULL' => ts('IS NOT NULL') );
                     
                     $form->add('select',"operator[$x][$i]",'', $operatorArray);
                     $form->add('text',"value[$x][$i]",'');
