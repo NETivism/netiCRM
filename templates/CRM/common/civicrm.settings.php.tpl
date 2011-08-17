@@ -24,13 +24,9 @@ define('CIVICRM_TAG_UNCONFIRMED', 'Unconfirmed');
 define('CIVICRM_PETITION_CONTACTS','Petition Contacts');
 
 global $civicrm_root;
-<<<<<<< HEAD:templates/CRM/common/civicrm.settings.php.tpl
-$civicrm_root = $_SERVER['DOCUMENT_ROOT']."/sites/all/modules/civicrm";
-=======
 if(!$civicrm_root){
   $civicrm_root = getcwd()."/sites/all/modules/civicrm";
 }
->>>>>>> develop:templates/CRM/common/civicrm.settings.php.tpl
 $include_path = '.'        . PATH_SEPARATOR .
                 $civicrm_root . PATH_SEPARATOR . 
                 $civicrm_root . DIRECTORY_SEPARATOR . 'packages' . PATH_SEPARATOR .
