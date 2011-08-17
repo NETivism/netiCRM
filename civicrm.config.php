@@ -107,13 +107,10 @@ function civicrm_conf_init() {
     return $conf;
 }
 
-<<<<<<< HEAD:civicrm.config.php
-=======
 if($_SERVER['DOCUMENT_ROOT']){
   global $civicrm_root;
   $civicrm_root = $_SERVER['DOCUMENT_ROOT']."/sites/all/modules/civicrm";
 }
->>>>>>> develop:civicrm.config.php
 if( file_exists(civicrm_conf_init( ) . '/settings.php')){
   include_once civicrm_conf_init( ) . '/settings.php';
 }
