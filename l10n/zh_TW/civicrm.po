@@ -8933,7 +8933,7 @@ msgstr "請輸入有效的 %1 編號。"
 
 #: CRM/Contact/Form/Search/Builder.php
 msgid "Please enter correct Data ( in valid format )."
-msgstr "請輸入正確日期（以有效格式）。"
+msgstr "請輸入正確格式"
 
 #: CRM/Contact/Form/Search/Builder.php
 msgid "Please enter the values correctly."
@@ -12280,7 +12280,7 @@ msgstr "="
 
 #: CRM/Core/DAO/MappingField.php
 msgid "!="
-msgstr "!="
+msgstr "不等於"
 
 #: CRM/Core/DAO/MappingField.php
 msgid ">"
@@ -12300,11 +12300,11 @@ msgstr "<="
 
 #: CRM/Core/DAO/MappingField.php
 msgid "IN"
-msgstr "在"
+msgstr "在選項中"
 
 #: CRM/Core/DAO/MappingField.php
 msgid "NOT IN"
-msgstr "不在"
+msgstr "不在選項中"
 
 #: CRM/Core/DAO/MappingField.php
 msgid "LIKE"
@@ -12316,11 +12316,11 @@ msgstr "不類似"
 
 #: CRM/Core/DAO/MappingField.php
 msgid "IS NULL"
-msgstr ""
+msgstr "無資料"
 
 #: CRM/Core/DAO/MappingField.php
 msgid "IS NOT NULL"
-msgstr ""
+msgstr "有資料"
 
 #: CRM/Core/DAO/Menu.php
 msgid "Path Arguments"
@@ -28882,7 +28882,7 @@ msgstr "最新報名"
 
 #: templates/CRM/Event/Page/EventInfo.tpl
 msgid "Registration is closed for this event"
-msgstr "活動報名結束於%1"
+msgstr "活動報名已經截止了"
 
 #: templates/CRM/Event/Page/EventInfo.tpl
 msgid "Show large map"
