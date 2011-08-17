@@ -1,0 +1,56 @@
+# $Id$
+#
+# Chinese, Traditional translation of Drupal (general)
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+# Generated from files:
+#  neticrm_preset.pages.inc: n/a
+#  neticrm_preset.info: n/a
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2011-08-16 17:03+0800\n"
+"PO-Revision-Date: 2011-08-16 17:10+0800\n"
+"Last-Translator: jimmy <jimmy@netivism.com.tw>\n"
+"Language-Team: Chinese, Traditional <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=1;\n"
+
+#: neticrm_preset.pages.inc:12
+msgid "Find out your contact, add or edit their profile, classify contacts in group or tag, make relationships between contacts, import or export contacts data."
+msgstr "搜尋你的聯絡人 / 新增或編輯聯絡人檔案 / 將聯絡人以群組或標籤分類 / 連結聯絡人彼此之間的家庭或工作關係 / 資料匯入匯出"
+
+#: neticrm_preset.pages.inc:13
+msgid "Handling contribution record, make online contribution page, define your contribution types, config priceset of contributions."
+msgstr "管理各種捐款記錄 / 製作線上募款頁面 / 定義你的捐款類型或分類 / 設定捐款價目表"
+
+#: neticrm_preset.pages.inc:14
+msgid "Setup online event registeration page, manage registeration status of participant, export or import participant data."
+msgstr "設定線上活動報名頁 / 管理報名和參加者狀態 / 匯出或匯入、管理參加者資料"
+
+#: neticrm_preset.pages.inc:15
+msgid "Schedule mass mailing newsletters, check report of mailing, define your newsletter templates."
+msgstr "EDM或電子報排程發送 / 查看開信率或點擊率報表 / 制訂你的電子報範本"
+
+#: neticrm_preset.pages.inc:16
+msgid "Define membership types, manage membership renew status, import or export membership data"
+msgstr "定義會員類型 / 管理會員更新的狀態 / 匯入或匯出會員資料"
+
+#: neticrm_preset.pages.inc:17
+msgid "Customize report for all of above function. Such as monthly contribution chart, or event income status."
+msgstr "為所有功能自訂報表以供查閱，如：月捐款成長長條圖、活動收入狀態表 .. 等"
+
+#: neticrm_preset.info:0
+msgid "NetiCRM Installation Preset"
+msgstr ""
+
+#: neticrm_preset.info:0
+msgid "Provide CiviCRM / NetiCRM database update script. And helper function for neticrm. This is handled by drupal hook_update_N()."
+msgstr ""
+
+#: neticrm_preset.info:0
+msgid "NetiCRM"
+msgstr ""
+
