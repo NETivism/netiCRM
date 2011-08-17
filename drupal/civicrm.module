@@ -169,6 +169,9 @@ function civicrm_perm()
 
 function civicrm_block($op='list', $delta='0')
 {
+    if ( ! civicrm_initialize( ) ) {
+        return;
+    }
     require_once 'CRM/Core/Block.php';
 
     if($op == 'list') {
@@ -727,31 +730,6 @@ function civicrm_cache_disable( ) {
 function civicrm_key_disable( ) {
     $config = CRM_Core_Config::singleton( );
     $config->keyDisable = true;
-}
-
-function civicrm_enable( ) {
-    menu_rebuild( );
-
-    menu_link_maintain( 'civicrm', 'delete', 'civicrm', 'CiviCRM' );
-    
-    $options = array(
-                     'link_title' => 'CiviCRM',
-                     'link_path'  => 'civicrm/dashboard',
-                     'module'     => 'civicrm',
-                     'options'    => array( 'alter' => true )
-                     );
-    menu_link_save( $options );
-
-    if ( ! civicrm_initialize( ) ) {
-        return;
-    }
-
-    // also invoke civicrm menu rebuild
-    require_once 'CRM/Core/Menu.php';
-    CRM_Core_Menu::store( );
-
-    //Update the 'blocks' DB table with the blocks
-    _block_rehash();
 }
 
 /**
