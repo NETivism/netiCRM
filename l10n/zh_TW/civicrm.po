@@ -14708,7 +14708,7 @@ msgstr "折扣結束日期"
 
 #: CRM/Event/Form/ManageEvent/Fee.php
 msgid "Add Discount Set to Fee Table"
-msgstr "為價格選項增加折扣設定"
+msgstr "為價格選項設定折扣細節"
 
 #: CRM/Event/Form/ManageEvent/Fee.php
 msgid "The discount end date cannot be prior to the start date."
