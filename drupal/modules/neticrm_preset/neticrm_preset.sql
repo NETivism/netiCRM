@@ -24,7 +24,7 @@ VALUES
   (43, '{contact.organization_name}', '3', '{contact.organization_name}', NULL ,   '3', '1', '3', NULL , '0', '0', '1', NULL , NULL),
   (43, 'Customized',                  '4', 'Customized',                  NULL ,    0 , '0', '4', NULL , '0', '1', '1', NULL , NULL);
 
-
+-- report translation
 REPLACE INTO 
   `civicrm_report_instance` (`id`, `domain_id`, `title`, `report_id`, `name`, `args`, `description`, `permission`, `form_values`, `is_active`, `email_subject`, `email_to`, `email_cc`, `header`, `footer`, `navigation_id`) 
 VALUES
@@ -57,39 +57,7 @@ VALUES
                                                       (27, 1, 'Email開信率報表', 'Mailing/opened', NULL, NULL, 'Email開信率概況報表。', 'access CiviMail', 'a:19:{s:6:"fields";a:4:{s:2:"id";s:1:"1";s:10:"first_name";s:1:"1";s:9:"last_name";s:1:"1";s:5:"email";s:1:"1";}s:12:"sort_name_op";s:3:"has";s:15:"sort_name_value";s:0:"";s:9:"source_op";s:3:"has";s:12:"source_value";s:0:"";s:6:"id_min";s:0:"";s:6:"id_max";s:0:"";s:5:"id_op";s:3:"lte";s:8:"id_value";s:0:"";s:6:"gid_op";s:2:"in";s:9:"gid_value";a:0:{}s:8:"tagid_op";s:2:"in";s:11:"tagid_value";a:0:{}s:11:"description";s:29:"Email開信率概況報表。";s:13:"email_subject";s:0:"";s:8:"email_to";s:0:"";s:8:"email_cc";s:0:"";s:10:"permission";s:15:"access CiviMail";s:9:"domain_id";i:1;}', NULL, NULL, NULL, NULL, '<html>\r\n  <head>\r\n    <title>Email開信率報表</title>\r\n    <style type="text/css">@import url(http://demo.civicrm.tw/sites/all/modules/civicrm/css/print.css);</style>\r\n  </head>\r\n  <body><div id="crm-container">', '<p><img src="http://demo.civicrm.tw/sites/all/modules/civicrm/i/powered_by.png" /></p></div></body>\r\n</html>\r\n', 222),
   (28, 1, 'Email點擊流程報表', 'Mailing/clicks', NULL, NULL, '提供每個電子報 / email行銷的概況報表。', 'access CiviMail', 'a:19:{s:6:"fields";a:4:{s:2:"id";s:1:"1";s:10:"first_name";s:1:"1";s:9:"last_name";s:1:"1";s:5:"email";s:1:"1";}s:12:"sort_name_op";s:3:"has";s:15:"sort_name_value";s:0:"";s:9:"source_op";s:3:"has";s:12:"source_value";s:0:"";s:6:"id_min";s:0:"";s:6:"id_max";s:0:"";s:5:"id_op";s:3:"lte";s:8:"id_value";s:0:"";s:6:"gid_op";s:2:"in";s:9:"gid_value";a:0:{}s:8:"tagid_op";s:2:"in";s:11:"tagid_value";a:0:{}s:11:"description";s:53:"提供每個電子報 / email行銷的概況報表。";s:13:"email_subject";s:0:"";s:8:"email_to";s:0:"";s:8:"email_cc";s:0:"";s:10:"permission";s:15:"access CiviMail";s:9:"domain_id";i:1;}', NULL, NULL, NULL, NULL, '<html>\r\n  <head>\r\n    <title>Email點擊流程報表</title>\r\n    <style type="text/css">@import url(http://demo.civicrm.tw/sites/all/modules/civicrm/css/print.css);</style>\r\n  </head>\r\n  <body><div id="crm-container">', '<p><img src="http://demo.civicrm.tw/sites/all/modules/civicrm/i/powered_by.png" /></p></div></body>\r\n</html>\r\n', 223);
 
-
-REPLACE INTO 
-  `civicrm_dashboard` (`id`, `domain_id`, `label`, `url`, `content`, `permission`, `permission_operator`, `column_no`, `is_minimized`, `is_fullscreen`, `is_active`, `is_reserved`, `weight`, `created_date`) 
-VALUES
-  (1, 1, '動態', 'civicrm/dashlet/activity&reset=1&snippet=4', NULL, 'access CiviCRM', NULL, 0, 0, 1, 1, 1, 1, NULL),
-  (2, 1, '我的個案', 'civicrm/dashlet/myCases&reset=1&snippet=4', NULL, 'access my cases and activities', NULL, 0, 0, 1, 1, 1, 2, NULL),
-  (3, 1, '全部個案', 'civicrm/dashlet/allCases&reset=1&snippet=4', NULL, 'access all cases and activities', NULL, 0, 0, 1, 1, 1, 3, NULL),
-  (4, 1, '支持者報表（詳情）', 'civicrm/report/instance/2&reset=1&section=2&snippet=4', NULL, 'administer CiviCRM', NULL, 0, 0, 1, 1, 0, 0, '2011-03-10 16:19:23'),
-  (5, 1, '支持者報表（概況）', 'civicrm/report/instance/1&reset=1&section=2&snippet=4', NULL, 'administer CiviCRM', NULL, 0, 0, 1, 1, 0, 0, '2011-03-10 16:18:53'),
-  (6, 1, '捐款者報表（概況）', 'civicrm/report/instance/3&reset=1&section=2&snippet=4', NULL, 'access CiviContribute', NULL, 0, 0, 1, 1, 0, 0, '2011-03-10 16:19:43'),
-  (7, 1, '捐款者報表（詳情）', 'civicrm/report/instance/4&reset=1&section=2&snippet=4', NULL, 'access CiviContribute', NULL, 0, 0, 1, 1, 0, 0, '2011-03-10 16:19:59'),
-  (8, 1, '捐贈摘要報表（重複）', 'civicrm/report/instance/5&reset=1&section=2&snippet=4', NULL, 'access CiviContribute', NULL, 0, 0, 1, 1, 0, 0, '2011-03-10 16:38:16'),
-  (9, 1, '本年未捐款報表 (以過去捐款為基礎)', 'civicrm/report/instance/6&reset=1&section=2&snippet=4', NULL, 'access CiviContribute', NULL, 0, 0, 1, 1, 0, 0, '2011-03-10 16:38:29'),
-  (10, 1, '本年未捐款報表 (與去年捐款為基礎)', 'civicrm/report/instance/7&reset=1&section=2&snippet=4', NULL, 'access CiviContribute', NULL, 0, 0, 1, 1, 0, 0, '2011-03-10 16:38:34'),
-  (11, 1, '會員報表（概況）', 'civicrm/report/instance/9&reset=1&section=2&snippet=4', NULL, 'access CiviMember', NULL, 0, 0, 1, 1, 0, 0, '2011-03-10 16:42:00'),
-  (12, 1, '會員報表（詳情）', 'civicrm/report/instance/10&reset=1&section=2&snippet=4', NULL, 'access CiviMember', NULL, 0, 0, 1, 1, 0, 0, '2011-03-10 16:42:22'),
-  (13, 1, '會員報表 (已失效)', 'civicrm/report/instance/11&reset=1&section=2&snippet=4', NULL, 'access CiviMember', NULL, 0, 0, 1, 1, 0, 0, '2011-03-10 16:42:35'),
-  (14, 1, '活動參加者報表（清單）', 'civicrm/report/instance/12&reset=1&section=2&snippet=4', NULL, 'access CiviEvent', NULL, 0, 0, 1, 1, 0, 0, '2011-03-10 16:42:51'),
-  (15, 1, '活動收入報表（摘要）', 'civicrm/report/instance/13&reset=1&section=2&snippet=4', NULL, 'access CiviEvent', NULL, 0, 0, 1, 1, 0, 0, '2011-03-10 16:43:07'),
-  (16, 1, '活動收入報表（詳情）', 'civicrm/report/instance/14&reset=1&section=2&snippet=4', NULL, 'access CiviEvent', NULL, 0, 0, 1, 1, 0, 0, '2011-03-10 16:43:22'),
-  (17, 1, '參加者清單', 'civicrm/report/instance/15&reset=1&section=2&snippet=4', NULL, 'access CiviEvent', NULL, 0, 0, 1, 1, 0, 0, '2011-03-10 16:44:18'),
-  (18, 1, '動態報表', 'civicrm/report/instance/16&reset=1&section=2&snippet=4', NULL, 'administer CiviCRM', NULL, 0, 0, 1, 1, 0, 0, '2011-03-10 16:44:33'),
-  (19, 1, '關係報表', 'civicrm/report/instance/17&reset=1&section=2&snippet=4', NULL, 'administer CiviCRM', NULL, 0, 0, 1, 1, 0, 0, '2011-03-10 16:44:48'),
-  (20, 1, '捐款概況報表（組織）', 'civicrm/report/instance/18&reset=1&section=2&snippet=4', NULL, 'access CiviContribute', NULL, 0, 0, 1, 1, 0, 0, '2011-03-10 16:45:04'),
-  (21, 1, '捐款概況報表（家庭）', 'civicrm/report/instance/19&reset=1&section=2&snippet=4', NULL, 'access CiviContribute', NULL, 0, 0, 1, 1, 0, 0, '2011-03-10 16:45:18'),
-  (22, 1, '最高捐款者名錄報表', 'civicrm/report/instance/20&reset=1&section=2&snippet=4', NULL, 'access CiviContribute', NULL, 0, 0, 1, 1, 0, 0, '2011-03-10 16:45:33'),
-  (23, 1, '記帳報表', 'civicrm/report/instance/23&reset=1&section=2&snippet=4', NULL, 'access CiviContribute', NULL, 0, 0, 1, 1, 0, 0, '2011-03-10 16:45:46'),
-  (24, 1, 'Email退信報表', 'civicrm/report/instance/25&reset=1&section=2&snippet=4', NULL, 'access CiviMail', NULL, 0, 0, 1, 1, 0, 0, '2011-03-10 16:45:57'),
-  (25, 1, 'Email遞送報表（概況）', 'civicrm/report/instance/26&reset=1&section=2&snippet=4', NULL, 'access CiviMail', NULL, 0, 0, 1, 1, 0, 0, '2011-03-10 16:50:23'),
-  (26, 1, 'Email開信率報表', 'civicrm/report/instance/27&reset=1&section=2&snippet=4', NULL, 'access CiviMail', NULL, 0, 0, 1, 1, 0, 0, '2011-03-10 16:50:39'),
-  (27, 1, 'Email點擊流程報表', 'civicrm/report/instance/28&reset=1&section=2&snippet=4', NULL, 'access CiviMail', NULL, 0, 0, 1, 1, 0, 0, '2011-03-10 16:52:25');
-
-
+-- group / profiles
 UPDATE `civicrm_group` SET `title` = '管理員', `description` = '網站最高權限管理員.' WHERE id = 1;
 UPDATE  `civicrm_uf_group` SET  `help_post` =  '' WHERE `id` = 2 LIMIT 1 ;
 DELETE FROM `civicrm_uf_join` WHERE id = 1 OR id = 2;

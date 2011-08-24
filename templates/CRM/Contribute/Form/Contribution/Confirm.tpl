@@ -54,7 +54,7 @@
     {if $amount GT 0 OR $minimum_fee GT 0 OR ( $priceSetID and $lineItem ) }
     <div class="crm-group amount_display-group">
         <div class="header-dark">
-            {if !$membershipBlock AND $amount OR ( $priceSetID and $lineItem ) }{ts}Contribution Amount{/ts}{else}{ts}Membership Fee{/ts} {/if}
+            {if !$membershipBlock AND $amount OR ( $priceSetID and $lineItem ) }{ts}Amount{/ts}{else}{ts}Membership Fee{/ts} {/if}
         </div>
         <div class="display-block">
             {if $lineItem and $priceSetID}
