@@ -16,12 +16,21 @@ function civicrm_gw_init(){
  */
 function civicrm_gw_menu(){
   return array(
-    'gw/ipn' => array(
+    'gw/ipn/%' => array(
       'access callback' => true,
       'page callback' => 'civicrm_gw_ipn',
+      'page arguments' => array(2),
       'type' => MENU_CALLBACK,
       'weight' => 0,
       'file' => 'civicrm_gw.ipn.inc',
+    ),
+    'gw/popup/%' => array(
+      'access callback' => true,
+      'page callback' => 'civicrm_gw_popup',
+      'page arguments' => array(2),
+      'type' => MENU_CALLBACK,
+      'weight' => 0,
+      'file' => 'civicrm_gw.checkout.inc',
     ),
   );
 }
@@ -50,9 +59,6 @@ function civicrm_gw_civicrm_buildForm($form_name, &$form){
     case 'CRM_Contribute_Form_Contribution_ThankYou':
       break;
     case 'CRM_Contribute_Form_Contribution_Main':
-      if($form->_paymentProcessor['payment_processor_type'] == 'GW'){
-        drupal_add_js(_civicrm_gw_instrument_page($radios), 'inline');
-      }
       break;
   }
 }
@@ -70,59 +76,14 @@ function civicrm_gw_cron(){
   // we don't need cron, yet
 }
 
-/**
- * Payment instrument javascript
- *
- * Provide payment instrument functions for contribution / event page
- */ 
-function _civicrm_gw_instrument_page($radios){
-  $output = "<div class='section'>";
-  $output .= "<div class='label'>".ts('Payment Instrument').'</div>';
-  $output .= "<div class='content'>";
-  foreach($radios as $value => $radio){
-    $checked = $value == 1 ? "checked='checked'" : '';
-    $radio['description'] = str_replace(array("\n","\r"), array('',''), $radio['description']);
-    $output .= "<div class='newweb-dummy-wrapper'><label><input type='radio' name='newweb_dummy' value='".$value."' class='form-radio' $checked />".$radio['label']."</label><div class='hover-item'>".$radio['description']."</div></div>";
-  }
-  $output .= '</div>';
-  $output .= "<div class='clear'></div>";
-  $output .= '</div>';
-  return '
-$(document).ready(function(){
-  // add radios
-  $("#crm-container form[name=Main] #intro_text").after("'.$output.'");
-  // modified exists recurring input
-
-  $("input[name=newweb_dummy]").click(function(){
-    var v = $(this).val();
-    $("input[name=newweb_instrument_id]").val(v);
-    if(v != 1){
-      $("#crm-container input[name=is_recur][value=0]").click();
-      $("#crm-container input[name=is_recur][value=1]").attr("disabled","disabled");
-    }
-    else{
-      $("#crm-container input[name=is_recur][value=1]").removeAttr("disabled");
-    }
-  });
-  
-  $(".hover-item").css({position:"absolute",display:"none"});
-  $(".newweb-dummy-wrapper").hover(function(){
-    $(this).children(".hover-item").show();
-  },function(){
-    $(this).children(".hover-item").hide();
-  });
-});  
-  ';
-}
-
 function _civicrm_gw_instrument($type = 'normal'){
   $i = array(
     'Credit Card' => array('label' => '信用卡', 'desc' => '', 'code' => 'Credit Card'),
-    'Virtual ATM' => array('label' => '轉帳（ATM/銀行）', 'desc' => '', 'code' => 'vacc'),
+    'ATM' => array('label' => 'ATM 轉帳', 'desc' => '', 'code' => 'vacc'),
     'Web ATM' => array('label' => 'Web ATM', 'desc' => '', 'code' => 'web_atm'),
     'Convenient Store' => array('label' => '便利商店', 'desc'=>'', 'code' => 'barcode'),
-    'Convenient Store (FamilyMart)' => array('label'=>'便利商店 (全家/萊爾富)','desc' => '', 'code' => 'cvs'),
-    'Convenient Store (7-11 ibon)' => array('label'=>'便利商店 (7-11 ibon)','desc' => '', 'code' => 'ibon'),
+    'Convenient Store (FamilyMart)' => array('label'=>'便利商店代碼 (全家/萊爾富)','desc' => '', 'code' => 'cvs'),
+    'Convenient Store (7-11 ibon)' => array('label'=>'便利商店代碼 (7-11 ibon)','desc' => '', 'code' => 'ibon'),
   );
   if($type == 'form_name'){
     foreach($i as $name => $data){
@@ -168,4 +129,29 @@ function _civicrm_gw_vars2array($str){
     $params[$name] = $value;
   }
   return $params;
+}
+
+/**
+ * Help funtion for printing payment info
+ */
+function _civicrm_gw_payment_info($cid, $instrument){
+  civicrm_initialize();
+  $gw = db_fetch_object(db_query("SELECT * FROM {civicrm_contribution_gw} WHERE cid = %d", $cid));
+  $amount = CRM_Core_DAO::singleValueQuery("SELECT total_amount FROM civicrm_contribution WHERE id = {$cid}");
+  $data = array();
+  switch($instrument){
+    case 'cvs':
+    case 'ibon':
+      $data[] = array('付款代碼', $gw->payno);
+      $data[] = array('付款金額', $amount);
+      $data[] = array('付款期限', format_date($gw->expire_datetime, 'short'));
+      break;
+    case 'vacc':
+      $data[] = array('轉帳銀行代碼', $gw->bankcode);
+      $data[] = array('轉帳銀行帳號', $gw->vaccno);
+      $data[] = array('付款金額', $amount);
+      $data[] = array('付款期限', format_date($gw->expire_datetime, 'custom', 'Y/m/d'));
+      break;
+  }
+  return $data;
 }

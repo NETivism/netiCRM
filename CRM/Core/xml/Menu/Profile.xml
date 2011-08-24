@@ -3,7 +3,6 @@
 <menu>
   <item>
      <path>civicrm/profile</path>
-     <access_callback>1</access_callback>
      <page_callback>CRM_Core_Invoke::profile</page_callback>
      <is_public>true</is_public>
      <weight>0</weight>
@@ -11,7 +10,7 @@
   <item>
      <path>civicrm/profile/create</path>
      <title>CiviCRM Profile Create</title>
-     <access_callback>1</access_callback>
+     <access_arguments>profile create</access_arguments>
      <page_callback>CRM_Core_Invoke::profile</page_callback>
      <is_public>true</is_public>
      <weight>0</weight>
@@ -19,6 +18,7 @@
   <item>
      <path>civicrm/profile/view</path>
      <page_callback>CRM_Profile_Page_View</page_callback>
+     <access_arguments>profile view</access_arguments>
      <is_public>true</is_public>
   </item>
 </menu>

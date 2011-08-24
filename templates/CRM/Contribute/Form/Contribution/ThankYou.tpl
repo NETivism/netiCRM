@@ -93,7 +93,7 @@
     {if $amount GT 0 OR $minimum_fee GT 0 OR ( $priceSetID and $lineItem ) }
     <div class="crm-group amount_display-group">
         <div class="header-dark">
-            {if !$membershipBlock AND $amount OR ( $priceSetID and $lineItem )}{ts}Contribution Information{/ts}{else}{ts}Membership Fee{/ts}{/if}
+            {if !$membershipBlock AND $amount OR ( $priceSetID and $lineItem )}{ts}Payment Information{/ts}{else}{ts}Membership Fee{/ts}{/if}
         </div>
         <div class="display-block">
           {if $trxn_id}
@@ -110,7 +110,7 @@
                 {$membership_name} {ts}Membership{/ts}: <strong>{$membership_amount|crmMoney}</strong><br />
                 {if $amount}
                     {if ! $is_separate_payment }
-    		    {ts}Contribution Amount{/ts}: <strong>{$amount|crmMoney}</strong><br />
+    		    {ts}Amount{/ts}: <strong>{$amount|crmMoney}</strong><br />
     	        {else}
     		    {ts}Additional Contribution{/ts}: <strong>{$amount|crmMoney}</strong><br />
       	        {/if}
