@@ -711,7 +711,7 @@ class CRM_Contact_BAO_Relationship extends CRM_Contact_DAO_Relationship
                               civicrm_address.street_address as street_address,
                               civicrm_address.city as city,
                               civicrm_address.postal_code as postal_code,
-                              civicrm_state_province.abbreviation as state,
+                              civicrm_state_province.name as state,
                               civicrm_country.name as country,
                               civicrm_email.email as email,
                               civicrm_phone.phone as phone,
@@ -895,7 +895,7 @@ LEFT JOIN  civicrm_country ON (civicrm_address.country_id = civicrm_country.id)
                 $values[$rid]['organization_name']    = $relationship->organization_name;
                 $values[$rid]['country']    = $relationship->country;
                 $values[$rid]['city']       = $relationship->city;
-                $values[$rid]['state']      = $relationship->state;
+                $values[$rid]['state']      = ts($relationship->state);
                 $values[$rid]['start_date'] = $relationship->start_date;
                 $values[$rid]['end_date']   = $relationship->end_date;
                 $values[$rid]['description']= $relationship->description;
