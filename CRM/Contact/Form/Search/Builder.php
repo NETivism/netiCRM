@@ -155,7 +155,11 @@ class CRM_Contact_Form_Search_Builder extends CRM_Contact_Form_Search
             } else {
                 if ( in_array( $v[1], array( 'IS NULL', 'IS NOT NULL' ) ) && $v[2] ) {
                     $errorMsg["value[$v[3]][$v[4]]"] = ts('Please clear your value if you want to use %1 operator.', array( 1 => $v[1] ));  
-                } else if ( $v[0] == 'group' || $v[0] == 'tag' ) {
+                }
+                else if(empty($v[2])){
+                    $errorMsg["value[$v[3]][$v[4]]"] = ts("Please enter the value.");  
+                }
+                else if ( $v[0] == 'group' || $v[0] == 'tag' ) {
                     $grpId = array_keys($v[2]);
                     if( ! key($v[2]) ) {
                         $errorMsg["value[$v[3]][$v[4]]"] = ts("Please enter the value.");  
@@ -230,14 +234,21 @@ class CRM_Contact_Form_Search_Builder extends CRM_Contact_Form_Search
                         if ( $v[1] == 'IN' ) {
                             $inVal = trim( $v[2] );
                             //checking for format to avoid db errors
-                            if (!preg_match( '/^[(][\']([A-Za-z0-9\'\,\s]+)[\'][)]$/', $inVal) ) {
-                                $errorMsg["value[$v[3]][$v[4]]"] = ts("Please enter correct Data ( in valid format ).");
+                            if ( $type == 'Int' ) {
+                                if (!preg_match( '/^[(]([A-Za-z0-9\,]+)[)]$/', $inVal) ) {
+                                    $errorMsg["value[$v[3]][$v[4]]"] = ts("Please enter correct Data ( in valid format ).");
+                                }
+                            } else {
+                                if (!preg_match( '/^[(]([A-Za-z0-9åäöÅÄÖüÜœŒæÆøØ\,\s]+)[)]$/', $inVal) ) {
+                                    $errorMsg["value[$v[3]][$v[4]]"] = ts("Please enter correct Data ( in valid format ).");
+                                }
                             }
                             // Validate each value in parenthesis to avoid db errors
                             if( empty( $errorMsg ) ) {
                                 $parenValues = array();
                                 $parenValues = explode ( ',', trim( $inVal, "(..)" ) );
                                 foreach ( $parenValues as $val ) {
+                                    $val = trim( $val );
                                     if ( !$val && $val !='0' ) {
                                         $errorMsg["value[$v[3]][$v[4]]"] = ts("Please enter the values correctly.");
                                     }
