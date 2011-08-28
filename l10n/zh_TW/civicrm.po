@@ -3031,7 +3031,7 @@ msgstr "變更記錄"
 
 #: CRM/Contact/Form/Search/Basic.php CRM/Grant/Form/Search.php
 msgid "Name or Email"
-msgstr "姓名或 Email"
+msgstr "姓名或Email"
 
 #: CRM/Contact/Form/Search/Basic.php CRM/Contact/Form/Search/Custom/Basic.php
 #: CRM/Contact/Form/Search/Custom/MultipleValues.php CRM/Core/SelectValues.php
@@ -8354,7 +8354,7 @@ msgstr "姓名或 Email"
 
 #: CRM/Contact/BAO/Query.php
 msgid "Name like"
-msgstr "姓名如"
+msgstr "姓名類似"
 
 #: CRM/Contact/BAO/Query.php
 msgid "Street"
@@ -8909,35 +8909,35 @@ msgstr "搜尋聯絡人"
 
 #: CRM/Contact/Form/Search/Builder.php
 msgid "Please enter the operator."
-msgstr "請輸入運算符號。"
+msgstr "請選擇篩選方式"
 
 #: CRM/Contact/Form/Search/Builder.php
 msgid "Please clear your value if you want to use %1 operator."
-msgstr "如果您想使用 %1運算符號，請清除您的數值。"
+msgstr "如果你需要用「%1」篩選方式，請先清空你的搜尋字詞"
 
 #: CRM/Contact/Form/Search/Builder.php
 msgid "Please enter the value."
-msgstr "請輸入數值。"
+msgstr "請輸入搜尋字詞"
 
 #: CRM/Contact/Form/Search/Builder.php
 msgid "Please enter the valid value."
-msgstr "請輸入有效數值。"
+msgstr "請輸入有效字詞"
 
 #: CRM/Contact/Form/Search/Builder.php
 msgid "Please enter valid value."
-msgstr "請輸入有效值。"
+msgstr "請輸入有效字詞"
 
 #: CRM/Contact/Form/Search/Builder.php
 msgid "Please enter valid %1 id."
-msgstr "請輸入有效的 %1 編號。"
+msgstr "請輸入有效的「%1」編號。"
 
 #: CRM/Contact/Form/Search/Builder.php
 msgid "Please enter correct Data ( in valid format )."
-msgstr "請輸入正確格式"
+msgstr "請輸入正確的資料格式"
 
 #: CRM/Contact/Form/Search/Builder.php
 msgid "Please enter the values correctly."
-msgstr "請輸入正確的值。"
+msgstr "請輸入正確的字詞。"
 
 #: CRM/Contact/Form/Search/Criteria.php
 #: templates/CRM/Contact/Form/Search/Criteria/Basic.tpl
@@ -11736,7 +11736,7 @@ msgstr "所選擇的對應已經成功刪除。"
 
 #: CRM/Core/BAO/Mapping.php templates/CRM/Contact/Form/Search/table.tpl
 msgid "Also include contacts where"
-msgstr "也包括聯絡人的"
+msgstr "也搜尋聯絡人包含下列條件"
 
 #: CRM/Core/BAO/Mapping.php msgctxt "menu"
 msgid "Case Activity"
@@ -12192,7 +12192,7 @@ msgstr "凍結"
 
 #: CRM/Core/DAO/Email.php
 msgid "Use for Bulk Mail"
-msgstr "用於大量寄送郵件"
+msgstr "用於EDM郵件寄送"
 
 #: CRM/Core/DAO/Email.php
 msgid "Hold Date"
@@ -20001,11 +20001,11 @@ msgstr "來源聯絡人或指派聯絡人完整或部份的名稱。"
 #: templates/CRM/Member/Form/Search/EmptyResults.tpl
 #: templates/CRM/Pledge/Form/Search/EmptyResults.tpl
 msgid "No matches found for:"
-msgstr "沒有相關搜尋："
+msgstr "沒有符合的搜尋結果："
 
 #: templates/CRM/Activity/Form/Search/EmptyResults.tpl
 msgid "No matching activity results found."
-msgstr "未找到符合的認捐。"
+msgstr "未找到符合的動態結果。"
 
 #: templates/CRM/Activity/Form/Search/EmptyResults.tpl
 #: templates/CRM/Campaign/Form/Search/EmptyResults.tpl
@@ -21140,7 +21140,7 @@ msgstr "<strong>認捐</strong> - 記錄及追蹤捐款者的認捐，傳送認�
 
 #: templates/CRM/Admin/Form/Setting/Component.hlp
 msgid "<strong>CiviMail</strong> - A robust mass-mailing component which allows you to engage your constituents with personalized email blasts and newsletters."
-msgstr "<strong>電子報</strong> - 強大的大量郵件模組，您可以用來傳送個人化的大量郵件和報紙通訊。"
+msgstr "<strong>電子報</strong> - 強大的大量郵件模組，您可以用來傳送個人化的電子報和EDM。"
 
 #: templates/CRM/Admin/Form/Setting/Component.hlp
 msgid "<strong>CiviMember</strong> - A flexible membership management component which includes convenient online signup and renewal."
@@ -23343,11 +23343,11 @@ msgstr "募款串連"
 
 #: templates/CRM/Campaign/Page/Campaign.tpl
 msgid "No Campaigns found."
-msgstr "沒有相關搜尋"
+msgstr "沒有符合的結果"
 
 #: templates/CRM/Campaign/Page/DashBoard.tpl
 msgid "No campaigns found."
-msgstr "沒有相關搜尋"
+msgstr "沒有符合的結果"
 
 #: templates/CRM/Campaign/Page/DashBoard.tpl
 #: templates/CRM/Campaign/Page/Petition.tpl
@@ -23375,7 +23375,7 @@ msgstr ""
 
 #: templates/CRM/Campaign/Page/DashBoard.tpl
 msgid "No surveys found."
-msgstr "沒有相關搜尋"
+msgstr "沒有符合的結果"
 
 #: templates/CRM/Campaign/Page/DashBoard.tpl
 msgid "Add Petition"
@@ -23442,7 +23442,7 @@ msgstr "刪除聯絡人"
 #: templates/CRM/Campaign/Page/Petition.tpl
 #: templates/CRM/Campaign/Page/Survey.tpl
 msgid "No survey found."
-msgstr "沒有相關搜尋"
+msgstr "沒有符合的結果"
 
 #: templates/CRM/Campaign/Page/SurveyType.tpl
 msgid "There are no survey type entered. You can <a href='%1'>add one</a>."
@@ -23991,11 +23991,11 @@ msgstr "下載有重複的記錄"
 
 #: templates/CRM/common/displaySearchCriteria.tpl
 msgid "AND"
-msgstr "及"
+msgstr "以及"
 
 #: templates/CRM/common/displaySearchCriteria.tpl
 msgid "...AND..."
-msgstr "...及..."
+msgstr " [以及] "
 
 #: templates/CRM/common/drupal.tpl templates/CRM/common/joomla.tpl
 #: templates/CRM/common/standalone.tpl
@@ -24212,11 +24212,11 @@ msgstr "選擇此聯絡人偏好的 Email 格式。選擇「兩者皆可」以�
 
 #: templates/CRM/Contact/Form/Contact.hlp
 msgid "If you are using the CiviMail component to send mailings to contacts, this field provides additional control over which email address is used. By default, CiviMail sends mail to each contact's preferred email address. If the contact has multiple locations, then the preferred email of the primary location is used. However, if the contact prefers to have CiviMail ('bulk') mailings set to an alternate email address - check the 'Use for Bulk Mailings' box next to that email address."
-msgstr "勾選此欄位，表示此 Email 是電子報預設寄送的郵件。如果沒有勾選任何 Email，預設便會挑選標示為「主要」的Email來寄送電子報。"
+msgstr "勾選此欄位，表示此 Email 是電子報預設寄送的郵件。如果沒有勾選任何 Email，預設便會挑選標示為「主要」的Email來寄送電子報/EDM。"
 
 #: templates/CRM/Contact/Form/Contact.hlp
 msgid "This option is designed to be set by the contact themselves when they don't want to receive bulk email from your organization (they set it using the opt-out action from a CiviMail mailing).   Please think before changing it, as it will override the preference they have set."
-msgstr "此選項被設計透過聯絡人他們自己設定，若他們不想從您的組織接收大量郵件（他們可透過電子報的進行取消訂閱的動作）。請在變更設定前三思，因為這會更改聯絡人所做的喜好設定。"
+msgstr "此選項被設計透過聯絡人他們自己設定，若他們不想從您的組織收到Email（他們可透過電子報的進行取消訂閱的動作）。請在變更設定前三思，因為這會更改聯絡人所做的喜好設定。"
 
 #: templates/CRM/Contact/Form/Contact.hlp
 msgid "This flag is most commonly used to mark an email address that is bouncing. If you are using the CiviMail component, emails that bounce excessively are automatically placed on hold and mailings are not sent to this address as long as it is marked hold. You can also set (or unset) this option manually - but remember that emails will not be sent to this address as long as it is marked 'On Hold'."
@@ -24433,7 +24433,7 @@ msgstr "凍結？"
 
 #: templates/CRM/Contact/Form/Edit/Email.tpl
 msgid "Bulk Mailings?"
-msgstr "大量發信?"
+msgstr "EDM發信?"
 
 #: templates/CRM/Contact/Form/Edit/Email.tpl
 #: templates/CRM/Contact/Form/Edit/IM.tpl
@@ -24589,13 +24589,13 @@ msgstr "太多相符結果。請縮窄您的搜尋透過輸入更多完整目標
 #: templates/CRM/Contact/Form/Task/AddToHousehold.tpl
 #: templates/CRM/Contact/Form/Task/AddToOrganization.tpl
 msgid "No matching results for"
-msgstr "沒有相關結果"
+msgstr "沒有符合的結果: "
 
 #: templates/CRM/Contact/Form/Relationship.tpl
 #: templates/CRM/Contact/Form/Task/AddToHousehold.tpl
 #: templates/CRM/Contact/Form/Task/AddToOrganization.tpl
 msgid "Name like: %1"
-msgstr "姓名如： %1"
+msgstr "姓名類似： %1"
 
 #: templates/CRM/Contact/Form/Relationship.tpl
 #: templates/CRM/Contact/Form/Task/AddToHousehold.tpl
@@ -24719,28 +24719,28 @@ msgstr ""
 
 #: templates/CRM/Contact/Form/Search/Builder.hlp
 msgid "IMPORTANT: Search Builder requires you to use specific formats for your search values. Review the %1 before building your first search..."
-msgstr ""
+msgstr "重要：自訂需要您為搜尋值使用指定格式。在建立您第一次搜尋之前先了解 %1 ..."
 
 #: templates/CRM/Contact/Form/Search/Builder.hlp
 msgid "Create your search by selecting the criteria (record type and field), the comparison operator, and entering the value you want to search for. You can define one or many criteria as a set: <em>Include contacts where... State IS Washington AND City IS Seattle AND Birth Date is later than (>) Jan 1, 1985</em>"
-msgstr ""
+msgstr "利用條件來建立你的搜尋。別忘了選擇篩選方式，以及輸入你想要搜尋的內容。你可以定義一個或多個搜尋條件組合。例如： <strong>搜尋「聯絡人」，在「華盛頓」州 和 「西雅圖」城 和 「生日大於1985/1/1」</strong>"
 
 #: templates/CRM/Contact/Form/Search/Builder.hlp
 msgid "You can also create additional sets of criteria: <em>Also include contacts where... State IS California AND City IS Los Angeles AND Birth Date is later than (>) Jan 1, 1985</em>"
-msgstr ""
+msgstr "你也可以建立額外的搜尋條件組合，例如： <strong>也搜尋「聯絡人」，在「加」州 和 「洛杉磯」城 和 「生日大於1985/1/1」</strong>"
 
 #: templates/CRM/Contact/Form/Search/Builder.hlp
 #: templates/CRM/Contact/Form/Search/Builder.tpl
 msgid "Search Builder Documentation"
-msgstr "搜尋建立者檔案"
+msgstr "自訂搜尋文件"
 
 #: templates/CRM/Contact/Form/Search/Builder.tpl
 msgid "IMPORTANT: Search Builder requires you to use specific formats for your search values. Review the %1 before building your first search."
-msgstr "重要：搜尋建立者需要您為搜尋值使用指定格式。在建立您第一次搜尋之前重新檢查%1。"
+msgstr "重要：自訂需要您為搜尋值使用指定格式。在建立您第一次搜尋之前先了解 %1。"
 
 #: templates/CRM/Contact/Form/Search/Criteria/Basic.tpl
 msgid "Complete OR Partial Name"
-msgstr "全部或部分名稱"
+msgstr "全部或部分字詞"
 
 #: templates/CRM/Contact/Form/Search/Criteria/Basic.tpl
 msgid "Complete OR Partial Email"
@@ -24748,7 +24748,7 @@ msgstr "全部或部分Email位址"
 
 #: templates/CRM/Contact/Form/Search/Criteria/Basic.tpl
 msgid "Does the contact have a %1 Account?"
-msgstr "聯絡人是否有%1帳號？"
+msgstr "聯絡人是否有網站帳號？"
 
 #: templates/CRM/Contact/Form/Search/Criteria/Location.tpl
 msgid "Location search uses the PRIMARY location for each contact by default."
@@ -24806,7 +24806,7 @@ msgstr "金額二：最少/最多"
 #: templates/CRM/Contact/Form/Search/Custom/EmptyResults.tpl
 #: templates/CRM/Contact/Form/Search/EmptyResults.tpl
 msgid "No matches found."
-msgstr "沒有相關搜尋"
+msgstr "沒有符合的結果"
 
 #: templates/CRM/Contact/Form/Search/Custom/EmptyResults.tpl
 #: templates/CRM/Contact/Form/Search/EmptyResults.tpl
@@ -24918,7 +24918,7 @@ msgstr "如果您在群組搜尋或Tag聯絡人，嘗試'任何群組'或'任何
 
 #: templates/CRM/Contact/Form/Search/EmptyResults.tpl
 msgid "add a <a href='%1'>New Individual</a>, <a href='%2'>Organization</a> or <a href='%3'>Household</a>"
-msgstr "新增 <a href='%1'>New Individual</a>，<a href='%2'>組織</a>或<a href='%3'>家庭</a>"
+msgstr "新增 <a href='%1'>個人</a>，<a href='%2'>組織</a>或<a href='%3'>家庭</a>"
 
 #: templates/CRM/Contact/Form/Search/Intro.tpl
 msgid "Edit Smart Group Search Criteria for %1"
@@ -24939,7 +24939,7 @@ msgstr[0] "列印聯絡人"
 
 #: templates/CRM/Contact/Form/Search/table.tpl
 msgid "Include contacts where"
-msgstr "包括聯絡人的"
+msgstr "搜尋聯絡人包括下列條件:"
 
 #: templates/CRM/Contact/Form/Selector.tpl
 msgid "Click contact name to view a summary. Right-click anywhere in the row for an actions menu.\""
