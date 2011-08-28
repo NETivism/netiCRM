@@ -46,8 +46,8 @@ function neticrm_preset_domain_default(){
     'contactUndelete' => '1',
     'logging' => '0',
     'versionCheck' => '0',
-    'maxAttachments' => '3',
-    'maxFileSize' => '2',
+    'maxAttachments' => '0',
+    'maxFileSize' => '0',
     'recaptchaPublicKey' => '',
     'recaptchaPrivateKey' => '',
     'dashboardCacheTimeout' => '1440',
@@ -186,7 +186,7 @@ function neticrm_preset_replace_sql($filename){
 function neticrm_preset_default_mail_settings(){
   global $base_url;
   $domain = str_replace("http://", '', $base_url);
-  $query = "REPLACE INTO `civicrm_mail_settings` (`id`, `domain_id`, `name`, `is_default`, `domain`, `localpart`, `return_path`, `protocol`, `server`, `port`, `username`, `password`, `is_ssl`, `source`) VALUES  (1, 1, 'default', 1, 'mail.neticrm.net', '{$domain}+', '{$domain}@mail.neticrm.net', '1', '127.0.0.1', NULL, '{$domain}@mail.neticrm.net', 'neticrm##1', 0, NULL);";
+  $query = "REPLACE INTO `civicrm_mail_settings` (`id`, `domain_id`, `name`, `is_default`, `domain`, `localpart`, `return_path`, `protocol`, `server`, `port`, `username`, `password`, `is_ssl`, `source`) VALUES  (1, 1, 'default', 1, 'mail.neticrm.tw', '{$domain}+', '{$domain}@mail.neticrm.tw', '1', '127.0.0.1', NULL, '{$domain}@mail.neticrm.tw', 'neticrm##1', 0, NULL);";
   $res =& CRM_Core_DAO::executeQuery($query);
   /*
     if ( PEAR::isError( $res ) ) {
@@ -198,14 +198,12 @@ function neticrm_preset_default_mail_settings(){
 /**
  * Implementation of hook_update_N()
  */
-function neticrm_preset_update_6103(){
-
-}
 
 /**
  * Update for drupal 6.x-1.1
  */
 function neticrm_preset_update_6101(){
+  civicrm_initialize();
   neticrm_preset_default_mail_settings();
 
   // set default front page
@@ -215,6 +213,22 @@ function neticrm_preset_update_6101(){
   // see http://api.drupal.org/api/drupal/includes--locale.inc/function/locale_batch_by_language/6
   // _locale_import_po($file, 'zh-hant', LOCALE_IMPORT_OVERWRITE);
 }
+
+function neticrm_preset_update_6102(){
+  civicrm_initialize();
+
+  // set again for domain change
+  neticrm_preset_default_mail_settings();
+
+  // remove mail attachment
+  $params = array(
+    'maxAttachments' => '0',
+    'maxFileSize' => '0',
+  );
+  require_once "CRM/Core/BAO/Setting.php";
+  CRM_Core_BAO_Setting::add($params);
+}
+
 
 function _neticrm_preset_message($message, $success){
   return array('success' => $success, 'query' => check_plain($message));
