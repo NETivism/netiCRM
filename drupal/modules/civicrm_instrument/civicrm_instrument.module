@@ -28,7 +28,7 @@ function civicrm_instrument_civicrm_buildForm($form_name, &$form){
     case 'CRM_Contribute_Form_Contribution_Main':
     case 'CRM_Event_Form_Registration_Register':
       // ok, now check the payment limitation.
-      $entity_id = $form->getVar('_id');;
+      $entity_id = $form->getVar('_id') ? $form->getVar('_id') : $form->getVar('_eventId') ;
       $entity_table = $form_name == 'CRM_Contribute_Form_Contribution_Main' ? 'civicrm_contribution_page' : 'civicrm_event';
       $gid = variable_get('civicrm_instrument_gid', 0);
 
