@@ -3308,7 +3308,7 @@ msgstr "請輸入名稱以儲存訊息範本"
 
 #: CRM/Contact/Form/Task/EmailCommon.php CRM/Contact/Form/Task/Email.php
 msgid "Please do not use this task to send a lot of emails (greater than %1). We recommend using CiviMail instead."
-msgstr "請不要使用此任務發送大量郵件（大於%1）。我們建議使用 CiviMail 代替。"
+msgstr "請不要使用此任務發送給大量的聯絡人（尤其大於 %1）。我們建議使用EDM/電子報發送系統代替，以防止發送的郵件被歸為垃圾信。"
 
 #: CRM/Contact/Form/Task/Label.php CRM/Core/BAO/Mapping.php
 msgid "Primary"
@@ -8418,7 +8418,7 @@ msgstr "不要交易"
 
 #: CRM/Contact/DAO/Contact.php templates/CRM/Contact/Page/View/Summary.tpl
 msgid "No Bulk Emails (User Opt Out)"
-msgstr "不要寄送大量郵件（使用者取消訂閱）"
+msgstr "不要EDM（使用者退訂）"
 
 #: CRM/Contact/DAO/Contact.php
 msgid "Sort Name"
@@ -8450,7 +8450,7 @@ msgstr "Sic Code"
 
 #: CRM/Contact/DAO/Contact.php
 msgid "Unique ID (OpenID)"
-msgstr "唯一編號(OpenID)"
+msgstr "OpenID"
 
 #: CRM/Contact/DAO/Contact.php
 msgid "Current Employer ID"
@@ -9577,11 +9577,11 @@ msgstr "移除 Tag 的聯絡人"
 
 #: CRM/Contact/Form/Task/Unhold.php
 msgid "Unhold Email"
-msgstr "解開 Email"
+msgstr "解凍Email"
 
 #: CRM/Contact/Form/Task/Unhold.php
 msgid "%1 emails were found on hold and updated."
-msgstr ""
+msgstr "有%1筆Email成功解凍了。"
 
 #: CRM/Contact/Form/Task/Unhold.php
 msgid "No contact found with email on hold status."
@@ -9803,7 +9803,7 @@ msgstr "列印PDF信件"
 
 #: CRM/Contact/Task.php
 msgid "Unhold Emails"
-msgstr "解開 Email"
+msgstr "解凍Email"
 
 #: CRM/Contact/Task.php
 msgid "Restore Contacts"
@@ -9819,7 +9819,7 @@ msgstr "新增聯絡人到活動"
 
 #: CRM/Contact/Task.php
 msgid "Schedule/Send a Mass Mailing"
-msgstr "排程/傳送大量郵件"
+msgstr "排程/傳送EDM/電子報"
 
 #: CRM/Contribute/BAO/ContributionPage.php
 msgid "Automatically Generated"
@@ -24216,7 +24216,7 @@ msgstr "勾選此欄位，表示此 Email 是電子報預設寄送的郵件。�
 
 #: templates/CRM/Contact/Form/Contact.hlp
 msgid "This option is designed to be set by the contact themselves when they don't want to receive bulk email from your organization (they set it using the opt-out action from a CiviMail mailing).   Please think before changing it, as it will override the preference they have set."
-msgstr "此選項被設計透過聯絡人他們自己設定，若他們不想從您的組織收到Email（他們可透過電子報的進行取消訂閱的動作）。請在變更設定前三思，因為這會更改聯絡人所做的喜好設定。"
+msgstr "此選項讓聯絡人可以自行設定，若他們不想從您的組織收到Email（他們可透過電子報的進行取消訂閱的動作）。請在變更設定前三思，因為這會更改聯絡人所做的喜好設定。"
 
 #: templates/CRM/Contact/Form/Contact.hlp
 msgid "This flag is most commonly used to mark an email address that is bouncing. If you are using the CiviMail component, emails that bounce excessively are automatically placed on hold and mailings are not sent to this address as long as it is marked hold. You can also set (or unset) this option manually - but remember that emails will not be sent to this address as long as it is marked 'On Hold'."
@@ -25116,7 +25116,7 @@ msgstr "已選取聯絡人人數： %1"
 
 #: templates/CRM/Contact/Form/Task/Unhold.tpl
 msgid "Are you sure you want to unhold email of selected contact(s)?."
-msgstr "您確定要解開所選取聯絡人的Email？"
+msgstr "您確定要解凍所選取的Email？"
 
 #: templates/CRM/Contact/Page/CustomSearch.tpl
 msgid "Use this search"
@@ -25545,11 +25545,11 @@ msgstr "隱私標示：不要寄送 Email"
 
 #: templates/CRM/Contact/Page/View/Summary.tpl
 msgid "Email on hold - generally due to bouncing."
-msgstr "擱置的信件 - 通常是被退信。"
+msgstr "擱置的信件 - 通常是因為被收信方退信。"
 
 #: templates/CRM/Contact/Page/View/Summary.tpl
 msgid "Bulk"
-msgstr "大量寄送"
+msgstr "EDM寄送"
 
 #: templates/CRM/Contact/Page/View/Summary.tpl
 msgid "(signature)"
@@ -26138,7 +26138,7 @@ msgstr ""
 
 #: templates/CRM/Contribute/Form/ContributionPage/PCP.hlp
 msgid "How many recipients can they send emails to at one time? You may want to limit this to prevent large mail blasts from being sent."
-msgstr "您允許使用者一次傳送 Email 給多少人？您可以設定上限，以防止同時傳送大量的 Email（不當的大量郵件可能會被視為垃圾信）。"
+msgstr "您允許使用者一次傳送 Email 給多少人？您可以設定上限，以防止同時傳送大量的 Email（不當的信件量會被視為垃圾信）。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/PCP.hlp
 msgid "Text for the link inviting constituents to create a Personal Contribution Page. This link will appear on the Contribution Thank-you page as well as on each Personal Campaign Page."
@@ -34132,11 +34132,11 @@ msgstr "修改個案開始時間"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Bulk Email"
-msgstr "大量 Email"
+msgstr "EDM郵件"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Bulk Email Sent."
-msgstr "大量 Email 已寄出。"
+msgstr "EDM已寄出。"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Assign Case Role"
@@ -37430,11 +37430,11 @@ msgstr "此聯絡人是否不想收到傳真？"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "Opted Out of Bulk Mail"
-msgstr "選擇退出大量郵件"
+msgstr "退訂EDM/電子報"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "Has this contact opted out of bulk mail?"
-msgstr "此聯絡人是否選擇退出大量郵件名單？"
+msgstr "此聯絡人是否從EDM/電子報發送名單排除？"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "The display name of the contact's organizations."
