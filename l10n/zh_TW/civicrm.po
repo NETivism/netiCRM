@@ -11261,7 +11261,7 @@ msgstr "請選擇處理中的線上捐款。"
 
 #: CRM/Contribute/Form/Task/Status.php
 msgid "Update Pending Status"
-msgstr "更新待辦狀態"
+msgstr "更新待處理狀態"
 
 #: CRM/Contribute/Form/Task/Status.php
 msgid "Transaction ID's must be unique. Include the account number for checks."
@@ -26605,7 +26605,7 @@ msgstr "間隔"
 
 #: templates/CRM/Contribute/Form/ContributionView.tpl
 msgid "pending"
-msgstr "待辦"
+msgstr "等待確認"
 
 #: templates/CRM/Contribute/Form/ContributionView.tpl
 #: templates/CRM/Contribute/Page/UserDashboard.tpl
