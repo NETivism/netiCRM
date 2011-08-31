@@ -1,4 +1,27 @@
 <?php
+define('NETICRM_LIMIT_PATH', 'civicrm/import/contact::civicrm/contact/add');
+
+/**
+ * Implementation of hook_init
+ *
+ * This function will limit user enter route and limitation.
+ * We got to redirect user to help page even they have permissions.
+ */
+function neticrm_preset_init(){
+  global $neticrm, $user;
+  // we assume the civicrm db is the same with drupal from neticrm service, or we got to load full civicrm object..
+  $neticrm['contact'] = db_result(db_query("SELECT COUNT(*) FROM {civicrm_contact} WHERE is_deleted = 0"));
+
+  $path = explode('::', NETICRM_LIMIT_PATH);
+  if(in_array($_GET['q'], $path) ){
+  /*
+    if($neticrm['contact']){
+      return drupal_access_denied();
+    }
+  */
+  }
+}
+
 /**
  * Implementation of hook_perm
  *
