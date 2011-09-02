@@ -194,32 +194,22 @@ function _civicrm_gw_form_redirect($redirect_vars, $instrument_code){
     case 'ibon':
       $js = '
     function print_redirect(){
-      // creating the "newebresult" window with custom features prior to submitting the form
-      window.open("", "newebresult", "scrollbars=yes,menubar=no,height=600,width=800,resizable=yes,toolbar=no,status=no,left=150,top=150");
+      // creating the "paymentpop" window with custom features prior to submitting the form
+      window.open("", "paymentpop", "scrollbars=yes,menubar=no,height=300,width=600,resizable=yes,toolbar=no,status=no,left=150,top=500");
       document.forms.print.submit();
       window.location = "'.$redirect_vars['#action'].'";
     }
-    var t = 6;
-    var timeout;
-    function showtime(){
-      t -= 1;
-      document.getElementById("showtime").innerHTML= t;
-      timeout = setTimeout("showtime()",1000);
-      if(t == 0){
-        clearTimeout(timeout);
-      }
-    }
-    showtime();
+    window.open("'.$redirect_vars['#popup'].'", "paymentinfo", "scrollbars=yes,menubar=no,height=300,width=600,resizable=yes,toolbar=no,status=no,left=150,top=500");
       ';
 
-      $o .= '<form action="'.$redirect_vars['#popup'].'" name="print" method="post" id="redirect-form" target="newebresult">';
+      $o .= '<form action="'.$redirect_vars['#popup'].'" name="print" method="post" id="redirect-form" target="paymentpop">';
       foreach($redirect_vars as $k=>$p){
         if($k[0] != '#'){
           $o .= '<input type="hidden" name="'.$k.'" value="'.$p.'" />';
         }
       }
       $o .= '</form>';
-      $o .= '<div align="center"><p>若網頁沒有自動轉向，您可自行按下「列印」按鈕以取得付款資訊</p><div id="showtime"></div><div><input type="button" value="列印" onclick="print_redirect();" /></div></div>';
+      $o .= '<div align="center"><p>若網頁沒有自動跳出付款資訊，您可自行按下「取得付款資訊」按鈕以獲得繳款訊息</p><div><input type="button" value="取得付款資訊" onclick="print_redirect();" /></div></div>';
           break;
   }
   return '
