@@ -2549,7 +2549,7 @@ msgstr "標籤"
 #: CRM/Contact/Form/Edit/Organization.php CRM/Import/Parser/Contact.php
 #: CRM/Report/Form/Contribute/OrganizationSummary.php
 msgid "Organization Name"
-msgstr "組織名稱"
+msgstr "單位抬頭"
 
 #: CRM/Contact/BAO/Contact/Utils.php CRM/Contact/DAO/Contact.php
 #: CRM/Contact/Form/Edit/Household.php
@@ -10464,7 +10464,7 @@ msgstr "請選擇一個組織或增加一個新組織。"
 
 #: CRM/Contribute/Form/Contribution/Main.php
 msgid "Please enter the organization name."
-msgstr "請輸入組織名稱。"
+msgstr "請輸入單位抬頭。"
 
 #: CRM/Contribute/Form/Contribution/Main.php
 msgid "Organization email is required."
@@ -39566,3 +39566,8 @@ msgid "to unsubscribe: {action.optOutUrl}\n"
 msgstr "取消訂閱連結: {action.optOutUrl}\n"
 "{domain.address}"
 
+msgid "Organization Details"
+msgstr "單位資料"
+
+msgid "Enter a SIC Code"
+msgstr "請輸入統一編號"
