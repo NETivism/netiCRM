@@ -8310,11 +8310,11 @@ msgstr "- 字尾 -"
 
 #: CRM/Contact/BAO/Contact/Utils.php
 msgid "Primary Phone"
-msgstr "預設電話"
+msgstr "主要電話"
 
 #: CRM/Contact/BAO/Contact/Utils.php
 msgid "Primary Email"
-msgstr "預設Email位址"
+msgstr "主要Email"
 
 #: CRM/Contact/BAO/GroupNestingCache.php
 msgid "We detected a cycle which we cant handle. aborting"
@@ -8322,27 +8322,27 @@ msgstr "我們偵測到一個無法處理的問題。終止"
 
 #: CRM/Contact/BAO/ProximityQuery.php
 msgid "Proximity searching requires you to set a valid geocoding provider"
-msgstr ""
+msgstr "你需要先選擇正確的圖資供應者，以進行地理位址區域搜尋"
 
 #: CRM/Contact/BAO/ProximityQuery.php
 msgid "Proximity search to a distance of %1 from %2"
-msgstr ""
+msgstr "搜尋 %1 至 %2 之間的區域"
 
 #: CRM/Contact/BAO/Query.php
 msgid "Search in Trash"
-msgstr "搜尋參數"
+msgstr "搜尋垃圾桶"
 
 #: CRM/Contact/BAO/Query.php
 msgid "Contacts %1"
-msgstr "聯絡人"
+msgstr "聯絡人 %1"
 
 #: CRM/Contact/BAO/Query.php
 msgid "CMS User"
-msgstr "內容管理系統使用者"
+msgstr "網站註冊使用者"
 
 #: CRM/Contact/BAO/Query.php
 msgid "Not a CMS User"
-msgstr "非 CMS 使用者"
+msgstr "非網站註冊使用者"
 
 #: CRM/Contact/BAO/Query.php
 msgid "Tagged %1"
