@@ -115,12 +115,16 @@ function _civicrm_gw_ecbank(&$vars, $component, &$payment_processor, $instrument
       $post['expire_day'] = GW_EXPIRE_DAY;
       break;
     case 'ibon':
-      $post['prd_desc'] = truncate_utf8($vars['item_name'], 10);
+      $post['prd_desc'] = $vars['item_name'];
       $post['desc_1'] = '';
       $post['desc_2'] = '';
       $post['desc_3'] = '';
+      break;
     case 'cvs':
-      // add desc_4
+      $post['prd_desc'] = $vars['item_name'];
+      $post['desc_1'] = '';
+      $post['desc_2'] = '';
+      $post['desc_3'] = '';
       $post['desc_4'] = '';
       break;
   }
