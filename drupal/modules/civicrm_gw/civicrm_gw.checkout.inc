@@ -44,6 +44,9 @@ function civicrm_gw_do_transfer_checkout(&$vars, &$component, &$payment_processo
   $contribution->find(true);
   $contribution->is_pay_later = $is_pay_later;
   $contribution->trxn_id = $params['contributionID'];
+  if($vars['civicrm_instrument_id']){
+    $contribution->payment_instrument_id = $vars['civicrm_instrument_id'];
+  }
   $contribution->save();
 
   // Inject in quickform sessions
@@ -54,7 +57,6 @@ function civicrm_gw_do_transfer_checkout(&$vars, &$component, &$payment_processo
   // move things to CiviCRM cache as needed
   require_once 'CRM/Core/Session.php';
   CRM_Core_Session::storeSessionObjects( );
-  module_invoke_all('exit');
   exit;
 }
 
