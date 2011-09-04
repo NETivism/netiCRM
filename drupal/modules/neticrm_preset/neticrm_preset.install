@@ -64,7 +64,6 @@ function neticrm_preset_domain_default(){
         2 => '1',
       ),
     'mapProvider' => 'Google',
-    'mapAPIKey' => '',
     'enableComponents' => 
       array (
         0 => 'CiviContribute',
