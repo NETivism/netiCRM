@@ -1434,6 +1434,10 @@ class CRM_Contact_BAO_Query
             $this->_where[$grouping] = array( );
         }
 
+        if($op == 'LIKE' && !$wildcard){
+          $value = '%'.trim($value, '%').'%';
+        }
+
         $multipleFields = array( 'url' );
         
         //check if the location type exits for fields
