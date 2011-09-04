@@ -164,6 +164,10 @@ class CRM_Contribute_BAO_Query
     {
         list( $name, $op, $value, $grouping, $wildcard ) = $values;
 
+        if($op == 'LIKE' && !$wildcard){
+          $value = '%'.trim($value, '%').'%';
+        }
+
         $fields = array( );
         $fields = self::getFields();
         if ( !empty ( $value ) ) {
