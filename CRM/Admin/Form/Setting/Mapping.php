@@ -52,7 +52,7 @@ class CRM_Admin_Form_Setting_Mapping extends CRM_Admin_Form_Setting
         CRM_Utils_System::setTitle(ts('Settings - Mapping Provider'));
 
         $map = CRM_Core_SelectValues::mapProvider();
-        $this->addElement('select','mapProvider', ts('Map Provider'),array('' => '- select -') + $map);  
+        $this->addElement('select','mapProvider', ts('Map Provider'),array('' => '- select -') + $map, array('onChange' => 'showHideMapAPIkey( this.value );'));  
         $this->add('text','mapAPIKey', ts('Provider Key'), null);  
     
         parent::buildQuickForm();
@@ -75,7 +75,7 @@ class CRM_Admin_Form_Setting_Mapping extends CRM_Admin_Form_Setting
             $errors['_qf_default'] = ts( 'Mapping features require PHP version 5 or greater' );
         }
 
-        if ( !$fields['mapAPIKey'] && $fields['mapProvider'] != '' ) {
+        if ( !$fields['mapAPIKey'] && ( $fields['mapProvider'] != '' && $fields['mapProvider'] != 'Google' )) {
             $errors['mapAPIKey'] = "API key is a required field";
         } 
 

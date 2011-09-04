@@ -42,3 +42,16 @@
     </table>
     <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
 </div>
+{literal}
+<script type="text/javascript">
+showHideMapAPIkey( cj('#mapProvider').val( ) );
+
+function showHideMapAPIkey( mapProvider ) {
+  if ( mapProvider && mapProvider == 'Google' ) {
+    cj('#Mapping tr.crm-map-form-block-mapAPIKey').hide( );
+  } else {
+    cj('#Mapping tr.crm-map-form-block-mapAPIKey').show( );
+  }
+}
+</script>
+{/literal}
