@@ -196,7 +196,9 @@ function _civicrm_instrument_js_page($radios){
   $output .= '</div>';
   return '
 $(document).ready(function(){
-  $("#crm-container form[name=Main] #intro_text, #crm-container form[name=Register] .paid_event-section").after("'.$output.'");
+  $("#crm-container form[name=Main] #intro_text").after("'.$output.'");
+  $("#crm-container form[name=Register] .crm-event-register-form-block").prepend("'.$output.'");
+
   $("input[name=civicrm_instrument_id_dummy]").click(function(){
     $("input[name=civicrm_instrument_id]").val($(this).val());
   });
