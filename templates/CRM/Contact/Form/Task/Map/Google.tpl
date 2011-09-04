@@ -48,11 +48,11 @@
 	{foreach from=$locations item=location}
 	    {if $location.url and ! $profileGID}
 		{literal}
-		var data = "{/literal}<a href='{$location.url}'>{$location.displayName}</a><br />{if !$skipLocationType}{$location.location_type}<br />{/if}{$location.address}<br /><br />{ts}Get Directions From{/ts}:&nbsp;<input type=hidden id=to value='{$location.displayAddress}'><input type=text id=from size=20>&nbsp;<a href=\"javascript:gpopUp();\">{ts}&raquo; Go{/ts}</a>";
+		var data = "{/literal}<div class=\"map-content\"><h3><a href='{$location.url}'>{$location.displayName}</a></h3><p>{if !$skipLocationType}[{$location.location_type}] {/if}{$location.address}</p><div>{ts}Get Directions From{/ts}:</div><div style=\"width:400px;\">{ts}From{/ts}:<input type=text id=from size=\"30\" /><br />{ts}To{/ts}:{$location.displayAddress}<input type=hidden id=to value='{$location.displayAddress}'> <a class=\"button silver\" href=\"javascript:gpopUp();\">{ts}&raquo; Go{/ts}</a></div></div>";
 	    {else}
 		{capture assign="profileURL"}{crmURL p='civicrm/profile/view' q="reset=1&id=`$location.contactID`&gid=$profileGID"}{/capture}
 		{literal}
-		var data = "{/literal}<a href='{$profileURL}'>{$location.displayName}</a><br />{if !$skipLocationType}{$location.location_type}<br />{/if}{$location.address}<br /><br />{ts}Get Directions From{/ts}:&nbsp;<input type=hidden id=to value='{$location.displayAddress}'><input type=text id=from size=20>&nbsp;<a href=\"javascript:gpopUp();\">{ts}&raquo; Go{/ts}</a>";
+		var data = "{/literal}<div class=\"map-content\"><p><a href='{$profileURL}'>{$location.displayName}</a></h3><p>{if !$skipLocationType}[{$location.location_type}] {/if}{$location.address}</p><div>{ts}Get Directions From{/ts}:</div><div style=\"width:400px;\">{ts}From{/ts}:<input type=text id=from size=\"30\" /><br />{ts}To{/ts}:{$location.displayAddress}<input type=hidden id=to value='{$location.displayAddress}'> <a class=\"button silver\" href=\"javascript:gpopUp();\">{ts}&raquo; Go{/ts}</a></div></div>";
 	    {/if}
 	    {literal}
 	    var address = "{/literal}{$location.address}{literal}";
@@ -95,16 +95,20 @@
                                               map: map,
                                               icon: image
                                             });
-        var infowindow = new google.maps.InfoWindow();
-        google.maps.event.addListener(marker, 'click', function() { infowindow.setContent(data);
-                                                                    infowindow.open(map,marker);
-                                                                   });
+        var infowindow = new google.maps.InfoWindow({
+            content: data,
+            maxWidth: 500
+        });
+        google.maps.event.addListener(marker, 'click', function() {
+          infowindow.open(map,marker);
+        });
+ 
     }
 
     function gpopUp() {
 	var from   = document.getElementById('from').value;
 	var to     = document.getElementById('to').value;	
-	var URL    = "http://maps.google.com/maps?saddr=" + from + "&daddr=" + to;
+	var URL    = "http://maps.google.com.tw/maps?saddr=" + from + "&daddr=" + to;
 	day = new Date();
 	id  = day.getTime();
 	eval("page" + id + " = window.open(URL, '" + id + "', 'toolbar=0,scrollbars=0,location=0,statusbar=0,menubar=0,resizable=0,width=780,height=640,left = 202,top = 100');");
