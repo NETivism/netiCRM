@@ -211,6 +211,10 @@ function neticrm_preset_update_6101(){
   // import new translated strings.
   // see http://api.drupal.org/api/drupal/includes--locale.inc/function/locale_batch_by_language/6
   // _locale_import_po($file, 'zh-hant', LOCALE_IMPORT_OVERWRITE);
+
+  // Critical bug fix #2960, import new translation then rewind the cache
+  $query = "DELETE FROM civicrm_cache WHERE data LIKE '%master_id%'";
+  $res =& CRM_Core_DAO::executeQuery($query);
 }
 
 function neticrm_preset_update_6102(){
