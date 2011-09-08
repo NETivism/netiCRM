@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: NOW\n"
-"PO-Revision-Date: 2011-04-15 23:27+0800\n"
-"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2011-09-06 17:52+0800\n"
+"Last-Translator: Fu-yuan Cheng <gloomcheng@gmail.com>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2549,7 +2549,7 @@ msgstr "標籤"
 #: CRM/Contact/Form/Edit/Organization.php CRM/Import/Parser/Contact.php
 #: CRM/Report/Form/Contribute/OrganizationSummary.php
 msgid "Organization Name"
-msgstr "組織名稱"
+msgstr "單位抬頭"
 
 #: CRM/Contact/BAO/Contact/Utils.php CRM/Contact/DAO/Contact.php
 #: CRM/Contact/Form/Edit/Household.php
@@ -7209,7 +7209,10 @@ msgstr ""
 
 #: CRM/Admin/Page/MessageTemplates.php
 msgid "We recommend that you save a copy of the your customized Text and HTML message content to a text file before reverting so you can combine your changes with the system default messages as needed."
-msgstr "您確定要將這個範本到這個工作流程的預設？所有的設定將會消失。\\n\\n我們建議您在執行回復前，先備份這些HTML和文字訊息，使您所做的更動可以回復。"
+msgstr ""
+"您確定要將這個範本到這個工作流程的預設？所有的設定將會消失。\\n"
+"\\n"
+"我們建議您在執行回復前，先備份這些HTML和文字訊息，使您所做的更動可以回復。"
 
 #: CRM/Admin/Page/MessageTemplates.php
 msgid "Edit this message template"
@@ -8310,11 +8313,11 @@ msgstr "- 字尾 -"
 
 #: CRM/Contact/BAO/Contact/Utils.php
 msgid "Primary Phone"
-msgstr "預設電話"
+msgstr "主要電話"
 
 #: CRM/Contact/BAO/Contact/Utils.php
 msgid "Primary Email"
-msgstr "預設Email位址"
+msgstr "主要Email"
 
 #: CRM/Contact/BAO/GroupNestingCache.php
 msgid "We detected a cycle which we cant handle. aborting"
@@ -8322,27 +8325,27 @@ msgstr "我們偵測到一個無法處理的問題。終止"
 
 #: CRM/Contact/BAO/ProximityQuery.php
 msgid "Proximity searching requires you to set a valid geocoding provider"
-msgstr ""
+msgstr "你需要先選擇正確的圖資供應者，以進行地理位址區域搜尋"
 
 #: CRM/Contact/BAO/ProximityQuery.php
 msgid "Proximity search to a distance of %1 from %2"
-msgstr ""
+msgstr "搜尋 %1 至 %2 之間的區域"
 
 #: CRM/Contact/BAO/Query.php
 msgid "Search in Trash"
-msgstr "搜尋參數"
+msgstr "搜尋垃圾桶"
 
 #: CRM/Contact/BAO/Query.php
 msgid "Contacts %1"
-msgstr "聯絡人"
+msgstr "聯絡人 %1"
 
 #: CRM/Contact/BAO/Query.php
 msgid "CMS User"
-msgstr "內容管理系統使用者"
+msgstr "網站註冊使用者"
 
 #: CRM/Contact/BAO/Query.php
 msgid "Not a CMS User"
-msgstr "非 CMS 使用者"
+msgstr "非網站註冊使用者"
 
 #: CRM/Contact/BAO/Query.php
 msgid "Tagged %1"
@@ -8682,7 +8685,7 @@ msgstr "- 請輸入第一個字母 -"
 
 #: CRM/Contact/Form/Edit/Address.php
 msgid "Please select a valid State/Province name."
-msgstr "請選擇一個有效的日期。"
+msgstr "請選擇一個有效的縣市名稱。"
 
 #: CRM/Contact/Form/Edit/Address.php
 msgid "State/Province %1 is not part of %2. It belongs to %3."
@@ -10464,7 +10467,7 @@ msgstr "請選擇一個組織或增加一個新組織。"
 
 #: CRM/Contribute/Form/Contribution/Main.php
 msgid "Please enter the organization name."
-msgstr "請輸入組織名稱。"
+msgstr "請輸入單位抬頭。"
 
 #: CRM/Contribute/Form/Contribution/Main.php
 msgid "Organization email is required."
@@ -11410,7 +11413,7 @@ msgstr "搜尋捐款"
 
 #: CRM/Contribute/Page/ContributionPage.php
 msgid "Contribution %%StatusMessage%%"
-msgstr "捐款 %%訊息狀態%%"
+msgstr "捐款 %%StatusMessage%%"
 
 #: CRM/Contribute/Page/ContributionType.php
 #: templates/CRM/Contribute/Form/ContributionType.tpl
@@ -15451,7 +15454,7 @@ msgstr "搜尋活動"
 
 #: CRM/Event/Page/ManageEvent.php
 msgid "Event %%StatusMessage%%"
-msgstr "活動 %%狀態訊息%%"
+msgstr "活動 %%StatusMessage%%"
 
 #: CRM/Event/Page/ParticipantListing.php
 msgid "Participant listing code file cannot be '%1'"
@@ -16639,7 +16642,7 @@ msgstr "電子報報表： %1"
 
 #: CRM/Mailing/Selector/Browse.php
 msgid "Mailings %%StatusMessage%%"
-msgstr "電子報 %%狀態訊息%%"
+msgstr "電子報 %%StatusMessage%%"
 
 #: CRM/Mailing/Selector/Browse.php templates/CRM/Case/Form/ActivityView.tpl
 #: templates/CRM/Contact/Page/View/Note.tpl
@@ -16693,7 +16696,7 @@ msgstr "電子報"
 
 #: CRM/Mailing/Selector/Event.php
 msgid "%1 %%StatusMessage%%"
-msgstr "%1 %%狀態訊息%%"
+msgstr "%1 %%StatusMessage%%"
 
 #: CRM/Mailing/Selector/Event.php
 msgid "Forwarded Email"
@@ -25082,12 +25085,12 @@ msgstr[0] "郵件不會被傳送到%計算聯絡人"
 #: templates/CRM/Contact/Form/Task/Map/Google.tpl
 #: templates/CRM/Contact/Form/Task/Map/Yahoo.tpl
 msgid "Get Directions From"
-msgstr "如何到？輸入地址"
+msgstr "規劃路線"
 
 #: templates/CRM/Contact/Form/Task/Map/Google.tpl
 #: templates/CRM/Contact/Form/Task/Map/Yahoo.tpl
 msgid "&raquo; Go"
-msgstr "&raquo;前往"
+msgstr "&raquo;送出"
 
 #: templates/CRM/Contact/Form/Task/PDFLetterCommon.tpl
 msgid "If you are composing HTML-formatted messages, you may want to enable a WYSIWYG editor (Administer CiviCRM &raquo; Global Settings &raquo; Site Preferences)."
@@ -32654,8 +32657,14 @@ msgid "Are you sure you want to delete this mapping? This operation cannot be un
 msgstr "您確定您想刪除此對應？此操作無法回復。"
 
 #: CRM/Admin/Page/MessageTemplates.php
-msgid "Are you sure you want to revert this template to the default for this workflow? You will lose any customizations you have made.\\n\\nWe recommend that you save a copy of the your customized Text and HTML message content to a text file before reverting so you can combine your changes with the system default messages as needed."
-msgstr "您確定要將這個範本到這個工作流程的預設？所有的設定將會消失。\\n\\n我們建議您在執行回復前，先備份這些HTML和文字訊息，使您所做的更動可以回復。"
+msgid ""
+"Are you sure you want to revert this template to the default for this workflow? You will lose any customizations you have made.\\n"
+"\\n"
+"We recommend that you save a copy of the your customized Text and HTML message content to a text file before reverting so you can combine your changes with the system default messages as needed."
+msgstr ""
+"您確定要將這個範本到這個工作流程的預設？所有的設定將會消失。\\n"
+"\\n"
+"我們建議您在執行回復前，先備份這些HTML和文字訊息，使您所做的更動可以回復。"
 
 #: CRM/Auction/Form/Auction.php
 msgid "Auction Title"
@@ -36057,8 +36066,12 @@ msgid "FollowUp"
 msgstr "跟進"
 
 #: CRM/Contribute/BAO/PCP.php
-msgid "Are you sure you want to delete this Personal Campaign Page ?\\n This action can not be undone."
-msgstr "確認刪除此個人募款頁？\\n提醒您，此操作無法回復。"
+msgid ""
+"Are you sure you want to delete this Personal Campaign Page ?\\n"
+" This action can not be undone."
+msgstr ""
+"確認刪除此個人募款頁？\\n"
+"提醒您，此操作無法回復。"
 
 #: CRM/Contribute/DAO/ContributionPage.php
 msgid "Receipt"
@@ -39561,8 +39574,16 @@ msgstr "已規劃"
 msgid "Sample Footer for HTML formatted content<br/><a href=\"{action.optOutUrl}\">Unsubscribe</a>  <br/> {domain.address}"
 msgstr "電子報頁尾的HTML範本<br/><a href=\"{action.optOutUrl}\">取消訂閱</a><br/> {domain.address}"
 
-msgid "to unsubscribe: {action.optOutUrl}\n"
+msgid ""
+"to unsubscribe: {action.optOutUrl}\n"
 "{domain.address}"
-msgstr "取消訂閱連結: {action.optOutUrl}\n"
+msgstr ""
+"取消訂閱連結: {action.optOutUrl}\n"
 "{domain.address}"
+
+msgid "Organization Details"
+msgstr "單位資料"
+
+msgid "Enter a SIC Code"
+msgstr "請輸入統一編號"
 
