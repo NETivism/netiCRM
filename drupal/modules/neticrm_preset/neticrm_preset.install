@@ -18,7 +18,7 @@ function neticrm_preset_install(){
   }
 
   // v 1.1 fix and update
-  neticrm_preset_update_6101();
+  neticrm_preset_update_6101('install');
 }
 
 /**
@@ -182,17 +182,13 @@ function neticrm_preset_default_mail_settings(){
 /**
  * Update for drupal 6.x-1.1
  */
-function neticrm_preset_update_6101(){
+function neticrm_preset_update_6101($type = 'update'){
   civicrm_initialize();
   neticrm_preset_default_mail_settings();
 
   // set default front page
   variable_set('site_frontpage', 'home');
   
-  // import new translated strings.
-  // see http://api.drupal.org/api/drupal/includes--locale.inc/function/locale_batch_by_language/6
-  // _locale_import_po($file, 'zh-hant', LOCALE_IMPORT_OVERWRITE);
-
   // Critical bug fix #2960, import new translation then rewind the cache
   $query = "DELETE FROM civicrm_cache WHERE data LIKE '%master_id%'";
   $res =& CRM_Core_DAO::executeQuery($query);
@@ -206,11 +202,17 @@ function neticrm_preset_update_6101(){
     'maxAttachments' => '0',
     'maxFileSize' => '0',
     'mapAPIKey' => '',
-    'userFrameworkVersion' => '6.20',
+    'userFrameworkVersion' => '6.22',
   );
   require_once "CRM/Core/BAO/Setting.php";
   CRM_Core_BAO_Setting::add($params);
+
+  // import new translated strings.
+  if($type == 'update'){
+    _neticrm_preset_import_po();
+  } 
 }
+
 
 function neticrm_preset_update_6102(){
   civicrm_initialize();
@@ -223,3 +225,10 @@ function neticrm_preset_update_6102(){
 function _neticrm_preset_message($message, $success){
   return array('success' => $success, 'query' => check_plain($message));
 }
+
+function _neticrm_preset_import_po(){
+  $langcode = 'zh-hant';
+  $file = new stdClass();
+  $file->filepath = drupal_get_path("module", 'civicrm')."/translations/$langcode.po";
+  locale_inc_callback('_locale_import_po', $file, $langcode, LOCALE_IMPORT_OVERWRITE, 'default');
+} 
