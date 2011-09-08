@@ -215,13 +215,10 @@ function neticrm_preset_update_6101(){
   // Critical bug fix #2960, import new translation then rewind the cache
   $query = "DELETE FROM civicrm_cache WHERE data LIKE '%master_id%'";
   $res =& CRM_Core_DAO::executeQuery($query);
-}
 
-function neticrm_preset_update_6102(){
-  civicrm_initialize();
-
-  // set again for domain change
-  neticrm_preset_default_mail_settings();
+  // Disable unnecessery location type.
+  $query = "UPDATE civicrm_location_type SET is_active = 0 WHERE id = 3";
+  $res =& CRM_Core_DAO::executeQuery($query);
 
   // remove mail attachment
   $params = array(
@@ -230,6 +227,13 @@ function neticrm_preset_update_6102(){
   );
   require_once "CRM/Core/BAO/Setting.php";
   CRM_Core_BAO_Setting::add($params);
+}
+
+function neticrm_preset_update_6102(){
+  civicrm_initialize();
+
+  // set again for domain change
+  neticrm_preset_default_mail_settings();
 }
 
 
