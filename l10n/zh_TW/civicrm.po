@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: NOW\n"
-"PO-Revision-Date: 2011-09-08 23:31+0800\n"
+"PO-Revision-Date: 2011-09-08 23:36+0800\n"
 "Last-Translator: Fu-yuan Cheng <gloomcheng@gmail.com>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "MIME-Version: 1.0\n"
@@ -25278,15 +25278,15 @@ msgstr "管理用作分辨有潛質複製聯絡人記錄的規測。使用已選
 
 #: templates/CRM/Contact/Page/DedupeRules.tpl
 msgid "Add Dedupe Rule for Individuals"
-msgstr "新增去重複規測-個人"
+msgstr "新增去重複規則-個人"
 
 #: templates/CRM/Contact/Page/DedupeRules.tpl
 msgid "Add Dedupe Rule for Households"
-msgstr "新增去重複規測-家庭"
+msgstr "新增去重複規則-家庭"
 
 #: templates/CRM/Contact/Page/DedupeRules.tpl
 msgid "Add Dedupe Rule for Organizations"
-msgstr "新增去重複規測-組織"
+msgstr "新增去重複規則-組織"
 
 #: templates/CRM/Contact/Page/DedupeRules.tpl msgctxt "menu"
 msgid "Dedupe Exceptions"
