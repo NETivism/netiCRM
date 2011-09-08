@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: NOW\n"
-"PO-Revision-Date: 2011-09-06 17:52+0800\n"
+"PO-Revision-Date: 2011-09-08 23:31+0800\n"
 "Last-Translator: Fu-yuan Cheng <gloomcheng@gmail.com>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "MIME-Version: 1.0\n"
@@ -13543,7 +13543,7 @@ msgstr "刪除聯絡人"
 
 #: CRM/Core/Permission.php
 msgid "access deleted contacts"
-msgstr "已刪除的聯絡人"
+msgstr "查看已刪除的聯絡人"
 
 #: CRM/Core/Permission.php
 msgid "import contacts"
@@ -13563,11 +13563,11 @@ msgstr "存取上傳檔案"
 
 #: CRM/Core/Permission.php
 msgid "profile listings and forms"
-msgstr "個人資訊列表及表單"
+msgstr "存取資料表單"
 
 #: CRM/Core/Permission.php
 msgid "profile listings"
-msgstr "個人資訊列表"
+msgstr "搜尋資料表單"
 
 #: CRM/Core/Permission.php
 msgid "profile create"
@@ -13607,7 +13607,7 @@ msgstr "翻譯 CiviCRM"
 
 #: CRM/Core/Permission.php
 msgid "administer Tagsets"
-msgstr "管理員"
+msgstr "管理標籤"
 
 #: CRM/Core/Permission.php
 msgid "administer reserved tags"
@@ -13615,15 +13615,15 @@ msgstr "管理保留的標籤"
 
 #: CRM/Core/Permission.php
 msgid "administer dedupe rules"
-msgstr "管理多個組織"
+msgstr "管理合併聯絡人的重複規則"
 
 #: CRM/Core/Permission.php
 msgid "merge duplicate contacts"
-msgstr "針對重複的聯絡人"
+msgstr "合併重複的聯絡人"
 
 #: CRM/Core/Permission.php
 msgid "view all notes"
-msgstr "查看所有聯絡人"
+msgstr "查看所有註記"
 
 #: CRM/Core/Permission.php
 msgid "administer Multiple Organizations"
@@ -20647,7 +20647,7 @@ msgstr "如何使用此電子郵件帳號？Only one box may be used for bounce 
 
 #: templates/CRM/Admin/Form/Mapping.tpl msgctxt "menu"
 msgid "New Tag"
-msgstr "新增Tag"
+msgstr "新增標籤（分類）"
 
 #: templates/CRM/Admin/Form/Mapping.tpl
 msgid "WARNING: Are you sure you want to delete mapping '<b>%1</b>'?"
