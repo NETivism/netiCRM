@@ -10,12 +10,15 @@ function neticrm_preset_install(){
   require_once "CRM/Core/BAO/Setting.php";
   require_once "CRM/Report/DAO/Instance.php";
 
-  // start standard installation process
-  neticrm_preset_domain_default();
-  neticrm_preset_replace_sql('neticrm_preset.sql');
-  
-  // v 1.1
-  neticrm_preset_default_mail_settings();
+  $count = CRM_Core_DAO::singleValueQuery("SELECT COUNT(*) FROM civicrm_contact WHERE 1");
+  if($count < 2){
+    // start standard installation process
+    neticrm_preset_domain_default();
+    neticrm_preset_replace_sql('neticrm_preset.sql');
+  }
+
+  // v 1.1 fix and update
+  neticrm_preset_update_6101();
 }
 
 /**
@@ -146,18 +149,6 @@ function neticrm_preset_domain_default(){
   CRM_Core_DAO::executeQuery($sql);
 }
 
-function neticrm_preset_disable_blocks(){
-/* // move to neticrmp.profile
-  install_include(array('block'));
-  install_set_block('civicrm', 2, 'neticrm', 'left', -10, 0, "civicrm\ncivicrm/dashboard\nadmin\nadmin/*");
-
-  install_disable_block('civicrm', 1, 'neticrm');
-  install_disable_block('civicrm', 3, 'neticrm');
-  install_disable_block('civicrm', 4, 'neticrm');
-  install_disable_block('civicrm', 5, 'neticrm');
-*/
-}
-
 function neticrm_preset_replace_sql($filename){
   $filename = dirname(__FILE__).'/'.$filename;
 
@@ -173,11 +164,6 @@ function neticrm_preset_replace_sql($filename){
     $query = trim( $query );
     if ( ! empty( $query ) ) {
       $res =& CRM_Core_DAO::executeQuery($query);
-      /*
-      if ( PEAR::isError( $res ) ) {
-        die( "Cannot execute $query: " . $res->getMessage( ) );
-      }
-      */
     }
   }
 }
@@ -187,11 +173,6 @@ function neticrm_preset_default_mail_settings(){
   $domain = str_replace("http://", '', $base_url);
   $query = "REPLACE INTO `civicrm_mail_settings` (`id`, `domain_id`, `name`, `is_default`, `domain`, `localpart`, `return_path`, `protocol`, `server`, `port`, `username`, `password`, `is_ssl`, `source`) VALUES  (1, 1, 'default', 1, 'mail.neticrm.tw', '{$domain}+', '{$domain}@mail.neticrm.tw', '1', '127.0.0.1', NULL, '{$domain}@mail.neticrm.tw', 'neticrm##1', 0, NULL);";
   $res =& CRM_Core_DAO::executeQuery($query);
-  /*
-    if ( PEAR::isError( $res ) ) {
-      die( "Cannot execute $query: " . $res->getMessage( ) );
-    }
-  */
 }
 
 /**
@@ -224,6 +205,8 @@ function neticrm_preset_update_6101(){
   $params = array(
     'maxAttachments' => '0',
     'maxFileSize' => '0',
+    'mapAPIKey' => '',
+    'userFrameworkVersion' => '6.20',
   );
   require_once "CRM/Core/BAO/Setting.php";
   CRM_Core_BAO_Setting::add($params);
