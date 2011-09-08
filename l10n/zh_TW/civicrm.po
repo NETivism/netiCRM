@@ -8682,7 +8682,7 @@ msgstr "- 請輸入第一個字母 -"
 
 #: CRM/Contact/Form/Edit/Address.php
 msgid "Please select a valid State/Province name."
-msgstr "請選擇一個有效的日期。"
+msgstr "請選擇一個有效的縣市名稱。"
 
 #: CRM/Contact/Form/Edit/Address.php
 msgid "State/Province %1 is not part of %2. It belongs to %3."
@@ -25082,12 +25082,12 @@ msgstr[0] "郵件不會被傳送到%計算聯絡人"
 #: templates/CRM/Contact/Form/Task/Map/Google.tpl
 #: templates/CRM/Contact/Form/Task/Map/Yahoo.tpl
 msgid "Get Directions From"
-msgstr "如何到？輸入地址"
+msgstr "規劃路線"
 
 #: templates/CRM/Contact/Form/Task/Map/Google.tpl
 #: templates/CRM/Contact/Form/Task/Map/Yahoo.tpl
 msgid "&raquo; Go"
-msgstr "&raquo;前往"
+msgstr "&raquo;送出"
 
 #: templates/CRM/Contact/Form/Task/PDFLetterCommon.tpl
 msgid "If you are composing HTML-formatted messages, you may want to enable a WYSIWYG editor (Administer CiviCRM &raquo; Global Settings &raquo; Site Preferences)."
