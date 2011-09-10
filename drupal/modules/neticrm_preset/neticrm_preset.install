@@ -163,7 +163,7 @@ function neticrm_preset_replace_sql($filename){
   foreach ( $queries as $query ) {
     $query = trim( $query );
     if ( ! empty( $query ) ) {
-      $res =& CRM_Core_DAO::executeQuery($query);
+      CRM_Core_DAO::executeQuery($query);
     }
   }
 }
@@ -172,7 +172,7 @@ function neticrm_preset_default_mail_settings(){
   global $base_url;
   $domain = str_replace("http://", '', $base_url);
   $query = "REPLACE INTO `civicrm_mail_settings` (`id`, `domain_id`, `name`, `is_default`, `domain`, `localpart`, `return_path`, `protocol`, `server`, `port`, `username`, `password`, `is_ssl`, `source`) VALUES  (1, 1, 'default', 1, 'mail.neticrm.tw', '{$domain}+', '{$domain}@mail.neticrm.tw', '1', '127.0.0.1', NULL, '{$domain}@mail.neticrm.tw', 'neticrm##1', 0, NULL);";
-  $res =& CRM_Core_DAO::executeQuery($query);
+  CRM_Core_DAO::executeQuery($query);
 }
 
 /**
@@ -191,11 +191,11 @@ function neticrm_preset_update_6101($type = 'update'){
   
   // Critical bug fix #2960, import new translation then rewind the cache
   $query = "DELETE FROM civicrm_cache WHERE data LIKE '%master_id%'";
-  $res =& CRM_Core_DAO::executeQuery($query);
+  CRM_Core_DAO::executeQuery($query);
 
   // Disable unnecessery location type.
   $query = "UPDATE civicrm_location_type SET is_active = 0 WHERE id = 3";
-  $res =& CRM_Core_DAO::executeQuery($query);
+  CRM_Core_DAO::executeQuery($query);
 
   // remove mail attachment
   $params = array(
@@ -211,15 +211,21 @@ function neticrm_preset_update_6101($type = 'update'){
   if($type == 'update'){
     _neticrm_preset_import_po();
   } 
+
+  // Replace translation error
+  $query = "UPDATE civicrm_option_value SET label = '表演' WHERE name = 'Performance' AND label = '效能'";
+  CRM_Core_DAO::executeQuery($query);
 }
 
 
+/* We shouldn't enable this until we really need 6.x.1.2
 function neticrm_preset_update_6102(){
   civicrm_initialize();
 
   // set again for domain change
   neticrm_preset_default_mail_settings();
 }
+*/
 
 
 function _neticrm_preset_message($message, $success){
