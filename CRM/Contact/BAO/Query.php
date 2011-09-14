@@ -1434,6 +1434,10 @@ class CRM_Contact_BAO_Query
             $this->_where[$grouping] = array( );
         }
 
+        if($op == 'LIKE' && !$wildcard){
+          $value = '%'.trim($value, '%').'%';
+        }
+
         $multipleFields = array( 'url' );
         
         //check if the location type exits for fields
@@ -2149,6 +2153,7 @@ class CRM_Contact_BAO_Query
                         $subTypes[$subType] = 1;
                     }
                     $clause[$contactType] = "'" . CRM_Utils_Type::escape( $contactType, 'String' ) . "'";
+                    $clause_display[$contactType] = ts($contactType);
                 }
             }
         } else {
@@ -2159,11 +2164,12 @@ class CRM_Contact_BAO_Query
                 $subTypes[$subType] = 1;
             }
             $clause[$contactType] = "'" . CRM_Utils_Type::escape( $contactType, 'String' ) . "'";
+            $clause_display[$contactType] = ts($contactType);
         }
         
         if ( ! empty( $clause ) ) { //fix for CRM-771
             $this->_where[$grouping][] = 'contact_a.contact_type IN (' . implode( ',', $clause ) . ')';
-            $this->_qill [$grouping][]  = ts('Contact Type') . ' - ' . implode( ' ' . ts('or') . ' ', $clause );
+            $this->_qill [$grouping][]  = ts('Contact Type') . " ". ts('Is') ." ". implode( ' ' . ts('or') . ' ', $clause_display);
             
             if ( ! empty( $subTypes ) ) {
                 $this->includeContactSubTypes( $subTypes, $grouping );
@@ -2560,9 +2566,9 @@ WHERE  id IN ( $groupIDs )
         $this->_where[$grouping][] = $sub;
         if ( $config->includeEmailInName ) {
             $this->_tables['civicrm_email'] = $this->_whereTables['civicrm_email'] = 1; 
-            $this->_qill[$grouping][]  = ts( 'Name or Email ' ) . "$op - '$name'";
+            $this->_qill[$grouping][]  = ts( 'Name or Email ' ) ." ".ts($op)." &ldquo;".$name.'&rdquo;';
         } else {
-            $this->_qill[$grouping][]  = ts( 'Name like' ) . " - '$name'";
+            $this->_qill[$grouping][]  = ts( 'Name like' ) . " &ldquo;$name&rdquo;";
         }
     }
 
@@ -2601,11 +2607,11 @@ WHERE  id IN ( $groupIDs )
                     $value = "'$value'";
                 }
             }
-            $this->_qill[$grouping][]  = ts( 'Email' ) . " $op '$n'";
+            $this->_qill[$grouping][]  = ts( 'Email' ) ." ". ts($op)." &ldquo;$n&rdquo;";
             $this->_where[$grouping][] = " ( civicrm_email.email $op $value )";
         } else {
-            $this->_qill[$grouping][]  = ts( 'Email' ) . " $op ";
-            $this->_where[$grouping][] = " ( civicrm_email.email $op )";
+            $this->_qill[$grouping][]  = ts( 'Email' ) ." ". ts($op);
+            $this->_where[$grouping][] = " ( civicrm_email.email $op)";
         }
         
         $this->_tables['civicrm_email'] = $this->_whereTables['civicrm_email'] = 1; 
@@ -2633,13 +2639,13 @@ WHERE  id IN ( $groupIDs )
                 $value = "'$value'";
                 // only add wild card if not there
             } else {
-                $value = "'$value%'";
+                $value = "'%$value%'";
             }
             $this->_where[$grouping][] = " ( LOWER(civicrm_address.street_address) $op $value )";
-            $this->_qill[$grouping][]  = ts( 'Street' ) . " $op '$n'";
+            $this->_qill[$grouping][]  = ts( 'Street' ) . " $op &ldquo;$n&rdquo;";
         } else {
-            $this->_where[$grouping][] = " (civicrm_address.street_address $op $value )";
-            $this->_qill[$grouping][]  = ts( 'Street' ) . " $op ";
+            $this->_where[$grouping][] = " (civicrm_address.street_address $op)";
+            $this->_qill[$grouping][]  = ts( 'Street' ) . " ".$op;
         }
 
         $this->_tables['civicrm_address'] = $this->_whereTables['civicrm_address'] = 1; 

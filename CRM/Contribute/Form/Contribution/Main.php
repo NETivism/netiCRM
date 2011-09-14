@@ -571,7 +571,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
         }
         $this->assign( 'is_for_organization', true);
         CRM_Contact_BAO_Contact_Utils::buildOnBehalfForm( $this, 'Organization', null, 
-                                                          null, 'Organization Details' );
+                                                          null, ts('Organization Details') );
     }
 
     /**

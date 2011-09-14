@@ -452,7 +452,7 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
         // process on-behalf-of functionality.
         if ( CRM_Utils_Array::value( 'is_for_organization', $this->_values ) ) {
             $behalfOrganization = array();
-            foreach ( array('organization_name', 'organization_id', 'org_option') as $fld ) {
+            foreach ( array('organization_name', 'organization_id', 'org_option', 'sic_code') as $fld ) {
                 if ( array_key_exists( $fld, $params ) ) {
                     $behalfOrganization[$fld] = $params[$fld];
                     unset($params[$fld]);

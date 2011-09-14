@@ -28,7 +28,7 @@ function civicrm_instrument_civicrm_buildForm($form_name, &$form){
     case 'CRM_Contribute_Form_Contribution_Main':
     case 'CRM_Event_Form_Registration_Register':
       // ok, now check the payment limitation.
-      $entity_id = $form->getVar('_id');;
+      $entity_id = $form->getVar('_id') ? $form->getVar('_id') : $form->getVar('_eventId') ;
       $entity_table = $form_name == 'CRM_Contribute_Form_Contribution_Main' ? 'civicrm_contribution_page' : 'civicrm_event';
       $gid = variable_get('civicrm_instrument_gid', 0);
 
@@ -196,7 +196,9 @@ function _civicrm_instrument_js_page($radios){
   $output .= '</div>';
   return '
 $(document).ready(function(){
-  $("#crm-container form[name=Main] #intro_text, #crm-container form[name=Register] .paid_event-section").after("'.$output.'");
+  $("#crm-container form[name=Main] #intro_text").after("'.$output.'");
+  $("#crm-container form[name=Register] .crm-event-register-form-block").prepend("'.$output.'");
+
   $("input[name=civicrm_instrument_id_dummy]").click(function(){
     $("input[name=civicrm_instrument_id]").val($(this).val());
   });

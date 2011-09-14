@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: NOW\n"
-"PO-Revision-Date: 2011-04-15 23:27+0800\n"
-"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2011-09-09 00:44+0800\n"
+"Last-Translator: Fu-yuan Cheng <gloomcheng@gmail.com>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2549,7 +2549,7 @@ msgstr "標籤"
 #: CRM/Contact/Form/Edit/Organization.php CRM/Import/Parser/Contact.php
 #: CRM/Report/Form/Contribute/OrganizationSummary.php
 msgid "Organization Name"
-msgstr "組織名稱"
+msgstr "單位抬頭"
 
 #: CRM/Contact/BAO/Contact/Utils.php CRM/Contact/DAO/Contact.php
 #: CRM/Contact/Form/Edit/Household.php
@@ -3031,7 +3031,7 @@ msgstr "變更記錄"
 
 #: CRM/Contact/Form/Search/Basic.php CRM/Grant/Form/Search.php
 msgid "Name or Email"
-msgstr "姓名或 Email"
+msgstr "姓名或Email"
 
 #: CRM/Contact/Form/Search/Basic.php CRM/Contact/Form/Search/Custom/Basic.php
 #: CRM/Contact/Form/Search/Custom/MultipleValues.php CRM/Core/SelectValues.php
@@ -3308,7 +3308,7 @@ msgstr "請輸入名稱以儲存訊息範本"
 
 #: CRM/Contact/Form/Task/EmailCommon.php CRM/Contact/Form/Task/Email.php
 msgid "Please do not use this task to send a lot of emails (greater than %1). We recommend using CiviMail instead."
-msgstr "請不要使用此任務發送大量郵件（大於%1）。我們建議使用 CiviMail 代替。"
+msgstr "請不要使用此任務發送給大量的聯絡人（尤其大於 %1）。我們建議使用EDM/電子報發送系統代替，以防止發送的郵件被歸為垃圾信。"
 
 #: CRM/Contact/Form/Task/Label.php CRM/Core/BAO/Mapping.php
 msgid "Primary"
@@ -7209,7 +7209,10 @@ msgstr ""
 
 #: CRM/Admin/Page/MessageTemplates.php
 msgid "We recommend that you save a copy of the your customized Text and HTML message content to a text file before reverting so you can combine your changes with the system default messages as needed."
-msgstr "您確定要將這個範本到這個工作流程的預設？所有的設定將會消失。\\n\\n我們建議您在執行回復前，先備份這些HTML和文字訊息，使您所做的更動可以回復。"
+msgstr ""
+"您確定要將這個範本到這個工作流程的預設？所有的設定將會消失。\\n"
+"\\n"
+"我們建議您在執行回復前，先備份這些HTML和文字訊息，使您所做的更動可以回復。"
 
 #: CRM/Admin/Page/MessageTemplates.php
 msgid "Edit this message template"
@@ -8310,11 +8313,11 @@ msgstr "- 字尾 -"
 
 #: CRM/Contact/BAO/Contact/Utils.php
 msgid "Primary Phone"
-msgstr "預設電話"
+msgstr "主要電話"
 
 #: CRM/Contact/BAO/Contact/Utils.php
 msgid "Primary Email"
-msgstr "預設Email位址"
+msgstr "主要Email"
 
 #: CRM/Contact/BAO/GroupNestingCache.php
 msgid "We detected a cycle which we cant handle. aborting"
@@ -8322,27 +8325,27 @@ msgstr "我們偵測到一個無法處理的問題。終止"
 
 #: CRM/Contact/BAO/ProximityQuery.php
 msgid "Proximity searching requires you to set a valid geocoding provider"
-msgstr ""
+msgstr "你需要先選擇正確的圖資供應者，以進行地理位址區域搜尋"
 
 #: CRM/Contact/BAO/ProximityQuery.php
 msgid "Proximity search to a distance of %1 from %2"
-msgstr ""
+msgstr "搜尋 %1 至 %2 之間的區域"
 
 #: CRM/Contact/BAO/Query.php
 msgid "Search in Trash"
-msgstr "搜尋參數"
+msgstr "搜尋垃圾桶"
 
 #: CRM/Contact/BAO/Query.php
 msgid "Contacts %1"
-msgstr "聯絡人"
+msgstr "聯絡人 %1"
 
 #: CRM/Contact/BAO/Query.php
 msgid "CMS User"
-msgstr "內容管理系統使用者"
+msgstr "網站註冊使用者"
 
 #: CRM/Contact/BAO/Query.php
 msgid "Not a CMS User"
-msgstr "非 CMS 使用者"
+msgstr "非網站註冊使用者"
 
 #: CRM/Contact/BAO/Query.php
 msgid "Tagged %1"
@@ -8354,7 +8357,7 @@ msgstr "姓名或 Email"
 
 #: CRM/Contact/BAO/Query.php
 msgid "Name like"
-msgstr "姓名如"
+msgstr "姓名類似"
 
 #: CRM/Contact/BAO/Query.php
 msgid "Street"
@@ -8418,7 +8421,7 @@ msgstr "不要交易"
 
 #: CRM/Contact/DAO/Contact.php templates/CRM/Contact/Page/View/Summary.tpl
 msgid "No Bulk Emails (User Opt Out)"
-msgstr "不要寄送大量郵件（使用者取消訂閱）"
+msgstr "不要EDM（使用者退訂）"
 
 #: CRM/Contact/DAO/Contact.php
 msgid "Sort Name"
@@ -8450,7 +8453,7 @@ msgstr "Sic Code"
 
 #: CRM/Contact/DAO/Contact.php
 msgid "Unique ID (OpenID)"
-msgstr "唯一編號(OpenID)"
+msgstr "OpenID"
 
 #: CRM/Contact/DAO/Contact.php
 msgid "Current Employer ID"
@@ -8682,7 +8685,7 @@ msgstr "- 請輸入第一個字母 -"
 
 #: CRM/Contact/Form/Edit/Address.php
 msgid "Please select a valid State/Province name."
-msgstr "請選擇一個有效的日期。"
+msgstr "請選擇一個有效的縣市名稱。"
 
 #: CRM/Contact/Form/Edit/Address.php
 msgid "State/Province %1 is not part of %2. It belongs to %3."
@@ -8909,35 +8912,35 @@ msgstr "搜尋聯絡人"
 
 #: CRM/Contact/Form/Search/Builder.php
 msgid "Please enter the operator."
-msgstr "請輸入運算符號。"
+msgstr "請選擇篩選方式"
 
 #: CRM/Contact/Form/Search/Builder.php
 msgid "Please clear your value if you want to use %1 operator."
-msgstr "如果您想使用 %1運算符號，請清除您的數值。"
+msgstr "如果你需要用「%1」篩選方式，請先清空你的搜尋字詞"
 
 #: CRM/Contact/Form/Search/Builder.php
 msgid "Please enter the value."
-msgstr "請輸入數值。"
+msgstr "請輸入搜尋字詞"
 
 #: CRM/Contact/Form/Search/Builder.php
 msgid "Please enter the valid value."
-msgstr "請輸入有效數值。"
+msgstr "請輸入有效字詞"
 
 #: CRM/Contact/Form/Search/Builder.php
 msgid "Please enter valid value."
-msgstr "請輸入有效值。"
+msgstr "請輸入有效字詞"
 
 #: CRM/Contact/Form/Search/Builder.php
 msgid "Please enter valid %1 id."
-msgstr "請輸入有效的 %1 編號。"
+msgstr "請輸入有效的「%1」編號。"
 
 #: CRM/Contact/Form/Search/Builder.php
 msgid "Please enter correct Data ( in valid format )."
-msgstr "請輸入正確格式"
+msgstr "請輸入正確的資料格式"
 
 #: CRM/Contact/Form/Search/Builder.php
 msgid "Please enter the values correctly."
-msgstr "請輸入正確的值。"
+msgstr "請輸入正確的字詞。"
 
 #: CRM/Contact/Form/Search/Criteria.php
 #: templates/CRM/Contact/Form/Search/Criteria/Basic.tpl
@@ -9577,11 +9580,11 @@ msgstr "移除 Tag 的聯絡人"
 
 #: CRM/Contact/Form/Task/Unhold.php
 msgid "Unhold Email"
-msgstr "解開 Email"
+msgstr "解凍Email"
 
 #: CRM/Contact/Form/Task/Unhold.php
 msgid "%1 emails were found on hold and updated."
-msgstr ""
+msgstr "有%1筆Email成功解凍了。"
 
 #: CRM/Contact/Form/Task/Unhold.php
 msgid "No contact found with email on hold status."
@@ -9803,7 +9806,7 @@ msgstr "列印PDF信件"
 
 #: CRM/Contact/Task.php
 msgid "Unhold Emails"
-msgstr "解開 Email"
+msgstr "解凍Email"
 
 #: CRM/Contact/Task.php
 msgid "Restore Contacts"
@@ -9819,7 +9822,7 @@ msgstr "新增聯絡人到活動"
 
 #: CRM/Contact/Task.php
 msgid "Schedule/Send a Mass Mailing"
-msgstr "排程/傳送大量郵件"
+msgstr "排程/傳送EDM/電子報"
 
 #: CRM/Contribute/BAO/ContributionPage.php
 msgid "Automatically Generated"
@@ -10464,7 +10467,7 @@ msgstr "請選擇一個組織或增加一個新組織。"
 
 #: CRM/Contribute/Form/Contribution/Main.php
 msgid "Please enter the organization name."
-msgstr "請輸入組織名稱。"
+msgstr "請輸入單位抬頭。"
 
 #: CRM/Contribute/Form/Contribution/Main.php
 msgid "Organization email is required."
@@ -11261,7 +11264,7 @@ msgstr "請選擇處理中的線上捐款。"
 
 #: CRM/Contribute/Form/Task/Status.php
 msgid "Update Pending Status"
-msgstr "更新待辦狀態"
+msgstr "更新待處理狀態"
 
 #: CRM/Contribute/Form/Task/Status.php
 msgid "Transaction ID's must be unique. Include the account number for checks."
@@ -11410,7 +11413,7 @@ msgstr "搜尋捐款"
 
 #: CRM/Contribute/Page/ContributionPage.php
 msgid "Contribution %%StatusMessage%%"
-msgstr "捐款 %%訊息狀態%%"
+msgstr "捐款 %%StatusMessage%%"
 
 #: CRM/Contribute/Page/ContributionType.php
 #: templates/CRM/Contribute/Form/ContributionType.tpl
@@ -11736,7 +11739,7 @@ msgstr "所選擇的對應已經成功刪除。"
 
 #: CRM/Core/BAO/Mapping.php templates/CRM/Contact/Form/Search/table.tpl
 msgid "Also include contacts where"
-msgstr "也包括聯絡人的"
+msgstr "也搜尋聯絡人包含下列條件"
 
 #: CRM/Core/BAO/Mapping.php msgctxt "menu"
 msgid "Case Activity"
@@ -12192,7 +12195,7 @@ msgstr "凍結"
 
 #: CRM/Core/DAO/Email.php
 msgid "Use for Bulk Mail"
-msgstr "用於大量寄送郵件"
+msgstr "用於EDM郵件寄送"
 
 #: CRM/Core/DAO/Email.php
 msgid "Hold Date"
@@ -13540,7 +13543,7 @@ msgstr "刪除聯絡人"
 
 #: CRM/Core/Permission.php
 msgid "access deleted contacts"
-msgstr "已刪除的聯絡人"
+msgstr "查看已刪除的聯絡人"
 
 #: CRM/Core/Permission.php
 msgid "import contacts"
@@ -13560,11 +13563,11 @@ msgstr "存取上傳檔案"
 
 #: CRM/Core/Permission.php
 msgid "profile listings and forms"
-msgstr "個人資訊列表及表單"
+msgstr "存取資料表單"
 
 #: CRM/Core/Permission.php
 msgid "profile listings"
-msgstr "個人資訊列表"
+msgstr "搜尋資料表單"
 
 #: CRM/Core/Permission.php
 msgid "profile create"
@@ -13604,7 +13607,7 @@ msgstr "翻譯 CiviCRM"
 
 #: CRM/Core/Permission.php
 msgid "administer Tagsets"
-msgstr "管理員"
+msgstr "管理標籤"
 
 #: CRM/Core/Permission.php
 msgid "administer reserved tags"
@@ -13612,15 +13615,15 @@ msgstr "管理保留的標籤"
 
 #: CRM/Core/Permission.php
 msgid "administer dedupe rules"
-msgstr "管理多個組織"
+msgstr "管理合併聯絡人的去重複規則"
 
 #: CRM/Core/Permission.php
 msgid "merge duplicate contacts"
-msgstr "針對重複的聯絡人"
+msgstr "合併重複的聯絡人"
 
 #: CRM/Core/Permission.php
 msgid "view all notes"
-msgstr "查看所有聯絡人"
+msgstr "查看所有註記"
 
 #: CRM/Core/Permission.php
 msgid "administer Multiple Organizations"
@@ -15451,7 +15454,7 @@ msgstr "搜尋活動"
 
 #: CRM/Event/Page/ManageEvent.php
 msgid "Event %%StatusMessage%%"
-msgstr "活動 %%狀態訊息%%"
+msgstr "活動 %%StatusMessage%%"
 
 #: CRM/Event/Page/ParticipantListing.php
 msgid "Participant listing code file cannot be '%1'"
@@ -16639,7 +16642,7 @@ msgstr "電子報報表： %1"
 
 #: CRM/Mailing/Selector/Browse.php
 msgid "Mailings %%StatusMessage%%"
-msgstr "電子報 %%狀態訊息%%"
+msgstr "電子報 %%StatusMessage%%"
 
 #: CRM/Mailing/Selector/Browse.php templates/CRM/Case/Form/ActivityView.tpl
 #: templates/CRM/Contact/Page/View/Note.tpl
@@ -16693,7 +16696,7 @@ msgstr "電子報"
 
 #: CRM/Mailing/Selector/Event.php
 msgid "%1 %%StatusMessage%%"
-msgstr "%1 %%狀態訊息%%"
+msgstr "%1 %%StatusMessage%%"
 
 #: CRM/Mailing/Selector/Event.php
 msgid "Forwarded Email"
@@ -20001,11 +20004,11 @@ msgstr "來源聯絡人或指派聯絡人完整或部份的名稱。"
 #: templates/CRM/Member/Form/Search/EmptyResults.tpl
 #: templates/CRM/Pledge/Form/Search/EmptyResults.tpl
 msgid "No matches found for:"
-msgstr "沒有相關搜尋："
+msgstr "沒有符合的搜尋結果："
 
 #: templates/CRM/Activity/Form/Search/EmptyResults.tpl
 msgid "No matching activity results found."
-msgstr "未找到符合的認捐。"
+msgstr "未找到符合的動態結果。"
 
 #: templates/CRM/Activity/Form/Search/EmptyResults.tpl
 #: templates/CRM/Campaign/Form/Search/EmptyResults.tpl
@@ -20644,7 +20647,7 @@ msgstr "如何使用此電子郵件帳號？Only one box may be used for bounce 
 
 #: templates/CRM/Admin/Form/Mapping.tpl msgctxt "menu"
 msgid "New Tag"
-msgstr "新增Tag"
+msgstr "新增標籤（分類）"
 
 #: templates/CRM/Admin/Form/Mapping.tpl
 msgid "WARNING: Are you sure you want to delete mapping '<b>%1</b>'?"
@@ -21140,7 +21143,7 @@ msgstr "<strong>認捐</strong> - 記錄及追蹤捐款者的認捐，傳送認�
 
 #: templates/CRM/Admin/Form/Setting/Component.hlp
 msgid "<strong>CiviMail</strong> - A robust mass-mailing component which allows you to engage your constituents with personalized email blasts and newsletters."
-msgstr "<strong>電子報</strong> - 強大的大量郵件模組，您可以用來傳送個人化的大量郵件和報紙通訊。"
+msgstr "<strong>電子報</strong> - 強大的大量郵件模組，您可以用來傳送個人化的電子報和EDM。"
 
 #: templates/CRM/Admin/Form/Setting/Component.hlp
 msgid "<strong>CiviMember</strong> - A flexible membership management component which includes convenient online signup and renewal."
@@ -23343,11 +23346,11 @@ msgstr "募款串連"
 
 #: templates/CRM/Campaign/Page/Campaign.tpl
 msgid "No Campaigns found."
-msgstr "沒有相關搜尋"
+msgstr "沒有符合的結果"
 
 #: templates/CRM/Campaign/Page/DashBoard.tpl
 msgid "No campaigns found."
-msgstr "沒有相關搜尋"
+msgstr "沒有符合的結果"
 
 #: templates/CRM/Campaign/Page/DashBoard.tpl
 #: templates/CRM/Campaign/Page/Petition.tpl
@@ -23375,7 +23378,7 @@ msgstr ""
 
 #: templates/CRM/Campaign/Page/DashBoard.tpl
 msgid "No surveys found."
-msgstr "沒有相關搜尋"
+msgstr "沒有符合的結果"
 
 #: templates/CRM/Campaign/Page/DashBoard.tpl
 msgid "Add Petition"
@@ -23442,7 +23445,7 @@ msgstr "刪除聯絡人"
 #: templates/CRM/Campaign/Page/Petition.tpl
 #: templates/CRM/Campaign/Page/Survey.tpl
 msgid "No survey found."
-msgstr "沒有相關搜尋"
+msgstr "沒有符合的結果"
 
 #: templates/CRM/Campaign/Page/SurveyType.tpl
 msgid "There are no survey type entered. You can <a href='%1'>add one</a>."
@@ -23991,11 +23994,11 @@ msgstr "下載有重複的記錄"
 
 #: templates/CRM/common/displaySearchCriteria.tpl
 msgid "AND"
-msgstr "及"
+msgstr "以及"
 
 #: templates/CRM/common/displaySearchCriteria.tpl
 msgid "...AND..."
-msgstr "...及..."
+msgstr " [以及] "
 
 #: templates/CRM/common/drupal.tpl templates/CRM/common/joomla.tpl
 #: templates/CRM/common/standalone.tpl
@@ -24212,11 +24215,11 @@ msgstr "選擇此聯絡人偏好的 Email 格式。選擇「兩者皆可」以�
 
 #: templates/CRM/Contact/Form/Contact.hlp
 msgid "If you are using the CiviMail component to send mailings to contacts, this field provides additional control over which email address is used. By default, CiviMail sends mail to each contact's preferred email address. If the contact has multiple locations, then the preferred email of the primary location is used. However, if the contact prefers to have CiviMail ('bulk') mailings set to an alternate email address - check the 'Use for Bulk Mailings' box next to that email address."
-msgstr "勾選此欄位，表示此 Email 是電子報預設寄送的郵件。如果沒有勾選任何 Email，預設便會挑選標示為「主要」的Email來寄送電子報。"
+msgstr "勾選此欄位，表示此 Email 是電子報預設寄送的郵件。如果沒有勾選任何 Email，預設便會挑選標示為「主要」的Email來寄送電子報/EDM。"
 
 #: templates/CRM/Contact/Form/Contact.hlp
 msgid "This option is designed to be set by the contact themselves when they don't want to receive bulk email from your organization (they set it using the opt-out action from a CiviMail mailing).   Please think before changing it, as it will override the preference they have set."
-msgstr "此選項被設計透過聯絡人他們自己設定，若他們不想從您的組織接收大量郵件（他們可透過電子報的進行取消訂閱的動作）。請在變更設定前三思，因為這會更改聯絡人所做的喜好設定。"
+msgstr "此選項讓聯絡人可以自行設定，若他們不想從您的組織收到Email（他們可透過電子報的進行取消訂閱的動作）。請在變更設定前三思，因為這會更改聯絡人所做的喜好設定。"
 
 #: templates/CRM/Contact/Form/Contact.hlp
 msgid "This flag is most commonly used to mark an email address that is bouncing. If you are using the CiviMail component, emails that bounce excessively are automatically placed on hold and mailings are not sent to this address as long as it is marked hold. You can also set (or unset) this option manually - but remember that emails will not be sent to this address as long as it is marked 'On Hold'."
@@ -24433,7 +24436,7 @@ msgstr "凍結？"
 
 #: templates/CRM/Contact/Form/Edit/Email.tpl
 msgid "Bulk Mailings?"
-msgstr "大量發信?"
+msgstr "EDM發信?"
 
 #: templates/CRM/Contact/Form/Edit/Email.tpl
 #: templates/CRM/Contact/Form/Edit/IM.tpl
@@ -24589,13 +24592,13 @@ msgstr "太多相符結果。請縮窄您的搜尋透過輸入更多完整目標
 #: templates/CRM/Contact/Form/Task/AddToHousehold.tpl
 #: templates/CRM/Contact/Form/Task/AddToOrganization.tpl
 msgid "No matching results for"
-msgstr "沒有相關結果"
+msgstr "沒有符合的結果: "
 
 #: templates/CRM/Contact/Form/Relationship.tpl
 #: templates/CRM/Contact/Form/Task/AddToHousehold.tpl
 #: templates/CRM/Contact/Form/Task/AddToOrganization.tpl
 msgid "Name like: %1"
-msgstr "姓名如： %1"
+msgstr "姓名類似： %1"
 
 #: templates/CRM/Contact/Form/Relationship.tpl
 #: templates/CRM/Contact/Form/Task/AddToHousehold.tpl
@@ -24719,28 +24722,28 @@ msgstr ""
 
 #: templates/CRM/Contact/Form/Search/Builder.hlp
 msgid "IMPORTANT: Search Builder requires you to use specific formats for your search values. Review the %1 before building your first search..."
-msgstr ""
+msgstr "重要：自訂需要您為搜尋值使用指定格式。在建立您第一次搜尋之前先了解 %1 ..."
 
 #: templates/CRM/Contact/Form/Search/Builder.hlp
 msgid "Create your search by selecting the criteria (record type and field), the comparison operator, and entering the value you want to search for. You can define one or many criteria as a set: <em>Include contacts where... State IS Washington AND City IS Seattle AND Birth Date is later than (>) Jan 1, 1985</em>"
-msgstr ""
+msgstr "利用條件來建立你的搜尋。別忘了選擇篩選方式，以及輸入你想要搜尋的內容。你可以定義一個或多個搜尋條件組合。例如： <strong>搜尋「聯絡人」，在「華盛頓」州 和 「西雅圖」城 和 「生日大於1985/1/1」</strong>"
 
 #: templates/CRM/Contact/Form/Search/Builder.hlp
 msgid "You can also create additional sets of criteria: <em>Also include contacts where... State IS California AND City IS Los Angeles AND Birth Date is later than (>) Jan 1, 1985</em>"
-msgstr ""
+msgstr "你也可以建立額外的搜尋條件組合，例如： <strong>也搜尋「聯絡人」，在「加」州 和 「洛杉磯」城 和 「生日大於1985/1/1」</strong>"
 
 #: templates/CRM/Contact/Form/Search/Builder.hlp
 #: templates/CRM/Contact/Form/Search/Builder.tpl
 msgid "Search Builder Documentation"
-msgstr "搜尋建立者檔案"
+msgstr "自訂搜尋文件"
 
 #: templates/CRM/Contact/Form/Search/Builder.tpl
 msgid "IMPORTANT: Search Builder requires you to use specific formats for your search values. Review the %1 before building your first search."
-msgstr "重要：搜尋建立者需要您為搜尋值使用指定格式。在建立您第一次搜尋之前重新檢查%1。"
+msgstr "重要：自訂需要您為搜尋值使用指定格式。在建立您第一次搜尋之前先了解 %1。"
 
 #: templates/CRM/Contact/Form/Search/Criteria/Basic.tpl
 msgid "Complete OR Partial Name"
-msgstr "全部或部分名稱"
+msgstr "全部或部分字詞"
 
 #: templates/CRM/Contact/Form/Search/Criteria/Basic.tpl
 msgid "Complete OR Partial Email"
@@ -24748,7 +24751,7 @@ msgstr "全部或部分Email位址"
 
 #: templates/CRM/Contact/Form/Search/Criteria/Basic.tpl
 msgid "Does the contact have a %1 Account?"
-msgstr "聯絡人是否有%1帳號？"
+msgstr "聯絡人是否有網站帳號？"
 
 #: templates/CRM/Contact/Form/Search/Criteria/Location.tpl
 msgid "Location search uses the PRIMARY location for each contact by default."
@@ -24806,7 +24809,7 @@ msgstr "金額二：最少/最多"
 #: templates/CRM/Contact/Form/Search/Custom/EmptyResults.tpl
 #: templates/CRM/Contact/Form/Search/EmptyResults.tpl
 msgid "No matches found."
-msgstr "沒有相關搜尋"
+msgstr "沒有符合的結果"
 
 #: templates/CRM/Contact/Form/Search/Custom/EmptyResults.tpl
 #: templates/CRM/Contact/Form/Search/EmptyResults.tpl
@@ -24918,7 +24921,7 @@ msgstr "如果您在群組搜尋或Tag聯絡人，嘗試'任何群組'或'任何
 
 #: templates/CRM/Contact/Form/Search/EmptyResults.tpl
 msgid "add a <a href='%1'>New Individual</a>, <a href='%2'>Organization</a> or <a href='%3'>Household</a>"
-msgstr "新增 <a href='%1'>New Individual</a>，<a href='%2'>組織</a>或<a href='%3'>家庭</a>"
+msgstr "新增 <a href='%1'>個人</a>，<a href='%2'>組織</a>或<a href='%3'>家庭</a>"
 
 #: templates/CRM/Contact/Form/Search/Intro.tpl
 msgid "Edit Smart Group Search Criteria for %1"
@@ -24939,7 +24942,7 @@ msgstr[0] "列印聯絡人"
 
 #: templates/CRM/Contact/Form/Search/table.tpl
 msgid "Include contacts where"
-msgstr "包括聯絡人的"
+msgstr "搜尋聯絡人包括下列條件:"
 
 #: templates/CRM/Contact/Form/Selector.tpl
 msgid "Click contact name to view a summary. Right-click anywhere in the row for an actions menu.\""
@@ -25082,12 +25085,12 @@ msgstr[0] "郵件不會被傳送到%計算聯絡人"
 #: templates/CRM/Contact/Form/Task/Map/Google.tpl
 #: templates/CRM/Contact/Form/Task/Map/Yahoo.tpl
 msgid "Get Directions From"
-msgstr "如何到？輸入地址"
+msgstr "規劃路線"
 
 #: templates/CRM/Contact/Form/Task/Map/Google.tpl
 #: templates/CRM/Contact/Form/Task/Map/Yahoo.tpl
 msgid "&raquo; Go"
-msgstr "&raquo;前往"
+msgstr "&raquo;送出"
 
 #: templates/CRM/Contact/Form/Task/PDFLetterCommon.tpl
 msgid "If you are composing HTML-formatted messages, you may want to enable a WYSIWYG editor (Administer CiviCRM &raquo; Global Settings &raquo; Site Preferences)."
@@ -25116,7 +25119,7 @@ msgstr "已選取聯絡人人數： %1"
 
 #: templates/CRM/Contact/Form/Task/Unhold.tpl
 msgid "Are you sure you want to unhold email of selected contact(s)?."
-msgstr "您確定要解開所選取聯絡人的Email？"
+msgstr "您確定要解凍所選取的Email？"
 
 #: templates/CRM/Contact/Page/CustomSearch.tpl
 msgid "Use this search"
@@ -25275,15 +25278,15 @@ msgstr "管理用作分辨有潛質複製聯絡人記錄的規測。使用已選
 
 #: templates/CRM/Contact/Page/DedupeRules.tpl
 msgid "Add Dedupe Rule for Individuals"
-msgstr "新增去重複規測-個人"
+msgstr "新增去重複規則-個人"
 
 #: templates/CRM/Contact/Page/DedupeRules.tpl
 msgid "Add Dedupe Rule for Households"
-msgstr "新增去重複規測-家庭"
+msgstr "新增去重複規則-家庭"
 
 #: templates/CRM/Contact/Page/DedupeRules.tpl
 msgid "Add Dedupe Rule for Organizations"
-msgstr "新增去重複規測-組織"
+msgstr "新增去重複規則-組織"
 
 #: templates/CRM/Contact/Page/DedupeRules.tpl msgctxt "menu"
 msgid "Dedupe Exceptions"
@@ -25545,11 +25548,11 @@ msgstr "隱私標示：不要寄送 Email"
 
 #: templates/CRM/Contact/Page/View/Summary.tpl
 msgid "Email on hold - generally due to bouncing."
-msgstr "擱置的信件 - 通常是被退信。"
+msgstr "擱置的信件 - 通常是因為被收信方退信。"
 
 #: templates/CRM/Contact/Page/View/Summary.tpl
 msgid "Bulk"
-msgstr "大量寄送"
+msgstr "EDM寄送"
 
 #: templates/CRM/Contact/Page/View/Summary.tpl
 msgid "(signature)"
@@ -26138,7 +26141,7 @@ msgstr ""
 
 #: templates/CRM/Contribute/Form/ContributionPage/PCP.hlp
 msgid "How many recipients can they send emails to at one time? You may want to limit this to prevent large mail blasts from being sent."
-msgstr "您允許使用者一次傳送 Email 給多少人？您可以設定上限，以防止同時傳送大量的 Email（不當的大量郵件可能會被視為垃圾信）。"
+msgstr "您允許使用者一次傳送 Email 給多少人？您可以設定上限，以防止同時傳送大量的 Email（不當的信件量會被視為垃圾信）。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/PCP.hlp
 msgid "Text for the link inviting constituents to create a Personal Contribution Page. This link will appear on the Contribution Thank-you page as well as on each Personal Campaign Page."
@@ -26605,7 +26608,7 @@ msgstr "間隔"
 
 #: templates/CRM/Contribute/Form/ContributionView.tpl
 msgid "pending"
-msgstr "待辦"
+msgstr "等待確認"
 
 #: templates/CRM/Contribute/Form/ContributionView.tpl
 #: templates/CRM/Contribute/Page/UserDashboard.tpl
@@ -32654,8 +32657,14 @@ msgid "Are you sure you want to delete this mapping? This operation cannot be un
 msgstr "您確定您想刪除此對應？此操作無法回復。"
 
 #: CRM/Admin/Page/MessageTemplates.php
-msgid "Are you sure you want to revert this template to the default for this workflow? You will lose any customizations you have made.\\n\\nWe recommend that you save a copy of the your customized Text and HTML message content to a text file before reverting so you can combine your changes with the system default messages as needed."
-msgstr "您確定要將這個範本到這個工作流程的預設？所有的設定將會消失。\\n\\n我們建議您在執行回復前，先備份這些HTML和文字訊息，使您所做的更動可以回復。"
+msgid ""
+"Are you sure you want to revert this template to the default for this workflow? You will lose any customizations you have made.\\n"
+"\\n"
+"We recommend that you save a copy of the your customized Text and HTML message content to a text file before reverting so you can combine your changes with the system default messages as needed."
+msgstr ""
+"您確定要將這個範本到這個工作流程的預設？所有的設定將會消失。\\n"
+"\\n"
+"我們建議您在執行回復前，先備份這些HTML和文字訊息，使您所做的更動可以回復。"
 
 #: CRM/Auction/Form/Auction.php
 msgid "Auction Title"
@@ -34132,11 +34141,11 @@ msgstr "修改個案開始時間"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Bulk Email"
-msgstr "大量 Email"
+msgstr "EDM郵件"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Bulk Email Sent."
-msgstr "大量 Email 已寄出。"
+msgstr "EDM已寄出。"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Assign Case Role"
@@ -36057,8 +36066,12 @@ msgid "FollowUp"
 msgstr "跟進"
 
 #: CRM/Contribute/BAO/PCP.php
-msgid "Are you sure you want to delete this Personal Campaign Page ?\\n This action can not be undone."
-msgstr "確認刪除此個人募款頁？\\n提醒您，此操作無法回復。"
+msgid ""
+"Are you sure you want to delete this Personal Campaign Page ?\\n"
+" This action can not be undone."
+msgstr ""
+"確認刪除此個人募款頁？\\n"
+"提醒您，此操作無法回復。"
 
 #: CRM/Contribute/DAO/ContributionPage.php
 msgid "Receipt"
@@ -37430,11 +37443,11 @@ msgstr "此聯絡人是否不想收到傳真？"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "Opted Out of Bulk Mail"
-msgstr "選擇退出大量郵件"
+msgstr "退訂EDM/電子報"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "Has this contact opted out of bulk mail?"
-msgstr "此聯絡人是否選擇退出大量郵件名單？"
+msgstr "此聯絡人是否從EDM/電子報發送名單排除？"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "The display name of the contact's organizations."
@@ -39561,8 +39574,16 @@ msgstr "已規劃"
 msgid "Sample Footer for HTML formatted content<br/><a href=\"{action.optOutUrl}\">Unsubscribe</a>  <br/> {domain.address}"
 msgstr "電子報頁尾的HTML範本<br/><a href=\"{action.optOutUrl}\">取消訂閱</a><br/> {domain.address}"
 
-msgid "to unsubscribe: {action.optOutUrl}\n"
+msgid ""
+"to unsubscribe: {action.optOutUrl}\n"
 "{domain.address}"
-msgstr "取消訂閱連結: {action.optOutUrl}\n"
+msgstr ""
+"取消訂閱連結: {action.optOutUrl}\n"
 "{domain.address}"
+
+msgid "Organization Details"
+msgstr "單位資料"
+
+msgid "Enter a SIC Code"
+msgstr "請輸入統一編號"
 

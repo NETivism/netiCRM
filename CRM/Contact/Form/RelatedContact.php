@@ -140,7 +140,7 @@ class CRM_Contact_Form_RelatedContact extends CRM_Core_Form
                                                          $this->_contactType, 
                                                          $countryID,
                                                          $stateID,
-                                                         'Contact Information',
+                                                         ts('Contact Information'),
                                                          true );
 
         $this->addButtons( array(
