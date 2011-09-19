@@ -182,7 +182,7 @@ function neticrm_preset_default_mail_settings(){
 /**
  * Update for drupal 6.x-1.1
  */
-function neticrm_preset_update_6101($type = 'update'){
+function neticrm_preset_update_6101($type = 'install'){
   civicrm_initialize();
   neticrm_preset_default_mail_settings();
 
@@ -208,7 +208,7 @@ function neticrm_preset_update_6101($type = 'update'){
   CRM_Core_BAO_Setting::add($params);
 
   // import new translated strings.
-  if($type == 'update'){
+  if($type != 'install'){
     _neticrm_preset_import_po();
   } 
 
