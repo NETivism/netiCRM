@@ -94,6 +94,9 @@ function civicrm_instrument_civicrm_buildForm($form_name, &$form){
 
       // we have real active instruments in radios array
       if(!empty($radios)){
+        if(count($radios) < 1){
+          // nothing
+        }
         if(count($radios) == 1){
           $form->addElement('hidden', 'civicrm_instrument_id', key($radios));
         }
@@ -113,7 +116,7 @@ function civicrm_instrument_civicrm_validate($form_name, &$fields, &$files, &$fo
   switch($form_name){
     case 'CRM_Contribute_Form_Contribution_Main':
     case 'CRM_Event_Form_Registration_Register':
-      if(!$fields['civicrm_instrument_id']){
+      if(!$fields['civicrm_instrument_id'] && isset($fields['civicrm_instrument_id'])){
         drupal_set_message(ts('This field is required'), 'error');
         return array('civicrm_instrument_id_dummy' => ts('This field is required.'));
       }
