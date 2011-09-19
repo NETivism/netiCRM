@@ -745,6 +745,9 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
             if ( ! $fields['email'][1]['email'] ) {
                 $errors["email[1][email]"] = ts('Organization email is required.'); 
             }
+            if ( ! $fields['sic_code'] ) {
+                $errors["sic_code"] = ts('Enter a SIC Code'); 
+            }
         }
 
         if ( CRM_Utils_Array::value('selectMembership', $fields) && 
