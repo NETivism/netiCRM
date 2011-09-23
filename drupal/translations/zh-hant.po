@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: NOW\n"
-"PO-Revision-Date: 2011-09-06 17:52+0800\n"
-"Last-Translator: Fu-yuan Cheng <gloomcheng@gmail.com>\n"
+"PO-Revision-Date: 2011-09-16 17:44+0800\n"
+"Last-Translator: licia <licia@netivism.com.tw>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1567,7 +1567,7 @@ msgstr "密碼"
 #: templates/CRM/Member/Form/Task/SearchTaskHookSample.tpl
 #: templates/CRM/Member/Page/Tab.tpl
 msgid "Source"
-msgstr "來源"
+msgstr "匯入資料來源"
 
 #: CRM/Admin/Form/MessageTemplates.php CRM/Mailing/BAO/Mailing.php
 msgid "Insert Tokens"
@@ -2523,7 +2523,7 @@ msgstr "標籤"
 #: CRM/Contact/Form/Relationship.php CRM/Core/BAO/Mapping.php
 #: CRM/UF/Form/Field.php
 msgid "Current Employer"
-msgstr "目前的雇主"
+msgstr "就職單位"
 
 #: CRM/Contact/BAO/Contact.php CRM/Contact/BAO/Query.php
 #: CRM/Contact/Form/Edit/Address.php CRM/Core/DAO/LocationType.php
@@ -8457,7 +8457,7 @@ msgstr "OpenID"
 
 #: CRM/Contact/DAO/Contact.php
 msgid "Current Employer ID"
-msgstr "現雇主ID"
+msgstr "就職單位ID"
 
 #: CRM/Contact/DAO/Group.php
 msgid "Cache Date"
@@ -8572,7 +8572,7 @@ msgstr "，或者與現有聯絡人合併"
 
 #: CRM/Contact/Form/Contact.php
 msgid "If you're sure this record is not a duplicate, click the 'Save Matching Contact' button below."
-msgstr ""
+msgstr "若您確認本筆資料與紀錄重複，請按「聯絡人詳情」欄位下方的「儲存對應的聯絡人」。"
 
 #: CRM/Contact/Form/Contact.php
 msgid "No matching contact found."
@@ -8884,7 +8884,7 @@ msgstr "請至少選擇一個聯絡人。"
 
 #: CRM/Contact/Form/Relationship.php
 msgid "Current employer should be one of the selected contacts."
-msgstr "目前的雇主應為所選的聯絡人之一。"
+msgstr "就職單位應為所選的聯絡人之一。"
 
 #: CRM/Contact/Form/Relationship.php
 msgid "Current employee should be among the selected contacts."
@@ -8973,7 +8973,7 @@ msgstr "包括有這些隱私選項的聯絡人。"
 
 #: CRM/Contact/Form/Search/Criteria.php
 msgid "Email On Hold"
-msgstr "凍結"
+msgstr "不寄送"
 
 #: CRM/Contact/Form/Search/Criteria.php
 msgid "- select language -"
@@ -9149,11 +9149,11 @@ msgstr "個人所在縣市"
 #: CRM/Contact/Form/Search/Custom/EmployerListing.php
 #: templates/CRM/Contact/Page/View/Summary.tpl
 msgid "Employer"
-msgstr "雇主"
+msgstr "就職單位"
 
 #: CRM/Contact/Form/Search/Custom/EmployerListing.php
 msgid "Employer State"
-msgstr "雇主所在縣市"
+msgstr "就職單位所在縣市"
 
 #: CRM/Contact/Form/Search/Custom/EmployerListing.php
 msgid "Individual's Name (last, first)"
@@ -13543,7 +13543,7 @@ msgstr "刪除聯絡人"
 
 #: CRM/Core/Permission.php
 msgid "access deleted contacts"
-msgstr "已刪除的聯絡人"
+msgstr "查看已刪除的聯絡人"
 
 #: CRM/Core/Permission.php
 msgid "import contacts"
@@ -13563,11 +13563,11 @@ msgstr "存取上傳檔案"
 
 #: CRM/Core/Permission.php
 msgid "profile listings and forms"
-msgstr "個人資訊列表及表單"
+msgstr "存取資料表單"
 
 #: CRM/Core/Permission.php
 msgid "profile listings"
-msgstr "個人資訊列表"
+msgstr "搜尋資料表單"
 
 #: CRM/Core/Permission.php
 msgid "profile create"
@@ -13607,7 +13607,7 @@ msgstr "翻譯 CiviCRM"
 
 #: CRM/Core/Permission.php
 msgid "administer Tagsets"
-msgstr "管理員"
+msgstr "管理標籤"
 
 #: CRM/Core/Permission.php
 msgid "administer reserved tags"
@@ -13615,15 +13615,15 @@ msgstr "管理保留的標籤"
 
 #: CRM/Core/Permission.php
 msgid "administer dedupe rules"
-msgstr "管理多個組織"
+msgstr "管理合併聯絡人的去重複規則"
 
 #: CRM/Core/Permission.php
 msgid "merge duplicate contacts"
-msgstr "針對重複的聯絡人"
+msgstr "合併重複的聯絡人"
 
 #: CRM/Core/Permission.php
 msgid "view all notes"
-msgstr "查看所有聯絡人"
+msgstr "查看所有註記"
 
 #: CRM/Core/Permission.php
 msgid "administer Multiple Organizations"
@@ -18258,7 +18258,7 @@ msgstr "如需查看所有資料，請選擇所有任務編號、日期及持續
 
 #: CRM/Report/Form/Contact/CurrentEmployer.php
 msgid "Employer Name"
-msgstr "雇主名稱"
+msgstr "就職單位名稱"
 
 #: CRM/Report/Form/Contact/CurrentEmployer.php
 msgid "Employee Name"
@@ -20647,7 +20647,7 @@ msgstr "如何使用此電子郵件帳號？Only one box may be used for bounce 
 
 #: templates/CRM/Admin/Form/Mapping.tpl msgctxt "menu"
 msgid "New Tag"
-msgstr "新增Tag"
+msgstr "新增標籤（分類）"
 
 #: templates/CRM/Admin/Form/Mapping.tpl
 msgid "WARNING: Are you sure you want to delete mapping '<b>%1</b>'?"
@@ -20921,7 +20921,7 @@ msgstr "僅在電子報Tag上使用。用您在新增/編輯聯絡人的畫面�
 
 #: templates/CRM/Admin/Form/Preferences/Address.hlp
 msgid "Current employer name as configured in the individual contact edit form. Note that this field is only available for contacts which are the contact type individual."
-msgstr "現任雇主名稱為已設定在個人聯絡編輯表格。若您想要它獨立為另一行，請在姓名欄位之後使用Enter鍵建立折行。"
+msgstr "就職單位名稱已設定在個人聯絡編輯表格。若您想要它獨立為另一行，請在姓名欄位之後使用Enter鍵建立折行。"
 
 #: templates/CRM/Admin/Form/Preferences/Address.hlp
 msgid "Address Name (e.g. Johnson Paviliont)."
@@ -21005,7 +21005,7 @@ msgstr "聯絡人的姓"
 
 #: templates/CRM/Admin/Form/Preferences/Address.hlp
 msgid "Current employer name as configured in the individual contact edit form. You will probably want this on a separate line, so use the Enter key to create a line-break after the name fields."
-msgstr "現任雇主名稱為已設定在個人聯絡編輯表格。若您想要它獨立為另一行，請在姓名欄位之後使用Enter鍵建立折行。"
+msgstr "就職單位名稱為已設定在個人聯絡編輯表格。若您想要它獨立為另一行，請在姓名欄位之後使用Enter鍵建立折行。"
 
 #: templates/CRM/Admin/Form/Preferences/Address.tpl
 msgid "Address format for mailing labels. Use the %1 token for state/province abbreviation or %2 for full name."
@@ -22957,7 +22957,7 @@ msgstr "日期分類"
 
 #: templates/CRM/Admin/Page/RelationshipType.hlp
 msgid "<strong>Special Relationships</strong><br />Employee <-> Employer and Household relationships both have special characteristics.<br /><strong>Employee <-> Employer relationship</strong> is created anytime the 'Current Employer' field is filled in, either in the Contact Summary form or via a Profile. When filled in, it will create an Organisation if one does not already exist with that name.<br /><strong>Household relationship</strong> enables household members to have the 'household address' applied to their record. Again, if a Household already exists then the individual will have a relationship created with it, if none exists then a new household will be created."
-msgstr "<strong>特別關係</strong><br />員工 <-> 雇主與家庭的關係都具有特殊性。<br /><strong>員工 <-> 雇主關係</strong>會在「目前雇主」欄位被填入的時候建立起來，從「聯絡人摘要」或從檔案文件皆是。當填入資料時，將會創建一個組織（尚未有名稱）。<br /><strong>家庭關係</strong>可使同一個家庭裡的成員都有一個家庭地址的紀錄。再次提醒，若一個家庭紀錄已存在，那麼個人的「關係」資料裡就會有這個家庭資料，若家庭紀錄先前不存在，那就會在此建立一個新的家庭資料。"
+msgstr "<strong>特別關係</strong><br />員工 <-> 雇主與家庭的關係都具有特殊性。<br /><strong>員工 <-> 雇主關係</strong>會在「就職單位」欄位被填入的時候建立起來，從「聯絡人摘要」或從檔案文件皆是。當填入資料時，將會創建一個組織（尚未有名稱）。<br /><strong>家庭關係</strong>可使同一個家庭裡的成員都有一個家庭地址的紀錄。再次提醒，若一個家庭紀錄已存在，那麼個人的「關係」資料裡就會有這個家庭資料，若家庭紀錄先前不存在，那就會在此建立一個新的家庭資料。"
 
 #: templates/CRM/Admin/Page/RelationshipType.tpl
 msgid "Relationship types describe relationships between people, households and organizations. Relationship types labels describe the relationship from the perspective of each of the two entities (e.g. Parent <-> Child, Employer <-> Employee). For some types of relationships, the labels may be the same in both directions (e.g. Spouse <-> Spouse)."
@@ -24215,7 +24215,7 @@ msgstr "選擇此聯絡人偏好的 Email 格式。選擇「兩者皆可」以�
 
 #: templates/CRM/Contact/Form/Contact.hlp
 msgid "If you are using the CiviMail component to send mailings to contacts, this field provides additional control over which email address is used. By default, CiviMail sends mail to each contact's preferred email address. If the contact has multiple locations, then the preferred email of the primary location is used. However, if the contact prefers to have CiviMail ('bulk') mailings set to an alternate email address - check the 'Use for Bulk Mailings' box next to that email address."
-msgstr "勾選此欄位，表示此 Email 是電子報預設寄送的郵件。如果沒有勾選任何 Email，預設便會挑選標示為「主要」的Email來寄送電子報/EDM。"
+msgstr "可寄送電郵。若無勾選任何 Email，便會以標示為「預設值」的Email來寄送電郵。"
 
 #: templates/CRM/Contact/Form/Contact.hlp
 msgid "This option is designed to be set by the contact themselves when they don't want to receive bulk email from your organization (they set it using the opt-out action from a CiviMail mailing).   Please think before changing it, as it will override the preference they have set."
@@ -24223,7 +24223,7 @@ msgstr "此選項讓聯絡人可以自行設定，若他們不想從您的組織
 
 #: templates/CRM/Contact/Form/Contact.hlp
 msgid "This flag is most commonly used to mark an email address that is bouncing. If you are using the CiviMail component, emails that bounce excessively are automatically placed on hold and mailings are not sent to this address as long as it is marked hold. You can also set (or unset) this option manually - but remember that emails will not be sent to this address as long as it is marked 'On Hold'."
-msgstr "凍結住的 Email，將不會收到電子報功能發出的信件。這個記錄將會在寄送電子報時發現失效的Email時，自動標記為「凍結」，您也可以自行取消凍結。"
+msgstr "凍結的電郵將不會收到EDM/電子報，此設定可隨時變更。本記錄亦會在寄送EDM/電子報發現失效的Email時，自動標記為「凍結」，您也可以自行取消凍結。"
 
 #: templates/CRM/Contact/Form/Contact.hlp
 msgid "Select the preferred method(s) of communicating with this contact."
@@ -24235,7 +24235,7 @@ msgstr "選擇與聯絡人偏好的隱私聯繫方式"
 
 #: templates/CRM/Contact/Form/Contact.hlp
 msgid "Check this option if you want to use a shared address for this contact. For example, you might want to share a \"Work\" address for an individual with the address of their employer. Or, you might want to share a household address with household members. You can select an existing contact to share an address with, or create a new contact and share that address."
-msgstr "若這個聯絡人要與其他人共用地址，請勾選此選項。舉例，您可能會要與雇主共享一個工作地址。或者您可能會與其他家庭成員共享住家地址。您可選擇一個現有的聯絡人與之共用地址，或建立一個新的聯絡人以共用地址。"
+msgstr "若這個聯絡人要與其他人共用地址，請勾選此選項。舉例，您可能會要與就職單位共享一個工作地址。或者您可能會與其他家庭成員共享住家地址。您可選擇一個現有的聯絡人與之共用地址，或建立一個新的聯絡人以共用地址。"
 
 #: templates/CRM/Contact/Form/Contact.hlp
 msgid "Use the greeting/address options to determine how you would like the contact's salutation and name displayed for different communication methods. When you send an email or export a list of records to a .csv file for mail merging, the greeting and addressee fields will reflect your preferences."
@@ -24270,7 +24270,7 @@ msgstr "上傳這個聯絡人的圖片或頭像。"
 
 #: templates/CRM/Contact/Form/Contact.hlp
 msgid "Use this field to store a unique identifier. This is generally used to link contacts with records in a related or legacy application. When migrating data from another system, import the unique contact identifier from the old system to this field. You can then use it to match imported contributions and other transactional data to the corresponding contact record."
-msgstr "外部的編號。此欄位記錄使用者獨一無二的編號，通常用作資訊匯入時的比對用途，或是辨識使用者的身分。（例如身分證字號）"
+msgstr "組織給使用者的自訂編號，通常作為資訊匯入比對用途，或辨識使用者身分。（如：會員編號）"
 
 #: templates/CRM/Contact/Form/Contact.tpl
 msgid "Click here to configure the panes."
@@ -24436,7 +24436,7 @@ msgstr "凍結？"
 
 #: templates/CRM/Contact/Form/Edit/Email.tpl
 msgid "Bulk Mailings?"
-msgstr "EDM發信?"
+msgstr "寄送"
 
 #: templates/CRM/Contact/Form/Edit/Email.tpl
 #: templates/CRM/Contact/Form/Edit/IM.tpl
@@ -24559,7 +24559,7 @@ msgstr "請先選擇關係類型，再輸入聯絡人的名稱後，按下「搜
 
 #: templates/CRM/Contact/Form/Relationship.tpl
 msgid "Current Employer?"
-msgstr "現在的雇主？"
+msgstr "就職單位?"
 
 #: templates/CRM/Contact/Form/Relationship.tpl
 msgid "Please select a relationship type first."
@@ -24710,7 +24710,7 @@ msgstr "按<a href='%1'>編輯靈敏群組搜尋條件…</a>去更變用作此'
 
 #: templates/CRM/Contact/Form/Search/Basic.hlp
 msgid "Use this Search form to find contacts. Mark the contacts you want to add to this group. Then click 'Add Contacts to %1'."
-msgstr ""
+msgstr "利用搜尋功能尋找聯絡人，並勾選要加入本群組的聯絡人，再按下新增聯絡人到 %1'"
 
 #: templates/CRM/Contact/Form/Search/Basic.hlp
 msgid "Click this button if you want to view and or modify the search criteria used to define the members of this smart group."
@@ -25278,15 +25278,15 @@ msgstr "管理用作分辨有潛質複製聯絡人記錄的規測。使用已選
 
 #: templates/CRM/Contact/Page/DedupeRules.tpl
 msgid "Add Dedupe Rule for Individuals"
-msgstr "新增去重複規測-個人"
+msgstr "新增去重複規則-個人"
 
 #: templates/CRM/Contact/Page/DedupeRules.tpl
 msgid "Add Dedupe Rule for Households"
-msgstr "新增去重複規測-家庭"
+msgstr "新增去重複規則-家庭"
 
 #: templates/CRM/Contact/Page/DedupeRules.tpl
 msgid "Add Dedupe Rule for Organizations"
-msgstr "新增去重複規測-組織"
+msgstr "新增去重複規則-組織"
 
 #: templates/CRM/Contact/Page/DedupeRules.tpl msgctxt "menu"
 msgid "Dedupe Exceptions"
@@ -25536,7 +25536,7 @@ msgstr "關聯的多組織群組"
 
 #: templates/CRM/Contact/Page/View/Summary.tpl
 msgid "view current employer"
-msgstr "查看目前雇主"
+msgstr "查看就職單位"
 
 #: templates/CRM/Contact/Page/View/Summary.tpl
 msgid "Position"
@@ -29501,7 +29501,7 @@ msgstr "在匯入聯絡人之後，您也可能想匯入這些聯絡人的<stron
 
 #: templates/CRM/Import/Form/DataSource.hlp
 msgid "Select <strong>Individual</strong> for Contact Type if each record in your file represents and individual person - even if the file also contains related Organization data (e.g. Employer Name, Employer Address, etc.)."
-msgstr "選擇<strong>個人</strong>給聯絡人類別，如果每一個在您檔案的記錄都是個人資料 - 就算檔案也包含組織的相關資料（例如：雇主姓名、雇主地址等）。"
+msgstr "選擇<strong>個人</strong>給聯絡人類別，如果每一個在您檔案的記錄都是個人資料 - 就算檔案也包含組織的相關資料（例如：就職單位名稱、就職單位地址等）。"
 
 #: templates/CRM/Import/Form/DataSource.hlp
 msgid "Select <strong>Organization</strong> or <strong>Household</strong> if each record in your file represents a contact of that type. (NOTE: Some built-in contact types may not be enabled for your site.)"
@@ -30723,7 +30723,7 @@ msgstr "那家庭的'家庭會員'"
 
 #: templates/CRM/Member/Page/MembershipType.hlp
 msgid "Employer of"
-msgstr "雇主"
+msgstr "就職單位"
 
 #: templates/CRM/Member/Page/MembershipType.hlp
 msgid "an organization"
@@ -33969,15 +33969,15 @@ msgstr "這是自動回覆訊息，請勿回覆至此信箱。如有任何問題
 
 #: xml/templates/civicrm_data.tpl
 msgid "Donation"
-msgstr "捐款"
+msgstr "一般捐款"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Member Dues"
-msgstr "會員限期"
+msgstr "會費"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Campaign Contribution"
-msgstr "募款捐款"
+msgstr "指定捐款"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Event Fee"
@@ -34381,7 +34381,7 @@ msgstr "目前的員工報表"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Provides detail list of employer employee relationships along with employment details Ex Join Date"
-msgstr "透過加入日期的詳細細節，提供詳細的雇主與僱員關係列表。"
+msgstr "透過加入日期的詳細細節，提供詳細的就職單位與僱員關係列表。"
 
 #: xml/templates/civicrm_data.tpl xml/templates/civicrm_navigation.tpl
 #: xml/templates/civicrm_sample.tpl
@@ -35659,7 +35659,7 @@ msgstr ""
 
 #: templates/CRM/Admin/Form/Preferences/Address.hlp
 msgid "Current employer name as configured in the individual contact edit form. If you are printing labels for Organizations and Households AS WELL AS Individuals, then consider putting this token in the Individual Name Format field below (rather than here)."
-msgstr "現雇主名稱設定在個人聯絡人編輯表格。如果您打算同時為組織、家庭<strong>以及</strong>個人列印Tag時，考慮放此token在以下的個人姓名格式欄位(而不是在這裡)。"
+msgstr "就職單位名稱設定在個人聯絡人編輯表格。如果您打算同時為組織、家庭<strong>以及</strong>個人列印Tag時，考慮放此token在以下的個人姓名格式欄位(而不是在這裡)。"
 
 #: templates/CRM/Admin/Page/ContactType.hlp
 msgid ""
