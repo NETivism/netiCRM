@@ -4,7 +4,31 @@ function neticrm_preset_home(){
   global $user;
   if(!$user->uid){
     // for now, we redirect anonymous user to "user/login" page.
-    drupal_goto('user');
+    $nid = variable_get("neticrm_preset_home", 0);
+    if(!$nid){
+      $node = new stdClass();
+      $node->type == "page";
+      $node->title = "歡迎！";
+      $node->body = "這裡是 ".variable_get("site_name", '')."，系統管理者請從右欄登入。\n\n其他朋友，可回到組織的官方網站，了解電子報訂閱、志工參與、活動報名、募款專案等資訊。謝謝！";
+      $node->status = 1;
+      $node->revision = 1;
+      $node->language = "zh-hant";
+      $node->comment = 0;
+      $node->uid = 1;
+      $node->format = 2;
+      $node->path = "homepage";
+      node_save($node);
+      $nid = $node->nid;
+      variable_set('neticrm_preset_home', $node->nid);
+    }
+    else{
+      $node = node_load($nid);
+    }
+    $block = module_invoke("user", "block", 'view', "0");
+    $output = '<div class="front-left-block"><h2>'.$node->title.'</h2><div class="content">'.nl2br($node->body).'</div></div><div class="front-right-block">'.$block['content'].'</div>';
+
+    $output = theme('neticrm_preset_home', $output);
+    return $output;
   }
   else{
     // display the navigation function icon and description.
