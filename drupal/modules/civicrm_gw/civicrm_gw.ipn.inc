@@ -196,7 +196,7 @@ class CRM_Core_Payment_GWIPN extends CRM_Core_Payment_BaseIPN {
 
     // non-credit card validation
     if($input['payment_type']){
-      if(! $this->gwEcbankCheck($input){
+      if(! $this->gwEcbankCheck($input)) {
         watchdog("civicrm_gw", "Checksum Error" );
         $note .= ts("Failuare: Transaction number and system response number doesn't match. Please contact us for further assistant.")."\n";
         $this->failed( $objects, $transaction );

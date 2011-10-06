@@ -199,7 +199,7 @@ function _civicrm_gw_form_redirect($redirect_vars, $instrument_code){
       document.forms.print.submit();
       window.location = "'.$redirect_vars['#action'].'";
     }
-    window.open("'.$redirect_vars['#popup'].'", "paymentinfo", "scrollbars=yes,menubar=no,height=300,width=600,resizable=yes,toolbar=no,status=no,left=150,top=500");
+    //window.open("'.$redirect_vars['#popup'].'", "paymentinfo", "scrollbars=yes,menubar=no,height=300,width=600,resizable=yes,toolbar=no,status=no,left=150,top=500");
       ';
 
       $o .= '<form action="'.$redirect_vars['#popup'].'" name="print" method="post" id="redirect-form" target="paymentpop">';
@@ -209,7 +209,7 @@ function _civicrm_gw_form_redirect($redirect_vars, $instrument_code){
         }
       }
       $o .= '</form>';
-      $o .= '<div align="center"><p>若網頁沒有自動跳出付款資訊，您可自行按下「取得付款資訊」按鈕以獲得繳款訊息</p><div><input type="button" value="取得付款資訊" onclick="print_redirect();" /></div></div>';
+      $o .= '<div align="center"><p>請按「取得付款資訊」按鈕以獲得繳款訊息</p><div><input type="button" value="取得付款資訊" onclick="print_redirect();" /></div></div>';
           break;
   }
   return '
