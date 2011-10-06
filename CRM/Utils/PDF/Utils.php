@@ -128,6 +128,7 @@ class CRM_Utils_PDF_Utils {
                               $paperSize   = 'a4',
                               $output = false ) {
         require_once 'tcpdf/tcpdf.php';
+        
         $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, $paperSize, true, 'UTF-8', false);
 
         // set default header data
@@ -170,7 +171,7 @@ class CRM_Utils_PDF_Utils {
             }
             if(is_array($value)){
               $html .= "<h2>{$value['to']}: {$value['subject']}</h2>"; //If needed it should be generated through the message template
-              $html .= preg_replace( $htmlElementstoStripStrict, "", $value['html'] );
+              $html .= self::stripHTML($value['html']);
             }
             else{
               $v = self::stripHTML($value);
@@ -180,32 +181,32 @@ class CRM_Utils_PDF_Utils {
         $html = str_replace('src="http://'.$_SERVER['HTTP_HOST']."/", 'src="', $html);
         $style = '
 <style>
-h1 {
-  color: #000000;
-  font-size: 18pt;
-  text-decoration: underline;
-  text-align: center;
-  padding: 0;
-  margin: 0;
-}
-table { 
-  color: #333333;
-  font-size: 10pt;
-  border: 1px solid #aaaaaa;
-  background-color: #efefef;
-}
-td {
-  font-size: 10pt;
-  padding: 3px;
-  border: 1px solid #cccccc;
-  background-color: #ffffff;
-}
-th {
-  font-size: 10pt;
-  text-align: center;
-  padding: 3px;
-  background-color: #efefef;
-}
+  h1 {
+    color: #000000;
+    font-size: 18pt;
+    text-decoration: underline;
+    text-align: center;
+    padding: 0;
+    margin: 0;
+  }
+  table { 
+    color: #333333;
+    font-size: 10pt;
+    border: 1px solid #aaaaaa;
+    background-color: #efefef;
+  }
+  td {
+    font-size: 10pt;
+    padding: 3px;
+    border: 1px solid #cccccc;
+    background-color: #ffffff;
+  }
+  th {
+    font-size: 10pt;
+    text-align: center;
+    padding: 3px;
+    background-color: #efefef;
+  }
 </style>';
         $html = $style."\n".$html;
         $pdf->writeHTML($html, true, false, true, false, '');
@@ -221,6 +222,10 @@ th {
 
     public function stripHTML($html){
       $html = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $html);
+      $html = preg_replace('/(id|style)="[^"].+"/i', "" , $html);
+      $html = preg_replace("/(id|style)='[^'].+'/i", "" , $html);
+      $html = preg_replace("/<!--(.*?)-->/Us", "" , $html);
+      $html = preg_replace("//Us", "" , $html);
       $dom = new DOMDocument();
       $dom->loadHTML(mb_convert_encoding($html, 'HTML-ENTITIES', "UTF-8"));
       $xpath = new DOMXPath($dom);
@@ -230,7 +235,8 @@ th {
         self::DOMRemove($ele_a->item($i));
       }
       $html_new = $dom->saveXML($xpath->query('//body')->item(0));
-      return preg_replace("/(<body[^>]+>)|(<\/body>)/i", '', $html_new);
+      $html_new = preg_replace("/(<body[^>]+>)|(<\/body>)/i", '', $html_new);
+      return $html_new;
     }
 
     private function DOMRemove(DOMNode $from) {
