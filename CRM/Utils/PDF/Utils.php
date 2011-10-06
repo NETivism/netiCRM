@@ -164,36 +164,17 @@ class CRM_Utils_PDF_Utils {
         }
 
 
-        $htmlElementstoStrip = array(
-          '@<script[^>]*?>.*?</script>@si',
-          '@<style[^>]*?>.*?</style>@siU', 
-          '/font-family:[^;]+;/iU',
-          '/font:[^;]+;/iU',
-        );
-        $htmlElementstoStripStrict = array(
-                                     '@<head[^>]*?>.*?</head>@siu',
-                                     '@<body>@siu',
-                                     '@</body>@siu',
-                                     '@<html[^>]*?>@siu',
-                                     '@</html>@siu',
-                                     '@<!DOCTYPE[^>]*?>@siu',
-          '@<script[^>]*?>.*?</script>@si',
-          '@<style[^>]*?>.*?</style>@siU', 
-          '/font-family:[^;]+;/iU',
-          '/font:[^;]+;/iU',
-                                     );
-        
         foreach ( $values as $k => $value ) {
-            if($value['html']){
-              if($k){
-                $html .= '<br pagebreak="true"/>'."\n";
-              }
+            if($k){
+              $html .= '<br pagebreak="true"/>'."\n";
+            }
+            if(is_array($value)){
               $html .= "<h2>{$value['to']}: {$value['subject']}</h2>"; //If needed it should be generated through the message template
               $html .= preg_replace( $htmlElementstoStripStrict, "", $value['html'] );
             }
             else{
-              $html .= "{$value}\n";
-              $html = preg_replace( $htmlElementstoStrip, "", $value );
+              $v = self::stripHTML($value);
+              $html .= $v;
             }
         }
         $html = str_replace('src="http://'.$_SERVER['HTTP_HOST']."/", 'src="', $html);
@@ -227,7 +208,6 @@ th {
 }
 </style>';
         $html = $style."\n".$html;
-
         $pdf->writeHTML($html, true, false, true, false, '');
         $pdf->lastPage();
 
@@ -238,4 +218,27 @@ th {
           $pdf->Output( $fileName ,'D');
         }
     }
+
+    public function stripHTML($html){
+      $html = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $html);
+      $dom = new DOMDocument();
+      $dom->loadHTML(mb_convert_encoding($html, 'HTML-ENTITIES', "UTF-8"));
+      $xpath = new DOMXPath($dom);
+
+      $ele_a = $xpath->query('//style');
+      for ($i = 0; $i < $ele_a->length; $i++) {
+        self::DOMRemove($ele_a->item($i));
+      }
+      $html_new = $dom->saveXML($xpath->query('//body')->item(0));
+      return preg_replace("/(<body[^>]+>)|(<\/body>)/i", '', $html_new);
+    }
+
+    private function DOMRemove(DOMNode $from) {
+      $sibling = $from->firstChild;
+      do {
+          $next = $sibling->nextSibling;
+          $from->parentNode->insertBefore($sibling, $from);
+      } while ($sibling = $next);
+      $from->parentNode->removeChild($from);    
+    }   
 }
