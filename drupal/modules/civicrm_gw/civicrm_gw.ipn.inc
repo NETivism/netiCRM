@@ -115,6 +115,9 @@ class CRM_Core_Payment_GWIPN extends CRM_Core_Payment_BaseIPN {
   function getInput( &$input) {
     $input = $_POST;
 
+    // this will fix receipt amount missing issue.
+    $input['amount'] = $input['amount'] ? $input['amount'] : $input['amt'];
+
     if($input['od_hoho']) {
       $hoho = str_replace('<BR>', '<br>', $input['od_hoho']);
       $hoho_ary = explode('<br>', trim($hoho, '<br>'));
