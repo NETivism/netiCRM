@@ -1726,7 +1726,8 @@ WHERE cg.extends IN ('" . implode( "','", $this->_customGroupExtends ) . "') AND
              $this->_sendmail              ) {
             $templateFile = parent::getTemplateFileName( );
             
-            $content = $this->_formValues['report_header'] .
+            $header = str_replace("<title>", '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>', $this->_formValues['report_header']);
+            $content = $header .
                 CRM_Core_Form::$_template->fetch( $templateFile ) .      
                 $this->_formValues['report_footer'] ;
 

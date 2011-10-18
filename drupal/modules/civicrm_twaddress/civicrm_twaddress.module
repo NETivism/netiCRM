@@ -49,13 +49,11 @@ function civicrm_twaddress_civicrm_buildForm($formName, &$form) {
       }
       $default = $form->getElement($name)->_findValue($form->_defaultValues);
       $override['countyName'][$key]['default'] = $county_options[$default];
-      $form->_elements[$k]->_label = '縣市';
     }
     if(strstr($name, 'city')){
       preg_match("/\[([0-9])\]/", $name, $matches);
       $key = $matches[1] ? $matches[1] : 1;
       // hide field
-      $form->_elements[$k]->_label = '鄉鎮市區';
 
       $default = $form->getElement($name)->_findValue($form->_defaultValues);
       $override['areaName'][$key]['key'] = '_'.$name;

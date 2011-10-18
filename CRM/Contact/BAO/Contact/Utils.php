@@ -492,7 +492,10 @@ WHERE id={$contactId}; ";
             }
             $form->add('text', 'organization_name', ts('Organization Name'), $attributes['organization_name'], $isRequired);
             $form->addElement('text', 'sic_code', ts('SIC Code'), $attributes['sic_code']);
-            $form->addRule('sic_code','Enter a SIC Code','required');
+
+            if($isRequired){
+              $form->addRule('sic_code','Enter a SIC Code', 'required');
+            }
             
             break;
         case 'Household':
