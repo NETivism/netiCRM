@@ -192,7 +192,7 @@ class CRM_Core_Report_Excel {
         }
     }
 
-    function writeExcelFile( $fileName, &$header, &$rows, $titleHeader = null, $outputHeader = true ){
+    function writeExcelFile( $fileName, &$header, &$rows, $titleHeader = null, $outputHeader = true, $return = FALSE){
         if ( ! empty( $rows ) ) {
             ob_start();
             self::makeCSVTable( $header, $rows, $titleHeader, true, $outputHeader );
@@ -211,13 +211,22 @@ class CRM_Core_Report_Excel {
         $highest_row = $sheet->getHighestRow();
         $sheet->getStyle('A1:'.$highest_column.$highest_row)->getNumberFormat()->setFormatCode('@');
 
-        CRM_Utils_System::download( CRM_Utils_String::munge( $fileName ),
-                                    'application/vnd.ms-excel',
-                                    CRM_Core_DAO::$_nullObject,
-                                    'xls',
-                                    false );
-        $writer = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
-        $writer->save('php://output');
-        CRM_Utils_System::civiExit( );
+        if($return){
+          $writer = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+          $writer->save($fileName);
+          return TRUE;
+        }
+        else{
+          CRM_Utils_System::download( CRM_Utils_String::munge( $fileName ),
+                                      'application/vnd.ms-excel',
+                                      CRM_Core_DAO::$_nullObject,
+                                      'xls',
+                                      false );
+          $writer = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+          $writer->save('php://output');
+          CRM_Utils_System::civiExit( );
+        }
+
+        return FALSE;
     }
 }

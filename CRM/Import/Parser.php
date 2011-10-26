@@ -496,6 +496,7 @@ abstract class CRM_Import_Parser {
                 }
             }
             
+            require_once 'CRM/Core/Report/Excel.php';
             if ($this->_invalidRowCount) {
                 // removed view url for invlaid contacts
                 $headers = array_merge( array(  ts('Line Number'),
@@ -907,9 +908,12 @@ abstract class CRM_Import_Parser {
             }
         }
         $data = $errorValues;
+
+        CRM_Core_Report_Excel::writeExcelFile( str_replace("csv", "xls", $fileName), $header, $data, null, true, TRUE);
         
+        /*
         $output = array();
-        $fd = fopen($fileName, 'w');
+          $fd = fopen($fileName, 'w');
         
         foreach ($header as $key => $value) {
             $header[$key] = "\"$value\"";
@@ -923,8 +927,11 @@ abstract class CRM_Import_Parser {
             }
             $output[] = implode($config->fieldSeparator, $datum);
         }
+         */
+        /*
         fwrite($fd, implode("\n", $output));
         fclose($fd);
+         */
     }
 
     /**
@@ -993,23 +1000,23 @@ abstract class CRM_Import_Parser {
         if ( empty( $type ) ) return $fileName;
         switch ( $type ) {
         case CRM_Import_Parser::ERROR:
-            $fileName = 'Import_Errors.csv';
+            $fileName = 'Import_Errors.xls';
             break;
             
         case CRM_Import_Parser::CONFLICT:
-            $fileName = 'Import_Conflicts.csv';
+            $fileName = 'Import_Conflicts.xls';
             break;
             
         case CRM_Import_Parser::DUPLICATE:
-            $fileName = 'Import_Duplicates.csv';
+            $fileName = 'Import_Duplicates.xls';
             break;
             
         case CRM_Import_Parser::NO_MATCH:
-            $fileName = 'Import_Mismatch.csv';
+            $fileName = 'Import_Mismatch.xls';
             break;
             
         case CRM_Import_Parser::UNPARSED_ADDRESS_WARNING:
-            $fileName = 'Import_Unparsed_Address.csv';
+            $fileName = 'Import_Unparsed_Address.xls';
             break;
         }
         
