@@ -791,6 +791,10 @@ AND    option_group_id = %2";
             $params['html_type'] = self::$_dataToHTML[$params['data_type'][0]][$params['data_type'][1]];
             $params['data_type'] = self::$_dataTypeKeys[$params['data_type'][0]];
         }
+
+        // reset the cache
+        require_once 'CRM/Core/BAO/Cache.php';
+        CRM_Core_BAO_Cache::deleteGroup( 'contact fields' );
         
         //fix for 'is_search_range' field. 
         if ( in_array( $dataTypeKey, array( 1, 2, 3, 5 ) ) ) {
