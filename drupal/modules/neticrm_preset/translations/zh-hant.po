@@ -54,3 +54,8 @@ msgstr ""
 msgid "NetiCRM"
 msgstr ""
 
+msgid "Show welcome message"
+msgstr "切換至歡迎訊息"
+
+msgid "Back to dashboard"
+msgstr "切換回一般首頁"
