@@ -286,7 +286,7 @@ $menu_links['navigation'] = array (
   ),
   27 => 
   array (
-    'path' => 'http://civicrm.netivism.com.tw/support',
+    'path' => 'http://neticrm.tw/support',
     'query' => NULL,
     'title' => '線上支援',
     'menu' => 'navigation',
@@ -811,8 +811,9 @@ $menu_links['navigation'] = array (
             'path' => 'civicrm/admin',
             'query' => NULL,
             'title' => '支持者系統管理',
+            'description' => '進階設定、管理支持者系統的欄位選項等',
             'menu' => 'navigation',
-            'weight' => '0',
+            'weight' => '-50',
             'module' => 'menu',
             'hidden' => '0',
             'children' => 
@@ -1098,7 +1099,7 @@ $menu_links['navigation'] = array (
                   array (
                     'path' => 'civicrm/admin/options/activity_type',
                     'query' => 'reset=1&group=activity_type',
-                    'title' => '動態類型',
+                    'title' => '任務類型',
                     'menu' => 'navigation',
                     'weight' => '-47',
                     'module' => 'menu',
@@ -1696,6 +1697,7 @@ $menu_links['navigation'] = array (
             'path' => 'civicrm/admin/access',
             'query' => 'reset=1',
             'title' => '存取控制',
+            'description' => '管理支持者系統的進階權限控制',
             'menu' => 'navigation',
             'weight' => '1',
             'module' => 'menu',
@@ -1706,6 +1708,7 @@ $menu_links['navigation'] = array (
             'path' => 'civicrm/admin/synchUser',
             'query' => 'reset=1',
             'title' => '同步使用者到聯絡人',
+            'description' => '將現有已註冊的使用者，同步成為聯絡人，重複的聯絡人將合併（已Email判斷）',
             'menu' => 'navigation',
             'weight' => '2',
             'module' => 'menu',
@@ -1755,6 +1758,15 @@ $menu_links['primary-links'] =array (
     array (
       0 => 
       array (
+        'path' => 'admin/user/user',
+        'title' => '新增/管理網站使用者',
+        'menu' => 'primary-links',
+        'weight' => '-51',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      1 => 
+      array (
         'path' => 'civicrm/contact/add',
         'query' => 'reset=1&ct=Household',
         'title' => '新增家庭',
@@ -1763,7 +1775,7 @@ $menu_links['primary-links'] =array (
         'module' => 'menu',
         'hidden' => '0',
       ),
-      1 => 
+      2 => 
       array (
         'path' => 'civicrm/contact/add',
         'query' => 'reset=1&ct=Individual',
@@ -1773,7 +1785,7 @@ $menu_links['primary-links'] =array (
         'module' => 'menu',
         'hidden' => '0',
       ),
-      2 => 
+      3 => 
       array (
         'path' => 'civicrm/contact/add',
         'query' => 'reset=1&ct=Organization',
@@ -1783,17 +1795,17 @@ $menu_links['primary-links'] =array (
         'module' => 'menu',
         'hidden' => '0',
       ),
-      3 => 
+      4 => 
       array (
         'path' => 'civicrm/activity',
         'query' => 'reset=1&action=add&context=standalone',
-        'title' => '新增動態',
+        'title' => '新增任務',
         'menu' => 'primary-links',
         'weight' => '-47',
         'module' => 'menu',
         'hidden' => '0',
       ),
-      4 => 
+      5 => 
       array (
         'path' => 'civicrm/activity/add',
         'query' => 'atype=3&action=add&reset=1&context=standalone',
@@ -1803,7 +1815,7 @@ $menu_links['primary-links'] =array (
         'module' => 'menu',
         'hidden' => '0',
       ),
-      5 => 
+      6 => 
       array (
         'path' => 'civicrm/import/contact',
         'query' => 'reset=1',
@@ -1813,17 +1825,17 @@ $menu_links['primary-links'] =array (
         'module' => 'menu',
         'hidden' => '0',
       ),
-      6 => 
+      7 => 
       array (
         'path' => 'civicrm/import/activity',
         'query' => 'reset=1',
-        'title' => '匯入動態記錄',
+        'title' => '匯入任務記錄',
         'menu' => 'primary-links',
         'weight' => '-44',
         'module' => 'menu',
         'hidden' => '0',
       ),
-      7 => 
+      8 => 
       array (
         'path' => 'civicrm/group/add',
         'query' => 'reset=1',
@@ -1833,7 +1845,7 @@ $menu_links['primary-links'] =array (
         'module' => 'menu',
         'hidden' => '0',
       ),
-      8 => 
+      9 => 
       array (
         'path' => 'civicrm/group',
         'query' => 'reset=1',
@@ -1843,7 +1855,7 @@ $menu_links['primary-links'] =array (
         'module' => 'menu',
         'hidden' => '0',
       ),
-      9 => 
+      10 => 
       array (
         'path' => 'civicrm/admin/tag',
         'query' => 'reset=1&action=add',
@@ -1853,7 +1865,7 @@ $menu_links['primary-links'] =array (
         'module' => 'menu',
         'hidden' => '0',
       ),
-      10 => 
+      11 => 
       array (
         'path' => 'civicrm/admin/tag',
         'query' => 'reset=1',
@@ -1863,7 +1875,7 @@ $menu_links['primary-links'] =array (
         'module' => 'menu',
         'hidden' => '0',
       ),
-      11 => 
+      12 => 
       array (
         'path' => 'civicrm/contact/deduperules',
         'query' => 'reset=1',
@@ -1873,7 +1885,7 @@ $menu_links['primary-links'] =array (
         'module' => 'menu',
         'hidden' => '0',
       ),
-      12 => 
+      13 => 
       array (
         'path' => 'civicrm/admin/reltype',
         'query' => 'reset=1',
@@ -2047,6 +2059,26 @@ $menu_links['primary-links'] =array (
         'module' => 'menu',
         'hidden' => '0',
       ),
+      15 => 
+      array (
+        'path' => 'civicrm/admin/uf/group',
+        'query' => 'reset=1',
+        'title' => '新增/管理資料表單',
+        'menu' => 'navigation',
+        'weight' => '20',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      16 => 
+      array (
+        'path' => 'civicrm/admin/custom/group',
+        'query' => 'reset=1',
+        'title' => '新增/管理自訂欄位',
+        'menu' => 'navigation',
+        'weight' => '20',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
     ),
   ),
   2 => 
@@ -2178,6 +2210,26 @@ $menu_links['primary-links'] =array (
         'title' => '管理價格表',
         'menu' => 'primary-links',
         'weight' => '-43',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      12 => 
+      array (
+        'path' => 'civicrm/admin/uf/group',
+        'query' => 'reset=1',
+        'title' => '新增/管理資料表單',
+        'menu' => 'navigation',
+        'weight' => '20',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      13 => 
+      array (
+        'path' => 'civicrm/admin/custom/group',
+        'query' => 'reset=1',
+        'title' => '新增/管理自訂欄位',
+        'menu' => 'navigation',
+        'weight' => '20',
         'module' => 'menu',
         'hidden' => '0',
       ),
