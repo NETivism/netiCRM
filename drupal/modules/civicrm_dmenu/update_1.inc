@@ -3,278 +3,15 @@ global $menu_links;
 $menu_links['navigation'] = array (
   0 => 
   array (
-    'path' => 'batch',
-    'query' => NULL,
-    'title' => '',
-    'menu' => 'navigation',
-    'weight' => '0',
-    'module' => 'menu',
-    'hidden' => '-1',
-  ),
-  1 => 
-  array (
-    'path' => 'node',
-    'query' => NULL,
-    'title' => 'Content',
-    'menu' => 'navigation',
-    'weight' => '0',
-    'module' => 'menu',
-    'hidden' => '-1',
-  ),
-  2 => 
-  array (
-    'path' => 'logout',
-    'query' => NULL,
-    'title' => 'Log out',
-    'menu' => 'navigation',
-    'weight' => '-42',
-    'module' => 'menu',
-    'hidden' => '0',
-  ),
-  3 => 
-  array (
-    'path' => 'rss.xml',
-    'query' => NULL,
-    'title' => 'RSS feed',
-    'menu' => 'navigation',
-    'weight' => '0',
-    'module' => 'menu',
-    'hidden' => '-1',
-  ),
-  4 => 
-  array (
-    'path' => 'user',
-    'query' => NULL,
-    'title' => 'User account',
-    'menu' => 'navigation',
-    'weight' => '0',
-    'module' => 'menu',
-    'hidden' => '-1',
-  ),
-  5 => 
-  array (
-    'path' => 'node/%',
-    'query' => NULL,
-    'title' => '',
-    'menu' => 'navigation',
-    'weight' => '0',
-    'module' => 'menu',
-    'hidden' => '-1',
-  ),
-  6 => 
-  array (
-    'path' => 'filter/tips',
-    'query' => NULL,
-    'title' => 'Compose tips',
-    'menu' => 'navigation',
-    'weight' => '-48',
-    'module' => 'menu',
-    'hidden' => '1',
-  ),
-  7 => 
-  array (
-    'path' => 'system/files',
-    'query' => NULL,
-    'title' => 'File download',
-    'menu' => 'navigation',
-    'weight' => '0',
-    'module' => 'menu',
-    'hidden' => '-1',
-  ),
-  8 => 
-  array (
-    'path' => 'user/autocomplete',
-    'query' => NULL,
-    'title' => 'User autocomplete',
-    'menu' => 'navigation',
-    'weight' => '0',
-    'module' => 'menu',
-    'hidden' => '-1',
-  ),
-  9 => 
-  array (
-    'path' => 'user/%',
-    'query' => NULL,
-    'title' => 'My account',
-    'menu' => 'navigation',
-    'weight' => '-47',
-    'module' => 'menu',
-    'hidden' => '0',
-    'children' => 
-    array (
-      0 => 
-      array (
-        'path' => 'user/%/delete',
-        'query' => NULL,
-        'title' => 'Delete',
-        'menu' => 'navigation',
-        'weight' => '0',
-        'module' => 'menu',
-        'hidden' => '-1',
-      ),
-    ),
-  ),
-  10 => 
-  array (
-    'path' => 'node/%/delete',
-    'query' => NULL,
-    'title' => 'Delete',
-    'menu' => 'navigation',
-    'weight' => '1',
-    'module' => 'menu',
-    'hidden' => '-1',
-  ),
-  11 => 
-  array (
-    'path' => 'admin/build/menu-customize/%/delete',
-    'query' => NULL,
-    'title' => 'Delete menu',
-    'menu' => 'navigation',
-    'weight' => '0',
-    'module' => 'menu',
-    'hidden' => '-1',
-  ),
-  12 => 
-  array (
-    'path' => 'user/reset/%/%/%',
-    'query' => NULL,
-    'title' => 'Reset password',
-    'menu' => 'navigation',
-    'weight' => '0',
-    'module' => 'menu',
-    'hidden' => '-1',
-  ),
-  13 => 
-  array (
-    'path' => 'node/%/revisions/%/delete',
-    'query' => NULL,
-    'title' => 'Delete earlier revision',
-    'menu' => 'navigation',
-    'weight' => '0',
-    'module' => 'menu',
-    'hidden' => '-1',
-  ),
-  14 => 
-  array (
-    'path' => 'node/%/revisions/%/revert',
-    'query' => NULL,
-    'title' => 'Revert to earlier revision',
-    'menu' => 'navigation',
-    'weight' => '0',
-    'module' => 'menu',
-    'hidden' => '-1',
-  ),
-  15 => 
-  array (
-    'path' => 'node/%/revisions/%/view',
-    'query' => NULL,
-    'title' => 'Revisions',
-    'menu' => 'navigation',
-    'weight' => '0',
-    'module' => 'menu',
-    'hidden' => '-1',
-  ),
-  16 => 
-  array (
-    'path' => 'imce',
-    'query' => NULL,
-    'title' => 'File browser',
-    'menu' => 'navigation',
-    'weight' => '0',
-    'module' => 'menu',
-    'hidden' => '-1',
-  ),
-  17 => 
-  array (
-    'path' => 'l10n_client/save',
-    'query' => NULL,
-    'title' => 'Save string',
-    'menu' => 'navigation',
-    'weight' => '0',
-    'module' => 'menu',
-    'hidden' => '-1',
-  ),
-  18 => 
-  array (
-    'path' => 'locale',
-    'query' => NULL,
-    'title' => 'Translate strings',
-    'menu' => 'navigation',
-    'weight' => '-49',
-    'module' => 'menu',
-    'hidden' => '1',
-  ),
-  19 => 
-  array (
-    'path' => 'toboggan/denied',
-    'query' => NULL,
-    'title' => 'Access denied',
-    'menu' => 'navigation',
-    'weight' => '0',
-    'module' => 'menu',
-    'hidden' => '-1',
-  ),
-  20 => 
-  array (
-    'path' => 'taxonomy/autocomplete',
-    'query' => NULL,
-    'title' => 'Autocomplete taxonomy',
-    'menu' => 'navigation',
-    'weight' => '0',
-    'module' => 'menu',
-    'hidden' => '-1',
-  ),
-  21 => 
-  array (
-    'path' => 'toboggan/revalidate/%',
-    'query' => NULL,
-    'title' => 'Re-send validation e-mail',
-    'menu' => 'navigation',
-    'weight' => '0',
-    'module' => 'menu',
-    'hidden' => '-1',
-  ),
-  22 => 
-  array (
-    'path' => 'taxonomy/term/%',
-    'query' => NULL,
-    'title' => 'Taxonomy term',
-    'menu' => 'navigation',
-    'weight' => '0',
-    'module' => 'menu',
-    'hidden' => '-1',
-  ),
-  23 => 
-  array (
-    'path' => 'user/validate/%/%/%',
-    'query' => NULL,
-    'title' => 'Validate e-mail address',
-    'menu' => 'navigation',
-    'weight' => '0',
-    'module' => 'menu',
-    'hidden' => '-1',
-  ),
-  24 => 
-  array (
-    'path' => 'admin/content/node-type/page/delete',
-    'query' => NULL,
-    'title' => 'Delete',
-    'menu' => 'navigation',
-    'weight' => '0',
-    'module' => 'menu',
-    'hidden' => '-1',
-  ),
-  25 => 
-  array (
     'path' => 'civicrm',
     'query' => NULL,
     'title' => 'CiviCRM',
     'menu' => 'navigation',
     'weight' => '0',
     'module' => 'menu',
-    'hidden' => '-1',
+    'hidden' => '1',
   ),
-  26 => 
+  1 => 
   array (
     'path' => 'civicrm/dashboard',
     'query' => NULL,
@@ -284,7 +21,7 @@ $menu_links['navigation'] = array (
     'module' => 'menu',
     'hidden' => '1',
   ),
-  27 => 
+  2 => 
   array (
     'path' => 'http://neticrm.tw/support',
     'query' => NULL,
@@ -294,17 +31,7 @@ $menu_links['navigation'] = array (
     'module' => 'menu',
     'hidden' => '0',
   ),
-  28 => 
-  array (
-    'path' => 'user/login',
-    'query' => NULL,
-    'title' => '登入',
-    'menu' => 'navigation',
-    'weight' => '-43',
-    'module' => 'menu',
-    'hidden' => '0',
-  ),
-  29 => 
+  3 => 
   array (
     'path' => 'admin',
     'query' => NULL,
@@ -316,16 +43,6 @@ $menu_links['navigation'] = array (
     'children' => 
     array (
       0 => 
-      array (
-        'path' => 'admin/compact',
-        'query' => NULL,
-        'title' => 'Compact mode',
-        'menu' => 'navigation',
-        'weight' => '0',
-        'module' => 'menu',
-        'hidden' => '-1',
-      ),
-      1 => 
       array (
         'path' => 'admin/content',
         'query' => NULL,
@@ -354,7 +71,7 @@ $menu_links['navigation'] = array (
             'menu' => 'navigation',
             'weight' => '0',
             'module' => 'menu',
-            'hidden' => '1',
+            'hidden' => '0',
           ),
           2 => 
           array (
@@ -375,7 +92,7 @@ $menu_links['navigation'] = array (
                 'menu' => 'navigation',
                 'weight' => '0',
                 'module' => 'menu',
-                'hidden' => '-1',
+                'hidden' => '0',
               ),
             ),
           ),
@@ -387,7 +104,7 @@ $menu_links['navigation'] = array (
             'menu' => 'navigation',
             'weight' => '0',
             'module' => 'menu',
-            'hidden' => '1',
+            'hidden' => '0',
           ),
           4 => 
           array (
@@ -408,7 +125,7 @@ $menu_links['navigation'] = array (
                 'menu' => 'navigation',
                 'weight' => '0',
                 'module' => 'menu',
-                'hidden' => '-1',
+                'hidden' => '0',
               ),
               1 => 
               array (
@@ -418,7 +135,7 @@ $menu_links['navigation'] = array (
                 'menu' => 'navigation',
                 'weight' => '0',
                 'module' => 'menu',
-                'hidden' => '-1',
+                'hidden' => '0',
               ),
               2 => 
               array (
@@ -428,7 +145,7 @@ $menu_links['navigation'] = array (
                 'menu' => 'navigation',
                 'weight' => '0',
                 'module' => 'menu',
-                'hidden' => '-1',
+                'hidden' => '0',
               ),
             ),
           ),
@@ -440,11 +157,11 @@ $menu_links['navigation'] = array (
             'menu' => 'navigation',
             'weight' => '0',
             'module' => 'menu',
-            'hidden' => '-1',
+            'hidden' => '0',
           ),
         ),
       ),
-      2 => 
+      1 => 
       array (
         'path' => 'admin/reports',
         'query' => NULL,
@@ -474,7 +191,7 @@ $menu_links['navigation'] = array (
                 'menu' => 'navigation',
                 'weight' => '0',
                 'module' => 'menu',
-                'hidden' => '-1',
+                'hidden' => '0',
               ),
               1 => 
               array (
@@ -484,7 +201,7 @@ $menu_links['navigation'] = array (
                 'menu' => 'navigation',
                 'weight' => '0',
                 'module' => 'menu',
-                'hidden' => '-1',
+                'hidden' => '0',
               ),
               2 => 
               array (
@@ -494,7 +211,7 @@ $menu_links['navigation'] = array (
                 'menu' => 'navigation',
                 'weight' => '0',
                 'module' => 'menu',
-                'hidden' => '-1',
+                'hidden' => '0',
               ),
             ),
           ),
@@ -516,7 +233,7 @@ $menu_links['navigation'] = array (
             'menu' => 'navigation',
             'weight' => '0',
             'module' => 'menu',
-            'hidden' => '1',
+            'hidden' => '0',
           ),
           3 => 
           array (
@@ -526,7 +243,7 @@ $menu_links['navigation'] = array (
             'menu' => 'navigation',
             'weight' => '0',
             'module' => 'menu',
-            'hidden' => '1',
+            'hidden' => '0',
           ),
           4 => 
           array (
@@ -536,11 +253,11 @@ $menu_links['navigation'] = array (
             'menu' => 'navigation',
             'weight' => '0',
             'module' => 'menu',
-            'hidden' => '-1',
+            'hidden' => '0',
           ),
         ),
       ),
-      3 => 
+      2 => 
       array (
         'path' => 'admin/build',
         'query' => NULL,
@@ -552,261 +269,6 @@ $menu_links['navigation'] = array (
         'children' => 
         array (
           0 => 
-          array (
-            'path' => 'admin/build/block',
-            'query' => NULL,
-            'title' => 'Blocks',
-            'menu' => 'navigation',
-            'weight' => '0',
-            'module' => 'menu',
-            'hidden' => '1',
-            'children' => 
-            array (
-              0 => 
-              array (
-                'path' => 'admin/build/block/configure',
-                'query' => NULL,
-                'title' => 'Configure block',
-                'menu' => 'navigation',
-                'weight' => '0',
-                'module' => 'menu',
-                'hidden' => '-1',
-              ),
-              1 => 
-              array (
-                'path' => 'admin/build/block/delete',
-                'query' => NULL,
-                'title' => 'Delete block',
-                'menu' => 'navigation',
-                'weight' => '0',
-                'module' => 'menu',
-                'hidden' => '-1',
-              ),
-              2 => 
-              array (
-                'path' => 'admin/build/block/list/js',
-                'query' => NULL,
-                'title' => 'JavaScript List Form',
-                'menu' => 'navigation',
-                'weight' => '0',
-                'module' => 'menu',
-                'hidden' => '-1',
-              ),
-            ),
-          ),
-          1 => 
-          array (
-            'path' => 'admin/build/modules',
-            'query' => NULL,
-            'title' => 'Modules',
-            'menu' => 'navigation',
-            'weight' => '0',
-            'module' => 'menu',
-            'hidden' => '1',
-            'children' => 
-            array (
-              0 => 
-              array (
-                'path' => 'admin/build/modules/list/confirm',
-                'query' => NULL,
-                'title' => 'List',
-                'menu' => 'navigation',
-                'weight' => '0',
-                'module' => 'menu',
-                'hidden' => '-1',
-              ),
-              1 => 
-              array (
-                'path' => 'admin/build/modules/uninstall/confirm',
-                'query' => NULL,
-                'title' => 'Uninstall',
-                'menu' => 'navigation',
-                'weight' => '0',
-                'module' => 'menu',
-                'hidden' => '-1',
-              ),
-            ),
-          ),
-          2 => 
-          array (
-            'path' => 'admin/build/themes',
-            'query' => NULL,
-            'title' => 'Themes',
-            'menu' => 'navigation',
-            'weight' => '0',
-            'module' => 'menu',
-            'hidden' => '1',
-          ),
-          3 => 
-          array (
-            'path' => 'admin/build/menu-customize/%',
-            'query' => NULL,
-            'title' => 'Customize menu',
-            'menu' => 'navigation',
-            'weight' => '0',
-            'module' => 'menu',
-            'hidden' => '-1',
-          ),
-          4 => 
-          array (
-            'path' => 'admin/build/translate',
-            'query' => NULL,
-            'title' => 'Translate interface',
-            'menu' => 'navigation',
-            'weight' => '0',
-            'module' => 'menu',
-            'hidden' => '1',
-            'children' => 
-            array (
-              0 => 
-              array (
-                'path' => 'admin/build/translate/delete/%',
-                'query' => NULL,
-                'title' => 'Delete string',
-                'menu' => 'navigation',
-                'weight' => '0',
-                'module' => 'menu',
-                'hidden' => '-1',
-              ),
-              1 => 
-              array (
-                'path' => 'admin/build/translate/edit/%',
-                'query' => NULL,
-                'title' => 'Edit string',
-                'menu' => 'navigation',
-                'weight' => '0',
-                'module' => 'menu',
-                'hidden' => '-1',
-              ),
-            ),
-          ),
-          5 => 
-          array (
-            'path' => 'admin/build/path',
-            'query' => NULL,
-            'title' => 'URL aliases',
-            'menu' => 'navigation',
-            'weight' => '0',
-            'module' => 'menu',
-            'hidden' => '0',
-            'children' => 
-            array (
-              0 => 
-              array (
-                'path' => 'admin/build/path/delete',
-                'query' => NULL,
-                'title' => 'Delete alias',
-                'menu' => 'navigation',
-                'weight' => '0',
-                'module' => 'menu',
-                'hidden' => '-1',
-              ),
-              1 => 
-              array (
-                'path' => 'admin/build/path/edit',
-                'query' => NULL,
-                'title' => 'Edit alias',
-                'menu' => 'navigation',
-                'weight' => '0',
-                'module' => 'menu',
-                'hidden' => '-1',
-              ),
-            ),
-          ),
-          6 => 
-          array (
-            'path' => 'admin/build/menu',
-            'query' => NULL,
-            'title' => 'Menus',
-            'menu' => 'navigation',
-            'weight' => '0',
-            'module' => 'menu',
-            'hidden' => '0',
-            'children' => 
-            array (
-              0 => 
-              array (
-                'path' => 'admin/build/menu/item/%/delete',
-                'query' => NULL,
-                'title' => 'Delete menu item',
-                'menu' => 'navigation',
-                'weight' => '0',
-                'module' => 'menu',
-                'hidden' => '-1',
-              ),
-              1 => 
-              array (
-                'path' => 'admin/build/menu/item/%/edit',
-                'query' => NULL,
-                'title' => 'Edit menu item',
-                'menu' => 'navigation',
-                'weight' => '0',
-                'module' => 'menu',
-                'hidden' => '-1',
-              ),
-              2 => 
-              array (
-                'path' => 'admin/build/menu/item/%/reset',
-                'query' => NULL,
-                'title' => 'Reset menu item',
-                'menu' => 'navigation',
-                'weight' => '0',
-                'module' => 'menu',
-                'hidden' => '-1',
-              ),
-              3 => 
-              array (
-                'path' => 'admin/build/menu-customize/navigation',
-                'query' => NULL,
-                'title' => '導覽',
-                'menu' => 'navigation',
-                'weight' => '0',
-                'module' => 'menu',
-                'hidden' => '0',
-              ),
-              4 => 
-              array (
-                'path' => 'admin/build/menu-customize/primary-links',
-                'query' => NULL,
-                'title' => '主選單',
-                'menu' => 'navigation',
-                'weight' => '0',
-                'module' => 'menu',
-                'hidden' => '0',
-              ),
-              5 => 
-              array (
-                'path' => 'admin/build/menu-customize/secondary-links',
-                'query' => NULL,
-                'title' => '次選單',
-                'menu' => 'navigation',
-                'weight' => '0',
-                'module' => 'menu',
-                'hidden' => '0',
-              ),
-              6 => 
-              array (
-                'path' => 'admin/build/menu-customize/menu-search',
-                'query' => NULL,
-                'title' => '搜尋選單',
-                'menu' => 'navigation',
-                'weight' => '0',
-                'module' => 'menu',
-                'hidden' => '0',
-              ),
-              7 => 
-              array (
-                'path' => 'admin/build/menu-customize/menu-footer',
-                'query' => NULL,
-                'title' => '底部導覽',
-                'menu' => 'navigation',
-                'weight' => '0',
-                'module' => 'menu',
-                'hidden' => '0',
-              ),
-            ),
-          ),
-          7 => 
           array (
             'path' => 'civicrm/admin',
             'query' => NULL,
@@ -827,765 +289,12 @@ $menu_links['navigation'] = array (
                 'weight' => '-50',
                 'module' => 'menu',
                 'hidden' => '0',
-                'children' => 
-                array (
-                  0 => 
-                  array (
-                    'path' => 'civicrm/admin/configtask',
-                    'query' => 'reset=1',
-                    'title' => '系統設定檢查表',
-                    'menu' => 'navigation',
-                    'weight' => '1',
-                    'module' => 'menu',
-                    'hidden' => '0',
-                  ),
-                  1 => 
-                  array (
-                    'path' => 'civicrm/admin/mapping',
-                    'query' => 'reset=1',
-                    'title' => '匯入/匯出對應',
-                    'menu' => 'navigation',
-                    'weight' => '3',
-                    'module' => 'menu',
-                    'hidden' => '0',
-                  ),
-                  2 => 
-                  array (
-                    'path' => 'civicrm/admin/messageTemplates',
-                    'query' => 'reset=1',
-                    'title' => '訊息範本',
-                    'menu' => 'navigation',
-                    'weight' => '4',
-                    'module' => 'menu',
-                    'hidden' => '0',
-                  ),
-                  3 => 
-                  array (
-                    'path' => 'civicrm/admin/domain',
-                    'query' => 'action=update&reset=1',
-                    'title' => '網域資訊頁',
-                    'menu' => 'navigation',
-                    'weight' => '5',
-                    'module' => 'menu',
-                    'hidden' => '0',
-                  ),
-                  4 => 
-                  array (
-                    'path' => 'civicrm/admin/options/from_email_address',
-                    'query' => 'group=from_email_address&reset=1',
-                    'title' => 'Email 寄件者',
-                    'menu' => 'navigation',
-                    'weight' => '6',
-                    'module' => 'menu',
-                    'hidden' => '0',
-                  ),
-                  5 => 
-                  array (
-                    'path' => 'civicrm/admin/setting/updateConfigBackend',
-                    'query' => 'reset=1',
-                    'title' => '更新目錄路徑和網址',
-                    'menu' => 'navigation',
-                    'weight' => '7',
-                    'module' => 'menu',
-                    'hidden' => '0',
-                  ),
-                  6 => 
-                  array (
-                    'path' => 'civicrm/admin/setting',
-                    'query' => 'reset=1',
-                    'title' => '全域設定',
-                    'menu' => 'navigation',
-                    'weight' => '2',
-                    'module' => 'menu',
-                    'hidden' => '0',
-                    'children' => 
-                    array (
-                      0 => 
-                      array (
-                        'path' => 'civicrm/admin/setting/component',
-                        'query' => 'reset=1',
-                        'title' => '啟用的 CiviCRM 模組',
-                        'menu' => 'navigation',
-                        'weight' => '1',
-                        'module' => 'menu',
-                        'hidden' => '0',
-                      ),
-                      1 => 
-                      array (
-                        'path' => 'civicrm/admin/setting/preferences/display',
-                        'query' => 'reset=1',
-                        'title' => '網站設定（屏幕和表格配置）',
-                        'menu' => 'navigation',
-                        'weight' => '2',
-                        'module' => 'menu',
-                        'hidden' => '0',
-                      ),
-                      2 => 
-                      array (
-                        'path' => 'civicrm/admin/setting/path',
-                        'query' => 'reset=1',
-                        'title' => '資料夾',
-                        'menu' => 'navigation',
-                        'weight' => '3',
-                        'module' => 'menu',
-                        'hidden' => '0',
-                      ),
-                      3 => 
-                      array (
-                        'path' => 'civicrm/admin/setting/url',
-                        'query' => 'reset=1',
-                        'title' => '版型資源路徑',
-                        'menu' => 'navigation',
-                        'weight' => '4',
-                        'module' => 'menu',
-                        'hidden' => '0',
-                      ),
-                      4 => 
-                      array (
-                        'path' => 'civicrm/admin/setting/smtp',
-                        'query' => 'reset=1',
-                        'title' => '外寄 Email（SMTP/Sendmail）',
-                        'menu' => 'navigation',
-                        'weight' => '5',
-                        'module' => 'menu',
-                        'hidden' => '0',
-                      ),
-                      5 => 
-                      array (
-                        'path' => 'civicrm/admin/setting/mapping',
-                        'query' => 'reset=1',
-                        'title' => '地圖與經緯度對應',
-                        'menu' => 'navigation',
-                        'weight' => '6',
-                        'module' => 'menu',
-                        'hidden' => '0',
-                      ),
-                      6 => 
-                      array (
-                        'path' => 'civicrm/admin/paymentProcessor',
-                        'query' => 'reset=1',
-                        'title' => '金流機制',
-                        'menu' => 'navigation',
-                        'weight' => '7',
-                        'module' => 'menu',
-                        'hidden' => '0',
-                      ),
-                      7 => 
-                      array (
-                        'path' => 'civicrm/admin/setting/localization',
-                        'query' => 'reset=1',
-                        'title' => '地區及語系',
-                        'menu' => 'navigation',
-                        'weight' => '8',
-                        'module' => 'menu',
-                        'hidden' => '0',
-                      ),
-                      8 => 
-                      array (
-                        'path' => 'civicrm/admin/setting/preferences/address',
-                        'query' => 'reset=1',
-                        'title' => '地址格式設定',
-                        'menu' => 'navigation',
-                        'weight' => '9',
-                        'module' => 'menu',
-                        'hidden' => '0',
-                      ),
-                      9 => 
-                      array (
-                        'path' => 'civicrm/admin/setting/search',
-                        'query' => 'reset=1',
-                        'title' => '搜尋設定',
-                        'menu' => 'navigation',
-                        'weight' => '10',
-                        'module' => 'menu',
-                        'hidden' => '0',
-                      ),
-                      10 => 
-                      array (
-                        'path' => 'civicrm/admin/setting/date',
-                        'query' => 'reset=1',
-                        'title' => '日期格式',
-                        'menu' => 'navigation',
-                        'weight' => '11',
-                        'module' => 'menu',
-                        'hidden' => '0',
-                      ),
-                      11 => 
-                      array (
-                        'path' => 'civicrm/admin/setting/uf',
-                        'query' => 'reset=1',
-                        'title' => 'CMS 整合',
-                        'menu' => 'navigation',
-                        'weight' => '12',
-                        'module' => 'menu',
-                        'hidden' => '0',
-                      ),
-                      12 => 
-                      array (
-                        'path' => 'civicrm/admin/setting/misc',
-                        'query' => 'reset=1',
-                        'title' => '雜項（版本檢查，reCAPTCHA 驗證服務...）',
-                        'menu' => 'navigation',
-                        'weight' => '13',
-                        'module' => 'menu',
-                        'hidden' => '0',
-                      ),
-                      13 => 
-                      array (
-                        'path' => 'civicrm/admin/options/safe_file_extension',
-                        'query' => 'group=safe_file_extension&reset=1',
-                        'title' => '安全及檔案副檔名',
-                        'menu' => 'navigation',
-                        'weight' => '14',
-                        'module' => 'menu',
-                        'hidden' => '0',
-                      ),
-                      14 => 
-                      array (
-                        'path' => 'civicrm/admin/setting/debug',
-                        'query' => 'reset=1',
-                        'title' => '除錯',
-                        'menu' => 'navigation',
-                        'weight' => '15',
-                        'module' => 'menu',
-                        'hidden' => '0',
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              1 => 
-              array (
-                'path' => 'civicrm/admin',
-                'query' => NULL,
-                'title' => '自訂',
-                'menu' => 'navigation',
-                'weight' => '5',
-                'module' => 'menu',
-                'hidden' => '0',
-                'children' => 
-                array (
-                  0 => 
-                  array (
-                    'path' => 'civicrm/admin/custom/group',
-                    'query' => 'reset=1',
-                    'title' => '自訂欄位',
-                    'menu' => 'navigation',
-                    'weight' => '-50',
-                    'module' => 'menu',
-                    'hidden' => '0',
-                  ),
-                  1 => 
-                  array (
-                    'path' => 'civicrm/admin/uf/group',
-                    'query' => 'reset=1',
-                    'title' => '資料表單',
-                    'menu' => 'navigation',
-                    'weight' => '-49',
-                    'module' => 'menu',
-                    'hidden' => '0',
-                  ),
-                  2 => 
-                  array (
-                    'path' => 'civicrm/admin/price',
-                    'query' => 'reset=1',
-                    'title' => '價格設定',
-                    'menu' => 'navigation',
-                    'weight' => '-48',
-                    'module' => 'menu',
-                    'hidden' => '0',
-                  ),
-                  3 => 
-                  array (
-                    'path' => 'civicrm/admin/options/activity_type',
-                    'query' => 'reset=1&group=activity_type',
-                    'title' => '任務類型',
-                    'menu' => 'navigation',
-                    'weight' => '-47',
-                    'module' => 'menu',
-                    'hidden' => '0',
-                  ),
-                  4 => 
-                  array (
-                    'path' => 'civicrm/admin/tag',
-                    'query' => 'reset=1',
-                    'title' => 'Tag（種類）',
-                    'menu' => 'navigation',
-                    'weight' => '-46',
-                    'module' => 'menu',
-                    'hidden' => '0',
-                  ),
-                  5 => 
-                  array (
-                    'path' => 'civicrm/admin/options/gender',
-                    'query' => 'reset=1&group=gender',
-                    'title' => '性別選項',
-                    'menu' => 'navigation',
-                    'weight' => '-45',
-                    'module' => 'menu',
-                    'hidden' => '0',
-                  ),
-                  6 => 
-                  array (
-                    'path' => 'civicrm/admin/options/individual_prefix',
-                    'query' => 'group=individual_prefix&reset=1',
-                    'title' => '個人稱銜(女士、先生…)',
-                    'menu' => 'navigation',
-                    'weight' => '-44',
-                    'module' => 'menu',
-                    'hidden' => '0',
-                  ),
-                  7 => 
-                  array (
-                    'path' => 'civicrm/admin/options/individual_suffix',
-                    'query' => 'group=individual_suffix&reset=1',
-                    'title' => '個人稱呼字尾(Jr, Sr...)',
-                    'menu' => 'navigation',
-                    'weight' => '-43',
-                    'module' => 'menu',
-                    'hidden' => '0',
-                  ),
-                  8 => 
-                  array (
-                    'path' => 'civicrm/admin/options/addressee',
-                    'query' => 'group=addressee&reset=1',
-                    'title' => '地址格式',
-                    'menu' => 'navigation',
-                    'weight' => '-42',
-                    'module' => 'menu',
-                    'hidden' => '0',
-                  ),
-                  9 => 
-                  array (
-                    'path' => 'civicrm/admin/options/email_greeting',
-                    'query' => 'group=email_greeting&reset=1',
-                    'title' => 'Email問候語',
-                    'menu' => 'navigation',
-                    'weight' => '-41',
-                    'module' => 'menu',
-                    'hidden' => '0',
-                  ),
-                  10 => 
-                  array (
-                    'path' => 'civicrm/admin/options/postal_greeting',
-                    'query' => 'group=postal_greeting&reset=1',
-                    'title' => '信件問候',
-                    'menu' => 'navigation',
-                    'weight' => '-40',
-                    'module' => 'menu',
-                    'hidden' => '0',
-                  ),
-                  11 => 
-                  array (
-                    'path' => 'civicrm/admin/options/instant_messenger_service',
-                    'query' => 'group=instant_messenger_service&reset=1',
-                    'title' => '即時通訊服務',
-                    'menu' => 'navigation',
-                    'weight' => '-39',
-                    'module' => 'menu',
-                    'hidden' => '0',
-                  ),
-                  12 => 
-                  array (
-                    'path' => 'civicrm/admin/locationType',
-                    'query' => 'reset=1',
-                    'title' => '地點類型（住家、工作場所）',
-                    'menu' => 'navigation',
-                    'weight' => '-38',
-                    'module' => 'menu',
-                    'hidden' => '0',
-                  ),
-                  13 => 
-                  array (
-                    'path' => 'civicrm/admin/options/mobile_provider',
-                    'query' => 'group=mobile_provider&reset=1',
-                    'title' => '電信業者',
-                    'menu' => 'navigation',
-                    'weight' => '-37',
-                    'module' => 'menu',
-                    'hidden' => '0',
-                  ),
-                  14 => 
-                  array (
-                    'path' => 'civicrm/admin/options/phone_type',
-                    'query' => 'group=phone_type&reset=1',
-                    'title' => '電話類型',
-                    'menu' => 'navigation',
-                    'weight' => '-36',
-                    'module' => 'menu',
-                    'hidden' => '0',
-                  ),
-                  15 => 
-                  array (
-                    'path' => 'civicrm/admin/options/website_type',
-                    'query' => 'group=website_type&reset=1',
-                    'title' => '網站類型',
-                    'menu' => 'navigation',
-                    'weight' => '-35',
-                    'module' => 'menu',
-                    'hidden' => '0',
-                  ),
-                  16 => 
-                  array (
-                    'path' => 'civicrm/admin/options/preferred_communication_method',
-                    'query' => 'group=preferred_communication_method&reset=1',
-                    'title' => '偏好聯絡方式',
-                    'menu' => 'navigation',
-                    'weight' => '-34',
-                    'module' => 'menu',
-                    'hidden' => '0',
-                  ),
-                  17 => 
-                  array (
-                    'path' => 'civicrm/admin/options/subtype',
-                    'query' => 'reset=1',
-                    'title' => '聯絡人類型',
-                    'menu' => 'navigation',
-                    'weight' => '-33',
-                    'module' => 'menu',
-                    'hidden' => '0',
-                  ),
-                  18 => 
-                  array (
-                    'path' => 'civicrm/admin/options/wordreplacements',
-                    'query' => 'reset=1',
-                    'title' => '置換',
-                    'menu' => 'navigation',
-                    'weight' => '-32',
-                    'module' => 'menu',
-                    'hidden' => '0',
-                  ),
-                ),
               ),
             ),
           ),
         ),
       ),
-      4 => 
-      array (
-        'path' => 'admin/settings',
-        'query' => NULL,
-        'title' => 'Site configuration',
-        'menu' => 'navigation',
-        'weight' => '-5',
-        'module' => 'menu',
-        'hidden' => '0',
-        'children' => 
-        array (
-          0 => 
-          array (
-            'path' => 'admin/settings/actions',
-            'query' => NULL,
-            'title' => 'Actions',
-            'menu' => 'navigation',
-            'weight' => '0',
-            'module' => 'menu',
-            'hidden' => '1',
-            'children' => 
-            array (
-              0 => 
-              array (
-                'path' => 'admin/settings/actions/configure',
-                'query' => NULL,
-                'title' => 'Configure an advanced action',
-                'menu' => 'navigation',
-                'weight' => '0',
-                'module' => 'menu',
-                'hidden' => '-1',
-              ),
-              1 => 
-              array (
-                'path' => 'admin/settings/actions/orphan',
-                'query' => NULL,
-                'title' => 'Remove orphans',
-                'menu' => 'navigation',
-                'weight' => '0',
-                'module' => 'menu',
-                'hidden' => '-1',
-              ),
-              2 => 
-              array (
-                'path' => 'admin/settings/actions/delete/%',
-                'query' => NULL,
-                'title' => 'Delete action',
-                'menu' => 'navigation',
-                'weight' => '0',
-                'module' => 'menu',
-                'hidden' => '-1',
-              ),
-            ),
-          ),
-          1 => 
-          array (
-            'path' => 'admin/settings/admin',
-            'query' => NULL,
-            'title' => 'Administration theme',
-            'menu' => 'navigation',
-            'weight' => '0',
-            'module' => 'menu',
-            'hidden' => '1',
-          ),
-          2 => 
-          array (
-            'path' => 'admin/settings/clean-urls',
-            'query' => NULL,
-            'title' => 'Clean URLs',
-            'menu' => 'navigation',
-            'weight' => '0',
-            'module' => 'menu',
-            'hidden' => '1',
-            'children' => 
-            array (
-              0 => 
-              array (
-                'path' => 'admin/settings/clean-urls/check',
-                'query' => NULL,
-                'title' => 'Clean URL check',
-                'menu' => 'navigation',
-                'weight' => '0',
-                'module' => 'menu',
-                'hidden' => '-1',
-              ),
-            ),
-          ),
-          3 => 
-          array (
-            'path' => 'admin/settings/date-time',
-            'query' => NULL,
-            'title' => 'Date and time',
-            'menu' => 'navigation',
-            'weight' => '0',
-            'module' => 'menu',
-            'hidden' => '0',
-            'children' => 
-            array (
-              0 => 
-              array (
-                'path' => 'admin/settings/date-time/lookup',
-                'query' => NULL,
-                'title' => 'Date and time lookup',
-                'menu' => 'navigation',
-                'weight' => '0',
-                'module' => 'menu',
-                'hidden' => '-1',
-              ),
-            ),
-          ),
-          4 => 
-          array (
-            'path' => 'admin/settings/error-reporting',
-            'query' => NULL,
-            'title' => 'Error reporting',
-            'menu' => 'navigation',
-            'weight' => '0',
-            'module' => 'menu',
-            'hidden' => '1',
-          ),
-          5 => 
-          array (
-            'path' => 'admin/settings/file-system',
-            'query' => NULL,
-            'title' => 'File system',
-            'menu' => 'navigation',
-            'weight' => '0',
-            'module' => 'menu',
-            'hidden' => '1',
-          ),
-          6 => 
-          array (
-            'path' => 'admin/settings/image-toolkit',
-            'query' => NULL,
-            'title' => 'Image toolkit',
-            'menu' => 'navigation',
-            'weight' => '0',
-            'module' => 'menu',
-            'hidden' => '1',
-          ),
-          7 => 
-          array (
-            'path' => 'admin/settings/filters',
-            'query' => NULL,
-            'title' => 'Input formats',
-            'menu' => 'navigation',
-            'weight' => '0',
-            'module' => 'menu',
-            'hidden' => '1',
-            'children' => 
-            array (
-              0 => 
-              array (
-                'path' => 'admin/settings/filters/%',
-                'query' => NULL,
-                'title' => '',
-                'menu' => 'navigation',
-                'weight' => '0',
-                'module' => 'menu',
-                'hidden' => '-1',
-              ),
-              1 => 
-              array (
-                'path' => 'admin/settings/filters/delete',
-                'query' => NULL,
-                'title' => 'Delete input format',
-                'menu' => 'navigation',
-                'weight' => '0',
-                'module' => 'menu',
-                'hidden' => '-1',
-              ),
-            ),
-          ),
-          8 => 
-          array (
-            'path' => 'admin/settings/logging',
-            'query' => NULL,
-            'title' => 'Logging and alerts',
-            'menu' => 'navigation',
-            'weight' => '0',
-            'module' => 'menu',
-            'hidden' => '1',
-            'children' => 
-            array (
-              0 => 
-              array (
-                'path' => 'admin/settings/logging/dblog',
-                'query' => NULL,
-                'title' => 'Database logging',
-                'menu' => 'navigation',
-                'weight' => '0',
-                'module' => 'menu',
-                'hidden' => '1',
-              ),
-            ),
-          ),
-          9 => 
-          array (
-            'path' => 'admin/settings/performance',
-            'query' => NULL,
-            'title' => 'Performance',
-            'menu' => 'navigation',
-            'weight' => '0',
-            'module' => 'menu',
-            'hidden' => '1',
-          ),
-          10 => 
-          array (
-            'path' => 'admin/settings/site-information',
-            'query' => NULL,
-            'title' => 'Site information',
-            'menu' => 'navigation',
-            'weight' => '0',
-            'module' => 'menu',
-            'hidden' => '0',
-          ),
-          11 => 
-          array (
-            'path' => 'admin/settings/site-maintenance',
-            'query' => NULL,
-            'title' => 'Site maintenance',
-            'menu' => 'navigation',
-            'weight' => '0',
-            'module' => 'menu',
-            'hidden' => '0',
-          ),
-          12 => 
-          array (
-            'path' => 'admin/settings/imce',
-            'query' => NULL,
-            'title' => 'IMCE',
-            'menu' => 'navigation',
-            'weight' => '0',
-            'module' => 'menu',
-            'hidden' => '0',
-            'children' => 
-            array (
-              0 => 
-              array (
-                'path' => 'admin/settings/imce/profile',
-                'query' => NULL,
-                'title' => 'Add new profile',
-                'menu' => 'navigation',
-                'weight' => '0',
-                'module' => 'menu',
-                'hidden' => '-1',
-              ),
-            ),
-          ),
-          13 => 
-          array (
-            'path' => 'admin/settings/language',
-            'query' => NULL,
-            'title' => 'Languages',
-            'menu' => 'navigation',
-            'weight' => '0',
-            'module' => 'menu',
-            'hidden' => '0',
-            'children' => 
-            array (
-              0 => 
-              array (
-                'path' => 'admin/settings/language/delete/%',
-                'query' => NULL,
-                'title' => 'Confirm',
-                'menu' => 'navigation',
-                'weight' => '0',
-                'module' => 'menu',
-                'hidden' => '-1',
-              ),
-              1 => 
-              array (
-                'path' => 'admin/settings/language/edit/%',
-                'query' => NULL,
-                'title' => 'Edit language',
-                'menu' => 'navigation',
-                'weight' => '0',
-                'module' => 'menu',
-                'hidden' => '-1',
-              ),
-            ),
-          ),
-          14 => 
-          array (
-            'path' => 'admin/settings/localefix',
-            'query' => NULL,
-            'title' => 'Localefix Configuration',
-            'menu' => 'navigation',
-            'weight' => '0',
-            'module' => 'menu',
-            'hidden' => '1',
-          ),
-          15 => 
-          array (
-            'path' => 'admin/settings/civicrm_import_group_tag',
-            'query' => NULL,
-            'title' => 'Import Group and Tag into CiviCRM',
-            'menu' => 'navigation',
-            'weight' => '0',
-            'module' => 'menu',
-            'hidden' => '1',
-          ),
-          16 => 
-          array (
-            'path' => 'admin/settings/pdf_receipts',
-            'query' => NULL,
-            'title' => 'CiviCRM PDF Receipts',
-            'menu' => 'navigation',
-            'weight' => '0',
-            'module' => 'menu',
-            'hidden' => '0',
-          ),
-          17 => 
-          array (
-            'path' => 'admin/settings/devel',
-            'query' => NULL,
-            'title' => 'Devel settings',
-            'menu' => 'navigation',
-            'weight' => '0',
-            'module' => 'menu',
-            'hidden' => '1',
-          ),
-        ),
-      ),
-      5 => 
+      3 => 
       array (
         'path' => 'admin/user',
         'query' => NULL,
@@ -1598,102 +307,6 @@ $menu_links['navigation'] = array (
         array (
           0 => 
           array (
-            'path' => 'admin/user/rules',
-            'query' => NULL,
-            'title' => 'Access rules',
-            'menu' => 'navigation',
-            'weight' => '0',
-            'module' => 'menu',
-            'hidden' => '1',
-            'children' => 
-            array (
-              0 => 
-              array (
-                'path' => 'admin/user/rules/delete',
-                'query' => NULL,
-                'title' => 'Delete rule',
-                'menu' => 'navigation',
-                'weight' => '0',
-                'module' => 'menu',
-                'hidden' => '-1',
-              ),
-              1 => 
-              array (
-                'path' => 'admin/user/rules/edit',
-                'query' => NULL,
-                'title' => 'Edit rule',
-                'menu' => 'navigation',
-                'weight' => '0',
-                'module' => 'menu',
-                'hidden' => '-1',
-              ),
-            ),
-          ),
-          1 => 
-          array (
-            'path' => 'admin/user/permissions',
-            'query' => NULL,
-            'title' => 'Permissions',
-            'menu' => 'navigation',
-            'weight' => '0',
-            'module' => 'menu',
-            'hidden' => '0',
-          ),
-          2 => 
-          array (
-            'path' => 'admin/user/roles',
-            'query' => NULL,
-            'title' => 'Roles',
-            'menu' => 'navigation',
-            'weight' => '0',
-            'module' => 'menu',
-            'hidden' => '0',
-            'children' => 
-            array (
-              0 => 
-              array (
-                'path' => 'admin/user/roles/edit',
-                'query' => NULL,
-                'title' => 'Edit role',
-                'menu' => 'navigation',
-                'weight' => '0',
-                'module' => 'menu',
-                'hidden' => '-1',
-              ),
-            ),
-          ),
-          3 => 
-          array (
-            'path' => 'admin/user/settings',
-            'query' => NULL,
-            'title' => 'User settings',
-            'menu' => 'navigation',
-            'weight' => '0',
-            'module' => 'menu',
-            'hidden' => '1',
-          ),
-          4 => 
-          array (
-            'path' => 'admin/user/user',
-            'query' => NULL,
-            'title' => 'Users',
-            'menu' => 'navigation',
-            'weight' => '0',
-            'module' => 'menu',
-            'hidden' => '0',
-          ),
-          5 => 
-          array (
-            'path' => 'admin/user/logintoboggan',
-            'query' => NULL,
-            'title' => 'LoginToboggan',
-            'menu' => 'navigation',
-            'weight' => '0',
-            'module' => 'menu',
-            'hidden' => '1',
-          ),
-          6 => 
-          array (
             'path' => 'civicrm/admin/access',
             'query' => 'reset=1',
             'title' => '存取控制',
@@ -1703,41 +316,18 @@ $menu_links['navigation'] = array (
             'module' => 'menu',
             'hidden' => '0',
           ),
-          7 => 
+          1 => 
           array (
             'path' => 'civicrm/admin/synchUser',
             'query' => 'reset=1',
             'title' => '同步使用者到聯絡人',
-            'description' => '將現有已註冊的使用者，同步成為聯絡人，重複的聯絡人將合併（已Email判斷）',
+            'description' => '將現有已註冊的使用者，同步成為聯絡人，重複的聯絡人將合併（以Email判斷）',
             'menu' => 'navigation',
             'weight' => '2',
             'module' => 'menu',
             'hidden' => '0',
           ),
         ),
-      ),
-    ),
-  ),
-  30 => 
-  array (
-    'path' => 'node/add',
-    'query' => NULL,
-    'title' => 'Create content',
-    'menu' => 'navigation',
-    'weight' => '-46',
-    'module' => 'menu',
-    'hidden' => '0',
-    'children' => 
-    array (
-      0 => 
-      array (
-        'path' => 'node/add/page',
-        'query' => NULL,
-        'title' => '頁面',
-        'menu' => 'navigation',
-        'weight' => '0',
-        'module' => 'menu',
-        'hidden' => '0',
       ),
     ),
   ),
