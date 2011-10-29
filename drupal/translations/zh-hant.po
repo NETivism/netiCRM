@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: NOW\n"
-"PO-Revision-Date: 2011-09-16 17:44+0800\n"
+"PO-Revision-Date: 2011-10-28 17:52+0800\n"
 "Last-Translator: licia <licia@netivism.com.tw>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "MIME-Version: 1.0\n"
@@ -459,7 +459,7 @@ msgstr "刪除權限"
 #: CRM/ACL/Page/ACLBasic.php CRM/ACL/Page/ACL.php CRM/ACL/Page/EntityRole.php
 #: CRM/Admin/Page/Options.php msgctxt "menu"
 msgid "Access Control"
-msgstr "存取控制"
+msgstr "權限控制"
 
 #: CRM/ACL/Page/ACL.php CRM/ACL/Page/EntityRole.php
 #: CRM/Admin/Page/ContactType.php CRM/Admin/Page/Extensions.php
@@ -1216,7 +1216,7 @@ msgstr "上一頁"
 #: CRM/Report/Form/Mailing/Clicks.php CRM/Report/Form/Mailing/Opened.php
 #: CRM/Report/Form/Membership/Summary.php CRM/Report/Form/Walklist.php
 msgid "Contact ID"
-msgstr "聯絡人編號"
+msgstr "系統編號"
 
 #: CRM/Activity/Import/Form/MapField.php
 #: CRM/Contribute/Import/Form/MapField.php CRM/Event/Import/Form/MapField.php
@@ -1571,7 +1571,7 @@ msgstr "匯入資料來源"
 
 #: CRM/Admin/Form/MessageTemplates.php CRM/Mailing/BAO/Mailing.php
 msgid "Insert Tokens"
-msgstr "插入替代符號（token）"
+msgstr "插入替代符號"
 
 #: CRM/Admin/Form/MessageTemplates.php CRM/Mailing/Form/ForwardMailing.php
 #: templates/CRM/Activity/Form/ActivityView.tpl
@@ -2079,7 +2079,7 @@ msgstr "不包括"
 #: CRM/Campaign/DAO/Campaign.php CRM/Contact/DAO/Contact.php
 #: CRM/Contribute/Import/Form/MapField.php
 msgid "External Identifier"
-msgstr "外部辨識器"
+msgstr "外部編號"
 
 #: CRM/Campaign/DAO/Campaign.php CRM/Campaign/DAO/Survey.php
 msgid "Campaign Created Date"
@@ -2709,7 +2709,7 @@ msgstr "任務狀態"
 
 #: CRM/Contact/DAO/Contact.php CRM/Core/SelectValues.php CRM/UF/Form/Field.php
 msgid "Internal Contact ID"
-msgstr "內部聯絡人 ID"
+msgstr "系統編號"
 
 #: CRM/Contact/DAO/Contact.php CRM/Contact/Form/Search/Custom/LegalId.php
 #: templates/CRM/common/footer.tpl
@@ -3134,7 +3134,7 @@ msgstr "Tag"
 #: CRM/Contact/Form/Search/Custom/ZipCodeRange.php CRM/Contact/Selector.php
 #: CRM/Pledge/Selector/Search.php
 msgid "Contact Id"
-msgstr "聯絡人編號"
+msgstr "系統編號"
 
 #: CRM/Contact/Form/Search/Custom/ContribSYBNT.php
 #: CRM/Contact/Form/Search/Custom/ContributionAggregate.php
@@ -4747,7 +4747,7 @@ msgstr "活動名稱"
 #: CRM/Event/DAO/Event.php CRM/Event/Form/ManageEvent/EventInfo.php
 #: templates/CRM/Event/Page/DashBoard.tpl
 msgid "Event Summary"
-msgstr "活動概況"
+msgstr "活動摘要"
 
 #: CRM/Event/DAO/Event.php CRM/Report/Form/Event/IncomeCountSummary.php
 #: CRM/Report/Form/Event/ParticipantListCount.php
@@ -5103,7 +5103,7 @@ msgstr "拒絕原因"
 #: CRM/Mailing/Event/DAO/TrackableURLOpen.php
 #: CRM/Mailing/Event/DAO/Unsubscribe.php
 msgid "Time Stamp"
-msgstr "時間替代符號（token）"
+msgstr "時間標記"
 
 #: CRM/Mailing/Form/Group.php CRM/Mailing/Form/Settings.php
 #: CRM/Mailing/Form/Test.php CRM/Mailing/Form/Upload.php
@@ -5231,7 +5231,7 @@ msgstr "最低會費"
 
 #: CRM/Member/DAO/MembershipType.php CRM/Member/Form/MembershipType.php
 msgid "Fixed Period Rollover Day"
-msgstr ""
+msgstr "固定結束日期"
 
 #: CRM/Member/DAO/MembershipType.php CRM/Member/Form/MembershipType.php
 msgid "Renewal Reminder Day"
@@ -5406,7 +5406,7 @@ msgstr "說明"
 
 #: CRM/Price/Form/Field.php CRM/Price/Form/Option.php
 msgid "Participant count can not be greater than max participants."
-msgstr "捐款金額不能大於 %1"
+msgstr "參加者數量不可高於參加者最高人數。"
 
 #: CRM/Price/Form/Preview.php CRM/Price/Form/Set.php CRM/Price/Page/Set.php
 #: msgctxt "menu"
@@ -5718,7 +5718,7 @@ msgstr "請將此權限設定給一個角色。"
 
 #: CRM/ACL/Form/ACL.php
 msgid "Only 'View' and 'Edit' operations are valid for this type of data"
-msgstr "此種類型的資料，僅能夠「瀏覽」與「編輯」"
+msgstr "此種類型的資料，僅允許「檢視」與「編輯」的操作權限"
 
 #: CRM/ACL/Form/ACL.php
 msgid "Please select a Group (or ALL Groups)."
@@ -5858,7 +5858,7 @@ msgstr "任務在垃圾箱裡"
 
 #: CRM/Activity/DAO/ActivityTarget.php
 msgid "Contact ID (match to contact)"
-msgstr "聯絡人編號(與聯絡人對應)"
+msgstr "系統編號(與聯絡人對應)"
 
 #: CRM/Activity/Form/Activity.php
 msgid "Followup Activity"
@@ -8514,7 +8514,7 @@ msgstr "API"
 
 #: CRM/Contact/Form/Contact.php
 msgid "Could not get a contact id and/or contact type"
-msgstr "無法取得聯絡人編號和 / 或聯絡人類別"
+msgstr "無法取得系統編號和 / 或聯絡人類別"
 
 #: CRM/Contact/Form/Contact.php
 msgid "Could not get a valid contact subtype for contact type '%1'"
@@ -9689,7 +9689,7 @@ msgstr "刪除聯絡人"
 
 #: CRM/Contact/Page/View.php
 msgid "We could not find a contact id."
-msgstr "我們找不到聯絡編號。"
+msgstr "我們找不到系統編號。"
 
 #: CRM/Contact/Page/View.php
 msgid "You do not have the necessary permission to view this contact."
@@ -9990,7 +9990,7 @@ msgstr "活動終止日期"
 
 #: CRM/Contribute/BAO/Widget.php
 msgid "Raised %1 of %2"
-msgstr "第%1頁，共%2頁"
+msgstr "募集到%1元，共需要%2元。"
 
 #: CRM/Contribute/BAO/Widget.php
 msgid "Raised %1"
@@ -10551,7 +10551,7 @@ msgstr "啟用捐款金額區域"
 
 #: CRM/Contribute/Form/ContributionPage/Amount.php
 msgid "Execute real-time monetary transactions"
-msgstr "執行即時金流交易"
+msgstr "啟用金流機制"
 
 #: CRM/Contribute/Form/ContributionPage/Amount.php
 msgid "Recurring contributions"
@@ -10752,7 +10752,7 @@ msgstr "標題及設定（%1）"
 
 #: CRM/Contribute/Form/ContributionPage/Settings.php
 msgid "Allow individuals to contribute and / or signup for membership on behalf of an organization?"
-msgstr "允許個人進行捐款及/或代替組織註冊會員？"
+msgstr "可用組織名義捐款及進行會員註冊繳費"
 
 #: CRM/Contribute/Form/ContributionPage/Settings.php
 msgid "On behalf of Label"
@@ -13527,7 +13527,7 @@ msgstr "Secret 還沒有設定為金流機制"
 
 #: CRM/Core/Permission.php
 msgid "add contacts"
-msgstr "新增聯絡人"
+msgstr "增加聯絡人"
 
 #: CRM/Core/Permission.php
 msgid "view all contacts"
@@ -13543,7 +13543,7 @@ msgstr "刪除聯絡人"
 
 #: CRM/Core/Permission.php
 msgid "access deleted contacts"
-msgstr "查看已刪除的聯絡人"
+msgstr "存取回收桶的聯絡人"
 
 #: CRM/Core/Permission.php
 msgid "import contacts"
@@ -13555,11 +13555,11 @@ msgstr "編輯群組"
 
 #: CRM/Core/Permission.php
 msgid "administer CiviCRM"
-msgstr "管理 CiviCRM "
+msgstr "管理與設定支持者系統"
 
 #: CRM/Core/Permission.php
 msgid "access uploaded files"
-msgstr "存取上傳檔案"
+msgstr "存取已上傳的檔案"
 
 #: CRM/Core/Permission.php
 msgid "profile listings and forms"
@@ -13595,15 +13595,15 @@ msgstr "刪除任務"
 
 #: CRM/Core/Permission.php
 msgid "access CiviCRM"
-msgstr "存取 CiviCRM"
+msgstr "存取支持者管理系統"
 
 #: CRM/Core/Permission.php
 msgid "access Contact Dashboard"
-msgstr "存取聯絡人總覽"
+msgstr "存取聯絡人總覽頁"
 
 #: CRM/Core/Permission.php
 msgid "translate CiviCRM"
-msgstr "翻譯 CiviCRM"
+msgstr "翻譯支持者系統"
 
 #: CRM/Core/Permission.php
 msgid "administer Tagsets"
@@ -14445,7 +14445,7 @@ msgstr "搜尋稍後付款參加者？"
 
 #: CRM/Event/DAO/Event.php
 msgid "Event Description"
-msgstr "活動描述"
+msgstr "活動內容"
 
 #: CRM/Event/DAO/Event.php
 msgid "Event Type ID"
@@ -14653,7 +14653,7 @@ msgstr "候補名單訊息"
 
 #: CRM/Event/Form/ManageEvent/EventInfo.php
 msgid "Message if Event Is Full"
-msgstr "如果活動已滿的訊息"
+msgstr "活動額滿顯示訊息"
 
 #: CRM/Event/Form/ManageEvent/EventInfo.php
 msgid "Is this Event Active?"
@@ -14825,7 +14825,7 @@ msgstr "參加此活動需要審核批准。請在此提交您的報名要求。
 
 #: CRM/Event/Form/ManageEvent/Registration.php
 msgid "Allow Online Registration?"
-msgstr "允許線上報名？"
+msgstr "開放線上報名"
 
 #: CRM/Event/Form/ManageEvent/Registration.php
 msgid "Registration Link Text"
@@ -15374,7 +15374,7 @@ msgstr "遺失所需欄位：提供參加者編號"
 
 #: CRM/Event/Import/Form/MapField.php
 msgid "Or Provide Contact Id or External Identifier."
-msgstr "或提供聯絡人編號或外部驗證碼"
+msgstr "或提供系統編號或外部編號"
 
 #: CRM/Event/Import/Form/MapField.php
 msgid "Duplicate Import Participant Mapping Name"
@@ -15634,7 +15634,7 @@ msgstr "網頁參數缺少或無效"
 
 #: CRM/Friend/Form.php
 msgid "Could not get the contact ID"
-msgstr "無法取得聯絡人編號"
+msgstr "無法取得系統編號"
 
 #: CRM/Friend/Form.php templates/CRM/Contribute/Form/Contribution/Confirm.tpl
 msgid "Your Email"
@@ -15992,11 +15992,11 @@ msgstr "本聯絡人子類別發現比對錯誤或格式不合的問題。"
 
 #: CRM/Import/Parser/Contact.php
 msgid "No contact found for this related contact ID: %1"
-msgstr "找不到相關的聯絡人ID： %1"
+msgstr "找不到相關的系統編號： %1"
 
 #: CRM/Import/Parser/Contact.php
 msgid "Mismatched or Invalid contact subtype found for this related contact ID: %1"
-msgstr "聯絡人ID %1 擁有子類別比對錯誤，或是格式不合的問題。"
+msgstr "系統編號 %1 擁有子類別比對錯誤，或是格式不合的問題。"
 
 #: CRM/Import/Parser/Contact.php
 msgid "Related contact required fields are missing."
@@ -16120,7 +16120,7 @@ msgstr "選取的電子報已刪除。"
 
 #: CRM/Mailing/BAO/Mailing.php
 msgid "Insert Token"
-msgstr "插入替代符號（token）"
+msgstr "插入替代符號"
 
 #: CRM/Mailing/BAO/Mailing.php
 msgid "Use Template"
@@ -16172,7 +16172,7 @@ msgstr ""
 
 #: CRM/Mailing/DAO/BounceType.php
 msgid "Host"
-msgstr "主機"
+msgstr "主持人"
 
 #: CRM/Mailing/DAO/BounceType.php
 msgid "Invalid"
@@ -16323,11 +16323,11 @@ msgstr "主體 - HTML格式"
 
 #: CRM/Mailing/Form/Component.php
 msgid "This token can only be used in send mailing context (body, header, footer).."
-msgstr "此替代符號（token）只可使用在郵件上下文（主體、頁首、頁尾…）"
+msgstr "此替代符號只可使用在郵件上下文（主體、頁首、頁尾…）"
 
 #: CRM/Mailing/Form/Component.php
 msgid "This message is having a invalid token - %1: %2"
-msgstr "此訊息有一個無效替代符號（token） - %1：%2"
+msgstr "此訊息有一個無效替代符號 - %1：%2"
 
 #: CRM/Mailing/Form/Component.php
 msgid "The following errors were detected in %1 message:"
@@ -16335,7 +16335,7 @@ msgstr "以下錯誤在%1訊息被偵測到："
 
 #: CRM/Mailing/Form/Component.php
 msgid "More information on tokens..."
-msgstr "關於替代符號（token）的更多資料…"
+msgstr "關於替代符號的更多資料…"
 
 #: CRM/Mailing/Form/ForwardMailing.php
 msgid "Invalid form parameters."
@@ -16566,11 +16566,11 @@ msgstr "請提供範本名稱。"
 
 #: CRM/Mailing/Form/Upload.php
 msgid "This message is missing a required token - {%1}: %2"
-msgstr "此訊息遺失所需替代符號（token） -{%1}：%2"
+msgstr "此訊息遺失所需替代符號 -{%1}：%2"
 
 #: CRM/Mailing/Form/Upload.php
 msgid "Invalid token code"
-msgstr "無效替代符號（token）編碼"
+msgstr "無效替代符號編碼"
 
 #: CRM/Mailing/Form/Upload.php
 msgid "The following errors were detected in %1:"
@@ -16578,7 +16578,7 @@ msgstr "以下錯誤在%1被偵測到："
 
 #: CRM/Mailing/Form/Upload.php
 msgid "More information on required tokens..."
-msgstr "關於必須替代符號（token）的更多資料…"
+msgstr "關於必須替代符號的更多資料…"
 
 #: CRM/Mailing/Form/Upload.php
 msgid "Duplicate Template Name."
@@ -17813,7 +17813,7 @@ msgstr "請在此欄位輸入一個金額。"
 
 #: CRM/Price/Form/Option.php
 msgid "Participants Count"
-msgstr "參加者的聯絡人編號"
+msgstr "參加者數量"
 
 #: CRM/Price/Form/Option.php
 msgid "%1 option has been deleted."
@@ -18019,7 +18019,7 @@ msgstr "此資料表單未啟用對應功能。"
 
 #: CRM/Profile/Page/View.php
 msgid "Could not find the required contact id parameter (id=) for viewing a contact record with a Profile."
-msgstr "無法找到所需的聯絡人編號參數(id=)，來查看個人資訊裡的聯絡人資料。"
+msgstr "無法找到所需的系統編號參數(id=)，來查看個人資訊裡的聯絡人資料。"
 
 #: CRM/Profile/Selector/Listings.php
 msgid "View Profile Details"
@@ -18302,7 +18302,7 @@ msgstr "合併聯絡人"
 
 #: CRM/Report/Form/Contact/LoggingSummary.php
 msgid "Insert"
-msgstr "插入替代符號（token）"
+msgstr "插入替代符號"
 
 #: CRM/Report/Form/Contact/LoggingSummary.php
 msgid "Altered By"
@@ -18790,11 +18790,11 @@ msgstr "PDF預覽"
 
 #: CRM/Report/Form.php
 msgid "Export to CSV"
-msgstr "匯出為CSV格式"
+msgstr "匯出試算表"
 
 #: CRM/Report/Form.php
 msgid "Preview CSV"
-msgstr "CSV預覽"
+msgstr "預覽試算表"
 
 #: CRM/Report/Form.php
 msgid "Add these Contacts to Group"
@@ -19720,7 +19720,7 @@ msgstr "透過 Email 取消訂閱 - 顯示一個 Email，讓訂戶可以取消�
 
 #: CRM/Utils/Token.php
 msgid "'Opt out via web page' - creates a link for recipients to click if they want to opt out of receiving emails from your organization. Alternatively, you can include the 'Opt out via email' token."
-msgstr "透過網頁取消訂閱 - 為收件者建立一個連結，讓他們在不想收到您的組織寄來的 Email 時，可以取消訂閱。你也可使用「透過 Email 取消訂閱」這個替代符號（Token）。"
+msgstr "透過網頁取消訂閱 - 為收件者建立一個連結，讓他們在不想收到您的組織寄來的 Email 時，可以取消訂閱。你也可使用「透過 Email 取消訂閱」這個替代符號。"
 
 #: CRM/Utils/Weight.php
 msgid "Move to top"
@@ -19817,7 +19817,7 @@ msgstr ""
 
 #: templates/CRM/ACL/Form/ACL.tpl
 msgid "Please remember that Drupal's \"register for events\" permission overrides CiviCRM's control over event information access."
-msgstr "請記得Drupal的 \"報名活動\" 權限覆蓋於CiviCRM的活動資訊存取控制。"
+msgstr "請記得Drupal的 \"報名活動\" 權限覆蓋於CiviCRM的活動資訊權限控制。"
 
 #: templates/CRM/ACL/Form/ACL.tpl
 msgid "What type of operation (action) is being permitted?"
@@ -19849,7 +19849,7 @@ msgstr ""
 
 #: templates/CRM/ACL/Page/ACLBasic.tpl templates/CRM/ACL/Page/ACL.tpl
 msgid "ACLs allow you control access to CiviCRM data. An ACL consists of an <strong>Operation</strong> (e.g. 'View' or 'Edit'), a <strong>set of data</strong> that the operation can be performed on (e.g. a group of contacts, a profile or a set of custom fields), and a <strong>Role</strong> that has permission to do this operation. Refer to the %1 for more info."
-msgstr "權限可讓您設定 CiviCRM 的資料存取控制。一個權限包含一個 <strong>操作</strong>（例如「查看」或「編輯」）、可被操作的<strong>資料集</strong>（例如聯絡人群組，資料表單或自訂欄位）、及具有此操作權限的<strong>角色</strong>。您可連至%1觀看更多資料。"
+msgstr "權限可讓您設定 CiviCRM 的資料權限控制。一個權限包含一個 <strong>操作</strong>（例如「查看」或「編輯」）、可被操作的<strong>資料集</strong>（例如聯絡人群組，資料表單或自訂欄位）、及具有此操作權限的<strong>角色</strong>。您可連至%1觀看更多資料。"
 
 #: templates/CRM/ACL/Page/ACLBasic.tpl templates/CRM/ACL/Page/ACL.tpl
 msgid "You can add or modify your ACLs below. You can create additional ACL Roles <a href='%2'>here</a>... and you can assign Roles to CiviCRM contacts who are users of your site <a href='%1'>here</a>."
@@ -19861,7 +19861,7 @@ msgstr "權限類別"
 
 #: templates/CRM/ACL/Page/ACLBasic.tpl templates/CRM/ACL/Page/ACL.tpl
 msgid "Add ACL"
-msgstr "新增副本"
+msgstr "新增權限"
 
 #: templates/CRM/ACL/Page/ACLBasic.tpl templates/CRM/ACL/Page/ACL.tpl
 msgid "There are no ACLs entered. You can <a href='%1'>add one</a>."
@@ -19871,7 +19871,7 @@ msgstr "尚未設定權限。您可以 <a href='%1'>新增一個</a>。"
 #: templates/CRM/ACL/Page/EntityRole.tpl templates/CRM/Admin/Page/Access.tpl
 #: templates/CRM/Admin/Page/Options.tpl
 msgid "Access Control Documentation"
-msgstr "存取控制檔案"
+msgstr "權限控制文件"
 
 #: templates/CRM/ACL/Page/ACL.tpl
 msgid "Which Data"
@@ -19879,7 +19879,7 @@ msgstr ""
 
 #: templates/CRM/ACL/Page/EntityRole.tpl templates/CRM/Admin/Page/Options.tpl
 msgid "ACLs allow you control access to CiviCRM data. An ACL consists of an <strong>Operation</strong> (e.g. 'View' or 'Edit'), a <strong>set of data</strong> that the operation can be performed on (e.g. a group of contacts), and a <strong>Role</strong> that has permission to do this operation. Refer to the %1 for more info."
-msgstr "權限可讓您設定 CiviCRM 的資料存取控制。一個權限包含一個 <strong>操作</strong>（例如「查看」或「編輯」）、可被操作的<strong>資料集</strong>（例如聯絡人群組）、及具有此操作權限的<strong>角色</strong>。您可連至%1觀看更多資料。"
+msgstr "權限可讓您設定 CiviCRM 的資料權限控制。一個權限包含一個 <strong>操作</strong>（例如「查看」或「編輯」）、可被操作的<strong>資料集</strong>（例如聯絡人群組）、及具有此操作權限的<strong>角色</strong>。您可連至%1觀看更多資料。"
 
 #: templates/CRM/ACL/Page/EntityRole.tpl
 msgid "An ACL Role represents a collection ACL&rsquo;s (permissions). You can assign roles to groups of CiviCRM contacts who are users of your site below. You can add or modify ACLs <a href='%1'>here</a>. You can create additional ACL Roles <a href='%2'>here</a>."
@@ -20410,7 +20410,7 @@ msgstr "已成功匯入資料列。"
 
 #: templates/CRM/Activity/Import/Form/UploadFile.hlp
 msgid "The Activity Import Wizard allows you to easily upload activity from other applications into CiviCRM. Contacts must already exist in your CiviCRM database prior to importing activities for them. Use Import Contacts to create contact records first, if necessary. Then you can match activities to contacts by Email Address, CiviCRM Contact ID, or an External Identifier (see the TIP below)."
-msgstr "行動匯入嚮導允許您容易地從其他程式上載活動到CiviCRM，匯入之前，聯絡人必須已經存在您的CiviCRM資料庫。如有需要，先使用匯入聯絡人建立聯絡人記錄。然後您可以透過Email地址、CiviCRM聯絡人ID，或外部識別碼(看以下的說明)來配對行動和聯絡人。"
+msgstr "活動匯入精靈讓您容易地從其他程式上載活動到CiviCRM，匯入之前，聯絡人必須已經存在您的CiviCRM資料庫。如有需要，先使用匯入聯絡人建立聯絡人記錄。然後您可以透過Email地址、CiviCRM系統編號，或外部編號(看以下的說明)來配對行動和聯絡人。"
 
 #: templates/CRM/Activity/Import/Form/UploadFile.hlp
 msgid "Files to be imported must be in the 'comma-separated-values' format (CSV). Most applications will allow you to export records in this format. Consult the documentation for your application if you're not sure how to do this. Save this file to your local hard drive (or an accessible drive on your network) - and you are now ready for step 1 (Upload Data)."
@@ -20423,10 +20423,10 @@ msgstr "配對捐款到捐款人"
 #: templates/CRM/Activity/Import/Form/UploadFile.hlp
 msgid "CiviCRM allows you to indicate which contact each activity record belongs to using either the unique CiviCRM-assigned Contact ID, a unique External Identifier which you assign, OR your configured 'strict' Dedupe Rule set (which uses email addresses by default). You must include at least one of these values as a column in your import file. If you have are synchronizing (or migrating) contacts from another application to CiviCRM, and that application has assigned a unique ID to each contact, you can import that value into CiviCRM's External Identifier field. Then you can use that unique key as the 'match to contact' value when importing related data such as Activities and Contributions."
 msgstr ""
-"<strong>說明 - 配對行動到聯絡人記錄</strong><br />CiviCRM允許您標註每項行動記錄歸屬於哪位聯絡人，透過使用特定的CiviCRM-assigned 聯絡人ID、您指派的特定外部識別碼或您的\n"
+"<strong>說明 - 配對行動到聯絡人記錄</strong><br />CiviCRM允許您標註每項行動記錄歸屬於哪位聯絡人，透過使用特定的CiviCRM-assigned 系統編號、您指派的外部編號或您的\n"
 "設定\"strict\" 刪除重複記錄規則(使用預設Email)。您必須在匯入檔案的欄位中至少寫入一個值。\n"
 "如果您正在從其他應用程式統整(或遷移)聯絡人到CiviCRM，而且這個應用程式已經為每一個聯絡人指定了特定的ID，您可以匯入那個值到\n"
-"CiviCRM外部識別碼欄位，然後當匯入相關數據如行動或捐款時，您可以使用那個特定鍵當做\"配對聯絡人\"值。"
+"CiviCRM外部編號，然後當匯入相關數據如行動或捐款時，您可以使用那個特定鍵當做\"配對聯絡人\"值。"
 
 #: templates/CRM/Activity/Import/Form/UploadFile.tpl
 msgid "The Activity Import Wizard allows you to easily upload activity from other applications into CiviCRM. Contacts must already exist in your CiviCRM database prior to importing activity."
@@ -20655,7 +20655,7 @@ msgstr "警告：您是否確定刪除配對'<b>%1</b>'？此動作不能復原�
 
 #: templates/CRM/Admin/Form/MessageTemplates.tpl
 msgid "Use this form to add or edit re-usable message templates."
-msgstr "使用此表格去新增或編輯創建可重用的訊息範本。"
+msgstr "在這裡新增或編輯可重複使用的訊息範本。"
 
 #: templates/CRM/Admin/Form/MessageTemplates.tpl
 msgid "New Message Template"
@@ -20683,7 +20683,7 @@ msgstr "訊息的描述標題 - 用作範本選擇"
 #: templates/CRM/Contact/Form/Task/PDFLetterCommon.tpl
 #: templates/CRM/Mailing/Form/Upload.tpl
 msgid "Begin typing to filter list of tokens"
-msgstr "打一些字即可篩選下列的替代符號（token）"
+msgstr "打一些字即可篩選下列的替代符號"
 
 #: templates/CRM/Admin/Form/MessageTemplates.tpl
 msgid "Subject for email message."
@@ -20691,7 +20691,7 @@ msgstr "Email 標題。"
 
 #: templates/CRM/Admin/Form/MessageTemplates.tpl
 msgid "Tokens may be included (%1)."
-msgstr "替代符號（token）可能已被加入（%1）。"
+msgstr "替代符號可能已被加入（%1）。"
 
 #: templates/CRM/Admin/Form/MessageTemplates.tpl
 #: templates/CRM/Contact/Form/Task/EmailCommon.tpl
@@ -20713,7 +20713,7 @@ msgstr ""
 
 #: templates/CRM/Admin/Form/MessageTemplates.tpl
 msgid "token documentation"
-msgstr "替代符號（token）文件"
+msgstr "替代符號文件"
 
 #: templates/CRM/Admin/Form/Navigation.hlp
 msgid "Enter the destination URL. Generally you should use relative URLs for CiviCRM pages (e.g. links to profiles). Use complete URLs for external pages. Leave this field empty if you are creating a menu section that does not have a clickable destination."
@@ -21009,7 +21009,7 @@ msgstr "就職單位名稱為已設定在個人聯絡編輯表格。若您想要
 
 #: templates/CRM/Admin/Form/Preferences/Address.tpl
 msgid "Address format for mailing labels. Use the %1 token for state/province abbreviation or %2 for full name."
-msgstr "您可以利用<strong>替代符號（token）</strong>來設定郵件標籤的格式。例如替代符號 %1 會顯示聯絡人居住地區的縮寫字；而替代符號 %2 則會出現居住地區的全名。"
+msgstr "您可以利用<strong>替代符號</strong>來設定郵件標籤的格式。例如替代符號 %1 會顯示聯絡人居住地區的縮寫字；而替代符號 %2 則會出現居住地區的全名。"
 
 #: templates/CRM/Admin/Form/Preferences/Address.tpl
 msgid "Address Display"
@@ -21710,7 +21710,7 @@ msgstr "<strong>例如：</strong>「團隊領導人」（<em>權限角色</em>�
 
 #: templates/CRM/Admin/Page/Access.tpl
 msgid "Use <a href='%1'>Drupal Access Control</a> to manage basic access to CiviCRM components and menu items. Use CiviCRM ACLs to control access to specific CiviCRM contact groups. You can also configure ACLs to grant or deny access to specific Profiles, and/or Custom Data Fields."
-msgstr "使用 <a href='%1'>Drupal 存取控制</a>管理 CiviCRM 模組與選單項目的基本存取功能。使用 CiviCRM 權限管理特定 CiviCRM 聯絡人群組存取功能。您可以設定權限去給予或拒絕特定資料表單，及/或自訂欄位欄位的存取功能。"
+msgstr "使用 <a href='%1'>Drupal 權限控制</a>管理 CiviCRM 模組與選單項目的基本存取功能。使用 CiviCRM 權限管理特定 CiviCRM 聯絡人群組存取功能。您可以設定權限去給予或拒絕特定資料表單，及/或自訂欄位欄位的存取功能。"
 
 #: templates/CRM/Admin/Page/Access.tpl
 msgid "ACLs can be used to control access to contacts in CiviCRM 'static' or 'smart' groups. You can also configure ACLs to grant or deny access to specific Profiles, and/or Custom Data Fields."
@@ -21718,7 +21718,7 @@ msgstr ""
 
 #: templates/CRM/Admin/Page/Access.tpl
 msgid "Drupal Access Control"
-msgstr "Drupal 存取控制"
+msgstr "Drupal 權限控制"
 
 #: templates/CRM/Admin/Page/Access.tpl
 msgid "Grant access to CiviCRM components and access to view or edit contacts using <strong>Drupal roles</strong>."
@@ -22134,7 +22134,7 @@ msgstr ""
 
 #: templates/CRM/Admin/Page/MessageTemplates.hlp
 msgid "Message templates allow you to save and re-use messages with layouts. You can use them when sending email to one or more contacts. If you are using the CiviMail component - you can use templates for your messages. If you are using the CiviMember component, you will need to create one or more message templates for membership renewal reminders."
-msgstr "訊息樣板允許您用設計去儲存及重新使用訊息。您可以在傳送Email到一個或更多聯絡人使用它們。如果您在使用CiviEmail模組 - 您可以使用樣板給您的訊息。如果您在使用會員模組，您會需要建立一個或更多訊息樣板給會員資格更新提示。"
+msgstr "訊息範本可儲存與重複使用訊息樣式，使用於電子報與會員模組，並寄給一個至更多數量的聯絡人電子報或通知訊息。"
 
 #: templates/CRM/Admin/Page/MessageTemplates.hlp
 #: templates/CRM/Admin/Page/MessageTemplates.tpl
@@ -22283,11 +22283,11 @@ msgstr "您可以為個別捐款選擇付款工具。常用的付款工具已被
 
 #: templates/CRM/Admin/Page/Options.tpl
 msgid "This page lists the credit card options that will be offered to contributors using your Online Contribution pages. You will need to verify which cards are accepted by your chosen Payment Processor and update these entries accordingly."
-msgstr "此頁列出可被提供到線上募款頁面以供捐款者使用的信用卡類型。您將需要核對您採用的金流機制是否接受這些信用卡，並進行更新。"
+msgstr "此頁列出線上募款頁可提供捐款者使用的信用卡選項。您將需要審核採用的金流機制是否接受這些信用卡並進行更新。"
 
 #: templates/CRM/Admin/Page/Options.tpl
 msgid "IMPORTANT: This page does NOT control credit card/payment method choices for sites and/or contributors using the PayPal Express service (e.g. where billing information is collected on the Payment Processor's website)."
-msgstr ""
+msgstr "重要：本頁面不管控信用卡/付款方式網站選項/或提供捐款人使用PayPal Express service (如:帳單資訊儲存於金流機制網站)"
 
 #: templates/CRM/Admin/Page/Options.tpl
 msgid "You can add or modify your ACL Roles below. You can create ACL&rsquo;s and grant permission to roles <a href='%1'>here</a>... and you can assign role(s) to CiviCRM contacts who are users of your site <a href='%2'>here</a>."
@@ -23481,7 +23481,7 @@ msgstr "目前開始日期"
 
 #: templates/CRM/Case/Form/ActivityToCase.tpl
 msgid "Begin typing client name for a list of open cases."
-msgstr "打一些字即可篩選下列的替代符號（token）"
+msgstr "打一些字即可篩選下列的替代符號"
 
 #: templates/CRM/Case/Form/ActivityToCase.tpl
 msgid "You can modify the activity subject before filing."
@@ -24243,7 +24243,7 @@ msgstr "稱謂開頭問候語，或是寄送信件時的稱謂方式。這個設
 
 #: templates/CRM/Contact/Form/Contact.hlp
 msgid "You may also create a customized greeting and use field tokens to insert fields of your choice. For more information on available tokens, see the online documentation %1."
-msgstr "您也可以在不同欄位中插入替代符號（Token），以建立個人化的問候語。要獲得更多關於替代符號（Token）的資訊，請參閱線上文件 %1。"
+msgstr "您也可以在不同欄位中插入替代符號，以建立個人化的問候語。要獲得更多關於替代符號的資訊，請參閱線上文件 %1。"
 
 #: templates/CRM/Contact/Form/Contact.hlp
 msgid "CiviCRM will attempt to split street addresses into separate elements (street number, street name and unit/apt) to help you make lists and reports where you need to sort by street number (and/or separate addresses with odd and even numbers). For most addresses, this is done for you automatically. However, you can manually edit these elements, and potentially handle addresses that are in unusual formats, by clicking 'Edit Address Elements'."
@@ -24335,7 +24335,7 @@ msgstr "組織地址"
 
 #: templates/CRM/Contact/Form/Domain.tpl
 msgid "CiviMail mailings must include the sending organization's address. This is done by putting the %1 token in either the body or footer of the mailing. This token may also be used in regular 'Send Email to Contacts' messages and in other Message Templates. The token is replaced by the address entered below when the message is sent."
-msgstr "電子報必須包含寄送組織的地址。您把替代符號（Token)%1置放在信件主文或郵件頁尾即可達到這個需求。這個替代符號（Token）通常也被用在要經常寄送的訊息，與其他訊息範本。這個替代符號（Token）在郵件送出的時候，會被您在下方所輸入的地址所取代。"
+msgstr "電子報必須包含寄送組織的地址。您把替代符號（Token)%1置放在信件主文或郵件頁尾即可達到這個需求。這個替代符號通常也被用在要經常寄送的訊息，與其他訊息範本。這個替代符號在郵件送出的時候，會被您在下方所輸入的地址所取代。"
 
 #: templates/CRM/Contact/Form/Domain.tpl
 msgid "Additional Domain Contact Information"
@@ -24436,7 +24436,7 @@ msgstr "凍結？"
 
 #: templates/CRM/Contact/Form/Edit/Email.tpl
 msgid "Bulk Mailings?"
-msgstr "預設寄送？"
+msgstr "寄送"
 
 #: templates/CRM/Contact/Form/Edit/Email.tpl
 #: templates/CRM/Contact/Form/Edit/IM.tpl
@@ -24938,7 +24938,8 @@ msgstr "搜尋產生器"
 #: templates/CRM/Contact/Form/Search/ResultTasks.tpl
 msgid "%count Contact"
 msgid_plural "%count Contacts"
-msgstr[0] "列印聯絡人"
+msgstr[0] "%count 聯絡人"
+msgstr[1] ""
 
 #: templates/CRM/Contact/Form/Search/table.tpl
 msgid "Include contacts where"
@@ -24999,23 +25000,23 @@ msgstr "前往<a href=\"%1\">管理&raquo; 選擇列表&raquo; Email寄件者</a
 
 #: templates/CRM/Contact/Form/Task/Email.hlp
 msgid "Use a token in the Subject when you are sending mail to a number of recipients and want to include their name and / or other values from their contact record automatically in the subject line."
-msgstr "當您要將郵件發送給大量的收件人，並且希望在標題中包含他們的名字或其他資料時，您可以在標題插入替代符號（Token），以自動產生這些資料。"
+msgstr "當您要將郵件發送給大量的收件人，並且希望在標題中包含他們的名字或其他資料時，您可以在標題插入替代符號，以自動產生這些資料。"
 
 #: templates/CRM/Contact/Form/Task/Email.hlp
 msgid "Use tokens when you are sending mail to a number of recipients, and want to include their name and / or other values from their contact record automatically within your message."
-msgstr "當您要將郵件發送給大量的收件人，並且希望在信件內容中包含聯絡人的名字或其他資料，您可以使用替代符號（Token）。"
+msgstr "當您要將郵件發送給大量的收件人，並且希望在信件內容中包含聯絡人的名字或其他資料，您可以使用替代符號。"
 
 #: templates/CRM/Contact/Form/Task/Email.hlp
 msgid "EXAMPLE: If you want your message to begin with \"Dear \" followed by the recipient's first name, you can use the %1 token in your message. <em>Dear %1</em>"
-msgstr "例如：若您想要在收件者名字前加上 「親愛的」，您可使用替代符號（Token） %1在您的信件內容中。 <em>親愛的 %1</em>"
+msgstr "例如：若您想要在收件者名字前加上 「親愛的」，您可使用替代符號 %1在您的信件內容中。 <em>親愛的 %1</em>"
 
 #: templates/CRM/Contact/Form/Task/Email.hlp
 msgid "Place your cursor within the Message box where you want to the token to be inserted. Then click the &quot;Insert Tokens&quot; link in the upper right corner of the message box to see a list of available tokens. Insert the token by clicking the desired token name in the list (for example, click &quot;First Name&quot;)."
-msgstr "將您的游標放置於訊息欄中欲插入替代符號（Token）的位置，然後點擊訊息欄右上角 &quot;插入替代符號（Token）&quot; 的連結，可看見目前可用的替代符號（Token）清單。在清單中點擊您欲插入信件內容的替代符號（Token）名稱。"
+msgstr "將您的游標放置於訊息欄中欲插入替代符號的位置，然後點擊訊息欄右上角 &quot;插入替代符號&quot; 的連結，可看見目前可用的替代符號清單。在清單中點擊您欲插入信件內容的替代符號名稱。"
 
 #: templates/CRM/Contact/Form/Task/Email.hlp
 msgid "You will also use tokens to insert Unsubscribe, Opt out and Forwarding links in your message."
-msgstr "您需使用替代符號（Token）來為信件內容加入取消訂閱、選擇退出、轉寄的功能。"
+msgstr "您需使用替代符號來為信件內容加入取消訂閱、選擇退出、轉寄的功能。"
 
 #: templates/CRM/Contact/Form/Task/Email.hlp
 msgid "Use these steps to insert clickable action links:"
@@ -25023,15 +25024,15 @@ msgstr "藉由以下步驟來加入可點擊的連結："
 
 #: templates/CRM/Contact/Form/Task/Email.hlp
 msgid "Select the action token from the Insert Tokens pop-up list - e.g. Unsubscribe via web page - and insert into your message."
-msgstr "從替代符號（Token）列表的彈出式視窗中，選取作用中的替代符號（Token) - 例如：透過網頁取消訂閱 - 然後插入到您的信件內容中。"
+msgstr "從替代符號列表的彈出式視窗中，選取作用中的替代符號（Token) - 例如：透過網頁取消訂閱 - 然後插入到您的信件內容中。"
 
 #: templates/CRM/Contact/Form/Task/Email.hlp
 msgid "'}Highlight the token and copy it to your clipboard - e.g. %1."
-msgstr "'}反白替代符號（Token）並複製到您的剪貼本 - 例如：%1。"
+msgstr "'}反白替代符號並複製到您的剪貼本 - 例如：%1。"
 
 #: templates/CRM/Contact/Form/Task/Email.hlp
 msgid "Replace the token in your message with the text you want for the link - e.g. Click here to unsubscribe."
-msgstr "將您訊息裡的替代符號（Token）替換成您想給此連結顯示的文字 - 例如「取消訂閱請按此連結」。"
+msgstr "將您訊息裡的替代符號替換成您想給此連結顯示的文字 - 例如「取消訂閱請按此連結」。"
 
 #: templates/CRM/Contact/Form/Task/Email.hlp
 msgid "With the text highlighted, click the Insert/Edit Link icon in the editor toolbar."
@@ -25043,11 +25044,11 @@ msgstr ""
 
 #: templates/CRM/Contact/Form/Task/Email.hlp
 msgid "Paste the action token into the URL field and click OK."
-msgstr "在 URL 欄貼上此替代符號（Token），並按「OK」。"
+msgstr "在 URL 欄貼上此替代符號，並按「OK」。"
 
 #: templates/CRM/Contact/Form/Task/Email.hlp
 msgid "Paste the action token into the URL field and click Insert (or Update)."
-msgstr "在 URL 欄貼上此替代符號（Token），並按「插入」（或更新）。"
+msgstr "在 URL 欄貼上此替代符號，並按「插入」（或更新）。"
 
 #: templates/CRM/Contact/Form/Task/Email.hlp
 #: templates/CRM/Mailing/Form/Upload.hlp
@@ -25099,7 +25100,7 @@ msgstr ""
 #: templates/CRM/Contact/Form/Task/PDFLetterCommon.tpl
 #: templates/CRM/Mailing/Form/InsertTokens.tpl
 msgid "Select Token"
-msgstr "選擇替代符號（token）"
+msgstr "選擇替代符號"
 
 #: templates/CRM/Contact/Form/Task/PDF.tpl
 msgid "Create Printable Letters (PDF)"
@@ -25952,7 +25953,7 @@ msgstr "注意：您也可以勾選下方的<strong>稍後付款</strong>選項�
 
 #: templates/CRM/Contribute/Form/ContributionPage/Amount.tpl
 msgid "Uncheck this box if you are using this contribution page for free membership signup ONLY, or to solicit in-kind / non-monetary donations such as furniture, equipment.. etc."
-msgstr "如果您這個募款頁僅用來提供加入免付費會員，或非金錢/以實物捐贈，例如家具、裝備等，請勿勾選此框。"
+msgstr "啟動線上付費(限已設定金流機制，否則無法開啟頁面)。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/Amount.tpl
 msgid "Select the currency to be used for contributions submitted from this contribution page."
@@ -26165,7 +26166,7 @@ msgstr "允許使用者建立他們自己的個人募款頁，連結到此募款
 
 #: templates/CRM/Contribute/Form/ContributionPage/Premium.tpl
 msgid "Edit <strong>Premiums Settings</strong> to enable the Premiums section for this Online Contribution Page, and customize the title and introductory message (e.g ...in appreciation of your support, you will be able to select from a number of exciting thank-you gifts...). You can optionally provide a contact email address and/or phone number for inquiries."
-msgstr "編輯 <strong>感謝禮設定</strong>以啓用這個獻上募款頁面的感謝禮區域，及標題及介紹訊息(例如…感謝您的支持，您可從致謝感謝禮中選擇…)。您可以選擇提供一個聯絡人Email及/或電話號碼以作查詢。"
+msgstr "為這個線上募款頁啟用<strong>感謝禮設定</strong> ，並依據需求填寫標題與簡介訊息(如：...感謝您的支持，您可選擇下列感謝禮…)。可選擇將聯絡人Email 和/或 電話號碼作為必要填欄位。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/Premium.tpl
 msgid "Then select and review the premiums that you want to offer on this contribution page."
@@ -26307,7 +26308,7 @@ msgstr "請輸入寄件者Email地址，這會顯示在電子收據寄件地址�
 
 #: templates/CRM/Contribute/Form/ContributionPage/ThankYou.tpl
 msgid "Enter a message you want included at the beginning of emailed receipts. NOTE: This text will be included in both TEXT and HTML versions of receipt emails so we do not recommend including HTML tags / formatting here."
-msgstr "在此框中樞入的訊息，會放在電子收據的開頭。注意：電子收據有純文字及HTML版本，所以我們不建議您在此輸入任何HTML或格式化的替代符號（token）語言。"
+msgstr "在此框中樞入的訊息，會放在電子收據的開頭。注意：電子收據有純文字及HTML版本，所以我們不建議您在此輸入任何HTML或格式化的替代符號語言。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/ThankYou.tpl
 msgid "If you want member(s) of your organization to receive a carbon copy of each emailed receipt, enter one or more email addresses here. Multiple email addresses should be separated by a comma (e.g. jane@example.org, paula@example.org)."
@@ -27000,21 +27001,21 @@ msgstr "配對捐款到捐款人"
 
 #: templates/CRM/Contribute/Import/Form/UploadFile.hlp
 msgid "Contribution import files must contain data needed to <strong>match the contribution to the contributor</strong>. This 'matching' can be handled in several different ways:"
-msgstr ""
+msgstr "匯入捐款資料必須包含可以讓捐款與捐款者對應的資料。選擇輸入下列其中一項的聯絡人資料與捐款資料'配對'："
 
 #: templates/CRM/Contribute/Import/Form/UploadFile.hlp
 #: templates/CRM/Event/Import/Form/UploadFile.hlp
 #: templates/CRM/Member/Import/Form/UploadFile.hlp
 msgid "Include the data fields used for contact 'matching' based on your configured <strong>Strict Duplicate Matching</strong> rules. For the default duplicate matching rules, you would include a column in each row with the contributors' Email Address."
-msgstr ""
+msgstr "聯絡人Email"
 
 #: templates/CRM/Contribute/Import/Form/UploadFile.hlp
 msgid "If you've stored a unique <strong>External Identifier</strong> for each contact in CiviCRM, you can include that value as a column in your import file. Contributions will then be matched to contributors using their External ID."
-msgstr ""
+msgstr "外部編號"
 
 #: templates/CRM/Contribute/Import/Form/UploadFile.hlp
 msgid "You can include a column with each contributor's <strong>Internal Contact ID</strong>. This is the unique ID assigned by CiviCRM which is displayed at the bottom of the Contact Summary screen - and can be exported."
-msgstr ""
+msgstr "系統編號"
 
 #: templates/CRM/Contribute/Import/Form/UploadFile.hlp
 msgid "Save the CSV file with your contributions and 'contact matching' data to your local hard drive (or an accessible drive on your network) - and you are now ready for step 1 (Upload Data)."
@@ -27026,16 +27027,16 @@ msgstr "每一筆匯入的資料中，您可以插入新會員記錄，或更新
 
 #: templates/CRM/Contribute/Import/Form/UploadFile.tpl
 msgid "The Contribution Import Wizard allows you to easily upload contributions from other applications into CiviCRM."
-msgstr "捐款匯入嚮導將讓您更容易地從其他應用程式上傳捐款到CiviCRM。"
+msgstr "匯入捐款資料精靈讓您可輕鬆地從其他應用程式匯入資料。"
 
 #: templates/CRM/Contribute/Import/Form/UploadFile.tpl
 msgid "Files to be imported must be in the 'comma-separated-values' format (CSV) and must contain data needed to match the contribution to an existing contact in your CiviCRM database."
-msgstr "被匯入的檔案必需是'逗號分離值'格式，及必需包含所需數據，以符合目前您CiviCRM資料庫的捐款並對應到既有的聯絡人。"
+msgstr "匯入的資料必須是CSV格式以及與可與CiviCRM資料庫對應的欄位內容。"
 
 #: templates/CRM/Contribute/Import/Form/UploadFile.tpl
 #: templates/CRM/Member/Import/Form/UploadFile.tpl
 msgid "Check this box if the first row of your file consists of field names (Example: 'Contact ID', 'Amount')."
-msgstr "如果您檔案的第一行是欄位名稱(例子：'聯絡人編號'、'金額')，請勾選此框。"
+msgstr "如果您檔案的第一行是欄位名稱(例子：'系統編號'、'金額')，請勾選此框。"
 
 #: templates/CRM/Contribute/Import/Form/UploadFile.tpl
 msgid "Select 'Individual' if you are importing contributions made by individual persons."
@@ -27152,7 +27153,7 @@ msgstr "捐款幫助您建立及維護線上捐款活動頁面。您可為個別
 
 #: templates/CRM/Contribute/Page/ContributionPage.hlp
 msgid "For existing pages"
-msgstr "為現存頁"
+msgstr "常用頁面"
 
 #: templates/CRM/Contribute/Page/ContributionPage.hlp
 msgid "Click <strong>Configure</strong> to view and modify settings, amounts, and text for existing pages."
@@ -27309,7 +27310,7 @@ msgstr "圖表樣式"
 
 #: templates/CRM/Contribute/Page/DashBoard.tpl
 msgid "Table Layout"
-msgstr "表格名稱"
+msgstr "表格樣式"
 
 #: templates/CRM/Contribute/Page/DashBoard.tpl
 msgid "Recent Contributions"
@@ -27317,11 +27318,11 @@ msgstr "最新捐款"
 
 #: templates/CRM/Contribute/Page/ManagePremiums.tpl
 msgid "CiviContribute allows you to configure any number of <strong>Premiums</strong> which can be offered to contributors as incentives / thank-you gifts. Premiums may be tangible items (i.e. a coffee mug or t-shirt), or they may be a membership or subscription with a pre-determined duration."
-msgstr "捐款允許您去設定任何<strong>感謝禮</strong>數目，可提供給捐款人為動機/致謝感謝禮。感謝禮可能是可觸摸的物件(即，咖啡杯或T恤)，或它們可能是一個會籍或預先確定時間的訂閱。"
+msgstr "→捐款頁面可設定提供激勵捐款人的<strong>感謝禮</strong>項目。感謝禮可能是實體物件(如：咖啡杯或T恤)，也可使捐款人成為會員或延長期會員期限。"
 
 #: templates/CRM/Contribute/Page/ManagePremiums.tpl
 msgid "Use this section to enter and update all premiums that you want to offer on any of your Online Contribution pages. Then you can assign one or more premiums to a specific Contribution page from <a href='%1'>Configure Online Contribution Pages</a> <strong>&raquo; Configure &raquo; Premiums</strong>."
-msgstr "使用此部分去輸入及更新所有您想提供在任何線上募款頁的感謝禮。您可以指派一個或更多到一個指定募款頁從<a href='%1'>設線上募款頁</a> <strong>&raquo; 設 &raquo; 感謝禮</strong>。"
+msgstr "在這裡設定或更新提供線上募款頁的所有感謝禮。您可以在<a href='%1'>管理募款頁</a>找到欲提供感謝禮的募款頁面， 點選 <strong>設定» 捐款感謝禮</strong>指定一個以上的感謝禮。"
 
 #: templates/CRM/Contribute/Page/ManagePremiums.tpl
 #: templates/CRM/Contribute/Page/Premium.tpl
@@ -28198,11 +28199,11 @@ msgstr "限制報名者在<strong>設定時間之內（小時）</strong>確認/
 
 #: templates/CRM/Event/Form/ManageEvent/Registration.tpl
 msgid "If you want to provide an Online Registration page for this event, check the first box below and then complete the fields on this form."
-msgstr "如果您想為此活動提供一個線上報名頁，請勾選以下第一個核取方塊，然後完成此表格的欄位。"
+msgstr "啟動本活動線上報名功能，請勾選「允許線上報名」核取方塊，並完成其他內容設定。"
 
 #: templates/CRM/Event/Form/ManageEvent/Registration.tpl
 msgid "Enable or disable online registration for this event."
-msgstr "啓用或停用此活動的線上報名。"
+msgstr "啟用線上報名"
 
 #: templates/CRM/Event/Form/ManageEvent/Registration.tpl
 msgid "Registration Screen"
@@ -28486,7 +28487,7 @@ msgstr "請按下方<strong>繼續</strong>去完成這項報名。"
 #: templates/CRM/Event/Form/Registration/Confirm.tpl
 #: templates/CRM/Event/Form/Registration/ThankYou.tpl
 msgid "Registered Email"
-msgstr "巳登記"
+msgstr "報名者Email"
 
 #: templates/CRM/Event/Form/Registration/Confirm.tpl
 #: templates/CRM/Event/Form/Registration/ThankYou.tpl
@@ -28764,12 +28765,12 @@ msgstr ""
 
 #: templates/CRM/Event/Import/Form/UploadFile.hlp
 msgid "If you've stored a unique <strong>External Identifier</strong> for each contact in CiviCRM, you can include that value as a column in your import file. Participant data will then be matched to contact records using their External ID."
-msgstr ""
+msgstr "外部編號"
 
 #: templates/CRM/Event/Import/Form/UploadFile.hlp
 #: templates/CRM/Member/Import/Form/UploadFile.hlp
 msgid "You can include a column with each contact's <strong>Internal Contact ID</strong>. This is the unique ID assigned by CiviCRM which is displayed at the bottom of the Contact Summary screen - and can be exported."
-msgstr ""
+msgstr "系統編號"
 
 #: templates/CRM/Event/Import/Form/UploadFile.hlp
 msgid "Save the CSV file with your participant data and 'contact matching' data to your local hard drive (or an accessible drive on your network) - and you are now ready for step 1 (Upload Data)."
@@ -28781,15 +28782,15 @@ msgstr "在每次匯入過程中，您都可以匯入新的參加者資料，或
 
 #: templates/CRM/Event/Import/Form/UploadFile.tpl
 msgid "The Event Import Wizard allows you to easily upload event participation data such as event registrations from other applications into CiviCRM."
-msgstr "活動匯入嚮導允許您容易地上載活動參與資料，例如從其他應用程式中匯入活動報名資料到CiviCRM。"
+msgstr "活動匯入精靈讓您可輕鬆地從其他應用程式匯入活動報名資料到CiviCRM。"
 
 #: templates/CRM/Event/Import/Form/UploadFile.tpl
 msgid "Files to be imported must be in the 'comma-separated-values' format (CSV) and must contain data needed to match the participant data to an existing contact in your CiviCRM database."
-msgstr ""
+msgstr "匯入的資料必須是CSV格式以及可與CiviCRM資料庫對應的欄位內容。"
 
 #: templates/CRM/Event/Import/Form/UploadFile.tpl
 msgid "Check this box if the first row of your file consists of field names (Example: \"Contact ID\", \"Participant Role\")."
-msgstr "如果您檔案的第一行包含欄位名稱(例如：\"聯絡人編號\"、\"參加者角色\")，請勾選此框。"
+msgstr "如果您檔案的第一行包含欄位名稱(例如：\"系統編號\"、\"參加者角色\")，請勾選此框。"
 
 #: templates/CRM/Event/Import/Form/UploadFile.tpl
 msgid "Select 'Individual' if you are importing event participation data for individual persons."
@@ -29343,7 +29344,7 @@ msgstr "顯示過濾搜尋。"
 
 #: templates/CRM/Group/Page/Group.hlp
 msgid "Use Groups to organize contacts (e.g. these contacts are part of our 'Steering Committee'). You can also create <strong>smart groups</strong> based on contact characteristics (e.g. this group consists of all people in our database who live in a specific locality)."
-msgstr ""
+msgstr "使用群組管理聯絡人(如：部分聯絡人隸屬於' 監事 ' )。你可以根據既有的聯絡人數據資料呈現出的特質，到<strong>新增群組\</strong>預先建立群組類型(如：A地區群組，都是資料庫中居住在A地區的聯絡人)。"
 
 #: templates/CRM/Group/Page/Group.hlp
 msgid "You can add contacts to a group from any set of search results (or when viewing an individual contact). You can also allow contacts to sign themselves up for certain groups by setting the group visibility to 'Public Pages' (use the <strong>Settings</strong> link), and including the <strong>Groups</strong> element in your CiviCRM Profile."
@@ -29355,7 +29356,7 @@ msgstr "電子報訂戶的群組，應被指派為「電子報訂戶」類型。
 
 #: templates/CRM/Group/Page/Group.hlp
 msgid "Groups of contacts which are used for <strong>access control</strong> must be assigned that type."
-msgstr "具有<strong>存取控制</strong>的聯絡人群組，應被指派為那個類別。"
+msgstr "具有<strong>權限控制</strong>的聯絡人群組，應被指派為那個類別。"
 
 #: templates/CRM/Group/Page/Group.hlp
 msgid "Use <strong>Find Groups</strong> to search by group name, type and visibility."
@@ -29363,7 +29364,7 @@ msgstr ""
 
 #: templates/CRM/Group/Page/Group.hlp
 msgid "Group type filtering uses <strong>AND</strong> logic. If you check both 'Mailing List' and 'Access Control' types - only groups which have both types assigned will be returned."
-msgstr "您可使用邏輯運算子<strong>AND<strong>來篩選群組類型。若您同時勾選「電子報訂戶」與「存取控制」，將僅有同時具備兩種類型的群組會被篩選出。"
+msgstr "您可使用邏輯運算子<strong>AND<strong>來篩選群組類型。若您同時勾選「電子報訂戶」與「權限控制」，將僅有同時具備兩種類型的群組會被篩選出。"
 
 #: templates/CRM/Group/Page/Group.hlp
 msgid "You can also click a letter on the <strong>A-to-Z bar</strong> to quickly find all groups starting with that letter."
@@ -29371,7 +29372,7 @@ msgstr "您也可在<strong>A-to-Z bar</strong>按任一個字母，以快速查
 
 #: templates/CRM/Group/Page/Group.hlp
 msgid "Check 'Access Control' if you want to use this group to assign access permissions to a set of contacts. %1"
-msgstr "如果您想使此群組具有存取聯絡人資料的權限，請勾選「存取控制」。%1"
+msgstr "如果您想使此群組具有存取聯絡人資料的權限，請勾選「權限控制」。%1"
 
 #: templates/CRM/Group/Page/Group.hlp
 msgid "Check 'Mailing List' if you are using this group as a mailing list in the %1."
@@ -29405,7 +29406,7 @@ msgstr "新增群組"
 
 #: templates/CRM/Group/Page/Group.tpl
 msgid "Use Groups to organize contacts (e.g. these contacts are part of our 'Steering Committee'). You can also create 'smart' groups based on contact characteristics (e.g. this group consists of all people in our database who live in a specific locality)."
-msgstr ""
+msgstr "使用群組管理聯絡人(如：部分聯絡人隸屬於\"監事\")。你可以根據既有的聯絡人數據資料呈現出的特質，到\"新增群組\"預先建立群組類型(如：\"A地區\"群組，都是資料庫中居住在A地區的聯絡人)。"
 
 #: templates/CRM/Group/Page/Group.tpl
 msgid "Organizaton"
@@ -29622,7 +29623,8 @@ msgstr "SQL 查詢語言必須是 SELECT 的查詢，並回傳一或多筆記錄
 #: templates/CRM/Import/Form/Summary.tpl
 msgid "CiviCRM has detected mismatched contact ID. This record have not been updated."
 msgid_plural "CiviCRM has detected mismatched contact IDs. These records have not been updated."
-msgstr[0] "CiviCRM 偵測到不相符的聯絡人編號。此記錄沒有被更新。"
+msgstr[0] "CiviCRM 偵測到不相符的系統編號。此記錄沒有被更新。"
+msgstr[1] ""
 
 #: templates/CRM/Import/Form/Summary.tpl
 msgid "You can <a href='%1'>Download Mismatched Contacts</a>. You may then correct them, and import the new file with the corrected data."
@@ -29656,7 +29658,7 @@ msgstr "您可以<a href='%1'>下載錯誤</a>。您可以修正它們，並重�
 
 #: templates/CRM/Import/Form/Summary.tpl
 msgid "Rows with mismatched contact IDs... (NOT updated)."
-msgstr "不相符聯絡人編號的列數（不會更新）。"
+msgstr "不相符系統編號的列數（不會更新）。"
 
 #: templates/CRM/Import/Form/Summary.tpl
 msgid "Download Mismatched Contacts"
@@ -29845,11 +29847,11 @@ msgstr "群組列表。"
 
 #: templates/CRM/Mailing/Form/Test.hlp templates/CRM/Mailing/Form/Test.tpl
 msgid "It's a good idea to test your mailing by sending it to yourself and/or a selected group of people in your organization. You can also view your content by clicking (+) Preview Mailing."
-msgstr "測試您的郵件，您可寄測試信給您自己，及/或您組織中一群被選取的人。您也可以透過按(+)預覽郵件查看您的內容。"
+msgstr "您可寄測試郵件給自己，及/或選擇您組織的群組。您也可以透過按預覽電子報查看您的內容。"
 
 #: templates/CRM/Mailing/Form/Test.hlp
 msgid "Verify the test email address and/or test recipient group. Then click <strong>Next</strong> with 'Send Test Mailing' checked to generate the test mailing. Once you receive the test mailing:"
-msgstr ""
+msgstr "審查測試電郵與/或測試收件群組後，接著按下\"寄送測試郵件\"以產生測試郵件。當您收到測試郵件："
 
 #: templates/CRM/Mailing/Form/Test.hlp
 msgid "Verify the content and formattting."
@@ -29857,15 +29859,15 @@ msgstr "驗證內容及格式。"
 
 #: templates/CRM/Mailing/Form/Test.hlp
 msgid "If you are using mail-merge tokens, check that they have been replaced with expected values."
-msgstr "如果您使用合併郵件的替代符號（token），請檢查是否已被替換為實際資料。"
+msgstr "如果您使用合併郵件的替代符號，請檢查是否有出現指定的字詞。"
 
 #: templates/CRM/Mailing/Form/Test.hlp
 msgid "Click on each included link to make sure they go to the expected web pages."
-msgstr "按每一個被包括的連結去確保他們到達預期的網頁。"
+msgstr "按每一個連結以確保到達預期的網頁。"
 
 #: templates/CRM/Mailing/Form/Test.hlp
 msgid "If you need to make changes, you can click <strong>Previous</strong> from the next screen, and again from this screen to return to step 3. After making your changes, you can send another test and repeat as needed."
-msgstr "如果您需要作出更變，您可以按<strong>之前</strong>從下一個螢幕，及再次從此螢幕返回到步驟3。作出您的更變之後，您可版傳送另外的測試及重複為所需。"
+msgstr "如需要變更，可在此按<strong>上一頁</strong>，返回到步驟'3編寫電子報'。確認變更後，您可再次傳送已變更的電子報做測試。"
 
 #: templates/CRM/Mailing/Form/Test.tpl msgctxt "menu"
 msgid "Preview Mailing"
@@ -30581,15 +30583,15 @@ msgstr ""
 
 #: templates/CRM/Member/Import/Form/UploadFile.hlp
 msgid "Matching Memberships to Contacts"
-msgstr "會員與聯絡人配對"
+msgstr "會員與連絡人資料配對 "
 
 #: templates/CRM/Member/Import/Form/UploadFile.hlp
 msgid "Membership import files must contain data needed to <strong>match the membership to the contact record</strong>. This 'matching' can be handled in several different ways:"
-msgstr "會員匯入檔案必需包含<strong>會員與聯絡人配對</strong>的資料。此「配對」可被用來處理多個不同的方法："
+msgstr "匯入的會員資料必須包含<strong>與聯絡人資料對照</strong>的資訊欄位，欄位如下三種擇一："
 
 #: templates/CRM/Member/Import/Form/UploadFile.hlp
 msgid "If you've stored a unique <strong>External Identifier</strong> for each contact in CiviCRM, you can include that value as a column in your import file. Memberships will then be matched to contact records using their External ID."
-msgstr ""
+msgstr "外部編號"
 
 #: templates/CRM/Member/Import/Form/UploadFile.hlp
 msgid "Save the CSV file with your membership data and 'contact matching' data to your local hard drive (or an accessible drive on your network) - and you are now ready for step 1 (Upload Data)."
@@ -30603,7 +30605,7 @@ msgstr ""
 
 #: templates/CRM/Member/Import/Form/UploadFile.tpl
 msgid "The Membership Import Wizard allows you to easily upload memberships from other applications into CiviCRM."
-msgstr ""
+msgstr "匯入會員精靈幫助您輕鬆地從其他應用程式上傳會員資料至CiviCRM。匯入的資料必須是CSV格式以及與可與CiviCRM資料庫對應的欄位內容。"
 
 #: templates/CRM/Member/Import/Form/UploadFile.tpl
 msgid "Files to be imported must be in the 'comma-separated-values' format (CSV) and must contain data needed to match the membership data to an existing contact in your CiviCRM database."
@@ -30683,11 +30685,11 @@ msgstr "最新加入的會員"
 
 #: templates/CRM/Member/Page/MembershipStatus.tpl
 msgid "CiviMember automatically calculates the current status of each contact's membership based on the status names and rules configured here. The status 'rule' tells CiviMember what status to assign based on the start and end dates of a given membership. For example, the default <strong>Grace</strong> status rule says: 'assign Grace status if the membership period ended sometime within the past month.'"
-msgstr ""
+msgstr "會員狀態會根據此頁面會員狀態名稱與規則的設定自動更新。狀態規則將在會員頁面顯示所給予的會員資格的起始時間。例如，預設的 <strong>寬限</strong> 狀態規則說明：'會員資格到期一個月內，設定為寬限狀態。'"
 
 #: templates/CRM/Member/Page/MembershipStatus.tpl
 msgid "The status rules provided by default may be sufficient for your organization. However, you can easily change the status names and/or adjust the rules by clicking the Edit links below. Or you can <a href='%1'>add a new status and rule</a>."
-msgstr ""
+msgstr "預設的狀態規則已能滿足一般組織的需求，您也可以點選'編輯'以變更狀態名稱以及/或調整規則，或 <a href='%1'>新增狀態與規則</a>。"
 
 #: templates/CRM/Member/Page/MembershipStatus.tpl
 msgid "Add Membership Status"
@@ -30767,7 +30769,7 @@ msgstr "<strong>定期續約會員資格 - 1年：</strong>一個人在二零零
 
 #: templates/CRM/Member/Page/MembershipType.tpl
 msgid "Membership types are used to categorize memberships. You can define an unlimited number of types. Each type incorporates a 'name' (Gold Member, Honor Society Member...), a description, a minimum fee (can be $0), and a duration (can be 'lifetime'). Each member type is specifically linked to the membership entity (organization) - e.g. Bay Area Chapter."
-msgstr ""
+msgstr "依據組織需求設定各種會員類型，每種類型可設定會員類型名稱(如：個人會員、團體會員、學生會員、預備會員、永久會員、贊助會員、榮譽會員...)、會員條件描述(如個人會員描述：年滿20歲之中華民國國民)、會費金額(最低為$0)、會員有效期限(可設定 '永久' )、會費計算基準(繳費日起或組織規定之起始日)。每個會員類型皆可設定其所屬分會別，如：台北總會、台中分會(需先至' 聯絡人/新增組織 ' 設定)。"
 
 #: templates/CRM/Member/Page/MembershipType.tpl
 #: templates/CRM/Member/Page/Tab.tpl
@@ -30784,11 +30786,11 @@ msgstr "目前沒有設定會籍類型。<a href='%1'>請新增</a>。"
 
 #: templates/CRM/Member/Page/Tab.hlp
 msgid "Membership status is normally assigned and updated automatically based on your configured membership status rules. However, if you want to assign a status manually and bypass automated status setting, check this box. Then you can select from the available status options."
-msgstr ""
+msgstr "會員狀態根據您配置的會員狀態規則(新增/編輯會員狀態)自動更新，若您想手動更新，請勾選此欄位，並選擇既有的會員狀態選單。"
 
 #: templates/CRM/Member/Page/Tab.hlp
 msgid "The status you assign will remain in force, unless it is again modified on this screen. As long as the Status Override flag is checked, the automated membership status update script will NOT update this membership record."
-msgstr ""
+msgstr "此手動設定將強制執行，除非再到此欄位取消勾選，否則將不會自動更新此筆會員記錄。"
 
 #: templates/CRM/Member/Page/Tab.tpl
 msgid "Click <a href='%1'>Add Membership</a> to record a new membership."
@@ -31164,7 +31166,7 @@ msgstr "預覽價目表。"
 
 #: templates/CRM/Price/Form/Set.tpl
 msgid "Use this form to edit the title and group-level help for a set of Price fields."
-msgstr ""
+msgstr "使用本頁面設定價格表。"
 
 #: templates/CRM/Price/Form/Set.tpl
 msgid "The name of this Price Set"
@@ -33997,7 +33999,7 @@ msgstr "聯絡人字尾"
 
 #: xml/templates/civicrm_data.tpl xml/templates/civicrm_navigation.tpl
 msgid "Accepted Credit Cards"
-msgstr "允許的信用卡"
+msgstr "接受的信用卡"
 
 #: xml/templates/civicrm_data.tpl
 msgid "PCP Status"
@@ -35616,7 +35618,7 @@ msgstr "聯絡人概況"
 msgid ""
 "The Activity Import Wizard allows you to easily upload activity from other applications into CiviCRM. Contacts must already exist in your CiviCRM database prior to importing activities for them.\n"
 "        Use Import Contacts to create contact records first, if necessary. Then you can match activities to contacts by Email Address, CiviCRM Contact ID, or an External Identifier (see the TIP below)."
-msgstr "行動匯入嚮導允許您容易地從其他程式上載活動到CiviCRM，匯入之前，聯絡人必須已經存在您的CiviCRM資料庫。如有需要，先使用匯入聯絡人建立聯絡人記錄。然後您可以透過Email地址、CiviCRM聯絡人ID，或外部識別碼(看以下的說明)來配對行動和聯絡人。"
+msgstr "活動匯入精靈讓您容易地從其他程式上載活動到CiviCRM，匯入之前，聯絡人必須已經存在您的CiviCRM資料庫。如有需要，先使用匯入聯絡人建立聯絡人記錄。然後您可以透過Email地址、CiviCRM聯絡人系統編號，或外部編號(看以下的說明)來配對行動和聯絡人。"
 
 #: templates/CRM/Activity/Import/Form/UploadFile.hlp
 msgid ""
@@ -39007,7 +39009,7 @@ msgstr "在 <a href=\"!1\">管理 &raquo; 網站建置 &raquo; 區塊</a>裡啟�
 
 #: drupal/civicrm.module
 msgid "read about <a href=\"!1\">CiviCRM access permissions</a> and set access permissions at <a href=\"!2\">Administer CiviCRM &raquo; Access Control</a>."
-msgstr "閱讀 <a href=\"!1\">CiviCRM 存取權限</a>，並在<a href=\"!2\">管理 CiviCRM &raquo; 存取控制</a>裡進行設定。 "
+msgstr "閱讀 <a href=\"!1\">CiviCRM 存取權限</a>，並在<a href=\"!2\">管理 CiviCRM &raquo; 權限控制</a>裡進行設定。 "
 
 #: drupal/civicrm.module
 msgid "find contacts by name, email address, group membership and or tagging at <a href=\"!1\">Find Contacts</a>."
@@ -39587,3 +39589,77 @@ msgstr "單位資料"
 msgid "Enter a SIC Code"
 msgstr "請輸入統一編號"
 
+msgid "access CiviContribute"
+msgstr "存取捐款管理"
+
+msgid "access CiviEvent"
+msgstr "存取活動管理"
+
+msgid "access CiviMail"
+msgstr "存取電子報管理"
+
+msgid "access CiviMember"
+msgstr "存取會員管理"
+
+msgid "access Report Criteria"
+msgstr "存取報表設定規則"
+
+msgid "access CiviReport"
+msgstr "存取支持者報表"
+
+msgid "access CiviMail subscribe/unsubscribe pages"
+msgstr "存取電子報訂閱/退訂畫面"
+
+msgid "administer Reports"
+msgstr "管理報表"
+
+msgid "delete in CiviContribute"
+msgstr "刪除捐款"
+
+msgid "delete in CiviEvent"
+msgstr "刪除活動"
+
+msgid "delete in CiviMail"
+msgstr "刪除電子報"
+
+msgid "delete in CiviMember"
+msgstr "刪除會員"
+
+msgid "edit all events"
+msgstr "編輯所有活動"
+
+msgid "edit contributions"
+msgstr "編輯單筆捐款"
+
+msgid "edit event participants"
+msgstr "編輯活動參加者"
+
+msgid "edit memberships"
+msgstr "編輯會員"
+
+msgid "make online contributions"
+msgstr "進行線上捐款"
+
+msgid "register for events"
+msgstr "報名活動"
+
+msgid "view event info"
+msgstr "觀看活動資訊"
+
+msgid "view event participants"
+msgstr "觀看活動參加者資訊"
+
+msgid "You may include tokens to represent fields (like a contact's \"first name\") in the message subject and body. These will be replaced with the actual value of the corresponding field in the outgoing message EXAMPLE: Dear {contact.first_name}."
+msgstr "可於訊息標題與內文使用替代符號於欲顯示的欄位(如聯絡人的名子)，送出訊息後替代符號將呈現相對應的文字。如：親愛的{contact.first_name}"
+
+msgid "Event Contacts:"
+msgstr "活動聯絡人"
+
+msgid "Event Information and Location"
+msgstr "活動資訊及地點"
+
+msgid "Mailing List"
+msgstr "電子報訂戶"
+
+msgid "Accept Creditcard"
+msgstr "可用的信用卡"

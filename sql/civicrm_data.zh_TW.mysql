@@ -4369,7 +4369,7 @@ INSERT INTO civicrm_relationship_type( name_a_b,label_a_b, name_b_a,label_b_a, d
     VALUES( 'Child of', '孩子', 'Parent of', '家長', '親子關係', 'Individual', 'Individual', 0 ),
           ( 'Spouse of', '配偶', 'Spouse of', '配偶', '配偶關係。', 'Individual', 'Individual', 0 ),
           ( 'Sibling of', '兄弟姊妹', 'Sibling of', '兄弟姊妹', '兄弟姊妹關係。', 'Individual','Individual', 0 ),
-          ( 'Employee of', '雇員', 'Employer of', '雇主', '聘僱關係。','Individual','Organization', 1 ),
+          ( 'Employee of', '雇員', 'Employer of', '就職單位', '聘僱關係。','Individual','Organization', 1 ),
           ( 'Volunteer for', '志工', 'Volunteer is', '志工單位', '志工關係。','Individual','Organization', 0 ),
           ( 'Head of Household for', '家戶主人', 'Head of Household is', '家戶', '家戶主人。','Individual','Household', 1 ),
           ( 'Household Member of', '家庭成員', 'Household Member is', '家庭', '家庭成員。','Individual','Household', 1 );
@@ -4410,9 +4410,9 @@ VALUES
 INSERT INTO
    civicrm_contribution_type(name, is_reserved, is_active, is_deductible)
 VALUES
-  ( '捐款'             , 0, 1, 1 ),
-  ( '會員限期'          , 0, 1, 1 ), 
-  ( '募款捐款', 0, 1, 0 ),
+  ( '一般捐款'             , 0, 1, 1 ),
+  ( '會費'          , 0, 1, 1 ), 
+  ( '指定捐款', 0, 1, 0 ),
   ( '活動費用'            , 0, 1, 0 );
   
 -- option groups and values for 'preferred communication methods' , 'activity types', 'gender', etc.
@@ -4428,7 +4428,7 @@ VALUES
    ('individual_prefix'             , '聯絡人稱謂'        , 0, 1),
    ('individual_suffix'             , '聯絡人字尾'        , 0, 1),
    ('acl_role'                      , '權限角色'                           , 0, 1),
-   ('accept_creditcard'             , '允許的信用卡'              , 0, 1),
+   ('accept_creditcard'             , '接受的信用卡'              , 0, 1),
    ('payment_instrument'            , '付款工具'                , 0, 1),
    ('contribution_status'           , '捐款狀態'                , 0, 1),
    ('pcp_status'                    , 'PCP Status'                         , 0, 1),
@@ -4572,7 +4572,7 @@ VALUES
   
    (@option_group_id_act, '會員資格更新提醒',        17, 'Membership Renewal Reminder',  NULL, 1, NULL, 17, '非網路會員資格更新提醒機制。',                      0, 1, 1, @memberCompId, NULL),
    (@option_group_id_act, '修改個案開始時間',         18, 'Change Case Start Date',         NULL, 0,  0, 18, '', 0, 0, 1, @caseCompId, NULL ), 
-   (@option_group_id_act, '大量 Email',                         19, 'Bulk Email',         NULL, 1, NULL, 19, '大量 Email 已寄出。',                                                    0, 1, 1, NULL, NULL),
+   (@option_group_id_act, 'EDM郵件',                         19, 'Bulk Email',         NULL, 1, NULL, 19, 'EDM已寄出。',                                                    0, 1, 1, NULL, NULL),
    (@option_group_id_act, '指派個案角色',                   20, 'Assign Case Role', NULL,0, 0, 20, '', 0, 0, 1, @caseCompId, NULL),
    (@option_group_id_act, '刪除個案角色',                   21, 'Remove Case Role', NULL,0, 0, 21, '', 0, 0, 1, @caseCompId, NULL),
    (@option_group_id_act, 'Print PDF Letter',                   22, 'Print PDF Letter',    NULL, 0, NULL, 22, 'Print PDF Letter.',                                                  0, 1, 1, NULL, NULL),
@@ -4642,7 +4642,7 @@ VALUES
 
   (@option_group_id_pRole, '參加者',  1, 'Attendee',  NULL, 1, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_pRole, '志工', 2, 'Volunteer', NULL, 1, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_pRole, '主機',      3, 'Host',      NULL, 1, NULL, 3, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_pRole, '主持人',      3, 'Host',      NULL, 1, NULL, 3, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_pRole, '講者',   4, 'Speaker',   NULL, 1, NULL, 4, NULL, 0, 0, 1, NULL, NULL),
 
   (@option_group_id_etype, '研討會', 1, 'Conference',  NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
@@ -4755,7 +4755,7 @@ VALUES
   (@option_group_id_report , '支持者報表（詳情）',             'contact/detail',                 'CRM_Report_Form_Contact_Detail',                 NULL, 0, NULL, 2,  '提供在捐款、會員、項目和活動有關的聯絡資訊',   0, 0, 1, NULL, NULL),
   (@option_group_id_report , '任務報表',                         'activity',                       'CRM_Report_Form_Activity',                       NULL, 0, NULL, 3,  '提供支持者任務的清單，包括在指定日期範圍內，聯絡人的任務統計。（必填）', 0, 0, 1, NULL, NULL),
   (@option_group_id_report , '步行/電話名單報表',                'walklist',                       'CRM_Report_Form_Walklist',                       NULL, 0, NULL, 4,  '為步行/電話名單報表的指定聯絡人提供一份詳細報表。', 0, 0, 0, NULL, NULL),
-  (@option_group_id_report , '目前的員工報表',                 'contact/currentEmployer',        'CRM_Report_Form_Contact_CurrentEmployer',        NULL, 0, NULL, 5,  '透過加入日期的詳細細節，提供詳細的雇主與僱員關係列表。', 0, 0, 0, NULL, NULL),
+  (@option_group_id_report , '目前的員工報表',                 'contact/currentEmployer',        'CRM_Report_Form_Contact_CurrentEmployer',        NULL, 0, NULL, 5,  '透過加入日期的詳細細節，提供詳細的就職單位與僱員關係列表。', 0, 0, 0, NULL, NULL),
   (@option_group_id_report , '捐款者報表（概況）',                  'contribute/summary',             'CRM_Report_Form_Contribute_Summary',             NULL, 0, NULL, 6,  '依月 / 星期 / 年 ... 國家 / 州等分類顯示捐款統計資料', 0, 0, 1, @contributeCompId, NULL),
   (@option_group_id_report , '捐款者報表（詳情）',                   'contribute/detail',              'CRM_Report_Form_Contribute_Detail',              NULL, 0, NULL, 7,  '列出一個 / 全部聯絡人的詳細捐款資料。捐款總結報表指出這個報表的具體細節。', 0, 0, 1, @contributeCompId, NULL),
   (@option_group_id_report , '捐贈摘要報表（重複）',        'contribute/repeat',              'CRM_Report_Form_Contribute_Repeat',              NULL, 0, NULL, 8,  '請給兩個日期範圍，顯示在這段時間裡，聯絡人（與他們的捐款）增加或減少的比率。', 0, 0, 1, @contributeCompId, NULL),
@@ -4795,11 +4795,11 @@ VALUES
   (@option_group_id_acs, '已完成',  2, 'Completed',  NULL, 0, NULL, 2, NULL, 0, 1, 1, NULL, NULL),
   (@option_group_id_acs, '已取消',  3, 'Cancelled',  NULL, 0, NULL, 3, NULL, 0, 1, 1, NULL, NULL),
   (@option_group_id_acs, '留下訊息', 4, 'Left Message', NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_acs, '找不到人', 5, 'Unreachable', NULL, 0, NULL, 5, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_acs, '找沒有', 5, 'Unreachable', NULL, 0, NULL, 5, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_acs, '非必要',  6, 'Not Required',  NULL, 0, NULL, 6, NULL, 0, 0, 1, NULL, NULL),
 
-  (@option_group_id_cas, '繼續' , 1, 'Open'  ,  'Opened', 0, 1,    1, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_cas, '解決', 2, 'Closed',  'Closed', 0, NULL, 2, NULL, 0, 1, 1, NULL, NULL),
+  (@option_group_id_cas, '進行中' , 1, 'Open'  ,  'Opened', 0, 1,    1, NULL, 0, 1, 1, NULL, NULL),
+  (@option_group_id_cas, '已解決', 2, 'Closed',  'Closed', 0, NULL, 2, NULL, 0, 1, 1, NULL, NULL),
   (@option_group_id_cas, '緊急'  , 3, 'Urgent',  'Opened', 0, NULL, 3, NULL, 0, 1, 1, NULL, NULL),
 
   (@option_group_id_pl, '只有名字'     , 1, 'Name Only'      ,  NULL, 0, 0, 1, 'CRM_Event_Page_ParticipantListing_Name', 0, 1, 1, NULL, NULL),
@@ -4955,8 +4955,8 @@ VALUES
   (@option_group_id_directory_pref, '暫時檔案' , '', 'uploadDir', NULL, 0, 0, 1, 'CiviCRM 的暫存檔上傳路徑 - 例如匯入資料檔案。', 0, 1, 1, NULL, @domainID, NULL),
   (@option_group_id_directory_pref, '影像' , '', 'imageUploadDir', NULL, 0, 0, 2, 'File system path where image files are uploaded. Currently, this path is used for images associated with premiums (CiviContribute thank-you gifts).', 0, 1, 1, NULL, @domainID, NULL),
   (@option_group_id_directory_pref, '自訂檔案' , '', 'customFileUploadDir', NULL, 0, 0, 3, '文件及圖像這些聯絡人記錄附件被儲存的路線(例如聯絡人相片、重新開始、聯絡人等)。這些附件被定義使用\'檔案\'類別自訂欄位。', 0, 1, 1, NULL, @domainID, NULL),
-  (@option_group_id_directory_pref, '自訂範本' , '', 'customTemplateDir', NULL, 0, 0, 4, '特定範本的路徑已儲存（若有的話）。此目錄會優先被搜尋（如果設定）。個案的設定檔也可儲存在此的路徑中。', 0, 1, 1, NULL, @domainID, NULL),
-  (@option_group_id_directory_pref, 'Custom PHP' , '', 'customPHPPathDir', NULL, 0, 0, 5, '網址指定服務器端編程語言電碼檔案被儲存的路線。此資料夾會先被搜尋如果被設。', 0, 1, 1, NULL, @domainID, NULL),
+  (@option_group_id_directory_pref, '自訂樣板' , '', 'customTemplateDir', NULL, 0, 0, 4, '特定範本的路徑已儲存（若有的話）。此目錄會優先被搜尋（如果設定）。個案的設定檔也可儲存在此的路徑中。', 0, 1, 1, NULL, @domainID, NULL),
+  (@option_group_id_directory_pref, 'Custom PHP' , '', 'customPHPPathDir', NULL, 0, 0, 5, '網站自行存放的PHP程式碼位置。這個位置將會預先被包含進來。', 0, 1, 1, NULL, @domainID, NULL),
   (@option_group_id_directory_pref, 'Custom Extensions' , '', 'extensionsDir', NULL, 0, 0, 6, 'Path where Custom extensions are stored.', 0, 1, 1, NULL, @domainID, NULL),
 
   (@option_group_id_url_pref, 'CiviCRM 版型資源路徑' , '', 'userFrameworkResourceURL', NULL, 0, 0, 1, NULL, 0, 1, 1, NULL, @domainID, NULL),
@@ -5554,7 +5554,7 @@ INSERT INTO civicrm_uf_field
        (12, 4,           'first_name',            1,           0,           1,      'User and User Admin Only',  0,           0,             NULL,             '名字 ',            		'Individual',  NULL,  NULL),
        (13, 4,           'last_name',             1,           0,           2,      'User and User Admin Only',  0,           0,             NULL,             '姓氏',             		'Individual',  NULL,  NULL),
        (14, 4,           'email',                 0,           0,           3,      'User and User Admin Only',  0,           0,             NULL,             '電子郵件位址',         		'Contact',     NULL,  NULL),
-       (15, 5,           'organization_name',     1,           0,           2,      'User and User Admin Only',  0,           0,             NULL,             '組織名稱',     		'Organization',NULL,  NULL),
+       (15, 5,           'organization_name',     1,           0,           2,      'User and User Admin Only',  0,           0,             NULL,             '單位抬頭',     		'Organization',NULL,  NULL),
        (16, 5,           'email',                 0,           0,           3,      'User and User Admin Only',  0,           0,             NULL,             '電子郵件位址',         		'Contact',     NULL,  NULL),
        (17, 6,           'household_name',        1,           0,           2,      'User and User Admin Only',  0,           0,             NULL,             '家庭名稱',        		'Household',   NULL,  NULL),
        (18, 6,           'email',                 0,           0,           3,      'User and User Admin Only',  0,           0,             NULL,             '電子郵件位址',         		'Contact',     NULL,  NULL),
@@ -5564,7 +5564,7 @@ INSERT INTO civicrm_uf_field
 	   (22, 7, 			 'city',				  1, 		   0, 			4, 	  	'User and User Admin Only',  0, 		  0, 			 NULL, 			   '鄉鎮市區',  						'Contact', 	   NULL,  NULL),
 	   (23, 7, 			 'state_province', 		  1, 		   0, 			5, 	  	'User and User Admin Only',  0, 		  0, 			 NULL, 			   '縣市',  						'Contact', 	   NULL,  NULL),
 	   (24, 7, 			 'postal_code', 		  1, 		   0, 			6, 	  	'User and User Admin Only',  0, 		  0, 			 NULL, 			   '郵遞區號',  				'Contact', 	   NULL,  NULL),
-	   (25, 7, 			 'email', 				  1, 		   0, 			7, 	  	'User and User Admin Only',  0, 		  0, 			 NULL, 			   '預設Email位址',  				'Contact', 	   NULL,  NULL),
+	   (25, 7, 			 'email', 				  1, 		   0, 			7, 	  	'User and User Admin Only',  0, 		  0, 			 NULL, 			   '主要Email',  				'Contact', 	   NULL,  NULL),
 	   (26, 7, 			 'group', 				  1, 		   0, 			8, 	  	'User and User Admin Only',  0, 		  0, 			 NULL, 			   '群組',  					'Contact', 	   NULL,  NULL),
 	   (27, 7, 			 'tag', 				  1, 		   0, 			9, 	  	'User and User Admin Only',  0, 	      0, 		     NULL, 			   '標籤/Tag', 						'Contact', 	   NULL,  NULL),
 	   (28  ,7  	    ,'gender'  				 ,1  	      ,0  			,10  	,'User and User Admin Only' ,0  		 ,0  			,NULL,  			 '性別'  						,'Individual' ,NULL,  NULL),
