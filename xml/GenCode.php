@@ -286,8 +286,9 @@ if (isset($argv[2]) and $argv[2] != '') {
 //    $svnversion = `svnversion .`;
     $gitversion = `git describe`;
     $gitversion = explode('-', $gitversion);
-    array_pop($gitversion);
-    $svnversion = implode('-', $gitversion);
+    $hash = array_pop($gitversion);
+    $revision_num = array_pop($gitversion);
+    $svnversion = 'r'.$revision_num;
 }
 file_put_contents("$tplCodePath/CRM/common/version.tpl", $svnversion);
 
