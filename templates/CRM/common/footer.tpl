@@ -27,12 +27,14 @@
 {include file="CRM/common/accesskeys.tpl"}
 {if isset($contactId) and $contactId} {* Display contact-related footer. *}
     <div class="footer" id="record-log">
-    <span class="col1">{if isset($legal_identifier) and $legal_identifier}{ts}Legal Identifier{/ts}: {$legal_identifier}{/if}{if isset($external_identifier) and $external_identifier}{ts}External ID{/ts}:&nbsp;{$external_identifier}{/if}{if $action NEQ 2}&nbsp; &nbsp;{ts}CiviCRM ID{/ts}:&nbsp;{$contactId}{/if}</span>
+    {if isset($legal_identifier) and $legal_identifier}<span class="col">{ts}Legal Identifier{/ts}: {$legal_identifier}</span>{/if} {if isset($external_identifier) and $external_identifier}<span class="col">{ts}External ID{/ts}:&nbsp;{$external_identifier}</span>{/if}{if $action NEQ 2}<span class="col">&nbsp; &nbsp;{ts}CiviCRM ID{/ts}:&nbsp;{$contactId}</span>{/if}
     {if isset($lastModified) and $lastModified}
+        <span class="col">
         {ts}Last Change by{/ts} <a href="{crmURL p='civicrm/contact/view' q="action=view&reset=1&cid=`$lastModified.id`"}">{$lastModified.name}</a> ({$lastModified.date|crmDate}) &nbsp;
 	{if $changeLog != '0'}
 	    <a href="{crmURL p='civicrm/contact/view' q="reset=1&action=browse&selectedChild=log&cid=`$contactId`"}">&raquo; {ts}View Change Log{/ts}</a>
 	{/if}
+        </span>
     {/if}
     </div>
 {/if}
