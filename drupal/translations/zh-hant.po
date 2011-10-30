@@ -5390,7 +5390,7 @@ msgstr "參加者數量"
 
 #: CRM/Price/Form/DeleteSet.php CRM/Price/Page/Set.php
 msgid "Delete Price Set"
-msgstr "刪除價格設定"
+msgstr "刪除價目表"
 
 #: CRM/Price/Form/Field.php CRM/Price/Form/Preview.php
 msgid "Price Set Fields"
@@ -5411,7 +5411,7 @@ msgstr "參加者數量不可高於參加者最高人數。"
 #: CRM/Price/Form/Preview.php CRM/Price/Form/Set.php CRM/Price/Page/Set.php
 #: msgctxt "menu"
 msgid "Price Sets"
-msgstr "價格設定"
+msgstr "價目表"
 
 #: CRM/Profile/Form.php CRM/Profile/Page/Listings.php
 #: CRM/Profile/Page/View.php
@@ -6952,7 +6952,7 @@ msgstr "您需要在使用SSL之前設立一安全伺服器"
 
 #: CRM/Admin/Form/Tag.php
 msgid "This tag cannot be deleted! You must Delete all its child tags ('%1', etc) prior to deleting this tag."
-msgstr "這個價格設定無法刪除！在刪除這個Tag前，您需先刪除它的所有子Tag ('%1', etc)。"
+msgstr "這個標籤無法刪除！在刪除這個標籤前，您需先刪除它的所有子標籤 ('%1', etc)。"
 
 #: CRM/Admin/Form/Tag.php
 msgid "Parent Tag"
@@ -7016,11 +7016,11 @@ msgstr "您是否確定停用此資料表單？"
 
 #: CRM/Admin/Page/AJAX.php
 msgid "Unable to disable the '%1' price set - it is currently in use by one or more active events, contribution pages or contributions."
-msgstr "無法停用「%1」價格設定 - 目前這個價格設定正活動、募款頁面使用中。"
+msgstr "無法停用「%1」價目表 - 因為這個價目表正由募款或活動頁面使用中。"
 
 #: CRM/Admin/Page/AJAX.php
 msgid "Are you sure you want to disable '%1' Price Set?"
-msgstr "您確定要刪除「%1」價格設定？"
+msgstr "您確定要刪除「%1」價目表？"
 
 #: CRM/Admin/Page/AJAX.php
 msgid "Are you sure you want to disable this Event?"
@@ -9233,7 +9233,7 @@ msgstr "自訂搜尋"
 
 #: CRM/Contact/Form/Search/Custom/PriceSet.php
 msgid "There are no events with Price Sets"
-msgstr "現無活動包含價格表"
+msgstr "現無活動包含價目表"
 
 #: CRM/Contact/Form/Search/Custom/PriceSet.php
 msgid "Participant Id"
@@ -9241,7 +9241,7 @@ msgstr "參加者編號"
 
 #: CRM/Contact/Form/Search/Custom/PriceSet.php
 msgid "Export Price Set Info for an Event"
-msgstr "匯出活動的價格設定資訊"
+msgstr "匯出活動的價目表資訊"
 
 #: CRM/Contact/Form/Search/Custom/Proximity.php
 msgid "Could not geocode input"
@@ -17709,7 +17709,7 @@ msgstr "%1 的數量不能低於零。請選擇相應的選項。"
 
 #: CRM/Price/BAO/Field.php
 msgid "Please select at least one option from price set."
-msgstr "請選擇價格表"
+msgstr "請至少選擇一個價目表中的選項"
 
 #: CRM/Price/BAO/Set.php
 msgid "[Copy id %1]"
@@ -17745,11 +17745,11 @@ msgstr "價格欄位 '%1'已被刪除。"
 
 #: CRM/Price/Form/DeleteSet.php
 msgid "The Price Set '%1' has been deleted."
-msgstr "價格設定 '%1'已被刪除。"
+msgstr "價目表 '%1'已被刪除。"
 
 #: CRM/Price/Form/DeleteSet.php
 msgid "The Price Set '%1' has not been deleted! You must delete all price fields in this set prior to deleting the set."
-msgstr "價格設定 '%1'沒有被刪除！在刪除此價格設定之前，您必需先刪除此設定裡的所有價格欄位。"
+msgstr "價目表 '%1'沒有被刪除！在刪除此價目表之前，您必需先刪除此設定裡的所有價格欄位。"
 
 #: CRM/Price/Form/Field.php
 msgid "Input Field Type"
@@ -17801,7 +17801,7 @@ msgstr "已儲存價格欄位 '%1'。"
 
 #: CRM/Price/Form/Field.php
 msgid " You can add another price set field."
-msgstr "您可以新增其他的價格設定欄位。"
+msgstr "您可以新增其他的價目表欄位。"
 
 #: CRM/Price/Form/Option.php templates/CRM/Price/Page/Option.tpl
 msgid "Option Amount"
@@ -17825,11 +17825,11 @@ msgstr "已儲存選項'%1'。"
 
 #: CRM/Price/Form/Set.php msgctxt "menu"
 msgid "New Price Set"
-msgstr "新增價格表"
+msgstr "新增價目表"
 
 #: CRM/Price/Form/Set.php
 msgid "Is this Price Set active?"
-msgstr "啓用此價格設定？"
+msgstr "啓用此價目表？"
 
 #: CRM/Price/Form/Set.php
 msgid "The Set '%1' has been saved."
@@ -17917,11 +17917,11 @@ msgstr "%1 - 價格選項"
 
 #: CRM/Price/Page/Set.php
 msgid "Are you sure you want to delete this price set?"
-msgstr "您確定要刪除此價格設定？"
+msgstr "您確定要刪除此價目表？"
 
 #: CRM/Price/Page/Set.php
 msgid "Are you sure you want to make a copy of this price set?"
-msgstr "您是否確定複製這個價格表？"
+msgstr "您是否確定複製這個價目表？"
 
 #: CRM/Price/Page/Set.php
 msgid "View and Edit Price Fields"
@@ -17929,27 +17929,27 @@ msgstr "查看並編輯價格欄位"
 
 #: CRM/Price/Page/Set.php
 msgid "Preview Price Set"
-msgstr "預覽價格設定"
+msgstr "預覽價目表"
 
 #: CRM/Price/Page/Set.php
 msgid "Edit Price Set"
-msgstr "編輯價格設定"
+msgstr "編輯價目表"
 
 #: CRM/Price/Page/Set.php
 msgid "Disable Price Set"
-msgstr "停用價格設定"
+msgstr "停用價目表"
 
 #: CRM/Price/Page/Set.php
 msgid "Enable Price Set"
-msgstr "啟用價格設定"
+msgstr "啟用價目表"
 
 #: CRM/Price/Page/Set.php
 msgid "Copy Price Set"
-msgstr "複製價格表"
+msgstr "複製價目表"
 
 #: CRM/Price/Page/Set.php
 msgid "Make a Copy of Price Set"
-msgstr "複製價格表"
+msgstr "複製價目表"
 
 #: CRM/Profile/Form/Edit.php
 msgid "The requested Profile (gid=%1) is disabled, OR there is no Profile with that ID, OR a valid 'gid=' integer value is missing from the URL. Contact the site administrator if you need assistance."
@@ -21443,7 +21443,7 @@ msgstr "如果被允許，CiviCRM自動地檢查軟件新版本的可版使用�
 
 #: templates/CRM/Admin/Form/Setting/Miscellaneous.tpl
 msgid "When enabled, statistics about your CiviCRM installation are reported anonymously to the CiviCRM team to assist in prioritizing ongoing development efforts. The following information is gathered: CiviCRM version, versions of PHP, MySQL and framework (Drupal/Joomla/standalone), and default language. Counts (but no actual data) of the following record types are reported: contacts, activities, cases, relationships, contributions, contribution pages, contribution products, contribution widgets, discounts, price sets, profiles, events, participants, tell-a-friend pages, grants, mailings, memberships, membership blocks, pledges, pledge blocks and active payment processor types."
-msgstr "當允許，關於您CiviCRM安裝統計會被匿名地報表到CiviCRM隊去幫助一個順次序進行發展的努力。以下資料被聚集：CiviCRM版本、服務器端編程語言版本、使用導引及架構(Drupal/部落格工具/獨立)，及預設的語言。以下記錄類別計算(但不是實質資料)被報表：聯絡人、活動、個案、關係、捐款、募款頁、捐款產品、捐款小機器、折扣、價格設定、資料表單、活動、參加者、告知朋友頁、撥款、郵件、會員籍、會員籍封鎖、認捐、認捐封鎖及應用中的金流機制類別。"
+msgstr "當允許，關於您CiviCRM安裝統計會被匿名地報表到CiviCRM隊去幫助一個順次序進行發展的努力。以下資料被聚集：CiviCRM版本、服務器端編程語言版本、使用導引及架構(Drupal/部落格工具/獨立)，及預設的語言。以下記錄類別計算(但不是實質資料)被報表：聯絡人、活動、個案、關係、捐款、募款頁、捐款產品、捐款小機器、折扣、價目表、資料表單、活動、參加者、告知朋友頁、撥款、郵件、會員籍、會員籍封鎖、認捐、認捐封鎖及應用中的金流機制類別。"
 
 #: templates/CRM/Admin/Form/Setting/Miscellaneous.tpl
 msgid "Maximum number of files (documents, images, etc.) which can attached to emails or activities."
@@ -31166,7 +31166,7 @@ msgstr "預覽價目表。"
 
 #: templates/CRM/Price/Form/Set.tpl
 msgid "Use this form to edit the title and group-level help for a set of Price fields."
-msgstr "使用本頁面設定價格表。"
+msgstr "使用本頁面設定價目表中的價格欄位。"
 
 #: templates/CRM/Price/Form/Set.tpl
 msgid "The name of this Price Set"
@@ -31174,7 +31174,7 @@ msgstr "價目表名稱"
 
 #: templates/CRM/Price/Form/Set.tpl
 msgid "No Components have been enabled for your site that can be configured with the price sets. Click <a href='%1'>here</a> if you want to enable CiviEvent/CiviContribute for your site."
-msgstr "您的網站裡沒有啟用任何須配置價格組的模組。若您想要為您的網站啟用活動 / 捐款模組，請按 <a href='%1'>這裡</a> 。"
+msgstr "您的網站裡沒有啟用任何須配置價目表的模組。若您想要為您的網站啟用活動 / 捐款模組，請按 <a href='%1'>這裡</a> 。"
 
 #: templates/CRM/Price/Form/Set.tpl
 msgid "Explanatory text displayed at the beginning of this group of fields."
@@ -31186,11 +31186,11 @@ msgstr "顯示在欄位群組下方的說明文字。"
 
 #: templates/CRM/Price/Form/Set.tpl
 msgid "Fields for this Set"
-msgstr "此價目表的價目選項"
+msgstr "此價目表的價格欄位選項"
 
 #: templates/CRM/Price/Page/Field.hlp
 msgid "You may enter a negative amount value if the field or option is being used to discount the total event price."
-msgstr "若此欄位或選項是用來做為折扣用，您可以輸入複數值。"
+msgstr "若此欄位或選項是用來做為折扣用，您可以輸入負數值。"
 
 #: templates/CRM/Price/Page/Field.hlp
 msgid "Enter a value here if you want to increment the number of registered participants per unit against the maximum number of participants allowed for this event. For example, if this price field is for a table at a fundraiser which seats eight people, you would set Participant Count to 8."
@@ -31198,7 +31198,7 @@ msgstr ""
 
 #: templates/CRM/Price/Page/Field.hlp
 msgid "Fields with 'Public' visibility will be displayed on your Event Information page AND will be available in the online registration (self-service) form. For some events you may want to allow staff to select special options with special pricing and / or discounts (using negative price set field values). Select 'Admin' visibility for these Price Fields. They will only be included when staff or volunteers are registering participants from the back-office 'Register Event Participants' screen."
-msgstr "若選擇「公開」，價格表會顯示在活動資訊頁與線上報名表單。對於某些活動，您可給內部員工特別的價格或折扣（透過在價格欄位輸入負數值）。若選擇「Admin」，價格表將只會出現在給職員或志工使用的報名頁面。"
+msgstr "若選擇「公開」，價目表會顯示在活動資訊頁與線上報名表單。對於某些活動，您可給內部員工特別的價格或折扣（透過在價格欄位輸入負數值）。若選擇「Admin」，價目表將只會出現在給職員或志工使用的報名頁面。"
 
 #: templates/CRM/Price/Page/Field.tpl
 msgid "Unable to delete the '%1' Price Field - it is currently in use by one or more active events or contribution pages or contributions."
@@ -31206,7 +31206,7 @@ msgstr "無法刪除價目選項%1 - 該選項目前被活動或募款頁面使�
 
 #: templates/CRM/Price/Page/Field.tpl
 msgid "Add Price Field"
-msgstr "價格欄位"
+msgstr "新增價格欄位"
 
 #: templates/CRM/Price/Page/Field.tpl templates/CRM/UF/Page/Field.tpl
 msgid "Preview (all fields)"
@@ -31214,7 +31214,7 @@ msgstr "預覽（所有欄位）"
 
 #: templates/CRM/Price/Page/Field.tpl
 msgid "Edit Price Options"
-msgstr "編輯價目選項"
+msgstr "編輯價格選項"
 
 #: templates/CRM/Price/Page/Field.tpl
 msgid "There are no fields for price set '%1', <a href='%2'>add one</a>."
@@ -31262,7 +31262,7 @@ msgstr "設定標題"
 
 #: templates/CRM/Price/Page/Set.tpl
 msgid "Add Set of Price Fields"
-msgstr "建立價目表選項"
+msgstr "建立價目表"
 
 #: templates/CRM/Price/Page/Set.tpl
 msgid "No price sets have been created yet. You can <a href='%1'>add one</a>."
@@ -32162,7 +32162,7 @@ msgstr "管理感謝禮"
 
 #: msgctxt "menu"
 msgid "Manage Price Sets"
-msgstr "管理價格表"
+msgstr "管理價目表"
 
 #: msgctxt "menu"
 msgid "Manage Tags (Categories)"
@@ -33649,23 +33649,23 @@ msgstr "如果你不想再使用此價目選項，點選下列募款頁面標題
 
 #: templates/CRM/Price/Page/Field.tpl
 msgid "New Price Field"
-msgstr "新增價目選項"
+msgstr "新增價格欄位"
 
 #: templates/CRM/Price/Page/Field.tpl
 msgid "Preview this Price Set (all fields)"
-msgstr "預覽價目表（所有價目選項）"
+msgstr "預覽價目表（所有價格選項）"
 
 #: templates/CRM/Price/Page/Option.tpl
 msgid "If you no longer want to use this Price Field Option, click the event title below, and modify the fees for that event."
-msgstr "如果你不想再使用此價目選項，請點選下列活動頁面標題，然後修改其中的收費設定。"
+msgstr "如果你不想再使用此價格選項，請點選下列活動頁面標題，然後修改其中的收費設定。"
 
 #: templates/CRM/Price/Page/Option.tpl
 msgid "If you no longer want to use this Price Field Option, click the contribution page title below, and modify the amount for that contribution page."
-msgstr "如果你不想再使用此價目選項，請點選下列募款頁面標題，然後修改其中的金額設定。"
+msgstr "如果你不想再使用此價格選項，請點選下列募款頁面標題，然後修改其中的金額設定。"
 
 #: templates/CRM/Price/Page/Set.tpl
 msgid "New Set of Price Fields"
-msgstr "建立價目表選項"
+msgstr "建立價目表"
 
 #: templates/CRM/Report/Form/Fields.tpl
 msgid "Please select valid Group"
@@ -39529,7 +39529,7 @@ msgstr "郵件開啟編號"
 
 #: CRM/Report/Form/Mailing/Summary.php
 msgid "For Chart view, please select at least one field from %1."
-msgstr "請選擇價格表"
+msgstr "如果要呈現圖表，請選擇 %1 裡至少一個欄位"
 
 msgid "Bookkeeping Transactions Report"
 msgstr "記帳報表"
