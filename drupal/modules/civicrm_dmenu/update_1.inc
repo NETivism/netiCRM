@@ -469,7 +469,7 @@ $menu_links['primary-links'] =array (
       array (
         'path' => 'civicrm/contact/deduperules',
         'query' => 'reset=1',
-        'title' => '搜尋並合併重複的聯絡人',
+        'title' => '合併重複聯絡人',
         'menu' => 'primary-links',
         'weight' => '-38',
         'module' => 'menu',
