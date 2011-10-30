@@ -4432,7 +4432,7 @@ msgstr "下拉選單"
 
 #: CRM/Core/DAO/CustomField.php CRM/Custom/Form/Field.php
 msgid "Multi-Select"
-msgstr "多選"
+msgstr "下拉多選"
 
 #: CRM/Core/DAO/CustomField.php CRM/Custom/Form/Field.php
 #: CRM/Price/BAO/Field.php CRM/Price/DAO/Field.php
