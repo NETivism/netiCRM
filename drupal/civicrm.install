@@ -62,9 +62,11 @@ function civicrm_install( ) {
 
   // step 2: create file directory
   // Oh we can't create civicrm directory here. Leave it for initialize auto create script.
-  /* 
   file_check_directory(file_create_path('civicrm'), FILE_CREATE_DIRECTORY);
-  */
+  file_check_directory(file_create_path('civicrm/templates_c'), FILE_CREATE_DIRECTORY);
+  file_check_directory(file_create_path('civicrm/upload'), FILE_CREATE_DIRECTORY);
+  file_check_directory(file_create_path('civicrm/persist'), FILE_CREATE_DIRECTORY);
+  file_check_directory(file_create_path('civicrm/custom'), FILE_CREATE_DIRECTORY);
 
   // step 3: copy civicrm.settings.php to correct directory
   $filename = $crm_root.'/templates/CRM/common/civicrm.settings.php.tpl';
