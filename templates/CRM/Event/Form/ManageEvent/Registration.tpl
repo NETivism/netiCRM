@@ -252,6 +252,7 @@
  <div class="crm-submit-buttons">
       {include file="CRM/common/formButtons.tpl" location="bottom"}
  </div>
+</div> <!-- crm-event-manage-registration-form-block -->
 
 {include file="CRM/common/showHide.tpl"}
 {include file="CRM/common/showHideByFieldValue.tpl" 

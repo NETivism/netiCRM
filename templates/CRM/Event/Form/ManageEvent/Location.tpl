@@ -31,70 +31,72 @@
 {/if}
 {include file="CRM/Event/Form/ManageEvent/Tab.tpl"}
 <div class="crm-block crm-form-block crm-event-manage-location-form-block">
+
 {if $addBlock}
 {include file="CRM/Contact/Form/Edit/$blockName.tpl"}
 {else}
-<div class="crm-submit-buttons">
-   {include file="CRM/common/formButtons.tpl" location="top"}
-</div>
-    {if $locEvents}
-    	<table class="form-layout-compressed">
-			<tr id="optionType" class="crm-event-manage-location-form-block-location_option">
-				<td class="labels">
-					{$form.location_option.label}
-				</td>
-				{foreach from=$form.location_option key=key item =item}
-					{if $key|is_numeric}
-						<td class="value"><strong>{$item.html}</strong></td>
-				    {/if}
-                {/foreach} 
-			 </tr>
-			<tr id="existingLoc" class="crm-event-manage-location-form-block-loc_event_id">
-				<td class="labels">
-					{$form.loc_event_id.label}
-				</td>
-				<td class="value" colspan="2">
-					{$form.loc_event_id.html|crmReplace:class:huge}
-				</td>
-			</tr>
-			<tr>
-				<td id="locUsedMsg" colspan="3">
-        {php}
-          $this->assign('locUsedMsgTxt', ts('<strong>Note:</strong> This location is used by multiple events. Modifying location information will change values for all events.'));
-        {/php}
-				</td>
-			</tr>
-			
-		</table>
-    {/if}	
+  <div class="crm-submit-buttons">
+     {include file="CRM/common/formButtons.tpl" location="top"}
+  </div>
+  {if $locEvents}
+    <table class="form-layout-compressed">
+    <tr id="optionType" class="crm-event-manage-location-form-block-location_option">
+      <td class="labels">
+        {$form.location_option.label}
+      </td>
+      {foreach from=$form.location_option key=key item =item}
+        {if $key|is_numeric}
+          <td class="value"><strong>{$item.html}</strong></td>
+          {/if}
+              {/foreach} 
+     </tr>
+    <tr id="existingLoc" class="crm-event-manage-location-form-block-loc_event_id">
+      <td class="labels">
+        {$form.loc_event_id.label}
+      </td>
+      <td class="value" colspan="2">
+        {$form.loc_event_id.html|crmReplace:class:huge}
+      </td>
+    </tr>
+    <tr>
+      <td id="locUsedMsg" colspan="3">
+      {php}
+        $this->assign('locUsedMsgTxt', ts('<strong>Note:</strong> This location is used by multiple events. Modifying location information will change values for all events.'));
+      {/php}
+      </td>
+    </tr>
+    
+  </table>
+  {/if}	
 
     
 
-    <div id="newLocation">
-	<fieldset><legend>{ts}Address{/ts}</legend>
-		{* Display the address block *}
-		{include file="CRM/Contact/Form/Edit/Address.tpl"} 
-	</fieldset>
-	<table class="form-layout-compressed">
-    {* Display the email block(s) *}  
-    {include file="CRM/Contact/Form/Edit/Email.tpl"}
+  <div id="newLocation">
+    <fieldset><legend>{ts}Address{/ts}</legend>
+      {* Display the address block *}
+      {include file="CRM/Contact/Form/Edit/Address.tpl"} 
+    </fieldset>
+    <table class="form-layout-compressed">
+      {* Display the email block(s) *}  
+      {include file="CRM/Contact/Form/Edit/Email.tpl"}
 
-    {* Display the phone block(s) *}
-    {include file="CRM/Contact/Form/Edit/Phone.tpl"} 
+      {* Display the phone block(s) *}
+      {include file="CRM/Contact/Form/Edit/Phone.tpl"} 
+      </table>
+     <table class="form-layout-compressed">
+     <tr class="crm-event-is_show_location">
+      <td colspan="2">{$form.is_show_location.label}</td>
+      <td colspan="2">
+        {$form.is_show_location.html}<br />
+        <span class="description">{ts}Uncheck this box if you want to HIDE the event Address on Event Information and Registration pages as well as on email confirmations.{/ts}
+      </td>
+    </tr>
     </table>
-	 <table class="form-layout-compressed">
-	 <tr class="crm-event-is_show_location">
-		<td colspan="2">{$form.is_show_location.label}</td>
-		<td colspan="2">
-			{$form.is_show_location.html}<br />
-			<span class="description">{ts}Uncheck this box if you want to HIDE the event Address on Event Information and Registration pages as well as on email confirmations.{/ts}
-		</td>
-	</tr>
-	</table>
-<div class="crm-submit-buttons">
-   {include file="CRM/common/formButtons.tpl" location="bottom"}
-</div>
-</div>
+    <div class="crm-submit-buttons">
+       {include file="CRM/common/formButtons.tpl" location="bottom"}
+    </div>
+  </div> <!-- newLocation -->
+</div> <!-- crm-event-manage-location-form-block -->
     
 {* Include Javascript to hide and display the appropriate blocks as directed by the php code *} 
 {*include file="CRM/common/showHide.tpl"*}
