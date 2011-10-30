@@ -107,4 +107,15 @@ function civicrm_conf_init() {
     return $conf;
 }
 
+if($_SERVER['DOCUMENT_ROOT']){
+  global $civicrm_root;
+  $civicrm_root = $_SERVER['DOCUMENT_ROOT']."/sites/all/modules/civicrm";
+}
+
+// this is only for single-databse or aegir-based civicrm
+if( file_exists(civicrm_conf_init( ) . '/settings.php')){
+  include_once civicrm_conf_init( ) . '/settings.php';
+} 
+
 include_once civicrm_conf_init( ) . '/civicrm.settings.php';
+
