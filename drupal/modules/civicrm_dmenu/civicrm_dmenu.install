@@ -14,35 +14,69 @@ function civicrm_dmenu_uninstall(){
 /**
  * Implementation of hook_update_N()
  */
-function civicrm_dmenu_update_6000(){
+function civicrm_dmenu_update_6001(){
   // will run in every update.php
   if(variable_get('civicrm_dmenu_installed', 0)){
     // check if exists menu links need update.
     module_load_include('inc', 'civicrm_dmenu', 'update_1');
     module_load_include('module', 'civicrm_dmenu', 'civicrm_dmenu');
+    global $menu_links;
 
-    _civicrm_dmenu_update_link($menu_links, 'primary-links');
-    // _civicrm_dmenu_update_link($menu_links, 'navigation');
+    $log = _civicrm_dmenu_update_link('primary-links');
+    menu_cache_clear('primary-links');
   }
+  $ret[] = _civicrm_dmenu_update_message(TRUE, $log);
+  return $ret;
 }
 
-function _civicrm_dmenu_update_link(&$menu_links, $menu_name){
-  // only update primary-links
-  foreach($menu_links[$menu_name] as $link => $sublinks){
-    $pmlid = db_result(db_query("SELECT mlid FROM {menu_links} WHERE menu_name = '%s' && title = '%s' && path = '%s'", $menu_name, $link['title'], $link['path']));
+function _civicrm_dmenu_update_link($menu_name){
+  global $menu_links;
 
-    // only update first sublink
-    foreach($sublinks as $l){
-      $exists = db_fetch_array(db_query("SELECT * FROM {menu_links} WHERE menu_name = '%s' && link_path = '%s' && plid = %d", $menu, $l['path'], $pmlid));
-      if(!$exists['title']){
-        // add new links
-        civicrm_dmenu_menu_item($l['path'], $l['title'], '', $menu_name, $pmlid, $l['weight'], $l['module'], $l['query'], $l['hidden']);
-      }
-      elseif($exists['title'] != $l['title']){
-        // update to new title
-        $exists['title'] = $l['title'];
-        menu_link_save($exists);
+  $log = 'Updating menu "'.$menu_name.'" ... <br />';
+
+  foreach($menu_links[$menu_name] as $idx => $links){
+    $pmlid = db_result(db_query("SELECT mlid FROM {menu_links} WHERE menu_name = '%s' && link_title = '%s' && link_path = '%s'", $menu_name, $links['title'], $links['path']));
+
+    if(is_array($links['children']) && $pmlid){
+      foreach($links['children'] as $l){
+        $exists_count = 0;
+        $exists = array();
+        $res = db_query("SELECT * FROM {menu_links} WHERE menu_name = '%s' && link_path = '%s' && plid = %d", $menu_name, $l['path'], $pmlid);
+        while( $ex = db_fetch_array($res) ){
+          $ex['options'] = unserialize($ex['options']);
+          if($ex['options']['query'] == $l['query']){
+            $exists = $ex;
+          }
+        }
+
+        // start real updating logic
+        if(!$exists['mlid']){
+          // add new links
+          $new = array(
+            'menu_name'     => $menu_name,
+            'weight'        => $l['weight'],
+            'link_title'    => $l['title'],
+            'module'        => $l['module'],
+            'link_path'     => $l['path'],
+            'hidden'        => $l['hidden'],
+            'options'       => array('query' => $l['query']),
+            'plid'          => $pmlid,
+          );
+          $log .= $pmlid." add: {$exists['link_path']}".$l['title'].":{$l['path']}<br />";
+          menu_link_save($new);
+        }
+        elseif($exists['link_title'] != $l['title']){
+          // update to new title
+          $log .= $pmlid." update: {$exists['link_title']} to {$l['title']}<br />";
+          $exists['link_title'] = $l['title'];
+          menu_link_save($exists);
+        }
       }
     }
   }
+  return $log;
+}
+
+function _civicrm_dmenu_update_message($success, $message){
+  return array('success' => $success, 'query' => $message);
 }
