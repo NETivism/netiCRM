@@ -29344,7 +29344,7 @@ msgstr "顯示過濾搜尋。"
 
 #: templates/CRM/Group/Page/Group.hlp
 msgid "Use Groups to organize contacts (e.g. these contacts are part of our 'Steering Committee'). You can also create <strong>smart groups</strong> based on contact characteristics (e.g. this group consists of all people in our database who live in a specific locality)."
-msgstr "使用群組管理聯絡人(如：部分聯絡人隸屬於' 監事 ' )。你可以根據既有的聯絡人數據資料呈現出的特質，到<strong>新增群組\</strong>預先建立群組類型(如：A地區群組，都是資料庫中居住在A地區的聯絡人)。"
+msgstr "使用群組管理聯絡人(如：部分聯絡人隸屬於' 監事 ' )。你可以根據既有的聯絡人數據資料呈現出的特質，到<strong>新增群組</strong>預先建立群組類型(如：A地區群組，都是資料庫中居住在A地區的聯絡人)。"
 
 #: templates/CRM/Group/Page/Group.hlp
 msgid "You can add contacts to a group from any set of search results (or when viewing an individual contact). You can also allow contacts to sign themselves up for certain groups by setting the group visibility to 'Public Pages' (use the <strong>Settings</strong> link), and including the <strong>Groups</strong> element in your CiviCRM Profile."
