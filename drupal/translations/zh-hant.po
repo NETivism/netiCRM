@@ -3055,7 +3055,7 @@ msgstr "群組"
 #: CRM/Contact/Form/Search/Custom/Proximity.php
 #: CRM/Contact/Form/Search/Custom/TagContributions.php
 msgid "- any tag -"
-msgstr "- 任何Tag -"
+msgstr "- 任何標籤-"
 
 #: CRM/Contact/Form/Search/Criteria.php CRM/Contact/Page/View/Summary.php
 #: CRM/Core/SelectValues.php CRM/Dedupe/Merger.php msgctxt "menu"
@@ -3116,7 +3116,7 @@ msgstr "郵政"
 #: CRM/Contact/Form/Search/Custom/MultipleValues.php
 #: CRM/Contact/Form/Search/Custom/TagContributions.php
 msgid "Tagged"
-msgstr "Tag"
+msgstr "標籤"
 
 #: CRM/Contact/Form/Search/Custom/ContribSYBNT.php
 #: CRM/Contact/Form/Search/Custom/ContributionAggregate.php
@@ -4432,7 +4432,7 @@ msgstr "下拉選單"
 
 #: CRM/Core/DAO/CustomField.php CRM/Custom/Form/Field.php
 msgid "Multi-Select"
-msgstr "多選"
+msgstr "下拉多選"
 
 #: CRM/Core/DAO/CustomField.php CRM/Custom/Form/Field.php
 #: CRM/Price/BAO/Field.php CRM/Price/DAO/Field.php
@@ -6960,7 +6960,7 @@ msgstr "上層標籤"
 
 #: CRM/Admin/Form/Tag.php
 msgid "If it's a tag or a category"
-msgstr "如果那是一個Tag或分類"
+msgstr "如果那是一個標籤或分類"
 
 #: CRM/Admin/Form/Tag.php templates/CRM/Admin/Page/OptionGroup.tpl
 #: templates/CRM/Admin/Page/OptionValue.tpl
@@ -6972,7 +6972,7 @@ msgstr "保留？"
 
 #: CRM/Admin/Form/Tag.php
 msgid "The tag '%1' has been saved."
-msgstr "已儲存Tag '%1'。"
+msgstr "已儲存標籤'%1'。"
 
 #: CRM/Admin/Form/WordReplacements.php msgctxt "menu"
 msgid "Word Replacements"
@@ -7389,11 +7389,11 @@ msgstr "刪除關係類型"
 
 #: CRM/Admin/Page/Tag.php
 msgid "Edit Tag"
-msgstr "編輯Tag"
+msgstr "編輯標籤"
 
 #: CRM/Admin/Page/Tag.php
 msgid "Delete Tag"
-msgstr "刪除Tag"
+msgstr "刪除標籤"
 
 #: CRM/Campaign/BAO/Petition.php
 msgid "No survey sid parameter. Cannot process signature."
@@ -7627,7 +7627,7 @@ msgstr ""
 
 #: CRM/Campaign/Form/Survey.php
 msgid "Please select Survey Response set."
-msgstr "請至少選擇一個Tag。"
+msgstr "請至少選擇一個問卷回覆表。"
 
 #: CRM/Campaign/Form/Survey.php
 msgid " Survey has been deleted."
@@ -7900,7 +7900,7 @@ msgstr "在個案的角色%1 '%2'"
 
 #: CRM/Case/BAO/Query.php
 msgid "Case Tags %1"
-msgstr "個案類型 %1"
+msgstr "個案標籤 %1"
 
 #: CRM/Case/BAO/Query.php
 msgid "- any status -"
@@ -8040,7 +8040,7 @@ msgstr "客戶聯絡人不存在: %1"
 
 #: CRM/Case/Form/Case.php
 msgid "Select Tags"
-msgstr "Select資料表"
+msgstr "選擇標籤"
 
 #: CRM/Case/Form/Case.php
 msgid "The selected case has been moved to the Trash. You can view and / or restore deleted cases by checking the \"Deleted Cases\" option under Find Cases.<br />"
@@ -8349,7 +8349,7 @@ msgstr "非網站註冊使用者"
 
 #: CRM/Contact/BAO/Query.php
 msgid "Tagged %1"
-msgstr "已加入Tag %1"
+msgstr "已加入標籤 %1"
 
 #: CRM/Contact/BAO/Query.php
 msgid "Name or Email "
@@ -8546,7 +8546,7 @@ msgstr "您為 %1地址區塊所輸入的街道數字並非預期格式。街道
 
 #: CRM/Contact/Form/Contact.php
 msgid "Browse/Upload Image"
-msgstr "瀏覽已上傳檔案"
+msgstr "瀏覽/上傳檔案"
 
 #: CRM/Contact/Form/Contact.php
 msgid "Check for Matching Contact(s)"
@@ -8904,7 +8904,7 @@ msgstr "類型"
 
 #: CRM/Contact/Form/Search/Basic.php
 msgid "with"
-msgstr "Tag"
+msgstr "與"
 
 #: CRM/Contact/Form/Search/Basic.php msgctxt "menu"
 msgid "Find Contacts"
@@ -8977,7 +8977,7 @@ msgstr "不寄送"
 
 #: CRM/Contact/Form/Search/Criteria.php
 msgid "- select language -"
-msgstr "- 選擇Tag -"
+msgstr "- 選擇語言 -"
 
 #: CRM/Contact/Form/Search/Criteria.php
 msgid "Range-From"
@@ -9201,19 +9201,19 @@ msgstr "表格"
 
 #: CRM/Contact/Form/Search/Custom/Group.php
 msgid "Tag Name"
-msgstr "Tag名稱"
+msgstr "標籤名稱"
 
 #: CRM/Contact/Form/Search/Custom/Group.php
 msgid "Atleast one Group and Tag must be present, for Custom Group / Tag search."
-msgstr "自訂群組/Tag搜尋，至少要有一個群組和Tag。"
+msgstr "自訂群組/標籤搜尋，至少要有一個群組或標籤。"
 
 #: CRM/Contact/Form/Search/Custom/Group.php
 msgid "Include Tag(s)"
-msgstr "包括Tag"
+msgstr "包括標籤"
 
 #: CRM/Contact/Form/Search/Custom/Group.php
 msgid "Exclude Tag(s)"
-msgstr "排除Tag"
+msgstr "排除標籤"
 
 #: CRM/Contact/Form/Search/Custom/MultipleValues.php
 msgid "Atleast one Custom Group must be present, for Custom Group search."
@@ -9366,7 +9366,7 @@ msgstr "新增聯絡人到組織"
 
 #: CRM/Contact/Form/Task/AddToTag.php
 msgid "Tag Contacts"
-msgstr "Tag 聯絡人"
+msgstr "聯絡人加入標籤"
 
 #: CRM/Contact/Form/Task/Batch.php
 msgid "Batch Update"
@@ -9478,11 +9478,11 @@ msgstr "製作郵寄標籤"
 
 #: CRM/Contact/Form/Task/Label.php
 msgid "Select Label"
-msgstr "選擇 Tag"
+msgstr "選擇郵寄標籤"
 
 #: CRM/Contact/Form/Task/Label.php
 msgid "- select label -"
-msgstr "- 選擇Tag -"
+msgstr "- 選擇郵寄標籤格式 -"
 
 #: CRM/Contact/Form/Task/Label.php
 msgid "Select Location"
@@ -9494,11 +9494,11 @@ msgstr "不要列印郵寄標籤給那些隱私選項勾選了「請勿郵寄」
 
 #: CRM/Contact/Form/Task/Label.php
 msgid "Merge labels for contacts with the same address"
-msgstr "合併有相同地址的聯絡人的Tag"
+msgstr "合併有相同地址的聯絡人"
 
 #: CRM/Contact/Form/Task/Label.php
 msgid "Merge labels for contacts belonging to the same household"
-msgstr "合併有相同地址的聯絡人的Tag"
+msgstr "合併有相同地址的聯絡人"
 
 #: CRM/Contact/Form/Task/Map.php msgctxt "menu"
 msgid "Map Location(s)"
@@ -9576,7 +9576,7 @@ msgstr "在群組 %1中，全部的聯絡人都沒有成為會員"
 
 #: CRM/Contact/Form/Task/RemoveFromTag.php
 msgid "Remove Tag Contacts"
-msgstr "移除 Tag 的聯絡人"
+msgstr "從標籤裡移除聯絡人"
 
 #: CRM/Contact/Form/Task/Unhold.php
 msgid "Unhold Email"
@@ -9722,7 +9722,7 @@ msgstr "投票選上之政府官員"
 
 #: CRM/Contact/Page/View/Tag.php
 msgid "Contact Tags"
-msgstr "聯絡人 Tag"
+msgstr "聯絡人標籤"
 
 #: CRM/Contact/Page/View/UserDashBoard.php
 msgid "You do not have permission to view this contact"
@@ -9994,7 +9994,7 @@ msgstr "募集到%1元，共需要%2元。"
 
 #: CRM/Contribute/BAO/Widget.php
 msgid "Raised %1"
-msgstr "已加入Tag %1"
+msgstr "已募得 %1"
 
 #: CRM/Contribute/BAO/Widget.php
 msgid "Donors"
@@ -11863,7 +11863,7 @@ msgstr "已重建選單"
 
 #: CRM/Core/BAO/Tag.php
 msgid "Selected Tag has been Deleted Successfuly."
-msgstr "選取的 Tag 已成功被刪除。"
+msgstr "標籤已刪除。"
 
 #: CRM/Core/BAO/UFField.php
 msgid "Cannot enable this UF field since the used custom field is disabled."
@@ -13607,7 +13607,7 @@ msgstr "翻譯支持者系統"
 
 #: CRM/Core/Permission.php
 msgid "administer Tagsets"
-msgstr "管理標籤"
+msgstr "管理標籤組"
 
 #: CRM/Core/Permission.php
 msgid "administer reserved tags"
@@ -15550,7 +15550,7 @@ msgstr "選擇要匯出的欄位"
 
 #: CRM/Export/Form/Select.php
 msgid "Merge Contacts with the Same Address"
-msgstr "合併有相同地址的聯絡人的Tag"
+msgstr "合併有相同地址的聯絡人"
 
 #: CRM/Export/Form/Select.php
 msgid "Merge Household Members into their Households"
@@ -15956,7 +15956,7 @@ msgstr "新增已匯入的資料到現有的群組"
 
 #: CRM/Import/Form/Preview.php
 msgid "Tag '%1' already exists."
-msgstr "Tag「%1」已經存在"
+msgstr "「%1」已經存在"
 
 #: CRM/Import/Form/Summary.php
 msgid "Records imported successfully but unable to parse some of the street addresses"
@@ -19036,7 +19036,7 @@ msgstr ""
 
 #: CRM/Tag/Form/Tag.php
 msgid "Update Tags"
-msgstr "更新 Tag"
+msgstr "更新標籤"
 
 #: CRM/Tag/Form/Tag.php
 msgid "Your update(s) have been saved."
@@ -20647,7 +20647,7 @@ msgstr "如何使用此電子郵件帳號？Only one box may be used for bounce 
 
 #: templates/CRM/Admin/Form/Mapping.tpl msgctxt "menu"
 msgid "New Tag"
-msgstr "新增標籤（分類）"
+msgstr "新增標籤"
 
 #: templates/CRM/Admin/Form/Mapping.tpl
 msgid "WARNING: Are you sure you want to delete mapping '<b>%1</b>'?"
@@ -20913,11 +20913,11 @@ msgstr "刪除金流機制類別"
 
 #: templates/CRM/Admin/Form/Preferences/Address.hlp
 msgid "The following tokens are available to format Mailing Labels. Address fields are taken from the contact's <strong>primary</strong> location."
-msgstr "以下tokens允許格式化信件Tag，地址欄從聯絡人<strong>主要</strong>位置取得。"
+msgstr "以下tokens允許格式化郵寄標籤，地址欄從聯絡人<strong>主要</strong>位置取得。"
 
 #: templates/CRM/Admin/Form/Preferences/Address.hlp
 msgid "Used for mailing labels only. Replaced by the Addressee option selected on contact add/edit screen."
-msgstr "僅在電子報Tag上使用。用您在新增/編輯聯絡人的畫面裡選擇的收件者來取代。"
+msgstr "僅用於寄送信件時的標籤。您可以在新增/編輯聯絡人的畫面裡設定偏好的格式。"
 
 #: templates/CRM/Admin/Form/Preferences/Address.hlp
 msgid "Current employer name as configured in the individual contact edit form. Note that this field is only available for contacts which are the contact type individual."
@@ -20945,7 +20945,7 @@ msgstr "鄉鎮市區"
 
 #: templates/CRM/Admin/Form/Preferences/Address.hlp
 msgid "County name. If you want to include the county in your mailing labels, the <strong>Include Counties</strong> setting must be enabled on this screen, and county names must be added to the civicrm_county table in your database."
-msgstr "縣名。如果想把縣名包括在信件Tag中，<strong>包括縣</strong> 的設定必須在此啟用，而且所有縣名必須已經新增到資料庫的civicrm_county表格中。"
+msgstr "縣名。如果想把縣名包括在郵寄標籤中，<strong>包括縣</strong> 的設定必須在此啟用，而且所有縣名必須已經新增到資料庫的civicrm_county表格中。"
 
 #: templates/CRM/Admin/Form/Preferences/Address.hlp
 msgid "State or province <strong>abbreviation</strong>."
@@ -20981,7 +20981,7 @@ msgstr "縣名。如果您想把縣名顯示在螢幕上，<strong>縣</strong>�
 
 #: templates/CRM/Admin/Form/Preferences/Address.hlp
 msgid "The following tokens are available to control the format of individuals' contact names when they are included in <strong>mailing labels</strong>."
-msgstr "以下tokens可以用來控制個別聯絡人的姓名格式，當他們被包括在<strong>信件Tag</strong>裡時。"
+msgstr "以下tokens可以用來控制個別聯絡人的姓名格式，當他們被包括在<strong>郵寄標籤</strong>裡時。"
 
 #: templates/CRM/Admin/Form/Preferences/Address.hlp
 msgid "Assigned name prefix, if any (e.g. 'Ms.', 'Dr.', 'Hon.' etc.)."
@@ -21648,7 +21648,7 @@ msgstr ""
 
 #: templates/CRM/Admin/Form/Tag.tpl
 msgid "What types of record(s) can this tag be used for?"
-msgstr "哪一種類型可被這個Tag所使用?"
+msgstr "這個標籤使用於何種類型?"
 
 #: templates/CRM/Admin/Form/Tag.tpl
 msgid "Reserved tags can not be deleted. Users with 'administer reserved tags' permission can set or unset the reserved flag. You must uncheck 'Reserved' (and delete any child tags) before you can delete a tag."
@@ -21925,12 +21925,12 @@ msgstr "組織您的聯絡人"
 
 #: templates/CRM/Admin/Page/ConfigTaskList.tpl
 msgid "Tags (Categories)"
-msgstr "Tag（種類）"
+msgstr "標籤（分類）"
 
 #: templates/CRM/Admin/Page/ConfigTaskList.tpl
 #: templates/CRM/Admin/Page/Tag.tpl
 msgid "Tags can be assigned to any contact record, and are a convenient way to find contacts. You can create as many tags as needed to organize and segment your records."
-msgstr "Tag 可以使用在任何聯絡人，是搜尋聯絡人最方便的方法。您可建立 Tag 以便組織及分類您的聯絡人資料。"
+msgstr "標籤可以使用在任何聯絡人，是搜尋聯絡人最方便的方法。您可建立標籤以便組織及分類您的聯絡人資料。"
 
 #: templates/CRM/Admin/Page/ConfigTaskList.tpl
 msgid "Use Groups to organize contacts (e.g. these contacts are part of our 'Steering Committee')."
@@ -23085,7 +23085,7 @@ msgstr ""
 
 #: templates/CRM/Admin/Page/Tag.tpl
 msgid "Tag set?"
-msgstr "Tag名稱"
+msgstr "上層標籤?"
 
 #: templates/CRM/Admin/Page/Tag.tpl
 msgid "Tag Set"
@@ -23093,7 +23093,7 @@ msgstr "上層標籤"
 
 #: templates/CRM/Admin/Page/Tag.tpl
 msgid "There are no Tags present. You can <a href='%1'>add one</a>."
-msgstr "尚未有 Tag。您可以<a href='%1'>新增一個</a>。"
+msgstr "目前沒有標籤。您可以<a href='%1'>新增一個</a>。"
 
 #: templates/CRM/Block/Add.tpl
 msgid "First Name:"
@@ -23691,7 +23691,7 @@ msgstr "請從清單中選擇有效的類型"
 
 #: templates/CRM/Case/Form/CaseView.tpl
 msgid "Case Tags"
-msgstr "個案類型"
+msgstr "個案標籤"
 
 #: templates/CRM/Case/Form/CaseView.tpl
 msgid "There are no tags currently assigend to this case."
@@ -23700,11 +23700,11 @@ msgstr "這個個案沒有任務。"
 #: templates/CRM/Case/Form/CaseView.tpl
 #: templates/CRM/Contact/Page/View/Summary.tpl templates/CRM/Tag/Form/Tag.tpl
 msgid "Edit Tags"
-msgstr "編輯 Tag"
+msgstr "編輯標籤"
 
 #: templates/CRM/Case/Form/CaseView.tpl
 msgid "Add Tags"
-msgstr "編輯 Tag"
+msgstr "新增標籤"
 
 #: templates/CRM/Case/Form/CaseView.tpl
 msgid "Search Filters"
@@ -23737,7 +23737,7 @@ msgstr "請從列表中選擇個案"
 
 #: templates/CRM/Case/Form/CaseView.tpl
 msgid "Please select a client for this case."
-msgstr "請至少選擇一個Tag。"
+msgstr "請為本個案選擇一個客戶。"
 
 #: templates/CRM/Case/Form/CaseView.tpl templates/CRM/Case/Form/EditClient.tpl
 msgid "%1 is already assigned to this case. Please select some other client for this case."
@@ -23761,7 +23761,7 @@ msgstr "報表參數"
 
 #: templates/CRM/Case/Form/Search/Common.tpl
 msgid "Case Tag(s)"
-msgstr "Tag"
+msgstr "個案標籤"
 
 #: templates/CRM/Case/Form/Search/EmptyResults.tpl
 msgid "No matching cases found."
@@ -24648,7 +24648,7 @@ msgstr "使用<strong>&#37;</strong>萬用字元於部分相符者。舉例：�
 
 #: templates/CRM/Contact/Form/Search/Advanced.hlp
 msgid "If multiple boxes are checked for Contact Types, Groups, Tags and Location Types, the selections are combined as <strong>OR</strong> criteria (e.g. checking 'Group A' and 'Group B' will find contacts who are either in 'Group A' OR 'Group B'). All other search fields are combined as <strong>AND</strong> criteria (e.g. selecting Tag is 'Major Donor' AND Country is 'Mexico' returns only those contacts who meet both criteria)."
-msgstr "當勾選選項為聯絡人類型、群組、Tag以及地點類型，該選擇項目的搜尋規則為OR(如勾選「群組A」和「群組B」將會找到在「群組A」或在「群組B」的聯絡人)。其他搜尋領域的規則為AND(例如選擇Tag為「主要捐款者」和國家為「墨西哥」，搜尋結果將會是同時擁有兩者條件的聯絡人)。"
+msgstr "當勾選選項為聯絡人類型、群組、標籤以及地點類型，該選擇項目的搜尋規則為OR(如勾選「群組A」和「群組B」將會找到在「群組A」或在「群組B」的聯絡人)。其他搜尋領域的規則為AND(例如選擇標籤為「主要捐款者」和國家為「墨西哥」，搜尋結果將會是同時擁有兩者條件的聯絡人)。"
 
 #: templates/CRM/Contact/Form/Search/Advanced.hlp
 msgid "If you've changed search criteria for this 'smart group' and want to save your changes, select <strong>Update Smart Group</strong> from the '- more actions -' drop-down menu, and then click Go."
@@ -24687,7 +24687,7 @@ msgstr "選擇群組"
 
 #: templates/CRM/Contact/Form/Search/Basic.hlp
 msgid "Find contacts by partial or full name or email, type of contact, group, and/or tag. You can then view or edit contact details, print a contact list, or use the <strong>- more actions -</strong> drop down list to assign tags, add contacts to groups, create smart groups, export contact data to a spreadsheet, and more."
-msgstr "使用部分或全部的項目名稱或Email、聯絡人類型、群組或用Tag來搜尋聯絡人。接著您可查看或編輯聯絡人資料，列印聯絡人列表，或使用下拉選單標示Tag、增加聯絡人至群組、建立群組、匯出連絡人資料等。"
+msgstr "使用部分或全部的項目名稱或Email、聯絡人類型、群組或用標籤來搜尋聯絡人。接著您可查看或編輯聯絡人資料，列印聯絡人列表，或使用下拉選單加入標籤、增加聯絡人至群組、建立群組、匯出連絡人資料等。"
 
 #: templates/CRM/Contact/Form/Search/Basic.hlp
 msgid "Click <strong>Advanced Search</strong> to search by address, demographics, custom fields, notes, and / or relationships. If you are using CiviContribute, CiviEvent or CiviMember - you can also search based on information stored by these components. For example - you can find all contacts who live in a specific city AND have contributed at least %1 within the past 6 months."
@@ -24917,7 +24917,7 @@ msgstr "%1沒有符合您搜尋條件的會員。您可以<a href='%2'>在此新
 
 #: templates/CRM/Contact/Form/Search/EmptyResults.tpl
 msgid "if you are searching within a Group or for Tagged contacts, try 'any group' or 'any tag'"
-msgstr "如果您在群組搜尋或Tag聯絡人，嘗試'任何群組'或'任何Tag'。"
+msgstr "如果您於搜尋群組或標籤裡的聯絡人，您可嘗試「任何群組」或「任何Tag」。"
 
 #: templates/CRM/Contact/Form/Search/EmptyResults.tpl
 msgid "add a <a href='%1'>New Individual</a>, <a href='%2'>Organization</a> or <a href='%3'>Household</a>"
@@ -24964,7 +24964,7 @@ msgstr "選擇關係類別及目標組織"
 
 #: templates/CRM/Contact/Form/Task/AddToTag.tpl
 msgid "Tag Contact(s)"
-msgstr "Tag聯絡人"
+msgstr "將聯絡人加入標籤"
 
 #: templates/CRM/Contact/Form/Task/Batch.tpl
 msgid "Update field values for each contact as needed. Click <strong>Update Contacts</strong> below to save all your changes. To set a field to the same value for ALL rows, enter that value for the first contact and then click the <strong>Copy icon</strong> (next to the column title)."
@@ -25112,7 +25112,7 @@ msgstr "自一個位置的距離"
 
 #: templates/CRM/Contact/Form/Task/RemoveFromTag.tpl
 msgid "Tag Contact(s) (Remove)"
-msgstr "Tag 聯絡人（刪除）"
+msgstr "標籤聯絡人（刪除）"
 
 #: templates/CRM/Contact/Form/Task.tpl
 msgid "Number of selected contacts: %1"
@@ -26398,7 +26398,7 @@ msgstr "試用您的募款頁"
 
 #: templates/CRM/Contribute/Form/Contribution/PreviewHeader.tpl
 msgid "This page is currently running in <strong>test-drive mode</strong>. Transactions will be sent to your payment processor's test server. <strong>No live financial transactions will be submitted. However, a contact record will be created or updated and a test contribution record will be saved to the database. Use obvious test contact names so you can review and delete these records as needed. Test contributions are not visible on the Contributions tab, but can be viewed by searching for 'Test Contributions' in the CiviContribute search form.</strong> Refer to your payment processor's documentation for information on values to use for test credit card number, security code, postal code, etc."
-msgstr "目前為<strong>試用模式</strong>。交易會送到測試的金留交易平台。<strong>本次交易不會扣取任何款項，但會建立、更新您在下列填寫的聯絡人資訊，也會增加一筆測試的交易到資料庫。進行試用模式時，請使用明顯易辨的測試用聯絡人姓名，可方便您需要的時候察看與刪除測試紀錄。類似這種的測試捐款不會出現在統計報表，若您需要搜尋，請至捐款搜尋中，勾選「測試捐款」的選項即可找到。</strong>請參閱金流機制的文件，以獲得更多使用測試信用卡號碼、安全碼、郵政電碼等的資料。"
+msgstr "目前為<strong>試用模式</strong>。交易會送到測試的金流交易平台。<strong>本次交易不會扣取任何款項，但會建立、更新您在下列填寫的聯絡人資訊，也會增加一筆測試的交易到資料庫。進行試用模式時，請使用明顯易辨的測試用聯絡人姓名，可方便您需要的時候察看與刪除測試紀錄。類似這種的測試捐款不會出現在統計報表，若您需要搜尋，請至捐款搜尋中，勾選「測試捐款」的選項即可找到。</strong>請參閱金流機制的文件，以獲得更多使用測試信用卡號碼、安全碼、郵政電碼等的資料。"
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid "An email confirmation with these payment instructions has been sent to %1 and to %2."
@@ -29701,17 +29701,17 @@ msgstr[0] "聯絡人未被新增（已存在此群組）。"
 
 #: templates/CRM/Import/Form/Summary.tpl
 msgid "Tagged Imported Contacts"
-msgstr "匯入的聯絡人已標註"
+msgstr "匯入的聯絡人已加入標籤"
 
 #: templates/CRM/Import/Form/Summary.tpl
 msgid "One contact is tagged with this tag."
 msgid_plural "%count contacts are tagged with this tag."
-msgstr[0] "聯絡人已被標註在此 Tag。"
+msgstr[0] "%count 位聯絡人已被標註在此標籤。"
 
 #: templates/CRM/Import/Form/Summary.tpl
 msgid "One contact NOT tagged (already tagged to this tag)."
 msgid_plural "%count contacts NOT tagged (already tagged to this tag)."
-msgstr[0] "聯絡人未被標註（已被標註在此 Tag）。"
+msgstr[0] "%count 位聯絡人未標註（或已經存在此標籤）。"
 
 #: templates/CRM/Mailing/Form/Component.tpl
 msgid "New Mailing Component"
@@ -31437,7 +31437,7 @@ msgstr "若使用者按下「CiviReport」選單，下面的標題與描述會�
 #: templates/CRM/Report/Form/Settings.hlp
 msgid "The Report Header contains HTML code that will be output at the beginning of the document whenever this report is printed or downloaded in PDF format. The default values will work for most situations. However you may want to enter the actual report title in the &lt;title&gt; tag (replacing 'CiviCRM Report'). You can include a logo by adding an &lt;img&gt; tag. You can also modify the look and feel of the printed report by including a custom CSS file (instead of print.css)."
 msgstr ""
-"報表的頁首 HTML code 將會輸出到文件開頭，若報表要列印或以 pdf 格式下載。此預設值在大部分情況下適用。然而您可能會想要在 &lt;title&gt; Tag裡輸入您想要的報表標題（替換掉「CiviCRM報表」）。您可增加一個&lt;img&gt;Tag來包含一個 logo。您若要修改外觀與調整列印版本的感覺，可包含一個自訂的 CSS 檔案\n"
+"報表的頁首 HTML code 將會輸出到文件開頭，若報表要列印或以 pdf 格式下載。此預設值在大部分情況下適用。然而您可能會想要在 &lt;title&gt; 標籤裡輸入您想要的報表標題（替換掉「CiviCRM報表」）。您可增加一個&lt;img&gt;標籤來包含一個 logo。您若要修改外觀與調整列印版本的感覺，可包含一個自訂的 CSS 檔案\n"
 "（取代掉print.css）"
 
 #: templates/CRM/Report/Form/Settings.hlp
@@ -31528,7 +31528,7 @@ msgstr "獨立報名於"
 
 #: templates/CRM/Tag/Form/Tag.tpl
 msgid "Current tags for <strong>%1</strong> are highlighted. You can add or remove tags from <a href='%2'>Edit Tags</a>."
-msgstr "目前的 Tags 已被反白。您可以利用<a href='%2'>編輯 Tags</a>來新增或刪移 Tags。"
+msgstr "目前的標籤已被反白。您可以利用<a href='%2'>編輯標籤</a>來新增或刪除。"
 
 #: templates/CRM/Tag/Form/Tag.tpl
 msgid "Current tags are highlighted."
@@ -31536,7 +31536,7 @@ msgstr "目前的 Tags 已被反白。"
 
 #: templates/CRM/Tag/Form/Tag.tpl
 msgid "Mark or unmark the checkboxes, <span class=\"unobstructive\">and click 'Update Tags' to modify tags.<span>"
-msgstr "勾選或取消勾選核取方塊，<span class=\"unobstructive\">並按「更新 Tags」以修改 Tags。<span>"
+msgstr "勾選或取消勾選核取方塊，<span class=\"unobstructive\">並按「更新標籤」以修改標籤。<span>"
 
 #: templates/CRM/UF/Form/Field.tpl
 msgid "Delete Field"
@@ -32866,7 +32866,7 @@ msgstr "寄到家庭 ID"
 
 #: CRM/Contact/Form/Contact.php
 msgid "Please select at least one tag."
-msgstr "請至少選擇一個Tag。"
+msgstr "請至少選擇一個標籤。"
 
 #: CRM/Contact/Form/CustomData.php
 msgid "Please select valid custom value."
@@ -34271,7 +34271,7 @@ msgstr "聯絡方式偏好"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Tags and Groups"
-msgstr "Tag及群組"
+msgstr "標籤及群組"
 
 #: xml/templates/civicrm_data.tpl
 msgid "My Contacts / Organizations"
@@ -34303,7 +34303,7 @@ msgstr "簡易搜尋"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Include / Exclude Contacts in a Group / Tag"
-msgstr "包括/不包括群組聯絡人/Tag"
+msgstr "包括/不包括群組聯絡人/標籤"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Postal Mailing"
@@ -34343,7 +34343,7 @@ msgstr "X年且非Y年的捐款"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Find Contribution Amounts by Tag"
-msgstr "從 Tag 尋找捐款金額"
+msgstr "從標籤尋找捐款金額"
 
 #: xml/templates/civicrm_data.tpl xml/templates/civicrm_navigation.tpl
 msgid "Constituent Report (Summary)"
@@ -35661,7 +35661,7 @@ msgstr ""
 
 #: templates/CRM/Admin/Form/Preferences/Address.hlp
 msgid "Current employer name as configured in the individual contact edit form. If you are printing labels for Organizations and Households AS WELL AS Individuals, then consider putting this token in the Individual Name Format field below (rather than here)."
-msgstr "就職單位名稱設定在個人聯絡人編輯表格。如果您打算同時為組織、家庭<strong>以及</strong>個人列印Tag時，考慮放此token在以下的個人姓名格式欄位(而不是在這裡)。"
+msgstr "就職單位名稱設定在個人聯絡人編輯表格。如果您打算同時為組織、家庭或個人列印郵件貼紙時，考慮放此token在以下的個人姓名格式欄位(而不是在這裡)。"
 
 #: templates/CRM/Admin/Page/ContactType.hlp
 msgid ""
@@ -36008,7 +36008,7 @@ msgid ""
 "The Report Header contains HTML code that will be output at the beginning of the document whenever this report is printed or downloaded in PDF format. The default values will work for most situations. However you may want to enter the actual report title in the &lt;title&gt; tag (replacing 'CiviCRM Report'). You can include a logo by adding an &lt;img&gt; tag. You can also modify the look and feel of the printed report by including a custom CSS file\n"
 "(instead of print.css)."
 msgstr ""
-"報表的頁首 HTML code 將會輸出到文件開頭，若報表要列印或以 pdf 格式下載。此預設值在大部分情況下適用。然而您可能會想要在 &lt;title&gt; Tag裡輸入您想要的報表標題（替換掉「CiviCRM報表」）。您可增加一個&lt;img&gt;Tag來包含一個 logo。您若要修改外觀與調整列印版本的感覺，可包含一個自訂的 CSS 檔案\n"
+"報表的頁首 HTML code 將會輸出到文件開頭，若報表要列印或以 pdf 格式下載。此預設值在大部分情況下適用。然而您可能會想要在 &lt;title&gt; 中輸入您想要的報表標題（替換掉「CiviCRM報表」）。您可增加一個&lt;img&gt;來包含一個 logo。您若要修改外觀與調整列印版本的感覺，可包含一個自訂的 CSS 檔案\n"
 "（取代掉print.css）"
 
 #: templates/CRM/UF/Form/Group.hlp
@@ -39290,7 +39290,7 @@ msgstr "活動報名連結文字"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "Contact Status"
-msgstr "聯絡人 Tag"
+msgstr "聯絡人狀態"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "The group status of the contact"
