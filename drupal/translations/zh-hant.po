@@ -8546,7 +8546,7 @@ msgstr "您為 %1地址區塊所輸入的街道數字並非預期格式。街道
 
 #: CRM/Contact/Form/Contact.php
 msgid "Browse/Upload Image"
-msgstr "瀏覽已上傳檔案"
+msgstr "瀏覽/上傳檔案"
 
 #: CRM/Contact/Form/Contact.php
 msgid "Check for Matching Contact(s)"
