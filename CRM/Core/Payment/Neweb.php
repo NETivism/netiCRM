@@ -125,15 +125,13 @@ class CRM_Core_Payment_Neweb extends CRM_Core_Payment {
       $contribution =& new CRM_Contribute_DAO_Contribution();
       $contribution->id = $params['contributionID'];
       $contribution->find(true);
-      /*
-      if($contribution->payment_instrument_id != $params['civicrm_instrument_id']){
+      if($params['civicrm_instrument_id']){
         $contribution->payment_instrument_id = $params['civicrm_instrument_id'];
       }
-      */
       if($contribution->is_pay_later != $is_pay_later){
         $contribution->is_pay_later = $is_pay_later;
       }
-      $contribution->trxn_id = $params['is_recur'] ? $params['contributionID'] + 990000000  : $params['contributionID'];
+      $contribution->trxn_id = $params['is_recur'] ? $params['contributionID'] + 900000000  : $params['contributionID'];
       $contribution->save();
 
       // Inject in quickform sessions
@@ -142,7 +140,6 @@ class CRM_Core_Payment_Neweb extends CRM_Core_Payment {
 
       // making redirect form
       print $this->formRedirect($params_form, $neweb_instrument);
-
       // move things to CiviCRM cache as needed
       require_once 'CRM/Core/Session.php';
       CRM_Core_Session::storeSessionObjects( );
@@ -231,7 +228,9 @@ class CRM_Core_Payment_Neweb extends CRM_Core_Payment {
       $post['duedate'] = date('Ymd', time()+86400*7);
       if($neweb_instrument == 'CS'){
         $post['payname'] = $params['last_name']." ".$params['first_name'];
-        $post['payphone'] = preg_replace("/[^\d]+/i", $params['phone']);
+        if($params['phone']){
+          $post['payphone'] = preg_replace("/[^\d]+/i", $params['phone']);
+        }
       }
       $post['returnvalue'] = 0;
       $post['hash'] = md5($post['merchantnumber'].$this->_paymentProcessor['subject'].$amount.$post['ordernumber']);
@@ -245,7 +244,7 @@ class CRM_Core_Payment_Neweb extends CRM_Core_Payment {
     function getInstrument($id = NULL, $type = 'name'){
       $instruments = array(
         'Credit Card' => 'Credit Card',
-        'EFT' => 'ATM',
+        'ATM' => 'ATM',
         'Web ATM' => 'WEBATM',
         'Convenient Store' => 'CS',
         'Convenient Store (Code)' => 'MMK',
@@ -283,17 +282,6 @@ class CRM_Core_Payment_Neweb extends CRM_Core_Payment {
       document.forms.print.submit();
       window.location = "'.$redirect_params['nexturl'].'";
     }
-    var t = 6;
-    var timeout;
-    function showtime(){
-      t -= 1;
-      document.getElementById("showtime").innerHTML= t;
-      timeout = setTimeout("showtime()",1000);
-      if(t == 0){
-        clearTimeout(timeout);
-      }
-    }
-    showtime();
           ';
 
           $o .= '<form action="'.$redirect_params['#action'].'" name="print" method="post" id="redirect-form" target="newebresult">';
@@ -303,7 +291,7 @@ class CRM_Core_Payment_Neweb extends CRM_Core_Payment {
             }
           }
           $o .= '</form>';
-          $o .= '<div align="center"><p>若網頁沒有自動轉向，您可自行按下「列印」按鈕以取得付款資訊</p><div id="showtime"></div><div><input type="button" value="列印" onclick="print_redirect();" /></div></div>';
+          $o .= '<div align="center"><p>若網頁沒有自動跳出付款資訊，您可自行按下「取得付款資訊」按鈕以獲得繳款訊息</p><div><input type="button" value="取得付款資訊" onclick="print_redirect();" /></div></div>';
           break;
       }
       return '

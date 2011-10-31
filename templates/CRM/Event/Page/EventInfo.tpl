@@ -73,7 +73,7 @@
             </div>
         {/if}
 
-	    {if ( $event.is_map && $config->mapAPIKey && 
+	    {if ( $event.is_map && $config->mapProvider && 
 	        ( is_numeric($location.address.1.geo_code_1)  || 
 	        ( $config->mapGeoCoding && $location.address.1.city AND $location.address.1.state_province ) ) ) }
 	        <div class="crm-section event_map-section">

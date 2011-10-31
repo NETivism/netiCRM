@@ -473,6 +473,9 @@ WHERE id={$contactId}; ";
                                                   "cid=" . $contactID, 
                                                   false, null, false );
                 $form->assign( 'employerDataURL', $dataURL );
+
+                $SICUrl = CRM_Utils_System::url('civicrm/ajax/rest/civicrm/ajax/rest', "fnName=civicrm/contact/search&json=1&contact_type=Organization&rowCount=1&return[sic_code]&contact_id=", false, null, false);
+                $form->assign( 'SICUrl', $SICUrl );
                 
                 $form->add('text', 'organization_id', ts('Select an existing related Organization OR Enter a new one') );
                 $form->add('hidden', 'onbehalfof_id', '', array( 'id' => 'onbehalfof_id' ) );
@@ -488,6 +491,12 @@ WHERE id={$contactId}; ";
                 $isRequired =  true;
             }
             $form->add('text', 'organization_name', ts('Organization Name'), $attributes['organization_name'], $isRequired);
+            $form->addElement('text', 'sic_code', ts('SIC Code'), $attributes['sic_code']);
+
+            if($isRequired){
+              $form->addRule('sic_code','Enter a SIC Code', 'required');
+            }
+            
             break;
         case 'Household':
             $form->add('text', 'household_name', ts('Household Name'), 

@@ -50,6 +50,9 @@ class CRM_Core_Payment_GWIPN extends CRM_Core_Payment_BaseIPN {
       if($qfKey){
         drupal_goto($civi_base_url, "_qf_ThankYou_display=true&qfKey={$qfKey}");
       }
+      else{
+        echo 'OK';
+      }
     }
     else{
       // start validation
@@ -66,6 +69,9 @@ class CRM_Core_Payment_GWIPN extends CRM_Core_Payment_BaseIPN {
         $this->addNote($note, $contribution);
         if(!$_GET['bg']){
           drupal_goto($civi_base_url, "_qf_ThankYou_display=true&qfKey={$qfKey}");
+        }
+        else{
+          echo 'OK';
         }
       }
     }
@@ -108,6 +114,9 @@ class CRM_Core_Payment_GWIPN extends CRM_Core_Payment_BaseIPN {
 
   function getInput( &$input) {
     $input = $_POST;
+
+    // this will fix receipt amount missing issue.
+    $input['amount'] = $input['amount'] ? $input['amount'] : $input['amt'];
 
     if($input['od_hoho']) {
       $hoho = str_replace('<BR>', '<br>', $input['od_hoho']);
@@ -196,7 +205,7 @@ class CRM_Core_Payment_GWIPN extends CRM_Core_Payment_BaseIPN {
 
     // non-credit card validation
     if($input['payment_type']){
-      if(! $this->gwEcbankCheck($input){
+      if(! $this->gwEcbankCheck($input)) {
         watchdog("civicrm_gw", "Checksum Error" );
         $note .= ts("Failuare: Transaction number and system response number doesn't match. Please contact us for further assistant.")."\n";
         $this->failed( $objects, $transaction );

@@ -171,12 +171,11 @@ class CRM_Contact_Task {
             //show map action only if map provider and key is set
             $config = CRM_Core_Config::singleton( );
 
-            if ( $config->mapProvider && $config->mapAPIKey ) {
+            if ( $config->mapProvider && ($config->mapProvider == 'Google' || $config->mapAPIKey) ) {
                 self::$_tasks[12] = array( 'title'  => ts( 'Map Contacts'),
                                            'class'  => 'CRM_Contact_Form_Task_Map',
                                            'result' => false );
             }
-
  
             if ( CRM_Core_Permission::access( 'CiviEvent' ) ) {
                 self::$_tasks[18] = array( 'title'  => ts( 'Add Contacts to Event' ),

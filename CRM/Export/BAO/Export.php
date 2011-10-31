@@ -585,6 +585,9 @@ class CRM_Export_BAO_Export
                             self::sqlColumnDefn( $query, $sqlColumns, $field );
                         }
                     }
+                    if($field == 'state_province'){
+                      $field = 'state_province_name';
+                    }
 
                     //build row values (data)
                     if ( property_exists( $dao, $field ) ) {
@@ -636,10 +639,11 @@ class CRM_Export_BAO_Export
                                 switch ($fld) {
                                 case 'country':
                                 case 'world_region':
-                                    $row[$fldValue] = $i18n->crm_translate($dao->$fldValue, array('context' => 'country'));
+                                    $row[$fldValue] = $dao->$fldValue ? $i18n->crm_translate($dao->$fldValue, array('context' => 'country')) : '';
                                     break;
+                                case 'state_province_name':
                                 case 'state_province':
-                                    $row[$fldValue] = $i18n->crm_translate($dao->$fldValue, array('context' => 'province'));
+                                    $row[$fldValue] = $dao->$fldValue ? $i18n->crm_translate($dao->$fldValue, array('context' => 'province')) : '';
                                     break;
                                 default:
                                     $row[$fldValue] = $dao->$fldValue;
@@ -675,10 +679,11 @@ class CRM_Export_BAO_Export
                                         switch (true) {
                                         case in_array('country',      $type):
                                         case in_array('world_region', $type):
-                                            $row[$field . $fldValue] = $i18n->crm_translate($relDAO->$fldValue, array('context' => 'country'));
+                                            $row[$field . $fldValue] = $relDAO->$fldValue ? $i18n->crm_translate($relDAO->$fldValue, array('context' => 'country')) : $relDAO->$fldValue;
                                             break;
+                                        case in_array('state_province_name', $type):
                                         case in_array('state_province', $type):
-                                            $row[$field . $fldValue] = $i18n->crm_translate($relDAO->$fldValue, array('context' => 'province'));
+                                            $row[$field . $fldValue] = $relDAO->$fldValue ? $i18n->crm_translate($relDAO->$fldValue, array('context' => 'province')) : $relDAO->$fldValue;
                                             break;
                                         default:
                                             $row[$field . $fldValue] = $relDAO->$fldValue;
@@ -702,10 +707,11 @@ class CRM_Export_BAO_Export
                                     switch ($relationField) {
                                     case 'country':
                                     case 'world_region':
-                                        $row[$field . $relationField] = $i18n->crm_translate($fieldValue, array('context' => 'country'));
+                                        $row[$field . $relationField] = $fieldValue ? $i18n->crm_translate($fieldValue, array('context' => 'country')) : $fieldValue;
                                         break;
+                                    case 'state_province_name':
                                     case 'state_province':
-                                        $row[$field . $relationField] = $i18n->crm_translate($fieldValue, array('context' => 'province'));
+                                        $row[$field . $relationField] = $fieldValue ? $i18n->crm_translate($fieldValue, array('context' => 'province')) : $fieldValue;
                                         break;
                                     default:
                                         $row[$field . $relationField] = $fieldValue;
@@ -744,7 +750,7 @@ class CRM_Export_BAO_Export
                             case 'world_region':
                                 $row[$field] = $i18n->crm_translate($fieldValue, array('context' => 'country'));
                                 break;
-                            case 'state_province':
+                            case 'state_province_name':
                                 $row[$field] = $i18n->crm_translate($fieldValue, array('context' => 'province'));
                                 break;
                             case 'gender':

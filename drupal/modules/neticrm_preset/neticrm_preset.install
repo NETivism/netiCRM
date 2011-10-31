@@ -10,12 +10,15 @@ function neticrm_preset_install(){
   require_once "CRM/Core/BAO/Setting.php";
   require_once "CRM/Report/DAO/Instance.php";
 
-  // start standard installation process
-  neticrm_preset_domain_default();
-  neticrm_preset_replace_sql('neticrm_preset.sql');
-  
-  // v 1.1
-  neticrm_preset_default_mail_settings();
+  $count = CRM_Core_DAO::singleValueQuery("SELECT COUNT(*) FROM civicrm_contact WHERE 1");
+  if($count < 2){
+    // start standard installation process
+    neticrm_preset_domain_default();
+    neticrm_preset_replace_sql('neticrm_preset.sql');
+  }
+
+  // v 1.1 fix and update
+  neticrm_preset_update_6101('install');
 }
 
 /**
@@ -46,8 +49,8 @@ function neticrm_preset_domain_default(){
     'contactUndelete' => '1',
     'logging' => '0',
     'versionCheck' => '0',
-    'maxAttachments' => '3',
-    'maxFileSize' => '2',
+    'maxAttachments' => '0',
+    'maxFileSize' => '0',
     'recaptchaPublicKey' => '',
     'recaptchaPrivateKey' => '',
     'dashboardCacheTimeout' => '1440',
@@ -64,7 +67,6 @@ function neticrm_preset_domain_default(){
         2 => '1',
       ),
     'mapProvider' => 'Google',
-    'mapAPIKey' => '',
     'enableComponents' => 
       array (
         0 => 'CiviContribute',
@@ -147,18 +149,6 @@ function neticrm_preset_domain_default(){
   CRM_Core_DAO::executeQuery($sql);
 }
 
-function neticrm_preset_disable_blocks(){
-/* // move to neticrmp.profile
-  install_include(array('block'));
-  install_set_block('civicrm', 2, 'neticrm', 'left', -10, 0, "civicrm\ncivicrm/dashboard\nadmin\nadmin/*");
-
-  install_disable_block('civicrm', 1, 'neticrm');
-  install_disable_block('civicrm', 3, 'neticrm');
-  install_disable_block('civicrm', 4, 'neticrm');
-  install_disable_block('civicrm', 5, 'neticrm');
-*/
-}
-
 function neticrm_preset_replace_sql($filename){
   $filename = dirname(__FILE__).'/'.$filename;
 
@@ -173,12 +163,7 @@ function neticrm_preset_replace_sql($filename){
   foreach ( $queries as $query ) {
     $query = trim( $query );
     if ( ! empty( $query ) ) {
-      $res =& CRM_Core_DAO::executeQuery($query);
-      /*
-      if ( PEAR::isError( $res ) ) {
-        die( "Cannot execute $query: " . $res->getMessage( ) );
-      }
-      */
+      CRM_Core_DAO::executeQuery($query);
     }
   }
 }
@@ -186,36 +171,70 @@ function neticrm_preset_replace_sql($filename){
 function neticrm_preset_default_mail_settings(){
   global $base_url;
   $domain = str_replace("http://", '', $base_url);
-  $query = "REPLACE INTO `civicrm_mail_settings` (`id`, `domain_id`, `name`, `is_default`, `domain`, `localpart`, `return_path`, `protocol`, `server`, `port`, `username`, `password`, `is_ssl`, `source`) VALUES  (1, 1, 'default', 1, 'vps3.netivism.com.tw', '{$domain}+', '{$domain}@vps3.netivism.com.tw', '1', '127.0.0.1', NULL, '{$domain}@vps3.netivism.com.tw', 'neticrm##1', 0, NULL);";
-  $res =& CRM_Core_DAO::executeQuery($query);
-  /*
-    if ( PEAR::isError( $res ) ) {
-      die( "Cannot execute $query: " . $res->getMessage( ) );
-    }
-  */
+  $query = "REPLACE INTO `civicrm_mail_settings` (`id`, `domain_id`, `name`, `is_default`, `domain`, `localpart`, `return_path`, `protocol`, `server`, `port`, `username`, `password`, `is_ssl`, `source`) VALUES  (1, 1, 'default', 1, 'mail.neticrm.tw', '{$domain}+', '{$domain}@mail.neticrm.tw', '1', '127.0.0.1', NULL, '{$domain}@mail.neticrm.tw', 'neticrm##1', 0, NULL);";
+  CRM_Core_DAO::executeQuery($query);
 }
 
 /**
  * Implementation of hook_update_N()
  */
-function neticrm_preset_update_6103(){
-
-}
 
 /**
  * Update for drupal 6.x-1.1
  */
-function neticrm_preset_update_6101(){
+function neticrm_preset_update_6101($type = 'install'){
+  civicrm_initialize();
   neticrm_preset_default_mail_settings();
 
   // set default front page
   variable_set('site_frontpage', 'home');
   
+  // Critical bug fix #2960, import new translation then rewind the cache
+  $query = "DELETE FROM civicrm_cache WHERE data LIKE '%master_id%'";
+  CRM_Core_DAO::executeQuery($query);
+
+  // Disable unnecessery location type.
+  $query = "UPDATE civicrm_location_type SET is_active = 0 WHERE id = 3";
+  CRM_Core_DAO::executeQuery($query);
+
+  // remove mail attachment
+  $params = array(
+    'maxAttachments' => '0',
+    'maxFileSize' => '0',
+    'mapAPIKey' => '',
+    'userFrameworkVersion' => '6.22',
+  );
+  require_once "CRM/Core/BAO/Setting.php";
+  CRM_Core_BAO_Setting::add($params);
+
   // import new translated strings.
-  // see http://api.drupal.org/api/drupal/includes--locale.inc/function/locale_batch_by_language/6
-  // _locale_import_po($file, 'zh-hant', LOCALE_IMPORT_OVERWRITE);
+  if($type != 'install'){
+    _neticrm_preset_import_po();
+  } 
+
+  // Replace translation error
+  $query = "UPDATE civicrm_option_value SET label = '表演' WHERE name = 'Performance' AND label = '效能'";
+  CRM_Core_DAO::executeQuery($query);
 }
+
+
+/* We shouldn't enable this until we really need 6.x.1.2
+function neticrm_preset_update_6102(){
+  civicrm_initialize();
+
+  // set again for domain change
+  neticrm_preset_default_mail_settings();
+}
+*/
+
 
 function _neticrm_preset_message($message, $success){
   return array('success' => $success, 'query' => check_plain($message));
 }
+
+function _neticrm_preset_import_po(){
+  $langcode = 'zh-hant';
+  $file = new stdClass();
+  $file->filepath = drupal_get_path("module", 'civicrm')."/translations/$langcode.po";
+  locale_inc_callback('_locale_import_po', $file, $langcode, LOCALE_IMPORT_OVERWRITE, 'default');
+} 

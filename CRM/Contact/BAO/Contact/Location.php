@@ -126,6 +126,7 @@ LEFT JOIN civicrm_phone ON ( civicrm_phone.contact_id = civicrm_contact.id )
      */
     static function &getMapInfo( $ids, $locationTypeID = null, $imageUrlOnly = false ) 
     {
+        require_once 'CRM/Utils/Address.php';
         $idString = ' ( ' . implode( ',', $ids ) . ' ) ';
         $sql = "
    SELECT civicrm_contact.id as contact_id,
@@ -140,7 +141,8 @@ LEFT JOIN civicrm_phone ON ( civicrm_phone.contact_id = civicrm_contact.id )
           civicrm_address.postal_code_suffix as postal_code_suffix,
           civicrm_address.geo_code_1 as latitude,
           civicrm_address.geo_code_2 as longitude,
-          civicrm_state_province.abbreviation as state,
+          civicrm_state_province.abbreviation as state_province,
+          civicrm_state_province.name as state_province_name,
           civicrm_country.name as country,
           civicrm_location_type.name as location_type
      FROM civicrm_contact
@@ -159,7 +161,6 @@ AND civicrm_contact.id IN $idString ";
             $sql .= " AND civicrm_address.location_type_id = %1";
             $params[1] = array( $locationTypeID, 'Integer' );
         }
-
         $dao =& CRM_Core_DAO::executeQuery( $sql, $params );
 
         $locations = array( );
@@ -175,17 +176,15 @@ AND civicrm_contact.id IN $idString ";
             $location['lat'         ] = $dao->latitude;
             $location['lng'         ] = $dao->longitude;
             $location['marker_class'] = $dao->contact_type;
-            $address = '';
+            $location['street_address'] = $dao->street_address;
+            $location['supplemental_address_1'] = $dao->supplemental_address_1;
+            $location['supplemental_address_2'] = $dao->supplemental_address_2;
+            $location['city'] = $dao->city;
+            $location['state_province_name'] = ts($dao->state_province_name);
+            $location['country'] = $dao->country;
             
-            CRM_Utils_String::append( $address, '<br />',
-                                      array( $dao->street_address,
-                                             $dao->supplemental_address_1,
-                                             $dao->supplemental_address_2,
-                                             $dao->city ) );
-            CRM_Utils_String::append( $address, ', ',
-                                      array(   $dao->state, $dao->postal_code ) );
-            CRM_Utils_String::append( $address, '<br /> ',
-                                      array( $dao->country ) );
+            $address = str_replace("\n", '', CRM_Utils_Address::format( $location ));
+
             $location['address'       ] = addslashes( $address );
             $location['displayAddress'] = str_replace( '<br />', ', ', $address );
             $location['url'           ] = CRM_Utils_System::url( 'civicrm/contact/view', 'reset=1&cid=' . $dao->contact_id );
