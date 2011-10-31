@@ -2861,7 +2861,7 @@ msgstr "刪除聯絡人"
 
 #: CRM/Contact/Form/Contact.php CRM/Profile/Form.php
 msgid "Save Matching Contact"
-msgstr "儲存對應的聯絡人"
+msgstr "確定儲存聯絡人"
 
 #: CRM/Contact/Form/Contact.php CRM/Contact/Form/RelatedContact.php
 msgid "Your %1 contact record has been saved."
@@ -2870,7 +2870,7 @@ msgstr "您的 %1 筆聯絡人記錄已儲存。"
 #: CRM/Contact/Form/Contact.php CRM/Profile/Form.php
 msgid "One matching contact was found. "
 msgid_plural "%count matching contacts were found.<br />"
-msgstr[0] "搜尋到 %count 個相符的聯絡人紀錄。"
+msgstr[0] "系統偵測到 %count 筆類似的聯絡人記錄。"
 
 #: CRM/Contact/Form/DedupeFind.php CRM/Contact/Form/Task/AddToGroup.php
 #: CRM/Contact/Form/Task/RemoveFromGroup.php
@@ -8572,7 +8572,7 @@ msgstr "，或者與現有聯絡人合併"
 
 #: CRM/Contact/Form/Contact.php
 msgid "If you're sure this record is not a duplicate, click the 'Save Matching Contact' button below."
-msgstr "若您確認本筆資料與紀錄重複，請按「聯絡人詳情」欄位下方的「儲存對應的聯絡人」。"
+msgstr "若你仍確定此聯絡人非重複資料，請在「聯絡人詳情」區域下方，按下「確定儲存聯絡人」以進行儲存。"
 
 #: CRM/Contact/Form/Contact.php
 msgid "No matching contact found."
