@@ -76,7 +76,9 @@ function civicrm_dmenu_menu_item($path, $title, $description = '', $menu = 'navi
   }
   else{
     $exists['options'] = unserialize($exists['options']);
-    $exists['options'] = array_merge($exists['options'], $option_arr);
+    if(is_array($option_arr)){
+      $exists['options'] = array_merge($exists['options'], $option_arr);
+    }
     $exists['hidden'] = ($exists['hidden'] == -1) ? -1 :$hidden;
     $exists['title'] = $title;
     $exists['weight'] = $weight;

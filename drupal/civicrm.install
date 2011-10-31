@@ -47,7 +47,13 @@ function civicrm_install( ) {
 
   // step 1: import databases
   require_once "$crm_root/packages/DB.php";
-  $dsn = str_replace("mysqli", "mysql", $db_url['default'])."?new_link=true";
+  if(is_array($db_url)){ // this should be another trick to detect active db_url
+    $dsn = str_replace("mysqli", "mysql", $db_url['default'])."?new_link=true";
+  }
+  else{
+    $dsn = str_replace("mysqli", "mysql", $db_url)."?new_link=true";
+  }
+
   $success = _civicrm_import_sql( $dsn, $crm_root.'/sql/civicrm.mysql');
   if($success){
     _civicrm_import_sql( $dsn, $crm_root.'/sql/civicrm_data.zh_TW.mysql');
@@ -56,9 +62,11 @@ function civicrm_install( ) {
 
   // step 2: create file directory
   // Oh we can't create civicrm directory here. Leave it for initialize auto create script.
-  /* 
   file_check_directory(file_create_path('civicrm'), FILE_CREATE_DIRECTORY);
-  */
+  file_check_directory(file_create_path('civicrm/templates_c'), FILE_CREATE_DIRECTORY);
+  file_check_directory(file_create_path('civicrm/upload'), FILE_CREATE_DIRECTORY);
+  file_check_directory(file_create_path('civicrm/persist'), FILE_CREATE_DIRECTORY);
+  file_check_directory(file_create_path('civicrm/custom'), FILE_CREATE_DIRECTORY);
 
   // step 3: copy civicrm.settings.php to correct directory
   $filename = $crm_root.'/templates/CRM/common/civicrm.settings.php.tpl';

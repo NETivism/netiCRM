@@ -143,6 +143,7 @@
     </fieldset>
 	</div>
  {/if}
+</div>
 <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
 </fieldset>
 <div>
@@ -183,3 +184,4 @@ function select_option() {
 </script>
 
 {/if}
+</div>
