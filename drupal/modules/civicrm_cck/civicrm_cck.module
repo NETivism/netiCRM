@@ -169,7 +169,7 @@ function civicrm_cck_field_settings($op, $field)
         
         
     case 'save':
-        return array_values( $contactTypes );
+        return array_keys( $contactTypes);
     }
 }
 

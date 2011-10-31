@@ -61,8 +61,8 @@
 </table>
 <br/>
 
-<h3>{ts}Other Settings{/ts}</h3>
-<table class="form-layout">
+<h3 style="display:none;">{ts}Other Settings{/ts}</h3>
+<table class="form-layout" style="display:none;">
     <tr class="crm-report-instanceForm-form-block-is_navigation">
 	<td class="report-label">{$form.is_navigation.label}</td>
         <td>{$form.is_navigation.html}<br />

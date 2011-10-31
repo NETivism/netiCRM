@@ -1,7 +1,12 @@
 <?php
 define( 'CIVICRM_UF'               , 'Drupal'        );
 global $db_url;
-$dsn = str_replace("mysqli", "mysql", $db_url['default']);
+if(is_array($db_url)){
+  $dsn = str_replace("mysqli", "mysql", $db_url['default']);
+}
+else{
+  $dsn = str_replace("mysqli", "mysql", $db_url);
+}
 define( 'CIVICRM_UF_DSN'           , $dsn."?new_link=true" );
 define( 'CIVICRM_DSN'          , $dsn."?new_link=true" );
 define('CIVICRM_LOGGING_DSN', CIVICRM_DSN);
