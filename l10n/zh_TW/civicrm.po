@@ -24243,7 +24243,7 @@ msgstr "稱謂開頭問候語，或是寄送信件時的稱謂方式。這個設
 
 #: templates/CRM/Contact/Form/Contact.hlp
 msgid "You may also create a customized greeting and use field tokens to insert fields of your choice. For more information on available tokens, see the online documentation %1."
-msgstr "您也可以在不同欄位中插入替代符號，以建立個人化的問候語。要獲得更多關於替代符號的資訊，請參閱線上文件 %1。"
+msgstr "您也可以在不同欄位中插入替代符號，以建立個人化的問候語。常用的替代符號如下：<ul><li>{contact.last_name} - 姓</li><li>{contact.first_name} - 名</li><li>{contact.job_title} - 職稱</li><li>{contact.individual_prefix} - 稱謂（先生小姐）</li><li>{contact.nick_name} - 暱稱</li></ul>要獲得更多關於替代符號的資訊，請參閱線上文件 %1。"
 
 #: templates/CRM/Contact/Form/Contact.hlp
 msgid "CiviCRM will attempt to split street addresses into separate elements (street number, street name and unit/apt) to help you make lists and reports where you need to sort by street number (and/or separate addresses with odd and even numbers). For most addresses, this is done for you automatically. However, you can manually edit these elements, and potentially handle addresses that are in unusual formats, by clicking 'Edit Address Elements'."
