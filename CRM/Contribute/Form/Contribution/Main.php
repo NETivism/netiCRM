@@ -571,7 +571,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
         }
         $this->assign( 'is_for_organization', true);
         CRM_Contact_BAO_Contact_Utils::buildOnBehalfForm( $this, 'Organization', null, 
-                                                          null, 'Organization Details' );
+                                                          null, ts('Organization Details') );
     }
 
     /**
@@ -744,6 +744,9 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
             }
             if ( ! $fields['email'][1]['email'] ) {
                 $errors["email[1][email]"] = ts('Organization email is required.'); 
+            }
+            if ( ! $fields['sic_code'] ) {
+                $errors["sic_code"] = ts('Enter a SIC Code'); 
             }
         }
 

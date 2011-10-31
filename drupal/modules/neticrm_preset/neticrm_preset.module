@@ -1,5 +1,148 @@
 <?php
-// placeholder
+define('NETICRM_LIMIT_PATH', 'civicrm/import/contact::civicrm/contact/add');
+
+/**
+ * Implementation of hook_init
+ *
+ * This function will limit user enter route and limitation.
+ * We got to redirect user to help page even they have permissions.
+ */
+function neticrm_preset_init(){
+  global $neticrm, $user;
+  // we assume the civicrm db is the same with drupal from neticrm service, or we got to load full civicrm object..
+  $neticrm['contact'] = db_result(db_query("SELECT COUNT(*) FROM {civicrm_contact} WHERE is_deleted = 0"));
+
+  $path = explode('::', NETICRM_LIMIT_PATH);
+  if(in_array($_GET['q'], $path) ){
+  /*
+    if($neticrm['contact']){
+      return drupal_access_denied();
+    }
+  */
+  }
+}
+
+/**
+ * Implementation of hook_perm
+ *
+ * The real administrator perm for neticrm
+ */
+function neticrm_preset_perm(){
+  return array('administer neticrm');
+}
+
+/**
+ * Implementation of hook_menu_alter
+ *
+ * Will alter the permission for some system menu items.
+ */
+function neticrm_preset_menu_alter(&$items){
+  // system.module
+  $items['admin/by-module']['access arguments'] = array('administer neticrm');
+  $items['admin/settings/admin']['access arguments'] = array('administer neticrm');
+  $items['admin/build/modules']['access arguments'] = array('administer neticrm');
+  $items['admin/build/modules/uninstall']['access arguments'] = array('administer neticrm');
+  $items['admin/settings/actions']['access arguments'] = array('administer neticrm');
+  $items['admin/settings/actions/configure']['access arguments'] = array('administer neticrm');
+  $items['admin/settings/actions/orphan']['access arguments'] = array('administer neticrm');
+  $items['admin/settings/error-reporting']['access arguments'] = array('administer neticrm');
+  $items['admin/settings/logging']['access arguments'] = array('administer neticrm');
+  $items['admin/settings/performance']['access arguments'] = array('administer neticrm');
+  $items['admin/settings/file-system']['access arguments'] = array('administer neticrm');
+  $items['admin/settings/image-toolkit']['access arguments'] = array('administer neticrm');
+  $items['admin/content/rss-publishing']['access arguments'] = array('administer neticrm');
+  $items['admin/settings/site-maintenance']['access arguments'] = array('administer neticrm');
+  $items['admin/settings/clean-urls']['access arguments'] = array('administer neticrm');
+  $items['admin/reports/status']['access arguments'] = array('administer neticrm');
+  $items['admin/reports/status/run-cron']['access arguments'] = array('administer neticrm');
+  $items['admin/reports/status/php']['access arguments'] = array('administer neticrm');
+  $items['admin/reports/status/sql']['access arguments'] = array('administer neticrm');
+
+  // special case for theme
+  $items['admin/build/themes']['page arguments'] = array('system_theme_settings');
+  $items['admin/build/themes/select'] = array(
+    'title' => 'List',
+    'description' => 'Select the default theme.',
+    'type' => MENU_LOCAL_TASK,
+    'page arguments' => array('system_themes_form', NULL),
+    'access arguments' => array('administer neticrm'),
+  );
+  $items['admin/build/themes/settings'] = array(
+    'title' => 'Configure',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -1,
+  );
+
+  // node.module
+  $items['admin/content/types']['access arguments'] = array('administer neticrm');
+  $items['admin/content/types/add']['access arguments'] = array('administer neticrm');
+  $items['admin/content/node-settings']['access arguments'] = array('administer neticrm');
+
+  // block.module
+  $items['admin/build/block']['access arguments'] = array('administer neticrm');
+  $items['admin/build/block/list/js']['access arguments'] = array('administer neticrm');
+  $items['admin/build/block/configure']['access arguments'] = array('administer neticrm');
+  $items['admin/build/block/delete']['access arguments'] = array('administer neticrm');
+  $items['admin/build/block/add']['access arguments'] = array('administer neticrm');
+
+  // path.module
+  $items['admin/build/path']['access arguments'] = array('administer neticrm');
+  $items['admin/build/path/edit']['access arguments'] = array('administer neticrm');
+  $items['admin/build/path/delete']['access arguments'] = array('administer neticrm');
+  $items['admin/build/path/add']['access arguments'] = array('administer neticrm');
+
+  // menu.module
+  $items['admin/build/menu']['access arguments'] = array('administer neticrm');
+  $items['admin/build/menu/add']['access arguments'] = array('administer neticrm');
+  $items['admin/build/menu/settings']['access arguments'] = array('administer neticrm');
+  $items['admin/build/menu-customize/%menu']['access arguments'] = array('administer neticrm');
+  $items['admin/build/menu-customize/%menu/add']['access arguments'] = array('administer neticrm');
+  $items['admin/build/menu-customize/%menu/edit']['access arguments'] = array('administer neticrm');
+  $items['admin/build/menu-customize/%menu/delete']['access arguments'] = array('administer neticrm');
+  $items['admin/build/menu/item/%menu_link/edit']['access arguments'] = array('administer neticrm');
+  $items['admin/build/menu/item/%menu_link/reset']['access arguments'] = array('administer neticrm');
+  $items['admin/build/menu/item/%menu_link/delete']['access arguments'] = array('administer neticrm');
+
+  // logintoboggan.module
+  $items['admin/user/logintoboggan']['access arguments'] = array('administer neticrm');
+
+  // localfix.module
+  $items['admin/settings/localfix']['access arguments'] = array('administer neticrm');
+
+  // filter.module
+  $items['admin/settings/filters']['access arguments'] = array('administer neticrm');
+  $items['admin/settings/filters/add']['access arguments'] = array('administer neticrm');
+
+  // imce.module
+  $items['admin/settings/imce']['title'] = 'Image toolkit';
+
+}
+
+/**
+ * Implementation of hook_form_alter
+ *
+ * hide the form elements in permissions setting page
+ */
+function neticrm_preset_form_alter(&$form, &$form_state, $form_id){
+  if($form_id == 'user_admin_perm'){
+    global $user;
+    if($user->uid != 1){
+      foreach($form['checkboxes'] as $rid => $cb){
+        if(isset($cb['#options']['administer neticrm'])){
+          unset($form['checkboxes'][$rid]['#options']['administer neticrm']);
+        }
+      }
+      unset($form['permission']['administer neticrm']);
+      foreach($form['permission'] as $k => $v){
+        if($v['#value'] == 'neticrm_preset'){
+          unset($form['permission'][$k]);
+          break;
+        }
+      }
+    }
+  }
+}
+
 /**
  * Implementation of hook_menu
  */
@@ -14,6 +157,7 @@ function neticrm_preset_menu(){
     ),
   );
 }
+
 /**
  * Implementation of hook_theme
  */

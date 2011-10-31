@@ -71,7 +71,7 @@
 	<div class="crm-section organizationName-section">
       {if $relatedOrganizationFound}
       <div class="section crm-section">
-		<div class="content">{$form.org_option.html}</div>
+    <div class="content">{$form.org_option.html}</div>
       </div>
       <div id="select_org" class="crm-section select_org-section">
         <div class="label">{$form.organization_name.label}</div>	   
@@ -79,11 +79,17 @@
       </div>
       {/if}  
       <div id="create_org" class="crm-section create_org-section">
-		<div class="label">{$form.organization_name.label}</div>
+      <div class="label">{$form.organization_name.label}</div>
         <div class="content">{$form.organization_name.html|crmReplace:class:big}</div>
         <div class="clear"></div>
       </div>
+      <div id="set_sic_code" class="crm-section create_org-section">
+        <div class="label">{$form.sic_code.label}</div>
+        <div class="content">{$form.sic_code.html|crmReplace:class:big}</div>
+        <div class="clear"></div>
+      </div>
     </div>
+  </div>
  {if $contactEditMode}
  	</fieldset>
  {/if}
@@ -122,30 +128,17 @@
             <div class="clear"></div>
         </div>
         {/if}
-        {if $addressSequence.street_address}
-		<div class="crm-section {$form.address.$index.street_address.id}-section">
-            <div class="label">{$form.address.$index.street_address.label}</div>
-            <div class="content">{$form.address.$index.street_address.html}    
-                <br class="spacer"/>
-                <span class="description">{ts}Street number, street name, apartment/unit/suite - OR P.O. box{/ts}</span>
-            </div>
+        {if $addressSequence.country && $form.address.$index.country_id.id}
+        <div class="crm-section {$form.address.$index.country_id.id}-section">
+            <div class="label">{$form.address.$index.country_id.label}</div>
+            <div class="content">{$form.address.$index.country_id.html}</div>
             <div class="clear"></div>
         </div>
         {/if}
-        {if $addressSequence.supplemental_address_1}
-		<div class="crm-section {$form.address.$index.supplemental_address_1.id}-section">
-            <div class="label">{$form.address.$index.supplemental_address_1.label}</div>
-            <div class="content">{$form.address.$index.supplemental_address_1.html}    
-                <br class="spacer"/>
-                <span class="description">{ts}Supplemental address info, e.g. c/o, department name, building name, etc.{/ts}</span>
-            </div>
-            <div class="clear"></div>
-        </div>
-        {/if}
-        {if $addressSequence.supplemental_address_2}
-		<div class="crm-section {$form.address.$index.supplemental_address_2.id}-section">
-            <div class="label">{$form.address.$index.supplemental_address_2.label}</div>
-            <div class="content">{$form.address.$index.supplemental_address_2.html}</div>
+        {if $addressSequence.state_province}
+		<div class="crm-section {$form.address.$index.state_province_id.id}-section">
+            <div class="label">{$form.address.$index.state_province_id.label}</div>
+            <div class="content">{$form.address.$index.state_province_id.html}</div>
             <div class="clear"></div>
         </div>
         {/if}
@@ -169,17 +162,30 @@
             <div class="clear"></div>
         </div>
         {/if}
-        {if $addressSequence.country}
-		<div class="crm-section {$form.address.$index.country_id.id}-section">
-            <div class="label">{$form.address.$index.country_id.label}</div>
-            <div class="content">{$form.address.$index.country_id.html}</div>
+        {if $addressSequence.street_address}
+		<div class="crm-section {$form.address.$index.street_address.id}-section">
+            <div class="label">{$form.address.$index.street_address.label}</div>
+            <div class="content">{$form.address.$index.street_address.html}    
+                <br class="spacer"/>
+                <span class="description">{ts}Street number, street name, apartment/unit/suite - OR P.O. box{/ts}</span>
+            </div>
             <div class="clear"></div>
         </div>
         {/if}
-        {if $addressSequence.state_province}
-		<div class="crm-section {$form.address.$index.state_province_id.id}-section">
-            <div class="label">{$form.address.$index.state_province_id.label}</div>
-            <div class="content">{$form.address.$index.state_province_id.html}</div>
+        {if $form.address.$index.supplemental_address_1.id}
+		<div class="crm-section {$form.address.$index.supplemental_address_1.id}-section">
+            <div class="label">{$form.address.$index.supplemental_address_1.label}</div>
+            <div class="content">{$form.address.$index.supplemental_address_1.html}    
+                <br class="spacer"/>
+                <span class="description">{ts}Supplemental address info, e.g. c/o, department name, building name, etc.{/ts}</span>
+            </div>
+            <div class="clear"></div>
+        </div>
+        {/if}
+        {if $form.address.$index.supplemental_address_2.id}
+		<div class="crm-section {$form.address.$index.supplemental_address_2.id}-section">
+            <div class="label">{$form.address.$index.supplemental_address_2.label}</div>
+            <div class="content">{$form.address.$index.supplemental_address_2.html}</div>
             <div class="clear"></div>
         </div>
         {/if}
@@ -251,8 +257,23 @@
     }).result( function(event, data, formatted) {
         cj('#organization_name').val( data[0] );
         cj('#onbehalfof_id').val( data[1] );
+        setSICCode( data[1] );
         setLocationDetails( data[1] );
     });
+    function setSICCode( contactID ) {
+        var SICUrl = "{/literal}{$SICUrl}{literal}"+ contactID;
+        cj.ajax({
+            url         : SICUrl,
+            dataType    : "json",
+            timeout     : 5000, //Time in milliseconds
+            success     : function( data, status ) {
+                cj("#sic_code").val(data[0].sic_code);
+            },
+            error       : function( XMLHttpRequest, textStatus, errorThrown ) {
+                console.error("HTTP error status: ", textStatus);
+            }
+        });
+    }
     
     function setLocationDetails( contactID ) {
         var locationUrl = {/literal}"{$locDataURL}"{literal}+ contactID; 

@@ -93,7 +93,7 @@ class CRM_Contribute_BAO_Query
         }
         
         if ( CRM_Utils_Array::value( 'contribution_note', $query->_returnProperties ) ) {
-            $query->_select['contribution_note']  = "civicrm_note_contribution.note as contribution_note";
+            $query->_select['contribution_note']  = "civicrm_note.note as contribution_note";
             $query->_element['contribution_note'] = 1;
             $query->_tables['contribution_note']  = 1;
         }
@@ -163,6 +163,10 @@ class CRM_Contribute_BAO_Query
     static function whereClauseSingle( &$values, &$query ) 
     {
         list( $name, $op, $value, $grouping, $wildcard ) = $values;
+
+        if($op == 'LIKE' && !$wildcard){
+          $value = '%'.trim($value, '%').'%';
+        }
 
         $fields = array( );
         $fields = self::getFields();
@@ -496,8 +500,8 @@ class CRM_Contribute_BAO_Query
             break;
             
         case 'contribution_note':
-            $from .= " $side JOIN civicrm_note civicrm_note_contribution ON ( civicrm_note_contribution.entity_table = 'civicrm_contribution' AND
-                                                        civicrm_contribution.id = civicrm_note_contribution.entity_id )";
+            $from .= " $side JOIN civicrm_note ON ( civicrm_note.entity_table = 'civicrm_contribution' AND
+                                                    civicrm_contribution.id = civicrm_note.entity_id )";
             break;
 
         case 'contribution_membership':
