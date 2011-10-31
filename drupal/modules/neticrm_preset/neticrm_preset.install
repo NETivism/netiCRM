@@ -218,14 +218,14 @@ function neticrm_preset_update_6101($type = 'install'){
 }
 
 
-/* We shouldn't enable this until we really need 6.x.1.2
+/**
+ * Update 6.x -1.2
+ */
 function neticrm_preset_update_6102(){
-  civicrm_initialize();
 
-  // set again for domain change
-  neticrm_preset_default_mail_settings();
+  // import new translated strings.
+  _neticrm_preset_import_po();
 }
-*/
 
 
 function _neticrm_preset_message($message, $success){
