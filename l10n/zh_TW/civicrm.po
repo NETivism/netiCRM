@@ -29360,11 +29360,11 @@ msgstr "具有<strong>權限控制</strong>的聯絡人群組，應被指派為�
 
 #: templates/CRM/Group/Page/Group.hlp
 msgid "Use <strong>Find Groups</strong> to search by group name, type and visibility."
-msgstr ""
+msgstr "在<strong>搜尋群組</strong>中填入群組名稱、群組類型和顯示狀態，以進行群組搜尋。"
 
 #: templates/CRM/Group/Page/Group.hlp
 msgid "Group type filtering uses <strong>AND</strong> logic. If you check both 'Mailing List' and 'Access Control' types - only groups which have both types assigned will be returned."
-msgstr "您可使用邏輯運算子<strong>AND<strong>來篩選群組類型。若您同時勾選「電子報訂戶」與「權限控制」，將僅有同時具備兩種類型的群組會被篩選出。"
+msgstr "您可使用邏輯運算子<strong>AND</strong>來篩選群組類型。若您同時勾選「電子報訂戶」與「權限控制」，將僅有同時具備兩種類型的群組會被篩選出。"
 
 #: templates/CRM/Group/Page/Group.hlp
 msgid "You can also click a letter on the <strong>A-to-Z bar</strong> to quickly find all groups starting with that letter."
