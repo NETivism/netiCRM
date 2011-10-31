@@ -24471,7 +24471,7 @@ msgstr "如果你想要新增的聯絡人與下列姓名相符，建議您先點
 
 #: templates/CRM/Contact/Form/Edit/Individual.tpl
 msgid "new contact record"
-msgstr "新增聯絡人記錄"
+msgstr "系統找不到該組織，將增加新聯絡人"
 
 #: templates/CRM/Contact/Form/Edit/OpenID.tpl
 msgid "Open ID"
