@@ -44,7 +44,7 @@ if($_SERVER['SERVER_ADDR'] == $_SERVER['REMOTE_ADDR']){
     }
     else{
       call_user_func($function);
-      $schedule[$function]['last'] = $now;
+      $schedule[$function] = $now;
     }
   }
   file_put_contents($schedule_file, json_encode($schedule));

@@ -225,6 +225,9 @@ function neticrm_preset_update_6102(){
 
   // import new translated strings.
   _neticrm_preset_import_po();
+
+  // update some site doesn't have default mail settings
+  neticrm_preset_default_mail_settings();
 }
 
 
