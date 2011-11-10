@@ -34,6 +34,9 @@ function civicrm_contribution_cck_menu() {
 }
 
 function civicrm_contribution_cck_admin_settings() {
+  civicrm_initialize();
+  require_once("api/v2/UFGroup.php");
+
   $types = node_get_types('names');
   /*
   $form['civicc_enable_register_button'] = array(
@@ -59,9 +62,22 @@ function civicrm_contribution_cck_admin_settings() {
     '#options' => $types,
     '#required' => TRUE,
   );
-  
-  civicrm_initialize();
-  require_once("api/v2/UFGroup.php");
+
+  $option_payment_processor =& CRM_Core_PseudoConstant::paymentProcessor( );
+  $form['civicc_payment_processor_id'] = array(
+    '#type' => 'select',
+    '#title' => 'Default payment processor for contribution page',
+    '#default_value' => variable_get('civicc_payment_processor_id', 0),
+    '#options' => $option_payment_processor,
+  );
+
+  $form['civicc_price_amount_block'] = array(
+    '#type' => 'textarea',
+    '#title' => 'Default amount label / value',
+    '#default_value' => variable_get('civicc_price_amount_block', 'TEST|100'),
+    '#description' => 'Please enter label|value per line.',
+  );
+
   $option_profile[0] = ts('- select -');
   $option_profile += civicrm_uf_profile_groups_get();
   $form['civicc_custom_pre'] = array(
@@ -97,6 +113,21 @@ function civicrm_contribution_cck_admin_settings() {
     );
   }
 
+  if(module_exists('civicrm_instrument')){
+    $gid = variable_get('civicrm_instrument_gid', 0);
+    $instruments = CRM_Core_DAO::executeQuery("SELECT * FROM civicrm_option_value WHERE option_group_id = {$gid} AND is_active = 1");
+    while($instruments->fetch()){
+      $checkbox_name = _civicrm_instrument_form_name($instruments->name);
+      $option_instrument[$checkbox_name] = ts($instruments->name);
+    }
+    $form['civicc_instrument'] = array(
+      '#type' => 'checkboxes',
+      '#title' => 'Default payment instrument for contribution',
+      '#default_value' => variable_get('civicc_instrument', array()),
+      '#options' => $option_instrument,
+    );
+  }
+  
   return system_settings_form($form);
 }
 
@@ -110,6 +141,8 @@ function civicrm_contribution_cck_fields(){
     'is_for_organization' => t('Allow individuals to contribute and / or signup for membership on behalf of an organization?'),
     'is_monetary' => t('Enable Payment Processor'),
     'amount_block_is_active' => t('Contribution Amounts section enabled'),
+    'min_amount' => t('Min Amount'),
+    'max_amount' => t('Max Amount'),
     'is_allow_other_amount' => t('Allow other amounts'),
     'thankyou_title' => t('Thank-you Page Title'),
     'thankyou_text' => t('Thank-you Message'),
@@ -119,23 +152,23 @@ function civicrm_contribution_cck_fields(){
 
 function civicrm_contribution_cck_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
   static $contribution_id;
-  if(!$contribution_id) {
-    $contribution_id = civicrm_contribution_cck_check($node);
-  }
-  if ($contribution_id) {
-    /* TODO
-    if ($op == 'view' && $a4) {
-      drupal_add_css(drupal_get_path('module', 'civicrm_contribution_cck')."/civicrm_contribution_cck.css");
-      civicrm_contribution_cck_view($node, $contribution_id);
+  if($op == 'delete' || $op == 'presave'){
+    if(!$contribution_id) {
+      $contribution_id = civicrm_contribution_cck_check($node);
     }
-    if($op == 'delete' || $op == 'presave'){
+    if ($contribution_id) {
+      /* TODO
+      if ($op == 'view' && $a4) {
+        drupal_add_css(drupal_get_path('module', 'civicrm_contribution_cck')."/civicrm_contribution_cck.css");
+        civicrm_contribution_cck_view($node, $contribution_id);
+      }
+       */
       civicrm_contribution_cck_save($node, $op);
     }
-     */
-  }
 
-  if($op == 'presave' && $contribution_id === 0) {
-    civicrm_contribution_cck_save($node, $op);
+    if($op == 'presave' && $contribution_id === 0) {
+      civicrm_contribution_cck_save($node, $op);
+    }
   }
 }
 
@@ -151,8 +184,9 @@ function civicrm_contribution_cck_view(&$node, $contribution_id){
 
 function civicrm_contribution_cck_save(&$node, $op) {
   civicrm_initialize();
-  require_once('CRM/Contribute/BAO/ContributionPage.php');
-  require_once "api/v2/UFJoin.php";
+  require_once 'CRM/Contribute/BAO/ContributionPage.php';
+  require_once 'api/v2/UFJoin.php';
+  require_once 'CRM/Core/OptionGroup.php';
 
   $contribution_fields = civicrm_contribution_cck_fields();
   $params = array();
@@ -179,6 +213,9 @@ function civicrm_contribution_cck_save(&$node, $op) {
   }
   $params['title'] = $node->title;
   $params['intro_text'] = $node->body;
+  if( variable_get('civicc_payment_processor_id', 0) ){
+    $params['payment_processor_id'] = variable_get('civicc_payment_processor_id', 0);
+  }
 
   $obj = CRM_Contribute_BAO_ContributionPage::create($params);
   // we need to save the event_id back to node. 
@@ -195,9 +232,38 @@ function civicrm_contribution_cck_save(&$node, $op) {
     civicrm_contribution_cck_uf_join($contribution_id, $custom_pre, 'pre');
   }
   if($custom_post){
-      civicrm_contribution_cck_uf_join($contribution_id, $custom_post, 'post');
-    }
+    civicrm_contribution_cck_uf_join($contribution_id, $custom_post, 'post');
   }
+
+  // process amount block label / value
+  $amount_block = variable_get('civicc_price_amount_block', '');
+  if($amount_block){
+    $amounts = explode("\n", $amount_block);
+    $options = array();
+    for($i = 0; $i < 10; $i++){
+      if($amounts[$i]){
+        list($l, $v) = explode('|', $amounts[$i]);
+        if( trim($l) && (strlen( trim($v)) > 0 ) ) {
+          $options[] = array(
+            'label'      => trim($l),
+            'value'      => CRM_Utils_Rule::cleanMoney( trim($v) ),
+            'weight'     => $i,
+            'is_active'  => 1,
+            'is_default' => 0,
+          );
+        }
+      }
+    } 
+    $default = 0;
+    CRM_Core_OptionGroup::createAssoc( "civicrm_contribution_page.amount.{$contribution_id}", $options, $default);
+  }
+
+  // process instrument
+  $payment_instrument = variable_get('civicc_instrument', array());
+  if(module_exists('civicrm_instrument') && !empty($payment_instrument) ){
+    CRM_Core_DAO::executeQuery("REPLACE INTO civicrm_instrument SET entity_id = {$contribution_id}, entity_table='civicrm_contribution_page', payment_instruments='".serialize($payment_instrument)."'");
+  }
+}
 
 function civicrm_contribution_cck_form_alter(&$form, &$form_state, $form_id){
   if (isset($form['type']) && isset($form['#node']) && $form['type']['#value'] . '_node_form' == $form_id){
@@ -237,8 +303,8 @@ function civicrm_contribution_cck_form_alter(&$form, &$form_state, $form_id){
 }
 
 function civicrm_contribution_cck_hide_field(&$form, &$form_state) {
+/* // wrong implementation for update ... 
   $contribution_id_field = variable_get('civicc_id', ''); 
-  // rewrite from civicrm_event_cck, need to porting to civicrm_event_cck
   $groups = fieldgroup_groups($form['type']['#value']); #using fieldgroup?
   if ($groups) {
     foreach ($groups as $group => $v) {
@@ -251,6 +317,7 @@ function civicrm_contribution_cck_hide_field(&$form, &$form_state) {
   else {
     $form[$contribution_id_field]['#access'] = false;
   }
+*/
   return $form;
 }
 
