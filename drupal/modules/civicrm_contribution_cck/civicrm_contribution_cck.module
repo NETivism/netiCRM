@@ -1,0 +1,266 @@
+<?php
+
+function civicrm_contribution_cck_menu() {
+  $items['admin/settings/civicrm_contribution_cck'] = array(
+    'title' => t('CiviCRM Contribution Sync'),
+    'description' => t('Auto create CiviCRM contribution when updating specific content type.'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('civicrm_contribution_cck_admin_settings'),
+    'access callback' => 'user_access',
+    'access arguments' => array('administer site configuration'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  /*
+  $items['node/%node/civicc_participants'] = array(
+    'title' => 'Participants',
+    'page callback' => 'civicrm_event_cck_goto',
+    'page arguments' => array(1, 'node'),
+    'access callback' => 'civicrm_event_cck_access_check',
+    'access arguments' => array('edit event participants'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 90,
+  );
+  $items['node/%node/civicc_admin_contribution'] = array(
+    'title' => 'Event Configure',
+    'page callback' => 'civicrm_event_cck_goto',
+    'page arguments' => array(1, 'node'),
+    'access callback' => 'civicrm_event_cck_access_check',
+    'access arguments' => array('edit all events'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 90,
+  );
+   */
+  return $items;
+}
+
+function civicrm_contribution_cck_admin_settings() {
+  $types = node_get_types('names');
+  /*
+  $form['civicc_enable_register_button'] = array(
+    '#type' => 'checkbox',
+    '#title' => 'Enable Registion link',
+    '#default_value' => variable_get('civicc_enable_register_button', 0),
+  );
+  $form['civiec_enable_admin_participants'] = array(
+    '#type' => 'checkbox',
+    '#title' => 'Enable Participants Admin Link',
+    '#default_value' => variable_get('civiec_enable_admin_participants', 0),
+  );
+  $form['civiec_enable_admin_event'] = array(
+    '#type' => 'checkbox',
+    '#title' => 'Enable CiviCRM Event Admin Link',
+    '#default_value' => variable_get('civiec_enable_admin_event', 0),
+  );
+   */
+  $form['civicc_enabled_type'] = array(
+    '#type' => 'checkboxes',
+    '#title' => 'Content type to enable for sync',
+    '#default_value' => variable_get('civicc_enabled_type', array()),
+    '#options' => $types,
+    '#required' => TRUE,
+  );
+  
+  /*
+  civicrm_initialize();
+  require_once("api/v2/UFGroup.php");
+  $option_profile[0] = ts('- select -');
+  $option_profile += civicrm_uf_profile_groups_get();
+  $form['civicc_custom_pre'] = array(
+    '#type' => 'select',
+    '#title' => 'Default profile form for attend event',
+    '#default_value' => variable_get('civiec_custom_pre', 0),
+    '#options' => $option_profile,
+  );
+  $form['civiec_custom_post'] = array(
+    '#type' => 'select',
+    '#title' => 'Default post profile form for attending event',
+    '#default_value' => variable_get('civiec_custom_post', 0),
+    '#options' => $option_profile,
+  );
+   */
+
+  $form['civicc_fields'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('CiviContributionPage / CCK field mapping'),
+  );
+  $fields = content_fields();
+  foreach($fields as $name => $f){
+    if($f['type'] != 'filefield' && $f['type'] != 'content_taxonomy')
+      $option_fields[$name] = $f['type'].":".$f['widget']['label']." ($name)";
+  }
+  $civicc_fields = civicrm_contribution_cck_fields();
+  foreach($civicc_fields as $f => $name){
+    $form['civicc_fields']['civicc_'.$f] = array(
+      '#type' => 'select',
+      '#title' => $name,
+      '#default_value' => variable_get('civicc_'.$f, ''),
+      '#options' => $option_fields,
+      '#required' => TRUE,
+    );
+  }
+
+  return system_settings_form($form);
+}
+
+function civicrm_contribution_cck_fields(){
+  return array(
+    'id' => t('Contribution ID'),
+    'contribution_type_id' => t('Contribution Type'),
+    'goal_amount' => t('Goal Amount'),
+    'date' => t('Start / End date of contribution'),
+    'is_active' => t('Is this Online Contribution Page Active?'),
+    'is_for_organization' => t('Allow individuals to contribute and / or signup for membership on behalf of an organization?'),
+    'is_monetary' => t('Enable Payment Processor'),
+    'amount_block_is_active' => t('Contribution Amounts section enabled'),
+    'is_allow_other_amount' => t('Allow other amounts'),
+    'thankyou_title' => t('Thank-you Page Title'),
+    'thankyou_text' => t('Thank-you Message'),
+  );
+}
+
+
+function civicrm_contribution_cck_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
+  static $contribution_id;
+  if(!$contribution_id) {
+    $contribution_id = civicrm_contribution_cck_check($node);
+  }
+  if ($contribution_id) {
+    /* TODO
+    if ($op == 'view' && $a4) {
+      drupal_add_css(drupal_get_path('module', 'civicrm_contribution_cck')."/civicrm_contribution_cck.css");
+      civicrm_contribution_cck_view($node, $contribution_id);
+    }
+    if($op == 'delete' || $op == 'presave'){
+      civicrm_contribution_cck_save($node, $op);
+    }
+     */
+  }
+
+  if($op == 'presave' && $contribution_id === 0) {
+    civicrm_contribution_cck_save($node, $op);
+  }
+}
+
+function civicrm_contribution_cck_view(&$node, $contribution_id){
+  civicrm_initialize();
+  $button['contribution'] = array(
+    'title' => t("Online Contribution"),
+    'href' => "civicrm/contribute/transact",
+    'query' => "reset=1&id=$contribution_id",
+    'attributes' => array('class' => 'orange bigrounded'),
+  );
+}
+
+function civicrm_contribution_cck_save(&$node, $op) {
+  civicrm_initialize();
+  require_once('CRM/Contribute/BAO/ContributionPage.php');
+
+  $contribution_fields = civicrm_contribution_cck_fields();
+  $params = array();
+  foreach ($contribution_fields as $f => $name) {
+    $fieldname = variable_get("civicc_".$f, '');
+    if ($fieldname) {
+      $field = $node->$fieldname;
+      if($f == 'id') {
+        $contribution_id_field = $fieldname;
+      }
+      elseif ($f == 'date') {
+        $params['start_date'] = date('YmdHis',strtotime($field[0]['value']) + $field[0]['offset']);
+        $params['end_date'] = date('YmdHis',strtotime($field[0]['value2']) + $field[0]['offset2']);
+      }
+      elseif ($f == 'is_active') {
+        $params['is_active'] = $op == 'delete' ? 0 : $field[0]['value'];
+      }
+      else {
+        $params[$f] = $field[0]['value'];
+      }
+    }
+  }
+  $params['title'] = $node->title;
+  $params['intro_text'] = $node->body;
+
+  $obj = CRM_Contribute_BAO_ContributionPage::create($params);
+  // we need to save the event_id back to node. 
+  $node->{$contribution_id_field}[0]['value'] = $obj->id;
+
+}
+
+function civicrm_contribution_cck_form_alter(&$form, &$form_state, $form_id){
+  if (isset($form['type']) && isset($form['#node']) && $form['type']['#value'] . '_node_form' == $form_id){
+    $available_types = variable_get('civicc_enabled_type', array());
+    if(in_array($form['#node']->type, $available_types) && variable_get('civicc_id', '')) {
+      $contribution_id_field = variable_get('civicc_id', ''); 
+
+      // add drop down select list of "contribution type"
+      civicrm_initialize();
+      require_once('api/v2/Contribution.php');
+
+      $civicc_fields = civicrm_contribution_cck_fields();
+      foreach($civicc_fields as $k => $name){
+        if($field = variable_get('civicc_'.$k, '')){
+          // now start to get default option / value from civicrm
+          $options = array();
+          switch($k) {
+            case 'contribution_type_id':
+              $options = CRM_Contribute_PseudoConstant::contributionType();
+              break;
+            case 'id':
+              // doing form alter job 
+              $form['#after_build'][] = 'civicrm_contribution_cck_hide_field';
+              break;
+          }
+          if(!empty($options)){
+            foreach($options as $k => $v){
+              $option_str .= $k.'|'.$v."\n";
+            }
+            $form['#field_info'][$field]['allowed_values'] = $option_str;
+          }
+        }
+      }
+
+    }
+  }
+}
+
+function civicrm_contribution_cck_hide_field(&$form, &$form_state) {
+  $contribution_id_field = variable_get('civicc_id', ''); 
+  // TODO: 這段失效, 要重寫判斷方式
+  /*
+  if($parent = $form['#field_info'][$contribution_id_field]['display_settings']['parent']){
+    $form[$parent][$contribution_id_field]['#prefix'] = '<div style="display:none">';
+    $form[$parent][$contribution_id_field]['#suffix'] = '</div>';
+  }
+  else{
+    $form[$contribution_id_field]['#prefix'] = '<div style="display:none">';
+    $form[$contribution_id_field]['#suffix'] = '</div>';
+    $form[$contribution_id_field]['#access'] = false;
+  }
+   */
+  // 重寫在此
+  $groups = fieldgroup_groups($form['type']['#value']); #using fieldgroup?
+  if ($groups) {
+    foreach ($groups as $group => $v) {
+      if ($form[$group][$contribution_id_field]) {
+        $form[$group][$contribution_id_field]['#access'] = false;
+        break;
+      }
+    }
+  }
+  else {
+    $form[$contribution_id_field]['#access'] = false;
+  }
+  return $form;
+}
+
+function civicrm_contribution_cck_check(&$node, $fieldname = 'id'){
+  $available_types = variable_get('civicc_enabled_type', array());
+  $fieldname = variable_get('civicc_'.$fieldname, '');
+  if (in_array($node->type, $available_types) && $fieldname) {
+    if (isset($node->$fieldname)) {
+      $field = $node->$fieldname;
+      $value = $field[0]['value'];
+      return $value ? $value : 0;
+    }
+  }
+  return FALSE;
+}
