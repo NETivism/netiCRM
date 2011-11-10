@@ -60,24 +60,22 @@ function civicrm_contribution_cck_admin_settings() {
     '#required' => TRUE,
   );
   
-  /*
   civicrm_initialize();
   require_once("api/v2/UFGroup.php");
   $option_profile[0] = ts('- select -');
   $option_profile += civicrm_uf_profile_groups_get();
   $form['civicc_custom_pre'] = array(
     '#type' => 'select',
-    '#title' => 'Default profile form for attend event',
-    '#default_value' => variable_get('civiec_custom_pre', 0),
+    '#title' => 'Default profile form for contribution page',
+    '#default_value' => variable_get('civicc_custom_pre', 0),
     '#options' => $option_profile,
   );
-  $form['civiec_custom_post'] = array(
+  $form['civicc_custom_post'] = array(
     '#type' => 'select',
-    '#title' => 'Default post profile form for attending event',
-    '#default_value' => variable_get('civiec_custom_post', 0),
+    '#title' => 'Default post profile form for contribution page',
+    '#default_value' => variable_get('civicc_custom_post', 0),
     '#options' => $option_profile,
   );
-   */
 
   $form['civicc_fields'] = array(
     '#type' => 'fieldset',
@@ -154,6 +152,7 @@ function civicrm_contribution_cck_view(&$node, $contribution_id){
 function civicrm_contribution_cck_save(&$node, $op) {
   civicrm_initialize();
   require_once('CRM/Contribute/BAO/ContributionPage.php');
+  require_once "api/v2/UFJoin.php";
 
   $contribution_fields = civicrm_contribution_cck_fields();
   $params = array();
@@ -162,9 +161,11 @@ function civicrm_contribution_cck_save(&$node, $op) {
     if ($fieldname) {
       $field = $node->$fieldname;
       if($f == 'id') {
+        $contribution_id = $field[0]['value'];
         $contribution_id_field = $fieldname;
       }
-      elseif ($f == 'date') {
+      // don't else
+      if ($f == 'date') {
         $params['start_date'] = date('YmdHis',strtotime($field[0]['value']) + $field[0]['offset']);
         $params['end_date'] = date('YmdHis',strtotime($field[0]['value2']) + $field[0]['offset2']);
       }
@@ -183,7 +184,20 @@ function civicrm_contribution_cck_save(&$node, $op) {
   // we need to save the event_id back to node. 
   $node->{$contribution_id_field}[0]['value'] = $obj->id;
 
-}
+  if(!$contribution_id){
+    $contribution_id = $obj->id;
+  }
+
+  // process uf_join to add custom profiel form to civicrm
+  $custom_pre = variable_get('civicc_custom_pre', 0);
+  $custom_post = variable_get('civicc_custom_post', 0);
+  if($custom_pre){
+    civicrm_contribution_cck_uf_join($contribution_id, $custom_pre, 'pre');
+  }
+  if($custom_post){
+      civicrm_contribution_cck_uf_join($contribution_id, $custom_post, 'post');
+    }
+  }
 
 function civicrm_contribution_cck_form_alter(&$form, &$form_state, $form_id){
   if (isset($form['type']) && isset($form['#node']) && $form['type']['#value'] . '_node_form' == $form_id){
@@ -224,19 +238,7 @@ function civicrm_contribution_cck_form_alter(&$form, &$form_state, $form_id){
 
 function civicrm_contribution_cck_hide_field(&$form, &$form_state) {
   $contribution_id_field = variable_get('civicc_id', ''); 
-  // TODO: 這段失效, 要重寫判斷方式
-  /*
-  if($parent = $form['#field_info'][$contribution_id_field]['display_settings']['parent']){
-    $form[$parent][$contribution_id_field]['#prefix'] = '<div style="display:none">';
-    $form[$parent][$contribution_id_field]['#suffix'] = '</div>';
-  }
-  else{
-    $form[$contribution_id_field]['#prefix'] = '<div style="display:none">';
-    $form[$contribution_id_field]['#suffix'] = '</div>';
-    $form[$contribution_id_field]['#access'] = false;
-  }
-   */
-  // 重寫在此
+  // rewrite from civicrm_event_cck, need to porting to civicrm_event_cck
   $groups = fieldgroup_groups($form['type']['#value']); #using fieldgroup?
   if ($groups) {
     foreach ($groups as $group => $v) {
@@ -263,4 +265,25 @@ function civicrm_contribution_cck_check(&$node, $fieldname = 'id'){
     }
   }
   return FALSE;
+}
+
+function civicrm_contribution_cck_uf_join($contribution_id, $uf_group_id, $type){
+  $entity_table = 'civicrm_contribution_page';
+
+  $weight = $type == 'pre' ? 1 : 2;
+  $params =  array( 
+    'module'       => 'CiviContribute',
+    'entity_table' => $entity_table,
+    'entity_id'    => $contribution_id,
+    'weight'       => $weight,
+    'uf_group_id'  => $uf_group_id,
+    'is_active'    => 1,
+  );
+
+  $search = array('entity_table' => $entity_table, 'entity_id' => $event_id, 'module'=> 'CiviContribute');
+  $id = civicrm_uf_join_id_find($search);
+  if($id){
+    $params['id'] = $id;
+  }
+  civicrm_uf_join_edit($params);
 }
