@@ -1,0 +1,67 @@
+CRM_Contribute_DAO_ContributionPage Object
+(
+    [id] => 5
+    [title] => 募款頁測試
+    [intro_text] => 
+    [contribution_type_id] => 2
+    [payment_processor_id] => 
+    [is_credit_card_only] => 
+    [is_monetary] => 
+    [is_recur] => 
+    [recur_frequency_unit] => 
+    [is_recur_interval] => 
+    [is_pay_later] => 
+    [pay_later_text] => 
+    [pay_later_receipt] => 
+    [is_allow_other_amount] => 
+    [default_amount_id] => 
+    [min_amount] => 
+    [max_amount] => 
+    [goal_amount] => 
+    [thankyou_title] => 
+    [thankyou_text] => 
+    [thankyou_footer] => 
+    [is_for_organization] => 
+    [for_organization] => 
+    [is_email_receipt] => 
+    [receipt_from_name] => 
+    [receipt_from_email] => 
+    [cc_receipt] => 
+    [bcc_receipt] => 
+    [receipt_text] => 
+    [is_active] => 
+    [footer_text] => 
+    [amount_block_is_active] => 
+    [honor_block_is_active] => 
+    [honor_block_title] => 
+    [honor_block_text] => 
+    [start_date] => 
+    [end_date] => 
+    [created_id] => 
+    [created_date] => 
+    [currency] => 
+    [_DB_DataObject_version] => 1.8.12
+    [__table] => civicrm_contribution_page
+    [N] => 0
+    [_database_dsn] => 
+    [_database_dsn_md5] => afcf06b06ab53e9a690ca3cf662e88d0
+    [_database] => wereport_drupal
+    [_query] => Array
+        (
+            [condition] => 
+            [group_by] => 
+            [order_by] => 
+            [having] => 
+            [limit_start] => 
+            [limit_count] => 
+            [data_select] => *
+        )
+
+    [_DB_resultid] => 
+    [_resultFields] => 
+    [_link_loaded] => 
+    [_join] => 
+    [_lastError] => 
+)
+
+
