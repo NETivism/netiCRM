@@ -10,6 +10,7 @@
  */
 function civicrm_neweb_schema(){
   $schema['civicrm_contribution_neweb'] = array(
+    'name' => 'civicrm_contribution_neweb',
     'fields' => array(
       'cid' => array(
         'description' => 'The id of civicrm_contribution.',
@@ -43,6 +44,52 @@ function civicrm_neweb_schema(){
       ),
     ),
     'primary key' => array('cid'),
+    'mysql_suffix' => 'ENGINE = InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci',
+  );
+
+  $schema['civicrm_contribution_neweb_recur'] = array(
+    'name' => 'civicrm_contribution_neweb_recur',
+    'fields' => array(
+      'recur_id' => array(
+        'description' => 'Recurrent ID of civicrm_contribution_recur',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'order_num' => array(
+        'description' => 'Order number of contribution trxn_id',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'cycle' => array(
+        'description' => 'Cycle count of recurrent contribution',
+        'type' => 'int',
+        'not null' => FALSE,
+        'unsigned' => TRUE,
+        'default' => 0,
+      ),
+      'upload' => array(
+        'description' => 'Upload timestamp flag.',
+        'type' => 'int',
+        'default' => 0,
+        'unsigned' => TRUE,
+      ),
+      'response' => array(
+        'description' => 'Response timestamp flag.',
+        'type' => 'int',
+        'default' => 0,
+        'unsigned' => TRUE,
+      ),
+      'contributions' => array(
+        'description' => 'Contributions timestamp flag.',
+        'type' => 'int',
+        'default' => 0,
+        'unsigned' => TRUE,
+      ),
+    ),
+    'primary key' => array('recur_id'),
+    'key' => array('order_num'),
     'mysql_suffix' => 'ENGINE = InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci',
   );
   return $schema;
@@ -120,3 +167,20 @@ function civicrm_neweb_disable() {
   CRM_Core_DAO::executeQuery("UPDATE civicrm_payment_processor SET is_active = 0 WHERE payment_processor_type LIKE 'Neweb'");
 }
 
+/**
+ * hook_update 
+ */
+function civicrm_neweb_update_6105(){
+  $schema = drupal_get_schema_unprocessed('civicrm_neweb');
+  foreach($schema as $name => $table){
+    if($name != 'civicrm_contribution_neweb_recur'){
+      unset($schema[$name]);
+    }
+  }
+  _drupal_initialize_schema('civicrm_neweb', $schema);
+  $ret = array();
+  foreach ($schema as $name => $table) {
+    db_create_table($ret, $name, $table);
+  }
+  return $ret;
+}

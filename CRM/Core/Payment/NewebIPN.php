@@ -1,5 +1,4 @@
 <?php
-define("NEWWEB_RECUR_DAY", 20); // day of month
 require_once 'CRM/Core/Payment/BaseIPN.php';
 require_once "CRM/Core/DAO.php";
 
@@ -17,7 +16,7 @@ class CRM_Core_Payment_NewebIPN extends CRM_Core_Payment_BaseIPN {
                                               false, null, $location );
         if ( $abort && $value === null ) {
             CRM_Core_Error::debug_log_message( "Could not find an entry for $name in $location" );
-            echo "Failure: Missing Parameter<p>";
+            echo "Failure: Missing Parameter";
             exit();
         }
         return $value;
@@ -61,15 +60,9 @@ class CRM_Core_Payment_NewebIPN extends CRM_Core_Payment_BaseIPN {
     function recur( &$input, &$ids, &$objects) {
       // check contribution first.
       $contribution =& $objects['contribution'];
-      $order_num = $contribution->id;
+      $order_num = $input['OrderNumber'];
       $note = $note ? $note : '';
       $failed = false;
-
-      if ( $order_num != $input['OrderNumber'] ) {
-        CRM_Core_Error::debug_log_message( "OrderNumber values doesn't match between database and IPN request" );
-        $note .= ts("Failuare: OrderNumber values doesn't match between database and IPN request")."\n";
-        $failed = true;
-      } 
 
       if ( $contribution->total_amount != $input['amount'] ) {
         CRM_Core_Error::debug_log_message( "Amount values dont match between database and IPN request" );
@@ -116,7 +109,6 @@ class CRM_Core_Payment_NewebIPN extends CRM_Core_Payment_BaseIPN {
         CRM_Core_Error::debug_log_message( "Start building recurring object." );
 
         // caculate date of recurring contrib
-        $order_num = $objects['contribution']->id;
         $time = time();
         $now = date( 'YmdHis', $time);
         // fix dates that already exist
@@ -138,30 +130,32 @@ class CRM_Core_Payment_NewebIPN extends CRM_Core_Payment_BaseIPN {
 
         // every recuring contrib start on next month
         $month_now = date('n');
-        $day_now = date('j');
-        if($day_now > (NEWWEB_RECUR_DAY - 2) ){
+        $day_now = date('j') + 1;
+        if($day_now > 25 ){
           $month = $month_now == 12 ? 1 : $month_now +1;
         }
         else{
           $month = $month_now;
         }
         $year = $month_now == 12 ? date('Y') + 1  : date('Y');
-        $next_recur = mktime(0,0,0, $month, NEWWEB_RECUR_DAY, $year);
-        $end_recur = strtotime('+'.$installments_total.' month', $next_recur);
-        $end_recur = mktime(0,0,0, date('n', $end_recur), NEWWEB_RECUR_DAY, date('Y', $end_recur));
+        $next_recur = mktime(0,0,0, $month, $day_now, $year);
+        if($recur->installments){
+          $end_recur = strtotime('+'.$installments_total.' month', $next_recur);
+          $end_recur = mktime(0,0,0, date('n', $end_recur), $day_now, date('Y', $end_recur));
+          $recur->end_date = date('YmdHis', $end_recur);
+        }
 
         $recur->next_sched_contribution = date('YmdHis', $next_recur);
         $recur->start_date = $recur->next_sched_contribution;
-        $recur->end_date = date('YmdHis', $end_recur);
-        $recur->cycle_day = NEWWEB_RECUR_DAY;
+        $recur->cycle_day = $day_now;
         $recur->save();
         CRM_Core_Error::debug_log_message( "Done the recurring object save." );
         CRM_Core_DAO::executeQuery("INSERT INTO civicrm_contribution_neweb_recur (recur_id,order_num,cycle) VALUES ($recur->id, $order_num, 0)");
 
         //send recurring Notification email for user
         require_once 'CRM/Contribute/BAO/ContributionPage.php';
-        CRM_Core_Error::debug_log_message( "Start to send recurring norify" );
-        CRM_Contribute_BAO_ContributionPage::recurringNotify( 'START', $ids['contact'], $ids['contributionPage'], $recur);
+        CRM_Core_Error::debug_log_message( "Start to send recurring notify" );
+        //CRM_Contribute_BAO_ContributionPage::recurringNotify( 'START', $ids['contact'], $ids['contributionPage'], $recur);
       }
     }
 
@@ -212,7 +206,7 @@ class CRM_Core_Payment_NewebIPN extends CRM_Core_Payment_BaseIPN {
       if(!$failed){
         // check if contribution is already completed, if so we ignore this ipn
         $contribution->receive_date = date('YmdHis');
-        $input['trxn_id'] = $contribution->id;
+        $input['trxn_id'] = $input['OrderNumber'];
         if ( $contribution->contribution_status_id == 1 ) {
             $transaction->commit();
             CRM_Core_Error::debug_log_message( "returning since contribution has already been handled" );
@@ -265,6 +259,7 @@ class CRM_Core_Payment_NewebIPN extends CRM_Core_Payment_BaseIPN {
       }
 
       self::$_paymentProcessor =& $objects['paymentProcessor'];
+
       if($ids['contributionRecur'] && $objects['contribution']->contribution_recur_id ){
         return $this->recur($input, $ids, $objects);
       }
@@ -274,4 +269,13 @@ class CRM_Core_Payment_NewebIPN extends CRM_Core_Payment_BaseIPN {
     }
 }
 
+function dwd($in){
+  ob_start();
+  print '<pre>';
+  print_r($in);
+  print '</pre>';
+  $c = ob_get_contents();
+  ob_end_flush();
+  watchdog('civicrm_neweb', $c);
+}
 
