@@ -143,6 +143,7 @@ function _civicrm_neweb_js_form(){
   return '
 $(document).ready(function(){
   $("input[name=civicrm_instrument_id_dummy]").click(function(){
+    var v = $(this).val();
     if(v != 1){
       $("#crm-container input[name=is_recur][value=0]").click();
       $("#crm-container input[name=is_recur][value=1]").attr("disabled","disabled");
