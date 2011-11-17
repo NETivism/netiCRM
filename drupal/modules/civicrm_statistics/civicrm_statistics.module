@@ -1,5 +1,5 @@
 <?php
-define("NETICRM_DEFAULT_URL", "http://civicrm.netivism.com.tw/neticrm/statistics");
+define("NETICRM_DEFAULT_URL", "http://neticrm.tw/neticrm/statistics");
 
 function civicrm_statistics_cron(){
   if($_SERVER['REQUEST_TIME'] - variable_get('civicrm_statistics_run', 0) > 86399){
@@ -41,11 +41,14 @@ function civicrm_statistics_check_update(){
     $url = civicrm_statistics_build_fetch_url($sitekey, $t, $rows);
     // $json = drupal_http_request($url);
     $response = drupal_http_request($url);
-    variable_set('civicrm_statistics_run', $_SERVER['REQUEST_TIME']);
+    if($response->code == 200){
+      variable_set('civicrm_statistics_run', $_SERVER['REQUEST_TIME']);
+      $data[$t] = $response->data;
+    }
   }
 }
 
 function civicrm_statistics_build_fetch_url($sitekey, $type, $stat){
-  return NETICRM_DEFAULT_URL."/add?sitekey={$sitekey}&type={$type}&stat={$stat}";
+  return NETICRM_DEFAULT_URL."/fetch?sitekey={$sitekey}&type={$type}&stat={$stat}";
 }
 
