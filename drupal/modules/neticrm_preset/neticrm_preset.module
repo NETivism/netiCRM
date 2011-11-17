@@ -128,7 +128,8 @@ function neticrm_preset_menu_alter(&$items){
 function neticrm_preset_form_alter(&$form, &$form_state, $form_id){
   if($form_id == 'user_admin_perm'){
     global $user;
-    if($user->uid != 1 || user_access('administer neticrm')){
+    /*
+    if($user->uid != 1 || !user_access('administer neticrm')){
       foreach($form['checkboxes'] as $rid => $cb){
         if(isset($cb['#options']['administer neticrm'])){
           unset($form['checkboxes'][$rid]['#options']['administer neticrm']);
@@ -142,6 +143,7 @@ function neticrm_preset_form_alter(&$form, &$form_state, $form_id){
         }
       }
     }
+    */
   }
 }
 
