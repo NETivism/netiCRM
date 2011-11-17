@@ -155,6 +155,27 @@ function civicrm_neweb_enable() {
   require_once "CRM/Core/DAO.php";
   CRM_Core_DAO::executeQuery("UPDATE civicrm_payment_processor_type SET is_active = 1 WHERE name LIKE 'Neweb'");
   CRM_Core_DAO::executeQuery("UPDATE civicrm_payment_processor SET is_active = 1 WHERE payment_processor_type LIKE 'Neweb'");
+
+  // add secure recurrent contribution transaction log dir
+  civicrm_neweb_create_dir('neweb');
+  civicrm_neweb_create_dir('neweb_test');
+}
+
+function civicrm_neweb_create_dir($directory){
+  $htaccess_lines = "order allow,deny\ndeny from all\n";
+  $newebpath = file_create_path($directory);
+  file_check_directory($newebpath, FILE_CREATE_DIRECTORY);
+  
+  if (($fp = @fopen($newebpath . '/.htaccess', 'w')) && @fputs($fp, $htaccess_lines)) {
+    fclose($fp);
+    chmod($newebpath . '/.htaccess', 0664);
+  }
+  else{
+    $message = "Security warning: Couldn't modify .htaccess file. Please create a .htaccess file in your %directory directory which contains the following lines: <code>!htaccess</code> or add them to the existing .htaccess file";
+    $replace = array('%directory' => $newebpath, '!htaccess' => '<br />' . nl2br(check_plain($htaccess_lines)));
+    drupal_set_message(t($message, $replace), "error");
+    watchdog('civicrm_neweb', t($message, $replace), WATCHDOG_ERROR);
+  } 
 }
 
 /**
@@ -182,5 +203,13 @@ function civicrm_neweb_update_6105(){
   foreach ($schema as $name => $table) {
     db_create_table($ret, $name, $table);
   }
+  return $ret;
+}
+
+function civicrm_neweb_update_6106(){
+  civicrm_neweb_create_dir('neweb');
+  civicrm_neweb_create_dir('neweb_test');
+  $ret = array();
+
   return $ret;
 }
