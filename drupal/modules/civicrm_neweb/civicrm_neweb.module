@@ -1,12 +1,4 @@
 <?php
-define('NEWWEB_TEST_HOST', '61.221.66.144');
-define('NEWWEB_TEST_USER', 'rp_nncf');
-define('NEWWEB_TEST_PASS', '');
-
-define('NEWWEB_HOST', '211.20.58.96');
-define('NEWWEB_USER', 'nncf');
-define('NEWWEB_PASS', 'tcder5cf');
-
 /**
  * Implementation of hook_init
  */
@@ -49,27 +41,6 @@ function civicrm_neweb_civicrm_buildForm($form_name, &$form){
       // add neweb payment method selection
       drupal_add_js(_civicrm_neweb_js_form(), 'inline');
       break;
-  /*
-    case 'CRM_Event_Form_Registration_Register':
-      // add neweb payment method selection
-      require_once "CRM/Core/DAO.php";
-      if($form->_paymentProcessor['payment_processor_type'] == 'Neweb'){
-        unset($_SESSION['neweb']);
-        unset($_SESSION['neweb_form']);
-        $dao = CRM_Core_DAO::executeQuery("SELECT id FROM civicrm_payment_processor_type WHERE name LIKE 'Neweb'");
-        $dao->fetch();
-        $ppt_id = $dao->id;
-        $dao = CRM_Core_DAO::executeQuery("SELECT * FROM civicrm_option_value WHERE filter = $ppt_id AND is_active = 1");
-        $default = 'Credit Card';
-        $radios[1] = array('name' => $default, 'label' => ts($default));
-        while($dao->fetch()){
-          $radios[$dao->value] = array('name'=> $dao->name, 'label' => ts($dao->label), 'description' => $dao->description);
-        }
-        //$form->addElement('hidden', 'neweb_instrument_id', 1);
-        //drupal_add_js(_civicrm_neweb_js_form($radios), 'inline');
-      }
-      break;
-    */
     case 'CRM_Contribute_Form_Contribution_ThankYou':
       // credit card
       if(isset($_POST['final_result'])){
@@ -90,6 +61,38 @@ function civicrm_neweb_civicrm_buildForm($form_name, &$form){
     case 'CRM_Contribute_Form_ContributionPage_Amount':
       _civicrm_neweb_js_contritweak();
       break;
+    case 'CRM_Admin_Form_PaymentProcessor':
+      if($form->_defaultValues['payment_processor_type'] == 'Neweb'){
+        $default = array(
+          'ftp_host' => '',
+          'ftp_user' => '',
+          'ftp_password' => '',
+        );
+        $ftp = variable_get('civicrm_neweb_ftp', $default);
+        _civicrm_neweb_js_payment($ftp, 0);
+        $ftp_test = variable_get('civicrm_neweb_ftp_test', $default);
+        _civicrm_neweb_js_payment($ftp_test, 1);
+      }
+      break;
+  }
+}
+
+/**
+ * Implementation of hook_postProcess()
+ */
+function civicrm_neweb_civicrm_postProcess($form_name, &$form){
+  if($form_name == 'CRM_Admin_Form_PaymentProcessor'){
+    $default = array(
+      'ftp_host' => '',
+      'ftp_user' => '',
+      'ftp_password' => '',
+    );
+    foreach($default as $k => $v){
+      if($_POST[$k]) $default[$k] = $_POST[$k];
+      if($_POST['test_'.$k]) $default_test[$k] = $_POST['test_'.$k];
+    }
+    variable_set("civicrm_neweb_ftp", $default);
+    variable_set("civicrm_neweb_ftp_test", $default_test);
   }
 }
 
@@ -98,6 +101,7 @@ function civicrm_neweb_civicrm_buildForm($form_name, &$form){
  */
 function civicrm_neweb_cron(){
   require_once("civicrm_neweb.cron.inc");
+  module_load_include("inc", 'civicrm_neweb', 'civicrm_neweb.cron');
   $is_test = 1;
   $hour = date('G');
   $now = time();
@@ -111,13 +115,13 @@ function civicrm_neweb_cron(){
 function _civicrm_neweb_process_all($is_test, $now, $hour, $yesterday){
   // recurring contributions
   $test = $is_test ? '_test' : '';
-  if($hour >= 18 && $hour <= 23 && variable_get('civicrm_neweb_response'.$test, 0) < $yesterday){
+  if($hour >= 20 && $hour <= 23 && variable_get('civicrm_neweb_response'.$test, 0) < $yesterday){
     // get yesterday modification result
     if(civicrm_neweb_process_response($is_test)){
       variable_set('civicrm_neweb_response'.$test, $now);
     }
   }
-  if($hour >= 11 && $hour <= 15 && variable_get('civicrm_neweb_transaction'.$test, 0) < $yesterday){
+  if($hour >= 10 && $hour <= 12 && variable_get('civicrm_neweb_transaction'.$test, 0) < $yesterday){
     // get yesterday transaction result
     if(civicrm_neweb_process_transaction($is_test)){
       variable_set('civicrm_neweb_transaction'.$test, $now);
@@ -131,8 +135,9 @@ function _civicrm_neweb_process_all($is_test, $now, $hour, $yesterday){
   }
 
   // ezpay contributions
-  if(1){
+  if($now - variable_get('civicrm_neweb_ezpay', 0) < 7200){
     civicrm_neweb_process_ezpay($is_test, $now);
+    variable_set('civicrm_neweb_ezpay'.$test, $now);
   }
 }
 
@@ -169,6 +174,34 @@ $(document).ready(function(){
   });
   $("#is_recur_interval").parents("tr").hide();
 
+});  
+';
+  drupal_add_js($js, 'inline', 'footer');
+}
+function _civicrm_neweb_js_payment($default, $is_test){
+  $element = $is_test ? 'crm-paymentProcessor-form-block-test_url_recur' : 'crm-paymentProcessor-form-block-url_recur';
+  $test = $is_test ? 'test_' : '';
+  $js = '
+$(document).ready(function(){
+  var def= new Object();
+  def = '.drupal_to_js($default).';
+  var e = "'.$element.'";
+  var test = "'.$test.'";
+  var main = "tr."+e;
+  var $new = new Object();
+  $new.ftp_password = $(main).clone();
+  $new.ftp_user = $(main).clone();
+  $new.ftp_host = $(main).clone();
+
+  for(var i in $new){
+    var $o = $new[i];
+    $o.find(".helpicon").remove();
+    $o.find("label").attr("for", test+i).text(i.replace("_", " "));
+    $o.find("input").attr("name", test+i).val("");
+    $o.find("input").val(def[i]);
+    $o.removeClass().addClass("crm-paymentProcessor-form-block-"+test+i);
+    $($o).insertAfter(main);
+  }
 });  
 ';
   drupal_add_js($js, 'inline', 'footer');
