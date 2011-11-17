@@ -14,6 +14,10 @@ if(file_exists($schedule_file)){
 }
 else{
   $schedule = array(
+    // mass malling
+    // place this in first to prevent through exception
+    'run_civimail' => 0,
+
     // process aborting mail
     'run_civimail_process' => array(
       'frequency' => '3600', // strtotime format
@@ -25,10 +29,6 @@ else{
       'frequency' => '7200', // strtotime format
       'last' => 0, // unix timestamp
     ),
-
-    // mass malling
-    // place this in last to prevent through exception
-    'run_civimail' => 0,
 
   );
 }
