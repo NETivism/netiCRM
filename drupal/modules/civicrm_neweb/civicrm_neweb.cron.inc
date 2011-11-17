@@ -215,29 +215,27 @@ function civicrm_neweb_process_upload($is_test){
   // check first insert and recurring contributions.
   // need check nextday for support neweb only allow upload new transaction after today
   // only upload new recurring in recurring day.(Duplicate payment bug fix.)
-  if(date('n') == NEWWEB_RECUR_DAY){
-    $sql = "SELECT * FROM civicrm_contribution_recur cr INNER JOIN civicrm_contribution_neweb_recur cnr ON cr.id = cnr.recur_id WHERE FROM_UNIXTIME($create_check) > cr.create_date && (cr.end_date >= FROM_UNIXTIME($now) OR cr.end_date IS NULL) && cr.cancel_date IS NULL && cr.is_test = $is_test && cnr.cycle = 0 && cnr.upload = 0 ORDER BY cr.next_sched_contribution DESC";
-    $recur = CRM_Core_DAO::executeQuery($sql);
+  $sql = "SELECT * FROM civicrm_contribution_recur cr INNER JOIN civicrm_contribution_neweb_recur cnr ON cr.id = cnr.recur_id WHERE FROM_UNIXTIME($create_check) > cr.create_date && (cr.end_date >= FROM_UNIXTIME($now) OR cr.end_date IS NULL) && cr.cancel_date IS NULL && cr.is_test = $is_test && cnr.cycle = 0 && cnr.upload = 0 ORDER BY cr.next_sched_contribution DESC";
+  $recur = CRM_Core_DAO::executeQuery($sql);
 
-    while( $recur->fetch() ){
-      // only effect when submit first recurring contribution
-      $contrib = CRM_Core_DAO::executeQuery("SELECT * FROM civicrm_contribution WHERE contribution_recur_id = $recur->id ORDER BY id ASC");
-      $contrib->fetch();
-      // start to collect output file string
-      $upload = array(
-        'MERCHANTNUMBER' => $payment['user_name'],
-        'REFNUMBER' => $recur->id,
-        'ORDERNUMBER' => $contrib->trxn_id,
-        'BRAND' => '',       // null for our status
-        'EXPIREDATE' => '',  // null for our status
-        'AMOUNT' => (int)$recur->amount,
-        'REGULAR' => NEWWEB_RECUR_DAY,
-        'ACTION' => 'New',
-        'STATUS' => '01',
-        'MODE' => 0, // 0 for month mode, 1 for date mode
-      );
-      $rows[$recur->id] = $upload;
-    }
+  while( $recur->fetch() ){
+    // only effect when submit first recurring contribution
+    $contrib = CRM_Core_DAO::executeQuery("SELECT * FROM civicrm_contribution WHERE contribution_recur_id = $recur->id ORDER BY id ASC");
+    $contrib->fetch();
+    // start to collect output file string
+    $upload = array(
+      'MERCHANTNUMBER' => $payment['user_name'],
+      'REFNUMBER' => $recur->id,
+      'ORDERNUMBER' => $contrib->trxn_id,
+      'BRAND' => '',       // null for our status
+      'EXPIREDATE' => '',  // null for our status
+      'AMOUNT' => (int)$recur->amount,
+      'REGULAR' => $recur->cycle_day,
+      'ACTION' => 'New',
+      'STATUS' => '01',
+      'MODE' => 0, // 0 for month mode, 1 for date mode
+    );
+    $rows[$recur->id] = $upload;
   }
 
   // end recurring cancelation
@@ -255,7 +253,7 @@ function civicrm_neweb_process_upload($is_test){
       'BRAND' => '',       // null for our status
       'EXPIREDATE' => '',  // null for our status
       'AMOUNT' => (int)$recur->amount,
-      'REGULAR' => NEWWEB_RECUR_DAY,
+      'REGULAR' => $recur->cycle_day,
       'ACTION' => 'Delete',
       'STATUS' => '01',
       'MODE' => 0, // 0 for month mode, 1 for date mode
@@ -277,7 +275,7 @@ function civicrm_neweb_process_upload($is_test){
       'BRAND' => '',       // null for our status
       'EXPIREDATE' => '',  // null for our status
       'AMOUNT' => (int)$recur->amount,
-      'REGULAR' => NEWWEB_RECUR_DAY,
+      'REGULAR' => $recur->cycle_day,
       'ACTION' => 'Delete',
       'STATUS' => '01',
       'MODE' => 0, // 0 for month mode, 1 for date mode
@@ -304,12 +302,16 @@ function civicrm_neweb_process_upload($is_test){
 function _civicrm_neweb_sslftp($id, $localfile, $upload, $is_test){
   $dir = $upload ? 'import' : 'output';
   if($is_test){
-    $cid = ftp_connect(NEWWEB_TEST_HOST);
-    $login = ftp_login($cid, NEWWEB_TEST_USER, NEWWEB_TEST_PASS);
+    $ftp = variable_get("civicrm_neweb_ftp_test", array());
+    if($ftp['ftp_host']){
+      $cid = ftp_connect($ftp['ftp_host']);
+      $login = ftp_login($cid, $ftp['ftp_user'], $ftp['ftp_password']);
+    }
   }
   else{
-    $cid = ssh2_connect(NEWWEB_HOST, 22);
-    $login = ssh2_auth_password($cid, NEWWEB_USER, NEWWEB_PASS);
+    $ftp = variable_get("civicrm_neweb_ftp", array());
+    $cid = ssh2_connect($ftp['ftp_host'], 22);
+    $login = ssh2_auth_password($cid, $ftp['ftp_user'], $ftp['ftp_password']);
     // $sftp = ssh2_sftp($cid);
   }
   if($login){
@@ -322,7 +324,7 @@ function _civicrm_neweb_sslftp($id, $localfile, $upload, $is_test){
       }
       else{
         $buffer = file_get_contents($localfile);
-        $success = file_put_contents("ssh2.sftp://".NEWWEB_USER.":".NEWWEB_PASS."@".NEWWEB_HOST.":22/$remotefile", $buffer);
+        $success = file_put_contents("ssh2.sftp://".$ftp['ftp_user'].":".$ftp['ftp_password']."@".$ftp['ftp_host'].":22/$remotefile", $buffer);
       }
     }
     else{
@@ -331,12 +333,15 @@ function _civicrm_neweb_sslftp($id, $localfile, $upload, $is_test){
         $success = ftp_get($cid, $localfile, $remotefile, FTP_ASCII);
       }
       else{
-        $contents = file_get_contents("ssh2.sftp://".NEWWEB_USER.":".NEWWEB_PASS."@".NEWWEB_HOST.":22/$remotefile");
+        $contents = file_get_contents("ssh2.sftp://".$ftp['ftp_user'].":".$ftp['ftp_password']."@".$ftp['ftp_host'].":22/$remotefile");
         if($contents){
           $success = file_put_contents($localfile, $contents);
         }
       }
     }
+  }
+  else{
+    watchdog('civicrm_neweb', "FTP error from _civicrm_neweb_sslftp");
   }
 
   if($is_test){
