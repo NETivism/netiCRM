@@ -88,7 +88,7 @@ function neticrm_preset_domain_default(){
     'monetaryThousandSeparator' => ',',
     'monetaryDecimalPoint' => '.',
     'moneyformat' => '%c %a',
-    'moneyvalueformat' => '%!i',
+    'moneyvalueformat' => '%!.0n',
     'countryLimit' => 
       array (
         0 => '1208',
@@ -222,7 +222,6 @@ function neticrm_preset_update_6101($type = 'install'){
  * Update 6.x -1.2
  */
 function neticrm_preset_update_6102(){
-
   // import new translated strings.
   _neticrm_preset_import_po();
 
@@ -230,6 +229,20 @@ function neticrm_preset_update_6102(){
   neticrm_preset_default_mail_settings();
 }
 
+/**
+ * Update 6.x -1.2
+ */
+function neticrm_preset_update_6103(){
+  // import new translated strings.
+  _neticrm_preset_import_po();
+
+  // fix currency format problem for TWD
+  $params = array(
+    'moneyvalueformat' => '%!.0n',
+  );
+  require_once "CRM/Core/BAO/Setting.php";
+  CRM_Core_BAO_Setting::add($params);
+}
 
 function _neticrm_preset_message($message, $success){
   return array('success' => $success, 'query' => check_plain($message));
