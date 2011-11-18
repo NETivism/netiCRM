@@ -91,114 +91,14 @@ function civicrm_contribution_cck_admin_settings() {
   return system_settings_form($form);
 }
 
-function civicrm_contribution_cck_save(&$node, $op) {
-  civicrm_initialize();
-  require_once 'CRM/Contribute/BAO/ContributionPage.php';
-  require_once 'api/v2/UFJoin.php';
-  require_once 'CRM/Core/OptionGroup.php';
-
-  $contribution_fields = civicrm_contribution_cck_fields();
-  $params = array();
-  foreach ($contribution_fields as $f => $name) {
-    $fieldname = variable_get("civicc_".$f, '');
-    if ($fieldname) {
-      $field = $node->$fieldname;
-      if($f == 'id') {
-        $contribution_id = $field[0]['value'];
-        $contribution_id_field = $fieldname;
-      }
-      // don't else
-      if ($f == 'date') {
-        $params['start_date'] = date('YmdHis',strtotime($field[0]['value']) + $field[0]['offset']);
-        $params['end_date'] = date('YmdHis',strtotime($field[0]['value2']) + $field[0]['offset2']);
-      }
-      elseif ($f == 'is_active') {
-        $params['is_active'] = $op == 'delete' ? 0 : $field[0]['value'];
-      }
-      else {
-        $params[$f] = $field[0]['value'];
-      }
-    }
-  }
-  $params['title'] = $node->title;
-  $params['intro_text'] = $node->body;
-  if( variable_get('civicc_payment_processor_id', 0) ){
-    $params['payment_processor_id'] = variable_get('civicc_payment_processor_id', 0);
-  }
-
-  $obj = CRM_Contribute_BAO_ContributionPage::create($params);
-  // we need to save the contribution back to node. 
-  $node->{$contribution_id_field}[0]['value'] = $obj->id;
-
-  if(!$contribution_id){
-    $contribution_id = $obj->id;
-  }
-
-  // process uf_join to add custom profiel form to civicrm
-  $custom_pre = variable_get('civicc_custom_pre', 0);
-  $custom_post = variable_get('civicc_custom_post', 0);
-  if($custom_pre){
-    civicrm_contribution_cck_uf_join($contribution_id, $custom_pre, 'pre');
-  }
-  if($custom_post){
-    civicrm_contribution_cck_uf_join($contribution_id, $custom_post, 'post');
-  }
-
-  // process amount block label / value
-  $amount_block = variable_get('civicc_price_amount_block', '');
-  if($amount_block){
-    $amounts = explode("\n", $amount_block);
-    $options = array();
-    for($i = 0; $i < 10; $i++){
-      if($amounts[$i]){
-        list($l, $v) = explode('|', $amounts[$i]);
-        if( trim($l) && (strlen( trim($v)) > 0 ) ) {
-          $options[] = array(
-            'label'      => trim($l),
-            'value'      => CRM_Utils_Rule::cleanMoney( trim($v) ),
-            'weight'     => $i,
-            'is_active'  => 1,
-            'is_default' => 0,
-          );
-        }
-      }
-    } 
-    $default = 0;
-    CRM_Core_OptionGroup::createAssoc( "civicrm_contribution_page.amount.{$contribution_id}", $options, $default);
-  }
-
-  // process instrument
-  $payment_instrument = variable_get('civicc_instrument', array());
-  if(module_exists('civicrm_instrument') && !empty($payment_instrument) ){
-    CRM_Core_DAO::executeQuery("REPLACE INTO civicrm_instrument SET entity_id = {$contribution_id}, entity_table='civicrm_contribution_page', payment_instruments='".serialize($payment_instrument)."'");
-  }
-}
-function civicrm_contribution_cck_uf_join($contribution_id, $uf_group_id, $type){
-  $entity_table = 'civicrm_contribution_page';
-
-  $weight = $type == 'pre' ? 1 : 2;
-  $params =  array( 
-    'module'       => 'CiviContribute',
-    'entity_table' => $entity_table,
-    'entity_id'    => $contribution_id,
-    'weight'       => $weight,
-    'uf_group_id'  => $uf_group_id,
-    'is_active'    => 1,
-  );
-
-  $search = array('entity_table' => $entity_table, 'entity_id' => $contribution_id, 'module'=> 'CiviContribute');
-  $id = civicrm_uf_join_id_find($search);
-  if($id){
-    $params['id'] = $id;
-  }
-  civicrm_uf_join_edit($params);
-}
-
 function civicrm_contribution_cck_donors(&$node){
   civicrm_initialize();
   $is_test = $_GET['action'] == 'preview' ? 1 : 0;
 
   $donors = civicrm_contribution_cck_donors_filter($node, $is_test);
+  if(empty($donors)){
+    $donors = array( '' => array());
+  }
   foreach($donors as $type => $d){
     $output .= theme("civicrm_contribution_cck_donors", $type, $node, $d);
   }
@@ -208,6 +108,7 @@ function civicrm_contribution_cck_donors(&$node){
 
 function civicrm_contribution_cck_donors_filter(&$node, $is_test = 0){
   require_once("CRM/Contribute/PseudoConstant.php");
+  require_once("CRM/Utils/Money.php");
   $query = "SELECT u.uf_id as uid, c.display_name, cc.id as contribution_id, cc.total_amount, cc.contact_id, cc.contribution_type_id FROM civicrm_contribution cc INNER JOIN civicrm_contact c ON c.id = cc.contact_id LEFT JOIN civicrm_uf_match u ON cc.contact_id = u.contact_id WHERE cc.contribution_status_id = 1 AND cc.cancel_date IS NULL AND cc.contribution_page_id = {$node->civicrm_contribution_cck['id']} AND cc.is_test = $is_test AND c.is_deleted = 0";
 
   $contact = CRM_Core_DAO::executeQuery( $query );
@@ -223,7 +124,7 @@ function civicrm_contribution_cck_donors_filter(&$node, $is_test = 0){
     $donors[$type][$contact->contribution_id] = array(
       'contact_id' => $contact->contact_id,
       'uid' => $contact->uid,
-      'amount' => (int) $contact->total_amount,
+      'amount' => CRM_Utils_Money::format($contact->total_amount),
       'name' => $contact->display_name,
       'picture' => $picture,
     );
@@ -234,8 +135,12 @@ function civicrm_contribution_cck_donors_filter(&$node, $is_test = 0){
 function template_preprocess_civicrm_contribution_cck_donors(&$vars){
   static $delta;
   $delta++;
+  $vars['delta'] = $delta;
   foreach($vars['donors'] as $d){
     $vars['content'] .= theme('civicrm_contribution_cck_donor_item', $d, $d['picture'], $d['amount'], $d['name']);
+  }
+  if(!$vars['content']){
+    $vars['content'] = t('No donations.');
   }
 }
 
