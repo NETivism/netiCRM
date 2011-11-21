@@ -1,5 +1,6 @@
 <?php
 define('NETICRM_LIMIT_PATH', 'civicrm/import/contact::civicrm/contact/add');
+define('NETICRM_BASE_URL', 'neticrm.tw');
 
 /**
  * Implementation of hook_init
@@ -176,4 +177,27 @@ function neticrm_preset_theme($existing, $type, $theme, $path){
       'file' => 'neticrm_preset.pages.inc',
     ),
   );
+}
+
+/**
+ * Implementation of hook_cron
+ */
+function neticrm_preset_cron(){
+  global $base_url;
+  $now = $_SERVER['REQUEST_TIME'];
+
+  if(date('G') >= 2 && date('G') <= 5){
+    $membership = variable_get("neticrm_preset_membership", 0);
+    if($now - $membership['last'] > 86399){
+      $domain = str_replace(array('http://','https://'), "", $base_url);
+      $url = "http://".NETICRM_BASE_URL."/neticrm/member/".$domain;
+      
+      $response = drupal_http_request($url);
+      if($response->code == 200){
+        $membership = unserialize($response->data);
+        $membership['last'] = $now;
+        variable_set("neticrm_preset_membership", $membership);
+      }
+    }
+  }
 }
