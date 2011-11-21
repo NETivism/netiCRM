@@ -3,4 +3,4 @@ description = Provide CiviCRM / NetiCRM database update script. And helper funct
 package = NetiCRM
 dependencies[] = civicrm
 core = 6.x
-version = 6.x-1.2
+version = 6.x-1.3
