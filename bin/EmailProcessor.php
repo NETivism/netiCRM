@@ -276,7 +276,7 @@ if ( php_sapi_name() == "cli" ) {
         throw new Exception('Could not acquire lock, another EmailProcessor process is running');
     // check if the script is being used for civimail processing or email to 
     // activity processing.
-    if ($cli->args[0] == "activities") {
+    if ( isset( $cli->args[0] ) && $cli->args[0] == "activities" ) {
         EmailProcessor::processActivities();
     } else {
         EmailProcessor::processBounces();
