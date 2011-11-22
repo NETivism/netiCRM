@@ -792,10 +792,6 @@ AND    option_group_id = %2";
             $params['data_type'] = self::$_dataTypeKeys[$params['data_type'][0]];
         }
 
-        // reset the cache
-        require_once 'CRM/Core/BAO/Cache.php';
-        CRM_Core_BAO_Cache::deleteGroup( 'contact fields' );
-        
         //fix for 'is_search_range' field. 
         if ( in_array( $dataTypeKey, array( 1, 2, 3, 5 ) ) ) {
             if ( ! CRM_Utils_Array::value( 'is_searchable', $params ) ) {
@@ -862,6 +858,10 @@ SELECT id
         // reset the cache
         require_once 'CRM/Core/BAO/Cache.php';
         CRM_Core_BAO_Cache::deleteGroup( 'contact fields' );
+
+        // reset memcache
+        $cache =& CRM_Utils_Cache::singleton();
+        $cache->delete('*CRM_Core_DAO_CustomGroup*');
 
         CRM_Core_Session::setStatus( ts('Your custom field \'%1\' has been saved.',
                                         array( 1 => $customField->label ) ) );
