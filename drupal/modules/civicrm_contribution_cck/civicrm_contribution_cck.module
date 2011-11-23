@@ -112,8 +112,6 @@ function civicrm_contribution_cck_fields(){
 
 
 function civicrm_contribution_cck_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
-  static $contribution_id;
-
   // we should load contribution caculation status here
   if($op == 'load'){
     if(!$contribution_id) {
