@@ -1,0 +1,50 @@
+.neticrm-footer-center {
+  text-align: center;
+  font-size: 11px;
+}
+.neticrm-footer-left .item-list ul{
+  float: left;
+  text-align: left;
+  list-style-type: none;
+  font-size: 11px;
+}
+.neticrm-footer-right .item-list ul{
+  float: right;
+  text-align: right;
+  list-style-type: none;
+  font-size: 11px;
+}
+.neticrm-footer-right .item-list ul li,
+.neticrm-footer-left .item-list ul li {
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+}
+
+/* Dashboard */
+.neticrm-dashboard {
+  width: 280px;
+  float: left;
+  min-height: 160px;
+  _height: 160px;
+  text-align: center;
+  padding: 5px 10px;
+  margin:5px;
+  border: 1px solid #DDD;
+}
+.neticrm-dashboard a {
+  display: block;
+  text-align: center;
+  padding: 5px 0;
+  font-weight: bold;
+  font-size: 15px;
+  font-family:"微軟正黑體","Lucida","Lucida Grande","Trebuchet MS",Tahoma,Verdana,sans-serif;
+}
+.neticrm-dashboard a:hover {
+  background-color: #F3F3F3;
+}
+#neticrm-home .neticrm-dashboard .description{
+  text-align: left;
+  font-size: 15px;
+  line-height: 20px;
+}

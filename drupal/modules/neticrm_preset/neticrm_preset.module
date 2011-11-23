@@ -11,16 +11,14 @@ define('NETICRM_BASE_URL', 'neticrm.tw');
 function neticrm_preset_init(){
   global $neticrm, $user;
   // we assume the civicrm db is the same with drupal from neticrm service, or we got to load full civicrm object..
-  $neticrm['contact'] = db_result(db_query("SELECT COUNT(*) FROM {civicrm_contact} WHERE is_deleted = 0"));
-
-  $path = explode('::', NETICRM_LIMIT_PATH);
-  if(in_array($_GET['q'], $path) ){
-  /*
-    if($neticrm['contact']){
-      return drupal_access_denied();
-    }
-  */
-  }
+  $count = db_result(db_query("SELECT COUNT(*) FROM {civicrm_contact} WHERE is_deleted = 0"));
+  $member = variable_get("neticrm_preset_membership", array());
+  $neticrm = array(
+    'count' => $count,
+    'max' => $member['max'],
+    'percent' => round(($count / $member['max']) * 100),
+  );
+  drupal_add_css(drupal_get_path("module","neticrm_preset")."/neticrm_preset.css");
 }
 
 /**
@@ -183,21 +181,72 @@ function neticrm_preset_theme($existing, $type, $theme, $path){
  * Implementation of hook_cron
  */
 function neticrm_preset_cron(){
-  global $base_url;
   $now = $_SERVER['REQUEST_TIME'];
+  $membership = variable_get("neticrm_preset_membership", array());
 
-  if(date('G') >= 2 && date('G') <= 5){
-    $membership = variable_get("neticrm_preset_membership", 0);
-    if($now - $membership['last'] > 86399){
-      $domain = str_replace(array('http://','https://'), "", $base_url);
-      $url = "http://".NETICRM_BASE_URL."/neticrm/member/".$domain;
-      
-      $response = drupal_http_request($url);
-      if($response->code == 200){
-        $membership = unserialize($response->data);
-        $membership['last'] = $now;
-        variable_set("neticrm_preset_membership", $membership);
-      }
+  if((date('G') >= 2 && date('G') <= 5) || empty($membership)){
+    if($now - $membership['last'] >= 86400){
+      _neticrm_preset_member_info($membership);
     }
   }
+}
+
+/**
+ * Implementation of hook_footer
+ */
+function neticrm_preset_block($op = 'list', $delta = 0, $edit = array()){
+  if($op == 'list'){
+    $blocks['footer'] = array(
+      'info' => t('netiCRM info'),
+      'region' => 'footer',
+    );
+  }
+  elseif($op == 'view'){
+    if($delta == 'footer'){
+      global $neticrm;
+      $member = variable_get("neticrm_preset_membership", array());
+
+      if(user_access("access administration pages")){
+        $item_left = array(
+          "<strong>已使用 {$neticrm['percent']}%</strong>",
+          "已使用 {$neticrm['count']}人，共{$neticrm['max']}人",
+        );
+        $item_right = array(
+          $member['membership_name']."方案（since {$member['start_date']} ）",
+        );
+        if($member['end_date']){
+          $item_right[] = "將於 {$member['end_date']} 到期";
+        }
+        else{
+          $item_right[] = "此方案無限期";
+        }
+
+        $left = '<div class="neticrm-footer-left">'.theme('item_list', $item_left).'</div>';
+        $right = '<div class="neticrm-footer-right">'.theme('item_list', $item_right).'</div>';
+      }
+      $center = '<div class="neticrm-footer-center">Powered by <a href="http://drupaltaiwan.org">Drupal</a> & <a href="http://civicrm.tw">CiviCRM</a><br>CiviCRM 是一套採用 <a href="http://www.gnu.org/licenses/agpl-3.0.html"><abbr title="GNU Affero General Public License">GNU AGPL</abbr></a> 授權的自由軟體，您所使用的中文優化版由 <a href="http://neticrm.tw"><abbr title="NETivism-由數位公益出發的社會企業">網絡行動科技</abbr></a> 提供</div>';
+
+      $block['content'] = $left.$right.$center;
+    }
+
+    return $block;
+  }
+}
+
+function _neticrm_preset_member_info($membership = NULL){
+  global $base_url;
+  if(!$membership){
+    $membership = variable_get("neticrm_preset_membership", array());
+  }
+  $domain = str_replace(array('http://','https://'), "", $base_url);
+  $url = "http://".NETICRM_BASE_URL."/neticrm/member/".$domain;
+  
+  $response = drupal_http_request($url);
+  if($response->code == 200){
+    $membership = unserialize($response->data);
+    $membership['last'] = $now;
+    variable_set("neticrm_preset_membership", $membership);
+    return $membership;
+  }
+  return FALSE;
 }
