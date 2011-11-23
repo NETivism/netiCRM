@@ -13,11 +13,14 @@ function neticrm_preset_init(){
   // we assume the civicrm db is the same with drupal from neticrm service, or we got to load full civicrm object..
   $count = db_result(db_query("SELECT COUNT(*) FROM {civicrm_contact} WHERE is_deleted = 0"));
   $member = variable_get("neticrm_preset_membership", array());
-  $neticrm = array(
-    'count' => $count,
-    'max' => $member['max'],
-    'percent' => round(($count / $member['max']) * 100),
-  );
+  if(!empty($member)){
+    $percent = round(($count / $member['max']) * 100);
+    $neticrm = array(
+      'count' => $count,
+      'max' => $member['max'],
+      'percent' => $percent,
+    );
+  }
   drupal_add_css(drupal_get_path("module","neticrm_preset")."/neticrm_preset.css");
 }
 
@@ -58,6 +61,7 @@ function neticrm_preset_menu_alter(&$items){
   $items['admin/reports/status/sql']['access arguments'] = array('administer neticrm');
 
   // special case for theme
+  /*
   $items['admin/build/themes']['page arguments'] = array('system_theme_settings');
   $items['admin/build/themes/select'] = array(
     'title' => 'List',
@@ -65,12 +69,14 @@ function neticrm_preset_menu_alter(&$items){
     'type' => MENU_LOCAL_TASK,
     'page arguments' => array('system_themes_form', NULL),
     'access arguments' => array('administer neticrm'),
+    'file' => drupal_load('module', 'system.admin.inc'),
   );
   $items['admin/build/themes/settings'] = array(
     'title' => 'Configure',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -1,
   );
+  */
 
   // node.module
   $items['admin/content/types']['access arguments'] = array('administer neticrm');
@@ -144,6 +150,129 @@ function neticrm_preset_form_alter(&$form, &$form_state, $form_id){
     }
     */
   }
+}
+
+
+/**
+ * Override system theme select form theme
+ */
+/**
+ * Theme function for the system themes form.
+ *
+ * @param $form
+ *   An associative array containing the structure of the form.
+ * @ingroup themeable
+ */
+function phptemplate_system_themes_form($form) {
+  foreach (element_children($form) as $key) {
+    // Only look for themes
+    if (!isset($form[$key]['info'])) {
+      continue;
+    }
+    if (!strstr($key, "neticrm")){
+      unset($form[$key]);
+      unset($form['status']['#options'][$key], $form['status'][$key]);
+      unset($form['theme_default']['#options'][$key], $form['theme_default'][$key]);
+      continue;
+    }
+
+    // Fetch info
+    $info = $form[$key]['info']['#value'];
+
+    // Localize theme description.
+    $description = t($info['description']);
+    // Make sure it is compatible and render the checkbox if so.
+    if (isset($form['status']['#incompatible_themes_core'][$key])) {
+      unset($form['status'][$key]);
+      $status = theme('image', 'misc/watchdog-error.png', t('incompatible'), t('Incompatible with this version of Drupal core'));
+      $description .= '<div class="incompatible">'. t('This version is incompatible with the !core_version version of Drupal core.', array('!core_version' => VERSION)) .'</div>';
+    }
+    elseif (isset($form['status']['#incompatible_themes_php'][$key])) {
+      unset($form['status'][$key]);
+      $status = theme('image', 'misc/watchdog-error.png', t('incompatible'), t('Incompatible with this version of PHP'));
+      $php_required = $form['status']['#incompatible_themes_php'][$key];
+      if (substr_count($php_required, '.') < 2) {
+        $php_required .= '.*';
+      }
+      $description .= '<div class="incompatible">'. t('This theme requires PHP version @php_required and is incompatible with PHP version !php_version.', array('@php_required' => $php_required, '!php_version' => phpversion())) .'</div>';
+    }
+    else {
+      $status = drupal_render($form['status'][$key]);
+    }
+
+    // Style theme info
+    $theme = '<div class="theme-info"><h2>'. $info['name'] .'</h2><div class="description">'. $description .'</div></div>';
+
+    // Build rows
+    $row = array();
+    $row[] = drupal_render($form[$key]['screenshot']);
+    $row[] = $theme;
+    $row[] = isset($info['version']) ? $info['version'] : '';
+    $row[] = array('data' => $status, 'align' => 'center');
+    if ($form['theme_default']) {
+      $row[] = array('data' => drupal_render($form['theme_default'][$key]), 'align' => 'center');
+      $row[] = array('data' => drupal_render($form[$key]['operations']), 'align' => 'center');
+    }
+    $rows[] = $row;
+  }
+
+  $header = array(t('Screenshot'), t('Name'), t('Version'), t('Enabled'), t('Default'), t('Operations'));
+  $output = theme('table', $header, $rows);
+  $output .= drupal_render($form);
+  return $output;
+}
+/**
+ * Theme the administer permissions page.
+ *
+ * @ingroup themeable
+ */
+function phptemplate_user_admin_perm($form) {
+  $roles = user_roles();
+  foreach (element_children($form['permission']) as $key) {
+    // Don't take form control structures
+    if (is_array($form['permission'][$key])) {
+      $row = array();
+      // Module name
+      if (is_numeric($key)) {
+        if($form['permission'][$key]['#value'] == 'neticrm_preset' && !user_access('administer neticrm')){
+          // nothing
+          unset($form['permission'][$key]);
+        }
+        else{
+          $row[] = array('data' => t('@module module', array('@module' => drupal_render($form['permission'][$key]))), 'class' => 'module', 'id' => 'module-'. $form['permission'][$key]['#value'], 'colspan' => count($form['role_names']) + 1);
+        }
+      }
+      else {
+        if($key == 'administer neticrm' && !user_access('administer neticrm')){
+          // hidden
+          unset($form['permission'][$key]);
+          foreach (element_children($form['checkboxes']) as $rid) {
+            if (is_array($form['checkboxes'][$rid])) {
+              $form['checkboxes'][$rid][$key]['#type'] = 'hidden';
+            }
+          }
+        }
+        else{
+          $row[] = array('data' => drupal_render($form['permission'][$key]), 'class' => 'permission');
+          foreach (element_children($form['checkboxes']) as $rid) {
+            if (is_array($form['checkboxes'][$rid])) {
+              $row[] = array('data' => drupal_render($form['checkboxes'][$rid][$key]), 'class' => 'checkbox', 'title' => $roles[$rid] .' : '. t($key));
+            }
+          }
+        }
+      }
+      $rows[] = $row;
+    }
+  }
+  $header[] = (t('Permission'));
+  foreach (element_children($form['role_names']) as $rid) {
+    if (is_array($form['role_names'][$rid])) {
+      $header[] = array('data' => drupal_render($form['role_names'][$rid]), 'class' => 'checkbox');
+    }
+  }
+  $output = theme('table', $header, $rows, array('id' => 'permissions'));
+  $output .= drupal_render($form);
+  return $output;
 }
 
 /**
