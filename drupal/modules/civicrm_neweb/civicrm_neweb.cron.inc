@@ -522,13 +522,18 @@ function civicrm_neweb_postdata($post, $payment_processor){
   $url = rtrim($payment_processor['url_api'],'/')."/Query"; 
 
   $ch = curl_init($url);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_POST, 1);
   curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
   curl_setopt($ch, CURLOPT_HEADER, 0);  // DO NOT RETURN HTTP HEADERS
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);  // RETURN THE CONTENTS OF THE CALL
   $receive = curl_exec($ch);
   if(curl_errno($ch)){
+    watchdog("civicrm_neweb", "CURL Error: ".curl_error($ch));
     $ch2 = curl_init($url);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 1);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
     curl_setopt($ch2, CURLOPT_POST, 1);
     curl_setopt($ch2, CURLOPT_POSTFIELDS, $postdata);
     curl_setopt($ch2, CURLOPT_HEADER, 0);  // DO NOT RETURN HTTP HEADERS
