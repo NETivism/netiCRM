@@ -270,7 +270,7 @@ function civicrm_event_cck_uf_join($event_id, $uf_group_id, $type){
     'is_active'    => 1,
   );
 
-  $search = array('entity_table' => $entity_table, 'entity_id' => $event_id, 'module'=> 'CiviEvent');
+  $search = array('entity_table' => $entity_table, 'entity_id' => $event_id, 'module'=> 'CiviEvent', 'weight' => $weight);
   $id = civicrm_uf_join_id_find($search);
   if($id){
     $params['id'] = $id;
