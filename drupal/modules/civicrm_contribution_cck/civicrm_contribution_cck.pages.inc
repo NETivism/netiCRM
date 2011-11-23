@@ -53,9 +53,39 @@ function civicrm_contribution_cck_admin_settings() {
     '#options' => $option_profile,
   );
 
+  $form['civicc_receipt'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Contribution Receipt'),
+  );
+  $form['civicc_receipt']['civicc_receipt_from_name'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Receipt From Name'),
+    '#default_value' => variable_get('civicc_receipt_from_name', ''),
+  );
+  $form['civicc_receipt']['civicc_receipt_from_email'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Receipt From Email'),
+    '#default_value' => variable_get('civicc_receipt_from_email', ''),
+  );
+  $form['civicc_receipt']['civicc_receipt_cc'] = array(
+    '#type' => 'textfield',
+    '#title' => t('CC Receipt To'),
+    '#default_value' => variable_get('civicc_receipt_cc', ''),
+  );
+  $form['civicc_receipt']['civicc_receipt_bcc'] = array(
+    '#type' => 'textfield',
+    '#title' => t('BCC Receipt To'),
+    '#default_value' => variable_get('civicc_receipt_bcc', ''),
+  );
+  $form['civicc_receipt']['civicc_receipt_text'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Receipt Message'),
+    '#default_value' => variable_get('civicc_receipt_text', ''),
+  );
+
   $form['civicc_fields'] = array(
     '#type' => 'fieldset',
-    '#title' => t('CiviContributionPage / CCK field mapping'),
+    '#title' => t('Contribution Page / CCK field mapping'),
   );
   $fields = content_fields();
   foreach($fields as $name => $f){

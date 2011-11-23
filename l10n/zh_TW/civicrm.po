@@ -26410,7 +26410,7 @@ msgstr "付款確認信已Email到%1。"
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid "Your contribution has been submitted to %1 for processing. Please print this page for your records."
-msgstr "感謝！您的捐款已開始進行處理。請列印此頁留存記錄。"
+msgstr "請列印此頁留存記錄。"
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid "An email receipt will be sent to %1 and to %2 once the transaction is processed successfully."
