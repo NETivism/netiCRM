@@ -197,6 +197,11 @@ function civicrm_contribution_cck_save(&$node, $op) {
   }
   $params['title'] = $node->title;
   $params['intro_text'] = $node->body;
+  $params['receipt_from_name'] = variable_get('civicc_receipt_from_name', '');
+  $params['receipt_from_email'] = variable_get('civicc_receipt_from_email', '');
+  $params['cc_receipt'] = variable_get('civicc_receipt_cc', '');
+  $params['bcc_receipt'] = variable_get('civicc_receipt_bcc', '');
+  $params['receipt_text'] = variable_get('civicc_receipt_text', '');
 
   // default currency
   $config = CRM_Core_Config::singleton( );
@@ -267,7 +272,7 @@ function civicrm_contribution_cck_uf_join($contribution_id, $uf_group_id, $type)
     'is_active'    => 1,
   );
 
-  $search = array('entity_table' => $entity_table, 'entity_id' => $contribution_id, 'module'=> 'CiviContribute');
+  $search = array('entity_table' => $entity_table, 'entity_id' => $contribution_id, 'module'=> 'CiviContribute', 'weight' => $weight);
   $id = civicrm_uf_join_id_find($search);
   if($id){
     $params['id'] = $id;
