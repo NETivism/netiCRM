@@ -44,8 +44,13 @@ function civicrm_contribution_cck_access_check($perm){
       break;
     case 'view donor list':
       if(variable_get('civicc_enable_dornor_list', 0)){
-        if(user_access($perm)){
-          return TRUE;
+        if(arg(0) == 'node' && is_numeric(arg(1))) {
+          $node = node_load(arg(1));
+          if(civicrm_contribution_cck_check($node)){
+            if(user_access($perm)){
+              return TRUE;
+            }
+          }
         }
       }
       break;
@@ -91,6 +96,39 @@ function civicrm_contribution_cck_perm(){
   return array('view donor list');
 }
 
+/**
+ * hook_block
+ */
+function civicrm_contribution_cck_block($op = 'list', $delta = 0, $edit = array()){
+  if($op == 'list'){
+    $blocks['donor_list'] = array(
+      'info' => t('List donors in block.'),
+    );
+    return $blocks;
+  }
+  if($op == 'view'){
+    switch($delta){
+      case 'donor_list': 
+        if(arg(0) == 'node' && is_numeric(arg(1))){
+          $node = node_load(arg(1));
+          if(civicrm_contribution_cck_access_check('view donor list')){
+            module_load_include('inc', 'civicrm_contribution_cck', 'civicrm_contribution_cck.pages');
+            $block['subject'] = t('Donors');
+            $is_test = $_GET['action'] == 'preview' ? 1 :0;
+            //$donors = civicrm_contribution_cck_donor_filter($node, $is_test);
+            $donors = civicrm_contribution_cck_donors_filter($node, $is_test);
+            foreach($donors as $type => $dd){
+              foreach($dd as $d){
+                $d['picture'] = theme('user_picture', $d['account']);
+                $block['content'] .= theme('civicrm_contribution_cck_donor_item', $d, $d['picture'], $d['amount'], $d['name']);
+              }
+            }
+          }
+        }
+        return $block;
+    }
+  }
+}
 
 function civicrm_contribution_cck_fields(){
   return array(
@@ -150,7 +188,7 @@ function civicrm_contribution_cck_preload(&$node, $contribution_id){
   $amount_goal = CRM_Core_DAO::singleValueQuery( $query );
   $amount_goal = $amount_goal ? (int) $amount_goal : 0;
 
-  $query = "SELECT count(*) FROM civicrm_contribution cc WHERE cc.contribution_status_id = 1 AND cc.cancel_date IS NULL AND cc.contribution_page_id = $contribution_id AND is_test = $is_test GROUP BY cc.contact_id";
+  $query = "SELECT count(*) FROM civicrm_contribution cc WHERE cc.contribution_status_id = 1 AND cc.cancel_date IS NULL AND cc.contribution_page_id = $contribution_id AND is_test = $is_test";
   $contact_total = CRM_Core_DAO::singleValueQuery( $query );
 
   $return = array(
