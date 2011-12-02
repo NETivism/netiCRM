@@ -276,7 +276,7 @@ function civicrm_contribution_cck_save(&$node, $op) {
         list($l, $v) = explode('|', $amounts[$i]);
         if( trim($l) && (strlen( trim($v)) > 0 ) ) {
           $options[] = array(
-            'label'      => trim($l),
+            'label'      => $l == '<none>' ? '' : trim($l),
             'value'      => CRM_Utils_Rule::cleanMoney( trim($v) ),
             'weight'     => $i,
             'is_active'  => 1,
