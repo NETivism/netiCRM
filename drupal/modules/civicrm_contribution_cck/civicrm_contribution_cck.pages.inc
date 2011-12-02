@@ -35,7 +35,7 @@ function civicrm_contribution_cck_admin_settings() {
     '#type' => 'textarea',
     '#title' => 'Default amount label / value',
     '#default_value' => variable_get('civicc_price_amount_block', 'TEST|100'),
-    '#description' => 'Please enter label|value per line.',
+    '#description' => 'Please enter label|value per line. If you don\'t want label appear, please fill <none>|value',
   );
 
   $option_profile[0] = ts('- select -');
