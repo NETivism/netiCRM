@@ -185,15 +185,6 @@ function _civicrm_instrument_js_admin($options, $entity_table){
  * Javascript generate helper function for page
  */
 function _civicrm_instrument_js_page($radios){
-  if($_SERVER['REMOTE_ADDR'] == '114.32.60.103'){
-  /*
-    print '<pre>';
-    print_r($_POST);
-    print_r($_SESSION);
-    print '</pre>';
-    */
-  }
-
   if($_POST['qfKey'] && count($radios) > 1 && !$_POST['civicrm_instrument_id']){
     $error = TRUE;
     $error_str = "<span class='crm-error'>".ts('%1 is a required field.', array( 1 => ts("Payment Instrument")))."</span>";
