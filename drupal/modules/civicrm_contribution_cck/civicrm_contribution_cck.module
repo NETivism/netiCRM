@@ -123,6 +123,7 @@ function civicrm_contribution_cck_block($op = 'list', $delta = 0, $edit = array(
                 $block['content'] .= theme('civicrm_contribution_cck_donor_item', $d, $d['picture'], $d['amount'], $d['name']);
               }
             }
+            $block['content'] .= "<div class=\"more\">&raquo; ".l(t("More"), "node/$node->nid/donors");
           }
         }
         return $block;

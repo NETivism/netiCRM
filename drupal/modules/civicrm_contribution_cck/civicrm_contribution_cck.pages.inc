@@ -140,7 +140,7 @@ function civicrm_contribution_cck_donors_filter(&$node, $is_test = 0){
   require_once("CRM/Contribute/PseudoConstant.php");
   require_once("CRM/Utils/Money.php");
   require_once("api/v2/Contribution.php");
-  $query = "SELECT u.uf_id as uid, c.display_name, cc.id as contribution_id, cc.total_amount, cc.contact_id, cc.contribution_type_id FROM civicrm_contribution cc INNER JOIN civicrm_contact c ON c.id = cc.contact_id LEFT JOIN civicrm_uf_match u ON cc.contact_id = u.contact_id WHERE cc.contribution_status_id = 1 AND cc.cancel_date IS NULL AND cc.contribution_page_id = {$node->civicrm_contribution_cck['id']} AND cc.is_test = $is_test AND c.is_deleted = 0";
+  $query = "SELECT u.uf_id as uid, c.display_name, cc.id as contribution_id, cc.total_amount, cc.contact_id, cc.contribution_type_id FROM civicrm_contribution cc INNER JOIN civicrm_contact c ON c.id = cc.contact_id LEFT JOIN civicrm_uf_match u ON cc.contact_id = u.contact_id WHERE cc.contribution_status_id = 1 AND cc.cancel_date IS NULL AND cc.contribution_page_id = {$node->civicrm_contribution_cck['id']} AND cc.is_test = $is_test AND c.is_deleted = 0 ORDER BY cc.receive_date DESC";
 
   $contact = CRM_Core_DAO::executeQuery( $query );
   $types = CRM_Contribute_PseudoConstant::contributionType( );
@@ -150,6 +150,9 @@ function civicrm_contribution_cck_donors_filter(&$node, $is_test = 0){
     $type = $types[$contact->contribution_type_id];
     if($contact->uid){
       $account = db_fetch_object(db_query("SELECT picture, uid, name FROM {users} WHERE uid = %d", $contact->uid));
+    }
+    else{
+      $account = new stdClass();
     }
     $donors[$type][$contact->contribution_id] = array(
       'contribution_id' => $contact->contribution_id,
