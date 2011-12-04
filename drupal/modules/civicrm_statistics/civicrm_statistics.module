@@ -1,26 +1,18 @@
 <?php
-define("NETICRM_DEFAULT_URL", "http://civicrm.netivism.com.tw/neticrm/statistics");
+define("NETICRM_DEFAULT_URL", "http://neticrm.tw/neticrm/statistics");
 
 function civicrm_statistics_cron(){
   if($_SERVER['REQUEST_TIME'] - variable_get('civicrm_statistics_run', 0) > 86399){
-    civicrm_statistics_check_update();
+    civicrm_statistics_fetch();
   }
 }
 
-function civicrm_statistics_check_update(){
+function civicrm_statistics_fetch(){
   global $base_url;
-  $tables = array(
-    'civicrm_contact' => 'cc',
-    'civicrm_contribution' => 'ccb',
-    'civicrm_contribution.amount' => 'ccb.a',
-    'civicrm_mailing_event_delivered' => 'cmed',
-    'civicrm_mailing_event_opened' => 'cmeo',
-    'civicrm_mailing_event_trackable_url_open' => 'cmet',
-    'civicrm_event' => 'ce',
-    'civicrm_participant' => 'cp',
-  );
 
+  $stat = array();
   $sitekey = md5($base_url . drupal_get_private_key());
+  $tables = civicrm_statistics_table();
   civicrm_initialize();
   foreach($tables as $table => $t){
     if(strpos($table, '_contribution')){
@@ -41,11 +33,35 @@ function civicrm_statistics_check_update(){
     $url = civicrm_statistics_build_fetch_url($sitekey, $t, $rows);
     // $json = drupal_http_request($url);
     $response = drupal_http_request($url);
+    if($response->code == 200 && $response->data){
+      $stat[$t] = $response->data;
+    }
+  }
+
+  if(!empty($stat)){
     variable_set('civicrm_statistics_run', $_SERVER['REQUEST_TIME']);
+    variable_set('civicrm_statistics', $stat);
   }
 }
 
 function civicrm_statistics_build_fetch_url($sitekey, $type, $stat){
-  return NETICRM_DEFAULT_URL."/add?sitekey={$sitekey}&type={$type}&stat={$stat}";
+  return NETICRM_DEFAULT_URL."/fetch?sitekey={$sitekey}&type={$type}&stat={$stat}";
 }
 
+
+function civicrm_statistics_table($flip = FALSE){
+  $tables = array(
+    'civicrm_contact' => 'cc',
+    'civicrm_contribution' => 'ccb',
+    'civicrm_contribution.amount' => 'ccb.a',
+    'civicrm_mailing_event_delivered' => 'cmed',
+    'civicrm_mailing_event_opened' => 'cmeo',
+    'civicrm_mailing_event_trackable_url_open' => 'cmet',
+    'civicrm_event' => 'ce',
+    'civicrm_participant' => 'cp',
+  );
+  if($flip){
+    return array_flip($tables);
+  }
+  return $tables;
+}
