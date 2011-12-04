@@ -224,7 +224,7 @@ class CRM_Core_Payment_Neweb extends CRM_Core_Payment {
       $post['ordernumber'] = $params['contributionID'];
       $post['amount'] = $amount;
       $post['paymenttype'] = $neweb_instrument;
-      $post['paytitle'] = $params['item_name'];
+      $post['paytitle'] = truncate_utf8($params['item_name'], 12);
       $post['bankid'] = '004';
       $post['duedate'] = date('Ymd', time()+86400*7);
       if($neweb_instrument == 'CS'){

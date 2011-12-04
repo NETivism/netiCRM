@@ -35,7 +35,7 @@ function civicrm_contribution_cck_admin_settings() {
     '#type' => 'textarea',
     '#title' => 'Default amount label / value',
     '#default_value' => variable_get('civicc_price_amount_block', 'TEST|100'),
-    '#description' => 'Please enter label|value per line.',
+    '#description' => 'Please enter label|value per line. If you don\'t want label appear, please fill <none>|value',
   );
 
   $option_profile[0] = ts('- select -');
@@ -139,6 +139,7 @@ function civicrm_contribution_cck_donors(&$node){
 function civicrm_contribution_cck_donors_filter(&$node, $is_test = 0){
   require_once("CRM/Contribute/PseudoConstant.php");
   require_once("CRM/Utils/Money.php");
+  require_once("api/v2/Contribution.php");
   $query = "SELECT u.uf_id as uid, c.display_name, cc.id as contribution_id, cc.total_amount, cc.contact_id, cc.contribution_type_id FROM civicrm_contribution cc INNER JOIN civicrm_contact c ON c.id = cc.contact_id LEFT JOIN civicrm_uf_match u ON cc.contact_id = u.contact_id WHERE cc.contribution_status_id = 1 AND cc.cancel_date IS NULL AND cc.contribution_page_id = {$node->civicrm_contribution_cck['id']} AND cc.is_test = $is_test AND c.is_deleted = 0";
 
   $contact = CRM_Core_DAO::executeQuery( $query );
@@ -150,13 +151,14 @@ function civicrm_contribution_cck_donors_filter(&$node, $is_test = 0){
     if($contact->uid){
       $account = db_fetch_object(db_query("SELECT picture, uid, name FROM {users} WHERE uid = %d", $contact->uid));
     }
-    $picture = theme('user_picture', $account);
     $donors[$type][$contact->contribution_id] = array(
+      'contribution_id' => $contact->contribution_id,
       'contact_id' => $contact->contact_id,
       'uid' => $contact->uid,
       'amount' => CRM_Utils_Money::format($contact->total_amount),
-      'name' => $contact->display_name,
-      'picture' => $picture,
+      'name' => $account->name,
+      'picture' => $account->picture,
+      'account' => $account,
     );
   }
   return $donors;
@@ -167,6 +169,7 @@ function template_preprocess_civicrm_contribution_cck_donors(&$vars){
   $delta++;
   $vars['delta'] = $delta;
   foreach($vars['donors'] as $d){
+    $d['picture'] = theme('user_picture', $d['account']);
     $vars['content'] .= theme('civicrm_contribution_cck_donor_item', $d, $d['picture'], $d['amount'], $d['name']);
   }
   if(!$vars['content']){

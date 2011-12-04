@@ -857,7 +857,13 @@ function civicrm_checkmenu( ){
   require_once 'CRM/Core/Permission.php';
   $item =& CRM_Core_Menu::get( $path );
   if($item){
-    if($item['access_callback'] && is_numeric($item['access_callback']) && !$user->uid){
+    if(strstr($item['path'], 'civicrm/ajax')){
+      if(CRM_Core_Permission::checkMenuItem( $item )){
+        $checked[$path] = true;
+        return true;
+      }
+    }
+    elseif($item['access_callback'] && is_numeric($item['access_callback']) && !$user->uid){
       if($access = $item['access_arguments'][0][0]){
         if(user_access($access)){
           return true;
