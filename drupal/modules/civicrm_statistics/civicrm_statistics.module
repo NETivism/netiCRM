@@ -12,6 +12,7 @@ function civicrm_statistics_fetch(){
 
   $stat = array();
   $sitekey = md5($base_url . drupal_get_private_key());
+  $tables = civicrm_statistics_table();
   civicrm_initialize();
   foreach($tables as $table => $t){
     if(strpos($table, '_contribution')){
@@ -24,9 +25,7 @@ function civicrm_statistics_fetch(){
       }
     }
     else{
-      $query = CRM_Core_DAO::executeQuery("SHOW TABLE STATUS LIKE '$table'");
-      $query->fetch();
-      $rows = $query->Rows;
+      $rows = CRM_Core_DAO::singleValueQuery("SELECT COUNT(*) FROM $table WHERE 1");
     }
 
     $url = civicrm_statistics_build_fetch_url($sitekey, $t, $rows);
