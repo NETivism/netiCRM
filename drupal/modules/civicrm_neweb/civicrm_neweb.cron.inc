@@ -440,10 +440,12 @@ function civicrm_neweb_process_ezpay($is_test, $now){
 
   foreach($instrument as $name => $obj){
     $vid = CRM_Core_DAO::singleValueQuery("SELECT value FROM civicrm_option_value WHERE name = '{$name}' AND option_group_id = {$gid} AND is_active = 1");
-    $instrument_id[$vid] = $vid;
+    if($vid){
+      $instrument_id[$vid] = $vid;
+    }
   }
   $instrument_str = implode(',', $instrument_id);
-  $dao = CRM_Core_DAO::executeQuery("SELECT * FROM civicrm_contribution WHERE contribution_status_id = 2 AND payment_instrument_id IN ($instrument_str) AND is_test = $is_test ORDER BY RAND() LIMIT 0, 10");
+  $dao = CRM_Core_DAO::executeQuery("SELECT * FROM civicrm_contribution WHERE contribution_status_id = 2 AND payment_instrument_id IN ($instrument_str) AND is_test = $is_test ORDER BY id DESC LIMIT 0, 20");
   while($dao->fetch()){
     if(!isset($p[$dao->contribution_page_id])){
       $pid = CRM_Core_DAO::getFieldValue( 'CRM_Contribute_DAO_ContributionPage',$dao->contribution_page_id, 'payment_processor_id');
@@ -467,6 +469,8 @@ function civicrm_neweb_process_ezpay($is_test, $now){
     $ids['contribution'] = $c->id;
     $input['component'] = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_participant_payment WHERE contribution_id = {$c->id}") ? 'event' : 'contribute'; // FIXME need to detect mode of contribute or event
 
+print '<pre>';
+print_r($post);
     // fetch result and object
     $result = civicrm_neweb_postdata($post, $payment_processor);
 
