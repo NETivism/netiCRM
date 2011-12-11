@@ -30,6 +30,11 @@ function civicrm_import_group_tag_settings(){
     '#title' => t('Type'),
     '#options' => array('tag' => t('Tag'), 'group' => t('Group')),
   );
+  $form['quick'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Quicker method'),
+    '#description' => t("Quicker but may have problem. Use for large number of group and contact import."),
+  );
   $form['multi_separator'] = array(
     '#type' => 'textfield',
     '#title' => t('Multiple tag / group separator'),
@@ -61,15 +66,30 @@ function civicrm_import_group_tag_settings_submit($form, &$form_state){
   require_once("api/v2/GroupContact.php");
   require_once("api/v2/EntityTag.php");
 
-  set_time_limit(600);
+  set_time_limit(6000);
 
   $separator = $form_state['values']['multi_separator'];
+  $quick = $form_state['values']['quick'];
+  $type = $form_state['values']['type'];
+
   if($file = file_save_upload('upload')) {
     $fd = fopen($file->filepath, "rb");
     if (!$fd) {
       return FALSE;
     }
     else{
+      if($quick){
+        if($form_state['values']['option'] != 'contact_id'){
+          // load external identifiers
+          $dao = CRM_Core_DAO::executeQuery("SELECT id, {$form_state['values']['option']} FROM civicrm_contact");
+          while($dao->fetch()){
+            $contacts[$dao->{$form_state['values']['option']}] = $dao->id;
+          }
+        }
+        $groups = array();
+        $groups_map = array();
+      }
+
       while (($data = fgetcsv($fd, 0, ",")) !== FALSE) {
         if(!$row){
           $title = $data;
@@ -85,12 +105,52 @@ function civicrm_import_group_tag_settings_submit($form, &$form_state){
           else{
             $import = array(trim($data[1]));
           }
+
           if(!empty($import)){
-            civicrm_import_group_tag($data[0], $import, $form_state['values']['type'], $form_state['values']['option']);
+            if($quick && $type == 'group'){
+              $contact_id = $form_state['values']['option'] == 'contact_id' ?  $data[0] : $contacts[$data[0]];
+
+              // batch in array then process.
+              foreach($import as $group_name){
+                if($groups_map[$group_name]){
+                  $group_id = $groups_map[$group_name];
+                }
+                else{
+                  // get or add new group
+                  $params = array('title'=>$group_name);
+                  $result = civicrm_group_get($params);
+
+                  // get id
+                  if(civicrm_error($result)){
+                    $params = array('title' => $group_name,'is_active' => 1 );
+                    $res = civicrm_group_add($params);
+                    if(civicrm_error($res)){
+                      drupal_set_message($res['error_message'], 'error');
+                      continue;
+                    }
+                    else{
+                      $group_id = $res['result']; 
+                    }
+                  }
+                  else{
+                    $group_id = key($result);
+                  }
+                  $groups_map[$group_name] = $group_id;
+                }
+                $groups[$group_id][$contact_id] = $contact_id;
+              }
+            }
+            else{
+              // one by one
+              civicrm_import_group_tag($data[0], $import, $form_state['values']['type'], $form_state['values']['option']);
+            }
           }
         }
         $row++;
-      } 
+      }
+      foreach($groups as $gid => $c){
+        CRM_Contact_BAO_GroupContact::addContactsToGroup($c, $gid, 'API');
+      }
     }
   }
   return ;
