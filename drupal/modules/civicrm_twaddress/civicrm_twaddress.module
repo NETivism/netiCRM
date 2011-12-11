@@ -53,14 +53,12 @@ function civicrm_twaddress_civicrm_buildForm($formName, &$form) {
   foreach ($form->_elements as $k => $e) {
     $name = $e->_attributes['name'];
     if(strstr($name, 'postal_code') && !strstr($name,'postal_code_suffix')){
-      preg_match("/\[([0-9])\]/", $name, $matches);
-      $key = $matches[1] ? $matches[1] : 1;
+      $key = _civicrm_twaddress_key($name);
       $override['zipName'][$key]['key'] = $name;
       $override['zipName'][$key]['default'] = $form->getElement($name)->_findValue($form->_defaultValues);
     }
     if(strstr($name, 'state_province')){
-      preg_match("/\[([0-9])\]/", $name, $matches);
-      $key = $matches[1] ? $matches[1] : 1;
+      $key = _civicrm_twaddress_key($name);
       $override['countyName'][$key]['key'] = $name;
       foreach($e->_options as $v){
         if($v['attr']['value']){
@@ -71,8 +69,7 @@ function civicrm_twaddress_civicrm_buildForm($formName, &$form) {
       $override['countyName'][$key]['default'] = $county_options[$default];
     }
     if(strstr($name, 'city')){
-      preg_match("/\[([0-9])\]/", $name, $matches);
-      $key = $matches[1] ? $matches[1] : 1;
+      $key = _civicrm_twaddress_key($name);
       // hide field
 
       $default = $form->getElement($name)->_findValue($form->_defaultValues);
@@ -158,4 +155,11 @@ function civicrm_twaddress_order(){
     '連江縣',
     '南海諸島',
   );
+}
+
+function _civicrm_twaddress_key($name){
+  preg_match('/\d/', $name, $matches);
+  $key = is_numeric($matches[0]) ? $matches[0] : 1;
+
+  return $key;
 }
