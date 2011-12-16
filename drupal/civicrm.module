@@ -459,8 +459,10 @@ function civicrm_user( $type, &$edit, &$user, $category = NULL )
         return civicrm_categories( $user );
 
 	case 'delete':
-        require_once 'CRM/Core/BAO/UFMatch.php';
-        return CRM_Core_BAO_UFMatch::deleteUser( $user->uid );
+        if($user->uid){
+          require_once 'CRM/Core/BAO/UFMatch.php';
+          return CRM_Core_BAO_UFMatch::deleteUser( $user->uid );
+        }
     }
 
 }
