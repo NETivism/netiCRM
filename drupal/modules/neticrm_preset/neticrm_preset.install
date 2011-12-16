@@ -119,7 +119,7 @@ function neticrm_preset_domain_default(){
     'userFrameworkUsersTableName' => 'users',
     'userFrameworkFrontend' => false,
     'userFrameworkLogging' => false,
-    'maxImportFileSize' => 1048576,
+    'maxImportFileSize' => 8388608,
     'geocodeMethod' => '',
     'mapGeoCoding' => 1,
     'enableSSL' => false,
@@ -239,6 +239,7 @@ function neticrm_preset_update_6103(){
   // fix currency format problem for TWD
   $params = array(
     'moneyvalueformat' => '%!.0n',
+    'maxImportFileSize' => 8388608,
   );
   require_once "CRM/Core/BAO/Setting.php";
   CRM_Core_BAO_Setting::add($params);
