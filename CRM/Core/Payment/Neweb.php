@@ -64,16 +64,12 @@ class CRM_Core_Payment_Neweb extends CRM_Core_Payment {
 
         $error = array( );
 
-        if ( empty( $this->_paymentProcessor['user_name'] ) ) {
-            $error[] = ts( 'User Name is not set in the Administer CiviCRM &raquo; Payment Processor.' );
+        if ( !empty( $this->_paymentProcessor['user_name'] ) xor !empty( $this->_paymentProcessor['signature'] )) {
+            $error[] = ts( 'Credit Card Payment is not set in the Administer CiviCRM &raquo; Payment Processor.' );
         }
 
-        if ( empty( $this->_paymentProcessor['password'] ) ) {
-            $error[] = ts( 'Password is not set in the Administer CiviCRM &raquo; Payment Processor.' );
-        }
-        
-        if ( empty( $this->_paymentProcessor['signature'] ) ) {
-            $error[] = ts( 'Signature is not set in the Administer CiviCRM &raquo; Payment Processor.' );
+        if ( !empty( $this->_paymentProcessor['password'] ) xor !empty( $this->_paymentProcessor['subject'] )) {
+            $error[] = ts( 'ECPay is not set in the Administer CiviCRM &raquo; Payment Processor.' );
         }
         
         if ( ! empty( $error ) ) {

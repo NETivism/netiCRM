@@ -37,6 +37,7 @@
 
 
 require_once 'HTML/QuickForm/Rule/Email.php';
+require_once (drupal_get_path('module', 'transliteration') . '/transliteration.inc');
 
 /**
  * This class contains string functions
@@ -94,12 +95,15 @@ class CRM_Utils_String {
     static function munge( $name, $char = '_', $len = 63 ) {
         // replace all white space and non-alpha numeric with $char
         $name = str_replace("-", $char, $name);
+
+        // dirty way to detect chinese
         $purged_name = preg_replace('/\s+|\W+|[-_]+/', $char, trim($name) );
-        if(!trim($purged_name, $char)){
+
+        // any chinese appear, should go transliteration (to prevent duplication)
+        if(!empty($purged_name)){
           if(module_exists('transliteration')){
             global $conf;
             $conf['transliteration_enable'] = TRUE;
-            require_once (drupal_get_path('module', 'transliteration') . '/transliteration.inc');
             $purged_name = strtolower(transliteration_clean_filename($name));
             $purged_name = trim($purged_name, '_');
           }
