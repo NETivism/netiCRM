@@ -37,7 +37,6 @@
 
 
 require_once 'HTML/QuickForm/Rule/Email.php';
-require_once (drupal_get_path('module', 'transliteration') . '/transliteration.inc');
 
 /**
  * This class contains string functions
@@ -101,6 +100,7 @@ class CRM_Utils_String {
 
         // any chinese appear, should go transliteration (to prevent duplication)
         if(!empty($purged_name)){
+          require_once (drupal_get_path('module', 'transliteration') . '/transliteration.inc');
           if(module_exists('transliteration')){
             global $conf;
             $conf['transliteration_enable'] = TRUE;
