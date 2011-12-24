@@ -136,11 +136,12 @@ function civicrm_contribution_cck_donors(&$node){
   return $output;
 }
 
-function civicrm_contribution_cck_donors_filter(&$node, $is_test = 0){
+function civicrm_contribution_cck_donors_filter(&$node, $is_test = 0, $limit = NULL){
   require_once("CRM/Contribute/PseudoConstant.php");
   require_once("CRM/Utils/Money.php");
   require_once("api/v2/Contribution.php");
-  $query = "SELECT u.uf_id as uid, c.display_name, cc.id as contribution_id, cc.total_amount, cc.contact_id, cc.contribution_type_id FROM civicrm_contribution cc INNER JOIN civicrm_contact c ON c.id = cc.contact_id LEFT JOIN civicrm_uf_match u ON cc.contact_id = u.contact_id WHERE cc.contribution_status_id = 1 AND cc.cancel_date IS NULL AND cc.contribution_page_id = {$node->civicrm_contribution_cck['id']} AND cc.is_test = $is_test AND c.is_deleted = 0 ORDER BY cc.receive_date DESC";
+  $limit = $limit ? 'LIMIT 0, '.$limit : '';
+  $query = "SELECT u.uf_id as uid, c.display_name, cc.id as contribution_id, cc.total_amount, cc.contact_id, cc.contribution_type_id FROM civicrm_contribution cc INNER JOIN civicrm_contact c ON c.id = cc.contact_id LEFT JOIN civicrm_uf_match u ON cc.contact_id = u.contact_id WHERE cc.contribution_status_id = 1 AND cc.cancel_date IS NULL AND cc.contribution_page_id = {$node->civicrm_contribution_cck['id']} AND cc.is_test = $is_test AND c.is_deleted = 0 ORDER BY cc.receive_date DESC $limit";
 
   $contact = CRM_Core_DAO::executeQuery( $query );
   $types = CRM_Contribute_PseudoConstant::contributionType( );

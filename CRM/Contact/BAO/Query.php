@@ -706,7 +706,7 @@ class CRM_Contact_BAO_Query
                 $this->_useDistinct = true;
                 
                 //commented for CRM-3256
-                $this->_useGroupBy  = true;
+                //$this->_useGroupBy  = true;
             }
             
             $name = str_replace( ' ', '_', $name );
