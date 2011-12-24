@@ -106,7 +106,19 @@ function civicrm_contribution_cck_block($op = 'list', $delta = 0, $edit = array(
     );
     return $blocks;
   }
-  if($op == 'view'){
+  elseif ($op == 'configure' && $delta == 'donor_list') {
+    $form['items'] = array(
+      '#type' => 'select', 
+      '#title' => t('Number of items'), 
+      '#default_value' => variable_get('civicrm_contribution_cck_block_item', 0), 
+      '#options' => array(0 => t('all'),'1', '2', '3', '4','5','6','7','8','9','10'),
+    );
+    return $form;
+  }
+  elseif($op == 'save' && $delta == 'donor_list'){
+    variable_set('civicrm_contribution_cck_block_item', $edit['items']);
+  }
+  elseif($op == 'view'){
     switch($delta){
       case 'donor_list': 
         if(arg(0) == 'node' && is_numeric(arg(1))){
@@ -115,15 +127,18 @@ function civicrm_contribution_cck_block($op = 'list', $delta = 0, $edit = array(
             module_load_include('inc', 'civicrm_contribution_cck', 'civicrm_contribution_cck.pages');
             $block['subject'] = t('Donors');
             $is_test = $_GET['action'] == 'preview' ? 1 :0;
+            $limit = variable_get('civicrm_contribution_cck_block_item', 0) ? variable_get('civicrm_contribution_cck_block_item', 0) : NULL;
             //$donors = civicrm_contribution_cck_donor_filter($node, $is_test);
-            $donors = civicrm_contribution_cck_donors_filter($node, $is_test);
+            $donors = civicrm_contribution_cck_donors_filter($node, $is_test, $limit);
             foreach($donors as $type => $dd){
               foreach($dd as $d){
                 $d['picture'] = theme('user_picture', $d['account']);
                 $block['content'] .= theme('civicrm_contribution_cck_donor_item', $d, $d['picture'], $d['amount'], $d['name']);
               }
             }
-            $block['content'] .= "<div class=\"more\">&raquo; ".l(t("More"), "node/$node->nid/donors");
+            if(count($donors)){
+              $block['content'] .= "<div class=\"more\">&raquo; ".l(t("More"), "node/$node->nid/donors");
+            }
           }
         }
         return $block;
