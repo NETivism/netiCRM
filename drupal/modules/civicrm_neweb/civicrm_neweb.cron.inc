@@ -11,11 +11,12 @@ function civicrm_neweb_process_response($is_test){
   require_once 'CRM/Core/Payment/NewebIPN.php';
 
   $p = new CRM_Core_BAO_PaymentProcessor();
+  $pid = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_payment_processor WHERE is_test = $is_test");
   if($is_test){
-    $payment = $p->getPayment(1,'test');
+    $payment = $p->getPayment($pid,'test');
   }
   else{
-    $payment = $p->getPayment(1,'live');
+    $payment = $p->getPayment($pid,'live');
   }
   $newebpath = _civicrm_neweb_path($is_test);
 
@@ -73,11 +74,12 @@ function civicrm_neweb_process_transaction($is_test){
   require_once 'CRM/Core/Payment/NewebIPN.php';
 
   $p = new CRM_Core_BAO_PaymentProcessor();
+  $pid = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_payment_processor WHERE is_test = $is_test");
   if($is_test){
-    $payment = $p->getPayment(1,'test');
+    $payment = $p->getPayment($pid,'test');
   }
   else{
-    $payment = $p->getPayment(1,'live');
+    $payment = $p->getPayment($pid,'live');
   }
   $newebpath = _civicrm_neweb_path($is_test);
 
@@ -205,11 +207,12 @@ function civicrm_neweb_process_upload($is_test){
   require_once 'CRM/Core/BAO/PaymentProcessor.php';
   require_once 'CRM/Core/Payment/NewebIPN.php';
   $p = new CRM_Core_BAO_PaymentProcessor();
+  $pid = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_payment_processor WHERE is_test = $is_test");
   if($is_test){
-    $payment = $p->getPayment(1,'test');
+    $payment = $p->getPayment($pid,'test');
   }
   else{
-    $payment = $p->getPayment(1,'live');
+    $payment = $p->getPayment($pid,'live');
   }
 
   // check first insert and recurring contributions.
