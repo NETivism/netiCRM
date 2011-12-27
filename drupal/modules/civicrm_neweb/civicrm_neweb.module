@@ -182,7 +182,7 @@ function _civicrm_neweb_js_payment($default, $is_test){
   $element = $is_test ? 'crm-paymentProcessor-form-block-test_url_recur' : 'crm-paymentProcessor-form-block-url_recur';
   $test = $is_test ? 'test_' : '';
   $js = '
-$(document).ready(function(){
+cj(document).ready(function(){
   var def= new Object();
   def = '.drupal_to_js($default).';
   var e = "'.$element.'";
@@ -200,7 +200,7 @@ $(document).ready(function(){
     $o.find("input").attr("name", test+i).val("");
     $o.find("input").val(def[i]);
     $o.removeClass().addClass("crm-paymentProcessor-form-block-"+test+i);
-    $($o).insertAfter(main);
+    cj($o).insertAfter(main);
   }
 });  
 ';
