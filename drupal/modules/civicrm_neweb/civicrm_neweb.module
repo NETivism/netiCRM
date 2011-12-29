@@ -115,7 +115,7 @@ function civicrm_neweb_cron(){
 function _civicrm_neweb_process_all($is_test, $now, $hour, $yesterday){
   // recurring contributions
   $test = $is_test ? '_test' : '';
-  if($hour >= 20 && $hour <= 23 && variable_get('civicrm_neweb_response'.$test, 0) < $yesterday){
+  if($hour >= 0 && $hour <= 9 && variable_get('civicrm_neweb_response'.$test, 0) < $yesterday){
     // get yesterday modification result
     if(civicrm_neweb_process_response($is_test)){
       variable_set('civicrm_neweb_response'.$test, $now);

@@ -2,6 +2,7 @@
 
 define("NEWEB_UPLOAD", 1);
 define("NEWEB_DOWNLOAD", 0);
+
 function civicrm_neweb_process_response($is_test){
   $now = time();
   civicrm_initialize();
@@ -20,13 +21,22 @@ function civicrm_neweb_process_response($is_test){
   }
   $newebpath = _civicrm_neweb_path($is_test);
 
-  $filename = 'RP_'.$payment['user_name'].'_'.date('Ymd',time()).'.out';
-  //$filename = 'RP_'.$payment['user_name'].'_'.'20101104'.'.out';
-  $response_str = _civicrm_neweb_sslftp($payment['user_name'], $newebpath.'/'.$filename, CRM_DOWNLOAD, $is_test);
+  $filename = 'RP_'.$payment['user_name'].'_'.date('Ymd',time() - 86400).'.out';
+  // $filename = 'RP_'.$payment['user_name'].'_'.'20111227'.'.out';
+  $response_str = _civicrm_neweb_sslftp($payment['user_name'], $newebpath.'/'.$filename, NEWEB_DOWNLOAD, $is_test);
+
+
   if($response_str === false){
     // error when download files
-    print $error = "error in civicrm_newwweb_process_response: Can't download files. ";
-    watchdog("CiviCRM", $error);
+    $error = "error in civicrm_newwweb_process_response: Can't download files. ";
+    _civicrm_neweb_error($error, $is_test);
+
+    return FALSE;
+  }
+  elseif($response_str == -1){
+    // $error = "error in civicrm_newwweb_process_response: No response today.";
+    // _civicrm_neweb_error($error, $is_test);
+    return -1;
   }
   elseif($response_str){
     $response = _civicrm_neweb_decodeline($response_str, 'response');
@@ -42,24 +52,13 @@ function civicrm_neweb_process_response($is_test){
       }
       else{
         // fail
-        print $error = "error in civicrm_newwweb_process_response:". $r['REFNUMBER'] . ":" . $r['RESPONSE'];
-        watchdog("CiviCRM", $error);
+        $error = "error in civicrm_newwweb_process_response:". $r['REFNUMBER'] . ":" . $r['RESPONSE'];
+        _civicrm_neweb_error($error, $is_test);
       }
     }
-  }
-  else{
-    // have file but no response
-    print $error = "error in civicrm_newwweb_process_response: No response today.";
-    watchdog("CiviCRM", $error);
-  }
 
-  if($error){
-    return FALSE;
-  }
-  else{
     return TRUE;
   }
-  
 }
 
 function civicrm_neweb_process_transaction($is_test){
@@ -85,11 +84,17 @@ function civicrm_neweb_process_transaction($is_test){
 
   $filename = 'RP_Trans_'.$payment['user_name'].'_'.date('Ymd').'.log';
   //$filename = 'RP_Trans_'.$payment['user_name'].'_'.'20110605'.'.log';
-  $transaction_str = _civicrm_neweb_sslftp($payment['user_name'], $newebpath.'/'.$filename, CRM_DOWNLOAD, $is_test);
+  $transaction_str = _civicrm_neweb_sslftp($payment['user_name'], $newebpath.'/'.$filename, NEWEB_DOWNLOAD, $is_test);
   if($transaction_str === false){
     // error when download files
-    print $error = "In civicrm_newwweb_process_transaction: Today have nothing to download. ";
-    watchdog("CiviCRM", $error);
+    $error = "In civicrm_newwweb_process_transaction: Today have nothing to download. ";
+    _civicrm_neweb_error($error, $is_test);
+  }
+  elseif($transaction_str == -1){
+    // have file but no response
+    // $error = "error in civicrm_newwweb_process_response: No response today.";
+    // _civicrm_neweb_error($error, $is_test);
+    return -1;
   }
   elseif($transaction_str){
     $trans = _civicrm_neweb_decodeline($transaction_str,'transaction');
@@ -102,8 +107,8 @@ function civicrm_neweb_process_transaction($is_test){
       $contrib =& new CRM_Contribute_DAO_Contribution();
       $contrib->id = $_contrib->id;
       if ( !$contrib->find( true ) ) { 
-        print $error = "Can't not find the first contribution id here";
-        watchdog("CiviCRM", $error);
+        $error = "Can't not find the first contribution id here";
+        _civicrm_neweb_error($error, $is_test);
       }
 
       if($recur->id){
@@ -181,18 +186,6 @@ function civicrm_neweb_process_transaction($is_test){
         }
       }
     }
-    
-  }
-  else{
-    // have file but no response
-    print $error = "error in civicrm_newwweb_process_response: No response today.";
-    watchdog("CiviCRM", $error);
-  }
-
-  if($error){
-    return FALSE;
-  }
-  else{
     return TRUE;
   }
 }
@@ -292,7 +285,7 @@ function civicrm_neweb_process_upload($is_test){
     $newebpath = _civicrm_neweb_path($is_test);
     $filename = 'RP_'.$payment['user_name'].'_'.date('Ymd').'.dat';
     file_save_data($data, $newebpath.'/'.$filename, FILE_EXISTS_REPLACE);
-    $uploaded =  _civicrm_neweb_sslftp($payment['user_name'], $newebpath.'/'.$filename, CRM_UPLOAD, $is_test);
+    $uploaded =  _civicrm_neweb_sslftp($payment['user_name'], $newebpath.'/'.$filename, NEWEB_UPLOAD, $is_test);
     if($uploaded){
       $sql = "UPDATE civicrm_contribution_neweb_recur SET upload=$now WHERE recur_id IN (".implode(',', array_keys($rows)).")";
     }
@@ -317,6 +310,7 @@ function _civicrm_neweb_sslftp($id, $localfile, $upload, $is_test){
     $login = ssh2_auth_password($cid, $ftp['ftp_user'], $ftp['ftp_password']);
     // $sftp = ssh2_sftp($cid);
   }
+
   if($login){
     $path = $is_test ? $id.'/'.$dir : $dir;
     $remotefile = $path .'/'. basename($localfile);
@@ -333,7 +327,10 @@ function _civicrm_neweb_sslftp($id, $localfile, $upload, $is_test){
     else{
       // download
       if($is_test){
-        $success = ftp_get($cid, $localfile, $remotefile, FTP_ASCII);
+        $contents = file_get_contents("ftp://".$ftp['ftp_user'].":".$ftp['ftp_password']."@".$ftp['ftp_host']."/$remotefile");
+        if($contents){
+          $success = file_put_contents($localfile, $contents);
+        }
       }
       else{
         $contents = file_get_contents("ssh2.sftp://".$ftp['ftp_user'].":".$ftp['ftp_password']."@".$ftp['ftp_host'].":22/$remotefile");
@@ -342,26 +339,28 @@ function _civicrm_neweb_sslftp($id, $localfile, $upload, $is_test){
         }
       }
     }
-  }
-  else{
-    watchdog('civicrm_neweb', "FTP error from _civicrm_neweb_sslftp");
-  }
-
-  if($is_test){
-    ftp_close($cid);
-  }
-  if($success){
-    if($upload){
-      return true;
+    if($is_test){
+      ftp_close($cid);
+    }
+    // see if success login and get result
+    if($success){
+      if($upload){
+        return true;
+      }
+      else{
+        return file_get_contents($localfile);
+      }
     }
     else{
-      return file_get_contents($localfile);
+      _civicrm_neweb_error("File not found: $localfile", $is_test, WATCHDOG_NOTICE);
+      return -1;
+      //retry ? or retry by next cron..
     }
   }
   else{
-    //retry ? or retry by next cron..
-    return false;
+    _civicrm_neweb_error("FTP error from _civicrm_neweb_sslftp");
   }
+  return false;
 }
 
 function _civicrm_neweb_encodeline($in){
@@ -472,8 +471,6 @@ function civicrm_neweb_process_ezpay($is_test, $now){
     $ids['contribution'] = $c->id;
     $input['component'] = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_participant_payment WHERE contribution_id = {$c->id}") ? 'event' : 'contribute'; // FIXME need to detect mode of contribute or event
 
-print '<pre>';
-print_r($post);
     // fetch result and object
     $result = civicrm_neweb_postdata($post, $payment_processor);
 
@@ -537,7 +534,7 @@ function civicrm_neweb_postdata($post, $payment_processor){
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);  // RETURN THE CONTENTS OF THE CALL
   $receive = curl_exec($ch);
   if(curl_errno($ch)){
-    watchdog("civicrm_neweb", "CURL Error: ".curl_error($ch));
+    _civicrm_neweb_error("CURL Error: ".curl_error($ch));
     $ch2 = curl_init($url);
     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 1);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -612,4 +609,14 @@ function _civicrm_neweb_addnote($note, $contribution_id, $contact_id){
     'contact_id'    => $contact_id,
   );
   CRM_Core_BAO_Note::add( $noteParams, $note_id );
+}
+
+function _civicrm_neweb_error($msg, $is_test = NULL, $type = NULL){
+  $type = $type ? $type : WATCHDOG_ERROR;
+  if($is_test){
+    // watchdog('civicrm_neweb', 'TEST Env: '.$msg, array(), $type);
+  }
+  else{
+    watchdog('civicrm_neweb', $msg, array(), $type);
+  }
 }
