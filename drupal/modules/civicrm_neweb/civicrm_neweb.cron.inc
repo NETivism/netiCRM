@@ -2,6 +2,7 @@
 
 define("NEWEB_UPLOAD", 1);
 define("NEWEB_DOWNLOAD", 0);
+define("NEWEB_DEBUG", 1);
 
 function civicrm_neweb_process_response($is_test){
   $now = time();
@@ -30,7 +31,6 @@ function civicrm_neweb_process_response($is_test){
     // error when download files
     $error = "error in civicrm_newwweb_process_response: Can't download files. ";
     _civicrm_neweb_error($error, $is_test);
-
     return FALSE;
   }
   elseif($response_str == -1){
@@ -299,15 +299,17 @@ function _civicrm_neweb_sslftp($id, $localfile, $upload, $is_test){
   $dir = $upload ? 'import' : 'output';
   if($is_test){
     $ftp = variable_get("civicrm_neweb_ftp_test", array());
-    if($ftp['ftp_host']){
+    if($ftp['ftp_host'] && $ftp['ftp_user']){
       $cid = ftp_connect($ftp['ftp_host']);
       $login = ftp_login($cid, $ftp['ftp_user'], $ftp['ftp_password']);
     }
   }
   else{
     $ftp = variable_get("civicrm_neweb_ftp", array());
-    $cid = ssh2_connect($ftp['ftp_host'], 22);
-    $login = ssh2_auth_password($cid, $ftp['ftp_user'], $ftp['ftp_password']);
+    if($ftp['ftp_host'] && $ftp['ftp_user']){
+      $cid = ssh2_connect($ftp['ftp_host'], 22);
+      $login = ssh2_auth_password($cid, $ftp['ftp_user'], $ftp['ftp_password']);
+    }
     // $sftp = ssh2_sftp($cid);
   }
 
@@ -327,7 +329,8 @@ function _civicrm_neweb_sslftp($id, $localfile, $upload, $is_test){
     else{
       // download
       if($is_test){
-        $contents = file_get_contents("ftp://".$ftp['ftp_user'].":".$ftp['ftp_password']."@".$ftp['ftp_host']."/$remotefile");
+        $pass = $ftp['ftp_password'] ? ':'.$ftp['ftp_password'] : '';
+        $contents = file_get_contents("ftp://".$ftp['ftp_user'].$pass."@".$ftp['ftp_host']."/$remotefile");
         if($contents){
           $success = file_put_contents($localfile, $contents);
         }
@@ -342,6 +345,7 @@ function _civicrm_neweb_sslftp($id, $localfile, $upload, $is_test){
     if($is_test){
       ftp_close($cid);
     }
+
     // see if success login and get result
     if($success){
       if($upload){
@@ -351,14 +355,15 @@ function _civicrm_neweb_sslftp($id, $localfile, $upload, $is_test){
         return file_get_contents($localfile);
       }
     }
-    else{
+    elseif(!$upload){
+      // only return -1 when download.
+      // upload will retry untill done.
       _civicrm_neweb_error("File not found: $localfile", $is_test, WATCHDOG_NOTICE);
       return -1;
-      //retry ? or retry by next cron..
     }
   }
   else{
-    _civicrm_neweb_error("FTP error from _civicrm_neweb_sslftp");
+    _civicrm_neweb_error("FTP loging or setup error.", $is_test);
   }
   return false;
 }
@@ -613,8 +618,8 @@ function _civicrm_neweb_addnote($note, $contribution_id, $contact_id){
 
 function _civicrm_neweb_error($msg, $is_test = NULL, $type = NULL){
   $type = $type ? $type : WATCHDOG_ERROR;
-  if($is_test){
-    // watchdog('civicrm_neweb', 'TEST Env: '.$msg, array(), $type);
+  if($is_test && NEWEB_DEBUG){
+    watchdog('civicrm_neweb', 'TEST Env: '.$msg, array(), $type);
   }
   else{
     watchdog('civicrm_neweb', $msg, array(), $type);
