@@ -859,6 +859,9 @@ function civicrm_checkmenu( ){
   require_once 'CRM/Core/Permission.php';
   $item =& CRM_Core_Menu::get( $path );
   if($item){
+    if($item['is_public']){
+      return true;
+    }
     if(strstr($item['path'], 'civicrm/ajax')){
       if(CRM_Core_Permission::checkMenuItem( $item )){
         $checked[$path] = true;
