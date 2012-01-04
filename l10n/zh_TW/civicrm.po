@@ -1567,7 +1567,7 @@ msgstr "密碼"
 #: templates/CRM/Member/Form/Task/SearchTaskHookSample.tpl
 #: templates/CRM/Member/Page/Tab.tpl
 msgid "Source"
-msgstr "匯入資料來源"
+msgstr "資料來源"
 
 #: CRM/Admin/Form/MessageTemplates.php CRM/Mailing/BAO/Mailing.php
 msgid "Insert Tokens"
@@ -2430,10 +2430,6 @@ msgstr "個案開始日期"
 #: CRM/Case/Form/Activity/LinkCases.php
 msgid "Case Id not found."
 msgstr "找不到個案編號"
-
-#: CRM/Case/Form/Activity/OpenCase.php CRM/Case/Form/Activity.php
-msgid "Medium"
-msgstr "溝通媒介"
 
 #: CRM/Case/Form/Activity/OpenCase.php CRM/Contribute/Form/Contribution.php
 #: CRM/Event/Form/Participant.php CRM/Grant/Form/Grant.php
@@ -7433,7 +7429,7 @@ msgstr "個人募款頁"
 
 #: CRM/Campaign/DAO/Campaign.php
 msgid "Campaign Description"
-msgstr "競選捐款"
+msgstr "募款描述"
 
 #: CRM/Campaign/DAO/Campaign.php
 msgid "Campaign Start Date"
@@ -9978,15 +9974,15 @@ msgstr "顯示在名單？"
 
 #: CRM/Contribute/BAO/Widget.php
 msgid "Campaign is ongoing"
-msgstr "競選捐款"
+msgstr "募款進行中"
 
 #: CRM/Contribute/BAO/Widget.php
 msgid "Campaign starts on %1"
-msgstr "競選捐款"
+msgstr "募款開始於 %1"
 
 #: CRM/Contribute/BAO/Widget.php
 msgid "Campaign ends on %1"
-msgstr "活動終止日期"
+msgstr "募款中止於 %1"
 
 #: CRM/Contribute/BAO/Widget.php
 msgid "Raised %1 of %2"
@@ -25869,7 +25865,7 @@ msgstr "你的定期捐款會於您指定的期間內自動扣款，自動扣款
 
 #: templates/CRM/Contribute/Form/Contribution/Main.tpl
 msgid "You will receive an email receipt for each recurring contribution. The receipts will include a link you can use if you decide to modify or cancel your future contributions."
-msgstr "每一次捐款時，您都會接收到一個Email收據，收據包含讓您取銷或修改捐款的連結，可點入修改該捐款即可。"
+msgstr "每一次捐款時，您都會接收到一個Email收據，若有需要更動您的定期捐款，歡迎您直接與我們聯繫。"
 
 #: templates/CRM/Contribute/Form/Contribution/Main.tpl
 msgid "Enter the name you want listed with this contribution. You can use a nick name like 'The Jones Family' or 'Sarah and Sam'."
