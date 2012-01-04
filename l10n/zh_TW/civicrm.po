@@ -8405,7 +8405,7 @@ msgstr "不要打電話"
 
 #: CRM/Contact/DAO/Contact.php
 msgid "Do Not Mail"
-msgstr "不要寄Email"
+msgstr "不要寄送郵政信件"
 
 #: CRM/Contact/DAO/Contact.php
 msgid "Do Not Sms"
