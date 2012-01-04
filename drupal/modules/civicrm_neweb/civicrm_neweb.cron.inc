@@ -453,7 +453,7 @@ function civicrm_neweb_process_ezpay($is_test, $now){
     }
   }
   $instrument_str = implode(',', $instrument_id);
-  $dao = CRM_Core_DAO::executeQuery("SELECT * FROM civicrm_contribution WHERE contribution_status_id = 2 AND payment_instrument_id IN ($instrument_str) AND is_test = $is_test ORDER BY id DESC LIMIT 0, 20");
+  $dao = CRM_Core_DAO::executeQuery("SELECT * FROM civicrm_contribution WHERE contribution_status_id = 2 AND payment_instrument_id IN ($instrument_str) AND is_test = $is_test ORDER BY id DESC");
   while($dao->fetch()){
     if(!isset($p[$dao->contribution_page_id])){
       $pid = CRM_Core_DAO::getFieldValue( 'CRM_Contribute_DAO_ContributionPage',$dao->contribution_page_id, 'payment_processor_id');
@@ -479,6 +479,14 @@ function civicrm_neweb_process_ezpay($is_test, $now){
 
     // fetch result and object
     $result = civicrm_neweb_postdata($post, $payment_processor);
+    $created = isset($result['timecreated']) ? strtotime($result['timecreated']) : '';
+    if($created){
+      // two week
+      $overdue = $now - $created > 86400 * 14 ? TRUE : FALSE;
+    }
+    else{
+      $overdue = $created = FALSE;
+    }
 
     $transaction = new CRM_Core_Transaction();
     $ipn = & new CRM_Core_Payment_BaseIPN();
@@ -509,13 +517,14 @@ function civicrm_neweb_process_ezpay($is_test, $now){
         $note .= ts("Completed");
         _civicrm_neweb_addnote($note, $c->id, $c->contact_id);
       }
-      elseif(!isset($result['status']) && $result['rc'] == 0) {
-        // cancel contribution
+      elseif(!$result['status'] && $result['rc'] == 0 && $overdue) {
+        // cancel contribution over 2 week
         $input['reasonCode'] = ts('Overdue');
         $input['trxn_id'] = $c->trxn_id;
         $input['payment_instrument_id'] = $c->payment_instrument_id;
         $ipn->cancelled($objects, $transaction);
         $note .= ts("Canceled").": ".ts('Overdue')."\n";
+        $note .= "Over 14 days doesn't have payment from {$result['timecreated']}\n";
         _civicrm_neweb_addnote($note, $c->id, $c->contact_id);
       }
       elseif($result['rc']){
