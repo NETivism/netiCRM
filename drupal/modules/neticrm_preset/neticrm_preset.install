@@ -49,8 +49,8 @@ function neticrm_preset_domain_default(){
     'contactUndelete' => '1',
     'logging' => '0',
     'versionCheck' => '0',
-    'maxAttachments' => '0',
-    'maxFileSize' => '0',
+    'maxAttachments' => '2',
+    'maxFileSize' => '2',
     'recaptchaPublicKey' => '',
     'recaptchaPrivateKey' => '',
     'dashboardCacheTimeout' => '1440',
@@ -240,6 +240,8 @@ function neticrm_preset_update_6103(){
   $params = array(
     'moneyvalueformat' => '%!.0n',
     'maxImportFileSize' => 8388608,
+    'maxAttachments' => '2',
+    'maxFileSize' => '2',
   );
   require_once "CRM/Core/BAO/Setting.php";
   CRM_Core_BAO_Setting::add($params);

@@ -236,10 +236,12 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form
             $this->set( 'uploadNames', array( 'textFile', 'htmlFile' ) );
         }
         
+        /*
         require_once 'CRM/Core/BAO/File.php';
         CRM_Core_BAO_File::buildAttachment( $this,
                                             'civicrm_mailing',
                                             $this->_mailingID );
+        */
 
         require_once 'CRM/Mailing/PseudoConstant.php';
         $this->add( 'select', 'header_id', ts( 'Mailing Header' ), 

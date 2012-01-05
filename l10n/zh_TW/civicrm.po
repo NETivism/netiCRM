@@ -6716,7 +6716,7 @@ msgstr "設定 - 雜項"
 
 #: CRM/Admin/Form/Setting/Miscellaneous.php
 msgid "Contact Trash & Undelete"
-msgstr "刪除了聯絡人"
+msgstr "聯絡人資源回收桶 / 恢復"
 
 #: CRM/Admin/Form/Setting/Miscellaneous.php
 msgid "Logging"
@@ -21423,7 +21423,7 @@ msgstr "快取總覽頁面資料的分鐘數。"
 
 #: templates/CRM/Admin/Form/Setting/Miscellaneous.tpl
 msgid "If enabled, deleted contacts will be moved to trash (instead of being destroyed). Users with the proper permission are able to search for the deleted contacts and restore them (or delete permanently)."
-msgstr ""
+msgstr "如果開啟，將聯絡人刪除時，會移動至資源回收桶，而不會直接刪除聯絡人。擁有權限的使用者可以透過進階搜尋來尋找被刪除的聯絡人，進行回復（或進行永久刪除）。"
 
 #: templates/CRM/Admin/Form/Setting/Miscellaneous.tpl
 msgid "If enabled, all actions performed on non-cache tables will be logged (in the respective log_* tables)."
@@ -21443,11 +21443,11 @@ msgstr "當允許，關於您CiviCRM安裝統計會被匿名地報表到CiviCRM�
 
 #: templates/CRM/Admin/Form/Setting/Miscellaneous.tpl
 msgid "Maximum number of files (documents, images, etc.) which can attached to emails or activities."
-msgstr "可以附到Email或活動的最高檔案(文件、圖像等)數目"
+msgstr "可以附加到任務、個人募款頁的檔案數量。"
 
 #: templates/CRM/Admin/Form/Setting/Miscellaneous.tpl
 msgid "Maximum Size of file (documents, images, etc.) which can attached to emails or activities.<br />Note: php.ini should support this file size."
-msgstr "可以附到Email或活動的最高檔案(文件、圖像等)數目"
+msgstr "可以附加到任務、個人募款頁等檔案大小。"
 
 #: templates/CRM/Admin/Form/Setting/Miscellaneous.tpl
 msgid "reCAPTCHA Keys"
