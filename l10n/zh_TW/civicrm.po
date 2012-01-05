@@ -7433,7 +7433,7 @@ msgstr "個人募款頁"
 
 #: CRM/Campaign/DAO/Campaign.php
 msgid "Campaign Description"
-msgstr "競選捐款"
+msgstr "募款描述"
 
 #: CRM/Campaign/DAO/Campaign.php
 msgid "Campaign Start Date"
@@ -8409,7 +8409,7 @@ msgstr "不要打電話"
 
 #: CRM/Contact/DAO/Contact.php
 msgid "Do Not Mail"
-msgstr "不要寄Email"
+msgstr "不要寄送郵政信件"
 
 #: CRM/Contact/DAO/Contact.php
 msgid "Do Not Sms"
@@ -9978,15 +9978,15 @@ msgstr "顯示在名單？"
 
 #: CRM/Contribute/BAO/Widget.php
 msgid "Campaign is ongoing"
-msgstr "競選捐款"
+msgstr "募款進行中"
 
 #: CRM/Contribute/BAO/Widget.php
 msgid "Campaign starts on %1"
-msgstr "競選捐款"
+msgstr "募款開始於 %1"
 
 #: CRM/Contribute/BAO/Widget.php
 msgid "Campaign ends on %1"
-msgstr "活動終止日期"
+msgstr "募款中止於 %1"
 
 #: CRM/Contribute/BAO/Widget.php
 msgid "Raised %1 of %2"
@@ -26410,7 +26410,7 @@ msgstr "付款確認信已Email到%1。"
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid "Your contribution has been submitted to %1 for processing. Please print this page for your records."
-msgstr "感謝！您的捐款已開始進行處理。請列印此頁留存記錄。"
+msgstr "請列印此頁留存記錄。"
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid "An email receipt will be sent to %1 and to %2 once the transaction is processed successfully."
