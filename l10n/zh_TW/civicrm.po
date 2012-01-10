@@ -1660,7 +1660,7 @@ msgstr "顯示名稱"
 #: CRM/Admin/Form/Options.php CRM/Admin/Form/OptionValue.php
 #: CRM/Report/Form/Mailing/Opened.php CRM/Report/Form/Mailing/Summary.php
 msgid "Opened"
-msgstr "OpenID"
+msgstr "開啟"
 
 #: CRM/Admin/Form/Options.php CRM/Admin/Form/OptionValue.php
 msgid "Closed"
@@ -8449,7 +8449,7 @@ msgstr "Sic Code"
 
 #: CRM/Contact/DAO/Contact.php
 msgid "Unique ID (OpenID)"
-msgstr "OpenID"
+msgstr "特別ID或OpenID"
 
 #: CRM/Contact/DAO/Contact.php
 msgid "Current Employer ID"
