@@ -410,6 +410,7 @@ INNER JOIN  civicrm_event event ON ( event.id = participant.event_id )
         
         //consider only counted participants.
         $where[] = ' participant.status_id IN ( ' . implode( ', ', array_keys( $countedStatuses ) ) . ' ) ';
+        $where[] = ' contact.is_deleted = 0 ';
         $whereClause = ' WHERE ' . implode( ' AND ', $where );
         
         $query = "
@@ -418,6 +419,7 @@ INNER JOIN  civicrm_event event ON ( event.id = participant.event_id )
             event.max_participants as max_participants
       FROM  civicrm_participant participant 
 INNER JOIN  civicrm_event event ON ( event.id = participant.event_id )
+INNER JOIN  civicrm_contact contact ON (participant.contact_id = contact.id)
             {$whereClause}";
         
         $eventMaxSeats  = null; 
