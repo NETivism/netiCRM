@@ -33,6 +33,7 @@
         </div>
     {/if}
 {include file="CRM/Event/Form/ManageEvent/Tab.tpl"}
+{assign var=eventID value=$id}
 <div class="crm-block crm-form-block crm-event-manage-fee-form-block">
 <div class="crm-submit-buttons">
    {include file="CRM/common/formButtons.tpl" location="top"}
