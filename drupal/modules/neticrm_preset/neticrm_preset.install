@@ -245,6 +245,9 @@ function neticrm_preset_update_6103(){
   );
   require_once "CRM/Core/BAO/Setting.php";
   CRM_Core_BAO_Setting::add($params);
+
+  // #5386
+  variable_set('error_level', 2);
 }
 
 function _neticrm_preset_message($message, $success){
