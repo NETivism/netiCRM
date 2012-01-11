@@ -352,10 +352,10 @@ function neticrm_preset_block($op = 'list', $delta = 0, $edit = array()){
           $item_right[] = "此方案無限期";
         }
 
-        $left = '<div class="neticrm-footer-left">'.theme('item_list', $item_left).'</div>';
-        $right = '<div class="neticrm-footer-right">'.theme('item_list', $item_right).'</div>';
+        $left = '<div class="neticrm-footer neticrm-footer-left">'.theme('item_list', $item_left).'</div>';
+        $right = '<div class="neticrm-footer neticrm-footer-right">'.theme('item_list', $item_right).'</div>';
       }
-      $center = '<div class="neticrm-footer-center">Powered by <a href="http://drupaltaiwan.org">Drupal</a> & <a href="http://civicrm.tw">CiviCRM</a><br>CiviCRM 是一套採用 <a href="http://www.gnu.org/licenses/agpl-3.0.html"><abbr title="GNU Affero General Public License">GNU AGPL</abbr></a> 授權的自由軟體，您所使用的中文優化版由 <a href="http://neticrm.tw"><abbr title="NETivism-由數位公益出發的社會企業">網絡行動科技</abbr></a> 提供</div>';
+      $center = '<div class="neticrm-footer neticrm-footer-center">Powered by <a href="http://drupaltaiwan.org">Drupal</a> & <a href="http://civicrm.tw">CiviCRM</a><br>CiviCRM 是一套採用 <a href="http://www.gnu.org/licenses/agpl-3.0.html"><abbr title="GNU Affero General Public License">GNU AGPL</abbr></a> 授權的自由軟體，您所使用的中文優化版由 <a href="http://neticrm.tw"><abbr title="NETivism-由數位公益出發的社會企業">網絡行動科技</abbr></a> 提供</div>';
 
       $block['content'] = $left.$right.$center;
     }
@@ -416,6 +416,18 @@ function neticrm_preset_civicrm_pageRun(&$page){
   if(in_array($_GET['q'], _neticrm_preset_st_path()) && variable_get('neticrm_preset_sharethis', 1) ){
     // event info sharethis
     $page->assign('sharethis', "<span  class='st_facebook_vcount' displayText='Facebook'></span><span  class='st_twitter_vcount' displayText='Tweet'></span><span  class='st_plusone_vcount' ></span><span  class='st_fblike_vcount' ></span>" );
+  }
+}
+
+/**
+ * Implementation of hook_civicrm_buildForm
+ */
+function neticrm_preset_civicrm_buildForm($form_name, &$form){
+  if(in_array($_GET['q'], _neticrm_preset_st_path()) && variable_get('neticrm_preset_sharethis', 1) ){
+    // contribution info sharethis
+    if($form_name == 'CRM_Contribute_Form_Contribution_Main' && $_GET['id']){
+      $form->assign('sharethis', "<span  class='st_facebook_vcount' displayText='Facebook'></span><span  class='st_twitter_vcount' displayText='Tweet'></span><span  class='st_plusone_vcount' ></span><span  class='st_fblike_vcount' ></span>" );
+    }
   }
 }
 
