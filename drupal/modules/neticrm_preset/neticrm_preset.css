@@ -1,3 +1,6 @@
+.neticrm-footer {
+  color: #CCC;
+}
 .neticrm-footer-center {
   text-align: center;
   font-size: 11px;
@@ -48,9 +51,8 @@
   font-size: 15px;
   line-height: 20px;
 }
-
 .sharethis {
   position: fixed;
-  right: 10px;
+  right: 3%;
   width: 55px;
 }
