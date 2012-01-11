@@ -59,3 +59,9 @@ msgstr "切換至歡迎訊息"
 
 msgid "Back to dashboard"
 msgstr "切換回一般首頁"
+
+msgid "Enable tracking"
+msgstr "啟用流量統計"
+
+msgid "Enable Sharethis"
+msgstr "啟用社群網路分享"
