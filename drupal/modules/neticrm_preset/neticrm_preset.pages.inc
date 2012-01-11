@@ -66,6 +66,7 @@ function neticrm_preset_home(){
       }
     }
     $output = theme('neticrm_preset_home', $output);
+    $output .= drupal_get_form('neticrm_preset_settings');
   }
   return $output;
 }
@@ -82,4 +83,33 @@ function theme_neticrm_preset_home_item($item){
   $options['attributes']['class'] = 'neticrm-dashboard-link link-'.$class;
   $link = l('<span class="icon"></span>'.$item['link_title'], $item['link_path'], $options);
   return '<div class="neticrm-dashboard item-'.$item['mlid'].'">'.$link.'<div class="description">'.$item['description'].'</div></div>';
+}
+
+/**
+ * implementation of hook_neticrm_settings
+ */
+function neticrm_preset_neticrm_settings(){
+/*
+  $form['neticrm_preset_tracking'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Enable tracking'),
+    '#default_value' => variable_get('neticrm_preset_tracking', 1),
+  );
+  $form['neticrm_preset_sharethis'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Enable Sharethis'),
+    '#default_value' => variable_get('neticrm_preset_tracking', 1),
+  );
+*/
+
+  return $form;
+}
+
+function neticrm_preset_settings(){
+  // hook_neticrm_settings
+
+  $form = module_invoke_all('neticrm_settings'); 
+  if(!empty($form)){
+    return system_settings_form($form);
+  }
 }

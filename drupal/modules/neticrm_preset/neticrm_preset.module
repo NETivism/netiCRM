@@ -1,6 +1,7 @@
 <?php
 define('NETICRM_LIMIT_PATH', 'civicrm/import/contact::civicrm/contact/add');
 define('NETICRM_BASE_URL', 'neticrm.tw');
+define('NETICRM_GA', 'UA-28254338-1');
 
 /**
  * Implementation of hook_init
@@ -114,7 +115,8 @@ function neticrm_preset_menu_alter(&$items){
   $items['admin/user/logintoboggan']['access arguments'] = array('administer neticrm');
 
   // localfix.module
-  $items['admin/settings/localfix']['access arguments'] = array('administer neticrm');
+  $items['admin/settings/localefix']['access arguments'] = array('administer neticrm');
+  $items['admin/settings/devel']['access arguments'] = array('administer neticrm');
 
   // filter.module
   $items['admin/settings/filters']['access arguments'] = array('administer neticrm');
@@ -380,19 +382,47 @@ function _neticrm_preset_member_info($membership = NULL){
   return FALSE;
 }
 
+/**
+ * Implementation of hook_footer
+ */
 function neticrm_preset_footer(){
-  $domain = $_SERVER['HTTP_HOST'];
-  $ga = "<script type=\"text/javascript\">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-28254338-1']);
-    _gaq.push(['_setDomainName', '{$domain}']);
-    _gaq.push(['_trackPageview']);
-          
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-</script>";
-  return $ga;
+  if(variable_get('neticrm_preset_tracking', 1)){
+    $domain = $_SERVER['HTTP_HOST'];
+    $ga = "<script type=\"text/javascript\">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', '".NETICRM_GA."']);
+      _gaq.push(['_setDomainName', '{$domain}']);
+      _gaq.push(['_trackPageview']);
+            
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+  </script>";
+  }
+
+  if( variable_get('neticrm_preset_sharethis', 1) && in_array($_GET['q'], _neticrm_preset_st_path()) ){
+    $domain = $_SERVER['HTTP_HOST'];
+    $sharethis = '<script type="text/javascript">var switchTo5x=true;</script><script type="text/javascript" src="https://ws.sharethis.com/button/buttons.js"></script><script type="text/javascript">stLight.options({publisherGA:"'.NETICRM_GA.'"});</script>';
+  }
+  return $ga."\n".$sharethis;
+}
+
+/**
+ * Implementation of hook_civicrm_pageRun
+ */
+function neticrm_preset_civicrm_pageRun(&$page){
+  if(in_array($_GET['q'], _neticrm_preset_st_path()) && variable_get('neticrm_preset_sharethis', 1) ){
+    // event info sharethis
+    $page->assign('sharethis', "<span  class='st_facebook_vcount' displayText='Facebook'></span><span  class='st_twitter_vcount' displayText='Tweet'></span><span  class='st_plusone_vcount' ></span><span  class='st_fblike_vcount' ></span>" );
+  }
+}
+
+function _neticrm_preset_st_path(){
+  $p = array(
+    'civicrm/event/info',
+    'civicrm/contribute/transact',
+  );
+  return $p;
 }

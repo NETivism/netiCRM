@@ -48,3 +48,9 @@
   font-size: 15px;
   line-height: 20px;
 }
+
+.sharethis {
+  position: fixed;
+  right: 10px;
+  width: 55px;
+}
