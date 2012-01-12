@@ -8417,7 +8417,7 @@ msgstr "不要交易"
 
 #: CRM/Contact/DAO/Contact.php templates/CRM/Contact/Page/View/Summary.tpl
 msgid "No Bulk Emails (User Opt Out)"
-msgstr "不要EDM（使用者退訂）"
+msgstr "不想收到Email（使用者退出）"
 
 #: CRM/Contact/DAO/Contact.php
 msgid "Sort Name"
@@ -8707,7 +8707,7 @@ msgstr "Email 格式"
 
 #: CRM/Contact/Form/Edit/CommunicationPreferences.php
 msgid "NO BULK EMAILS (User Opt Out)"
-msgstr "不接受大量Email（使用者退訂）"
+msgstr "不想收到Email（使用者退出）"
 
 #: CRM/Contact/Form/Edit/Demographics.php
 #: templates/CRM/Contact/Page/View/Demographics.tpl
@@ -13800,7 +13800,7 @@ msgstr "由e-mail退訂全部訊息"
 
 #: CRM/Core/SelectValues.php
 msgid "Opt out via web page"
-msgstr "經由網頁退訂全部電子報"
+msgstr "經由網頁退訂全部訊息"
 
 #: CRM/Core/SelectValues.php
 msgid "Forward this email (link)"
@@ -19712,11 +19712,11 @@ msgstr "網域地址 - 顯示您組織的郵件地址。"
 
 #: CRM/Utils/Token.php
 msgid "'Opt out via email' - displays an email address for recipients to opt out of receiving emails from your organization."
-msgstr "透過 Email 退訂- 顯示一個 Email，讓訂戶可以取消訂閱這份電子報。"
+msgstr "透過 Email 退訂全部訊息 - 顯示一個 Email，讓訂戶可以回饋他不想再收到本系統的任何訊息。"
 
 #: CRM/Utils/Token.php
 msgid "'Opt out via web page' - creates a link for recipients to click if they want to opt out of receiving emails from your organization. Alternatively, you can include the 'Opt out via email' token."
-msgstr "透過網頁退訂 - 為收件者建立一個連結，讓他們在不想收到您的組織寄來的 Email 時，可以取消訂閱。你也可使用「透過 Email 取消訂閱」這個替代符號。"
+msgstr "透過網頁退訂全部訊息 - 為收件者建立一個連結，讓他們在不想收到任何來自您的組織的 Email 時，可以選擇退出。你也可使用「透過 Email 取消訂閱」這個替代符號。"
 
 #: CRM/Utils/Weight.php
 msgid "Move to top"
@@ -25012,7 +25012,7 @@ msgstr "將您的游標放置於訊息欄中欲插入替代符號的位置，然
 
 #: templates/CRM/Contact/Form/Task/Email.hlp
 msgid "You will also use tokens to insert Unsubscribe, Opt out and Forwarding links in your message."
-msgstr "您需使用替代符號來為信件內容加入取消訂閱、選擇退訂、轉寄的功能。"
+msgstr "您需使用替代符號來為信件內容加入取消訂閱、退訂全部訊息、轉寄的功能。"
 
 #: templates/CRM/Contact/Form/Task/Email.hlp
 msgid "Use these steps to insert clickable action links:"
@@ -29919,7 +29919,7 @@ msgstr "所需元件"
 
 #: templates/CRM/Mailing/Form/Upload.hlp
 msgid "CiviMail email messages must include an <strong>opt-out</strong> link (\"Opt out via web page\"), and the <strong>postal address</strong> of your organization. These elements help reduce the chances of your email being categorized as SPAM. They can be included in the main message body OR in a re-usable <strong>message footer</strong>. Refer to the online documentation for details on how to include required links and contact information as well as sample messages."
-msgstr "使用電子報寄送的 Email 必需包含一個<strong>取消訂閱</strong>的連結（\"透過網頁\"），及您組織的<strong>郵政地址</strong>。這個設定是為了減低您郵件被歸為垃圾郵件的機率。他們可被包含在郵件主文，或在一個重複使用的<strong>電子報頁尾</strong>。參考線上檔案以尋找如何操作的詳情。"
+msgstr "使用電子報寄送的 Email 必需包含一個<strong>退訂全部訊息</strong>的連結（\"透過網頁\"），及您組織的<strong>實際地址</strong>。這個設定是為了減低您郵件被歸為垃圾郵件的機率。他們可被包含在郵件主文，或在一個重複使用的<strong>電子報頁尾</strong>。參考線上檔案以尋找如何操作的詳情。"
 
 #: templates/CRM/Mailing/Form/Upload.hlp
 msgid "Upload or Compose On-screen"
@@ -30023,15 +30023,15 @@ msgstr "回到報表"
 
 #: templates/CRM/Mailing/Page/Optout.tpl
 msgid "has been successfully opted out."
-msgstr "已成功取消訂閱。"
+msgstr "已成功記錄您退出全站訊息的設定。"
 
 #: templates/CRM/Mailing/Page/Optout.tpl
 msgid "Are you sure you want to optout: %1 (%2)"
-msgstr "您是否確定要取消訂閱：%1 (%2)"
+msgstr "您是否確定不想再收到本站訊息：%1 (%2)"
 
 #: templates/CRM/Mailing/Page/Optout.tpl msgctxt "menu"
 msgid "Optout"
-msgstr "退出"
+msgstr "退出全站訊息"
 
 #: templates/CRM/Mailing/Page/Report.tpl
 msgid "Delivery Summary"
