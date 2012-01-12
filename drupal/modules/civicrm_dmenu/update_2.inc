@@ -1,0 +1,1057 @@
+<?php
+global $menu_links;
+$menu_links['navigation'] = array (
+  0 => 
+  array (
+    'path' => 'civicrm',
+    'query' => NULL,
+    'title' => 'CiviCRM',
+    'menu' => 'navigation',
+    'weight' => '0',
+    'module' => 'menu',
+    'hidden' => '1',
+  ),
+  1 => 
+  array (
+    'path' => 'civicrm/dashboard',
+    'query' => NULL,
+    'title' => 'CiviCRM',
+    'menu' => 'navigation',
+    'weight' => '-50',
+    'module' => 'menu',
+    'hidden' => '1',
+  ),
+  2 => 
+  array (
+    'path' => 'http://neticrm.tw/support',
+    'query' => NULL,
+    'title' => '線上支援',
+    'menu' => 'navigation',
+    'weight' => '-44',
+    'module' => 'menu',
+    'hidden' => '0',
+  ),
+  3 => 
+  array (
+    'path' => 'admin',
+    'query' => NULL,
+    'title' => '網站管理',
+    'menu' => 'navigation',
+    'weight' => '-45',
+    'module' => 'menu',
+    'hidden' => '0',
+    'children' => 
+    array (
+      0 => 
+      array (
+        'path' => 'admin/content',
+        'query' => NULL,
+        'title' => 'Content management',
+        'menu' => 'navigation',
+        'weight' => '-10',
+        'module' => 'menu',
+        'hidden' => '0',
+        'children' => 
+        array (
+          0 => 
+          array (
+            'path' => 'admin/content/node',
+            'query' => NULL,
+            'title' => 'Content',
+            'menu' => 'navigation',
+            'weight' => '0',
+            'module' => 'menu',
+            'hidden' => '0',
+          ),
+          1 => 
+          array (
+            'path' => 'admin/content/types',
+            'query' => NULL,
+            'title' => 'Content types',
+            'menu' => 'navigation',
+            'weight' => '0',
+            'module' => 'menu',
+            'hidden' => '0',
+          ),
+          2 => 
+          array (
+            'path' => 'admin/content/node-settings',
+            'query' => NULL,
+            'title' => 'Post settings',
+            'menu' => 'navigation',
+            'weight' => '0',
+            'module' => 'menu',
+            'hidden' => '0',
+            'children' => 
+            array (
+              0 => 
+              array (
+                'path' => 'admin/content/node-settings/rebuild',
+                'query' => NULL,
+                'title' => 'Rebuild permissions',
+                'menu' => 'navigation',
+                'weight' => '0',
+                'module' => 'menu',
+                'hidden' => '0',
+              ),
+            ),
+          ),
+          3 => 
+          array (
+            'path' => 'admin/content/rss-publishing',
+            'query' => NULL,
+            'title' => 'RSS publishing',
+            'menu' => 'navigation',
+            'weight' => '0',
+            'module' => 'menu',
+            'hidden' => '0',
+          ),
+          4 => 
+          array (
+            'path' => 'admin/content/taxonomy',
+            'query' => NULL,
+            'title' => 'Taxonomy',
+            'menu' => 'navigation',
+            'weight' => '0',
+            'module' => 'menu',
+            'hidden' => '0',
+            'children' => 
+            array (
+              0 => 
+              array (
+                'path' => 'admin/content/taxonomy/%',
+                'query' => NULL,
+                'title' => 'List terms',
+                'menu' => 'navigation',
+                'weight' => '0',
+                'module' => 'menu',
+                'hidden' => '0',
+              ),
+              1 => 
+              array (
+                'path' => 'admin/content/taxonomy/edit/term',
+                'query' => NULL,
+                'title' => 'Edit term',
+                'menu' => 'navigation',
+                'weight' => '0',
+                'module' => 'menu',
+                'hidden' => '0',
+              ),
+              2 => 
+              array (
+                'path' => 'admin/content/taxonomy/edit/vocabulary/%',
+                'query' => NULL,
+                'title' => 'Edit vocabulary',
+                'menu' => 'navigation',
+                'weight' => '0',
+                'module' => 'menu',
+                'hidden' => '0',
+              ),
+            ),
+          ),
+          5 => 
+          array (
+            'path' => 'admin/content/node-type/page',
+            'query' => NULL,
+            'title' => '頁面',
+            'menu' => 'navigation',
+            'weight' => '0',
+            'module' => 'menu',
+            'hidden' => '0',
+          ),
+        ),
+      ),
+      1 => 
+      array (
+        'path' => 'admin/reports',
+        'query' => NULL,
+        'title' => 'Reports',
+        'menu' => 'navigation',
+        'weight' => '5',
+        'module' => 'menu',
+        'hidden' => '0',
+        'children' => 
+        array (
+          0 => 
+          array (
+            'path' => 'admin/reports/status',
+            'query' => NULL,
+            'title' => 'Status report',
+            'menu' => 'navigation',
+            'weight' => '10',
+            'module' => 'menu',
+            'hidden' => '0',
+            'children' => 
+            array (
+              0 => 
+              array (
+                'path' => 'admin/reports/status/php',
+                'query' => NULL,
+                'title' => 'PHP',
+                'menu' => 'navigation',
+                'weight' => '0',
+                'module' => 'menu',
+                'hidden' => '0',
+              ),
+              1 => 
+              array (
+                'path' => 'admin/reports/status/run-cron',
+                'query' => NULL,
+                'title' => 'Run cron',
+                'menu' => 'navigation',
+                'weight' => '0',
+                'module' => 'menu',
+                'hidden' => '0',
+              ),
+              2 => 
+              array (
+                'path' => 'admin/reports/status/sql',
+                'query' => NULL,
+                'title' => 'SQL',
+                'menu' => 'navigation',
+                'weight' => '0',
+                'module' => 'menu',
+                'hidden' => '0',
+              ),
+            ),
+          ),
+          1 => 
+          array (
+            'path' => 'admin/reports/dblog',
+            'query' => NULL,
+            'title' => 'Recent log entries',
+            'menu' => 'navigation',
+            'weight' => '-1',
+            'module' => 'menu',
+            'hidden' => '0',
+          ),
+          2 => 
+          array (
+            'path' => 'admin/reports/access-denied',
+            'query' => NULL,
+            'title' => 'Top \'access denied\' errors',
+            'menu' => 'navigation',
+            'weight' => '0',
+            'module' => 'menu',
+            'hidden' => '0',
+          ),
+          3 => 
+          array (
+            'path' => 'admin/reports/page-not-found',
+            'query' => NULL,
+            'title' => 'Top \'page not found\' errors',
+            'menu' => 'navigation',
+            'weight' => '0',
+            'module' => 'menu',
+            'hidden' => '0',
+          ),
+          4 => 
+          array (
+            'path' => 'admin/reports/event/%',
+            'query' => NULL,
+            'title' => 'Details',
+            'menu' => 'navigation',
+            'weight' => '0',
+            'module' => 'menu',
+            'hidden' => '0',
+          ),
+        ),
+      ),
+      2 => 
+      array (
+        'path' => 'admin/build',
+        'query' => NULL,
+        'title' => 'Site building',
+        'menu' => 'navigation',
+        'weight' => '-10',
+        'module' => 'menu',
+        'hidden' => '0',
+        'children' => 
+        array (
+          0 => 
+          array (
+            'path' => 'civicrm/admin',
+            'query' => NULL,
+            'title' => '支持者系統進階管理',
+            'description' => '進階設定、管理支持者系統的欄位選項等',
+            'menu' => 'navigation',
+            'weight' => '-54',
+            'module' => 'menu',
+            'hidden' => '0',
+          ),
+          1 => 
+          array (
+            'path' => 'civicrm/admin/custom/group',
+            'query' => 'reset=1',
+            'title' => '自訂欄位',
+            'description' => '自行定義聯絡人、活動、捐款的記錄欄位',
+            'menu' => 'navigation',
+            'weight' => '-53',
+            'module' => 'menu',
+            'hidden' => '0',
+          ),
+          2 => 
+          array (
+            'path' => 'civicrm/admin/uf/group',
+            'query' => 'reset=1',
+            'title' => '資料表單',
+            'description' => '產生線上填寫表單，建立後以嵌入活動報名、捐款、或會員，甚至插入外站',
+            'menu' => 'navigation',
+            'weight' => '-52',
+            'module' => 'menu',
+            'hidden' => '0',
+          ),
+          3 => 
+          array (
+            'path' => 'civicrm/admin/configtask',
+            'query' => 'reset=1',
+            'title' => '支持者系統設定精靈',
+            'description' => '讓你快速檢查系統設定，完成初始設置',
+            'menu' => 'navigation',
+            'weight' => '-55',
+            'module' => 'menu',
+            'hidden' => '0',
+          ),
+        ),
+      ),
+      3 => 
+      array (
+        'path' => 'admin/user',
+        'query' => NULL,
+        'title' => 'User management',
+        'menu' => 'navigation',
+        'weight' => '0',
+        'module' => 'menu',
+        'hidden' => '0',
+        'children' => 
+        array (
+          0 => 
+          array (
+            'path' => 'civicrm/admin/access',
+            'query' => 'reset=1',
+            'title' => '存取控制',
+            'description' => '管理支持者系統的進階權限控制',
+            'menu' => 'navigation',
+            'weight' => '1',
+            'module' => 'menu',
+            'hidden' => '0',
+          ),
+          1 => 
+          array (
+            'path' => 'civicrm/admin/synchUser',
+            'query' => 'reset=1',
+            'title' => '同步使用者到聯絡人',
+            'description' => '將現有已註冊的使用者，同步成為聯絡人，重複的聯絡人將合併（以Email判斷）',
+            'menu' => 'navigation',
+            'weight' => '2',
+            'module' => 'menu',
+            'hidden' => '0',
+          ),
+        ),
+      ),
+    ),
+  ),
+);
+
+$menu_links['neticrm'] =array (
+  '#title' => '系統選單',
+  '#description' => '系統主要的導覽，僅有登入使用者可看見。',
+  0 => 
+  array (
+    'path' => 'civicrm/contact/search',
+    'query' => 'reset=1',
+    'title' => '聯絡人',
+    'menu' => 'menu-neticrm',
+    'weight' => '-49',
+    'module' => 'menu',
+    'hidden' => '0',
+    'expanded' => 1,
+    'children' => 
+    array (
+      0 => 
+      array (
+        'path' => 'admin/user/user',
+        'title' => '新增/管理網站使用者',
+        'menu' => 'menu-neticrm',
+        'weight' => '-55',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      1 => 
+      array (
+        'path' => 'civicrm/contact/add',
+        'query' => 'reset=1&ct=Household',
+        'title' => '新增家庭',
+        'menu' => 'menu-neticrm',
+        'weight' => '-49',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      2 => 
+      array (
+        'path' => 'civicrm/contact/add',
+        'query' => 'reset=1&ct=Individual',
+        'title' => '新增個人',
+        'menu' => 'menu-neticrm',
+        'weight' => '-50',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      3 => 
+      array (
+        'path' => 'civicrm/contact/add',
+        'query' => 'reset=1&ct=Organization',
+        'title' => '新增組織',
+        'menu' => 'menu-neticrm',
+        'weight' => '-48',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      4 => 
+      array (
+        'path' => 'civicrm/activity',
+        'query' => 'reset=1&action=add&context=standalone',
+        'title' => '新增任務',
+        'menu' => 'menu-neticrm',
+        'weight' => '-47',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      5 => 
+      array (
+        'path' => 'civicrm/activity/add',
+        'query' => 'atype=3&action=add&reset=1&context=standalone',
+        'title' => '新增 Email',
+        'menu' => 'menu-neticrm',
+        'weight' => '-46',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      6 => 
+      array (
+        'path' => 'civicrm/import/contact',
+        'query' => 'reset=1',
+        'title' => '匯入聯絡人資料',
+        'menu' => 'menu-neticrm',
+        'weight' => '-45',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      7 => 
+      array (
+        'path' => 'civicrm/import/activity',
+        'query' => 'reset=1',
+        'title' => '匯入任務記錄',
+        'menu' => 'menu-neticrm',
+        'weight' => '-44',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      8 => 
+      array (
+        'path' => 'civicrm/group/add',
+        'query' => 'reset=1',
+        'title' => '新增群組',
+        'menu' => 'menu-neticrm',
+        'weight' => '-43',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      9 => 
+      array (
+        'path' => 'civicrm/group',
+        'query' => 'reset=1',
+        'title' => '管理群組',
+        'menu' => 'menu-neticrm',
+        'weight' => '-42',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      10 => 
+      array (
+        'path' => 'civicrm/admin/tag',
+        'query' => 'reset=1&action=add',
+        'title' => '新增Tag',
+        'menu' => 'menu-neticrm',
+        'weight' => '-41',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      11 => 
+      array (
+        'path' => 'civicrm/admin/tag',
+        'query' => 'reset=1',
+        'title' => '管理標籤（分類）',
+        'menu' => 'menu-neticrm',
+        'weight' => '-40',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      12 => 
+      array (
+        'path' => 'civicrm/contact/deduperules',
+        'query' => 'reset=1',
+        'title' => '合併重複聯絡人',
+        'menu' => 'menu-neticrm',
+        'weight' => '-38',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      13 => 
+      array (
+        'path' => 'civicrm/admin/reltype',
+        'query' => 'reset=1',
+        'title' => '新增/管理關係類型',
+        'menu' => 'menu-neticrm',
+        'weight' => '-39',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      14 => 
+      array (
+        'path' => 'admin/user/permissions',
+        'title' => '權限管理',
+        'menu' => 'menu-neticrm',
+        'weight' => '-54',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+    ),
+  ),
+  1 => 
+  array (
+    'path' => 'civicrm/contribute',
+    'query' => 'reset=1',
+    'title' => '捐款',
+    'menu' => 'menu-neticrm',
+    'weight' => '-48',
+    'module' => 'menu',
+    'hidden' => '0',
+    'expanded' => 1,
+    'children' => 
+    array (
+      0 => 
+      array (
+        'path' => 'civicrm/admin/options/payment_instrument',
+        'query' => 'group=payment_instrument&reset=1',
+        'title' => '新增/管理付款工具',
+        'menu' => 'menu-neticrm',
+        'weight' => '-36',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      1 => 
+      array (
+        'path' => 'civicrm/contribute/add',
+        'query' => 'reset=1&action=add&context=standalone',
+        'title' => '新增捐款',
+        'menu' => 'menu-neticrm',
+        'weight' => '-50',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      2 => 
+      array (
+        'path' => 'civicrm/contribute/search',
+        'query' => 'reset=1',
+        'title' => '搜尋捐款',
+        'menu' => 'menu-neticrm',
+        'weight' => '-49',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      3 => 
+      array (
+        'path' => 'civicrm/contribute/import',
+        'query' => 'reset=1',
+        'title' => '匯入捐款資料',
+        'menu' => 'menu-neticrm',
+        'weight' => '-48',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      4 => 
+      array (
+        'path' => 'civicrm/pledge',
+        'query' => 'reset=1',
+        'title' => '認捐總覽',
+        'menu' => 'menu-neticrm',
+        'weight' => '-47',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      5 => 
+      array (
+        'path' => 'civicrm/pledge/add',
+        'query' => 'reset=1&action=add&context=standalone',
+        'title' => '新增認捐',
+        'menu' => 'menu-neticrm',
+        'weight' => '-46',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      6 => 
+      array (
+        'path' => 'civicrm/pledge/search',
+        'query' => 'reset=1',
+        'title' => '搜尋認捐',
+        'menu' => 'menu-neticrm',
+        'weight' => '-45',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      7 => 
+      array (
+        'path' => 'civicrm/admin/contribute/add',
+        'query' => 'reset=1&action=add',
+        'title' => '新增募款頁',
+        'menu' => 'menu-neticrm',
+        'weight' => '-43',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      8 => 
+      array (
+        'path' => 'civicrm/admin/contribute',
+        'query' => 'reset=1',
+        'title' => '管理募款頁',
+        'menu' => 'menu-neticrm',
+        'weight' => '-42',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      9 => 
+      array (
+        'path' => 'civicrm/admin/pcp',
+        'query' => 'reset=1',
+        'title' => '個人募款頁',
+        'menu' => 'menu-neticrm',
+        'weight' => '-41',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      10 => 
+      array (
+        'path' => 'civicrm/admin/contribute/managePremiums',
+        'query' => 'reset=1',
+        'title' => '感謝禮 (感謝禮品)',
+        'menu' => 'menu-neticrm',
+        'weight' => '-40',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      11 => 
+      array (
+        'path' => 'civicrm/admin/price',
+        'query' => 'reset=1&action=add',
+        'title' => '新增價格表',
+        'menu' => 'menu-neticrm',
+        'weight' => '-39',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      12 => 
+      array (
+        'path' => 'civicrm/admin/price',
+        'query' => 'reset=1',
+        'title' => '管理價格表',
+        'menu' => 'menu-neticrm',
+        'weight' => '-38',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      13 => 
+      array (
+        'path' => 'civicrm/admin/contribute/contributionType',
+        'query' => 'reset=1',
+        'title' => '新增/管理捐款類型',
+        'menu' => 'menu-neticrm',
+        'weight' => '-37',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      14 => 
+      array (
+        'path' => 'civicrm/admin/options/accept_creditcard',
+        'query' => 'group=accept_creditcard&reset=1',
+        'title' => '新增/管理可用的信用卡',
+        'menu' => 'menu-neticrm',
+        'weight' => '-35',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      15 => 
+      array (
+        'path' => 'civicrm/admin/uf/group',
+        'query' => 'reset=1',
+        'title' => '新增/管理資料表單',
+        'menu' => 'navigation',
+        'weight' => '20',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      16 => 
+      array (
+        'path' => 'civicrm/admin/custom/group',
+        'query' => 'reset=1',
+        'title' => '新增/管理自訂欄位',
+        'menu' => 'navigation',
+        'weight' => '20',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+    ),
+  ),
+  2 => 
+  array (
+    'path' => 'civicrm/event',
+    'query' => 'reset=1',
+    'title' => '活動',
+    'menu' => 'menu-neticrm',
+    'weight' => '-47',
+    'module' => 'menu',
+    'hidden' => '0',
+    'expanded' => 1,
+    'children' => 
+    array (
+      0 => 
+      array (
+        'path' => 'civicrm/admin/options/participant_listing',
+        'query' => 'group=participant_listing&reset=1',
+        'title' => '參加者列表範本',
+        'menu' => 'menu-neticrm',
+        'weight' => '-42',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      1 => 
+      array (
+        'path' => 'civicrm/admin/options/event_type',
+        'query' => 'group=event_type&reset=1',
+        'title' => '新增/管理活動類型',
+        'menu' => 'menu-neticrm',
+        'weight' => '-41',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      2 => 
+      array (
+        'path' => 'civicrm/admin/participant_status',
+        'query' => 'reset=1',
+        'title' => '新增/管理參加者狀態',
+        'menu' => 'menu-neticrm',
+        'weight' => '-40',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      3 => 
+      array (
+        'path' => 'civicrm/admin/options/participant_role',
+        'query' => 'group=participant_role&reset=1',
+        'title' => '新增/管理參加者角色',
+        'menu' => 'menu-neticrm',
+        'weight' => '-39',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      4 => 
+      array (
+        'path' => 'civicrm/participant/add',
+        'query' => 'reset=1&action=add&context=standalone',
+        'title' => '登記活動參加者',
+        'menu' => 'menu-neticrm',
+        'weight' => '-50',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      5 => 
+      array (
+        'path' => 'civicrm/event/search',
+        'query' => 'reset=1',
+        'title' => '搜尋活動參加者',
+        'menu' => 'menu-neticrm',
+        'weight' => '-49',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      6 => 
+      array (
+        'path' => 'civicrm/event/import',
+        'query' => 'reset=1',
+        'title' => '匯入參加者',
+        'menu' => 'menu-neticrm',
+        'weight' => '-48',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      7 => 
+      array (
+        'path' => 'civicrm/event/add',
+        'query' => 'reset=1&action=add',
+        'title' => '新增活動',
+        'menu' => 'menu-neticrm',
+        'weight' => '-47',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      8 => 
+      array (
+        'path' => 'civicrm/event/manage',
+        'query' => 'reset=1',
+        'title' => '管理活動',
+        'menu' => 'menu-neticrm',
+        'weight' => '-46',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      9 => 
+      array (
+        'path' => 'civicrm/admin/eventTemplate',
+        'query' => 'reset=1',
+        'title' => '活動範本',
+        'menu' => 'menu-neticrm',
+        'weight' => '-45',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      10 => 
+      array (
+        'path' => 'civicrm/admin/price',
+        'query' => 'reset=1&action=add',
+        'title' => '新增價格表',
+        'menu' => 'menu-neticrm',
+        'weight' => '-44',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      11 => 
+      array (
+        'path' => 'civicrm/admin/price',
+        'query' => 'reset=1',
+        'title' => '管理價格表',
+        'menu' => 'menu-neticrm',
+        'weight' => '-43',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      12 => 
+      array (
+        'path' => 'civicrm/admin/uf/group',
+        'query' => 'reset=1',
+        'title' => '新增/管理資料表單',
+        'menu' => 'navigation',
+        'weight' => '20',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      13 => 
+      array (
+        'path' => 'civicrm/admin/custom/group',
+        'query' => 'reset=1',
+        'title' => '新增/管理自訂欄位',
+        'menu' => 'navigation',
+        'weight' => '20',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+    ),
+  ),
+  3 => 
+  array (
+    'path' => 'civicrm/mailing/browse',
+    'query' => 'reset=1&scheduled=true',
+    'title' => '電子報',
+    'menu' => 'menu-neticrm',
+    'weight' => '-46',
+    'module' => 'menu',
+    'expanded' => 1,
+    'hidden' => '0',
+    'children' => 
+    array (
+      0 => 
+      array (
+        'path' => 'civicrm/mailing/send',
+        'query' => 'reset=1',
+        'title' => '新增電子報/郵件',
+        'menu' => 'menu-neticrm',
+        'weight' => '-50',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      1 => 
+      array (
+        'path' => 'civicrm/mailing/browse/unscheduled',
+        'query' => 'reset=1&scheduled=false',
+        'title' => '草稿與未排程的電子報',
+        'menu' => 'menu-neticrm',
+        'weight' => '-49',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      2 => 
+      array (
+        'path' => 'civicrm/mailing/browse/scheduled',
+        'query' => 'reset=1&scheduled=true',
+        'title' => '已排程與已寄送的電子報',
+        'menu' => 'menu-neticrm',
+        'weight' => '-48',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      3 => 
+      array (
+        'path' => 'civicrm/mailing/browse/archived',
+        'query' => 'reset=1',
+        'title' => '電子報存檔',
+        'menu' => 'menu-neticrm',
+        'weight' => '-47',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      4 => 
+      array (
+        'path' => 'civicrm/admin/component',
+        'query' => 'reset=1',
+        'title' => '頁首、頁尾、自動回覆訊息',
+        'menu' => 'menu-neticrm',
+        'weight' => '-46',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      5 => 
+      array (
+        'path' => 'civicrm/admin/messageTemplates',
+        'query' => 'reset=1',
+        'title' => '訊息範本',
+        'menu' => 'menu-neticrm',
+        'weight' => '-45',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      6 => 
+      array (
+        'path' => 'civicrm/admin/options/from_email',
+        'query' => 'group=from_email_address&reset=1',
+        'title' => 'Email寄件者',
+        'menu' => 'menu-neticrm',
+        'weight' => '-44',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      7 => 
+      array (
+        'path' => 'civicrm/admin/options/email_greeting',
+        'query' => 'group=email_greeting&reset=1',
+        'title' => 'Email問候語',
+        'menu' => 'menu-neticrm',
+        'weight' => '-43',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+    ),
+  ),
+  4 => 
+  array (
+    'path' => 'civicrm/member',
+    'query' => 'reset=1',
+    'title' => '會員',
+    'menu' => 'menu-neticrm',
+    'weight' => '-45',
+    'module' => 'menu',
+    'hidden' => '0',
+    'expanded' => 1,
+    'children' => 
+    array (
+      0 => 
+      array (
+        'path' => 'civicrm/member/add',
+        'query' => 'reset=1&action=add&context=standalone',
+        'title' => '新增會員資料',
+        'menu' => 'menu-neticrm',
+        'weight' => '-50',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      1 => 
+      array (
+        'path' => 'civicrm/member/search',
+        'query' => 'reset=1',
+        'title' => '搜尋會員',
+        'menu' => 'menu-neticrm',
+        'weight' => '-49',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      2 => 
+      array (
+        'path' => 'civicrm/member/import',
+        'query' => 'reset=1',
+        'title' => '匯入會員',
+        'menu' => 'menu-neticrm',
+        'weight' => '-48',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      3 => 
+      array (
+        'path' => 'civicrm/admin/member/membershipType',
+        'query' => 'reset=1',
+        'title' => '新增/編輯會員類型',
+        'menu' => 'menu-neticrm',
+        'weight' => '-47',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      4 => 
+      array (
+        'path' => 'civicrm/admin/member/membershipStatus',
+        'query' => 'reset=1',
+        'title' => '新增/編輯會員狀態',
+        'menu' => 'menu-neticrm',
+        'weight' => '0',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+    ),
+  ),
+  5 => 
+  array (
+    'path' => 'civicrm/report/list',
+    'query' => 'reset=1',
+    'title' => '報表',
+    'menu' => 'menu-neticrm',
+    'weight' => '-44',
+    'module' => 'menu',
+    'hidden' => '0',
+    'expanded' => 1,
+    'children' => 
+    array (
+      0 => 
+      array (
+        'path' => 'civicrm/admin/report/template/list',
+        'query' => 'reset=1',
+        'title' => '從範本新增報表',
+        'menu' => 'menu-neticrm',
+        'weight' => '2',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      1 => 
+      array (
+        'path' => 'civicrm/admin/report/options/report_template&reset=1',
+        'query' => NULL,
+        'title' => '報表範本管理',
+        'menu' => 'menu-neticrm',
+        'weight' => '0',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+    ),
+  ),
+);
+ 
+$menu_links['footer'] =array (
+  '#title' => '底部選單',
+  '#description' => '網站的底部選單，通常擺放原始網站的連結，授權條款，著作權、使用者協議等等。',
+);
+
