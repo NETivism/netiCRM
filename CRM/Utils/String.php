@@ -96,10 +96,10 @@ class CRM_Utils_String {
         $name = str_replace("-", $char, $name);
 
         // dirty way to detect chinese
-        $purged_name = preg_replace('/\s+|\W+|[-_]+/', $char, trim($name) );
+        preg_match('/[^0-9a-z-_]+/i', $name, $matches);
 
         // any chinese appear, should go transliteration (to prevent duplication)
-        if(!empty($purged_name)){
+        if(trim($matches[0])){
           require_once (drupal_get_path('module', 'transliteration') . '/transliteration.inc');
           if(module_exists('transliteration')){
             global $conf;
@@ -107,6 +107,9 @@ class CRM_Utils_String {
             $purged_name = strtolower(transliteration_clean_filename($name));
             $purged_name = trim($purged_name, '_');
           }
+        }
+        else{
+          $purged_name = preg_replace('/\s+|\W+|[-_]+/', $char, trim($name) );
         }
 
         if ( $len ) {
