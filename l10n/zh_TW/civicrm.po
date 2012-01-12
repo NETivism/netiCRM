@@ -34191,7 +34191,7 @@ msgstr "Sr."
 
 #: xml/templates/civicrm_data.tpl
 msgid "Administrator"
-msgstr "管理者"
+msgstr "管理"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Authenticated"
