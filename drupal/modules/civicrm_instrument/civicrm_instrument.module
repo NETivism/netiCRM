@@ -17,9 +17,10 @@ function civicrm_instrument_civicrm_buildForm($form_name, &$form){
         $option = CRM_Core_DAO::executeQuery("SELECT * FROM civicrm_option_value WHERE option_group_id = {$gid} AND is_active = 1");
         while($option->fetch()){
           $checkbox_name = _civicrm_instrument_form_name($option->name);
+          $label = $option->is_reserved ? $option->label." [".ts('Payment Processor')."]*" : $option->label;
           $options[$checkbox_name] = array(
             'default' => $payment_instruments[$checkbox_name] ? 1: 0,
-            'label' => $option->label,
+            'label' => $label,
           );
         }
         drupal_add_js(_civicrm_instrument_js_admin($options, $entity_table), 'inline');
