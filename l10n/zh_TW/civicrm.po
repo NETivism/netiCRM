@@ -10824,27 +10824,27 @@ msgstr "進度導覽列顏色"
 
 #: CRM/Contribute/Form/ContributionPage/Widget.php
 msgid "Additional Text Color"
-msgstr "其他文字顏色"
+msgstr "說明文字顏色"
 
 #: CRM/Contribute/Form/ContributionPage/Widget.php
 msgid "Background Color"
-msgstr "按鈕顏色"
+msgstr "背景顏色"
 
 #: CRM/Contribute/Form/ContributionPage/Widget.php
 msgid "Background Color Top Area"
-msgstr "上方區域背景色"
+msgstr "標題區域底色"
 
 #: CRM/Contribute/Form/ContributionPage/Widget.php
 msgid "Border Color"
-msgstr "邊框顏色"
+msgstr "工具邊框顏色"
 
 #: CRM/Contribute/Form/ContributionPage/Widget.php
 msgid "Button Link Color"
-msgstr "按鈕顏色"
+msgstr "下方按鈕文字色"
 
 #: CRM/Contribute/Form/ContributionPage/Widget.php
 msgid "Button Background Color"
-msgstr "按鈕顏色"
+msgstr "下方按鈕背景色"
 
 #: CRM/Contribute/Form/ContributionPage/Widget.php
 msgid "Homepage Link Color"
