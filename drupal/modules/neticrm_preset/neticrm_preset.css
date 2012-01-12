@@ -1,18 +1,24 @@
 .neticrm-footer {
   color: #CCC;
+  position: relative;
+}
+body.anonymous .neticrm-footer{
+  color: #aaa;
 }
 .neticrm-footer-center {
   text-align: center;
   font-size: 11px;
 }
 .neticrm-footer-left .item-list ul{
-  float: left;
+  position: absolute;
+  left: 0;
   text-align: left;
   list-style-type: none;
   font-size: 11px;
 }
 .neticrm-footer-right .item-list ul{
-  float: right;
+  position: absolute;
+  right: 0;
   text-align: right;
   list-style-type: none;
   font-size: 11px;
@@ -26,7 +32,7 @@
 
 /* Dashboard */
 .neticrm-dashboard {
-  width: 280px;
+  width: 285px;
   float: left;
   min-height: 160px;
   _height: 160px;
@@ -34,6 +40,7 @@
   padding: 5px 10px;
   margin:5px;
   border: 1px solid #DDD;
+  border-radius: 3px;
 }
 .neticrm-dashboard a {
   display: block;

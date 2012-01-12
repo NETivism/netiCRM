@@ -62,6 +62,7 @@ function neticrm_preset_menu_alter(&$items){
   $items['admin/reports/status/sql']['access arguments'] = array('administer neticrm');
 
   // special case for theme
+  $items['admin/build/themes/settings']['access arguments'] = array('administer neticrm');
   /*
   $items['admin/build/themes']['page arguments'] = array('system_theme_settings');
   $items['admin/build/themes/select'] = array(
