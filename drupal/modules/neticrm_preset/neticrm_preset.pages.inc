@@ -33,7 +33,7 @@ function neticrm_preset_home(){
     if($user->uid){
       $output = '<div>&raquo; '.l(t('Back to dashboard'), '<front>', array('query' => 't=reset')).'</div>';
       if(node_access('update', $node->nid)){
-        $edit_link = '<span style="font-size:50%;">('.l(t("Edit"), "node/$node->nid/edit", array('query' => 'destination=<front>')).')</span>';
+        $edit_link = '<span style="font-size:50%;" class="hover-setting">'.l(t("Settings"), "node/$node->nid/edit", array('query' => 'destination=<front>')).'</span>';
       }
     }
     else{
