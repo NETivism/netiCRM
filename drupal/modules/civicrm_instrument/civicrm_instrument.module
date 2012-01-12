@@ -3,7 +3,6 @@
  * Implementation of hook_civicrm_buildForm()
  */
 function civicrm_instrument_civicrm_buildForm($form_name, &$form){
-dpm($form_name);
   switch($form_name){
     // contribution page settings
     case 'CRM_Contribute_Form_ContributionPage_Amount':
