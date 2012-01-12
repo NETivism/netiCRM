@@ -142,6 +142,7 @@ function civicrm_gw_install() {
       'name' => $k,
       'label' => $v['label'],
       'is_active' => 1,
+      'is_reserved' => 1,
     );
     $dao = CRM_Core_DAO::executeQuery("SELECT id, value FROM civicrm_option_value WHERE option_group_id = {$gid} AND name = '$k'");
     $dao->fetch();
@@ -195,3 +196,18 @@ function civicrm_gw_disable() {
 }
 
 
+function civicrm_gw_update_6101(){
+  include_once "civicrm_gw.module";
+
+  civicrm_initialize( );
+  $new_instrument = _civicrm_gw_instrument();
+  $gid = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_option_group WHERE name LIKE 'payment_instrument'");
+
+  foreach($new_instrument as $k => $v){
+    $ids[] = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_option_value WHERE option_group_id = {$gid} AND name = '$k'");
+  }
+  if(count($ids)){
+    CRM_Core_DAO::singleValueQuery("Update civicrm_option_value SET is_reserved = 1 WHERE id IN(".implode(',', $ids).") AND is_reserved = 0");
+  }
+  return array();
+}

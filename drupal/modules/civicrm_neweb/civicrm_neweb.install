@@ -126,7 +126,7 @@ function civicrm_neweb_install() {
     $dao = CRM_Core_DAO::executeQuery("SELECT * FROM civicrm_option_value WHERE option_group_id = $instrument_id AND name = '$k'");
     $dao->fetch();
     if(!$dao->id){
-      $sql = "INSERT INTO civicrm_option_value (option_group_id, label, value, name, grouping, filter, is_default, weight, description, is_optgroup, is_reserved, is_active, component_id, visibility_id) VALUES ($instrument_id, '{$v['label']}', $next, '$k', NULL, $ppt_id, NULL, $next, '{$v['description']}', 0, 0, 1, NULL, NULL)";
+      $sql = "INSERT INTO civicrm_option_value (option_group_id, label, value, name, grouping, filter, is_default, weight, description, is_optgroup, is_reserved, is_active, component_id, visibility_id) VALUES ($instrument_id, '{$v['label']}', $next, '$k', NULL, $ppt_id, NULL, $next, '{$v['description']}', 0, 1, 1, NULL, NULL)";
       CRM_Core_DAO::executeQuery($sql);
     }
   }
@@ -212,4 +212,19 @@ function civicrm_neweb_update_6106(){
   $ret = array();
 
   return $ret;
+}
+
+function civicrm_neweb_update_6107(){
+  civicrm_initialize( );
+  $new_instrument = _civicrm_neweb_instrument();
+  $gid = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_option_group WHERE name LIKE 'payment_instrument'");
+
+  foreach($new_instrument as $k => $v){
+    $ids[] = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_option_value WHERE option_group_id = {$gid} AND name = '$k'");
+  }
+  if(count($ids)){
+    CRM_Core_DAO::singleValueQuery("Update civicrm_option_value SET is_reserved = 1 WHERE id IN(".implode(',', $ids).") AND is_reserved = 0");
+  }
+
+  return array();
 }
