@@ -65,3 +65,21 @@ msgstr "啟用流量統計"
 
 msgid "Enable Sharethis"
 msgstr "啟用社群網路分享"
+
+msgid "Used !percent%"
+msgstr "已使用 !percent%"
+
+msgid "Used !current of !max contacts"
+msgstr "已使用!current人，總共!max人"
+
+msgid "!plan plan (since !start_date)"
+msgstr "!plan 方案 (!start_date 開始)"
+
+msgid "Expiration date at !expire_date"
+msgstr "到期日 !expire_date"
+
+msgid "No expiration date"
+msgstr "無限期"
+
+msgid "The quota of contacts is %percent to full."
+msgstr "聯絡人的限額已經使用了 %percent"
