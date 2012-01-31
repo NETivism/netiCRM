@@ -5934,7 +5934,7 @@ msgstr "Email或姓名"
 
 #: CRM/Activity/Form/Search.php msgctxt "menu"
 msgid "Find Activities"
-msgstr "尋找測試任務"
+msgstr "尋找任務"
 
 #: CRM/Activity/Form/Task/Batch.php
 msgid "Batch Update for Activities"
