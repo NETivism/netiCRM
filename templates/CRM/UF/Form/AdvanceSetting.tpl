@@ -34,7 +34,7 @@
 <div class="crm-accordion-wrapper crm-accordion_title-accordion crm-accordion-closed">
  <div class="crm-accordion-header">
     <div class="icon crm-accordion-pointer"></div> 
-    Advanced Settings 
+    {ts}Advanced options{/ts}
   </div><!-- /.crm-accordion-header -->
   <div class="crm-accordion-body">
   <div class="crm-block crm-form-block crm-uf-advancesetting-form-block">
