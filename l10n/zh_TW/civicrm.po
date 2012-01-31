@@ -20287,7 +20287,7 @@ msgstr "有效列"
 #: templates/CRM/Import/Form/Preview.tpl
 #: templates/CRM/Member/Import/Form/Preview.tpl
 msgid "Total rows to be imported."
-msgstr "所有列已被匯入。"
+msgstr "將匯入的總列數。"
 
 #: templates/CRM/Activity/Import/Form/Summary.tpl
 #: templates/CRM/Import/Form/Summary.tpl
@@ -29586,7 +29586,7 @@ msgstr "CiviCRM 偵測到此資料檔案有%筆衝突 Email 記錄。如果您�
 
 #: templates/CRM/Import/Form/Preview.tpl templates/CRM/Import/Form/Summary.tpl
 msgid "Total number of rows in the imported data."
-msgstr "匯入資料總列數。"
+msgstr "上傳資料中的總列數。"
 
 #: templates/CRM/Import/Form/Preview.tpl templates/CRM/Import/Form/Summary.tpl
 msgid "Rows with invalid data in one or more fields (for example, invalid email address formatting). These rows will be skipped (not imported)."
