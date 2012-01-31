@@ -414,9 +414,11 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task
         }
 
         // add attachments part
+        /*
         CRM_Core_BAO_File::buildAttachment( $this,
                                             'civicrm_activity',
                                             $this->_activityId );
+        */
 
         // figure out the file name for activity type, if any
         if ( $this->_activityTypeId   &&
