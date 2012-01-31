@@ -1260,7 +1260,7 @@ GROUP BY cc.id';
         }
         $tplParams['activity'] = $activityInfo;
         foreach ($tplParams['activity']['fields'] as $k => $val) {
-            if ( CRM_Utils_Array::value('label', $val) == ts('Subject') ) {
+            if ( CRM_Utils_Array::value('label', $val) == 'Subject' ) {
                 $activitySubject = $val['value'];
                 break;
             }
@@ -1301,6 +1301,9 @@ GROUP BY cc.id';
             }
             
             $displayName = $info['sort_name'];
+            if(!$activitySubject){
+              $tplParams['activitySubject'] = ts('Activity').": ".ts("Assigned to") ." - ".$displayName;
+            }
 
             require_once 'CRM/Core/BAO/MessageTemplates.php';
             list ($result[$info['contact_id']], $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate(
@@ -1316,7 +1319,7 @@ GROUP BY cc.id';
                 )
             );
 
-            $activityParams['subject']           = $activitySubject.' - copy sent to '.$displayName;
+            $activityParams['subject']           = $activitySubject.' ('.ts('Cc Receipt').')';
             $activityParams['details']           = $message;
             $activityParams['target_contact_id'] = $info['contact_id'];
             
