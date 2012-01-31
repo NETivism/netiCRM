@@ -437,7 +437,7 @@ msgstr "活動"
 #: templates/CRM/Activity/Form/Task/Print.tpl
 #: templates/CRM/Case/Form/Activity.tpl
 msgid "Assigned To"
-msgstr "指派給"
+msgstr "分派給"
 
 #: CRM/ACL/Form/EntityRole.php CRM/Contact/Form/GroupContact.php
 #: CRM/Contact/Form/Search/Custom/PostalMailing.php
@@ -684,7 +684,7 @@ msgstr "任務類型編號"
 #: templates/CRM/Member/Page/MembershipType.tpl
 #: templates/CRM/Member/Page/Tab.tpl
 msgid "Duration"
-msgstr "持續期間"
+msgstr "時間長短"
 
 #: CRM/Activity/DAO/Activity.php CRM/Activity/Form/Activity.php
 #: CRM/Case/Form/Activity/OpenCase.php
@@ -1113,7 +1113,7 @@ msgstr "傳送Email給聯絡人"
 #: templates/CRM/Activity/Form/ActivityView.tpl
 #: templates/CRM/Case/Form/Activity.tpl
 msgid "With Contact"
-msgstr "與聯絡人"
+msgstr "目標聯絡人"
 
 #: CRM/Activity/Form/Task/PickOption.php
 #: CRM/Activity/Form/Task/PickProfile.php
@@ -1468,7 +1468,7 @@ msgstr "和"
 
 #: CRM/Activity/Selector/Activity.php CRM/Activity/Selector/Search.php
 msgid "Assigned"
-msgstr "被指派人"
+msgstr "分派給"
 
 #: CRM/Activity/Selector/Activity.php CRM/Activity/Selector/Search.php
 #: CRM/Case/Selector/Search.php CRM/Contact/Selector.php
@@ -2440,7 +2440,7 @@ msgstr "請選擇聯絡人或創建新的聯絡人資料"
 #: CRM/Case/Form/ActivityToCase.php CRM/Case/XMLProcessor/Report.php
 #: templates/CRM/Activity/Form/Activity.tpl
 msgid "With Contact(s)"
-msgstr "與聯絡人"
+msgstr "目標聯絡人"
 
 #: CRM/Case/Form/CaseView.php CRM/Case/Selector/Search.php
 #: templates/CRM/Case/Page/DashboardSelector.tpl
@@ -3819,12 +3819,12 @@ msgstr "固定開始日期"
 #: CRM/Contribute/DAO/Product.php CRM/Contribute/Form/ManagePremiums.php
 #: CRM/Member/DAO/MembershipType.php
 msgid "Duration Unit"
-msgstr "期間單位"
+msgstr "時間長短單位"
 
 #: CRM/Contribute/DAO/Product.php CRM/Member/DAO/MembershipType.php
 #: CRM/Member/Form/MembershipType.php
 msgid "Duration Interval"
-msgstr "期間間隔時間"
+msgstr "時間間隔"
 
 #: CRM/Contribute/DAO/Product.php CRM/Core/SelectValues.php
 #: CRM/Member/DAO/MembershipType.php
@@ -5798,7 +5798,7 @@ msgstr "任務排程日期"
 
 #: CRM/Activity/BAO/Activity.php
 msgid "Activity Duration"
-msgstr "任務期間"
+msgstr "任務時間長短"
 
 #: CRM/Activity/BAO/Activity.php
 msgid "Activity Details"
@@ -5826,7 +5826,7 @@ msgstr "任務類型%1 %2"
 
 #: CRM/Activity/BAO/Query.php
 msgid "Assigned to"
-msgstr "指派給"
+msgstr "分派給"
 
 #: CRM/Activity/BAO/Query.php
 msgid "Find Test Activities?"
@@ -5958,7 +5958,7 @@ msgstr "總選取報名：%1"
 
 #: CRM/Activity/Form/Task/PickOption.php
 msgid "Assigned to Contact"
-msgstr "被指派者的聯絡人編號"
+msgstr "分派給聯絡人"
 
 #: CRM/Activity/Form/Task/PickProfile.php
 msgid "Batch Profile Update for Activities"
@@ -7876,7 +7876,7 @@ msgstr "任務類型%1 %2"
 
 #: CRM/Case/BAO/Query.php
 msgid "Activity Duration %1 %2"
-msgstr "任務區間 %1 %2"
+msgstr "任務時間 %1 %2"
 
 #: CRM/Case/BAO/Query.php
 msgid "Activity Medium %1 %2"
@@ -8076,7 +8076,7 @@ msgstr "- 選擇適當個案類別 -"
 
 #: CRM/Case/Form/CaseView.php
 msgid "Assign to another Client"
-msgstr "指派個案角色"
+msgstr "分派到其他客戶"
 
 #: CRM/Case/Form/CaseView.php
 msgid " - any status - "
@@ -8162,7 +8162,7 @@ msgstr "回復個案"
 
 #: CRM/Case/Selector/Search.php templates/CRM/Case/Form/CaseView.tpl
 msgid "Assign to Another Client"
-msgstr "指派給另一個客戶"
+msgstr "分派給另一個客戶"
 
 #: CRM/Case/Selector/Search.php templates/CRM/Case/Form/Task/Print.tpl
 #: templates/CRM/Case/Page/DashboardSelector.tpl
@@ -9050,7 +9050,7 @@ msgstr ""
 #: CRM/Contact/Form/Search/Custom/ActivitySearch.php
 #: templates/CRM/Contact/Form/Search/Custom/FullText.tpl
 msgid "Assignee"
-msgstr "被指派人"
+msgstr "受任人"
 
 #: CRM/Contact/Form/Search/Custom/ActivitySearch.php
 msgid "Activity Date From"
@@ -18120,27 +18120,27 @@ msgstr "導覽選單 ID"
 
 #: CRM/Report/Form/Activity.php
 msgid "Source Contact Name"
-msgstr "來源聯絡人名稱"
+msgstr "建立者"
 
 #: CRM/Report/Form/Activity.php
 msgid "Assignee Contact Name"
-msgstr "指派者聯絡人名稱"
+msgstr "受任者"
 
 #: CRM/Report/Form/Activity.php
 msgid "Target Contact Name"
-msgstr "目標的聯絡人名稱"
+msgstr "目標聯絡人"
 
 #: CRM/Report/Form/Activity.php
 msgid "Source Contact Email"
-msgstr "初始聯絡人 Email"
+msgstr "建立者 Email"
 
 #: CRM/Report/Form/Activity.php
 msgid "Assignee Contact Email"
-msgstr "指派者聯絡人 Email"
+msgstr "受任者 Email"
 
 #: CRM/Report/Form/Activity.php
 msgid "Target Contact Email"
-msgstr "目標聯絡人 Email"
+msgstr "目標 Email"
 
 #: CRM/Report/Form/Activity.php
 msgid "Survey Result"
@@ -18214,7 +18214,7 @@ msgstr "查看這個區域的重複。"
 
 #: CRM/Report/Form/Case/Summary.php
 msgid "Duration (Days)"
-msgstr "期間（天數）"
+msgstr "時間長短（天數）"
 
 #: CRM/Report/Form/Case/Summary.php
 msgid "Deleted?"
@@ -23511,15 +23511,15 @@ msgstr "客戶名稱"
 
 #: templates/CRM/Case/Form/Activity.tpl
 msgid "With other contact(s)"
-msgstr "與聯絡人"
+msgstr "其他目標聯絡人"
 
 #: templates/CRM/Case/Form/Activity.tpl
 msgid "With client"
-msgstr "與聯絡人"
+msgstr "目標聯絡人"
 
 #: templates/CRM/Case/Form/Activity.tpl
 msgid "With client(s)"
-msgstr "與聯絡人"
+msgstr "目標聯絡人"
 
 #: templates/CRM/Case/Form/Activity.tpl
 msgid "You can optionally assign this activity to someone."
@@ -33214,7 +33214,7 @@ msgstr "新增"
 
 #: templates/CRM/Activity/Form/Activity.tpl
 msgid "Assigned To "
-msgstr "指派給"
+msgstr "分派給"
 
 #: templates/CRM/Activity/Form/Activity.tpl
 msgid "A problem occurred during case selection"
@@ -38017,11 +38017,11 @@ msgstr "任務所安排的日期及時間。"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "Duration (min)"
-msgstr "持續時間（分鐘）"
+msgstr "時間長短（分鐘）"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "The Activity's Duration in Minutes"
-msgstr "任務的進行時間"
+msgstr "任務的時間長短，以分鐘計"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "Activity's Location in a text string."
