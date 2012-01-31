@@ -2302,7 +2302,7 @@ msgstr "停用價格"
 
 #: CRM/Campaign/Page/DashBoard.php CRM/Campaign/Page/Survey.php
 msgid "Enable Survey"
-msgstr "啟用價格"
+msgstr "啟用調查"
 
 #: CRM/Campaign/Page/Petition/Confirm.php CRM/Mailing/Page/Common.php
 #: CRM/Mailing/Page/Confirm.php
@@ -31222,7 +31222,7 @@ msgstr "項目"
 
 #: templates/CRM/Price/Page/LineItem.tpl
 msgid "Total Price"
-msgstr "啟用價格"
+msgstr "價格總計"
 
 #: templates/CRM/Price/Page/LineItem.tpl
 msgid "Total Participants"
