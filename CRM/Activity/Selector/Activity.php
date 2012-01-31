@@ -424,7 +424,7 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
                                                 'sort'      => 'source_contact_name',
                                                 'direction' => CRM_Utils_Sort::DONTCARE,
                                                 ),
-                                          array('name'      => ts('With') ),
+                                          array('name'      => ts('With Contact') ),
                                           array('name'      => ts('Assigned') ),
                                           array(
                                                 'name'      => ts('Date'),
