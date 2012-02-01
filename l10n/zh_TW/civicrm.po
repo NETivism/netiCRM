@@ -2861,7 +2861,7 @@ msgstr "確定儲存聯絡人"
 
 #: CRM/Contact/Form/Contact.php CRM/Contact/Form/RelatedContact.php
 msgid "Your %1 contact record has been saved."
-msgstr "您的 %1 筆聯絡人記錄已儲存。"
+msgstr "您的 %1 聯絡人記錄已儲存。"
 
 #: CRM/Contact/Form/Contact.php CRM/Profile/Form.php
 msgid "One matching contact was found. "
