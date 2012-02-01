@@ -14845,7 +14845,7 @@ msgstr "批准訊息"
 
 #: CRM/Event/Form/ManageEvent/Registration.php
 msgid "Pending participant expiration (hours)"
-msgstr "報名確認期限（小時）"
+msgstr "報名後未繳費取消資格的時間（小時）"
 
 #: CRM/Event/Form/ManageEvent/Registration.php
 msgid "Please enter the number of hours (as an integer)."
