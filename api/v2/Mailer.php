@@ -249,7 +249,7 @@ function civicrm_mailer_event_confirm($params)
  */
 function civicrm_mailer_event_reply($params)
 {
-    $errors = _civicrm_mailer_check_params( $params, array('job_id', 'event_queue_id', 'hash', 'bodyTxt', 'replyTo') ) ;
+    $errors = _civicrm_mailer_check_params( $params, array('job_id', 'event_queue_id', 'hash', 'replyTo') ) ;
   
     if ( !empty( $errors ) ) {
         return $errors;
