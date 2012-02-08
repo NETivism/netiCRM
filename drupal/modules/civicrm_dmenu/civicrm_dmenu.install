@@ -19,6 +19,7 @@ function civicrm_dmenu_uninstall(){
  */
 function civicrm_dmenu_update_6001(){
   // will run in every update.php
+  /*
   if(variable_get('civicrm_dmenu_installed', 0)){
     // check if exists menu links need update.
     module_load_include('inc', 'civicrm_dmenu', 'update_1');
@@ -30,11 +31,8 @@ function civicrm_dmenu_update_6001(){
   }
   $ret[] = _civicrm_dmenu_update_message(TRUE, $log);
   return $ret;
+  */
 }
-
-/**
- * Implementation of hook_update_N()
- */
 function civicrm_dmenu_update_6002(){
   // will run in every update.php
   if(variable_get('civicrm_dmenu_installed', 0)){
