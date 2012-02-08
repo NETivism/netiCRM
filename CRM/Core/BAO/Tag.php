@@ -229,11 +229,13 @@ class CRM_Core_BAO_Tag extends CRM_Core_DAO_Tag
             // As you find the children, append them to the end of the new set
             // of roots (maintain alphabetical ordering). Also remove the node
             // from the set of unplaced nodes.
-            foreach ($current_rows as $key=>$row) {
-                if ( $row['parent_id']==$root['id'] ) {
-                    $new_roots[] = array('id'=>$row['id'],'prefix'=>$tags[$root['id']][0].'&nbsp;&nbsp;','name'=>$row['name']);
-                    unset($rows[$key]);
-                }
+            if(is_array($current_rows)){
+              foreach ($current_rows as $key=>$row) {
+                  if ( $row['parent_id']==$root['id'] ) {
+                      $new_roots[] = array('id'=>$row['id'],'prefix'=>$tags[$root['id']][0].'&nbsp;&nbsp;','name'=>$row['name']);
+                      unset($rows[$key]);
+                  }
+              }
             }
 
             //As a group, insert the new roots into the beginning of the roots
