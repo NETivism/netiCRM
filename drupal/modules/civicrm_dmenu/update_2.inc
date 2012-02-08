@@ -1055,3 +1055,37 @@ $menu_links['footer'] =array (
   '#description' => '網站的底部選單，通常擺放原始網站的連結，授權條款，著作權、使用者協議等等。',
 );
 
+$menu_links['search'] = array (
+  '#title' => '搜尋選單',
+  '#description' => '全站左側的搜尋選單。',
+  0 => 
+  array (
+    'path' => 'civicrm/contact/search/builder',
+    'query' => 'reset=1',
+    'title' => '自定搜尋',
+    'menu' => 'menu-search',
+    'weight' => '4',
+    'module' => 'menu',
+    'hidden' => '0',
+  ),
+  1 => 
+  array (
+    'path' => 'civicrm/contact/search/custom',
+    'query' => 'csid=15&reset=1',
+    'title' => '全文搜尋',
+    'menu' => 'menu-search',
+    'weight' => '3',
+    'module' => 'menu',
+    'hidden' => '0',
+  ),
+  2 => 
+  array (
+    'path' => 'civicrm/contact/search/advanced',
+    'query' => 'reset=1',
+    'title' => '進階搜尋',
+    'menu' => 'menu-search',
+    'weight' => '2',
+    'module' => 'menu',
+    'hidden' => '0',
+  ),
+);
