@@ -154,10 +154,18 @@ class CRM_Core_Payment_NewebIPN extends CRM_Core_Payment_BaseIPN {
         CRM_Core_Error::debug_log_message( "Done the recurring object save." );
         CRM_Core_DAO::executeQuery("INSERT INTO civicrm_contribution_neweb_recur (recur_id,order_num,cycle) VALUES ($recur->id, $order_num, 0)");
 
-        //send recurring Notification email for user
+        //recurring Notification email for user
         require_once 'CRM/Contribute/BAO/ContributionPage.php';
         CRM_Core_Error::debug_log_message( "Start to send recurring notify" );
         //CRM_Contribute_BAO_ContributionPage::recurringNotify( 'START', $ids['contact'], $ids['contributionPage'], $recur);
+        
+        // now, complete the transaction
+        $contribution =& $objects['contribution'];
+        $contribution->receive_date = date('YmdHis');
+        $input['trxn_id'] = $input['OrderNumber'];
+        $note .= ts('Completed')."\n";
+        $this->completeTransaction( $input, $ids, $objects, $transaction);
+        $this->addNote($note, $contribution);
       }
     }
 
