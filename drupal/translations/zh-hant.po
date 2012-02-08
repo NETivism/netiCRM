@@ -437,7 +437,7 @@ msgstr "活動"
 #: templates/CRM/Activity/Form/Task/Print.tpl
 #: templates/CRM/Case/Form/Activity.tpl
 msgid "Assigned To"
-msgstr "指派給"
+msgstr "分派給"
 
 #: CRM/ACL/Form/EntityRole.php CRM/Contact/Form/GroupContact.php
 #: CRM/Contact/Form/Search/Custom/PostalMailing.php
@@ -684,7 +684,7 @@ msgstr "任務類型編號"
 #: templates/CRM/Member/Page/MembershipType.tpl
 #: templates/CRM/Member/Page/Tab.tpl
 msgid "Duration"
-msgstr "持續期間"
+msgstr "時間長短"
 
 #: CRM/Activity/DAO/Activity.php CRM/Activity/Form/Activity.php
 #: CRM/Case/Form/Activity/OpenCase.php
@@ -1113,7 +1113,7 @@ msgstr "傳送Email給聯絡人"
 #: templates/CRM/Activity/Form/ActivityView.tpl
 #: templates/CRM/Case/Form/Activity.tpl
 msgid "With Contact"
-msgstr "與聯絡人"
+msgstr "目標聯絡人"
 
 #: CRM/Activity/Form/Task/PickOption.php
 #: CRM/Activity/Form/Task/PickProfile.php
@@ -1468,7 +1468,7 @@ msgstr "和"
 
 #: CRM/Activity/Selector/Activity.php CRM/Activity/Selector/Search.php
 msgid "Assigned"
-msgstr "被指派人"
+msgstr "分派給"
 
 #: CRM/Activity/Selector/Activity.php CRM/Activity/Selector/Search.php
 #: CRM/Case/Selector/Search.php CRM/Contact/Selector.php
@@ -1567,7 +1567,7 @@ msgstr "密碼"
 #: templates/CRM/Member/Form/Task/SearchTaskHookSample.tpl
 #: templates/CRM/Member/Page/Tab.tpl
 msgid "Source"
-msgstr "匯入資料來源"
+msgstr "資料來源"
 
 #: CRM/Admin/Form/MessageTemplates.php CRM/Mailing/BAO/Mailing.php
 msgid "Insert Tokens"
@@ -1660,7 +1660,7 @@ msgstr "顯示名稱"
 #: CRM/Admin/Form/Options.php CRM/Admin/Form/OptionValue.php
 #: CRM/Report/Form/Mailing/Opened.php CRM/Report/Form/Mailing/Summary.php
 msgid "Opened"
-msgstr "OpenID"
+msgstr "開啟"
 
 #: CRM/Admin/Form/Options.php CRM/Admin/Form/OptionValue.php
 msgid "Closed"
@@ -2302,7 +2302,7 @@ msgstr "停用價格"
 
 #: CRM/Campaign/Page/DashBoard.php CRM/Campaign/Page/Survey.php
 msgid "Enable Survey"
-msgstr "啟用價格"
+msgstr "啟用調查"
 
 #: CRM/Campaign/Page/Petition/Confirm.php CRM/Mailing/Page/Common.php
 #: CRM/Mailing/Page/Confirm.php
@@ -2431,10 +2431,6 @@ msgstr "個案開始日期"
 msgid "Case Id not found."
 msgstr "找不到個案編號"
 
-#: CRM/Case/Form/Activity/OpenCase.php CRM/Case/Form/Activity.php
-msgid "Medium"
-msgstr "溝通媒介"
-
 #: CRM/Case/Form/Activity/OpenCase.php CRM/Contribute/Form/Contribution.php
 #: CRM/Event/Form/Participant.php CRM/Grant/Form/Grant.php
 #: CRM/Member/Form/Membership.php CRM/Pledge/Form/Pledge.php
@@ -2444,7 +2440,7 @@ msgstr "請選擇聯絡人或創建新的聯絡人資料"
 #: CRM/Case/Form/ActivityToCase.php CRM/Case/XMLProcessor/Report.php
 #: templates/CRM/Activity/Form/Activity.tpl
 msgid "With Contact(s)"
-msgstr "與聯絡人"
+msgstr "目標聯絡人"
 
 #: CRM/Case/Form/CaseView.php CRM/Case/Selector/Search.php
 #: templates/CRM/Case/Page/DashboardSelector.tpl
@@ -3823,12 +3819,12 @@ msgstr "固定開始日期"
 #: CRM/Contribute/DAO/Product.php CRM/Contribute/Form/ManagePremiums.php
 #: CRM/Member/DAO/MembershipType.php
 msgid "Duration Unit"
-msgstr "期間單位"
+msgstr "時間長短單位"
 
 #: CRM/Contribute/DAO/Product.php CRM/Member/DAO/MembershipType.php
 #: CRM/Member/Form/MembershipType.php
 msgid "Duration Interval"
-msgstr "期間間隔時間"
+msgstr "時間間隔"
 
 #: CRM/Contribute/DAO/Product.php CRM/Core/SelectValues.php
 #: CRM/Member/DAO/MembershipType.php
@@ -5802,7 +5798,7 @@ msgstr "任務排程日期"
 
 #: CRM/Activity/BAO/Activity.php
 msgid "Activity Duration"
-msgstr "任務期間"
+msgstr "任務時間長短"
 
 #: CRM/Activity/BAO/Activity.php
 msgid "Activity Details"
@@ -5830,7 +5826,7 @@ msgstr "任務類型%1 %2"
 
 #: CRM/Activity/BAO/Query.php
 msgid "Assigned to"
-msgstr "指派給"
+msgstr "分派給"
 
 #: CRM/Activity/BAO/Query.php
 msgid "Find Test Activities?"
@@ -5962,7 +5958,7 @@ msgstr "總選取報名：%1"
 
 #: CRM/Activity/Form/Task/PickOption.php
 msgid "Assigned to Contact"
-msgstr "被指派者的聯絡人編號"
+msgstr "分派給聯絡人"
 
 #: CRM/Activity/Form/Task/PickProfile.php
 msgid "Batch Profile Update for Activities"
@@ -6720,7 +6716,7 @@ msgstr "設定 - 雜項"
 
 #: CRM/Admin/Form/Setting/Miscellaneous.php
 msgid "Contact Trash & Undelete"
-msgstr "刪除了聯絡人"
+msgstr "聯絡人資源回收桶 / 恢復"
 
 #: CRM/Admin/Form/Setting/Miscellaneous.php
 msgid "Logging"
@@ -7433,7 +7429,7 @@ msgstr "個人募款頁"
 
 #: CRM/Campaign/DAO/Campaign.php
 msgid "Campaign Description"
-msgstr "競選捐款"
+msgstr "募款描述"
 
 #: CRM/Campaign/DAO/Campaign.php
 msgid "Campaign Start Date"
@@ -7880,7 +7876,7 @@ msgstr "任務類型%1 %2"
 
 #: CRM/Case/BAO/Query.php
 msgid "Activity Duration %1 %2"
-msgstr "任務區間 %1 %2"
+msgstr "任務時間 %1 %2"
 
 #: CRM/Case/BAO/Query.php
 msgid "Activity Medium %1 %2"
@@ -8080,7 +8076,7 @@ msgstr "- 選擇適當個案類別 -"
 
 #: CRM/Case/Form/CaseView.php
 msgid "Assign to another Client"
-msgstr "指派個案角色"
+msgstr "分派到其他客戶"
 
 #: CRM/Case/Form/CaseView.php
 msgid " - any status - "
@@ -8166,7 +8162,7 @@ msgstr "回復個案"
 
 #: CRM/Case/Selector/Search.php templates/CRM/Case/Form/CaseView.tpl
 msgid "Assign to Another Client"
-msgstr "指派給另一個客戶"
+msgstr "分派給另一個客戶"
 
 #: CRM/Case/Selector/Search.php templates/CRM/Case/Form/Task/Print.tpl
 #: templates/CRM/Case/Page/DashboardSelector.tpl
@@ -8409,7 +8405,7 @@ msgstr "不要打電話"
 
 #: CRM/Contact/DAO/Contact.php
 msgid "Do Not Mail"
-msgstr "不要寄Email"
+msgstr "不要寄送郵政信件"
 
 #: CRM/Contact/DAO/Contact.php
 msgid "Do Not Sms"
@@ -8421,7 +8417,7 @@ msgstr "不要交易"
 
 #: CRM/Contact/DAO/Contact.php templates/CRM/Contact/Page/View/Summary.tpl
 msgid "No Bulk Emails (User Opt Out)"
-msgstr "不要EDM（使用者退訂）"
+msgstr "不想收到Email（使用者退出）"
 
 #: CRM/Contact/DAO/Contact.php
 msgid "Sort Name"
@@ -8453,7 +8449,7 @@ msgstr "Sic Code"
 
 #: CRM/Contact/DAO/Contact.php
 msgid "Unique ID (OpenID)"
-msgstr "OpenID"
+msgstr "特別ID或OpenID"
 
 #: CRM/Contact/DAO/Contact.php
 msgid "Current Employer ID"
@@ -8711,7 +8707,7 @@ msgstr "Email 格式"
 
 #: CRM/Contact/Form/Edit/CommunicationPreferences.php
 msgid "NO BULK EMAILS (User Opt Out)"
-msgstr "不接受大量Email（使用者取消訂閱）"
+msgstr "不想收到Email（使用者退出）"
 
 #: CRM/Contact/Form/Edit/Demographics.php
 #: templates/CRM/Contact/Page/View/Demographics.tpl
@@ -9054,7 +9050,7 @@ msgstr ""
 #: CRM/Contact/Form/Search/Custom/ActivitySearch.php
 #: templates/CRM/Contact/Form/Search/Custom/FullText.tpl
 msgid "Assignee"
-msgstr "被指派人"
+msgstr "受任人"
 
 #: CRM/Contact/Form/Search/Custom/ActivitySearch.php
 msgid "Activity Date From"
@@ -9978,15 +9974,15 @@ msgstr "顯示在名單？"
 
 #: CRM/Contribute/BAO/Widget.php
 msgid "Campaign is ongoing"
-msgstr "競選捐款"
+msgstr "募款進行中"
 
 #: CRM/Contribute/BAO/Widget.php
 msgid "Campaign starts on %1"
-msgstr "競選捐款"
+msgstr "募款開始於 %1"
 
 #: CRM/Contribute/BAO/Widget.php
 msgid "Campaign ends on %1"
-msgstr "活動終止日期"
+msgstr "募款中止於 %1"
 
 #: CRM/Contribute/BAO/Widget.php
 msgid "Raised %1 of %2"
@@ -10828,27 +10824,27 @@ msgstr "進度導覽列顏色"
 
 #: CRM/Contribute/Form/ContributionPage/Widget.php
 msgid "Additional Text Color"
-msgstr "其他文字顏色"
+msgstr "說明文字顏色"
 
 #: CRM/Contribute/Form/ContributionPage/Widget.php
 msgid "Background Color"
-msgstr "按鈕顏色"
+msgstr "背景顏色"
 
 #: CRM/Contribute/Form/ContributionPage/Widget.php
 msgid "Background Color Top Area"
-msgstr "上方區域背景色"
+msgstr "標題區域底色"
 
 #: CRM/Contribute/Form/ContributionPage/Widget.php
 msgid "Border Color"
-msgstr "邊框顏色"
+msgstr "工具邊框顏色"
 
 #: CRM/Contribute/Form/ContributionPage/Widget.php
 msgid "Button Link Color"
-msgstr "按鈕顏色"
+msgstr "下方按鈕文字色"
 
 #: CRM/Contribute/Form/ContributionPage/Widget.php
 msgid "Button Background Color"
-msgstr "按鈕顏色"
+msgstr "下方按鈕背景色"
 
 #: CRM/Contribute/Form/ContributionPage/Widget.php
 msgid "Homepage Link Color"
@@ -13800,11 +13796,11 @@ msgstr "經由網頁重新訂閱電子報"
 
 #: CRM/Core/SelectValues.php
 msgid "Opt out via email"
-msgstr "由e-mail取消訂閱全部訊息"
+msgstr "由e-mail退訂全部訊息"
 
 #: CRM/Core/SelectValues.php
 msgid "Opt out via web page"
-msgstr "經由網頁選擇退出，取消訂閱全部電子報"
+msgstr "經由網頁退訂全部訊息"
 
 #: CRM/Core/SelectValues.php
 msgid "Forward this email (link)"
@@ -18124,27 +18120,27 @@ msgstr "導覽選單 ID"
 
 #: CRM/Report/Form/Activity.php
 msgid "Source Contact Name"
-msgstr "來源聯絡人名稱"
+msgstr "建立者"
 
 #: CRM/Report/Form/Activity.php
 msgid "Assignee Contact Name"
-msgstr "指派者聯絡人名稱"
+msgstr "受任者"
 
 #: CRM/Report/Form/Activity.php
 msgid "Target Contact Name"
-msgstr "目標的聯絡人名稱"
+msgstr "目標聯絡人"
 
 #: CRM/Report/Form/Activity.php
 msgid "Source Contact Email"
-msgstr "初始聯絡人 Email"
+msgstr "建立者 Email"
 
 #: CRM/Report/Form/Activity.php
 msgid "Assignee Contact Email"
-msgstr "指派者聯絡人 Email"
+msgstr "受任者 Email"
 
 #: CRM/Report/Form/Activity.php
 msgid "Target Contact Email"
-msgstr "目標聯絡人 Email"
+msgstr "目標 Email"
 
 #: CRM/Report/Form/Activity.php
 msgid "Survey Result"
@@ -18218,7 +18214,7 @@ msgstr "查看這個區域的重複。"
 
 #: CRM/Report/Form/Case/Summary.php
 msgid "Duration (Days)"
-msgstr "期間（天數）"
+msgstr "時間長短（天數）"
 
 #: CRM/Report/Form/Case/Summary.php
 msgid "Deleted?"
@@ -19716,11 +19712,11 @@ msgstr "網域地址 - 顯示您組織的郵件地址。"
 
 #: CRM/Utils/Token.php
 msgid "'Opt out via email' - displays an email address for recipients to opt out of receiving emails from your organization."
-msgstr "透過 Email 取消訂閱 - 顯示一個 Email，讓訂戶可以取消訂閱這份電子報。"
+msgstr "透過 Email 退訂全部訊息 - 顯示一個 Email，讓訂戶可以回饋他不想再收到本系統的任何訊息。"
 
 #: CRM/Utils/Token.php
 msgid "'Opt out via web page' - creates a link for recipients to click if they want to opt out of receiving emails from your organization. Alternatively, you can include the 'Opt out via email' token."
-msgstr "透過網頁取消訂閱 - 為收件者建立一個連結，讓他們在不想收到您的組織寄來的 Email 時，可以取消訂閱。你也可使用「透過 Email 取消訂閱」這個替代符號。"
+msgstr "透過網頁退訂全部訊息 - 為收件者建立一個連結，讓他們在不想收到任何來自您的組織的 Email 時，可以選擇退出。你也可使用「透過 Email 取消訂閱」這個替代符號。"
 
 #: CRM/Utils/Weight.php
 msgid "Move to top"
@@ -20291,7 +20287,7 @@ msgstr "有效列"
 #: templates/CRM/Import/Form/Preview.tpl
 #: templates/CRM/Member/Import/Form/Preview.tpl
 msgid "Total rows to be imported."
-msgstr "所有列已被匯入。"
+msgstr "將匯入的總列數。"
 
 #: templates/CRM/Activity/Import/Form/Summary.tpl
 #: templates/CRM/Import/Form/Summary.tpl
@@ -21427,7 +21423,7 @@ msgstr "快取總覽頁面資料的分鐘數。"
 
 #: templates/CRM/Admin/Form/Setting/Miscellaneous.tpl
 msgid "If enabled, deleted contacts will be moved to trash (instead of being destroyed). Users with the proper permission are able to search for the deleted contacts and restore them (or delete permanently)."
-msgstr ""
+msgstr "如果開啟，將聯絡人刪除時，會移動至資源回收桶，而不會直接刪除聯絡人。擁有權限的使用者可以透過進階搜尋來尋找被刪除的聯絡人，進行回復（或進行永久刪除）。"
 
 #: templates/CRM/Admin/Form/Setting/Miscellaneous.tpl
 msgid "If enabled, all actions performed on non-cache tables will be logged (in the respective log_* tables)."
@@ -21447,11 +21443,11 @@ msgstr "當允許，關於您CiviCRM安裝統計會被匿名地報表到CiviCRM�
 
 #: templates/CRM/Admin/Form/Setting/Miscellaneous.tpl
 msgid "Maximum number of files (documents, images, etc.) which can attached to emails or activities."
-msgstr "可以附到Email或活動的最高檔案(文件、圖像等)數目"
+msgstr "可以附加到任務、個人募款頁的檔案數量。"
 
 #: templates/CRM/Admin/Form/Setting/Miscellaneous.tpl
 msgid "Maximum Size of file (documents, images, etc.) which can attached to emails or activities.<br />Note: php.ini should support this file size."
-msgstr "可以附到Email或活動的最高檔案(文件、圖像等)數目"
+msgstr "可以附加到任務、個人募款頁等檔案大小。"
 
 #: templates/CRM/Admin/Form/Setting/Miscellaneous.tpl
 msgid "reCAPTCHA Keys"
@@ -23515,15 +23511,15 @@ msgstr "客戶名稱"
 
 #: templates/CRM/Case/Form/Activity.tpl
 msgid "With other contact(s)"
-msgstr "與聯絡人"
+msgstr "其他目標聯絡人"
 
 #: templates/CRM/Case/Form/Activity.tpl
 msgid "With client"
-msgstr "與聯絡人"
+msgstr "目標聯絡人"
 
 #: templates/CRM/Case/Form/Activity.tpl
 msgid "With client(s)"
-msgstr "與聯絡人"
+msgstr "目標聯絡人"
 
 #: templates/CRM/Case/Form/Activity.tpl
 msgid "You can optionally assign this activity to someone."
@@ -25016,7 +25012,7 @@ msgstr "將您的游標放置於訊息欄中欲插入替代符號的位置，然
 
 #: templates/CRM/Contact/Form/Task/Email.hlp
 msgid "You will also use tokens to insert Unsubscribe, Opt out and Forwarding links in your message."
-msgstr "您需使用替代符號來為信件內容加入取消訂閱、選擇退出、轉寄的功能。"
+msgstr "您需使用替代符號來為信件內容加入取消訂閱、退訂全部訊息、轉寄的功能。"
 
 #: templates/CRM/Contact/Form/Task/Email.hlp
 msgid "Use these steps to insert clickable action links:"
@@ -25869,7 +25865,7 @@ msgstr "你的定期捐款會於您指定的期間內自動扣款，自動扣款
 
 #: templates/CRM/Contribute/Form/Contribution/Main.tpl
 msgid "You will receive an email receipt for each recurring contribution. The receipts will include a link you can use if you decide to modify or cancel your future contributions."
-msgstr "每一次捐款時，您都會接收到一個Email收據，收據包含讓您取銷或修改捐款的連結，可點入修改該捐款即可。"
+msgstr "每一次捐款時，您都會接收到一個Email收據，若有需要更動您的定期捐款，歡迎您直接與我們聯繫。"
 
 #: templates/CRM/Contribute/Form/Contribution/Main.tpl
 msgid "Enter the name you want listed with this contribution. You can use a nick name like 'The Jones Family' or 'Sarah and Sam'."
@@ -26410,7 +26406,7 @@ msgstr "付款確認信已Email到%1。"
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid "Your contribution has been submitted to %1 for processing. Please print this page for your records."
-msgstr "感謝！您的捐款已開始進行處理。請列印此頁留存記錄。"
+msgstr "請列印此頁留存記錄。"
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid "An email receipt will be sent to %1 and to %2 once the transaction is processed successfully."
@@ -29590,7 +29586,7 @@ msgstr "CiviCRM 偵測到此資料檔案有%筆衝突 Email 記錄。如果您�
 
 #: templates/CRM/Import/Form/Preview.tpl templates/CRM/Import/Form/Summary.tpl
 msgid "Total number of rows in the imported data."
-msgstr "匯入資料總列數。"
+msgstr "上傳資料中的總列數。"
 
 #: templates/CRM/Import/Form/Preview.tpl templates/CRM/Import/Form/Summary.tpl
 msgid "Rows with invalid data in one or more fields (for example, invalid email address formatting). These rows will be skipped (not imported)."
@@ -29923,7 +29919,7 @@ msgstr "所需元件"
 
 #: templates/CRM/Mailing/Form/Upload.hlp
 msgid "CiviMail email messages must include an <strong>opt-out</strong> link (\"Opt out via web page\"), and the <strong>postal address</strong> of your organization. These elements help reduce the chances of your email being categorized as SPAM. They can be included in the main message body OR in a re-usable <strong>message footer</strong>. Refer to the online documentation for details on how to include required links and contact information as well as sample messages."
-msgstr "使用電子報寄送的 Email 必需包含一個<strong>選擇退出</strong>的連結（\"透過網頁選擇退出\"），及您組織的<strong>郵政地址</strong>。這個設定是為了減低您郵件被歸為垃圾郵件的機率。他們可被包含在郵件主文，或在一個重複使用的<strong>電子報頁尾</strong>。參考線上檔案以尋找如何操作的詳情。"
+msgstr "使用電子報寄送的 Email 必需包含一個<strong>退訂全部訊息</strong>的連結（\"透過網頁\"），及您組織的<strong>實際地址</strong>。這個設定是為了減低您郵件被歸為垃圾郵件的機率。他們可被包含在郵件主文，或在一個重複使用的<strong>電子報頁尾</strong>。參考線上檔案以尋找如何操作的詳情。"
 
 #: templates/CRM/Mailing/Form/Upload.hlp
 msgid "Upload or Compose On-screen"
@@ -30027,15 +30023,15 @@ msgstr "回到報表"
 
 #: templates/CRM/Mailing/Page/Optout.tpl
 msgid "has been successfully opted out."
-msgstr "重新訂閱已成功。"
+msgstr "已成功記錄您退出全站訊息的設定。"
 
 #: templates/CRM/Mailing/Page/Optout.tpl
 msgid "Are you sure you want to optout: %1 (%2)"
-msgstr "您是否確定要選擇退出：%1 (%2)"
+msgstr "您是否確定不想再收到本站訊息：%1 (%2)"
 
 #: templates/CRM/Mailing/Page/Optout.tpl msgctxt "menu"
 msgid "Optout"
-msgstr "選擇退出"
+msgstr "退出全站訊息"
 
 #: templates/CRM/Mailing/Page/Report.tpl
 msgid "Delivery Summary"
@@ -31226,7 +31222,7 @@ msgstr "項目"
 
 #: templates/CRM/Price/Page/LineItem.tpl
 msgid "Total Price"
-msgstr "啟用價格"
+msgstr "價格總計"
 
 #: templates/CRM/Price/Page/LineItem.tpl
 msgid "Total Participants"
@@ -33218,7 +33214,7 @@ msgstr "新增"
 
 #: templates/CRM/Activity/Form/Activity.tpl
 msgid "Assigned To "
-msgstr "指派給"
+msgstr "分派給"
 
 #: templates/CRM/Activity/Form/Activity.tpl
 msgid "A problem occurred during case selection"
@@ -34195,7 +34191,7 @@ msgstr "Sr."
 
 #: xml/templates/civicrm_data.tpl
 msgid "Administrator"
-msgstr "管理者"
+msgstr "管理"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Authenticated"
@@ -38021,11 +38017,11 @@ msgstr "任務所安排的日期及時間。"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "Duration (min)"
-msgstr "持續時間（分鐘）"
+msgstr "時間長短（分鐘）"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "The Activity's Duration in Minutes"
-msgstr "任務的進行時間"
+msgstr "任務的時間長短，以分鐘計"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "Activity's Location in a text string."
