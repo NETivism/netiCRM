@@ -737,7 +737,6 @@ AND    contact_id IN ( $contactStr )
             }
         }
 
-dpm($numContactsAdded);
         return array( $numContactsAdded, $numContactsNotAdded );
     }
 }

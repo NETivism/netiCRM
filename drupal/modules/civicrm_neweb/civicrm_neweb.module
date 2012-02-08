@@ -115,19 +115,19 @@ function civicrm_neweb_cron(){
 function _civicrm_neweb_process_all($is_test, $now, $hour, $yesterday){
   // recurring contributions
   $test = $is_test ? '_test' : '';
-  if($hour >= 0 && $hour <= 9 && variable_get('civicrm_neweb_response'.$test, 0) < $yesterday){
+  if($hour >= 19 && $hour <= 23 && variable_get('civicrm_neweb_response'.$test, 0) < $yesterday){
     // get yesterday modification result
     if(civicrm_neweb_process_response($is_test)){
       variable_set('civicrm_neweb_response'.$test, $now);
     }
   }
-  if($hour >= 10 && $hour <= 12 && variable_get('civicrm_neweb_transaction'.$test, 0) < $yesterday){
+  if($hour >= 11 && $hour <= 15 && variable_get('civicrm_neweb_transaction'.$test, 0) < $yesterday){
     // get yesterday transaction result
     if(civicrm_neweb_process_transaction($is_test)){
       variable_set('civicrm_neweb_transaction'.$test, $now);
     }
   }
-  if($hour >= 13 && $hour <= 15 && variable_get('civicrm_neweb_uploaded'.$test, 0) < $yesterday){
+  if($hour >= 9 && $hour <= 15 && variable_get('civicrm_neweb_uploaded'.$test, 0) < $yesterday){
     // doing upload stuff
     if(civicrm_neweb_process_upload($is_test)){
       variable_set('civicrm_neweb_uploaded'.$test, $now);
