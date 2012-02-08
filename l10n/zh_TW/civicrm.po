@@ -5231,7 +5231,7 @@ msgstr "固定結束日期"
 
 #: CRM/Member/DAO/MembershipType.php CRM/Member/Form/MembershipType.php
 msgid "Renewal Reminder Day"
-msgstr "通知日期"
+msgstr "幾天前要通知會員更新"
 
 #: CRM/Member/Form/Membership.php CRM/Report/Form/Member/Summary.php
 msgid "Join Date"
@@ -17197,7 +17197,7 @@ msgstr "請選擇一個期間類型。"
 
 #: CRM/Member/Form/MembershipType.php
 msgid "Period type should be Rolling when duration unit is Day"
-msgstr "期間類型應該滾動，當時間單位是「日」。"
+msgstr "當時間長短的單位是「日」的時候，週期類型應該要設定為「依繳費日計算」。"
 
 #: CRM/Member/Form/MembershipType.php
 msgid "Please enter a valid fixed period start day"
@@ -17205,7 +17205,7 @@ msgstr "請輸入一個有效固定時段開始日"
 
 #: CRM/Member/Form/MembershipType.php
 msgid "Please enter a valid fixed period rollover day"
-msgstr ""
+msgstr "請輸入一個有效的會員更新日"
 
 #: CRM/Member/Form/MembershipType.php
 msgid "Please enter valid Fixed Period Start Day"
@@ -17213,7 +17213,7 @@ msgstr "請輸入有效固定時段開始日"
 
 #: CRM/Member/Form/MembershipType.php
 msgid "Please enter valid Fixed Period Rollover Day"
-msgstr ""
+msgstr "請輸入一個有效的會員更新日"
 
 #: CRM/Member/Form/MembershipType.php
 msgid "Please enter renewal reminder days."
@@ -24038,7 +24038,7 @@ msgstr "錯誤電碼"
 
 #: templates/CRM/common/fatal.tpl
 msgid "Database Error Code:"
-msgstr "資料錯誤電碼："
+msgstr "資料庫錯誤碼："
 
 #: templates/CRM/common/fatal.tpl
 msgid "Additional Details:"
@@ -28556,11 +28556,11 @@ msgstr "活動詳情已被傳送到 %1。"
 
 #: templates/CRM/Event/Form/Registration/ThankYou.tpl
 msgid "Your registration payment has been submitted to %1 for processing. Please print this page for your records."
-msgstr "您的%1註冊費已處理成功。請列印此頁留為記錄。"
+msgstr "您的註冊費已送至 %1。請您列印此頁留為記錄。"
 
 #: templates/CRM/Event/Form/Registration/ThankYou.tpl
 msgid "A registration confirmation email will be sent to %1 once the transaction is processed successfully."
-msgstr "當交易成功，一個報名確認Email會被傳送到%1。"
+msgstr "當交易成功，一個報名確認Email會被傳送到 %1。"
 
 #: templates/CRM/Event/Form/Registration/ThankYou.tpl
 msgid "Your registration has been processed successfully. Please print this page for your records."
