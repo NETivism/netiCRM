@@ -435,7 +435,7 @@ function neticrm_preset_footer(){
     $ga = "<script type=\"text/javascript\">
       var _gaq = _gaq || [];
       _gaq.push(['_setAccount', '".NETICRM_GA."']);
-      _gaq.push(['_setDomainName', '{$domain}']);
+      _gaq.push(['_setDomainName', 'neticrm.tw']);
       _gaq.push(['_trackPageview']);
             
       (function() {
