@@ -19,6 +19,12 @@ function neticrm_preset_install(){
 
   // v 1.1 fix and update
   neticrm_preset_update_6101('install');
+
+  // v 1.3 fix email footer
+  _neticrm_preset_update_email_footer();
+
+  // disable login block
+  _neticrm_preset_disable_login_block();
 }
 
 /**
@@ -248,6 +254,28 @@ function neticrm_preset_update_6103(){
   // #5386
   variable_set('error_level', 2);
 
+  // email footer
+  _neticrm_preset_update_email_footer();
+
+  // import new translated strings.
+  _neticrm_preset_import_po();
+
+  // disable login block
+  _neticrm_preset_disable_login_block();
+}
+
+function _neticrm_preset_message($message, $success){
+  return array('success' => $success, 'query' => check_plain($message));
+}
+
+function _neticrm_preset_import_po($module = 'civicrm'){
+  $langcode = 'zh-hant';
+  $file = new stdClass();
+  $file->filepath = drupal_get_path("module", $module)."/translations/$langcode.po";
+  locale_inc_callback('_locale_import_po', $file, $langcode, LOCALE_IMPORT_OVERWRITE, 'default');
+} 
+
+function _neticrm_preset_update_email_footer(){
   // refine the footer message when mailing
   $body_text = '--\n{domain.name}\n{domain.address}\n取消訂閱本訊息： {action.unsubscribeUrl}\n不要再收到任何訊息： {action.optOutUrl}';
   $body_html = '<hr /><div align="center">{domain.name}<br />{domain.address}<br /><br /><a href="{action.unsubscribeUrl}">取消訂閱本訊息</a><br /><a href="{action.optOutUrl}">不要再收到任何訊息</a></div>';
@@ -255,19 +283,8 @@ function neticrm_preset_update_6103(){
   
   $sql = "UPDATE civicrm_mailing_component SET body_html = '{$body_html}', body_text = '{$body_text}' WHERE component_type = 'Footer' AND body_html LIKE '{$body_replace}'";
   CRM_Core_DAO::executeQuery($sql);
-
-  // import new translated strings.
-  _neticrm_preset_import_po();
-
 }
 
-function _neticrm_preset_message($message, $success){
-  return array('success' => $success, 'query' => check_plain($message));
+function _neticrm_preset_disable_login_block(){
+  db_query("UPDATE {blocks} SET region = '', status = 0 WHERE module = '%s' AND delta = '%s' AND theme = '%s'", 'user', '0', 'neticrm');
 }
-
-function _neticrm_preset_import_po(){
-  $langcode = 'zh-hant';
-  $file = new stdClass();
-  $file->filepath = drupal_get_path("module", 'civicrm')."/translations/$langcode.po";
-  locale_inc_callback('_locale_import_po', $file, $langcode, LOCALE_IMPORT_OVERWRITE, 'default');
-} 
