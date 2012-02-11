@@ -17969,7 +17969,7 @@ msgstr "此功能目前未提供。"
 
 #: CRM/Profile/Form.php
 msgid "Profile search, view and edit are not supported for Profiles which include fields for more than one record type."
-msgstr "個人資訊搜尋、查看、編輯功能，將在一個多值欄位時無法使用。"
+msgstr "個人檔案的搜尋、查看、編輯功能，將在多種類型欄位時無法使用（如會員類型 + 聯絡人姓名）。"
 
 #: CRM/Profile/Form.php
 msgid "This profile is configured for contact type '%1'. It cannot be used to edit contacts of other types."
@@ -31536,7 +31536,7 @@ msgstr "勾選或取消勾選核取方塊，<span class=\"unobstructive\">並按
 
 #: templates/CRM/UF/Form/Field.tpl
 msgid "Delete Field"
-msgstr "刪除價格欄位"
+msgstr "刪除欄位"
 
 #: templates/CRM/UF/Form/Field.tpl
 msgid "WARNING: Deleting this profile field will remove it from Profile forms and listings. If this field is used in any 'stand-alone' Profile forms, you will need to update those forms to remove this field."
