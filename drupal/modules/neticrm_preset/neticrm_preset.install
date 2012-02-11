@@ -25,6 +25,9 @@ function neticrm_preset_install(){
 
   // disable login block
   _neticrm_preset_disable_login_block();
+
+  // enable participant waiting type
+  CRM_Core_DAO::executeQuery("UPDATE civicrm_participant_status_type SET is_active = 1 WHERE is_active = 0");
 }
 
 /**
@@ -262,6 +265,9 @@ function neticrm_preset_update_6103(){
 
   // disable login block
   _neticrm_preset_disable_login_block();
+
+  // enable participant waiting type
+  CRM_Core_DAO::executeQuery("UPDATE civicrm_participant_status_type SET is_active = 1 WHERE is_active = 0");
 }
 
 function _neticrm_preset_message($message, $success){
