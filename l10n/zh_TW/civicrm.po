@@ -35577,7 +35577,7 @@ msgstr "提醒您，下一個付款日期是 %1。"
 
 #: xml/templates/message_templates/pledge_reminder_html.tpl
 msgid "Go to a web page where you can make your payment online"
-msgstr "前往您可網上付款的網頁版面"
+msgstr "點進行行線上付款 &raquo;"
 
 #: xml/templates/message_templates/pledge_reminder_html.tpl
 #: xml/templates/message_templates/pledge_reminder_text.tpl
@@ -39659,3 +39659,6 @@ msgstr "電子報訂戶"
 
 msgid "Accept Creditcard"
 msgstr "可用的信用卡"
+
+msgid "Go to a web page where you can confirm your registration online"
+msgstr "點此完成線上登記 &raquo;"
