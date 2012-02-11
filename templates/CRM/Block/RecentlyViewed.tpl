@@ -36,9 +36,9 @@
          {if $item.isDeleted}<del>{/if}{$item.title|mb_truncate:25:"..":true}{if $item.isDeleted}</del>{/if}</a>
          <ul class="crm-recentview-wrapper" style="display:none;">
       
-         <li><br /><a href='{$item.url}'>View</a> &nbsp;
-	           {if $item.edit_url}<a href='{$item.edit_url}'>Edit</a> &nbsp;{/if}    
-		   {if $item.delete_url}<a href='{$item.delete_url}'>Delete</a> &nbsp;{/if}
+         <li><br /><a href='{$item.url}'>{ts}view{/ts}</a> &nbsp;
+	           {if $item.edit_url}<a href='{$item.edit_url}'>{ts}edit{/ts}</a> &nbsp;{/if}    
+		   {if $item.delete_url}<a href='{$item.delete_url}'>{ts}delete{/ts}</a> &nbsp;{/if}
 	</li>
          </ul>
          </li>
