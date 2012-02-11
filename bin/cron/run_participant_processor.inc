@@ -1,59 +1,16 @@
 <?php
-/*
- +--------------------------------------------------------------------+
- | CiviCRM version 3.3                                                |
- +--------------------------------------------------------------------+
- | Copyright CiviCRM LLC (c) 2004-2010                                |
- +--------------------------------------------------------------------+
- | This file is a part of CiviCRM.                                    |
- |                                                                    |
- | CiviCRM is free software; you can copy, modify, and distribute it  |
- | under the terms of the GNU Affero General Public License           |
- | Version 3, 19 November 2007 and the CiviCRM Licensing Exception.   |
- |                                                                    |
- | CiviCRM is distributed in the hope that it will be useful, but     |
- | WITHOUT ANY WARRANTY; without even the implied warranty of         |
- | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.               |
- | See the GNU Affero General Public License for more details.        |
- |                                                                    |
- | You should have received a copy of the GNU Affero General Public   |
- | License and the CiviCRM Licensing Exception along                  |
- | with this program; if not, contact CiviCRM LLC                     |
- | at info[AT]civicrm[DOT]org. If you have questions about the        |
- | GNU Affero General Public License or the licensing of CiviCRM,     |
- | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
- +--------------------------------------------------------------------+
-*/
 
-/*
- * This file check and updates the status of all participant records.
- * 
- * EventParticipantion.php prior to running this script.
- */
-require_once '../civicrm.config.php';
-require_once 'CRM/Core/Config.php';
-
+function run_participant_processor(){
+  $obj = new CRM_ParticipantProcessor( );
+  echo "Updating..";
+  $obj->updateParticipantStatus( );
+  echo "\nParticipant records updated. (Done)";
+}
 class CRM_ParticipantProcessor 
 {
     function __construct( ) 
     {
-        $config = CRM_Core_Config::singleton();
-        
-        //this does not return on failure
-        require_once 'CRM/Utils/System.php';
-        require_once 'CRM/Utils/Hook.php';
-        
-        CRM_Utils_System::authenticateScript( true );
-        $config->cleanURL = 1;
-
-        //log the execution time of script
-        CRM_Core_Error::debug_log_message( 'ParticipantProcessor.php' );
- 
-	//load bootstrap to call hooks
-	require_once 'CRM/Utils/System.php';
-	CRM_Utils_System::loadBootStrap(  );
-
-   }
+    }
     
     public function updateParticipantStatus( )
     {
@@ -136,12 +93,12 @@ LEFT JOIN  civicrm_event event ON ( event.id = participant.event_id )
                             if ( is_array( $results['updatedParticipantIds'] ) && !empty( $results['updatedParticipantIds'] ) ) {
                                 foreach ( $results['updatedParticipantIds'] as $processedId ) {
                                     $expiredParticipantCount += 1;   
-                                    echo "<br /><br />- status updated to: Expired";
+                                    echo "\n\n- status updated to: Expired";
                                     
                                     //mailed participants.
                                     if ( is_array( $results['mailedParticipants'] ) && 
                                          array_key_exists( $processedId, $results['mailedParticipants']) ) {
-                                        echo "<br />Expiration Mail sent to: {$results['mailedParticipants'][$processedId]}";
+                                        echo "\nExpiration Mail sent to: {$results['mailedParticipants'][$processedId]}";
                                     }
                                 }
                             }
@@ -201,14 +158,14 @@ LEFT JOIN  civicrm_event event ON ( event.id = participant.event_id )
                                         foreach ( $results['updatedParticipantIds'] as $processedId ) {
                                             if ( $values['requires_approval'] ) {
                                                 $waitingApprovalCount += 1;
-                                                echo "<br /><br />- status updated to: Awaiting approval";
-                                                echo "<br />Will send you Confirmation Mail when registration get approved.";
+                                                echo "\nstatus updated to: Awaiting approval";
+                                                echo "\nWill send you Confirmation Mail when registration get approved.";
                                             } else {
                                                 $waitingConfirmCount += 1;  
-                                                echo "<br /><br />- status updated to: Pending from waitlist";
+                                                echo "\n\n- status updated to: Pending from waitlist";
                                                 if ( is_array( $results['mailedParticipants'] ) && 
                                                      array_key_exists( $processedId, $results['mailedParticipants']) ) {
-                                                    echo "<br />Confirmation Mail sent to: {$results['mailedParticipants'][$processedId]}";
+                                                    echo "\nConfirmation Mail sent to: {$results['mailedParticipants'][$processedId]}";
                                                 }
                                             }
                                         }
@@ -227,19 +184,14 @@ LEFT JOIN  civicrm_event event ON ( event.id = participant.event_id )
             }//cron 2 ends.
         }
         
-        echo "<br /><br />Number of Expired registration(s) = {$expiredParticipantCount}";
-        echo "<br />Number of registration(s) require approval =  {$waitingApprovalCount}";
-        echo "<br />Number of registration changed to Pending from waitlist = {$waitingConfirmCount}<br /><br />";
+        echo "\n\nNumber of Expired registration(s) = {$expiredParticipantCount}";
+        echo "\nNumber of registration(s) require approval =  {$waitingApprovalCount}";
+        echo "\nNumber of registration changed to Pending from waitlist = {$waitingConfirmCount}\n\n";
         if ( !empty( $fullEvents ) ) {
             foreach ( $fullEvents as $eventId => $title ) {
-                echo "Full Event : {$title}<br />";
+                echo "Full Event : {$title}\n";
             }
         }
     }
 }
-
-$obj = new CRM_ParticipantProcessor( );
-echo "Updating..";
-$obj->updateParticipantStatus( );
-echo "<br />Participant records updated. (Done)";
 ?>
