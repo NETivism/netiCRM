@@ -2853,7 +2853,7 @@ msgstr "您確定要刪除附加檔案？"
 
 #: CRM/Contact/Form/Contact.php CRM/Core/BAO/UFGroup.php
 msgid "Delete Contact Image"
-msgstr "刪除聯絡人"
+msgstr "刪除聯絡人頭像"
 
 #: CRM/Contact/Form/Contact.php CRM/Profile/Form.php
 msgid "Save Matching Contact"
@@ -8542,7 +8542,7 @@ msgstr "您為 %1地址區塊所輸入的街道數字並非預期格式。街道
 
 #: CRM/Contact/Form/Contact.php
 msgid "Browse/Upload Image"
-msgstr "瀏覽/上傳檔案"
+msgstr "上傳頭像"
 
 #: CRM/Contact/Form/Contact.php
 msgid "Check for Matching Contact(s)"
