@@ -5850,7 +5850,7 @@ msgstr "此任務是最新的版本嗎？"
 
 #: CRM/Activity/DAO/Activity.php
 msgid "Activity is in the Trash"
-msgstr "任務在垃圾箱裡"
+msgstr "任務在資源回收桶裡"
 
 #: CRM/Activity/DAO/ActivityTarget.php
 msgid "Contact ID (match to contact)"
@@ -7924,7 +7924,7 @@ msgstr "個案狀態"
 
 #: CRM/Case/DAO/Case.php
 msgid "Case is in the Trash"
-msgstr "垃圾筒中的個案"
+msgstr "資源回收桶中的個案"
 
 #: CRM/Case/Form/Activity/ChangeCaseStartDate.php
 msgid "New Start Date"
@@ -8000,7 +8000,7 @@ msgstr "報表作者："
 
 #: CRM/Case/Form/Activity.php
 msgid "The selected activity has been moved to the Trash. You can view and / or restore deleted activities by checking \"Deleted Activities\" from the Case Activities search filter (under Manage Case).<br />"
-msgstr "你選擇的任務已經移到垃圾桶。之後若想回復，您可以從檢查個案任務搜尋清單中，篩選「已刪除的任務」來瀏覽及 / 回復刪除的任務。"
+msgstr "你選擇的任務已經移到資源回收桶。之後若想回復，您可以從檢查個案任務搜尋清單中，篩選「已刪除的任務」來瀏覽及 / 回復刪除的任務。"
 
 #: CRM/Case/Form/Activity.php
 msgid "Selected Activity cannot be deleted."
@@ -8040,7 +8040,7 @@ msgstr "選擇標籤"
 
 #: CRM/Case/Form/Case.php
 msgid "The selected case has been moved to the Trash. You can view and / or restore deleted cases by checking the \"Deleted Cases\" option under Find Cases.<br />"
-msgstr "你選擇的個案已經移到垃圾桶。之後若想回復，您可以從檢查個案搜尋清單，篩選「已刪除的個案」來瀏覽及 / 回復刪除的個案。"
+msgstr "你選擇的個案已經移到資源回收桶。之後若想回復，您可以從檢查個案搜尋清單，篩選「已刪除的個案」來瀏覽及 / 回復刪除的個案。"
 
 #: CRM/Case/Form/Case.php
 msgid "The selected case has been restored.<br />"
@@ -8329,7 +8329,7 @@ msgstr "搜尋 %1 至 %2 之間的區域"
 
 #: CRM/Contact/BAO/Query.php
 msgid "Search in Trash"
-msgstr "搜尋垃圾桶"
+msgstr "搜尋資源回收桶"
 
 #: CRM/Contact/BAO/Query.php
 msgid "Contacts %1"
@@ -23499,11 +23499,11 @@ msgstr "無法儲存個案"
 
 #: templates/CRM/Case/Form/Activity.tpl
 msgid "Click Delete to move this &quot;%1&quot; activity to the Trash."
-msgstr "按刪除將此 &quot;%1&quot; 任務移到垃圾桶。"
+msgstr "按刪除將此 &quot;%1&quot; 任務移到資源回收桶。"
 
 #: templates/CRM/Case/Form/Activity.tpl
 msgid "Click Restore to retrieve this &quot;%1&quot; activity from the Trash."
-msgstr "按回復，將任務 &quot;%1&quot; 從垃圾桶中拉回。"
+msgstr "按回復，將任務 &quot;%1&quot; 從資源回收桶中拉回。"
 
 #: templates/CRM/Case/Form/Activity.tpl
 msgid "Clients"
@@ -23607,11 +23607,11 @@ msgstr "從列表中提供一個適當的服務。如果此服務需要協同工
 
 #: templates/CRM/Case/Form/Case.tpl
 msgid "Click Delete to move this case and all associated activities to the Trash."
-msgstr "按刪除，去移動此個案及所有相關任務到垃圾箱。"
+msgstr "按刪除，去移動此個案及所有相關任務到資源回收桶。"
 
 #: templates/CRM/Case/Form/Case.tpl
 msgid "Click Restore to retrieve this case and all associated activities from the Trash."
-msgstr "按修復去垃圾箱收回此個案及所有相關任務。"
+msgstr "按回復以復原此個案及所有相關任務。"
 
 #: templates/CRM/Case/Form/CaseView.tpl
 msgid "Clients:"
@@ -23798,7 +23798,7 @@ msgstr "搜尋更多個案"
 
 #: templates/CRM/Case/Form/Task/Delete.tpl
 msgid "Are you sure you want to delete the selected cases? This will move the case(s) and all associated activities to the Trash."
-msgstr "您是否確定刪除已選取的個案？這將會移動個案及所有相關活動到垃圾箱。"
+msgstr "您是否確定刪除已選取的個案？這將會移動個案及所有相關活動到資源回收桶。"
 
 #: templates/CRM/Case/Form/Task/Print.tpl
 msgid "Most Recent Activity"
@@ -23810,7 +23810,7 @@ msgstr "下個排程任務"
 
 #: templates/CRM/Case/Form/Task/Restore.tpl
 msgid "Are you sure you want to restore the selected cases? This operation will retrieve the case(s) and all associated activities from Trash."
-msgstr "您是否確定修復已選取的個案？這操作會把個案及所有相關活動從垃圾箱裡拉回。"
+msgstr "您是否確定回復已選取的個案？這操作會把個案及所有相關活動從資源為收桶裡拉回。"
 
 #: templates/CRM/Case/Form/Task.tpl
 msgid "Number of selected cases: %1"
@@ -24976,7 +24976,7 @@ msgstr "您確定要刪除所選連絡人？"
 
 #: templates/CRM/Contact/Form/Task/Delete.tpl
 msgid "The contact(s) and all related data will be moved to trash and only users with the relevant permission will be able to restore it."
-msgstr "聯絡人與其相關資料將會被刪除，唯有在使用者的同意下才能復原。"
+msgstr "聯絡人與其相關資料將會被丟到資源回收桶，僅能由管理員進行復原。"
 
 #: templates/CRM/Contact/Form/Task/Delete.tpl
 msgid "The contact(s) and all related data will be permanently removed."
