@@ -61,7 +61,7 @@ function civicrm_instrument_install() {
     'Credit Card Recurring (Offline)' => '信用卡定期定額（非線上）',
     'Post Office Transfer' => '郵政劃撥',
     'Post Office Recurring (Offline)' => '郵局自動轉帳授權',
-    'Convenient Store' => '便利商店',
+    'Convenient Store' => '便利商店繳款單',
     'Convenient Store (Code)' => '便利商店（代碼）',
     'Web ATM' => 'Web ATM',
     'ATM' => 'ATM 轉帳',
@@ -101,3 +101,12 @@ function civicrm_instrument_uninstall() {
   variable_del('civicrm_instrument_gid');
 }
 
+
+/* update */
+function civicrm_instrument_update_6001(){
+  civicrm_initialize( );
+  require_once "CRM/Core/DAO.php";
+  $query = "UPDATE civicrm_option_value SET label = '便利商店繳款單' WHERE label = '便利商店' AND name = 'Convenient Store'";
+  CRM_Core_DAO::executeQuery($query);
+  return array('success' => 'Successful update. ', 'query' => check_plain($query));
+}
