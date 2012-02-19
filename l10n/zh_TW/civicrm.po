@@ -19300,7 +19300,7 @@ msgstr "編輯資料表單群組"
 
 #: CRM/UF/Page/Group.php
 msgid "Use Profile-Create Mode"
-msgstr "使用新增資料模式"
+msgstr "使用（透過表單建立資料）"
 
 #: CRM/UF/Page/Group.php
 msgid "Disable CiviCRM Profile Group"
@@ -19316,7 +19316,7 @@ msgstr "刪除資料表單群組"
 
 #: CRM/UF/Page/Group.php
 msgid "HTML Form Snippet"
-msgstr "嵌入表單小工具"
+msgstr "將表單嵌入其他網站"
 
 #: CRM/UF/Page/Group.php
 msgid "HTML Form Snippet for this Profile"
@@ -31774,7 +31774,7 @@ msgstr "編輯設定"
 
 #: templates/CRM/UF/Page/Field.tpl
 msgid "Use (create mode)"
-msgstr "使用(創建模式)"
+msgstr "使用（透過表單建立資料）"
 
 #: templates/CRM/UF/Page/Field.tpl
 msgid "In Selector?"
@@ -31834,7 +31834,7 @@ msgstr "http://www.example.com/thank_you.html"
 
 #: templates/CRM/UF/Page/Group.hlp
 msgid "If the form is submitted with errors (i.e. required field not completed...) - the default behavior is to display the errors within the 'built-in' profile form. You can override this behavior - specifying your own error page - by adding a hidden <strong>errorURL</strong> input field."
-msgstr ""
+msgstr "提供表單填寫，需考慮填寫錯誤時的資訊，例如必填欄位沒有填寫時，會出現何種訊息。預設的錯誤處理機制便是將錯誤呈現在資料表單中，提示使用者。然而，你也可以改變此機制，只要加入隱藏的HTML input語法，指定其欄位名稱為 errorURL，便可以在錯誤時提供導向的網址（需懂HTML語言）。"
 
 #: templates/CRM/UF/Page/Group.hlp
 msgid "Make sure the CAPTCHA feature is NOT enabled for this profile when you are grabbing the HTML code. CAPTCHA requires dynamic page generation. Submitting an HTML Snippet profile form with CAPTCHA included will ALWAYS result in a CAPTCHA validation error - which means that the information entered by the user can not be saved."
@@ -31846,7 +31846,7 @@ msgstr "若您正在黏貼片段代碼的網頁，與您CiviCRM網站是不同�
 
 #: templates/CRM/UF/Page/Group.tpl
 msgid "The HTML code below will display a form consisting of the active fields in this Profile. You can copy this HTML code and paste it into any block or page on ANY website where you want to collect contact information."
-msgstr ""
+msgstr "複製下面的 HTML 原始碼，貼到外部任何網站，便可以在該網站讓人填寫資訊。鑲嵌到外部的表單，也會對應在此資料表單中的欄位設定。"
 
 #: templates/CRM/UF/Page/Group.tpl
 msgid "Back to Profile Listings"
@@ -31854,11 +31854,11 @@ msgstr "回到資料表單列表"
 
 #: templates/CRM/UF/Page/Group.tpl
 msgid "CiviCRM Profile(s) allow you to aggregate groups of fields and include them in your site as input forms, contact display pages, and search and listings features. They provide a powerful set of tools for you to collect information from constituents and selectively share contact information."
-msgstr ""
+msgstr "資料表單就像是一張線上填寫報名單，不同的是本張報名單的資訊可以直接存入系統，還提供了搜尋、篩選清單以供瀏覽聯絡人資訊。有了這個強大工具，蒐集資料、舉辦活動不再是繁雜痛苦的事情，讓組織利用網路蒐集聯絡人資訊。"
 
 #: templates/CRM/UF/Page/Group.tpl
 msgid "Add Profile"
-msgstr "增加個人資訊"
+msgstr "增加資料表單"
 
 #: templates/CRM/UF/Page/Group.tpl
 msgid "Profile Title"
