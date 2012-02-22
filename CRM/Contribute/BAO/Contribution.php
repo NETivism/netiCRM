@@ -34,6 +34,8 @@
  *
  */
 
+require_once 'CRM/Utils/Money.php';
+require_once 'CRM/Contribute/PseudoConstant.php';
 require_once 'CRM/Contribute/DAO/Contribution.php';
 
 require_once 'CRM/Core/BAO/CustomField.php';
@@ -443,7 +445,7 @@ class CRM_Contribute_BAO_Contribution extends CRM_Contribute_DAO_Contribution
                     
                     $tmpConatctField[trim($value)] = $contactFields[trim($value)];
                     if (!$status) {
-                        $title = $tmpConatctField[trim($value)]['title']." (match to contact)" ;
+                        $title = $tmpConatctField[trim($value)]['title']. ' '. ts('(match to contact)') ;
                     } else {
                         $title = $tmpConatctField[trim($value)]['title'];
                     }
@@ -453,8 +455,8 @@ class CRM_Contribute_BAO_Contribution extends CRM_Contribute_DAO_Contribution
             }
 
             $tmpConatctField['external_identifier'] = $contactFields['external_identifier'];
-            $tmpConatctField['external_identifier']['title'] = $contactFields['external_identifier']['title'] . " (match to contact)";
-            $tmpFields['contribution_contact_id']['title']   = $tmpFields['contribution_contact_id']['title'] . " (match to contact)";
+            $tmpConatctField['external_identifier']['title'] = $contactFields['external_identifier']['title'] . ' '. ts('(match to contact)') ;
+            $tmpFields['contribution_contact_id']['title']   = $tmpFields['contribution_contact_id']['title'] . ' '. ts('(match to contact)') ;
             $fields = array_merge($fields, $tmpConatctField);
             $fields = array_merge($fields, $tmpFields);
             $fields = array_merge($fields, $note);

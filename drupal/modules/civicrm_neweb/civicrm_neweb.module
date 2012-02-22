@@ -212,8 +212,8 @@ function _civicrm_neweb_instrument(){
     'Credit Card' => array('label' => '信用卡', 'description' => ''),
     'ATM' => array('label' => 'ATM 轉帳', 'description' => ''),
     'Web ATM' => array('label' => '網路 ATM', 'description' => ''),
-    'Convenient Store' => array('label' => '便利商店', 'description'=>''),
-    'Convenient Store (Code)' => array('label'=>'便利商店 (代碼)','desc' => ''),
+    'Convenient Store' => array('label' => '超商條碼繳費', 'description'=>''),
+    'Convenient Store (Code)' => array('label'=>'超商代碼繳費','desc' => ''),
     'Alipay' => array('label' => '支付寶', 'description' => ''),
   );
 }
