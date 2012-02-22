@@ -28,6 +28,10 @@ function neticrm_preset_install(){
 
   // enable participant waiting type
   CRM_Core_DAO::executeQuery("UPDATE civicrm_participant_status_type SET is_active = 1 WHERE is_active = 0");
+
+  // preset custom fields
+  _neticrm_preset_customgf();
+
 }
 
 /**
@@ -293,4 +297,149 @@ function _neticrm_preset_update_email_footer(){
 
 function _neticrm_preset_disable_login_block(){
   db_query("UPDATE {blocks} SET region = '', status = 0 WHERE module = '%s' AND delta = '%s' AND theme = '%s'", 'user', '0', 'neticrm');
+}
+
+
+/**
+ * data_type:
+ * String, Int, Float, Money, Memo, Date, Boolean, StateProvince,
+ * Country, File, Link, ContactReference
+ *
+ * html_type:
+ * Text, TextArea, Select, Multi-Select, AdvMulti-Select, Radio,
+ * CheckBox, Select Date, Select State/Province, Select Country,
+ * Multi-Select Country, Multi-Select State/Province, File, Link,
+ * RichTextEditor, Autocomplete-Select
+ */
+function _neticrm_preset_customgf(){
+  $custom_groups = array(
+    array(
+      'title' => '捐款資訊',
+      'extends' => 'Contribution',
+      'field' => array(
+        array(
+          'label' => '收據寄發方式',
+          'data_type' => 'String',
+          'html_type' => 'Radio',
+          'option_values' => array(
+            array('label'=>'免寄', 'value'=>'none', 'is_active'=>1, 'weight'=>1),
+            array('label'=>'月寄', 'value'=>'month', 'is_active'=>1, 'weight'=>2),
+            array('label'=>'年寄', 'value'=>'year', 'is_active'=>1, 'weight'=>3),
+          ),
+        ),
+        array(
+          'label' => '匿名捐款顯示名稱',
+          'data_type' => 'String',
+          'html_type' => 'Text',
+        ),
+        array(
+          'label' => '捐款留言',
+          'data_type' => 'Memo',
+          'html_type' => 'TextArea',
+        ),
+      ),
+    ),
+    array(
+      'title' => '個人背景',
+      'extends' => 'Individual',
+      'field' => array(
+        array(
+          'label' => '教育程度',
+          'data_type' => 'String',
+          'html_type' => 'Radio',
+          'option_values' => array(
+            array('label'=>'中學或以下', 'value'=>'中學或以下', 'is_active'=>1, 'weight'=>1),
+            array('label'=>'高中', 'value'=>'高中', 'is_active'=>1, 'weight'=>2),
+            array('label'=>'大學', 'value'=>'大學', 'is_active'=>1, 'weight'=>3),
+            array('label'=>'碩士', 'value'=>'碩士', 'is_active'=>1, 'weight'=>4),
+            array('label'=>'博士', 'value'=>'博士', 'is_active'=>1, 'weight'=>5),
+          ),
+        ),
+        array(
+          'label' => '年收入區間',
+          'data_type' => 'String',
+          'html_type' => 'Radio',
+          'options_per_line' => '1',
+          'option_values' => array(
+            array('label'=>'500,000或以下', 'value'=>'500,000', 'is_active'=>1, 'weight'=>1),
+            array('label'=>'500,001元 ~ 1,130,000元', 'value'=>'500001-1130000', 'is_active'=>1, 'weight'=>2),
+            array('label'=>'1,130,001元 ~ 2,260,000元', 'value'=>'1130001-2260000', 'is_active'=>1, 'weight'=>3),
+            array('label'=>'2,260,001元 ~ 4,230,000元', 'value'=>'2260001-4230000', 'is_active'=>1, 'weight'=>4),
+            array('label'=>'4,230,001或以上', 'value'=>'4230001', 'is_active'=>1, 'weight'=>5),
+          ),
+        ),
+        array(
+          'label' => '已婚',
+          'data_type' => 'Boolean',
+          'html_type' => 'Radio',
+        ),
+      ),
+    ),
+  );
+  _neticrm_preset_customgroup($custom_groups);
+  _neticrm_preset_customfield($custom_groups);
+}
+function _neticrm_preset_customgroup(&$custom_groups){
+  // contribution custom group
+  $entity = 'CustomGroup';
+  foreach($custom_groups as $k => $g){
+    $op = 'getsingle';
+    $p = array(
+      'version' => 3,
+      'title' => $g['title'],
+    );
+    $r = civicrm_api($entity, $op, $p);
+    if(civicrm_error($r)){ // empty, than create
+      $op = 'create';
+      $p = array(
+        'version' => 3,
+        'title' => $g['title'],
+        'extends' => $g['extends'],
+        'collapse_display' => 0,
+        'style' => 'Inline',
+        'is_active' => 1,
+      );
+      $r = civicrm_api($entity, $op, $p);
+      if(!civicrm_error($r)){
+        $custom_groups[$k]['info'] = $r['values'][$r['id']];
+      }
+    }
+    else{
+      $custom_groups[$k]['info'] = $r;
+    }
+  }
+}
+
+function _neticrm_preset_customfield(&$custom_groups){
+  // contribution custom group
+  $entity = 'CustomField';
+  foreach($custom_groups as $k => $g){
+    $gid = $g['info']['id'];
+    foreach($g['field'] as $f){
+      $op = 'getsingle';
+      $p = array(
+        'version' => 3,
+        'custom_group_id' => $gid,
+        'label' => $f['label'],
+      );
+      $r = civicrm_api($entity, $op, $p);
+      if(civicrm_error($r)){ // empty, than create
+        $op = 'create';
+        $p = array(
+          'version' => 3,
+          'custom_group_id' => $gid,
+          'is_searchable' => '1',
+          'is_active' => '1',
+        );
+        $p = array_merge($p, $f);
+        $r = civicrm_api($entity, $op, $p);
+        if(!civicrm_error($r)){
+          $custom_groups[$k]['info'] = $r['values'][$r['id']];
+        }
+      }
+      else{
+        watchdog('neticrm', 'neticrm preset install custom field err.', NULL, WATCHDOG_ERROR);
+      }
+    }
+  }
 }
