@@ -45,6 +45,7 @@ require_once 'CRM/Utils/System.php';
 require_once 'CRM/Utils/File.php';
 require_once 'CRM/Core/Session.php';
 require_once 'CRM/Core/Config/Variables.php';
+require_once 'api/api.php';
 
 class CRM_Core_Config extends CRM_Core_Config_Variables
 {

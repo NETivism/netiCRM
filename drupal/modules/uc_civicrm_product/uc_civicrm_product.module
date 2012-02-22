@@ -492,11 +492,18 @@ function uc_civicrm_product_order($op, $order, $arg2) {
       // Since in our case, we know that they've got to log in before they can
       // checkout, we know that they will have a uf_id (drupal user id).
       $uf_id = $order->uid;
+      if(!$uf_id){
+        return;
+      }
 
       // Since in our case, a user has to create a civicrm account
       // (via a drupal registration profile) when they register,
       // we know that they will have a civicrm contact id as well
       $contact_id = civicrm_uf_match_id_get($uf_id);
+
+      if(!$contact_id){
+        return;
+      }
 
       foreach ($order->products as $product) {
         $api_results = array();
