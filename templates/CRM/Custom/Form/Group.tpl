@@ -106,7 +106,7 @@ function showHideStyle()
     eval('var contactTypes = ' + contactTypes);
     
     if ( cj.inArray(extend, contactTypes) >= 0 ) {
-        isShow  = true;
+        // isShow  = true;
     }
 	if( isShow  ) {	
         cj("tr#style").show();
