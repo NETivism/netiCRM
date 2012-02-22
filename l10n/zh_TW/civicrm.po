@@ -2853,7 +2853,7 @@ msgstr "您確定要刪除附加檔案？"
 
 #: CRM/Contact/Form/Contact.php CRM/Core/BAO/UFGroup.php
 msgid "Delete Contact Image"
-msgstr "刪除聯絡人"
+msgstr "刪除聯絡人頭像"
 
 #: CRM/Contact/Form/Contact.php CRM/Profile/Form.php
 msgid "Save Matching Contact"
@@ -5850,7 +5850,7 @@ msgstr "此任務是最新的版本嗎？"
 
 #: CRM/Activity/DAO/Activity.php
 msgid "Activity is in the Trash"
-msgstr "任務在垃圾箱裡"
+msgstr "任務在資源回收桶裡"
 
 #: CRM/Activity/DAO/ActivityTarget.php
 msgid "Contact ID (match to contact)"
@@ -7924,7 +7924,7 @@ msgstr "個案狀態"
 
 #: CRM/Case/DAO/Case.php
 msgid "Case is in the Trash"
-msgstr "垃圾筒中的個案"
+msgstr "資源回收桶中的個案"
 
 #: CRM/Case/Form/Activity/ChangeCaseStartDate.php
 msgid "New Start Date"
@@ -8000,7 +8000,7 @@ msgstr "報表作者："
 
 #: CRM/Case/Form/Activity.php
 msgid "The selected activity has been moved to the Trash. You can view and / or restore deleted activities by checking \"Deleted Activities\" from the Case Activities search filter (under Manage Case).<br />"
-msgstr "你選擇的任務已經移到垃圾桶。之後若想回復，您可以從檢查個案任務搜尋清單中，篩選「已刪除的任務」來瀏覽及 / 回復刪除的任務。"
+msgstr "你選擇的任務已經移到資源回收桶。之後若想回復，您可以從檢查個案任務搜尋清單中，篩選「已刪除的任務」來瀏覽及 / 回復刪除的任務。"
 
 #: CRM/Case/Form/Activity.php
 msgid "Selected Activity cannot be deleted."
@@ -8040,7 +8040,7 @@ msgstr "選擇標籤"
 
 #: CRM/Case/Form/Case.php
 msgid "The selected case has been moved to the Trash. You can view and / or restore deleted cases by checking the \"Deleted Cases\" option under Find Cases.<br />"
-msgstr "你選擇的個案已經移到垃圾桶。之後若想回復，您可以從檢查個案搜尋清單，篩選「已刪除的個案」來瀏覽及 / 回復刪除的個案。"
+msgstr "你選擇的個案已經移到資源回收桶。之後若想回復，您可以從檢查個案搜尋清單，篩選「已刪除的個案」來瀏覽及 / 回復刪除的個案。"
 
 #: CRM/Case/Form/Case.php
 msgid "The selected case has been restored.<br />"
@@ -8329,7 +8329,7 @@ msgstr "搜尋 %1 至 %2 之間的區域"
 
 #: CRM/Contact/BAO/Query.php
 msgid "Search in Trash"
-msgstr "搜尋垃圾桶"
+msgstr "搜尋資源回收桶"
 
 #: CRM/Contact/BAO/Query.php
 msgid "Contacts %1"
@@ -8542,7 +8542,7 @@ msgstr "您為 %1地址區塊所輸入的街道數字並非預期格式。街道
 
 #: CRM/Contact/Form/Contact.php
 msgid "Browse/Upload Image"
-msgstr "瀏覽/上傳檔案"
+msgstr "上傳頭像"
 
 #: CRM/Contact/Form/Contact.php
 msgid "Check for Matching Contact(s)"
@@ -19300,7 +19300,7 @@ msgstr "編輯資料表單群組"
 
 #: CRM/UF/Page/Group.php
 msgid "Use Profile-Create Mode"
-msgstr "使用新增資料模式"
+msgstr "使用（透過表單建立資料）"
 
 #: CRM/UF/Page/Group.php
 msgid "Disable CiviCRM Profile Group"
@@ -19316,7 +19316,7 @@ msgstr "刪除資料表單群組"
 
 #: CRM/UF/Page/Group.php
 msgid "HTML Form Snippet"
-msgstr "嵌入表單小工具"
+msgstr "將表單嵌入其他網站"
 
 #: CRM/UF/Page/Group.php
 msgid "HTML Form Snippet for this Profile"
@@ -23499,11 +23499,11 @@ msgstr "無法儲存個案"
 
 #: templates/CRM/Case/Form/Activity.tpl
 msgid "Click Delete to move this &quot;%1&quot; activity to the Trash."
-msgstr "按刪除將此 &quot;%1&quot; 任務移到垃圾桶。"
+msgstr "按刪除將此 &quot;%1&quot; 任務移到資源回收桶。"
 
 #: templates/CRM/Case/Form/Activity.tpl
 msgid "Click Restore to retrieve this &quot;%1&quot; activity from the Trash."
-msgstr "按回復，將任務 &quot;%1&quot; 從垃圾桶中拉回。"
+msgstr "按回復，將任務 &quot;%1&quot; 從資源回收桶中拉回。"
 
 #: templates/CRM/Case/Form/Activity.tpl
 msgid "Clients"
@@ -23607,11 +23607,11 @@ msgstr "從列表中提供一個適當的服務。如果此服務需要協同工
 
 #: templates/CRM/Case/Form/Case.tpl
 msgid "Click Delete to move this case and all associated activities to the Trash."
-msgstr "按刪除，去移動此個案及所有相關任務到垃圾箱。"
+msgstr "按刪除，去移動此個案及所有相關任務到資源回收桶。"
 
 #: templates/CRM/Case/Form/Case.tpl
 msgid "Click Restore to retrieve this case and all associated activities from the Trash."
-msgstr "按修復去垃圾箱收回此個案及所有相關任務。"
+msgstr "按回復以復原此個案及所有相關任務。"
 
 #: templates/CRM/Case/Form/CaseView.tpl
 msgid "Clients:"
@@ -23798,7 +23798,7 @@ msgstr "搜尋更多個案"
 
 #: templates/CRM/Case/Form/Task/Delete.tpl
 msgid "Are you sure you want to delete the selected cases? This will move the case(s) and all associated activities to the Trash."
-msgstr "您是否確定刪除已選取的個案？這將會移動個案及所有相關活動到垃圾箱。"
+msgstr "您是否確定刪除已選取的個案？這將會移動個案及所有相關活動到資源回收桶。"
 
 #: templates/CRM/Case/Form/Task/Print.tpl
 msgid "Most Recent Activity"
@@ -23810,7 +23810,7 @@ msgstr "下個排程任務"
 
 #: templates/CRM/Case/Form/Task/Restore.tpl
 msgid "Are you sure you want to restore the selected cases? This operation will retrieve the case(s) and all associated activities from Trash."
-msgstr "您是否確定修復已選取的個案？這操作會把個案及所有相關活動從垃圾箱裡拉回。"
+msgstr "您是否確定回復已選取的個案？這操作會把個案及所有相關活動從資源為收桶裡拉回。"
 
 #: templates/CRM/Case/Form/Task.tpl
 msgid "Number of selected cases: %1"
@@ -24976,7 +24976,7 @@ msgstr "您確定要刪除所選連絡人？"
 
 #: templates/CRM/Contact/Form/Task/Delete.tpl
 msgid "The contact(s) and all related data will be moved to trash and only users with the relevant permission will be able to restore it."
-msgstr "聯絡人與其相關資料將會被刪除，唯有在使用者的同意下才能復原。"
+msgstr "聯絡人與其相關資料將會被丟到資源回收桶，僅能由管理員進行復原。"
 
 #: templates/CRM/Contact/Form/Task/Delete.tpl
 msgid "The contact(s) and all related data will be permanently removed."
@@ -31774,7 +31774,7 @@ msgstr "編輯設定"
 
 #: templates/CRM/UF/Page/Field.tpl
 msgid "Use (create mode)"
-msgstr "使用(創建模式)"
+msgstr "使用（透過表單建立資料）"
 
 #: templates/CRM/UF/Page/Field.tpl
 msgid "In Selector?"
@@ -31834,7 +31834,7 @@ msgstr "http://www.example.com/thank_you.html"
 
 #: templates/CRM/UF/Page/Group.hlp
 msgid "If the form is submitted with errors (i.e. required field not completed...) - the default behavior is to display the errors within the 'built-in' profile form. You can override this behavior - specifying your own error page - by adding a hidden <strong>errorURL</strong> input field."
-msgstr ""
+msgstr "提供表單填寫，需考慮填寫錯誤時的資訊，例如必填欄位沒有填寫時，會出現何種訊息。預設的錯誤處理機制便是將錯誤呈現在資料表單中，提示使用者。然而，你也可以改變此機制，只要加入隱藏的HTML input語法，指定其欄位名稱為 errorURL，便可以在錯誤時提供導向的網址（需懂HTML語言）。"
 
 #: templates/CRM/UF/Page/Group.hlp
 msgid "Make sure the CAPTCHA feature is NOT enabled for this profile when you are grabbing the HTML code. CAPTCHA requires dynamic page generation. Submitting an HTML Snippet profile form with CAPTCHA included will ALWAYS result in a CAPTCHA validation error - which means that the information entered by the user can not be saved."
@@ -31846,7 +31846,7 @@ msgstr "若您正在黏貼片段代碼的網頁，與您CiviCRM網站是不同�
 
 #: templates/CRM/UF/Page/Group.tpl
 msgid "The HTML code below will display a form consisting of the active fields in this Profile. You can copy this HTML code and paste it into any block or page on ANY website where you want to collect contact information."
-msgstr ""
+msgstr "複製下面的 HTML 原始碼，貼到外部任何網站，便可以在該網站讓人填寫資訊。鑲嵌到外部的表單，也會對應在此資料表單中的欄位設定。"
 
 #: templates/CRM/UF/Page/Group.tpl
 msgid "Back to Profile Listings"
@@ -31854,11 +31854,11 @@ msgstr "回到資料表單列表"
 
 #: templates/CRM/UF/Page/Group.tpl
 msgid "CiviCRM Profile(s) allow you to aggregate groups of fields and include them in your site as input forms, contact display pages, and search and listings features. They provide a powerful set of tools for you to collect information from constituents and selectively share contact information."
-msgstr ""
+msgstr "資料表單就像是一張線上填寫報名單，不同的是本張報名單的資訊可以直接存入系統，還提供了搜尋、篩選清單以供瀏覽聯絡人資訊。有了這個強大工具，蒐集資料、舉辦活動不再是繁雜痛苦的事情，讓組織利用網路蒐集聯絡人資訊。"
 
 #: templates/CRM/UF/Page/Group.tpl
 msgid "Add Profile"
-msgstr "增加個人資訊"
+msgstr "增加資料表單"
 
 #: templates/CRM/UF/Page/Group.tpl
 msgid "Profile Title"
