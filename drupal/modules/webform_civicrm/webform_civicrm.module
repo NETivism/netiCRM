@@ -1,0 +1,348 @@
+<?php
+
+/**
+ * @file
+ * Webform CiviCRM Integration Module:
+ * Links webform submissions to contacts in a CiviCRM database.
+ * @author Coleman Watts
+ */
+
+
+/**
+ * Implements hook_menu().
+ */
+function webform_civicrm_menu() {
+  $items = array();
+  $items['node/%webform_menu/civicrm'] = array(
+    'title' => 'CiviCRM',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('webform_civicrm_configure_form', 1),
+    'access callback' => 'webform_civicrm_form_access',
+    'access arguments' => array(1),
+    'file' => 'webform_civicrm_forms.inc',
+    'weight' => 3,
+    'type' => MENU_LOCAL_TASK,
+  );
+  $items['webform-civicrm/js/%'] = array(
+    'page callback' => 'webform_civicrm_js_options',
+    'file' => 'webform_civicrm_forms.inc',
+    'access callback' => TRUE,
+    'page arguments' => array(2),
+    'type' => MENU_CALLBACK
+  );
+  return $items;
+}
+
+
+/**
+ * Menu callback to pass the right number of params for this version of Drupal
+ */
+function webform_civicrm_configure_form(&$form_state, $node) {
+  return webform_civicrm_configure_form_builder(array(), $form_state, $node);
+}
+
+
+/**
+ * Access callback to determine if user can see the CiviCRM tab of a webform.
+ */
+function webform_civicrm_form_access($node) {
+  return (node_access('update', $node) && user_access('access CiviCRM'));
+}
+
+
+/**
+ * Implements hook_form_alter().
+ */
+function webform_civicrm_form_alter(&$form, &$form_state, $form_id) {
+  // Alter back-end webform component edit forms
+  if ($form_id == 'webform_component_edit_form'
+  && substr($form['form_key']['#default_value'], 0, 7) == 'civicrm') {
+    module_load_include('inc', 'webform_civicrm', 'webform_civicrm_forms');
+    _webform_civicrm_webform_component_form_alter($form, $form_state);
+  }
+
+  // Alter front-end of webforms
+  elseif (strpos($form_id, 'webform_client_form_') !== FALSE
+  && !empty($form['#node']->webform_civicrm)) {
+    module_load_include('inc', 'webform_civicrm', 'webform_civicrm_forms');
+    _webform_civicrm_webform_frontend_form_alter($form, $form_state);
+  }
+}
+
+
+/**
+ * Implements hook_nodeapi().
+ */
+function webform_civicrm_nodeapi(&$node, $op, $teaser, $page) {
+  switch ($op) {
+    case 'load':
+      $db = db_query('SELECT * FROM {webform_civicrm_forms} WHERE nid = %d', $node->nid);
+      if ($settings = db_fetch_array($db)) {
+        $settings['data'] = unserialize($settings['data']);
+        return array('webform_civicrm' => $settings);
+      }
+      break;
+
+    case 'insert':
+      // For compatibility with node_clone module
+      if (arg(2)=='clone') {
+        $db = db_query('SELECT * FROM {webform_civicrm_forms} WHERE nid = %d', arg(1));
+        if ($settings = db_fetch_array($db)) {
+          $settings['nid'] = $node->nid;
+          $settings['data'] = unserialize($settings['data']);
+          drupal_write_record('webform_civicrm_forms', $settings);
+        }
+      }
+      break;
+
+    case 'delete':
+      if (!empty($node->webform)) {
+        db_query('DELETE FROM {webform_civicrm_forms} WHERE nid = %d', $node->nid);
+        // Submissions have already been deleted from webform_submissions table, so we'll do the opposite of a join to find them
+        db_query('DELETE FROM {webform_civicrm_submissions} WHERE sid NOT IN (SELECT sid FROM {webform_submissions})');
+      }
+      break;
+  }
+}
+
+
+/**
+ * Implements hook_theme().
+ */
+function webform_civicrm_theme() {
+  $theme = array(
+    // Override webform-results-submissions.tpl.php
+    'webform_results_submissions' => array(
+      'arguments' => array('element' => NULL),
+      'template' => 'webform-results-submissions'
+    ),
+    'webform_civicrm_options' => array(
+      'arguments' => array('element' => NULL),
+    )
+  );
+  return $theme;
+}
+
+
+/**
+ * Implements hook_webform_submission_presave().
+ * Initial submission processing - saves contacts.
+ */
+function webform_civicrm_webform_submission_presave($node, &$submission) {
+  if (!empty($node->webform_civicrm)) {
+    module_load_include('inc', 'webform_civicrm', 'webform_civicrm_utils');
+    webform_civicrm_process_submission($node, $submission, 'presave');
+  }
+}
+
+
+/**
+ * Implements hook_webform_submission_insert().
+ * Final submission processing - saves activity and writes webform_civicrm record.
+ */
+function webform_civicrm_webform_submission_insert($node, $submission) {
+  if (!empty($node->webform_civicrm)) {
+    webform_civicrm_process_submission($node, $submission, 'insert');
+  }
+}
+
+
+/**
+ * Implements hook_webform_submission_update().
+ * Final submission processing - saves activity and updates webform_civicrm record.
+ */
+function webform_civicrm_webform_submission_update($node, $submission) {
+  if (!empty($node->webform_civicrm)) {
+    webform_civicrm_process_submission($node, $submission, 'update');
+  }
+}
+
+
+/**
+ * Implements hook_webform_submission_delete().
+ */
+function webform_civicrm_webform_submission_delete($node, $submission) {
+  db_query("DELETE FROM {webform_civicrm_submissions} WHERE sid = %d", $submission->sid);
+}
+
+
+/**
+ * Implements hook_webform_submission_load().
+ * Add CiviCRM contact info to submission objects.
+ */
+function webform_civicrm_webform_submission_load(&$submissions) {
+  if (empty($submissions)) {
+    return;
+  }
+  $db = db_query('SELECT * FROM {webform_civicrm_submissions} WHERE sid IN ('. implode(',', array_keys($submissions)) .')');
+  $contacts = array();
+  while ($row = db_fetch_array($db)) {
+    $sid = $row['sid'];
+    unset($row['sid']);
+    if ($cid = $row['contact_id']) {
+      $cid = explode('-', rtrim($cid, '-'));
+      unset($cid[0]);
+      $row['contact_id'] = $cid;
+      $contacts[$cid[1]] = '';
+    }
+    $submissions[$sid]->civicrm = $row;
+  }
+  if ($contacts) {
+    // Retrieve contact names and add to submission objects
+    civicrm_initialize();
+    $sql = 'SELECT id, display_name FROM civicrm_contact WHERE id IN (' . implode(',', array_keys($contacts)) . ')';
+
+    $dao = &CRM_Core_DAO::executeQuery($sql);
+    while ($dao->fetch()) {
+      $contacts[$dao->id] = $dao->display_name;
+    }
+    foreach ($submissions as &$s) {
+      if (isset($s->civicrm['contact_id'])) {
+        $s->civicrm['display_name'] = $contacts[$s->civicrm['contact_id'][1]];
+      }
+    }
+  }
+}
+
+
+/**
+ * Implements hook_webform_submission_render_alter().
+ * Add display name to title while viewing a submission.
+ */
+function webform_civicrm_webform_submission_render_alter(&$sub) {
+  if (!empty($sub['#submission']->civicrm['display_name'])
+  && empty($sub['#email']) && $sub['#format'] == 'html') {
+    drupal_set_title(t('Submission #!num by @name', array('!num' => $sub['#submission']->sid, '@name' => $sub['#submission']->civicrm['display_name'])));
+  }
+}
+
+
+/**
+ * Implements hook_webform_submission_actions().
+ * Add links to view contact & activity.
+ */
+function webform_civicrm_webform_submission_actions($node, $submission) {
+  $actions = array();
+  if (!empty($node->webform_civicrm)
+  && !empty($submission->civicrm)
+  && webform_results_access($node)
+  && user_access('access CiviCRM')) {
+    $data = $submission->civicrm;
+    if (!empty($data['display_name'])) {
+      $actions['civicrm_action contact_view'] = array(
+        'title' => t('View @name', array('@name' => $data['display_name'])),
+        'href' => 'civicrm/contact/view',
+        'query' => array('reset' => 1, 'cid' => $data['contact_id'][1]),
+      );
+    }
+    if (!empty($data['activity_id'])) {
+      $actions['civicrm_action activity_view'] = array(
+        'title' => t('View Activity'),
+        'href' => 'civicrm/activity',
+        'query' => array('action' => 'view', 'reset' => 1, 'cid' => $data['contact_id'][1], 'id' => $data['activity_id']),
+      );
+    }
+  }
+  return $actions;
+}
+
+
+/**
+ * Implements hook_civicrm_merge().
+ * Update submission data to reflect new cids when contacts are merged.
+ */
+function webform_civicrm_civicrm_merge($type, $data, $new_id = NULL, $old_id = NULL, $tables = NULL) {
+  if(!empty($new_id) && !empty($old_id) && $type == 'sqls') {
+    db_query("UPDATE {webform_civicrm_submissions} SET contact_id = REPLACE(contact_id, '-%d-', '-%d-') WHERE contact_id LIKE '%%-%d-%%'", $old_id, $new_id, $old_id);
+  }
+}
+
+
+/**
+ * Implements hook_help().
+ */
+function webform_civicrm_help($section) {
+  switch ($section) {
+    case 'admin/help#webform_civicrm':
+      // Return a line-break version of the module README.txt
+      return nl2br(file_get_contents(drupal_get_path('module', 'webform_civicrm') . '/README.txt'));
+    break;
+  }
+}
+
+
+/**
+ * Implements hook_webform_component_presave().
+ * Alter form key when cloning a contact.
+ */
+function webform_civicrm_webform_component_presave(&$component) {
+  if ($c = webform_civicrm_contact_clone_storage()) {
+    $component['form_key'] = str_replace($c['old'], $c['new'], $component['form_key']);
+  }
+}
+
+
+/**
+ * Store info while a clone operation is running.
+ */
+function webform_civicrm_contact_clone_storage($storage = NULL) {
+  static $ret = NULL;
+  if ($storage) {
+    $ret = $storage;
+  }
+  return $ret;
+}
+
+
+/**
+ * Clone a contact via webform.
+ * This submit handler is called when cloning a contact's fieldset
+ */
+function webform_civicrm_contact_clone($form, $form_state) {
+  module_load_include('inc', 'webform_civicrm', 'webform_civicrm_utils');
+  $fid = $form['form_key']['#default_value'];
+  list($lobo, $old, $ent, $n, $table, $key) = webform_civicrm_explode_key($fid);
+  $node = node_load($form['nid']['#value']);
+  $settings = $node->webform_civicrm;
+  $new = count($settings['data']['contact']) + 1;
+  // Clone contact
+  $settings['data']['contact'][$new] = $settings['data']['contact'][$old];
+  $storage = array(
+    'old' => array("civicrm_{$old}_contact_"),
+    'new' => array("civicrm_{$new}_contact_"),
+  );
+  // Clone particpant if registering separately
+  if (webform_civicrm_aval($settings['data'], 'participant_reg_type') == 'separate') {
+    $settings['data']['participant'][$new] = $settings['data']['participant'][$old];
+    $storage['old'][] = "civicrm_{$old}_participant_";
+    $storage['new'][] = "civicrm_{$new}_participant_";
+  }
+  drupal_write_record('webform_civicrm_forms', $settings, 'nid');
+  // Store data to rewrite form keys
+  webform_civicrm_contact_clone_storage($storage);
+}
+
+
+/**
+ * Validation callback for webform submissions.
+ */
+function webform_civicrm_form_validate($form, &$form_state) {
+  module_load_include('inc', 'webform_civicrm', 'webform_civicrm_utils');
+  civicrm_initialize();
+  require_once 'CRM/Utils/Type.php';
+  $node = $form['#node'];
+  $values = _webform_client_form_submit_flatten($node, webform_civicrm_aval($form_state, 'values:submitted'));
+  $submitted = webform_civicrm_enabled_fields($node, $values);
+  _webform_civicrm_form_validate($form['submitted'], $form_state, $submitted);
+  if (!empty($node->webform_civicrm['data']['reg_options']['validate'])
+  && !empty($node->webform_civicrm['data']['participant'])
+  && !empty($node->webform_civicrm['data']['participant_reg_type'])) {
+    // We need data from all pages to validate events
+    if (!empty($form_state['storage']['submitted'])
+    && webform_civicrm_aval($form_state, 'storage:page_num', 1) > 1) {
+      $values += $form_state['storage']['submitted'];
+      $submitted = webform_civicrm_enabled_fields($node, $values);
+    }
+    _webform_civicrm_participant_validate($form, $form_state, $submitted);
+  }
+}
