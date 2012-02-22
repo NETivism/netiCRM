@@ -13998,11 +13998,11 @@ msgstr "高度（列）"
 
 #: CRM/Custom/Form/Field.php
 msgid "Field Pre Help"
-msgstr "欄位幫助訊息開頭"
+msgstr "欄位上方說明"
 
 #: CRM/Custom/Form/Field.php
 msgid "Field Post Help"
-msgstr "欄位幫助訊息結尾"
+msgstr "欄位補充說明（tip）"
 
 #: CRM/Custom/Form/Field.php
 msgid "Is this Field Searchable?"
@@ -27684,15 +27684,15 @@ msgstr "如果您想為此欄位提供一個預設的值，在此輸入。給日
 
 #: templates/CRM/Custom/Form/Field.tpl
 msgid "Explanatory text displayed for this field. Pre help is displayed inline on the form (above the field). Post help is displayed in a pop-up - users click the help balloon to view help text."
-msgstr ""
+msgstr "欄位的說明，將在編輯時顯示。欄位上方說明，將會呈現在欄位的上方。而欄位補充說明，則會顯示在欄位右側的提示按鈕。滑鼠移過去即可看到提示。"
 
 #: templates/CRM/Custom/Form/Field.tpl
 msgid "Can you search on this field in the Advanced and component search forms? NOTE: This feature is available to custom fields used for <strong>Contacts (individuals, organizations and househoulds), Contributions, Pledges, Memberships, Event Participants, Activities, and Relationships</strong>."
-msgstr ""
+msgstr "此欄位可用在「進階搜尋」中嗎？ 注意，此功能僅能在下列資料類型：聯絡人（個人、組織、家庭）、捐款、認捐、會員、活動參加者、任務、關係。"
 
 #: templates/CRM/Custom/Form/Field.tpl
 msgid "Is this field set by PHP code (via a custom hook). This field will not be updated by CiviCRM."
-msgstr ""
+msgstr "此欄位僅能由程式操控？（欄位將會隱藏，需由工程人員撰寫程式碼才能儲存值）。"
 
 #: templates/CRM/Custom/Form/Field.tpl
 msgid "View / Edit Multiple Choice Options"
@@ -27700,7 +27700,7 @@ msgstr "查看 / 編輯多個選項"
 
 #: templates/CRM/Custom/Form/Group.tpl
 msgid "Use Custom Field Sets to add logically related fields for a specific type of CiviCRM record (e.g. contact records, contribution records, etc.)."
-msgstr ""
+msgstr "使用資料欄位集"
 
 #: templates/CRM/Custom/Form/Group.tpl
 msgid "Custom Fields for this Set"
@@ -27736,7 +27736,7 @@ msgstr "是否預設的此選項值'已選取'？"
 
 #: templates/CRM/Custom/Form/Preview.tpl
 msgid "Preview of the custom data group (fieldset) as it will be displayed within an edit form."
-msgstr ""
+msgstr "自訂欄位群組在編輯狀態的表單預覽。"
 
 #: templates/CRM/Custom/Form/Preview.tpl templates/CRM/Price/Form/Preview.tpl
 msgid "Preview of this field as it will be displayed in an edit form."
@@ -27854,11 +27854,11 @@ msgstr "說明文字會顯示在此群組欄位的下方。"
 
 #: templates/CRM/Custom/Page/Group.tpl
 msgid "Custom data is stored in custom fields. Custom fields are organized into logically related custom data sets (e.g. Volunteer Info). Use custom fields to collect and store custom data which are not included in the standard CiviCRM forms. You can create one or many sets of custom fields."
-msgstr ""
+msgstr "設定自訂欄位，可以為聯絡人、捐款、活動、參加者等增加新的欄位，裡頭可存放您組織特有的資料。例如單位有志工的類別，每個聯絡人需要選擇志工類別，便可新增欄位讓聯絡人可標示。新增完的自訂欄位，可在聯絡人綜覽、新增聯絡人、編輯聯絡人的畫面中看到，亦可用作「資料表單」的欄位，供網路使用者填寫資訊。"
 
 #: templates/CRM/Custom/Page/Group.tpl
 msgid "Set"
-msgstr "Setif"
+msgstr "自訂欄位群組"
 
 #: templates/CRM/Custom/Page/Group.tpl
 msgid "All Contact Types"
@@ -27866,7 +27866,7 @@ msgstr "所有聯絡類別"
 
 #: templates/CRM/Custom/Page/Group.tpl
 msgid "Add Set of Custom Fields"
-msgstr "資料欄位集"
+msgstr "新增自訂欄位群組"
 
 #: templates/CRM/Custom/Page/Group.tpl
 msgid "No custom data groups have been created yet. You can <a href='%1'>add one</a>."
