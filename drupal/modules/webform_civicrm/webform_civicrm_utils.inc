@@ -540,6 +540,9 @@ function webform_civicrm_process_submission($node, &$submission, $op) {
       'contact_id' => $cid,
       'activity_id' => empty($id['act'][1]) ? 0 : $id['act'][1],
     );
+    if(empty($update) && $submission->sid){
+      $update = array('sid');
+    }
     drupal_write_record('webform_civicrm_submissions', $record, $update);
   }
 }
