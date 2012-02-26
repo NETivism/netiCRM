@@ -6051,7 +6051,7 @@ msgstr "已刪除的任務‘"
 
 #: CRM/Activity/Task.php
 msgid "Export Activities"
-msgstr "匯入任務記錄"
+msgstr "匯出任務記錄"
 
 #: CRM/Activity/Task.php
 msgid "Batch Update Activities Via Profile"
@@ -8068,7 +8068,7 @@ msgstr "增加時程"
 
 #: CRM/Case/Form/CaseView.php
 msgid "Select Case for Merge"
-msgstr "選擇要匯出的欄位"
+msgstr "選擇要合併的個案"
 
 #: CRM/Case/Form/CaseView.php
 msgid "- select case -"
@@ -8445,7 +8445,7 @@ msgstr "自訂收件人"
 
 #: CRM/Contact/DAO/Contact.php
 msgid "Sic Code"
-msgstr "Sic Code"
+msgstr "統一編號"
 
 #: CRM/Contact/DAO/Contact.php
 msgid "Unique ID (OpenID)"
@@ -26867,13 +26867,13 @@ msgstr "上載檔案中的總列數（捐款紀錄）。"
 #: templates/CRM/Event/Import/Form/Summary.tpl
 #: templates/CRM/Member/Import/Form/Summary.tpl
 msgid "Import has completed successfully."
-msgstr "個案開啟成功。"
+msgstr "匯入成功。"
 
 #: templates/CRM/Contribute/Import/Form/Summary.tpl
 #: templates/CRM/Event/Import/Form/Summary.tpl
 #: templates/CRM/Member/Import/Form/Summary.tpl
 msgid "The information below summarizes the results."
-msgstr "<strong>已被成功匯入</strong>。以下為結果摘要報告。"
+msgstr "以下為結果摘要報告。"
 
 #: templates/CRM/Contribute/Import/Form/Summary.tpl
 msgid "CiviCRM has detected mismatched contribution ID. This record have not been updated."
@@ -28695,29 +28695,31 @@ msgstr[0] "CiviCRM已偵測到不符的參加者編號。這記錄沒有被更�
 
 #: templates/CRM/Event/Import/Form/Summary.tpl
 msgid "You can <a href=\"%1\">Download Mismatched Participantss</a>. You may then correct them, and import the new file with the corrected data."
-msgstr "您可以<a href=\"%1\">下載不相符參加者</a>。您可以更正他們，及匯入已修正數據的新檔案。"
+msgstr "您可以<a href=\"%1\">下載不相符參加者</a>。您可以修正這些錯誤的聯絡人後，再次匯入。"
 
 #: templates/CRM/Event/Import/Form/Summary.tpl
 msgid "CiviCRM has detected one record with conflicting transaction ID within this data file or relative to existing particpant records. This record have not been imported."
 msgid_plural "CiviCRM has detected %count records with conflicting transaction IDs within this data file or relative to existing participant records. These records have not been imported."
-msgstr[0] "CiviCRM已在此資料檔案或相關的現有參加者記錄中偵測到一個有衝突交易編號的紀錄。此記錄未被匯入。"
+msgstr[0] "匯入時，偵測到 1 筆重複的參加者編號。資料沒有匯入。"
+msgstr[1] "匯入時，偵測到 %count 筆重複的參加者編號。這些資料沒有匯入。"
 
 #: templates/CRM/Event/Import/Form/Summary.tpl
 msgid "CiviCRM has detected one record which is a duplicate of existing CiviCRM participant record."
 msgid_plural "CiviCRM has detected %count records which are duplicates of existing CiviCRM participant records."
-msgstr[0] "CiviCRM已偵測到一個紀錄，是為現有的CiviCRM參加者記錄的複製。"
+msgstr[0] "匯入時，偵測到 1 筆跟現有參加者重複的紀錄。"
+msgstr[1] "匯入時，偵測到 %count 筆跟現有參加者重複的紀錄。"
 
 #: templates/CRM/Event/Import/Form/Summary.tpl
 msgid "Rows with mismatched participant IDs... (NOT updated)."
-msgstr "不相符參加者編號的行…(沒有更新)。"
+msgstr "參加者編號不存在匯入資料（未更新）。"
 
 #: templates/CRM/Event/Import/Form/Summary.tpl
 msgid "Download Mismatched participants"
-msgstr "下載不相符的參加者"
+msgstr "下載錯誤的參加者（檔案不相符）的匯入檔案。"
 
 #: templates/CRM/Event/Import/Form/Summary.tpl
 msgid "Rows which are duplicates of existing CiviCRM participant records."
-msgstr ""
+msgstr "重複參加者資料的匯入檔案。"
 
 #: templates/CRM/Event/Import/Form/UploadFile.hlp
 msgid "Required Participant Data"
@@ -28749,24 +28751,24 @@ msgstr "活動參加者聯絡記錄"
 
 #: templates/CRM/Event/Import/Form/UploadFile.hlp
 msgid "Participant import requires that each person, household or organization already exists as a contact record in your CiviCRM database. If you need to import participant information for contact records which haven't been added to CiviCRM yet - you will do this in 2 steps. First, use <strong>Import Contacts</strong> to add the contact records. If possible, include a unique 'External ID' for each new contact which you can then use to match participant info such as event registration to the corresponding contact record. Then return to this screen and import the participant records."
-msgstr ""
+msgstr "參加者匯入之前，聯絡人需要先存在於系統中。如此參加者資料才能正確匯入到活動中。如果你需要匯入一些參加者，並且這些參加者的聯絡資料還未儲存在系統中，您需要先進行<strong>匯入聯絡人</strong>的步驟並帶入「外部編號」已供第二步<strong>匯入參加者</strong>使用。當回到此畫面匯入參加者時，您需要有一個欄位對應正確的聯絡人，通常是剛剛匯入的「外部編號」，或系統提供的聯絡人「系統編號」，而較為不準確的方式，則利用聯絡人「Email」來做對應。三種選一，即可正確對應參加狀態到聯絡人中。"
 
 #: templates/CRM/Event/Import/Form/UploadFile.hlp
 msgid "Matching Participant Data to Contacts"
-msgstr "參加者資料合併到聯絡人"
+msgstr "對應到的參加者資料（聯絡人）"
 
 #: templates/CRM/Event/Import/Form/UploadFile.hlp
 msgid "Participant import files must contain data needed to <strong>match the participant to a contact record in your CiviCRM database</strong>. This 'matching' can be handled in several different ways:"
-msgstr ""
+msgstr "匯入參加者檔案，所需欄位包含<strong>對應參加者和聯絡人的資料</strong>。這些「對應」的方式通常會以下列格式存在："
 
 #: templates/CRM/Event/Import/Form/UploadFile.hlp
 msgid "If you've stored a unique <strong>External Identifier</strong> for each contact in CiviCRM, you can include that value as a column in your import file. Participant data will then be matched to contact records using their External ID."
-msgstr "外部編號"
+msgstr "「外部編號」-外部資料匯入系統時，所賦予聯絡人的唯一編號。"
 
 #: templates/CRM/Event/Import/Form/UploadFile.hlp
 #: templates/CRM/Member/Import/Form/UploadFile.hlp
 msgid "You can include a column with each contact's <strong>Internal Contact ID</strong>. This is the unique ID assigned by CiviCRM which is displayed at the bottom of the Contact Summary screen - and can be exported."
-msgstr "系統編號"
+msgstr "「系統編號」：聯絡人建立時，系統自動給予的一個獨一無二數字編號。"
 
 #: templates/CRM/Event/Import/Form/UploadFile.hlp
 msgid "Save the CSV file with your participant data and 'contact matching' data to your local hard drive (or an accessible drive on your network) - and you are now ready for step 1 (Upload Data)."
@@ -28774,15 +28776,15 @@ msgstr "將您的參加者資料與聯絡人配對資料儲存為 CSV 檔，並�
 
 #: templates/CRM/Event/Import/Form/UploadFile.hlp
 msgid "For each import, you can either INSERT new participant records, or UPDATE existing records during the import session. If you are UPDATING existing records (to update participant status after an event, for example), you will need to include a column containing the unique CiviCRM-assigned participant ID to match to the existing record. This value is included whenever you Export participant records from Find Participants."
-msgstr "在每次匯入過程中，您都可以匯入新的參加者資料，或更新現存的參加者資料。如果您要更新現存參加者資料（例如在活動辦理後更新參加者狀態），您必須要在匯入檔案中，加入一列 CiviCRM 所分配之參加者編號的記錄，以對應資料庫的參加者資料。您可以透過「搜尋參加者」來匯出參加者資料，並找到 CiviCRM 所分配的參加者編號。"
+msgstr "在每次匯入過程中，您都可以匯入新的參加者資料，或更新現存的參加者資料。如果您要更新現存參加者資料（例如在活動辦理後更新參加者狀態），您必須要在匯入檔案中，加入一列系統先前給予的「參加者編號」欄位，以對應資料庫的參加者資料。您可以透過「搜尋參加者」來匯出參加者資料，並找到系統給予的「參加者編號」。"
 
 #: templates/CRM/Event/Import/Form/UploadFile.tpl
 msgid "The Event Import Wizard allows you to easily upload event participation data such as event registrations from other applications into CiviCRM."
-msgstr "活動匯入精靈讓您可輕鬆地從其他應用程式匯入活動報名資料到CiviCRM。"
+msgstr "活動匯入精靈讓您可輕鬆地從其他應用程式匯入活動報名資料。"
 
 #: templates/CRM/Event/Import/Form/UploadFile.tpl
 msgid "Files to be imported must be in the 'comma-separated-values' format (CSV) and must contain data needed to match the participant data to an existing contact in your CiviCRM database."
-msgstr "匯入的資料必須是CSV格式以及可與CiviCRM資料庫對應的欄位內容。"
+msgstr "匯入的資料必須是CSV格式，並且需要對應系統編號的欄位。"
 
 #: templates/CRM/Event/Import/Form/UploadFile.tpl
 msgid "Check this box if the first row of your file consists of field names (Example: \"Contact ID\", \"Participant Role\")."
@@ -28802,7 +28804,7 @@ msgstr "選擇已儲存配對，或留空以建立新的配對。"
 
 #: templates/CRM/Event/Page/DashBoard.hlp
 msgid "CiviEvent allows you to create customized page(s) for constituents to learn about events and optionally register online. You can create <a href='%1'><strong>new events</strong></a> and <a href='%2'><strong>manage existing events</strong></a>."
-msgstr "您可以利用活動建立一個虛擬的活動頁面，讓您的支持者學習線上報名活動。您可以按<a href='%1'><strong>新增活動</strong></a>建立新活動，或按<a href='%2'><strong>管理活動</strong></a>來管理現有活動。"
+msgstr "您可以隨時建立一個線上活動頁面，讓您的支持者線上報名活動。按下<a href='%1'><strong>新增活動</strong></a>建立新活動，或按<a href='%2'><strong>管理活動</strong></a>來管理現有活動。"
 
 #: templates/CRM/Event/Page/DashBoard.hlp
 msgid "You can also input and track offline Events. To enter events manually for individual contacts, use <a href='%1'>Find Contacts</a> to locate the contact. Then click <strong>View</strong> to go to their summary page and click on the <strong>New Event</strong> link. You can also <a href='%2'><strong>import batches of participants</strong></a> from other sources."
@@ -29048,19 +29050,19 @@ msgstr "您沒有報名任何現在或即將舉行的活動。"
 
 #: templates/CRM/Export/Form/Map.tpl
 msgid "Select the fields to be exported using the table below. For each field, first select the contact type that the field belongs to (e.g. select <strong>Individuals</strong> if you are exporting <strong>Last Name</strong>). Then select the actual field to be exported from the drop-down menu which will appear next to the contact type. Your export can include multiple types of contact records, and non-applicable fields will be empty (e.g. <strong>Last Name</strong> will not be populated for an Organization record)."
-msgstr ""
+msgstr "請在下列選擇要匯出的欄位，您需要先在第一欄篩選要使用的聯絡人類型，當你點選後右側即會出現該類型下面可用的欄位。您可以匯出不同類型的欄位，但某些衝突的欄位將無法一次匯出。"
 
 #: templates/CRM/Export/Form/Map.tpl
 msgid "Click <strong>Select more fields...</strong> if you want to export more fields than are initially displayed in the table."
-msgstr ""
+msgstr "點擊<strong>「選擇更多欄位...」</strong>，以加入更多欄位來進行匯出。"
 
 #: templates/CRM/Export/Form/Map.tpl
 msgid "Click 'Load Saved Field Mapping' to retrieve an export setup that you have previously saved."
-msgstr ""
+msgstr "點擊「選擇要匯出的欄位」，以取出之前儲存的欄位對應，省時省力。"
 
 #: templates/CRM/Export/Form/Map.tpl
 msgid "If you want to use the same export setup in the future, check 'Save this field mapping' at the bottom of the page before continuing. You will then be able to reload this setup with a single click."
-msgstr ""
+msgstr "如果你想要將來還可以重複使用此欄位對應，請在儲存前勾選「儲存為新的欄位配對」選項，未來你就可以在匯出時的欄位清單中看到該對應。"
 
 #: templates/CRM/Export/Form/Select.hlp
 msgid ""
@@ -29086,24 +29088,25 @@ msgstr "<strong>匯出主要欄位</strong>提供最常使用的資料值。此�
 
 #: templates/CRM/Export/Form/Select.tpl
 msgid "Click <strong>Select fields for export</strong> and then <strong>Continue</strong> to choose a subset of fields for export. This option allows you to export multiple specific locations (Home, Work, etc.) as well as custom data. You can also save your selections as a 'field mapping' so you can use it again later."
-msgstr "按<strong>選擇匯出欄位</strong>然後<strong>繼續<strong>選擇匯出集合欄位。此選項允許您匯出多個指定地點(家中、工作等)和自訂欄位。您可儲存您的選擇為'欄位配對'所以您可以之後再次使用它。"
+msgstr "按<strong>選擇匯出欄位</strong>然後<strong>繼續</strong>選擇接續的欄位對應選擇。您可以在欄位對應選擇中，儲存儲存您的選擇為「欄位配對」，儲存下來的欄位範本，讓您之後也可重新應用。"
 
 #: templates/CRM/Export/Form/Select.tpl
 msgid "One record selected for export."
 msgid_plural "%count records selected for export."
-msgstr[0] "記錄已被選取來匯出。"
+msgstr[0] "已選取 1 個記錄以供匯出。"
+msgstr[1] "已選取 %count 個記錄以供匯出。"
 
 #: templates/CRM/Export/Form/Select.tpl
 msgid "Merge Options"
-msgstr "性別選項"
+msgstr "合併選項"
 
 #: templates/CRM/Export/Form/table.tpl
 msgid "Using Field Mapping: %1"
-msgstr "用欄位配對： %1"
+msgstr "使用欄位配對： %1"
 
 #: templates/CRM/Export/Form/table.tpl
 msgid "Fields to Include in Export File"
-msgstr "包括在匯出檔案的欄位"
+msgstr "匯出時要包含的欄位"
 
 #: templates/CRM/Form/attachment.tpl
 msgid "Current Attachment(s)"
@@ -39662,3 +39665,6 @@ msgstr "可用的信用卡"
 
 msgid "Go to a web page where you can confirm your registration online"
 msgstr "點此完成線上登記 &raquo;"
+
+msgid "Export Activity"
+msgstr "匯出任務"
