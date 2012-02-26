@@ -221,7 +221,7 @@ FROM   {$this->_componentTable}
         
         $this->buildMapping( );
 
-        $this->setDefaults(array('exportOption' => self::EXPORT_ALL ));
+        $this->setDefaults(array('exportOption' => self::EXPORT_SELECTED ));
 
         $this->addButtons( array(
                                  array ( 'type'      => 'next',
