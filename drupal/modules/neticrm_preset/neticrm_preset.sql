@@ -252,3 +252,11 @@ VALUES
   (@import_participant_id, '- 不要匯入 -', NULL, 10),
   (@import_participant_id, '系統編號 (match to contact)', NULL, 11);
 
+
+-- remove custom search at navigation
+UPDATE civicrm_navigation SET is_active = 0 WHERE url LIKE 'civicrm/contact/search/custom%csid=8%';
+UPDATE civicrm_navigation SET is_active = 0 WHERE url LIKE 'civicrm/contact/search/custom%csid=11%';
+UPDATE civicrm_navigation SET is_active = 0 WHERE url LIKE 'civicrm/contact/search/custom%csid=2%';
+UPDATE civicrm_navigation SET is_active = 0 WHERE url LIKE 'civicrm/contact/search/custom%csid=6%';
+UPDATE civicrm_navigation SET is_active = 0 WHERE url LiKE 'civicrm/contact/search/custom/list%';
+
