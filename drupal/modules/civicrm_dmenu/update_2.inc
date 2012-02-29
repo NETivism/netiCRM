@@ -1,7 +1,6 @@
 <?php
 global $menu_links;
 $menu_links['navigation'] = array (
-  0 => 
   array (
     'path' => 'civicrm',
     'query' => NULL,
@@ -11,7 +10,6 @@ $menu_links['navigation'] = array (
     'module' => 'menu',
     'hidden' => '1',
   ),
-  1 => 
   array (
     'path' => 'civicrm/dashboard',
     'query' => NULL,
@@ -21,7 +19,6 @@ $menu_links['navigation'] = array (
     'module' => 'menu',
     'hidden' => '1',
   ),
-  2 => 
   array (
     'path' => 'http://neticrm.tw/support',
     'query' => NULL,
@@ -31,7 +28,7 @@ $menu_links['navigation'] = array (
     'module' => 'menu',
     'hidden' => '0',
   ),
-  3 => 
+ 
   array (
     'path' => 'admin',
     'query' => NULL,
@@ -63,7 +60,7 @@ $menu_links['navigation'] = array (
             'module' => 'menu',
             'hidden' => '0',
           ),
-          1 => 
+         
           array (
             'path' => 'admin/content/types',
             'query' => NULL,
@@ -73,7 +70,7 @@ $menu_links['navigation'] = array (
             'module' => 'menu',
             'hidden' => '0',
           ),
-          2 => 
+         
           array (
             'path' => 'admin/content/node-settings',
             'query' => NULL,
@@ -96,7 +93,7 @@ $menu_links['navigation'] = array (
               ),
             ),
           ),
-          3 => 
+         
           array (
             'path' => 'admin/content/rss-publishing',
             'query' => NULL,
@@ -106,7 +103,7 @@ $menu_links['navigation'] = array (
             'module' => 'menu',
             'hidden' => '0',
           ),
-          4 => 
+         
           array (
             'path' => 'admin/content/taxonomy',
             'query' => NULL,
@@ -127,7 +124,7 @@ $menu_links['navigation'] = array (
                 'module' => 'menu',
                 'hidden' => '0',
               ),
-              1 => 
+             
               array (
                 'path' => 'admin/content/taxonomy/edit/term',
                 'query' => NULL,
@@ -137,7 +134,7 @@ $menu_links['navigation'] = array (
                 'module' => 'menu',
                 'hidden' => '0',
               ),
-              2 => 
+             
               array (
                 'path' => 'admin/content/taxonomy/edit/vocabulary/%',
                 'query' => NULL,
@@ -149,7 +146,7 @@ $menu_links['navigation'] = array (
               ),
             ),
           ),
-          5 => 
+         
           array (
             'path' => 'admin/content/node-type/page',
             'query' => NULL,
@@ -161,7 +158,7 @@ $menu_links['navigation'] = array (
           ),
         ),
       ),
-      1 => 
+     
       array (
         'path' => 'admin/reports',
         'query' => NULL,
@@ -193,7 +190,7 @@ $menu_links['navigation'] = array (
                 'module' => 'menu',
                 'hidden' => '0',
               ),
-              1 => 
+             
               array (
                 'path' => 'admin/reports/status/run-cron',
                 'query' => NULL,
@@ -203,7 +200,7 @@ $menu_links['navigation'] = array (
                 'module' => 'menu',
                 'hidden' => '0',
               ),
-              2 => 
+             
               array (
                 'path' => 'admin/reports/status/sql',
                 'query' => NULL,
@@ -215,7 +212,7 @@ $menu_links['navigation'] = array (
               ),
             ),
           ),
-          1 => 
+         
           array (
             'path' => 'admin/reports/dblog',
             'query' => NULL,
@@ -225,7 +222,7 @@ $menu_links['navigation'] = array (
             'module' => 'menu',
             'hidden' => '0',
           ),
-          2 => 
+         
           array (
             'path' => 'admin/reports/access-denied',
             'query' => NULL,
@@ -235,7 +232,7 @@ $menu_links['navigation'] = array (
             'module' => 'menu',
             'hidden' => '0',
           ),
-          3 => 
+         
           array (
             'path' => 'admin/reports/page-not-found',
             'query' => NULL,
@@ -245,7 +242,7 @@ $menu_links['navigation'] = array (
             'module' => 'menu',
             'hidden' => '0',
           ),
-          4 => 
+         
           array (
             'path' => 'admin/reports/event/%',
             'query' => NULL,
@@ -257,7 +254,7 @@ $menu_links['navigation'] = array (
           ),
         ),
       ),
-      2 => 
+     
       array (
         'path' => 'admin/build',
         'query' => NULL,
@@ -279,7 +276,7 @@ $menu_links['navigation'] = array (
             'module' => 'menu',
             'hidden' => '0',
           ),
-          1 => 
+         
           array (
             'path' => 'civicrm/admin/custom/group',
             'query' => 'reset=1',
@@ -290,7 +287,7 @@ $menu_links['navigation'] = array (
             'module' => 'menu',
             'hidden' => '0',
           ),
-          2 => 
+         
           array (
             'path' => 'civicrm/admin/uf/group',
             'query' => 'reset=1',
@@ -301,7 +298,7 @@ $menu_links['navigation'] = array (
             'module' => 'menu',
             'hidden' => '0',
           ),
-          3 => 
+         
           array (
             'path' => 'civicrm/admin/configtask',
             'query' => 'reset=1',
@@ -314,7 +311,7 @@ $menu_links['navigation'] = array (
           ),
         ),
       ),
-      3 => 
+     
       array (
         'path' => 'admin/user',
         'query' => NULL,
@@ -336,7 +333,7 @@ $menu_links['navigation'] = array (
             'module' => 'menu',
             'hidden' => '0',
           ),
-          1 => 
+         
           array (
             'path' => 'civicrm/admin/synchUser',
             'query' => 'reset=1',
@@ -356,7 +353,6 @@ $menu_links['navigation'] = array (
 $menu_links['neticrm'] =array (
   '#title' => '系統選單',
   '#description' => '系統主要的導覽，僅有登入使用者可看見。',
-  0 => 
   array (
     'path' => 'civicrm/contact/search',
     'query' => 'reset=1',
@@ -368,7 +364,6 @@ $menu_links['neticrm'] =array (
     'expanded' => 1,
     'children' => 
     array (
-      0 => 
       array (
         'path' => 'admin/user/user',
         'title' => '新增/管理網站使用者',
@@ -377,17 +372,14 @@ $menu_links['neticrm'] =array (
         'module' => 'menu',
         'hidden' => '0',
       ),
-      1 => 
       array (
-        'path' => 'civicrm/contact/add',
-        'query' => 'reset=1&ct=Household',
-        'title' => '新增家庭',
+        'path' => 'admin/user/permissions',
+        'title' => '權限管理',
         'menu' => 'menu-neticrm',
-        'weight' => '-49',
+        'weight' => '-54',
         'module' => 'menu',
         'hidden' => '0',
       ),
-      2 => 
       array (
         'path' => 'civicrm/contact/add',
         'query' => 'reset=1&ct=Individual',
@@ -397,7 +389,6 @@ $menu_links['neticrm'] =array (
         'module' => 'menu',
         'hidden' => '0',
       ),
-      3 => 
       array (
         'path' => 'civicrm/contact/add',
         'query' => 'reset=1&ct=Organization',
@@ -407,47 +398,33 @@ $menu_links['neticrm'] =array (
         'module' => 'menu',
         'hidden' => '0',
       ),
-      4 => 
       array (
-        'path' => 'civicrm/activity',
-        'query' => 'reset=1&action=add&context=standalone',
-        'title' => '新增任務',
+        'path' => 'civicrm/contact/add',
+        'query' => 'reset=1&ct=Household',
+        'title' => '新增家庭',
         'menu' => 'menu-neticrm',
         'weight' => '-47',
         'module' => 'menu',
         'hidden' => '0',
       ),
-      5 => 
       array (
         'path' => 'civicrm/activity/add',
         'query' => 'atype=3&action=add&reset=1&context=standalone',
         'title' => '新增 Email',
         'menu' => 'menu-neticrm',
-        'weight' => '-46',
+        'weight' => '-45',
         'module' => 'menu',
         'hidden' => '0',
       ),
-      6 => 
       array (
         'path' => 'civicrm/import/contact',
         'query' => 'reset=1',
         'title' => '匯入聯絡人資料',
         'menu' => 'menu-neticrm',
-        'weight' => '-45',
-        'module' => 'menu',
-        'hidden' => '0',
-      ),
-      7 => 
-      array (
-        'path' => 'civicrm/import/activity',
-        'query' => 'reset=1',
-        'title' => '匯入任務記錄',
-        'menu' => 'menu-neticrm',
         'weight' => '-44',
         'module' => 'menu',
         'hidden' => '0',
       ),
-      8 => 
       array (
         'path' => 'civicrm/group/add',
         'query' => 'reset=1',
@@ -457,7 +434,6 @@ $menu_links['neticrm'] =array (
         'module' => 'menu',
         'hidden' => '0',
       ),
-      9 => 
       array (
         'path' => 'civicrm/group',
         'query' => 'reset=1',
@@ -467,7 +443,6 @@ $menu_links['neticrm'] =array (
         'module' => 'menu',
         'hidden' => '0',
       ),
-      10 => 
       array (
         'path' => 'civicrm/admin/tag',
         'query' => 'reset=1&action=add',
@@ -477,7 +452,6 @@ $menu_links['neticrm'] =array (
         'module' => 'menu',
         'hidden' => '0',
       ),
-      11 => 
       array (
         'path' => 'civicrm/admin/tag',
         'query' => 'reset=1',
@@ -487,38 +461,53 @@ $menu_links['neticrm'] =array (
         'module' => 'menu',
         'hidden' => '0',
       ),
-      12 => 
       array (
-        'path' => 'civicrm/contact/deduperules',
-        'query' => 'reset=1',
-        'title' => '合併重複聯絡人',
-        'menu' => 'menu-neticrm',
-        'weight' => '-38',
-        'module' => 'menu',
-        'hidden' => '0',
-      ),
-      13 => 
-      array (
-        'path' => 'civicrm/admin/reltype',
-        'query' => 'reset=1',
-        'title' => '新增/管理關係類型',
+        'path' => 'civicrm/activity',
+        'query' => 'reset=1&action=add&context=standalone',
+        'title' => '新增任務',
         'menu' => 'menu-neticrm',
         'weight' => '-39',
         'module' => 'menu',
         'hidden' => '0',
       ),
-      14 => 
       array (
-        'path' => 'admin/user/permissions',
-        'title' => '權限管理',
+        'path' => 'civicrm/activity/search',
+        'query' => 'reset=1',
+        'title' => '搜尋任務',
         'menu' => 'menu-neticrm',
-        'weight' => '-54',
+        'weight' => '-38',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      array (
+        'path' => 'civicrm/import/activity',
+        'query' => 'reset=1',
+        'title' => '匯入任務記錄',
+        'menu' => 'menu-neticrm',
+        'weight' => '-37',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      array (
+        'path' => 'civicrm/contact/deduperules',
+        'query' => 'reset=1',
+        'title' => '合併重複聯絡人',
+        'menu' => 'menu-neticrm',
+        'weight' => '-35',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      array (
+        'path' => 'civicrm/admin/reltype',
+        'query' => 'reset=1',
+        'title' => '新增/管理關係類型',
+        'menu' => 'menu-neticrm',
+        'weight' => '-34',
         'module' => 'menu',
         'hidden' => '0',
       ),
     ),
   ),
-  1 => 
   array (
     'path' => 'civicrm/contribute',
     'query' => 'reset=1',
@@ -530,7 +519,6 @@ $menu_links['neticrm'] =array (
     'expanded' => 1,
     'children' => 
     array (
-      0 => 
       array (
         'path' => 'civicrm/admin/options/payment_instrument',
         'query' => 'group=payment_instrument&reset=1',
@@ -540,7 +528,6 @@ $menu_links['neticrm'] =array (
         'module' => 'menu',
         'hidden' => '0',
       ),
-      1 => 
       array (
         'path' => 'civicrm/contribute/add',
         'query' => 'reset=1&action=add&context=standalone',
@@ -550,7 +537,6 @@ $menu_links['neticrm'] =array (
         'module' => 'menu',
         'hidden' => '0',
       ),
-      2 => 
       array (
         'path' => 'civicrm/contribute/search',
         'query' => 'reset=1',
@@ -560,7 +546,7 @@ $menu_links['neticrm'] =array (
         'module' => 'menu',
         'hidden' => '0',
       ),
-      3 => 
+     
       array (
         'path' => 'civicrm/contribute/import',
         'query' => 'reset=1',
@@ -570,7 +556,7 @@ $menu_links['neticrm'] =array (
         'module' => 'menu',
         'hidden' => '0',
       ),
-      4 => 
+     
       array (
         'path' => 'civicrm/pledge',
         'query' => 'reset=1',
@@ -580,7 +566,7 @@ $menu_links['neticrm'] =array (
         'module' => 'menu',
         'hidden' => '0',
       ),
-      5 => 
+     
       array (
         'path' => 'civicrm/pledge/add',
         'query' => 'reset=1&action=add&context=standalone',
@@ -590,7 +576,7 @@ $menu_links['neticrm'] =array (
         'module' => 'menu',
         'hidden' => '0',
       ),
-      6 => 
+     
       array (
         'path' => 'civicrm/pledge/search',
         'query' => 'reset=1',
@@ -600,7 +586,7 @@ $menu_links['neticrm'] =array (
         'module' => 'menu',
         'hidden' => '0',
       ),
-      7 => 
+     
       array (
         'path' => 'civicrm/admin/contribute/add',
         'query' => 'reset=1&action=add',
@@ -610,7 +596,7 @@ $menu_links['neticrm'] =array (
         'module' => 'menu',
         'hidden' => '0',
       ),
-      8 => 
+     
       array (
         'path' => 'civicrm/admin/contribute',
         'query' => 'reset=1',
@@ -620,7 +606,7 @@ $menu_links['neticrm'] =array (
         'module' => 'menu',
         'hidden' => '0',
       ),
-      9 => 
+     
       array (
         'path' => 'civicrm/admin/pcp',
         'query' => 'reset=1',
@@ -640,7 +626,7 @@ $menu_links['neticrm'] =array (
         'module' => 'menu',
         'hidden' => '0',
       ),
-      11 => 
+      
       array (
         'path' => 'civicrm/admin/price',
         'query' => 'reset=1&action=add',
@@ -650,7 +636,7 @@ $menu_links['neticrm'] =array (
         'module' => 'menu',
         'hidden' => '0',
       ),
-      12 => 
+      
       array (
         'path' => 'civicrm/admin/price',
         'query' => 'reset=1',
@@ -660,7 +646,7 @@ $menu_links['neticrm'] =array (
         'module' => 'menu',
         'hidden' => '0',
       ),
-      13 => 
+      
       array (
         'path' => 'civicrm/admin/contribute/contributionType',
         'query' => 'reset=1',
@@ -670,7 +656,7 @@ $menu_links['neticrm'] =array (
         'module' => 'menu',
         'hidden' => '0',
       ),
-      14 => 
+      
       array (
         'path' => 'civicrm/admin/options/accept_creditcard',
         'query' => 'group=accept_creditcard&reset=1',
@@ -680,7 +666,7 @@ $menu_links['neticrm'] =array (
         'module' => 'menu',
         'hidden' => '0',
       ),
-      15 => 
+      
       array (
         'path' => 'civicrm/admin/uf/group',
         'query' => 'reset=1',
@@ -690,7 +676,7 @@ $menu_links['neticrm'] =array (
         'module' => 'menu',
         'hidden' => '0',
       ),
-      16 => 
+      
       array (
         'path' => 'civicrm/admin/custom/group',
         'query' => 'reset=1',
@@ -702,7 +688,7 @@ $menu_links['neticrm'] =array (
       ),
     ),
   ),
-  2 => 
+ 
   array (
     'path' => 'civicrm/event',
     'query' => 'reset=1',
@@ -724,7 +710,7 @@ $menu_links['neticrm'] =array (
         'module' => 'menu',
         'hidden' => '0',
       ),
-      1 => 
+     
       array (
         'path' => 'civicrm/admin/options/event_type',
         'query' => 'group=event_type&reset=1',
@@ -734,7 +720,7 @@ $menu_links['neticrm'] =array (
         'module' => 'menu',
         'hidden' => '0',
       ),
-      2 => 
+     
       array (
         'path' => 'civicrm/admin/participant_status',
         'query' => 'reset=1',
@@ -744,7 +730,7 @@ $menu_links['neticrm'] =array (
         'module' => 'menu',
         'hidden' => '0',
       ),
-      3 => 
+     
       array (
         'path' => 'civicrm/admin/options/participant_role',
         'query' => 'group=participant_role&reset=1',
@@ -754,7 +740,7 @@ $menu_links['neticrm'] =array (
         'module' => 'menu',
         'hidden' => '0',
       ),
-      4 => 
+     
       array (
         'path' => 'civicrm/participant/add',
         'query' => 'reset=1&action=add&context=standalone',
@@ -764,7 +750,7 @@ $menu_links['neticrm'] =array (
         'module' => 'menu',
         'hidden' => '0',
       ),
-      5 => 
+     
       array (
         'path' => 'civicrm/event/search',
         'query' => 'reset=1',
@@ -774,7 +760,7 @@ $menu_links['neticrm'] =array (
         'module' => 'menu',
         'hidden' => '0',
       ),
-      6 => 
+     
       array (
         'path' => 'civicrm/event/import',
         'query' => 'reset=1',
@@ -784,7 +770,7 @@ $menu_links['neticrm'] =array (
         'module' => 'menu',
         'hidden' => '0',
       ),
-      7 => 
+     
       array (
         'path' => 'civicrm/event/add',
         'query' => 'reset=1&action=add',
@@ -794,7 +780,7 @@ $menu_links['neticrm'] =array (
         'module' => 'menu',
         'hidden' => '0',
       ),
-      8 => 
+     
       array (
         'path' => 'civicrm/event/manage',
         'query' => 'reset=1',
@@ -804,7 +790,7 @@ $menu_links['neticrm'] =array (
         'module' => 'menu',
         'hidden' => '0',
       ),
-      9 => 
+     
       array (
         'path' => 'civicrm/admin/eventTemplate',
         'query' => 'reset=1',
@@ -824,7 +810,7 @@ $menu_links['neticrm'] =array (
         'module' => 'menu',
         'hidden' => '0',
       ),
-      11 => 
+      
       array (
         'path' => 'civicrm/admin/price',
         'query' => 'reset=1',
@@ -834,7 +820,7 @@ $menu_links['neticrm'] =array (
         'module' => 'menu',
         'hidden' => '0',
       ),
-      12 => 
+      
       array (
         'path' => 'civicrm/admin/uf/group',
         'query' => 'reset=1',
@@ -844,7 +830,7 @@ $menu_links['neticrm'] =array (
         'module' => 'menu',
         'hidden' => '0',
       ),
-      13 => 
+      
       array (
         'path' => 'civicrm/admin/custom/group',
         'query' => 'reset=1',
@@ -856,7 +842,7 @@ $menu_links['neticrm'] =array (
       ),
     ),
   ),
-  3 => 
+ 
   array (
     'path' => 'civicrm/mailing/browse',
     'query' => 'reset=1&scheduled=true',
@@ -878,7 +864,7 @@ $menu_links['neticrm'] =array (
         'module' => 'menu',
         'hidden' => '0',
       ),
-      1 => 
+     
       array (
         'path' => 'civicrm/mailing/browse/unscheduled',
         'query' => 'reset=1&scheduled=false',
@@ -888,7 +874,7 @@ $menu_links['neticrm'] =array (
         'module' => 'menu',
         'hidden' => '0',
       ),
-      2 => 
+     
       array (
         'path' => 'civicrm/mailing/browse/scheduled',
         'query' => 'reset=1&scheduled=true',
@@ -898,7 +884,7 @@ $menu_links['neticrm'] =array (
         'module' => 'menu',
         'hidden' => '0',
       ),
-      3 => 
+     
       array (
         'path' => 'civicrm/mailing/browse/archived',
         'query' => 'reset=1',
@@ -908,7 +894,7 @@ $menu_links['neticrm'] =array (
         'module' => 'menu',
         'hidden' => '0',
       ),
-      4 => 
+     
       array (
         'path' => 'civicrm/admin/component',
         'query' => 'reset=1',
@@ -918,7 +904,7 @@ $menu_links['neticrm'] =array (
         'module' => 'menu',
         'hidden' => '0',
       ),
-      5 => 
+     
       array (
         'path' => 'civicrm/admin/messageTemplates',
         'query' => 'reset=1',
@@ -928,7 +914,7 @@ $menu_links['neticrm'] =array (
         'module' => 'menu',
         'hidden' => '0',
       ),
-      6 => 
+     
       array (
         'path' => 'civicrm/admin/options/from_email',
         'query' => 'group=from_email_address&reset=1',
@@ -938,7 +924,7 @@ $menu_links['neticrm'] =array (
         'module' => 'menu',
         'hidden' => '0',
       ),
-      7 => 
+     
       array (
         'path' => 'civicrm/admin/options/email_greeting',
         'query' => 'group=email_greeting&reset=1',
@@ -950,7 +936,7 @@ $menu_links['neticrm'] =array (
       ),
     ),
   ),
-  4 => 
+ 
   array (
     'path' => 'civicrm/member',
     'query' => 'reset=1',
@@ -972,7 +958,7 @@ $menu_links['neticrm'] =array (
         'module' => 'menu',
         'hidden' => '0',
       ),
-      1 => 
+     
       array (
         'path' => 'civicrm/member/search',
         'query' => 'reset=1',
@@ -982,7 +968,7 @@ $menu_links['neticrm'] =array (
         'module' => 'menu',
         'hidden' => '0',
       ),
-      2 => 
+     
       array (
         'path' => 'civicrm/member/import',
         'query' => 'reset=1',
@@ -992,7 +978,7 @@ $menu_links['neticrm'] =array (
         'module' => 'menu',
         'hidden' => '0',
       ),
-      3 => 
+     
       array (
         'path' => 'civicrm/admin/member/membershipType',
         'query' => 'reset=1',
@@ -1002,7 +988,7 @@ $menu_links['neticrm'] =array (
         'module' => 'menu',
         'hidden' => '0',
       ),
-      4 => 
+     
       array (
         'path' => 'civicrm/admin/member/membershipStatus',
         'query' => 'reset=1',
@@ -1014,7 +1000,7 @@ $menu_links['neticrm'] =array (
       ),
     ),
   ),
-  5 => 
+ 
   array (
     'path' => 'civicrm/report/list',
     'query' => 'reset=1',
@@ -1036,7 +1022,7 @@ $menu_links['neticrm'] =array (
         'module' => 'menu',
         'hidden' => '0',
       ),
-      1 => 
+     
       array (
         'path' => 'civicrm/admin/report/options/report_template&reset=1',
         'query' => NULL,
@@ -1068,7 +1054,7 @@ $menu_links['search'] = array (
     'module' => 'menu',
     'hidden' => '0',
   ),
-  1 => 
+ 
   array (
     'path' => 'civicrm/contact/search/custom',
     'query' => 'csid=15&reset=1',
@@ -1078,7 +1064,7 @@ $menu_links['search'] = array (
     'module' => 'menu',
     'hidden' => '0',
   ),
-  2 => 
+ 
   array (
     'path' => 'civicrm/contact/search/advanced',
     'query' => 'reset=1',
