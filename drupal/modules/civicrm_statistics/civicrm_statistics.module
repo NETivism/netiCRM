@@ -2,16 +2,14 @@
 define("NETICRM_DEFAULT_URL", "http://neticrm.tw/neticrm/statistics");
 
 function civicrm_statistics_cron(){
-  if($_SERVER['REQUEST_TIME'] - variable_get('civicrm_statistics_run', 0) > 86399){
+  if($_SERVER['REQUEST_TIME'] - variable_get('civicrm_statistics_run', 0) > 21600){
     civicrm_statistics_fetch();
   }
 }
 
 function civicrm_statistics_fetch(){
-  global $base_url;
-
   $stat = array();
-  $sitekey = md5($base_url . drupal_get_private_key());
+  $sitekey = $_SERVER['HTTP_HOST'];
   $tables = civicrm_statistics_table();
   civicrm_initialize();
   foreach($tables as $table => $t){
