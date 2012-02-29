@@ -272,6 +272,10 @@ function neticrm_preset_update_6103(){
 
   // enable participant waiting type
   CRM_Core_DAO::executeQuery("UPDATE civicrm_participant_status_type SET is_active = 1 WHERE is_active = 0");
+
+  // remove custom search at civicrm navigation
+  _netcrm_preset_disable_custom_search();
+
 }
 
 function _neticrm_preset_message($message, $success){
@@ -443,3 +447,16 @@ function _neticrm_preset_customfield(&$custom_groups){
     }
   }
 }
+
+function _netcrm_preset_disable_custom_search() {
+  require_once 'CRM/Core/Menu.php';
+  require_once 'CRM/Core/BAO/Navigation.php';
+  CRM_Core_DAO::executeQuery("UPDATE civicrm_navigation SET is_active = 0 WHERE url LIKE 'civicrm/contact/search/custom%csid=8%'");
+  CRM_Core_DAO::executeQuery("UPDATE civicrm_navigation SET is_active = 0 WHERE url LIKE 'civicrm/contact/search/custom%csid=11%'");
+  CRM_Core_DAO::executeQuery("UPDATE civicrm_navigation SET is_active = 0 WHERE url LIKE 'civicrm/contact/search/custom%csid=2%'");
+  CRM_Core_DAO::executeQuery("UPDATE civicrm_navigation SET is_active = 0 WHERE url LIKE 'civicrm/contact/search/custom%csid=6%'");
+  CRM_Core_DAO::executeQuery("UPDATE civicrm_navigation SET is_active = 0 WHERE url LiKE 'civicrm/contact/search/custom/list%'");
+  CRM_Core_Menu::store( );
+  CRM_Core_BAO_Navigation::resetNavigation( );
+}
+
