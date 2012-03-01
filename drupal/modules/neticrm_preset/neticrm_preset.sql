@@ -260,3 +260,7 @@ UPDATE civicrm_navigation SET is_active = 0 WHERE url LIKE 'civicrm/contact/sear
 UPDATE civicrm_navigation SET is_active = 0 WHERE url LIKE 'civicrm/contact/search/custom%csid=6%';
 UPDATE civicrm_navigation SET is_active = 0 WHERE url LiKE 'civicrm/contact/search/custom/list%';
 
+-- translate profile group
+UPDATE civicrm_uf_group SET  title =  '聯絡人摘要' WHERE  civicrm_uf_group.id =7;
+UPDATE civicrm_uf_group SET  title =  '共享地址' WHERE  civicrm_uf_group.id =8;
+
