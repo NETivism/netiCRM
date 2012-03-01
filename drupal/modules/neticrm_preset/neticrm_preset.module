@@ -41,6 +41,12 @@ function neticrm_preset_init(){
   if(arg(0) == 'neticrm' && arg(1) == 'quota'){
     $conf['cache'] = FALSE;
   }
+
+  // #5947, redirect to correct frontpage
+  if($_GET['q'] == 'civicrm' || $_GET['q'] == 'civicrm/dashboard'){
+    drupal_goto();
+  }
+
 }
 
 /**
