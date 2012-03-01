@@ -276,6 +276,9 @@ function neticrm_preset_update_6103(){
   // remove custom search at civicrm navigation
   _netcrm_preset_disable_custom_search();
 
+  // translate group
+  CRM_Core_DAO::executeQuery("UPDATE civicrm_uf_group SET  title =  '聯絡人摘要' WHERE  civicrm_uf_group.id = 7");
+  CRM_Core_DAO::executeQuery("UPDATE civicrm_uf_group SET  title =  '共享地址' WHERE  civicrm_uf_group.id = 8");
 }
 
 function _neticrm_preset_message($message, $success){
