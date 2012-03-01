@@ -5662,7 +5662,7 @@ msgstr "聯絡人群組"
 
 #: CRM/ACL/BAO/ACL.php
 msgid "Administer"
-msgstr "管理者"
+msgstr "管理"
 
 #: CRM/ACL/BAO/ACL.php msgctxt "menu"
 msgid "Import"
@@ -19052,7 +19052,7 @@ msgstr "更新對應的聯絡人。"
 
 #: CRM/UF/Form/AdvanceSetting.php
 msgid "Allow duplicate contact to be created"
-msgstr "已經新增了聯絡人。"
+msgstr "允許建立重複聯絡人"
 
 #: CRM/UF/Form/AdvanceSetting.php
 msgid "What to do upon duplicate match"
@@ -20727,13 +20727,13 @@ msgstr "勾選此框，以在這個選單項目與下一個項目之間新增分
 msgid "You can assign one or more permissions to this menu item. Multiple permissions are additive by default. EXAMPLE: If you assign <em>access CiviContribute</em> and <em>administer CiviCRM</em> to a menu item, a user will need to have BOTH permissions to access it. You can change this behavior to \"either / or\" by changing the Operator below."
 msgstr ""
 "您可以指派一個或多個權限到這個選單項目。預設上，多重權限是可以的。舉例：若您指派\n"
-"<em>存取捐款</em>與<em>CiviCRM管理員</em>到選單項目，使用者需要具有兩者的權限才能存取。\n"
+"<em>存取捐款</em>與<em>支持者系統管理</em>到選單項目，使用者需要具有兩者的權限才能存取。\n"
 "You can change this behavior to \"either / or\" by changing the Operator below."
 
 #: templates/CRM/Admin/Form/Navigation.hlp
 msgid "Set the Operator to \"OR\" if you've assigned multiple permissions and want access to be granted for any one of them. EXAMPLE: If you assign <em>access CiviContribute</em> and <em>administer CiviCRM</em> to a menu item, and set the Operator to \"OR\", users who have either of those permissions will have access."
 msgstr ""
-"若您指定多個權限並想要被授予訪問其中任何一個，請設定操作子到「或」。舉例：若您指派<em>存取捐款</em>與<em>CiviCRM管理員</em>到選單項目，並設置操作子為「或」，使用者\n"
+"若您指定多個權限並想要被授予訪問其中任何一個，請設定操作子到「或」。舉例：若您指派<em>存取捐款</em>與<em>支持者系統管理</em>到選單項目，並設置操作子為「或」，使用者\n"
 "將有權限存取。"
 
 #: templates/CRM/Admin/Form/Navigation.tpl
@@ -21782,7 +21782,7 @@ msgstr "編輯設定"
 
 #: templates/CRM/Admin/Page/ConfigTaskList.tpl
 msgid "Use this checklist to review and complete configuration tasks for your site. You will be redirected back to this checklist after saving each setting. Settings which you have not yet reviewed will be <span class=\"status-overdue\">displayed in red</span>. After you have visited a page, the links will <span class=\"status-pending\">display in green</span>  (although you may still need to revisit the page to complete or update the settings). You can access this page again from the <a href=\"%1\">Administer CiviCRM</a> menu at any time."
-msgstr "透過<strong>設定清單</strong>，您可以查看並完成各項系統設定工作。在設定清單中，<span class=\"status-overdue\">紅字</span>顯示的項目代表您還沒進行查看/設定的工作，而您已查看/設定的項目，則會以<span class=\"status-pending\">綠字</span>顯示。您可隨時透過  <a href=\"%1\">CiviCRM管理員</a> 的頁面來進行各項系統組態的查看及設定。"
+msgstr "透過<strong>設定清單</strong>，您可以查看並完成各項系統設定工作。在設定清單中，<span class=\"status-overdue\">紅字</span>顯示的項目代表您還沒進行查看/設定的工作，而您已查看/設定的項目，則會以<span class=\"status-pending\">綠字</span>顯示。您可隨時透過  <a href=\"%1\">支持者系統管理</a> 的頁面來進行各項系統組態的查看及設定。"
 
 #: templates/CRM/Admin/Page/ConfigTaskList.tpl
 msgid "Site Configuration"
@@ -26069,7 +26069,7 @@ msgstr "將您的自訂欄位加入至此資料表單，以做為資料表單的
 
 #: templates/CRM/Contribute/Form/ContributionPage/Custom.hlp
 msgid "Return to this screen (<strong>Administer CiviCRM &raquo; Manage Contribution Page &raquo; Configure &raquo; Custom Elements</strong>) and select your profile."
-msgstr "返回到此畫面（<strong>CiviCRM管理員&raquo; 管理募款頁&raquo; 設定&raquo; 元素</strong>），並選擇您的資料表單。"
+msgstr "返回到此畫面（<strong>支持者系統管理&raquo; 管理募款頁&raquo; 設定&raquo; 元素</strong>），並選擇您的資料表單。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/Custom.hlp
 #: templates/CRM/Event/Form/ManageEvent/Registration.hlp
@@ -28948,7 +28948,7 @@ msgstr "開始=YYYYMMDD - 指定一個不同的日期範圍給被列出的活動
 
 #: templates/CRM/Event/Page/ManageEvent.hlp
 msgid "type=N - Specify a particular Event Type using the event_type_id value. (You can find these values by browsing the listing at Administer CiviCRM &raquo; Event Types.)"
-msgstr "輸入=N - 指定一個活動類別的 event_type_id 值（您可以透過 CiviCRM管理員&raquo; 活動類別，來查看活動類別的 event_type_id 值）。"
+msgstr "輸入=N - 指定一個活動類別的 event_type_id 值（您可以透過 支持者系統管理&raquo; 活動類別，來查看活動類別的 event_type_id 值）。"
 
 #: templates/CRM/Event/Page/ManageEvent.hlp
 msgid "EXAMPLE: Given the default event types, this URL will retrieve all events with start dates on or after January 1, 2007 whose event type is 'Fundraiser':"
@@ -29497,7 +29497,7 @@ msgstr "您可以使用<strong>CSV</strong>檔案，或<strong>SQL 查詢語言<
 
 #: templates/CRM/Import/Form/DataSource.hlp
 msgid "After importing contacts, you may also want to import <strong>contributions, membership info and/or event participation</strong> data for these contacts. If so, first make sure that the corresponding CiviCRM component is enabled from Administer CiviCRM &raquo; Global Settings &raquo; Enable Components. Enable CiviContribute, CiviMember, and/or CiviEvent. Then navigate to the Import option found in each component's menu (e.g. CiviContribute &raquo; Import Contributions)."
-msgstr "在匯入聯絡人之後，您也可能想匯入這些聯絡人的<strong>捐款、會員及/或活動參加人</strong>等相關資料。如果這樣，首先確定您已在 CiviCRM管理員&raquo;設定總覽&raquo;啟用模組 啟用相關的 CiviCRM 模組。啟用 捐款、會員、及/或 活動等模組後，然後連結至每一個模組選單下的匯入選項（例如：捐款&raquo;匯入捐款）。"
+msgstr "在匯入聯絡人之後，您也可能想匯入這些聯絡人的<strong>捐款、會員及/或活動參加人</strong>等相關資料。如果這樣，首先確定您已在 支持者系統管理&raquo;設定總覽&raquo;啟用模組 啟用相關的 CiviCRM 模組。啟用 捐款、會員、及/或 活動等模組後，然後連結至每一個模組選單下的匯入選項（例如：捐款&raquo;匯入捐款）。"
 
 #: templates/CRM/Import/Form/DataSource.hlp
 msgid "Select <strong>Individual</strong> for Contact Type if each record in your file represents and individual person - even if the file also contains related Organization data (e.g. Employer Name, Employer Address, etc.)."
@@ -31679,7 +31679,7 @@ msgstr "當 reCAPTCHA 驗證服務被包括在一個新增/編輯資料表單表
 
 #: templates/CRM/UF/Form/Group.hlp
 msgid "To use reCAPTCHA you must get an API key from <a href=\"%1\" target=\"_blank\">reCAPTCHA.net</a>, and enter the key information in <a href=\"%2\">Administer CiviCRM &raquo; Global Settings &raquo; Miscellaneous Settings</a>."
-msgstr "為了使用 reCAPTCHA 驗證服務，您必需先至<a href=\"%1\" target=\"_blank\">reCAPTCHA.net</a>取得一組 API  key，並且在 <a href=\"%2\">CiviCRM管理員&raquo; 設定總覽&raquo; 雜項設定</a> 輸入 key 值。"
+msgstr "為了使用 reCAPTCHA 驗證服務，您必需先至<a href=\"%1\" target=\"_blank\">reCAPTCHA.net</a>取得一組 API  key，並且在 <a href=\"%2\">支持者系統管理&raquo; 設定總覽&raquo; 雜項設定</a> 輸入 key 值。"
 
 #: templates/CRM/UF/Form/Group.hlp
 msgid "Do not enable this feature for stand-alone profile forms. reCAPTCHA requires dynamic page generation. Submitting a stand-alone form with reCAPTCHA included will always result in a reCAPTCHA validation error."
@@ -31793,11 +31793,11 @@ msgstr "尚未指派 資料表單欄位給「%1」，您可以 <a href='%2'>立�
 
 #: templates/CRM/UF/Page/Group.hlp
 msgid "Profiles may be linked to specific modules, accessed via built-in CiviCRM URLs, or embedded into any web page using the HTML Form Snippet feature. Examples include:"
-msgstr ""
+msgstr "資料表單建立線上的表單，通常會與別的功能一同運用，諸如捐款中的填寫表格，或是活動報名的額外資訊。資料表單也可直接透過線上連結存取填寫，或透過嵌入的方式，把該表單嵌入到外部的網站。"
 
 #: templates/CRM/UF/Page/Group.hlp
 msgid "<strong>User Screens</strong> - One or several profiles can be linked to either the <strong>new user registration</strong> and/or view and edit screens for <strong>existing user accounts</strong>."
-msgstr ""
+msgstr "<strong>網站使用者畫面</strong> - 你可以將資料表單與網站使用者做連結，如此一來，使用者註冊時便可以填寫所需資料，並且在登入後的個人帳號管理介面，可看到該表單的呈現。"
 
 #: templates/CRM/UF/Page/Group.hlp
 msgid "<strong>CiviContribute</strong> - When you want to collect information from Contributors via online contribution pages, you can create a profile and link it to to your contribution page as a 'custom page element' (<a href='%1'>Configure Online Contribution Pages</a>)."
@@ -31809,7 +31809,7 @@ msgstr "<strong>聯絡人搜尋及列表</strong> - 當您想提供一個搜尋�
 
 #: templates/CRM/UF/Page/Group.hlp
 msgid "<strong>Contact Signup Forms</strong> - Create link(s) to 'new contact' input form(s) for your Profiles using the following path: <em>%1/%2</em>. (This example links to an input form for Profile ID 3.)"
-msgstr "<strong>聯絡人註冊表格</strong> - 為您的資料表單建立連結到'新增聯絡人'匯入表格，使用以下路線：<em>%1/%2</em>。(這例子為資料表單編號3連結到匯入表格)"
+msgstr "<strong>聯絡人簽到表單</strong> - 為您的資料表單建立連結到「新增聯絡人」匯入表格，使用以下網址：<em>%1/%2</em>。(這例子為資料表單編號3連結到簽到表)"
 
 #: templates/CRM/UF/Page/Group.hlp
 msgid "<strong>Contact Edit Forms</strong> - Allow <strong>authenticated users</strong> to edit their own contact info with a Profile using the following path: <em>%1/%2</em>. (This example links to an edit form for Profile ID 3.)"
@@ -35646,7 +35646,7 @@ msgid ""
 "You can change this behavior to \"either / or\" by changing the Operator below."
 msgstr ""
 "您可以指派一個或多個權限到這個選單項目。預設上，多重權限是可以的。舉例：若您指派\n"
-"<em>存取捐款</em>與<em>CiviCRM管理員</em>到選單項目，使用者需要具有兩者的權限才能存取。\n"
+"<em>存取捐款</em>與<em>支持者系統管理</em>到選單項目，使用者需要具有兩者的權限才能存取。\n"
 "You can change this behavior to \"either / or\" by changing the Operator below."
 
 #: templates/CRM/Admin/Form/Navigation.hlp
@@ -35655,7 +35655,7 @@ msgid ""
 "If you assign <em>access CiviContribute</em> and <em>administer CiviCRM</em> to a menu item, and set the Operator to \"OR\", users\n"
 "who have either of those permissions will have access."
 msgstr ""
-"若您指定多個權限並想要被授予訪問其中任何一個，請設定操作子到「或」。舉例：若您指派<em>存取捐款</em>與<em>CiviCRM管理員</em>到選單項目，並設置操作子為「或」，使用者\n"
+"若您指定多個權限並想要被授予訪問其中任何一個，請設定操作子到「或」。舉例：若您指派<em>存取捐款</em>與<em>支持者系統管理</em>到選單項目，並設置操作子為「或」，使用者\n"
 "將有權限存取。"
 
 #: templates/CRM/Admin/Form/Preferences/Address.hlp
@@ -35795,7 +35795,7 @@ msgstr "按<a href='%1'>新增聯絡人到%2</a>如果您想新增新會員到�
 
 #: templates/CRM/Contact/Form/Task/Email.hlp
 msgid "Go to <a href=\"%1\">Administer CiviCRM &raquo; Option Lists &raquo; FROM Email Addresses</a> to add or edit general email addresses. Make sure these email addresses are valid email accounts with your email service provider."
-msgstr "前往<a href=\"%1\">CiviCRM管理員&raquo; 選擇列表&raquo; Email寄件者</a>來新增或編輯 Email。請確定這些 Email 是有效的。"
+msgstr "前往<a href=\"%1\">支持者系統管理&raquo; 選擇列表&raquo; Email寄件者</a>來新增或編輯 Email。請確定這些 Email 是有效的。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/PCP.hlp
 msgid ""
@@ -35946,7 +35946,7 @@ msgstr ""
 
 #: templates/CRM/Mailing/Form/Upload.hlp
 msgid "Go to <a href=\"%1\">Administer CiviCRM &raquo; Option Lists &raquo; FROM Email Addresses</a> to add or edit email addresses. Make sure these email addresses are valid email accounts with your email service provider."
-msgstr "前往<a href='%1'>CiviCRM管理員&raquo; 選項清單 &raquo; Email寄件者</a>，並輸入一個有效的 Email寄件者。請確認 Email 設定是正確的寄件者。"
+msgstr "前往<a href='%1'>支持者系統管理&raquo; 選項清單 &raquo; Email寄件者</a>，並輸入一個有效的 Email寄件者。請確認 Email 設定是正確的寄件者。"
 
 #: templates/CRM/Mailing/Form/Upload.hlp
 msgid "If this box is checked, the automatically generated VERP address in the Reply-To will be overriden by the From email address specified above. Consult with your site administrator before using this feature as it may affect handling of bounced emails and replies."
