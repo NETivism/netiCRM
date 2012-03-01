@@ -28,18 +28,26 @@ $menu_links['navigation'] = array (
     'module' => 'menu',
     'hidden' => '0',
   ),
- 
+  array (
+    'path' => 'civicrm/admin',
+    'query' => 'reset=1',
+    'title' => '設定',
+    'description' => '進階設定、管理支持者系統的欄位選項等',
+    'menu' => 'navigation',
+    'weight' => '9',
+    'module' => 'menu',
+    'hidden' => '0',
+  ),
   array (
     'path' => 'admin',
     'query' => NULL,
-    'title' => '網站管理',
+    'title' => 'Administer',
     'menu' => 'navigation',
     'weight' => '-45',
     'module' => 'menu',
-    'hidden' => '0',
+    'hidden' => 1,
     'children' => 
     array (
-      0 => 
       array (
         'path' => 'admin/content',
         'query' => NULL,
@@ -48,117 +56,7 @@ $menu_links['navigation'] = array (
         'weight' => '-10',
         'module' => 'menu',
         'hidden' => '0',
-        'children' => 
-        array (
-          0 => 
-          array (
-            'path' => 'admin/content/node',
-            'query' => NULL,
-            'title' => 'Content',
-            'menu' => 'navigation',
-            'weight' => '0',
-            'module' => 'menu',
-            'hidden' => '0',
-          ),
-         
-          array (
-            'path' => 'admin/content/types',
-            'query' => NULL,
-            'title' => 'Content types',
-            'menu' => 'navigation',
-            'weight' => '0',
-            'module' => 'menu',
-            'hidden' => '0',
-          ),
-         
-          array (
-            'path' => 'admin/content/node-settings',
-            'query' => NULL,
-            'title' => 'Post settings',
-            'menu' => 'navigation',
-            'weight' => '0',
-            'module' => 'menu',
-            'hidden' => '0',
-            'children' => 
-            array (
-              0 => 
-              array (
-                'path' => 'admin/content/node-settings/rebuild',
-                'query' => NULL,
-                'title' => 'Rebuild permissions',
-                'menu' => 'navigation',
-                'weight' => '0',
-                'module' => 'menu',
-                'hidden' => '0',
-              ),
-            ),
-          ),
-         
-          array (
-            'path' => 'admin/content/rss-publishing',
-            'query' => NULL,
-            'title' => 'RSS publishing',
-            'menu' => 'navigation',
-            'weight' => '0',
-            'module' => 'menu',
-            'hidden' => '0',
-          ),
-         
-          array (
-            'path' => 'admin/content/taxonomy',
-            'query' => NULL,
-            'title' => 'Taxonomy',
-            'menu' => 'navigation',
-            'weight' => '0',
-            'module' => 'menu',
-            'hidden' => '0',
-            'children' => 
-            array (
-              0 => 
-              array (
-                'path' => 'admin/content/taxonomy/%',
-                'query' => NULL,
-                'title' => 'List terms',
-                'menu' => 'navigation',
-                'weight' => '0',
-                'module' => 'menu',
-                'hidden' => '0',
-              ),
-             
-              array (
-                'path' => 'admin/content/taxonomy/edit/term',
-                'query' => NULL,
-                'title' => 'Edit term',
-                'menu' => 'navigation',
-                'weight' => '0',
-                'module' => 'menu',
-                'hidden' => '0',
-              ),
-             
-              array (
-                'path' => 'admin/content/taxonomy/edit/vocabulary/%',
-                'query' => NULL,
-                'title' => 'Edit vocabulary',
-                'menu' => 'navigation',
-                'weight' => '0',
-                'module' => 'menu',
-                'hidden' => '0',
-              ),
-            ),
-          ),
-         
-          array (
-            'path' => 'admin/content/node-type/page',
-            'query' => NULL,
-            'title' => '頁面',
-            'menu' => 'navigation',
-            'weight' => '0',
-            'module' => 'menu',
-            'hidden' => '0',
-          ),
-        ),
       ),
-     
       array (
         'path' => 'admin/reports',
         'query' => NULL,
@@ -167,92 +65,6 @@ $menu_links['navigation'] = array (
         'weight' => '5',
         'module' => 'menu',
         'hidden' => '0',
-        'children' => 
-        array (
-          0 => 
-          array (
-            'path' => 'admin/reports/status',
-            'query' => NULL,
-            'title' => 'Status report',
-            'menu' => 'navigation',
-            'weight' => '10',
-            'module' => 'menu',
-            'hidden' => '0',
-            'children' => 
-            array (
-              0 => 
-              array (
-                'path' => 'admin/reports/status/php',
-                'query' => NULL,
-                'title' => 'PHP',
-                'menu' => 'navigation',
-                'weight' => '0',
-                'module' => 'menu',
-                'hidden' => '0',
-              ),
-             
-              array (
-                'path' => 'admin/reports/status/run-cron',
-                'query' => NULL,
-                'title' => 'Run cron',
-                'menu' => 'navigation',
-                'weight' => '0',
-                'module' => 'menu',
-                'hidden' => '0',
-              ),
-             
-              array (
-                'path' => 'admin/reports/status/sql',
-                'query' => NULL,
-                'title' => 'SQL',
-                'menu' => 'navigation',
-                'weight' => '0',
-                'module' => 'menu',
-                'hidden' => '0',
-              ),
-            ),
-          ),
-         
-          array (
-            'path' => 'admin/reports/dblog',
-            'query' => NULL,
-            'title' => 'Recent log entries',
-            'menu' => 'navigation',
-            'weight' => '-1',
-            'module' => 'menu',
-            'hidden' => '0',
-          ),
-         
-          array (
-            'path' => 'admin/reports/access-denied',
-            'query' => NULL,
-            'title' => 'Top \'access denied\' errors',
-            'menu' => 'navigation',
-            'weight' => '0',
-            'module' => 'menu',
-            'hidden' => '0',
-          ),
-         
-          array (
-            'path' => 'admin/reports/page-not-found',
-            'query' => NULL,
-            'title' => 'Top \'page not found\' errors',
-            'menu' => 'navigation',
-            'weight' => '0',
-            'module' => 'menu',
-            'hidden' => '0',
-          ),
-         
-          array (
-            'path' => 'admin/reports/event/%',
-            'query' => NULL,
-            'title' => 'Details',
-            'menu' => 'navigation',
-            'weight' => '0',
-            'module' => 'menu',
-            'hidden' => '0',
-          ),
-        ),
       ),
      
       array (
@@ -265,14 +77,13 @@ $menu_links['navigation'] = array (
         'hidden' => '0',
         'children' => 
         array (
-          0 => 
           array (
             'path' => 'civicrm/admin',
             'query' => NULL,
             'title' => '支持者系統進階管理',
             'description' => '進階設定、管理支持者系統的欄位選項等',
             'menu' => 'navigation',
-            'weight' => '-54',
+            'weight' => '-50',
             'module' => 'menu',
             'hidden' => '0',
           ),
@@ -283,7 +94,7 @@ $menu_links['navigation'] = array (
             'title' => '自訂欄位',
             'description' => '自行定義聯絡人、活動、捐款的記錄欄位',
             'menu' => 'navigation',
-            'weight' => '-53',
+            'weight' => '-90',
             'module' => 'menu',
             'hidden' => '0',
           ),
@@ -294,7 +105,7 @@ $menu_links['navigation'] = array (
             'title' => '資料表單',
             'description' => '產生線上填寫表單，建立後以嵌入活動報名、捐款、或會員，甚至插入外站',
             'menu' => 'navigation',
-            'weight' => '-52',
+            'weight' => '-88',
             'module' => 'menu',
             'hidden' => '0',
           ),
@@ -305,7 +116,7 @@ $menu_links['navigation'] = array (
             'title' => '支持者系統設定精靈',
             'description' => '讓你快速檢查系統設定，完成初始設置',
             'menu' => 'navigation',
-            'weight' => '-55',
+            'weight' => '-99',
             'module' => 'menu',
             'hidden' => '0',
           ),
@@ -322,18 +133,6 @@ $menu_links['navigation'] = array (
         'hidden' => '0',
         'children' => 
         array (
-          0 => 
-          array (
-            'path' => 'civicrm/admin/access',
-            'query' => 'reset=1',
-            'title' => '存取控制',
-            'description' => '管理支持者系統的進階權限控制',
-            'menu' => 'navigation',
-            'weight' => '1',
-            'module' => 'menu',
-            'hidden' => '0',
-          ),
-         
           array (
             'path' => 'civicrm/admin/synchUser',
             'query' => 'reset=1',
