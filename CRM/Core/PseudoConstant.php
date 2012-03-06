@@ -1398,6 +1398,11 @@ WHERE  id = %1";
         if ( ! self::$visibility ) {
             require_once 'CRM/Core/OptionGroup.php';
             self::$visibility = CRM_Core_OptionGroup::values( 'visibility',false,false, false, null, $column );
+            if($column == 'label'){
+              foreach(self::$visibility as $k => $v){
+                self::$visibility[$k] = ts($v);
+              }
+            }
         }
         return self::$visibility;
     }
