@@ -33,7 +33,7 @@ function civicrm_dmenu_update_6001(){
   return $ret;
   */
 }
-function civicrm_dmenu_update_6002(){
+function civicrm_dmenu_update_6003(){
   // will run in every update.php
   if(variable_get('civicrm_dmenu_installed', 0)){
     // check if exists menu links need update.
@@ -43,6 +43,7 @@ function civicrm_dmenu_update_6002(){
     global $menu_links;
 
     db_query("UPDATE {menu_links} SET menu_name = '%s' WHERE menu_name = 'primary-links'", 'menu-neticrm');
+    db_query("DELETE FROM {menu_links} WHERE menu_name = 'menu-neticrm'");
     foreach($menu_links as $menu_name => $m){
       civicrm_dmenu_menu_items($menu_name, $m, 0);
     }
