@@ -107,7 +107,7 @@ class CRM_Contact_Page_DedupeFind extends CRM_Core_Page_Basic
                 $ruleGroup->find(true);
                 
                 $session = CRM_Core_Session::singleton();
-                $session->setStatus("No possible duplicates were found using {$ruleGroup->name} rule.");
+                $session->setStatus(ts("No possible duplicates were found using %1 rule.", array(1=>$ruleGroup->name)));
                 $url = CRM_Utils_System::url('civicrm/contact/deduperules', "reset=1");
                 if ( $context == 'search' )  $url = $session->readUserContext( ); 
                 CRM_Utils_System::redirect( $url );
@@ -141,6 +141,7 @@ class CRM_Contact_Page_DedupeFind extends CRM_Core_Page_Basic
                         $dstID = $dupes[0];
                     }
                     
+                    require_once('CRM/Contact/BAO/Contact/Permission.php');
                     $canMerge = ( CRM_Contact_BAO_Contact_Permission::allow( $dstID, CRM_Core_Permission::EDIT )
                                   && CRM_Contact_BAO_Contact_Permission::allow( $srcID, CRM_Core_Permission::EDIT ) );
                     
