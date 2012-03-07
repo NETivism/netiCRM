@@ -159,6 +159,9 @@ class CRM_Contact_Form_Search_Builder extends CRM_Contact_Form_Search
                 else if(empty($v[2]) && !in_array( $v[1], array( 'IS NULL', 'IS NOT NULL' ) )){
                     $errorMsg["value[$v[3]][$v[4]]"] = ts("Please enter the value.");  
                 }
+                else if ( in_array( $v[1], array( 'IS NULL', 'IS NOT NULL' ) ) ) {
+                  // do nothing
+                }
                 else if ( $v[0] == 'group' || $v[0] == 'tag' ) {
                     $grpId = array_keys($v[2]);
                     if( ! key($v[2]) ) {
