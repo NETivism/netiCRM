@@ -4767,7 +4767,7 @@ msgstr "報名截止日期"
 
 #: CRM/Event/DAO/Event.php CRM/Price/Form/Field.php CRM/Price/Form/Option.php
 msgid "Max Participants"
-msgstr "參加者最高人數"
+msgstr "參加者最多人數"
 
 #: CRM/Event/DAO/Event.php CRM/Event/Form/ManageEvent/Fee.php
 #: CRM/Report/Form/Event/IncomeCountSummary.php
@@ -5169,7 +5169,7 @@ msgstr "會員類別："
 #: CRM/Report/Form/Membership/Summary.php templates/CRM/Member/Page/Tab.tpl
 #: msgctxt "menu"
 msgid "Membership Types"
-msgstr "會籍類型"
+msgstr "會員類型"
 
 #: CRM/Member/DAO/MembershipLog.php CRM/Member/DAO/MembershipStatus.php
 #: CRM/Member/Form/Membership.php CRM/Member/Import/Form/MapField.php
@@ -5217,7 +5217,7 @@ msgstr "有效的會員？"
 #: templates/CRM/Contact/Form/Search/Custom/FullText.tpl
 #: templates/CRM/Member/Form/MembershipView.tpl
 msgid "Membership Type"
-msgstr "會籍類型"
+msgstr "會員類型"
 
 #: CRM/Member/DAO/MembershipType.php CRM/Member/Form/MembershipType.php
 #: templates/CRM/Member/Page/MembershipType.tpl
@@ -5394,7 +5394,7 @@ msgstr "價格欄位"
 
 #: CRM/Price/Form/Field.php CRM/Price/Form/Option.php
 msgid "Please enter a valid Max Participants."
-msgstr "請輸入一個有效數值。"
+msgstr "請輸入有效的參加者最多人數數值。"
 
 #: CRM/Price/Form/Field.php CRM/UF/Form/Field.php
 msgid "Field Help"
@@ -5402,7 +5402,7 @@ msgstr "說明"
 
 #: CRM/Price/Form/Field.php CRM/Price/Form/Option.php
 msgid "Participant count can not be greater than max participants."
-msgstr "參加者數量不可高於參加者最高人數。"
+msgstr "參加者數量不可高於參加者最多人數。"
 
 #: CRM/Price/Form/Preview.php CRM/Price/Form/Set.php CRM/Price/Page/Set.php
 #: msgctxt "menu"
@@ -9434,7 +9434,7 @@ msgstr "此聯絡人資料已連結到目前登入的使用者 - '%1' - 而無�
 
 #: CRM/Contact/Form/Task/Delete.php
 msgid "The contact might be the Membership Organization of a Membership Type. You will need to edit the Membership Type and change the Membership Organization before you can delete this contact."
-msgstr "此聯絡人可能是某會員類型裡的組織。您刪除此聯絡人之前，需要編輯會員類型、並更改會員組織。"
+msgstr "此聯絡人可能是某會員所屬組織的某會員類型。刪除此聯絡人之前，需要編輯會員類型、並更改會員所屬組織。"
 
 #: CRM/Contact/Form/Task/Delete.php
 msgid "The following contact(s) have address records which were shared with the address you removed from selected contacts. These address records are no longer shared - but they have not been removed or altered."
@@ -9532,7 +9532,7 @@ msgstr "確認動作"
 
 #: CRM/Contact/Form/Task/PickProfile.php
 msgid "Batch Profile Update for Contact"
-msgstr "批次更新捐款檔案"
+msgstr "批次更新聯絡人檔案"
 
 #: CRM/Contact/Form/Task/Print.php
 msgid "CiviCRM Contact Listing"
@@ -14637,7 +14637,7 @@ msgstr "參加人數上限"
 
 #: CRM/Event/Form/ManageEvent/EventInfo.php
 msgid "Max participants should be a positive number"
-msgstr "參加者上限值必須為正整數值"
+msgstr "參加者最多人數必須為正整數"
 
 #: CRM/Event/Form/ManageEvent/EventInfo.php
 msgid "Offer a Waitlist?"
@@ -15235,7 +15235,7 @@ msgstr "請輸入你想額外報名的人數。"
 
 #: CRM/Event/Form/Registration/Register.php
 msgid "Only %1 Registrations available."
-msgstr "連結到報名頁"
+msgstr "名額不足，剩下 %1 人可參與。"
 
 #: CRM/Event/Form/Registration/Register.php
 msgid "Event Fee(s) can not be less than zero. Please select the options accordingly"
@@ -15674,7 +15674,7 @@ msgstr "請輸入至少一位朋友的資訊，或是如果您現在不想要寄
 
 #: CRM/Friend/Form.php
 msgid "Thanks for your Support"
-msgstr "多謝您的支持"
+msgstr "感謝您的支持"
 
 #: CRM/Friend/Form.php
 msgid "Thanks for supporting this campaign by spreading the word to your friends."
@@ -16904,7 +16904,7 @@ msgstr "會員類型"
 
 #: CRM/Member/DAO/Membership.php
 msgid "Membership Expiration Date"
-msgstr "會藉到期日"
+msgstr "會員到期日"
 
 #: CRM/Member/DAO/Membership.php
 msgid "Membership Status Id"
@@ -16972,11 +16972,11 @@ msgstr "啟用新增會員的區塊？"
 
 #: CRM/Member/Form/MembershipBlock.php
 msgid "Title - New Membership"
-msgstr "標題 - 新會籍"
+msgstr "標題 - 新會員"
 
 #: CRM/Member/Form/MembershipBlock.php
 msgid "Introductory Message - New Memberships"
-msgstr "介紹訊息 - 新會籍"
+msgstr "介紹訊息 - 新會員"
 
 #: CRM/Member/Form/MembershipBlock.php
 msgid "Title - Renewals"
@@ -17008,15 +17008,15 @@ msgstr "在同一個募款頁中，您無法同時啟用會員註冊和設定價
 
 #: CRM/Member/Form/MembershipBlock.php
 msgid "Please select at least one Membership Type to include in the Membership section of this page."
-msgstr "您還需要在此頁下方「會籍類型」中勾選至少一種會籍。"
+msgstr "在此頁下方「會員類型」中勾選至少一種會員。"
 
 #: CRM/Member/Form/MembershipBlock.php
 msgid "Add status rules, before configuring membership"
-msgstr "在設會籍之前新增狀態規則"
+msgstr "在設會員之前新增狀態規則"
 
 #: CRM/Member/Form/MembershipBlock.php
 msgid "Can't set default option for an unchecked membership type."
-msgstr "無法為一個未經檢查的會籍類別設置預設選項。"
+msgstr "無法為一個未經檢查的會員類型設置預設選項。"
 
 #: CRM/Member/Form/MembershipBlock.php
 msgid "Please enable the contribution amount section to use this option."
@@ -17025,7 +17025,7 @@ msgstr "請啓用捐款金額部分以使用此選項。"
 #: CRM/Member/Form/Membership.php
 #: templates/CRM/Member/Form/MembershipRenewal.tpl
 msgid "Membership Organization and Type"
-msgstr "會籍組織及類別"
+msgstr "會員所屬組織及類別"
 
 #: CRM/Member/Form/Membership.php
 msgid "Status Override?"
@@ -17225,15 +17225,15 @@ msgstr "請選擇更新訊息。"
 
 #: CRM/Member/Form/MembershipType.php
 msgid "Selected membership type has been deleted."
-msgstr "選取的會籍類別已被刪除。"
+msgstr "選取的會員類型已被刪除。"
 
 #: CRM/Member/Form/MembershipType.php
 msgid "The membership type '%1' has been saved."
-msgstr "會籍類別 %1 已被儲存。"
+msgstr "會員類別 %1 已被儲存。"
 
 #: CRM/Member/Form/MembershipType.php
 msgid " You can add another membership type."
-msgstr "你可以新增其他會籍類型。"
+msgstr "你可以新增其他會員類型。"
 
 #: CRM/Member/Form/Search.php
 msgid "Member Name or Email"
@@ -17302,37 +17302,37 @@ msgstr "無效日期問題\"%1\"在URL(有效語法是yyyymm)。"
 #: CRM/Member/Page/MembershipStatus.php
 #: templates/CRM/Member/Form/MembershipStatus.tpl
 msgid "Edit Membership Status"
-msgstr "編輯會籍狀態"
+msgstr "編輯會員狀態"
 
 #: CRM/Member/Page/MembershipStatus.php
 msgid "Disable Membership Status"
-msgstr "停用會籍狀態"
+msgstr "停用會員狀態"
 
 #: CRM/Member/Page/MembershipStatus.php
 msgid "Enable Membership Status"
-msgstr "啓用會籍狀態"
+msgstr "啓用會員狀態"
 
 #: CRM/Member/Page/MembershipStatus.php
 #: templates/CRM/Member/Form/MembershipStatus.tpl
 msgid "Delete Membership Status"
-msgstr "刪除會籍狀態"
+msgstr "刪除會員狀態"
 
 #: CRM/Member/Page/MembershipType.php
 msgid "Disable Membership Type"
-msgstr "停用會籍類別"
+msgstr "停用會員類型"
 
 #: CRM/Member/Page/MembershipType.php
 msgid "Enable Membership Type"
-msgstr "啓用會籍類別"
+msgstr "啓用會員類型"
 
 #: CRM/Member/Page/MembershipType.php
 #: templates/CRM/Member/Form/MembershipType.tpl
 msgid "Delete Membership Type"
-msgstr "刪除會籍類型"
+msgstr "刪除會員類型"
 
 #: CRM/Member/Page/Tab.php
 msgid "Create Membership"
-msgstr "建立新會籍"
+msgstr "建立新會員"
 
 #: CRM/Member/Page/Tab.php
 msgid "Members"
@@ -17777,7 +17777,7 @@ msgstr "價格是必填的欄位"
 
 #: CRM/Price/Form/Field.php
 msgid "Participant Count must be greater than zero."
-msgstr "捐款金額要大於 %1"
+msgstr "參與者數量要大於 %1"
 
 #: CRM/Price/Form/Field.php
 msgid "Duplicate weight value"
@@ -24491,27 +24491,27 @@ msgstr "刪除網址區塊"
 
 #: templates/CRM/Contact/Form/Merge.hlp templates/CRM/Contact/Form/Merge.tpl
 msgid "Click <strong>Merge</strong> to move data from the Duplicate Contact on the left into the Main Contact. In addition to the contact data (address, phone, email...), you may choose to move all or some of the related activity records (groups, contributions, memberships, etc.)."
-msgstr "點選 <strong>合併</strong> 去移動資料從左邊複製聯絡人到主要聯絡人。除了聯絡人資料(地址、電話、Email…)，您可以選擇種移動一些相關任務記錄（群組、捐款、會員籍等）。"
+msgstr "在本頁面 <strong>勾選</strong>欲合併資料類型，點選 <strong>合併</strong>後 ，系統將移動左欄資料 （括號標示'重複'）合併到右欄。除了基本資料（地址、電話、Email…），也可以選擇種移動相關任務記錄（群組、捐款、會員籍等）。"
 
 #: templates/CRM/Contact/Form/Merge.hlp
 msgid "You will see a row and a checkbox for each type of related data currently linked to the duplicate contact. For example, if the duplicate contact has Contribution records - you will see a row and a checkbox for you to mark IF you want those contribution records moved over to the main contact record. If you want to move all related records, you can check the <strong>Mark All</strong> checkbox."
-msgstr "您會看到一行及一個勾選框給每一現連結到複製聯絡人相關數據的類別。例如：如果複製聯絡人已有捐款記錄 - 您會看到一行及一個勾選框給您去標記，如果您想那些捐款記錄移動到主聯絡人記錄。如果您想移動所有相關記錄，您可以檢查<strong>選擇所有</strong>勾選框。"
+msgstr "每行欄位對比的資料之間都有勾選框，<strong>勾選</strong後再點選<strong>合併</strong>即生效。舉例而言，若重複的聯絡人有捐款的記錄，某一行資料將有'移動有關...捐款==>捐款'欄位，兩筆對照的資料間會顯示勾選框，勾選後再點選合併，左欄的聯絡人資料就會移動到右欄，與之合併。若要合併所有相關記錄，勾選 <strong>選擇所有</strong>勾選框。注意：無勾選的資料欄位，合併後將自動刪除。"
 
 #: templates/CRM/Contact/Form/Merge.hlp
 msgid "The Duplicate Contact record and all related information WILL BE DELETED after the Merge is complete."
-msgstr "複製聯絡人記錄及所有相關資料會在合併完成後被刪除"
+msgstr "重複的聯絡人記錄與相關資料會在合併完成後刪除"
 
 #: templates/CRM/Contact/Form/Merge.tpl
 msgid "Flip between original and duplicate contacts."
-msgstr "瀏覽於原來及複製聯絡人"
+msgstr "對調原始（右欄）與重複（左欄）的聯絡人資料"
 
 #: templates/CRM/Contact/Form/Merge.tpl
 msgid "Mark this pair as not a duplicate."
-msgstr ""
+msgstr "標註這兩筆資料非重複"
 
 #: templates/CRM/Contact/Form/Merge.tpl
 msgid "duplicate"
-msgstr "複製"
+msgstr "重複"
 
 #: templates/CRM/Contact/Form/Merge.tpl
 msgid "Mark All"
@@ -24523,7 +24523,7 @@ msgstr "移動有關…"
 
 #: templates/CRM/Contact/Form/Merge.tpl
 msgid "WARNING: The duplicate contact record WILL BE DELETED after the merge is complete."
-msgstr "警告：複製聯絡人記錄會被刪除在完成合併之後。"
+msgstr "警告：未勾選的資料欄位（左欄）將在合併後刪除。"
 
 #: templates/CRM/Contact/Form/Merge.tpl
 msgid "There are Drupal user accounts associated with both the original and duplicate contacts. If you continue with the merge, the user record associated with the duplicate contact will not be deleted, but will be un-linked from the associated contact record (which will be deleted). If that user logs in again, a new contact record will be created for them."
@@ -25271,7 +25271,7 @@ msgstr "例子：如果您設定一個長度8的'街道地址'，然後'101 Dela
 
 #: templates/CRM/Contact/Page/DedupeRules.tpl
 msgid "Manage the rules used to identify potentially duplicate contact records. Scan for duplicates using a selected rule and merge duplicate contact data as needed."
-msgstr "管理用作分辨有潛質複製聯絡人記錄的規測。使用已選取規測及合併複製聯絡人資料來掃描給副本是需要的。"
+msgstr "管理篩選規則，以找出重複的聯絡人資料。根據需求使用選定的規則檢視重複的資料，並合併重複的聯絡人資料。"
 
 #: templates/CRM/Contact/Page/DedupeRules.tpl
 msgid "Add Dedupe Rule for Individuals"
@@ -27027,7 +27027,7 @@ msgstr "匯入捐款資料精靈讓您可輕鬆地從其他應用程式匯入資
 
 #: templates/CRM/Contribute/Import/Form/UploadFile.tpl
 msgid "Files to be imported must be in the 'comma-separated-values' format (CSV) and must contain data needed to match the contribution to an existing contact in your CiviCRM database."
-msgstr "匯入的資料必須是CSV格式以及與可與CiviCRM資料庫對應的欄位內容。"
+msgstr "匯入的資料必須是CSV格式，並且需要對應系統編號的欄位。"
 
 #: templates/CRM/Contribute/Import/Form/UploadFile.tpl
 #: templates/CRM/Member/Import/Form/UploadFile.tpl
@@ -27724,7 +27724,7 @@ msgstr "查看價格選項"
 
 #: templates/CRM/Custom/Form/Option.tpl
 msgid "Add Option"
-msgstr "地址選項"
+msgstr "新增選項"
 
 #: templates/CRM/Custom/Form/Option.tpl
 msgid "WARNING: Deleting this custom field option will result in the loss of all related data."
@@ -30182,23 +30182,23 @@ msgstr "此線上募款頁面是否包括會員註冊？"
 
 #: templates/CRM/Member/Form/MembershipBlock.tpl
 msgid "Membership section title - for new member signups."
-msgstr "會籍部分標題 - 新會員註冊。"
+msgstr "會員部分標題 - 新會員註冊。"
 
 #: templates/CRM/Member/Form/MembershipBlock.tpl
 msgid "Membership section introductory text - for new member signups."
-msgstr "會籍部分介紹文字 - 新會員註冊。"
+msgstr "會員部分介紹文字 - 新會員註冊。"
 
 #: templates/CRM/Member/Form/MembershipBlock.tpl
 msgid "Membership section title - displayed to renewing members."
-msgstr "會籍區塊標題 - 展示給更新會籍的會員。"
+msgstr "會員區塊標題 - 展示更新會員狀態。"
 
 #: templates/CRM/Member/Form/MembershipBlock.tpl
 msgid "Membership section introductory text - displayed to renewing members."
-msgstr "會籍區塊介紹文字 - 展示給更新會員。"
+msgstr "會員區塊介紹文字 - 展示更新會員狀態。"
 
 #: templates/CRM/Member/Form/MembershipBlock.tpl
 msgid "Include these membership types"
-msgstr "包括這些會籍類型"
+msgstr "包括這些會員類型"
 
 #: templates/CRM/Member/Form/MembershipBlock.tpl
 msgid "If checked, user must signup for one of the displayed membership options before continuing."
@@ -30206,11 +30206,11 @@ msgstr "如果勾選，使用者必需註冊一個上方所列出的會員，才
 
 #: templates/CRM/Member/Form/MembershipBlock.tpl
 msgid "Check this box if you are including both Membership Signup/Renewal AND a Contribution Amount section, AND you want the membership fee to be charged separately from any additional contribution amount."
-msgstr "若您的捐款頁有包括會員申請/會籍更新（繳會費），與一般的捐款，而您想讓會費與捐款分開收取，請勾選此框。"
+msgstr "若您的捐款頁有包括會員申請/更新（繳會費）與一般的捐款，而您想讓會費與捐款分開收取，請勾選此框。"
 
 #: templates/CRM/Member/Form/MembershipBlock.tpl
 msgid "Display the membership fee along with the membership name and description for each membership option?"
-msgstr "將會籍、會費、及各個會籍的描述展示出來？"
+msgstr "顯示會員類型、費用及描述？"
 
 #: templates/CRM/Member/Form/MembershipBlock.tpl
 msgid "You need to have at least one <a href=\"%1\">Membership Type</a> to enable Member Signup."
@@ -30218,11 +30218,11 @@ msgstr "你至少需要有一種<a href=\"%1\">會員類型</a>，才能啟用�
 
 #: templates/CRM/Member/Form/MembershipRenewal.tpl
 msgid "You will not be able to send an automatic email receipt for this Renew Membership because there is no email address recorded for this contact. If you want a receipt to be sent when this Membership is recorded, click Cancel and then click Edit from the Summary tab to add an email address before Renewal the Membership."
-msgstr "您不會被允許為此更新會籍傳送一個自動Email收據，因為此聯絡人的Email沒有紀錄到。如果您想在紀錄會籍時傳送一份電子收據，在更新會員籍前，按取消，然後從概況選項按編輯，去新增一個Email。"
+msgstr "您不會被允許為此更新會員傳送一個自動Email收據，因為此聯絡人的Email沒有紀錄到。若您想在更新會員資格時傳送一份電子收據，在更新會員員前，按取消，然後從概況選項按編輯，去新增一個Email。"
 
 #: templates/CRM/Member/Form/MembershipRenewal.tpl
 msgid "Use this form to Renew Membership Record on behalf of %1. <strong>A %2 transaction will be submitted</strong> using the selected payment processor."
-msgstr "使用此表格代表%1以更新會員籍錄。<strong>%2 交易會被提交</strong>，使用選擇的金流機制。"
+msgstr "使用此表格代表%1以更新會員記錄。<strong>%2 交易會被提交</strong>，使用選擇的金流機制。"
 
 #: templates/CRM/Member/Form/MembershipRenewal.tpl
 msgid "Renewing will add the normal membership period to the End Date of the previous period for members whose status is Current or Grace. For Expired memberships, renewing will create a membership period commencing from the 'Date Renewal Entered'. This date can be adjusted including being set to the day after the previous End Date - if continuous membership is required."
@@ -30230,7 +30230,7 @@ msgstr ""
 
 #: templates/CRM/Member/Form/MembershipRenewal.tpl
 msgid "Status of this membership."
-msgstr "此會籍的狀態。"
+msgstr "此會員狀態。"
 
 #: templates/CRM/Member/Form/MembershipRenewal.tpl
 msgid "Renewal Payment and Receipt"
@@ -30239,7 +30239,7 @@ msgstr "更新付款及收據"
 #: templates/CRM/Member/Form/MembershipRenewal.tpl
 #: templates/CRM/Member/Form/Membership.tpl
 msgid "Membership payment amount. A contribution record will be created for this amount."
-msgstr "會籍付款金額。一個捐款記錄將會以此金額建立。"
+msgstr "會員付款金額。一個捐款記錄將會以此金額建立。"
 
 #: templates/CRM/Member/Form/MembershipRenewal.tpl
 #: templates/CRM/Member/Form/Membership.tpl
@@ -30252,7 +30252,7 @@ msgstr "輸入您想在電子收據開頭出現的訊息。例如：「謝謝您
 
 #: templates/CRM/Member/Form/MembershipStatus.tpl
 msgid "New Membership Status"
-msgstr "新增會籍狀態"
+msgstr "新增會員狀態"
 
 #: templates/CRM/Member/Form/MembershipStatus.tpl
 msgid "WARNING: Deleting this option will result in the loss of all membership records of this status."
@@ -30260,11 +30260,11 @@ msgstr "警告：刪除此選項，會導致遺失此狀態下的所有會員紀
 
 #: templates/CRM/Member/Form/MembershipStatus.tpl
 msgid "Display name for this Membership status (e.g. New, Current, Grace, Expired...)."
-msgstr "此會籍狀態的顯示名稱（例如新增、現在、寬限期、已過期…）"
+msgstr "此會員狀態的顯示名稱（例如新增、現在、寬限期、已過期…）"
 
 #: templates/CRM/Member/Form/MembershipStatus.tpl
 msgid "When does this status begin? EXAMPLE: <strong>New</strong> status begins at the membership 'join date'."
-msgstr "此狀態何時開始？舉例來說：<strong>新增</strong>狀態是從該會藉的加入日期起算。"
+msgstr "此狀態何時開始？舉例來說：<strong>新增</strong>狀態是從該會員的加入日期起算。"
 
 #: templates/CRM/Member/Form/MembershipStatus.tpl
 msgid "Optional adjustment period added or subtracted from the Start Event. EXAMPLE: <strong>Current</strong> status might begin at 'join date' PLUS 3 months (to distinguish Current from New members)."
@@ -30272,7 +30272,7 @@ msgstr "可以選擇延長或提早開始日期？舉例來說：<strong>現有�
 
 #: templates/CRM/Member/Form/MembershipStatus.tpl
 msgid "When does this status end? EXAMPLE: <strong>Current</strong> status ends at the membership 'end date'."
-msgstr "此狀態何時結束？舉例來說：<strong>現在</strong>狀態會在該會藉的結束日期結束。"
+msgstr "此狀態何時結束？舉例來說：<strong>現在</strong>狀態會在該會員的結束日期結束。"
 
 #: templates/CRM/Member/Form/MembershipStatus.tpl
 msgid "Optional adjustment period added or subtracted from the End Event. EXAMPLE: <strong>Grace</strong> status might end at 'end date' PLUS 1 month."
@@ -30320,7 +30320,7 @@ msgstr "警告：刪除此會員籍會同時刪除會員籍日誌及付款記錄
 
 #: templates/CRM/Member/Form/Membership.tpl
 msgid "Select Membership Organization and then Membership Type."
-msgstr "選擇會員組織及會員類型。"
+msgstr "選擇會員所屬組織及會員類型。"
 
 #: templates/CRM/Member/Form/Membership.tpl
 msgid "Source of this membership. This value is searchable."
@@ -30364,11 +30364,11 @@ msgstr "如果您需要包含一項特別的訊息給此會員，請在此輸入
 
 #: templates/CRM/Member/Form/MembershipType.tpl
 msgid "New Membership Type"
-msgstr "新的會籍類型"
+msgstr "新的會員類型"
 
 #: templates/CRM/Member/Form/MembershipType.tpl
 msgid "WARNING: Deleting this option will result in the loss of all membership records of this type."
-msgstr "警告：刪除此選項會遺失全部此類別的會員籍記錄。"
+msgstr "警告：刪除此選項會遺失全部此類別的會員記錄。"
 
 #: templates/CRM/Member/Form/MembershipType.tpl
 msgid "e.g. 'Student', 'Senior', 'Honor Society'..."
@@ -30384,7 +30384,7 @@ msgstr ""
 
 #: templates/CRM/Member/Form/MembershipType.tpl
 msgid "Select Target Contact for the Membership-Organization"
-msgstr "請選擇此會藉所屬之組織"
+msgstr "請選擇此會員所屬之組織"
 
 #: templates/CRM/Member/Form/MembershipType.tpl
 msgid "Organization, who is the owner for this membership type."
@@ -30400,7 +30400,7 @@ msgstr "以下的搜尋條件找不到資料：<ul><li>名稱：%1</li><li>聯�
 
 #: templates/CRM/Member/Form/MembershipType.tpl
 msgid "Minimum fee required for this membership type. For free/complimentary memberships - set minimum fee to zero (0)."
-msgstr "此會籍類別需要的最少費用。若為免費/贈送的會員籍 - 設定最低費用為零(0)。"
+msgstr "此會員類型需要的最少費用。若為免費/贈送的會員 - 設定最低費用為零(0)。"
 
 #: templates/CRM/Member/Form/MembershipType.tpl
 msgid "Select the contribution type assigned to fees for this membership type (for example 'Membership Fees'). This is required for all membership types - including free or complimentary memberships."
@@ -30408,7 +30408,7 @@ msgstr ""
 
 #: templates/CRM/Member/Form/MembershipType.tpl
 msgid "Duration of this membership (e.g. 30 days, 2 months, 5 years, 1 lifetime)"
-msgstr "此會員籍期限（例如三十日、兩個月、五年、終生）"
+msgstr "此會員期限（例如三十日、兩個月、五年、終生）"
 
 #: templates/CRM/Member/Form/MembershipType.tpl
 msgid "Select 'rolling' if membership periods begin at date of signup. Select 'fixed' if membership periods begin on a set calendar date."
@@ -30432,7 +30432,7 @@ msgstr ""
 
 #: templates/CRM/Member/Form/MembershipType.tpl
 msgid "Renewal Reminders"
-msgstr "會籍到期通知"
+msgstr "會員資格到期通知"
 
 #: templates/CRM/Member/Form/MembershipType.tpl
 msgid "If you would like Membership Renewal Reminder emails sent to members automatically, you need to create a reminder message template and you need to configure and periodically run a 'cron' job on your server."
@@ -30440,7 +30440,7 @@ msgstr ""
 
 #: templates/CRM/Member/Form/MembershipType.tpl
 msgid "No message templates have been created yet. If you want renewal reminders to be sent, <a href='%1'>click here</a> to create a reminder email template. Then return to this screen to assign the renewal reminder message, and set reminder date."
-msgstr "沒有建立訊息範本。如果您想自動寄送更新會藉的通知， <a href='%1'>請按此</a>以建立一個提醒郵件的範本。然後再回到此畫面，指定要使用的更新通知，並設定通知日期。"
+msgstr "沒有建立訊息範本。如果您想自動寄送更新會員的通知， <a href='%1'>請按此</a>以建立一個提醒郵件的範本，然後再回到此畫面，指定要使用的更新通知，並設定通知日期。"
 
 #: templates/CRM/Member/Form/MembershipType.tpl
 msgid "Select the renewal reminder message to be sent to the members of this membership type."
@@ -30480,7 +30480,7 @@ msgstr "提示日期"
 
 #: templates/CRM/Member/Form/Search/Common.tpl
 msgid "Membership Type(s)"
-msgstr "會籍類別"
+msgstr "會員類別"
 
 #: templates/CRM/Member/Form/Search/EmptyResults.tpl
 msgid "if you are searching by member name, check your spelling"
@@ -30528,7 +30528,7 @@ msgstr ""
 
 #: templates/CRM/Member/Form/Task/Delete.tpl
 msgid "Are you sure you want to delete the selected memberships? This delete operation cannot be undone and will delete all transactions and activity associated with these members."
-msgstr "您是否確定刪除選取的會籍？此操作無法回復，會導致與這些會籍相關的全部交易與任務被刪除。"
+msgstr "您是否確定刪除選取的會員類型？此操作無法回復，會導致與這些會員類型相關的全部交易與任務被刪除。"
 
 #: templates/CRM/Member/Form/Task.tpl
 msgid "Number of selected members: %1"
@@ -30566,7 +30566,7 @@ msgstr ""
 
 #: templates/CRM/Member/Import/Form/Summary.tpl
 msgid "Download Mismatched Memberships"
-msgstr "下載不相符的會員籍"
+msgstr "下載不相符的會員"
 
 #: templates/CRM/Member/Import/Form/Summary.tpl
 msgid "Rows which are duplicates of existing CiviCRM membership records."
@@ -30608,7 +30608,7 @@ msgstr "匯入會員精靈幫助您輕鬆地從其他應用程式上傳會員資
 
 #: templates/CRM/Member/Import/Form/UploadFile.tpl
 msgid "Files to be imported must be in the 'comma-separated-values' format (CSV) and must contain data needed to match the membership data to an existing contact in your CiviCRM database."
-msgstr ""
+msgstr "匯入的資料必須是CSV格式，並且需要對應系統編號的欄位。"
 
 #: templates/CRM/Member/Import/Form/UploadFile.tpl
 msgid "Select 'Individual' if you are importing memberships for individual persons."
@@ -30640,7 +30640,7 @@ msgstr "參閱 會員操作指南，以獲得更多資訊。"
 
 #: templates/CRM/Member/Page/DashBoard.tpl
 msgid "Membership Summary"
-msgstr "會籍概況"
+msgstr "會員概況"
 
 #: templates/CRM/Member/Page/DashBoard.tpl
 msgid "Members by Type"
@@ -30696,7 +30696,7 @@ msgstr "會員狀態"
 
 #: templates/CRM/Member/Page/MembershipStatus.tpl
 msgid "There are no custom membership status entered. You can <a href='%1'>add one</a>."
-msgstr "沒有的會籍狀態被輸入。您可以<a href='%1'>新增一個</a>。"
+msgstr "目前沒有新的會員狀態。您可以<a href='%1'>新增一個</a>。"
 
 #: templates/CRM/Member/Page/MembershipType.hlp
 msgid "Use the <strong>Relationship Type</strong> field to configure Membership Types where memberships are automatically granted to related contacts. Examples are listed below:"
@@ -30781,7 +30781,7 @@ msgstr "會員類型"
 
 #: templates/CRM/Member/Page/MembershipType.tpl
 msgid "There are no membership types entered. You can <a href='%1'>add one</a>."
-msgstr "目前沒有設定會籍類型。<a href='%1'>請新增</a>。"
+msgstr "目前沒有設定會員類型。<a href='%1'>請新增</a>。"
 
 #: templates/CRM/Member/Page/Tab.hlp
 msgid "Membership status is normally assigned and updated automatically based on your configured membership status rules. However, if you want to assign a status manually and bypass automated status setting, check this box. Then you can select from the available status options."
@@ -30793,7 +30793,7 @@ msgstr "此手動設定將強制執行，除非再到此欄位取消勾選，否
 
 #: templates/CRM/Member/Page/Tab.tpl
 msgid "Click <a href='%1'>Add Membership</a> to record a new membership."
-msgstr "按<a href='%1'>新會籍</a>以記錄一個新會籍。"
+msgstr "按<a href='%1'>新增會員</a>以記錄一個新會員。"
 
 #: templates/CRM/Member/Page/Tab.tpl
 msgid "Click <a href='%1'>Submit Credit Card Membership</a> to process a Membership on behalf of the member using their credit card."
@@ -30809,19 +30809,19 @@ msgstr "提交信用卡會員"
 
 #: templates/CRM/Member/Page/Tab.tpl
 msgid "No memberships have been recorded for this contact."
-msgstr "此聯絡人沒有會籍紀錄。"
+msgstr "此聯絡人沒有會員紀錄。"
 
 #: templates/CRM/Member/Page/Tab.tpl
 msgid "Active Memberships"
-msgstr "啓用會籍"
+msgstr "啓用會員"
 
 #: templates/CRM/Member/Page/Tab.tpl
 msgid "Pending and Inactive Memberships"
-msgstr "等待中以及停用的會員籍"
+msgstr "等待中以及停用的會員"
 
 #: templates/CRM/Member/Page/Tab.tpl
 msgid "The following Membership Types are associated with this organization. Click <strong>Members</strong> for a listing of all contacts who have memberships of that type. Click <strong>Edit</strong> to modify the settings for that type."
-msgstr "以下會員籍類別與此組織相關。按<strong>會員</strong>列出所有有那類別會員籍的聯絡人。按<strong>編輯</strong>為那類別修改設定。"
+msgstr "以下會員類別與此組織相關。按<strong>會員</strong>列出所有有那類別會員的聯絡人。按<strong>編輯</strong>為那類別修改設定。"
 
 #: templates/CRM/Member/Page/UserDashboard.tpl
 msgid "Renew Now"
@@ -30829,11 +30829,11 @@ msgstr "立即更新"
 
 #: templates/CRM/Member/Page/UserDashboard.tpl
 msgid "Expired / Inactive Memberships"
-msgstr "過期 / 停用的會籍"
+msgstr "過期 / 停用的會員類型"
 
 #: templates/CRM/Member/Page/UserDashboard.tpl
 msgid "There are no memberships on record for you."
-msgstr "您沒有會籍紀錄。"
+msgstr "您沒有會員紀錄。"
 
 #: templates/CRM/Pledge/Form/Payment.tpl
 msgid "Edit Scheduled Pledge Payment"
@@ -31121,7 +31121,7 @@ msgstr "單位價格"
 
 #: templates/CRM/Price/Form/Field.tpl
 msgid "Enter a value here if you want to increment the number of registered participants per unit against the maximum number of participants allowed for this event."
-msgstr ""
+msgstr "若本次登記，登記者可攜帶同伴參與，輸入可攜伴的人數上限數值。"
 
 #: templates/CRM/Price/Form/Field.tpl
 msgid "Display amount next to each option? If no, then the amount should be in the option description."
@@ -31149,7 +31149,7 @@ msgstr "在此表格可輸入最多到十個的選項（按「其他選項」來
 
 #: templates/CRM/Price/Form/OptionFields.tpl
 msgid "Max Participant"
-msgstr "參加者人數限制"
+msgstr "參加者最多人數"
 
 #: templates/CRM/Price/Form/Option.tpl
 msgid "WARNING: Deleting this option will result in the loss of all data."
@@ -31193,7 +31193,7 @@ msgstr "若此欄位或選項是用來做為折扣用，您可以輸入負數值
 
 #: templates/CRM/Price/Page/Field.hlp
 msgid "Enter a value here if you want to increment the number of registered participants per unit against the maximum number of participants allowed for this event. For example, if this price field is for a table at a fundraiser which seats eight people, you would set Participant Count to 8."
-msgstr ""
+msgstr "若本次登記，登記者可攜帶同伴參與，輸入可攜伴的人數上限數值。例如本價格表若用於募款餐會，以認捐一桌為單位，每桌最多有8個座位，數值輸入8，認捐一桌的參與者可攜帶包含自己共8位人士參與。"
 
 #: templates/CRM/Price/Page/Field.hlp
 msgid "Fields with 'Public' visibility will be displayed on your Event Information page AND will be available in the online registration (self-service) form. For some events you may want to allow staff to select special options with special pricing and / or discounts (using negative price set field values). Select 'Admin' visibility for these Price Fields. They will only be included when staff or volunteers are registering participants from the back-office 'Register Event Participants' screen."
@@ -31809,15 +31809,15 @@ msgstr "<strong>聯絡人搜尋及列表</strong> - 當您想提供一個搜尋�
 
 #: templates/CRM/UF/Page/Group.hlp
 msgid "<strong>Contact Signup Forms</strong> - Create link(s) to 'new contact' input form(s) for your Profiles using the following path: <em>%1/%2</em>. (This example links to an input form for Profile ID 3.)"
-msgstr "<strong>聯絡人簽到表單</strong> - 為您的資料表單建立連結到「新增聯絡人」匯入表格，使用以下網址：<em>%1/%2</em>。(這例子為資料表單編號3連結到簽到表)"
+msgstr "<strong>聯絡人簽到表單</strong> - 為資料表單建立連結到「新增聯絡人」匯入表格，使用以下網址：<em>%1/%2</em>。(本例為資料表單編號3連結到簽到表)"
 
 #: templates/CRM/UF/Page/Group.hlp
 msgid "<strong>Contact Edit Forms</strong> - Allow <strong>authenticated users</strong> to edit their own contact info with a Profile using the following path: <em>%1/%2</em>. (This example links to an edit form for Profile ID 3.)"
-msgstr "<strong>聯絡人編輯表格</strong> - 允許<strong>已確認使用者</strong>去編輯他們自己檔案裡的聯絡人資料，請使用以下路徑： <em>%1/%2</em>。(這例子連結到資料表單編號3的編輯表格)"
+msgstr "<strong>聯絡人編輯表格</strong> - 允許<strong>已確認使用者</strong>去編輯他們自己檔案裡的聯絡人資料，請使用以下路徑： <em>%1/%2</em>。(本例為連結到資料表單編號3的編輯表格)"
 
 #: templates/CRM/UF/Page/Group.hlp
 msgid "<strong>HTML Form Snippet</strong> - If you want more control over form layout, or want to add Profile input forms to non-CiviCRM blocks, pages and/or sites...click the HTML Form Snippet action link for a Profile below - and copy and paste the HTML form code into any web page."
-msgstr ""
+msgstr "<strong>HTML嵌入小工具</strong> - 若需要將表單增加到非CiviCRM的頁面，點擊'更多>將表單崁入其他網站' 複製'HTML嵌入小工具' 中的html代碼貼到外部網站。"
 
 #: templates/CRM/UF/Page/Group.hlp
 msgid "The HTML Form Snippet code will display a form consisting of the active fields in this Profile. You can copy this HTML code and paste it into any block or page on ANY website where you want to collect contact information."
