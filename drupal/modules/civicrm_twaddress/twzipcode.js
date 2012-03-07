@@ -39,8 +39,13 @@
         areaSel: '',
         zipSel: '',
         zipReadonly: true,
+        dbcode: '',
         css: []
       }, options);
+
+      if(o.dbcode){
+        dbcode = o.dbcode;
+      }
 
       var _ = cj(this);
       var sel = {}, zipcode = cj.fn.twzipcode.zipcode;
