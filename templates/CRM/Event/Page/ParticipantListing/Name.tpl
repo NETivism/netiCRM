@@ -41,7 +41,7 @@
          </tr>
       {foreach from=$rows item=row}
          <tr class="{cycle values="odd-row,even-row"} crm-participant-name">
-            <td>{$row.name}</td>	
+            <td>{$row.name|regex_replace:"/\@/":" [AT] "|regex_replace:"/.$/u":"＊"}</td>	
          </tr>
       {/foreach}
       </table>

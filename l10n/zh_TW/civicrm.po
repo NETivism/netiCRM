@@ -5662,7 +5662,7 @@ msgstr "聯絡人群組"
 
 #: CRM/ACL/BAO/ACL.php
 msgid "Administer"
-msgstr "管理者"
+msgstr "管理"
 
 #: CRM/ACL/BAO/ACL.php msgctxt "menu"
 msgid "Import"
@@ -6051,7 +6051,7 @@ msgstr "已刪除的任務‘"
 
 #: CRM/Activity/Task.php
 msgid "Export Activities"
-msgstr "匯入任務記錄"
+msgstr "匯出任務記錄"
 
 #: CRM/Activity/Task.php
 msgid "Batch Update Activities Via Profile"
@@ -8068,7 +8068,7 @@ msgstr "增加時程"
 
 #: CRM/Case/Form/CaseView.php
 msgid "Select Case for Merge"
-msgstr "選擇要匯出的欄位"
+msgstr "選擇要合併的個案"
 
 #: CRM/Case/Form/CaseView.php
 msgid "- select case -"
@@ -8445,7 +8445,7 @@ msgstr "自訂收件人"
 
 #: CRM/Contact/DAO/Contact.php
 msgid "Sic Code"
-msgstr "Sic Code"
+msgstr "統一編號"
 
 #: CRM/Contact/DAO/Contact.php
 msgid "Unique ID (OpenID)"
@@ -13998,11 +13998,11 @@ msgstr "高度（列）"
 
 #: CRM/Custom/Form/Field.php
 msgid "Field Pre Help"
-msgstr "欄位幫助訊息開頭"
+msgstr "欄位上方說明"
 
 #: CRM/Custom/Form/Field.php
 msgid "Field Post Help"
-msgstr "欄位幫助訊息結尾"
+msgstr "欄位補充說明（tip）"
 
 #: CRM/Custom/Form/Field.php
 msgid "Is this Field Searchable?"
@@ -19052,7 +19052,7 @@ msgstr "更新對應的聯絡人。"
 
 #: CRM/UF/Form/AdvanceSetting.php
 msgid "Allow duplicate contact to be created"
-msgstr "已經新增了聯絡人。"
+msgstr "允許建立重複聯絡人"
 
 #: CRM/UF/Form/AdvanceSetting.php
 msgid "What to do upon duplicate match"
@@ -20727,13 +20727,13 @@ msgstr "勾選此框，以在這個選單項目與下一個項目之間新增分
 msgid "You can assign one or more permissions to this menu item. Multiple permissions are additive by default. EXAMPLE: If you assign <em>access CiviContribute</em> and <em>administer CiviCRM</em> to a menu item, a user will need to have BOTH permissions to access it. You can change this behavior to \"either / or\" by changing the Operator below."
 msgstr ""
 "您可以指派一個或多個權限到這個選單項目。預設上，多重權限是可以的。舉例：若您指派\n"
-"<em>存取捐款</em>與<em>CiviCRM管理員</em>到選單項目，使用者需要具有兩者的權限才能存取。\n"
+"<em>存取捐款</em>與<em>支持者系統管理</em>到選單項目，使用者需要具有兩者的權限才能存取。\n"
 "You can change this behavior to \"either / or\" by changing the Operator below."
 
 #: templates/CRM/Admin/Form/Navigation.hlp
 msgid "Set the Operator to \"OR\" if you've assigned multiple permissions and want access to be granted for any one of them. EXAMPLE: If you assign <em>access CiviContribute</em> and <em>administer CiviCRM</em> to a menu item, and set the Operator to \"OR\", users who have either of those permissions will have access."
 msgstr ""
-"若您指定多個權限並想要被授予訪問其中任何一個，請設定操作子到「或」。舉例：若您指派<em>存取捐款</em>與<em>CiviCRM管理員</em>到選單項目，並設置操作子為「或」，使用者\n"
+"若您指定多個權限並想要被授予訪問其中任何一個，請設定操作子到「或」。舉例：若您指派<em>存取捐款</em>與<em>支持者系統管理</em>到選單項目，並設置操作子為「或」，使用者\n"
 "將有權限存取。"
 
 #: templates/CRM/Admin/Form/Navigation.tpl
@@ -21782,7 +21782,7 @@ msgstr "編輯設定"
 
 #: templates/CRM/Admin/Page/ConfigTaskList.tpl
 msgid "Use this checklist to review and complete configuration tasks for your site. You will be redirected back to this checklist after saving each setting. Settings which you have not yet reviewed will be <span class=\"status-overdue\">displayed in red</span>. After you have visited a page, the links will <span class=\"status-pending\">display in green</span>  (although you may still need to revisit the page to complete or update the settings). You can access this page again from the <a href=\"%1\">Administer CiviCRM</a> menu at any time."
-msgstr "透過<strong>設定清單</strong>，您可以查看並完成各項系統設定工作。在設定清單中，<span class=\"status-overdue\">紅字</span>顯示的項目代表您還沒進行查看/設定的工作，而您已查看/設定的項目，則會以<span class=\"status-pending\">綠字</span>顯示。您可隨時透過  <a href=\"%1\">CiviCRM管理員</a> 的頁面來進行各項系統組態的查看及設定。"
+msgstr "透過<strong>設定清單</strong>，您可以查看並完成各項系統設定工作。在設定清單中，<span class=\"status-overdue\">紅字</span>顯示的項目代表您還沒進行查看/設定的工作，而您已查看/設定的項目，則會以<span class=\"status-pending\">綠字</span>顯示。您可隨時透過  <a href=\"%1\">支持者系統管理</a> 的頁面來進行各項系統組態的查看及設定。"
 
 #: templates/CRM/Admin/Page/ConfigTaskList.tpl
 msgid "Site Configuration"
@@ -26069,7 +26069,7 @@ msgstr "將您的自訂欄位加入至此資料表單，以做為資料表單的
 
 #: templates/CRM/Contribute/Form/ContributionPage/Custom.hlp
 msgid "Return to this screen (<strong>Administer CiviCRM &raquo; Manage Contribution Page &raquo; Configure &raquo; Custom Elements</strong>) and select your profile."
-msgstr "返回到此畫面（<strong>CiviCRM管理員&raquo; 管理募款頁&raquo; 設定&raquo; 元素</strong>），並選擇您的資料表單。"
+msgstr "返回到此畫面（<strong>支持者系統管理&raquo; 管理募款頁&raquo; 設定&raquo; 元素</strong>），並選擇您的資料表單。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/Custom.hlp
 #: templates/CRM/Event/Form/ManageEvent/Registration.hlp
@@ -26867,13 +26867,13 @@ msgstr "上載檔案中的總列數（捐款紀錄）。"
 #: templates/CRM/Event/Import/Form/Summary.tpl
 #: templates/CRM/Member/Import/Form/Summary.tpl
 msgid "Import has completed successfully."
-msgstr "個案開啟成功。"
+msgstr "匯入成功。"
 
 #: templates/CRM/Contribute/Import/Form/Summary.tpl
 #: templates/CRM/Event/Import/Form/Summary.tpl
 #: templates/CRM/Member/Import/Form/Summary.tpl
 msgid "The information below summarizes the results."
-msgstr "<strong>已被成功匯入</strong>。以下為結果摘要報告。"
+msgstr "以下為結果摘要報告。"
 
 #: templates/CRM/Contribute/Import/Form/Summary.tpl
 msgid "CiviCRM has detected mismatched contribution ID. This record have not been updated."
@@ -27684,15 +27684,15 @@ msgstr "如果您想為此欄位提供一個預設的值，在此輸入。給日
 
 #: templates/CRM/Custom/Form/Field.tpl
 msgid "Explanatory text displayed for this field. Pre help is displayed inline on the form (above the field). Post help is displayed in a pop-up - users click the help balloon to view help text."
-msgstr ""
+msgstr "欄位的說明，將在編輯時顯示。欄位上方說明，將會呈現在欄位的上方。而欄位補充說明，則會顯示在欄位右側的提示按鈕。滑鼠移過去即可看到提示。"
 
 #: templates/CRM/Custom/Form/Field.tpl
 msgid "Can you search on this field in the Advanced and component search forms? NOTE: This feature is available to custom fields used for <strong>Contacts (individuals, organizations and househoulds), Contributions, Pledges, Memberships, Event Participants, Activities, and Relationships</strong>."
-msgstr ""
+msgstr "此欄位可用在「進階搜尋」中嗎？ 注意，此功能僅能在下列資料類型：聯絡人（個人、組織、家庭）、捐款、認捐、會員、活動參加者、任務、關係。"
 
 #: templates/CRM/Custom/Form/Field.tpl
 msgid "Is this field set by PHP code (via a custom hook). This field will not be updated by CiviCRM."
-msgstr ""
+msgstr "此欄位僅能由程式操控？（欄位將會隱藏，需由工程人員撰寫程式碼才能儲存值）。"
 
 #: templates/CRM/Custom/Form/Field.tpl
 msgid "View / Edit Multiple Choice Options"
@@ -27700,7 +27700,7 @@ msgstr "查看 / 編輯多個選項"
 
 #: templates/CRM/Custom/Form/Group.tpl
 msgid "Use Custom Field Sets to add logically related fields for a specific type of CiviCRM record (e.g. contact records, contribution records, etc.)."
-msgstr ""
+msgstr "使用資料欄位集"
 
 #: templates/CRM/Custom/Form/Group.tpl
 msgid "Custom Fields for this Set"
@@ -27736,7 +27736,7 @@ msgstr "是否預設的此選項值'已選取'？"
 
 #: templates/CRM/Custom/Form/Preview.tpl
 msgid "Preview of the custom data group (fieldset) as it will be displayed within an edit form."
-msgstr ""
+msgstr "自訂欄位群組在編輯狀態的表單預覽。"
 
 #: templates/CRM/Custom/Form/Preview.tpl templates/CRM/Price/Form/Preview.tpl
 msgid "Preview of this field as it will be displayed in an edit form."
@@ -27854,11 +27854,11 @@ msgstr "說明文字會顯示在此群組欄位的下方。"
 
 #: templates/CRM/Custom/Page/Group.tpl
 msgid "Custom data is stored in custom fields. Custom fields are organized into logically related custom data sets (e.g. Volunteer Info). Use custom fields to collect and store custom data which are not included in the standard CiviCRM forms. You can create one or many sets of custom fields."
-msgstr ""
+msgstr "設定自訂欄位，可以為聯絡人、捐款、活動、參加者等增加新的欄位，裡頭可存放您組織特有的資料。例如單位有志工的類別，每個聯絡人需要選擇志工類別，便可新增欄位讓聯絡人可標示。新增完的自訂欄位，可在聯絡人綜覽、新增聯絡人、編輯聯絡人的畫面中看到，亦可用作「資料表單」的欄位，供網路使用者填寫資訊。"
 
 #: templates/CRM/Custom/Page/Group.tpl
 msgid "Set"
-msgstr "Setif"
+msgstr "自訂欄位群組"
 
 #: templates/CRM/Custom/Page/Group.tpl
 msgid "All Contact Types"
@@ -27866,7 +27866,7 @@ msgstr "所有聯絡類別"
 
 #: templates/CRM/Custom/Page/Group.tpl
 msgid "Add Set of Custom Fields"
-msgstr "資料欄位集"
+msgstr "新增自訂欄位群組"
 
 #: templates/CRM/Custom/Page/Group.tpl
 msgid "No custom data groups have been created yet. You can <a href='%1'>add one</a>."
@@ -28695,29 +28695,31 @@ msgstr[0] "CiviCRM已偵測到不符的參加者編號。這記錄沒有被更�
 
 #: templates/CRM/Event/Import/Form/Summary.tpl
 msgid "You can <a href=\"%1\">Download Mismatched Participantss</a>. You may then correct them, and import the new file with the corrected data."
-msgstr "您可以<a href=\"%1\">下載不相符參加者</a>。您可以更正他們，及匯入已修正數據的新檔案。"
+msgstr "您可以<a href=\"%1\">下載不相符參加者</a>。您可以修正這些錯誤的聯絡人後，再次匯入。"
 
 #: templates/CRM/Event/Import/Form/Summary.tpl
 msgid "CiviCRM has detected one record with conflicting transaction ID within this data file or relative to existing particpant records. This record have not been imported."
 msgid_plural "CiviCRM has detected %count records with conflicting transaction IDs within this data file or relative to existing participant records. These records have not been imported."
-msgstr[0] "CiviCRM已在此資料檔案或相關的現有參加者記錄中偵測到一個有衝突交易編號的紀錄。此記錄未被匯入。"
+msgstr[0] "匯入時，偵測到 1 筆重複的參加者編號。資料沒有匯入。"
+msgstr[1] "匯入時，偵測到 %count 筆重複的參加者編號。這些資料沒有匯入。"
 
 #: templates/CRM/Event/Import/Form/Summary.tpl
 msgid "CiviCRM has detected one record which is a duplicate of existing CiviCRM participant record."
 msgid_plural "CiviCRM has detected %count records which are duplicates of existing CiviCRM participant records."
-msgstr[0] "CiviCRM已偵測到一個紀錄，是為現有的CiviCRM參加者記錄的複製。"
+msgstr[0] "匯入時，偵測到 1 筆跟現有參加者重複的紀錄。"
+msgstr[1] "匯入時，偵測到 %count 筆跟現有參加者重複的紀錄。"
 
 #: templates/CRM/Event/Import/Form/Summary.tpl
 msgid "Rows with mismatched participant IDs... (NOT updated)."
-msgstr "不相符參加者編號的行…(沒有更新)。"
+msgstr "參加者編號不存在匯入資料（未更新）。"
 
 #: templates/CRM/Event/Import/Form/Summary.tpl
 msgid "Download Mismatched participants"
-msgstr "下載不相符的參加者"
+msgstr "下載錯誤的參加者（檔案不相符）的匯入檔案。"
 
 #: templates/CRM/Event/Import/Form/Summary.tpl
 msgid "Rows which are duplicates of existing CiviCRM participant records."
-msgstr ""
+msgstr "重複參加者資料的匯入檔案。"
 
 #: templates/CRM/Event/Import/Form/UploadFile.hlp
 msgid "Required Participant Data"
@@ -28749,24 +28751,24 @@ msgstr "活動參加者聯絡記錄"
 
 #: templates/CRM/Event/Import/Form/UploadFile.hlp
 msgid "Participant import requires that each person, household or organization already exists as a contact record in your CiviCRM database. If you need to import participant information for contact records which haven't been added to CiviCRM yet - you will do this in 2 steps. First, use <strong>Import Contacts</strong> to add the contact records. If possible, include a unique 'External ID' for each new contact which you can then use to match participant info such as event registration to the corresponding contact record. Then return to this screen and import the participant records."
-msgstr ""
+msgstr "參加者匯入之前，聯絡人需要先存在於系統中。如此參加者資料才能正確匯入到活動中。如果你需要匯入一些參加者，並且這些參加者的聯絡資料還未儲存在系統中，您需要先進行<strong>匯入聯絡人</strong>的步驟並帶入「外部編號」已供第二步<strong>匯入參加者</strong>使用。當回到此畫面匯入參加者時，您需要有一個欄位對應正確的聯絡人，通常是剛剛匯入的「外部編號」，或系統提供的聯絡人「系統編號」，而較為不準確的方式，則利用聯絡人「Email」來做對應。三種選一，即可正確對應參加狀態到聯絡人中。"
 
 #: templates/CRM/Event/Import/Form/UploadFile.hlp
 msgid "Matching Participant Data to Contacts"
-msgstr "參加者資料合併到聯絡人"
+msgstr "對應到的參加者資料（聯絡人）"
 
 #: templates/CRM/Event/Import/Form/UploadFile.hlp
 msgid "Participant import files must contain data needed to <strong>match the participant to a contact record in your CiviCRM database</strong>. This 'matching' can be handled in several different ways:"
-msgstr ""
+msgstr "匯入參加者檔案，所需欄位包含<strong>對應參加者和聯絡人的資料</strong>。這些「對應」的方式通常會以下列格式存在："
 
 #: templates/CRM/Event/Import/Form/UploadFile.hlp
 msgid "If you've stored a unique <strong>External Identifier</strong> for each contact in CiviCRM, you can include that value as a column in your import file. Participant data will then be matched to contact records using their External ID."
-msgstr "外部編號"
+msgstr "「外部編號」-外部資料匯入系統時，所賦予聯絡人的唯一編號。"
 
 #: templates/CRM/Event/Import/Form/UploadFile.hlp
 #: templates/CRM/Member/Import/Form/UploadFile.hlp
 msgid "You can include a column with each contact's <strong>Internal Contact ID</strong>. This is the unique ID assigned by CiviCRM which is displayed at the bottom of the Contact Summary screen - and can be exported."
-msgstr "系統編號"
+msgstr "「系統編號」：聯絡人建立時，系統自動給予的一個獨一無二數字編號。"
 
 #: templates/CRM/Event/Import/Form/UploadFile.hlp
 msgid "Save the CSV file with your participant data and 'contact matching' data to your local hard drive (or an accessible drive on your network) - and you are now ready for step 1 (Upload Data)."
@@ -28774,15 +28776,15 @@ msgstr "將您的參加者資料與聯絡人配對資料儲存為 CSV 檔，並�
 
 #: templates/CRM/Event/Import/Form/UploadFile.hlp
 msgid "For each import, you can either INSERT new participant records, or UPDATE existing records during the import session. If you are UPDATING existing records (to update participant status after an event, for example), you will need to include a column containing the unique CiviCRM-assigned participant ID to match to the existing record. This value is included whenever you Export participant records from Find Participants."
-msgstr "在每次匯入過程中，您都可以匯入新的參加者資料，或更新現存的參加者資料。如果您要更新現存參加者資料（例如在活動辦理後更新參加者狀態），您必須要在匯入檔案中，加入一列 CiviCRM 所分配之參加者編號的記錄，以對應資料庫的參加者資料。您可以透過「搜尋參加者」來匯出參加者資料，並找到 CiviCRM 所分配的參加者編號。"
+msgstr "在每次匯入過程中，您都可以匯入新的參加者資料，或更新現存的參加者資料。如果您要更新現存參加者資料（例如在活動辦理後更新參加者狀態），您必須要在匯入檔案中，加入一列系統先前給予的「參加者編號」欄位，以對應資料庫的參加者資料。您可以透過「搜尋參加者」來匯出參加者資料，並找到系統給予的「參加者編號」。"
 
 #: templates/CRM/Event/Import/Form/UploadFile.tpl
 msgid "The Event Import Wizard allows you to easily upload event participation data such as event registrations from other applications into CiviCRM."
-msgstr "活動匯入精靈讓您可輕鬆地從其他應用程式匯入活動報名資料到CiviCRM。"
+msgstr "活動匯入精靈讓您可輕鬆地從其他應用程式匯入活動報名資料。"
 
 #: templates/CRM/Event/Import/Form/UploadFile.tpl
 msgid "Files to be imported must be in the 'comma-separated-values' format (CSV) and must contain data needed to match the participant data to an existing contact in your CiviCRM database."
-msgstr "匯入的資料必須是CSV格式以及可與CiviCRM資料庫對應的欄位內容。"
+msgstr "匯入的資料必須是CSV格式，並且需要對應系統編號的欄位。"
 
 #: templates/CRM/Event/Import/Form/UploadFile.tpl
 msgid "Check this box if the first row of your file consists of field names (Example: \"Contact ID\", \"Participant Role\")."
@@ -28802,7 +28804,7 @@ msgstr "選擇已儲存配對，或留空以建立新的配對。"
 
 #: templates/CRM/Event/Page/DashBoard.hlp
 msgid "CiviEvent allows you to create customized page(s) for constituents to learn about events and optionally register online. You can create <a href='%1'><strong>new events</strong></a> and <a href='%2'><strong>manage existing events</strong></a>."
-msgstr "您可以利用活動建立一個虛擬的活動頁面，讓您的支持者學習線上報名活動。您可以按<a href='%1'><strong>新增活動</strong></a>建立新活動，或按<a href='%2'><strong>管理活動</strong></a>來管理現有活動。"
+msgstr "您可以隨時建立一個線上活動頁面，讓您的支持者線上報名活動。按下<a href='%1'><strong>新增活動</strong></a>建立新活動，或按<a href='%2'><strong>管理活動</strong></a>來管理現有活動。"
 
 #: templates/CRM/Event/Page/DashBoard.hlp
 msgid "You can also input and track offline Events. To enter events manually for individual contacts, use <a href='%1'>Find Contacts</a> to locate the contact. Then click <strong>View</strong> to go to their summary page and click on the <strong>New Event</strong> link. You can also <a href='%2'><strong>import batches of participants</strong></a> from other sources."
@@ -28946,7 +28948,7 @@ msgstr "開始=YYYYMMDD - 指定一個不同的日期範圍給被列出的活動
 
 #: templates/CRM/Event/Page/ManageEvent.hlp
 msgid "type=N - Specify a particular Event Type using the event_type_id value. (You can find these values by browsing the listing at Administer CiviCRM &raquo; Event Types.)"
-msgstr "輸入=N - 指定一個活動類別的 event_type_id 值（您可以透過 CiviCRM管理員&raquo; 活動類別，來查看活動類別的 event_type_id 值）。"
+msgstr "輸入=N - 指定一個活動類別的 event_type_id 值（您可以透過 支持者系統管理&raquo; 活動類別，來查看活動類別的 event_type_id 值）。"
 
 #: templates/CRM/Event/Page/ManageEvent.hlp
 msgid "EXAMPLE: Given the default event types, this URL will retrieve all events with start dates on or after January 1, 2007 whose event type is 'Fundraiser':"
@@ -29048,19 +29050,19 @@ msgstr "您沒有報名任何現在或即將舉行的活動。"
 
 #: templates/CRM/Export/Form/Map.tpl
 msgid "Select the fields to be exported using the table below. For each field, first select the contact type that the field belongs to (e.g. select <strong>Individuals</strong> if you are exporting <strong>Last Name</strong>). Then select the actual field to be exported from the drop-down menu which will appear next to the contact type. Your export can include multiple types of contact records, and non-applicable fields will be empty (e.g. <strong>Last Name</strong> will not be populated for an Organization record)."
-msgstr ""
+msgstr "請在下列選擇要匯出的欄位，您需要先在第一欄篩選要使用的聯絡人類型，當你點選後右側即會出現該類型下面可用的欄位。您可以匯出不同類型的欄位，但某些衝突的欄位將無法一次匯出。"
 
 #: templates/CRM/Export/Form/Map.tpl
 msgid "Click <strong>Select more fields...</strong> if you want to export more fields than are initially displayed in the table."
-msgstr ""
+msgstr "點擊<strong>「選擇更多欄位...」</strong>，以加入更多欄位來進行匯出。"
 
 #: templates/CRM/Export/Form/Map.tpl
 msgid "Click 'Load Saved Field Mapping' to retrieve an export setup that you have previously saved."
-msgstr ""
+msgstr "點擊「選擇要匯出的欄位」，以取出之前儲存的欄位對應，省時省力。"
 
 #: templates/CRM/Export/Form/Map.tpl
 msgid "If you want to use the same export setup in the future, check 'Save this field mapping' at the bottom of the page before continuing. You will then be able to reload this setup with a single click."
-msgstr ""
+msgstr "如果你想要將來還可以重複使用此欄位對應，請在儲存前勾選「儲存為新的欄位配對」選項，未來你就可以在匯出時的欄位清單中看到該對應。"
 
 #: templates/CRM/Export/Form/Select.hlp
 msgid ""
@@ -29086,24 +29088,25 @@ msgstr "<strong>匯出主要欄位</strong>提供最常使用的資料值。此�
 
 #: templates/CRM/Export/Form/Select.tpl
 msgid "Click <strong>Select fields for export</strong> and then <strong>Continue</strong> to choose a subset of fields for export. This option allows you to export multiple specific locations (Home, Work, etc.) as well as custom data. You can also save your selections as a 'field mapping' so you can use it again later."
-msgstr "按<strong>選擇匯出欄位</strong>然後<strong>繼續<strong>選擇匯出集合欄位。此選項允許您匯出多個指定地點(家中、工作等)和自訂欄位。您可儲存您的選擇為'欄位配對'所以您可以之後再次使用它。"
+msgstr "按<strong>選擇匯出欄位</strong>然後<strong>繼續</strong>選擇接續的欄位對應選擇。您可以在欄位對應選擇中，儲存儲存您的選擇為「欄位配對」，儲存下來的欄位範本，讓您之後也可重新應用。"
 
 #: templates/CRM/Export/Form/Select.tpl
 msgid "One record selected for export."
 msgid_plural "%count records selected for export."
-msgstr[0] "記錄已被選取來匯出。"
+msgstr[0] "已選取 1 個記錄以供匯出。"
+msgstr[1] "已選取 %count 個記錄以供匯出。"
 
 #: templates/CRM/Export/Form/Select.tpl
 msgid "Merge Options"
-msgstr "性別選項"
+msgstr "合併選項"
 
 #: templates/CRM/Export/Form/table.tpl
 msgid "Using Field Mapping: %1"
-msgstr "用欄位配對： %1"
+msgstr "使用欄位配對： %1"
 
 #: templates/CRM/Export/Form/table.tpl
 msgid "Fields to Include in Export File"
-msgstr "包括在匯出檔案的欄位"
+msgstr "匯出時要包含的欄位"
 
 #: templates/CRM/Form/attachment.tpl
 msgid "Current Attachment(s)"
@@ -29494,7 +29497,7 @@ msgstr "您可以使用<strong>CSV</strong>檔案，或<strong>SQL 查詢語言<
 
 #: templates/CRM/Import/Form/DataSource.hlp
 msgid "After importing contacts, you may also want to import <strong>contributions, membership info and/or event participation</strong> data for these contacts. If so, first make sure that the corresponding CiviCRM component is enabled from Administer CiviCRM &raquo; Global Settings &raquo; Enable Components. Enable CiviContribute, CiviMember, and/or CiviEvent. Then navigate to the Import option found in each component's menu (e.g. CiviContribute &raquo; Import Contributions)."
-msgstr "在匯入聯絡人之後，您也可能想匯入這些聯絡人的<strong>捐款、會員及/或活動參加人</strong>等相關資料。如果這樣，首先確定您已在 CiviCRM管理員&raquo;設定總覽&raquo;啟用模組 啟用相關的 CiviCRM 模組。啟用 捐款、會員、及/或 活動等模組後，然後連結至每一個模組選單下的匯入選項（例如：捐款&raquo;匯入捐款）。"
+msgstr "在匯入聯絡人之後，您也可能想匯入這些聯絡人的<strong>捐款、會員及/或活動參加人</strong>等相關資料。如果這樣，首先確定您已在 支持者系統管理&raquo;設定總覽&raquo;啟用模組 啟用相關的 CiviCRM 模組。啟用 捐款、會員、及/或 活動等模組後，然後連結至每一個模組選單下的匯入選項（例如：捐款&raquo;匯入捐款）。"
 
 #: templates/CRM/Import/Form/DataSource.hlp
 msgid "Select <strong>Individual</strong> for Contact Type if each record in your file represents and individual person - even if the file also contains related Organization data (e.g. Employer Name, Employer Address, etc.)."
@@ -31676,7 +31679,7 @@ msgstr "當 reCAPTCHA 驗證服務被包括在一個新增/編輯資料表單表
 
 #: templates/CRM/UF/Form/Group.hlp
 msgid "To use reCAPTCHA you must get an API key from <a href=\"%1\" target=\"_blank\">reCAPTCHA.net</a>, and enter the key information in <a href=\"%2\">Administer CiviCRM &raquo; Global Settings &raquo; Miscellaneous Settings</a>."
-msgstr "為了使用 reCAPTCHA 驗證服務，您必需先至<a href=\"%1\" target=\"_blank\">reCAPTCHA.net</a>取得一組 API  key，並且在 <a href=\"%2\">CiviCRM管理員&raquo; 設定總覽&raquo; 雜項設定</a> 輸入 key 值。"
+msgstr "為了使用 reCAPTCHA 驗證服務，您必需先至<a href=\"%1\" target=\"_blank\">reCAPTCHA.net</a>取得一組 API  key，並且在 <a href=\"%2\">支持者系統管理&raquo; 設定總覽&raquo; 雜項設定</a> 輸入 key 值。"
 
 #: templates/CRM/UF/Form/Group.hlp
 msgid "Do not enable this feature for stand-alone profile forms. reCAPTCHA requires dynamic page generation. Submitting a stand-alone form with reCAPTCHA included will always result in a reCAPTCHA validation error."
@@ -31790,11 +31793,11 @@ msgstr "尚未指派 資料表單欄位給「%1」，您可以 <a href='%2'>立�
 
 #: templates/CRM/UF/Page/Group.hlp
 msgid "Profiles may be linked to specific modules, accessed via built-in CiviCRM URLs, or embedded into any web page using the HTML Form Snippet feature. Examples include:"
-msgstr ""
+msgstr "資料表單建立線上的表單，通常會與別的功能一同運用，諸如捐款中的填寫表格，或是活動報名的額外資訊。資料表單也可直接透過線上連結存取填寫，或透過嵌入的方式，把該表單嵌入到外部的網站。"
 
 #: templates/CRM/UF/Page/Group.hlp
 msgid "<strong>User Screens</strong> - One or several profiles can be linked to either the <strong>new user registration</strong> and/or view and edit screens for <strong>existing user accounts</strong>."
-msgstr ""
+msgstr "<strong>網站使用者畫面</strong> - 你可以將資料表單與網站使用者做連結，如此一來，使用者註冊時便可以填寫所需資料，並且在登入後的個人帳號管理介面，可看到該表單的呈現。"
 
 #: templates/CRM/UF/Page/Group.hlp
 msgid "<strong>CiviContribute</strong> - When you want to collect information from Contributors via online contribution pages, you can create a profile and link it to to your contribution page as a 'custom page element' (<a href='%1'>Configure Online Contribution Pages</a>)."
@@ -31806,7 +31809,7 @@ msgstr "<strong>聯絡人搜尋及列表</strong> - 當您想提供一個搜尋�
 
 #: templates/CRM/UF/Page/Group.hlp
 msgid "<strong>Contact Signup Forms</strong> - Create link(s) to 'new contact' input form(s) for your Profiles using the following path: <em>%1/%2</em>. (This example links to an input form for Profile ID 3.)"
-msgstr "<strong>聯絡人註冊表格</strong> - 為您的資料表單建立連結到'新增聯絡人'匯入表格，使用以下路線：<em>%1/%2</em>。(這例子為資料表單編號3連結到匯入表格)"
+msgstr "<strong>聯絡人簽到表單</strong> - 為您的資料表單建立連結到「新增聯絡人」匯入表格，使用以下網址：<em>%1/%2</em>。(這例子為資料表單編號3連結到簽到表)"
 
 #: templates/CRM/UF/Page/Group.hlp
 msgid "<strong>Contact Edit Forms</strong> - Allow <strong>authenticated users</strong> to edit their own contact info with a Profile using the following path: <em>%1/%2</em>. (This example links to an edit form for Profile ID 3.)"
@@ -35643,7 +35646,7 @@ msgid ""
 "You can change this behavior to \"either / or\" by changing the Operator below."
 msgstr ""
 "您可以指派一個或多個權限到這個選單項目。預設上，多重權限是可以的。舉例：若您指派\n"
-"<em>存取捐款</em>與<em>CiviCRM管理員</em>到選單項目，使用者需要具有兩者的權限才能存取。\n"
+"<em>存取捐款</em>與<em>支持者系統管理</em>到選單項目，使用者需要具有兩者的權限才能存取。\n"
 "You can change this behavior to \"either / or\" by changing the Operator below."
 
 #: templates/CRM/Admin/Form/Navigation.hlp
@@ -35652,7 +35655,7 @@ msgid ""
 "If you assign <em>access CiviContribute</em> and <em>administer CiviCRM</em> to a menu item, and set the Operator to \"OR\", users\n"
 "who have either of those permissions will have access."
 msgstr ""
-"若您指定多個權限並想要被授予訪問其中任何一個，請設定操作子到「或」。舉例：若您指派<em>存取捐款</em>與<em>CiviCRM管理員</em>到選單項目，並設置操作子為「或」，使用者\n"
+"若您指定多個權限並想要被授予訪問其中任何一個，請設定操作子到「或」。舉例：若您指派<em>存取捐款</em>與<em>支持者系統管理</em>到選單項目，並設置操作子為「或」，使用者\n"
 "將有權限存取。"
 
 #: templates/CRM/Admin/Form/Preferences/Address.hlp
@@ -35792,7 +35795,7 @@ msgstr "按<a href='%1'>新增聯絡人到%2</a>如果您想新增新會員到�
 
 #: templates/CRM/Contact/Form/Task/Email.hlp
 msgid "Go to <a href=\"%1\">Administer CiviCRM &raquo; Option Lists &raquo; FROM Email Addresses</a> to add or edit general email addresses. Make sure these email addresses are valid email accounts with your email service provider."
-msgstr "前往<a href=\"%1\">CiviCRM管理員&raquo; 選擇列表&raquo; Email寄件者</a>來新增或編輯 Email。請確定這些 Email 是有效的。"
+msgstr "前往<a href=\"%1\">支持者系統管理&raquo; 選擇列表&raquo; Email寄件者</a>來新增或編輯 Email。請確定這些 Email 是有效的。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/PCP.hlp
 msgid ""
@@ -35943,7 +35946,7 @@ msgstr ""
 
 #: templates/CRM/Mailing/Form/Upload.hlp
 msgid "Go to <a href=\"%1\">Administer CiviCRM &raquo; Option Lists &raquo; FROM Email Addresses</a> to add or edit email addresses. Make sure these email addresses are valid email accounts with your email service provider."
-msgstr "前往<a href='%1'>CiviCRM管理員&raquo; 選項清單 &raquo; Email寄件者</a>，並輸入一個有效的 Email寄件者。請確認 Email 設定是正確的寄件者。"
+msgstr "前往<a href='%1'>支持者系統管理&raquo; 選項清單 &raquo; Email寄件者</a>，並輸入一個有效的 Email寄件者。請確認 Email 設定是正確的寄件者。"
 
 #: templates/CRM/Mailing/Form/Upload.hlp
 msgid "If this box is checked, the automatically generated VERP address in the Reply-To will be overriden by the From email address specified above. Consult with your site administrator before using this feature as it may affect handling of bounced emails and replies."
@@ -39662,3 +39665,6 @@ msgstr "可用的信用卡"
 
 msgid "Go to a web page where you can confirm your registration online"
 msgstr "點此完成線上登記 &raquo;"
+
+msgid "Export Activity"
+msgstr "匯出任務"

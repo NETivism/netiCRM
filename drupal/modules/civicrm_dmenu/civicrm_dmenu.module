@@ -11,6 +11,15 @@ function civicrm_dmenu_init(){
     variable_set('civicrm_dmenu_installed', 1);
     cache_clear_all();
   }
+  $js = '
+  cj( document ).ready( function( ) {
+    cj("body").css("padding-top", "0");
+    if(cj("#civicrm-menu").length){
+      cj("#civicrm-menu").hide();
+    }
+  });
+  ';
+  drupal_add_js($js, 'inline', 'footer');
 }
 
 function civicrm_dmenu_menu_items($menu_name, $items, $plid = 0) {
@@ -85,6 +94,7 @@ function civicrm_dmenu_menu_item($path, $title, $description = '', $menu = 'navi
     $exists['hidden'] = ($exists['hidden'] == -1) ? -1 :$hidden;
     $exists['title'] = $title;
     $exists['weight'] = $weight;
+    $exists['customized'] = 1;
     $link = $exists;
   }
 

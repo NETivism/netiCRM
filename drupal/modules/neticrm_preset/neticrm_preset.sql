@@ -1,6 +1,6 @@
 REPLACE INTO 
-  `civicrm_preferences` (`id`, `domain_id`, `contact_id`, `is_domain`, `contact_view_options`, `contact_edit_options`, `advanced_search_options`, `user_dashboard_options`, `address_options`, `address_format`, `mailing_format`, `display_name_format`, `sort_name_format`, `address_standardization_provider`, `address_standardization_userid`, `address_standardization_url`, `editor_id`, `mailing_backend`, `navigation`, `contact_autocomplete_options`)  
-VALUES 
+  `civicrm_preferences` (`id`, `domain_id`, `contact_id`, `is_domain`, `contact_view_options`, `contact_edit_options`, `advanced_search_options`, `user_dashboard_options`, `address_options`, `address_format`, `mailing_format`, `display_name_format`, `sort_name_format`, `address_standardization_provider`, `address_standardization_userid`, `address_standardization_url`, `editor_id`, `mailing_backend`, `navigation`, `contact_autocomplete_options`) 
+VALUES
   (1, 1, NULL, 1, '123456789101113', '1234567891011', '12345678910121315161718', '1234578', '145681011', '{contact.postal_code}{ }{contact.state_province_name}{contact.city}{contact.street_address}{contact.supplemental_address_1}{contact.supplemental_address_2}', '{contact.postal_code}{ }{contact.state_province_name}{contact.city}{contact.street_address}{contact.supplemental_address_1}{contact.supplemental_address_2}', '{contact.last_name}{contact.first_name}{ }{contact.individual_prefix}', '{contact.last_name}{contact.first_name}', NULL, NULL, NULL, 2, 'a:1:{s:15:"outBound_option";s:1:"3";}', NULL, '12');
 
 REPLACE INTO 
@@ -96,4 +96,171 @@ REPLACE INTO `civicrm_uf_field` (`id`, `uf_group_id`, `field_name`, `is_active`,
 (32, 8, 'postal_code', 1, 0, 0, 4, '', NULL, 'User and User Admin Only', 0, 0, 1, NULL, '郵遞區號', 'Contact', 0),
 (33, 8, 'country', 0, 0, 0, 1, NULL, NULL, 'Public Pages and Listings', 0, 1, 1, NULL, '國家（住家）', 'Contact', 0),
 (34, 8, 'state_province', 1, 0, 0, 2, '', NULL, 'User and User Admin Only', 0, 0, 1, NULL, '縣市', 'Contact', 0);
+
+
+-- start for mapping
+
+INSERT INTO 
+  `civicrm_mapping` (`name`, `description`, `mapping_type_id`) 
+VALUES
+  ('[範本]聯絡人基本資料', NULL, 7),
+  ('[範本]單位通訊錄', NULL, 7),
+  ('[範本]捐款記錄匯出', NULL, 8),
+  ('[範本]活動參加者匯出', NULL, 10),
+  ('[範本]任務記錄匯出', NULL, 14),
+  ('[範本]聯絡人匯入', NULL, 2),
+  ('[範本]單位資料匯入', NULL, 2),
+  ('[範本]任務記錄匯入', NULL, 3),
+  ('[範本]捐款記錄匯入', NULL, 4),
+  ('[範本]活動參加者匯入', NULL, 6);
+
+SELECT @export_contact_id := id from civicrm_mapping where name = '[範本]聯絡人基本資料';
+SELECT @export_org_id := id from civicrm_mapping where name = '[範本]單位通訊錄';
+SELECT @export_contribution_id := id from civicrm_mapping where name = '[範本]捐款記錄匯出';
+SELECT @export_participant_id := id from civicrm_mapping where name = '[範本]活動參加者匯出';
+SELECT @export_activity_id := id from civicrm_mapping where name = '[範本]任務記錄匯出';
+SELECT @import_contact_id := id from civicrm_mapping where name = '[範本]聯絡人匯入';
+SELECT @import_org_id := id from civicrm_mapping where name = '[範本]單位資料匯入';
+SELECT @import_activity_id := id from civicrm_mapping where name = '[範本]任務記錄匯入';
+SELECT @import_contribution_id := id from civicrm_mapping where name = '[範本]捐款記錄匯入';
+SELECT @import_participant_id := id from civicrm_mapping where name = '[範本]活動參加者匯入';
+
+
+INSERT INTO 
+  `civicrm_mapping_field` (`mapping_id`, `name`, `contact_type`, `column_number`) 
+VALUES
+  (@export_contact_id, 'id', 'Individual', 0),
+  (@export_contact_id, 'legal_identifier', 'Individual', 1),
+  (@export_contact_id, 'external_identifier', 'Individual', 2),
+  (@export_contact_id, 'display_name', 'Individual', 3),
+  (@export_contact_id, 'last_name', 'Individual', 4),
+  (@export_contact_id, 'first_name', 'Individual', 5),
+  (@export_contact_id, 'nick_name', 'Individual', 6),
+  (@export_contact_id, 'individual_prefix', 'Individual', 7),
+  (@export_contact_id, 'gender', 'Individual', 8),
+  (@export_contact_id, 'birth_date', 'Individual', 9),
+  (@export_contact_id, 'email', 'Individual', 10),
+  (@export_contact_id, 'phone', 'Individual', 11),
+  (@export_contact_id, 'postal_code', 'Individual', 12),
+  (@export_contact_id, 'state_province', 'Individual', 13),
+  (@export_contact_id, 'city', 'Individual', 14),
+  (@export_contact_id, 'street_address', 'Individual', 15),
+  (@export_org_id, 'id', 'Organization', 0),
+  (@export_org_id, 'organization_name', 'Organization', 1),
+  (@export_org_id, 'sic_code', 'Organization', 2),
+  (@export_org_id, 'email', 'Organization', 3),
+  (@export_org_id, 'phone', 'Organization', 4),
+  (@export_org_id, 'url', 'Organization', 5),
+  (@export_org_id, 'postal_code', 'Organization', 6),
+  (@export_org_id, 'state_province', 'Organization', 7),
+  (@export_org_id, 'city', 'Organization', 8),
+  (@export_org_id, 'street_address', 'Organization', 9),
+  (@export_contribution_id, 'contribution_id', 'Contribution', 0),
+  (@export_contribution_id, 'trxn_id', 'Contribution', 1),
+  (@export_contribution_id, 'receive_date', 'Contribution', 2),
+  (@export_contribution_id, 'total_amount', 'Contribution', 3),
+  (@export_contribution_id, 'contribution_type', 'Contribution', 4),
+  (@export_contribution_id, 'contribution_status', 'Contribution', 5),
+  (@export_contribution_id, 'contribution_source', 'Contribution', 6),
+  (@export_contribution_id, 'custom_11', 'Contribution', 7),
+  (@export_contribution_id, 'custom_10', 'Contribution', 8),
+  (@export_contribution_id, 'last_name', 'Individual', 9),
+  (@export_contribution_id, 'first_name', 'Individual', 10),
+  (@export_contribution_id, 'email', 'Individual', 11),
+  (@export_contribution_id, 'phone', 'Individual', 12),
+  (@export_contribution_id, 'state_province', 'Individual', 13),
+  (@export_contribution_id, 'city', 'Individual', 14),
+  (@export_contribution_id, 'street_address', 'Individual', 15),
+  (@export_contribution_id, 'postal_code', 'Individual', 16),
+  (@export_contribution_id, 'id', 'Individual', 17),
+  (@export_contribution_id, 'id', 'Individual', 18),
+  (@export_participant_id, 'participant_id', 'Participant', 0),
+  (@export_participant_id, 'last_name', 'Individual', 1),
+  (@export_participant_id, 'first_name', 'Individual', 2),
+  (@export_participant_id, 'individual_prefix', 'Individual', 3),
+  (@export_participant_id, 'participant_register_date', 'Participant', 4),
+  (@export_participant_id, 'participant_status', 'Participant', 5),
+  (@export_participant_id, 'participant_role', 'Participant', 6),
+  (@export_participant_id, 'event_id', 'Participant', 7),
+  (@export_participant_id, 'participant_fee_level', 'Participant', 8),
+  (@export_participant_id, 'email', 'Individual', 9),
+  (@export_participant_id, 'phone', 'Individual', 10),
+  (@export_participant_id, 'id', 'Individual', 11),
+  (@export_activity_id, 'activity_id', 'Activity', 0),
+  (@export_activity_id, 'activity_type', 'Activity', 1),
+  (@export_activity_id, 'activity_status', 'Activity', 2),
+  (@export_activity_id, 'activity_date_time', 'Activity', 3),
+  (@export_activity_id, 'activity_duration', 'Activity', 4),
+  (@export_activity_id, 'activity_subject', 'Activity', 5),
+  (@export_activity_id, 'source_contact_id', 'Activity', 6),
+  (@export_activity_id, 'id', 'Individual', 7),
+  (@import_contact_id, '系統編號', 'Individual', 0),
+  (@import_contact_id, '身分證字號', 'Individual', 1),
+  (@import_contact_id, '外部編號', 'Individual', 2),
+  (@import_contact_id, '- 不要匯入 -', 'Individual', 3),
+  (@import_contact_id, '姓氏', 'Individual', 4),
+  (@import_contact_id, '名字 ', 'Individual', 5),
+  (@import_contact_id, '暱稱', 'Individual', 6),
+  (@import_contact_id, '個人稱謂', 'Individual', 7),
+  (@import_contact_id, '性別', 'Individual', 8),
+  (@import_contact_id, '出生日期', 'Individual', 9),
+  (@import_contact_id, 'Email (match to contact)', 'Individual', 10),
+  (@import_contact_id, '電話', 'Individual', 11),
+  (@import_contact_id, '郵遞區號', 'Individual', 12),
+  (@import_contact_id, '縣市', 'Individual', 13),
+  (@import_contact_id, '鄉鎮市區', 'Individual', 14),
+  (@import_contact_id, '街道地址', 'Individual', 15),
+  (@import_org_id, '系統編號', 'Organization', 0),
+  (@import_org_id, '單位抬頭 (match to contact)', 'Organization', 1),
+  (@import_org_id, 'Sic Code', 'Organization', 2),
+  (@import_org_id, 'Email (match to contact)', 'Organization', 3),
+  (@import_org_id, '電話', 'Organization', 4),
+  (@import_org_id, '網站', 'Organization', 5),
+  (@import_org_id, '郵遞區號', 'Organization', 6),
+  (@import_org_id, '縣市', 'Organization', 7),
+  (@import_org_id, '鄉鎮市區', 'Organization', 8),
+  (@import_org_id, '街道地址', 'Organization', 9),
+  (@import_activity_id, '- 不要匯入 -', NULL, 0),
+  (@import_activity_id, '任務類型顯示名稱', NULL, 1),
+  (@import_activity_id, '任務狀態', NULL, 2),
+  (@import_activity_id, '任務日期', NULL, 3),
+  (@import_activity_id, '時間長短', NULL, 4),
+  (@import_activity_id, '主旨', NULL, 5),
+  (@import_activity_id, '來源聯絡人', NULL, 6),
+  (@import_activity_id, '系統編號(與聯絡人對應)', NULL, 7),
+  (@import_contribution_id, '- 不要匯入 -', NULL, 0),
+  (@import_contribution_id, '交易編號', NULL, 1),
+  (@import_contribution_id, '收到日期', NULL, 2),
+  (@import_contribution_id, '總金額', NULL, 3),
+  (@import_contribution_id, '捐款類型', NULL, 4),
+  (@import_contribution_id, '捐款狀態', NULL, 5),
+  (@import_contribution_id, '捐款來源', NULL, 6),
+  (@import_contribution_id, '匿名捐款顯示名稱', NULL, 7),
+  (@import_contribution_id, '收據寄發方式', NULL, 8),
+  (@import_contribution_id, 'Email (與聯絡人對應)', NULL, 9),
+  (@import_contribution_id, '系統編號 (與聯絡人對應)', NULL, 10),
+  (@import_participant_id, '- 不要匯入 -', NULL, 0),
+  (@import_participant_id, '- 不要匯入 -', NULL, 1),
+  (@import_participant_id, '- 不要匯入 -', NULL, 2),
+  (@import_participant_id, '- 不要匯入 -', NULL, 3),
+  (@import_participant_id, '報名日期', NULL, 4),
+  (@import_participant_id, '參加者狀態', NULL, 5),
+  (@import_participant_id, '參加者身分', NULL, 6),
+  (@import_participant_id, '活動名稱', NULL, 7),
+  (@import_participant_id, '費用級別', NULL, 8),
+  (@import_participant_id, 'Email (match to contact)', NULL, 9),
+  (@import_participant_id, '- 不要匯入 -', NULL, 10),
+  (@import_participant_id, '系統編號 (match to contact)', NULL, 11);
+
+
+-- remove custom search at navigation
+UPDATE civicrm_navigation SET is_active = 0 WHERE url LIKE 'civicrm/contact/search/custom%csid=8%';
+UPDATE civicrm_navigation SET is_active = 0 WHERE url LIKE 'civicrm/contact/search/custom%csid=11%';
+UPDATE civicrm_navigation SET is_active = 0 WHERE url LIKE 'civicrm/contact/search/custom%csid=2%';
+UPDATE civicrm_navigation SET is_active = 0 WHERE url LIKE 'civicrm/contact/search/custom%csid=6%';
+UPDATE civicrm_navigation SET is_active = 0 WHERE url LiKE 'civicrm/contact/search/custom/list%';
+
+-- translate profile group
+UPDATE civicrm_uf_group SET  title =  '聯絡人摘要' WHERE  civicrm_uf_group.id =7;
+UPDATE civicrm_uf_group SET  title =  '共享地址' WHERE  civicrm_uf_group.id =8;
 
