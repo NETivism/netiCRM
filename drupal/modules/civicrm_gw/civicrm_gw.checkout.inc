@@ -240,7 +240,7 @@ function _civicrm_gw_notify_url(&$vars, $path, $component){
     $query[] = "pid={$vars['participantID']}";
   }
   else {
-    if ( $vars['mid'] ) {
+    if ( $vars['membershipID'] ) {
       $query[] = "mid=".$vars['membershipID'];
     }
     if ($vars['related_contact']) {
