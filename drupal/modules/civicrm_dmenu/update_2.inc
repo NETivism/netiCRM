@@ -209,7 +209,7 @@ $menu_links['neticrm'] =array (
       array (
         'path' => 'civicrm/activity/add',
         'query' => 'atype=3&action=add&reset=1&context=standalone',
-        'title' => '新增 Email',
+        'title' => '寄送 Email',
         'menu' => 'menu-neticrm',
         'weight' => '-45',
         'module' => 'menu',
@@ -284,6 +284,24 @@ $menu_links['neticrm'] =array (
         'title' => '新增/管理關係類型',
         'menu' => 'menu-neticrm',
         'weight' => '-34',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      array (
+        'path' => 'civicrm/admin/uf/group',
+        'query' => 'reset=1',
+        'title' => '新增/管理資料表單',
+        'menu' => 'menu-neticrm',
+        'weight' => '20',
+        'module' => 'menu',
+        'hidden' => '0',
+      ),
+      array (
+        'path' => 'civicrm/admin/custom/group',
+        'query' => 'reset=1',
+        'title' => '新增/管理自訂欄位',
+        'menu' => 'menu-neticrm',
+        'weight' => '20',
         'module' => 'menu',
         'hidden' => '0',
       ),
@@ -401,7 +419,7 @@ $menu_links['neticrm'] =array (
       array (
         'path' => 'civicrm/admin/contribute/managePremiums',
         'query' => 'reset=1',
-        'title' => '感謝禮 (感謝禮品)',
+        'title' => '新增/管理感謝禮品',
         'menu' => 'menu-neticrm',
         'weight' => '-40',
         'module' => 'menu',
@@ -437,36 +455,6 @@ $menu_links['neticrm'] =array (
         'module' => 'menu',
         'hidden' => '0',
       ),
-      
-      array (
-        'path' => 'civicrm/admin/options/accept_creditcard',
-        'query' => 'group=accept_creditcard&reset=1',
-        'title' => '新增/管理可用的信用卡',
-        'menu' => 'menu-neticrm',
-        'weight' => '-35',
-        'module' => 'menu',
-        'hidden' => '0',
-      ),
-      
-      array (
-        'path' => 'civicrm/admin/uf/group',
-        'query' => 'reset=1',
-        'title' => '新增/管理資料表單',
-        'menu' => 'navigation',
-        'weight' => '20',
-        'module' => 'menu',
-        'hidden' => '0',
-      ),
-      
-      array (
-        'path' => 'civicrm/admin/custom/group',
-        'query' => 'reset=1',
-        'title' => '新增/管理自訂欄位',
-        'menu' => 'navigation',
-        'weight' => '20',
-        'module' => 'menu',
-        'hidden' => '0',
-      ),
     ),
   ),
  
@@ -481,17 +469,6 @@ $menu_links['neticrm'] =array (
     'expanded' => 1,
     'children' => 
     array (
-      0 => 
-      array (
-        'path' => 'civicrm/admin/options/participant_listing',
-        'query' => 'group=participant_listing&reset=1',
-        'title' => '參加者列表範本',
-        'menu' => 'menu-neticrm',
-        'weight' => '-42',
-        'module' => 'menu',
-        'hidden' => '0',
-      ),
-     
       array (
         'path' => 'civicrm/admin/options/event_type',
         'query' => 'group=event_type&reset=1',
@@ -501,7 +478,6 @@ $menu_links['neticrm'] =array (
         'module' => 'menu',
         'hidden' => '0',
       ),
-     
       array (
         'path' => 'civicrm/admin/participant_status',
         'query' => 'reset=1',
@@ -598,26 +574,6 @@ $menu_links['neticrm'] =array (
         'title' => '管理價格表',
         'menu' => 'menu-neticrm',
         'weight' => '-43',
-        'module' => 'menu',
-        'hidden' => '0',
-      ),
-      
-      array (
-        'path' => 'civicrm/admin/uf/group',
-        'query' => 'reset=1',
-        'title' => '新增/管理資料表單',
-        'menu' => 'navigation',
-        'weight' => '20',
-        'module' => 'menu',
-        'hidden' => '0',
-      ),
-      
-      array (
-        'path' => 'civicrm/admin/custom/group',
-        'query' => 'reset=1',
-        'title' => '新增/管理自訂欄位',
-        'menu' => 'navigation',
-        'weight' => '20',
         'module' => 'menu',
         'hidden' => '0',
       ),
