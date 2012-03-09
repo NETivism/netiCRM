@@ -35303,7 +35303,7 @@ msgstr "更多本活動的相關訊息"
 
 #: xml/templates/message_templates/friend_subject.tpl
 msgid "%1 wants you to know about %2"
-msgstr "%1 想您知道有關 %2"
+msgstr "%1 和你分享「%2」"
 
 #: xml/templates/message_templates/friend_text.tpl
 msgid "For more information, visit:"
