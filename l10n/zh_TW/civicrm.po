@@ -14082,7 +14082,7 @@ msgstr "您可以新增其他的自訂欄位。"
 
 #: CRM/Custom/Form/Group.php
 msgid "New Custom Field Set"
-msgstr "新自訂欄位"
+msgstr "新增自訂欄位群組"
 
 #: CRM/Custom/Form/Group.php
 msgid "Custom group '%1' already exists in Database."
