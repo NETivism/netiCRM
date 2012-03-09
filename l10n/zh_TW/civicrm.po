@@ -4472,7 +4472,7 @@ msgstr "頁籤"
 
 #: CRM/Core/DAO/CustomGroup.php CRM/Core/SelectValues.php
 msgid "Inline"
-msgstr "同一行"
+msgstr "內嵌"
 
 #: CRM/Core/DAO/Dashboard.php CRM/Core/DAO/Navigation.php
 msgid "Permission Operator"
@@ -14138,7 +14138,7 @@ msgstr "已儲存您的自訂欄位'%1。"
 
 #: CRM/Custom/Form/Group.php
 msgid "Your custom field set '%1' has been added. You can add it custom fields now."
-msgstr "已新增您的自訂欄位群組'%1'。您現在可以增加自訂欄位到此群組。"
+msgstr "已新增「%1」資料欄位群組，可繼續在此增加自訂欄位。"
 
 #: CRM/Custom/Form/Group.php
 msgid "Note:To ensure that all of your custom data groups are available to Views, you may need to add the following key(s) to the $db_prefix array in your settings.php file: '%1'."
@@ -14263,7 +14263,7 @@ msgstr "自訂欄位"
 
 #: CRM/Custom/Page/Field.php
 msgid "%1 - Custom Fields"
-msgstr "%1 - 自訂欄位"
+msgstr "%1 - 新增/修改自訂欄位"
 
 #: CRM/Custom/Page/Group.php
 msgid "View and Edit Custom Fields"
@@ -26410,11 +26410,11 @@ msgstr "請列印此頁留存記錄。"
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid "An email receipt will be sent to %1 and to %2 once the transaction is processed successfully."
-msgstr "一旦捐款程序完成，系統會寄送確認信件至%1與%2。"
+msgstr "一旦收到您的付款，系統會寄送確認信件至%1與%2。"
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid "An email receipt will be sent to %1 once the transaction is processed successfully."
-msgstr "一旦捐款程序完成，系統會寄送確認信件至 %1。"
+msgstr "一旦付款完成，系統會寄送確認信件至 %1。"
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid "Your transaction has been processed successfully. Please print this page for your records."
@@ -27700,7 +27700,7 @@ msgstr "查看 / 編輯多個選項"
 
 #: templates/CRM/Custom/Form/Group.tpl
 msgid "Use Custom Field Sets to add logically related fields for a specific type of CiviCRM record (e.g. contact records, contribution records, etc.)."
-msgstr "使用資料欄位集"
+msgstr "使用'自訂欄位群組'以新增相關的'自訂欄位'用於客製化的記錄表單（如：聯絡人記錄、捐款記錄等）。"
 
 #: templates/CRM/Custom/Form/Group.tpl
 msgid "Custom Fields for this Set"
@@ -27772,11 +27772,11 @@ msgstr "沒有自訂群組'%1'的自訂欄位，<a href='%2'>新增一個</a>"
 
 #: templates/CRM/Custom/Page/Group.hlp
 msgid "Use this form to set the title, the type of record the fields will be used for, and set-level help. You will then be able to add any number of fields to the set."
-msgstr ""
+msgstr "在這裡設定標題、欄位用於哪種記錄類型，資料群組的出現順序。設定完'自訂群組'後，便可以增加多個'自訂欄位'。"
 
 #: templates/CRM/Custom/Page/Group.hlp
 msgid "For 'inline' display custom sets, this title will appear as the fieldset legend. If you choose the 'tab' display style (which is available for Contact record custom fields), the title will be used for the navigation tab."
-msgstr ""
+msgstr "若顯示自訂欄位的樣式選為'內嵌'，標題將顯示如一般欄位的標題位置；若選擇'頁籤'（僅適用於聯絡人記錄），標題將會顯示於導覽頁籤上。"
 
 #: templates/CRM/Custom/Page/Group.hlp
 msgid "Select 'Inline' to include this set  of fields in the main contact Add/Edit form and Contact Summary screens. Select 'Tab' to create a separate navigation tab for display and editing these values (generally for less frequently accessed and/or larger sets of fields)."
@@ -27788,15 +27788,15 @@ msgstr "註記：此設定只適用於群組，用作聯絡人記錄（例如：
 
 #: templates/CRM/Custom/Page/Group.hlp
 msgid "Select the type of record that this set of custom fields is applicable for. You can configure custom data for a specific type of contact (e.g. Individuals but NOT Organizations), ANY type of contact, or other record types such as activities, contributions, memberships and event participants."
-msgstr ""
+msgstr "為自訂欄位選擇適用的資料類型。您可以為特定的聯絡人類型設定自訂資料欄位（例如：僅用於個人，非組織），任何聯絡人類型或其他如任務、捐款、會員與活動參與者。"
 
 #: templates/CRM/Custom/Page/Group.hlp
 msgid "EXAMPLE: If you are using CiviEvent, and you want to collect information from people registering for your events, select \"Participants\". If the information is specific to one type of participant (e.g. event volunteers), select \"Participants (role)\" and then select the role (e.g. 'Volunteer')."
-msgstr "範例：如果你使用活動，並且您想要蒐集報名的參加者資訊，請選擇 \"Participants\"。如果此資訊是與特定某一類型的參加者相關（例如：活動志工），可選擇 \"Participants (role)\"，然後再選擇角色（例如 ：志工）。"
+msgstr "範例：若使用'活動'蒐集報名的參加者資訊，請選擇 \"參加者\"。如果此資訊是與特定某類型的參加者相關（例如：活動志工），可選擇 \"參加者 (角色)\"，然後再選擇角色（例如 ：志工）。"
 
 #: templates/CRM/Custom/Page/Group.hlp
 msgid "If your site uses Contact Subtypes, you can assign this set of custom fields to a specific subtype (e.g. 'Student'), OR you can select '- Any -' which makes the fields available to contacts of the parent type (e.g. 'Individual') as well as to any subtypes."
-msgstr "如果您的網站有使用聯絡人次類型，您可以群組中以自訂欄位來指派特定的次類型（例如：學生），或是您也可以選擇「- 任何 -」，使欄位提供聯絡人的主類型，以及任何次類型。"
+msgstr "若使用聯絡人的次類型（個人、家庭、組織以外的類型），可在自訂欄位群組來指派特定的次類型（例如：學生），或選擇「- 任何 -」，欄位便可用於聯絡人的主類型及任何次類型。"
 
 #: templates/CRM/Custom/Page/Group.hlp
 msgid "Checking this box allows you to enter multiple sets of values for a given contact."
@@ -27838,11 +27838,11 @@ msgstr "權重可控制多個資料群組的出現次序。您可輸入正整數
 
 #: templates/CRM/Custom/Page/Group.hlp
 msgid "Check this box if you want only the title for this fieldset to be displayed when the page is initially loaded (fields are hidden)."
-msgstr ""
+msgstr "勾選此項目，將隱藏本欄位自訂欄位，待使用者點選後才顯示。"
 
 #: templates/CRM/Custom/Page/Group.hlp
 msgid "Check this box if you want only the title for this fieldset to be displayed when the page is initially loaded (fields are hidden) on advanced search."
-msgstr ""
+msgstr "勾選此項目，'進階搜尋'將隱藏本欄位自訂欄位，待使用者點選後才顯示。"
 
 #: templates/CRM/Custom/Page/Group.hlp
 msgid "Explanatory text displayed at the beginning of this sets of fields."
