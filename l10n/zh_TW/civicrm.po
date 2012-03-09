@@ -4849,7 +4849,7 @@ msgstr "停用"
 
 #: CRM/Event/Form/ManageEvent/EventInfo.php CRM/Event/Form/ManageEvent.php
 msgid "'%1' information has been saved."
-msgstr "已儲存 %1 設定。"
+msgstr "設定已成功儲存。"
 
 #: CRM/Event/Form/ManageEvent/Fee.php CRM/Price/Form/Field.php
 msgid "Label cannot be empty."
