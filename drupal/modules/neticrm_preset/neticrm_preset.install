@@ -279,6 +279,9 @@ function neticrm_preset_update_6103(){
   // translate group
   CRM_Core_DAO::executeQuery("UPDATE civicrm_uf_group SET  title =  '聯絡人摘要' WHERE  civicrm_uf_group.id = 7");
   CRM_Core_DAO::executeQuery("UPDATE civicrm_uf_group SET  title =  '共享地址' WHERE  civicrm_uf_group.id = 8");
+
+  // update mail server options
+  _neticrm_preset_set_smtp();
 }
 
 function _neticrm_preset_message($message, $success){
@@ -463,3 +466,22 @@ function _netcrm_preset_disable_custom_search() {
   CRM_Core_BAO_Navigation::resetNavigation( );
 }
 
+function _neticrm_preset_set_smtp(){
+  $params = array(
+    'outBound_option' => '0',
+    'sendmail_path' => '',
+    'sendmail_args' => '',
+    'smtpServer' => '127.0.0.1',
+    'smtpPort' => '25',
+    'smtpAuth' => '',
+    'smtpUsername' => '',
+    'smtpPassword' => '',
+  );
+
+  $mailingDomain = new CRM_Core_DAO_Preferences();
+  $mailingDomain->domain_id  = CRM_Core_Config::domainID( );
+  $mailingDomain->is_domain  = true;
+  $mailingDomain->find(true);
+  $mailingDomain->mailing_backend = serialize( $params );
+  $mailingDomain->save();
+}
