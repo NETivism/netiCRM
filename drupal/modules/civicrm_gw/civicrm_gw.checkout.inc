@@ -43,7 +43,7 @@ function civicrm_gw_do_transfer_checkout(&$vars, &$component, &$payment_processo
   $contribution->id = $vars['contributionID'];
   $contribution->find(true);
   $contribution->is_pay_later = $is_pay_later;
-  $contribution->trxn_id = $params['contributionID'];
+  $contribution->trxn_id = $vars['contributionID'];
   if($vars['civicrm_instrument_id']){
     $contribution->payment_instrument_id = $vars['civicrm_instrument_id'];
   }
