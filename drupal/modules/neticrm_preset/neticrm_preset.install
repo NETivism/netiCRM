@@ -5,6 +5,7 @@
  */
 function neticrm_preset_install(){
   civicrm_initialize();
+  module_load_include('module', 'neticrm_preset', 'neticrm_preset');
   require_once "packages/DB.php";
   require_once "CRM/Core/Component.php";
   require_once "CRM/Core/BAO/Setting.php";
@@ -32,6 +33,8 @@ function neticrm_preset_install(){
   // preset custom fields
   _neticrm_preset_customgf();
 
+  // update membership status
+  _neticrm_preset_member_info();
 }
 
 /**

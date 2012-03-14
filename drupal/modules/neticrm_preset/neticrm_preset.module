@@ -10,31 +10,7 @@ define('NETICRM_GA', 'UA-28254338-1');
  * We got to redirect user to help page even they have permissions.
  */
 function neticrm_preset_init(){
-  global $neticrm, $user, $conf;
-  // we assume the civicrm db is the same with drupal from neticrm service, or we got to load full civicrm object..
-  $count = db_result(db_query("SELECT COUNT(*) FROM {civicrm_contact} WHERE is_deleted = 0"));
-  $member = variable_get("neticrm_preset_membership", array());
-  if(!empty($member)){
-    $percent = round(($count / $member['max']) * 100);
-    $neticrm = array(
-      'count' => $count,
-      'max' => $member['max'],
-      'percent' => $percent,
-    );
-  }
-  // display message when user number over 95
-  if($neticrm['percent'] > 95 && $neticrm['percent'] < 100){
-    drupal_set_message(t("The quota of contacts is %percent to full.", array('%percent' => $neticrm['percent'].'%')), 'help');
-  }
-  // restric over
-  elseif($neticrm['percent'] >= 100){
-    // if in the restrict page
-    drupal_set_message(t("The quota of contacts is %percent to full.", array('%percent' => $neticrm['percent'].'%')), 'error');
-    if(in_array($_GET['q'], _neticrm_preset_limit_path())) {
-      drupal_get_messages();
-      drupal_goto();
-    }
-  }
+  _neticrm_preset_count();
 
   drupal_add_css(drupal_get_path("module","neticrm_preset")."/neticrm_preset.css");
 
@@ -46,7 +22,6 @@ function neticrm_preset_init(){
   if($_GET['q'] == 'civicrm' || $_GET['q'] == 'civicrm/dashboard'){
     drupal_goto();
   }
-
 }
 
 /**
@@ -495,4 +470,35 @@ function _neticrm_preset_limit_path(){
     'civicrm/profile/create',
   );
   return $p;
+}
+
+function _neticrm_preset_count(){
+  global $neticrm, $user, $conf;
+  // we assume the civicrm db is the same with drupal from neticrm service, or we got to load full civicrm object..
+
+  $count = db_result(db_query("SELECT COUNT(*) FROM {civicrm_contact} WHERE is_deleted = 0"));
+  $count = $count ? $count : 0;
+  $member = variable_get("neticrm_preset_membership", array());
+  if(!empty($member)){
+    $percent = round(($count / $member['max']) * 100);
+    $neticrm = array(
+      'count' => $count,
+      'max' => $member['max'] < 0 ? '無限' : $member['max'],
+      'percent' => $member['max'] < 0 ? 'n/a' : $percent,
+    );
+  }
+  // display message when user number over 95
+  if($neticrm['percent'] > 95 && $neticrm['percent'] < 100){
+    drupal_set_message(t("The quota of contacts is %percent to full.", array('%percent' => $neticrm['percent'].'%')), 'help');
+  }
+  // restric over
+  elseif($neticrm['percent'] >= 100){
+    // if in the restrict page
+    drupal_set_message(t("The quota of contacts is %percent to full.", array('%percent' => $neticrm['percent'].'%')), 'error');
+    if(in_array($_GET['q'], _neticrm_preset_limit_path())) {
+      drupal_get_messages();
+      drupal_goto();
+    }
+  }
+
 }
