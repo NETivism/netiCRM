@@ -25259,7 +25259,7 @@ msgstr "'模糊'規則應該以關於構成'符合'較鬆散的定義而設。�
 
 #: templates/CRM/Contact/Page/DedupeRules.hlp
 msgid "Configure up to five fields to evaluate when searching for 'suspected' duplicate contact records. For each field, set a numeric <strong>Weight</strong> which determines the relative importance of a match on that field."
-msgstr "當搜尋'可疑'複製聯絡人記錄時設到五個欄位去評估。為每一個欄位，設一個數字<strong>重量<strong>，決定相對重要的欄位配對。"
+msgstr "當搜尋'可疑'複製聯絡人記錄時設到五個欄位去評估。為每一個欄位，設一個數字<strong>重量</strong>，決定相對重要的欄位配對。"
 
 #: templates/CRM/Contact/Page/DedupeRules.hlp
 msgid "You can also set a <strong>Length</strong> value which determines how many characters in the field should be compared."
@@ -26091,8 +26091,8 @@ msgid "You may want to collect information from contributors beyond what is requ
 msgstr "您可能想從捐款者收集其他資料。例如，您可能想詢問加入志工的意願與能力。您可從資料表單新增字段到您的捐款表格，包含在頁面頂部，與/或頁面底部。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/Custom.tpl
-msgid "No Profile(s) have been configured / enabled for your site. You need to first configure <a href=\"%1\"><strong>&raquo; %2</a>(s)."
-msgstr "你尚未設定或啟用任何設定檔。你必須先設定<a href=\"%1\"><strong>&raquo; %2</a>。"
+msgid "No Profile(s) have been configured / enabled for your site. You need to first configure <a href=\"%1\"><strong>&raquo; %2 </strong></a>(s)."
+msgstr "你尚未設定或啟用任何設定檔。你必須先設定<a href=\"%1\"><strong>&raquo; %2 </strong></a>。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/Custom.tpl
 msgid "You can use existing CiviCRM Profiles on your page - OR create profile(s) specifically for use in Online Contribution pages. Go to <a href='%1'>Administer CiviCRM Profiles</a> if you need to review, modify or create profiles (you can come back at any time to select or update the Profile(s) used for this page)."
