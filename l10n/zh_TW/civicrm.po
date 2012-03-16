@@ -31590,8 +31590,8 @@ msgid "Oops. You can not mark fields as Searchable in a profile that contains fi
 msgstr "哎呀！您不能在一個允許多重類型欄位的檔案資料中標記一個欄位為可搜尋。"
 
 #: templates/CRM/UF/Form/Field.tpl
-msgid "'Oops. '"
-msgstr "哎呀。"
+msgid "Oops!"
+msgstr "哎呀！"
 
 #: templates/CRM/UF/Form/Field.tpl
 msgid " fields can not be marked as Searchable in a profile."
@@ -31606,8 +31606,8 @@ msgid " can not be used as a Result Column for profile searches."
 msgstr "不能作為結果欄的檔案搜尋。"
 
 #: templates/CRM/UF/Form/Field.tpl
-msgid "'Oops. One or more fields in this profile are configured to be Searchable and / or shown in a Results Column, AND you are trying to add a '"
-msgstr "哎呀！這個檔案中一個或更多的欄位已被設置為可搜尋，與/或顯示在一個搜尋欄位，與您正嘗試要增加一個 '"
+msgid "Oops. One or more fields in this profile are configured to be Searchable and / or shown in a Results Column, AND you are trying to add a "
+msgstr "哎呀！這個檔案中一個或更多的欄位已被設置為可搜尋，與/或顯示在一個搜尋欄位，與您正嘗試要增加一個 "
 
 #: templates/CRM/UF/Form/Field.tpl
 msgid " field. Profiles with a mixture of field types can not include Searchable or Results Column fields. If you save this field now, the Seachable and Results Column settings will be removed for all fields in this profile. Do you want to continue?"
