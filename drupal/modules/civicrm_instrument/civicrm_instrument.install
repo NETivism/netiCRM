@@ -88,6 +88,8 @@ function civicrm_instrument_install() {
       CRM_Core_OptionValue::addOptionValue($params, $group_params, $action, $option_value_id);
     }
   }
+  $query = "UPDATE civicrm_payment_processor_type SET is_active = 0 WHERE name != 'GW' AND name != 'Neweb'";
+  CRM_Core_DAO::executeQuery($query);
 }
 
 /**
@@ -109,5 +111,9 @@ function civicrm_instrument_update_6001(){
   $query = "UPDATE civicrm_option_value SET label = '超商條碼繳費' WHERE label = '便利商店' AND name = 'Convenient Store'";
   $query = "UPDATE civicrm_option_value SET label = '超商代碼繳費' WHERE label = '便利商店 (代碼)' AND name = 'Convenient Store'";
   CRM_Core_DAO::executeQuery($query);
+
+  $query = "UPDATE civicrm_payment_processor_type SET is_active = 0 WHERE name != 'GW' AND name != 'Neweb'";
+  CRM_Core_DAO::executeQuery($query);
+
   return array('success' => 'Successful update. ', 'query' => check_plain($query));
 }
