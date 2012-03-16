@@ -1,7 +1,0 @@
-name = Dmenu
-description = "Build drupal primary links menu from utilized civicrm (For NetiCRM)."
-dependencies[] = menu
-dependencies[] = civicrm 
-package = NetiCRM
-core = 6.x
-version = 6.x-1.2
