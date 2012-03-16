@@ -6564,7 +6564,7 @@ msgstr "啟用除錯"
 
 #: CRM/Admin/Form/Setting/Debugging.php
 msgid "Enable Drupal Watchdog Logging"
-msgstr "啟用Drupal紀錄"
+msgstr "啟用系統紀錄"
 
 #: CRM/Admin/Form/Setting/Debugging.php
 msgid "Display Backtrace"
@@ -8949,7 +8949,7 @@ msgstr "搜尋資源回收桶（被刪除的聯絡人）"
 
 #: CRM/Contact/Form/Search/Criteria.php
 msgid "CMS User?"
-msgstr "內容管理系統使用者？"
+msgstr "網站使用者？"
 
 #: CRM/Contact/Form/Search/Criteria.php
 msgid "Search Views"
@@ -11795,7 +11795,7 @@ msgstr "首頁"
 
 #: CRM/Core/BAO/Navigation.php
 msgid "Drupal Menu"
-msgstr "Drupal 選單"
+msgstr "選單"
 
 #: CRM/Core/BAO/Note.php
 msgid "We could not find your logged in user ID"
@@ -11851,7 +11851,7 @@ msgstr "已清除暫存。"
 
 #: CRM/Core/BAO/Setting.php
 msgid "Drupal session table cleared."
-msgstr "Drupal session table cleared。"
+msgstr "使用者連線資料已清除。"
 
 #: CRM/Core/BAO/Setting.php
 msgid "Session has been reset."
@@ -13744,11 +13744,11 @@ msgstr "地址"
 
 #: CRM/Core/SelectValues.php
 msgid "Drupal User Registration"
-msgstr "Drupal 使用者註冊"
+msgstr "網站使用者註冊"
 
 #: CRM/Core/SelectValues.php
 msgid "View/Edit Drupal User Account"
-msgstr "查看 / 編輯 Drupal 使用者"
+msgstr "查看/編輯網站使用者"
 
 #: CRM/Core/SelectValues.php
 msgid "Dynamic"
@@ -19781,7 +19781,7 @@ msgstr "選擇此權限可操作的資料類別。"
 
 #: templates/CRM/ACL/Form/ACL.tpl
 msgid "IMPORTANT: The Drupal permissions for 'access all custom data' and 'profile listings and forms' override and disable specific ACL settings for custom field groups and profiles respectively. Do not enable those Drupal permissions for a Drupal role if you want to use CiviCRM ACL's to control access."
-msgstr "重要：Drupal在access all custom data和profile listing and forms這兩種權限將會覆蓋掉元現在CiviCRM ACL設定的欄位群組。如果你想要使用CiviCRM的權限控制機制（ACL），請不要在Drupal Role中啟用這些Drupal的權限。"
+msgstr "重要：在權限管理的「存取所有自訂欄位」和「允許看到聯絡人清單」這兩種權限將會覆蓋掉現在目前權限設定的欄位群組。如果你想要使用權限控制機制（ACL），請不要在角色中啟用這些權限。"
 
 #: templates/CRM/ACL/Form/ACL.tpl
 msgid "Select a specific group of contacts, OR apply this permission to ALL groups."
@@ -19813,7 +19813,7 @@ msgstr ""
 
 #: templates/CRM/ACL/Form/ACL.tpl
 msgid "Please remember that Drupal's \"register for events\" permission overrides CiviCRM's control over event information access."
-msgstr "請記得Drupal的 \"報名活動\" 權限覆蓋於CiviCRM的活動資訊權限控制。"
+msgstr "請記得的權限管理的「報名活動」權限將會覆蓋於ACL的活動資訊權限控制。"
 
 #: templates/CRM/ACL/Form/ACL.tpl
 msgid "What type of operation (action) is being permitted?"
@@ -21395,7 +21395,7 @@ msgstr "當系統提示「我的網站網址」- 在路徑'/ civicrm'之後為�
 
 #: templates/CRM/Admin/Form/Setting/Mapping.hlp
 msgid "EXAMPLE: if your Drupal site url is %1 you would enter"
-msgstr "例如：如果您的Drupal網址是%1您會輸入"
+msgstr "例如：如果您的網址是 %1"
 
 #: templates/CRM/Admin/Form/Setting/Mapping.hlp
 msgid "<strong>For YAHOO mapping</strong> - request an Application ID for your site at %1"
@@ -21698,7 +21698,7 @@ msgstr "新增到"
 
 #: templates/CRM/Admin/Page/Access.tpl
 msgid "ACLs (Access Control Lists) allow you control access to CiviCRM data. An ACL consists of an <strong>Operation</strong> (e.g. 'View' or 'Edit'), a <strong>set of Data</strong> that the operation can be performed on (e.g. a group of contacts), and a <strong>Role</strong> that has permission to do this operation. Refer to the %1 for more info. Note that a CiviCRM ACL Role is not related to the Drupal Role."
-msgstr "權限允許您控制如何存取 CiviCRM 資料。一個權限包含一個<strong>操作</strong>（例如：「查看」或「編輯　）、一個可以操作的<strong>資料集</strong>（例如：聯絡人群組）、及一個擁有此操作的<strong>角色</strong>。更多資料請參考%1。注意 CiviCRM 權限角色並非 Drupal 角色。"
+msgstr "權限允許您控制如何存取 CiviCRM 資料。一個權限包含一個<strong>操作</strong>（例如：「查看」或「編輯　）、一個可以操作的<strong>資料集</strong>（例如：聯絡人群組）、及一個擁有此操作的<strong>角色</strong>。更多資料請參考%1。注意，支持者管理系統的權限角色，並非CMS的權限與角色。"
 
 #: templates/CRM/Admin/Page/Access.tpl
 msgid "<strong>EXAMPLE:</strong> 'Team Leaders' (<em>ACL Role</em>) can 'Edit' (<em>Operation</em>) all contacts in the 'Active Volunteers Group' (<em>Data</em>)."
@@ -21706,7 +21706,7 @@ msgstr "<strong>例如：</strong>「團隊領導人」（<em>權限角色</em>�
 
 #: templates/CRM/Admin/Page/Access.tpl
 msgid "Use <a href='%1'>Drupal Access Control</a> to manage basic access to CiviCRM components and menu items. Use CiviCRM ACLs to control access to specific CiviCRM contact groups. You can also configure ACLs to grant or deny access to specific Profiles, and/or Custom Data Fields."
-msgstr "使用 <a href='%1'>Drupal 權限控制</a>管理 CiviCRM 模組與選單項目的基本存取功能。使用 CiviCRM 權限管理特定 CiviCRM 聯絡人群組存取功能。您可以設定權限去給予或拒絕特定資料表單，及/或自訂欄位欄位的存取功能。"
+msgstr "使用 <a href='%1'>權限控制</a>管理 CiviCRM 模組與選單項目的基本存取功能。使用 CiviCRM 權限管理特定 CiviCRM 聯絡人群組存取功能。您可以設定權限去給予或拒絕特定資料表單，及/或自訂欄位的存取功能。"
 
 #: templates/CRM/Admin/Page/Access.tpl
 msgid "ACLs can be used to control access to contacts in CiviCRM 'static' or 'smart' groups. You can also configure ACLs to grant or deny access to specific Profiles, and/or Custom Data Fields."
@@ -21714,7 +21714,7 @@ msgstr ""
 
 #: templates/CRM/Admin/Page/Access.tpl
 msgid "Drupal Access Control"
-msgstr "Drupal 權限控制"
+msgstr "權限控制"
 
 #: templates/CRM/Admin/Page/Access.tpl
 msgid "Grant access to CiviCRM components and access to view or edit contacts using <strong>Drupal roles</strong>."
@@ -21988,7 +21988,7 @@ msgstr ""
 
 #: templates/CRM/Admin/Page/ContactType.hlp
 msgid "Relative URL for a default Drupal site:"
-msgstr "在Drupal網站中的相關網址:"
+msgstr "在網站中的相對路徑網址:"
 
 #: templates/CRM/Admin/Page/ContactType.hlp
 msgid "Complete URL for icon accessible from an external location:"
@@ -27991,7 +27991,7 @@ msgstr "允許用戶者觀看參加者列表，設定此欄位為「姓名」（
 
 #: templates/CRM/Event/Form/ManageEvent/EventInfo.hlp
 msgid "You will need to set Drupal Access Control permissions to include 'view event participants' for any Roles you want to access this listing."
-msgstr "如果您希望任何人都可以查看參加者列表，您需要設定 Drupal 的「查看活動參加者」的存取權限。"
+msgstr "如果您希望任何人都可以查看參加者列表，您需要設定「查看活動參加者」的存取權限。"
 
 #: templates/CRM/Event/Form/ManageEvent/EventInfo.hlp
 msgid "Create links to the listing page by copying the following URL, and adding it to the Event Description below and / or as a menu item or links elsewhere on your site:"
@@ -28964,7 +28964,7 @@ msgstr "活動提供一個以表格方式，在瀏覽器列出您現在及將來
 
 #: templates/CRM/Event/Page/ManageEvent.hlp
 msgid "You can add links to this page in your Drupal or Joomla menus and on any content page. You can also use the additional parameters shown above to filter the events included on the page."
-msgstr "您可以在 Drupal 或 Joomla 加入連結到此頁的 URL。您還可以使用其他參數來篩選顯示哪些活動在頁面上。"
+msgstr "您可以在一般頁面或您的網站加入連結到此頁的 URL。您還可以使用其他參數來篩選顯示哪些活動在頁面上。"
 
 #: templates/CRM/Event/Page/ManageEvent.hlp
 msgid "RSS 2.0 Feeds"
@@ -37234,7 +37234,7 @@ msgstr "連結到自訂節點"
 #: drupal/modules/views/civicrm/civicrm_handler_field_link_event.inc
 #: drupal/modules/views/civicrm/civicrm_handler_field_link_contribution.inc
 msgid "Custom Link to a Drupal Node"
-msgstr "自訂連結到 Drupal 節點"
+msgstr "自訂連結到網頁"
 
 #: drupal/modules/views/civicrm/civicrm_handler_field_link_participant.inc
 #: drupal/modules/views/civicrm/civicrm_handler_field_link_activity.inc
@@ -37267,7 +37267,7 @@ msgstr "連結到活動設定"
 #: drupal/modules/views/civicrm/civicrm_handler_field_event_link.inc
 #: drupal/modules/views/civicrm/civicrm_handler_field_link_event.inc
 msgid "Link to a Drupal Node or View, from the base path. The Event ID will be appended to the end of the link."
-msgstr "從基礎路徑連結到Drupal節點或頁面檢視。活動編號會被附加到連結後面。"
+msgstr "由網站基礎路徑提供的連結。活動編號會被附加到連結後面。"
 
 #: drupal/modules/civicrm_group_roles/civicrm_group_roles.module
 #: drupal/modules/civicrm_member_roles/civicrm_member_roles.module
@@ -37392,15 +37392,15 @@ msgstr "聯絡人的數字編號"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "Drupal ID"
-msgstr "Drupal 編號"
+msgstr "網站使用者編號"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "Relates a CiviCRM Contact to the Druapl User Record"
-msgstr "將一筆 CiviCRM 聯絡人連結到 Druapl 的使用者資料"
+msgstr "將一筆 CiviCRM 聯絡人連結到網站使用者資料"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "Drupal User"
-msgstr "Drupal 使用者"
+msgstr "網站使用者"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "The Contact Name for sorting purposes, Last Name then First"
