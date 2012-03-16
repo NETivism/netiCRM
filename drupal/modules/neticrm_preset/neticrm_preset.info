@@ -1,6 +1,0 @@
-name = NetiCRM Installation Preset
-description = Provide CiviCRM / NetiCRM database update script. And helper function for neticrm. This is handled by drupal hook_update_N().
-package = NetiCRM
-dependencies[] = civicrm
-core = 6.x
-version = 6.x-1.3
