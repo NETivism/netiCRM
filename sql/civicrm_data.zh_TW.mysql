@@ -4615,7 +4615,7 @@ VALUES
    (@option_group_id_suffix, 'VI',  7, 'VI',  NULL, 0, NULL, 7, NULL, 0, 0, 1, NULL, NULL),
    (@option_group_id_suffix, 'VII', 8, 'VII', NULL, 0, NULL, 8, NULL, 0, 0, 1, NULL, NULL),
 
-   (@option_group_id_aclRole, '管理者',  1, 'Admin', NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
+   (@option_group_id_aclRole, '管理',  1, 'Admin', NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
    (@option_group_id_aclRole, '已認證',  2, 'Auth' , NULL, 0, NULL, 2, NULL, 0, 1, 1, NULL, NULL),
 
    (@option_group_id_acc, 'Visa'      ,  1, 'Visa'      , NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
@@ -4838,7 +4838,7 @@ VALUES
   (@option_group_id_mt, '匯出認捐',      11, 'Export Pledge',       NULL, 0, 0,   11, NULL, 0, 1, 1, NULL, NULL),
   (@option_group_id_mt, '匯出個案',        12, 'Export Case',         NULL, 0, 0,   12, NULL, 0, 1, 1, NULL, NULL),
   (@option_group_id_mt, '匯出補助',       13, 'Export Grant',        NULL, 0, 0,   13, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_mt, 'Export Activity',    14, 'Export Activity',     NULL, 0, 0,   14, NULL, 0, 1, 1, NULL, NULL),
+  (@option_group_id_mt, '匯出任務',    14, 'Export Activity',     NULL, 0, 0,   14, NULL, 0, 1, 1, NULL, NULL),
 
   (@option_group_id_fu, '日'    , 'day'  ,    'day',  NULL, 0, NULL, 1, NULL, 0, 1, 1, NULL, NULL),
   (@option_group_id_fu, '週'   , 'week' ,   'week',  NULL, 0, NULL, 2, NULL, 0, 1, 1, NULL, NULL),
@@ -12481,7 +12481,7 @@ Click this link to go to a web page where you can confirm your registration onli
    <tr>
     <td colspan="2" {$valueStyle}>
      {capture assign=confirmUrl}{crmURL p=\'civicrm/event/confirm\' q="reset=1&participantId=`$participant.id`&cs=`$checksumValue`" a=true h=0 fe=1}{/capture}
-     <a href="{$confirmUrl}">Go to a web page where you can confirm your registration online</a>
+     <a href="{$confirmUrl}">{ts}Go to a web page where you can confirm your registration online{/ts}</a>
     </td>
    </tr>
   {/if}
@@ -12716,7 +12716,7 @@ Click this link to go to a web page where you can confirm your registration onli
    <tr>
     <td colspan="2" {$valueStyle}>
      {capture assign=confirmUrl}{crmURL p=\'civicrm/event/confirm\' q="reset=1&participantId=`$participant.id`&cs=`$checksumValue`" a=true h=0 fe=1}{/capture}
-     <a href="{$confirmUrl}">Go to a web page where you can confirm your registration online</a>
+     <a href="{$confirmUrl}">{ts}Go to a web page where you can confirm your registration online{/ts}</a>
     </td>
    </tr>
   {/if}

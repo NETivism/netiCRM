@@ -39668,3 +39668,6 @@ msgstr "點此完成線上登記 &raquo;"
 
 msgid "Export Activity"
 msgstr "匯出任務"
+
+msgid "No possible duplicates were found using %1 rule."
+msgstr "沒發現重複聯絡人。"
