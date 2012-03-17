@@ -263,7 +263,7 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates
             
             $messageSubject = CRM_Utils_Token::replaceContactTokens($body_subject, $contact, false, $subjectToken);
             $messageSubject = CRM_Utils_Token::replaceDomainTokens($messageSubject, $domain, true, $tokens[$value] );
-            $messageSubject = CRM_Utils_Token::replaceComponentTokens($$bodyType, $contact, $tokens[$value], true );
+            $messageSubject = CRM_Utils_Token::replaceComponentTokens($messageSubject, $contact, $tokens[$value], true );
             $messageSubject = CRM_Utils_Token::replaceHookTokens ( $messageSubject,$contactId , $categories, true );
           
             $messageSubject = $smarty->fetch("string:{$messageSubject}");
