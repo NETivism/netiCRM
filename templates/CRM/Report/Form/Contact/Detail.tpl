@@ -94,7 +94,7 @@
                             {assign var=componentContactId value=$row.contactID}
                             {foreach from=$columnHeadersComponent item=pheader key=component}
                                 {if $componentRows.$componentContactId.$component}
-                                    <h3>{$component|replace:'_civireport':''|upper}</h3>
+                                    <h3>{ts}{$component|replace:'_civireport':''|capitalize}{/ts}</h3>
                         	<table class="report-layout crm-report_{$component}">
                         	    {*add space before headers*}
                         		<tr>

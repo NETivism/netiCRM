@@ -60,12 +60,10 @@ class CRM_Admin_Form_Setting_Miscellaneous extends  CRM_Admin_Form_Setting
         $this->addYesNo('logging', ts('Logging'), null, null, $attribs);
 
         $this->addYesNo( 'versionCheck'           , ts( 'Version Check & Statistics Reporting' ));
-        /*
         $this->addElement('text', 'maxAttachments' , ts('Maximum Attachments'),
                           array( 'size' => 2, 'maxlength' => 8 ) );
         $this->addElement('text', 'maxFileSize' , ts('Maximum File Size'),
                           array( 'size' => 2, 'maxlength' => 8 ) );
-        */
         $this->addElement('text','recaptchaPublicKey' , ts('Public Key'),
                           array( 'size' => 64, 'maxlength' => 64 ) );
         $this->addElement('text','recaptchaPrivateKey', ts('Private Key'),
@@ -74,10 +72,8 @@ class CRM_Admin_Form_Setting_Miscellaneous extends  CRM_Admin_Form_Setting
         $this->addElement('text', 'dashboardCacheTimeout', ts('Dashboard cache timeout'),
                           array( 'size' => 3, 'maxlength' => 5 ) );
 
-        /*
         $this->addRule('maxAttachments', ts('Value should be a positive number') , 'positiveInteger');
         $this->addRule('maxFileSize', ts('Value should be a positive number') , 'positiveInteger');
-        */
        
         parent::buildQuickForm();    
     }

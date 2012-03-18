@@ -11,6 +11,7 @@ class CRM_Core_Payment_Neweb extends CRM_Core_Payment {
      */
     static protected $_mode = null;
 
+    static protected $_params = array();
     /**
      * We only need one instance of this object. So we use the singleton
      * pattern and cache the instance in this variable
@@ -127,7 +128,7 @@ class CRM_Core_Payment_Neweb extends CRM_Core_Payment {
       if($contribution->is_pay_later != $is_pay_later){
         $contribution->is_pay_later = $is_pay_later;
       }
-      $contribution->trxn_id = $params['is_recur'] ? $params['contributionID'] + 900000000  : $params['contributionID'];
+      $contribution->trxn_id = $params['is_recur'] ? $params['contributionID'] + 990000000  : $params['contributionID'];
       $contribution->save();
 
       // Inject in quickform sessions
@@ -219,8 +220,8 @@ class CRM_Core_Payment_Neweb extends CRM_Core_Payment {
       $post['ordernumber'] = $params['contributionID'];
       $post['amount'] = $amount;
       $post['paymenttype'] = $neweb_instrument;
-      $post['paytitle'] = $params['item_name'];
-      $post['bankid'] = '004';
+      $post['paytitle'] = truncate_utf8($params['item_name'], 12);
+      $post['bankid'] = '007';
       $post['duedate'] = date('Ymd', time()+86400*7);
       if($neweb_instrument == 'CS'){
         $post['payname'] = $params['last_name']." ".$params['first_name'];

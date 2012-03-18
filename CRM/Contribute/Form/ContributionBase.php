@@ -596,10 +596,13 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form
                 if ( $v == 'frequency_unit' || $v == 'pledge_frequency_unit' ) {
                     $frequencyUnits =  CRM_Core_OptionGroup::values( 'recur_frequency_units' );
                     if ( array_key_exists( $this->_params[$v], $frequencyUnits ) ) {
-                        $this->_params[$v] = $frequencyUnits[$this->_params[$v]];
+                        // This is a bug for recurring unit translations. refs #4670
+                        $this->assign( $v, $frequencyUnits[$this->_params[$v]]);
                     }
                 }
-                $this->assign( $v, $this->_params[$v] );
+                else{
+                    $this->assign( $v, $this->_params[$v] );
+                }
             }
         }
 

@@ -35,7 +35,7 @@ if ( !in_array($cms, array('drupal', 'standalone', 'joomla')) ) {
     echo "Config file for '{$cms}' not known.";
     exit();
 } else if ( $cms !== 'joomla' ) {
-    copy("../{$cms}/civicrm.config.php.{$cms}", '../civicrm.config.php');
+//    copy("../{$cms}/civicrm.config.php.{$cms}", '../civicrm.config.php');
 }
 
 require_once 'Smarty/Smarty.class.php';

@@ -311,6 +311,12 @@ class CRM_Contribute_DAO_Contribution extends CRM_Core_DAO
                 'contribution_page_id' => array(
                     'name' => 'contribution_page_id',
                     'type' => CRM_Utils_Type::T_INT,
+                    'title' => ts('Contribution Page ID') ,
+                    'import' => true,
+                    'where' => 'civicrm_contribution.contribution_page_id',
+                    'headerPattern' => '',
+                    'dataPattern' => '/^\d+$/',
+                    'export' => true,
                     'FKClassName' => 'CRM_Contribute_DAO_ContributionPage',
                 ) ,
                 'payment_instrument_id' => array(

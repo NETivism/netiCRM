@@ -65,7 +65,7 @@ function civicrm_neweb_response($prc, $src, $brc = NULL, $mode = 'normal'){
     else{
       $error['system'] = ts("Network or system error. Please try again a minutes later, if you still can't success, please contact us for further assistance.");
       if($brc){
-        $error[$brc] = $this->brc($brc);
+        $error[$brc] = civicrm_neweb_brc($brc);
       }
     }
   }

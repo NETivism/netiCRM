@@ -65,7 +65,7 @@
 		    </div>
 		    <div class="thermometer-fill-wrapper">
 		        <div style="height: {$achieved}%;" class="thermometer-fill">
-		        	<div class="thermometer-pointer"><span class="pcp-percent-raised">{$achieved}%</span> {ts}towards our goal{ts}</div>
+		        	<div class="thermometer-pointer"><span class="pcp-percent-raised">{$achieved}%</span> {ts}towards our goal{/ts}</div>
 		        </div><!-- /.thermometer-fill -->
 		    </div><!-- /.thermometer-fill-wrapper -->
 		    <div class="pcp-amount-raised">

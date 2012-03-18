@@ -53,7 +53,7 @@ class CRM_Contribute_Form_AdditionalInfo
         $dao->is_active = 1;
         $dao->find();
         $min_amount = array();
-        $sel1[0] = '-select product-';
+        $sel1[0] = ts('- select -');
         while ( $dao->fetch() ) {
             $sel1[$dao->id] = $dao->name." ( ".$dao->sku." )";
             $min_amount[$dao->id] = $dao->min_contribution;
@@ -132,6 +132,11 @@ class CRM_Contribute_Form_AdditionalInfo
                             'objectExists', 
                             array( 'CRM_Contribute_DAO_Contribution', $form->_id, 'invoice_id' ) );
         }
+
+        $form->add('select', 'contribution_page_id', 
+                   ts( 'Contribution Page' ),
+                   array( '' => ts( '- select -' ) ) +
+                   CRM_Contribute_PseudoConstant::contributionPage( ) );
         
         $form->add('textarea', 'note', ts('Notes'),array("rows"=>4,"cols"=>60) );
         
@@ -247,7 +252,8 @@ class CRM_Contribute_Form_AdditionalInfo
                          'net_amount',
                          'trxn_id',
                          'invoice_id',
-                         'honor_type_id'
+                         'honor_type_id',
+                         'contribution_page_id'
                          );
         foreach ( $fields as $f ) {
             $formatted[$f] = CRM_Utils_Array::value( $f, $params );

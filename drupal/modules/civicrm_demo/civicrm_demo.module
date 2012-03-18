@@ -1,6 +1,6 @@
 <?php
 
-define('DEMO_CONTACT_NUM', 5);
+define('DEMO_CONTACT_NUM', 200);
 define('DEMO_CONTRIBUTE_NUM', 5000);
 define('DEMO_EVENT_NUM', 5);
 define('DEMO_PARTICIPANT_NUM', 20);
@@ -183,8 +183,13 @@ function civicrm_demo_process_contribution($vars){
       $fee = number_format($amount*0.025, 2, '.', '');
 
       $year = mt_rand($start_year, date('Y'));
-      $month = sprintf('%02s',mt_rand(1,12));
-      $day = sprintf('%02s', mt_rand(1,28));
+      $month = sprintf('%02s',mt_rand(1,date('n')));
+      if($year == date('Y') ){
+        $day = sprintf('%02s', mt_rand(1,28));
+      }
+      else{
+        $day = sprintf('%02s', mt_rand(1,date('j')));
+      }
 
       $params = array(
         'contact_id'             => $contact_id,
@@ -274,7 +279,7 @@ function _civicrm_demo_rand_addr($type = 'chinese'){
     $seed = array_rand($sp);
     $state_province = $sp[$seed];
     list($city, $postal_code) = _civicrm_demo_rand_city_postcode($sp[$seed]);
-    $street = '中號路1段1號';
+    $street = '中山路1段1號';
     $country = 1208;
   }
   else{

@@ -482,8 +482,11 @@ function uc_civicrm_product_order($op, $order, $arg2) {
   switch ($op) {
     // When an order is saved
     case 'save':
-      $arg2 = $order->order_status;
+      $order_status = $order->order_status;
     case 'update':
+      if($arg2 == 'in_checkout' && $order_status == 'in_checkout') {
+        break;
+      }
       civicrm_initialize();
       require_once 'api/v2/UFGroup.php';
 
@@ -492,11 +495,18 @@ function uc_civicrm_product_order($op, $order, $arg2) {
       // Since in our case, we know that they've got to log in before they can
       // checkout, we know that they will have a uf_id (drupal user id).
       $uf_id = $order->uid;
+      if(!$uf_id){
+        return;
+      }
 
       // Since in our case, a user has to create a civicrm account
       // (via a drupal registration profile) when they register,
       // we know that they will have a civicrm contact id as well
       $contact_id = civicrm_uf_match_id_get($uf_id);
+
+      if(!$contact_id){
+        return;
+      }
 
       foreach ($order->products as $product) {
         $api_results = array();
@@ -546,7 +556,6 @@ function uc_civicrm_product_order($op, $order, $arg2) {
 
           // This is a product that requires a civicrm contribution record
           case 'civicontribute':
-
             if (!empty($data['statuses'][$state])) {
               require_once 'api/v2/Contribute.php';
 
@@ -712,6 +721,52 @@ function uc_civicrm_product_order($op, $order, $arg2) {
         }
       }
       break;
+    case 'delete':
+      civicrm_initialize();
+      foreach ($order->products as $product) {
+        $api_results = array();
+        foreach ($product->data as $fid => $data) {
+          switch ($fid) {
+            case 'civimember':
+              // require_once 'api/v2/MembershipContact.php';
+              // require_once 'CRM/Member/BAO/MembershipType.php';
+              break;
+            case 'civicontribute':
+              require_once 'api/v2/Contribute.php';
+              $contribution_id = db_result(db_query('SELECT contribution_id FROM {uc_civicontribute_order_products} WHERE order_product_id = %d', array($product->order_product_id)));
+              if (is_numeric($contribution_id) && $contribution_id) {
+                $params = array(
+                  'contribution_id' => $contribution_id,
+                );
+                civicrm_contribution_delete($params);
+              }
+              break;
+            case 'civievent':
+              require_once 'api/v2/Participant.php';
+              // Why is this necessary?
+              require_once 'CRM/Event/PseudoConstant.php';
+              $participant_id = db_result(db_query('SELECT participant_id FROM {uc_civievent_order_products} WHERE order_product_id = %d', array($product->order_product_id)));
+              if (is_numeric($participant_id) && $participant_id) {
+                // delete all participant payment
+                $q = CRM_Core_DAO::executeQuery("SELECT id FROM civicrm_participant_payment WHERE participant_id = $participant_id");
+                while($q->fetch()){
+                  $params = array(
+                    'id' => $q->id,
+                  );
+                  civicrm_participant_payment_delete($params);
+                }
+
+                // delete participant
+                $params = array(
+                  'id' => $participant_id,
+                );
+                civicrm_participant_delete($params);
+              }
+              break;
+          }
+        }
+      }
+      break;
   }
 }
 
@@ -724,8 +779,8 @@ function uc_civicrm_product_form_alter(&$form, $form_state, $form_id) {
   // Add a new submit handler to edit CiviContribute product feature.
   // Module weight must be heavier than UC Product.
   if (uc_product_is_product_form($form)) {
-    $form['buttons']['submit']['#submit'][] = 'uc_civicrm_product_submit';
-    //$form['buttons']['save_continue']['#submit'][] = 'uc_civicrm_product_submit';
+    // $form['buttons']['submit']['#submit'][] = 'uc_civicrm_product_submit';
+    $form['buttons']['save_continue']['#submit'][] = 'uc_civicrm_product_submit';
   }
 }
 

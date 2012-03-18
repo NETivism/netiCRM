@@ -110,8 +110,8 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form
 
         $this->add('text', 'donate_link_text', ts('Donation Button'), $attributes); 
         $attrib = Array ('rows' => 8, 'cols' => 60 );
-//        $this->addWysiwyg( 'page_text', ts('Your Message'), $attrib ); 
-        $this->add('textarea', 'page_text', ts('Your Message'), null, false );
+        $this->addWysiwyg( 'page_text', ts('Your Message'), $attrib ); 
+//        $this->add('textarea', 'page_text', ts('Your Message'), null, false );
         
         $maxAttachments = 1; 
         require_once 'CRM/Core/BAO/File.php';

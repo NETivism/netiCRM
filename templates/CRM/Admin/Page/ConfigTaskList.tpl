@@ -139,6 +139,7 @@
 </table>
 <br />
 
+<!--
 <div class="description">
     {ts}Now you can move on to exploring, configuring and using the various optional components for fundraising and constituent engagement. The links below will take you to the online documentation for each component.{/ts}
 </div>
@@ -171,3 +172,4 @@
         <td>{ts}Integrated case management for human service providers{/ts}</td>
     </tr>
 </table>
+-->

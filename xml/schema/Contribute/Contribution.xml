@@ -71,7 +71,12 @@
   </foreignKey>  
   <field> 
       <name>contribution_page_id</name> 
+      <title>Contribution Page ID</title>
       <type>int unsigned</type>                 
+      <headerPattern></headerPattern>
+      <dataPattern>/^\d+$/</dataPattern>
+      <import>true</import>
+      <export>true</export>
       <comment>The Contribution Page which triggered this contribution</comment> 
       <add>1.5</add> 
   </field> 

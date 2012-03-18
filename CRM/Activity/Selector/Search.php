@@ -349,7 +349,7 @@ class CRM_Activity_Selector_Search extends CRM_Core_Selector_Base implements CRM
                                                  'sort'      => 'sort_name',
                                                  'direction' => CRM_Utils_Sort::DONTCARE,
                                                  ),
-                                           array( 'name'      => ts('With') ),
+                                           array( 'name'      => ts('With Contact') ),
                                            array( 'name'      => ts('Assigned') ),
                                            array(
                                                  'name'      => ts('Date'),

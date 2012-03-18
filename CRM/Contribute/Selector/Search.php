@@ -83,6 +83,7 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
                                  'thankyou_date',
                                  'contribution_status_id',
                                  'contribution_status',
+                                 'trxn_id',
                                  'cancel_date',
                                  'product_name',
                                  'is_test',
@@ -409,6 +410,11 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
         if ( ! isset( self::$_columnHeaders ) ) {
             self::$_columnHeaders = array(
                                           array(
+                                                'name'      => ts('Transaction ID'),
+                                                'sort'      => 'trxn_id',
+                                                'direction' => CRM_Utils_Sort::DONTCARE,
+                                                ),
+                                          array(
                                                 'name'      => ts('Amount'),
                                                 'sort'      => 'total_amount',
                                                 'direction' => CRM_Utils_Sort::DONTCARE,
@@ -427,21 +433,25 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
                                                 'sort'      => 'receive_date',
                                                 'direction' => CRM_Utils_Sort::DESCENDING,
                                                 ),
+                                          /*
                                           array(
                                                 'name'      => ts('Thank-you Sent'),
                                                 'sort'      => 'thankyou_date',
                                                 'direction' => CRM_Utils_Sort::DONTCARE,
                                                 ),
+                                          */
                                           array(
                                                 'name'      => ts('Status'),
                                                 'sort'      => 'contribution_status_id',
                                                 'direction' => CRM_Utils_Sort::DONTCARE,
                                                 ),
+                                          /*
                                           array(
                                                 'name'      => ts('Premium'),
                                                 'sort'      => 'product_name',
                                                 'direction' => CRM_Utils_Sort::DONTCARE,
                                                 ),
+                                          */
                                           array('desc' => ts('Actions') ),
                                           );
 
@@ -483,7 +493,7 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
 
     function getSummary( )
     {
-        return $this->_query->summaryContribution( );
+        return $this->_query->summaryContribution( $this->_context );
     }
 
 }//end of class

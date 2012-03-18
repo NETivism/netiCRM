@@ -262,7 +262,7 @@ class CRM_Core_SelectValues
                                         );
             $contactTypes = self::contactType( );
             unset( $contactTypes[''] ); 
-            $contactTypes = !empty( $contactTypes ) ? array( 'Contact' => 'Contacts' ) 
+            $contactTypes = !empty( $contactTypes ) ? array( 'Contact' => ts('All Contacts') ) 
                 + $contactTypes : array( );
             $customGroupExtends = array_merge( $contactTypes, $customGroupExtends );
         }

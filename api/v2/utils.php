@@ -114,6 +114,7 @@ function civicrm_duplicate($error)
  * @static void
  * @access public
  */
+/*
 function civicrm_error( $params ) 
 {
     if ( is_array( $params ) ) {
@@ -122,6 +123,7 @@ function civicrm_error( $params )
     }
     return false;
 }
+ */
 
 /**
  *

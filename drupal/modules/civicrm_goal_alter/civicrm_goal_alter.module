@@ -1,0 +1,81 @@
+<?php
+
+function civicrm_goal_alter_menu(){
+  return array(
+    'contribution/achieved' => array(
+      'access callback' => true,
+      'page callback' => 'civicrm_goal_alter_page',
+      'type' => MENU_CALLBACK,
+    ),
+  );
+}
+
+/**
+ * Implementation of hook_civicrm_buildForm().
+ */
+function civicrm_goal_alter_civicrm_buildForm($form_name, &$form) {
+  switch($form_name){
+    case 'CRM_Contribute_Form_Contribution_Main':
+      // add neweb payment method selection
+      $goal_amount = $form->_values['goal_amount'];
+      if($goal_amount > 0){
+        $contribution_page_id = $form->_values['id'];
+        $price_set = $form->_values['amount'];
+        $query = "SELECT sum( total_amount) as total FROM civicrm_contribution WHERE  is_test = 0  AND contribution_status_id = 1 AND contribution_page_id = %1";
+        $params = array( 1 => array( $contribution_page_id, 'Integer' ) ) ;
+        $total = CRM_Core_DAO::singleValueQuery( $query, $params );
+
+        if($total >= $goal_amount){
+          // disable
+          drupal_goto("contribution/achieved");
+        }
+        else{
+          // add javascript to test
+          drupal_add_js(civicrm_goal_alter_js($goal_amount, $total, $price_set), 'inline');
+        }
+      }
+      break;
+  }
+}
+
+function civicrm_goal_alter_js($goal_amount, $total, $price_set){
+  $max = $goal_amount - $total;
+
+  $price_set_js = 'var price = new Array();'."\n";
+  foreach($price_set as $k => $v){
+    $price_set_js .= "price[$k] = {$v['value']};\n";
+  }
+  
+  $js = '
+cj(document).ready(function(){
+  '.$price_set_js.'
+  var max = '.$max.';
+  var goal_check = function(max, current){
+    if(current > max){
+      alert("您設定的金額將超過募款目標金額，已將您的捐款金額設定在募款目標內。");
+      cj("input[name=amount][value=amount_other_radio]").click();
+      cj("input[name=amount_other]").val(max);
+    }
+  }
+
+  if(cj("input[name=amount_other]").size()){
+    cj("input[name=amount]").click(function(){
+      var v = parseInt($(this).val());
+      if(v){
+        var amount = price[v];
+        goal_check(max, amount);
+      }
+    });
+    cj("input[name=amount_other]").blur(function(){
+      goal_check(max, cj(this).val());
+    });
+  }
+});
+  ';
+  return $js;
+}
+
+function civicrm_goal_alter_page(){
+  drupal_set_title("您所存取的募款頁面，已經達到募款金額目標囉！");
+  return '&nbsp;';
+}
