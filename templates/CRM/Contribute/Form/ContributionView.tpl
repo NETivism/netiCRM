@@ -125,6 +125,12 @@
 	    <td class="label">{ts}Source{/ts}</td>
     	<td>{$source}</td>
 	</tr>
+	{if $contribution_page_title}
+  <tr>
+      <td class="label">{ts}Contribution Page{/ts}</td>
+      <td>{$contribution_page_title}</td>
+  </tr>
+  {/if}
 	{if $receipt_date}
     	<tr>
     	    <td class="label">{ts}Receipt Sent{/ts}</td>

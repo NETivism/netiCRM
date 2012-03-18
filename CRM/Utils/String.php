@@ -101,12 +101,20 @@ class CRM_Utils_String {
 
         // any chinese appear, should go transliteration (to prevent duplication)
         if(!empty($purged_name)){
+        preg_match('/[^0-9a-z-_]+/i', $name, $matches);
+
+        // any chinese appear, should go transliteration (to prevent duplication)
+        if(trim($matches[0])){
+          require_once (drupal_get_path('module', 'transliteration') . '/transliteration.inc');
           if(module_exists('transliteration')){
             global $conf;
             $conf['transliteration_enable'] = TRUE;
             $purged_name = strtolower(transliteration_clean_filename($name));
             $purged_name = trim($purged_name, '_');
           }
+        }
+        else{
+          $purged_name = preg_replace('/\s+|\W+|[-_]+/', $char, trim($name) );
         }
 
         if ( $len ) {

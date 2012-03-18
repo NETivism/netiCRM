@@ -33,7 +33,7 @@
    <tr>
     <td colspan="2" {$valueStyle}>
      {capture assign=confirmUrl}{crmURL p='civicrm/event/confirm' q="reset=1&participantId=`$participant.id`&cs=`$checksumValue`" a=true h=0 fe=1}{/capture}
-     <a href="{$confirmUrl}">Go to a web page where you can confirm your registration online</a>
+     <a href="{$confirmUrl}">{ts}Go to a web page where you can confirm your registration online{/ts}</a>
     </td>
    </tr>
   {/if}

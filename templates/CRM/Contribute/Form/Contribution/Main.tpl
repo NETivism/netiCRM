@@ -58,6 +58,11 @@ function clearAmountOther() {
 
 {capture assign='reqMark'}<span class="marker" title="{ts}This field is required.{/ts}">*</span>{/capture}
 <div class="crm-block crm-contribution-main-form-block">
+{if $sharethis}
+    <div class="sharethis">
+      {$sharethis}
+    </div>
+{/if}
     <div id="intro_text" class="crm-section intro_text-section">
         {$intro_text}
     </div>

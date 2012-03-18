@@ -32,6 +32,9 @@
      &nbsp;{ts}Registration is closed for this event{/ts}
   </div>
 {/if}
+{if $sharethis}
+<div class="sharethis">{$sharethis}</div>
+{/if}
 <div class="vevent crm-block crm-event-info-form-block">
 	<div class="event-info">
 	
@@ -41,6 +44,11 @@
 	{if $event.description}
 	    <div class="crm-section event_description-section summary">{$event.description}</div>
 	{/if}
+  {if $allowRegistration}
+      <div class="action-link section register_link-section">
+          <a href="{$registerURL}" title="{$registerText}" class="button crm-register-button"><span>{$registerText}</span></a>
+      </div>
+  {/if}
 	<div class="crm-section event_date_time-section">
 	    <div class="label"><label>{ts}When{/ts}</label></div>
 	    <div class="content">
@@ -141,15 +149,11 @@
 
 
     {include file="CRM/Custom/Page/CustomDataView.tpl"}
+  {if $allowRegistration}
+      <div class="action-link section register_link-section">
+          <a href="{$registerURL}" title="{$registerText}" class="button crm-register-button"><span>{$registerText}</span></a>
+      </div>
+  {/if}
         
-	{if $allowRegistration}
-        <div class="action-link section register_link-section">
-            <a href="{$registerURL}" title="{$registerText}" class="button crm-register-button"><span>{$registerText}</span></a>
-        </div>
-    {/if}
-    { if $event.is_public }
-        <br />{include file="CRM/Event/Page/iCalLinks.tpl"}
-    {/if}
-    
     </div>
 </div>

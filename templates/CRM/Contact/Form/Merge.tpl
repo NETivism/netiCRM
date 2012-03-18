@@ -137,6 +137,8 @@ cj(document).ready(function(){
           });
        }
     });
+    cj('#toggleSelect').click();
+    cj('table td input.form-checkbox').click();
 });
 
 function mergeAddress( element, blockId ) {

@@ -125,7 +125,7 @@ function civicrm_gw_install() {
   require_once('CRM/Core/Action.php');
 
   // new payment processor
-  $sql = "INSERT INTO civicrm_payment_processor_type (name, title, description, is_active, is_default, user_name_label, password_label, signature_label, subject_label, class_name, url_site_default, url_api_default, url_recur_default, url_button_default, url_site_test_default, url_api_test_default, url_recur_test_default, url_button_test_default, billing_mode, is_recur, payment_type) VALUES ('GW', 'Green World', NULL, 1, 0, '商店代號（ECPay）', '商家檢查碼（ECPay）', '商店代號（ECBank）', '加密私鑰（ECBank）', 'Payment_GW', 'https://ecpay.com.tw/form_Sc_to5.php', 'https://ecbank.com.tw/gateway.php', NULL, NULL, 'https://ecpay.com.tw/form_Sc_to5.php', 'https://ecbank.com.tw/gateway.php', NULL, NULL, 4, 0, 1)";
+  $sql = "INSERT INTO civicrm_payment_processor_type (name, title, description, is_active, is_default, user_name_label, password_label, signature_label, subject_label, class_name, url_site_default, url_api_default, url_recur_default, url_button_default, url_site_test_default, url_api_test_default, url_recur_test_default, url_button_test_default, billing_mode, is_recur, payment_type) VALUES ('GW', '綠界', NULL, 1, 0, '商店代號（ECPay）', '商家檢查碼（ECPay）', '商店代號（ECBank）', '加密私鑰（ECBank）', 'Payment_GW', 'https://ecpay.com.tw/form_Sc_to5.php', 'https://ecbank.com.tw/gateway.php', NULL, NULL, 'https://ecpay.com.tw/form_Sc_to5.php', 'https://ecbank.com.tw/gateway.php', NULL, NULL, 4, 0, 1)";
 
   CRM_Core_DAO::executeQuery($sql);
   $ppt_id = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_payment_processor_type WHERE name LIKE 'GW'");
@@ -142,6 +142,7 @@ function civicrm_gw_install() {
       'name' => $k,
       'label' => $v['label'],
       'is_active' => 1,
+      'is_reserved' => 1,
     );
     $dao = CRM_Core_DAO::executeQuery("SELECT id, value FROM civicrm_option_value WHERE option_group_id = {$gid} AND name = '$k'");
     $dao->fetch();
@@ -195,3 +196,18 @@ function civicrm_gw_disable() {
 }
 
 
+function civicrm_gw_update_6101(){
+  include_once "civicrm_gw.module";
+
+  civicrm_initialize( );
+  $new_instrument = _civicrm_gw_instrument();
+  $gid = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_option_group WHERE name LIKE 'payment_instrument'");
+
+  foreach($new_instrument as $k => $v){
+    $ids[] = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_option_value WHERE option_group_id = {$gid} AND name = '$k'");
+  }
+  if(count($ids)){
+    CRM_Core_DAO::singleValueQuery("Update civicrm_option_value SET is_reserved = 1 WHERE id IN(".implode(',', $ids).") AND is_reserved = 0");
+  }
+  return array();
+}

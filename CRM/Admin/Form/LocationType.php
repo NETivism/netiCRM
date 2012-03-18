@@ -67,9 +67,11 @@ class CRM_Admin_Form_LocationType extends CRM_Admin_Form
                         ts('Name already exists in Database.'),
                         'objectExists',
                         array( 'CRM_Core_DAO_LocationType', $this->_id ) );
+        /*
         $this->addRule( 'name',
                         ts( 'Name can only consist of alpha-numeric characters' ),
                         'variable' );
+        */
         
         $this->add('text', 'vcard_name', ts('vCard Name'), CRM_Core_DAO::getAttribute( 'CRM_Core_DAO_LocationType', 'vcard_name' ) );
 

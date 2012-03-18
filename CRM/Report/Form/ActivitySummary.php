@@ -91,6 +91,12 @@ class CRM_Report_Form_ActivitySummary extends CRM_Report_Form {
                                                      'default'    => true ,
                                                      'type'       =>  CRM_Utils_Type::T_STRING 
                                                      ),
+                                              'duration'	  =>
+                                              array( 'title'	  => 'Duration',
+                                                     'statistics' =>
+                                                     array(
+                                                           'sum'  => ts( 'Total Duration' ), ),
+                                                     ),
                                               'id'                => 
                                               array( 'title'      => 'Total Activities',
                                                      'required'   => true,
@@ -170,7 +176,7 @@ class CRM_Report_Form_ActivitySummary extends CRM_Report_Form {
                             $select[] = "QUARTER({$field['dbAlias']}) AS {$tableName}_{$fieldName}_interval";
                             $field['title'] = 'Quarter';
                             break;
-                            
+
                         }
                         if ( CRM_Utils_Array::value( $fieldName, $this->_params['group_bys_freq'] ) ) {
                             $this->_interval = $field['title'];
@@ -210,6 +216,12 @@ class CRM_Report_Form_ActivitySummary extends CRM_Report_Form {
                                     $this->_statFields[] = "{$tableName}_{$fieldName}_{$stat}";
                                     break;
                                     
+                                case 'sum':
+                                    $select[] = "SUM({$field['dbAlias']}) as {$tableName}_{$fieldName}_{$stat}";
+                                    $this->_columnHeaders["{$tableName}_{$fieldName}_{$stat}"]['type'] = CRM_Utils_Type::T_INT;
+                                    $this->_columnHeaders["{$tableName}_{$fieldName}_{$stat}"]['title'] = $label;
+                                    $this->_statFields[] = "{$tableName}_{$fieldName}_{$stat}";
+                                    break;
                                 }
                             }   
                         } elseif ($fieldName == 'activity_type_id') {

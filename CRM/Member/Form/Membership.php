@@ -667,7 +667,7 @@ class CRM_Member_Form_Membership extends CRM_Member_Form
             if ( !$date ) {
                 $date = CRM_Utils_Array::value( $d, $calcDates );
             }
-            $params[$d] = CRM_Utils_Date::processDate( $date );
+            $params[$d] = CRM_Utils_Date::processDate( $date, null, true );
         }
         
         if ( $this->_id ) {

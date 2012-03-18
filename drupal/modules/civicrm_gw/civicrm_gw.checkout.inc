@@ -43,7 +43,7 @@ function civicrm_gw_do_transfer_checkout(&$vars, &$component, &$payment_processo
   $contribution->id = $vars['contributionID'];
   $contribution->find(true);
   $contribution->is_pay_later = $is_pay_later;
-  $contribution->trxn_id = $params['contributionID'];
+  $contribution->trxn_id = $vars['contributionID'];
   if($vars['civicrm_instrument_id']){
     $contribution->payment_instrument_id = $vars['civicrm_instrument_id'];
   }
@@ -103,7 +103,7 @@ function _civicrm_gw_ecbank(&$vars, $component, &$payment_processor, $instrument
   switch($instrument_code){
     // only web_atm use POST method to pass the parameter
     case 'web_atm':
-      $post['return_url'] = _civicrm_gw_notify_url($vars, "gw/ipn/$instrument_code", $component);
+      $post['return_url'] = _civicrm_gw_notify_url($vars, "gw/ipn/$instrument_code", $component)."&qfKey=".$vars['qfKey'];
       $post['#action'] = $payment_processor['url_api'];
       return $post;
     // otherwise, we need to fetch result from backgrouund
@@ -240,7 +240,7 @@ function _civicrm_gw_notify_url(&$vars, $path, $component){
     $query[] = "pid={$vars['participantID']}";
   }
   else {
-    if ( $vars['mid'] ) {
+    if ( $vars['membershipID'] ) {
       $query[] = "mid=".$vars['membershipID'];
     }
     if ($vars['related_contact']) {

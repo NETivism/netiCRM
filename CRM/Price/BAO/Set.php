@@ -635,7 +635,7 @@ WHERE  id = %1";
         
         $displayParticipantCount ='';
         if ( $totalParticipant > 0 ) {
-            $displayParticipantCount = ' Participant Count -'.$totalParticipant;
+            $displayParticipantCount = ' '.ts('Participant Count').' -'.$totalParticipant;
         }
         
         require_once 'CRM/Core/BAO/CustomOption.php';

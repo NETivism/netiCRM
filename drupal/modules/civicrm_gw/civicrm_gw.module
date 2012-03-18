@@ -81,9 +81,9 @@ function _civicrm_gw_instrument($type = 'normal'){
     'Credit Card' => array('label' => '信用卡', 'desc' => '', 'code' => 'Credit Card'),
     'ATM' => array('label' => 'ATM 轉帳', 'desc' => '', 'code' => 'vacc'),
     'Web ATM' => array('label' => 'Web ATM', 'desc' => '', 'code' => 'web_atm'),
-    'Convenient Store' => array('label' => '便利商店', 'desc'=>'', 'code' => 'barcode'),
-    'Convenient Store (FamilyMart)' => array('label'=>'便利商店代碼 (全家/萊爾富)','desc' => '', 'code' => 'cvs'),
-    'Convenient Store (7-11 ibon)' => array('label'=>'便利商店代碼 (7-11 ibon)','desc' => '', 'code' => 'ibon'),
+    'Convenient Store' => array('label' => '超商條碼繳費', 'desc'=>'', 'code' => 'barcode'),
+    'Convenient Store (FamilyMart)' => array('label'=>'超商代碼 (全家/萊爾富)','desc' => '', 'code' => 'cvs'),
+    'Convenient Store (7-11 ibon)' => array('label'=>'超商代碼 (7-11 ibon)','desc' => '', 'code' => 'ibon'),
   );
   if($type == 'form_name'){
     foreach($i as $name => $data){

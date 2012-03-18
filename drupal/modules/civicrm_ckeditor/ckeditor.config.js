@@ -8,12 +8,11 @@ CKEDITOR.editorConfig = function(config) {
   config.disableNativeSpellChecker = true;
   config.scayt_autoStartup = false;
   config.font_names = '微軟正黑體;新細明體;標楷體;Arial;Comic Sans MS;Courier New;Tahoma;Times New Roman;Verdana';
-  config.format_tags = 'p;h1;h2;h3;h4;h5;h6;div';
-  config.disableNativeSpellChecker = true;
-  config.indentClasses = [ 'rteindent1', 'rteindent2', 'rteindent3', 'rteindent4' ];
+  config.format_tags = 'p;h1;h2;h3;div';
+  // config.indentClasses = [ 'rteindent1', 'rteindent2', 'rteindent3', 'rteindent4' ];
 
   // [ Left, Center, Right, Justified ]
-  config.justifyClasses = [ 'rteleft', 'rtecenter', 'rteright', 'rtejustify' ];
+  // config.justifyClasses = [ 'rteleft', 'rtecenter', 'rteright', 'rtejustify' ];
 
   // The minimum editor width, in pixels, when resizing it with the resize handle.
   config.resize_minWidth = 450;
@@ -33,12 +32,12 @@ CKEDITOR.editorConfig = function(config) {
   config.toolbar_CiviCRM = [
     ['Format','Font','FontSize'],
     ['Bold','Italic','Underline','Strike','TextColor'],
-    ['PasteFromWord','PasteText','Source'],
+    ['PasteFromWord','PasteText'],
     '/',
     ['JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],
     ['NumberedList','BulletedList','Outdent','Indent','Blockquote'],
     ['Link','Image','Table','HorizontalRule'],
-    ['RemoveFormat']
+    ['RemoveFormat'],['Source']
    ];
 
   /*

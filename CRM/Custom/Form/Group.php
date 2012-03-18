@@ -226,7 +226,7 @@ class CRM_Custom_Form_Group extends CRM_Core_Form
         $contactTypes = array( 'Contact', 'Individual', 'Household', 'Organization' );
         $this->assign( 'contactTypes', json_encode($contactTypes) );
               
-        $sel1 = array( "" => "- select -" ) + CRM_Core_SelectValues::customGroupExtends( );
+        $sel1 = array( "" => ts("- select -") ) + CRM_Core_SelectValues::customGroupExtends( );
         $sel2 = array( );
         $activityType = CRM_Core_PseudoConstant::activityType( false, true, false, 'label', true );
         

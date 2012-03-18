@@ -257,7 +257,7 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant
     {
         self::$pcpStatus = array();
         if ( ! self::$pcpStatus ) {
-            self::$pcpStatus = CRM_Core_OptionGroup::values("pcp_status", false, false, false, null, 'name');
+            self::$pcpStatus = CRM_Core_OptionGroup::values("pcp_status", false, false, false, null, 'label');
         }
         return self::$pcpStatus;
     }

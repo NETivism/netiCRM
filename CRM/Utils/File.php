@@ -291,6 +291,22 @@ class CRM_Utils_File {
     }
 
     /**
+     * Determine whether a given file is listed in the PHP include path
+     *
+     * @param string $name name of file
+     * @return boolean  whether the file can be include()d or require()d
+     */
+    static function isIncludable( $name ) {
+        $x = @fopen($name, 'r', TRUE);
+        if ($x) {
+            fclose($x);
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+
+    /**
      * remove the 32 bit md5 we add to the fileName
      * also remove the unknown tag if we added it
      */
