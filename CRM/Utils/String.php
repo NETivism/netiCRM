@@ -37,7 +37,6 @@
 
 
 require_once 'HTML/QuickForm/Rule/Email.php';
-require_once (drupal_get_path('module', 'transliteration') . '/transliteration.inc');
 
 /**
  * This class contains string functions
@@ -97,10 +96,6 @@ class CRM_Utils_String {
         $name = str_replace("-", $char, $name);
 
         // dirty way to detect chinese
-        $purged_name = preg_replace('/\s+|\W+|[-_]+/', $char, trim($name) );
-
-        // any chinese appear, should go transliteration (to prevent duplication)
-        if(!empty($purged_name)){
         preg_match('/[^0-9a-z-_]+/i', $name, $matches);
 
         // any chinese appear, should go transliteration (to prevent duplication)
