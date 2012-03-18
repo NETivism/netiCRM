@@ -17129,11 +17129,11 @@ msgstr "一個有此名稱的會籍狀態已經存在。請選擇另外名稱。
 
 #: CRM/Member/Form/MembershipStatus.php
 msgid "Start Event Adjustment"
-msgstr "開始活動調整"
+msgstr "開始時間調整"
 
 #: CRM/Member/Form/MembershipStatus.php
 msgid "End Event Adjustment"
-msgstr "結束活動調整"
+msgstr "結束時間調整"
 
 #: CRM/Member/Form/MembershipStatus.php
 msgid "Administrator Only?"

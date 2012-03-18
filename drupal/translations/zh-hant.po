@@ -17129,11 +17129,11 @@ msgstr "一個有此名稱的會籍狀態已經存在。請選擇另外名稱。
 
 #: CRM/Member/Form/MembershipStatus.php
 msgid "Start Event Adjustment"
-msgstr "開始活動調整"
+msgstr "開始時間調整"
 
 #: CRM/Member/Form/MembershipStatus.php
 msgid "End Event Adjustment"
-msgstr "結束活動調整"
+msgstr "結束時間調整"
 
 #: CRM/Member/Form/MembershipStatus.php
 msgid "Administrator Only?"
@@ -18031,7 +18031,7 @@ msgstr "查看網站個人資訊"
 
 #: CRM/Profile/Selector/Listings.php
 msgid "CiviCRM Profile Listings"
-msgstr "CiviCRM 資料表單列表"
+msgstr "資料表單列表"
 
 #: CRM/Project/DAO/Project.php templates/CRM/Contribute/Page/Widget.tpl
 msgid "Logo"
@@ -19116,7 +19116,7 @@ msgstr "近似搜尋"
 
 #: CRM/UF/Form/Field.php msgctxt "menu"
 msgid "CiviCRM Profile Fields"
-msgstr "CiviCRM 資料表單欄位"
+msgstr "資料表單欄位"
 
 #: CRM/UF/Form/Field.php
 msgid "Delete Profile Field"
@@ -19224,7 +19224,7 @@ msgstr "設定資料表單"
 
 #: CRM/UF/Form/Group.php msgctxt "menu"
 msgid "New CiviCRM Profile"
-msgstr "建立 CiviCRM 資料表單"
+msgstr "建立資料表單"
 
 #: CRM/UF/Form/Group.php
 msgid "Profile Name"
@@ -19232,7 +19232,7 @@ msgstr "資料表單名稱"
 
 #: CRM/UF/Form/Group.php
 msgid "Is this CiviCRM Profile active?"
-msgstr "此 CiviCRM 資料表單是否作用中？"
+msgstr "此資料表單是否作用中？"
 
 #: CRM/UF/Form/Group.php
 msgid "Profile '%1' already exists in Database."
@@ -19240,15 +19240,15 @@ msgstr "資料庫已有 %1 資料表單 。"
 
 #: CRM/UF/Form/Group.php
 msgid "Your CiviCRM Profile '%1' has been deleted."
-msgstr "您的 CiviCRM 資料表單'%1'已刪除。"
+msgstr "資料表單「%1」已刪除。"
 
 #: CRM/UF/Form/Group.php
-msgid "Your CiviCRM Profile '%1' has been saved."
-msgstr "您的 CiviCRM 資料表單'%1'已儲存。"
+msgid "YourProfile '%1' has been saved."
+msgstr "資料表單「%1」已儲存。"
 
 #: CRM/UF/Form/Group.php
 msgid "Your CiviCRM Profile '%1' has been added. You can add fields to this profile now."
-msgstr "您的 CiviCRM 資料表單'%1'已新增。您可以立即新增欄位到資料表單。"
+msgstr "資料表單「%1」已新增。您可以立即新增欄位到資料表單。"
 
 #: CRM/UF/Form/Preview.php
 msgid "This field is inactive so it will not be displayed on profile form."
@@ -19260,27 +19260,27 @@ msgstr "此欄位僅可以查看，因此不會顯示在資料表單的編輯表
 
 #: CRM/UF/Page/Field.php
 msgid "Edit CiviCRM Profile Field"
-msgstr "編輯 CiviCRM 資料表單欄位"
+msgstr "編輯資料表單欄位"
 
 #: CRM/UF/Page/Field.php
 msgid "Preview CiviCRM Profile Field"
-msgstr "預覽 CiviCRM 資料表單欄位"
+msgstr "預覽資料表單欄位"
 
 #: CRM/UF/Page/Field.php
 msgid "Disable CiviCRM Profile Field"
-msgstr "停用 CiviCRM 資料表單欄位"
+msgstr "停用資料表單欄位"
 
 #: CRM/UF/Page/Field.php
 msgid "Enable CiviCRM Profile Field"
-msgstr "啟用 CiviCRM 資料表單欄位"
+msgstr "啟用資料表單欄位"
 
 #: CRM/UF/Page/Field.php
 msgid "CiviCRM Profile Field"
-msgstr "CiviCRM 資料表單欄位"
+msgstr "資料表單欄位"
 
 #: CRM/UF/Page/Field.php
 msgid "%1 - CiviCRM Profile Fields"
-msgstr "%1 - CiviCRM 資料表單欄位"
+msgstr "%1 - 資料表單欄位"
 
 #: CRM/UF/Page/Group.php
 msgid "Are you sure you want to make a copy of this Profile?"
@@ -25259,7 +25259,7 @@ msgstr "'模糊'規則應該以關於構成'符合'較鬆散的定義而設。�
 
 #: templates/CRM/Contact/Page/DedupeRules.hlp
 msgid "Configure up to five fields to evaluate when searching for 'suspected' duplicate contact records. For each field, set a numeric <strong>Weight</strong> which determines the relative importance of a match on that field."
-msgstr "當搜尋'可疑'複製聯絡人記錄時設到五個欄位去評估。為每一個欄位，設一個數字<strong>重量<strong>，決定相對重要的欄位配對。"
+msgstr "當搜尋'可疑'複製聯絡人記錄時設到五個欄位去評估。為每一個欄位，設一個數字<strong>重量</strong>，決定相對重要的欄位配對。"
 
 #: templates/CRM/Contact/Page/DedupeRules.hlp
 msgid "You can also set a <strong>Length</strong> value which determines how many characters in the field should be compared."
@@ -26043,7 +26043,7 @@ msgstr "捐款標籤"
 
 #: templates/CRM/Contribute/Form/ContributionPage/Custom.hlp
 msgid "If you want collect additional information from contributors, you will need to configure one or two CiviCRM Profiles - which are collections of standard or custom fields. You may need to information about the person (e.g. name and address if these are not already required by your payment processor, interest in subscribing to a newsletter or volunteering). You might also want to collect information specific to this contribution (e.g. target one or several projects or funds to support with this contribution)."
-msgstr "如果您想從捐款人收集資料，您會需要先設置一個或兩個CiviCRM資料表單 - 有內建的表單項目，您也可。可能會需要收集的個人資料（例如姓名及地址，或者也可提供電子報訂閱選項、或詢問是否加入志工)。甚至是特定的捐款資訊（例如詢問是否對某些專案有興趣、或是否想要一起宣傳此募款活動)。"
+msgstr "如果您想從捐款人收集資料，您會需要先設置一個或兩個資料表單 - 有內建的表單項目，您也可。可能會需要收集的個人資料（例如姓名及地址，或者也可提供電子報訂閱選項、或詢問是否加入志工)。甚至是特定的捐款資訊（例如詢問是否對某些專案有興趣、或是否想要一起宣傳此募款活動)。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/Custom.hlp
 msgid "If you haven't already configured custom fields and a profile for this, you can save this screen without selecting a Profile, complete the steps below and then return to <strong>Manage Contribution Page</strong> and select your new profile."
@@ -26088,11 +26088,11 @@ msgstr "資料表單"
 
 #: templates/CRM/Contribute/Form/ContributionPage/Custom.tpl
 msgid "You may want to collect information from contributors beyond what is required to make a contribution. For example, you may want to inquire about volunteer availability and skills. Add any number of fields to your contribution form by selecting CiviCRM Profiles (collections of fields) to include at the beginning of the page, and/or at the bottom."
-msgstr "您可能想從捐款者收集其他資料。例如，您可能想詢問加入志工的意願與能力。您可從CiviCRM Profile（欄位收集）新增字段到您的捐款表格，包含在頁面頂部，與/或頁面底部。"
+msgstr "您可能想從捐款者收集其他資料。例如，您可能想詢問加入志工的意願與能力。您可從資料表單新增字段到您的捐款表格，包含在頁面頂部，與/或頁面底部。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/Custom.tpl
-msgid "No Profile(s) have been configured / enabled for your site. You need to first configure <a href=\"%1\"><strong>&raquo; %2</a>(s)."
-msgstr "你尚未設定或啟用任何設定檔。你必須先設定<a href=\"%1\"><strong>&raquo; %2</a>。"
+msgid "No Profile(s) have been configured / enabled for your site. You need to first configure <a href=\"%1\"><strong>&raquo; %2 </strong></a>(s)."
+msgstr "你尚未設定或啟用任何設定檔。你必須先設定<a href=\"%1\"><strong>&raquo; %2 </strong></a>。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/Custom.tpl
 msgid "You can use existing CiviCRM Profiles on your page - OR create profile(s) specifically for use in Online Contribution pages. Go to <a href='%1'>Administer CiviCRM Profiles</a> if you need to review, modify or create profiles (you can come back at any time to select or update the Profile(s) used for this page)."
@@ -28151,7 +28151,7 @@ msgstr "在參加者完成報名程序之前，您可能還需要將活動配置
 
 #: templates/CRM/Event/Form/ManageEvent/Registration.hlp
 msgid "If you want collect additional information during event registration, you will need to configure one or two CiviCRM Profiles - which are collections of standard or custom fields. For event registration, you may need to collect additional information specific to a person's <strong>participation</strong> in an Event. Examples include meal and/or volunteer preferences."
-msgstr "如果您希望收集活動報名者額外的個人資訊，您必須設定一或兩組的「CiviCRM資料表單」- 也就是可以透過系統預設或的欄位來收集報名者的個人資訊。在活動報名時，您可能需要收集特定<strong>參加者</strong>更詳盡的個人資訊，例如飲食偏好以及成為志工意願調查等。"
+msgstr "如果您希望收集活動報名者額外的個人資訊，您必須設定一或兩組的「資料表單」- 也就是可以透過系統預設或的欄位來收集報名者的個人資訊。在活動報名時，您可能需要收集特定<strong>參加者</strong>更詳盡的個人資訊，例如飲食偏好以及成為志工意願調查等。"
 
 #: templates/CRM/Event/Form/ManageEvent/Registration.hlp
 msgid "If you haven't already configured custom fields and a profile for this, you can save this screen without selecting a Profile, complete the steps below and then return to <strong>Manage Events</strong> and select your new profile."
@@ -28215,11 +28215,11 @@ msgstr "活動報名頁面的頁尾訊息（可選）。"
 
 #: templates/CRM/Event/Form/ManageEvent/Registration.tpl
 msgid "Include additional fields on this registration form by configuring and selecting a CiviCRM Profile to be included at the top of the page (immediately after the introductory message)."
-msgstr "在報名表單的頁首加入額外的個人資料欄位，可在「CiviCRM資料表單」資料表單，並設定表單內的欄位（會出現介紹文字之後）。"
+msgstr "在報名表單的頁首加入額外的個人資料欄位，可在「資料表單」資料表單，並設定表單內的欄位（會出現介紹文字之後）。"
 
 #: templates/CRM/Event/Form/ManageEvent/Registration.tpl
 msgid "Include additional fields on this registration form by configuring and selecting a CiviCRM Profile to be included at the bottom of the page."
-msgstr "在報名表單的頁尾加入額外的個人資料欄位，可在「CiviCRM資料表單」資料表單，並設定表單內的欄位。"
+msgstr "在報名表單的頁尾加入額外的個人資料欄位，可在「資料表單」資料表單，並設定表單內的欄位。"
 
 #: templates/CRM/Event/Form/ManageEvent/Registration.tpl
 msgid "Change this if you want to use a different profile for additional participants."
@@ -31590,8 +31590,8 @@ msgid "Oops. You can not mark fields as Searchable in a profile that contains fi
 msgstr "哎呀！您不能在一個允許多重類型欄位的檔案資料中標記一個欄位為可搜尋。"
 
 #: templates/CRM/UF/Form/Field.tpl
-msgid "'Oops. '"
-msgstr "哎呀。"
+msgid "Oops!"
+msgstr "哎呀！"
 
 #: templates/CRM/UF/Form/Field.tpl
 msgid " fields can not be marked as Searchable in a profile."
@@ -31606,8 +31606,8 @@ msgid " can not be used as a Result Column for profile searches."
 msgstr "不能作為結果欄的檔案搜尋。"
 
 #: templates/CRM/UF/Form/Field.tpl
-msgid "'Oops. One or more fields in this profile are configured to be Searchable and / or shown in a Results Column, AND you are trying to add a '"
-msgstr "哎呀！這個檔案中一個或更多的欄位已被設置為可搜尋，與/或顯示在一個搜尋欄位，與您正嘗試要增加一個 '"
+msgid "Oops. One or more fields in this profile are configured to be Searchable and / or shown in a Results Column, AND you are trying to add a "
+msgstr "哎呀！這個檔案中一個或更多的欄位已被設置為可搜尋，與/或顯示在一個搜尋欄位，與您正嘗試要增加一個 "
 
 #: templates/CRM/UF/Form/Field.tpl
 msgid " field. Profiles with a mixture of field types can not include Searchable or Results Column fields. If you save this field now, the Seachable and Results Column settings will be removed for all fields in this profile. Do you want to continue?"
@@ -36232,7 +36232,7 @@ msgstr "你尚未設定或啟用任何設定檔。你必須先設定<a href=\"%1
 
 #: templates/CRM/Contribute/Form/ContributionPage/Custom.tpl
 msgid "Include additional fields in this online contribution page by configuring and selecting a CiviCRM Profile to be included at the top of the page (immediately after the introductory message)."
-msgstr "透過選擇包括在頁頂部的CiviCRM資料表單(在介紹訊息之後)，來包括另外在此線上募款頁的欄位。您可從CiviCRM Profile（欄位收集）去將線上募款頁額外的欄位包含進來，包含在頁面頂部，與/或頁面底部。"
+msgstr "透過選擇包括在頁頂部的資料表單(在介紹訊息之後)，來包括另外在此線上募款頁的欄位。您可從CiviCRM Profile（欄位收集）去將線上募款頁額外的欄位包含進來，包含在頁面頂部，與/或頁面底部。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/Settings.tpl
 msgid "Select the corresponding contribution type for contributions made using this page (e.g. donation, membership fee, etc.). You can add or modify available types using the <strong>Contribution Type</strong> option from the CiviCRM Administrator Control Panel."
