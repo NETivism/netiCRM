@@ -124,11 +124,25 @@ class CRM_Report_Form_Contribute_Summary extends CRM_Report_Form {
                           'group_bys'     =>
                           array( 'contribution_type'   => null, ), ),
 
+                   'civicrm_contribution_page' =>
+                   array( 'dao'           => 'CRM_Contribute_DAO_ContributionPage',
+                          'fields'        =>
+                          array( 'title'   => array(
+                              'title' => t('Contribution Page'),
+                            ), 
+                          ), 
+                          'grouping'      => 'contri-fields',
+                          'group_bys'     =>
+                          array( 'contribution_page'   => null, ), ),
+
                    'civicrm_contribution' =>
                    array( 'dao'           => 'CRM_Contribute_DAO_Contribution',
                           //'bao'           => 'CRM_Contribute_BAO_Contribution',
                           'fields'        =>
                           array( 'contribution_source' => null, 
+                                 'payment_instrument_id' => array(
+                                   'title' => ts('Payment Instrument'),
+                                 ),
                                  'total_amount'        => 
                                  array( 'title'        => ts( 'Amount Statistics' ),
                                         'default'      => true,
@@ -153,6 +167,18 @@ class CRM_Report_Form_Contribute_Summary extends CRM_Report_Form {
                                    array( 'title'        => ts( 'Contribution Type' ), 
                                           'operatorType' => CRM_Report_Form::OP_MULTISELECT,
                                           'options'      => CRM_Contribute_PseudoConstant::contributionType( )
+                                        ),
+
+                                'contribution_page_id'   =>
+                                   array( 'title'        => ts( 'Contribution Page' ), 
+                                          'operatorType' => CRM_Report_Form::OP_MULTISELECT,
+                                          'options'      => CRM_Contribute_PseudoConstant::contributionPage( )
+                                        ),
+
+                                'payment_instrument_id'   =>
+                                   array( 'title'        => ts( 'Payment Instrument' ), 
+                                          'operatorType' => CRM_Report_Form::OP_MULTISELECT,
+                                          'options'      => CRM_Core_OptionGroup::values('payment_instrument'),
                                         ),
 
                                  'total_amount'   => 
@@ -324,7 +350,7 @@ class CRM_Report_Form_Contribute_Summary extends CRM_Report_Form {
                     foreach ( $table['fields'] as $fieldName => $field ) {
                         if ( CRM_Utils_Array::value( $field['name'], $fields['fields'] ) && 
                              $fields['fields'][$field['name']] && 
-                             in_array( $field['name'], array( 'display_name', 'postal_greeting_display', 'contribution_source', 'contribution_type' ) ) ) {
+                             in_array( $field['name'], array( 'display_name', 'postal_greeting_display', 'contribution_source', 'contribution_type', 'contribution_page' ) ) ) {
                             $grouping[] = $field['title'];
                         }
                     }
@@ -362,6 +388,8 @@ class CRM_Report_Form_Contribute_Summary extends CRM_Report_Form {
                         {$this->_aliases['civicrm_contribution']}.is_test = 0
              LEFT  JOIN civicrm_contribution_type  {$this->_aliases['civicrm_contribution_type']} 
                      ON {$this->_aliases['civicrm_contribution']}.contribution_type_id ={$this->_aliases['civicrm_contribution_type']}.id
+             LEFT  JOIN civicrm_contribution_page  {$this->_aliases['civicrm_contribution_page']} 
+                     ON {$this->_aliases['civicrm_contribution']}.contribution_page_id ={$this->_aliases['civicrm_contribution_page']}.id
              LEFT  JOIN civicrm_email {$this->_aliases['civicrm_email']} 
                      ON ({$this->_aliases['civicrm_contact']}.id = {$this->_aliases['civicrm_email']}.contact_id AND 
                         {$this->_aliases['civicrm_email']}.is_primary = 1) 
@@ -481,6 +509,7 @@ class CRM_Report_Form_Contribute_Summary extends CRM_Report_Form {
     function alterDisplay( &$rows ) {
         // custom code to alter rows
         $entryFound = false;
+        $payment_instrument = CRM_Core_OptionGroup::values('payment_instrument');
 
         foreach ( $rows as $rowNum => $row ) {
             // make count columns point to detail report
@@ -575,6 +604,12 @@ class CRM_Report_Form_Contribute_Summary extends CRM_Report_Form {
                 $rows[$rowNum]['civicrm_contact_display_name_link'] = $url;
                 $rows[$rowNum]['civicrm_contact_display_name_hover'] = 
                     ts("Lists detailed contribution(s) for this record.");
+                $entryFound = true;
+            }
+
+            // convert payment instruments display
+            if ( array_key_exists('civicrm_contribution_payment_instrument_id', $row) && $row['civicrm_contribution_payment_instrument_id']) {
+                $rows[$rowNum]['civicrm_contribution_payment_instrument_id'] = $payment_instrument[$rows[$rowNum]['civicrm_contribution_payment_instrument_id']];
                 $entryFound = true;
             }
 
