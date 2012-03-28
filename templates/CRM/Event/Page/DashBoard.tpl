@@ -61,7 +61,7 @@
         <td class="crm-event-id">{$id}</td>
         <td class="crm-event-eventType">{$values.eventType}</td>
         <td class="crm-event-isPublic">{$values.isPublic}</td>
-        <td class="nowrap crm-event-startDate">{$values.startDate}&nbsp;{if $values.endDate}to{/if}&nbsp;{$values.endDate}</td>
+        <td class="nowrap crm-event-startDate">{$values.startDate}&nbsp;{if $values.endDate}~<br />{/if}&nbsp;{$values.endDate}</td>
         <td class="right crm-event-participants_url">
             {if $values.participants and $values.participants_url}
 		<a href="{$values.participants_url}" title="{ts 1=$eventSummary.countedStatusANDRoles}List %1 participants{/ts}">{ts}Counted{/ts}:&nbsp;{$values.participants}</a>
