@@ -559,7 +559,7 @@
 		 if ( status == '{ts}Cancelled{/ts}' || 
      	  	      status == '{ts}Pending from waitlist{/ts}' || 
 		      status == '{ts}Pending from approval{/ts}' || 
-	  	      status == '{ts}Expired{/ts}' ) {{/literal}
+	  	      status == '{ts}Expired{/ts}' ) {literal}{
           	      	  cj("#notify").show();
 	  		  cj("#is_notify").attr('checked',true);
    		 }
