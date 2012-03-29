@@ -14837,11 +14837,11 @@ msgstr "允許使用同一Email報名多位參加者？"
 
 #: CRM/Event/Form/ManageEvent/Registration.php
 msgid "Require participant approval?"
-msgstr "需要批准參加者？"
+msgstr "參加者需事先審核?"
 
 #: CRM/Event/Form/ManageEvent/Registration.php
 msgid "Approval message"
-msgstr "批准訊息"
+msgstr "審核訊息"
 
 #: CRM/Event/Form/ManageEvent/Registration.php
 msgid "Pending participant expiration (hours)"
@@ -15297,12 +15297,12 @@ msgstr "- 選擇狀態 -"
 #: CRM/Event/Form/Task/ParticipantStatus.php
 #: templates/CRM/Admin/Page/ParticipantStatus.hlp
 msgid "Pending from waitlist"
-msgstr "等待-在等待名單中"
+msgstr "待處理-在候補名單中"
 
 #: CRM/Event/Form/Task/ParticipantStatus.php
 #: templates/CRM/Admin/Page/ParticipantStatus.hlp
 msgid "Pending from approval"
-msgstr "等待-在批准名單中"
+msgstr "待處理-在審核名單中"
 
 #: CRM/Event/Form/Task/ParticipantStatus.php
 msgid "Expired"
@@ -22330,11 +22330,11 @@ msgstr "要啟用活動參與批准，以下狀態必須被啟用："
 
 #: templates/CRM/Admin/Page/ParticipantStatus.hlp
 msgid "Awaiting approval"
-msgstr "等待核准"
+msgstr "等待審核"
 
 #: templates/CRM/Admin/Page/ParticipantStatus.hlp
 msgid "Rejected"
-msgstr "已被拒絕"
+msgstr "已拒絕"
 
 #: templates/CRM/Admin/Page/ParticipantStatus.hlp
 msgid "Once these statuses are enabled, the event Online Registration screen will have controls to enable (and configure) participation approval."
@@ -27910,7 +27910,7 @@ msgstr "輸入一個您想在確認email開頭包含的訊息。例如：「謝�
 
 #: templates/CRM/Event/Form/EventFees.tpl
 msgid "The Payment Status for this participant is Completed. The Participant Status is set to Pending from pay later. Click Cancel if you want to review or modify these values before saving this record"
-msgstr "此參加者的付款狀態為已完成。此參加者狀態設定為等候付款。如果你要在儲存記錄之前查看或修改這些設定，請按取消鍵。"
+msgstr "此參加者的付款狀態為已完成。此參加者狀態設定為「待處理-後續付款。如果你要在儲存記錄之前查看或修改這些設定，請按取消鍵。"
 
 #: templates/CRM/Event/Form/ManageEvent/Delete.tpl
 msgid "Warning: Deleting this event template will also delete associated Event Registration Page and Event Fee configurations."
@@ -27987,7 +27987,7 @@ msgstr "當報名人數達到上限時，顯示在活動資訊頁的文字（除
 
 #: templates/CRM/Event/Form/ManageEvent/EventInfo.hlp
 msgid "Check this box to allow users to join a waitlist if the event is full. If a space becomes available, the first participant from the waitlist will move to 'Pending from waitlist' status, and will be sent an email with a link to complete their registration (including paying event fees - if any)."
-msgstr "當活動額滿，您可允許使用者列候補名單。當有人數可接受報名時，候補名單中的第一個參加者將會移到「待處理候補」，然後會收到一封提供有報名連結的 Email，以完成報名（還有支付參加費用，如果有的話）。"
+msgstr "當活動額滿，您可允許使用者列候補名單。當有人數可接受報名時，候補名單中的第一個參加者將會移到「待處理-在候補名單」，然後會收到一封提供有報名連結的 Email，以完成報名（還有支付參加費用，如果有的話）。"
 
 #: templates/CRM/Event/Form/ManageEvent/EventInfo.hlp
 msgid "This message is displayed on the event information and event registration pages when the event is full AND the waitlist feature is enabled."
@@ -28147,7 +28147,7 @@ msgstr "您還需要更新默認為完全重複的聯絡人，個人對應標準
 
 #: templates/CRM/Event/Form/ManageEvent/Registration.hlp
 msgid "Check this box to require administrative approval for all the participants who self-register, prior to being able to complete the registration process. Participants will be placed in 'Awaiting Approval' status. You can review and approve participants from 'Find Participants' - select the 'Change Participant Status' task. Approved participants will move to 'Pending from approval' status, and will be sent an email with a link to complete their registration (including paying event fees - if any). "
-msgstr "勾選此核取方塊，可批准所有自己來報名的但尚未完成報名程序的參加者。參加者將會被歸在「等待批准」狀態。您可從「尋找參加者」中選擇「改變參加者狀態」，來審閱與核准報名。已核准的參加者將會被移到「尚待批准」狀態，系統將會對他們寄出一封包含報名確認連結的 Email（若有的話，會包含支付活動費用）。"
+msgstr "勾選此核取方塊，可批准所有自己來報名的但尚未完成報名程序的參加者。參加者將會被歸在「等待審核」狀態。您可從「尋找參加者」中選擇「改變參加者狀態」，來審閱與核准報名。已核准的參加者將會被移到「待處理-在審核名單」狀態，系統將會對他們寄出一封包含報名確認連結的 Email（若有的話，會包含支付活動費用）。"
 
 #: templates/CRM/Event/Form/ManageEvent/Registration.hlp
 msgid "Time limit <strong>in hours</strong> for confirming/finishing registration by participants with any of the pending statuses. Enter 0 (or leave empty) to disable this feature."
@@ -28629,7 +28629,7 @@ msgstr "提示：管理候補名單"
 
 #: templates/CRM/Event/Form/Task/ParticipantStatus.hlp
 msgid "If you are moving participants from \"On waitlist\" to \"Pending from waitlist\" status, make sure there are available spaces for the event. An email with a link to confirm their registration will be automatically sent. However, they will only be allowed to complete their registration if the event is not full (e.g. the number of registered participants is less than the maximum number of participants configured for the event)."
-msgstr "若您正將參加者從「候補」移到「等待候補」，請確定這個活動還有可供報名的人數。包含報名確認連結的 Email 會自動寄出。若活動尚未額滿，他們將可完成報名程序（例如：報名參加的人數未達名額上限）。"
+msgstr "若您正將參加者從「在候補名單」移到「待處理-在候補名單」，請確定這個活動還有可供報名的人數。包含報名確認連結的 Email 會自動寄出。若活動尚未額滿，他們將可完成報名程序（例如：報名參加的人數未達名額上限）。"
 
 #: templates/CRM/Event/Form/Task/PickProfile.tpl
 msgid "Batch Update Event via Profile"
@@ -34842,11 +34842,11 @@ msgstr "失約"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Pending from pay later"
-msgstr "等待-後續付款"
+msgstr "待處理-後續付款"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Pending from incomplete transaction"
-msgstr "等待-未完成交易"
+msgstr "待處理-未完成交易"
 
 #: xml/templates/civicrm_msg_template.tpl
 msgid "Message Template Workflow for Cases"
