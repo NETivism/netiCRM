@@ -555,11 +555,11 @@
 	function sendNotification( ) {
 		 var status = cj("select#status_id option:selected").text();
 		 cj("#notify").hide();
-		 
-		 if ( status == 'Cancelled' || 
-     	  	      status == 'Pending from waitlist' || 
-		      status == 'Pending from approval' || 
-	  	      status == 'Expired' ) {
+		{/literal} 
+		 if ( status == '{ts}Cancelled{/ts}' || 
+     	  	      status == '{ts}Pending from waitlist{/ts}' || 
+		      status == '{ts}Pending from approval{/ts}' || 
+	  	      status == '{ts}Expired{/ts}' ) {{/literal}
           	      	  cj("#notify").show();
 	  		  cj("#is_notify").attr('checked',true);
    		 }
