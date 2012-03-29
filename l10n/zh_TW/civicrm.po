@@ -4836,7 +4836,7 @@ msgstr "刪除活動"
 #: CRM/Event/Form/ManageEvent/EventInfo.php
 #: CRM/Event/Form/Registration/Register.php
 msgid "This event is currently full. However you can register now and get added to a waiting list. You will be notified if spaces become available."
-msgstr "此活動已報名額滿。不過現在你可以註冊並列入等候名單，並在可報名時通知你。"
+msgstr "此活動已報名額滿。你還是可以輸入資料，但你將會被列入候補，並在名額有空缺時通知你。"
 
 #: CRM/Event/Form/ManageEvent/EventInfo.php CRM/Mailing/BAO/Mailing.php
 msgid "Template Title"
@@ -8337,11 +8337,11 @@ msgstr "聯絡人 %1"
 
 #: CRM/Contact/BAO/Query.php
 msgid "CMS User"
-msgstr "網站註冊使用者"
+msgstr "網站使用者"
 
 #: CRM/Contact/BAO/Query.php
 msgid "Not a CMS User"
-msgstr "非網站註冊使用者"
+msgstr "非網站使用者"
 
 #: CRM/Contact/BAO/Query.php
 msgid "Tagged %1"
@@ -10373,7 +10373,7 @@ msgstr "<< 返回"
 
 #: CRM/Contribute/Form/Contribution/Main.php
 msgid "Mixed profile not allowed for on behalf of registration/sign up."
-msgstr "混合的資料表單不允許代為註冊/登記。"
+msgstr "混合的資料表單不允許用在使用者註冊。"
 
 #: CRM/Contribute/Form/Contribution/Main.php
 msgid "This contribution is being made thanks to effort of <strong>%1</strong>, who supports our campaign. You can support it as well - once you complete the donation, you will be able to create your own Personal Campaign Page!"
@@ -14817,11 +14817,11 @@ msgstr "感謝您的報名"
 
 #: CRM/Event/Form/ManageEvent/Registration.php
 msgid "Participation in this event requires approval. Submit your registration request here. Once approved, you will receive an email with a link to a web page where you can complete the registration process."
-msgstr "參加此活動需要審核批准。請在此提交您的報名要求。一旦通過，您將會收到系統所發出的Email，請點擊郵件內的網址，以完成註冊程序。"
+msgstr "參加此活動需要審核，請在此填寫報名表。一旦通過，您將會收到系統所發出的Email，請點擊其中的Email網址，以完成報名程序。"
 
 #: CRM/Event/Form/ManageEvent/Registration.php
 msgid "Allow Online Registration?"
-msgstr "開放線上報名"
+msgstr "開放線上報名?"
 
 #: CRM/Event/Form/ManageEvent/Registration.php
 msgid "Registration Link Text"
@@ -14974,47 +14974,47 @@ msgstr "報名參加者 %1 / %2"
 
 #: CRM/Event/Form/Registration/AdditionalParticipant.php
 msgid "It looks like you are now registering a group of %1 participants. The event has %2 available spaces (you will not be wait listed). Registration for this event requires approval. You will receive an email once your registration has been reviewed."
-msgstr "你註冊了%1人參與此活動，然而此活動只能接受%2人報名(你的名單將不會列入候補名單)。你將在註冊通過後收到註冊確認信函。"
+msgstr "你登記了 %1 人要參加此活動，然而此活動只能接受 %2 人報名，且本活動沒有開放候補，你的名單將不會列入候補名單。因為本活動需要事先審核，你會在我們審核通過後，收到通過的確認信。"
 
 #: CRM/Event/Form/Registration/AdditionalParticipant.php
 msgid "It looks like you are now registering a group of %1 participants. The event has %2 available spaces (you will not be wait listed)."
-msgstr "你註冊了%1人參與此活動，然而此活動只能接受%2人報名(你的名單將不會列入候補名單)。"
+msgstr "你登記了 %1 人要參加此活動，然而此活動只能接受 %2 人報名，且本活動沒有開放候補，你的名單將不會列入候補名單。"
 
 #: CRM/Event/Form/Registration/AdditionalParticipant.php
 msgid "It looks like you are now registering a group of %1 participants. The event has %2 available spaces (you will not be wait listed). Please go back to the main registration page and reduce the number of additional people. You will also need to complete payment information."
-msgstr "你註冊了%1人參與此活動，然而此活動只能接受%2人報名(你的名單將不會列入等候清單)。請你回到上一個頁面，並減少活動報名人數，同時你也必須修改付款資訊。"
+msgstr "你登記了 %1 人要參加此活動，然而此活動只能接受 %2 人報名，且本活動沒有開放候補，你的名單將不會列入候補名單。請你回到上一個頁面，並減少活動報名人數，調整相關付款資訊。"
 
 #: CRM/Event/Form/Registration/AdditionalParticipant.php
 msgid "If you skip this participant there will be enough spaces in the event for your group (you will not be wait listed). Registration for this event requires approval. You will receive an email once your registration has been reviewed."
-msgstr "如果你略過這位參加者，那麼剩餘可供報名的人數便能接受你的報名請求（也就是不必列入等候清單）。註冊這個活動需要審查，一旦你的註冊審查通過，你將會收到一封Email。"
+msgstr "如果你略過這位參加者，那麼剩餘名額可以直接完成報名，不必列入候補。然而，登記這個活動需要經過我們的審核，一旦你的註冊審查通過，你將會收到一封 Email 確認。"
 
 #: CRM/Event/Form/Registration/AdditionalParticipant.php
 msgid "If you skip this participant there will be enough spaces in the event for your group (you will not be wait listed)."
-msgstr "如果您略過這位參加者，那麼剩餘可供報名的人數便能接受你的報名請求（也就是不必列入候補名單）。"
+msgstr "如果你略過這位參加者，那麼剩餘名額可以直接完成報名，不必列入候補。"
 
 #: CRM/Event/Form/Registration/AdditionalParticipant.php
 msgid "If you skip this participant there will be enough spaces in the event for your group (you will not be wait listed). Please go back to the main registration page and reduce the number of additional people. You will also need to complete payment information."
-msgstr "如果您略過這位參加者，那麼剩餘可供報名的人數便能接受你的報名請求（也就是不必列入候補名單）。請返回主註冊頁面，減少一些額外的報名人數。同時你必須完成付款資訊。"
+msgstr "如果你略過這位參加者，那麼剩餘名額可以直接完成報名，不必列入候補。建議你回到上一頁報名頁面，減少一些額外的報名人數，以及調整合適的付款資訊。"
 
 #: CRM/Event/Form/Registration/AdditionalParticipant.php
 msgid "This event is currently full. You are registering in a waiting list. You will be notified if spaces become available."
-msgstr "此活動已報名額滿。不過現在你可以註冊並列入等候名單，並在可報名時通知你。"
+msgstr "此活動已額滿。但你仍然可以登記，你的登記將會列入候補，並在可報名時通知你。"
 
 #: CRM/Event/Form/Registration/AdditionalParticipant.php
 msgid "It looks like you are now registering a group participants which are extending the event availability. All participant will be listed in the waiting list and you will be notified if spaces become available."
-msgstr "你註冊了%1人參與此活動，然而此活動只能接受%2人報名(你的名單將不會列入候補名單)。"
+msgstr "你登記了數位參加者，然而這些人已經超過了本活動的名額上線。你登記的這些參加者已被列入候補，一旦名額有空缺，你將會收到一封我們的通知 Email。"
 
 #: CRM/Event/Form/Registration/AdditionalParticipant.php
 msgid "It look like that total participant recoreded will fit in the event availability (you will not be wait listed)."
-msgstr "如果您略過這位參加者，那麼剩餘可供報名的人數便能接受你的報名請求（也就是不必列入候補名單）。"
+msgstr "你選的人數仍在本活動的名額限制內，你可以繼續填寫報名表，不用列入候補。"
 
 #: CRM/Event/Form/Registration/AdditionalParticipant.php
 msgid "It look like that total participant recoreded will fit in the event availability (you will not be wait listed). Registration for this event requires approval. You will receive an email once your registration has been reviewed."
-msgstr "如果你略過這位參加者，那麼剩餘可供報名的人數便能接受你的報名請求（也就是不必列入等候清單）。註冊這個活動需要審查，一旦你的註冊審查通過，你將會收到一封Email。"
+msgstr "你選的人數仍在本活動的名額限制內，你可以繼續填寫報名表，不用列入候補。本活動需要審核參加者，一旦你的審核通過，你將會收到一封Email確認。"
 
 #: CRM/Event/Form/Registration/AdditionalParticipant.php
 msgid "Please go back to the main registration page, to complete payment information."
-msgstr "請返回主註冊頁面，完成付款資訊。"
+msgstr "請返回活動報名頁，接續付款資訊的填寫。"
 
 #: CRM/Event/Form/Registration/AdditionalParticipant.php
 msgid "Skip Participant >>|"
@@ -15022,23 +15022,23 @@ msgstr "略過參加者 >>|"
 
 #: CRM/Event/Form/Registration/AdditionalParticipant.php
 msgid "A person is already registered for this event."
-msgstr "這個Email已經報名過這個活動了。"
+msgstr "這個人已經報過這個活動了。"
 
 #: CRM/Event/Form/Registration/AdditionalParticipant.php
 msgid "A person with this email address is already registered for this event."
-msgstr "這個Email已經報名過這個活動了。"
+msgstr "已經有使用同樣 Email 的人報名了本活動。"
 
 #: CRM/Event/Form/Registration/AdditionalParticipant.php
 msgid "The email address must be unique for each participant."
-msgstr "每一個參加者的Email必須是沒有重複的。"
+msgstr "每一個參加者的 Email 必須是沒有重複的。"
 
 #: CRM/Event/Form/Registration/AdditionalParticipant.php
 msgid "Your event registration will be confirmed. Please go back to the main registration page, to complete payment information."
-msgstr "將接受您的報名請求。請返回主註冊頁面，完成付款資訊。"
+msgstr "將接受您的報名請求。請回到主要報名畫面，完成付款資訊。"
 
 #: CRM/Event/Form/Registration/AdditionalParticipant.php
 msgid "It looks like event has only %2 seats available and you are trying to register %1 participants, so could you please select price options accordingly."
-msgstr ""
+msgstr "看來本活動僅剩2個名額，但你想要登記 %1 個參加者。請您調整一下相關的登記資訊。"
 
 #: CRM/Event/Form/Registration/AdditionalParticipant.php
 msgid "You are goinng to skip the last participant, your event registration will be confirmed. Please go back to the main registration page, to complete payment information."
@@ -15046,7 +15046,7 @@ msgstr "如果您略過這位參加者，那麼剩餘可供報名的人數便能
 
 #: CRM/Event/Form/Registration/AdditionalParticipant.php
 msgid "You have skipped last participant and which result into event having enough spaces, but your registration require approval, Once your registration has been reviewed, you will receive an email with a link to a web page where you can complete the registration process."
-msgstr "您已經略過最後的參加者，剩餘可供報名的人數已足夠，但是你的註冊需要審查，一旦你的註冊審查通過，你將會收到一封Email，你可以點選信件中的鏈結網址以完成註冊程序。"
+msgstr "這個活動有多餘的名額，但是你的登記需要審核，一旦審核通過，你將會收到一封Email，你可以點選信件中的網址以完成登記程序。"
 
 #: CRM/Event/Form/Registration/AdditionalParticipant.php
 msgid "You have skipped last participant and which result into event having enough spaces, hence your group become as register participants though you selected on wait list."
@@ -15062,48 +15062,48 @@ msgstr "(多位參加者)"
 
 #: CRM/Event/Form/Registration/ParticipantConfirm.php
 msgid "You do not have permission to access this event registration. Contact the site administrator if you need assistance."
-msgstr "您沒有報名此活動的權限。如果你需要幫助，請聯繫網站管理員。"
+msgstr "您沒有報名此活動的權限。如果你需要進一步的資訊，請聯繫網站管理員。"
 
 #: CRM/Event/Form/Registration/ParticipantConfirm.php
 msgid "Oops, it looks like there are currently no available spaces for the %1 event."
-msgstr "噢，目前%1活動報名已額滿。"
+msgstr "%1 已額滿。"
 
 #: CRM/Event/Form/Registration/ParticipantConfirm.php
 msgid "Your Credit Card transaction was not successful. No money has yet been charged to your card."
-msgstr "交易完成，請列印這頁留為記錄。"
+msgstr "信用卡交易未成功，沒有任何款項從你的卡中扣除"
 
 #: CRM/Event/Form/Registration/ParticipantConfirm.php
 msgid "Click the \"Confirm Registration\" button to complete your registration in %1, or click \"Cancel Registration\" if you are no longer interested in attending this event."
-msgstr "你可以按\"確認報名\"鍵。如果你不是要參與此一活動，請按\"取消確認\"鍵。"
+msgstr "你可以按「確認登記」鍵已完成在 %1 的登記。如果你不是要參與此活動，請按「取消登記」鍵。"
 
 #: CRM/Event/Form/Registration/ParticipantConfirm.php
 msgid "Confirm your registration for %1."
-msgstr "請確認你的%1活動報名。"
+msgstr "請確認你的 %1 登記。"
 
 #: CRM/Event/Form/Registration/ParticipantConfirm.php
 msgid "Click the \"Confirm Registration\" button to begin, or click \"Cancel Registration\" if you are no longer interested in attending this event."
-msgstr "你可以按\"確認報名\"鍵。如果你不是要參與此一活動，請按\"取消確認\"鍵。"
+msgstr "你可以按「確認登記」鍵開始。如果不想參加此活動，請按「取消登記」鍵。"
 
 #: CRM/Event/Form/Registration/ParticipantConfirm.php
 #: templates/CRM/Event/Page/UserDashboard.tpl
 msgid "Confirm Registration"
-msgstr "確認報名"
+msgstr "確認登記"
 
 #: CRM/Event/Form/Registration/ParticipantConfirm.php
 msgid "Are you sure you want to cancel your registration for this event?"
-msgstr "你確定要取消報名此活動？"
+msgstr "你要取消此活動的報名登記？"
 
 #: CRM/Event/Form/Registration/ParticipantConfirm.php
 msgid "You can cancel your registration for %1 by clicking \"Cancel Registration\"."
-msgstr "您可點擊「取消報名」來取消%1。"
+msgstr "您可點擊「取消登記」來取消 %1。"
 
 #: CRM/Event/Form/Registration/ParticipantConfirm.php
 msgid "Oops, it looks like your registration for %1 has already been cancelled."
-msgstr "噢，你%1活動的報名已取消。"
+msgstr "你於 %1 活動的報名已取消。"
 
 #: CRM/Event/Form/Registration/ParticipantConfirm.php
 msgid "%1 Event registration(s) have been cancelled."
-msgstr "%1活動報名已取消。"
+msgstr "%1 活動報名已取消。"
 
 #: CRM/Event/Form/Registration/ParticipantConfirm.php
 msgid "Your event registration has been cancelled."
@@ -15115,7 +15115,7 @@ msgstr "Email已寄送至：%1"
 
 #: CRM/Event/Form/Registration.php
 msgid "You do not have permission to register for this event"
-msgstr "您沒有權限報名此活動"
+msgstr "報名此活動需要進階的權限。"
 
 #: CRM/Event/Form/Registration.php
 msgid "The event you requested is currently unavailable (contact the site administrator for assistance)."
@@ -15131,11 +15131,11 @@ msgstr "活動範本不能被用來報名。"
 
 #: CRM/Event/Form/Registration.php
 msgid "Registration for this event begins on %1"
-msgstr "活動報名開始於 %1"
+msgstr "登記開始日：%1"
 
 #: CRM/Event/Form/Registration.php
 msgid "Registration for this event ended on %1"
-msgstr "活動報名截止日：%1"
+msgstr "登記截止日：%1"
 
 #: CRM/Event/Form/Registration.php
 msgid "A payment processor must be selected for this event registration page, or the event must be configured to give users the option to pay later (contact the site administrator for assistance)."
@@ -15143,7 +15143,7 @@ msgstr "此活動必須選擇一個金流機制，或設定給使用者「稍後
 
 #: CRM/Event/Form/Registration.php
 msgid "The site administrator must set a Payment Processor for this event in order to use online registration."
-msgstr "為了使用線上報名，網站管理者必須指定一種金流機制給活動。"
+msgstr "為了使用線上報名，網站管理者必須指定一種金流機制。"
 
 #: CRM/Event/Form/Registration.php
 msgid "No Fee Level(s) or Price Set is configured for this event.<br />Click <a href='%1'>CiviEvent >> Manage Event >> Configure >> Event Fees</a> to configure the Fee Level(s) or Price Set for this event."
@@ -15151,51 +15151,11 @@ msgstr "此活動尚未設定活動費用或價目表。<br />請按<a href='%1'
 
 #: CRM/Event/Form/Registration.php
 msgid "It looks like this field participant count extending its maximum limit."
-msgstr "參加者數量似乎已達到最大的限制。"
+msgstr "參加者數量已到最大名額限制。"
 
 #: CRM/Event/Form/Registration.php
 msgid "Select at least one option from Event Fee(s)."
 msgstr "請從活動費用至少選擇一個選項。"
-
-#: CRM/Event/Form/Registration/Register.php
-msgid "1"
-msgstr "1"
-
-#: CRM/Event/Form/Registration/Register.php
-msgid "2"
-msgstr "2"
-
-#: CRM/Event/Form/Registration/Register.php
-msgid "3"
-msgstr "3"
-
-#: CRM/Event/Form/Registration/Register.php
-msgid "4"
-msgstr "4"
-
-#: CRM/Event/Form/Registration/Register.php
-msgid "5"
-msgstr "5"
-
-#: CRM/Event/Form/Registration/Register.php
-msgid "6"
-msgstr "6"
-
-#: CRM/Event/Form/Registration/Register.php
-msgid "7"
-msgstr "7"
-
-#: CRM/Event/Form/Registration/Register.php
-msgid "8"
-msgstr "8"
-
-#: CRM/Event/Form/Registration/Register.php
-msgid "9"
-msgstr "9"
-
-#: CRM/Event/Form/Registration/Register.php
-msgid "10"
-msgstr "10"
 
 #: CRM/Event/Form/Registration/Register.php
 msgid "How many people are you registering?"
@@ -15203,15 +15163,15 @@ msgstr "有幾位參加者？"
 
 #: CRM/Event/Form/Registration/Register.php
 msgid "This event has only %1 space(s) left. If you continue and register more than %1 people (including yourself ), the whole group will be wait listed. Or, you can reduce the number of people you are registering to %1 to avoid being put on the waiting list."
-msgstr "此活動還可報名%1人。如果你報名的人數（包括你自己）超過%1人，那麼全部的人將一併列入等候清單。或是你可以減少報名人數至%1人，以完成報名動作並避免進到候補名單。"
+msgstr "此活動還可登記%1人。如果你報名的人數（包括你自己）超過%1人，那麼全部的人將一併列入等候清單。或是你可以減少報名人數至%1人，以完成報名動作並避免進到候補名單。"
 
 #: CRM/Event/Form/Registration/Register.php
 msgid "Registration for this event requires approval. Once your registration(s) have been reviewed, you will receive an email with a link to a web page where you can complete the registration process."
-msgstr "您的報名已通過。當您的申請審核後，您將會收到一封Email，請點擊郵件內的連結，以完成報名程序。"
+msgstr "您的報名已通過。一旦通過，您將會收到一封Email，請點擊郵件內的連結，以完成報名程序。"
 
 #: CRM/Event/Form/Registration/Register.php
 msgid "Registration for this event requires approval. Once your registration has been reviewed, you will receive an email with a link to a web page where you can complete the registration process."
-msgstr "註冊此活動需要經過審查。一旦你的註冊審查通過，你將會收到一封Email，你可以點選信件中的鏈結網址以完成註冊。"
+msgstr "參加此活動需要經過審查。一旦審查通過，你會收到一封 Email，請你點擊從該Email中的網址以完成活動登記。"
 
 #: CRM/Event/Form/Registration/Register.php
 msgid "Fee Level is a required field."
@@ -15418,7 +15378,7 @@ msgstr "您沒有權限瀏覽此活動"
 
 #: CRM/Event/Page/EventInfo.php
 msgid "Event is currently full, but you can register and be a part of waiting list."
-msgstr "此活動已報名額滿。不過現在你可以註冊並列入等候名單，並在可報名時通知你。"
+msgstr "此活動已額滿。但你仍然可以登記，你的登記將會列入候補，並在可報名時通知你。"
 
 #: CRM/Event/Page/ManageEvent.php
 msgid "Are you sure you want to make a copy of this Event?"
@@ -28536,7 +28496,7 @@ msgstr "請在此頁填寫你的註冊資訊。如果你是代替其他人註冊
 
 #: templates/CRM/Event/Form/Registration/ThankYou.tpl
 msgid "You have been added to the WAIT LIST for this event."
-msgstr "您已經被加入了這項目的等候名單。"
+msgstr "已為您加入到本活動的的候補名單中。"
 
 #: templates/CRM/Event/Form/Registration/ThankYou.tpl
 msgid "If space becomes available you will receive an email with a link to a web page where you can complete your registration."
@@ -28544,11 +28504,11 @@ msgstr "若活動尚有名額，您將會收到Email，通知您上線完成報�
 
 #: templates/CRM/Event/Form/Registration/ThankYou.tpl
 msgid "Your registration has been submitted."
-msgstr "你的註冊訊息已經送出。"
+msgstr "登記收到了。"
 
 #: templates/CRM/Event/Form/Registration/ThankYou.tpl
 msgid "Once your registration has been reviewed, you will receive an email with a link to a web page where you can complete the registration process."
-msgstr "一旦你的註冊審查通過，你將會收到一封Email，你可以點選信件中的鏈結網址以完成註冊。"
+msgstr "一旦你通過了，我們會傳一封 Email於您的信箱，你可以點選 Email 中的網址以完成登記。"
 
 #: templates/CRM/Event/Form/Registration/ThankYou.tpl
 msgid "An email with event details has been sent to %1."
@@ -28556,7 +28516,7 @@ msgstr "活動詳情已被傳送到 %1。"
 
 #: templates/CRM/Event/Form/Registration/ThankYou.tpl
 msgid "Your registration payment has been submitted to %1 for processing. Please print this page for your records."
-msgstr "您的註冊費已送至 %1。請您列印此頁留為記錄。"
+msgstr "您的報名費已送至 %1。請您列印此頁留為記錄。"
 
 #: templates/CRM/Event/Form/Registration/ThankYou.tpl
 msgid "A registration confirmation email will be sent to %1 once the transaction is processed successfully."
@@ -28585,7 +28545,7 @@ msgstr "另外參加者Email"
 
 #: templates/CRM/Event/Form/Registration/ThankYou.tpl
 msgid "Back to \"%1\" event information"
-msgstr "返回 \"%1\" 活動資料"
+msgstr "回到「%1」活動資訊"
 
 #: templates/CRM/Event/Form/Search/EmptyResults.tpl
 #: templates/CRM/Grant/Form/Search/EmptyResults.tpl
@@ -28661,7 +28621,7 @@ msgstr "啟用候補名單與批准報名"
 
 #: templates/CRM/Event/Form/Task/ParticipantStatus.hlp
 msgid "This screen is particularly useful for managing events with Waitlisting and / or Registration Approval features enabled. In order to use these features you must first enable the related Participant Statuses (Administer &raquo; CiviEvent &raquo; Participant Statuses)."
-msgstr "此畫面專為管理有候補名單的活動，與/或為了啟用註冊批核的功能。要使用這些功能，您必須先啟用相關的參加者的狀態（管理者 &raquo; 活動 &raquo; 參加者狀態）。"
+msgstr "此畫面專為管理有候補名單的活動，與/或為了啟用登記批核的功能。要使用這些功能，您必須先啟用相關的參加者的狀態（管理者 &raquo; 活動 &raquo; 參加者狀態）。"
 
 #: templates/CRM/Event/Form/Task/ParticipantStatus.hlp
 msgid "Tip: Managing waitlisted participants"
@@ -30174,7 +30134,7 @@ msgstr "一般會員（需捐款最少 $100.00）"
 
 #: templates/CRM/Member/Form/MembershipBlock.tpl
 msgid "Use this form to enable and configure a Membership Signup and Renewal section for this Online Contribution Page. If you're not using this page for membership signup, leave the <strong>Enabled</strong> box un-checked.."
-msgstr "使用此表格去啓用及設定一個會籍註冊，及更新此線上募款頁。如果您不是在此頁面註冊會員，請取消勾選<strong>已啓用</strong>框..."
+msgstr "使用此表格去啓用及設定一個會籍註冊，及更新此線上募款頁。如果您不是在此頁面加入會員，請取消勾選<strong>已啓用</strong>框..."
 
 #: templates/CRM/Member/Form/MembershipBlock.tpl
 msgid "Include a Membership Signup section in this Online Contribution page?"
