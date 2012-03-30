@@ -28476,7 +28476,7 @@ msgstr "此頁現執行<strong>測試驅動模式</strong>。如果這是付款�
 
 #: templates/CRM/Event/Form/Registration/Register.tpl
 msgid "Welcome %1"
-msgstr "歡迎"
+msgstr "%1 你好！"
 
 #: templates/CRM/Event/Form/Registration/Register.tpl
 msgid "Click here to register a different person for this event."
@@ -28484,7 +28484,7 @@ msgstr "啓用或停用此活動的線上報名。"
 
 #: templates/CRM/Event/Form/Registration/Register.tpl
 msgid "Not %1, or want to register a different person"
-msgstr "不是%1, 或者想要報名另一個人"
+msgstr "若你不是%1，請你點下此連結進行報名"
 
 #: templates/CRM/Event/Form/Registration/Register.tpl
 msgid "including yourself"
@@ -28492,7 +28492,7 @@ msgstr "包括自己"
 
 #: templates/CRM/Event/Form/Registration/Register.tpl
 msgid "Fill in your registration information on this page. If you are registering additional people, you will be able to enter their registration information after you complete this page and click &quot;Continue&quot;."
-msgstr "請在此頁填寫你的註冊資訊。如果你是代替其他人註冊，你可以在完成此頁註冊資訊後，點擊&quot;繼續&quot;鍵後，再為他們填寫註冊資訊。"
+msgstr "請在此頁填寫你的登記資訊。如果你想登記多人，請完成此頁資訊後，點擊「繼續」按鍵後，再幫他們填完資料。"
 
 #: templates/CRM/Event/Form/Registration/ThankYou.tpl
 msgid "You have been added to the WAIT LIST for this event."
@@ -28504,7 +28504,7 @@ msgstr "若活動尚有名額，您將會收到Email，通知您上線完成報�
 
 #: templates/CRM/Event/Form/Registration/ThankYou.tpl
 msgid "Your registration has been submitted."
-msgstr "登記收到了。"
+msgstr "我們已經記錄你填寫的資料。"
 
 #: templates/CRM/Event/Form/Registration/ThankYou.tpl
 msgid "Once your registration has been reviewed, you will receive an email with a link to a web page where you can complete the registration process."
@@ -35317,8 +35317,7 @@ msgid ""
 "Your pending event registration for %1 has expired\n"
 "because you did not confirm your registration."
 msgstr ""
-"您的等待項目申請為%1已經過期 \n"
-"原因是您沒有確定您的申請。"
+"您在本活動「%1」的候補已經過期。因為你沒有點擊Email信件中的登記確認連結。"
 
 #: xml/templates/message_templates/participant_expired_html.tpl
 #: xml/templates/message_templates/participant_expired_text.tpl
@@ -35326,12 +35325,11 @@ msgid ""
 "Please contact us at %1 or send email to %2 if you have questions\n"
 "or want to inquire about reinstating your registration for this event."
 msgstr ""
-"如有什麼問題或需要恢復您對於這個項目的申請，\n"
-"請在%1聯絡我們或Email到%2。"
+"若您有任何問題，或是仍想參加此活動，您可以透過電話 %1 聯絡我們，或是寄送 Email 到 %2 信箱。"
 
 #: xml/templates/message_templates/participant_expired_subject.tpl
 msgid "Event registration has expired for %1"
-msgstr "項目登記已經過期因為 %1 "
+msgstr "您在本站的活動報名已過期：%1 "
 
 #: xml/templates/message_templates/pcp_notify_html.tpl
 #: xml/templates/message_templates/pcp_notify_subject.tpl
