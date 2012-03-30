@@ -38,7 +38,7 @@
      <title>Confirm Event Registration</title>
      <page_callback>CRM_Event_Form_Registration_ParticipantConfirm</page_callback>
      <access_callback>1</access_callback>
-     <access_arguments>access CiviEvent</access_arguments>
+     <access_arguments>register for events</access_arguments>
      <is_public>true</is_public>
      <is_ssl>true</is_ssl>
   </item>
