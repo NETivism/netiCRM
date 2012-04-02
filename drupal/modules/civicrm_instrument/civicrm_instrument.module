@@ -210,7 +210,7 @@ function _civicrm_instrument_js_page($radios){
     }
     $checked = $value == $_POST['civicrm_instrument_id'] ? "checked='checked'" : '';
     $radio['description'] = str_replace(array("\n","\r"), array('',''), $radio['description']);
-    $output .= "<div class='civicrm-instrument-dummy'><label><input type='radio' name='civicrm_instrument_id_dummy' value='".$value."' class='form-radio' $checked />".$radio['label']."</label>$error_str<div class='hover-item'>".$radio['description']."</div></div>";
+    $output .= "<div class='civicrm-instrument-dummy'><label><input type='radio' name='civicrm_instrument_id_dummy' value='".$value."' class='form-radio required' $checked />".$radio['label']."</label>$error_str<div class='hover-item'>".$radio['description']."</div></div>";
   }
   $output .= '</div>';
   $output .= "<div class='clear'></div>";
