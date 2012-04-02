@@ -12,65 +12,9 @@ function civicrm_jvalidate_civicrm_buildForm($formName, &$form) {
   if(!$add){
     $js = '';
     $path = drupal_get_path('module', 'civicrm_jvalidate');
-    drupal_add_js($path.'/js/jquery.validate.min.js', 'module', 'footer');
-    drupal_add_js($path.'/js/localization/messages_tw.js', 'module', 'footer');
-    $js = '
-$(document).ready(function(){
-  $("#crm-container form").each(function(){
-    $(".crm-section .label .crm-marker").each(function(){
-      if($(this).text() == "*"){
-        var inputs = $(this).parents(".crm-section").find(":input:visible:first:not([@type=checkbox])");
-        inputs.addClass("required");
-        var checkboxes = $(this).parents(".crm-section").find(":input:visible[@type=checkbox]");
-        checkboxes.addClass("required");
-      }
-    });
-    if($(this).attr("id")){
-      var formid = $(this).attr("id");
-      $("#"+formid).validate({
-        errorPlacement: function (error, element) {
-          if (element.is(":radio") || element.is(":checkbox")) {
-            element.parents(".content").find("label.error").remove();
-            var c = element.parents(".content");
-            error.css({"color":"#E55","padding-left":"10px"}).wrap("div");
-            c.prepend(error);
-          }
-          else {
-            error.css({"color":"#E55","padding-left":"10px"});
-            error.insertAfter(element);
-          }
-        }
-      });
-      $("#"+formid+" input.required:visible:not([@type=checkbox])").each(function(){
-        $(this).rules("add", {required:true });
-      });
-      $("#"+formid+" input.required:visible:not([@type=checkbox])").blur(function(){
-        $(this).valid();
-      });
-      $("#"+formid+" input.required[@type=checkbox]").each(function(){
-        $(this).rules("add", {
-          required:{
-            depends: function(element){
-              return $(element).parents(".crm-section").find(":input:checkbox:checked").size() == 0;
-            }
-          }
-        });
-      });
-      $("#"+formid+" input.required[@type=checkbox]").click(function(){
-        $(this).parents(".content").find("label.error").remove();
-        $(this).valid();
-      });
-      $("#"+formid+" input[name*=email]").each(function(){
-        $(this).rules("add", {required:true,email:true});
-      });
-      $("#"+formid+" input[name*=url]").each(function(){
-        $(this).rules("add", {required:true,url:true});
-      });
-    }
-  });  
-});
-    ';
-    drupal_add_js($js, 'inline', 'footer');
+    drupal_add_js($path.'/js/jquery.validate.min.js');
+    drupal_add_js($path.'/js/localization/messages_tw.js');
+    drupal_add_js($path.'/civicrm_jvalidate.js');
     $add = TRUE;
   }
 }
