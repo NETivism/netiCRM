@@ -12,7 +12,7 @@ function civicrm_jvalidate_civicrm_buildForm($formName, &$form) {
   if(!$add){
     $js = '';
     $path = drupal_get_path('module', 'civicrm_jvalidate');
-    drupal_add_js($path.'/js/jquery.validate.js', 'module', 'footer');
+    drupal_add_js($path.'/js/jquery.validate.min.js', 'module', 'footer');
     drupal_add_js($path.'/js/localization/messages_tw.js', 'module', 'footer');
     $js = '
 $(document).ready(function(){
