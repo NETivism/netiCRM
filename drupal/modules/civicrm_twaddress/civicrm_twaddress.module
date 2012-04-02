@@ -66,6 +66,7 @@ function civicrm_twaddress_civicrm_buildForm($formName, &$form) {
         }
       }
       $default = $form->getElement($name)->_findValue($form->_defaultValues);
+      $default = $default ? $default : $_POST[$name];
       $override['countyName'][$key]['default'] = $county_options[$default];
     }
     if(strstr($name, 'city')){
@@ -73,6 +74,7 @@ function civicrm_twaddress_civicrm_buildForm($formName, &$form) {
       // hide field
 
       $default = $form->getElement($name)->_findValue($form->_defaultValues);
+      $default = $default ? $default : $_POST[$name];
       $override['areaName'][$key]['key'] = '_'.$name;
       $override['areaName'][$key]['name'] = $name;
       $override['areaName'][$key]['default'] = $default;
