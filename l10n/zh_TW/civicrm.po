@@ -2974,7 +2974,7 @@ msgstr "OpenID"
 #: CRM/Event/Form/Registration/Register.php CRM/Price/BAO/Field.php
 #: CRM/Price/Form/Set.php
 msgid "%1 is a required field."
-msgstr "%1 是必填的欄位，請認真填寫啊！"
+msgstr "%1 是必填的欄位！"
 
 #: CRM/Contact/Form/Edit/Website.php CRM/Core/DAO/Website.php
 #: CRM/Import/Parser/Contact.php templates/CRM/Contact/Form/Edit/Website.tpl
@@ -16249,7 +16249,7 @@ msgstr "未知的退信類型：退回Email無法分析"
 
 #: CRM/Mailing/Event/BAO/Subscribe.php
 msgid "You are already subscribed in %1, your subscription is %2."
-msgstr "您已在%1訂閱，您的訂閱狀態是 %2。"
+msgstr "您已訂閱了「%1」，目前訂閱狀態為 %2。"
 
 #: CRM/Mailing/Event/BAO/Subscribe.php
 msgid "Your subscription request has been submitted for group %1. Check your inbox shortly for the confirmation email(s). If you do not see a confirmation email, please check your spam/junk mail folder."
@@ -16257,7 +16257,7 @@ msgstr "已提交你的訂閱申請。請檢查你的收件匣是否有訂閱確
 
 #: CRM/Mailing/Event/BAO/Subscribe.php
 msgid "We had a problem processing your subscription request for group %1. You have tried to subscribe to a private group and/or we encountered a database error. Please contact the site administrator."
-msgstr "抱歉，我們在處理您的訂閱過程中出現問題。您訂閱的可能是不公開群組，未開放給一般人訂閱，或是網站資料庫的錯誤。請你與網站管理員聯繫。"
+msgstr "抱歉，處理您的訂閱過程中出現問題。您訂閱的可能是不公開群組，未開放給一般人訂閱，或是網站資料庫的錯誤。請你與網站管理員聯繫。"
 
 #: CRM/Mailing/Event/DAO/Unsubscribe.php
 msgid "Org Unsubscribe"
@@ -28484,7 +28484,7 @@ msgstr "啓用或停用此活動的線上報名。"
 
 #: templates/CRM/Event/Form/Registration/Register.tpl
 msgid "Not %1, or want to register a different person"
-msgstr "若你不是%1，請你點下此連結進行報名"
+msgstr "若要為他人報名，請你點下此連結以繼續"
 
 #: templates/CRM/Event/Form/Registration/Register.tpl
 msgid "including yourself"
@@ -28512,11 +28512,11 @@ msgstr "一旦你通過了，我們會傳一封 Email於您的信箱，你可以
 
 #: templates/CRM/Event/Form/Registration/ThankYou.tpl
 msgid "An email with event details has been sent to %1."
-msgstr "活動詳情已被傳送到 %1。"
+msgstr "活動詳情已寄到 %1。"
 
 #: templates/CRM/Event/Form/Registration/ThankYou.tpl
 msgid "Your registration payment has been submitted to %1 for processing. Please print this page for your records."
-msgstr "您的報名費已送至 %1。請您列印此頁留為記錄。"
+msgstr "您的報名費已送至 %1。請列印此頁留為記錄。"
 
 #: templates/CRM/Event/Form/Registration/ThankYou.tpl
 msgid "A registration confirmation email will be sent to %1 once the transaction is processed successfully."
@@ -28524,11 +28524,11 @@ msgstr "當交易成功，一個報名確認Email會被傳送到 %1。"
 
 #: templates/CRM/Event/Form/Registration/ThankYou.tpl
 msgid "Your registration has been processed successfully. Please print this page for your records."
-msgstr "您的報名巳成功處理。請列印此頁做為記錄。"
+msgstr "已成功記錄了您的登記。如果需要留作記錄，請列印此頁面。"
 
 #: templates/CRM/Event/Form/Registration/ThankYou.tpl
 msgid "A registration confirmation email has also been sent to %1"
-msgstr "一個報名確認Email已被傳送到%1"
+msgstr "登記的確認信已寄到 %1"
 
 #: templates/CRM/Event/Form/Registration/ThankYou.tpl
 #: templates/CRM/Price/Page/LineItem.tpl
@@ -39629,3 +39629,6 @@ msgstr "匯出任務"
 
 msgid "No possible duplicates were found using %1 rule."
 msgstr "沒發現重複聯絡人。"
+
+msgid "Submit"
+msgstr "送出"
