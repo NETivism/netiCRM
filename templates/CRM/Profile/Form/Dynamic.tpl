@@ -103,7 +103,7 @@
                         </tr>
                         </table>
                     	{if $field.html_type eq 'Radio' and $form.formName eq 'Edit' and $field.is_view neq 1 }
-                               &nbsp;<span class="crm-clear-link">(<a href="#" title="unselect" onclick="unselectRadio('{$n}', '{$form.formName}'); return false;">{ts}clear{/ts}</a>)</span>
+                               <span class="crm-clear-link">(<a href="#" title="unselect" onclick="unselectRadio('{$n}', '{$form.formName}'); return false;">{ts}clear{/ts}</a>)</span>
                     	{/if}
                         {/strip}
                     </div>
@@ -115,10 +115,10 @@
                    <div class="edit-value content">
                        {if $n|substr:0:3 eq 'im-'}
                          {assign var="provider" value=$n|cat:"-provider_id"}
-                         {$form.$provider.html}&nbsp;
+                         {$form.$provider.html}
                        {else if $n|substr:0:4 eq 'url-'}
                          {assign var="websiteType" value=$n|cat:"-website_type_id"}
-                         {$form.$websiteType.html}&nbsp;
+                         {$form.$websiteType.html}
                        {/if}
                        {if $n eq 'email_greeting' or  $n eq 'postal_greeting' or $n eq 'addressee'}
                             {include file="CRM/Profile/Form/GreetingType.tpl"}  
@@ -142,7 +142,7 @@
                            {/if}
                            {if (($n eq 'gender') or ($field.html_type eq 'Radio' and $form.formName eq 'Edit' and $field.is_required neq 1)) and
             	       	   ($field.is_view neq 1)}
-                                   &nbsp;<span class="crm-clear-link">(<a href="#" title="unselect" onclick="unselectRadio('{$n}', '{$form.formName}'); return false;">{ts}clear{/ts}</a>)</span>
+                                   <span class="crm-clear-link">(<a href="#" title="unselect" onclick="unselectRadio('{$n}', '{$form.formName}'); return false;">{ts}clear{/ts}</a>)</span>
             		       {elseif $field.html_type eq 'Autocomplete-Select'}
                                 {include file="CRM/Custom/Form/AutoComplete.tpl" element_name = $n}
             			   {/if}
