@@ -45,7 +45,7 @@ function civicrm_html_head()
         require_once 'CRM/Core/Config.php';
         $config = CRM_Core_Config::singleton();
 
-        $template =& CRM_Core_Smarty::singleton( );
+        $template = CRM_Core_Smarty::singleton( );
         $buffer = $template->fetch( 'CRM/common/jquery.files.tpl' );
         $lines  = preg_split( '/\s+/', $buffer );
         foreach ( $lines as $line ) {
@@ -71,10 +71,6 @@ function civicrm_html_head()
         // add Common.js
         drupal_add_js( drupal_get_path('module', 'civicrm' ) . '/../js/Common.js' );
 
-        // add the final assignment
-        drupal_add_js( 'var cj = jQuery.noConflict(); $ = cj;',
-                       'inline' );
-   
     }
     if ( isset( $config->customCSSURL ) && ! empty( $config->customCSSURL ) ) {
         $head  = "<style type=\"text/css\">@import url({$config->customCSSURL});</style>\n";
@@ -156,7 +152,7 @@ function civicrm_perm()
     $config = CRM_Core_Config::singleton();
 
     require_once 'CRM/Core/Permission.php';
-    $permissions =& CRM_Core_Permission::basicPermissions( );
+    $permissions = CRM_Core_Permission::basicPermissions( );
 	return array_keys( $permissions );
 }
 
@@ -169,15 +165,20 @@ function civicrm_perm()
 
 function civicrm_block($op='list', $delta='0')
 {
+    if ( $op == 'configure' ) {
+        return;
+    }
+
     if ( ! civicrm_initialize( ) ) {
         return;
     }
+
+    // The $op parameter determines what piece of information is being requested.
     require_once 'CRM/Core/Block.php';
 
-    if($op == 'list') {
+    if ($op == 'list') {
         $block = CRM_Core_Block::getInfo();
-    }
-    if($op == 'view') {
+    } else {
         $block = CRM_Core_Block::getContent ($delta);
     }
     return $block;
@@ -429,6 +430,13 @@ function civicrm_user( $type, &$edit, &$user, $category = NULL )
                                                       trim( $edit['mail'] ) );
         }
         break;
+        
+    case 'after_update':
+        // ensure preferences navigation is cleared so new role perms are reflected
+        // CRM-7450
+        require_once 'CRM/Core/BAO/Navigation.php';
+        CRM_Core_BAO_Navigation::resetNavigation( );
+        break;
 
     case 'form':
         $inCategory = true;
@@ -442,7 +450,7 @@ function civicrm_user( $type, &$edit, &$user, $category = NULL )
                 }
             }
         }
-        
+
         // only return a form to drupal my account page
         if ( $inCategory      &&
              arg(0) == 'user' &&
@@ -463,6 +471,10 @@ function civicrm_user( $type, &$edit, &$user, $category = NULL )
           require_once 'CRM/Core/BAO/UFMatch.php';
           return CRM_Core_BAO_UFMatch::deleteUser( $user->uid );
         }
+    case 'logout':
+        $session = CRM_Core_Session::singleton();
+        $session->reset();
+        return;
     }
 
 }
@@ -484,7 +496,7 @@ function civicrm_categories( &$user )
     require_once 'CRM/Core/BAO/UFGroup.php';
     require_once 'CRM/Core/BAO/UFField.php';
 
-    $allUFGroups =& CRM_Core_BAO_UFGroup::getModuleUFGroup('User Account');
+    $allUFGroups = CRM_Core_BAO_UFGroup::getModuleUFGroup('User Account');
     $ufGroups = array( );
 
     $weight = 100;
@@ -509,7 +521,7 @@ function _civicrm_categories_access( $profile_id ) {
     }
 
     require_once 'CRM/Core/BAO/UFGroup.php';
-    $allUFGroups =& CRM_Core_BAO_UFGroup::getModuleUFGroup( 'User Account', 0, false );
+    $allUFGroups = CRM_Core_BAO_UFGroup::getModuleUFGroup( 'User Account', 0, false );
 
     require_once 'CRM/Utils/Array.php';
     if ( is_array( CRM_Utils_Array::value( $profile_id, $allUFGroups ) ) ) {
@@ -639,7 +651,7 @@ function civicrm_view_data( &$user )
 
         $ctype = CRM_Core_DAO::getFieldValue( 'CRM_Contact_DAO_Contact', $userID, 'contact_type' );
 
-        $ufGroups =& CRM_Core_BAO_UFGroup::getModuleUFGroup('User Account', 0, false);
+        $ufGroups = CRM_Core_BAO_UFGroup::getModuleUFGroup('User Account', 0, false);
         $weight   = 100;
         foreach ( $ufGroups as $id => $title ) {
             
@@ -843,6 +855,34 @@ function civicrm_preprocess_page(&$variables) {
   			$variables['styles'] = drupal_get_css( $variables['css'] ); 
   		} 
   	}
+
+    if ( in_array( arg(0), array('civicrm', 'user') ) ) { 
+        // Move the CiviCRM jquery and jQuery UI libraries above Drupal's core jQuery
+        // and relatively gracefully handle noConflict.
+        $path = drupal_get_path('module', 'civicrm');
+        $scripts = drupal_add_js();
+        $val = array(
+          'cache' => TRUE,
+          'defer' => FALSE,
+          'preprocess' => TRUE,
+          );
+          
+        unset($scripts['module'][$path . '/../packages/jquery/jquery.js']);
+        $core = array(
+          $path . '/../packages/jquery/jquery.js' => $val,
+        );
+        
+        foreach ($scripts['module'] as $script => $val) {
+          if (strpos($script, $path) === 0) {
+            $core[$script] = $scripts['module'][$script];
+            unset($scripts['module'][$script]);
+          }
+        }
+        
+        $core[$path . '/../js/noconflict.js'] = $val;
+        $scripts['core'] = $core + $scripts['core'];
+        $variables['scripts'] = drupal_get_js('header', $scripts);
+    }
 }
 
 function civicrm_checkmenu( ){
