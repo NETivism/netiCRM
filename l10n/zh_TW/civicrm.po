@@ -19943,7 +19943,7 @@ msgstr "任務類型"
 #: templates/CRM/Profile/Form/Search.tpl templates/CRM/UF/Form/Block.tpl
 #: templates/CRM/UF/Form/Preview.tpl
 msgid "clear"
-msgstr "清空"
+msgstr "重填"
 
 #: templates/CRM/Activity/Form/Search/Common.tpl
 msgid "Complete OR partial Name of the Source Contact or the Assignee Contact."
