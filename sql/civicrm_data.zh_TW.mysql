@@ -4730,7 +4730,7 @@ VALUES
 
   (@option_group_id_grantSt, '待處理',  1, 'Pending',  NULL, 0, 1,    1, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_grantSt, '已補助',  2, 'Granted',  NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_grantSt, '已被拒絕', 3, 'Rejected', NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_grantSt, '已拒絕', 3, 'Rejected', NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_honorTyp, '致敬'        , 1, 'In Honor of'       , NULL, 0, 1,    1, NULL, 0, 1, 1, NULL, NULL),
   (@option_group_id_honorTyp, '悼念'       , 2, 'In Memory of'      , NULL, 0, NULL, 2, NULL, 0, 1, 1, NULL, NULL),
 
@@ -5581,13 +5581,13 @@ INSERT INTO civicrm_participant_status_type
   (2,  'Attended',                            '出席',                            'Positive', 0,           1,         1,          2,      2            ),
   (3,  'No-show',                             '失約',                             'Negative', 0,           1,         0,          3,      2            ),
   (4,  'Cancelled',                           '已取消',                           'Negative', 1,           1,         0,          4,      2            ),
-  (5,  'Pending from pay later',              '等待-後續付款',              'Pending',  1,           1,         1,          5,      2            ),
-  (6,  'Pending from incomplete transaction', '等待-未完成交易', 'Pending',  1,           1,         0,          6,      2            ),
+  (5,  'Pending from pay later',              '待處理-後續付款',              'Pending',  1,           1,         1,          5,      2            ),
+  (6,  'Pending from incomplete transaction', '待處理-未完成交易', 'Pending',  1,           1,         0,          6,      2            ),
   (7,  'On waitlist',                         '在候補名單',                         'Waiting',  1,           0,         0,          7,      2            ),
-  (8,  'Awaiting approval',                   '等待核准',                   'Waiting',  1,           0,         1,          8,      2            ),
-  (9,  'Pending from waitlist',               '等待-在等待名單中',               'Pending',  1,           0,         1,          9,      2            ),
-  (10, 'Pending from approval',               '等待-在批准名單中',               'Pending',  1,           0,         1,          10,     2            ),
-  (11, 'Rejected',                            '已被拒絕',                            'Negative', 1,           0,         0,          11,     2            ),
+  (8,  'Awaiting approval',                   '等待審核',                   'Waiting',  1,           0,         1,          8,      2            ),
+  (9,  'Pending from waitlist',               '待處理-在候補名單中',               'Pending',  1,           0,         1,          9,      2            ),
+  (10, 'Pending from approval',               '待處理-在審核名單中',               'Pending',  1,           0,         1,          10,     2            ),
+  (11, 'Rejected',                            '已拒絕',                            'Negative', 1,           0,         0,          11,     2            ),
   (12, 'Expired',                             '已清除',                             'Negative', 1,           1,         0,          12,     2            );
 
 INSERT INTO `civicrm_contact_type`
