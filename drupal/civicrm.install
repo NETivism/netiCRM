@@ -125,6 +125,9 @@ function _civicrm_import_sql($dsn, $fileName){
 
 
 function civicrm_enable( ) {
+    // set system weight higher than jQuery_update so Civi's preprocess can run
+    // last. This is the only way to make sure the jquery noconflict works.
+    db_query("UPDATE {system} SET weight = 100 WHERE name = 'civicrm'");
     menu_rebuild( );
     menu_link_maintain( 'civicrm', 'delete', 'civicrm', 'CiviCRM' );
     
@@ -146,4 +149,10 @@ function civicrm_enable( ) {
 
     //Update the 'blocks' DB table with the blocks
     _block_rehash();
+}
+/**
+ * Update CiviCRM module weight
+ */
+function civicrm_update_6300(&$sandbox) {
+  db_query("UPDATE {system} SET weight = 100 WHERE name = 'civicrm'");
 }
