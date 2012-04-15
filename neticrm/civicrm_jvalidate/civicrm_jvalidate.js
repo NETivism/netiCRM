@@ -1,17 +1,16 @@
-var cj = jQuery.noConflict(); $ = cj;
-cj(document).ready(function(){
-  cj("#crm-container form").each(function(){
-    cj(".crm-section .label .crm-marker").each(function(){
-      if(cj(this).text() == "*"){
-        var inputs = cj(this).parents(".crm-section").find(":input:visible:first:not([type=checkbox])");
+$(document).ready(function(){
+  $("#crm-container form").each(function(){
+    $(".crm-section .label .crm-marker").each(function(){
+      if($(this).text() == "*"){
+        var inputs = $(this).parents(".crm-section").find(":input:visible:first:not([type=checkbox])");
         inputs.addClass("required");
-        var checkboxes = cj(this).parents(".crm-section").find(":input:visible[type=checkbox]");
+        var checkboxes = $(this).parents(".crm-section").find(":input:visible[type=checkbox]");
         checkboxes.addClass("required");
       }
     });
-    if(cj(this).attr("id")){
-      var formid = cj(this).attr("id");
-      cj("#"+formid).validate({
+    if($(this).attr("id")){
+      var formid = $(this).attr("id");
+      $("#"+formid).validate({
         errorPlacement: function (error, element) {
           if (element.is(":radio") || element.is(":checkbox")) {
             element.parents(".content").find("label.error").remove();
@@ -25,30 +24,30 @@ cj(document).ready(function(){
           }
         }
       });
-      cj("#"+formid+" input.required:visible:not([type=checkbox])").each(function(){
-        cj(this).rules("add", {required:true });
+      $("#"+formid+" input.required:visible:not([type=checkbox])").each(function(){
+        $(this).rules("add", {required:true });
       });
-      cj("#"+formid+" input.required:visible:not([type=checkbox])").blur(function(){
-        cj(this).valid();
+      $("#"+formid+" input.required:visible:not([type=checkbox])").blur(function(){
+        $(this).valid();
       });
-      cj("#"+formid+" input.required[type=checkbox]").each(function(){
-        cj(this).rules("add", {
+      $("#"+formid+" input.required[type=checkbox]").each(function(){
+        $(this).rules("add", {
           required:{
             depends: function(element){
-              return cj(element).parents(".crm-section").find(":input:checkbox:checked").size() == 0;
+              return $(element).parents(".crm-section").find(":input:checkbox:checked").size() == 0;
             }
           }
         });
       });
-      cj("#"+formid+" input.required[type=checkbox]").click(function(){
-        cj(this).parents(".content").find("label.error").remove();
-        cj(this).valid();
+      $("#"+formid+" input.required[type=checkbox]").click(function(){
+        $(this).parents(".content").find("label.error").remove();
+        $(this).valid();
       });
-      cj("#"+formid+" input[name*=email]").each(function(){
-        cj(this).rules("add", {required:true,email:true});
+      $("#"+formid+" input[name*=email]").each(function(){
+        $(this).rules("add", {required:true,email:true});
       });
-      cj("#"+formid+" input[name*=url]").each(function(){
-        cj(this).rules("add", {required:true,url:true});
+      $("#"+formid+" input[name*=url]").each(function(){
+        $(this).rules("add", {required:true,url:true});
       });
     }
   });  

@@ -7,7 +7,7 @@ function civicrm_ckeditor_civicrm_buildForm($formName, &$form) {
     if($element->_type == 'CKeditor') {
       $path = base_path().drupal_get_path('module', 'civicrm_ckeditor');
       $ckeditor_inline_js = "
-        cj( function( ) {
+        $( function( ) {
           CKEDITOR.config.customConfig= '$path/ckeditor.config.js';
           CKEDITOR.config.toolbar = 'CiviCRM';
         });

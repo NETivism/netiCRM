@@ -24,9 +24,9 @@
  *
  * Wed, 25 August 2010 10:58:54 GMT
  */
-;(function(cj) {
+;(function($) {
 
-  cj.fn.extend({
+  $.fn.extend({
 
     twzipcode: function(options) {
       var dbcode = { "南投縣": "4855", "台中市": "5219", "台北市": "5221", "台南市": "5224", "台東縣": "4861", "嘉義市": "5222", "嘉義縣": "4849", "基隆市": "4864", "宜蘭縣": "4852", "屏東縣": "4857", "彰化縣": "4848", "新北市": "4860", "新竹市": "5223", "新竹縣": "4850", "桃園縣": "4862", "澎湖縣": "4856", "花蓮縣": "4851", "苗栗縣": "4854", "連江縣": "5225", "金門縣": "5226", "雲林縣": "4863", "高雄市": "5220" };
@@ -47,32 +47,33 @@
         dbcode = o.dbcode;
       }
 
-      var _ = cj(this);
-      var sel = {}, zipcode = cj.fn.twzipcode.zipcode;
+      var _ = $(this);
+      var sel = {}, zipcode = $.fn.twzipcode.zipcode;
       var i = 0, tpl = [];
       var opt = ['<option value="">-- 縣市 --</option>', '<option value="">-- 鄉鎮市區 --</option>'];
-      var ie = !cj.support.noCloneEvent;
+      var ie = !$.support.noCloneEvent;
       
       /*
        * enter the zipcode to find the county and area
        * Wed, 25 August 2010 10:22:12 GMT
        */
-      var countyAndarea = cj.fn.twzipcode.fromzip(o.zipSel);
+      var countyAndarea = $.fn.twzipcode.fromzip(o.zipSel);
       if(2 === countyAndarea.length){
         o.countySel = countyAndarea[0];
         o.areaSel = countyAndarea[1];
       }
       
       try {
-        sel.county = ( o.countyName ) ? ( cj('select[name="' + o.countyName + '"]').length > 0 ? cj('select[name="' + o.countyName + '"]') : _.append('<select name="' + o.countyName + '[]" />').children('select:eq(0)') ) : _.append('<select name="zip_county[]" />').children('select:eq(0)');
-        sel.area = ( o.areaName ) ? ( cj('select[name="' + o.areaName + '"]').length > 0 ? cj('select[name="' + o.areaName + '"]') : _.append('<select name="' + o.areaName + '[]" />').children('select:eq(1)') ) : _.append('<select name="zip_area[]" />').children('select:eq(1)');
-        sel.zip  = ( o.zipName ) ? ( cj('input[name="' + o.zipName + '"]').length > 0 ? cj('input[name="' + o.zipName + '"]') : _.append('<input type="text" name="' + o.zipName + '[]" />').children('input:eq(0)') ) : _.append('<input type="text" name="zip_code[]" />').children('input:eq(0)');
+        sel.county = ( o.countyName ) ? ( $('select[name="' + o.countyName + '"]').length > 0 ? $('select[name="' + o.countyName + '"]') : _.append('<select name="' + o.countyName + '[]" />').children('select:eq(0)') ) : _.append('<select name="zip_county[]" />').children('select:eq(0)');
+        sel.area = ( o.areaName ) ? ( $('select[name="' + o.areaName + '"]').length > 0 ? $('select[name="' + o.areaName + '"]') : _.append('<select name="' + o.areaName + '[]" />').children('select:eq(1)') ) : _.append('<select name="zip_area[]" />').children('select:eq(1)');
+        sel.zip  = ( o.zipName ) ? ( $('input[name="' + o.zipName + '"]').length > 0 ? $('input[name="' + o.zipName + '"]') : _.append('<input type="text" name="' + o.zipName + '[]" />').children('input:eq(0)') ) : _.append('<input type="text" name="zip_code[]" />').children('input:eq(0)');
       }
       catch(e){}
 
       sel.county.addClass( o.css && o.css[0] === 'undefined' ? '' : o.css[0] );
       sel.area.addClass( o.css && o.css[1] === 'undefined' ? '' : o.css[1] );
-      sel.zip.addClass( o.css && o.css[2] === 'undefined' ? '' : o.css[2] ).attr('readonly', o.zipReadonly);
+      sel.zip.addClass( o.css && o.css[2] === 'undefined' ? '' : o.css[2] );
+      sel.zip.attr('readonly', o.zipReadonly);
       sel.county.empty().append( opt[0] );
 
       for( var data in zipcode ){
@@ -85,7 +86,9 @@
         }
       }
       
-      sel.county.append( tpl.join('') ).val( dbcode[o.countySel] ).attr('selected', true).change(function(){
+      sel.county.append( tpl.join('') ).val( dbcode[o.countySel] );
+      sel.county.attr('selected', true);
+      sel.county.change(function(){
         i = 0;
         tpl = [];
         if(sel.county.val() == ''){
@@ -103,23 +106,26 @@
             }
           }
           if(ie){
-            var ie6 = cj(sel.area)[0];
+            var ie6 = $(sel.area)[0];
             ie6.options.length = parseInt((i/5), 10);
           }
-          sel.area.empty().append( tpl.join('') ).val( o.areaSel ).attr('selected', true).trigger('change');
+          sel.area.empty().append( tpl.join('') ).val( o.areaSel );
+          sel.area.attr('selected', true).trigger('change');
         }
       });
 
       sel.area.change(function(){
         if(sel.area.val() !== ''){
           var county = sel.county.children("option:selected").text();
-          if( zipcode[county][cj(this).val()] ){
-            sel.zip.val( zipcode[ sel.county.children("option:selected").text() ][ cj(this).val() ] );
+          if( zipcode[county][$(this).val()] ){
+            sel.zip.val( zipcode[ sel.county.children("option:selected").text() ][ $(this).val() ] );
           }
         }
       });
 
-      sel.county.val( dbcode[o.countySel] ).attr('selected', true).trigger('change');
+      sel.county.val( dbcode[o.countySel] );
+      sel.county.attr('selected', true);
+      sel.county.trigger('change');
       
       /*
        * enter the zipcode to find the county and area
@@ -127,22 +133,24 @@
        */
       sel.zip.keyup(function(){
 
-        var val = cj(this).val();
+        var val = $(this).val();
 
         if(0 === val.length){
           return;
         }
 
-        var _countyAndarea = cj.fn.twzipcode.fromzip(val);
+        var _countyAndarea = $.fn.twzipcode.fromzip(val);
         if(2 === _countyAndarea.length){
-          sel.county.val( _countyAndarea[0] ).attr('selected', true).trigger('change');
-          sel.area.val( _countyAndarea[1] ).attr('selected', true);
+          sel.county.val( _countyAndarea[0] );
+          sel.county.attr('selected', true).trigger('change');
+          sel.area.val( _countyAndarea[1] );
+          sel.area.attr('selected', true);
           sel.zip.val( val );
           return;
         }
       });
       
-      cj('input[type=reset]').click(function(){ sel.area.empty().append( opt[1] ); });
+      $('input[type=reset]').click(function(){ sel.area.empty().append( opt[1] ); });
     }
     
   });
@@ -151,10 +159,10 @@
    * enter the zipcode to find the county and area
    * Wed, 25 August 2010 10:22:12 GMT
    */
-  cj.fn.twzipcode.fromzip = function(sel){
+  $.fn.twzipcode.fromzip = function(sel){
 
       var result = [];
-      var zipcode = cj.fn.twzipcode.zipcode;
+      var zipcode = $.fn.twzipcode.zipcode;
       
       for(var i in zipcode){
         
@@ -171,7 +179,7 @@
       
   };
     
-  cj.fn.twzipcode.zipcode = {
+  $.fn.twzipcode.zipcode = {
     '基隆市': {'仁愛區':'200', '信義區':'201', '中正區':'202', '中山區':'203', '安樂區':'204', '暖暖區':'205', '七堵區':'206'},
     '台北市': {'中正區':'100', '大同區':'103', '中山區':'104', '松山區':'105', '大安區':'106', '萬華區':'108', '信義區':'110', '士林區':'111', '北投區':'112', '內湖區':'114', '南港區':'115', '文山區':'116'},
     '新北市': {

@@ -32,7 +32,7 @@ function civicrm_imce_civicrm_buildForm($formName, &$form) {
   
   if ($editor == 'ckeditor') {
     $ckeditor_inline_js = "
-      cj( document ).ready( function( ) {
+      $( document ).ready( function( ) {
         CKEDITOR.config.filebrowserBrowseUrl = '/index.php?q=imce&app=ckeditor|sendto@civicrmImceCkeditSendTo|params@';
         CKEDITOR.config.filebrowserImageBrowseUrl = '/index.php?q=imce&app=ckeditor|sendto@civicrmImceCkeditSendTo|params@';
         CKEDITOR.config.filebrowserFlashBrowseUrl = '/index.php?q=imce&app=ckeditor|sendto@civicrmImceCkeditSendTo|params@';
