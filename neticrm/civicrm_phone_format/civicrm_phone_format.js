@@ -1,21 +1,25 @@
-var cj = jQuery.noConflict(); $ = cj;
 $(document).ready(function(){
   // $("#crm-container form").each(function(){
-  cj.mask.definitions['~']='[+-]';
+  $.mask.definitions['~']='[+-]';
   // mobile
   $("#crm-container input[name*=phone]").each(function(){
     var n = $(this).attr('name');
     var re = /phone-(\w+)-(\d+)/g;
     var match = re.exec(n);
-
+    var mobile = false;
+    if(match != null){
+      var idx = match.length;
+      if(match[idx] == '2'){
+        mobile = true;
+      }
+    }
     // mobile
-    var idx = match.length-1;
-    if(match[idx] == '2'){
+    if(mobile){
       $(this).mask("+886-999999999");
     }
     else{
     // normal
-      $(this).mask("+886-999999999? #*****");
+      $(this).mask("+886-999999999?#*****");
     }
     // add tip when focus
     $(this).focus(function(){

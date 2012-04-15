@@ -51,7 +51,10 @@
       var sel = {}, zipcode = $.fn.twzipcode.zipcode;
       var i = 0, tpl = [];
       var opt = ['<option value="">-- 縣市 --</option>', '<option value="">-- 鄉鎮市區 --</option>'];
-      var ie = !$.support.noCloneEvent;
+      var ie = false;
+      if($.browser.msie && $.browser.version.substr(0,1) == '6'){
+        var ie = true;
+      }
       
       /*
        * enter the zipcode to find the county and area
