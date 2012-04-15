@@ -47,27 +47,27 @@ function civicrm_goal_alter_js($goal_amount, $total, $price_set){
   }
   
   $js = '
-cj(document).ready(function(){
+$(document).ready(function(){
   '.$price_set_js.'
   var max = '.$max.';
   var goal_check = function(max, current){
     if(current > max){
       alert("您設定的金額將超過募款目標金額，已將您的捐款金額設定在募款目標內。");
-      cj("input[name=amount][value=amount_other_radio]").click();
-      cj("input[name=amount_other]").val(max);
+      $("input[name=amount][value=amount_other_radio]").click();
+      $("input[name=amount_other]").val(max);
     }
   }
 
-  if(cj("input[name=amount_other]").size()){
-    cj("input[name=amount]").click(function(){
+  if($("input[name=amount_other]").size()){
+    $("input[name=amount]").click(function(){
       var v = parseInt($(this).val());
       if(v){
         var amount = price[v];
         goal_check(max, amount);
       }
     });
-    cj("input[name=amount_other]").blur(function(){
-      goal_check(max, cj(this).val());
+    $("input[name=amount_other]").blur(function(){
+      goal_check(max, $(this).val());
     });
   }
 });

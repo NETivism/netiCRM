@@ -96,16 +96,16 @@ function civicrm_twaddress_civicrm_buildForm($formName, &$form) {
       $insert = "<select name='{$override['areaName'][$k]['key']}' class='form-select'></select>";
 
       $js = '
-      cj(document).ready(function(){
-        if( cj("input[name=\''.$override['areaName'][$k]['name'].'\']").length ){
-          cj("'.$insert.'").insertAfter("input[name=\''.$override['areaName'][$k]['name'].'\']");
-          cj("input[name=\''.$override['areaName'][$k]['name'].'\']").hide();
-          cj("select[name=\''.$override['areaName'][$k]['key'].'\']").change(function(){
+      $(document).ready(function(){
+        if( $("input[name=\''.$override['areaName'][$k]['name'].'\']").length ){
+          $("'.$insert.'").insertAfter("input[name=\''.$override['areaName'][$k]['name'].'\']");
+          $("input[name=\''.$override['areaName'][$k]['name'].'\']").hide();
+          $("select[name=\''.$override['areaName'][$k]['key'].'\']").change(function(){
             var v = $(this).val();
-            cj("input[name=\''.$override['areaName'][$k]['name'].'\']").val(v);
+            $("input[name=\''.$override['areaName'][$k]['name'].'\']").val(v);
           });
 
-          cj("form[name='.$form_name.']").twzipcode({
+          $("form[name='.$form_name.']").twzipcode({
             zipName:"'.$override['zipName'][$k]['key'].'",
             countyName:"'.$override['countyName'][$k]['key'].'",
             areaName:"'.$override['areaName'][$k]['key'].'",
