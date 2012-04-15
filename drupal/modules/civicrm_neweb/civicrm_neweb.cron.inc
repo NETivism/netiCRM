@@ -27,7 +27,7 @@ function civicrm_neweb_process_response($is_test, $now = NULL){
   $newebpath = _civicrm_neweb_path($is_test);
   $filename = 'RP_'.$payment['user_name'].'_'.date('Ymd', $now).'.out';
   if(is_file($newebpath."/".$filename)){
-    $response_str = file_get_contents($newwebpath."/".$filename);
+    $response_str = file_get_contents($newebpath."/".$filename);
   }
   else{
     $response_str = _civicrm_neweb_sslftp($payment['user_name'], $newebpath.'/'.$filename, NEWEB_DOWNLOAD, $is_test);
@@ -98,7 +98,7 @@ function civicrm_neweb_process_transaction($is_test, $now = NULL){
 
   $filename = 'RP_Trans_'.$payment['user_name'].'_'.date('Ymd', $now).'.log';
   if(is_file($newebpath."/".$filename)){
-    $transaction_str  = file_get_contents($newwebpath."/".$filename);
+    $transaction_str  = file_get_contents($newebpath."/".$filename);
   }
   else{
     $transaction_str = _civicrm_neweb_sslftp($payment['user_name'], $newebpath.'/'.$filename, NEWEB_DOWNLOAD, $is_test);
@@ -134,7 +134,7 @@ function civicrm_neweb_process_transaction($is_test, $now = NULL){
         $contribution = new CRM_Contribute_DAO_Contribution();
         $contribution->trxn_id = $t['ORGORDERNUMBER'];
         if($contribution->find( true )){
-          $contribution->receive_date = date('YmdHis', $date);
+          $contribution->receive_date = date('YmdHis', $now);
         }
         else{
           // clone exists
@@ -144,7 +144,7 @@ function civicrm_neweb_process_transaction($is_test, $now = NULL){
           unset($contribution->receive_date);
           unset($contribution->trxn_id);
           unset($contribution->invoice_id);
-          $contribution->receive_date = date('YmdHis', $date);
+          $contribution->receive_date = date('YmdHis', $now);
           $contribution->trxn_id = $t['ORGORDERNUMBER'];
         }
         // we save contribution first, anyway.

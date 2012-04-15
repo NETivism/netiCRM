@@ -46,7 +46,7 @@
 
 {if $contact_id}
 <div class="messages status">
-    {ts 1=$display_name}Welcome %1{/ts}. (<a href="{crmURL p='civicrm/event/register' q="&cid=0&reset=1&id=`$event.id`"}" title="{ts}Click here to register a different person for this event.{/ts}">{ts 1=$display_name}Not %1, or want to register a different person{/ts}</a>?)</div>
+    {ts 1=$display_name}Welcome %1{/ts} (<a href="{crmURL p='civicrm/event/register' q="&cid=0&reset=1&id=`$event.id`"}" title="{ts}Click here to register a different person for this event.{/ts}">{ts 1=$display_name}Not %1, or want to register a different person{/ts}</a>)</div>
 {/if}
 {if $event.intro_text}
     <div id="intro_text" class="crm-section intro_text-section">

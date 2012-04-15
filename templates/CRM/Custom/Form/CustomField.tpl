@@ -39,7 +39,7 @@
             <td class="label">{$form.$element_name.label}{if $element.help_post}{help id=$element_name text=$help_post}{/if}</td>
             <td class="html-adjust">
                 {assign var="count" value="1"}
-                <table class="form-layout-compressed" style="margin-top: -0.5em;">
+                <table class="form-layout-compressed">
                     <tr>
                         {* sort by fails for option per line. Added a variable to iterate through the element array*}
                         {assign var="index" value="1"}

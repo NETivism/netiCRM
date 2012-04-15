@@ -56,6 +56,7 @@
             <td>{$form.$cbName.html}</td> 
         {/if}	
 	<td class="crm-participant-contact_type">{$row.contact_type}</td>
+      <td class="crm-participant-id">{$row.participant_id}</td>
     	<td class="crm-participant-sort_name"><a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$row.contact_id`"}" title="{ts}View contact record{/ts}">{$row.sort_name}</a></td>
     {/if}
 

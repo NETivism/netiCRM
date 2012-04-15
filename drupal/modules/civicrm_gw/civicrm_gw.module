@@ -147,7 +147,7 @@ function _civicrm_gw_payment_info($cid, $instrument){
       $data[] = array('付款期限', format_date($gw->expire_datetime, 'short'));
       break;
     case 'vacc':
-      $data[] = array('轉帳銀行代碼', $gw->bankcode);
+      $data[] = array('轉帳銀行代碼', '玉山銀行 ('.$gw->bankcode.')');
       $data[] = array('轉帳銀行帳號', $gw->vaccno);
       $data[] = array('付款金額', $amount);
       $data[] = array('付款期限', format_date($gw->expire_datetime, 'custom', 'Y/m/d'));

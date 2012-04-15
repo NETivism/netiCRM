@@ -440,7 +440,7 @@ class CRM_Utils_String {
      */
     static function addJqueryFiles( &$html ) {
         $smarty = CRM_Core_Smarty::singleton( );
-        return $smarty->fetch( 'CRM/common/jquery.tpl' ) . $html . '<script type="text/javascript">jQuery.noConflict(true);</script>';
+        return $smarty->fetch( 'CRM/common/jquery.tpl' ) . $html;
     }
 
     /**

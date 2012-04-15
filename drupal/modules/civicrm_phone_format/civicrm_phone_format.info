@@ -1,0 +1,7 @@
+; $Id$
+name = CiviCRM Phone Format
+description = CiviCRM Phone Number format plugin.
+core = 6.x
+package = "NetiCRM"
+version = "6.x-1.0"
+dependencies[] = civicrm
