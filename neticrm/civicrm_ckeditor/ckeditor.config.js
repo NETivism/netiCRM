@@ -30,14 +30,17 @@ CKEDITOR.editorConfig = function(config) {
 
   // This toolbar should work fine with "Filtered HTML" filter
   config.toolbar_CiviCRM = [
-    ['Format','Font','FontSize'],
-    ['Bold','Italic','Underline','Strike','TextColor'],
-    ['PasteFromWord','PasteText'],
-    '/',
+    ['Maximize'],
+    ['Bold','Italic','Underline','Strike','RemoveFormat'],
     ['JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],
     ['NumberedList','BulletedList','Outdent','Indent','Blockquote'],
-    ['Link','Unlink','Image','Table','HorizontalRule'],
-    ['RemoveFormat'],['Source']
+    ['Link','Unlink','Image'],
+    '/',
+    ['Format','Font','FontSize'],
+    ['PasteFromWord','PasteText'],
+    ['TextColor','BGColor'],
+    ['Table','HorizontalRule'],
+    ['Source']
    ];
 
   /*
@@ -78,4 +81,5 @@ CKEDITOR.editorConfig = function(config) {
   config.bodyClass = '';
   config.bodyId = '';
   config.skin = 'BootstrapCK-Skin';
+  config.resize_enabled = false;
 };
