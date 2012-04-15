@@ -179,7 +179,7 @@ class CRM_Utils_System_Drupal {
 
         $separator = $htmlize ? '&amp;' : '&';
 
-        if (! $config->cleanURL ) {
+        if (! variable_get('clean_url', 0) ) {
             if ( isset( $path ) ) {
                 if ( isset( $query ) ) {
                     return $base . $script .'?q=' . $path . $separator . $query . $fragment;

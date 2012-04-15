@@ -1,0 +1,20 @@
+<?php
+/**
+ * Implementation of hook_civicrm_buildForm().
+ */
+function civicrm_jvalidate_civicrm_buildForm($formName, &$form) {
+  static $add;
+
+  if($_GET['q'] != 'civicrm/event/register' && $_GET['q'] != 'civicrm/profile/create' && $_GET['q']!= 'civicrm/contribute/transact'){
+    return;
+  }
+
+  if(!$add){
+    $js = '';
+    $path = drupal_get_path('module', 'civicrm_jvalidate');
+    drupal_add_js($path.'/js/jquery.validate.min.js');
+    drupal_add_js($path.'/js/localization/messages_tw.js');
+    drupal_add_js($path.'/civicrm_jvalidate.js');
+    $add = TRUE;
+  }
+}

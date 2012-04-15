@@ -216,7 +216,7 @@ SELECT module
         }
         
         $buttons[] = array( 'type'      => $buttonName,
-                            'name'      => ts('Save'),
+                            'name'      => ts('Submit'),
                             'isDefault' => true);
         
         if ( $this->_context != 'dialog' ) {
