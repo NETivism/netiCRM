@@ -77,4 +77,5 @@ CKEDITOR.editorConfig = function(config) {
    */
   config.bodyClass = '';
   config.bodyId = '';
+  config.skin = 'BootstrapCK-Skin';
 };
