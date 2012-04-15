@@ -92,10 +92,10 @@
            <div class="content">
              {if $n|substr:0:3 eq 'im-'}
                {assign var="provider" value=$n|cat:"-provider_id"}
-               {$form.$provider.html}&nbsp;
+               {$form.$provider.html}
              {else if $n|substr:0:4 eq 'url-'}
                {assign var="websiteType" value=$n|cat:"-website_type_id"}
-               {$form.$websiteType.html}&nbsp;
+               {$form.$websiteType.html}
              {/if}
              {if $n eq 'email_greeting' or  $n eq 'postal_greeting' or $n eq 'addressee'}
                 {include file="CRM/Profile/Form/GreetingType.tpl"}  
