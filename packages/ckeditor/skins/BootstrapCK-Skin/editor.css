@@ -1086,3 +1086,10 @@ visibility:inherit;
 html.cke_skin_BootstrapCK-Skin_container{
 visibility:visible;
 }
+
+
+.cke_skin_BootstrapCK-Skin #cke_top_msg_html,
+.cke_skin_BootstrapCK-Skin #cke_contents_msg_html,
+.cke_skin_BootstrapCK-Skin #cke_bottom_msg_html{
+  background-color: whiteSmoke;
+}
