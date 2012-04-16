@@ -133,6 +133,12 @@ function _civicrm_neweb_process_all($is_test, $now, $hour, $yesterday){
       variable_set('civicrm_neweb_uploaded'.$test, $now);
     }
   }
+  if(variable_get('civicrm_neweb_end_date_calculate'.$test, 0) < $yesterday){
+    // doing upload stuff
+    if(civicrm_neweb_end_date_calculate($is_test)){
+      variable_set('civicrm_neweb_end_date_calculate'.$test, $now);
+    }
+  }
 
   // ezpay contributions
   if($now - variable_get('civicrm_neweb_ezpay', 0) > 7200){
