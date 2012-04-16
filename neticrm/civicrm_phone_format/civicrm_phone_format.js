@@ -19,7 +19,7 @@ $(document).ready(function(){
     }
     else{
     // normal
-      $(this).mask("+886-999999999?#*****");
+      $(this).mask("+886-99999999?9#*****");
     }
     // add tip when focus
     $(this).focus(function(){
