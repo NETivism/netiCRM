@@ -75,9 +75,9 @@ function civicrm_html_head()
     if ( isset( $config->customCSSURL ) && ! empty( $config->customCSSURL ) ) {
         $head  = "<style type=\"text/css\">@import url({$config->customCSSURL});</style>\n";
     } else {
-        drupal_add_css(drupal_get_path('module', 'civicrm') . '/../css/deprecate.css'); 
+//        drupal_add_css(drupal_get_path('module', 'civicrm') . '/../css/deprecate.css'); 
         drupal_add_css(drupal_get_path('module', 'civicrm') . '/../css/civicrm.css'); 
-        drupal_add_css(drupal_get_path('module', 'civicrm') . '/../css/extras.css'); 
+//        drupal_add_css(drupal_get_path('module', 'civicrm') . '/../css/extras.css'); 
     }
     return $head;
 }
