@@ -150,6 +150,7 @@ class CRM_Core_Payment_NewebIPN extends CRM_Core_Payment_BaseIPN {
         $recur->next_sched_contribution = date('YmdHis', $next_recur);
         $recur->start_date = $recur->next_sched_contribution;
         $recur->cycle_day = $cycle_day;
+        $recur->contribution_status_id = 2;
         $recur->save();
         CRM_Core_Error::debug_log_message( "Done the recurring object save." );
         CRM_Core_DAO::executeQuery("INSERT INTO civicrm_contribution_neweb_recur (recur_id,order_num,cycle) VALUES ($recur->id, $order_num, 0)");
