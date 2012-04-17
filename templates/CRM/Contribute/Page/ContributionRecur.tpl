@@ -31,22 +31,22 @@
         <h3>{ts}View Recurring Payment{/ts}</h3>
         <div class="crm-block crm-content-block crm-recurcontrib-view-block">
           <table class="crm-info-panel">
-            <tr><td class="label">{ts}Amount:{/ts}</td><td>{$recur.amount} {$recur.currency}</td></tr>
-            <tr><td class="label">{ts}Frequency:{/ts}</td><td>every {$recur.frequency_interval} {$recur.frequency_unit}</td></tr>
-            <tr><td class="label">{ts}Installments:{/ts}</td><td>{$recur.installments}</td></tr>
-            <tr><td class="label">{ts}Start date:{/ts}</td><td>{$recur.start_date|crmDate}</td></tr>
-            <tr><td class="label">{ts}Creation date:{/ts}</td><td>{$recur.create_date|crmDate}</td></tr>
-            {if $recur.modified_date}<tr><td class="label">{ts}Modified date:{/ts}</td><td>{$recur.modified_date|crmDate}</td></tr>{/if}
-            {if $recur.cancel_date}<tr><td class="label">{ts}Cancel date:{/ts}</td><td>{$recur.cancel_date|crmDate}</td></tr>{/if}
-            {if $recur.cancel_date}<tr><td class="label">{ts}End date:{/ts}</td><td>{$recur.end_date|crmDate}</td></tr>{/if}
-            {if $recur.processor_id}<tr><td class="label">{ts}Processor ID:{/ts}</td><td>{$recur.processor_id}</td></tr>{/if}
-            <tr><td class="label">{ts}Transaction ID:{/ts}</td><td>{$recur.trxn_id}</td></tr>
-            {if $recur.invoice_id}<tr><td class="label">{ts}Invoice ID:{/ts}</td><td>{$recur.invoice_id}</td></tr>{/if}
+            <tr><td class="label">{ts}Amount{/ts}</td><td>{$recur.amount} {$recur.currency}</td></tr>
+            <tr><td class="label">{ts}Frequency{/ts}</td><td>every {$recur.frequency_interval} {$recur.frequency_unit}</td></tr>
+            <tr><td class="label">{ts}Installments{/ts}</td><td>{$recur.installments}</td></tr>
+            <tr><td class="label">{ts}Start date{/ts}</td><td>{$recur.start_date|crmDate}</td></tr>
+            <tr><td class="label">{ts}Creation date{/ts}</td><td>{$recur.create_date|crmDate}</td></tr>
+            {if $recur.modified_date}<tr><td class="label">{ts}Modified date{/ts}</td><td>{$recur.modified_date|crmDate}</td></tr>{/if}
+            {if $recur.cancel_date}<tr><td class="label">{ts}Cancel date{/ts}</td><td>{$recur.cancel_date|crmDate}</td></tr>{/if}
+            {if $recur.cancel_date}<tr><td class="label">{ts}End date{/ts}</td><td>{$recur.end_date|crmDate}</td></tr>{/if}
+            {if $recur.processor_id}<tr><td class="label">{ts}Processor ID{/ts}</td><td>{$recur.processor_id}</td></tr>{/if}
+            <tr><td class="label">{ts}Transaction ID{/ts}</td><td>{$recur.trxn_id}</td></tr>
+            {if $recur.invoice_id}<tr><td class="label">{ts}Invoice ID{/ts}</td><td>{$recur.invoice_id}</td></tr>{/if}
             <tr><td class="label">{ts}Cycle day:{/ts}</td><td>{$recur.cycle_day}</td></tr>
-            {if $recur.contribution_status_id neq 3}<tr><td class="label">{ts}Next contribution:{/ts}</td><td>{$recur.next_sched_contribution|crmDate}</td></tr>{/if}
-            <tr><td class="label">{ts}Failure count:{/ts}</td><td>{$recur.failure_count}</td></tr>
-            {if $recur.invoice_id}<tr><td class="label">{ts}Failure retry date:{/ts}</td><td>{$recur.next_sched_contribution|crmDate}</td></tr>{/if}
-            <tr><td class="label">{ts}Auto renew:{/ts}</td><td>{if $recur.auto_renew}true{else}false{/if}</td></tr>
+            {if $recur.contribution_status_id neq 3}<tr><td class="label">{ts}Next contribution{/ts}</td><td>{$recur.next_sched_contribution|crmDate}</td></tr>{/if}
+            <tr><td class="label">{ts}Failure count{/ts}</td><td>{$recur.failure_count}</td></tr>
+            {if $recur.invoice_id}<tr><td class="label">{ts}Failure retry date{/ts}</td><td>{$recur.next_sched_contribution|crmDate}</td></tr>{/if}
+            <tr><td class="label">{ts}Auto renew{/ts}</td><td>{if $recur.auto_renew}true{else}false{/if}</td></tr>
             {if $recur.payment_processor}<tr><td class="label">{ts}Payment processor:{/ts}</td><td>{$recur.payment_processor}</td></tr>{/if}
           </table>
           <div class="crm-submit-buttons"><input type="button" name='cancel' value="{ts}Done{/ts}" onclick="location.href='{crmURL p='civicrm/contact/view' q='action=browse&selectedChild=contribute'}';"/></div>
