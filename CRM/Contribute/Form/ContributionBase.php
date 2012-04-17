@@ -538,6 +538,11 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form
         $config->defaultCurrency = CRM_Utils_Array::value( 'currency', 
                                                            $this->_values, 
                                                            $config->defaultCurrency );
+
+        //do check for cancel recurring and clean db, CRM-7696
+        if ( CRM_Utils_Request::retrieve( 'cancel', 'Boolean', CRM_Core_DAO::$_nullObject ) ) {
+            self::cancelRecurring( );
+        }
     }
 
     /** 
@@ -832,6 +837,30 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form
         }
     }
 
+    /**
+     * In case user cancel recurring contribution,
+     * When we get the control back from payment gate way
+     * lets delete the recurring and related contribution.
+     *
+     **/
+    public function cancelRecurring( ) 
+    {
+        $isCancel = CRM_Utils_Request::retrieve( 'cancel',  'Boolean',  CRM_Core_DAO::$_nullObject );
+        if ( $isCancel ) {
+            $isRecur  = CRM_Utils_Request::retrieve( 'isRecur', 'Boolean',  CRM_Core_DAO::$_nullObject );
+            $recurId  = CRM_Utils_Request::retrieve( 'recurId', 'Positive', CRM_Core_DAO::$_nullObject );
+            //clean db for recurring contribution.
+            if ( $isRecur && $recurId ) {
+                require_once 'CRM/Contribute/BAO/ContributionRecur.php';
+                CRM_Contribute_BAO_ContributionRecur::deleteRecurContribution( $recurId );
+            }
+            $contribId = CRM_Utils_Request::retrieve( 'contribId', 'Positive', CRM_Core_DAO::$_nullObject );
+            if ( $contribId ) {
+                require_once 'CRM/Contribute/BAO/Contribution.php';
+                CRM_Contribute_BAO_Contribution::deleteContribution( $contribId );
+            }
+        }
+    }
 }
 
 

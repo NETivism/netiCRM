@@ -85,6 +85,46 @@ class CRM_Contribute_Page_Tab extends CRM_Core_Page
         }
         return self::$_links;
     } //end of function
+
+     /**
+     * This method returns the links that are given for recur search row.
+     * currently the links added for each row are 
+     * 
+     * - View
+     * - Edit
+     * - Cancel
+     *
+     * @return array
+     * @access public
+     *
+     */
+    static function &recurLinks()
+    {
+        if (!(self::$_links)) {
+            self::$_links = array(
+                                  CRM_Core_Action::VIEW => array(
+                                                                    'name'  => ts('View'),
+                                                                    'title' => ts('View Recurring Payment'),
+                                                                    'url'   => 'civicrm/contact/view/contributionrecur',
+                                                                    'qs'    => 'reset=1&id=%%id%%&cid=%%cid%%'
+                                                                    ),
+                                  CRM_Core_Action::UPDATE => array(
+                                                                    'name'  => ts('Edit'),
+                                                                    'title' => ts('Edit Recurring Payment'),
+                                                                    'url'   => 'civicrm/contact/view/contributionrecur',
+                                                                    'qs'    => 'reset=1&action=update&id=%%id%%&cid=%%cid%%'
+                                                                    ),
+                                  CRM_Core_Action::DISABLE => array(
+                                                                    'name'  => ts('Cancel'),
+                                                                    'title' => ts('Cancel'),
+                                                                    'extra' => 'onclick = "enableDisable( %%id%%,\''. 'CRM_Contribute_BAO_ContributionRecur' . '\',\'' . 'enable-disable' . '\' );"',
+                                                                    'ref'   => 'disable-action'
+                                                                    ),
+                                 );
+        }
+        return self::$_links;
+    } // end function
+
     
     /**
      * This function is called when action is browse
@@ -95,6 +135,8 @@ class CRM_Contribute_Page_Tab extends CRM_Core_Page
     function browse( ) 
     {
         require_once 'CRM/Contribute/BAO/Contribution.php';
+        require_once 'CRM/Contribute/BAO/ContributionRecur.php';
+        require_once 'CRM/Core/BAO/PaymentProcessor.php';
 
         // add annual contribution
         $annual = array( );
@@ -112,6 +154,30 @@ class CRM_Contribute_Page_Tab extends CRM_Core_Page
         $controller->set( 'context', 'contribution' ); 
         $controller->process( );
         $controller->run( );
+
+        // add recurring block
+        $action = array_sum(array_keys($this->recurLinks( )));
+        $params = array( );
+        $params =  CRM_Contribute_BAO_ContributionRecur::getRecurContributions ( $this->_contactId );
+        if ( ! empty($params) ) {
+
+            foreach( $params as $ids => $recur ) {
+                // no action allowed if it's not active
+                $params[$ids]['is_active'] = ($recur['contribution_status_id'] != 3);
+
+                if ($params[$ids]['is_active'] ) {
+                    $params[$ids]['action'] = CRM_Core_Action::formLink(self::recurLinks( ), $action,
+                                                                        array('cid'              => $this->_contactId,
+                                                                              'id'               => $ids,
+                                                                              'cxt'              => 'contribution')
+                                                                       );
+                }
+            }
+            // assign vars to templates
+            $this->assign('action', $this->_action);
+            $this->assign('recurRows', $params);
+            $this->assign('recur', true);
+        }
         
         //add honor block
         // form all action links	
