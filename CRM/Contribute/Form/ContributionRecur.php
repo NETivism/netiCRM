@@ -94,10 +94,10 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form
     
         // define the fields
         $this->add('text', 'amount' , ts('Amount') , array('size' => 20), true);
-        $this->add('text', 'currency' , ts('Currency') , array('size' => 20), true);
-        $this->add('text', 'frequency_interval' , ts('Frequency interval') , array('size' => 20), true);
-        $this->add('text', 'frequency_unit' , ts('Frequency unit') , array('size' => 20), true);
-        $this->add('text', 'cycle_day' , ts('Cycle day') , array('size' => 20), true);
+        $this->add('text', 'currency' , ts('Currency') , array('size' => 20, 'readonly' => 'readonly'), true);
+        $this->add('text', 'frequency_interval' , ts('Frequency Interval') , array('size' => 20, 'readonly' => 'readonly'), true);
+        $this->add('text', 'frequency_unit' , ts('Frequency Unit') , array('size' => 20, 'readonly' => 'readonly'), true);
+        $this->add('text', 'cycle_day' , ts('Cycle Day') , array('size' => 20, 'readonly' => 'readonly'), true);
         
         // define the buttons
         $this->addButtons( array(
