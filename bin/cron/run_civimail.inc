@@ -5,7 +5,9 @@
  */
 function run_civimail() {
   $cmspath = $_SERVER['DOCUMENT_ROOT'];
-  chdir($cmspath);
+  if($cmspath){
+    chdir($cmspath);
+  }
   require_once 'CRM/Mailing/BAO/Job.php';
   $config =& CRM_Core_Config::singleton(); 
     
