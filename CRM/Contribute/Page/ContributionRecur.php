@@ -81,8 +81,8 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page
      */
     function edit( )
     {
-        $controller = new CRM_Core_Controller_Simple( 'CRM_Contribute_Form_ContributionRecur', 
-            'Create Contribution', $this->_action );
+        $controller = new CRM_Core_Controller_Simple( 'CRM_Contribute_Form_ContributionRecur', 'Create Contribution', $this->_action );
+        $controller->setEmbedded( true );
         
         // set the userContext stack
         $session = CRM_Core_Session::singleton();
@@ -92,6 +92,7 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page
         
         $controller->set( 'id' , $this->_id );
         $controller->set( 'cid', $this->_contactId );
+        $controller->process( );
         
         return $controller->run( );
     }
