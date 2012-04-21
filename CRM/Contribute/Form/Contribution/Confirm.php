@@ -1022,6 +1022,7 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
         $recurParams['frequency_unit']     = $params['frequency_unit'];
         $recurParams['frequency_interval'] = $params['frequency_interval'];
         $recurParams['installments']       = $params['installments'];
+        $recurParams['contribution_type_id'] = $params['contribution_type_id'];
 
         if( $this->_action & CRM_Core_Action::PREVIEW ) {
             $recurParams["is_test"] = 1;

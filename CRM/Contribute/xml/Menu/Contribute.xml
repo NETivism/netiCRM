@@ -163,6 +163,11 @@
      <page_callback>CRM_Contribute_Page_Tab</page_callback>
      <weight>1</weight>
   </item>
+   <item>
+     <path>civicrm/contact/view/contributionrecur</path>
+     <title>Recurring Contributions</title>
+     <page_callback>CRM_Contribute_Page_ContributionRecur</page_callback>
+  </item>
   <item>
      <path>civicrm/contact/view/contribution/additionalinfo</path>
      <title>Additional Info</title>

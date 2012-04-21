@@ -39632,3 +39632,9 @@ msgstr "沒發現重複聯絡人。"
 
 msgid "Submit"
 msgstr "送出"
+
+msgid "Are you sure you want to mark this recurring contribution as cancelled?"
+msgstr "你確定要將這筆定期定額捐款標註為取消嗎？"
+
+msgid "WARNING - Cancelling a recurring contribution should only be used if your gateway payment is not capable of sending this information automatically to CiviCRM."
+msgstr ""

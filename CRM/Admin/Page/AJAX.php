@@ -200,6 +200,14 @@ class CRM_Admin_Page_AJAX
                 $status = ts('Are you sure you want to disable this \'%1\' record ?', array(1 => $label));
                 break;
 
+            case 'CRM_Contribute_BAO_ContributionRecur':
+                $status = ts('Are you sure you want to mark this recurring contribution as cancelled?');
+                /* // We don't integrate with neweb yet.
+                $status .= '<br /><br />' . ts('WARNING - Cancelling a recurring contribution should only be used if your gateway payment is not capable of sending this information automatically to CiviCRM.');
+                */
+                break;
+    
+
             default:
                 $status = ts('Are you sure you want to disable this record?');
                 break;
