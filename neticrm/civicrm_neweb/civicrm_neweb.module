@@ -121,7 +121,7 @@ function _civicrm_neweb_process_all($is_test, $now, $hour, $yesterday){
       variable_set('civicrm_neweb_response'.$test, $now);
     }
   }
-  if($hour >= 11 && $hour <= 15 && variable_get('civicrm_neweb_transaction'.$test, 0) < $yesterday){
+  if($hour >= 12 && $hour <= 20 && variable_get('civicrm_neweb_transaction'.$test, 0) < $yesterday){
     // get yesterday transaction result
     if(civicrm_neweb_process_transaction($is_test)){
       variable_set('civicrm_neweb_transaction'.$test, $now);
@@ -224,3 +224,91 @@ function _civicrm_neweb_instrument(){
   );
 }
 
+/**
+ * mode - put / get
+ */
+function _civicrm_neweb_ftp($mode, $local, $remote, $host, $user, $pass){
+
+  $cid = @ftp_connect($host);
+  $login = @ftp_login($cid, $user, $pass);
+  if(!$login){
+    watchdog('civicrm_neweb', "Unable to login FTP. host: {$host} , user: {$user}", WATCHDOG_ERROR);  
+  }
+  else{
+    if($mode == 'put'){
+      $success = @ftp_put($cid, $remote, $local, FTP_ASCII);
+    }
+    elseif($mode == 'get'){
+      $pass = $pass ? ':'.$pass : '';
+      $contents = @file_get_contents("ftp://".$user.$pass."@".$host."/".$remote);
+      if($contents){
+        $success = @file_put_contents($local, $contents);
+      }
+    }
+  }
+  return $success;
+}
+/**
+ * mode - put / get / list
+ */
+function _civicrm_neweb_sftp($mode, $local, $remote, $host, $user, $pass){
+  $path = drupal_get_path('module', 'civicrm_neweb'). '/phpseclib/';
+  set_include_path(get_include_path() . PATH_SEPARATOR . getcwd().base_path().rtrim($path, '/'));
+
+  include_once($path.'Net/SSH2.php');
+  include_once($path.'Net/SFTP.php');
+
+  $sftp = new Net_SFTP($host);
+  if (!$sftp->login($user, $pass)) {
+    watchdog('civicrm_neweb', "Unable to login SFTP. host: {$host} , user: {$user}", WATCHDOG_ERROR);  
+  }
+  else{
+    switch($mode){
+      case 'put':
+        $data = file_get_contents($local);
+        $success = $sftp->put($remote, $data);
+        break;
+      case 'get':
+        $success = $sftp->get($remote, $local);
+        break;
+      case 'list':
+      default:
+        $success = $sftp->rawlist($remote);
+        break;
+    }
+  }
+  /* debug usage
+  print '<pre>';
+  print_r($sftp->getSFTPLog());
+  print_r($sftp->getSFTPErrors());
+  print '</pre>';
+  */
+  return $success;
+}
+
+/**
+ * Connect for neweb
+ *
+ * @id Neweb store id
+ * @local local file full path
+ * @mode put, get, list
+ * @is_test test contribution or not
+ */
+function _civicrm_neweb_connect($id, $local, $mode, $is_test){
+  $dir = $mode ? 'import' : 'output';
+  $mode = $mode ? 'put' : 'get';
+  $ret = false;
+
+  if($is_test){
+    $function = '_civicrm_neweb_ftp';
+  }
+  else{
+    $function = '_civicrm_neweb_sftp';
+  }
+
+  $remote = $dir.".".basename($local);
+  $ftp = variable_get("civicrm_neweb_ftp", array());
+  $ret = call_user_func($function, $mode, $local, $remote, $ftp['ftp_host'], $ftp['ftp_user'], $ftp['ftp_passowrd']);
+
+  return $ret;
+}

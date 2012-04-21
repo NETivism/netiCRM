@@ -30,7 +30,7 @@ function civicrm_neweb_process_response($is_test, $now = NULL){
     $response_str = file_get_contents($newebpath."/".$filename);
   }
   else{
-    $response_str = _civicrm_neweb_sslftp($payment['user_name'], $newebpath.'/'.$filename, NEWEB_DOWNLOAD, $is_test);
+    $response_str = _civicrm_neweb_connect($payment['user_name'], $newebpath.'/'.$filename, NEWEB_DOWNLOAD, $is_test);
   }
 
   if($response_str === false){
@@ -123,7 +123,7 @@ function civicrm_neweb_process_transaction($is_test, $now = NULL){
     $transaction_str  = file_get_contents($newebpath."/".$filename);
   }
   else{
-    $transaction_str = _civicrm_neweb_sslftp($payment['user_name'], $newebpath.'/'.$filename, NEWEB_DOWNLOAD, $is_test);
+    $transaction_str = _civicrm_neweb_connect($payment['user_name'], $newebpath.'/'.$filename, NEWEB_DOWNLOAD, $is_test);
   }
 
   if($transaction_str === false){
@@ -302,7 +302,7 @@ function civicrm_neweb_process_upload($is_test){
     $newebpath = _civicrm_neweb_path($is_test);
     $filename = 'RP_'.$payment['user_name'].'_'.date('Ymd').'.dat';
     file_save_data($data, $newebpath.'/'.$filename, FILE_EXISTS_REPLACE);
-    $uploaded =  _civicrm_neweb_sslftp($payment['user_name'], $newebpath.'/'.$filename, NEWEB_UPLOAD, $is_test);
+    $uploaded =  _civicrm_neweb_connect($payment['user_name'], $newebpath.'/'.$filename, NEWEB_UPLOAD, $is_test);
     if($uploaded){
       $sql = "UPDATE civicrm_contribution_neweb_recur SET upload=$now WHERE recur_id IN (".implode(',', array_keys($rows)).")";
     }
