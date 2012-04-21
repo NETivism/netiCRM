@@ -45,6 +45,11 @@ class CRM_Core_I18n
      */
     private $_phpgettext = null;
 
+     /**
+     * Whether we are using native gettext or not.
+     */
+    private $_nativegettext = false;
+
     /**
      * A locale-based constructor that shouldn't be called from outside of this class (use singleton() instead).
      *
@@ -55,7 +60,29 @@ class CRM_Core_I18n
     {
         if ($locale != '' and $locale != 'en_US') {
             $config = CRM_Core_Config::singleton();
-            $streamer = new FileReader(implode(DIRECTORY_SEPARATOR, array($config->gettextResourceDir, $locale, 'civicrm.mo')));
+
+            if (defined('CIVICRM_GETTEXT_NATIVE') && CIVICRM_GETTEXT_NATIVE && function_exists('gettext')) {
+                require_once 'CRM/Core/I18n/NativeGettext.php';
+
+                $this->_nativegettext = true;
+
+                $locale .= '.utf8';
+                putenv("LANG=$locale");
+                setlocale(LC_ALL, $locale);
+                
+                bindtextdomain('civicrm', $config->gettextResourceDir);
+                bind_textdomain_codeset('civicrm', 'UTF-8');
+                textdomain('civicrm');
+
+                $this->_phpgettext = new CRM_Core_I18n_NativeGettext();
+                return;
+            }
+
+            // Otherwise, use PHP-gettext
+            require_once 'PHPgettext/streams.php';
+            require_once 'PHPgettext/gettext.php';
+    
+            $streamer = new FileReader($config->gettextResourceDir . $locale . DIRECTORY_SEPARATOR . 'LC_MESSAGES' . DIRECTORY_SEPARATOR . 'civicrm.mo');
             $this->_phpgettext = new gettext_reader($streamer);
         }
     }
@@ -262,6 +289,15 @@ class CRM_Core_I18n
     }
 
     /**
+     * Returns whether gettext is running natively or using PHP-Gettext.
+     *
+     * @return bool True if gettext is native
+     */
+    function isNative() {
+        return $this->_nativegettext;
+    }
+
+    /**
      * Localize (destructively) array values.
      *
      * @param  $array array  the array for localization (in place)
@@ -270,6 +306,12 @@ class CRM_Core_I18n
      */
     function localizeArray(&$array, $params = array())
     {
+        global $tsLocale;
+
+        if ($tsLocale == 'en_US') {
+            return;
+        }
+
         foreach ($array as &$value) {
             if ($value) $value = ts($value, $params);
         }
