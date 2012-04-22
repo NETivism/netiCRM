@@ -41,7 +41,8 @@ class CRM_ParticipantProcessor
            event.requires_approval
      FROM  civicrm_participant participant
 LEFT JOIN  civicrm_event event ON ( event.id = participant.event_id )
-    WHERE  participant.status_id IN {$statusIds}
+    WHERE  participant.status_id IN {$statusIds} AND
+           event.end_date > NOW()
  ORDER BY  participant.register_date, participant.id 
 ";
         $dao =& CRM_Core_DAO::executeQuery( $query );
