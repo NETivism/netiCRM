@@ -90,6 +90,8 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
         } else {
             CRM_Utils_Hook::post( 'create', 'ContributionRecur', $recurring->id, $recurring );
         }
+
+        return $result;
     }
 
     /**
