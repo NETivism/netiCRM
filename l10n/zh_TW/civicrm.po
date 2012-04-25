@@ -3279,7 +3279,7 @@ msgstr "(偏好的)"
 
 #: CRM/Contact/Form/Task/EmailCommon.php CRM/Contact/Page/View/Email.php
 msgid "Your user record does not have a valid email address"
-msgstr "您的使用者記錄並沒有一個有效的Email信箱"
+msgstr "請您先設定好自己的Email，才能發信給其他人喔。"
 
 #: CRM/Contact/Form/Task/EmailCommon.php CRM/Report/Form/Instance.php
 msgid "CC"
