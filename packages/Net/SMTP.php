@@ -339,6 +339,12 @@ class Net_SMTP
             return true;
         }
 
+        // CRM-6718: 4xx are transient errors, which should result in a separate bounce
+        // if made permanent, so it should be safe to not treat them as bounces just now
+        if ($this->_code >= 400 and $this->_code < 500) {
+            return true;
+        }
+
         /* 535: Authentication failed */
         if ($this->_code == 535) {
             $this->disconnect();
