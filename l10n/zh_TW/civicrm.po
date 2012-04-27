@@ -27886,7 +27886,7 @@ msgstr "註冊確認及收據"
 
 #: templates/CRM/Event/Form/EventFees.tpl
 msgid "Registration Confirmation"
-msgstr "註冊確認及收據"
+msgstr "登記確認"
 
 #: templates/CRM/Event/Form/EventFees.tpl
 msgid "Send Confirmation and Receipt"
@@ -27898,11 +27898,11 @@ msgstr "傳送確認"
 
 #: templates/CRM/Event/Form/EventFees.tpl
 msgid "Automatically email a confirmation and receipt to %1?"
-msgstr "自動寄送確認函及收據給%1？"
+msgstr "自動寄送通知及收據給%1？"
 
 #: templates/CRM/Event/Form/EventFees.tpl
 msgid "Automatically email a confirmation to %1?"
-msgstr "自動寄送確認函給%1？"
+msgstr "自動寄送通知給%1？"
 
 #: templates/CRM/Event/Form/EventFees.tpl
 msgid "Enter a message you want included at the beginning of the confirmation email. EXAMPLE: 'Thanks for registering for this event.'"
