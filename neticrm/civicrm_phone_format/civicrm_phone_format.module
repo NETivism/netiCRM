@@ -6,7 +6,7 @@ function civicrm_phone_format_civicrm_buildForm($formName, &$form) {
   static $add;
 
   if($_GET['q'] != 'civicrm/event/register' && $_GET['q'] != 'civicrm/profile/create' && $_GET['q']!= 'civicrm/contribute/transact'){
-//    return;
+    return;
   }
 
   if(!$add){
