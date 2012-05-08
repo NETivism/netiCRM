@@ -89,6 +89,16 @@ function civicrm_uninstall( ) {
 
     require_once 'CRM/Core/DAO.php';
     CRM_Core_DAO::dropAllTables( );
+
+    // delete civicrm.settings.php
+    $civicrm_settings_file = conf_path().'/civicrm.settings.php';
+    $res = file_delete($civicrm_settings_file);
+    if(!$res){
+      drupal_set_message('You need to delete civicrm.settings.php file manually.', 'error');
+    }
+    
+    // remove whole civicrm directory
+    civicrm_recursive_rmdir(file_create_path('civicrm'));
 }
 
 /**
@@ -156,3 +166,98 @@ function civicrm_enable( ) {
 function civicrm_update_6300(&$sandbox) {
   db_query("UPDATE {system} SET weight = 100 WHERE name = 'civicrm'");
 }
+
+function civicrm_requirements($phase){
+  if ($phase == 'install') {
+    $memory_limit = ini_get('memory_limit');
+    print $memory_limit;
+    if ($memory_limit && $memory_limit != -1 && parse_size($memory_limit) < parse_size('128M')){
+      $problem['civicrm_memory_limit'] = array(
+        'title' => t('CiviCRM PHP memory limit'),
+        'value' => $memory_limit,
+        'severity' => REQUIREMENT_ERROR,
+        'description' => t('CiviCRM Install Error: Consider increasing your PHP memory limit to %memory_minimum_limit to help prevent errors in the installation process.', array('%memory_minimum_limit' => '128M')),
+      );
+    }
+
+    // test InnoDB
+    $result = db_query( "SHOW variables like 'have_innodb'");
+    if ( $result ) {
+      $have_innodb = db_fetch_object( $result );
+      if ( strtolower( $have_innodb->Value) != 'yes' ) {
+        $problem['civicrm_have_innodb'] = array(
+          'title' => t('CiviCRM Need InnoDB'),
+          'description' => t('CiviCRM Install Error: Please check your InnoDB enabled in MySQL.'),
+          'severity' => REQUIREMENT_ERROR,
+        );
+      }
+    }
+    
+    // test civicrm.settings.php write permissions
+    require_once './includes/install.inc';
+    $conf_path = conf_path();
+    $settings_file = $conf_path.'/civicrm.settings.php';
+    $passed = FALSE;
+    if (drupal_verify_install_file($conf_path, FILE_EXIST|FILE_WRITABLE, 'dir')) {
+      // Check to make sure a settings.php already exists.
+      if (!drupal_verify_install_file($settings_file, FILE_EXIST)) {
+        $passed = TRUE;
+      }
+      else{
+        $desc = t('CiviCRM Install Error: civicrm.settings.php already exists. Please remove previous installed civicrm.');
+      }
+    }
+    else{
+      $desc = t('CiviCRM Install Error: Please make sure you have write permission for install civicrm. Directory path: !path', array('!path' => $conf_path));
+    }
+    if(!$passed){
+      $problem['civicrm_setings'] = array(
+        'title' => t('CiviCRM Install Error: Please check your config path is writable(same as your settings.php).'),
+        'description' => $desc,
+        'severity' => REQUIREMENT_ERROR,
+      );
+    }
+
+    // check php-gettext enabled in php
+    if(!function_exists('gettext')){
+      $problem['civicrm_gettext'] = array(
+        'title' => t('CiviCRM Install Error: Please enable php-gettext extension.'),
+        'description' => 'Read more about how to install php-gettext here: http://php.net/manual/en/book.gettext.php',
+        'severity' => REQUIREMENT_ERROR,
+      );
+    }
+  } 
+  return $problem;
+}
+
+
+function civicrm_recursive_rmdir($directory, $empty = FALSE) {
+  if(substr($directory,-1) == '/'){
+    $directory = substr($directory,0,-1);
+  }
+  if(!file_exists($directory) || !is_dir($directory)){
+    return FALSE;
+  }
+  elseif(is_readable($directory)){
+    $handle = opendir($directory);
+    while (FALSE !== ($item = readdir($handle))) {
+      if($item != '.' && $item != '..') {
+        $path = $directory.'/'.$item;
+        if(is_dir($path)) {
+          civicrm_recursive_rmdir($path);
+        }
+        else{
+          unlink($path);
+        }
+      }
+    }
+    closedir($handle);
+    if($empty == FALSE){
+      if(!rmdir($directory)) {
+        return FALSE;
+      }
+    }
+  }
+  return TRUE;
+}
+
