@@ -105,7 +105,7 @@ $tables = orderTables( $tables );
 //echo "\n\n\n\n\n*****************************************************************************\n\n";
 //print_r(array_keys($tables));
 //exit(1);
-
+/*
 echo "Generating tests truncate file\n";
 
 $truncate = '<?xml version="1.0" encoding="UTF-8" ?>
@@ -122,6 +122,7 @@ fputs( $ft, $truncate );
 fclose( $ft );
 unset( $ft );
 unset( $truncate );
+*/
 
 $smarty->assign_by_ref( 'database', $database );
 $smarty->assign_by_ref( 'tables'  , $tables   );
@@ -218,65 +219,68 @@ $sample .= $smarty->fetch('civicrm_acl.tpl');
 file_put_contents($sqlCodePath . 'civicrm_sample.mysql', $sample);
 
 
-$beautifier = new PHP_Beautifier(); // create a instance
-$beautifier->addFilter('ArrayNested');
-$beautifier->addFilter('Pear'); // add one or more filters
-$beautifier->addFilter('NewLines', array( 'after' => 'class, public, require, comment' ) ); // add one or more filters
-$beautifier->setIndentChar(' ');
-$beautifier->setIndentNumber(4);
-$beautifier->setNewLine("\n");
+// 
+if(0){
+  $beautifier = new PHP_Beautifier(); // create a instance
+  $beautifier->addFilter('ArrayNested');
+  $beautifier->addFilter('Pear'); // add one or more filters
+  $beautifier->addFilter('NewLines', array( 'after' => 'class, public, require, comment' ) ); // add one or more filters
+  $beautifier->setIndentChar(' ');
+  $beautifier->setIndentNumber(4);
+  $beautifier->setNewLine("\n");
 
-foreach ( array_keys( $tables ) as $name ) {
-    $smarty->clear_all_cache();
-    echo "Generating $name as " . $tables[$name]['fileName'] . "\n";
-    $smarty->clear_all_assign( );
+  foreach ( array_keys( $tables ) as $name ) {
+      $smarty->clear_all_cache();
+      echo "Generating $name as " . $tables[$name]['fileName'] . "\n";
+      $smarty->clear_all_assign( );
 
-    $smarty->assign_by_ref( 'table', $tables[$name] );
-    $php = $smarty->fetch( 'dao.tpl' );
+      $smarty->assign_by_ref( 'table', $tables[$name] );
+      $php = $smarty->fetch( 'dao.tpl' );
 
-    $beautifier->setInputString( $php );
-    
-    if ( empty( $tables[$name]['base'] ) ) {
-        echo "No base defined for $name, skipping output generation\n";
-        continue;
-    }
+      $beautifier->setInputString( $php );
+      
+      if ( empty( $tables[$name]['base'] ) ) {
+          echo "No base defined for $name, skipping output generation\n";
+          continue;
+      }
 
-    $directory = $phpCodePath . $tables[$name]['base'];
-    createDir( $directory );
-    $beautifier->setOutputFile( $directory . $tables[$name]['fileName'] );
-    $beautifier->process(); // required
-    
-    $beautifier->save( );
+      $directory = $phpCodePath . $tables[$name]['base'];
+      createDir( $directory );
+      $beautifier->setOutputFile( $directory . $tables[$name]['fileName'] );
+      $beautifier->process(); // required
+      
+      $beautifier->save( );
+  }
+
+  echo "Generating CRM_Core_I18n_SchemaStructure...\n";
+  $columns = array();
+  $indices = array();
+  foreach ($tables as $table) {
+      if ($table['localizable']) {
+          $columns[$table['name']] = array();
+      } else {
+          continue;
+      }
+      foreach ($table['fields'] as $field) {
+          if ($field['localizable']) $columns[$table['name']][$field['name']] = $field['sqlType'];
+      }
+      if (isset($table['index'])) {
+          foreach ($table['index'] as $index) {
+              if ($index['localizable']) $indices[$table['name']][$index['name']] = $index;
+          }
+      }
+  }
+
+  $smarty->clear_all_cache();
+  $smarty->clear_all_assign();
+  $smarty->assign_by_ref('columns', $columns);
+  $smarty->assign_by_ref('indices', $indices);
+
+  $beautifier->setInputString($smarty->fetch('schema_structure.tpl'));
+  $beautifier->setOutputFile("$phpCodePath/CRM/Core/I18n/SchemaStructure.php");
+  $beautifier->process();
+  $beautifier->save();
 }
-
-echo "Generating CRM_Core_I18n_SchemaStructure...\n";
-$columns = array();
-$indices = array();
-foreach ($tables as $table) {
-    if ($table['localizable']) {
-        $columns[$table['name']] = array();
-    } else {
-        continue;
-    }
-    foreach ($table['fields'] as $field) {
-        if ($field['localizable']) $columns[$table['name']][$field['name']] = $field['sqlType'];
-    }
-    if (isset($table['index'])) {
-        foreach ($table['index'] as $index) {
-            if ($index['localizable']) $indices[$table['name']][$index['name']] = $index;
-        }
-    }
-}
-
-$smarty->clear_all_cache();
-$smarty->clear_all_assign();
-$smarty->assign_by_ref('columns', $columns);
-$smarty->assign_by_ref('indices', $indices);
-
-$beautifier->setInputString($smarty->fetch('schema_structure.tpl'));
-$beautifier->setOutputFile("$phpCodePath/CRM/Core/I18n/SchemaStructure.php");
-$beautifier->process();
-$beautifier->save();
 
 // add the Subversion revision to templates
 // use svnversion if the version was not specified explicitely on the commandline
