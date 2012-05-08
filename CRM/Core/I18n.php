@@ -61,7 +61,7 @@ class CRM_Core_I18n
         if ($locale != '' and $locale != 'en_US') {
             $config = CRM_Core_Config::singleton();
 
-            if (defined('CIVICRM_GETTEXT_NATIVE') && CIVICRM_GETTEXT_NATIVE && function_exists('gettext')) {
+            if (function_exists('gettext')) {
                 require_once 'CRM/Core/I18n/NativeGettext.php';
 
                 $this->_nativegettext = true;
