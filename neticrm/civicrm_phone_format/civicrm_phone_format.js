@@ -6,7 +6,7 @@ $(document).ready(function(){
     var n = $(this).attr('name');
     var re = /phone-(\w+)-(\d+)/g;
     var match = re.exec(n);
-    console.log(match);
+// console.log(match);
     var mobile = false;
     var tip;
     if(match != null){
