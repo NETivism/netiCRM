@@ -1,6 +1,6 @@
 <?php
 define( 'CIVICRM_UF'               , 'Drupal'        );
-global $db_url;
+$db_url = $GLOBALS['db_url'];
 if(is_array($db_url)){
   $dsn = str_replace("mysqli", "mysql", $db_url['default']);
 }
@@ -28,9 +28,13 @@ define('CIVICRM_TRACK_CIVIMAIL_REPLIES', false);
 define('CIVICRM_TAG_UNCONFIRMED', 'Unconfirmed');
 define('CIVICRM_PETITION_CONTACTS','Petition Contacts');
 
+$civi_root = $GLOBALS['civicrm_root'];
 global $civicrm_root;
-if(!$civicrm_root){
+if(!$civi_root){
   $civicrm_root = getcwd()."/sites/all/modules/civicrm";
+}
+else{
+  $civicrm_root = $civi_root;
 }
 $include_path = '.'        . PATH_SEPARATOR .
                 $civicrm_root . PATH_SEPARATOR . 

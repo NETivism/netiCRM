@@ -1,5 +1,12 @@
 <?php
+
+// don't let warning to interrupt civimail process
+ini_set('display_errors', 0);
+
+// use unicode from drupal library to prevent gmail double quote problem
 include_once '../../../../../includes/unicode.inc';
+
+// then, finally normal civimail can work.
 
 /*
  +--------------------------------------------------------------------+
