@@ -4,3 +4,5 @@ version = 3.3
 package = CiviCRM
 core = 6.x
 php = 5.2
+
+dependencies[] = transliteration
