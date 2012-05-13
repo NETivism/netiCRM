@@ -32,9 +32,8 @@
  * 10. $confdir/default
  *
  */
-
 function civicrm_conf_init() {
-    global $skipConfigError;
+    global $skipConfigErrori, $db_url;
 
     static $conf = '';
 
@@ -107,11 +106,16 @@ function civicrm_conf_init() {
     return $conf;
 }
 
-if($_SERVER['DOCUMENT_ROOT']){
-  global $civicrm_root;
-  $civicrm_root = $_SERVER['DOCUMENT_ROOT']."/sites/all/modules/civicrm";
+
+function civicrm_conf_set(){
+  global $civicrm_root, $db_url;
+  if($_SERVER['DOCUMENT_ROOT']){
+    $civicrm_root = $_SERVER['DOCUMENT_ROOT']."/sites/all/modules/civicrm";
+  }
+  if( file_exists(civicrm_conf_init( ) . '/settings.php')){
+    include_once civicrm_conf_init( ) . '/settings.php';
+  }
 }
-if( file_exists(civicrm_conf_init( ) . '/settings.php')){
-  include_once civicrm_conf_init( ) . '/settings.php';
-}
+
+civicrm_conf_set();
 include_once civicrm_conf_init( ) . '/civicrm.settings.php';
