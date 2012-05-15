@@ -506,6 +506,7 @@ LIMIT      0, 10
         }
         
         $statusTypes = CRM_Event_PseudoConstant::participantStatus();
+        $statusLabels = CRM_Event_PseudoConstant::participantStatus(null, null, 'label');
         $participantStatusSummary  = self::getParticipantCount( false, false, false, false, $eventIds, true );
         foreach ( $participantStatusSummary as $eventId => $values ) {
             foreach ( $values as $statusId => $statusValues ) {
@@ -514,6 +515,7 @@ LIMIT      0, 10
                 $urlString  = "reset=1&force=1&event=$eventId&status=$statusId"; 
                 $statusInfo =  array( 'url'   => CRM_Utils_System::url( 'civicrm/event/search', $urlString ),
                                       'name'  => $statusTypes[$statusId],
+                                      'label' => $statusLabels[$statusId],
                                       'count' => $count );
                 $eventSummary['events'][$eventId]['statuses'][$class][] = $statusInfo;
             }
