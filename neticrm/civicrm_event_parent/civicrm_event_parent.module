@@ -40,9 +40,9 @@ function civicrm_event_parent_civicrm_buildForm( $formName, &$form ) {
     $params = array('id' => $event_id);
     $result = civicrm_event_get($params);
     if(!$result['is_error'] && $parent_gid[$event_id]){
-      $relation = CRM_Core_DAO::executeQuery("SELECT * FROM civicrm_relationship_type WHERE id = ".$parent_gid[$event_id]['parent_gid']);
-      $relation->fetch();
       list($rTypeID, $rTypeDir) = explode('-', $parent_gid[$event_id]['parent_relation']);
+      $relation = CRM_Core_DAO::executeQuery("SELECT * FROM civicrm_relationship_type WHERE id = ".$rTypeID);
+      $relation->fetch();
       $relation_label = 'label_'.$rTypeDir;
       drupal_set_title($result['title']." - ".t("!relation profile form", array('!relation' => $relation->{$relation_label})));
     }
@@ -118,7 +118,7 @@ function civicrm_event_parent_civicrm_buildForm_regRegister( $formName, &$form )
 
 
   if(!empty($civicrm_event_parent_gid[$event_id]['parent_gid'])){
-    $relation = CRM_Core_DAO::executeQuery("SELECT * FROM civicrm_relationship_type WHERE id = ".$civicrm_event_parent_gid[$event_id]['parent_gid']);
+    $relation = CRM_Core_DAO::executeQuery("SELECT * FROM civicrm_relationship_type WHERE id = ".$rTypeID);
     $relation->fetch();
 
     // handling redirection
