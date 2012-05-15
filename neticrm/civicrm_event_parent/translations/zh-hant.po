@@ -1,0 +1,36 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: drupal (6.x)\n"
+"Language-Team: NETivism <info@netivism.com.tw>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Last-Translator: jimmy <jimmy@netivism.com.tw>\n"
+"X-Poedit-Language: Chinese\n"
+"X-Poedit-Country: TAIWAN\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"Plural-Forms: nplurals=2; plural=1;\n"
+
+msgid "!relation profile form"
+msgstr "!relation 基本資料表"
+
+msgid "Hello !name! After finish this form, we will create a relashionship between you and belows. If you are not below's !relationship, or you would like to register for yourself, please <a href='!register_link'>use alternative form to register this event</a>."
+msgstr "!name 您好！此張表格送出後，我們將您與下面填表資訊建立「!relationship」的關係。若您是為自己登記，請您<a href='!register_link'>使用另一張表格進行登記</a>。"
+
+msgid "Please continue enter this form. We suppose you are !relationship of belows, then we will create relationship between you and belows. If you would like to register for yourself, please <a href='!register_link'>use alternative form to register this event</a>."
+msgstr "請您繼續完成下列表格。這張表格假設您是下表聯絡人的「!relationship」。若您想為自己登記，應<a href='!register_link'>使用另一張表格進行登記</a>。"
+
+msgid "Parent Relationship"
+msgstr "代理登記為參加者的："
+
+msgid "Parent Profile"
+msgstr "代理登記表"
+
+msgid "Pre-registeration profile for registration agent. Using this option will also need to config relationship type below. This form will only collect contact data and build relationships. People who enter this form will not count in participant."
+msgstr "活動登記前，代理人需填寫的基本資料表單。若啟用這個選項，也需要調整下列選項，以建立兩個聯絡人的正確關係。這張表格記錄的聯絡人，將不會算進參加者。"
+
+msgid "Relationship type for registeration agent of participant. When enable this feature with profile option above, event registration will have two form to complete. One is profile crate form, another is normal event register. When a participant go join the event, they will bring to first form of profile to fill in agent information. After that, the form will redirect to normal event registeration. And these two individual will connect with seleted relationship of this option."
+msgstr "代理登記人與參加者的關係類型。當選擇關係後，也需要選擇對應的「代理登記表」。而活動報名便會產生兩張表格，一張表格用作記錄代理登記人，而另一張表格就是正常的活動報名表，則是記錄真正的參加者資訊。當填寫完代理登記表之後，系統會導引下一步為登記參加者資訊，且在完成參加者的登記後，系統便會建立這兩位聯絡人的關係。建立的關係，便是此選項需要選擇的關係類型。"
+
+msgid "You may need to visit this event registeration page by <strong>anonymous user</strong> and <strong>logged user</strong>, to make sure whole process fit your needs."
+msgstr "建議您設定此選項後，需要用<strong>登入</strong>、<strong>未登入使用者</strong>來進行活動的報名測試，以確認關係類型建立無誤。"

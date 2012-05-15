@@ -3279,7 +3279,7 @@ msgstr "(偏好的)"
 
 #: CRM/Contact/Form/Task/EmailCommon.php CRM/Contact/Page/View/Email.php
 msgid "Your user record does not have a valid email address"
-msgstr "您的使用者記錄並沒有一個有效的Email信箱"
+msgstr "請您先設定好自己的Email，才能發信給其他人喔。"
 
 #: CRM/Contact/Form/Task/EmailCommon.php CRM/Report/Form/Instance.php
 msgid "CC"
@@ -21435,15 +21435,15 @@ msgstr "文件及圖像這些聯絡人記錄附件被儲存的路線(例如聯�
 
 #: templates/CRM/Admin/Form/Setting/Path.tpl
 msgid "Path where site specific templates are stored if any. This directory is searched first if set. CiviCase configuration files can also be stored in this custom path."
-msgstr "特定範本的路徑已儲存（若有的話）。此目錄會優先被搜尋（如果設定）。個案的設定檔也可儲存在此的路徑中。"
+msgstr "自定版型的路徑。若該路徑中有對應的版型檔案，會套用該檔案，否則就會用預設的版型檔案。個案的設定檔也可儲存在此的路徑中。"
 
 #: templates/CRM/Admin/Form/Setting/Path.tpl
 msgid "Path where site specific PHP code files are stored if any. This directory is searched first if set."
-msgstr "網站自行存放的PHP程式碼位置。這個位置將會預先被包含進來。"
+msgstr "網站自行存放的PHP程式碼位置。這個位置將會在include時被預設近來（預設為空）"
 
 #: templates/CRM/Admin/Form/Setting/Path.tpl
 msgid "Path where CiviCRM extensions are stored."
-msgstr "CiviCRM套件目錄已被儲存。"
+msgstr "CiviCRM的延伸模組路徑（預設為空）。"
 
 #: templates/CRM/Admin/Form/Setting/Search.tpl
 msgid "If enabled, wildcards are automatically added to the beginning AND end of the search term when users search for contacts by Name. EXAMPLE: Searching for 'ada' will return any contact whose name includes those letters - e.g. 'Adams, Janet', 'Nadal, Jorge', etc. If disabled, a wildcard is added to the end of the search term only. EXAMPLE: Searching for 'ada' will return any contact whose last name begins with those letters - e.g. 'Adams, Janet' but NOT 'Nadal, Jorge'. Disabling this feature will speed up search significantly for larger databases, but users must manually enter wildcards ('%' or '_') to the beginning of the search term if they want to find all records which contain those letters. EXAMPLE: '%ada' will return 'Nadal, Jorge'."
@@ -27886,7 +27886,7 @@ msgstr "註冊確認及收據"
 
 #: templates/CRM/Event/Form/EventFees.tpl
 msgid "Registration Confirmation"
-msgstr "註冊確認及收據"
+msgstr "登記確認"
 
 #: templates/CRM/Event/Form/EventFees.tpl
 msgid "Send Confirmation and Receipt"
@@ -27898,11 +27898,11 @@ msgstr "傳送確認"
 
 #: templates/CRM/Event/Form/EventFees.tpl
 msgid "Automatically email a confirmation and receipt to %1?"
-msgstr "自動寄送確認函及收據給%1？"
+msgstr "自動寄送通知及收據給%1？"
 
 #: templates/CRM/Event/Form/EventFees.tpl
 msgid "Automatically email a confirmation to %1?"
-msgstr "自動寄送確認函給%1？"
+msgstr "自動寄送通知給%1？"
 
 #: templates/CRM/Event/Form/EventFees.tpl
 msgid "Enter a message you want included at the beginning of the confirmation email. EXAMPLE: 'Thanks for registering for this event.'"
@@ -39632,3 +39632,15 @@ msgstr "沒發現重複聯絡人。"
 
 msgid "Submit"
 msgstr "送出"
+
+msgid "Are you sure you want to mark this recurring contribution as cancelled?"
+msgstr "你確定要將這筆定期定額捐款標註為取消嗎？"
+
+msgid "WARNING - Cancelling a recurring contribution should only be used if your gateway payment is not capable of sending this information automatically to CiviCRM."
+msgstr ""
+
+msgid "File uploaded"
+msgstr "檔案已上傳"
+
+msgid "Event Confirmation"
+msgstr "活動登記確認"

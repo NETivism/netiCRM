@@ -105,7 +105,7 @@ function civicrm_instrument_civicrm_buildForm($form_name, &$form){
         }
         else{ // > 1
           $form->addElement('hidden', 'civicrm_instrument_id', 0);
-          drupal_add_js(_civicrm_instrument_js_page($radios), 'inline');
+          drupal_add_js(_civicrm_instrument_js_page($radios, $form), 'inline');
         }
       }
       break;
@@ -188,7 +188,7 @@ function _civicrm_instrument_js_admin($options, $entity_table){
 /**
  * Javascript generate helper function for page
  */
-function _civicrm_instrument_js_page($radios){
+function _civicrm_instrument_js_page($radios, &$form){
   if($_POST['qfKey'] && count($radios) > 1 && !$_POST['civicrm_instrument_id']){
     $error = TRUE;
     $error_str = "<span class='crm-error'>".ts('%1 is a required field.', array( 1 => ts("Payment Instrument")))."</span>";
@@ -202,13 +202,15 @@ function _civicrm_instrument_js_page($radios){
   $output .= "</div>";
 
   $output .= "<div class='content'>";
+  $key = '_'.$form->controller->_name.'_container';
+  $submitted_instrument_id = $_POST['civicrm_instrument_id'] ? $_POST['civicrm_instrument_id'] : $_SESSION[$key]['values']['Main']['civicrm_instrument_id'];
 
   foreach($radios as $value => $radio){
     $c++;
     if($c != 1){
       $error_str = '';
     }
-    $checked = $value == $_POST['civicrm_instrument_id'] ? "checked='checked'" : '';
+    $checked = $value == $submitted_instrument_id ? "checked='checked'" : '';
     $radio['description'] = str_replace(array("\n","\r"), array('',''), $radio['description']);
     $output .= "<div class='civicrm-instrument-dummy'><label><input type='radio' name='civicrm_instrument_id_dummy' value='".$value."' class='form-radio required' $checked />".$radio['label']."</label>$error_str<div class='hover-item'>".$radio['description']."</div></div>";
   }

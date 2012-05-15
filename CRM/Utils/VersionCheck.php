@@ -82,6 +82,9 @@ class CRM_Utils_VersionCheck
         $localfile = $civicrm_root . DIRECTORY_SEPARATOR . self::LOCALFILE_NAME;
         $cachefile = $config->uploadDir . self::CACHEFILE_NAME;
 
+        // Skip all civicrm version check. Because the stable version is not very stable ..
+        return;
+
         if ($config->versionCheck and file_exists($localfile)) {
             $localParts         = explode(' ', trim(file_get_contents($localfile)));
             $this->localVersion = $localParts[0];
