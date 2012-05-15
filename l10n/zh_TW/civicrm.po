@@ -1776,7 +1776,7 @@ msgstr "聯絡人類型"
 #: templates/CRM/Admin/Page/Options.tpl
 #: templates/CRM/Admin/Page/ParticipantStatus.tpl
 msgid "Counted?"
-msgstr "列入統計人數？"
+msgstr "佔據參加者名額？"
 
 #: CRM/Admin/Form/Options.php CRM/Admin/Form/ParticipantStatus.php
 #: CRM/Contact/DAO/Group.php CRM/Core/DAO/UFField.php CRM/Group/Form/Edit.php
@@ -22290,7 +22290,7 @@ msgstr "預留"
 #: templates/CRM/Admin/Page/ParticipantStatus.tpl
 #: templates/CRM/Event/Page/DashBoard.tpl
 msgid "Counted"
-msgstr "人數統計"
+msgstr "已佔名額"
 
 #: templates/CRM/Admin/Page/Options.tpl
 msgid "There are no option values entered. You can <a href='%1'>add one</a>."
@@ -28808,15 +28808,15 @@ msgstr "列出 %1 參加者"
 
 #: templates/CRM/Event/Page/DashBoard.tpl
 msgid "Not Counted"
-msgstr "未列入人數統計"
+msgstr "已佔據名額"
 
 #: templates/CRM/Event/Page/DashBoard.tpl
 msgid "Not Counted Due To Status"
-msgstr "未列入人數統計 (根據狀態)"
+msgstr "未佔據名額 (根據狀態)"
 
 #: templates/CRM/Event/Page/DashBoard.tpl
 msgid "Not Counted Due To Role"
-msgstr "未列入人數統計 (根據角色)"
+msgstr "未佔據名額 (根據角色)"
 
 #: templates/CRM/Event/Page/DashBoard.tpl
 msgid "(max %1)"
