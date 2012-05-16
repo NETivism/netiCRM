@@ -281,10 +281,12 @@ function _civicrm_neweb_sftp($mode, $local, $remote, $host, $user, $pass){
     }
   }
   // debug usage
+  /*
   print '<pre>';
   print_r($sftp->getSFTPLog());
   print_r($sftp->getSFTPErrors());
   print '</pre>';
+  */
   // call destructor to close connection
   unset($sftp);
 
