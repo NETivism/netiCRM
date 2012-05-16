@@ -30,6 +30,12 @@ $(document).ready(function(){
          */
         }
       });
+      $("#"+formid+" input[name*=email]").each(function(){
+        $(this).rules("add", {required:false,email:true});
+      });
+      $("#"+formid+" input[name*=url]").each(function(){
+        $(this).rules("add", {required:false,url:true});
+      });
       $("#"+formid+" input.required:visible:not([type=checkbox])").each(function(){
         $(this).rules("add", {required:true });
       });
@@ -51,12 +57,6 @@ $(document).ready(function(){
         $(this).valid();
       });
       */
-      $("#"+formid+" input[name*=email]").each(function(){
-        $(this).rules("add", {required:true,email:true});
-      });
-      $("#"+formid+" input[name*=url]").each(function(){
-        $(this).rules("add", {required:true,url:true});
-      });
     }
   });  
 });
