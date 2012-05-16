@@ -270,6 +270,9 @@ function _civicrm_neweb_sftp($mode, $local, $remote, $host, $user, $pass){
         break;
       case 'get':
         $success = $sftp->get($remote, $local);
+        if(file_exists($local)){
+          $success = file_get_contents($local);
+        }
         break;
       case 'list':
       default:
@@ -277,13 +280,20 @@ function _civicrm_neweb_sftp($mode, $local, $remote, $host, $user, $pass){
         break;
     }
   }
-  /* debug usage
+  // debug usage
   print '<pre>';
   print_r($sftp->getSFTPLog());
   print_r($sftp->getSFTPErrors());
   print '</pre>';
-  */
-  return $success;
+  // call destructor to close connection
+  unset($sftp);
+
+  if($success){
+    return $success;
+  }
+  else{
+    return false;
+  }
 }
 
 /**
@@ -301,14 +311,15 @@ function _civicrm_neweb_connect($id, $local, $mode, $is_test){
 
   if($is_test){
     $function = '_civicrm_neweb_ftp';
+    $ftp = variable_get("civicrm_neweb_ftp_test", array());
   }
   else{
     $function = '_civicrm_neweb_sftp';
+    $ftp = variable_get("civicrm_neweb_ftp", array());
   }
 
-  $remote = $dir.".".basename($local);
-  $ftp = variable_get("civicrm_neweb_ftp", array());
-  $ret = call_user_func($function, $mode, $local, $remote, $ftp['ftp_host'], $ftp['ftp_user'], $ftp['ftp_passowrd']);
+  $remote = $dir."/".basename($local);
+  $ret = call_user_func($function, $mode, $local, $remote, $ftp['ftp_host'], $ftp['ftp_user'], $ftp['ftp_password']);
 
   return $ret;
 }

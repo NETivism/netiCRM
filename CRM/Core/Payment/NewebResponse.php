@@ -19,25 +19,25 @@ function civicrm_neweb_response($prc, $src, $brc = NULL, $id = NULL){
   $error['nopaid'] = ts("Transaction failed. You won't be doing any charge of this transaction. Below is the detail of this failed transaction:");
   if($prc == 8){
 "contribution";
-    $error[$prc] = $this->prc($prc);
+    $error[$prc] = civicrm_neweb_prc($prc);
     $error[$prc] .= ': '.ts("This may occurred because you press the back button of browser. You can ignore this transaction, and try <a href='%1'>create a new one.</a>.", array($dup_link));
   }
   elseif($prc == 52){
-    $error[$prc] = $this->prc($prc);
+    $error[$prc] = civicrm_neweb_prc($prc);
     if($brc){
-      $error[$prc] .= ": ".$this->brc($brc);
+      $error[$prc] .= ": ".civicrm_neweb_brc($brc);
     }
   }
   elseif($prc == 34){
-    $error[$prc] = $this->prc($prc);
+    $error[$prc] = civicrm_neweb_prc($prc);
     if($brc){
-      $error[$prc] .= ": ".$this->brc($brc);
+      $error[$prc] .= ": ".civicrm_neweb_brc($brc);
     }
   }
   else{
     $error['system'] = ts("Network or system error. Please try again a minutes later, if you still can't success, please contact us for further assistance.");
     if($brc){
-      $error[$brc] = $this->brc($brc);
+      $error[$brc] = civicrm_neweb_brc($brc);
     }
   }
   $error[] = ts("&raquo; <a href='%1'>Try again</a>", array($dup_link));
