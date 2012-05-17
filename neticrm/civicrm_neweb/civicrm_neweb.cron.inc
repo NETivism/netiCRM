@@ -125,7 +125,7 @@ function civicrm_neweb_process_response($is_test, $now = NULL){
         $action = strtolower($r['ACTION']);
         switch($action){
           case 'new':
-            if($r['RESPONSE'] == '0'){
+            if($r['RESPONSE'] == '0' || $r['RESPONSE'] == '-11'){
               if ( $contrib->find( true ) ) { 
                 // send notification email of recurring contribution
                 CRM_Contribute_BAO_ContributionPage::recurringNotify( 'START', $recur->contact_id, $contrib->contribution_page_id, $recur);
