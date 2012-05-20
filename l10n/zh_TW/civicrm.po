@@ -34658,7 +34658,7 @@ msgstr "免罰"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Current"
-msgstr "現在"
+msgstr "正常"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Grace"
