@@ -142,7 +142,6 @@ function civicrm_neweb_process_response($is_test, $now = NULL){
             if($r['RESPONSE'] == '0' || $r['RESPONSE'] == '-31'){
               $recur->contribution_status_id = 3;
               $recur->modified_date = date('YmdHis');
-              $recur->cancel_date = date('YmdHis');
               $recur->save();
             }
             break;
@@ -344,17 +343,16 @@ function civicrm_neweb_process_upload($is_test){
     $rows[$recur->id] = $upload;
   }
 
-  // cancelation by admin manually
-  $sql = "SELECT * FROM civicrm_contribution_recur cr INNER JOIN civicrm_contribution_neweb_recur cnr ON cr.id = cnr.recur_id WHERE cr.contribution_status_id = 3 && cr.cancel_date IS NOT NULL && cr.cancel_date < FROM_UNIXTIME($now) && cr.is_test = $is_test ORDER BY cr.id ASC";
+  // only one rule for cancelation. just look if they have cancel date and still pending, then process cancel job.
+  $sql = "SELECT * FROM civicrm_contribution_recur cr WHERE cr.contribution_status_id = 2 && cr.cancel_date IS NOT NULL && cr.cancel_date < FROM_UNIXTIME($now) && cr.is_test = $is_test ORDER BY cr.id ASC";
   $recur = CRM_Core_DAO::executeQuery($sql);
   while( $recur->fetch() ){
-    $contrib = CRM_Core_DAO::executeQuery("SELECT * FROM civicrm_contribution WHERE contribution_recur_id = $recur->id ORDER BY id ASC");
-    $contrib->fetch();
+    $trxn_id = CRM_Core_DAO::singleValueQuery("SELECT trxn_id FROM civicrm_contribution WHERE contribution_recur_id = $recur->id ORDER BY id ASC");
     // start to collect output file string
     $upload = array(
       'MERCHANTNUMBER' => $payment['user_name'],
       'REFNUMBER' => $recur->id,
-      'ORDERNUMBER' => $contrib->trxn_id,
+      'ORDERNUMBER' => $trxn_id,
       'BRAND' => '',       // null for our status
       'EXPIREDATE' => '',  // null for our status
       'AMOUNT' => (int)$recur->amount,
@@ -364,7 +362,7 @@ function civicrm_neweb_process_upload($is_test){
       'MODE' => 0, // 0 for month mode, 1 for date mode
     );
     $rows[$recur->id] = $upload;
-    CRM_Core_DAO::executeQuery("UPDATE civicrm_contribution_recur SET contribution_status_id = 4 WHERE id = $recur->id");
+    //    CRM_Core_DAO::executeQuery("UPDATE civicrm_contribution_recur SET contribution_status_id = 4 WHERE id = $recur->id");
   }
 
   if(count($rows)){

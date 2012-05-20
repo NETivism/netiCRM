@@ -56,6 +56,10 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page
     function view( )
     {
         require_once 'CRM/Contribute/DAO/ContributionRecur.php';
+        require_once 'CRM/Contribute/PseudoConstant.php';
+        $status = CRM_Contribute_Pseudoconstant::contributionStatus();
+        $status[1] = ts('Current');
+
         $recur = new CRM_Contribute_DAO_ContributionRecur();
         $recur->id =  $this->_id;
         if ( $recur->find( true ) ) {
@@ -69,6 +73,7 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page
                     'name'
                 );
             }
+            $values['contribution_status'] = $status[$values['contribution_status_id']];
             $this->assign( 'recur', $values );
         }
     }
