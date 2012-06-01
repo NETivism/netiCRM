@@ -6,8 +6,9 @@ For the secure reason, we will suggest you can follow steps below to setup this 
 1. Disable permissions "View All Contacts" AND "Edit All Contacts" in all roles.
 2. Setup settings.php to config secure civicrm group id (eg. civicrm_secure_group_gid) and allowed drupal role id (civicrm_secure_group_rid)
 for example, you can setup these two line in settings.php
-  $conf['civicrm_secure_group_gid'] = 4;
-  $conf['civicrm_secure_group_rid'] = 9;
+  $conf['civicrm_secure_group_gid'] = 4;      // civicrm group id
+  $conf['civicrm_secure_group_rid'] = 9;      // drupal role id
+  $conf['civicrm_secure_group_reverse'] = 0;  // Do you need to hide all other group for roles?
 
 3. Use user 1 to assign a user to allowed role
 4. Now, do more test, to see if the module work correctly
