@@ -16249,7 +16249,7 @@ msgstr "未知的退信類型：退回Email無法分析"
 
 #: CRM/Mailing/Event/BAO/Subscribe.php
 msgid "You are already subscribed in %1, your subscription is %2."
-msgstr "您已訂閱了「%1」，目前訂閱狀態為 %2。"
+msgstr "您已訂閱了「%1」，目前訂閱狀態為「%2」。請到您剛才填寫的信箱讀取確認信並按「確認」，即可完成訂閱！若您之前已訂閱，就不會再收到訂閱確認信。"
 
 #: CRM/Mailing/Event/BAO/Subscribe.php
 msgid "Your subscription request has been submitted for group %1. Check your inbox shortly for the confirmation email(s). If you do not see a confirmation email, please check your spam/junk mail folder."
@@ -39644,3 +39644,6 @@ msgstr "檔案已上傳"
 
 msgid "Event Confirmation"
 msgstr "活動登記確認"
+
+msgid "Are you sure you wish to submit this form?"
+msgstr "都填寫完了嗎？如需修改請取消，若無則請按「確定」以送出表格。"
