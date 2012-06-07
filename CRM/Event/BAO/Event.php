@@ -98,8 +98,7 @@ class CRM_Event_BAO_Event extends CRM_Event_DAO_Event
     static function add( &$params )
     {
         require_once 'CRM/Utils/System.php';
-        $cache =& CRM_Utils_Cache::singleton( );
-        $cache->delete('*CRM_Event_DAO_Event*');
+        CRM_Utils_System::flushCache( );
 
         require_once 'CRM/Utils/Hook.php';
         
@@ -187,8 +186,6 @@ class CRM_Event_BAO_Event extends CRM_Event_DAO_Event
         if ( !$id ) {
             return null;
         }
-        $cache =& CRM_Utils_Cache::singleton( );
-        $cache->delete('*CRM_Event_DAO_Event*');
 
         require_once 'CRM/Utils/Hook.php';
         CRM_Utils_Hook::pre( 'delete', 'Event', $id, CRM_Core_DAO::$_nullArray );
@@ -351,6 +348,16 @@ class CRM_Event_BAO_Event extends CRM_Event_DAO_Event
             return $eventSummary;
         }
         
+        //get the participant status type values.
+        $query  = 'SELECT id, name, class FROM civicrm_participant_status_type';
+        $status = CRM_Core_DAO::executeQuery( $query );
+        $statusValues = array( );
+        while ( $status->fetch( ) ) {
+            $statusValues[$status->id]['id']    = $status->id;
+            $statusValues[$status->id]['name']  = $status->name;
+            $statusValues[$status->id]['class'] = $status->class;
+        }
+        
         // Get the Id of Option Group for Event Types
         require_once 'CRM/Core/DAO/OptionGroup.php';
         $optionGroupDAO = new CRM_Core_DAO_OptionGroup();
@@ -379,10 +386,7 @@ LIMIT      0, 10
 ";
         $eventParticipant = array( );
         
-        $eventParticipant['participants']           = self::getParticipantCount( );
-        $eventParticipant['notCountedParticipants'] = self::getParticipantCount( true,  false, true,  false );
-        $eventParticipant['notCountedDueToRole']    = self::getParticipantCount( false, false, true,  false );
-        $eventParticipant['notCountedDueToStatus']  = self::getParticipantCount( true,  false, false, false );
+
         
         $properties = array( 'eventTitle'      => 'event_title',      'isPublic'      => 'is_public', 
                              'maxParticipants' => 'max_participants', 'startDate'     => 'start_date', 
@@ -445,24 +449,35 @@ LIMIT      0, 10
                     case 'notCountedDueToRole' :
                     case 'notCountedDueToStatus' :
                     case 'notCountedParticipants' :
+                        $set = null;
                         $propertyCnt = 0;
-                        if ( CRM_Utils_Array::value( $dao->id, $eventParticipant[$name] ) ) {
-                            $propertyCnt = $eventParticipant[$name][$dao->id];
-                            if ( $name == 'participants' ) {
+                        if ( $name == 'participants' ) {
+                            $propertyCnt = self::getParticipantCount( $dao->id );
+                            if ( $propertyCnt ) {
                                 $set = CRM_Utils_System::url( 'civicrm/event/search',
                                                               "reset=1&force=1&event=$dao->id&status=true&role=true" );
-                            } else if ( $name == 'notCountedParticipants' ) {
+                            }
+                        } else if ( $name == 'notCountedParticipants' ) {
+                            $propertyCnt = self::getParticipantCount( $dao->id, true,  false, true,  false );
+                            if ( $propertyCnt ) {
                                 // FIXME : selector fail to search w/ OR operator.
                                 // $set = CRM_Utils_System::url( 'civicrm/event/search',
-                                // "reset=1&force=1&event=$dao->id&status=false&role=false" );
-                            } else if ( $name == 'notCountedDueToStatus' ) {
+                                // "reset=1&force=1&event=$dao->id&status=false&role=false" ); 
+                            }
+                        } else if ( $name == 'notCountedDueToStatus' ) {
+                            $propertyCnt = self::getParticipantCount( $dao->id, true,  false, false, false );
+                            if ( $propertyCnt ) {
                                 $set = CRM_Utils_System::url( 'civicrm/event/search',
                                                               "reset=1&force=1&event=$dao->id&status=false" );
-                            } else {
+                            }
+                        } else {
+                            $propertyCnt = self::getParticipantCount( $dao->id, false, false, true,  false );
+                            if ( $propertyCnt ) {
                                 $set = CRM_Utils_System::url( 'civicrm/event/search',
                                                               "reset=1&force=1&event=$dao->id&role=false" );
                             }
                         }
+                        
                         $eventSummary['events'][$dao->id][$property]    = $propertyCnt; 
                         $eventSummary['events'][$dao->id][$name.'_url'] = $set;
                         break;
@@ -487,6 +502,22 @@ LIMIT      0, 10
             $eventSummary['events'][$dao->id]['is_monetary'] = $dao->is_monetary;
             $eventSummary['events'][$dao->id]['is_online_registration'] = $dao->is_online_registration;
             $eventSummary['events'][$dao->id]['is_show_location'] = $dao->is_show_location;
+
+            $statusTypes = CRM_Event_PseudoConstant::participantStatus( );
+            $statusLabels = CRM_Event_PseudoConstant::participantStatus(null, null, 'label');
+            foreach ( $statusValues as $statusId => $statusValue ) {
+                if ( !array_key_exists( $statusId, $statusTypes ) ) continue; 
+                $class = $statusValue['class'];
+                $statusCount = self::eventTotalSeats( $dao->id, "( participant.status_id = {$statusId} )" );
+                if ( $statusCount ) {
+                    $urlString  = "reset=1&force=1&event={$dao->id}&status=$statusId"; 
+                    $statusInfo =  array( 'url'   => CRM_Utils_System::url( 'civicrm/event/search', $urlString ),
+                                          'name'  => $statusValue['name'],
+                                          'label' => $statusLabels[$statusId],
+                                          'count' => $statusCount );                
+                    $eventSummary['events'][$dao->id]['statuses'][$class][] = $statusInfo;
+                }
+            }
         }
         
         require_once 'CRM/Event/PseudoConstant.php';
@@ -494,32 +525,6 @@ LIMIT      0, 10
         $nonCountedRoles  = CRM_Event_PseudoConstant::participantRole( null, '( filter = 0 OR filter IS NULL )' );
         $countedStatus    = CRM_Event_PseudoConstant::participantStatus( null, 'is_counted = 1' );
         $nonCountedStatus = CRM_Event_PseudoConstant::participantStatus( null, '( is_counted = 0 OR is_counted IS NULL )' );
-        
-        $roleSQL = '';
-        if ( !empty( $countedRoles ) ) {
-            $roleSQL = " AND role_id in ( ". implode( ',', array_keys( $countedRoles ) ) .') ';
-        }
-        
-        $eventIdsClause = '';
-        if ( !empty( $eventIds ) ) {
-            $eventIdsClause = "WHERE p.event_id IN (" . implode( ',', $eventIds ) . ") $roleSQL ";
-        }
-        
-        $statusTypes = CRM_Event_PseudoConstant::participantStatus();
-        $statusLabels = CRM_Event_PseudoConstant::participantStatus(null, null, 'label');
-        $participantStatusSummary  = self::getParticipantCount( false, false, false, false, $eventIds, true );
-        foreach ( $participantStatusSummary as $eventId => $values ) {
-            foreach ( $values as $statusId => $statusValues ) {
-                $class = $statusValues['class'];
-                $count = CRM_Utils_Array::value( 'count', $statusValues );
-                $urlString  = "reset=1&force=1&event=$eventId&status=$statusId"; 
-                $statusInfo =  array( 'url'   => CRM_Utils_System::url( 'civicrm/event/search', $urlString ),
-                                      'name'  => $statusTypes[$statusId],
-                                      'label' => $statusLabels[$statusId],
-                                      'count' => $count );
-                $eventSummary['events'][$eventId]['statuses'][$class][] = $statusInfo;
-            }
-        }
         
         $countedStatusANDRoles    = array_merge(  $countedStatus ,  $countedRoles );
         $nonCountedStatusANDRoles = array_merge( $nonCountedStatus, $nonCountedRoles );
@@ -545,12 +550,11 @@ LIMIT      0, 10
      * @access public
      * @return array array with count of participants for each event based on status/role
      */
-    function getParticipantCount( $considerStatus = true, 
-                                  $status = true, 
-                                  $considerRole = true, 
-                                  $role = true, 
-                                  $eventIds = array( ),
-                                  $countWithStatus = false ) {
+    function getParticipantCount( $eventId,
+                                  $considerStatus = true, 
+                                  $status         = true, 
+                                  $considerRole   = true, 
+                                  $role           = true ) {
         
         // consider both role and status for counted participants, CRM-4924.
         require_once 'CRM/Event/PseudoConstant.php';
@@ -571,7 +575,7 @@ LIMIT      0, 10
             if ( empty( $status ) ) {
                 $status = 0;
             }
-            $clause[] = "civicrm_participant.status_id {$statusClause} ( {$status} ) ";
+            $clause[] = "participant.status_id {$statusClause} ( {$status} ) ";
         }
         
         if ( $considerRole ) {
@@ -584,76 +588,15 @@ LIMIT      0, 10
             if ( empty( $roles ) ) {
                 $roles = 0;
             }
-            $clause[] = "civicrm_participant.role_id {$roleClause} ( $roles )";
+            $clause[] = "participant.role_id {$roleClause} ( $roles )";
         }
         
         $sqlClause = '';
         if ( !empty( $clause ) ) {
-            $sqlClause = ' AND ( ' . implode( $operator, $clause ) . ' )';
+            $sqlClause = ' ( ' . implode( $operator, $clause ) . ' )';
         }
         
-        $eventLimit = 10;
-        if ( is_array( $eventIds ) && !empty( $eventIds ) ) {
-            $eventLimit = null;
-            $sqlClause .= ' AND civicrm_event.id IN (' . implode( ',', $eventIds ) . ')';
-        }
-        
-        $select = '
-    SELECT   civicrm_event.id as id, 
-             civicrm_participant.id as participantId';
-        $from = '
-      FROM   civicrm_event 
-INNER JOIN   civicrm_participant ON ( civicrm_event.id = civicrm_participant.event_id )
-INNER JOIN   civicrm_contact contact ON ( contact.id = civicrm_participant.contact_id AND contact.is_deleted = 0 )';
-        
-        if ( $countWithStatus ) {
-            $select .= ', status_id as statusId, status_type.class as statusClass';
-            $from .= ' 
-INNER JOIN   civicrm_participant_status_type status_type ON ( civicrm_participant.status_id = status_type.id )'; 
-        }
-        
-        $where = "
-     WHERE   ( civicrm_participant.is_test = 0 OR civicrm_participant.is_test IS NULL ) 
-       AND   civicrm_event.is_active = 1
-             {$sqlClause}";
-        
-        $orderBy = 'Order By civicrm_event.end_date DESC';
-        $participantIds = $participantCount = array( );
-        
-        $query = "$select $from $where $orderBy";
-        $event = CRM_Core_DAO::executeQuery( $query );
-        while ( $event->fetch( ) ) {
-            //we are interested in first 10 events only.
-            if ( $eventLimit && 
-                 count( array_keys( $participantIds ) ) > $eventLimit ) {
-                break;
-            }
-            if ( $countWithStatus ) {
-                $participantIds[$event->id][$event->statusId]['pIds'][$event->participantId] = $event->participantId;
-                $participantIds[$event->id][$event->statusId]['statusClass'] = $event->statusClass;
-            } else {
-                $participantIds[$event->id][$event->participantId] = $event->participantId;
-            }
-        }
-        
-        //poped last 11th events participants.
-        if ( $eventLimit && count( array_keys( $participantIds ) ) > $eventLimit ) array_pop( $participantIds );
-        
-        //pickup event seats
-        foreach ( $participantIds as $eventId => $pInfo ) { 
-            $pIds = $pInfo;
-            if ( $countWithStatus ) {
-                foreach ( $pInfo as $statusId => $values ) {
-                    $participantCount[$eventId][$statusId]['count'] = 
-                        CRM_Event_BAO_Participant::totalEventSeats( $values['pIds'] ); 
-                    $participantCount[$eventId][$statusId]['class'] = $values['statusClass'];
-                }
-            } else {
-                $participantCount[$eventId] = CRM_Event_BAO_Participant::totalEventSeats( $pIds );
-            }
-        }
-        
-        return $participantCount;
+        return self::eventTotalSeats( $eventId, $sqlClause );
     }
     
     /**
@@ -665,7 +608,7 @@ INNER JOIN   civicrm_participant_status_type status_type ON ( civicrm_participan
      * @static
      * @access public
      */
-        
+    
     static function &getMapInfo(&$id ) 
     {
 
@@ -893,8 +836,6 @@ WHERE civicrm_event.is_active = 1
      */
     static function copy( $id )
     {
-        $cache =& CRM_Utils_Cache::singleton( );
-        $cache->delete('*CRM_Event_DAO_Event*');
         $defaults = $eventValues = array( );
         
         //get the require event values.
@@ -1121,7 +1062,7 @@ WHERE civicrm_event.is_active = 1
                         'confirm_email_text' => CRM_Utils_Array::value('confirm_email_text', $values['event']),
                         'isShowLocation'     => CRM_Utils_Array::value('is_show_location',   $values['event']),
                     ),
-                    'PDFFilename' => 'civicrm.pdf',
+                    'PDFFilename' => 'eventReceipt.pdf',
                 );
 
                 // address required during receipt processing (pdf and email receipt)
@@ -1865,5 +1806,50 @@ WHERE  ce.loc_block_id = $locBlockId";
                                     'bcc'   => CRM_Utils_Array::value( 'bcc_confirm', $eventEmail ) ) ;
         return $emails[$cacheKey];
     }
+    
+    /**
+     * Function to calculate event total seats occupied.
+     *
+     * @param int    $eventId          event id.
+     * @param sting  $extraWhereClause extra filter on participants.
+     *
+     * @return int   event total seats w/ given criteria.
+     * @access public
+     * @static
+     */
+    function eventTotalSeats( $eventId, $extraWhereClause = null ) 
+    {
+        if ( empty( $eventId ) ) {
+            return 0;
+        }
+        
+        $extraWhereClause = trim( $extraWhereClause );
+        if ( !empty( $extraWhereClause ) ) {
+            $extraWhereClause  = " AND ( {$extraWhereClause} )";
+        }
+        
+        //event seats calculation :
+        //1. consider event seat as a single when participant does not have line item.
+        //2. consider event seat as a single when participant has line items but does not 
+        //   have count for corresponding price field value ( ie price field value does not carry any seat )  
+        //3. consider event seat as a sum of all seats from line items in case price field value carries count. 
+        
+        $query = "
+    SELECT  IF ( SUM( value.count*lineItem.qty ),
+                 SUM( value.count*lineItem.qty ) + 
+                 COUNT( DISTINCT participant.id ) -
+                 COUNT( DISTINCT IF ( value.count, participant.id, NULL ) ),
+                 COUNT( DISTINCT participant.id ) ) 
+      FROM  civicrm_participant participant
+INNER JOIN  civicrm_contact contact ON ( contact.id = participant.contact_id AND contact.is_deleted = 0 ) 
+INNER JOIN  civicrm_event event ON ( event.id = participant.event_id ) 
+LEFT  JOIN  civicrm_line_item lineItem ON ( lineItem.entity_id    = participant.id 
+                                       AND  lineItem.entity_table = 'civicrm_participant' ) 
+LEFT  JOIN  civicrm_price_field_value value ON ( value.id = lineItem.price_field_value_id AND value.count )    
+     WHERE  ( participant.event_id = %1 )
+            {$extraWhereClause}
+  GROUP BY  participant.event_id";
+        
+        return (int)CRM_Core_DAO::singleValueQuery( $query, array( 1 => array( $eventId, 'Positive' ) ) );
+    }
 }
-
