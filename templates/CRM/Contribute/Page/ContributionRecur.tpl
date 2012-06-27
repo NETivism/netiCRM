@@ -31,6 +31,7 @@
         <h3>{ts}Recurring contributions{/ts}</h3>
         <div class="crm-block crm-content-block crm-recurcontrib-view-block">
           <table class="crm-info-panel">
+            <tr><td class="label">{ts}Status{/ts}</td><td>{$recur.contribution_status}</td></tr>
             <tr><td class="label">{ts}Amount{/ts}</td><td>{$recur.amount} {$recur.currency}</td></tr>
             <tr><td class="label">{ts}Frequency{/ts}</td><td>{ts}every{/ts} {$recur.frequency_interval} {ts}{$recur.frequency_unit}{/ts}</td></tr>
             <tr><td class="label">{ts}Installments{/ts}</td><td>{$recur.installments}</td></tr>
@@ -62,6 +63,7 @@
             <th scope="col">{ts}Frequency{/ts}</th>
             <th scope="col">{ts}Start Date{/ts}</th>
             <th scope="col">{ts}End Date{/ts}</th>
+            <th scope="col">{ts}Cancel Date{/ts}</th>
             <th scope="col">{ts}Installments{/ts}</th>
             <th scope="col">{ts}Status{/ts}</th>
             <th scope="col">{ts}Cycle Day{/ts}</th>
@@ -76,6 +78,7 @@
                 <td>{ts}every{/ts} {$row.frequency_interval} {$row.frequency_unit} </td>
                 <td>{$row.start_date|crmDate}</td>
                 <td>{$row.end_date|crmDate}</td>
+                <td>{$row.cancel_date|crmDate}</td>
                 <td>{$row.installments}</td>
                 <td>{$row.contribution_status}</td>
                 <td>{$row.cycle_day} {ts}day{/ts}</td>

@@ -260,6 +260,13 @@ function civicrm_neweb_process_transaction($is_test, $now = NULL){
         // we save recur object then
         CRM_Contribute_BAO_ContributionRecur::add( $params, $ids );
 
+=======
+          $recur->contribution_status_id = 1; // if neweb have transaction, add reucrring to correct status.
+        }
+        // we save contribution first, anyway.
+        $contribution->save();
+        $recur->save();
+>>>>>>> 249f404f0930cff7368bdb590de4b3bcb8527a5b:neticrm/civicrm_neweb/civicrm_neweb.cron.inc
 
         // now we have correct contribution object. procceed.
         // submit recurring items by ipn functions

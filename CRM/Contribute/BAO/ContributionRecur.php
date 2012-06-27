@@ -223,30 +223,32 @@ SELECT p.payment_processor_id
     static function cancelRecurContribution( $recurId, $objects ) 
     {
         if ( !$recurId ) return false;
-        
         require_once 'CRM/Contribute/PseudoConstant.php';
-        $contributionStatus = CRM_Contribute_PseudoConstant::contributionStatus( null, 'name' );
-        $canceledId         = array_search( 'Cancelled', $contributionStatus );
+        // for now, we use pending for cancel id, because we need further response to make sure the contribution is cancelled.
+        // $contributionStatus = CRM_Contribute_PseudoConstant::contributionStatus( null, 'name' );
+        // $canceledId         = array_search( 'Cancelled', $contributionStatus );
+        $canceledId         = 2;
+
         $recur     = new CRM_Contribute_DAO_ContributionRecur( );
         $recur->id = $recurId;
-        $recur->whereAdd ("contribution_status_id != $canceledId");
         if ( $recur->find(true) ) {
             require_once 'CRM/Core/Transaction.php';
             $transaction = new CRM_Core_Transaction( );
             $recur->contribution_status_id = $canceledId;
             $recur->start_date             = CRM_Utils_Date::isoToMysql( $recur->start_date );
             $recur->create_date            = CRM_Utils_Date::isoToMysql( $recur->create_date );
-            $recur->modified_date          = CRM_Utils_Date::isoToMysql( $recur->modified_date );
+            $recur->modified_date          = date('YmdHis');
             $recur->cancel_date            = date( 'YmdHis' );
             $recur->save( );
 
             if ( $objects == CRM_Core_DAO::$_nullObject ) {
-                $transaction->commit( );
-                return true;           
-            } else {
-                require_once 'CRM/Core/Payment/BaseIPN.php';
-                $baseIPN = new CRM_Core_Payment_BaseIPN( );
-                return $baseIPN->cancelled( $objects, $transaction );
+              $transaction->commit( );
+              return true;           
+            }
+            else {
+              require_once 'CRM/Core/Payment/BaseIPN.php';
+              $baseIPN = new CRM_Core_Payment_BaseIPN( );
+              return $baseIPN->cancelled( $objects, $transaction );
             }
     
         }
@@ -274,12 +276,14 @@ SELECT p.payment_processor_id
         $recurDAO->find( );
         require_once 'CRM/Contribute/PseudoConstant.php';
         $contributionStatus = CRM_Contribute_Pseudoconstant::contributionStatus( );
+        $contributionStatus[1] = ts('Current');
 
         while( $recurDAO->fetch( ) ) {
             $params[$recurDAO->id]['id']                        = $recurDAO->id;
             $params[$recurDAO->id]['contactId']                 = $recurDAO->contact_id;
             $params[$recurDAO->id]['start_date']                = $recurDAO->start_date;
             $params[$recurDAO->id]['end_date']                  = $recurDAO->end_date;
+            $params[$recurDAO->id]['cancel_date']                  = $recurDAO->cancel_date;
             $params[$recurDAO->id]['next_sched_contribution']   = $recurDAO->next_sched_contribution;
             $params[$recurDAO->id]['amount']                    = $recurDAO->amount;
              $params[$recurDAO->id]['currency']                  = $recurDAO->currency;
