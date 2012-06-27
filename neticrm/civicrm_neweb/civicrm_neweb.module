@@ -102,12 +102,12 @@ function civicrm_neweb_civicrm_postProcess($form_name, &$form){
 function civicrm_neweb_cron(){
   require_once("civicrm_neweb.cron.inc");
   module_load_include("inc", 'civicrm_neweb', 'civicrm_neweb.cron');
-  $is_test = 1;
   $hour = date('G');
   $now = time();
   $yesterday = $now - 86400;
-  _civicrm_neweb_process_all($is_test, $now, $hour, $yesterday);
   $is_test = 0;
+  _civicrm_neweb_process_all($is_test, $now, $hour, $yesterday);
+  $is_test = 1;
   _civicrm_neweb_process_all($is_test, $now, $hour, $yesterday);
 }
 
@@ -121,7 +121,7 @@ function _civicrm_neweb_process_all($is_test, $now, $hour, $yesterday){
       variable_set('civicrm_neweb_response'.$test, $now);
     }
   }
-  if($hour >= 12 && $hour <= 20 && variable_get('civicrm_neweb_transaction'.$test, 0) < $yesterday){
+  if($hour >= 16 && $hour <= 23 && variable_get('civicrm_neweb_transaction'.$test, 0) < $yesterday){
     // get yesterday transaction result
     if(civicrm_neweb_process_transaction($is_test)){
       variable_set('civicrm_neweb_transaction'.$test, $now);
@@ -213,12 +213,12 @@ cj(document).ready(function(){
   drupal_add_js($js, 'inline', 'footer');
 }
 
-function _civicrm_neweb_instrument(){
+function _civicrm_neweb_instrument($type = 'label'){
   return array(
-    'Credit Card' => array('label' => '信用卡', 'description' => ''),
-    'ATM' => array('label' => 'ATM 轉帳', 'description' => ''),
-    'Web ATM' => array('label' => '網路 ATM', 'description' => ''),
-    'Convenient Store' => array('label' => '超商條碼繳費', 'description'=>''),
+    'Credit Card' => array('label' => '信用卡', 'description' => '', 'code' => 'Credit Card'),
+    'ATM' => array('label' => 'ATM 轉帳', 'description' => '', 'code' => 'ATM'),
+    'Web ATM' => array('label' => '網路 ATM', 'description' => '', 'code' => 'WEBATM'),
+    'Convenient Store' => array('label' => '超商條碼繳費', 'description'=>'', ),
     'Convenient Store (Code)' => array('label'=>'超商代碼繳費','desc' => ''),
     'Alipay' => array('label' => '支付寶', 'description' => ''),
   );
@@ -270,6 +270,9 @@ function _civicrm_neweb_sftp($mode, $local, $remote, $host, $user, $pass){
         break;
       case 'get':
         $success = $sftp->get($remote, $local);
+        if(file_exists($local)){
+          $success = file_get_contents($local);
+        }
         break;
       case 'list':
       default:
@@ -283,7 +286,15 @@ function _civicrm_neweb_sftp($mode, $local, $remote, $host, $user, $pass){
   print_r($sftp->getSFTPErrors());
   print '</pre>';
   */
-  return $success;
+  // call destructor to close connection
+  unset($sftp);
+
+  if($success){
+    return $success;
+  }
+  else{
+    return false;
+  }
 }
 
 /**
@@ -301,14 +312,15 @@ function _civicrm_neweb_connect($id, $local, $mode, $is_test){
 
   if($is_test){
     $function = '_civicrm_neweb_ftp';
+    $ftp = variable_get("civicrm_neweb_ftp_test", array());
   }
   else{
     $function = '_civicrm_neweb_sftp';
+    $ftp = variable_get("civicrm_neweb_ftp", array());
   }
 
-  $remote = $dir.".".basename($local);
-  $ftp = variable_get("civicrm_neweb_ftp", array());
-  $ret = call_user_func($function, $mode, $local, $remote, $ftp['ftp_host'], $ftp['ftp_user'], $ftp['ftp_passowrd']);
+  $remote = $dir."/".basename($local);
+  $ret = call_user_func($function, $mode, $local, $remote, $ftp['ftp_host'], $ftp['ftp_user'], $ftp['ftp_password']);
 
   return $ret;
 }
