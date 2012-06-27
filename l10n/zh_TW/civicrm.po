@@ -23930,23 +23930,23 @@ msgstr ""
 
 #: templates/CRM/common/dedupe.tpl
 msgid "Are you sure you want to mark these contacts as dedupe exception."
-msgstr "您確定要製作這個拍賣的副本？"
+msgstr "您確定要把這兩位聯絡人為重複例外？"
 
 #: templates/CRM/common/dedupe.tpl
 msgid "Remove Dedupe Exception"
-msgstr ""
+msgstr "移除重複例外"
 
 #: templates/CRM/common/dedupe.tpl
 msgid "Are you sure you want to remove dedupe exception."
-msgstr "您是否確定去除%1從%2？"
+msgstr "您是否確定去除重複例外？"
 
 #: templates/CRM/common/dedupe.tpl
 msgid "Marked as non duplicates."
-msgstr ""
+msgstr "標示為非重複"
 
 #: templates/CRM/common/dedupe.tpl
 msgid "Marked as duplicates."
-msgstr "下載有重複的記錄"
+msgstr "標示為重複。"
 
 #: templates/CRM/common/displaySearchCriteria.tpl
 msgid "AND"
@@ -25195,7 +25195,7 @@ msgstr "合併"
 
 #: templates/CRM/Contact/Page/DedupeFind.tpl
 msgid "not a duplicate"
-msgstr "下載有重複的記錄"
+msgstr "標示為非重複"
 
 #: templates/CRM/Contact/Page/DedupeFind.tpl
 msgid "Insufficient access rights - cannot merge"
