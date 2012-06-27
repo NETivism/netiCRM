@@ -17,6 +17,12 @@ function civicrm_gw_schema(){
         'length' => '11',
         'not null' => TRUE,
       ),
+      'created' => array(
+        'description' => 'Submit time for user confirmed transaction.',
+        'type' => 'int',
+        'length' => '11',
+        'not null' => FALSE,
+      ),
       'succ' => array(
         'description' => 'Success response from ecpay server',
         'type' => 'int',
@@ -210,4 +216,16 @@ function civicrm_gw_update_6101(){
     CRM_Core_DAO::singleValueQuery("Update civicrm_option_value SET is_reserved = 1 WHERE id IN(".implode(',', $ids).") AND is_reserved = 0");
   }
   return array();
+}
+
+function civicrm_gw_update_6102(){
+  $ret = array();
+  
+  db_add_field($ret, 'civicrm_contribution_gw', 'created', array(
+    'description' => 'Submit time for user confirmed transaction.',
+    'type' => 'int',
+    'length' => '11',
+    'not null' => FALSE,
+  ));
+  return $ret;
 }

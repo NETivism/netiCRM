@@ -20,7 +20,7 @@ function civicrm_gw_do_transfer_checkout(&$vars, &$component, &$payment_processo
   $instrument_code = $gw_instruments[$instrument_name];
 
   // The first, we insert every contribution into record. After this, we'll use update for the record.
-  $record = array('cid' => $vars['contributionID']);
+  $record = array('cid' => $vars['contributionID'], 'created' => time());
   drupal_write_record("civicrm_contribution_gw", $record);
 
   $is_pay_later = TRUE;
