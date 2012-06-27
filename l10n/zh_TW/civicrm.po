@@ -28422,7 +28422,7 @@ msgstr "請確認下方資訊。<span class=\"bold\">繼續列於候補名單</s
 
 #: templates/CRM/Event/Form/Registration/Confirm.tpl
 msgid "Please verify the information below. Then click 'Continue' to submit your registration. <span class=\"bold\">Once approved, you will receive an email with a link to a web page where you can complete the registration process.</span>"
-msgstr "請確認下方資訊。接著點擊「繼續」以完成註冊。通過申請後，您將收到一封系統發出的Email，請連上郵件裡提供的網址即可完成註冊。"
+msgstr "請確認下方資訊。接著點擊「繼續」以完成報名。通過申請後，您將收到一封系統發出的Email，請連上郵件裡提供的網址即可完成報名。"
 
 #: templates/CRM/Event/Form/Registration/Confirm.tpl
 msgid "Please verify the information below. Click <strong>Go Back</strong> if you need to make changes."
@@ -28430,15 +28430,15 @@ msgstr "請確定輸入資料正確。如要作出修改，請按<strong>返回<
 
 #: templates/CRM/Event/Form/Registration/Confirm.tpl
 msgid "Click the <strong>%1</strong> button to checkout to Google, where you will select your payment method and complete the registration."
-msgstr "按<strong>繼續</strong>鍵以使用Google進行結帳流程，然後選擇你的付款方式及完成註冊。"
+msgstr "按<strong>繼續</strong>鍵以使用Google進行結帳流程，然後選擇你的付款方式及完成報名。"
 
 #: templates/CRM/Event/Form/Registration/Confirm.tpl
 msgid "Click the <strong>Continue</strong> button to checkout to %1, where you will select your payment method and complete the registration."
-msgstr "按<strong>繼續</strong>鍵以使用%1進行結帳流程，然後選擇你的付款方式及完成註冊。"
+msgstr "按「<strong>繼續</strong>」鍵以進行結帳流程，完成付款與報名程序。"
 
 #: templates/CRM/Event/Form/Registration/Confirm.tpl
 msgid "Otherwise, click the <strong>Continue</strong> button below to complete your registration."
-msgstr "請按下方<strong>繼續</strong>去完成這項報名。"
+msgstr "請按下方「<strong>繼續</strong>」以完成報名。"
 
 #: templates/CRM/Event/Form/Registration/Confirm.tpl
 #: templates/CRM/Event/Form/Registration/ThankYou.tpl
@@ -28452,7 +28452,7 @@ msgstr "參加者資料 - 參加者 %1"
 
 #: templates/CRM/Event/Form/Registration/Confirm.tpl
 msgid "Your registration will not be submitted until you click the <strong>Continue</strong> button. Please click the button one time only."
-msgstr "在你按下<strong>繼續</strong>鍵之前，你的註冊還未完成。請按「一次」此鍵。"
+msgstr "在你按下「<strong>繼續</strong>」鍵之前，你的報名還未完成"
 
 #: templates/CRM/Event/Form/Registration/EventInfoBlock.tpl
 msgid "View complete event information."
@@ -35295,7 +35295,7 @@ msgstr "您的活動報名已經取消"
 #: xml/templates/message_templates/participant_expired_text.tpl
 msgid "Please contact us at %1 or send email to %2 if you have questions."
 msgstr ""
-"如有任何問題，請在%1聯絡我們\n"
+"如有任何問題，請利用電話 %1 聯絡我們\n"
 " 或Email至%2"
 
 #: xml/templates/message_templates/participant_cancelled_subject.tpl
