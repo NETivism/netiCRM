@@ -5854,7 +5854,7 @@ msgstr "任務在資源回收桶裡"
 
 #: CRM/Activity/DAO/ActivityTarget.php
 msgid "Contact ID (match to contact)"
-msgstr "系統編號(與聯絡人對應)"
+msgstr "系統編號(依此欄對應聯絡人)"
 
 #: CRM/Activity/Form/Activity.php
 msgid "Followup Activity"
@@ -16724,7 +16724,7 @@ msgstr "- 會員區 -"
 
 #: CRM/Member/BAO/Membership.php
 msgid "(match to contact)"
-msgstr "(與聯絡人對應)"
+msgstr "(以此欄對應聯絡人)"
 
 #: CRM/Member/BAO/Membership.php
 msgid "Invalid date \"%1\" (must have form yyyymmdd)."
@@ -24852,7 +24852,7 @@ msgstr "會員的姓名"
 #: templates/CRM/Contribute/Form/Contribution/Confirm.tpl
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid "Membership Fee"
-msgstr "會員類型"
+msgstr "會費"
 
 #: templates/CRM/Contact/Form/Search/Custom/FullText.tpl
 #: templates/CRM/Member/Form/MembershipRenewal.tpl
