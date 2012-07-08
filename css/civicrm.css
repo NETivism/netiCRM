@@ -147,7 +147,7 @@ div#crm-container {
 }
 
 #crm-container select {
-    vertical-align: middle;
+    vertical-align: top;
     border: 1px solid #999;
 }
 

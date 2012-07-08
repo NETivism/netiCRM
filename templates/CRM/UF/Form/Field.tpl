@@ -91,6 +91,11 @@
 
 {literal}
 <script type="text/javascript">
+cj("#field_name\\[0\\]").bind( 'change', function( ) {
+  // cj("#field_name\\[1\\]").chosen({"search_contains": true});
+  cj("#field_name\\[1\\]").chosen({"search_contains": true}).hide();
+  cj("#field_name\\[1\\]").trigger("liszt:updated");
+}); 
 function showLabel( ) {
     var labelValue = '';
     /* Code to set the Field Label */		
