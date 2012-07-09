@@ -71,7 +71,7 @@
                 {assign var=fieldset  value=`$field.groupTitle`}
                 {assign var=groupHelpPost  value=`$field.groupHelpPost`}
                 {if $field.groupHelpPre}
-                    <div class="messages help">{$field.groupHelpPre}</div>
+                    <div class="">{$field.groupHelpPre}</div>
                 {/if}
                 <div class="form-layout-compressed">
             {/if}
