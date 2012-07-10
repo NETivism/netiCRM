@@ -45,7 +45,10 @@
 if ( document.getElementsByName("saveMapping")[0].checked ) {
     document.getElementsByName("updateMapping")[0].checked = true;
     document.getElementsByName("saveMapping")[0].checked = false;	
-} 
+}
+cj(document).ready(function(){
+  cj('select[name$="0\\]"]').chosen({"search_contains": true});
+});
 {/literal}
 {if $isCheked}  
     document.getElementsByName("saveMapping")[0].checked = true;           

@@ -86,6 +86,7 @@
          }
          {/literal}	     
     cj('Select[id^="mapper[1]"][id$="[1]"]').addClass('huge');
+    // TODO cj('select[name$="0\\]"]').chosen({"search_contains": true});
 	</script>
     </div>
 
