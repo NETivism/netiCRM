@@ -5521,7 +5521,7 @@ msgstr "容許量"
 #: CRM/Report/Form/Event/IncomeCountSummary.php
 #: CRM/Report/Form/Event/ParticipantListCount.php
 msgid "Income"
-msgstr "未完成"
+msgstr "收入"
 
 #: CRM/Report/Form/Event/Income.php CRM/Report/Form.php
 msgid "Records %%StatusMessage%%"
