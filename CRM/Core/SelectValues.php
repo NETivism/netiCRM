@@ -296,7 +296,7 @@ class CRM_Core_SelectValues
         static $ufGroupType = null;
         if (!$ufGroupType) {
             $ufGroupType = array(
-                                  'Profile'           => ts('Profile'),
+                                  'Profile'           => ts('Public Pages'),
                                   'Search Profile'    => ts('Search Results'),
                                   );
             $config = CRM_Core_Config::singleton( );

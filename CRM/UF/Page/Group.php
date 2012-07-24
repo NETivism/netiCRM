@@ -92,6 +92,12 @@ class CRM_UF_Page_Group extends CRM_Core_Page
                                                                           'qs'    => 'gid=%%id%%&reset=1',
                                                                           'title' => ts('Use Profile-Create Mode'),
                                                                           ),
+                                        CRM_Core_Action::VIEW    => array(
+                                                                          'name'  => ts('Public Pages'),
+                                                                          'url'   => 'civicrm/profile',
+                                                                          'qs'    => 'reset=1&gid=%%id%%',
+                                                                          'title' => ts('Search in public pages when enabled in profile settings') 
+                                                                          ),
                                         CRM_Core_Action::DISABLE => array(
                                                                           'name'  => ts('Disable'),
                                                                           'extra' => 'onclick = "enableDisable( %%id%%,\''. 'CRM_Core_BAO_UFGroup' . '\',\'' . 'enable-disable' . '\' );"',

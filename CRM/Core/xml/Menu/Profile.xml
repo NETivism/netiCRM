@@ -4,6 +4,7 @@
   <item>
      <path>civicrm/profile</path>
      <page_callback>CRM_Core_Invoke::profile</page_callback>
+     <access_arguments>profile listings</access_arguments>
      <is_public>true</is_public>
      <weight>0</weight>
   </item>

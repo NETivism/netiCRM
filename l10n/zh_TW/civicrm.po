@@ -4510,7 +4510,7 @@ msgstr "欄位名稱"
 
 #: CRM/Core/DAO/UFField.php CRM/Core/SelectValues.php
 msgid "Public Pages and Listings"
-msgstr "公開使用者頁面及列表"
+msgstr "公開頁面及瀏覽"
 
 #: CRM/Core/Error.php CRM/Member/BAO/Membership.php
 msgid "Payment Processor Error message"
@@ -11867,7 +11867,7 @@ msgstr "無法啟用此UF欄位，因為所使用的欄位已停用。"
 
 #: CRM/Core/BAO/UFGroup.php
 msgid "The requested Profile (gid=%1) is disabled OR it is not configured to be used for 'Profile' listings in its Settings OR there is no Profile with that ID OR you do not have permission to access this profile. Please contact the site administrator if you need assistance."
-msgstr "已停用要求的個人資訊 (gid=%1) ，或是該資訊設定為不顯示於個人資訊列表中，或是沒有該編號的個人資訊，或是您沒有存取此個人資訊的權限。如您需要更多幫助，請聯絡管理者。"
+msgstr "您所存取的線上資料表單已停用 (編號=%1) ，或是您沒有權限瀏覽此資料表單。如您需要更多幫助，請聯絡網站管理員。"
 
 #: CRM/Core/BAO/UFGroup.php
 msgid "Dynamic Form Creator"
@@ -12546,7 +12546,7 @@ msgstr "位移"
 
 #: CRM/Core/DAO/UFField.php
 msgid "In Selector"
-msgstr "用選擇器"
+msgstr "在結果欄"
 
 #: CRM/Core/DAO/UFField.php templates/CRM/Custom/Page/Field.tpl
 #: templates/CRM/Price/Page/Field.tpl
@@ -13559,23 +13559,23 @@ msgstr "存取已上傳的檔案"
 
 #: CRM/Core/Permission.php
 msgid "profile listings and forms"
-msgstr "存取資料表單"
+msgstr "存取所有資料表單"
 
 #: CRM/Core/Permission.php
 msgid "profile listings"
-msgstr "搜尋資料表單"
+msgstr "瀏覽資料表單公開頁面"
 
 #: CRM/Core/Permission.php
 msgid "profile create"
-msgstr "建立資料表單"
+msgstr "新增資料表單個資"
 
 #: CRM/Core/Permission.php
 msgid "profile edit"
-msgstr "編輯資料表單"
+msgstr "編輯資料表單個資"
 
 #: CRM/Core/Permission.php
 msgid "profile view"
-msgstr "瀏覽資料表單"
+msgstr "檢視資料表單個資"
 
 #: CRM/Core/Permission.php
 msgid "access all custom data"
@@ -19128,7 +19128,7 @@ msgstr "請選擇欄位名稱"
 
 #: CRM/UF/Form/Field.php
 msgid "'In Selector' cannot be checked for %1 fields."
-msgstr "「用選擇器」無法勾選%1個欄位。"
+msgstr "針對 %1 的欄位，不能出現在「結果欄」。"
 
 #: CRM/UF/Form/Field.php
 msgid "Cannot set this field \"Active\" since the selected custom field is disabled."
@@ -19260,7 +19260,7 @@ msgstr "編輯資料表單群組"
 
 #: CRM/UF/Page/Group.php
 msgid "Use Profile-Create Mode"
-msgstr "使用（透過表單建立資料）"
+msgstr "使用表單建立資料"
 
 #: CRM/UF/Page/Group.php
 msgid "Disable CiviCRM Profile Group"
@@ -21738,7 +21738,7 @@ msgstr "使用此頁面的連結以管理您的 CiviCRM 網站。按%1取得每�
 
 #: templates/CRM/Admin/Page/ConfigTaskList.tpl
 msgid "Edit settings"
-msgstr "編輯設定"
+msgstr "設定"
 
 #: templates/CRM/Admin/Page/ConfigTaskList.tpl
 msgid "Use this checklist to review and complete configuration tasks for your site. You will be redirected back to this checklist after saving each setting. Settings which you have not yet reviewed will be <span class=\"status-overdue\">displayed in red</span>. After you have visited a page, the links will <span class=\"status-pending\">display in green</span>  (although you may still need to revisit the page to complete or update the settings). You can access this page again from the <a href=\"%1\">Administer CiviCRM</a> menu at any time."
@@ -31169,7 +31169,7 @@ msgstr "新增價格欄位"
 
 #: templates/CRM/Price/Page/Field.tpl templates/CRM/UF/Page/Field.tpl
 msgid "Preview (all fields)"
-msgstr "預覽（所有欄位）"
+msgstr "預覽欄位"
 
 #: templates/CRM/Price/Page/Field.tpl
 msgid "Edit Price Options"
@@ -31733,15 +31733,15 @@ msgstr ""
 
 #: templates/CRM/UF/Page/Field.tpl
 msgid "Edit Settings"
-msgstr "編輯設定"
+msgstr "設定"
 
 #: templates/CRM/UF/Page/Field.tpl
 msgid "Use (create mode)"
-msgstr "使用（透過表單建立資料）"
+msgstr "使用線上表單建立資料"
 
 #: templates/CRM/UF/Page/Field.tpl
 msgid "In Selector?"
-msgstr "用選擇器?"
+msgstr "在結果欄?"
 
 #: templates/CRM/UF/Page/Field.tpl
 msgid "View Only"
@@ -39647,3 +39647,6 @@ msgstr "活動登記確認"
 
 msgid "Are you sure you wish to submit this form?"
 msgstr "都填寫完了嗎？如需修改請取消，若無則請按「確定」以送出表格。"
+
+msgid "Search in public pages when enabled in profile settings"
+msgstr "如果資料表單有勾選該設定，您可以在在公開頁面中搜尋並瀏覽聯絡人"
