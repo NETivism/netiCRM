@@ -163,7 +163,7 @@ function civicrm_perm()
  * generates the contents of the blocks themselves.
  */
 
-function civicrm_block($op='list', $delta='0')
+function civicrm_block($op = 'list', $delta = 0, $edit = array())
 {
     if ( $op == 'configure' ) {
         return;
@@ -178,10 +178,12 @@ function civicrm_block($op='list', $delta='0')
 
     if ($op == 'list') {
         $block = CRM_Core_Block::getInfo();
-    } else {
-        $block = CRM_Core_Block::getContent ($delta);
+        return $block;
     }
-    return $block;
+    if ($op == 'view') {
+        $block = CRM_Core_Block::getContent ($delta);
+        return $block;
+    }
 }
 
 /**
