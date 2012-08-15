@@ -2270,7 +2270,7 @@ div.grippie {
 
 /* setup for icons */
 
-.ac_results ul li {background-image:url('');}
+.ac_results ul li {background-image:url(''); white-space: nowrap;}
 
 .ui-icon {background-image: url("../i/icons/jquery-ui-52534D.png")}
 .icon { 
