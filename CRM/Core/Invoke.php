@@ -174,6 +174,7 @@ class CRM_Core_Invoke
                 $session->pushUserContext( CRM_Utils_System::url( $item['return_url'], 
                                                                   $args ) );
             }
+            $template->assign('callbackPath', $item['page_callback']);
 
             $result = null;
             if ( is_array( $item['page_callback'] ) ) {
