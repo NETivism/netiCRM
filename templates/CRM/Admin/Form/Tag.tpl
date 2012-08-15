@@ -38,7 +38,7 @@
           <td>{$form.description.html}</td>
        </tr>
          {if $form.parent_id.html}
-       <tr class="crm-tag-form-block-parent_id">
+       <tr class="crm-tag-form-block-parent_id" style="display:none;">
  	  <td class="label">{$form.parent_id.label}</td>
           <td>{$form.parent_id.html}</td>
        </tr>
