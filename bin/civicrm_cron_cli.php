@@ -3,6 +3,7 @@
  * We always locate at sites/all/modules/civicrm/bin/
  */
 global $civicrm_root, $db_url, $user;
+date_default_timezone_set("Asia/Taipei");
 
 $vars = array();
 if(is_array($argv)){
