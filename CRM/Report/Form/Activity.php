@@ -355,6 +355,7 @@ class CRM_Report_Form_Activity extends CRM_Report_Form {
         //override for ACL( Since Cotact may be source
         //contact/assignee or target also it may be null )
         
+        /*
         require_once 'CRM/Core/Permission.php';
         require_once 'CRM/Contact/BAO/Contact/Permission.php';
         if ( CRM_Core_Permission::check( 'view all contacts' ) ) {
@@ -377,6 +378,7 @@ class CRM_Report_Form_Activity extends CRM_Report_Form {
         
         $this->_aclFrom  = implode(" ", $clauses );
         $this->_aclWhere = null;
+        */
     }
     function postProcess( ) {
         
