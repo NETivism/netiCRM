@@ -4010,7 +4010,7 @@ msgstr "認捐"
 #: CRM/Contribute/Form/ContributionPage/Amount.php
 #: CRM/Event/Form/ManageEvent/Fee.php
 msgid "I will send payment by check"
-msgstr "透過支票付款"
+msgstr "提供離線繳款，請依提示處理"
 
 #: CRM/Contribute/Form/ContributionPage/Amount.php
 #: CRM/Contribute/Form/ContributionPage.php
@@ -4836,7 +4836,7 @@ msgstr "刪除活動"
 #: CRM/Event/Form/ManageEvent/EventInfo.php
 #: CRM/Event/Form/Registration/Register.php
 msgid "This event is currently full. However you can register now and get added to a waiting list. You will be notified if spaces become available."
-msgstr "此活動已報名額滿。你還是可以輸入資料，但你將會被列入候補，並在名額有空缺時通知你。"
+msgstr "此活動已額滿，您的報名將列為候補，若有名額將再通知您完成報名。"
 
 #: CRM/Event/Form/ManageEvent/EventInfo.php CRM/Mailing/BAO/Mailing.php
 msgid "Template Title"
@@ -23965,7 +23965,7 @@ msgstr "列印此頁"
 #: templates/CRM/common/standalone.tpl
 #: templates/CRM/Contact/Form/ActionsButton.tpl
 msgid "Printer-friendly view of this page."
-msgstr "查看此頁面的友善列印版本"
+msgstr "本頁列印預覽"
 
 #: templates/CRM/common/enableDisable.tpl
 msgid "Disable Record"
@@ -24054,7 +24054,7 @@ msgstr "每頁列數："
 
 #: templates/CRM/common/print.tpl
 msgid "Printer-Friendly View"
-msgstr "此頁友善列印查看"
+msgstr "列印預覽"
 
 #: templates/CRM/common/recentlyViewed.tpl
 msgid "Recently Viewed:"
@@ -39650,3 +39650,6 @@ msgstr "都填寫完了嗎？如需修改請取消，若無則請按「確定」
 
 msgid "Search in public pages when enabled in profile settings"
 msgstr "如果資料表單有勾選該設定，您可以在在公開頁面中搜尋並瀏覽聯絡人"
+
+msgid "This event was ended by %1, we don't send notify message to them."
+msgstr "由於登記的活動已經在 %1 結束，所以我們不會寄送任何通知信給參加者。"
