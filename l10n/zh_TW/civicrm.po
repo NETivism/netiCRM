@@ -24392,7 +24392,7 @@ msgstr "凍結？"
 
 #: templates/CRM/Contact/Form/Edit/Email.tpl
 msgid "Bulk Mailings?"
-msgstr "寄送"
+msgstr "允許電子報信件?"
 
 #: templates/CRM/Contact/Form/Edit/Email.tpl
 #: templates/CRM/Contact/Form/Edit/IM.tpl
