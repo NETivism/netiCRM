@@ -8969,7 +8969,7 @@ msgstr "包括有這些隱私選項的聯絡人。"
 
 #: CRM/Contact/Form/Search/Criteria.php
 msgid "Email On Hold"
-msgstr "不寄送"
+msgstr "已凍結信箱"
 
 #: CRM/Contact/Form/Search/Criteria.php
 msgid "- select language -"
@@ -15960,11 +15960,11 @@ msgstr "遺失相關聯絡人必要欄位。"
 
 #: CRM/Import/Parser/Contact.php
 msgid "Mismatched or Invalid contact subtype found for this related contact."
-msgstr "聯絡人擁有子類別比對錯誤或格式不合的問題。"
+msgstr "聯絡人類型比對錯誤或格式不合。"
 
 #: CRM/Import/Parser/Contact.php
 msgid "Record duplicates multiple contacts"
-msgstr "記錄複製多個聯絡人"
+msgstr "匯入時發現一筆記錄對應到多個聯絡人，請用「合併重複聯絡人」工具合併聯絡人後，再行匯入此筆資料。"
 
 #: CRM/Import/Parser/Contact.php
 msgid "field ID"
