@@ -73,6 +73,7 @@ class CiviMailProcessor {
         }
 
         $config = CRM_Core_Config::singleton();
+        date_default_timezone_set("Asia/Taipei");
         $verpSeperator = preg_quote( $config->verpSeparator );
         $twoDigitStringMin = $verpSeperator . '(\d+)' . $verpSeperator . '(\d+)';
         $twoDigitString    = $twoDigitStringMin . $verpSeperator;

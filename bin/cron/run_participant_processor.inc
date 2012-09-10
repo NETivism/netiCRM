@@ -1,6 +1,7 @@
 <?php
 
 function run_participant_processor(){
+  date_default_timezone_set("Asia/Taipei");
   $obj = new CRM_ParticipantProcessor( );
   echo "Updating..";
   $obj->updateParticipantStatus( );

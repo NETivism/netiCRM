@@ -15,6 +15,7 @@ function run_civimail() {
   }
     
   // Split up the parent jobs into multiple child jobs
+  date_default_timezone_set("Asia/Taipei");
   CRM_Mailing_BAO_Job::runJobs_pre($config->mailerJobSize);
   CRM_Mailing_BAO_Job::runJobs();
   CRM_Mailing_BAO_Job::runJobs_post();
