@@ -3266,7 +3266,7 @@ msgstr "無法建立關係記錄 - 現有關係重複： %1。"
 
 #: CRM/Contact/Form/Task/Delete.php CRM/Contact/Selector.php
 msgid "Restore Contact"
-msgstr "合併聯絡人"
+msgstr "回復聯絡人"
 
 #: CRM/Contact/Form/Task/Delete.php CRM/Core/BAO/Address.php
 msgid "The following contact(s) have address records which were shared with the address you removed from this contact. These address records are no longer shared - but they have not been removed or altered."
@@ -9402,7 +9402,7 @@ msgstr ""
 
 #: CRM/Contact/Form/Task/Delete.php
 msgid "Restore Contact(s)"
-msgstr "合併聯絡人"
+msgstr "回復聯絡人"
 
 #: CRM/Contact/Form/Task/Delete.php
 msgid "Delete Contact(s)"
@@ -18254,7 +18254,7 @@ msgstr "時間"
 
 #: CRM/Report/Form/Contact/LoggingSummary.php
 msgid "Altered Contact"
-msgstr "合併聯絡人"
+msgstr "更動的聯絡人"
 
 #: CRM/Report/Form/Contact/LoggingSummary.php
 msgid "Insert"
@@ -18262,7 +18262,7 @@ msgstr "插入替代符號"
 
 #: CRM/Report/Form/Contact/LoggingSummary.php
 msgid "Altered By"
-msgstr "新增自"
+msgstr "更改者"
 
 #: CRM/Report/Form/Contact/LoggingSummary.php
 msgid "Go to contact summary."
@@ -24928,7 +24928,7 @@ msgstr "更新欄位值給每一個聯絡人為需要。按以下<strong>更新�
 
 #: templates/CRM/Contact/Form/Task/Delete.tpl
 msgid "Are you sure you want to restore the selected contact(s)? The contact(s) and all related data will be fully restored."
-msgstr "您確定要刪除選取的聯絡人？該聯絡人的所有資料將被永久刪除且無法還原。"
+msgstr "您確定要回復選取的聯絡人？該聯絡人的所有資料將會完整還原。"
 
 #: templates/CRM/Contact/Form/Task/Delete.tpl
 msgid "Are you sure you want to delete the selected contact(s)?"
@@ -24940,7 +24940,7 @@ msgstr "聯絡人與其相關資料將會被丟到資源回收桶，僅能由管
 
 #: templates/CRM/Contact/Form/Task/Delete.tpl
 msgid "The contact(s) and all related data will be permanently removed."
-msgstr ""
+msgstr "聯絡人和其相關的資料，將會永久刪除。"
 
 #: templates/CRM/Contact/Form/Task/EmailCommon.tpl
 msgid "NOTE: If you are composing HTML-formatted messages, you may want to enable a Rich Text (WYSIWYG) editor (Administer &raquo; Configure &raquo; Global Settings &raquo; Site Preferences)."
