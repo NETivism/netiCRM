@@ -882,7 +882,26 @@ function civicrm_preprocess_page(&$variables) {
         }
         
         $core[$path . '/../js/noconflict.js'] = $val;
+
+        if(module_exists('jquery_update')){
+          $core[jquery_update_jquery_path()] = $scripts['core']['misc/jquery.js'];
+          unset($scripts['core']['misc/jquery.js']);
+        }
         $scripts['core'] = $core + $scripts['core'];
+
+        if(module_exists('jquery_update')){
+          foreach (jquery_update_get_replacements() as $type => $replacements) {
+            foreach ($replacements as $find => $replace) {
+              // If the file to replace is loaded on this page...
+              if (isset($scripts[$type][$find])) {
+                // Create a new entry for the replacement file, and unset the original one.
+                $replace = JQUERY_UPDATE_REPLACE_PATH .'/'. $replace;
+                $scripts[$type][$replace] = $scripts[$type][$find];
+                unset($scripts[$type][$find]);
+              }
+            }
+          }  
+        }
         $variables['scripts'] = drupal_get_js('header', $scripts);
     }
 }
