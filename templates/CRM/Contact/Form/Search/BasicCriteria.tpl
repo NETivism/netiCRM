@@ -210,5 +210,7 @@ dojo.addOnLoad( function( ) {
 cj(function() {
    cj().crmaccordions(); 
 });
+cj("select#group").chosen({"search_contains": true});
+cj("select#tag").chosen({"search_contains": true});
 </script>
 {/literal}
