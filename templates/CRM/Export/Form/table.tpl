@@ -86,7 +86,6 @@
          }
         cj(document).ready(function(){
           cj('Select[id^="mapper[1]"][id$="[1]"]').addClass('huge');
-          // TODO cj('select[name$="0\\]"]').chosen({"search_contains": true});
           var mappers = cj("#map-field select").filter(function(){
             var n = cj(this).attr('name');
             if(n.match(/mapper\[1\]\[\d+\]\[0\]/)){
@@ -97,7 +96,11 @@
           mappers.each(function(){
             var n = cj(this).attr('name');
             var name = n.replace(/\[0\]$/, '[1]').replace(/\[/g, '\\[').replace(/\]/g,'\\]');
-            cj("select[name="+name+"]:visible").chosen({"search_contains": true}).hide();
+            cj("select[name="+name+"]:visible").chosen({
+              "search_contains": true,
+              "placeholder_text": "{/literal}{ts}-- Select --{/ts}{literal}",
+              "no_results_text": "{/literal}{ts}No matches found.{/ts}{literal}"
+            }).hide();
           });
           mappers.bind('change', function( ) {
             // trigger change first
@@ -109,7 +112,11 @@
             // now start chosen
             var n = cj(this).attr('name');
             var name = n.replace(/\[0\]$/, '[1]').replace(/\[/g, '\\[').replace(/\]/g,'\\]');
-            cj("select[name="+name+"]").chosen({"search_contains": true}).hide();
+            cj("select[name="+name+"]").chosen({
+              "search_contains": true,
+              "placeholder_text": "{/literal}{ts}-- Select --{/ts}{literal}",
+              "no_results_text": "{/literal}{ts}No matches found.{/ts}{literal}"
+            }).hide();
             cj("select[name="+name+"]").trigger("liszt:updated");
           });
         });

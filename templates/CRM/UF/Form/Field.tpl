@@ -92,8 +92,11 @@
 {literal}
 <script type="text/javascript">
 cj("#field_name\\[0\\]").bind( 'change', function( ) {
-  // cj("#field_name\\[1\\]").chosen({"search_contains": true});
-  cj("#field_name\\[1\\]").chosen({"search_contains": true}).hide();
+  cj("#field_name\\[1\\]").chosen({
+    "search_contains": true,
+    "placeholder_text": "{/literal}{ts}-- Select --{/ts}{literal}",
+    "no_results_text": "{/literal}{ts}No matches found.{/ts}{literal}"
+  }).hide();
   cj("#field_name\\[1\\]").trigger("liszt:updated");
 }); 
 function showLabel( ) {
