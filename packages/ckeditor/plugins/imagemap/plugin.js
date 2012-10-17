@@ -60,33 +60,7 @@ CKEDITOR.plugins.add('imagemap',
 var processingInstance;
 
 function initImageMapEditor(editor,selected){
-  cj.modal("<div style='width: 700px; height:400px; border: 1px solid black; background: white;' id='imageMapModalDiv'>\
-<div id='imageMapCanvasDiv' style='background: grey; width: 400px; height: 400px; border-right: 1px solid black; float: left; overflow: auto;'>\
-</div>\
-<div style='float: left;'>\
-  <div style='height: 200px; border-bottom: 1px solid black; width: 238px;'>\
-    <button onclick='processingInstance.addArea(\"\",\"\",\"New\",\"circle\",\"20,20,10\");'>Circle</button>\
-    <button onclick='processingInstance.addArea(\"\",\"\",\"New\",\"rect\",\"20,20,40,40\");'>Box</button>\
-    <button onclick='processingInstance.addArea(\"\",\"\",\"New\",\"poly\",\"\");'>Polygon</button>\
-  <select style='width: 240px; height: 200px;' size='4' onclick='processingInstance.select(cj(\"#imageMapAreas\").val())' id='imageMapAreas'>\
-  </select>\
-  </div>\
-  <div style='clear: both;'>\
-    <button onclick='processingInstance.saveToHtml();'>Update</button>
-    <button onclick='processingInstance.removeArea();'>Delete Area</button><br>\
-    <table style='display: none; border: none;' id='imageMapRegionEdit'>\
-      <tr><td colspan=2>\
-      URL: <input type='text' id='imageMapHref' style='width: 190px;' onchange='processingInstance.updateArea();'>\
-      </td></tr><td>\
-      Title: <input type='text' id='imageMapTitle' style='width: 60px;' onkeyup='processingInstance.updateArea();'>\
-      </td><td>\
-      Alt: <input type='text' id='imageMapAlt' style='width: 60px;' onchange='processingInstance.updateArea();'>\
-      </td></tr>\
-    </table>\
-  </div>\
-  </div>\
-  <div id='imageMapHidden' style='display:none;'></div>\
-   </div>"); 
+  cj.modal("<div style='width: 700px; height:400px; border: 1px solid black; background: white;' id='imageMapModalDiv'><div id='imageMapCanvasDiv' style='background: grey; width: 400px; height: 400px; border-right: 1px solid black; float: left; overflow: auto;'></div><div style='float: left;'>  <div style='height: 200px; border-bottom: 1px solid black; width: 238px;'><button onclick='processingInstance.addArea(\"\",\"\",\"New\",\"circle\",\"20,20,10\");'>Circle</button><button onclick='processingInstance.addArea(\"\",\"\",\"New\",\"rect\",\"20,20,40,40\");'>Box</button><button onclick='processingInstance.addArea(\"\",\"\",\"New\",\"poly\",\"\");'>Polygon</button><select style='width: 240px; height: 200px;' size='4' onclick='processingInstance.select(cj(\"#imageMapAreas\").val())' id='imageMapAreas'></select></div><div style='clear: both;'>    <button onclick='processingInstance.saveToHtml();'>Update</button>    <button onclick='processingInstance.removeArea();'>Delete Area</button><br>   <table style='display: none; border: none;' id='imageMapRegionEdit'>      <tr><td colspan=2>      URL: <input type='text' id='imageMapHref' style='width: 190px;' onchange='processingInstance.updateArea();'>      </td></tr><td>      Title: <input type='text' id='imageMapTitle' style='width: 60px;' onkeyup='processingInstance.updateArea();'>      </td><td>      Alt: <input type='text' id='imageMapAlt' style='width: 60px;' onchange='processingInstance.updateArea();'>      </td></tr>    </table>  </div>  </div>  <div id='imageMapHidden' style='display:none;'></div>   </div>"); 
   //$("#imageMapHidden").html(editor.val());
   initImageMapCanvas(editor,selected);
 }

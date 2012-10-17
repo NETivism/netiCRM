@@ -1201,13 +1201,10 @@ AND    civicrm_mailing.id = civicrm_mailing_job.mailing_id";
             $domain =& CRM_Core_BAO_Domain::getDomain( );
             $data = CRM_Utils_Token::getDomainTokenReplacement($token, $domain, $html);
         } else if( $type == 'mailing') {
-            require_once 'CRM/Mailing/BAO/Mailing.php';
-            $mailing = new CRM_Mailing_BAO_Mailing( );
-            $mailing->find( true );
             if ( $token == 'name' ) {
-                $data = $mailing->name ;
+                $data = $this->name ;
             } else if ( $token == 'group' ) {
-                $groups = $mailing->getGroupNames( );
+                $groups = $this->getGroupNames( );
                 $data = implode(', ', $groups);
             }         
         } else {
