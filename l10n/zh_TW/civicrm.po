@@ -6964,7 +6964,7 @@ msgstr "如果那是一個標籤或分類"
 #: templates/CRM/Admin/Page/Tag.tpl
 #: templates/CRM/Contribute/Page/ContributionType.tpl
 msgid "Reserved?"
-msgstr "保留？"
+msgstr "預留？"
 
 #: CRM/Admin/Form/Tag.php
 msgid "The tag '%1' has been saved."
@@ -21608,7 +21608,7 @@ msgstr "這個標籤使用於何種類型?"
 
 #: templates/CRM/Admin/Form/Tag.tpl
 msgid "Reserved tags can not be deleted. Users with 'administer reserved tags' permission can set or unset the reserved flag. You must uncheck 'Reserved' (and delete any child tags) before you can delete a tag."
-msgstr "保留標籤後，該標籤將無法刪除。擁有「管理預留標籤」權限的使用者，可以設定標籤是否保留。若要刪除一個標前，您可以先刪除其子標籤，然後再取消此標籤中「保留」的勾選，才能刪除標籤。"
+msgstr "預留的標籤無法刪除。擁有「管理預留標籤」權限的使用者，可以設定標籤是否預留。若要刪除一個預留的標籤，您必須先取消該標籤的預留屬性，刪除其子標籤（如果為自由標籤的話，該標籤下面會有子標籤），才能刪除標籤。"
 
 #: templates/CRM/Admin/Form/Tag.tpl templates/CRM/Group/Form/Edit.tpl
 msgid "Remove Parent?"
@@ -23025,7 +23025,7 @@ msgstr "新增標籤"
 
 #: templates/CRM/Admin/Page/Tag.tpl
 msgid "Add Tag Set"
-msgstr "新增上層標籤"
+msgstr "新增自由標籤"
 
 #: templates/CRM/Admin/Page/Tag.tpl templates/CRM/Case/Form/Selector.tpl
 #: templates/CRM/Contact/Form/Task/HookSample.tpl
@@ -23037,15 +23037,15 @@ msgstr "ID"
 
 #: templates/CRM/Admin/Page/Tag.tpl
 msgid "Parent ID"
-msgstr ""
+msgstr "自由標籤編號"
 
 #: templates/CRM/Admin/Page/Tag.tpl
 msgid "Tag set?"
-msgstr "上層標籤?"
+msgstr "自由標籤?"
 
 #: templates/CRM/Admin/Page/Tag.tpl
 msgid "Tag Set"
-msgstr "上層標籤"
+msgstr "自由標籤"
 
 #: templates/CRM/Admin/Page/Tag.tpl
 msgid "There are no Tags present. You can <a href='%1'>add one</a>."
