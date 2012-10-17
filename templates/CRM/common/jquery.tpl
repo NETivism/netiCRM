@@ -75,7 +75,7 @@
 
 <script type="text/javascript" src="{$config->resourceBase}packages/jquery/plugins/jquery.FormNavigate.js"></script>
 
-<script type="text/javascript" src="{$config->resourceBase}packages/jquery/plugins/jquery.chosen.min.js"></script>
+<script type="text/javascript" src="{$config->resourceBase}packages/jquery/plugins/jquery.chosen.js"></script>
 <style type="text/css">@import url("{$config->resourceBase}packages/jquery/css/jquery.chosen.css");</style>
 
 <script type="text/javascript" src="{$config->resourceBase}packages/jquery/plugins/jquery.simplemodal.min.js"></script>

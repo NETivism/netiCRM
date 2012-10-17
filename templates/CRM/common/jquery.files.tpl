@@ -71,7 +71,7 @@ packages/jquery/css/dashboard.css
 
 packages/jquery/plugins/jquery.FormNavigate.js
 
-packages/jquery/plugins/jquery.chosen.min.js
+packages/jquery/plugins/jquery.chosen.js
 packages/jquery/css/jquery.chosen.css
 
 packages/jquery/plugins/jquery.simplemodal.min.js
