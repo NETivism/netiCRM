@@ -62,3 +62,10 @@
  </table>
   <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
 </div>
+{literal}
+<script type="text/javascript">
+cj(document).ready(function(){
+  cj('select[name^=where]').chosen({"search_contains": true});
+}); 
+</script>
+{/literal}
