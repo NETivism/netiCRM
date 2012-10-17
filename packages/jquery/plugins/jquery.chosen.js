@@ -112,6 +112,7 @@ Copyright (c) 2011 by Harvest
       this.set_up_html();
       this.register_observers();
       this.finish_setup();
+      this.result_can_select = false;
     }
 
     AbstractChosen.prototype.set_default_values = function() {
@@ -231,7 +232,12 @@ Copyright (c) 2011 by Harvest
           break;
         case 13:
           evt.preventDefault();
-          if (this.results_showing) return this.result_select(evt);
+          if(!this.result_can_select){
+            return this.results_search();
+          }
+          else if (this.results_showing) {
+            return this.result_select(evt);
+          }
           break;
         case 27:
           if (this.results_showing) this.results_hide();
@@ -633,6 +639,7 @@ Copyright (c) 2011 by Harvest
       var target;
       target = $(evt.target).hasClass("active-result") ? $(evt.target) : $(evt.target).parents(".active-result").first();
       if (target.length) {
+        this.result_can_select = true;
         this.result_highlight = target;
         this.result_select(evt);
         return this.search_field.focus();
@@ -741,8 +748,12 @@ Copyright (c) 2011 by Harvest
           this.selected_item.find("span").first().text(item.text);
           if (this.allow_single_deselect) this.single_deselect_control_build();
         }
-        if (!(evt.metaKey && this.is_multiple)) this.results_hide();
-        this.search_field.val("");
+        if(this.result_can_select){
+          if (!(evt.metaKey && this.is_multiple)) this.results_hide();
+          this.search_field.val("");
+          this.result_can_select = false;
+        }
+        
         if (this.is_multiple || this.form_field_jq.val() !== this.current_value) {
           this.form_field_jq.trigger("change", {
             'selected': this.form_field.options[item.options_index].value
@@ -954,6 +965,7 @@ Copyright (c) 2011 by Harvest
           this.mouse_on_container = false;
           break;
         case 13:
+          this.result_can_select = true;
           evt.preventDefault();
           break;
         case 38:
