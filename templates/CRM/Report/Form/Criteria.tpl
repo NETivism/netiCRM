@@ -184,6 +184,11 @@
 	        document.getElementById( field ).checked = false;	    
 	    }	
 	}
+  cj(document).ready(function(){
+    cj(".crm-accordion-closed").click(function(){
+      cj(".crm-accordion-open .crm-report-criteria-filter select.form-select").not("[name$=op]").chosen({"search_contains": true});
+    });
+  });
     </script>
     {/literal}
 
