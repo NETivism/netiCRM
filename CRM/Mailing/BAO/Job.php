@@ -456,13 +456,16 @@ VALUES (%1, %2, %3, %4, %5, %6, %7)
 
         // make sure that there's no more than $config->mailerBatchLimit mails processed in a run
         while ($eq->fetch()) {
-            // if ( ( $mailsProcessed % 100 ) == 0 ) {
-            // CRM_Utils_System::xMemory( "$mailsProcessed: " );
-            // }
+            //if ( ( $mailsProcessed % 10 ) == 0 ) {
+            //CRM_Utils_System::xMemory( "$mailsProcessed: " );
+            //}
 
             if ( $config->mailerBatchLimit > 0 &&
                  $mailsProcessed >= $config->mailerBatchLimit ) {
-                $this->deliverGroup( $fields, $mailing, $mailer, $job_date, $attachments );
+                if (!empty($fields)) {
+                  $this->deliverGroup( $fields, $mailing, $mailer, $job_date, $attachments );
+                }
+                $eq->free();
                 return false;
             }
             $mailsProcessed++;
@@ -474,13 +477,16 @@ VALUES (%1, %2, %3, %4, %5, %6, %7)
             if ( count( $fields ) == self::MAX_CONTACTS_TO_PROCESS ) {
                 $isDelivered = $this->deliverGroup( $fields, $mailing, $mailer, $job_date, $attachments );
                 if ( !$isDelivered ) {
+                    $eq->free();
                     return $isDelivered;
                 }
                 $fields = array( );
             }
         }
 
-        $isDelivered = $this->deliverGroup( $fields, $mailing, $mailer, $job_date, $attachments );
+        if (!empty($fields)) {
+          $isDelivered = $this->deliverGroup( $fields, $mailing, $mailer, $job_date, $attachments );
+        }
         return $isDelivered;
     }
 
