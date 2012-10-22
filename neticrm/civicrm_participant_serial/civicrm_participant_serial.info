@@ -1,0 +1,6 @@
+name = CiviCRM Participant Serial
+description = Participant serial number per event base on civicrm custom field.
+package = NetiCRM
+dependencies[] = civicrm
+core = 6.x
+version = 6.x-dev
