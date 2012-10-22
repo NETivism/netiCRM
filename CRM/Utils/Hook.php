@@ -126,6 +126,24 @@ class CRM_Utils_Hook {
                   $config->userHookClass .
                   '::invoke( 2, $formName, $form, $formName, $formName, $formName, \'civicrm_buildForm\' );' );  
     }
+    /** 
+     * This hook is invoked when a CiviCRM form is before submit. If the module has injected
+     * any form elements, this hook should save the values in the database
+     * 
+     * @param string $formName the name of the form
+     * @param object $form     reference to the form object
+     *
+     * @return null the return value is ignored
+     */
+    static function preSave( $formName, &$form ) {
+        $config = CRM_Core_Config::singleton( );
+        require_once( str_replace( '_', DIRECTORY_SEPARATOR, $config->userHookClass ) . '.php' );
+        return
+            eval( 'return ' .
+                  $config->userHookClass .
+                  '::invoke( 2, $formName, $form, $formName, $formName, $formName, \'civicrm_preSubmit\' );' );
+    }
+
 
     /** 
      * This hook is invoked when a CiviCRM form is submitted. If the module has injected
