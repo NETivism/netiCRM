@@ -430,21 +430,12 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration
             //freeze button to avoid multiple calls.
             $js = null;
            
-            if(!$this->_paymentProcessor && !CRM_Utils_Array::value( 'is_pay_later', $this->_values['event'])){
-              $button_text = ts("Submit");
-              $js = array( 
-                'onclick' => 'var agree=confirm("'.ts('Are you sure you wish to submit this form?').'"); if(agree) return true; else return false;' 
-              );
-            }
-            else{
-              if ( !CRM_Utils_Array::value('is_monetary', $this->_values['event']) ) {
-                  $js = array( 'onclick' => "return submitOnce(this,'" . $this->_name . "','" . ts('Processing') ."');" );
-              }
-              $button_text = ts('Continue >>');
+            if ( !CRM_Utils_Array::value('is_monetary', $this->_values['event']) ) {
+                $js = array( 'onclick' => "return submitOnce(this,'" . $this->_name . "','" . ts('Processing') ."');" );
             }
             $this->addButtons(array( 
                                     array ( 'type'      => 'upload', 
-                                            'name'      => $button_text, 
+                                            'name'      => ts('Continue >>'), 
                                             'spacing'   => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;', 
                                             'isDefault' => true,
                                             'js'        => $js ), 
