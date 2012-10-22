@@ -141,7 +141,7 @@ class CRM_Utils_Hook {
         return
             eval( 'return ' .
                   $config->userHookClass .
-                  '::invoke( 2, $formName, $form, $formName, $formName, $formName, \'civicrm_preSubmit\' );' );
+                  '::invoke( 2, $formName, $form, $formName, $formName, $formName, \'civicrm_preSave\' );' );
     }
 
 
