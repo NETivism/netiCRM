@@ -774,7 +774,7 @@ WHERE  contribution_id = {$this->_id}
                                array(''=>ts( '- select -' )) + CRM_Contribute_PseudoConstant::contributionType( ),
                                true, array('onChange' => "buildCustomData( 'Contribution', this.value );"));
         if ( $this->_online ) {
-            $element->freeze( );
+            // $element->freeze( );
         }
         if ( !$this->_mode ) { 
             $element = $this->add('select', 'payment_instrument_id', 
