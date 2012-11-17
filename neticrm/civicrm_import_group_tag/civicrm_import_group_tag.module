@@ -30,11 +30,13 @@ function civicrm_import_group_tag_settings(){
     '#title' => t('Type'),
     '#options' => array('tag' => t('Tag'), 'group' => t('Group')),
   );
+  /*
   $form['quick'] = array(
     '#type' => 'checkbox',
     '#title' => t('Quicker method'),
     '#description' => t("Quicker but may have problem. Use for large number of group and contact import."),
   );
+  */
   $form['multi_separator'] = array(
     '#type' => 'textfield',
     '#title' => t('Multiple tag / group separator'),
@@ -91,10 +93,7 @@ function civicrm_import_group_tag_settings_submit($form, &$form_state){
       }
 
       while (($data = fgetcsv($fd, 0, ",")) !== FALSE) {
-        if(!$row){
-          $title = $data;
-        }
-        elseif(is_numeric($data[0])){
+        if($data[0]){
           if($separator){
             $import = explode($separator, $data[1]);
             foreach($import as $k=>$v){
@@ -186,7 +185,8 @@ function civicrm_import_group_tag($id, $import, $type, $main_id = 'contact_id'){
         $params = array('title'=>$text);
         $result = civicrm_group_get($params);
         if(civicrm_error($result)){
-          $params = array('title' => $text,'is_active' => 1 );
+          drupal_set_message('Add new group '. $text);
+          $params = array('title' => $text, 'is_active' => 1 );
           $res = civicrm_group_add($params);
           if(civicrm_error($res)){
             drupal_set_message($res['error_message'], 'error');
