@@ -35177,12 +35177,12 @@ msgstr "多謝您登記了定期捐款."
 #: xml/templates/message_templates/contribution_recurring_notify_html.tpl
 #: xml/templates/message_templates/contribution_recurring_notify_text.tpl
 msgid "This recurring contribution will be automatically processed every %1 %2(s) for a total %3 installment."
-msgstr "此定期定額捐款，會於每 %1 %2自動處理，總共是 %3 期"
+msgstr "此定期捐款，會於每 %1 %2定期請款，總共是 %3 期"
 
 #: xml/templates/message_templates/contribution_recurring_notify_html.tpl
 #: xml/templates/message_templates/contribution_recurring_notify_text.tpl
-msgid "You have pledged to make this recurring donation. You will be charged periodically (per frequency listed above), and you will receive an email receipt from %1 following each charge. These recurring donations will continue until you explicitly cancel the donation. You may change or cancel your recurring donation at anytime by logged in your account. If you have questions about recurring donations please contact us at %2."
-msgstr "您必須保證使這個定期捐款。您將定期被收取（頻率如上面列出），並且您將收到一封Email收據從%1，以及後來的費用。這些定期捐款將繼續下去，直到你明確地取消這捐款。您可以隨時通過登入您的帳戶去更改或取消定期捐款。如果對定期捐款有什麼問題，請在%2聯絡我們。"
+msgid "You have pledged to make this recurring donation. You will be charged periodically (per frequency listed above), and you will receive an email receipt from %1 following each charge. These recurring donations will continue until you explicitly cancel the donation. You may change or cancel your recurring donation at anytime by logging into your account. If you have questions about recurring donations please contact us at %2."
+msgstr "收到這封信，因為您在本單位 %1 認捐了一筆定期捐款，捐款的期數和金額列出如上，每次請款時您會收到一封Email通知，無論任何原因需要取消您的定期捐款，您可以隨時透過Email %2 聯絡我們。"
 
 #: xml/templates/message_templates/contribution_recurring_notify_html.tpl
 #: xml/templates/message_templates/contribution_recurring_notify_text.tpl
