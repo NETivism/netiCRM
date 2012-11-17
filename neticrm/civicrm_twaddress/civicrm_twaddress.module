@@ -90,6 +90,10 @@ function civicrm_twaddress_civicrm_buildForm($formName, &$form) {
       drupal_add_js($path."/twzipcode.js");
       $add = 1;
     }
+
+    if(arg(1) == 'contribute' || arg(1) == 'event'){
+      _civicrm_twaddress_grouping_js();
+    }
     foreach($override['areaName'] as $k => $v){
       $count++;
 
@@ -104,6 +108,7 @@ function civicrm_twaddress_civicrm_buildForm($formName, &$form) {
             var v = $(this).val();
             $("input[name=\''.$override['areaName'][$k]['name'].'\']").val(v);
           });
+          $("input[name='.$override['zipName'][$k]['key'].']").addClass("readonly post-code");
 
           $("form[name='.$form_name.']").twzipcode({
             zipName:"'.$override['zipName'][$k]['key'].'",
@@ -114,7 +119,6 @@ function civicrm_twaddress_civicrm_buildForm($formName, &$form) {
             areaSel:"'.$override['areaName'][$k]['default'].'"
           });
         }
-
       });
       ';
       drupal_add_js($js , 'inline');
@@ -164,4 +168,45 @@ function _civicrm_twaddress_key($name){
   $key = is_numeric($matches[0]) ? $matches[0] : 1;
 
   return $key;
+}
+
+function _civicrm_twaddress_grouping_js(){
+  $js = '
+    $(document).ready(function(){
+      // find a address group to collapsed to single line
+      var ids = {};
+      var addr_fields = $(".crm-section").filter(function(){
+        var classes = $(this).attr("class").split(" ");
+        for (var i=0; i<classes.length; i++) {
+          if (classes[i].slice(0,14) == "state_province" || classes[i].slice(0, 4) == "city" || classes[i].slice(0, 11) == "postal_code") {
+            var matches = classes[i].match(/\d+/);
+            var rel = "g"+matches[0];
+            $(this).attr("rel", rel);
+            if(typeof(ids[rel]) == "undefined"){
+              ids[rel] = 1;
+            }
+            else{
+              ids[rel] = ids[rel]+1;
+            }
+            return true;
+          }
+        }
+      });
+
+      for(property in ids) {  
+        if(ids[property] == 3){
+          var id = property.replace("g", "");
+          // this the right group
+          $("[rel=\'"+property+"\']").each(function(){
+            var classes = $(this).attr("class");
+            if(!classes.match(/state_province/g)){
+              var html = $(this).find(".content *").appendTo(".state_province-"+id+"-section .content");
+              $(this).hide();
+            }
+          });
+        }
+      }
+    });
+  ';
+  drupal_add_js($js , 'inline');
 }
