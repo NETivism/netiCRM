@@ -338,7 +338,7 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
                     'contactId' => $contactID,
                     'tplParams' => array(
                         'recur_frequency_interval' => $recur->frequency_interval,
-                        'recur_frequency_unit'     => $recur->frequency_unit,
+                        'recur_frequency_unit'     => ts($recur->frequency_unit),
                         'recur_installments'       => $recur->installments,
                         'recur_start_date'         => $recur->start_date,
                         'recur_end_date'           => $recur->end_date,
