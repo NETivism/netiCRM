@@ -41,10 +41,11 @@ class CRM_Contact_Form_Search_Custom_UpcomingBirthdays
      * Define the columns for search result rows
      */
     $this->_columns = array( 
-      ts('Name') => 'name',	
-			ts('Date') => 'sort_name',
-			ts('Occasion Type' ) => 'oc_type'
-		);
+      ts('Contact Id')  => 'contact_id',
+      ts('Name')  => 'name',
+      ts('Birth year') => 'year',
+      ts('Birthday')  => 'birth',
+    );
   }
 
 
@@ -60,14 +61,17 @@ class CRM_Contact_Form_Search_Custom_UpcomingBirthdays
      */
     $month = array( ''   => ts('- select -') , '1' => '1', '2' => '2', '3' => '3', '4' => '4', '5' => '5' , '6' => '6', '7' => '7', '8' => '8' , '9' => '9' , '10' => '10' , '11' => '11' , '12' => '12') ;
             
-            
     $form->add  ('select', 'oc_month_start', ts('Start With Month'), $month, false);
-
     $form->add  ('select', 'oc_month_end', ts('Ends With Month'), $month, false);
-
-    $form->add( 'text', 'oc_day_start', ts( ' Start With day' ) );
-
-    $form->add( 'text', 'oc_day_end', ts( ' End With day' ) );
+    $form->add( 'text', 'oc_day_start', ts( 'Start With day' ) );
+    $form->add( 'text', 'oc_day_end', ts( 'End With day' ) );
+    $time = time();
+    $form->setDefaults(array(
+      'oc_month_start' => date('n', $time),
+      'oc_month_end' => date('n', $time),
+      'oc_day_start' => date('j', $time),
+      'oc_day_end' => date('j', strtotime('first day of next month') - 86400),
+    ));
 
 /*
 
@@ -89,17 +93,15 @@ class CRM_Contact_Form_Search_Custom_UpcomingBirthdays
      * for the search form.
      */
     $form->assign( 'elements', array( 'oc_month_start', 'oc_month_end', 'oc_day_start', 'oc_day_end') );
-
-
   }
 
   /**
    * Define the smarty template used to layout the search form and results listings.
    */
   function templateFile( ) {
-    return 'CRM/Contact/Form/Search/Custom/Sample.tpl';
+    return 'CRM/Contact/Form/Search/Custom/UpcomingBirthday.tpl';
   }
-       
+
   /**
    * Construct the search query
    */       
@@ -109,10 +111,10 @@ class CRM_Contact_Form_Search_Custom_UpcomingBirthdays
     // Get data for contacts 
 
     if ( $onlyIDs ) {
-      $select  = "DISTINCT civicrm_contact.id as contact_id, civicrm_contact.display_name as name";
+      $select  = "DISTINCT contact_a.id as contact_id, contact_a.display_name as name";
     }
     else {
-      $select = "DISTINCT civicrm_contact.id as contact_id, CONCAT( month(civicrm_contact.birth_date) , '-', day(civicrm_contact.birth_date)) as sort_name , civicrm_contact.display_name as name, 'birthday' as oc_type" ;
+      $select = "DISTINCT contact_a.id as contact_id, DATE_FORMAT(contact_a.birth_date,'%Y') as year, CAST(DATE_FORMAT(contact_a.birth_date,'%m.%d') as DECIMAL(5,2)) as birth, contact_a.display_name as name";
     }
     
     $from  = $this->from( );
@@ -126,7 +128,11 @@ class CRM_Contact_Form_Search_Custom_UpcomingBirthdays
     //for only contact ids ignore order.
     if ( !$onlyIDs ) {
       // Define ORDER BY for query in $sort, with default value
-      if ( ! empty( $sort ) ) {
+      if(empty($_GET['crmSID'])){
+        // default sort
+        $sql .= "ORDER BY birth ASC";
+      }
+      elseif ( ! empty( $sort ) ) {
         if ( is_string( $sort ) ) {
           $sql .= " ORDER BY $sort ";
         }
@@ -135,7 +141,7 @@ class CRM_Contact_Form_Search_Custom_UpcomingBirthdays
         }
       }
       else {
-        $sql .= "ORDER BY CONCAT(month(birth_date), '-',day(civicrm_contact.birth_date)) ASC";
+        $sql .= "ORDER BY birth ASC";
       }
     }
 
@@ -143,16 +149,14 @@ class CRM_Contact_Form_Search_Custom_UpcomingBirthdays
       $sql .= " LIMIT $offset, $rowcount ";
     }
 
-
     return $sql;
   }
       
   function from(){
-    return " civicrm_contact ";
+    return " civicrm_contact contact_a ";
   }
  
   function where($includeContactIDs = false){ 
-
     $clauses = array( );
 
     $oc_month_start = $this->_formValues['oc_month_start'] ;
@@ -180,7 +184,6 @@ class CRM_Contact_Form_Search_Custom_UpcomingBirthdays
 
     if( ( $oc_day_end <> '') && is_numeric($oc_day_end) ){
       $clauses[] = "day(birth_date) <= ".$oc_day_end;
-
     }
 
     $clauses[] =  "birth_date IS NOT NULL";
@@ -199,6 +202,8 @@ class CRM_Contact_Form_Search_Custom_UpcomingBirthdays
         $clauses[] = "contact_a.id IN ( $contactIDs )";
       }
     }
+
+    $clauses[] = "contact_a.is_deleted = 0";
         
     $partial_where_clause = implode( ' AND ', $clauses );
     return $partial_where_clause ;
@@ -234,4 +239,9 @@ class CRM_Contact_Form_Search_Custom_UpcomingBirthdays
   function summary( ) {
     return null;
   }
+
+  function alterRow( &$row ) {
+    $row['birth'] = str_replace('.','/', $row['birth']);
+  }
+
 }
