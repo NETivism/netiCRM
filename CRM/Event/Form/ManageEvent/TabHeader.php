@@ -115,6 +115,7 @@ class CRM_Event_Form_ManageEvent_TabHeader {
                 $tabs[$key]['link'] = CRM_Utils_System::url( "civicrm/event/manage/{$key}",
                                                              "{$reset}action=update&id={$eventID}&qfKey={$qfKey}" );
                 $tabs[$key]['active'] = $tabs[$key]['valid'] = true;
+                $tabs[$key]['current'] = strpos($_SERVER['SCRIPT_URL'], $key) ? TRUE : FALSE;
             }
             
             // retrieve info about paid event, tell a friend and online reg

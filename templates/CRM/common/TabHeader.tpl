@@ -24,10 +24,10 @@
  +--------------------------------------------------------------------+
 *}
 {if $tabHeader and count($tabHeader) gt 1}
-<div id="mainTabContainer" class="clear-block">
+<div id="mainTabContainer" class="clear-block ui-tabs">
 <ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
    {foreach from=$tabHeader key=tabName item=tabValue}
-      <li id="tab_{$tabName}" class="crm-tab-button ui-state-default ui-corner-top ui-tabs-selected ui-corner-bottom {if !$tabValue.valid}disabled{/if}">
+      <li id="tab_{$tabName}" class="crm-tab-button ui-state-default ui-corner-all {if !$tabValue.valid}disabled{/if} {if $tabValue.current}ui-state-active{/if}">
       {if $tabValue.link and $tabValue.active}
          <a href="{$tabValue.link}" title="{$tabValue.title}{if !$tabValue.valid} ({ts}disabled{/ts}){/if}"><span> </span> {$tabValue.title}</a>
       {else}
@@ -51,7 +51,15 @@ function stopSpinner( ) {
 }
 
     cj( function() {
+        cj('li.crm-tab-button').hover(function(){
+          $(this).addClass('ui-state-hover');
+        },
+        function(){
+          $(this).removeClass('ui-state-hover');
+        });
+        /*
         var tabIndex = cj('#tab_' + selectedTab).prevAll().length
+        cj("#mainTabContainer").tabs();
         cj("#mainTabContainer").tabs( {
             selected: tabIndex,
             spinner: spinnerImage,
@@ -84,6 +92,7 @@ function stopSpinner( ) {
             },
 	    load: stopSpinner
         });        
+        */
     });
 {/literal}
 </script>
