@@ -41,7 +41,6 @@
 
 
 <script type="text/javascript"> 
-/*
    var selectedTab = 'EventInfo';
    {if $selectedTab}selectedTab = "{$selectedTab}";{/if}
    var spinnerImage = '<img src="{$config->resourceBase}i/loading.gif" style="width:10px;height:10px"/>';    
@@ -58,15 +57,19 @@ function stopSpinner( ) {
             spinner: spinnerImage,
             select: function(event, ui) {
                 // we need to change the action of parent form, so that form submits to correct page
-                var url = cj.data(ui.tab, 'load.tabs');
+                var url = ui.tab.href;
                 {/literal}{if $config->userFramework eq 'Drupal'}{literal}
                     var actionUrl = url.split( '?' );
-                    var actualUrl = actionUrl[0];
+                    {/literal}{if $config->cleanURL}{literal}
+                      var actualUrl = actionUrl[0];
+                    {/literal}{else}{literal}
+                      var getParams = actionUrl[1].split( '&' );
+                      var actualUrl = actionUrl[0] + '?' + getParams[0];
+                    {/literal}{/if}{literal}
                 {/literal}{else}{literal}
                     var actionUrl = url.split( '&' );
                     var actualUrl = actionUrl[0] + '&' + actionUrl[1];
                 {/literal}{/if}{literal}
-
                 cj(this).parents("form").attr("action", actualUrl )                
                 
                 if ( !global_formNavigate ) {
@@ -82,6 +85,5 @@ function stopSpinner( ) {
 	    load: stopSpinner
         });        
     });
-    */
 {/literal}
 </script>
