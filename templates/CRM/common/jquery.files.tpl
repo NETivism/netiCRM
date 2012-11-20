@@ -28,8 +28,9 @@
  * We will unify the two files in a future release
  *}
 packages/jquery/jquery.js
-packages/jquery/jquery-ui-1.8.5/js/jquery-ui-1.8.5.custom.min.js
-packages/jquery/jquery-ui-1.8.5/css/custom-theme/jquery-ui-1.8.5.custom.css
+packages/jquery/jquery-ui/js/jquery-ui-1.9.1.custom.min.js
+packages/jquery/jquery-ui/css/custom-theme/jquery-ui-1.9.1.custom.css
+packages/jquery/jquery-ui/development-bundle/ui/i18n/jquery.ui.datepicker-{$config->lcMessages|replace:'_':'-'}.js
 
 packages/jquery/plugins/flexigrid.js
 packages/jquery/css/flexigrid.css

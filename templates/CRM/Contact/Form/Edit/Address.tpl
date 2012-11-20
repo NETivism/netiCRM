@@ -114,7 +114,7 @@
          });
          
          // start of code to add onchange event for hidden element
-         var contactHiddenElement = 'input[name=contact_select_id[' + blockNo +']]';
+         var contactHiddenElement = 'input[name="contact_select_id[' + blockNo +']"]';
          
          // store initial value
          var _default  = cj( contactHiddenElement ).val();

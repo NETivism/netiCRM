@@ -60,8 +60,14 @@ eval('tableId =[' + tableId + ']');
     var id = -1; var count = 0; var columns=''; var sortColumn = '';
     //build columns array for sorting or not sorting
     cj(tabId + ' th').each( function( ) {
-        var option = cj(this).attr('id').split("_");
-        option  = ( option.length > 1 ) ? option[1] : option[0];
+        var tid = cj(this).attr('id');
+        if(tid){
+          var option = tid.split("_");
+          option  = ( option.length > 1 ) ? option[1] : option[0];
+        }
+        else{
+          option = 'none';
+        }
         stype   = 'numeric';
         switch( option ) { 
             case 'sortable':

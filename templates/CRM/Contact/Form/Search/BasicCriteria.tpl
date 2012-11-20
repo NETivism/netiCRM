@@ -210,7 +210,7 @@ dojo.addOnLoad( function( ) {
 cj(function() {
    cj().crmaccordions(); 
 });
-cj("select#group, select#tag").chosen({
+cj("select#contact_type, select#group, select#tag").chosen({
   "search_contains": true,
   "placeholder_text": "{/literal}{ts}-- Select --{/ts}{literal}",
   "no_results_text": "{/literal}{ts}No matches found.{/ts}{literal}"

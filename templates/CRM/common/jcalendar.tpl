@@ -73,7 +73,7 @@
       {literal}
 
       var lcMessage = {/literal}"{$config->lcMessages}"{literal};
-      var localisation = lcMessage.split('_');
+      var localisation = lcMessage.replace("_", "-");
       cj(element_date).datepicker({
                                     closeAtTop        : true, 
                                     dateFormat        : date_format,
@@ -82,7 +82,7 @@
                                     altField          : alt_field,
                                     altFormat         : 'mm/dd/yy',
                                     yearRange         : yearRange,
-                                    regional          : localisation[0]
+                                    regional          : localisation
                                 });
 
       cj(element_date).click( function( ) {

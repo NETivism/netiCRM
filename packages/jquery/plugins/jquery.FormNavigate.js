@@ -30,14 +30,14 @@ var global_formNavigate = true;		// Js Global Variable for onChange Flag
         function confirmExit( event ) {  
             if (global_formNavigate == true) {  event.cancelBubble = true;  }  else  { return message;  }
         }
-        $(this+ ":input[type=text], :input[type='textarea'], :input[type='password'], :input[type='radio'], :input[type='checkbox'], :input[type='file'], select").change(function(){
+        $("input[type=text], input[type='textarea'], input[type='password'], input[type='radio'], input[type='checkbox'], input[type='file'], select").change(function(){
             global_formNavigate = false;
         });
 		//to handle back button
-		$(this+ ":input[type='textarea']").keyup(function(){ 
+		$("input[type='textarea']").keyup(function(){ 
 			global_formNavigate = false; 
 		}); 
-        $(this+ ":submit").click(function(){
+        $("input[type='submit']").click(function(){
             global_formNavigate = true;
         });
         $(".token-input-list-facebook").bind( "DOMNodeRemoved DOMNodeInserted", function(){ 
