@@ -17,12 +17,6 @@ function civicrm_gw_schema(){
         'length' => '11',
         'not null' => TRUE,
       ),
-      'created' => array(
-        'description' => 'Submit time for user confirmed transaction.',
-        'type' => 'int',
-        'length' => '11',
-        'not null' => FALSE,
-      ),
       'succ' => array(
         'description' => 'Success response from ecpay server',
         'type' => 'int',
@@ -111,6 +105,18 @@ function civicrm_gw_schema(){
       'data' => array(
         'description' => 'Serialized data of response.',
         'type' => 'blob',
+        'not null' => FALSE,
+      ),
+      'created' => array(
+        'description' => 'Submit time for user confirmed transaction.',
+        'type' => 'int',
+        'length' => '11',
+        'not null' => FALSE,
+      ),
+      'card4no' => array(
+        'description' => 'Last 4 number for credit card',
+        'type' => 'varchar',
+        'length' => '4',
         'not null' => FALSE,
       ),
     ),
@@ -225,6 +231,28 @@ function civicrm_gw_update_6102(){
     'description' => 'Submit time for user confirmed transaction.',
     'type' => 'int',
     'length' => '11',
+    'not null' => FALSE,
+  ));
+  return $ret;
+}
+
+function civicrm_gw_update_6103(){
+  $ret = array();
+  
+  civicrm_initialize( );
+  $new_instrument = _civicrm_gw_instrument();
+  $gid = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_option_group WHERE name LIKE 'payment_instrument'");
+
+  foreach($new_instrument as $k => $v){
+    $ids[] = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_option_value WHERE option_group_id = {$gid} AND name = '$k'");
+  }
+  if(count($ids)){
+    CRM_Core_DAO::singleValueQuery("Update civicrm_option_value SET is_reserved = 1 WHERE id IN(".implode(',', $ids).") AND is_reserved = 0");
+  }
+  db_add_field($ret, 'civicrm_contribution_gw', 'card4no', array(
+    'description' => 'Last 4 number for credit card',
+    'type' => 'varchar',
+    'length' => '4',
     'not null' => FALSE,
   ));
   return $ret;

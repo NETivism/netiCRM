@@ -26,6 +26,7 @@ function civicrm_gw_do_transfer_checkout(&$vars, &$component, &$payment_processo
   $is_pay_later = TRUE;
   switch($instrument_code){
     case 'Credit Card':
+    case 'unionpay':
       $redirect_vars = _civicrm_gw_ecpay($vars, $component, $payment_processor, $instrument_code);
       $is_pay_later = FALSE;
       break;
@@ -66,12 +67,17 @@ function _civicrm_gw_ecpay(&$vars, $component, &$payment_processor, $instrument_
   // notify url for receive payment result
   $notify_url = _civicrm_gw_notify_url($vars, 'gw/ipn/'.$instrument_code, $component);
 
+  // for union card
+  $civi_base_url = $component == 'event' ? 'civicrm/event/register' : 'civicrm/contribute/transact';
+  $mallurl = url($civi_base_url, array( 'query' => "_qf_ThankYou_display=1&qfKey={$vars['qfKey']}", 'absolute'=>true));
+
   // building vars
   $amount = $vars['currencyID'] == 'TWD' && strstr($vars['amount'], '.') ? substr($vars['amount'], 0, strpos($vars['amount'],'.')) : $vars['amount'];
   $name = truncate_utf8($vars['item_name'], 10);
   $notify_url .= "&qfKey=".$vars['qfKey'];
 
   $redirect_vars = array(
+    "act" => "auth",
     "client" => $payment_processor['user_name'],
     "od_sob" => $vars['contributionID'],
     "amount" => $amount,
@@ -80,6 +86,10 @@ function _civicrm_gw_ecpay(&$vars, $component, &$payment_processor, $instrument_
     "qfKey" => $vars['qfKey'],
     "#action" => $payment_processor['url_site'],
   );
+  if($instrument_code == 'unionpay'){
+    $redirect_vars["mallurl"] = $mallurl;
+    $redirect_vars["CUPus"] = 1;
+  }
   if(!strstr($language->language, 'zh')){
     $redirect_vars['Enn'] = 'e';
   }
@@ -179,6 +189,7 @@ function _civicrm_gw_form_redirect($redirect_vars, $instrument_code){
   switch($instrument_code){
     case 'Credit Card':
     case 'web_atm':
+    case 'unionpay':
       $js = 'document.forms.redirect.submit();';
       $o .= '<form action="'.$redirect_vars['#action'].'" name="redirect" method="post" id="redirect-form">';
       foreach($redirect_vars as $k=>$p){
