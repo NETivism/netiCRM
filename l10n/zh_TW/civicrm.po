@@ -29247,19 +29247,20 @@ msgstr "您是否確定刪除群組 %1？"
 #: templates/CRM/Group/Form/Delete.tpl
 msgid "This group currently has one member in it."
 msgid_plural "This group currently has %count members in it."
-msgstr[0] "此群組現有一個會員"
+msgstr[0] "此群組現有 1 個聯絡人"
+msgstr[1] "此群組現有 %count 個聯絡人"
 
 #: templates/CRM/Group/Form/Delete.tpl
 msgid "Deleting this group will NOT delete the member contact records. However, all contact subscription information and history for this group will be deleted."
-msgstr "刪除此群組不會刪除會員聯絡記錄。但是，所有此群組的聯絡人捐助資料及歷史會被刪除。"
+msgstr "刪除此群組不會刪除聯絡人，但是所有在此群組標註訂閱的聯絡人資料會被刪除。"
 
 #: templates/CRM/Group/Form/Delete.tpl
 msgid "If this group is used in CiviCRM profiles, those fields will be reset."
-msgstr "如果此群組被 資料表單使用，那些欄位會被重設。"
+msgstr "如果您的資料表單有使用到群組欄位，那些欄位中將不會再出現本群組的選項。"
 
 #: templates/CRM/Group/Form/Edit.tpl
 msgid "You can edit the Name and Description for this group here. Click <a href='%1'>Contacts in this Group</a> to view, add or remove contacts in this group."
-msgstr "您可以在此編輯群組姓名及描述。按<a href='%1'>顯示群組會員</a>查看、新增或刪除聯絡此群組。"
+msgstr "您可以在此編輯群組名稱及描述。按<a href='%1'>顯示群組聯絡人</a>以查看、新增或刪除聯絡此群組。"
 
 #: templates/CRM/Group/Form/Edit.tpl
 msgid "Enter a unique name and a description for your new group here. Then click 'Continue' to find contacts to add to your new group."
