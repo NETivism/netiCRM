@@ -462,10 +462,7 @@ VALUES (%1, %2, %3, %4, %5, %6, %7)
 
             if ( $config->mailerBatchLimit > 0 &&
                  $mailsProcessed >= $config->mailerBatchLimit ) {
-                if (!empty($fields)) {
-                  $this->deliverGroup( $fields, $mailing, $mailer, $job_date, $attachments );
-                }
-                $eq->free();
+                $this->deliverGroup( $fields, $mailing, $mailer, $job_date, $attachments );
                 return false;
             }
             $mailsProcessed++;
@@ -477,16 +474,13 @@ VALUES (%1, %2, %3, %4, %5, %6, %7)
             if ( count( $fields ) == self::MAX_CONTACTS_TO_PROCESS ) {
                 $isDelivered = $this->deliverGroup( $fields, $mailing, $mailer, $job_date, $attachments );
                 if ( !$isDelivered ) {
-                    $eq->free();
                     return $isDelivered;
                 }
                 $fields = array( );
             }
         }
 
-        if (!empty($fields)) {
-          $isDelivered = $this->deliverGroup( $fields, $mailing, $mailer, $job_date, $attachments );
-        }
+        $isDelivered = $this->deliverGroup( $fields, $mailing, $mailer, $job_date, $attachments );
         return $isDelivered;
     }
 
