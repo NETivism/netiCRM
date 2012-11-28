@@ -56,7 +56,7 @@
       <div id="mainTabContainer" class="ui-tabs ui-widget ui-widget-content ui-corner-all">
         <ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
            <li id="chart_view"   class="crm-tab-button ui-state-active ui-corner-top ui-corner-bottom ui-tabs-selected" > 
-             <a href="#chart_layout"><span>&nbsp;</span>&nbsp;{ts}Chart Layout{/ts}&nbsp;</a> </li>&nbsp;
+             <a href="#chart_layout"><span>&nbsp;</span>&nbsp;{ts}Chart Layout{/ts}&nbsp;</a> </li>
            <li id ="table_view"  class="crm-tab-button ui-corner-top ui-corner-bottom ui-state-default" >
              <a href="#table_layout"><span>&nbsp;</span>&nbsp;{ts}Table Layout{/ts}&nbsp;</a>
            </li>
@@ -65,15 +65,8 @@
  {capture assign=configPagesURL}{crmURL p="civicrm/admin/contribute" q="reset=1"}{/capture}
 
 <div class="float-right">
-<table class="form-layout-compressed">
-<tr>
-    <td>
-     <a href="{$configPagesURL}" class="button"><span>{ts}Manage Contribution Pages{/ts}
-       </span></a>
-    </td>
-    <td><a href="{$newPageURL}" class="button"><span><div class="icon add-icon"></div>{ts}Add Contribution Page{/ts}
-        </span></a>
-    </td>
+     <span><a href="{$configPagesURL}" class="button"><span>{ts}Manage Contribution Pages{/ts}</span></a></span>
+    <span><a href="{$newPageURL}" class="button"><span><div class="icon add-icon"></div>{ts}Add Contribution Page{/ts}</span></a></span>
 </tr>
 </table>
 </div>

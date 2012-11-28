@@ -24,7 +24,7 @@
  +--------------------------------------------------------------------+
 *}
 {if $tabHeader and count($tabHeader) gt 1}
-<div id="mainTabContainer" class="clear-block ui-tabs">
+<div id="mainTabContainer" class="ui-tabs ui-widget ui-widget-content ui-corner-all">
 <ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
    {foreach from=$tabHeader key=tabName item=tabValue}
       <li id="tab_{$tabName}" class="crm-tab-button ui-state-default ui-corner-all {if !$tabValue.valid}disabled{/if} {if $tabValue.current}ui-state-active{/if}">

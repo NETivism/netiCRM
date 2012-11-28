@@ -23,7 +23,7 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
-<div class="crm-block crm-form-block crm-search-form-block">
+<div class="crm-block crm-form-block crm-form-block-search crm-search-form-block">
 <table class="form-layout">
     <tr>
         <td>{$form.mailing_name.label}<br />

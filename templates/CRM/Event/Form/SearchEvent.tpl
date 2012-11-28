@@ -23,7 +23,7 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
-<div class="crm-block crm-form-block crm-event-searchevent-form-block">
+<div class="crm-block crm-form-block crm-form-block-search crm-event-searchevent-form-block">
  <h3>{ts}Find Events{/ts}</h3>
   <table class="form-layout">
     <tr class="crm-event-searchevent-form-block-title">
@@ -34,29 +34,23 @@
              <div style="height: auto; vertical-align: bottom">{$form.eventsByDates.html}</div>
         </td>
         <td rowspan="2"><label>{ts}Event Type{/ts}</label>
-            <div class="listing-box">
-                {foreach from=$form.event_type_id item="event_val"}
-                <div class="{cycle values="odd-row,even-row"}">
-                    {$event_val.html}
-                </div>
-                {/foreach}
-            </div>
+                {$form.event_type_id.html} 
         </td>
         <td class="right" rowspan="2">&nbsp;{include file="CRM/common/formButtons.tpl"}</td>  
     </tr>
   
     <tr>
-       <td colspan="2">
-       <table class="form-layout-compressed" id="id_fromToDates">
-        <tr class="crm-event-searchevent-form-block-start_date">
-            <td class="label">{$form.start_date.label}</td>
-            <td>{include file="CRM/common/jcalendar.tpl" elementName=start_date}</td>
-        </tr>
-        <tr class="crm-event-searchevent-form-block-end_date" >
-            <td class="label">{$form.end_date.label}</td>
-            <td>{include file="CRM/common/jcalendar.tpl" elementName=end_date}</td>             
-        </tr>
-      </table> 
+       <td colspan="3">
+       <div id="id_fromToDates">
+            <div>
+            <label>{$form.start_date.label}</label>
+            {include file="CRM/common/jcalendar.tpl" elementName=start_date}
+            </div>
+            <div>
+            <label>{$form.end_date.label}</label>
+            {include file="CRM/common/jcalendar.tpl" elementName=end_date}
+            </div>
+      </div> 
     </td></tr>  
   </table>
 </div>
@@ -68,5 +62,12 @@
 if ( document.getElementsByName('eventsByDates')[1].checked ) {
    show( 'id_fromToDates', 'block' );
 }
+cj("select#event_type_id").chosen({
+  "search_contains": true,
+  "placeholder_text": "{/literal}{ts}-- Select --{/ts}{literal}",
+  "no_results_text": "{/literal}{ts}No matches found.{/ts}{literal}"
+});
+cj("input[name=eventsByDates]").click();
+showHideByValue('eventsByDates','1','id_fromToDates','block','radio',true);
 </script>
 {/literal} 

@@ -29,7 +29,7 @@
 <strong>{ts 1=$docLink}IMPORTANT: Search Builder requires you to use specific formats for your search values. Review the %1 before building your first search.{/ts}</strong> {help id='builder-intro'}
 </div>
 
-<div class="crm-form-block crm-search-form-block">
+<div class="crm-form-block crm-form-block-search crm-search-form-block">
 <div class="crm-accordion-wrapper crm-search_builder-accordion {if $rows and !$showSearchForm}crm-accordion-closed{else}crm-accordion-open{/if}">
  <div class="crm-accordion-header crm-master-accordion-header">
   <div class="icon crm-accordion-pointer"></div> 

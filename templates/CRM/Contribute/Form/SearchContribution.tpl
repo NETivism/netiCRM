@@ -23,7 +23,7 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
-<div class="crm-block crm-form-block crm-contribution-search_contribution-form-block">
+<div class="crm-block crm-form-block crm-form-block-search crm-contribution-search_contribution-form-block">
 <h3>{ts}Find Contribution Pages{/ts}</h3>
 <table class="form-layout-compressed">
     <tr>
@@ -31,19 +31,24 @@
             <div class="description font-italic">
                 {ts}Complete OR partial Contribution Page title.{/ts}
             </div>
-            <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl"}</div>  
         </td>
         
         <td>
             <label>{ts}Contribution Type{/ts}</label>
-            <div class="listing-box">
-                {foreach from=$form.contribution_type_id item="contribution_val"}
-                <div class="{cycle values="odd-row,even-row"}">
-                     {$contribution_val.html}
-                  </div>
-                {/foreach}
-            </div>
+            {$form.contribution_type_id.html}
+        </td>
+        <td>
+            <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl"}</div>  
         </td>
     </tr>
  </table>
 </div>
+{literal}
+<script type="text/javascript">
+cj("select#contribution_type_id").chosen({
+  "search_contains": true,
+  "placeholder_text": "{/literal}{ts}-- Select --{/ts}{literal}",
+  "no_results_text": "{/literal}{ts}No matches found.{/ts}{literal}"
+});
+</script>
+{/literal}

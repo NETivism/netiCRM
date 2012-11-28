@@ -25,7 +25,7 @@
 *}
 {* Master tpl for Advanced Search *}
 
-<div class="crm-form-block crm-search-form-block">
+<div class="crm-form-block crm-form-block-search crm-search-form-block">
 
 {include file="CRM/Contact/Form/Search/Intro.tpl"}
 
