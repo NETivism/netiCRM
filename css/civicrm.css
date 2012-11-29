@@ -1696,6 +1696,7 @@ div.grippie {
 .ui-tabs .ui-tabs-nav {
     border:none;
     padding:4px;
+    background: #F3F3F3;
 }
 .ui-tabs .ui-state-active, 
 .ui-tabs.ui-widget-content .ui-state-active,
@@ -1705,6 +1706,10 @@ div.grippie {
 }
 .ui-tabs {
     border: 0;
+}
+.ui-tabs .ui-state-hover {
+    background: #777;
+    color: #FFF;
 }
 
 .crm-tab-button a,
@@ -1722,8 +1727,7 @@ div.grippie {
 }
 
 .crm-tab-button a em {
-    color: #3e3e3e;
-    font-size: 10px;
+    font-size: 9px;
     font-style: normal;
 }
 
@@ -2446,7 +2450,7 @@ span.icon {
     -khtml-border-radius: 4px 4px 0px 0px; 
     border-radius:4px 4px 0px 0px;
     border: 1px solid #AAA;
-    background: #F3F3F3;
+    background: #EEE;
 }
 .crm-accordion-open>.crm-accordion-header:hover {
     color: #000;
@@ -2926,7 +2930,7 @@ table.crm-info-panel td.label {
 }
 
 .crm-accordion-header-hover {
-    background: #0073EA url(../packages/jquery/jquery-ui/css/custom-theme/images/ui-bg_highlight-soft_25_0073ea_1x100.png);
+    background: #575757;
     color:#FFF;
 }
 
@@ -3138,7 +3142,7 @@ div#crm-toolTip
  width: 40%;
 }
 .crm-form-block-search {
-  background:url(../packages/jquery/jquery-ui/css/custom-theme/images/ui-bg_diagonals-thick_90_eeeeee_40x40.png) #EEE;
+  background: #CCC;
 }
 .crm-form-block-search:hover {
   background: #F3F3F3;
