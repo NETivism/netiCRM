@@ -3151,3 +3151,7 @@ div#crm-toolTip
   border: 0;
   background: none;
 }
+#crm-container .action-link.register_link-top {
+  float:right;
+  margin-top: -5px;
+}
