@@ -24611,12 +24611,16 @@ msgid "If you've changed search criteria for this 'smart group' and want to save
 msgstr ""
 
 #: templates/CRM/Contact/Form/Search/Advanced.hlp
-msgid "Contacts with any of the checked privacy options are EXCLUDED from your search results by default. EXAMPLE: If you check 'Do not phone', and search for contacts with an address in a specific city - then contacts in that city who have 'Do not phone' selected as a privacy option will be excluded from the search results."
-msgstr "若勾選這些選項，聯絡人就不會出現在搜尋的結果中。例如，若勾選「不要打電話」給這個聯絡人後，再去搜尋中尋找地址在這個城市的聯絡人，此時該聯絡人便不會出現在搜尋結果。"
+msgid "Contacts with any of the checked privacy options are EXCLUDED from your search results by default. EXAMPLE: If you select 'Do not phone', and search for contacts with an address in a specific city - then contacts in that city who have 'Do not phone' selected as a privacy option will be excluded from the search results."
+msgstr "聯絡人如果標示了隱私選項，預設的搜尋結果會排除勾選的人（如搜尋不要打電話，出現的結果是可以打電話的人，也就是排除了不要打電話的人）。"
 
 #: templates/CRM/Contact/Form/Search/Advanced.hlp
-msgid "If you want to FIND (include) contacts with a particular privacy option set, then check 'Include contacts who have these privacy option(s)'."
-msgstr "若您要尋找有特定隱私設定的聯絡人，請選擇「包括有這些隱私選項的聯絡人」"
+msgid "If you want to FIND (include) contacts with a particular privacy option set, then click the 'Include' radio button."
+msgstr "若你是要搜尋特定隱私選項的人，例如要找出所有不可以打電話給他們的人，請選擇「包含隱私選項」。"
+
+#: templates/CRM/Contact/Form/Search/Advanced.hlp
+msgid "If you select multiple privacy options, your choices are combined with OR statements by default. EXAMPLE: If you select 'Do not phone' and 'Do not email', results will include contacts who have either or both preferences. If you want to return only contacts with both preferences, select the AND operator."
+msgstr "如果你選擇多種隱私選項，預設會以「OR-或」的方式來搜尋，也就是說，你選了不要打電話，不要寄送Email，你得到的結果會包含所有有勾以上兩個隱私選項的人。除非你右側的選項改變了「或」變成「以及」，而選擇了「排除」，那你就會得到「可以打電話」且「可以寄送Email」的人。"
 
 #: templates/CRM/Contact/Form/Search/Advanced.hlp
 msgid "Advanced Search returns your results as Contact records by default. However, you may want to get another record type instead. For example, you may want to see all the Contribution records which match your search criteria."
