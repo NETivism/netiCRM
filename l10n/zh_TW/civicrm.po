@@ -2070,11 +2070,11 @@ msgstr "群組類型"
 
 #: CRM/Campaign/DAO/CampaignGroup.php CRM/Mailing/DAO/Group.php
 msgid "Include"
-msgstr "包括"
+msgstr "包含"
 
 #: CRM/Campaign/DAO/CampaignGroup.php CRM/Mailing/DAO/Group.php
 msgid "Exclude"
-msgstr "不包括"
+msgstr "排除"
 
 #: CRM/Campaign/DAO/Campaign.php CRM/Contact/DAO/Contact.php
 #: CRM/Contribute/Import/Form/MapField.php
@@ -8953,7 +8953,7 @@ msgstr "網站使用者？"
 
 #: CRM/Contact/Form/Search/Criteria.php
 msgid "Search Views"
-msgstr "搜尋檢視"
+msgstr "搜尋結果欄位"
 
 #: CRM/Contact/Form/Search/Criteria.php
 msgid "- default view -"
@@ -8961,7 +8961,7 @@ msgstr "- 預設檢視 -"
 
 #: CRM/Contact/Form/Search/Criteria.php
 msgid "Display Results As"
-msgstr "顯示搜尋結果為"
+msgstr "搜尋範疇"
 
 #: CRM/Contact/Form/Search/Criteria.php
 msgid "Include contacts who have these privacy option(s)."
@@ -24624,7 +24624,7 @@ msgstr "進階搜尋會預設將搜尋結果以聯絡人紀錄呈現。若您想
 
 #: templates/CRM/Contact/Form/Search/Advanced.hlp
 msgid "You can modify the columns displayed in your search results by creating a Profile containing a different set of contact fields and then selecting that Profile here. For example you may want to include columns for Gender and Date of Birth, while eliminating Country."
-msgstr "如要在您的搜尋結果顯示不同的欄位內容，您可建立一個檔案包含不同的聯絡人資料欄位，並在此選擇使用此檔案。舉例來說，您可設計欄位包含性別與生日，但不要顯示國家。"
+msgstr "如要在您的搜尋結果顯示不同欄位，您可建立一個資料表單，在設定時勾選使用於「搜尋結果」，該資料表單便會出現在這裡供你選擇，資料表單的欄位便會是搜尋結果。舉例而言，你可以顯示一位聯絡人的電話、生日，但不要顯示國家。"
 
 #: templates/CRM/Contact/Form/Search/Advanced.tpl
 msgid "Edit %1 Smart Group Criteria"
@@ -39663,3 +39663,28 @@ msgstr "自訂表單"
 
 msgid "Reserved Profiles"
 msgstr "系統預設表單"
+
+msgid "No bulk emails (User Opt Out)"
+msgstr "不想收電子報（退訂全站訊息）"
+
+msgid "Use this filter to limit search results to relationships where the related contacts are part of a specific group or groups."
+"For example, you might want to find all individuals who are employees ('Employee of' relationship type) of organizations which are in your 'Corporate Sponsors' group."
+msgstr "使用這個篩選，將會篩選出屬於特定群組與特定關係的聯絡人。舉例，你或許想要搜尋在「企業贊助者」群組中，所有跟該單位有「員工」關係的聯絡人。"
+
+msgid "Find records with tags (regular or tagset tag) which contain a complete or partial word or phrase. EXAMPLE: If you have several tags that contain the word 'Donor', you can find contacts tagged with any of them by entering 'Donor' in this field."
+msgstr "輸入全部或部分文字來尋找相符的聯絡人。例如，你有「平面媒體」標籤、「電視媒體」標籤的聯絡人，你可以輸入「媒體」，便可同時搜到包含這兩標籤的聯絡人。"
+
+msgid "Use the Search Operator to determine whether your criteria are combined with AND statements, or combined with OR statements. For example, you may want to find all individuals who are in the Volunteers group AND who have a Volunteer Training activity recorded for them. In this case use the AND operator. If you need to find everyone who is in the Volunteers group OR has a Volunteer Training activity recorded, use the OR operator."
+msgstr "篩選方式，可讓你搜尋的條件決定為交集（AND-以及），或是多種條件的聯集（OR-或）來篩選你的搜尋。舉例，你也許想要找所有在「志工」群組下，且有進行過「志工服務」任務的人，這時就要用「AND-以及」的篩選方式。反之，若要找到所有志工群組中的人，或是曾經有參加過志工活動的人，這時就可以用「OR-或」的條件來搜尋。"
+
+msgid "Search Operator"
+msgstr "篩選方式"
+
+msgid "Select Tag(s)"
+msgstr "標籤"
+
+msgid "All Tags"
+msgstr "標籤文字"
+
+msgid "Include by Privacy Option(s)"
+msgstr "包含隱私選項"
