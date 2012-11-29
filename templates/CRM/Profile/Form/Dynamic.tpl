@@ -279,6 +279,20 @@ cj(document).ready(function(){
 {/literal}    
 {/if}
 {literal}
+  cj('form input:not([type="submit"])').keydown(function (e) {
+    if (e.keyCode == 13) {
+      if(cj(this).attr('id') == 'neticrm_sort_name_navigation'){
+        return true;
+      }
+      var inputs = cj(this).parents("form").eq(0).find(':input:visible');
+      if (inputs[inputs.index(this) + 1] != null && ( inputs.index(this) + 1 ) < inputs.length) {                    
+          inputs[inputs.index(this) + 1].focus();
+      }
+      cj(this).blur();
+      e.preventDefault();
+      return false;
+    }
+  });
 </script>
 {/literal}
 
