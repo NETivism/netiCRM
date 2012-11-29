@@ -24171,7 +24171,7 @@ msgstr "選擇此聯絡人偏好的 Email 格式。選擇「兩者皆可」以�
 
 #: templates/CRM/Contact/Form/Contact.hlp
 msgid "If you are using the CiviMail component to send mailings to contacts, this field provides additional control over which email address is used. By default, CiviMail sends mail to each contact's preferred email address. If the contact has multiple locations, then the preferred email of the primary location is used. However, if the contact prefers to have CiviMail ('bulk') mailings set to an alternate email address - check the 'Use for Bulk Mailings' box next to that email address."
-msgstr "可寄送電郵。若無勾選任何 Email，便會以標示為「預設值」的Email來寄送電郵。"
+msgstr "若無勾選任何 Email 為電子報指定信箱，便會以該聯絡人的「預設」Email來寄送電子報。"
 
 #: templates/CRM/Contact/Form/Contact.hlp
 msgid "This option is designed to be set by the contact themselves when they don't want to receive bulk email from your organization (they set it using the opt-out action from a CiviMail mailing).   Please think before changing it, as it will override the preference they have set."
@@ -24392,7 +24392,7 @@ msgstr "凍結？"
 
 #: templates/CRM/Contact/Form/Edit/Email.tpl
 msgid "Bulk Mailings?"
-msgstr "允許電子報信件?"
+msgstr "電子報指定信箱?"
 
 #: templates/CRM/Contact/Form/Edit/Email.tpl
 #: templates/CRM/Contact/Form/Edit/IM.tpl
