@@ -166,6 +166,25 @@ class CRM_Contact_Form_Search_Criteria {
           )
         );
 
+        // add the option to display relationships
+        $rTypes = CRM_Core_PseudoConstant::relationshipType();
+        $rSelect = array('' => ts('- Select Relationship Type-'));
+        foreach ($rTypes as $rid => $rValue) {
+          if ($rValue['label_a_b'] == $rValue['label_b_a']) {
+            $rSelect[$rid] = $rValue['label_a_b'];
+          }
+          else {
+            $rSelect["{$rid}_a_b"] = $rValue['label_a_b'];
+            $rSelect["{$rid}_b_a"] = $rValue['label_b_a'];
+          }
+        }
+
+        $form->addElement('select',
+          'display_relationship_type',
+          ts('Display Results as Relationship'),
+          $rSelect
+        );
+
         // checkboxes for DO NOT phone, email, mail
         // we take labels from SelectValues
         $t = CRM_Core_SelectValues::privacy();
