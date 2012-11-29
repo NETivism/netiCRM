@@ -2519,7 +2519,7 @@ msgstr "標籤"
 #: CRM/Contact/Form/Relationship.php CRM/Core/BAO/Mapping.php
 #: CRM/UF/Form/Field.php
 msgid "Current Employer"
-msgstr "就職單位"
+msgstr "現職單位"
 
 #: CRM/Contact/BAO/Contact.php CRM/Contact/BAO/Query.php
 #: CRM/Contact/Form/Edit/Address.php CRM/Core/DAO/LocationType.php
@@ -8453,7 +8453,7 @@ msgstr "特別ID或OpenID"
 
 #: CRM/Contact/DAO/Contact.php
 msgid "Current Employer ID"
-msgstr "就職單位ID"
+msgstr "現職單位ID"
 
 #: CRM/Contact/DAO/Group.php
 msgid "Cache Date"
@@ -8572,7 +8572,7 @@ msgstr "若你仍確定此聯絡人非重複資料，請在「聯絡人詳情」
 
 #: CRM/Contact/Form/Contact.php
 msgid "No matching contact found."
-msgstr "未找到相關的個案。"
+msgstr "沒有重複的聯絡人。"
 
 #: CRM/Contact/Form/Contact.php
 msgid "Complete street address(es) have been saved. However we were unable to split the address in the %1 address block(s) into address elements (street number, street name, street unit) due to an unrecognized address format. You can set the address elements manually by clicking 'Edit Address Elements' next to the Street Address field while in edit mode."
@@ -8845,7 +8845,7 @@ msgstr "允許聯絡人b查看並更新聯絡人a的資訊"
 
 #: CRM/Contact/Form/Relationship.php
 msgid "Current Employee"
-msgstr "現職員工？"
+msgstr "現職單位？"
 
 #: CRM/Contact/Form/Relationship.php
 msgid "Save Relationship"
@@ -22913,7 +22913,7 @@ msgstr "日期分類"
 
 #: templates/CRM/Admin/Page/RelationshipType.hlp
 msgid "<strong>Special Relationships</strong><br />Employee <-> Employer and Household relationships both have special characteristics.<br /><strong>Employee <-> Employer relationship</strong> is created anytime the 'Current Employer' field is filled in, either in the Contact Summary form or via a Profile. When filled in, it will create an Organisation if one does not already exist with that name.<br /><strong>Household relationship</strong> enables household members to have the 'household address' applied to their record. Again, if a Household already exists then the individual will have a relationship created with it, if none exists then a new household will be created."
-msgstr "<strong>特別關係</strong><br />員工 <-> 雇主與家庭的關係都具有特殊性。<br /><strong>員工 <-> 雇主關係</strong>會在「就職單位」欄位被填入的時候建立起來，從「聯絡人摘要」或從檔案文件皆是。當填入資料時，將會創建一個組織（尚未有名稱）。<br /><strong>家庭關係</strong>可使同一個家庭裡的成員都有一個家庭地址的紀錄。再次提醒，若一個家庭紀錄已存在，那麼個人的「關係」資料裡就會有這個家庭資料，若家庭紀錄先前不存在，那就會在此建立一個新的家庭資料。"
+msgstr "<strong>特別關係</strong><br />員工 <-> 雇主與家庭的關係都是特殊的關係類型。<br /><strong>員工 <-> 雇主關係</strong>會在「就職單位」欄位被填入的時候建立起來，從「聯絡人摘要」或從檔案文件皆是。當填入資料時，將會創建一個組織（尚未有名稱）。<br /><strong>家庭關係</strong>可使同一個家庭裡的成員都有一個家庭地址的紀錄。再次提醒，若一個家庭紀錄已存在，那麼個人的「關係」資料裡就會有這個家庭資料，若家庭紀錄先前不存在，那就會在此建立一個新的家庭資料。"
 
 #: templates/CRM/Admin/Page/RelationshipType.tpl
 msgid "Relationship types describe relationships between people, households and organizations. Relationship types labels describe the relationship from the perspective of each of the two entities (e.g. Parent <-> Child, Employer <-> Employee). For some types of relationships, the labels may be the same in both directions (e.g. Spouse <-> Spouse)."
@@ -23174,7 +23174,7 @@ msgstr "如果您需要另外選項 - 您可以在儲存您現入口後新增它
 
 #: templates/CRM/Campaign/Form/Search/EmptyResults.tpl
 msgid "No matching respondent found."
-msgstr "未找到相關的個案。"
+msgstr "未找到相關的回答者。"
 
 #: templates/CRM/Campaign/Form/Search/EmptyResults.tpl
 msgid "if you are searching by respondent name, check your spelling"
@@ -24515,7 +24515,7 @@ msgstr "請先選擇關係類型，再輸入聯絡人的名稱後，按下「搜
 
 #: templates/CRM/Contact/Form/Relationship.tpl
 msgid "Current Employer?"
-msgstr "就職單位?"
+msgstr "現職單位?"
 
 #: templates/CRM/Contact/Form/Relationship.tpl
 msgid "Please select a relationship type first."
@@ -34339,7 +34339,7 @@ msgstr "為步行/電話名單報表的指定聯絡人提供一份詳細報表�
 
 #: xml/templates/civicrm_data.tpl
 msgid "Current Employer Report"
-msgstr "目前的員工報表"
+msgstr "現職單位報表"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Provides detail list of employer employee relationships along with employment details Ex Join Date"
