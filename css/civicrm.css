@@ -1711,7 +1711,9 @@ div.grippie {
     background: #777;
     color: #FFF;
 }
-
+.ui-tabs .ui-state-hover.ui-state-active {
+    background: #FFF;
+}
 .crm-tab-button a,
 .ui-tabs .ui-tabs-nav li a, 
 .ui-tabs-collapsible .ui-tabs-nav li.ui-tabs-selected a,
