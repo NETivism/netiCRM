@@ -39657,3 +39657,9 @@ msgstr "由於登記的活動已經在 %1 結束，所以我們不會寄送任�
 
 msgid "Use this form to add or edit re-usable message templates. Once you save a message template, you can use it when sending mail to one or more contacts. If you are using the CiviMember component, you can also use a message template to send Membership Renewal Reminders. You may include tokens to represent fields (like a contact's \"first name\") in the message subject and body. These will be replaced with the actual value of the corresponding field in the outgoing message. EXAMPLE: Dear{contact.first_name}."
 msgstr "在這裡新增或編輯可重複使用的訊息範本。訊息範本可儲存與重複使用訊息樣式，使用於電子報與會員模組，並寄給一位或更多數量的聯絡人電子郵件或通知訊息。可於訊息標題與內文使用替代符號於欲顯示的欄位(如聯絡人的「名子」)，送出訊息後替代符號將呈現相對應的文字。如：親愛的{contact.first_name}。"
+
+msgid "User-defined Profiles"
+msgstr "自訂表單"
+
+msgid "Reserved Profiles"
+msgstr "系統預設表單"
