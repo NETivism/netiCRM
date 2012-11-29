@@ -1001,7 +1001,7 @@ div.block-civicrm li, #crm-container ul li, #crm-container ul.treeview li {
     background: #E6E6E6 url(../packages/jquery/jquery-ui/css/custom-theme/images/ui-bg_glass_75_e6e6e6_1x400.png) 50% 50% 
 }
 #crm-container form .section-hidden-border:hover {
-    background: #0073EA url(../packages/jquery/jquery-ui/css/custom-theme/images/ui-bg_highlight-soft_25_0073ea_1x100.png);
+    background: #777;
     color: #FFF;
 }
 
