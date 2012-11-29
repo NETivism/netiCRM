@@ -44,21 +44,45 @@
     <tr class="crm-contribution-contributionpage-custom-form-block-custom_pre_id">
        <td class="label">{$form.custom_pre_id.label}
        </td>
-       <td class="html-adjust">{$form.custom_pre_id.html}<br />
+       <td class="html-adjust">{$form.custom_pre_id.html} <span class="profile-links"></span><br />
           <span class="description">{ts}Include additional fields in this online contribution page by configuring and selecting a CiviCRM Profile to be included above the billing information (but after the introductory message, amounts, and honoree section).{/ts}{help id="contrib-profile"}</span>
        </td>
     </tr>
     <tr class="crm-contribution-contributionpage-custom-form-block-custom_post_id">
        <td class="label">{$form.custom_post_id.label}
        </td>
-       <td class="html-adjust">{$form.custom_post_id.html}<br />
+       <td class="html-adjust">{$form.custom_post_id.html} <span class="profile-links"></span><br />
           <span class="description">{ts}Include additional fields in this online contribution page by configuring and selecting a CiviCRM Profile to be included at the bottom of the page.{/ts}</span>
        </td>
+    </tr>
+    <tr class='crm-contribution-contributionpage-custom-form--block-create-new-profile'>
+        <td class="label"></td>
+        <td><a href="{crmURL p='civicrm/admin/uf/group/add' q='reset=1&action=add'}" target="_blank">{ts}Add Profile{/ts}</td>
     </tr>
     </table>
 {/if}
 <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
 </div>
 
+{*include profile link function*}
+{include file="CRM/common/buildProfileLink.tpl"}
+{literal}
+<script type="text/javascript">
+    //show edit profile field links
+    cj(function() {
+        // show edit for profile
+        cj('select[id^="custom_p"]').change( function( ) {
+            buildLinks( cj(this), cj(this).val());
+        });
+        
+        // make sure we set edit links for profile when form loads
+        cj('select[id^="custom_p"]').each( function(e) {
+            buildLinks( cj(this), cj(this).val()); 
+        });
+    });
+</script>
+{/literal}
+
 {* include jscript to warn if unsaved form field changes *}
 {include file="CRM/common/formNavigate.tpl"}
+
