@@ -108,23 +108,23 @@
          </tr>
          <tr class="crm-event-manage-registration-form-block-custom_pre_id">
             <td scope="row" class="label" width="20%">{$form.custom_pre_id.label}</td>
-            <td>{$form.custom_pre_id.html}<br />
+            <td>{$form.custom_pre_id.html} <span class="profile-links"></span></span><br />
             <span class="description">{ts}Include additional fields on this registration form by configuring and selecting a CiviCRM Profile to be included at the top of the page (immediately after the introductory message).{/ts}{help id="event-profile"}</span></td>
 	 </tr>
          <tr class="crm-event-manage-registration-form-block-custom_post_id">
             <td scope="row" class="label" width="20%">{$form.custom_post_id.label}</td>
-            <td>{$form.custom_post_id.html}<br />
+            <td>{$form.custom_post_id.html} <span class="profile-links"></span><br />
             <span class="description">{ts}Include additional fields on this registration form by configuring and selecting a CiviCRM Profile to be included at the bottom of the page.{/ts}</span></td>
         </tr>
         <tr id="additional_profile_pre" class="crm-event-manage-registration-form-block-additional_custom_pre_id">
             <td scope="row" class="label" width="20%">{$form.additional_custom_pre_id.label}</td>
-            <td>{$form.additional_custom_pre_id.html}<br />
+            <td>{$form.additional_custom_pre_id.html} <span class="profile-links"></span><br />
               <span class="description">{ts}Change this if you want to use a different profile for additional participants.{/ts}</span></td>
             </td>
         </tr>
         <tr id="additional_profile_post" class="crm-event-manage-registration-form-block-additional_custom_post_id">
              <td scope="row" class="label" width="20%">{$form.additional_custom_post_id.label}</td>
-             <td>{$form.additional_custom_post_id.html}<br />
+             <td>{$form.additional_custom_post_id.html} <span class="profile-links"></span><br />
                 <span class="description">{ts}Change this if you want to use a different profile for additional participants.{/ts}</span>
              </td>
         </tr>
@@ -276,6 +276,10 @@ invert              = 0
     invert              = 0
 }
 {/if}
+
+{*include profile link function*}
+{include file="CRM/common/buildProfileLink.tpl"}
+
 <script type="text/javascript">
     {literal}
     cj("#is_multiple_registrations").change( function( ) {
@@ -284,6 +288,28 @@ invert              = 0
             cj("#additional_custom_post_id").val('');
         }
     });
+
+    //show edit profile field links
+    // show edit for main profile
+    cj('select[id^="custom_p"]').live( 'change',  function( event ) {
+        buildLinks( cj(this), cj(this).val());
+    });
+    
+    // make sure we set edit links for main contact profile when form loads
+    cj('select[id^="custom_p"]').each( function(e) {
+        buildLinks( cj(this), cj(this).val()); 
+    });
+
+    //show edit profile field links in additional participant
+    cj('select[id^="additional_custom_p"]').live( 'change',  function( event ) {
+        buildLinks( cj(this), cj(this).val());
+    });
+
+    // make sure we set edit links for additional profile  when form loads
+    cj('select[id^="additional_custom_p"]').each( function(e) {
+        buildLinks( cj(this), cj(this).val()); 
+    });
+
     {/literal}
 </script>
 {include file="CRM/common/formNavigate.tpl"}
