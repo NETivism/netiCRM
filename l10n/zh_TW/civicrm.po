@@ -39692,3 +39692,6 @@ msgstr "標籤文字"
 
 msgid "Include by Privacy Option(s)"
 msgstr "包含隱私選項"
+
+msgid "- Select Relationship Type -"
+msgstr "-請選擇關係類型-"

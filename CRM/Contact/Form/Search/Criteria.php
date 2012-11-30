@@ -168,7 +168,7 @@ class CRM_Contact_Form_Search_Criteria {
 
         // add the option to display relationships
         $rTypes = CRM_Core_PseudoConstant::relationshipType();
-        $rSelect = array('' => ts('- Select Relationship Type-'));
+        $rSelect = array('' => ts('- Select Relationship Type -'));
         foreach ($rTypes as $rid => $rValue) {
           if ($rValue['label_a_b'] == $rValue['label_b_a']) {
             $rSelect[$rid] = $rValue['label_a_b'];
