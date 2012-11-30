@@ -92,6 +92,7 @@ class CRM_Core_Report_Excel {
             $colNo = 0;
             
             foreach ( $row as $j => $value ) {
+                if($value[0] == '0') $value = '="'.$value.'"';
                 if (!isset($value) || is_null($value)) {
                     $schema_insert .= '';
                 } else if ($value == '0' || $value != '') {
