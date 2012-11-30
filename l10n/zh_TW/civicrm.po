@@ -1106,7 +1106,7 @@ msgstr "名稱"
 #: CRM/Contact/Task.php CRM/Contribute/Task.php CRM/Event/Task.php
 #: CRM/Member/Task.php
 msgid "Send Email to Contacts"
-msgstr "傳送Email給聯絡人"
+msgstr "Email-寄信給聯絡人"
 
 #: CRM/Activity/Form/Task/PickOption.php CRM/Report/Form/Contact/Detail.php
 #: templates/CRM/Activity/Form/Activity.tpl
@@ -3312,7 +3312,7 @@ msgstr "預設"
 
 #: CRM/Contact/Form/Task/RemoveFromGroup.php CRM/Contact/Task.php
 msgid "Remove Contacts from Group"
-msgstr "從群組裡移除聯絡人"
+msgstr "群組-將聯絡人移出群組"
 
 #: CRM/Contact/Form/Task/SaveSearch.php CRM/Contact/Task.php
 #: CRM/Event/Form/Task/SaveSearch.php CRM/Event/Task.php
@@ -3426,7 +3426,7 @@ msgstr "動作"
 #: CRM/Contact/Selector.php CRM/Contact/Task.php
 #: templates/CRM/Contact/Page/View/Summary.tpl
 msgid "Delete Permanently"
-msgstr "永久刪除"
+msgstr "刪除聯絡人（永久刪除不可回復）"
 
 #: CRM/Contact/Selector.php CRM/Export/BAO/Export.php
 msgid "CiviCRM Contact Search"
@@ -3434,7 +3434,7 @@ msgstr "CiviCRM 聯絡人搜尋"
 
 #: CRM/Contact/Task.php CRM/Event/Task.php
 msgid "New Smart Group"
-msgstr "新增智慧群組"
+msgstr "群組-儲存搜尋條件為智慧群組"
 
 #: CRM/Contribute/BAO/ContributionPage.php CRM/Event/BAO/Event.php
 msgid "Copy of"
@@ -9576,7 +9576,7 @@ msgstr "從標籤裡移除聯絡人"
 
 #: CRM/Contact/Form/Task/Unhold.php
 msgid "Unhold Email"
-msgstr "解凍Email"
+msgstr "解凍封鎖的Email"
 
 #: CRM/Contact/Form/Task/Unhold.php
 msgid "%1 emails were found on hold and updated."
@@ -9754,19 +9754,19 @@ msgstr "智慧"
 
 #: CRM/Contact/Selector.php
 msgid "Permanently Delete Contact"
-msgstr "連結到刪除聯絡人"
+msgstr "永久刪除聯絡人"
 
 #: CRM/Contact/Task.php
 msgid "Add Contacts to Group"
-msgstr "新增聯絡人到群組"
+msgstr "群組-加入搜尋到的聯絡人"
 
 #: CRM/Contact/Task.php
 msgid "Tag Contacts (assign tags)"
-msgstr "為聯絡人加入標籤"
+msgstr "標籤-將聯絡人加入標籤"
 
 #: CRM/Contact/Task.php
 msgid "Untag Contacts (remove tags)"
-msgstr "為聯絡人移除標籤"
+msgstr "標籤-為聯絡人移除標籤"
 
 #: CRM/Contact/Task.php msgctxt "menu"
 msgid "Export Contacts"
@@ -9778,11 +9778,11 @@ msgstr "傳送簡訊給聯絡人"
 
 #: CRM/Contact/Task.php
 msgid "Delete Contacts"
-msgstr "刪除聯絡人"
+msgstr "刪除聯絡人（丟到資源回收桶）"
 
 #: CRM/Contact/Task.php
 msgid "Record Activity for Contacts"
-msgstr "為聯絡人記錄任務"
+msgstr "任務-為聯絡人記錄任務"
 
 #: CRM/Contact/Task.php
 msgid "Print Contacts"
@@ -9790,7 +9790,7 @@ msgstr "列印聯絡人"
 
 #: CRM/Contact/Task.php templates/CRM/Admin/Form/Preferences/Address.tpl
 msgid "Mailing Labels"
-msgstr "郵寄貼紙"
+msgstr "列印-郵寄貼紙"
 
 #: CRM/Contact/Task.php
 msgid "Batch Update via Profile"
@@ -9798,11 +9798,11 @@ msgstr "批次更新"
 
 #: CRM/Contact/Task.php
 msgid "Print PDF Letter for Contacts"
-msgstr "列印PDF信件"
+msgstr "列印-PDF信件"
 
 #: CRM/Contact/Task.php
 msgid "Unhold Emails"
-msgstr "解凍Email"
+msgstr "Email-解凍封鎖的Email"
 
 #: CRM/Contact/Task.php
 msgid "Restore Contacts"
@@ -9814,11 +9814,11 @@ msgstr "在地圖上顯示聯絡人"
 
 #: CRM/Contact/Task.php
 msgid "Add Contacts to Event"
-msgstr "新增聯絡人到活動"
+msgstr "活動-將聯絡人加入活動"
 
 #: CRM/Contact/Task.php
 msgid "Schedule/Send a Mass Mailing"
-msgstr "排程/傳送EDM/電子報"
+msgstr "Email-排程寄送電子報"
 
 #: CRM/Contribute/BAO/ContributionPage.php
 msgid "Automatically Generated"
@@ -24600,15 +24600,15 @@ msgstr "搜尋條件"
 
 #: templates/CRM/Contact/Form/Search/Advanced.hlp
 msgid "Use <strong>&#37;</strong> wildcard(s) for partial matches. EXAMPLE: Enter 'Volunteer&#37;' as your Activity Type to match any activity whose type is 'Volunteer' + any other words (e.g. Volunteer for Open House)."
-msgstr "使用<strong>&#37;</strong>萬用字元於部分相符者。舉例：輸入'志工&#37;'做為您的任務類型去搭配相關活動，而相關活動的類型則為 相關詞彙+'志工' (例如：觀摩活動的志工)。"
+msgstr "若只輸入部分字詞，請加上<strong>&#37;</strong>萬用字元。舉例：輸入「王小&#37;」，搜尋結果便包含「王小明」，「王小東」等名字。"
 
 #: templates/CRM/Contact/Form/Search/Advanced.hlp
 msgid "If multiple boxes are checked for Contact Types, Groups, Tags and Location Types, the selections are combined as <strong>OR</strong> criteria (e.g. checking 'Group A' and 'Group B' will find contacts who are either in 'Group A' OR 'Group B'). All other search fields are combined as <strong>AND</strong> criteria (e.g. selecting Tag is 'Major Donor' AND Country is 'Mexico' returns only those contacts who meet both criteria)."
-msgstr "當勾選選項為聯絡人類型、群組、標籤以及地點類型，該選擇項目的搜尋規則為OR(如勾選「群組A」和「群組B」將會找到在「群組A」或在「群組B」的聯絡人)。其他搜尋領域的規則為AND(例如選擇標籤為「主要捐款者」和國家為「墨西哥」，搜尋結果將會是同時擁有兩者條件的聯絡人)。"
+msgstr "某些搜尋的選項允許多選，這些多選將用「OR-或」的條件搜尋，例如你選了兩個群組「群組A」、「群組B」，預設選項將會找到在「群組A」或「群組B」的聯絡人。其餘單選項目，則為「AND-以及」的條件來搜尋。"
 
 #: templates/CRM/Contact/Form/Search/Advanced.hlp
 msgid "If you've changed search criteria for this 'smart group' and want to save your changes, select <strong>Update Smart Group</strong> from the '- more actions -' drop-down menu, and then click Go."
-msgstr ""
+msgstr "如果你想儲存新的搜尋條件，請在聯絡人的「-更多動作-」下拉選項中，選擇「更新智慧群組」選項"
 
 #: templates/CRM/Contact/Form/Search/Advanced.hlp
 msgid "Contacts with any of the checked privacy options are EXCLUDED from your search results by default. EXAMPLE: If you select 'Do not phone', and search for contacts with an address in a specific city - then contacts in that city who have 'Do not phone' selected as a privacy option will be excluded from the search results."
@@ -24703,7 +24703,7 @@ msgstr "重要：自訂需要您為搜尋值使用指定格式。在建立您第
 
 #: templates/CRM/Contact/Form/Search/Criteria/Basic.tpl
 msgid "Complete OR Partial Name"
-msgstr "全部或部分字詞"
+msgstr "聯絡人姓名（可輸入部分字詞）"
 
 #: templates/CRM/Contact/Form/Search/Criteria/Basic.tpl
 msgid "Complete OR Partial Email"
@@ -29284,7 +29284,7 @@ msgstr "相關組織"
 
 #: templates/CRM/Group/Form/Edit.tpl
 msgid "Contacts in this Group"
-msgstr "新增聯絡人到群組"
+msgstr "在本群組的聯絡人"
 
 #: templates/CRM/Group/Form/Edit.tpl
 msgid "Edit Smart Group Criteria"
@@ -33487,7 +33487,7 @@ msgstr[0] "%計算個群組會員"
 
 #: templates/CRM/Contact/Form/Task/AddToGroup.tpl
 msgid "Add Contacts to a Group"
-msgstr "新增聯絡人到群組"
+msgstr "群組-加入搜尋到的聯絡人"
 
 #: templates/CRM/Contact/Form/Task/Delete.tpl
 msgid "Are you sure you want to Delete the selected contact(s)? The contact(s) and all related data will be permanently removed. This operation cannot be undone."
@@ -38927,7 +38927,7 @@ msgstr "要增加到群組的聯絡人"
 
 #: drupal/modules/civicrm_rules/civicrm_rules.rules.inc
 msgid "Remove Contact from CiviCRM Group"
-msgstr "從群組裡移除聯絡人"
+msgstr "將聯絡人移出群組"
 
 #: drupal/modules/civicrm_rules/civicrm_rules.rules.inc
 msgid "Contact who should be removed from the group"
