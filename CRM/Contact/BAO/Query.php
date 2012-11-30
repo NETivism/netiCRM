@@ -901,9 +901,8 @@ class CRM_Contact_BAO_Query {
             $this->_element["{$tName}_id"] = 1;
             if (substr($tName, -15) == '-state_province') {
               // FIXME: hack to fix CRM-1900
-              $a = CRM_Core_BAO_Setting::getItem(CRM_Core_BAO_Setting::SYSTEM_PREFERENCES_NAME,
-                'address_format'
-              );
+              require_once 'CRM/Core/BAO/Preferences.php';
+              $a = CRM_Core_BAO_Preferences::value( 'address_format' );
 
               if (substr_count($a, 'state_province_name') > 0) {
                 $this->_select["{$name}-{$elementFullName}"] = "`$tName`.name as `{$name}-{$elementFullName}`";
@@ -1072,7 +1071,7 @@ class CRM_Contact_BAO_Query {
         // we add distinct to get the right count for components
         // for the more complex result set, we use GROUP BY the same id
         // CRM-9630
-        $select = "SELECT count( DISTINCT {$this->_distinctComponentClause} )";
+        $select = "SELECT count( {$this->_distinctComponentClause} )";
       }
       else {
         $select = 'SELECT count(DISTINCT contact_a.id)';
@@ -1586,6 +1585,9 @@ class CRM_Contact_BAO_Query {
 
     if (!CRM_Utils_Array::value($grouping, $this->_where)) {
       $this->_where[$grouping] = array();
+    }
+    if($op == 'LIKE' && !$wildcard){
+      $value = trim($value, '%').'%';
     }
 
     $multipleFields = array('url');
@@ -2380,12 +2382,13 @@ class CRM_Contact_BAO_Query {
         $subTypes[$subType] = 1;
       }
       $clause[$contactType] = "'" . CRM_Utils_Type::escape($contactType, 'String') . "'";
+      $clause_display[$contactType] = ts($contactType);
     }
 
     // fix for CRM-771
     if (!empty($clause)) {
       $this->_where[$grouping][] = 'contact_a.contact_type IN (' . implode(',', $clause) . ')';
-      $this->_qill[$grouping][] = ts('Contact Type') . ' - ' . implode(' ' . ts('or') . ' ', $clause);
+      $this->_qill[$grouping][] = ts('Contact Type') . ' - ' . implode(' ' . ts('or') . ' ', $clause_display);
 
       if (!empty($subTypes)) {
         $this->includeContactSubTypes($subTypes, $grouping);
@@ -2839,10 +2842,10 @@ WHERE  id IN ( $groupIDs )
     $this->_where[$grouping][] = $sub;
     if ($config->includeEmailInName) {
       $this->_tables['civicrm_email'] = $this->_whereTables['civicrm_email'] = 1;
-      $this->_qill[$grouping][] = ts('Name or Email ') . "$op - '$name'";
+      $this->_qill[$grouping][] = ts('Name or Email ') . ts($op)." &ldquo;{$name}&rdquo;";
     }
     else {
-      $this->_qill[$grouping][] = ts('Name like') . " - '$name'";
+      $this->_qill[$grouping][] = ts('Name like') . " &ldquo;{$name}&rdquo;";
     }
   }
 
@@ -2884,11 +2887,11 @@ WHERE  id IN ( $groupIDs )
           $value = "'$value'";
         }
       }
-      $this->_qill[$grouping][] = ts('Email') . " $op '$n'";
+      $this->_qill[$grouping][] = ts('Email') ." ". ts($op)." &ldquo;$n&rdquo;";
       $this->_where[$grouping][] = " ( civicrm_email.email $op $value )";
     }
     else {
-      $this->_qill[$grouping][] = ts('Email') . " $op ";
+      $this->_qill[$grouping][] = ts('Email') ." ". ts($op);
       $this->_where[$grouping][] = " ( civicrm_email.email $op )";
     }
 
@@ -2917,11 +2920,11 @@ WHERE  id IN ( $groupIDs )
         // only add wild card if not there
       }
       else {
-        $value = "'$value%'";
+        $value = "'%{$value}%'";
       }
       $op = 'LIKE';
       $this->_where[$grouping][] = " ( LOWER(civicrm_address.street_address) $op $value )";
-      $this->_qill[$grouping][] = ts('Street') . " $op '$n'";
+      $this->_qill[$grouping][]  = ts('Street') . " $op &ldquo;$n&rdquo;";
     }
     else {
       $this->_where[$grouping][] = " (civicrm_address.street_address $op $value )";
