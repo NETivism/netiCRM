@@ -234,6 +234,16 @@ function civicrm_initialize( )
         exit( );
     }
 
+    // autoload
+    if (FALSE && module_exists('xautoload')) {
+        _xautoload_finder()->registerPrefixDeep('CRM', 'CRM');
+    }
+    else {
+        require_once dirname(__FILE__) . '/../CRM/Core/ClassLoader.php';
+        $classLoader = new CRM_Core_ClassLoader();
+        $classLoader->register();
+    }
+
     static $initialized    = false;
     static $failure        = false;
 
