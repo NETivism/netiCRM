@@ -1,5 +1,5 @@
   <table class="form-layout">
-    <tr>
+    <tr class="odd">
             <td><label>{ts}Complete OR Partial Name{/ts}</label>&nbsp;{help id='id-advanced-intro'}<br />
                 {$form.sort_name.html|crmReplace:class:big}
             </td>
@@ -22,16 +22,16 @@
                     &nbsp;
                 {/if}
             </td>
-            <td class="labels" rowspan="2">
+            <td class="labels">
                 <div class="crm-submit-buttons">
                     {include file="CRM/common/formButtons.tpl" location="top" buttonStyle="width:80px; text-align:center;"}
                 </div>
                 <div class="crm-submit-buttons reset-advanced-search">
-                    <a href="{crmURL p='civicrm/contact/search/advanced' q='reset=1'}" id="resetAdvancedSearch" class="button" style="width:70px; text-align:center;"><span>{ts}Reset{/ts}</span></a>
+                    <a href="{crmURL p='civicrm/contact/search/advanced' q='reset=1'}" id="resetAdvancedSearch" class="button" style="text-align:center;"><span>{ts}Reset{/ts}</span></a>
                 </div>
             </td>
         </tr>
-    <tr>
+    <tr class="even">
 {if $form.contact_type}
             <td><label>{ts}Contact Type(s){/ts}</label><br />
                 {$form.contact_type.html}
@@ -72,11 +72,11 @@
             <td>&nbsp;</td>
 {/if}
             <td>{$form.operator.label} {help id="id-search-operator"}<br />{$form.operator.html}</td>
-            <td>
+            <td colspan="2">
                 {if $form.deleted_contacts}{$form.deleted_contacts.html} {$form.deleted_contacts.label}{else}&nbsp;{/if}
             </td>
     </tr>
-    <tr>
+    <tr class="odd">
 {if $form.contact_tags}
             <td><label>{ts}Select Tag(s){/ts}</label>
                 {$form.contact_tags.html}
@@ -100,10 +100,10 @@
 {/if}
             <td colspan="4">{$form.tag_search.label}  {help id="id-all-tags"}<br />{$form.tag_search.html|crmReplace:class:huge}</td>
         </tr>
-        <tr>
+        <tr class="odd">
             <td colspan="5">{include file="CRM/common/Tag.tpl"}</td>
         </tr>
-        <tr>
+        <tr class="even">
             <td colspan="2">
                 <table class="form-layout-compressed">
                 <tr>
@@ -138,12 +138,12 @@
                 {$form.email_on_hold.html} {$form.email_on_hold.label}
             </td>
         </tr>
-        <tr>
+        <tr class="odd">
             <td>
                 {$form.contact_source.label}<br />
                 {$form.contact_source.html|crmReplace:class:medium}
             </td>
-            <td>
+            <td colspan="2">
                 {if $form.uf_user}
                     {$form.uf_user.label} {$form.uf_user.html} <span class="crm-clear-link">(<a href="#" title="unselect" onclick="unselectRadio('uf_user', 'Advanced'); return false;" >{ts}clear{/ts}</a>)</span>
                     <div class="description font-italic">
@@ -153,23 +153,23 @@
                     &nbsp;
                 {/if}
             </td>
-            <td>
+            <td colspan="2">
                 {$form.job_title.label}<br />
                 {$form.job_title.html|crmReplace:class:medium}
             </td>
         </tr>
-        <tr>
+        <tr class="even">
              <td>
                  {$form.id.label}<br />
                  {$form.id.html|crmReplace:class:medium}
              </td>
              <td>
                  {$form.external_identifier.label}<br />
-                 {$form.external_identifier.html|crmReplace:class:medium}
+                 {$form.external_identifier.html|crmReplace:class:eight}
              </td>
             <td colspan="3">
                 {$form.preferred_language.label}<br />
-                {$form.preferred_language.html|crmReplace:class:medium}
+                {$form.preferred_language.html|crmReplace:class:eight}
             </td>
         </tr>
     </table>
