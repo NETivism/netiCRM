@@ -3814,7 +3814,7 @@ msgstr "週期類型"
 #: CRM/Contribute/DAO/Product.php CRM/Contribute/Form/ManagePremiums.php
 #: CRM/Member/DAO/MembershipType.php CRM/Member/Form/MembershipType.php
 msgid "Fixed Period Start Day"
-msgstr "固定開始日期"
+msgstr "固定週期開始日期"
 
 #: CRM/Contribute/DAO/Product.php CRM/Contribute/Form/ManagePremiums.php
 #: CRM/Member/DAO/MembershipType.php
@@ -26668,23 +26668,23 @@ msgstr "如果有的話，請輸入此物品的選項列表（以逗號分隔）
 
 #: templates/CRM/Contribute/Form/ManagePremiums.tpl
 msgid "Subscription or Service Settings"
-msgstr "訂閱或服務設定"
+msgstr "訂閱 / 服務設定（如寄送紙本月刊）"
 
 #: templates/CRM/Contribute/Form/ManagePremiums.tpl
 msgid "Select 'Rolling' if the subscription or service starts on the current day. Select 'Fixed' if the start date is a fixed month and day within the current year (set this value in the next field)."
-msgstr ""
+msgstr "如果服務的起始時間為捐款當日，請選擇「變動週期(Rolling)」。如果服務為固定每月某個日期，或是每年某個日期，請選擇「固定(Fixed)」"
 
 #: templates/CRM/Contribute/Form/ManagePremiums.tpl
 msgid "Month and day (MMDD) on which a fixed period subscription or service will start. EXAMPLE: A fixed period subscription with Start Day set to 0101 means that the subscription period would be 1/1/06 - 12/31/06 for anyone signing up during 2006."
-msgstr ""
+msgstr "固定週期的起始日，請填寫月日。例如，填寫： 0101，表示將從當年度的1/1到12/31（無論捐款底月份是哪個月份）。"
 
 #: templates/CRM/Contribute/Form/ManagePremiums.tpl
 msgid "Duration of subscription or service (e.g. 12-month subscription)."
-msgstr "捐款或服務時間(例如12個月的捐款)。"
+msgstr "服務長短(如：12個月的訂閱)"
 
 #: templates/CRM/Contribute/Form/ManagePremiums.tpl
 msgid "Frequency of subscription or service (e.g. journal delivered every two months)."
-msgstr "捐款或服務頻率（例如每兩個月傳送月刊）。"
+msgstr "服務頻率（例如每兩個月傳送月刊）。"
 
 #: templates/CRM/Contribute/Form/PaymentInstrument.tpl
 msgid "New Payment Instrument"
