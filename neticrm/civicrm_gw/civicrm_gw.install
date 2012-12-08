@@ -247,6 +247,11 @@ function civicrm_gw_update_6103(){
     $ids[] = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_option_value WHERE option_group_id = {$gid} AND name = '$k'");
   }
   if(count($ids)){
+    foreach($ids as $i => $id){
+      if(empty($id)){
+        unset($ids[$i]);
+      }
+    }
     CRM_Core_DAO::singleValueQuery("Update civicrm_option_value SET is_reserved = 1 WHERE id IN(".implode(',', $ids).") AND is_reserved = 0");
   }
   db_add_field($ret, 'civicrm_contribution_gw', 'card4no', array(
