@@ -298,8 +298,11 @@ function civicrm_initialize( )
         // Add module-specific header elements
         drupal_set_html_head(civicrm_html_head());
     }
-
-    return true;
+    $userID = CRM_Core_Session::singleton()->get('userID');
+    if (empty($userID)) {
+        unset($_SESSION['CiviCRM']);
+    }
+    return TRUE;
 }
 
 /**

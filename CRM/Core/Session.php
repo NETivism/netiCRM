@@ -89,8 +89,6 @@ class CRM_Core_Session {
     function __construct()
     {
         $this->_session =& $_SESSION;
-
-        $this->create();
     }
 
     /**
