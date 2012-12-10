@@ -270,13 +270,16 @@ function _civicrm_gw_notify_url(&$vars, $path, $component){
      }
   }
 
-  return url(
+  $url = url(
     $path,
     array(
       'query'=> implode('&', $query),
       'absolute' => true,
     )
   );
+  if($_SERVER['HTTP_HTTPS'] == 'on' || $_SERVER['HTTPS'] == 'on'){
+    return str_replace('http://', 'https://', $url);
+  }
 }
 
 function civicrm_gw_popup($instrument){
