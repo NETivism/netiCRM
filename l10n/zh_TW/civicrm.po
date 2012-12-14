@@ -9410,7 +9410,7 @@ msgstr "刪除聯絡人"
 
 #: CRM/Contact/Form/Task/Delete.php
 msgid "Restored Contact(s): %1"
-msgstr "已刪除的聯絡人： %1"
+msgstr "已回復的聯絡人： %1"
 
 #: CRM/Contact/Form/Task/Delete.php
 msgid "Deleted Contact(s): %1"
@@ -18274,11 +18274,11 @@ msgstr "查看這個區域的重複。"
 
 #: CRM/Report/Form/Contact/Log.php
 msgid "Touched Contact"
-msgstr "已接觸的聯絡人"
+msgstr "影響到的聯絡人"
 
 #: CRM/Report/Form/Contact/Log.php
 msgid "Touched Activity"
-msgstr "已接觸的任務"
+msgstr "影響到的任務"
 
 #: CRM/Report/Form/Contact/Relationship.php
 msgid "Contact A"
@@ -25489,7 +25489,7 @@ msgstr "傳送簡訊"
 
 #: templates/CRM/Contact/Page/View/Summary.tpl
 msgid "Restore from Trash"
-msgstr "回復個案"
+msgstr "回復聯絡人"
 
 #: templates/CRM/Contact/Page/View/Summary.tpl
 msgid "Associated Multi-Org Group"

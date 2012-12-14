@@ -29,11 +29,12 @@
     <div class="form-item">
      {if $logCount > 0 }  	
        <table>
-       <tr class="columnheader"><th>{ts}Changed By{/ts}</th><th>{ts}Change Date{/ts}</th></tr>
+       <tr class="columnheader"><th>{ts}Changed By{/ts}</th><th>{ts}Change Date{/ts}</th><th>{ts}Change Log{/ts}</th></tr>
        {foreach from=$log item=row}
          <tr class="{cycle values="odd-row,even-row"}">
             <td> {$row.image}&nbsp;<a href="{crmURL p='civicrm/contact/view' q="action=view&reset=1&cid=`$row.id`"}">{$row.name}</a></td>
             <td>{$row.date|crmDate}</td>
+            <td>{$row.data}</td>
          </tr>
        {/foreach}
        </table>
