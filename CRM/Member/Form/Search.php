@@ -377,6 +377,20 @@ class CRM_Member_Form_Search extends CRM_Core_Form
         // then see if there are any get values, and if so over-ride the post values
         // note that this means that GET over-rides POST :)
 
+        if(is_array($_REQUEST['member_membership_type_id'])){
+            $this->_formValues['member_membership_type_id'] = array();
+            foreach ( $_REQUEST['member_membership_type_id'] as $key => $value) {
+                $this->_formValues['member_membership_type_id'][$value] = $value;
+            }
+        }
+
+        if(is_array($_REQUEST['member_status_id'])){
+            $this->_formValues['member_status_id'] = array();
+            foreach ( $_REQUEST['member_status_id'] as $key => $value) {
+                $this->_formValues['member_status_id'][$value] = $value;
+            }
+        }
+
         if ( ! $this->_force ) {
             return;
         }
