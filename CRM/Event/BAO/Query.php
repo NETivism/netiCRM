@@ -339,13 +339,13 @@ class CRM_Event_BAO_Query
 
             if ( !empty($val) ) {
                 foreach ( $val as $id => $dontCare ) {
-                    $names[] = $statusTypes[$id];
+                    $names[] = ts($statusTypes[$id]);
                 }
             } else {
-                $names[] = $statusTypes[$value];
+                $names[] = ts($statusTypes[$value]);
             }
 
-            $query->_qill[$grouping][]  = ts('Participant Status %1', array( 1 => $op ) ) . ' ' . implode( ' ' . ts('or') . ' ', $names );
+            $query->_qill[$grouping][]  = ts('Participant Status %1', array( 1 => ts($op) ) ) . ' ' . implode( ' ' . ts('or') . ' ', $names );
             
             $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause( "civicrm_participant.status_id", 
                                                                               $op,
@@ -556,15 +556,14 @@ class CRM_Event_BAO_Query
         $form->addDate( 'event_end_date_high', ts('To'), false, array( 'formatType' => 'searchDate') );
 
         require_once 'CRM/Event/PseudoConstant.php';
+        $attrs = array('multiple' => 'multiple');
         $status = CRM_Event_PseudoConstant::participantStatus( null, null, 'label' );
         asort( $status );
-        foreach ( $status as $id => $Name) {
-            $form->_participantStatus =& $form->addElement('checkbox', "participant_status_id[$id]", null,$Name);
-        }
-        
-        foreach (CRM_Event_PseudoConstant::participantRole( ) as $rId => $rName) {
-            $form->_participantRole =& $form->addElement('checkbox', "participant_role_id[$rId]", null,$rName);
-        }
+        //$form->_participantStatus =& $form->addElement('checkbox', "participant_status_id[$id]", null,$Name);
+        $form->addElement('select', 'participant_status_id', 'Participant Status', $status, $attrs);
+
+        $roles = CRM_Event_PseudoConstant::participantRole();
+        $form->addElement('select', 'participant_role_id', 'Participant Role', $roles, $attrs);
         
         $form->addElement( 'checkbox', 'participant_test' , ts( 'Find Test Participants?' ) );
         $form->addElement( 'checkbox', 'participant_pay_later' , ts( 'Find Pay Later Participants?' ) );

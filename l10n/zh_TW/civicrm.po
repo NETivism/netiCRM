@@ -3669,7 +3669,7 @@ msgstr "總金額"
 #: templates/CRM/Event/Form/Search/Common.tpl
 #: templates/CRM/Event/Form/Task/Print.tpl
 msgid "Fee Amount"
-msgstr "手續費"
+msgstr "費用"
 
 #: CRM/Contribute/DAO/Contribution.php CRM/Contribute/Form/AdditionalInfo.php
 #: CRM/Core/DAO/FinancialTrxn.php
@@ -4786,7 +4786,7 @@ msgstr "名稱"
 #: templates/CRM/Event/Form/Registration/ThankYou.tpl
 #: templates/CRM/Event/Form/Search/Common.tpl msgctxt "menu"
 msgid "Participant Role"
-msgstr "參加者身分"
+msgstr "參加者角色"
 
 #: CRM/Event/DAO/Event.php CRM/Event/Form/ManageEvent/Registration.php
 msgid "Confirm From Name"
@@ -9894,7 +9894,7 @@ msgstr "個人募款頁 - %1"
 
 #: CRM/Contribute/BAO/Query.php
 msgid "Paid By - %1"
-msgstr "付款人 - %1"
+msgstr "付款方式為 - %1"
 
 #: CRM/Contribute/BAO/Query.php
 msgid "Contribution Status %1"
@@ -14542,7 +14542,7 @@ msgstr "參加者狀態"
 
 #: CRM/Event/DAO/Participant.php
 msgid "Participant Role Id"
-msgstr "參加者身分"
+msgstr "參加者角色"
 
 #: CRM/Event/DAO/Participant.php
 msgid "Register date"
