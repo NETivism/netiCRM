@@ -238,6 +238,18 @@ class CRM_Contact_Form_Search_Advanced extends CRM_Contact_Form_Search
             } else {
                 $this->set( 'id', '' );
             }
+
+            // support multiple drop down select
+            $convert = array('participant_status_id', 'participant_role_id', 'member_membership_type_id', 'member_status_id');
+            foreach($convert as $ele){
+              if(is_array($this->_formValues[$ele])){
+                  $ary = $this->_formValues[$ele];
+                  $this->_formValues[$ele] = array();
+                  foreach ( $ary as $value) {
+                      $this->_formValues[$ele][$value] = $value;
+                  }
+              }
+            }
         }
 
         // retrieve ssID values only if formValues is null, i.e. form has never been posted
