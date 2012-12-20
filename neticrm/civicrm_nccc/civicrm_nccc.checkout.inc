@@ -40,14 +40,12 @@ function civicrm_nccc_do_transfer_checkout(&$vars, &$component, &$payment_proces
 
   // here we should inlcude iframe to post to nccc
   // see http://css-tricks.com/snippets/html/post-data-to-an-iframe/
-  return _civicrm_nccc_form_redirect($redirect_vars, $instrument_code);
+  print _civicrm_nccc_form_redirect($redirect_vars, $instrument_code);
 
-   /*
   // move things to CiviCRM cache as needed
   require_once 'CRM/Core/Session.php';
   CRM_Core_Session::storeSessionObjects( );
   exit;
-  */
 }
 
 function _civicrm_nccc_getvars(&$vars, $component, &$payment_processor, $instrument_code){
@@ -66,19 +64,16 @@ function _civicrm_nccc_getvars(&$vars, $component, &$payment_processor, $instrum
   $notify_url .= "&qfKey=".$vars['qfKey'];
 
   $redirect_vars = array(
-    "act" => "auth",
-    "client" => $payment_processor['user_name'],
-    "od_sob" => $vars['contributionID'],
-    "amount" => $amount,
-    "roturl" => $notify_url,
-    "bk_posturl" => $notify_url.'&bg=1',
+    "MerchantID" => $payment_processor['user_name'],
+    "TerminalID" => $payment_processor['password'],
+    "OrderID" => $vars['contributionID'],
+    "TransAmt" => $amount,
+    "TransMode" => "0",
+    "NotifyURL" => $notify_url,
+    "CSS_URL" => $payment_processor['subject'],
     "qfKey" => $vars['qfKey'],
     "#action" => $payment_processor['url_site'],
   );
-  if($instrument_code == 'unionpay'){
-    $redirect_vars["mallurl"] = $mallurl;
-    $redirect_vars["CUPus"] = 1;
-  }
   if(!strstr($language->language, 'zh')){
     $redirect_vars['Enn'] = 'e';
   }
@@ -92,43 +87,14 @@ function _civicrm_nccc_form_redirect($redirect_vars, $instrument_code){
   header('Cache-Control: no-store, no-cache, must-revalidate');
   header('Expires: 0');
 
-  switch($instrument_code){
-    case 'Credit Card':
-    case 'web_atm':
-    case 'unionpay':
-      $js = 'document.forms.redirect.submit();';
-      $o .= '<form action="'.$redirect_vars['#action'].'" name="redirect" method="post" id="redirect-form">';
-      foreach($redirect_vars as $k=>$p){
-        if($k[0] != '#'){
-          $o .= '<input type="hidden" name="'.$k.'" value="'.$p.'" />';
-        }
-      }
-      $o .= '</form>';
-      break;
-    case 'vacc':
-    case 'barcode':
-    case 'cvs':
-    case 'ibon':
-      $js = '
-    function print_redirect(){
-      // creating the "paymentpop" window with custom features prior to submitting the form
-      window.open("", "paymentpop", "scrollbars=yes,menubar=no,height=300,width=600,resizable=yes,toolbar=no,status=no,left=150,top=500");
-      document.forms.print.submit();
-      window.location = "'.$redirect_vars['#action'].'";
+  $js = 'document.forms.redirect.submit();';
+  $o .= '<form action="'.$redirect_vars['#action'].'" name="redirect" method="post" id="redirect-form">';
+  foreach($redirect_vars as $k=>$p){
+    if($k[0] != '#'){
+      $o .= '<input type="hidden" name="'.$k.'" value="'.$p.'" />';
     }
-    //window.open("'.$redirect_vars['#popup'].'", "paymentinfo", "scrollbars=yes,menubar=no,height=300,width=600,resizable=yes,toolbar=no,status=no,left=150,top=500");
-      ';
-
-      $o .= '<form action="'.$redirect_vars['#popup'].'" name="print" method="post" id="redirect-form" target="paymentpop">';
-      foreach($redirect_vars as $k=>$p){
-        if($k[0] != '#'){
-          $o .= '<input type="hidden" name="'.$k.'" value="'.$p.'" />';
-        }
-      }
-      $o .= '</form>';
-      $o .= '<div align="center"><p>請按「取得付款資訊」按鈕以獲得繳款訊息</p><div><input type="button" value="取得付款資訊" onclick="print_redirect();" /></div></div>';
-          break;
   }
+  $o .= '</form>';
   return '
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
