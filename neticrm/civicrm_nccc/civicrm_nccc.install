@@ -105,7 +105,7 @@ function civicrm_nccc_schema(){
         'length' => '8',
         'not null' => FALSE,
       ),
-      'foreign' => array(
+      'foreigncard' => array(
         'description' => 'Card from forign, support VISA Master JSB. Y/N or NULL',
         'type' => 'varchar',
         'length' => '8',

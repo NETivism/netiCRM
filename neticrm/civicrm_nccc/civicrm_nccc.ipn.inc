@@ -5,7 +5,7 @@ require_once 'CRM/Core/Payment/BaseIPN.php';
 /**
  * Helper function for receive pingback from payment server
  */
-function civicrm_nccc_ipn($instrument){
+function civicrm_nccc_ipn(){
   // detect variables
   if(empty($_POST)){
     watchdog("civicrm_nccc", "Could not find POST data from payment server");
@@ -13,7 +13,7 @@ function civicrm_nccc_ipn($instrument){
   else{
     if($component = $_GET['module']){
       $ipn = new CRM_Core_Payment_NCCCIPN();
-      $ipn->main($component, $instrument);
+      $ipn->main($component);
     }
     else{
       watchdog('civicrm_nccc', "Could not get module name from request url");
@@ -27,7 +27,7 @@ class CRM_Core_Payment_NCCCIPN extends CRM_Core_Payment_BaseIPN {
     parent::__construct( );
   }
 
-  function main(  $component = 'contribute', $instrument){
+  function main(  $component = 'contribute'){
     // get the contribution and contact ids from the GET params
     require_once 'CRM/Utils/Request.php';
     $objects = $ids = $input = array();
@@ -90,11 +90,15 @@ class CRM_Core_Payment_NCCCIPN extends CRM_Core_Payment_BaseIPN {
     $record = array_intersect_key($input, $schema['fields']);
     $record['cid'] = $cid;
     $record['redeem'] = serialize($record['redeem']);
+
     drupal_write_record('civicrm_contribution_nccc', $record, 'cid');
   }
 
   function getInput( &$input) {
     foreach($_POST as $k => $v){
+      // skip empty value
+      if($v === '') continue;
+
       $key = strtolower($k);
       if(strpos($key, 'redeem') !== FALSE){
         $input['redeem'][$key] = $v;
@@ -105,6 +109,10 @@ class CRM_Core_Payment_NCCCIPN extends CRM_Core_Payment_BaseIPN {
       elseif($key == 'responsemsg'){
         $v = iconv("big5","UTF-8", $v);
         $input[$key] = $v;
+      }
+      // we can't use mysql reserved word for column name
+      elseif($key == 'foreign'){
+        $input['foreigncard'] = $v;
       }
       else{
         $input[$key] = $v;
@@ -154,17 +162,17 @@ class CRM_Core_Payment_NCCCIPN extends CRM_Core_Payment_BaseIPN {
     }
 
     // process fail response
-    if($input['transcode'] == '00' || $input['transcode'] == '08' || $input['transcode'] == '11'){
+    if($input['approvecode'] == '00' || $input['approvecode'] == '08' || $input['approvecode'] == '11'){
       // success , do nothing
     }
     else{
-      $tc = $input['transcode'];
+      $tc = $input['approvecode'];
       $rc = $input['responsecode'];
       $rmsg = $input['responsemsg'];
       $this->failed( $objects, $transaction );
       watchdog("civicrm_nccc", "{$contribution->trxn_id}: Transaction failed from nccc server response." );
       $note .= ts("Transaction failed from remote response")."\n";
-      $note .= "Error response code / transaction code: {$rc}/{$tc}\n";
+      $note .= "Error response code / approve code: {$rc}/{$tc}\n";
       $note .= "Error message: ".$rmsg."\n";
       $pass = FALSE;
     }
