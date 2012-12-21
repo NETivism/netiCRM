@@ -117,12 +117,6 @@ function civicrm_nccc_schema(){
         'length' => '8',
         'not null' => FALSE,
       ),
-      '' => array(
-        'description' => 'Last 4 number for credit card',
-        'type' => 'varchar',
-        'length' => '4',
-        'not null' => FALSE,
-      ),
     ),
     'primary key' => array('cid'),
     'mysql_suffix' => 'ENGINE = InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci',
@@ -144,7 +138,7 @@ function civicrm_nccc_install() {
   $sql = "INSERT INTO civicrm_payment_processor_type 
   (name, title, description, is_active, is_default, user_name_label, password_label, signature_label, subject_label, class_name, url_site_default, url_api_default, url_recur_default, url_button_default, url_site_test_default, url_api_test_default, url_recur_test_default, url_button_test_default, billing_mode, is_recur, payment_type)
   VALUES 
-  ('NCCC', '聯合信用卡', NULL, 1, 0, '特店代號（MerchantID）', '端末機代號（TerminalID）', NULL, 'CSS URL', 'Payment_NCCC', 'https://nccnet-ec.nccc.com.tw/merchant/HPPRequest', NULL, NULL, NULL, 'https://nccnet-ectest.nccc.com.tw/merchant/HPPRequest', NULL, NULL, NULL, 4, 0, 1)";
+  ('NCCC', '聯合信用卡', NULL, 1, 0, '特店代號（MerchantID）', '端末機代號（TerminalID）', '交易編號開頭文字', 'CSS URL', 'Payment_NCCC', 'https://nccnet-ec.nccc.com.tw/merchant/HPPRequest', NULL, NULL, NULL, 'https://nccnet-ectest.nccc.com.tw/merchant/HPPRequest', NULL, NULL, NULL, 4, 0, 1)";
 
   CRM_Core_DAO::executeQuery($sql);
   $ppt_id = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_payment_processor_type WHERE name LIKE 'NCCC'");

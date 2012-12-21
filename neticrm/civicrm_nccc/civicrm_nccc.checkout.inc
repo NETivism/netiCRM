@@ -28,7 +28,8 @@ function civicrm_nccc_do_transfer_checkout(&$vars, &$component, &$payment_proces
   $contribution->id = $vars['contributionID'];
   $contribution->find(true);
   $contribution->is_pay_later = $is_pay_later;
-  $contribution->trxn_id = $vars['contributionID'];
+
+  $contribution->trxn_id = $payment_processor['signature'].$vars['contributionID'];
   if($vars['civicrm_instrument_id']){
     $contribution->payment_instrument_id = $vars['civicrm_instrument_id'];
   }
@@ -69,6 +70,7 @@ function _civicrm_nccc_getvars(&$vars, $component, &$payment_processor, $instrum
     "OrderID" => $vars['contributionID'],
     "TransAmt" => $amount,
     "TransMode" => "0",
+    "PrivateData" => "qfKey=".$vars['qfKey'],
     "NotifyURL" => $notify_url,
     "CSS_URL" => $payment_processor['subject'],
     "qfKey" => $vars['qfKey'],
