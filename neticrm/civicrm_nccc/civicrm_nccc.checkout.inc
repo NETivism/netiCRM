@@ -67,17 +67,20 @@ function _civicrm_nccc_getvars(&$vars, $component, &$payment_processor, $instrum
   $redirect_vars = array(
     "MerchantID" => $payment_processor['user_name'],
     "TerminalID" => $payment_processor['password'],
-    "OrderID" => $vars['contributionID'],
+    "OrderID" => $payment_processor['signature'].$vars['contributionID'],
     "TransAmt" => $amount,
     "TransMode" => "0",
     "PrivateData" => "qfKey=".$vars['qfKey'],
     "NotifyURL" => $notify_url,
     "CSS_URL" => $payment_processor['subject'],
-    "qfKey" => $vars['qfKey'],
+    "#qfKey" => $vars['qfKey'],
     "#action" => $payment_processor['url_site'],
   );
   if(!strstr($language->language, 'zh')){
-    $redirect_vars['Enn'] = 'e';
+    $redirect_vars['TEMPLATE'] = 'ENGLISH_SIMPLE';
+  }
+  else{
+    $redirect_vars['TEMPLATE'] = 'CHINESE_SIMPLE';
   }
 
   return $redirect_vars;
@@ -90,7 +93,8 @@ function _civicrm_nccc_form_redirect($redirect_vars, $instrument_code){
   header('Expires: 0');
 
   $js = 'document.forms.redirect.submit();';
-  $o .= '<form action="'.$redirect_vars['#action'].'" name="redirect" method="post" id="redirect-form">';
+  $o .= '<form action="'.$redirect_vars['#action'].'" name="redirect" method="post" id="redirect-form" target="ncccframe">
+  <iframe name="ncccframe" height="600" width="800" scrolling="auto" align="center" frameborder="0" src="'.$redirect_vars['#action'].'"></iframe>';
   foreach($redirect_vars as $k=>$p){
     if($k[0] != '#'){
       $o .= '<input type="hidden" name="'.$k.'" value="'.$p.'" />';
@@ -153,6 +157,9 @@ function _civicrm_nccc_notify_url(&$vars, $path, $component){
   );
   if($_SERVER['HTTP_HTTPS'] == 'on' || $_SERVER['HTTPS'] == 'on'){
     return str_replace('http://', 'https://', $url);
+  }
+  else{
+    return $url;
   }
 }
 

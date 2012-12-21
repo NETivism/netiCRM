@@ -34,7 +34,7 @@ class CRM_Core_Payment_NCCCIPN extends CRM_Core_Payment_BaseIPN {
     $this->getInput($input);
     $input['component'] = $component;
     $this->getIds($ids, $component);
-    $qfKey = $_GET['qfKey'] ? $_GET['qfKey'] : $_POST['qfKey'];
+    $qfKey = $_GET['qfKey'] ? $_GET['qfKey'] : '';
     $civi_base_url = $component == 'event' ? 'civicrm/event/register' : 'civicrm/contribute/transact';
 
     // we use cid from url for mapping contribution
@@ -76,7 +76,7 @@ class CRM_Core_Payment_NCCCIPN extends CRM_Core_Payment_BaseIPN {
         drupal_goto($civi_base_url, "_qf_ThankYou_display=true&qfKey={$qfKey}");
       }
       else{
-        $this->addNote($note, $contribution);
+        $this->addNote($note, $objects['contribution']);
         $this->failed($objects, $transaction);
 
         // TODO: Fail reason and fail page.
@@ -102,6 +102,10 @@ class CRM_Core_Payment_NCCCIPN extends CRM_Core_Payment_BaseIPN {
       elseif($key == 'transdate' || $key == 'transtime'){
         continue;
       }
+      elseif($key == 'responsemsg'){
+        $v = iconv("big5","UTF-8", $v);
+        $input[$key] = $v;
+      }
       else{
         $input[$key] = $v;
       }
@@ -123,6 +127,9 @@ class CRM_Core_Payment_NCCCIPN extends CRM_Core_Payment_BaseIPN {
       $ids['contributionPage'] = $_GET['cpid'];
       $ids['related_contact'] = $_GET['rid'];
       $ids['onbehalf_dupe_alert'] = $_GET['onbehalf_dupe_alert'];
+    }
+    foreach($ids as $k => $v){
+      if(empty($v)) unset($ids[$k]);
     }
   }
 
