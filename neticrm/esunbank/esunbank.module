@@ -28,7 +28,7 @@ function esunbank_api_test($func, $code, $a, $b){
   );
   dpm($vars);
   $barcode_store =& esunbank_api_barcode('store', $vars);
-  $barcode_postoffice =& esunbank_api_barcode('store', $vars);
+  $barcode_postoffice =& esunbank_api_barcode('postoffice', $vars);
 
   $output .= '<h2>Store</h2>';
   foreach($barcode_store as $src){

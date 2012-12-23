@@ -129,7 +129,7 @@ function _esunbank_check_calc($serial, $price = NULL){
 function esunbank_store_a($timestamp, $code){
   $year = _esunbank_year2roc($timestamp);
   $year = substr($year, -2);
-  $date = $year . date('md', $timestamp - 86400);
+  $date = $year . date('md', $timestamp);
   $bar1 = $date.$code;
 
   return $bar1;
