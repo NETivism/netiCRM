@@ -59,7 +59,10 @@ class CRM_Admin_Form_Setting_Miscellaneous extends  CRM_Admin_Form_Setting
         $attribs = $domain->locales ? array('disabled' => 'disabled') : null;
         $this->addYesNo('logging', ts('Logging'), null, null, $attribs);
 
-        $this->addYesNo( 'versionCheck'           , ts( 'Version Check & Statistics Reporting' ));
+        $this->addYesNo( 'versionCheck', ts( 'Version Check & Statistics Reporting' ));
+        
+        $this->addYesNo( 'doNotAttachPDFReceipt', ts( 'Attach PDF copy to receipts' ) );
+        
         $this->addElement('text', 'maxAttachments' , ts('Maximum Attachments'),
                           array( 'size' => 2, 'maxlength' => 8 ) );
         $this->addElement('text', 'maxFileSize' , ts('Maximum File Size'),
