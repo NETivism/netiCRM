@@ -266,7 +266,7 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
                 'contactId' => $contactID,
                 'tplParams' => $tplParams,
                 'isTest'    => $isTest,
-            	'PDFFilename' => 'civicrm.pdf',
+                'PDFFilename' => 'receipt.pdf',
             );
 
             require_once 'CRM/Core/BAO/MessageTemplates.php';
