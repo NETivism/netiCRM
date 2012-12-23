@@ -15,7 +15,7 @@ function esunbank_serial($code, $number, $length){
     return $serial;
   }
   else{
-    return 'serial too long';
+    return 'serial-too-long';
   }
 }
 
@@ -35,7 +35,7 @@ function esunbank_serial_price($code, $number, $length, $price){
     return $serial;
   }
   else{
-    return 'serial too long';
+    return 'serial-too-long';
   }
 }
 
@@ -57,7 +57,7 @@ function esunbank_serial_price_date($code, $number, $length, $price, $timestamp)
     return $serial;
   }
   else{
-    return 'serial too long';
+    return 'serial-too-long';
   }
 }
 
@@ -82,7 +82,7 @@ function esunbank_serial_price_hour($code, $number, $length, $price, $timestamp)
     return $serial;
   }
   else{
-    return 'serial too long';
+    return 'serial-too-long';
   }
 
 }
@@ -129,7 +129,7 @@ function _esunbank_check_calc($serial, $price = NULL){
 function esunbank_store_a($timestamp, $code){
   $year = _esunbank_year2roc($timestamp);
   $year = substr($year, -2);
-  $date = $year . date('md', $timestamp);
+  $date = $year . date('md', $timestamp - 86400);
   $bar1 = $date.$code;
 
   return $bar1;
@@ -291,6 +291,25 @@ function _esunbank_year2roc($timestamp){
 }
 
 
+/**
+ * 條碼產生
+ */
+function esunbank_barcode($serial){
+  module_load_include('php', 'esunbank', 'barcode.inc');
+
+  $dir = 'esunbarcode';
+  $ext = 'png';
+  $encoding = 'CODE39';
+  $file = file_create_path($dir).'/e-'.$serial.'-'.strtolower($encoding);
+  $bar = new barCode();
+  $bar->setSymblogy($encoding);
+  $bar->setHeight(30);
+  $bar->setScale(2.0);
+  $bar->setHexColor('#000000','#FFFFFF');
+  $bar->setFont(drupal_get_path('module', 'esunbank') ."/arialbd.ttf");
+  $bar->genBarCode($serial, $ext, $file);
+  return $file.'.'.$ext;
+}
 
 
 function _esunbank_check_api(){
@@ -327,5 +346,6 @@ function _esunbank_check_api(){
   return $output;
 } 
 
-print_r(_esunbank_check_api());
+
+# print_r(_esunbank_check_api());
  
