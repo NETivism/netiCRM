@@ -123,22 +123,8 @@ function _esunbank_check_calc($serial, $price = NULL){
   return substr($check, -1);
 }
 
-function _esunbank_check_api(){
-  $code = 99123;
-  $number = 3939889;
-  $length = 13;
-  $price = 1500;
-  $timestamp1 = strtotime('2012-01-19 00:00:00');
-  $timestamp2 = strtotime('2013-08-01 10:00:00');
-  $output[] = esunbank_serial($code, $number, $length);
-  $output[] = esunbank_serial_price($code, $number, $length, $price);
-  $output[] = esunbank_serial_price_date($code, 1, $length, $price, $timestamp1);
-  $output[] = esunbank_serial_price_hour($code, 89, $length, $price, $timestamp2);
-  return $output;
-} 
-
 /**
- * 超商條碼
+ * 超商條碼A
  */
 function esunbank_store_a($timestamp, $code){
   $year = _esunbank_year2roc($timestamp);
@@ -146,9 +132,12 @@ function esunbank_store_a($timestamp, $code){
   $date = $year . date('md', $timestamp);
   $bar1 = $date.$code;
 
-  // image of barcode
+  return $bar1;
 }
 
+/**
+ * 超商條碼B
+ */
 function esunbank_store_b($serial){
   $len = 16 - strlen($serial);
   if($len > 0){
@@ -157,8 +146,13 @@ function esunbank_store_b($serial){
   else{
     $bar2 = $serial;
   }
+
+  return $bar2;
 }
 
+/**
+ * 超商條碼C
+ */
 function esunbank_store_c($timestamp, $price, $a, $b){
   $date = date('md', $timestamp);
   $price = (string) $price;
@@ -166,9 +160,16 @@ function esunbank_store_c($timestamp, $price, $a, $b){
   if($len > 0){
     $price = str_repeat('0', $len).$price;
   }
-  $bar3 = $date.'##'.$price;
+  $bar3 = $date.'#@'.$price;
+  $replace['#'] = _esunbank_store_calc('odd', $a, $b, $bar3);
+  $replace['@'] = _esunbank_store_calc('even', $a, $b, $bar3);
+
+  return str_replace(array_keys($replace), $replace, $bar3);
 }
 
+/**
+ * 超商條碼驗證檢核
+ */
 function _esunbank_store_calc($type, $a, $b, $c){
   $map = _esunbank_store_calc_map();
   $run = array($a, $b, $c);
@@ -181,6 +182,7 @@ function _esunbank_store_calc($type, $a, $b, $c){
       if($type == 'odd' && $even) continue;
       if($type == 'even' && !$even) continue;
       if($char == '#') continue;
+      if($char == '@') continue;
 
       // start calc
       if(!is_numeric($char)){
@@ -231,6 +233,53 @@ function _esunbank_store_calc_map(){
   return $ary;
 }
 
+/**
+ * 郵局條碼a
+ */
+function esunbank_postoffice_a(){
+  return '50079841';
+}
+
+/**
+ * 郵局條碼b
+ */
+function esunbank_postoffice_b($timestamp, $serial, $a, $c){
+  $year = _esunbank_year2roc($timestamp);
+  $len = 3 - strlen($year);
+  if($len > 0) $year = str_repeat('0', $len).$year;
+  $date = $year . date('md', $timestamp);
+
+  $len = 16 - strlen($serial);
+  if($len > 0) $serial .= str_repeat('0', $len);
+
+  $bar = $date.$serial;
+  $code = _esunbank_postoffice_calc($a, $bar, $c);
+  return $bar.$code;
+}
+
+/**
+ * 郵局條碼c
+ */
+function esunbank_postoffice_c($price){
+  return (string) $price;
+}
+
+/**
+ * 郵局檢查碼
+ */
+function _esunbank_postoffice_calc($a, $b, $c){
+  $ary['a'] = str_split($a);
+  $ary['b'] = str_split($b);
+  $ary['c'] = str_split($c);
+  $sum = 0;
+  foreach($ary as $v){
+    foreach($v as $vv){
+      $sum += $vv;
+    }
+  }
+  return $sum%10;
+}
+
 function _esunbank_year2roc($timestamp){
   $ac = date('Y', $timestamp);
   $ac = (int)$ac;
@@ -241,5 +290,42 @@ function _esunbank_year2roc($timestamp){
   return $roc;
 }
 
-# print_r(_esunbank_check_api());
 
+
+
+function _esunbank_check_api(){
+  $code = 99123;
+  $number = 3939889;
+  $length = 13;
+  $price = 1500;
+  $timestamp1 = strtotime('2012-01-19 00:00:00');
+  $timestamp2 = strtotime('2013-08-01 10:00:00');
+  $output[] = esunbank_serial($code, $number, $length);
+  $output[] = esunbank_serial_price($code, $number, $length, $price);
+  $output[] = esunbank_serial_price_date($code, 1, $length, $price, $timestamp1);
+  $output[] = esunbank_serial_price_hour($code, 89, $length, $price, $timestamp2);
+
+  // store
+  $timestamp3 = strtotime('2010-12-31 00:00:00');
+  $a = esunbank_store_a($timestamp3, 'Y01');
+  $b = esunbank_store_b('99001123456789');
+  $c = esunbank_store_c($timestamp3, 7890, $a, $b);
+  $output[] = $a;
+  $output[] = $b;
+  $output[] = $c;
+
+  // post office 
+  $timestamp = strtotime('2008-08-31 00:00:00');
+  $serial = '9900120082800059';
+  $price = 1512;
+  $a = esunbank_postoffice_a();
+  $c = esunbank_postoffice_c($price);
+  $b = esunbank_postoffice_b($timestamp, $serial, $a, $c);
+  $output[] = $a;
+  $output[] = $b;
+  $output[] = $c;
+  return $output;
+} 
+
+print_r(_esunbank_check_api());
+ 
