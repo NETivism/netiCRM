@@ -6,16 +6,29 @@
 function esunbank_menu(){
   return array(
     'esunbank/%/%' => array(
-      'page callback' => 'esunbank_api_test',
+      'page callback' => 'esunbank_api',
       'page arguments' => array(1),
-      'access arguments' => array('access administration pages'),
+      'access callback' => 1,
+      #'access arguments' => array('access administration pages'),
       'type' => MENU_CALLBACK,
       'file' => 'esunbank.api.inc',
     ),
   );
 }
 
-function esunbank_api_test($func, $code, $a, $b){
+/**
+ * Implement hook_theme()
+ */
+function esunbank_theme($existing, $type, $theme, $path){
+  return array(
+    'esunbank_invoice' => array(
+      'arguments' => array('vars' => NULL),
+      'template' => 'esunbank-invoice',
+    ),
+  );
+}
+
+function esunbank_api($func, $code, $a, $b){
   global $base_path;
   $vars = array(
     'code' => arg(1),
@@ -26,21 +39,18 @@ function esunbank_api_test($func, $code, $a, $b){
     'store' => '619',
     #'type' => 'price',
   );
-  dpm($vars);
-  $barcode_store =& esunbank_api_barcode('store', $vars);
-  $barcode_postoffice =& esunbank_api_barcode('postoffice', $vars);
+  
+  esunbank_api_barcode('store', $vars);
+  esunbank_api_barcode('postoffice', $vars);
 
-  $output .= '<h2>Store</h2>';
-  foreach($barcode_store as $src){
-    $output .= '<div><img src="'.$base_path.$src.'" /></div>';
-  }
-  $output .= '<h2>Post Office</h2>';
-  foreach($barcode_postoffice as $src){
-    $output .= '<div><img src="'.$base_path.$src.'" /></div>';
-  }
+  // normal variable
+  $vars['site_name'] = variable_get('site_name', '');
+  $vars['logo'] = theme_get_setting('logo');
+  $vars['css'] = base_path().drupal_get_path('module', 'esunbank').'/invoice.css';
+  $vars['path'] = base_path().drupal_get_path('module', 'esunbank').'/';
 
-  return $output;
-
+  print theme('esunbank_invoice', $vars);
+  
   /*
   if(function_exists($func)){
     return call_user_func($func, $code, $a, $b);
@@ -71,7 +81,7 @@ function esunbank_api_store(&$vars){
   $o['a'] = esunbank_store_a($vars['timestamp'], $vars['store']);
   $o['b'] = esunbank_store_b($vars['serial']);
   $o['c'] = esunbank_store_c($vars['timestamp'], $vars['price'], $o['a'], $o['b']);
-  return $o;
+  $vars['serial_store'] = $o;
 }
 
 function esunbank_api_postoffice(&$vars){
@@ -79,19 +89,19 @@ function esunbank_api_postoffice(&$vars){
   $o['a'] = esunbank_postoffice_a();
   $o['c'] = esunbank_postoffice_c($vars['price']);
   $o['b'] = esunbank_postoffice_b($vars['timestamp'], $vars['serial'], $o['a'], $o['c']);
-  return $o;
+  $vars['serial_postoffice'] = $o;
 }
 
-function esunbank_api_barcode($type, $vars){
+function esunbank_api_barcode($type, &$vars){
   if($type == 'store'){
-    $code = esunbank_api_store($vars);
+    esunbank_api_store($vars);
   }
   if($type == 'postoffice'){
-    $code = esunbank_api_postoffice($vars);
+    esunbank_api_postoffice($vars);
   }
-  ksort($code);
-  foreach($code as $k => $v){
+  ksort($vars['serial_'.$type]);
+  foreach($vars['serial_'.$type] as $k => $v){
     $barcode[$k] = esunbank_barcode($v);
   }
-  return $barcode;
+  $vars['barcode_'.$type] = $barcode;
 }
