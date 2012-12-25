@@ -5,9 +5,8 @@
  */
 function esunbank_menu(){
   return array(
-    'esunbank/%/%' => array(
+    'esunbank' => array(
       'page callback' => 'esunbank_api',
-      'page arguments' => array(1),
       'access callback' => 1,
       #'access arguments' => array('access administration pages'),
       'type' => MENU_CALLBACK,
@@ -28,35 +27,36 @@ function esunbank_theme($existing, $type, $theme, $path){
   );
 }
 
-function esunbank_api($func, $code, $a, $b){
+function esunbank_api(&$vars){
   global $base_path;
-  $vars = array(
-    'code' => arg(1),
-    'number' => arg(2),
-    'length' => arg(3),
-    'price' => arg(4),
-    'timestamp' => strtotime(arg(5)),
-    'store' => '619',
-    #'type' => 'price',
-  );
+  if(!is_array($vars)){
+    $vars = array(
+      'code' => arg(1),
+      'number' => arg(2),
+      'length' => arg(3),
+      'price' => arg(4),
+      'timestamp' => strtotime(arg(5)),
+      'store' => arg(6),
+      'type' => arg(7),
+      'return' => arg(8),
+    );
+  }
   
   esunbank_api_barcode('store', $vars);
   esunbank_api_barcode('postoffice', $vars);
 
-  // normal variable
-  print theme('esunbank_invoice', $vars);
-  
-  /*
-  if(function_exists($func)){
-    return call_user_func($func, $code, $a, $b);
+  if($vars['return']){
+    return theme('esunbank_invoice', $vars);
   }
-  */
+  else{ // print web page
+    print theme('esunbank_invoice', $vars);
+  }
 }
 
-function esunbank_api_serial($vars){
+function esunbank_api_serial(&$vars){
   module_load_include('inc', 'esunbank', 'esunbank.api');
   if(!empty($vars['type'])){
-    $vars['type'] = '_'.$vars['type'];
+    $type = '_'.$vars['type'];
   }
   if(function_exists('esunbank_serial'. $type)){
     $variables = array(
@@ -66,13 +66,15 @@ function esunbank_api_serial($vars){
       $vars['price'],
       $vars['timestamp'],
     );
-    $result = call_user_func_array('esunbank_serial'.$type, $variables);
+    $vars['serial'] = call_user_func_array('esunbank_serial'.$type, $variables);
   }
-  return $result;
+  return $vars['serial'];
 }
 
 function esunbank_api_store(&$vars){
-  $vars['serial'] = esunbank_api_serial($vars);
+  if(empty($vars['serial'])){
+    esunbank_api_serial($vars);
+  }
   $o['a'] = esunbank_store_a($vars['timestamp'], $vars['store']);
   $o['b'] = esunbank_store_b($vars['serial']);
   $o['c'] = esunbank_store_c($vars['timestamp'], $vars['price'], $o['a'], $o['b']);
@@ -80,7 +82,9 @@ function esunbank_api_store(&$vars){
 }
 
 function esunbank_api_postoffice(&$vars){
-  $vars['serial'] = esunbank_api_serial($vars);
+  if(empty($vars['serial'])){
+    esunbank_api_serial($vars);
+  }
   $o['a'] = esunbank_postoffice_a();
   $o['c'] = esunbank_postoffice_c($vars['price']);
   $o['b'] = esunbank_postoffice_b($vars['timestamp'], $vars['serial'], $o['a'], $o['c']);
