@@ -1,0 +1,51 @@
+<?php
+/**
+ * Implementation of hook_init()
+ */
+function civicrm_esunbank_init(){
+  if(strstr($_GET['q'], 'payment-esunbank')){
+    $GLOBALS['conf']['cache'] = FALSE;
+  }
+}
+
+/**
+ * Implementation of hook_menu()
+ */
+function civicrm_esunbank_menu(){
+  return array(
+    'payment-esunbank/ipn' => array(
+      'access callback' => true,
+      'page callback' => 'civicrm_esunbank_ipn',
+      'page arguments' => array(2),
+      'type' => MENU_CALLBACK,
+      'weight' => 0,
+      'file' => 'civicrm_esunbank.ipn.inc',
+    ),
+  );
+}
+
+
+/**
+ * Implementation of hook_civicrm_buildForm()
+ */
+function civicrm_esunbank_civicrm_buildForm($form_name, &$form){
+  switch($form_name){
+    case 'CRM_Contribute_Form_Contribution_ThankYou':
+      break;
+    case 'CRM_Contribute_Form_Contribution_Main':
+      break;
+  }
+}
+
+/**
+ * Implementation of hook_cron()
+ */
+function civicrm_esunbank_cron(){
+  // we don't need cron, yet
+
+  // every day check payment
+
+  // contribution due day check
+}
+
+
