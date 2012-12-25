@@ -44,11 +44,6 @@ function esunbank_api($func, $code, $a, $b){
   esunbank_api_barcode('postoffice', $vars);
 
   // normal variable
-  $vars['site_name'] = variable_get('site_name', '');
-  $vars['logo'] = theme_get_setting('logo');
-  $vars['css'] = base_path().drupal_get_path('module', 'esunbank').'/invoice.css';
-  $vars['path'] = base_path().drupal_get_path('module', 'esunbank').'/';
-
   print theme('esunbank_invoice', $vars);
   
   /*
@@ -104,4 +99,11 @@ function esunbank_api_barcode($type, &$vars){
     $barcode[$k] = esunbank_barcode($v);
   }
   $vars['barcode_'.$type] = $barcode;
+}
+
+function template_preprocess_esunbank_invoice(&$variables){
+  $variables['vars']['site_name'] = variable_get('site_name', '');
+  $variables['vars']['logo'] = theme_get_setting('logo');
+  $variables['vars']['css'] = base_path().drupal_get_path('module', 'esunbank').'/invoice.css';
+  $variables['vars']['path'] = base_path().drupal_get_path('module', 'esunbank').'/';
 }
