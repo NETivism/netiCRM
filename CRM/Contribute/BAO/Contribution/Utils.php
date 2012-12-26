@@ -215,7 +215,7 @@ class CRM_Contribute_BAO_Contribution_Utils {
                                                                    "_qf_Main_display=true&qfKey={$form->_params['qfKey']}" ) );
             }
             $membershipResult[1] = $result;
-        } else {
+        } elseif($result) {
             if ( $result ) {
                 $form->_params = array_merge( $form->_params, $result );
             }
