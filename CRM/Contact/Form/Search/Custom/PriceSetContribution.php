@@ -35,6 +35,7 @@
  */
 
 require_once 'CRM/Contact/Form/Search/Custom/Base.php';
+require_once 'CRM/Contribute/PseudoConstant.php';
 
 class CRM_Contact_Form_Search_Custom_PriceSetContribution
    extends    CRM_Contact_Form_Search_Custom_Base
@@ -43,6 +44,8 @@ class CRM_Contact_Form_Search_Custom_PriceSetContribution
     protected $_price_set_id = null;
 
     protected $_tableName = null;
+
+    protected $_cstatus = null;
 
 
     function __construct( &$formValues ) {
@@ -54,6 +57,7 @@ class CRM_Contact_Form_Search_Custom_PriceSetContribution
               $this->buildTempTable( );
               $this->fillTable( );
           }
+          $this->_cstatus = CRM_Contribute_PseudoConstant::contributionStatus();
     }
 
     function __destruct( ) {
@@ -126,7 +130,7 @@ ORDER BY l.entity_table, l.entity_id ASC
         $dao = CRM_Core_DAO::executeQuery("SELECT * FROM $this->_tableName");
         while($dao->fetch()){
             // contact id and total amount
-            $sql = "SELECT contact_id, total_amount FROM $dao->entity_table WHERE id = $dao->entity_id";
+            $sql = "SELECT contact_id, total_amount, contribution_status_id FROM $dao->entity_table WHERE id = $dao->entity_id";
             $data = CRM_Core_DAO::executeQuery($sql);
             $data->fetch();
 
@@ -145,6 +149,7 @@ ORDER BY l.entity_table, l.entity_id ASC
               
               $sql = "UPDATE {$this->_tableName} 
               SET contact_id = {$data->contact_id},
+              contribution_status_id = {$data->contribution_status_id},
               email = '{$email}',
               phone = '{$phone}',
               total_amount = '{$data->total_amount}',
@@ -222,6 +227,8 @@ WHERE  p.price_set_id = e.id
 
     function setColumns( ) {
         $this->_columns = array(
+          ts('Contribution ID') => 'entity_id',
+          ts('Contribution Status') => 'contribution_status_id',
           ts('Contact Id')      => 'contact_id',
           ts('Name')            => 'display_name',
           ts('Postal Code')     => 'zip',
@@ -303,6 +310,7 @@ contact_a.display_name   as display_name";
     }
 
     function alterRow( &$row ) {
+      $row['contribution_status_id'] = $this->_cstatus[$row['contribution_status_id']]; 
     }
     
     function setTitle( $title ) {
