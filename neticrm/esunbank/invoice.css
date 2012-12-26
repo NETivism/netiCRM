@@ -1,0 +1,83 @@
+#wrap {
+  width: 800px;
+  font-size: 16px;
+  font-family: "Micro Hei";
+}
+.section1, .section2{
+  margin: 0 20px;
+}
+img {
+  vertical-align: top;
+}
+p {
+  margin: 0.5em;
+}
+.bar {
+  margin-left: 30px;
+}
+.bar .code {
+  font-size: 13px;
+  margin-left: 5px;
+}
+div.stamp {
+  width: 240px;
+  margin-right: 20px;
+  height: 120px;
+  border: 1px dashed #777;
+  padding: 5px;
+  float: right;
+  font-size: 12px;
+  color: #777;
+}
+.clear-block {
+  display: inline-block;
+}
+.clear-block {
+  display: block;
+}
+.clear-block::after {
+  content: ".";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
+}
+h1,h2,h3{
+  margin: 0.5em 0;
+}
+h1{
+  font-size: 20px;
+  text-align: center;
+}
+h2{
+  font-size: 16px;
+}
+h3{
+  font-size: 16px;
+  font-weight: normal;
+  background: #EEE;
+  padding: 5px 0 5px 20px;
+}
+
+
+div.bank-right {
+  float: right;
+}
+table.bank {
+  border-collapse:collapse;
+  margin-left: 20px;
+  width: 450px;
+}
+table.bank td {
+  border: 1px solid #999;
+  padding: 3px;
+}
+table.bank td.col1 {
+  width: 100px;
+}
+table.bank td.col2 {
+
+}
+div.blank {
+  height: 80px;
+}
