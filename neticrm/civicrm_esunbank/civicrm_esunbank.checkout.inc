@@ -26,10 +26,10 @@ function civicrm_esunbank_do_transfer_checkout(&$vars, &$component, &$payment_pr
   $p['timestamp'] = strtotime('+7 days');
   $p['store'] = $payment_processor['subject'];
   $p['type'] = $payment_processor['signature'];
-  $p['return'] = 1;
 
   // Generate invoice in web and pdf
   $invoice_html = esunbank_api($p);
+  $invoice_link = esunbank_api_link($p);
   
   // now process contribution to save some default value
   require_once 'CRM/Contribute/DAO/Contribution.php';
@@ -46,21 +46,28 @@ function civicrm_esunbank_do_transfer_checkout(&$vars, &$component, &$payment_pr
   */
   $contribution->save();
 
-  // TODO: Send payment invoice to contact
-  if(empty($_SESSION['CiviCRM'][$form_key]['params']['sent'])){
-    $email = $vars['email-5'];
-  }
-
   // Inject some in quickform sessions
   // Special hacking for display trxn_id after thank you page.
   $_SESSION['CiviCRM'][$form_key]['params']['trxn_id'] = $contribution->trxn_id;
   $_SESSION['CiviCRM'][$form_key]['params']['is_pay_later'] = 1;
   $values =& $_SESSION['CiviCRM'][$form_key]['values'];
-  $values['thankyou_title'] = '123';
-  $values['thankyou_text'] = '<em>test text</em>';
-  $values['pay_later_text'] = '222';
-  $values['pay_later_receipt'] = '333';
-  $values['receipt_text'] = '999';
+//  $values['thankyou_title'] = '請列印繳費單！';
+  /*
+  $values['pay_later_text'] = '';
+  $values['pay_later_receipt'] = '';
+  $values['receipt_text'] = '';
+  */
+  // TODO: Send payment invoice to contact
+  if(empty($_SESSION['CiviCRM'][$form_key]['params']['sent'])){
+    $js = '<script type="text/javascript">
+$(document).ready(function(){
+  $(".colorbox-load").click();
+});
+</script>';
+    $values['thankyou_text'] .= '<div>如果您沒有看到繳費單視窗，點此<strong>開啟'.l('付款單', $invoice_link.'?width=900&height=600&iframe=true', array('attributes' => array('class' => 'colorbox-load'))).'</strong></div>'.$js;
+    $email = $vars['email-5'];
+  }
+
 
   // prevent re-send invoice
   $_SESSION['CiviCRM'][$form_key]['params']['sent'] = true;;
