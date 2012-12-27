@@ -5,6 +5,20 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <title><?php print $vars['site_name']; ?>繳款單</title>
   <link type="text/css" rel="stylesheet" media="all" href="<?php print $vars['css']; ?>" />
+  <link type="text/css" rel="stylesheet" media="print" href="<?php print $vars['css']; ?>" />
+  <style>
+    @media print {
+      img {
+        border: 0;
+      }
+      button.print {
+        display: none;
+      }
+    }
+  </style>
+  <script type="text/javascript">
+    window.print();
+  </script>
   </head>
 <body>
 <div id="wrap">

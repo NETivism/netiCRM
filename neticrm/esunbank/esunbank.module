@@ -6,7 +6,7 @@
 function esunbank_menu(){
   return array(
     'esunbank' => array(
-      'page callback' => 'esunbank_api',
+      'page callback' => 'esunbank_api_page',
       'access callback' => 1,
       #'access arguments' => array('access administration pages'),
       'type' => MENU_CALLBACK,
@@ -29,28 +29,29 @@ function esunbank_theme($existing, $type, $theme, $path){
 
 function esunbank_api(&$vars){
   global $base_path;
-  if(!is_array($vars)){
-    $vars = array(
-      'code' => arg(1),
-      'number' => arg(2),
-      'length' => arg(3),
-      'price' => arg(4),
-      'timestamp' => strtotime(arg(5)),
-      'store' => arg(6),
-      'type' => arg(7),
-      'return' => arg(8),
-    );
-  }
   
   esunbank_api_barcode('store', $vars);
   esunbank_api_barcode('postoffice', $vars);
 
-  if($vars['return']){
-    return theme('esunbank_invoice', $vars);
-  }
-  else{ // print web page
-    print theme('esunbank_invoice', $vars);
-  }
+  return theme('esunbank_invoice', $vars);
+}
+
+function esunbank_api_page(){
+  $vars = array(
+    'code' => arg(1),
+    'number' => arg(2),
+    'length' => arg(3),
+    'price' => arg(4),
+    'timestamp' => strtotime(arg(5)),
+    'store' => arg(6),
+    'type' => arg(7),
+  );
+  print esunbank_api($vars);
+}
+
+function esunbank_api_link(&$vars){
+  extract($vars);
+  return url("esunbank/$code/$number/$length/$price/$timestamp/$store/$type", array('absolute' => TRUE, 'target' => '_blank'));
 }
 
 function esunbank_api_serial(&$vars){
