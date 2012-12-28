@@ -302,7 +302,7 @@ function esunbank_barcode($serial){
   $encoding = 'CODE39';
   $file = file_create_path($dir).'/e-'.$serial.'-'.strtolower($encoding).'.'.$ext;
 
-  $bar = new Barcode39('*'.$serial.'*');
+  $bar = new Barcode39($serial);
   $bar->barcode_text = false;
   $bar->barcode_bar_thick = 3;
   $bar->barcode_bar_thin = 1;
