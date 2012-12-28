@@ -605,9 +605,15 @@ function civicrm_neweb_process_ezpay($is_test, $now){
   $instrument_str = implode(',', $instrument_id);
   $dao = CRM_Core_DAO::executeQuery("SELECT * FROM civicrm_contribution WHERE contribution_status_id = 2 AND payment_instrument_id IN ($instrument_str) AND is_test = $is_test ORDER BY id DESC");
   while($dao->fetch()){
+    if(!$dao->contribution_page_id) continue;
     if(!isset($p[$dao->contribution_page_id])){
       $pid = CRM_Core_DAO::getFieldValue( 'CRM_Contribute_DAO_ContributionPage',$dao->contribution_page_id, 'payment_processor_id');
-      $p[$dao->contribution_page_id] = CRM_Core_BAO_PaymentProcessor::getPayment( $pid, $is_test ? 'test' : 'live' );
+      if($pid){
+        $p[$dao->contribution_page_id] = CRM_Core_BAO_PaymentProcessor::getPayment( $pid, $is_test ? 'test' : 'live' );
+      }
+      else{
+        continue;
+      }
     }
     $payment_processor = $p[$dao->contribution_page_id];
     $post = array();
