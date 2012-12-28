@@ -259,7 +259,7 @@ function civicrm_neweb_process_transaction($is_test, $now = NULL){
         $contribution->save();
         // we save recur object then
         CRM_Contribute_BAO_ContributionRecur::add( $params, $ids );
-
+        
 
         // now we have correct contribution object. procceed.
         // submit recurring items by ipn functions
@@ -605,18 +605,29 @@ function civicrm_neweb_process_ezpay($is_test, $now){
   $instrument_str = implode(',', $instrument_id);
   $dao = CRM_Core_DAO::executeQuery("SELECT * FROM civicrm_contribution WHERE contribution_status_id = 2 AND payment_instrument_id IN ($instrument_str) AND is_test = $is_test ORDER BY id DESC");
   while($dao->fetch()){
-    if(!$dao->contribution_page_id) continue;
-    if(!isset($p[$dao->contribution_page_id])){
-      $pid = CRM_Core_DAO::getFieldValue( 'CRM_Contribute_DAO_ContributionPage',$dao->contribution_page_id, 'payment_processor_id');
-      if($pid){
-        $p[$dao->contribution_page_id] = CRM_Core_BAO_PaymentProcessor::getPayment( $pid, $is_test ? 'test' : 'live' );
-      }
-      else{
-        continue;
-      }
+    $post = $input = $object = $ids = $result = array();
+
+    if(!$dao->contribution_page_id){
+      // this is event payment
+      $pp = CRM_Core_DAO::executeQuery("SELECT cpp.participant_id, e.id, e.payment_processor_id FROM civicrm_participant_payment cpp INNER JOIN civicrm_participant cp ON cpp.participant_id = cp.id INNER JOIN civicrm_event e ON e.id = cp.event_id WHERE cpp.contribution_id = {$dao->id}");
+      $pp->fetch();
+      $pid = $pp->payment_processor_id;
+      $input['component'] = 'event';
+      $ids['event'] = $pp->id;
+      $ids['participant'] = $pp->participant_id;
     }
-    $payment_processor = $p[$dao->contribution_page_id];
-    $post = array();
+    else{
+      $pid = CRM_Core_DAO::getFieldValue( 'CRM_Contribute_DAO_ContributionPage',$dao->contribution_page_id, 'payment_processor_id');
+      $input['component'] = 'contribute';
+    }
+
+    if($pid){
+      $payment_processor = CRM_Core_BAO_PaymentProcessor::getPayment( $pid, $is_test ? 'test' : 'live' );
+    }
+    else{
+      continue;
+    }
+
     $post['merchantnumber'] = $payment_processor['password'];
     $post['ordernumber'] = $dao->id;
     $post['operation'] = 'queryorders';
@@ -624,14 +635,12 @@ function civicrm_neweb_process_ezpay($is_test, $now){
     $post['hash'] = md5($post['operation'].$payment_processor['subject'].$time);
 
     // initialize objects and ids
-    $input = $object = $ids = $result = array();
     $note = '';
     $c =& new CRM_Contribute_DAO_Contribution();
     $c->id = $dao->id;
     $c->find(true);
     $ids['contact'] = $c->contact_id;
     $ids['contribution'] = $c->id;
-    $input['component'] = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_participant_payment WHERE contribution_id = {$c->id}") ? 'event' : 'contribute'; // FIXME need to detect mode of contribute or event
 
     // fetch result and object
     $result = civicrm_neweb_postdata($post, $payment_processor);
