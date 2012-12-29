@@ -432,6 +432,11 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
                                                 'direction' => CRM_Utils_Sort::DONTCARE,
                                                 ),
                                           array(
+                                                'name'      => ts('Duration'),
+                                                'sort'      => 'duration',
+                                                'direction' => CRM_Utils_Sort::DONTCARE,
+                                                ),
+                                          array(
                                                 'name'      => ts('Status'),
                                                 'sort'      => 'status_id',
                                                 'direction' => CRM_Utils_Sort::DONTCARE,

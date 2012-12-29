@@ -39695,3 +39695,6 @@ msgstr "包含隱私選項"
 
 msgid "- Select Relationship Type -"
 msgstr "-請選擇關係類型-"
+
+msgid "hr"
+msgstr "小時"
