@@ -109,6 +109,8 @@
 
     <td>{$row.activity_date_time|crmDate}</td>
 
+    <td>{if $row.activity_duration}{$row.activity_duration}hr{/if}</td>
+
     <td>{$row.activity_status}</td>
 
     <td>{$row.action|replace:'xx':$row.id}</td>
