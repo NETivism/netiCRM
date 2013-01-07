@@ -565,6 +565,7 @@ function _civicrm_neweb_decodeline($in, $type){
   $in = str_replace (array("\r\n", "\n", "\r"), "\n", $in);
   $lines = explode("\n",$in);
   foreach($lines as $l){
+    if($l[0] == '#') continue;
     if($l){ // check if empty line
       $value = explode(",", $l);
       $o[] = array_combine($key, $value);
