@@ -1,6 +1,5 @@
 <?php
 civicrm_initialize();
-require_once 'CRM/Core/Payment/BaseIPN.php';
 
 /**
  * Helper function for receive pingback from payment server
@@ -80,7 +79,8 @@ class CRM_Core_Payment_NCCCIPN extends CRM_Core_Payment_BaseIPN {
         $this->failed($objects, $transaction);
 
         // TODO: Fail reason and fail page.
-        drupal_goto($civi_base_url, "_qf_ThankYou_display=true&qfKey={$qfKey}");
+        // drupal_goto($civi_base_url, "_qf_ThankYou_display=true&qfKey={$qfKey}");
+        // drupal_goto('payment-nccc/error');
       }
     }
   }
@@ -161,10 +161,14 @@ class CRM_Core_Payment_NCCCIPN extends CRM_Core_Payment_BaseIPN {
       $pass = FALSE;
     }
 
-    // process fail response
-    if($input['approvecode'] == '00' || $input['approvecode'] == '08' || $input['approvecode'] == '11'){
-      // success , do nothing
+    // process success response
+    if($input['responsecode'] == '00' || $input['responsecode'] == '08' || $input['responsecode'] == '11'){
+      $tc = $input['approvecode'];
+      $rc = $input['responsecode'];
+      $note .= "Response code / approve code: {$rc}/{$tc}\n";
+      $note .= "Message: ".$rmsg."\n";
     }
+    // process fail response
     else{
       $tc = $input['approvecode'];
       $rc = $input['responsecode'];
