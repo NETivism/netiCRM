@@ -119,7 +119,7 @@ function template_preprocess_esunbank_invoice(&$variables){
   $variables['vars']['site_name'] = variable_get('site_name', '');
   $variables['vars']['logo'] = theme_get_setting('logo');
   $variables['vars']['css'] = $base_url.base_path().drupal_get_path('module', 'esunbank').'/invoice.css';
-  $variables['vars']['path'] = base_path().drupal_get_path('module', 'esunbank').'/';
+  $variables['vars']['path'] = $base_url.base_path().drupal_get_path('module', 'esunbank').'/';
   if(empty($variables['vars']['order_number'])){
     $variables['vars']['order_number'] = $variables['vars']['serial']; 
   }
