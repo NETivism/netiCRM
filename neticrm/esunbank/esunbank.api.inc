@@ -306,7 +306,7 @@ function esunbank_barcode($serial){
   $bar->barcode_text = false;
   $bar->barcode_bar_thick = 3;
   $bar->barcode_bar_thin = 1;
-  $bar->barcode_height = 50;
+  $bar->barcode_height = 40;
   $bar->draw($file);
 
   return $file;

@@ -12,6 +12,14 @@ function esunbank_menu(){
       'type' => MENU_CALLBACK,
       'file' => 'esunbank.api.inc',
     ),
+    'admin/settings/esunbank' => array(
+      'title' => 'Esunbank Invoice',
+      'description' => 'Esunbank invoice display settings.',
+      'page callback'    => 'drupal_get_form',
+      'page arguments' => array('esunbank_admin_settings'),
+      'access arguments' => array('access administration pages'),
+      'file' => 'esunbank.admin.inc',
+    ),
   );
 }
 
@@ -107,8 +115,24 @@ function esunbank_api_barcode($type, &$vars){
 }
 
 function template_preprocess_esunbank_invoice(&$variables){
+  global $base_url;
   $variables['vars']['site_name'] = variable_get('site_name', '');
   $variables['vars']['logo'] = theme_get_setting('logo');
-  $variables['vars']['css'] = base_path().drupal_get_path('module', 'esunbank').'/invoice.css';
+  $variables['vars']['css'] = $base_url.base_path().drupal_get_path('module', 'esunbank').'/invoice.css';
   $variables['vars']['path'] = base_path().drupal_get_path('module', 'esunbank').'/';
+  if(empty($variables['vars']['order_number'])){
+    $variables['vars']['order_number'] = $variables['vars']['serial']; 
+  }
+  if(!empty($variables['vars']['timestamp'])){
+    $variables['vars']['due_date'] = date('Y/m/d', $variables['vars']['timestamp']);
+  }
+  foreach($variables['vars']['barcode_store'] as $k => $v){
+    $variables['vars']['barcode_store'][$k] = '<img src="'.url($v, array('absolute' => TRUE)).'" />';
+  }
+  foreach($variables['vars']['barcode_postoffice'] as $k => $v){
+    $variables['vars']['barcode_postoffice'][$k] = '<img src="'.url($v, array('absolute' => TRUE)).'" />';
+  }
+  $variables['contact_info'] = variable_get('esunbank_contact_info', '');
+  $variables['receipt_info'] = variable_get('esunbank_receipt_info', '');
+  $variables['postoffice_account'] = variable_get('esunbank_postoffice_account', '');
 }
