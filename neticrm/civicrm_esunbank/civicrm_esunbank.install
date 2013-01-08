@@ -88,6 +88,41 @@ function civicrm_esunbank_install() {
   CRM_Core_DAO::executeQuery($sql);
   $ppt_id = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_payment_processor_type WHERE name LIKE 'ESUNBANK'");
 
+  // insert new msg template
+  $group_params = array(
+    'name' => 'msg_tpl_workflow_invoice',
+    'label' => '繳款單工作流程範本',
+    'description' => '捐款或活動繳費單的工作流程範本',
+    'is_active' => TRUE,
+    'is_reserved' => 0,
+  );
+  $option_params = array(
+    'label' => '繳款單-玉山銀行便利商店/ATM/銀行代收繳款單',
+    'name' => 'invoice_esunbank',
+    'is_active' => TRUE,
+  );
+  $action = CRM_Core_Action::ADD;
+  $option_id = 0;
+  $option = CRM_Core_OptionValue::addOptionValue($option_params, $group_params, $action, $option_id);
+
+
+  $params = array(
+    'msg_title' => '玉山銀行繳款單',
+    'msg_subject' => '便利商店/ATM/銀行代收 繳款單',
+    'msg_text' => "謝謝您的支持，請您至以下網址列印繳費單\n".'{$invoice_link}',
+    'msg_html' => '{$invoice_html}',
+    'is_active' => TRUE,
+    'workflow_id' => $option->id,
+    'is_default' => 1,
+    'is_reserved' => 0,
+  );
+  // add default template
+  CRM_Core_BAO_MessageTemplates::add($params);
+  $params['is_default'] = 0;
+  $params['is_reserved'] = 1;
+
+  // add reserved template
+  CRM_Core_BAO_MessageTemplates::add($params);
 }
 
 /**

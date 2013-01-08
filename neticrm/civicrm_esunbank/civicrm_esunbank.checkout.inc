@@ -27,9 +27,18 @@ function civicrm_esunbank_do_transfer_checkout(&$vars, &$component, &$payment_pr
   $p['store'] = $payment_processor['subject'];
   $p['type'] = $payment_processor['signature'];
 
+  // contact info
+  $p['user'] = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $vars['contactID'], 'display_name');
+
+  // order info
+  $p['order_number'] = '';
+  $p['order_date'] = '';
+
   // Generate invoice in web and pdf
-  $invoice_html = esunbank_api($p);
-  $invoice_link = esunbank_api_link($p);
+  $tpl = array();
+  $tpl['invoice_link'] = esunbank_api_link($p);
+  $tpl['invoice_html'] = esunbank_api($p);
+  $tpl['invoice_html'] = civicrm_esunbank_convert_css($tpl['invoice_html']);
   
   // now process contribution to save some default value
   require_once 'CRM/Contribute/DAO/Contribution.php';
@@ -38,7 +47,7 @@ function civicrm_esunbank_do_transfer_checkout(&$vars, &$component, &$payment_pr
   $contribution->find(true);
   $contribution->is_pay_later = 1;
 
-  $contribution->trxn_id = $p['serial']; // we use payment serial to be trxn_id
+  $contribution->trxn_id = $p['order_number'] ? $p['order_number'] : $p['serial']; // we use payment serial to be trxn_id
   /*
   if($vars['civicrm_instrument_id']){
     $contribution->payment_instrument_id = $vars['civicrm_instrument_id'];
@@ -64,13 +73,45 @@ $(document).ready(function(){
   $(".colorbox-load").click();
 });
 </script>';
-    $values['thankyou_text'] .= '<div>如果您沒有看到繳費單視窗，點此<strong>開啟'.l('付款單', $invoice_link.'?width=900&height=600&iframe=true', array('attributes' => array('class' => 'colorbox-load'))).'</strong></div>'.$js;
+    $values['thankyou_text'] .= '<div>如果您沒有看到繳費單視窗，點此<strong>開啟'.l('付款單', $tpl['invoice_link'].'?width=900&height=600&iframe=true', array('attributes' => array('class' => 'colorbox-load'))).'</strong></div>'.$js;
     $email = $vars['email-5'];
+
+    // prepare template parameter
+
+    // default from_email
+    $from_emails = array();
+    CRM_Core_OptionValue::getValues(array('name' => 'from_email_address'), &$from_emails);
+    foreach($from_emails as $id => $v){
+      if($v['is_default'] == 1){
+        $from_default = $v['name'];
+        break;
+      }
+    }
+    if($component == 'event'){
+      if($values['event']['confirm_from_name'] && $values['event']['confirm_from_email']){
+        $from = $values['event']['confirm_from_name']. '<'.$values['event']['confirm_from_email'];
+      }
+    }
+    else{ // contribute
+      if($values['receipt_from_name'] && $values['receipt_from_email']){
+        $from = $values['receipt_from_name']. ' <'.$values['receipt_from_email'].'>';
+      }
+    }
+    $send_params = array(
+      'from' => $from ? $from : $from_default,
+      'toName' => $p['user'],
+      'toEmail' => $email,
+      'groupName' => 'msg_tpl_workflow_invoice',
+      'valueName' => 'invoice_esunbank',
+      'contactId' => $vars['contactID'],
+      'tplParams' => $tpl,
+      'PDFFilename' => 'invoice.pdf',
+    );
+    CRM_Core_BAO_MessageTemplates::sendTemplate($send_params);
+    // prevent re-send invoice
+    $_SESSION['CiviCRM'][$form_key]['params']['sent'] = true;;
   }
 
-
-  // prevent re-send invoice
-  $_SESSION['CiviCRM'][$form_key]['params']['sent'] = true;;
   require_once 'CRM/Core/Session.php';
   CRM_Core_Session::storeSessionObjects( );
 
@@ -78,3 +119,20 @@ $(document).ready(function(){
   drupal_goto($civi_base_url, "_qf_ThankYou_display=true&qfKey={$vars['qfKey']}");
 }
 
+function civicrm_esunbank_convert_css($html){
+  preg_match('/text\/css.*href="([^"].+\.css)"/i', $html, $matches);
+  $css = file_get_contents($matches[1]);
+  $html = mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8');
+
+  module_load_include('inc', 'civicrm_esunbank', 'css_to_inline_styles');
+  $inline = new CSSToInlineStyles($html, $css); //class?
+  $inline->setEncoding('UTF-8');
+  $html = $inline->convert();
+
+  /*
+  $html = preg_replace('/<\!DOC[^>]+>/', '', $html);
+  $html = preg_replace('/<\/?html>/', '', $html);
+  $html = preg_replace('/<\/?body>/', '', $html);
+  */
+  return $html;
+}
