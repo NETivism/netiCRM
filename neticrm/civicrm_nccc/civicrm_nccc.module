@@ -18,13 +18,24 @@ function civicrm_nccc_init(){
  */
 function civicrm_nccc_menu(){
   return array(
+    'payment-nccc/checkout' => array(
+      'access callback' => true,
+      'page callback' => 'civicrm_nccc_checkout',
+      'type' => MENU_CALLBACK,
+      'file' => 'civicrm_nccc.checkout.inc',
+    ),
     'payment-nccc/ipn' => array(
       'access callback' => true,
       'page callback' => 'civicrm_nccc_ipn',
       'page arguments' => array(2),
       'type' => MENU_CALLBACK,
-      'weight' => 0,
       'file' => 'civicrm_nccc.ipn.inc',
+    ),
+    'payment-nccc/err' => array(
+      'access callback' => true,
+      'page callback' => 'civicrm_nccc_err',
+      'type' => MENU_CALLBACK,
+      'file' => 'civicrm_nccc.err.inc',
     ),
   );
 }
@@ -47,9 +58,5 @@ function civicrm_nccc_civicrm_buildForm($form_name, &$form){
  */
 function civicrm_nccc_cron(){
   // we don't need cron, yet
-}
-
-function civicrm_nccc_err($response_code = NULL, $bank_code = NULL){
-  module_load_include('inc', 'civicrm_nccc', 'civicrm_nccc.err');
 }
 

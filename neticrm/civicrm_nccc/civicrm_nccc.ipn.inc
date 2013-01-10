@@ -81,6 +81,7 @@ class CRM_Core_Payment_NCCCIPN extends CRM_Core_Payment_BaseIPN {
         // TODO: Fail reason and fail page.
         // drupal_goto($civi_base_url, "_qf_ThankYou_display=true&qfKey={$qfKey}");
         // drupal_goto('payment-nccc/error');
+        drupal_goto('payment-nccc/err', "_qf_ThankYou_display=true&qfKey={$qfKey}");
       }
     }
   }

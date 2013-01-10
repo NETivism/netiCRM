@@ -41,12 +41,13 @@ function civicrm_nccc_do_transfer_checkout(&$vars, &$component, &$payment_proces
 
   // here we should inlcude iframe to post to nccc
   // see http://css-tricks.com/snippets/html/post-data-to-an-iframe/
-  print _civicrm_nccc_form_redirect($redirect_vars, $instrument_code);
+  // post to correct page
+  print _civirm_nccc_redirect($redirect_vars);
 
   // move things to CiviCRM cache as needed
   require_once 'CRM/Core/Session.php';
   CRM_Core_Session::storeSessionObjects( );
-  exit;
+  exit();
 }
 
 function _civicrm_nccc_getvars(&$vars, $component, &$payment_processor, $instrument_code){
@@ -72,10 +73,15 @@ function _civicrm_nccc_getvars(&$vars, $component, &$payment_processor, $instrum
     "TransMode" => "0",
     "PrivateData" => "qfKey=".$vars['qfKey'],
     "NotifyURL" => $notify_url,
-    "CSS_URL" => $payment_processor['subject'],
     "#qfKey" => $vars['qfKey'],
     "#action" => $payment_processor['url_site'],
   );
+  if($payment_processor['subject']){
+    $redirect_vars['CSS_URL'] = $payment_processor['subject'];
+  }
+  else{
+    $redirect_vars['CSS_URL'] = 'https://'.$_SERVER['HTTP_HOST'].base_path().drupal_get_path('module', 'civicrm_nccc').'/civicrm_nccc.css';
+  }
   if(!strstr($language->language, 'zh')){
     $redirect_vars['TEMPLATE'] = 'ENGLISH_SIMPLE';
   }
@@ -87,35 +93,46 @@ function _civicrm_nccc_getvars(&$vars, $component, &$payment_processor, $instrum
 }
 
 
-function _civicrm_nccc_form_redirect($redirect_vars, $instrument_code){
-  header('Pragma: no-cache');
-  header('Cache-Control: no-store, no-cache, must-revalidate');
-  header('Expires: 0');
-
-  $js = 'document.forms.redirect.submit();';
-  $o .= '<form action="'.$redirect_vars['#action'].'" name="redirect" method="post" id="redirect-form" target="ncccframe">
+function _civicrm_nccc_post_body($redirect_vars){
+  $o .= '<form action="'.$redirect_vars['#action'].'" name="nccc" method="post" id="nccc-form" target="ncccframe">
   <iframe name="ncccframe" height="600" width="800" scrolling="auto" align="center" frameborder="0" src="'.$redirect_vars['#action'].'"></iframe>';
   foreach($redirect_vars as $k=>$p){
     if($k[0] != '#'){
       $o .= '<input type="hidden" name="'.$k.'" value="'.$p.'" />';
     }
   }
-  $o .= '</form>';
+  $o .= '</form>
+  <script type="text/javascript">
+    document.forms.nccc.submit();
+  </script>
+  ';
+  return $o;
+}
+
+function _civirm_nccc_redirect($redirect_vars){
+  global $base_url, $base_path;
+  
+  foreach($redirect_vars as $k=>$p){
+    $o .= '<input type="hidden" name="post['.$k.']" value="'.$p.'" />'."\n";
+  }
+  
   return '
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
+  <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr"> 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 </head>
 <body>
-  '.$o.'
-  <script type="text/javascript">
-  '.$js.'
-  </script>
+<form action="'.$base_path.'payment-nccc/checkout" name="redirect" method="post" id="redirect-form">
+'.$o.'
+</form>
+<script type="text/javascript">
+  document.forms.redirect.submit();
+</script>
 </body>
 <html>
-';
+  ';
 }
 
 function _civicrm_nccc_notify_url(&$vars, $path, $component){
@@ -163,3 +180,16 @@ function _civicrm_nccc_notify_url(&$vars, $path, $component){
   }
 }
 
+function civicrm_nccc_checkout(){
+  drupal_set_header('Pragma: no-cache');
+  drupal_set_header('Cache-Control: no-store, no-cache, must-revalidate');
+  drupal_set_header('Expires: 0');
+
+  $post =& $_POST['post'];
+  
+  if(empty($post)){
+    return t('This page has expired because security reason. Try again for your transactionin open new window.');
+  }
+
+  return _civicrm_nccc_post_body($post);
+}
