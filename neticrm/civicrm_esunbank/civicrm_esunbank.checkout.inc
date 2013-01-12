@@ -41,19 +41,12 @@ function civicrm_esunbank_do_transfer_checkout(&$vars, &$component, &$payment_pr
   $tpl['invoice_html'] = civicrm_esunbank_convert_css($tpl['invoice_html']);
   
   // now process contribution to save some default value
-  require_once 'CRM/Contribute/DAO/Contribution.php';
-  $contribution =& new CRM_Contribute_DAO_Contribution();
-  $contribution->id = $vars['contributionID'];
-  $contribution->find(true);
-  $contribution->is_pay_later = 1;
-
-  $contribution->trxn_id = $p['order_number'] ? $p['order_number'] : $p['serial']; // we use payment serial to be trxn_id
-  /*
-  if($vars['civicrm_instrument_id']){
-    $contribution->payment_instrument_id = $vars['civicrm_instrument_id'];
-  }
-  */
-  $contribution->save();
+  $contrib_params = array( 'id' => $vars['contributionID'] );
+  $contrib_values = $contrib_ids = array();
+  CRM_Contribute_BAO_Contribution::getValues($contrib_params, $contrib_values, $contrib_ids);
+  $contrib_values['trxn_id'] = $p['order_number'] ? $p['order_number'] : $p['serial']; // we use payment serial to be trxn_id
+  $contrib_values['is_pay_later'] = 1;
+  $contribution =& CRM_Contribute_BAO_Contribution::create($contrib_values, $contrib_ids);
 
   // Inject some in quickform sessions
   // Special hacking for display trxn_id after thank you page.
