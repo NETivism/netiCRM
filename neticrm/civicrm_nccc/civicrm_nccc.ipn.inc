@@ -71,17 +71,14 @@ class CRM_Core_Payment_NCCCIPN extends CRM_Core_Payment_BaseIPN {
         $note .= ts('Completed')."\n";
         $this->addNote($note, $contribution);
 
-        // TODO: We should inject reponse message in session before redirect.
         drupal_goto($civi_base_url, "_qf_ThankYou_display=true&qfKey={$qfKey}");
       }
       else{
         $this->addNote($note, $objects['contribution']);
         $this->failed($objects, $transaction);
 
-        // TODO: Fail reason and fail page.
-        // drupal_goto($civi_base_url, "_qf_ThankYou_display=true&qfKey={$qfKey}");
-        // drupal_goto('payment-nccc/error');
-        drupal_goto('payment-nccc/err', "_qf_ThankYou_display=true&qfKey={$qfKey}");
+        // Fail reason and fail page.
+        drupal_goto('payment-nccc/err/'.$input['responsecode'], 'msg='.$input['responsemsg']);
       }
     }
   }

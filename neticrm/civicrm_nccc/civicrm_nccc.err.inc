@@ -1,6 +1,19 @@
 <?php
-function civicrm_nccc_err($response_code = NULL, $bank_code = NULL){
-  return 'err';
+function civicrm_nccc_err($response_code = NULL){
+  if($response_code){
+    $msg = $_GET['msg'];
+  }
+  else{
+    $msg = t('Unknown error');
+  }
+  $items = array(
+    '錯誤代碼：'.$response_code,
+    '錯誤訊息：'.$msg,
+  );
+  $output = '很抱歉，您的信用卡刷卡不成功，錯誤訊息可參考下方資訊：';
+  $output .= theme('item_list', $items);
+  $output .= '若有問題，可與我們聯絡，提供錯誤訊息以協助處理。謝謝。';
+  return $output;
 }
 
 function _civicrm_nccc_err(){
@@ -33,10 +46,7 @@ function _civicrm_nccc_err(){
     "929" => "端末機尚未建檔",
     "930" => "特店回覆 Plug=In 資料檢核錯誤",
     "931" => "交易失敗",
-    "932" => "1.OrderID 為 EC 系統交易序號對應商店指派的「交易訂單編號」。",
-    "2.當商店執行 HPP Plug-In 時，Hosted Pay Page 會偵測該編號是否為唯",
-    "一(未執行過 HPP Plug-In)，當偵測到同一編號重覆執行 Plug-In 時，系",
-    "統回覆「932-訂單編號重複執行 Plug-In」之錯誤訊息。",
+    "932" => "1.OrderID 為 EC 系統交易序號對應商店指派的「交易訂單編號」。2.當商店執行 HPP Plug-In 時，Hosted Pay Page 會偵測該編號是否為唯一(未執行過 HPP Plug-In)，當偵測到同一編號重覆執行 Plug-In 時，系統回覆「932-訂單編號重複執行 Plug-In」之錯誤訊息。",
     "933" => "訂單編號不存",
     "934" => "發卡行 3D 認證數字簽章驗 失敗",
     "935" => "發卡行 3D 認證主機回覆認證錯誤",

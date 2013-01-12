@@ -34,6 +34,7 @@ function civicrm_nccc_menu(){
     'payment-nccc/err' => array(
       'access callback' => true,
       'page callback' => 'civicrm_nccc_err',
+      'page arguments' => array(2),
       'type' => MENU_CALLBACK,
       'file' => 'civicrm_nccc.err.inc',
     ),
