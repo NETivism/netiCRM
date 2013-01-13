@@ -24451,7 +24451,7 @@ msgstr "刪除網址區塊"
 
 #: templates/CRM/Contact/Form/Merge.hlp templates/CRM/Contact/Form/Merge.tpl
 msgid "Click <strong>Merge</strong> to move data from the Duplicate Contact on the left into the Main Contact. In addition to the contact data (address, phone, email...), you may choose to move all or some of the related activity records (groups, contributions, memberships, etc.)."
-msgstr "在本頁面 <strong>勾選</strong>欲合併資料類型，點選 <strong>合併</strong>後 ，系統將移動左欄資料 （括號標示'重複'）合併到右欄。除了基本資料（地址、電話、Email…），也可以選擇種移動相關任務記錄（群組、捐款、會員籍等）。"
+msgstr "請把左欄要合併到右欄的資料欄位勾選起來，然後點擊「合併」，系統就會把勾選的左邊資料合併到右邊。除了基本資料欄位（地址、電話、Email…），也可以選擇移動其他類型的記錄（群組、捐款、會籍...等）。"
 
 #: templates/CRM/Contact/Form/Merge.hlp
 msgid "You will see a row and a checkbox for each type of related data currently linked to the duplicate contact. For example, if the duplicate contact has Contribution records - you will see a row and a checkbox for you to mark IF you want those contribution records moved over to the main contact record. If you want to move all related records, you can check the <strong>Mark All</strong> checkbox."
@@ -24463,11 +24463,11 @@ msgstr "重複的聯絡人記錄與相關資料會在合併完成後刪除"
 
 #: templates/CRM/Contact/Form/Merge.tpl
 msgid "Flip between original and duplicate contacts."
-msgstr "對調原始（右欄）與重複（左欄）的聯絡人資料"
+msgstr "將欲合併的聯絡人（右欄）與重覆聯絡人（左欄）對調"
 
 #: templates/CRM/Contact/Form/Merge.tpl
 msgid "Mark this pair as not a duplicate."
-msgstr "標註這兩筆資料非重複"
+msgstr "標記這兩筆資料並非重覆資料"
 
 #: templates/CRM/Contact/Form/Merge.tpl
 msgid "duplicate"
