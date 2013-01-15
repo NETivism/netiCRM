@@ -1,0 +1,138 @@
+<?php
+
+/**
+ * Implementation of hook_menu()
+ */
+function esunbank_menu(){
+  return array(
+    'esunbank' => array(
+      'page callback' => 'esunbank_api_page',
+      'access callback' => 1,
+      #'access arguments' => array('access administration pages'),
+      'type' => MENU_CALLBACK,
+      'file' => 'esunbank.api.inc',
+    ),
+    'admin/settings/esunbank' => array(
+      'title' => 'Esunbank Invoice',
+      'description' => 'Esunbank invoice display settings.',
+      'page callback'    => 'drupal_get_form',
+      'page arguments' => array('esunbank_admin_settings'),
+      'access arguments' => array('access administration pages'),
+      'file' => 'esunbank.admin.inc',
+    ),
+  );
+}
+
+/**
+ * Implement hook_theme()
+ */
+function esunbank_theme($existing, $type, $theme, $path){
+  return array(
+    'esunbank_invoice' => array(
+      'arguments' => array('vars' => NULL),
+      'template' => 'esunbank-invoice',
+    ),
+  );
+}
+
+function esunbank_api(&$vars){
+  global $base_path;
+  
+  esunbank_api_barcode('store', $vars);
+  esunbank_api_barcode('postoffice', $vars);
+
+  return theme('esunbank_invoice', $vars);
+}
+
+function esunbank_api_page(){
+  $vars = array(
+    'code' => arg(1),
+    'number' => arg(2),
+    'length' => arg(3),
+    'price' => arg(4),
+    'timestamp' => strtotime(arg(5)),
+    'store' => arg(6),
+    'type' => arg(7),
+  );
+  print esunbank_api($vars);
+}
+
+function esunbank_api_link(&$vars){
+  extract($vars);
+  return url("esunbank/$code/$number/$length/$price/$timestamp/$store/$type", array('absolute' => TRUE, 'target' => '_blank'));
+}
+
+function esunbank_api_serial(&$vars){
+  module_load_include('inc', 'esunbank', 'esunbank.api');
+  if(!empty($vars['type'])){
+    $type = '_'.$vars['type'];
+  }
+  if(function_exists('esunbank_serial'. $type)){
+    $variables = array(
+      $vars['code'],
+      $vars['number'],
+      $vars['length'],
+      $vars['price'],
+      $vars['timestamp'],
+    );
+    $vars['serial'] = call_user_func_array('esunbank_serial'.$type, $variables);
+  }
+  return $vars['serial'];
+}
+
+function esunbank_api_store(&$vars){
+  if(empty($vars['serial'])){
+    esunbank_api_serial($vars);
+  }
+  $o['a'] = esunbank_store_a($vars['timestamp'], $vars['store']);
+  $o['b'] = esunbank_store_b($vars['serial']);
+  $o['c'] = esunbank_store_c($vars['timestamp'], $vars['price'], $o['a'], $o['b']);
+  $vars['serial_store'] = $o;
+}
+
+function esunbank_api_postoffice(&$vars){
+  if(empty($vars['serial'])){
+    esunbank_api_serial($vars);
+  }
+  $o['a'] = esunbank_postoffice_a();
+  $o['c'] = esunbank_postoffice_c($vars['price']);
+  $o['b'] = esunbank_postoffice_b($vars['timestamp'], $vars['serial'], $o['a'], $o['c']);
+  $vars['serial_postoffice'] = $o;
+}
+
+function esunbank_api_barcode($type, &$vars){
+  if($type == 'store'){
+    esunbank_api_store($vars);
+  }
+  if($type == 'postoffice'){
+    esunbank_api_postoffice($vars);
+  }
+  ksort($vars['serial_'.$type]);
+  foreach($vars['serial_'.$type] as $k => $v){
+    $barcode[$k] = esunbank_barcode($v);
+  }
+  $vars['barcode_'.$type] = $barcode;
+}
+
+function template_preprocess_esunbank_invoice(&$variables){
+  global $base_url;
+  $variables['vars']['site_name'] = variable_get('site_name', '');
+  $variables['vars']['logo'] = theme_get_setting('logo');
+  $variables['vars']['css'] = $base_url.base_path().drupal_get_path('module', 'esunbank').'/invoice.css';
+  $variables['vars']['path'] = $base_url.base_path().drupal_get_path('module', 'esunbank').'/';
+  if(empty($variables['vars']['order_number'])){
+    $variables['vars']['order_number'] = $variables['vars']['serial']; 
+  }
+  if(!empty($variables['vars']['timestamp'])){
+    $variables['vars']['due_date'] = date('Y/m/d', $variables['vars']['timestamp']);
+  }
+  foreach($variables['vars']['barcode_store'] as $k => $v){
+    $variables['vars']['barcode_store'][$k] = '<img src="'.url($v, array('absolute' => TRUE)).'" />';
+  }
+  foreach($variables['vars']['barcode_postoffice'] as $k => $v){
+    $variables['vars']['barcode_postoffice'][$k] = '<img src="'.url($v, array('absolute' => TRUE)).'" />';
+  }
+  $variables['contact_info'] = variable_get('esunbank_contact_info', '');
+  $variables['receipt_info'] = variable_get('esunbank_receipt_info', '');
+  $variables['postoffice_account'] = variable_get('esunbank_postoffice_account', '');
+}

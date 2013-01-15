@@ -280,6 +280,9 @@ function _civicrm_gw_notify_url(&$vars, $path, $component){
   if($_SERVER['HTTP_HTTPS'] == 'on' || $_SERVER['HTTPS'] == 'on'){
     return str_replace('http://', 'https://', $url);
   }
+  else{
+    return $url;
+  }
 }
 
 function civicrm_gw_popup($instrument){

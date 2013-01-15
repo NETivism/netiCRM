@@ -1,0 +1,133 @@
+#wrap {
+  width: 800px;
+  font-size: 16px;
+  font-family: "Micro Hei";
+}
+.section1, .section2{
+  margin: 0 20px;
+}
+img {
+  vertical-align: top;
+  border: 0;
+}
+p {
+  margin: 0.5em;
+}
+.bar {
+  margin: 5px 0 0 30px;
+}
+.bar .code {
+  font-size: 13px;
+  margin-left: 5px;
+}
+.info-right {
+  float: right;
+}
+.create-date {
+  font-size: 11px;
+}
+.due-date {
+  text-align: center;
+  width: 240px;
+  border: 1px solid #000;
+  font-weight: bold;
+  padding: 3px 5px;
+  margin: 5px 20px 5px 0;
+}
+div.stamp {
+  width: 240px;
+  margin-right: 20px;
+  height: 120px;
+  border: 1px dashed #777;
+  padding: 5px;
+  font-size: 12px;
+  color: #777;
+}
+.clear-block {
+  display: inline-block;
+}
+.clear-block {
+  display: block;
+}
+.clear-block::after {
+  content: ".";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
+}
+h1,h2,h3{
+  margin: 0.5em 0;
+}
+h1{
+  font-size: 20px;
+  text-align: center;
+}
+h1 span {
+  font-size: 13px;
+  padding-right: 5px;
+}
+h2{
+  font-size: 16px;
+}
+h3{
+  font-size: 16px;
+  font-weight: normal;
+  background: #EEE;
+  padding: 5px 0 5px 20px;
+}
+
+
+div.bank-right {
+  float: right;
+}
+table.bank {
+  border-collapse:collapse;
+  margin-left: 20px;
+  width: 450px;
+}
+table.bank td {
+  border: 1px solid #999;
+  padding: 3px;
+}
+table.bank td.col1 {
+  width: 100px;
+}
+table.bank td.col2 {
+
+}
+div.blank {
+  height: 80px;
+}
+
+.section2 .head {
+  font-size: 13px;
+}
+.contact-info {
+  clear: both;
+  padding-top: 10px;
+  font-size: 13px;
+}
+.receipt-info {
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.postoffice-account {
+  float:right;
+  background: #EFEFEF;
+  width: 260px;
+  padding: 10px 5px;
+  font-size: 13px;
+}
+.postoffice-account p {
+  margin: 5px 0;
+}
+.footer {
+  clear: both;
+  border-top:1px solid #CCC;
+  font-size: 13px;
+  padding: 10px 0 0 0;
+  margin: 10px 0 0 0;
+  text-align: center;
+}

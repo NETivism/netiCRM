@@ -496,8 +496,7 @@ class CRM_Event_Form_Search extends CRM_Core_Form
             $this->_formValues['event_name'] = CRM_Event_PseudoConstant::event( $event, true );
         }
         
-        $status = CRM_Utils_Request::retrieve( 'status', 'String',
-                                               CRM_Core_DAO::$_nullObject );
+        $status = CRM_Utils_Request::retrieve( 'status', 'String', CRM_Core_DAO::$_nullObject );
         
         if ( isset ( $status ) ) {
             require_once 'CRM/Event/PseudoConstant.php';
@@ -516,8 +515,7 @@ class CRM_Event_Form_Search extends CRM_Core_Form
             $this->_formValues['participant_status_id'] = $status;    
         }
         
-        $role = CRM_Utils_Request::retrieve( 'role', 'String',
-                                             CRM_Core_DAO::$_nullObject );
+        $role = CRM_Utils_Request::retrieve( 'role', 'String', CRM_Core_DAO::$_nullObject );
         
         if ( isset ( $role ) ) {
             require_once 'CRM/Event/PseudoConstant.php';
@@ -534,6 +532,20 @@ class CRM_Event_Form_Search extends CRM_Core_Form
                 $role[$key] = 1;
             }
             $this->_formValues['participant_role_id'] = $role;
+        }
+
+        if(is_array($_REQUEST['participant_status_id'])){
+            $this->_formValues['participant_status_id'] = array();
+            foreach ( $_REQUEST['participant_status_id'] as $key => $value) {
+                $this->_formValues['participant_status_id'][$value] = $value;
+            }
+        }
+
+        if(is_array($_REQUEST['participant_role_id'])){
+            $this->_formValues['participant_role_id'] = array();
+            foreach ( $_REQUEST['participant_role_id'] as $key => $value) {
+                $this->_formValues['participant_role_id'][$value] = $value;
+            }
         }
         
         $type = CRM_Utils_Request::retrieve( 'type', 'Positive',

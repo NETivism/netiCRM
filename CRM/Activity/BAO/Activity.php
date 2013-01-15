@@ -640,6 +640,7 @@ class CRM_Activity_BAO_Activity extends CRM_Activity_DAO_Activity
 
         $tableFields =
                     array( 'activity_id'               => 'int unsigned',
+                           'duration'                  => 'int unsigned',
                            'activity_date_time'        => 'datetime',
                            'status_id'                 => 'int unsigned',
                            'subject'                   => 'varchar(255)',
@@ -770,6 +771,7 @@ LEFT JOIN  civicrm_case_activity ON ( civicrm_case_activity.activity_id = {$acti
         while( $dao->fetch() ) {
             $activityID = $dao->activity_id;
             $values[$activityID]['activity_id']         = $dao->activity_id;
+            $values[$activityID]['duration']            = $dao->duration;
             $values[$activityID]['source_record_id']    = $dao->source_record_id;
             $values[$activityID]['activity_type_id']    = $dao->activity_type_id;
             $values[$activityID]['activity_type']       = $dao->activity_type;
@@ -933,6 +935,7 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
         
         if ( !$count ) {
             $sourceSelect = ',
+                civicrm_activity.duration,
                 civicrm_activity.activity_date_time,
                 civicrm_activity.status_id, 
                 civicrm_activity.subject,
@@ -972,6 +975,7 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
         
         if ( !$count ) {
             $targetAssigneeSelect = ',
+                civicrm_activity.duration,
                 civicrm_activity.activity_date_time,
                 civicrm_activity.status_id, 
                 civicrm_activity.subject,
@@ -1033,6 +1037,7 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
             $caseSelect = '';
             if ( !$count ) {
                 $caseSelect = ', 
+                civicrm_activity.duration,
                 civicrm_activity.activity_date_time,
                 civicrm_activity.status_id, 
                 civicrm_activity.subject,

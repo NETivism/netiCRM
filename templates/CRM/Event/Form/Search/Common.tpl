@@ -39,24 +39,12 @@
 
 <tr>
     <td class="crm-event-form-block-participant_status"><label>{ts}Participant Status{/ts}</label> 
-    <br />
-      <div class="listing-box" style="width: auto; height: 120px">
-       {foreach from=$form.participant_status_id item="participant_status_val"} 
-        <div class="{cycle values="odd-row,even-row"}">
-       {$participant_status_val.html}
-        </div>
-       {/foreach}
-      </div>
+      <br />
+     {$form.participant_status_id.html}
     </td>
     <td class="crm-event-form-block-participant_role_id"><label>{ts}Participant Role{/ts}</label>
-    <br />
-      <div class="listing-box" style="width: auto; height: 120px">
-       {foreach from=$form.participant_role_id item="participant_role_id_val"}
-        <div class="{cycle values="odd-row,even-row"}">
-                {$participant_role_id_val.html}
-        </div>
-      {/foreach}
-      </div><br />
+      <br />
+      {$form.participant_role_id.html}
     </td>
   
 </tr> 
@@ -96,5 +84,12 @@ cj('#event_type').autocomplete( typeUrl, { width : 180, selectFirst : false, mat
 cj('#participant_fee_level').autocomplete( feeUrl, { width : 180, selectFirst : false, matchContains: true
                                          }).result(function(event, data, formatted) { cj( "input#participant_fee_id" ).val( data[1] );
                                          }).bind( 'click', function( ) { cj( "input#participant_fee_id" ).val(''); });
+cj(document).ready(function(){
+  cj('select[name^="participant_status_id"], select[name^="participant_role_id"]').chosen({
+    "search_contains": true,
+    "placeholder_text": "{/literal}{ts}-- Select --{/ts}{literal}",
+    "no_results_text": "{/literal}{ts}No matches found.{/ts}{literal}"
+  });
+});
 </script>
 {/literal}

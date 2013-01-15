@@ -348,18 +348,17 @@ class CRM_Member_BAO_Query
     static function buildSearchForm( &$form ) 
     {
         require_once 'CRM/Member/PseudoConstant.php';
-        foreach (CRM_Member_PseudoConstant::membershipType( ) as $id => $Name) {
-            $form->_membershipType =& $form->addElement('checkbox', "member_membership_type_id[$id]", null,$Name);
-        }
+        $attrs = array('multiple' => 'multiple');
+        $membership_type = CRM_Member_PseudoConstant::membershipType( );
+        $form->addElement('select', 'member_membership_type_id', 'Membership Type', $membership_type, $attrs);
 
         // Option to include / exclude inherited memberships from search results (e.g. rows where owner_membership_id is NOT NULL)
         $primaryValues = array( 1 => ts('All Members'), 2 => ts('Primary Members Only'), 3 => ts('Related Members Only') );
         $form->addRadio( 'member_is_primary', '', $primaryValues );
         $form->setDefaults( array( 'member_is_primary' => 1 ) );
         
-        foreach (CRM_Member_PseudoConstant::membershipStatus(null, null, 'label') as $sId => $sName) {
-            $form->_membershipStatus =& $form->addElement('checkbox', "member_status_id[$sId]", null,$sName);
-        }
+        $membership_status = CRM_Member_PseudoConstant::membershipStatus(null, null, 'label');
+        $form->addElement('select', 'member_status_id', 'Membership Status', $membership_status, $attrs);
 
         $form->addElement( 'text', 'member_source', ts( 'Source' ) );
  

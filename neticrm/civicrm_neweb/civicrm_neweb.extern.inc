@@ -156,12 +156,13 @@ class CRM_Core_Payment_NewebIPN extends CRM_Core_Payment_BaseIPN {
         if($day_now > 25 ){
           $month = $month_now == 12 ? 1 : $month_now +1;
           $cycle_day = 1;
+          $year = $month_now == 12 ? date('Y') + 1  : date('Y');
         }
         else{
           $month = $month_now;
           $cycle_day = $day_now;
+          $year = date('Y');
         }
-        $year = $month_now == 12 ? date('Y') + 1  : date('Y');
         $next_recur = mktime(0,0,0, $month, $cycle_day, $year);
         if($recur->installments){
           $end_recur = strtotime('+'.$installments_total.' month', $next_recur);

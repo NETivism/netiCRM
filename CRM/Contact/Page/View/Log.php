@@ -60,7 +60,9 @@ class CRM_Contact_Page_View_Log extends CRM_Core_Page {
             $logEntries[] = array( 'id'    => $log->modified_id,
                                    'name'  => $displayName,
                                    'image' => $contactImage,
-                                   'date'  => $log->modified_date );
+                                   'date'  => $log->modified_date,
+                                   'data'  => $log->data,
+                                 );
         }
 
         $this->assign( 'logCount', count( $logEntries ) );

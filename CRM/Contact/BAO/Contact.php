@@ -191,7 +191,7 @@ class CRM_Contact_BAO_Contact extends CRM_Contact_DAO_Contact
             require_once 'CRM/Core/BAO/Log.php';
             CRM_Core_BAO_Log::register( $contact->id,
                                         'civicrm_contact',
-                                        $contact->id );
+                                        $contact->id, NULL, ts('Updated contact'));
         }
 
         if ( $contact->contact_type == 'Individual' &&
@@ -883,14 +883,18 @@ WHERE id={$id}; ";
      *  @return void
      */
     function contactTrashRestore( $contactId, $restore = false ) {
+        require_once 'CRM/Core/BAO/Log.php';
         $params   = array( 1 => array( $contactId, 'Integer' ) );
         $isDelete = ' is_deleted = 1 ';
         if ( $restore ) {
             $isDelete = ' is_deleted = 0 ';
+            CRM_Core_BAO_Log::register( $contactId, 'civicrm_contact', $contactId, NULL, ts('Restore Contacts'));
         } else {
             $query = "DELETE FROM civicrm_uf_match WHERE contact_id = %1";
             CRM_Core_DAO::executeQuery( $query, $params );
+            CRM_Core_BAO_Log::register( $contactId, 'civicrm_contact', $contactId, NULL, ts('Delete Contact'));
         }
+
         
         $query = "UPDATE civicrm_contact SET {$isDelete} WHERE id = %1";
         CRM_Core_DAO::executeQuery( $query, $params );

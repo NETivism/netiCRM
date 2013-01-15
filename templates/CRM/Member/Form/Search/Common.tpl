@@ -25,22 +25,10 @@
 *}
 <tr> 
     <td><label>{ts}Membership Type(s){/ts}</label><br />
-                   <div class="listing-box">
-                    {foreach from=$form.member_membership_type_id item="membership_type_val"} 
-                    <div class="{cycle values="odd-row,even-row"}">
-                    {$membership_type_val.html}
-                    </div>
-                    {/foreach}
-                </div>
+                   {$form.member_membership_type_id.html}
     </td>
     <td><label>{ts}Membership Status{/ts}</label><br />
-                <div class="listing-box">
-                    {foreach from=$form.member_status_id item="membership_status_val"} 
-                    <div class="{cycle values="odd-row,even-row"}">
-                    {$membership_status_val.html}
-                    </div>
-                    {/foreach}
-                </div>
+                   {$form.member_status_id.html}
     </td>
 </tr>
 
@@ -97,3 +85,14 @@
     </td>
 </tr>
 {/if}
+{literal}
+<script type="text/javascript"> 
+cj(document).ready(function(){
+  cj('select[name^="member_membership_type_id"], select[name^="member_status_id"]').chosen({
+    "search_contains": true,
+    "placeholder_text": "{/literal}{ts}-- Select --{/ts}{literal}",
+    "no_results_text": "{/literal}{ts}No matches found.{/ts}{literal}"
+  });
+});
+</script>
+{/literal}

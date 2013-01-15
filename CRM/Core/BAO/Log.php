@@ -81,10 +81,7 @@ class CRM_Core_BAO_Log extends CRM_Core_DAO_Log
         $log->save();
     }
 
-    static function register( $contactID,
-                              $tableName,
-                              $tableID  ,
-                              $userID = null ) {
+    static function register( $contactID, $tableName, $tableID, $userID = null, $data = null) {
         if ( ! self::$_processed ) {
             self::$_processed = array( );
         }
@@ -120,7 +117,7 @@ class CRM_Core_BAO_Log extends CRM_Core_DAO_Log
             $log->entity_id     = $contactID;
             $log->modified_id   = $userID;
             $log->modified_date = date( "YmdHis" );
-            $log->data          = $logData;
+            $log->data          = $data ? $data : $logData;
             $log->save( );
         } else {
             $query = "

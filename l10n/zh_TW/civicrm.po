@@ -3669,7 +3669,7 @@ msgstr "總金額"
 #: templates/CRM/Event/Form/Search/Common.tpl
 #: templates/CRM/Event/Form/Task/Print.tpl
 msgid "Fee Amount"
-msgstr "手續費"
+msgstr "費用"
 
 #: CRM/Contribute/DAO/Contribution.php CRM/Contribute/Form/AdditionalInfo.php
 #: CRM/Core/DAO/FinancialTrxn.php
@@ -4786,7 +4786,7 @@ msgstr "名稱"
 #: templates/CRM/Event/Form/Registration/ThankYou.tpl
 #: templates/CRM/Event/Form/Search/Common.tpl msgctxt "menu"
 msgid "Participant Role"
-msgstr "參加者身分"
+msgstr "參加者角色"
 
 #: CRM/Event/DAO/Event.php CRM/Event/Form/ManageEvent/Registration.php
 msgid "Confirm From Name"
@@ -9410,7 +9410,7 @@ msgstr "刪除聯絡人"
 
 #: CRM/Contact/Form/Task/Delete.php
 msgid "Restored Contact(s): %1"
-msgstr "已刪除的聯絡人： %1"
+msgstr "已回復的聯絡人： %1"
 
 #: CRM/Contact/Form/Task/Delete.php
 msgid "Deleted Contact(s): %1"
@@ -9894,7 +9894,7 @@ msgstr "個人募款頁 - %1"
 
 #: CRM/Contribute/BAO/Query.php
 msgid "Paid By - %1"
-msgstr "付款人 - %1"
+msgstr "付款方式為 - %1"
 
 #: CRM/Contribute/BAO/Query.php
 msgid "Contribution Status %1"
@@ -14542,7 +14542,7 @@ msgstr "參加者狀態"
 
 #: CRM/Event/DAO/Participant.php
 msgid "Participant Role Id"
-msgstr "參加者身分"
+msgstr "參加者角色"
 
 #: CRM/Event/DAO/Participant.php
 msgid "Register date"
@@ -18274,11 +18274,11 @@ msgstr "查看這個區域的重複。"
 
 #: CRM/Report/Form/Contact/Log.php
 msgid "Touched Contact"
-msgstr "已接觸的聯絡人"
+msgstr "影響到的聯絡人"
 
 #: CRM/Report/Form/Contact/Log.php
 msgid "Touched Activity"
-msgstr "已接觸的任務"
+msgstr "影響到的任務"
 
 #: CRM/Report/Form/Contact/Relationship.php
 msgid "Contact A"
@@ -24451,7 +24451,7 @@ msgstr "刪除網址區塊"
 
 #: templates/CRM/Contact/Form/Merge.hlp templates/CRM/Contact/Form/Merge.tpl
 msgid "Click <strong>Merge</strong> to move data from the Duplicate Contact on the left into the Main Contact. In addition to the contact data (address, phone, email...), you may choose to move all or some of the related activity records (groups, contributions, memberships, etc.)."
-msgstr "在本頁面 <strong>勾選</strong>欲合併資料類型，點選 <strong>合併</strong>後 ，系統將移動左欄資料 （括號標示'重複'）合併到右欄。除了基本資料（地址、電話、Email…），也可以選擇種移動相關任務記錄（群組、捐款、會員籍等）。"
+msgstr "請把左欄要合併到右欄的資料欄位勾選起來，然後點擊「合併」，系統就會把勾選的左邊資料合併到右邊。除了基本資料欄位（地址、電話、Email…），也可以選擇移動其他類型的記錄（群組、捐款、會籍...等）。"
 
 #: templates/CRM/Contact/Form/Merge.hlp
 msgid "You will see a row and a checkbox for each type of related data currently linked to the duplicate contact. For example, if the duplicate contact has Contribution records - you will see a row and a checkbox for you to mark IF you want those contribution records moved over to the main contact record. If you want to move all related records, you can check the <strong>Mark All</strong> checkbox."
@@ -24463,11 +24463,11 @@ msgstr "重複的聯絡人記錄與相關資料會在合併完成後刪除"
 
 #: templates/CRM/Contact/Form/Merge.tpl
 msgid "Flip between original and duplicate contacts."
-msgstr "對調原始（右欄）與重複（左欄）的聯絡人資料"
+msgstr "將欲合併的聯絡人（右欄）與重覆聯絡人（左欄）對調"
 
 #: templates/CRM/Contact/Form/Merge.tpl
 msgid "Mark this pair as not a duplicate."
-msgstr "標註這兩筆資料非重複"
+msgstr "標記這兩筆資料並非重覆資料"
 
 #: templates/CRM/Contact/Form/Merge.tpl
 msgid "duplicate"
@@ -25489,7 +25489,7 @@ msgstr "傳送簡訊"
 
 #: templates/CRM/Contact/Page/View/Summary.tpl
 msgid "Restore from Trash"
-msgstr "回復個案"
+msgstr "回復聯絡人"
 
 #: templates/CRM/Contact/Page/View/Summary.tpl
 msgid "Associated Multi-Org Group"
@@ -39695,3 +39695,6 @@ msgstr "包含隱私選項"
 
 msgid "- Select Relationship Type -"
 msgstr "-請選擇關係類型-"
+
+msgid "hr"
+msgstr "小時"

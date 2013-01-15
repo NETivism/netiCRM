@@ -1,0 +1,5 @@
+name = Esunbank Helper API
+description = Calculation, validation, barcode generator for esunbank.
+package = NetiCRM Payment Method
+core = 6.x
+version = 6.x-1.0

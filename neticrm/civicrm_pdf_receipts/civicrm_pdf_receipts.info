@@ -1,0 +1,6 @@
+name = CiviCRM PDF Receipts
+description = Provide CRA-compliant electronic receipts for Canadian organizations
+dependencies[] = civicrm
+package = CiviCRM
+core = 6.x
+version = 6.x-1.0-beta1
