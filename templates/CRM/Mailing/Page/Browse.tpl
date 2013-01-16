@@ -1,8 +1,8 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.3                                                |
+ | CiviCRM version 4.1                                                |
  +--------------------------------------------------------------------+
- | Copyright CiviCRM LLC (c) 2004-2010                                |
+ | Copyright CiviCRM LLC (c) 2004-2011                                |
  +--------------------------------------------------------------------+
  | This file is a part of CiviCRM.                                    |
  |                                                                    |
@@ -23,9 +23,11 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
-<div class="action-link">
-    <a accesskey="N" href="{crmURL p='civicrm/mailing/send' q='reset=1'}" class="button"><span><div class="icon email-icon"></div>{ts}New Mailing{/ts}</span></a><br/><br/>
-</div>
+{if $showLinks}
+    <div class="action-link">
+    	<a accesskey="N" href="{crmURL p='civicrm/mailing/send' q='reset=1'}" class="button"><span><div class="icon email-icon"></div>{ts}New Mailing{/ts}</span></a><br/><br/>
+    </div>
+{/if}
 {include file="CRM/Mailing/Form/Search.tpl"}
 
 {if $rows}
@@ -36,14 +38,27 @@
     <table class="selector">
       <thead class="sticky">
       {foreach from=$columnHeaders item=header}
-        <th>
-          {if $header.sort}
-            {assign var='key' value=$header.sort}
-            {$sort->_response.$key.link}
-          {else}
-            {$header.name}
-          {/if}
-        </th>
+        {if $unscheduled} {* Hide columnns not relevant for unscheduled mailings. *}
+            {if $header.sort NEQ 'scheduled_by' && $header.sort NEQ 'scheduled_date' && $header.sort NEQ 'start_date' & $header.sort NEQ 'end_date'}
+            <th>
+              {if $header.sort}
+                {assign var='key' value=$header.sort}
+                {$sort->_response.$key.link}
+              {else}
+                {$header.name}
+              {/if}
+            </th>
+            {/if}
+        {elseif $header.sort NEQ 'created_date'}
+            <th>
+              {if $header.sort}
+                {assign var='key' value=$header.sort}
+                {$sort->_response.$key.link}
+              {else}
+                {$header.name}
+              {/if}
+            </th>
+        {/if}
       {/foreach}
       </thead>
 
@@ -53,10 +68,17 @@
         <td class="crm-mailing-name">{$row.name}</td>
         <td class="crm-mailing-status crm-mailing_status-{$row.status}">{$row.status}</td>
         <td class="crm-mailing-created_by"><a href ={crmURL p='civicrm/contact/view' q="reset=1&cid="}{$row.created_id}>{$row.created_by}</a></td>
-        <td class="crm-mailing-scheduled_by"><a href ={crmURL p='civicrm/contact/view' q="reset=1&cid="}{$row.scheduled_id}>{$row.scheduled_by}</a></td>	
-        <td class="crm-mailing-scheduled">{$row.scheduled}</td>
-        <td class="crm-mailing-start">{$row.start}</td>
-        <td class="crm-mailing-end">{$row.end}</td>
+        {if $unscheduled}
+            <td class="crm-mailing-created_date">{$row.created_date}</td>
+        {else}
+            <td class="crm-mailing-scheduled_by"><a href ={crmURL p='civicrm/contact/view' q="reset=1&cid="}{$row.scheduled_id}>{$row.scheduled_by}</a></td>	
+            <td class="crm-mailing-scheduled">{$row.scheduled}</td>
+            <td class="crm-mailing-start">{$row.start}</td>
+            <td class="crm-mailing-end">{$row.end}</td>
+        {/if}
+	    {if call_user_func(array('CRM_Campaign_BAO_Campaign','isCampaignEnable'))}
+	        <td class="crm-mailing-campaign">{$row.campaign}</td>
+	    {/if}
         <td>{$row.action|replace:'xx':$row.id}</td>
       </tr>
       {/foreach}
@@ -64,9 +86,11 @@
     {/strip}
 
     {include file="CRM/common/pager.tpl" location="bottom"}
-    <div class="action-link">
-        <a accesskey="N" href="{crmURL p='civicrm/mailing/send' q='reset=1'}" class="button"><span><div class="icon email-icon"></div>{ts}New Mailing{/ts}</span></a><br/>
-    </div>
+    {if $showLinks}
+    	<div class="action-link">
+            <a accesskey="N" href="{crmURL p='civicrm/mailing/send' q='reset=1'}" class="button"><span><div class="icon email-icon"></div>{ts}New Mailing{/ts}</span></a><br/>
+    	</div>
+    {/if}
 
 {* No mailings to list. Check isSearch flag to see if we're in a search or not. *}
 {elseif $isSearch eq 1}
@@ -94,11 +118,14 @@
         </table>
     </div>
 {elseif $unscheduled}
+
     <div class="messages status">
             <div class="icon inform-icon"></div>&nbsp;
             {capture assign=crmURL}{crmURL p='civicrm/mailing/send' q='reset=1'}{/capture}
-            {ts 1=$crmURL}There are no Unscheduled Mailings. You can <a href='%1'>create and send one</a>.{/ts}
+            {ts}There are no Unscheduled Mailings.{/ts}
+	    {if $showLinks}{ts 1=$crmURL}You can <a href='%1'>create and send one</a>.{/ts}{/if}
    </div>
+
 {elseif $archived}
     <div class="messages status">
             <div class="icon inform-icon"></div>&nbsp
@@ -110,6 +137,7 @@
             <div class="icon inform-icon"></div>&nbsp;
             {capture assign=crmURL}{crmURL p='civicrm/mailing/send' q='reset=1'}{/capture}
             {capture assign=archiveURL}{crmURL p='civicrm/mailing/browse/archived' q='reset=1'}{/capture}
-            {ts 1=$crmURL, 2=$archiveURL}There are no Scheduled or Sent Mailings. You can <a href='%1'>create and send one</a> OR you can search the <a href='%2'>Archived Mailings</a>.{/ts}
+            {ts}There are no Scheduled or Sent Mailings.{/ts}
+	    {if $showLinks}{ts 1=$crmURL}You can <a href='%1'>create and send one</a>{/ts}{/if}{if $archiveLinks}{ts 1=$archiveURL} OR you can search the <a href='%1'>Archived Mailings</a>{/ts}{/if}.	    
    </div>
 {/if}

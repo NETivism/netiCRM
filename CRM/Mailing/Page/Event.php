@@ -1,10 +1,10 @@
-<?php 
+<?php
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.3                                                |
+ | CiviCRM version 4.1                                                |
  +--------------------------------------------------------------------+
- | Copyright CiviCRM LLC (c) 2004-2010                                |
+ | Copyright CiviCRM LLC (c) 2004-2011                                |
  +--------------------------------------------------------------------+
  | This file is a part of CiviCRM.                                    |
  |                                                                    |
@@ -29,7 +29,7 @@
 /**
  *
  * @package CRM
- * @copyright CiviCRM LLC (c) 2004-2010
+ * @copyright CiviCRM LLC (c) 2004-2011
  * $Id$
  *
  */
@@ -45,61 +45,64 @@ require_once 'CRM/Core/Page.php';
  */
 class CRM_Mailing_Page_Event extends CRM_Core_Page {
 
-    /**
-     * all the fields that are listings related
-     *
-     * @var array
-     * @access protected
-     */
-    protected $_fields;
+  /**
+   * all the fields that are listings related
+   *
+   * @var array
+   * @access protected
+   */
+  protected $_fields;
 
-    /** 
-     * run this page (figure out the action needed and perform it). 
-     * 
-     * @return void 
-     */ 
-    function run( ) {
-        require_once 'CRM/Mailing/Selector/Event.php';
-        $selector =&
-            new CRM_Mailing_Selector_Event( 
-                      CRM_Utils_Request::retrieve('event', 'String',
-                                                  $this),
-                      CRM_Utils_Request::retrieve('distinct', 'Boolean',
-                                                  $this),
-                      CRM_Utils_Request::retrieve('mid', 'Positive',
-                                                  $this),
-                      CRM_Utils_Request::retrieve('jid', 'Positive', 
-                                                  $this),
-                      CRM_Utils_Request::retrieve('uid', 'Positive', 
-                                                  $this)
-                      );
-       
-        $mailing_id = CRM_Utils_Request::retrieve('mid', 'Positive', $this);
-        
-        CRM_Utils_System::setTitle($selector->getTitle());
-        $this->assign('title',$selector->getTitle());
-        $this->assign('mailing_id',$mailing_id);
-        
-        $sortID = null; 
-        if ( $this->get( CRM_Utils_Sort::SORT_ID ) ) { 
-            $sortID = CRM_Utils_Sort::sortIDValue( $this->get( CRM_Utils_Sort::SORT_ID ), 
-                                                   $this->get( CRM_Utils_Sort::SORT_DIRECTION ) );
-        } 
-        
-        $controller = new CRM_Core_Selector_Controller(
-                        $selector ,
-                        $this->get( CRM_Utils_Pager::PAGE_ID ),
-                        $sortID,
-                        CRM_Core_Action::VIEW, 
-                        $this, 
-                        CRM_Core_Selector_Controller::TEMPLATE );
+  /**
+   * run this page (figure out the action needed and perform it).
+   *
+   * @return void
+   */ function run() {
+    require_once 'CRM/Mailing/Selector/Event.php';
+    $selector = &new CRM_Mailing_Selector_Event(
+      CRM_Utils_Request::retrieve('event', 'String',
+        $this
+      ),
+      CRM_Utils_Request::retrieve('distinct', 'Boolean',
+        $this
+      ),
+      CRM_Utils_Request::retrieve('mid', 'Positive',
+        $this
+      ),
+      CRM_Utils_Request::retrieve('jid', 'Positive',
+        $this
+      ),
+      CRM_Utils_Request::retrieve('uid', 'Positive',
+        $this
+      )
+    );
 
-        $controller->setEmbedded( true );
-        $controller->run( );
-        
-        return parent::run( );
+    $mailing_id = CRM_Utils_Request::retrieve('mid', 'Positive', $this);
+
+    CRM_Utils_System::setTitle($selector->getTitle());
+    $this->assign('title', $selector->getTitle());
+    $this->assign('mailing_id', $mailing_id);
+
+    $sortID = NULL;
+    if ($this->get(CRM_Utils_Sort::SORT_ID)) {
+      $sortID = CRM_Utils_Sort::sortIDValue($this->get(CRM_Utils_Sort::SORT_ID),
+        $this->get(CRM_Utils_Sort::SORT_DIRECTION)
+      );
     }
 
-}
+    $controller = new CRM_Core_Selector_Controller(
+      $selector,
+      $this->get(CRM_Utils_Pager::PAGE_ID),
+      $sortID,
+      CRM_Core_Action::VIEW,
+      $this,
+      CRM_Core_Selector_Controller::TEMPLATE
+    );
 
+    $controller->setEmbedded(TRUE);
+    $controller->run();
+
+    return parent::run();
+  }
+}
 

@@ -1,10 +1,9 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.3                                                |
+ | CiviCRM version 4.1                                                |
  +--------------------------------------------------------------------+
- | Copyright CiviCRM LLC (c) 2004-2010                                |
+ | Copyright CiviCRM LLC (c) 2004-2011                                |
  +--------------------------------------------------------------------+
  | This file is a part of CiviCRM.                                    |
  |                                                                    |
@@ -29,7 +28,7 @@
 /**
  *
  * @package CRM
- * @copyright CiviCRM LLC (c) 2004-2010
+ * @copyright CiviCRM LLC (c) 2004-2011
  * $Id$
  *
  */
@@ -37,66 +36,91 @@
 require_once 'ezc/Base/src/ezc_bootstrap.php';
 require_once 'ezc/autoload/mail_autoload.php';
 require_once 'CRM/Mailing/MailStore.php';
+class CRM_Mailing_MailStore_Imap extends CRM_Mailing_MailStore {
 
-class CRM_Mailing_MailStore_Imap extends CRM_Mailing_MailStore
-{
-    /**
-     * Connect to the supplied IMAP server and make sure the two mailboxes exist
-     *
-     * @param string $host      host to connect to
-     * @param string $username  authentication username
-     * @param string $password  authentication password
-     * @param bool   $ssl       whether to use IMAP or IMAPS
-     * @param string $folder    name of the inbox folder
-     * @return void
-     */
-    function __construct($host, $username, $password, $ssl = true, $folder = 'INBOX')
-    {
-        // default to INBOX if an empty string
-        if (!$folder) $folder = 'INBOX';
-
-        if ($this->_debug) print "connecting to $host, authenticating as $username and selecting $folder\n";
-
-        $options = array('ssl' => $ssl, 'uidReferencing' => true);
-        $this->_transport = new ezcMailImapTransport($host, null, $options);
-        $this->_transport->authenticate($username, $password);
-        $this->_transport->selectMailbox($folder);
-
-        $this->_ignored   = implode($this->_transport->getHierarchyDelimiter(), array($folder, 'CiviMail', 'ignored'));
-        $this->_processed = implode($this->_transport->getHierarchyDelimiter(), array($folder, 'CiviMail', 'processed'));
-        $boxes = $this->_transport->listMailboxes();
-
-        if ($this->_debug) print 'mailboxes found: ' . implode(', ', $boxes) . "\n";
-
-        if (!in_array($this->_ignored,   $boxes)) $this->_transport->createMailbox($this->_ignored);
-        if (!in_array($this->_processed, $boxes)) $this->_transport->createMailbox($this->_processed);
+  /**
+   * Connect to the supplied IMAP server and make sure the two mailboxes exist
+   *
+   * @param string $host      host to connect to
+   * @param string $username  authentication username
+   * @param string $password  authentication password
+   * @param bool   $ssl       whether to use IMAP or IMAPS
+   * @param string $folder    name of the inbox folder
+   *
+   * @return void
+   */
+  function __construct($host, $username, $password, $ssl = TRUE, $folder = 'INBOX') {
+    // default to INBOX if an empty string
+    if (!$folder) {
+      $folder = 'INBOX';
     }
 
-    /**
-     * Move the specified message to the ignored folder
-     *
-     * @param integer $nr  number of the message to move
-     * @return void
-     */
-    function markIgnored($nr)
-    {
-        if ($this->_debug) print "setting $nr as seen and moving it to the ignored mailbox\n";
-        $this->_transport->setFlag($nr, 'SEEN');
-        $this->_transport->copyMessages($nr, $this->_ignored);
-        $this->_transport->delete($nr);
+    if ($this->_debug) {
+
+      print "connecting to $host, authenticating as $username and selecting $folder\n";
+
     }
 
-    /**
-     * Move the specified message to the processed folder
-     *
-     * @param integer $nr  number of the message to move
-     * @return void
-     */
-    function markProcessed($nr)
-    {
-        if ($this->_debug) print "setting $nr as seen and moving it to the processed mailbox\n";
-        $this->_transport->setFlag($nr, 'SEEN');
-        $this->_transport->copyMessages($nr, $this->_processed);
-        $this->_transport->delete($nr);
+    $options = array('ssl' => $ssl, 'uidReferencing' => TRUE);
+    $this->_transport = new ezcMailImapTransport($host, NULL, $options);
+    $this->_transport->authenticate($username, $password);
+    $this->_transport->selectMailbox($folder);
+
+    $this->_ignored   = implode($this->_transport->getHierarchyDelimiter(), array($folder, 'CiviMail', 'ignored'));
+    $this->_processed = implode($this->_transport->getHierarchyDelimiter(), array($folder, 'CiviMail', 'processed'));
+    $boxes            = $this->_transport->listMailboxes();
+
+    if ($this->_debug) {
+      print 'mailboxes found: ' . implode(', ', $boxes) . "\n";
     }
+
+    if (!in_array(strtolower($this->_ignored), array_map('strtolower', $boxes))) {
+
+      $this->_transport->createMailbox($this->_ignored);
+
+    }
+    if (!in_array(strtolower($this->_processed), array_map('strtolower', $boxes))) {
+      $this->_transport->createMailbox($this->_processed);
+    }
+  }
+
+  /**
+   * Expunge the messages marked for deletion, CRM-7356
+   */
+  function expunge() {
+    $this->_transport->expunge();
+  }
+
+  /**
+   * Move the specified message to the ignored folder
+   *
+   * @param integer $nr  number of the message to move
+   *
+   * @return void
+   */
+  function markIgnored($nr) {
+    if ($this->_debug) {
+      print "setting $nr as seen and moving it to the ignored mailbox\n";
+    }
+    $this->_transport->setFlag($nr, 'SEEN');
+    $this->_transport->copyMessages($nr, $this->_ignored);
+    $this->_transport->delete($nr);
+  }
+
+  /**
+   * Move the specified message to the processed folder
+   *
+   * @param integer $nr  number of the message to move
+   *
+   * @return void
+   */
+  function markProcessed($nr) {
+    if ($this->_debug) {
+      print "setting $nr as seen and moving it to the processed mailbox\n";
+    }
+    $this->_transport->setFlag($nr, 'SEEN');
+    $this->_transport->copyMessages($nr, $this->_processed);
+    $this->_transport->delete($nr);
+  }
 }
+

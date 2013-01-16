@@ -1,8 +1,8 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.3                                                |
+ | CiviCRM version 4.1                                                |
  +--------------------------------------------------------------------+
- | Copyright CiviCRM LLC (c) 2004-2010                                |
+ | Copyright CiviCRM LLC (c) 2004-2011                                |
  +--------------------------------------------------------------------+
  | This file is a part of CiviCRM.                                    |
  |                                                                    |
@@ -36,6 +36,17 @@
     <tr class="crm-mailing-upload-form-block-from_email_address"><td class="label">{$form.from_email_address.label}</td>
         <td>{$form.from_email_address.html} {help id ="id-from_email"}</td>
     </tr>
+    {if $trackReplies}
+    <tr class="crm-mailing-upload-form-block-reply_to_address">
+        <td style="color:#3E3E3E;"class="label">{ts}Reply-To{/ts}<span class="crm-marker">*</span></td>
+        <td>{ts}Auto-Generated{/ts}</td>
+    </tr>
+    {else}
+    <tr class="crm-mailing-upload-form-block-reply_to_address">
+        <td class="label">{$form.reply_to_address.label}</td>
+        <td>{$form.reply_to_address.html}</td>
+    </tr>
+    {/if}
     <tr class="crm-mailing-upload-form-block-template">
     	<td class="label">{$form.template.label}</td>
 	<td>{$form.template.html}</td>
@@ -57,10 +68,8 @@
 <fieldset id="compose_id"><legend>{ts}Compose On-screen{/ts}</legend>
 {include file="CRM/Contact/Form/Task/EmailCommon.tpl" upload=1 noAttach=1}
 </fieldset>
-  {php}
-    $this->assign('sample_message', ts('More information and sample messages...'));
-  {/php}
-  {capture assign=docLink}{docURL page="Sample CiviMail Messages" text=$sample_message}{/capture}
+
+  {capture assign=docLink}{docURL page="Sample CiviMail Messages" text="More information and sample messages..."}{/capture}
   <fieldset id="upload_id"><legend>{ts}Upload Content{/ts}</legend>
     <table class="form-layout-compressed">
         <tr class="crm-mailing-upload-form-block-textFile">

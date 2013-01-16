@@ -18602,7 +18602,7 @@ msgstr "已更新報表 %1 。"
 
 #: CRM/Report/Form/Mailing/Bounce.php
 msgid "Bounce Count"
-msgstr "拒絕原因"
+msgstr "拒絕次數"
 
 #: CRM/Report/Form/Mailing/Bounce.php
 msgid "Mail Bounce Report"
@@ -18610,7 +18610,7 @@ msgstr "Email 退信報表"
 
 #: CRM/Report/Form/Mailing/Clicks.php
 msgid "Click through URL"
-msgstr "點擊來源(URL)"
+msgstr "點擊網址(URL)"
 
 #: CRM/Report/Form/Mailing/Clicks.php
 msgid "Click Count"
@@ -18618,11 +18618,11 @@ msgstr "點擊次數"
 
 #: CRM/Report/Form/Mailing/Clicks.php
 msgid "Mail Clickthrough Report"
-msgstr "Email 點擊流程報表"
+msgstr "Email 點擊報表"
 
 #: CRM/Report/Form/Mailing/Opened.php
 msgid "Opened Count"
-msgstr "會員計次"
+msgstr "開啟次數"
 
 #: CRM/Report/Form/Mailing/Opened.php
 msgid "Mail Opened Report"
@@ -18634,15 +18634,15 @@ msgstr "已建立"
 
 #: CRM/Report/Form/Mailing/Summary.php
 msgid "Mailing Status"
-msgstr "電子報設定"
+msgstr "電子報狀態"
 
 #: CRM/Report/Form/Mailing/Summary.php
 msgid "Delivered"
-msgstr "巳登記"
+msgstr "巳遞送"
 
 #: CRM/Report/Form/Mailing/Summary.php
 msgid "Mail Summary"
-msgstr "個案概況"
+msgstr "遞送概況"
 
 #: CRM/Report/Form/Mailing/Summary.php
 msgid "Statistics"
@@ -39698,3 +39698,24 @@ msgstr "-請選擇關係類型-"
 
 msgid "hr"
 msgstr "小時"
+
+msgid "Remove duplicate emails?"
+msgstr "同樣Email僅寄送一次？"
+
+msgid "CiviCRM will always dedupe your mailing based on unique contact records. For example, if a contact is in three of the groups you are including in your mailing, they will only be sent one copy of the email."
+msgstr "CRM會根據聯絡人的不同來整併Email，舉例而言，如果同樣的聯絡人存在三個群組，該聯絡人僅會收到一份電子報。"
+
+msgid "However, if the same email is used by multiple contacts, that email address will receive multiple copies of the email -- one for each contact using that address."
+msgstr "然而，如果同樣的Email存在於不同的聯絡人，系統會寄給每個聯絡人，也就是該信箱會收到多封信件。"
+
+msgid "Selecting this option will ensure only one email is sent to each address. Note that when using this option and including contact tokens in your email content, the email with it's respective tokens will only be created for one of the matching contacts."
+msgstr "勾選這個選項，將會確保Email僅遞送一次到信箱。也請注意，若有插入替代符號（token），該Email僅會替換第一個聯絡人的替代符號當做Email內容。"
+
+msgid "Online Publication"
+msgstr "公開發表"
+
+msgid "Mailing Visibility"
+msgstr "電子報顯示選項"
+
+msgid "Choose <strong>public pages</strong> if you want the content of this mailing to be viewable by everyone who has the permission of <strong>"view public CiviMail content"</strong>, <strong>user and user admin only</strong> means that only users that received the mailing or administrators can view the content of this email"
+msgstr "若你希望這封電子報可以讓所有「<strong>view public CiviMail content</strong>」權限的使用者在網頁上看到，請選擇<strong>公開頁面</strong>，若選擇<strong>使用者與使用者管理員</strong>，則僅有管理員和收件人的信箱看的到此封Email。"

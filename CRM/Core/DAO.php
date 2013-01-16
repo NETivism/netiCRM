@@ -59,7 +59,8 @@ class CRM_Core_DAO extends DB_DataObject
         VALUE_SEPARATOR = "",
         BULK_INSERT_COUNT      = 200,
  
-        BULK_INSERT_HIGH_COUNT = 200;
+        BULK_INSERT_HIGH_COUNT = 200,
+        BULK_MAIL_INSERT_COUNT = 10;
 
     /**
      * the factory class for this application
@@ -1166,6 +1167,20 @@ SELECT contact_id
             $_dao = new CRM_Core_DAO( );
         }
         return $_dao->escape( $string );
+    }
+
+    static function escapeWildCardString($string) {
+      // CRM-9155
+      // ensure we escape the single characters % and _ which are mysql wild
+      // card characters and could come in via sortByCharacter
+      // note that mysql does not escape these characters
+      if ($string && in_array($string,
+          array('%', '_', '%%', '_%')
+        )) {
+        return '\\' . $string;
+      }
+
+      return self::escapeString($string);
     }
 
     //Creates a test object, including any required objects it needs via recursion

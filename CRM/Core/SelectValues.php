@@ -498,22 +498,24 @@ class CRM_Core_SelectValues
         static $tokens = null;
 
         if (! $tokens ) {
-            $tokens = array( '{action.unsubscribe}'    => ts('Unsubscribe via email'),
-                             '{action.unsubscribeUrl}' => ts('Unsubscribe via web page'),
-                             '{action.resubscribe}'    => ts('Resubscribe via email'),
-                             '{action.resubscribeUrl}' => ts('Resubscribe via web page'),
-                             '{action.optOut}'         => ts('Opt out via email'),
-                             '{action.optOutUrl}'      => ts('Opt out via web page'),
-                             '{action.forward}'        => ts('Forward this email (link)'),
-                             '{action.reply}'          => ts('Reply to this email (link)'),
-                             '{action.subscribeUrl}'   => ts('Subscribe via web page'),
-                             '{domain.name}'           => ts('Domain name'),
-                             '{domain.address}'        => ts('Domain (organization) address'),
-                             '{domain.phone}'          => ts('Domain (organization) phone'),
-                             '{domain.email}'          => ts('Domain (organization) email'),
-                             '{mailing.name}'          => ts('Mailing name'),
-                             '{mailing.group}'         => ts('Mailing group')    
-                          );
+            $tokens = array(
+              '{action.unsubscribe}'    => ts('Unsubscribe via email'),
+              '{action.unsubscribeUrl}' => ts('Unsubscribe via web page'),
+              '{action.resubscribe}'    => ts('Resubscribe via email'),
+              '{action.resubscribeUrl}' => ts('Resubscribe via web page'),
+              '{action.optOut}'         => ts('Opt out via email'),
+              '{action.optOutUrl}'      => ts('Opt out via web page'),
+              '{action.forward}'        => ts('Forward this email (link)'),
+              '{action.reply}'          => ts('Reply to this email (link)'),
+              '{action.subscribeUrl}'   => ts('Subscribe via web page'),
+              '{domain.name}'           => ts('Domain name'),
+              '{domain.address}'        => ts('Domain (organization) address'),
+              '{domain.phone}'          => ts('Domain (organization) phone'),
+              '{domain.email}'          => ts('Domain (organization) email'),
+              '{mailing.name}'          => ts('Mailing name'),
+              '{mailing.group}'         => ts('Mailing group'),
+              '{mailing.viewUrl}' => ts('Mailing permalink'),
+            );
         }
         return $tokens;
     }

@@ -4334,6 +4334,20 @@ function civicrm_views_data() {
                                                                        'handler' => 'views_handler_sort',
                                                                        ),
                                                        );
+     //is this mailing public
+     $data['civicrm_mailing']['visibility'] = array(
+       'title' => t('Visibility'),
+       'help' => t('Is this mailing public or not?'),
+       'argument' => array(
+         'handler' => 'views_handler_argument',
+       ),
+       'filter' => array(
+         'handler' => 'civicrm_handler_filter_visibility',
+       ),
+       'sort' => array(
+         'handler' => 'views_handler_sort',
+       ),
+     );
 
     // mailing_component table aliased as mailing_header
      $data['civicrm_mailing_header']['table']['group'] = ts('CiviCRM Mailings');
@@ -5535,6 +5549,9 @@ function civicrm_views_handlers() {
                                                                       'parent' => 'views_handler_filter_in_operator',
                                                                       ),
                        'civicrm_handler_filter_custom_option' => array(
+                                                                       'parent' => 'views_handler_filter_in_operator',
+                                                                       ),
+                       'civicrm_handler_filter_visibility' => array(
                                                                        'parent' => 'views_handler_filter_in_operator',
                                                                        ),
                        

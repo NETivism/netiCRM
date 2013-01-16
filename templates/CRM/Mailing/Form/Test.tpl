@@ -1,8 +1,8 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.3                                                |
+ | CiviCRM version 4.1                                                |
  +--------------------------------------------------------------------+
- | Copyright CiviCRM LLC (c) 2004-2010                                |
+ | Copyright CiviCRM LLC (c) 2004-2011                                |
  +--------------------------------------------------------------------+
  | This file is a part of CiviCRM.                                    |
  |                                                                    |
@@ -34,7 +34,7 @@
 <fieldset>
   <legend>{ts}Test Mailing:{/ts}</legend>
   <table class="form-layout">
-    <tr class="crm-mailing-test-form-block-test_email"><td class="label">{$form.test_email.label}</td><td>{$form.test_email.html}</td></tr>
+    <tr class="crm-mailing-test-form-block-test_email"><td class="label">{$form.test_email.label}</td><td>{$form.test_email.html} {ts}(filled with your contact's token values){/ts}</td></tr>
     <tr class="crm-mailing-test-form-block-test_group"><td class="label">{$form.test_group.label}</td><td>{$form.test_group.html}</td></tr>
     <tr><td></td><td>{$form.sendtest.html}</td>  
   </table>
