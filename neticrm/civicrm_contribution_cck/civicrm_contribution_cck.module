@@ -194,6 +194,7 @@ function civicrm_contribution_cck_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
  * return node_load array
  */
 function civicrm_contribution_cck_preload(&$node, $contribution_id){
+  $contribution_id = CRM_Utils_Type::escape($contribution_id, 'Integer');
   $is_test = $_GET['action'] == 'preview' ? 1 : 0;
   civicrm_initialize();
   $query = "SELECT SUM( cc.total_amount ) as total_amount FROM civicrm_contribution cc WHERE cc.contribution_status_id = 1 AND cc.cancel_date IS NULL AND cc.contribution_page_id = $contribution_id AND is_test = $is_test";

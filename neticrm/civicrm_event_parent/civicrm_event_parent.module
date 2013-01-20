@@ -41,6 +41,7 @@ function civicrm_event_parent_civicrm_buildForm( $formName, &$form ) {
     $result = civicrm_event_get($params);
     if(!$result['is_error'] && $parent_gid[$event_id]){
       list($rTypeID, $rTypeDir) = explode('-', $parent_gid[$event_id]['parent_relation']);
+      $rTypeID = CRM_Utils_Type::escape($rTypeID, 'Integer');
       $relation = CRM_Core_DAO::executeQuery("SELECT * FROM civicrm_relationship_type WHERE id = ".$rTypeID);
       $relation->fetch();
       $relation_label = 'label_'.$rTypeDir;
@@ -112,6 +113,7 @@ function civicrm_event_parent_civicrm_buildForm_regRegister( $formName, &$form )
   $civicrm_event_parent_gid = variable_get('civicrm_event_parent_gid', array());
   $mainID = CRM_Utils_Request::retrieve( 'mainID', 'Integer', $form, false, null, $_REQUEST );
   list($rTypeID, $rTypeDir) = explode('-', $civicrm_event_parent_gid[$event_id]['parent_relation']);
+  $rTypeID = CRM_Utils_Type::escape($rTypeID, 'Integer');
   $relation_label = 'label_'.$rTypeDir;
 
   $_id = $_GET['id'];
