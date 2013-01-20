@@ -15,6 +15,19 @@
        <autoincrement>true</autoincrement>
   </primaryKey>
   <field>
+      <name>domain_id</name>
+      <type>int unsigned</type>
+      <comment>Which site is this mailing for</comment>
+      <add>3.4</add>
+  </field>
+  <foreignKey>
+       <name>domain_id</name>
+       <table>civicrm_domain</table>
+       <key>id</key>
+       <onDelete>SET NULL</onDelete>
+       <add>3.4</add>
+  </foreignKey>
+  <field>
       <name>header_id</name>
       <type>int unsigned</type>
       <comment>FK to the header component.</comment>
@@ -202,5 +215,20 @@
        <default>0</default>
        <comment>Is this mailing archived?</comment>
        <add>2.2</add>
+  </field>
+  <field> 
+       <name>visibility</name> 
+       <type>enum</type> 
+       <values>User and User Admin Only,Public Pages</values> 
+       <default>'User and User Admin Only'</default> 
+       <comment>In what context(s) is the mailing contents visible (online viewing)</comment> 
+       <add>3.3</add> 
+  </field>
+  <field>
+      <name>dedupe_email</name>
+      <type>boolean</type>
+      <default>0</default>
+      <add>4.1</add>    
+      <comment>Remove duplicate emails?</comment>
   </field>
 </table>
