@@ -4432,7 +4432,7 @@ VALUES
    ('payment_instrument'            , '付款工具'                , 0, 1),
    ('contribution_status'           , '捐款狀態'                , 0, 1),
    ('pcp_status'                    , 'PCP Status'                         , 0, 1),
-   ('participant_role'              , '參加者身分'                   , 0, 1),
+   ('participant_role'              , '參加者角色'                   , 0, 1),
    ('event_type'                    , '活動類型'                         , 0, 1),
    ('contact_view_options'          , '聯絡人查看選項'               , 0, 1),
    ('contact_edit_options'          , '聯絡人編輯選項'               , 0, 1),
@@ -4755,7 +4755,7 @@ VALUES
   (@option_group_id_report , '支持者報表（詳情）',             'contact/detail',                 'CRM_Report_Form_Contact_Detail',                 NULL, 0, NULL, 2,  '提供在捐款、會員、項目和活動有關的聯絡資訊',   0, 0, 1, NULL, NULL),
   (@option_group_id_report , '任務報表',                         'activity',                       'CRM_Report_Form_Activity',                       NULL, 0, NULL, 3,  '提供支持者任務的清單，包括在指定日期範圍內，聯絡人的任務統計。（必填）', 0, 0, 1, NULL, NULL),
   (@option_group_id_report , '步行/電話名單報表',                'walklist',                       'CRM_Report_Form_Walklist',                       NULL, 0, NULL, 4,  '為步行/電話名單報表的指定聯絡人提供一份詳細報表。', 0, 0, 0, NULL, NULL),
-  (@option_group_id_report , '目前的員工報表',                 'contact/currentEmployer',        'CRM_Report_Form_Contact_CurrentEmployer',        NULL, 0, NULL, 5,  '透過加入日期的詳細細節，提供詳細的就職單位與僱員關係列表。', 0, 0, 0, NULL, NULL),
+  (@option_group_id_report , '現職單位報表',                 'contact/currentEmployer',        'CRM_Report_Form_Contact_CurrentEmployer',        NULL, 0, NULL, 5,  '透過加入日期的詳細細節，提供詳細的就職單位與僱員關係列表。', 0, 0, 0, NULL, NULL),
   (@option_group_id_report , '捐款者報表（概況）',                  'contribute/summary',             'CRM_Report_Form_Contribute_Summary',             NULL, 0, NULL, 6,  '依月 / 星期 / 年 ... 國家 / 州等分類顯示捐款統計資料', 0, 0, 1, @contributeCompId, NULL),
   (@option_group_id_report , '捐款者報表（詳情）',                   'contribute/detail',              'CRM_Report_Form_Contribute_Detail',              NULL, 0, NULL, 7,  '列出一個 / 全部聯絡人的詳細捐款資料。捐款總結報表指出這個報表的具體細節。', 0, 0, 1, @contributeCompId, NULL),
   (@option_group_id_report , '捐贈摘要報表（重複）',        'contribute/repeat',              'CRM_Report_Form_Contribute_Repeat',              NULL, 0, NULL, 8,  '請給兩個日期範圍，顯示在這段時間裡，聯絡人（與他們的捐款）增加或減少的比率。', 0, 0, 1, @contributeCompId, NULL),
@@ -4787,7 +4787,7 @@ VALUES
   (@option_group_id_report, 'Email 退信報表', 'Mailing/bounce', 'CRM_Report_Form_Mailing_Bounce', NULL, 0, NULL, 34, 'Bounce Report for mailings', 0, 0, 1, @mailCompId, NULL),
   (@option_group_id_report, 'Email遞送報表（概況）', 'Mailing/summary', 'CRM_Report_Form_Mailing_Summary', NULL, 0, NULL, 35, 'Summary statistics for mailings', 0, 0, 1, @mailCompId, NULL),
   (@option_group_id_report, 'Email 開信率報表', 'Mailing/opened', 'CRM_Report_Form_Mailing_Opened', NULL, 0, NULL, 36, 'Display contacts who opened emails from a mailing', 0, 0, 1, @mailCompId, NULL),
-  (@option_group_id_report, 'Email 點擊流程報表', 'Mailing/clicks', 'CRM_Report_Form_Mailing_Clicks', NULL, 0, NULL, 37, 'Display clicks from each mailing', 0, 0, 1, @mailCompId, NULL),
+  (@option_group_id_report, 'Email 點擊報表', 'Mailing/clicks', 'CRM_Report_Form_Mailing_Clicks', NULL, 0, NULL, 37, 'Display clicks from each mailing', 0, 0, 1, @mailCompId, NULL),
   (@option_group_id_report, 'Contact Logging Report (Summary)', 'logging/contact/summary', 'CRM_Report_Form_Contact_LoggingSummary', NULL, 0, NULL, 38, 'Contact modification report for the logging infrastructure (summary).', 0, 0, 0, NULL, NULL),
   (@option_group_id_report, 'Contact Logging Report (Detail)', 'logging/contact/detail', 'CRM_Report_Form_Contact_LoggingDetail', NULL, 0, NULL, 39, 'Contact modification report for the logging infrastructure (detail).', 0, 0, 0, NULL, NULL),
   
@@ -4898,7 +4898,7 @@ VALUES
 -- Account types
    (@option_group_id_accTp, 'Asset', 1, 'Asset',  NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
    (@option_group_id_accTp, 'Liability', 2, 'Liability',  NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_accTp, '未完成', 3, 'Income',  NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
+   (@option_group_id_accTp, '收入', 3, 'Income',  NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
    (@option_group_id_accTp, 'Expense', 4, 'Expense',  NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
 
 -- website type
@@ -5197,7 +5197,7 @@ INSERT INTO
     civicrm_membership_status(name, label, start_event, start_event_adjust_unit, start_event_adjust_interval, end_event, end_event_adjust_unit, end_event_adjust_interval, is_current_member, is_admin, weight, is_default, is_active, is_reserved)
 VALUES
     ('New',       '新增', 'join_date', null, null,'join_date','month',3, 1, 0, 1, 0, 1, 0),
-    ('Current',   '現在', 'start_date', null, null,'end_date', null, null, 1, 0, 2, 1, 1, 0),
+    ('Current',   '正常', 'start_date', null, null,'end_date', null, null, 1, 0, 2, 1, 1, 0),
     ('Grace',     '寬限', 'end_date', null, null,'end_date','month', 1, 1, 0, 3, 0, 1, 0),
     ('Expired',   '已清除', 'end_date', 'month', 1, null, null, null, 0, 0, 4, 0, 1, 0),
     ('Pending',   '待處理', 'join_date', null, null,'join_date',null,null, 0, 0, 5, 0, 1, 1),

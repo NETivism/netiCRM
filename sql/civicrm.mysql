@@ -1071,7 +1071,8 @@ CREATE TABLE civicrm_mailing (
      created_id int unsigned    COMMENT 'FK to Contact ID who first created this mailing',
      created_date datetime    COMMENT 'Date and time this mailing was created.',
      scheduled_id int unsigned    COMMENT 'FK to Contact ID who scheduled this mailing',
-     is_archived tinyint   DEFAULT 0 COMMENT 'Is this mailing archived?' 
+     is_archived tinyint   DEFAULT 0 COMMENT 'Is this mailing archived?',
+     visibility enum('User and User Admin Only', 'Public Pages')   DEFAULT 'User and User Admin Only' COMMENT 'In what context(s) is the mailing contents visible (online viewing)' 
 ,
     PRIMARY KEY ( id )
  
@@ -3346,7 +3347,7 @@ CREATE TABLE civicrm_contribution_page (
      title varchar(255)    COMMENT 'Contribution Page title. For top of page display',
      intro_text text    COMMENT 'Text and html allowed. Displayed below title.',
      contribution_type_id int unsigned NOT NULL   COMMENT 'default Contribution type assigned to contributions submitted via this page, e.g. Contribution, Campaign Contribution',
-     payment_processor_id int unsigned    COMMENT 'Payment Processor for this contribution Page ',
+     payment_processor varchar(128)    COMMENT 'Payment Processors configured for this contribution Page ',
      is_credit_card_only tinyint   DEFAULT 0 COMMENT 'if true - processing logic must reject transaction at confirmation stage if pay method != credit card',
      is_monetary tinyint   DEFAULT 1 COMMENT 'if true - allows real-time monetary transactions otherwise non-monetary transactions',
      is_recur tinyint   DEFAULT 0 COMMENT 'if true - allows recurring contributions, valid only for PayPal_Standard',
@@ -3388,7 +3389,6 @@ CREATE TABLE civicrm_contribution_page (
  
 ,      
      CONSTRAINT FK_civicrm_contribution_page_contribution_type_id FOREIGN KEY (contribution_type_id) REFERENCES civicrm_contribution_type(id) ,      
-     CONSTRAINT FK_civicrm_contribution_page_payment_processor_id FOREIGN KEY (payment_processor_id) REFERENCES civicrm_payment_processor(id) ON DELETE SET NULL,      
      CONSTRAINT FK_civicrm_contribution_page_created_id FOREIGN KEY (created_id) REFERENCES civicrm_contact(id) ON DELETE SET NULL  
 )  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci  ;
 
@@ -4300,7 +4300,7 @@ CREATE TABLE civicrm_event (
      event_full_text text    COMMENT 'Message to display on Event Information page and INSTEAD OF Event Registration form if maximum participants are signed up. Can include email address/info about getting on a waiting list, etc. Text and html allowed.',
      is_monetary tinyint   DEFAULT 0 COMMENT 'Is this a PAID event? If true, one or more fee amounts must be set and a Payment Processor must be configured for Online Event Registration.',
      contribution_type_id int unsigned   DEFAULT 0 COMMENT 'Contribution type assigned to paid event registrations for this event. Required if is_monetary is true.',
-     payment_processor_id int unsigned    COMMENT 'Payment Processor for this Event (if is_monetary is true)',
+     payment_processor varchar(128)    COMMENT 'Payment Processors configured for this Event (if is_monetary is true)',
      is_map tinyint   DEFAULT 0 COMMENT 'Include a map block on the Event Information page when geocode info is available and a mapping provider has been specified?',
      is_active tinyint   DEFAULT 0 COMMENT 'Is this Event enabled or disabled/cancelled?',
      fee_label varchar(255)    ,
@@ -4349,7 +4349,6 @@ CREATE TABLE civicrm_event (
   )
   
 ,      
-     CONSTRAINT FK_civicrm_event_payment_processor_id FOREIGN KEY (payment_processor_id) REFERENCES civicrm_payment_processor(id) ON DELETE SET NULL,      
      CONSTRAINT FK_civicrm_event_loc_block_id FOREIGN KEY (loc_block_id) REFERENCES civicrm_loc_block(id) ON DELETE SET NULL,      
      CONSTRAINT FK_civicrm_event_created_id FOREIGN KEY (created_id) REFERENCES civicrm_contact(id) ON DELETE SET NULL  
 )  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci  ;
