@@ -287,8 +287,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form
             $isMonetary = CRM_Utils_Array::value( 'is_monetary', $this->_values );
             $isPayLater = CRM_Utils_Array::value( 'is_pay_later', $this->_values );
 
-            if ( $isMonetary && 
-                 ( ! $isPayLater || CRM_Utils_Array::value( 'payment_processor', $this->_values ) ) ) {
+            if ( $isMonetary && ( ! $isPayLater || CRM_Utils_Array::value( 'payment_processor', $this->_values ) ) ) {
                 $ppID = CRM_Utils_Array::value( 'payment_processor', $this->_values );
                 if ( ! $ppID ) {
                     CRM_Core_Error::fatal( ts( 'A payment processor must be selected for this contribution page (contact the site administrator for assistance).' ) );
@@ -475,36 +474,8 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form
         if ( CRM_Utils_Array::value( 'pledge_block_id', $this->_values ) ) {
             $this->assign( 'pledgeBlock', true );
         }
-        
-        // we do this outside of the above conditional to avoid 
-        // saving the country/state list in the session (which could be huge)
-        if ( ( $this->_paymentProcessor['billing_mode'] & CRM_Core_Payment::BILLING_MODE_FORM ) &&
-             CRM_Utils_Array::value('is_monetary', $this->_values) ) {
-            require_once 'CRM/Core/Payment/Form.php';
-            require_once 'CRM/Core/Payment.php';
-            // payment fields are depending on payment type
-            if ( $this->_paymentProcessor['payment_type'] & CRM_Core_Payment::PAYMENT_TYPE_DIRECT_DEBIT ){
-                CRM_Core_Payment_Form::setDirectDebitFields( $this );
-            } else {
-                CRM_Core_Payment_Form::setCreditCardFields( $this );
-            }         
-        }
 
         $this->assign_by_ref( 'paymentProcessor', $this->_paymentProcessor );
-
-        // check if this is a paypal auto return and redirect accordingly
-        if ( CRM_Core_Payment::paypalRedirect( $this->_paymentProcessor ) ) {
-            $url = CRM_Utils_System::url( 'civicrm/contribute/transact',
-                                          "_qf_ThankYou_display=1&qfKey={$this->controller->_key}" );
-            CRM_Utils_System::redirect( $url );
-        }
-        
-        // make sure we have a valid payment class, else abort
-        if ( CRM_Utils_Array::value('is_monetary',$this->_values) &&
-             ! $this->_paymentProcessor['class_name'] &&
-             !CRM_Utils_Array::value( 'is_pay_later',$this->_values ) ) {
-            CRM_Core_Error::fatal( ts( 'Payment processor is not set for this page' ) );
-        }
 
         // check if one of the (amount , membership)  bloks is active or not
         require_once 'CRM/Member/BAO/Membership.php';
