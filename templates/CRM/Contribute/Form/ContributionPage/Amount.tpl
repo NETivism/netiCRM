@@ -48,8 +48,8 @@
             <span class="description">{ts}Select the currency to be used for contributions submitted from this contribution page.{/ts}</span></td>
         </tr>	
         {if $paymentProcessor}
-        <tr class="crm-contribution-contributionpage-amount-form-block-payment_processor_id"><th scope="row" class="label" width="20%">{$form.payment_processor_id.label}</th>
-            <td>{$form.payment_processor_id.html}<br />
+        <tr class="crm-contribution-contributionpage-amount-form-block-payment_processor"><th scope="row" class="label" width="20%">{$form.payment_processor.label}</th>
+            <td>{$form.payment_processor.html}<br />
             <span class="description">{ts}Select the payment processor to be used for contributions submitted from this contribution page (unless you are soliciting non-monetary / in-kind contributions only).{/ts} {docURL page="CiviContribute Payment Processor Configuration"}</span></td>
         </tr>
         {/if}
@@ -182,7 +182,7 @@
        {/if}
      {literal}
    cj( document ).ready( function( ) { 
-       showRecurring( cj( '#payment_processor_id' ).val( ) ) 
+       showRecurring( cj( '#payment_processor' ).val( ) ) 
    });
 	var element_other_amount = document.getElementsByName('is_allow_other_amount');
   	if (! element_other_amount[0].checked) {

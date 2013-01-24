@@ -232,6 +232,11 @@ class CRM_Event_Form_ManageEvent_Fee extends CRM_Event_Form_ManageEvent
         $this->_showHide->addToTemplate( );
         $this->assign('inDate', $this->_inDate );
        
+        if ( CRM_Utils_Array::value( 'payment_processor', $defaults ) ) {
+            $defaults['payment_processor'] =
+                array_fill_keys( explode( CRM_Core_DAO::VALUE_SEPARATOR,
+                                          $defaults['payment_processor'] ), '1' );
+        }
         return $defaults;
     }
     
@@ -257,9 +262,11 @@ class CRM_Event_Form_ManageEvent_Fee extends CRM_Event_Form_ManageEvent
         require_once 'CRM/Contribute/PseudoConstant.php';
         $paymentProcessor =& CRM_Core_PseudoConstant::paymentProcessor( );
         $this->assign('paymentProcessor',$paymentProcessor);
-        $this->add( 'select', 'payment_processor_id',
-                    ts( 'Payment Processor' ),
-                    array('' => ts( '- select -' )) + $paymentProcessor );
+
+        $this->addCheckBox( 'payment_processor', ts('Payment Processor'),
+                            array_flip($paymentProcessor),
+                            null, null, null, null,
+                            array( '&nbsp;&nbsp;', '&nbsp;&nbsp;', '&nbsp;&nbsp;', '<br/>' ) );
         
         $this->add('select', 'contribution_type_id',ts( 'Contribution Type' ),
                    array(''=>ts( '- select -' )) + CRM_Contribute_PseudoConstant::contributionType( ) );
@@ -557,6 +564,9 @@ class CRM_Event_Form_ManageEvent_Fee extends CRM_Event_Form_ManageEvent
             return;
         }
         
+        if ( !CRM_Utils_System::isNull( $params['payment_processor'] ) ) {
+            $params['payment_processor'] = implode( CRM_Core_DAO::VALUE_SEPARATOR, array_keys( $params['payment_processor'] ) );
+        }
         $params['is_pay_later'] = CRM_Utils_Array::value( 'is_pay_later', $params, 0 );
         
         if ( $this->_id ) {

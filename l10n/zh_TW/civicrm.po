@@ -39719,3 +39719,9 @@ msgstr "電子報顯示選項"
 
 msgid "Choose <strong>public pages</strong> if you want the content of this mailing to be viewable by everyone who has the permission of <strong>\"view public CiviMail content\"</strong>, <strong>user and user admin only</strong> means that only users that received the mailing or administrators can view the content of this email"
 msgstr "若你希望這封電子報可以讓所有「<strong>view public CiviMail content</strong>」權限的使用者在網頁上看到，請選擇<strong>公開頁面</strong>，若選擇<strong>使用者與使用者管理員</strong>，則僅有管理員和收件人的信箱看的到此封Email。"
+
+msgid "Payment Method"
+msgstr "選擇付款方式"
+
+msgid "Payment Options"
+msgstr "付款選項"

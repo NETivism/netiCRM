@@ -170,18 +170,13 @@
       <comment>Contribution type assigned to paid event registrations for this event. Required if is_monetary is true.</comment> 
       <add>1.7</add> 
   </field>
-  <field> 
-      <name>payment_processor_id</name> 
-      <type>int unsigned</type>                 
-      <comment>Payment Processor for this Event (if is_monetary is true)</comment> 
-      <add>1.8</add> 
-  </field> 
-  <foreignKey> 
-      <name>payment_processor_id</name> 
-      <table>civicrm_payment_processor</table> 
-      <key>id</key> 
-      <onDelete>SET NULL</onDelete>
-  </foreignKey>
+  <field>
+      <name>payment_processor</name>
+      <type>varchar</type>
+      <length>128</length>
+      <comment>Payment Processors configured for this Event (if is_monetary is true)</comment>
+      <add>1.8</add>
+  </field>
   <field> 
       <name>is_map</name> 
       <type>boolean</type> 

@@ -54,6 +54,10 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
         parent::preProcess( );
         // lineItem isn't set until Register postProcess
         $this->_lineItem = $this->get( 'lineItem' );
+        $this->_params = $this->controller->exportValues( 'Main' );
+        if(! ($this->_paymentProcessor = $this->get('paymentProcessor')) && !empty($this->_params['payment_processor'])){
+          $this->_paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($this->_params['payment_processor'], $this->_mode);
+        }
         
         if ( $this->_contributeMode == 'express' ) {
             // rfp == redirect from paypal
@@ -110,7 +114,6 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
                 $this->_params = $this->get( 'getExpressCheckoutDetails' );
             }
         } else {
-            $this->_params = $this->controller->exportValues( 'Main' );
 
             if ( !empty( $this->_params["billing_state_province_id-{$this->_bltID}"] ) ) {
                 $this->_params["billing_state_province-{$this->_bltID}"] =
@@ -140,6 +143,12 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
 
             $this->_params['currencyID'    ] = $config->defaultCurrency;
             $this->_params['payment_action'] = 'Sale';
+        }
+
+        $this->_params['is_pay_later'] = $this->get('is_pay_later');
+        $this->assign('is_pay_later', $this->_params['is_pay_later']);
+        if ($this->_params['is_pay_later']) {
+          $this->assign('pay_later_receipt', $this->_values['pay_later_receipt']);
         }
 
         // if onbehalf-of-organization
@@ -385,6 +394,15 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
         $this->_params['currencyID'] = $config->defaultCurrency;
 
         $premiumParams = $membershipParams = $tempParams = $params = $this->_params;
+
+        //carry payment processor id.
+        if ($paymentProcessorId = CRM_Utils_Array::value('id', $this->_paymentProcessor)) {
+          $this->_params['payment_processor_id'] = $paymentProcessorId;
+          foreach (array(
+            'premiumParams', 'membershipParams', 'tempParams', 'params') as $p) {
+            ${$p}['payment_processor_id'] = $paymentProcessorId;
+          }
+        }
         $now = date( 'YmdHis' );
         $fields = array( );
         

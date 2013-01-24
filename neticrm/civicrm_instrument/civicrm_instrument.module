@@ -31,8 +31,25 @@ function civicrm_instrument_civicrm_buildForm($form_name, &$form){
       break;
     case 'CRM_Contribute_Form_Contribution_Main':
     case 'CRM_Event_Form_Registration_Register':
+      if(CRM_Utils_Array::value( 'type', $_GET )){
+        return;
+      }
       // ok, now check the payment limitation.
-      $entity_id = $form->getVar('_id') ? $form->getVar('_id') : $form->getVar('_eventId') ;
+      $entity_id = $form->getVar('_id') ? $form->getVar('_id') : $form->getVar('_eventId');
+      if(!$entity_id){
+      /* will add this when necessery
+        // using ajax to fetch form
+        $qfKey = !empty($form->controller->_key) ? $form->controller->_key : $_GET['qfKey'];
+        if($qfKey){
+          $k = 'CRM_Contribute_Controller_Contribution_'.$_GET['qfKey'];
+          $entity_id = $_SESSION['CiviCRM'][$k]['values']['id'];
+        }
+        else{
+          return;
+        }
+      */
+        return;
+      }
       $entity_table = $form_name == 'CRM_Contribute_Form_Contribution_Main' ? 'civicrm_contribution_page' : 'civicrm_event';
       $gid = variable_get('civicrm_instrument_gid', 0);
 

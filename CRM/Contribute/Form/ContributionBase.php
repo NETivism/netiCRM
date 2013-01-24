@@ -288,29 +288,47 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form
             $isPayLater = CRM_Utils_Array::value( 'is_pay_later', $this->_values );
 
             if ( $isMonetary && 
-                 ( ! $isPayLater || CRM_Utils_Array::value( 'payment_processor_id', $this->_values ) ) ) {
-                $ppID = CRM_Utils_Array::value( 'payment_processor_id', $this->_values );
+                 ( ! $isPayLater || CRM_Utils_Array::value( 'payment_processor', $this->_values ) ) ) {
+                $ppID = CRM_Utils_Array::value( 'payment_processor', $this->_values );
                 if ( ! $ppID ) {
                     CRM_Core_Error::fatal( ts( 'A payment processor must be selected for this contribution page (contact the site administrator for assistance).' ) );
                 }
                 
+                $ppIds = explode( CRM_Core_DAO::VALUE_SEPARATOR, $ppID );
                 require_once 'CRM/Core/BAO/PaymentProcessor.php';
-                $this->_paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment( $ppID,
-                                                                                      $this->_mode );
-                // check selected payment processor is active
-                if ( empty( $this->_paymentProcessor ) ) {
-                    CRM_Core_Error::fatal( ts( 'A payment processor configured for this page might be disabled (contact the site administrator for assistance).' ) );
+                $this->_paymentProcessors = CRM_Core_BAO_PaymentProcessor::getPayments( $ppIds, $this->_mode );
+                $this->set('paymentProcessors', $this->_paymentProcessors);
+
+                //set default payment processor
+                if (!empty($this->_paymentProcessors) && empty($this->_paymentProcessor)) {
+                  foreach ($this->_paymentProcessors as $ppId => $values) {
+                    if ($values['is_default'] == 1 || (count($this->_paymentProcessors) == 1)) {
+                      $defaultProcessorId = $ppId;
+                      break;
+                    }
+                  }
+                }
+                
+                if (isset($defaultProcessorId)) {
+                  $this->_paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($defaultProcessorId, $this->_mode);
+                  $this->assign_by_ref('paymentProcessor', $this->_paymentProcessor);    
                 }
 
-                // ensure that processor has a valid config
-                $this->_paymentObject =&
-                    CRM_Core_Payment::singleton( $this->_mode, $this->_paymentProcessor, $this );
-                $error = $this->_paymentObject->checkConfig( );
-                if ( ! empty( $error ) ) {
-                    CRM_Core_Error::fatal( $error );
+                if (!CRM_Utils_System::isNull($this->_paymentProcessors)) {
+                  foreach ($this->_paymentProcessors as $eachPaymentProcessor) {
+                    // check selected payment processor is active
+                    if (empty($eachPaymentProcessor)) {
+                      CRM_Core_Error::fatal(ts('A payment processor configured for this page might be disabled (contact the site administrator for assistance).'));
+                    }
+
+                    // ensure that processor has a valid config
+                    $this->_paymentObject = &CRM_Core_Payment::singleton($this->_mode, $eachPaymentProcessor, $this);
+                    $error = $this->_paymentObject->checkConfig();
+                    if (!empty($error)) {
+                      CRM_Core_Error::fatal($error);
+                    }
+                  }
                 }
-                $this->_paymentProcessor['processorName'] = $this->_paymentObject->_processorName;
-                $this->set( 'paymentProcessor', $this->_paymentProcessor );                
             }
 
             // get price info
@@ -570,6 +588,8 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form
         $name = trim( $name );
         $this->assign( 'billingName', $name );
         $this->set( 'name', $name );
+
+        $this->assign('paymentProcessor', $this->_paymentProcessor);
 
         $vars = array( 'amount', 'currencyID',
                        'credit_card_type', 'trxn_id', 'amount_level' );

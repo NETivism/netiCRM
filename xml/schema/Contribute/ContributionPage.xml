@@ -49,17 +49,12 @@
        <key>id</key> 
   </foreignKey>
   <field> 
-      <name>payment_processor_id</name> 
-      <type>int unsigned</type>                 
-      <comment>Payment Processor for this contribution Page </comment> 
+      <name>payment_processor</name> 
+      <type>varchar</type>
+      <length>128</length>
+      <comment>Payment Processors configured for this contribution Page </comment> 
       <add>1.8</add> 
   </field> 
-  <foreignKey> 
-       <name>payment_processor_id</name> 
-       <table>civicrm_payment_processor</table> 
-       <key>id</key> 
-       <onDelete>SET NULL</onDelete>
-  </foreignKey>
   <field>  
       <name>is_credit_card_only</name>  
       <type>boolean</type>                  
