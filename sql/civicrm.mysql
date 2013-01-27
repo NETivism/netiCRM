@@ -1072,7 +1072,8 @@ CREATE TABLE civicrm_mailing (
      created_date datetime    COMMENT 'Date and time this mailing was created.',
      scheduled_id int unsigned    COMMENT 'FK to Contact ID who scheduled this mailing',
      is_archived tinyint   DEFAULT 0 COMMENT 'Is this mailing archived?',
-     visibility enum('User and User Admin Only', 'Public Pages')   DEFAULT 'User and User Admin Only' COMMENT 'In what context(s) is the mailing contents visible (online viewing)' 
+     visibility enum('User and User Admin Only', 'Public Pages')   DEFAULT 'User and User Admin Only' COMMENT 'In what context(s) is the mailing contents visible (online viewing)',
+     dedupe_email tinyint   DEFAULT 0 COMMENT 'Remove duplicate emails?' 
 ,
     PRIMARY KEY ( id )
  
