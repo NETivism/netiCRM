@@ -1048,6 +1048,7 @@ CREATE TABLE civicrm_mailing (
 
 
      id int unsigned NOT NULL AUTO_INCREMENT  ,
+     domain_id int unsigned    COMMENT 'Which site is this mailing for',
      header_id int unsigned    COMMENT 'FK to the header component.',
      footer_id int unsigned    COMMENT 'FK to the footer component.',
      reply_id int unsigned    COMMENT 'FK to the auto-responder component.',

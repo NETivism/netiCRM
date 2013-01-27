@@ -18,7 +18,7 @@
       <name>domain_id</name>
       <type>int unsigned</type>
       <comment>Which site is this mailing for</comment>
-      <add>3.4</add>
+      <add>3.3</add>
   </field>
   <foreignKey>
        <name>domain_id</name>
