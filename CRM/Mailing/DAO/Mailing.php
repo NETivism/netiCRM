@@ -1,9 +1,9 @@
 <?php
 /*
 +--------------------------------------------------------------------+
-| CiviCRM version 4.1                                                |
+| CiviCRM version 3.3                                                |
 +--------------------------------------------------------------------+
-| Copyright CiviCRM LLC (c) 2004-2011                                |
+| Copyright CiviCRM LLC (c) 2004-2010                                |
 +--------------------------------------------------------------------+
 | This file is a part of CiviCRM.                                    |
 |                                                                    |
@@ -27,7 +27,7 @@
 /**
  *
  * @package CRM
- * @copyright CiviCRM LLC (c) 2004-2011
+ * @copyright CiviCRM LLC (c) 2004-2010
  * $Id$
  *
  */
@@ -58,7 +58,7 @@ class CRM_Mailing_DAO_Mailing extends CRM_Core_DAO
     static $_links = null;
     /**
      * static instance to hold the values that can
-     * be imported
+     * be imported / apu
      *
      * @var array
      * @static
@@ -66,7 +66,7 @@ class CRM_Mailing_DAO_Mailing extends CRM_Core_DAO
     static $_import = null;
     /**
      * static instance to hold the values that can
-     * be exported
+     * be exported / apu
      *
      * @var array
      * @static
@@ -229,12 +229,6 @@ class CRM_Mailing_DAO_Mailing extends CRM_Core_DAO
      */
     public $scheduled_id;
     /**
-     * Date and time this mailing was scheduled.
-     *
-     * @var datetime
-     */
-    public $scheduled_date;
-    /**
      * Is this mailing archived?
      *
      * @var boolean
@@ -246,12 +240,6 @@ class CRM_Mailing_DAO_Mailing extends CRM_Core_DAO
      * @var enum('User and User Admin Only', 'Public Pages')
      */
     public $visibility;
-    /**
-     * The campaign for which this mailing has been initiated.
-     *
-     * @var int unsigned
-     */
-    // public $campaign_id;
     /**
      * Remove duplicate emails?
      *
@@ -278,7 +266,6 @@ class CRM_Mailing_DAO_Mailing extends CRM_Core_DAO
     {
         if (!(self::$_links)) {
             self::$_links = array(
-                'domain_id' => 'civicrm_domain:id',
                 'header_id' => 'civicrm_mailing_component:id',
                 'footer_id' => 'civicrm_mailing_component:id',
                 'reply_id' => 'civicrm_mailing_component:id',
@@ -287,7 +274,6 @@ class CRM_Mailing_DAO_Mailing extends CRM_Core_DAO
                 'msg_template_id' => 'civicrm_msg_template:id',
                 'created_id' => 'civicrm_contact:id',
                 'scheduled_id' => 'civicrm_contact:id',
-                // 'campaign_id' => 'civicrm_campaign:id',
             );
         }
         return self::$_links;
@@ -310,7 +296,6 @@ class CRM_Mailing_DAO_Mailing extends CRM_Core_DAO
                 'domain_id' => array(
                     'name' => 'domain_id',
                     'type' => CRM_Utils_Type::T_INT,
-                    'FKClassName' => 'CRM_Core_DAO_Domain',
                 ) ,
                 'header_id' => array(
                     'name' => 'header_id',
@@ -435,11 +420,6 @@ class CRM_Mailing_DAO_Mailing extends CRM_Core_DAO
                     'type' => CRM_Utils_Type::T_INT,
                     'FKClassName' => 'CRM_Contact_DAO_Contact',
                 ) ,
-                'scheduled_date' => array(
-                    'name' => 'scheduled_date',
-                    'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
-                    'title' => ts('Mailing Scheduled Date') ,
-                ) ,
                 'is_archived' => array(
                     'name' => 'is_archived',
                     'type' => CRM_Utils_Type::T_BOOLEAN,
@@ -451,13 +431,6 @@ class CRM_Mailing_DAO_Mailing extends CRM_Core_DAO
                     'default' => 'User and User Admin Only',
                     'enumValues' => 'User and User Admin Only,Public Pages',
                 ) ,
-                /*
-                'campaign_id' => array(
-                    'name' => 'campaign_id',
-                    'type' => CRM_Utils_Type::T_INT,
-                    'FKClassName' => 'CRM_Campaign_DAO_Campaign',
-                ),
-                */
                 'dedupe_email' => array(
                     'name' => 'dedupe_email',
                     'type' => CRM_Utils_Type::T_BOOLEAN,
@@ -475,7 +448,8 @@ class CRM_Mailing_DAO_Mailing extends CRM_Core_DAO
      */
     function getTableName()
     {
-        return self::$_tableName;
+        global $dbLocale;
+        return self::$_tableName . $dbLocale;
     }
     /**
      * returns if this table needs to be logged
@@ -497,7 +471,7 @@ class CRM_Mailing_DAO_Mailing extends CRM_Core_DAO
     {
         if (!(self::$_import)) {
             self::$_import = array();
-            $fields = self::fields();
+            $fields = & self::fields();
             foreach($fields as $name => $field) {
                 if (CRM_Utils_Array::value('import', $field)) {
                     if ($prefix) {
@@ -520,7 +494,7 @@ class CRM_Mailing_DAO_Mailing extends CRM_Core_DAO
     {
         if (!(self::$_export)) {
             self::$_export = array();
-            $fields = self::fields();
+            $fields = & self::fields();
             foreach($fields as $name => $field) {
                 if (CRM_Utils_Array::value('export', $field)) {
                     if ($prefix) {
