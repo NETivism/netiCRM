@@ -101,6 +101,24 @@ echo "Extracting table information\n";
 $tables   =& getTables( $dbXML, $database );
 resolveForeignKeys( $tables, $classNames );
 $tables = orderTables( $tables );
+$allDAO = "<?php\n\$dao = array ();";
+$dao = array();
+
+foreach ($tables as $table) {
+  $base  = $table['base']  . $table['objectName'];
+  if (!array_key_exists($table['objectName'],$dao)) {
+    $dao[$table['objectName']] = str_replace( '/', '_', $base );
+    $allDAO  .= "\n\$dao['".$table['objectName']."'] = '". str_replace( '/', '_', $base ) ."';"; 
+  } else {
+    $allDAO .= "\n//NAMESPACE ERROR: ".$table['objectName']. " already used . ". str_replace( '/', '_', $base ) . " ignored.";
+  }
+//
+}
+
+// TODO deal with the BAO's too ?
+# file_put_contents($CoreDAOCodePath . ".listAll.php", $allDAO );
+
+
 
 //echo "\n\n\n\n\n*****************************************************************************\n\n";
 //print_r(array_keys($tables));
@@ -218,9 +236,7 @@ $sample  = $smarty->fetch('civicrm_sample.tpl');
 $sample .= $smarty->fetch('civicrm_acl.tpl');
 file_put_contents($sqlCodePath . 'civicrm_sample.mysql', $sample);
 
-
-// 
-if(0){
+if(1){
   $beautifier = new PHP_Beautifier(); // create a instance
   $beautifier->addFilter('ArrayNested');
   $beautifier->addFilter('Pear'); // add one or more filters

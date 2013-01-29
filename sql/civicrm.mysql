@@ -4189,7 +4189,8 @@ CREATE TABLE civicrm_contribution (
      contribution_status_id int unsigned   DEFAULT 1 ,
      honor_type_id int unsigned    COMMENT 'Implicit FK to civicrm_option_value.',
      address_id int unsigned    COMMENT 'Conditional foreign key to civicrm_address.id. We insert an address record for each contribution when we have associated billing name and address data.',
-     check_number varchar(255)     
+     check_number varchar(255)    ,
+     receipt_id varchar(255)     
 ,
     PRIMARY KEY ( id )
  
@@ -4210,6 +4211,9 @@ CREATE TABLE civicrm_contribution (
   )
   ,     INDEX check_number(
         check_number
+  )
+  ,     INDEX receipt_id(
+        receipt_id
   )
   
 ,      

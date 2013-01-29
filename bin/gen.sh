@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+SCHEMA=schema/Schema.xml
 
 CALLEDPATH=`dirname $0`
 LANGUAGE='zh_TW'
@@ -16,6 +17,6 @@ cp -f $CALLEDPATH/../l10n/$LANGUAGE/civicrm.po $CALLEDPATH/../drupal/translation
 
 if [ -d $CALLEDPATH/../xml ]; then
   cd $CALLEDPATH/../xml
-  php GenCode.php 
+  php GenCode.php $SCHEMA
 fi
 
