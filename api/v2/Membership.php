@@ -1,10 +1,12 @@
 <?php
+// $Id: Membership.php 41417 2012-07-06 14:53:10Z deepak $
+
 
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.3                                                |
+ | CiviCRM version 4.2                                                |
  +--------------------------------------------------------------------+
- | Copyright CiviCRM LLC (c) 2004-2010                                |
+ | Copyright CiviCRM LLC (c) 2004-2012                                |
  +--------------------------------------------------------------------+
  | This file is a part of CiviCRM.                                    |
  |                                                                    |
@@ -32,8 +34,8 @@
  * @package CiviCRM_APIv2
  * @subpackage API_Membership
  *
- * @copyright CiviCRM LLC (c) 2004-2010
- * @version $Id: Membership.php 30533 2010-11-04 13:16:35Z mover $
+ * @copyright CiviCRM LLC (c) 2004-2012
+ * @version $Id: Membership.php 41417 2012-07-06 14:53:10Z deepak $
  *
  */
 
@@ -48,72 +50,80 @@ require_once 'api/v2/MembershipStatus.php';
 
 /**
  * Deletes an existing contact membership
- * 
+ *
  * This API is used for deleting a contact membership
- * 
+ *
  * @param  Int  $membershipID   Id of the contact membership to be deleted
- * 
+ *
  * @return null if successfull, object of CRM_Core_Error otherwise
  * @access public
  */
-function civicrm_membership_delete(&$membershipID)
-{
-    _civicrm_initialize();
-    
-    if (empty($membershipID)) {
-        return civicrm_create_error('Membership ID cannot be empty.');
-    }
-    
-    // membershipID should be numeric
-    if ( ! is_numeric( $membershipID ) ) {
-        return civicrm_create_error( 'Input parameter should be numeric' );
-    }    
-    
-    require_once 'CRM/Member/BAO/Membership.php';
-    CRM_Member_BAO_Membership::deleteRelatedMemberships( $membershipID );
-    
-    $membership = new CRM_Member_BAO_Membership();
-    $result = $membership->deleteMembership($membershipID);
-    
-    return $result ? civicrm_create_success( ) : civicrm_create_error('Error while deleting Membership');
+function civicrm_membership_delete(&$membershipID) {
+  _civicrm_initialize();
+
+  if (empty($membershipID)) {
+    return civicrm_create_error('Membership ID cannot be empty.');
+  }
+
+  // membershipID should be numeric
+  if (!is_numeric($membershipID)) {
+    return civicrm_create_error('Input parameter should be numeric');
+  }
+
+  require_once 'CRM/Member/BAO/Membership.php';
+  CRM_Member_BAO_Membership::deleteRelatedMemberships($membershipID);
+
+  $membership = new CRM_Member_BAO_Membership();
+  $result = $membership->deleteMembership($membershipID);
+
+  return $result ? civicrm_create_success() : civicrm_create_error('Error while deleting Membership');
 }
 
 /**
  *
  * @param <type> $contactID
+ *
  * @return <type>
  * @deprecated compatilibility wrappers
  */
-function civicrm_contact_memberships_get(&$contactID)
-{
-    return civicrm_membership_contact_get($contactID);
+function civicrm_contact_memberships_get(&$contactID) {
+  return civicrm_membership_contact_get($contactID);
 }
 
 /**
  *
  * @param <type> $params
+ *
  * @return <type>
  */
-function civicrm_contact_membership_create(&$params)
-{
-    return civicrm_membership_contact_create($params);
+function civicrm_contact_membership_create(&$params) {
+  return civicrm_membership_contact_create($params);
+}
+
+/**
+ * wrapper function according to new api standards
+ */
+function civicrm_membership_create(&$params) {
+  return civicrm_membership_contact_create($params);
 }
 
 /**
  *
  * @param <type> $params
+ *
  * @return <type>
  */
 function civicrm_membership_types_get(&$params) {
-    return civicrm_membership_type_get($params);
+  return civicrm_membership_type_get($params);
 }
 
 /**
  *
  * @param <type> $params
- * @return <type> 
+ *
+ * @return <type>
  */
 function civicrm_membership_statuses_get(&$params) {
-    return civicrm_membership_status_get($params);
+  return civicrm_membership_status_get($params);
 }
 
