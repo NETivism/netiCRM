@@ -48,6 +48,18 @@ class CRM_Mailing_BAO_Job extends CRM_Mailing_DAO_Job {
     parent::__construct();
   }
 
+  function create ($params){
+    $job = new CRM_Mailing_BAO_Job();
+    $job->mailing_id = $params['mailing_id'];
+    $job->status = $params['status'];
+    $job->scheduled_date = $params['scheduled_date'];
+    $job->is_test = $params['is_test'];
+    $job->save();
+    $mailing = new CRM_Mailing_BAO_Mailing();
+    $eq = $mailing->getRecipients($job->id, $params['mailing_id'], NULL, NULL, true, false);
+    return $job;
+  }
+
   /**
    * Initiate all pending/ready jobs
    *

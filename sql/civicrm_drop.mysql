@@ -69,6 +69,7 @@ DROP TABLE IF EXISTS civicrm_mailing_event_forward;
 DROP TABLE IF EXISTS civicrm_mailing_event_delivered;
 DROP TABLE IF EXISTS civicrm_mailing_event_bounce;
 DROP TABLE IF EXISTS civicrm_mailing_event_queue;
+DROP TABLE IF EXISTS civicrm_mailing_recipients;
 DROP TABLE IF EXISTS civicrm_relationship;
 DROP TABLE IF EXISTS civicrm_group_organization;
 DROP TABLE IF EXISTS civicrm_group_nesting;
