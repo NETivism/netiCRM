@@ -105,9 +105,9 @@ class CRM_Contribute_DAO_ContributionPage extends CRM_Core_DAO
      */
     public $contribution_type_id;
     /**
-     * Payment Processor for this contribution Page
+     * Payment Processors configured for this contribution Page
      *
-     * @var int unsigned
+     * @var string
      */
     public $payment_processor;
     /**
@@ -384,6 +384,9 @@ class CRM_Contribute_DAO_ContributionPage extends CRM_Core_DAO
                 'payment_processor' => array(
                     'name' => 'payment_processor',
                     'type' => CRM_Utils_Type::T_STRING,
+                    'title' => ts('Payment Processor') ,
+                    'maxlength' => 128,
+                    'size' => CRM_Utils_Type::HUGE,
                 ) ,
                 'is_credit_card_only' => array(
                     'name' => 'is_credit_card_only',
