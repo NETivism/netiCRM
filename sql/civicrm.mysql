@@ -94,6 +94,7 @@ DROP TABLE IF EXISTS civicrm_mailing_event_forward;
 DROP TABLE IF EXISTS civicrm_mailing_event_delivered;
 DROP TABLE IF EXISTS civicrm_mailing_event_bounce;
 DROP TABLE IF EXISTS civicrm_mailing_event_queue;
+DROP TABLE IF EXISTS civicrm_mailing_recipients;
 DROP TABLE IF EXISTS civicrm_relationship;
 DROP TABLE IF EXISTS civicrm_group_organization;
 DROP TABLE IF EXISTS civicrm_group_nesting;
@@ -3109,6 +3110,30 @@ CREATE TABLE civicrm_relationship (
      CONSTRAINT FK_civicrm_relationship_contact_id_b FOREIGN KEY (contact_id_b) REFERENCES civicrm_contact(id) ON DELETE CASCADE,      
      CONSTRAINT FK_civicrm_relationship_relationship_type_id FOREIGN KEY (relationship_type_id) REFERENCES civicrm_relationship_type(id) ON DELETE CASCADE,      
      CONSTRAINT FK_civicrm_relationship_case_id FOREIGN KEY (case_id) REFERENCES civicrm_case(id) ON DELETE CASCADE  
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci  ;
+
+-- /*******************************************************
+-- *
+-- * civicrm_mailing_recipients
+-- *
+-- * Stores information about the recipients of a mailing.
+-- *
+-- *******************************************************/
+CREATE TABLE civicrm_mailing_recipients (
+
+
+     id int unsigned NOT NULL AUTO_INCREMENT  ,
+     mailing_id int unsigned NOT NULL   COMMENT 'The ID of the mailing this Job will send.',
+     contact_id int unsigned NOT NULL   COMMENT 'FK to Contact',
+     email_id int unsigned NOT NULL   COMMENT 'FK to Email' 
+,
+    PRIMARY KEY ( id )
+ 
+ 
+,      
+     CONSTRAINT FK_civicrm_mailing_recipients_mailing_id FOREIGN KEY (mailing_id) REFERENCES civicrm_mailing(id) ON DELETE CASCADE,      
+     CONSTRAINT FK_civicrm_mailing_recipients_contact_id FOREIGN KEY (contact_id) REFERENCES civicrm_contact(id) ON DELETE CASCADE,      
+     CONSTRAINT FK_civicrm_mailing_recipients_email_id FOREIGN KEY (email_id) REFERENCES civicrm_email(id) ON DELETE CASCADE  
 )  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci  ;
 
 -- /*******************************************************
