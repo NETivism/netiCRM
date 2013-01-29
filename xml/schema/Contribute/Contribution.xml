@@ -350,4 +350,18 @@
     <fieldName>check_number</fieldName>
     <add>2.2</add>
   </index>
+  <field>        
+    <name>receipt_id</name>     
+    <title>Receipt ID</title>
+    <headerPattern>/receipt(.?number)?/i</headerPattern>
+    <type>varchar</type>     
+    <length>255</length>  
+    <import>true</import>
+    <add>2.2</add>     
+  </field>  
+  <index>
+    <name>receipt_id</name>
+    <fieldName>receipt_id</fieldName>
+    <add>3.3</add>
+  </index>
 </table>
