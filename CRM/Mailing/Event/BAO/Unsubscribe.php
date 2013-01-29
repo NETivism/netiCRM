@@ -197,7 +197,7 @@ class CRM_Mailing_Event_BAO_Unsubscribe extends CRM_Mailing_Event_DAO_Unsubscrib
     require_once 'CRM/Utils/Hook.php';
     $group_ids = array_keys($groups);
     $base_group_ids = array_keys($base_groups);
-    CRM_Utils_Hook::unsubscribeGroups('unsubscribe', $mailing_id, $contact_id, $group_ids, $base_group_ids);
+//    CRM_Utils_Hook::unsubscribeGroups('unsubscribe', $mailing_id, $contact_id, $group_ids, $base_group_ids);
 
     /* Now we have a complete list of recipient groups.  Filter out all
          * those except smart groups, those that the contact belongs to and

@@ -287,7 +287,6 @@ class CRM_Mailing_DAO_Mailing extends CRM_Core_DAO
                 'msg_template_id' => 'civicrm_msg_template:id',
                 'created_id' => 'civicrm_contact:id',
                 'scheduled_id' => 'civicrm_contact:id',
-                'approver_id' => 'civicrm_contact:id',
                 // 'campaign_id' => 'civicrm_campaign:id',
             );
         }
