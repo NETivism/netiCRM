@@ -237,6 +237,11 @@ class CRM_Contribute_DAO_Contribution extends CRM_Core_DAO
      */
     public $check_number;
     /**
+     *
+     * @var string
+     */
+    public $receipt_id;
+    /**
      * class constructor
      *
      * @access public
@@ -533,6 +538,18 @@ class CRM_Contribute_DAO_Contribution extends CRM_Core_DAO
                     'import' => true,
                     'where' => 'civicrm_contribution.check_number',
                     'headerPattern' => '/check(.?number)?/i',
+                    'dataPattern' => '',
+                    'export' => true,
+                ) ,
+                'receipt_id' => array(
+                    'name' => 'receipt_id',
+                    'type' => CRM_Utils_Type::T_STRING,
+                    'title' => ts('Receipt ID') ,
+                    'maxlength' => 255,
+                    'size' => CRM_Utils_Type::HUGE,
+                    'import' => true,
+                    'where' => 'civicrm_contribution.receipt_id',
+                    'headerPattern' => '/receipt(.?number)?/i',
                     'dataPattern' => '',
                     'export' => true,
                 ) ,
