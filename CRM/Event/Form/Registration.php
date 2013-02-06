@@ -358,33 +358,52 @@ class CRM_Event_Form_Registration extends CRM_Core_Form
             //check for variour combination for paylater, payment
             //process with paid event.
             if ( $isMonetary && 
-                 ( ! $isPayLater || CRM_Utils_Array::value( 'payment_processor_id', $this->_values['event'] ) ) ) {
-                $ppID = CRM_Utils_Array::value( 'payment_processor_id',
+                 ( ! $isPayLater || CRM_Utils_Array::value( 'payment_processor', $this->_values['event'] ) ) ) {
+                $ppID = CRM_Utils_Array::value( 'payment_processor',
                                                 $this->_values['event'] );
                 if ( ! $ppID ) {
                     CRM_Core_Error::statusBounce( ts( 'A payment processor must be selected for this event registration page, or the event must be configured to give users the option to pay later (contact the site administrator for assistance).' ), $infoUrl );
                 }
+                $ppIds = explode(CRM_Core_DAO::VALUE_SEPARATOR, $ppID);
+
                 
-                require_once 'CRM/Core/BAO/PaymentProcessor.php';
-                $this->_paymentProcessor =
-                    CRM_Core_BAO_PaymentProcessor::getPayment( $ppID,
-                                                               $this->_mode );
+                $this->_paymentProcessors = CRM_Core_BAO_PaymentProcessor::getPayments($ppIds, $this->_mode);
+                $this->set('paymentProcessors', $this->_paymentProcessors);
+
+                //set default payment processor
+                if (!empty($this->_paymentProcessors) && empty($this->_paymentProcessor)) {
+                  foreach ($this->_paymentProcessors as $ppId => $values) {
+                    if ($values['is_default'] == 1 || (count($this->_paymentProcessors) == 1)) {
+                      $defaultProcessorId = $ppId;
+                      break;
+                    }
+                  }
+                }
+
+                if (isset($defaultProcessorId)) {
+                  $this->_paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($defaultProcessorId, $this->_mode);
+                  $this->assign_by_ref('paymentProcessor', $this->_paymentProcessor);
+                }
                 
                 // make sure we have a valid payment class, else abort
                 if ( $this->_values['event']['is_monetary'] ) {
-                    if ( ! $this->_paymentProcessor ) {
-                        CRM_Core_Error::fatal( ts( 'The site administrator must set a Payment Processor for this event in order to use online registration.' ) );
+                  if (!CRM_Utils_System::isNull($this->_paymentProcessors)) {
+                    foreach ($this->_paymentProcessors as $eachPaymentProcessor) {
+
+                      // check selected payment processor is active
+                      if (!$eachPaymentProcessor) {
+                        CRM_Core_Error::fatal(ts('The site administrator must set a Payment Processor for this event in order to use online registration.'));
+                      }
+
+                      // ensure that processor has a valid config
+                      $payment = CRM_Core_Payment::singleton($this->_mode, $eachPaymentProcessor, $this);
+                      $error = $payment->checkConfig();
+                      if (!empty($error)) {
+                        CRM_Core_Error::fatal($error);
+                      }
                     }
-                    
-                    // ensure that processor has a valid config
-                    $payment =& CRM_Core_Payment::singleton( $this->_mode, $this->_paymentProcessor, $this );
-                    $error = $payment->checkConfig( );
-                    if ( ! empty( $error ) ) {
-                        CRM_Core_Error::fatal( $error );
-                    }
+                  }
                 }
-                $this->_paymentProcessor['processorName'] = $payment->_processorName;
-                $this->set( 'paymentProcessor', $this->_paymentProcessor );
             }
             
             //init event fee.

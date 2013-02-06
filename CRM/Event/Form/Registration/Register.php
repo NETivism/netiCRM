@@ -63,6 +63,8 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration
      */
     protected $_waitlistMsg = null;
     protected $_requireApprovalMsg = null;
+
+    protected $_ppType;
     
     /** 
      * Function to set variables up before form is built 
@@ -73,6 +75,26 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration
     function preProcess( ) 
     {
         parent::preProcess( );
+
+        $this->_ppType = CRM_Utils_Array::value('type', $_GET);
+        $this->assign('ppType', FALSE);
+        if ($this->_ppType) {
+          $this->assign('ppType', TRUE);
+          return CRM_Core_Payment_ProcessorForm::preProcess($this);
+        }
+
+        //get payPal express id and make it available to template
+        $paymentProcessors = $this->get('paymentProcessors');
+        $this->assign('payPalExpressId', 0);
+        if (!empty($paymentProcessors)) {
+          foreach ($paymentProcessors as $ppId => $values) {
+            $payPalExpressId = ($values['payment_processor_type'] == 'PayPal_Express') ? $values['id'] : 0;
+            $this->assign('payPalExpressId', $payPalExpressId);
+            if ($payPalExpressId) {
+              break;
+            }
+          }
+        }
         
         //CRM-4320.
         //here we can't use parent $this->_allowWaitlist as user might
@@ -105,6 +127,15 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration
         
         // Assign pageTitle
     	$this->assign( 'pageTitle', ts( 'Event Registration' ) );
+
+      if (CRM_Utils_Array::value('hidden_processor', $_POST)) {
+        $this->set('type', CRM_Utils_Array::value('payment_processor', $_POST));
+        $this->set('mode', $this->_mode);
+        $this->set('paymentProcessor', $this->_paymentProcessor);
+
+        CRM_Core_Payment_ProcessorForm::preProcess($this);
+        CRM_Core_Payment_ProcessorForm::buildQuickForm($this);
+      }
     }
     
     /**
@@ -116,6 +147,9 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration
      */
     function setDefaultValues( ) 
     {  
+        if ($this->_ppType) {
+          return;
+        }
         $contactID = parent::getContactID( );
         if ( $contactID ) {
             $options = array( );
@@ -274,6 +308,10 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration
 
     public function buildQuickForm( ) 
     {  
+        if ($this->_ppType) {
+          return CRM_Core_Payment_ProcessorForm::buildQuickForm($this);
+        }
+
         $contactID = parent::getContactID( );
         if ( $contactID ) {
             require_once "CRM/Contact/BAO/Contact.php";
@@ -365,6 +403,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration
             }
             
             //lets build only when there is no waiting and no required approval.
+/*
             if ( $this->_allowConfirmation || ( !$this->_requireApproval && !$this->_allowWaitlist ) ) {
                 if ( $this->_values['event']['is_pay_later'] ) {
                     $element = $this->addElement( 'checkbox', 'is_pay_later', 
@@ -386,6 +425,33 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration
                     $buildExpressPayBlock = true; 
                 }
             }
+*/
+
+        }
+        $pps = NULL;
+        $this->_paymentProcessors = $this->get('paymentProcessors');
+        if (!empty($this->_paymentProcessors)) {
+          $pps = $this->_paymentProcessors;
+          foreach ($pps as $key => & $name) {
+            $pps[$key] = $name['name'];
+          }
+        }
+
+        if (CRM_Utils_Array::value('is_pay_later', $this->_values['event']) &&
+          ($this->_allowConfirmation || (!$this->_requireApproval && !$this->_allowWaitlist))
+        ) {
+          $pps[0] = $this->_values['event']['pay_later_text'];
+        }
+
+        if ($this->_values['event']['is_monetary']) {
+          if (count($pps) > 1) {
+            $this->addRadio('payment_processor', ts('Payment Method'), $pps,
+              NULL, "&nbsp;", TRUE
+            );
+          }
+          elseif (!empty($pps)) {
+            $this->addElement('hidden', 'payment_processor', array_pop(array_keys($pps)));
+          }
         }
         
         //lets add some qf element to bypass payment validations, CRM-4320
@@ -421,38 +487,47 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration
                 CRM_Core_BAO_CMSUser::buildForm( $this, $profileID , true );
             }
         }
-        
-        if ( $this->_paymentProcessor['billing_mode'] != CRM_Core_Payment::BILLING_MODE_BUTTON ||
-             CRM_Utils_Array::value( 'is_pay_later', $this->_values['event'] ) ||
-             $bypassPayment ||
-             !$buildExpressPayBlock ) {
-            
-            //freeze button to avoid multiple calls.
-            $js = null;
-           
-            if(!$this->_paymentProcessor && !CRM_Utils_Array::value( 'is_pay_later', $this->_values['event'])){
-              $button_text = ts("Submit");
-              $js = array( 
-                'onclick' => 'var agree=confirm("'.ts('Are you sure you wish to submit this form?').'"); if(agree) return true; else return false;' 
-              );
+        //we have to load confirm contribution button in template
+        //when multiple payment processor as the user
+        //can toggle with payment processor selection
+        $billingModePaymentProcessors = 0;
+        if (!CRM_Utils_System::isNull($this->_paymentProcessors)) {
+          foreach ($this->_paymentProcessors as $key => $values) {
+            if ($values['billing_mode'] == CRM_Core_Payment::BILLING_MODE_BUTTON) {
+              $billingModePaymentProcessors++;
             }
-            else{
-              if ( !CRM_Utils_Array::value('is_monetary', $this->_values['event']) ) {
-                  $js = array( 'onclick' => "return submitOnce(this,'" . $this->_name . "','" . ts('Processing') ."');" );
-              }
-              $button_text = ts('Continue >>');
-            }
-            $this->addButtons(array( 
-                                    array ( 'type'      => 'upload', 
-                                            'name'      => $button_text, 
-                                            'spacing'   => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;', 
-                                            'isDefault' => true,
-                                            'js'        => $js ), 
-                                    ) 
-                              );
+          }
         }
-        $this->addFormRule( array( 'CRM_Event_Form_Registration_Register', 'formRule' ),
-                            $this );
+
+        if ($billingModePaymentProcessors && count($this->_paymentProcessors) == $billingModePaymentProcessors) {
+          $allAreBillingModeProcessors = TRUE;
+        } else {
+          $allAreBillingModeProcessors = FALSE;
+        }
+
+        if (!$allAreBillingModeProcessors ||
+          CRM_Utils_Array::value('is_pay_later', $this->_values['event']) || $bypassPayment
+        ) {
+
+          //freeze button to avoid multiple calls.
+          $js = NULL;
+
+          if (!CRM_Utils_Array::value('is_monetary', $this->_values['event'])) {
+            $js = array('onclick' => "return submitOnce(this,'" . $this->_name . "','" . ts('Processing') . "');");
+          }
+          $this->addButtons(array(
+              array(
+                'type' => 'upload',
+                'name' => ts('Continue >>'),
+                'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
+                'isDefault' => TRUE,
+                'js' => $js,
+              ),
+            )
+          );
+        }
+        
+        $this->addFormRule( array( 'CRM_Event_Form_Registration_Register', 'formRule' ), $this );
         
     }
     
@@ -827,8 +902,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration
         if ( CRM_Utils_Array::value( 'additional_participants', $params ) ) {
             $totalParticipants += $params['additional_participants'];
         }
-        if ( !$this->_allowConfirmation && 
-             CRM_Utils_Array::value( 'bypass_payment', $params ) &&
+        if ( !$this->_allowConfirmation && CRM_Utils_Array::value( 'bypass_payment', $params ) &&
              is_numeric( $this->_availableRegistrations ) &&
              $totalParticipants > $this->_availableRegistrations ) {
             $this->_allowWaitlist = true;

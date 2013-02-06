@@ -73,6 +73,10 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration
         $this->_lineItem = $this->get( 'lineItem' );
         $this->_params = $this->get( 'params' );
 
+        if(! ($this->_paymentProcessor = $this->get('paymentProcessor')) && !empty($this->_params[0]['payment_processor'])){
+          $this->_paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($this->_params[0]['payment_processor'], $this->_mode);
+        }
+
         require_once 'CRM/Utils/Hook.php';
         CRM_Utils_Hook::eventDiscount( $this, $this->_params );
 
@@ -813,6 +817,11 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration
                                'source'                => $params['description'],
                                'is_pay_later'          => CRM_Utils_Array::value( 'is_pay_later', $params, 0 ),
                                );
+        if($params['payment_processor']){
+            $contribParams += array(
+              'payment_processor_id' => $params['payment_processor'],
+            );
+        }
         
         if ( ! CRM_Utils_Array::value( 'is_pay_later', $params ) ) {
             $contribParams['payment_instrument_id'] = 1;
