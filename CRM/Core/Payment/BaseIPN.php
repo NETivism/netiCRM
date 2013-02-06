@@ -115,7 +115,7 @@ class CRM_Core_Payment_BaseIPN {
             return false;
         }
         $objects['contributionType'] = $contributionType;
-        $paymentProcessorID          = null;
+        $paymentProcessorID = $contribution->payment_processor_id;
         if ( $input['component'] == 'contribute' ) {
 
             // retrieve the other optional objects first so
@@ -181,13 +181,6 @@ class CRM_Core_Payment_BaseIPN {
                 }
             }
 
-            //for offline pledge we dont have contribution page.
-            if ( !CRM_Utils_Array::value( 'pledge_payment', $ids ) ) {
-                // get the payment processor id from contribution page
-                $paymentProcessorID = CRM_Core_DAO::getFieldValue( 'CRM_Contribute_DAO_ContributionPage',
-                                                                   $contribution->contribution_page_id,
-                                                                   'payment_processor_id' );
-            }
         } else {
             // we are in event mode
             // make sure event exists and is valid
@@ -215,8 +208,6 @@ class CRM_Core_Payment_BaseIPN {
             $participant->register_date = CRM_Utils_Date::isoToMysql( $participant->register_date );
 
             $objects['participant'] =& $participant;
-
-            $paymentProcessorID = $objects['event']->payment_processor_id;
         }
 
         if ( ! $paymentProcessorID ) {
@@ -227,8 +218,7 @@ class CRM_Core_Payment_BaseIPN {
             }
         } else {
             require_once 'CRM/Core/BAO/PaymentProcessor.php';
-            $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment( $paymentProcessorID,
-                                                                           $contribution->is_test ? 'test' : 'live' );
+            $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment( $paymentProcessorID, $contribution->is_test ? 'test' : 'live' );
             
             $ids['paymentProcessor']       =  $paymentProcessorID;
             $objects['paymentProcessor']   =& $paymentProcessor;
