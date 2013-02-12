@@ -395,13 +395,12 @@ class CRM_Member_Form_Search extends CRM_Core_Form
             return;
         }
 
-        $status = CRM_Utils_Request::retrieve( 'status', 'String',
-                                               CRM_Core_DAO::$_nullObject );
+        $status = CRM_Utils_Request::retrieve( 'status', 'String', CRM_Core_DAO::$_nullObject );
         if ( $status ) {
             $status = explode(',' , $status  );
             $tempStatus = array();
             foreach( $status as $value ) {
-                $tempStatus[$value] = 1;
+                $tempStatus[$value] = $value;
             }
             $this->_formValues['member_status_id'] = $tempStatus;
             $this->_defaults  ['member_status_id'] = $tempStatus;
