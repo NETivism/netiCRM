@@ -701,9 +701,7 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
      * @return void
      * @access public
      */
-    static function processContribution( &$form, $params, $result, $contactID, $contributionType,
-                                         $deductibleMode = true, $pending = false,
-                                         $online = true ) 
+    static function processContribution( &$form, $params, $result, $contactID, $contributionType, $deductibleMode = true, $pending = false, $online = true ) 
     {
         require_once 'CRM/Core/Transaction.php';
         $transaction = new CRM_Core_Transaction( );
@@ -763,7 +761,8 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
                                'contact_id'            => $contactID,
                                'contribution_type_id'  => $contributionType->id,
                                'contribution_page_id'  => $contributionPageId,
-                               'receive_date'          => $now,
+                               'created_date'          => $now,
+                               'receive_date'          => CRM_Utils_Array::value( 'receive_date',  $params ) ? CRM_Utils_Date::processDate( $params['receive_date'] ) : '',
                                'non_deductible_amount' => $nonDeductibleAmount,
                                'total_amount'          => $params['amount'],
                                'amount_level'          => CRM_Utils_Array::value( 'amount_level', $params ),
@@ -788,6 +787,11 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
             }
         }
         
+        if($params['payment_processor']){
+            $contribParams += array(
+              'payment_processor_id' => $params['payment_processor'],
+            );
+        }
         if ( ! $pending && $result ) {
             $contribParams += array(
                                     'fee_amount'   => CRM_Utils_Array::value( 'fee_amount', $result ),

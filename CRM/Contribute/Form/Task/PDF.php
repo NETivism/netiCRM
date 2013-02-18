@@ -49,6 +49,8 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
      */
     public $_single = false;
 
+    protected $_tmpreceipt;
+
     protected $_rows;
 
     /**
@@ -59,29 +61,22 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
      */
     
     function preProcess( ) {
-        $id = CRM_Utils_Request::retrieve( 'id', 'Positive',
-                                           $this, false );
+        $id = CRM_Utils_Request::retrieve( 'id', 'Positive', $this, false );
 
         if ( $id ) {
             $this->_contributionIds    = array( $id );
-            $this->_componentClause =
-                " civicrm_contribution.id IN ( $id ) ";
-            $this->_single             = true;
+            $this->_componentClause = " civicrm_contribution.id IN ( $id ) ";
+            $this->_single = true;
             $this->assign( 'totalSelectedContributions', 1 );
         } else {
             parent::preProcess( );
         }
 
         // check that all the contribution ids have pending status
-        $query = "
-SELECT count(*)
-FROM   civicrm_contribution
-WHERE  contribution_status_id != 1
-AND    {$this->_componentClause}";
-        $count = CRM_Core_DAO::singleValueQuery( $query,
-                                                 CRM_Core_DAO::$_nullArray );
+        $query = " SELECT count(*) FROM civicrm_contribution WHERE  contribution_status_id != 1 AND {$this->_componentClause}";
+        $count = CRM_Core_DAO::singleValueQuery( $query, CRM_Core_DAO::$_nullArray );
         if ( $count != 0 ) {
-            CRM_Core_Error::statusBounce( "Please select only online contributions with Completed status." ); 
+          CRM_Core_Error::statusBounce( ts("Please select only contributions with Completed status.") ); 
         }
 
         // we have all the contribution ids, so now we get the contact ids
@@ -91,11 +86,12 @@ AND    {$this->_componentClause}";
         $qfKey = CRM_Utils_Request::retrieve( 'qfKey', 'String', $this );
         require_once 'CRM/Utils/Rule.php';
         $urlParams = 'force=1';
-        if ( CRM_Utils_Rule::qfKey( $qfKey ) ) $urlParams .= "&qfKey=$qfKey";
+        if ( CRM_Utils_Rule::qfKey( $qfKey ) ) {
+          $urlParams .= "&qfKey=$qfKey";
+        }
         
         $url = CRM_Utils_System::url( 'civicrm/contribute/search', $urlParams );
-        $breadCrumb = array ( array( 'url'   => $url,
-                                     'title' => ts('Search Results') ) );
+        $breadCrumb = array ( array( 'url'   => $url, 'title' => ts('Search Results') ) );
         
         CRM_Utils_System::appendBreadCrumb( $breadCrumb );
         CRM_Utils_System::setTitle( ts('Print Contribution Receipts') );
@@ -110,11 +106,14 @@ AND    {$this->_componentClause}";
     public function buildQuickForm()
     {
         
-        $this->addElement( 'radio', 'output', null, ts('PDF Receipts'), 'pdf_receipt' );
-        $this->addElement( 'radio', 'output', null, ts('Email Receipts'), 'email_receipt' ); 
+        $this->addElement( 'checkbox', 'single_page_letter', ts('Single page with address letter') );
+        $this->addElement( 'radio', 'output', null, ts('Copy Receipts'), 'copy_receipt' ); 
+        $this->addElement( 'radio', 'output', null, ts('Accounting Receipts'), 'accounting_receipt' ); 
+        $this->addElement( 'radio', 'output', null, ts('Original Receipts'), 'original_receipt' );
+        $this->addRule( 'output', ts('%1 is a required field.', array(1 => ts('Receipt Type'))), 'required' );
         $this->addButtons( array(
                                  array ( 'type'      => 'next',
-                                         'name'      => ts('Process Receipt(s)'),
+                                         'name'      => ts('Download Receipt(s)'),
                                          'isDefault' => true   ),
                                  array ( 'type'      => 'back',
                                          'name'      => ts('Cancel') ),
@@ -132,52 +131,25 @@ AND    {$this->_componentClause}";
         // get all the details needed to generate a receipt
         $contribIDs = implode( ',', $this->_contributionIds );
 
-        require_once 'CRM/Contribute/Form/Task/Status.php';
+        // TODO: using batch api to procceed this.
         $details =& CRM_Contribute_Form_Task_Status::getDetails( $contribIDs );
 
-        require_once 'CRM/Core/Payment/BaseIPN.php';
-        $baseIPN = new CRM_Core_Payment_BaseIPN( );
-
         $message  =  array( );
-        $template = CRM_Core_Smarty::singleton( );
+        $template =& CRM_Core_Smarty::singleton( );
+        $baseIPN = new CRM_Core_Payment_BaseIPN();
 
         $params = $this->controller->exportValues( $this->_name );
         
         $createPdf = false;
-        if ( $params['output'] == "pdf_receipt" ) {
-            $createPdf = true;
-        }
+        $pdf_type = $params['output'];
         
-        $excludeContactIds = array( );
-        if ( !$createPdf ) {
-            $returnProperties = array( 'email'        => 1,
-                                       'do_not_email' => 1,
-                                       'is_deceased'  => 1,
-                                       'on_hold'      => 1
-                                       );
-            
-            require_once 'CRM/Mailing/BAO/Mailing.php';
-            list( $contactDetails ) = 
-                CRM_Mailing_BAO_Mailing::getDetails( $this->_contactIds, $returnProperties, false, false );
-            
-            foreach ( $contactDetails as $id => $values ) {
-                if ( empty( $values['email'] ) ||
-                     CRM_Utils_Array::value( 'do_not_email', $values ) || 
-                     CRM_Utils_Array::value( 'is_deceased', $values ) ||
-                     CRM_Utils_Array::value( 'on_hold', $values ) ) {
-                    $suppressedEmails++;
-                    $excludeContactIds[] = $values['contact_id'];
-                }
-            }
-        }
-                
+        $this->_tmpreceipt = tempnam('/tmp', 'receipt');
+        $config =& CRM_Core_Config::singleton( );
         foreach ( $details as $contribID => $detail ) {
             $input = $ids = $objects = array( );
+            $template->assign('receiptOrgInfo', htmlspecialchars_decode($config->receiptOrgInfo));
+            $template->assign('receiptDescription', htmlspecialchars_decode($config->receiptDescription));
             
-            if ( in_array( $detail['contact'], $excludeContactIds ) ) {
-                continue;
-            }
-
             $input['component'] = $detail['component'];
 
             $ids['contact'     ]      = $detail['contact'];
@@ -191,10 +163,7 @@ AND    {$this->_componentClause}";
             if ( ! $baseIPN->validateData( $input, $ids, $objects, false ) ) {
                 CRM_Core_Error::fatal( );
             }
-
             $contribution =& $objects['contribution'];
-            // CRM_Core_Error::debug('o',$objects);
-
 
             // set some fake input values so we can reuse IPN code
             $input['amount']     = $contribution->total_amount;
@@ -207,37 +176,44 @@ AND    {$this->_componentClause}";
             // CRM_Core_Error::debug('input',$input);
             
             $values = array( );
-            $mail = $baseIPN->sendMail( $input, $ids, $objects, $values, false, $createPdf );
+            $html = CRM_Contribute_BAO_Contribution::getReceipt( $input, $ids, $objects, $values);
+            $html .= '<div style="page-break-after: always;"></div>';
             
-            if ( !$mail['html'] ) {
-                $mail = str_replace( "\n\n", "<p>", $mail );
-                $mail = str_replace( "\n", "<br/>", $mail );
-            }
-
-            $message[] = $mail;
+            // do not use array to prevent memory exhusting
+            self::pushFile($html);
+            // dump to file then retrive lately
 
             // reset template values before processing next transactions
             $template->clearTemplateVars( );
         }
-        if ( $createPdf ) {
-            require_once 'CRM/Utils/PDF/Utils.php';
-            CRM_Utils_PDF_Utils::domlib( $message,
-                                         'civicrmContributionReceipt.pdf',
-                                         false,
-                                         'portrait',
-                                         'letter' );
-            CRM_Utils_System::civiExit( );
-        } else {
-            if ( $suppressedEmails ) {
-                $status = array( '', ts( 'Email was NOT sent to %1 contacts (no email address on file, or communication preferences specify DO NOT EMAIL, or contact is deceased).', array( 1 => $suppressedEmails ) ) );
-            } else {
-                $status = array( '', ts( 'Your mail has been sent.' ) );
-            }
-            CRM_Core_Session::setStatus( $status );
-        }
 
+        self::makePDF();
+        CRM_Utils_System::civiExit( );
     }
 
+    public function pushFile($html) {
+      // tmp directory
+      file_put_contents($this->_tmpreceipt, $html, FILE_APPEND);
+    }
+    public function popFile() {
+      $return = file_get_contents($this->_tmpreceipt);
+      unlink($this->_tmpreceipt);
+      return $return;
+    }
+    
+    public function makePDF(){
+      $pages = self::popFile();
+      $pages = '<!DOCTYPE html>
+      <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+      <head>
+      <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+      </head>
+      <body>
+      '.$pages.'
+      </body>
+      </html>
+      ';
+
+      CRM_Utils_PDF_Utils::domlib( $pages, 'Receipt.pdf', false, 'portrait', 'a4' );
+    }
 }
-
-

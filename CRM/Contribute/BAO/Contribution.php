@@ -134,6 +134,11 @@ class CRM_Contribute_BAO_Contribution extends CRM_Contribute_DAO_Contribution
         
         $contribution->id        = CRM_Utils_Array::value( 'contribution', $ids );
 
+        // make sure we always have created date when adding new record
+        if(!$contribution->id && !$params['created_date']){
+          $contribution->created_date = date('YmdHis');
+        }
+
         // also add financial_trxn details as part of fix for CRM-4724
         $contribution->trxn_result_code  = CRM_Utils_Array::value('trxn_result_code',  $params );
         $contribution->payment_processor = CRM_Utils_Array::value('payment_processor', $params );
@@ -1699,6 +1704,182 @@ SELECT source_contact_id
         return array( 'now'       => $now,
                       'yearDate'  => $yearDate,
                       'monthDate' => $monthDate );
+    }
+
+    function getReceipt( &$input, &$ids, &$objects, &$values) {
+        $contribution =& $objects['contribution'];
+        $membership   =& $objects['membership']  ;
+        $participant  =& $objects['participant'] ;
+        $event        =& $objects['event']       ;
+        $contact      =& $objects['contact'];
+        $instruments = CRM_Contribute_PseudoConstant::paymentInstrument();
+
+        $contribID = $ids['contribution'];
+        $contactID = $ids['contact'];
+        
+        // set display address of contributor
+        if ( $contribution->address_id ) {
+          require_once 'CRM/Core/BAO/Address.php';
+          $addressParams     = array( 'id' => $contribution->address_id );	
+          $addressDetails    = CRM_Core_BAO_Address::getValues( $addressParams, false, 'id' );
+          $addressDetails    = array_values( $addressDetails );
+          $values['address'] = $addressDetails[0]['display'];                
+        }
+
+        $template =& CRM_Core_Smarty::singleton( );
+
+        // add the new contribution values
+        $template->assign( 'amount' , $input['amount'] );
+
+        if ( $contribution->contribution_type_id ) {
+          $values['contribution_type_id'] = $contribution->contribution_type_id;
+        }
+
+        if($contact->contact_type == 'Individual'){
+          $template->assign( 'serial_id', $contact->legal_identifier );
+        }
+        elseif($contact->contact_type == 'Organization'){
+          $template->assign( 'serial_id', $contact->sic_code );
+        }
+        $template->assign( 'sort_name', $contact->sort_name );
+
+        $template->assign( 'trxn_id', $contribution->trxn_id );
+        $template->assign( 'receive_date', CRM_Utils_Date::customFormat( $contribution->receive_date, '%Y/%m/%d' ) );
+        $template->assign( 'action', $contribution->is_test ? 1024 : 1 );
+        $template->assign( 'receipt_text', CRM_Utils_Array::value( 'receipt_text', $values ) );
+        $template->assign( 'is_monetary', 1 );
+        $template->assign( 'currency', $contribution->currency );
+        $template->assign( 'instrument', $instruments[$contribution->payment_instrument_id] );
+        
+        $template->assign( 'address', CRM_Utils_Address::format( $input ) );
+        if ( $membership ) {
+          $values['membership_id'] = $membership->id;
+
+          // need to set the membership values here
+          $template->assign( 'membership_assign', 1 );
+          $template->assign( 'membership_name', CRM_Member_PseudoConstant::membershipType( $membership->membership_type_id ));
+          $template->assign( 'mem_start_date', $membership->start_date );
+          $template->assign( 'mem_end_date'  , $membership->end_date );
+
+          // if separate payment there are two contributions recorded and the 
+          // admin will need to send a receipt for each of them separately.
+          // we dont link the two in the db (but can potentially infer it if needed)
+          $template->assign( 'is_separate_payment', 0);
+        }
+        $values['contribution_id']     = $contribution->id;
+        $isTest = false;
+        if ( $contribution->is_test ) {
+          $isTest = true;
+        }
+
+        // start ContributionPage::sendMail code clone
+        /*
+        $gIds = array( );
+        $params = array( );
+        if ( isset( $values['custom_pre_id'] ) ) {
+            $preProfileType = CRM_Core_BAO_UFField::getProfileType( $values['custom_pre_id'] );
+            if ( $preProfileType == 'Membership' && CRM_Utils_Array::value( 'membership_id', $values )  ) {
+                $params['custom_pre_id'] = array( array( 'membership_id', '=', $values['membership_id'], 0, 0 ) );
+            }
+            elseif ( $preProfileType == 'Contribution' && CRM_Utils_Array::value( 'contribution_id', $values ) ) {
+                $params['custom_pre_id'] = array( array( 'contribution_id', '=', $values['contribution_id'], 0, 0 ) );
+            }
+            
+            $gIds['custom_pre_id'] = $values['custom_pre_id'];
+        }
+
+        if ( isset( $values['custom_post_id'] ) ) {
+            $postProfileType = CRM_Core_BAO_UFField::getProfileType( $values['custom_post_id'] );
+            if ( $postProfileType == 'Membership' && CRM_Utils_Array::value( 'membership_id', $values ) ) {
+                $params['custom_post_id'] = array( array( 'membership_id', '=', $values['membership_id'], 0, 0 ) );
+            }
+            else if ( $postProfileType == 'Contribution' && CRM_Utils_Array::value( 'contribution_id', $values ) ) {
+                $params['custom_post_id'] = array( array( 'contribution_id', '=', $values['contribution_id'], 0, 0 ) );
+            }
+            
+            $gIds['custom_post_id'] = $values['custom_post_id'];
+        }
+        
+        //check whether it is a test drive
+        if ( $isTest && !empty( $params['custom_pre_id'] ) ) {
+            $params['custom_pre_id'][] = array( 'contribution_test', '=', 1, 0, 0 );
+        }
+        
+        if ( $isTest && !empty( $params['custom_post_id'] ) ) {
+            $params['custom_post_id'][] = array( 'contribution_test', '=', 1, 0, 0 );
+        }
+        */
+
+        // get the billing location type
+        if ( !array_key_exists('related_contact', $values) ) {
+            $locationTypes =& CRM_Core_PseudoConstant::locationType( );
+            $billingLocationTypeId = array_search( 'Billing',  $locationTypes );
+        }
+        else {
+            // presence of related contact implies onbehalf of org case, 
+            // where location type is set to default. 
+            $locType = CRM_Core_BAO_LocationType::getDefault();
+            $billingLocationTypeId = $locType->id;
+        }
+
+        // get primary location email if no email exist( for billing location).
+        if ( !$email ) {
+            list( $displayName, $email ) = CRM_Contact_BAO_Contact_Location::getEmailDetails( $contactID );
+        }
+        
+        //for display profile need to get individual contact id,  
+        //hence get it from related_contact if on behalf of org true CRM-3767.
+                   
+        //CRM-5001 Contribution/Membership:: On Behalf of Organization,
+        //If profile GROUP contain the Individual type then consider the
+        //profile is of Individual ( including the custom data of membership/contribution )
+        //IF Individual type not present in profile then it is consider as Organization data.
+        /*
+        require_once 'CRM/Core/BAO/UFGroup.php';
+        $userID = $contactID;
+        if ( $preID = CRM_Utils_Array::value( 'custom_pre_id', $values ) ) {
+            self::buildCustomDisplay( $preID, 'customPre', $userID, $template, $params['custom_pre_id'] );
+        }
+        $userID = $contactID;    
+        if ( $postID = CRM_Utils_Array::value( 'custom_post_id', $values ) ) {
+            self::buildCustomDisplay( $postID, 'customPost', $userID, $template, $params['custom_post_id'] );
+        }
+        */
+        
+        // set email in the template here
+        $tplParams = array(
+          'email'            => $email,
+          'receiptFromEmail' => $values['receipt_from_email'],
+          'contactID'        => $contactID,
+          'contributionID'   => $values['contribution_id'],
+          'membershipID'     => CRM_Utils_Array::value('membership_id', $values),
+          'lineItem'         => CRM_Utils_Array::value('lineItem',      $values), // CRM-5095
+          'priceSetID'       => CRM_Utils_Array::value('priceSetID',    $values), // CRM-5095
+        );
+
+        if ( $contributionTypeId = CRM_Utils_Array::value('contribution_type_id', $values ) ) {
+          $tplParams['contributionTypeId']   = $contributionTypeId;
+          $tplParams['contributionTypeName'] = CRM_Core_DAO::getFieldValue( 'CRM_Contribute_DAO_ContributionType', $contributionTypeId );
+        }
+                    
+        // address required during receipt processing (pdf and email receipt)
+        if ( $displayAddress = CRM_Utils_Array::value('address', $values) ) {
+          $tplParams['address'] = $displayAddress;
+          $tplParams['contributeMode']= null;
+        }
+        
+        // use either the contribution or membership receipt, based on whether it’s a membership-related contrib or not
+        $sendTemplateParams = array(
+          'groupName' => 'msg_tpl_workflow_receipt',
+          'valueName' => 'receipt_letter',
+          'contactId' => $contactID,
+          'tplParams' => $tplParams,
+          'isTest'    => $isTest,
+        );
+
+        list ($sent, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate($sendTemplateParams);
+        $all_tpl_vars = $template->get_template_vars();
+        return $html;
     }
 
 }

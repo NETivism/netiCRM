@@ -45,6 +45,16 @@
      <weight>360</weight>
   </item>
   <item>
+     <path>civicrm/admin/receipt</path>
+     <title>Receipt Settings</title>
+     <page_callback>CRM_Admin_Form_Setting_Receipt</page_callback>
+     <desc>Configure receipt number and format.</desc>
+     <access_arguments>administer CiviCRM</access_arguments>
+     <adminGroup>CiviContribute</adminGroup>
+     <icon>admin/small/accepted_creditcards.png</icon>
+     <weight>400</weight>
+  </item>
+  <item>
      <path>civicrm/admin/contribute/settings</path>
      <title>Title and Settings</title>
      <page_callback>CRM_Contribute_Form_ContributionPage_Settings</page_callback>

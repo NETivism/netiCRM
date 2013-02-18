@@ -787,8 +787,7 @@ WHERE  contribution_id = {$this->_id}
             }
         }
         
-        $element = $this->add( 'text', 'trxn_id', ts('Transaction ID'), 
-                                $attributes['trxn_id'] );
+        $element = $this->add( 'text', 'trxn_id', ts('Transaction ID'), $attributes['trxn_id'] );
         if ( $this->_online ) {
             $element->freeze( );
         } else {
@@ -797,8 +796,16 @@ WHERE  contribution_id = {$this->_id}
                             'objectExists', 
                             array( 'CRM_Contribute_DAO_Contribution', $this->_id, 'trxn_id' ) );
         }
+
+
         //add receipt for offline contribution
         $this->addElement('checkbox','is_email_receipt', ts('Send Receipt?'),null, array('onclick' =>"return showHideByValue('is_email_receipt','','receiptDate','table-row','radio',true);") );
+
+        // add receipt id text area
+        $receipt_attr = array_merge($attributes['receipt_id'], array('disabled' => 'disabled'));
+        $this->add('text', 'receipt_id', ts('Receipt ID'), $receipt_attr);
+        $this->addRule( 'receipt_id', ts( 'This Receipt ID already exists in the database.' ), 'objectExists', array( 'CRM_Contribute_DAO_Contribution', $this->_id, 'receipt_id' ) );
+        $this->assign( 'receipt_id_setting', url("civicrm/admin/options/receipt_id_setting", array('query' => 'group=receipt_id_setting&reset=1')) );
 
         $status = CRM_Contribute_PseudoConstant::contributionStatus(  );
         // supressing contribution statuses that are NOT relevant to pledges (CRM-5169)
@@ -818,6 +825,10 @@ WHERE  contribution_id = {$this->_id}
 
         // add various dates
         $this->addDateTime( 'receive_date', ts('Received'), false, array( 'formatType' => 'activityDateTime') );
+        if($this->_values['receipt_id']){
+          $this->getElement('receive_date')->freeze();
+          $this->getElement('receive_date_time')->freeze();
+        }
                 
         if ( $this->_online ) {
             $this->assign( 'hideCalender', true );

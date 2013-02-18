@@ -503,22 +503,22 @@ WHERE entity_table = 'civicrm_contribution_page'
      * @access public
      * @static
      */
-    static function checkRecurPaymentProcessor( $contributionPageId ) 
-    {
-        $sql = "
-  SELECT pp.is_recur
-  FROM   civicrm_contribution_page  cp,
-         civicrm_payment_processor  pp
-  WHERE  cp.payment_processor_id = pp.id
-    AND  cp.id = {$contributionPageId}
-";
-        
-        if ( $recurring =& CRM_Core_DAO::singleValueQuery( $sql, CRM_Core_DAO::$_nullArray ) ) {
-            return true;
-        }
-        return false;
+    static function checkRecurPaymentProcessor($contributionPageId) {
+      //FIXME
+      $sql = "
+    SELECT pp.is_recur
+    FROM   civicrm_contribution_page  cp,
+           civicrm_payment_processor  pp
+    WHERE  cp.payment_processor = pp.id
+      AND  cp.id = {$contributionPageId}
+  ";
+
+      if ($recurring = &CRM_Core_DAO::singleValueQuery($sql, CRM_Core_DAO::$_nullArray)) {
+        return TRUE;
+      }
+      return FALSE;
     }
-    
+
     
     /**                                                           
      * Function to get info for all sections enable/disable.
