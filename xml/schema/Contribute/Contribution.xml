@@ -87,6 +87,23 @@
        <onDelete>SET NULL</onDelete>
   </foreignKey>
   <field>   
+      <name>payment_processor_id</name>
+      <type>int unsigned</type>
+      <comment>FK to Payment Processor</comment>   
+      <add>3.3</add>   
+  </field>  
+  <foreignKey> 
+       <name>payment_processor_id</name> 
+       <table>civicrm_payment_processor</table> 
+       <key>id</key> 
+       <onDelete>SET NULL</onDelete>
+  </foreignKey>
+  <index>
+      <name>UI_contrib_payment_processor_id</name>
+      <fieldName>payment_processor_id</fieldName>      
+      <add>3.3</add>
+  </index>   
+  <field>   
       <name>payment_instrument_id</name>
       <type>int unsigned</type>
       <comment>FK to Payment Instrument</comment>   
@@ -96,6 +113,20 @@
       <name>UI_contrib_payment_instrument_id</name>
       <fieldName>payment_instrument_id</fieldName>      
       <add>1.6</add>
+  </index>   
+  <field> 
+      <name>created_date</name> 
+      <type>datetime</type> 
+      <import>true</import>
+      <headerPattern>/created(.?date)?/i</headerPattern>
+      <dataPattern>/^\d{4}-?\d{2}-?\d{2} ?(\d{2}:?\d{2}:?(\d{2})?)?$/</dataPattern>
+      <comment>when was contribution submitted</comment> 
+      <add>3.3</add> 
+  </field> 
+  <index>
+      <name>created_date</name>
+      <fieldName>created_date</fieldName>      
+      <add>3.3</add>
   </index>   
   <field> 
       <name>receive_date</name> 
