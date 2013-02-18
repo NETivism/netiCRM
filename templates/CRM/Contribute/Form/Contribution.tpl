@@ -120,6 +120,10 @@
                 <td class="label">{$form.receipt_date.label}</td>
                 <td>{include file="CRM/common/jcalendar.tpl" elementName=receipt_date}<br />
                 <span class="description">{ts}Date that a receipt was sent to the contributor.{/ts}</span></td></tr>
+            <tr id="receiptId" class="crm-contribution-form-block-receipt_id">
+                <td class="label">{$form.receipt_id.label}</td>
+                <td>{$form.receipt_id.html}<br />
+                <span class="description">{ts 1=$receipt_id_setting}Receipt Id will generate automatically based on <a href="%1" target="_blank">settings</a>.{/ts}</span></td></tr>
         {/if}
         {if !$contributionMode}
             <tr class="crm-contribution-form-block-receive_date">
@@ -127,6 +131,11 @@
                 <td{$valueStyle}>{if $hideCalender neq true}{include file="CRM/common/jcalendar.tpl" elementName=receive_date}{else}{$receive_date|crmDate}{/if}<br />
                     <span class="description">{ts}The date this contribution was received.{/ts}</span>
                 </td>
+            </tr>
+            <tr id="receiptId" class="crm-contribution-form-block-receipt_id">
+                <td class="label">{$form.receipt_id.label}</td>
+                <td>{$form.receipt_id.html}<br />
+                <span class="description">{ts 1=$receipt_id_setting}Receipt ID will generate automatically based on receive date and <a href="%1" target="_blank">prefix settings</a>.{/ts}</span></td>
             </tr>
             <tr class="crm-contribution-form-block-payment_instrument_id">
                 <td class="label">{$form.payment_instrument_id.label}</td><td{$valueStyle}>{$form.payment_instrument_id.html}<br />
