@@ -105,11 +105,23 @@ class CRM_Contribute_DAO_Contribution extends CRM_Core_DAO
      */
     public $contribution_page_id;
     /**
+     * FK to Payment Processor
+     *
+     * @var int unsigned
+     */
+    public $payment_processor_id;
+    /**
      * FK to Payment Instrument
      *
      * @var int unsigned
      */
     public $payment_instrument_id;
+    /**
+     * when was contribution submitted
+     *
+     * @var datetime
+     */
+    public $created_date;
     /**
      * when was gift received
      *
@@ -264,6 +276,7 @@ class CRM_Contribute_DAO_Contribution extends CRM_Core_DAO
                 'contact_id' => 'civicrm_contact:id',
                 'contribution_type_id' => 'civicrm_contribution_type:id',
                 'contribution_page_id' => 'civicrm_contribution_page:id',
+                'payment_processor_id' => 'civicrm_payment_processor:id',
                 'contribution_recur_id' => 'civicrm_contribution_recur:id',
                 'honor_contact_id' => 'civicrm_contact:id',
                 'address_id' => 'civicrm_address:id',
@@ -324,9 +337,24 @@ class CRM_Contribute_DAO_Contribution extends CRM_Core_DAO
                     'export' => true,
                     'FKClassName' => 'CRM_Contribute_DAO_ContributionPage',
                 ) ,
+                'payment_processor_id' => array(
+                    'name' => 'payment_processor_id',
+                    'type' => CRM_Utils_Type::T_INT,
+                    'FKClassName' => 'CRM_Core_DAO_PaymentProcessor',
+                ) ,
                 'payment_instrument_id' => array(
                     'name' => 'payment_instrument_id',
                     'type' => CRM_Utils_Type::T_INT,
+                ) ,
+                'created_date' => array(
+                    'name' => 'created_date',
+                    'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
+                    'title' => ts('Created Date') ,
+                    'import' => true,
+                    'where' => 'civicrm_contribution.created_date',
+                    'headerPattern' => '/created(.?date)?/i',
+                    'dataPattern' => '/^\d{4}-?\d{2}-?\d{2} ?(\d{2}:?\d{2}:?(\d{2})?)?$/',
+                    'export' => true,
                 ) ,
                 'receive_date' => array(
                     'name' => 'receive_date',
