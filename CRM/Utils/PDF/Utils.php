@@ -157,7 +157,7 @@ class CRM_Utils_PDF_Utils {
 
       if(exec("test -x $wkhtmltopdf && echo 1")){
         $temp_prefix = 'pdf_';
-        $temp_dir= '/tmp';
+        $temp_dir = '/tmp';
         $dest = tempnam($temp_dir, $temp_prefix);
         if(preg_match('/^http:\/\//i', $html)){
           $source = $html;
@@ -168,6 +168,7 @@ class CRM_Utils_PDF_Utils {
             $source = tempnam($temp_dir, 'pdfsrc_').'.htm';
           }
           file_put_contents($source, $html);
+          unset($html); // release memory before wkhtmltopdf
         }
         $exec = $wkhtmltopdf.escapeshellcmd(" $option $source $dest");
         exec($exec);
