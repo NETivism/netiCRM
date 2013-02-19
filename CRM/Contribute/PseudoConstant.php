@@ -104,17 +104,32 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant
      * @return array - array reference of all contribution types if any
      * @static
      */
-    public static function &contributionType($id = null)
+    public static function &contributionType($id = null, $dedutible = FALSE)
     {
-        if ( ! self::$contributionType ) {
-            CRM_Core_PseudoConstant::populate( self::$contributionType,
-                                               'CRM_Contribute_DAO_ContributionType' );
+      if ( ! self::$contributionType ) {
+        CRM_Core_PseudoConstant::populate( self::$contributionType, 'CRM_Contribute_DAO_ContributionType' );
+      }
+      if(is_numeric($dedutible)){
+        CRM_Core_PseudoConstant::populate( $types, 'CRM_Contribute_DAO_ContributionType', false, 'is_deductible', 'is_active', 'is_deductible=1' );
+        return array_intersect_key(self::$contributionType, $types);
+      }
+      elseif(!is_numeric($dedutible)){
+        CRM_Core_PseudoConstant::populate( $types, 'CRM_Contribute_DAO_ContributionType', false, 'is_deductible' );
+        $result = self::$contributionType;
+        foreach($result as $k => $v){
+          if($types[$k] == 1){
+            $result[$k] .= '('.ts('Deductible').')';
+          }
         }
+        return $result;
+      }
+      else{
         if ($id) {
-            $result = CRM_Utils_Array::value( $id, self::$contributionType );
-            return $result;
+          $result = CRM_Utils_Array::value( $id, self::$contributionType );
+          return $result;
         }
-        return self::$contributionType;
+      }
+      return self::$contributionType;
     }
 
     /**

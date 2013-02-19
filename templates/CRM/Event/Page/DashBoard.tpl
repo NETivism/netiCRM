@@ -57,45 +57,46 @@
     <tbody>
     {foreach from=$eventSummary.events item=values key=id}
     <tr class="crm-event_{$id}">
-        <td class="crm-event-eventTitle"><a href="{crmURL p="civicrm/event/info" q="reset=1&id=`$id`"}" title="{ts}View event info page"{/ts}>{$values.eventTitle}</a></td>
+        <td class="crm-event-eventTitle"><a href="{crmURL p="civicrm/event/info" q="reset=1&id=`$id`"}" title="{ts}View event info page{/ts}">{$values.eventTitle}</a></td>
         <td class="crm-event-id">{$id}</td>
         <td class="crm-event-eventType">{$values.eventType}</td>
         <td class="crm-event-isPublic">{$values.isPublic}</td>
         <td class="nowrap crm-event-startDate">{$values.startDate}&nbsp;{if $values.endDate}~<br />{/if}&nbsp;{$values.endDate}</td>
         <td class="right crm-event-participants_url">
-            {if $values.participants and $values.participants_url}
-		<a href="{$values.participants_url}" title="{ts 1=$eventSummary.countedStatusANDRoles}List %1 participants{/ts}">{ts}Counted{/ts}:&nbsp;{$values.participants}</a>
-	    {else}
-		{ts}Counted{/ts}:&nbsp;{$values.participants}
-	    {/if}
+        {if $values.participants and $values.participants_url}
+          <a href="{$values.participants_url}" title="{ts 1=$eventSummary.countedStatusANDRoles}List %1 participants{/ts}">{ts}Counted{/ts}:&nbsp;{$values.participants}</a>
+        {else}
+          {ts}Counted{/ts}:&nbsp;{$values.participants}
+        {/if}
            
-	    {if $values.notCountedParticipants and $values.notCountedParticipants_url}
-		<a href="{$values.notCountedParticipants_url}" title="{ts 1=$eventSummary.nonCountedStatusANDRoles}List %1 participants{/ts}">{ts}Not Counted{/ts}:&nbsp;{$values.notCountedParticipants}</a><hr />
-	    {else}
-		{ts}Not Counted{/ts}:&nbsp;{$values.notCountedParticipants}<hr />
-	    {/if}
+        {if $values.notCountedParticipants and $values.notCountedParticipants_url}
+          <a href="{$values.notCountedParticipants_url}" title="{ts 1=$eventSummary.nonCountedStatusANDRoles}List %1 participants{/ts}">{ts}Not Counted{/ts}:&nbsp;{$values.notCountedParticipants}</a><hr />
+        {else}
+          {ts}Not Counted{/ts}:&nbsp;{$values.notCountedParticipants}<hr />
+        {/if}
 
-	    {if $values.notCountedDueToStatus and $values.notCountedDueToStatus_url}
-		<a href="{$values.notCountedDueToStatus_url}" title="{ts 1=$eventSummary.nonCountedStatus}List %1 participants{/ts}">{ts}Not Counted Due To Status{/ts}:&nbsp;{$values.notCountedDueToStatus}</a><hr />
-	    {else}
-		{ts}Not Counted Due To Status{/ts}:&nbsp;{$values.notCountedDueToStatus}<hr />
-	    {/if}
+        {if $values.notCountedDueToStatus and $values.notCountedDueToStatus_url}
+          <a href="{$values.notCountedDueToStatus_url}" title="{ts 1=$eventSummary.nonCountedStatus}List %1 participants{/ts}">{ts}Not Counted Due To Status{/ts}:&nbsp;{$values.notCountedDueToStatus}</a><hr />
+        {else}
+          {ts}Not Counted Due To Status{/ts}:&nbsp;{$values.notCountedDueToStatus}<hr />
+        {/if}
 
-            {if $values.notCountedDueToRole and $values.notCountedDueToRole_url}
-		<a href="{$values.notCountedDueToRole_url}" title="{ts 1=$eventSummary.nonCountedRoles}List %1 participants{/ts}">{ts}Not Counted Due To Role{/ts}:&nbsp;{$values.notCountedDueToRole}</a><hr />
-	    {else}
-		{ts}Not Counted Due To Role{/ts}:&nbsp;{$values.notCountedDueToRole}<hr />
-	    {/if}
+        {if $values.notCountedDueToRole and $values.notCountedDueToRole_url}
+          <a href="{$values.notCountedDueToRole_url}" title="{ts 1=$eventSummary.nonCountedRoles}List %1 participants{/ts}">{ts}Not Counted Due To Role{/ts}:&nbsp;{$values.notCountedDueToRole}</a><hr />
+        {else}
+          {ts}Not Counted Due To Role{/ts}:&nbsp;{$values.notCountedDueToRole}<hr />
+        {/if}
             
-            {foreach from=$values.statuses item=class}
-                {if $class}
-                    {foreach from=$class item=status}
-                        <a href="{$status.url}" title="{ts 1=$status.name}List %1 participants{/ts}">{$status.label}: {$status.count}</a>
-                    {/foreach}
-                    <hr />
-                {/if}
+        {foreach from=$values.statuses item=class}
+          {if $class}
+            {foreach from=$class item=status}
+              <a href="{$status.url}" title="{ts 1=$status.name}List %1 participants{/ts}">{$status.label}: {$status.count}</a>
             {/foreach}
-            {if $values.maxParticipants}{ts 1=$values.maxParticipants}(max %1){/ts}{/if}
+            <hr />
+          {/if}
+        {/foreach}
+
+        {if $values.maxParticipants}{ts 1=$values.maxParticipants}(max %1){/ts}{/if}
         </td>
 	{if $actionColumn}
         <td class="crm-event-isMap">
@@ -104,7 +105,7 @@
             {/if}
             {if $values.configure}
               <div class="crm-configure-actions">
-		 <span id="{$id}" class="btn-slide">{ts}Configure{/ts}
+		            <span id="{$id}" class="btn-slide">{ts}Configure{/ts}
         	    	<ul class="panel" id="panel_info_{$id}">
         		    <li><a title="Info and Settings" class="action-item-wrap" href="{crmURL p='civicrm/event/manage/eventInfo' q="reset=1&action=update&id=`$id`"}">{ts}Info and Settings{/ts}</a></li>
         		    <li><a title="Location" class="action-item-wrap {if NOT $values.is_show_location} disabled{/if}" href="{crmURL p='civicrm/event/manage/location' q="reset=1&action=update&id=`$id`"}">{ts}Location{/ts}</a></li>

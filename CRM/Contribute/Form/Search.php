@@ -371,7 +371,6 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form
                                                    $this->get( CRM_Utils_Sort::SORT_DIRECTION ) ); 
         } 
 
-        require_once 'CRM/Contact/BAO/Query.php';
         $this->_queryParams =& CRM_Contact_BAO_Query::convertFormValues( $this->_formValues );
         $selector = new CRM_Contribute_Selector_Search( $this->_queryParams,
                                                         $this->_action,
@@ -415,11 +414,23 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form
             return;
         }
 
-        $status = CRM_Utils_Request::retrieve( 'status', 'String',
-                                               CRM_Core_DAO::$_nullObject );
+        $status = CRM_Utils_Request::retrieve( 'status', 'String', CRM_Core_DAO::$_nullObject );
         if ( $status ) {
             $this->_formValues['contribution_status_id'] = array( $status => 1);
             $this->_defaults['contribution_status_id']   = array( $status => 1);
+        }
+
+        $type = CRM_Utils_Request::retrieve( 'type', 'String', CRM_Core_DAO::$_nullObject );
+        if( $type ){
+            $type = explode(',', $type);
+            foreach($type as $k => $t){
+              $types[$t] = $t;
+            }
+            $ctypes = CRM_Contribute_PseudoConstant::contributionType( );
+            $types = array_intersect_key($types, $ctypes);
+
+            $this->_formValues['contribution_type_id'] = $types;
+            $this->_defaults['contribution_type_id']   = $types;
         }
 
         $cid = CRM_Utils_Request::retrieve( 'cid', 'Positive', $this );

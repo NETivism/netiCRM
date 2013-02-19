@@ -217,12 +217,26 @@ class CRM_Contribute_BAO_Query
 
         case 'contribution_type_id':
         case 'contribution_type':
-            require_once 'CRM/Contribute/PseudoConstant.php';
-            $cType = $value;
-            $types = CRM_Contribute_PseudoConstant::contributionType( );
-            $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause( "civicrm_contribution.contribution_type_id", 
-                                                                              $op, $value, "Integer" ) ;
-            $query->_qill[$grouping ][] = ts( 'Contribution Type - %1', array( 1 => $types[$cType] ) );
+            $types = CRM_Contribute_PseudoConstant::contributionType();
+            if( is_array($value) ){
+              foreach($value as $k => $v){
+                if($v){
+                  $val[$v] = $v;
+                }
+              }
+              $contribution_type_id = implode(',', $val);
+              if( count($val) > 1){
+                $op = 'IN';
+                $contribution_type_id = "({$contribution_type_id})";
+              }
+              $names = array_intersect_key($types, $val);
+            }
+            else{
+              $op = '=';
+              $status = $value;
+            }
+            $query->_qill[$grouping][] = ts('Contribution Type - %1', array( 1 => $op ) ) . ' ' . implode( ' ' . ts('or') . ' ', $names );
+            $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause( "civicrm_contribution.contribution_type_id", $op, $contribution_type_id, "Integer" ) ;
             $query->_tables['civicrm_contribution'] = $query->_whereTables['civicrm_contribution'] = 1;
             return;
             
@@ -602,17 +616,14 @@ class CRM_Contribute_BAO_Query
         $form->addRule('contribution_amount_high', ts('Please enter a valid money value (e.g. %1).', array(1 => CRM_Utils_Money::format('99.99', ' '))), 'money');
 
         //adding select option for curreny type -- CRM-4711
-        require_once 'CRM/Core/PseudoConstant.php';
         $form->add('select', 'contribution_currency_type',
                    ts( 'Currency Type' ),
                    array( '' => ts( '- select -' ) ) +
                    CRM_Core_PseudoConstant::currencySymbols( 'name' ) );
 
-        require_once 'CRM/Contribute/PseudoConstant.php';
-        $form->add('select', 'contribution_type_id', 
-                   ts( 'Contribution Type' ),
-                   array( '' => ts( '- select -' ) ) +
-                   CRM_Contribute_PseudoConstant::contributionType( ) );
+        $attrs = array('multiple' => 'multiple');
+        $ctypes = CRM_Contribute_PseudoConstant::contributionType(null, 'mark');
+        $form->addElement('select', 'contribution_type_id', ts( 'Contribution Type' ), $ctypes, $attrs);
 
         $form->add('select', 'contribution_page_id', 
                    ts( 'Contribution Page' ),
@@ -632,7 +643,6 @@ class CRM_Contribute_BAO_Query
         
         $status = array( );
         
-        require_once "CRM/Core/OptionGroup.php";
         $statusValues = CRM_Core_OptionGroup::values("contribution_status");
         // Remove status values that are only used for recurring contributions or pledges (In Progress, Overdue).
         unset( $statusValues['5']);
