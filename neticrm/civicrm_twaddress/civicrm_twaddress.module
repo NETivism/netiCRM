@@ -179,7 +179,7 @@ function _civicrm_twaddress_grouping_js(){
         var classes = $(this).attr("class").split(" ");
         for (var i=0; i<classes.length; i++) {
           if (classes[i].slice(0,14) == "state_province" || classes[i].slice(0, 4) == "city" || classes[i].slice(0, 11) == "postal_code") {
-            var matches = classes[i].match(/\d+/);
+            var matches = classes[i].match(/\d+|Primary/);
             var rel = "g"+matches[0];
             $(this).attr("rel", rel);
             if(typeof(ids[rel]) == "undefined"){
