@@ -29,10 +29,6 @@ function civicrm_twaddress_civicrm_buildForm($formName, &$form) {
     return;
   }
   
-  if($_GET['snippet']){
-    return;
-  }
-
   // we don't support ajax form
   $deny = array();
   if(in_array($formName,$deny)){
@@ -94,34 +90,17 @@ function civicrm_twaddress_civicrm_buildForm($formName, &$form) {
     if(arg(1) == 'contribute' || arg(1) == 'event'){
       _civicrm_twaddress_grouping_js();
     }
-    foreach($override['areaName'] as $k => $v){
-      $count++;
 
-      $insert = "<select name='{$override['areaName'][$k]['key']}' class='form-select'></select>";
-
-      $js = '
-      $(document).ready(function(){
-        if( $("input[name=\''.$override['areaName'][$k]['name'].'\']").length ){
-          $("'.$insert.'").insertAfter("input[name=\''.$override['areaName'][$k]['name'].'\']");
-          $("input[name=\''.$override['areaName'][$k]['name'].'\']").hide();
-          $("select[name=\''.$override['areaName'][$k]['key'].'\']").change(function(){
-            var v = $(this).val();
-            $("input[name=\''.$override['areaName'][$k]['name'].'\']").val(v);
-          });
-          $("input[name='.$override['zipName'][$k]['key'].']").addClass("readonly post-code");
-
-          $("form[name='.$form_name.']").twzipcode({
-            zipName:"'.$override['zipName'][$k]['key'].'",
-            countyName:"'.$override['countyName'][$k]['key'].'",
-            areaName:"'.$override['areaName'][$k]['key'].'",
-            zipSel:"'.$override['zipName'][$k]['default'].'",
-            countySel:"'.$override['countyName'][$k]['default'].'",
-            areaSel:"'.$override['areaName'][$k]['default'].'"
-          });
-        }
-      });
-      ';
-      drupal_add_js($js , 'inline');
+    if($_GET['snippet']){
+      reset($form->_fields);
+      $first = key($form->_fields);
+      $js = _civicrm_twaddress_common_js($override, FALSE);
+      $js = implode("\n", $js);
+      $js = '<script type="text/javascript" src="'.base_path().$path.'/twzipcode.js"></script><script type="text/javascript">'.$js.'</script>';
+      $form->_fields[$first]['groupHelpPre'] = $js;
+    }
+    else{
+      _civicrm_twaddress_common_js($override, $add_js = TRUE);
     }
   }
 }
@@ -209,4 +188,42 @@ function _civicrm_twaddress_grouping_js(){
     });
   ';
   drupal_add_js($js , 'inline');
+}
+
+function _civicrm_twaddress_common_js($field, $add_js = TRUE){
+  $return = array();
+  foreach($field['areaName'] as $k => $v){
+    $count++;
+    $insert = "<select name='{$field['areaName'][$k]['key']}' class='form-select'></select>";
+
+    $js = '
+    $(document).ready(function(){
+      if( $("input[name=\''.$field['areaName'][$k]['name'].'\']").length ){
+        $("'.$insert.'").insertAfter("input[name=\''.$field['areaName'][$k]['name'].'\']");
+        $("input[name=\''.$field['areaName'][$k]['name'].'\']").hide();
+        $("select[name=\''.$field['areaName'][$k]['key'].'\']").change(function(){
+          var v = $(this).val();
+          $("input[name=\''.$field['areaName'][$k]['name'].'\']").val(v);
+        });
+        $("input[name='.$field['zipName'][$k]['key'].']").addClass("readonly post-code");
+
+        $("form[name='.$form_name.']").twzipcode({
+          zipName:"'.$field['zipName'][$k]['key'].'",
+          countyName:"'.$field['countyName'][$k]['key'].'",
+          areaName:"'.$field['areaName'][$k]['key'].'",
+          zipSel:"'.$field['zipName'][$k]['default'].'",
+          countySel:"'.$field['countyName'][$k]['default'].'",
+          areaSel:"'.$field['areaName'][$k]['default'].'"
+        });
+      }
+    });
+    ';
+    if($add_js){
+      drupal_add_js($js , 'inline');
+    }
+    else{
+      $return[$k] = $js;
+    }
+  }
+  return $return;
 }
