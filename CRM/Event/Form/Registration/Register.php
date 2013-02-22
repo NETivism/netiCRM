@@ -986,6 +986,12 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration
                 $params['payment_action'] = 'Sale';
                 $params['invoiceID'] = $invoiceID;
             }
+            if (($this->_values['is_pay_later'] && empty($this->_paymentProcessor) && !array_key_exists('hidden_processor', $params)) || CRM_Utils_Array::value('payment_processor', $params) == 0) {
+              $params['is_pay_later'] = 1;
+            }
+            else {
+              $params['is_pay_later'] = 0;
+            }
             
             $this->_params  = array ();
             $this->_params[] = $params;
