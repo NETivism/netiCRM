@@ -3641,7 +3641,7 @@ msgstr "捐款編號"
 #: CRM/Contribute/DAO/Contribution.php CRM/Contribute/Form/AdditionalInfo.php
 #: templates/CRM/Contribute/Form/ContributionView.tpl
 msgid "Non-deductible Amount"
-msgstr "此筆捐款（收入）不能作為列舉扣除的金額"
+msgstr "此筆捐款不能抵稅的金額"
 
 #: CRM/Contribute/DAO/Contribution.php
 #: CRM/Contribute/Form/ContributionCharts.php
@@ -7483,7 +7483,7 @@ msgstr "個人募款頁"
 
 #: CRM/Campaign/Form/Campaign.php
 msgid "Parent Id"
-msgstr "上層"
+msgstr "上層ID"
 
 #: CRM/Campaign/Form/Campaign.php
 msgid "- select Parent -"
@@ -7912,7 +7912,7 @@ msgstr "已刪除的個案"
 
 #: CRM/Case/DAO/Case.php
 msgid "Case Type Id"
-msgstr "個案類型"
+msgstr "個案類型ID"
 
 #: CRM/Case/DAO/Case.php
 msgid "Case End Date"
@@ -7920,7 +7920,7 @@ msgstr "個案結束日期"
 
 #: CRM/Case/DAO/Case.php
 msgid "Case Status Id"
-msgstr "個案狀態"
+msgstr "個案狀態ID"
 
 #: CRM/Case/DAO/Case.php
 msgid "Case is in the Trash"
@@ -11006,7 +11006,7 @@ msgstr "重複的捐款類型名稱，請選擇其他名稱。"
 
 #: CRM/Contribute/Form/ContributionType.php
 msgid "Tax-deductible?"
-msgstr "免稅？"
+msgstr "可抵稅？"
 
 #: CRM/Contribute/Form/ContributionType.php
 msgid "Selected contribution type has been deleted."
@@ -11231,15 +11231,19 @@ msgid "Print Contribution Receipts"
 msgstr "列印捐款收據"
 
 #: CRM/Contribute/Form/Task/PDF.php
-msgid "PDF Receipts"
-msgstr "收據"
+msgid "Original Receipts"
+msgstr "存根聯"
 
 #: CRM/Contribute/Form/Task/PDF.php
-msgid "Email Receipts"
-msgstr "副本"
+msgid "Copy Receipts"
+msgstr "收執聯"
 
 #: CRM/Contribute/Form/Task/PDF.php
-msgid "Process Receipt(s)"
+msgid "Accounting Receipts"
+msgstr "會計聯"
+
+#: CRM/Contribute/Form/Task/PDF.php
+msgid "Download Receipt(s)"
 msgstr "下載收據"
 
 #: CRM/Contribute/Form/Task/PDF.php
@@ -14538,11 +14542,11 @@ msgstr "活動建立日期"
 
 #: CRM/Event/DAO/Participant.php
 msgid "Participant Status Id"
-msgstr "參加者狀態"
+msgstr "參加者狀態編號"
 
 #: CRM/Event/DAO/Participant.php
 msgid "Participant Role Id"
-msgstr "參加者角色"
+msgstr "參加者角色編號"
 
 #: CRM/Event/DAO/Participant.php
 msgid "Register date"
@@ -15302,7 +15306,7 @@ msgstr "待處理-在候補名單中"
 #: CRM/Event/Form/Task/ParticipantStatus.php
 #: templates/CRM/Admin/Page/ParticipantStatus.hlp
 msgid "Pending from approval"
-msgstr "待處理-在審核名單中"
+msgstr "待處理-已審核通過"
 
 #: CRM/Event/Form/Task/ParticipantStatus.php
 msgid "Expired"
@@ -15710,7 +15714,7 @@ msgstr "已收到補助報表"
 
 #: CRM/Grant/DAO/Grant.php
 msgid "Grant Type Id"
-msgstr "補助類型"
+msgstr "補助類型編號"
 
 #: CRM/Grant/DAO/Grant.php
 msgid "Amount granted"
@@ -15718,7 +15722,7 @@ msgstr "已撥款總額"
 
 #: CRM/Grant/DAO/Grant.php
 msgid "Grant Status Id"
-msgstr "補助狀態"
+msgstr "補助狀態編號"
 
 #: CRM/Grant/Form/Grant.php templates/CRM/Grant/Form/GrantView.tpl
 msgid "Grant Decision"
@@ -15968,7 +15972,7 @@ msgstr "匯入時發現一筆記錄對應到多個聯絡人，請用「合併重
 
 #: CRM/Import/Parser/Contact.php
 msgid "field ID"
-msgstr "欄位ID"
+msgstr "欄位編號"
 
 #: CRM/Import/Parser/Contact.php
 msgid "Birth-Date"
@@ -16860,7 +16864,7 @@ msgstr "會員編號"
 
 #: CRM/Member/DAO/Membership.php
 msgid "Membership Type Id"
-msgstr "會員類型"
+msgstr "會員類型編號"
 
 #: CRM/Member/DAO/Membership.php
 msgid "Membership Expiration Date"
@@ -16868,7 +16872,7 @@ msgstr "會員到期日"
 
 #: CRM/Member/DAO/Membership.php
 msgid "Membership Status Id"
-msgstr "會員狀態"
+msgstr "會員狀態編號"
 
 #: CRM/Member/DAO/Membership.php
 msgid "Status Override"
@@ -17077,11 +17081,11 @@ msgstr "更新訊息"
 
 #: CRM/Member/Form/MembershipRenewal.php
 msgid "%1 membership for %2 has been renewed."
-msgstr "%1在%2的會籍以更新。"
+msgstr "%2 於 %1 的會籍已更新。"
 
 #: CRM/Member/Form/MembershipRenewal.php
 msgid "A renewal confirmation and receipt has been sent to %1."
-msgstr "更新確定以及收據已被傳送給 %1。"
+msgstr "會籍更新確認信以及收據已傳送給 %1。"
 
 #: CRM/Member/Form/MembershipStatus.php
 msgid "A membership status with this label already exists. Please select another label."
@@ -17448,7 +17452,7 @@ msgstr "寄送感謝函日期"
 
 #: CRM/Pledge/DAO/Pledge.php
 msgid "Pledge Status Id"
-msgstr "認捐狀態 %1"
+msgstr "認捐狀態編號"
 
 #: CRM/Pledge/Form/Payment.php
 msgid "Pledge Payment Schedule has been updated.<br />"
@@ -18076,7 +18080,7 @@ msgstr "寄件副本"
 
 #: CRM/Report/DAO/Instance.php
 msgid "Navigation ID"
-msgstr "導覽選單 ID"
+msgstr "導覽選單編號"
 
 #: CRM/Report/Form/Activity.php
 msgid "Source Contact Name"
@@ -21123,15 +21127,15 @@ msgstr "允許模組被列在右邊箱。停用模組被列在左邊箱。強調
 
 #: templates/CRM/Admin/Form/Setting/Date.hlp
 msgid "Use this screen to configure formats for date display and date input fields. Defaults are provided for standard United States formats. Settings use standard POSIX specifiers. Available specifiers and the values produced will vary based on your operating system and locale."
-msgstr "在這裡來設定顯示日期及日期輸入欄位的格式，預設為standard United States formats。設定使用standard POSIX specifiers。specifiers及其值的產生會依據作業系統及地點而有差異。"
+msgstr "你可以在此設定日期顯示及日期輸入欄位的格式。預設為POSIX格式。"
 
 #: templates/CRM/Admin/Form/Setting/Date.hlp
 msgid "Commonly Used Specifiers"
-msgstr "常用說明符"
+msgstr "日期格式說明"
 
 #: templates/CRM/Admin/Form/Setting/Date.tpl
 msgid "Use this screen to configure formats for date display and date input fields. Defaults are provided for standard United States formats. Settings use standard POSIX specifiers."
-msgstr "使用此螢幕去設日期顯示及日期輸入欄位的格式。為標準美國格式提供預設的。設定使用標準可移植操作系統界面指定器。"
+msgstr "你可以在此設定日期顯示及日期輸入欄位的格式。預設為POSIX格式。"
 
 #: templates/CRM/Admin/Form/Setting/Date.tpl
 msgid "Date Display"
@@ -22634,7 +22638,7 @@ msgstr "（例如：%1）"
 
 #: templates/CRM/Admin/Page/PaymentProcessor.hlp
 msgid "Merchant ID"
-msgstr "商業帳戶 ID"
+msgstr "商業帳戶帳號"
 
 #: templates/CRM/Admin/Page/PaymentProcessor.hlp
 msgid "Example of a large Google Checkout button on a white background (For TEST Account):"
@@ -25625,7 +25629,7 @@ msgstr "此信用卡類別名稱，它會顯示給捐款者。這可能與上方
 
 #: templates/CRM/Contribute/Form/AdditionalInfo/AdditionalDetail.tpl
 msgid "Non-deductible portion of this contribution."
-msgstr "此筆捐款無法被扣除的部分。"
+msgstr "此筆捐款的類型若是可以抵稅，當其中包含不可抵稅的品項時，可將不可抵稅的金額註記在此，以正確產生捐款人的收據。"
 
 #: templates/CRM/Contribute/Form/AdditionalInfo/AdditionalDetail.tpl
 msgid "Processing fee for this transaction (if applicable)."
@@ -26349,8 +26353,7 @@ msgstr "(捐款滿 %1 可獲贈此感謝禮。)"
 #: templates/CRM/Contribute/Form/Contribution/PremiumBlock.tpl
 msgid "The value of this premium is %1. This may affect the amount of the tax deduction you can claim. Consult your tax advisor for more information."
 msgstr ""
-"此禮物的金額是%1。這也許可以抵稅。更多資料請向您的稅項顧問查詢。#-#-#-#-#  civicrm-modules.po (CiviCRM 2.1)  #-#-#-#-#\n"
-"此感謝禮價值是%1。這可能會影響您索賠可減免的稅項金額。更多資料資詢您的稅項顧問。"
+"此感謝的金額是%1。這個設定將會影響該筆捐款可抵稅的金額。若你希望捐款者收據的金額為扣除掉禮品金額，請填寫此金額。更多資料請向您的會計諮詢。"
 
 #: templates/CRM/Contribute/Form/Contribution/PreviewHeader.tpl
 msgid "Test-drive Your Contribution Page"
@@ -26557,7 +26560,7 @@ msgstr "使用此欄位，可將這個捐款類型標上代碼，以便與您原
 
 #: templates/CRM/Contribute/Form/ContributionType.tpl
 msgid "Are contributions of this type tax-deductible?"
-msgstr "此捐款類型是否為免稅？"
+msgstr "此捐款類型是否為可抵稅（收據具有抵扣個人所得稅的效用）？"
 
 #: templates/CRM/Contribute/Form/ContributionView.tpl
 msgid "Recurring Contribution"
@@ -26656,7 +26659,7 @@ msgstr "（至少要X的捐款才符合此贈品的資格。）"
 
 #: templates/CRM/Contribute/Form/ManagePremiums.tpl
 msgid "The market value of this premium (e.g. retail price). For tax-deductible contributions, this amount will be used to set the non-deductible amount in the contribution record and receipt."
-msgstr "此感謝禮的市價（例如它的零售價格）。對於可免稅的捐款，這裡設定的金額將會用在捐款紀錄與收據中，做為不可扣除的金額。"
+msgstr "此感謝禮的市價（例如它的零售價格）。對於可抵稅的捐款，這裡設定的金額將會用在捐款紀錄與收據中，做為不可抵稅的金額，也會影響捐款收據上面標註的金額。若你希望收據上的金額跟捐款金額一致，請在此填寫0元。"
 
 #: templates/CRM/Contribute/Form/ManagePremiums.tpl
 msgid "You may optionally record the actual cost of this premium to your organization. This may be useful when evaluating net return for this incentive."
@@ -27194,10 +27197,6 @@ msgid "View related contribution"
 msgstr "瀏覽相關捐款"
 
 #: templates/CRM/Contribute/Page/ContributionTotals.tpl
-msgid "Current Year-to-Date"
-msgstr "現在的「年到日期」"
-
-#: templates/CRM/Contribute/Page/ContributionTotals.tpl
 msgid "# Contributions"
 msgstr "# 捐款"
 
@@ -27219,7 +27218,7 @@ msgstr "會計代碼"
 
 #: templates/CRM/Contribute/Page/ContributionType.tpl
 msgid "Deductible?"
-msgstr "可扣除？"
+msgstr "可抵稅？"
 
 #: templates/CRM/Contribute/Page/ContributionType.tpl
 msgid "Add Contribution Type"
@@ -28151,7 +28150,7 @@ msgstr "您還需要更新默認為完全重複的聯絡人，個人對應標準
 
 #: templates/CRM/Event/Form/ManageEvent/Registration.hlp
 msgid "Check this box to require administrative approval for all the participants who self-register, prior to being able to complete the registration process. Participants will be placed in 'Awaiting Approval' status. You can review and approve participants from 'Find Participants' - select the 'Change Participant Status' task. Approved participants will move to 'Pending from approval' status, and will be sent an email with a link to complete their registration (including paying event fees - if any). "
-msgstr "勾選此核取方塊，可批准所有自己來報名的但尚未完成報名程序的參加者。參加者將會被歸在「等待審核」狀態。您可從「尋找參加者」中選擇「改變參加者狀態」，來審閱與核准報名。已核准的參加者將會被移到「待處理-在審核名單」狀態，系統將會對他們寄出一封包含報名確認連結的 Email（若有的話，會包含支付活動費用）。"
+msgstr "勾選此核取方塊，可批准所有自己來報名的但尚未完成報名程序的參加者。參加者將會被歸在「等待審核」狀態。您可從「尋找參加者」中選擇「改變參加者狀態」，來審閱與核准報名。已核准的參加者將會被移到「已審核通過」狀態，系統將會對他們寄出一封包含報名確認連結的 Email（若有的話，會包含支付活動費用）。"
 
 #: templates/CRM/Event/Form/ManageEvent/Registration.hlp
 msgid "Time limit <strong>in hours</strong> for confirming/finishing registration by participants with any of the pending statuses. Enter 0 (or leave empty) to disable this feature."
@@ -28476,7 +28475,7 @@ msgstr "測試您的活動報名頁"
 
 #: templates/CRM/Event/Form/Registration/PreviewHeader.tpl
 msgid "This page is currently running in <strong>test-drive mode</strong>. If this is a paid event, transactions will be sent to your payment processor's test server. <strong>No live financial transactions will be submitted. However, a contact record will be created or updated and test event registration and contribution records will be saved to the database. Use obvious test contact names so you can review and delete these records as needed. </strong> Refer to your payment processor's documentation for information on values to use for test credit card number, security code, postal code, etc."
-msgstr "此頁現執行<strong>測試驅動模式</strong>。如果這是付款活動，交易會被傳送到您的金流機制伺服器。<strong>沒有活的交易會被提交。但是，一個聯絡人記錄會被建立或上傳，測試活動登記及捐款記錄也會被儲存到資料庫。使用明顯易辨的測試聯絡人，以便在您需要時方便察看或刪除這些紀錄。參考您付款處理器的文件獲得更多關於測試用信用卡卡號、安全碼、郵遞區號等的資訊。"
+msgstr "此頁現執行<strong>測試驅動模式</strong>。如果這是付款活動，交易會被傳送到您的金流機制伺服器。<strong>沒有活的交易會被提交</strong>。但是，一個聯絡人記錄會被建立或上傳，測試活動登記及捐款記錄也會被儲存到資料庫。使用明顯易辨的測試聯絡人，以便在您需要時方便察看或刪除這些紀錄。參考您付款處理器的文件獲得更多關於測試用信用卡卡號、安全碼、郵遞區號等的資訊。"
 
 #: templates/CRM/Event/Form/Registration/Register.tpl
 msgid "Welcome %1"
@@ -28812,7 +28811,7 @@ msgstr "列出 %1 參加者"
 
 #: templates/CRM/Event/Page/DashBoard.tpl
 msgid "Not Counted"
-msgstr "已佔據名額"
+msgstr "未佔據名額"
 
 #: templates/CRM/Event/Page/DashBoard.tpl
 msgid "Not Counted Due To Status"
@@ -28952,7 +28951,7 @@ msgstr "公開"
 
 #: templates/CRM/Event/Page/ManageEvent.tpl
 msgid "ID:"
-msgstr "ID"
+msgstr "ID:"
 
 #: templates/CRM/Event/Page/ManageEvent.tpl
 msgid "Registration (Test-drive)"
@@ -32826,7 +32825,7 @@ msgstr "已成功刪除所選取的關係。"
 
 #: CRM/Contact/DAO/Contact.php
 msgid "Mail to Household ID"
-msgstr "寄到家庭 ID"
+msgstr "寄到家庭編號"
 
 #: CRM/Contact/Form/Contact.php
 msgid "Please select at least one tag."
@@ -32891,10 +32890,6 @@ msgstr "已成功刪除個案角色。"
 #: CRM/Core/BAO/CMSUser.php
 msgid "An account already exists with the same information."
 msgstr "有相同的資料的使用者已存在。"
-
-#: xml/templates/civicrm_data.tpl
-msgid "Home"
-msgstr "住家"
 
 #: CRM/Core/BAO/Note.php
 msgid "Selected Note has been Deleted Successfully."
@@ -35103,7 +35098,7 @@ msgstr "組織 Email"
 #: xml/templates/message_templates/contribution_dupalert_html.tpl
 #: xml/templates/message_templates/contribution_dupalert_text.tpl
 msgid "Organization Contact Id"
-msgstr "組織聯絡人 ID"
+msgstr "組織聯絡人編號"
 
 #: xml/templates/message_templates/contribution_dupalert_html.tpl
 #: xml/templates/message_templates/contribution_dupalert_text.tpl
@@ -37719,11 +37714,11 @@ msgstr "接收/支付捐款的日期"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "Non Deductible Amount"
-msgstr "非可扣除額"
+msgstr "不可抵稅金額"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "The Non Deductible Part of the Contribution"
-msgstr "捐款裡不可扣除的部分"
+msgstr "捐款裡不可抵稅的部分"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "The Total Contribution made by the Contact"
@@ -39725,3 +39720,33 @@ msgstr "選擇付款方式"
 
 msgid "Payment Options"
 msgstr "付款選項"
+
+msgid "Please select only contributions with Completed status."
+msgstr "請選擇「已完成」的收據"
+
+msgid "Are you sure you want to continue?"
+msgstr "你確定要繼續嗎？"
+
+msgid "Deductible"
+msgstr "可抵稅"
+
+msgid "Receipt ID"
+msgstr "收據編號"
+
+msgid "Receipt ID will generate automatically based on receive date and <a href=\"%1\" target=\"_blank\">prefix settings</a>."
+msgstr "收據編號將會依據<a href=\"%1\" target=\"_blank\">收據設定頁面</a>的調整自動產生。"
+
+msgid "Have receipt?"
+msgstr "開立收據？"
+
+msgid "Membership: Offline membership signup (by %1)"
+msgstr "會員:手動新增會籍(by %1)"
+
+msgid "Membership: Offline membership renewal (by %1)"
+msgstr "會員:手動更新會籍(by %1)"
+
+msgid "Membership Confirmation and Receipt"
+msgstr "會員註冊確認信與收據"
+
+msgid "Renewing will add the normal membership period to the End Date of the previous period for members whose status is Current or Grace. For Expired memberships, renewing will create a membership period commencing from the 'Date Renewal Entered'. This date can be adjusted including being set to the day after the previous End Date - if continuous membership is required."
+msgstr "若是對還在期限中，與寬限期中的會員進行會籍更新，他們的會籍將會從預計到期日之後新增上去。若是已過期的會員，更新會籍則會讓會籍從輸入的會籍更新日起算。若有需要，會籍更新日可以調整，例如把日期調整到到期日之後。"
