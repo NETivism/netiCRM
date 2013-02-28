@@ -107,8 +107,7 @@ class CRM_Event_Form_Task extends CRM_Core_Form
                 $sortOrder = $form->get( CRM_Utils_Sort::SORT_ORDER );
             }
 
-            $query       = new CRM_Contact_BAO_Query( $queryParams, null, null, false, false, 
-                                                       CRM_Contact_BAO_Query::MODE_EVENT);
+            $query = new CRM_Contact_BAO_Query( $queryParams, null, null, false, false, CRM_Contact_BAO_Query::MODE_EVENT);
             $result = $query->searchQuery(0, 0, $sortOrder);
             while ($result->fetch()) {
                 $ids[] = $result->participant_id;
