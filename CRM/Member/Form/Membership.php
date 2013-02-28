@@ -149,8 +149,7 @@ class CRM_Member_Form_Membership extends CRM_Member_Form
         $this->_onlinePendingContributionId = null;
         if ( !$this->_mode && $this->_id && ($this->_action & CRM_Core_Action::UPDATE) ) {
             require_once 'CRM/Contribute/BAO/Contribution.php';
-            $this->_onlinePendingContributionId = CRM_Contribute_BAO_Contribution::checkOnlinePendingContribution( $this->_id, 
-                                                                                                                   'Membership' );
+            $this->_onlinePendingContributionId = CRM_Contribute_BAO_Contribution::checkOnlinePendingContribution( $this->_id, 'Membership' );
         }
         $this->assign( 'onlinePendingContributionId', $this->_onlinePendingContributionId );
         
@@ -176,7 +175,7 @@ class CRM_Member_Form_Membership extends CRM_Member_Form
         //setting default join date and receive date
         list( $now ) = CRM_Utils_Date::setDateDefaults( );
         if ($this->_action == CRM_Core_Action::ADD) {
-            $defaults['receive_date'] = $now;
+            list( $defaults['receive_date'], $defaults['receive_date_time'] ) = CRM_Utils_Date::setDateDefaults( null, 'activityDateTime' );
         }
         
         if ( is_numeric( $this->_memType ) ) {
@@ -396,7 +395,7 @@ class CRM_Member_Form_Membership extends CRM_Member_Form
             $this->add('text', 'total_amount', ts('Amount'));
             $this->addRule('total_amount', ts('Please enter a valid amount.'), 'money');
 
-            $this->addDate( 'receive_date', ts('Received'), false, array( 'formatType' => 'activityDate') );
+            $this->addDateTime( 'receive_date', ts('Receive Date'), false, array( 'formatType' => 'activityDateTime') );
 
             $this->add('select', 'payment_instrument_id', 
                        ts( 'Paid By' ), 
@@ -421,17 +420,26 @@ class CRM_Member_Form_Membership extends CRM_Member_Form
                        ts('Payment Status'), $allowStatuses );
             $this->add( 'text', 'check_number', ts('Check Number'), 
                         CRM_Core_DAO::getAttribute( 'CRM_Contribute_DAO_Contribution', 'check_number' ) );
+
         }
-        $this->addElement('checkbox', 
-                          'send_receipt', 
-                          ts('Send Confirmation and Receipt?'), null, 
-                          array('onclick' =>"return showHideByValue('send_receipt','','notice','table-row','radio',false);") );
+
+        // receipt
+        $receipt_attr = array('readonly' => 'readonly');
+        $this->add('text', 'receipt_id', ts('Receipt ID'), $receipt_attr);
+        $this->addRule( 'receipt_id', ts( 'This Receipt ID already exists in the database.' ), 'objectExists', array( 'CRM_Contribute_DAO_Contribution', $this->_id, 'receipt_id' ) );
+        $this->assign( 'receipt_id_setting', url("civicrm/admin/receipt", array('query' => 'reset=1')) );
+        $this->addDateTime( 'receipt_date', ts('Receipt Date'), false, array( 'formatType' => 'activityDateTime') );
+        if($this->_values['receipt_id']){
+          $this->assign( 'receipt_id', $this->_values['receipt_id'] );
+          $this->getElement('receipt_date')->freeze();
+          $this->getElement('receipt_date_time')->freeze();
+        }
+
+        $this->addElement('checkbox', 'send_receipt', ts('Send Confirmation and Receipt?'), null, array('onclick' =>"return showHideByValue('send_receipt','','notice','table-row','radio',false);") );
         $this->add('textarea', 'receipt_text_signup', ts('Receipt Message') );
         if ( $this->_mode ) {
         
-            $this->add( 'select', 'payment_processor_id',
-                        ts( 'Payment Processor' ),
-                        $this->_processors, true );
+            $this->add( 'select', 'payment_processor_id', ts( 'Payment Processor' ), $this->_processors, true );
             require_once 'CRM/Core/Payment/Form.php';
             CRM_Core_Payment_Form::buildCreditCard( $this, true );
         }
@@ -658,7 +666,6 @@ class CRM_Member_Form_Membership extends CRM_Member_Form
                         'start_date',
                         'end_date',
                         'reminder_date',
-                        'receive_date'
                         );
         $currentTime = getDate();        
         foreach ( $dates as $d ) {
@@ -668,6 +675,11 @@ class CRM_Member_Form_Membership extends CRM_Member_Form
                 $date = CRM_Utils_Array::value( $d, $calcDates );
             }
             $params[$d] = CRM_Utils_Date::processDate( $date, null, true );
+        }
+        
+        $tdates = array('receive_date', 'receipt_date');
+        foreach ( $tdates as $d ) {
+            $params[$d] = CRM_Utils_Date::processDate( $formValues[$d], $formValues[$d.'_time'], true );
         }
         
         if ( $this->_id ) {
@@ -704,10 +716,10 @@ class CRM_Member_Form_Membership extends CRM_Member_Form
             $membershipType = CRM_Core_DAO::getFieldValue( 'CRM_Member_DAO_MembershipType',
                                                            $formValues['membership_type_id'][1] );
             if ( !$this->_onlinePendingContributionId ) {
-                $params['contribution_source'] = "{$membershipType} Membership: Offline membership signup (by {$userName})";
+                $params['contribution_source'] = "{$membershipType} ".ts("Membership: Offline membership signup (by %1)", array(1 => $userName));
             }
             
-            if ( CRM_Utils_Array::value( 'send_receipt', $formValues ) ) {
+            if ( CRM_Utils_Array::value( 'send_receipt', $formValues ) && empty($formValues['receipt_date'])) {
                 $params['receipt_date'] = $params['receive_date'];
             }
             
@@ -750,7 +762,7 @@ class CRM_Member_Form_Membership extends CRM_Member_Form
             $formValues["address_name-{$this->_bltID}"] = trim( $formValues["address_name-{$this->_bltID}"] );
         
             $fields["address_name-{$this->_bltID}"] = 1;
-            
+           
             $fields["email-{$this->_bltID}"]        = 1;
             
             $ctype = CRM_Core_DAO::getFieldValue( 'CRM_Contact_DAO_Contact', $this->_contactID, 'contact_type' );
@@ -813,10 +825,8 @@ class CRM_Member_Form_Membership extends CRM_Member_Form
             $params['trxn_id']                = $result['trxn_id'];
             $params['payment_instrument_id']  = 1;
             $params['is_test']                = ( $this->_mode == 'live' ) ? 0 : 1 ; 
-            if ( CRM_Utils_Array::value( 'send_receipt', $this->_params ) ) {
+            if ( CRM_Utils_Array::value( 'send_receipt', $this->_params ) && empty($this->_params['receipt_date'])) {
                 $params['receipt_date'] = $now;
-            } else {
-                $params['receipt_date'] = null;
             }
             
             $this->set( 'params', $this->_params );
@@ -849,8 +859,7 @@ class CRM_Member_Form_Membership extends CRM_Member_Form
             }
         } else {
             $params['action'] = $this->_action;
-            if ( $this->_onlinePendingContributionId && 
-                 CRM_Utils_Array::value( 'record_contribution', $formValues ) ) {
+            if ( $this->_onlinePendingContributionId && CRM_Utils_Array::value( 'record_contribution', $formValues ) ) {
                 
                 // update membership as well as contribution object, CRM-4395
                 require_once 'CRM/Contribute/Form/Contribution.php';
