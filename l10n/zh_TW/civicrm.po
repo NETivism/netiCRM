@@ -30190,7 +30190,7 @@ msgstr "使用此表格代表%1以更新會員記錄。<strong>%2 交易會被�
 
 #: templates/CRM/Member/Form/MembershipRenewal.tpl
 msgid "Renewing will add the normal membership period to the End Date of the previous period for members whose status is Current or Grace. For Expired memberships, renewing will create a membership period commencing from the 'Date Renewal Entered'. This date can be adjusted including being set to the day after the previous End Date - if continuous membership is required."
-msgstr ""
+msgstr "若是對還在期限中，與寬限期中的會員進行會籍更新，他們的會籍將會從預計到期日之後新增上去。若是已過期的會員，更新會籍則會讓會籍從輸入的會籍更新日起算。若有需要，會籍更新日可以調整，例如把日期調整到到期日之後。"
 
 #: templates/CRM/Member/Form/MembershipRenewal.tpl
 msgid "Status of this membership."
@@ -36088,10 +36088,6 @@ msgstr "個人募款頁狀態"
 msgid "Show"
 msgstr "顯示"
 
-#: CRM/Contribute/Form/Task/PDF.php
-msgid "Download Receipt(s)"
-msgstr "下載收據"
-
 #: CRM/Contribute/Page/ContributionPage.php
 msgid "Copy Contribution Page"
 msgstr "複製募款頁"
@@ -39747,6 +39743,3 @@ msgstr "會員:手動更新會籍(by %1)"
 
 msgid "Membership Confirmation and Receipt"
 msgstr "會員註冊確認信與收據"
-
-msgid "Renewing will add the normal membership period to the End Date of the previous period for members whose status is Current or Grace. For Expired memberships, renewing will create a membership period commencing from the 'Date Renewal Entered'. This date can be adjusted including being set to the day after the previous End Date - if continuous membership is required."
-msgstr "若是對還在期限中，與寬限期中的會員進行會籍更新，他們的會籍將會從預計到期日之後新增上去。若是已過期的會員，更新會籍則會讓會籍從輸入的會籍更新日起算。若有需要，會籍更新日可以調整，例如把日期調整到到期日之後。"

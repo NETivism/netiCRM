@@ -4167,7 +4167,9 @@ CREATE TABLE civicrm_contribution (
      contact_id int unsigned NOT NULL   COMMENT 'FK to Contact ID',
      contribution_type_id int unsigned    COMMENT 'FK to Contribution Type',
      contribution_page_id int unsigned    COMMENT 'The Contribution Page which triggered this contribution',
+     payment_processor_id int unsigned    COMMENT 'FK to Payment Processor',
      payment_instrument_id int unsigned    COMMENT 'FK to Payment Instrument',
+     created_date datetime    COMMENT 'when was contribution submitted',
      receive_date datetime    COMMENT 'when was gift received',
      non_deductible_amount decimal(20,2)   DEFAULT 0 COMMENT 'Portion of total amount which is NOT tax deductible. Equal to total_amount for non-deductible contribution types.',
      total_amount decimal(20,2) NOT NULL   COMMENT 'Total amount of this contribution. Use market value for non-monetary gifts.',
@@ -4194,8 +4196,14 @@ CREATE TABLE civicrm_contribution (
 ,
     PRIMARY KEY ( id )
  
-    ,     INDEX UI_contrib_payment_instrument_id(
+    ,     INDEX UI_contrib_payment_processor_id(
+        payment_processor_id
+  )
+  ,     INDEX UI_contrib_payment_instrument_id(
         payment_instrument_id
+  )
+  ,     INDEX created_date(
+        created_date
   )
   ,     UNIQUE INDEX UI_contrib_trxn_id(
         trxn_id
@@ -4220,6 +4228,7 @@ CREATE TABLE civicrm_contribution (
      CONSTRAINT FK_civicrm_contribution_contact_id FOREIGN KEY (contact_id) REFERENCES civicrm_contact(id) ON DELETE CASCADE,      
      CONSTRAINT FK_civicrm_contribution_contribution_type_id FOREIGN KEY (contribution_type_id) REFERENCES civicrm_contribution_type(id) ON DELETE SET NULL,      
      CONSTRAINT FK_civicrm_contribution_contribution_page_id FOREIGN KEY (contribution_page_id) REFERENCES civicrm_contribution_page(id) ON DELETE SET NULL,      
+     CONSTRAINT FK_civicrm_contribution_payment_processor_id FOREIGN KEY (payment_processor_id) REFERENCES civicrm_payment_processor(id) ON DELETE SET NULL,      
      CONSTRAINT FK_civicrm_contribution_contribution_recur_id FOREIGN KEY (contribution_recur_id) REFERENCES civicrm_contribution_recur(id) ON DELETE SET NULL,      
      CONSTRAINT FK_civicrm_contribution_honor_contact_id FOREIGN KEY (honor_contact_id) REFERENCES civicrm_contact(id) ON DELETE SET NULL,      
      CONSTRAINT FK_civicrm_contribution_address_id FOREIGN KEY (address_id) REFERENCES civicrm_address(id) ON DELETE SET NULL  
