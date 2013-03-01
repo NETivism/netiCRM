@@ -74,7 +74,7 @@
          url: dataURL,
          success: function( content ) {
              cj( '#contact-dialog-' + blockNo ).show( ).html( content ).dialog({
-         	    	title: "Create New Contact",
+         	    	title: "{/literal}{ts}Create New Contact{/ts}{literal}",
              		modal: true,
              		width: 680, 
              		overlay: { 

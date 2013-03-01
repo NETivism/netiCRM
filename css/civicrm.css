@@ -3164,3 +3164,16 @@ div#crm-toolTip
 #crm-container .crm-search_criteria_basic-accordion .form-layout td {
   border-right: 1px dotted #CCC;
 }
+
+#receipt-option {
+  padding: 5px;
+  background: #EFEFEF;
+  border: 1px solid #CCC;
+  border-radius: 5px;
+}
+#receipt-option .crm-receipt-option {
+  margin-bottom: 8px;
+}
+#receipt-option div.label {
+  font-weight: bold;
+}

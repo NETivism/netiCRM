@@ -61,40 +61,40 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
      */
     
     function preProcess( ) {
-        $id = CRM_Utils_Request::retrieve( 'id', 'Positive', $this, false );
+      $id = CRM_Utils_Request::retrieve( 'id', 'Positive', $this, false );
 
-        if ( $id ) {
-            $this->_contributionIds    = array( $id );
-            $this->_componentClause = " civicrm_contribution.id IN ( $id ) ";
-            $this->_single = true;
-            $this->assign( 'totalSelectedContributions', 1 );
-        } else {
-            parent::preProcess( );
-        }
+      if ( $id ) {
+          $this->_contributionIds    = array( $id );
+          $this->_componentClause = " civicrm_contribution.id IN ( $id ) ";
+          $this->_single = true;
+          $this->assign( 'totalSelectedContributions', 1 );
+      } else {
+          parent::preProcess( );
+      }
 
-        // check that all the contribution ids have pending status
-        $query = " SELECT count(*) FROM civicrm_contribution WHERE  contribution_status_id != 1 AND {$this->_componentClause}";
-        $count = CRM_Core_DAO::singleValueQuery( $query, CRM_Core_DAO::$_nullArray );
-        if ( $count != 0 ) {
-          CRM_Core_Error::statusBounce( ts("Please select only contributions with Completed status.") ); 
-        }
+      // check that all the contribution ids have pending status
+      $query = " SELECT count(*) FROM civicrm_contribution WHERE  contribution_status_id != 1 AND {$this->_componentClause}";
+      $count = CRM_Core_DAO::singleValueQuery( $query, CRM_Core_DAO::$_nullArray );
+      if ( $count != 0 ) {
+        CRM_Core_Error::statusBounce( ts("Please select only contributions with Completed status.") ); 
+      }
 
-        // we have all the contribution ids, so now we get the contact ids
-        parent::setContactIDs( );
-        $this->assign( 'single', $this->_single );
-        
-        $qfKey = CRM_Utils_Request::retrieve( 'qfKey', 'String', $this );
-        require_once 'CRM/Utils/Rule.php';
-        $urlParams = 'force=1';
-        if ( CRM_Utils_Rule::qfKey( $qfKey ) ) {
-          $urlParams .= "&qfKey=$qfKey";
-        }
-        
-        $url = CRM_Utils_System::url( 'civicrm/contribute/search', $urlParams );
-        $breadCrumb = array ( array( 'url'   => $url, 'title' => ts('Search Results') ) );
-        
-        CRM_Utils_System::appendBreadCrumb( $breadCrumb );
-        CRM_Utils_System::setTitle( ts('Print Contribution Receipts') );
+      // we have all the contribution ids, so now we get the contact ids
+      parent::setContactIDs( );
+      $this->assign( 'single', $this->_single );
+      
+      $qfKey = CRM_Utils_Request::retrieve( 'qfKey', 'String', $this );
+      require_once 'CRM/Utils/Rule.php';
+      $urlParams = 'force=1';
+      if ( CRM_Utils_Rule::qfKey( $qfKey ) ) {
+        $urlParams .= "&qfKey=$qfKey";
+      }
+      
+      $url = CRM_Utils_System::url( 'civicrm/contribute/search', $urlParams );
+      $breadCrumb = array ( array( 'url'   => $url, 'title' => ts('Search Results') ) );
+      
+      CRM_Utils_System::appendBreadCrumb( $breadCrumb );
+      CRM_Utils_System::setTitle( ts('Print Contribution Receipts') );
     }
     
     /**
@@ -128,67 +128,14 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
      * @return None
      */
     public function postProcess() {
-        // get all the details needed to generate a receipt
-        $contribIDs = implode( ',', $this->_contributionIds );
+      // get all the details needed to generate a receipt
+      $contribIDs = implode( ',', $this->_contributionIds );
+      $details =& CRM_Contribute_Form_Task_Status::getDetails( $contribIDs );
 
-        // TODO: using batch api to procceed this.
-        $details =& CRM_Contribute_Form_Task_Status::getDetails( $contribIDs );
-
-        $message  =  array( );
-        $template =& CRM_Core_Smarty::singleton( );
-        $baseIPN = new CRM_Core_Payment_BaseIPN();
-
-        $params = $this->controller->exportValues( $this->_name );
-        
-        $createPdf = false;
-        $pdf_type = $params['output'];
-        
-        $this->_tmpreceipt = tempnam('/tmp', 'receipt');
-        $config =& CRM_Core_Config::singleton( );
-        foreach ( $details as $contribID => $detail ) {
-            $input = $ids = $objects = array( );
-            $template->assign('receiptOrgInfo', htmlspecialchars_decode($config->receiptOrgInfo));
-            $template->assign('receiptDescription', htmlspecialchars_decode($config->receiptDescription));
-            
-            $input['component'] = $detail['component'];
-
-            $ids['contact'     ]      = $detail['contact'];
-            $ids['contribution']      = $contribID;
-            $ids['contributionRecur'] = null;
-            $ids['contributionPage']  = null;
-            $ids['membership']        = $detail['membership'];
-            $ids['participant']       = $detail['participant'];
-            $ids['event']             = $detail['event'];
-
-            if ( ! $baseIPN->validateData( $input, $ids, $objects, false ) ) {
-                CRM_Core_Error::fatal( );
-            }
-            $contribution =& $objects['contribution'];
-
-            // set some fake input values so we can reuse IPN code
-            $input['amount']     = $contribution->total_amount;
-            $input['is_test']    = $contribution->is_test;
-            $input['fee_amount'] = $contribution->fee_amount;
-            $input['net_amount'] = $contribution->net_amount;
-            $input['trxn_id']    = $contribution->trxn_id;
-            $input['trxn_date']  = isset( $contribution->trxn_date ) ? $contribution->trxn_date : null;
-
-            // CRM_Core_Error::debug('input',$input);
-            
-            $values = array( );
-            $html = CRM_Contribute_BAO_Contribution::getReceipt( $input, $ids, $objects, $values);
-            $html .= '<div style="page-break-after: always;"></div>';
-            
-            // do not use array to prevent memory exhusting
-            self::pushFile($html);
-            // dump to file then retrive lately
-
-            // reset template values before processing next transactions
-            $template->clearTemplateVars( );
-        }
-
-        self::makePDF();
-        CRM_Utils_System::civiExit( );
+      $params = $this->controller->exportValues( $this->_name );
+      self::makeReceipt($details);
+      self::makePDF();
+      CRM_Utils_System::civiExit( );
     }
 
     public function pushFile($html) {
@@ -201,19 +148,113 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
       return $return;
     }
     
-    public function makePDF(){
+    public function makePDF($output = FALSE){
       $pages = self::popFile();
       $pages = '<!DOCTYPE html>
-      <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
-      <head>
-      <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-      </head>
-      <body>
-      '.$pages.'
-      </body>
-      </html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+.row { display:table-row;}
+.line { border-top: 1px dashed #aaa; padding-top: 10px;}
+.receipt{ position:relative; font-size:12pt; height:480px; margin-top:20px;}
+.receipt-head { width: 100%; height: 50px;}
+.receipt-head .logo {position:absolute; left:0; top:0;}
+.receipt-head .title {position:absolute; left:45%; top:0; font-size: 16pt; text-align:center;}
+.receipt-head .serial {position:absolute; font-size: 10pt; top: -20px; right:0;}
+.receipt-head .serial .type { font-weight:bold; }
+
+.receipt-body {clear:both; position: relative; }
+.receipt-body .content { float: left; maring:0; margin-left:10px; padding-left:10px;}
+.receipt-body .content li { margin: 8px 0;}
+.receipt-body .stamp { position: absolute; left:50%;}
+.receipt-body .handle { margin-top:50px;}
+.receipt-body .unit { padding:0 8px; font-size:10pt;}
+.receipt-body li.amount .desc { padding-left: 5px; }
+.receipt-body li.amount .second-line { padding-left: 50px; }
+.receipt-body .start.unit { font-size: 12pt; padding-left:5px;}
+
+.receipt-footer {clear:both; display:table;}
+.receipt-footer .org-info { display:table-cell; font-size:9pt; width:255px; }
+.receipt-footer .org-desc { display:table-cell; font-size:8pt; }
+
+
+</style>
+</head>
+<body>
+'.$pages.'
+</body>
+</html>
       ';
 
-      CRM_Utils_PDF_Utils::domlib( $pages, 'Receipt.pdf', false, 'portrait', 'a4' );
+      $pdf = CRM_Utils_PDF_Utils::domlib( $pages, 'Receipt.pdf', $output, 'portrait', 'a4' );
+      if($output){
+        print $pdf;
+      }
+    }
+
+    public function makeReceipt($details, $print_type = NULL){
+      $this->_tmpreceipt = tempnam('/tmp', 'receipt');
+      if(is_numeric($details)){
+        $details =& CRM_Contribute_Form_Task_Status::getDetails( $details );
+      }
+      if(empty($print_type)){
+        $print_type = array(
+          'original' => ts('Original Receipts'),
+          'copy' => ts('Copy Receipts'),
+          //'address' => '',
+        );
+      }
+
+      $template =& CRM_Core_Smarty::singleton( );
+      $baseIPN = new CRM_Core_Payment_BaseIPN();
+      $config =& CRM_Core_Config::singleton( );
+      $count = 0;
+      $template->assign('print_type', $print_type);
+
+      foreach ( $details as $contribID => $detail ) {
+        $input = $ids = $objects = array( );
+        $template->assign('receiptOrgInfo', htmlspecialchars_decode($config->receiptOrgInfo));
+        $template->assign('receiptDescription', htmlspecialchars_decode($config->receiptDescription));
+              
+        $input['component'] = $detail['component'];
+
+        $ids['contact'     ]      = $detail['contact'];
+        $ids['contribution']      = $contribID;
+        $ids['contributionRecur'] = null;
+        $ids['contributionPage']  = null;
+        $ids['membership']        = $detail['membership'];
+        $ids['participant']       = $detail['participant'];
+        $ids['event']             = $detail['event'];
+
+
+        if ( ! $baseIPN->validateData( $input, $ids, $objects, false ) ) {
+          CRM_Core_Error::fatal( );
+        }
+        $contribution =& $objects['contribution'];
+
+        // set some fake input values so we can reuse IPN code
+        $input['amount']     = $contribution->total_amount;
+        $input['is_test']    = $contribution->is_test;
+        $input['fee_amount'] = $contribution->fee_amount;
+        $input['net_amount'] = $contribution->net_amount;
+        $input['trxn_id']    = $contribution->trxn_id;
+        $input['trxn_date']  = isset( $contribution->trxn_date ) ? $contribution->trxn_date : null;
+
+        $values = array( );
+        if($count){
+          $html = '<div style="page-break-after: always;"></div>';
+        }
+        $html .= CRM_Contribute_BAO_Contribution::getReceipt( $input, $ids, $objects, $values);
+              
+        // do not use array to prevent memory exhusting
+        self::pushFile($html);
+        // dump to file then retrive lately
+
+        // reset template values before processing next transactions
+        $template->clearTemplateVars( );
+        $count++;
+        unset($html);
+      }
     }
 }

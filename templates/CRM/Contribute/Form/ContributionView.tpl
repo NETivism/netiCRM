@@ -33,6 +33,14 @@
        {assign var='urlParams' value="reset=1&id=$id&cid=$contact_id&action=update&context=$context&key=$searchKey"}	   
        {/if}
        <a class="button" href="{crmURL p='civicrm/contact/view/contribution' q=$urlParams}" accesskey="e"><span><div class="icon edit-icon"></div>{ts}Edit{/ts}</span></a>
+
+       {if $receipt_id}
+         {assign var='urlParams' value="reset=1&id=$id&cid=$contact_id&action=pdf&context=$context"}
+         {if ( $context eq 'fulltext' || $context eq 'search' ) && $searchKey}
+         {assign var='urlParams' value="reset=1&id=$id&cid=$contact_id&action=view&context=$context&key=$searchKey"}
+         {/if}
+         <a class="button" href="{crmURL p='civicrm/contact/view/contribution/receipt' q=$urlParams}" accesskey="e" target="_blank"><span><div class="icon ui-icon-circle-arrow-s"></div>{ts}Receipt{/ts}</span></a>
+       {/if}
     {/if}
     {if call_user_func(array('CRM_Core_Permission','check'), 'delete in CiviContribute')}
        {assign var='urlParams' value="reset=1&id=$id&cid=$contact_id&action=delete&context=$context"}
@@ -133,8 +141,15 @@
   {/if}
 	{if $receipt_date}
     	<tr>
-    	    <td class="label">{ts}Receipt Sent{/ts}</td>
+    	    <td class="label">{ts}Receipt Date{/ts}</td>
         	<td>{$receipt_date|crmDate}</td>
+    	</tr>
+	{/if}	
+	{if $receipt_id}
+    	<tr>
+    	    <td class="label">{ts}Receipt ID{/ts}</td>
+        	<td>{$receipt_id} (<a href="{crmURL p='civicrm/contact/view/contribution/receipt' q=$urlParams}" accesskey="e" target="_blank">{ts}Print Contribution Receipts{/ts}</a>)</td>
+         
     	</tr>
 	{/if}	
 	{foreach from=$note item="rec"} 
@@ -240,6 +255,14 @@
        {assign var='urlParams' value="reset=1&id=$id&cid=$contact_id&action=update&context=$context&key=$searchKey"}	   
        {/if}
        <a class="button" href="{crmURL p='civicrm/contact/view/contribution' q=$urlParams}" accesskey="e"><span><div class="icon edit-icon"></div>{ts}Edit{/ts}</span></a>
+
+       {if $receipt_id}
+         {assign var='urlParams' value="reset=1&id=$id&cid=$contact_id&action=pdf&context=$context"}
+         {if ( $context eq 'fulltext' || $context eq 'search' ) && $searchKey}
+         {assign var='urlParams' value="reset=1&id=$id&cid=$contact_id&action=view&context=$context&key=$searchKey"}
+         {/if}
+         <a class="button" href="{crmURL p='civicrm/contact/view/contribution/receipt' q=$urlParams}" accesskey="e" target="_blank"><span><div class="icon ui-icon-circle-arrow-s"></div>{ts}Receipt{/ts}</span></a>
+       {/if}
     {/if}
     {if call_user_func(array('CRM_Core_Permission','check'), 'delete in CiviContribute')}
        {assign var='urlParams' value="reset=1&id=$id&cid=$contact_id&action=delete&context=$context"}

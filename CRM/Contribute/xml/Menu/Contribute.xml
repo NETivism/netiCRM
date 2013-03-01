@@ -173,6 +173,12 @@
      <page_callback>CRM_Contribute_Page_Tab</page_callback>
      <weight>1</weight>
   </item>
+  <item>
+     <path>civicrm/contact/view/contribution/receipt</path>
+     <title>Contributions</title>
+     <page_callback>CRM_Contribute_Page_Receipt</page_callback>
+     <access_arguments>access CiviContribute,edit contributions</access_arguments>
+  </item>
    <item>
      <path>civicrm/contact/view/contributionrecur</path>
      <title>Recurring Contributions</title>

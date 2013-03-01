@@ -437,6 +437,9 @@ class CRM_Core_Payment_BaseIPN {
         if ( CRM_Utils_Array::value('payment_instrument_id', $input) ) {
             $contribution->payment_instrument_id = $input['payment_instrument_id'];
         }
+
+        // check and generate receipt id here for every online contribution
+        CRM_Contribute_BAO_Contribute::genReceiptID($contribution, FALSE);
         
         $contribution->save( );
         

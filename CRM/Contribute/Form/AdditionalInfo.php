@@ -265,7 +265,7 @@ class CRM_Contribute_Form_AdditionalInfo
             $formatted['thankyou_date'] = 'null';
         }
         
-        if ( CRM_Utils_Array::value( 'is_email_receipt', $params ) ) {
+        if ( CRM_Utils_Array::value( 'is_email_receipt', $params ) && empty($params['receipt_date']) ) {
             $params['receipt_date'] = $formatted['receipt_date'] = date( 'YmdHis' );
         }
 

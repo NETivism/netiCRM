@@ -16,6 +16,14 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting
         $this->addElement('text','receiptPrefix', ts('Prefix of Receipt ID'));
         $this->addElement('textarea','receiptDescription', ts('Description of Receipt Footer'));
         $this->addElement('textarea','receiptOrgInfo', ts('Organization info'));
+
+        $fields = CRM_Core_BAO_CustomField::getFields('Contribution');
+        $option = array( 0 => ts('-- Select --'));
+        foreach($fields as $custom_id => $f){
+          $option[$custom_id] = $f['label'];
+        }
+        $this->addElement('select', 'receiptTitle', ts('Field for receipt title'), $option);
+        $this->addElement('select', 'receiptSerial', ts('Field for receipt serial number'), $option);
         $check = true;
         
         // redirect to Administer Section After hitting either Save or Cancel button.

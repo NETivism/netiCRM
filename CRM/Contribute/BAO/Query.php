@@ -577,6 +577,7 @@ class CRM_Contribute_BAO_Query
                                 'amount_level'            => 1,
                                 'contribution_note'       => 1,
                                 'contribution_page_id'    => 1,
+                                'receipt_id'              => 1,
                                 );
 
             // also get all the custom contribution properties

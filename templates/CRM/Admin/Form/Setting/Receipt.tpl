@@ -38,6 +38,14 @@
             <td class="label">{$form.receiptOrgInfo.label}</td><td>{$form.receiptOrgInfo.html}<br />
             <span class="description"></span></td>
         </tr>
+        <tr class="crm-mail-form-block-receiptTitle">
+            <td class="label">{$form.receiptTitle.label}</td><td>{$form.receiptTitle.html}<br />
+            <span class="description"></span></td>
+        </tr>
+        <tr class="crm-mail-form-block-receiptSerial">
+            <td class="label">{$form.receiptSerial.label}</td><td>{$form.receiptSerial.html}<br />
+            <span class="description"></span></td>
+        </tr>
       </table>
 <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>     
 <div class="spacer"></div>

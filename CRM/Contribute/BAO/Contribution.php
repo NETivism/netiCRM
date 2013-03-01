@@ -220,6 +220,11 @@ class CRM_Contribute_BAO_Contribution extends CRM_Contribute_DAO_Contribution
             }
         }
 
+        // calculate receipt id
+        if(!$params['receipt_id']){
+          $params['receipt_id'] = CRM_Contribute_BAO_Contribution::genReceiptID($params, FALSE);
+        }
+
         require_once 'CRM/Core/Transaction.php';
         $transaction = new CRM_Core_Transaction( );
 
@@ -1706,7 +1711,7 @@ SELECT source_contact_id
                       'monthDate' => $monthDate );
     }
 
-    function getReceipt( &$input, &$ids, &$objects, &$values) {
+    static function getReceipt( &$input, &$ids, &$objects, &$values) {
         $contribution =& $objects['contribution'];
         $membership   =& $objects['membership']  ;
         $participant  =& $objects['participant'] ;
@@ -1718,13 +1723,18 @@ SELECT source_contact_id
         $contactID = $ids['contact'];
         
         // set display address of contributor
+        /*
         if ( $contribution->address_id ) {
-          require_once 'CRM/Core/BAO/Address.php';
           $addressParams     = array( 'id' => $contribution->address_id );	
           $addressDetails    = CRM_Core_BAO_Address::getValues( $addressParams, false, 'id' );
           $addressDetails    = array_values( $addressDetails );
           $values['address'] = $addressDetails[0]['display'];                
         }
+        */
+        $config = CRM_Core_Config::singleton();
+        $custom_values = CRM_Core_BAO_CustomValueTable::getEntityValues($contribID, 'Contribution');
+        $custom_title = $config->receiptTitle;
+        $custom_serial = $config->receiptSerial;
 
         $template =& CRM_Core_Smarty::singleton( );
 
@@ -1736,15 +1746,20 @@ SELECT source_contact_id
         }
 
         if($contact->contact_type == 'Individual'){
-          $template->assign( 'serial_id', $contact->legal_identifier );
+          $legal_identifier = $custom_values[$custom_serial] ? $custom_values[$custom_serial] : $contact->legal_identifier;
+          $template->assign( 'serial_id', $legal_identifier );
         }
         elseif($contact->contact_type == 'Organization'){
-          $template->assign( 'serial_id', $contact->sic_code );
+          $sic_code = $custom_values[$custom_serial] ? $custom_values[$custom_serial] : $contact->sic_code;
+          $template->assign( 'serial_id', $sic_code );
         }
-        $template->assign( 'sort_name', $contact->sort_name );
+
+        $sort_name = $custom_values[$custom_title] ? $custom_values[$custom_title] : $contact->sort_name;
+        $template->assign( 'sort_name', $sort_name);
 
         $template->assign( 'trxn_id', $contribution->trxn_id );
-        $template->assign( 'receive_date', CRM_Utils_Date::customFormat( $contribution->receive_date, '%Y/%m/%d' ) );
+        $template->assign( 'receipt_date', CRM_Utils_Date::customFormat( $contribution->receipt_date, '%Y/%m/%d' ) );
+        $template->assign( 'receipt_id', $contribution->receipt_id );
         $template->assign( 'action', $contribution->is_test ? 1024 : 1 );
         $template->assign( 'receipt_text', CRM_Utils_Array::value( 'receipt_text', $values ) );
         $template->assign( 'is_monetary', 1 );
@@ -1882,4 +1897,90 @@ SELECT source_contact_id
         return $html;
     }
 
+    static function genReceiptID(&$contrib, $save = TRUE){
+      if(is_numeric($contrib)){
+        $id = $contrib;
+        $contribution = new CRM_Contribute_DAO_Contribution( );
+        $contribution->id = $id;
+        if ( ! $contribution->find( true ) ) {
+          CRM_Core_Error::debug_log_message( "Could not find contribution record: $contributionID" );
+          return FALSE;
+        }
+      }
+      elseif(is_array($contrib)){
+        $contribution = $contrib;
+        $contribution = (object) $contribution;
+      }
+      else{
+        // object
+      }
+
+      $needs = array('is_test', 'contribution_status_id', 'receipt_date', 'receipt_id');
+      foreach($needs as $n){
+        if(!isset($contribution->$n) && $contribution->id){
+          $contribution->$n= CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $contribution->id, $n, 'id');
+        }
+      }
+
+      // have receipt date? completed? already have receipt id?
+      if(!empty($contribution->receipt_date) && $contribution->contribution_status_id == 1 && empty($contribution->receipt_id)){
+        // contribution type is dedutible?
+        $deductible = CRM_Contribute_BAO_ContributionType::deductible($contribution->contribution_type_id);
+        if($deductible){
+          $config = CRM_Core_Config::singleton();
+          if($contribution->id){
+            $fids = CRM_Core_BAO_FinancialTrxn::getFinancialTrxnIds( $contribution->id, 'civicrm_contribution' );
+          }
+          if(!empty($fids['entityFinancialTrxnId'])){
+            // online
+            $prefix = 'A';
+          }
+          else{
+            $prefix = 'M';
+          }
+          if(strstr($config->receiptPrefix, '%')){
+            $prefix .= CRM_Utils_Date::customFormat($contribution->receipt_date, $config->receiptPrefix);
+          }
+          
+          if($contribution->is_test){
+            $prefix = 'test-'.$prefix;
+          }
+
+          // now, give a proper id for contribution
+          $last = self::lastReceiptID($prefix);
+
+          if(empty($last)){
+            // first of this prefix, do generate
+            $num = sprintf('%06d', 1);
+            $receipt_id = $prefix.'-'.$num;
+          }
+          else{
+            // truncate and generate
+            $num = str_replace($prefix.'-', '', $last);
+            $num = (int)$num;
+            $num++;
+            $num = sprintf('%06d', $num);
+            $receipt_id = $prefix.'-'.$num;
+          }
+
+          $contribution->receipt_id = $receipt_id;
+          if($save && $contribution->id){
+            $contribution->save();
+          }
+          return $receipt_id;
+        }
+      }
+
+      // not a proper contribution to have receipt id
+      return FALSE;
+    }
+    
+    function lastReceiptID($prefix){
+      $query = "SELECT receipt_id FROM civicrm_contribution WHERE UPPER(receipt_id) LIKE UPPER('{$prefix}%') ORDER BY receipt_date DESC";
+      $last = CRM_Core_DAO::singleValueQuery($query);
+
+      if($last){
+        return $last;
+      }
+    }
 }

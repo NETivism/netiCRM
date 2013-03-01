@@ -132,11 +132,6 @@
                     <span class="description">{ts}The date this contribution was received.{/ts}</span>
                 </td>
             </tr>
-            <tr id="receiptId" class="crm-contribution-form-block-receipt_id">
-                <td class="label">{$form.receipt_id.label}</td>
-                <td>{$form.receipt_id.html}<br />
-                <span class="description">{ts 1=$receipt_id_setting}Receipt ID will generate automatically based on receive date and <a href="%1" target="_blank">prefix settings</a>.{/ts}</span></td>
-            </tr>
             <tr class="crm-contribution-form-block-payment_instrument_id">
                 <td class="label">{$form.payment_instrument_id.label}</td><td{$valueStyle}>{$form.payment_instrument_id.html}<br />
                     <span class="description">{ts}Leave blank for non-monetary contributions.{/ts}</span>
@@ -146,16 +141,35 @@
                 <tr id="checkNumber" class="crm-contribution-form-block-check_number"><td class="label">{$form.check_number.label}</td><td>{$form.check_number.html|crmReplace:class:six}</td></tr>
             {/if}
             <tr class="crm-contribution-form-block-trxn_id"><td class="label">{$form.trxn_id.label}</td><td{$valueStyle}>{$form.trxn_id.html|crmReplace:class:twelve} {help id="id-trans_id"}</td></tr>
-            {if $email and $outBound_option != 2}
-                <tr class="crm-contribution-form-block-is_email_receipt"><td class="label">{$form.is_email_receipt.label}</td><td>{$form.is_email_receipt.html} <span class="description">{ts 1=$email}Automatically email a receipt for this contribution to %1?{/ts}</span></td></tr>
-            {elseif $context eq 'standalone' and $outBound_option != 2 }
-                <tr id="email-receipt" style="display:none;" class="crm-contribution-form-block-is_email_receipt"><td class="label">{$form.is_email_receipt.label}</td><td>{$form.is_email_receipt.html} <span class="description">{ts}Automatically email a receipt for this contribution to {/ts}<span id="email-address"></span>?</span></td></tr>
-            {/if}
-            <tr id="receiptDate" class="crm-contribution-form-block-receipt_date">
-                <td class="label">{$form.receipt_date.label}</td>
-                <td>{include file="CRM/common/jcalendar.tpl" elementName=receipt_date}<br />
-                    <span class="description">{ts}Date that a receipt was sent to the contributor.{/ts}</span>
-                </td>
+            <tr id="receipt" class="crm-contribution-form-block-receipt">
+              <td class="label"><label>{ts}Receipt{/ts}</label></td>
+              <td>
+                <div class="have-receipt"><input value="1" class="form-checkbox" type="checkbox" name="have_receipt" id="have_receipt" /> <span class="description">{ts}Have receipt?{/ts}</span></div>
+                <div id="receipt-option">
+                  {if $email and $outBound_option != 2 and !$receipt_id}
+                    <div class="crm-receipt-option crm-contribution-form-block-is_email_receipt">
+                      <div class="label">{$form.is_email_receipt.label}</div>
+                      <div>{$form.is_email_receipt.html} <span class="description">{ts 1=$email}Automatically email a receipt for this contribution to %1?{/ts}</span></div>
+                    </div>
+                  {elseif $context eq 'standalone' and $outBound_option != 2}
+                    <div id="email-receipt" style="display:none;" class="crm-contribution-form-block-is_email_receipt">
+                      <div class="label">{$form.is_email_receipt.label}</div>
+                      <div>{$form.is_email_receipt.html} <span class="description">{ts}Automatically email a receipt for this contribution to {/ts}<span id="email-address"></span>?</span></div>
+                    </div>
+                  {/if}
+                  <div class="crm-receipt-option">
+                    <div class="label">{$form.receipt_date.label}</div>
+                    <div>{include file="CRM/common/jcalendar.tpl" elementName=receipt_date}<br />
+                        <span class="description">{ts}Date that a receipt was sent to the contributor.{/ts}</span>
+                    </div>
+                  </div>
+                  <div class="crm-receipt-option">
+                    <div class="label">{$form.receipt_id.label}</div>
+                    <div>{$form.receipt_id.html}<br />
+                    <span class="description">{ts 1=$receipt_id_setting}Receipt ID will generate automatically based on receive date and <a href="%1" target="_blank">prefix settings</a>.{/ts}</span></div>
+                  </div>
+                </div>
+              </td>
             </tr>
             <tr class="crm-contribution-form-block-contribution_status_id"><td class="label">{$form.contribution_status_id.label}</td><td>{$form.contribution_status_id.html}
             {if $contribution_status_id eq 2}{if $is_pay_later }: {ts}Pay Later{/ts} {else}: {ts}Incomplete Transaction{/ts}{/if}{/if}</td></tr>
@@ -331,16 +345,6 @@ function loadPanes( id ) {
 
 
 {if $action neq 8}  
-{if $email and $outBound_option != 2}
-{include file="CRM/common/showHideByFieldValue.tpl" 
-    trigger_field_id    ="is_email_receipt"
-    trigger_value       =""
-    target_element_id   ="receiptDate" 
-    target_element_type ="table-row"
-    field_type          ="radio"
-    invert              = 1
-}
-{/if}
 {if !$contributionMode} 
 {include file="CRM/common/showHideByFieldValue.tpl" 
     trigger_field_id    ="contribution_status_id"
@@ -379,6 +383,33 @@ function loadPanes( id ) {
 
 {literal}
 <script type="text/javascript">
+cj(document).ready(function(){
+   if(cj('#receipt_date').val()){
+     cj('#have_receipt').attr('checked', 'checked');
+     cj('#have_receipt').attr('disabled', 'disabled');
+   }
+   else{
+     cj('#receipt-option').hide();
+   }
+   cj('#have_receipt').live('click', function(){
+     if(cj(this).attr('checked') == 'checked'){
+       var d = new Date();
+       if(cj("#receive_date").length){
+         cj("#receipt_date").datepicker('setDate', cj("#receive_date").val());
+         cj("#receipt_date_time").val(cj("#receive_date_time").val());
+       }
+       else{
+         cj("#receipt_date").datepicker('setDate', d);
+         cj("#receipt_date_time").val(d.getHours()+':'+d.getMinutes());
+       }
+       cj('#receipt-option').show();
+     }
+     else{
+       cj('#receipt-option').hide();
+       clearDateTime('receipt_date');
+     }
+   });
+});
 cj(function() {
    cj().crmaccordions(); 
 });
