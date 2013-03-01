@@ -39,16 +39,15 @@ function civicrm_gw_do_transfer_checkout(&$vars, &$component, &$payment_processo
       break;
   }
   // now process contribution to save some default value
-  require_once 'CRM/Contribute/DAO/Contribution.php';
-  $contribution =& new CRM_Contribute_DAO_Contribution();
-  $contribution->id = $vars['contributionID'];
-  $contribution->find(true);
-  $contribution->is_pay_later = $is_pay_later;
-  $contribution->trxn_id = $vars['contributionID'];
+  $contrib_params = array( 'id' => $vars['contributionID'] );
+  $contrib_values = $contrib_ids = array();
+  CRM_Contribute_BAO_Contribution::getValues($contrib_params, $contrib_values, $contrib_ids);
   if($vars['civicrm_instrument_id']){
-    $contribution->payment_instrument_id = $vars['civicrm_instrument_id'];
+    $contrib_values['payment_instrument_id'] = $vars['civicrm_instrument_id'];
   }
-  $contribution->save();
+  $contrib_values['is_pay_later'] = $is_pay_later;
+  $contrib_values['trxn_id'] = $payment_processor['signature'].$vars['contributionID'];
+  $contribution =& CRM_Contribute_BAO_Contribution::create($contrib_values, $contrib_ids);
 
   // Inject in quickform sessions
   // Special hacking for display trxn_id after thank you page.

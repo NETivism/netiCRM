@@ -11,24 +11,17 @@
  * @param $payment_processor 
  */
 function civicrm_nccc_do_transfer_checkout(&$vars, &$component, &$payment_processor){
-  // to see what instrument for newweb
-  $instrument_id = $vars['civicrm_instrument_id'];
-  $instrument_name = civicrm_instrument_by_id($instrument_id, 'name');
-  $instrument_code = $gw_instruments[$instrument_name];
-
   // First, we insert every contribution into record. After this, we'll use update for the record.
   $record = array('cid' => $vars['contributionID'], 'created' => time());
   drupal_write_record("civicrm_contribution_nccc", $record);
 
-  $redirect_vars = _civicrm_nccc_getvars($vars, $component, $payment_processor, $instrument_code);
+  $redirect_vars = _civicrm_nccc_getvars($vars, $component, $payment_processor);
 
   // now process contribution to save some default value
   $contrib_params = array( 'id' => $vars['contributionID'] );
   $contrib_values = $contrib_ids = array();
   CRM_Contribute_BAO_Contribution::getValues($contrib_params, $contrib_values, $contrib_ids);
-  if($vars['civicrm_instrument_id']){
-    $contrib_values['payment_instrument_id'] = $vars['civicrm_instrument_id'];
-  }
+  $contrib_values['payment_instrument_id'] = 1;
   $contrib_values['trxn_id'] = $payment_processor['signature'].$vars['contributionID'];
   $contribution =& CRM_Contribute_BAO_Contribution::create($contrib_values, $contrib_ids);
 
@@ -47,7 +40,7 @@ function civicrm_nccc_do_transfer_checkout(&$vars, &$component, &$payment_proces
   exit();
 }
 
-function _civicrm_nccc_getvars(&$vars, $component, &$payment_processor, $instrument_code){
+function _civicrm_nccc_getvars(&$vars, $component, &$payment_processor){
   global $base_url, $base_path, $language;
 
   // notify url for receive payment result
