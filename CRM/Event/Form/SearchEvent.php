@@ -98,7 +98,14 @@ class CRM_Event_Form_SearchEvent extends CRM_Core_Form
                         if ( substr( $field, -4 ) == 'date' ) {
                             $time = ( $field == 'end_date' ) ? '235959' : null;
                             $parent->set( $field, CRM_Utils_Date::processDate( $params[$field], $time ) );
-                        } else {
+                        }
+                        elseif($field == 'event_type_id'){
+                            foreach($params[$field] as $k => $v){
+                              $event_type_ids[$v] = $v;
+                            }
+                            $parent->set( $field, $event_type_ids );
+                        }
+                        else {
                             $parent->set( $field, $params[$field] );
                         }
                 } else {
