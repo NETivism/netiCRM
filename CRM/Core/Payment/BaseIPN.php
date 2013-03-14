@@ -439,7 +439,7 @@ class CRM_Core_Payment_BaseIPN {
         }
 
         // check and generate receipt id here for every online contribution
-        CRM_Contribute_BAO_Contribute::genReceiptID($contribution, FALSE);
+        CRM_Contribute_BAO_Contribution::genReceiptID($contribution, FALSE);
         
         $contribution->save( );
         
