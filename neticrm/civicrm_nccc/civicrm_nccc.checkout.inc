@@ -73,10 +73,10 @@ function _civicrm_nccc_getvars(&$vars, $component, &$payment_processor){
     $redirect_vars['CSS_URL'] = 'https://'.$_SERVER['HTTP_HOST'].base_path().drupal_get_path('module', 'civicrm_nccc').'/civicrm_nccc.css';
   }
   if(!strstr($language->language, 'zh')){
-    $redirect_vars['TEMPLATE'] = 'ENGLISH_SIMPLE';
+    $redirect_vars['TEMPLATE'] = 'ENGLISH';
   }
   else{
-    $redirect_vars['TEMPLATE'] = 'CHINESE_SIMPLE';
+    $redirect_vars['TEMPLATE'] = 'CHINESE';
   }
 
   return $redirect_vars;
