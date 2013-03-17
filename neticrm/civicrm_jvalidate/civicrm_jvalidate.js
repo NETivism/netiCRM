@@ -56,6 +56,9 @@ $(document).ready(function(){
       if(lang == 'zh-hant' && !skiptwcheck){
         // twid
         $("#"+formid+" input[name*=legal_identifier]").each(function(){
+          $(this).keyup(function(){
+            this.value = this.value.toUpperCase();
+          });
           $(this).rules("add", "twid");
         });
 
