@@ -14,7 +14,8 @@ function civicrm_jvalidate_civicrm_buildForm($formName, &$form) {
     $path = drupal_get_path('module', 'civicrm_jvalidate');
     drupal_add_js($path.'/js/jquery.validate.min.js');
     drupal_add_js($path.'/js/localization/messages_tw.js');
-    drupal_add_js($path.'/civicrm_jvalidate.js');
+    drupal_add_js($path.'/js/custom-methods.js');
+    drupal_add_js($path.'/civicrm_jvalidate.js', 'module', 'footer');
     $add = TRUE;
   }
 }
