@@ -37,7 +37,7 @@ $.validator.addMethod("twid", function(value, element, param){
 }, "請輸入正確的身分證字號!");
 
 $.validator.addMethod("twphone", function(value, element, param) {
-  var tel = /^[0][1-9]{1,3}[-][0-9]{6,8}$/;
+  var tel = /^0[1-9]-[0-9]{7,8}[#_]*[0-9_]*$/;
   var mobile = /^09[0-9]{2}-[0-9]{3}[0-9]{3}$/;
   return this.optional(element) || (tel.test(value)) || (mobile.test(value));
 }, "請輸入正確的電話號碼!");

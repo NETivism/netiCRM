@@ -12,9 +12,15 @@ function civicrm_jvalidate_civicrm_buildForm($formName, &$form) {
   if(!$add){
     $js = '';
     $path = drupal_get_path('module', 'civicrm_jvalidate');
+    $t = array('jvalidate' => array(
+      'ext'=> t('Phone Ext.'),
+      'extprompt'=> t('Enter phone number Ext.'),
+    ));
+    drupal_add_js($t, 'setting');
     drupal_add_js($path.'/js/jquery.validate.min.js');
     drupal_add_js($path.'/js/localization/messages_tw.js');
     drupal_add_js($path.'/js/custom-methods.js');
+    drupal_add_js($path.'/js/jquery.maskedinput.js');
     drupal_add_js($path.'/civicrm_jvalidate.js', 'module', 'footer');
     $add = TRUE;
   }

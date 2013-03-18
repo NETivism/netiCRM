@@ -1,3 +1,45 @@
+$.amask.definitions['~']='[1-9]';
+$.amask.definitions['z']='[9]';
+$.amask.definitions['A']='[A-Z]';
+$.amask.definitions['#']='[0-9#]';
+$.amask.phone_add_validate = function(obj){
+  $(obj).rules("add", "twphone");
+
+  var mobile = false;
+  var n = $(obj).attr('name');
+  var re = /phone-(\w+)-(\d+)/g;
+  var match = re.exec(n);
+  if(match != null){
+    var idx = match.length - 1;
+    if(match[idx] == '2'){
+      mobile = true;
+    }
+  }
+  if(mobile){
+    $(obj).amask("0z99-999999");
+  }
+  else{
+    $(obj).amask("0~-9999999?##########");
+    // add phone ext box.
+    var fid = $(obj).attr("id");
+    $('<span href="#" class="ext" rel="'+fid+'"> +'+Drupal.settings.jvalidate.ext+'</span>').insertAfter(obj);
+    $("span[rel='"+fid+"']").css({cursor:"pointer",color:"green"});
+    $("span[rel='"+fid+"']").click(function(){
+      var ext = prompt(Drupal.settings.jvalidate.extprompt);
+      if(ext != null && ext != ""){
+        var f = '#'+$(this).attr("rel");
+        var v = $(f).val().replace(/#.*/, '');
+        $(f).val(v+'#'+ext);
+      }
+    });
+  }
+}
+
+$.amask.id_add_validate = function(obj){
+  $(obj).rules("add", "twid");
+  $(obj).amask("a999999999", {completed:function(){ obj.value = obj.value.toUpperCase(); }});
+}
+
 $(document).ready(function(){
   var lang = $('html').attr('lang');
   var skiptwcheck = typeof(Drupal.settings.skiptwcheck) == 'undefined' ? 0 : 1;
@@ -56,18 +98,15 @@ $(document).ready(function(){
       if(lang == 'zh-hant' && !skiptwcheck){
         // twid
         $("#"+formid+" input[name*=legal_identifier]").each(function(){
-          $(this).keyup(function(){
-            this.value = this.value.toUpperCase();
-          });
-          $(this).rules("add", "twid");
+          $.amask.id_add_validate(this);
         });
 
         // phone
         $("#"+formid+" input[name*=phone]").each(function(){
-          console.log($(this));
-          $(this).rules("add", "twphone");
+          $.amask.phone_add_validate(this);
         });
       }
     }
-  });  
+  });
+
 });
