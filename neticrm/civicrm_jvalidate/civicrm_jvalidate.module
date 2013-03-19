@@ -5,7 +5,7 @@
 function civicrm_jvalidate_civicrm_buildForm($formName, &$form) {
   static $add;
 
-  if($_GET['q'] != 'civicrm/event/register' && $_GET['q'] != 'civicrm/profile/create' && $_GET['q']!= 'civicrm/contribute/transact'){
+  if($_GET['q'] != 'civicrm/event/register' && $_GET['q'] != 'civicrm/profile/create' && $_GET['q']!= 'civicrm/contribute/transact' && $_GET['q'] != 'civicrm/contact/add'){
     return;
   }
 
