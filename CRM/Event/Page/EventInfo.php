@@ -80,10 +80,14 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page
         $params = array( 'id' => $this->_id );
         CRM_Event_BAO_Event::retrieve( $params, $values['event'] );
         
-        if (! $values['event']['is_active']){
+        if (! $values['event']['is_active'] && CRM_Core_Permission::check('access CiviEvent')){
+            CRM_Core_Session::setStatus( ts( 'Preview Page - %1', array(1 => $values['event']['title']) ));
+        }
+        elseif(! $values['event']['is_active']){
             // form is inactive, die a fatal death
             CRM_Core_Error::fatal( ts( 'The page you requested is currently unavailable.' ) );
-        }          
+        
+        }
         
         if ( !empty(  $values['event']['is_template'] ) ) {
             // form is an Event Template
