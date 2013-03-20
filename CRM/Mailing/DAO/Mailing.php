@@ -229,6 +229,12 @@ class CRM_Mailing_DAO_Mailing extends CRM_Core_DAO
      */
     public $scheduled_id;
     /**
+     * Date and time this mailing was scheduled.
+     *
+     * @var datetime
+     */
+    public $scheduled_date;
+    /**
      * Is this mailing archived?
      *
      * @var boolean
@@ -419,6 +425,11 @@ class CRM_Mailing_DAO_Mailing extends CRM_Core_DAO
                     'name' => 'scheduled_id',
                     'type' => CRM_Utils_Type::T_INT,
                     'FKClassName' => 'CRM_Contact_DAO_Contact',
+                ) ,
+                'scheduled_date' => array(
+                    'name' => 'scheduled_date',
+                    'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
+                    'title' => ts('Mailing Scheduled Date') ,
                 ) ,
                 'is_archived' => array(
                     'name' => 'is_archived',

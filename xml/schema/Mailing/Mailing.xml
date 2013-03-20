@@ -210,6 +210,13 @@
        <onDelete>SET NULL</onDelete>
   </foreignKey>
   <field>
+      <name>scheduled_date</name>
+      <type>datetime</type>
+      <title>Mailing Scheduled Date</title>
+      <comment>Date and time this mailing was scheduled.</comment>
+      <add>3.3</add>
+  </field>
+  <field>
        <name>is_archived</name>
        <type>boolean</type>
        <default>0</default>
