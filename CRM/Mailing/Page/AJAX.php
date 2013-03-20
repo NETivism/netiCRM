@@ -49,13 +49,12 @@ class CRM_Mailing_Page_AJAX {
     $messageTemplate = new CRM_Core_DAO_MessageTemplates();
     $messageTemplate->id = $templateId;
     $messageTemplate->selectAdd();
-    $messageTemplate->selectAdd('msg_text, msg_html, msg_subject, pdf_format_id');
+    $messageTemplate->selectAdd('msg_text, msg_html, msg_subject');
     $messageTemplate->find(TRUE);
     $messages = array(
       'subject' => $messageTemplate->msg_subject,
       'msg_text' => $messageTemplate->msg_text,
       'msg_html' => $messageTemplate->msg_html,
-      'pdf_format_id' => $messageTemplate->pdf_format_id,
     );
 
     echo json_encode($messages);
