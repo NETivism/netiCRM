@@ -1557,6 +1557,7 @@ table.campaign td,
     padding:0px 5px;
     border-left:1px solid #CCC;
     white-space:nowrap;
+    cursor: pointer;
 }
 #crm-container .action-item-wrap {
     padding:0px 5px;
@@ -2672,6 +2673,10 @@ div#crm-toolTip #hide-tooltip {
 
 #crm-container ul.token-input-list-facebook, ul.token-input-list-facebook li.leaf {
   list-style-image:none;
+}
+a.token-trigger, a.token-trigger label {
+  cursor: pointer;
+  font-size: 13px;
 }
 
 /* "don't do this" icons */

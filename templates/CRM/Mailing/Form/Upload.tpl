@@ -53,7 +53,7 @@
     </tr>
     <tr class="crm-mailing-upload-form-block-subject"><td class="label">{$form.subject.label}</td>
         <td colspan="2">{$form.subject.html|crmReplace:class:huge}
-                        <a href="#" onClick="return showToken('Subject', 3);">{$form.token3.label}</a>
+                        <a class="token-trigger" href="#" onClick="return showToken('Subject', 3);">{$form.token3.label|strip_tags}</a>
                         {help id="id-token-subject" file="CRM/Contact/Form/Task/Email.hlp"}
                         <div id='tokenSubject' style="display:none">
                            <input style="border:1px solid #999999;" type="text" id="filter3" size="20" name="filter3" onkeyup="filter(this, 3)"/><br />
