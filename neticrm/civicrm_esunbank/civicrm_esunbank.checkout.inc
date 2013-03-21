@@ -46,6 +46,7 @@ function civicrm_esunbank_do_transfer_checkout(&$vars, &$component, &$payment_pr
   CRM_Contribute_BAO_Contribution::getValues($contrib_params, $contrib_values, $contrib_ids);
   $contrib_values['trxn_id'] = $p['order_number'] ? $p['order_number'] : $p['serial']; // we use payment serial to be trxn_id
   $contrib_values['is_pay_later'] = 1;
+  $contrib_values['payment_instrument_id'] = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionValue', 'Esunbank', 'value', 'name');
   $contribution =& CRM_Contribute_BAO_Contribution::create($contrib_values, $contrib_ids);
 
   // Inject some in quickform sessions

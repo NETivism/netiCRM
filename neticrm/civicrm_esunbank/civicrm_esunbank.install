@@ -123,6 +123,28 @@ function civicrm_esunbank_install() {
 
   // add reserved template
   CRM_Core_BAO_MessageTemplates::add($params);
+
+  $gid = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_option_group WHERE name LIKE 'payment_instrument'");
+  
+  $group_params = array('name' => 'payment_instrument');
+  $params = array(
+    'name' => 'Esunbank',
+    'label' => '玉山',
+    'is_active' => 1,
+    'is_reserved' => 1,
+  );
+  $dao = CRM_Core_DAO::executeQuery("SELECT id, value FROM civicrm_option_value WHERE option_group_id = {$gid} AND name = 'Esunbank'");
+  $dao->fetch();
+  if($dao->id){
+    $params['value'] = $dao->value;
+    $action = CRM_Core_Action::UPDATE;
+    $option_value_id = $dao->id;
+  }
+  else{
+    $action = CRM_Core_Action::ADD;
+    $option_value_id = 0;
+  }
+  CRM_Core_OptionValue::addOptionValue($params, $group_params, $action, $option_value_id);
 }
 
 /**

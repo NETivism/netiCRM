@@ -41,10 +41,62 @@ function civicrm_esunbank_civicrm_buildForm($form_name, &$form){
  * Implementation of hook_cron()
  */
 function civicrm_esunbank_cron(){
-  // we don't need cron, yet
+  $now = $_SERVER['REQUEST_TIME'] ? $_SERVER['REQUEST_TIME'] : time();
 
-  // every day check payment
+  // fetch ftp
+  // every one hour, we check a system path for esunbank payment
+  $last = variable_get("civicrm_esunbank_cron", 0);
 
-  // contribution due day check
+  if($now - $last >= 3600){
+    $dir = file_directory_temp().'/esunbank';
+    $dir2 = file_directory_temp().'/esunbank_processed';
+    if(file_check_directory($dir, FILE_CREATE_DIRECTORY) && file_check_directory($dir2, FILE_CREATE_DIRECTORY)){
+      module_load_include('inc', 'civicrm_esunbank', 'civicrm_esunbank.ipn');
+      // start trying process ftp data
+      file_scan_directory($dir, '.csv', array('.', '..', 'CVS'), 'civicrm_esunbank_process_file', FALSE);
+    }
+    variable_set("civicrm_esunbank_cron", $now);
+  }
+
+  // expired
+  // every day, we check if payment should expired.
+  // we will expired payment in 8 day before.
+  if(date('G') > 2 && date('G') < 5){
+    $status = CRM_Contribute_PseudoConstant::contributionStatus(NULL, 'name');
+    $overdue = array_search('Overdue', $status);
+    $pending = array_search('Pending', $status);
+    $gid = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_option_group WHERE name LIKE 'payment_instrument'");
+    $instrument_id = CRM_Core_DAO::singleValueQuery("SELECT value FROM civicrm_option_value WHERE option_group_id = {$gid} AND name = 'Esunbank'");
+    if(!empty($instrument_id) && !empty($overdue) && !($pending)){
+      $eight_days = date('Y-m-d H:i:s', $now - 86400*8);
+      $nine_days = date('Y-m-d H:i:s', $now - 86400*9);
+      CRM_Core_DAO::executeQuery("UPDATE civicrm_contribution SET contribution_status_id = {$overdue} WHERE contribution_status_id = {$pending} AND created_date > '{$nine_days}' AND created_date < {$eight_days}");
+    }
+  }
+}
+
+function civicrm_esunbank_process_file($path){
+  if(file_exists($path)){
+    $dest = str_replace('/esunbank/', '/esunbank_processed/', $path);
+    $data = file_get_contents($path);
+    if(!empty($data)){
+      $post = array('Data' => $data);
+      $output = civicrm_esunbank_ipn($post, TRUE);
+      if(strstr($output, 'serial:')){
+        file_move($path, $dest, FILE_EXISTS_RENAME);
+        if(strstr($output, ':FAILED' )){
+          watchdog('civicrm_esunbank', 'Process Failed: '. $path."\n".$output, NULL, WATCHDOG_ERROR);
+        }
+      }
+      // still remove file if file parsed then have bunch of errors
+      elseif($output === FALSE){
+        file_move($path, $dest, FILE_EXISTS_RENAME);
+        watchdog('civicrm_esunbank', 'Process Failed: '. $path, NULL, WATCHDOG_ERROR);
+      }
+      else{
+        watchdog('civicrm_esunbank', 'Unknown Failed: '. $path."\n".$output, NULL, WATCHDOG_ERROR);
+      }
+    }
+  }
 }
 

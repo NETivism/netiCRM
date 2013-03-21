@@ -5,20 +5,95 @@ require_once 'CRM/Core/Payment/BaseIPN.php';
 /**
  * Helper function for receive pingback from payment server
  */
-function civicrm_esunbank_ipn(){
+function civicrm_esunbank_ipn($post = NULL, $slient = NULL){
   // detect variables
-  if(empty($_POST)){
+  if(empty($_POST) && empty($post)){
     watchdog("civicrm_esunbank", "Could not find POST data from payment server");
   }
   else{
-    if($component = $_GET['module']){
-      $ipn = new CRM_Core_Payment_ESUNBANKIPN();
-      $ipn->main($component);
+    if(empty($post)){
+      $post = $_POST;
+    }
+    // process post data first
+    $data = !empty($post['Data']) ? $post['Data'] : $post['data'];
+    $output = NULL;
+    if($data){
+      $parsed_data = civicrm_esunbank_parse_response($data);
+      $count = 0;
+      foreach($parsed_data as $response){
+        $count++;
+        if($count%10 == 0 && function_exists('gc_collect_cycles')){
+          gc_collect_cycles();
+        }
+        // try to find out response component
+        $contribution_id = CRM_Core_DAO::getFieldValue("CRM_Contribute_DAO_Contribution", $response['serial'], 'id', 'trxn_id');
+        $response['cid'] = $contribution_id;
+        drupal_write_record('civicrm_contribution_esunbank', $response, 'cid');
+        $query = CRM_Core_DAO::exeuteQuery("SELECT c.*, p.participant_id FROM civicrm_contribution c LEFT JOIN civicrm_participant_payment p ON p.contribution_id = c.id WHERE id = %1", array(1 => array($contribution_id, 'Integer')) );
+        $query->fetch();
+        if(empty($query->participant_id)){
+          $component = 'contribute';
+        }
+        else{
+          $component = 'event';
+        }
+        $ipn = new CRM_Core_Payment_ESUNBANKIPN();
+        $status = $ipn->main($component, $response, $query);
+        if($status === FALSE){
+          $output .= 'serial:'.$response['serial'].":FAILED\n";
+        }
+        else{
+          $output .= 'serial'.$response['serial'].":$status\n";
+        }
+      }
+
+      if($slient){
+        if(empty($output)){
+          return FALSE;
+        }
+        else{
+          return $output;
+        }
+      }
+      // after all script processed, we always output OK for esunbank https
+      else{
+        print 'OK';
+      }
     }
     else{
-      watchdog('civicrm_esunbank', "Could not get module name from request url");
+      watchdog("civicrm_esunbank", "Could not find POST data from payment server", NULL, WATCHDOG_WARNING);
     }
   }
+}
+
+function civicrm_esunbank_parse_response($data){
+  $r = array();
+  if (substr($data, 0,3) == pack("CCC",0xef,0xbb,0xbf)) {
+    $data = substr($data, 3);
+  }
+  $lines = explode(pack("CC",0x0d,0x0a), $data);
+
+  foreach($lines as $l){
+    if($l[0] == '#') continue;
+    $d = explode(',', $l);
+    if(count($d) < 6){
+      watchdog('civicrm_esunbank', 'Wrong format when parsing: '.$l, NULL, WATCHDOG_ERROR);
+      continue;
+    }
+    $ary = array(
+      'process_date' => $d[0],
+      'instrument' => $d[1],
+      'sequence' => $d[2],
+      'serial' => $d[3],
+      'amount' => $d[4],
+      'payment_datetime' => date("Y-m-d H:i:s", strtotime($d[5])),
+    );
+    if(!empty($d[6])){
+      $ary['data'] = $d[6];
+    }
+    $r[] = $ary;
+  }
+  return $r;
 }
 
 class CRM_Core_Payment_ESUNBANKIPN extends CRM_Core_Payment_BaseIPN {
@@ -27,19 +102,33 @@ class CRM_Core_Payment_ESUNBANKIPN extends CRM_Core_Payment_BaseIPN {
     parent::__construct( );
   }
 
-  function main(  $component = 'contribute'){
+  function main(  $component, $response, $contribution){
     // get the contribution and contact ids from the GET params
-    require_once 'CRM/Utils/Request.php';
     $objects = $ids = $input = array();
-    $this->getInput($input);
+    $input = $response;
     $input['component'] = $component;
-    $this->getIds($ids, $component);
+
+    // ids
+    $ids['contact'] = $contribution['contact_id'];
+    $ids['contribution'] = $contribution['id'];
+    if ( $component == 'event' ) {
+      $ids['event'] = CRM_Core_DAO::getFieldValue("CRM_Event_DAO_Participant", $contribution['participant_id'], 'event_id', 'id');
+      $ids['participant'] = $contribution['participant_id'];
+    }
+    else {
+      $ids['membership'] = $_GET['mid'];
+      $ids['contributionRecur'] = $contribution['contribution_recur_id'];
+      $ids['contributionPage'] = $contribution['contribution_page_id'];
+      /*
+      $ids['related_contact'] = $_GET['rid'];
+      $ids['onbehalf_dupe_alert'] = $_GET['onbehalf_dupe_alert'];
+      */
+    }
+    
+
     $qfKey = $_GET['qfKey'] ? $_GET['qfKey'] : '';
     $civi_base_url = $component == 'event' ? 'civicrm/event/register' : 'civicrm/contribute/transact';
 
-    // we use cid from url for mapping contribution
-    $this->saveRecord($_GET['cid'], $input);
-    
     // now, retrieve full object by validateData, or false fallback
     if ( ! $this->validateData( $input, $ids, $objects ) ) {
       return false;
@@ -48,7 +137,7 @@ class CRM_Core_Payment_ESUNBANKIPN extends CRM_Core_Payment_BaseIPN {
     // set global variable for paymentProcessor
     self::$payment_processor =& $objects['paymentProcessor'];
     if($objects['contribution']->contribution_status_id == 1){
-      // already completed, or unionpay, skip and redirect to thank you page
+      // already completed, skip and redirect to thank you page
       if($qfKey){
         drupal_goto($civi_base_url, "_qf_ThankYou_display=true&qfKey={$qfKey}");
       }
@@ -58,128 +147,24 @@ class CRM_Core_Payment_ESUNBANKIPN extends CRM_Core_Payment_BaseIPN {
     }
     else{
       // start validation
-      require_once 'CRM/Core/Transaction.php';
       $transaction = new CRM_Core_Transaction();
       $note = '';
-      if( $this->validateOthers($input, $ids, $objects, $transaction, $note) ){
-        $contribution =& $objects['contribution'];
+      $contribution =& $objects['contribution'];
+      $contribution->receive_date = date('YmdHis', strtotime($input['payment_datetime']));
+      $contribution->source .= '-玉山'.$input['instrument'];
+      $input['trxn_id'] = $input['serial'];
+      $this->completeTransaction( $input, $ids, $objects, $transaction, $recur );
+      $note .= ts('Completed')."\n";
+      $note .= $input['instrument']."\n";
+      $note .= 'Bank process date:'. $input['process_date'];
+      $this->addNote($note, $contribution);
 
-        $contribution->receive_date = date('YmdHis', strtotime($input['transdatetime']));
-
-        // we seperate orderid and contribution id
-        $input['trxn_id'] = $input['orderid'];
-        $this->completeTransaction( $input, $ids, $objects, $transaction, $recur );
-        $note .= ts('Completed')."\n";
-        $this->addNote($note, $contribution);
-
-        // TODO: We should inject reponse message in session before redirect.
-        drupal_goto($civi_base_url, "_qf_ThankYou_display=true&qfKey={$qfKey}");
-      }
-      else{
-        $this->addNote($note, $objects['contribution']);
-        $this->failed($objects, $transaction);
-
-        // TODO: Fail reason and fail page.
-        drupal_goto($civi_base_url, "_qf_ThankYou_display=true&qfKey={$qfKey}");
-      }
+      // printing OK!!
+      return 'OK';
     }
+    $objects = null;
+    return false;
   }
-
-  function saveRecord($cid, &$input){
-    $schema = drupal_get_schema_unprocessed('civicrm_esunbank', 'civicrm_contribution_esunbank');
-    $record = array_intersect_key($input, $schema['fields']);
-    $record['cid'] = $cid;
-    $record['redeem'] = serialize($record['redeem']);
-
-    drupal_write_record('civicrm_contribution_esunbank', $record, 'cid');
-  }
-
-  function getInput( &$input) {
-    foreach($_POST as $k => $v){
-      // skip empty value
-      if($v === '') continue;
-
-      $key = strtolower($k);
-      if(strpos($key, 'redeem') !== FALSE){
-        $input['redeem'][$key] = $v;
-      }
-      elseif($key == 'transdate' || $key == 'transtime'){
-        continue;
-      }
-      elseif($key == 'responsemsg'){
-        $v = iconv("big5","UTF-8", $v);
-        $input[$key] = $v;
-      }
-      // we can't use mysql reserved word for column name
-      elseif($key == 'foreign'){
-        $input['foreigncard'] = $v;
-      }
-      else{
-        $input[$key] = $v;
-      }
-    }
-
-    $input['transdatetime'] = date('Y-m-d H:i:s', strtotime($_POST['TransDate'].$_POST['TransTime']));
-  }
-
-  function getIds( &$ids , $component){
-    $ids['contact'] = $_GET['contact_id'];
-    $ids['contribution'] = $_GET['cid'];
-    if ( $component == 'event' ) {
-      $ids['event'] = $_GET['eid'];
-      $ids['participant'] = $_GET['pid'];
-    }
-    else {
-      $ids['membership'] = $_GET['mid'];
-      $ids['contributionRecur'] = $_GET['crid'];
-      $ids['contributionPage'] = $_GET['cpid'];
-      $ids['related_contact'] = $_GET['rid'];
-      $ids['onbehalf_dupe_alert'] = $_GET['onbehalf_dupe_alert'];
-    }
-    foreach($ids as $k => $v){
-      if(empty($v)) unset($ids[$k]);
-    }
-  }
-
-
-  function validateOthers( &$input, &$ids, &$objects, &$transaction, &$note){
-    $contribution = &$objects['contribution'];
-    $pass = TRUE;
-    
-    // check contribution id matches
-    if ( $contribution->trxn_id != $input['orderid'] ) {
-      watchdog("civicrm_esunbank", "{$contribution->trxn_id}: Orderid doesn't match in trxn_id" );
-      $note .= ts("Failuare: OrderNumber values doesn't match between database and IPN request")."\n";
-      $pass = FALSE;
-    } 
-
-    // check amount
-    $amount = $input['transamt'];
-    if ( $contribution->total_amount != $amount ) {
-      watchdog("civicrm_esunbank", "{$contribution->trxn_id}: Amount values dont match between database and IPN request" );
-      $note .= ts("Failuare: Amount values dont match between database and IPN request")."\n";
-      $pass = FALSE;
-    }
-
-    // process fail response
-    if($input['approvecode'] == '00' || $input['approvecode'] == '08' || $input['approvecode'] == '11'){
-      // success , do nothing
-    }
-    else{
-      $tc = $input['approvecode'];
-      $rc = $input['responsecode'];
-      $rmsg = $input['responsemsg'];
-      $this->failed( $objects, $transaction );
-      watchdog("civicrm_esunbank", "{$contribution->trxn_id}: Transaction failed from esunbank server response." );
-      $note .= ts("Transaction failed from remote response")."\n";
-      $note .= "Error response code / approve code: {$rc}/{$tc}\n";
-      $note .= "Error message: ".$rmsg."\n";
-      $pass = FALSE;
-    }
-
-    return $pass;
-  }
-
 
   function addNote($note, &$contribution){
     require_once 'CRM/Core/BAO/Note.php';
@@ -202,5 +187,4 @@ class CRM_Core_Payment_ESUNBANKIPN extends CRM_Core_Payment_BaseIPN {
     );
     CRM_Core_BAO_Note::add( $noteParams, $note_id );
   }
-
 }
