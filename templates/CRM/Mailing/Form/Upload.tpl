@@ -49,7 +49,7 @@
     {/if}
     <tr class="crm-mailing-upload-form-block-template">
     	<td class="label">{$form.template.label}</td>
-	<td>{$form.template.html}</td>
+      <td colspan="2">{$form.template.html} <a id="online-template-link" class="online-template-link" href="https://neticrm.tw/enews/embed?embed=1" title="{ts}Online tempalte{/ts}" style="display:none;">{ts}Online tempalte{/ts}</a></td>
     </tr>
     <tr class="crm-mailing-upload-form-block-subject"><td class="label">{$form.subject.label}</td>
         <td colspan="2">{$form.subject.html|crmReplace:class:huge}
@@ -127,6 +127,28 @@
             verify( );
         }
     }
+    cj(document).ready(function(){
+      // show dialog for online tempalte
+      cj("#online-template-link").click(function(e){
+        e.preventDefault();
+        var $this = cj(this);
+        var horizontalPadding = 30;
+        var verticalPadding = 30;
+        cj('<iframe id="externalSite" class="externalSite" src="' + this.href + '" />').dialog({
+            title: ($this.attr('title')) ? $this.attr('title') : 'Online template',
+            autoOpen: true,
+            width: 850,
+            height: 630,
+            modal: true,
+            resizable: true,
+            autoResize: true,
+            overlay: {
+              opacity: 0.5,
+              background: "black"
+            }
+        }).width(850 - horizontalPadding).height(630 - verticalPadding);
+      });
+    });
 </script>
 {/literal}
 
