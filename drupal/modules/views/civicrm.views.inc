@@ -1580,6 +1580,23 @@ function civicrm_views_data() {
                                                                              'handler' => 'views_handler_sort',
                                                                              ),
                                                              );
+    //BOOLEAN : is_monetary 
+    $data['civicrm_event']['is_monetary'] = array(
+                                                             'title' => t('Paid Event'),
+                                                             'help' => t('Is this event need to paid?'),
+                                                             'field' => array(
+                                                                              'handler' => 'views_handler_field_boolean',
+                                                                              'click sortable' => TRUE,
+                                                                              ),
+
+                                                             'filter' => array(
+                                                                               'handler' => 'views_handler_filter_boolean_operator',
+                                                                               ),
+
+                                                             'sort' => array(
+                                                                             'handler' => 'views_handler_sort',
+                                                                             ),
+                                                             );
 
     //EVENT ONLINE REGISTRATION START DATE
     $data['civicrm_event']['registration_start_date'] = array(
