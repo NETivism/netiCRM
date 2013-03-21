@@ -57,7 +57,7 @@ require_once 'CRM/Contribute/PseudoConstant.php';
  * {@getfields Contribution_create}
  */
 function civicrm_api3_contribution_create($params) {
-  civicrm_api3_verify_one_mandatory($params, NULL, array('financial_type_id', 'financial_type'));
+  // civicrm_api3_verify_one_mandatory($params, NULL, array('financial_type_id', 'financial_type'));
 
   $values = array();
 
