@@ -1,4 +1,5 @@
 $.amask.definitions['~']='[1-9]';
+$.amask.definitions['o']='[0]';
 $.amask.definitions['z']='[9]';
 $.amask.definitions['A']='[A-Z]';
 $.amask.definitions['#']='[0-9#]';
@@ -69,6 +70,20 @@ $.amask.phone_add_validate = function(obj, admin){
 $.amask.id_add_validate = function(obj){
   $(obj).rules("add", "twid");
   $(obj).amask("a999999999", {completed:function(){ obj.value = obj.value.toUpperCase(); }});
+
+  // add id validate remove rule.
+  var fid = $(obj).attr("id");
+  $("span[rel="+fid+"]").remove();
+  $('<span href="#" class="valid-id" rel="'+fid+'"> '+Drupal.settings.jvalidate.notw+'</span>').insertAfter(obj);
+  $("span[rel='"+fid+"']").css({cursor:"pointer",color:"green"});
+  $("span[rel='"+fid+"']").click(function(){
+    var notw = prompt(Drupal.settings.jvalidate.notwprompt);
+    if(notw != null && notw != ""){
+      $(obj).rules("remove", "twid");
+      $(obj).unmask();
+      $(obj).val(notw);
+    }
+  });
 }
 
 function parse_url(name, url){
@@ -117,7 +132,6 @@ $(document).ready(function(){
           if(admin){
             error.css({"color":"#E55","padding-left":"10px","display":"block"});
             error.appendTo($(element).parent());
-            $(element).css("border-color", "red");
           }
           else if (element.is(":radio") || element.is(":checkbox")) {
             var $c = element.parent();
@@ -142,7 +156,7 @@ $(document).ready(function(){
             $("#"+formid+" input[name*=email]:not(#email_1_email)").each(function(){
               $(this).rules("add", {required:false,email:true});
             });
-            $("#"+formid+" input[name*=phone]:not(#phone_1_phone)").each(function(){
+            $("#"+formid+" input[name$='[phone]']:not(#phone_1_phone)").each(function(){
               $.amask.phone_add_validate(this, admin);
             });
           },1200);
@@ -180,9 +194,16 @@ $(document).ready(function(){
         });
 
         // phone
-        $("#"+formid+" input[name*=phone]").each(function(){
-          $.amask.phone_add_validate(this, admin);
-        });
+        if(admin){
+          $("#"+formid+" input[name$='[phone]']").each(function(){
+            $.amask.phone_add_validate(this, admin);
+          });
+        }
+        else{
+          $("#"+formid+" input[name*=phone]").each(function(){
+            $.amask.phone_add_validate(this, admin);
+          });
+        }
       }
     }
   });

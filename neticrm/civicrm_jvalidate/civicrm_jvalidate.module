@@ -14,7 +14,9 @@ function civicrm_jvalidate_civicrm_buildForm($formName, &$form) {
     $path = drupal_get_path('module', 'civicrm_jvalidate');
     $t = array('jvalidate' => array(
       'ext'=> t('Phone Ext.'),
-      'extprompt'=> t('Enter phone number Ext.'),
+      'extprompt' => t('Enter phone number Ext.'),
+      'notw' => t('other format?'),
+      'notwprompt' => t('Enter id below.'),
     ));
     drupal_add_js($t, 'setting');
     drupal_add_js($path.'/js/jquery.validate.min.js');

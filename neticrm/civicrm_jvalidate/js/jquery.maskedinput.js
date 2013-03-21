@@ -275,7 +275,7 @@ $.fn.extend({
 				if (allow) {
 					writeBuffer();
 				} else if (lastMatch + 1 < partialPosition) {
-					//input.val("");
+					input.val("");
 					clearBuffer(0, len);
 				} else {
 					writeBuffer();
