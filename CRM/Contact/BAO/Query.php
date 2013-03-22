@@ -1120,7 +1120,8 @@ class CRM_Contact_BAO_Query {
         $this->_useGroupBy = TRUE;
       }
       if ($this->_useDistinct && !isset($this->_distinctComponentClause)) {
-        if (!($this->_mode & CRM_Contact_BAO_Query::MODE_ACTIVITY)) {
+        if (!($this->_mode & CRM_Contact_BAO_Query::MODE_ACTIVITY) && 
+            !($this->_mode & CRM_Contact_BAO_Query::MODE_CONTRIBUTE) ) {
           // CRM-5954
           $this->_select['contact_id'] = 'contact_a.id as contact_id';
           $this->_useDistinct = FALSE;
@@ -3774,11 +3775,9 @@ civicrm_relationship.start_date > {$today}
       // regenerate fromClause since permission might have added tables
       if ($permission) {
         //fix for row count in qill (in contribute/membership find)
-        /*
         if (!$count) {
           $this->_useDistinct = TRUE;
         }
-        */
         $this->_fromClause = self::fromClause($this->_tables, NULL, NULL, $this->_primaryLocation, $this->_mode);
         $this->_simpleFromClause = self::fromClause($this->_whereTables, NULL, NULL, $this->_primaryLocation, $this->_mode);
       }
