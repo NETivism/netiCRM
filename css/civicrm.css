@@ -613,6 +613,9 @@ div.spacer,
     padding:4px;
     color:#8A1F11;
 }
+#crm-container input.error {
+    border-color: red;
+}
 
 #restmsg {
     z-index:10000;
@@ -3181,4 +3184,8 @@ div#crm-toolTip
 }
 #receipt-option div.label {
   font-weight: bold;
+}
+
+.online-template-link {
+  cursor: pointer;
 }
