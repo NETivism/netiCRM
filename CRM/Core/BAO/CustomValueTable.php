@@ -544,44 +544,80 @@ AND    cf.id IN ( $fieldIDList )
      * @static
      */
     static function &getValues( &$params ) {
-        if ( empty( $params ) ) {
-            return null;
-        }
-        if ( ! isset( $params['entityID'] ) ||
-             CRM_Utils_Type::escape( $params['entityID'],
-                                     'Integer', false ) === null ) {
-            return CRM_Core_Error::createAPIError( ts( 'entityID needs to be set and of type Integer' ) );
-        }
+      if (empty($params)) {
+        return NULL;
+      }
+      if (!isset($params['entityID']) ||
+        CRM_Utils_Type::escape($params['entityID'],
+          'Integer', FALSE
+        ) === NULL
+      ) {
+        return CRM_Core_Error::createAPIError(ts('entityID needs to be set and of type Integer'));
+      }
 
-        // first collect all the ids. The format is:
-        // custom_ID
-        $fieldsIDs = array( );
-        foreach ( $params as $n => $v ) {
-            $key = $idx = null;
-            if ( substr( $n, 0, 7 ) == 'custom_' ) {
-                $idx = substr( $n, 7 );
-                if ( CRM_Utils_Type::escape( $idx,
-                                             'Integer', false ) === null ) {
-                    return CRM_Core_Error::createAPIError( ts( 'field ID needs to be of type Integer for index %1',
-                                                               array( 1 => $idx ) ) );
-                }
-                $fieldIDs[] = (int ) $idx;
-            }
+      // first collect all the ids. The format is:
+      // custom_ID
+      $fieldIDs = array();
+      foreach ($params as $n => $v) {
+        $key = $idx = NULL;
+        if (substr($n, 0, 7) == 'custom_') {
+          $idx = substr($n, 7);
+          if (CRM_Utils_Type::escape($idx,
+              'Integer', FALSE
+            ) === NULL) {
+            return CRM_Core_Error::createAPIError(ts('field ID needs to be of type Integer for index %1',
+                array(1 => $idx)
+              ));
+          }
+          $fieldIDs[] = (int ) $idx;
         }
+      }
 
-        $values = self::getEntityValues( $params['entityID'],
-                                         null,
-                                         $fieldIDs );
-        if ( empty( $values ) ) {
-            return CRM_Core_Error::createAPIError( ts( 'No values found for the specified entity ID and custom field(s).' ) );
-        } else {
-            $result = array( 'is_error' => 0,
-                             'entityID' => $params['entityID'] );
-            foreach ( $values as $id => $value ) {
-                $result["custom_{$id}"] = $value;
+      $default = array('Contact', 'Individual', 'Household', 'Organization');
+      if (!($type = CRM_Utils_Array::value('entityType', $params)) ||
+        in_array($params['entityType'], $default)
+      ) {
+        $type = NULL;
+      }
+      else {
+        $entities = CRM_Core_SelectValues::customGroupExtends();
+        if (!array_key_exists($type, $entities)) {
+          if (in_array($type, $entities)) {
+            $type = $entities[$type];
+            if (in_array($type, $default)) {
+              $type = NULL;
             }
-            return $result;
+          }
+          else {
+            return CRM_Core_Error::createAPIError(ts('Invalid entity type') . ': "' . $type . '"');
+          }
         }
+      }
+
+      $values = self::getEntityValues($params['entityID'],
+        $type,
+        $fieldIDs
+      );
+      if (empty($values)) {
+        // note that this behaviour is undesirable from an API point of view - it should return an empty array
+        // since this is also called by the merger code & not sure the consequences of changing
+        // are just handling undoing this in the api layer. ie. converting the error back into a success
+        $result = array(
+          'is_error' => 1,
+          'error_message' => 'No values found for the specified entity ID and custom field(s).',
+        );
+        return $result;
+      }
+      else {
+        $result = array(
+          'is_error' => 0,
+          'entityID' => $params['entityID'],
+        );
+        foreach ($values as $id => $value) {
+          $result["custom_{$id}"] = $value;
+        }
+        return $result;
+      }
     }
 
 }
