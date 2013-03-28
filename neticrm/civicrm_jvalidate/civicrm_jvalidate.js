@@ -110,9 +110,14 @@ $(document).ready(function(){
   var path = parse_url('path', document.URL);
   var action = parse_url('action', document.URL) == 'update' ? 'update' : 'add';
   var admin = path == 'civicrm/contact/add' ? 1 : 0;
+  var is_event = path == 'civicrm/event/register' ? 1 : 0;
 
   if(admin){
     $("form input.form-submit").addClass('cancel');
+  }
+  if(is_event){
+    $("form input.form-submit[name$='next_skip']").addClass('cancel');
+    $("form input.form-submit[name$='back']").addClass('cancel');
   }
 
   $("#crm-container form").each(function(){
