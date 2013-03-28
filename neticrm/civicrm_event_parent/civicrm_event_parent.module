@@ -113,13 +113,12 @@ function civicrm_event_parent_civicrm_buildForm_regRegister( $formName, &$form )
   $civicrm_event_parent_gid = variable_get('civicrm_event_parent_gid', array());
   $mainID = CRM_Utils_Request::retrieve( 'mainID', 'Integer', $form, false, null, $_REQUEST );
   list($rTypeID, $rTypeDir) = explode('-', $civicrm_event_parent_gid[$event_id]['parent_relation']);
-  $rTypeID = CRM_Utils_Type::escape($rTypeID, 'Integer');
   $relation_label = 'label_'.$rTypeDir;
 
   $_id = $_GET['id'];
 
 
-  if(!empty($civicrm_event_parent_gid[$event_id]['parent_gid'])){
+  if(!empty($civicrm_event_parent_gid[$event_id]['parent_gid']) && !empty($rTypeID)){
     $relation = CRM_Core_DAO::executeQuery("SELECT * FROM civicrm_relationship_type WHERE id = ".$rTypeID);
     $relation->fetch();
 
