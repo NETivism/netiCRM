@@ -1459,6 +1459,46 @@ function civicrm_views_data() {
                                                                 'handler' => 'views_handler_sort',
                                                                 ),
                                                 );
+    $data['civicrm_event']['has_waitlist'] = array(
+                                                'title' => t('Has Waitlist'),
+                                                'help' => t('Offer a Waitlist?'),
+                                                'field' => array(
+                                                                 'handler' => 'views_handler_field_boolean',
+                                                                 'click sortable' => TRUE,
+                                                                 ),
+
+                                                'argument' => array(
+                                                                    'handler' => 'views_handler_argument',
+                                                                    ),
+
+                                                'filter' => array(
+                                                                  'handler' => 'views_handler_filter_boolean_operator',
+                                                                  ),
+
+                                                'sort' => array(
+                                                                'handler' => 'views_handler_sort',
+                                                                ),
+                                                );
+    $data['civicrm_event']['requires_approval'] = array(
+                                                'title' => t('Requires Approval'),
+                                                'help' => t('Require participant approval?'),
+                                                'field' => array(
+                                                                 'handler' => 'views_handler_field_boolean',
+                                                                 'click sortable' => TRUE,
+                                                                 ),
+
+                                                'argument' => array(
+                                                                    'handler' => 'views_handler_argument',
+                                                                    ),
+
+                                                'filter' => array(
+                                                                  'handler' => 'views_handler_filter_boolean_operator',
+                                                                  ),
+
+                                                'sort' => array(
+                                                                'handler' => 'views_handler_sort',
+                                                                ),
+                                                );
     //BOOLEAN : Include EVENT Templates ?
     $data['civicrm_event']['is_template'] = array(
                                                 'title' => t('Include Template'),
