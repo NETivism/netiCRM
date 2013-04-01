@@ -1,0 +1,6 @@
+name = NCCC Contribution Import
+description = Parse NCCC donation data and import into CiviCRM Contribution.
+core = 6.x
+version = 6.x-1.0
+dependencies[] = civicrm
+
