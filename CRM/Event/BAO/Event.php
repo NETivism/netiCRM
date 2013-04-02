@@ -1056,6 +1056,7 @@ WHERE civicrm_event.is_active = 1
                     'groupName' => 'msg_tpl_workflow_event',
                     'valueName' => 'event_online_receipt',
                     'contactId' => $contactID,
+                    'participantId' => $participantId,
                     'isTest'    => $isTest,
                     'tplParams' => array(
                         'email'              => $email,
