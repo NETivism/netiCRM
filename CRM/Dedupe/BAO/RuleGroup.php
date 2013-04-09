@@ -129,7 +129,9 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup
         while ($bao->fetch()) {
             $bao->contactIds = $this->contactIds;
             $bao->params = $this->params;
-            $queries["{$bao->rule_table}.{$bao->rule_field}.{$bao->rule_weight}"] = $bao->sql();
+            if ( $query = $bao->sql() ) {
+                $queries["{$bao->rule_table}.{$bao->rule_field}.{$bao->rule_weight}"] = $query;
+            }
         }
 
         // if there are no rules in this rule group, add an empty query fulfilling the pattern
@@ -142,6 +144,9 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup
     }
 
     function fillTable( ) {
+        // get the list of queries handy
+        $tableQueries = $this->tableQuery( );
+
         if ( $this->params && !$this->noRules ) { 
             $tempTableQuery = "CREATE TEMPORARY TABLE dedupe (id1 int, weight int, UNIQUE UI_id1 (id1))";
             $insertClause   = "INSERT INTO dedupe (id1, weight)";
@@ -154,23 +159,25 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup
             $dupeCopyJoin   = " JOIN dedupe_copy ON dedupe_copy.id1 = t1.column AND dedupe_copy.id2 = t2.column WHERE ";
         }
         $patternColumn     = '/t1.(\w+)/';
+        $exclWeightSum     = array( );
 
         // create temp table
         $dao = new CRM_Core_DAO();
         $dao->query( $tempTableQuery );
 
-        // get the list of queries handy
-        $tableQueries = $this->tableQuery( );
+  
         CRM_Utils_Hook::dupeQuery( $this, 'table', $tableQueries );
 
         while ( !empty($tableQueries) ) {
-            list( $isInclusive, $isDie ) = self::isQuerySetInclusive( $tableQueries, $this->threshold );
+            list( $isInclusive, $isDie ) = self::isQuerySetInclusive( $tableQueries, $this->threshold, $exclWeightSum );
 
             if ( $isInclusive ) {
                 // order queries by table count
                 self::orderByTableCount( $tableQueries );
 
-                $searchWithinDupes = 0;
+                $weightSum = array_sum( $exclWeightSum );
+                $searchWithinDupes = !empty( $exclWeightSum ) ? 1 : 0;
+
                 while ( !empty($tableQueries) ) {
                     // extract the next query ( and weight ) to be executed
                     $fieldWeight = array_keys( $tableQueries );
@@ -206,9 +213,14 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup
                 }
             } else if ( !$isDie ) { // An exclusive situation -
                 // since queries are already sorted by weights, we can continue as is
+                $fieldWeight = array_keys( $tableQueries );
+                $fieldWeight = $fieldWeight[0];
                 $query = array_shift( $tableQueries );
                 $query = "{$insertClause} {$query} {$groupByClause} ON DUPLICATE KEY UPDATE weight = weight + VALUES(weight)";
                 $dao->query( $query );
+                if ( $dao->affectedRows( ) >= 1 ) {
+                    $exclWeightSum[] = substr( $fieldWeight, strrpos( $fieldWeight, '.' ) + 1 );
+                }
                 $dao->free();
             } else {
                 // its a die situation
@@ -219,10 +231,15 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup
 
     // Function to determine if a given query set contains inclusive or exclusive set of weights.
     // The function assumes that the query set is already ordered by weight in desc order.
-    static function isQuerySetInclusive( $tableQueries, $threshold ) {
+    static function isQuerySetInclusive( $tableQueries, $threshold, $exclWeightSum = array() ) {
         $input = array( );
         foreach ( $tableQueries as $key => $query ) {
             $input[] = substr( $key, strrpos( $key, '.' ) + 1 );
+        }
+
+        if ( ! empty( $exclWeightSum ) ) {
+            $input = array_merge( $input, $exclWeightSum );
+            rsort($input);
         }
 
         if ( count( $input ) == 1 ) {
@@ -240,7 +257,6 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup
                 $combination[] = $input[$j];
                 if ( array_sum($combination) >= $threshold ) {
                     $totalCombinations++;
-                    $combination = array($input[$i]);
                 }
             }
         }
@@ -294,6 +310,7 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup
                 WHERE contact_type = '{$this->contact_type}' {$this->_aclWhere}
                 AND weight >= {$this->threshold}";
         } else {
+            $this->_aclWhere = ' AND c1.is_deleted = 0 AND c2.is_deleted = 0';
             if ( $checkPermission ) {
                 list( $this->_aclFrom, $this->_aclWhere ) = 
                     CRM_Contact_BAO_Contact_Permission::cacheClause( array('c1', 'c2') );
@@ -337,5 +354,35 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup
         }
         
         return array($ruleFields, $rgBao->threshold);
+    }
+
+    /**
+     * Get an array of rule group id to rule group name
+     * for all th groups for that contactType. If contactType
+     * not specified, do it for all
+     *
+     * @param string $contactType Individual, Household or Organization
+     * 
+     * @static
+     * @return array id => "nice name" of rule group
+     */
+    static function getByType( $contactType = null ) {
+        $dao = new CRM_Dedupe_DAO_RuleGroup( );
+
+        if ( $contactType ) {
+            $dao->contact_type = $contactType;
+        }
+        
+        $dao->find( );
+        $result = array( );
+        while ( $dao->fetch( ) ) {
+            if ( ! empty( $dao->name ) ) {
+                $name = "{$dao->name} - {$dao->level}" ;
+            } else {
+                $name = "{$dao->contact_type} - {$dao->level}";
+            }
+            $result[$dao->id] = $name;
+        }
+        return $result;
     }
 }
