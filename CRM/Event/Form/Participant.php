@@ -1531,6 +1531,8 @@ buildEventTypeCustomData( {$this->_eID}, {$this->_eventTypeCustomDataTypeID}, '{
                     'groupName' => 'msg_tpl_workflow_event',
                     'valueName' => 'event_offline_receipt',
                     'contactId' => $contactID,
+                    'participantId' => $participants[$num]->id,
+                    'eventId' => $params['event_id'],
                     'isTest'    => (bool) CRM_Utils_Array::value('is_test', $this->_defaultValues),
                 );
 

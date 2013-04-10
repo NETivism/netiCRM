@@ -1417,6 +1417,8 @@ UPDATE  civicrm_participant
                     'groupName' => 'msg_tpl_workflow_event',
                     'valueName' => 'participant_' . strtolower($mailType),
                     'contactId' => $contactId,
+                    'participantId' => $participantId,
+                    'eventId' => $eventDetails['id'],
                     'tplParams' => array(
                         'contact'        => $contactDetails,
                         'domain'         => $domainValues,
@@ -1428,6 +1430,7 @@ UPDATE  civicrm_participant
                         'isExpired'      => $mailType == 'Expired',
                         'isConfirm'      => $mailType == 'Confirm',
                         'checksumValue'  => $checksumValue,
+                        'participantID'  => $participantId,
                     ),
                     'from'    => $receiptFrom,
                     'toName'  => $participantName,
