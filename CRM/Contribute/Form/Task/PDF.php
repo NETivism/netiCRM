@@ -107,10 +107,11 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
     {
         
         $this->addElement( 'checkbox', 'single_page_letter', ts('Single page with address letter') );
+        /*
         $this->addElement( 'radio', 'output', null, ts('Copy Receipts'), 'copy_receipt' ); 
-        $this->addElement( 'radio', 'output', null, ts('Accounting Receipts'), 'accounting_receipt' ); 
         $this->addElement( 'radio', 'output', null, ts('Original Receipts'), 'original_receipt' );
         $this->addRule( 'output', ts('%1 is a required field.', array(1 => ts('Receipt Type'))), 'required' );
+        */
         $this->addButtons( array(
                                  array ( 'type'      => 'next',
                                          'name'      => ts('Download Receipt(s)'),
@@ -133,7 +134,8 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
       $details =& CRM_Contribute_Form_Task_Status::getDetails( $contribIDs );
 
       $params = $this->controller->exportValues( $this->_name );
-      self::makeReceipt($details);
+
+      self::makeReceipt($details, $params['single_page_letter']);
       self::makePDF();
       CRM_Utils_System::civiExit( );
     }
@@ -193,16 +195,21 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
       }
     }
 
-    public function makeReceipt($details, $print_type = NULL){
+    public function makeReceipt($details, $single_page_letter = NULL){
       $this->_tmpreceipt = tempnam('/tmp', 'receipt');
       if(is_numeric($details)){
         $details =& CRM_Contribute_Form_Task_Status::getDetails( $details );
       }
-      if(empty($print_type)){
+      if(empty($single_page_letter)){
         $print_type = array(
           'original' => ts('Original Receipts'),
           'copy' => ts('Copy Receipts'),
-          //'address' => '',
+        );
+        $single_page_letter = '';
+      }
+      else{
+        $print_type = array(
+          'copy' => ts('Copy Receipts'),
         );
       }
 
@@ -211,6 +218,7 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
       $config =& CRM_Core_Config::singleton( );
       $count = 0;
       $template->assign('print_type', $print_type);
+      $template->assign('single_page_letter', $single_page_letter);
 
       foreach ( $details as $contribID => $detail ) {
         $input = $ids = $objects = array( );

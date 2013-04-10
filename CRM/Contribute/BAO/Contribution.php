@@ -1766,7 +1766,14 @@ SELECT source_contact_id
         $template->assign( 'currency', $contribution->currency );
         $template->assign( 'instrument', $instruments[$contribution->payment_instrument_id] );
         
-        $template->assign( 'address', CRM_Utils_Address::format( $input ) );
+        $entityBlock = array('contact_id' => 2);
+        $addresses = CRM_Core_BAO_Address::getValues($entityBlock);
+        $addr = reset($addresses);
+        if(!empty($addr)){
+          $addr['state_province_name'] = CRM_Core_PseudoConstant::stateProvince( $addr['state_province_id'], false );
+        }
+        $address = CRM_Utils_Address::format($addr, NULL, FALSE, TRUE);
+        $template->assign( 'address', $address);
         if ( $membership ) {
           $values['membership_id'] = $membership->id;
 
@@ -1877,12 +1884,6 @@ SELECT source_contact_id
           $tplParams['contributionTypeName'] = CRM_Core_DAO::getFieldValue( 'CRM_Contribute_DAO_ContributionType', $contributionTypeId );
         }
                     
-        // address required during receipt processing (pdf and email receipt)
-        if ( $displayAddress = CRM_Utils_Array::value('address', $values) ) {
-          $tplParams['address'] = $displayAddress;
-          $tplParams['contributeMode']= null;
-        }
-        
         // use either the contribution or membership receipt, based on whether it’s a membership-related contrib or not
         $sendTemplateParams = array(
           'groupName' => 'msg_tpl_workflow_receipt',

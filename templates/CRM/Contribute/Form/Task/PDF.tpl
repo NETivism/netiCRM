@@ -38,14 +38,7 @@
 
   <div>{ts}Please notice that, because the serial number must continuous, once you generate receipt, it will also generte receipt ID and you can't modify receipt ID after generation. Make sure your search result have correct receive date search to prevent generate wrong number.{/ts}</div>
 </div>
-<div class="form-item">{$form.single_page_letter.html}<label>{$form.single_page_letter.label}</label><div class="description">{ts}By default we generate 3 receipt in one A4 page. After you check this option, receipt will generate per page. And when database have default address of donor, we will generate their address in the top of page. This is useful when you want to send by post directly without envelop.{/ts}</div></div>
-  <div class="form-item">
-    <label>{ts}Receipt Type{/ts}:</label><br />
-    <div class="receipt-type copy_receipt">{$form.output.copy_receipt.html}</div>
-    <div class="receipt-type accounting_receipt">{$form.output.accounting_receipt.html}</div>
-    <div class="receipt-type original_receipt">{$form.output.original_receipt.html}</div>
-    <div class="description">{ts}We always add receipt type mark at every receipt.{/ts}</div>
-  </div>
+<div class="form-item">{$form.single_page_letter.html}<label>{$form.single_page_letter.label}</label><div class="description">{ts}By default we generate one receipt in every A4 page. After you check this option, receipt will include default address of donor in every page instead. We will generate their address in the top of page. This is useful when you want to send by post directly without envelop.{/ts}</div></div>
 
   <div id="dialog-confirm" title="{ts}Procceed Receipt Generation?{/ts}" style="display:none;">
     <p><span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>{ts}In order to prevent non-continues receipt id. After generate, you can't insert any receipt number between these contribution.{/ts}<br />{ts}Are you sure you want to continue?{/ts}</p>
