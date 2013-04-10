@@ -42,7 +42,7 @@ require_once 'CRM/Import/Field.php';
 abstract class CRM_Import_Parser {
 
     const
-        MAX_ERRORS      = 250,
+        MAX_ERRORS      = 5000,
         MAX_WARNINGS    = 25,
         VALID           =  1,
         WARNING         =  2,
