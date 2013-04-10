@@ -69,7 +69,12 @@ $.amask.phone_add_validate = function(obj, admin){
 
 $.amask.id_add_validate = function(obj){
   $(obj).rules("add", "twid");
-  $(obj).amask("a999999999", {completed:function(){ obj.value = obj.value.toUpperCase(); }});
+  if($(obj).valid()){
+    $(obj).amask("a999999999", {completed:function(){ obj.value = obj.value.toUpperCase(); }});
+  }
+  else{
+    $(obj).rules("remove", "twid");
+  }
 
   // add id validate remove rule.
   var fid = $(obj).attr("id");
