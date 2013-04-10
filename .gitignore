@@ -2,4 +2,4 @@
 *.swp
 *.rej
 *.orig
-.svn
+.svn*
