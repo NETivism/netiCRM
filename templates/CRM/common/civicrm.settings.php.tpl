@@ -13,7 +13,7 @@ define('CIVICRM_LOGGING_DSN', CIVICRM_DSN);
 
 define( 'CIVICRM_TEMPLATE_COMPILEDIR', dirname ( __FILE__ ).'/files/civicrm/templates_c/' );
 define( 'CIVICRM_UF_BASEURL'      , 'http://'.$_SERVER['HTTP_HOST']);
-define( 'CIVICRM_SITE_KEY', sprintf("%u", crc32(CIVICRM_UF_BASEURL)) );
+define( 'CIVICRM_SITE_KEY', '%%siteKey%%' );
 define( 'CIVICRM_IDS_ENABLE', 1);
 define( 'CIVICRM_DOMAIN_ID'      , 1 );
 define( 'CIVICRM_DOMAIN_GROUP_ID', null );

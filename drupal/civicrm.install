@@ -37,6 +37,7 @@ define( 'CIVICRM_DIRECTORY_SEPARATOR', DIRECTORY_SEPARATOR );
  */
 
 function civicrm_install( ) {
+  global $base_url;
   // got to doing real install here.
   // prepare variables first.
   $crm_root = rtrim(dirname(__FILE__), "/drupal");
@@ -70,7 +71,9 @@ function civicrm_install( ) {
 
   // step 3: copy civicrm.settings.php to correct directory
   $filename = $crm_root.'/templates/CRM/common/civicrm.settings.php.tpl';
-  file_put_contents("$conf_path/civicrm.settings.php", file_get_contents($filename));
+  $setting_content = file_get_contents($filename);
+  $setting_content = str_replace('%%'.$key.'%%', md5($base_url.microtime()), $setting_content);
+  file_put_contents("$conf_path/civicrm.settings.php", $setting_content);
   drupal_set_message("CiviCRM for Drupal Installation Successful.");
 }
 
