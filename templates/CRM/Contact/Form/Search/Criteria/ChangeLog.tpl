@@ -31,10 +31,10 @@
                 {$form.changed_by.html}
             </td>
             <td>
-                {$form.modified_date_low.label}<br />
-	            {include file="CRM/common/jcalendar.tpl" elementName=modified_date_low}&nbsp;
-		        {$form.modified_date_high.label}&nbsp; 
-                {include file="CRM/common/jcalendar.tpl" elementName=modified_date_high}
+                {$form.log_date_low.label}<br />
+	            {include file="CRM/common/jcalendar.tpl" elementName=log_date_low}&nbsp;
+		        {$form.log_date_high.label}&nbsp; 
+                {include file="CRM/common/jcalendar.tpl" elementName=log_date_high}
             </td>
         </tr>
     </table>
