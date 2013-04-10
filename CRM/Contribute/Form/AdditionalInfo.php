@@ -125,7 +125,7 @@ class CRM_Contribute_Form_AdditionalInfo
         $element =& $form->add( 'text', 'invoice_id', ts('Invoice ID'), 
                                 $attributes['invoice_id'] );
         if ( $form->_online ) {
-            $element->freeze( );
+            // $element->freeze( );
         } else {
             $form->addRule( 'invoice_id',
                             ts( 'This Invoice ID already exists in the database.' ),
