@@ -363,8 +363,8 @@ class CRM_Contact_Form_Search_Criteria {
         // block for change log
         $form->addElement('text', 'changed_by', ts('Modified By'), null);
 
-        $form->addDate( 'modified_date_low', ts('Modified Between'), false, array( 'formatType' => 'searchDate') );
-        $form->addDate( 'modified_date_high', ts('and'), false, array( 'formatType' => 'searchDate') );
+        $form->addDate( 'log_date_low', ts('Modified Between'), false, array( 'formatType' => 'searchDate') );
+        $form->addDate( 'log_date_high', ts('and'), false, array( 'formatType' => 'searchDate') );
     }
 
     static function task( &$form ) {
