@@ -1774,6 +1774,7 @@ SELECT source_contact_id
         }
         $address = CRM_Utils_Address::format($addr, NULL, FALSE, TRUE);
         $template->assign( 'address', $address);
+        /*
         if ( $membership ) {
           $values['membership_id'] = $membership->id;
 
@@ -1788,6 +1789,7 @@ SELECT source_contact_id
           // we dont link the two in the db (but can potentially infer it if needed)
           $template->assign( 'is_separate_payment', 0);
         }
+         */
         $values['contribution_id']     = $contribution->id;
         $isTest = false;
         if ( $contribution->is_test ) {
