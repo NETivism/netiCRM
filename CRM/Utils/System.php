@@ -1179,7 +1179,7 @@ class CRM_Utils_System {
         return $url;
     }
 
-    static function absoluteURL( $url ) {
+    static function absoluteURL($url, $removeLanguagePart = FALSE) {
         // check if url is already absolute, if so return immediately
         if ( substr( $url, 0, 4 ) == 'http' ) {
             return $url;
@@ -1188,7 +1188,26 @@ class CRM_Utils_System {
         // make everything absolute from the baseFileURL
         $baseURL = self::baseCMSURL( );
 
+        //CRM-7622: drop the language from the URL if requested (and it’s there)
+        $config = CRM_Core_Config::singleton();
+        if ($removeLanguagePart) {
+          $baseURL = self::languageNegotiationURL($baseURL, FALSE, TRUE);
+        }
+
         return $baseURL . $url;
+    }
+
+    /**
+     * Format the url as per language Negotiation.
+     *
+     * @param string $url
+     *
+     * @return string $url, formatted url.
+     * @static
+     */
+    static function languageNegotiationURL($url, $addLanguagePart = TRUE, $removeLanguagePart = FALSE) {
+      $config = &CRM_Core_Config::singleton();
+      return eval( 'return '.$config->userFrameworkClass.'::languageNegotiationURL($url, $addLanguagePart, $removeLanguagePart);' );
     }
     
 }

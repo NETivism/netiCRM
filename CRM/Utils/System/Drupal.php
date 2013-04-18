@@ -391,5 +391,23 @@ class CRM_Utils_System_Drupal {
         
         return $ufID;
     }
-    
+
+    function languageNegotiationURL($url, $addLanguagePart = TRUE, $removeLanguagePart = FALSE) {
+      if (empty($url)) {
+        return $url;
+      }
+      global $language, $base_url, $base_path;
+      if($addLanguagePart){
+        if(strstr($url, $_SERVER['HTTP_HOST'].$base_path.$language->prefix)){
+          return $url;
+        }
+        else{
+          return str_replace($_SERVER['HTTP_HOST'].$base_path, $_SERVER['HTTP_HOST'].$base_path.$language->prefix, $url);
+        }
+      }
+      if($removeLanguagePart){
+        return str_replace('/'.$language->prefix.'/', '/', $url);
+      }
+    }
+
 }
