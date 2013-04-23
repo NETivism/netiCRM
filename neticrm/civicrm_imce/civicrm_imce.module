@@ -31,11 +31,14 @@ function civicrm_imce_civicrm_buildForm($formName, &$form) {
   }
   
   if ($editor == 'ckeditor') {
+    // clean url ?
+    $clean_url = variable_get('clean_url', 0) ? '' : 'index.php?q=';
+    
     $ckeditor_inline_js = "
       $( document ).ready( function( ) {
-        CKEDITOR.config.filebrowserBrowseUrl = '/index.php?q=imce&app=ckeditor|sendto@civicrmImceCkeditSendTo|params@';
-        CKEDITOR.config.filebrowserImageBrowseUrl = '/index.php?q=imce&app=ckeditor|sendto@civicrmImceCkeditSendTo|params@';
-        CKEDITOR.config.filebrowserFlashBrowseUrl = '/index.php?q=imce&app=ckeditor|sendto@civicrmImceCkeditSendTo|params@';
+        CKEDITOR.config.filebrowserBrowseUrl = '/{$clean_url}imce&app=ckeditor|sendto@civicrmImceCkeditSendTo|params@';
+        CKEDITOR.config.filebrowserImageBrowseUrl = '/{$clean_url}imce&app=ckeditor|sendto@civicrmImceCkeditSendTo|params@';
+        CKEDITOR.config.filebrowserFlashBrowseUrl = '/{$clean_url}imce&app=ckeditor|sendto@civicrmImceCkeditSendTo|params@';
       });
       ";
     drupal_add_js($ckeditor_inline_js, 'inline');
