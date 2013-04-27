@@ -178,16 +178,23 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
           'copy' => ts('Copy Receipts'),
         );
       }
+      // domain info
+      $domain = CRM_Core_BAO_Domain::getDomain();
+      $location = $domain->getLocationValues();
 
-      $template =& CRM_Core_Smarty::singleton( );
       $baseIPN = new CRM_Core_Payment_BaseIPN();
       $config =& CRM_Core_Config::singleton( );
       $count = 0;
-      $template->assign('print_type', $print_type);
-      $template->assign('single_page_letter', $single_page_letter);
 
       foreach ( $details as $contribID => $detail ) {
         $input = $ids = $objects = array( );
+        $template =& CRM_Core_Smarty::singleton( );
+        $template->assign('print_type', $print_type);
+        $template->assign('single_page_letter', $single_page_letter);
+        $template->assign('domain_name', $domain->name);
+        $template->assign('domain_email', $location['email'][1]['email']);
+        $template->assign('domain_phone', $location['phone'][1]['phone']);
+        $template->assign('domain_address', $location['address'][1]['display_text']);
         $template->assign('receiptOrgInfo', htmlspecialchars_decode($config->receiptOrgInfo));
         $template->assign('receiptDescription', htmlspecialchars_decode($config->receiptDescription));
               
