@@ -1766,7 +1766,7 @@ SELECT source_contact_id
         $template->assign( 'currency', $contribution->currency );
         $template->assign( 'instrument', $instruments[$contribution->payment_instrument_id] );
         
-        $entityBlock = array('contact_id' => 2);
+        $entityBlock = array('contact_id' => $contact->id);
         $addresses = CRM_Core_BAO_Address::getValues($entityBlock);
         $addr = reset($addresses);
         if(!empty($addr)){
