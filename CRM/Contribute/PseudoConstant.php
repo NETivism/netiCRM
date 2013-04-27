@@ -113,7 +113,7 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant
         CRM_Core_PseudoConstant::populate( $types, 'CRM_Contribute_DAO_ContributionType', false, 'is_deductible', 'is_active', 'is_deductible=1' );
         return array_intersect_key(self::$contributionType, $types);
       }
-      elseif(!is_numeric($dedutible)){
+      elseif($dedutible !== FALSE){
         CRM_Core_PseudoConstant::populate( $types, 'CRM_Contribute_DAO_ContributionType', false, 'is_deductible' );
         $result = self::$contributionType;
         foreach($result as $k => $v){
