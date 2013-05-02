@@ -112,7 +112,13 @@ div.blank {
   font-size: 11px;
   font-weight: bold;
 }
-
+.payment-info {
+    border-top: 1px solid #CCC;
+    margin-top: 15px;
+}
+.payment-info-store {
+    margin-top: 10px;
+}
 .postoffice-account {
   float:right;
   background: #EFEFEF;
