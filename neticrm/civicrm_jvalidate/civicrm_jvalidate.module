@@ -9,6 +9,10 @@ function civicrm_jvalidate_civicrm_buildForm($formName, &$form) {
     return;
   }
 
+  if(isset($_GET['_qf_Confirm_display']) || isset($_GET['_qf_ThankYou_display'])){
+    return;
+  }
+
   if(!$add){
     $js = '';
     $path = drupal_get_path('module', 'civicrm_jvalidate');
