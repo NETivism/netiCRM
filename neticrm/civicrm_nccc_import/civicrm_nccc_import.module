@@ -8,7 +8,7 @@ function civicrm_nccc_import_menu(){
   return array(
     'civicrm/nccc_import' => array(
       'title' => 'NCCC VPOS data import',
-      'access arguments' => array('access CiviContribute'),
+      'access arguments' => array('import nccc contribution'),
       'page callback' => 'drupal_get_form',
       'page arguments' => array('civicrm_nccc_import_form'),
       'type' => MENU_CALLBACK,
@@ -16,8 +16,9 @@ function civicrm_nccc_import_menu(){
   );
 }
 
-
-
+function civicrm_nccc_import_perm(){
+  return('import nccc contribution');
+}
 
 function civicrm_nccc_import_form($form_state){
   if(isset($_SESSION['nccc_import']) && (!empty($_SESSION['nccc_import']['imported']) || !empty($_SESSION['nccc_import']['skipped'])) ){
