@@ -1614,9 +1614,3 @@ buildEventTypeCustomData( {$this->_eID}, {$this->_eventTypeCustomDataTypeID}, '{
     }
       
 }
-
-function ddd($in){
-  if($_SERVER['HTTP_HOST'] == 'dev.neticrm.tw'){
-    dpm($in);
-  }
-}
