@@ -1332,6 +1332,7 @@ WHERE  contribution_id = {$this->_id}
                              'pcp_display_in_roll',
                              'pcp_roll_nickname',
                              'pcp_personal_note',
+                             'receipt_id',
                              );
             
             foreach ( $fields as $f ) {
