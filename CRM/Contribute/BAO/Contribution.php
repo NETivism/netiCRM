@@ -1921,8 +1921,11 @@ SELECT source_contact_id
 
       $needs = array('is_test', 'contribution_status_id', 'receipt_date', 'receipt_id', 'contribution_type_id');
       foreach($needs as $n){
-        if(!isset($contribution->$n) && $contribution->id){
-          $contribution->$n= CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $contribution->id, $n, 'id');
+        if($contribution->$n === 'null'){
+          $contribution->$n = NULL;
+        }
+        if(empty($contribution->$n) && $contribution->id){
+          $contribution->$n = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $contribution->id, $n, 'id');
         }
       }
 
