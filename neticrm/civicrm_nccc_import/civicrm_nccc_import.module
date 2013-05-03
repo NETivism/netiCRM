@@ -17,7 +17,7 @@ function civicrm_nccc_import_menu(){
 }
 
 function civicrm_nccc_import_perm(){
-  return('import nccc contribution');
+  return array('import nccc contribution');
 }
 
 function civicrm_nccc_import_form($form_state){
