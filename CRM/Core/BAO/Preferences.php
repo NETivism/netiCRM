@@ -305,7 +305,7 @@ AND    v.is_active = 1
             if ( $dao->optionName == 'directory_preferences' ) {
                 $value = CRM_Utils_File::absoluteDirectory( $dao->value );
             } else {
-                $value = CRM_Utils_System::absoluteURL( $dao->value );
+                $value = CRM_Utils_System::absoluteURL($dao->value, TRUE);
             }
             $params[$dao->valueName] = $value;
             if ( $setInConfig ) {

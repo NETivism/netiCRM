@@ -678,6 +678,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser
         if ( is_object( $newContact ) || ( $newContact instanceof CRM_Contact_BAO_Contact ) ) { 
             $relationship = true;
             $newContact = clone( $newContact );
+            $contactID            = $newContact->id;
             $this->_newContacts[] = $newContact->id;
             
             //get return code if we create new contact in update mode, CRM-4148
@@ -699,6 +700,25 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser
             if ( !in_array( $contactID, $this->_newContacts ) ) {
                 $this->_newContacts[] =  $contactID;
             }
+        }
+
+#file_put_contents('/tmp/imp', $contactID."\n", FILE_APPEND);
+
+        if ( $contactID ) {
+            // call import hook
+            require_once 'CRM/Utils/Hook.php';
+            $currentImportID  = end($values);
+
+            $hookParams = array( 'contactID'       => $contactID,
+                                 'importID'        => $currentImportID,
+                                 'importTempTable' => $this->_tableName,
+                                 'fieldHeaders'    => $this->_mapperKeys,
+                                 'fields'          => $this->_activeFields );
+
+            CRM_Utils_Hook::import( 'Contact',
+                                    'process',
+                                    $this,
+                                    $hookParams );
         }
         
         if ( $relationship ) {

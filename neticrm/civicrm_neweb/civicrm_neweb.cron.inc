@@ -7,7 +7,7 @@ define("NEWEB_DEBUG", 1);
 /**
  * Sync last 30 days payments
  */
-function civicrm_neweb_recur_sync($is_test, $start = 'last month'){
+function civicrm_neweb_recur_sync($is_test, $start = 'last month', $pid){
   civicrm_initialize();
   require_once "CRM/Core/DAO.php";
   require_once 'CRM/Core/Payment.php'; 
@@ -18,7 +18,6 @@ function civicrm_neweb_recur_sync($is_test, $start = 'last month'){
   $last_month = strtotime($start);
   $now = time();
   $p = new CRM_Core_BAO_PaymentProcessor();
-  $pid = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_payment_processor WHERE is_test = $is_test");
   if($is_test){
     $ftp = variable_get("civicrm_neweb_ftp_test", array());
     $payment = $p->getPayment($pid,'test');
@@ -66,7 +65,7 @@ function civicrm_neweb_recur_sync($is_test, $start = 'last month'){
 
 }
 
-function civicrm_neweb_process_response($is_test, $now = NULL){
+function civicrm_neweb_process_response($is_test, $now = NULL, $pid){
   $now = $now ? $now : time();
 
   civicrm_initialize();
@@ -81,7 +80,6 @@ function civicrm_neweb_process_response($is_test, $now = NULL){
   require_once 'CRM/Contribute/BAO/ContributionPage.php';
 
   $p = new CRM_Core_BAO_PaymentProcessor();
-  $pid = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_payment_processor WHERE is_test = $is_test");
   if($is_test){
     $payment = $p->getPayment($pid,'test');
   }
@@ -173,7 +171,7 @@ function civicrm_neweb_process_response($is_test, $now = NULL){
   }
 }
 
-function civicrm_neweb_process_transaction($is_test, $now = NULL){
+function civicrm_neweb_process_transaction($is_test, $now = NULL, $pid){
   $now = $now ? $now : time();
   civicrm_initialize();
   require_once "CRM/Core/DAO.php";
@@ -186,7 +184,6 @@ function civicrm_neweb_process_transaction($is_test, $now = NULL){
   require_once 'CRM/Utils/Array.php';
 
   $p = new CRM_Core_BAO_PaymentProcessor();
-  $pid = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_payment_processor WHERE is_test = $is_test");
   if($is_test){
     $payment = $p->getPayment($pid,'test');
   }
@@ -319,7 +316,7 @@ function civicrm_neweb_process_transaction($is_test, $now = NULL){
   }
 }
 
-function civicrm_neweb_process_upload($is_test){
+function civicrm_neweb_process_upload($is_test, $pid){
   $now = time();
   $nextday = mktime(6,0,0,date('n'),date('j'),date('Y'))+86400;
   $create_check = $now - 86400; // yesterday
@@ -329,7 +326,6 @@ function civicrm_neweb_process_upload($is_test){
   require_once 'CRM/Core/BAO/PaymentProcessor.php';
   require_once 'CRM/Core/Payment/NewebIPN.php';
   $p = new CRM_Core_BAO_PaymentProcessor();
-  $pid = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_payment_processor WHERE is_test = $is_test");
   if($is_test){
     $payment = $p->getPayment($pid,'test');
   }

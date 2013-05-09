@@ -536,7 +536,12 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task
         if ( ! CRM_Utils_Array::value( 'priority_id', $defaults ) ) {
             require_once 'CRM/Core/PseudoConstant.php';
             $priority = CRM_Core_PseudoConstant::priority( );
-            $defaults['priority_id'] = array_search( 'Normal', $priority );
+            $defaults['priority_id'] = array_search( ts('Normal'), $priority );
+        }
+
+        if ( ! CRM_Utils_Array::value( 'status_id', $defaults ) ) {
+            $status = CRM_Core_PseudoConstant::activityStatus();
+            $defaults['status_id'] = array_search( ts('Completed'), $status );
         }
         return $defaults;
     }
