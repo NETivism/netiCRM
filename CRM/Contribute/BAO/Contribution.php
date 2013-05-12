@@ -1900,7 +1900,7 @@ SELECT source_contact_id
         return $html;
     }
 
-    static function genReceiptID(&$contrib, $save = TRUE){
+    static function genReceiptID(&$contrib, $save = TRUE, $is_online = FALSE){
       if(is_numeric($contrib)){
         $id = $contrib;
         $contribution = new CRM_Contribute_DAO_Contribution( );
@@ -1938,7 +1938,7 @@ SELECT source_contact_id
           if($contribution->id){
             $fids = CRM_Core_BAO_FinancialTrxn::getFinancialTrxnIds( $contribution->id, 'civicrm_contribution' );
           }
-          if(!empty($fids['entityFinancialTrxnId'])){
+          if(!empty($fids['entityFinancialTrxnId']) || $is_online){
             // online
             $prefix = 'A';
           }
