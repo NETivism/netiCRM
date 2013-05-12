@@ -383,6 +383,10 @@ function loadPanes( id ) {
 
 {literal}
 <script type="text/javascript">
+
+Number.prototype.pad = function (len) {
+  return (new Array(len+1).join("0") + this).slice(-len);
+}
 cj(document).ready(function(){
    if(cj('#receipt_date').val()){
      cj('#have_receipt').attr('checked', 'checked');
@@ -394,14 +398,8 @@ cj(document).ready(function(){
    cj('#have_receipt').live('click', function(){
      if(cj(this).attr('checked') == 'checked'){
        var d = new Date();
-       if(cj("#receive_date").length){
-         cj("#receipt_date").datepicker('setDate', cj("#receive_date").val());
-         cj("#receipt_date_time").val(cj("#receive_date_time").val());
-       }
-       else{
-         cj("#receipt_date").datepicker('setDate', d);
-         cj("#receipt_date_time").val(d.getHours()+':'+d.getMinutes());
-       }
+       cj("#receipt_date").datepicker('setDate', d);
+       cj("#receipt_date_time").val(d.getHours().pad(2)+':'+d.getMinutes().pad(2));
        cj('#receipt-option').show();
      }
      else{

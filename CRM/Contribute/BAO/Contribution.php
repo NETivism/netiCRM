@@ -1969,6 +1969,7 @@ SELECT source_contact_id
             $num = sprintf('%06d', $num);
             $receipt_id = $prefix.'-'.$num;
           }
+          watchdog('civicrm', $last.":".$receipt_id);
 
           $contribution->receipt_id = $receipt_id;
           if($save && $contribution->id){
@@ -1983,7 +1984,7 @@ SELECT source_contact_id
     }
     
     function lastReceiptID($prefix){
-      $query = "SELECT receipt_id FROM civicrm_contribution WHERE UPPER(receipt_id) LIKE UPPER('{$prefix}%') ORDER BY receipt_date DESC";
+      $query = "SELECT receipt_id FROM civicrm_contribution WHERE UPPER(receipt_id) LIKE UPPER('{$prefix}%') AND receipt_id IS NOT NULL AND receipt_id != '' ORDER BY receipt_id DESC";
       $last = CRM_Core_DAO::singleValueQuery($query);
 
       if($last){
