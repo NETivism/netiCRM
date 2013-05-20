@@ -370,6 +370,7 @@ class CRM_Core_Permission {
                       'edit all contacts'                 => ts( 'edit all contacts' ),
                       'delete contacts'                   => ts( 'delete contacts' ),
                       'access deleted contacts'           => ts( 'access deleted contacts' ),
+                      'delete contacts permanantly'       => ts( 'delete contacts permanantly' ),
                       'import contacts'                   => ts( 'import contacts' ),
                       'edit groups'                       => ts( 'edit groups' ),
                       'administer CiviCRM'                => ts( 'administer CiviCRM' ),
