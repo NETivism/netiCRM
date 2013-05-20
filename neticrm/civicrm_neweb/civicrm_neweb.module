@@ -115,6 +115,7 @@ function civicrm_neweb_cron(){
   $pid = _civicrm_neweb_is_active($is_test);
   if($pid){
     _civicrm_neweb_process_all($is_test, $now, $hour, $yesterday, $pid);
+    _civicrm_neweb_scan_missing_transaction($now, $hour, $yesterday, $pid);
   }
 }
 
@@ -340,4 +341,40 @@ function _civicrm_neweb_is_active($is_test){
   civicrm_initialize();
   $id = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_payment_processor WHERE name = 'Neweb' AND is_active = 1 AND is_test = $is_test");
   return $id;
+}
+
+function _civicrm_neweb_scan_missing_transaction($now, $hour, $yesterday, $pid){
+  // one time a day
+  // only process non-test contribution
+  if($hour >= 1 && $hour <= 5 && variable_get('civicrm_neweb_scan', 0) < $yesterday){
+    // look back 7 days to see if we miss some file from neweb
+    $week = array();
+    $path = _civicrm_neweb_path(0);
+    for($i = 1; $i<=7; $i++){
+      $offset = $i*86400;
+      $date = $now - $offset;
+      // try to find some file
+      $ymd = date('Ymd', $date);
+      $week[$ymd] = $ymd;
+    }
+
+    $result = glob($path.'/RP_Trans_*{'.implode(',', $week).'}.log',GLOB_BRACE);
+    foreach($result as $filename){
+      // to see what days we miss
+      preg_match('/_([0-9]{4,})\.log$/i', $filename, $matches);
+      $ymd = $matches[1];
+      if($ymd){
+        unset($week[$ymd]);
+      }
+    }
+
+    // ok see what left
+    if(count($week)){
+      foreach($week as $ymd){
+        $date = strtotime($ymd);
+        //civicrm_neweb_process_transaction(0, $date);
+      }
+    }
+    variable_set('civicrm_neweb_scan', $now);
+  }
 }
