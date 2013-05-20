@@ -266,6 +266,10 @@ class CRM_Contact_Task {
             }
         } elseif ($permission == CRM_Core_Permission::EDIT) {
             $tasks = self::taskTitles( );
+            // we remove delete permanently in normal interface anyway.
+            if(isset($tasks[self::DELETE_PERMANENTLY])) {
+              unset($tasks[self::DELETE_PERMANENTLY]);
+            }
         } else {
             $tasks = array( 
                            5  => self::$_tasks[ 5]['title'],
