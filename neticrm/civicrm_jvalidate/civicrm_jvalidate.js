@@ -58,12 +58,15 @@ $.amask.phone_add_validate = function(obj, admin){
 
   // phone type change
   $("select[name*='phone_type_id']").change(function(){
-    if($(this).val()==2){
-      mobile_mask(obj);
-    }
-    else{
-      phone_mask(obj);
-    }
+    var type_id = $(this).val();
+    $(this).parents('tr').find("input[name$='[phone]']").each(function(){
+      if(type_id==2){
+        mobile_mask(this);
+      }
+      else{
+        phone_mask(this);
+      }
+    });
   });
 }
 
@@ -116,8 +119,8 @@ $(document).ready(function(){
   var skiptwcheck = typeof(Drupal.settings.skiptwcheck) == 'undefined' ? 0 : 1;
   var path = parse_url('path', document.URL);
   var action = parse_url('action', document.URL) == 'update' ? 'update' : 'add';
-  var admin = path == 'civicrm/contact/add' ? 1 : 0;
-  var is_event = path == 'civicrm/event/register' ? 1 : 0;
+  var admin = path.match('civicrm/contact/add') ? 1 : 0;
+  var is_event = path.match('civicrm/event/register') ? 1 : 0;
 
   if(admin){
     $("form input.form-submit").addClass('cancel');
