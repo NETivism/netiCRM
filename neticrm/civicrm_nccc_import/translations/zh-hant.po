@@ -1,0 +1,125 @@
+# $Id$
+#
+# LANGUAGE translation of Drupal (general)
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+# Generated from files:
+#  civicrm_nccc_import.module: n/a
+#  civicrm_nccc_import.info: n/a
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2013-04-01 16:03+0800\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: civicrm_nccc_import.module:27
+msgid "Imported record"
+msgstr "匯入的記錄"
+
+#: civicrm_nccc_import.module:33
+msgid "Skipped record"
+msgstr "略過的紀錄"
+
+#: civicrm_nccc_import.module:47
+msgid "Done"
+msgstr "完成"
+
+#: civicrm_nccc_import.module:68
+msgid "Duplicate contribution <a href=\"!clink\" target=\"_blank\">!cid</a>"
+msgstr "重複的捐款 <a href=\"!clink\" target=\"_blank\">!cid</a>"
+
+#: civicrm_nccc_import.module:79
+msgid "Contact not found.<br />Would you like <a href=\"!crmadd\" target=\"_blank\">add one</a> with external ID !ext."
+msgstr "找不到聯絡人。<br />您願意 <a href=\"!crmadd\" target=\"_blank\">新增一個</a> 外部編號!ext."
+
+#: civicrm_nccc_import.module:85
+msgid "Ready"
+msgstr "準備好"
+
+#: civicrm_nccc_import.module:110
+msgid "Status"
+msgstr "狀態"
+
+#: civicrm_nccc_import.module:111
+msgid "Message"
+msgstr "訊息"
+
+#: civicrm_nccc_import.module:112
+msgid "Store num"
+msgstr "商店號碼"
+
+#: civicrm_nccc_import.module:113
+msgid "Machine id"
+msgstr "機器編號"
+
+#: civicrm_nccc_import.module:114
+msgid "Card"
+msgstr "信用卡"
+
+#: civicrm_nccc_import.module:115
+msgid "Amount"
+msgstr "金額"
+
+#: civicrm_nccc_import.module:116
+msgid "Auth Code"
+msgstr "驗證碼"
+
+#: civicrm_nccc_import.module:118
+msgid "Date"
+msgstr "日期"
+
+#: civicrm_nccc_import.module:119
+msgid "Valid Date"
+msgstr "有效日期"
+
+#: civicrm_nccc_import.module:120
+msgid "Note"
+msgstr "註記"
+
+#: civicrm_nccc_import.module:141;272
+msgid "Import"
+msgstr "匯入"
+
+#: civicrm_nccc_import.module:142
+msgid "Are you sure you want to continue? We will ignore line with errors(marked as red.)"
+msgstr "您確定要繼續？我們將會忽略那些錯誤的行（標記為紅色）"
+
+#: civicrm_nccc_import.module:146;257
+msgid "Cancel"
+msgstr "刪除"
+
+#: civicrm_nccc_import.module:164
+msgid "Donation Data"
+msgstr "捐款日期"
+
+#: civicrm_nccc_import.module:166
+msgid "Please paste nccc VPOS export txt data."
+msgstr "請把聯合信用卡中心的匯出文字數據貼上。"
+
+#: civicrm_nccc_import.module:179
+msgid "Verify data"
+msgstr "驗證數據"
+
+#: civicrm_nccc_import.module:200;208;215;222;228;234;240;247
+msgid "Wrong format at column !column , line: !line"
+msgstr "錯誤格式 column !column , line: !line"
+
+#: civicrm_nccc_import.module:10
+msgid "NCCC VPOS data import"
+msgstr "聯合信用卡中心VPOS數據匯入"
+
+#: civicrm_nccc_import.info:0
+msgid "NCCC Contribution Import"
+msgstr "聯合信用卡中心捐款匯入"
+
+#: civicrm_nccc_import.info:0
+msgid "Parse NCCC donation data and import into CiviCRM Contribution."
+msgstr "解析聯合信用卡中心捐款數據，並匯入CiviCRM捐款。"
+
