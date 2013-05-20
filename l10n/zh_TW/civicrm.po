@@ -2482,7 +2482,7 @@ msgstr "總選取個案：%1"
 
 #: CRM/Case/Form/Task/Restore.php CRM/Case/Task.php
 msgid "Restore Cases"
-msgstr "回復個案"
+msgstr "還原個案"
 
 #: CRM/Case/Info.php CRM/Case/Page/Tab.php CRM/Case/Selector/Search.php
 #: CRM/Core/BAO/Mapping.php CRM/Core/DAO/CustomGroup.php
@@ -2519,7 +2519,7 @@ msgstr "標籤"
 #: CRM/Contact/Form/Relationship.php CRM/Core/BAO/Mapping.php
 #: CRM/UF/Form/Field.php
 msgid "Current Employer"
-msgstr "現職單位"
+msgstr "服務單位/就讀學校"
 
 #: CRM/Contact/BAO/Contact.php CRM/Contact/BAO/Query.php
 #: CRM/Contact/Form/Edit/Address.php CRM/Core/DAO/LocationType.php
@@ -3143,7 +3143,7 @@ msgstr "捐款次數"
 #: CRM/Report/Form/Contribute/SoftCredit.php
 #: CRM/Report/Form/Contribute/Summary.php
 msgid "Donation Amount"
-msgstr "捐款金額"
+msgstr "金額"
 
 #: CRM/Contact/Form/Search/Custom/ContributionAggregate.php
 #: CRM/Contribute/Form/Contribution/Main.php
@@ -3266,7 +3266,7 @@ msgstr "無法建立關係記錄 - 現有關係重複： %1。"
 
 #: CRM/Contact/Form/Task/Delete.php CRM/Contact/Selector.php
 msgid "Restore Contact"
-msgstr "回復聯絡人"
+msgstr "還原聯絡人"
 
 #: CRM/Contact/Form/Task/Delete.php CRM/Core/BAO/Address.php
 msgid "The following contact(s) have address records which were shared with the address you removed from this contact. These address records are no longer shared - but they have not been removed or altered."
@@ -3485,7 +3485,7 @@ msgstr "不用，謝謝"
 
 #: CRM/Contribute/BAO/Query.php CRM/Pledge/BAO/Query.php
 msgid "Contribution Type - %1"
-msgstr "捐款類型 - %1"
+msgstr "費用類型 - %1"
 
 #: CRM/Contribute/BAO/Query.php CRM/Pledge/BAO/Query.php
 msgid "Contribution Page - %1"
@@ -3528,7 +3528,7 @@ msgstr "請輸入一個有效金額(例如%1)。"
 #: templates/CRM/Pledge/Form/Search/Common.tpl
 #: templates/CRM/Pledge/Page/UserDashboard.tpl
 msgid "Contribution Type"
-msgstr "捐款類型"
+msgstr "費用類型"
 
 #: CRM/Contribute/BAO/Query.php CRM/Contribute/Form/PCP/PCP.php
 #: CRM/Pledge/BAO/Query.php templates/CRM/Contribute/Form/Preview.tpl
@@ -3961,7 +3961,7 @@ msgstr "每隔"
 #: CRM/Contribute/Form/Contribution/Main.php CRM/Event/Form/Participant.php
 #: CRM/Event/Form/Registration/Register.php CRM/Member/Form/Membership.php
 msgid "Please enter a valid Credit Card Number"
-msgstr "請輸入有效的信用卡號碼"
+msgstr "請輸入有效的信用卡卡號"
 
 #: CRM/Contribute/Form/Contribution/Main.php CRM/Event/Form/Participant.php
 #: CRM/Event/Form/Registration/Register.php CRM/Member/Form/Membership.php
@@ -4888,7 +4888,7 @@ msgstr "找不到有效的付款處理器"
 
 #: CRM/Event/Form/Participant.php CRM/Event/Selector/Search.php
 msgid "Registered"
-msgstr "巳登記"
+msgstr "已登記"
 
 #: CRM/Event/Form/Participant.php CRM/Event/Form/Task/Delete.php
 msgid "Delete this participant record along with associated participant record(s)."
@@ -4922,7 +4922,7 @@ msgstr "活動報名"
 
 #: CRM/Event/Form/Registration/Register.php CRM/Event/Page/EventInfo.php
 msgid "Oops. It looks like you are already registered for this event. If you want to change your registration, or you feel that you've gotten this message in error, please contact the site administrator."
-msgstr "糟糕！在紀錄中您巳報名這項活動，不需要重複報名。如果您想變更您的報名，或您覺得您的報名出現錯誤，請聯絡網站管理者。"
+msgstr "糟糕！在紀錄中您已報名這項活動，不需要重複報名。如果您想變更您的報名，或您覺得您的報名出現錯誤，請聯絡網站管理者。"
 
 #: CRM/Event/Form/Task/SaveSearch.php CRM/Group/Page/Group.php
 #: templates/CRM/Contact/Form/Task/SaveSearch.tpl
@@ -5243,7 +5243,7 @@ msgstr "要送出確認信函及收據？"
 
 #: CRM/Member/Form/Membership.php CRM/Member/Form/MembershipRenewal.php
 msgid "Please enter the contribution Type."
-msgstr "請輸入捐款類型"
+msgstr "請輸入費用類型"
 
 #: CRM/Member/Form/Membership.php CRM/Member/Form/MembershipRenewal.php
 msgid "Please enter the contribution."
@@ -5938,7 +5938,7 @@ msgstr "尋找任務"
 
 #: CRM/Activity/Form/Task/Batch.php
 msgid "Batch Update for Activities"
-msgstr "批量更新活動"
+msgstr "批次更新活動"
 
 #: CRM/Activity/Form/Task/Batch.php
 msgid "Update Activities"
@@ -6055,7 +6055,7 @@ msgstr "匯出任務記錄"
 
 #: CRM/Activity/Task.php
 msgid "Batch Update Activities Via Profile"
-msgstr "從自訂表單批次更新任務"
+msgstr "從資料表單批次更新任務"
 
 #: CRM/Admin/Form/CMSUser.php
 msgid "OK"
@@ -6404,7 +6404,7 @@ msgstr "提供者"
 #: CRM/Admin/Form/Preferences/Address.php
 #: templates/CRM/Contact/Page/View/Summary.tpl
 msgid "User ID"
-msgstr "使用者編號"
+msgstr "網站使用者編號"
 
 #: CRM/Admin/Form/Preferences/Address.php
 msgid "Web Service URL"
@@ -8000,7 +8000,7 @@ msgstr "報表作者："
 
 #: CRM/Case/Form/Activity.php
 msgid "The selected activity has been moved to the Trash. You can view and / or restore deleted activities by checking \"Deleted Activities\" from the Case Activities search filter (under Manage Case).<br />"
-msgstr "你選擇的任務已經移到資源回收桶。之後若想回復，您可以從檢查個案任務搜尋清單中，篩選「已刪除的任務」來瀏覽及 / 回復刪除的任務。"
+msgstr "你選擇的任務已經移到資源回收桶。之後若想還原，您可以從檢查個案任務搜尋清單中，篩選「已刪除的任務」來瀏覽及 / 還原刪除的任務。"
 
 #: CRM/Case/Form/Activity.php
 msgid "Selected Activity cannot be deleted."
@@ -8008,7 +8008,7 @@ msgstr "選取的任務無法被刪除"
 
 #: CRM/Case/Form/Activity.php
 msgid "The selected activity has been restored.<br />"
-msgstr "選擇的任務已成功回復。<br />"
+msgstr "選擇的任務已成功還原。<br />"
 
 #: CRM/Case/Form/Activity.php
 msgid "A copy of the activity has also been sent to selected contacts(s)."
@@ -8040,11 +8040,11 @@ msgstr "選擇標籤"
 
 #: CRM/Case/Form/Case.php
 msgid "The selected case has been moved to the Trash. You can view and / or restore deleted cases by checking the \"Deleted Cases\" option under Find Cases.<br />"
-msgstr "你選擇的個案已經移到資源回收桶。之後若想回復，您可以從檢查個案搜尋清單，篩選「已刪除的個案」來瀏覽及 / 回復刪除的個案。"
+msgstr "你選擇的個案已經移到資源回收桶。之後若想還原，您可以從檢查個案搜尋清單，篩選「已刪除的個案」來瀏覽及 / 還原刪除的個案。"
 
 #: CRM/Case/Form/Case.php
 msgid "The selected case has been restored.<br />"
-msgstr "選取的個案已回復。<br />"
+msgstr "選取的個案已還原。<br />"
 
 #: CRM/Case/Form/CaseView.php msgctxt "menu"
 msgid "New Activity"
@@ -8137,7 +8137,7 @@ msgstr "列印個案清單"
 
 #: CRM/Case/Form/Task/Restore.php
 msgid "Restored Case(s): %1"
-msgstr "已回復個案: %1"
+msgstr "已還原個案: %1"
 
 #: CRM/Case/Info.php
 msgid "CiviCase Engine"
@@ -8158,7 +8158,7 @@ msgstr "您確定要刪除此個案？"
 #: CRM/Case/Selector/Search.php templates/CRM/Case/Form/Case.tpl
 #: templates/CRM/Contact/Form/Search/Custom/FullText.tpl
 msgid "Restore Case"
-msgstr "回復個案"
+msgstr "還原個案"
 
 #: CRM/Case/Selector/Search.php templates/CRM/Case/Form/CaseView.tpl
 msgid "Assign to Another Client"
@@ -8259,7 +8259,7 @@ msgstr "新增認捐"
 
 #: CRM/Contact/BAO/Contact.php templates/CRM/Member/Page/Tab.tpl
 msgid "Add Membership"
-msgstr "編輯會員資料"
+msgstr "新增會員資料"
 
 #: CRM/Contact/BAO/Contact.php templates/CRM/Case/Page/DashBoard.tpl
 #: templates/CRM/Case/Page/Tab.tpl
@@ -8277,7 +8277,7 @@ msgstr "關係"
 
 #: CRM/Contact/BAO/Contact.php templates/CRM/Contact/Page/View/Note.tpl
 msgid "Add Note"
-msgstr "編輯註記"
+msgstr "新增註記"
 
 #: CRM/Contact/BAO/Contact/Utils.php
 msgid "You seem to have deleted the relationship type 'Employee of'"
@@ -8453,7 +8453,7 @@ msgstr "特別ID或OpenID"
 
 #: CRM/Contact/DAO/Contact.php
 msgid "Current Employer ID"
-msgstr "現職單位ID"
+msgstr "服務單位/就讀學校ID"
 
 #: CRM/Contact/DAO/Group.php
 msgid "Cache Date"
@@ -8546,7 +8546,7 @@ msgstr "上傳頭像"
 
 #: CRM/Contact/Form/Contact.php
 msgid "Check for Matching Contact(s)"
-msgstr "檢查對應到的聯絡人"
+msgstr "檢查重覆的聯絡人"
 
 #: CRM/Contact/Form/Contact.php
 msgid "Save With Duplicate Household"
@@ -8596,7 +8596,7 @@ msgstr "長度"
 
 #: CRM/Contact/Form/DedupeRules.php
 msgid "Weight Threshold to Consider Contacts 'Matching':"
-msgstr "用來評估聯絡人對應的權重："
+msgstr "判斷為重複聯絡人的總權重值："
 
 #: CRM/Contact/Form/Domain.php templates/CRM/Admin/Page/ConfigTaskList.tpl
 #: msgctxt "menu"
@@ -8845,7 +8845,7 @@ msgstr "允許聯絡人b查看並更新聯絡人a的資訊"
 
 #: CRM/Contact/Form/Relationship.php
 msgid "Current Employee"
-msgstr "現職單位？"
+msgstr "服務單位/就讀學校"
 
 #: CRM/Contact/Form/Relationship.php
 msgid "Save Relationship"
@@ -8880,7 +8880,7 @@ msgstr "請至少選擇一個聯絡人。"
 
 #: CRM/Contact/Form/Relationship.php
 msgid "Current employer should be one of the selected contacts."
-msgstr "就職單位應為所選的聯絡人之一。"
+msgstr "服務單位/就讀學校應為所選的聯絡人之一。"
 
 #: CRM/Contact/Form/Relationship.php
 msgid "Current employee should be among the selected contacts."
@@ -9402,7 +9402,7 @@ msgstr ""
 
 #: CRM/Contact/Form/Task/Delete.php
 msgid "Restore Contact(s)"
-msgstr "回復聯絡人"
+msgstr "還原聯絡人"
 
 #: CRM/Contact/Form/Task/Delete.php
 msgid "Delete Contact(s)"
@@ -9410,7 +9410,7 @@ msgstr "刪除聯絡人"
 
 #: CRM/Contact/Form/Task/Delete.php
 msgid "Restored Contact(s): %1"
-msgstr "已回復的聯絡人： %1"
+msgstr "已還原的聯絡人： %1"
 
 #: CRM/Contact/Form/Task/Delete.php
 msgid "Deleted Contact(s): %1"
@@ -9418,7 +9418,7 @@ msgstr "已刪除的聯絡人： %1"
 
 #: CRM/Contact/Form/Task/Delete.php
 msgid "Selected contact was restored sucessfully."
-msgstr "選取的聯絡人已成功刪除。"
+msgstr "選取的聯絡人已成功還原。"
 
 #: CRM/Contact/Form/Task/Delete.php
 msgid "Selected contact was deleted sucessfully."
@@ -9681,7 +9681,7 @@ msgstr "加入評語"
 
 #: CRM/Contact/Page/View/Note.php
 msgid "Delete Comment"
-msgstr "刪除聯絡人"
+msgstr "刪除評語"
 
 #: CRM/Contact/Page/View.php
 msgid "We could not find a contact id."
@@ -9794,7 +9794,7 @@ msgstr "列印-郵寄貼紙"
 
 #: CRM/Contact/Task.php
 msgid "Batch Update via Profile"
-msgstr "批次更新"
+msgstr "從資料表單進行批次更新"
 
 #: CRM/Contact/Task.php
 msgid "Print PDF Letter for Contacts"
@@ -9806,7 +9806,7 @@ msgstr "Email-解凍封鎖的Email"
 
 #: CRM/Contact/Task.php
 msgid "Restore Contacts"
-msgstr "回復聯絡人"
+msgstr "還原聯絡人"
 
 #: CRM/Contact/Task.php
 msgid "Map Contacts"
@@ -9838,7 +9838,7 @@ msgstr "定期捐款編號"
 
 #: CRM/Contribute/BAO/ContributionType.php
 msgid "This contribution type cannot be deleted because it is being referenced by one or more of the following types of records: Contributions, Contribution Pages, or Membership Types. Consider disabling this type instead if you no longer want it used."
-msgstr "此捐款類型無法刪除。它已經被捐款、募款頁、或會員類型其中一種功能綁定。如果您已經不需要使用，建議您停用此捐款類型。"
+msgstr "此費用類型無法刪除。它已經被捐款、募款頁、或會員類型其中一種功能綁定。如果您已經不需要使用，建議您停用此費用類型。"
 
 #: CRM/Contribute/BAO/Contribution/Utils.php
 msgid "transaction already processed."
@@ -10087,7 +10087,7 @@ msgstr "數量"
 
 #: CRM/Contribute/DAO/ContributionProduct.php
 msgid "Fulfilled Date"
-msgstr "完成日期"
+msgstr "出貨日期"
 
 #: CRM/Contribute/DAO/ContributionRecur.php
 #: templates/CRM/Pledge/Form/Task/Print.tpl
@@ -10257,7 +10257,7 @@ msgstr "色彩 - 首頁連結"
 #: CRM/Contribute/Form/AdditionalInfo.php
 #: templates/CRM/Contribute/Form/ContributionView.tpl
 msgid "Fulfilled"
-msgstr "補貨"
+msgstr "出貨"
 
 #: CRM/Contribute/Form/AdditionalInfo.php
 msgid "This Invoice ID already exists in the database."
@@ -11002,19 +11002,19 @@ msgstr "<br />%1的認捐付款已更新。"
 
 #: CRM/Contribute/Form/ContributionType.php
 msgid "A contribution type with this name already exists. Please select another name."
-msgstr "重複的捐款類型名稱，請選擇其他名稱。"
+msgstr "重複的費用類型名稱，請選擇其他名稱。"
 
 #: CRM/Contribute/Form/ContributionType.php
 msgid "Tax-deductible?"
-msgstr "可抵稅？"
+msgstr "可開收據？"
 
 #: CRM/Contribute/Form/ContributionType.php
 msgid "Selected contribution type has been deleted."
-msgstr "選擇的捐款類型已被刪除。"
+msgstr "選擇的費用類型已被刪除。"
 
 #: CRM/Contribute/Form/ContributionType.php
 msgid "The contribution type '%1' has been saved."
-msgstr "捐款類型 「%1」已儲存。"
+msgstr "費用類型 「%1」已儲存。"
 
 #: CRM/Contribute/Form/ManagePremiums.php
 msgid "A product with this name already exists. Please select another name."
@@ -11176,7 +11176,7 @@ msgstr "專頁審核完成後，您會立刻收到Email通知。"
 
 #: CRM/Contribute/Form/PCP/Campaign.php
 msgid "Your Personal Campaign Page has been %1 %2 %3"
-msgstr "您的個人募款頁巳被 %1 %2 %3"
+msgstr "您的個人募款頁已被 %1 %2 %3"
 
 #: CRM/Contribute/Form/PCP/PCPAccount.php
 msgid "You must login with your OpenID provider before you can create a Personal Campaign Page."
@@ -11418,20 +11418,20 @@ msgstr "捐款 %%StatusMessage%%"
 #: CRM/Contribute/Page/ContributionType.php
 #: templates/CRM/Contribute/Form/ContributionType.tpl
 msgid "Edit Contribution Type"
-msgstr "編輯捐款類型"
+msgstr "編輯費用類型"
 
 #: CRM/Contribute/Page/ContributionType.php
 msgid "Disable Contribution Type"
-msgstr "停用捐款類型"
+msgstr "停用費用類型"
 
 #: CRM/Contribute/Page/ContributionType.php
 msgid "Enable Contribution Type"
-msgstr "啟用捐款類型"
+msgstr "啟用費用類型"
 
 #: CRM/Contribute/Page/ContributionType.php
 #: templates/CRM/Contribute/Form/ContributionType.tpl
 msgid "Delete Contribution Type"
-msgstr "刪除捐款類型"
+msgstr "刪除費用類型"
 
 #: CRM/Contribute/Page/DashBoard.php
 msgid "Contributions Charts"
@@ -11491,7 +11491,7 @@ msgstr "編輯個人募款頁"
 
 #: CRM/Contribute/Page/PCP.php
 msgid "Approve"
-msgstr "巳允許"
+msgstr "已允許"
 
 #: CRM/Contribute/Page/PCP.php
 msgid "Approve Personal Campaign Page"
@@ -11528,7 +11528,7 @@ msgstr "匯出捐款"
 
 #: CRM/Contribute/Task.php
 msgid "Batch Update Contributions Via Profile"
-msgstr "由個人資料進行批次更新捐款"
+msgstr "由資料表單進行批次更新捐款"
 
 #: CRM/Contribute/Task.php
 msgid "Update Pending Contribution Status"
@@ -12891,11 +12891,11 @@ msgstr "點選並認捐"
 
 #: CRM/Core/Payment/ClickAndPledge.php
 msgid "Could not find User ID for payment processor"
-msgstr "找不到金流機制的使用者編號"
+msgstr "找不到金流機制的網站使用者編號"
 
 #: CRM/Core/Payment/ClickAndPledge.php
 msgid "User ID is not set in the Administer CiviCRM &raquo; Payment Processor."
-msgstr "沒有在管理 CiviCRM &raquo; 金流機制裡設定使用者編號。"
+msgstr "沒有在管理 CiviCRM &raquo; 金流機制裡設定網站使用者編號。"
 
 #: CRM/Core/Payment/ClickAndPledge.php
 msgid "Sending a relative URL to Click And Pledge is erroneous. Please make your resource URL (in <a href=\"%1\">Administer CiviCRM &raquo; Global Settings &raquo; Resource URLs</a> ) complete."
@@ -13255,7 +13255,7 @@ msgstr "ID 錯誤"
 
 #: CRM/Core/Payment/NewwebResponse.php
 msgid "PRC: operation success"
-msgstr "作業順利完成"
+msgstr "作業順利完成"
 
 #: CRM/Core/Payment/NewwebResponse.php
 msgid "PRC: operation pending"
@@ -13263,23 +13263,23 @@ msgstr "API 呼叫尚未完成"
 
 #: CRM/Core/Payment/NewwebResponse.php
 msgid "PRC: undefined object"
-msgstr "找不到指定的訂單"
+msgstr "找不到指定的訂單"
 
 #: CRM/Core/Payment/NewwebResponse.php
 msgid "PRC: parameter not found"
-msgstr "找不到必要參數"
+msgstr "找不到必要參數"
 
 #: CRM/Core/Payment/NewwebResponse.php
 msgid "PRC: parameter too short"
-msgstr "必要參數太短"
+msgstr "必要參數太短"
 
 #: CRM/Core/Payment/NewwebResponse.php
 msgid "PRC: parameter too long"
-msgstr "必要參數太長"
+msgstr "必要參數太長"
 
 #: CRM/Core/Payment/NewwebResponse.php
 msgid "PRC: parameter format error"
-msgstr "必要參數的格式不正確"
+msgstr "必要參數的格式不正確"
 
 #: CRM/Core/Payment/NewwebResponse.php
 msgid "PRC: parameter value error"
@@ -13291,11 +13291,11 @@ msgstr "訂單重複"
 
 #: CRM/Core/Payment/NewwebResponse.php
 msgid "PRC: parameter mismatch"
-msgstr "發生參數不符"
+msgstr "發生參數不符"
 
 #: CRM/Core/Payment/NewwebResponse.php
 msgid "PRC: input error"
-msgstr "剖析輸入資料時發生錯誤。可能是傳入的指令或其中一個參數的長度無效"
+msgstr "剖析輸入資料時發生錯誤。可能是傳入的指令或其中一個參數的長度無效"
 
 #: CRM/Core/Payment/NewwebResponse.php
 msgid "PRC: verb not valid in present state"
@@ -13311,7 +13311,7 @@ msgstr "Payment Manager 遇到非預期的內部錯誤"
 
 #: CRM/Core/Payment/NewwebResponse.php
 msgid "PRC: database error"
-msgstr "發生資料庫通信錯誤"
+msgstr "發生資料庫通信錯誤"
 
 #: CRM/Core/Payment/NewwebResponse.php
 msgid "PRC: cassette error"
@@ -13323,7 +13323,7 @@ msgstr "應用程式所用的 API 版本比 Payment Manager 所支援的版本�
 
 #: CRM/Core/Payment/NewwebResponse.php
 msgid "PRC: obsolete API version"
-msgstr "應用程式所用的 API 版本 Payment Manager 已不再支援。請升級應用程式以使用會取代過時功能或特性的新功能"
+msgstr "應用程式所用的 API 版本 Payment Manager 已不再支援。請升級應用程式以使用會取代過時功能或特性的新功能"
 
 #: CRM/Core/Payment/NewwebResponse.php
 msgid "PRC: autoapprove failed"
@@ -13343,23 +13343,23 @@ msgstr "卡匣無效"
 
 #: CRM/Core/Payment/NewwebResponse.php
 msgid "PRC: unsupported in sysplex"
-msgstr "sysplex 環境中不支援該作業"
+msgstr "sysplex 環境中不支援該作業"
 
 #: CRM/Core/Payment/NewwebResponse.php
 msgid "PRC: parameter null value"
-msgstr "參數值為空值"
+msgstr "參數值為空值"
 
 #: CRM/Core/Payment/NewwebResponse.php
 msgid "PRC: XML error"
-msgstr "XML 文件不正確"
+msgstr "XML 文件不正確"
 
 #: CRM/Core/Payment/NewwebResponse.php
 msgid "PRC: corequisite parameter not found"
-msgstr "當指定另一參數時，必須指定此參數"
+msgstr "當指定另一參數時，必須指定此參數"
 
 #: CRM/Core/Payment/NewwebResponse.php
 msgid "PRC: invalid parameter combination"
-msgstr "不容許 API 指令中所指定的參數組合"
+msgstr "不容許 API 指令中所指定的參數組合"
 
 #: CRM/Core/Payment/NewwebResponse.php
 msgid "PRC: batch error"
@@ -13367,7 +13367,7 @@ msgstr "批次作業出現相關錯誤"
 
 #: CRM/Core/Payment/NewwebResponse.php
 msgid "PRC: financial failure"
-msgstr "因金融理由導致作業失敗"
+msgstr "因金融理由導致作業失敗"
 
 #: CRM/Core/Payment/NewwebResponse.php
 msgid "PRC: block black BIN"
@@ -13375,7 +13375,7 @@ msgstr "為特定商店做的風險控管"
 
 #: CRM/Core/Payment/NewwebResponse.php
 msgid "PRC: block foreign"
-msgstr "信用卡發卡行為國外銀行"
+msgstr "信用卡發卡行為國外銀行"
 
 #: CRM/Core/Payment/NewwebResponse.php
 msgid "PRC: servlet init error"
@@ -13383,7 +13383,7 @@ msgstr "起始設定 Servlet 時發生錯誤"
 
 #: CRM/Core/Payment/NewwebResponse.php
 msgid "PRC: authentication error"
-msgstr "進行使用者身份驗證期間發生錯誤"
+msgstr "進行使用者身份驗證期間發生錯誤"
 
 #: CRM/Core/Payment/NewwebResponse.php
 msgid "PRC: authorization error"
@@ -13391,7 +13391,7 @@ msgstr "信用卡授權錯誤"
 
 #: CRM/Core/Payment/NewwebResponse.php
 msgid "PRC: unhandled exception"
-msgstr "發生無法處理的異常狀況，請稍後再試"
+msgstr "發生無法處理的異常狀況，請稍後再試"
 
 #: CRM/Core/Payment/NewwebResponse.php
 msgid "PRC: duplicate parameter value not allowed"
@@ -13403,15 +13403,15 @@ msgstr "無效的指令"
 
 #: CRM/Core/Payment/NewwebResponse.php
 msgid "PRC: crypto error"
-msgstr "發生與加密 / 解密金鑰相關錯誤"
+msgstr "發生與加密 / 解密金鑰相關錯誤"
 
 #: CRM/Core/Payment/NewwebResponse.php
 msgid "PRC: not active"
-msgstr "管理訂單未啟用"
+msgstr "管理訂單未啟用"
 
 #: CRM/Core/Payment/NewwebResponse.php
 msgid "PRC: parameter not allowed"
-msgstr "不應指定參數"
+msgstr "不應指定參數"
 
 #: CRM/Core/Payment/NewwebResponse.php
 msgid "PRC: delete error"
@@ -13423,19 +13423,19 @@ msgstr "發生 WebSphere / WebServer 相關錯誤"
 
 #: CRM/Core/Payment/NewwebResponse.php
 msgid "PRC: supported in sysplex admin only"
-msgstr "僅在指定為 Sysplex 管理者的 Payment Manager 上，才能在 Sysplex 模式中支援此要求"
+msgstr "僅在指定為 Sysplex 管理者的 Payment Manager 上，才能在 Sysplex 模式中支援此要求"
 
 #: CRM/Core/Payment/NewwebResponse.php
 msgid "PRC: realm"
-msgstr "發生領域相關錯誤"
+msgstr "發生領域相關錯誤"
 
 #: CRM/Core/Payment/NewwebResponse.php
 msgid "PRC: missing API version"
-msgstr "應用程式未傳送必要的 API  版本參數給 Payment Manager"
+msgstr "應用程式未傳送必要的 API  版本參數給 Payment Manager"
 
 #: CRM/Core/Payment/NewwebResponse.php
 msgid "PRC: dispathcer error"
-msgstr "連接dispatcher 做信用卡交易時，dispatcher 部分發生的錯誤"
+msgstr "連接dispatcher 做信用卡交易時，dispatcher 部分發生的錯誤"
 
 #: CRM/Core/Payment/PayflowPro.php
 msgid "Payflow Pro"
@@ -13768,7 +13768,7 @@ msgstr "回覆的自動回應機制"
 
 #: CRM/Core/SelectValues.php
 msgid "Subscription Confirmation Request"
-msgstr "確認訂閱"
+msgstr "訂閱待確認"
 
 #: CRM/Core/SelectValues.php
 msgid "Welcome Message"
@@ -14739,7 +14739,7 @@ msgstr "在折扣設定中需至少輸入一個費用。若您未能看到輸入
 
 #: CRM/Event/Form/ManageEvent/Fee.php
 msgid "Please select contribution type."
-msgstr "請選擇捐款類型。"
+msgstr "請選擇費用類型。"
 
 #: CRM/Event/Form/ManageEvent/Fee.php
 msgid "Please enter the fee label for the paid event."
@@ -14821,7 +14821,7 @@ msgstr "感謝您的報名"
 
 #: CRM/Event/Form/ManageEvent/Registration.php
 msgid "Participation in this event requires approval. Submit your registration request here. Once approved, you will receive an email with a link to a web page where you can complete the registration process."
-msgstr "參加此活動需要審核，請在此填寫報名表。一旦通過，您將會收到系統所發出的Email，請點擊其中的Email網址，以完成報名程序。"
+msgstr "參加此活動需要審核，請在此填寫報名表。一旦你通過審核，我們會傳一封 Email到您的信箱，你可以點選 Email 中的網址以完成報名程序。"
 
 #: CRM/Event/Form/ManageEvent/Registration.php
 msgid "Allow Online Registration?"
@@ -14930,7 +14930,7 @@ msgstr "報名來源"
 
 #: CRM/Event/Form/Participant.php
 msgid "Please enter the associated Contribution Type"
-msgstr "請輸入相關的捐款類型"
+msgstr "請輸入相關的費用類型"
 
 #: CRM/Event/Form/Participant.php
 msgid "Selected Event is not Paid Event "
@@ -15171,11 +15171,11 @@ msgstr "此活動還可登記%1人。如果你報名的人數（包括你自己�
 
 #: CRM/Event/Form/Registration/Register.php
 msgid "Registration for this event requires approval. Once your registration(s) have been reviewed, you will receive an email with a link to a web page where you can complete the registration process."
-msgstr "您的報名已通過。一旦通過，您將會收到一封Email，請點擊郵件內的連結，以完成報名程序。"
+msgstr "您的報名已通過。一旦你通過審核，我們會傳一封 Email到您的信箱，你可以點選 Email 中的網址以完成報名程序。"
 
 #: CRM/Event/Form/Registration/Register.php
 msgid "Registration for this event requires approval. Once your registration has been reviewed, you will receive an email with a link to a web page where you can complete the registration process."
-msgstr "參加此活動需要經過審查。一旦審查通過，你會收到一封 Email，請你點擊從該Email中的網址以完成活動登記。"
+msgstr "參加此活動需要經過審查。一旦你通過審核，我們會傳一封 Email到您的信箱，你可以點選 Email 中的網址以完成報名程序。"
 
 #: CRM/Event/Form/Registration/Register.php
 msgid "Fee Level is a required field."
@@ -15260,7 +15260,7 @@ msgstr "名牌格式"
 
 #: CRM/Event/Form/Task/Batch.php
 msgid "Batch Update for Events"
-msgstr "批量更新活動"
+msgstr "批次更新活動"
 
 #: CRM/Event/Form/Task/Batch.php
 msgid "Update Participant(s)"
@@ -15318,7 +15318,7 @@ msgstr "已取消"
 
 #: CRM/Event/Form/Task/PickProfile.php
 msgid "Batch Update for Event Participants"
-msgstr "批量更新活動參加者"
+msgstr "批次更新活動參加者"
 
 #: CRM/Event/Form/Task/Print.php
 msgid "Print Participant List"
@@ -17061,7 +17061,7 @@ msgstr "%1會籍%2已被加入。"
 
 #: CRM/Member/Form/Membership.php
 msgid "A membership confirmation and receipt has been sent to %1."
-msgstr "會籍確認以及收據已被傳送給%1。"
+msgstr "會籍確認信以及收據已傳送給%1。"
 
 #: CRM/Member/Form/MembershipRenewal.php
 msgid "Membership Renewal using credit card required Membership fee, since this memebrship type have no fee, you can use normal renew mode"
@@ -17209,7 +17209,7 @@ msgstr "搜尋會員"
 
 #: CRM/Member/Form/Task/Batch.php
 msgid "Batch Update for Members"
-msgstr "批量更新會員"
+msgstr "批次更新會員"
 
 #: CRM/Member/Form/Task/Batch.php
 msgid "Update Members(s)"
@@ -17312,7 +17312,7 @@ msgstr "匯出會員"
 
 #: CRM/Member/Task.php
 msgid "Batch Update Members Via Profile"
-msgstr "從資料表單批量更新會員"
+msgstr "從資料表單批次更新會員"
 
 #: CRM/Note/Form/Note.php templates/CRM/Mailing/Form/Test.tpl
 msgid "Subject:"
@@ -18410,7 +18410,7 @@ msgstr "請至少輸入一項群組欄位。"
 
 #: CRM/Report/Form/Contribute/Repeat.php
 msgid "You can not use other Group by with Contribution type or Contribution source."
-msgstr "您不能使用其他捐款類型或捐款來源的群組。"
+msgstr "您不能使用其他費用類型或捐款來源的群組。"
 
 #: CRM/Report/Form/Contribute/Repeat.php
 msgid "Do not select field %1 with Group by %2."
@@ -18642,7 +18642,7 @@ msgstr "電子報狀態"
 
 #: CRM/Report/Form/Mailing/Summary.php
 msgid "Delivered"
-msgstr "巳遞送"
+msgstr "已遞送"
 
 #: CRM/Report/Form/Mailing/Summary.php
 msgid "Mail Summary"
@@ -19624,7 +19624,7 @@ msgstr "最後頁 &gt;&gt;"
 
 #: CRM/Utils/ReCAPTCHA.php
 msgid "Input text must match the phrase in the image. Please review the image and re-enter matching text."
-msgstr "輸入文字必需符合在圖像的短語。請重新檢查圖像及重新輸入相符的文字。"
+msgstr "您所輸入的文字必需符合在圖裡的文字。請重新檢查、輸入正確的文字。"
 
 #: CRM/Utils/Request.php
 msgid "Please convert retrieve call to use new function signature"
@@ -20881,7 +20881,7 @@ msgstr "僅用於寄送信件時的標籤。您可以在新增/編輯聯絡人�
 
 #: templates/CRM/Admin/Form/Preferences/Address.hlp
 msgid "Current employer name as configured in the individual contact edit form. Note that this field is only available for contacts which are the contact type individual."
-msgstr "就職單位名稱已設定在個人聯絡編輯表格。若您想要它獨立為另一行，請在姓名欄位之後使用Enter鍵建立折行。"
+msgstr "服務單位/就讀學校名稱已設定在個人聯絡編輯表格。若您想要它獨立為另一行，請在姓名欄位之後使用Enter鍵建立折行。"
 
 #: templates/CRM/Admin/Form/Preferences/Address.hlp
 msgid "Address Name (e.g. Johnson Paviliont)."
@@ -20965,7 +20965,7 @@ msgstr "聯絡人的姓"
 
 #: templates/CRM/Admin/Form/Preferences/Address.hlp
 msgid "Current employer name as configured in the individual contact edit form. You will probably want this on a separate line, so use the Enter key to create a line-break after the name fields."
-msgstr "就職單位名稱為已設定在個人聯絡編輯表格。若您想要它獨立為另一行，請在姓名欄位之後使用Enter鍵建立折行。"
+msgstr "服務單位/就讀學校名稱為已設定在個人聯絡編輯表格。若您想要它獨立為另一行，請在姓名欄位之後使用Enter鍵建立折行。"
 
 #: templates/CRM/Admin/Form/Preferences/Address.tpl
 msgid "Address format for mailing labels. Use the %1 token for state/province abbreviation or %2 for full name."
@@ -21387,7 +21387,7 @@ msgstr "快取總覽頁面資料的分鐘數。"
 
 #: templates/CRM/Admin/Form/Setting/Miscellaneous.tpl
 msgid "If enabled, deleted contacts will be moved to trash (instead of being destroyed). Users with the proper permission are able to search for the deleted contacts and restore them (or delete permanently)."
-msgstr "如果開啟，將聯絡人刪除時，會移動至資源回收桶，而不會直接刪除聯絡人。擁有權限的使用者可以透過進階搜尋來尋找被刪除的聯絡人，進行回復（或進行永久刪除）。"
+msgstr "如果開啟，將聯絡人刪除時，會移動至資源回收桶，而不會直接刪除聯絡人。擁有權限的使用者可以透過進階搜尋來尋找被刪除的聯絡人，進行還原（或進行永久刪除）。"
 
 #: templates/CRM/Admin/Form/Setting/Miscellaneous.tpl
 msgid "If enabled, all actions performed on non-cache tables will be logged (in the respective log_* tables)."
@@ -22215,7 +22215,7 @@ msgstr "API 文件"
 
 #: templates/CRM/Admin/Page/Options.tpl
 msgid "CiviCRM is pre-configured with standard options for individual gender (e.g. Male, Female, Transgender). You can use this page to customize these options and add new options as needed for your installation."
-msgstr "CiviCRM 已預先設定個人性別的標準選項（例如：男、女、跨性別）。您可以使用此頁這些選項，並根據您網站的需要添加新的選項。"
+msgstr "CiviCRM 已預先設定個人性別的標準選項（例如：男、女、其他）。您可以使用此頁這些選項，並根據您網站的需要添加新的選項。"
 
 #: templates/CRM/Admin/Page/Options.tpl
 msgid "CiviCRM is pre-configured with standard options for individual contact prefixes (e.g. Ms., Mr., Dr. etc.). You can use this page to customize these options and add new ones as needed for your installation."
@@ -22917,7 +22917,7 @@ msgstr "日期分類"
 
 #: templates/CRM/Admin/Page/RelationshipType.hlp
 msgid "<strong>Special Relationships</strong><br />Employee <-> Employer and Household relationships both have special characteristics.<br /><strong>Employee <-> Employer relationship</strong> is created anytime the 'Current Employer' field is filled in, either in the Contact Summary form or via a Profile. When filled in, it will create an Organisation if one does not already exist with that name.<br /><strong>Household relationship</strong> enables household members to have the 'household address' applied to their record. Again, if a Household already exists then the individual will have a relationship created with it, if none exists then a new household will be created."
-msgstr "<strong>特別關係</strong><br />員工 <-> 雇主與家庭的關係都是特殊的關係類型。<br /><strong>員工 <-> 雇主關係</strong>會在「就職單位」欄位被填入的時候建立起來，從「聯絡人摘要」或從檔案文件皆是。當填入資料時，將會創建一個組織（尚未有名稱）。<br /><strong>家庭關係</strong>可使同一個家庭裡的成員都有一個家庭地址的紀錄。再次提醒，若一個家庭紀錄已存在，那麼個人的「關係」資料裡就會有這個家庭資料，若家庭紀錄先前不存在，那就會在此建立一個新的家庭資料。"
+msgstr "<strong>特別關係</strong><br />員工 <-> 雇主與家庭的關係都是特殊的關係類型。<br /><strong>員工 <-> 雇主關係</strong>會在「服務單位/就讀學校」欄位被填入的時候建立起來，從「聯絡人摘要」或從檔案文件皆是。當填入資料時，將會創建一個組織（尚未有名稱）。<br /><strong>家庭關係</strong>可使同一個家庭裡的成員都有一個家庭地址的紀錄。再次提醒，若一個家庭紀錄已存在，那麼個人的「關係」資料裡就會有這個家庭資料，若家庭紀錄先前不存在，那就會在此建立一個新的家庭資料。"
 
 #: templates/CRM/Admin/Page/RelationshipType.tpl
 msgid "Relationship types describe relationships between people, households and organizations. Relationship types labels describe the relationship from the perspective of each of the two entities (e.g. Parent <-> Child, Employer <-> Employee). For some types of relationships, the labels may be the same in both directions (e.g. Spouse <-> Spouse)."
@@ -23467,7 +23467,7 @@ msgstr "按刪除將此 &quot;%1&quot; 任務移到資源回收桶。"
 
 #: templates/CRM/Case/Form/Activity.tpl
 msgid "Click Restore to retrieve this &quot;%1&quot; activity from the Trash."
-msgstr "按回復，將任務 &quot;%1&quot; 從資源回收桶中拉回。"
+msgstr "按還原，將任務 &quot;%1&quot; 從資源回收桶中取回。"
 
 #: templates/CRM/Case/Form/Activity.tpl
 msgid "Clients"
@@ -23575,7 +23575,7 @@ msgstr "按刪除，去移動此個案及所有相關任務到資源回收桶。
 
 #: templates/CRM/Case/Form/Case.tpl
 msgid "Click Restore to retrieve this case and all associated activities from the Trash."
-msgstr "按回復以復原此個案及所有相關任務。"
+msgstr "按還原以還原此個案及所有相關任務。"
 
 #: templates/CRM/Case/Form/CaseView.tpl
 msgid "Clients:"
@@ -23774,7 +23774,7 @@ msgstr "下個排程任務"
 
 #: templates/CRM/Case/Form/Task/Restore.tpl
 msgid "Are you sure you want to restore the selected cases? This operation will retrieve the case(s) and all associated activities from Trash."
-msgstr "您是否確定回復已選取的個案？這操作會把個案及所有相關活動從資源為收桶裡拉回。"
+msgstr "您是否確定要還原已選取的個案？這操作會把個案及所有相關活動從資源為收桶裡取回。"
 
 #: templates/CRM/Case/Form/Task.tpl
 msgid "Number of selected cases: %1"
@@ -24127,11 +24127,11 @@ msgstr "你是否確定準備好立即更新？"
 
 #: templates/CRM/common/success.tpl
 msgid "CiviCRM home page"
-msgstr "CiviCRM 主頁"
+msgstr "CiviCRM 首頁"
 
 #: templates/CRM/common/success.tpl
 msgid "Return to CiviCRM home page."
-msgstr "回到 CiviCRM 主頁。"
+msgstr "回到 CiviCRM 首頁。"
 
 #: templates/CRM/common/success.tpl
 msgid "Upgrade Documentation"
@@ -24183,15 +24183,15 @@ msgstr "此選項讓聯絡人可以自行設定，若他們不想從您的組織
 
 #: templates/CRM/Contact/Form/Contact.hlp
 msgid "This flag is most commonly used to mark an email address that is bouncing. If you are using the CiviMail component, emails that bounce excessively are automatically placed on hold and mailings are not sent to this address as long as it is marked hold. You can also set (or unset) this option manually - but remember that emails will not be sent to this address as long as it is marked 'On Hold'."
-msgstr "凍結的電郵將不會收到EDM/電子報，此設定可隨時變更。本記錄亦會在寄送EDM/電子報發現失效的Email時，自動標記為「凍結」，您也可以自行取消凍結。"
+msgstr "被凍結的電子郵件將不會收到EDM/電子報，但您可隨時將它解凍。本記錄亦會在寄送EDM/電子報、當發現失效的Email時，自動將其標記為「凍結」，以避免未來仍持續寄送。您也可以自行取消凍結。"
 
 #: templates/CRM/Contact/Form/Contact.hlp
 msgid "Select the preferred method(s) of communicating with this contact."
-msgstr "選擇您與聯絡人偏好的聯絡方法"
+msgstr "選擇此聯絡人偏好的聯絡方法"
 
 #: templates/CRM/Contact/Form/Contact.hlp
 msgid "Select the preferred method for Privacy."
-msgstr "選擇與聯絡人偏好的隱私聯繫方式"
+msgstr "選擇此聯絡人偏好的隱私聯繫方式"
 
 #: templates/CRM/Contact/Form/Contact.hlp
 msgid "Check this option if you want to use a shared address for this contact. For example, you might want to share a \"Work\" address for an individual with the address of their employer. Or, you might want to share a household address with household members. You can select an existing contact to share an address with, or create a new contact and share that address."
@@ -24218,7 +24218,7 @@ msgstr "按這裡回到編輯街道地址在單一欄位。不符合預期格式
 
 #: templates/CRM/Contact/Form/Contact.hlp
 msgid "You can select an existing organization record here, OR type in the name of a new organization if this person's employer is not already in your database. However, if you want this person to share their work address with their employer AND that organization doesn't exist yet - leave this field blank and use the Shared Address feature in the Address pane below to create the employer record AND enter the employer address. The 'current employer' relationship will be automatically created for you."
-msgstr "你可以選擇既有的單位，或新增一個單位。然而，如果你希望與單位分享你的地址，但是單位還沒有建立出來，請將此欄位留空，使用下面地址的「共享地址」的功能，同時建立單位的地址。如此聯絡人與單位的關係也會自動被建立出來。"
+msgstr "你可以選擇既有的服務單位/就讀學校，或新增一個。然而，如果你希望與單位服務單位/就讀學校你的地址，但是服務單位/就讀學校還沒有建立出來，請將此欄位留空，使用下面地址的「共享地址」的功能，同時建立服務單位/就讀學校的地址。如此聯絡人與服務單位/就讀學校的關係也會自動被建立出來。"
 
 #: templates/CRM/Contact/Form/Contact.hlp
 msgid "Record one or more web addresses (URLs) associated with this contact. Examples include personal web addresses like a Facebook or Twitter page, as well as links to a company or organization web site or page."
@@ -24242,7 +24242,7 @@ msgstr "展開所有收合項目"
 
 #: templates/CRM/Contact/Form/Contact.tpl
 msgid "Internal Id"
-msgstr "內部編號"
+msgstr "系統編號"
 
 #: templates/CRM/Contact/Form/Contact.tpl
 msgid "Collapse all tabs"
@@ -24250,7 +24250,7 @@ msgstr "收合所有項目"
 
 #: templates/CRM/Contact/Form/DedupeFind.tpl
 msgid "You can search all contacts for duplicates or limit the search to a specific group."
-msgstr "您可以搜尋所有重複或限制到指定群組搜尋的聯絡人。"
+msgstr "您可以搜尋所有聯絡人，或搜尋特定群組的聯絡人。"
 
 #: templates/CRM/Contact/Form/DedupeRules.tpl
 msgid "Matching Rules for %1 Contacts"
@@ -24519,7 +24519,7 @@ msgstr "請先選擇關係類型，再輸入聯絡人的名稱後，按下「搜
 
 #: templates/CRM/Contact/Form/Relationship.tpl
 msgid "Current Employer?"
-msgstr "現職單位?"
+msgstr "服務單位/就讀學校?"
 
 #: templates/CRM/Contact/Form/Relationship.tpl
 msgid "Please select a relationship type first."
@@ -24936,7 +24936,7 @@ msgstr "更新欄位值給每一個聯絡人為需要。按以下<strong>更新�
 
 #: templates/CRM/Contact/Form/Task/Delete.tpl
 msgid "Are you sure you want to restore the selected contact(s)? The contact(s) and all related data will be fully restored."
-msgstr "您確定要回復選取的聯絡人？該聯絡人的所有資料將會完整還原。"
+msgstr "您確定要還原所選取的聯絡人？這些聯絡人及其相關資料，將會被全部還原。"
 
 #: templates/CRM/Contact/Form/Task/Delete.tpl
 msgid "Are you sure you want to delete the selected contact(s)?"
@@ -24944,7 +24944,7 @@ msgstr "您確定要刪除所選連絡人？"
 
 #: templates/CRM/Contact/Form/Task/Delete.tpl
 msgid "The contact(s) and all related data will be moved to trash and only users with the relevant permission will be able to restore it."
-msgstr "聯絡人與其相關資料將會被丟到資源回收桶，僅能由管理員進行復原。"
+msgstr "聯絡人與其相關資料將會被丟到資源回收桶，僅能由管理員進行還原。"
 
 #: templates/CRM/Contact/Form/Task/Delete.tpl
 msgid "The contact(s) and all related data will be permanently removed."
@@ -25215,31 +25215,31 @@ msgstr "與%1合併"
 
 #: templates/CRM/Contact/Page/DedupeRules.hlp
 msgid "Manage the rules used to identify potentially duplicate contact records. Scan for duplicates using a selected rule and merge duplicate contact data as needed. Click <strong>Edit Rule</strong> to review or modify the rules for each type of contact. You will generally want to maintain both 'fuzzy' and 'strict' rules for each contact type."
-msgstr "管理用作分辨有潛質複製聯絡人記錄的規則。為副本使用一個已選取規則來掃描及合併複製聯絡人數據為需要。按<strong>編輯規則</strong>為每一個類別的聯絡人重新查看或修改規則。您通常會維持'模糊'及'精確'規則給每一個聯絡人類別。"
+msgstr "在此可管理「去重覆聯絡人」的規則。使用某一個去重覆規則，可掃瞄出該規則下的重覆聯絡人，並視情況將掃描到的重覆聯絡人合併。按<strong>編輯規則</strong>可檢視或修改規則。通常，每一個聯絡人類型通常會有'模糊'及'嚴謹'的去重覆規則。"
 
 #: templates/CRM/Contact/Page/DedupeRules.hlp
 msgid "'Strict' rules should be configured with a relatively tight definition of what constitutes a match (for example... email address + first and last name for Individuals). The default 'Strict' rule is automatically used when new contacts are created through online registrations including Events, Membership, Contributions and Profile pages. They are also used when you Import contacts. You can only have one default 'Strict' rule for each contact type."
-msgstr "'精確'規則制定了一個相對較為嚴謹的定義，關於匹配 (例如…Email + 個人姓氏及名字)。當新的聯絡人透過線上報名活動、加入會員、捐款或設定個人頁面，「精確」的規則即為預設。它們在您匯入聯絡人時也會被使用。您在每一個聯絡人類別裡，只能預設一個'精確'規則。"
+msgstr "'嚴謹'規則相對較為嚴格精確 (例如個人的重覆條件…有Email + 個人姓氏、名字)。當新的聯絡人透過線上報名活動、加入會員、捐款或設定個人頁面，「嚴謹」的規則即為預設。它們在您匯入聯絡人時也會被使用。您在每一個聯絡人類別裡，只能預設一個'精確'規則。"
 
 #: templates/CRM/Contact/Page/DedupeRules.hlp
 msgid "'Fuzzy' rules should be configured with a looser definition of what constitutes a 'match'.  The default Fuzzy rule is automatically used to check for possible duplicates when contacts are added or edited via the user interface. You'll probably also want to use a Fuzzy rule when scanning your database for possible duplicates. Click <strong>Use Rule</strong> to scan for duplicate contacts (of that contact type) using the selected rule."
-msgstr "'模糊'規則應該以關於構成'符合'較鬆散的定義而設。隱含模糊規則被自動地使用作檢查副本，當聯絡人透過用戶者界面被新增或編輯。您大概會想使用模糢規則，當您為掃描您的資料庫副本。按<strong>使用規則</strong>去使用已選取規則掃描複製聯絡人(那個聯絡人類別)。"
+msgstr "'模糊'規則則較鬆散。當聯絡人經由使用者界面被新增到系統（或被編輯），系統就會用模糊規則來檢查可能的重覆聯絡人。若您想找出資料庫中可能的重覆聯絡人，也可能想使用模糊規則。按<strong>使用規則</strong>即可使用該規則找到重覆聯絡人(在那個聯絡人類別)。"
 
 #: templates/CRM/Contact/Page/DedupeRules.hlp
 msgid "Configure up to five fields to evaluate when searching for 'suspected' duplicate contact records. For each field, set a numeric <strong>Weight</strong> which determines the relative importance of a match on that field."
-msgstr "當搜尋'可疑'複製聯絡人記錄時設到五個欄位去評估。為每一個欄位，設一個數字<strong>重量</strong>，決定相對重要的欄位配對。"
+msgstr "一個去重覆規則可設定至多五個欄位來判別可能的重覆聯絡人。且可為每一個欄位設定一個數字<strong>權重</strong>，以決定該欄位在該重覆規則中的重要性。"
 
 #: templates/CRM/Contact/Page/DedupeRules.hlp
 msgid "You can also set a <strong>Length</strong> value which determines how many characters in the field should be compared."
-msgstr "您也可以設一個<strong>長度</strong>價值，決定有多少角色在欄位應該被比較。"
+msgstr "您也可以為各欄位設一個<strong>長度</strong>值，決定該欄位要判斷的字元數。"
 
 #: templates/CRM/Contact/Page/DedupeRules.hlp
 msgid "EXAMPLE: If you set a length of 8 on 'Street Address', then '101 Delaplane Ave.' would match '101 Delaplain St.' because the first 8 characters are the same. If Length is left blank, then the comparison is done on the entire field value."
-msgstr "例子：如果您設定一個長度8的'街道地址'，然後'101 Delaplane Ave.'會符合'101 Delaplain St.'因為頭8個角色是相同。如果長度留空，然後比較完成在完整的欄位價值。"
+msgstr "例如：如果您設定'街道地址'欄位的長度值為8，則'101 Delaplane Ave.'會被判斷為與'101 Delaplain St.'是同樣的街道地址，因為頭8個字元是相同。若把長度值留空，系統就會去比對整個欄位的值，不會限定字元數。"
 
 #: templates/CRM/Contact/Page/DedupeRules.tpl
 msgid "Manage the rules used to identify potentially duplicate contact records. Scan for duplicates using a selected rule and merge duplicate contact data as needed."
-msgstr "管理篩選規則，以找出重複的聯絡人資料。根據需求使用選定的規則檢視重複的資料，並合併重複的聯絡人資料。"
+msgstr "管理篩選規則，以找出重覆的聯絡人資料。根據需求使用選定的規則檢視重覆的資料，並合併重覆的聯絡人資料。"
 
 #: templates/CRM/Contact/Page/DedupeRules.tpl
 msgid "Add Dedupe Rule for Individuals"
@@ -25493,7 +25493,7 @@ msgstr "傳送簡訊"
 
 #: templates/CRM/Contact/Page/View/Summary.tpl
 msgid "Restore from Trash"
-msgstr "回復聯絡人"
+msgstr "還原聯絡人"
 
 #: templates/CRM/Contact/Page/View/Summary.tpl
 msgid "Associated Multi-Org Group"
@@ -25501,7 +25501,7 @@ msgstr "關聯的多組織群組"
 
 #: templates/CRM/Contact/Page/View/Summary.tpl
 msgid "view current employer"
-msgstr "查看就職單位"
+msgstr "查看服務單位/就讀學校"
 
 #: templates/CRM/Contact/Page/View/Summary.tpl
 msgid "Position"
@@ -25629,7 +25629,7 @@ msgstr "此信用卡類別名稱，它會顯示給捐款者。這可能與上方
 
 #: templates/CRM/Contribute/Form/AdditionalInfo/AdditionalDetail.tpl
 msgid "Non-deductible portion of this contribution."
-msgstr "此筆捐款的類型若是可以抵稅，當其中包含不可抵稅的品項時，可將不可抵稅的金額註記在此，以正確產生捐款人的收據。"
+msgstr "此筆捐款的類型若是可以開收據，當其中包含不可開收據的品項時，可將不可開收據的金額註記在此，以正確產生捐款人的收據。"
 
 #: templates/CRM/Contribute/Form/AdditionalInfo/AdditionalDetail.tpl
 msgid "Processing fee for this transaction (if applicable)."
@@ -25722,11 +25722,11 @@ msgstr "我每%2願意捐獻此金額，總共捐獻%3期。"
 
 #: templates/CRM/Contribute/Form/Contribution/Confirm.tpl
 msgid "Click &quot;%2&quot; below to register your pledge. You will be able to modify or cancel future pledge payments at any time by logging in to your account or contacting us at %1."
-msgstr "按下方&quot;%2&quot;登記您的認捐。您可以在任何時候登入到你的帳戶，修改或取消您往後的認捐款項，或是使用%1與我們聯繫。"
+msgstr "按下方&quot;%2&quot;登記您的認捐。您可以在任何時候登入到您的帳戶，修改或取消您往後的認捐款項，或是使用%1與我們聯繫。"
 
 #: templates/CRM/Contribute/Form/Contribution/Confirm.tpl
 msgid "Your initial pledge payment will be processed when you click &quot;%2&quot; below. You will be able to modify or cancel future pledge payments at any time by logging in to your account or contacting us at %1."
-msgstr "當您按下&quot;%2&quot;後，將會處理你最初的認捐付款。你可以在任何時候登入到你的帳戶，修改或取消您往後 的認捐款項，或是使用%1與我們聯繫。"
+msgstr "當您按下&quot;%2&quot;後，將會處理您最初的認捐付款。您可以在任何時候登入到您的帳戶，修改或取消您往後 的認捐款項，或是使用%1與我們聯繫。"
 
 #: templates/CRM/Contribute/Form/Contribution/Confirm.tpl
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
@@ -25791,11 +25791,11 @@ msgstr "協議"
 #: templates/CRM/Contribute/Form/Contribution/Confirm.tpl
 #: templates/CRM/Contribute/Form/Contribution/Main.tpl
 msgid "Your account data will be used to charge your bank account via direct debit. While submitting this form you agree to the charging of your bank account via direct debit."
-msgstr "你的帳戶資料將被用來從你的銀行帳戶請求直接扣款。當你提交此表單後，即代表你同意從你的銀行帳戶進行直接扣款。"
+msgstr "您的帳戶資料將被用來從您的銀行帳戶請求直接扣款。當您提交此表單後，即代表您同意從您的銀行帳戶進行直接扣款。"
 
 #: templates/CRM/Contribute/Form/Contribution/Confirm.tpl
 msgid "Your transaction will not be completed until you click the <strong>%1</strong> button. Please click the button one time only."
-msgstr "在你按下<strong>%1</strong>按鈕之前，您的交易都不算完成。請按此鍵一次。"
+msgstr "在您按下<strong>%1</strong>按鈕之前，您的交易都不算完成。請按此鍵一次。"
 
 #: templates/CRM/Contribute/Form/Contribution/Confirm.tpl
 msgid "Your contribution will not be completed until you click the <strong>%1</strong> button. Please click the button one time only."
@@ -25829,7 +25829,7 @@ msgstr "次"
 
 #: templates/CRM/Contribute/Form/Contribution/Main.tpl
 msgid "Your recurring contribution will be processed automatically for the number of installments you specify. You can leave the number of installments blank if you want to make an open-ended commitment. In either case, you can choose to cancel at any time."
-msgstr "你的定期捐款會於您指定的期間內自動扣款，自動扣款的期數也是您上面指定的。若將期數留空，表示您願意一直定期捐款支持。也請您放心，無論是何種模式，您可以隨時取消您的自動扣款。"
+msgstr "您的定期捐款會於您指定的期間內自動扣款，自動扣款的期數也是您上面指定的。若將期數留空，表示您願意一直定期捐款支持。也請您放心，無論是何種模式，您可以隨時取消您的自動扣款。"
 
 #: templates/CRM/Contribute/Form/Contribution/Main.tpl
 msgid "You will receive an email receipt for each recurring contribution. The receipts will include a link you can use if you decide to modify or cancel your future contributions."
@@ -25951,7 +25951,7 @@ msgstr "請為此捐款選擇一個預先設定好的價目表，以提供多種
 
 #: templates/CRM/Contribute/Form/ContributionPage/Amount.tpl
 msgid "No Price Set has been configured / enabled for your site. Price sets allow you to configure more complex contribution options (e.g. \"Contribute $25 more to receive our monthly magazine.\"). Click <a href='%1'>here</a> if you want to configure price sets for your site."
-msgstr "您尚未設定或啟用任何價目表。價目表能讓你設定較複雜的的捐款選項（例如\"捐款$500元以上即可收到我們的月刊\"）。如果你要設定價目表請<a href='%1'>按此</a>。"
+msgstr "您尚未設定或啟用任何價目表。價目表能讓您設定較複雜的的捐款選項（例如\"捐款$500元以上即可收到我們的月刊\"）。如果您要設定價目表請<a href='%1'>按此</a>。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/Amount.tpl
 msgid "Check this box if you want to give users the option to make a Pledge (a commitment to contribute a fixed amount on a recurring basis)."
@@ -25979,7 +25979,7 @@ msgstr "天後（於上一個付款通知之後的相隔天數）"
 
 #: templates/CRM/Contribute/Form/ContributionPage/Amount.tpl
 msgid "Check this box if you want to give users the option to make recurring contributions. (This feature requires that you use a payment processor with this functionality built in - Paypal std or Pro, Pay2Cash or Payjunction at the time of writing.)"
-msgstr "如果你想啟用定期定額捐款功能讓使用者選擇，請勾選此框。（這個功能並不是所有的金流機制都可以支援，請確認你的金流機制支援定期定額的功能。）"
+msgstr "如果您想啟用定期定額捐款功能讓使用者選擇，請勾選此框。（這個功能並不是所有的金流機制都可以支援，請確認您的金流機制支援定期定額的功能。）"
 
 #: templates/CRM/Contribute/Form/ContributionPage/Amount.tpl
 msgid "Select recurring units supported for recurring payments."
@@ -26060,7 +26060,7 @@ msgstr "您可能想從捐款者收集其他資料。例如，您可能想詢問
 
 #: templates/CRM/Contribute/Form/ContributionPage/Custom.tpl
 msgid "No Profile(s) have been configured / enabled for your site. You need to first configure <a href=\"%1\"><strong>&raquo; %2 </strong></a>(s)."
-msgstr "你尚未設定或啟用任何設定檔。你必須先設定<a href=\"%1\"><strong>&raquo; %2 </strong></a>。"
+msgstr "您尚未設定或啟用任何設定檔。您必須先設定<a href=\"%1\"><strong>&raquo; %2 </strong></a>。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/Custom.tpl
 msgid "You can use existing CiviCRM Profiles on your page - OR create profile(s) specifically for use in Online Contribution pages. Go to <a href='%1'>Administer CiviCRM Profiles</a> if you need to review, modify or create profiles (you can come back at any time to select or update the Profile(s) used for this page)."
@@ -26169,14 +26169,14 @@ msgid ""
 "Select the corresponding contribution type for contributions made using this page (e.g. donation, capital campaign, etc.).\n"
 "Contribution types (and associated accounting codes) are included when contributions are exported, so it can helpful to set up\n"
 "specific types for accounting purposes. You can add or modify contribution available types from Administer &gt; CiviContribute &gt; Contribution Types."
-msgstr "請選擇符合該募款頁面的捐款類型（例如捐款、募款活動等）。當要匯出捐款資料，捐款類型（以其會計代碼）也會包含在內，因此這在設定捐款的用途上相當有幫助。您可以在「管理員」&gt; 「捐款」&gt; 「捐款類型」中增加或修改捐款類型。"
+msgstr "請選擇符合該募款頁面的費用類型（例如捐款、募款活動等）。當要匯出捐款資料，費用類型（以其會計代碼）也會包含在內，因此這在設定捐款的用途上相當有幫助。您可以在「管理員」&gt; 「捐款」&gt; 「費用類型」中增加或修改費用類型。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/Settings.hlp
 msgid ""
 "NOTE: If you are using this contribution page for membership signup and renewals, the contribution type configured in the\n"
 "membership type settings will be used when recording the membership payment. The contribution type selected here will only be used\n"
 "if you are also collecting additional contributions (as configured on the Membership Settings page)."
-msgstr "注意：當您允許使用者在這個募款頁面加入會員或更新會籍，當紀錄該會員的付款時，將會使用會員類型（會費）的捐款類型。您在此選擇的捐款類型，將只會被用在您募集其他捐款的時候（例如會籍設定頁）。"
+msgstr "注意：當您允許使用者在這個募款頁面加入會員或更新會籍，當紀錄該會員的付款時，將會使用會員類型（會費）的費用類型。您在此選擇的費用類型，將只會被用在您募集其他捐款的時候（例如會籍設定頁）。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/Settings.hlp
 msgid "Enter content for the introductory message. This will be displayed below the page title. You can include images, as long as they are already uploaded to a server - click the \"Image\" button in the button bar."
@@ -26196,7 +26196,7 @@ msgstr "您可以自行設定這個募款頁面的「活動時間範圍」。這
 
 #: templates/CRM/Contribute/Form/ContributionPage/Settings.hlp
 msgid "If you want to allow contributors to specify a person whom they are honoring with their gift, check this box. An optional Honoree section will be included in the form. Honoree information is automatically saved and linked with the contribution record."
-msgstr "若你允許捐款者讓該筆捐款用其他人之名義捐贈，請勾選此框。勾選此框後，捐款表單內會出現榮譽捐款人的輸入框，當中的資訊將會自動儲存和連結到捐款的紀錄裡。"
+msgstr "若您允許捐款者讓該筆捐款用其他人之名義捐贈，請勾選此框。勾選此框後，捐款表單內會出現榮譽捐款人的輸入框，當中的資訊將會自動儲存和連結到捐款的紀錄裡。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/Settings.tpl
 msgid "This is the first step in creating a new online Contribution Page. You can create one or more different Contribution Pages for different purposes, audiences, campaigns, etc. Each page can have it's own introductory message, pre-configured contribution amounts, custom data collection fields, etc."
@@ -26208,7 +26208,7 @@ msgstr "在此步驟，您會設置頁面標題、捐款類別(捐款、募款�
 
 #: templates/CRM/Contribute/Form/ContributionPage/Settings.tpl
 msgid "Use this form to edit the page title, contribution type (e.g. donation, campaign contribution, etc.), goal amount, introduction, and status (active/inactive) for this online contribution page."
-msgstr "使用此表格可為此線上募款頁編輯頁面標題、捐款類型（例如捐款、募款捐款等）、目標金額、介紹、及狀態（啟用/停用）。"
+msgstr "使用此表格可為此線上募款頁編輯頁面標題、費用類型（例如捐款、募款捐款等）、目標金額、介紹、及狀態（啟用/停用）。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/Settings.tpl
 msgid "This title will be displayed at the top of the page.<br />Please use only alphanumeric, spaces, hyphens and dashes for Title."
@@ -26216,7 +26216,7 @@ msgstr "此標題將顯示在募款頁面頂端。<br />標題僅能輸入中英
 
 #: templates/CRM/Contribute/Form/ContributionPage/Settings.tpl
 msgid "Select the corresponding contribution type for contributions made using this page."
-msgstr "為此募款頁面選擇適用的捐款類型。"
+msgstr "為此募款頁面選擇適用的費用類型。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/Settings.tpl
 msgid "Text displayed next to the checkbox on the contribution form."
@@ -26353,7 +26353,7 @@ msgstr "(捐款滿 %1 可獲贈此感謝禮。)"
 #: templates/CRM/Contribute/Form/Contribution/PremiumBlock.tpl
 msgid "The value of this premium is %1. This may affect the amount of the tax deduction you can claim. Consult your tax advisor for more information."
 msgstr ""
-"此感謝的金額是%1。這個設定將會影響該筆捐款可抵稅的金額。若你希望捐款者收據的金額為扣除掉禮品金額，請填寫此金額。更多資料請向您的會計諮詢。"
+"此感謝的金額是%1。這個設定將會影響該筆捐款可以開收據的金額。若您希望捐款者收據的金額為扣除掉禮品金額，請填寫此金額。更多資料請向您的會計諮詢。"
 
 #: templates/CRM/Contribute/Form/Contribution/PreviewHeader.tpl
 msgid "Test-drive Your Contribution Page"
@@ -26373,7 +26373,7 @@ msgstr "付款確認信已Email到%1。"
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid "Your contribution has been submitted to %1 for processing. Please print this page for your records."
-msgstr "請列印此頁留存記錄。"
+msgstr "您的捐/繳款資料已經送到%1作處理。請保存此信件，以作存查。"
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid "An email receipt will be sent to %1 and to %2 once the transaction is processed successfully."
@@ -26385,7 +26385,7 @@ msgstr "一旦付款完成，系統會寄送確認信件至 %1。"
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid "Your transaction has been processed successfully. Please print this page for your records."
-msgstr "交易完成，請列印這頁留為記錄。"
+msgstr "交易完成，請保存此信件，以作存查。"
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid "An email receipt has also been sent to %1 and to %2"
@@ -26393,7 +26393,7 @@ msgstr "Email收據已寄送至 %1 與 %2"
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid "An email receipt has also been sent to %1"
-msgstr "Email收據巳寄給 %1"
+msgstr "Email收據已寄給 %1"
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid "Contribution Information"
@@ -26523,7 +26523,7 @@ msgstr "資料取消"
 
 #: templates/CRM/Contribute/Form/Contribution.tpl
 msgid "Enter the cancellation date, or you can skip this field and the cancellation date will be automatically set to TODAY."
-msgstr "輸入取消日期，或你可以跳過此欄位，取消的日期會被自動設定為今天。"
+msgstr "輸入取消日期，或您可以跳過此欄位，取消的日期會被自動設定為今天。"
 
 #: templates/CRM/Contribute/Form/Contribution.tpl
 msgid "Name displayed in the Honor Roll."
@@ -26556,11 +26556,11 @@ msgstr "刪除捐款類別將無法回復。"
 
 #: templates/CRM/Contribute/Form/ContributionType.tpl
 msgid "Use this field to flag contributions of this type with the corresponding code used in your accounting system. This code will be included when you export contribution data to your accounting package."
-msgstr "使用此欄位，可將這個捐款類型標上代碼，以便與您原本會計系統的會計項目做對應。當您要將這些捐款資料匯出到您的會計系統時，這個會計代碼將會被包含在內。"
+msgstr "使用此欄位，可將這個費用類型標上代碼，以便與您原本會計系統的會計項目做對應。當您要將這些捐款資料匯出到您的會計系統時，這個會計代碼將會被包含在內。"
 
 #: templates/CRM/Contribute/Form/ContributionType.tpl
 msgid "Are contributions of this type tax-deductible?"
-msgstr "此捐款類型是否為可抵稅（收據具有抵扣個人所得稅的效用）？"
+msgstr "此費用類型是否為可以開收據（具有抵扣個人所得稅的效用）？"
 
 #: templates/CRM/Contribute/Form/ContributionView.tpl
 msgid "Recurring Contribution"
@@ -26659,7 +26659,7 @@ msgstr "（至少要X的捐款才符合此贈品的資格。）"
 
 #: templates/CRM/Contribute/Form/ManagePremiums.tpl
 msgid "The market value of this premium (e.g. retail price). For tax-deductible contributions, this amount will be used to set the non-deductible amount in the contribution record and receipt."
-msgstr "此感謝禮的市價（例如它的零售價格）。對於可抵稅的捐款，這裡設定的金額將會用在捐款紀錄與收據中，做為不可抵稅的金額，也會影響捐款收據上面標註的金額。若你希望收據上的金額跟捐款金額一致，請在此填寫0元。"
+msgstr "此感謝禮的市價（例如它的零售價格）。對於可以開收據的捐款，這裡設定的金額將會用在捐款紀錄與收據中，做為不可以開收據的金額，也會影響捐款收據上面標註的金額。若您希望收據上的金額跟捐款金額一致，請在此填寫0元。"
 
 #: templates/CRM/Contribute/Form/ManagePremiums.tpl
 msgid "You may optionally record the actual cost of this premium to your organization. This may be useful when evaluating net return for this incentive."
@@ -26798,7 +26798,7 @@ msgstr ""
 
 #: templates/CRM/Contribute/Form/Task/PickProfile.tpl
 msgid "Batch Update Contribution via Profile"
-msgstr "從檔案批量更新捐款"
+msgstr "從資料表單批次更新捐款"
 
 #: templates/CRM/Contribute/Form/Task/Status.tpl
 msgid "Use this form to record received payments for 'pay later' online contributions, membership signups and event registrations. You can use the Transaction ID field to record account+check number, bank transfer identifier, or other unique payment identifier."
@@ -27007,7 +27007,7 @@ msgstr "如果您正在匯入個人捐款，請選擇「個人」。"
 
 #: templates/CRM/Contribute/Import/Form/UploadFile.tpl
 msgid "Select 'Organization' or 'Household' if you are importing contributions made by contacts of that type. (NOTE: Some built-in contact types may not be enabled for your site.)"
-msgstr "請為你匯入的捐款人選擇適當的聯絡人資料類型，例如'組織'或'家庭'。(注意：有些內建的聯絡人類型可能並未被啟用)"
+msgstr "請為您匯入的捐款人選擇適當的聯絡人資料類型，例如'組織'或'家庭'。(注意：有些內建的聯絡人類型可能並未被啟用)"
 
 #: templates/CRM/Contribute/Import/Form/UploadFile.tpl
 msgid "Select a saved field mapping if this file format matches a previous import."
@@ -27039,7 +27039,7 @@ msgstr "使用以下連結為此線上募款頁更新功能及內容，只要透
 
 #: templates/CRM/Contribute/Page/ContributionPageEdit.tpl
 msgid "Set page title and describe your cause or campaign. Select contribution type (donation, campaign contribution, etc.), and set optional fund-raising goal and campaign start and end dates. Enable honoree features and allow individuals to contribute on behalf of an organization. Enable or disable this page."
-msgstr "為您的募款頁設定標題以及描述或文案。選擇捐款類型（例如捐款、專案捐款等），並可設定募款目標金額，與募款起訖日。啓用榮譽捐款人功能，可讓個人以組織之名義捐款。也可在此啓用或停用此募款頁。"
+msgstr "為您的募款頁設定標題以及描述或文案。選擇費用類型（例如捐款、專案捐款等），並可設定募款目標金額，與募款起訖日。啓用榮譽捐款人功能，可讓個人以組織之名義捐款。也可在此啓用或停用此募款頁。"
 
 #: templates/CRM/Contribute/Page/ContributionPageEdit.tpl
 msgid "Select the payment processor to be used for this contribution page."
@@ -27112,7 +27112,7 @@ msgstr "捐款管理文件"
 #: templates/CRM/Contribute/Page/ContributionPage.hlp
 #: templates/CRM/Contribute/Page/ContributionPage.tpl
 msgid "CiviContribute allows you to create and maintain any number of Online Contribution Pages. You can create different pages for different programs or campaigns - and customize text, amounts, types of information collected from contributors, etc."
-msgstr "捐款幫助您建立及維護線上捐款活動頁面。您可為個別計畫或募款建立不同的募款頁面 - 及文字、金額、從捐款者收集的資料等。"
+msgstr "捐款功能可讓您建立及維護線上捐款活動頁面。您可為個別計畫或募款建立不同的募款頁面 - 及客製文案、金額、或從捐款者收集資料等。"
 
 #: templates/CRM/Contribute/Page/ContributionPage.hlp
 msgid "For existing pages"
@@ -27120,15 +27120,15 @@ msgstr "常用頁面"
 
 #: templates/CRM/Contribute/Page/ContributionPage.hlp
 msgid "Click <strong>Configure</strong> to view and modify settings, amounts, and text for existing pages."
-msgstr ""
+msgstr "點按<strong>設定</strong>即可檢視與修改設定、金額與文案。"
 
 #: templates/CRM/Contribute/Page/ContributionPage.hlp
 msgid "Click <strong>Test-drive</strong> to try out the page in <strong>test mode</strong>. This allows you to go through the full contribution process using a dummy credit card on a test server."
-msgstr ""
+msgstr "點按<strong>測試頁面</strong>可在測試模式下使用本頁面。測試模式可讓您在測試用的伺服器上使用測試卡號來測試完整的捐款步驟。"
 
 #: templates/CRM/Contribute/Page/ContributionPage.hlp
 msgid "If your page is enabled, click <strong>Live Page</strong> to view to the page in <strong>live mode</strong>."
-msgstr ""
+msgstr "若您的捐款頁面為啓用狀態，可點按<strong>線上頁面</strong>來檢視其<strong>線上模式</strong>。"
 
 #: templates/CRM/Contribute/Page/ContributionPage.hlp
 msgid "Click <a href='%1'>New Contribution Page</a> to create and configure a new online contribution page using the step-by-step wizard."
@@ -27145,7 +27145,7 @@ msgstr "管理個人募款頁"
 
 #: templates/CRM/Contribute/Page/ContributionPage.tpl
 msgid "No available Contribution Pages match your search criteria. Suggestions:"
-msgstr "沒有可用的募款頁符合你的搜尋。建議："
+msgstr "沒有可用的募款頁符合您的搜尋。建議："
 
 #: templates/CRM/Contribute/Page/ContributionPage.tpl
 #: templates/CRM/Event/Page/ManageEvent.tpl templates/CRM/Group/Page/Group.tpl
@@ -27210,7 +27210,7 @@ msgstr "總取消金頞"
 
 #: templates/CRM/Contribute/Page/ContributionType.tpl
 msgid "Contribution types are used to categorize contributions for reporting and accounting purposes. These are also referred to as <strong>Funds</strong>. You may set up as many types as needed. Each type can carry an accounting code which can be used to map contributions to codes in your accounting system. Commonly used contribution types are: Donation, Campaign Contribution, Membership Dues..."
-msgstr "捐款類型是用來將捐款分類，以便於做報表與會計用途。這些分類也參考到<strong>捐款</strong>。您可視需要，自由設置捐款類型。每一個捐款類型可配置一個會計代碼，讓您可容易的與您的會計系統做配對。一般常用的捐款類別有：捐款、募款、會費……"
+msgstr "費用類型是用來將捐款分類，以便於做報表與會計用途。這些分類也參考到<strong>捐款</strong>。您可視需要，自由設置費用類型。每一個費用類型可配置一個會計代碼，讓您可容易的與您的會計系統做配對。一般常用的捐款類別有：捐款、募款、會費……"
 
 #: templates/CRM/Contribute/Page/ContributionType.tpl
 msgid "Acctg Code"
@@ -27218,11 +27218,11 @@ msgstr "會計代碼"
 
 #: templates/CRM/Contribute/Page/ContributionType.tpl
 msgid "Deductible?"
-msgstr "可抵稅？"
+msgstr "開收據？"
 
 #: templates/CRM/Contribute/Page/ContributionType.tpl
 msgid "Add Contribution Type"
-msgstr "捐款類型"
+msgstr "費用類型"
 
 #: templates/CRM/Contribute/Page/ContributionType.tpl
 msgid "There are no Contribution Types entered. You can <a href='%1'>add one</a>."
@@ -27234,7 +27234,7 @@ msgstr "捐款可讓您建立一個客製化的線上捐款頁面。您也可以
 
 #: templates/CRM/Contribute/Page/DashBoard.hlp
 msgid "The <strong>Contribution Summary</strong> table provides a summary of month and year-to-date contribution totals, and includes shortcuts to view the contribution details for these commonly used search periods. To run your own customized searches - click <a href='%1'>Find Contributions</a>. You can search by Contributor Name, Amount Range, and a variety of other criteria."
-msgstr "<strong>捐款概況</strong>表格提供一個每月概況及年到日的捐款總金額，及包括捷徑去為這些常常被使用的搜尋期限查看捐款詳情。去執行您的個人化搜尋 -  按<a href='%1'>搜尋捐款</a>。您可以用捐款人名稱、金額範圍、及多種其他條件。"
+msgstr "<strong>捐款概況</strong>表格提供一個每月概況及今年到目前為止的捐款總金額，及包括捷徑去為這些常常被使用的搜尋期限查看捐款詳情。去執行您的個人化搜尋 -  按<a href='%1'>搜尋捐款</a>。您可以用捐款人名稱、金額範圍、及多種其他條件。"
 
 #: templates/CRM/Contribute/Page/DashBoard.tpl
 #: templates/CRM/Member/Page/MembershipType.tpl
@@ -27398,7 +27398,7 @@ msgstr "繼續"
 
 #: templates/CRM/Contribute/Page/PCP.tpl
 msgid "There are no Personal Campaign Pages which match your search criteria."
-msgstr "沒有個人募款頁符合你的搜尋條件。"
+msgstr "沒有個人募款頁符合您的搜尋條件。"
 
 #: templates/CRM/Contribute/Page/PCP.tpl
 msgid "There are currently no Personal Campaign Pages."
@@ -27458,7 +27458,7 @@ msgstr "捐款來源識別（募款名稱、活動、郵件等等）。"
 
 #: templates/CRM/Contribute/Page/Tab.hlp
 msgid "Select the appropriate contribution type for this transaction."
-msgstr "請為這筆帳款選擇合適的捐款類型。"
+msgstr "請為這筆帳款選擇合適的費用類型。"
 
 #: templates/CRM/Contribute/Page/Tab.hlp
 msgid "Unique payment ID for this transaction. The Payment Processor's transaction ID will be automatically stored here on online contributions."
@@ -27853,7 +27853,7 @@ msgstr "在過去的兩個星期中，找不到有排程任務的個案。使用
 
 #: templates/CRM/Dashlet/Page/MyCases.tpl
 msgid "There are no open cases with activities scheduled in the next two weeks. Use <a href=\"%1\">Find Cases</a> to expand your search."
-msgstr "在未來兩個星期內，找不到任何個案有安排任務。你可以使用%1來擴大搜尋範圍。"
+msgstr "在未來兩個星期內，找不到任何個案有安排任務。您可以使用%1來擴大搜尋範圍。"
 
 #: templates/CRM/Event/Form/EventFees.tpl
 #: templates/CRM/Event/Form/ParticipantView.tpl
@@ -27867,7 +27867,7 @@ msgstr "活動費用級別（如適用）。"
 #: templates/CRM/Event/Form/EventFees.tpl
 #: templates/CRM/Member/Form/MembershipRenewal.tpl
 msgid "Check this box to enter payment information. You will also be able to generate a customized receipt."
-msgstr "勾選此框以輸入付款資料。您也能產生一個的收據。"
+msgstr "勾選此核取方塊，即可輸入付款資料。也可產生自定收據。"
 
 #: templates/CRM/Event/Form/EventFees.tpl
 msgid "Payment Information"
@@ -27877,7 +27877,7 @@ msgstr "付款資料"
 #: templates/CRM/Member/Form/MembershipRenewal.tpl
 #: templates/CRM/Member/Form/Membership.tpl
 msgid "Select the appropriate contribution type for this payment."
-msgstr "為此付款選擇適當的捐款類型。"
+msgstr "為此付款選擇適當的費用類型。"
 
 #: templates/CRM/Event/Form/EventFees.tpl
 msgid "Actual payment amount for this registration."
@@ -27913,7 +27913,7 @@ msgstr "輸入一個您想在確認email開頭包含的訊息。例如：「謝�
 
 #: templates/CRM/Event/Form/EventFees.tpl
 msgid "The Payment Status for this participant is Completed. The Participant Status is set to Pending from pay later. Click Cancel if you want to review or modify these values before saving this record"
-msgstr "此參加者的付款狀態為已完成。此參加者狀態設定為「待處理-後續付款。如果你要在儲存記錄之前查看或修改這些設定，請按取消鍵。"
+msgstr "此參加者的付款狀態為已完成。此參加者狀態設定為「待處理-後續付款。如果您要在儲存記錄之前查看或修改這些設定，請按取消鍵。"
 
 #: templates/CRM/Event/Form/ManageEvent/Delete.tpl
 msgid "Warning: Deleting this event template will also delete associated Event Registration Page and Event Fee configurations."
@@ -28002,7 +28002,7 @@ msgstr "在活動資訊頁面中顯示地圖？（須到<strong><a href='%1'>全
 
 #: templates/CRM/Event/Form/ManageEvent/EventInfo.tpl
 msgid "If you find that you are creating multiple events with similar settings, you may want to use the <a href='%1'>Event Templates</a> feature to streamline your workflow."
-msgstr "如果你發現你正在建立多個類似的活動設定，你可以使用<a href='%1'>活動範本</a>的功能，以簡化工作流程。"
+msgstr "如果您發現您正在建立多個類似的活動設定，您可以使用<a href='%1'>活動範本</a>的功能，以簡化工作流程。"
 
 #: templates/CRM/Event/Form/ManageEvent/EventInfo.tpl
 msgid "After selecting an Event Type, this page will display any custom event fields for that type."
@@ -28042,7 +28042,7 @@ msgstr "注意：或者，您可以在沒有設立付款處理機的情況下，
 
 #: templates/CRM/Event/Form/ManageEvent/Fee.tpl
 msgid "This contribution type will be assigned to payments made by participants when they register online."
-msgstr "此捐款類型會被指派為參加者線上報名時的付款。"
+msgstr "此費用類型會被指派為參加者線上報名時的付款。"
 
 #: templates/CRM/Event/Form/ManageEvent/Fee.tpl
 msgid "This label is displayed with the list of event fees."
@@ -28054,7 +28054,7 @@ msgstr "當使用者選擇「稍後付款」，顯示在確認頁及致謝頁說
 
 #: templates/CRM/Event/Form/ManageEvent/Fee.tpl
 msgid "No Price Set has been configured / enabled for your site. Price sets allow you to meet the complex demands of your event registration structure.(e.g. \"Pay $15 more for lunch.\"). Click <a href='%1'>here</a> if you want to configure price sets for your site."
-msgstr "您的網站尚未設定/啟用價目表。價目表能讓你為活動報名設定不同的價錢，以滿足不同的需求（例如\"午餐 $50\"）。如果你要設定價目表請<a href='%1'>按此</a>。"
+msgstr "您的網站尚未設定/啟用價目表。價目表能讓您為活動報名設定不同的價錢，以滿足不同的需求（例如\"午餐 $50\"）。如果您要設定價目表請<a href='%1'>按此</a>。"
 
 #: templates/CRM/Event/Form/ManageEvent/Fee.tpl
 msgid "Select a pre-configured Price Set to offer multiple individually priced options for event registrants. Otherwise, select &quot;-none-&quot; and enter one or more fee levels in the table below. Create or edit Price Sets <a href='%1'>here</a>."
@@ -28086,7 +28086,7 @@ msgstr "您可以利用下表為每個活動費用設定最多十組的折扣設
 
 #: templates/CRM/Event/Form/ManageEvent/Fee.tpl
 msgid "If you uncheck \"Discounts by Signup Date\" and Save this form, any existing discount sets will be deleted."
-msgstr "如果你取消勾選\"註冊日期折扣\"並儲存此表單，任何已設定的折扣設定都將被刪除。此動作無法還原。如果這不是你想要進行的動作，你可以再次勾選\"註冊日期折扣\"。"
+msgstr "如果您取消勾選\"註冊日期折扣\"並儲存此表單，任何已設定的折扣設定都將被刪除。此動作無法還原。如果這不是您想要進行的動作，您可以再次勾選\"註冊日期折扣\"。"
 
 #: templates/CRM/Event/Form/ManageEvent/Fee.tpl
 msgid "If this is NOT what you want to do, you can check \"Discounts by Signup Date\" again."
@@ -28142,7 +28142,7 @@ msgstr "勾選此核取方塊可讓使用者為自己報名外，同時也為其
 
 #: templates/CRM/Event/Form/ManageEvent/Registration.hlp
 msgid "Check this box to allow a user to register multiple participants using the same email address. If you want additional participants to be registered <strong>without requiring an email address to be entered for each person</strong> - check the \"Register multiple participants\" option, AND include a profile in this registration form which <strong>includes First Name and Last Name fields</strong>."
-msgstr "勾選此核取方塊，可允許使用者使用同一個 Email 帳號報名多位參加者。若您想要更多的參加者來報名而<strong>不需一定要每個報名者都要有個別的 Email 帳號</strong> ，請勾選「報名多位參加者」，並在報名表格裡加入包含有<strong>姓氏與名字欄位</strong>的資料表單。"
+msgstr "勾選此核取方塊，可允許報名者使用同一個 Email 帳號報名多位參加者，<strong>而不需要提供每個參加者自己的 Email 帳號</strong> 。"
 
 #: templates/CRM/Event/Form/ManageEvent/Registration.hlp
 msgid "You will also need to update the default strict duplicate contact matching rule for Individuals to include First Name and Last Name fields (Administer &raquo; Manage &raquo; Find and Merge Duplicate Contacts)."
@@ -28238,15 +28238,15 @@ msgstr "Email寄件者姓名"
 
 #: templates/CRM/Event/Form/ManageEvent/Registration.tpl
 msgid "FROM email address (this must be a valid email account with your SMTP email service provider)."
-msgstr "寄件者的Email（這必需是你的SMTP Email服務商提供的有效Email)。"
+msgstr "寄件者的Email（這必需是您的SMTP Email服務商提供的有效Email)。"
 
 #: templates/CRM/Event/Form/ManageEvent/Registration.tpl
 msgid "You can notify event organizers of each online registration by specifying one or more email addresses to receive a carbon copy (cc). Multiple email addresses should be separated by a comma (e.g. jane@example.org, paula@example.org)."
-msgstr "你可以在每一個線上報名時，使用副本（CC）通知活動舉辦人。若你輸入多個Email地址，應以逗號分隔（例如jane@example.org, paula@example.org）。"
+msgstr "您可以在每一個線上報名時，使用副本（CC）通知活動舉辦人。若您輸入多個Email地址，應以逗號分隔（例如jane@example.org, paula@example.org）。"
 
 #: templates/CRM/Event/Form/ManageEvent/Registration.tpl
 msgid "You may specify one or more email addresses to receive a blind carbon copy (bcc) of the confirmation email. Multiple email addresses should be separated by a comma (e.g. jane@example.org, paula@example.org)."
-msgstr "你可以指定一個或多個Email地址，收到密件副本（BCC）Email。若你輸入多個Email地址，應以逗號分隔（例如jane@example.org, paula@example.org）。"
+msgstr "您可以指定一個或多個Email地址，收到密件副本（BCC）Email。若您輸入多個Email地址，應以逗號分隔（例如jane@example.org, paula@example.org）。"
 
 #: templates/CRM/Event/Form/ManageEvent/Tab.hlp
 msgid "Info &amp; Settings"
@@ -28306,7 +28306,7 @@ msgstr "線上"
 
 #: templates/CRM/Event/Form/ManageEvent/Tab.hlp
 msgid "Review your customized <strong>LIVE</strong> online event registration page here. Use the following URL in links and buttons on any website to send visitors to this live page"
-msgstr "請在此檢查線上活動的註冊頁面設定。下列的連結將可加入任何其他網頁，讓網友可以連至你的系統進行報名。"
+msgstr "請在此檢查線上活動的註冊頁面設定。下列的連結將可加入任何其他網頁，讓網友可以連至您的系統進行報名。"
 
 #: templates/CRM/Event/Form/ManageEvent/Tab.tpl
 #: templates/CRM/Event/Page/ManageEvent.tpl
@@ -28320,11 +28320,11 @@ msgstr "登記新的活動參加者"
 
 #: templates/CRM/Event/Form/ManageEvent/Tab.tpl
 msgid "Online Registration (Test-drive)"
-msgstr "線上報名（測試）"
+msgstr "線上報名（測試頁面）"
 
 #: templates/CRM/Event/Form/ManageEvent/Tab.tpl
 msgid "Online Registration (Live)"
-msgstr "線上報名（上線）"
+msgstr "線上報名（線上）"
 
 #: templates/CRM/Event/Form/ManageEvent/Tab.tpl
 #: templates/CRM/Event/Page/ManageEvent.tpl
@@ -28433,7 +28433,7 @@ msgstr "請確定輸入資料正確。如要作出修改，請按<strong>返回<
 
 #: templates/CRM/Event/Form/Registration/Confirm.tpl
 msgid "Click the <strong>%1</strong> button to checkout to Google, where you will select your payment method and complete the registration."
-msgstr "按<strong>繼續</strong>鍵以使用Google進行結帳流程，然後選擇你的付款方式及完成報名。"
+msgstr "按<strong>繼續</strong>鍵以使用Google進行結帳流程，然後選擇您的付款方式及完成報名。"
 
 #: templates/CRM/Event/Form/Registration/Confirm.tpl
 msgid "Click the <strong>Continue</strong> button to checkout to %1, where you will select your payment method and complete the registration."
@@ -28455,7 +28455,7 @@ msgstr "參加者資料 - 參加者 %1"
 
 #: templates/CRM/Event/Form/Registration/Confirm.tpl
 msgid "Your registration will not be submitted until you click the <strong>Continue</strong> button. Please click the button one time only."
-msgstr "在你按下「<strong>繼續</strong>」鍵之前，你的報名還未完成"
+msgstr "在您按下「<strong>繼續</strong>」鍵之前，您的報名還未完成"
 
 #: templates/CRM/Event/Form/Registration/EventInfoBlock.tpl
 msgid "View complete event information."
@@ -28475,11 +28475,11 @@ msgstr "測試您的活動報名頁"
 
 #: templates/CRM/Event/Form/Registration/PreviewHeader.tpl
 msgid "This page is currently running in <strong>test-drive mode</strong>. If this is a paid event, transactions will be sent to your payment processor's test server. <strong>No live financial transactions will be submitted. However, a contact record will be created or updated and test event registration and contribution records will be saved to the database. Use obvious test contact names so you can review and delete these records as needed. </strong> Refer to your payment processor's documentation for information on values to use for test credit card number, security code, postal code, etc."
-msgstr "此頁現執行<strong>測試驅動模式</strong>。如果這是付款活動，交易會被傳送到您的金流機制伺服器。<strong>沒有活的交易會被提交</strong>。但是，一個聯絡人記錄會被建立或上傳，測試活動登記及捐款記錄也會被儲存到資料庫。使用明顯易辨的測試聯絡人，以便在您需要時方便察看或刪除這些紀錄。參考您付款處理器的文件獲得更多關於測試用信用卡卡號、安全碼、郵遞區號等的資訊。"
+msgstr "此頁現執行<strong>測試模式</strong>。如果這是付款活動，所進行的交易會被傳送到您的金流機制伺服器。<strong>不會產生正式的交易</strong>。但是，會建立或上傳一筆聯絡人記錄，測試活動報名及捐款記錄也會被儲存到資料庫。請使用明顯易辨的測試聯絡人，以便在您需要時方便察看或刪除這些紀錄。參考您金流服務商的文件獲得更多關於測試用信用卡卡號、安全碼、郵遞區號等資訊。"
 
 #: templates/CRM/Event/Form/Registration/Register.tpl
 msgid "Welcome %1"
-msgstr "%1 你好！"
+msgstr "%1 您好！"
 
 #: templates/CRM/Event/Form/Registration/Register.tpl
 msgid "Click here to register a different person for this event."
@@ -28487,7 +28487,7 @@ msgstr "啓用或停用此活動的線上報名。"
 
 #: templates/CRM/Event/Form/Registration/Register.tpl
 msgid "Not %1, or want to register a different person"
-msgstr "若要為他人報名，請你點下此連結以繼續"
+msgstr "若要為他人報名，請您點下此連結以繼續"
 
 #: templates/CRM/Event/Form/Registration/Register.tpl
 msgid "including yourself"
@@ -28495,7 +28495,7 @@ msgstr "包括自己"
 
 #: templates/CRM/Event/Form/Registration/Register.tpl
 msgid "Fill in your registration information on this page. If you are registering additional people, you will be able to enter their registration information after you complete this page and click &quot;Continue&quot;."
-msgstr "請在此頁填寫你的登記資訊。如果你想登記多人，請完成此頁資訊後，點擊「繼續」按鍵後，再幫他們填完資料。"
+msgstr "請在此頁填寫您的登記資訊。如果您想登記多人，請完成此頁資訊後，點擊「繼續」按鍵後，再幫他們填完資料。"
 
 #: templates/CRM/Event/Form/Registration/ThankYou.tpl
 msgid "You have been added to the WAIT LIST for this event."
@@ -28507,11 +28507,11 @@ msgstr "若活動尚有名額，您將會收到Email，通知您上線完成報�
 
 #: templates/CRM/Event/Form/Registration/ThankYou.tpl
 msgid "Your registration has been submitted."
-msgstr "我們已經記錄你填寫的資料。"
+msgstr "我們已收到您的報名資料。"
 
 #: templates/CRM/Event/Form/Registration/ThankYou.tpl
 msgid "Once your registration has been reviewed, you will receive an email with a link to a web page where you can complete the registration process."
-msgstr "一旦你通過了，我們會傳一封 Email於您的信箱，你可以點選 Email 中的網址以完成登記。"
+msgstr "一旦您通過審核，我們會傳一封 Email到您的信箱，您可以點選 Email 中的網址以完成報名程序。"
 
 #: templates/CRM/Event/Form/Registration/ThankYou.tpl
 msgid "An email with event details has been sent to %1."
@@ -28519,7 +28519,7 @@ msgstr "活動詳情已寄到 %1。"
 
 #: templates/CRM/Event/Form/Registration/ThankYou.tpl
 msgid "Your registration payment has been submitted to %1 for processing. Please print this page for your records."
-msgstr "您的報名費已送至 %1。請列印此頁留為記錄。"
+msgstr "您的報名費用已送到%1進行處理。請保存此信件，以作存查。"
 
 #: templates/CRM/Event/Form/Registration/ThankYou.tpl
 msgid "A registration confirmation email will be sent to %1 once the transaction is processed successfully."
@@ -28527,7 +28527,7 @@ msgstr "當交易成功，一個報名確認Email會被傳送到 %1。"
 
 #: templates/CRM/Event/Form/Registration/ThankYou.tpl
 msgid "Your registration has been processed successfully. Please print this page for your records."
-msgstr "已成功記錄了您的登記。如果需要留作記錄，請列印此頁面。"
+msgstr "已成功記錄了您的報名資料。請保存此信件，以作存查。"
 
 #: templates/CRM/Event/Form/Registration/ThankYou.tpl
 msgid "A registration confirmation email has also been sent to %1"
@@ -28714,7 +28714,7 @@ msgstr "活動參加者聯絡記錄"
 
 #: templates/CRM/Event/Import/Form/UploadFile.hlp
 msgid "Participant import requires that each person, household or organization already exists as a contact record in your CiviCRM database. If you need to import participant information for contact records which haven't been added to CiviCRM yet - you will do this in 2 steps. First, use <strong>Import Contacts</strong> to add the contact records. If possible, include a unique 'External ID' for each new contact which you can then use to match participant info such as event registration to the corresponding contact record. Then return to this screen and import the participant records."
-msgstr "參加者匯入之前，聯絡人需要先存在於系統中。如此參加者資料才能正確匯入到活動中。如果你需要匯入一些參加者，並且這些參加者的聯絡資料還未儲存在系統中，您需要先進行<strong>匯入聯絡人</strong>的步驟並帶入「外部編號」已供第二步<strong>匯入參加者</strong>使用。當回到此畫面匯入參加者時，您需要有一個欄位對應正確的聯絡人，通常是剛剛匯入的「外部編號」，或系統提供的聯絡人「系統編號」，而較為不準確的方式，則利用聯絡人「Email」來做對應。三種選一，即可正確對應參加狀態到聯絡人中。"
+msgstr "參加者匯入之前，聯絡人需要先存在於系統中。如此參加者資料才能正確匯入到活動中。如果您需要匯入一些參加者，並且這些參加者的聯絡資料還未儲存在系統中，您需要先進行<strong>匯入聯絡人</strong>的步驟並帶入「外部編號」已供第二步<strong>匯入參加者</strong>使用。當回到此畫面匯入參加者時，您需要有一個欄位對應正確的聯絡人，通常是剛剛匯入的「外部編號」，或系統提供的聯絡人「系統編號」，而較為不準確的方式，則利用聯絡人「Email」來做對應。三種選一，即可正確對應參加狀態到聯絡人中。"
 
 #: templates/CRM/Event/Import/Form/UploadFile.hlp
 msgid "Matching Participant Data to Contacts"
@@ -28759,7 +28759,7 @@ msgstr "選擇「個人」。如果您在為個人匯入活動報名資料。"
 
 #: templates/CRM/Event/Import/Form/UploadFile.tpl
 msgid "Select 'Organization' or 'Household' if you are importing event participation data for contacts of that type. (NOTE: Some built-in contact types may not be enabled for your site.)"
-msgstr "請為你匯入的活動參加者選擇適當的聯絡人資料類型，例如「組織」或「家庭」。（注意：有些內建的聯絡人類型可能並未被啟用。）"
+msgstr "請為您匯入的活動參加者選擇適當的聯絡人資料類型，例如「組織」或「家庭」。（注意：有些內建的聯絡人類型可能並未被啟用。）"
 
 #: templates/CRM/Event/Import/Form/UploadFile.tpl
 msgid "Select Saved Mapping, or leave blank to create a new mapping."
@@ -28847,7 +28847,7 @@ msgstr "最新報名"
 
 #: templates/CRM/Event/Page/EventInfo.tpl
 msgid "Registration is closed for this event"
-msgstr "活動報名已經截止了"
+msgstr "本活動目前未開放報名（尚未開始或已截止）。"
 
 #: templates/CRM/Event/Page/EventInfo.tpl
 msgid "Show large map"
@@ -28955,11 +28955,11 @@ msgstr "ID:"
 
 #: templates/CRM/Event/Page/ManageEvent.tpl
 msgid "Registration (Test-drive)"
-msgstr "活動報名 (測試)"
+msgstr "活動報名 (測試頁面)"
 
 #: templates/CRM/Event/Page/ManageEvent.tpl
 msgid "Registration (Live)"
-msgstr "活動報名 (線上)"
+msgstr "活動報名 (線上頁面)"
 
 #: templates/CRM/Event/Page/ManageEvent.tpl
 msgid "No available Events match your search criteria. Suggestions:"
@@ -29013,7 +29013,7 @@ msgstr "您沒有報名任何現在或即將舉行的活動。"
 
 #: templates/CRM/Export/Form/Map.tpl
 msgid "Select the fields to be exported using the table below. For each field, first select the contact type that the field belongs to (e.g. select <strong>Individuals</strong> if you are exporting <strong>Last Name</strong>). Then select the actual field to be exported from the drop-down menu which will appear next to the contact type. Your export can include multiple types of contact records, and non-applicable fields will be empty (e.g. <strong>Last Name</strong> will not be populated for an Organization record)."
-msgstr "請在下列選擇要匯出的欄位，您需要先在第一欄篩選要使用的聯絡人類型，當你點選後右側即會出現該類型下面可用的欄位。您可以匯出不同類型的欄位，但某些衝突的欄位將無法一次匯出。"
+msgstr "請在下列選擇要匯出的欄位，您需要先在第一欄篩選要使用的聯絡人類型，當您點選後右側即會出現該類型下面可用的欄位。您可以匯出不同類型的欄位，但某些衝突的欄位將無法一次匯出。"
 
 #: templates/CRM/Export/Form/Map.tpl
 msgid "Click <strong>Select more fields...</strong> if you want to export more fields than are initially displayed in the table."
@@ -29025,7 +29025,7 @@ msgstr "點擊「選擇要匯出的欄位」，以取出之前儲存的欄位對
 
 #: templates/CRM/Export/Form/Map.tpl
 msgid "If you want to use the same export setup in the future, check 'Save this field mapping' at the bottom of the page before continuing. You will then be able to reload this setup with a single click."
-msgstr "如果你想要將來還可以重複使用此欄位對應，請在儲存前勾選「儲存為新的欄位配對」選項，未來你就可以在匯出時的欄位清單中看到該對應。"
+msgstr "如果您想要將來還可以重複使用此欄位對應，請在儲存前勾選「儲存為新的欄位配對」選項，未來您就可以在匯出時的欄位清單中看到該對應。"
 
 #: templates/CRM/Export/Form/Select.hlp
 msgid ""
@@ -29129,7 +29129,7 @@ msgstr "您給%1轉寄資訊給朋友的致謝語。您可以使用HTML標籤語
 
 #: templates/CRM/Friend/Form.tpl
 msgid "Spread the word about this fundraising page (%1). Add your personal message below. A link to the fundraising page will be automatically included in the email."
-msgstr "把這 (%1) 募款專頁介紹給朋友。Email上巳附上這專頁的網址。"
+msgstr "把這 (%1) 募款專頁介紹給朋友。Email上已附上這專頁的網址。"
 
 #: templates/CRM/Friend/Form.tpl
 msgid "Send to these Friend(s)"
@@ -29255,7 +29255,7 @@ msgstr[1] "此群組現有 %count 個聯絡人"
 
 #: templates/CRM/Group/Form/Delete.tpl
 msgid "Deleting this group will NOT delete the member contact records. However, all contact subscription information and history for this group will be deleted."
-msgstr "刪除此群組不會刪除聯絡人，但是所有在此群組標註訂閱的聯絡人資料會被刪除。"
+msgstr "刪除此群組不會將聯絡人刪除，但是原本在此群組中的聯絡人，其群組tab中將不會再有此群組的紀錄。"
 
 #: templates/CRM/Group/Form/Delete.tpl
 msgid "If this group is used in CiviCRM profiles, those fields will be reset."
@@ -29307,11 +29307,11 @@ msgstr "顯示過濾搜尋。"
 
 #: templates/CRM/Group/Page/Group.hlp
 msgid "Use Groups to organize contacts (e.g. these contacts are part of our 'Steering Committee'). You can also create <strong>smart groups</strong> based on contact characteristics (e.g. this group consists of all people in our database who live in a specific locality)."
-msgstr "使用群組管理聯絡人(如：部分聯絡人隸屬於' 監事 ' )。你可以根據既有的聯絡人數據資料呈現出的特質，到<strong>新增群組</strong>預先建立群組類型(如：A地區群組，都是資料庫中居住在A地區的聯絡人)。"
+msgstr "使用群組管理聯絡人(如：部分聯絡人隸屬於' 監事 ' )。您可以根據既有的聯絡人數據資料呈現出的特質，到<strong>新增群組</strong>預先建立群組類型(如：A地區群組，都是資料庫中居住在A地區的聯絡人)。"
 
 #: templates/CRM/Group/Page/Group.hlp
 msgid "You can add contacts to a group from any set of search results (or when viewing an individual contact). You can also allow contacts to sign themselves up for certain groups by setting the group visibility to 'Public Pages' (use the <strong>Settings</strong> link), and including the <strong>Groups</strong> element in your CiviCRM Profile."
-msgstr "你可從任何搜尋結果新增聯絡人到群組（或從個別聯絡人）從任何搜尋結果新增聯絡人至某個群組。你亦可設定群組為公開（使用<strong>設定</strong>連結），讓聯絡人自己參加某些群組。"
+msgstr "您可從任何搜尋結果新增聯絡人到群組（或從個別聯絡人）從任何搜尋結果新增聯絡人至某個群組。您亦可設定群組為公開（使用<strong>設定</strong>連結），讓聯絡人自己參加某些群組。"
 
 #: templates/CRM/Group/Page/Group.hlp
 msgid "Groups which are using as mailing lists should be assigned the 'Mailing List' type."
@@ -29343,7 +29343,7 @@ msgstr "若您想將此群組指定為可訂閱的電子報類別，請勾選「
 
 #: templates/CRM/Group/Page/Group.hlp
 msgid "Select 'User and User Admin Only' if joining this group is controlled by authorized CiviCRM users only. If you want to allow contacts to join and remove themselves from this group via the Registration and Account Profile forms, select 'Public Pages'."
-msgstr "如該群組只可由已授權的使用者控制，請選「使用者與使用者管理員」。如你容許聯絡人自由參加群組，請選「公開頁面」。 "
+msgstr "如該群組只可由已授權的使用者控制，請選「使用者與使用者管理員」。如您容許聯絡人自由參加群組，請選「公開頁面」。 "
 
 #: templates/CRM/Group/Page/Group.hlp
 msgid "Some organizations find it useful to create a hierarchy of groups. In CiviCRM, this is done by creating one or more \"Parent\" groups and then assigning other groups to them. When a user sends a mailing to a \"Parent\", or searches for contacts in a \"Parent\" - all contacts in the associated child groups are automatically included,"
@@ -29369,7 +29369,7 @@ msgstr "新增群組"
 
 #: templates/CRM/Group/Page/Group.tpl
 msgid "Use Groups to organize contacts (e.g. these contacts are part of our 'Steering Committee'). You can also create 'smart' groups based on contact characteristics (e.g. this group consists of all people in our database who live in a specific locality)."
-msgstr "使用群組管理聯絡人(如：部分聯絡人隸屬於\"監事\")。你可以根據既有的聯絡人數據資料呈現出的特質，到\"新增群組\"預先建立群組類型(如：\"A地區\"群組，都是資料庫中居住在A地區的聯絡人)。"
+msgstr "使用群組管理聯絡人(如：部分聯絡人隸屬於\"監事\")。您可以根據既有的聯絡人數據資料呈現出的特質，到\"新增群組\"預先建立群組類型(如：\"A地區\"群組，都是資料庫中居住在A地區的聯絡人)。"
 
 #: templates/CRM/Group/Page/Group.tpl
 msgid "Organizaton"
@@ -29481,7 +29481,7 @@ msgstr "若所有聯絡人記錄都屬於同一個次類型，則從\"子類別\
 
 #: templates/CRM/Import/Form/DataSource.hlp
 msgid "Select a specific Contact Subtype here ONLY if all you want all records in this import to be assigned to that subtype. EXAMPLE: If all records are of the <strong>Student</strong>, select that subtype here and it will be assigned to all import records."
-msgstr "只有當你想匯入的聯絡人都需要被匯入一個次類型時，請在此選一個特定的聯絡人次類型。範例：若所有資料都是<strong>學生</strong>，請在此選定這個次類型，然後全部要匯入的紀錄都會被歸在這個次類型。"
+msgstr "只有當您想匯入的聯絡人都需要被匯入一個次類型時，請在此選一個特定的聯絡人次類型。範例：若所有資料都是<strong>學生</strong>，請在此選定這個次類型，然後全部要匯入的紀錄都會被歸在這個次類型。"
 
 #: templates/CRM/Import/Form/DataSource.hlp
 msgid "Do NOT select a Contact Subtype if your import file contains a mixture of subtypes. In that case, select the built-in (\"parent\") type, and make sure you'll file includes include a column which sets the subtype for each row."
@@ -29545,7 +29545,7 @@ msgstr "欄名稱"
 
 #: templates/CRM/Import/Form/Preview.tpl
 msgid "Are you sure you want to Import now"
-msgstr "你確認要現在匯入"
+msgstr "您確認要現在匯入"
 
 #: templates/CRM/Import/Form/Preview.tpl
 msgid "CiviCRM has detected %1 records with conflicting email addresses within this data file. If you continue, these records will be skipped. OR, you can download a file with just these problem records - <a href='%2'>Download Conflicts</a>. Then correct them in the original import file, cancel this import and begin again at step 1."
@@ -29946,7 +29946,7 @@ msgstr "新增電子報/郵件"
 
 #: templates/CRM/Mailing/Page/Browse.tpl
 msgid "No Mailings match your search criteria. Suggestions:"
-msgstr "沒有郵件符合你的搜尋。建議："
+msgstr "沒有郵件符合您的搜尋。建議："
 
 #: templates/CRM/Mailing/Page/Browse.tpl
 msgid "Or you can <a href='%1'>browse all %2 mailings</a>."
@@ -29974,7 +29974,7 @@ msgstr "編輯電子報組件"
 
 #: templates/CRM/Mailing/Page/Confirm.tpl
 msgid "<strong>%1 (%2)</strong> has been successfully subscribed to the <strong>%3</strong> mailing list."
-msgstr "<strong>%1 (%2)</strong>已成功訂閱<strong>%3</strong>電子報。"
+msgstr "<strong>%1 (%2)</strong>已成功訂閱<strong>%3</strong>。"
 
 #: templates/CRM/Mailing/Page/Confirm.tpl
 msgid "Oops. We encountered a problem in processing your subscription confirmation. Please contact the site administrator."
@@ -30106,7 +30106,7 @@ msgstr "在此設定下，會費會自動收取，而使用者可以做額外捐
 
 #: templates/CRM/Member/Form/MembershipBlock.hlp
 msgid "The contribution amount covering the membership fee will use the contribution type configured with the selected membership type (see the membership types configuration tool to review those settings). Any additional contribution will use the contribution type configured for this online contribution page."
-msgstr "捐款金額有包含會費的話，將會使用所選的會籍與其捐款類型（詳細設定請見會員類型設定工具）。有任何附加的捐款，會使用這個捐款頁面所設定的捐款類型。"
+msgstr "捐款金額有包含會費的話，將會使用所選的會籍與其費用類型（詳細設定請見會員類型設定工具）。有任何附加的捐款，會使用這個捐款頁面所設定的費用類型。"
 
 #: templates/CRM/Member/Form/MembershipBlock.hlp
 msgid "If this option is NOT checked and you include a Contribution Amount section, then a single transaction is processed for their contribution amount which must at least cover the selected membership fee."
@@ -30178,7 +30178,7 @@ msgstr "顯示會員類型、費用及描述？"
 
 #: templates/CRM/Member/Form/MembershipBlock.tpl
 msgid "You need to have at least one <a href=\"%1\">Membership Type</a> to enable Member Signup."
-msgstr "你至少需要有一種<a href=\"%1\">會員類型</a>，才能啟用會員註冊。"
+msgstr "您至少需要有一種<a href=\"%1\">會員類型</a>，才能啟用會員註冊。"
 
 #: templates/CRM/Member/Form/MembershipRenewal.tpl
 msgid "You will not be able to send an automatic email receipt for this Renew Membership because there is no email address recorded for this contact. If you want a receipt to be sent when this Membership is recorded, click Cancel and then click Edit from the Summary tab to add an email address before Renewal the Membership."
@@ -30208,7 +30208,7 @@ msgstr "會員付款金額。一個捐款記錄將會以此金額建立。"
 #: templates/CRM/Member/Form/MembershipRenewal.tpl
 #: templates/CRM/Member/Form/Membership.tpl
 msgid "Automatically email a membership confirmation and receipt to %1?"
-msgstr "自動寄送Email會員確認函和收據給%1？"
+msgstr "自動寄送會籍確認Email和收據給%1？"
 
 #: templates/CRM/Member/Form/MembershipRenewal.tpl
 msgid "Enter a message you want included at the beginning of the emailed receipt. EXAMPLE: 'Thanks for supporting our organization with your membership.'"
@@ -30304,7 +30304,7 @@ msgstr "最近會籍到期的那一日。若您不選一個日期，此日期會
 
 #: templates/CRM/Member/Form/Membership.tpl
 msgid "If <strong>Status Override</strong> is checked, the selected status will remain in force (it will NOT be modified by the automated status update script)."
-msgstr "如果勾選了<strong>狀態覆寫</strong>，已選取的狀態仍然會生效（它不會因為自動狀態更新而修改)。"
+msgstr "如果勾選了<strong>狀態覆寫</strong>，您所選取的狀態將會永久保持不變（不會因為繳費、過期等動作或情況發生而自動更改狀態）。"
 
 #: templates/CRM/Member/Form/Membership.tpl
 msgid "Update Payment Status"
@@ -30312,7 +30312,7 @@ msgstr "更新付款狀態"
 
 #: templates/CRM/Member/Form/Membership.tpl
 msgid "Check this box to enter or update payment information. You will also be able to generate a customized receipt."
-msgstr "勾選此框以輸入或更新付款資訊。你還可以產生客制化的收據。"
+msgstr "勾選此框以輸入或更新付款資訊。您還可以產生客制化的收據。"
 
 #: templates/CRM/Member/Form/Membership.tpl
 msgid "Membership Payment and Receipt"
@@ -30320,7 +30320,7 @@ msgstr "會員付款及收據"
 
 #: templates/CRM/Member/Form/Membership.tpl
 msgid "Automatically email a membership confirmation and receipt to "
-msgstr "自動透過Email發送會員確認函和收據到"
+msgstr "自動發送會員確認Email和收據到"
 
 #: templates/CRM/Member/Form/Membership.tpl
 msgid "If you need to include a special message for this member, enter it here. Otherwise, the confirmation email will include the standard receipt message configured under System Message Templates."
@@ -30580,7 +30580,7 @@ msgstr "如果您在匯入個人的會籍資料，請選擇「個人」。"
 
 #: templates/CRM/Member/Import/Form/UploadFile.tpl
 msgid "Select 'Organization' or 'Household' if you are importing memberships made by contacts of that type. (NOTE: Some built-in contact types may not be enabled for your site.)"
-msgstr "請為你匯入的聯絡人資料選擇適當的類型，例如個人、組織或家庭。（注意：有些內建的聯絡人類型可能並未被啟用）"
+msgstr "請為您匯入的聯絡人資料選擇適當的類型，例如個人、組織或家庭。（注意：有些內建的聯絡人類型可能並未被啟用）"
 
 #: templates/CRM/Member/Import/Form/UploadFile.tpl
 msgid "If you want to use a previously saved import field mapping - select it here."
@@ -30809,7 +30809,7 @@ msgstr "已排定的認捐日期。"
 
 #: templates/CRM/Pledge/Form/Pledge.tpl
 msgid "You will not be able to send an acknowledgment for this pledge because there is no email address recorded for this contact. If you want a acknowledgment to be sent when this pledge is recorded, click Cancel and then click Edit from the Summary tab to add an email address before recording the pledge."
-msgstr "因為這筆認捐沒有任何聯絡人email記錄，你無法寄送通知給這個認捐者。如果你仍想寄送通知，可以先點取消按鈕，然後再編輯此筆記錄，填入email，即可寄送。"
+msgstr "因為這筆認捐沒有任何聯絡人email記錄，您無法寄送通知給這個認捐者。如果您仍想寄送通知，可以先點取消按鈕，然後再編輯此筆記錄，填入email，即可寄送。"
 
 #: templates/CRM/Pledge/Form/Pledge.tpl msgctxt "menu"
 msgid "New Pledge"
@@ -30862,7 +30862,7 @@ msgstr "寄出認捐感謝函的日期。"
 
 #: templates/CRM/Pledge/Form/Pledge.tpl
 msgid "Sets the default contribution type for payments against this pledge."
-msgstr "為這個認捐設置預設的捐款類型。"
+msgstr "為這個認捐設置預設的費用類型。"
 
 #: templates/CRM/Pledge/Form/Pledge.tpl
 msgid "Select an Online Contribution page that the user can access to make self-service pledge payments. (Only Online Contribution pages configured to include the Pledge option are listed.)"
@@ -30922,7 +30922,7 @@ msgstr "搜尋更多認捐"
 
 #: templates/CRM/Pledge/Form/Task/Delete.tpl
 msgid "Are you sure you want to delete the selected pledges? This delete operation cannot be undone and will delete all transactions associated with these pledges."
-msgstr "你是否想刪除所選取的認捐？此行動無法回復，所有與認捐相關的交易也會被刪除。"
+msgstr "您是否想刪除所選取的認捐？此行動無法回復，所有與認捐相關的交易也會被刪除。"
 
 #: templates/CRM/Pledge/Form/Task/Print.tpl
 msgid "To Be Paid"
@@ -31341,7 +31341,7 @@ msgstr "有適當權限的使用者可把這個報表加到他們的總覽上。
 
 #: templates/CRM/Report/Form/Instance.tpl
 msgid "You have chosen to include this report in the Navigation Menu without selecting a Parent Menu item from the dropdown. This will add the report to the top level menu bar. Are you sure you want to continue?"
-msgstr "你把這份報表拉到主選單中，即該報表將會新增為最上層選單列。確定要繼續？"
+msgstr "您把這份報表拉到主選單中，即該報表將會新增為最上層選單列。確定要繼續？"
 
 #: templates/CRM/Report/Form/Register.tpl
 msgid "Delete Report Template"
@@ -31357,7 +31357,7 @@ msgstr "新增報表範本"
 
 #: templates/CRM/Report/Form/Register.tpl
 msgid "WARNING: Deleting this option will result in the loss of all Report related records which use the option. This may mean the loss of a substantial amount of data, and the action cannot be undone. Do you want to continue?"
-msgstr "警告：刪除這個項目將會一併刪除所有報表中相關的資料和記錄，這可能會影響大量的資料。本動作無法回復，請問你是否要刪除？"
+msgstr "警告：刪除這個項目將會一併刪除所有報表中相關的資料和記錄，這可能會影響大量的資料。本動作無法回復，請問您是否要刪除？"
 
 #: templates/CRM/Report/Form/Register.tpl
 msgid "Report title appear in the display screen."
@@ -31395,7 +31395,7 @@ msgstr "您的網站管理者將需要設置一個伺服器「定時任務」（
 
 #: templates/CRM/Report/Form/Settings.hlp
 msgid "This title and the description below will be displayed to users in the reports list when they click the 'CiviReport' menu. The title should reflect the report's default criteria. EXAMPLE: Donation Summary - Current Year-to-date"
-msgstr "若使用者按下「CiviReport」選單，下面的標題與描述會顯示在報表清單中。標題應反映報表的預設標準。舉例：捐款概況 - 今年起到今日"
+msgstr "若使用者按下「CiviReport」選單，下面的標題與描述會顯示在報表清單中。標題應反映報表的預設標準。舉例：捐款概況 - 今年到目前為止"
 
 #: templates/CRM/Report/Form/Settings.hlp
 msgid "The Report Header contains HTML code that will be output at the beginning of the document whenever this report is printed or downloaded in PDF format. The default values will work for most situations. However you may want to enter the actual report title in the &lt;title&gt; tag (replacing 'CiviCRM Report'). You can include a logo by adding an &lt;img&gt; tag. You can also modify the look and feel of the printed report by including a custom CSS file (instead of print.css)."
@@ -31761,7 +31761,7 @@ msgstr "資料表單建立線上的表單，通常會與別的功能一同運用
 
 #: templates/CRM/UF/Page/Group.hlp
 msgid "<strong>User Screens</strong> - One or several profiles can be linked to either the <strong>new user registration</strong> and/or view and edit screens for <strong>existing user accounts</strong>."
-msgstr "<strong>網站使用者畫面</strong> - 你可以將資料表單與網站使用者做連結，如此一來，使用者註冊時便可以填寫所需資料，並且在登入後的個人帳號管理介面，可看到該表單的呈現。"
+msgstr "<strong>網站使用者畫面</strong> - 您可以將資料表單與網站使用者做連結，如此一來，使用者註冊時便可以填寫所需資料，並且在登入後的個人帳號管理介面，可看到該表單的呈現。"
 
 #: templates/CRM/UF/Page/Group.hlp
 msgid "<strong>CiviContribute</strong> - When you want to collect information from Contributors via online contribution pages, you can create a profile and link it to to your contribution page as a 'custom page element' (<a href='%1'>Configure Online Contribution Pages</a>)."
@@ -31769,7 +31769,7 @@ msgstr "<strong>捐款</strong> - 當您想透過線上募款頁收集捐款人�
 
 #: templates/CRM/UF/Page/Group.hlp
 msgid "<strong>Contact Search and Listings</strong> - When you want to provide a search form and search result listings for some or all of your contacts you can create a profile with the desired search fields and link users to the path for that search form. When creating a link to search and listings profiles, add the corresponding profile ID to the end of your query string using the 'gid' parameter. For example, the link to display a search and listings page for a Profile with ID = 3 would be:"
-msgstr "<strong>聯絡人搜尋及列表</strong> - 當您想提供一個搜尋表格及搜尋結果列表給一些或所有您的聯絡人，您可以用您想要的搜尋欄位建立一個資料表單，及連結使用者到那個搜尋表格。當建立一個連結到搜尋及列表資料表單時，透過使用'使用者編號'參數，新增相對的資料表單編號到您問題串的結尾。例如，連結到資料表單編號=3，顯示出來的某一個搜尋及搜尋列表頁會是："
+msgstr "<strong>聯絡人搜尋及列表</strong> - 當您想提供一個搜尋表格及搜尋結果列表給一些或所有您的聯絡人，您可以用您想要的搜尋欄位建立一個資料表單，及連結使用者到那個搜尋表格。當建立一個連結到搜尋及列表資料表單時，透過使用'網站使用者編號'參數，新增相對的資料表單編號到您問題串的結尾。例如，連結到資料表單編號=3，顯示出來的某一個搜尋及搜尋列表頁會是："
 
 #: templates/CRM/UF/Page/Group.hlp
 msgid "<strong>Contact Signup Forms</strong> - Create link(s) to 'new contact' input form(s) for your Profiles using the following path: <em>%1/%2</em>. (This example links to an input form for Profile ID 3.)"
@@ -31801,7 +31801,7 @@ msgstr "http://www.example.com/thank_you.html"
 
 #: templates/CRM/UF/Page/Group.hlp
 msgid "If the form is submitted with errors (i.e. required field not completed...) - the default behavior is to display the errors within the 'built-in' profile form. You can override this behavior - specifying your own error page - by adding a hidden <strong>errorURL</strong> input field."
-msgstr "提供表單填寫，需考慮填寫錯誤時的資訊，例如必填欄位沒有填寫時，會出現何種訊息。預設的錯誤處理機制便是將錯誤呈現在資料表單中，提示使用者。然而，你也可以改變此機制，只要加入隱藏的HTML input語法，指定其欄位名稱為 errorURL，便可以在錯誤時提供導向的網址（需懂HTML語言）。"
+msgstr "提供表單填寫，需考慮填寫錯誤時的資訊，例如必填欄位沒有填寫時，會出現何種訊息。預設的錯誤處理機制便是將錯誤呈現在資料表單中，提示使用者。然而，您也可以改變此機制，只要加入隱藏的HTML input語法，指定其欄位名稱為 errorURL，便可以在錯誤時提供導向的網址（需懂HTML語言）。"
 
 #: templates/CRM/UF/Page/Group.hlp
 msgid "Make sure the CAPTCHA feature is NOT enabled for this profile when you are grabbing the HTML code. CAPTCHA requires dynamic page generation. Submitting an HTML Snippet profile form with CAPTCHA included will ALWAYS result in a CAPTCHA validation error - which means that the information entered by the user can not be saved."
@@ -31957,7 +31957,7 @@ msgstr "捐款概況 - 圖表查看"
 
 #: msgctxt "menu"
 msgid "Contribution Types"
-msgstr "捐款類型"
+msgstr "費用類型"
 
 #: msgctxt "menu"
 msgid "Create Reports from Templates"
@@ -32733,7 +32733,7 @@ msgstr "您贏得的拍賣項目"
 
 #: CRM/Auction/Page/ManageItem.php
 msgid "Are you sure you want to disable this Item?"
-msgstr "你確定要停用這個項目嗎？"
+msgstr "您確定要停用這個項目嗎？"
 
 #: CRM/Auction/Page/ManageItem.php
 msgid "Are you sure you want to delete this Item?"
@@ -32761,7 +32761,7 @@ msgstr "刪除項目"
 
 #: CRM/Auction/Page/Manage.php
 msgid "Are you sure you want to disable this Auction?"
-msgstr "你確定要停用這個拍賣？"
+msgstr "您確定要停用這個拍賣？"
 
 #: CRM/Auction/Page/Manage.php
 msgid "Are you sure you want to delete this Auction?"
@@ -32873,7 +32873,7 @@ msgstr "新增會員： %1"
 
 #: CRM/Contact/Form/Task/EmailCommon.php
 msgid "Selected contact(s) do not have a valid email address, or communication preferences specify DO NOT EMAIL, or they are deceased or Primary email address is On Hold)."
-msgstr "選擇的聯絡人沒有正確的Email地址，或者偏好的聯絡方式中有「不要寄Email」，或聯絡人已故，或者聯絡人的預設 Email 標記為凍結。"
+msgstr "您所選擇聯絡人的Email地址是無效的，或者偏好的聯絡方式中有「不要寄Email」，或聯絡人已故，或者聯絡人的預設 Email 標記為凍結。"
 
 #: CRM/Contact/Form/Task/PickProfile.php
 msgid "Batch Profile Update"
@@ -33237,7 +33237,7 @@ msgstr "如果允許，通配符會自動地新增用姓名搜尋聯絡人。例
 
 #: templates/CRM/Admin/Form/Setting/Smtp.tpl
 msgid "If you are sending emails to contacts using CiviCRM - then you need to enter settings for your SMTP/Sendmail server. You can send a test email to check your SMTP/Sendmail settings by clicking \"Save and Send Test Email\". If you're unsure of the correct values, check with your system administrator, ISP or hosting provider. If you do not want users to send outbound mail from CiviCRM, select \"Disable Outbound Email\". NOTE: If you disable outbound email, and you are using Online Contribution pages or online Event Registration - you will need to disable automated receipts and registration confirmations."
-msgstr "如果你需要使用 CiviCRM 寄送 Email 給聯絡人，你必須先設定下列的 SMTP / Sendmail 伺服器設定。你可以寄送測試 Email 來確定設定是否正確，只要按下 「儲存並且寄送測試 Email」。如果你不確定該設定什麼選項，請與您的伺服器管理員或ISP、伺服器代管公司聯繫。如果你不希望使用 CiviCRM 寄信給外部信箱，選擇「停用寄送 Email」。（注意：如果取消了 Email 寄送功能，而且你使用線上募款頁活動報名的功能，你也需要停用自動寄送 email 收據和參加確認 email 信件的功能。）"
+msgstr "如果您需要使用 CiviCRM 寄送 Email 給聯絡人，您必須先設定下列的 SMTP / Sendmail 伺服器設定。您可以寄送測試 Email 來確定設定是否正確，只要按下 「儲存並且寄送測試 Email」。如果您不確定該設定什麼選項，請與您的伺服器管理員或ISP、伺服器代管公司聯繫。如果您不希望使用 CiviCRM 寄信給外部信箱，選擇「停用寄送 Email」。（注意：如果取消了 Email 寄送功能，而且您使用線上募款頁活動報名的功能，您也需要停用自動寄送 email 收據和參加確認 email 信件的功能。）"
 
 #: templates/CRM/Admin/Form/Setting/Smtp.tpl
 msgid "Settings - Outbound Email"
@@ -33287,7 +33287,7 @@ msgstr "總覽頁面快取時間、啟用版本檢查、設定 reCAPTCHA 驗證�
 
 #: templates/CRM/Auction/Form/ItemAccount.tpl
 msgid "Adding your auction items is simple. Fill in some basic information below, which will allow you to manage your items page."
-msgstr "新增你的拍賣物品相當容易。你只需填寫好下列的基本資料，然後你就可以進入拍賣項目頁面管理你的拍賣物品。"
+msgstr "新增您的拍賣物品相當容易。您只需填寫好下列的基本資料，然後您就可以進入拍賣項目頁面管理您的拍賣物品。"
 
 #: templates/CRM/Auction/Form/Item.tpl
 msgid "Item Information"
@@ -33351,7 +33351,7 @@ msgstr "或是 <a href='%1'>瀏覽所有拍賣項目</a>。"
 #: templates/CRM/Auction/Page/ManageItem.tpl
 #: templates/CRM/Auction/Page/Manage.tpl
 msgid "There are no auctions created yet. You can <a href='%1'>add one</a>."
-msgstr "尚未建立任何拍賣項目。你可以 <a href='%1'>新增一個</a>。"
+msgstr "尚未建立任何拍賣項目。您可以 <a href='%1'>新增一個</a>。"
 
 #: templates/CRM/Auction/Page/ManageItem.tpl
 msgid "New Item"
@@ -33604,7 +33604,7 @@ msgstr "如果您想使用此價目選項，按以下活動標題，及修改費
 
 #: templates/CRM/Price/Page/Field.tpl
 msgid "If you no longer want to use this Price Field, click the contribution page title below, and modify the amount for that contribution page."
-msgstr "如果你不想再使用此價目選項，點選下列募款頁面標題，然後修改募款頁面中的金額設定。"
+msgstr "如果您不想再使用此價目選項，點選下列募款頁面標題，然後修改募款頁面中的金額設定。"
 
 #: templates/CRM/Price/Page/Field.tpl
 msgid "New Price Field"
@@ -33616,11 +33616,11 @@ msgstr "預覽價目表（所有價格選項）"
 
 #: templates/CRM/Price/Page/Option.tpl
 msgid "If you no longer want to use this Price Field Option, click the event title below, and modify the fees for that event."
-msgstr "如果你不想再使用此價格選項，請點選下列活動頁面標題，然後修改其中的收費設定。"
+msgstr "如果您不想再使用此價格選項，請點選下列活動頁面標題，然後修改其中的收費設定。"
 
 #: templates/CRM/Price/Page/Option.tpl
 msgid "If you no longer want to use this Price Field Option, click the contribution page title below, and modify the amount for that contribution page."
-msgstr "如果你不想再使用此價格選項，請點選下列募款頁面標題，然後修改其中的金額設定。"
+msgstr "如果您不想再使用此價格選項，請點選下列募款頁面標題，然後修改其中的金額設定。"
 
 #: templates/CRM/Price/Page/Set.tpl
 msgid "New Set of Price Fields"
@@ -33874,7 +33874,7 @@ msgstr "訂閱訊息"
 
 #: xml/templates/civicrm_data.tpl
 msgid "You have a pending subscription to the %1 mailing list. To confirm this subscription, reply to this email or click <a href=\"%2\">here</a>."
-msgstr "您有一個%1電子報的訂閱待確認。要確認此訂閱，請回覆此信件或按<a href=\"%2\">這裡</a>。"
+msgstr "您有一個%1電子報的訂閱待確認。若您確定要訂閱此份電子報，請回覆此信件或按<a href=\"%2\">這裡</a>。"
 
 #: xml/templates/civicrm_data.tpl
 msgid "You have a pending subscription to the %1 mailing list. To confirm this subscription, reply to this email or click on this link: %2"
@@ -33882,11 +33882,11 @@ msgstr "您有一個%1電子報的訂閱待確認。要確認此訂閱，請回�
 
 #: xml/templates/civicrm_data.tpl
 msgid "Your Subscription has been Activated"
-msgstr "您的訂閱已被啟用"
+msgstr "您的訂閱已確認！感謝您的訂閱～"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Welcome. Your subscription to the %1 mailing list has been activated."
-msgstr "歡迎，您已完成 %1 電子報的訂閱。"
+msgstr "您好，您已完成 %1 電子報的訂閱。"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Un-subscribe Confirmation"
@@ -34126,7 +34126,7 @@ msgstr "男"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Transgender"
-msgstr "跨性別"
+msgstr "其他"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Mrs."
@@ -34190,7 +34190,7 @@ msgstr "待查看"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Approved"
-msgstr "巳允許"
+msgstr "已允許"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Not Approved"
@@ -34338,7 +34338,7 @@ msgstr "為步行/電話名單報表的指定聯絡人提供一份詳細報表�
 
 #: xml/templates/civicrm_data.tpl
 msgid "Current Employer Report"
-msgstr "現職單位報表"
+msgstr "服務單位/就讀學校報表"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Provides detail list of employer employee relationships along with employment details Ex Join Date"
@@ -34826,7 +34826,7 @@ msgstr "國家（住家）"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Your state/province and country of residence will be shared with others so folks can find others in their community."
-msgstr "你所在的縣市和居住國將與他人共享，以便人們可以找到其他住在他們社區的聯絡人。"
+msgstr "您所在的縣市和居住國將與他人共享，以便人們可以找到其他住在他們社區的聯絡人。"
 
 #: xml/templates/civicrm_data.tpl
 msgid "State (Home)"
@@ -35122,7 +35122,7 @@ msgstr "捐款提醒：可能有重複的聯絡人"
 #: xml/templates/message_templates/membership_offline_receipt_text.tpl
 #: xml/templates/message_templates/membership_online_receipt_text.tpl
 msgid "Please print this receipt for your records."
-msgstr "請列印這收據以作記錄。"
+msgstr "請保存此信件，以做存查。"
 
 #: xml/templates/message_templates/contribution_online_receipt_html.tpl
 #: xml/templates/message_templates/event_offline_receipt_html.tpl
@@ -35131,7 +35131,7 @@ msgstr "請列印這收據以作記錄。"
 #: xml/templates/message_templates/event_online_receipt_text.tpl
 #: xml/templates/message_templates/membership_online_receipt_html.tpl
 msgid "Please print this confirmation for your records."
-msgstr "請列印此確定以作記錄"
+msgstr "請保存此信件，以作存查。"
 
 #: xml/templates/message_templates/contribution_online_receipt_html.tpl
 #: xml/templates/message_templates/membership_online_receipt_html.tpl
@@ -35187,7 +35187,7 @@ msgstr "收到這封信，因為您在本單位 %1 認捐了一筆定期捐款�
 #: xml/templates/message_templates/contribution_recurring_notify_html.tpl
 #: xml/templates/message_templates/contribution_recurring_notify_text.tpl
 msgid "Your recurring contribution term has ended."
-msgstr "你的定期定額捐款已經結束。"
+msgstr "您的定期定額捐款已經結束。"
 
 #: xml/templates/message_templates/contribution_recurring_notify_html.tpl
 #: xml/templates/message_templates/contribution_recurring_notify_text.tpl
@@ -35223,9 +35223,7 @@ msgid ""
 "an email with a link to a web page where you can complete the\n"
 "registration process."
 msgstr ""
-"當您的申請已再一次被驗證，您便會收到\n"
-"一封附上一個申請完成\n"
-"的連結的Email"
+"一旦您通過審核，我們會傳一封 Email到您的信箱，您可以點選 Email 中的網址以完成報名程序。"
 
 #: xml/templates/message_templates/event_offline_receipt_html.tpl
 #: xml/templates/message_templates/event_online_receipt_html.tpl
@@ -35263,7 +35261,7 @@ msgstr "更多本活動的相關訊息"
 
 #: xml/templates/message_templates/friend_subject.tpl
 msgid "%1 wants you to know about %2"
-msgstr "%1 和你分享「%2」"
+msgstr "%1 和您分享「%2」"
 
 #: xml/templates/message_templates/friend_text.tpl
 msgid "For more information, visit:"
@@ -35305,11 +35303,11 @@ msgstr "取消活動報名 %1"
 #: xml/templates/message_templates/participant_confirm_html.tpl
 #: xml/templates/message_templates/participant_confirm_text.tpl
 msgid "Confirm Your Registration"
-msgstr "請確認你的報名"
+msgstr "請確認您的報名"
 
 #: xml/templates/message_templates/participant_confirm_subject.tpl
 msgid "Confirm your registration for %1"
-msgstr "確認您的%1申請"
+msgstr "您%1申請已通過審核"
 
 #: xml/templates/message_templates/participant_expired_html.tpl
 #: xml/templates/message_templates/participant_expired_text.tpl
@@ -35317,7 +35315,7 @@ msgid ""
 "Your pending event registration for %1 has expired\n"
 "because you did not confirm your registration."
 msgstr ""
-"您在本活動「%1」的候補已經過期。因為你沒有點擊Email信件中的登記確認連結。"
+"您在本活動「%1」的候補已經過期。因為您沒有點擊Email信件中的登記確認連結。"
 
 #: xml/templates/message_templates/participant_expired_html.tpl
 #: xml/templates/message_templates/participant_expired_text.tpl
@@ -35355,7 +35353,7 @@ msgstr "檢視頁面"
 #: xml/templates/message_templates/pcp_status_change_html.tpl
 #: xml/templates/message_templates/pcp_status_change_text.tpl
 msgid "Your personal campaign page has been approved and is now live."
-msgstr "您的個人募款頁巳審核通過，上線了！"
+msgstr "您的個人募款頁已審核通過，上線了！"
 
 #: xml/templates/message_templates/pcp_status_change_html.tpl
 #: xml/templates/message_templates/pcp_status_change_text.tpl
@@ -35415,7 +35413,7 @@ msgstr "您為 %1 所建立的個人募款頁"
 #: xml/templates/message_templates/pcp_status_change_text.tpl
 #: xml/templates/message_templates/pcp_supporter_notify_text.tpl
 msgid "Click or paste this link into your browser to go to your page"
-msgstr "點擊連結，或把連結貼到瀏覽器中開啟你的網頁"
+msgstr "點擊連結，或把連結貼到瀏覽器中開啟您的網頁"
 
 #: xml/templates/message_templates/pcp_supporter_notify_html.tpl
 #: xml/templates/message_templates/pcp_supporter_notify_text.tpl
@@ -35489,7 +35487,7 @@ msgstr "親愛的 %1"
 
 #: xml/templates/message_templates/pledge_acknowledge_html.tpl
 msgid "thank you for your generous pledge. please print this acknowledgment for your records."
-msgstr "謝謝您慷慨的認捐。請列印這收據作記錄。"
+msgstr "謝謝您慷慨的認捐。請保存此信件，以作存查。"
 
 #: xml/templates/message_templates/pledge_acknowledge_html.tpl
 #: xml/templates/message_templates/pledge_acknowledge_text.tpl
@@ -35529,7 +35527,7 @@ msgstr ""
 
 #: xml/templates/message_templates/pledge_acknowledge_text.tpl
 msgid "Thank you for your generous pledge. Please print this acknowledgment for your records."
-msgstr "感謝您的慷慨認捐。請列印這收據作記錄。"
+msgstr "感謝您的慷慨認捐。請保存此信件，以作存查。"
 
 #: xml/templates/message_templates/pledge_reminder_html.tpl
 #: xml/templates/message_templates/pledge_reminder_text.tpl
@@ -35548,12 +35546,12 @@ msgstr "請將您的付款寄到"
 #: xml/templates/message_templates/test_preview_html.tpl
 #: xml/templates/message_templates/test_preview_text.tpl
 msgid "Test-drive Email / Receipt"
-msgstr "測試驅動Email/收據"
+msgstr "測試Email/收據"
 
 #: xml/templates/message_templates/test_preview_html.tpl
 #: xml/templates/message_templates/test_preview_text.tpl
 msgid "This is a test-drive email. No live financial transaction has occurred."
-msgstr "這是測試驅動Email。沒有真實的財務交易發生。"
+msgstr "這是測試Email。沒有產生真正的財務交易。"
 
 #: xml/templates/message_templates/uf_notify_html.tpl
 msgid "Submitted For"
@@ -35618,7 +35616,7 @@ msgstr ""
 
 #: templates/CRM/Admin/Form/Preferences/Address.hlp
 msgid "Current employer name as configured in the individual contact edit form. If you are printing labels for Organizations and Households AS WELL AS Individuals, then consider putting this token in the Individual Name Format field below (rather than here)."
-msgstr "就職單位名稱設定在個人聯絡人編輯表格。如果您打算同時為組織、家庭或個人列印郵件貼紙時，考慮放此token在以下的個人姓名格式欄位(而不是在這裡)。"
+msgstr "服務單位/就讀學校名稱設定在個人聯絡人編輯表格。如果您打算同時為組織、家庭或個人列印郵件貼紙時，考慮放此token在以下的個人姓名格式欄位(而不是在這裡)。"
 
 #: templates/CRM/Admin/Page/ContactType.hlp
 msgid ""
@@ -35722,8 +35720,8 @@ msgid ""
 "you need to sort by street number (and/or separate addresses with odd and even numbers). For most addresses, this is done for you automatically. However, you can\n"
 "manually edit these elements, and potentially handle addresses that are in unusual formats, by clicking 'Edit Address Elements'."
 msgstr ""
-"CiviCRM會企圖把街道地址分開成個別的元素（街道號碼，街道名稱與公寓等）以便幫助你製作清單與報表\n"
-"例如當你需要以街道號碼來排序時。（與/或把街道號碼分成奇數與偶數）。大部分的地址會自動處理這部份，然而您也可以\n"
+"CiviCRM會企圖把街道地址分開成個別的元素（街道號碼，街道名稱與公寓等）以便幫助您製作清單與報表\n"
+"例如當您需要以街道號碼來排序時。（與/或把街道號碼分成奇數與偶數）。大部分的地址會自動處理這部份，然而您也可以\n"
 "手動編輯這些元素，要把地址以特殊格式處理的話，請按「編輯地址元素」。"
 
 #: templates/CRM/Contact/Form/Search/Basic.hlp
@@ -35878,7 +35876,7 @@ msgstr ""
 msgid ""
 "Select 'User and User Admin Only' if membership in this group is controlled by authorized CiviCRM users only. If you want to allow contacts to join and remove themselves from this\n"
 "    group via the Registration and Account Profile forms, select 'Public Pages'."
-msgstr "若該群組只可由已授權的使用者控制，請選「使用者語使用者管理員」。如你容許聯絡人自由參加群組，請選「公開頁面」。"
+msgstr "若該群組只可由已授權的使用者控制，請選「使用者語使用者管理員」。如您容許聯絡人自由參加群組，請選「公開頁面」。"
 
 #: templates/CRM/Group/Page/Group.hlp
 msgid ""
@@ -36038,7 +36036,7 @@ msgstr "收據"
 
 #: CRM/Contribute/Form/ContributionBase.php
 msgid "We could not find contribution details for your request. Please try your request again."
-msgstr "我們未能找到你要的捐款資料，請換別的條件再試試。"
+msgstr "我們未能找到您要的捐款資料，請換別的條件再試試。"
 
 #: CRM/Contribute/Form/ContributionCharts.php
 msgid "Reload Charts"
@@ -36102,7 +36100,7 @@ msgid ""
 "However, you can still override this limit and register additional participants using this form.<br >"
 msgstr ""
 "此活動報名人數目前已達到參加人數的上限 (%1人)。\n"
-"不過你仍然可以利用報名表單進行報名。<br>"
+"不過您仍然可以利用報名表單進行報名。<br>"
 
 #: CRM/Event/Form/Participant.php
 msgid "Email has NOT been sent to %1 contact - communication preferences specify DO NOT EMAIL OR valid Email is NOT present. "
@@ -36114,11 +36112,11 @@ msgstr "糟糕！看來這位參加者已報名完成，若您想變更您的報
 
 #: CRM/Mailing/Event/BAO/Subscribe.php
 msgid "Your subscription request has been submitted. Check your inbox shortly for the confirmation email(s). If you do not see a confirmation email, please check your spam/junk mail folder."
-msgstr "已提交你的訂閱申請。請檢查你的收件匣是否有訂閱確認信函。如果你沒有看到確認信函，請檢查信件是否被誤判為垃圾郵件。"
+msgstr "已送出您的電子報訂閱申請。請檢查您的收件匣是否有訂閱確認信函。如果您沒有看到確認信函，請檢查信件是否被誤判為垃圾郵件。"
 
 #: CRM/Mailing/Event/BAO/Subscribe.php
 msgid "We had a problem processing your subscription request. You have tried to subscribe to a private group and/or we encountered a database error. Please contact the site administrator"
-msgstr "抱歉，我們在處理您的訂閱過程中出現問題。您訂閱的可能是不公開群組，未開放給一般人訂閱，或是網站資料庫的錯誤。請你與網站管理員聯繫。"
+msgstr "抱歉，我們在處理您的訂閱過程中出現問題。您訂閱的可能是不公開群組，未開放給一般人訂閱，或是網站資料庫的錯誤。請您與網站管理員聯繫。"
 
 #: CRM/Mailing/Form/Upload.php
 msgid "Override VERP address?"
@@ -36150,7 +36148,7 @@ msgstr "&raquo; 管理個案"
 
 #: templates/CRM/Case/Form/CaseView.tpl
 msgid "Are you sure you want to add a set of scheduled activities to this case"
-msgstr "你確定要為此個案新增一系列排程的任務？"
+msgstr "您確定要為此個案新增一系列排程的任務？"
 
 #: templates/CRM/Case/Page/DashBoard.tpl
 msgid "Show ALL Cases with Upcoming Activities"
@@ -36178,11 +36176,11 @@ msgstr "按<strong>%2</strong>鍵前往%1，在那裡可選擇付款方式並完
 
 #: templates/CRM/Contribute/Form/ContributionPage/Amount.tpl
 msgid "Check this box if you want to give users the option to make recurring contributions. (This feature requires that you use 'PayPal Website Standard' OR 'PayJunction' as your payment processor.)"
-msgstr "如果你想啟用定期定額捐款功能讓使用者選擇，請勾選此框。（這個功能並不是所有的金流機制都可以支援，請確認你的金流機制支援定期定額的功能。）"
+msgstr "如果您想啟用定期定額捐款功能讓使用者選擇，請勾選此框。（這個功能並不是所有的金流機制都可以支援，請確認您的金流機制支援定期定額的功能。）"
 
 #: templates/CRM/Contribute/Form/ContributionPage/Custom.tpl
 msgid "No Profile has been configured / enabled for your site. You need to first configure <a href=\"%1\"><strong>&raquo; %2</a>(s)."
-msgstr "你尚未設定或啟用任何設定檔。你必須先設定<a href=\"%1\"><strong>&raquo; %2</a>。"
+msgstr "您尚未設定或啟用任何設定檔。您必須先設定<a href=\"%1\"><strong>&raquo; %2</a>。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/Custom.tpl
 msgid "Include additional fields in this online contribution page by configuring and selecting a CiviCRM Profile to be included at the top of the page (immediately after the introductory message)."
@@ -36264,7 +36262,7 @@ msgstr "允許用戶者觀看參加者列表，設定此欄位為「姓名」(�
 
 #: templates/CRM/Event/Form/ManageEvent/Fee.tpl
 msgid "If you uncheck \"Discounts by Signup Date\" and Save this form, any existing discount sets will be deleted. This action cannot be undone. If this is NOT what you want to do, you can check \"Discounts by Signup Date\" again"
-msgstr "如果你取消勾選\"註冊日期折扣\"並儲存此表單，任何已設定的折扣設定都將被刪除。此動作無法還原。如果這不是你想要進行的動作，你可以再次勾選\"註冊日期折扣\"。"
+msgstr "如果您取消勾選\"註冊日期折扣\"並儲存此表單，任何已設定的折扣設定都將被刪除。此動作無法還原。如果這不是您想要進行的動作，您可以再次勾選\"註冊日期折扣\"。"
 
 #: templates/CRM/Event/Form/Participant.tpl
 msgid " There are %1 more Participant(s) registered by this participant. Deleting this registration will also result in deletion of these additional participant(s)."
@@ -36340,11 +36338,11 @@ msgstr "您可以從您的電腦<strong>上載</strong>郵件內容或在此螢�
 
 #: templates/CRM/Mailing/Page/Browse.tpl
 msgid "Are you sure you want to delete the mailing '%1'?"
-msgstr "你是否確定刪除此電子報\"%1\"？"
+msgstr "您是否確定刪除此電子報\"%1\"？"
 
 #: templates/CRM/Mailing/Page/Browse.tpl
 msgid "Are you sure you want to cancel the mailing '%1'?"
-msgstr "你是否確定取消此電子報 '%1'？"
+msgstr "您是否確定取消此電子報 '%1'？"
 
 #: templates/CRM/Mailing/Page/Browse.tpl
 msgid ""
@@ -36368,7 +36366,7 @@ msgstr "警告：刪除此會員籍會同時刪除會員籍日誌及付款記錄
 
 #: templates/CRM/Member/Form/Task/PickProfile.tpl
 msgid "Batch Update Members via Profile"
-msgstr "從資料表單批量更新會員"
+msgstr "從資料表單批次更新會員"
 
 #: templates/CRM/Member/Page/Tab.tpl
 msgid "Click <a href='%1'>New Membership</a> to record a new membership."
@@ -37662,7 +37660,7 @@ msgstr "選擇報名後才繳費，目前仍是待繳費。"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "Registered by ID"
-msgstr "報名編號"
+msgstr "代為報名者"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "The numeric ID of the Participant who registered this Participant"
@@ -37710,11 +37708,11 @@ msgstr "接收/支付捐款的日期"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "Non Deductible Amount"
-msgstr "不可抵稅金額"
+msgstr "不可開收據的金額"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "The Non Deductible Part of the Contribution"
-msgstr "捐款裡不可抵稅的部分"
+msgstr "捐款裡不可以開收據的部分"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "The Total Contribution made by the Contact"
@@ -38946,11 +38944,11 @@ msgstr "CiviCRM 模組儲存所有與社群相關的人員資料，以及彼此�
 
 #: drupal/civicrm.module
 msgid "The CiviCRM module allows you to create contacts, or import them from other sources. You can record relationships between contacts, such as indicating they live in the same household. There are two types of groups of contacts. You can create static groups which have a set list of contacts. You can also create dynamic (smart) groups based on characteristics that contacts have in common. For example, you could create a group of all contacts who live in California AND who have volunteered for your organization within the past year. The CiviCRM module also allows for tagging for less formal categorization of contacts or groups. You can easily extend CiviCRM to record community member information which is specific to your community or organization using custom fields. For example, you can create a set of fields to track volunteer skills and preferences. CiviCRM profile gives you a way to allow community members ('users') to update their own information, as well as share some of that information with others. Finally, you can configure custom activity types such as volunteering or attending events."
-msgstr "CiviCRM 模組讓你可以建立聯絡人，或是從其他來源匯入。你可以記錄聯絡人之間的關係，例如是否是同一個家庭。有兩種聯絡人群組，一種是靜態的聯絡人群組，或是根據聯絡人的特性來建立任務的聯絡人群組。例如：你可建立一個住在台北市、並且都曾經在去年擔任過志工的聯絡人群組。CiviCRM 也可以使用標籤功能，針對聯絡人或群組進行比較非正式的分類方式。你也可以使用 CiviCRM 的客製化欄位，來記錄與社群或組織相關的特定資料。例如：建立一組欄位來追蹤志工的技能或喜好。CiviCRM 的資料表單，可以讓社群成員自行更新他們的資訊，並與他人分享一些資訊。你還可以自訂任務類型，例如擔任志工或參與活動。"
+msgstr "CiviCRM 模組讓您可以建立聯絡人，或是從其他來源匯入。您可以記錄聯絡人之間的關係，例如是否是同一個家庭。有兩種聯絡人群組，一種是靜態的聯絡人群組，或是根據聯絡人的特性來建立任務的聯絡人群組。例如：您可建立一個住在台北市、並且都曾經在去年擔任過志工的聯絡人群組。CiviCRM 也可以使用標籤功能，針對聯絡人或群組進行比較非正式的分類方式。您也可以使用 CiviCRM 的客製化欄位，來記錄與社群或組織相關的特定資料。例如：建立一組欄位來追蹤志工的技能或喜好。CiviCRM 的資料表單，可以讓社群成員自行更新他們的資訊，並與他人分享一些資訊。您還可以自訂任務類型，例如擔任志工或參與活動。"
 
 #: drupal/civicrm.module
 msgid "You can:"
-msgstr "你可以："
+msgstr "您可以："
 
 #: drupal/civicrm.module
 msgid "read the <a href=\"!1\">CiviCRM Administrator Guide</a>."
@@ -39014,7 +39012,7 @@ msgstr "支持者關係管理 (Constituent Relationship Management，CiviCRM !1)
 
 #: drupal/civicrm.module
 msgid "Please review the <a href='!1'>Drupal Installation Guide</a> and the <a href='!2'>Trouble-shooting page</a> for assistance. If you still need help installing, you can often find solutions to your issue by searching for the error message in the <a href='!3'>installation support section of the community forum</a>.</strong></p>"
-msgstr "請參考 <a href='!1'>Drupal 安裝指南</a>和<a href='!2'>障礙排除頁面</a>，以取得相關協助。如果你還需要安裝方面的幫助，可以在<a href='!3'>社群論壇裡的安裝支援單元</a>裡搜尋所出現的錯誤訊息，以找出解決辦法。</strong></p>"
+msgstr "請參考 <a href='!1'>Drupal 安裝指南</a>和<a href='!2'>障礙排除頁面</a>，以取得相關協助。如果您還需要安裝方面的幫助，可以在<a href='!3'>社群論壇裡的安裝支援單元</a>裡搜尋所出現的錯誤訊息，以找出解決辦法。</strong></p>"
 
 #: drupal/civicrm.module
 msgid "Oops! - The CiviCRM settings file (civicrm.settings.php) was not found in the expected location "
@@ -39022,7 +39020,7 @@ msgstr "哦！ - 無法在預期的地方找到CiviCRM 設定檔案 (civicrm.set
 
 #: drupal/civicrm.module
 msgid "Oops! - The path for including CiviCRM code files is not set properly. Most likely there is an error in the <em>civicrm_root</em> setting in your CiviCRM settings file (!1)."
-msgstr "哦！ - 包含 CiviCRM 的程式檔案的路徑，設定不正確。很可能是有錯誤發生在你的 CiviCRM 設定檔案(!1)裡的<em>civicrm_root</em>設定。"
+msgstr "哦！ - 包含 CiviCRM 的程式檔案的路徑，設定不正確。很可能是有錯誤發生在您的 CiviCRM 設定檔案(!1)裡的<em>civicrm_root</em>設定。"
 
 #: drupal/civicrm.module
 msgid "civicrm_root is currently set to: <em>!1</em>."
@@ -39154,7 +39152,7 @@ msgid "AliPay"
 msgstr "支付寶"
 
 msgid "This may occurred because you press the back button of browser. You can ignore this transaction, and try <a href='%1'>create a new one.</a>."
-msgstr "這可能是因為您按下了網頁的上一頁，因此重複送出訂單。若您確定你尚未完成，您可以忽略這筆交易，再<a href='%1'>重新建立一個新的</a>。"
+msgstr "這可能是因為您按下了網頁的上一頁，因此重複送出訂單。若您確定您尚未完成，您可以忽略這筆交易，再<a href='%1'>重新建立一個新的</a>。"
 
 msgid "&raquo; <a href='%1'>Try again</a>"
 msgstr "&raquo; <a href='%1'>再試一次</a>"
@@ -39630,7 +39628,7 @@ msgid "Submit"
 msgstr "送出"
 
 msgid "Are you sure you want to mark this recurring contribution as cancelled?"
-msgstr "你確定要將這筆定期定額捐款標註為取消嗎？"
+msgstr "您確定要將這筆定期定額捐款標註為取消嗎？"
 
 msgid "WARNING - Cancelling a recurring contribution should only be used if your gateway payment is not capable of sending this information automatically to CiviCRM."
 msgstr ""
@@ -39664,13 +39662,13 @@ msgstr "不想收電子報（退訂全站訊息）"
 
 msgid "Use this filter to limit search results to relationships where the related contacts are part of a specific group or groups."
 "For example, you might want to find all individuals who are employees ('Employee of' relationship type) of organizations which are in your 'Corporate Sponsors' group."
-msgstr "使用這個篩選，將會篩選出屬於特定群組與特定關係的聯絡人。舉例，你或許想要搜尋在「企業贊助者」群組中，所有跟該單位有「員工」關係的聯絡人。"
+msgstr "使用這個篩選，將會篩選出屬於特定群組與特定關係的聯絡人。舉例，您或許想要搜尋在「企業贊助者」群組中，所有跟該單位有「員工」關係的聯絡人。"
 
 msgid "Find records with tags (regular or tagset tag) which contain a complete or partial word or phrase. EXAMPLE: If you have several tags that contain the word 'Donor', you can find contacts tagged with any of them by entering 'Donor' in this field."
-msgstr "輸入全部或部分文字來尋找相符的聯絡人。例如，你有「平面媒體」標籤、「電視媒體」標籤的聯絡人，你可以輸入「媒體」，便可同時搜到包含這兩標籤的聯絡人。"
+msgstr "輸入全部或部分文字來尋找相符的聯絡人。例如，您有「平面媒體」標籤、「電視媒體」標籤的聯絡人，您可以輸入「媒體」，便可同時搜到包含這兩標籤的聯絡人。"
 
 msgid "Use the Search Operator to determine whether your criteria are combined with AND statements, or combined with OR statements. For example, you may want to find all individuals who are in the Volunteers group AND who have a Volunteer Training activity recorded for them. In this case use the AND operator. If you need to find everyone who is in the Volunteers group OR has a Volunteer Training activity recorded, use the OR operator."
-msgstr "篩選方式，可讓你搜尋的條件決定為交集（AND-以及），或是多種條件的聯集（OR-或）來篩選你的搜尋。舉例，你也許想要找所有在「志工」群組下，且有進行過「志工服務」任務的人，這時就要用「AND-以及」的篩選方式。反之，若要找到所有志工群組中的人，或是曾經有參加過志工活動的人，這時就可以用「OR-或」的條件來搜尋。"
+msgstr "篩選方式，可讓您搜尋的條件決定為交集（AND-以及），或是多種條件的聯集（OR-或）來篩選您的搜尋。舉例，您也許想要找所有在「志工」群組下，且有進行過「志工服務」任務的人，這時就要用「AND-以及」的篩選方式。反之，若要找到所有志工群組中的人，或是曾經有參加過志工活動的人，這時就可以用「OR-或」的條件來搜尋。"
 
 msgid "Search Operator"
 msgstr "篩選方式"
@@ -39709,7 +39707,7 @@ msgid "Mailing Visibility"
 msgstr "電子報顯示選項"
 
 msgid "Choose <strong>public pages</strong> if you want the content of this mailing to be viewable by everyone who has the permission of <strong>\"view public CiviMail content\"</strong>, <strong>user and user admin only</strong> means that only users that received the mailing or administrators can view the content of this email"
-msgstr "若你希望這封電子報可以讓所有「<strong>view public CiviMail content</strong>」權限的使用者在網頁上看到，請選擇<strong>公開頁面</strong>，若選擇<strong>使用者與使用者管理員</strong>，則僅有管理員和收件人的信箱看的到此封Email。"
+msgstr "若您希望這封電子報可以讓所有「<strong>view public CiviMail content</strong>」權限的使用者在網頁上看到，請選擇<strong>公開頁面</strong>，若選擇<strong>使用者與使用者管理員</strong>，則僅有管理員和收件人的信箱看的到此封Email。"
 
 msgid "Payment Method"
 msgstr "選擇付款方式"
@@ -39721,10 +39719,10 @@ msgid "Please select only contributions with Completed status."
 msgstr "請選擇「已完成」的收據"
 
 msgid "Are you sure you want to continue?"
-msgstr "你確定要繼續嗎？"
+msgstr "您確定要繼續嗎？"
 
 msgid "Deductible"
-msgstr "可抵稅"
+msgstr "開收據"
 
 msgid "Receipt ID"
 msgstr "收據編號"
@@ -39743,3 +39741,45 @@ msgstr "會員:手動更新會籍(by %1)"
 
 msgid "Membership Confirmation and Receipt"
 msgstr "會員註冊確認信與收據"
+
+msgid "Membership Renewal Confirmation and Receipt"
+msgstr "會籍更新確認確認信與收據"
+
+msgid "Online tempalte"
+msgstr "線上範本"
+
+msgid "Skipped Participant(s)"
+msgstr "略過的報名人數"
+
+msgid "Contribution need to match conditions below in order to generate receipt(and receipt serial id number)"
+msgstr "捐/繳款須滿足下列條件才能列印收據（與收據編號）"
+
+msgid "Contribution record must completed."
+msgstr "捐/繳款狀態必須是「已完成」。"
+
+msgid "Contribution record must have receive date."
+msgstr "捐/繳款必須有「收到日期」。"
+
+msgid "Please notice that, because the serial number must continuous, once you generate receipt, it will also generte receipt ID and you can't modify receipt ID after generation. Make sure your search result have correct receive date search to prevent generate wrong number."
+msgstr "請注意，由於收據編號必須是連號，當您按下列印收據，系統產生的收據編號是不能修改的。請務必確認您搜尋條件的「收到日期」是正確的，以免產生錯誤的收據編號。"
+
+msgid "Single page with address letter"
+msgstr "適用於開窗信封的收據"
+
+msgid "By default we generate one receipt in every A4 page. After you check this option, receipt will include default address of donor in every page instead. We will generate their address in the top of page. This is useful when you want to send by post directly without envelop."
+msgstr "當您勾選此選項，系統將產生A4格式收據，並在頁面上方附上捐/繳款人收據寄送地址。您可摺疊A4收據，放進開窗信封並讓收件人姓名地址露出。"
+
+msgid "Contribution record must dedutible.(base on Contribution type settings."
+msgstr "捐/繳款必須是可開收據的。（根據捐/繳款類型的設定）"
+
+msgid "Procceed Receipt Generation?"
+msgstr "您確定要產生收據？"
+
+msgid "In order to prevent non-continues receipt id. After generate, you can't insert any receipt number between these contribution."
+msgstr "為了避免收據編號不連號，在您產生收據後，將不能在已產生的收據間插入別的收據。"
+
+msgid "Membership Information"
+msgstr "會籍資訊"
+
+msgid "Selected Participants was deleted sucessfully."
+msgstr "已經成功刪除所選取的參加者。"
