@@ -305,6 +305,7 @@ class CRM_Core_Selector_Controller {
         if ($this->_output == self::EXPORT || $this->_output == self::SCREEN ) {
             // get rows (without paging criteria)
             $rows = self::getRows( $this );
+            CRM_Utils_Hook::searchColumns( $contextName, $columnHeaders, $rows, $this );
             if ( $this->_output == self::EXPORT ) {
                 // export the rows.
                 CRM_Core_Report_Excel::writeCSVFile( $this->_object->getExportFileName( ),
@@ -320,6 +321,7 @@ class CRM_Core_Selector_Controller {
         } else {
             // output requires paging/sorting capability
             $rows = self::getRows( $this );
+            CRM_Utils_Hook::searchColumns( $contextName, $columnHeaders, $rows, $this );
             $rowsEmpty = count( $rows ) ? false : true;
             $qill      = $this->getQill( );
             $summary   = $this->getSummary( );
