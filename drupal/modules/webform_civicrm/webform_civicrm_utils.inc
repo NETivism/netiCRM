@@ -56,11 +56,19 @@ function webform_civicrm_process_submission($node, &$submission, $op) {
       return;
     }
 
+    $state_province = webform_civicrm_get_options('state_province_id', $config->defaultContactCountry);
+
     // Fill entity arrays with field values
     foreach ($enabled as $field => $fid) {
       if (isset($submission->data[$fid]['value'])) {
         list($lobo, $c, $ent, $n, $table, $field) = explode('_', $field, 6);
         $val = $submission->data[$fid]['value'];
+        if($field == 'state_province_id' && is_numeric($val[0])){
+          // change state province data to real data
+          if(!empty($state_province[$val[0]])){
+            $submission->data[$fid]['value'][0] = t($state_province[$val[0]]);
+          }
+        }
         if ($field == 'privacy') {
           foreach (array_keys(webform_civicrm_str2array($node->webform['components'][$fid]['extra']['items'])) as $key) {
             $data[$ent][$c][$table][$n][$key] = in_array($key, $val);
@@ -199,7 +207,7 @@ function webform_civicrm_process_submission($node, &$submission, $op) {
               }
               unset($params['master_id']);
               // Translate state/prov abbr to id
-              if (!empty($params['state_province_id'])) {
+              if (!empty($params['state_province_id']) && !is_numeric($params['state_province_id'])) {
                 if (!($params['state_province_id'] = webform_civicrm_state_abbr($params['state_province_id'], 'id', webform_civicrm_aval($params, 'country_id', $config->defaultContactCountry)))) {
                   $params['state_province_id'] = '';
                 }
@@ -577,8 +585,8 @@ function webform_civicrm_get_options($option_group, $param = NULL) {
     }
     $sql .= ' ORDER BY name';
   }
-  elseif ($option_group == 'state_province') {
-    $value = $param ? 'UPPER(abbreviation)' : 'id';
+  elseif ($option_group == 'state_province' || $option_group == 'state_province_id') {
+    $value = $option_group == 'state_province' ? 'name' : 'id';
     if (!$param || $param == 'default') {
       $config = CRM_Core_Config::singleton();
       if (!$param && !empty($config->provinceLimit)) {
@@ -978,8 +986,8 @@ function webform_civicrm_fill_values(&$elements, $data, $fields, $submitted) {
 /**
  * Match a state/province id to its abbr.
  */
-function webform_civicrm_state_abbr($input, $ret = 'abbreviation', $country_id = NULL) {
-  $input_type = $ret == 'id' ? 'abbreviation' : 'id';
+function webform_civicrm_state_abbr($input, $ret = 'name', $country_id = NULL) {
+  $input_type = $ret == 'id' ? 'name' : 'id';
   $sql = "SELECT $ret FROM civicrm_state_province WHERE $input_type = %1";
   $vars = array(1 => array($input, $ret == 'id' ? 'String' : 'Integer'));
   if ($country_id) {
@@ -1005,7 +1013,7 @@ function _webform_civicrm_form_validate($form, &$form_state, $submitted) {
       && $element['#value'] !== '') {
         $dt = $element['#civicrm_data_type'];
         // Validate state/prov abbreviation
-        if ($dt == 'state_province_abbr') {
+        if ($dt == 'state_province') {
           $ckey = str_replace('state_province', 'country', $key);
           if (!empty($submitted[$ckey]) && is_numeric($submitted[$ckey])) {
             $country_id = $submitted[$ckey];
@@ -1014,7 +1022,7 @@ function _webform_civicrm_form_validate($form, &$form_state, $submitted) {
             $config = CRM_Core_Config::singleton();
             $country_id = $config->defaultContactCountry;
           }
-          $states = webform_civicrm_get_options('state_province', $country_id);
+          $states = webform_civicrm_get_options('state_province_id', $country_id);
           if ($states && !array_key_exists(strtoupper($element['#value']), $states)) {
             $countries = webform_civicrm_get_options('country');
             form_error($element, t('Mismatch: "@state" is not a state/province of %country. Please enter a valid state/province abbreviation for %field.', array('@state' => $element['#value'], '%country' => $countries[$country_id], '%field' => $element['#title'])));
@@ -1250,7 +1258,7 @@ function webform_civicrm_get_fields($var = 'fields') {
         'maxlength' => 5,
         'width' => 4,
       ),
-      'data_type' => 'state_province_abbr',
+      'data_type' => 'state_province',
     );
     $fields['address_master_id'] = array(
       'name' => t('Share address of'),
