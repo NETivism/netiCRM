@@ -1194,6 +1194,12 @@ function webform_civicrm_get_fields($var = 'fields') {
         'contact_type' => 'individual',
       );
     }
+    $fields['contact_sic_code'] = array(
+      'name' => t('Sic Code'),
+      'type' => 'textfield',
+      'extra' => array('width' => 20),
+      'contact_type' => 'organization',
+    );
     $fields['contact_birth_date'] = array(
       'name' => t('Birth Date'),
       'type' => 'date',
