@@ -1534,6 +1534,7 @@ buildEventTypeCustomData( {$this->_eID}, {$this->_eventTypeCustomDataTypeID}, '{
                     'participantId' => $participants[$num]->id,
                     'eventId' => $params['event_id'],
                     'isTest'    => (bool) CRM_Utils_Array::value('is_test', $this->_defaultValues),
+                    'PDFFilename' => 'Attendee_confirm_copy.pdf',
                 );
 
                 // try to send emails only if email id is present
