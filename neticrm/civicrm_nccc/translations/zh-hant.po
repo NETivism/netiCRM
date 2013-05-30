@@ -1,0 +1,59 @@
+# $Id$
+#
+# LANGUAGE translation of Drupal (general)
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+# Generated from files:
+#  civicrm_nccc.checkout.inc: n/a
+#  civicrm_nccc.err.inc: n/a
+#  civicrm_nccc.ipn.inc: n/a
+#  civicrm_nccc.info: n/a
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2013-05-30 14:50+0800\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: civicrm_nccc.checkout.inc:92
+msgid "Before leaving this page, you will need to submit credit card information."
+msgstr "離開此頁面以前，請確認你已經輸入正確的信用卡資訊，以避免交易失敗。"
+
+#: civicrm_nccc.checkout.inc:209
+msgid "This page has expired because security reason. Try again for your transactionin open new window."
+msgstr "因為安全性的原因，此頁面已過期。請開新視窗重新輸入資料。"
+
+#: civicrm_nccc.err.inc:7
+msgid "Unknown error"
+msgstr "未知的問題"
+
+#: civicrm_nccc.ipn.inc:10;18
+msgid "civicrm_nccc"
+msgstr ""
+
+#: civicrm_nccc.ipn.inc:10
+msgid "Could not find POST data from payment server"
+msgstr ""
+
+#: civicrm_nccc.ipn.inc:18
+msgid "Could not get module name from request url"
+msgstr ""
+
+#: civicrm_nccc.info:0
+msgid "Payment Method of NCCC"
+msgstr ""
+
+#: civicrm_nccc.info:0
+msgid "NCCC credit card payment functions for civicrm."
+msgstr "聯合信用卡中心線上金流支援（需搭配CiviCRM）"
+
+#: civicrm_nccc.info:0
+msgid "NetiCRM Payment Method"
+msgstr ""
+

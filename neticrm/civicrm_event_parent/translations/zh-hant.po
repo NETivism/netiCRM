@@ -15,10 +15,10 @@ msgid "!relation profile form"
 msgstr "!relation 基本資料表"
 
 msgid "Hello !name! After finish this form, we will create a relashionship between you and belows. If you are not below's !relationship, or you would like to register for yourself, please <a href='!register_link'>use alternative form to register this event</a>."
-msgstr "!name 您好！此張表格送出後，我們將您與下面填表資訊建立「!relationship」的關係。若您是為自己登記，請您<a href='!register_link'>使用另一張表格進行登記</a>。"
+msgstr "!name 您好！請在這張表格填寫!relationship資料，填完表格後，再到下一頁填寫活動參加者（而非你自己）的資料。若您是為自己報名，請您<a href='!register_link'>使用另一張表格進行登記</a>。"
 
 msgid "Please continue enter this form. We suppose you are !relationship of belows, then we will create relationship between you and belows. If you would like to register for yourself, please <a href='!register_link'>use alternative form to register this event</a>."
-msgstr "請您繼續完成下列表格。這張表格假設您是下表聯絡人的「!relationship」。若您想為自己登記，應<a href='!register_link'>使用另一張表格進行登記</a>。"
+msgstr "剛才您已成功填寫了!relationship資料，請在此繼續為其他人報名活動。若您是自己想要參加活動，而非幫他人報名，應<a href='!register_link'>使用另一張表格進行登記</a>。"
 
 msgid "Parent Relationship"
 msgstr "代理登記為參加者的："

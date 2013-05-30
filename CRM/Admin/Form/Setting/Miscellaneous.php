@@ -61,7 +61,7 @@ class CRM_Admin_Form_Setting_Miscellaneous extends  CRM_Admin_Form_Setting
 
         $this->addYesNo( 'versionCheck', ts( 'Version Check & Statistics Reporting' ));
         
-        $this->addYesNo( 'doNotAttachPDFReceipt', ts( 'Attach PDF copy to receipts' ) );
+        $this->addYesNo( 'doNotAttachPDFReceipt', ts( 'Do not attach PDF copy to receipts' ) );
         
         $this->addElement('text','wkhtmltopdfPath', ts('Path to wkhtmltopdf executable'),
                           array( 'size' => 64, 'maxlength' => 256 ) );

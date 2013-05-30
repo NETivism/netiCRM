@@ -1437,6 +1437,7 @@ UPDATE  civicrm_participant
                     'toEmail' => $toEmail,
                     'cc'      => CRM_Utils_Array::value('cc_confirm',  $eventDetails),
                     'bcc'     => CRM_Utils_Array::value('bcc_confirm', $eventDetails),
+                    'PDFFilename' => 'Attendee_confirm_copy.pdf'
                 )
             );
             

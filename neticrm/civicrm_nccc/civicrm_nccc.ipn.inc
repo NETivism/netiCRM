@@ -204,5 +204,4 @@ class CRM_Core_Payment_NCCCIPN extends CRM_Core_Payment_BaseIPN {
     );
     CRM_Core_BAO_Note::add( $noteParams, $note_id );
   }
-
 }
