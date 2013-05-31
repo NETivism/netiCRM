@@ -144,7 +144,7 @@
       </table>
      
         <div id="map-field" >
-        <fieldset id="map-field"><legend>{ts}Regular Fees{/ts}</legend>
+        <fieldset id="map-field-set"><legend>{ts}Regular Fees{/ts}</legend>
         {ts}Use the table below to enter descriptive labels and amounts for up to ten event fee levels. These will be presented as a list of radio button options. Both the label and dollar amount will be displayed. You can also configure one or more sets of discounted fees by checking "Discounts by Signup Date" below.{/ts}
         <table id="map-field-table">
         <tr class="columnheader"><td scope="column">{ts}Fee Label{/ts}</td><td scope="column">{ts}Amount{/ts}</td><td scope="column">{ts}Default?{/ts}</td></tr>
