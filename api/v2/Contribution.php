@@ -285,7 +285,7 @@ function &civicrm_contribution_format_create(&$params) {
 function _civicrm_contribute_check_params(&$params) {
   static $required = array('contact_id' => NULL,
     'total_amount' => NULL,
-    'financial_type_id' => 'financial_type',
+#    'financial_type_id' => 'financial_type',
   );
 
   // params should be an array
