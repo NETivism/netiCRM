@@ -23,7 +23,7 @@ msgstr ""
 
 #: civicrm_nccc.checkout.inc:92
 msgid "Before leaving this page, you will need to submit credit card information."
-msgstr "離開此頁面以前，請確認你已經輸入正確的信用卡資訊，以避免交易失敗。"
+msgstr "在還未填寫信用卡卡號、按下「確認付款」前離開此頁面、或重新整理此頁面，都會導致交易失效，必須回到活動報名開始重新輸入資料。"
 
 #: civicrm_nccc.checkout.inc:209
 msgid "This page has expired because security reason. Try again for your transactionin open new window."
