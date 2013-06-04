@@ -38,6 +38,7 @@ class CRM_Core_Payment_NCCCIPN extends CRM_Core_Payment_BaseIPN {
 
     // we use cid from url for mapping contribution
     $this->saveRecord($_GET['cid'], $input);
+    unset($_SESSION['nccc']['submitted']);
     
     // now, retrieve full object by validateData, or false fallback
     if ( ! $this->validateData( $input, $ids, $objects ) ) {

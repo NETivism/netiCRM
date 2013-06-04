@@ -29,6 +29,9 @@ msgstr "在還未填寫信用卡卡號、按下「確認付款」前離開此頁
 msgid "This page has expired because security reason. Try again for your transactionin open new window."
 msgstr "因為安全性的原因，此頁面已過期。請開新視窗重新輸入資料。"
 
+msgid "This message indicate your last payment may not success because you didn't submit credit card information. If you are sure you have completed the transaction, please contact us. Otherwise, you can retry again."
+msgstr "這個訊息表示您最近一次的交易沒有成功送出，可能是您在付款頁面按下重新整理，或在付款頁面回到前一頁，或因為網路斷線問題，導致信用卡付款沒有完成。<br />若您確認信用卡已被授權、扣款成功（例如收到銀行簡訊告知扣款成功），請儘速與我們聯繫，無須重新填寫表格。<br />若您的信用卡沒有任何扣款，建議您重新填寫下方表格，並在信用卡填寫頁面維持網路連線，謝謝您的耐心。"
+
 #: civicrm_nccc.err.inc:7
 msgid "Unknown error"
 msgstr "未知的問題"

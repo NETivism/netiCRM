@@ -92,7 +92,7 @@ function _civicrm_nccc_post_body($redirect_vars){
   $msg = t("Before leaving this page, you will need to submit credit card information.");
   $o .= '<div style="margin:0 auto;width:525px; color:#A00; font-size:16px; text-align:center;">'.$msg.'</div>';
   $o .= '<form action="'.$redirect_vars['#action'].'" name="nccc" method="post" id="nccc-form" target="ncccframe">
-  <iframe name="ncccframe" height="600" width="800" scrolling="auto" align="center" frameborder="0" src="'.$redirect_vars['#action'].'"></iframe>';
+  <iframe name="ncccframe" height="600" width="800" scrolling="auto" align="center" frameborder="0" src="'.$redirect_vars['#action'].'"></iframe><a name="1"></a>';
   foreach($redirect_vars as $k=>$p){
     if($k[0] != '#'){
       $o .= '<input type="hidden" name="'.$k.'" value="'.$p.'" />';
@@ -104,24 +104,36 @@ function _civicrm_nccc_post_body($redirect_vars){
       var msg = "'.$msg.'";
       return msg;
     }
-    setTimeout(function(){ window.onbeforeunload = null; }, 15000);
+    setTimeout(function(){ window.onbeforeunload = null; }, 10000);
     document.forms.nccc.submit();
 
     // prevent back to previous page
-    window.onload = function(){
-      window.location.href += "#";
-      setTimeout("change_hash_again()", 50); 
-    };
-    function change_hash_again() {
-      window.location.href += "1";
+    if($.browser.msie && parseInt($.browser.version, 10) < 8){
     }
-
-    var stored_hash= window.location.hash;
-    window.setInterval(function () {
-      if (window.location.hash != stored_hash) {
-        window.location.hash = stored_hash;
+    else{
+      // zoom
+      if ($.browser.mozilla){
+        $("body").css("MozTransform","scale(1)");
       }
-    }, 50);
+      else{
+        $("body").css("zoom", "100%");
+      }
+
+      window.onload = function(){
+        window.location.href += "#";
+        setTimeout("change_hash_again()", 50); 
+      };
+      function change_hash_again() {
+        window.location.href += "1";
+      }
+
+      var stored_hash= window.location.hash;
+      window.setInterval(function () {
+        if (window.location.hash != stored_hash) {
+          window.location.hash = stored_hash;
+        }
+      }, 50);
+    }
   </script>
   ';
   return $o;
@@ -199,15 +211,18 @@ function _civicrm_nccc_notify_url(&$vars, $path, $component){
 }
 
 function civicrm_nccc_checkout(){
+  if(!empty($_SESSION['nccc']['submitted'])) {
+    drupal_goto($_SESSION['nccc']['path'], $_SESSION['nccc']['query']);
+  }
   drupal_set_header('Pragma: no-cache');
   drupal_set_header('Cache-Control: no-store, no-cache, must-revalidate');
   drupal_set_header('Expires: 0');
 
-  $post =& $_POST['post'];
   
+  $post =& $_POST['post'];
   if(empty($post)){
     return t('This page has expired because security reason. Try again for your transactionin open new window.');
   }
-
+  $_SESSION['nccc']['submitted'] = TRUE;
   return _civicrm_nccc_post_body($post);
 }

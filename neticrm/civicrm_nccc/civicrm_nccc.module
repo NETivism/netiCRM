@@ -47,9 +47,23 @@ function civicrm_nccc_menu(){
  */
 function civicrm_nccc_civicrm_buildForm($form_name, &$form){
   switch($form_name){
+  /*
     case 'CRM_Contribute_Form_Contribution_ThankYou':
+    case 'CRM_Event_Form_Registration_ThankYou':
       break;
+   */
     case 'CRM_Contribute_Form_Contribution_Main':
+    case 'CRM_Event_Form_Registration_Register':
+      if(!empty($_SESSION['nccc']['submitted'])){
+        drupal_set_message(t("This message indicate your last payment may not success because you didn't submit credit card information. If you are sure you have completed the transaction, please contact us. Otherwise, you can retry again."), 'error');
+      }
+      if($_GET['id']){
+        $parsed = parse_url($_SERVER['REQUEST_URI']);
+        $_SESSION['nccc'] = array(
+          'path' => $_GET['q'],
+          'query' => $parsed['query'],
+        );
+      }
       break;
   }
 }
