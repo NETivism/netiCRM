@@ -104,7 +104,7 @@ function _civicrm_nccc_post_body($redirect_vars){
       var msg = "'.$msg.'";
       return msg;
     }
-    setTimeout(function(){ window.onbeforeunload = null; }, 20000);
+    setTimeout(function(){ window.onbeforeunload = null; }, 15000);
     document.forms.nccc.submit();
 
     // prevent back to previous page

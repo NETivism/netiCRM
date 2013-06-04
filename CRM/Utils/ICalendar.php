@@ -56,12 +56,12 @@ class CRM_Utils_ICalendar
     {
         $text = htmlspecialchars_decode($text);
         $text = str_replace(array('&nbsp;', '&nbsp\;'), '', $text);
-        $text = strip_tags($text);
         $text = str_replace("\"", "DQUOTE", $text);
         $text = str_replace("\\", "\\\\", $text);
+        $text = str_replace(array("<br>","<br />","</p>"), "\\n ", $text);
+        $text = strip_tags($text);
         $text = str_replace(",", "\,", $text);
         $text = str_replace(";", "\;", $text);
-        $text = str_replace(array("\n","\r\n"), "\\n ", $text);
         $text = preg_replace('/\s+/u', '', $text);
         $text = implode("\n ", CRM_Utils_ICalendar::mb_str_split($text, 20));
         return $text;

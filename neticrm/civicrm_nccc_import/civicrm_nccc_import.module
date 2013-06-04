@@ -282,7 +282,7 @@ function civicrm_nccc_import_form_submit($form, &$form_state){
           // import contribution
           $params = array( 
             'contact_id' => $d['#contact_id'],
-            'receive_date' => $d['delidate'],
+            'receive_date' => '20'.ltrim($d['delidate'], '20'), // only for this centry
             'total_amount' => $d['amount'],
             'contribution_type_id' => $contribution_type,
             'payment_instrument_id' => $instrument,

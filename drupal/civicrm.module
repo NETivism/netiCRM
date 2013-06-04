@@ -770,6 +770,7 @@ function civicrm_translated_menu_link_alter(&$item) {
     }
 }
 
+/*
 function civicrm_admin_menu( ) {
     if ( ! civicrm_initialize( ) ) {
         return;
@@ -783,8 +784,8 @@ function civicrm_admin_menu( ) {
                      'weight' => $weight,
                      'options' => array( 'query' => 'reset=1' ) );
     return $links;
-
 }
+*/
 
 /**
  * Implementation of hook_views_api().
