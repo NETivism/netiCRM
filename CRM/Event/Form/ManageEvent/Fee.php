@@ -312,6 +312,11 @@ class CRM_Event_Form_ManageEvent_Fee extends CRM_Event_Form_ManageEvent
                           array( 'onclick' => "warnDiscountDel(); return showHideByValue('is_discount','','discount','block','radio',false);" ));
         
         $discountSection = $this->get( 'discountSection' );
+        if(!$discountSection){
+          if($_POST['_qf_Fee_submit']){
+            $discountSection = 2;
+          }
+        }
         
         $this->assign('discountSection', $discountSection);
         

@@ -6,12 +6,19 @@ define('CIVICRM_PARENT_DIR', 'b_a'); // relationship id
  * hook_civicrm_buildForm
  */
 function civicrm_event_parent_civicrm_buildForm( $formName, &$form ) {
+  $reset = true;
+  $session = CRM_Core_Session::singleton( );
+  if ($formName == 'CRM_Event_Form_Registration_Confirm'){
+    $session->getStatus(true);
+  }
+
   // event registration form
   if ( $formName == 'CRM_Event_Form_Registration_Register' ) {
     civicrm_event_parent_civicrm_buildForm_regRegister( $formName, $form );
   }
   // event registration for additional participant
   if ( $formName == 'CRM_Event_Form_Registration_AdditionalParticipant' ) {
+    $session->getStatus(true);
     civicrm_event_parent_civicrm_buildForm_regAdditional( $formName, $form );
   }
 
@@ -134,6 +141,9 @@ function civicrm_event_parent_civicrm_buildForm_regRegister( $formName, &$form )
     }
     // now the real registration process
     else {
+      if($_GET['_qf_Confirm_display'] || $_GET['_qf_ThankYou_display']){
+        return;
+      }
       $status_msg = array(
         '!name' => $display_name,
         '!relationship' => $relation->{$relation_label},

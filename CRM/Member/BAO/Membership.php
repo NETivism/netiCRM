@@ -761,7 +761,7 @@ INNER JOIN  civicrm_membership_type type ON ( type.id = membership.membership_ty
         //avoid pending membership as current memebrship: CRM-3027
         require_once 'CRM/Member/PseudoConstant.php';        
         $pendingStatusId = array_search( 'Pending', CRM_Member_PseudoConstant::membershipStatus( ) );
-        $dao->whereAdd( "status_id != $pendingStatusId" );
+        $dao->whereAdd( "status_id != $pendingStatusId AND join_date IS NOT NULL" );
         
         // order by start date to find mos recent membership first, CRM-4545
         $dao->orderBy('start_date DESC');
