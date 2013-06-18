@@ -625,6 +625,7 @@ SELECT civicrm_custom_group.name as name,
 
     public function buildQuickForm( )  
     { 
+        $this->_eID = CRM_Utils_Request::retrieve( 'eid', 'Positive', $this );
         if ( $this->_showFeeBlock ) {
             return CRM_Event_Form_EventFees::buildQuickForm( $this );
         }
@@ -699,7 +700,7 @@ SELECT civicrm_custom_group.name as name,
         $events = array( );
         $this->assign("past", false);
         require_once "CRM/Event/BAO/Event.php";
-        if ( $this->_action & CRM_Core_Action::UPDATE ) {
+        if ( $this->_action & CRM_Core_Action::UPDATE || $this->_eID) {
             $events = CRM_Event_BAO_Event::getEvents( true, false, false );
         } elseif ( $this->getElementValue( 'past_event' ) )  {
             $events = CRM_Event_BAO_Event::getEvents( true );
@@ -746,7 +747,6 @@ WHERE      civicrm_event.is_template IS NULL OR civicrm_event.is_template = 0";
         // and i did not want to break it late in the 3.2 cycle
         $preloadJSSnippet = null;
         if ( CRM_Utils_Array::value( 'reset', $_GET ) ) {
-            $this->_eID = CRM_Utils_Request::retrieve( 'eid', 'Positive', $this );
             if ( $this->_eID ) {
                 $preloadJSSnippet = "
 cj(function() {
