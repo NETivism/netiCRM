@@ -249,6 +249,7 @@ function civicrm_neweb_process_transaction($is_test, $now = NULL, $pid){
           unset($contribution->trxn_id);
           unset($contribution->invoice_id);
           $contribution->receive_date = date('YmdHis', $now);
+          $contribution->created_date = date('YmdHis', $now);
           $contribution->trxn_id = $t['ORGORDERNUMBER'];
           $params['contribution_status_id'] = 1; // if neweb have transaction, add reucrring to correct status.
         }
