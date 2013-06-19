@@ -50,7 +50,7 @@ function esunbank_api_page(){
     'number' => arg(2),
     'length' => arg(3),
     'price' => arg(4),
-    'timestamp' => strtotime(arg(5)),
+    'timestamp' => arg(5),
     'store' => arg(6),
     'type' => arg(7),
   );
