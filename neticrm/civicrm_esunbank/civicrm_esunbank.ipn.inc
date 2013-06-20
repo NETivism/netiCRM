@@ -19,51 +19,50 @@ function civicrm_esunbank_ipn($post = NULL, $slient = NULL){
     $output = NULL;
     if($data){
       $parsed_data = civicrm_esunbank_parse_response($data);
-      $count = 0;
+      list($last_date, $last_sequence) = explode(':' , variable_get('civicrm_esunbank_sequence', '0:0'));
+      $return = array();
       foreach($parsed_data as $response){
-        $count++;
-        if($count%10 == 0 && function_exists('gc_collect_cycles')){
-          gc_collect_cycles();
+        $sequence = $response['sequence'];
+        $payment_date = date('Ymd', strtotime($response['payment_datetime']));
+        if($silent && $sequence <= $last_sequence && $payment_date == $last_date ){
+          $return[$sequence] = -1;
+          continue;
         }
         // try to find out response component
-        $contribution_id = CRM_Core_DAO::getFieldValue("CRM_Contribute_DAO_Contribution", $response['serial'], 'id', 'trxn_id');
-        $response['cid'] = $contribution_id;
-        drupal_write_record('civicrm_contribution_esunbank', $response, 'cid');
-        $query = CRM_Core_DAO::exeuteQuery("SELECT c.*, p.participant_id FROM civicrm_contribution c LEFT JOIN civicrm_participant_payment p ON p.contribution_id = c.id WHERE id = %1", array(1 => array($contribution_id, 'Integer')) );
-        $query->fetch();
-        if(empty($query->participant_id)){
-          $component = 'contribute';
-        }
-        else{
-          $component = 'event';
-        }
-        $ipn = new CRM_Core_Payment_ESUNBANKIPN();
-        $status = $ipn->main($component, $response, $query);
-        if($status === FALSE){
-          $output .= 'serial:'.$response['serial'].":FAILED\n";
-        }
-        else{
-          $output .= 'serial'.$response['serial'].":$status\n";
+        if(strlen($response['serial'])){
+          $query = CRM_Core_DAO::executeQuery("SELECT c.*, p.participant_id FROM civicrm_contribution c LEFT JOIN civicrm_participant_payment p ON p.contribution_id = c.id WHERE c.trxn_id = %1 AND c.created_date > '%2' AND c.contribution_status_id = 2", array(1 => array($response['serial'], 'String'), 2 => array(date('Y-01-01 00:00:00'), 'Timestamp')) );
+          $query->fetch();
+          $response['cid'] = $query->id;
+          drupal_write_record('civicrm_contribution_esunbank', $response, 'cid');
+
+          if($query->id){
+            if(empty($query->participant_id)){
+              $component = 'contribute';
+            }
+            else{
+              $component = 'event';
+            }
+            $ipn = new CRM_Core_Payment_ESUNBANKIPN();
+            $status = $ipn->main($component, $response, $query);
+          }
+          else{
+            $status = 1;
+          }
+
+          $return[$sequence] = $status;
         }
       }
-
       if($slient){
-        if(empty($output)){
-          return FALSE;
-        }
-        else{
-          return $output;
-        }
+        variable_set("civicrm_esunbank_sequence", "$payment_date:$sequence");
+        return $return;
       }
       // after all script processed, we always output OK for esunbank https
       else{
         print 'OK';
       }
     }
-    else{
-      watchdog("civicrm_esunbank", "Could not find POST data from payment server", NULL, WATCHDOG_WARNING);
-    }
   }
+  return FALSE;
 }
 
 function civicrm_esunbank_parse_response($data){
@@ -109,16 +108,16 @@ class CRM_Core_Payment_ESUNBANKIPN extends CRM_Core_Payment_BaseIPN {
     $input['component'] = $component;
 
     // ids
-    $ids['contact'] = $contribution['contact_id'];
-    $ids['contribution'] = $contribution['id'];
+    $ids['contact'] = $contribution->contact_id;
+    $ids['contribution'] = $contribution->id;
     if ( $component == 'event' ) {
-      $ids['event'] = CRM_Core_DAO::getFieldValue("CRM_Event_DAO_Participant", $contribution['participant_id'], 'event_id', 'id');
-      $ids['participant'] = $contribution['participant_id'];
+      $ids['event'] = CRM_Core_DAO::getFieldValue("CRM_Event_DAO_Participant", $contribution->participant_id, 'event_id', 'id');
+      $ids['participant'] = $contribution->participant_id;
     }
     else {
       $ids['membership'] = $_GET['mid'];
-      $ids['contributionRecur'] = $contribution['contribution_recur_id'];
-      $ids['contributionPage'] = $contribution['contribution_page_id'];
+      $ids['contributionRecur'] = $contribution->contribution_recur_id;
+      $ids['contributionPage'] = $contribution->contribution_page_id;
       /*
       $ids['related_contact'] = $_GET['rid'];
       $ids['onbehalf_dupe_alert'] = $_GET['onbehalf_dupe_alert'];
@@ -151,7 +150,8 @@ class CRM_Core_Payment_ESUNBANKIPN extends CRM_Core_Payment_BaseIPN {
       $note = '';
       $contribution =& $objects['contribution'];
       $contribution->receive_date = date('YmdHis', strtotime($input['payment_datetime']));
-      $contribution->source .= '-玉山'.$input['instrument'];
+      list($source) = explode('-玉山', $contribution->source);
+      $contribution->source = $source.'-玉山('.$input['instrument'].')';
       $input['trxn_id'] = $input['serial'];
       $this->completeTransaction( $input, $ids, $objects, $transaction, $recur );
       $note .= ts('Completed')."\n";
