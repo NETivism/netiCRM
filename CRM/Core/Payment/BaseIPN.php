@@ -64,6 +64,7 @@ class CRM_Core_Payment_BaseIPN {
             return false;
         }
         $contribution->receive_date = CRM_Utils_Date::isoToMysql($contribution->receive_date); 
+        $contribution->created_date = CRM_Utils_Date::isoToMysql($contribution->created_date);
 
         $objects['contact']          =& $contact;
         $objects['contribution']     =& $contribution;
@@ -428,6 +429,7 @@ class CRM_Core_Payment_BaseIPN {
         $contribution->net_amount   = $input['net_amount'];
         $contribution->trxn_id      = $input['trxn_id'];
         $contribution->receive_date = CRM_Utils_Date::isoToMysql($contribution->receive_date);
+        $contribution->receive_date = CRM_Utils_Date::isoToMysql($contribution->created_date);
         $contribution->cancel_date  = 'null';
         
         if ( CRM_Utils_Array::value('check_number', $input) ) {
