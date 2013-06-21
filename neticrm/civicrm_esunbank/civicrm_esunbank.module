@@ -60,7 +60,7 @@ function civicrm_esunbank_cron(){
 
   // expired
   // every day, we check if payment should expired.
-  // we will expired payment in 8 day before.
+  // we will expired payment in 10 day before. (only for esunbank instrument)
   if(date('G') > 2 && date('G') < 5){
     $status = CRM_Contribute_PseudoConstant::contributionStatus(NULL, 'name');
     $instrument_id = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionValue', 'Esunbank', 'value', 'name');
@@ -68,9 +68,9 @@ function civicrm_esunbank_cron(){
     $pending = array_search('Pending', $status);
     $gid = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_option_group WHERE name LIKE 'payment_instrument'");
     if(!empty($instrument_id) && !empty($overdue) && !($pending)){
-      $eight_days = date('Y-m-d H:i:s', $now - 86400*8);
-      $nine_days = date('Y-m-d H:i:s', $now - 86400*9);
-      CRM_Core_DAO::executeQuery("UPDATE civicrm_contribution SET contribution_status_id = {$overdue} WHERE contribution_status_id = {$pending} AND created_date > '{$nine_days}' AND created_date < {$eight_days} AND payment_instrument_id = {$instrument_id}");
+      $days_before = date('Y-m-d H:i:s', $now - 86400*10);
+      $days_after = date('Y-m-d H:i:s', $now - 86400*11);
+      CRM_Core_DAO::executeQuery("UPDATE civicrm_contribution SET contribution_status_id = {$overdue} WHERE contribution_status_id = {$pending} AND created_date > '{$days_after}' AND created_date < {$days_before} AND payment_instrument_id = {$instrument_id}");
     }
   }
 }
