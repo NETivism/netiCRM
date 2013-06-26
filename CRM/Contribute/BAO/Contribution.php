@@ -1972,6 +1972,9 @@ SELECT source_contact_id
           watchdog('civicrm', $last.":".$receipt_id);
 
           $contribution->receipt_id = $receipt_id;
+          if(!empty($contribution->created_date)){
+            $contribution->created_date = CRM_Utils_Date::isoToMysql($contribution->created_date);
+          }
           if($save && $contribution->id){
             $contribution->save();
           }

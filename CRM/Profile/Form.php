@@ -649,7 +649,7 @@ class CRM_Profile_Form extends CRM_Core_Form
 		                 }
 		
 		                 $duplicateContactsLinks .= $row.'</table>';
-		                 $duplicateContactsLinks .= "If you're sure this record is not a duplicate, click the 'Save Matching Contact' button below.";
+		                 $duplicateContactsLinks .= ts("If you're sure this record is not a duplicate, click the 'Save Matching Contact' button below.");
 		                 
 						 $errors['_qf_default'] = $duplicateContactsLinks;
                         

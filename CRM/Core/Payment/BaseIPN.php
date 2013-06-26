@@ -234,6 +234,9 @@ class CRM_Core_Payment_BaseIPN {
         $participant  =& $objects['participant'] ;
 
         $contribution->contribution_status_id = 4;
+        if(!empty($contribution->created_date)){
+          $contribution->created_date = CRM_Utils_Date::isoToMysql($contribution->created_date);
+        }
         $contribution->save( );
 
         if ( $membership ) {
@@ -272,6 +275,9 @@ class CRM_Core_Payment_BaseIPN {
         $contribution->contribution_status_id = 3;
         $contribution->cancel_date = self::$_now;
         $contribution->cancel_reason = CRM_Utils_Array::value( 'reasonCode', $input );
+        if(!empty($contribution->created_date)){
+          $contribution->created_date = CRM_Utils_Date::isoToMysql($contribution->created_date);
+        }
         $contribution->save( );
 
         if ( $membership ) {
