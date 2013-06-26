@@ -120,7 +120,7 @@ class CRM_Member_BAO_Membership extends CRM_Member_DAO_Membership
         $membershipLog = array('membership_id' => $membership->id,
                                'status_id'     => $membership->status_id,
                                'start_date'    => $logStartDate,
-                               'end_date'      => $membership->end_date,
+                               'end_date'      => CRM_Utils_Date::isoToMysql( $membership->end_date ),
                                'renewal_reminder_date' => $membership->reminder_date, 
                                'modified_id'   => CRM_Utils_Array::value( 'userId', $ids ),
                                'modified_date' => date('Ymd')
@@ -207,7 +207,12 @@ class CRM_Member_BAO_Membership extends CRM_Member_DAO_Membership
                 $startDate  = CRM_Utils_Date::customFormat($params['start_date'],'%Y%m%d');
             }
             if ( isset( $params['end_date'] ) ) {
-                $endDate    = CRM_Utils_Date::customFormat($params['end_date'],'%Y%m%d');
+                if ( $params['end_date'] == 'null') {
+                   $endDate = null;
+                }
+                else{
+                   $endDate = CRM_Utils_Date::customFormat($params['end_date'],'%Y%m%d');
+                }
             }
             if ( isset( $params['join_date'] ) ) {
                 $joinDate   = CRM_Utils_Date::customFormat($params['join_date'],'%Y%m%d');
