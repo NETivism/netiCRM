@@ -2542,11 +2542,12 @@ div.helpicon {
     background  : transparent url(../i/quiz.png) no-repeat;
     display     : inline;
     cursor      : pointer;
-    background-position:-128px -98px;
+    background-position: -50px -146px;
     background-image:url(../i/icons/jquery-ui-52534D.png);
-    background-color:transparent;
-    width:16px;
-    height:16px;
+    background-color:#efefef;
+    border-radius: 6px;
+    width:12px;
+    height:12px;
     z-index:1;
     position:absolute;
 }
@@ -2554,6 +2555,10 @@ div.helpicon {
 div.crm-accordion-header div.helpicon {
     background-image:url(../i/icons/jquery-ui-F5F6F1.png);
     float: right;
+}
+div.helpicon:hover, div.helpicon:focus {
+  background-image: url(../i/icons/jquery-ui-2786C2.png);
+  opacity: 1;
 }
 
 div.statusicon {
@@ -3188,4 +3193,9 @@ div#crm-toolTip
 
 .online-template-link {
   cursor: pointer;
+}
+
+.ui-widget-overlay {
+  opacity: .6;
+  filter: Alpha(Opacity=60);
 }
