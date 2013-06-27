@@ -23,6 +23,7 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
+<script type="text/javascript" src="{$config->resourceBase}packages/jquery/plugins/jquery.fieldselection.js"></script>
 {literal}
 <script type="text/javascript" >
 var text_message = null;
@@ -324,10 +325,11 @@ function selectValue( val ) {
             width       : '310px',
             resizable   : false,
             bgiframe    : false,
-            overlay     : { opacity: 0.5, background: "black" },
+            position    : { my: "left top", at: "left bottom" },
+            overlay     : { opacity: 0.9, background: "black" },
             beforeclose : function(event, ui) { cj(this).dialog("destroy"); },
             buttons     : { 
-                "Done": function() { 
+                {/literal}"{ts}Done{/ts}"{literal}: function() { 
                     cj(this).dialog("close");
                         //focus on editor/textarea after token selection     
                         if (element == 'Text') {
