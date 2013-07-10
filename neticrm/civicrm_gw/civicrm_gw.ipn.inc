@@ -74,16 +74,19 @@ class CRM_Core_Payment_GWIPN extends CRM_Core_Payment_BaseIPN {
           echo 'OK';
         }
       }
+      else{
+        $note .= ts('Failed')."\n";
+        drupal_set_message(ts("Failed").":".$input['response_msg']."({$input['response_code']})", 'error');
+        $this->addNote($note, $objects['contribution']);
+      }
     }
     
     // error stage: doesn't goto and not the background posturl
-    /* Still need to define the best way to handle this
     if(!$_GET['bg']){
       $error_base_url =  $component == 'event' ? 'civicrm/event/confirm' : 'civicrm/contribute/transact';
       $error_argument = $component == 'event' ? "reset=1&cc=fail&participantId={$ids['participant']}" : "_qf_Main_display=1&cancel=1&qfKey=$qfKey";
       drupal_goto($error_base_url, $error_argument);
     }
-    */
   }
 
   function saveRecord($cid, &$input){
@@ -230,6 +233,7 @@ class CRM_Core_Payment_GWIPN extends CRM_Core_Payment_BaseIPN {
     if(!$input['succ']){
       $response_code = $input['response_code'];
       $response_msg = $input['response_msg'];
+      $note .= "Failed $response_code: $response_msg";
       $this->failed( $objects, $transaction );
       $pass = FALSE;
     }
