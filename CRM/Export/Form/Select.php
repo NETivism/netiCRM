@@ -192,11 +192,13 @@ FROM   {$this->_componentTable}
     {
         //export option
         $exportOptions = $mergeHousehold = $mergeAddress = array();        
+        /*
         $exportOptions[] = HTML_QuickForm::createElement('radio',
                                                          null, null,
                                                          ts('Export PRIMARY fields'),
                                                          self::EXPORT_ALL,
                                                          array( 'onClick' => 'showMappingOption( );' ));
+        */
         $exportOptions[] = HTML_QuickForm::createElement('radio',
                                                          null, null,
                                                          ts('Select fields for export'),

@@ -101,9 +101,11 @@ function civicrm_twaddress_civicrm_buildForm($formName, &$form) {
   }
 
   // we don't support outside of civicrm yet
+  /*
   if(arg(0) != 'civicrm'){
     return;
   }
+  */
   
   // we don't support ajax form
   $deny = array();
@@ -232,7 +234,7 @@ function _civicrm_twaddress_webform_key($name){
 
 function _civicrm_twaddress_grouping_js(){
   $js = '
-    $(document).ready(function(){
+    jQuery(function($){
       // find a address group to collapsed to single line
       var ids = {};
       var addr_fields = $(".crm-section").filter(function(){
@@ -278,8 +280,9 @@ function _civicrm_twaddress_common_js($field, $form_name, $add_js = TRUE){
     $insert = "<select name='{$field['areaName'][$k]['key']}' class='form-select'></select>";
 
     $js = '
-    $(document).ready(function(){
+    jQuery(function($){
       if( $("input[name=\''.$field['areaName'][$k]['name'].'\']").length ){
+        var $form = $("input[name=\''.$field['areaName'][$k]['name'].'\']").parents("form");
         $("'.$insert.'").insertAfter("input[name=\''.$field['areaName'][$k]['name'].'\']");
         $("input[name=\''.$field['areaName'][$k]['name'].'\']").hide();
         $("select[name=\''.$field['areaName'][$k]['key'].'\']").change(function(){
@@ -288,7 +291,7 @@ function _civicrm_twaddress_common_js($field, $form_name, $add_js = TRUE){
         });
         $("input[name='.$field['zipName'][$k]['key'].']").addClass("readonly post-code");
 
-        $("form[name='.$form_name.']").twzipcode({
+        $form.twzipcode({
           zipName:"'.$field['zipName'][$k]['key'].'",
           countyName:"'.$field['countyName'][$k]['key'].'",
           areaName:"'.$field['areaName'][$k]['key'].'",
@@ -316,7 +319,7 @@ function _civicrm_twaddress_webform_js($field, $form_name, $add_js = TRUE){
     $insert = "<select name='{$field['areaName'][$k]['key']}' class='form-select'></select>";
 
     $js = '
-    $(document).ready(function(){
+    jQuery(function($){
       if( $("input[name*=\''.$field['areaName'][$k]['name'].'\']").length ){
         $("'.$insert.'").insertAfter("input[name*=\''.$field['areaName'][$k]['name'].'\']");
         $("input[name*=\''.$field['areaName'][$k]['name'].'\']").hide();

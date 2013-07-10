@@ -47,7 +47,7 @@
 <div class="head"><?php print $vars['site_name']; ?><span>超商/郵局/ATM/玉山銀行代收</span>繳款單</div>
 <h2>第二聯  代理收款傳票</h2>
 <div class="payment-info payment-info-store">
-<h3>便利商店專用（上限2萬元）</h3>
+<h3>便利商店專用（上限2萬元）- 可至統一超商/全家/OK/萊爾富便利商店繳納</h3>
 <?php
 foreach($vars['barcode_store'] as $k => $v){
   $c++;
@@ -56,7 +56,7 @@ foreach($vars['barcode_store'] as $k => $v){
 ?>
 </div>
 <div class="payment-info payment-info-atm">
-<h3>ATM轉帳/玉山銀行繳款</h3>
+<h3>ATM轉帳/玉山銀行繳款 - 可用網路ATM或實體ATM或至玉山銀行臨櫃繳納</h3>
 <div class="bank-right">
   <p><label>繳款人：</label><?php print $vars['user']; ?></p>
   <p><label>繳款日：</label>中華民國&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;月&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日</p>
@@ -85,7 +85,7 @@ foreach($vars['barcode_store'] as $k => $v){
 </table>
 </div>
 <div class="payment-info payment-info-post-office">
-<h3>郵局專用</h3>
+<h3>郵局專用 - 可至各郵局櫃臺繳納</h3>
 <?php if($postoffice_account){ ?><div class="postoffice-account"><?php print $postoffice_account; ?></div><?php } ?>
 <div class="bar"><?php print $vars['barcode_postoffice']['a']; ?><div class="code"><label class="b">郵政劃撥：</label>*<?php print $vars['serial_postoffice']['a']; ?>*</div></div>
 <div class="bar"><?php print $vars['barcode_postoffice']['b']; ?><div class="code"><label class="b">繳款帳號：</label>*<?php print $vars['serial_postoffice']['b']; ?>*</div></div>

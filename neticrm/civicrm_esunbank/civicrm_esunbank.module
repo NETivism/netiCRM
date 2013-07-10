@@ -55,22 +55,22 @@ function civicrm_esunbank_cron(){
       // start trying process ftp data
       file_scan_directory($dir, '.csv', array('.', '..', 'CVS'), 'civicrm_esunbank_process_file', FALSE);
     }
-    variable_set("civicrm_esunbank_cron", $now);
+    variable_set("civicrm_esunbank_cron", $_SERVER['REQUEST_TIME']);
   }
 
   // expired
   // every day, we check if payment should expired.
-  // we will expired payment in 8 day before.
+  // we will expired payment in 10 day before. (only for esunbank instrument)
   if(date('G') > 2 && date('G') < 5){
     $status = CRM_Contribute_PseudoConstant::contributionStatus(NULL, 'name');
+    $instrument_id = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionValue', 'Esunbank', 'value', 'name');
     $overdue = array_search('Overdue', $status);
     $pending = array_search('Pending', $status);
     $gid = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_option_group WHERE name LIKE 'payment_instrument'");
-    $instrument_id = CRM_Core_DAO::singleValueQuery("SELECT value FROM civicrm_option_value WHERE option_group_id = {$gid} AND name = 'Esunbank'");
     if(!empty($instrument_id) && !empty($overdue) && !($pending)){
-      $eight_days = date('Y-m-d H:i:s', $now - 86400*8);
-      $nine_days = date('Y-m-d H:i:s', $now - 86400*9);
-      CRM_Core_DAO::executeQuery("UPDATE civicrm_contribution SET contribution_status_id = {$overdue} WHERE contribution_status_id = {$pending} AND created_date > '{$nine_days}' AND created_date < {$eight_days}");
+      $days_before = date('Y-m-d H:i:s', $now - 86400*10);
+      $days_after = date('Y-m-d H:i:s', $now - 86400*11);
+      CRM_Core_DAO::executeQuery("UPDATE civicrm_contribution SET contribution_status_id = {$overdue} WHERE contribution_status_id = {$pending} AND created_date > '{$days_after}' AND created_date < {$days_before} AND payment_instrument_id = {$instrument_id}");
     }
   }
 }
@@ -81,20 +81,18 @@ function civicrm_esunbank_process_file($path){
     $data = file_get_contents($path);
     if(!empty($data)){
       $post = array('Data' => $data);
-      $output = civicrm_esunbank_ipn($post, TRUE);
-      if(strstr($output, 'serial:')){
-        file_move($path, $dest, FILE_EXISTS_RENAME);
-        if(strstr($output, ':FAILED' )){
-          watchdog('civicrm_esunbank', 'Process Failed: '. $path."\n".$output, NULL, WATCHDOG_ERROR);
-        }
+      $results = civicrm_esunbank_ipn($post, TRUE);
+
+      // file move, we can't use drupal file_move because it's only move to drupal
+      if (copy($path, $dest)) {
+        unlink($path);
       }
-      // still remove file if file parsed then have bunch of errors
-      elseif($output === FALSE){
-        file_move($path, $dest, FILE_EXISTS_RENAME);
-        watchdog('civicrm_esunbank', 'Process Failed: '. $path, NULL, WATCHDOG_ERROR);
+
+      if($results === FALSE){
+        // empty results
       }
       else{
-        watchdog('civicrm_esunbank', 'Unknown Failed: '. $path."\n".$output, NULL, WATCHDOG_ERROR);
+        watchdog('civicrm_esunbank', var_export($results, true));
       }
     }
   }

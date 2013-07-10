@@ -64,6 +64,7 @@ class CRM_Core_Payment_BaseIPN {
             return false;
         }
         $contribution->receive_date = CRM_Utils_Date::isoToMysql($contribution->receive_date); 
+        $contribution->created_date = CRM_Utils_Date::isoToMysql($contribution->created_date);
 
         $objects['contact']          =& $contact;
         $objects['contribution']     =& $contribution;
@@ -319,7 +320,7 @@ class CRM_Core_Payment_BaseIPN {
         if ( $input['component'] == 'contribute' ) {
             require_once 'CRM/Contribute/BAO/ContributionPage.php';
             CRM_Contribute_BAO_ContributionPage::setValues( $contribution->contribution_page_id, $values );
-            $contribution->source = $values['title'];
+            $contribution->source = !empty($contribution->source) ? $contribution->source : $values['title'];
             
             if ( $values['is_email_receipt'] ) {
                 $contribution->receipt_date = self::$_now;
@@ -416,7 +417,7 @@ class CRM_Core_Payment_BaseIPN {
             $ufJoinParams['weight'] = 2;
             $values['custom_post_id'] = CRM_Core_BAO_UFJoin::findUFGroupId( $ufJoinParams );
 
-            $contribution->source                  = ts( 'Online Event Registration' ) . ': ' . $values['event']['title'];
+            $contribution->source = !empty($contribution->source) ? $contribution->source :  ts('Online Event Registration').':'.$values['event']['title'];
 
             if ( $values['event']['is_email_confirm'] ) {
                 $contribution->receipt_date = self::$_now;
