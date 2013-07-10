@@ -76,7 +76,7 @@ class CRM_Core_Payment_GWIPN extends CRM_Core_Payment_BaseIPN {
       }
       else{
         $note .= ts('Failed')."\n";
-        drupal_set_message(ts("Failed").":".$input['response_msg']."({$input['response_code']})", 'error');
+        drupal_set_message(ts("Payment Information").": ".ts("Failed").' - '.$input['response_msg']."({$input['response_code']})", 'error');
         $this->addNote($note, $objects['contribution']);
       }
     }
