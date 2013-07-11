@@ -329,9 +329,7 @@ abstract class CRM_Import_Parser {
             $config = CRM_Core_Config::singleton( );
             $statusFile = "{$config->uploadDir}status_{$statusID}.txt";
             $status = "<div class='description'>&nbsp; " . ts('No processing status reported yet.') . "</div>";
-            require_once 'Services/JSON.php';
-            $json = new Services_JSON( ); 
-            $contents = $json->encode( array( 0, $status ) );
+            $contents = json_encode( array( 0, $status ) );
 
             file_put_contents( $statusFile, $contents );
 
@@ -339,9 +337,6 @@ abstract class CRM_Import_Parser {
         
         }
 
-        // put this outside the while loop
-        require_once 'Services/JSON.php';
-        
         // get the contents of the temp. import table
         $query = "SELECT * FROM $tableName";
         if ( $mode == self::MODE_IMPORT ) {
@@ -399,8 +394,7 @@ abstract class CRM_Import_Parser {
 </div>
 ";
 
-                    $json = new Services_JSON( ); 
-                    $contents = $json->encode( array( $processedPercent, $status ) );
+                    $contents = json_encode( array( $processedPercent, $status ) );
 
                     file_put_contents( $statusFile, $contents );
 
