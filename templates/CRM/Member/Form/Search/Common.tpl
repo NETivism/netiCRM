@@ -85,14 +85,5 @@
     </td>
 </tr>
 {/if}
-{literal}
-<script type="text/javascript"> 
-cj(document).ready(function(){
-  cj('select[name^="member_membership_type_id"], select[name^="member_status_id"]').chosen({
-    "search_contains": true,
-    "placeholder_text": "{/literal}{ts}-- Select --{/ts}{literal}",
-    "no_results_text": "{/literal}{ts}No matches found.{/ts}{literal}"
-  });
-});
-</script>
-{/literal}
+
+{include file="CRM/common/chosen.tpl" selector='select[name^=member_membership_type_id], select[name^=member_status_id]'}

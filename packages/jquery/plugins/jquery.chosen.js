@@ -328,7 +328,6 @@ Copyright (c) 2011 by Harvest
       this.container_id = this.form_field.id.length ? this.form_field.id.replace(/[^\w]/g, '_') : this.generate_field_id();
       this.container_id += "_chzn";
       this.f_width = this.form_field_jq.outerWidth() ? this.form_field_jq.outerWidth() : 150;
-      this.f_width = this.is_multiple ? this.f_width*2 : this.f_width;
       container_div = $("<div />", {
         id: this.container_id,
         "class": "chzn-container" + (this.is_rtl ? ' chzn-rtl' : ''),

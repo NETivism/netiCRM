@@ -29,11 +29,11 @@ msgstr "請輸入分機號碼"
 
 #: civicrm_jvalidate.module:18
 msgid "other format?"
-msgstr "其他格式？"
+msgstr "若您是外籍人士，點此輸入護照號碼"
 
 #: civicrm_jvalidate.module:19
 msgid "Enter id below."
-msgstr "在下方輸入id"
+msgstr "在下方輸入ID"
 
 #: civicrm_jvalidate.info:0
 msgid "Jquery Form Validation"
@@ -46,4 +46,3 @@ msgstr "此模組是用於 CiviCRM 表單 的 jquery 驗證插件。"
 #: civicrm_jvalidate.info:0
 msgid "NetiCRM"
 msgstr "NetiCRM"
-

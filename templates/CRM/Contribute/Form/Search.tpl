@@ -80,13 +80,5 @@
 cj(function() {
    cj().crmaccordions(); 
 });
-cj(document).ready(function(){
-  cj('.crm-form-block-search select').chosen({
-    "search_contains": true,
-    "placeholder_text": "{/literal}{ts}-- Select --{/ts}{literal}",
-    "no_results_text": "{/literal}{ts}No matches found.{/ts}{literal}"
-  });
-});
 </script>
 {/literal}
-

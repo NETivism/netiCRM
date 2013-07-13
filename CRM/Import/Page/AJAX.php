@@ -56,10 +56,8 @@ class CRM_Import_Page_AJAX
             $str = file_get_contents( $file );
             echo $str;
         } else {
-            require_once 'Services/JSON.php';
-            $json = new Services_JSON( );
             $status = "<div class='description'>&nbsp; " . ts('No processing status reported yet.') . "</div>";
-            echo $json->encode( array( 0, $status ) );
+            echo json_encode( array( 0, $status ) );
         }
         CRM_Utils_System::civiExit( );
     }
