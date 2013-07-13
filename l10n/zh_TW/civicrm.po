@@ -26413,7 +26413,7 @@ msgstr "每%1 %2此定期定額捐款會自動被處理。"
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid "You can modify or cancel future contributions at any time by <a href='%1'>logging in to your account</a>."
-msgstr "您可以<a href='%1'>登入</a>，隨時修改或取消您的捐款設定。"
+msgstr "若對捐款有任何疑問，請直接與我們聯繫。"
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid "To modify or cancel future contributions please contact us at %1."
@@ -26425,7 +26425,7 @@ msgstr "每次定期定額捐款，我們都會發送收據至您的 Email 中�
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid "The receipts will also include a link you can use if you decide to modify or cancel your future contributions."
-msgstr "您可以使用收據裡的連結，修改或取消後續的捐款。"
+msgstr "若您要修改/取消後續捐款，也請直接聯繫我們。"
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid "We will record your initial pledge payment when we receive it from you. You will be able to modify or cancel future pledge payments at any time by logging in to your account or contacting us at %1."
@@ -35245,7 +35245,7 @@ msgstr "參加者 %1"
 
 #: xml/templates/message_templates/event_online_receipt_subject.tpl
 msgid "Wait List Confirmation"
-msgstr "Wait List Confirmation"
+msgstr "活動報名候補通知信"
 
 #: xml/templates/message_templates/friend_html.tpl
 msgid "More information"
