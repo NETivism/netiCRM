@@ -51,3 +51,4 @@
          {/if}
     </table>         
 </div>
+{include file="CRM/common/chosen.tpl" selector='select[name=relation_type_id]'}

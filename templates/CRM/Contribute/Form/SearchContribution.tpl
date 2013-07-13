@@ -43,12 +43,5 @@
     </tr>
  </table>
 </div>
-{literal}
-<script type="text/javascript">
-cj("select#contribution_type_id").chosen({
-  "search_contains": true,
-  "placeholder_text": "{/literal}{ts}-- Select --{/ts}{literal}",
-  "no_results_text": "{/literal}{ts}No matches found.{/ts}{literal}"
-});
-</script>
-{/literal}
+{include file="CRM/common/chosen.tpl" selector="select#contribution_type_id"}
+
