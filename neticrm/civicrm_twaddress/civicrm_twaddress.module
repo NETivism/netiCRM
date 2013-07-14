@@ -331,9 +331,6 @@ function _civicrm_twaddress_webform_js($field, $form_name, $add_js = TRUE){
         var zipname = $("input[name*=\''.$field['zipName'][$k]['key'].'\']").attr("name");
         var areaname = $("select[name*=\''.$field['areaName'][$k]['key'].'\']").attr("name");
         var countyname = $("select[name*=\''.$field['countyName'][$k]['key'].'\']").attr("name");
-        console.log(zipname);
-        console.log(areaname);
-        console.log(countyname);
 
         $("form[name='.$form_name.']").twzipcode({
           zipName:zipname,

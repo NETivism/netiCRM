@@ -84,12 +84,6 @@ cj('#event_type').autocomplete( typeUrl, { width : 180, selectFirst : false, mat
 cj('#participant_fee_level').autocomplete( feeUrl, { width : 180, selectFirst : false, matchContains: true
                                          }).result(function(event, data, formatted) { cj( "input#participant_fee_id" ).val( data[1] );
                                          }).bind( 'click', function( ) { cj( "input#participant_fee_id" ).val(''); });
-cj(document).ready(function(){
-  cj('select[name^="participant_status_id"], select[name^="participant_role_id"]').chosen({
-    "search_contains": true,
-    "placeholder_text": "{/literal}{ts}-- Select --{/ts}{literal}",
-    "no_results_text": "{/literal}{ts}No matches found.{/ts}{literal}"
-  });
-});
 </script>
 {/literal}
+{include file="CRM/common/chosen.tpl" selector="select[name^=participant_status_id],select[name^=participant_role_id]"}

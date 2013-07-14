@@ -4,6 +4,8 @@ require_once '../civicrm.config.php';
 require_once 'CRM/Core/Config.php';
 require_once 'CRM/Core/Error.php';
 require_once 'CRM/Utils/Array.php';
+require_once 'CRM/Utils/System.php';
+require_once 'CRM/Utils/System/Drupal.php';
 
 $config = CRM_Core_Config::singleton();
 

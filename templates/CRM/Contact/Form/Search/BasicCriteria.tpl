@@ -210,10 +210,7 @@ dojo.addOnLoad( function( ) {
 cj(function() {
    cj().crmaccordions(); 
 });
-cj("select#contact_type, select#group, select#tag").chosen({
-  "search_contains": true,
-  "placeholder_text": "{/literal}{ts}-- Select --{/ts}{literal}",
-  "no_results_text": "{/literal}{ts}No matches found.{/ts}{literal}"
-});
 </script>
 {/literal}
+{include file="CRM/common/chosen.tpl" selector="select#contact_type,select#group,select#tag"}
+

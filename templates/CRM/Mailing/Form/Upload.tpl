@@ -49,7 +49,7 @@
     {/if}
     <tr class="crm-mailing-upload-form-block-template">
     	<td class="label">{$form.template.label}</td>
-      <td colspan="2">{$form.template.html} <a id="online-template-link" class="online-template-link" href="https://neticrm.tw/enews/embed?embed=1" title="{ts}Online tempalte{/ts}" style="display:none;">{ts}Online tempalte{/ts}</a></td>
+      <td colspan="2">{$form.template.html} <a id="online-template-link" class="online-template-link" href="https://neticrm.tw/enews/embed?embed=1" title="{ts}Online tempalte{/ts}">{ts}Online tempalte{/ts}</a></td>
     </tr>
     <tr class="crm-mailing-upload-form-block-subject"><td class="label">{$form.subject.label}</td>
         <td colspan="2">{$form.subject.html|crmReplace:class:huge}

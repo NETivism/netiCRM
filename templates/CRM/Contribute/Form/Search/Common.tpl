@@ -87,3 +87,5 @@
 	{include file="CRM/Custom/Form/Search.tpl" groupTree=$contributeGroupTree showHideLinks=false}</td>
 </tr>
 {/if}
+
+{include file="CRM/common/chosen.tpl" selector="#contribution_payment_instrument_id,#contribution_page_id,#contribution_pcp_made_through_id,#contribution_currency_type,#contribution_type_id"}

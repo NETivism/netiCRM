@@ -62,12 +62,8 @@
 if ( document.getElementsByName('eventsByDates')[1].checked ) {
    show( 'id_fromToDates', 'block' );
 }
-cj("select#event_type_id").chosen({
-  "search_contains": true,
-  "placeholder_text": "{/literal}{ts}-- Select --{/ts}{literal}",
-  "no_results_text": "{/literal}{ts}No matches found.{/ts}{literal}"
-});
 cj("input[name=eventsByDates]").click();
 showHideByValue('eventsByDates','1','id_fromToDates','block','radio',true);
 </script>
 {/literal} 
+{include file="CRM/common/chosen.tpl" selector="select#event_type_id"}

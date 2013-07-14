@@ -361,21 +361,21 @@ class CRM_Mailing_Form_Test extends CRM_Core_Form {
 
     if (CRM_Utils_Array::value('sendtest', $testParams)) {
       require_once 'CRM/Mailing/Info.php';
-      $status = ts('Your test message has been sent.');
+      $status = 'Your test message has been sent.';
       if (CRM_Mailing_Info::workflowEnabled()) {
         if ((CRM_Core_Permission::check('schedule mailings') &&
             CRM_Core_Permission::check('create mailings')
           ) ||
           CRM_Core_Permission::check('access CiviMail')
         ) {
-          $status .= ts(" Click 'Next' when you are ready to Schedule or Send your live mailing (you will still have a chance to confirm or cancel sending this mailing on the next page).");
+          $status .= " Click 'Next' when you are ready to Schedule or Send your live mailing (you will still have a chance to confirm or cancel sending this mailing on the next page).";
         }
       }
       else {
-        $status .= ts(" Click 'Next' when you are ready to Schedule or Send your live mailing (you will still have a chance to confirm or cancel sending this mailing on the next page).");
+        $status .= " Click 'Next' when you are ready to Schedule or Send your live mailing (you will still have a chance to confirm or cancel sending this mailing on the next page).";
       }
 
-      CRM_Core_Session::setStatus($status);
+      CRM_Core_Session::setStatus(ts($status));
       $url = CRM_Utils_System::url($urlString, $urlParams);
       CRM_Utils_System::redirect($url);
     }
