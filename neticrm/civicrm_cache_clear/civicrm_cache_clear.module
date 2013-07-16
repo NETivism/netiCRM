@@ -1,0 +1,9 @@
+<?php
+
+function civicrm_cache_clear_civicrm_postProcess($form_name, &$form){
+  if(module_exists('boost')){
+    if($form_name == 'CRM_Event_Form_ManageEvent_EventInfo'){
+
+    }
+  }
+}
