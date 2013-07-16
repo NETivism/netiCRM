@@ -1,9 +1,33 @@
 <?php
-
+function civicrm_cache_clear_boost_is_cacheable($path){
+  if(arg(0) == 'civicrm'){
+    if($_GET['qfKey']) return FALSE;
+    if($_GET['snippet']) return FALSE;
+    if(!empty($_POST)) return FALSE;
+    if(strpos($path, 'ivicrm/event/register')) return FALSE;
+    if(strpos($path, 'ivicrm/contribute/transact')) return FALSE;
+  }
+  return NULL;
+}
 function civicrm_cache_clear_civicrm_postProcess($form_name, &$form){
-  if(module_exists('boost')){
-    if($form_name == 'CRM_Event_Form_ManageEvent_EventInfo'){
+  if(strpos($form_name, 'CRM_Event_Form_ManageEvent_') === 0){
+    _civicrm_cache_clear_eventinfo($form->_id);
+  }
+}
 
+function civicrm_cache_clear_civicrm_post($op, $obj_name, $obj_id, &$obj){
+  if($obj_name == 'Participant' && !empty($obj->event_id)){
+    _civicrm_cache_clear_eventinfo($obj->event_id);
+  }
+}
+
+function _civicrm_cache_clear_eventinfo($id){
+  if(module_exists('boost')){
+    $url = url('civicrm/event/info', array('query' => 'reset=1&id='.$id));
+    $results = db_query("SELECT filename, base_dir FROM {boost_cache} WHERE url LIKE '%%%s%%'", $url);
+    while($f = db_fetch_array($results)){
+      $files[] = $f;
     }
+    boost_cache_kill($files, TRUE);
   }
 }
