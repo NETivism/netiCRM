@@ -14,7 +14,7 @@ function civicrm_esunbank_do_transfer_checkout(&$vars, &$component, &$payment_pr
   // First, we insert every contribution into record. After this, we'll use update for the record.
   $record = array('cid' => $vars['contributionID'], 'created' => time());
   drupal_write_record("civicrm_contribution_esunbank", $record);
-  $form_key = 'CRM_Contribute_Controller_Contribution_'.$vars['qfKey'];
+  $form_key = $component == 'event' ? 'CRM_Event_Controller_Registration_'.$vars['qfKey'] : 'CRM_Contribute_Controller_Contribution_'.$vars['qfKey'];
   $civi_base_url = $component == 'event' ? 'civicrm/event/register' : 'civicrm/contribute/transact';
 
   // Generate esunbank payment serial
@@ -53,8 +53,12 @@ function civicrm_esunbank_do_transfer_checkout(&$vars, &$component, &$payment_pr
   // Special hacking for display trxn_id after thank you page.
   $_SESSION['CiviCRM'][$form_key]['params']['trxn_id'] = $contribution->trxn_id;
   $_SESSION['CiviCRM'][$form_key]['params']['is_pay_later'] = 1;
-  $values =& $_SESSION['CiviCRM'][$form_key]['values'];
-//  $values['thankyou_title'] = '請列印繳費單！';
+  if($component == 'event'){
+    $values =& $_SESSION['CiviCRM'][$form_key]['values']['event'];
+  }
+  else{
+    $values =& $_SESSION['CiviCRM'][$form_key]['values'];
+  }
   /*
   $values['pay_later_text'] = '';
   $values['pay_later_receipt'] = '';
@@ -67,7 +71,7 @@ $(document).ready(function(){
   $(".colorbox-load").click();
 });
 </script>';
-    $values['thankyou_text'] .= '<div>如果您沒有看到繳費單視窗，點此<strong>開啟'.l('付款單', $tpl['invoice_link'].'?width=900&height=600&iframe=true', array('attributes' => array('class' => 'colorbox-load'))).'</strong></div>'.$js;
+    $values['thankyou_text'] .= '<div>如果您沒有看到繳費單視窗，點此<strong>開啟'.l('付款單', $tpl['invoice_link'].'?width=900&height=600&iframe=true', array('attributes' => array('class' => 'colorbox-load', 'target' => '_blank'))).'</strong></div>'.$js;
     $email = $vars['email-5'];
 
     // prepare template parameter
