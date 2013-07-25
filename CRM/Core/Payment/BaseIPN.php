@@ -38,12 +38,14 @@ class CRM_Core_Payment_BaseIPN {
 
     static $_now = null;
 
+    static $_membershipStatus = null;
+
     function __construct( ) {
         self::$_now = date( 'YmdHis' );
+        self::$_membershipStatus = CRM_Member_PseudoConstant::membershipStatus();
     }
 
     function validateData( &$input, &$ids, &$objects, $required = true ) {
-
         // make sure contact exists and is valid
         require_once 'CRM/Contact/DAO/Contact.php';
         $contact = new CRM_Contact_DAO_Contact( );
@@ -240,12 +242,13 @@ class CRM_Core_Payment_BaseIPN {
         $contribution->save( );
 
         if ( $membership ) {
-            $membership->status_id = 4;
+            $failed_id = array_search('Expired', self::$_membershipStatus);
+            $membership->status_id = $failed_id;
             $membership->save( );
             
             //update related Memberships.
             require_once 'CRM/Member/BAO/Membership.php';
-            $params = array( 'status_id' => 4 );
+            $params = array( 'status_id' => $failed_id );
             CRM_Member_BAO_Membership::updateRelatedMemberships( $membership->id, $params );
         }
 
@@ -281,12 +284,13 @@ class CRM_Core_Payment_BaseIPN {
         $contribution->save( );
 
         if ( $membership ) {
-            $membership->status_id = 6;
+            $cancelled_id = array_search('Cancelled', self::$_membershipStatus);
+            $membership->status_id = $cancelled_id;
             $membership->save( );
             
             //update related Memberships.
             require_once 'CRM/Member/BAO/Membership.php';
-            $params = array( 'status_id' => 6 );
+            $params = array( 'status_id' => $cancelled_id );
             CRM_Member_BAO_Membership::updateRelatedMemberships( $membership->id, $params );
         }
         
