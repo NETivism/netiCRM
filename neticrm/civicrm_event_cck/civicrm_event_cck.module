@@ -60,7 +60,13 @@ function civicrm_event_cck_goto(&$node){
         drupal_goto('civicrm/event/search', "reset=1&force=1&event=$event_id");
         break;
       case 'civiec_admin_event':
-        drupal_goto('civicrm/event/manage/registration', "reset=1&action=update&id=$event_id");
+        if($_GET['tab'] && in_array($_GET['tab'], array('eventInfo', 'location', 'fee', 'registration', 'friend'))){
+          $tab = $_GET['tab'];
+          drupal_goto('civicrm/event/manage/'.$tab, "reset=1&action=update&id=$event_id");
+        }
+        else{
+          drupal_goto('civicrm/event/manage/registration', "reset=1&action=update&id=$event_id");
+        }
         break;
     }
   }
