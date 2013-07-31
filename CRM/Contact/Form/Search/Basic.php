@@ -75,6 +75,7 @@ class CRM_Contact_Form_Search_Basic extends CRM_Contact_Form_Search {
     {
         // text for sort_name or email criteria
         $this->add('text', 'sort_name', ts('Name or Email'));
+        $this->add('text', 'legal_identifier', ts('Legal Identifier'));
 
         require_once 'CRM/Core/BAO/Preferences.php';
         $searchOptions = CRM_Core_BAO_Preferences::valueOptions( 'advanced_search_options' );
