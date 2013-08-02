@@ -167,7 +167,11 @@
                  {$form.external_identifier.label}<br />
                  {$form.external_identifier.html|crmReplace:class:eight}
              </td>
-            <td colspan="3">
+             <td>
+                 {$form.legal_identifier.label}<br />
+                 {$form.legal_identifier.html|crmReplace:class:eight}
+             </td>
+            <td colspan="2">
                 {$form.preferred_language.label}<br />
                 {$form.preferred_language.html|crmReplace:class:eight}
             </td>

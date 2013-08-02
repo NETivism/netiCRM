@@ -136,4 +136,5 @@ function template_preprocess_esunbank_invoice(&$variables){
   $variables['contact_info'] = variable_get('esunbank_contact_info', '');
   $variables['receipt_info'] = variable_get('esunbank_receipt_info', '');
   $variables['postoffice_account'] = variable_get('esunbank_postoffice_account', '');
+  $variables['account_name'] = variable_get('esunbank_account_name', '');
 }

@@ -1,0 +1,6 @@
+name = CiviCRM Cache Clear
+description = Cache clear action when drupal cache enabled.
+version = 6.x
+core = 6.x
+package = NetiCRM
+dependencies[] = civicrm

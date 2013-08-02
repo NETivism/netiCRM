@@ -65,7 +65,7 @@ foreach($vars['barcode_store'] as $k => $v){
 <table class="bank" cellpadding="0" cellspacing="0">
 <tr>
   <td class="col1">戶名</td>
-  <td class="col2">xxx</td>
+  <td class="col2"><?php print $account_name; ?></td>
 </tr>
 <tr>
   <td>銀行代碼</td>

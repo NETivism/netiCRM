@@ -27,7 +27,7 @@
     <table class="form-layout">
     {if $priceSet}
     	{if $action eq 2 and $hasPayment} {* Updating *}
-            {if $lineItem}	
+            {if $lineItem}
                 <tr class="crm-event-eventfees-form-block-line_items">
                     <td class="label">{ts}Event Fees{/ts}</td>
                     <td>{include file="CRM/Price/Page/LineItem.tpl" context="Event"}</td>
@@ -89,12 +89,12 @@
                 <tr>
                     <td class="label" >{$form.receive_date.label}</td>
                     <td>{include file="CRM/common/jcalendar.tpl" elementName=receive_date}</td>
-                </tr> 
+                </tr>
                 <tr class="crm-event-eventfees-form-block-payment_instrument_id"><td class="label">{$form.payment_instrument_id.label}</td><td>{$form.payment_instrument_id.html}</td></tr>
                 <tr id="checkNumber" class="crm-event-eventfees-form-block-check_number"><td class="label">{$form.check_number.label}</td><td>{$form.check_number.html|crmReplace:class:six}</td></tr>
-                {if $showTransactionId }	
+                {if $showTransactionId }
                     <tr class="crm-event-eventfees-form-block-trxn_id"><td class="label">{$form.trxn_id.label}</td><td>{$form.trxn_id.html}</td></tr>	
-                {/if}	
+                {/if}
                 <tr class="crm-event-eventfees-form-block-contribution_status_id"><td class="label">{$form.contribution_status_id.label}</td><td>{$form.contribution_status_id.html}</td></tr>      
              </table>
            </fieldset>
@@ -102,10 +102,10 @@
         </tr>
 
         {* Record contribution field only present if we are NOT in submit credit card mode (! participantMode). *}
-        {include file="CRM/common/showHideByFieldValue.tpl" 
+        {include file="CRM/common/showHideByFieldValue.tpl"
             trigger_field_id    ="record_contribution"
             trigger_value       =""
-            target_element_id   ="payment_information" 
+            target_element_id   ="payment_information"
             target_element_type ="table-row"
             field_type          ="radio"
             invert              = 0
@@ -116,12 +116,12 @@
 {/if}
 
 {* credit card block when it is live or test mode*}
-{if $participantMode and $paid}	
+{if $participantMode and $paid}
   <div class="spacer"></div>
   {include file='CRM/Core/BillingBlock.tpl'}
 {/if}
 {if ($email OR $batchEmail) and $outBound_option != 2}
-    <fieldset id="send_confirmation_receipt"><legend>{if $paid}{ts}Registration Confirmation and Receipt{/ts}{else}{ts}Registration Confirmation{/ts}{/if}</legend>  
+    <fieldset id="send_confirmation_receipt"><legend>{if $paid}{ts}Registration Confirmation and Receipt{/ts}{else}{ts}Registration Confirmation{/ts}{/if}</legend>
       <table class="form-layout" style="width:auto;">
 		 <tr class="crm-event-eventfees-form-block-send_receipt"> 
             <td class="label">{if $paid}{ts}Send Confirmation and Receipt{/ts}{else}{ts}Send Confirmation{/ts}{/if}</td>
@@ -137,13 +137,13 @@
             <td>{$form.from_email_address.html} {help id ="id-from_email" file="CRM/Contact/Form/Task/Email.hlp"}</td>
     	</tr>
         <tr id='notice' class="crm-event-eventfees-form-block-receipt_text">
- 			<td class="label">{$form.receipt_text.label}</td> 
+ 			<td class="label">{$form.receipt_text.label}</td>
             <td><span class="description">
                 {ts}Enter a message you want included at the beginning of the confirmation email. EXAMPLE: 'Thanks for registering for this event.'{/ts}
                 </span><br />
                 {$form.receipt_text.html|crmReplace:class:huge}
             </td>
-        </tr> 
+        </tr>
       </table>
     </fieldset>
 {elseif $context eq 'standalone' and $outBound_option != 2 }
@@ -164,7 +164,7 @@
             <td>{$form.from_email_address.html} {help id ="id-from_email" file="CRM/Contact/Form/Task/Email.hlp"}</td>
     	</tr>
         <tr id='notice' class="crm-event-eventfees-form-block-receipt_text">
-    		<td class="label">{$form.receipt_text.label}</td> 
+    		<td class="label">{$form.receipt_text.label}</td>
             <td><span class="description">
                 {ts}Enter a message you want included at the beginning of the confirmation email. EXAMPLE: 'Thanks for registering for this event.'{/ts}
                 </span><br />
@@ -175,34 +175,34 @@
 {/if}
 
 {if ($email and $outBound_option != 2) OR $context eq 'standalone' } {* Send receipt field only present if contact has a valid email address. *}
-{include file="CRM/common/showHideByFieldValue.tpl" 
+{include file="CRM/common/showHideByFieldValue.tpl"
     trigger_field_id    ="send_receipt"
     trigger_value       =""
-    target_element_id   ="notice" 
+    target_element_id   ="notice"
     target_element_type ="table-row"
     field_type          ="radio"
     invert              = 0
 }
-{include file="CRM/common/showHideByFieldValue.tpl" 
+{include file="CRM/common/showHideByFieldValue.tpl"
     trigger_field_id    ="send_receipt"
     trigger_value       =""
-    target_element_id   ="from-email" 
+    target_element_id   ="from-email"
     target_element_type ="table-row"
     field_type          ="radio"
     invert              = 0
 }
 {/if}
 
-{if ($action eq 1 or ( $action eq 2 and !$hasPayment) ) and !$participantMode} 
-{include file="CRM/common/showHideByFieldValue.tpl" 
+{if $paid and ($action eq 1 or ( $action eq 2 and !$hasPayment) ) and !$participantMode}
+{include file="CRM/common/showHideByFieldValue.tpl"
     trigger_field_id    ="payment_instrument_id"
     trigger_value       = '4'
-    target_element_id   ="checkNumber" 
+    target_element_id   ="checkNumber"
     target_element_type ="table-row"
     field_type          ="select"
     invert              = 0
 }
-{/if} 
+{/if}
 
 {if $context eq 'standalone' and $outBound_option != 2 }
 <script type="text/javascript">
@@ -214,7 +214,7 @@ cj( function( ) {
     checkEmail( );
 });
 function checkEmail( ) {
-    var contactID = cj("input[name=contact_select_id]").val();
+    var contactID = cj("input[name='contact_select_id']").val();
     if ( contactID ) {
         var postUrl = "{/literal}{crmURL p='civicrm/ajax/checkemail' h=0}{literal}";
         cj.post( postUrl, {contact_id: contactID},
@@ -224,7 +224,7 @@ function checkEmail( ) {
                     if ( cj("#send_receipt").is(':checked') ) {
                         cj("#notice").show( );
                     }
-                
+
                     cj("#email-address").html( response );
                 } else {
                     cj("#email-receipt").hide( );
@@ -243,8 +243,8 @@ function checkEmail( ) {
 {literal}
   function confirmStatus( pStatusId, cStatusId ) {
      if ( (pStatusId == cj("#status_id").val() ) && (cStatusId == cj("#contribution_status_id").val()) ) {
-         var allow = confirm( '{/literal}{ts}The Payment Status for this participant is Completed. The Participant Status is set to Pending from pay later. Click Cancel if you want to review or modify these values before saving this record{/ts}{literal}.' );       
-         if ( !allow ) return false; 
+         var allow = confirm( '{/literal}{ts}The Payment Status for this participant is Completed. The Participant Status is set to Pending from pay later. Click Cancel if you want to review or modify these values before saving this record{/ts}{literal}.' );
+         if ( !allow ) return false;
      }
   }
 
@@ -252,7 +252,7 @@ function checkEmail( ) {
     //selected participant status is 'cancelled'
     if ( statusId == pStatusId ) {
        cj("#contribution_status_id").val( cStatusId );
-       
+
        //unset value for send receipt check box.
        cj("#send_receipt").attr( "checked", false );
        cj("#send_confirmation_receipt").hide( );
@@ -263,18 +263,18 @@ function checkEmail( ) {
        document.getElementById("receive_date[Y]").value = null;
     } else {
        cj("#send_confirmation_receipt").show( );
-    }	
+    }
     sendNotification();
   }
 
 {/literal}
 </script>
 {/if}
-{if $showFeeBlock && !$priceSet && $action neq 2}
+{if $showFeeBlock && $feeBlockPaid && ! $priceSet && $action neq 2}
 <script>
 {literal}
      fillTotalAmount( );
-     
+
      function fillTotalAmount( totalAmount ) {
           if ( !totalAmount ) {
      	      var eventFeeBlockValues = {/literal}{$eventFeeBlockValues}{literal};
@@ -286,4 +286,4 @@ function checkEmail( ) {
 </script>
 {/if}
 
-{* ADD mode if *}    
+{* ADD mode if *}

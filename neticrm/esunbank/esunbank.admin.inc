@@ -13,6 +13,12 @@ function esunbank_admin_settings(){
     '#default_value' => variable_get('esunbank_receipt_info', ''),
     '#description' => t('Receipt infomation display on invoice. This will tell user when they receive receipt after payment.'),
   );
+  $form['esunbank_account_name'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Account name'),
+    '#default_value' => variable_get('esunbank_account_name', ''),
+    '#description' => t('Account name appear on invoice.'),
+  );
   $form['esunbank_postoffice_account'] = array(
     '#type' => 'textarea',
     '#title' => t('Post Office Account'),

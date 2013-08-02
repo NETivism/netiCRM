@@ -149,6 +149,15 @@ dojo.addOnLoad( function( ) {
         	</div>
         	<div class="clear"></div> 
         </div>
+        <div class="crm-section legal_identifier-section">	
+        	<div class="label">
+        		{$form.legal_identifier.label}
+        	</div>
+        	<div class="content">
+        		{$form.legal_identifier.html}
+        	</div>
+        	<div class="clear"></div> 
+        </div>
 
         {if $form.contact_type}    
         	<div class="crm-section contact_type-section">	
