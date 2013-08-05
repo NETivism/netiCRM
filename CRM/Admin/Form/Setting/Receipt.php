@@ -13,6 +13,7 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting
     public function buildQuickForm( ) 
     {
         CRM_Utils_System::setTitle(ts('Settings - Contribution Receipt'));
+        $this->addElement('text','receiptLogo', ts('Logo'));
         $this->addElement('text','receiptPrefix', ts('Prefix of Receipt ID'));
         $this->addElement('textarea','receiptDescription', ts('Description of Receipt Footer'));
         $this->addElement('textarea','receiptOrgInfo', ts('Organization info'));

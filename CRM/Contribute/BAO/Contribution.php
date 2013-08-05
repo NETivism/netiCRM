@@ -1735,6 +1735,7 @@ SELECT source_contact_id
         $custom_values = CRM_Core_BAO_CustomValueTable::getEntityValues($contribID, 'Contribution');
         $custom_title = $config->receiptTitle;
         $custom_serial = $config->receiptSerial;
+        $receipt_logo = $config->receiptLogo;
 
         $template =& CRM_Core_Smarty::singleton( );
 
@@ -1756,7 +1757,7 @@ SELECT source_contact_id
 
         $sort_name = $custom_values[$custom_title] ? $custom_values[$custom_title] : $contact->sort_name;
         $template->assign( 'sort_name', $sort_name);
-
+        $template->assign( 'logo', $receipt_logo);
         $template->assign( 'trxn_id', $contribution->trxn_id );
         $template->assign( 'receipt_date', CRM_Utils_Date::customFormat( $contribution->receipt_date, '%Y/%m/%d' ) );
         $template->assign( 'receipt_id', $contribution->receipt_id );
