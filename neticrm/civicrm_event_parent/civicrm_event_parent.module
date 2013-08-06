@@ -212,6 +212,11 @@ function civicrm_event_parent_civicrm_buildForm_regAdditional( $formName, &$form
 }
 
 function civicrm_event_parent_civicrm_postProcess( $class, &$form ) {
+  if ( is_a( $form, 'CRM_Event_Form_Registration_Register' ) ) {
+    if($form->_values['event']['is_monetary'] == 0){
+      return civicrm_event_parent_civicrm_postProcess_regConfirm( $class, $form );
+    }
+  }
   if ( is_a( $form, 'CRM_Event_Form_Registration_Confirm' ) ) {
     return civicrm_event_parent_civicrm_postProcess_regConfirm( $class, $form );
   }
