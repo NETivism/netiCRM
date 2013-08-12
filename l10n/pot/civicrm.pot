@@ -44626,5 +44626,58 @@ msgstr ""
 msgid "Membership Information"
 msgstr ""
 
+#: civicrm/CRM/Admin/Form/Setting/Receipt.php
+msgid "Settings - Contribution Receipt"
+msgstr ""
+
+#: civicrm/CRM/Admin/Form/Setting/Receipt.php
+msgid "Logo"
+msgstr ""
+
+#: civicrm/CRM/Admin/Form/Setting/Receipt.php
+msgid "Prefix of Receipt ID"
+msgstr ""
+
+#: civicrm/CRM/Admin/Form/Setting/Receipt.php
+msgid "Description of Receipt Footer"
+msgstr ""
+
+#: civicrm/CRM/Admin/Form/Setting/Receipt.php
+msgid "Organization info"
+msgstr ""
+
+#: civicrm/CRM/Admin/Form/Setting/Receipt.php
+msgid "Field for receipt title"
+msgstr ""
+
+#: civicrm/CRM/Admin/Form/Setting/Receipt.php
+msgid "Field for receipt serial number"
+msgstr ""
+
+#: templates/CRM/Admin/Form/Setting/Receipt.tpl
 msgid "Selected Participants was deleted sucessfully."
+msgstr ""
+
+#: templates/CRM/Admin/Form/Setting/Receipt.tpl
+msgid "Paste logo url. Start with http://"
+msgstr ""
+
+#: templates/CRM/Admin/Form/Setting/Receipt.tpl
+msgid "Receipt ID prefix. Can be numberic or alphabetic."
+msgstr ""
+
+#: templates/CRM/Admin/Form/Setting/Receipt.tpl
+msgid "Description will appear at the end of receipt."
+msgstr ""
+
+#: templates/CRM/Admin/Form/Setting/Receipt.tpl
+msgid "Organization info will appear at the end of receipt."
+msgstr ""
+
+#: templates/CRM/Admin/Form/Setting/Receipt.tpl
+msgid "When your receipt title save in another field, use this to select the field."
+msgstr ""
+
+#: templates/CRM/Admin/Form/Setting/Receipt.tpl
+msgid "When your serial code save in another field, use this to select the field."
 msgstr ""
