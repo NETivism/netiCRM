@@ -156,9 +156,15 @@ function civicrm_instrument_civicrm_postProcess($form_name, &$form){
     case 'CRM_Contribute_Form_ContributionPage_Settings':
       $entity_table = strstr($form_name, 'Contribute') ? 'civicrm_contribution_page' : 'civicrm_event';
       $entity_id = $form->getVar('_id');
-      $payment_instrument = $form->_submitValues['payment_instrument'];
-      if($entity_id && !empty($payment_instrument)){
-        CRM_Core_DAO::executeQuery("REPLACE INTO civicrm_instrument SET entity_id = {$entity_id}, entity_table='{$entity_table}', payment_instruments='".serialize($payment_instrument)."'");
+      if($entity_id){
+        if( !empty($form->_submitValues['payment_instrument'])){
+          $payment_instrument = $form->_submitValues['payment_instrument'];
+          CRM_Core_DAO::executeQuery("REPLACE INTO civicrm_instrument SET entity_id = {$entity_id}, entity_table='{$entity_table}', payment_instruments='".serialize($payment_instrument)."'");
+        }
+        else{
+          // empty
+          CRM_Core_DAO::executeQuery("REPLACE INTO civicrm_instrument SET entity_id = {$entity_id}, entity_table='{$entity_table}', payment_instruments=''");
+        }
       }
       break;
     // save instrument
