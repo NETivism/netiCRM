@@ -44631,10 +44631,6 @@ msgid "Settings - Contribution Receipt"
 msgstr ""
 
 #: civicrm/CRM/Admin/Form/Setting/Receipt.php
-msgid "Logo"
-msgstr ""
-
-#: civicrm/CRM/Admin/Form/Setting/Receipt.php
 msgid "Prefix of Receipt ID"
 msgstr ""
 
