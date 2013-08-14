@@ -44612,7 +44612,7 @@ msgid ""
 msgstr ""
 
 msgid ""
-"Contribution record must dedutible.(base on Contribution type settings."
+"Contribution record must dedutible.(base on <a href="%1">Contribution type</a> settings)"
 msgstr ""
 
 msgid "Procceed Receipt Generation?"
