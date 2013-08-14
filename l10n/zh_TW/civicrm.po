@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2013-08-13 12:13+0000\n"
+"PO-Revision-Date: 2013-08-14 12:54+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/projects/p/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -4776,7 +4776,7 @@ msgstr "活動名稱"
 #: CRM/Event/DAO/Event.php CRM/Event/Form/ManageEvent/EventInfo.php
 #: templates/CRM/Event/Page/DashBoard.tpl
 msgid "Event Summary"
-msgstr "活動摘要"
+msgstr "活動總覽"
 
 #: CRM/Event/DAO/Event.php CRM/Report/Form/Event/IncomeCountSummary.php
 #: CRM/Report/Form/Event/ParticipantListCount.php
@@ -4788,7 +4788,7 @@ msgstr "活動開始日期"
 #: CRM/Report/Form/Event/ParticipantListCount.php
 #: CRM/Report/Form/Event/Summary.php
 msgid "Event End Date"
-msgstr "活動日期"
+msgstr "活動結束日期"
 
 #: CRM/Event/DAO/Event.php CRM/Event/Form/ManageEvent/Registration.php
 msgid "Registration Start Date"
@@ -4807,7 +4807,7 @@ msgstr "參加者最多人數"
 #: CRM/Report/Form/Event/Summary.php
 #: templates/CRM/Event/Form/ManageEvent/Fee.tpl
 msgid "Fee Label"
-msgstr "名稱"
+msgstr "費用名稱"
 
 #: CRM/Event/DAO/Event.php CRM/Event/Form/ManageEvent/EventInfo.php
 #: CRM/Event/Form/Participant.php CRM/Report/Form/Event/IncomeCountSummary.php
@@ -4827,7 +4827,7 @@ msgstr "確認寄件者名稱"
 
 #: CRM/Event/DAO/Event.php CRM/Event/Form/ManageEvent/Registration.php
 msgid "Confirm From Email"
-msgstr "確認寄件者 Email"
+msgstr "確認寄件者的電子郵件地址"
 
 #: CRM/Event/DAO/ParticipantPayment.php CRM/Pledge/DAO/Payment.php
 msgid "Payment ID"
@@ -4884,7 +4884,7 @@ msgstr "停用"
 
 #: CRM/Event/Form/ManageEvent/EventInfo.php CRM/Event/Form/ManageEvent.php
 msgid "'%1' information has been saved."
-msgstr "設定已成功儲存。"
+msgstr "「%1」設定已儲存成功。"
 
 #: CRM/Event/Form/ManageEvent/Fee.php CRM/Price/Form/Field.php
 msgid "Label cannot be empty."
@@ -4919,7 +4919,7 @@ msgstr "線上報名"
 #: CRM/Event/Form/Participant.php CRM/Member/Form/Membership.php
 #: CRM/Member/Form/MembershipRenewal.php
 msgid "Could not find valid payment processor for this page"
-msgstr "找不到有效的付款處理器"
+msgstr "此頁面找不到有效的付款處理器"
 
 #: CRM/Event/Form/Participant.php CRM/Event/Selector/Search.php
 msgid "Registered"
@@ -4949,7 +4949,7 @@ msgid ""
 "The following participants no longer have an event fee recorded. You can "
 "edit their registration and record a replacement contribution by clicking "
 "the links below:"
-msgstr ""
+msgstr "下列參加者的活動費用記錄已刪除。您可以修改參加者的報名狀態以及捐款記錄。如需變更，請按頁面下方連結："
 
 #: CRM/Event/Form/Registration/ParticipantConfirm.php CRM/Event/Task.php
 msgid "Cancel Registration"
@@ -4964,7 +4964,7 @@ msgid ""
 "Oops. It looks like you are already registered for this event. If you want "
 "to change your registration, or you feel that you've gotten this message in "
 "error, please contact the site administrator."
-msgstr "糟糕！在紀錄中您已報名這項活動，不需要重複報名。如果您想變更您的報名，或您覺得您的報名出現錯誤，請聯絡網站管理者。"
+msgstr "哎呀！您已完成此活動的登記報名。如果想取消、變更您的報名，或是頁面顯示您的報名狀態出現錯誤，請聯絡網站管理人員。"
 
 #: CRM/Event/Form/Task/SaveSearch.php CRM/Group/Page/Group.php
 #: templates/CRM/Contact/Form/Task/SaveSearch.tpl
@@ -5133,7 +5133,7 @@ msgstr "訂閱"
 #: CRM/Mailing/Event/DAO/Bounce.php CRM/Mailing/Selector/Event.php
 #: CRM/Report/Form/Mailing/Bounce.php
 msgid "Bounce Reason"
-msgstr "拒絕原因"
+msgstr "拒絕/退回原因"
 
 #: CRM/Mailing/Event/DAO/Bounce.php CRM/Mailing/Event/DAO/Confirm.php
 #: CRM/Mailing/Event/DAO/Delivered.php CRM/Mailing/Event/DAO/Forward.php
@@ -5142,7 +5142,7 @@ msgstr "拒絕原因"
 #: CRM/Mailing/Event/DAO/TrackableURLOpen.php
 #: CRM/Mailing/Event/DAO/Unsubscribe.php
 msgid "Time Stamp"
-msgstr "時間標記"
+msgstr "時間戳記"
 
 #: CRM/Mailing/Form/Group.php CRM/Mailing/Form/Settings.php
 #: CRM/Mailing/Form/Test.php CRM/Mailing/Form/Upload.php
@@ -5206,7 +5206,7 @@ msgstr "網址"
 #: CRM/Mailing/Selector/Event.php CRM/Report/Form/Mailing/Summary.php
 #: templates/CRM/Mailing/Page/Report.tpl
 msgid "Intended Recipients"
-msgstr "收件者"
+msgstr "指定收件者"
 
 #: CRM/Member/BAO/Membership.php CRM/Member/Form/MembershipView.php
 msgid "Membership Type:"
@@ -5573,7 +5573,7 @@ msgstr "收入"
 
 #: CRM/Report/Form/Event/Income.php CRM/Report/Form.php
 msgid "Records %%StatusMessage%%"
-msgstr "報表 %%StatusMessage%%"
+msgstr "紀錄 %%StatusMessage%%"
 
 #: CRM/Report/Form/Event/ParticipantListCount.php
 #: CRM/Report/Form/Event/ParticipantListing.php
@@ -5584,7 +5584,7 @@ msgstr "參加者的姓名"
 #: CRM/Report/Form/Event/ParticipantListCount.php
 #: CRM/Report/Form/Event/ParticipantListing.php
 msgid "Participant E-mail"
-msgstr "參加者的 E-mail"
+msgstr "參加者的電子郵件"
 
 #: CRM/Report/Form/Event/ParticipantListCount.php
 #: CRM/Report/Form/Event/ParticipantListing.php
@@ -9315,7 +9315,7 @@ msgstr "參加者<br/>人數"
 
 #: CRM/Contact/Form/Search/Custom/EventAggregate.php
 msgid "Total Payment"
-msgstr "總付款金額"
+msgstr "付款總額"
 
 #: CRM/Contact/Form/Search/Custom/EventAggregate.php
 msgid "Fee"
@@ -14796,21 +14796,21 @@ msgstr "- 參加者欄位 -"
 #: CRM/Event/BAO/Participant.php
 msgid ""
 "Participant status has been updated to '%1'. An email has been sent to %2."
-msgstr "<br /> 參加者的狀態已更新為 '%1' 。Email已寄給%2。"
+msgstr "參加者的狀態已更新為 「%1」 。電子郵件已寄給 %2。"
 
 #: CRM/Event/BAO/Participant.php
 msgid ""
 "This event currently has the maximum number of participants registered (%1)."
 " However, you can still override this limit and register additional "
 "participants using this form."
-msgstr "此活動報名人數目前已達到參加人數的上限 (%1人)。\n不過你仍然可以利用報名表單進行報名。<br>"
+msgstr "此活動報名人數已達上限 (%1人)。如欲候補者，請登錄此候補表單。"
 
 #: CRM/Event/BAO/Participant.php
 msgid ""
 "There are %2 people currently on the waiting list for this event. You can <a"
 " href='%1'>view waitlisted registrations here</a>, or you can continue and "
 "register additional participants using this form."
-msgstr "這個活動目前有%2人在候補名單。你可以<a href='%1'>在此查看候補名單</a>，或繼續，用這個表單新增另一筆報名資料。"
+msgstr "此活動目前有%2人在候補名單。您可以<a href='%1'>在此查看候補名單</a>，或者繼續新增另一筆報名資料。"
 
 #: CRM/Event/BAO/Query.php
 msgid "Event Type - %1"
@@ -14822,7 +14822,7 @@ msgstr "搜尋測試的參加者"
 
 #: CRM/Event/BAO/Query.php
 msgid "Find Pay Later Participants"
-msgstr "搜尋稍後付款參加者"
+msgstr "搜尋稍後付款的參加者"
 
 #: CRM/Event/BAO/Query.php
 msgid "Participant Status %1"
@@ -14887,11 +14887,11 @@ msgstr "確定文字"
 
 #: CRM/Event/DAO/Event.php
 msgid "Is confirm email"
-msgstr "確認 Email"
+msgstr "確認電子郵件"
 
 #: CRM/Event/DAO/Event.php
 msgid "Confirmation Email Text"
-msgstr "確認 Email 文字"
+msgstr "確認電子郵件文字"
 
 #: CRM/Event/DAO/Event.php
 msgid "Cc Confirm"
@@ -14911,7 +14911,7 @@ msgstr "致謝文字"
 
 #: CRM/Event/DAO/Event.php
 msgid "Does Event allow multiple registrations from same email address?"
-msgstr "活動允許同一個Email 重複報名？"
+msgstr "活動允許同一個電子郵件重複報名？"
 
 #: CRM/Event/DAO/Event.php
 msgid "Has Waitlist"
@@ -15000,15 +15000,15 @@ msgid ""
 " it. If you want to delete this event, you must first find the participants "
 "linked to this event and delete them. You can use use <a href='%1'> "
 "CiviEvent >> Find Participants page </a>."
-msgstr "此活動無法刪除，因為已經與參加者紀錄連結。若你想刪除此活動，您必需先找到連結的參加者，並將他們刪除。您可以用<a href='%1'> 活動  >>  搜尋參加者頁面 </a>來尋找這些參加者。"
+msgstr "此活動無法刪除，因為已經與參加者紀錄連結。\n假若您想刪除此活動，可以利用<a href='%1'> 活動  >>  搜尋參加者頁面 </a>，找到此活動報名的相關參加者，再予以刪除。"
 
 #: CRM/Event/Form/ManageEvent/Delete.php
 msgid "Event template '%1' has been deleted."
-msgstr "活動範本%1已刪除。"
+msgstr "活動範本「%1」已刪除。"
 
 #: CRM/Event/Form/ManageEvent/Delete.php
 msgid "Event '%1' has been deleted."
-msgstr "活動'%1'已刪除。"
+msgstr "活動「%1」已刪除。"
 
 #: CRM/Event/Form/ManageEvent/EventInfo.php
 msgid "This event is currently full."
@@ -15038,7 +15038,7 @@ msgstr "使用電子地圖顯示活動地點？"
 
 #: CRM/Event/Form/ManageEvent/EventInfo.php
 msgid "End Date / Time"
-msgstr "結束日期"
+msgstr "結束日期 / 時間"
 
 #: CRM/Event/Form/ManageEvent/EventInfo.php
 msgid "Max Number of Participants"
@@ -15084,7 +15084,7 @@ msgstr "活動資料及設定"
 #: CRM/Event/Form/ManageEvent/Fee.php
 #: templates/CRM/Admin/Page/EventTemplate.tpl
 msgid "Paid Event"
-msgstr "付款活動"
+msgstr "已付款的活動"
 
 #: CRM/Event/Form/ManageEvent/Fee.php
 msgid "Enable Pay Later option?"
@@ -44576,8 +44576,9 @@ msgid ""
 msgstr "當您勾選此選項，系統將產生A4格式收據，並在頁面上方附上捐/繳款人收據寄送地址。您可摺疊A4收據，放進開窗信封並讓收件人姓名地址露出。"
 
 msgid ""
-"Contribution record must dedutible.(base on Contribution type settings."
-msgstr "捐/繳款必須是可開收據的。（根據捐/繳款類型的設定）"
+"Contribution record must dedutible.(base on <a href=\"%1\">Contribution "
+"type</a> settings)"
+msgstr "費用類型必須是「可開收據」的類型，才能夠產生收據。(請至<a href=\"%1\">費用類型</a> 頁面進行設定)"
 
 msgid "Procceed Receipt Generation?"
 msgstr "您確定要產生收據？"
