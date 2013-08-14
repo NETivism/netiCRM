@@ -44611,8 +44611,7 @@ msgid ""
 "want to send by post directly without envelop."
 msgstr ""
 
-msgid ""
-"Contribution record must dedutible.(base on <a href="%1">Contribution type</a> settings)"
+msgid "Contribution record must dedutible.(base on <a href=\"%1\">Contribution type</a> settings)"
 msgstr ""
 
 msgid "Procceed Receipt Generation?"
