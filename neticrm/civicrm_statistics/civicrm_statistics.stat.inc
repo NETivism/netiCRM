@@ -87,7 +87,7 @@ function civicrm_statistics_fetch($debug = false){
     variable_set('civicrm_statistics_run', $_SERVER['REQUEST_TIME']);
     variable_set('civicrm_statistics', $stat);
   }
-  else{
+  elseif($debug){
     print_r($stat);
   }
 }
