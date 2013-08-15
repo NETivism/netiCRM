@@ -40,7 +40,7 @@
  */
 class CRM_Export_BAO_Export
 {
-    const EXPORT_ROW_COUNT = 1000;
+    const EXPORT_ROW_COUNT = 10000;
 
     /**
      * Function to get the list the export fields
@@ -435,7 +435,7 @@ class CRM_Export_BAO_Export
         if ( CRM_Utils_Array::value( 'tags'  , $returnProperties ) || 
              CRM_Utils_Array::value( 'groups', $returnProperties ) ||
              CRM_Utils_Array::value( 'notes' , $returnProperties ) ||
-             $query->_useGroupBy ) { 
+             ( $queryMode & CRM_Contact_BAO_Query::MODE_CONTACTS && $query->_useGroupBy ) ) {
             $groupBy = " GROUP BY contact_a.id";
         }
         if ( $queryMode & CRM_Contact_BAO_Query::MODE_ACTIVITY ) {

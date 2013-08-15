@@ -19,8 +19,8 @@ $.fn.extend({
 		options = $.extend({}, $.Autocompleter.defaults, {
 			url: isUrl ? urlOrData : null,
 			data: isUrl ? null : urlOrData,
-			delay: isUrl ? $.Autocompleter.defaults.delay : 10,
-			max: options && !options.scroll ? 10 : 150
+			delay: isUrl ? $.Autocompleter.defaults.delay : 30,
+			max: options && !options.scroll ? 30 : 150
 		}, options);
 		
 		// if highlight is set to false, replace it with a do-nothing function

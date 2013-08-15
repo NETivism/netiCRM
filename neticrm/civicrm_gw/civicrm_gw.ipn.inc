@@ -36,7 +36,7 @@ class CRM_Core_Payment_GWIPN extends CRM_Core_Payment_BaseIPN {
     $input['component'] = $component;
     $qfKey = $_GET['qfKey'] ? $_GET['qfKey'] : $input['od_hoho']['qfKey'];
     $civi_base_url = $component == 'event' ? 'civicrm/event/register' : 'civicrm/contribute/transact';
-    $this->saveRecord($input['cid'], $input);
+    $this->saveRecord($_GET['cid'], $input);
     
     // now, retrieve full object by validateData, or false fallback
     if ( ! $this->validateData( $input, $ids, $objects ) ) {
@@ -45,8 +45,8 @@ class CRM_Core_Payment_GWIPN extends CRM_Core_Payment_BaseIPN {
 
     // set global variable for paymentProcessor
     self::$payment_processor =& $objects['paymentProcessor'];
-    if($objects['contribution']->contribution_status_id == 1){
-      // already completed. skip and redirect to thank you page
+    if($objects['contribution']->contribution_status_id == 1 || $instrument == 'unionpay'){
+      // already completed, or unionpay, skip and redirect to thank you page
       if($qfKey){
         drupal_goto($civi_base_url, "_qf_ThankYou_display=true&qfKey={$qfKey}");
       }
@@ -74,22 +74,25 @@ class CRM_Core_Payment_GWIPN extends CRM_Core_Payment_BaseIPN {
           echo 'OK';
         }
       }
+      else{
+        $note .= ts('Failed')."\n";
+        drupal_set_message(ts("Payment Information").": ".ts("Failed").' - '.$input['response_msg']."({$input['response_code']})", 'error');
+        $this->addNote($note, $objects['contribution']);
+      }
     }
     
     // error stage: doesn't goto and not the background posturl
-    /* Still need to define the best way to handle this
     if(!$_GET['bg']){
       $error_base_url =  $component == 'event' ? 'civicrm/event/confirm' : 'civicrm/contribute/transact';
       $error_argument = $component == 'event' ? "reset=1&cc=fail&participantId={$ids['participant']}" : "_qf_Main_display=1&cancel=1&qfKey=$qfKey";
       drupal_goto($error_base_url, $error_argument);
     }
-    */
   }
 
   function saveRecord($cid, &$input){
     $save = array(
       'succ',
-      'response_code', 'response_msg', 'auth_code', // credit card
+      'response_code', 'response_msg', 'auth_code', 'card4no', // credit card
       'payno', 'payfrom', 'payer_bank', 'payer_acc', 'paid_date', // non credit card
       'proc_datetime', 'expire_datetime', // special case
       '',
@@ -153,18 +156,22 @@ class CRM_Core_Payment_GWIPN extends CRM_Core_Payment_BaseIPN {
   }
 
   // Greenworld check 
-  function gwEcpayCheck($process_time,$gwsr,$amount,$spcheck,$check_sum){
-    $T = $process_time+$gwsr+$amount;	
-    $a = substr($T,0,1).substr($T,2,1).substr($T,4,1);
-    $b = substr($T,1,1).substr($T,3,1).substr($T,5,1);
-    $c = ( $check_sum % $T ) + $check_sum + $a + $b;
-
-    if($spcheck == $c) {
+  function gwEcpayCheck($i){
+    $serial = $i['process_date'].$i['process_time'].$i['gwsr'];
+    $response = file("https://ecpay.com.tw/g_recheck.php?key={$i['rech_key']}&serial={$serial}&amt={$i['amount']}");
+    parse_str($response[0]);
+    if($valid==1){
       return TRUE;
     }
-    else {
+    else{
+      $error = array(
+        0 => 'unknown',
+        2 => 'Time error',
+        3 => 'Amount error',
+      );
+      watchdog("civicrm_gw", "Checksum Error:". $error[$valid]);
       return FALSE;
-    }  
+    }
   }
 
   /**
@@ -206,7 +213,6 @@ class CRM_Core_Payment_GWIPN extends CRM_Core_Payment_BaseIPN {
     // non-credit card validation
     if($input['payment_type']){
       if(! $this->gwEcbankCheck($input)) {
-        watchdog("civicrm_gw", "Checksum Error" );
         $note .= ts("Failuare: Transaction number and system response number doesn't match. Please contact us for further assistant.")."\n";
         $this->failed( $objects, $transaction );
         $pass = FALSE;
@@ -215,7 +221,7 @@ class CRM_Core_Payment_GWIPN extends CRM_Core_Payment_BaseIPN {
     }
     // credit card validation
     else{
-      if(! $this->gwEcpayCheck($input["process_time"],$input["gwsr"],$input["amount"],$input["spcheck"], $objects['paymentProcessor']['password']) ){
+      if(! $this->gwEcpayCheck($input) ){
         watchdog("civicrm_gw", "Checksum Error" );
         $note .= ts("Failuare: Transaction number and system response number doesn't match. Please contact us for further assistant.")."\n";
         $this->failed( $objects, $transaction );
@@ -227,6 +233,7 @@ class CRM_Core_Payment_GWIPN extends CRM_Core_Payment_BaseIPN {
     if(!$input['succ']){
       $response_code = $input['response_code'];
       $response_msg = $input['response_msg'];
+      $note .= "Failed $response_code: $response_msg";
       $this->failed( $objects, $transaction );
       $pass = FALSE;
     }

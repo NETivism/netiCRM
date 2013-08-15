@@ -1,0 +1,126 @@
+<?php
+
+// for security issue, we can only setup these variable by settings.php
+define( 'CIVICRM_SECURE_GROUP_GID',  variable_get('civicrm_secure_group_gid', '0') );
+define( 'CIVICRM_SECURE_GROUP_RID',  variable_get('civicrm_secure_group_rid', '0') );
+
+function civicrm_secure_group_menu(){
+  $items['admin/settings/civicrm_secure'] = array(
+    'title' => t('CiviCRM Secure Group'),
+    'description' => t('CiviCRM secure group setting.'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('civicrm_secure_group_settings'),
+    'access callback' => 'user_access',
+    'access arguments' => array('administer site configuration'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  return $items;
+}
+
+function civicrm_secure_group_settings(){
+  $form['civicrm_secure_group_reverse'] = array(
+    '#type' => 'checkbox',
+    '#title' => 'Reverse',
+    '#description' => 'Check this will hide other groups when user login with secured role. Uncheck this will show all group if user have permission "administer CiviCRM"',
+    '#default_value' => variable_get('civicrm_secure_group_reverse', 0),
+  );
+  return system_settings_form($form);
+}
+
+function civicrm_secure_group_civicrm_aclWhereClause( $type, &$tables, &$whereTables, &$contactID, &$where ) {
+  global $user;
+  civicrm_initialize( );
+
+  if ( ! empty( $where ) ) {
+      $where .= ' AND ';
+  } else {
+      $where = '';
+  }
+
+  if( !strstr($where, 'is_deleted')){
+    $where .= ' contact_a.is_deleted = 0 AND ';
+  }
+
+  // if the contact has spcific role, dont modify the clause
+  if( array_key_exists(CIVICRM_SECURE_GROUP_RID, $user->roles) ) {
+    if(variable_get('civicrm_secure_group_reverse', 0)){
+      $groupTable = 'secure_group';
+      $tables[$groupTable] = $whereTables[$groupTable] =
+          "LEFT JOIN civicrm_group_contact $groupTable ON ( contact_a.id = $groupTable.contact_id AND $groupTable.group_id = " . CIVICRM_SECURE_GROUP_GID . " )";
+      $where .= " ( $groupTable.status = 'Added' ) ";
+    }
+    else{
+      $where .= ' (1) ';
+    }
+  }
+  else{
+    // else modify the query so we can ensure that contactIDs belong to the secure group are not shown
+    $groupTable = 'secure_group';
+    $tables[$groupTable] = $whereTables[$groupTable] =
+        "LEFT JOIN civicrm_group_contact $groupTable ON ( contact_a.id = $groupTable.contact_id AND $groupTable.group_id = " . CIVICRM_SECURE_GROUP_GID . " )";
+    $where .= " ( $groupTable.status is null OR $groupTable.status != 'Added' ) ";
+  }
+
+}
+
+function civicrm_secure_group_civicrm_aclGroup( $type, $contactID, $tableName, &$allGroups, &$currentGroups ) {
+  global $user;
+  // only process saved search
+  if ( $tableName != 'civicrm_saved_search' ) {
+    return;
+  }
+
+  civicrm_initialize( );
+
+  $currentGroups = $allGroups;
+
+  if ( !array_key_exists(CIVICRM_SECURE_GROUP_RID, $user->roles) ) {
+    unset( $currentGroups[CIVICRM_SECURE_GROUP_GID] );
+    $currentGroups = array_keys( $currentGroups );
+  }
+  else{
+    if(variable_get('civicrm_secure_group_reverse', 0)){
+      $currentGroups = array(CIVICRM_SECURE_GROUP_GID);
+    }
+    else{
+      $currentGroups = array_keys( $currentGroups );
+    }
+  }
+}
+
+/**
+ * remove secure role for drupal user edit page
+ */
+function civicrm_secure_group_form_alter(&$form, &$form_state, $form_name){
+  global $user;
+  if($form_name == 'user_profile_form' && !empty($form['account']['roles']['#options'][CIVICRM_SECURE_GROUP_RID]) ){
+    if( !array_key_exists(CIVICRM_SECURE_GROUP_RID, $user->roles) && $user->uid != 1) {
+      unset($form['account']['roles']['#options'][CIVICRM_SECURE_GROUP_RID]);
+    }
+  }
+}
+
+/*
+function civicrm_secure_group_civicrm_buildForm( $formName, &$form) {
+  if( $formName == 'CRM_Activity_Form_Activity' || $formName == 'CRM_Case_Form_Activity') {
+    // set status to Completed by default
+      $defaults['status_id'] = 2;
+    $form->setDefaults( $defaults );
+  }
+}
+
+function civicrm_secure_group_civicrm_validate( $formName, &$fields, &$files, &$form ) {
+    $errors = array();
+    if( $formName == 'CRM_Activity_Form_Activity' || $formName == 'CRM_Case_Form_Activity') {
+  if( $form->_action !== CRM_Core_Action::DELETE ) {
+
+            $subject = CRM_Utils_Array::value( 'subject', $fields );
+            if ( ! $subject ) {
+                $errors['subject'] = ts('Subject is a required field');
+            }
+        }        
+    }
+     return empty($errors) ? true : $errors;
+}
+*/
+

@@ -1,0 +1,100 @@
+<?php
+/**
+ * Implementation of hook_init()
+ */
+function civicrm_esunbank_init(){
+  if(strstr($_GET['q'], 'payment-esunbank')){
+    $GLOBALS['conf']['cache'] = FALSE;
+  }
+}
+
+/**
+ * Implementation of hook_menu()
+ */
+function civicrm_esunbank_menu(){
+  return array(
+    'payment-esunbank/ipn' => array(
+      'access callback' => true,
+      'page callback' => 'civicrm_esunbank_ipn',
+      'page arguments' => array(2),
+      'type' => MENU_CALLBACK,
+      'weight' => 0,
+      'file' => 'civicrm_esunbank.ipn.inc',
+    ),
+  );
+}
+
+
+/**
+ * Implementation of hook_civicrm_buildForm()
+ */
+function civicrm_esunbank_civicrm_buildForm($form_name, &$form){
+  switch($form_name){
+    case 'CRM_Contribute_Form_Contribution_ThankYou':
+      break;
+    case 'CRM_Contribute_Form_Contribution_Main':
+      break;
+  }
+}
+
+/**
+ * Implementation of hook_cron()
+ */
+function civicrm_esunbank_cron(){
+  $now = $_SERVER['REQUEST_TIME'] ? $_SERVER['REQUEST_TIME'] : time();
+
+  // fetch ftp
+  // every one hour, we check a system path for esunbank payment
+  $last = variable_get("civicrm_esunbank_cron", 0);
+
+  if($now - $last >= 3600){
+    $dir = file_directory_temp().'/esunbank';
+    $dir2 = file_directory_temp().'/esunbank_processed';
+    if(file_check_directory($dir, FILE_CREATE_DIRECTORY) && file_check_directory($dir2, FILE_CREATE_DIRECTORY)){
+      module_load_include('inc', 'civicrm_esunbank', 'civicrm_esunbank.ipn');
+      // start trying process ftp data
+      file_scan_directory($dir, '.csv', array('.', '..', 'CVS'), 'civicrm_esunbank_process_file', FALSE);
+    }
+    variable_set("civicrm_esunbank_cron", $_SERVER['REQUEST_TIME']);
+  }
+
+  // expired
+  // every day, we check if payment should expired.
+  // we will expired payment in 10 day before. (only for esunbank instrument)
+  if(date('G') > 2 && date('G') < 5){
+    $status = CRM_Contribute_PseudoConstant::contributionStatus(NULL, 'name');
+    $instrument_id = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionValue', 'Esunbank', 'value', 'name');
+    $overdue = array_search('Overdue', $status);
+    $pending = array_search('Pending', $status);
+    $gid = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_option_group WHERE name LIKE 'payment_instrument'");
+    if(!empty($instrument_id) && !empty($overdue) && !($pending)){
+      $days_before = date('Y-m-d H:i:s', $now - 86400*10);
+      $days_after = date('Y-m-d H:i:s', $now - 86400*11);
+      CRM_Core_DAO::executeQuery("UPDATE civicrm_contribution SET contribution_status_id = {$overdue} WHERE contribution_status_id = {$pending} AND created_date > '{$days_after}' AND created_date < {$days_before} AND payment_instrument_id = {$instrument_id}");
+    }
+  }
+}
+
+function civicrm_esunbank_process_file($path){
+  if(file_exists($path)){
+    $dest = str_replace('/esunbank/', '/esunbank_processed/', $path);
+    $data = file_get_contents($path);
+    if(!empty($data)){
+      $post = array('Data' => $data);
+      $results = civicrm_esunbank_ipn($post, TRUE);
+
+      // file move, we can't use drupal file_move because it's only move to drupal
+      if (copy($path, $dest)) {
+        unlink($path);
+      }
+
+      if($results === FALSE){
+        // empty results
+      }
+      else{
+        watchdog('civicrm_esunbank', var_export($results, true));
+      }
+    }
+  }
+}
+

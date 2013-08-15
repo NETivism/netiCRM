@@ -26,7 +26,7 @@
 
 {* Main template for basic search (Find Contacts) *}
 {include file="CRM/Contact/Form/Search/Intro.tpl"}
-<div class="crm-form-block crm-search-form-block">
+<div class="crm-search-form-block">
 {* This section handles form elements for search criteria *}
 <div id="searchForm">
     {include file="CRM/Contact/Form/Search/BasicCriteria.tpl"}

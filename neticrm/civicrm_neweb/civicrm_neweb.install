@@ -18,6 +18,12 @@ function civicrm_neweb_schema(){
         'length' => '11',
         'not null' => TRUE,
       ),
+      'created' => array(
+        'description' => 'Submit time for user confirmed transaction.',
+        'type' => 'int',
+        'length' => '11',
+        'not null' => FALSE,
+      ),
       'prc' => array(
         'description' => 'Primary code returned from credit card transaction.',
         'type' => 'int',
@@ -236,4 +242,16 @@ function civicrm_neweb_update_6107(){
   }
 
   return array();
+}
+
+function civicrm_neweb_update_6108(){
+  $ret = array();
+  
+  db_add_field($ret, 'civicrm_contribution_neweb', 'created', array(
+    'description' => 'Submit time for user confirmed transaction.',
+    'type' => 'int',
+    'length' => '11',
+    'not null' => FALSE,
+  ));
+  return $ret;
 }

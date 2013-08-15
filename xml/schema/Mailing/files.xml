@@ -10,4 +10,5 @@
 <xi:include href="BounceType.xml"   parse="xml" />
 <xi:include href="BouncePattern.xml"    parse="xml" />
 <xi:include href="Spool.xml"        parse="xml" />
+<xi:include href="Recipients.xml"        parse="xml" />
 </tables>

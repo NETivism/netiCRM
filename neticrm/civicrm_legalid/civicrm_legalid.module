@@ -43,6 +43,7 @@ TODO: need to change to Taiwan id verify
       */
 
       // duplicate
+      $fields['legal_identifier'] = CRM_Utils_Type::escape($fields['legal_identifier'], 'String');
       $sql = "SELECT id, display_name FROM civicrm_contact WHERE legal_identifier = '{$fields['legal_identifier']}'";
       if($contactID){
         // when update
@@ -66,7 +67,7 @@ function civicrm_legalid_civicrm_postProcess( $formName, &$form ) {
   if ($formName == 'CRM_Contact_Form_Contact') {
     // this will give you the SSN submitted value
     $values = $form->exportValues( );
-    $legalid = $values['legal_identifier'];
+    $legalid = CRM_Utils_Type::escape($values['legal_identifier'], 'String');
 
     // this will retrieve the contact id
     $contactID = $form->getVar( '_contactId' );
@@ -76,6 +77,7 @@ function civicrm_legalid_civicrm_postProcess( $formName, &$form ) {
     $exists_legalid = CRM_Core_DAO::singleValueQuery( "SELECT id FROM civicrm_contact WHERE id = {$contactID}" );
 
     if ( $exists_legalid) {
+      
       $query = "UPDATE civicrm_contact SET legal_identifier = '{$legalid}' WHERE id = {$contactID}";
       CRM_Core_DAO::executeQuery( $query );
     }

@@ -110,8 +110,12 @@ SELECT id
         if ( count($paymentProcessor) ) {
             $this->assign('paymentProcessor',$paymentProcessor);
         }
-        $this->add( 'select', 'payment_processor_id', ts( 'Payment Processor' ),
-                    array(''=>ts( '- select -' )) + $paymentProcessor, null, array( 'onchange' => "showRecurring( this.value );" ) );
+
+        $this->addCheckBox( 'payment_processor', ts('Payment Processor'),
+                            array_flip($paymentProcessor),
+                            null, null, null, null,
+                            array( '&nbsp;&nbsp;', '&nbsp;&nbsp;', '&nbsp;&nbsp;', '<br/&' ) );
+
         
         require_once "CRM/Contribute/BAO/ContributionPage.php";
         
@@ -183,7 +187,6 @@ SELECT id
     function setDefaultValues() 
     {
         $defaults = parent::setDefaultValues( );
-        
         $title = CRM_Core_DAO::getFieldValue( 'CRM_Contribute_DAO_ContributionPage', $this->_id, 'title' );
         CRM_Utils_System::setTitle(ts('Contribution Amounts (%1)', array(1 => $title)));
         
@@ -232,7 +235,12 @@ SELECT id
         if (isset($defaults['max_amount'])) {
             $defaults['max_amount'] = CRM_Utils_Money::format($defaults['max_amount'], null, '%a');
         }
-        
+
+        if ( CRM_Utils_Array::value( 'payment_processor', $defaults ) ) {
+                $defaults['payment_processor'] =
+                    array_fill_keys( explode( CRM_Core_DAO::VALUE_SEPARATOR,
+                                              $defaults['payment_processor'] ), '1' );
+        }
         return $defaults;
     }
     
@@ -391,7 +399,11 @@ SELECT id
                          array_keys( $params['recur_frequency_unit'] ) );
             $params['is_recur_interval'] = CRM_Utils_Array::value( 'is_recur_interval', $params ,false );
         }
-        
+
+        if ( !CRM_Utils_System::isNull( $params['payment_processor'] ) ) {
+            $params['payment_processor'] = implode( CRM_Core_DAO::VALUE_SEPARATOR, array_keys( $params['payment_processor'] ) );
+        }
+
         require_once 'CRM/Contribute/BAO/ContributionPage.php';
         $contributionPage   = CRM_Contribute_BAO_ContributionPage::create( $params );
         $contributionPageID = $contributionPage->id;

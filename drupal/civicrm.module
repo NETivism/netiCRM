@@ -163,7 +163,7 @@ function civicrm_perm()
  * generates the contents of the blocks themselves.
  */
 
-function civicrm_block($op='list', $delta='0')
+function civicrm_block($op = 'list', $delta = 0, $edit = array())
 {
     if ( $op == 'configure' ) {
         return;
@@ -178,10 +178,12 @@ function civicrm_block($op='list', $delta='0')
 
     if ($op == 'list') {
         $block = CRM_Core_Block::getInfo();
-    } else {
-        $block = CRM_Core_Block::getContent ($delta);
+        return $block;
     }
-    return $block;
+    if ($op == 'view') {
+        $block = CRM_Core_Block::getContent ($delta);
+        return $block;
+    }
 }
 
 /**
@@ -230,6 +232,16 @@ function civicrm_initialize( )
     if ( (int ) substr( PHP_VERSION, 0, 1 ) < 5 ) {
         echo "CiviCRM requires PHP Version 5.2 or greater. You are running PHP Version " . PHP_VERSION . "<p>";
         exit( );
+    }
+
+    // autoload
+    if (FALSE && module_exists('xautoload')) {
+        _xautoload_finder()->registerPrefixDeep('CRM', 'CRM');
+    }
+    else {
+        require_once dirname(__FILE__) . '/../CRM/Core/ClassLoader.php';
+        $classLoader = new CRM_Core_ClassLoader();
+        $classLoader->register();
     }
 
     static $initialized    = false;
@@ -286,8 +298,7 @@ function civicrm_initialize( )
         // Add module-specific header elements
         drupal_set_html_head(civicrm_html_head());
     }
-
-    return true;
+    return TRUE;
 }
 
 /**
@@ -759,6 +770,7 @@ function civicrm_translated_menu_link_alter(&$item) {
     }
 }
 
+/*
 function civicrm_admin_menu( ) {
     if ( ! civicrm_initialize( ) ) {
         return;
@@ -772,8 +784,8 @@ function civicrm_admin_menu( ) {
                      'weight' => $weight,
                      'options' => array( 'query' => 'reset=1' ) );
     return $links;
-
 }
+*/
 
 /**
  * Implementation of hook_views_api().
@@ -880,7 +892,26 @@ function civicrm_preprocess_page(&$variables) {
         }
         
         $core[$path . '/../js/noconflict.js'] = $val;
+
+        if(module_exists('jquery_update')){
+          $core[jquery_update_jquery_path()] = $scripts['core']['misc/jquery.js'];
+          unset($scripts['core']['misc/jquery.js']);
+        }
         $scripts['core'] = $core + $scripts['core'];
+
+        if(module_exists('jquery_update')){
+          foreach (jquery_update_get_replacements() as $type => $replacements) {
+            foreach ($replacements as $find => $replace) {
+              // If the file to replace is loaded on this page...
+              if (isset($scripts[$type][$find])) {
+                // Create a new entry for the replacement file, and unset the original one.
+                $replace = JQUERY_UPDATE_REPLACE_PATH .'/'. $replace;
+                $scripts[$type][$replace] = $scripts[$type][$find];
+                unset($scripts[$type][$find]);
+              }
+            }
+          }  
+        }
         $variables['scripts'] = drupal_get_js('header', $scripts);
     }
 }

@@ -382,7 +382,7 @@ class CRM_UF_Form_Field extends CRM_Core_Form
                 if ( $customFieldId = CRM_Core_BAO_CustomField::getKeyID( $key1 ) ) {
                     $customGroupId   = CRM_Core_DAO::getFieldValue( 'CRM_Core_DAO_CustomField', $customFieldId, 'custom_group_id' );
                     $customGroupName = CRM_Core_DAO::getFieldValue( 'CRM_Core_DAO_CustomGroup', $customGroupId, 'title' );
-                    $this->_mapperFields[$key][$key1] = $value1['title'] . ' :: ' . $customGroupName; 
+                    $this->_mapperFields[$key][$key1] = '#'.$customGroupName . '::' .$value1['title']; 
                     if ( in_array( $key1, $addressCustomFields ) ) {
                         $noSearchable[] = $value1['title'] . ' :: ' . $customGroupName;
                     }
@@ -421,7 +421,7 @@ class CRM_UF_Form_Field extends CRM_Core_Form
         
         $this->_location_types = array (ts('Primary')) + $this->_location_types;
 
-        $contactTypes = !empty($contactTypes) ? array( 'Contact' => 'Contacts' ) + $contactTypes : array( );
+        $contactTypes = !empty($contactTypes) ? array( 'Contact' => ts('Contacts') ) + $contactTypes : array( );
         $sel1 = array( '' => '- select -' ) + $contactTypes;
 
         if ( CRM_Core_Permission::access( 'Quest' ) ) {

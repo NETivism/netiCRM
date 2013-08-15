@@ -375,7 +375,7 @@ abstract class ezcMailPart
                         'input-charset' => $charset,
                         'output-charset' => $charset,
                         'line-length' => ezcMailHeaderFolder::getLimit(),
-                        'scheme' => 'Q',
+                        'scheme' => 'B',
                         'line-break-chars' => ezcMailTools::lineBreak()
                     );
                     $value = iconv_mime_encode( 'dummy', $value, $preferences );

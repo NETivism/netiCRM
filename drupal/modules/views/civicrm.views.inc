@@ -1459,6 +1459,46 @@ function civicrm_views_data() {
                                                                 'handler' => 'views_handler_sort',
                                                                 ),
                                                 );
+    $data['civicrm_event']['has_waitlist'] = array(
+                                                'title' => t('Has Waitlist'),
+                                                'help' => t('Offer a Waitlist?'),
+                                                'field' => array(
+                                                                 'handler' => 'views_handler_field_boolean',
+                                                                 'click sortable' => TRUE,
+                                                                 ),
+
+                                                'argument' => array(
+                                                                    'handler' => 'views_handler_argument',
+                                                                    ),
+
+                                                'filter' => array(
+                                                                  'handler' => 'views_handler_filter_boolean_operator',
+                                                                  ),
+
+                                                'sort' => array(
+                                                                'handler' => 'views_handler_sort',
+                                                                ),
+                                                );
+    $data['civicrm_event']['requires_approval'] = array(
+                                                'title' => t('Requires Approval'),
+                                                'help' => t('Require participant approval?'),
+                                                'field' => array(
+                                                                 'handler' => 'views_handler_field_boolean',
+                                                                 'click sortable' => TRUE,
+                                                                 ),
+
+                                                'argument' => array(
+                                                                    'handler' => 'views_handler_argument',
+                                                                    ),
+
+                                                'filter' => array(
+                                                                  'handler' => 'views_handler_filter_boolean_operator',
+                                                                  ),
+
+                                                'sort' => array(
+                                                                'handler' => 'views_handler_sort',
+                                                                ),
+                                                );
     //BOOLEAN : Include EVENT Templates ?
     $data['civicrm_event']['is_template'] = array(
                                                 'title' => t('Include Template'),
@@ -1567,6 +1607,23 @@ function civicrm_views_data() {
     $data['civicrm_event']['is_online_registration'] = array(
                                                              'title' => t('Is Online Registration On'),
                                                              'help' => t('Is Online Registration enabled for the event?'),
+                                                             'field' => array(
+                                                                              'handler' => 'views_handler_field_boolean',
+                                                                              'click sortable' => TRUE,
+                                                                              ),
+
+                                                             'filter' => array(
+                                                                               'handler' => 'views_handler_filter_boolean_operator',
+                                                                               ),
+
+                                                             'sort' => array(
+                                                                             'handler' => 'views_handler_sort',
+                                                                             ),
+                                                             );
+    //BOOLEAN : is_monetary 
+    $data['civicrm_event']['is_monetary'] = array(
+                                                             'title' => t('Paid Event'),
+                                                             'help' => t('Is this event need to paid?'),
                                                              'field' => array(
                                                                               'handler' => 'views_handler_field_boolean',
                                                                               'click sortable' => TRUE,
@@ -4334,6 +4391,20 @@ function civicrm_views_data() {
                                                                        'handler' => 'views_handler_sort',
                                                                        ),
                                                        );
+     //is this mailing public
+     $data['civicrm_mailing']['visibility'] = array(
+       'title' => t('Visibility'),
+       'help' => t('Is this mailing public or not?'),
+       'argument' => array(
+         'handler' => 'views_handler_argument',
+       ),
+       'filter' => array(
+         'handler' => 'civicrm_handler_filter_visibility',
+       ),
+       'sort' => array(
+         'handler' => 'views_handler_sort',
+       ),
+     );
 
     // mailing_component table aliased as mailing_header
      $data['civicrm_mailing_header']['table']['group'] = ts('CiviCRM Mailings');
@@ -5535,6 +5606,9 @@ function civicrm_views_handlers() {
                                                                       'parent' => 'views_handler_filter_in_operator',
                                                                       ),
                        'civicrm_handler_filter_custom_option' => array(
+                                                                       'parent' => 'views_handler_filter_in_operator',
+                                                                       ),
+                       'civicrm_handler_filter_visibility' => array(
                                                                        'parent' => 'views_handler_filter_in_operator',
                                                                        ),
                        

@@ -6,12 +6,19 @@ define('CIVICRM_PARENT_DIR', 'b_a'); // relationship id
  * hook_civicrm_buildForm
  */
 function civicrm_event_parent_civicrm_buildForm( $formName, &$form ) {
+  $reset = true;
+  $session = CRM_Core_Session::singleton( );
+  if ($formName == 'CRM_Event_Form_Registration_Confirm'){
+    $session->getStatus(true);
+  }
+
   // event registration form
   if ( $formName == 'CRM_Event_Form_Registration_Register' ) {
     civicrm_event_parent_civicrm_buildForm_regRegister( $formName, $form );
   }
   // event registration for additional participant
   if ( $formName == 'CRM_Event_Form_Registration_AdditionalParticipant' ) {
+    $session->getStatus(true);
     civicrm_event_parent_civicrm_buildForm_regAdditional( $formName, $form );
   }
 
@@ -40,9 +47,10 @@ function civicrm_event_parent_civicrm_buildForm( $formName, &$form ) {
     $params = array('id' => $event_id);
     $result = civicrm_event_get($params);
     if(!$result['is_error'] && $parent_gid[$event_id]){
-      $relation = CRM_Core_DAO::executeQuery("SELECT * FROM civicrm_relationship_type WHERE id = ".$parent_gid[$event_id]['parent_gid']);
-      $relation->fetch();
       list($rTypeID, $rTypeDir) = explode('-', $parent_gid[$event_id]['parent_relation']);
+      $rTypeID = CRM_Utils_Type::escape($rTypeID, 'Integer');
+      $relation = CRM_Core_DAO::executeQuery("SELECT * FROM civicrm_relationship_type WHERE id = ".$rTypeID);
+      $relation->fetch();
       $relation_label = 'label_'.$rTypeDir;
       drupal_set_title($result['title']." - ".t("!relation profile form", array('!relation' => $relation->{$relation_label})));
     }
@@ -117,8 +125,8 @@ function civicrm_event_parent_civicrm_buildForm_regRegister( $formName, &$form )
   $_id = $_GET['id'];
 
 
-  if(!empty($civicrm_event_parent_gid[$event_id]['parent_gid'])){
-    $relation = CRM_Core_DAO::executeQuery("SELECT * FROM civicrm_relationship_type WHERE id = ".$civicrm_event_parent_gid[$event_id]['parent_gid']);
+  if(!empty($civicrm_event_parent_gid[$event_id]['parent_gid']) && !empty($rTypeID)){
+    $relation = CRM_Core_DAO::executeQuery("SELECT * FROM civicrm_relationship_type WHERE id = ".$rTypeID);
     $relation->fetch();
 
     // handling redirection
@@ -133,6 +141,9 @@ function civicrm_event_parent_civicrm_buildForm_regRegister( $formName, &$form )
     }
     // now the real registration process
     else {
+      if($_GET['_qf_Confirm_display'] || $_GET['_qf_ThankYou_display']){
+        return;
+      }
       $status_msg = array(
         '!name' => $display_name,
         '!relationship' => $relation->{$relation_label},
@@ -201,6 +212,11 @@ function civicrm_event_parent_civicrm_buildForm_regAdditional( $formName, &$form
 }
 
 function civicrm_event_parent_civicrm_postProcess( $class, &$form ) {
+  if ( is_a( $form, 'CRM_Event_Form_Registration_Register' ) ) {
+    if($form->_values['event']['is_monetary'] == 0){
+      return civicrm_event_parent_civicrm_postProcess_regConfirm( $class, $form );
+    }
+  }
   if ( is_a( $form, 'CRM_Event_Form_Registration_Confirm' ) ) {
     return civicrm_event_parent_civicrm_postProcess_regConfirm( $class, $form );
   }

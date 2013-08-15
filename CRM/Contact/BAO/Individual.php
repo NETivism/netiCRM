@@ -233,10 +233,12 @@ class CRM_Contact_BAO_Individual extends CRM_Contact_DAO_Contact
             $default_format = "{first_name}{ }{last_name}";
             if(!preg_replace('/\w+|[-_]+/', '', $sortName)){
               $sortName = CRM_Utils_Address::format($formatted, $default_format, false, false, true, $tokenFields);
+              $sortName = preg_replace('/[\r\n]+$/m', '', $sortName);
               $is_eng = TRUE;
             }
             if(!preg_replace('/\w+|[-_]+/', '', $displayName) || $is_eng){
               $displayName = CRM_Utils_Address::format($formatted, $default_format, false, false, true, $tokenFields);
+              $displayName = preg_replace('/[\r\n]+$/m', '', $displayName);
             }
         }
         

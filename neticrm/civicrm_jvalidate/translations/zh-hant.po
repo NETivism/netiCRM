@@ -1,0 +1,47 @@
+# $Id$
+#
+# LANGUAGE translation of Drupal (general)
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+# Generated from files:
+#  civicrm_jvalidate.module: n/a
+#  civicrm_jvalidate.info: n/a
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Jquey Validate\n"
+"POT-Creation-Date: 2013-04-12 13:54+0800\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Language-Team: Chinese, Traditional\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n>1);\n"
+
+#: civicrm_jvalidate.module:16
+msgid "Phone Ext."
+msgstr "分機號碼"
+
+#: civicrm_jvalidate.module:17
+msgid "Enter phone number Ext."
+msgstr "請輸入分機號碼"
+
+#: civicrm_jvalidate.module:18
+msgid "other format?"
+msgstr "若您是外籍人士，點此輸入護照號碼"
+
+#: civicrm_jvalidate.module:19
+msgid "Enter id below."
+msgstr "在下方輸入ID"
+
+#: civicrm_jvalidate.info:0
+msgid "Jquery Form Validation"
+msgstr "Jquery表單驗證"
+
+#: civicrm_jvalidate.info:0
+msgid "This module is used for CiviCRM form validation of jquery.validate plug-in."
+msgstr "此模組是用於 CiviCRM 表單 的 jquery 驗證插件。"
+
+#: civicrm_jvalidate.info:0
+msgid "NetiCRM"
+msgstr "NetiCRM"
+

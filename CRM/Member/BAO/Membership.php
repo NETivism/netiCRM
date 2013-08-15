@@ -120,7 +120,7 @@ class CRM_Member_BAO_Membership extends CRM_Member_DAO_Membership
         $membershipLog = array('membership_id' => $membership->id,
                                'status_id'     => $membership->status_id,
                                'start_date'    => $logStartDate,
-                               'end_date'      => $membership->end_date,
+                               'end_date'      => CRM_Utils_Date::isoToMysql( $membership->end_date ),
                                'renewal_reminder_date' => $membership->reminder_date, 
                                'modified_id'   => CRM_Utils_Array::value( 'userId', $ids ),
                                'modified_date' => date('Ymd')
@@ -207,7 +207,12 @@ class CRM_Member_BAO_Membership extends CRM_Member_DAO_Membership
                 $startDate  = CRM_Utils_Date::customFormat($params['start_date'],'%Y%m%d');
             }
             if ( isset( $params['end_date'] ) ) {
-                $endDate    = CRM_Utils_Date::customFormat($params['end_date'],'%Y%m%d');
+                if ( $params['end_date'] == 'null') {
+                   $endDate = null;
+                }
+                else{
+                   $endDate = CRM_Utils_Date::customFormat($params['end_date'],'%Y%m%d');
+                }
             }
             if ( isset( $params['join_date'] ) ) {
                 $joinDate   = CRM_Utils_Date::customFormat($params['join_date'],'%Y%m%d');
@@ -761,7 +766,7 @@ INNER JOIN  civicrm_membership_type type ON ( type.id = membership.membership_ty
         //avoid pending membership as current memebrship: CRM-3027
         require_once 'CRM/Member/PseudoConstant.php';        
         $pendingStatusId = array_search( 'Pending', CRM_Member_PseudoConstant::membershipStatus( ) );
-        $dao->whereAdd( "status_id != $pendingStatusId" );
+        $dao->whereAdd( "status_id != $pendingStatusId AND join_date IS NOT NULL" );
         
         // order by start date to find mos recent membership first, CRM-4545
         $dao->orderBy('start_date DESC');

@@ -693,13 +693,15 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
                             'qs'    => 'reset=1&cid=%%id%%&restore=1',
                             'title' => ts('Restore Contact'),
                         ),
-                        array(
-                            'name'  => ts('Delete Permanently'),
-                            'url'   => 'civicrm/contact/view/delete',
-                            'qs'    => 'reset=1&cid=%%id%%&skip_undelete=1',
-                            'title' => ts('Permanently Delete Contact'),
-                        ),
                     );
+                    if(CRM_Core_Permission::check('delete contacts permanantly')){
+                      $links[] = array(
+                          'name'  => ts('Delete Permanently'),
+                          'url'   => 'civicrm/contact/view/delete',
+                          'qs'    => 'reset=1&cid=%%id%%&skip_undelete=1',
+                          'title' => ts('Permanently Delete Contact'),
+                      );
+                    }
                     $row['action'] = CRM_Core_Action::formLink($links, null, array('id' => $result->contact_id));
                 } elseif ( ( is_numeric( CRM_Utils_Array::value( 'geo_code_1', $row ) ) ) ||
                      ( $config->mapGeoCoding &&

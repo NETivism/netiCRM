@@ -35,6 +35,7 @@
 <div class="crm-submit-buttons">
    {include file="CRM/common/formButtons.tpl"}
 </div>
+<div class="crm-jquery-accordion">
 <div class="crm-accordion-wrapper crm-contactDetails-accordion crm-accordion-open">
  <div class="crm-accordion-header">
   <div class="icon crm-accordion-pointer"></div> 
@@ -101,6 +102,7 @@
     {foreach from = $editOptions item = "title" key="name"}
         {include file="CRM/Contact/Form/Edit/$name.tpl"}
     {/foreach}
+</div><!-- /.crm-jquery-accordion -->
 <div class="crm-submit-buttons">
     {include file="CRM/common/formButtons.tpl"}
 </div>

@@ -259,14 +259,8 @@ ORDER BY start_date desc
         $this->assign('rows', $manageEvent);
         
         require_once 'CRM/Event/PseudoConstant.php';
-        $statusTypes        = CRM_Event_PseudoConstant::participantStatus(null, 'is_counted = 1');
-        $statusTypesPending = CRM_Event_PseudoConstant::participantStatus(null, 'is_counted = 0');
-        foreach($statusTypes as $k => $v){
-          $statusTypes[$k] = ts($v);
-        }
-        foreach($statusTypesPending as $k => $v){
-          $statusTypesPending[$k] = ts($v);
-        }
+        $statusTypes        = CRM_Event_PseudoConstant::participantStatus(null, 'is_counted = 1', 'label');
+        $statusTypesPending = CRM_Event_PseudoConstant::participantStatus(null, 'is_counted = 0', 'label');
         $findParticipants['statusCounted'] = implode( ', ', array_values( $statusTypes ) );
         $findParticipants['statusNotCounted'] = implode( ', ', array_values( $statusTypesPending ) );
         $this->assign('findParticipants', $findParticipants);

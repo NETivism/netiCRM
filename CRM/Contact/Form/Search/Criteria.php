@@ -89,6 +89,17 @@ class CRM_Contact_Form_Search_Criteria {
         $attributes['job_title']['size'] = 30;
         $form->addElement('text', 'job_title', ts('Job Title'), $attributes['job_title'], 'size="30"' );
 
+        //added internal ID
+        $attributes['id']['size'] = 30;
+        $form->addElement('text', 'id', ts('Contact ID'), $attributes['id'], 'size="30"');
+
+        //added external ID
+        $attributes['external_identifier']['size'] = 30;
+        $form->addElement('text', 'external_identifier', ts('External ID'), $attributes['external_identifier'], 'size="30"');
+
+        $attributes['legal_identifier']['size'] = 30;
+        $form->addElement('text', 'legal_identifier', ts('Legal Identifier'), $attributes['legal_identifier'], 'size="30"');
+
         $config =& CRM_Core_Config::singleton();
         if (CRM_Core_Permission::check('access deleted contacts') and $config->contactUndelete) {
             $form->add('checkbox', 'deleted_contacts', ts('Search in Trash (deleted contacts)'));
@@ -96,6 +107,9 @@ class CRM_Contact_Form_Search_Criteria {
 
         // add checkbox for cms users only
         $form->addYesNo( 'uf_user', ts( 'CMS User?' ) );
+
+        // tag all search
+        $form->add('text', 'tag_search', ts('All Tags'));
  
         // add search profiles
         require_once 'CRM/Core/BAO/UFGroup.php';
@@ -147,18 +161,60 @@ class CRM_Contact_Form_Search_Criteria {
                               $componentModes );
         }
 
+        $form->addElement('select',
+          'operator',
+          ts('Search Operator'),
+          array('AND' => ts('AND'),
+            'OR' => ts('OR'),
+          )
+        );
+
+        // add the option to display relationships
+        $rTypes = CRM_Core_PseudoConstant::relationshipType();
+        $rSelect = array('' => ts('- Select Relationship Type -'));
+        foreach ($rTypes as $rid => $rValue) {
+          if ($rValue['label_a_b'] == $rValue['label_b_a']) {
+            $rSelect[$rid] = $rValue['label_a_b'];
+          }
+          else {
+            $rSelect["{$rid}_a_b"] = $rValue['label_a_b'];
+            $rSelect["{$rid}_b_a"] = $rValue['label_b_a'];
+          }
+        }
+
+        $form->addElement('select',
+          'display_relationship_type',
+          ts('Display Results as Relationship'),
+          $rSelect
+        );
+
         // checkboxes for DO NOT phone, email, mail
         // we take labels from SelectValues
         $t = CRM_Core_SelectValues::privacy();
-        $t['do_not_toggle'] = ts( 'Include contacts who have these privacy option(s).' );
-        $privacy[] = HTML_QuickForm::createElement('advcheckbox', 'do_not_phone', null, $t['do_not_phone']);
-        $privacy[] = HTML_QuickForm::createElement('advcheckbox', 'do_not_email', null, $t['do_not_email']);
-        $privacy[] = HTML_QuickForm::createElement('advcheckbox', 'do_not_mail' , null, $t['do_not_mail']);
-        $privacy[] = HTML_QuickForm::createElement('advcheckbox', 'do_not_sms' ,  null, $t['do_not_sms']);
-        $privacy[] = HTML_QuickForm::createElement('advcheckbox', 'do_not_trade', null, $t['do_not_trade']);
-        $privacy[] = HTML_QuickForm::createElement('advcheckbox', 'do_not_toggle', null, $t['do_not_toggle']);
-        
-        $form->addGroup($privacy, 'privacy', ts('Privacy'), array( '&nbsp;', '&nbsp;', '&nbsp;', '<br/>' ) );
+        $form->add('select',
+          'privacy_options',
+          ts('Privacy'),
+          $t,
+          FALSE,
+          array(
+            'id' => 'privacy_options',
+            'multiple' => 'multiple',
+            'title' => ts('- select -'),
+          )
+        );
+
+        $form->addElement('select',
+          'privacy_operator',
+          ts('Operator'),
+          array('OR' => ts('OR'),
+            'AND' => ts('AND'),
+          )
+        );
+
+        $toggleChoice   = array();
+        $toggleChoice[] = $form->createElement('radio', NULL, '', ' ' . ts('Exclude'), '1');
+        $toggleChoice[] = $form->createElement('radio', NULL, '', ' ' . ts('Include by Privacy Option(s)'), '2');
+        $form->addGroup($toggleChoice, 'privacy_toggle', 'Privacy Options');
 
         // preferred communication method 
         require_once 'CRM/Core/PseudoConstant.php';
@@ -310,8 +366,8 @@ class CRM_Contact_Form_Search_Criteria {
         // block for change log
         $form->addElement('text', 'changed_by', ts('Modified By'), null);
 
-        $form->addDate( 'modified_date_low', ts('Modified Between'), false, array( 'formatType' => 'searchDate') );
-        $form->addDate( 'modified_date_high', ts('and'), false, array( 'formatType' => 'searchDate') );
+        $form->addDate( 'log_date_low', ts('Modified Between'), false, array( 'formatType' => 'searchDate') );
+        $form->addDate( 'log_date_high', ts('and'), false, array( 'formatType' => 'searchDate') );
     }
 
     static function task( &$form ) {

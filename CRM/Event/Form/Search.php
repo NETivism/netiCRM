@@ -488,58 +488,73 @@ class CRM_Event_Form_Search extends CRM_Core_Form
         // if this search has been forced
         // then see if there are any get values, and if so over-ride the post values
         // note that this means that GET over-rides POST :)
-        $event = CRM_Utils_Request::retrieve( 'event', 'Positive',
-                                              CRM_Core_DAO::$_nullObject );
+        $event = CRM_Utils_Request::retrieve( 'event', 'Positive', CRM_Core_DAO::$_nullObject );
         if ( $event ) {
-            require_once 'CRM/Event/PseudoConstant.php';
-            $this->_formValues['event_id'] = $event;
-            $this->_formValues['event_name'] = CRM_Event_PseudoConstant::event( $event, true );
+          require_once 'CRM/Event/PseudoConstant.php';
+          $this->_formValues['event_id'] = $event;
+          $this->_formValues['event_name'] = CRM_Event_PseudoConstant::event( $event, true );
         }
         
-        $status = CRM_Utils_Request::retrieve( 'status', 'String',
-                                               CRM_Core_DAO::$_nullObject );
+        $status = CRM_Utils_Request::retrieve( 'status', 'String', CRM_Core_DAO::$_nullObject );
         
         if ( isset ( $status ) ) {
-            require_once 'CRM/Event/PseudoConstant.php';
-            if ( $status === 'true' ) {
-                $statusTypes = CRM_Event_PseudoConstant::participantStatus( null, "is_counted = 1" );
-            } elseif ( $status === 'false' ) {
-                $statusTypes = CRM_Event_PseudoConstant::participantStatus( null, "is_counted = 0" );
-            } elseif (is_numeric($status)) {
-                $status = (int) $status;
-                $statusTypes = array($status => CRM_Event_PseudoConstant::participantStatus($status));
-            }
-            $status = array( );
-            foreach ( $statusTypes as $key => $value) {
-                $status[$key] = 1;
-            }
-            $this->_formValues['participant_status_id'] = $status;    
+          require_once 'CRM/Event/PseudoConstant.php';
+          if ( $status === 'true' ) {
+            $statusTypes = CRM_Event_PseudoConstant::participantStatus( null, "is_counted = 1" );
+          }
+          elseif ( $status === 'false' ) {
+            $statusTypes = CRM_Event_PseudoConstant::participantStatus( null, "is_counted = 0" );
+          }
+          elseif (is_numeric($status)) {
+            $status = (int) $status;
+            $statusTypes = array($status => CRM_Event_PseudoConstant::participantStatus($status));
+          }
+          $status = array( );
+          foreach ( $statusTypes as $key => $value) {
+            $status[$key] = $key;
+          }
+          $this->_formValues['participant_status_id'] = $status;    
         }
         
-        $role = CRM_Utils_Request::retrieve( 'role', 'String',
-                                             CRM_Core_DAO::$_nullObject );
+        $role = CRM_Utils_Request::retrieve( 'role', 'String', CRM_Core_DAO::$_nullObject );
         
         if ( isset ( $role ) ) {
-            require_once 'CRM/Event/PseudoConstant.php';
-            if ( $role === 'true' ) {
-                $roleTypes = CRM_Event_PseudoConstant::participantRole( null, "filter = 1" );
-            } elseif ( $role === 'false' ) {
-                $roleTypes = CRM_Event_PseudoConstant::participantRole( null, "filter = 0" );
-            } elseif (is_numeric($role)) {
-                $role      = (int) $role;
-                $roleTypes = array( $role => CRM_Event_PseudoConstant::participantRole($role));
-            }
-            $role = array( );
-            foreach ( $roleTypes as $key => $value) {
-                $role[$key] = 1;
-            }
-            $this->_formValues['participant_role_id'] = $role;
+          require_once 'CRM/Event/PseudoConstant.php';
+          if ( $role === 'true' ) {
+            $roleTypes = CRM_Event_PseudoConstant::participantRole( null, "filter = 1" );
+          }
+          elseif ( $role === 'false' ) {
+            $roleTypes = CRM_Event_PseudoConstant::participantRole( null, "filter = 0" );
+          }
+          elseif (is_numeric($role)) {
+            $role      = (int) $role;
+            $roleTypes = array( $role => CRM_Event_PseudoConstant::participantRole($role));
+          }
+          $role = array( );
+          foreach ( $roleTypes as $key => $value) {
+            $role[$key] = $key;
+          }
+          $this->_formValues['participant_role_id'] = $role;
+        }
+
+        if(is_array($_REQUEST['participant_status_id'])){
+          $this->_formValues['participant_status_id'] = array();
+          foreach ( $_REQUEST['participant_status_id'] as $key => $value) {
+            $this->_formValues['participant_status_id'][$value] = $value;
+          }
+        }
+
+        if(is_array($_REQUEST['participant_role_id'])){
+          $this->_formValues['participant_role_id'] = array();
+          foreach ( $_REQUEST['participant_role_id'] as $key => $value) {
+            $this->_formValues['participant_role_id'][$value] = $value;
+          }
         }
         
         $type = CRM_Utils_Request::retrieve( 'type', 'Positive',
                                              CRM_Core_DAO::$_nullObject );
         if ( $type ) {
-            $this->_formValues['event_type'] = $type;
+          $this->_formValues['event_type'] = $type;
         }
         
         $cid = CRM_Utils_Request::retrieve( 'cid', 'Positive', $this );

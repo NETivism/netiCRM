@@ -30,9 +30,14 @@
   {assign var=height value="600px"}
   {assign var=width  value="100%"}
 {/if}
+{if $smarty.server.HTTPS}
+  {assign var=protocol value="https://"}
+{else}
+  {assign var=protocol value="http://"}
+{/if}
 {assign var=defaultZoom value=12}  
 {literal}
-<script src="http://maps.googleapis.com/maps/api/js?sensor=false" type="text/javascript"></script>
+<script src="{/literal}{$protocol}{literal}maps.googleapis.com/maps/api/js?sensor=false" type="text/javascript"></script>
 <script type="text/javascript">
     function initMap() {
         var latlng = new google.maps.LatLng({/literal}{$center.lat},{$center.lng}{literal});

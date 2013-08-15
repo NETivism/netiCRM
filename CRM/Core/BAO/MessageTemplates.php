@@ -482,11 +482,11 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates
                 $params['html'] = null;
             }
 
+            $config = CRM_Core_Config::singleton();
             $pdf_filename = '';
-            if ( $params['PDFFilename'] && $params['html'] ) {
+            if ( !$config->doNotAttachPDFReceipt && $params['PDFFilename'] && $params['html'] ) {
                 require_once 'CRM/Utils/PDF/Utils.php';
                 require_once 'CRM/Utils/File.php';
-                $config = CRM_Core_Config::singleton();
                 $pdf_filename = $config->templateCompileDir . CRM_Utils_File::makeFileName( $params['PDFFilename'] );
                 file_put_contents( $pdf_filename, CRM_Utils_PDF_Utils::html2pdf( $params['html'],
                                                                                  $params['PDFFilename'],
@@ -496,14 +496,14 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates
                                                                                )
                                  );
                                  
-			    if ( empty( $params['attachments'] ) ) {
-			        $params['attachments'] = array();
-			    }
-			    $params['attachments'][] = array(
-			        'fullPath' => $pdf_filename,
-			        'mime_type' => 'application/pdf',
-			        'cleanName' => $params['PDFFilename'],
-			    );
+              if ( empty( $params['attachments'] ) ) {
+                  $params['attachments'] = array();
+              }
+              $params['attachments'][] = array(
+                  'fullPath' => $pdf_filename,
+                  'mime_type' => 'application/pdf',
+                  'cleanName' => $params['PDFFilename'],
+              );
             }
             
             require_once 'CRM/Utils/Mail.php';

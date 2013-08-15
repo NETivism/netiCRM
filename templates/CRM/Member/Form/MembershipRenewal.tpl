@@ -107,6 +107,36 @@
                        <td class="label">{$form.contribution_status_id.label}</td>
                        <td>{$form.contribution_status_id.html}</td>
                     </tr>
+                    <tr id="receipt" class="crm-contribution-form-block-receipt">
+                      <td class="label"><label>{ts}Receipt{/ts}</label></td>
+                      <td>
+                        <div class="have-receipt"><input value="1" class="form-checkbox" type="checkbox" name="have_receipt" id="have_receipt" /> <span class="description">{ts}Have receipt?{/ts}</span></div>
+                        <div id="receipt-option">
+                      {if $email and $outBound_option != 2 }
+                          <div class="crm-receipt-option crm-membership-form-block-send_receipt">
+                              <div class="label">{$form.send_receipt.label}</div><div>{$form.send_receipt.html}
+                              <span class="description">{ts 1=$emailExists}Automatically email a membership confirmation and receipt to %1?{/ts}</span></div>
+                          </div>
+                      {/if}    
+                          <div id="notice" class="crm-member-membershiprenew-form-block-receipt_text_renewal">	
+                              <div class="label">{$form.receipt_text_renewal.label}</div>
+                              <div><span class="description">{ts}Enter a message you want included at the beginning of the emailed receipt. EXAMPLE: 'Thanks for supporting our organization with your membership.'{/ts}</span>
+                              {$form.receipt_text_renewal.html|crmReplace:class:huge}</div> 
+                          </div>
+                          <div class="crm-receipt-option">
+                            <div class="label">{$form.receipt_date.label}</div>
+                            <div>{include file="CRM/common/jcalendar.tpl" elementName=receipt_date}<br />
+                                <span class="description">{ts}Date that a receipt was sent to the contributor.{/ts}</span>
+                            </div>
+                          </div>
+                          <div class="crm-receipt-option">
+                            <div class="label">{$form.receipt_id.label}</div>
+                            <div>{$form.receipt_id.html}<br />
+                            <span class="description">{ts 1=$receipt_id_setting}Receipt ID will generate automatically based on receive date and <a href="%1" target="_blank">prefix settings</a>.{/ts}</span></div>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
                  </table>
                </fieldset>
             </td>
@@ -118,21 +148,6 @@
      	<div class="spacer"></div>
      	{include file='CRM/Core/BillingBlock.tpl'}
      {/if}
-     {if $email and $outBound_option != 2}
-     <table class="form-layout">
-	     <tr class="crm-member-membershiprenew-form-block-send_receipt">
-	       <td class="label">{$form.send_receipt.label}</td>
-           <td>{$form.send_receipt.html}<br />
-	       <span class="description">{ts 1=$email}Automatically email a membership confirmation and receipt to %1?{/ts}</span></td>
-	     </tr> 
-	     <tr id="notice" class="crm-member-membershiprenew-form-block-receipt_text_renewal">	
-    	    <td class="label">{$form.receipt_text_renewal.label}</td>
-            <td><span class="description">{ts}Enter a message you want included at the beginning of the emailed receipt. EXAMPLE: 'Thanks for supporting our organization with your membership.'{/ts}</span><br />
-            {$form.receipt_text_renewal.html|crmReplace:class:huge}</td> 
-	     </tr>
-     </table>
-     {/if}
-         
      <div>{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
    
    <div class="spacer"></div>
@@ -169,6 +184,39 @@
 {/if}
 {literal}
 <script type="text/javascript">
+cj(document).ready(function(){
+   if(cj('#receipt_date').val()){
+     cj('#have_receipt').attr('checked', 'checked');
+     cj('#have_receipt').attr('disabled', 'disabled');
+   }
+   else{
+     cj('#receipt-option').hide();
+   }
+   cj('#have_receipt').live('click', function(){
+     if(cj(this).attr('checked') == 'checked'){
+       var d = new Date();
+       if(cj("#receive_date").length){
+         cj("#receipt_date").datepicker('setDate', cj("#receive_date").val());
+
+         if(cj("#receive_date_time").val()){
+           cj("#receipt_date_time").val(cj("#receive_date_time").val());
+         }
+         else{
+           cj("#receipt_date_time").val(d.getHours()+':'+d.getMinutes());
+         }
+       }
+       else{
+         cj("#receipt_date").datepicker('setDate', d);
+         cj("#receipt_date_time").val(d.getHours()+':'+d.getMinutes());
+       }
+       cj('#receipt-option').show();
+     }
+     else{
+       cj('#receipt-option').hide();
+       clearDateTime('receipt_date');
+     }
+   });
+});
 function checkPayment()
 {
     showHideByValue('record_contribution','','recordContribution','table-row','radio',false);

@@ -625,6 +625,7 @@ SELECT civicrm_custom_group.name as name,
 
     public function buildQuickForm( )  
     { 
+        $this->_eID = CRM_Utils_Request::retrieve( 'eid', 'Positive', $this );
         if ( $this->_showFeeBlock ) {
             return CRM_Event_Form_EventFees::buildQuickForm( $this );
         }
@@ -699,7 +700,7 @@ SELECT civicrm_custom_group.name as name,
         $events = array( );
         $this->assign("past", false);
         require_once "CRM/Event/BAO/Event.php";
-        if ( $this->_action & CRM_Core_Action::UPDATE ) {
+        if ( $this->_action & CRM_Core_Action::UPDATE || $this->_eID) {
             $events = CRM_Event_BAO_Event::getEvents( true, false, false );
         } elseif ( $this->getElementValue( 'past_event' ) )  {
             $events = CRM_Event_BAO_Event::getEvents( true );
@@ -746,7 +747,6 @@ WHERE      civicrm_event.is_template IS NULL OR civicrm_event.is_template = 0";
         // and i did not want to break it late in the 3.2 cycle
         $preloadJSSnippet = null;
         if ( CRM_Utils_Array::value( 'reset', $_GET ) ) {
-            $this->_eID = CRM_Utils_Request::retrieve( 'eid', 'Positive', $this );
             if ( $this->_eID ) {
                 $preloadJSSnippet = "
 cj(function() {
@@ -1365,14 +1365,20 @@ buildEventTypeCustomData( {$this->_eID}, {$this->_eventTypeCustomDataTypeID}, '{
         
         $updateStatusMsg = null;
         //send mail when participant status changed, CRM-4326
+        if ( $params['event_id'] ) {
+          $eventEndDate = CRM_Core_DAO::getFieldValue( 'CRM_Event_DAO_Event', $params['event_id'], 'end_date');
+        }
         if ( $this->_id && $this->_statusId && 
              $this->_statusId != CRM_Utils_Array::value( 'status_id', $params ) &&
              CRM_Utils_Array::value( 'is_notify', $params )
              ) {
-            require_once "CRM/Event/BAO/Participant.php";
-            $updateStatusMsg = CRM_Event_BAO_Participant::updateStatusMessage( $this->_id, 
-                                                                               $params['status_id'], 
-                                                                               $this->_statusId );
+            if(!empty($eventEndDate) && time()-strtotime($eventEndDate) > 0){
+              // don't send any notification.
+            }
+            else{
+              require_once "CRM/Event/BAO/Participant.php";
+              $updateStatusMsg = CRM_Event_BAO_Participant::updateStatusMessage( $this->_id, $params['status_id'], $this->_statusId );
+            }
         }
         
         if ( CRM_Utils_Array::value( 'send_receipt', $params ) ) {
@@ -1525,7 +1531,10 @@ buildEventTypeCustomData( {$this->_eID}, {$this->_eventTypeCustomDataTypeID}, '{
                     'groupName' => 'msg_tpl_workflow_event',
                     'valueName' => 'event_offline_receipt',
                     'contactId' => $contactID,
+                    'participantId' => $participants[$num]->id,
+                    'eventId' => $params['event_id'],
                     'isTest'    => (bool) CRM_Utils_Array::value('is_test', $this->_defaultValues),
+                    'PDFFilename' => 'Attendee_confirm_copy.pdf',
                 );
 
                 // try to send emails only if email id is present
@@ -1538,16 +1547,22 @@ buildEventTypeCustomData( {$this->_eID}, {$this->_eventTypeCustomDataTypeID}, '{
                     $sendTemplateParams['bcc']     = CRM_Utils_Array::value( 'bcc', $this->_fromEmails );
                 }
 
-                require_once 'CRM/Core/BAO/MessageTemplates.php';
-                list ($mailSent, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate($sendTemplateParams);
-                if ($mailSent) {
-                    $sent[] = $contactID;
-                    require_once 'CRM/Activity/BAO/Activity.php';
-                    foreach ( $participants as $ids => $values ) { 
-                        CRM_Activity_BAO_Activity::addActivity( $values, 'Email' );
-                    } 
-                } else {
-                    $notSent[] = $contactID;
+                if(!empty($eventEndDate) && time()-strtotime($eventEndDate) > 0){
+                    // don't send any notification.
+                    $skipMSG = TRUE;
+                }
+                else{
+                    require_once 'CRM/Core/BAO/MessageTemplates.php';
+                    list ($mailSent, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate($sendTemplateParams);
+                    if ($mailSent) {
+                        $sent[] = $contactID;
+                        require_once 'CRM/Activity/BAO/Activity.php';
+                        foreach ( $participants as $ids => $values ) { 
+                            CRM_Activity_BAO_Activity::addActivity( $values, 'Email' );
+                        } 
+                    } else {
+                        $notSent[] = $contactID;
+                    }
                 }
             }
         }
@@ -1576,6 +1591,10 @@ buildEventTypeCustomData( {$this->_eID}, {$this->_eventTypeCustomDataTypeID}, '{
                     $statusMsg .= ' ' .  ts('A confirmation email has been sent to ALL participants');
                 }
             }
+
+            if($skipMSG){
+                $statusMsg .= ' ' . ts('This event was ended by %1, we don\'t send notify message to them.', array(1 => $eventEndDate));
+            }
         }
         require_once "CRM/Core/Session.php";
         CRM_Core_Session::setStatus( "{$statusMsg}" );
@@ -1596,4 +1615,3 @@ buildEventTypeCustomData( {$this->_eID}, {$this->_eventTypeCustomDataTypeID}, '{
     }
       
 }
-

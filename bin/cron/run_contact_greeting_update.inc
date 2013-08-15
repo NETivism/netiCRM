@@ -3,6 +3,7 @@
  * Update contact greeting
  */
 function run_contact_greeting_update( ){
+  date_default_timezone_set("Asia/Taipei");
   require_once 'CRM/Utils/Request.php';
   require_once 'CRM/Core/PseudoConstant.php';
   require_once 'CRM/Contact/BAO/Contact.php';

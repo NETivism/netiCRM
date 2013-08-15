@@ -99,7 +99,7 @@ abstract class CRM_Core_Payment {
                 $paymentClass = $ext->keyToClass( $paymentProcessor['class_name'], 'payment' );
                 require_once( $ext->classToPath( $paymentClass ) );
             } else {                
-                $paymentClass = "CRM_Core_" . $paymentProcessor['class_name'];
+                $paymentClass = 'CRM_Core_' . $paymentProcessor['class_name'];
                 require_once( str_replace( '_', DIRECTORY_SEPARATOR , $paymentClass ) . '.php' );
             }
 
@@ -185,6 +185,26 @@ abstract class CRM_Core_Payment {
         return false;
     }
 
+    /**
+     * Function to get Payment Processor Info
+     * 
+     */
+    static function getPaymentProcessorInfo( )
+    {
+        $ppID = CRM_Utils_Type::escape( $_POST['ppID'], 'Positive' );
+        $action = CRM_Utils_Type::escape( $_POST['action'], 'String' );
+        
+        $mode = ( $action == 1024 ) ? 'test' : 'live';
+        
+        require_once 'CRM/Core/BAO/PaymentProcessor.php';
+        $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment( $ppID, $mode );        
+        
+        echo json_encode( $paymentProcessor );
+
+        require_once 'CRM/Utils/System.php';
+        CRM_Utils_System::civiExit();
+
+    }
 }
 
 

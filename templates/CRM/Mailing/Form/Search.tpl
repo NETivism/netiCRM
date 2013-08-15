@@ -1,8 +1,8 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.3                                                |
+ | CiviCRM version 4.1                                                |
  +--------------------------------------------------------------------+
- | Copyright CiviCRM LLC (c) 2004-2010                                |
+ | Copyright CiviCRM LLC (c) 2004-2011                                |
  +--------------------------------------------------------------------+
  | This file is a part of CiviCRM.                                    |
  |                                                                    |
@@ -37,10 +37,19 @@
         </td> 
     </tr>
     <tr> 
-        <td colspan="3">{$form.sort_name.label}<br />
+        <td colspan="1">{$form.sort_name.label}<br />
             {$form.sort_name.html|crmReplace:class:big} {help id="id-create_sort_name"}
         </td>
+        <td colspan="2">
+            <label>{ts}Mailing Status{/ts}</label><br />
+            {$form.mailing_status.html}
+        </td>
     </tr>
+
+    {* campaign in mailing search *}
+    {include file="CRM/Campaign/Form/addCampaignToComponent.tpl" 
+    campaignContext="componentSearch" campaignTrClass='' campaignTdClass=''}
+
     <tr>
         <td>{$form.buttons.html}</td><td colspan="2"></td>
     </tr>

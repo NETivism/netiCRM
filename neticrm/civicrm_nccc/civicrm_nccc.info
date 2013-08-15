@@ -1,0 +1,6 @@
+name = Payment Method of NCCC 
+description = NCCC credit card payment functions for civicrm.
+package = NetiCRM Payment Method
+dependencies[] = civicrm
+core = 6.x
+version = 6.x-1.0

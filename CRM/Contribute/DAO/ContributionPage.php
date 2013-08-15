@@ -105,11 +105,11 @@ class CRM_Contribute_DAO_ContributionPage extends CRM_Core_DAO
      */
     public $contribution_type_id;
     /**
-     * Payment Processor for this contribution Page
+     * Payment Processors configured for this contribution Page
      *
-     * @var int unsigned
+     * @var string
      */
-    public $payment_processor_id;
+    public $payment_processor;
     /**
      * if true - processing logic must reject transaction at confirmation stage if pay method != credit card
      *
@@ -341,7 +341,6 @@ class CRM_Contribute_DAO_ContributionPage extends CRM_Core_DAO
         if (!(self::$_links)) {
             self::$_links = array(
                 'contribution_type_id' => 'civicrm_contribution_type:id',
-                'payment_processor_id' => 'civicrm_payment_processor:id',
                 'created_id' => 'civicrm_contact:id',
             );
         }
@@ -382,10 +381,12 @@ class CRM_Contribute_DAO_ContributionPage extends CRM_Core_DAO
                     'required' => true,
                     'FKClassName' => 'CRM_Contribute_DAO_ContributionType',
                 ) ,
-                'payment_processor_id' => array(
-                    'name' => 'payment_processor_id',
-                    'type' => CRM_Utils_Type::T_INT,
-                    'FKClassName' => 'CRM_Core_DAO_PaymentProcessor',
+                'payment_processor' => array(
+                    'name' => 'payment_processor',
+                    'type' => CRM_Utils_Type::T_STRING,
+                    'title' => ts('Payment Processor') ,
+                    'maxlength' => 128,
+                    'size' => CRM_Utils_Type::HUGE,
                 ) ,
                 'is_credit_card_only' => array(
                     'name' => 'is_credit_card_only',

@@ -973,7 +973,8 @@ class ezcMailImapTransport
             $ids = trim( substr( $response, 9 ) );
             if ( $ids !== "" )
             {
-                $messageList = explode( ' ', $ids );
+                $messageList = explode( ' ', $ids , 201);
+                array_pop($messageList);
             }
         }
         // skip the OK response ("{$tag} OK Search completed.")

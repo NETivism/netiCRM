@@ -54,13 +54,16 @@ class CRM_Utils_ICalendar
      */
     static function formatText( $text ) 
     {
-        $text = strip_tags($text);
+        $text = htmlspecialchars_decode($text);
+        $text = str_replace(array('&nbsp;', '&nbsp\;'), '', $text);
         $text = str_replace("\"", "DQUOTE", $text);
         $text = str_replace("\\", "\\\\", $text);
+        $text = str_replace(array("<br>","<br />","</p>"), "\\n ", $text);
+        $text = strip_tags($text);
         $text = str_replace(",", "\,", $text);
-        $text = str_replace(":", "\":\"", $text);
         $text = str_replace(";", "\;", $text);
-        $text = str_replace("\n", "\n ", $text);
+        $text = preg_replace('/\s+/u', '', $text);
+        $text = implode("\n ", CRM_Utils_ICalendar::mb_str_split($text, 20));
         return $text;
     }
 
@@ -122,6 +125,19 @@ class CRM_Utils_ICalendar
         }
         
         echo $calendar;
+    }
+    function mb_str_split($str, $split_len = 1){
+        if (!preg_match('/^[0-9]+$/', $split_len) || $split_len < 1){
+          return FALSE;
+        }
+     
+        $len = mb_strlen($str, 'UTF-8');
+        if ($len <= $split_len){
+          return array($str);
+        }
+     
+        preg_match_all('/.{'.$split_len.'}|[^\x00]{1,'.$split_len.'}$/us', $str, $ar);
+        return $ar[0];
     }
 }
 

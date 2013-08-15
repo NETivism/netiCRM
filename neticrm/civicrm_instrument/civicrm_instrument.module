@@ -16,13 +16,14 @@ function civicrm_instrument_civicrm_buildForm($form_name, &$form){
         $payment_instruments = unserialize($payment_instruments);
 
         $gid = variable_get('civicrm_instrument_gid', 0);
-        $option = CRM_Core_DAO::executeQuery("SELECT * FROM civicrm_option_value WHERE option_group_id = {$gid} AND is_active = 1");
+        $option = CRM_Core_DAO::executeQuery("SELECT * FROM civicrm_option_value WHERE option_group_id = {$gid} AND is_active = 1 ORDER BY is_reserved DESC, id ASC");
         while($option->fetch()){
           $checkbox_name = _civicrm_instrument_form_name($option->name);
           $label = $option->is_reserved ? $option->label." [".ts('Payment Processor')."]*" : $option->label;
           $options[$checkbox_name] = array(
             'default' => $payment_instruments[$checkbox_name] ? 1: 0,
             'label' => $label,
+            'reserved' => $option->is_reserved ? 1 : 0,
           );
         }
         drupal_add_js(_civicrm_instrument_js_admin($options, $entity_table), 'inline');
@@ -30,8 +31,25 @@ function civicrm_instrument_civicrm_buildForm($form_name, &$form){
       break;
     case 'CRM_Contribute_Form_Contribution_Main':
     case 'CRM_Event_Form_Registration_Register':
+      if(CRM_Utils_Array::value( 'type', $_GET )){
+        return;
+      }
       // ok, now check the payment limitation.
-      $entity_id = $form->getVar('_id') ? $form->getVar('_id') : $form->getVar('_eventId') ;
+      $entity_id = $form->getVar('_id') ? $form->getVar('_id') : $form->getVar('_eventId');
+      if(!$entity_id){
+      /* will add this when necessery
+        // using ajax to fetch form
+        $qfKey = !empty($form->controller->_key) ? $form->controller->_key : $_GET['qfKey'];
+        if($qfKey){
+          $k = 'CRM_Contribute_Controller_Contribution_'.$_GET['qfKey'];
+          $entity_id = $_SESSION['CiviCRM'][$k]['values']['id'];
+        }
+        else{
+          return;
+        }
+      */
+        return;
+      }
       $entity_table = $form_name == 'CRM_Contribute_Form_Contribution_Main' ? 'civicrm_contribution_page' : 'civicrm_event';
       $gid = variable_get('civicrm_instrument_gid', 0);
 
@@ -138,9 +156,15 @@ function civicrm_instrument_civicrm_postProcess($form_name, &$form){
     case 'CRM_Contribute_Form_ContributionPage_Settings':
       $entity_table = strstr($form_name, 'Contribute') ? 'civicrm_contribution_page' : 'civicrm_event';
       $entity_id = $form->getVar('_id');
-      $payment_instrument = $form->_submitValues['payment_instrument'];
-      if($entity_id && !empty($payment_instrument)){
-        CRM_Core_DAO::executeQuery("REPLACE INTO civicrm_instrument SET entity_id = {$entity_id}, entity_table='{$entity_table}', payment_instruments='".serialize($payment_instrument)."'");
+      if($entity_id){
+        if( !empty($form->_submitValues['payment_instrument'])){
+          $payment_instrument = $form->_submitValues['payment_instrument'];
+          CRM_Core_DAO::executeQuery("REPLACE INTO civicrm_instrument SET entity_id = {$entity_id}, entity_table='{$entity_table}', payment_instruments='".serialize($payment_instrument)."'");
+        }
+        else{
+          // empty
+          CRM_Core_DAO::executeQuery("REPLACE INTO civicrm_instrument SET entity_id = {$entity_id}, entity_table='{$entity_table}', payment_instruments=''");
+        }
       }
       break;
     // save instrument
@@ -176,13 +200,25 @@ function _civicrm_instrument_js_admin($options, $entity_table){
   $o .= "<td><div class='content'>";
   foreach($options as $k => $v){
     $checked = $v['default'] ? 'checked=checked' : '';
-    $o .= "<div class='instrument-gw-wrapper'><label><input type='checkbox' name='payment_instrument[{$k}]' value='1' class='form-checkbox' $checked />".$v['label']."</label></div>";
+    $reserved = $v['reserved'] ? ' reserved' : '';
+    $o .= "<div class='instrument-wrapper{$reserved}'><label><input type='checkbox' name='payment_instrument[{$k}]' value='1' class='form-checkbox' $checked />".$v['label']."</label></div>";
   }
   $o .= '</div></td>';
   $o .= '</tr></tbody></table>';
   return '
   $(document).ready(function(){
     $("#crm-container #'.$css_id.'").before("'.$o.'");
+    if( !$("#crm-container input#is_pay_later").attr("checked") ){
+      $("#crm-container .instrument-wrapper").not(".reserved").hide();
+    }
+    $("#crm-container input#is_pay_later").click(function(){
+      if($(this).attr("checked")){
+        $("#crm-container .instrument-wrapper").not(".reserved").show();
+      }
+      else{
+        $("#crm-container .instrument-wrapper").not(".reserved").hide();
+      }
+    });
   });';
 }
 /**
@@ -203,7 +239,7 @@ function _civicrm_instrument_js_page($radios, &$form){
 
   $output .= "<div class='content'>";
   $key = '_'.$form->controller->_name.'_container';
-  $submitted_instrument_id = $_POST['civicrm_instrument_id'] ? $_POST['civicrm_instrument_id'] : $_SESSION[$key]['values']['Main']['civicrm_instrument_id'];
+  $submitted_instrument_id = $_POST['civicrm_instrument_id'] ? $_POST['civicrm_instrument_id'] : $_SESSION[$key]['values']['Main']['civicrm_instrument_id'] ? $_SESSION[$key]['values']['Main']['civicrm_instrument_id'] : $_SESSION[$key]['values']['Register']['civicrm_instrument_id'];
 
   foreach($radios as $value => $radio){
     $c++;

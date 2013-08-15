@@ -102,34 +102,42 @@ function civicrm_neweb_civicrm_postProcess($form_name, &$form){
 function civicrm_neweb_cron(){
   require_once("civicrm_neweb.cron.inc");
   module_load_include("inc", 'civicrm_neweb', 'civicrm_neweb.cron');
-  $is_test = 1;
   $hour = date('G');
   $now = time();
   $yesterday = $now - 86400;
-  _civicrm_neweb_process_all($is_test, $now, $hour, $yesterday);
   $is_test = 0;
-  _civicrm_neweb_process_all($is_test, $now, $hour, $yesterday);
+  $pid = _civicrm_neweb_is_active($is_test);
+  if($pid){
+    _civicrm_neweb_process_all($is_test, $now, $hour, $yesterday, $pid);
+  }
+  $pid = NULL;
+  $is_test = 1;
+  $pid = _civicrm_neweb_is_active($is_test);
+  if($pid){
+    _civicrm_neweb_process_all($is_test, $now, $hour, $yesterday, $pid);
+    _civicrm_neweb_scan_missing_transaction($now, $hour, $yesterday, $pid);
+  }
 }
 
 
-function _civicrm_neweb_process_all($is_test, $now, $hour, $yesterday){
+function _civicrm_neweb_process_all($is_test, $now, $hour, $yesterday, $pid){
   // recurring contributions
   $test = $is_test ? '_test' : '';
   if($hour >= 19 && $hour <= 23 && variable_get('civicrm_neweb_response'.$test, 0) < $yesterday){
     // get yesterday modification result
-    if(civicrm_neweb_process_response($is_test)){
+    if(civicrm_neweb_process_response($is_test, NULL, $pid)){
       variable_set('civicrm_neweb_response'.$test, $now);
     }
   }
-  if($hour >= 12 && $hour <= 20 && variable_get('civicrm_neweb_transaction'.$test, 0) < $yesterday){
+  if($hour >= 16 && $hour <= 23 && variable_get('civicrm_neweb_transaction'.$test, 0) < $yesterday){
     // get yesterday transaction result
-    if(civicrm_neweb_process_transaction($is_test)){
+    if(civicrm_neweb_process_transaction($is_test, NULL, $pid)){
       variable_set('civicrm_neweb_transaction'.$test, $now);
     }
   }
   if($hour >= 9 && $hour <= 15 && variable_get('civicrm_neweb_uploaded'.$test, 0) < $yesterday){
     // doing upload stuff
-    if(civicrm_neweb_process_upload($is_test)){
+    if(civicrm_neweb_process_upload($is_test, $pid)){
       variable_set('civicrm_neweb_uploaded'.$test, $now);
     }
   }
@@ -213,14 +221,14 @@ cj(document).ready(function(){
   drupal_add_js($js, 'inline', 'footer');
 }
 
-function _civicrm_neweb_instrument(){
+function _civicrm_neweb_instrument($type = 'label'){
   return array(
-    'Credit Card' => array('label' => '信用卡', 'description' => ''),
-    'ATM' => array('label' => 'ATM 轉帳', 'description' => ''),
-    'Web ATM' => array('label' => '網路 ATM', 'description' => ''),
-    'Convenient Store' => array('label' => '超商條碼繳費', 'description'=>''),
-    'Convenient Store (Code)' => array('label'=>'超商代碼繳費','desc' => ''),
-    'Alipay' => array('label' => '支付寶', 'description' => ''),
+    'Credit Card' => array('label' => '信用卡', 'description' => '', 'code' => 'Credit Card'),
+    'ATM' => array('label' => 'ATM 轉帳', 'description' => '', 'code' => 'ATM'),
+    'Web ATM' => array('label' => '網路 ATM', 'description' => '', 'code' => 'WEBATM'),
+    'Convenient Store' => array('label' => '超商條碼繳費', 'description'=>'', 'code' => 'CS'),
+    'Convenient Store (Code)' => array('label'=>'超商代碼繳費','desc' => '', 'code' => 'MMK'),
+    'Alipay' => array('label' => '支付寶', 'description' => '', 'code' => 'ALIPAY'),
   );
 }
 
@@ -270,6 +278,9 @@ function _civicrm_neweb_sftp($mode, $local, $remote, $host, $user, $pass){
         break;
       case 'get':
         $success = $sftp->get($remote, $local);
+        if(file_exists($local)){
+          $success = file_get_contents($local);
+        }
         break;
       case 'list':
       default:
@@ -277,13 +288,22 @@ function _civicrm_neweb_sftp($mode, $local, $remote, $host, $user, $pass){
         break;
     }
   }
-  /* debug usage
+  // debug usage
+  /*
   print '<pre>';
   print_r($sftp->getSFTPLog());
   print_r($sftp->getSFTPErrors());
   print '</pre>';
   */
-  return $success;
+  // call destructor to close connection
+  unset($sftp);
+
+  if($success){
+    return $success;
+  }
+  else{
+    return false;
+  }
 }
 
 /**
@@ -301,14 +321,60 @@ function _civicrm_neweb_connect($id, $local, $mode, $is_test){
 
   if($is_test){
     $function = '_civicrm_neweb_ftp';
+    $ftp = variable_get("civicrm_neweb_ftp_test", array());
   }
   else{
     $function = '_civicrm_neweb_sftp';
+    $ftp = variable_get("civicrm_neweb_ftp", array());
   }
 
-  $remote = $dir.".".basename($local);
-  $ftp = variable_get("civicrm_neweb_ftp", array());
-  $ret = call_user_func($function, $mode, $local, $remote, $ftp['ftp_host'], $ftp['ftp_user'], $ftp['ftp_passowrd']);
+  $remote = $dir."/".basename($local);
+  $ret = call_user_func($function, $mode, $local, $remote, $ftp['ftp_host'], $ftp['ftp_user'], $ftp['ftp_password']);
 
   return $ret;
+}
+
+/**
+ * Check if payment processor exists
+ */
+function _civicrm_neweb_is_active($is_test){
+  civicrm_initialize();
+  $id = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_payment_processor WHERE name = 'Neweb' AND is_active = 1 AND is_test = $is_test");
+  return $id;
+}
+
+function _civicrm_neweb_scan_missing_transaction($now, $hour, $yesterday, $pid){
+  // one time a day
+  // only process non-test contribution
+  if($hour >= 1 && $hour <= 5 && variable_get('civicrm_neweb_scan', 0) < $yesterday){
+    // look back 7 days to see if we miss some file from neweb
+    $week = array();
+    $path = _civicrm_neweb_path(0);
+    for($i = 1; $i<=7; $i++){
+      $offset = $i*86400;
+      $date = $now - $offset;
+      // try to find some file
+      $ymd = date('Ymd', $date);
+      $week[$ymd] = $ymd;
+    }
+
+    $result = glob($path.'/RP_Trans_*{'.implode(',', $week).'}.log',GLOB_BRACE);
+    foreach($result as $filename){
+      // to see what days we miss
+      preg_match('/_([0-9]{4,})\.log$/i', $filename, $matches);
+      $ymd = $matches[1];
+      if($ymd){
+        unset($week[$ymd]);
+      }
+    }
+
+    // ok see what left
+    if(count($week)){
+      foreach($week as $ymd){
+        $date = strtotime($ymd);
+        civicrm_neweb_process_transaction(0, $date);
+      }
+    }
+    variable_set('civicrm_neweb_scan', $now);
+  }
 }

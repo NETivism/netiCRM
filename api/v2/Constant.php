@@ -1,9 +1,12 @@
 <?php
+// $Id: Constant.php 41417 2012-07-06 14:53:10Z deepak $
+
+
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.3                                                |
+ | CiviCRM version 4.2                                                |
  +--------------------------------------------------------------------+
- | Copyright CiviCRM LLC (c) 2004-2010                                |
+ | Copyright CiviCRM LLC (c) 2004-2012                                |
  +--------------------------------------------------------------------+
  | This file is a part of CiviCRM.                                    |
  |                                                                    |
@@ -30,8 +33,8 @@
  *
  * @package CiviCRM_APIv2
  * @subpackage API_Constant
- * @copyright CiviCRM LLC (c) 2004-2010
- * @version $Id: Constant.php 30171 2010-10-14 09:11:27Z mover $
+ * @copyright CiviCRM LLC (c) 2004-2012
+ * @version $Id: Constant.php 41417 2012-07-06 14:53:10Z deepak $
  *
  */
 
@@ -45,7 +48,7 @@ require_once 'api/v2/utils.php';
  * pseudo constants used in CiviCRM
  *
  *  @param  string  Name of a public static method of
- *                  CRM_Core_PseudoContant: one of 
+ *                  CRM_Core_PseudoContant: one of
  *  <ul>
  *    <li>activityStatus</li>
  *    <li>activityType</li>
@@ -89,22 +92,22 @@ require_once 'api/v2/utils.php';
  *    <li>wysiwygEditor</li>
  *  </ul>
  */
-function civicrm_constant_get($name, $params = array()) 
-{
-    require_once 'CRM/Core/PseudoConstant.php';
-    $className = 'CRM_Core_PseudoConstant';
-    $callable  = "$className::$name";
-     
-    if (is_callable($callable)) {
-        if (empty($params)) {
-            $values = call_user_func( array( $className, $name ) );
-        } else {
-            $values = call_user_func_array( array( $className, $name ), $params );
-        }
-        return $values;
+function civicrm_constant_get($name, $params = array(
+  )) {
+  require_once 'CRM/Core/PseudoConstant.php';
+  $className = 'CRM_Core_PseudoConstant';
+  $callable = "$className::$name";
+
+  if (is_callable($callable)) {
+    if (empty($params)) {
+      $values = call_user_func(array($className, $name));
     }
+    else {
+      $values = call_user_func_array(array($className, $name), $params);
+    }
+    return $values;
+  }
 
-    return civicrm_create_error(ts('Unknown civicrm constant or method not callable'));
+  return civicrm_create_error(ts('Unknown civicrm constant or method not callable'));
 }
-
 

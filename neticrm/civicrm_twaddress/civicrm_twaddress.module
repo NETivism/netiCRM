@@ -1,5 +1,81 @@
 <?php
 /**
+ * Implementation of hook_form_alter
+ *
+ * Support webform_civicrm address
+ */
+function civicrm_twaddress_form_alter(&$form, &$form_state, $form_id){
+  static $add;
+  if (substr($form['#id'], 0, 20) == 'webform-client-form-') {
+    // for now we only support field below 2 fieldset
+    $override = array();
+    foreach($form['submitted'] as $k => $c){
+      if(!is_array($c)) continue;
+      $children = element_children($c);
+      if(count($children)){
+        foreach($children as $name){
+          $cchildren = element_children($form['submitted'][$k][$name]);
+          if(count($cchildren)){
+            foreach($cchildren as $nname){
+              _civicrm_twaddress_is_addr_field($nname, $form['submitted'][$k][$name][$nname], $override);
+            }
+          }
+          _civicrm_twaddress_is_addr_field($name, $form['submitted'][$k][$name], $override);
+        }
+      }
+      _civicrm_twaddress_is_addr_field($name, $form['submitted'][$k][$key], $override);
+    }
+    if(count($override)>=3){
+      // check post value
+      if(!empty($form_state['post'])){
+        foreach($override as $k => $v){
+          foreach($v as $kk => $vv){
+            $override[$k][$kk]['default'] = _civicrm_twaddress_search_value($vv['key'], $form_state['post']);
+          }
+        }
+      }
+
+      if(!$add){
+        $path = drupal_get_path("module",'civicrm_twaddress');
+        drupal_add_js($path."/twzipcode.js");
+        $add = 1;
+      }
+      _civicrm_twaddress_webform_js($override, $add_js = TRUE);
+    }
+  }
+}
+
+function _civicrm_twaddress_is_addr_field($name, &$obj, &$override){
+  if(strstr($name, 'postal_code') && !strstr($name,'postal_code_suffix')){
+    $key = _civicrm_twaddress_webform_key($name);
+    $override['zipName'][$key]['key'] = $name;
+    $override['zipName'][$key]['default'] = '';
+  }
+  elseif(strstr($name, 'state_province')){
+    $key = _civicrm_twaddress_webform_key($name);
+    $override['countyName'][$key]['key'] = $name;
+    foreach($e->_options as $v){
+      if($v['attr']['value']){
+        $county_options[$v['attr']['value']] = $v['text'];
+      }
+    }
+    // $default = $default ? $default : $_POST[$name];
+    $override['countyName'][$key]['default'] = '';
+  }
+  elseif(strstr($name, 'city')){
+    $key = _civicrm_twaddress_webform_key($name);
+    // hide field
+
+    // $default = $default ? $default : $_POST[$name];
+    $override['areaName'][$key]['key'] = '_'.$name;
+    $override['areaName'][$key]['name'] = $name;
+    // $override['areaName'][$key]['default'] = $default;
+  }
+  return $override;
+}
+
+
+/**
  * Implementation of hook_civicrm_buildForm().
  */
 function civicrm_twaddress_civicrm_buildForm($formName, &$form) {
@@ -25,14 +101,12 @@ function civicrm_twaddress_civicrm_buildForm($formName, &$form) {
   }
 
   // we don't support outside of civicrm yet
+  /*
   if(arg(0) != 'civicrm'){
     return;
   }
+  */
   
-  if($_GET['snippet']){
-    return;
-  }
-
   // we don't support ajax form
   $deny = array();
   if(in_array($formName,$deny)){
@@ -90,34 +164,21 @@ function civicrm_twaddress_civicrm_buildForm($formName, &$form) {
       drupal_add_js($path."/twzipcode.js");
       $add = 1;
     }
-    foreach($override['areaName'] as $k => $v){
-      $count++;
 
-      $insert = "<select name='{$override['areaName'][$k]['key']}' class='form-select'></select>";
+    if(arg(1) == 'contribute' || arg(1) == 'event'){
+      _civicrm_twaddress_grouping_js();
+    }
 
-      $js = '
-      $(document).ready(function(){
-        if( $("input[name=\''.$override['areaName'][$k]['name'].'\']").length ){
-          $("'.$insert.'").insertAfter("input[name=\''.$override['areaName'][$k]['name'].'\']");
-          $("input[name=\''.$override['areaName'][$k]['name'].'\']").hide();
-          $("select[name=\''.$override['areaName'][$k]['key'].'\']").change(function(){
-            var v = $(this).val();
-            $("input[name=\''.$override['areaName'][$k]['name'].'\']").val(v);
-          });
-
-          $("form[name='.$form_name.']").twzipcode({
-            zipName:"'.$override['zipName'][$k]['key'].'",
-            countyName:"'.$override['countyName'][$k]['key'].'",
-            areaName:"'.$override['areaName'][$k]['key'].'",
-            zipSel:"'.$override['zipName'][$k]['default'].'",
-            countySel:"'.$override['countyName'][$k]['default'].'",
-            areaSel:"'.$override['areaName'][$k]['default'].'"
-          });
-        }
-
-      });
-      ';
-      drupal_add_js($js , 'inline');
+    if($_GET['snippet']){
+      reset($form->_fields);
+      $first = key($form->_fields);
+      $js = _civicrm_twaddress_common_js($override, $form_name, FALSE);
+      $js = implode("\n", $js);
+      $js = '<script type="text/javascript" src="'.base_path().$path.'/twzipcode.js"></script><script type="text/javascript">'.$js.'</script>';
+      $form->_fields[$first]['groupHelpPre'] = $js;
+    }
+    else{
+      _civicrm_twaddress_common_js($override, $form_name, $add_js = TRUE);
     }
   }
 }
@@ -164,4 +225,147 @@ function _civicrm_twaddress_key($name){
   $key = is_numeric($matches[0]) ? $matches[0] : 1;
 
   return $key;
+}
+
+function _civicrm_twaddress_webform_key($name){
+  list($key) = explode('_address', $name);
+  return $key;
+}
+
+function _civicrm_twaddress_grouping_js(){
+  $js = '
+    jQuery(function($){
+      // find a address group to collapsed to single line
+      var ids = {};
+      var addr_fields = $(".crm-section").filter(function(){
+        var classes = $(this).attr("class").split(" ");
+        for (var i=0; i<classes.length; i++) {
+          if (classes[i].slice(0,14) == "state_province" || classes[i].slice(0, 4) == "city" || classes[i].slice(0, 11) == "postal_code") {
+            var matches = classes[i].match(/\d+|Primary/);
+            var rel = "g"+matches[0];
+            $(this).attr("rel", rel);
+            if(typeof(ids[rel]) == "undefined"){
+              ids[rel] = 1;
+            }
+            else{
+              ids[rel] = ids[rel]+1;
+            }
+            return true;
+          }
+        }
+      });
+
+      for(property in ids) {  
+        if(ids[property] == 3){
+          var id = property.replace("g", "");
+          // this the right group
+          $("[rel=\'"+property+"\']").each(function(){
+            var classes = $(this).attr("class");
+            if(!classes.match(/state_province/g)){
+              var html = $(this).find(".content *").appendTo(".state_province-"+id+"-section .content");
+              $(this).hide();
+            }
+          });
+        }
+      }
+    });
+  ';
+  drupal_add_js($js , 'inline');
+}
+
+function _civicrm_twaddress_common_js($field, $form_name, $add_js = TRUE){
+  $return = array();
+  foreach($field['areaName'] as $k => $v){
+    $count++;
+    $insert = "<select name='{$field['areaName'][$k]['key']}' class='form-select'></select>";
+
+    $js = '
+    jQuery(function($){
+      if( $("input[name=\''.$field['areaName'][$k]['name'].'\']").length ){
+        var $form = $("input[name=\''.$field['areaName'][$k]['name'].'\']").parents("form");
+        $("'.$insert.'").insertAfter("input[name=\''.$field['areaName'][$k]['name'].'\']");
+        $("input[name=\''.$field['areaName'][$k]['name'].'\']").hide();
+        $("select[name=\''.$field['areaName'][$k]['key'].'\']").change(function(){
+          var v = $(this).val();
+          $("input[name=\''.$field['areaName'][$k]['name'].'\']").val(v);
+        });
+        $("input[name='.$field['zipName'][$k]['key'].']").addClass("readonly post-code");
+
+        $form.twzipcode({
+          zipName:"'.$field['zipName'][$k]['key'].'",
+          countyName:"'.$field['countyName'][$k]['key'].'",
+          areaName:"'.$field['areaName'][$k]['key'].'",
+          zipSel:"'.$field['zipName'][$k]['default'].'",
+          countySel:"'.$field['countyName'][$k]['default'].'",
+          areaSel:"'.$field['areaName'][$k]['default'].'"
+        });
+      }
+    });
+    ';
+    if($add_js){
+      drupal_add_js($js , 'inline');
+    }
+    else{
+      $return[$k] = $js;
+    }
+  }
+  return $return;
+}
+
+function _civicrm_twaddress_webform_js($field, $form_name, $add_js = TRUE){
+  $return = array();
+  foreach($field['areaName'] as $k => $v){
+    $count++;
+    $insert = "<select name='{$field['areaName'][$k]['key']}' class='form-select'></select>";
+
+    $js = '
+    jQuery(function($){
+      if( $("input[name*=\''.$field['areaName'][$k]['name'].'\']").length ){
+        $("'.$insert.'").insertAfter("input[name*=\''.$field['areaName'][$k]['name'].'\']");
+        $("input[name*=\''.$field['areaName'][$k]['name'].'\']").hide();
+        $("select[name*=\''.$field['areaName'][$k]['key'].'\']").change(function(){
+          var v = $(this).val();
+          $("input[name*=\''.$field['areaName'][$k]['name'].'\']").val(v);
+        });
+        $("input[name*='.$field['zipName'][$k]['key'].']").addClass("readonly post-code");
+        var zipname = $("input[name*=\''.$field['zipName'][$k]['key'].'\']").attr("name");
+        var areaname = $("select[name*=\''.$field['areaName'][$k]['key'].'\']").attr("name");
+        var countyname = $("select[name*=\''.$field['countyName'][$k]['key'].'\']").attr("name");
+
+        $("form[name='.$form_name.']").twzipcode({
+          zipName:zipname,
+          countyName:countyname,
+          areaName:areaname,
+          zipSel:"'.$field['zipName'][$k]['default'].'",
+          countySel:"'.$field['countyName'][$k]['default'].'",
+          areaSel:"'.$field['areaName'][$k]['default'].'"
+        });
+      }
+    });
+    ';
+    if($add_js){
+      drupal_add_js($js , 'inline');
+    }
+    else{
+      $return[$k] = $js;
+    }
+  }
+  return $return;
+}
+
+function _civicrm_twaddress_search_value($key, $array){
+  if(!isset($array[$key])){
+    foreach($array as $k => $v){
+      if(is_array($v)){
+        $return = _civicrm_twaddress_search_value($key, $v);
+        if($return){
+          break;
+        }
+      }
+    }
+  }
+  else{
+    return $array[$key];
+  }
+  return $return;
 }

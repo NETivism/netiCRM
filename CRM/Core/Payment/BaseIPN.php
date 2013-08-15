@@ -38,12 +38,14 @@ class CRM_Core_Payment_BaseIPN {
 
     static $_now = null;
 
+    static $_membershipStatus = null;
+
     function __construct( ) {
         self::$_now = date( 'YmdHis' );
+        self::$_membershipStatus = CRM_Member_PseudoConstant::membershipStatus();
     }
 
     function validateData( &$input, &$ids, &$objects, $required = true ) {
-
         // make sure contact exists and is valid
         require_once 'CRM/Contact/DAO/Contact.php';
         $contact = new CRM_Contact_DAO_Contact( );
@@ -64,6 +66,7 @@ class CRM_Core_Payment_BaseIPN {
             return false;
         }
         $contribution->receive_date = CRM_Utils_Date::isoToMysql($contribution->receive_date); 
+        $contribution->created_date = CRM_Utils_Date::isoToMysql($contribution->created_date);
 
         $objects['contact']          =& $contact;
         $objects['contribution']     =& $contribution;
@@ -115,7 +118,7 @@ class CRM_Core_Payment_BaseIPN {
             return false;
         }
         $objects['contributionType'] = $contributionType;
-        $paymentProcessorID          = null;
+        $paymentProcessorID = $contribution->payment_processor_id;
         if ( $input['component'] == 'contribute' ) {
 
             // retrieve the other optional objects first so
@@ -181,13 +184,6 @@ class CRM_Core_Payment_BaseIPN {
                 }
             }
 
-            //for offline pledge we dont have contribution page.
-            if ( !CRM_Utils_Array::value( 'pledge_payment', $ids ) ) {
-                // get the payment processor id from contribution page
-                $paymentProcessorID = CRM_Core_DAO::getFieldValue( 'CRM_Contribute_DAO_ContributionPage',
-                                                                   $contribution->contribution_page_id,
-                                                                   'payment_processor_id' );
-            }
         } else {
             // we are in event mode
             // make sure event exists and is valid
@@ -215,8 +211,6 @@ class CRM_Core_Payment_BaseIPN {
             $participant->register_date = CRM_Utils_Date::isoToMysql( $participant->register_date );
 
             $objects['participant'] =& $participant;
-
-            $paymentProcessorID = $objects['event']->payment_processor_id;
         }
 
         if ( ! $paymentProcessorID ) {
@@ -227,8 +221,7 @@ class CRM_Core_Payment_BaseIPN {
             }
         } else {
             require_once 'CRM/Core/BAO/PaymentProcessor.php';
-            $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment( $paymentProcessorID,
-                                                                           $contribution->is_test ? 'test' : 'live' );
+            $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment( $paymentProcessorID, $contribution->is_test ? 'test' : 'live' );
             
             $ids['paymentProcessor']       =  $paymentProcessorID;
             $objects['paymentProcessor']   =& $paymentProcessor;
@@ -243,15 +236,19 @@ class CRM_Core_Payment_BaseIPN {
         $participant  =& $objects['participant'] ;
 
         $contribution->contribution_status_id = 4;
+        if(!empty($contribution->created_date)){
+          $contribution->created_date = CRM_Utils_Date::isoToMysql($contribution->created_date);
+        }
         $contribution->save( );
 
         if ( $membership ) {
-            $membership->status_id = 4;
+            $failed_id = array_search('Expired', self::$_membershipStatus);
+            $membership->status_id = $failed_id;
             $membership->save( );
             
             //update related Memberships.
             require_once 'CRM/Member/BAO/Membership.php';
-            $params = array( 'status_id' => 4 );
+            $params = array( 'status_id' => $failed_id );
             CRM_Member_BAO_Membership::updateRelatedMemberships( $membership->id, $params );
         }
 
@@ -281,15 +278,19 @@ class CRM_Core_Payment_BaseIPN {
         $contribution->contribution_status_id = 3;
         $contribution->cancel_date = self::$_now;
         $contribution->cancel_reason = CRM_Utils_Array::value( 'reasonCode', $input );
+        if(!empty($contribution->created_date)){
+          $contribution->created_date = CRM_Utils_Date::isoToMysql($contribution->created_date);
+        }
         $contribution->save( );
 
         if ( $membership ) {
-            $membership->status_id = 6;
+            $cancelled_id = array_search('Cancelled', self::$_membershipStatus);
+            $membership->status_id = $cancelled_id;
             $membership->save( );
             
             //update related Memberships.
             require_once 'CRM/Member/BAO/Membership.php';
-            $params = array( 'status_id' => 6 );
+            $params = array( 'status_id' => $cancelled_id );
             CRM_Member_BAO_Membership::updateRelatedMemberships( $membership->id, $params );
         }
         
@@ -323,7 +324,7 @@ class CRM_Core_Payment_BaseIPN {
         if ( $input['component'] == 'contribute' ) {
             require_once 'CRM/Contribute/BAO/ContributionPage.php';
             CRM_Contribute_BAO_ContributionPage::setValues( $contribution->contribution_page_id, $values );
-            $contribution->source = $values['title'];
+            $contribution->source = !empty($contribution->source) ? $contribution->source : $values['title'];
             
             if ( $values['is_email_receipt'] ) {
                 $contribution->receipt_date = self::$_now;
@@ -420,7 +421,7 @@ class CRM_Core_Payment_BaseIPN {
             $ufJoinParams['weight'] = 2;
             $values['custom_post_id'] = CRM_Core_BAO_UFJoin::findUFGroupId( $ufJoinParams );
 
-            $contribution->source                  = ts( 'Online Event Registration' ) . ': ' . $values['event']['title'];
+            $contribution->source = !empty($contribution->source) ? $contribution->source :  ts('Online Event Registration').':'.$values['event']['title'];
 
             if ( $values['event']['is_email_confirm'] ) {
                 $contribution->receipt_date = self::$_now;
@@ -438,6 +439,7 @@ class CRM_Core_Payment_BaseIPN {
         $contribution->net_amount   = $input['net_amount'];
         $contribution->trxn_id      = $input['trxn_id'];
         $contribution->receive_date = CRM_Utils_Date::isoToMysql($contribution->receive_date);
+        $contribution->created_date = CRM_Utils_Date::isoToMysql($contribution->created_date);
         $contribution->cancel_date  = 'null';
         
         if ( CRM_Utils_Array::value('check_number', $input) ) {
@@ -447,6 +449,9 @@ class CRM_Core_Payment_BaseIPN {
         if ( CRM_Utils_Array::value('payment_instrument_id', $input) ) {
             $contribution->payment_instrument_id = $input['payment_instrument_id'];
         }
+
+        // check and generate receipt id here for every online contribution
+        CRM_Contribute_BAO_Contribution::genReceiptID($contribution, TRUE, $is_online = TRUE);
         
         $contribution->save( );
         

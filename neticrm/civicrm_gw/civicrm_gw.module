@@ -84,6 +84,7 @@ function _civicrm_gw_instrument($type = 'normal'){
     'Convenient Store' => array('label' => '超商條碼繳費', 'desc'=>'', 'code' => 'barcode'),
     'Convenient Store (FamilyMart)' => array('label'=>'超商代碼 (全家/萊爾富)','desc' => '', 'code' => 'cvs'),
     'Convenient Store (7-11 ibon)' => array('label'=>'超商代碼 (7-11 ibon)','desc' => '', 'code' => 'ibon'),
+    'UnionPay' => array('label'=> '銀聯卡', 'desc' => '', 'code' => 'unionpay'),
   );
   if($type == 'form_name'){
     foreach($i as $name => $data){

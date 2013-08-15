@@ -48,7 +48,7 @@
        <tr id="row_{$row.id}" class=" crm-particpant crm-participant_{$row.id} {cycle values="odd-row,even-row"} {$row.class}{if NOT $row.is_active} disabled{/if}">
           <td class="crm-particpant-label">{$row.label}</td>
           <td class="crm-particpant-name">{$row.name}</td>
-          <td class="crm-particpant-class">{$row.class}</td>
+          <td class="crm-particpant-class">{ts}{$row.class}{/ts}</td>
           <td class="yes-no crm-participant-is_reserved">{if $row.is_reserved}<img src="{$config->resourceBase}/i/check.gif" alt="{ts}Reserved{/ts}" />{/if}</td>
 	  <td id="row_{$row.id}_status" class="crm-participant-is_active">{if $row.is_active eq 1} {ts}Yes{/ts} {else} {ts}No{/ts} {/if}</td>
           <td class="yes-no crm-participant-is_counted">{if $row.is_counted} <img src="{$config->resourceBase}/i/check.gif" alt="{ts}Counted{/ts}" />{/if}</td>

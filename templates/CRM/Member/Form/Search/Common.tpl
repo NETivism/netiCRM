@@ -25,22 +25,10 @@
 *}
 <tr> 
     <td><label>{ts}Membership Type(s){/ts}</label><br />
-                   <div class="listing-box">
-                    {foreach from=$form.member_membership_type_id item="membership_type_val"} 
-                    <div class="{cycle values="odd-row,even-row"}">
-                    {$membership_type_val.html}
-                    </div>
-                    {/foreach}
-                </div>
+                   {$form.member_membership_type_id.html}
     </td>
     <td><label>{ts}Membership Status{/ts}</label><br />
-                <div class="listing-box">
-                    {foreach from=$form.member_status_id item="membership_status_val"} 
-                    <div class="{cycle values="odd-row,even-row"}">
-                    {$membership_status_val.html}
-                    </div>
-                    {/foreach}
-                </div>
+                   {$form.member_status_id.html}
     </td>
 </tr>
 
@@ -97,3 +85,5 @@
     </td>
 </tr>
 {/if}
+
+{include file="CRM/common/chosen.tpl" selector='select[name^=member_membership_type_id], select[name^=member_status_id]'}

@@ -125,7 +125,7 @@ class CRM_Contribute_Form_AdditionalInfo
         $element =& $form->add( 'text', 'invoice_id', ts('Invoice ID'), 
                                 $attributes['invoice_id'] );
         if ( $form->_online ) {
-            $element->freeze( );
+            // $element->freeze( );
         } else {
             $form->addRule( 'invoice_id',
                             ts( 'This Invoice ID already exists in the database.' ),
@@ -265,7 +265,7 @@ class CRM_Contribute_Form_AdditionalInfo
             $formatted['thankyou_date'] = 'null';
         }
         
-        if ( CRM_Utils_Array::value( 'is_email_receipt', $params ) ) {
+        if ( CRM_Utils_Array::value( 'is_email_receipt', $params ) && empty($params['receipt_date']) ) {
             $params['receipt_date'] = $formatted['receipt_date'] = date( 'YmdHis' );
         }
 
@@ -439,6 +439,7 @@ class CRM_Contribute_Form_AdditionalInfo
                 'toName'    => $contributorDisplayName,
                 'toEmail'   => $contributorEmail,
                 'isTest'    => $form->_mode == 'test',
+                'PDFFilename' => 'receipt.pdf',
             )
         );
 

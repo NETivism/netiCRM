@@ -4,6 +4,7 @@
  * Update membership status
  */
 function run_membership_status_update(){
+  date_default_timezone_set("Asia/Taipei");
   $obj = new CRM_UpdateMembershipRecord( );
   $obj->updateMembershipStatus( );
 }

@@ -5,16 +5,29 @@
 function civicrm_jvalidate_civicrm_buildForm($formName, &$form) {
   static $add;
 
-  if($_GET['q'] != 'civicrm/event/register' && $_GET['q'] != 'civicrm/profile/create' && $_GET['q']!= 'civicrm/contribute/transact'){
+  if($_GET['q'] != 'civicrm/event/register' && $_GET['q'] != 'civicrm/profile/create' && $_GET['q']!= 'civicrm/contribute/transact' && $_GET['q'] != 'civicrm/contact/add'){
+    return;
+  }
+
+  if(isset($_GET['_qf_Confirm_display']) || isset($_GET['_qf_ThankYou_display'])){
     return;
   }
 
   if(!$add){
     $js = '';
     $path = drupal_get_path('module', 'civicrm_jvalidate');
-    drupal_add_js($path.'/js/jquery.validate.min.js');
-    drupal_add_js($path.'/js/localization/messages_tw.js');
-    drupal_add_js($path.'/civicrm_jvalidate.js');
+    $t = array('jvalidate' => array(
+      'ext'=> t('Phone Ext.'),
+      'extprompt' => t('Enter phone number Ext.'),
+      'notw' => t('other format?'),
+      'notwprompt' => t('Enter id below.'),
+    ));
+    drupal_add_js($t, 'setting');
+    drupal_add_js($path.'/js/jquery.validate.min.js', 'module', 'footer');
+    drupal_add_js($path.'/js/localization/messages_tw.js', 'module', 'footer');
+    drupal_add_js($path.'/js/custom-methods.js', 'module', 'footer');
+    drupal_add_js($path.'/js/jquery.maskedinput.js', 'module', 'footer');
+    drupal_add_js($path.'/civicrm_jvalidate.js', 'module', 'footer');
     $add = TRUE;
   }
 }

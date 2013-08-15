@@ -89,6 +89,7 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
                                  'is_test',
                                  'contribution_recur_id',
                                  'receipt_date',
+                                 'receipt_id',
                                  'membership_id',
                                  'currency',
                                  );
@@ -232,6 +233,13 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
                                                                    'qs'       => "reset=1&action=update&id=%%id%%&cid=%%cid%%&context=%%cxt%%{$extraParams}",
                                                                    'title'    => ts('Edit Contribution'),
                                                                   ),
+                                  CRM_Core_Action::PREVIEW=> array(
+                                                                   'name'     => ts('Receipt'),
+                                                                   'url'      => 'civicrm/contact/view/contribution/receipt',
+                                                                   'qs'       => "reset=1&action=update&id=%%id%%&cid=%%cid%%&context=%%cxt%%",
+                                                                   'title'    => ts('Receipt'),
+                                                                   'fe'       => 1,
+                                                                  ),
                                   CRM_Core_Action::DELETE => array(
                                                                    'name'     => ts('Delete'),
                                                                    'url'      => 'civicrm/contact/view/contribution',
@@ -319,16 +327,14 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
             $componentAction  = CRM_Utils_Request::retrieve( 'action',      'String',   CRM_Core_DAO::$_nullObject );
             $componentContext = CRM_Utils_Request::retrieve( 'compContext', 'String',   CRM_Core_DAO::$_nullObject );
 
-            if ( ! $componentContext &&
-                 $this->_compContext ) {
+            if ( ! $componentContext && $this->_compContext ) {
                 $componentContext = $this->_compContext;
                 $qfKey = CRM_Utils_Request::retrieve( 'qfKey', 'String', CRM_Core_DAO::$_nullObject, null, false, 'REQUEST' );
             }
         }
 
         // get all contribution status
-        $contributionStatuses = CRM_Core_OptionGroup::values( 'contribution_status', 
-                                                              false, false, false, null, 'name', false );
+        $contributionStatuses = CRM_Core_OptionGroup::values( 'contribution_status', false, false, false, null, 'name', false );
         
         While ($result->fetch()) {
             $row = array();
@@ -340,18 +346,17 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
             }
 
             // add contribution status name
-            $row['contribution_status_name'] = CRM_Utils_Array::value( $row['contribution_status_id'],
-                                                                       $contributionStatuses );
+            $row['contribution_status_name'] = CRM_Utils_Array::value( $row['contribution_status_id'], $contributionStatuses );
 
             if ( $result->is_pay_later && CRM_Utils_Array::value( 'contribution_status_name', $row ) == 'Pending' ) {
-                $row['contribution_status'] .= ' (Pay Later)';
+                $row['contribution_status'] .= ' ('.ts('Pay Later').')';
                 
             } else if ( CRM_Utils_Array::value( 'contribution_status_name', $row ) == 'Pending' ) {
-                $row['contribution_status'] .= ' (Incomplete Transaction)';
+                $row['contribution_status'] .= ' ('.ts('Incomplete Transaction').')';
             }
 
             if ( $row['is_test'] ) {
-                $row['contribution_type'] = $row['contribution_type'] . ' (test)';
+                $row['contribution_type'] = $row['contribution_type'] . ' ('.ts('test').')';
             }
             
             $row['checkbox'] = CRM_Core_Form::CB_PREFIX . $result->contribution_id;
@@ -363,11 +368,13 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
                                'cxt'              => $this->_context
                                );
             
-            $row['action']       = CRM_Core_Action::formLink( self::links( $componentId, 
-                                                                           $componentAction, 
-                                                                           $qfKey,
-                                                                           $componentContext ),
-                                                              $mask, $actions );
+            $links = self::links( $componentId, $componentAction, $qfKey, $componentContext );
+
+            // receipt only available when receipt id generated.
+            if(empty($result->receipt_id)){
+              unset($links[CRM_Core_Action::PREVIEW]);
+            }
+            $row['action'] = CRM_Core_Action::formLink( $links, $mask, $actions );
             
             $row['contact_type'] = 
                 CRM_Contact_BAO_Contact_Utils::getImage( $result->contact_sub_type ? 

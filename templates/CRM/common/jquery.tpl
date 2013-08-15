@@ -29,8 +29,9 @@
  * html profile etc
  *}
 <script type="text/javascript" src="{$config->resourceBase}packages/jquery/jquery.js"></script>
-<script type="text/javascript" src="{$config->resourceBase}packages/jquery/jquery-ui-1.8.5/js/jquery-ui-1.8.5.custom.min.js"></script>
-<style type="text/css">@import url("{$config->resourceBase}packages/jquery/jquery-ui-1.8.5/css/custom-theme/jquery-ui-1.8.5.custom.css");</style>
+<script type="text/javascript" src="{$config->resourceBase}packages/jquery/jquery-ui/js/jquery-ui-1.9.1.custom.min.js"></script>
+<script type="text/javascript" src="{$config->resourceBase}packages/jquery/jquery-ui/development-bundle/ui/i18n/jquery.ui.datepicker-{$config->lcMessages|replace:'_':'-'}.js"></script>
+<style type="text/css">@import url("{$config->resourceBase}packages/jquery/jquery-ui/css/custom-theme/jquery-ui-1.9.1.custom.css");</style>
 
 <script type="text/javascript" src="{$config->resourceBase}packages/jquery/plugins/flexigrid.js"></script>
 <style type="text/css">@import url("{$config->resourceBase}packages/jquery/css/flexigrid.css");</style>
@@ -74,6 +75,11 @@
 <style type="text/css">@import url("{$config->resourceBase}packages/jquery/plugins/DataTables-1.7.2/media/css/demo_table_jui.css");</style>
 
 <script type="text/javascript" src="{$config->resourceBase}packages/jquery/plugins/jquery.FormNavigate.js"></script>
+
+<script type="text/javascript" src="{$config->resourceBase}packages/jquery/plugins/jquery.chosen.js"></script>
+<style type="text/css">@import url("{$config->resourceBase}packages/jquery/css/jquery.chosen.css");</style>
+
+<script type="text/javascript" src="{$config->resourceBase}packages/jquery/plugins/jquery.simplemodal.min.js"></script>
 
 <script type="text/javascript" src="{$config->resourceBase}js/rest.js"></script>
 

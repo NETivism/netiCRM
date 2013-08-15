@@ -2,5 +2,6 @@ name = Payment Method of GreenWorld
 description = GreenWorld GW payment functions for civicrm. Include ecpay and ecbank.
 package = NetiCRM Payment Method
 dependencies[] = civicrm
+dependencies[] = civicrm_instrument
 core = 6.x
-version = 6.x-1.1
+version = 6.x-1.3

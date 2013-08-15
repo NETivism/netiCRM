@@ -718,6 +718,7 @@ AND    contact_id IN ( $contactStr )
 
             $gcValues = $shValues = array( );
             foreach ( $input as $cid ) {
+                if (strstr($cid, ',')) continue; // #5743, duplicate contacts group issue
                 if ( isset( $presentIDs[$cid] ) ) {
                     $numContactsNotAdded++;
                     continue;

@@ -15,7 +15,7 @@ function civicrm_event_cck_menu(){
     'page callback' => 'civicrm_event_cck_goto',
     'page arguments' => array(1, 'node'),
     'access callback' => 'civicrm_event_cck_access_check',
-    'access arguments' => array('edit event participants'),
+    'access arguments' => array('edit event participants', 1),
     'type' => MENU_LOCAL_TASK,
     'weight' => 90,
   );
@@ -24,25 +24,26 @@ function civicrm_event_cck_menu(){
     'page callback' => 'civicrm_event_cck_goto',
     'page arguments' => array(1, 'node'),
     'access callback' => 'civicrm_event_cck_access_check',
-    'access arguments' => array('edit all events'),
+    'access arguments' => array('edit all events', 1),
     'type' => MENU_LOCAL_TASK,
     'weight' => 90,
   );
   return $items;
 }
 
-function civicrm_event_cck_access_check($perm){
+function civicrm_event_cck_access_check($perm, $node){
+  $event_id = civicrm_event_cck_check($node);
   switch($perm){ 
     case 'edit event participants':
       if(variable_get('civiec_enable_admin_participants', 0)){
-        if(user_access($perm)){
+        if(user_access($perm) && $event_id){
           return TRUE;
         }
       }
       break;
     case 'edit all events':
       if(variable_get('civiec_enable_admin_event', 0)){
-        if(user_access($perm)){
+        if(user_access($perm) && $event_id){
           return TRUE;
         }
       }
@@ -59,7 +60,13 @@ function civicrm_event_cck_goto(&$node){
         drupal_goto('civicrm/event/search', "reset=1&force=1&event=$event_id");
         break;
       case 'civiec_admin_event':
-        drupal_goto('civicrm/event/manage/registration', "reset=1&action=update&id=$event_id");
+        if($_GET['tab'] && in_array($_GET['tab'], array('eventInfo', 'location', 'fee', 'registration', 'friend'))){
+          $tab = $_GET['tab'];
+          drupal_goto('civicrm/event/manage/'.$tab, "reset=1&action=update&id=$event_id");
+        }
+        else{
+          drupal_goto('civicrm/event/manage/registration', "reset=1&action=update&id=$event_id");
+        }
         break;
     }
   }

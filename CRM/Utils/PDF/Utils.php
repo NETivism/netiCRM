@@ -42,6 +42,8 @@ class CRM_Utils_PDF_Utils {
     }
 
     static function html2pdf( $text, $fileName = 'output.pdf', $orientation = 'landscape', $paperSize   = 'a4', $output = false ) {
+        $config = CRM_Core_Config::singleton();
+
         // make whole html first
         $values = array( );
         if (is_array( $text ) ) {
@@ -53,7 +55,9 @@ class CRM_Utils_PDF_Utils {
 
         // use system wkhtmltopdf to solve everything
         $html = self::makeHTML($values, FALSE);
-        if($pdf = self::wkhtmltopdf($html)){
+        
+        if ($config->wkhtmltopdfPath) {
+          $pdf = self::wkhtmltopdf($html);
           if($output){
             header('Content-type: application/pdf');
             return file_get_contents($pdf);
@@ -148,11 +152,12 @@ class CRM_Utils_PDF_Utils {
      * see /usr/local/bin/wkhtmltopdf-i386 --help
      */
     function wkhtmltopdf($html, $option = '-n'){
-      $wkhtmltopdf = '/usr/local/bin/wkhtmltopdf-i386';
+      $config = CRM_Core_Config::singleton();
+      $wkhtmltopdf = $config->wkhtmltopdfPath;
 
       if(exec("test -x $wkhtmltopdf && echo 1")){
         $temp_prefix = 'pdf_';
-        $temp_dir= '/tmp';
+        $temp_dir = '/tmp';
         $dest = tempnam($temp_dir, $temp_prefix);
         if(preg_match('/^http:\/\//i', $html)){
           $source = $html;
@@ -163,6 +168,7 @@ class CRM_Utils_PDF_Utils {
             $source = tempnam($temp_dir, 'pdfsrc_').'.htm';
           }
           file_put_contents($source, $html);
+          unset($html); // release memory before wkhtmltopdf
         }
         $exec = $wkhtmltopdf.escapeshellcmd(" $option $source $dest");
         exec($exec);

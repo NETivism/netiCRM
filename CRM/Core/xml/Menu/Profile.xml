@@ -4,6 +4,7 @@
   <item>
      <path>civicrm/profile</path>
      <page_callback>CRM_Core_Invoke::profile</page_callback>
+     <access_arguments>profile listings</access_arguments>
      <is_public>true</is_public>
      <weight>0</weight>
   </item>
@@ -13,6 +14,13 @@
      <access_arguments>profile create</access_arguments>
      <page_callback>CRM_Core_Invoke::profile</page_callback>
      <is_public>true</is_public>
+     <weight>0</weight>
+  </item>
+  <item>
+     <path>civicrm/profile/edit</path>
+     <title>CiviCRM Profile Edit</title>
+     <access_arguments>profile edit</access_arguments>
+     <page_callback>CRM_Core_Invoke::profile</page_callback>
      <weight>0</weight>
   </item>
   <item>

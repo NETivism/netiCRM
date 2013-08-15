@@ -240,7 +240,7 @@ class CRM_Import_Form_MapField extends CRM_Core_Form
             if ( is_array( $this->_dedupeFields[$contactType] ) ) {
                 foreach ( $this->_dedupeFields[$contactType] as $val ) {
                     if ( $valTitle = CRM_Utils_Array::value( $val, $this->_mapperFields ) ) {
-                        $this->_mapperFields[$val]  = $valTitle . ' (match to contact)';
+                        $this->_mapperFields[$val]  = $valTitle . ts('(match to contact)');
                     }
                 }
             }
@@ -1033,7 +1033,7 @@ class CRM_Import_Form_MapField extends CRM_Core_Form
                 foreach ( $groupTitles as $fId => $values ) {
                     $key = "custom_{$fId}";
                     $groupTitle = $values['groupTitle'];
-                    $formattedFieldNames[$key] = $fields[$key] . ' :: ' . $groupTitle;
+                    $formattedFieldNames[$key] = $groupTitle . '::'. $fields[$key];
                 }
             }
         }

@@ -23,7 +23,7 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
-<div class="crm-block crm-form-block crm-search-form-block">
+<div class="crm-block crm-form-block crm-form-block-search crm-search-form-block">
 
 <h3>{ts}Find Groups{/ts}</h3>
 <div class="form-item">

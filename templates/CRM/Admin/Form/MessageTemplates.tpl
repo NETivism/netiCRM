@@ -51,7 +51,7 @@
             <td class="label">{$form.msg_subject.label}</td>
             <td>
                   {$form.msg_subject.html|crmReplace:class:huge}
-	              <a href="#" onClick="return showToken('Subject', 3);">{$form.token3.label}</a>
+	              <a class="token-trigger" href="#" onClick="return showToken('Subject', 3);">{$form.token3.label|strip_tags}</a>
 	              {help id="id-token-text" file="CRM/Contact/Form/Task/Email.hlp"}
                   <div id='tokenSubject' style="display:none">
 	                   <input  style="border:1px solid #999999;" type="text" id="filter3" size="20" name="filter3" onkeyup="filter(this, 3)"/><br />
@@ -71,7 +71,7 @@
 	    	</div><!-- /.crm-accordion-header -->
             <div class="crm-accordion-body">
                 <span class="helpIcon" id="helptext">
-                  <a href="#" onClick="return showToken('Text', 1);">{$form.token1.label}</a>
+                  <a class="token-trigger" href="#" onClick="return showToken('Text', 1);">{$form.token1.label}</a>
                   {help id="id-token-text" file="CRM/Contact/Form/Task/Email.hlp"}
                   <div id='tokenText' style="display:none">
                     <input  style="border:1px solid #999999;" type="text" id="filter1" size="20" name="filter1" onkeyup="filter(this, 1)"/><br />
@@ -95,7 +95,7 @@
 		    </div><!-- /.crm-accordion-header -->
  		    <div class="crm-accordion-body">
                 <span class="helpIcon" id="helphtml">
-                  <a href="#" onClick="return showToken('Html', 2);">{$form.token2.label}</a> 
+                  <a class="token-trigger" href="#" onClick="return showToken('Html', 2);">{$form.token2.label}</a> 
                   {help id="id-token-html" file="CRM/Contact/Form/Task/Email.hlp"}
                   <div id='tokenHtml' style="display:none">
                     <input style="border:1px solid #999999;" type="text" id="filter2" size="20" name="filter2" onkeyup="filter(this, 2)"/><br />

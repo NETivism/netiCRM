@@ -92,6 +92,12 @@ class CRM_UF_Page_Group extends CRM_Core_Page
                                                                           'qs'    => 'gid=%%id%%&reset=1',
                                                                           'title' => ts('Use Profile-Create Mode'),
                                                                           ),
+                                        CRM_Core_Action::VIEW    => array(
+                                                                          'name'  => ts('Public Pages'),
+                                                                          'url'   => 'civicrm/profile',
+                                                                          'qs'    => 'reset=1&gid=%%id%%',
+                                                                          'title' => ts('Search in public pages when enabled in profile settings') 
+                                                                          ),
                                         CRM_Core_Action::DISABLE => array(
                                                                           'name'  => ts('Disable'),
                                                                           'extra' => 'onclick = "enableDisable( %%id%%,\''. 'CRM_Core_BAO_UFGroup' . '\',\'' . 'enable-disable' . '\' );"',
@@ -312,16 +318,43 @@ class CRM_UF_Page_Group extends CRM_Core_Page
                 $action -= CRM_Core_Action::DISABLE;
                 $action -= CRM_Core_Action::DELETE;
             }
+            $groupTypes = self::extractGroupTypes($value['group_type']);
+            $groupComponents = array('Contribution', 'Membership', 'Activity', 'Participant');
             
             // drop Create, Edit and View mode links if profile group_type is Contribution, Membership, Activities or Participant
             if ( $value['group_type'] == 'Contribution' || $value['group_type'] == 'Membership' || $value['group_type'] == 'Activity' || $value['group_type'] == 'Participant' ) {
                 $action -= CRM_Core_Action::ADD;
             }
+            $groupTypesString = '';
+            if (!empty($groupTypes)) {
+              $groupTypesStrings = array();
+              foreach ($groupTypes as $groupType => $typeValues) {
+                if (is_array($typeValues)) {
+                  if ($groupType == 'Participant') {
+                    foreach ($typeValues as $subType => $subTypeValues) {
+                      $groupTypesStrings[] = $subType . '::' . implode(': ', $subTypeValues);
+                    }
+                  }
+                  else {
+                    $groupTypesStrings[] = ts($groupType) . '::' . implode(': ', current($typeValues));
+                  }
+                }
+                else {
+                  $groupTypesStrings[] = ts($groupType);
+                }
+              }
+              $groupTypesString = implode(', ', $groupTypesStrings);
+            }
+            $ufGroup[$id]['group_type'] = $groupTypesString;
             
             $ufGroup[$id]['action'] = CRM_Core_Action::formLink(self::actionLinks(), $action, 
                                                                 array('id' => $id));
             //get the "Used For" from uf_join
-            $ufGroup[$id]['module'] = implode( ', ', CRM_Core_BAO_UFGroup::getUFJoinRecord( $id, true ));
+            $modules = CRM_Core_BAO_UFGroup::getUFJoinRecord( $id, true );
+            foreach($modules as $k => $v){
+              $modules[$k] = ts(str_replace("_", " ", $v));
+            }
+            $ufGroup[$id]['module'] = implode(',<br />', $modules);
         }
 
         $this->assign('rows', $ufGroup);
@@ -372,6 +405,70 @@ class CRM_UF_Page_Group extends CRM_Core_Page
         
         $session = CRM_Core_Session::singleton( ); 
         $session->pushUserContext( $url );
+    }
+
+    static
+    function extractGroupTypes($groupType) {
+      $returnGroupTypes = array();
+      if (!$groupType) {
+        return $returnGroupTypes;
+      }
+
+      $groupTypeParts = explode(CRM_Core_DAO::VALUE_SEPARATOR, $groupType);
+      foreach (explode(',', $groupTypeParts[0]) as $type) {
+        $returnGroupTypes[$type] = $type;
+      }
+
+      if (CRM_Utils_Array::value(1, $groupTypeParts)) {
+        foreach (explode(',', $groupTypeParts[1]) as $typeValue) {
+          $groupTypeValues = $valueLabels = array();
+          $valueParts      = explode(':', $typeValue);
+          $typeName        = NULL;
+          switch ($valueParts[0]) {
+            case 'ContributionType':
+              $typeName = 'Contribution';
+              $valueLabels = CRM_Contribute_PseudoConstant::contributionType();
+              break;
+
+            case 'ParticipantRole':
+              $typeName = 'Participant';
+              $valueLabels = CRM_Event_PseudoConstant::participantRole();
+              break;
+
+            case 'ParticipantEventName':
+              $typeName = 'Participant';
+              $valueLabels = CRM_Event_PseudoConstant::event();
+              break;
+
+            case 'ParticipantEventType':
+              $typeName = 'Participant';
+              $valueLabels = CRM_Event_PseudoConstant::eventType();
+              break;
+
+            case 'MembershipType':
+              $typeName = 'Membership';
+              $valueLabels = CRM_Member_PseudoConstant::membershipType();
+              break;
+
+            case 'ActivityType':
+              $typeName = 'Activity';
+              $valueLabels = CRM_Core_PseudoConstant::ActivityType(TRUE, TRUE, FALSE, 'label', TRUE);
+              break;
+          }
+
+          foreach ($valueParts as $val) {
+            if (CRM_Utils_Rule::integer($val)) {
+              $groupTypeValues[$val] = CRM_Utils_Array::value($val, $valueLabels);
+            }
+          }
+
+          if (!is_array($returnGroupTypes[$typeName])) {
+            $returnGroupTypes[$typeName] = array();
+          }
+          $returnGroupTypes[$typeName][$valueParts[0]] = $groupTypeValues;
+        }
+      }
+      return $returnGroupTypes;
     }
 }
 

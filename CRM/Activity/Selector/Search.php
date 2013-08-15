@@ -84,7 +84,8 @@ class CRM_Activity_Selector_Search extends CRM_Core_Selector_Base implements CRM
                                 'source_contact_name',
                                 'activity_type_id',
                                 'activity_type',
-                                'activity_is_test'
+                                'activity_is_test',
+                                'activity_duration',
                                 );
     
     /** 
@@ -355,6 +356,11 @@ class CRM_Activity_Selector_Search extends CRM_Core_Selector_Base implements CRM
                                                  'name'      => ts('Date'),
                                                  'sort'      => 'activity_date_time',
                                                  'direction' => CRM_Utils_Sort::DESCENDING,
+                                                 ),
+                                           array(
+                                                 'name'      => ts('Duration'),
+                                                 'sort'      => 'duration',
+                                                 'direction' => CRM_Utils_Sort::DONTCARE,
                                                  ),
                                            array(
                                                  'name'      => ts('Status'),

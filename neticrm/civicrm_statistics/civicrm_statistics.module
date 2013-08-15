@@ -2,62 +2,9 @@
 define("NETICRM_DEFAULT_URL", "http://neticrm.tw/neticrm/statistics");
 
 function civicrm_statistics_cron(){
-  if($_SERVER['REQUEST_TIME'] - variable_get('civicrm_statistics_run', 0) > 21600){
+  module_load_include('inc', 'civicrm_statistics', 'civicrm_statistics.stat');
+  if($_SERVER['REQUEST_TIME'] - variable_get('civicrm_statistics_run', 0) > 80000){
     civicrm_statistics_fetch();
   }
 }
 
-function civicrm_statistics_fetch(){
-  $stat = array();
-  $sitekey = $_SERVER['HTTP_HOST'];
-  $tables = civicrm_statistics_table();
-  civicrm_initialize();
-  foreach($tables as $table => $t){
-    if(strpos($table, '_contribution')){
-      if(strpos($table, 'amount')){
-        $rows = CRM_Core_DAO::singleValueQuery("SELECT SUM(total_amount) FROM civicrm_contribution WHERE contribution_status_id = 1");
-        $rows = (int) $rows;
-      }
-      else{
-        $rows = CRM_Core_DAO::singleValueQuery("SELECT COUNT(*) FROM civicrm_contribution WHERE contribution_status_id = 1");
-      }
-    }
-    else{
-      $rows = CRM_Core_DAO::singleValueQuery("SELECT COUNT(*) FROM $table WHERE 1");
-    }
-
-    $url = civicrm_statistics_build_fetch_url($sitekey, $t, $rows);
-    // $json = drupal_http_request($url);
-    $response = drupal_http_request($url);
-    if($response->code == 200 && $response->data){
-      $stat[$t] = $response->data;
-    }
-  }
-
-  if(!empty($stat)){
-    variable_set('civicrm_statistics_run', $_SERVER['REQUEST_TIME']);
-    variable_set('civicrm_statistics', $stat);
-  }
-}
-
-function civicrm_statistics_build_fetch_url($sitekey, $type, $stat){
-  return NETICRM_DEFAULT_URL."/fetch?sitekey={$sitekey}&type={$type}&stat={$stat}";
-}
-
-
-function civicrm_statistics_table($flip = FALSE){
-  $tables = array(
-    'civicrm_contact' => 'cc',
-    'civicrm_contribution' => 'ccb',
-    'civicrm_contribution.amount' => 'ccb.a',
-    'civicrm_mailing_event_delivered' => 'cmed',
-    'civicrm_mailing_event_opened' => 'cmeo',
-    'civicrm_mailing_event_trackable_url_open' => 'cmet',
-    'civicrm_event' => 'ce',
-    'civicrm_participant' => 'cp',
-  );
-  if($flip){
-    return array_flip($tables);
-  }
-  return $tables;
-}

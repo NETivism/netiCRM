@@ -23,6 +23,39 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
+{if $ppType}
+  {include file="CRM/Core/BillingBlock.tpl"}
+  {if $paymentProcessor.description}
+    <div class="payment-description">{$paymentProcessor.description}</div>
+  {/if}
+ {if $is_monetary}
+  {* Put PayPal Express button after customPost block since it's the submit button in this case. *}
+  {if $paymentProcessor.payment_processor_type EQ 'PayPal_Express'}
+  <div id="paypalExpress">   
+     {assign var=expressButtonName value='_qf_Main_upload_express'}
+      <fieldset class="crm-group paypal_checkout-group">
+        <legend>{ts}Checkout with PayPal{/ts}</legend>
+        <div class="section">
+        <div class="crm-section paypalButtonInfo-section">
+          <div class="content">
+              <span class="description">{ts}Click the PayPal button to continue.{/ts}</span>
+          </div>
+          <div class="clear"></div>
+        </div>
+        <div class="crm-section {$expressButtonName}-section">
+            <div class="content">
+              {$form.$expressButtonName.html} <span class="description">Checkout securely. Pay without sharing your financial information. </span>
+            </div>
+            <div class="clear"></div>
+        </div>
+        </div>
+      </fieldset>
+   </div> 
+  {/if}
+ {/if}
+{elseif $onbehalf}
+   {include file=CRM/Contribute/Form/Contribution/OnBehalfOf.tpl}
+{else}
 {literal}
 <script type="text/javascript">
 <!--
@@ -111,11 +144,6 @@ function clearAmountOther() {
 	    {/if} 
 	{/if} 
 {/if}
-	{if $form.is_pay_later}
-	    <div class="crm-section {$form.is_pay_later.name}-section">
-			<div class="content">{$form.is_pay_later.html}&nbsp;{$form.is_pay_later.label}</div>
-	    </div>
-	{/if} 
 	{if $form.is_recur}
 	    <div class="crm-section {$form.is_recur.name}-section">
 			<div class="content">
@@ -142,7 +170,7 @@ function clearAmountOther() {
 	    	</div>
 	    	<div class="clear"></div> 
 	    </div>
-	
+
 	{if $form.is_for_organization}
 		<div class="crm-section {$form.is_for_organization.name}-section">
 	    	<div class="content">
@@ -242,14 +270,35 @@ function clearAmountOther() {
     	</div>
     </fieldset>
     {/if} 
-
-    {if $is_monetary} 
-        {include file='CRM/Core/BillingBlock.tpl'} 
-    {/if} 
-
-    <div class="crm-group custom_post_profile-group">
+  <div class="crm-group custom_post_profile-group">
     	{include file="CRM/UF/Form/Block.tpl" fields=$customPost}
 	</div>
+
+    {if $form.payment_processor.label}
+      <fieldset class="crm-group payment_options-group">
+        <legend>{ts}Payment Options{/ts}</legend>
+        <div class="crm-section payment_processor-section">
+          <div class="label">{$form.payment_processor.label}</div>
+          <div class="content">{$form.payment_processor.html}</div>
+          <div class="clear"></div>
+        </div>
+      </fieldset>
+    {/if}
+
+    {if $is_pay_later}
+      <fieldset class="crm-group pay_later-group">
+        <legend>{ts}Payment Options{/ts}</legend>
+        <div class="crm-section pay_later_receipt-section">
+          <div class="label">&nbsp;</div>
+          <div class="content">
+            [x] {$pay_later_text}
+          </div>
+          <div class="clear"></div>
+        </div>
+      </fieldset>
+    {/if}
+    <div id="billing-payment-block"></div>
+    {include file="CRM/common/paymentBlock.tpl'}
 	
     {if $is_monetary and $form.bank_account_number}
     <div id="payment_notice">
@@ -303,7 +352,7 @@ function clearAmountOther() {
 {include file="CRM/common/showHideByFieldValue.tpl" 
     trigger_field_id    ="is_pay_later"
     trigger_value       =""
-    target_element_id   ="payment_information" 
+    target_element_id   ="billing-payment-block" 
     target_element_type ="table-row"
     field_type          ="radio"
     invert              = 1
@@ -313,12 +362,7 @@ function clearAmountOther() {
 <script type="text/javascript">
 {if $pcp}pcpAnonymous();{/if}
 {literal}
-var is_monetary = {/literal}{$is_monetary}{literal}
-if (! is_monetary ) {
-    if ( document.getElementsByName("is_pay_later")[0] ) {
-	document.getElementsByName("is_pay_later")[0].disabled = true;
-    }
-}
+
 if ( {/literal}"{$form.is_recur}"{literal} ) {
     if ( document.getElementsByName("is_recur")[0].checked == true ) { 
 	window.onload = function() {
@@ -405,5 +449,26 @@ function showHidePayPalExpressOption()
 	hide("crm-submit-buttons");
     }
 }
+
+  cj('form input:not([type="submit"])').keydown(function (e) {
+    if (e.keyCode == 13) {
+      if(cj(this).attr('id') == 'neticrm_sort_name_navigation'){
+        return true;
+      }
+      var inputs = cj(this).parents("form").eq(0).find(':input:visible');
+      if (inputs[inputs.index(this) + 1] != null && ( inputs.index(this) + 1 ) < inputs.length) {                    
+          inputs[inputs.index(this) + 1].focus();
+      }
+      cj(this).blur();
+      e.preventDefault();
+      return false;
+    }
+  });
+  cj("input[name=payment_processor]").click(function(){
+    if(cj(this).val() == 0){
+      cj("#billing-payment-block").html("{/literal}{$pay_later_receipt}{literal}");
+    }
+  });
 {/literal}
 </script>
+{/if}

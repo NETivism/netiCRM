@@ -67,6 +67,10 @@ class CRM_Utils_Money {
             return '';
         }
 
+        if($currency == 'TWD' && $format == 'chinese'){
+          return self::toChinese($amount);
+        }
+
         $config = CRM_Core_Config::singleton();
 
         if (!$format) {
@@ -125,6 +129,25 @@ class CRM_Utils_Money {
                               '%c' => CRM_Utils_Array::value($currency, self::$_currencySymbols, $currency),
                               );
         return strtr($format, $replacements);
+    }
+
+    static function toChinese($amount){
+      $amount = floor($amount);
+      $amount = (string) $amount;
+
+      $num = array('0','1','2','3','4','5','6','7','8','9'); 
+      $cht = array('零','壹','貳','參','肆','伍','陸','柒','捌','玖'); 
+      $amt = str_replace($num, $cht, $amount);
+      $amt = preg_split('/(?<!^)(?!$)/u', $amt );
+      $amt = array_reverse($amt);
+
+      $unit = array('元整', '拾', '佰', '仟', '萬', '拾萬', '佰萬', '仟萬');
+
+      foreach($amt as $k => $v){
+        $class =  $k == 0 ? "unit start" : 'unit';
+        $o = $v. '<span class="'.$class.'">'.$unit[$k].'</span>'.$o;
+      }
+      return $o;
     }
 
 }

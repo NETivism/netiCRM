@@ -89,7 +89,8 @@ class CRM_Core_SelectValues
                 'do_not_email' => ts('Do not email'),
                 'do_not_mail'  => ts('Do not mail'),
                 'do_not_sms'   => ts('Do not sms'),
-                'do_not_trade' => ts('Do not trade')
+                'do_not_trade' => ts('Do not trade'),
+                'is_opt_out' => ts('No bulk emails (User Opt Out)'),
             );
         }
         return $privacy;
@@ -296,7 +297,7 @@ class CRM_Core_SelectValues
         static $ufGroupType = null;
         if (!$ufGroupType) {
             $ufGroupType = array(
-                                  'Profile'           => ts('Profile'),
+                                  'Profile'           => ts('Public Pages'),
                                   'Search Profile'    => ts('Search Results'),
                                   );
             $config = CRM_Core_Config::singleton( );
@@ -497,22 +498,24 @@ class CRM_Core_SelectValues
         static $tokens = null;
 
         if (! $tokens ) {
-            $tokens = array( '{action.unsubscribe}'    => ts('Unsubscribe via email'),
-                             '{action.unsubscribeUrl}' => ts('Unsubscribe via web page'),
-                             '{action.resubscribe}'    => ts('Resubscribe via email'),
-                             '{action.resubscribeUrl}' => ts('Resubscribe via web page'),
-                             '{action.optOut}'         => ts('Opt out via email'),
-                             '{action.optOutUrl}'      => ts('Opt out via web page'),
-                             '{action.forward}'        => ts('Forward this email (link)'),
-                             '{action.reply}'          => ts('Reply to this email (link)'),
-                             '{action.subscribeUrl}'   => ts('Subscribe via web page'),
-                             '{domain.name}'           => ts('Domain name'),
-                             '{domain.address}'        => ts('Domain (organization) address'),
-                             '{domain.phone}'          => ts('Domain (organization) phone'),
-                             '{domain.email}'          => ts('Domain (organization) email'),
-                             '{mailing.name}'          => ts('Mailing name'),
-                             '{mailing.group}'         => ts('Mailing group')    
-                          );
+            $tokens = array(
+              '{action.unsubscribe}'    => ts('Unsubscribe via email'),
+              '{action.unsubscribeUrl}' => ts('Unsubscribe via web page'),
+              '{action.resubscribe}'    => ts('Resubscribe via email'),
+              '{action.resubscribeUrl}' => ts('Resubscribe via web page'),
+              '{action.optOut}'         => ts('Opt out via email'),
+              '{action.optOutUrl}'      => ts('Opt out via web page'),
+              '{action.forward}'        => ts('Forward this email (link)'),
+              '{action.reply}'          => ts('Reply to this email (link)'),
+              '{action.subscribeUrl}'   => ts('Subscribe via web page'),
+              '{domain.name}'           => ts('Domain name'),
+              '{domain.address}'        => ts('Domain (organization) address'),
+              '{domain.phone}'          => ts('Domain (organization) phone'),
+              '{domain.email}'          => ts('Domain (organization) email'),
+              '{mailing.name}'          => ts('Mailing name'),
+              '{mailing.group}'         => ts('Mailing group'),
+              '{mailing.viewUrl}' => ts('Mailing permalink'),
+            );
         }
         return $tokens;
     }

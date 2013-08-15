@@ -1,8 +1,8 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.3                                                |
+ | CiviCRM version 4.1                                                |
  +--------------------------------------------------------------------+
- | Copyright CiviCRM LLC (c) 2004-2010                                |
+ | Copyright CiviCRM LLC (c) 2004-2011                                |
  +--------------------------------------------------------------------+
  | This file is a part of CiviCRM.                                    |
  |                                                                    |
@@ -36,13 +36,24 @@
     <tr class="crm-mailing-upload-form-block-from_email_address"><td class="label">{$form.from_email_address.label}</td>
         <td>{$form.from_email_address.html} {help id ="id-from_email"}</td>
     </tr>
+    {if $trackReplies}
+    <tr class="crm-mailing-upload-form-block-reply_to_address">
+        <td style="color:#3E3E3E;"class="label">{ts}Reply-To{/ts}<span class="crm-marker">*</span></td>
+        <td>{ts}Auto-Generated{/ts}</td>
+    </tr>
+    {else}
+    <tr class="crm-mailing-upload-form-block-reply_to_address">
+        <td class="label">{$form.reply_to_address.label}</td>
+        <td>{$form.reply_to_address.html}</td>
+    </tr>
+    {/if}
     <tr class="crm-mailing-upload-form-block-template">
     	<td class="label">{$form.template.label}</td>
-	<td>{$form.template.html}</td>
+      <td colspan="2">{$form.template.html} <a id="online-template-link" class="online-template-link" href="https://neticrm.tw/enews/embed?embed=1" title="{ts}Online tempalte{/ts}">{ts}Online tempalte{/ts}</a></td>
     </tr>
     <tr class="crm-mailing-upload-form-block-subject"><td class="label">{$form.subject.label}</td>
         <td colspan="2">{$form.subject.html|crmReplace:class:huge}
-                        <a href="#" onClick="return showToken('Subject', 3);">{$form.token3.label}</a>
+                        <a class="token-trigger" href="#" onClick="return showToken('Subject', 3);">{$form.token3.label|strip_tags}</a>
                         {help id="id-token-subject" file="CRM/Contact/Form/Task/Email.hlp"}
                         <div id='tokenSubject' style="display:none">
                            <input style="border:1px solid #999999;" type="text" id="filter3" size="20" name="filter3" onkeyup="filter(this, 3)"/><br />
@@ -57,10 +68,8 @@
 <fieldset id="compose_id"><legend>{ts}Compose On-screen{/ts}</legend>
 {include file="CRM/Contact/Form/Task/EmailCommon.tpl" upload=1 noAttach=1}
 </fieldset>
-  {php}
-    $this->assign('sample_message', ts('More information and sample messages...'));
-  {/php}
-  {capture assign=docLink}{docURL page="Sample CiviMail Messages" text=$sample_message}{/capture}
+
+  {capture assign=docLink}{docURL page="Sample CiviMail Messages" text="More information and sample messages..."}{/capture}
   <fieldset id="upload_id"><legend>{ts}Upload Content{/ts}</legend>
     <table class="form-layout-compressed">
         <tr class="crm-mailing-upload-form-block-textFile">
@@ -118,6 +127,28 @@
             verify( );
         }
     }
+    cj(document).ready(function(){
+      // show dialog for online tempalte
+      cj("#online-template-link").click(function(e){
+        e.preventDefault();
+        var $this = cj(this);
+        var horizontalPadding = 30;
+        var verticalPadding = 30;
+        cj('<iframe id="externalSite" class="externalSite" src="' + this.href + '" />').dialog({
+            title: ($this.attr('title')) ? $this.attr('title') : 'Online template',
+            autoOpen: true,
+            width: 850,
+            height: 630,
+            modal: true,
+            resizable: true,
+            autoResize: true,
+            overlay: {
+              opacity: 0.5,
+              background: "black"
+            }
+        }).width(850 - horizontalPadding).height(630 - verticalPadding);
+      });
+    });
 </script>
 {/literal}
 

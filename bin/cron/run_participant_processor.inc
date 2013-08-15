@@ -1,6 +1,7 @@
 <?php
 
 function run_participant_processor(){
+  date_default_timezone_set("Asia/Taipei");
   $obj = new CRM_ParticipantProcessor( );
   echo "Updating..";
   $obj->updateParticipantStatus( );
@@ -42,6 +43,8 @@ class CRM_ParticipantProcessor
      FROM  civicrm_participant participant
 LEFT JOIN  civicrm_event event ON ( event.id = participant.event_id )
     WHERE  participant.status_id IN {$statusIds}
+     AND   (event.end_date > now() OR event.end_date IS NULL)
+     AND   event.is_active = 1 
  ORDER BY  participant.register_date, participant.id 
 ";
         $dao =& CRM_Core_DAO::executeQuery( $query );
@@ -131,8 +134,8 @@ LEFT JOIN  civicrm_event event ON ( event.id = participant.event_id )
                             
                             $allIds = array( $participantId );
                             if ( !empty( $additionalIds ) ) $allIds = array_merge( $allIds, $additionalIds );
-                            $requiredSpaces = CRM_Event_BAO_Participant::totalEventSeats( $allIds );
-                            
+                            $pClause = ' participant.id IN ( '. implode( ' , ', $allIds ).' )'; 
+                            $requiredSpaces = CRM_Event_BAO_Event::eventTotalSeats( $values['event_id'], $pClause );
                             //need to check as to see if event has enough speces
                             if ( ( $requiredSpaces <= $eventOpenSpaces ) || ( $eventOpenSpaces === null ) ) {
                                 require_once 'CRM/Core/Transaction.php';

@@ -399,7 +399,9 @@ INNER JOIN  civicrm_event event ON ( event.id = participant.event_id )
                 $participantIds[$participants->id] = $participants->id;
                 //oops here event is full and we don't want waiting count.
                 if ( !$returnWaitingCount ) {
-                    $eventFullText = $participants->event_full_text;
+                    if($participants->event_full_text){
+                      $eventFullText = $participants->event_full_text;
+                    }
                     break;
                 }
             }
@@ -427,7 +429,9 @@ INNER JOIN  civicrm_contact contact ON (participant.contact_id = contact.id)
         $eventFullText  = ts( 'This event is full !!!' );
         $participants   = CRM_Core_DAO::executeQuery( $query, $eventParams );
         while ( $participants->fetch( ) ) {
-            $eventFullText = $participants->event_full_text;
+            if($participants->event_full_text){
+              $eventFullText = $participants->event_full_text;
+            }
             $eventMaxSeats = $participants->max_participants;
             $participantIds[$participants->id] = $participants->id;
             
@@ -1413,6 +1417,8 @@ UPDATE  civicrm_participant
                     'groupName' => 'msg_tpl_workflow_event',
                     'valueName' => 'participant_' . strtolower($mailType),
                     'contactId' => $contactId,
+                    'participantId' => $participantId,
+                    'eventId' => $eventDetails['id'],
                     'tplParams' => array(
                         'contact'        => $contactDetails,
                         'domain'         => $domainValues,
@@ -1424,12 +1430,14 @@ UPDATE  civicrm_participant
                         'isExpired'      => $mailType == 'Expired',
                         'isConfirm'      => $mailType == 'Confirm',
                         'checksumValue'  => $checksumValue,
+                        'participantID'  => $participantId,
                     ),
                     'from'    => $receiptFrom,
                     'toName'  => $participantName,
                     'toEmail' => $toEmail,
                     'cc'      => CRM_Utils_Array::value('cc_confirm',  $eventDetails),
                     'bcc'     => CRM_Utils_Array::value('bcc_confirm', $eventDetails),
+                    'PDFFilename' => 'Attendee_confirm_copy.pdf'
                 )
             );
             

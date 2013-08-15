@@ -266,7 +266,7 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
                 'contactId' => $contactID,
                 'tplParams' => $tplParams,
                 'isTest'    => $isTest,
-            	'PDFFilename' => 'civicrm.pdf',
+                'PDFFilename' => 'receipt.pdf',
             );
 
             require_once 'CRM/Core/BAO/MessageTemplates.php';
@@ -338,7 +338,7 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
                     'contactId' => $contactID,
                     'tplParams' => array(
                         'recur_frequency_interval' => $recur->frequency_interval,
-                        'recur_frequency_unit'     => $recur->frequency_unit,
+                        'recur_frequency_unit'     => ts($recur->frequency_unit),
                         'recur_installments'       => $recur->installments,
                         'recur_start_date'         => $recur->start_date,
                         'recur_end_date'           => $recur->end_date,
@@ -503,22 +503,22 @@ WHERE entity_table = 'civicrm_contribution_page'
      * @access public
      * @static
      */
-    static function checkRecurPaymentProcessor( $contributionPageId ) 
-    {
-        $sql = "
-  SELECT pp.is_recur
-  FROM   civicrm_contribution_page  cp,
-         civicrm_payment_processor  pp
-  WHERE  cp.payment_processor_id = pp.id
-    AND  cp.id = {$contributionPageId}
-";
-        
-        if ( $recurring =& CRM_Core_DAO::singleValueQuery( $sql, CRM_Core_DAO::$_nullArray ) ) {
-            return true;
-        }
-        return false;
+    static function checkRecurPaymentProcessor($contributionPageId) {
+      //FIXME
+      $sql = "
+    SELECT pp.is_recur
+    FROM   civicrm_contribution_page  cp,
+           civicrm_payment_processor  pp
+    WHERE  cp.payment_processor = pp.id
+      AND  cp.id = {$contributionPageId}
+  ";
+
+      if ($recurring = &CRM_Core_DAO::singleValueQuery($sql, CRM_Core_DAO::$_nullArray)) {
+        return TRUE;
+      }
+      return FALSE;
     }
-    
+
     
     /**                                                           
      * Function to get info for all sections enable/disable.

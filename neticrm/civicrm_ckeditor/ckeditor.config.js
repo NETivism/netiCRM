@@ -6,13 +6,13 @@
  */
 CKEDITOR.editorConfig = function(config) {
   // plug-in 
-  config.extraPlugins = 'MediaEmbed';
+  config.extraPlugins = 'MediaEmbed,imagemap';
   
   // disabled
   config.disableNativeSpellChecker = true;
   config.scayt_autoStartup = false;
   config.font_names = '微軟正黑體;新細明體;標楷體;Arial;Comic Sans MS;Courier New;Tahoma;Times New Roman;Verdana';
-  config.fontSize_sizes = '10/10px;11/11px;13/13px;15/15px;16/16px;18/18px;20/20px;22/22px;24/24px;26/26px;28/28px;36/36px;48/48px;72/72px';
+  config.fontSize_sizes = '10/10px;11/11px;12/12px;13/13px;14/14px;15/15px;16/16px;18/18px;20/20px;22/22px;24/24px;26/26px;28/28px;36/36px;48/48px;72/72px';
   config.format_tags = 'p;h1;h2;h3';
   // config.indentClasses = [ 'rteindent1', 'rteindent2', 'rteindent3', 'rteindent4' ];
 
@@ -45,7 +45,7 @@ CKEDITOR.editorConfig = function(config) {
     ['PasteFromWord','PasteText'],
     ['TextColor','BGColor'],
     ['Table','HorizontalRule'],
-    ['Source']
+    ['Source','ImageMap']
    ];
 
   /*

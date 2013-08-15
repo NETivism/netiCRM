@@ -73,6 +73,7 @@ class CiviMailProcessor {
         }
 
         $config = CRM_Core_Config::singleton();
+        date_default_timezone_set("Asia/Taipei");
         $verpSeperator = preg_quote( $config->verpSeparator );
         $twoDigitStringMin = $verpSeperator . '(\d+)' . $verpSeperator . '(\d+)';
         $twoDigitString    = $twoDigitStringMin . $verpSeperator;
@@ -95,7 +96,7 @@ class CiviMailProcessor {
         require_once 'api/v2/Mailer.php';
 
         // process fifty at a time, CRM-4002
-        while ($mails = $store->fetchNext(50)) {
+        while ($mails = $store->fetchNext(5)) {
             foreach ($mails as $key => $mail) {
 
                 // for every addressee: match address elements if it's to CiviMail

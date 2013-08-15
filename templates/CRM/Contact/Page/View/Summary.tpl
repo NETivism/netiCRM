@@ -137,11 +137,12 @@
                             {if $legal_name}
                             <td class="label">{ts}Legal Name{/ts}</td>
                             <td>{$legal_name}</td>
+                            {/if}
                             {if $sic_code}
                             <td class="label">{ts}SIC Code{/ts}</td>
                             <td>{$sic_code}</td>
                             {/if}
-                            {elseif $nick_name}
+                            {if $nick_name}
                             <td class="label">{ts}Nickname{/ts}</td>
                             <td>{$nick_name}</td>
                             {/if}

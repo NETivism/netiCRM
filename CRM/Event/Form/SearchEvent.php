@@ -67,9 +67,8 @@ class CRM_Event_Form_SearchEvent extends CRM_Core_Form
         
         $event_type = CRM_Core_OptionGroup::values( 'event_type', false );
         
-        foreach($event_type as $eventId => $eventName) {
-            $this->addElement('checkbox', "event_type_id[$eventId]", 'Event Type', $eventName);
-        }
+        $attrs = array('multiple' => 'multiple');
+        $this->addElement('select', 'event_type_id', 'Contribution Type', $event_type, $attrs);
        
         $eventsByDates = array();
         $searchOption  = array( ts('Show Current and Upcoming Events'), ts('Search All or by Date Range') );
@@ -99,7 +98,14 @@ class CRM_Event_Form_SearchEvent extends CRM_Core_Form
                         if ( substr( $field, -4 ) == 'date' ) {
                             $time = ( $field == 'end_date' ) ? '235959' : null;
                             $parent->set( $field, CRM_Utils_Date::processDate( $params[$field], $time ) );
-                        } else {
+                        }
+                        elseif($field == 'event_type_id'){
+                            foreach($params[$field] as $k => $v){
+                              $event_type_ids[$v] = $v;
+                            }
+                            $parent->set( $field, $event_type_ids );
+                        }
+                        else {
                             $parent->set( $field, $params[$field] );
                         }
                 } else {

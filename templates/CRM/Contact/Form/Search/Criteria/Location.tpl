@@ -99,4 +99,4 @@
     </table>
 </div>
 
-
+{include file="CRM/common/chosen.tpl" selector='select[name^=state_province]'}

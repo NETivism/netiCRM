@@ -62,3 +62,5 @@
  </table>
   <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
 </div>
+{include file="CRM/common/chosen.tpl" selector="select[name^=where]"}
+

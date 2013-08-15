@@ -23,6 +23,24 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
+{if $ppType}
+  {include file="CRM/Core/BillingBlock.tpl"}
+  {if $paymentProcessor.description}
+    <div class="payment-description">{$paymentProcessor.description}</div>
+  {/if}
+
+<div id="paypalExpress">
+{* Put PayPal Express button after customPost block since it's the submit button in this case. *}
+{if $paymentProcessor.payment_processor_type EQ 'PayPal_Express'}
+    {assign var=expressButtonName value='_qf_Register_upload_express'}
+    <fieldset class="crm-group payPalExpress-group"><legend>{ts}Checkout with PayPal{/ts}</legend>
+    <div class="description">{ts}Click the PayPal button to continue.{/ts}</div>
+	<div>{$form.$expressButtonName.html} <span style="font-size:11px; font-family: Arial, Verdana;">Checkout securely.  Pay without sharing your financial information. </span>
+    </div>
+    </fieldset>
+{/if}
+</div>
+{else}
 {if $action & 1024}
     {include file="CRM/Event/Form/Registration/PreviewHeader.tpl"}
 {/if}
@@ -107,28 +125,19 @@
 {include file="CRM/common/CMSUser.tpl"}
 
 {include file="CRM/UF/Form/Block.tpl" fields=$customPre} 
+ <div class="crm-section payment_processor-section">
+      <div class="label">{$form.payment_processor.label}</div>
+      <div class="content">{$form.payment_processor.html}</div>
+      <div class="clear"></div>
+ </div>
 
-{if $paidEvent}   
-    {include file='CRM/Core/BillingBlock.tpl'} 
-{/if}        
-
+<div id="billing-payment-block"></div>
+{include file="CRM/common/paymentBlock.tpl"}
 {include file="CRM/UF/Form/Block.tpl" fields=$customPost}   
 
 {if $isCaptcha}
     {include file='CRM/common/ReCAPTCHA.tpl'}
 {/if}
-
-<div id="paypalExpress">
-{* Put PayPal Express button after customPost block since it's the submit button in this case. *}
-{if $paymentProcessor.payment_processor_type EQ 'PayPal_Express' and $buildExpressPayBlock}
-    {assign var=expressButtonName value='_qf_Register_upload_express'}
-    <fieldset class="crm-group payPalExpress-group"><legend>{ts}Checkout with PayPal{/ts}</legend>
-    <div class="description">{ts}Click the PayPal button to continue.{/ts}</div>
-	<div>{$form.$expressButtonName.html} <span style="font-size:11px; font-family: Arial, Verdana;">Checkout securely.  Pay without sharing your financial information. </span>
-    </div>
-    </fieldset>
-{/if}
-</div>
 
 <div id="crm-submit-buttons" class="crm-submit-buttons">
     {include file="CRM/common/formButtons.tpl" location="bottom"}
@@ -140,7 +149,7 @@
     </div>
 {/if}
 </div>
-
+{/if}
 {literal} 
 <script type="text/javascript">
 
@@ -184,9 +193,9 @@
 
 	if ( ( cj("#bypass_payment").val( ) == 1 ) ||
 	     ( payLater && document.getElementsByName('is_pay_later')[0].checked ) ) {
-	     hide( 'payment_information' );		
+	     hide( 'billing-payment-block' );		
 	} else {
-             show( 'payment_information' );
+             show( 'billing-payment-block' );
 	}
     }
     
@@ -257,5 +266,20 @@
          showHidePaymentInfo( );
       {/literal}{/if}{literal}
     }
+
+  cj('form input:not([type="submit"])').keydown(function (e) {
+    if (e.keyCode == 13) {
+      if(cj(this).attr('id') == 'neticrm_sort_name_navigation'){
+        return true;
+      }
+      var inputs = cj(this).parents("form").eq(0).find(':input:visible');
+      if (inputs[inputs.index(this) + 1] != null && ( inputs.index(this) + 1 ) < inputs.length) {                    
+          inputs[inputs.index(this) + 1].focus();
+      }
+      cj(this).blur();
+      e.preventDefault();
+      return false;
+    }
+  });
 </script>
 {/literal} 

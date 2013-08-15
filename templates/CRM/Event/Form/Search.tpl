@@ -26,7 +26,7 @@
 {* Search form and results for Event Participants *}
 {assign var="showBlock" value="'searchForm'"}
 {assign var="hideBlock" value="'searchForm_show'"}
-<div class="crm-block crm-form-block crm-event-search-form-block">
+<div class="crm-block crm-form-block crm-form-block-search crm-event-search-form-block">
 <div class="crm-accordion-wrapper crm-advanced_search_form-accordion {if $ssID or $rows}crm-accordion-closed{else}crm-accordion-open{/if}">
  <div class="crm-accordion-header crm-master-accordion-header">
   <div class="icon crm-accordion-pointer"></div>

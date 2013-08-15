@@ -48,8 +48,8 @@
             <span class="description">{ts}Select the currency to be used for contributions submitted from this contribution page.{/ts}</span></td>
         </tr>	
         {if $paymentProcessor}
-        <tr class="crm-contribution-contributionpage-amount-form-block-payment_processor_id"><th scope="row" class="label" width="20%">{$form.payment_processor_id.label}</th>
-            <td>{$form.payment_processor_id.html}<br />
+        <tr class="crm-contribution-contributionpage-amount-form-block-payment_processor"><th scope="row" class="label" width="20%">{$form.payment_processor.label}</th>
+            <td>{$form.payment_processor.html}<br />
             <span class="description">{ts}Select the payment processor to be used for contributions submitted from this contribution page (unless you are soliciting non-monetary / in-kind contributions only).{/ts} {docURL page="CiviContribute Payment Processor Configuration"}</span></td>
         </tr>
         {/if}
@@ -181,9 +181,25 @@
            {/literal}{/foreach}
        {/if}
      {literal}
-   cj( document ).ready( function( ) { 
-       showRecurring( cj( '#payment_processor_id' ).val( ) ) 
-   });
+console.log(paymentProcessorMapper);
+     cj( document ).ready( function( ) {
+       function checked_payment_processors() {
+         ids = [];
+         cj('.crm-contribution-contributionpage-amount-form-block-payment_processor input[type="checkbox"]').each(function(){
+           if(cj(this).attr('checked')) {
+             var id = cj(this).val();
+             ids.push(id);
+           }
+         });
+         return ids;
+       }
+
+       // show/hide recurring block
+       cj('.crm-contribution-contributionpage-amount-form-block-payment_processor input[type="checkbox"]').change(function(){
+         showRecurring(checked_payment_processors());
+       });
+       showRecurring(checked_payment_processors());
+     });
 	var element_other_amount = document.getElementsByName('is_allow_other_amount');
   	if (! element_other_amount[0].checked) {
 	   hide('minMaxFields', 'table-row');
@@ -270,17 +286,25 @@
 		 }
 	}
 
-    function showRecurring( paymentProcessorId ) {
-        if ( cj.inArray( paymentProcessorId, paymentProcessorMapper) == -1 ) {
-            if ( cj( '#is_recur' ).attr( 'checked' ) ) {
-                cj( '#is_recur' ).removeAttr("checked");
-                cj( '#recurFields' ).hide( );
-            }
-            cj( '#recurringContribution' ).hide( );
-        } else { 
-            cj( '#recurringContribution' ).show( );
-        }  
+  function showRecurring( paymentProcessorIds ) {
+    var display = true;
+    cj.each(paymentProcessorIds, function(k, id){
+      if( cj.inArray(id, paymentProcessorMapper) == -1 ) {
+        display = false;
+      }
+    });
+
+    if(display) {
+      cj( '#recurringContribution' ).show( );
     }
+    else {
+      if ( cj( '#is_recur' ).attr( 'checked' ) ) {
+        cj( '#is_recur' ).removeAttr("checked");
+        cj( '#recurFields' ).hide( );
+      }
+      cj( '#recurringContribution' ).hide( );
+    }
+  }
 </script>
 {/literal}
 {if $form.is_recur}

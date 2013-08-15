@@ -4357,7 +4357,7 @@ INSERT INTO civicrm_domain (name, version, loc_block_id) VALUES (@domainName, '2
 SELECT @domainID := id FROM civicrm_domain where name = 'Default Domain Name';
 
 -- Sample location types
-INSERT INTO civicrm_location_type( name, vcard_name, description, is_reserved, is_active, is_default ) VALUES( '住家', 'HOME', '居住地點', 0, 1, 1 );
+INSERT INTO civicrm_location_type( name, vcard_name, description, is_reserved, is_active, is_default ) VALUES( 'Home', 'HOME', '居住地點', 0, 1, 1 );
 INSERT INTO civicrm_location_type( name, vcard_name, description, is_reserved, is_active ) VALUES( '工作', 'WORK', '工作地點', 0, 1 );
 INSERT INTO civicrm_location_type( name, vcard_name, description, is_reserved, is_active ) VALUES( '主要', NULL, '主要辦公地點', 0, 1 );
 INSERT INTO civicrm_location_type( name, vcard_name, description, is_reserved, is_active ) VALUES( '其他', NULL, '其他地點', 0, 1 );
@@ -4397,8 +4397,8 @@ INSERT INTO civicrm_mailing_component
 VALUES
     ('電子報頁首','Header','頁首標題','HTML 格式的頁首範本。','文字格式的頁首範本。',1,1),
     ('電子報頁尾','Footer','頁尾標題','電子報頁尾的HTML範本<br/><a href=\"{action.optOutUrl}\">取消訂閱</a><br/> {domain.address}','取消訂閱連結: {action.optOutUrl}\n{domain.address}',1,1),
-    ('訂閱訊息','Subscribe','確認訂閱','您有一個{subscribe.group}電子報的訂閱待確認。要確認此訂閱，請回覆此信件或按<a href=\"{subscribe.url}\">這裡</a>。','您有一個{subscribe.group}電子報的訂閱待確認。要確認此訂閱，請回覆此信件或按此連結：{subscribe.url}',1,1),
-    ('歡迎訊息','Welcome','您的訂閱已被啟用','歡迎，您已完成 {welcome.group} 電子報的訂閱。','歡迎，您已完成 {welcome.group} 電子報的訂閱。',1,1),
+    ('訂閱訊息','Subscribe','訂閱待確認','您有一個{subscribe.group}電子報的訂閱待確認。若您確定要訂閱此份電子報，請回覆此信件或按<a href=\"{subscribe.url}\">這裡</a>。','您有一個{subscribe.group}電子報的訂閱待確認。要確認此訂閱，請回覆此信件或按此連結：{subscribe.url}',1,1),
+    ('歡迎訊息','Welcome','您的訂閱已確認！感謝您的訂閱～','您好，您已完成 {welcome.group} 電子報的訂閱。','您好，您已完成 {welcome.group} 電子報的訂閱。',1,1),
     ('退訂訊息','Unsubscribe','取消訂閱','您已取消訂閱：{unsubscribe.group}。您欲重新訂閱，可以寄信給{action.resubscribe}或按 <a href=\"{action.resubscribeUrl}\">這裡</a>。','您已取消訂閱：{unsubscribe.group}。如您要重新訂閱，可寄信到{action.resubscribe}或按%3',1,1),
     ('再次訂閱訊息','Resubscribe','再次訂閱確認','您已重新訂閱以下電子報：{resubscribe.group}。如您要取消訂閱，可寄信給{action.unsubscribe}或按<a href=\"{action.unsubscribeUrl}\">這裡</a>。','您已重新訂閱以下電子報：{resubscribe.group}。如您要取消訂閱，可寄信給{action.unsubscribe}或按{action.unsubscribeUrl}',1,1),
     ('選擇退出收信訊息','OptOut','退出確認','您這個 Email 將不會再收到從 {domain.name} 寄出的電子報。','您這個 Email 將不會再收到從 {domain.name} 寄出的電子報。',1,1),
@@ -4432,7 +4432,7 @@ VALUES
    ('payment_instrument'            , '付款工具'                , 0, 1),
    ('contribution_status'           , '捐款狀態'                , 0, 1),
    ('pcp_status'                    , 'PCP Status'                         , 0, 1),
-   ('participant_role'              , '參加者身分'                   , 0, 1),
+   ('participant_role'              , '參加者角色'                   , 0, 1),
    ('event_type'                    , '活動類型'                         , 0, 1),
    ('contact_view_options'          , '聯絡人查看選項'               , 0, 1),
    ('contact_edit_options'          , '聯絡人編輯選項'               , 0, 1),
@@ -4546,14 +4546,14 @@ INSERT INTO
    `civicrm_option_value` (`option_group_id`, `label`, `value`, `name`, `grouping`, `filter`, `is_default`, `weight`, `description`, `is_optgroup`, `is_reserved`, `is_active`, `component_id`, `visibility_id`) 
 VALUES
    (@option_group_id_pcm, '電話', 1, NULL, NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_pcm, 'Email', 2, NULL, NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
+   (@option_group_id_pcm, '電子郵件', 2, NULL, NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
    (@option_group_id_pcm, '郵政郵件', 3, NULL, NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL),
    (@option_group_id_pcm, '簡訊', 4, NULL, NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL),
    (@option_group_id_pcm, '傳真', 5, NULL, NULL, 0, NULL, 5, NULL, 0, 0, 1, NULL, NULL),
  
    (@option_group_id_act, '會議',                            1, 'Meeting', NULL, 0, NULL, 1, NULL,                       				                                                0, 1, 1, NULL, NULL),
    (@option_group_id_act, '電話',                         2, 'Phone Call',          NULL, 0, NULL, 2, NULL,                                                          				0, 1, 1, NULL, NULL),
-   (@option_group_id_act, 'Email',                              3, 'Email',               NULL, 1, NULL, 3, 'Email 已傳送。',                                                          0, 1, 1, NULL, NULL),
+   (@option_group_id_act, '電子郵件',                              3, 'Email',               NULL, 1, NULL, 3, 'Email 已傳送。',                                                          0, 1, 1, NULL, NULL),
    (@option_group_id_act, '簡訊',                 4, 'SMS',                 NULL, 1, NULL, 4, '簡訊已發送。',                                             0, 1, 1, NULL, NULL),
    (@option_group_id_act, '活動報名',                 5, 'Event Registration',  NULL, 1, NULL, 5, '網路或非網路活動報名。',                                0, 1, 1, @eventCompId, NULL),
    (@option_group_id_act, '捐款',                       6, 'Contribution',        NULL, 1, NULL, 6, '網路或非網路捐款。',                                      0, 1, 1, @contributeCompId, NULL),
@@ -4588,7 +4588,7 @@ VALUES
 
    (@option_group_id_gender, '女',      1, 'Female',      NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
    (@option_group_id_gender, '男',        2, 'Male',        NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_gender, '跨性別', 3, 'Transgender', NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL),
+   (@option_group_id_gender, '其他', 3, 'Transgender', NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL),
 
    (@option_group_id_IMProvider, 'Yahoo', 1, 'Yahoo', NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
    (@option_group_id_IMProvider, 'MSN',   2, 'Msn',   NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
@@ -4637,7 +4637,7 @@ VALUES
   (@option_group_id_cs, '已過期'    , 6, 'Overdue'    , NULL, 0, NULL, 6, NULL, 0, 1, 1, NULL, NULL),
 
   (@option_group_id_pcp, '待查看', 1, 'Waiting Review', NULL, 0, NULL, 1, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_pcp, '巳允許'      , 2, 'Approved'      , NULL, 0, NULL, 2, NULL, 0, 1, 1, NULL, NULL),
+  (@option_group_id_pcp, '已允許'      , 2, 'Approved'      , NULL, 0, NULL, 2, NULL, 0, 1, 1, NULL, NULL),
   (@option_group_id_pcp, '未允許'  , 3, 'Not Approved'  , NULL, 0, NULL, 3, NULL, 0, 1, 1, NULL, NULL),
 
   (@option_group_id_pRole, '參加者',  1, 'Attendee',  NULL, 1, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
@@ -4673,7 +4673,7 @@ VALUES
   (@option_group_id_ceOpt, '註記'                    ,   4, 'Notes', NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_ceOpt, '人口統計資料'             ,   5, 'Demographics', NULL, 0, NULL, 5, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_ceOpt, '標籤及群組'          ,   6, 'TagsAndGroups', NULL, 0, NULL, 6, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_ceOpt, 'Email'                    ,   7, 'Email', NULL, 1, NULL, 7, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_ceOpt, '電子郵件'                    ,   7, 'Email', NULL, 1, NULL, 7, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_ceOpt, '電話'                    ,   8, 'Phone', NULL, 1, NULL, 8, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_ceOpt, '即時通訊'        ,   9, 'IM', NULL, 1, NULL, 9, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_ceOpt, 'Open ID'                  ,   10, 'OpenID', NULL, 1, NULL, 10, NULL, 0, 0, 1, NULL, NULL),
@@ -4704,7 +4704,7 @@ VALUES
   (@option_group_id_udOpt, '認捐'                    , 7, 'CiviPledge', NULL, 0, NULL, 7, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_udOpt, '個人募款頁'    , 8, 'PCP', NULL, 0, NULL, 8, NULL, 0, 0, 1, NULL, NULL),
 
-  (@option_group_id_acsOpt, '電子郵件位址'   , 2, 'email'         , NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_acsOpt, '電子郵件地址'   , 2, 'email'         , NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_acsOpt, '電話'           , 3, 'phone'         , NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_acsOpt, '街道地址'  , 4, 'street_address', NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_acsOpt, '鄉鎮市區'            , 5, 'city'          , NULL, 0, NULL, 5, NULL, 0, 0, 1, NULL, NULL),
@@ -4755,7 +4755,7 @@ VALUES
   (@option_group_id_report , '支持者報表（詳情）',             'contact/detail',                 'CRM_Report_Form_Contact_Detail',                 NULL, 0, NULL, 2,  '提供在捐款、會員、項目和活動有關的聯絡資訊',   0, 0, 1, NULL, NULL),
   (@option_group_id_report , '任務報表',                         'activity',                       'CRM_Report_Form_Activity',                       NULL, 0, NULL, 3,  '提供支持者任務的清單，包括在指定日期範圍內，聯絡人的任務統計。（必填）', 0, 0, 1, NULL, NULL),
   (@option_group_id_report , '步行/電話名單報表',                'walklist',                       'CRM_Report_Form_Walklist',                       NULL, 0, NULL, 4,  '為步行/電話名單報表的指定聯絡人提供一份詳細報表。', 0, 0, 0, NULL, NULL),
-  (@option_group_id_report , '目前的員工報表',                 'contact/currentEmployer',        'CRM_Report_Form_Contact_CurrentEmployer',        NULL, 0, NULL, 5,  '透過加入日期的詳細細節，提供詳細的就職單位與僱員關係列表。', 0, 0, 0, NULL, NULL),
+  (@option_group_id_report , '服務單位/就讀學校報表',                 'contact/currentEmployer',        'CRM_Report_Form_Contact_CurrentEmployer',        NULL, 0, NULL, 5,  '透過加入日期的詳細細節，提供詳細的就職單位與僱員關係列表。', 0, 0, 0, NULL, NULL),
   (@option_group_id_report , '捐款者報表（概況）',                  'contribute/summary',             'CRM_Report_Form_Contribute_Summary',             NULL, 0, NULL, 6,  '依月 / 星期 / 年 ... 國家 / 州等分類顯示捐款統計資料', 0, 0, 1, @contributeCompId, NULL),
   (@option_group_id_report , '捐款者報表（詳情）',                   'contribute/detail',              'CRM_Report_Form_Contribute_Detail',              NULL, 0, NULL, 7,  '列出一個 / 全部聯絡人的詳細捐款資料。捐款總結報表指出這個報表的具體細節。', 0, 0, 1, @contributeCompId, NULL),
   (@option_group_id_report , '捐贈摘要報表（重複）',        'contribute/repeat',              'CRM_Report_Form_Contribute_Repeat',              NULL, 0, NULL, 8,  '請給兩個日期範圍，顯示在這段時間裡，聯絡人（與他們的捐款）增加或減少的比率。', 0, 0, 1, @contributeCompId, NULL),
@@ -4787,7 +4787,7 @@ VALUES
   (@option_group_id_report, 'Email 退信報表', 'Mailing/bounce', 'CRM_Report_Form_Mailing_Bounce', NULL, 0, NULL, 34, 'Bounce Report for mailings', 0, 0, 1, @mailCompId, NULL),
   (@option_group_id_report, 'Email遞送報表（概況）', 'Mailing/summary', 'CRM_Report_Form_Mailing_Summary', NULL, 0, NULL, 35, 'Summary statistics for mailings', 0, 0, 1, @mailCompId, NULL),
   (@option_group_id_report, 'Email 開信率報表', 'Mailing/opened', 'CRM_Report_Form_Mailing_Opened', NULL, 0, NULL, 36, 'Display contacts who opened emails from a mailing', 0, 0, 1, @mailCompId, NULL),
-  (@option_group_id_report, 'Email 點擊流程報表', 'Mailing/clicks', 'CRM_Report_Form_Mailing_Clicks', NULL, 0, NULL, 37, 'Display clicks from each mailing', 0, 0, 1, @mailCompId, NULL),
+  (@option_group_id_report, 'Email 點擊報表', 'Mailing/clicks', 'CRM_Report_Form_Mailing_Clicks', NULL, 0, NULL, 37, 'Display clicks from each mailing', 0, 0, 1, @mailCompId, NULL),
   (@option_group_id_report, 'Contact Logging Report (Summary)', 'logging/contact/summary', 'CRM_Report_Form_Contact_LoggingSummary', NULL, 0, NULL, 38, 'Contact modification report for the logging infrastructure (summary).', 0, 0, 0, NULL, NULL),
   (@option_group_id_report, 'Contact Logging Report (Detail)', 'logging/contact/detail', 'CRM_Report_Form_Contact_LoggingDetail', NULL, 0, NULL, 39, 'Contact modification report for the logging infrastructure (detail).', 0, 0, 0, NULL, NULL),
   
@@ -4898,11 +4898,11 @@ VALUES
 -- Account types
    (@option_group_id_accTp, 'Asset', 1, 'Asset',  NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
    (@option_group_id_accTp, 'Liability', 2, 'Liability',  NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_accTp, '未完成', 3, 'Income',  NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
+   (@option_group_id_accTp, '收入', 3, 'Income',  NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
    (@option_group_id_accTp, 'Expense', 4, 'Expense',  NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
 
 -- website type
-   (@option_group_id_website, '住家',     1, 'Home',     NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
+   (@option_group_id_website, 'Home',     1, 'Home',     NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
    (@option_group_id_website, '工作',     2, 'Work',     NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
    (@option_group_id_website, 'Facebook', 3, 'Facebook', NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL),
    (@option_group_id_website, 'Twitter',  4, 'Twitter',  NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL),
@@ -5197,7 +5197,7 @@ INSERT INTO
     civicrm_membership_status(name, label, start_event, start_event_adjust_unit, start_event_adjust_interval, end_event, end_event_adjust_unit, end_event_adjust_interval, is_current_member, is_admin, weight, is_default, is_active, is_reserved)
 VALUES
     ('New',       '新增', 'join_date', null, null,'join_date','month',3, 1, 0, 1, 0, 1, 0),
-    ('Current',   '現在', 'start_date', null, null,'end_date', null, null, 1, 0, 2, 1, 1, 0),
+    ('Current',   '正常', 'start_date', null, null,'end_date', null, null, 1, 0, 2, 1, 1, 0),
     ('Grace',     '寬限', 'end_date', null, null,'end_date','month', 1, 1, 0, 3, 0, 1, 0),
     ('Expired',   '已清除', 'end_date', 'month', 1, null, null, null, 0, 0, 4, 0, 1, 0),
     ('Pending',   '待處理', 'join_date', null, null,'join_date',null,null, 0, 0, 5, 0, 1, 1),
@@ -5228,7 +5228,7 @@ VALUES
  ('PayPal_Standard',    'PayPal - 網站付款標準版', NULL,1,0,'商業帳戶 Email',NULL,NULL,NULL,'Payment_PayPalImpl','https://www.paypal.com/',NULL,'https://www.paypal.com/',NULL,'https://www.sandbox.paypal.com/',NULL,'https://www.sandbox.paypal.com/',NULL,4,1),
  ('PayPal',             'PayPal - 網站付款進階版',      NULL,1,0,'使用者名稱','密碼','簽名檔',NULL,'Payment_PayPalImpl','https://www.paypal.com/','https://api-3t.paypal.com/','https://www.paypal.com/','https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif','https://www.sandbox.paypal.com/','https://api-3t.sandbox.paypal.com/','https://www.sandbox.paypal.com/','https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif',3, 1 ),
  ('PayPal_Express',     'PayPal - 快速結帳',       NULL,1,0,'使用者名稱','密碼','簽名檔',NULL,'Payment_PayPalImpl','https://www.paypal.com/','https://api-3t.paypal.com/',NULL,'https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif','https://www.sandbox.paypal.com/','https://api-3t.sandbox.paypal.com/',NULL,'https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif',2,NULL),
- ('Google_Checkout',    'Google Checkout',        NULL,1,0,'商業帳戶 ID','Key',NULL,NULL,'Payment_Google','https://checkout.google.com/',NULL,NULL,'https://checkout.google.com/buttons/checkout.gif?merchant_id=YOURMERCHANTIDHERE&w=160&h=43&style=white&variant=text&loc=en_US','https://sandbox.google.com/checkout/',NULL,NULL,'https://sandbox.google.com/checkout/buttons/checkout.gif?merchant_id=YOURMERCHANTIDHERE&w=160&h=43&style=white&variant=text&loc=en_US',4,NULL),
+ ('Google_Checkout',    'Google Checkout',        NULL,1,0,'商業帳戶帳號','Key',NULL,NULL,'Payment_Google','https://checkout.google.com/',NULL,NULL,'https://checkout.google.com/buttons/checkout.gif?merchant_id=YOURMERCHANTIDHERE&w=160&h=43&style=white&variant=text&loc=en_US','https://sandbox.google.com/checkout/',NULL,NULL,'https://sandbox.google.com/checkout/buttons/checkout.gif?merchant_id=YOURMERCHANTIDHERE&w=160&h=43&style=white&variant=text&loc=en_US',4,NULL),
  ('Moneris',            'Moneris',                NULL,1,0,'使用者名稱','密碼','Store ID',NULL,'Payment_Moneris','https://www3.moneris.com/',NULL,NULL,NULL,'https://esqa.moneris.com/',NULL,NULL,NULL,1,1),
  ('AuthNet_AIM',        'Authorize.Net - AIM',    NULL,1,0,'API Login','Payment Key','MD5 Hash',NULL,'Payment_AuthorizeNet','https://secure.authorize.net/gateway/transact.dll',NULL,'https://api.authorize.net/xml/v1/request.api',NULL,'https://test.authorize.net/gateway/transact.dll',NULL,'https://apitest.authorize.net/xml/v1/request.api',NULL,1,NULL),
  ('PayJunction',        'PayJunction',            NULL,1,0,'User Name','Password',NULL,NULL,'Payment_PayJunction','https://payjunction.com/quick_link',NULL,NULL,NULL,'https://www.payjunctionlabs.com/quick_link',NULL,NULL,NULL,1,1),
@@ -5545,19 +5545,19 @@ INSERT INTO civicrm_uf_field
        (3,  1,           'street_address',        0,           0,           3,      'User and User Admin Only',  0,           0,             1,                '街道地址（住家）', 		'Contact',     NULL,  NULL),
        (4,  1,           'city',                  0,           0,           4,      'User and User Admin Only',  0,           0,             1,                '鄉鎮市區（住家）',           		'Contact',     NULL,  NULL),
        (5,  1,           'postal_code',           0,           0,           5,      'User and User Admin Only',  0,           0,             1,                '郵遞區號（住家）',    		'Contact',     NULL,  NULL),
-       (6,  1,           'country',               0,           0,           6,      'Public Pages and Listings', 0,           1,             1,                '國家（住家）',        		'Contact',     '你所在的縣市和居住國將與他人共享，以便人們可以找到其他住在他們社區的聯絡人。',  NULL),
+       (6,  1,           'country',               0,           0,           6,      'Public Pages and Listings', 0,           1,             1,                '國家（住家）',        		'Contact',     '您所在的縣市和居住國將與他人共享，以便人們可以找到其他住在他們社區的聯絡人。',  NULL),
        (7,  1,           'state_province',        0,           0,           7,      'Public Pages and Listings', 1,           1,             1,                '縣市（住家）',          		'Contact',     NULL,  NULL),
        (8,  2,           'first_name',            1,           0,           1,      'User and User Admin Only',  0,           0,             NULL,             '名字 ',            		'Individual',  NULL,  NULL),
        (9,  2,           'last_name',             1,           0,           2,      'User and User Admin Only',  0,           0,             NULL,             '姓氏',             		'Individual',  NULL,  NULL),
-       (10, 2,           'email',                 1,           0,           3,      'User and User Admin Only',  0,           0,             NULL,             '電子郵件位址',         		'Contact',     NULL,  NULL),
+       (10, 2,           'email',                 1,           0,           3,      'User and User Admin Only',  0,           0,             NULL,             '電子郵件地址',         		'Contact',     NULL,  NULL),
        (11, 3,           'participant_status_id', 1,           1,           1,      'User and User Admin Only',  0,           0,             NULL,             '參加者狀態',    		'Participant', NULL,  NULL),
        (12, 4,           'first_name',            1,           0,           1,      'User and User Admin Only',  0,           0,             NULL,             '名字 ',            		'Individual',  NULL,  NULL),
        (13, 4,           'last_name',             1,           0,           2,      'User and User Admin Only',  0,           0,             NULL,             '姓氏',             		'Individual',  NULL,  NULL),
-       (14, 4,           'email',                 0,           0,           3,      'User and User Admin Only',  0,           0,             NULL,             '電子郵件位址',         		'Contact',     NULL,  NULL),
+       (14, 4,           'email',                 0,           0,           3,      'User and User Admin Only',  0,           0,             NULL,             '電子郵件地址',         		'Contact',     NULL,  NULL),
        (15, 5,           'organization_name',     1,           0,           2,      'User and User Admin Only',  0,           0,             NULL,             '單位抬頭',     		'Organization',NULL,  NULL),
-       (16, 5,           'email',                 0,           0,           3,      'User and User Admin Only',  0,           0,             NULL,             '電子郵件位址',         		'Contact',     NULL,  NULL),
+       (16, 5,           'email',                 0,           0,           3,      'User and User Admin Only',  0,           0,             NULL,             '電子郵件地址',         		'Contact',     NULL,  NULL),
        (17, 6,           'household_name',        1,           0,           2,      'User and User Admin Only',  0,           0,             NULL,             '家庭名稱',        		'Household',   NULL,  NULL),
-       (18, 6,           'email',                 0,           0,           3,      'User and User Admin Only',  0,           0,             NULL,             '電子郵件位址',         		'Contact',     NULL,  NULL),
+       (18, 6,           'email',                 0,           0,           3,      'User and User Admin Only',  0,           0,             NULL,             '電子郵件地址',         		'Contact',     NULL,  NULL),
 	   (19 	,7 		    ,'phone' 				 ,1  	      ,0 			,1 	,'User and User Admin Only' ,0 		 	 ,0 			,1 				  ,'Home Phone' 					,'Contact' 	  ,NULL,  1 ),
 	   (20 	,7 		    ,'phone' 				 ,1  	      ,0 			,2 	,'User and User Admin Only' ,0 		 	 ,0 			,1 				  ,'Home Mobile' 					,'Contact' 	  ,NULL, 2 ),
 	   (21, 7, 			 'street_address', 		  1, 		   0, 			3, 	  	'User and User Admin Only',  0, 		  0, 			 NULL, 			   'Primary Address',		'Contact', 	   NULL,  NULL),
@@ -5577,7 +5577,7 @@ INSERT INTO civicrm_uf_field
 
 INSERT INTO civicrm_participant_status_type
   (id, name,                                  label,                                                       class,      is_reserved, is_active, is_counted, weight, visibility_id) VALUES
-  (1,  'Registered',                          '巳登記',                          'Positive', 1,           1,         1,          1,      1            ),
+  (1,  'Registered',                          '已登記',                          'Positive', 1,           1,         1,          1,      1            ),
   (2,  'Attended',                            '出席',                            'Positive', 0,           1,         1,          2,      2            ),
   (3,  'No-show',                             '失約',                             'Negative', 0,           1,         0,          3,      2            ),
   (4,  'Cancelled',                           '已取消',                           'Negative', 1,           1,         0,          4,      2            ),
@@ -5586,7 +5586,7 @@ INSERT INTO civicrm_participant_status_type
   (7,  'On waitlist',                         '在候補名單',                         'Waiting',  1,           0,         0,          7,      2            ),
   (8,  'Awaiting approval',                   '等待審核',                   'Waiting',  1,           0,         1,          8,      2            ),
   (9,  'Pending from waitlist',               '待處理-在候補名單中',               'Pending',  1,           0,         1,          9,      2            ),
-  (10, 'Pending from approval',               '待處理-在審核名單中',               'Pending',  1,           0,         1,          10,     2            ),
+  (10, 'Pending from approval',               '待處理-已審核通過',               'Pending',  1,           0,         1,          10,     2            ),
   (11, 'Rejected',                            '已拒絕',                            'Negative', 1,           0,         0,          11,     2            ),
   (12, 'Expired',                             '已清除',                             'Negative', 1,           1,         0,          12,     2            );
 

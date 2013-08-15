@@ -133,7 +133,7 @@ dojo.addOnLoad( function( ) {
 {/if}
 
 {strip}
-<div class="crm-block crm-form-block crm-basic-criteria-form-block">
+<div class="crm-block crm-form-block crm-form-block-search crm-basic-criteria-form-block">
     <div class="crm-accordion-wrapper crm-case_search-accordion {if $rows}crm-accordion-closed{else}crm-accordion-open{/if}">
      <div class="crm-accordion-header crm-master-accordion-header">
       <div class="icon crm-accordion-pointer"></div> 
@@ -146,6 +146,15 @@ dojo.addOnLoad( function( ) {
         	</div>
         	<div class="content">
         		{$form.sort_name.html}
+        	</div>
+        	<div class="clear"></div> 
+        </div>
+        <div class="crm-section legal_identifier-section">	
+        	<div class="label">
+        		{$form.legal_identifier.label}
+        	</div>
+        	<div class="content">
+        		{$form.legal_identifier.html}
         	</div>
         	<div class="clear"></div> 
         </div>
@@ -212,3 +221,5 @@ cj(function() {
 });
 </script>
 {/literal}
+{include file="CRM/common/chosen.tpl" selector="select#contact_type,select#group,select#tag"}
+

@@ -247,6 +247,8 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
      * This function is just a wrapper, so that we can call all the hook functions
      */
     function mainProcess() {
+        CRM_Utils_Hook::preSave( get_class( $this ),
+                                     $this );
         $this->postProcess( );
 
         CRM_Utils_Hook::postProcess( get_class( $this ),

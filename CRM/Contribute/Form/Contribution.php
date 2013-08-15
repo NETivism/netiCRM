@@ -774,7 +774,7 @@ WHERE  contribution_id = {$this->_id}
                                array(''=>ts( '- select -' )) + CRM_Contribute_PseudoConstant::contributionType( ),
                                true, array('onChange' => "buildCustomData( 'Contribution', this.value );"));
         if ( $this->_online ) {
-            $element->freeze( );
+            // $element->freeze( );
         }
         if ( !$this->_mode ) { 
             $element = $this->add('select', 'payment_instrument_id', 
@@ -787,8 +787,7 @@ WHERE  contribution_id = {$this->_id}
             }
         }
         
-        $element = $this->add( 'text', 'trxn_id', ts('Transaction ID'), 
-                                $attributes['trxn_id'] );
+        $element = $this->add( 'text', 'trxn_id', ts('Transaction ID'), $attributes['trxn_id'] );
         if ( $this->_online ) {
             $element->freeze( );
         } else {
@@ -797,8 +796,16 @@ WHERE  contribution_id = {$this->_id}
                             'objectExists', 
                             array( 'CRM_Contribute_DAO_Contribution', $this->_id, 'trxn_id' ) );
         }
+
+
         //add receipt for offline contribution
-        $this->addElement('checkbox','is_email_receipt', ts('Send Receipt?'),null, array('onclick' =>"return showHideByValue('is_email_receipt','','receiptDate','table-row','radio',true);") );
+        $this->addElement('checkbox','is_email_receipt', ts('Send Receipt?'),null);
+
+        // add receipt id text area
+        $receipt_attr = array_merge($attributes['receipt_id'], array('readonly' => 'readonly'));
+        $this->add('text', 'receipt_id', ts('Receipt ID'), $receipt_attr);
+        $this->addRule( 'receipt_id', ts( 'This Receipt ID already exists in the database.' ), 'objectExists', array( 'CRM_Contribute_DAO_Contribution', $this->_id, 'receipt_id' ) );
+        $this->assign( 'receipt_id_setting', url("civicrm/admin/receipt", array('query' => 'reset=1')) );
 
         $status = CRM_Contribute_PseudoConstant::contributionStatus(  );
         // supressing contribution statuses that are NOT relevant to pledges (CRM-5169)
@@ -818,7 +825,6 @@ WHERE  contribution_id = {$this->_id}
 
         // add various dates
         $this->addDateTime( 'receive_date', ts('Received'), false, array( 'formatType' => 'activityDateTime') );
-                
         if ( $this->_online ) {
             $this->assign( 'hideCalender', true );
         }
@@ -828,6 +834,12 @@ WHERE  contribution_id = {$this->_id}
         }
         
         $this->addDateTime( 'receipt_date', ts('Receipt Date'), false, array( 'formatType' => 'activityDateTime') );
+        if($this->_values['receipt_id']){
+          $this->assign( 'receipt_id', $this->_values['receipt_id'] );
+          $this->getElement('receipt_date')->freeze();
+          $this->getElement('receipt_date_time')->freeze();
+        }
+                
         $this->addDateTime( 'cancel_date', ts('Cancelled Date'), false, array( 'formatType' => 'activityDateTime') );
         
         $this->add('textarea', 'cancel_reason', ts('Cancellation Reason'), $attributes['cancel_reason'] );
@@ -1186,7 +1198,7 @@ WHERE  contribution_id = {$this->_id}
             
             $this->_params['receive_date'] = $now;
             
-            if ( CRM_Utils_Array::value( 'is_email_receipt', $this->_params ) ) {
+            if ( CRM_Utils_Array::value( 'is_email_receipt', $this->_params ) && empty($this->_params['receipt_date'])) {
                 $this->_params['receipt_date'] = $now;
             } else {
                 $this->_params['receipt_date'] = CRM_Utils_Date::processDate( $this->_params['receipt_date'], $params['receipt_date_time'] , true );
@@ -1320,6 +1332,7 @@ WHERE  contribution_id = {$this->_id}
                              'pcp_display_in_roll',
                              'pcp_roll_nickname',
                              'pcp_personal_note',
+                             'receipt_id',
                              );
             
             foreach ( $fields as $f ) {
@@ -1343,7 +1356,7 @@ WHERE  contribution_id = {$this->_id}
                 $params[$d] = CRM_Utils_Date::processDate( $formValues[$d], $formValues[$d.'_time'], true );
             }
 
-            if ( CRM_Utils_Array::value( 'is_email_receipt', $formValues ) ) {
+            if ( CRM_Utils_Array::value( 'is_email_receipt', $formValues ) && empty($params['receipt_date']) ) {
                 $params['receipt_date'] = date("Y-m-d");
             }
 
@@ -1359,11 +1372,11 @@ WHERE  contribution_id = {$this->_id}
             
             //Add Additinal common information  to formatted params
             CRM_Contribute_Form_AdditionalInfo::postProcessCommon( $formValues, $params );
-            
+
             //create contribution.
             require_once 'CRM/Contribute/BAO/Contribution.php';
             $contribution = CRM_Contribute_BAO_Contribution::create( $params, $ids );
-            
+
             // process line items, until no previous line items.
             if ( empty( $this->_lineItems )  && $contribution->id && !empty( $lineItem ) ) {
                 CRM_Contribute_Form_AdditionalInfo::processPriceSet( $contribution->id, $lineItem );

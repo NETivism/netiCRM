@@ -1,0 +1,6 @@
+name = Secure Group
+description = Secure a civicrm group to let no one can see that except the specific drupal role. See README.rd first before enable.
+version = 6.x-1.0
+package = NetiCRM
+core = 6.x
+dependencies[] = civicrm

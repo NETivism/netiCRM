@@ -155,7 +155,8 @@ class CRM_Contact_Page_AJAX
         $dao = CRM_Core_DAO::executeQuery( $query );
         $contactList = null;
         while ( $dao->fetch( ) ) {
-            echo $contactList = "$dao->data|$dao->id\n";
+            $d = str_replace(array("\n", "\r", "\t"), '', $dao->data);
+            echo $contactList = "$d|$dao->id\n";
         }
         
         //return organization name if doesn't exist in db
