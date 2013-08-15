@@ -131,7 +131,6 @@ function civicrm_statistics_table($flip = FALSE){
 
 function civicrm_statistics_query($query){
   $q = CRM_Core_DAO::executeQuery($query);
-  dpm($query);
   $result = array();
   while($q->fetch()){
     if($q->summ){
