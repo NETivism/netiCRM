@@ -58,7 +58,6 @@ else{
  */
 cli_authenticate(1);
 
-
 /**
  * The main cron run
  */
@@ -128,11 +127,12 @@ function cli_error($e){
 function cli_authenticate($uid) {
   session_start();                               
   require_once 'CRM/Core/Config.php'; 
+  // this does not return on failure
+  require_once 'CRM/Utils/System.php';
+  require_once 'CRM/Utils/System/Drupal.php';
 
   $config =& CRM_Core_Config::singleton(); 
 
-  // this does not return on failure
-  require_once 'CRM/Utils/System.php';
   if(!CRM_Utils_System::authenticateKey( true ) ){
     cli_error('Authenticate Key error');
     return;
