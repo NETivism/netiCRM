@@ -52,7 +52,7 @@ function civicrm_event_cck_access_check($perm, $node){
   return FALSE;
 }
 
-function civicrm_event_cck_goto(&$node){
+function civicrm_event_cck_goto($node){
   $event_id = civicrm_event_cck_check($node);
   if($event_id){
     switch(arg(2)){
@@ -295,7 +295,7 @@ function civicrm_event_cck_uf_join($event_id, $uf_group_id, $type){
   civicrm_uf_join_edit($params2);
 }
 
-function civicrm_event_cck_form_alter(&$form, &$form_state, $form_id){
+function civicrm_event_cck_form_alter(&$form, $form_state, $form_id){
   if (isset($form['type']) && isset($form['#node']) && $form['type']['#value'] . '_node_form' == $form_id){
     $available_types = variable_get('civiec_enabled_type', array());
     if(in_array($form['#node']->type, $available_types) && variable_get('civiec_id', '')) {

@@ -334,7 +334,7 @@ function civicrm_contribution_cck_uf_join($contribution_id, $uf_group_id, $type)
 }
 
 
-function civicrm_contribution_cck_form_alter(&$form, &$form_state, $form_id){
+function civicrm_contribution_cck_form_alter(&$form, $form_state, $form_id){
   if (isset($form['type']) && isset($form['#node']) && $form['type']['#value'] . '_node_form' == $form_id){
     $available_types = variable_get('civicc_enabled_type', array());
     if(in_array($form['#node']->type, $available_types) && variable_get('civicc_id', '')) {
