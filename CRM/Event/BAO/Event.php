@@ -923,6 +923,7 @@ WHERE civicrm_event.is_active = 1
                 $dao = CRM_Core_DAO::executeQuery( $query, CRM_Core_DAO::$_nullArray ); 
             }
         }   
+        $copyEvent->is_active = 0;
         $copyEvent->save( );
 
         require_once 'CRM/Utils/Hook.php';
