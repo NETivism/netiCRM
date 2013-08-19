@@ -63,3 +63,4 @@ if ($memLimit >= 0 and $memLimit < 67108864) {
     ini_set('memory_limit', '64M');
 }
 
+date_default_timezone_set('Asia/Taipei');
