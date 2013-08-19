@@ -171,9 +171,9 @@ function civicrm_update_6300(&$sandbox) {
 }
 
 function civicrm_requirements($phase){
+  $problem = array();
   if ($phase == 'install') {
     $memory_limit = ini_get('memory_limit');
-    print $memory_limit;
     if ($memory_limit && $memory_limit != -1 && parse_size($memory_limit) < parse_size('128M')){
       $problem['civicrm_memory_limit'] = array(
         'title' => t('CiviCRM PHP memory limit'),
@@ -184,6 +184,7 @@ function civicrm_requirements($phase){
     }
 
     // test InnoDB
+    /* // remove from drupal 6.28 which have db_query not found error
     $result = db_query( "SHOW variables like 'have_innodb'");
     if ( $result ) {
       $have_innodb = db_fetch_object( $result );
@@ -195,6 +196,7 @@ function civicrm_requirements($phase){
         );
       }
     }
+    */
     
     // test civicrm.settings.php write permissions
     require_once './includes/install.inc';
