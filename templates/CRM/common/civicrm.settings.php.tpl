@@ -28,7 +28,7 @@ define('CIVICRM_TRACK_CIVIMAIL_REPLIES', false);
 define('CIVICRM_TAG_UNCONFIRMED', 'Unconfirmed');
 define('CIVICRM_PETITION_CONTACTS','Petition Contacts');
 
-$civi_root = $GLOBALS['civicrm_root'];
+$civi_root = !empty($GLOBALS['civicrm_root']) ? $GLOBALS['civicrm_root'] : '';
 global $civicrm_root;
 if(!$civi_root){
   $civicrm_root = getcwd()."/sites/all/modules/civicrm";
