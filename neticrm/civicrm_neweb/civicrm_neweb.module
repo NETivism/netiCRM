@@ -339,7 +339,8 @@ function _civicrm_neweb_connect($id, $local, $mode, $is_test){
  */
 function _civicrm_neweb_is_active($is_test){
   civicrm_initialize();
-  $id = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_payment_processor WHERE name = 'Neweb' AND is_active = 1 AND is_test = $is_test");
+  $is_test = $is_test ? 1 : 0;
+  $id = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_payment_processor WHERE payment_processor_type = 'Neweb' AND is_active = 1 AND is_test = $is_test");
   return $id;
 }
 
