@@ -304,7 +304,6 @@ function civicrm_neweb_process_transaction($is_test, $now = NULL, $pid){
         }
         // Status: failed, cancel. We don't have retry mechnism.
         else{
-          require_once "CRM/Core/Payment/NewebResponse.php";
           $err= civicrm_neweb_response($t['PRC'], $t['SRC'], 'detail');
           $IPN->failed($objects, $transaction);
           // don't use cancel date , don't combine single failure to whole recurring process
@@ -617,7 +616,7 @@ function civicrm_neweb_process_ezpay($is_test, $now, $pid){
   $instrument_str = implode(',', $instrument_id);
   $dao = CRM_Core_DAO::executeQuery("SELECT * FROM civicrm_contribution WHERE contribution_status_id = 2 AND payment_instrument_id IN ($instrument_str) AND is_test = $is_test ORDER BY id DESC");
   while($dao->fetch()){
-    $post = $input = $object = $ids = $result = array();
+    $post = $input = $objects = $ids = $result = array();
 
     if(!$dao->contribution_page_id){
       // this is event payment
@@ -657,7 +656,7 @@ function civicrm_neweb_process_ezpay($is_test, $now, $pid){
     }
 
     $transaction = new CRM_Core_Transaction();
-    $ipn = & new CRM_Core_Payment_BaseIPN();
+    $ipn =& new CRM_Core_Payment_BaseIPN();
 
     if($ipn->validateData($input, $ids, $objects) && $result){
       // check result

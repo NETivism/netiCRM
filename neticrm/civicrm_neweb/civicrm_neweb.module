@@ -49,7 +49,7 @@ function civicrm_neweb_civicrm_buildForm($form_name, &$form){
         }
         else{
           // error here
-          require_once('civicrm_neweb.extern.inc');
+          module_load_include("inc", 'civicrm_neweb', 'civicrm_neweb.extern');
           $prc = $_POST['final_return_PRC'];
           $src = $_POST['final_return_SRC'];
           $brc = $_POST['final_return_BankRC'];
