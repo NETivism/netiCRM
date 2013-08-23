@@ -183,6 +183,8 @@ function civicrm_neweb_process_transaction($is_test, $now = NULL, $pid){
   require_once 'CRM/Contribute/BAO/ContributionRecur.php';
   require_once 'CRM/Utils/Array.php';
 
+  module_load_include("inc", 'civicrm_neweb', 'civicrm_neweb.extern');
+
   $p = new CRM_Core_BAO_PaymentProcessor();
   if($is_test){
     $payment = $p->getPayment($pid,'test');
