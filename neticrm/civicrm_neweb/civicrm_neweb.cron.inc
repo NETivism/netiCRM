@@ -582,7 +582,7 @@ function _civicrm_neweb_path($is_test){
 }
 
 
-function civicrm_neweb_process_ezpay($is_test, $now){
+function civicrm_neweb_process_ezpay($is_test, $now, $pid){
   $time = date('YmdHis');
   civicrm_initialize();
   require_once 'CRM/Contribute/DAO/Contribution.php';
@@ -590,6 +590,17 @@ function civicrm_neweb_process_ezpay($is_test, $now){
   require_once 'CRM/Core/Payment/BaseIPN.php';
   require_once 'CRM/Core/Transaction.php';
   require_once "CRM/Core/DAO.php";
+  $p = new CRM_Core_BAO_PaymentProcessor();
+  if($is_test){
+    $payment_processor = $p->getPayment($pid,'test');
+  }
+  else{
+    $payment_processor = $p->getPayment($pid,'live');
+  }
+
+  if(!empty($payment_processor)){
+    return;
+  }
 
   $instrument = _civicrm_neweb_instrument();
   $gid = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_option_group WHERE name LIKE 'payment_instrument'");
@@ -607,23 +618,14 @@ function civicrm_neweb_process_ezpay($is_test, $now){
 
     if(!$dao->contribution_page_id){
       // this is event payment
-      $pp = CRM_Core_DAO::executeQuery("SELECT cpp.participant_id, e.id, e.payment_processor_id FROM civicrm_participant_payment cpp INNER JOIN civicrm_participant cp ON cpp.participant_id = cp.id INNER JOIN civicrm_event e ON e.id = cp.event_id WHERE cpp.contribution_id = {$dao->id}");
+      $pp = CRM_Core_DAO::executeQuery("SELECT cpp.participant_id, e.id FROM civicrm_participant_payment cpp INNER JOIN civicrm_participant cp ON cpp.participant_id = cp.id INNER JOIN civicrm_event e ON e.id = cp.event_id WHERE cpp.contribution_id = {$dao->id}");
       $pp->fetch();
-      $pid = $pp->payment_processor_id;
       $input['component'] = 'event';
       $ids['event'] = $pp->id;
       $ids['participant'] = $pp->participant_id;
     }
     else{
-      $pid = CRM_Core_DAO::getFieldValue( 'CRM_Contribute_DAO_ContributionPage',$dao->contribution_page_id, 'payment_processor_id');
       $input['component'] = 'contribute';
-    }
-
-    if($pid){
-      $payment_processor = CRM_Core_BAO_PaymentProcessor::getPayment( $pid, $is_test ? 'test' : 'live' );
-    }
-    else{
-      continue;
     }
 
     $post['merchantnumber'] = $payment_processor['password'];

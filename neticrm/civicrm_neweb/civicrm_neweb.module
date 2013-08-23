@@ -150,7 +150,7 @@ function _civicrm_neweb_process_all($is_test, $now, $hour, $yesterday, $pid){
 
   // ezpay contributions
   if($now - variable_get('civicrm_neweb_ezpay', 0) > 7200){
-    civicrm_neweb_process_ezpay($is_test, $now);
+    civicrm_neweb_process_ezpay($is_test, $now, $pid);
     variable_set('civicrm_neweb_ezpay'.$test, $now);
   }
 }
