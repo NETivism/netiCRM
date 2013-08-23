@@ -241,6 +241,7 @@ function civicrm_neweb_process_transaction($is_test, $now = NULL, $pid){
         $contribution->trxn_id = $t['ORGORDERNUMBER'];
         if($contribution->find( true )){
           $contribution->receive_date = date('YmdHis', $now);
+          continue; // skip recurring transaction when specifix transaction id exists.
         }
         else{
           // clone exists
