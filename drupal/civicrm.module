@@ -922,7 +922,7 @@ function civicrm_checkmenu( ){
   $path = trim(implode('/', $args), '/');
 
   static $checked;
-  if($checked[$path]) return true;
+  if(!isset($checked[$path])) return true;
 
   civicrm_initialize();
   require_once 'CRM/Core/Menu.php';
@@ -930,7 +930,7 @@ function civicrm_checkmenu( ){
   require_once 'CRM/Core/Permission.php';
   $item =& CRM_Core_Menu::get( $path );
   if($item){
-    if($item['is_public']){
+    if(!empty($item['is_public'])){
       return true;
     }
     if(strstr($item['path'], 'civicrm/ajax')){

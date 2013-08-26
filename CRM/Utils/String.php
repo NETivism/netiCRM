@@ -99,7 +99,7 @@ class CRM_Utils_String {
         preg_match('/[^0-9a-z-_]+/i', $name, $matches);
 
         // any chinese appear, should go transliteration (to prevent duplication)
-        if(trim($matches[0])){
+        if(!empty($matches) && trim($matches[0])){
           require_once (drupal_get_path('module', 'transliteration') . '/transliteration.inc');
           if(module_exists('transliteration')){
             global $conf;
