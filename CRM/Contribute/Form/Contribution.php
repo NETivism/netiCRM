@@ -826,7 +826,7 @@ WHERE  contribution_id = {$this->_id}
         // add various dates
         $this->addDateTime( 'receive_date', ts('Received'), false, array( 'formatType' => 'activityDateTime') );
         if ( $this->_online ) {
-            $this->assign( 'hideCalender', true );
+            //$this->assign( 'hideCalender', true ); // refs #9900
         }
         $element = $this->add( 'text', 'check_number', ts('Check Number'), $attributes['check_number'] );
         if ( $this->_online ) {
