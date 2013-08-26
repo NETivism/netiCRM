@@ -292,7 +292,8 @@ function civicrm_gw_popup($instrument){
   else{
     $gw = db_fetch_object(db_query("SELECT * FROM {civicrm_contribution_gw} WHERE cid = %d", $cid));
     civicrm_initialize();
-    $amount = CRM_Core_DAO::singleValueQuery("SELECT total_amount FROM civicrm_contribution WHERE id = {$cid}");
+    $params = array( 1 => array( $cid, 'Integer' ) );
+    $amount = CRM_Core_DAO::singleValueQuery("SELECT total_amount FROM civicrm_contribution WHERE id = %1", $params);
     $output = '
 <style>
   #content { text-align: center;}
