@@ -373,7 +373,7 @@ function _civicrm_neweb_scan_missing_transaction($now, $hour, $yesterday, $pid){
     if(count($week)){
       foreach($week as $ymd){
         $date = strtotime($ymd);
-        civicrm_neweb_process_transaction(0, $date);
+        civicrm_neweb_process_transaction(0, $date, $pid);
       }
     }
     variable_set('civicrm_neweb_scan', $now);
