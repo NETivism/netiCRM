@@ -3955,7 +3955,8 @@ civicrm_relationship.start_date > {$today}
           }
           else {
             if (isset($this->_distinctComponentClause)) {
-              $limitClause = " AND {$this->_distinctComponentClause} IN ( ";
+              $passed_field = str_replace(array('DISTINCT(',')'), '', $this->_distinctComponentClause);
+              $limitClause = " AND {$passed_field} IN ( ";
             }
             else {
               $limitClause = ' AND contact_a.id IN ( ';
