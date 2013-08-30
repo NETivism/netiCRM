@@ -436,7 +436,8 @@ function civicrm_neweb_end_date_calculate($is_test){
   }
 
   // cancel recurring calculate
-  $end = $now + 86400;
+  // 2 day after end day
+  $end = $now - 86400*2;
   $sql = "SELECT * FROM civicrm_contribution_recur cr INNER JOIN civicrm_contribution_neweb_recur cnr ON cr.id = cnr.recur_id WHERE cr.end_date <= FROM_UNIXTIME($end) && cr.end_date IS NOT NULL && cr.cancel_date IS NULL && cr.is_test = $is_test && cr.contribution_status_id = 1 ORDER BY cr.end_date ASC";
   $recur = CRM_Core_DAO::executeQuery($sql);
   while( $recur->fetch() ){
