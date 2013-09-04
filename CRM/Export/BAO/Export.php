@@ -1017,7 +1017,7 @@ class CRM_Export_BAO_Export
             if ( substr( $fieldName, -3, 3 ) == '_id' ) {
                 $sqlColumns[$fieldName] = "$fieldName varchar(16)";
             } else {
-                $changeFields = array( 'groups', 'tags', 'notes' );
+                $changeFields = array( 'groups', 'tags', 'notes', 'contribution_note');
                 if ( in_array( $fieldName, $changeFields) ) {
                     $sqlColumns[$fieldName] = "$fieldName text";
                 } else {
