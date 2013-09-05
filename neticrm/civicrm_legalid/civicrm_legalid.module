@@ -25,8 +25,8 @@ function civicrm_legalid_civicrm_buildForm( $formName, &$form ) {
 function civicrm_legalid_civicrm_validate( $formName, &$fields, &$files, &$form ) {
   $errors = array( );
   if ($formName == 'CRM_Contact_Form_Contact') {
-    if ( !empty( $fields['legal_identifier'] ) ) {
-      $contactID = $form->getVar( '_contactId' );
+    $contactID = $form->getVar( '_contactId' );
+    if ( !empty($fields['legal_identifier']) ) {
 /*
 TODO: need to change to Taiwan id verify
       $preg = "/^\\d{3}[- ]?\\d{2}[- ]?\\d{4}$/";
@@ -43,13 +43,16 @@ TODO: need to change to Taiwan id verify
       */
 
       // duplicate
-      $fields['legal_identifier'] = CRM_Utils_Type::escape($fields['legal_identifier'], 'String');
-      $sql = "SELECT id, display_name FROM civicrm_contact WHERE legal_identifier = '{$fields['legal_identifier']}'";
+      $qvar = array( 
+        1 => array($fields['legal_identifier'], 'String' ),
+      );
+      $sql = "SELECT id, display_name FROM civicrm_contact WHERE is_deleted = 0 AND legal_identifier = %1";
       if($contactID){
         // when update
-        $sql .= " AND id != {$contactID}";
+        $qvar[2] = array($contactID, 'Integer' );
+        $sql .= " AND id != %2";
       }
-      $dao = CRM_Core_DAO::executeQuery( $sql );
+      $dao = CRM_Core_DAO::executeQuery($sql, $qvar);
       $dao->fetch();
       if($dao->id){
         $link = CRM_Utils_System::href($dao->display_name, 'civicrm/contact/add', 'reset=1&action=update&context=search&cid='.$dao->id);
@@ -74,12 +77,13 @@ function civicrm_legalid_civicrm_postProcess( $formName, &$form ) {
 
     // we need to check if entry exists for current contact in training_ssn table
     // if yes then update else insert
-    $exists_legalid = CRM_Core_DAO::singleValueQuery( "SELECT id FROM civicrm_contact WHERE id = {$contactID}" );
+    $qvar = array(1 => array($contactID, 'Integer' ));
+    $exists_legalid = CRM_Core_DAO::singleValueQuery( "SELECT id FROM civicrm_contact WHERE id = %1", $qvar);
 
-    if ( $exists_legalid) {
-      
-      $query = "UPDATE civicrm_contact SET legal_identifier = '{$legalid}' WHERE id = {$contactID}";
-      CRM_Core_DAO::executeQuery( $query );
+    if ($exists_legalid) {
+      $qvar[2] = array($legalid, 'String' );
+      $query = "UPDATE civicrm_contact SET legal_identifier = %2 WHERE id = %1";
+      CRM_Core_DAO::executeQuery($query, $qvar);
     }
     else {
       // drop here.
@@ -96,9 +100,8 @@ function civicrm_legalid_civicrm_pageRun( &$page ) {
      // this will retrieve the contact id
     $contactID = $page->getVar( '_contactId' );
     // get the ssn number and set it to the templaet
-    $legalid = CRM_Core_DAO::singleValueQuery( "SELECT legal_identifier FROM civicrm_contact WHERE id = {$contactID}" );
+    $qvar = array(1 => array($contactID, 'Integer' ));
+    $legalid = CRM_Core_DAO::singleValueQuery( "SELECT legal_identifier FROM civicrm_contact WHERE id = %1", $qvar);
     $page->assign('legal_identifier', $legalid);
   }
 }
-
-

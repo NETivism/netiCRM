@@ -159,7 +159,8 @@ function civicrm_instrument_civicrm_postProcess($form_name, &$form){
       if($entity_id){
         if( !empty($form->_submitValues['payment_instrument'])){
           $payment_instrument = $form->_submitValues['payment_instrument'];
-          CRM_Core_DAO::executeQuery("REPLACE INTO civicrm_instrument SET entity_id = {$entity_id}, entity_table='{$entity_table}', payment_instruments='".serialize($payment_instrument)."'");
+          $qvar = array(1 => array(serialize($payment_instrument) ,'String'));
+          CRM_Core_DAO::executeQuery("REPLACE INTO civicrm_instrument SET entity_id = {$entity_id}, entity_table='{$entity_table}', payment_instruments=%1", $qvar);
         }
         else{
           // empty
