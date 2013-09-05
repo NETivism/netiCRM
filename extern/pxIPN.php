@@ -10,9 +10,7 @@
  */
  
 session_start( );
-
-require_once '../civicrm.config.php';
-require_once 'CRM/Core/Config.php';
+include './extern.inc';
 
 $config = CRM_Core_Config::singleton();
 
@@ -31,18 +29,18 @@ $params = array( 1 => array( $_GET['userid'], 'String' ) );
 
 $dpsSettings =& CRM_Core_DAO::executeQuery( $query, $params );
 while ( $dpsSettings->fetch( ) ) {
-    $dpsUrl = $dpsSettings->url_site;
-    $dpsUser = $dpsSettings->user_name;
-    $dpsKey = $dpsSettings->password;
-    $dpsMacKey = $dpsSettings->signature;
+  $dpsUrl = $dpsSettings->url_site;
+  $dpsUser = $dpsSettings->user_name;
+  $dpsKey = $dpsSettings->password;
+  $dpsMacKey = $dpsSettings->signature;
 }
 
 if ( $dpsMacKey ) {
 	$method = "pxaccess";
-} else {
+}
+else {
 	$method = "pxpay";
- }
+}
 
-require_once 'CRM/Core/Payment/PaymentExpressIPN.php';
 $rawPostData = $_GET['result'];
 CRM_Core_Payment_PaymentExpressIPN::main( $method, $rawPostData, $dpsUrl, $dpsUser, $dpsKey, $dpsMacKey);

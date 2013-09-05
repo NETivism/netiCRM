@@ -25,24 +25,19 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 */
-
 session_start( );
 
-require_once '../civicrm.config.php';
-require_once 'CRM/Core/Config.php';
-
-require_once 'CRM/Utils/REST.php';
+include './extern.inc';
 $rest = new CRM_Utils_REST();
 
 $config = CRM_Core_Config::singleton();
 
 if ( isset( $_GET['json'] ) &&
-     $_GET['json'] ) {
-    header( 'Content-Type: text/javascript' );
-} else {
-    header( 'Content-Type: text/xml' );
+  $_GET['json'] ) {
+  header( 'Content-Type: text/javascript' );
+}
+else {
+  header( 'Content-Type: text/xml' );
 }
 
 echo $rest->run( $config );
-
-
