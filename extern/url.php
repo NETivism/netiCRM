@@ -1,11 +1,8 @@
 <?php
-
 require_once '../civicrm.config.php';
-require_once 'CRM/Core/Config.php';
-require_once 'CRM/Core/Error.php';
-require_once 'CRM/Utils/Array.php';
-require_once 'CRM/Utils/System.php';
-require_once 'CRM/Utils/System/Drupal.php';
+require_once dirname(__FILE__) . '/../CRM/Core/ClassLoader.php';
+$classLoader = new CRM_Core_ClassLoader();
+$classLoader->register();
 
 $config = CRM_Core_Config::singleton();
 
@@ -24,7 +21,6 @@ if ( ! $queue_id ||
     exit( );
 }
 
-require_once 'CRM/Mailing/Event/BAO/TrackableURLOpen.php';
 $url = CRM_Mailing_Event_BAO_TrackableURLOpen::track($queue_id, $url_id);
 
 // CRM-7103
@@ -40,5 +36,4 @@ if(stristr($url, '?')) {
 }
 
 CRM_Utils_System::redirect($url);
-
 
