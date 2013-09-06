@@ -23,18 +23,9 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
-<div id="crm-container" lang="{$config->lcMessages|truncate:2:"":true}" xml:lang="{$config->lcMessages|truncate:2:"":true}">
-<div class="messages status">  <div class="icon red-icon alert-icon"></div>
- <span class="status-fatal">{ts}Sorry. A non-recoverable error has occurred.{/ts}</span>
-    {if $message}<div class="crm-section crm-error-message">{$message}</div>{/if}
+<div class="messages warning">
+    {if $message}{$message}{/if}
     {if $error.message && $message != $error.message}
-        <div class="crm-section crm-error-message">{$error.message}</div>
+        {$error.message}
     {/if}
-    <div>
-    {php}
-      echo date('Y-m-d H:i:s') . ' - '.$_SERVER['SCRIPT_URI'];
-    {/php}
-    See the log at {$config->configAndLogDir}
-    </div>
 </div>
-</div> {* end crm-container div *}
