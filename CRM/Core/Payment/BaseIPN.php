@@ -928,7 +928,7 @@ class CRM_Core_Payment_BaseIPN {
             }
         }
         if ( !$input['trxn_id'] = CRM_Utils_Array::value( 'trxn_id', $params ) ) {
-            $input['trxn_id']   = $contribution->invoice_id;
+            $input['trxn_id']   = $contribution->trxn_id;
         }
         if ( !$input['amount'] = CRM_Utils_Array::value( 'total_amount', $params ) ) {
             $input['amount']   = $contribution->total_amount;
