@@ -249,6 +249,9 @@ class CRM_Core_Error extends PEAR_ErrorStack {
     if ( ! $message ) {
       $message = ts('We experienced an unexpected error. Please post a detailed description and the backtrace on the CiviCRM forums: %1', array(1 => 'http://forum.civicrm.org/')); 
     }
+    else{
+      $message = str_replace(array('<','>'), array('&lt;', '&gt;'), $message);
+    }
 
     $vars = array( 'message' => $message,
         'code'    => $code );
