@@ -612,6 +612,9 @@ class CRM_Core_Config extends CRM_Core_Config_Variables
         foreach ( $queries as $query ) {
             CRM_Core_DAO::executeQuery( $query );
         }
+
+        // rebuild menu
+        CRM_Core_Menu::store();
     }
 
     /**
