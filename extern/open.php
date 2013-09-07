@@ -3,9 +3,9 @@ include './extern.inc';
 
 $config   = CRM_Core_Config::singleton();
 $queue_id =  CRM_Utils_Array::value( 'q', $_GET );
-if ( ! $queue_id ) {
-  echo "Missing input parameters\n";
-  exit( );
+if (!$queue_id) {
+  //echo "Missing input parameters\n";
+  exit();
 }
 CRM_Mailing_Event_BAO_Opened::open($queue_id);
 
@@ -21,5 +21,3 @@ header('Content-Disposition: inline; filename=tracker.gif');
 readfile($filename);
 
 exit();
-
-
