@@ -184,8 +184,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables
             // first, attempt to get configuration object from cache
             require_once 'CRM/Utils/Cache.php';
             $cache =& CRM_Utils_Cache::singleton( );
-            //self::$_singleton = $cache->get( 'CRM_Core_Config' );
-
+            self::$_singleton = $cache->get( 'CRM_Core_Config' );
 
             // if not in cache, fire off config construction
             if ( ! self::$_singleton ) {
@@ -319,7 +318,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables
         }
 
         if (defined('CIVICRM_TEMPLATE_COMPILEDIR')) {
-            $this->templateCompileDir = CRM_Utils_File::addTrailingSlash(CIVICRM_TEMPLATE_COMPILEDIR);
+            $this->templateCompileDir = CRM_Utils_File::addTrailingSlash(CIVICRM_TEMPLATE_COMPILEDIR.php_sapi_name());
 
             // we're automatically prefixing compiled templates directories with country/language code
             global $tsLocale;
