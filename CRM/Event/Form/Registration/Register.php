@@ -751,7 +751,10 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration
         $errors = array( );
         
         //To check if the user is already registered for the event(CRM-2426)
-        $self->checkRegistration($fields, $self);
+        $checked = $self->checkRegistration($fields, $self);
+        if(is_array($checked)){
+          $errors += $checked;
+        }
         //check for availability of registrations.
         if ( !$self->_allowConfirmation &&
              !CRM_Utils_Array::value( 'bypass_payment', $fields ) &&
@@ -890,6 +893,10 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration
         
         //set as Primary participant
         $params ['is_primary'] = 1;         
+        if ( !$this->_allowConfirmation ) {
+            // check if the participant is already registered
+            $params['contact_id'] = self::checkRegistration( $params, $this, false, true );
+        }
         
         if ( CRM_Utils_Array::value( 'image_URL', $params  ) ) {
             CRM_Contact_BAO_Contact::processImageParams( $params ) ;
@@ -1045,7 +1052,6 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration
             }
         } else {
             $session = CRM_Core_Session::singleton( );
-            $contactID = parent::getContactID( );
             $params['description'] = ts( 'Online Event Registration' ) . ' ' . $this->_values['event']['title'];
             
             $this->_params                = array();
@@ -1079,7 +1085,6 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration
     public function processRegistration( $params, $contactID = null ) 
     {
         $session = CRM_Core_Session::singleton( );
-        $contactID = parent::getContactID( );
         $this->_participantInfo   = array();
         
         // CRM-4320, lets build array of cancelled additional participant ids 
@@ -1239,14 +1244,14 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration
      * @return void  
      * @access public 
      */ 
-    function checkRegistration($fields, &$self, $isAdditional = false)
+    function checkRegistration( $fields, &$self, $isAdditional = false, $returnContactId = false )
     {
         // CRM-3907, skip check for preview registrations
         // CRM-4320 participant need to walk wizard
-        if ( $self->_mode == 'test' || $self->_allowConfirmation ) {
-            return false;
+        if ( !$returnContactId && ( $self->_mode == 'test' || $self->_allowConfirmation ) ) {
+          return false;
         }
-        
+
         $contactID = null;
         $session = CRM_Core_Session::singleton( );
         if( ! $isAdditional ) {
@@ -1275,8 +1280,28 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration
             $ids = CRM_Dedupe_Finder::dupesByParams( $dedupeParams, 'Individual' );
             $contactID = CRM_Utils_Array::value( 0, $ids );
         }
+
+        if ( $returnContactId ) {
+            // CRM-7377 
+            // return contactID if contact already exists
+            return $contactID;
+        }
         
         if ( $contactID ) {
+            // check if contact exists but email not the same
+            if(isset($fields['_qf_default']) && $fields['cms_create_account']){
+              $dao = new CRM_Core_DAO_UFMatch();
+              $dao->contact_id = $contactID;
+              $dao->find(true);
+              if(!empty($dao->uf_name) && ($dao->uf_name !== $fields['email-5'])){
+                // errors because uf_name(email) will update to new value
+                // then the drupal duplicate email check may failed
+                // we should validate and stop here before confirm stage
+                $url = CRM_Utils_System::url( 'user', "destination=civicrm/event/register?reset=1&id={$self->_values['event']['id']}" );
+                return array('email-5' => ts('Accroding your profile, you are one of our contact. Please <a href="%1">login</a> to procceed registration.', array(1 => $url)));
+              }
+            }
+
             require_once 'CRM/Event/BAO/Participant.php';
             $participant = new CRM_Event_BAO_Participant();
             $participant->contact_id = $contactID;
@@ -1295,8 +1320,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration
                         $status = ts("Oops. It looks like you are already registered for this event. If you want to change your registration, or you feel that you've gotten this message in error, please contact the site administrator.") 
                                   . ' ' . ts('You can also <a href="%1">register another participant</a>.', array(1 => $registerUrl));
                         $session->setStatus( $status );
-                        $url = CRM_Utils_System::url( 'civicrm/event/info',
-                                                      "reset=1&id={$self->_values['event']['id']}&noFullMsg=true" );
+                        $url = CRM_Utils_System::url( 'civicrm/event/info', "reset=1&id={$self->_values['event']['id']}&noFullMsg=true" );
                         if ( $self->_action & CRM_Core_Action::PREVIEW ) {
                             $url .= '&action=preview';
                         }
