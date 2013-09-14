@@ -1297,8 +1297,8 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration
                 // errors because uf_name(email) will update to new value
                 // then the drupal duplicate email check may failed
                 // we should validate and stop here before confirm stage
-                $url = CRM_Utils_System::url( 'user', "destination=civicrm/event/register?reset=1&id={$self->_values['event']['id']}" );
-                return array('email-5' => ts('Accroding your profile, you are one of our contact. Please <a href="%1">login</a> to procceed registration.', array(1 => $url)));
+                $url = CRM_Utils_System::url( 'user', "destination=".urlencode("civicrm/event/register?reset=1&id={$self->_values['event']['id']}") );
+                return array('email-5' => ts('Accroding your profile, you are one of our registered user. Please <a href="%1">login</a> to proceed.', array(1 => $url)));
               }
             }
 
