@@ -367,9 +367,19 @@ class CRM_Core_Payment_BaseIPN {
                                          'start_date'    => CRM_Utils_Date::customFormat( $dates['start_date'],    $format ),
                                          'end_date'      => CRM_Utils_Date::customFormat( $dates['end_date'],      $format ),
                                          'reminder_date' => CRM_Utils_Date::customFormat( $dates['reminder_date'], $format ) );
+                // respect human input even we have complete transaction
+                if($membership->is_override){
+                  if($membership->end_date > $formatedParams['end_date']){
+                    $formatedParams['end_date'] = $membership->end_date;
+                    $formatedParams['reminder_date'] = $membership->reminder_date;
+                  }
+                  $formatedParams['is_override'] = true;
+                }
                 //we might be renewing membership, 
                 //so make status override false.  
-                $formatedParams['is_override'] = false;
+                else{
+                  $formatedParams['is_override'] = false;
+                }
 
                 $membership->copyValues( $formatedParams );
                 $membership->save( );
