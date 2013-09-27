@@ -380,7 +380,12 @@ HTACCESS;
         if ( ! $_path ) {
             if ( $templateCompileDir == null ) {
                 $config =& CRM_Core_Config::singleton( );
-                $templateCompileDir = $config->templateCompileDir;
+                if($config->userFramework == 'Drupal' && function_exists('file_directory_path')){
+                  $templateCompileDir = file_directory_path().'/civicrm/template_c';
+                }
+                else{
+                  $templateCompileDir = $config->templateCompileDir;
+                }
             }
             
             $path = dirname( $templateCompileDir );

@@ -470,6 +470,11 @@ class CRM_Event_Form_Registration_AdditionalParticipant extends CRM_Event_Form_R
         
         //user submitted params.
         $params = $this->controller->exportValues( $this->_name );
+
+        if ( !$this->_allowConfirmation ) {
+            // check if the participant is already registered
+            $params['contact_id'] = CRM_Event_Form_Registration_Register::checkRegistration( $params, $this, true, true );
+        }
         
         // if waiting is enabled
         if ( !$this->_allowConfirmation && 

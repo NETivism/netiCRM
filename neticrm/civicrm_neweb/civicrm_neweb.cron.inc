@@ -603,7 +603,7 @@ function civicrm_neweb_process_ezpay($is_test, $now, $pid){
     $payment_processor = $p->getPayment($pid,'live');
   }
 
-  if(!empty($payment_processor)){
+  if(empty($payment_processor)){
     return;
   }
 

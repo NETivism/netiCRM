@@ -237,6 +237,7 @@ function civicrm_gw_update_6102(){
 }
 
 function civicrm_gw_update_6103(){
+  include_once "civicrm_gw.module";
   $ret = array();
   
   civicrm_initialize( );

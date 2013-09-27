@@ -186,7 +186,6 @@ class CRM_Core_Config extends CRM_Core_Config_Variables
             $cache =& CRM_Utils_Cache::singleton( );
             self::$_singleton = $cache->get( 'CRM_Core_Config' );
 
-
             // if not in cache, fire off config construction
             if ( ! self::$_singleton ) {
                 self::$_singleton = new CRM_Core_Config;
@@ -319,7 +318,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables
         }
 
         if (defined('CIVICRM_TEMPLATE_COMPILEDIR')) {
-            $this->templateCompileDir = CRM_Utils_File::addTrailingSlash(CIVICRM_TEMPLATE_COMPILEDIR);
+            $this->templateCompileDir = CRM_Utils_File::addTrailingSlash(CIVICRM_TEMPLATE_COMPILEDIR.php_sapi_name());
 
             // we're automatically prefixing compiled templates directories with country/language code
             global $tsLocale;
@@ -444,10 +443,9 @@ class CRM_Core_Config extends CRM_Core_Config_Variables
                 }
             } else if ( $key == 'lcMessages' ) {
                 // reset the templateCompileDir to locale-specific and make sure it exists
-                if ( substr( $this->templateCompileDir, -1 * strlen( $value ) - 1, -1 ) != $value ) {
-                    $this->templateCompileDir .= CRM_Utils_File::addTrailingSlash($value);
-                    CRM_Utils_File::createDir( $this->templateCompileDir );
-                }
+                $this->templateCompileDir = str_replace('/'.$this->lcMessages.'/', '/', $this->templateCompileDir);
+                $this->templateCompileDir .= CRM_Utils_File::addTrailingSlash($value);
+                CRM_Utils_File::createDir( $this->templateCompileDir );
             }
             
             $this->$key = $value;
@@ -614,6 +612,9 @@ class CRM_Core_Config extends CRM_Core_Config_Variables
         foreach ( $queries as $query ) {
             CRM_Core_DAO::executeQuery( $query );
         }
+
+        // rebuild menu
+        CRM_Core_Menu::store();
     }
 
     /**

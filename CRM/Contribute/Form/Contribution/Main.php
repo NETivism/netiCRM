@@ -762,6 +762,11 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
         $errors = array( );
         $amount = self::computeAmount( $fields, $self );
         
+        $checked = $self->checkDuplicate($fields, $self);
+        if(is_array($checked)){
+          $errors += $checked;
+        }
+        
         //check for atleast one pricefields should be selected
         if ( CRM_Utils_Array::value( 'priceSetId', $fields ) ) {
             $priceField = new CRM_Price_DAO_Field( );
@@ -1129,7 +1134,43 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
             }
         }      
     }
-    
+
+    function checkDuplicate($fields, &$self){
+        // CRM-3907, skip check for preview registrations
+        if ($self->_mode == 'test') {
+          return false;
+        }
+
+        $contactID = null;
+        $session = CRM_Core_Session::singleton( );
+        if( ! $isAdditional ) {
+            $contactID = $session->get( 'userID' );
+        }
+        if ( !$contactID && is_array( $fields ) && !empty( $fields ) ) {
+            $params = $fields;
+            $dedupeParams = CRM_Dedupe_Finder::formatParams( $params, 'Individual' );
+            
+            // disable permission based on cache since event registration is public page/feature.
+            $dedupeParams['check_permission'] = false;
+            $ids = CRM_Dedupe_Finder::dupesByParams( $dedupeParams, 'Individual' );
+            $contactID = CRM_Utils_Array::value( 0, $ids );
+            if ( $contactID ) {
+              // check if contact exists but email not the same
+              if(isset($fields['_qf_default']) && $fields['cms_create_account']){
+                $dao = new CRM_Core_DAO_UFMatch();
+                $dao->contact_id = $contactID;
+                $dao->find(true);
+                if(!empty($dao->uf_name) && ($dao->uf_name !== $fields['email-5'])){
+                  // errors because uf_name(email) will update to new value
+                  // then the drupal duplicate email check may failed
+                  // we should validate and stop here before confirm stage
+                  $url = CRM_Utils_System::url( 'user', "destination=".urlencode("civicrm/contribute/transact?reset=1&id={$self->_values['id']}") );
+                  return array('email-5' => ts('Accroding your profile, you are one of our registered user. Please <a href="%1">login</a> to proceed.', array(1 => $url)));
+                }
+              }
+            }
+        }
+    }
 }
 
 

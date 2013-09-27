@@ -7,7 +7,6 @@ function civicrm_instrument_civicrm_buildForm($form_name, &$form){
     // contribution page settings
     case 'CRM_Contribute_Form_ContributionPage_Amount':
     case 'CRM_Event_Form_ManageEvent_Fee':
-    case 'CRM_Contribute_Form_ContributionPage_Settings':
       $entity_id = $_GET['id'] ? $_GET['id'] : ($form->_defaultValues['id'] ? $form->_defaultValues['id'] : NULL);
       if($entity_id){
         $entity_table = $form_name == 'CRM_Contribute_Form_ContributionPage_Amount' ? 'civicrm_contribution_page' : 'civicrm_event';
@@ -153,7 +152,6 @@ function civicrm_instrument_civicrm_postProcess($form_name, &$form){
     // contribution page settings
     case 'CRM_Contribute_Form_ContributionPage_Amount':
     case 'CRM_Event_Form_ManageEvent_Fee':
-    case 'CRM_Contribute_Form_ContributionPage_Settings':
       $entity_table = strstr($form_name, 'Contribute') ? 'civicrm_contribution_page' : 'civicrm_event';
       $entity_id = $form->getVar('_id');
       if($entity_id){
