@@ -49,9 +49,14 @@ class CRM_Utils_Array {
      * @access public
      *
      */
-    static function value( $key, &$list, $default = null ) {
+    static function value($key, $list, $default = NULL) {
         if ( is_array( $list ) ) {
-            return array_key_exists( $key, $list ) ? $list[$key] : $default;
+          if(isset($list[$key])){ // faster
+            return $list[$key];
+          }
+          else{
+            return array_key_exists($key, $list) ? $list[$key] : $default;
+          }
         }
         return $default;
     }
