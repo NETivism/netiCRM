@@ -147,7 +147,16 @@ class CRM_Utils_System {
         } else {
             $out = $content;
         }
-        
+        if($type == 'page'){
+          global $civicrm_cache_id;
+          if(!empty($civicrm_cache_id) && function_exists('cache_set')){
+            $data = array(
+              'ret' => $ret,
+              'out' => $out,
+            );
+            cache_set($civicrm_cache_id, $data, 'cache_block', CACHE_TEMPORARY);
+          }
+        }
         if ( $ret ) {
             return $out;
         } else {
