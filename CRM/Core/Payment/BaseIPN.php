@@ -45,7 +45,7 @@ class CRM_Core_Payment_BaseIPN {
         self::$_membershipStatus = CRM_Member_PseudoConstant::membershipStatus();
     }
 
-    function validateData( &$input, &$ids, &$objects, $required = true ) {
+    function validateData( &$input, &$ids, &$objects, $required = true, $paymentProcessorID = NULL) {
         // make sure contact exists and is valid
         require_once 'CRM/Contact/DAO/Contact.php';
         $contact = new CRM_Contact_DAO_Contact( );
@@ -70,7 +70,7 @@ class CRM_Core_Payment_BaseIPN {
 
         $objects['contact']          =& $contact;
         $objects['contribution']     =& $contribution;
-        if ( ! $this->loadObjects( $input, $ids, $objects, $required ) ) {
+        if ( ! $this->loadObjects( $input, $ids, $objects, $required, $paymentProcessorID) ) {
             return false;
         }
 
@@ -99,7 +99,7 @@ class CRM_Core_Payment_BaseIPN {
         return true;
     }
 
-    function loadObjects( &$input, &$ids, &$objects, $required ) {
+    function loadObjects( &$input, &$ids, &$objects, $required,  $paymentProcessorID) {
         $contribution =& $objects['contribution'];
      
         $objects['membership']        = null;
@@ -118,7 +118,7 @@ class CRM_Core_Payment_BaseIPN {
             return false;
         }
         $objects['contributionType'] = $contributionType;
-        $paymentProcessorID = $contribution->payment_processor_id;
+        $paymentProcessorID = $paymentProcessorID ? $paymentProcessorID : $contribution->payment_processor_id;
         if ( $input['component'] == 'contribute' ) {
 
             // retrieve the other optional objects first so
