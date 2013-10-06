@@ -608,6 +608,7 @@ function civicrm_neweb_process_ezpay($is_test, $now, $pid){
   }
 
   $instrument = _civicrm_neweb_instrument();
+  unset($instrument['Credit Card']);
   $gid = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_option_group WHERE name LIKE 'payment_instrument'");
 
   foreach($instrument as $name => $obj){
@@ -661,7 +662,7 @@ function civicrm_neweb_process_ezpay($is_test, $now, $pid){
     $transaction = new CRM_Core_Transaction();
     $ipn =& new CRM_Core_Payment_BaseIPN();
 
-    if($ipn->validateData($input, $ids, $objects) && $result){
+    if($ipn->validateData($input, $ids, $objects, TRUE, $pid) && $result){
       // check result
       if($result['rc'] == 0 && $result['status'] == 1){
         // after validate, start to complete some transaction
@@ -695,6 +696,16 @@ function civicrm_neweb_process_ezpay($is_test, $now, $pid){
         $ipn->cancelled($objects, $transaction);
         $note .= ts("Canceled").": ".ts('Overdue')."\n";
         $note .= "Over 14 days doesn't have payment from {$result['timecreated']}\n";
+        _civicrm_neweb_addnote($note, $c->id, $c->contact_id);
+      }
+      elseif($result['rc'] == 0 && count($result) == 2 && is_numeric($c->trxn_id)){
+        // not found on neweb, cancel
+        $input['reasonCode'] = ts('Overdue');
+        $input['trxn_id'] = $c->trxn_id;
+        $input['payment_instrument_id'] = $c->payment_instrument_id;
+        $ipn->cancelled($objects, $transaction);
+        $note .= ts("Canceled").": ".ts('Overdue')."\n";
+        $note .= "Can't found this order in neweb, but have transaction number. Expire dummy contribution record\n";
         _civicrm_neweb_addnote($note, $c->id, $c->contact_id);
       }
       elseif($result['rc']){

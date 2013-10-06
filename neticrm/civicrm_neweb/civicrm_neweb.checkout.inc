@@ -36,6 +36,7 @@ function civicrm_neweb_do_transfer_checkout($params, $component, &$payment_proce
   if($contrib_values['is_pay_later'] != $is_pay_later){
     $contrib_values['is_pay_later'] = $is_pay_later;
   }
+  $contrib_values['payment_processor_id'] = $payment_processor['id'];
   $contrib_values['trxn_id'] = $params['is_recur'] ? $params['contributionID'] + 990000000  : $params['contributionID'];
   $contribution =& CRM_Contribute_BAO_Contribution::create($contrib_values, $contrib_ids);
 
