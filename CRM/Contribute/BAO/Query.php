@@ -177,6 +177,14 @@ class CRM_Contribute_BAO_Query
         $strtolower = function_exists('mb_strtolower') ? 'mb_strtolower' : 'strtolower';
 
         switch ( $name ) {
+        case 'contribution_created_date':
+        case 'contribution_created_date_low':
+        case 'contribution_created_date_low_time':
+        case 'contribution_created_date_high':
+        case 'contribution_created_date_high_time':
+            // process to / from date
+            $query->dateQueryBuilder( $values, 'civicrm_contribution', 'contribution_created_date', 'created_date', 'Created Date' );
+            return;
        
         case 'contribution_date':
         case 'contribution_date_low':
@@ -607,6 +615,9 @@ class CRM_Contribute_BAO_Query
 
         //added contribution source
         $form->addElement('text', 'contribution_source', ts('Contribution Source'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_Contribution', 'source') );
+
+        $form->addDate( 'contribution_created_date_low', ts('Created Date - From'), false, array( 'formatType' => 'searchDate') );
+        $form->addDate( 'contribution_created_date_high', ts('To'), false, array( 'formatType' => 'searchDate') );
         
         $form->addDate( 'contribution_date_low', ts('Contribution Dates - From'), false, array( 'formatType' => 'searchDate') );
         $form->addDate( 'contribution_date_high', ts('To'), false, array( 'formatType' => 'searchDate') );
