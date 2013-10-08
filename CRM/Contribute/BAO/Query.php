@@ -546,6 +546,7 @@ class CRM_Contribute_BAO_Query
                                 'display_name'            => 1,
                                 'contribution_type'       => 1,
                                 'contribution_source'     => 1,
+                                'created_date'            => 1,
                                 'receive_date'            => 1,
                                 'thankyou_date'           => 1,
                                 'cancel_date'             => 1,

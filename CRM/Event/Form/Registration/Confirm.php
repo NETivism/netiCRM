@@ -813,7 +813,7 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration
                                'contact_id'            => $contactID,
                                'contribution_type_id'  => $form->_values['event']['contribution_type_id'] ?
                                $form->_values['event']['contribution_type_id'] : $params['contribution_type_id'],
-                               'receive_date'          => $now,
+                               'receive_date'          => '',
                                'total_amount'          => $params['amount'],
                                'amount_level'          => $params['amount_level'],
                                'invoice_id'            => $params['invoiceID'],
@@ -872,7 +872,7 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration
             $contribParams['address_id']  = CRM_Contribute_BAO_Contribution::createAddress( $params, $form->_bltID );
         }
         
-		// create contribution record
+        // create contribution record
         $contribution =& CRM_Contribute_BAO_Contribution::add( $contribParams, $ids );
         
         // return if pending

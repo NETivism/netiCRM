@@ -79,6 +79,7 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
                                  'total_amount',
                                  'contribution_type',
                                  'contribution_source',
+                                 'created_date',
                                  'receive_date',
                                  'thankyou_date',
                                  'contribution_status_id',
@@ -434,6 +435,11 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
                                                 'name'      => ts('Source'),
                                                 'sort'      => 'contribution_source',
                                                 'direction' => CRM_Utils_Sort::DONTCARE,
+                                                ),
+                                          array(
+                                                'name'      => ts('Created Date'),
+                                                'sort'      => 'created_date',
+                                                'direction' => CRM_Utils_Sort::DESCENDING,
                                                 ),
                                           array(
                                                 'name'      => ts('Received'),
