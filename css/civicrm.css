@@ -517,8 +517,21 @@ div.spacer,
     vertical-align: top;
 }
 
+#crm-container table.selector tr:hover {
+    background-color: #D0DDFF;
+}
+
 #crm-container table.selector td {
     border-right: 1px solid #dddddd;
+    word-wrap: break-word;
+    text-overflow: "…";
+    font-size: 13px;
+}
+#crm-container table.selector td a{
+    word-wrap: break-word;
+    max-width: 100px;
+    display: inline-block;
+    font-size: 13px;
 }
 
 #crm-container .form-layout td.view-value, 
@@ -1555,7 +1568,6 @@ table.campaign td,
 
 #crm-container .action-item {
     padding:0px 5px;
-    border-left:1px solid #CCC;
     white-space:nowrap;
     cursor: pointer;
 }
@@ -3195,4 +3207,8 @@ div#crm-toolTip
 .ui-widget-overlay {
   opacity: .6;
   filter: Alpha(Opacity=60);
+}
+
+#crm-container .crm-search-display_name a {
+  min-width: 50px;
 }
