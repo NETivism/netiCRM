@@ -192,7 +192,7 @@
         {$form._qf_Fee_submit.html}
 	
         {if $discountSection}
-            <fieldset id="map-field"><legend>{ts}Discounted Fees{/ts}</legend>
+            <fieldset id="map-field-discount"><legend>{ts}Discounted Fees{/ts}</legend>
             <p>{ts}Use the table below to enter descriptive labels and amounts for up to ten discounted event fees for each discount set. <strong>Don't forget to click 'Save' when you are finished.</strong>{/ts}</p>
 	    <table id="map-field-table">
             <tr class="columnheader">

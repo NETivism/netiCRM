@@ -30,11 +30,69 @@ function civicrm_gw_menu(){
       'page arguments' => array(2),
       'type' => MENU_CALLBACK,
       'weight' => 0,
-      'file' => 'civicrm_gw.checkout.inc',
     ),
   );
 }
 
+/**
+ * hook_civicrm_pageRun
+ *
+ * Inject information for billing info
+ */
+function civicrm_gw_civicrm_pageRun(&$page){
+  if($_GET['q'] == 'civicrm/contact/view/contribution'){
+    if($page->_permission && $page->_action == 4 && !empty($page->_id)){
+      $result = db_query("SELECT * FROM {civicrm_contribution_gw} WHERE cid = %d", $page->_id);
+      $r = db_fetch_object($result);
+      if(!empty($r)){
+        // normal info
+        // payment submit date
+        if(!empty($r->data)){
+          $data = unserialize($r->data);
+        }
+        $rows = array();
+        $link_attr = array('absolute' => TRUE, 'attributes' => array('target' => '_blank'));
+        if(!empty($r->vaccno)){
+          // ATM vacc
+          $rows[] = array(t('Billing'), l(t('URL'), _civicrm_gw_popupurl('vacc', $page->_id), $link_attr));
+        }
+        elseif(!empty($r->tsr)){
+          // printing
+          if(!empty($data['mer_id'])){
+            $mer_id = $data['mer_id'];
+          }
+          else{
+            $mer_id = db_result(db_query("SELECT signature FROM {civicrm_payment_processor} WHERE is_test = 0 AND payment_processor_type = GW"));
+          }
+          $rows[] = array(t('Billing'), l(t('URL'), _civicrm_gw_barcode($mer_id, $r->tsr), $link_attr));
+        }
+        elseif(!empty($r->card4no)){
+          // creadit card
+          $rows[] = array(t('Card number'), $r->card4no);
+          $rows[] = array(t('Response_msg'), $r->response_msg);
+        }
+        $common_date = array(
+          'created' => t('Created Date'),
+          'expire_datetime' => t('Expire On'),
+          'paid_date' => t('Paid Date'),
+          'proc_datetime' => t('Process date'),
+        );
+        foreach($common_date as $k => $t){
+          if(!empty($r->{$k})){
+            $rows[] = array($t, format_date($r->{$k}, 'custom', 'Y-m-d H:i'));
+          } 
+          else{
+            $rows[] = array($t, 'n/a');
+          }
+        }
+
+        $info = theme('table', NULL, $rows, array('class'=>'crm-info-panel'));
+        $template = $page->getTemplate();
+        $template->assign('payment_processor_billinginfo', $info);
+      }
+    }
+  }
+}
 
 function civicrm_gw_error(){
   $msg = $_SESSION['gw']['error'];
@@ -155,4 +213,44 @@ function _civicrm_gw_payment_info($cid, $instrument){
       break;
   }
   return $data;
+}
+
+function civicrm_gw_popup($instrument){
+  $cid = $_GET['cid'];
+  if(!$cid){
+    drupal_goto();
+  }
+  else{
+    $gw = db_fetch_object(db_query("SELECT * FROM {civicrm_contribution_gw} WHERE cid = %d", $cid));
+    civicrm_initialize();
+    $params = array( 1 => array( $cid, 'Integer' ) );
+    $amount = CRM_Core_DAO::singleValueQuery("SELECT total_amount FROM civicrm_contribution WHERE id = %1", $params);
+    $output = '
+<style>
+  #content { text-align: center;}
+  #content table {text-align: left; width: 300px; margin: 0 auto;}
+  #sidebar {display:none;}
+  #navigation, #branding, #admin-menu { display: none !important; }
+</style>
+    ';
+    if($gw){
+      $rows = _civicrm_gw_payment_info($cid, $instrument);
+      $output .= '<h3>付款資訊</h3>';
+      $output .= theme('table', NULL, $rows, array('align' => 'center', 'width' =>' 300', 'id' => 'payment-info'));
+      $output .= '<div class="function">';
+      $output .= '<input type="button" onclick="print();" value="列印">';
+      $output .= '</div>';
+    }
+    else{
+      $output = 'database not found error';
+    }
+  }
+  return $output;
+}
+
+function _civicrm_gw_popupurl($instrument_code, $cid){
+  return url('gw/popup/'.$instrument_code, array('absolute' => TRUE, 'query' => 'cid='.$cid));
+}
+function _civicrm_gw_barcode($mer, $tsr){
+  return 'https://ecbank.com.tw/order/barcode_print.php?mer_id='.$mer.'&tsr='.$tsr;
 }

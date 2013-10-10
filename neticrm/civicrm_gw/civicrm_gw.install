@@ -119,6 +119,12 @@ function civicrm_gw_schema(){
         'length' => '4',
         'not null' => FALSE,
       ),
+      'tsr' => array(
+        'description' => 'Unique serial from gw generated.',
+        'type' => 'varchar',
+        'length' => '64',
+        'not null' => FALSE,
+      ),
     ),
     'primary key' => array('cid'),
     'mysql_suffix' => 'ENGINE = InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci',
@@ -259,6 +265,16 @@ function civicrm_gw_update_6103(){
     'description' => 'Last 4 number for credit card',
     'type' => 'varchar',
     'length' => '4',
+    'not null' => FALSE,
+  ));
+  return $ret;
+}
+
+function civicrm_gw_update_6104(){
+  db_add_field($ret, 'civicrm_contribution_gw', 'tsr', array(
+    'description' => 'Unique serial from gw generated.',
+    'type' => 'varchar',
+    'length' => '64',
     'not null' => FALSE,
   ));
   return $ret;

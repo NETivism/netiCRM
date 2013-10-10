@@ -400,8 +400,11 @@ SELECT id
             $params['is_recur_interval'] = CRM_Utils_Array::value( 'is_recur_interval', $params ,false );
         }
 
-        if ( !CRM_Utils_System::isNull( $params['payment_processor'] ) ) {
-            $params['payment_processor'] = implode( CRM_Core_DAO::VALUE_SEPARATOR, array_keys( $params['payment_processor'] ) );
+        if (array_key_exists('payment_processor', $params) && !CRM_Utils_System::isNull($params['payment_processor'])) {
+          $params['payment_processor'] = implode(CRM_Core_DAO::VALUE_SEPARATOR, array_keys($params['payment_processor']));
+        }
+        else {
+          $params['payment_processor'] = 'null';
         }
 
         require_once 'CRM/Contribute/BAO/ContributionPage.php';

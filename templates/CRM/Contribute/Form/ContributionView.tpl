@@ -237,6 +237,10 @@
          </div>
     </div>
 {/if}
+{if $payment_processor_billinginfo}
+<fieldset><legend>{ts}Billing{/ts}</legend></fieldset>
+  {$payment_processor_billinginfo}
+{/if}
 
 {include file="CRM/Custom/Page/CustomDataView.tpl"}
 

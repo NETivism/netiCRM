@@ -26,7 +26,13 @@
 {if $ppType}
   {include file="CRM/Core/BillingBlock.tpl"}
   {if $paymentProcessor.description}
-    <div class="payment-description">{$paymentProcessor.description}</div>
+    <div class="crm-section payment-description">
+        <div class="label"></div>
+        <div class="content">
+            {$paymentProcessor.description}
+        </div>
+        <div class="clear"></div>
+    </div>
   {/if}
 
 <div id="paypalExpress">
@@ -83,36 +89,6 @@
     </div>
 {/if}
 
-{if $priceSet}
-    <fieldset id="priceset" class="crm-group priceset-group"><legend>{$event.fee_label}</legend>
-        {include file="CRM/Price/Form/PriceSet.tpl"}
-	{include file="CRM/Price/Form/ParticipantCount.tpl"}
-    </fieldset>
-    {if $form.is_pay_later}
-        <div class="crm-section pay_later-section">
-	        <div class="label">&nbsp;</div>
-            <div class="content">{$form.is_pay_later.html}&nbsp;{$form.is_pay_later.label}</div>
-            <div class="clear"></div>
-        </div>
-    {/if}
-
-{else}
-    {if $paidEvent}
-        <div class="crm-section paid_event-section">
-    	    <div class="label">{$event.fee_label} <span class="marker">*</span></div>
-    		<div class="content">{$form.amount.html}</div>
-            <div class="clear"></div>
-     	</div>
-        {if $form.is_pay_later}
-            <div class="crm-section pay_later-section">
-    	        <div class="label">&nbsp;</div>
-                <div class="content">{$form.is_pay_later.html}&nbsp;{$form.is_pay_later.label}</div>
-                <div class="clear"></div>
-            </div>
-        {/if}
-    {/if}
-{/if}
-
 {assign var=n value=email-$bltID}
     <div class="crm-section email-section">
         <div class="label">{$form.$n.label}</div>
@@ -125,15 +101,50 @@
 {include file="CRM/common/CMSUser.tpl"}
 
 {include file="CRM/UF/Form/Block.tpl" fields=$customPre} 
+{include file="CRM/UF/Form/Block.tpl" fields=$customPost}   
+
+{if $priceSet}
+    <fieldset id="priceset" class="crm-group priceset-group"><legend>{$event.fee_label}</legend>
+        {include file="CRM/Price/Form/PriceSet.tpl"}
+	{include file="CRM/Price/Form/ParticipantCount.tpl"}
+    </fieldset>
+    {if $event.is_pay_later && !$form.payment_processor}
+        <div class="crm-section pay_later-section">
+	        <div class="label">&nbsp;</div>
+            <div class="label">{ts}Payment Method{/ts}</div>
+              <div class="content"><input type="checkbox" checked="checked" disabled="disabled"/>{$event.pay_later_text}<br />
+              <span class="description">{$event.pay_later_receipt}</span>
+              </div>
+            <div class="clear"></div>
+        </div>
+    {/if}
+{else}
+    {if $paidEvent}
+      <fieldset id="priceset" class="crm-group priceset-group"><legend>{$event.fee_label}</legend></fieldset>
+      <div class="crm-section paid_event-section">
+    	    <div class="label">&nbsp;<span class="marker">*</span></div>
+          <div class="content">{$form.amount.html}</div>
+          <div class="clear"></div>
+     	</div>
+      {if $event.is_pay_later && !$form.payment_processor}
+          <div class="crm-section pay_later-section">
+            <div class="label">{ts}Payment Method{/ts}</div>
+              <div class="content"><input type="checkbox" checked="checked" disabled="disabled"/>{$event.pay_later_text}<br />
+              <span class="description">{$event.pay_later_receipt}</span>
+              </div>
+              <div class="clear"></div>
+          </div>
+      {/if}
+    {/if}
+{/if}
+
  <div class="crm-section payment_processor-section">
       <div class="label">{$form.payment_processor.label}</div>
       <div class="content">{$form.payment_processor.html}</div>
       <div class="clear"></div>
  </div>
-
 <div id="billing-payment-block"></div>
 {include file="CRM/common/paymentBlock.tpl"}
-{include file="CRM/UF/Form/Block.tpl" fields=$customPost}   
 
 {if $isCaptcha}
     {include file='CRM/common/ReCAPTCHA.tpl'}
@@ -279,6 +290,11 @@
       cj(this).blur();
       e.preventDefault();
       return false;
+    }
+  });
+  cj("input[name=payment_processor]").click(function(){
+    if(cj(this).val() == 0){
+      cj("#billing-payment-block").html('<div class="crm-section payment-description"><div class="label"></div><div class="content">{/literal}{$event.pay_later_receipt}{literal}</div><div class="clear"></div></div>');
     }
   });
 </script>

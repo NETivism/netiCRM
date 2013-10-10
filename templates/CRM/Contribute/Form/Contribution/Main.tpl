@@ -26,7 +26,13 @@
 {if $ppType}
   {include file="CRM/Core/BillingBlock.tpl"}
   {if $paymentProcessor.description}
-    <div class="payment-description">{$paymentProcessor.description}</div>
+    <div class="crm-section payment-description">
+        <div class="label"></div>
+        <div class="content">
+            {$paymentProcessor.description}
+        </div>
+        <div class="clear"></div>
+    </div>
   {/if}
  {if $is_monetary}
   {* Put PayPal Express button after customPost block since it's the submit button in this case. *}
@@ -289,9 +295,10 @@ function clearAmountOther() {
       <fieldset class="crm-group pay_later-group">
         <legend>{ts}Payment Options{/ts}</legend>
         <div class="crm-section pay_later_receipt-section">
-          <div class="label">&nbsp;</div>
+          <div class="label">{ts}Payment Method{/ts}</div>
           <div class="content">
-            [x] {$pay_later_text}
+            <input type="checkbox" checked="checked" disabled="disabled"/>{$pay_later_text}<br />
+            <span class="description">{$pay_later_receipt}</span>
           </div>
           <div class="clear"></div>
         </div>
@@ -466,7 +473,7 @@ function showHidePayPalExpressOption()
   });
   cj("input[name=payment_processor]").click(function(){
     if(cj(this).val() == 0){
-      cj("#billing-payment-block").html("{/literal}{$pay_later_receipt}{literal}");
+      cj("#billing-payment-block").html('<div class="crm-section payment-description"><div class="label"></div><div class="content">{/literal}{$pay_later_receipt}{literal}</div><div class="clear"></div></div>');
     }
   });
 {/literal}

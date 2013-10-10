@@ -18,6 +18,7 @@ function civicrm_gw_do_transfer_checkout(&$vars, &$component, &$payment_processo
   $instrument_name = civicrm_instrument_by_id($instrument_id, 'name');
   $gw_instruments = _civicrm_gw_instrument('code');
   $instrument_code = $gw_instruments[$instrument_name];
+  $form_key = $component == 'event' ? 'CRM_Event_Controller_Registration_'.$vars['qfKey'] : 'CRM_Contribute_Controller_Contribution_'.$vars['qfKey'];
 
   // The first, we insert every contribution into record. After this, we'll use update for the record.
   $record = array('cid' => $vars['contributionID'], 'created' => time());
@@ -46,12 +47,13 @@ function civicrm_gw_do_transfer_checkout(&$vars, &$component, &$payment_processo
     $contrib_values['payment_instrument_id'] = $vars['civicrm_instrument_id'];
   }
   $contrib_values['is_pay_later'] = $is_pay_later;
-  $contrib_values['trxn_id'] = $payment_processor['signature'].$vars['contributionID'];
+  $contrib_values['trxn_id'] = $vars['contributionID'];
   $contribution =& CRM_Contribute_BAO_Contribution::create($contrib_values, $contrib_ids);
 
   // Inject in quickform sessions
   // Special hacking for display trxn_id after thank you page.
-  $_SESSION['CiviCRM']['CRM_Contribute_Controller_Contribution_'.$vars['qfKey']]['params']['trxn_id'] = $contribution->trxn_id;
+  $_SESSION['CiviCRM'][$form_key]['params']['trxn_id'] = $contribution->trxn_id;
+  $_SESSION['CiviCRM'][$form_key]['params']['is_pay_later'] = $is_pay_later;
 
   print _civicrm_gw_form_redirect($redirect_vars, $instrument_code);
   // move things to CiviCRM cache as needed
@@ -146,7 +148,7 @@ function _civicrm_gw_ecbank(&$vars, $component, &$payment_processor, $instrument
 
   // save fetched result
   $record = array('cid' => $vars['contributionID']);
-  $save = array('error', 'bankcode', 'vaccno', 'payno', 'expire_datetime');
+  $save = array('error', 'bankcode', 'vaccno', 'payno', 'expire_datetime', 'tsr');
   foreach($save as $k){
     $record[$k] = $res[$k];
     if($k == 'expire_datetime'){
@@ -155,7 +157,17 @@ function _civicrm_gw_ecbank(&$vars, $component, &$payment_processor, $instrument
       $record[$k] = strtotime($datetime.' +0800');
     }
   }
+  $record['data'] = serialize($res);
   drupal_write_record('civicrm_contribution_gw', $record, 'cid');
+
+  // inject info
+  $form_key = $component == 'event' ? 'CRM_Event_Controller_Registration_'.$vars['qfKey'] : 'CRM_Contribute_Controller_Contribution_'.$vars['qfKey'];
+  if($component == 'event'){
+    $values =& $_SESSION['CiviCRM'][$form_key]['values']['event'];
+  }
+  else{
+    $values =& $_SESSION['CiviCRM'][$form_key]['values'];
+  }
 
   // After saving the record, we only return the popup javascript for these method
   $civi_base_url = $component == 'event' ? 'civicrm/event/register' : 'civicrm/contribute/transact';
@@ -166,13 +178,55 @@ function _civicrm_gw_ecbank(&$vars, $component, &$payment_processor, $instrument
       "#action" => $thankyou_url,
     );
     if($instrument_code == 'barcode'){
-      $redirect_vars['#popup'] = "https://ecbank.com.tw/order/barcode_print.php?mer_id={$payment_processor['signature']}&tsr={$res['tsr']}";
+      $redirect_vars['#popup'] = _civicrm_gw_barcode($payment_processor['signature'], $res['tsr']);
     }
     else{
       // cvs vacc ibon
-      $redirect_vars['#popup'] = url('gw/popup/'.$instrument_code, array('absolute' => TRUE, 'query' => "cid={$vars['contributionID']}"));
+      $redirect_vars['#popup'] = _civicrm_gw_popupurl($instrument_code, $vars['contributionID']);
       //dpr($_SESSION['CiviCRM']['CRM_Contribute_Controller_Contribution_'.$vars['qfKey']]['values']['thankyou_text']);
     }
+    // send mail
+    if(empty($_SESSION['CiviCRM'][$form_key]['params']['sent'])){
+      $values['thankyou_text'] .= '<div>如果您沒有看到繳費資訊，點此<strong>開啟'.l('付款資訊', $redirect_vars['#popup'].'?width=900&height=600&iframe=true', array('attributes' => array('class' => 'colorbox-load', 'target' => '_blank'))).'</strong></div>';
+      $p['user'] = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $vars['contactID'], 'display_name');
+
+      // prepare template parameter
+      $email = $vars['email-5'];
+      // default from_email
+      $from_emails = array();
+      CRM_Core_OptionValue::getValues(array('name' => 'from_email_address'), &$from_emails);
+      foreach($from_emails as $id => $v){
+        if($v['is_default'] == 1){
+          $from_default = $v['name'];
+          break;
+        }
+      }
+      if($component == 'event'){
+        if($values['event']['confirm_from_name'] && $values['event']['confirm_from_email']){
+          $from = $values['event']['confirm_from_name']. '<'.$values['event']['confirm_from_email'];
+        }
+      }
+      else{ // contribute
+        if($values['receipt_from_name'] && $values['receipt_from_email']){
+          $from = $values['receipt_from_name']. ' <'.$values['receipt_from_email'].'>';
+        }
+      }
+      $html = '您好！<br /><br />這是您在本網站<u>'.variable_get('site_name', '').'</u>的<u>'.$values['title'].'</u>頁面產生的付款資訊，點此可<strong>'.l('開啟付款資訊', $redirect_vars['#popup'], array('attributes' => array('target' => '_blank'))).'</strong>。<br />若您已經繳費，可忽略本訊息，提醒您，本繳費單有7天的期限，超過期限本訂單會自動取消。<br />--<br />'.variable_get('site_name', '');
+      $send_params                = array( );
+      $send_params['groupName'  ] = 'Activity Email Sender';
+      $send_params['from'       ] = $from ? $from : $from_default;
+      $send_params['toName'     ] = $p['user'];
+      $send_params['toEmail'    ] = $email;
+      $send_params['subject'    ] = '您在本站的付款資訊 - 訂單編號#'.$vars['contributionID'];
+      $send_params['text'       ] = '';
+      $send_params['html'       ] = $html;
+      if ( ! CRM_Utils_Mail::send( $send_params ) ) {
+        return false;
+      }
+      // prevent re-send invoice
+      $_SESSION['CiviCRM'][$form_key]['params']['sent'] = true;;
+    }
+
     return $redirect_vars;
   }
   else{
@@ -282,37 +336,4 @@ function _civicrm_gw_notify_url(&$vars, $path, $component){
   else{
     return $url;
   }
-}
-
-function civicrm_gw_popup($instrument){
-  $cid = $_GET['cid'];
-  if(!$cid){
-    drupal_goto();
-  }
-  else{
-    $gw = db_fetch_object(db_query("SELECT * FROM {civicrm_contribution_gw} WHERE cid = %d", $cid));
-    civicrm_initialize();
-    $params = array( 1 => array( $cid, 'Integer' ) );
-    $amount = CRM_Core_DAO::singleValueQuery("SELECT total_amount FROM civicrm_contribution WHERE id = %1", $params);
-    $output = '
-<style>
-  #content { text-align: center;}
-  #content table {text-align: left; width: 300px; margin: 0 auto;}
-  #sidebar {display:none;}
-  #navigation, #branding, #admin-menu { display: none !important; }
-</style>
-    ';
-    if($gw){
-      $rows = _civicrm_gw_payment_info($cid, $instrument);
-      $output .= '<h3>付款資訊</h3>';
-      $output .= theme('table', NULL, $rows, array('align' => 'center', 'width' =>' 300', 'id' => 'payment-info'));
-      $output .= '<div class="function">';
-      $output .= '<input type="button" onclick="print();" value="列印">';
-      $output .= '</div>';
-    }
-    else{
-      $output = 'database not found error';
-    }
-  }
-  return $output;
 }
