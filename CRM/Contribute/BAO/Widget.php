@@ -97,6 +97,22 @@ class CRM_Contribute_BAO_Widget extends CRM_Contribute_DAO_Widget {
         }
 
         $query = "
+            SELECT count( id ) as count,
+            sum( total_amount) as amount
+            FROM   civicrm_contribution
+            WHERE  is_test = 0
+            AND    contribution_status_id IN (1,2,5)
+            AND    contribution_page_id = %1";
+        $params = array( 1 => array( $contributionPageID, 'Integer' ) ) ;
+        $dao = CRM_Core_DAO::executeQuery( $query, $params );
+        if ( $dao->fetch( ) ) {
+            $data['num_donors_include_pending'] = (int)$dao->count;
+            $data['money_raised_include_pending'] = (int)$dao->amount;
+        } else {
+            $data['num_donors_include_pending'] = $data['money_raised'] = $data->money_raised = 0;
+        }
+
+        $query = "
             SELECT goal_amount, start_date, end_date, is_active
             FROM   civicrm_contribution_page
             WHERE  id = %1";
@@ -152,13 +168,23 @@ class CRM_Contribute_BAO_Widget extends CRM_Contribute_DAO_Widget {
         require_once 'CRM/Utils/Money.php';
         $data['money_raised_percentage'] = 0;
         if ( $data['money_target'] > 0 ) {
-            $data['money_raised_percentage'] = ( $data['money_raised'] / $data['money_target'] ) * 100 . "%";
+            $data['money_raised_percentage'] = round(( $data['money_raised'] / $data['money_target'] ) * 100, 1) . "%";
             $data['money_target_display'] = CRM_Utils_Money::format( $data['money_target'] );
             $data['money_raised'] = ts( 'Raised %1 of %2', array( 1 => CRM_Utils_Money::format( $data['money_raised'] ), 
                                                                   2 => $data['money_target_display']
                 ) );
         } else {
             $data['money_raised'] = ts( 'Raised %1', array(1 =>  CRM_Utils_Money::format( $data['money_raised'] ) ) );
+        }
+        $data['money_raised_percentage_include_pending'] = 0;
+        if ( $data['money_target'] > 0 ) {
+            $data['money_raised_percentage_include_pending'] = round(( $data['money_raised_include_pending'] / $data['money_target'] ) * 100, 1) . "%";
+            $data['money_target_display'] = CRM_Utils_Money::format( $data['money_target'] );
+            $data['money_raised_include_pending'] = ts( 'Raised %1 of %2', array( 1 => CRM_Utils_Money::format( $data['money_raised_include_pending'] ), 
+                                                                  2 => $data['money_target_display']
+                ) );
+        } else {
+            $data['money_raised_include_pending'] = ts( 'Raised %1', array(1 =>  CRM_Utils_Money::format( $data['money_raised_include_pending'] ) ) );
         }
 
         $data['money_low' ] = 0;
