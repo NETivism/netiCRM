@@ -1,4 +1,6 @@
 <?php
+// $Id$
+
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -23,6 +25,7 @@
  +--------------------------------------------------------------------+
 */
 
+
 /*
  * Heavily based on anonymous code contribution. No claim.
  * CiviCRM Views Integration
@@ -31,31 +34,29 @@
  * Filters Contribution Types, and is configured using the labels from the database
  *
  */
-
 class civicrm_handler_filter_group_title extends views_handler_filter_in_operator {
-    static $_groupName;
-
-    function construct( ) {
-        parent::construct();
-        if ( ! self::$_groupName ) {
-            if ( ! civicrm_initialize( ) ) {
-                return;
-            }
-            require_once 'CRM/Core/PseudoConstant.php';
-            self::$_groupName = CRM_Core_PseudoConstant::allGroup( );
-        }
+  static $_groupName;
+  function construct() {
+    parent::construct();
+    if (!self::$_groupName) {
+      if (!civicrm_initialize()) {
+        return;
+      }
+      require_once 'CRM/Core/PseudoConstant.php';
+      self::$_groupName = CRM_Core_PseudoConstant::allGroup();
     }
+  }
 
-    function get_value_options() {
-        if (!isset($this->value_options)) {
-            $this->value_title = t('Group Name');
-            $options = array( );
-            foreach (self::$_groupName as $id => $name ) {
-                $options[$name] = $name;
-            }
-            $this->value_options = $options;
-        }
+  function get_value_options() {
+    if (!isset($this->value_options)) {
+      $this->value_title = t('Group Name');
+      $options = array();
+      foreach (self::$_groupName as $id => $name) {
+        $options[$name] = $name;
+      }
+      $this->value_options = $options;
     }
-
+  }
 }
-?>
+
+

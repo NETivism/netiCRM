@@ -1,4 +1,6 @@
 <?php
+// $Id$
+
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -22,22 +24,20 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 */
-
 class civicrm_handler_filter_option extends views_handler_filter_in_operator {
-    static $_options;
+  static $_options;
+  function get_value_options() {
+    $this->initialize();
 
-    function get_value_options() {
-        $this->initialize( );
-
-        if (!isset($this->value_options)) {
-            $this->value_title = $this->title( );
-            $options = array( );
-            foreach (self::$_options as $id => $name ) {
-                $options[$id] = $name;
-            }
-            $this->value_options = $options;
-        }
+    if (!isset($this->value_options)) {
+      $this->value_title = $this->title();
+      $options = array();
+      foreach (self::$_options as $id => $name) {
+        $options[$id] = $name;
+      }
+      $this->value_options = $options;
     }
-
+  }
 }
-?>
+
+

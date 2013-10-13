@@ -1,4 +1,6 @@
 <?php
+// $Id$
+
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -22,6 +24,7 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 */
+
 /*
  * Unchanged anonymous code contribution. No claim.
  *
@@ -29,6 +32,7 @@
  * Displays Email and links to email address.
  *
  */
+
 /**
  * Field handler to provide acess control for the email field
  *
@@ -60,9 +64,10 @@ class civicrm_handler_field_email extends views_handler_field {
     }
     return check_plain($values->{$this->field_alias});
   }
-  
+
   function render_link($input, $values) {
-     return $input;
+    return $input;
   }
 }
-?>
+
+

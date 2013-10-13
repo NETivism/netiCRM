@@ -1,4 +1,6 @@
 <?php
+// $Id$
+
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -34,7 +36,7 @@ class civicrm_handler_relationship_contact2users extends views_handler_relations
    * Called to implement a relationship in a query.
    */
   function query() {
-   
+
     $join = new views_join();
     $join->definition = array(
       'left_table' => 'civicrm_contact',
@@ -70,7 +72,7 @@ class civicrm_handler_relationship_contact2users extends views_handler_relations
 
     $alias = $join->definition['table'] . '_' . $join->definition['left_table'];
 
-    $this->alias = $this->query->add_relationship($alias, $join, 'users', $this->relationship);      
-    
+    $this->alias = $this->query->add_relationship($alias, $join, 'users', $this->relationship);
   }
 }
+

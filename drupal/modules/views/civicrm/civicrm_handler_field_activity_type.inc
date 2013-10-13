@@ -1,4 +1,6 @@
 <?php
+// $Id$
+
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -22,6 +24,7 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 */
+
 /*
  * Heavily based on anonymous code contribution. No claim.
  *
@@ -30,26 +33,26 @@
  *
  */
 class civicrm_handler_field_activity_type extends views_handler_field {
-    static $_activityType;
+  static $_activityType;
+  function construct() {
+    if (!self::$_activityType) {
+      if (!civicrm_initialize()) {
+        return;
+      }
+      require_once 'CRM/Core/PseudoConstant.php';
+      self::$_activityType = CRM_Core_PseudoConstant::activityType();
+    }
+  }
 
-    function construct( ) {
-        if ( ! self::$_activityType ) {
-             if ( ! civicrm_initialize( ) ) {
-                 return;
-             }
-            require_once 'CRM/Core/PseudoConstant.php';
-            self::$_activityType = CRM_Core_PseudoConstant::activityType( );
-        }
+  function render($values) {
+    $sid = $values->{$this->field_alias};
+    if (empty($sid) ||
+      (int ) $sid <= 0
+    ) {
+      return NULL;
     }
 
-    function render( $values ) {
-        $sid = $values->{$this->field_alias};
-        if ( empty( $sid ) ||
-             (int ) $sid <= 0 ) {
-            return null;
-        }
-
-        return self::$_activityType[$values->{$this->field_alias}];
-    }
+    return self::$_activityType[$values->{$this->field_alias}];
+  }
 }
 

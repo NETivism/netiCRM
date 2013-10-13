@@ -1,4 +1,6 @@
 <?php
+// $Id$
+
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -23,6 +25,7 @@
  +--------------------------------------------------------------------+
 */
 
+
 /*
  * Heavily based on anonymous code contribution. No claim.
  * CiviCRM Views Integration
@@ -31,30 +34,29 @@
  * Filters Contact Types, and is configured using the labels from the database
  *
  */
-
 class civicrm_handler_filter_contact_type extends views_handler_filter_in_operator {
-    static $_contactTypes;
-
-    function construct( ) {
-        parent::construct();
-        if ( ! self::$_contactTypes ) {
-            if ( ! civicrm_initialize( ) ) {
-                return;
-            }
-            require_once 'CRM/Core/SelectValues.php';
-            self::$_contactTypes = CRM_Core_SelectValues::contactType( );
-        }
+  static $_contactTypes;
+  function construct() {
+    parent::construct();
+    if (!self::$_contactTypes) {
+      if (!civicrm_initialize()) {
+        return;
+      }
+      require_once 'CRM/Core/SelectValues.php';
+      self::$_contactTypes = CRM_Core_SelectValues::contactType();
     }
+  }
 
-    function get_value_options() {
-        if (!isset($this->value_options)) {
-            $this->value_title = t('Contact type');
-            $options = array( );
-            foreach (self::$_contactTypes as $id => $name ) {
-                $options[$id] = $name;
-            }
-            $this->value_options = $options;
-        }
+  function get_value_options() {
+    if (!isset($this->value_options)) {
+      $this->value_title = t('Contact type');
+      $options = array();
+      foreach (self::$_contactTypes as $id => $name) {
+        $options[$id] = $name;
+      }
+      $this->value_options = $options;
     }
+  }
 }
-?>
+
+

@@ -1,4 +1,6 @@
 <?php
+// $Id$
+
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -29,26 +31,27 @@
  * @ingroup civicrm_field_handlers
  */
 class civicrm_handler_field_website_type extends views_handler_field {
-    static $_websiteTypes;
+  static $_websiteTypes;
+  function construct() {
+    if (!self::$_websiteTypes) {
+      if (!civicrm_initialize()) {
+        return;
+      }
+      require_once 'CRM/Core/PseudoConstant.php';
+      self::$_locationTypes = CRM_Core_PseudoConstant::websiteType();
+    }
+  }
 
-    function construct( ) {
-        if ( ! self::$_websiteTypes ) {
-            if ( ! civicrm_initialize( ) ) {
-                return;
-            }
-            require_once 'CRM/Core/PseudoConstant.php';
-            self::$_locationTypes = CRM_Core_PseudoConstant::websiteType( );
-        }
+  function render($values) {
+    $wid = $values->{$this->field_alias};
+    if (empty($wid) ||
+      (int ) $wid <= 0
+    ) {
+      return NULL;
     }
 
-    function render( $values ) {
-        $wid = $values->{$this->field_alias};
-        if ( empty( $wid ) ||
-             (int ) $wid <= 0 ) {
-            return null;
-        }
-
-        return self::$_websiteTypes[$values->{$this->field_alias}];
-    }
+    return self::$_websiteTypes[$values->{$this->field_alias}];
+  }
 }
-?>
+
+

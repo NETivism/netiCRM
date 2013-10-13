@@ -1,4 +1,6 @@
 <?php
+// $Id$
+
 /*
   +--------------------------------------------------------------------+
   | CiviCRM version 3.3                                                |
@@ -23,6 +25,7 @@
   +--------------------------------------------------------------------+
 */
 
+
 /*
  * Heavily based on anonymous code contribution. No claim.
  * CiviCRM Views Integration
@@ -31,40 +34,35 @@
  * Filters Contribution Types, and is configured using the labels from the database
  *
  */
+class civicrm_handler_filter_group_status extends views_handler_filter_in_operator {
 
+  static $groupContactStatus = NULL;
+  function construct() {
+    parent::construct();
 
-
-class civicrm_handler_filter_group_status extends views_handler_filter_in_operator {  
- 
-    static $groupContactStatus = null;
-   
-    function construct( ) {
-        parent::construct();
-
-        if ( ! self::$groupContactStatus ) {
-            if ( ! civicrm_initialize( ) ) {
-                return;
-            }
-            self::$groupContactStatus = array(
-                                              0 => 'Added',
-                                              1 => 'Removed',
-                                              2 => 'Pending',
-                                              );
-        }
+    if (!self::$groupContactStatus) {
+      if (!civicrm_initialize()) {
+        return;
+      }
+      self::$groupContactStatus = array(
+        0 => 'Added',
+        1 => 'Removed',
+        2 => 'Pending',
+      );
     }
+  }
 
-    function get_value_options() {
-        if (!isset($this->value_options)) {
-            $this->value_title = t('Contact Group Status');
-            $options = array( );
-            foreach (self::$groupContactStatus as $id => $name ) {
-                $options[$name] = $name;
-            }
-            $this->value_options = $options; 
-            
-        }
+  function get_value_options() {
+    if (!isset($this->value_options)) {
+      $this->value_title = t('Contact Group Status');
+      $options = array();
+      foreach (self::$groupContactStatus as $id => $name) {
+        $options[$name] = $name;
+      }
+      $this->value_options = $options;
     }
-
+  }
 }
 
-?>
+
+

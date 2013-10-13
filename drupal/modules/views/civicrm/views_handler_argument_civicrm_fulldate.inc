@@ -1,4 +1,6 @@
 <?php
+// $Id$
+
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -27,14 +29,15 @@
  * Argument handler for a full date (CCYYMMDD)
  */
 class views_handler_argument_civicrm_fulldate extends views_handler_argument_date {
+
   /**
    * Constructor implementation
    */
   function construct() {
     parent::construct();
-    $this->format = 'F j, Y';
+    $this->format     = 'F j, Y';
     $this->arg_format = 'Ymd';
-    $this->formula = views_date_sql_format($this->arg_format, "***table***.$this->real_field", "datetime",'0');
+    $this->formula    = views_date_sql_format($this->arg_format, "***table***.$this->real_field", "datetime", '0');
   }
 
   /**

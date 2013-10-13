@@ -1,4 +1,6 @@
 <?php
+// $Id$
+
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -23,6 +25,7 @@
  +--------------------------------------------------------------------+
 */
 
+
 /*
  * Heavily based on anonymous code contribution. No claim.
  * CiviCRM Views Integration
@@ -31,31 +34,29 @@
  * Filters Contribution Types, and is configured using the labels from the database
  *
  */
-
 class civicrm_handler_filter_membership_status extends views_handler_filter_in_operator {
-    static $_membershipStatus;
-
-    function construct( ) {
-        parent::construct();
-        if ( ! self::$_membershipStatus ) {
-            if ( ! civicrm_initialize( ) ) {
-                return;
-            }
-            require_once 'CRM/Member/PseudoConstant.php';
-            self::$_membershipStatus = CRM_Member_PseudoConstant::membershipStatus( );
-        }
+  static $_membershipStatus;
+  function construct() {
+    parent::construct();
+    if (!self::$_membershipStatus) {
+      if (!civicrm_initialize()) {
+        return;
+      }
+      require_once 'CRM/Member/PseudoConstant.php';
+      self::$_membershipStatus = CRM_Member_PseudoConstant::membershipStatus();
     }
+  }
 
-    function get_value_options() {
-        if (!isset($this->value_options)) {
-            $this->value_title = t('Membership Type');
-            $options = array( );
-            foreach (self::$_membershipStatus as $id => $name ) {
-                $options[$id] = $name;
-            }
-            $this->value_options = $options;
-        }
+  function get_value_options() {
+    if (!isset($this->value_options)) {
+      $this->value_title = t('Membership Type');
+      $options = array();
+      foreach (self::$_membershipStatus as $id => $name) {
+        $options[$id] = $name;
+      }
+      $this->value_options = $options;
     }
-
+  }
 }
-?>
+
+

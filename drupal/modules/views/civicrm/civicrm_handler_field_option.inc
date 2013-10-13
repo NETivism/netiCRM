@@ -1,4 +1,6 @@
 <?php
+// $Id$
+
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -29,18 +31,19 @@
  * @ingroup civicrm_field_handlers
  */
 class civicrm_handler_field_option extends civicrm_handler_field {
-    static $_options;
+  static $_options;
+  function render($values) {
+    $this->initialize();
 
-    function render( $values ) {
-        $this->initialize( );
-
-        $id = $values->{$this->field_alias};
-        if ( empty( $id ) ||
-             (int ) $id <= 0 ) {
-            return null;
-        }
-
-        return self::$_options[$values->{$this->field_alias}];
+    $id = $values->{$this->field_alias};
+    if (empty($id) ||
+      (int ) $id <= 0
+    ) {
+      return NULL;
     }
+
+    return self::$_options[$values->{$this->field_alias}];
+  }
 }
-?>
+
+

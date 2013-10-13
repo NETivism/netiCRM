@@ -1,4 +1,6 @@
 <?php
+// $Id$
+
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -29,26 +31,27 @@
  * @ingroup civicrm_field_handlers
  */
 class civicrm_handler_field_state extends views_handler_field {
-    static $_states;
+  static $_states;
+  function construct() {
+    if (!self::$_states) {
+      if (!civicrm_initialize()) {
+        return;
+      }
+      require_once 'CRM/Core/PseudoConstant.php';
+      self::$_states = CRM_Core_PseudoConstant::stateProvinceAbbreviation();
+    }
+  }
 
-    function construct( ) {
-        if ( ! self::$_states ) {
-            if ( ! civicrm_initialize( ) ) {
-                return;
-            }
-            require_once 'CRM/Core/PseudoConstant.php';
-            self::$_states = CRM_Core_PseudoConstant::stateProvinceAbbreviation( );
-        }
+  function render($values) {
+    $sid = $values->{$this->field_alias};
+    if (empty($sid) ||
+      (int ) $sid <= 0
+    ) {
+      return NULL;
     }
 
-    function render( $values ) {
-        $sid = $values->{$this->field_alias};
-        if ( empty( $sid ) ||
-             (int ) $sid <= 0 ) {
-            return null;
-        }
-
-        return self::$_states[$values->{$this->field_alias}];
-    }
+    return self::$_states[$values->{$this->field_alias}];
+  }
 }
-?>
+
+

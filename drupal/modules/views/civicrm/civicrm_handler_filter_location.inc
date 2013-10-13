@@ -1,4 +1,6 @@
 <?php
+// $Id$
+
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -22,31 +24,29 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 */
-
 class civicrm_handler_filter_location extends views_handler_filter_in_operator {
-    static $_locationTypes;
-
-    function construct( ) {
-        parent::construct();
-        if ( ! self::$_locationTypes ) {
-            if ( ! civicrm_initialize( ) ) {
-                return;
-            }
-            require_once 'CRM/Core/PseudoConstant.php';
-            self::$_locationTypes = CRM_Core_PseudoConstant::locationType( );
-        }
+  static $_locationTypes;
+  function construct() {
+    parent::construct();
+    if (!self::$_locationTypes) {
+      if (!civicrm_initialize()) {
+        return;
+      }
+      require_once 'CRM/Core/PseudoConstant.php';
+      self::$_locationTypes = CRM_Core_PseudoConstant::locationType();
     }
+  }
 
-    function get_value_options() {
-        if (!isset($this->value_options)) {
-            $this->value_title = t('Location type');
-            $options = array( );
-            foreach (self::$_locationTypes as $id => $name ) {
-                $options[$id] = $name;
-            }
-            $this->value_options = $options;
-        }
+  function get_value_options() {
+    if (!isset($this->value_options)) {
+      $this->value_title = t('Location type');
+      $options = array();
+      foreach (self::$_locationTypes as $id => $name) {
+        $options[$id] = $name;
+      }
+      $this->value_options = $options;
     }
-
+  }
 }
-?>
+
+

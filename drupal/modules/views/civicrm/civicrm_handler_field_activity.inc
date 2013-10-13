@@ -1,4 +1,6 @@
 <?php
+// $Id$
+
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -29,26 +31,27 @@
  * @ingroup civicrm_field_handlers
  */
 class civicrm_handler_field_activity extends civicrm_handler_field {
-    static $_activityTypes;
+  static $_activityTypes;
+  function construct() {
+    if (!self::$_activityTypes) {
+      if (!civicrm_initialize()) {
+        return;
+      }
+      require_once 'CRM/Core/PseudoConstant.php';
+      self::$_activityTypes = CRM_Core_PseudoConstant::activityType();
+    }
+  }
 
-    function construct( ) {
-        if ( ! self::$_activityTypes ) {
-	     if ( ! civicrm_initialize( ) ) {
-     	         return;
-    		}	
-            require_once 'CRM/Core/PseudoConstant.php';
-            self::$_activityTypes = CRM_Core_PseudoConstant::activityType( );
-        }
+  function render($values) {
+    $lid = $values->{$this->field_alias};
+    if (empty($lid) ||
+      (int ) $lid <= 0
+    ) {
+      return NULL;
     }
 
-    function render( $values ) {
-        $lid = $values->{$this->field_alias};
-        if ( empty( $lid ) ||
-             (int ) $lid <= 0 ) {
-            return null;
-        }
-
-        return self::$_activityTypes[$values->{$this->field_alias}];
-    }
+    return self::$_activityTypes[$values->{$this->field_alias}];
+  }
 }
-?>
+
+

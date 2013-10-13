@@ -1,4 +1,6 @@
 <?php
+// $Id$
+
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -22,6 +24,7 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 */
+
 /*
  * Heavily based on anonymous code contribution. No claim.
  *
@@ -30,26 +33,27 @@
  *
  */
 class civicrm_handler_field_membership_type extends views_handler_field {
-    static $_membershipType;
+  static $_membershipType;
+  function construct() {
+    if (!self::$_membershipType) {
+      if (!civicrm_initialize()) {
+        return;
+      }
+      require_once 'CRM/Member/PseudoConstant.php';
+      self::$_membershipType = CRM_Member_PseudoConstant::membershipType();
+    }
+  }
 
-    function construct( ) {
-        if ( ! self::$_membershipType ) {
-            if ( ! civicrm_initialize( ) ) {
-                return;
-            }
-            require_once 'CRM/Member/PseudoConstant.php';
-            self::$_membershipType = CRM_Member_PseudoConstant::membershipType( );
-        }
+  function render($values) {
+    $lid = $values->{$this->field_alias};
+    if (empty($lid) ||
+      (int ) $lid <= 0
+    ) {
+      return NULL;
     }
 
-    function render( $values ) {
-        $lid = $values->{$this->field_alias};
-        if ( empty( $lid ) ||
-             (int ) $lid <= 0 ) {
-            return null;
-        }
-
-        return self::$_membershipType[$values->{$this->field_alias}];
-    }
+    return self::$_membershipType[$values->{$this->field_alias}];
+  }
 }
-?>
+
+

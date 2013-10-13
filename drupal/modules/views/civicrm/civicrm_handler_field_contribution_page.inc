@@ -1,4 +1,6 @@
 <?php
+// $Id$
+
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -22,6 +24,7 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 */
+
 /*
  * Heavily based on anonymous code contribution. No claim.
  *
@@ -30,26 +33,27 @@
  *
  */
 class civicrm_handler_field_contribution_page extends views_handler_field {
-    static $_contributionPage;
+  static $_contributionPage;
+  function construct() {
+    if (!self::$_contributionPage) {
+      if (!civicrm_initialize()) {
+        return;
+      }
+      require_once 'CRM/Contribute/PseudoConstant.php';
+      self::$_contributionPage = CRM_Contribute_PseudoConstant::contributionPage();
+    }
+  }
 
-    function construct( ) {
-        if ( ! self::$_contributionPage ) {
-            if ( ! civicrm_initialize( ) ) {
-                return;
-            }
-            require_once 'CRM/Contribute/PseudoConstant.php';
-            self::$_contributionPage = CRM_Contribute_PseudoConstant::contributionPage( );
-        }
+  function render($values) {
+    $lid = $values->{$this->field_alias};
+    if (empty($lid) ||
+      (int ) $lid <= 0
+    ) {
+      return NULL;
     }
 
-    function render( $values ) {
-        $lid = $values->{$this->field_alias};
-        if ( empty( $lid ) ||
-             (int ) $lid <= 0 ) {
-            return null;
-        }
-
-        return self::$_contributionPage[$values->{$this->field_alias}];
-    }
+    return self::$_contributionPage[$values->{$this->field_alias}];
+  }
 }
-?>
+
+

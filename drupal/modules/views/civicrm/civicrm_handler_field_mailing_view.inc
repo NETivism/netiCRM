@@ -1,4 +1,6 @@
 <?php
+// $Id$
+
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -29,12 +31,14 @@
  * @ingroup civicrm_field_handlers
  */
 class civicrm_handler_field_mailing_view extends civicrm_handler_field_link {
-    function render($values) {
-        $text = !empty($this->options['text']) ? $this->options['text'] : t('edit');
-        $id = $values->id;
-        return civicrm_views_href( $text,
-                                  'civicrm/mailing/view',
-                                  "reset=1&id=$id" );
-    }
+  function render($values) {
+    $text = !empty($this->options['text']) ? $this->options['text'] : t('edit');
+    $id = $values->id;
+    return civicrm_views_href($text,
+      'civicrm/mailing/view',
+      "reset=1&id=$id"
+    );
+  }
 }
-?>
+
+

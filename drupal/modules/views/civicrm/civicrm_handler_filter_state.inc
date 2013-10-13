@@ -1,4 +1,6 @@
 <?php
+// $Id$
+
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -22,6 +24,7 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 */
+
 /*
  * Heavily based on anonymous code contribution. No claim.
  * CiviCRM Views Integration
@@ -30,32 +33,29 @@
  * Filters States, and is configured using the labels from the database
  *
  */
-
-
 class civicrm_handler_filter_state extends views_handler_filter_in_operator {
-    static $_states;
-
-    function construct( ) {
-        parent::construct();
-        if ( ! self::$_states ) {
-            if ( ! civicrm_initialize( ) ) {
-                return;
-            }
-            require_once 'CRM/Core/PseudoConstant.php';
-            self::$_states = CRM_Core_PseudoConstant::stateProvince( );
-        }
+  static $_states;
+  function construct() {
+    parent::construct();
+    if (!self::$_states) {
+      if (!civicrm_initialize()) {
+        return;
+      }
+      require_once 'CRM/Core/PseudoConstant.php';
+      self::$_states = CRM_Core_PseudoConstant::stateProvince();
     }
+  }
 
-    function get_value_options() {
-        if (!isset($this->value_options)) {
-            $this->value_title = t('State province');
-            $options = array( );
-            foreach (self::$_states as $id => $name ) {
-                $options[$id] = $name;
-            }
-            $this->value_options = $options;
-        }
+  function get_value_options() {
+    if (!isset($this->value_options)) {
+      $this->value_title = t('State province');
+      $options = array();
+      foreach (self::$_states as $id => $name) {
+        $options[$id] = $name;
+      }
+      $this->value_options = $options;
     }
-
+  }
 }
-?>
+
+

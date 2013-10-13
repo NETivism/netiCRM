@@ -1,4 +1,6 @@
 <?php
+// $Id$
+
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -22,6 +24,7 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 */
+
 /*
  * Heavily based on anonymous code contribution. No claim.
  * CiviCRM Views Integration
@@ -30,33 +33,29 @@
  * Filters Payment Instruments, and is configured using the labels from the database
  *
  */
-
-
-
 class civicrm_handler_filter_payment_instrument extends views_handler_filter_in_operator {
-    static $_paymentInstrument;
-
-    function construct( ) {
-        parent::construct();
-        if ( ! self::$_paymentInstrument ) {
-            if ( ! civicrm_initialize( ) ) {
-                return;
-            }
-            require_once 'CRM/Contribute/PseudoConstant.php';
-            self::$_paymentInstrument = CRM_Contribute_PseudoConstant::paymentInstrument( );
-        }
+  static $_paymentInstrument;
+  function construct() {
+    parent::construct();
+    if (!self::$_paymentInstrument) {
+      if (!civicrm_initialize()) {
+        return;
+      }
+      require_once 'CRM/Contribute/PseudoConstant.php';
+      self::$_paymentInstrument = CRM_Contribute_PseudoConstant::paymentInstrument();
     }
+  }
 
-    function get_value_options() {
-        if (!isset($this->value_options)) {
-            $this->value_title = t('Contribution Type');
-            $options = array( );
-            foreach (self::$_paymentInstrument as $id => $name ) {
-                $options[$id] = $name;
-            }
-            $this->value_options = $options;
-        }
+  function get_value_options() {
+    if (!isset($this->value_options)) {
+      $this->value_title = t('Contribution Type');
+      $options = array();
+      foreach (self::$_paymentInstrument as $id => $name) {
+        $options[$id] = $name;
+      }
+      $this->value_options = $options;
     }
-
+  }
 }
-?>
+
+

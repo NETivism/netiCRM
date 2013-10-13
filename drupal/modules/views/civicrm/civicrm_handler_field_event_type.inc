@@ -1,4 +1,6 @@
 <?php
+// $Id$
+
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -22,6 +24,7 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 */
+
 /*
  * Heavily based on anonymous code contribution. No claim.
  *
@@ -30,25 +33,25 @@
  *
  */
 class civicrm_handler_field_event_type extends views_handler_field {
-    static $_event_type;
-
-    function construct( ) {
-        if ( ! self::$_event_type ) {
-            if ( ! civicrm_initialize( ) ) {
-                return;
-            }
-            require_once 'CRM/Core/OptionGroup.php';
-            self::$_event_type = CRM_Core_OptionGroup::values( 'event_type', false );
-        }
+  static $_event_type;
+  function construct() {
+    if (!self::$_event_type) {
+      if (!civicrm_initialize()) {
+        return;
+      }
+      require_once 'CRM/Core/OptionGroup.php';
+      self::$_event_type = CRM_Core_OptionGroup::values('event_type', FALSE);
     }
+  }
 
-    function render( $values ) {
-        $sid = $values->{$this->field_alias};
-        if ( empty( $sid ) ||
-             (int ) $sid <= 0 ) {
-            return null;
-        }
-        return self::$_event_type[$values->{$this->field_alias}];
+  function render($values) {
+    $sid = $values->{$this->field_alias};
+    if (empty($sid) ||
+      (int ) $sid <= 0
+    ) {
+      return NULL;
     }
+    return self::$_event_type[$values->{$this->field_alias}];
+  }
 }
 
