@@ -169,26 +169,23 @@ class CRM_Contribute_BAO_Widget extends CRM_Contribute_DAO_Widget {
         $data['money_raised_percentage'] = 0;
         if ( $data['money_target'] > 0 ) {
             $data['money_raised_percentage'] = round(( $data['money_raised'] / $data['money_target'] ) * 100, 1) . "%";
-            $data['money_target_display'] = CRM_Utils_Money::format( $data['money_target'] );
-            $data['money_raised'] = ts( 'Raised %1 of %2', array( 1 => CRM_Utils_Money::format( $data['money_raised'] ), 
-                                                                  2 => $data['money_target_display']
-                ) );
+            $data['money_target_display'] = ts('Goal').': '.CRM_Utils_Money::format( $data['money_target'] );
+            $data['money_raised'] = ts( 'Raised %1', array(1 =>  CRM_Utils_Money::format( $data['money_raised'] ) ) );
         } else {
             $data['money_raised'] = ts( 'Raised %1', array(1 =>  CRM_Utils_Money::format( $data['money_raised'] ) ) );
         }
         $data['money_raised_percentage_include_pending'] = 0;
         if ( $data['money_target'] > 0 ) {
             $data['money_raised_percentage_include_pending'] = round(( $data['money_raised_include_pending'] / $data['money_target'] ) * 100, 1) . "%";
-            $data['money_target_display'] = CRM_Utils_Money::format( $data['money_target'] );
-            $data['money_raised_include_pending'] = ts( 'Raised %1 of %2', array( 1 => CRM_Utils_Money::format( $data['money_raised_include_pending'] ), 
-                                                                  2 => $data['money_target_display']
-                ) );
+            $data['money_target_display'] = ts('Goal').': '.CRM_Utils_Money::format( $data['money_target'] );
+            $data['money_raised_include_pending'] = ts( 'Raised %1', array(1 =>  CRM_Utils_Money::format( $data['money_raised_include_pending'] ) ) );
         } else {
             $data['money_raised_include_pending'] = ts( 'Raised %1', array(1 =>  CRM_Utils_Money::format( $data['money_raised_include_pending'] ) ) );
         }
 
         $data['money_low' ] = 0;
         $data['num_donors'] = $data['num_donors'  ] ." " .ts( 'Donors' );
+        $data['num_donors_include_pending'] = $data['num_donors_include_pending'] ." " .ts( 'Donors' );
         $data['home_url'  ] = "<a href='{$config->userFrameworkBaseURL}' class='crm-home-url' style='color:". $widget->color_homepage_link ."'>". ts('Learn more.') ."</a>";
 
         // if is_active is false, show this link and hide the contribute button
