@@ -1436,7 +1436,7 @@ WHERE  id = $cfID
                             $values[$index] = "<a href=\"$url\">{$params[$name]}</a>";
                         } else if ( in_array( $name, array('birth_date', 'deceased_date','participant_register_date') ) ) {
                             require_once 'CRM/Utils/Date.php';
-                            $values[$index] = CRM_Utils_Date::customFormat( CRM_Utils_Date::format( $params[$name] ) );
+                            $values[$index] = CRM_Utils_Date::customFormat($params[$name]);
                         } else {
                             $values[$index] = $params[$name];
                         }
