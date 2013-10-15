@@ -131,6 +131,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
           CRM_Core_Payment_ProcessorForm::preProcess($this);
           CRM_Core_Payment_ProcessorForm::buildQuickForm($this);
         }
+        $this->assign('contribution_type_id', $this->_values['contribution_type_id']);
     }
 
     function setDefaultValues( ) 
