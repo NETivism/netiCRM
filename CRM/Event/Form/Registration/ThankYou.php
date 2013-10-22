@@ -197,7 +197,7 @@ class CRM_Event_Form_Registration_ThankYou extends CRM_Event_Form_Registration
      */
     public function getTitle( ) 
     {
-        return ts('Thank You Page');
+        return ts('Complete');
     }
     
 }

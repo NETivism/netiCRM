@@ -23,6 +23,7 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
+{include file="CRM/Event/Form/Registration/Progress.tpl"}
 {if $skipCount}
     <h3>{ts}Skipped Participant(s){/ts}: {$skipCount}</h3>
 {/if}
@@ -123,3 +124,4 @@ function allowGroupOnWaitlist( participantCount, currentCount )
 </script>
 {/literal} 	
 {/if}
+{include file="CRM/Event/Form/Registration/UpdateSeat.tpl"}

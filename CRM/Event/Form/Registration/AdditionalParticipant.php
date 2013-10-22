@@ -63,7 +63,8 @@ class CRM_Event_Form_Registration_AdditionalParticipant extends CRM_Event_Form_R
      */ 
     function preProcess( ) 
     {
-        parent::preProcess( );
+        parent::preProcess();
+        parent::isEventFull();
 
         $participantNo = substr( $this->_name, 12 );
         
@@ -318,33 +319,34 @@ class CRM_Event_Form_Registration_AdditionalParticipant extends CRM_Event_Form_R
         }
 
         $this->assign( 'statusMessage', $statusMessage );
-        
-        $buttons = array( array ( 'type'      => 'back',
-                                  'name'      => ts('<< Go Back'),
-                                  'spacing'   => '&nbsp;&nbsp;&nbsp;&nbsp',
-                                  )
-                          );
-        
-        //CRM-4320
-        if ( $allowToProceed ) {
+        if(!$this->_isEventFull || $this->_allowWaitlist){
+          $buttons = array( array ( 'type'      => 'back',
+                                    'name'      => ts('<< Go Back'),
+                                    'spacing'   => '&nbsp;&nbsp;&nbsp;&nbsp',
+                                    )
+                            );
+          
+          //CRM-4320
+          if ( $allowToProceed ) {
             $buttons = array_merge( $buttons, array( array ( 'type'      => 'next',
-                                                             'name'      => ts('Continue >>'),
-                                                             'spacing'   => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
-                                                             'isDefault' => true,
-                                                             'js'        => $js 
-                                                             )
-                                                     )
-                                    );
+                    'name'      => ts('Continue >>'),
+                    'spacing'   => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
+                    'isDefault' => true,
+                    'js'        => $js 
+                    )
+                  )
+                );
             if ( $includeSkipButton ) {
-                $buttons = array_merge( $buttons,  array( array ( 'type'       => 'next',
-                                                                  'name'       => ts('Skip Participant >>|'),
-                                                                  'subName'    => 'skip' 
-                                                                  )
-                                                          )
-                                        );
+              $buttons = array_merge( $buttons,  array( array ( 'type'       => 'next',
+                      'name'       => ts('Skip Participant >>|'),
+                      'subName'    => 'skip' 
+                      )
+                    )
+                  );
             }
+          }
+          $this->addButtons( $buttons );
         }
-        $this->addButtons( $buttons );
         $this->addFormRule( array( 'CRM_Event_Form_Registration_AdditionalParticipant', 'formRule' ), $this );
     }
     
@@ -703,6 +705,10 @@ class CRM_Event_Form_Registration_AdditionalParticipant extends CRM_Event_Form_R
                 $values[$elementName][$keyId] = null;
             }
         }
+    }
+    public function getTitle( ) 
+    {
+        return ts('Additional Participant');
     }
     
 }

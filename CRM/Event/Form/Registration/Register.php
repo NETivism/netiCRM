@@ -74,7 +74,8 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration
      */ 
     function preProcess( ) 
     {
-        parent::preProcess( );
+        parent::preProcess();
+        parent::isEventFull();
 
         $this->_ppType = CRM_Utils_Array::value('type', $_GET);
         $this->assign('ppType', FALSE);
@@ -95,24 +96,6 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration
             }
           }
         }
-        
-        //CRM-4320.
-        //here we can't use parent $this->_allowWaitlist as user might
-        //walk back and we maight set this value in this postProcess.
-        //(we set when spaces < group count and want to allow become part of waiting )
-        require_once 'CRM/Event/BAO/Participant.php';
-        $eventFull = CRM_Event_BAO_Participant::eventFull( $this->_eventId );
-        
-        $this->_allowWaitlist = false;
-        if ( $eventFull && !$this->_allowConfirmation &&
-             CRM_Utils_Array::value( 'has_waitlist', $this->_values['event'] ) ) { 
-            $this->_allowWaitlist = true;
-            $this->_waitlistMsg = CRM_Utils_Array::value( 'waitlist_text', $this->_values['event'] );
-            if ( !$this->_waitlistMsg ) {
-                $this->_waitlistMsg = ts('This event is currently full. However you can register now and get added to a waiting list. You will be notified if spaces become available.' );
-            }
-        }
-        $this->set( 'allowWaitlist', $this->_allowWaitlist );
         
         //To check if the user is already registered for the event(CRM-2426) 
         self::checkRegistration(null , $this);
@@ -515,16 +498,19 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration
           if (!CRM_Utils_Array::value('is_monetary', $this->_values['event'])) {
             $js = array('onclick' => "return submitOnce(this,'" . $this->_name . "','" . ts('Processing') . "');");
           }
-          $this->addButtons(array(
-              array(
-                'type' => 'upload',
-                'name' => ts('Continue >>'),
-                'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
-                'isDefault' => TRUE,
-                'js' => $js,
-              ),
-            )
-          );
+          
+          if(!$this->_isEventFull || $this->_allowWaitlist){
+            $this->addButtons(array(
+                array(
+                  'type' => 'upload',
+                  'name' => ts('Continue >>'),
+                  'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
+                  'isDefault' => TRUE,
+                  'js' => $js,
+                ),
+              )
+            );
+          }
         }
         
         $this->addFormRule( array( 'CRM_Event_Form_Registration_Register', 'formRule' ), $this );
@@ -1337,5 +1323,9 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration
         }
     }
     
+    public function getTitle( ) 
+    {
+        return ts('Register for Event');
+    }
 }
 

@@ -235,4 +235,9 @@
      <page_callback>CRM_Event_Page_AJAX::eventList</page_callback>
      <access_arguments>access CiviCRM,access CiviEvent</access_arguments>
   </item>
+  <item>
+     <path>civicrm/ajax/eventFull</path>
+     <page_callback>CRM_Event_Page_AJAX::eventFull</page_callback>
+     <access_arguments>register for events,view event info</access_arguments>
+  </item>
 </menu>

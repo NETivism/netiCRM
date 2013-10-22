@@ -516,7 +516,7 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
     function addWizardStyle( &$wizard ) {
         $wizard['style'] = array( 'barClass' => '',
                                   'stepPrefixCurrent' => '&raquo;',
-                                  'stepPrefixPast' => '&radic;',
+                                  'stepPrefixPast' => '&#x2714;',
                                   'stepPrefixFuture' => ' ',
                                   'subStepPrefixCurrent' => '&nbsp;&nbsp;',
                                   'subStepPrefixPast' => '&nbsp;&nbsp;',

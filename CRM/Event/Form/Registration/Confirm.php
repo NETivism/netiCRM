@@ -67,7 +67,8 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration
      */ 
     function preProcess( ) 
     {
-        parent::preProcess( );
+        parent::preProcess();
+        parent::isEventFull();
         
         // lineItem isn't set until Register postProcess
         $this->_lineItem = $this->get( 'lineItem' );
@@ -310,35 +311,38 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration
             $this->assign( 'isAmountzero', 1 );
         }
 
-        if ( $this->_paymentProcessor['payment_processor_type'] == 'Google_Checkout' && 
-             ! CRM_Utils_Array::value( 'is_pay_later', $this->_params[0] ) && ! ( $this->_params[0]['amount'] == 0 ) &&
-             !$this->_allowWaitlist && !$this->_requireApproval ) {
-            $this->_checkoutButtonName = $this->getButtonName( 'next', 'checkout' );
-            $this->add('image',
-                       $this->_checkoutButtonName,
-                       $this->_paymentProcessor['url_button'],
-                       array( 'class' => 'form-submit' ) );
-            
-            $this->addButtons(array(
-                                    array ( 'type'      => 'back',
-                                            'name'      => ts('<< Go Back')),
-                                    )
-                              );
-            
-        } else {
-            $contribButton = ts('Continue >>');
-            $this->addButtons(array(
-                                    array ( 'type'      => 'back',
-                                            'spacing'   => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
-                                            'name'      => ts('<< Go Back'),
-                                           ),
-                                    array ( 'type'      => 'next',
-                                            'name'      => $contribButton,
-                                            'isDefault' => true,
-                                            'js'        => array( 'onclick' => "return submitOnce(this,'" . $this->_name . "','" . ts('Processing') ."');" ),
-                                           ),
-                                    )
+        if(!$this->_isEventFull || $this->_allowWaitlist){
+          if ( $this->_paymentProcessor['payment_processor_type'] == 'Google_Checkout' && 
+               ! CRM_Utils_Array::value( 'is_pay_later', $this->_params[0] ) && ! ( $this->_params[0]['amount'] == 0 ) &&
+               !$this->_allowWaitlist && !$this->_requireApproval ) {
+              $this->_checkoutButtonName = $this->getButtonName( 'next', 'checkout' );
+              $this->add('image',
+                         $this->_checkoutButtonName,
+                         $this->_paymentProcessor['url_button'],
+                         array( 'class' => 'form-submit' ) );
+              
+              $this->addButtons(array(
+                                      array ( 'type'      => 'back',
+                                              'name'      => ts('<< Go Back')),
+                                      )
                                 );
+              
+          }
+          else {
+              $contribButton = ts('Continue >>');
+              $this->addButtons(array(
+                                      array ( 'type'      => 'back',
+                                              'spacing'   => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
+                                              'name'      => ts('<< Go Back'),
+                                             ),
+                                      array ( 'type'      => 'next',
+                                              'name'      => $contribButton,
+                                              'isDefault' => true,
+                                              'js'        => array( 'onclick' => "return submitOnce(this,'" . $this->_name . "','" . ts('Processing') ."');" ),
+                                             ),
+                                      )
+                                  );
+          }
         }
         
         $defaults = array( );
@@ -383,6 +387,32 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration
         // Assign Participant Count to Lineitem Table
         require_once "CRM/Price/BAO/Set.php";
         $this->assign( 'pricesetFieldsCount', CRM_Price_BAO_Set::getPricesetCount( $this->_priceSetId ) );
+
+        $this->addFormRule( array( 'CRM_Event_Form_Registration_Confirm', 'formRule' ), $this );
+    }
+
+    /** 
+     * global form rule 
+     * 
+     * @param array $fields  the input form values 
+     * @param array $files   the uploaded files if any 
+     * @param array $options additional user data 
+     * 
+     * @return true if no errors, else array of errors 
+     * @access public 
+     * @static 
+     */ 
+    static function formRule( $fields, $files, $self){
+        $errors = array( );
+        $seat = CRM_Event_BAO_Participant::eventFull($self->_eventId, TRUE);
+        $part = count($self->_part);
+        if(empty($seat)){
+          $errors['qfKey'] = $self->_values['event']['event_full_text'] ? $self->_values['event']['event_full_text'] : ts('This event is currently full.');
+        }
+        elseif($seat < $part){
+          $errors['qfKey'] = ts('It looks like you are now registering a group of %1 participants. The event has %2 available spaces (you will not be wait listed). Please go back to the main registration page and reduce the number of additional people. You will also need to complete payment information.', array( 1 => $part, 2 => $seat));
+        }
+        return $errors;
     }
     
     /**
@@ -1046,5 +1076,9 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration
         return $contactID;
     }
 
+    public function getTitle( ) 
+    {
+        return ts('Confirm Your Registration Information');
+    }
 }
 

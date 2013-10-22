@@ -23,6 +23,7 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
+{include file="CRM/Event/Form/Registration/Progress.tpl"}
 {if $action & 1024}
     {include file="CRM/Event/Form/Registration/PreviewHeader.tpl"}
 {/if}
@@ -258,3 +259,4 @@
     {/if}
 </div>
 {include file="CRM/common/showHide.tpl"}
+{include file="CRM/Event/Form/Registration/UpdateSeat.tpl"}

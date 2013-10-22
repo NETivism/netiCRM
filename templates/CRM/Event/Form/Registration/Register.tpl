@@ -23,6 +23,7 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
+{include file="CRM/Event/Form/Registration/Progress.tpl"}
 {if $ppType}
   {include file="CRM/Core/BillingBlock.tpl"}
   {if $paymentProcessor.description}
@@ -55,18 +56,6 @@
 
 {capture assign='reqMark'}<span class="marker"  title="{ts}This field is required.{/ts}">*</span>{/capture}
 <div class="crm-block crm-event-register-form-block">
-
-{* moved to tpl since need to show only for primary participant page *}
-{if $requireApprovalMsg || $waitlistMsg}
-  <div id = "id-waitlist-approval-msg" class="messages status">
-    	{if $requireApprovalMsg}
-	    <div id="id-req-approval-msg">{$requireApprovalMsg}</div>
-	{/if}
-        {if $waitlistMsg}
-	    <div id="id-waitlist-msg">{$waitlistMsg}</div>
-	{/if} 
-  </div>
-{/if}
 
 {if $contact_id}
 <div class="messages status">
@@ -299,3 +288,4 @@
   });
 </script>
 {/literal} 
+{include file="CRM/Event/Form/Registration/UpdateSeat.tpl"}

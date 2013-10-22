@@ -1205,7 +1205,32 @@ WHERE  v.option_group_id = g.id
         
         return $errors;
     }
-    
+
+
+    function isEventFull(){
+        $eventFull = CRM_Event_BAO_Participant::eventFull( $this->_eventId );
+        $this->_allowWaitlist = false;
+        $this->_isEventFull   = false;
+        if ( $eventFull && !$this->_allowConfirmation ) {
+            $this->_isEventFull = true;
+            //lets redirecting to info only when to waiting list.
+            $this->_allowWaitlist = CRM_Utils_Array::value( 'has_waitlist', $this->_values['event'] );
+
+            if($this->_allowWaitlist){
+                $wait_list_msg = CRM_Utils_Array::value( 'waitlist_text', $this->_values['event'] ) ? CRM_Utils_Array::value( 'waitlist_text', $this->_values['event'] ) : ts('This event is currently full. However you can register now and get added to a waiting list. You will be notified if spaces become available.' );
+                $this->_waitlistMsg = $wait_list_msg;
+                $this->set('waitlistMsg', $this->_waitlistMsg);
+                $this->assign('allowWaitlist', $this->_allowWaitlist );
+            }
+            else{
+                $event_full_text = $eventFull ? $eventFull : ts('This event is currently full.');
+                $this->set('eventFullText', $event_full_text);
+                $this->assign('eventFullText', $event_full_text);
+            }
+        }
+        $this->set('isEventFull', $this->_isEventFull);
+        $this->set('allowWaitlist', $this->_allowWaitlist);
+    }
 }
 
 

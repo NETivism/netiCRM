@@ -991,7 +991,7 @@ function civicrm_page_get_cache(){
 
       // check event full
       $left = CRM_Event_BAO_Participant::eventFull($event->id, TRUE);
-      if(empty($left)){
+      if(!is_numeric($left) && !empty($left)){
         return $cid;
       }
       // check if cache created time overdue or need expire

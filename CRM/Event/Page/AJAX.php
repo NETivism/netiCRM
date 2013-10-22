@@ -155,4 +155,18 @@ WHERE cg.name LIKE 'civicrm_event.amount%'
         echo json_encode( $participantRole );
         CRM_Utils_System::civiExit( );
     } 
+
+    /**
+     * Function to get Event Full or left seat
+     */
+    function eventFull(){
+        $id = $_GET['id'] ? $_GET['id'] : ($_GET['eventId'] ? $_GET['eventId'] : null);
+        $info = array();
+        if(is_numeric($id) && !empty($id)){
+            $seat = CRM_Event_BAO_Participant::eventFull($id, TRUE);
+            $info['seat'] = $seat;
+        }
+        echo json_encode( $info );
+        CRM_Utils_System::civiExit( );
+    }
 }

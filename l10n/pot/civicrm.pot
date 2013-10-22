@@ -44676,3 +44676,15 @@ msgstr ""
 #: templates/CRM/Admin/Form/Setting/Receipt.tpl
 msgid "When your serial code save in another field, use this to select the field."
 msgstr ""
+
+#: templates/CRM/Event/Form/Registration/Register.tpl
+msgid "Update per minute."
+msgstr ""
+
+#: templats/CRM/common/Widget.tpl
+msgid "Additional Participant"
+msgstr ""
+
+#: templates/CRM/Event/Form/Registration/Process.tpl
+msgid "Until to the last step, your registeration is not complete and we won't reserve any spaces for your registeration."
+msgstr ""

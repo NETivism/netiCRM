@@ -156,9 +156,12 @@ class CRM_Core_Payment_GWIPN extends CRM_Core_Payment_BaseIPN {
   }
 
   // Greenworld check 
-  function gwEcpayCheck($i){
+  function gwEcpayCheck($i, &$objects){
     $serial = $i['process_date'].$i['process_time'].$i['gwsr'];
-    $response = file("https://ecpay.com.tw/g_recheck.php?key={$i['rech_key']}&serial={$serial}&amt={$i['amount']}");
+    $url_site = self::$payment_processor['url_site'];
+    preg_match('/^https?:\/\/[^\/]+/i', $url_site, $matches);
+    $base_url_site = reset($matches);
+    $response = file("$base_url_site/g_recheck.php?key={$i['rech_key']}&serial={$serial}&amt={$i['amount']}");
     parse_str($response[0]);
     if($valid==1){
       return TRUE;
@@ -221,7 +224,7 @@ class CRM_Core_Payment_GWIPN extends CRM_Core_Payment_BaseIPN {
     }
     // credit card validation
     else{
-      if(! $this->gwEcpayCheck($input) ){
+      if(! $this->gwEcpayCheck($input, $objects) ){
         watchdog("civicrm_gw", "Checksum Error" );
         $note .= ts("Failuare: Transaction number and system response number doesn't match. Please contact us for further assistant.")."\n";
         $this->failed( $objects, $transaction );
