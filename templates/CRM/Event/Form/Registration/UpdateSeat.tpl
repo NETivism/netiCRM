@@ -1,3 +1,4 @@
+{if $event.max_participants}
 {literal} 
 <script type="text/javascript">
  var updateSeat = function(){
@@ -29,3 +30,4 @@
   setInterval('updateSeat()', 60000);
 </script>
 {/literal} 
+{/if}
