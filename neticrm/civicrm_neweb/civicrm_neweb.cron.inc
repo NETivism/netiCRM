@@ -253,6 +253,7 @@ function civicrm_neweb_process_transaction($is_test, $now = NULL, $pid){
           unset($contribution->receive_date);
           unset($contribution->trxn_id);
           unset($contribution->invoice_id);
+          unset($contribution->receipt_id);
           $contribution->receive_date = date('YmdHis', $now);
           $contribution->created_date = date('YmdHis', $now);
           $contribution->trxn_id = $t['ORGORDERNUMBER'];
