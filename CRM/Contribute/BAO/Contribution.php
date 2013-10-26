@@ -1901,7 +1901,7 @@ SELECT source_contact_id
         return $html;
     }
 
-    static function genReceiptID(&$contrib, $save = TRUE, $is_online = FALSE){
+    static function genReceiptID(&$contrib, $save = TRUE, $is_online = FALSE, $reset = FALSE){
       if(is_numeric($contrib)){
         $id = $contrib;
         $contribution = new CRM_Contribute_DAO_Contribution( );
@@ -1928,6 +1928,9 @@ SELECT source_contact_id
         if(empty($contribution->$n) && $contribution->id){
           $contribution->$n = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $contribution->id, $n, 'id');
         }
+      }
+      if($reset){
+        $contribution->receipt_id = NULL;
       }
 
       // have receipt date? completed? already have receipt id?

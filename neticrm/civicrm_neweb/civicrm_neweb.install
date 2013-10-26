@@ -255,3 +255,47 @@ function civicrm_neweb_update_6108(){
   ));
   return $ret;
 }
+
+function civicrm_neweb_update_6109(){
+  $ret = $updated = array();
+  $date_field = array('created_date', 'receive_date', 'receipt_date', 'cancel_date', 'thankyou_date');
+  civicrm_initialize();
+  $query = CRM_Core_DAO::executeQuery("SELECT count(id) as counter, group_concat(id) as ids, group_concat(receipt_id) as receipt_ids FROM civicrm_contribution where receipt_id IS NOT NULL AND receipt_id != '' group by receipt_id having count(id) > 1");
+  while($query->fetch()){
+    $ids = $receipt_ids = array();
+    $ids = explode(',', $query->ids);
+    $receipt_ids = explode(',', $query->receipt_ids);
+    foreach($ids as $k => $id){
+      // skip first
+      if(!$k) continue;
+      // fix following
+      $c =& new CRM_Contribute_DAO_Contribution();
+      $c->id = $id;
+      $c->find(true);
+      // clear duplicate
+      $c->receipt_id = NULL;
+
+      // re-calculate receipt_id for correct month
+      $receipt_id = CRM_Contribute_BAO_Contribution::genReceiptID($c, FALSE, TRUE, TRUE);
+      if($receipt_id){
+        $c->receipt_id = $receipt_id;
+      }
+      else{
+        $c->receipt_id = 'null';
+      }
+      foreach($date_field as $f){
+        if(!empty($c->{$f}) && $c->{$f} !== 'null'){
+          $c->{$f} = CRM_Utils_Date::isoToMysql($c->{$f});
+        }
+        else{
+          $c->{$f} = 'null';
+        }
+      }
+      $c->save();
+      $updated[] = $id;
+    }
+  }
+
+  $ret['#abort'] = array('success' => TRUE, 'query' => implode(',', $updated));
+  return $ret;
+}
