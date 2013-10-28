@@ -4,7 +4,7 @@
  var updateSeat = function(){
     cj.ajax({
       type:'GET',
-      url:'/civicrm/ajax/eventFull?id=16',
+      url:'/civicrm/ajax/eventFull?id={/literal}{$event.id}{literal}',
       dataType:'json'
     }).done(function(r) {
       if(r.seat > 0){
