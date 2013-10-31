@@ -5199,7 +5199,7 @@ VALUES
     ('New',       '新增', 'join_date', null, null,'join_date','month',3, 1, 0, 1, 0, 1, 0),
     ('Current',   '正常', 'start_date', null, null,'end_date', null, null, 1, 0, 2, 1, 1, 0),
     ('Grace',     '寬限', 'end_date', null, null,'end_date','month', 1, 1, 0, 3, 0, 1, 0),
-    ('Expired',   '已清除', 'end_date', 'month', 1, null, null, null, 0, 0, 4, 0, 1, 0),
+    ('Expired',   '已過期', 'end_date', 'month', 1, null, null, null, 0, 0, 4, 0, 1, 0),
     ('Pending',   '待處理', 'join_date', null, null,'join_date',null,null, 0, 0, 5, 0, 1, 1),
     ('Cancelled', '已取消', 'join_date', null, null,'join_date',null,null, 0, 0, 6, 0, 1, 0),
     ('Deceased',  '已故', null, null, null, null, null, null, 0, 1, 7, 0, 1, 1);
@@ -5588,7 +5588,7 @@ INSERT INTO civicrm_participant_status_type
   (9,  'Pending from waitlist',               '待處理-在候補名單中',               'Pending',  1,           0,         1,          9,      2            ),
   (10, 'Pending from approval',               '待處理-已審核通過',               'Pending',  1,           0,         1,          10,     2            ),
   (11, 'Rejected',                            '已拒絕',                            'Negative', 1,           0,         0,          11,     2            ),
-  (12, 'Expired',                             '已清除',                             'Negative', 1,           1,         0,          12,     2            );
+  (12, 'Expired',                             '已過期',                             'Negative', 1,           1,         0,          12,     2            );
 
 INSERT INTO `civicrm_contact_type`
   (`id`, `name`, `label`,`image_URL`, `parent_id`, `is_active`,`is_reserved`)
