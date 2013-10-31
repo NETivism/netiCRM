@@ -193,7 +193,7 @@ function civicrm_import_group_tag($id, $import, $type, $main_id = 'contact_id'){
             continue;
           }
           else{
-            $exists[$text] = $res['result']; 
+            $exists[$text] = $res['result']->id; 
           
           }
         }
