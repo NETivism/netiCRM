@@ -40,7 +40,7 @@
  */
 class CRM_Export_BAO_Export
 {
-    const EXPORT_ROW_COUNT = 10000;
+    const EXPORT_ROW_COUNT = 300;
 
     /**
      * Function to get the list the export fields
@@ -848,7 +848,8 @@ class CRM_Export_BAO_Export
      */
     function getExportFileName( $output = 'csv', $mode = CRM_Export_Form_Select::CONTACT_EXPORT ) 
     {
-        return "civicrm_export_".$_SERVER['REQUEST_TIME'];
+        $rand = substr(md5(microtime(true)), 0, 4);
+        return "civicrm_export_".$_SERVER['REQUEST_TIME'].$rand;
         switch ( $mode ) {
         case CRM_Export_Form_Select::CONTACT_EXPORT : 
             return ts('CiviCRM Contact Search');
@@ -906,7 +907,7 @@ class CRM_Export_BAO_Export
                      ! empty( $saveFileName ) ) {
                     header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
                     header('Content-Description: File Transfer');
-                    header('Content-Type: text/csv');
+                    header('Content-Type: application/vnd.ms-excel');
                     header('Content-Length: ' . filesize( $errorFileName ) );
                     header('Content-Disposition: attachment; filename=' . $saveFileName );
                     
@@ -1330,7 +1331,9 @@ GROUP BY civicrm_primary_id ";
 
     static function writeCSVFromTable( $exportTempTable, $headerRows, $sqlColumns, $exportMode )
     {
-        $writeHeader = true;
+        $writeHeader = TRUE;
+        $saveFile = TRUE;
+        $fileName = self::getExportFileName( 'csv', $exportMode );
         $offset = 0;
         $limit  = self::EXPORT_ROW_COUNT;
 
@@ -1340,9 +1343,7 @@ FROM   $exportTempTable
 ";
         require_once 'CRM/Core/Report/Excel.php';
         while ( 1 ) {
-            $limitQuery = $query . "
-LIMIT $offset, $limit
-";
+            $limitQuery = $query . " LIMIT $offset, $limit";
             $dao = CRM_Core_DAO::executeQuery( $limitQuery );
            
             if ( $dao->N <= 0 ) {
@@ -1359,11 +1360,13 @@ LIMIT $offset, $limit
 
                 $componentDetails[] = $row;
             }
-            CRM_Core_Report_Excel::writeExcelFile( self::getExportFileName( 'csv', $exportMode ), $headerRows,
-                                                 $componentDetails, null, $writeHeader );
-            $writeHeader = false;
+            $result = CRM_Core_Report_Excel::writeCSVFile($fileName, $headerRows, $componentDetails, null, $writeHeader, $saveFile);
+            $writeHeader = FALSE;
+            file_put_contents('/tmp/'.$fileName, $result, FILE_APPEND);
+            $result = NULL;
             $offset += $limit;
         }
+        CRM_Core_Report_Excel::writeExcelFile('/tmp/'.$fileName);
     }
     
     /**

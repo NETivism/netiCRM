@@ -178,35 +178,33 @@ class CRM_Core_Report_Excel {
         echo "</tbody></table>";
     } 
 
-    function writeCSVFile( $fileName, &$header, &$rows, $titleHeader = null, $outputHeader = true ) {
-        if ( $outputHeader ) {
-            require_once 'CRM/Utils/System.php';
-            CRM_Utils_System::download( CRM_Utils_String::munge( $fileName ),
-                                        'text/x-csv',
-                                        CRM_Core_DAO::$_nullObject,
-                                        'csv',
-                                        false );
-        }
+    function writeCSVFile( $fileName, &$header, &$rows, $titleHeader = null, $outputHeader = true, $saveFile = null ) {
+      if ( $outputHeader && !$saveFile ) {
+        CRM_Utils_System::download(CRM_Utils_String::munge($fileName),
+          'text/x-csv',
+          CRM_Core_DAO::$_nullObject,
+          'csv',
+          FALSE
+        );
+      }
 
-        if ( ! empty( $rows ) ) {
-            self::makeCSVTable( $header, $rows, $titleHeader, true, $outputHeader );
-        }
+      if (!empty($rows)) {
+        $print = true;
+        if( $saveFile )
+          $print = 0;
+        return self::makeCSVTable( $header, $rows, $titleHeader, $print, $outputHeader );
+      }
     }
 
-    function writeExcelFile( $fileName, &$header, &$rows, $titleHeader = null, $outputHeader = true, $return = FALSE){
-        if ( ! empty( $rows ) ) {
-            ob_start();
-            self::makeCSVTable( $header, $rows, $titleHeader, true, $outputHeader );
-            $output = ob_get_contents();
-            ob_end_clean();
+    function writeExcelFile($file, $return = NULL){
+        if(!file_exists($file)){
+          return;
         }
-        // convert csv output to excel
+        $filename = basename($file);
         require_once 'packages/PHPExcel/PHPExcel.php';
         require_once 'packages/PHPExcel/PHPExcel/IOFactory.php';
-        $tmp_filename = tempnam("/tmp", "csv");
-        file_put_contents($tmp_filename, $output);
         $objReader = PHPExcel_IOFactory::createReader('CSV');
-        $objPHPExcel = $objReader->load($tmp_filename);
+        $objPHPExcel = $objReader->load($file);
         $sheet = $objPHPExcel->getActiveSheet();
         $highest_column = $sheet->getHighestColumn();
         $highest_row = $sheet->getHighestRow();
@@ -214,11 +212,11 @@ class CRM_Core_Report_Excel {
 
         if($return){
           $writer = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
-          $writer->save($fileName);
+          $writer->save($file);
           return TRUE;
         }
         else{
-          CRM_Utils_System::download( CRM_Utils_String::munge( $fileName ),
+          CRM_Utils_System::download( CRM_Utils_String::munge($filename),
                                       'application/vnd.ms-excel',
                                       CRM_Core_DAO::$_nullObject,
                                       'xls',

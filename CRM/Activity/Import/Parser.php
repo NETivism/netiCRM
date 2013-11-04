@@ -621,23 +621,10 @@ abstract class CRM_Activity_Import_Parser
      */
     static function exportCSV($fileName, $header, $data) 
     {
-        $output = array();
-        $fd = fopen($fileName, 'w');
-
-        foreach ($header as $key => $value) {
-            $header[$key] = "\"$value\"";
-        }
-        $config = CRM_Core_Config::singleton( );
-        $output[] = implode($config->fieldSeparator, $header);
-
-        foreach ($data as $datum) {
-            foreach ($datum as $key => $value) {
-                $datum[$key] = "\"$value\"";
-            }
-            $output[] = implode($config->fieldSeparator, $datum);
-        }
-        fwrite($fd, implode("\n", $output));
-        fclose($fd);
+        $fileName = str_replace("csv", "xls", $fileName);
+        $result = CRM_Core_Report_Excel::writeCSVFile($fileName, $header, $data, null, $writeHeader = TRUE, $saveFile = TRUE);
+        file_put_contents($fileName, $result);
+        CRM_Core_Report_Excel::writeExcelFile($fileName, TRUE);
     }
 
     /** 

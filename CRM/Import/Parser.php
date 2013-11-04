@@ -903,7 +903,10 @@ abstract class CRM_Import_Parser {
         }
         $data = $errorValues;
 
-        CRM_Core_Report_Excel::writeExcelFile( str_replace("csv", "xls", $fileName), $header, $data, null, true, TRUE);
+        $fileName = str_replace("csv", "xls", $fileName);
+        $result = CRM_Core_Report_Excel::writeCSVFile($fileName, $header, $data, null, $writeHeader = TRUE, $saveFile = TRUE);
+        file_put_contents($fileName, $result);
+        CRM_Core_Report_Excel::writeExcelFile($fileName, TRUE);
         
         /*
         $output = array();

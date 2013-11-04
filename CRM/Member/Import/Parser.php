@@ -645,32 +645,10 @@ abstract class CRM_Member_Import_Parser {
      * @access public
      */
     static function exportCSV($fileName, $header, $data) {
-        $output = array();
-        $fd = fopen($fileName, 'w');
-
-        foreach ($header as $key => $value) {
-            $header[$key] = "\"$value\"";
-        }
-        $config = CRM_Core_Config::singleton( );
-        $output[] = implode($config->fieldSeparator, $header);
-
-        foreach ($data as $datum) {
-            foreach ($datum as $key => $value) {
-                if ( is_array($value) ) {
-                    foreach($value[0] as $k1=>$v1) {
-                        if ($k1 == 'location_type_id') {
-                            continue;
-                        }
-                        $datum[$k1] =  $v1;
-                    }
-                } else {
-                    $datum[$key] = "\"$value\"";
-                }
-            }
-            $output[] = implode($config->fieldSeparator, $datum);
-        }
-        fwrite($fd, implode("\n", $output));
-        fclose($fd);
+        $fileName = str_replace("csv", "xls", $fileName);
+        $result = CRM_Core_Report_Excel::writeCSVFile($fileName, $header, $data, null, $writeHeader = TRUE, $saveFile = TRUE);
+        file_put_contents($fileName, $result);
+        CRM_Core_Report_Excel::writeExcelFile($fileName, TRUE);
     }
 
     /** 
