@@ -960,7 +960,7 @@ class CRM_Export_BAO_Export
         }
 
         require_once 'CRM/Core/Report/Excel.php';
-        CRM_Core_Report_Excel::writeExcelFile( self::getExportFileName( ), $header, $rows );
+        CRM_Core_Report_Excel::writeCSVFile(self::getExportFileName( ), $header, $rows);
         CRM_Utils_System::civiExit( );
     }
 
@@ -1341,6 +1341,7 @@ GROUP BY civicrm_primary_id ";
 SELECT *
 FROM   $exportTempTable
 ";
+        $total_row = CRM_Core_DAO::singleValueQuery("SELECT count(*) FROM $exportTempTable");
         require_once 'CRM/Core/Report/Excel.php';
         while ( 1 ) {
             $limitQuery = $query . " LIMIT $offset, $limit";
@@ -1360,13 +1361,20 @@ FROM   $exportTempTable
 
                 $componentDetails[] = $row;
             }
-            $result = CRM_Core_Report_Excel::writeCSVFile($fileName, $headerRows, $componentDetails, null, $writeHeader, $saveFile);
-            $writeHeader = FALSE;
-            file_put_contents('/tmp/'.$fileName, $result, FILE_APPEND);
-            $result = NULL;
+            if($total_row > 5000){ // only support csv to prevent memory leak
+              $result = CRM_Core_Report_Excel::writeCSVFile($fileName, $headerRows, $componentDetails, null, $writeHeader);
+            }
+            else{
+              $result = CRM_Core_Report_Excel::writeCSVFile($fileName, $headerRows, $componentDetails, null, $writeHeader, $saveFile);
+              $writeHeader = FALSE;
+              file_put_contents('/tmp/'.$fileName, $result, FILE_APPEND);
+              $result = NULL;
+            }
             $offset += $limit;
         }
-        CRM_Core_Report_Excel::writeExcelFile('/tmp/'.$fileName);
+        if($total_row <= 5000){
+          CRM_Core_Report_Excel::writeExcelFile('/tmp/'.$fileName);
+        }
     }
     
     /**
