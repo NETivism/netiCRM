@@ -441,6 +441,9 @@ class CRM_Export_BAO_Export
         if ( $queryMode & CRM_Contact_BAO_Query::MODE_ACTIVITY ) {
             $groupBy = " GROUP BY civicrm_activity.id ";  
         }
+        if ( $queryMode & CRM_Contact_BAO_Query::MODE_MEMBER) {
+            $groupBy = " GROUP BY civicrm_membership.id ";  
+        }
         $queryString .= $groupBy;
         if ( $order ) {
             list( $field, $dir ) = explode( ' ', $order, 2 );
