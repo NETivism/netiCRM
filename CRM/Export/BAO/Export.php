@@ -1363,6 +1363,7 @@ FROM   $exportTempTable
             }
             if($total_row > 5000){ // only support csv to prevent memory leak
               $result = CRM_Core_Report_Excel::writeCSVFile($fileName, $headerRows, $componentDetails, null, $writeHeader);
+              $writeHeader = FALSE;
             }
             else{
               $result = CRM_Core_Report_Excel::writeCSVFile($fileName, $headerRows, $componentDetails, null, $writeHeader, $saveFile);
