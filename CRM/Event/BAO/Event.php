@@ -909,6 +909,7 @@ WHERE civicrm_event.is_active = 1
             foreach ( $groupTree as $groupID => $group ) {
                 $table[$groupTree[$groupID]['table_name']] = array( 'entity_id');
                 foreach ( $group['fields'] as $fieldID => $field ) {
+                    if($field['data_type'] == 'File') continue;
                     $table[$groupTree[$groupID]['table_name']][] = $groupTree[$groupID]['fields'][$fieldID]['column_name'];
                 }
             }
@@ -922,7 +923,7 @@ WHERE civicrm_event.is_active = 1
                 $query = $insert . $select . $from . $where;
                 $dao = CRM_Core_DAO::executeQuery( $query, CRM_Core_DAO::$_nullArray ); 
             }
-        }   
+        }
         $copyEvent->is_active = 0;
         $copyEvent->save( );
 
