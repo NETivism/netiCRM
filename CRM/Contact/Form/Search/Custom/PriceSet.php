@@ -44,6 +44,8 @@ class CRM_Contact_Form_Search_Custom_PriceSet
 
     protected $_tableName = null;
 
+    protected $_pstatus = null;
+
     function __construct( &$formValues ) {
         parent::__construct( $formValues );
 
@@ -53,6 +55,7 @@ class CRM_Contact_Form_Search_Custom_PriceSet
         $this->setColumns( );
 
         if ( $this->_eventID ) {
+            $this->_pstatus = CRM_Event_PseudoConstant::participantStatus(null, null, 'label');
             $this->buildTempTable( );
         
             $this->fillTable( );
@@ -83,7 +86,8 @@ CREATE TEMPORARY TABLE {$this->_tableName} (
         foreach ( $this->_columns as $dontCare => $fieldName ) {
             if ( in_array( $fieldName, array( 'contact_id',
                                               'participant_id',
-                                              'display_name' ) ) ) {
+                                              'display_name',
+                                              ) ) ) {
                 continue;
             }
             $sql .= "{$fieldName} int default 0,\n";
@@ -102,8 +106,8 @@ UNIQUE INDEX unique_participant_id ( participant_id )
     function fillTable( ) {
         $sql = "
 REPLACE INTO {$this->_tableName}
-( contact_id, participant_id )
-SELECT c.id, p.id
+( contact_id, participant_id, status_id )
+SELECT c.id, p.id, p.status_id
 FROM   civicrm_contact c,
        civicrm_participant p
 WHERE  p.contact_id = c.id
@@ -220,6 +224,7 @@ AND    p.entity_id    = e.id
     function setColumns( ) {
         $this->_columns = array( ts('Contact Id')      => 'contact_id'    ,
                                  ts('Participant Id' ) => 'participant_id',
+                                 ts('Status' )         => 'status_id',
                                  ts('Name')            => 'display_name'  );
 
         if ( ! $this->_eventID ) {
@@ -296,6 +301,7 @@ INNER JOIN {$this->_tableName} tempTable ON ( tempTable.contact_id = contact_a.i
     }
 
     function alterRow( &$row ) {
+      $row['status_id'] = $this->_pstatus[$row['status_id']]; 
     }
     
     function setTitle( $title ) {
