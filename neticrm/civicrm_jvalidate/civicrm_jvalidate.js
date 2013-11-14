@@ -148,8 +148,14 @@ $(document).ready(function(){
             error.css({"color":"#E55","padding-left":"10px","display":"block"});
             error.appendTo($(element).parent());
           }
-          else if (element.is(":radio") || element.is(":checkbox")) {
+          else if (element.is(":radio")) {
             var $c = element.parent();
+            $c.find("label.error").remove();
+            error.css({"color":"#E55","padding-left":"10px","display":"block"});
+            $c.prepend(error);
+          }
+          else if (element.is(":checkbox")) {
+            var $c = element.parents('div.ckbox');
             $c.find("label.error").remove();
             error.css({"color":"#E55","padding-left":"10px","display":"block"});
             $c.prepend(error);
@@ -192,7 +198,7 @@ $(document).ready(function(){
           });
         });
         $ckbox.find("input:checkbox").click(function(){
-          var $p = $(this).parent("div.ckbox");
+          var $p = $(this).parents("div.ckbox");
           $p.find("label.error").remove();
           $(this).valid();
         });

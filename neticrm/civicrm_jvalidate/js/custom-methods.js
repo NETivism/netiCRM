@@ -1,5 +1,6 @@
 $.validator.addMethod("ckbox", function(value, element, param) {
-  var s = $(element).parent().find("input:checkbox:checked").length;
+  var p = $(element).parents('div.ckbox');
+  var s = p.find("input:checkbox:checked").length;
   if(s > 0){
     return true;
   }
