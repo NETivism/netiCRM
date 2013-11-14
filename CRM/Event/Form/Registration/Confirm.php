@@ -406,11 +406,13 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration
         $errors = array( );
         $seat = CRM_Event_BAO_Participant::eventFull($self->_eventId, TRUE);
         $part = count($self->_part);
-        if(empty($seat)){
-          $errors['qfKey'] = $self->_values['event']['event_full_text'] ? $self->_values['event']['event_full_text'] : ts('This event is currently full.');
-        }
-        elseif($seat < $part){
-          $errors['qfKey'] = ts('It looks like you are now registering a group of %1 participants. The event has %2 available spaces (you will not be wait listed). Please go back to the main registration page and reduce the number of additional people. You will also need to complete payment information.', array( 1 => $part, 2 => $seat));
+        if(!is_null($seat)){
+          if($seat === 0){
+            $errors['qfKey'] = $self->_values['event']['event_full_text'] ? $self->_values['event']['event_full_text'] : ts('This event is currently full.');
+          }
+          elseif($seat < $part){
+            $errors['qfKey'] = ts('It looks like you are now registering a group of %1 participants. The event has %2 available spaces (you will not be wait listed). Please go back to the main registration page and reduce the number of additional people. You will also need to complete payment information.', array( 1 => $part, 2 => $seat));
+          }
         }
         return $errors;
     }
