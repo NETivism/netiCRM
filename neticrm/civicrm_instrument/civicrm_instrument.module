@@ -77,6 +77,12 @@ function civicrm_instrument_civicrm_buildForm($form_name, &$form){
       else{
         $form->addElement('hidden', 'civicrm_instrument_id', 0);
         if($is_multiple) {
+          if(!empty($form->_submitValues['civicrm_instrument_id'])){
+            $default = '$("input[name=civicrm_instrument_id_dummy][value='.$form->_submitValues['civicrm_instrument_id'].']").click();';
+          }
+          else{
+            $default = '';
+          }
           $js = '
           $(document).ready(function(){
             $("input[name=payment_processor]").live("click", function(){
@@ -85,6 +91,7 @@ function civicrm_instrument_civicrm_buildForm($form_name, &$form){
             $("input[name=civicrm_instrument_id_dummy]").live("click", function(){
               $("input[name=civicrm_instrument_id]").val($(this).val());
             });
+            '.$default.'
           });
 ';
           drupal_add_js($js, 'inline');
