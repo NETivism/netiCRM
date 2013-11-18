@@ -198,7 +198,7 @@ function _civicrm_gw_ecbank(&$vars, $component, &$payment_processor, $instrument
     }
     // send mail
     if(empty($_SESSION['CiviCRM'][$form_key]['params']['sent'])){
-      $values['thankyou_text'] .= '<div>如果您沒有看到繳費資訊，點此<strong>開啟'.l('付款資訊', $redirect_vars['#popup'].'?width=900&height=600&iframe=true', array('attributes' => array('class' => 'colorbox-load', 'target' => '_blank'))).'</strong></div>';
+      $values['thankyou_text'] .= '<div>如果您沒有看到繳費資訊，點此<strong>開啟'.l('付款資訊', $redirect_vars['#popup'].'&width=900&height=600&iframe=true', array('attributes' => array('class' => 'colorbox-load', 'target' => '_blank'))).'</strong></div>';
       $p['user'] = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $vars['contactID'], 'display_name');
 
       // prepare template parameter
