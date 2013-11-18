@@ -38,7 +38,6 @@ See https://neticrm.tw/resources
 
 7. Developer Resources
 --------------
-For CiviCRM, you can follow information on http://civicrm.org/participate/developer
-For netiCRM, please contact us on http://civicrm.tw or http://neticrm.tw
+For netiCRM, you can read https://neticrm.tw/developer
 
 
