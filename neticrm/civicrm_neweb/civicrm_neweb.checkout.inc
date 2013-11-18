@@ -182,13 +182,13 @@ function _civicrm_neweb_form_redirect($redirect_params, $instrument){
       $js = '
 function print_redirect(){
   // creating the "newebresult" window with custom features prior to submitting the form
-  window.open("", "newebresult", "scrollbars=yes,menubar=no,height=600,width=800,resizable=yes,toolbar=no,status=no,left=150,top=150");
+  // window.open("", "newebresult", "scrollbars=yes,menubar=no,height=600,width=800,resizable=yes,toolbar=no,status=no,left=150,top=150");
   document.forms.print.submit();
-  window.location = "'.$redirect_params['nexturl'].'";
+  // window.location = "'.$redirect_params['nexturl'].'";
 }
       ';
 
-      $o .= '<form action="'.$redirect_params['#action'].'" name="print" method="post" id="redirect-form" target="newebresult">';
+      $o .= '<form action="'.$redirect_params['#action'].'" name="print" method="post" id="redirect-form">';
       foreach($redirect_params as $k=>$p){
         if($k[0] != '#'){
           $o .= '<input type="hidden" name="'.$k.'" value="'.$p.'" />';
