@@ -38,6 +38,6 @@ See https://neticrm.tw/resources
 
 7. Developer Resources
 --------------
-For netiCRM, you can read https://neticrm.tw/developer
+For netiCRM, you can read document at https://neticrm.tw/about/developer
 
 
