@@ -405,9 +405,10 @@ class CRM_Utils_System_Drupal {
           return str_replace($_SERVER['HTTP_HOST'].$base_path, $_SERVER['HTTP_HOST'].$base_path.$language->prefix, $url);
         }
       }
-      if($removeLanguagePart){
+      if($removeLanguagePart && $language->prefix){
         return str_replace('/'.$language->prefix.'/', '/', $url);
       }
+      return $url;
     }
 
 }
