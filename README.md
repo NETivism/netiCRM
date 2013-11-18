@@ -41,4 +41,8 @@ See https://neticrm.tw/resources
 For netiCRM, you can read document:
 https://neticrm.tw/about/developer
 
-
+8. Translation
+--------------
+We will merge string into CiviCRM regularly.
+For now if you would like to join translation project, you may see this public translation page:
+https://www.transifex.com/projects/p/neticrm/
