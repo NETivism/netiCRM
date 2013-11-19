@@ -75,7 +75,6 @@ function civicrm_instrument_civicrm_buildForm($form_name, &$form){
         return;
       }
       else{
-        $form->addElement('hidden', 'civicrm_instrument_id', 0);
         if($is_multiple) {
           if(!empty($form->_submitValues['civicrm_instrument_id'])){
             $default = '$("input[name=civicrm_instrument_id_dummy][value='.$form->_submitValues['civicrm_instrument_id'].']").click();';
@@ -98,8 +97,11 @@ function civicrm_instrument_civicrm_buildForm($form_name, &$form){
         }
         elseif(!empty($form->_paymentProcessor)){
           // single processor
-          civicrm_instrument_attach_processor($form, $all_instruments, $active_instruments);
+          if(count($active_instruments) > 1){
+            civicrm_instrument_attach_processor($form, $all_instruments, $active_instruments);
+          }
         }
+        $form->addElement('hidden', 'civicrm_instrument_id', reset($active_instruments));
       }
       break;
   }
