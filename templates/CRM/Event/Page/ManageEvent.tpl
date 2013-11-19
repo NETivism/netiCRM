@@ -87,6 +87,8 @@
         	    <div class=crm-event-participants>
         	    <span id="event-participants-{$row.id}" class="btn-slide">{ts}Participants{/ts}
         	    	<ul class="panel" id="panel_participants_{$row.id}">
+        		    	<li><a title="All" class="action-item-wrap" href="{crmURL p='civicrm/event/search' q="reset=1&force=1&event=`$row.id`"}">{ts}All{/ts}</a>
+                </li>
         		    {if $findParticipants.statusCounted}
         		    	<li><a title="Counted" class="action-item-wrap" href="{crmURL p='civicrm/event/search' q="reset=1&force=1&status=true&event=`$row.id`"}">{$findParticipants.statusCounted}</a>
         			</li>

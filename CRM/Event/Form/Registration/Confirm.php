@@ -411,7 +411,12 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration
             $errors['qfKey'] = $self->_values['event']['event_full_text'] ? $self->_values['event']['event_full_text'] : ts('This event is currently full.');
           }
           elseif($seat < $part){
-            $errors['qfKey'] = ts('It looks like you are now registering a group of %1 participants. The event has %2 available spaces (you will not be wait listed). Please go back to the main registration page and reduce the number of additional people. You will also need to complete payment information.', array( 1 => $part, 2 => $seat));
+            if($self->_values['event']['has_waitlist']){
+              // civicrm will passed these attendee to waitlist (because over the seat)
+            } 
+            else{                                                            
+              $errors['qfKey'] = ts('It looks like you are now registering a group of %1 participants. The event has %2 available spaces (you will not be wait listed). Please go back to the main registration page and reduce the number of additional people. You will also need to complete payment information.', array( 1 => $part, 2 => $seat));
+            }          
           }
         }
         return $errors;
@@ -480,7 +485,25 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration
                 }
             }
         }
-                
+
+        // if waiting is enabled
+        if ( !$this->_allowConfirmation && is_numeric( $this->_availableRegistrations ) ) {
+            $this->_allowWaitlist = false;
+            //get the current page count.
+            $currentCount = self::getParticipantCount( $this, $params );
+            if ( is_numeric( $currentCount ) ) {
+              $totalParticipants = $currentCount;
+            }
+            else{
+              $totalParticipants = 0;
+            }
+            if ( CRM_Utils_Array::value( 'has_waitlist', $this->_values['event'] ) &&
+                 $totalParticipants > $this->_availableRegistrations ) {
+                $this->_allowWaitlist = true;
+            }
+            $this->set( 'allowWaitlist', $this->_allowWaitlist );
+        }
+
         $payment = $registerByID = $primaryCurrencyID = $contribution = null;
         foreach ( $params as $key => $value ) {
             $this->fixLocationFields( $value, $fields );
@@ -710,8 +733,7 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration
                 
         // for Transfer checkout.
         require_once "CRM/Event/BAO/Event.php";
-        if ( ( $this->_contributeMode == 'checkout' ||
-               $this->_contributeMode == 'notify'   ) && 
+        if ( ( $this->_contributeMode == 'checkout' || $this->_contributeMode == 'notify'   ) && 
              ! CRM_Utils_Array::value( 'is_pay_later', $params[0] ) && 
              ! $this->_allowWaitlist && !$this->_requireApproval &&
              $this->_totalAmount > 0 ) {

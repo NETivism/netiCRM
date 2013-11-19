@@ -1208,7 +1208,7 @@ WHERE  v.option_group_id = g.id
 
 
     function isEventFull(){
-        $eventFull = CRM_Event_BAO_Participant::eventFull( $this->_eventId );
+        $eventFull = CRM_Event_BAO_Participant::eventFull( $this->_eventId); // count with waitlist
         $this->_allowWaitlist = false;
         $this->_isEventFull   = false;
         if ( $eventFull && !$this->_allowConfirmation ) {
