@@ -509,16 +509,10 @@ SELECT username, email
             return false;
         }
 
-        // looks like we created a drupal user, lets make another db call to get the user id!
-        $db_cms = DB::connect($config->userFrameworkDSN);
-        if ( DB::isError( $db_cms ) ) { 
-            die( "Cannot connect to UF db via $dsn, " . $db_cms->getMessage( ) ); 
-        }
-
         //Fetch id of newly added user
-        $id_sql   = "SELECT uid FROM {$config->userFrameworkUsersTableName} where name = '{$params['cms_name']}'";
-        $id_query = $db_cms->query( $id_sql );
-        $id_row   = $id_query->fetchRow( DB_FETCHMODE_ASSOC ) ;
+        $id_sql   = "SELECT uid FROM {$config->userFrameworkUsersTableName} where name = '%s'";
+        $id_query = db_query( $id_sql, $params['cms_name']);
+        $id_row   = db_fetch_array($id_query);
         return $id_row['uid'];
     }
 

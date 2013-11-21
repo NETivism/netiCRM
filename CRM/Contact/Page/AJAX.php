@@ -550,7 +550,7 @@ WHERE sort_name LIKE '%$name%'";
     static public function checkUserName() 
     {
         $config   = CRM_Core_Config::singleton();
-        $username = trim(htmlentities($_POST['cms_name']));
+        $username = $_POST['cms_name'];
              
         $isDrupal = ucfirst($config->userFramework) == 'Drupal' ? TRUE : FALSE;
         $isJoomla = ucfirst($config->userFramework) == 'Joomla' ? TRUE : FALSE;
