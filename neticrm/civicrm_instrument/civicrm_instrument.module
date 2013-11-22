@@ -77,18 +77,18 @@ function civicrm_instrument_civicrm_buildForm($form_name, &$form){
       else{
         if($is_multiple) {
           if(!empty($form->_submitValues['civicrm_instrument_id'])){
-            $default = '$("input[name=civicrm_instrument_id_dummy][value='.$form->_submitValues['civicrm_instrument_id'].']").click();';
+            $default = 'cj("input[name=civicrm_instrument_id_dummy][value='.$form->_submitValues['civicrm_instrument_id'].']").click();';
           }
           else{
             $default = '';
           }
           $js = '
-          $(document).ready(function(){
-            $("input[name=payment_processor]").live("click", function(){
-              $("input[name=civicrm_instrument_id]").val("");
+          cj(document).ready(function(){
+            cj("input[name=payment_processor]").live("click", function(){
+              cj("input[name=civicrm_instrument_id]").val("");
             });
-            $("input[name=civicrm_instrument_id_dummy]").live("click", function(){
-              $("input[name=civicrm_instrument_id]").val($(this).val());
+            cj("input[name=civicrm_instrument_id_dummy]").live("click", function(){
+              cj("input[name=civicrm_instrument_id]").val(cj(this).val());
             });
             '.$default.'
           });
