@@ -1231,11 +1231,6 @@ buildEventTypeCustomData( {$this->_eID}, {$this->_eventTypeCustomDataTypeID}, '{
 
         } else {
             $participants = array();
-            // fix note if deleted
-            if ( !$params['note'] ) {
-                $params['note'] = 'null';
-            }
-
             if ( $this->_single ) {
                 if ( $params['role_id'] ) {
                     foreach ( $params['role_id'] as $k => $v ) {

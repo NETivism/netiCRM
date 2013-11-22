@@ -291,7 +291,7 @@ class CRM_Core_BAO_Note extends CRM_Core_DAO_Note
      * @static
      * 
      */
-    static function del( $id ) 
+    static function del( $id, $showStatus = true ) 
     {
         $return   = null;
         $recent   = array( $id );
@@ -314,7 +314,9 @@ class CRM_Core_BAO_Note extends CRM_Core_DAO_Note
         }
         
         $return   = $note->delete( );
-        CRM_Core_Session::setStatus( $status );
+        if ( $showStatus ) {
+            CRM_Core_Session::setStatus( $status );
+        }
         
         // delete the recently created Note
         require_once 'CRM/Utils/Recent.php';

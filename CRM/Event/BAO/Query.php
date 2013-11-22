@@ -452,7 +452,7 @@ class CRM_Event_BAO_Query
 
         case 'participant_note':
             $from .= " $side JOIN civicrm_note ON ( civicrm_note.entity_table = 'civicrm_participant' AND
-                                                        civicrm_participant.id = civicrm_note.entity_id )";
+                                                        civicrm_participant.id = civicrm_note.entity_id AND civicrm_note.note IS NOT NULL)";
             break;
 
         case 'participant_status':
@@ -502,7 +502,7 @@ class CRM_Event_BAO_Query
                                 'participant_id'            => 1,
                                 'participant_status'        => 1,
                                 'participant_role_id'       => 1,
-                                'participant_note'          => 1,
+                                //'participant_note'          => 1,
                                 'participant_register_date' => 1,
                                 'participant_source'        => 1,
                                 'participant_fee_level'     => 1,
