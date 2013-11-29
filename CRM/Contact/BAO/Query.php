@@ -1122,6 +1122,7 @@ class CRM_Contact_BAO_Query {
       if ($this->_useDistinct && !isset($this->_distinctComponentClause)) {
         if (!($this->_mode & CRM_Contact_BAO_Query::MODE_ACTIVITY) && 
             !($this->_mode & CRM_Contact_BAO_Query::MODE_CONTRIBUTE) &&
+            !($this->_mode & CRM_Contact_BAO_Query::MODE_EVENT) &&
             !($this->_mode & CRM_Contact_BAO_Query::MODE_MEMBER)) {
           // CRM-5954
           $this->_select['contact_id'] = 'contact_a.id as contact_id';
