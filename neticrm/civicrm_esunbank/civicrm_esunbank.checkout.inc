@@ -86,6 +86,15 @@ $(document).ready(function(){
       }
     }
     if($component == 'event'){
+      // after saved record, we should modify the status of participant / membership
+      $participant_id = CRM_Core_DAO::getFieldValue('CRM_Event_DAO_ParticipantPayment', $vars['contributionID'], 'participant_id', 'contribution_id');
+      if($participant_id){
+        $pstatus = CRM_Event_PseudoConstant::participantStatus();
+        if($new_pstatus = array_search('Pending from pay later', $pstatus)){
+          CRM_Core_DAO::setFieldValue('CRM_Event_DAO_Participant', $participant_id, 'status_id', $new_pstatus, 'id');
+        }
+      }
+
       if($values['event']['confirm_from_name'] && $values['event']['confirm_from_email']){
         $from = $values['event']['confirm_from_name']. '<'.$values['event']['confirm_from_email'];
       }
