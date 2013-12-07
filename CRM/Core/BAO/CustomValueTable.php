@@ -284,37 +284,39 @@ class CRM_Core_BAO_CustomValueTable
     {
         $cvParams = array( );
         foreach ($params as $fieldID => $param ) {
-            foreach ( $param as $index => $customValue ) {
-                $cvParam = array(
-                                 'entity_table'    => $entityTable,
-                                 'entity_id'       => $entityID,
-                                 'value'           => $customValue['value'],
-                                 'type'            => $customValue['type'],
-                                 'custom_field_id' => $customValue['custom_field_id'],
-                                 'custom_group_id' => $customValue['custom_group_id'],
-                                 'table_name'      => $customValue['table_name'],
-                                 'column_name'     => $customValue['column_name'],
-                                 'is_multiple'     => CRM_Utils_Array::value( 'is_multiple', $customValue ),
-                                 'file_id'         => $customValue['file_id'],
-                                 );
-            
-                // fix Date type to be timestamp, since that is how we store in db
-                if ( $cvParam['type'] == 'Date' ) {
-                    $cvParam['type'] = 'Timestamp';
-                }
+            if(is_array($param)){
+                foreach ( $param as $index => $customValue ) {
+                    $cvParam = array(
+                                     'entity_table'    => $entityTable,
+                                     'entity_id'       => $entityID,
+                                     'value'           => $customValue['value'],
+                                     'type'            => $customValue['type'],
+                                     'custom_field_id' => $customValue['custom_field_id'],
+                                     'custom_group_id' => $customValue['custom_group_id'],
+                                     'table_name'      => $customValue['table_name'],
+                                     'column_name'     => $customValue['column_name'],
+                                     'is_multiple'     => CRM_Utils_Array::value( 'is_multiple', $customValue ),
+                                     'file_id'         => $customValue['file_id'],
+                                     );
+                
+                    // fix Date type to be timestamp, since that is how we store in db
+                    if ( $cvParam['type'] == 'Date' ) {
+                        $cvParam['type'] = 'Timestamp';
+                    }
 
-                if ( CRM_Utils_Array::value( 'id', $customValue ) ) {
-                    $cvParam['id'] = $customValue['id'];
-                }
-                if ( ! array_key_exists( $customValue['table_name'], $cvParams ) ) {
-                    $cvParams[$customValue['table_name']] = array( );
-                }
+                    if ( CRM_Utils_Array::value( 'id', $customValue ) ) {
+                        $cvParam['id'] = $customValue['id'];
+                    }
+                    if ( ! array_key_exists( $customValue['table_name'], $cvParams ) ) {
+                        $cvParams[$customValue['table_name']] = array( );
+                    }
 
-                if ( ! array_key_exists( $index, $cvParams[$customValue['table_name']] ) ) {
-                    $cvParams[$customValue['table_name']][$index] = array( );
-                }
+                    if ( ! array_key_exists( $index, $cvParams[$customValue['table_name']] ) ) {
+                        $cvParams[$customValue['table_name']][$index] = array( );
+                    }
 
-                $cvParams[$customValue['table_name']][$index][] = $cvParam;
+                    $cvParams[$customValue['table_name']][$index][] = $cvParam;
+                }
             }
         }
 

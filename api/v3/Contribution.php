@@ -88,7 +88,7 @@ function civicrm_api3_contribution_create($params) {
  */
 function _civicrm_api3_contribution_create_spec(&$params) {
   $params['contact_id']['api.required'] = 1;
-  $params['total_amount']['api.required'] = 1;
+  #$params['total_amount']['api.required'] = 1;
   $params['note'] = array(
     'name' => 'note',
     'uniqueName' => 'contribution_note',
