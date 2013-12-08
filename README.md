@@ -51,8 +51,8 @@ https://www.transifex.com/projects/p/neticrm/
 
 9. When to use CiviCRM/ not netiCRM
 -----------------------------------
-Function of CiviCRM is more completed on the functions. Move forward more quickly, more developer.
-Function of netiCRM is less function, but bug are also less especially on Event, Contribution, Membership compoment.
-For world-wild usage, you should consider use CiviCRM not netiCRM.
-More info of CiviCRM you can watch github organization CiviCRM http://github.com/civicrm/ .
+- Function of CiviCRM is more completed on the functions. Move forward more quickly, more developers.
+- Function of netiCRM is less function, but bug are also less especially on Event, Contribution, Membership compoment.
+- For world-wild usage, you should consider use CiviCRM not netiCRM.
+- More info of CiviCRM you can watch github organization CiviCRM http://github.com/civicrm/ .
 
