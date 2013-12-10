@@ -43,6 +43,10 @@
 function smarty_modifier_htmlize($text)
 {
     $text = preg_replace('@(https?://([-\w\.]+)+(:\d+)?(/([\w/_\.]*(\?\S+)?)?)?)@', '<a href="$1">$1</a>', $text);
+    if(preg_match('/<\w+[^>]*>/', $text)){
+      // already HTML
+      return $text;
+    }
     $text = nl2br($text);
     return $text;
 }

@@ -74,7 +74,7 @@ class CRM_Contribute_Form_ContributionPage_ThankYou extends CRM_Contribute_Form_
         $this->addElement('checkbox', 'is_email_receipt', ts( 'Email Receipt to Contributor?' ), null, array('onclick' =>"showReceipt()") );
         $this->add('text', 'receipt_from_name', ts('Receipt From Name'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionPage', 'receipt_from_name') );
         $this->add('text', 'receipt_from_email', ts('Receipt From Email'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionPage', 'receipt_from_email'));
-        $this->add('textarea', 'receipt_text', ts('Receipt Message'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionPage', 'receipt_text') );
+        $this->addWysiwyg('receipt_text', ts('Receipt Message'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionPage', 'receipt_text'));
         
         $this->add('text', 'cc_receipt', ts('CC Receipt To'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionPage', 'cc_receipt') );
         $this->addRule( 'cc_receipt', ts('Please enter a valid list of comma delimited email addresses'), 'emailList' );
