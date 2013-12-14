@@ -30,7 +30,7 @@ function civicrm_esunbank_ipn($post = NULL, $slient = NULL){
         }
         // try to find out response component
         if(strlen($response['serial'])){
-          $query = CRM_Core_DAO::executeQuery("SELECT c.*, p.participant_id FROM civicrm_contribution c LEFT JOIN civicrm_participant_payment p ON p.contribution_id = c.id WHERE c.trxn_id = %1 AND c.created_date > '%2' AND c.contribution_status_id = 2", array(1 => array($response['serial'], 'String'), 2 => array(date('Y-01-01 00:00:00'), 'Timestamp')) );
+          $query = CRM_Core_DAO::executeQuery("SELECT c.*, p.participant_id FROM civicrm_contribution c LEFT JOIN civicrm_participant_payment p ON p.contribution_id = c.id WHERE c.trxn_id = %1 AND c.created_date > '%2' AND c.contribution_status_id = 2", array(1 => array($response['serial'], 'String'), 2 => array(date('Y-m-d 00:00:00', strtotime('-1 year')), 'Timestamp')) );
           $query->fetch();
           $response['cid'] = $query->id;
           drupal_write_record('civicrm_contribution_esunbank', $response, 'cid');
@@ -115,7 +115,8 @@ class CRM_Core_Payment_ESUNBANKIPN extends CRM_Core_Payment_BaseIPN {
       $ids['participant'] = $contribution->participant_id;
     }
     else {
-      $ids['membership'] = $_GET['mid'];
+      $mid = CRM_Core_DAO::singleValueQuery("SELECT membership_id FROM civicrm_membership_payment WHERE contribution_id = {$contribution->id}");
+      $ids['membership'] = $_GET['mid'] ? $_GET['mid'] : $mid;
       $ids['contributionRecur'] = $contribution->contribution_recur_id;
       $ids['contributionPage'] = $contribution->contribution_page_id;
       /*
