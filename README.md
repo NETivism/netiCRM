@@ -17,7 +17,7 @@ NETivism also support CiviCRM community in Taiwan on http://CiviCRM.tw .
 
 3. License
 --------------
-License is under AGPL-3.0. See agpl-3.0.txt .
+License is under AGPL-3.0. See agpl-3.0.txt.
 
 
 4. Bug report
