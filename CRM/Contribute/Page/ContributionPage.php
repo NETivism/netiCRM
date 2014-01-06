@@ -248,7 +248,7 @@ class CRM_Contribute_Page_ContributionPage extends CRM_Core_Page
             $urlParams = 'reset=1&pid=%%id%%&force=1&test=0';
             
             self::$_contributionLinks = array( 
-                                              CRM_Core_Action::MAX_ACTION => array(
+                                              CRM_Core_Action::BROWSE => array(
                                                                                   'name'  => ts( 'All' ),
                                                                                   'title' => ts( 'All' ),
                                                                                   'url'   => $urlString,
@@ -269,13 +269,6 @@ class CRM_Contribute_Page_ContributionPage extends CRM_Core_Page
                                                                                   'qs'    => "{$urlParams}&start={$yearDate}&end={$yearNow}",
                                                                                   'uniqueName' => 'fiscal_year_to_date'
                                                                                    ),
-                                              CRM_Core_Action::BROWSE     => array( 
-                                                                                   'name'  => ts('Cumulative'),
-                                                                                   'title' => ts('Cumulative'),
-                                                                                   'url'   => $urlString,
-                                                                                   'qs'    => "{$urlParams}&start=&end=$now",
-                                                                                   'uniqueName' => 'cumulative'
-                                                                                    ),
                                                );
         }
         
