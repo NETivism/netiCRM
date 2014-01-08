@@ -23,7 +23,7 @@
    <td>
 
     {if $event.confirm_email_text AND (not $isOnWaitlist AND not $isRequireApproval)}
-     <p>{$event.confirm_email_text|htmlize}</p>
+     <div>{$event.confirm_email_text|htmlize}</div>
     {/if}
 
     {if $isOnWaitlist}

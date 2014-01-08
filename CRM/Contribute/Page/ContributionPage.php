@@ -248,6 +248,13 @@ class CRM_Contribute_Page_ContributionPage extends CRM_Core_Page
             $urlParams = 'reset=1&pid=%%id%%&force=1&test=0';
             
             self::$_contributionLinks = array( 
+                                              CRM_Core_Action::MAX_ACTION => array(
+                                                                                  'name'  => ts( 'All' ),
+                                                                                  'title' => ts( 'All' ),
+                                                                                  'url'   => $urlString,
+                                                                                  'qs'    => $urlParams, 
+                                                                                  'uniqueName' => 'all_without_date'
+                                                                                  ),
                                               CRM_Core_Action::DETACH    => array(
                                                                                   'name'  => ts( 'Current Month-To-Date' ),
                                                                                   'title' => ts( 'Current Month-To-Date' ),

@@ -136,7 +136,7 @@ class CRM_Contribute_Form_AdditionalInfo
         $form->add('select', 'contribution_page_id', 
                    ts( 'Contribution Page' ),
                    array( '' => ts( '- select -' ) ) +
-                   CRM_Contribute_PseudoConstant::contributionPage( ) );
+                   CRM_Contribute_PseudoConstant::contributionPage(null, TRUE) );
         
         $form->add('textarea', 'note', ts('Notes'),array("rows"=>4,"cols"=>60) );
         
