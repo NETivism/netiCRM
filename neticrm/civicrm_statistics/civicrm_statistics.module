@@ -8,3 +8,101 @@ function civicrm_statistics_cron(){
   }
 }
 
+function civicrm_statistics_menu(){
+	return array(
+		'civicrm/contribute/statistics' => array(
+			'page callback' => 'civicrm_statistics_page_content',
+			"access callback" => TRUE
+			)
+		);
+}
+
+function test_myform($form, &$form_state){
+	$options = array('1' => t('Enabled') , '0' => t('Disable'));
+	$form['dash'] = array(
+    	'#type' => 'fieldset',
+    	'#title' => t('Access log settings'),
+    	'#tree' => TRUE,
+  	);
+  	//日期
+	$form['dash']['date']=array(
+		'#type' => 'date_popup',
+		'#title' => t('日期'),
+		'#defqult_value' => 0,
+		'#description'=> t('請輸入日期'),
+		'#attributes'=>array('class'=>'span3') //試不出來
+		);
+	//第一個週期
+	$form['dash']['period1']=array(
+		'#type' => 'select',
+		'#title' => t('第一個週期'),
+		'#default_value' => '1',
+		'#options'=> array(
+			'1' => t('一年內'),
+			'2' => t('11個月內'),
+			'3' => t('10個月內'),
+			),
+		);
+	//型態
+	$form['dash']['type1']=array(
+		'#type' => 'select',
+		'#title' => t('型態'),
+		'#default_value' => '1',
+		'#options'=> array(
+			'1' => t('捐款次數'),
+			'2' => t('捐款人數'),
+			'3' => t('捐款金額'),
+			'4' => t('每人捐款金額'),
+			),
+		);
+	//核選:是否比對
+	$form['dash']['compare']=array(
+		'#type' => 'checkbox',
+		'#title' => t('比較'),
+		'#default_value' => FALSE,
+		);
+
+	//比對的週期
+	$form['dash']['period2']=array(
+		'#type' => 'select',
+		'#title' => t('第二個週期'),
+		'#default_value' => '1',
+		'#options'=> array(
+			'1' => t('同一年'),
+			'2' => t('前一年'),
+			'3' => t('歷年同月份平均'),
+			'4' => t('歷年平均'),
+			'5' => t('自訂'),
+			),
+		);
+	//自訂的時候該出現的日期欄位
+	$form['dash']['date2']=array(
+		'#type' => 'date_popup',
+		'#title' => t('自訂日期'),
+		'#default_value' => '1',
+		);
+	//第二個型態
+	$form['dash']['type2']=array(
+		'#type' => 'select',
+		'#title' => t('型態'),
+		'#default_value' => '1',
+		'#options'=> array(
+			'1' => t('捐款次數'),
+			'2' => t('捐款人數'),
+			'3' => t('捐款金額'),
+			'4' => t('每人捐款金額'),
+			),
+		);
+	//送出按鈕
+	$form['dash']['send']=array(
+		'#type' => 'button',
+		'#value' => '更新',
+		);
+
+	return $form;
+}
+
+function civicrm_statistics_page_content(){
+	$formarr=drupal_get_form('test_myform');
+	return $formarr;
+}
