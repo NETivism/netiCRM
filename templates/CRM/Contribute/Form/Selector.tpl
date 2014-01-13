@@ -59,6 +59,8 @@
     	<td class="crm-search-display_name"><a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$row.contact_id`"}">{$row.sort_name}</a></td>
     {/if}
     <td class="crm-contribution-trxn-id">{$row.trxn_id}</td>
+    <td class="crm-contribution-receipt-id">{$row.receipt_id}</td>
+    <td class="crm-contribution-instrument">{$row.payment_instrument}</td>
     <td class="right bold crm-contribution-amount"><span class="nowrap">{$row.total_amount|crmMoney:$row.currency}</span> {if $row.amount_level }<br /> ({$row.amount_level}){/if}
     {if $row.contribution_recur_id}
      <br /> {ts}(Recurring Contribution){/ts}

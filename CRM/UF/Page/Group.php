@@ -196,8 +196,9 @@ class CRM_UF_Page_Group extends CRM_Core_Page
                                            $this, true, 0, 'GET');
         
         require_once 'CRM/Core/BAO/UFGroup.php';
-        CRM_Core_BAO_UFGroup::copy( $gid ); 
-        CRM_Utils_System::redirect( CRM_Utils_System::url( 'civicrm/admin/uf/group', 'reset=1' ) );
+        $copy = CRM_Core_BAO_UFGroup::copy( $gid );
+
+        CRM_Utils_System::redirect( CRM_Utils_System::url( 'civicrm/admin/uf/group/update', 'reset=1&action=update&id='.$copy->id ) );
     }
     
     /**

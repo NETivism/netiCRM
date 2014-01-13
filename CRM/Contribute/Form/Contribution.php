@@ -463,6 +463,11 @@ WHERE  contribution_id = {$this->_id}
         }
        
         $defaults = $this->_values;
+        foreach($defaults as $k => $v){
+          if($v === '0000-00-00 00:00:00'){
+            unset($defaults[$k]);
+          }
+        }
 
         //set defaults for pledge payment.
         if ( $this->_ppID ) {
