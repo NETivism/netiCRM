@@ -79,6 +79,7 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
                                  'total_amount',
                                  'contribution_type',
                                  'contribution_source',
+                                 'payment_instrument',
                                  'created_date',
                                  'receive_date',
                                  'thankyou_date',
@@ -420,6 +421,16 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
                                           array(
                                                 'name'      => ts('Transaction ID'),
                                                 'sort'      => 'trxn_id',
+                                                'direction' => CRM_Utils_Sort::DONTCARE,
+                                                ),
+                                          array(
+                                                'name'      => ts('Receipt ID'),
+                                                'sort'      => 'receipt_id',
+                                                'direction' => CRM_Utils_Sort::DONTCARE,
+                                                ),
+                                          array(
+                                                'name'      => ts('Payment Instrument'),
+                                                'sort'      => 'payment_instrument',
                                                 'direction' => CRM_Utils_Sort::DONTCARE,
                                                 ),
                                           array(

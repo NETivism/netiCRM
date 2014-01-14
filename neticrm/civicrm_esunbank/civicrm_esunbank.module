@@ -48,8 +48,8 @@ function civicrm_esunbank_cron(){
   $last = variable_get("civicrm_esunbank_cron", 0);
 
   if($now - $last >= 3600){
-    $dir = file_directory_temp().'/esunbank';
-    $dir2 = file_directory_temp().'/esunbank_processed';
+    $dir = file_directory_path().'/esunbank';
+    $dir2 = file_directory_path().'/esunbank_processed';
     if(file_check_directory($dir, FILE_CREATE_DIRECTORY) && file_check_directory($dir2, FILE_CREATE_DIRECTORY)){
       module_load_include('inc', 'civicrm_esunbank', 'civicrm_esunbank.ipn');
       // start trying process ftp data
@@ -68,8 +68,8 @@ function civicrm_esunbank_cron(){
     $pending = array_search('Pending', $status);
     $gid = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_option_group WHERE name LIKE 'payment_instrument'");
     if(!empty($instrument_id) && !empty($overdue) && !($pending)){
-      $days_before = date('Y-m-d H:i:s', $now - 86400*10);
-      $days_after = date('Y-m-d H:i:s', $now - 86400*11);
+      $days_before = date('Y-m-d H:i:s', $now - 86400*40);
+      $days_after = date('Y-m-d H:i:s', $now - 86400*35);
       CRM_Core_DAO::executeQuery("UPDATE civicrm_contribution SET contribution_status_id = {$overdue} WHERE contribution_status_id = {$pending} AND created_date > '{$days_after}' AND created_date < {$days_before} AND payment_instrument_id = {$instrument_id}");
     }
   }
