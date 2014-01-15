@@ -1394,55 +1394,57 @@ AND civicrm_contact.is_opt_out =0";
    */
   public static function create(&$params, $ids = array()) {
     // Retrieve domain email and name for default sender
-    $domain = civicrm_api('Domain', 'getsingle', array(
-                'version' => 3,
-                'current_domain' => 1,
-                'sequential' => 1,
-              ));
-    if (isset($domain['from_email'])) {
-      $domain_email = $domain['from_email'];
-      $domain_name  = $domain['from_name'];
-    }
-    else {
-      $domain_email = 'info@FIXME.ORG';
-      $domain_name  = 'FIXME.ORG';
-    }
-    if (!isset($params['created_id'])) {
-      $session =& CRM_Core_Session::singleton();
-      $params['created_id'] = $session->get('userID');
-    }
-    $defaults = array(
-      // load the default config settings for each
-      // eg reply_id, unsubscribe_id need to use
-      // correct template IDs here
-      'override_verp'   => TRUE,
-      'forward_replies' => FALSE,
-      'open_tracking'   => TRUE,
-      'url_tracking'    => TRUE,
-      'visibility'      => 'User and User Admin Only',
-      'replyto_email'   => $domain_email,
-      'header_id'       => CRM_Mailing_PseudoConstant::defaultComponent('header_id', ''),
-      'footer_id'       => CRM_Mailing_PseudoConstant::defaultComponent('footer_id', ''),
-      'from_email'      => $domain_email,
-      'from_name'       => $domain_name,
-      'msg_template_id' => NULL,
-      'created_id'      => $params['created_id'],
-      'auto_responder'  => 0,
-      'created_date'    => date('YmdHis'),
-    );
+    if (!isset($ids['id']) && !isset($ids['mailing_id'])) {
+      $domain = civicrm_api('Domain', 'getsingle', array(
+                  'version' => 3,
+                  'current_domain' => 1,
+                  'sequential' => 1,
+                ));
+      if (isset($domain['from_email'])) {
+        $domain_email = $domain['from_email'];
+        $domain_name  = $domain['from_name'];
+      }
+      else {
+        $domain_email = 'info@FIXME.ORG';
+        $domain_name  = 'FIXME.ORG';
+      }
+      if (!isset($params['created_id'])) {
+        $session =& CRM_Core_Session::singleton();
+        $params['created_id'] = $session->get('userID');
+      }
+      $defaults = array(
+        // load the default config settings for each
+        // eg reply_id, unsubscribe_id need to use
+        // correct template IDs here
+        'override_verp'   => TRUE,
+        'forward_replies' => FALSE,
+        'open_tracking'   => TRUE,
+        'url_tracking'    => TRUE,
+        'visibility'      => 'User and User Admin Only',
+        'replyto_email'   => $domain_email,
+        'header_id'       => CRM_Mailing_PseudoConstant::defaultComponent('header_id', ''),
+        'footer_id'       => CRM_Mailing_PseudoConstant::defaultComponent('footer_id', ''),
+        'from_email'      => $domain_email,
+        'from_name'       => $domain_name,
+        'msg_template_id' => NULL,
+        'created_id'      => $params['created_id'],
+        'auto_responder'  => 0,
+        'created_date'    => date('YmdHis'),
+      );
 
-    // Get the default from email address, if not provided.
-    if (empty($defaults['from_email'])) {
-      $defaultAddress = CRM_Core_OptionGroup::values('from_email_address', NULL, NULL, NULL, ' AND is_default = 1');
-      foreach ($defaultAddress as $id => $value) {
-        if (preg_match('/"(.*)" <(.*)>/', $value, $match)) {
-          $defaults['from_email'] = $match[2];
-          $defaults['from_name'] = $match[1];
+      // Get the default from email address, if not provided.
+      if (empty($defaults['from_email'])) {
+        $defaultAddress = CRM_Core_OptionGroup::values('from_email_address', NULL, NULL, NULL, ' AND is_default = 1');
+        foreach ($defaultAddress as $id => $value) {
+          if (preg_match('/"(.*)" <(.*)>/', $value, $match)) {
+            $defaults['from_email'] = $match[2];
+            $defaults['from_name'] = $match[1];
+          }
         }
       }
-    }
 
-    $params = array_merge($defaults, $params);
+      $params = array_merge($defaults, $params);
+    }
 
     /**
      * Could check and warn for the following cases:
