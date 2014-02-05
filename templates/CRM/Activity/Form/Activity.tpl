@@ -203,12 +203,12 @@
         	        {if $activityTypeName eq "Print PDF Letter"}
             		  <td class="view-value">
                           {* If using plain textarea, assign class=huge to make input large enough. *}
-                          {if $defaultWysiwygEditor eq 0}{$form.details.html|crmReplace:class:huge|nl2br}{else}{$form.details.html|nl2br}{/if}
+                          {if $defaultWysiwygEditor eq 0}{$form.details.html|crmReplace:class:huge|nl2br}{else}{$form.details.html}{/if}
             		  </td>
             		{else}
             	      <td class="view-value">
                           {* If using plain textarea, assign class=huge to make input large enough. *}
-                          {if $defaultWysiwygEditor eq 0}{$form.details.html|crmStripAlternatives|crmReplace:class:huge|nl2br}{else}{$form.details.html|crmStripAlternatives|nl2br}{/if}
+                          {if $defaultWysiwygEditor eq 0}{$form.details.html|crmStripAlternatives|crmReplace:class:huge|nl2br}{else}{$form.details.html|crmStripAlternatives}{/if}
             		  </td>
             		{/if}
              </tr> 
