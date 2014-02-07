@@ -81,7 +81,7 @@ $(document).ready(function(){
     CRM_Core_OptionValue::getValues(array('name' => 'from_email_address'), &$from_emails);
     foreach($from_emails as $id => $v){
       if($v['is_default'] == 1){
-        $from_default = $v['name'];
+        $from_default = $v['label'];
         break;
       }
     }
