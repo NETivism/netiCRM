@@ -47,7 +47,7 @@ function civicrm_esunbank_cron(){
   // every one hour, we check a system path for esunbank payment
   $last = variable_get("civicrm_esunbank_cron", 0);
 
-  if($now - $last >= 3600){
+  if($now - $last >= 86399){
     $dir = file_directory_path().'/esunbank';
     $dir2 = file_directory_path().'/esunbank_processed';
     if(file_check_directory($dir, FILE_CREATE_DIRECTORY) && file_check_directory($dir2, FILE_CREATE_DIRECTORY)){
@@ -76,9 +76,15 @@ function civicrm_esunbank_cron(){
 }
 
 function civicrm_esunbank_process_file($path){
-  if(file_exists($path)){
+  // not today file
+  $today = (date('Y')-1911).date('md');
+  if(file_exists($path) && !strstr($path, $today)){
     $dest = str_replace('/esunbank/', '/esunbank_processed/', $path);
     $data = file_get_contents($path);
+    if (substr($data, 0,3) == pack("CCC",0xef,0xbb,0xbf)) {
+      $data = substr($data, 3);
+    }
+    $data = trim($data);
     if(!empty($data)){
       $post = array('Data' => $data);
       $results = civicrm_esunbank_ipn($post, TRUE);
