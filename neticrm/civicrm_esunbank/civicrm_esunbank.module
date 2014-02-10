@@ -76,9 +76,11 @@ function civicrm_esunbank_cron(){
 }
 
 function civicrm_esunbank_process_file($path){
+  static $num_files;
+  $num_files++;
   // not today file
   $today = (date('Y')-1911).date('md');
-  if(file_exists($path) && !strstr($path, $today)){
+  if(file_exists($path) && !strstr($path, $today) && $num_files <= 5){
     $dest = str_replace('/esunbank/', '/esunbank_processed/', $path);
     $data = file_get_contents($path);
     if (substr($data, 0,3) == pack("CCC",0xef,0xbb,0xbf)) {
