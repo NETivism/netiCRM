@@ -1,5 +1,5 @@
 name = CiviCRM Statistics 
-description = Check statistics data from netivism to see the average number.
+description = Check statistics data from netiCRM to know avarage number of your organization.
 package = NetiCRM
 core = 6.x
 version = 6.x-1.0
