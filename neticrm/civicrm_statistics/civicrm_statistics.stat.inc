@@ -68,7 +68,20 @@ function civicrm_statistics_fetch($debug = false){
       }
     }
     else{
-      $rows = CRM_Core_DAO::singleValueQuery("SELECT COUNT(*) FROM $table WHERE 1");
+      switch($t){
+        case 'cc':
+          $rows = CRM_Core_DAO::singleValueQuery("SELECT COUNT(*) FROM $table WHERE is_deleted != 1");
+          break;
+        default:
+          $has_test_field = CRM_Core_DAO::singleValueQuery("SHOW COLUMNS FROM civicrm_contribution LIKE 'is_test'");
+          if($has_test_field){
+            $rows = CRM_Core_DAO::singleValueQuery("SELECT COUNT(*) FROM $table WHERE is_test != 1");
+          }
+          else{
+            $rows = CRM_Core_DAO::singleValueQuery("SELECT COUNT(*) FROM $table WHERE 1");
+          }
+          break;
+      }
     }
 
     $url = civicrm_statistics_build_fetch_url($sitekey, $t, $rows);
@@ -133,7 +146,7 @@ function civicrm_statistics_query($query){
   $q = CRM_Core_DAO::executeQuery($query);
   $result = array();
   while($q->fetch()){
-    if($q->summ){
+    if(isset($q->summ)){
       $result[$q->idx] = array(
         'count' => $q->counting,
         'sum' => $q->summ,
