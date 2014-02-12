@@ -9,23 +9,23 @@ function civicrm_statistics_fetch($debug = false){
     if($sub){
       switch($t){
         case 'cc.g':
-          $rows = civicrm_statistics_query("SELECT gender_id idx, count(id) counting FROM civicrm_contact WHERE gender_id IS NOT NULL GROUP BY gender_id");
+          $rows = civicrm_statistics_query("SELECT gender_id idx, count(id) counting FROM civicrm_contact WHERE gender_id IS NOT NULL AND is_deleted != 1 GROUP BY gender_id");
           break;
         case 'cc.b':
-          $rows = civicrm_statistics_query("SELECT year(birth_date) idx, count(id) counting FROM civicrm_contact WHERE birth_date IS NOT NULL GROUP BY year(birth_date)");
+          $rows = civicrm_statistics_query("SELECT year(birth_date) idx, count(id) counting FROM civicrm_contact WHERE birth_date IS NOT NULL AND is_deleted != 1 GROUP BY year(birth_date)");
           break;
         case 'ca.p':
-          $rows = civicrm_statistics_query("SELECT state_province_id idx, count(id) counting FROM civicrm_address WHERE state_province_id IS NOT NULL group by state_province_id");
+          $rows = civicrm_statistics_query("SELECT a.state_province_id idx, count(a.id) counting FROM civicrm_address a INNER JOIN civicrm_contact c ON c.id = a.contact_id WHERE a.state_province_id IS NOT NULL AND c.is_deleted != 1 group by a.state_province_id");
           break;
         case 'ccb.a':
-          $rows = CRM_Core_DAO::singleValueQuery("SELECT SUM(total_amount) FROM civicrm_contribution WHERE contribution_status_id = 1");
+          $rows = CRM_Core_DAO::singleValueQuery("SELECT SUM(total_amount) FROM civicrm_contribution WHERE contribution_status_id = 1 AND is_test != 1");
           $rows = (int) $rows;
           break;
         case 'ccb.h':
-          $rows = civicrm_statistics_query("SELECT HOUR(receive_date) idx, count(id) counting, round(sum(total_amount)) as summ, round(avg(total_amount)) as avgg FROM civicrm_contribution WHERE payment_instrument_id = 1 AND contribution_status_id = 1 AND receive_date > '2000-01-01 00:00:00' group by HOUR(receive_date)");
+          $rows = civicrm_statistics_query("SELECT HOUR(receive_date) idx, count(id) counting, round(sum(total_amount)) as summ, round(avg(total_amount)) as avgg FROM civicrm_contribution WHERE contribution_status_id = 1 AND receive_date > '1990-01-01 00:00:00' AND is_test != 1 AND EXTRACT(HOUR_SECOND FROM receive_date) != '000000' group by HOUR(receive_date)");
           break;
         case 'ccb.w':
-          $rows = civicrm_statistics_query("SELECT WEEKDAY(receive_date) idx, count(id) counting, round(sum(total_amount)) as summ, round(avg(total_amount)) as avgg      FROM civicrm_contribution WHERE payment_instrument_id = 1 AND contribution_status_id = 1 AND receive_date > '2000-01-01 00:00:00' group by WEEKDAY(receive_date)");
+          $rows = civicrm_statistics_query("SELECT WEEKDAY(receive_date) idx, count(id) counting, round(sum(total_amount)) as summ, round(avg(total_amount)) as avgg FROM civicrm_contribution WHERE contribution_status_id = 1 AND receive_date > '1990-01-01 00:00:00' AND is_test != 1 AND EXTRACT(HOUR_SECOND FROM receive_date) != '000000' group by WEEKDAY(receive_date)");
           break;
         case 'ccb.r':
           $rows = civicrm_statistics_query("
@@ -43,6 +43,7 @@ function civicrm_statistics_fetch($debug = false){
           end idx,
           total_amount
           from civicrm_contribution
+          where contribution_status_id = 1 AND is_test != 1
           ) t 
           group by t.idx
           ");
