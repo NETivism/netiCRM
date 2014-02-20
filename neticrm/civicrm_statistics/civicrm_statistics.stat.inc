@@ -23,9 +23,11 @@ function civicrm_statistics_fetch($debug = false){
           break;
         case 'ccb.h':
           $rows = civicrm_statistics_query("SELECT HOUR(receive_date) idx, count(id) counting, round(sum(total_amount)) as summ, round(avg(total_amount)) as avgg FROM civicrm_contribution WHERE contribution_status_id = 1 AND receive_date > '1990-01-01 00:00:00' AND is_test != 1 AND EXTRACT(HOUR_SECOND FROM receive_date) != '000000' group by HOUR(receive_date)");
+          civicrm_statistics_normalize($rows, 24);
           break;
         case 'ccb.w':
           $rows = civicrm_statistics_query("SELECT WEEKDAY(receive_date) idx, count(id) counting, round(sum(total_amount)) as summ, round(avg(total_amount)) as avgg FROM civicrm_contribution WHERE contribution_status_id = 1 AND receive_date > '1990-01-01 00:00:00' AND is_test != 1 AND EXTRACT(HOUR_SECOND FROM receive_date) != '000000' group by WEEKDAY(receive_date)");
+          civicrm_statistics_normalize($rows, 7);
           break;
         case 'ccb.r':
           $rows = civicrm_statistics_query("
@@ -50,18 +52,22 @@ function civicrm_statistics_fetch($debug = false){
           break;
         case 'cmeo.h':
           $rows = civicrm_statistics_query("SELECT HOUR(time_stamp) idx, COUNT(time_stamp) as counting FROM civicrm_mailing_event_opened group by HOUR(time_stamp)");
+          civicrm_statistics_normalize($rows, 24);
           break;
         case 'cmeo.w':
           $rows = civicrm_statistics_query("SELECT WEEKDAY(time_stamp) idx, COUNT(time_stamp) as counting FROM civicrm_mailing_event_opened group by WEEKDAY(time_stamp)");
+          civicrm_statistics_normalize($rows, 7);
           break;
         case 'cmeo.n':
           $rows = civicrm_statistics_query("SELECT cc.counting as idx, count(cc.counting) as counting FROM (SELECT event_queue_id, count(event_queue_id) as counting FROM civicrm_mailing_event_opened group by event_queue_id having count(event_queue_id) > 1) as cc GROUP BY cc.counting");
           break;
         case 'cmet.h':
           $rows = civicrm_statistics_query("SELECT HOUR(time_stamp) idx, COUNT(time_stamp) as counting FROM civicrm_mailing_event_trackable_url_open group by HOUR(time_stamp)");
+          civicrm_statistics_normalize($rows, 24);
           break;
         case 'cmet.w':
           $rows = civicrm_statistics_query("SELECT WEEKDAY(time_stamp) idx, COUNT(time_stamp) as counting FROM civicrm_mailing_event_trackable_url_open group by WEEKDAY(time_stamp)");
+          civicrm_statistics_normalize($rows, 7);
           break;
         case 'cmet.n':
           $rows = civicrm_statistics_query("SELECT cc.counting as idx, count(cc.counting) as counting FROM (SELECT event_queue_id, count(event_queue_id) as counting FROM civicrm_mailing_event_trackable_url_open group by event_queue_id having count(event_queue_id) > 1) as cc GROUP BY cc.counting");
@@ -74,7 +80,7 @@ function civicrm_statistics_fetch($debug = false){
           $rows = CRM_Core_DAO::singleValueQuery("SELECT COUNT(*) FROM $table WHERE is_deleted != 1");
           break;
         default:
-          $has_test_field = CRM_Core_DAO::singleValueQuery("SHOW COLUMNS FROM civicrm_contribution LIKE 'is_test'");
+          $has_test_field = CRM_Core_DAO::singleValueQuery("SHOW COLUMNS FROM $table LIKE 'is_test'");
           if($has_test_field){
             $rows = CRM_Core_DAO::singleValueQuery("SELECT COUNT(*) FROM $table WHERE is_test != 1");
           }
@@ -159,4 +165,25 @@ function civicrm_statistics_query($query){
     }
   }
   return $result;
+}
+function civicrm_statistics_normalize(&$rows, $num){
+  $null = reset($rows);
+  if(is_array($null)){
+    foreach($null as $k => $v){
+      $null[$k] = 0;
+    }
+  }
+  else{
+    $null = 0;
+  }
+  $clone = $rows;
+  $rows = array();
+  for($i = 0; $i < $num; $i++){
+    if(!isset($clone[$i])){
+      $rows[$i] = $null;
+    }
+    else{
+      $rows[$i] = $clone[$i];
+    }
+  }
 }
