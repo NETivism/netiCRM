@@ -296,6 +296,22 @@ function civicrm_instrument_attach_processor($form, &$all_instruments, &$active_
       }
     }
   }
+  elseif(module_exists('civicrm_allpay') && $form->_paymentProcessor['payment_processor_type'] == 'ALLPAY'){
+    $enabled_instruments = _civicrm_neweb_instrument();
+    $enabled_instruments = array_intersect_key($all_instruments, $enabled_instruments);
+
+    foreach($enabled_instruments as $name => $i){
+      $radio_name = _civicrm_instrument_form_name($name);
+      if($active_instruments[$radio_name]){
+        $radios[$i['value']] = array(
+          'form_name'=> $radio_name,
+          'name'=> $name, 
+          'label' => $i['label'],
+          'description' => $i['description'],
+        );
+      }
+    }
+  }
 
   // we have real active instruments in radios array
   if(!empty($radios)){
