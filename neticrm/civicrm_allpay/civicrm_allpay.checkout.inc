@@ -13,6 +13,7 @@ define('ALLPAY_EXPIRE_DAY', 7);
  * @param $payment_processor 
  */
 function civicrm_allpay_do_transfer_checkout(&$vars, &$component, &$payment_processor){
+  // once they enter here, we will check SESSION
   // to see what instrument for newweb
   $instrument_id = $vars['civicrm_instrument_id'];
   $instrument_name = civicrm_instrument_by_id($instrument_id, 'name');
@@ -23,6 +24,12 @@ function civicrm_allpay_do_transfer_checkout(&$vars, &$component, &$payment_proc
   // The first, we insert every contribution into record. After this, we'll use update for the record.
   $record = array('cid' => $vars['contributionID']);
   drupal_write_record("civicrm_contribution_allpay", $record);
+
+  if(!empty($_SESSION['allpay']['submitted']) && $instrument_code == 'Credit' ) {
+    drupal_goto($_SESSION['allpay']['path'], $_SESSION['allpay']['query']);
+  }
+  $_SESSION['allpay']['submitted'] = TRUE;
+  $_SESSION['allpay']['instrument'] = $instrument_code;
 
   if($instrument_code == 'Credit' || $instrument_code == 'WebATM'){
     $is_pay_later = FALSE;
