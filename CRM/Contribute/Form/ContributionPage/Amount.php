@@ -114,7 +114,7 @@ SELECT id
         $this->addCheckBox( 'payment_processor', ts('Payment Processor'),
                             array_flip($paymentProcessor),
                             null, null, null, null,
-                            array( '&nbsp;&nbsp;', '&nbsp;&nbsp;', '&nbsp;&nbsp;', '<br/&' ) );
+                            array( '&nbsp;&nbsp;', '&nbsp;&nbsp;', '&nbsp;&nbsp;', '<br />' ) );
 
         
         require_once "CRM/Contribute/BAO/ContributionPage.php";
