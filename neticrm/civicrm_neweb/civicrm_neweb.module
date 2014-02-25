@@ -59,7 +59,11 @@ function civicrm_neweb_civicrm_buildForm($form_name, &$form){
       }
       break;
     case 'CRM_Contribute_Form_ContributionPage_Amount':
-      _civicrm_neweb_js_contritweak();
+      $query = CRM_Core_DAO::executeQuery("SELECT id FROM civicrm_payment_processor WHERE payment_processor_type = 'Neweb'");
+      while($query->fetch()){
+        $processor[$query->id] = $query->id;
+      }
+      _civicrm_neweb_js_contritweak($processor);
       break;
     case 'CRM_Admin_Form_PaymentProcessor':
       if($form->_defaultValues['payment_processor_type'] == 'Neweb'){
@@ -174,20 +178,35 @@ $(document).ready(function(){
 });  
   ';
 }
-function _civicrm_neweb_js_contritweak(){
+function _civicrm_neweb_js_contritweak($processor){
+  $str = '\['.implode('\]|\[', $processor).'\]';
   $js = '
 $(document).ready(function(){
-  $("input[name=\'recur_frequency_unit[week]\']").hide();
-  $("label[for=\'recur_frequency_unit[week]\']").hide();
-  $("input[name=\'recur_frequency_unit[day]\']").hide();
-  $("label[for=\'recur_frequency_unit[day]\']").hide();
-  $("input[name=\'recur_frequency_unit[year]\']").hide();
-  $("label[for=\'recur_frequency_unit[year]\']").hide();
-  $("#is_recur").click(function(){
-    $("#is_recur_interval").attr( "checked", false );
+  $("tr.crm-contribution-contributionpage-amount-form-block-payment_processor input:checkbox").click(function(){
+    if($(this).attr("name").match(/'.$str.'/) && $(this).val()){
+      $("input[name=\'recur_frequency_unit[week]\']").hide();
+      $("label[for=\'recur_frequency_unit[week]\']").hide();
+      $("input[name=\'recur_frequency_unit[day]\']").hide();
+      $("label[for=\'recur_frequency_unit[day]\']").hide();
+      $("input[name=\'recur_frequency_unit[year]\']").hide();
+      $("label[for=\'recur_frequency_unit[year]\']").hide();
+      $("#is_recur_interval").parents("tr").hide();
+    }
+    else{
+      $("input[name=\'recur_frequency_unit[week]\']").show();
+      $("label[for=\'recur_frequency_unit[week]\']").show();
+      $("input[name=\'recur_frequency_unit[day]\']").show();
+      $("label[for=\'recur_frequency_unit[day]\']").show();
+      $("input[name=\'recur_frequency_unit[year]\']").show();
+      $("label[for=\'recur_frequency_unit[year]\']").show();
+      $("#is_recur_interval").parents("tr").show();
+    }
   });
-  $("#is_recur_interval").parents("tr").hide();
-
+  $("#is_recur").click(function(){
+    if($(this).val()){
+      $("#is_recur_interval").attr( "checked", false );
+    }
+  });
 });  
 ';
   drupal_add_js($js, 'inline', 'footer');
