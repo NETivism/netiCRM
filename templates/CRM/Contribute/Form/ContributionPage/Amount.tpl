@@ -181,15 +181,14 @@
            {/literal}{/foreach}
        {/if}
      {literal}
-console.log(paymentProcessorMapper);
      cj( document ).ready( function( ) {
        function checked_payment_processors() {
          ids = [];
          cj('.crm-contribution-contributionpage-amount-form-block-payment_processor input[type="checkbox"]').each(function(){
-           if(cj(this).attr('checked')) {
-             var id = cj(this).val();
-             ids.push(id);
-           }
+            if(cj(this).attr('checked')) {
+              var id = cj(this).attr('id').split('[')[1].split(']')[0];
+              ids.push(id);
+            }
          });
          return ids;
        }
