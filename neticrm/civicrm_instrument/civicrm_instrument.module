@@ -85,7 +85,7 @@ function civicrm_instrument_civicrm_buildForm($form_name, &$form){
           $js = '
           cj(document).ready(function(){
             cj("input[name=payment_processor]").live("click", function(){
-              cj("input[name=civicrm_instrument_id]").val("");
+              cj("input[name=civicrm_instrument_id_dummy]:eq(0)").click();
             });
             cj("input[name=civicrm_instrument_id_dummy]").live("click", function(){
               cj("input[name=civicrm_instrument_id]").val(cj(this).val());
@@ -296,10 +296,21 @@ function civicrm_instrument_attach_processor($form, &$all_instruments, &$active_
       }
     }
   }
-  elseif(module_exists('civicrm_allpay') && $form->_paymentProcessor['payment_processor_type'] == 'ALLPAY'){
-    $enabled_instruments = _civicrm_neweb_instrument();
+  elseif(module_exists('civicrm_allpay') && strstr($form->_paymentProcessor['payment_processor_type'], 'ALLPAY')){
+    $enabled_instruments = _civicrm_allpay_instrument();
     $enabled_instruments = array_intersect_key($all_instruments, $enabled_instruments);
-
+    if($form->_paymentProcessor['payment_processor_type'] == 'ALLPAY'){
+      $credit_card = $enabled_instruments['Credit Card'];
+      $enabled_instruments = array(
+        'Credit Card' => $credit_card,
+      );
+      if($_GET['id']){
+        $_POST['civicrm_instrument_id'] = $credit_card['value'];
+      }
+    }
+    else{
+      unset($enabled_instruments['Credit Card']);
+    }
     foreach($enabled_instruments as $name => $i){
       $radio_name = _civicrm_instrument_form_name($name);
       if($active_instruments[$radio_name]){
@@ -320,9 +331,16 @@ function civicrm_instrument_attach_processor($form, &$all_instruments, &$active_
       drupal_add_js(_civicrm_instrument_js_page($radios, $form), 'inline');
     }
     else{
-      // attack by html
-      foreach($radios as $rid => $r){
-        $output .= '<div class="civicrm-instrument-dummy"><label><input type="radio" name="civicrm_instrument_id_dummy" value="'.$rid.'" class="form-radio required">'.$r['label'].'</label><div class="hover-item">'.$r['description'].'</div></div>'."\n";
+      // attach by html
+      if(count($radios) == 1){
+          $rid = key($radios);
+          $r = reset($radios);
+          $output = '<div class="civicrm-instrument-dummy"><label><input type="radio" name="civicrm_instrument_id_dummy" value="'.$rid.'" checked="checked" class="form-radio required">'.$r['label'].'</label><div class="hover-item">'.$r['description'].'</div></div>'."\n";
+      }
+      else{
+        foreach($radios as $rid => $r){
+          $output .= '<div class="civicrm-instrument-dummy"><label><input type="radio" name="civicrm_instrument_id_dummy" value="'.$rid.'" class="form-radio required">'.$r['label'].'</label><div class="hover-item">'.$r['description'].'</div></div>'."\n";
+        }
       }
       $output = '
       <div class="crm-section">
