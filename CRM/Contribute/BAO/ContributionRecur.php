@@ -220,14 +220,13 @@ SELECT p.payment_processor_id
      * @access public 
      * @static 
      */ 
-    static function cancelRecurContribution( $recurId, $objects ) 
+    static function cancelRecurContribution( $recurId, $objects, $canceledId = 2 ) 
     {
         if ( !$recurId ) return false;
         require_once 'CRM/Contribute/PseudoConstant.php';
         // for now, we use pending for cancel id, because we need further response to make sure the contribution is cancelled.
         // $contributionStatus = CRM_Contribute_PseudoConstant::contributionStatus( null, 'name' );
         // $canceledId         = array_search( 'Cancelled', $contributionStatus );
-        $canceledId         = 2;
 
         $recur     = new CRM_Contribute_DAO_ContributionRecur( );
         $recur->id = $recurId;
@@ -235,24 +234,22 @@ SELECT p.payment_processor_id
             require_once 'CRM/Core/Transaction.php';
             $transaction = new CRM_Core_Transaction( );
             $recur->contribution_status_id = $canceledId;
-            $recur->start_date             = CRM_Utils_Date::isoToMysql( $recur->start_date );
-            $recur->create_date            = CRM_Utils_Date::isoToMysql( $recur->create_date );
-            $recur->modified_date          = date('YmdHis');
-            $recur->cancel_date            = date( 'YmdHis' );
-            $recur->save( );
+            $recur->start_date = CRM_Utils_Date::isoToMysql($recur->start_date);
+            $recur->create_date = CRM_Utils_Date::isoToMysql($recur->create_date);
+            $recur->modified_date = date('YmdHis');
+            $recur->cancel_date = date('YmdHis');
+            $recur->save();
 
             if ( $objects == CRM_Core_DAO::$_nullObject ) {
-              $transaction->commit( );
+              $transaction->commit();
               return true;           
             }
             else {
               require_once 'CRM/Core/Payment/BaseIPN.php';
-              $baseIPN = new CRM_Core_Payment_BaseIPN( );
-              return $baseIPN->cancelled( $objects, $transaction );
+              $baseIPN = new CRM_Core_Payment_BaseIPN();
+              return $baseIPN->cancelled($objects, $transaction);
             }
-    
         }
-
         return false;
     }
 
@@ -318,6 +315,43 @@ SELECT p.payment_processor_id
         return false;
     }
 
+    /**
+     * Sync custom field from first recurring contrib to others
+     * @param int      $id             id of the recurring
+     * @param int      $contributionId id of the contribution target to sync
+     */
+    static function syncContribute($id, $contributionId = NULL){
+      $query = CRM_Core_DAO::executeQuery("SELECT id, trxn_id FROM civicrm_contribution WHERE contribution_recur_id = %1 ORDER BY id ASC", array(1 => array($id, 'Integer')));
+      $i = 1;
+      $children = array();
+      while($query->fetch()){
+        if($i == 1){
+          // load custom field values
+          $parent = CRM_Core_BAO_CustomValueTable::getEntityValues($query->id, 'Contribution');
+          if($contributionId){
+            $children = array(0 => $contributionId);
+            break;
+          }
+        }
+        elseif($i > 1 && !$contributionId){
+          $children[] = $query->id;
+        }
+      }
+
+      if(!empty($parent) && !empty($children)){
+        // prepare original params
+        foreach($parent as $k => $v){
+          if($v !== NULL){
+            $params_parent['custom_'.$k] =$v;
+          }
+        }
+        foreach($children as $cid){
+          $params = array('entityID' => $cid);
+          $params = array_merge($params, $params_parent);
+          CRM_Core_BAO_CustomValueTable::setValues($params);
+        }
+      }
+    }
 }
 
 

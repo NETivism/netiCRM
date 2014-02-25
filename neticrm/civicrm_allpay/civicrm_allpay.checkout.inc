@@ -80,7 +80,6 @@ function _civicrm_allpay_order(&$vars, $component, &$payment_processor, $instrum
 
   // building vars
   $amount = $vars['currencyID'] == 'TWD' && strstr($vars['amount'], '.') ? substr($vars['amount'], 0, strpos($vars['amount'],'.')) : $vars['amount'];
-  $notify_url .= "&qfKey=".$vars['qfKey'];
 
   $args = array(
     'MerchantID' => $payment_processor['user_name'],
@@ -90,7 +89,7 @@ function _civicrm_allpay_order(&$vars, $component, &$payment_processor, $instrum
     'TotalAmount' => $amount,
     'TradeDesc' => $vars['description'],
     'ItemName' => !empty($vars['amount_level']) ? $vars['amount_level'] : $vars['item_name'],
-    'ReturnURL' => $notify_url.'&bg=1',
+    'ReturnURL' => $notify_url."&qfKey=".$vars['qfKey'],
     'ChoosePayment' => $instrument_code,
     #'CheckMacValue' => '', // add in civicrm_allpay_checkmacvalue
     'ClientBackURL' => $thankyou_url,
@@ -142,14 +141,15 @@ function _civicrm_allpay_order(&$vars, $component, &$payment_processor, $instrum
     case 'WebATM':
       break;
     case 'Credit':
-    /*
+      if($vars['is_recur']){
+        $args['PeriodAmount'] = $amount;
+        $period = strtoupper($vars['frequency_unit'][0]);
+        $args['PeriodType'] = $period;
+        $args['Frequency'] = 1; // now only support continious recurring
+        $args['ExecTimes'] = empty($vars['installments']) ? 999 : $vars['installments']; // support endless
+        $args['PeriodReturnURL'] = $notify_url.'&is_recur=1';
+      }
       # Recurring
-      $args['PeriodAmount'] = '';
-      $args['PeriodType'] = '';
-      $args['Frequency'] = '';
-      $args['ExecTimes'] = '';
-      $args['PeriodReturnURL'] = '';
-    */
       break;
   }
   return $args ;

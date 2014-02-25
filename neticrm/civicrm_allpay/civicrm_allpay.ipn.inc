@@ -22,7 +22,8 @@ function civicrm_allpay_ipn($instrument){
 }
 
 class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
-  static $payment_processor = null;
+  static $_payment_processor = null;
+  static $_input = null;
   function __construct( ) {
     parent::__construct( );
   }
@@ -36,7 +37,15 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
     $input['component'] = $component;
     $qfKey = $_GET['qfKey'];
     $civi_base_url = $component == 'event' ? 'civicrm/event/register' : 'civicrm/contribute/transact';
-    civicrm_allpay_record($_GET['cid']);
+
+    if(empty($ids['contributionRecur'])){
+      // we will save record later if this is recurring
+      civicrm_allpay_record($ids['contribution']);
+      $recur = FALSE;
+    }
+    else{
+      $recur = TRUE;
+    }
     
     // now, retrieve full object by validateData, or false fallback
     if ( ! $this->validateData( $input, $ids, $objects ) ) {
@@ -44,8 +53,10 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
     }
 
     // set global variable for paymentProcessor
-    self::$payment_processor =& $objects['paymentProcessor'];
-    if($objects['contribution']->contribution_status_id == 1){
+    self::$_payment_processor =& $objects['paymentProcessor'];
+    self::$_input = $input;
+
+    if($objects['contribution']->contribution_status_id == 1 && empty($_GET['is_recur'])){
       // already completed, skip
       echo '1|OK';
     }
@@ -57,7 +68,7 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
       if( $this->validateOthers($input, $ids, $objects, $transaction, $note) ){
         $contribution =& $objects['contribution'];
 
-        $contribution->receive_date = date('YmdHis');
+        $contribution->receive_date = $input['PaymentDate'] ? date('YmdHis', strtotime($input['PaymentDate'])) : date('YmdHis');
         $input['trxn_id'] = $contribution->id;
         $this->completeTransaction( $input, $ids, $objects, $transaction, $recur );
         $note .= ts('Completed')."\n";
@@ -103,7 +114,7 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
     } 
 
     // check amount
-    $amount = $input['TradeAmt'];
+    $amount = $input['TradeAmt'] ? $input['TradeAmt'] : $input['Amount'];
     if ( round($contribution->total_amount) != $amount ) {
       watchdog("civicrm_allpay", "Amount values dont match between database and IPN request" );
       $note .= ts("Failuare: Amount values dont match between database and IPN request")."\n";
@@ -111,11 +122,62 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
     }
 
     // allpay validation
-    $mac = _civicrm_allpay_checkmacvalue($_POST, self::$payment_processor);
+    $mac = _civicrm_allpay_checkmacvalue($_POST, self::$_payment_processor);
     if(!$input['CheckMacValue'] != $mac) {
       $note .= ts("Failuare: CheckMacValue not match. Contact system admin.")."\n";
       $this->failed( $objects, $transaction );
       $pass = FALSE;
+    }
+
+    // recurring validation
+    // certainly this is recurring contribution
+    if($ids['contributionRecur'] && $pass){
+      $recur = &$objects['contributionRecur'];
+      $params = $null = array();
+      // see if we are first time, if not first time, save new contribution
+      // cancel recurring
+      // 4 - fail
+      // 3 - end
+      // 2 - pending
+      // 1 - current(already submitted first time)
+
+      // not the first time (PeriodReturnURL)
+      if($_GET['is_recur']){
+        #$exectimes = CRM_Core_DAO::singleValueQuery("SELECT count(*) FROM civicrm_contribution WHERE contribution_recur_id = %1", array(1 => array($recur->id, 'Integer')));
+        if($input['RtnCode'] == 1){
+          $contribution->contribution_status_id = 1; // Completed
+        }
+        else{
+          $contribution->contribution_status_id = 4; // Failed
+        }
+        if($c = $this->copyContribution($contribution, $ids['contributionRecur'])){
+          unset($objects['contribution']);
+          $objects['contribution'] = $c;
+          
+          // update recurring object
+          // never end if TotalSuccessTimes not excceed the ExecTimes
+          if($input['TotalSuccessTimes'] == $recur->installments){
+            $params['modified_date'] = date('YmdHis');
+            $params['end_date'] = date('YmdHis');
+            $params['contribution_status_id'] = 3;
+            CRM_Contribute_BAO_ContributionRecur::add($params, $null);
+          }
+        }
+      }
+      else{
+      // is first time
+        if($input['RtnCode'] == 1){
+          $params['id'] = $recur->id;
+          $params['start_date'] = date('YmdHis', strtotime($input['PaymentDate']));
+          $params['contribution_status_id'] = 1;
+          $params['modified_date'] = date('YmdHis');
+          CRM_Contribute_BAO_ContributionRecur::add($params, $null);
+        }
+        else{
+          CRM_Contribute_BAO_ContributionRecur::cancelRecurContribution($recur->id, CRM_Core_DAO::$_nullObject, 4);
+        }
+      }
+      civicrm_allpay_record($objects['contribution']->id);
     }
       
     // process fail response
@@ -128,6 +190,24 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
     }
 
     return $pass;
+  }
+
+  function copyContribution(&$contrib, $rid){
+    if(is_object($contrib)){
+      $c = clone $contrib;
+      unset($c->id);
+      unset($c->receive_date);
+      unset($c->trxn_id);
+      unset($c->invoice_id);
+      unset($c->receipt_id);
+      $time = strtotime(self::$_input['ProcessDate']);
+      $c->receive_date = date('YmdHis', $time);
+      $c->created_date = date('YmdHis', $time);
+      $c->save();
+      CRM_Contribute_BAO_ContributionRecur::syncContribute($rid, $c->id);
+      return $c;
+    }
+    return FALSE;
   }
 
   function addNote($note, &$contribution){

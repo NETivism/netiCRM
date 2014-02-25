@@ -36,11 +36,13 @@ function civicrm_allpay_install() {
   drupal_install_schema('civicrm_allpay');
   civicrm_initialize( );
 
-  // new payment processor
-  $sql = "INSERT INTO civicrm_payment_processor_type (name, title, description, is_active, is_default, user_name_label, password_label, signature_label, subject_label, class_name, url_site_default, url_api_default, url_recur_default, url_button_default, url_site_test_default, url_api_test_default, url_recur_test_default, url_button_test_default, billing_mode, is_recur, payment_type) VALUES ('ALLPAY', '歐付寶', NULL, 1, 0, '商店代號', 'HashKey', 'HashIV', '', 'Payment_ALLPAY', 'https://payment.allpay.com.tw/Cashier/AioCheckOut', 'https://payment.allpay.com.tw/api/purchase/allpay.asmx?op=QueryTradeInfo', NULL, NULL, 'http://payment-stage.allpay.com.tw/Cashier/AioCheckOut', 'http://payment-stage.allpay.com.tw/api/purchase/allpay.asmx?op=QueryTradeInfo', NULL, NULL, 4, 0, 1)";
-
+  // new payment processor - credit card (allowed recurring)
+  $sql = "INSERT INTO civicrm_payment_processor_type (name, title, description, is_active, is_default, user_name_label, password_label, signature_label, subject_label, class_name, url_site_default, url_api_default, url_recur_default, url_button_default, url_site_test_default, url_api_test_default, url_recur_test_default, url_button_test_default, billing_mode, is_recur, payment_type) VALUES ('ALLPAY', '歐付寶信用卡', NULL, 1, 0, '商店代號', 'HashKey', 'HashIV', '', 'Payment_ALLPAY', 'https://payment.allpay.com.tw/Cashier/AioCheckOut', 'https://payment.allpay.com.tw/api/purchase/allpay.asmx?op=QueryTradeInfo', NULL, NULL, 'http://payment-stage.allpay.com.tw/Cashier/AioCheckOut', 'http://payment-stage.allpay.com.tw/api/purchase/allpay.asmx?op=QueryTradeInfo', NULL, NULL, 4, 1, 1)";
   CRM_Core_DAO::executeQuery($sql);
-  $ppt_id = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_payment_processor_type WHERE name LIKE 'ALLPAY'");
+
+  // new payment processor - others (not allowed recurring)
+  $sql = "INSERT INTO civicrm_payment_processor_type (name, title, description, is_active, is_default, user_name_label, password_label, signature_label, subject_label, class_name, url_site_default, url_api_default, url_recur_default, url_button_default, url_site_test_default, url_api_test_default, url_recur_test_default, url_button_test_default, billing_mode, is_recur, payment_type) VALUES ('ALLPAYX', '歐付寶非信用卡', NULL, 1, 0, '商店代號', 'HashKey', 'HashIV', '', 'Payment_ALLPAY', 'https://payment.allpay.com.tw/Cashier/AioCheckOut', 'https://payment.allpay.com.tw/api/purchase/allpay.asmx?op=QueryTradeInfo', NULL, NULL, 'http://payment-stage.allpay.com.tw/Cashier/AioCheckOut', 'http://payment-stage.allpay.com.tw/api/purchase/allpay.asmx?op=QueryTradeInfo', NULL, NULL, 4, 0, 1)";
+  CRM_Core_DAO::executeQuery($sql);
 
   // new payment instrument
   include_once "civicrm_allpay.module";
