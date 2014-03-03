@@ -1,6 +1,7 @@
 <?php
 civicrm_initialize();
 require_once 'CRM/Core/Payment/BaseIPN.php';
+date_default_timezone_set("Asia/Taipei");
 
 /**
  * Helper function for receive pingback from payment server
@@ -67,8 +68,9 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
       $note = '';
       if( $this->validateOthers($input, $ids, $objects, $transaction, $note) ){
         $contribution =& $objects['contribution'];
-
-        $contribution->receive_date = $input['PaymentDate'] ? date('YmdHis', strtotime($input['PaymentDate'])) : date('YmdHis');
+        if(empty($contribution->receive_date)){
+          $contribution->receive_date = $input['PaymentDate'] ? date('YmdHis', strtotime($input['PaymentDate'])) : date('YmdHis');
+        }
         $input['trxn_id'] = $contribution->id;
         $this->completeTransaction( $input, $ids, $objects, $transaction, $recur );
         $note .= ts('Completed')."\n";
@@ -125,7 +127,7 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
     $mac = _civicrm_allpay_checkmacvalue($_POST, self::$_payment_processor);
     if(!$input['CheckMacValue'] != $mac) {
       $note .= ts("Failuare: CheckMacValue not match. Contact system admin.")."\n";
-      $this->failed( $objects, $transaction );
+      watchdog("civicrm_allpay", "Failuare: CheckMacValue not match. Contact system admin.");
       $pass = FALSE;
     }
 
@@ -143,20 +145,29 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
 
       // not the first time (PeriodReturnURL)
       if($_GET['is_recur']){
-        #$exectimes = CRM_Core_DAO::singleValueQuery("SELECT count(*) FROM civicrm_contribution WHERE contribution_recur_id = %1", array(1 => array($recur->id, 'Integer')));
-        if($input['RtnCode'] == 1){
+        $local_succ_times = CRM_Core_DAO::singleValueQuery("SELECT count(*) FROM civicrm_contribution WHERE contribution_recur_id = %1 AND contribution_status_id = 1", array(1 => array($recur->id, 'Integer')));
+        if($input['RtnCode'] == 1 && $local_succ_times < $input['TotalSuccessTimes']){
           $contribution->contribution_status_id = 1; // Completed
+          $c = $this->copyContribution($contribution, $ids['contributionRecur']);
+        }
+        elseif($input['RtnCode'] != 1){
+          $contribution->contribution_status_id = 4; // Failed
+          $c = $this->copyContribution($contribution, $ids['contributionRecur']);
         }
         else{
-          $contribution->contribution_status_id = 4; // Failed
+          // possible duplicate notify
+          watchdog('civicrm_allpay', 'Possible duplicate notify, detect from TotalSuccessTimes: '.$input['TotalSuccessTimes']);
+          $note .= "Possible duplicate notify. Already success $local_succ_times, but notify us only {$input['TotalSuccessTimes']} success execution.";
+          $pass = FALSE;
         }
-        if($c = $this->copyContribution($contribution, $ids['contributionRecur'])){
+        if(!empty($c)){
           unset($objects['contribution']);
           $objects['contribution'] = $c;
           
           // update recurring object
           // never end if TotalSuccessTimes not excceed the ExecTimes
           if($input['TotalSuccessTimes'] == $recur->installments){
+            $params['id'] = $recur->id;
             $params['modified_date'] = date('YmdHis');
             $params['end_date'] = date('YmdHis');
             $params['contribution_status_id'] = 3;
@@ -181,7 +192,7 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
     }
       
     // process fail response
-    if($input['RtnCode'] != 1){
+    if($input['RtnCode'] != 1 && $pass){
       $response_code = $input['RtnCode'];
       $response_msg = $input['RtnMsg'];
       $note .= "Failed $response_code: $response_msg";
@@ -202,7 +213,7 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
       unset($c->receipt_id);
       $time = strtotime(self::$_input['ProcessDate']);
       $c->receive_date = date('YmdHis', $time);
-      $c->created_date = date('YmdHis', $time);
+      $c->created_date = date('YmdHis');
       $c->save();
       CRM_Contribute_BAO_ContributionRecur::syncContribute($rid, $c->id);
       return $c;

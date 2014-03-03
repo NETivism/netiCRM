@@ -279,16 +279,32 @@ function civicrm_allpay_record($cid, $data = null){
         'cid' => $cid,
         'data' => json_encode($data),
       );
-      drupal_write_record('civicrm_contribution_allpay', $record, 'cid');
+      // update
+      if(db_result(db_query("SELECT cid FROM {civicrm_contribution_allpay} WHERE cid = %d", $cid))){
+        drupal_write_record('civicrm_contribution_allpay', $record, 'cid');
+      }
+      else{
+        drupal_write_record('civicrm_contribution_allpay', $record);
+      }
     }
   }
 }
 
 function _civicrm_allpay_checkmacvalue(&$args, $payment_processor){
   // remove empty arg
-  foreach($args as $k => $v){
-    if(empty($v)){
-      unset($args[$k]);
+  if(is_array($args)){
+    foreach($args as $k => $v){
+      if(empty($v)){
+        unset($args[$k]);
+      }
+    }
+  }
+  elseif(is_string($args)){
+    $tmp = explode('&', $args);
+    $args = array();
+    foreach($tmp as $v){
+      list($key, $value) = explode('=', $v);
+      $args[$key] = $value;
     }
   }
   ksort($args);
