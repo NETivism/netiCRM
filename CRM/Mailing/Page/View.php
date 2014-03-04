@@ -111,6 +111,7 @@ class CRM_Mailing_Page_View extends CRM_Core_Page {
       CRM_Utils_System::permissionDenied();
       return;
     }
+    $this->_mailing->url_tracking = 0;
 
     CRM_Mailing_BAO_Mailing::tokenReplace($this->_mailing);
 
