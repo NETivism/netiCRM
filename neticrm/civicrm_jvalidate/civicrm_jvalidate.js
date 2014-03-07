@@ -32,7 +32,7 @@ $.amask.phone_add_validate = function(obj, admin){
 
   var mobile = false;
   if(admin){
-    var $p = $(obj).parents("tr");
+    var $p = $(obj).parents("tr:first");
     var $type = $p.find("select[name*='phone_type_id']");
     if($type.val() == 2){
       mobile = true;
@@ -59,7 +59,7 @@ $.amask.phone_add_validate = function(obj, admin){
   // phone type change
   $("select[name*='phone_type_id']").change(function(){
     var type_id = $(this).val();
-    $(this).parents('tr').find("input[name$='[phone]']").each(function(){
+    $(this).parents('tr:first').find("input[name$='[phone]']").each(function(){
       if(type_id==2){
         mobile_mask(this);
       }
@@ -133,11 +133,11 @@ $(document).ready(function(){
   $("#crm-container form").each(function(){
     $(".crm-section .label .crm-marker").each(function(){
       if($(this).text() == "*"){
-        var inputs = $(this).parents(".crm-section").find(":input:visible:first:not([type=checkbox])");
+        var inputs = $(this).parents(".crm-section:first").find(":input:visible:first:not([type=checkbox])");
         inputs.addClass("required");
 
-        var checkboxes = $(this).parents(".crm-section").find(":input:visible[type=checkbox]");
-        checkboxes.parents("div.content").addClass("ckbox");
+        var checkboxes = $(this).parents(".crm-section:first").find(":input:visible[type=checkbox]");
+        checkboxes.parents("div.content:first").addClass("ckbox");
       }
     });
     if($(this).attr("id")){
@@ -155,7 +155,7 @@ $(document).ready(function(){
             $c.prepend(error);
           }
           else if (element.is(":checkbox")) {
-            var $c = element.parents('div.ckbox');
+            var $c = element.parents('div.ckbox:first');
             $c.find("label.error").remove();
             error.css({"color":"#E55","padding-left":"10px","display":"block"});
             $c.prepend(error);
@@ -198,7 +198,7 @@ $(document).ready(function(){
           });
         });
         $ckbox.find("input:checkbox").click(function(){
-          var $p = $(this).parents("div.ckbox");
+          var $p = $(this).parents("div.ckbox:first");
           $p.find("label.error").remove();
           $(this).valid();
         });
