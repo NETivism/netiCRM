@@ -37,135 +37,129 @@ var seperator      = '{/literal}{$config->monetaryDecimalPoint}{literal}';
 var symbol         = '{/literal}{$currencySymbol}{literal}';
 var optionSep      = '|';
 var priceSet = price = Array( );
-cj("input,#priceset select,#priceset").each(function () {
-
+cj("#priceset select, #priceset input").each(function () {
   if ( cj(this).attr('price') ) {
-  switch( cj(this).attr('type') ) {
-    
-  case 'checkbox':
-    
-    //default calcution of element. 
-    eval( 'var option = ' + cj(this).attr('price') ) ;
-    ele        = option[0];
-    optionPart = option[1].split(optionSep);
-    addprice   = parseFloat( optionPart[0] );    
-    
-    if( cj(this).attr('checked') ) {
-      totalfee   += addprice;
-      price[ele] += addprice;
-    }
+    var thetype = cj(this)[0].tagName == "INPUT" ? cj(this).attr('type') : cj(this)[0].tagName.toLowerCase();
+    switch( thetype ) {
+      case 'checkbox':
+        //default calcution of element. 
+        eval( 'var option = ' + cj(this).attr('price') ) ;
+        ele        = option[0];
+        optionPart = option[1].split(optionSep);
+        addprice   = parseFloat( optionPart[0] );    
+        
+        if( cj(this).attr('checked') ) {
+          totalfee   += addprice;
+          price[ele] += addprice;
+        }
 
-    //event driven calculation of element.
-    cj(this).click( function(){
-      
-      if ( cj(this).attr('checked') )  {
-	totalfee   += addprice;
-	price[ele] += addprice;
-      } else {
-	totalfee   -= addprice;
-	price[ele] -= addprice;
-      }
-      display( totalfee );
-    });
-    display( totalfee );
-    break;
-    
-  case 'radio':
-
-    //default calcution of element. 
-    eval( 'var option = ' + cj(this).attr('price') ); 
-    ele        = option[0];
-    optionPart = option[1].split(optionSep);
-    addprice   = parseFloat( optionPart[0] );
-    if ( ! price[ele] ) {
-      price[ele] = 0;
-    }
-    
-    if( cj(this).attr('checked') ) {
-      totalfee   = parseFloat(totalfee) + addprice - parseFloat(price[ele]);
-      price[ele] = addprice;
-    }
-    
-    //event driven calculation of element.
-    cj(this).click( function(){ 
-      totalfee   = parseFloat(totalfee) + addprice - parseFloat(price[ele]);
-      price[ele] = addprice;
-      
-      display( totalfee );
-    });
-    display( totalfee );
-    break;
-    
-  case 'text':
-    
-    //default calcution of element. 
-    var textval = parseFloat( cj(this).val() );
-    if ( textval ) {
-      eval( 'var option = '+ cj(this).attr('price') );
-      ele         = option[0];
-      if ( ! price[ele] ) {
-       price[ele] = 0;
-      }
-      optionPart = option[1].split(optionSep);
-      addprice   = parseFloat( optionPart[0] );
-      var curval  = textval * addprice;
-      if ( textval >= 0 ) {
-  	totalfee   = parseFloat(totalfee) + curval - parseFloat(price[ele]);
-  	price[ele] = curval;
-      }
-    }
-    
-    //event driven calculation of element.
-    cj(this).bind( 'keyup', function() { calculateText( this );
-	  }).bind( 'blur' , function() { calculateText( this );   
-    });
-    display( totalfee );
-    break;
-
-  case 'select-one':
-    
-    //default calcution of element. 
-    var ele = cj(this).attr('id');
-      if ( ! price[ele] ) {
-	price[ele] = 0;
-      }
-      eval( 'var selectedText = ' + cj(this).attr('price') );
-      var addprice = 0;
-      if ( cj(this).val( ) ) {
-        optionPart = selectedText[cj(this).val( )].split(optionSep);
+        //event driven calculation of element.
+        cj(this).click( function(){
+          if ( cj(this).attr('checked') )  {
+            totalfee   += addprice;
+            price[ele] += addprice;
+          } else {
+            totalfee   -= addprice;
+            price[ele] -= addprice;
+          }
+          display( totalfee );
+        });
+        display( totalfee );
+        break;
+        
+      case 'radio':
+        //default calcution of element. 
+        eval( 'var option = ' + cj(this).attr('price') ); 
+        ele        = option[0];
+        optionPart = option[1].split(optionSep);
         addprice   = parseFloat( optionPart[0] );
-      } 
+        if ( ! price[ele] ) {
+          price[ele] = 0;
+        }
+        
+        if( cj(this).attr('checked') ) {
+          totalfee   = parseFloat(totalfee) + addprice - parseFloat(price[ele]);
+          price[ele] = addprice;
+        }
+        
+        //event driven calculation of element.
+        cj(this).click( function(){ 
+          totalfee   = parseFloat(totalfee) + addprice - parseFloat(price[ele]);
+          price[ele] = addprice;
+          
+          display( totalfee );
+        });
+        display( totalfee );
+        break;
+        
+      case 'text':
+        //default calcution of element. 
+        var textval = parseFloat( cj(this).val() );
+        if ( textval ) {
+          eval( 'var option = '+ cj(this).attr('price') );
+          ele         = option[0];
+          if ( ! price[ele] ) {
+           price[ele] = 0;
+          }
+          optionPart = option[1].split(optionSep);
+          addprice   = parseFloat( optionPart[0] );
+          var curval  = textval * addprice;
+          if ( textval >= 0 ) {
+            totalfee   = parseFloat(totalfee) + curval - parseFloat(price[ele]);
+            price[ele] = curval;
+          }
+        }
+        
+        //event driven calculation of element.
+        cj(this).bind( 'keyup', function() { calculateText( this );
+        }).bind( 'blur' , function() { calculateText( this );   
+        });
+        display( totalfee );
+        break;
 
-    if ( addprice ) {
-	totalfee   = parseFloat(totalfee) + addprice - parseFloat(price[ele]);
-	price[ele] = addprice;
-    }
-    
-    //event driven calculation of element.
-    cj(this).change( function() {
-      var ele = cj(this).attr('id');
-      if ( ! price[ele] ) {
-	price[ele] = 0;
-      }
-      eval( 'var selectedText = ' + cj(this).attr('price') );
+      case 'select':
+        //default calcution of element. 
+        var ele = cj(this).attr('id');
+          if ( ! price[ele] ) {
+            price[ele] = 0;
+          }
+          eval( 'var selectedText = ' + cj(this).attr('price') );
+          var addprice = 0;
+          if ( cj(this).val( ) ) {
+            optionPart = selectedText[cj(this).val( )].split(optionSep);
+            addprice   = parseFloat( optionPart[0] );
+          } 
 
-      var addprice = 0;
-      if ( cj(this).val( ) ) {
-        optionPart = selectedText[cj(this).val( )].split(optionSep);
-        addprice   = parseFloat( optionPart[0] );
-      }
+        if ( addprice ) {
+          totalfee   = parseFloat(totalfee) + addprice - parseFloat(price[ele]);
+          price[ele] = addprice;
+        }
+        
+        //event driven calculation of element.
+        cj(this).change( function() {
+          var ele = cj(this).attr('id');
+          if ( ! price[ele] ) {
+            price[ele] = 0;
+          }
+          eval( 'var selectedText = ' + cj(this).attr('price') );
 
-      if ( addprice ) {
-	totalfee   = parseFloat(totalfee) + addprice - parseFloat(price[ele]);
-	price[ele] = addprice;
-      } else {
-	totalfee   = parseFloat(totalfee) - parseFloat(price[ele]);
-	price[ele] = parseFloat('0');
-      }
-      display( totalfee );
-    });
-    display( totalfee );
-    break;
+          var addprice = 0;
+          if ( cj(this).val( ) ) {
+            optionPart = selectedText[cj(this).val( )].split(optionSep);
+            addprice   = parseFloat( optionPart[0] );
+          }
+
+          if ( addprice ) {
+            totalfee   = parseFloat(totalfee) + addprice - parseFloat(price[ele]);
+            price[ele] = addprice;
+          } else {
+            totalfee   = parseFloat(totalfee) - parseFloat(price[ele]);
+            price[ele] = parseFloat('0');
+          }
+          display( totalfee );
+        });
+        display( totalfee );
+        break;
     }
   }
 });
@@ -181,13 +175,13 @@ function calculateText( object ) {
   addprice    = parseFloat( optionPart[0] );
   var textval = parseFloat( cj(object).attr('value') );
   var curval  = textval * addprice;
-    if ( textval >= 0 ) {
-	totalfee   = parseFloat(totalfee) + curval - parseFloat(price[ele]);
-	price[ele] = curval;
-    } else {
-	totalfee   = parseFloat(totalfee) - parseFloat(price[ele]);	
-	price[ele] = parseFloat('0');
-    }
+  if ( textval >= 0 ) {
+    totalfee   = parseFloat(totalfee) + curval - parseFloat(price[ele]);
+    price[ele] = curval;
+  } else {
+    totalfee   = parseFloat(totalfee) - parseFloat(price[ele]);	
+    price[ele] = parseFloat('0');
+  }
   display( totalfee );  
 }
 
