@@ -127,6 +127,45 @@ function civicrm_allpay_civicrm_buildForm($form_name, &$form){
     case 'CRM_Event_Form_Registration_ThankYou':
       unset($_SESSION['allpay']);
       break;
+    case 'CRM_Contribute_Form_ContributionPage_Amount':
+      $query = CRM_Core_DAO::executeQuery("SELECT id FROM civicrm_payment_processor WHERE payment_processor_type = 'ALLPAY'");
+      while($query->fetch()){
+        $processor[$query->id] = $query->id;
+      }
+      $str = '\['.implode('\]|\[', $processor).'\]';
+      $js = '
+    $(document).ready(function(){
+      var show_hide_interval = function(show){
+        if(show){
+          $("#is_recur_interval").parents("tr:first").show();
+        }
+        else{
+          $("#is_recur_interval").parents("tr:first").hide();
+        }
+      }
+      $("tr.crm-contribution-contributionpage-amount-form-block-payment_processor input:checkbox").each(function(){
+        if($(this).attr("name").match(/'.$str.'/) && $(this).attr("checked")){
+          show_hide_interval(0);
+        }
+      });
+      $("tr.crm-contribution-contributionpage-amount-form-block-payment_processor input:checkbox").click(function(){
+        if($(this).attr("name").match(/'.$str.'/) && $(this).attr("checked")){
+          show_hide_interval(0);
+        }
+        else
+        if($(this).attr("name").match(/'.$str.'/) && !$(this).attr("checked")){
+          show_hide_interval(1);
+        }
+      });
+      $("#is_recur").click(function(){
+        if($(this).val()){
+          $("#is_recur_interval").attr( "checked", false );
+        }
+      });
+    });  
+    ';
+      drupal_add_js($js, 'inline', 'footer');
+      break;
   }
 }
 
