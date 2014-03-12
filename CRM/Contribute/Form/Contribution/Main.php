@@ -829,7 +829,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
             }
         }
 
-        if ( CRM_Utils_Array::value( 'is_recur', $fields ) && CRM_Utils_Array::value('payment_processor', $fields) == 0 ) {
+        if ( CRM_Utils_Array::value( 'is_recur', $fields ) && (CRM_Utils_Array::value('payment_processor', $fields) == 0 || CRM_Utils_Array::value('civicrm_instrument_id', $fields) != 1) ) {
             $errors['_qf_default'] = ts('You cannot set up a recurring contribution if you are not paying online by credit card.'); 
         }
 
