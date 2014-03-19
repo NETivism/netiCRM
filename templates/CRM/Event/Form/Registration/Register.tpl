@@ -99,12 +99,12 @@
     </fieldset>
     {if $event.is_pay_later && !$form.payment_processor}
         <div class="crm-section pay_later-section">
-	        <div class="label">&nbsp;</div>
-            <div class="label">{ts}Payment Method{/ts}</div>
-              <div class="content"><input type="checkbox" checked="checked" disabled="disabled"/>{$event.pay_later_text}<br />
-              <span class="description">{$event.pay_later_receipt}</span>
-              </div>
-            <div class="clear"></div>
+          <div class="label">{ts}Payment Method{/ts}</div>
+          <div class="content">
+            <input type="checkbox" checked="checked" disabled="disabled"/> {$event.pay_later_text|nl2br}<br />
+            <span class="description">{$event.pay_later_receipt|nl2br}</span>
+          </div>
+          <div class="clear"></div>
         </div>
     {/if}
 {else}
@@ -283,7 +283,7 @@
   });
   cj("input[name=payment_processor]").click(function(){
     if(cj(this).val() == 0){
-      cj("#billing-payment-block").html('<div class="crm-section payment-description"><div class="label"></div><div class="content">{/literal}{$event.pay_later_receipt}{literal}</div><div class="clear"></div></div>');
+      cj("#billing-payment-block").html('<div class="crm-section payment-description"><div class="label"></div><div class="content">{/literal}{$event.pay_later_receipt|nl2br|regex_replace:"/[\r\n]/" : ""}{literal}</div><div class="clear"></div></div>');
     }
   });
 </script>
