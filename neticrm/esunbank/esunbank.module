@@ -54,13 +54,14 @@ function esunbank_api_page(){
     'store' => arg(6),
     'type' => arg(7),
     'user' => arg(8),
+    'item' => arg(9),
   );
   print esunbank_api($vars);
 }
 
 function esunbank_api_link(&$vars){
   extract($vars);
-  return url("esunbank/$code/$number/$length/$price/$timestamp/$store/$type/$user", array('absolute' => TRUE, 'target' => '_blank'));
+  return url("esunbank/$code/$number/$length/$price/$timestamp/$store/$type/$user/$item", array('absolute' => TRUE, 'target' => '_blank'));
 }
 
 function esunbank_api_serial(&$vars){
