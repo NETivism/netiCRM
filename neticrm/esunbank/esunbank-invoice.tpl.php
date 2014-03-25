@@ -35,8 +35,9 @@
   </div>
   <div class="info">
     <p><label>訂單編號：</label><?php print $vars['order_number']; ?></p>
-    <p><label>繳款人：</label><?php print $vars['user']; ?></p>
-    <p><label>繳款金額：</label><?php print $vars['price']; ?><br /></p>
+    <?php if($vars['user']){ ?><p><label>繳款人：</label><?php print $vars['user']; ?></p><?php } ?>
+    <?php if($vars['item']){ ?><p><label>繳款項目：</label><?php print $vars['item']; ?></p><?php } ?>
+    <p><label>繳款金額：</label><?php print $vars['price']; ?></p>
     <div><img src="<?php print $vars['path'].'images/icons.png'; ?>" border="0" /></div>
     <div class="receipt-info"><?php print $receipt_info; ?></div>
   </div>

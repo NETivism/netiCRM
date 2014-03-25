@@ -29,6 +29,7 @@ function civicrm_esunbank_do_transfer_checkout(&$vars, &$component, &$payment_pr
 
   // contact info
   $p['user'] = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $vars['contactID'], 'display_name');
+  $p['item'] = $vars['item_name'];
 
   // order info
   $p['order_number'] = '';
