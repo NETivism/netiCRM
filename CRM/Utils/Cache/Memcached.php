@@ -32,11 +32,12 @@
  * $Id$
  *
  */
-class CRM_Utils_Cache_Memcache {
+class CRM_Utils_Cache_Memcached {
   const DEFAULT_HOST    = 'localhost';
   const DEFAULT_PORT    = 11211;
   const DEFAULT_TIMEOUT = 3600;
   const DEFAULT_PREFIX  = '';
+  const MAX_KEY_LEN     = 62;
 
   /**
    * The host name of the memcached server
@@ -81,7 +82,6 @@ class CRM_Utils_Cache_Memcache {
    * Constructor
    *
    * @param array   $config  an array of configuration params
-   *
    * @return void
    */
   function __construct($config) {
@@ -98,9 +98,9 @@ class CRM_Utils_Cache_Memcache {
       $this->_prefix = $config['prefix'];
     }
 
-    $this->_cache = new Memcache();
+    $this->_cache = new Memcached();
 
-    if (!$this->_cache->connect($this->_host, $this->_port)) {
+    if (!$this->_cache->addServer($this->_host, $this->_port)) {
       // dont use fatal here since we can go in an infinite loop
       echo 'Could not connect to Memcached server';
       CRM_Utils_System::civiExit();
@@ -108,23 +108,37 @@ class CRM_Utils_Cache_Memcache {
   }
 
   function set($key, &$value) {
-    if (!$this->_cache->set($this->_prefix . $key, $value, FALSE, $this->_timeout)) {
+    $key = $this->cleanKey($key);
+    if (!$this->_cache->set($key, $value, $this->_timeout)) {
+      CRM_Core_Error::debug( 'Result Code: ', $this->_cache->getResultMessage());
+      CRM_Core_Error::fatal("memcached set failed, wondering why?, $key", $value );
       return FALSE;
     }
     return TRUE;
   }
 
   function &get($key) {
-    $result = $this->_cache->get($this->_prefix . $key);
+    $key = $this->cleanKey($key);
+    $result = $this->_cache->get($key);
     return $result;
   }
 
   function delete($key) {
-    return $this->_cache->delete($this->_prefix . $key);
+    $key = $this->cleanKey($key);
+    return $this->_cache->delete($key);
+  }
+
+  function cleanKey($key) {
+    $key = preg_replace('/\s+|\W+/', '_', $this->_prefix . $key);
+    if ( strlen($key) > self::MAX_KEY_LEN ) {
+      $md5Key = md5($key);  // this should be 32 characters in length
+      $subKeyLen = self::MAX_KEY_LEN - 1 - strlen($md5Key);
+      $key = substr($key, 0, $subKeyLen) . "_" . $md5Key;
+    }
+    return $key;
   }
 
   function flush() {
     return $this->_cache->flush();
   }
 }
-

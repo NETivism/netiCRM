@@ -32,50 +32,17 @@
  * $Id$
  *
  */
-class CRM_Utils_Cache_Memcache {
-  const DEFAULT_HOST    = 'localhost';
-  const DEFAULT_PORT    = 11211;
-  const DEFAULT_TIMEOUT = 3600;
-  const DEFAULT_PREFIX  = '';
+
+class CRM_Utils_Cache_NoCache implements CRM_Utils_Cache_Interface {
 
   /**
-   * The host name of the memcached server
+   * We only need one instance of this object. So we use the singleton
+   * pattern and cache the instance in this variable
    *
-   * @var string
+   * @var object
+   * @static
    */
-  protected $_host = self::DEFAULT_HOST;
-
-  /**
-   * The port on which to connect on
-   *
-   * @var int
-   */
-  protected $_port = self::DEFAULT_PORT;
-
-  /**
-   * The default timeout to use
-   *
-   * @var int
-   */
-  protected $_timeout = self::DEFAULT_TIMEOUT;
-
-  /**
-   * The prefix prepended to cache keys.
-   *
-   * If we are using the same memcache instance for multiple CiviCRM
-   * installs, we must have a unique prefix for each install to prevent
-   * the keys from clobbering each other.
-   *
-   * @var string
-   */
-  protected $_prefix = self::DEFAULT_PREFIX;
-
-  /**
-   * The actual memcache object
-   *
-   * @var resource
-   */
-  protected $_cache;
+  static private $_singleton = NULL;
 
   /**
    * Constructor
@@ -85,46 +52,22 @@ class CRM_Utils_Cache_Memcache {
    * @return void
    */
   function __construct($config) {
-    if (isset($config['host'])) {
-      $this->_host = $config['host'];
-    }
-    if (isset($config['port'])) {
-      $this->_port = $config['port'];
-    }
-    if (isset($config['timeout'])) {
-      $this->_timeout = $config['timeout'];
-    }
-    if (isset($config['prefix'])) {
-      $this->_prefix = $config['prefix'];
-    }
-
-    $this->_cache = new Memcache();
-
-    if (!$this->_cache->connect($this->_host, $this->_port)) {
-      // dont use fatal here since we can go in an infinite loop
-      echo 'Could not connect to Memcached server';
-      CRM_Utils_System::civiExit();
-    }
   }
 
   function set($key, &$value) {
-    if (!$this->_cache->set($this->_prefix . $key, $value, FALSE, $this->_timeout)) {
-      return FALSE;
-    }
-    return TRUE;
+    return FALSE;
   }
 
-  function &get($key) {
-    $result = $this->_cache->get($this->_prefix . $key);
-    return $result;
+  function get($key) {
+    return NULL;
   }
 
   function delete($key) {
-    return $this->_cache->delete($this->_prefix . $key);
+    return FALSE;
   }
 
   function flush() {
-    return $this->_cache->flush();
+    return FALSE;
   }
 }
 

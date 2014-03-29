@@ -32,99 +32,85 @@
  * $Id$
  *
  */
-class CRM_Utils_Cache_Memcache {
-  const DEFAULT_HOST    = 'localhost';
-  const DEFAULT_PORT    = 11211;
-  const DEFAULT_TIMEOUT = 3600;
-  const DEFAULT_PREFIX  = '';
+
+/**
+ * This caching provider stores all cached items as a "group" in the
+ * "civicrm_cache" table. The entire 'group' may be prefetched when
+ * instantiating the cache provider.
+ */
+class CRM_Utils_Cache_SqlGroup implements CRM_Utils_Cache_Interface {
 
   /**
    * The host name of the memcached server
    *
    * @var string
    */
-  protected $_host = self::DEFAULT_HOST;
+  protected $group;
 
   /**
-   * The port on which to connect on
-   *
-   * @var int
+   * @var int $componentID The optional component ID (so componenets can share the same name space)
    */
-  protected $_port = self::DEFAULT_PORT;
+  protected $componentID;
 
   /**
-   * The default timeout to use
-   *
-   * @var int
+   * @var array in-memory cache to optimize redundant get()s
    */
-  protected $_timeout = self::DEFAULT_TIMEOUT;
-
-  /**
-   * The prefix prepended to cache keys.
-   *
-   * If we are using the same memcache instance for multiple CiviCRM
-   * installs, we must have a unique prefix for each install to prevent
-   * the keys from clobbering each other.
-   *
-   * @var string
-   */
-  protected $_prefix = self::DEFAULT_PREFIX;
-
-  /**
-   * The actual memcache object
-   *
-   * @var resource
-   */
-  protected $_cache;
+  protected $frontCache;
 
   /**
    * Constructor
    *
    * @param array   $config  an array of configuration params
+   *   - group: string
+   *   - componentID: int
+   *   - prefetch: bool, whether to preemptively read the entire cache group; default: TRUE
    *
    * @return void
    */
   function __construct($config) {
-    if (isset($config['host'])) {
-      $this->_host = $config['host'];
+    if (isset($config['group'])) {
+      $this->group = $config['group'];
+    } else {
+      throw new RuntimeException("Cannot construct SqlGroup cache: missing group");
     }
-    if (isset($config['port'])) {
-      $this->_port = $config['port'];
+    if (isset($config['componentID'])) {
+      $this->componentID = $config['componentID'];
+    } else {
+      $this->componentID = NULL;
     }
-    if (isset($config['timeout'])) {
-      $this->_timeout = $config['timeout'];
-    }
-    if (isset($config['prefix'])) {
-      $this->_prefix = $config['prefix'];
-    }
-
-    $this->_cache = new Memcache();
-
-    if (!$this->_cache->connect($this->_host, $this->_port)) {
-      // dont use fatal here since we can go in an infinite loop
-      echo 'Could not connect to Memcached server';
-      CRM_Utils_System::civiExit();
+    $this->frontCache = array();
+    if (CRM_Utils_Array::value('prefetch', $config, TRUE)) {
+      $this->prefetch();
     }
   }
 
   function set($key, &$value) {
-    if (!$this->_cache->set($this->_prefix . $key, $value, FALSE, $this->_timeout)) {
-      return FALSE;
-    }
-    return TRUE;
+    CRM_Core_BAO_Cache::setItem($value, $this->group, $key, $this->componentID);
+    $this->frontCache[$key] = $value;
   }
 
-  function &get($key) {
-    $result = $this->_cache->get($this->_prefix . $key);
-    return $result;
+  function get($key) {
+    if (! array_key_exists($key, $this->frontCache)) {
+      $this->frontCache[$key] = CRM_Core_BAO_Cache::getItem($this->group, $key, $this->componentID);
+    }
+    return $this->frontCache[$key];
+  }
+
+  function getFromFrontCache($key, $default = NULL) {
+    return CRM_Utils_Array::value($key, $this->frontCache, $default);
   }
 
   function delete($key) {
-    return $this->_cache->delete($this->_prefix . $key);
+    CRM_Core_BAO_Cache::deleteGroup($this->group, $key);
+    unset($this->frontCache[$key]);
   }
 
   function flush() {
-    return $this->_cache->flush();
+    CRM_Core_BAO_Cache::deleteGroup($this->group);
+    $this->frontCache = array();
+  }
+
+  function prefetch() {
+    $this->frontCache = CRM_Core_BAO_Cache::getItems($this->group, $this->componentID);
   }
 }
-

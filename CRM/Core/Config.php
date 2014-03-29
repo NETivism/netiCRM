@@ -184,7 +184,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables
             // first, attempt to get configuration object from cache
             require_once 'CRM/Utils/Cache.php';
             $cache =& CRM_Utils_Cache::singleton( );
-            self::$_singleton = $cache->get( 'CRM_Core_Config' );
+            self::$_singleton = $cache->get('CRM_Core_Config' . CRM_Core_Config::domainID());
 
             // if not in cache, fire off config construction
             if ( ! self::$_singleton ) {
@@ -199,7 +199,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables
                     // retrieve and overwrite stuff from the settings file
                     self::$_singleton->setCoreVariables( );
                 }
-                $cache->set( 'CRM_Core_Config', self::$_singleton );
+                $cache->set('CRM_Core_Config'.CRM_Core_Config::domainID(), self::$_singleton);
             } else {
                 // we retrieve the object from memcache, so we now initialize the objects
                 self::$_singleton->_initialize( $loadFromDB );
@@ -592,8 +592,16 @@ class CRM_Core_Config extends CRM_Core_Config_Variables
     /**
      * one function to get domain ID
      */
-    static function domainID( ) {
-        return defined( 'CIVICRM_DOMAIN_ID' ) ? CIVICRM_DOMAIN_ID : 1;
+    static function domainID($domainID = NULL, $reset = FALSE) {
+      static $domain;
+      if ($domainID) {
+        $domain = $domainID;
+      }
+      if ($reset || empty($domain)) {
+        $domain = defined('CIVICRM_DOMAIN_ID') ? CIVICRM_DOMAIN_ID : 1;
+      }
+
+      return $domain;
     }
 
     /**

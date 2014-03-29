@@ -183,10 +183,7 @@ class CRM_Core_BAO_CustomGroup extends CRM_Core_DAO_CustomGroup
             CRM_Core_BAO_SchemaHandler::changeFKConstraint( $table, self::mapTableName( $params['extends'][0] ) );
         }
         $transaction->commit( );
-
-        // reset the cache
-        require_once 'CRM/Core/BAO/Cache.php';
-        CRM_Core_BAO_Cache::deleteGroup( 'contact fields' );
+        CRM_Utils_System::flushCache();
 
         require_once 'CRM/Utils/Hook.php';
         if ( $tableName ) {
@@ -229,6 +226,9 @@ class CRM_Core_BAO_CustomGroup extends CRM_Core_DAO_CustomGroup
      */
     static function setIsActive( $id, $is_active ) 
     {
+        // reset the cache
+        CRM_Core_BAO_Cache::deleteGroup('contact fields');
+
         require_once 'CRM/Core/BAO/UFField.php';
         if( $is_active ) {
             //CRM_Core_BAO_UFField::setUFFieldStatus($id, $is_active);
@@ -261,7 +261,9 @@ class CRM_Core_BAO_CustomGroup extends CRM_Core_DAO_CustomGroup
                                      $entityID = null,
                                      $groupID  = null,
                                      $subType  = null,
-                                     $subName  = null )
+                                     $subName  = null,
+                                     $fromCache = TRUE
+                                     )
     {
         if ( $entityID ) {
             $entityID = CRM_Utils_Type::escape( $entityID, 'Integer' );
@@ -384,76 +386,96 @@ ORDER BY civicrm_custom_group.weight,
 
         // final query string
         $queryString = "$strSelect $strFrom $strWhere $orderBy";
-        //crm_core_error::debug('$queryString', $queryString );
-        // dummy dao needed
-        $crmDAO =& CRM_Core_DAO::executeQuery( $queryString, $params );
-        
-        $customValueTables = array( );
 
-        // process records
-        while( $crmDAO->fetch( ) ) {
-            // get the id's 
-            $groupID = $crmDAO->civicrm_custom_group_id;
-            $fieldId = $crmDAO->civicrm_custom_field_id;
-
-            // create an array for groups if it does not exist
-            if ( ! array_key_exists( $groupID, $groupTree ) ) {
-                $groupTree[$groupID]       = array();
-                $groupTree[$groupID]['id'] = $groupID;
-                
-                // populate the group information
-                foreach ( $tableData['civicrm_custom_group'] as $fieldName ) {
-                    $fullFieldName = "civicrm_custom_group_$fieldName";
-                    if ( $fieldName == 'id' ||
-                         is_null( $crmDAO->$fullFieldName ) ) {
-                        continue;
-                    }
-                    if ( $fieldName == 'extends_entity_column_value' && $subType ) { // CRM-5507
-                        $groupTree[$groupID]['subtype'] = trim( $subType, CRM_Core_DAO::VALUE_SEPARATOR );
-                    }
-                    $groupTree[$groupID][$fieldName] = $crmDAO->$fullFieldName;
-                }
-                $groupTree[$groupID]['fields'] = array();
-                
-                $customValueTables[$crmDAO->civicrm_custom_group_table_name] = array( );
-            }
-
-            // add the fields now (note - the query row will always contain a field)
-            // we only reset this once, since multiple values come is as multiple rows
-            if ( ! array_key_exists( $fieldId, $groupTree[$groupID]['fields'] ) ) {
-                $groupTree[$groupID]['fields'][$fieldId] = array();
-            }
-			
-            $customValueTables[$crmDAO->civicrm_custom_group_table_name][$crmDAO->civicrm_custom_field_column_name] = 1;
-            $groupTree[$groupID]['fields'][$fieldId]['id'] = $fieldId;
-            // populate information for a custom field
-            foreach ($tableData['civicrm_custom_field'] as $fieldName) {
-                $fullFieldName = "civicrm_custom_field_$fieldName";
-                if ( $fieldName == 'id' ||
-                     is_null( $crmDAO->$fullFieldName ) ) {
-                    continue;
-                } 
-                $groupTree[$groupID]['fields'][$fieldId][$fieldName] = $crmDAO->$fullFieldName;
-            }
+        // lets see if we can retrieve the groupTree from cache
+        $cacheString = $queryString;
+        if ( $groupID > 0 ) {
+          $cacheString .= "_{$groupID}";
+        } else {
+          $cacheString .= "_Inline";
         }
+        $cacheKey = "CRM_Core_DAO_CustomGroup_Query " . md5($cacheString);
+        $multipleFieldGroupCacheKey = "CRM_Core_DAO_CustomGroup_QueryMultipleFields " . md5($cacheString);
+        $cache = CRM_Utils_Cache::singleton();
+        $tablesWithEntityData = array();
+        if ($fromCache) {
+          $groupTree = $cache->get($cacheKey);
+          $multipleFieldGroups = $cache->get($multipleFieldGroupCacheKey);
+        }
+        if (empty($groupTree)) {
+          $groupTree = $multipleFieldGroups =array();
+          $crmDAO =& CRM_Core_DAO::executeQuery( $queryString, $params );
+          
+          $customValueTables = array( );
 
-        require_once 'CRM/Core/Action.php';
+          // process records
+          while( $crmDAO->fetch( ) ) {
+              // get the id's 
+              $groupID = $crmDAO->civicrm_custom_group_id;
+              $fieldId = $crmDAO->civicrm_custom_field_id;
+
+              // create an array for groups if it does not exist
+              if ( ! array_key_exists( $groupID, $groupTree ) ) {
+                  $groupTree[$groupID]       = array();
+                  $groupTree[$groupID]['id'] = $groupID;
+                  
+                  // populate the group information
+                  foreach ( $tableData['civicrm_custom_group'] as $fieldName ) {
+                      $fullFieldName = "civicrm_custom_group_$fieldName";
+                      if ( $fieldName == 'id' ||
+                           is_null( $crmDAO->$fullFieldName ) ) {
+                          continue;
+                      }
+                      if ( $fieldName == 'extends_entity_column_value' && $subType ) { // CRM-5507
+                          $groupTree[$groupID]['subtype'] = trim( $subType, CRM_Core_DAO::VALUE_SEPARATOR );
+                      }
+                      $groupTree[$groupID][$fieldName] = $crmDAO->$fullFieldName;
+                  }
+                  $groupTree[$groupID]['fields'] = array();
+                  
+                  $customValueTables[$crmDAO->civicrm_custom_group_table_name] = array( );
+              }
+
+              // add the fields now (note - the query row will always contain a field)
+              // we only reset this once, since multiple values come is as multiple rows
+              if ( ! array_key_exists( $fieldId, $groupTree[$groupID]['fields'] ) ) {
+                  $groupTree[$groupID]['fields'][$fieldId] = array();
+              }
+        
+              $customValueTables[$crmDAO->civicrm_custom_group_table_name][$crmDAO->civicrm_custom_field_column_name] = 1;
+              $groupTree[$groupID]['fields'][$fieldId]['id'] = $fieldId;
+              // populate information for a custom field
+              foreach ($tableData['civicrm_custom_field'] as $fieldName) {
+                  $fullFieldName = "civicrm_custom_field_$fieldName";
+                  if ( $fieldName == 'id' ||
+                       is_null( $crmDAO->$fullFieldName ) ) {
+                      continue;
+                  } 
+                  $groupTree[$groupID]['fields'][$fieldId][$fieldName] = $crmDAO->$fullFieldName;
+              }
+          }
+          if (!empty($customValueTables)) {
+            $groupTree['info'] = array('tables' => $customValueTables);
+          }
+
+          $cache->set($cacheKey, $groupTree);
+          $cache->set($multipleFieldGroupCacheKey, $multipleFieldGroups);
+        }
 
         // now that we have all the groups and fields, lets get the values
         // since we need to know the table and field names
 
         // add info to groupTree
-        if ( ! empty( $customValueTables ) ) {
-            $groupTree['info'] = array( 'tables' => $customValueTables );
+        if (isset($groupTree['info']) && !empty($groupTree['info']) && !empty($groupTree['info']['tables'])) {
             $select = $from = $where = array( );
             foreach ( $groupTree['info']['tables'] as $table => $fields ) {
                 $from[]   = $table;
                 $select[] = "{$table}.id as {$table}_id";
                 $select[] = "{$table}.entity_id as {$table}_entity_id";
 
-				foreach ( $fields as $column => $dontCare ) {
-					$select[] = "{$table}.{$column} as {$table}_{$column}";
-				}
+                foreach ( $fields as $column => $dontCare ) {
+                  $select[] = "{$table}.{$column} as {$table}_{$column}";
+                }
 
                 if ( $entityID ) {
                     $where[]  = "{$table}.entity_id = $entityID";
