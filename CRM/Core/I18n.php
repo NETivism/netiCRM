@@ -385,25 +385,35 @@ function ts($text, $params = array())
     static $function = null;
 
     if ($text == '') {
-        return '';
+      return '';
     }
 
-    if (!$config) {
-        $config = CRM_Core_Config::singleton();
+    if ($config === NULL) {
+      $config = CRM_Core_Config::singleton();
+    }
+
+    if($i18n === NULL){
+      $i18n = CRM_Core_I18n::singleton();
     }
 
     global $tsLocale;
-    if (!$i18n or $locale != $tsLocale) {
-        $i18n =& CRM_Core_I18n::singleton();
-        $locale = $tsLocale;
-        if (isset($config->customTranslateFunction) and function_exists($config->customTranslateFunction)) {
-            $function = $config->customTranslateFunction;
-        }
+    if (empty($locale) && $locale != $tsLocale) {
+      $locale = $tsLocale;
+    }
+
+    if (!empty($config->customTranslateFunction) && $function === NULL) {
+      if(function_exists($config->customTranslateFunction)){
+        $function = $config->customTranslateFunction;
+      }
+      else{
+        $function = FALSE;
+      }
     }
 
     if ($function) {
-        return $function($text, $params);
-    } else {
-        return $i18n->crm_translate($text, $params);
+      return $function($text, $params);
+    }
+    else {
+      return $i18n->crm_translate($text, $params);
     }
 }
