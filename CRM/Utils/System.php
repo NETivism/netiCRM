@@ -1118,11 +1118,6 @@ class CRM_Utils_System {
 
       CRM_Core_OptionGroup::flushAll();
       CRM_Utils_PseudoConstant::flushAll();
-        // flush out all cache entries so we can reload new data
-        // a bit aggressive, but livable for now
-        require_once 'CRM/Utils/Cache.php';
-        $cache =& CRM_Utils_Cache::singleton( );
-        $cache->flush( );
     }
 
     /**
