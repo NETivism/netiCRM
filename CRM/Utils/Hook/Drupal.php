@@ -45,11 +45,10 @@ class CRM_Utils_Hook_Drupal extends CRM_Utils_Hook {
     // copied from user_module_invoke
     if (function_exists('module_list')) {
       $procceed = FALSE;
+      $functions[$fnSuffix] = array();
       foreach ( module_list() as $module) { 
         $fnName = "{$module}_{$fnSuffix}";
-        $functions[$fnSuffix] = array();
-        $r = array();
-        if(isset($functions[$fnSuffix])){
+        if(isset($functions[$fnSuffix][$fnName])){
           if(!empty($functions[$fnSuffix][$fnName])){
             $r = self::runHook($fnName, $numParams, $arg1, $arg2, $arg3, $arg4, $arg5);
           }
@@ -57,6 +56,9 @@ class CRM_Utils_Hook_Drupal extends CRM_Utils_Hook {
         elseif ( function_exists( $fnName ) ) {
           $functions[$fnSuffix][$fnName] = TRUE;
           $r = self::runHook($fnName, $numParams, $arg1, $arg2, $arg3, $arg4, $arg5);
+        }
+        else{
+          $functions[$fnSuffix][$fnName] = FALSE;
         }
         if (is_array($r)){
           $result = array_merge($result, $r);
