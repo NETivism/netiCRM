@@ -781,11 +781,7 @@ SELECT g.*
         if ( ! empty( $acls ) ) {
             $aclKeys = array_keys( $acls );
             $aclKeys = implode( ',', $aclKeys );
-            $cacheKey = "$tableName-$aclKeys";
-            $cache = CRM_Utils_Cache::singleton();
-            $ids = $cache->get($cacheKey);
 
-            if (!$ids) {
               $query = "
 SELECT   a.operation, a.object_id
   FROM   civicrm_acl_cache c, civicrm_acl a
@@ -814,8 +810,6 @@ ORDER BY a.object_id
                   break;
                 }
               }
-            }
-            $cache->set($cacheKey, $ids);
         }
 
         require_once 'CRM/Utils/Hook.php';
