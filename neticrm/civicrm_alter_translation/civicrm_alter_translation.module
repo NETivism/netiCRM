@@ -1,4 +1,7 @@
 <?php
+function civicrm_alter_translation_civicrm_config(&$config){
+  $config->customTranslateFunction = 'civicrm_alter_translation';
+}
 function civicrm_alter_translation($string, $args = array(), $langcode = NULL) {
   global $language;
   static $custom_strings;

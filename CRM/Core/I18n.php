@@ -58,7 +58,7 @@ class CRM_Core_I18n
      */
     function __construct($locale)
     {
-        if ($locale != '' and $locale != 'en_US') {
+        if (!empty($locale) and $locale != 'en_US') {
             $config = CRM_Core_Config::singleton();
 
             if (function_exists('gettext')) {
@@ -383,6 +383,10 @@ function ts($text, $params = array())
     static $locale   = null;
     static $i18n     = null;
     static $function = null;
+    global $tsLocale;
+    if(empty($tsLocale)){
+      return '';
+    }
 
     if ($text == '') {
       return '';
@@ -396,7 +400,6 @@ function ts($text, $params = array())
       $i18n = CRM_Core_I18n::singleton();
     }
 
-    global $tsLocale;
     if (empty($locale) && $locale != $tsLocale) {
       $locale = $tsLocale;
     }
