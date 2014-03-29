@@ -37,34 +37,51 @@
 require_once 'CRM/Utils/Hook.php';
 
 class CRM_Utils_Hook_Drupal extends CRM_Utils_Hook {
-
-    static function invoke( $numParams,
-                            &$arg1, &$arg2, &$arg3, &$arg4, &$arg5,
-                            $fnSuffix ) {
-        $result = array( );
-        // copied from user_module_invoke
-        if (function_exists('module_list')) {
-            foreach ( module_list() as $module) { 
-                $fnName = "{$module}_{$fnSuffix}";
-                if ( function_exists( $fnName ) ) {
-                    if ( $numParams == 1 ) {
-                        $fResult = $fnName( $arg1 );
-                    } else if ( $numParams == 2 ) {
-                        $fResult = $fnName( $arg1, $arg2 );
-                    } else if ( $numParams == 3 ) {
-                        $fResult = $fnName( $arg1, $arg2, $arg3 );
-                    } else if ( $numParams == 4 ) {
-                        $fResult = $fnName( $arg1, $arg2, $arg3, $arg4 );
-                    } else if ( $numParams == 5 ) {
-                        $fResult = $fnName( $arg1, $arg2, $arg3, $arg4, $arg5 );
-                    }
-                    if ( is_array( $fResult ) ) {
-                        $result = array_merge( $result, $fResult );
-                    }
-                }
-            }
+  static function invoke( $numParams,
+                          &$arg1, &$arg2, &$arg3, &$arg4, &$arg5,
+                          $fnSuffix ) {
+    static $functions = array();
+    $result = array();
+    // copied from user_module_invoke
+    if (function_exists('module_list')) {
+      $procceed = FALSE;
+      foreach ( module_list() as $module) { 
+        $fnName = "{$module}_{$fnSuffix}";
+        $functions[$fnSuffix] = array();
+        $r = array();
+        if(isset($functions[$fnSuffix])){
+          if(!empty($functions[$fnSuffix][$fnName])){
+            $r = self::runHook($fnName, $numParams, $arg1, $arg2, $arg3, $arg4, $arg5);
+          }
         }
-        return empty( $result ) ? true : $result;
-   }
+        elseif ( function_exists( $fnName ) ) {
+          $functions[$fnSuffix][$fnName] = TRUE;
+          $r = self::runHook($fnName, $numParams, $arg1, $arg2, $arg3, $arg4, $arg5);
+        }
+        if (is_array($r)){
+          $result = array_merge($result, $r);
+        }
+      }
+    }
+    return empty($result) ? true : $result;
+  }
 
+  static function runHook($fnName, $numParams, &$arg1, &$arg2, &$arg3, &$arg4, &$arg5){
+    if ( $numParams == 1 ) {
+      $fResult = $fnName( $arg1 );
+    }
+    elseif ( $numParams == 2 ) {
+      $fResult = $fnName( $arg1, $arg2 );
+    }
+    elseif ( $numParams == 3 ) {
+      $fResult = $fnName( $arg1, $arg2, $arg3 );
+    }
+    elseif ( $numParams == 4 ) {
+      $fResult = $fnName( $arg1, $arg2, $arg3, $arg4 );
+    }
+    elseif ( $numParams == 5 ) {
+      $fResult = $fnName( $arg1, $arg2, $arg3, $arg4, $arg5 );
+    }
+    return $fResult;
+  }
 }
