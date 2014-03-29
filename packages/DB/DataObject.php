@@ -557,13 +557,14 @@ class DB_DataObject extends DB_DataObject_Overload
             $_DB_DATAOBJECT['RESULTFIELDS'][$this->_DB_resultid]= array_flip(array_keys($array));
         }
         
-        foreach($array as $k=>$v) {
-            $kk = str_replace(".", "_", $k);
-            $kk = str_replace(" ", "_", $kk);
+        $keys = str_replace(array("."," "), "_", array_keys($array));
+        $i = 0;
+        foreach($array as $val) {
+            $key = $keys[$i++];
             if (!empty($_DB_DATAOBJECT['CONFIG']['debug'])) {
-                $this->debug("$kk = ". $array[$k], "fetchrow LINE", 3);
+                $this->debug("$key = ". $val, "fetchrow LINE", 3);
             }
-            $this->$kk = $array[$k];
+            $this->$key = $val;
         }
         
         // set link flag
