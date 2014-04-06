@@ -49,6 +49,7 @@ class CRM_Core_DAO extends DB_DataObject
      */
     static $_nullObject = null;
     static $_nullArray  = array( );
+    static $_dbColumnValueCache = NULL;
 
     const
         NOT_NULL        =   1,
@@ -705,30 +706,38 @@ FROM   civicrm_domain
      * @static
      * @access public
      */
-    static function getFieldValue( $daoName, $searchValue, $returnColumn = 'name', $searchColumn = 'id' ) 
+    static function getFieldValue( $daoName, $searchValue, $returnColumn = 'name', $searchColumn = 'id', $force = FALSE) 
     {
         if ( empty( $searchValue ) ) {
-            // adding this year since developers forget to check for an id
-            // and hence we get the first value in the db
-            CRM_Core_Error::fatal( );
-            return null;
+          // adding this year since developers forget to check for an id
+          // and hence we get the first value in the db
+          CRM_Core_Error::fatal( );
+          return null;
+        }
+
+        $cacheKey = "{$daoName}:{$searchValue}:{$returnColumn}:{$searchColumn}";
+        if (self::$_dbColumnValueCache === NULL) {
+          self::$_dbColumnValueCache = array();
         }
         
-        require_once(str_replace('_', DIRECTORY_SEPARATOR, $daoName) . ".php");
-        eval( '$object   = new ' . $daoName . '( );' );
-        $object->$searchColumn =  $searchValue;
-        $object->selectAdd( );
-        if ( $returnColumn == 'id' ) {
+        if (!array_key_exists($cacheKey, self::$_dbColumnValueCache) || $force) {
+          $object   = new $daoName();
+          $object->$searchColumn = $searchValue;
+          $object->selectAdd();
+          if( $returnColumn == 'id' ) {
             $object->selectAdd( 'id' );
-        } else {
+          }
+          else {
             $object->selectAdd( "id, $returnColumn" );
-        }
-        $result = null;
-        if ( $object->find( true ) ) {
+          }
+          $result = null;
+          if ( $object->find( true ) ) {
             $result = $object->$returnColumn;
+          }
+          $object->free( );
+          self::$_dbColumnValueCache[$cacheKey] = $result;
         }
-        $object->free( );
-        return $result;
+        return self::$_dbColumnValueCache[$cacheKey];
     }
     
     /**
