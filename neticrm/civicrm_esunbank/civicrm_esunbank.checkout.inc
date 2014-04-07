@@ -23,7 +23,7 @@ function civicrm_esunbank_do_transfer_checkout(&$vars, &$component, &$payment_pr
   $p['number'] = $vars['contributionID'];
   $p['length'] = $payment_processor['password'];
   $p['price'] = $vars['amount'];
-  $p['timestamp'] = strtotime('+7 days');
+  $p['timestamp'] = strtotime('+'.CIVICRM_ESUNBANK_EXPIRED_DAY.' days');
   $p['store'] = $payment_processor['subject'];
   $p['type'] = $payment_processor['signature'];
 
