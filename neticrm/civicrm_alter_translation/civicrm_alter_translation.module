@@ -1,10 +1,16 @@
 <?php
-
+function civicrm_alter_translation_civicrm_config(&$config){
+  $config->customTranslateFunction = 'civicrm_alter_translation';
+}
 function civicrm_alter_translation($string, $args = array(), $langcode = NULL) {
   global $language;
   static $custom_strings;
+  static $function = NULL;
 
   $langcode = isset($langcode) ? $langcode : $language->language;
+  if($function === NULL){
+    $function = function_exists('locale') ? 'locale' : FALSE;
+  }
 
   // First, check for an array of customized strings. If present, use the array
   // *instead of* database lookups. This is a high performance way to provide a
@@ -18,8 +24,8 @@ function civicrm_alter_translation($string, $args = array(), $langcode = NULL) {
     $string = $custom_strings[$langcode][$string];
   }
   // Translate with locale module if enabled.
-  elseif (function_exists('locale') && $langcode != 'en') {
-    $string = locale($string, $langcode);
+  elseif ($function && $langcode != 'en') {
+    $string = $function($string, $langcode);
   }
   if (empty($args)) {
     return $string;

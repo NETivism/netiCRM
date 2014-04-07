@@ -132,9 +132,7 @@ class CRM_Core_BAO_OptionValue extends CRM_Core_DAO_OptionValue
 
         $optionValue->id = CRM_Utils_Array::value( 'optionValue', $ids );
         $optionValue->save( );
-
-        $cache =& CRM_Utils_Cache::singleton( );
-        $cache->delete('CRM_OG_*');
+        CRM_Core_PseudoConstant::flush();
         return $optionValue;
     }
     
@@ -154,10 +152,9 @@ class CRM_Core_BAO_OptionValue extends CRM_Core_DAO_OptionValue
         $optionValue->id = $optionValueId;
         require_once 'CRM/Core/Action.php';
         if ( self::updateRecords($optionValueId, CRM_Core_Action::DELETE) ){
+            CRM_Core_PseudoConstant::flush();
             return $optionValue->delete();        
         }
-        $cache =& CRM_Utils_Cache::singleton( );
-        $cache->delete('CRM_OG_*');
         return false;
     }
 
@@ -358,6 +355,83 @@ class CRM_Core_BAO_OptionValue extends CRM_Core_DAO_OptionValue
         }
     }
     
+    /**
+     * Get the values of all option values given an option group ID. Store in system cache
+     * Does not take any filtering arguments. The object is to avoid hitting the DB and retrieve
+     * from memory
+     *
+     * @param int $optionGroupID the option group for which we want the values from
+     *
+     * @return array an array of array of values for this option group
+     * @static
+     * @public
+     */
+    static function getOptionValuesArray($optionGroupID) {
+      // check if we can get the field values from the system cache
+      $cacheKey     = "CRM_Core_BAO_OptionValue_OptionGroupID_{$optionGroupID}";
+      $cache        = CRM_Utils_Cache::singleton();
+      $optionValues = $cache->get($cacheKey);
+      if (empty($optionValues)) {
+        $dao = new CRM_Core_DAO_OptionValue();
+        $dao->option_group_id = $optionGroupID;
+        $dao->orderBy('weight ASC, label ASC');
+        $dao->find();
+
+        $optionValues = array();
+        while ($dao->fetch()) {
+          $optionValues[$dao->id] = array();
+          CRM_Core_DAO::storeValues($dao, $optionValues[$dao->id]);
+        }
+
+        $cache->set($cacheKey, $optionValues);
+      }
+
+      return $optionValues;
+    }
+
+    /**
+     * Get the values of all option values given an option group ID as a key => value pair
+     * Use above cached function to make it super efficient
+     *
+     * @param int $optionGroupID the option group for which we want the values from
+     *
+     * @return array an associative array of label, value pairs
+     * @static
+     * @public
+     */
+    static function getOptionValuesAssocArray($optionGroupID) {
+      $optionValues = self::getOptionValuesArray($optionGroupID);
+
+      $options = array();
+      foreach ($optionValues as $id => $value) {
+        $options[$value['value']] = $value['label'];
+      }
+      return $options;
+    }
+    /**
+     * Get the values of all option values given an option group Name as a key => value pair
+     * Use above cached function to make it super efficient
+     *
+     * @param string $optionGroupName the option group name for which we want the values from
+     *
+     * @return array an associative array of label, value pairs
+     * @static
+     * @public
+     */
+    static function getOptionValuesAssocArrayFromName($optionGroupName) {
+      $dao = new CRM_Core_DAO_OptionGroup();
+      $dao->name = $optionGroupName;
+      $dao->selectAdd();
+      $dao->selectAdd('id');
+      $dao->find(TRUE);
+      $optionValues = self::getOptionValuesArray($dao->id);
+
+      $options = array();
+      foreach ($optionValues as $id => $value) {
+        $options[$value['value']] = $value['label'];
+      }
+      return $options;
+    }
 }
 
 

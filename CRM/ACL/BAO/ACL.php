@@ -782,7 +782,7 @@ SELECT g.*
             $aclKeys = array_keys( $acls );
             $aclKeys = implode( ',', $aclKeys );
 
-            $query = "
+              $query = "
 SELECT   a.operation, a.object_id
   FROM   civicrm_acl_cache c, civicrm_acl a
  WHERE   c.acl_id       =  a.id
@@ -791,24 +791,25 @@ SELECT   a.operation, a.object_id
    AND   a.id        IN ( $aclKeys )
 ORDER BY a.object_id
 ";
-            $params = array( 1 => array( $tableName, 'String' ) );
-            $dao =& CRM_Core_DAO::executeQuery( $query, $params );
-            while ( $dao->fetch( ) ) {
+              $params = array( 1 => array( $tableName, 'String' ) );
+              $dao =& CRM_Core_DAO::executeQuery( $query, $params );
+              while ( $dao->fetch( ) ) {
                 if ( $dao->object_id ) {
-                    if ( self::matchType( $type, $dao->operation ) ) {
-                        $ids[] = $dao->object_id;
-                    }
-                } else {
-                    // this user has got the permission for all objects of this type
-                    // check if the type matches
-                    if ( self::matchType( $type, $dao->operation ) ) {
-                        foreach ( $allGroups as $id => $dontCare ) {
-                            $ids[] = $id;
-                        }
-                    }
-                    break;
+                  if ( self::matchType( $type, $dao->operation ) ) {
+                    $ids[] = $dao->object_id;
+                  }
                 }
-            }
+                else {
+                  // this user has got the permission for all objects of this type
+                  // check if the type matches
+                  if ( self::matchType( $type, $dao->operation ) ) {
+                    foreach ( $allGroups as $id => $dontCare ) {
+                      $ids[] = $id;
+                    }
+                  }
+                  break;
+                }
+              }
         }
 
         require_once 'CRM/Utils/Hook.php';

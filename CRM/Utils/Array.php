@@ -54,9 +54,6 @@ class CRM_Utils_Array {
           if(isset($list[$key])){ // faster
             return $list[$key];
           }
-          else{
-            return array_key_exists($key, $list) ? $list[$key] : $default;
-          }
         }
         return $default;
     }

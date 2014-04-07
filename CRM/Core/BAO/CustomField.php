@@ -254,9 +254,7 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField
         // complete transaction
         $transaction->commit( );
 
-        // reset the cache
-        require_once 'CRM/Core/BAO/Cache.php';
-        CRM_Core_BAO_Cache::deleteGroup( 'contact fields' );
+        CRM_Utils_System::flushCache();
     
         // reset various static arrays used here
         require_once 'CRM/Contact/BAO/Contact.php';
@@ -297,7 +295,8 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField
      */
     static function setIsActive( $id, $is_active )
     {
-        require_once 'CRM/Core/BAO/UFField.php';
+        CRM_Utils_System::flushCache();
+
         //enable-disable UFField 
         CRM_Core_BAO_UFField::setUFField($id, $is_active);
         return CRM_Core_DAO::setFieldValue( 'CRM_Core_DAO_CustomField', $id, 'is_active', $is_active );
@@ -337,9 +336,11 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField
                                        $showAll = false,
                                        $inline = false,
                                        $customDataSubType = null,
- 									   $customDataSubName = null,
- 									   $onlyParent = false,
-                                       $onlySubType = false ) 
+                                       $customDataSubName = null,
+                                       $onlyParent = false,
+                                       $onlySubType = false,
+                                       $checkPermission = TRUE
+                                       ) 
     {
         //$onlySubType = false;
         
@@ -365,22 +366,29 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField
 
         if ( is_array( $customDataType ) ) {
             $cacheKey  = implode( '_', $customDataType );
-        } else {
+        }
+        else {
             $cacheKey  = $customDataType;
         }
-        $cacheKey .= $customDataSubType ? "{$customDataSubType}_" : "_0";
-		$cacheKey .= $customDataSubName ? "{$customDataSubName}_" : "_0";
+        $cacheKey .= !empty($customDataSubType) ? ('_' . implode('_', $customDataSubType)) : '_0';
+        $cacheKey .= $customDataSubName ? "{$customDataSubName}_" : "_0";
         $cacheKey .= $showAll ? "_1" : "_0";
         $cacheKey .= $inline  ? "_1_" : "_0_";
-		$cacheKey .= $onlyParent  ? "_1_" : "_0_";
-		$cacheKey .= $onlySubType  ? "_1_" : "_0_";
+        $cacheKey .= $onlyParent  ? "_1_" : "_0_";
+        $cacheKey .= $onlySubType  ? "_1_" : "_0_";
+        $cacheKey .= $checkPermission ? '_1_' : '_0_';
         
         $cgTable = CRM_Core_DAO_CustomGroup::getTableName();
 
         // also get the permission stuff here
-        require_once 'CRM/Core/Permission.php';
-        $permissionClause = CRM_Core_Permission::customGroupClause( CRM_Core_Permission::VIEW,
-                                                                    "{$cgTable}." );
+        if ($checkPermission) {
+          $permissionClause = CRM_Core_Permission::customGroupClause(CRM_Core_Permission::VIEW,
+            "{$cgTable}."
+          );
+        }
+        else {
+          $permissionClause = '(1)';
+        }                                                                  
 
         // lets md5 permission clause and take first 8 characters
         $cacheKey .= substr( md5( $permissionClause ), 0, 8 );
@@ -878,9 +886,7 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField
      */
     public static function deleteField( $field )
     { 
-        // reset the cache
-        require_once 'CRM/Core/BAO/Cache.php';
-        CRM_Core_BAO_Cache::deleteGroup( 'contact fields' );
+        CRM_Utils_System::flushCache();
 
         // reset various static arrays used here
         require_once 'CRM/Contact/BAO/Contact.php';
@@ -1536,11 +1542,13 @@ SELECT $columnName
         CRM_Core_BAO_SchemaHandler::alterFieldSQL( $params, $indexExist );
     }
 
-    static function getTableColumnGroup( $fieldID ) 
+    static function getTableColumnGroup( $fieldID, $force = FALSE) 
     {
-        static $cache = array( );
+        $cacheKey    = "CRM_Core_DAO_CustomField_CustomGroup_TableColumn_{$fieldID}";
+        $cache       = CRM_Utils_Cache::singleton();
+        $fieldValues = $cache->get($cacheKey);
 
-        if ( ! array_key_exists( $fieldID, $cache ) ) {
+        if (empty($fieldValues) || $force) {
             $query = "
 SELECT cg.table_name, cf.column_name, cg.id
 FROM   civicrm_custom_group cg,
@@ -1553,10 +1561,11 @@ AND    cf.id = %1";
             if ( ! $dao->fetch( ) ) {
                 CRM_Core_Error::fatal( );
             }
+            $fieldValues = array($dao->table_name, $dao->column_name, $dao->id);
             $dao->free( );
-            $cache[$fieldID] = array( $dao->table_name, $dao->column_name, $dao->id );
+            $cache->set($cacheKey, $fieldValues);
         }
-        return $cache[$fieldID];
+        return $fieldValues;
     }
 
     /**

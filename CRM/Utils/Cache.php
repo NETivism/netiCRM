@@ -1,10 +1,9 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.3                                                |
+ | CiviCRM version 4.5                                                |
  +--------------------------------------------------------------------+
- | Copyright CiviCRM LLC (c) 2004-2010                                |
+ | Copyright CiviCRM LLC (c) 2004-2014                                |
  +--------------------------------------------------------------------+
  | This file is a part of CiviCRM.                                    |
  |                                                                    |
@@ -29,7 +28,7 @@
 /**
  *
  * @package CRM
- * @copyright CiviCRM LLC (c) 2004-2010
+ * @copyright CiviCRM LLC (c) 2004-2014
  * $Id$
  *
  */
@@ -38,70 +37,130 @@
  * Cache is an empty base object, we'll modify the scheme when we have different caching schemes
  *
  */
-
 class CRM_Utils_Cache {
+  /**
+   * We only need one instance of this object. So we use the singleton
+   * pattern and cache the instance in this variable
+   *
+   * @var object
+   * @static
+   */
+  static private $_singleton = NULL;
 
-    /**
-     * We only need one instance of this object. So we use the singleton
-     * pattern and cache the instance in this variable
-     *
-     * @var object
-     * @static
-     */
-    static private $_singleton = null;
+  /**
+   * Constructor
+   *
+   * @param array   $config  an array of configuration params
+   *
+   * @return void
+   */
+  function __construct(&$config) {
+    CRM_Core_Error::fatal(ts('this is just an interface and should not be called directly'));
+  }
 
-    /**
-     * Constructor
-     *
-     * @return void
-     */
-    function __construct( ) {
+  /**
+   * singleton function used to manage this object
+   *
+   * @return object
+   * @static
+   *
+   */
+  static function &singleton() {
+    if (self::$_singleton === NULL) {
+      $className = 'ArrayCache';   // default to ArrayCache for now
+
+      // Maintain backward compatibility for now.
+      // Setting CIVICRM_USE_MEMCACHE or CIVICRM_USE_ARRAYCACHE will
+      // override the CIVICRM_DB_CACHE_CLASS setting.
+      // Going forward, CIVICRM_USE_xxxCACHE should be deprecated.
+      if (defined('CIVICRM_USE_MEMCACHE') && CIVICRM_USE_MEMCACHE) {
+        $className = 'Memcache';
+      }
+      else if (defined('CIVICRM_USE_ARRAYCACHE') && CIVICRM_USE_ARRAYCACHE) {
+        $className = 'ArrayCache';
+      }
+      else if (defined('CIVICRM_DB_CACHE_CLASS') && CIVICRM_DB_CACHE_CLASS) {
+        $className = CIVICRM_DB_CACHE_CLASS;
+      }
+
+      // a generic method for utilizing any of the available db caches.
+      $dbCacheClass = 'CRM_Utils_Cache_' . $className;
+      require_once(str_replace('_', DIRECTORY_SEPARATOR, $dbCacheClass) . '.php');
+      $settings = self::getCacheSettings($className);
+      self::$_singleton = new $dbCacheClass($settings);
     }
+    return self::$_singleton;
+  }
 
-    /**
-     * singleton function used to manage this object
-     *
-     * @param string  $host      the memcached server host
-     * @param int     $port      the memcached server port
-     * @param int     $timeout   the default timeout
-     *
-     * @return object
-     * @static
-     *
-     */
-    static function &singleton( $host      = 'localhost',
-                                $port      = 11211,
-                                $timeout   = 3600 ) {
-        if (self::$_singleton === null ) {
-        /*
-            if ( defined( 'CIVICRM_USE_MEMCACHE' ) && CIVICRM_USE_MEMCACHE) {
-                require_once 'CRM/Utils/Cache/Memcache.php';
-                self::$_singleton = new CRM_Utils_Cache_Memcache( $host, $port, $timeout );
-            } else {
-                self::$_singleton = new CRM_Utils_Cache( );
-            }
-        */
-                self::$_singleton = new CRM_Utils_Cache( );
+  /**
+   * Get cache relevant settings
+   *
+   * @return array
+   *   associative array of settings for the cache
+   * @static
+   */
+  static function getCacheSettings($cachePlugin) {
+    switch ($cachePlugin) {
+      case 'ArrayCache':
+      case 'NoCache':
+        $defaults = array();
+        break;
+
+      case 'Memcache':
+      case 'Memcached':
+        $defaults = array(
+          'host' => 'localhost',
+          'port' => 11211,
+          'timeout' => 3600,
+          'prefix' => '',
+        );
+
+        // Use old constants if needed to ensure backward compatability
+        if (defined('CIVICRM_MEMCACHE_HOST')) {
+          $defaults['host'] = CIVICRM_MEMCACHE_HOST;
         }
-        return self::$_singleton;
-    }
 
-    function set( $key, &$value ) {
-        return false;
-    }
+        if (defined('CIVICRM_MEMCACHE_PORT')) {
+          $defaults['port'] = CIVICRM_MEMCACHE_PORT;
+        }
 
-    function get( $key ) {
-        return null;
-    }
+        if (defined('CIVICRM_MEMCACHE_TIMEOUT')) {
+          $defaults['timeout'] = CIVICRM_MEMCACHE_TIMEOUT;
+        }
 
-    function delete( $key ) {
-        return false;
-    }
+        if (defined('CIVICRM_MEMCACHE_PREFIX')) {
+          $defaults['prefix'] = CIVICRM_MEMCACHE_PREFIX;
+        }
 
-    function flush( ) {
-        return false;
-    }
+        // Use new constants if possible
+        if (defined('CIVICRM_DB_CACHE_HOST')) {
+          $defaults['host'] = CIVICRM_DB_CACHE_HOST;
+        }
 
+        if (defined('CIVICRM_DB_CACHE_PORT')) {
+          $defaults['port'] = CIVICRM_DB_CACHE_PORT;
+        }
+
+        if (defined('CIVICRM_DB_CACHE_TIMEOUT')) {
+          $defaults['timeout'] = CIVICRM_DB_CACHE_TIMEOUT;
+        }
+
+        if (defined('CIVICRM_DB_CACHE_PREFIX')) {
+          $defaults['prefix'] = CIVICRM_DB_CACHE_PREFIX;
+        }
+
+        break;
+
+      case 'APCcache':
+        $defaults = array();
+        if (defined('CIVICRM_DB_CACHE_TIMEOUT')) {
+          $defaults['timeout'] = CIVICRM_DB_CACHE_TIMEOUT;
+        }
+        if (defined('CIVICRM_DB_CACHE_PREFIX')) {
+          $defaults['prefix'] = CIVICRM_DB_CACHE_PREFIX;
+        }
+        break;
+    }
+    return $defaults;
+  }
 }
-
-

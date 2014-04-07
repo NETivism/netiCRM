@@ -42,37 +42,74 @@ require_once 'CRM/Core/DAO/Cache.php';
 
 class CRM_Core_BAO_Cache extends CRM_Core_DAO_Cache
 {
+    static $_cache = NULL;
     static function &getItem( $group, $path, $componentID = null ) {
-        $dao = new CRM_Core_DAO_Cache( );
-
-        $dao->group_name = $group;
-        $dao->path  = $path;
-        $dao->component_id = $componentID;
-
-        $data = null;
-        if ( $dao->find( true ) ) {
-            $data = unserialize( $dao->data );
+        if (self::$_cache === NULL) {
+          self::$_cache = array();
         }
-        $dao->free( );
-        return $data;
+        $argString = "CRM_CT_{$group}_{$path}_{$componentID}";
+        if (!array_key_exists($argString, self::$_cache)) {
+          $cache = CRM_Utils_Cache::singleton();
+          self::$_cache[$argString] = $cache->get($argString);
+          if (!self::$_cache[$argString]) {
+            $dao = new CRM_Core_DAO_Cache();
+
+            $dao->group_name   = $group;
+            $dao->path         = $path;
+            $dao->component_id = $componentID;
+
+            $data = NULL;
+            if ($dao->find(TRUE)) {
+              $data = unserialize($dao->data);
+            }
+            $dao->free();
+            self::$_cache[$argString] = $data;
+            $cache->set($argString, self::$_cache[$argString]);
+          }
+        }
+        return self::$_cache[$argString];
     }
 
-    static function setItem( &$data,
-                             $group, $path, $componentID = null ) {
-        $dao = new CRM_Core_DAO_Cache( );
+    static function setItem( &$data, $group, $path, $componentID = null ) {
+      if (self::$_cache === NULL) {
+        self::$_cache = array();
+      }
 
-        $dao->group_name = $group;
-        $dao->path  = $path;
-        $dao->component_id = $componentID;
+      $dao = new CRM_Core_DAO_Cache();
 
-        $dao->find( true );
-        $dao->data         = serialize( $data );
-        $dao->created_date = date( 'Ymdhis' );
+      $dao->group_name   = $group;
+      $dao->path         = $path;
+      $dao->component_id = $componentID;
 
-        // CRM_Core_Error::debug_var( "Saving $group, $path on {$dao->created_date}", $data );
-        $dao->save( );
-        
-        $dao->free( );
+      // get a lock so that multiple ajax requests on the same page
+      // dont trample on each other
+      // CRM-11234
+      $lockName = "civicrm.cache.{$group}_{$path}._{$componentID}";
+      $lock = new CRM_Core_Lock($lockName);
+      if (!$lock->isAcquired()) {
+        CRM_Core_Error::fatal();
+      }
+
+      $dao->find(TRUE);
+      $dao->data = serialize($data);
+      $dao->created_date = date('YmdHis');
+      $dao->save();
+
+      $lock->release();
+
+      $dao->free();
+
+      // cache coherency - refresh or remove dependent caches
+
+      $argString = "CRM_CT_{$group}_{$path}_{$componentID}";
+      $cache = CRM_Utils_Cache::singleton();
+      $data = unserialize($dao->data);
+      self::$_cache[$argString] = $data;
+      $cache->set($argString, $data);
+
+      $argString = "CRM_CT_CI_{$group}_{$componentID}";
+      unset(self::$_cache[$argString]);
+      $cache->delete($argString);
     }
 
     static function deleteGroup( $group = null ) {

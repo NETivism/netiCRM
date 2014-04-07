@@ -37,6 +37,7 @@
 class CRM_Core_OptionGroup 
 {
     static $_values = array( );
+    static $_cache = array();
 
     /*
      * $_domainIDGroups array maintains the list of option groups for whom 
@@ -75,13 +76,20 @@ class CRM_Core_OptionGroup
 
     static function &values( $name, $flip = false, $grouping = false,
                              $localize = false, $condition = null,
-                             $valueColumnName = 'label', $onlyActive = true ) 
+                             $valueColumnName = 'label', $onlyActive = true, $fresh = FALSE, $keyColumnName = 'value' ) 
     {
-        $cacheKey = "CRM_OG_{$name}_{$flip}_{$grouping}_{$localize}_{$condition}_{$valueColumnName}_{$onlyActive}";
-        $cache =& CRM_Utils_Cache::singleton( );
-        $var = $cache->get( $cacheKey );
-        if ( $var ) {
+        $cache = CRM_Utils_Cache::singleton();
+        $cacheKey = self::createCacheKey($name, $flip, $grouping, $localize, $condition, $labelColumnName, $onlyActive, $keyColumnName);
+        if (!$fresh) {
+          // Fetch from static var
+          if (array_key_exists($cacheKey, self::$_cache)) {
+            return self::$_cache[$cacheKey];
+          }
+          // Fetch from main cache
+          $var = $cache->get($cacheKey);
+          if ($var) {
             return $var;
+          }
         }
         
         $query = "
@@ -116,19 +124,45 @@ WHERE  v.option_group_id = g.id
         require_once 'CRM/Utils/Hook.php';
         CRM_Utils_Hook::optionValues( $var, $name );
 
+        self::$_cache[$cacheKey] = $var;
+        $cache->set($cacheKey, $var);
+
         return $var;
     }
 
-    static function &valuesByID( $id, $flip = false, $grouping = false, $localize = false, $valueColumnName = 'label' ) 
-    {
-        $cacheKey = "CRM_OG_ID_{$id}_{$flip}_{$grouping}_{$localize}_{$valueColumnName}";
+    /**
+     * Counterpart to values() which removes the item from the cache
+     *
+     * @param $name
+     * @param $flip
+     * @param $grouping
+     * @param $localize
+     * @param $condition
+     * @param $labelColumnName
+     * @param $onlyActive
+     */
+    protected static function flushValues($name, $flip, $grouping, $localize, $condition, $labelColumnName, $onlyActive, $keyColumnName = 'value') {
+      $cacheKey = self::createCacheKey($name, $flip, $grouping, $localize, $condition, $labelColumnName, $onlyActive, $keyColumnName);
+      $cache = CRM_Utils_Cache::singleton();
+      $cache->delete($cacheKey);
+      unset(self::$_cache[$cacheKey]);
+    }
 
-        $cache =& CRM_Utils_Cache::singleton( );
-        $var = $cache->get( $cacheKey );
-        if ( $var ) {
+    protected static function createCacheKey() {
+      $cacheKey = "CRM_OG_" . serialize(func_get_args());
+      return $cacheKey;
+    }
+
+    static function &valuesByID( $id, $flip = false, $grouping = false, $localize = false, $valueColumnName = 'label', $onlyActive = TRUE, $fresh = FALSE ) {
+        $cacheKey = self::createCacheKey($id, $flip, $grouping, $localize, $labelColumnName, $onlyActive);
+
+        $cache = CRM_Utils_Cache::singleton();
+        if (!$fresh) {
+          $var = $cache->get($cacheKey);
+          if ($var) {
             return $var;
+          }
         }
-        
 
         $query = "
 SELECT  v.{$valueColumnName} as {$valueColumnName} ,v.value as value, v.grouping as grouping
@@ -143,8 +177,8 @@ WHERE  v.option_group_id = g.id
         $p = array( 1 => array( $id, 'Integer' ) );
         $dao =& CRM_Core_DAO::executeQuery( $query, $p );
            
-        $var =& self::valuesCommon( $dao, $flip, $grouping, $localize, $valueColumnName );
-        $cache->set( $cacheKey, $var );
+        $var = self::valuesCommon($dao, $flip, $grouping, $localize, $labelColumnName);
+        $cache->set($cacheKey, $var);
 
         return $var;
     }
@@ -409,5 +443,52 @@ WHERE  v.option_group_id = g.id
             }
         }
         return $row;
+    }
+
+    /*
+     * Wrapper for calling values with fresh set to true to empty the given value
+     *
+     * Since there appears to be some inconsistency
+     * (@todo remove inconsistency) around the pseudoconstant operations
+     * (for example CRM_Contribution_Pseudoconstant::paymentInstrument doesn't specify isActive
+     * which is part of the cache key
+     * will do a couple of variations & aspire to someone cleaning it up later
+     */
+    static function flush($name, $params = array()){
+      $defaults = array(
+        'flip' => FALSE,
+        'grouping' => FALSE,
+        'localize' => FALSE,
+        'condition' => NULL,
+        'labelColumnName' => 'label',
+      );
+
+      $params = array_merge($defaults, $params);
+      self::flushValues(
+        $name,
+        $params['flip'],
+        $params['grouping'],
+        $params['localize'],
+        $params['condition'],
+        $params['labelColumnName'],
+        TRUE,
+        TRUE
+      );
+      self::flushValues(
+        $name,
+        $params['flip'],
+        $params['grouping'],
+        $params['localize'],
+        $params['condition'],
+        $params['labelColumnName'],
+        FALSE,
+        TRUE
+      );
+    }
+
+    static function flushAll() { 
+      self::$_values = array(); 
+      self::$_cache = array(); 
+      CRM_Utils_Cache::singleton()->flush(); 
     }
 }
