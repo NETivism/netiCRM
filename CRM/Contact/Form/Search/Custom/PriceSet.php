@@ -137,14 +137,17 @@ ORDER BY c.id, l.price_field_value_id;
 
         // first store all the information by option value id
         $rows = array( );
+        $column = array_flip($this->_columns);
         while ( $dao->fetch( ) ) {
             $contactID     = $dao->contact_id;
             $participantID = $dao->participant_id;
             if ( ! isset( $rows[$participantID] ) ) {
                 $rows[$participantID] = array( );
             }
-
-            $rows[$participantID][] = "price_field_{$dao->price_field_value_id} = {$dao->qty}";
+	    $column_name = "price_field_{$dao->price_field_value_id}";
+	    if($column[$column_name]){
+                $rows[$participantID][] = "$column_name = {$dao->qty}";
+	    }
         }
 
         foreach ( array_keys( $rows ) as $participantID ) {
