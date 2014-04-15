@@ -755,6 +755,7 @@ class CRM_Contact_BAO_Query {
     // CRM_Core_Error::debug( 'r', $this->_returnProperties );
     $addressCustomFields = CRM_Core_BAO_CustomField::getFieldsForImport('Address');
     $addressCustomFieldIds = array();
+    $locationPrimary = array();
 
     foreach ($this->_returnProperties['location'] as $name => $elements) {
       $lCond = self::getPrimaryCondition($name);
@@ -930,8 +931,15 @@ class CRM_Contact_BAO_Query {
                 case 'civicrm_email':
                 case 'civicrm_im':
                 case 'civicrm_openid':
+                  // special case for fix CRM-14470
+                  if(empty($locationPrimary[$tableName][$lCond])){
+                    $locationPrimary[$tableName][$lCond] = 1;
+                    $this->_tables[$tName] = "\nLEFT JOIN $tableName `$tName` ON contact_a.id = `$tName`.contact_id AND `$tName`.$lCond";
+                  }
+                  else{
+                    $this->_tables[$tName] = "\nLEFT JOIN $tableName `$tName` ON contact_a.id = `$tName`.contact_id";
+                  }
 
-                  $this->_tables[$tName] = "\nLEFT JOIN $tableName `$tName` ON contact_a.id = `$tName`.contact_id AND `$tName`.$lCond";
                   // this special case to add phone type
                   if ($cond) {
                     $phoneTypeCondition = " AND `$tName`.$cond ";
