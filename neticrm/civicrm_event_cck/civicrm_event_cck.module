@@ -207,6 +207,10 @@ function civicrm_event_cck_save(&$node, $op){
         $params['end_date'] = date('YmdHis',strtotime($field[0]['value2']) + $field[0]['offset2']);
       }
       elseif($f == 'registration_date'){
+        if(!strstr($field[0]['value'], ':')){
+          $field[0]['value'] .= ' 00:00:00';
+          $field[0]['value2'] .= ' 23:59:59';
+        }
         $params['registration_start_date'] = date('YmdHis',strtotime($field[0]['value']) + $field[0]['offset']);
         $params['registration_end_date'] = date('YmdHis',strtotime($field[0]['value2']) + $field[0]['offset2']);
       }
