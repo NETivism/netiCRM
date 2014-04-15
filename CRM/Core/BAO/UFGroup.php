@@ -829,7 +829,12 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup
                     CRM_Core_OptionGroup::lookupValues( $paramsNew, $names, false );
                     $values[$index] = $paramsNew[$index];
                     $params[$index] = $paramsNew[$name];
-                } else {
+                }
+                elseif ($name == 'legal_identifier'){
+                    $params[$index] = $details->$name;
+                    $values[$index] = substr($details->$name, 0, 1).str_repeat('*', strlen($details->$name)-5).substr($details->$name, -4, 4);
+                }
+                else {
                     $processed = false;
                     if ( CRM_Core_Permission::access( 'Quest', false ) ) {
                         require_once 'CRM/Quest/BAO/Student.php';
