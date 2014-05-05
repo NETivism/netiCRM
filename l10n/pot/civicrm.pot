@@ -44311,9 +44311,7 @@ msgstr ""
 msgid "Planned"
 msgstr ""
 
-msgid ""
-"Sample Footer for HTML formatted content<br/><a "
-"href=\"{action.optOutUrl}\">Unsubscribe</a>  <br/> {domain.address}"
+msgid "<a href=\"{action.optOutUrl}\">Unsubscribe</a>  <br/> {domain.address}"
 msgstr ""
 
 msgid ""
