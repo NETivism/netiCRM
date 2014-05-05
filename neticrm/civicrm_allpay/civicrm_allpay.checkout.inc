@@ -25,7 +25,7 @@ function civicrm_allpay_do_transfer_checkout(&$vars, &$component, &$payment_proc
   $record = array('cid' => $vars['contributionID']);
   drupal_write_record("civicrm_contribution_allpay", $record);
 
-  if(!empty($_SESSION['allpay']['submitted']) && $instrument_code == 'Credit' ) {
+  if(!empty($_SESSION['allpay']['submitted'])) {
     drupal_goto($_SESSION['allpay']['path'], $_SESSION['allpay']['query']);
   }
   $_SESSION['allpay']['submitted'] = TRUE;
@@ -36,7 +36,14 @@ function civicrm_allpay_do_transfer_checkout(&$vars, &$component, &$payment_proc
   }
   else{
     $is_pay_later = TRUE;
+    if($vars['participantID']){
+      $pstatus = CRM_Event_PseudoConstant::participantStatus();
+      if($new_pstatus = array_search('Pending from pay later', $pstatus)){
+        CRM_Core_DAO::setFieldValue('CRM_Event_DAO_Participant', $vars['participantID'], 'status_id', $new_pstatus, 'id');
+      }
+    }
   }
+
   // now process contribution to save some default value
   $contrib_params = array( 'id' => $vars['contributionID'] );
   $contrib_values = $contrib_ids = array();
