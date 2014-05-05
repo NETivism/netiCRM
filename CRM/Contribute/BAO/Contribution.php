@@ -1731,14 +1731,6 @@ SELECT source_contact_id
         $contactID = $ids['contact'];
         
         // set display address of contributor
-        /*
-        if ( $contribution->address_id ) {
-          $addressParams     = array( 'id' => $contribution->address_id );	
-          $addressDetails    = CRM_Core_BAO_Address::getValues( $addressParams, false, 'id' );
-          $addressDetails    = array_values( $addressDetails );
-          $values['address'] = $addressDetails[0]['display'];                
-        }
-        */
         $config = CRM_Core_Config::singleton();
         $custom_values = CRM_Core_BAO_CustomValueTable::getEntityValues($contribID, 'Contribution');
         $custom_title = $config->receiptTitle;
@@ -1783,65 +1775,12 @@ SELECT source_contact_id
         }
         $address = CRM_Utils_Address::format($addr, NULL, FALSE, TRUE);
         $template->assign( 'address', $address);
-        /*
-        if ( $membership ) {
-          $values['membership_id'] = $membership->id;
 
-          // need to set the membership values here
-          $template->assign( 'membership_assign', 1 );
-          $template->assign( 'membership_name', CRM_Member_PseudoConstant::membershipType( $membership->membership_type_id ));
-          $template->assign( 'mem_start_date', $membership->start_date );
-          $template->assign( 'mem_end_date'  , $membership->end_date );
-
-          // if separate payment there are two contributions recorded and the 
-          // admin will need to send a receipt for each of them separately.
-          // we dont link the two in the db (but can potentially infer it if needed)
-          $template->assign( 'is_separate_payment', 0);
-        }
-         */
         $values['contribution_id']     = $contribution->id;
         $isTest = false;
         if ( $contribution->is_test ) {
           $isTest = true;
         }
-
-        // start ContributionPage::sendMail code clone
-        /*
-        $gIds = array( );
-        $params = array( );
-        if ( isset( $values['custom_pre_id'] ) ) {
-            $preProfileType = CRM_Core_BAO_UFField::getProfileType( $values['custom_pre_id'] );
-            if ( $preProfileType == 'Membership' && CRM_Utils_Array::value( 'membership_id', $values )  ) {
-                $params['custom_pre_id'] = array( array( 'membership_id', '=', $values['membership_id'], 0, 0 ) );
-            }
-            elseif ( $preProfileType == 'Contribution' && CRM_Utils_Array::value( 'contribution_id', $values ) ) {
-                $params['custom_pre_id'] = array( array( 'contribution_id', '=', $values['contribution_id'], 0, 0 ) );
-            }
-            
-            $gIds['custom_pre_id'] = $values['custom_pre_id'];
-        }
-
-        if ( isset( $values['custom_post_id'] ) ) {
-            $postProfileType = CRM_Core_BAO_UFField::getProfileType( $values['custom_post_id'] );
-            if ( $postProfileType == 'Membership' && CRM_Utils_Array::value( 'membership_id', $values ) ) {
-                $params['custom_post_id'] = array( array( 'membership_id', '=', $values['membership_id'], 0, 0 ) );
-            }
-            else if ( $postProfileType == 'Contribution' && CRM_Utils_Array::value( 'contribution_id', $values ) ) {
-                $params['custom_post_id'] = array( array( 'contribution_id', '=', $values['contribution_id'], 0, 0 ) );
-            }
-            
-            $gIds['custom_post_id'] = $values['custom_post_id'];
-        }
-        
-        //check whether it is a test drive
-        if ( $isTest && !empty( $params['custom_pre_id'] ) ) {
-            $params['custom_pre_id'][] = array( 'contribution_test', '=', 1, 0, 0 );
-        }
-        
-        if ( $isTest && !empty( $params['custom_post_id'] ) ) {
-            $params['custom_post_id'][] = array( 'contribution_test', '=', 1, 0, 0 );
-        }
-        */
 
         // get the billing location type
         if ( !array_key_exists('related_contact', $values) ) {
@@ -1859,25 +1798,6 @@ SELECT source_contact_id
         if ( !$email ) {
             list( $displayName, $email ) = CRM_Contact_BAO_Contact_Location::getEmailDetails( $contactID );
         }
-        
-        //for display profile need to get individual contact id,  
-        //hence get it from related_contact if on behalf of org true CRM-3767.
-                   
-        //CRM-5001 Contribution/Membership:: On Behalf of Organization,
-        //If profile GROUP contain the Individual type then consider the
-        //profile is of Individual ( including the custom data of membership/contribution )
-        //IF Individual type not present in profile then it is consider as Organization data.
-        /*
-        require_once 'CRM/Core/BAO/UFGroup.php';
-        $userID = $contactID;
-        if ( $preID = CRM_Utils_Array::value( 'custom_pre_id', $values ) ) {
-            self::buildCustomDisplay( $preID, 'customPre', $userID, $template, $params['custom_pre_id'] );
-        }
-        $userID = $contactID;    
-        if ( $postID = CRM_Utils_Array::value( 'custom_post_id', $values ) ) {
-            self::buildCustomDisplay( $postID, 'customPost', $userID, $template, $params['custom_post_id'] );
-        }
-        */
         
         // set email in the template here
         $tplParams = array(
