@@ -138,6 +138,10 @@ class CRM_Member_BAO_Query
             $values = array( 'member_test', '=', 0, $grouping, 0 );
             self::whereClauseSingle( $values, $query );
         }
+
+        if(!empty($query->_whereTables['civicrm_membership'])){
+          $query->_groupByComponentClause = ' GROUP BY civicrm_membership.id';
+        }
     }
   
     static function whereClauseSingle( &$values, &$query ) 
