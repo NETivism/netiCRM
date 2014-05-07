@@ -94,8 +94,8 @@ function _civicrm_allpay_order(&$vars, $component, &$payment_processor, $instrum
     'MerchantTradeDate' => date('Y/m/d H:i:s'),
     'PaymentType' => 'aio',
     'TotalAmount' => $amount,
-    'TradeDesc' => $vars['description'],
-    'ItemName' => $vars['item_name'],
+    'TradeDesc' => preg_replace('~[^\p{L}\p{N}]++~u', ' ', $vars['description']),
+    'ItemName' => preg_replace('~[^\p{L}\p{N}]++~u', ' ', $vars['item_name']),
     'ReturnURL' => $notify_url."&qfKey=".$vars['qfKey'],
     'ChoosePayment' => $instrument_code,
     #'CheckMacValue' => '', // add in civicrm_allpay_checkmacvalue
