@@ -1884,6 +1884,7 @@ SELECT source_contact_id
           if($contribution->is_test){
             $prefix = 'test-'.$prefix;
           }
+          CRM_Utils_Hook::alterReceiptId( $prefix, $contribution );
 
           // now, give a proper id for contribution
           $last = self::lastReceiptID($prefix);
@@ -1901,7 +1902,7 @@ SELECT source_contact_id
             $num = sprintf('%06d', $num);
             $receipt_id = $prefix.'-'.$num;
           }
-          watchdog('civicrm', $last.":".$receipt_id);
+          // watchdog('civicrm', $last.":".$receipt_id);
 
           $contribution->receipt_id = $receipt_id;
           if(!empty($contribution->created_date)){
