@@ -777,7 +777,7 @@ class CRM_Utils_Hook {
         return   
             eval( 'return ' .
                   $config->userHookClass .
-                  '::invoke( 4, $object, $usage, $objectRef, $params, $null, $null, \'civicrm_import\' );' );
+                  '::invoke( 4, $object, $usage, $objectRef, $params, $null, \'civicrm_import\' );' );
     }
 
     /**
@@ -820,5 +820,16 @@ class CRM_Utils_Hook {
         require_once(str_replace('_', DIRECTORY_SEPARATOR, $config->userHookClass) . '.php');
         $null =& CRM_Core_DAO::$_nullObject;
         return eval("return {$config->userHookClass}::invoke(4, \$objectName, \$headers, \$rows, \$selector, \$null, 'civicrm_searchColumns');");
+    }
+
+
+    /**
+     * Alter receipt id prefix
+     */
+    static function alterReceiptId(&$prefix, &$object){
+        $config = CRM_Core_Config::singleton();
+        require_once(str_replace('_', DIRECTORY_SEPARATOR, $config->userHookClass) . '.php');
+        $null =& CRM_Core_DAO::$_nullObject;
+        return eval("return {$config->userHookClass}::invoke(2, \$prefix, \$object, \$null, \$null, \$null, 'civicrm_alterReceiptId');");
     }
 }
