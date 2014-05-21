@@ -10,6 +10,7 @@ $.validator.addMethod("ckbox", function(value, element, param) {
 },$.validator.messages.required);
 
 $.validator.addMethod("twid", function(value, element, param){
+  if(!value) return true;
   var tab = "ABCDEFGHJKLMNPQRSTUVXYWZIO";
   var A1 = new Array (1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,3,3,3,3,3,3 );
   var A2 = new Array (0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5 );

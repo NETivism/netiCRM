@@ -74,7 +74,7 @@ $.amask.id_add_validate = function(obj){
   $(obj).rules("add", "twid");
   if($(obj).val()){
     if($(obj).valid()){
-    $(obj).amask("a999999999", {completed:function(){ obj.value = obj.value.toUpperCase(); }});
+      $(obj).amask("a999999999", {completed:function(){ obj.value = obj.value.toUpperCase(); }});
     }
     else{
       $(obj).rules("remove", "twid");
