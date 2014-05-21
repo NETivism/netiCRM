@@ -1930,9 +1930,9 @@ WHERE      civicrm_openid.openid = %1";
         $query = "
    SELECT civicrm_email.email as email
      FROM civicrm_contact
-LEFT JOIN civicrm_email    ON ( civicrm_contact.id = civicrm_email.contact_id )
-    WHERE civicrm_email.is_primary = 1
-      AND civicrm_contact.id = %1";
+LEFT JOIN civicrm_email ON ( civicrm_contact.id = civicrm_email.contact_id )
+    WHERE civicrm_contact.id = %1
+      ORDER BY civicrm_email.is_primary DESC";
         $p = array( 1 => array( $contactID, 'Integer' ) );
         $dao =& CRM_Core_DAO::executeQuery( $query, $p );
 

@@ -64,9 +64,7 @@ function civicrm_allpay_do_transfer_checkout(&$vars, &$component, &$payment_proc
   _civicrm_allpay_checkmacvalue($arguments, $payment_processor);
   print _civicrm_allpay_form_redirect($arguments, $payment_processor);
   // move things to CiviCRM cache as needed
-  require_once 'CRM/Core/Session.php';
-  CRM_Core_Session::storeSessionObjects( );
-  exit;
+  CRM_Utils_System::civiExit();
 }
 
 function _civicrm_allpay_order(&$vars, $component, &$payment_processor, $instrument_code, $form_key){
