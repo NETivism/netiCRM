@@ -681,7 +681,8 @@ class CRM_Core_Payment_BaseIPN {
         // add the new contribution values
         if ( $input['component'] == 'contribute' ) {
             $template->assign( 'title', $values['title']);
-            $template->assign( 'amount' , $input['amount'] );
+            $total_amount = $input['amount'] ? $input['amount'] : $contribution->total_amount;
+            $template->assign( 'amount' , $total_amount );
 
             //PCP Info
             require_once 'CRM/Contribute/DAO/ContributionSoft.php';
