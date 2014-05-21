@@ -178,7 +178,6 @@ class CRM_Event_Form_Registration_ThankYou extends CRM_Event_Form_Registration
         // can we blow away the session now to prevent hackery
         $this->controller->reset( );
         $session = CRM_Core_Session::singleton();
-        $session->set('_submitted', FALSE);
     }
     
     /**

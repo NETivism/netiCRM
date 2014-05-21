@@ -438,10 +438,11 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration
         $session       = CRM_Core_Session::singleton( );
 
         // prevent duplicate submission
-        $submitted = $session->get('_submitted');
-        if($this->_eventId == $submitted){
-            $session->set('_submitted', FALSE);
-            CRM_Utils_System::redirect( CRM_Utils_System::url( 'civicrm/event/register', "id={$this->_eventId}" ) );
+        $paymentProcessed = $this->controller->get('paymentProcessed');
+        if($paymentProcessed){
+            $this->controller->set('paymentProcessed', FALSE);
+            $session->set('submitted', TRUE);
+            CRM_Utils_System::redirect( CRM_Utils_System::url( 'civicrm/event/register', "reset=1&id={$this->_eventId}" ) );
         }
         $this->_params = $this->get( 'params' );
         if ( CRM_Utils_Array::value( 'contact_id', $this->_params[0] ) ) {
@@ -762,7 +763,7 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration
             
             // do a transfer only if a monetary payment greater than 0
             if ( $this->_values['event']['is_monetary'] && $primaryParticipant && $payment ) {
-                $session->set( '_submitted', $this->_eventId);
+                $this->controller->set('paymentProcessed', TRUE);
                 $payment->doTransferCheckout( $primaryParticipant, 'event' );
             }
             

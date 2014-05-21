@@ -108,9 +108,9 @@ function civicrm_allpay_civicrm_buildForm($form_name, &$form){
     case 'CRM_Contribute_Form_Contribution_Main':
     case 'CRM_Event_Form_Registration_Register':
       $session = CRM_Core_Session::singleton();
-      $submitted = $session->get('_submitted');
-      $submitted = $submitted === $form->_eventId ? TRUE : FALSE;
-      if(!empty($_SESSION['allpay']['submitted']) || $submitted){
+      $submitted = $session->get('submitted');
+      $session->set('submitted', FALSE);
+      if($submitted){
         if($_SESSION['allpay']['instrument'] == 'Credit'){
           drupal_set_message(t("This message indicate your last payment may not success because you didn't submit credit card information. If you are sure you have completed the transaction, please contact us. Otherwise, you can retry again."), 'error');
         }

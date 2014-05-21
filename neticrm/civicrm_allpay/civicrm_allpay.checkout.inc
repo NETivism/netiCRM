@@ -25,9 +25,6 @@ function civicrm_allpay_do_transfer_checkout(&$vars, &$component, &$payment_proc
   $record = array('cid' => $vars['contributionID']);
   drupal_write_record("civicrm_contribution_allpay", $record);
 
-  if(!empty($_SESSION['allpay']['submitted'])) {
-    drupal_goto($_SESSION['allpay']['path'], $_SESSION['allpay']['query']);
-  }
   $_SESSION['allpay']['submitted'] = TRUE;
   $_SESSION['allpay']['instrument'] = $instrument_code;
 
