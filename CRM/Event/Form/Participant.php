@@ -626,6 +626,11 @@ SELECT civicrm_custom_group.name as name,
     public function buildQuickForm( )  
     { 
         $this->_eID = CRM_Utils_Request::retrieve( 'eid', 'Positive', $this );
+        if($this->_eID){
+          $eventTitle = CRM_Core_DAO::getFieldValue( 'CRM_Event_DAO_Event', $this->_eID, 'title' );
+          CRM_Utils_System::setTitle($eventTitle.' - '.ts('New Event Registration'));
+          $this->assign('id', $this->_eID);
+        }
         if ( $this->_showFeeBlock ) {
             return CRM_Event_Form_EventFees::buildQuickForm( $this );
         }
@@ -750,10 +755,12 @@ WHERE      civicrm_event.is_template IS NULL OR civicrm_event.is_template = 0";
             if ( $this->_eID ) {
                 $preloadJSSnippet = "
 cj(function() {
-cj('#event_id').val( '{$this->_eID}' );
-buildFeeBlock( {$this->_eID} ); 
-buildCustomData( 'Participant', {$this->_eID}, {$this->_eventNameCustomDataTypeID} );
-buildEventTypeCustomData( {$this->_eID}, {$this->_eventTypeCustomDataTypeID}, '{$eventAndTypeMapping}' );
+  cj('#event_id').val( '{$this->_eID}' );
+  cj('#event_id > option[value!={$this->_eID}]').remove();
+  cj('#past-event').remove();
+  buildFeeBlock( {$this->_eID} ); 
+  buildCustomData( 'Participant', {$this->_eID}, {$this->_eventNameCustomDataTypeID} );
+  buildEventTypeCustomData( {$this->_eID}, {$this->_eventTypeCustomDataTypeID}, '{$eventAndTypeMapping}' );
 });
 ";
             }
@@ -1224,9 +1231,7 @@ buildEventTypeCustomData( {$this->_eID}, {$this->_eventTypeCustomDataTypeID}, '{
             $ids = array();       
             
             CRM_Event_BAO_ParticipantPayment::create( $paymentParticipant, $ids);
-            $eventTitle = CRM_Core_DAO::getFieldValue( 'CRM_Event_DAO_Event',
-                                                   $params['event_id'],
-                                                   'title' );
+            $eventTitle = CRM_Core_DAO::getFieldValue( 'CRM_Event_DAO_Event', $params['event_id'], 'title' );
             $this->_contactIds[] = $this->_contactId;
 
         } else {

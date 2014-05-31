@@ -1577,10 +1577,19 @@ table.campaign td,
     padding:0px;
     list-style: none;
 }
+#crm-container .crm-actions-ribbon li span {
+    display:inline-block;
+}
 
 #crm-container .crm-actions-ribbon li.crm-delete-action {
     float:right;
     margin:0px 0px 0px 8px;
+}
+#crm-container .crm-actions-ribbon li a,
+#crm-container .crm-actions-ribbon li a:link,
+#crm-container .crm-actions-ribbon li a:visited {
+    color: #FFF;
+    display: inline-block;
 }
 
 #crm-container .ac_results li { 
@@ -2072,6 +2081,7 @@ div.grippie {
 }
 
 .ac_results-inner,
+.action-link-result-inner,
 .crm-participant-list-inner,
 .crm-event-links-list-inner,
 .crm-contribpage-links-list-inner,
@@ -2122,8 +2132,10 @@ div.grippie {
 #crm-container .crm-button-type-cancel input { color:#E6E6DC!important; }
 
 #crm-container a.button,
+#crm-container .action-link-button,
 #crm-create-new-link,
 #crm-participant-link,
+#crm-event-nav-link,
 #crm-event-links-link,
 #crm-contribpage-links-link,
 #crm-contact-actions-link,
@@ -2162,8 +2174,10 @@ div.grippie {
 }
 
 #crm-container a.button,
+#crm-container .action-link-button,
 #crm-create-new-link,
 #crm-participant-link,
+#crm-event-nav-link,
 #crm-event-links-link,
 #crm-contribpage-links-link,
 #crm-contact-actions-link,
@@ -2172,9 +2186,11 @@ div.grippie {
     float: left;
 }
 
+#crm-container .action-link-button span,
 #crm-create-new-link span,
 #crm-contact-actions-link span,
 #crm-participant-link span,
+#crm-event-nav-link span,
 #crm-event-links-link span,
 #crm-contribpage-links-link span,
 #crm-container a.button span {
@@ -2205,16 +2221,18 @@ div.grippie {
 }
 
 /* create new XXX style (drupal block) */ 
-
-#crm-participant-wrapper,
-#crm-event-links-wrapper,
+#actions .action-wrapper {
+	position:relative;
+	float: left;
+}
 #crm-contribpage-links-wrapper,
 #crm-create-new-wrapper,
 #crm-contact-actions-wrapper{
 	position:relative;
 	float: left;
-	}
+}
 
+.action-link-result,
 #crm-event-links-list,
 #crm-contribpage-links-list,
 #crm-create-new-list,
@@ -2226,10 +2244,8 @@ div.grippie {
 	width:220px;
 	left:0px;
 	z-index:15;
-	}
+}
 
-#crm-event-links-link {width:90px;}
-#crm-participant-link { width:120px;}
 #crm-create-new-list{width:124px;}
 .clear { clear: both; }
 
@@ -2245,6 +2261,7 @@ div.grippie {
     width: 160px;
 }
 
+.action-link-result ul,
 #crm-contact-actions-list .crm-contact_activities-list ul,
 #crm-contact-actions-list .crm-contact_print-list ul,
 #crm-contact-actions-list .crm-contact_actions-list ul,
@@ -2314,8 +2331,10 @@ span.icon {
 	display:inline-block;
 }
 
+.action-link-button .icon,
 #crm-contact-actions-link .icon,
 #crm-participant-link .icon,
+#crm-event-nav-link .icon,
 #crm-event-links-link .icon,
 #crm-contribpage-links-link .icon,
 #crm-create-new-link .icon,
@@ -3013,9 +3032,11 @@ del,
 
 /* rounded corners - we will call dd_roundies on all this */
 #crm-container .crm-button,
+#crm-container .action-link-button,
 #crm-container a.button,
 #crm-create-new-link,
 #crm-participant-link,
+#crm-event-nav-link,
 #crm-event-links-link,
 #crm-contribpage-links-link,
 #crm-contact-actions-link,
@@ -3055,6 +3076,7 @@ div#crm-toolTip
 }
 
 .ac_results-inner,
+.action-link-result-inner,
 .crm-participant-list-inner,
 .crm-event-links-list-inner,
 .crm-contribpage-links-list-inner,
@@ -3116,7 +3138,9 @@ div#crm-toolTip
 }
 
 #crm-container .panel li a:hover,
+#crm-container .ac_results li a:hover,
 #crm-container .crm-participant-list-inner li a:hover,
+#crm-container .action-link-result-inner li a:hover,
 #crm-container .crm-event-links-list-inner li a:hover,
 #crm-container .crm-contribpage-links-list-inner li a:hover,
 #crm-container .contextMenu li a:hover,
@@ -3240,4 +3264,29 @@ div#crm-toolTip
 }
 #crm-container #wizard-steps {
   margin-top: 25px;
+}
+
+#crm-container .crm-event-searchevent-form-block label {
+  vertical-align: top;
+  display: block;
+}
+#crm-container .crm-event-searchevent-form-block .chzn-container {
+  min-width: 120px;
+  width: 150px !important;
+}
+#crm-container .crm-event-searchevent-form-block .crm-button {
+  margin-top: 10px;
+}
+
+#crm-container a.rss-feed, 
+#crm-container a.ical-feed {
+  background: url(../i/rss_feed.png) no-repeat;
+  padding-left: 25px;
+  line-height: 25px;
+  height: 25px;
+  display:inline-block;
+}
+
+#crm-container a.ical-feed {
+  background: url(../i/ical_feed.png) no-repeat;
 }

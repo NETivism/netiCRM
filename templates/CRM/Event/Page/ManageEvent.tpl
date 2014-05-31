@@ -27,50 +27,44 @@
 {capture assign=icalFile}{crmURL p='civicrm/event/ical' q="reset=1" fe=1}{/capture}
 {capture assign=icalFeed}{crmURL p='civicrm/event/ical' q="reset=1&page=1" fe=1}{/capture}
 {capture assign=rssFeed}{crmURL p='civicrm/event/ical' q="reset=1&page=1&rss=1" fe=1}{/capture}
-{capture assign=htmlFeed}{crmURL p='civicrm/event/ical' q="reset=1&page=1&html=1" fe=1}{/capture}
-<div class="float-right">
-    <a href="{$htmlFeed}" target="_blank" title="{ts}HTML listing of current and future public events.{/ts}">
-    <img src="{$config->resourceBase}i/applications-internet.png" alt="{ts}HTML listing of current and future public events.{/ts}" /></a>&nbsp;&nbsp;
-    <a href="{$rssFeed}" target="_blank" title="{ts}Get RSS 2.0 feed for current and future public events.{/ts}">
-    <img src="{$config->resourceBase}i/feed-icon.png" alt="{ts}Get RSS 2.0 feed for current and future public events.{/ts}" /></a>&nbsp;&nbsp;
-</div>
-{include file="CRM/Event/Form/SearchEvent.tpl"}
 
 <div class="action-link">
-    <a accesskey="N" href="{$newEventURL}" id="newManageEvent" class="button"><span><div class="icon add-icon"></div>{ts}Add Event{/ts}</span></a>
-<div class="clear"></div>
+  <a accesskey="N" href="{$newEventURL}" id="newManageEvent" class="button"><span><div class="icon add-icon"></div>{ts}Add Event{/ts}</span></a>
+  <div class="float-right top-icon">
+    <a href="{$rssFeed}" target="_blank" title="{ts}Get RSS 2.0 feed for current and future public events.{/ts}" class="rss-feed">RSS</a> 
+    <a href="{$icalFeed}" target="_blank" title="{ts}Get iCalendar feed for current and future public events.{/ts}" class="ical-feed">iCAL</a>
+  </div>
+  <div class="clear"></div>
 </div>
+{include file="CRM/Event/Form/SearchEvent.tpl"}
 {if $rows}
     <div id="event_status_id" class="crm-block crm-manage-events">
         {strip}
         {include file="CRM/common/pager.tpl" location="top"}
-        {include file="CRM/common/pagerAToZ.tpl"}
         {* handle enable/disable actions*}
         {include file="CRM/common/enableDisable.tpl"}         
         {include file="CRM/common/jsortable.tpl"}         
         <table id="options" class="display">
          <thead>
          <tr>
+            <th>{ts}Event Type{/ts}</th>
             <th>{ts}Event{/ts}</th>
-            <th>{ts}City{/ts}</th>
-            <th>{ts}State/Province{/ts}</th>
-            <th>{ts}Public?{/ts}</th>
             <th>{ts}Starts{/ts}</th>
             <th>{ts}Ends{/ts}</th>
-	        <th>{ts}Active?{/ts}</th>
-    		<th></th>
-    		<th class="hiddenElement"></th>
-    		<th class="hiddenElement"></th>	
+            <th>{ts}Public?{/ts}</th>
+	          <th>{ts}Active?{/ts}</th>
+            <th></th>
+        		<th class="hiddenElement"></th>
+        		<th class="hiddenElement"></th>	
          </tr>
          </thead>
         {foreach from=$rows item=row}
           <tr id="row_{$row.id}" class="{cycle values="odd-row,even-row"} {$row.class}{if NOT $row.is_active} disabled{/if}">
-            <td class="crm-event_{$row.id}"><a href="{crmURL p='civicrm/event/info' q="id=`$row.id`&reset=1"}" title="{ts}View event info page{/ts}" class="bold">{$row.title}</a>&nbsp;&nbsp;({ts}ID:{/ts} {$row.id})</td> 
-            <td class="crm-event-city">{$row.city}</td>  
-            <td class="crm-event-state_province">{$row.state_province}</td>	
+            <td class="crm-event-type">{$row.event_type}</td>
+            <td class="crm-event_{$row.id}"><a href="{crmURL p='civicrm/event/search' q="reset=1&force=1&event=`$row.id`"}" class="bold">{$row.title}</a>&nbsp;&nbsp;({ts}ID:{/ts} {$row.id})</td> 
+            <td class="crm-event-start_date">{$row.start_date|crmDate}</td>
+            <td class="crm-event-end_date">{$row.end_date|crmDate}</td>
             <td class="crm-event-is_public">{if $row.is_public eq 1} {ts}Yes{/ts} {else} {ts}No{/ts} {/if}</td>    
-            <td class="crm-event-start_date">{$row.start_date|crmDate:"%b %d, %Y %l:%M %P"}</td>
-            <td class="crm-event-end_date">{$row.end_date|crmDate:"%b %d, %Y %l:%M %P"}</td>
             <td class="crm-event_status" id="row_{$row.id}_status">{if $row.is_active eq 1} {ts}Yes{/ts} {else} {ts}No{/ts} {/if}</td>
     	    <td class="crm-event-actions right nowrap">
         	    <div class="crm-configure-actions">

@@ -24,6 +24,9 @@
  +--------------------------------------------------------------------+
 *}
 {* Search form and results for Event Participants *}
+{if $id}
+  {include file="CRM/Event/Form/ManageEvent/Navigator.tpl"}
+{else}
 {assign var="showBlock" value="'searchForm'"}
 {assign var="hideBlock" value="'searchForm_show'"}
 <div class="crm-block crm-form-block crm-form-block-search crm-event-search-form-block">
@@ -53,6 +56,7 @@
 </div>
 </div>
 </div>
+{/if}
 {if $rowsEmpty|| $rows}
 <div class="crm-block crm-content-block">
 {if $rowsEmpty}

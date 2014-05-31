@@ -27,43 +27,18 @@
  <h3>{ts}Find Events{/ts}</h3>
   <table class="form-layout">
     <tr class="crm-event-searchevent-form-block-title">
-        <td>{$form.title.html|crmReplace:class:twenty}
-             <div class="description font-italic">
-                    {ts}Complete OR partial Event name.{/ts}
-             </div>
-             <div style="height: auto; vertical-align: bottom">{$form.eventsByDates.html}</div>
+        <td>
+            <label>{ts}Complete OR partial Event name.{/ts}</label>
+            {$form.title.html|crmReplace:class:huge}
         </td>
-        <td rowspan="2"><label>{ts}Event Type{/ts}</label>
-                {$form.event_type_id.html} 
+        <td>
+          <label>{ts}Event Type{/ts}</label>
+          {$form.event_type_id.html} 
         </td>
-        <td class="right" rowspan="2">&nbsp;{include file="CRM/common/formButtons.tpl"}</td>  
+        <td class="right" rowspan="2">
+          {include file="CRM/common/formButtons.tpl"}
+        </td>  
     </tr>
-  
-    <tr>
-       <td colspan="3">
-       <div id="id_fromToDates">
-            <div>
-            <label>{$form.start_date.label}</label>
-            {include file="CRM/common/jcalendar.tpl" elementName=start_date}
-            </div>
-            <div>
-            <label>{$form.end_date.label}</label>
-            {include file="CRM/common/jcalendar.tpl" elementName=end_date}
-            </div>
-      </div> 
-    </td></tr>  
   </table>
 </div>
-
-{include file="CRM/common/showHide.tpl"}
-
-{literal} 
-<script type="text/javascript">
-if ( document.getElementsByName('eventsByDates')[1].checked ) {
-   show( 'id_fromToDates', 'block' );
-}
-cj("input[name=eventsByDates]").click();
-showHideByValue('eventsByDates','1','id_fromToDates','block','radio',true);
-</script>
-{/literal} 
 {include file="CRM/common/chosen.tpl" selector="select#event_type_id"}

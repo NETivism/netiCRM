@@ -492,7 +492,19 @@ class CRM_Event_Form_Search extends CRM_Core_Form
         if ( $event ) {
           require_once 'CRM/Event/PseudoConstant.php';
           $this->_formValues['event_id'] = $event;
-          $this->_formValues['event_name'] = CRM_Event_PseudoConstant::event( $event, true );
+          $this->assign('id', $event);
+          $params = array('id' => $event);
+          $object = array();
+          CRM_Event_BAO_Event::retrieve($params, $object);
+          $this->_formValues['event_name'] = $object['event_title'];
+          $this->assign('isOnlineRegistration', $object['is_online_registration']);
+          $this->assign('hideParticipantLink', 1);
+          CRM_Utils_System::setTitle($object['event_title']);
+        }
+        else{
+          if( isset($this->_defaultValues['event_id']) && !empty($this->_defaultValues['event_id']) ){
+            $this->assign('id', $this->_defaultValues['event_id']);
+          }
         }
         
         $status = CRM_Utils_Request::retrieve( 'status', 'String', CRM_Core_DAO::$_nullObject );

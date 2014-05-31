@@ -137,7 +137,10 @@
         {else if $participantMode == 'live'}
         {assign var=registerMode value="LIVE"}
     {/if}
-    <h3>{if $action eq 1}{ts}New Event Registration{/ts}{elseif $action eq 8}{ts}Delete Event Registration{/ts}{else}{ts}Edit Event Registration{/ts}{/if}</h3>
+    {if $id}
+      {include file="CRM/Event/Form/ManageEvent/Navigator.tpl"}
+    {/if}
+    <h3>{if $action eq 1}{elseif $action eq 8}{ts}Delete Event Registration{/ts}{else}{ts}Edit Event Registration{/ts}{/if}</h3>
     <div class="crm-block crm-form-block crm-participant-form-block">
     <div class="view-content">
     {if $participantMode}
@@ -171,8 +174,15 @@
               {$form.delete_participant.html}
             {/if}
         {else} {* If action is other than Delete *}
-            <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>
             <table class="form-layout-compressed">
+            <tr class="crm-participant-form-block-event_id">
+              <td class="label">{$form.event_id.label}</td><td class="view-value bold">{$form.event_id.html}&nbsp;        
+              {if $action eq 1 && !$past }<br /><a href='javascript:buildSelect( "event_id" );' id='past-event'>&raquo; {ts}Include past event(s) in this select list.{/ts}</a>{/if}    
+              {if $is_test}
+                {ts}(test){/ts}
+              {/if}
+              </td>
+            </tr> 
             {if $single and $context neq 'standalone'}
     			<tr class="crm-participant-form-block-displayName">
     			    <td class="label font-size12pt"><label>{ts}Participant{/ts}</label></td>
@@ -204,14 +214,6 @@
             {if $participantMode}
                 <tr class="crm-participant-form-block-payment_processor_id"><td class="label nowrap">{$form.payment_processor_id.label}</td><td>{$form.payment_processor_id.html}</td></tr>
             {/if}
-            <tr class="crm-participant-form-block-event_id">
-                <td class="label">{$form.event_id.label}</td><td class="view-value bold">{$form.event_id.html}&nbsp;        
-    				{if $action eq 1 && !$past }<br /><a href='javascript:buildSelect( "event_id" );' id='past-event'>&raquo; {ts}Include past event(s) in this select list.{/ts}</a>{/if}    
-    				{if $is_test}
-    					{ts}(test){/ts}
-    				{/if}
-                </td>
-            </tr> 
             <tr class="crm-participant-form-block-role_id"><td class="label">{$form.role_id.label}</td><td>{$form.role_id.html}</td></tr>
             <tr class="crm-participant-form-block-register_date">
                 <td class="label">{$form.register_date.label}</td>

@@ -182,13 +182,10 @@ class CRM_Event_Page_ManageEvent extends CRM_Core_Page
         $config = CRM_Core_Config::singleton( );
         
         $params = array( );
-        $this->_force = CRM_Utils_Request::retrieve( 'force', 'Boolean',
-                                                       $this, false ); 
+        $this->_force = CRM_Utils_Request::retrieve( 'force', 'Boolean', $this, false ); 
         $this->_searchResult = CRM_Utils_Request::retrieve( 'searchResult', 'Boolean', $this );
       
         $whereClause = $this->whereClause( $params, false, $this->_force );
-        $this->pagerAToZ( $whereClause, $params );
-
         $params      = array( );
         $whereClause = $this->whereClause( $params, true, $this->_force );
         $whereClause .= ' AND (is_template = 0 OR is_template IS NULL)'; // because is_template != 1 would be to simple
@@ -209,11 +206,14 @@ ORDER BY start_date desc
         
         $dao = CRM_Core_DAO::executeQuery( $query, $params, true, 'CRM_Event_DAO_Event' );
         $permissions = CRM_Event_BAO_Event::checkPermission( );
+        $eventType = CRM_Event_PseudoConstant::eventType();
 
         while ($dao->fetch()) {
             if ( in_array( $dao->id, $permissions[CRM_Core_Permission::VIEW] ) ) {
                 $manageEvent[$dao->id] = array();
                 CRM_Core_DAO::storeValues( $dao, $manageEvent[$dao->id]);
+
+                $manageEvent[$dao->id]['event_type'] = $eventType[$dao->event_type_id];
             
                 // form all action links
                 $action = array_sum(array_keys($this->links()));
@@ -237,23 +237,8 @@ ORDER BY start_date desc
                                                                               ts( 'more' ),
                                                                               true );
                 
-                $params = array( 'entity_id'    => $dao->id, 
-                                 'entity_table' => 'civicrm_event',
-                                 'is_active'    => 1
-                                 );
-                
-                require_once 'CRM/Core/BAO/Location.php';
-                $defaults['location'] = CRM_Core_BAO_Location::getValues( $params, true );
-
                 require_once 'CRM/Friend/BAO/Friend.php';
                 $manageEvent[$dao->id]['friend'] = CRM_Friend_BAO_Friend::getValues( $params );
-
-                if ( isset ( $defaults['location']['address'][1]['city'] ) ) {
-                    $manageEvent[$dao->id]['city'] = $defaults['location']['address'][1]['city'];
-                }
-                if ( isset( $defaults['location']['address'][1]['state_province_id'] )) {
-                    $manageEvent[$dao->id]['state_province'] = CRM_Core_PseudoConstant::stateProvince($defaults['location']['address'][1]['state_province_id']);
-                }
             }
         }
         $this->assign('rows', $manageEvent);
@@ -319,11 +304,7 @@ ORDER BY start_date desc
 
         if ( $title ) {
             $clauses[] = "title LIKE %1";
-            if ( strpos( $title, '%' ) !== false ) {
-                $params[1] = array( trim($title), 'String', false );
-            } else {
-                $params[1] = array( trim($title), 'String', true );
-            }
+            $params[1] = array( trim($title), 'String', true);
         }
 
         $value = $this->get( 'event_type_id' );
@@ -339,50 +320,6 @@ ORDER BY start_date desc
             }
             $clauses[] = "event_type_id IN ({$type})";
         }
-        
-        $eventsByDates = $this->get( 'eventsByDates' );
-        if ($this->_searchResult) {
-            if ( $eventsByDates) {
-                require_once 'CRM/Utils/Date.php';
-                
-                $from = $this->get( 'start_date' );
-                if ( ! CRM_Utils_System::isNull( $from ) ) {
-                    $clauses[] = '( start_date >= %3 OR start_date IS NULL )';
-                    $params[3] = array( $from, 'String' );
-                }
-                
-                $to = $this->get( 'end_date' );
-                if ( ! CRM_Utils_System::isNull( $to ) ) {
-                    $clauses[] = '( end_date <= %4 OR end_date IS NULL )';
-                    $params[4] = array( $to, 'String' );
-                }
-                
-            } else {
-                $curDate = date( 'YmdHis' );
-                $clauses[5] =  "(end_date >= {$curDate} OR end_date IS NULL)";
-            }
-        
-        } else {
-            $curDate = date( 'YmdHis' );
-            $clauses[] =  "(end_date >= {$curDate} OR end_date IS NULL)";
-        }
-
-        if ( $sortBy &&
-             $this->_sortByCharacter ) {
-            $clauses[] = 'title LIKE %6';
-            $params[6] = array( $this->_sortByCharacter . '%', 'String' );
-        }
-
-        // dont do a the below assignment when doing a 
-        // AtoZ pager clause
-        if ( $sortBy ) {
-            if ( count( $clauses ) > 1 || $eventsByDates  ) {
-                $this->assign( 'isSearch', 1 );
-            } else {
-                $this->assign( 'isSearch', 0 );
-            }
-        }
-
         return !empty($clauses) ? implode( ' AND ', $clauses ) : '(1)';
     }
     
@@ -409,22 +346,5 @@ SELECT count(id)
         $this->_pager = new CRM_Utils_Pager( $params );
         $this->assign_by_ref( 'pager', $this->_pager );
     }
-
-    function pagerAtoZ( $whereClause, $whereParams )
-    {
-        require_once 'CRM/Utils/PagerAToZ.php';
-        
-        $query = "
-   SELECT DISTINCT UPPER(LEFT(title, 1)) as sort_name
-     FROM civicrm_event
-    WHERE $whereClause
- ORDER BY LEFT(title, 1)
-";
-        $dao = CRM_Core_DAO::executeQuery( $query, $whereParams );
-
-        $aToZBar = CRM_Utils_PagerAToZ::getAToZBar( $dao, $this->_sortByCharacter, true );
-        $this->assign( 'aToZ', $aToZBar );
-    }
-    
 }
 

@@ -62,44 +62,29 @@ class CRM_Event_Form_SearchEvent extends CRM_Core_Form
      */
     public function buildQuickForm( ) 
     {
-        $this->add( 'text', 'title', ts( 'Find' ),
-                    array(CRM_Core_DAO::getAttribute('CRM_Event_DAO_Event', 'title') ) );
-        
+        $this->add( 'text', 'title', ts( 'Find' ), array(CRM_Core_DAO::getAttribute('CRM_Event_DAO_Event', 'title') ) );
         $event_type = CRM_Core_OptionGroup::values( 'event_type', false );
-        
         $attrs = array('multiple' => 'multiple');
         $this->addElement('select', 'event_type_id', 'Contribution Type', $event_type, $attrs);
-       
-        $eventsByDates = array();
-        $searchOption  = array( ts('Show Current and Upcoming Events'), ts('Search All or by Date Range') );
-        $this->addRadio( 'eventsByDates', ts( 'Events by Dates' ), $searchOption, array('onclick' =>"return showHideByValue('eventsByDates','1','id_fromToDates','block','radio',true);"), "<br />");
-
-        $this->addDate( 'start_date', ts('From'), false, array( 'formatType' => 'searchDate') ); 
-        $this->addDate( 'end_date', ts('To'), false, array( 'formatType' => 'searchDate') ); 
-        
         $this->addButtons(array( 
-                                array ('type'      => 'refresh', 
-                                       'name'      => ts('Search'), 
-                                       'isDefault' => true ), 
-                                ) ); 
+          array (
+            'type' => 'refresh', 
+            'name' => ts('Search'), 
+            'isDefault' => true ), 
+          )
+        ); 
     }
 
 
-    function postProcess( ) 
-    {
+    function postProcess( ) {
         $params = $this->controller->exportValues( $this->_name );
         $parent = $this->controller->getParent( );
         $parent->set( 'searchResult', 1 );
         if ( ! empty( $params ) ) {
-            $fields = array( 'title', 'event_type_id', 'start_date', 'end_date', 'eventsByDates' );
+            $fields = array('title', 'event_type_id');
             foreach ( $fields as $field ) {
-                if ( isset( $params[$field] ) &&
-                     ! CRM_Utils_System::isNull( $params[$field] ) ) {
-                        if ( substr( $field, -4 ) == 'date' ) {
-                            $time = ( $field == 'end_date' ) ? '235959' : null;
-                            $parent->set( $field, CRM_Utils_Date::processDate( $params[$field], $time ) );
-                        }
-                        elseif($field == 'event_type_id'){
+                if ( isset( $params[$field] ) && !CRM_Utils_System::isNull( $params[$field] ) ) {
+                        if($field == 'event_type_id'){
                             foreach($params[$field] as $k => $v){
                               $event_type_ids[$v] = $v;
                             }
@@ -108,7 +93,8 @@ class CRM_Event_Form_SearchEvent extends CRM_Core_Form
                         else {
                             $parent->set( $field, $params[$field] );
                         }
-                } else {
+                }
+                else {
                     $parent->set( $field, null );
                 }
             }
