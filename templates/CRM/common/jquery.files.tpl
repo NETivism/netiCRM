@@ -82,3 +82,5 @@ js/rest.js
 js/jquery/jquery.crmaccordions.js
 js/jquery/jquery.crmasmselect.js
 js/jquery/jquery.crmtooltip.js
+
+packages/fontawesome/css/font-awesome.min.css

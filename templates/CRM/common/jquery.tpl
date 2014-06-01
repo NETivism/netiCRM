@@ -96,3 +96,5 @@
 {/if}
 
 <script type="text/javascript">var cj = jQuery.noConflict(); $ = cj;</script>
+
+<style type="text/css">@import url("{$config->resourceBase}packages/fontawesome/css/font-awesome.min.css");</style>

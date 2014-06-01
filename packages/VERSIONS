@@ -12,6 +12,8 @@ Licensing info in this file:
   PHP 2     PHP License 2.*
   PHP 3     PHP License 3.*
   X11       X11 (a.k.a. MIT) license
+  MIT       The MIT License (MIT)
+  SIL OFL 1.1 SIL Open Font License (OFL)
 
 
 PEAR install instructions
@@ -96,8 +98,6 @@ eZ Components  2009.1.2   BSD 3-cl.   http://ezcomponents.org/                  
 html2text      1.0.0      GPL 2+      http://chuggnutt.com/html2text.php                            local changes
 reCAPTCHA      1.10       X11         http://recaptcha.net/
 
-
-
 payment processors for CiviCRM
 ==============================
 IATS             AGPL 3   in Services/IATS
@@ -114,3 +114,4 @@ Facebook      BSD 2-cl.
 Google        Apache 2/GPL 2+
 TinyMCE       LGPL 2.1
 jQuery        GPL 2/X11
+fontawesome   4.1.0      MIT         http://fortawesome.github.io/Font-Awesome/
