@@ -88,7 +88,8 @@ class CRM_Event_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
                                  'participant_fee_amount',
                                  'participant_fee_currency',
                                  'participant_status',
-                                 'participant_role'
+                                 'participant_role',
+                                 'participant_registered_by_id',
                                  );
 
     /** 

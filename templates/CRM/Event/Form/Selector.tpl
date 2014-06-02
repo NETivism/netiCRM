@@ -56,11 +56,20 @@
             <td>{$form.$cbName.html}</td> 
         {/if}	
 	<td class="crm-participant-contact_type">{$row.contact_type}</td>
-      <td class="crm-participant-id">{$row.participant_id}</td>
+      <td class="crm-participant-id nowrap">
+        {if !$smarty.get.crmSID or $smarty.get.crmSID == '1_d'}
+          {if $row.participant_registered_by_id}
+            <span>&nbsp;</span><i class="fa fa-level-up fa-rotate-90 fa-grey"></i><span>&nbsp;</span>
+          {else}
+            <i class="fa fa-dot-circle-o fa-grey" title="{ts}Registered by ID{/ts}"></i>
+          {/if}
+        {/if}
+        {$row.participant_id}
+      </td>
     	<td class="crm-search-display_name"><a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$row.contact_id`"}" title="{ts}View contact record{/ts}">{$row.sort_name}</a></td>
     {/if}
 
-    <td class="crm-participant-event_title">
+    <td class="crm-participant-event_title twelve">
       <a href="{crmURL p='civicrm/event/search' q="reset=1&force=1&event=`$row.event_id`"}" title="{ts}List participants for this event (all statuses){/ts}">{$row.event_title}</a>
       <ul class="crm-nav-links">
         <li><a href="{crmURL p='civicrm/event/info' q="reset=1&id=`$row.event_id`"}" title="{ts}View event info page{/ts}" target="_blank"><i class="fa fa-info-circle"></i></a></li>

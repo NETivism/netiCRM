@@ -46,27 +46,30 @@
         </div>
     </div>
     <table class="crm-info-panel">
+    {if $participant_registered_by_id} {* Display primary participant *}
+        <tr class="crm-event-participantview-form-block-registeredBy">
+            <td class="label">{ts}Registered by ID{/ts}</td>
+            <td><i class="fa fa-dot-circle-o fa-grey"></i><a href="{crmURL p='civicrm/contact/view/participant' q="reset=1&id=$participant_registered_by_id&cid=$registered_by_contact_id&action=view"}" title="{ts}view primary participant{/ts}">{$registered_by_display_name}</a></td>
+        </tr>
+    {/if}
     <tr class="crm-event-participantview-form-block-displayName">
 	    <td class="label">{ts}Participant Name{/ts}</td>
 	    <td class="bold">
+        {if $participant_registered_by_id}
+            &nbsp; <i class="fa fa-level-up fa-rotate-90 fa-grey"></i> 
+        {/if}
 	    	<a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=$contact_id"}" title="view contact record">{$displayName}</a>
 	    	<div class="crm-submit-buttons">
 	    	    <a class="button" href="{crmURL p='civicrm/event/badge' q="reset=1&context=view&id=$id&cid=$contact_id"}" title="{ts}Print Event Name Badge{/ts}"><span><div class="icon print-icon"></div> {ts}Print Name Badge{/ts}</span></a>
 	    	</div>
 	    </td>
 	</tr>
-	{if $participant_registered_by_id} {* Display primary participant *}
-	    <tr class="crm-event-participantview-form-block-registeredBy">
-	        <td class="label">{ts}Registered By{/ts}</td>
-	        <td><a href="{crmURL p='civicrm/contact/view/participant' q="reset=1&id=$participant_registered_by_id&cid=$registered_by_contact_id&action=view"}" title="{ts}view primary participant{/ts}">{$registered_by_display_name}</a></td>
-	    </tr>
-	{/if}
 	{if $additionalParticipants} {* Display others registered by this participant *}
         <tr class="crm-event-participantview-form-block-additionalParticipants">
             <td class="label">{ts}Also Registered by this Participant{/ts}</td>
             <td>
                 {foreach from=$additionalParticipants key=apName item=apURL}
-                    <a href="{$apURL}" title="{ts}view additional participant{/ts}">{$apName}</a><br />
+                    <i class="fa fa-level-up fa-rotate-90 fa-grey"></i> <a href="{$apURL}" title="{ts}view additional participant{/ts}">{$apName}</a><br />
                 {/foreach}
             </td>
         </tr>

@@ -3329,3 +3329,6 @@ div#crm-toolTip
   color: #000;
   box-shadow: #EFEFEF 1px 1px;
 }
+#crm-container .fa-grey {
+  color: #999;
+}

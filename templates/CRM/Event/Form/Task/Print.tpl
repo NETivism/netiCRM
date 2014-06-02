@@ -34,6 +34,7 @@
 <p>
 <table>
   <tr class="columnheader">
+    <th>{ts}ID{/ts}</th>
     <th>{ts}Name{/ts}</th>
     <th>{ts}Event{/ts}</th>
     <th>{ts}Fee Level{/ts}</th>
@@ -44,6 +45,7 @@
   </tr>
 {foreach from=$rows item=row}
     <tr class="{cycle values="odd-row,even-row"}">
+        <td class="crm-event-print-sort_name">{$row.participant_id}</td>
         <td class="crm-event-print-sort_name">{$row.sort_name}</td>
         <td class="crm-event-print-event_title">{$row.event_title}</td>
         {assign var="participant_id" value=$row.participant_id}
