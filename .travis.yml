@@ -2,8 +2,8 @@ language: php
 
 php:
   - 5.4
-  - 5.5
-  - hhvm
+  #- 5.5
+  #- hhvm
 
 mysql:
   database: netivism_neticrm_build
