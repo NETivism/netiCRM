@@ -3,7 +3,7 @@
     	<ul id="actions">
       <li>
         <div class="action-wrapper">
-    	    <div class="action-link-button" id="crm-event-nav-link"><span><a href="{crmURL p='civicrm/event/search' q="reset=1&force=1&event=`$id`"}">{ts}Dashboard{/ts}<div class="icon dashboard-icon"></div></a></span></div>
+    	    <div class="action-link-button" id="crm-event-nav-link"><span><a href="{crmURL p='civicrm/event/search' q="reset=1&force=1&event=`$id`"}">{ts}Statistics{/ts}<div class="icon dashboard-icon"></div></a></span></div>
         </div>
       </li>
       <li>
@@ -13,7 +13,7 @@
       </li>
       <li>
         <div class="action-wrapper">
-    	    <div class="action-link-button" id="crm-eventsetting-link"><span>{ts}Configure{/ts}<div class="icon settings-icon"></div></div>
+    	    <div class="action-link-button" id="crm-eventsetting-link"><span>{ts}Configure{/ts}<div class="icon dropdown-icon"></div></div>
           <div class="action-link-result ac_results" id="crm-eventsetting-list">
             <div class="action-link-result-inner crm-eventsetting-list-inner">
               <ul>

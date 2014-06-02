@@ -4,7 +4,7 @@
   <item>
      <path>civicrm/event</path>
      <title>CiviEvent Dashboard</title>
-     <page_callback>CRM_Event_Page_DashBoard</page_callback>
+     <page_callback>CRM_Event_Page_ManageEvent</page_callback>
      <access_arguments>access CiviEvent</access_arguments>
      <page_type>1</page_type>
      <weight>800</weight>
@@ -117,15 +117,6 @@
      <access_arguments>access CiviEvent</access_arguments>
      <page_type>1</page_type>
      <weight>810</weight>
-  </item>
-  <item>
-     <path>civicrm/event/manage</path>
-     <title>Manage Events</title>
-     <page_callback>CRM_Event_Page_ManageEvent</page_callback>
-     <access_arguments>access CiviEvent</access_arguments>
-     <page_type>1</page_type>
-     <is_ssl>true</is_ssl>
-     <weight>820</weight>
   </item>
   <item>
      <path>civicrm/event/badge</path>

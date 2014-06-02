@@ -152,6 +152,29 @@ div#crm-container {
     font-size:12px;
 }
 
+/* List style links */
+#crm-container ul.crm-nav-links {
+  margin: 3px 0;
+  list-style-type: none;
+  list-style-image: none;
+  padding: 0;
+}
+#crm-container ul.crm-nav-links > li{
+  list-style-type: none;
+  display:inline;
+  display:inline-block;
+  padding: 0 3px;
+}
+#crm-container ul.crm-nav-menu {
+  margin: 3px 0;
+  list-style-type: none;
+  list-style-image: none;
+  padding: 0;
+}
+#crm-container ul.crm-nav-menu > li{
+  list-style-type: none;
+  padding: 0 3px;
+}
 
 /* crm advanced select styling */
 
@@ -1644,7 +1667,7 @@ table.campaign td,
     border: none;
     cursor: pointer;  
     position: relative;
-    padding:0px 14px 0 5px;
+    padding:0px 14px 0 0;
     background: url("../i/TreePlus.gif") no-repeat right 1px;
     border-left:none;
     z-index: 2;
@@ -1656,7 +1679,7 @@ table.campaign td,
 .crm-event-participants,
 .crm-event-links,
 .crm-event-more { 
-    min-width:85px; 
+    min-width:50px; 
     z-index: 1;
     }
 
@@ -3289,4 +3312,20 @@ div#crm-toolTip
 
 #crm-container a.ical-feed {
   background: url(../i/ical_feed.png) no-repeat;
+}
+#crm-container ul.crm-nav-links-event{
+  margin: 8px 0 8px 15px;
+}
+
+/* fontawesome */
+#crm-container .fa {
+  padding-right: 3px;
+}
+#crm-container a i.fa,
+#crm-container a:link i.fa {
+  color: #555;
+}
+#crm-container a:hover i.fa {
+  color: #000;
+  box-shadow: #EFEFEF 1px 1px;
 }

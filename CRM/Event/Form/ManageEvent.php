@@ -179,6 +179,14 @@ class CRM_Event_Form_ManageEvent extends CRM_Core_Form
             if ( $this->_id ) {
                 $this->_doneUrl = CRM_Utils_System::url( CRM_Utils_System::currentPath( ), 
                                                          "action=update&reset=1&id={$this->_id}" );
+                if(!empty($eventInfo['event_title'])){
+                  $breadCrumb = array(
+                    array(
+                      'title' => $eventInfo['event_title'],
+                      'url' => CRM_Utils_System::url('civicrm/event/search', 'reset=1&force=1&event='.$this->_id),
+                    ),
+                  );
+                }
             } else {
                 $this->_doneUrl = CRM_Utils_System::url( 'civicrm/event/manage', 
                                                          'reset=1' );

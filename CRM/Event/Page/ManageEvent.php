@@ -132,8 +132,7 @@ class CRM_Event_Page_ManageEvent extends CRM_Core_Page
         }
         
         if ( !$this->_isTemplate && $id ) {
-            $breadCrumb = array(array('title' => ts('Manage Events'),
-                                      'url'   => CRM_Utils_System::url(CRM_Utils_System::currentPath(), 'reset=1')));
+            $breadCrumb = array(array('title' => ts('Manage Events'), 'url' => CRM_Utils_System::url(CRM_Utils_System::currentPath(), 'reset=1')));
             CRM_Utils_System::appendBreadCrumb( $breadCrumb );
         }
 
@@ -234,7 +233,7 @@ ORDER BY start_date desc
                 $manageEvent[$dao->id]['action'] = CRM_Core_Action::formLink( self::links(), 
                                                                               $action, 
                                                                               array( 'id' => $dao->id ),
-                                                                              ts( 'more' ),
+                                                                              ts( 'Operation' ),
                                                                               true );
                 
                 require_once 'CRM/Friend/BAO/Friend.php';

@@ -146,6 +146,12 @@ class CRM_Event_Form_Participant extends CRM_Contact_Form_Task
      * participant mode
      */
     public  $_mode = null;
+
+    /**
+     * event ID preselect
+     */
+    public $_eID = NULL;
+
     /*
      *Line Item for Price Set
      */
@@ -172,7 +178,7 @@ class CRM_Event_Form_Participant extends CRM_Contact_Form_Task
      */
     public $_originalDiscountId = null;
 	
-	/**
+    /**
      * event id
      */
     public $_eventId = null;
@@ -200,8 +206,15 @@ class CRM_Event_Form_Participant extends CRM_Contact_Form_Task
 
         $this->_contactId 	   = CRM_Utils_Request::retrieve( 'cid', 'Positive', $this );
         $this->_mode           = CRM_Utils_Request::retrieve( 'mode', 'String', $this );
+        $this->_eID             = CRM_Utils_Request::retrieve('eid', 'Positive', $this);
         $this->_context        = CRM_Utils_Request::retrieve('context', 'String', $this );
-        $this->assign('context', $this->_context );
+        $this->assign('context', $this->_context);
+
+        if($this->_eID){
+            $this->_eventTitle = CRM_Core_DAO::getFieldValue( 'CRM_Event_DAO_Event', $this->_eID, 'title');
+            CRM_Utils_System::setTitle($eventTitle.' - '.ts('New Event Registration'));
+            $this->assign('id', $this->_eID);
+        }
         
         if ( $this->_contactId ) {
             require_once 'CRM/Contact/BAO/Contact.php';
@@ -303,9 +316,15 @@ class CRM_Event_Form_Participant extends CRM_Contact_Form_Task
             $this->_single = true;
             $this->assign( 'urlPath'   , 'civicrm/contact/view/participant' );
             if ( !$this->_id && !$this->_contactId ) {
-                $breadCrumbs = array( array( 'title' => ts('CiviEvent Dashboard'),
-                                             'url'   => CRM_Utils_System::url('civicrm/event','reset=1') ) );
-                
+                if($this->_eID){
+                  $breadCrumbs = array(
+                    array( 'title' => ts('CiviEvent Dashboard'), 'url'   => CRM_Utils_System::url('civicrm/event','reset=1') ),
+                    array('title' => $this->_eventTitle, 'url' => CRM_Utils_System::url('civicrm/event/search','reset=1&force=1&event='.$this->_eID)),
+                  );
+                }
+                else{
+                  $breadCrumbs = array( array( 'title' => ts('CiviEvent Dashboard'), 'url'   => CRM_Utils_System::url('civicrm/event','reset=1') ) );
+                }
                 CRM_Utils_System::appendBreadCrumb( $breadCrumbs );
             }
         } else {
@@ -625,12 +644,6 @@ SELECT civicrm_custom_group.name as name,
 
     public function buildQuickForm( )  
     { 
-        $this->_eID = CRM_Utils_Request::retrieve( 'eid', 'Positive', $this );
-        if($this->_eID){
-          $eventTitle = CRM_Core_DAO::getFieldValue( 'CRM_Event_DAO_Event', $this->_eID, 'title' );
-          CRM_Utils_System::setTitle($eventTitle.' - '.ts('New Event Registration'));
-          $this->assign('id', $this->_eID);
-        }
         if ( $this->_showFeeBlock ) {
             return CRM_Event_Form_EventFees::buildQuickForm( $this );
         }
@@ -672,7 +685,10 @@ SELECT civicrm_custom_group.name as name,
         if ( $this->_single ) {
             $urlPath   = 'civicrm/contact/view/participant';
             $urlParams = "reset=1&cid={$this->_contactId}&context=participant";
-            if ( $this->_context == 'standalone' ) {
+            if ( $this->_eID){
+            
+            }
+            elseif ( $this->_context == 'standalone' ) {
                 require_once 'CRM/Contact/Form/NewContact.php';
                 CRM_Contact_Form_NewContact::buildQuickForm( $this );
                 $urlParams = "reset=1&context=standalone";
