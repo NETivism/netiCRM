@@ -1,0 +1,44 @@
+language: php
+
+php:
+  - 5.4
+  - 5.5
+  - hhvm
+
+mysql:
+  database: netivism_neticrm_build
+  username: admin
+  encoding: utf8
+
+before_install:
+  - sudo apt-get update > /dev/null
+
+install:
+  # install php packages required for running a web server from drush on php 5.4
+  - sudo apt-get install -y --force-yes php5-fpm php5-mysql php5-apc php5-curl php5-memcache php5-memcached php5-gd
+
+  # add composer's global bin directory to the path
+  # see: https://github.com/drush-ops/drush#install---composer
+  - export PATH="$HOME/.composer/vendor/bin:$PATH"
+
+  # install drush globally
+  - composer global require drush/drush:5.*
+
+before_script:
+  # navigate out of module directory to prevent blown stack by recursive module lookup
+  - cd ../..
+
+  # create new site, stubbing sendmail path with true to prevent delivery errors and manually resolving drush path
+  - mysql -e 'create database netivism_neticrm_build'
+  - php -d sendmail_path=`which true` ~/.composer/vendor/bin/drush.php --yes core-quick-drupal --core=drupal-6.x --no-server --db-url=mysql://root:@127.0.0.1/netivism_neticrm_build --enable=transliteration
+
+  # reference and enable civicrm in build site
+  - ln -s $(readlink -e $(cd -)) netivism_neticrm_build/drupal/sites/all/modules/civicrm
+  - cd netivism_neticrm_build/drupal
+  - drush --yes pm-enable civicrm
+
+  # start a web server on port 8080, run in the background; wait for initialization
+  - drush runserver 127.0.0.1:8080 &
+  - until netstat -an 2>/dev/null | grep '8080.*LISTEN'; do true; done
+
+script: drush test-run 'Travis-CI Drupal Module Example' --uri=http://127.0.0.1:8080
