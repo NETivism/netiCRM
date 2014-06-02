@@ -60,8 +60,12 @@
     	<td class="crm-search-display_name"><a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$row.contact_id`"}" title="{ts}View contact record{/ts}">{$row.sort_name}</a></td>
     {/if}
 
-    <td class="crm-participant-event_title"><a href="{crmURL p='civicrm/event/info' q="id=`$row.event_id`&reset=1"}" title="{ts}View event info page{/ts}">{$row.event_title}</a>
-        {if $contactId}<br /><a href="{crmURL p='civicrm/event/search' q="reset=1&force=1&event=`$row.event_id`"}" title="{ts}List participants for this event (all statuses){/ts}">({ts}participants{/ts})</a>{/if}
+    <td class="crm-participant-event_title">
+      <a href="{crmURL p='civicrm/event/search' q="reset=1&force=1&event=`$row.event_id`"}" title="{ts}List participants for this event (all statuses){/ts}">{$row.event_title}</a>
+      <ul class="crm-nav-links">
+        <li><a href="{crmURL p='civicrm/event/info' q="reset=1&id=`$row.event_id`"}" title="{ts}View event info page{/ts}" target="_blank"><i class="fa fa-info-circle"></i></a></li>
+        <li><a href="{crmURL p='civicrm/event/register' q="reset=1&id=`$row.event_id`"}" title="{ts}Online Registration{/ts}" target="_blank"><i class="fa fa-plus-circle"></i></a></li>
+      </ul>
     </td> 
     {assign var="participant_id" value=$row.participant_id}
     {if $lineItems.$participant_id}
@@ -75,12 +79,7 @@
         <td class="crm-participant-participant_fee_level">{if !$row.paid && !$row.participant_fee_level} {ts}(no fee){/ts}{else} {$row.participant_fee_level}{/if}</td>
     {/if}
     <td class="right nowrap crm-paticipant-participant_fee_amount">{$row.participant_fee_amount|crmMoney:$row.participant_fee_currency}</td>
-    <td class="crm-participant-participant_register_date">{$row.participant_register_date|truncate:10:''|crmDate}</td>	
-    <td class="crm-participant-event_start_date">{$row.event_start_date|truncate:10:''|crmDate}
-        {if $row.event_end_date && $row.event_end_date|date_format:"%Y%m%d" NEQ $row.event_start_date|date_format:"%Y%m%d"}
-            <br/>- {$row.event_end_date|truncate:10:''|crmDate}
-        {/if}
-   </td>
+    <td class="crm-participant-participant_register_date">{$row.participant_register_date|crmDate}</td>	
     <td class="crm-participant-participant_status crm-participant_status_{$row.participant_status_id}">{$row.participant_status}</td>
     <td class="crm-participant-participant_role">{$row.participant_role_id}</td>
     <td>{$row.action|replace:'xx':$participant_id}</td>
