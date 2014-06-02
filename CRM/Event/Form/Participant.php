@@ -212,7 +212,7 @@ class CRM_Event_Form_Participant extends CRM_Contact_Form_Task
 
         if($this->_eID){
             $this->_eventTitle = CRM_Core_DAO::getFieldValue( 'CRM_Event_DAO_Event', $this->_eID, 'title');
-            CRM_Utils_System::setTitle($eventTitle.' - '.ts('New Event Registration'));
+            CRM_Utils_System::setTitle($this->_eventTitle.' - '.ts('New Event Registration'));
             $this->assign('id', $this->_eID);
         }
         
