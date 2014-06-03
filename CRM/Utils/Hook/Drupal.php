@@ -46,6 +46,7 @@ class CRM_Utils_Hook_Drupal extends CRM_Utils_Hook {
     if (function_exists('module_list')) {
       $procceed = FALSE;
       $functions[$fnSuffix] = array();
+      $r = FALSE;
       foreach ( module_list() as $module) { 
         $fnName = "{$module}_{$fnSuffix}";
         if(isset($functions[$fnSuffix][$fnName])){

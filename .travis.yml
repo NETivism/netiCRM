@@ -1,9 +1,15 @@
 language: php
 
 php:
+  - 5.3
   - 5.4
-  #- 5.5
-  #- hhvm
+  - 5.5
+  - hhvm
+
+matrix:
+  allow-failures:
+    - php: 5.5
+    - php: hhvm
 
 mysql:
   database: netivism_neticrm_build
@@ -49,12 +55,12 @@ before_script:
   - patch -p0 < sites/all/modules/simpletest/D6-core-simpletest.patch
   - drush --yes pm-enable civicrm simpletest
 
-  # start a web server on port 8080, run in the background; wait for initialization
-  - drush runserver 127.0.0.1:8080 &
-  - until netstat -an 2>/dev/null | grep '8080.*LISTEN'; do true; done
+  # start a web server on port 8000, run in the background; wait for initialization
+  - drush runserver 127.0.0.1:8000 &
+  - until netstat -an 2>/dev/null | grep '8000.*LISTEN'; do true; done
   - phantomjs --version
   - casperjs --version
 
 script:
-  - drush test-run 'Travis-CI Drupal Module Example' --uri=http://127.0.0.1:8080
+  - drush test-run 'Travis-CI Drupal Module Example' --uri=http://127.0.0.1:8000
   - casperjs sites/all/modules/civicrm/test-casper.js
