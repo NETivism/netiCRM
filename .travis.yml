@@ -4,12 +4,10 @@ php:
   - 5.3
   - 5.4
   - 5.5
-  - hhvm
 
 matrix:
   allow-failures:
     - php: 5.5
-    - php: hhvm
 
 mysql:
   database: netivism_neticrm_build
@@ -64,3 +62,9 @@ before_script:
 script:
   - drush test-run 'Travis-CI Drupal Module Example' --uri=http://127.0.0.1:8000
   - casperjs sites/all/modules/civicrm/test-casper.js
+
+notifications:
+  email:
+    - mis@netivism.com.tw
+  irc:
+    - "chat.freenode.net#neticrm"
