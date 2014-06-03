@@ -7,7 +7,7 @@ function run(){
   this.echo(this.getTitle());
 }
 var casper = require('casper').create();
-var base_url = 'http://127.0.0.1:8000/index.php?q=';
+var base_url = 'http://127.0.0.1:8080/index.php?q=';
 
 // login for test
 casper.start(base_url, function() {
@@ -26,6 +26,5 @@ casper.thenOpen(base_url+'civicrm/contribute/add&reset=1&action=add&context=stan
 // event
 casper.thenOpen(base_url+'civicrm/event&reset=1', run);
 casper.thenOpen(base_url+'civicrm/participant/add&reset=1&action=add&context=standalone', run);
-
 
 casper.run();

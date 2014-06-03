@@ -49,14 +49,14 @@ before_script:
   - patch -p0 < sites/all/modules/simpletest/D6-core-simpletest.patch
   - drush --yes pm-enable civicrm simpletest
 
-  # start a web server on port 8000, run in the background; wait for initialization
-  - drush runserver 127.0.0.1:8000 &
-  - until netstat -an 2>/dev/null | grep '8000.*LISTEN'; do true; done
-  
+  # start a web server on port 8080, run in the background; wait for initialization
+  - drush runserver 127.0.0.1:8080 &
+  - until netstat -an 2>/dev/null | grep '8080.*LISTEN'; do true; done
   - phantomjs --version
   - casperjs --version
+  - pwd aux | grep php
 
 script:
-  - drush test-run 'Travis-CI Drupal Module Example' --uri=http://127.0.0.1:8000
+  - drush test-run 'Travis-CI Drupal Module Example' --uri=http://127.0.0.1:8080
   - cd -
   - casperjs civicrm/test-casper.js
