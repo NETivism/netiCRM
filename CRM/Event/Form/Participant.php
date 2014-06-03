@@ -688,7 +688,7 @@ SELECT civicrm_custom_group.name as name,
             if ( $this->_eID){
             
             }
-            elseif ( $this->_context == 'standalone' ) {
+            if ( $this->_context == 'standalone' ) {
                 require_once 'CRM/Contact/Form/NewContact.php';
                 CRM_Contact_Form_NewContact::buildQuickForm( $this );
                 $urlParams = "reset=1&context=standalone";
