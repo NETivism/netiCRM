@@ -56,5 +56,5 @@ before_script:
   - casperjs --version
 
 script:
-  # - drush test-run 'Travis-CI Drupal Module Example' --uri=http://127.0.0.1:8080
+  - drush test-run 'Travis-CI Drupal Module Example' --uri=http://127.0.0.1:8080
   - casperjs sites/all/modules/civicrm/test-casper.js
