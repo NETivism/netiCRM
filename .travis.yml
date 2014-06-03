@@ -32,7 +32,7 @@ install:
 
 before_script:
   # php env
-  echo 'error_reporting = E_ALL & ~E_NOTICE & ~E_STRICT' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
+  - echo 'error_reporting = E_ALL & ~E_NOTICE & ~E_STRICT' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
   
   # navigate out of module directory to prevent blown stack by recursive module lookup
   - cd ../..
