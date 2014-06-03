@@ -7,7 +7,7 @@ function run(){
   this.echo(this.getTitle());
 }
 var casper = require('casper').create();
-var base_url = 'http://127.0.0.1:8080/index.php?q=';
+var base_url = 'http://127.0.0.1:8080/';
 
 // login for test
 casper.start(base_url, function() {
