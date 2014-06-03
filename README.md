@@ -1,4 +1,4 @@
-netiCRM
+netiCRM [![Build Status](https://travis-ci.org/NETivism/netiCRM.svg?branch=develop)](https://travis-ci.org/NETivism/netiCRM) 
 ==============
 
 1. Why netiCRM
