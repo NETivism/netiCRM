@@ -48,6 +48,9 @@ function civicrm_instrument_civicrm_buildForm($form_name, &$form){
       $query = CRM_Core_DAO::executeQuery("SELECT payment_instruments FROM civicrm_instrument WHERE entity_id = %1 AND entity_table = %2", $query_params);
       $query->fetch();
       $active_instruments = unserialize($query->payment_instruments);
+      if(empty($active_instruments)){
+        $active_instruments = array();
+      }
       $all_instruments = array();
       $dao = CRM_Core_DAO::executeQuery("SELECT * FROM civicrm_option_value WHERE option_group_id = {$gid} AND is_active = 1 ORDER BY weight ASC");
       while($dao->fetch()){
