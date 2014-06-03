@@ -7,7 +7,7 @@ php:
 
 mysql:
   database: netivism_neticrm_build
-  username: admin
+  username: root
   encoding: utf8
 
 before_install:
@@ -26,15 +26,15 @@ install:
 
 before_script:
   # navigate out of module directory to prevent blown stack by recursive module lookup
-  - cd ../..
+  - cd ..
 
   # create new site, stubbing sendmail path with true to prevent delivery errors and manually resolving drush path
-  - mysql -e 'create database netivism_neticrm_build'
-  - php -d sendmail_path=`which true` ~/.composer/vendor/bin/drush.php --yes core-quick-drupal --core=drupal-6.x --no-server --db-url=mysql://root:@127.0.0.1/netivism_neticrm_build --enable=transliteration
+  - mysql -e 'create database netivism_neticrm_build CHARACTER SET utf8 COLLATE utf8_general_ci'
+  - php -d sendmail_path=`which true` ~/.composer/vendor/bin/drush.php --yes core-quick-drupal --core=drupal-6.x --no-server --db-url=mysql://root:@127.0.0.1/netivism_neticrm_build --enable=simpletest,transliteration netivism_neticrm_build 
 
   # reference and enable civicrm in build site
-  - ln -s $(readlink -e $(cd -)) netivism_neticrm_build/drupal/sites/all/modules/civicrm
-  - cd netivism_neticrm_build/drupal
+  - ln -s $(readlink -e $(cd -)) netivism_neticrm_build/drupal-6.x/sites/all/modules/civicrm
+  - cd netivism_neticrm_build/drupal-6.x
   - drush --yes pm-enable civicrm
 
   # start a web server on port 8080, run in the background; wait for initialization
