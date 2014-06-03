@@ -37,7 +37,7 @@ install:
 
 before_script:
   # env
-  phpenv config-add test-php.ini 
+  - phpenv config-add test-php.ini 
 
   # navigate out of module directory to prevent blown stack by recursive module lookup
   - cd ../..
