@@ -20,7 +20,7 @@ before_install:
 
 install:
   # install php packages required for running a web server from drush on php 5.4
-  - sudo apt-get install -y --force-yes php5-fpm php5-mysql php5-curl php5-gd
+  - sudo apt-get install -y --force-yes php5-cgi php5-fpm php5-mysql php5-curl php5-gd
 
   # add composer's global bin directory to the path
   # see: https://github.com/drush-ops/drush#install---composer
@@ -56,5 +56,5 @@ before_script:
   - casperjs --version
 
 script:
-  - drush test-run 'Travis-CI Drupal Module Example' --uri=http://127.0.0.1:8080
+  # - drush test-run 'Travis-CI Drupal Module Example' --uri=http://127.0.0.1:8080
   - casperjs sites/all/modules/civicrm/test-casper.js
