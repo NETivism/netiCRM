@@ -1,7 +1,6 @@
 <?php
 function neticrm_event_stat_civicrm_searchTasks($objectType, &$tasks){
   static $executed;
-  ini_set('display_errors', 1);
   if($objectType=="event" && !$executed){
     // breadcrumbs
     if($_GET['status']){
