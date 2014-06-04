@@ -1,13 +1,14 @@
 <?php
 function neticrm_event_stat_civicrm_searchTasks($objectType, &$tasks){
   static $executed;
+  ini_set('display_errors', 1);
   if($objectType=="event" && !$executed){
-    // 處理 breadcrumbs
+    // breadcrumbs
     if($_GET['status']){
       $breadcrumb = array();
       $breadcrumb[] = l('Home', '<front>');
-      $breadcrumb[] = l('活動介面',  'civicrm/event', array('html' => true, 'query' => 'reset=1'));
-      $breadcrumb[] = l('所有參加者', 'civicrm/event/search', array('html' => true, 'query' => 'reset=1&force=1&event='.$_GET['event']));
+      $breadcrumb[] = l(t('CiviEvent Dashboard'),  'civicrm/event', array('html' => true, 'query' => 'reset=1'));
+      $breadcrumb[] = l(t('Participants'), 'civicrm/event/search', array('html' => true, 'query' => 'reset=1&force=1&event='.$_GET['event']));
       drupal_set_breadcrumb($breadcrumb);
 
     }
@@ -25,7 +26,7 @@ function neticrm_event_stat_civicrm_searchTasks($objectType, &$tasks){
       while($r = db_fetch_object($result)){
         $calc['total']++;
         if($r->times > 1){
-          //參加過的人數
+          //How many people attend many times?
           $calc['attended']++;
           if($calc['attended'] < 7){
             $calc['attendee'][$r->sort_name] = $r->times;
@@ -34,12 +35,12 @@ function neticrm_event_stat_civicrm_searchTasks($objectType, &$tasks){
       }
       $calc['first'] = $calc['total'] - $calc['attended'];
       $pie = array();
-      $pie[] = array('種類', '人數');
-      $pie[] = array('第一次參加', $calc['first']);
-      $pie[] = array('以前參加過', $calc['attended']);
+      $pie[] = array(t('type'), t('count'));
+      $pie[] = array(t('First time'), $calc['first']);
+      $pie[] = array(t('Attended Before'), $calc['attended']);
 
       $bar = array();
-      $bar[] = array('參加者','次數');
+      $bar[] = array(t('Participant'),t('Count'));
       if($calc['attended']>=1){
         foreach($calc['attendee'] as $n => $t){
           $bar[] = array($n, (int)$t);
@@ -61,8 +62,8 @@ function neticrm_event_stat_civicrm_searchTasks($objectType, &$tasks){
 
 
       /** 
-       * 進行第二階段: 
-       * 取出已完成報名參加者和未完成報名參加者的比例圖
+       * Part two: 
+       * Count how many participants each status.
        */
       $params = array(
         'version' => 3,
@@ -100,13 +101,17 @@ function neticrm_event_stat_civicrm_searchTasks($objectType, &$tasks){
       }
 
       /**
-       * 代 setting 變數到 javascript.
+       * Throw setting variable to javascript.
        */
       // $setting['neticrm_event_stat']['participantStatus'] = $eventSummary['events'][$event_id]['statuses'];
       // $setting['neticrm_event_stat']['eventSummary'] = $eventSummary['events'][$event_id];
       $setting['neticrm_event_stat']['summary'] = $summary;
 
-      $setting['neticrm_event_stat']['translate'] = array('Counted' => t('Counted'),'Not Counted' => t('Not Counted'));
+      $setting['neticrm_event_stat']['translate'] = array(
+        'Counted' => t('Counted'),
+        'Not Counted' => t('Not Counted'),
+        'Place Available' => t('Place Available'),
+      );
 
 
       drupal_add_js($setting, 'setting', 'header');

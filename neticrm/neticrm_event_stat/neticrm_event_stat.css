@@ -6,7 +6,7 @@
 }
 
 /**
- * 下方報名完成人數示意圖
+ * Ratio Block
  */
 #stat_ps {
   margin: 10px 0;
@@ -15,7 +15,7 @@
   border: 1px #999999 solid;
 }
 /**
- * 下方報名完成人數示意圖標籤
+ * Text Label of Ratio Block
  */
 .stat_ps_label ol{
   margin:0;
@@ -39,7 +39,7 @@
 }
 
 /**
- * 下方報名完成人數示意圖直條部份
+ * Rectangle of Ratio Block
  */
 .stat_ps_graph{
   clear: both;
