@@ -1,0 +1,5 @@
+name = neticrm_event_stat
+description = 參加過本次活動的人，有多少是以前參加過的人？
+version = 1.0
+core = 6.x
+package = Alpha Custom Modules

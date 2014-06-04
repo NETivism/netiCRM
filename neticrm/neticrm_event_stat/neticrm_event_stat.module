@@ -1,0 +1,118 @@
+<?php
+function neticrm_event_stat_civicrm_searchTasks($objectType, &$tasks){
+  static $executed;
+  ini_set('display_errors', 1);
+  if($objectType=="event" && !$executed){
+    // 處理 breadcrumbs
+    if($_GET['status']){
+      $breadcrumb = array();
+      $breadcrumb[] = l('Home', '<front>');
+      $breadcrumb[] = l('活動介面',  'civicrm/event', array('html' => true, 'query' => 'reset=1'));
+      $breadcrumb[] = l('所有參加者', 'civicrm/event/search', array('html' => true, 'query' => 'reset=1&force=1&event='.$_GET['event']));
+      drupal_set_breadcrumb($breadcrumb);
+
+    }
+    if(is_numeric($_GET['event'])&& $_GET['event']){
+      $event_id = $_GET['event'];
+      $sql = "SELECT p.contact_id, c.sort_name, (
+        SELECT count(pp.id)FROM {civicrm_participant} pp WHERE pp.contact_id = p.contact_id AND pp.is_test = 0
+      )as times
+      FROM {civicrm_participant} p
+      LEFT JOIN {civicrm_contact} c ON c.id = p.contact_id
+      WHERE p.event_id = %d AND p.is_test = 0 
+      ORDER BY times DESC";
+
+      $result = db_query($sql, $event_id);
+      while($r = db_fetch_object($result)){
+        $calc['total']++;
+        if($r->times > 1){
+          //參加過的人數
+          $calc['attended']++;
+          if($calc['attended'] < 7){
+            $calc['attendee'][$r->sort_name] = $r->times;
+          }
+        }
+      }
+      $calc['first'] = $calc['total'] - $calc['attended'];
+      $pie = array();
+      $pie[] = array('種類', '人數');
+      $pie[] = array('第一次參加', $calc['first']);
+      $pie[] = array('以前參加過', $calc['attended']);
+
+      $bar = array();
+      $bar[] = array('參加者','次數');
+      if($calc['attended']>=1){
+        foreach($calc['attendee'] as $n => $t){
+          $bar[] = array($n, (int)$t);
+        }
+      }
+      $setting = array(
+        'neticrm_event_stat'=> array(
+          'event' => $event_id,
+          'pie' => $pie,
+          'bar' => $bar,
+        ),
+      );
+
+        
+      drupal_set_html_head('<script type="text/javascript" src="//www.google.com/jsapi"></script>');
+      drupal_add_js(drupal_get_path('module', 'neticrm_event_stat'). '/sugar.min.js');
+      drupal_add_js(drupal_get_path('module', 'neticrm_event_stat'). '/neticrm_event_stat.js');
+      drupal_add_css(drupal_get_path('module', 'neticrm_event_stat'). '/neticrm_event_stat.css');
+
+
+      /** 
+       * 進行第二階段: 
+       * 取出已完成報名參加者和未完成報名參加者的比例圖
+       */
+      $params = array(
+        'version' => 3,
+        'id' => $event_id,
+      );
+      $result = civicrm_api('event', 'get', $params);
+      $event = $result['count'] ? reset($result['values']) : array();
+      $summary = array(
+        'finished' => array(), 
+        'unfinished' => array(), 
+        'space' => $event['max_participants'] ? $event['max_participants'] : 0,
+      );
+
+      $finished = CRM_Event_PseudoConstant::participantStatus('', 'is_counted = 1', 'label');
+      $unfinished = CRM_Event_PseudoConstant::participantStatus('', 'is_counted = 0', 'label');
+      $setting['neticrm_event_stat']['state'] = array();
+      foreach ($finished as $key => $value) {
+        $setting['neticrm_event_stat']['state'][$key] = array('name' => $value,'isfinish' => 'finished');
+      }
+      foreach ($unfinished as $key => $value) {
+        $setting['neticrm_event_stat']['state'][$key] = array('name' => $value,'isfinish' => 'unfinished');
+      }
+
+
+
+      $sql = "SELECT status_id, count(id) as total FROM civicrm_participant WHERE event_id = %1 GROUP BY status_id";
+      $query = CRM_Core_DAO::executeQuery($sql, array(1 => array($event_id, 'Integer')));
+      while($query->fetch()){
+        if(isset($finished[$query->status_id])){
+          $summary['finished'][$finished[$query->status_id]] = $query->total;
+        }
+        else{
+          $summary['unfinished'][$unfinished[$query->status_id]] = $query->total;
+        }
+      }
+
+      /**
+       * 代 setting 變數到 javascript.
+       */
+      // $setting['neticrm_event_stat']['participantStatus'] = $eventSummary['events'][$event_id]['statuses'];
+      // $setting['neticrm_event_stat']['eventSummary'] = $eventSummary['events'][$event_id];
+      $setting['neticrm_event_stat']['summary'] = $summary;
+
+      $setting['neticrm_event_stat']['translate'] = array('Counted' => t('Counted'),'Not Counted' => t('Not Counted'));
+
+
+      drupal_add_js($setting, 'setting', 'header');
+
+    }
+    $executed = TRUE;
+  }
+}
