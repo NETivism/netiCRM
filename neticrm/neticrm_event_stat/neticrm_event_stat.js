@@ -246,46 +246,61 @@ $(document).ready(function() {
    * @return {[type]} [description]
    */
   function startDrawChart() {
-    $('form#Search').parent().prepend($('<div id="stat_bc">')).prepend($('<div id="stat_dc">'));
+    var data_pie = Drupal.settings.neticrm_event_stat.pie;
+    var data_bar = Drupal.settings.neticrm_event_stat.bar;
 
-    var data = google.visualization.arrayToDataTable(Drupal.settings.neticrm_event_stat.pie);
-    gPie = new google.visualization.PieChart(document.getElementById('stat_dc'));
-    gPie.draw(data, {
-      title: '參加者回流比例',
-      piehole: 0.3,
-      backgroundColor: {
-        fill: 'transparent'
-      },
-    });
-    console.log(gPie);
+    is_gPie = !(data_pie[1][1] == 0 && data_pie[2][1] == null);
+    is_gBar = data_bar.length !== 1;
 
-    data = google.visualization.arrayToDataTable(Drupal.settings.neticrm_event_stat.bar);
-    gBar = new google.visualization.BarChart(document.getElementById('stat_bc'));
-    gBar.draw(data, {
-      title: '最活躍參加者（根據以前活動）',
-      backgroundColor: {
-        fill: 'transparent'
-      },
-    });
+    if (is_gBar) $('form#Search').parent().prepend($('<div id="stat_bc">'));
 
-    //點選圓餅圖區塊的事件
-    google.visualization.events.addListener(gPie, 'select', function() {
-      switch (gPie.getSelection()[0].row) {
-        case 0:
-          console.log(gPie.getSelection()[0].row);
-          location.href = "https://dev.neticrm.tw/civicrm/event/search?reset=1&force=1&status=true&event=2";
-          //選到第一次參加的人
-          break;
-        case 1:
-          //選到以前參加過的人
-          console.log(gPie.getSelection()[0].row);
-          location.href = "https://dev.neticrm.tw/civicrm/event/search?reset=1&force=1&status=false&event=2";
-          break;
-      }
-    });
-    google.visualization.events.addListener(gBar, 'select', function() {
-      console.log(gBar.getSelection());
-    });
+    if (is_gPie) $('form#Search').parent().prepend($('<div id="stat_dc">'));
+
+    if (is_gPie) {
+      data = google.visualization.arrayToDataTable(data_pie);
+      gPie = new google.visualization.PieChart(document.getElementById('stat_dc'));
+      gPie.draw(data, {
+        title: '參加者回流比例',
+        piehole: 0.3,
+        backgroundColor: {
+          fill: 'transparent'
+        },
+      });
+
+      //點選圓餅圖區塊的事件
+      google.visualization.events.addListener(gPie, 'select', function() {
+        switch (gPie.getSelection()[0].row) {
+          case 0:
+            console.log(gPie.getSelection()[0].row);
+            location.href = "https://dev.neticrm.tw/civicrm/event/search?reset=1&force=1&status=true&event=2";
+            //選到第一次參加的人
+            break;
+          case 1:
+            //選到以前參加過的人
+            console.log(gPie.getSelection()[0].row);
+            location.href = "https://dev.neticrm.tw/civicrm/event/search?reset=1&force=1&status=false&event=2";
+            break;
+        }
+      });
+    }
+
+    if (is_gBar) {
+      data = google.visualization.arrayToDataTable(data_bar);
+      gBar = new google.visualization.BarChart(document.getElementById('stat_bc'));
+      gBar.draw(data, {
+        title: '最活躍參加者（根據以前活動）',
+        backgroundColor: {
+          fill: 'transparent'
+        },
+      });
+
+      google.visualization.events.addListener(gBar, 'select', function() {
+        console.log(gBar.getSelection());
+      });
+    }
+
+
+
 
 
   }
