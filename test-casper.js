@@ -12,12 +12,10 @@ var base_url = 'http://127.0.0.1:8000/';
 // login for test
 casper.start(base_url, function() {
   this.echo(this.getTitle());
-  this.fill('#user-login-form', {
-    'name':'admin',
-    'pass':'123456'
-  }, true);
 });
+
 // run pages
+// add individual
 casper.thenOpen(base_url+'civicrm/contact/add&reset=1&ct=Individual', run);
 
 // contribute

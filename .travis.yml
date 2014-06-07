@@ -54,7 +54,7 @@ before_script:
   - drush --yes pm-enable civicrm simpletest
 
   # start a web server on port 8000, run in the background; wait for initialization
-  - drush runserver 127.0.0.1:8000 &
+  - drush runserver 127.0.0.1:8000 --user=1 &
   - until netstat -an 2>/dev/null | grep '8000.*LISTEN'; do true; done
   - phantomjs --version
   - casperjs --version
@@ -64,7 +64,5 @@ script:
   - casperjs sites/all/modules/civicrm/test-casper.js
 
 notifications:
-  email:
-    - mis@netivism.com.tw
   irc:
     - "chat.freenode.net#neticrm"
