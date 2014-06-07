@@ -5,10 +5,6 @@ php:
   - 5.4
   - 5.5
 
-matrix:
-  allow-failures:
-    - php: 5.5
-
 mysql:
   database: netivism_neticrm_build
   username: root
@@ -56,12 +52,10 @@ before_script:
   # start a web server on port 8000, run in the background; wait for initialization
   - drush runserver 127.0.0.1:8000 --user=1 &
   - until netstat -an 2>/dev/null | grep '8000.*LISTEN'; do true; done
-  - phantomjs --version
-  - casperjs --version
 
 script:
-  - drush test-run 'Travis-CI Drupal Module Example' --uri=http://127.0.0.1:8000
   - casperjs sites/all/modules/civicrm/test-casper.js
+  - drush test-run 'Travis-CI Drupal Module Example' --uri=http://127.0.0.1:8000
 
 notifications:
   irc:
