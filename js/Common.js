@@ -790,3 +790,56 @@ function activityStatus( message )
         }
     } 
 }
+
+function setCookie(cname, cvalue, extsec) {
+    extsec = typeof extsec !== 'undefined' ? extsec : 86400;
+    var d = new Date();
+    d.setTime(d.getTime() + (extsec*1000));
+    var expires = "expires=" + d.toGMTString();
+    document.cookie = cname+"="+cvalue+"; "+expires;
+}
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0; i<ca.length; i++) {
+        var c = ca[i].trim();
+        if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
+    }
+    return "";
+}
+
+function getUrlParams(name) {
+  // This function is anonymous, is executed immediately and 
+  // the return value is assigned to QueryString!
+  var query_string = {};
+  var query = window.location.search.substring(1);
+  var vars = query.split("&");
+  for (var i=0;i<vars.length;i++) {
+    var pair = vars[i].split("=");
+      // If first entry with this name
+    if (typeof query_string[pair[0]] === "undefined") {
+      query_string[pair[0]] = pair[1];
+      // If second entry with this name
+    }
+    else if (typeof query_string[pair[0]] === "string") {
+      var arr = [ query_string[pair[0]], pair[1] ];
+      query_string[pair[0]] = arr;
+      // If third or later entry with this name
+    }
+    else {
+      query_string[pair[0]].push(pair[1]);
+    }
+  }
+  if(name){
+    if(typeof query_string[name] === 'undefined'){
+      return null;
+    }
+    else{
+      return query_string[name];
+    }
+  }
+  else{
+    return query_string;
+  }
+}
