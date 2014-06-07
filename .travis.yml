@@ -48,6 +48,7 @@ before_script:
   - drush --yes pm-download simpletest
   - patch -p0 < sites/all/modules/simpletest/D6-core-simpletest.patch
   - drush --yes pm-enable civicrm simpletest
+  - drush --yes variable-set error_level 0
 
   # start a web server on port 8080, run in the background; wait for initialization
   - drush runserver 127.0.0.1:8080 >> /dev/null &
