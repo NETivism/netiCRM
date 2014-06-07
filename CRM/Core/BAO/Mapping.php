@@ -797,7 +797,7 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping
                 }
                 //Fix for Search Builder
                if ( $mappingType == 'Export' ) {
-                    if ( ! isset( $mappingId ) ) {
+                    if ( ! isset( $mappingId ) || $i >= count(reset($mappingName))) {
                         if ( array_key_exists ( $formValues['mapper'][$x][$i][1], $relationshipTypes ) ) {
                             $sel->setOptions( array( $sel1, $sel2, $sel5, $sel6, $sel7, $sel3, $sel4 ) );
                         } else {
