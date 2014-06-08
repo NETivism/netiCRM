@@ -47,9 +47,10 @@
 {/if}
 </div>
 {else}
+
 {include file="CRM/Event/Form/Registration/Progress.tpl"}
 {if $action & 1024}
-    {include file="CRM/Event/Form/Registration/PreviewHeader.tpl"}
+  {include file="CRM/Event/Form/Registration/PreviewHeader.tpl"}
 {/if}
 
 {include file="CRM/common/TrackingFields.tpl"}
@@ -57,99 +58,102 @@
 {capture assign='reqMark'}<span class="marker"  title="{ts}This field is required.{/ts}">*</span>{/capture}
 <div class="crm-block crm-event-register-form-block">
 
-{if $contact_id}
-<div class="messages status">
-    {ts 1=$display_name}Welcome %1{/ts} (<a href="{crmURL p='civicrm/event/register' q="&cid=0&reset=1&id=`$event.id`"}" title="{ts}Click here to register a different person for this event.{/ts}">{ts 1=$display_name}Not %1, or want to register a different person{/ts}</a>)</div>
-{/if}
 {if $event.intro_text}
-    <div id="intro_text" class="crm-section intro_text-section">
-        <p>{$event.intro_text}</p>
-    </div>
+  <div id="intro_text" class="crm-section intro_text-section">
+      <p>{$event.intro_text}</p>
+  </div>
 {/if}
-
-{if $form.additional_participants.html}
+{if $contact_id}
+  <div id="register-who">
+    <a href="#register-now" id="register-me" class="button"><span><i class="fa fa-sign-in"></i>{ts 1=$display_name}Registering Yourself (%1){/ts}</span></a>
+    <a href="{crmURL p='civicrm/event/register' q="cid=0&reset=1&id=`$event.id`"}" title="{ts}Click here to register a different person for this event.{/ts}" class="button"><span><i class="fa fa-external-link"></i>{ts}Registering Others{/ts}</span></a>
+  </div>
+{/if}
+<div id="register-now">
+  {if $form.additional_participants.html}
     <div class="crm-section additional_participants-section" id="noOfparticipants">
-        <div class="label">{$form.additional_participants.label}</div>
-        <div class="content">
-            {$form.additional_participants.html}<br />
-            <span class="description">{ts}Fill in your registration information on this page. If you are registering additional people, you will be able to enter their registration information after you complete this page and click &quot;Continue&quot;.{/ts}</span>
-        </div>
-        <div class="clear"></div>
+      <div class="label">{$form.additional_participants.label}</div>
+      <div class="content">
+        {$form.additional_participants.html}<br />
+        <span class="description">{ts}Fill in your registration information on this page. If you are registering additional people, you will be able to enter their registration information after you complete this page and click &quot;Continue&quot;.{/ts}</span>
+      </div>
     </div>
-{/if}
+    <div class="clear"></div>
+  {/if}
 
-{assign var=n value=email-$bltID}
-    <div class="crm-section email-section">
-        <div class="label">{$form.$n.label}</div>
-        <div class="content">{$form.$n.html}</div>
-        <div class="clear"></div>
-    </div>
+  {assign var=n value=email-$bltID}
+  <div class="crm-section email-section">
+    <div class="label">{$form.$n.label}</div>
+    <div class="content">{$form.$n.html}</div>
+    <div class="clear"></div>
+  </div>
 
 
-{* User account registration option. Displays if enabled for one of the profiles on this page. *}
-{include file="CRM/common/CMSUser.tpl"}
+  {* User account registration option. Displays if enabled for one of the profiles on this page. *}
+  {include file="CRM/common/CMSUser.tpl"}
+  {include file="CRM/UF/Form/Block.tpl" fields=$customPre} 
+  {include file="CRM/UF/Form/Block.tpl" fields=$customPost}   
 
-{include file="CRM/UF/Form/Block.tpl" fields=$customPre} 
-{include file="CRM/UF/Form/Block.tpl" fields=$customPost}   
-
-{if $priceSet}
+  {if $priceSet}
     <fieldset id="priceset" class="crm-group priceset-group"><legend>{$event.fee_label}</legend>
-        {include file="CRM/Price/Form/PriceSet.tpl"}
-	{include file="CRM/Price/Form/ParticipantCount.tpl"}
+      {include file="CRM/Price/Form/PriceSet.tpl"}
+      {include file="CRM/Price/Form/ParticipantCount.tpl"}
     </fieldset>
     {if $event.is_pay_later && !$form.payment_processor}
-        <div class="crm-section pay_later-section">
-          <div class="label">{ts}Payment Method{/ts}</div>
-          <div class="content">
-            <input type="checkbox" checked="checked" disabled="disabled"/> {$event.pay_later_text|nl2br}<br />
-            <span class="description">{$event.pay_later_receipt|nl2br}</span>
-          </div>
-          <div class="clear"></div>
+      <div class="crm-section pay_later-section">
+        <div class="label">{ts}Payment Method{/ts}</div>
+        <div class="content">
+          <input type="checkbox" checked="checked" disabled="disabled"/> {$event.pay_later_text|nl2br}<br />
+          <span class="description">{$event.pay_later_receipt|nl2br}</span>
         </div>
+        <div class="clear"></div>
+      </div>
     {/if}
-{else}
+  {else}
     {if $paidEvent}
       <fieldset id="priceset" class="crm-group priceset-group"><legend>{$event.fee_label}</legend></fieldset>
       <div class="crm-section paid_event-section">
-    	    <div class="label">&nbsp;<span class="marker">*</span></div>
-          <div class="content">{$form.amount.html}</div>
-          <div class="clear"></div>
-     	</div>
+        <div class="label">&nbsp;<span class="marker">*</span></div>
+        <div class="content">{$form.amount.html}</div>
+        <div class="clear"></div>
+      </div>
       {if $event.is_pay_later && !$form.payment_processor}
-          <div class="crm-section pay_later-section">
-            <div class="label">{ts}Payment Method{/ts}</div>
-              <div class="content"><input type="checkbox" checked="checked" disabled="disabled"/>{$event.pay_later_text}<br />
-              <span class="description">{$event.pay_later_receipt}</span>
-              </div>
-              <div class="clear"></div>
+        <div class="crm-section pay_later-section">
+          <div class="label">{ts}Payment Method{/ts}</div>
+          <div class="content"><input type="checkbox" checked="checked" disabled="disabled"/>{$event.pay_later_text}<br />
+            <span class="description">{$event.pay_later_receipt}</span>
           </div>
+          <div class="clear"></div>
+        </div>
       {/if}
     {/if}
-{/if}
+  {/if}
 
- <div class="crm-section payment_processor-section">
-      <div class="label">{$form.payment_processor.label}</div>
-      <div class="content">{$form.payment_processor.html}</div>
-      <div class="clear"></div>
- </div>
-<div id="billing-payment-block"></div>
-{include file="CRM/common/paymentBlock.tpl"}
+  <div class="crm-section payment_processor-section">
+    <div class="label">{$form.payment_processor.label}</div>
+    <div class="content">{$form.payment_processor.html}</div>
+    <div class="clear"></div>
+  </div>
+  <div id="billing-payment-block"></div>
+  {include file="CRM/common/paymentBlock.tpl"}
 
-{if $isCaptcha}
+  {if $isCaptcha}
     {include file='CRM/common/ReCAPTCHA.tpl'}
-{/if}
+  {/if}
 
-<div id="crm-submit-buttons" class="crm-submit-buttons">
+  <div id="crm-submit-buttons" class="crm-submit-buttons">
     {include file="CRM/common/formButtons.tpl" location="bottom"}
-</div>
+  </div>
 
-{if $event.footer_text}
-    <div id="footer_text" class="crm-section event_footer_text-section">
-        <p>{$event.footer_text}</p>
-    </div>
-{/if}
-</div>
-{/if}
+  {if $event.footer_text}
+  <div id="footer_text" class="crm-section event_footer_text-section">
+    <p>{$event.footer_text}</p>
+  </div>
+  {/if}
+</div><!-- end register-me -->
+
+</div><!-- end crm-event-register-form-block -->
+{/if}{*end pptype else*}
 {literal} 
 <script type="text/javascript">
 
@@ -286,6 +290,12 @@
       cj("#billing-payment-block").html('<div class="crm-section payment-description"><div class="label"></div><div class="content">{/literal}{$event.pay_later_receipt|nl2br|regex_replace:"/[\r\n]g/":""}{literal}</div><div class="clear"></div></div>');
     }
   });
+  if(cj("#register-who").length){
+    cj("#register-now").hide();
+    cj("#register-me").click(function(){
+      cj("#register-now").slideDown();
+    });
+  }
 </script>
 {/literal} 
 {include file="CRM/Event/Form/Registration/UpdateSeat.tpl"}

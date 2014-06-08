@@ -44690,3 +44690,12 @@ msgstr ""
 #: templates/CRM/Event/Form/Registration/UpdateSeat.tpl
 msgid "Update per minute."
 msgstr ""
+
+#: templates/CRM/Event/Form/Registration/Register.tpl
+msgid "Registering Yourself (%1)"
+msgstr ""
+
+#: templates/CRM/Event/Form/Registration/Register.tpl
+msgid "Registering Others"
+msgstr ""
+

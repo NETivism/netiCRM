@@ -3317,6 +3317,11 @@ div#crm-toolTip
   margin: 8px 0 8px 15px;
 }
 
+#crm-container #register-who {
+  margin: 10px 0;
+  text-align: center;
+}
+
 /* fontawesome */
 #crm-container .fa {
   padding-right: 3px;
@@ -3328,6 +3333,13 @@ div#crm-toolTip
 #crm-container a:hover i.fa {
   color: #000;
   box-shadow: #EFEFEF 1px 1px;
+}
+#crm-container a.button i.fa {
+  color: #ccc;
+}
+#crm-container a.button:hover i.fa {
+  color: #FFF;
+  box-shadow: transparent 0px 0px;
 }
 #crm-container .fa-grey {
   color: #999;
