@@ -135,8 +135,7 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
     function setShowHide( &$defaults) 
     {
         require_once 'CRM/Core/ShowHideBlocks.php';
-        $this->_showHide = new CRM_Core_ShowHideBlocks( array('registration' => 1 ),
-                                                         '') ;
+        $this->_showHide = new CRM_Core_ShowHideBlocks( array('registration' => 1 ), '') ;
         if ( empty($defaults)) {
             $this->_showHide->addShow( 'registration_screen_show' );
             $this->_showHide->addShow( 'confirm_show' );
@@ -204,7 +203,7 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
                           'is_multiple_registrations',
                           ts('Register multiple participants?'),
                           null,
-                          array('onclick' => "return showHideByValue('is_multiple_registrations', '', 'additional_profile_pre|additional_profile_post', 'table-row', 'radio', false);"));
+                          array('onclick' => "return showHideByValue('is_multiple_registrations', '', 'allow_same_emails|additional_profile_pre|additional_profile_post', 'table-row', 'radio', false);"));
         $this->addElement('checkbox', 'allow_same_participant_emails', ts('Allow multiple registrations from the same email address?'));
 
         require_once 'CRM/Event/PseudoConstant.php';

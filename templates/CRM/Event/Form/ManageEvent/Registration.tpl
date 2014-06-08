@@ -45,8 +45,7 @@
     </div>
     <div class="spacer"></div>
     <div id="registration_blocks">
-	<table class="form-layout-compressed">
-         
+      <table class="form-layout-compressed">
         <tr class="crm-event-manage-registration-form-block-registration_link_text">
             <td scope="row" class="label" width="20%">{$form.registration_link_text.label} {if $action == 2}{include file='CRM/Core/I18n/Dialog.tpl' table='civicrm_event' field='registration_link_text' id=$eventID}{/if}</td>
             <td>{$form.registration_link_text.html} {help id="id-link_text"}</td>
@@ -61,18 +60,12 @@
            <td>{include file="CRM/common/jcalendar.tpl" elementName=registration_end_date}</td>
         </tr>
        {/if}
-        <tr class="crm-event-manage-registration-form-block-is_multiple_registrations">
-            <td scope="row" class="label" width="20%">{$form.is_multiple_registrations.label}</td>
-            <td>{$form.is_multiple_registrations.html} {help id="id-allow_multiple"}</td>
-        </tr>
-        <tr class="crm-event-manage-registration-form-block-allow_same_participant_emails">
-            <td scope="row" class="label" width="20%">{$form.allow_same_participant_emails.label}</td>
-            <td>{$form.allow_same_participant_emails.html} {help id="id-allow_same_email"}</td>
-        </tr>
         <tr class="crm-event-manage-registration-form-block-requires_approval">
           {if $form.requires_approval}
             <td scope="row" class="label" width="20%">{$form.requires_approval.label}</td>
-            <td>{$form.requires_approval.html} {help id="id-requires_approval"}</td>
+            <td>{$form.requires_approval.html} <br />
+              <span class="description">{ts}Check this box to require administrative approval for all the participants who self-register, prior to being able to complete the registration process. Participants will be placed in 'Awaiting Approval' status. You can review and approve participants from 'Find Participants' - select the 'Change Participant Status' task. Approved participants will move to 'Pending from approval' status, and will be sent an email with a link to complete their registration (including paying event fees - if any). {/ts}</span>
+            </td>
           {/if}
         </tr>
         <tr id="id-approval-text" class="crm-event-manage-registration-form-block-approval_req_text">
@@ -85,36 +78,32 @@
             <td scope="row" class="label" width="20%">{$form.expiration_time.label}</td>
             <td>{$form.expiration_time.html|crmReplace:class:four} {help id="id-expiration_time"}</td>
         </tr>
-    </table>
-    <div class="spacer"></div>
-    <div id="registration">
-        {*Registration Block*}
-        <div id="registration_screen_show" class="section-hidden section-hidden-border">
-            <a href="#" onclick="hide('registration_screen_show'); show('registration_screen'); return false;"><img src="{$config->resourceBase}i/TreePlus.gif" class="action-icon" alt="{ts}open section{/ts}"/></a><label>{ts}Registration Screen{/ts}</label><br />
-        </div>	
-        <div id="registration_screen">
-        <fieldset><legend><a href="#" onclick= "hide('registration_screen'); show('registration_screen_show'); return false;"><img src="{$config->resourceBase}i/TreeMinus.gif" class="action-icon" alt="{ts}close section{/ts}"/></a>{ts}Registration Screen{/ts}</legend>
-        <table class= "form-layout-compressed">
-         <tr class="crm-event-manage-registration-form-block-intro_text">
-            <td scope="row" class="label" width="20%">{$form.intro_text.label} {if $action == 2}{include file='CRM/Core/I18n/Dialog.tpl' table='civicrm_event' field='intro_text' id=$eventID}{/if}</td>
-            <td>{$form.intro_text.html}
-            <div class="description">{ts}Introductory message / instructions for online event registration page (may include HTML formatting tags).{/ts}</div>
-            </td>
-         </tr>
-         <tr class="crm-event-manage-registration-form-block-footer_text">
-            <td scope="row" class="label" width="20%">{$form.footer_text.label} {if $action == 2}{include file='CRM/Core/I18n/Dialog.tpl' table='civicrm_event' field='footer_text' id=$eventID}{/if}</td>
-            <td>{$form.footer_text.html}
-            <div class="description">{ts}Optional footer text for registration screen.{/ts}</div></td>
-         </tr>
+      </table>
+
+    {*Form Block*}
+    <div class="crm-accordion-wrapper crm-accordion-closed" id="">
+      <div class="crm-accordion-header">
+        <div class="icon crm-accordion-pointer"></div>{ts}Include Profiles{/ts}
+      </div>
+      <div class="crm-accordion-body">
+        <table class="form-layout-compressed">
          <tr class="crm-event-manage-registration-form-block-custom_pre_id">
             <td scope="row" class="label" width="20%">{$form.custom_pre_id.label}</td>
             <td>{$form.custom_pre_id.html} <span class="profile-links"></span></span><br />
             <span class="description">{ts}Include additional fields on this registration form by configuring and selecting a CiviCRM Profile to be included at the top of the page (immediately after the introductory message).{/ts}{help id="event-profile"}</span></td>
-	 </tr>
+         </tr>
          <tr class="crm-event-manage-registration-form-block-custom_post_id">
             <td scope="row" class="label" width="20%">{$form.custom_post_id.label}</td>
             <td>{$form.custom_post_id.html} <span class="profile-links"></span><br />
             <span class="description">{ts}Include additional fields on this registration form by configuring and selecting a CiviCRM Profile to be included at the bottom of the page.{/ts}</span></td>
+        </tr>
+        <tr class="crm-event-manage-registration-form-block-is_multiple_registrations">
+            <td scope="row" class="label" width="20%">{$form.is_multiple_registrations.label}</td>
+            <td>{$form.is_multiple_registrations.html} {help id="id-allow_multiple"}</td>
+        </tr>
+        <tr id="allow_same_emails" class="crm-event-manage-registration-form-block-allow_same_participant_emails">
+            <td scope="row" class="label" width="20%">{$form.allow_same_participant_emails.label}</td>
+            <td>{$form.allow_same_participant_emails.html} {help id="id-allow_same_email"}</td>
         </tr>
         <tr id="additional_profile_pre" class="crm-event-manage-registration-form-block-additional_custom_pre_id">
             <td scope="row" class="label" width="20%">{$form.additional_custom_pre_id.label}</td>
@@ -129,16 +118,37 @@
              </td>
         </tr>
         </table>
-        </fieldset>
-        </div>
+      </div>
+    </div>  
 
-        {*Confirmation Block*}
-        <div id="confirm_show" class="section-hidden section-hidden-border">
-            <a href="#" onclick="hide('confirm_show'); show('confirm'); return false;"><img src="{$config->resourceBase}i/TreePlus.gif" class="action-icon" alt="{ts}open section{/ts}"/></a><label>{ts}Confirmation Screen{/ts}</label><br />
-        </div>	
+    {*Registration Block*}
+    <div class="crm-accordion-wrapper crm-accordion-closed" id="registration">
+      <div class="crm-accordion-header">
+        <div class="icon crm-accordion-pointer"></div>{ts}Registration Screen{/ts}
+      </div>
+      <div class="crm-accordion-body">
+        <table class="form-layout-compressed">
+         <tr class="crm-event-manage-registration-form-block-intro_text">
+            <td scope="row" class="label" width="20%">{$form.intro_text.label} {if $action == 2}{include file='CRM/Core/I18n/Dialog.tpl' table='civicrm_event' field='intro_text' id=$eventID}{/if}</td>
+            <td>{$form.intro_text.html}
+            <div class="description">{ts}Introductory message / instructions for online event registration page (may include HTML formatting tags).{/ts}</div>
+            </td>
+         </tr>
+         <tr class="crm-event-manage-registration-form-block-footer_text">
+            <td scope="row" class="label" width="20%">{$form.footer_text.label} {if $action == 2}{include file='CRM/Core/I18n/Dialog.tpl' table='civicrm_event' field='footer_text' id=$eventID}{/if}</td>
+            <td>{$form.footer_text.html}
+            <div class="description">{ts}Optional footer text for registration screen.{/ts}</div></td>
+         </tr>
+        </table>
+      </div>
+    </div>  
 
-        <div id="confirm">
-        <fieldset><legend><a href="#" onclick="hide('confirm'); show('confirm_show'); return false;"><img src="{$config->resourceBase}i/TreeMinus.gif" class="action-icon" alt="{ts}close section{/ts}"/></a>{ts}Confirmation Screen{/ts}</legend>
+    {*Confirmation Block*}
+    <div class="crm-accordion-wrapper crm-accordion-closed" id="confirm_show">
+      <div class="crm-accordion-header">
+        <div class="icon crm-accordion-pointer"></div>{ts}Confirmation Screen{/ts}
+      </div>
+      <div class="crm-accordion-body">
          <table class= "form-layout-compressed">
            <tr class="crm-event-manage-registration-form-block-confirm_title">
               <td scope="row" class="label" width="20%">{$form.confirm_title.label} <span class="marker">*</span> {if $action == 2}{include file='CRM/Core/I18n/Dialog.tpl' table='civicrm_event' field='confirm_title' id=$eventID}{/if}</td>
@@ -159,16 +169,15 @@
               </td>
            </tr>
          </table>
-        </fieldset>
-        </div>
+      </div>
+    </div>  
 
-         {*ThankYou Block*}
-        <div id="thankyou_show" class="section-hidden section-hidden-border">
-            <a href="#" onclick="hide('thankyou_show'); show('thankyou'); return false;"><img src="{$config->resourceBase}i/TreePlus.gif" class="action-icon" alt="{ts}open section{/ts}"/></a><label>{ts}Thank-you Screen{/ts}</label><br />
-        </div>	
-
-        <div id="thankyou">
-        <fieldset><legend><a href="#" onclick="hide('thankyou'); show('thankyou_show'); return false;"><img src="{$config->resourceBase}i/TreeMinus.gif" class="action-icon" alt="{ts}close section{/ts}"/></a>{ts}Thank-you Screen{/ts}</legend>
+    {*ThankYou Block*}
+    <div class="crm-accordion-wrapper crm-accordion-closed" id="">
+      <div class="crm-accordion-header">
+        <div class="icon crm-accordion-pointer"></div>{ts}Thank-you Screen{/ts}
+      </div>
+      <div class="crm-accordion-body">
          <table class= "form-layout-compressed">
            <tr class="crm-event-manage-registration-form-block-confirm_thankyou_title">           
               <td scope="row" class="label" width="20%">{$form.thankyou_title.label} <span class="marker">*</span> {if $action == 2}{include file='CRM/Core/I18n/Dialog.tpl' table='civicrm_event' field='thankyou_title' id=$eventID}{/if}</td>
@@ -189,16 +198,15 @@
               </td>
             </tr>
          </table>
-        </fieldset>
-        </div>
+      </div>
+    </div>  
 
-        {* Confirmation Email Block *}
-        <div id="mail_show" class="section-hidden section-hidden-border">
-            <a href="#" onclick="hide('mail_show'); show('mail'); return false;"><img src="{$config->resourceBase}i/TreePlus.gif" class="action-icon" alt="{ts}open section{/ts}"/></a><label>{ts}Confirmation Email{/ts}</label><br />
-        </div>	
-
-        <div id="mail">
-        <fieldset><legend><a href="#" onclick="hide('mail'); show('mail_show'); return false;"><img src="{$config->resourceBase}i/TreeMinus.gif" class="action-icon" alt="{ts}close section{/ts}"/></a>{ts}Confirmation Email{/ts}</legend>
+    {* Confirmation Email Block *}
+    <div class="crm-accordion-wrapper crm-accordion-closed" id="">
+      <div class="crm-accordion-header">
+        <div class="icon crm-accordion-pointer"></div>{ts}Confirmation Email{/ts}
+      </div>
+      <div class="crm-accordion-body">
           <table class= "form-layout-compressed">
             <tr class="crm-event-manage-registration-form-block-is_email_confirm"> 
               <td scope="row" class="label" width="20%">{$form.is_email_confirm.label}</td>
@@ -239,9 +247,9 @@
                </td>
              </tr>
            </table>
-	  </div>
-        </fieldset>
-        </div>
+      </div>
+    </div>  
+
     </div> {*end of div registration_blocks*}
     </div>
  <div class="crm-submit-buttons">
@@ -249,7 +257,6 @@
  </div>
 </div> <!-- crm-event-manage-registration-form-block -->
 
-{include file="CRM/common/showHide.tpl"}
 {include file="CRM/common/showHideByFieldValue.tpl" 
 trigger_field_id    ="is_online_registration"
 trigger_value       ="" 
@@ -267,14 +274,14 @@ field_type          ="radio"
 invert              = 0
 }
 {if $form.requires_approval}
-{include file="CRM/common/showHideByFieldValue.tpl" 
+  {include file="CRM/common/showHideByFieldValue.tpl" 
     trigger_field_id    ="requires_approval"
     trigger_value       =""
     target_element_id   ="id-approval-text" 
     target_element_type ="table-row"
     field_type          ="radio"
     invert              = 0
-}
+  }
 {/if}
 
 {*include profile link function*}
@@ -282,10 +289,14 @@ invert              = 0
 
 <script type="text/javascript">
     {literal}
+    cj().crmaccordions(); 
+
     cj("#is_multiple_registrations").change( function( ) {
+        console.log(123);
         if ( !cj(this).attr( 'checked') ) {
             cj("#additional_custom_pre_id").val('');
             cj("#additional_custom_post_id").val('');
+            cj("#allow_same_participant_emails").removeAttr("checked");
         }
     });
 

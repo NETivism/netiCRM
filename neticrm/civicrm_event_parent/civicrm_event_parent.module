@@ -82,7 +82,7 @@ function civicrm_event_parent_civicrm_buildForm( $formName, &$form ) {
     $sel_html = $sel->toHtml();
     $sel_html = '<tr class="crm-event-manage-registration-form-block-'.$sel_id.'"><td scope="row" class="label" width="20%"><label for="'.$sel_id.'">'.t('Parent Relationship').'</label></td><td>'.$sel_html.'<br /><span class="description">'.t('Relationship type for registeration agent of participant. When enable this feature with profile option above, event registration will have two form to complete. One is profile crate form, another is normal event register. When a participant go join the event, they will bring to first form of profile to fill in agent information. After that, the form will redirect to normal event registeration. And these two individual will connect with seleted relationship of this option.').'</span></td></tr>';
     $sel_html = str_replace("\n", "", $sel_html);
-    drupal_add_js("$(document).ready(function(){ var parent_relation_html = '{$sel_html}'; $(parent_relation_html).insertAfter('.crm-event-manage-registration-form-block-expiration_time'); });",'inline', 'footer');
+    drupal_add_js("$(document).ready(function(){ var parent_relation_html = '{$sel_html}'; $(parent_relation_html).insertBefore('.crm-event-manage-registration-form-block-custom_pre_id'); });",'inline', 'footer');
 
 
     // add profile form select
@@ -101,7 +101,7 @@ function civicrm_event_parent_civicrm_buildForm( $formName, &$form ) {
     $sel_html = $sel->toHtml();
     $sel_html = '<tr class="crm-event-manage-registration-form-block-'.$sel_id.'"><td scope="row" class="label" width="20%"><label for="'.$sel_id.'">'.t('Parent Profile').'</label></td><td>'.$sel_html.'<br /><span class="description">'.t('Pre-registeration profile for registration agent. Using this option will also need to config relationship type below. This form will only collect contact data and build relationships. People who enter this form will not count in participant.').'<br />'.t('You may need to visit this event registeration page by <strong>anonymous user</strong> and <strong>logged user</strong>, to make sure whole process fit your needs.').'</span></td></tr>';
     $sel_html = str_replace("\n", "", $sel_html);
-    drupal_add_js("$(document).ready(function(){ var parent_relation_html = '{$sel_html}'; $(parent_relation_html).insertAfter('.crm-event-manage-registration-form-block-expiration_time'); });",'inline', 'footer');
+    drupal_add_js("$(document).ready(function(){ var parent_relation_html = '{$sel_html}'; $(parent_relation_html).insertBefore('.crm-event-manage-registration-form-block-custom_pre_id'); });",'inline', 'footer');
 
   }
 }
