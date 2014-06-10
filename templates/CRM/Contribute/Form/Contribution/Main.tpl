@@ -473,7 +473,7 @@ function showHidePayPalExpressOption()
   });
   cj("input[name=payment_processor]").click(function(){
     if(cj(this).val() == 0){
-      cj("#billing-payment-block").html('<div class="crm-section payment-description"><div class="label"></div><div class="content">{/literal}{$pay_later_receipt|nl2br|regex_replace:"/[\r\n]/g":""}{literal}</div><div class="clear"></div></div>');
+      cj("#billing-payment-block").html('<div class="crm-section payment-description"><div class="label"></div><div class="content">{/literal}{$pay_later_receipt|nl2br|regex_replace:"/[\r\n]/":""}{literal}</div><div class="clear"></div></div>');
     }
   });
 {/literal}

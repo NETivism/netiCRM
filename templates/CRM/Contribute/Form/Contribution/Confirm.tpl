@@ -273,6 +273,8 @@
     {/if}
 
     <div id="crm-submit-buttons" class="crm-submit-buttons">
-        {include file="CRM/common/formButtons.tpl" location="bottom"}
+      {include file="CRM/common/formButtons.tpl" location="bottom"}
+      {capture assign="backlink"}{crmURL p="civicrm/contribute/transact" q="reset=1&id=`$id`"}{/capture} 
+      <span class="hide-block disable-submit-message">{ts 1=`$backlink`}Order submitted. You can create another <a href="%1">here</a>.{/ts}</span>
     </div>
 </div>

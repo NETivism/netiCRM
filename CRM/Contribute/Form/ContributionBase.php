@@ -239,6 +239,9 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form
             }
         }
 
+        // assign id
+        $this->assign( 'id', $this->_id );
+
         // we do not want to display recently viewed items, so turn off
         $this->assign       ( 'displayRecent' , false );
         // Contribution page values are cleared from session, so can't use normal Printer Friendly view.
@@ -252,6 +255,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form
 
         // current mode
         $this->_mode = ( $this->_action == 1024 ) ? 'test' : 'live';
+        $this->assign( 'browserPrint', true  );
 
         $this->_values           = $this->get( 'values' );
         $this->_fields           = $this->get( 'fields' );

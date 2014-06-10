@@ -10,12 +10,7 @@
         });
         $obj.css({"color":"#aaa","cursor":"not-allowed"});
         $obj.attr("disabled", true);
-        $obj.parent().parent()
-          .append(
-            $('<span>')
-            .append('You have send order information. <br>Avoiding paying twice by sending order information again, please refill the form by last step.')
-            .css("font-size","0.8em")
-          );
+        $('.disable-submit-message').show();
       }
       else{
         // set cookie

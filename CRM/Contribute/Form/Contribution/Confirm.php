@@ -290,15 +290,15 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
                 $this->assign( 'button', 'Make Contribution' );
             }
             $this->addButtons(array(
+                                    array ( 'type'      => 'back',
+                                            'name'      => ts('Go Back')
+                                            ),
                                     array ( 'type'      => 'next',
                                             'name'      => $contribButton,
                                             'spacing'   => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
                                             'isDefault' => true,
                                             'js'        => array( 'onclick' => "return submitOnce(this,'" . $this->_name . "','" . ts('Processing') ."');" )
                                             ),
-                                    array ( 'type'      => 'back',
-                                            'name'      => ts('Go Back')
-                                            )
                                     )
                               );
         }

@@ -250,6 +250,9 @@
 
     <div id="crm-submit-buttons" class="crm-submit-buttons">
 	    {include file="CRM/common/formButtons.tpl" location="bottom"}
+      {capture assign="backlink"}{crmURL p="civicrm/event/register" q="reset=1&id=`$event.id`"}{/capture} 
+      <span class="hide-block disable-submit-message">{ts 1=`$backlink`}Order submitted. You can create another <a href="%1">here</a>.{/ts}</span>
+
     </div>
 
     {if $event.confirm_footer_text}
