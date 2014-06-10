@@ -86,24 +86,28 @@ function neticrm_event_stat_civicrm_searchTasks($objectType, &$tasks){
         $setting['neticrm_event_stat']['state'][$key] = array('name' => $value,'isfinish' => 'unfinished');
       }
 
-
-
-      $sql = "SELECT status_id, count(id) as total FROM civicrm_participant WHERE event_id = %1 GROUP BY status_id";
+      $sql = "SELECT id, status_id FROM civicrm_participant WHERE event_id = %1 AND is_test = 0";
       $query = CRM_Core_DAO::executeQuery($sql, array(1 => array($event_id, 'Integer')));
+      $participant_status = array();
       while($query->fetch()){
-        if(isset($finished[$query->status_id])){
-          $summary['finished'][$finished[$query->status_id]] = $query->total;
-        }
-        else{
-          $summary['unfinished'][$unfinished[$query->status_id]] = $query->total;
+        $participant_status[$query->id] = $query->status_id;
+      }
+      if(!empty($participant_status)){
+        $participant_count = CRM_Event_BAO_Participant::totalEventSeats(array_keys($participant_status), TRUE);
+        foreach($participant_count as $pid => $count){
+          $status_id = $participant_status[$pid];
+          if(isset($finished[$status_id])){
+            $summary['finished'][$finished[$status_id]] += $count;
+          }
+          else{
+            $summary['unfinished'][$unfinished[$status_id]] += $count;
+          }
         }
       }
 
       /**
        * Throw setting variable to javascript.
        */
-      // $setting['neticrm_event_stat']['participantStatus'] = $eventSummary['events'][$event_id]['statuses'];
-      // $setting['neticrm_event_stat']['eventSummary'] = $eventSummary['events'][$event_id];
       $setting['neticrm_event_stat']['summary'] = $summary;
 
       $setting['neticrm_event_stat']['translate'] = array(

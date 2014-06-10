@@ -1674,11 +1674,15 @@ UPDATE  civicrm_participant
       * @access public
       * @static
       */
-     static function totalEventSeats( $participantIds ) 
+     static function totalEventSeats( $participantIds, $returnArray = FALSE) 
      {
-         $totalSeats = 0;
          if ( !is_array( $participantIds ) || empty( $participantIds ) ) {
-             return $totalSeats;
+             if($returnArray){
+               return array();
+             }
+             else{
+               return 0;
+             }
          }
          
          $sql ="
@@ -1694,7 +1698,7 @@ INNER JOIN  civicrm_price_field field ON ( value.price_field_id = field.id )
        AND  line.entity_id IN (" . implode( ', ', $participantIds ) .' )';
          
          $lineItem = CRM_Core_DAO::executeQuery( $sql );
-         $countDetails = array( );
+         $countDetails = $participantCount = array( );
          while ( $lineItem->fetch( ) ) {
              $count = $lineItem->count;
              if ( !$count ) $count = 0; 
@@ -1706,10 +1710,15 @@ INNER JOIN  civicrm_price_field field ON ( value.price_field_id = field.id )
              $optCounts = CRM_Utils_Array::value( $pId, $countDetails );
              if ( is_array( $optCounts ) ) $count = array_sum( $optCounts );
              if ( !$count ) $count = 1;
-             $totalSeats += $count;
+             $participantCount[$pId] = $count;
          }
          
-         return $totalSeats;
+         if($returnArray){
+             return $participantCount;
+         }
+         else{
+             return array_sum($participantCount);
+         }
      }
      
      /**
