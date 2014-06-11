@@ -15,12 +15,12 @@ $(document).ready(function() {
     12: '#82BA81 ', //Bright Green
   };
 
-  $('form#Search').prepend(' <div style = "width:100%; margin:0 auto;"><div id = "stat_ps"><div class="stat_ps_graph" id="stat_ps_graph1"></div><div class = "stat_ps_graph" id = "stat_ps_graph2"></div><div class="stat_ps_label" id="stat_ps_label1"></div></div></div>');
+  $('form#Search').prepend(' <div style="width:100%; margin:0 auto;"><div id="stat_ps"><div class="stat_ps_graph" id="stat_ps_graph1"></div><div class="stat_ps_graph" id="stat_ps_graph2"></div><div class="stat_ps_label" id="stat_ps_label1"></div></div></div>');
 
   if (!location.search.match('status=')) {
     google.load("visualization", "1", {
       packages: ["corechart"],
-      callback: startDrawChart,
+      callback: startDrawChart
     });
   }
   //google.setOnLoadCallback(startDrawChart);
@@ -35,21 +35,25 @@ $(document).ready(function() {
   arr_states = Drupal.settings.neticrm_event_stat.state;
 
   //人數
-  part_finished = Object.extended(p_status.finished).values().sum(function(n) {
-    return parseInt(n);
+  var part_finished = 0;
+  $.each(p_status.finished, function(index, val) {
+     part_finished += parseInt(val);
   });
-  part_unfinished = Object.extended(p_status.unfinished).values().sum(function(n) {
-    return parseInt(n);
-  });
-  part_Participants = part_finished;
 
-  part_Blank = p_status.space > 0 ? p_status.space - part_Participants : 0;
+  var part_unfinished = 0;
+  $.each(p_status.unfinished, function(index, val) {
+     part_unfinished += parseInt(val);
+  });
+
+  part_participants = part_finished;
+
+  part_blank = p_status.space > 0 ? p_status.space - part_participants : 0;
 
 
   // part_Positive = (p_status.Positive.length > 0) ? p_status.Positive[0].count : 0;
   // part_Pending = (p_status.Pending.length > 0) ? p_status.Pending[0].count : 0;
-  // part_Participants = Drupal.settings.neticrm_event_stat.eventSummary.maxParticipants;
-  // part_Blank = part_Participants - part_Positive - part_Pending;
+  // part_participants = Drupal.settings.neticrm_event_stat.eventSummary.maxParticipants;
+  // part_blank = part_participants - part_Positive - part_Pending;
 
 
   //
@@ -58,8 +62,8 @@ $(document).ready(function() {
     p_max += part_finished;
   }
 
-  if (part_Blank > 0) {
-    p_max += part_Blank;
+  if (part_blank > 0) {
+    p_max += part_blank;
   } else {
     p_max += part_unfinished;
   }
@@ -68,17 +72,17 @@ $(document).ready(function() {
   // Count ratio.
   perc_finished = part_finished / p_max;
   perc_unfinished = part_unfinished / p_max;
-  perc_Blank = part_Blank / p_max;
+  perc_Blank = part_blank / p_max;
 
   /**
    * Graph
    */
-  $pos = getJqGraphBlock(t('Counted'), part_finished, '#111', p_max).appendTo($('#stat_ps_graph1'));
+  $pos = getJqGraphBlock(part_finished, '#111', p_max).appendTo($('#stat_ps_graph1'));
 
-  if (part_Blank > 0) {
-    $bla = getJqGraphBlock(t('Place Available'), part_Blank, '#ddd', p_max).appendTo($('#stat_ps_graph1'));
+  if (part_blank > 0) {
+    $bla = getJqGraphBlock(part_blank, '#ddd', p_max).appendTo($('#stat_ps_graph1'));
   } else {
-    $pen = getJqGraphBlock(t('Not Counted'), part_unfinished, '#777', p_max).appendTo($('#stat_ps_graph1'));
+    $pen = getJqGraphBlock(part_unfinished, '#777', p_max).appendTo($('#stat_ps_graph1'));
   }
 
   /**
@@ -87,13 +91,13 @@ $(document).ready(function() {
   $block = [];
   $.each(color, function(index, val) {
     if (p_status['finished'][arr_states[index]['name']]) {
-      $block.push(getJqGraphBlock(arr_states[index]['name'], p_status['finished'][arr_states[index]['name']], color[index], p_max));
+      $block.push(getJqGraphBlock(p_status['finished'][arr_states[index]['name']], color[index], p_max));
     }
   });
-  if (!part_Blank > 0) {
+  if (!part_blank > 0) {
     $.each(color, function(index, val) {
       if (p_status['unfinished'][arr_states[index]['name']]) {
-        $block.push(getJqGraphBlock(arr_states[index]['name'], p_status['unfinished'][arr_states[index]['name']], color[index], p_max));
+        $block.push(getJqGraphBlock(p_status['unfinished'][arr_states[index]['name']], color[index], p_max));
       }
     });
   }
@@ -110,9 +114,9 @@ $(document).ready(function() {
   ).appendTo($('#stat_ps_label1 ol'));
 
 
-  if (part_Blank > 0) {
+  if (part_blank > 0) {
     $('<li>').append(
-      getJqLabelBlock(t('Place Available'), part_Blank, '#dddddd', 'div')
+      getJqLabelBlock(t('Place Available'), part_blank, '#dddddd', 'div')
     ).appendTo($('#stat_ps_label1 ol'));
   } else {
     $('<li class="unfinished-label">').append(
@@ -126,7 +130,7 @@ $(document).ready(function() {
    */
   $li = {
     'finished': $('<div class="substate-div">'),
-    'unfinished': $('<div class="substate-div">'),
+    'unfinished': $('<div class="substate-div">')
   };
 
   $.each(arr_states, function(index, val) {
@@ -138,7 +142,7 @@ $(document).ready(function() {
   $li['finished'].appendTo('.finished-label');
   $li['unfinished'].appendTo('.unfinished-label');
 
-  if (part_Blank > 0) {
+  if (part_blank > 0) {
     $('<li>').appendTo($('#stat_ps_label2 ol'));
   }
 
@@ -159,17 +163,15 @@ $(document).ready(function() {
             arr.push($(val).children('div').length);
             /* iterate through array or object */
           });
-          return arr.max() * 20 + 10;
-        }(),
-      },
-      'fast');
+          return Math.max.apply(null, arr) * 20 + 10;
+        }()
+      },'fast');
   }, function() {
     $('#stat_ps_graph1').show();
     $('#stat_ps_graph2').hide();
     $('.substate-div').animate({
-        'height': 0,
-      },
-      'fast', function() {
+        'height': 0
+      },'fast', function() {
         $('.substate-div').hide();
       });
   });
@@ -177,12 +179,12 @@ $(document).ready(function() {
 
   /**
    * Get jquery Status Label Object (<span>)
-   * @param  {[type]} stateNumber  [description]
-   * @param  {[type]} people [description]
-   * @param  {[type]} color  [description]
-   * @param  {[type]} htmlTag  [description]
-   * @param  {[type]} name  [description]
-   * @return {[type]}        [description]
+   * @param  {number or String} stateNumber  If it is number. Output will return a link.
+   * @param  {number} people  The counts of people.
+   * @param  {String of Hash} color  Like '#159c93'
+   * @param  {String} htmlTag  Like 'div', default is 'li'
+   * @param  {String} name  Class name
+   * @return {jQuery object}        Like $('<span>...</span>')
    */
   function getJqLabelBlock(stateNumber, people, color, htmlTag, name) {
     htmlTag = typeof htmlTag !== "undefined" ? htmlTag : "li";
@@ -194,7 +196,7 @@ $(document).ready(function() {
           .attr('href', '/civicrm/event/search?reset=1&force=1&status=' + stateNumber + '&event=' + event_id)
           .append(
             $('<span>').css({
-              'backgroundColor': color,
+              'backgroundColor': color
             }))
           .append($('<span class="label-title">').text(arr_states[stateNumber]['name']))
           .append($('<span class="people-count">').text(people))
@@ -202,7 +204,7 @@ $(document).ready(function() {
     } else {
       return $('<' + htmlTag + '>')
         .append($('<span>').css({
-          'backgroundColor': color,
+          'backgroundColor': color
         }))
         .append($('<span class="label-title">').text(stateNumber))
         .append($('<span class="people-count">').text(people))
@@ -212,16 +214,16 @@ $(document).ready(function() {
 
   /**
    * Get jquery Rectangle Objects (<span>)
-   * @param  {[type]} name  [description]
-   * @param  {[type]} state [description]
-   * @param  {[type]} color [description]
-   * @param  {[type]} max   [description]
-   * @return {[type]}       [description]
+   * @param  {} name  No used.
+   * @param  {Number} state The counts of this status.
+   * @param  {String of Hash} color Like '#19f88a'
+   * @param  {Number} max   Max value
+   * @return {jQuery object}       Like $(<span>...</span>)
    */
-  function getJqGraphBlock(name, state, color, max) {
+  function getJqGraphBlock(state, color, max) {
     return $('<span>').addClass('part').css({
       'backgroundColor': color,
-      'width': state / max * 100 + "%",
+      'width': state / max * 100 + "%"
     });
   }
 
@@ -257,21 +259,17 @@ $(document).ready(function() {
         piehole: 0.3,
         backgroundColor: {
           fill: 'transparent'
-        },
+        }
       });
 
       //The Event click Pie Chart
       google.visualization.events.addListener(gPie, 'select', function() {
         switch (gPie.getSelection()[0].row) {
           case 0:
-            console.log(gPie.getSelection()[0].row);
-            location.href = "https://dev.neticrm.tw/civicrm/event/search?reset=1&force=1&status=true&event=2";
             // Click First time part
             break;
           case 1:
             // Click Another Part
-            console.log(gPie.getSelection()[0].row);
-            location.href = "https://dev.neticrm.tw/civicrm/event/search?reset=1&force=1&status=false&event=2";
             break;
         }
       });
@@ -284,17 +282,13 @@ $(document).ready(function() {
         title: 'Most active participants.',
         backgroundColor: {
           fill: 'transparent'
-        },
+        }
       });
 
       google.visualization.events.addListener(gBar, 'select', function() {
-        console.log(gBar.getSelection());
+        //Event when gBar is selected.
       });
     }
-
-
-
-
 
   }
 
