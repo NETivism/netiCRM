@@ -55,7 +55,7 @@ function neticrm_event_stat_civicrm_searchTasks($objectType, &$tasks){
 
         
       drupal_set_html_head('<script type="text/javascript" src="//www.google.com/jsapi"></script>');
-      drupal_add_js(drupal_get_path('module', 'neticrm_event_stat'). '/sugar.min.js');
+      drupal_add_js(drupal_get_path('module', 'neticrm_event_stat'). '/sugar.js');
       drupal_add_js(drupal_get_path('module', 'neticrm_event_stat'). '/neticrm_event_stat.js');
       drupal_add_css(drupal_get_path('module', 'neticrm_event_stat'). '/neticrm_event_stat.css');
 
