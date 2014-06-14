@@ -1,4 +1,7 @@
 <?php
+/**
+ * hook civicrm_searchTasks
+ */
 function neticrm_event_stat_civicrm_searchTasks($objectType, &$tasks){
   static $executed;
   if($objectType=="event" && !$executed){
@@ -55,7 +58,6 @@ function neticrm_event_stat_civicrm_searchTasks($objectType, &$tasks){
 
         
       drupal_set_html_head('<script type="text/javascript" src="//www.google.com/jsapi"></script>');
-      drupal_add_js(drupal_get_path('module', 'neticrm_event_stat'). '/sugar.js');
       drupal_add_js(drupal_get_path('module', 'neticrm_event_stat'). '/neticrm_event_stat.js');
       drupal_add_css(drupal_get_path('module', 'neticrm_event_stat'). '/neticrm_event_stat.css');
 
@@ -64,46 +66,6 @@ function neticrm_event_stat_civicrm_searchTasks($objectType, &$tasks){
        * Part two: 
        * Count how many participants each status.
        */
-      $params = array(
-        'version' => 3,
-        'id' => $event_id,
-      );
-      $result = civicrm_api('event', 'get', $params);
-      $event = $result['count'] ? reset($result['values']) : array();
-      $summary = array(
-        'finished' => array(), 
-        'unfinished' => array(), 
-        'space' => $event['max_participants'] ? $event['max_participants'] : 0,
-      );
-
-      $finished = CRM_Event_PseudoConstant::participantStatus('', 'is_counted = 1', 'label');
-      $unfinished = CRM_Event_PseudoConstant::participantStatus('', 'is_counted = 0', 'label');
-      $setting['neticrm_event_stat']['state'] = array();
-      foreach ($finished as $key => $value) {
-        $setting['neticrm_event_stat']['state'][$key] = array('name' => $value,'isfinish' => 'finished');
-      }
-      foreach ($unfinished as $key => $value) {
-        $setting['neticrm_event_stat']['state'][$key] = array('name' => $value,'isfinish' => 'unfinished');
-      }
-
-      $sql = "SELECT id, status_id FROM civicrm_participant WHERE event_id = %1 AND is_test = 0";
-      $query = CRM_Core_DAO::executeQuery($sql, array(1 => array($event_id, 'Integer')));
-      $participant_status = array();
-      while($query->fetch()){
-        $participant_status[$query->id] = $query->status_id;
-      }
-      if(!empty($participant_status)){
-        $participant_count = CRM_Event_BAO_Participant::totalEventSeats(array_keys($participant_status), TRUE);
-        foreach($participant_count as $pid => $count){
-          $status_id = $participant_status[$pid];
-          if(isset($finished[$status_id])){
-            $summary['finished'][$finished[$status_id]] += $count;
-          }
-          else{
-            $summary['unfinished'][$unfinished[$status_id]] += $count;
-          }
-        }
-      }
 
       /**
        * Throw setting variable to javascript.
@@ -115,7 +77,6 @@ function neticrm_event_stat_civicrm_searchTasks($objectType, &$tasks){
         'Not Counted' => t('Not Counted'),
         'Place Available' => t('Place Available'),
       );
-
 
       drupal_add_js($setting, 'setting', 'header');
 
