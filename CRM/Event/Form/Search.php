@@ -500,6 +500,44 @@ class CRM_Event_Form_Search extends CRM_Core_Form
           $this->assign('isOnlineRegistration', $object['is_online_registration']);
           $this->assign('hideParticipantLink', 1);
           CRM_Utils_System::setTitle($object['event_title']);
+
+          // participant count
+          $max_participants = CRM_Core_DAO::getFieldValue('CRM_Event_DAO_Event', $event, 'max_participants');
+          $summary = array(
+            'finished' => array(), 
+            'unfinished' => array(), 
+            'space' => $max_participants ? $max_participants : 0,
+          );
+
+          $finished = CRM_Event_PseudoConstant::participantStatus('', 'is_counted = 1', 'label');
+          $unfinished = CRM_Event_PseudoConstant::participantStatus('', 'is_counted = 0', 'label');
+          $setting['neticrm_event_stat']['state'] = array();
+          foreach ($finished as $key => $value) {
+            $setting['neticrm_event_stat']['state'][$key] = array('name' => $value,'isfinish' => 'finished');
+          }
+          foreach ($unfinished as $key => $value) {
+            $setting['neticrm_event_stat']['state'][$key] = array('name' => $value,'isfinish' => 'unfinished');
+          }
+
+          $sql = "SELECT id, status_id FROM civicrm_participant WHERE event_id = %1 AND is_test = 0";
+          $query = CRM_Core_DAO::executeQuery($sql, array(1 => array($event, 'Integer')));
+          $participant_status = array();
+          while($query->fetch()){
+            $participant_status[$query->id] = $query->status_id;
+          }
+          if(!empty($participant_status)){
+            $participant_count = CRM_Event_BAO_Participant::totalEventSeats(array_keys($participant_status), TRUE);
+            foreach($participant_count as $pid => $count){
+              $status_id = $participant_status[$pid];
+              if(isset($finished[$status_id])){
+                $summary['finished'][$finished[$status_id]] += $count;
+              }
+              else{
+                $summary['unfinished'][$unfinished[$status_id]] += $count;
+              }
+            }
+          }
+          $this->assign('participantSummary', json_encode($summary));
         }
         else{
           if( isset($this->_defaultValues['event_id']) && !empty($this->_defaultValues['event_id']) ){

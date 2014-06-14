@@ -26,6 +26,7 @@
 {* Search form and results for Event Participants *}
 {if $id}
   {include file="CRM/Event/Form/ManageEvent/Navigator.tpl"}
+  {include file="CRM/common/participantCount.tpl"}
 {else}
 {assign var="showBlock" value="'searchForm'"}
 {assign var="hideBlock" value="'searchForm_show'"}
