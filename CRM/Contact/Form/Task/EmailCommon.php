@@ -351,16 +351,18 @@ class CRM_Contact_Form_Task_EmailCommon
         $tempEmails = array( );
         
         foreach( $form->_contactIds as $key => $contactId ) {
-            $email = $form->_toContactEmails[ $key ];
-            // prevent duplicate emails if same email address is selected CRM-4067
-            // we should allow same emails for different contacts
-            $emailKey = "{$contactId}::{$email}";
-            if ( !in_array( $emailKey, $tempEmails ) ) {
-                $tempEmails[] = $emailKey; 
-                $details          = $form->_contactDetails[$contactId];
-                $details['email'] = $email;
-                unset( $details['email_id'] );
-                $formattedContactDetails[] = $details;
+            if(is_numeric($contactId) && !empty($contactId)){
+                $email = $form->_toContactEmails[ $key ];
+                // prevent duplicate emails if same email address is selected CRM-4067
+                // we should allow same emails for different contacts
+                $emailKey = "{$contactId}::{$email}";
+                if ( !in_array( $emailKey, $tempEmails ) ) {
+                    $tempEmails[] = $emailKey; 
+                    $details          = $form->_contactDetails[$contactId];
+                    $details['email'] = $email;
+                    unset( $details['email_id'] );
+                    $formattedContactDetails[] = $details;
+                }
             }
         }
 
