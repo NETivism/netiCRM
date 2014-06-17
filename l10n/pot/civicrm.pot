@@ -44687,10 +44687,6 @@ msgstr ""
 msgid "Until to the last step, your registeration is not complete and we won't reserve any spaces for your registeration."
 msgstr ""
 
-#: templates/CRM/Event/Form/Registration/UpdateSeat.tpl
-msgid "Update per minute."
-msgstr ""
-
 #: templates/CRM/Event/Form/Registration/Register.tpl
 msgid "Registering Yourself (%1)"
 msgstr ""
