@@ -51,9 +51,14 @@
     {/if} 
      
     {assign var=n value=$field.name} 
+    {if $form.$n.id}
+      {assign var=classname value=$form.$n.id}
+    {else}
+      {assign var=classname value=$n}
+    {/if}
 
     {if $field.options_per_line != 0} 
-        <div class="crm-section {$form.$n.id}-section"> 
+        <div class="crm-section {$classname}-section"> 
         <div class="label option-label">{$form.$n.label}</div> 
         <div class="content 3"> 
              {assign var="count" value="1"} 
@@ -87,7 +92,7 @@
         <div class="clear"></div> 
         </div> 
     {else} 
-        <div class="crm-section {$form.$n.id}-section"> 
+        <div class="crm-section {$classname}-section"> 
            <div class="label">{$form.$n.label}</div>
            <div class="content">
              {if $n|substr:0:3 eq 'im-'}
