@@ -84,8 +84,8 @@ cj(document).ready(function(){
   });
   if (!part_blank > 0) {
     $.each(color, function(index, val) {
-      if (p_status['unfinished'][arr_states[index]['name']]) {
-        block.push(getJqGraphBlock(p_status['unfinished'][arr_states[index]['name']], color[index], p_max));
+      if (p_status['unfinished'][index]) {
+        block.push(getJqGraphBlock(p_status['unfinished'][index], color[index], p_max));
       }
     });
     $.each(p_status.unfinished, function(index, val) {
@@ -195,7 +195,7 @@ cj(document).ready(function(){
             $('<span>').css({
               'backgroundColor': color
             }))
-          .append($('<span class="label-title">').text(arr_states[stateNumber]['name']))
+          .append($('<span class="label-title">').text(stateNumber))
           .append($('<span class="people-count">').text(people))
       ).toggleClass(name);
     } else {
