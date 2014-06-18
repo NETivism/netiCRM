@@ -5,15 +5,6 @@
 function neticrm_event_stat_civicrm_searchTasks($objectType, &$tasks){
   static $executed;
   if($objectType=="event" && !$executed){
-    // breadcrumbs
-    if($_GET['status']){
-      $breadcrumb = array();
-      $breadcrumb[] = l('Home', '<front>');
-      $breadcrumb[] = l(t('CiviEvent Dashboard'),  'civicrm/event', array('html' => true, 'query' => 'reset=1'));
-      $breadcrumb[] = l(t('Participants'), 'civicrm/event/search', array('html' => true, 'query' => 'reset=1&force=1&event='.$_GET['event']));
-      drupal_set_breadcrumb($breadcrumb);
-
-    }
     if(is_numeric($_GET['event'])&& $_GET['event']){
       $event_id = $_GET['event'];
       $sql = "SELECT p.contact_id, c.sort_name, (
@@ -71,12 +62,6 @@ function neticrm_event_stat_civicrm_searchTasks($objectType, &$tasks){
        * Throw setting variable to javascript.
        */
       $setting['neticrm_event_stat']['summary'] = $summary;
-
-      $setting['neticrm_event_stat']['translate'] = array(
-        'Counted' => t('Counted'),
-        'Not Counted' => t('Not Counted'),
-        'Place Available' => t('Place Available'),
-      );
 
       drupal_add_js($setting, 'setting', 'header');
 

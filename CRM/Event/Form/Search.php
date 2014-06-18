@@ -541,7 +541,7 @@ class CRM_Event_Form_Search extends CRM_Core_Form
               }
             }
           }
-          $this->assign('participantSummary', json_encode($summary));
+          $this->assign('participantSummary', $summary);
         }
         else{
           if( isset($this->_defaultValues['event_id']) && !empty($this->_defaultValues['event_id']) ){

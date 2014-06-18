@@ -1,6 +1,6 @@
 <div>
   <div id="stat_ps">
-    <span class="fa fa-plus-square expand-icon"></span>
+    <span class="fa fa-minus-square-o expand-icon"></span>
     <div class="stat_ps_graph" id="stat_ps_graph1"></div>
     <div class="stat_ps_graph" id="stat_ps_graph2"></div>
     <div class="stat_ps_label" id="stat_ps_label1"></div>
@@ -10,7 +10,7 @@
 {literal}
 <script>
 color = [
-  '#3F3F3F', // dark black
+  '#333333', // dark black
   '#335f94', // blue
   '#88add9',
   '#27476d',
@@ -21,7 +21,7 @@ color = [
   '#d57e82',
   '#b03d42',
   '#e2a4a7',
-  '#BFBFBF' // white grey
+  '#cecece' // white grey
 ];
 
 cj(document).ready(function(){
@@ -29,7 +29,7 @@ cj(document).ready(function(){
    * participants status
    */
 
-  var p_status = {/literal}{$participantSummary}{literal};
+  var p_status = {/literal}{$participantSummary|@json_encode}{literal};
   var event_id = {/literal}{$id}{literal};
 
   //人數
@@ -66,9 +66,9 @@ cj(document).ready(function(){
   /**
    * Graph
    */
-  $('#stat_ps_graph1').append(getJqGraphBlock(part_finished, '#111', p_max));
+  $('#stat_ps_graph1').append(getJqGraphBlock(part_finished, color[0], p_max));
   if (part_blank > 0) {
-    $('#stat_ps_graph1').append(getJqGraphBlock(part_blank, '#ddd', p_max));
+    $('#stat_ps_graph1').append(getJqGraphBlock(part_blank, color[color.length-1], p_max));
   } else {
     $('#stat_ps_graph1').append(getJqGraphBlock(part_unfinished, '#777', p_max));
   }
@@ -95,20 +95,20 @@ cj(document).ready(function(){
    * Text Label
    */
   $('#stat_ps_label1').append($('<ol>'));
-  $('<li class="finished-label">').append(
-    getJqLabelBlock(t('Counted'), part_finished, '#111111', 'div', 'finished-block')
-  ).appendTo($('#stat_ps_label1 ol'));
+  $('<li class="finished-label">')
+    .append(getJqLabelBlock('{/literal}{ts}Counted{/ts}{literal}', part_finished, color[0], 'div', 'status-block'))
+    .appendTo($('#stat_ps_label1 ol'));
 
 
   if (part_blank > 0) {
-    $('<li>').append(
-      getJqLabelBlock(t('Place Available'), part_blank, '#dddddd', 'div')
-    ).appendTo($('#stat_ps_label1 ol'));
-  } else {
-    $('<li class="unfinished-label">').append(
-      getJqLabelBlock(t('Not Counted'), part_unfinished, '#777777', 'div', 'finished-block')
-    ).appendTo($('#stat_ps_label1 ol'));
-
+    $('<li class="unfinished-label">')
+      .append(getJqLabelBlock('{/literal}{ts}Place Available{/ts}{literal}', part_blank, color[color.length-1], 'div', 'status-block'))
+      .appendTo($('#stat_ps_label1 ol'));
+  }
+  else {
+    $('<li class="unfinished-label">')
+      .append(getJqLabelBlock('{/literal}{ts}Not Counted{/ts}{literal}', part_unfinished, '#777777', 'div', 'status-block'))
+      .appendTo($('#stat_ps_label1 ol'));
   }
 
   /**
@@ -143,36 +143,38 @@ cj(document).ready(function(){
   }
 
   /**
-   * Event
+   * Expand, collapse
    */
-  $('#stat_ps_graph2').hide(); //.css('height', 0);
-  $('.substate-div').css('height', 0).hide();
-  $('#stat_ps').hover(function() {
-    $('#stat_ps_graph2').show();
-    $('#stat_ps .expand-icon').removeClass('fa-plus-square').addClass('fa-minus-square-o');
-    $('#stat_ps_graph1').animate({'opacity': 0.3}, 'fast');
-    $('.substate-div').animate({
-        'height': function() {
-          var $lis = $('.substate-div').show();
-          var arr = [];
-          $.each($lis, function(index, val) {
-            arr.push($(val).children('div').length);
-            /* iterate through array or object */
-          });
-          return Math.max.apply(null, arr) * 20 + 10;
-        }()
-      },'fast');
-  }, function() {
-    $('#stat_ps_graph2').hide();
-    $('#stat_ps .expand-icon').addClass('fa-plus-square').removeClass('fa-minus-square-o');
-    $('#stat_ps_graph1').animate({'opacity': 1}, 'fast');
-    $('.substate-div').animate({
-        'height': 0
-      },'fast', function() {
-        $('.substate-div').hide();
-      });
+  var toggleStatus = function(type){
+    if(type === 'slide'){
+      $('#stat_ps_graph2').slideToggle();
+      $('.substate-div').slideToggle();
+    }
+    else{
+      $('#stat_ps_graph2').toggle();
+      $('.substate-div').toggle();
+    }
+    if($('#stat_ps .expand-icon').hasClass('fa-plus-square')){
+      setCookie('collapseParticipantCount', 0);
+      $("#stat_ps_graph1").animate({'opacity':0.3});
+      $('#stat_ps .expand-icon').removeClass('fa-plus-square').addClass('fa-minus-square-o');
+    }
+    else{
+      setCookie('collapseParticipantCount', 1);
+      $("#stat_ps_graph1").animate({'opacity':1});
+      $('#stat_ps .expand-icon').addClass('fa-plus-square').removeClass('fa-minus-square-o');
+    }
+  }
+  $('#stat_ps .expand-icon, #stat_ps .stat_ps_graph').click(function() {
+    toggleStatus('slide');
   });
-
+  var collapse = getCookie('collapseParticipantCount');
+  if(collapse == 1){
+    toggleStatus();
+  }
+  else{
+    $("#stat_ps_graph1").animate({'opacity':0.5});
+  }
 
   /**
    * Get jquery Status Label Object (<span>)
@@ -191,10 +193,12 @@ cj(document).ready(function(){
     else{
       var label = state;
     }
+
+    var icon = name ? 'fa-users' : 'fa-square';
     
     return $('<' + htmlTag + '>')
-      .append($('<span>').css({
-        'backgroundColor': color,
+      .append($('<span class="fa '+icon+'">').css({
+        'color': color,
         'margin-right': '10px'
       }))
       .append('<span class="label-title">'+label+'</span>')
@@ -217,16 +221,6 @@ cj(document).ready(function(){
     });
     return $block[0].outerHTML;
   }
-
-  /**
-   * get translate string
-   * @param  {[type]} str [description]
-   * @return {[type]}          [description]
-   */
-  function t(str) {
-    return typeof Drupal.settings.neticrm_event_stat.translate[str] !== 'undefined' ? Drupal.settings.neticrm_event_stat.translate[str] : str;
-  }
-  
 });
 </script>
 {/literal}
