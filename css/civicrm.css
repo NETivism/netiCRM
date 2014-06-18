@@ -3344,3 +3344,74 @@ div#crm-toolTip
 #crm-container .fa-grey {
   color: #999;
 }
+
+/**
+ * Ratio Block
+ */
+#stat_ps {
+  margin: 10px 0;
+  position: relative;
+}
+#stat_ps .expand-icon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  color: #08C;
+  text-shadow: 1px 1px #FFF;
+}
+/**
+ * Text Label of Ratio Block
+ */
+.stat_ps_label ol{
+  margin:0;
+  padding:0;
+}
+.stat_ps_label ol li{
+  display: table-cell;
+  width: 1%;
+  border-bottom: 0;
+  /*text-align: center;*/
+}
+.stat_ps_label ol li span:nth-child(1){
+  width: 12px;
+  height: 12px;
+  display: inline-block;
+  border-radius: 50%;
+}
+.stat_ps_label ol li>div{
+  width: 48%;
+  min-width: 250px;
+  margin:0 auto;
+}
+
+/**
+ * Rectangle of Ratio Block
+ */
+.stat_ps_graph{
+  clear: both;
+  height: 18px;
+  width: 100%;
+  border-radius: 5px;
+  overflow:hidden;
+  cursor: pointer;
+}
+#stat_ps_graph2 {
+  height: 11px;
+  position: absolute;
+  top: 7px;
+  line-height: 11px;
+}
+.part{
+  height: 100%;
+  display: inline-block;
+  color: #ffffff;
+  overflow: hidden;
+  text-indent: 20px;
+  line-height: 30px;
+}
+.label-title{
+  display:inline-block;
+}
+.people-count{
+  float:right;
+}

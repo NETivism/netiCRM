@@ -503,10 +503,14 @@ class CRM_Event_Form_Search extends CRM_Core_Form
 
           // participant count
           $max_participants = CRM_Core_DAO::getFieldValue('CRM_Event_DAO_Event', $event, 'max_participants');
+
+          $status_summary = CRM_Event_PseudoConstant::participantStatus('', NULL, 'label');
+          $status_summary = array_flip($status_summary);
           $summary = array(
             'finished' => array(), 
             'unfinished' => array(), 
             'space' => $max_participants ? $max_participants : 0,
+            'status' => $status_summary,
           );
 
           $finished = CRM_Event_PseudoConstant::participantStatus('', 'is_counted = 1', 'label');

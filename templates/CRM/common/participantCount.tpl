@@ -1,5 +1,6 @@
 <div>
   <div id="stat_ps">
+    <span class="fa fa-plus-square expand-icon"></span>
     <div class="stat_ps_graph" id="stat_ps_graph1"></div>
     <div class="stat_ps_graph" id="stat_ps_graph2"></div>
     <div class="stat_ps_label" id="stat_ps_label1"></div>
@@ -8,20 +9,20 @@
 
 {literal}
 <script>
-color = {
-  1: '#156970 ', //Dark Water Blue
-  2: '#700000', //Dark Red
-  3: '#0C4018', //Dark Green
-  4: '#70330B', //Dark Orange
-  5: '#0B2770', //Dark Blue
-  6: '#621478', //Dark Purple
-  7: '#C9B974', //Bright Yellow
-  8: '#82BA81', //Bright Green
-  9: '#D47F7F', //Bright Red
-  10: '#7C8FBF', //Bright Blue
-  11: '#D881F0', //Bright Purple
-  12: '#BFBFBF' //Bright Gray
-};
+color = [
+  '#3F3F3F', // dark black
+  '#335f94', // blue
+  '#88add9',
+  '#27476d',
+  '#6292cb',
+  '#3f78bb',
+  '#893135', // red
+  '#c7595e',
+  '#d57e82',
+  '#b03d42',
+  '#e2a4a7',
+  '#BFBFBF' // white grey
+];
 
 cj(document).ready(function(){
   /**
@@ -147,8 +148,9 @@ cj(document).ready(function(){
   $('#stat_ps_graph2').hide(); //.css('height', 0);
   $('.substate-div').css('height', 0).hide();
   $('#stat_ps').hover(function() {
-    $('#stat_ps_graph1').hide();
     $('#stat_ps_graph2').show();
+    $('#stat_ps .expand-icon').removeClass('fa-plus-square').addClass('fa-minus-square-o');
+    $('#stat_ps_graph1').animate({'opacity': 0.3}, 'fast');
     $('.substate-div').animate({
         'height': function() {
           var $lis = $('.substate-div').show();
@@ -161,8 +163,9 @@ cj(document).ready(function(){
         }()
       },'fast');
   }, function() {
-    $('#stat_ps_graph1').show();
     $('#stat_ps_graph2').hide();
+    $('#stat_ps .expand-icon').addClass('fa-plus-square').removeClass('fa-minus-square-o');
+    $('#stat_ps_graph1').animate({'opacity': 1}, 'fast');
     $('.substate-div').animate({
         'height': 0
       },'fast', function() {
@@ -173,37 +176,30 @@ cj(document).ready(function(){
 
   /**
    * Get jquery Status Label Object (<span>)
-   * @param  {number or String} stateNumber  If it is number. Output will return a link.
+   * @param  {String} state If it is number. Output will return a link.
    * @param  {number} people  The counts of people.
    * @param  {String of Hash} color  Like '#159c93'
    * @param  {String} htmlTag  Like 'div', default is 'li'
    * @param  {String} name  Class name
    * @return {jQuery object}        Like $('<span>...</span>')
    */
-  function getJqLabelBlock(stateNumber, people, color, htmlTag, name) {
+  function getJqLabelBlock(state, people, color, htmlTag, name) {
     htmlTag = typeof htmlTag !== "undefined" ? htmlTag : "li";
-    if (!isNaN(stateNumber)) {
-      return $('<' + htmlTag + '>')
-        .toggleClass(name)
-        .append(
-          $('<a>')
-          .attr('href', '/civicrm/event/search?reset=1&force=1&status=' + stateNumber + '&event=' + event_id)
-          .append(
-            $('<span>').css({
-              'backgroundColor': color
-            }))
-          .append($('<span class="label-title">').text(stateNumber))
-          .append($('<span class="people-count">').text(people))
-      ).toggleClass(name);
-    } else {
-      return $('<' + htmlTag + '>')
-        .append($('<span>').css({
-          'backgroundColor': color
-        }))
-        .append($('<span class="label-title">').text(stateNumber))
-        .append($('<span class="people-count">').text(people))
-        .toggleClass(name);
+    if(p_status.status.hasOwnProperty(state)){
+      var label = '<a href="'+document.URL.replace(/&status=\d+/, '')+'&status='+p_status.status[state]+'">'+state+'</a>';
     }
+    else{
+      var label = state;
+    }
+    
+    return $('<' + htmlTag + '>')
+      .append($('<span>').css({
+        'backgroundColor': color,
+        'margin-right': '10px'
+      }))
+      .append('<span class="label-title">'+label+'</span>')
+      .append($('<span class="people-count">').text(people))
+      .toggleClass(name);
   }
 
   /**
