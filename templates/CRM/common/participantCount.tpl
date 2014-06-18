@@ -9,18 +9,18 @@
 {literal}
 <script>
 color = {
-  1: '#621478', //Dark Purple
+  1: '#156970 ', //Dark Water Blue
   2: '#700000', //Dark Red
-  3: '#D881F0', //Bright Purple
-  4: '#D47F7F', //Bright Red
+  3: '#0C4018', //Dark Green
+  4: '#70330B', //Dark Orange
   5: '#0B2770', //Dark Blue
-  6: '#7C8FBF', //Bright Blue
+  6: '#621478', //Dark Purple
   7: '#C9B974', //Bright Yellow
-  8: '#0C4018', //Dark Green
-  9: '#70330B', //Dark Orange
-  10: '#156970 ', //Dark Water Blue
-  11: '#BFBFBF', //Bright Gray
-  12: '#82BA81' //Bright Green
+  8: '#82BA81', //Bright Green
+  9: '#D47F7F', //Bright Red
+  10: '#7C8FBF', //Bright Blue
+  11: '#D881F0', //Bright Purple
+  12: '#BFBFBF' //Bright Gray
 };
 
 cj(document).ready(function(){
@@ -44,8 +44,8 @@ cj(document).ready(function(){
 
   var part_participants = part_finished;
 
-  part_blank = p_status.space > 0 ? p_status.space - part_participants : 0;
-  p_max = 0;
+  var part_blank = p_status.space > 0 ? p_status.space - part_participants : 0;
+  var p_max = 0;
   if (part_finished > 0) {
     p_max += part_finished;
   }
@@ -58,19 +58,18 @@ cj(document).ready(function(){
 
 
   // Count ratio.
-  perc_finished = part_finished / p_max;
-  perc_unfinished = part_unfinished / p_max;
-  perc_Blank = part_blank / p_max;
+  var perc_finished = part_finished / p_max;
+  var perc_unfinished = part_unfinished / p_max;
+  var perc_Blank = part_blank / p_max;
 
   /**
    * Graph
    */
-  $pos = $('#stat_ps_graph1').append(getJqGraphBlock(part_finished, '#111', p_max));
-
+  $('#stat_ps_graph1').append(getJqGraphBlock(part_finished, '#111', p_max));
   if (part_blank > 0) {
-    $bla = $('#stat_ps_graph1').append(getJqGraphBlock(part_blank, '#ddd', p_max));
+    $('#stat_ps_graph1').append(getJqGraphBlock(part_blank, '#ddd', p_max));
   } else {
-    $pen = $('#stat_ps_graph1').appendTo(getJqGraphBlock(part_unfinished, '#777', p_max));
+    $('#stat_ps_graph1').append(getJqGraphBlock(part_unfinished, '#777', p_max));
   }
 
   /**
@@ -83,11 +82,7 @@ cj(document).ready(function(){
     block.push(getJqGraphBlock(p_status['finished'][index], color[i], p_max));
   });
   if (!part_blank > 0) {
-    $.each(color, function(index, val) {
-      if (p_status['unfinished'][index]) {
-        block.push(getJqGraphBlock(p_status['unfinished'][index], color[index], p_max));
-      }
-    });
+    i=6;
     $.each(p_status.unfinished, function(index, val) {
       i++;
       block.push(getJqGraphBlock(p_status['unfinished'][index], color[i], p_max));
@@ -123,6 +118,7 @@ cj(document).ready(function(){
     'unfinished': $('<div class="substate-div">')
   };
   
+  i=0;
   $.each(p_status.finished, function(index, val) {
     i++;
     if (typeof p_status.finished[index] !== 'undefined') {
@@ -130,11 +126,12 @@ cj(document).ready(function(){
         .appendTo($li['finished']);
     }
   });
+  i=6;
   $.each(p_status.unfinished, function(index, val) {
     i++;
     if (typeof p_status.unfinished[index] !== 'undefined') {
       getJqLabelBlock(index, p_status.unfinished[index], color[i], 'div')
-        .appendTo($li['finished']);
+        .appendTo($li['unfinished']);
     }
   });
   $li['finished'].appendTo('.finished-label');
