@@ -110,7 +110,8 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
         CRM_Core_Error::fatal( 'Module civicrm_allpay doesn\'t exists.' );
       }
       else{
-        civicrm_allpay_do_transfer_checkout($params, $component, $this->_paymentProcessor);
+        $is_test = $this->_mode == 'test' ? 1 : 0;
+        civicrm_allpay_do_transfer_checkout($params, $component, $this->_paymentProcessor, $is_test);
       }
     }
 }
