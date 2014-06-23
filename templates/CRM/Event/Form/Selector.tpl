@@ -48,7 +48,7 @@
  </thead>
 
   {counter start=0 skip=1 print=false}
-  {foreach from=$rows item=row}
+  {foreach from=$rows key=k item=row}
   <tr id='rowid{$row.participant_id}' class="{cycle values="odd-row,even-row"} crm-event crm-event_{$row.event_id}">
      {if ! $single }
         {if $context eq 'Search' }       
@@ -57,11 +57,15 @@
         {/if}	
 	<td class="crm-participant-contact_type">{$row.contact_type}</td>
       <td class="crm-participant-id nowrap">
+        {assign var="nk" value=$k+1}
+        {assign var="next" value=$rows[$nk]}
         {if !$smarty.get.crmSID or $smarty.get.crmSID == '1_d'}
           {if $row.participant_registered_by_id}
             <span>&nbsp;</span><i class="fa fa-level-up fa-rotate-90 fa-grey"></i><span>&nbsp;</span>
+          {elseif $next.participant_registered_by_id}
+            <i class="fa fa-group fa-grey" title="{ts}Registered by ID{/ts}"></i>
           {else}
-            <i class="fa fa-dot-circle-o fa-grey" title="{ts}Registered by ID{/ts}"></i>
+            <i class="fa fa-user fa-grey"></i>
           {/if}
         {/if}
         {$row.participant_id}
@@ -71,10 +75,11 @@
 
     <td class="crm-participant-event_title twelve">
       <a href="{crmURL p='civicrm/event/search' q="reset=1&force=1&event=`$row.event_id`"}" title="{ts}List participants for this event (all statuses){/ts}">{$row.event_title}</a>
+      {if $contactId}
       <ul class="crm-nav-links">
-        <li><a href="{crmURL p='civicrm/event/info' q="reset=1&id=`$row.event_id`"}" title="{ts}View event info page{/ts}" target="_blank"><i class="fa fa-info-circle"></i></a></li>
-        <li><a href="{crmURL p='civicrm/event/register' q="reset=1&id=`$row.event_id`"}" title="{ts}Online Registration{/ts}" target="_blank"><i class="fa fa-plus-circle"></i></a></li>
+        <li><a href="{crmURL p='civicrm/event/info' q="reset=1&id=`$row.event_id`"}" title="{ts}View event info page{/ts}" target="_blank"><i class="fa fa-info-circle"></i>{ts}View event info page{/ts}</a></li>
       </ul>
+      {/if}
     </td> 
     {assign var="participant_id" value=$row.participant_id}
     {if $lineItems.$participant_id}
