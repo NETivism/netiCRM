@@ -149,7 +149,7 @@ function _civicrm_allpay_order(&$vars, $component, &$payment_processor, $instrum
         $period = strtoupper($vars['frequency_unit'][0]);
         $args['PeriodType'] = $period;
         $args['Frequency'] = 1; // now only support continious recurring
-        $args['ExecTimes'] = empty($vars['installments']) ? 999 : $vars['installments']; // support endless
+        $args['ExecTimes'] = empty($vars['installments']) ? 99 : $vars['installments']; // support endless
         $args['PeriodReturnURL'] = $notify_url.'&is_recur=1';
       }
       # Recurring
