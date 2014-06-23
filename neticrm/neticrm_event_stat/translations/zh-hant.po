@@ -1,0 +1,60 @@
+# $Id$
+#
+# Chinese, Traditional translation of Drupal (general)
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+# Generated from files:
+#  neticrm_event_stat.module: n/a
+#  neticrm_event_stat.info: n/a
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2014-06-23 20:49+0800\n"
+"PO-Revision-Date: 2014-06-23 20:49+0800\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Chinese, Traditional <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: neticrm_event_stat.module:31
+msgid "type"
+msgstr "狀況"
+
+#: neticrm_event_stat.module:31
+msgid "count"
+msgstr "人數"
+
+#: neticrm_event_stat.module:32
+msgid "First time"
+msgstr "第一次參加"
+
+#: neticrm_event_stat.module:33
+msgid "Attended Before"
+msgstr "曾經參加過"
+
+#: neticrm_event_stat.module:36
+msgid "Participant"
+msgstr ""
+
+#: neticrm_event_stat.module:36
+msgid "Count"
+msgstr ""
+
+#: neticrm_event_stat.info:0
+msgid "NetiCRM Event Statistics"
+msgstr ""
+
+#: neticrm_event_stat.info:0
+msgid "Show participants infographic on event search page."
+msgstr ""
+
+#: neticrm_event_stat.info:0
+msgid "NetiCRM"
+msgstr ""
+
+#: neticrm_event_stat.info:0
+msgid "Place Available"
+msgstr "剩餘名額"

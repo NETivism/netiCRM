@@ -44659,23 +44659,3 @@ msgid ""
 "Until to the last step, your registeration is not complete and we won't "
 "reserve any spaces for your registeration."
 msgstr "提醒您，您尚未完成報名程序。在進行到最後一個步驟完成報名之前，我們不會為您保留名額。"
-
-#: /civicrm/event/search?reset=1&force=1&event=1
-msgid "type"
-msgstr "狀況"
-
-#: /civicrm/event/search?reset=1&force=1&event=1
-msgid "count"
-msgstr "人數"
-
-#: /civicrm/event/search?reset=1&force=1&event=1
-msgid "First time"
-msgstr "第一次參加"
-
-#: /civicrm/event/search?reset=1&force=1&event=1
-msgid "Attended Before"
-msgstr "曾經參加過"
-
-#: /civicrm/event/search?reset=1&force=1&event=1
-msgid "Place Available"
-msgstr "剩餘名額"

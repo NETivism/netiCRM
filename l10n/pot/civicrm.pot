@@ -44694,24 +44694,3 @@ msgstr ""
 #: templates/CRM/Event/Form/Registration/Register.tpl
 msgid "Registering Others"
 msgstr ""
-
-
-#: /civicrm/event/search?reset=1&force=1&event=1
-msgid "type"
-msgstr ""
-
-#: /civicrm/event/search?reset=1&force=1&event=1
-msgid "count"
-msgstr ""
-
-#: /civicrm/event/search?reset=1&force=1&event=1
-msgid "First time"
-msgstr ""
-
-#: /civicrm/event/search?reset=1&force=1&event=1
-msgid "Attended Before"
-msgstr ""
-
-#: /civicrm/event/search?reset=1&force=1&event=1
-msgid "Place Available"
-msgstr ""
