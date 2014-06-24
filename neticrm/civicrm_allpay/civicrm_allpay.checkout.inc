@@ -12,7 +12,7 @@ define('ALLPAY_EXPIRE_DAY', 7);
  * @param $component 
  * @param $payment_processor 
  */
-function civicrm_allpay_do_transfer_checkout(&$vars, &$component, &$payment_processor){
+function civicrm_allpay_do_transfer_checkout(&$vars, &$component, &$payment_processor, $is_test){
   // once they enter here, we will check SESSION
   // to see what instrument for newweb
   $instrument_id = $vars['civicrm_instrument_id'];
@@ -49,13 +49,14 @@ function civicrm_allpay_do_transfer_checkout(&$vars, &$component, &$payment_proc
     $contrib_values['payment_instrument_id'] = $vars['civicrm_instrument_id'];
   }
   $contrib_values['is_pay_later'] = $is_pay_later;
-  $contrib_values['trxn_id'] = $vars['contributionID'];
+  $contrib_values['trxn_id'] = _civicrm_allpay_trxn_id($is_test, $vars['contributionID']);
   $contribution =& CRM_Contribute_BAO_Contribution::create($contrib_values, $contrib_ids);
 
   // Inject in quickform sessions
   // Special hacking for display trxn_id after thank you page.
   $_SESSION['CiviCRM'][$form_key]['params']['trxn_id'] = $contribution->trxn_id;
   $_SESSION['CiviCRM'][$form_key]['params']['is_pay_later'] = $is_pay_later;
+  $vars['trxn_id'] = $contribution->trxn_id;
 
   $arguments = _civicrm_allpay_order($vars, $component, $payment_processor, $instrument_code, $form_key);
   _civicrm_allpay_checkmacvalue($arguments, $payment_processor);
@@ -85,7 +86,7 @@ function _civicrm_allpay_order(&$vars, $component, &$payment_processor, $instrum
 
   $args = array(
     'MerchantID' => $payment_processor['user_name'],
-    'MerchantTradeNo' => $vars['contributionID'],
+    'MerchantTradeNo' => $vars['trxn_id'],
     'MerchantTradeDate' => date('Y/m/d H:i:s'),
     'PaymentType' => 'aio',
     'TotalAmount' => $amount,
@@ -148,7 +149,7 @@ function _civicrm_allpay_order(&$vars, $component, &$payment_processor, $instrum
         $period = strtoupper($vars['frequency_unit'][0]);
         $args['PeriodType'] = $period;
         $args['Frequency'] = 1; // now only support continious recurring
-        $args['ExecTimes'] = empty($vars['installments']) ? 999 : $vars['installments']; // support endless
+        $args['ExecTimes'] = empty($vars['installments']) ? 99 : $vars['installments']; // support endless
         $args['PeriodReturnURL'] = $notify_url.'&is_recur=1';
       }
       # Recurring
@@ -230,4 +231,11 @@ function _civicrm_allpay_notify_url(&$vars, $path, $component){
   else{
     return $url;
   }
+}
+
+function _civicrm_allpay_trxn_id($is_test, $id){
+  if($is_test){
+    $id = 'test' . substr(str_replace('.', '', $_SERVER['HTTP_HOST']), 0, 3) . $id;
+  }
+  return $id;
 }

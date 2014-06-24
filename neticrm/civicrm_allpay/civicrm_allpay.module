@@ -132,6 +132,7 @@ function civicrm_allpay_civicrm_buildForm($form_name, &$form){
       break;
     case 'CRM_Contribute_Form_ContributionPage_Amount':
       $query = CRM_Core_DAO::executeQuery("SELECT id FROM civicrm_payment_processor WHERE payment_processor_type = 'ALLPAY'");
+      $processor = array();
       while($query->fetch()){
         $processor[$query->id] = $query->id;
       }
