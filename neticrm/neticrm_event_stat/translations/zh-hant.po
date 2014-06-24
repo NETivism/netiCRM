@@ -1,7 +1,7 @@
-# $Id$
+# junsuwhy
 #
 # Chinese, Traditional translation of Drupal (general)
-# Copyright YEAR NAME <EMAIL@ADDRESS>
+# Copyright YEAR NAME junsuwhy@netivism.com.tw
 # Generated from files:
 #  neticrm_event_stat.module: n/a
 #  neticrm_event_stat.info: n/a
@@ -10,8 +10,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2014-06-23 20:49+0800\n"
-"PO-Revision-Date: 2014-06-23 20:49+0800\n"
+"POT-Creation-Date: 2014-06-24 16:30+0800\n"
+"PO-Revision-Date: 2014-06-24 16:30+0800\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Chinese, Traditional <EMAIL@ADDRESS>\n"
 "MIME-Version: 1.0\n"
@@ -37,11 +37,11 @@ msgstr "曾經參加過"
 
 #: neticrm_event_stat.module:36
 msgid "Participant"
-msgstr ""
+msgstr "參加者"
 
 #: neticrm_event_stat.module:36
 msgid "Count"
-msgstr ""
+msgstr "次數"
 
 #: neticrm_event_stat.info:0
 msgid "NetiCRM Event Statistics"
@@ -53,8 +53,4 @@ msgstr ""
 
 #: neticrm_event_stat.info:0
 msgid "NetiCRM"
-msgstr ""
-
-#: neticrm_event_stat.info:0
-msgid "Place Available"
-msgstr "剩餘名額"
+msgstr "NetiCRM"
