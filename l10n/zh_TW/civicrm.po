@@ -44660,6 +44660,6 @@ msgid ""
 "reserve any spaces for your registeration."
 msgstr "提醒您，您尚未完成報名程序。在進行到最後一個步驟完成報名之前，我們不會為您保留名額。"
 
-#: /civicrm/event/search?reset=1&force=1&event=1
+#: CRM/Event/Search.php
 msgid "Place Available"
 msgstr "剩餘名額"

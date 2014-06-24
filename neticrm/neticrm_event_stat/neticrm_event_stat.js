@@ -16,16 +16,20 @@ $(document).ready(function() {
 
     is_gPie = !(data_pie[1][1] == 0 && data_pie[2][1] == null);
     is_gBar = data_bar.length !== 1;
-
-    if (is_gBar) $('form#Search').parent().prepend($('<div id="stat_bc">'));
-
-    if (is_gPie) $('form#Search').parent().prepend($('<div id="stat_dc">'));
+    $('form#Search').parent().prepend('<div id="stat-wrapper" claass="clear-block"></div>');
+    $('form#Search').parent().prepend('<a class="stat-expand"><i class="fa fa-arrow-right"></i>'+Drupal.settings.neticrm_event_stat.t.most_active_p+'</a>');
+    $(".stat-expand").click(function(){
+      $("#stat-wrapper").slideToggle();
+    });
+    
+    if (is_gPie) $('#stat-wrapper').append($('<div id="stat_dc">'));
+    if (is_gBar) $('#stat-wrapper').append($('<div id="stat_bc">'));
 
     if (is_gPie) {
       data = google.visualization.arrayToDataTable(data_pie);
       gPie = new google.visualization.PieChart(document.getElementById('stat_dc'));
       gPie.draw(data, {
-        title: 'Ratio of participants has attended before.',
+        title: Drupal.settings.neticrm_event_stat.t.attend_before_p,
         piehole: 0.3,
         backgroundColor: {
           fill: 'transparent'
@@ -49,7 +53,7 @@ $(document).ready(function() {
       data = google.visualization.arrayToDataTable(data_bar);
       gBar = new google.visualization.BarChart(document.getElementById('stat_bc'));
       gBar.draw(data, {
-        title: 'Most active participants.',
+        title: Drupal.settings.neticrm_event_stat.t.most_active_p,
         backgroundColor: {
           fill: 'transparent'
         }

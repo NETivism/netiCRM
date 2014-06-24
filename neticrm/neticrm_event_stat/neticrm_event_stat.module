@@ -44,6 +44,10 @@ function neticrm_event_stat_civicrm_searchTasks($objectType, &$tasks){
           'event' => $event_id,
           'pie' => $pie,
           'bar' => $bar,
+          't' => array(
+            'most_active_p' => t('Most active participants.'),
+            'attend_before_p' => t('Ratio of participants has attended before.'),
+          ),
         ),
       );
 

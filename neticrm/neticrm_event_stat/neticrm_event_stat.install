@@ -3,5 +3,5 @@
 /**
  * Implementation of hook_install().
  */
-function whycivi_install() {
+function neticrm_event_stat_uninstall() {
 }
