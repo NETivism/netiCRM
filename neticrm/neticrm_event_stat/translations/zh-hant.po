@@ -54,3 +54,9 @@ msgstr ""
 #: neticrm_event_stat.info:0
 msgid "NetiCRM"
 msgstr "NetiCRM"
+
+msgid "Ratio of participants has attended before."
+msgstr "參加過的和第一次參加者的比例"
+
+msgid "Most active participants."
+msgstr "最活躍的參加者"
