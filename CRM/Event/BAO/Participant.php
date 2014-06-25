@@ -1745,4 +1745,49 @@ INNER JOIN  civicrm_price_field field ON ( value.price_field_id = field.id )
          }
          
      }
+
+    /**
+     * Function to get participant count by seperated status
+     * @param Integer $event_id a id of event
+     * 
+     * @return array of count listed by counted and not-counted
+     * @access public
+     * @static
+     */
+    static function statusEventSeats($event_id){
+      $summary = array(
+        'counted' => array(), 
+        'notcounted' => array(), 
+      );
+
+      $counted = CRM_Event_PseudoConstant::participantStatus('', 'is_counted = 1', 'label');
+      $notcounted = CRM_Event_PseudoConstant::participantStatus('', 'is_counted = 0', 'label');
+      $setting['neticrm_event_stat']['state'] = array();
+      foreach ($counted as $key => $value) {
+        $setting['neticrm_event_stat']['state'][$key] = array('name' => $value,'isfinish' => 'counted');
+      }
+      foreach ($notcounted as $key => $value) {
+        $setting['neticrm_event_stat']['state'][$key] = array('name' => $value,'isfinish' => 'notcounted');
+      }
+
+      $sql = "SELECT id, status_id FROM civicrm_participant WHERE event_id = %1 AND is_test = 0";
+      $query = CRM_Core_DAO::executeQuery($sql, array(1 => array($event_id, 'Integer')));
+      $participant_status = array();
+      while($query->fetch()){
+        $participant_status[$query->id] = $query->status_id;
+      }
+      if(!empty($participant_status)){
+        $participant_count = CRM_Event_BAO_Participant::totalEventSeats(array_keys($participant_status), TRUE);
+        foreach($participant_count as $pid => $count){
+          $status_id = $participant_status[$pid];
+          if(isset($counted[$status_id])){
+            $summary['counted'][$counted[$status_id]] += $count;
+          }
+          else{
+            $summary['notcounted'][$notcounted[$status_id]] += $count;
+          }
+        }
+      }
+      return $summary;
+    }
 }

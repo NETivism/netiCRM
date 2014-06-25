@@ -506,41 +506,9 @@ class CRM_Event_Form_Search extends CRM_Core_Form
 
           $status_summary = CRM_Event_PseudoConstant::participantStatus('', NULL, 'label');
           $status_summary = array_flip($status_summary);
-          $summary = array(
-            'finished' => array(), 
-            'unfinished' => array(), 
-            'space' => $max_participants ? $max_participants : 0,
-            'status' => $status_summary,
-          );
-
-          $finished = CRM_Event_PseudoConstant::participantStatus('', 'is_counted = 1', 'label');
-          $unfinished = CRM_Event_PseudoConstant::participantStatus('', 'is_counted = 0', 'label');
-          $setting['neticrm_event_stat']['state'] = array();
-          foreach ($finished as $key => $value) {
-            $setting['neticrm_event_stat']['state'][$key] = array('name' => $value,'isfinish' => 'finished');
-          }
-          foreach ($unfinished as $key => $value) {
-            $setting['neticrm_event_stat']['state'][$key] = array('name' => $value,'isfinish' => 'unfinished');
-          }
-
-          $sql = "SELECT id, status_id FROM civicrm_participant WHERE event_id = %1 AND is_test = 0";
-          $query = CRM_Core_DAO::executeQuery($sql, array(1 => array($event, 'Integer')));
-          $participant_status = array();
-          while($query->fetch()){
-            $participant_status[$query->id] = $query->status_id;
-          }
-          if(!empty($participant_status)){
-            $participant_count = CRM_Event_BAO_Participant::totalEventSeats(array_keys($participant_status), TRUE);
-            foreach($participant_count as $pid => $count){
-              $status_id = $participant_status[$pid];
-              if(isset($finished[$status_id])){
-                $summary['finished'][$finished[$status_id]] += $count;
-              }
-              else{
-                $summary['unfinished'][$unfinished[$status_id]] += $count;
-              }
-            }
-          }
+          $summary = CRM_Event_BAO_Participant::statusEventSeats($event);
+          $summary['status'] = $status_summary;
+          $summary['space'] = $max_participants ? $max_participants : 0;
           $this->assign('participantSummary', $summary);
         }
         else{

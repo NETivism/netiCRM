@@ -33,44 +33,44 @@ cj(document).ready(function(){
   var event_id = {/literal}{$id}{literal};
 
   //人數
-  var part_finished = 0;
-  $.each(p_status.finished, function(index, val) {
-     part_finished += parseInt(val);
+  var part_counted = 0;
+  $.each(p_status.counted, function(index, val) {
+     part_counted += parseInt(val);
   });
 
-  var part_unfinished = 0;
-  $.each(p_status.unfinished, function(index, val) {
-     part_unfinished += parseInt(val);
+  var part_notcounted = 0;
+  $.each(p_status.notcounted, function(index, val) {
+     part_notcounted += parseInt(val);
   });
 
-  var part_participants = part_finished;
+  var part_participants = part_counted;
 
   var part_blank = p_status.space > 0 ? p_status.space - part_participants : 0;
   var p_max = 0;
-  if (part_finished > 0) {
-    p_max += part_finished;
+  if (part_counted > 0) {
+    p_max += part_counted;
   }
 
   if (part_blank > 0) {
     p_max += part_blank;
   } else {
-    p_max += part_unfinished;
+    p_max += part_notcounted;
   }
 
 
   // Count ratio.
-  var perc_finished = part_finished / p_max;
-  var perc_unfinished = part_unfinished / p_max;
+  var perc_counted = part_counted / p_max;
+  var perc_notcounted = part_notcounted / p_max;
   var perc_Blank = part_blank / p_max;
 
   /**
    * Graph
    */
-  $('#stat_ps_graph1').append(getJqGraphBlock(part_finished, color[0], p_max));
+  $('#stat_ps_graph1').append(getJqGraphBlock(part_counted, color[0], p_max));
   if (part_blank > 0) {
     $('#stat_ps_graph1').append(getJqGraphBlock(part_blank, color[color.length-1], p_max));
   } else {
-    $('#stat_ps_graph1').append(getJqGraphBlock(part_unfinished, '#777', p_max));
+    $('#stat_ps_graph1').append(getJqGraphBlock(part_notcounted, '#777', p_max));
   }
 
   /**
@@ -78,15 +78,15 @@ cj(document).ready(function(){
    */
   var block = [];
   var i = 0;
-  $.each(p_status.finished, function(index, val) {
+  $.each(p_status.counted, function(index, val) {
     i++;
-    block.push(getJqGraphBlock(p_status['finished'][index], color[i], p_max));
+    block.push(getJqGraphBlock(p_status['counted'][index], color[i], p_max));
   });
   if (!part_blank > 0) {
     i=6;
-    $.each(p_status.unfinished, function(index, val) {
+    $.each(p_status.notcounted, function(index, val) {
       i++;
-      block.push(getJqGraphBlock(p_status['unfinished'][index], color[i], p_max));
+      block.push(getJqGraphBlock(p_status['notcounted'][index], color[i], p_max));
     });
   }
   $('#stat_ps_graph2').append(block.join(''));
@@ -95,19 +95,19 @@ cj(document).ready(function(){
    * Text Label
    */
   $('#stat_ps_label1').append($('<ol>'));
-  $('<li class="finished-label">')
-    .append(getJqLabelBlock('{/literal}{ts}Counted{/ts}{literal}', part_finished, color[0], 'div', 'status-block'))
+  $('<li class="counted-label">')
+    .append(getJqLabelBlock('{/literal}{ts}Counted{/ts}{literal}', part_counted, color[0], 'div', 'status-block'))
     .appendTo($('#stat_ps_label1 ol'));
 
 
   if (part_blank > 0) {
-    $('<li class="unfinished-label">')
+    $('<li class="notcounted-label">')
       .append(getJqLabelBlock('{/literal}{ts}Place Available{/ts}{literal}', part_blank, color[color.length-1], 'div', 'status-block'))
       .appendTo($('#stat_ps_label1 ol'));
   }
   else {
-    $('<li class="unfinished-label">')
-      .append(getJqLabelBlock('{/literal}{ts}Not Counted{/ts}{literal}', part_unfinished, '#777777', 'div', 'status-block'))
+    $('<li class="notcounted-label">')
+      .append(getJqLabelBlock('{/literal}{ts}Not Counted{/ts}{literal}', part_notcounted, '#777777', 'div', 'status-block'))
       .appendTo($('#stat_ps_label1 ol'));
   }
 
@@ -115,28 +115,28 @@ cj(document).ready(function(){
    * Text Label 2
    */
   var $li = {
-    'finished': $('<div class="substate-div">'),
-    'unfinished': $('<div class="substate-div">')
+    'counted': $('<div class="substate-div">'),
+    'notcounted': $('<div class="substate-div">')
   };
   
   i=0;
-  $.each(p_status.finished, function(index, val) {
+  $.each(p_status.counted, function(index, val) {
     i++;
-    if (typeof p_status.finished[index] !== 'undefined') {
-      getJqLabelBlock(index, p_status.finished[index], color[i], 'div')
-        .appendTo($li['finished']);
+    if (typeof p_status.counted[index] !== 'undefined') {
+      getJqLabelBlock(index, p_status.counted[index], color[i], 'div')
+        .appendTo($li['counted']);
     }
   });
   i=6;
-  $.each(p_status.unfinished, function(index, val) {
+  $.each(p_status.notcounted, function(index, val) {
     i++;
-    if (typeof p_status.unfinished[index] !== 'undefined') {
-      getJqLabelBlock(index, p_status.unfinished[index], color[i], 'div')
-        .appendTo($li['unfinished']);
+    if (typeof p_status.notcounted[index] !== 'undefined') {
+      getJqLabelBlock(index, p_status.notcounted[index], color[i], 'div')
+        .appendTo($li['notcounted']);
     }
   });
-  $li['finished'].appendTo('.finished-label');
-  $li['unfinished'].appendTo('.unfinished-label');
+  $li['counted'].appendTo('.counted-label');
+  $li['notcounted'].appendTo('.notcounted-label');
 
   if (part_blank > 0) {
     $('<li>').appendTo($('#stat_ps_label2 ol'));

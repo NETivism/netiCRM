@@ -44695,6 +44695,10 @@ msgstr ""
 msgid "Registering Others"
 msgstr ""
 
-#: /civicrm/event/search?reset=1&force=1&event=1
+#: CRM/Event/Form/Search.php 
 msgid "Place Available"
+msgstr ""
+
+#: templates/CRM/Event/Page/ManageEvent.tpl
+msgid "Participant count"
 msgstr ""

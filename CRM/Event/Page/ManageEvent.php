@@ -216,6 +216,11 @@ ORDER BY start_date desc
             
                 // form all action links
                 $action = array_sum(array_keys($this->links()));
+                $counting = CRM_Event_BAO_Participant::statusEventSeats($dao->id);
+                foreach($counting as $k => $c){
+                    $manageEvent[$dao->id][$k] = array_sum($c);
+                }
+                $manageEvent[$dao->id]['max_participants'] = $dao->max_participants; 
             
                 if ($dao->is_active) {
                     $action -= CRM_Core_Action::ENABLE;
