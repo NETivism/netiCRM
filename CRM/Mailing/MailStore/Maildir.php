@@ -67,7 +67,8 @@ class CRM_Mailing_MailStore_Maildir extends CRM_Mailing_MailStore {
     $parser->options->parseTextAttachmentsAsFiles = TRUE;
 
     foreach (array(
-      'cur', 'new') as $subdir) {
+        'cur', 'new',
+      ) as $subdir) {
       $dir = $this->_dir . DIRECTORY_SEPARATOR . $subdir;
       foreach (scandir($dir) as $file) {
         if ($file == '.' or $file == '..') {
@@ -78,11 +79,10 @@ class CRM_Mailing_MailStore_Maildir extends CRM_Mailing_MailStore {
         if ($this->_debug) {
 
           print "retrieving message $path\n";
-
         }
 
-        $set          = new ezcMailFileSet(array($path));
-        $single       = $parser->parseMail($set);
+        $set = new ezcMailFileSet(array($path));
+        $single = $parser->parseMail($set);
         $mails[$path] = $single[0];
       }
     }

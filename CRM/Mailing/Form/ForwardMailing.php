@@ -66,6 +66,7 @@ class CRM_Mailing_Form_ForwardMailing extends CRM_Core_Form {
     /* Show the subject instead of the name here, since it's being
          * displayed to external contacts/users */
 
+
     CRM_Utils_System::setTitle(ts('Forward Mailing: %1', array(1 => $mailing->subject)));
 
     $this->set('queue_id', $queue_id);
@@ -113,15 +114,15 @@ class CRM_Mailing_Form_ForwardMailing extends CRM_Core_Form {
    * @return None
    */
   public function postProcess() {
-    $queue_id  = $this->get('queue_id');
-    $job_id    = $this->get('job_id');
-    $hash      = $this->get('hash');
+    $queue_id = $this->get('queue_id');
+    $job_id = $this->get('job_id');
+    $hash = $this->get('hash');
     $timeStamp = date('YmdHis');
 
-    $formValues          = $this->controller->exportValues($this->_name);
-    $params              = array();
+    $formValues = $this->controller->exportValues($this->_name);
+    $params = array();
     $params['body_text'] = $formValues['forward_comment'];
-    $html_comment        = $formValues['html_comment'];
+    $html_comment = $formValues['html_comment'];
     $params['body_html'] = str_replace('%7B', '{', str_replace('%7D', '}', $html_comment));
 
     $emails = array();

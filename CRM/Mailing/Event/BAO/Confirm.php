@@ -125,10 +125,10 @@ class CRM_Mailing_Event_BAO_Confirm extends CRM_Mailing_Event_DAO_Confirm {
     }
 
     require_once 'CRM/Mailing/BAO/Mailing.php';
-    $bao            = new CRM_Mailing_BAO_Mailing();
+    $bao = new CRM_Mailing_BAO_Mailing();
     $bao->body_text = $text;
     $bao->body_html = $html;
-    $tokens         = $bao->getTokens();
+    $tokens = $bao->getTokens();
 
     require_once 'CRM/Utils/Token.php';
     $html = CRM_Utils_Token::replaceDomainTokens($html, $domain, TRUE, $tokens['html']);
@@ -141,8 +141,8 @@ class CRM_Mailing_Event_BAO_Confirm extends CRM_Mailing_Event_DAO_Confirm {
 
     $message->setHTMLBody($html);
     $message->setTxtBody($text);
-    $b      = CRM_Utils_Mail::setMimeParams($message);
-    $h      = &$message->headers($headers);
+    $b = CRM_Utils_Mail::setMimeParams($message);
+    $h = &$message->headers($headers);
     $mailer = &$config->getMailer();
 
     require_once 'CRM/Mailing/BAO/Mailing.php';

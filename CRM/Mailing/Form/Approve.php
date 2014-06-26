@@ -96,7 +96,7 @@ class CRM_Mailing_Form_Approve extends CRM_Core_Form {
   function setDefaultValues() {
     $defaults = array();
     if ($this->_mailingID) {
-    /*
+      /*
       $defaults['approval_status_id'] = $this->_mailing->approval_status_id;
       $defaults['approval_note'] = $this->_mailing->approval_note;
     */
@@ -114,7 +114,7 @@ class CRM_Mailing_Form_Approve extends CRM_Core_Form {
    * @access public
    */
   public function buildQuickform() {
-  /*
+    /*
     $title = ts('Approve/Reject Mailing') . " - {$this->_mailing->name}";
     CRM_Utils_System::setTitle($title);
 
@@ -135,6 +135,7 @@ class CRM_Mailing_Form_Approve extends CRM_Core_Form {
 
     $this->addRadio('approval_status_id', ts('Approval Status'), $mailApprovalStatus, TRUE, NULL, TRUE);
 */
+
 
     $buttons = array(
       array('type' => 'next',
@@ -191,10 +192,11 @@ class CRM_Mailing_Form_Approve extends CRM_Core_Form {
       CRM_Core_Error::fatal();
     }
 
-/*
+    /*
     $params['approver_id'] = $this->_contactID;
     $params['approval_date'] = date('YmdHis');
 */
+
 
     // if rejected, then we need to reset the scheduled date and scheduled id
     /*
@@ -215,6 +217,7 @@ class CRM_Mailing_Form_Approve extends CRM_Core_Form {
       $job->delete();
     }
     */
+
 
     CRM_Mailing_BAO_Mailing::create($params, $ids);
 

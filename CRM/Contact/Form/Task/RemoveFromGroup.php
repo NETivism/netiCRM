@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -42,64 +41,64 @@ require_once 'CRM/Contact/Form/Task.php';
  * addition of contacts to groups.
  */
 class CRM_Contact_Form_Task_RemoveFromGroup extends CRM_Contact_Form_Task {
-    /**
-     * Build the form
-     *
-     * @access public
-     * @return void
-     */
-    function buildQuickForm( ) {
-        // add select for groups
-        $group = array( '' => ts('- select group -')) + CRM_Core_PseudoConstant::group( );
-        $groupElement = $this->add('select', 'group_id', ts('Select Group'), $group, true);
 
-        CRM_Utils_System::setTitle( ts('Remove Contacts from Group') );
-        $this->addDefaultButtons( ts('Remove from Group') );
+  /**
+   * Build the form
+   *
+   * @access public
+   *
+   * @return void
+   */
+  function buildQuickForm() {
+    // add select for groups
+    $group = array('' => ts('- select group -')) + CRM_Core_PseudoConstant::group();
+    $groupElement = $this->add('select', 'group_id', ts('Select Group'), $group, TRUE);
+
+    CRM_Utils_System::setTitle(ts('Remove Contacts from Group'));
+    $this->addDefaultButtons(ts('Remove from Group'));
+  }
+
+  /**
+   * Set the default form values
+   *
+   * @access protected
+   *
+   * @return array the default array reference
+   */
+  function &setDefaultValues() {
+    $defaults = array();
+
+    if ($this->get('context') === 'smog') {
+      $defaults['group_id'] = $this->get('gid');
     }
+    return $defaults;
+  }
 
-    /**
-     * Set the default form values
-     *
-     * @access protected
-     * @return array the default array reference
-     */
-    function &setDefaultValues() {
-        $defaults = array();
+  /**
+   * process the form after the input has been submitted and validated
+   *
+   * @access public
+   *
+   * @return None
+   */
+  public function postProcess() {
+    $groupId = $this->controller->exportValue('RemoveFromGroup', 'group_id');
+    $group = &CRM_Core_PseudoConstant::group();
 
-        if ( $this->get( 'context' ) === 'smog' ) {
-            $defaults['group_id'] = $this->get( 'gid' );
-        }
-        return $defaults;
+    list($total, $removed, $notRemoved) = CRM_Contact_BAO_GroupContact::removeContactsFromGroup($this->_contactIds, $groupId);
+    $status = array(
+      ts('Removed Contact(s) from %1', array(1 => $group[$groupId])),
+      ts('Total Selected Contact(s): %1', array(1 => $total)),
+    );
+    if ($removed) {
+      $status[] = ts('Total Contact(s) removed from group: %1', array(1 => $removed));
     }
-
-
-    /**
-     * process the form after the input has been submitted and validated
-     *
-     * @access public
-     * @return None
-     */
-    public function postProcess() {
-        $groupId  =  $this->controller->exportValue( 'RemoveFromGroup', 'group_id'  );
-        $group    =& CRM_Core_PseudoConstant::group( );
-
-        list( $total, $removed, $notRemoved ) = CRM_Contact_BAO_GroupContact::removeContactsFromGroup( $this->_contactIds, $groupId );
-        $status = array(
-                        ts('Removed Contact(s) from %1', array(1 => $group[$groupId])),
-                        ts('Total Selected Contact(s): %1', array(1 => $total))
-                        );
-        if ( $removed ) {
-            $status[] = ts('Total Contact(s) removed from group: %1', array(1 => $removed));
-        }
-        if ( $notRemoved ) {
-            $status[] = ts('Total Contact(s) not in group: %1', array(1 => $notRemoved));
-            $status[] = ts('Total Contact(s) with negative membership in group: %1', array(1 => $notRemoved));
-        }
-        CRM_Core_Session::setStatus( $status );
-
-    }//end of function
-
-
+    if ($notRemoved) {
+      $status[] = ts('Total Contact(s) not in group: %1', array(1 => $notRemoved));
+      $status[] = ts('Total Contact(s) with negative membership in group: %1', array(1 => $notRemoved));
+    }
+    CRM_Core_Session::setStatus($status);
+  }
+  //end of function
 }
-
 

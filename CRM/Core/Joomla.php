@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -39,41 +38,43 @@
  */
 class CRM_Core_Joomla {
 
-    /**
-     * Reuse drupal blocks into a left sidebar. Assign the generated template
-     * to the smarty instance
-     *
-     * @return void
-     * @access public
-     * @static
-     */
-    static function sidebarLeft( ) {
-        $config = CRM_Core_Config::singleton( );
+  /**
+   * Reuse drupal blocks into a left sidebar. Assign the generated template
+   * to the smarty instance
+   *
+   * @return void
+   * @access public
+   * @static
+   */
+  static
+  function sidebarLeft() {
+    $config = CRM_Core_Config::singleton();
 
-        if ( $config->userFrameworkFrontend ) {
-            return;
-        }
-
-        require_once 'CRM/Core/Block.php';
-        $blockIds = array( 
-            CRM_Core_Block::CREATE_NEW,
-            CRM_Core_Block::RECENTLY_VIEWED,
-            CRM_Core_Block::DASHBOARD,
-            CRM_Core_Block::ADD,
-            CRM_Core_Block::LANGSWITCH,
-            //CRM_Core_Block::EVENT,
-            //CRM_Core_Block::FULLTEXT_SEARCH
-        );
-
-        $blocks = array( );
-        foreach ( $blockIds as $id ) {
-            $blocks[] = CRM_Core_Block::getContent( $id );
-        }
-
-        require_once 'CRM/Core/Smarty.php';
-        $template = CRM_Core_Smarty::singleton( );
-        $template->assign_by_ref( 'blocks', $blocks );
-        $sidebarLeft = $template->fetch( 'CRM/Block/blocks.tpl' );
-        $template->assign_by_ref( 'sidebarLeft', $sidebarLeft );
+    if ($config->userFrameworkFrontend) {
+      return;
     }
+
+    require_once 'CRM/Core/Block.php';
+    $blockIds = array(
+      CRM_Core_Block::CREATE_NEW,
+      CRM_Core_Block::RECENTLY_VIEWED,
+      CRM_Core_Block::DASHBOARD,
+      CRM_Core_Block::ADD,
+      CRM_Core_Block::LANGSWITCH,
+      //CRM_Core_Block::EVENT,
+      //CRM_Core_Block::FULLTEXT_SEARCH
+    );
+
+    $blocks = array();
+    foreach ($blockIds as $id) {
+      $blocks[] = CRM_Core_Block::getContent($id);
+    }
+
+    require_once 'CRM/Core/Smarty.php';
+    $template = CRM_Core_Smarty::singleton();
+    $template->assign_by_ref('blocks', $blocks);
+    $sidebarLeft = $template->fetch('CRM/Block/blocks.tpl');
+    $template->assign_by_ref('sidebarLeft', $sidebarLeft);
+  }
 }
+

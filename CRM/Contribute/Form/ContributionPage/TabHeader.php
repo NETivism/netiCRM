@@ -113,8 +113,8 @@ class CRM_Contribute_Form_ContributionPage_TabHeader {
     );
 
     $contribPageId = $form->getVar('_id');
-    $fullName      = $form->getVar('_name');
-    $className     = CRM_Utils_String::getClassName($fullName);
+    $fullName = $form->getVar('_name');
+    $className = CRM_Utils_String::getClassName($fullName);
 
     // Hack for special cases.
     switch ($className) {

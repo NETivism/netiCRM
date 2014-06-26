@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -39,137 +38,143 @@
  */
 class CRM_Event_Form_ManageEvent_TabHeader {
 
-    static function build( &$form ) {
-        $tabs = $form->get( 'tabHeader' );
-        if ( !$tabs || !CRM_Utils_Array::value('reset', $_GET) ) {
-            $tabs =& self::process( $form );
-            $form->set( 'tabHeader', $tabs );
-        }
-        $form->assign_by_ref( 'tabHeader', $tabs );
-        $form->assign_by_ref( 'selectedTab', self::getCurrentTab($tabs) );
-        return $tabs;
+  static
+  function build(&$form) {
+    $tabs = $form->get('tabHeader');
+    if (!$tabs || !CRM_Utils_Array::value('reset', $_GET)) {
+      $tabs = &self::process($form);
+      $form->set('tabHeader', $tabs);
+    }
+    $form->assign_by_ref('tabHeader', $tabs);
+    $form->assign_by_ref('selectedTab', self::getCurrentTab($tabs));
+    return $tabs;
+  }
+
+  static
+  function process(&$form) {
+    if ($form->getVar('_id') <= 0) {
+      return NULL;
     }
 
-    static function process( &$form ) {
-        if ( $form->getVar( '_id' ) <= 0 ) {
-            return null;
-        }
+    $tabs = array(
+      'eventInfo' => array('title' => ts('Info and Settings'),
+        'link' => NULL,
+        'valid' => FALSE,
+        'active' => FALSE,
+        'current' => FALSE,
+      ),
+      'location' => array('title' => ts('Event Location'),
+        'link' => NULL,
+        'valid' => FALSE,
+        'active' => FALSE,
+        'current' => FALSE,
+      ),
+      'fee' => array('title' => ts('Fees'),
+        'link' => NULL,
+        'valid' => FALSE,
+        'active' => FALSE,
+        'current' => FALSE,
+      ),
+      'registration' => array('title' => ts('Online Registration'),
+        'link' => NULL,
+        'valid' => FALSE,
+        'active' => FALSE,
+        'current' => FALSE,
+      ),
+      'friend' => array('title' => ts('Tell a Friend'),
+        'link' => NULL,
+        'valid' => FALSE,
+        'active' => FALSE,
+        'current' => FALSE,
+      ),
+    );
 
-        $tabs = array(
-                      'eventInfo'    => array( 'title'  => ts( 'Info and Settings' ),
-                                               'link'   => null,
-                                               'valid'  => false,
-                                               'active' => false,
-                                               'current' => false,
-                                               ),
-                      'location'     => array( 'title' => ts( 'Event Location' ),
-                                               'link'   => null,
-                                               'valid' => false,
-                                               'active' => false,
-                                               'current' => false,
-                                               ),
-                      'fee'          => array( 'title' => ts( 'Fees' ),
-                                               'link'   => null,
-                                               'valid' => false,
-                                               'active' => false,
-                                               'current' => false,
-                                               ),
-                      'registration' => array( 'title' => ts( 'Online Registration' ),
-                                               'link'   => null,
-                                               'valid' => false,
-                                               'active' => false,
-                                               'current' => false,
-                                               ),
-                      'friend'       => array( 'title' => ts( 'Tell a Friend' ),
-                                               'link'   => null,
-                                               'valid' => false,
-                                               'active' => false,
-                                               'current' => false,
-                                               ),
-                      );
+    $eventID = $form->getVar('_id');
 
-        $eventID = $form->getVar( '_id' );
+    $fullName = $form->getVar('_name');
+    $className = CRM_Utils_String::getClassName($fullName);
+    $class = strtolower($className);
+    // hack for tell a friend, since class name is different
+    if ($className == 'Event') {
+      $class = 'friend';
+    }
+    elseif ($className == 'EventInfo') {
+      $class = 'eventInfo';
+    }
 
-        $fullName  = $form->getVar( '_name' );      
-        $className = CRM_Utils_String::getClassName( $fullName );
-        $class = strtolower($className) ;
-        // hack for tell a friend, since class name is different
-        if ( $className == 'Event' ) {
-            $class = 'friend';
-        } elseif ( $className == 'EventInfo' ){
-            $class = 'eventInfo';
-        }        
+    if (array_key_exists($class, $tabs)) {
+      $tabs[$class]['current'] = TRUE;
+    }
 
-        if ( array_key_exists( $class, $tabs ) ) {
-            $tabs[$class]['current'] = true;
-        }
+    if ($eventID) {
+      $reset = CRM_Utils_Array::value('reset', $_GET) ? 'reset=1&' : '';
 
-        if ( $eventID ) {
-            $reset = CRM_Utils_Array::value('reset', $_GET) ? 'reset=1&' : '';
-            
-            //add qf key
-            $qfKey = $form->get( 'qfKey' );
-            $form->assign( 'qfKey', $qfKey );
-            
-            foreach ( $tabs as $key => $value ) {
-                $tabs[$key]['link'] = CRM_Utils_System::url( "civicrm/event/manage/{$key}",
-                                                             "{$reset}action=update&id={$eventID}&qfKey={$qfKey}" );
-                $tabs[$key]['active'] = $tabs[$key]['valid'] = true;
-                $tabs[$key]['current'] = strpos($_SERVER['SCRIPT_URL'], $key) ? TRUE : FALSE;
-            }
-            
-            // retrieve info about paid event, tell a friend and online reg
-            $sql = "
+      //add qf key
+      $qfKey = $form->get('qfKey');
+      $form->assign('qfKey', $qfKey);
+
+      foreach ($tabs as $key => $value) {
+        $tabs[$key]['link'] = CRM_Utils_System::url("civicrm/event/manage/{$key}",
+          "{$reset}action=update&id={$eventID}&qfKey={$qfKey}"
+        );
+        $tabs[$key]['active'] = $tabs[$key]['valid'] = TRUE;
+        $tabs[$key]['current'] = strpos($_SERVER['SCRIPT_URL'], $key) ? TRUE : FALSE;
+      }
+
+      // retrieve info about paid event, tell a friend and online reg
+      $sql = "
 SELECT     e.is_online_registration, e.is_monetary, taf.is_active
 FROM       civicrm_event e
 LEFT JOIN  civicrm_tell_friend taf ON ( taf.entity_table = 'civicrm_event' AND taf.entity_id = e.id )
 WHERE      e.id = %1
 ";
-            $params = array( 1 => array( $eventID, 'Integer' ) );
-            $dao = CRM_Core_DAO::executeQuery( $sql, $params );
-            if ( ! $dao->fetch( ) ) {
-                CRM_Core_Error::fatal( );
-            }
+      $params = array(1 => array($eventID, 'Integer'));
+      $dao = CRM_Core_DAO::executeQuery($sql, $params);
+      if (!$dao->fetch()) {
+        CRM_Core_Error::fatal();
+      }
 
-            if ( ! $dao->is_online_registration ) {
-                $tabs['registration']['valid'] = false;
-            }
-            
-            if ( ! $dao->is_monetary ) {
-                $tabs['fee']['valid'] = false;
-            }
-        
-            if ( ! $dao->is_active ) {
-                $tabs['friend']['valid'] = false;
-            }
-        }
+      if (!$dao->is_online_registration) {
+        $tabs['registration']['valid'] = FALSE;
+      }
 
-        return $tabs;
+      if (!$dao->is_monetary) {
+        $tabs['fee']['valid'] = FALSE;
+      }
+
+      if (!$dao->is_active) {
+        $tabs['friend']['valid'] = FALSE;
+      }
     }
 
-    static function reset( &$form ) {
-        $tabs =& self::process( $form );
-        $form->set( 'tabHeader', $tabs );
+    return $tabs;
+  }
+
+  static
+  function reset(&$form) {
+    $tabs = &self::process($form);
+    $form->set('tabHeader', $tabs);
+  }
+
+  static
+  function getCurrentTab($tabs) {
+    static $current = FALSE;
+
+    if ($current) {
+      return $current;
     }
 
-    static function getCurrentTab( $tabs ) {
-        static $current = false;
-
-        if ( $current ) {
-            return $current;
+    if (is_array($tabs)) {
+      foreach ($tabs as $subPage => $pageVal) {
+        if ($pageVal['current'] === TRUE) {
+          $current = $subPage;
+          break;
         }
-        
-        if ( is_array($tabs) ) {
-            foreach ( $tabs as $subPage => $pageVal ) {
-                if ( $pageVal['current'] === true ) {
-                    $current = $subPage;
-                    break;
-                }
-            }
-        }
-        
-        $current = $current ? $current : 'eventInfo';
-        return $current;
-
+      }
     }
+
+    $current = $current ? $current : 'eventInfo';
+    return $current;
+  }
 }
+

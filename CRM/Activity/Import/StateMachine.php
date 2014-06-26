@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -40,29 +39,27 @@ require_once 'CRM/Core/StateMachine.php';
  * State machine for managing different states of the Import process.
  *
  */
-class CRM_Activity_Import_StateMachine extends CRM_Core_StateMachine 
-{
-    /**
-     * class constructor
-     *
-     * @param object  CRM_Activity_Import_Controller
-     * @param int     $action
-     *
-     * @return object CRM_Activity_Import_StateMachine
-     */
-    function __construct( $controller, $action = CRM_Core_Action::NONE ) {
-        parent::__construct( $controller, $action );
-        
-        $this->_pages = array(
-                              'CRM_Activity_Import_Form_UploadFile' => null,
-                              'CRM_Activity_Import_Form_MapField' => null,
-                              'CRM_Activity_Import_Form_Preview' => null,
-                              'CRM_Activity_Import_Form_Summary' => null,
-                              );
-        
-        $this->addSequentialPages( $this->_pages, $action );
-    }
+class CRM_Activity_Import_StateMachine extends CRM_Core_StateMachine {
 
+  /**
+   * class constructor
+   *
+   * @param object  CRM_Activity_Import_Controller
+   * @param int     $action
+   *
+   * @return object CRM_Activity_Import_StateMachine
+   */
+  function __construct($controller, $action = CRM_Core_Action::NONE) {
+    parent::__construct($controller, $action);
+
+    $this->_pages = array(
+      'CRM_Activity_Import_Form_UploadFile' => NULL,
+      'CRM_Activity_Import_Form_MapField' => NULL,
+      'CRM_Activity_Import_Form_Preview' => NULL,
+      'CRM_Activity_Import_Form_Summary' => NULL,
+    );
+
+    $this->addSequentialPages($this->_pages, $action);
+  }
 }
-
 

@@ -102,11 +102,11 @@ class CRM_Mailing_Selector_Event extends CRM_Core_Selector_Base implements CRM_C
    * @return CRM_Contact_Selector_Profile
    * @access public
    */ function __construct($event, $distinct, $mailing, $job = NULL, $url = NULL) {
-    $this->_event_type  = $event;
+    $this->_event_type = $event;
     $this->_is_distinct = $distinct;
-    $this->_mailing_id  = $mailing;
-    $this->_job_id      = $job;
-    $this->_url_id      = $url;
+    $this->_mailing_id = $mailing;
+    $this->_job_id = $job;
+    $this->_url_id = $url;
   }
   //end of constructor
 
@@ -131,9 +131,9 @@ class CRM_Mailing_Selector_Event extends CRM_Core_Selector_Base implements CRM_C
    */
   function getPagerParams($action, &$params) {
     $params['csvString'] = NULL;
-    $params['rowCount']  = CRM_Utils_Pager::ROWCOUNT;
-    $params['status']    = ts('%1 %%StatusMessage%%', array(
-      1 =>
+    $params['rowCount'] = CRM_Utils_Pager::ROWCOUNT;
+    $params['status'] = ts('%1 %%StatusMessage%%', array(
+        1 =>
         $this->eventToTitle(),
       ));
 
@@ -231,7 +231,7 @@ class CRM_Mailing_Selector_Event extends CRM_Core_Selector_Base implements CRM_C
           require_once 'CRM/Mailing/Event/BAO/Unsubscribe.php';
           $dateSort = CRM_Mailing_Event_BAO_Unsubscribe::getTableName() . '.time_stamp';
           $this->_columnHeaders = array_merge($this->_columnHeaders, array(
-            array(
+              array(
                 'name' => ts('Opt-Out'),
               ),
             ));
@@ -241,7 +241,7 @@ class CRM_Mailing_Selector_Event extends CRM_Core_Selector_Base implements CRM_C
           require_once 'CRM/Mailing/Event/BAO/TrackableURLOpen.php';
           $dateSort = CRM_Mailing_Event_BAO_TrackableURLOpen::getTableName() . '.time_stamp';
           $this->_columnHeaders = array_merge($this->_columnHeaders, array(
-            array(
+              array(
                 'name' => ts('URL'),
               ),
             ));

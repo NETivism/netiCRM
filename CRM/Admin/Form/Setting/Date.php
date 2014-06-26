@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -38,34 +37,36 @@ require_once 'CRM/Admin/Form/Setting.php';
 
 /**
  * This class generates form components for Date Formatting
- * 
+ *
  */
-class CRM_Admin_Form_Setting_Date extends CRM_Admin_Form_Setting  
-{
-    /**
-     * Function to build the form
-     *
-     * @return None
-     * @access public
-     */
-    public function buildQuickForm( ) {
-        CRM_Utils_System::setTitle(ts('Settings - Date'));
+class CRM_Admin_Form_Setting_Date extends CRM_Admin_Form_Setting {
 
-        $this->addElement('text', 'dateformatDatetime', ts('Complete Date and Time'));
-        $this->addElement('text', 'dateformatFull', ts('Complete Date'));
-        $this->addElement('text', 'dateformatPartial', ts('Month and Year'));
-        $this->addElement('text', 'dateformatYear', ts('Year Only'));
-        $this->addElement('text', 'dateformatTime', ts('Time Only'));
-        $this->add( 'select', 'dateInputFormat', ts('Complete Date'),
-                    CRM_Core_SelectValues::getDatePluginInputFormats( ) );
-        $this->add( 'select', 'timeInputFormat', ts('Time'),
-                    CRM_Core_SelectValues::getTimeFormats( ) );
-                    
-        $this->add('date', 'fiscalYearStart', ts('Fiscal Year Start'),
-                   CRM_Core_SelectValues::date( null, 'M d' ) );
-        
-        parent::buildQuickForm();
-    }
+  /**
+   * Function to build the form
+   *
+   * @return None
+   * @access public
+   */
+  public function buildQuickForm() {
+    CRM_Utils_System::setTitle(ts('Settings - Date'));
+
+    $this->addElement('text', 'dateformatDatetime', ts('Complete Date and Time'));
+    $this->addElement('text', 'dateformatFull', ts('Complete Date'));
+    $this->addElement('text', 'dateformatPartial', ts('Month and Year'));
+    $this->addElement('text', 'dateformatYear', ts('Year Only'));
+    $this->addElement('text', 'dateformatTime', ts('Time Only'));
+    $this->add('select', 'dateInputFormat', ts('Complete Date'),
+      CRM_Core_SelectValues::getDatePluginInputFormats()
+    );
+    $this->add('select', 'timeInputFormat', ts('Time'),
+      CRM_Core_SelectValues::getTimeFormats()
+    );
+
+    $this->add('date', 'fiscalYearStart', ts('Fiscal Year Start'),
+      CRM_Core_SelectValues::date(NULL, 'M d')
+    );
+
+    parent::buildQuickForm();
+  }
 }
-
 

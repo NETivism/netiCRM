@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -48,34 +47,31 @@ require_once 'CRM/Core/Session.php';
  * The second form is used to process search results with the asscociated actions
  *
  */
-
 class CRM_Contribute_Controller_PCP extends CRM_Core_Controller {
 
-    /**
-     * class constructor
-     */
-    function __construct( $title = null, $action = CRM_Core_Action::NONE, $modal = true ) {
-        require_once 'CRM/Contribute/StateMachine/PCP.php';
+  /**
+   * class constructor
+   */
+  function __construct($title = NULL, $action = CRM_Core_Action::NONE, $modal = TRUE) {
+    require_once 'CRM/Contribute/StateMachine/PCP.php';
 
-        parent::__construct( $title, $modal );
+    parent::__construct($title, $modal);
 
-        
-        $this->_stateMachine = new CRM_Contribute_StateMachine_PCP( $this, $action );
 
-        // create and instantiate the pages
-        $this->addPages( $this->_stateMachine, $action );
+    $this->_stateMachine = new CRM_Contribute_StateMachine_PCP($this, $action);
 
-        // add all the actions
-        $uploadNames = $this->get( 'uploadNames' );
-        if ( ! empty( $uploadNames ) ) {
-            $config = CRM_Core_Config::singleton( );
-            $this->addActions( $config->customFileUploadDir, $uploadNames );
-        } else {
-            $this->addActions( );
-        }
-    
+    // create and instantiate the pages
+    $this->addPages($this->_stateMachine, $action);
+
+    // add all the actions
+    $uploadNames = $this->get('uploadNames');
+    if (!empty($uploadNames)) {
+      $config = CRM_Core_Config::singleton();
+      $this->addActions($config->customFileUploadDir, $uploadNames);
     }
-
+    else {
+      $this->addActions();
+    }
+  }
 }
-
 

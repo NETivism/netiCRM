@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -44,57 +43,62 @@ require_once 'CRM/Contact/BAO/Contact.php';
  *
  */
 class CRM_Contact_Page_View_SMS extends CRM_Core_Page {
-    /**
-     * Run the page.
-     *
-     * This method is called after the page is created.
-     *
-     * @return void
-     * @access public
-     *
-     */
-    function run()
-    {
-        // get the callback, module and activity id
-        $action = CRM_Utils_Request::retrieve('action', 'String',
-                                              $this, false, 'browse');
-        $id     = CRM_Utils_Request::retrieve('id', 'Positive',
-                                              $this);
-        
-        $dao = new CRM_Core_DAO_ActivityHistory();
-        $dao->activity_id   = $id;
-        $dao->activity_type = ts( 'SMS Sent' );
-        if ( $dao->find(true) ) {
-            $cid = $dao->entity_id;
-        }
 
-        require_once 'CRM/SMS/DAO/History.php';
-        $dao = new CRM_SMS_DAO_History();
-        $dao->id = $id;
-       
-        if ( $dao->find(true) ) {
-            $this->assign('fromName',
-                          CRM_Core_DAO::getFieldValue( 'CRM_Contact_DAO_Contact',
-                                                       $dao->contact_id,
-                                                       'display_name' ) );
-            $this->assign('toName',
-                          CRM_Core_DAO::getFieldValue( 'CRM_Contact_DAO_Contact',
-                                                       $cid,
-                                                       'display_name' ) );
-            $this->assign('sentDate', $dao->sent_date);
-            $this->assign('message', $dao->message);
+  /**
+   * Run the page.
+   *
+   * This method is called after the page is created.
+   *
+   * @return void
+   * @access public
+   *
+   */
+  function run() {
+    // get the callback, module and activity id
+    $action = CRM_Utils_Request::retrieve('action', 'String',
+      $this, FALSE, 'browse'
+    );
+    $id = CRM_Utils_Request::retrieve('id', 'Positive',
+      $this
+    );
 
-            // get the display name and images for the contact
-            list( $displayName, $contactImage ) = CRM_Contact_BAO_Contact::getDisplayAndImage( $dao->contact_id );
-            
-            CRM_Utils_System::setTitle( $contactImage . ' ' . $displayName );
-
-            require_once 'CRM/Core/Menu.php';
-            // also add the cid params to the Menu array
-            CRM_Core_Menu::addParam( 'cid',  $cid);
-          
-        }
-        parent::run();
+    $dao = new CRM_Core_DAO_ActivityHistory();
+    $dao->activity_id = $id;
+    $dao->activity_type = ts('SMS Sent');
+    if ($dao->find(TRUE)) {
+      $cid = $dao->entity_id;
     }
+
+    require_once 'CRM/SMS/DAO/History.php';
+    $dao = new CRM_SMS_DAO_History();
+    $dao->id = $id;
+
+    if ($dao->find(TRUE)) {
+      $this->assign('fromName',
+        CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact',
+          $dao->contact_id,
+          'display_name'
+        )
+      );
+      $this->assign('toName',
+        CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact',
+          $cid,
+          'display_name'
+        )
+      );
+      $this->assign('sentDate', $dao->sent_date);
+      $this->assign('message', $dao->message);
+
+      // get the display name and images for the contact
+      list($displayName, $contactImage) = CRM_Contact_BAO_Contact::getDisplayAndImage($dao->contact_id);
+
+      CRM_Utils_System::setTitle($contactImage . ' ' . $displayName);
+
+      require_once 'CRM/Core/Menu.php';
+      // also add the cid params to the Menu array
+      CRM_Core_Menu::addParam('cid', $cid);
+    }
+    parent::run();
+  }
 }
 

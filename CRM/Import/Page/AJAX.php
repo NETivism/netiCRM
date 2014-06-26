@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -37,29 +36,28 @@
 /**
  * This class contains all the function that are called using AJAX
  */
-class CRM_Import_Page_AJAX
-{
- 
-    /**
-     * Function to show import status
-     */
-    function status( ) 
-    {
-        // make sure we get an id
-        if ( ! isset( $_GET['id'] ) ) {
-            return;
-        }
+class CRM_Import_Page_AJAX {
 
-        $config = CRM_Core_Config::singleton( );    
-        $file = "{$config->uploadDir}status_{$_GET['id']}.txt";
-        if ( file_exists( $file ) ) {
-            $str = file_get_contents( $file );
-            echo $str;
-        } else {
-            $status = "<div class='description'>&nbsp; " . ts('No processing status reported yet.') . "</div>";
-            echo json_encode( array( 0, $status ) );
-        }
-        CRM_Utils_System::civiExit( );
+  /**
+   * Function to show import status
+   */
+  function status() {
+    // make sure we get an id
+    if (!isset($_GET['id'])) {
+      return;
     }
 
+    $config = CRM_Core_Config::singleton();
+    $file = "{$config->uploadDir}status_{$_GET['id']}.txt";
+    if (file_exists($file)) {
+      $str = file_get_contents($file);
+      echo $str;
+    }
+    else {
+      $status = "<div class='description'>&nbsp; " . ts('No processing status reported yet.') . "</div>";
+      echo json_encode(array(0, $status));
+    }
+    CRM_Utils_System::civiExit();
+  }
 }
+

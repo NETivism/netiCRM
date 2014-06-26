@@ -42,44 +42,46 @@ require_once 'CRM/Grant/Form/Task.php';
  */
 class CRM_Grant_Form_Task_Result extends CRM_Grant_Form_Task {
 
-    /**
-     * build all the data structures needed to build the form
-     *
-     * @return void
-     * @access public
-     */
-    function preProcess( ) {
-        $session = CRM_Core_Session::singleton( );
-        
-        $this->set( 'searchRows', '');
+  /**
+   * build all the data structures needed to build the form
+   *
+   * @return void
+   * @access public
+   */
+  function preProcess() {
+    $session = CRM_Core_Session::singleton();
 
-        $ssID = $this->get( 'ssID' );
-        if ( isset( $ssID ) ) {
-            $urlParams = 'reset=1&force=1&ssID=' . $ssID;
-            $qfKey = CRM_Utils_Request::retrieve( 'qfKey', 'String', $this );
-            require_once 'CRM/Utils/Rule.php';
-            if ( CRM_Utils_Rule::qfKey( $qfKey ) ) $urlParams .= "&qfKey=$qfKey";
-            
-            $url = CRM_Utils_System::url( 'civicrm/grant/search', $urlParams );
-            $session->replaceUserContext( $url );
-            return;
-        }
+    $this->set('searchRows', '');
+
+    $ssID = $this->get('ssID');
+    if (isset($ssID)) {
+      $urlParams = 'reset=1&force=1&ssID=' . $ssID;
+      $qfKey = CRM_Utils_Request::retrieve('qfKey', 'String', $this);
+      require_once 'CRM/Utils/Rule.php';
+      if (CRM_Utils_Rule::qfKey($qfKey)) {
+        $urlParams .= "&qfKey=$qfKey";
+      }
+
+      $url = CRM_Utils_System::url('civicrm/grant/search', $urlParams);
+      $session->replaceUserContext($url);
+      return;
     }
+  }
 
-    /**
-     * Function to actually build the form
-     *
-     * @return None
-     * @access public
-     */
-    public function buildQuickForm( ) {
-        $this->addButtons( array(
-                                 array ( 'type'      => 'done',
-                                         'name'      => ts('Done'),
-                                         'isDefault' => true   ),
-                                 )
-                           );
-    }
-
+  /**
+   * Function to actually build the form
+   *
+   * @return None
+   * @access public
+   */
+  public function buildQuickForm() {
+    $this->addButtons(array(
+        array('type' => 'done',
+          'name' => ts('Done'),
+          'isDefault' => TRUE,
+        ),
+      )
+    );
+  }
 }
 

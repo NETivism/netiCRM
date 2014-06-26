@@ -33,8 +33,8 @@
  *
  */
 class CRM_Utils_Cache_APCcache {
-  const DEFAULT_TIMEOUT = 3600;
-  const DEFAULT_PREFIX  = '';
+  CONST DEFAULT_TIMEOUT = 3600;
+  CONST DEFAULT_PREFIX = '';
 
   /**
    * The default timeout to use
@@ -60,8 +60,7 @@ class CRM_Utils_Cache_APCcache {
    * @param array   $config  an array of configuration params
    *
    * @return void
-   */
-  function __construct(&$config) {
+   */ function __construct(&$config) {
     if (isset($config['timeout'])) {
       $this->_timeout = intval($config['timeout']);
     }
@@ -88,14 +87,18 @@ class CRM_Utils_Cache_APCcache {
   function flush() {
     $allinfo = apc_cache_info('user');
     $keys = $allinfo['cache_list'];
-    $prefix = $this->_prefix . "CRM_";  // Our keys follows this pattern: ([A-Za-z0-9_]+)?CRM_[A-Za-z0-9_]+
-    $lp = strlen($prefix);              // Get prefix length
+    // Our keys follows this pattern: ([A-Za-z0-9_]+)?CRM_[A-Za-z0-9_]+
+    $prefix = $this->_prefix . "CRM_";
+    // Get prefix length
+    $lp = strlen($prefix);
 
     foreach ($keys as $key) {
       $name = $key['info'];
-      if ($prefix == substr($name,0,$lp)) {  // Ours?
+      // Ours?
+      if ($prefix == substr($name, 0, $lp)) {
         apc_delete($this->_prefix . $name);
       }
     }
   }
 }
+

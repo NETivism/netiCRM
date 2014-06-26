@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -33,7 +32,7 @@
  * $Id$
  *
  */
-              
+
 require_once 'CRM/Core/Page.php';
 
 /**
@@ -41,57 +40,57 @@ require_once 'CRM/Core/Page.php';
  *
  */
 class CRM_Contact_Page_DedupeException extends CRM_Core_Page {
-    
-    /**
-     * Heart of the viewing process. The runner gets all the meta data for
-     * the contact and calls the appropriate type of page to view.
-     *
-     * @return void
-     * @access public
-     *
-     */
-    function preProcess( )
-    {
-        //fetch the dedupe exception contacts.
-        $dedupeExceptions = array( );
-        
-        require_once 'CRM/Dedupe/DAO/Exception.php';
-        $exception = new CRM_Dedupe_DAO_Exception( );
-        $exception->find( );
-        $contactIds = array( );
-        while ( $exception->fetch( ) ) {
-            $key = "{$exception->contact_id1}_{$exception->contact_id2}";
-            $contactIds[$exception->contact_id1] = $exception->contact_id1;
-            $contactIds[$exception->contact_id2] = $exception->contact_id2;
-            $dedupeExceptions[$key] = array( 'main'  => array( 'id' => $exception->contact_id1 ),
-                                             'other' => array( 'id' => $exception->contact_id2 ) ); 
-        }
-        //get the dupe contacts display names.
-        if ( !empty( $dedupeExceptions ) ) {
-            $sql = 'select id, display_name from civicrm_contact where id IN ( '. implode( ', ', $contactIds ) . ' )';
-            $contact = CRM_Core_DAO::executeQuery( $sql );
-            $displayNames = array( );
-            while ( $contact->fetch( ) ) {
-                $displayNames[$contact->id] = $contact->display_name;
-            }
-            foreach ( $dedupeExceptions as $key => &$values )  {
-                $values['main']['name']  = CRM_Utils_Array::value( $values['main']['id'], $displayNames );
-                $values['other']['name'] = CRM_Utils_Array::value( $values['other']['id'], $displayNames );
-            }
-        }
-        $this->assign( 'dedupeExceptions', $dedupeExceptions );
+
+  /**
+   * Heart of the viewing process. The runner gets all the meta data for
+   * the contact and calls the appropriate type of page to view.
+   *
+   * @return void
+   * @access public
+   *
+   */
+  function preProcess() {
+    //fetch the dedupe exception contacts.
+    $dedupeExceptions = array();
+
+    require_once 'CRM/Dedupe/DAO/Exception.php';
+    $exception = new CRM_Dedupe_DAO_Exception();
+    $exception->find();
+    $contactIds = array();
+    while ($exception->fetch()) {
+      $key = "{$exception->contact_id1}_{$exception->contact_id2}";
+      $contactIds[$exception->contact_id1] = $exception->contact_id1;
+      $contactIds[$exception->contact_id2] = $exception->contact_id2;
+      $dedupeExceptions[$key] = array('main' => array('id' => $exception->contact_id1),
+        'other' => array('id' => $exception->contact_id2),
+      );
     }
-    
-    /** 
-     * This function is the main function that is called when the page loads, 
-     * it decides the which action has to be taken for the page. 
-     *                                                          
-     * return null        
-     * @access public 
-     */                                                          
-    function run( ) { 
-        $this->preProcess( );
-        return parent::run( );
+    //get the dupe contacts display names.
+    if (!empty($dedupeExceptions)) {
+      $sql = 'select id, display_name from civicrm_contact where id IN ( ' . implode(', ', $contactIds) . ' )';
+      $contact = CRM_Core_DAO::executeQuery($sql);
+      $displayNames = array();
+      while ($contact->fetch()) {
+        $displayNames[$contact->id] = $contact->display_name;
+      }
+      foreach ($dedupeExceptions as $key => & $values) {
+        $values['main']['name'] = CRM_Utils_Array::value($values['main']['id'], $displayNames);
+        $values['other']['name'] = CRM_Utils_Array::value($values['other']['id'], $displayNames);
+      }
     }
-    
+    $this->assign('dedupeExceptions', $dedupeExceptions);
+  }
+
+  /**
+   * This function is the main function that is called when the page loads,
+   * it decides the which action has to be taken for the page.
+   *
+   * return null
+   * @access public
+   */
+  function run() {
+    $this->preProcess();
+    return parent::run();
+  }
 }
+

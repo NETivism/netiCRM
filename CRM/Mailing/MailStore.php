@@ -46,8 +46,8 @@ class CRM_Mailing_MailStore {
    * @return object        mail store implementation for processing CiviMail-bound emails
    */
   function getStore($name = NULL) {
-    $dao               = new CRM_Core_DAO_MailSettings;
-    $dao->domain_id    = CRM_Core_Config::domainID();
+    $dao = new CRM_Core_DAO_MailSettings;
+    $dao->domain_id = CRM_Core_Config::domainID();
     $name ? $dao->name = $name : $dao->is_default = 1;
     if (!$dao->find(TRUE)) {
       throw new Exception("Could not find entry named $name in civicrm_mail_settings");
@@ -150,7 +150,8 @@ class CRM_Mailing_MailStore {
     $config = CRM_Core_Config::singleton();
     $dir = $config->customFileUploadDir . DIRECTORY_SEPARATOR . $name;
     foreach (array(
-      'cur', 'new', 'tmp') as $sub) {
+        'cur', 'new', 'tmp',
+      ) as $sub) {
       if (!file_exists($dir . DIRECTORY_SEPARATOR . $sub)) {
         if ($this->_debug) {
           print "creating $dir/$sub\n";

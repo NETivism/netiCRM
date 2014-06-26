@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -38,102 +37,100 @@
  */
 
 require_once 'CRM/Core/Config.php';
-
 class CRM_SMS_Config {
 
-    /**
-     * Username for the sms provider
-     *
-     * @var string
-     */
-    protected $smsUsername;
+  /**
+   * Username for the sms provider
+   *
+   * @var string
+   */
+  protected $smsUsername;
 
-    /**
-     * Password for the sms provider
-     *
-     * @var string
-     */
-    protected $smsPassword;
+  /**
+   * Password for the sms provider
+   *
+   * @var string
+   */
+  protected $smsPassword;
 
-    /**
-     * API ID for the sms provider
-     *
-     * @var string
-     */
-    protected $smsAPIID;
+  /**
+   * API ID for the sms provider
+   *
+   * @var string
+   */
+  protected $smsAPIID;
 
-    /**
-     * API Server for the sms provider
-     *
-     * @var string
-     */
-    protected $smsAPIServer;
+  /**
+   * API Server for the sms provider
+   *
+   * @var string
+   */
+  protected $smsAPIServer;
 
-    /** 
-     * Class implementing the server protocol
-     * 
-     * @var string 
-     */ 
-    protected $smsClass;
+  /**
+   * Class implementing the server protocol
+   *
+   * @var string
+   */
+  protected $smsClass;
 
-    /**
-     * Function to add additional config paramters to the core Config class
-     * if CiviSMS is enabled
-     *
-     * Note that this config class prevent code bloat in the Core Config class,
-     * however we declare all the variables assigned here, more for documentation
-     * than anything else, at some point, we'll figure out how to extend a class
-     * and properties dynamically in PHP (like Ruby)
-     *
-     * @param CRM_Core_Config (reference ) the system config object
-     *
-     * @return void
-     * @static
-     * @access public
-     */
-    static function add( &$config ) {
+  /**
+   * Function to add additional config paramters to the core Config class
+   * if CiviSMS is enabled
+   *
+   * Note that this config class prevent code bloat in the Core Config class,
+   * however we declare all the variables assigned here, more for documentation
+   * than anything else, at some point, we'll figure out how to extend a class
+   * and properties dynamically in PHP (like Ruby)
+   *
+   * @param CRM_Core_Config (reference ) the system config object
+   *
+   * @return void
+   * @static
+   * @access public
+   */
+  static function add(&$config) {
 
-        $config->smsUsername  = null;
-        $config->smsPassword  = null;
-        $config->smsAPIID     = null;
-        $config->smsAPIServer = null;
-        $config->smsClass     = null;
+    $config->smsUsername = NULL;
+    $config->smsPassword = NULL;
+    $config->smsAPIID = NULL;
+    $config->smsAPIServer = NULL;
+    $config->smsClass = NULL;
 
-        if ( defined( 'CIVICRM_SMS_USERNAME' ) ) {
-            $config->smsUsername = CIVICRM_SMS_USERNAME;
-        }
-
-        if ( defined( 'CIVICRM_SMS_PASSWORD' ) ) {
-            $config->smsPassword = CIVICRM_SMS_PASSWORD;
-        }
-
-        if ( defined( 'CIVICRM_SMS_APIID' ) ) {
-            $config->smsAPIID = CIVICRM_SMS_APIID;
-        }
-
-        if ( defined( 'CIVICRM_SMS_APISERVER' ) ) {
-            $config->smsAPIServer = CIVICRM_SMS_APISERVER;
-        }
-
-        if ( defined( 'CIVICRM_SMS_CLASS' ) ) {
-            $config->smsClass = CIVICRM_SMS_CLASS;
-        }
+    if (defined('CIVICRM_SMS_USERNAME')) {
+      $config->smsUsername = CIVICRM_SMS_USERNAME;
     }
 
-    /**
-     * verify that the needed parameters have been set of SMS to work
-     *
-     * @param CRM_Core_Config (reference ) the system config object
-     *
-     * @return boolean
-     * @static
-     * @access public
-     */
-    static function check( &$config ) {
-        $requiredParameters = array( 'smsUsername', 'smsPassword', 'smsAPIID', 'smsAPIServer', 'smsClass' );
-        return CRM_Core_Config::check( $config, $requiredParameters );
+    if (defined('CIVICRM_SMS_PASSWORD')) {
+      $config->smsPassword = CIVICRM_SMS_PASSWORD;
     }
 
+    if (defined('CIVICRM_SMS_APIID')) {
+      $config->smsAPIID = CIVICRM_SMS_APIID;
+    }
+
+    if (defined('CIVICRM_SMS_APISERVER')) {
+      $config->smsAPIServer = CIVICRM_SMS_APISERVER;
+    }
+
+    if (defined('CIVICRM_SMS_CLASS')) {
+      $config->smsClass = CIVICRM_SMS_CLASS;
+    }
+  }
+
+  /**
+   * verify that the needed parameters have been set of SMS to work
+   *
+   * @param CRM_Core_Config (reference ) the system config object
+   *
+   * @return boolean
+   * @static
+   * @access public
+   */
+  static
+  function check(&$config) {
+    $requiredParameters = array('smsUsername', 'smsPassword', 'smsAPIID', 'smsAPIServer', 'smsClass');
+    return CRM_Core_Config::check($config, $requiredParameters);
+  }
 }
-
 

@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -44,59 +43,56 @@ require_once 'CRM/Activity/BAO/Activity.php';
  */
 class CRM_Activity_Form_Task_Delete extends CRM_Activity_Form_Task {
 
-    /**
-     * Are we operating in "single mode", i.e. deleting one
-     * specific Activity?
-     *
-     * @var boolean
-     */
-    protected $_single = false;
+  /**
+   * Are we operating in "single mode", i.e. deleting one
+   * specific Activity?
+   *
+   * @var boolean
+   */
+  protected $_single = FALSE;
 
-    /**
-     * build all the data structures needed to build the form
-     *
-     * @return void
-     * @access public
-     */
-    function preProcess( ) 
-    {
-        parent::preProcess( );
-    }
-    
-    /**
-     * Build the form
-     *
-     * @access public
-     * @return void
-     */
-    function buildQuickForm( )
-    {
-        $this->addDefaultButtons( ts( 'Delete Activites' ), 'done' );
+  /**
+   * build all the data structures needed to build the form
+   *
+   * @return void
+   * @access public
+   */ function preProcess() {
+    parent::preProcess();
+  }
+
+  /**
+   * Build the form
+   *
+   * @access public
+   *
+   * @return void
+   */
+  function buildQuickForm() {
+    $this->addDefaultButtons(ts('Delete Activites'), 'done');
+  }
+
+  /**
+   * process the form after the input has been submitted and validated
+   *
+   * @access public
+   *
+   * @return None
+   */
+  public function postProcess() {
+    $deletedActivities = 0;
+    foreach ($this->_activityHolderIds as $activityId['id']) {
+      require_once 'CRM/Case/BAO/Case.php';
+      $moveToTrash = CRM_Case_BAO_Case::isCaseActivity($activityId['id']);
+      if (CRM_Activity_BAO_Activity::deleteActivity($activityId, $moveToTrash)) {
+        $deletedActivities++;
+      }
     }
 
-    /**
-     * process the form after the input has been submitted and validated
-     *
-     * @access public
-     * @return None
-     */
-    public function postProcess( ) 
-    {
-        $deletedActivities = 0;
-        foreach ( $this->_activityHolderIds as $activityId['id'] ) {
-            require_once 'CRM/Case/BAO/Case.php';
-            $moveToTrash = CRM_Case_BAO_Case::isCaseActivity( $activityId['id'] );
-            if ( CRM_Activity_BAO_Activity::deleteActivity( $activityId, $moveToTrash ) ) {
-                $deletedActivities++;
-            }
-        }
-        
-        $status = array(
-                        ts( 'Deleted Activities: %1', array( 1 => $deletedActivities ) ),
-                        ts( 'Total Selected Activities: %1', array( 1 => count( $this->_activityHolderIds ) ) ),
-                        );
-        CRM_Core_Session::setStatus( $status );
-    }
+    $status = array(
+      ts('Deleted Activities: %1', array(1 => $deletedActivities)),
+      ts('Total Selected Activities: %1', array(1 => count($this->_activityHolderIds))),
+    );
+    CRM_Core_Session::setStatus($status);
+  }
 }
-
 

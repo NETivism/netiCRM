@@ -38,6 +38,7 @@
  *
  */
 class CRM_Utils_Cache {
+
   /**
    * We only need one instance of this object. So we use the singleton
    * pattern and cache the instance in this variable
@@ -53,8 +54,7 @@ class CRM_Utils_Cache {
    * @param array   $config  an array of configuration params
    *
    * @return void
-   */
-  function __construct(&$config) {
+   */ function __construct(&$config) {
     CRM_Core_Error::fatal(ts('this is just an interface and should not be called directly'));
   }
 
@@ -65,9 +65,11 @@ class CRM_Utils_Cache {
    * @static
    *
    */
-  static function &singleton() {
+  static
+  function &singleton() {
     if (self::$_singleton === NULL) {
-      $className = 'ArrayCache';   // default to ArrayCache for now
+      // default to ArrayCache for now
+      $className = 'ArrayCache';
 
       // Maintain backward compatibility for now.
       // Setting CIVICRM_USE_MEMCACHE or CIVICRM_USE_ARRAYCACHE will
@@ -76,16 +78,16 @@ class CRM_Utils_Cache {
       if (defined('CIVICRM_USE_MEMCACHE') && CIVICRM_USE_MEMCACHE) {
         $className = 'Memcache';
       }
-      else if (defined('CIVICRM_USE_ARRAYCACHE') && CIVICRM_USE_ARRAYCACHE) {
+      elseif (defined('CIVICRM_USE_ARRAYCACHE') && CIVICRM_USE_ARRAYCACHE) {
         $className = 'ArrayCache';
       }
-      else if (defined('CIVICRM_DB_CACHE_CLASS') && CIVICRM_DB_CACHE_CLASS) {
+      elseif (defined('CIVICRM_DB_CACHE_CLASS') && CIVICRM_DB_CACHE_CLASS) {
         $className = CIVICRM_DB_CACHE_CLASS;
       }
 
       // a generic method for utilizing any of the available db caches.
       $dbCacheClass = 'CRM_Utils_Cache_' . $className;
-      require_once(str_replace('_', DIRECTORY_SEPARATOR, $dbCacheClass) . '.php');
+      require_once (str_replace('_', DIRECTORY_SEPARATOR, $dbCacheClass) . '.php');
       $settings = self::getCacheSettings($className);
       self::$_singleton = new $dbCacheClass($settings);
     }
@@ -99,7 +101,8 @@ class CRM_Utils_Cache {
    *   associative array of settings for the cache
    * @static
    */
-  static function getCacheSettings($cachePlugin) {
+  static
+  function getCacheSettings($cachePlugin) {
     switch ($cachePlugin) {
       case 'ArrayCache':
       case 'NoCache':
@@ -148,7 +151,6 @@ class CRM_Utils_Cache {
         if (defined('CIVICRM_DB_CACHE_PREFIX')) {
           $defaults['prefix'] = CIVICRM_DB_CACHE_PREFIX;
         }
-
         break;
 
       case 'APCcache':
@@ -164,3 +166,4 @@ class CRM_Utils_Cache {
     return $defaults;
   }
 }
+

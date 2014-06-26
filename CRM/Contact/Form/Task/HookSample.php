@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -42,19 +41,18 @@ require_once 'CRM/Contact/Form/Task.php';
  */
 class CRM_Contact_Form_Task_HookSample extends CRM_Contact_Form_Task {
 
-    /**
-     * build all the data structures needed to build the form
-     *
-     * @return void
-     * @access public
-     */
-    function preProcess()
-    {
-        parent::preProcess( );
+  /**
+   * build all the data structures needed to build the form
+   *
+   * @return void
+   * @access public
+   */
+  function preProcess() {
+    parent::preProcess();
 
-        // display name and email of all contact ids
-        $contactIDs = implode( ',', $this->_contactIds );;
-        $query = "
+    // display name and email of all contact ids
+    $contactIDs = implode(',', $this->_contactIds);;
+    $query = "
 SELECT c.id as contact_id, c.display_name as name,
        c.contact_type as contact_type, e.email as email
 FROM   civicrm_contact c, civicrm_email e
@@ -62,38 +60,38 @@ WHERE  e.contact_id = c.id
 AND    e.is_primary = 1
 AND    c.id IN ( $contactIDs )";
 
-        
-        $rows = array( );
-        $dao  = CRM_Core_DAO::executeQuery( $query );
-        while ( $dao->fetch( ) ) {
-            $rows[] = array( 'id'           => $dao->contact_id,
-                             'name'         => $dao->name,
-                             'contact_type' => $dao->contact_type,
-                             'email'        => $dao->email );
-        }
 
-        $this->assign( 'rows', $rows );
+    $rows = array();
+    $dao = CRM_Core_DAO::executeQuery($query);
+    while ($dao->fetch()) {
+      $rows[] = array('id' => $dao->contact_id,
+        'name' => $dao->name,
+        'contact_type' => $dao->contact_type,
+        'email' => $dao->email,
+      );
     }
 
-    /**
-     * Build the form - it consists of
-     *
-     * @access public
-     * @return void
-     */
-    function buildQuickForm()
-    {
-        $this->addDefaultButtons( ts('Back to Search'), 'done' );
-    }
+    $this->assign('rows', $rows);
+  }
 
-    /**
-     * process the form after the input has been submitted and validated
-     *
-     * @access public
-     * @return void
-     */
-    public function postProcess()
-    {
-    }
+  /**
+   * Build the form - it consists of
+   *
+   * @access public
+   *
+   * @return void
+   */
+  function buildQuickForm() {
+    $this->addDefaultButtons(ts('Back to Search'), 'done');
+  }
 
+  /**
+   * process the form after the input has been submitted and validated
+   *
+   * @access public
+   *
+   * @return void
+   */
+  public function postProcess() {}
 }
+

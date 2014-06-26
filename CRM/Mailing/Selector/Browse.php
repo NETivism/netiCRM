@@ -175,7 +175,7 @@ class CRM_Mailing_Selector_Browse extends CRM_Core_Selector_Base implements CRM_
         ),
       );
 
-/*
+      /*
       require_once 'CRM/Campaign/BAO/Campaign.php';
       if (CRM_Campaign_BAO_Campaign::isCampaignEnable()) {
         self::$_columnHeaders[] = array('name' => ts('Campaign'),
@@ -184,6 +184,7 @@ class CRM_Mailing_Selector_Browse extends CRM_Core_Selector_Base implements CRM_
         );
       }
 */
+
 
       if ($output != CRM_Core_Selector_Controller::EXPORT) {
         self::$_columnHeaders[] = array('name' => ts('Action'));
@@ -203,8 +204,8 @@ class CRM_Mailing_Selector_Browse extends CRM_Core_Selector_Base implements CRM_
   function getTotalCount($action) {
     require_once 'CRM/Mailing/BAO/Job.php';
     require_once 'CRM/Mailing/BAO/Mailing.php';
-    $job        = CRM_Mailing_BAO_Job::getTableName();
-    $mailing    = CRM_Mailing_BAO_Mailing::getTableName();
+    $job = CRM_Mailing_BAO_Job::getTableName();
+    $mailing = CRM_Mailing_BAO_Mailing::getTableName();
     $mailingACL = CRM_Mailing_BAO_Mailing::mailingACL();
 
     //get the where clause.
@@ -236,12 +237,12 @@ LEFT JOIN  civicrm_contact scheduledContact ON ( $mailing.scheduled_id = schedul
   function &getRows($action, $offset, $rowCount, $sort, $output = NULL) {
     static $actionLinks = NULL;
     if (empty($actionLinks)) {
-      $cancelExtra  = ts('Are you sure you want to cancel this mailing?');
-      $deleteExtra  = ts('Are you sure you want to delete this mailing?');
+      $cancelExtra = ts('Are you sure you want to cancel this mailing?');
+      $deleteExtra = ts('Are you sure you want to delete this mailing?');
       $archiveExtra = ts('Are you sure you want to archive this mailing?');
 
       $actionLinks = array(
-      /*
+        /*
         CRM_Core_Action::ENABLE => array(
           'name' => ts('Approve/Reject'),
           'url' => 'civicrm/mailing/approve',
@@ -265,7 +266,7 @@ LEFT JOIN  civicrm_contact scheduledContact ON ( $mailing.scheduled_id = schedul
           'name' => ts('Cancel'),
           'url' => 'civicrm/mailing/browse',
           'qs' => 'action=disable&mid=%%mid%%&reset=1',
-          'extra' => 'onclick="if (confirm(\'' . $cancelExtra . '\')) this.href+=\'&amp;confirmed=1\'; else return false;"',
+          'extra' => 'onclick="if (confirm(\'' . $cancelExtra . '\')) {  this.href+=\'&amp;confirmed=1\'; else return false;}"',
           'title' => ts('Cancel Mailing'),
         ),
         CRM_Core_Action::PREVIEW => array(
@@ -278,14 +279,14 @@ LEFT JOIN  civicrm_contact scheduledContact ON ( $mailing.scheduled_id = schedul
           'name' => ts('Delete'),
           'url' => 'civicrm/mailing/browse',
           'qs' => 'action=delete&mid=%%mid%%&reset=1',
-          'extra' => 'onclick="if (confirm(\'' . $deleteExtra . '\')) this.href+=\'&amp;confirmed=1\'; else return false;"',
+          'extra' => 'onclick="if (confirm(\'' . $deleteExtra . '\')) {  this.href+=\'&amp;confirmed=1\'; else return false;}"',
           'title' => ts('Delete Mailing'),
         ),
         CRM_Core_Action::RENEW => array(
           'name' => ts('Archive'),
           'url' => 'civicrm/mailing/browse/archived',
           'qs' => 'action=renew&mid=%%mid%%&reset=1',
-          'extra' => 'onclick="if (confirm(\'' . $archiveExtra . '\')) this.href+=\'&amp;confirmed=1\'; else return false;"',
+          'extra' => 'onclick="if (confirm(\'' . $archiveExtra . '\')) {  this.href+=\'&amp;confirmed=1\'; else return false;}"',
           'title' => ts('Archive Mailing'),
         ),
       );
@@ -306,11 +307,12 @@ LEFT JOIN  civicrm_contact scheduledContact ON ( $mailing.scheduled_id = schedul
         $showApprovalLinks = TRUE;
       }
 
-/*
+      /*
       if (CRM_Core_Permission::check('create mailings')) {
         $showCreateLinks = TRUE;
       }
 */
+
 
       if (CRM_Core_Permission::check('schedule mailings')) {
         $showScheduleLinks = TRUE;
@@ -374,7 +376,8 @@ LEFT JOIN  civicrm_contact scheduledContact ON ( $mailing.scheduled_id = schedul
           }
         }
         if (in_array($row['status'], array(
-          'Scheduled', 'Running', 'Paused'))) {
+              'Scheduled', 'Running', 'Paused',
+            ))) {
           if ($allAccess ||
             ($showApprovalLinks && $showCreateLinks && $showScheduleLinks)
           ) {
@@ -466,22 +469,22 @@ LEFT JOIN  civicrm_contact scheduledContact ON ( $mailing.scheduled_id = schedul
     if (!CRM_Utils_System::isNull($from)) {
       $dateClause1[] = 'civicrm_mailing_job.start_date >= %2';
       $dateClause2[] = 'civicrm_mailing_job.scheduled_date >= %2';
-      $params[2]     = array($from, 'String');
+      $params[2] = array($from, 'String');
     }
 
     $to = $this->_parent->get('mailing_to');
     if (!CRM_Utils_System::isNull($to)) {
       $dateClause1[] = 'civicrm_mailing_job.start_date <= %3';
       $dateClause2[] = 'civicrm_mailing_job.scheduled_date <= %3';
-      $params[3]     = array($to, 'String');
+      $params[3] = array($to, 'String');
     }
 
     if (!empty($dateClause1)) {
       $dateClause1[] = "civicrm_mailing_job.status IN ('Complete', 'Running')";
       $dateClause2[] = "civicrm_mailing_job.status IN ('Scheduled')";
-      $dateClause1   = implode(' AND ', $dateClause1);
-      $dateClause2   = implode(' AND ', $dateClause2);
-      $clauses[]     = "( ({$dateClause1}) OR ({$dateClause2}) )";
+      $dateClause1 = implode(' AND ', $dateClause1);
+      $dateClause2 = implode(' AND ', $dateClause2);
+      $clauses[] = "( ({$dateClause1}) OR ({$dateClause2}) )";
     }
 
     if ($this->_parent->get('unscheduled')) {
@@ -499,10 +502,10 @@ LEFT JOIN  civicrm_contact scheduledContact ON ( $mailing.scheduled_id = schedul
     if ($this->_parent->get('scheduled')) {
       $clauses[] = "civicrm_mailing.scheduled_id IS NOT NULL";
       $clauses[] = "( civicrm_mailing.is_archived IS NULL OR civicrm_mailing.is_archived = 0 )";
-      $status    = $this->_parent->get('mailing_status');
+      $status = $this->_parent->get('mailing_status');
       if (!empty($status)) {
-        $status    = array_keys($status);
-        $status    = implode("','", $status);
+        $status = array_keys($status);
+        $status = implode("','", $status);
         $clauses[] = "civicrm_mailing_job.status IN ('$status')";
       }
       else {

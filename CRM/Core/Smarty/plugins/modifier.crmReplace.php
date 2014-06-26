@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -47,14 +46,13 @@
  * @return string        the new modified html string
  * @access public
  */
-function smarty_modifier_crmReplace( $string, $attribute, $value ) {
-    static $endOfElement = '/>';
+function smarty_modifier_crmReplace($string, $attribute, $value) {
+  static $endOfElement = '/>';
 
-    // if we know what attribute we need to replace
-    // we need to search and replace the string: $attribute=XXX or $attribute="XXX"
-    // with $attribute=\"$value\"
-    $pattern = '/' . $attribute . '="([^"]+?)"/';
-    return preg_replace( $pattern, $attribute . '="' . $value . '"', $string );
+  // if we know what attribute we need to replace
+  // we need to search and replace the string: $attribute=XXX or $attribute="XXX"
+  // with $attribute=\"$value\"
+  $pattern = '/' . $attribute . '="([^"]+?)"/';
+  return preg_replace($pattern, $attribute . '="' . $value . '"', $string);
 }
-
 

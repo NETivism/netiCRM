@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -45,24 +44,24 @@
  *
  * @return string  multilingualized query
  */
-function smarty_block_localize($params, $text, &$smarty)
-{
-    if (!$smarty->_tpl_vars['multilingual']) {
-        return $text;
-    }
+function smarty_block_localize($params, $text, &$smarty) {
+  if (!$smarty->_tpl_vars['multilingual']) {
+    return $text;
+  }
 
-    $lines = array();
-    foreach ($smarty->_tpl_vars['locales'] as $locale) {
-        $line = $text;
-        if ($params['field']) {
-            $fields = explode(',', $params['field']);
-            foreach ($fields as $field) {
-                $field = trim($field);
-                $line = preg_replace('/\b' . preg_quote($field) . '\b/', "{$field}_{$locale}", $line);
-            }
-        }
-        $lines[] = $line;
+  $lines = array();
+  foreach ($smarty->_tpl_vars['locales'] as $locale) {
+    $line = $text;
+    if ($params['field']) {
+      $fields = explode(',', $params['field']);
+      foreach ($fields as $field) {
+        $field = trim($field);
+        $line = preg_replace('/\b' . preg_quote($field) . '\b/', "{$field}_{$locale}", $line);
+      }
     }
+    $lines[] = $line;
+  }
 
-    return implode(', ', $lines);
+  return implode(', ', $lines);
 }
+

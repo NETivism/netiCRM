@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -38,65 +37,62 @@ require_once 'CRM/Admin/Form/Setting.php';
 
 /**
  * This class generates form components for Mapping and Geocoding
- * 
+ *
  */
-class CRM_Admin_Form_Setting_Mapping extends CRM_Admin_Form_Setting
-{
-    /**
-     * Function to build the form
-     *
-     * @return None
-     * @access public
-     */
-    public function buildQuickForm( ) {
-        CRM_Utils_System::setTitle(ts('Settings - Mapping Provider'));
+class CRM_Admin_Form_Setting_Mapping extends CRM_Admin_Form_Setting {
 
-        $map = CRM_Core_SelectValues::mapProvider();
-        $this->addElement('select','mapProvider', ts('Map Provider'),array('' => '- select -') + $map, array('onChange' => 'showHideMapAPIkey( this.value );'));  
-        $this->add('text','mapAPIKey', ts('Provider Key'), null);  
-    
-        parent::buildQuickForm();
+  /**
+   * Function to build the form
+   *
+   * @return None
+   * @access public
+   */
+  public function buildQuickForm() {
+    CRM_Utils_System::setTitle(ts('Settings - Mapping Provider'));
+
+    $map = CRM_Core_SelectValues::mapProvider();
+    $this->addElement('select', 'mapProvider', ts('Map Provider'), array('' => '- select -') + $map, array('onChange' => 'showHideMapAPIkey( this.value );'));
+    $this->add('text', 'mapAPIKey', ts('Provider Key'), NULL);
+
+    parent::buildQuickForm();
+  }
+
+  /**
+   * global form rule
+   *
+   * @param array $fields  the input form values
+
+   *
+   * @return true if no errors, else array of errors
+   * @access public
+   * @static
+   */
+  static
+  function formRule($fields) {
+    $errors = array();
+
+    if (!CRM_Utils_System::checkPHPVersion(5, FALSE)) {
+      $errors['_qf_default'] = ts('Mapping features require PHP version 5 or greater');
     }
 
-
-    /**
-     * global form rule
-     *
-     * @param array $fields  the input form values
-
-     * @return true if no errors, else array of errors
-     * @access public
-     * @static
-     */
-    static function formRule( $fields) {
-        $errors = array();
-
-        if ( ! CRM_Utils_System::checkPHPVersion( 5, false ) ) {
-            $errors['_qf_default'] = ts( 'Mapping features require PHP version 5 or greater' );
-        }
-
-        if ( !$fields['mapAPIKey'] && ( $fields['mapProvider'] != '' && $fields['mapProvider'] != 'Google' )) {
-            $errors['mapAPIKey'] = "API key is a required field";
-        } 
-
-        return $errors;
+    if (!$fields['mapAPIKey'] && ($fields['mapProvider'] != '' && $fields['mapProvider'] != 'Google')) {
+      $errors['mapAPIKey'] = "API key is a required field";
     }
 
-    /**
-     * This function is used to add the rules (mainly global rules) for form.
-     * All local rules are added near the element
-     *
-     * @param null
-     * 
-     * @return void
-     * @access public
-     */
-    function addRules( )
-    {
-        $this->addFormRule( array( 'CRM_Admin_Form_Setting_Mapping', 'formRule' ) );
-    }
-    
- 
+    return $errors;
+  }
+
+  /**
+   * This function is used to add the rules (mainly global rules) for form.
+   * All local rules are added near the element
+   *
+   * @param null
+   *
+   * @return void
+   * @access public
+   */
+  function addRules() {
+    $this->addFormRule(array('CRM_Admin_Form_Setting_Mapping', 'formRule'));
+  }
 }
-
 

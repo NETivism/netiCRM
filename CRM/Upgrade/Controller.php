@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -35,30 +34,29 @@
  */
 
 require_once 'CRM/Core/Controller.php';
-
 class CRM_Upgrade_Controller extends CRM_Core_Controller {
 
-    /**
-     * class constructor
-     */
-    function __construct( $title = null,
-                          $action = CRM_Core_Action::NONE,
-                          $modal = true ) {
-        parent::__construct( $title, $modal );
+  /**
+   * class constructor
+   */
+  function __construct($title = NULL,
+    $action = CRM_Core_Action::NONE,
+    $modal = TRUE
+  ) {
+    parent::__construct($title, $modal);
 
-        require_once 'CRM/Upgrade/StateMachine.php';
-        $this->_stateMachine = new CRM_Upgrade_StateMachine( $this,
-                                                              $this->getPages( ), 
-                                                              $action );
+    require_once 'CRM/Upgrade/StateMachine.php';
+    $this->_stateMachine = new CRM_Upgrade_StateMachine($this,
+      $this->getPages(),
+      $action
+    );
 
-        // create and instantiate the pages
-        $this->addPages( $this->_stateMachine, $action );
+    // create and instantiate the pages
+    $this->addPages($this->_stateMachine, $action);
 
-        // add all the actions
-        $config = CRM_Core_Config::singleton( );
-        $this->addActions( );
-    }
-
+    // add all the actions
+    $config = CRM_Core_Config::singleton();
+    $this->addActions();
+  }
 }
-
 

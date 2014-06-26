@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -33,54 +32,53 @@
  * $Id$
  *
  */
-
 class CRM_Utils_Crypt {
 
-    static function encrypt( $string ) {
-        if ( empty( $string ) ) {
-            return $string;
-        }
-
-        if ( function_exists( 'mcrypt_module_open' ) &&
-             defined( 'CIVICRM_SITE_KEY' ) ) {
-            $td = mcrypt_module_open(MCRYPT_RIJNDAEL_256, '', MCRYPT_MODE_ECB, '');
-            $iv = mcrypt_create_iv( 32 );
-            $ks = mcrypt_enc_get_key_size($td);
-            $key = substr( sha1( CIVICRM_SITE_KEY ), 0, $ks );
-            
-            mcrypt_generic_init($td, $key, $iv);
-            $string = mcrypt_generic($td, $string );
-            mcrypt_generic_deinit($td);
-            mcrypt_module_close($td);
-        }
-        return base64_encode( $string );
+  static
+  function encrypt($string) {
+    if (empty($string)) {
+      return $string;
     }
 
-    static function decrypt( $string ) {
-        if ( empty( $string ) ) {
-            return $string;
-        }
+    if (function_exists('mcrypt_module_open') &&
+      defined('CIVICRM_SITE_KEY')
+    ) {
+      $td = mcrypt_module_open(MCRYPT_RIJNDAEL_256, '', MCRYPT_MODE_ECB, '');
+      $iv = mcrypt_create_iv(32);
+      $ks = mcrypt_enc_get_key_size($td);
+      $key = substr(sha1(CIVICRM_SITE_KEY), 0, $ks);
 
-        $string = base64_decode( $string );
+      mcrypt_generic_init($td, $key, $iv);
+      $string = mcrypt_generic($td, $string);
+      mcrypt_generic_deinit($td);
+      mcrypt_module_close($td);
+    }
+    return base64_encode($string);
+  }
 
-        if ( function_exists( 'mcrypt_module_open' ) &&
-             defined( 'CIVICRM_SITE_KEY' ) ) {
-            $td = mcrypt_module_open(MCRYPT_RIJNDAEL_256, '', MCRYPT_MODE_ECB, '');
-            $iv = mcrypt_create_iv( 32 );
-            $ks = mcrypt_enc_get_key_size($td);
-            $key = substr( sha1( CIVICRM_SITE_KEY ), 0, $ks );
-            
-            mcrypt_generic_init($td, $key, $iv);
-            $string = rtrim( mdecrypt_generic($td, $string ) );
-            mcrypt_generic_deinit($td);
-            mcrypt_module_close($td);
-        }
-        
-        return $string;
+  static
+  function decrypt($string) {
+    if (empty($string)) {
+      return $string;
     }
 
+    $string = base64_decode($string);
+
+    if (function_exists('mcrypt_module_open') &&
+      defined('CIVICRM_SITE_KEY')
+    ) {
+      $td = mcrypt_module_open(MCRYPT_RIJNDAEL_256, '', MCRYPT_MODE_ECB, '');
+      $iv = mcrypt_create_iv(32);
+      $ks = mcrypt_enc_get_key_size($td);
+      $key = substr(sha1(CIVICRM_SITE_KEY), 0, $ks);
+
+      mcrypt_generic_init($td, $key, $iv);
+      $string = rtrim(mdecrypt_generic($td, $string));
+      mcrypt_generic_deinit($td);
+      mcrypt_module_close($td);
+    }
+
+    return $string;
+  }
 }
-
-
-
 

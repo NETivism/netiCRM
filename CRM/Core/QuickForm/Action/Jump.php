@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -36,54 +35,49 @@
  */
 
 require_once 'CRM/Core/QuickForm/Action.php';
-
 class CRM_Core_QuickForm_Action_Jump extends CRM_Core_QuickForm_Action {
 
-    /**
-     * class constructor
-     *
-     * @param object $stateMachine reference to state machine object
-     *
-     * @return object
-     * @access public
-     */
-    function __construct( &$stateMachine ) {
-        parent::__construct( $stateMachine );
+  /**
+   * class constructor
+   *
+   * @param object $stateMachine reference to state machine object
+   *
+   * @return object
+   * @access public
+   */
+  function __construct(&$stateMachine) {
+    parent::__construct($stateMachine);
+  }
+
+  /**
+   * Processes the request.
+   *
+   * @param  object    $page       CRM_Core_Form the current form-page
+   * @param  string    $actionName Current action name, as one Action object can serve multiple actions
+   *
+   * @return void
+   * @access public
+   */
+  function perform(&$page, $actionName) {
+    // check whether the page is valid before trying to go to it
+    if ($page->controller->isModal()) {
+      // we check whether *all* pages up to current are valid
+      // if there is an invalid page we go to it, instead of the
+      // requested one
+      $pageName = $page->getAttribute('id');
+      if (!$page->controller->isValid($pageName)) {
+        $pageName = $page->controller->findInvalid();
+      }
+      $current = &$page->controller->getPage($pageName);
     }
-
-    /**
-     * Processes the request. 
-     *
-     * @param  object    $page       CRM_Core_Form the current form-page
-     * @param  string    $actionName Current action name, as one Action object can serve multiple actions
-     *
-     * @return void
-     * @access public
-     */
-    function perform(&$page, $actionName) {
-        // check whether the page is valid before trying to go to it
-        if ($page->controller->isModal()) {
-            // we check whether *all* pages up to current are valid
-            // if there is an invalid page we go to it, instead of the
-            // requested one
-            $pageName = $page->getAttribute('id');
-            if (!$page->controller->isValid($pageName)) {
-                $pageName = $page->controller->findInvalid();
-            }
-            $current =& $page->controller->getPage($pageName);
-
-        } else {
-            $current =& $page;
-        }
-        // generate the URL for the page 'display' event and redirect to it
-        $action = $current->getAttribute('action');
-        $url    = $action . (false === strpos($action, '?')? '?': '&') .
-                  $current->getButtonName('display') . '=true' .
-                 '&qfKey=' . $page->get( 'qfKey' );
-
-        CRM_Utils_System::redirect( $url ); 
+    else {
+      $current = &$page;
     }
+    // generate the URL for the page 'display' event and redirect to it
+    $action = $current->getAttribute('action');
+    $url = $action . (FALSE === strpos($action, '?') ? '?' : '&') . $current->getButtonName('display') . '=true' . '&qfKey=' . $page->get('qfKey');
 
+    CRM_Utils_System::redirect($url);
+  }
 }
-
 

@@ -131,8 +131,8 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
     $showGroupSelector = TRUE;
     if ($this->_searchBasedMailing) {
       $showGroupSelector = FALSE;
-      $formElements      = array('includeGroups', 'excludeGroups', 'includeMailings', 'excludeMailings');
-      $formValues        = $this->controller->exportValues($this->_name);
+      $formElements = array('includeGroups', 'excludeGroups', 'includeMailings', 'excludeMailings');
+      $formValues = $this->controller->exportValues($this->_name);
       foreach ($formElements as $element) {
         if (!empty($formValues[$element])) {
           $showGroupSelector = TRUE;
@@ -175,7 +175,7 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
       TRUE
     );
 
-/*
+    /*
     //CRM-7362 --add campaigns.
     $mailingId = CRM_Utils_Request::retrieve('mid', 'Integer', $this, FALSE, NULL);
     require_once 'CRM/Campaign/BAO/Campaign.php';
@@ -185,6 +185,7 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
     }
     CRM_Campaign_BAO_Campaign::addCampaign($this, $campaignId);
 */
+
 
     //dedupe on email option
     $this->addElement('checkbox', 'dedupe_email', ts('Remove duplicate emails?'));
@@ -208,7 +209,8 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
       $this->add('select', 'baseGroup',
         ts('Unsubscription Group'),
         array(
-          '' => ts('- select -')) + $staticGroups,
+          '' => ts('- select -'),
+        ) + $staticGroups,
         TRUE
       );
     }
@@ -323,9 +325,9 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
       if ($this->_resultSelectOption == 'ts_sel') {
         // create a static grp if only a subset of result set was selected:
 
-        $qfsID    = $session->get('qfSessionID');
+        $qfsID = $session->get('qfSessionID');
         $grpTitle = "Hidden Group {$qfsID}";
-        $grpID    = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Group', $grpTitle, 'id', 'title');
+        $grpID = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Group', $grpTitle, 'id', 'title');
 
         if (!$grpID) {
           $groupParams = array(
@@ -373,7 +375,8 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
     }
 
     foreach (array(
-      'name', 'group_id', 'search_id', 'search_args', 'campaign_id', 'dedupe_email') as $n) {
+        'name', 'group_id', 'search_id', 'search_args', 'campaign_id', 'dedupe_email',
+      ) as $n) {
       if (CRM_Utils_Array::value($n, $values)) {
         $params[$n] = $values[$n];
       }
@@ -383,9 +386,9 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
     $qf_Group_submit = $this->controller->exportValue($this->_name, '_qf_Group_submit');
     $this->set('name', $params['name']);
 
-    $inGroups    = $values['includeGroups'];
-    $outGroups   = $values['excludeGroups'];
-    $inMailings  = $values['includeMailings'];
+    $inGroups = $values['includeGroups'];
+    $outGroups = $values['excludeGroups'];
+    $inMailings = $values['includeMailings'];
     $outMailings = $values['excludeMailings'];
 
     if (is_array($inGroups)) {
@@ -419,8 +422,8 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
       }
     }
 
-    $session            = CRM_Core_Session::singleton();
-    $params['groups']   = $groups;
+    $session = CRM_Core_Session::singleton();
+    $params['groups'] = $groups;
     $params['mailings'] = $mailings;
 
     if ($this->get('mailing_id')) {
@@ -434,9 +437,10 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
       // delete previous includes/excludes, if mailing already existed
       require_once 'CRM/Contact/DAO/Group.php';
       foreach (array(
-        'groups', 'mailings') as $entity) {
-        $mg               = new CRM_Mailing_DAO_Group();
-        $mg->mailing_id   = $ids['mailing_id'];
+          'groups', 'mailings',
+        ) as $entity) {
+        $mg = new CRM_Mailing_DAO_Group();
+        $mg->mailing_id = $ids['mailing_id'];
         $mg->entity_table = ($entity == 'groups') ? $groupTableName : $mailingTableName;
         $mg->find();
         while ($mg->fetch()) {

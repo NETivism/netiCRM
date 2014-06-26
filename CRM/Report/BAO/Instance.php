@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -35,35 +34,32 @@
  */
 
 require_once 'CRM/Report/DAO/Instance.php';
+class CRM_Report_BAO_Instance extends CRM_Report_DAO_Instance {
 
-class CRM_Report_BAO_Instance extends CRM_Report_DAO_Instance
-{
+  /**
+   * Delete the instance of the Report
+   *
+   * @return $results no of deleted Instance  on success, false otherwise
+   * @access public
+   *
+   */
+  function delete($id) {
+    $dao = new CRM_Report_DAO_Instance();
+    $dao->id = $id;
+    return $dao->delete();
+  }
 
-    /**                                                           
-     * Delete the instance of the Report
-     * 
-     * @return $results no of deleted Instance  on success, false otherwise
-     * @access public 
-     *  
-     */ 
+  static
+  function retrieve($params, &$defaults) {
+    $instance = new CRM_Report_DAO_Instance();
+    $instance->copyValues($params);
 
-    function delete( $id )
-    {
-        $dao     = new CRM_Report_DAO_Instance( );
-        $dao->id = $id;
-        return $dao->delete( );
+    if ($instance->find(TRUE)) {
+      CRM_Core_DAO::storeValues($instance, $defaults);
+      $instance->free();
+      return $instance;
     }
-
-    static function retrieve( $params, &$defaults ) 
-    {
-        $instance = new CRM_Report_DAO_Instance( );
-        $instance->copyValues( $params );
-
-        if ( $instance->find( true ) ) {
-            CRM_Core_DAO::storeValues( $instance, $defaults );
-            $instance->free( );
-            return $instance;
-        }
-        return null;
-    }
+    return NULL;
+  }
 }
+

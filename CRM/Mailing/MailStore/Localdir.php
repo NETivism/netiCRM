@@ -67,7 +67,6 @@ class CRM_Mailing_MailStore_Localdir extends CRM_Mailing_MailStore {
     if ($this->_debug) {
 
       print "fetching $count messages\n";
-
     }
 
     $directory = new DirectoryIterator($path);
@@ -101,7 +100,6 @@ class CRM_Mailing_MailStore_Localdir extends CRM_Mailing_MailStore {
     if ($this->_debug && (count($mails) <= 0)) {
 
       print "No messages found\n";
-
     }
 
     return $mails;

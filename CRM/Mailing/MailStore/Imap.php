@@ -58,7 +58,6 @@ class CRM_Mailing_MailStore_Imap extends CRM_Mailing_MailStore {
     if ($this->_debug) {
 
       print "connecting to $host, authenticating as $username and selecting $folder\n";
-
     }
 
     $options = array('ssl' => $ssl, 'uidReferencing' => TRUE);
@@ -66,9 +65,9 @@ class CRM_Mailing_MailStore_Imap extends CRM_Mailing_MailStore {
     $this->_transport->authenticate($username, $password);
     $this->_transport->selectMailbox($folder);
 
-    $this->_ignored   = implode($this->_transport->getHierarchyDelimiter(), array($folder, 'CiviMail', 'ignored'));
+    $this->_ignored = implode($this->_transport->getHierarchyDelimiter(), array($folder, 'CiviMail', 'ignored'));
     $this->_processed = implode($this->_transport->getHierarchyDelimiter(), array($folder, 'CiviMail', 'processed'));
-    $boxes            = $this->_transport->listMailboxes();
+    $boxes = $this->_transport->listMailboxes();
 
     if ($this->_debug) {
       print 'mailboxes found: ' . implode(', ', $boxes) . "\n";
@@ -77,7 +76,6 @@ class CRM_Mailing_MailStore_Imap extends CRM_Mailing_MailStore {
     if (!in_array(strtolower($this->_ignored), array_map('strtolower', $boxes))) {
 
       $this->_transport->createMailbox($this->_ignored);
-
     }
     if (!in_array(strtolower($this->_processed), array_map('strtolower', $boxes))) {
       $this->_transport->createMailbox($this->_processed);

@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -39,15 +38,11 @@
 
 require_once 'CRM/Core/Error.php';
 require_once 'CRM/Core/I18n.php';
-
 class CRM_Core_Base {
 
-    /**
-     * constructor
-     */
-    function __construct() {
-    }
-
+  /**
+   * constructor
+   */
+  function __construct() {}
 }
-
 

@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -33,32 +32,31 @@
  * $Id$
  *
  */
-
 function civicrm_smarty_resource_string_get_template($tpl_name, &$tpl_source, &$smarty_obj) {
-    $tpl_source = $tpl_name;
-    return true;
+  $tpl_source = $tpl_name;
+  return TRUE;
 }
 
 function civicrm_smarty_resource_string_get_timestamp($tpl_name, &$tpl_timestamp, &$smarty_obj) {
-    $tpl_timestamp = time();
-    return true;
+  $tpl_timestamp = time();
+  return TRUE;
 }
 
 function civicrm_smarty_resource_string_get_secure($tpl_name, &$smarty_obj) {
-    return true;
+  return TRUE;
 }
 
-function civicrm_smarty_resource_string_get_trusted($tpl_name, &$smarty_obj) {
-}
+function civicrm_smarty_resource_string_get_trusted($tpl_name, &$smarty_obj) {}
 
-function civicrm_smarty_register_string_resource( ) {
-    require_once 'CRM/Core/Smarty.php';
-    $template =& CRM_Core_Smarty::singleton( );
-    $template->register_resource('string', array(
-                                                 'civicrm_smarty_resource_string_get_template',
-                                                 'civicrm_smarty_resource_string_get_timestamp',
-                                                 'civicrm_smarty_resource_string_get_secure',
-                                                 'civicrm_smarty_resource_string_get_trusted')
-                                 );
+function civicrm_smarty_register_string_resource() {
+  require_once 'CRM/Core/Smarty.php';
+  $template = &CRM_Core_Smarty::singleton();
+  $template->register_resource('string', array(
+      'civicrm_smarty_resource_string_get_template',
+      'civicrm_smarty_resource_string_get_timestamp',
+      'civicrm_smarty_resource_string_get_secure',
+      'civicrm_smarty_resource_string_get_trusted',
+    )
+  );
 }
 

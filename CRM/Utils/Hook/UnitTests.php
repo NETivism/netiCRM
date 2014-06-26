@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /*
  +--------------------------------------------------------------------+
@@ -35,13 +35,14 @@
  */
 
 require_once 'CRM/Utils/Hook.php';
-
 class CRM_Utils_Hook_UnitTests extends CRM_Utils_Hook {
 
-    static function invoke( $numParams,
-                            &$arg1, &$arg2, &$arg3, &$arg4, &$arg5,
-                            $fnSuffix ) {
-        return;
-    }
-
+  static
+  function invoke($numParams,
+    &$arg1, &$arg2, &$arg3, &$arg4, &$arg5,
+    $fnSuffix
+  ) {
+    return;
+  }
 }
+

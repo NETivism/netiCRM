@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -36,7 +35,7 @@
  * $Id$
  */
 
-/** 
+/**
  * Smarty block function providing gettext support
  *
  * See CRM_Core_I18n class documentation for details.
@@ -47,9 +46,7 @@
  *
  * @return string  the string, translated by gettext
  */
-function smarty_block_ts($params, $text, &$smarty)
-{
-    return ts($text, $params);
+function smarty_block_ts($params, $text, &$smarty) {
+  return ts($text, $params);
 }
-
 

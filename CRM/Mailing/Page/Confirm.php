@@ -39,9 +39,9 @@ require_once 'CRM/Core/Page.php';
 class CRM_Mailing_Page_Confirm extends CRM_Core_Page {
   function run() {
     require_once 'CRM/Utils/Request.php';
-    $contact_id   = CRM_Utils_Request::retrieve('cid', 'Integer', CRM_Core_DAO::$_nullObject);
+    $contact_id = CRM_Utils_Request::retrieve('cid', 'Integer', CRM_Core_DAO::$_nullObject);
     $subscribe_id = CRM_Utils_Request::retrieve('sid', 'Integer', CRM_Core_DAO::$_nullObject);
-    $hash         = CRM_Utils_Request::retrieve('h', 'String', CRM_Core_DAO::$_nullObject);
+    $hash = CRM_Utils_Request::retrieve('h', 'String', CRM_Core_DAO::$_nullObject);
 
     if (!$contact_id ||
       !$subscribe_id ||

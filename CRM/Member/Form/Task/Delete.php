@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -44,61 +43,58 @@ require_once 'CRM/Member/BAO/Membership.php';
  */
 class CRM_Member_Form_Task_Delete extends CRM_Member_Form_Task {
 
-    /**
-     * Are we operating in "single mode", i.e. deleting one
-     * specific membership?
-     *
-     * @var boolean
-     */
-    protected $_single = false;
+  /**
+   * Are we operating in "single mode", i.e. deleting one
+   * specific membership?
+   *
+   * @var boolean
+   */
+  protected $_single = FALSE;
 
-    /**
-     * build all the data structures needed to build the form
-     *
-     * @return void
-     * @access public
-     */
-    function preProcess() {
-        //check for delete
-        if ( !CRM_Core_Permission::checkActionPermission( 'CiviMember', CRM_Core_Action::DELETE ) ) {
-            CRM_Core_Error::fatal( ts( 'You do not have permission to access this page' ) );  
-        }
-        parent::preProcess();
+  /**
+   * build all the data structures needed to build the form
+   *
+   * @return void
+   * @access public
+   */ function preProcess() {
+    //check for delete
+    if (!CRM_Core_Permission::checkActionPermission('CiviMember', CRM_Core_Action::DELETE)) {
+      CRM_Core_Error::fatal(ts('You do not have permission to access this page'));
+    }
+    parent::preProcess();
+  }
+
+  /**
+   * Build the form
+   *
+   * @access public
+   *
+   * @return void
+   */
+  function buildQuickForm() {
+    $this->addDefaultButtons(ts('Delete Members'), 'done');
+  }
+
+  /**
+   * process the form after the input has been submitted and validated
+   *
+   * @access public
+   *
+   * @return None
+   */
+  public function postProcess() {
+    $deletedMemberss = 0;
+    foreach ($this->_memberIds as $memberId) {
+      if (CRM_Member_BAO_Membership::deleteMembership($memberId)) {
+        $deletedMemberss++;
+      }
     }
 
-    /**
-     * Build the form
-     *
-     * @access public
-     * @return void
-     */
-    function buildQuickForm() {
-        $this->addDefaultButtons(ts('Delete Members'), 'done');
-    }
-
-    /**
-     * process the form after the input has been submitted and validated
-     *
-     * @access public
-     * @return None
-     */
-    public function postProcess( ) 
-    {
-        $deletedMemberss = 0;
-        foreach ($this->_memberIds as $memberId) {
-            if (CRM_Member_BAO_Membership::deleteMembership($memberId)) {
-                $deletedMemberss++;
-            }
-        }
-
-        $status = array(
-                        ts('Deleted Member(s): %1', array(1 => $deletedMembers)),
-                        ts('Total Selected Membership(s): %1', array(1 => count($this->_memberIds))),
-                        );
-        CRM_Core_Session::setStatus($status);
-    }
-
-
+    $status = array(
+      ts('Deleted Member(s): %1', array(1 => $deletedMembers)),
+      ts('Total Selected Membership(s): %1', array(1 => count($this->_memberIds))),
+    );
+    CRM_Core_Session::setStatus($status);
+  }
 }
-
 

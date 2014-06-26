@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -37,33 +36,35 @@
 /**
  * This class contains all the function that are called using AJAX (dojo)
  */
-class CRM_Member_Page_AJAX
-{
-    /**
-     * Function to setDefaults according to membership type
-     */
-    function getMemberTypeDefaults( $config ) 
-    {
-        require_once 'CRM/Utils/Type.php';
-        $memType  = CRM_Utils_Type::escape( $_POST['mtype'], 'Integer') ; 
-        
-        $contributionType = CRM_Core_DAO::getFieldValue( 'CRM_Member_DAO_MembershipType', 
-                                                         $memType, 
-                                                         'contribution_type_id' );
-        
-        $totalAmount = CRM_Core_DAO::getFieldValue( 'CRM_Member_DAO_MembershipType', 
-                                                    $memType, 
-                                                    'minimum_fee' );
+class CRM_Member_Page_AJAX {
 
-        // fix the display of the monetary value, CRM-4038
-        require_once 'CRM/Utils/Money.php';
-        $totalAmount = CRM_Utils_Money::format( $totalAmount, null, '%a' );
-        
-        $details = array( 'contribution_type_id' => $contributionType,
-                          'total_amount'         => $totalAmount );                                         
-        
-        echo json_encode( $details );
-        CRM_Utils_System::civiExit( );
-    }
-    
+  /**
+   * Function to setDefaults according to membership type
+   */
+  function getMemberTypeDefaults($config) {
+    require_once 'CRM/Utils/Type.php';
+    $memType = CRM_Utils_Type::escape($_POST['mtype'], 'Integer');
+
+    $contributionType = CRM_Core_DAO::getFieldValue('CRM_Member_DAO_MembershipType',
+      $memType,
+      'contribution_type_id'
+    );
+
+    $totalAmount = CRM_Core_DAO::getFieldValue('CRM_Member_DAO_MembershipType',
+      $memType,
+      'minimum_fee'
+    );
+
+    // fix the display of the monetary value, CRM-4038
+    require_once 'CRM/Utils/Money.php';
+    $totalAmount = CRM_Utils_Money::format($totalAmount, NULL, '%a');
+
+    $details = array('contribution_type_id' => $contributionType,
+      'total_amount' => $totalAmount,
+    );
+
+    echo json_encode($details);
+    CRM_Utils_System::civiExit();
+  }
 }
+

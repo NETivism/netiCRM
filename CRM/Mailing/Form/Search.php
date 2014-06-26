@@ -52,16 +52,17 @@ class CRM_Mailing_Form_Search extends CRM_Core_Form {
       CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Contact', 'sort_name')
     );
 
-/*
+    /*
     require_once 'CRM/Campaign/BAO/Campaign.php';
     CRM_Campaign_BAO_Campaign::addCampaignInComponentSearch($this);
 */
+
 
     $status = array(
       '' => ts('- none -'),
       'Scheduled' => ts('Scheduled'),
       'Complete' => ts('Complete'),
-      'Running' => ts('Running')
+      'Running' => ts('Running'),
     );
     $this->addElement('select', 'mailing_status', NULL, $status);
 
@@ -77,7 +78,8 @@ class CRM_Mailing_Form_Search extends CRM_Core_Form {
   function setDefaultValues() {
     $defaults = array();
     foreach (array(
-      'Scheduled', 'Complete', 'Running') as $status) {
+        'Scheduled', 'Complete', 'Running',
+      ) as $status) {
       $defaults['mailing_status'][$status] = 1;
     }
     return $defaults;
@@ -94,7 +96,8 @@ class CRM_Mailing_Form_Search extends CRM_Core_Form {
           !CRM_Utils_System::isNull($params[$field])
         ) {
           if (in_array($field, array(
-            'mailing_from', 'mailing_to'))) {
+                'mailing_from', 'mailing_to',
+              ))) {
             $time = ($field == 'mailing_to') ? '235959' : NULL;
             $parent->set($field, CRM_Utils_Date::processDate($params[$field], $time));
           }

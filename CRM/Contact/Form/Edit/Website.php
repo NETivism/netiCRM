@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -32,42 +31,46 @@
  * @copyright CiviCRM LLC (c) 2004-2010
  * $Id$
  *
- */ 
+ */
 
 /**
- * form helper class for an Website object 
+ * form helper class for an Website object
  */
-class CRM_Contact_Form_Edit_Website
-{
-    /**
-     * build the form elements for an Website object
-     *
-     * @param CRM_Core_Form $form       reference to the form object
-     * @param array         $location   the location object to store all the form elements in
-     * @param int           $locationId the locationId we are dealing with
-     * @param int           $count      the number of blocks to create
-     *
-     * @return void
-     * @access public
-     * @static
-     */
-    static function buildQuickForm( &$form ) {
-        
-        $blockId = ( $form->get( 'Website_Block_Count' ) ) ? $form->get( 'Website_Block_Count' ) : 1;
+class CRM_Contact_Form_Edit_Website {
 
-        $form->applyFilter('__ALL__','trim');
-        
-        //Website type select
-        $form->addElement('select', "website[$blockId][website_type_id]", '', CRM_Core_PseudoConstant::websiteType( ) );
-        
-        //Website box
-        $form->addElement('text', "website[$blockId][url]", ts('Website'),
-                                  array_merge( 
-                                      CRM_Core_DAO::getAttribute('CRM_Core_DAO_Website', 'url'),
-                                      array( 'onfocus' => "if (!this.value) this.value='http://'; else return false",
-                                             'onblur'  => "if ( this.value == 'http://') this.value=''; else return false")
-                                  ));
-        
-        $form->addRule( "website[$blockId][url]", ts('Enter a valid web location beginning with \'http://\' or \'https://\'. EXAMPLE: http://www.mysite.org/'), 'url');                     
-    }
+  /**
+   * build the form elements for an Website object
+   *
+   * @param CRM_Core_Form $form       reference to the form object
+   * @param array         $location   the location object to store all the form elements in
+   * @param int           $locationId the locationId we are dealing with
+   * @param int           $count      the number of blocks to create
+   *
+   * @return void
+   * @access public
+   * @static
+   */
+  static
+  function buildQuickForm(&$form) {
+
+    $blockId = ($form->get('Website_Block_Count')) ? $form->get('Website_Block_Count') : 1;
+
+    $form->applyFilter('__ALL__', 'trim');
+
+    //Website type select
+    $form->addElement('select', "website[$blockId][website_type_id]", '', CRM_Core_PseudoConstant::websiteType());
+
+    //Website box
+    $form->addElement('text', "website[$blockId][url]", ts('Website'),
+      array_merge(
+        CRM_Core_DAO::getAttribute('CRM_Core_DAO_Website', 'url'),
+        array('onfocus' => "if (!this.value) {  this.value='http://';} else return false",
+          'onblur' => "if ( this.value == 'http://') {  this.value='';} else return false",
+        )
+      )
+    );
+
+    $form->addRule("website[$blockId][url]", ts('Enter a valid web location beginning with \'http://\' or \'https://\'. EXAMPLE: http://www.mysite.org/'), 'url');
+  }
 }
+

@@ -39,6 +39,7 @@ interface CRM_Utils_Cache_Interface {
    *
    * @param string $key
    * @param mixed $value
+   *
    * @return void
    */
   function set($key, &$value);
@@ -47,6 +48,7 @@ interface CRM_Utils_Cache_Interface {
    * Get a value from the cache
    *
    * @param string $key
+   *
    * @return mixed NULL if $key has not been previously set
    */
   function get($key);
@@ -55,6 +57,7 @@ interface CRM_Utils_Cache_Interface {
    * Delete a value from the cache
    *
    * @param string $key
+   *
    * @return void
    */
   function delete($key);
@@ -66,3 +69,4 @@ interface CRM_Utils_Cache_Interface {
    */
   function flush();
 }
+

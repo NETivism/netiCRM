@@ -40,34 +40,30 @@ require_once 'CRM/Pledge/Form/Task.php';
  *
  *
  */
-class CRM_Pledge_Form_Task_Result extends CRM_Pledge_Form_Task 
-{
-    
-    /**
-     * build all the data structures needed to build the form
-     *
-     * @return void
-     * @access public
-     */
-    function preProcess( ) 
-    {
-    }
+class CRM_Pledge_Form_Task_Result extends CRM_Pledge_Form_Task {
 
-    /**
-     * Function to actually build the form
-     *
-     * @return None
-     * @access public
-     */
-    public function buildQuickForm( ) 
-    {
-        $this->addButtons( array(
-                                 array ( 'type'      => 'done',
-                                         'name'      => ts('Done'),
-                                         'isDefault' => true   ),
-                                 )
-                           );
-    }
+  /**
+   * build all the data structures needed to build the form
+   *
+   * @return void
+   * @access public
+   */
+  function preProcess() {}
 
+  /**
+   * Function to actually build the form
+   *
+   * @return None
+   * @access public
+   */
+  public function buildQuickForm() {
+    $this->addButtons(array(
+        array('type' => 'done',
+          'name' => ts('Done'),
+          'isDefault' => TRUE,
+        ),
+      )
+    );
+  }
 }
 

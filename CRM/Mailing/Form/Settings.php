@@ -102,7 +102,7 @@ class CRM_Mailing_Form_Settings extends CRM_Core_Form {
     $this->addElement('checkbox', 'override_verp', ts('Track Replies?'));
 
     require_once 'CRM/Core/BAO/Setting.php';
-    $defaults['override_verp'] = defined('CIVICRM_TRACK_CIVIMAIL_REPLIES') ? CIVICRM_TRACK_CIVIMAIL_REPLIES : false;
+    $defaults['override_verp'] = defined('CIVICRM_TRACK_CIVIMAIL_REPLIES') ? CIVICRM_TRACK_CIVIMAIL_REPLIES : FALSE;
 
     $this->add('checkbox', 'forward_replies', ts('Forward Replies?'));
     $defaults['forward_replies'] = FALSE;

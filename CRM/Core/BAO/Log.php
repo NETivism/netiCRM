@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -39,110 +38,114 @@ require_once 'CRM/Core/DAO/Log.php';
 /**
  * BAO object for crm_log table
  */
+class CRM_Core_BAO_Log extends CRM_Core_DAO_Log {
+  static $_processed = NULL;
 
-class CRM_Core_BAO_Log extends CRM_Core_DAO_Log
-{
-    static $_processed = null;
+  static
+  function &lastModified($id, $table = 'civicrm_contact') {
+    require_once 'CRM/Core/DAO/Log.php';
 
-    static function &lastModified( $id, $table = 'civicrm_contact' )
-    {
-        require_once 'CRM/Core/DAO/Log.php';
-        
-        $log = new CRM_Core_DAO_Log( );
-        
-        $log->entity_table = $table;
-        $log->entity_id    = $id;
-        $log->orderBy( 'modified_date desc' );
-        $log->limit( 1 );
-        $result = CRM_Core_DAO::$_nullObject;
-        if ( $log->find( true ) ) {
-            list( $displayName, $contactImage ) = CRM_Contact_BAO_Contact::getDisplayAndImage( $log->modified_id );
-            $result = array( 'id'    => $log->modified_id,
-                             'name'  => $displayName,
-                             'image' => $contactImage,
-                             'date'  => $log->modified_date );
-        }
-        return $result;
+    $log = new CRM_Core_DAO_Log();
+
+    $log->entity_table = $table;
+    $log->entity_id = $id;
+    $log->orderBy('modified_date desc');
+    $log->limit(1);
+    $result = CRM_Core_DAO::$_nullObject;
+    if ($log->find(TRUE)) {
+      list($displayName, $contactImage) = CRM_Contact_BAO_Contact::getDisplayAndImage($log->modified_id);
+      $result = array('id' => $log->modified_id,
+        'name' => $displayName,
+        'image' => $contactImage,
+        'date' => $log->modified_date,
+      );
     }
-    
-    /**
-     * add log to civicrm_log table
-     * 
-     * @param array $params  array of name-value pairs of log table.
-     * 
-     * @static
-     */
-    static function add( &$params)
-    {
-        require_once 'CRM/Core/DAO/Log.php';
-        
-        $log = new CRM_Core_DAO_Log( );
-        $log->copyValues($params);
-        $log->save();
+    return $result;
+  }
+
+  /**
+   * add log to civicrm_log table
+   *
+   * @param array $params  array of name-value pairs of log table.
+   *
+   * @static
+   */
+  static
+  function add(&$params) {
+    require_once 'CRM/Core/DAO/Log.php';
+
+    $log = new CRM_Core_DAO_Log();
+    $log->copyValues($params);
+    $log->save();
+  }
+
+  static
+  function register($contactID, $tableName, $tableID, $userID = NULL, $data = NULL) {
+    if (!self::$_processed) {
+      self::$_processed = array();
     }
 
-    static function register( $contactID, $tableName, $tableID, $userID = null, $data = null) {
-        if ( ! self::$_processed ) {
-            self::$_processed = array( );
-        }
+    if (!$userID) {
+      $session = CRM_Core_Session::singleton();
+      $userID = $session->get('userID');
+    }
 
-        if ( ! $userID ) {
-            $session = CRM_Core_Session::singleton( );
-            $userID  =  $session->get( 'userID' );
-        }
+    if (!$userID) {
+      $userID = $contactID;
+    }
 
-        if ( ! $userID ) {
-            $userID  =  $contactID;
-        }
-        
-        if ( ! $userID ) {
-            return;
-        }
+    if (!$userID) {
+      return;
+    }
 
-        $log = new CRM_Core_DAO_Log( );
-        $log->id = null;
+    $log = new CRM_Core_DAO_Log();
+    $log->id = NULL;
 
-        if ( isset( self::$_processed[$contactID] ) ) {
-            if ( isset( self::$_processed[$contactID][$userID] ) ) {
-                $log->id = self::$_processed[$contactID][$userID];
-            }
-            self::$_processed[$contactID][$userID] = 1;
-        } else {
-            self::$_processed[$contactID] = array( $userID => 1 );
-        }
+    if (isset(self::$_processed[$contactID])) {
+      if (isset(self::$_processed[$contactID][$userID])) {
+        $log->id = self::$_processed[$contactID][$userID];
+      }
+      self::$_processed[$contactID][$userID] = 1;
+    }
+    else {
+      self::$_processed[$contactID] = array($userID => 1);
+    }
 
-        $logData = "$tableName,$tableID";
-        if ( ! $log->id ) {
-            $log->entity_table  = 'civicrm_contact';
-            $log->entity_id     = $contactID;
-            $log->modified_id   = $userID;
-            $log->modified_date = date( "YmdHis" );
-            $log->data          = $data ? $data : $logData;
-            $log->save( );
-        } else {
-            $query = "
+    $logData = "$tableName,$tableID";
+    if (!$log->id) {
+      $log->entity_table = 'civicrm_contact';
+      $log->entity_id = $contactID;
+      $log->modified_id = $userID;
+      $log->modified_date = date("YmdHis");
+      $log->data = $data ? $data : $logData;
+      $log->save();
+    }
+    else {
+      $query = "
 UPDATE civicrm_log
    SET data = concat( data, ':$logData' )
  WHERE id = {$log->id}
 ";
-            CRM_Core_DAO::executeQuery( $query );
-        }
-
-        self::$_processed[$contactID][$userID] = $log->id;
+      CRM_Core_DAO::executeQuery($query);
     }
-    
-    /**
-     * Function to get log record count for a Contact
-     *
-     * @param int $contactId Contact ID
-     * 
-     * @return int count of log records
-     * @access public
-     * @static
-     */
-     static function getContactLogCount( $contactID ) {
-         $query = "SELECT count(*) FROM civicrm_log 
+
+    self::$_processed[$contactID][$userID] = $log->id;
+  }
+
+  /**
+   * Function to get log record count for a Contact
+   *
+   * @param int $contactId Contact ID
+   *
+   * @return int count of log records
+   * @access public
+   * @static
+   */
+  static
+  function getContactLogCount($contactID) {
+    $query = "SELECT count(*) FROM civicrm_log 
                    WHERE civicrm_log.entity_table = 'civicrm_contact' AND civicrm_log.entity_id = {$contactID}";
-         return CRM_Core_DAO::singleValueQuery( $query );
-     }    
+    return CRM_Core_DAO::singleValueQuery($query);
+  }
 }
+

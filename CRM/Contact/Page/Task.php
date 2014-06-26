@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -43,18 +42,16 @@ require_once 'CRM/Core/Page.php';
  * and then subjected to Tasks/Actions.
  *
  */
-
 class CRM_Contact_Page_Task extends CRM_Core_Page {
-    /**
-     * returns the page title
-     *
-     * @return string the title of the page
-     * @access public
-     */
-    function getTitle()
-    {
-        return "Task Results";
-    }
 
+  /**
+   * returns the page title
+   *
+   * @return string the title of the page
+   * @access public
+   */
+  function getTitle() {
+    return "Task Results";
+  }
 }
 

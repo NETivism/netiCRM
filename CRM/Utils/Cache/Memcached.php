@@ -33,11 +33,11 @@
  *
  */
 class CRM_Utils_Cache_Memcached {
-  const DEFAULT_HOST    = 'localhost';
-  const DEFAULT_PORT    = 11211;
-  const DEFAULT_TIMEOUT = 3600;
-  const DEFAULT_PREFIX  = '';
-  const MAX_KEY_LEN     = 62;
+  CONST DEFAULT_HOST = 'localhost';
+  CONST DEFAULT_PORT = 11211;
+  CONST DEFAULT_TIMEOUT = 3600;
+  CONST DEFAULT_PREFIX = '';
+  CONST MAX_KEY_LEN = 62;
 
   /**
    * The host name of the memcached server
@@ -82,9 +82,9 @@ class CRM_Utils_Cache_Memcached {
    * Constructor
    *
    * @param array   $config  an array of configuration params
+   *
    * @return void
-   */
-  function __construct($config) {
+   */ function __construct($config) {
     if (isset($config['host'])) {
       $this->_host = $config['host'];
     }
@@ -110,8 +110,8 @@ class CRM_Utils_Cache_Memcached {
   function set($key, &$value) {
     $key = $this->cleanKey($key);
     if (!$this->_cache->set($key, $value, $this->_timeout)) {
-      CRM_Core_Error::debug( 'Result Code: ', $this->_cache->getResultMessage());
-      CRM_Core_Error::fatal("memcached set failed, wondering why?, $key", $value );
+      CRM_Core_Error::debug('Result Code: ', $this->_cache->getResultMessage());
+      CRM_Core_Error::fatal("memcached set failed, wondering why?, $key", $value);
       return FALSE;
     }
     return TRUE;
@@ -130,8 +130,9 @@ class CRM_Utils_Cache_Memcached {
 
   function cleanKey($key) {
     $key = preg_replace('/\s+|\W+/', '_', $this->_prefix . $key);
-    if ( strlen($key) > self::MAX_KEY_LEN ) {
-      $md5Key = md5($key);  // this should be 32 characters in length
+    if (strlen($key) > self::MAX_KEY_LEN) {
+      // this should be 32 characters in length
+      $md5Key = md5($key);
       $subKeyLen = self::MAX_KEY_LEN - 1 - strlen($md5Key);
       $key = substr($key, 0, $subKeyLen) . "_" . $md5Key;
     }
@@ -142,3 +143,4 @@ class CRM_Utils_Cache_Memcached {
     return $this->_cache->flush();
   }
 }
+

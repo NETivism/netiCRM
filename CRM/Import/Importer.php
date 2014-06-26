@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -41,20 +40,21 @@ require_once 'CRM/Import/ImportJob.php';
  *  via a form post) and asynchronously (i.e. by the workflow system)
  */
 class CRM_Import_Importer {
-    public function __construct() {
-        // may not need this
+  public function __construct() {
+    // may not need this
+  }
+
+  public function runIncompleteImportJobs($timeout = 55) {
+    $startTime = time();
+    $incompleteImportTables = CRM_Import_ImportJob::getIncompleteImportTables();
+    foreach ($incompleteImportTables as $importTable) {
+      $importJob = new CRM_Import_ImportJob($importTable);
+      $importJob->runImport(NULL, $timeout);
+      $currentTime = time();
+      if (($currentTime - $startTime) >= $timeout) {
+        break;
+      }
     }
-    
-    public function runIncompleteImportJobs( $timeout = 55 ) {
-        $startTime = time();
-        $incompleteImportTables = CRM_Import_ImportJob::getIncompleteImportTables();
-        foreach ($incompleteImportTables as $importTable) {
-            $importJob = new CRM_Import_ImportJob( $importTable );
-            $importJob->runImport(null, $timeout);
-            $currentTime = time();
-            if ( ( $currentTime - $startTime ) >= $timeout) {
-                break;
-            }
-        }
-    }
+  }
 }
+

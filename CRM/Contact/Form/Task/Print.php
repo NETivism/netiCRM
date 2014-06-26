@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -42,93 +41,96 @@ require_once 'CRM/Contact/Form/Task.php';
  */
 class CRM_Contact_Form_Task_Print extends CRM_Contact_Form_Task {
 
-    /**
-     * build all the data structures needed to build the form
-     *
-     * @return void
-     * @access public
-     */
-    function preProcess()
-    {
-        // set print view, so that print templates are called
-        $this->controller->setPrint( 1 );
-        $this->assign( 'id', $this->get( 'id' ) );
-        $this->assign( 'pageTitle', ts( 'CiviCRM Contact Listing' ) );
+  /**
+   * build all the data structures needed to build the form
+   *
+   * @return void
+   * @access public
+   */
+  function preProcess() {
+    // set print view, so that print templates are called
+    $this->controller->setPrint(1);
+    $this->assign('id', $this->get('id'));
+    $this->assign('pageTitle', ts('CiviCRM Contact Listing'));
 
-        // create the selector, controller and run - store results in session
-        $fv               = $this->get( 'formValues' );
-       
-        $params           = $this->get( 'queryParams' );
-        $returnProperties = $this->get( 'returnProperties' );
-        
-        $sortID = null;
-        if ( $this->get( CRM_Utils_Sort::SORT_ID  ) ) {
-            $sortID = CRM_Utils_Sort::sortIDValue( $this->get( CRM_Utils_Sort::SORT_ID  ),
-                                                   $this->get( CRM_Utils_Sort::SORT_DIRECTION ) );
-        }
-        
-        $includeContactIds = false;
-        if ( $fv['radio_ts'] == 'ts_sel' ) {
-            $includeContactIds = true;
-        }
+    // create the selector, controller and run - store results in session
+    $fv = $this->get('formValues');
 
-        $selectorName = $this->controller->selectorName( );
-        require_once( str_replace('_', DIRECTORY_SEPARATOR, $selectorName ) . '.php' );
+    $params = $this->get('queryParams');
+    $returnProperties = $this->get('returnProperties');
 
-        $returnP = isset($returnPropeties) ? $returnPropeties : "";
-        $customSearchClass = $this->get( 'customSearchClass' );
-        eval( '$selector   = new ' .
-              $selectorName . 
-              '( $customSearchClass,
+    $sortID = NULL;
+    if ($this->get(CRM_Utils_Sort::SORT_ID)) {
+      $sortID = CRM_Utils_Sort::sortIDValue($this->get(CRM_Utils_Sort::SORT_ID),
+        $this->get(CRM_Utils_Sort::SORT_DIRECTION)
+      );
+    }
+
+    $includeContactIds = FALSE;
+    if ($fv['radio_ts'] == 'ts_sel') {
+      $includeContactIds = TRUE;
+    }
+
+    $selectorName = $this->controller->selectorName();
+    require_once (str_replace('_', DIRECTORY_SEPARATOR, $selectorName) . '.php');
+
+    $returnP = isset($returnPropeties) ? $returnPropeties : "";
+    $customSearchClass = $this->get('customSearchClass');
+    eval('$selector   = new ' .
+      $selectorName .
+      '( $customSearchClass,
                  $fv,
                  $params,
                  $returnP,
                  $this->_action,
-                 $includeContactIds );' );
-        $controller = new CRM_Core_Selector_Controller($selector ,
-                                                        null,
-                                                        $sortID,
-                                                        CRM_Core_Action::VIEW,
-                                                        $this,
-                                                        CRM_Core_Selector_Controller::SCREEN);
-        $controller->setEmbedded( true );
-        $controller->run();
-    }
+                 $includeContactIds );'
+    );
+    $controller = new CRM_Core_Selector_Controller($selector,
+      NULL,
+      $sortID,
+      CRM_Core_Action::VIEW,
+      $this,
+      CRM_Core_Selector_Controller::SCREEN
+    );
+    $controller->setEmbedded(TRUE);
+    $controller->run();
+  }
 
+  /**
+   * Build the form - it consists of
+   *    - displaying the QILL (query in local language)
+   *    - displaying elements for saving the search
+   *
+   * @access public
+   *
+   * @return void
+   */
+  function buildQuickForm() {
+    //
+    // just need to add a javacript to popup the window for printing
+    //
+    $this->addButtons(array(
+        array('type' => 'next',
+          'name' => ts('Print Contact List'),
+          'js' => array('onclick' => 'window.print()'),
+          'isDefault' => TRUE,
+        ),
+        array('type' => 'back',
+          'name' => ts('Done'),
+        ),
+      )
+    );
+  }
 
-    /**
-     * Build the form - it consists of
-     *    - displaying the QILL (query in local language)
-     *    - displaying elements for saving the search
-     *
-     * @access public
-     * @return void
-     */
-    function buildQuickForm()
-    {
-        //
-        // just need to add a javacript to popup the window for printing
-        // 
-        $this->addButtons( array(
-                                 array ( 'type'      => 'next',
-                                         'name'      => ts('Print Contact List'),
-                                         'js'        => array( 'onclick' => 'window.print()' ),
-                                         'isDefault' => true   ),
-                                 array ( 'type'      => 'back',
-                                         'name'      => ts('Done') ),
-                                 )
-                           );
-    }
-
-    /**
-     * process the form after the input has been submitted and validated
-     *
-     * @access public
-     * @return void
-     */
-    public function postProcess()
-    {
-        // redirect to the main search page after printing is over
-    }
+  /**
+   * process the form after the input has been submitted and validated
+   *
+   * @access public
+   *
+   * @return void
+   */
+  public function postProcess() {
+    // redirect to the main search page after printing is over
+  }
 }
 

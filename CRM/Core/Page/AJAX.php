@@ -44,7 +44,8 @@ class CRM_Core_Page_AJAX {
    * @static
    * @access public
    */
-  static function run() {
+  static
+  function run() {
     $className = CRM_Utils_Type::escape($_REQUEST['class_name'], 'String');
     $type = '';
     if (CRM_Utils_Array::value('type', $_POST)) {
@@ -68,6 +69,7 @@ class CRM_Core_Page_AJAX {
       case 'method':
         call_user_func(array($className, $fnName));
         break;
+
       case 'page':
       case 'class':
       case '':
@@ -76,11 +78,13 @@ class CRM_Core_Page_AJAX {
         if (preg_match('/^CRM_[a-zA-Z0-9]+_Page_Inline_/', $className)) {
           $page = new $className;
           $page->run();
-        } else {
+        }
+        else {
           $wrapper = new CRM_Utils_Wrapper();
           $wrapper->run($className);
         }
         break;
+
       default:
         CRM_Core_Error::debug_log_message('Unsupported inline request type: ' . var_export($type, TRUE));
     }
@@ -93,22 +97,23 @@ class CRM_Core_Page_AJAX {
    * @static
    * @access public
    */
-  static function setIsQuickConfig() {
+  static
+  function setIsQuickConfig() {
     if (!$id = CRM_Utils_Array::value('id', $_GET)) {
-        return false;
+      return FALSE;
     }
     $priceSetId = CRM_Price_BAO_Set::getFor($_GET['context'], $id, NULL);
     if ($priceSetId) {
-      $result = CRM_Price_BAO_Set::setIsQuickConfig($priceSetId,0);
+      $result = CRM_Price_BAO_Set::setIsQuickConfig($priceSetId, 0);
     }
     if (!$result) {
-      $priceSetId = null;
+      $priceSetId = NULL;
     }
     echo json_encode($priceSetId);
-      
+
     CRM_Utils_System::civiExit();
   }
-  
+
   /**
    * Determine whether the request is for a valid class/method name.
    *
@@ -116,7 +121,8 @@ class CRM_Core_Page_AJAX {
    * @param string $className 'Class_Name'
    * @param string $fnName method name
    */
-  static function checkAuthz($type, $className, $fnName = null) {
+  static
+  function checkAuthz($type, $className, $fnName = NULL) {
     switch ($type) {
       case 'method':
         if (!preg_match('/^CRM_[a-zA-Z0-9]+_Page_AJAX$/', $className)) {
@@ -127,7 +133,7 @@ class CRM_Core_Page_AJAX {
         }
 
         // ensure that function exists
-       return method_exists($className, $fnName);
+        return method_exists($className, $fnName);
 
       case 'page':
       case 'class':
@@ -136,6 +142,7 @@ class CRM_Core_Page_AJAX {
           return FALSE;
         }
         return class_exists($className);
+
       default:
         return FALSE;
     }

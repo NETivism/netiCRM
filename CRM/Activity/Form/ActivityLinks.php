@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -38,35 +37,36 @@ require_once 'CRM/Core/Form.php';
 
 /**
  * This class generates form components for Activity Links
- * 
+ *
  */
-class CRM_Activity_Form_ActivityLinks extends CRM_Core_Form
-{
-    public function buildQuickForm( ) {
-        $contactId = CRM_Utils_Request::retrieve( 'cid' , 'Positive', $this );
-        $urlParams = "action=add&reset=1&cid={$contactId}&selectedChild=activity&atype=";
-    
-        $url = CRM_Utils_System::url( 'civicrm/contact/view/activity', 
-                                      $urlParams, false, null, false );
- 
-        $activityTypes = array( );
-        require_once 'CRM/Utils/Mail.php';
-        if ( CRM_Utils_Mail::validOutBoundMail() && $contactId ) { 
-            require_once 'CRM/Contact/BAO/Contact.php';
-            list( $name, $email, $doNotEmail, $onHold, $isDeseased ) = CRM_Contact_BAO_Contact::getContactDetails( $contactId );
-            if ( !$doNotEmail && $email && !$isDeseased ) {
-                $activityTypes = array( '3' => ts('Send an Email') );
-            }
-        }
-        
-        // this returns activity types sorted by weight
-        $otherTypes = CRM_Core_PseudoConstant::activityType( false );
-        
-        $activityTypes += $otherTypes;
-        
-        $this->assign( 'activityTypes', $activityTypes );
-        $this->assign( 'url', $url );
+class CRM_Activity_Form_ActivityLinks extends CRM_Core_Form {
+  public function buildQuickForm() {
+    $contactId = CRM_Utils_Request::retrieve('cid', 'Positive', $this);
+    $urlParams = "action=add&reset=1&cid={$contactId}&selectedChild=activity&atype=";
 
-        $this->assign( 'suppressForm', true );
+    $url = CRM_Utils_System::url('civicrm/contact/view/activity',
+      $urlParams, FALSE, NULL, FALSE
+    );
+
+    $activityTypes = array();
+    require_once 'CRM/Utils/Mail.php';
+    if (CRM_Utils_Mail::validOutBoundMail() && $contactId) {
+      require_once 'CRM/Contact/BAO/Contact.php';
+      list($name, $email, $doNotEmail, $onHold, $isDeseased) = CRM_Contact_BAO_Contact::getContactDetails($contactId);
+      if (!$doNotEmail && $email && !$isDeseased) {
+        $activityTypes = array('3' => ts('Send an Email'));
+      }
     }
+
+    // this returns activity types sorted by weight
+    $otherTypes = CRM_Core_PseudoConstant::activityType(FALSE);
+
+    $activityTypes += $otherTypes;
+
+    $this->assign('activityTypes', $activityTypes);
+    $this->assign('url', $url);
+
+    $this->assign('suppressForm', TRUE);
+  }
 }
+

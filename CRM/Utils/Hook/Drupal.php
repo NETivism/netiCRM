@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /*
  +--------------------------------------------------------------------+
@@ -35,11 +35,12 @@
  */
 
 require_once 'CRM/Utils/Hook.php';
-
 class CRM_Utils_Hook_Drupal extends CRM_Utils_Hook {
-  static function invoke( $numParams,
-                          &$arg1, &$arg2, &$arg3, &$arg4, &$arg5,
-                          $fnSuffix ) {
+  static
+  function invoke($numParams,
+    &$arg1, &$arg2, &$arg3, &$arg4, &$arg5,
+    $fnSuffix
+  ) {
     static $functions = array();
     $result = array();
     // copied from user_module_invoke
@@ -47,44 +48,46 @@ class CRM_Utils_Hook_Drupal extends CRM_Utils_Hook {
       $procceed = FALSE;
       $functions[$fnSuffix] = array();
       $r = FALSE;
-      foreach ( module_list() as $module) { 
+      foreach (module_list() as $module) {
         $fnName = "{$module}_{$fnSuffix}";
-        if(isset($functions[$fnSuffix][$fnName])){
-          if(!empty($functions[$fnSuffix][$fnName])){
+        if (isset($functions[$fnSuffix][$fnName])) {
+          if (!empty($functions[$fnSuffix][$fnName])) {
             $r = self::runHook($fnName, $numParams, $arg1, $arg2, $arg3, $arg4, $arg5);
           }
         }
-        elseif ( function_exists( $fnName ) ) {
+        elseif (function_exists($fnName)) {
           $functions[$fnSuffix][$fnName] = TRUE;
           $r = self::runHook($fnName, $numParams, $arg1, $arg2, $arg3, $arg4, $arg5);
         }
-        else{
+        else {
           $functions[$fnSuffix][$fnName] = FALSE;
         }
-        if (is_array($r)){
+        if (is_array($r)) {
           $result = array_merge($result, $r);
         }
       }
     }
-    return empty($result) ? true : $result;
+    return empty($result) ? TRUE : $result;
   }
 
-  static function runHook($fnName, $numParams, &$arg1, &$arg2, &$arg3, &$arg4, &$arg5){
-    if ( $numParams == 1 ) {
-      $fResult = $fnName( $arg1 );
+  static
+  function runHook($fnName, $numParams, &$arg1, &$arg2, &$arg3, &$arg4, &$arg5) {
+    if ($numParams == 1) {
+      $fResult = $fnName($arg1);
     }
-    elseif ( $numParams == 2 ) {
-      $fResult = $fnName( $arg1, $arg2 );
+    elseif ($numParams == 2) {
+      $fResult = $fnName($arg1, $arg2);
     }
-    elseif ( $numParams == 3 ) {
-      $fResult = $fnName( $arg1, $arg2, $arg3 );
+    elseif ($numParams == 3) {
+      $fResult = $fnName($arg1, $arg2, $arg3);
     }
-    elseif ( $numParams == 4 ) {
-      $fResult = $fnName( $arg1, $arg2, $arg3, $arg4 );
+    elseif ($numParams == 4) {
+      $fResult = $fnName($arg1, $arg2, $arg3, $arg4);
     }
-    elseif ( $numParams == 5 ) {
-      $fResult = $fnName( $arg1, $arg2, $arg3, $arg4, $arg5 );
+    elseif ($numParams == 5) {
+      $fResult = $fnName($arg1, $arg2, $arg3, $arg4, $arg5);
     }
     return $fResult;
   }
 }
+

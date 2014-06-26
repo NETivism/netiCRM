@@ -64,10 +64,10 @@ class CRM_Mailing_Event_BAO_Subscribe extends CRM_Mailing_Event_DAO_Subscribe {
    */
   public static function &subscribe($group_id, $email, $contactId = NULL, $context = NULL) {
     // CRM-1797 - allow subscription only to public groups
-    $params     = array('id' => (int) $group_id);
-    $defaults   = array();
+    $params = array('id' => (int) $group_id);
+    $defaults = array();
     $contact_id = NULL;
-    $success    = NULL;
+    $success = NULL;
 
     require_once 'CRM/Contact/BAO/Group.php';
     $bao = CRM_Contact_BAO_Group::retrieve($params, $defaults);
@@ -85,6 +85,7 @@ class CRM_Mailing_Event_BAO_Subscribe extends CRM_Mailing_Event_DAO_Subscribe {
     else {
       /* First, find out if the contact already exists */
 
+
       $query = "
    SELECT DISTINCT contact_a.id as contact_id 
      FROM civicrm_contact contact_a 
@@ -92,8 +93,8 @@ LEFT JOIN civicrm_email      ON contact_a.id = civicrm_email.contact_id
     WHERE civicrm_email.email = %1 AND contact_a.is_deleted = 0";
 
       $params = array(1 => array($email, 'String'));
-      $dao    = CRM_Core_DAO::executeQuery($query, $params);
-      $id     = array();
+      $dao = CRM_Core_DAO::executeQuery($query, $params);
+      $id = array();
       // lets just use the first contact id we got
       if ($dao->fetch()) {
         $contact_id = $dao->contact_id;
@@ -109,6 +110,7 @@ LEFT JOIN civicrm_email      ON contact_a.id = civicrm_email.contact_id
       require_once 'api/v3/DeprecatedUtils.php';
 
       /* If the contact does not exist, create one. */
+
 
       $formatted = array(
         'contact_type' => 'Individual',
@@ -144,6 +146,7 @@ LEFT JOIN civicrm_email      ON contact_a.id = civicrm_email.contact_id
 
     /* Get the primary email id from the contact to use as a hash input */
 
+
     $dao = new CRM_Core_DAO();
 
     $query = "
@@ -161,11 +164,11 @@ SELECT     civicrm_email.id as email_id
       return $success;
     }
 
-    $se             = new CRM_Mailing_Event_BAO_Subscribe();
-    $se->group_id   = $group_id;
+    $se = new CRM_Mailing_Event_BAO_Subscribe();
+    $se->group_id = $group_id;
     $se->contact_id = $contact_id;
     $se->time_stamp = date('YmdHis');
-    $se->hash       = substr(sha1("{$group_id}:{$contact_id}:{$dao->email_id}:" . time()),
+    $se->hash = substr(sha1("{$group_id}:{$contact_id}:{$dao->email_id}:" . time()),
       0, 16
     );
     $se->save();
@@ -192,11 +195,11 @@ SELECT     civicrm_email.id as email_id
    * @static
    */
   public static function &verify($contact_id, $subscribe_id, $hash) {
-    $success        = NULL;
-    $se             = new CRM_Mailing_Event_BAO_Subscribe();
+    $success = NULL;
+    $se = new CRM_Mailing_Event_BAO_Subscribe();
     $se->contact_id = $contact_id;
-    $se->id         = $subscribe_id;
-    $se->hash       = $hash;
+    $se->id = $subscribe_id;
+    $se->hash = $hash;
     if ($se->find(TRUE)) {
       $success = $se;
     }
@@ -270,10 +273,10 @@ SELECT     civicrm_email.id as email_id
     }
 
     require_once 'CRM/Mailing/BAO/Mailing.php';
-    $bao            = new CRM_Mailing_BAO_Mailing();
+    $bao = new CRM_Mailing_BAO_Mailing();
     $bao->body_text = $text;
     $bao->body_html = $html;
-    $tokens         = $bao->getTokens();
+    $tokens = $bao->getTokens();
 
     require_once 'CRM/Utils/Token.php';
     $html = CRM_Utils_Token::replaceDomainTokens($html, $domain, TRUE, $tokens['html']);
@@ -294,8 +297,8 @@ SELECT     civicrm_email.id as email_id
 
     $message->setHTMLBody($html);
     $message->setTxtBody($text);
-    $b      = CRM_Utils_Mail::setMimeParams($message);
-    $h      = &$message->headers($headers);
+    $b = CRM_Utils_Mail::setMimeParams($message);
+    $h = &$message->headers($headers);
     $mailer = &$config->getMailer();
 
     require_once 'CRM/Mailing/BAO/Mailing.php';
@@ -384,8 +387,8 @@ SELECT     civicrm_email.id as email_id
    */
   function commonSubscribe(&$groups, &$params, $contactId = NULL, $context = NULL) {
     $contactGroups = CRM_Mailing_Event_BAO_Subscribe::getContactGroups($params['email'], $contactId);
-    $group         = array();
-    $success       = NULL;
+    $group = array();
+    $success = NULL;
     foreach ($groups as $groupID) {
       $title = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Group', $groupID, 'title');
       if (array_key_exists($groupID, $contactGroups) && $contactGroups[$groupID]['status'] != 'Removed') {
@@ -405,6 +408,7 @@ SELECT     civicrm_email.id as email_id
         $groupAdded[] = $title;
 
         /* Ask the contact for confirmation */
+
 
         $se->send_confirm_request($params['email']);
       }

@@ -169,8 +169,6 @@ class CRM_Utils_REST {
 
 
       $count = ' count="' . $result['count'] . '" ';
-
-
     }
     else $count = "";
     $xml = "<?xml version=\"1.0\"?>
@@ -192,10 +190,10 @@ class CRM_Utils_REST {
   }
 
   function jsonFormated($json) {
-    $tabcount   = 0;
-    $result     = '';
-    $inquote    = FALSE;
-    $inarray    = FALSE;
+    $tabcount = 0;
+    $result = '';
+    $inquote = FALSE;
+    $inarray = FALSE;
     $ignorenext = FALSE;
 
     $tab = "\t";
@@ -396,8 +394,8 @@ class CRM_Utils_REST {
       return $result;
     }
 
-    if ($_SERVER['REQUEST_METHOD'] == 'GET' && strtolower (substr( $args[2],0,3)) != 'get' ) {
-    // get only valid for non destructive methods
+    if ($_SERVER['REQUEST_METHOD'] == 'GET' && strtolower(substr($args[2], 0, 3)) != 'get') {
+      // get only valid for non destructive methods
       require_once 'api/v3/utils.php';
       return civicrm_api3_create_error("SECURITY: All requests that modify the database must be http POST, not GET.",
         array(
@@ -433,9 +431,9 @@ class CRM_Utils_REST {
       'action' => 1,
     );
 
-    if (array_key_exists('json', $_REQUEST) &&  $_REQUEST['json'][0] == "{") {
+    if (array_key_exists('json', $_REQUEST) && $_REQUEST['json'][0] == "{") {
       $params = json_decode($_REQUEST['json'], TRUE);
-      if(empty($params)) {
+      if (empty($params)) {
         echo json_encode(array('is_error' => 1, 'error_message', 'invalid json format: ?{"param_with_double_quote":"value"}'));
         CRM_Utils_System::civiExit();
       }
@@ -493,54 +491,57 @@ class CRM_Utils_REST {
 
   /** used to load a template "inline", eg. for ajax, without having to build a menu for each template */
   static
-  function loadTemplate () {
-    $request = CRM_Utils_Request::retrieve( 'q', 'String');
-    if (false !== strpos($request, '..')) {
-      die ("SECURITY FATAL: the url can't contain '..'. Please report the issue on the forum at civicrm.org");
+  function loadTemplate() {
+    $request = CRM_Utils_Request::retrieve('q', 'String');
+    if (FALSE !== strpos($request, '..')) {
+      die("SECURITY FATAL: the url can't contain '..'. Please report the issue on the forum at civicrm.org");
     }
 
-    $request = split ('/',$request);
+    $request = split('/', $request);
     $entity = _civicrm_api_get_camel_name($request[2]);
-    $tplfile=_civicrm_api_get_camel_name($request[3]);
+    $tplfile = _civicrm_api_get_camel_name($request[3]);
 
-    $tpl = 'CRM/'.$entity.'/Page/Inline/'.$tplfile.'.tpl';
-    $smarty= CRM_Core_Smarty::singleton( );
-    CRM_Utils_System::setTitle( "$entity::$tplfile inline $tpl" );
-    if( !$smarty->template_exists($tpl) ){
+    $tpl = 'CRM/' . $entity . '/Page/Inline/' . $tplfile . '.tpl';
+    $smarty = CRM_Core_Smarty::singleton();
+    CRM_Utils_System::setTitle("$entity::$tplfile inline $tpl");
+    if (!$smarty->template_exists($tpl)) {
       header("Status: 404 Not Found");
-      die ("Can't find the requested template file templates/$tpl");
+      die("Can't find the requested template file templates/$tpl");
     }
-    if (array_key_exists('id',$_GET)) {// special treatmenent, because it's often used
-      $smarty->assign ('id',(int)$_GET['id']);// an id is always positive
+    // special treatmenent, because it's often used
+    if (array_key_exists('id', $_GET)) {
+      // an id is always positive
+      $smarty->assign('id', (int)$_GET['id']);
     }
-    $pos = strpos (implode (array_keys ($_GET)),'<') ;
+    $pos = strpos(implode(array_keys($_GET)), '<');
 
-    if ($pos !== false) {
-      die ("SECURITY FATAL: one of the param names contains &lt;");
+    if ($pos !== FALSE) {
+      die("SECURITY FATAL: one of the param names contains &lt;");
     }
-    $param = array_map( 'htmlentities' , $_GET);
+    $param = array_map('htmlentities', $_GET);
     unset($param['q']);
     $smarty->assign_by_ref("request", $param);
 
-    if  ( ! array_key_exists ( 'HTTP_X_REQUESTED_WITH', $_SERVER ) ||
-      $_SERVER['HTTP_X_REQUESTED_WITH'] != "XMLHttpRequest"  )  {
+    if (!array_key_exists('HTTP_X_REQUESTED_WITH', $_SERVER) ||
+      $_SERVER['HTTP_X_REQUESTED_WITH'] != "XMLHttpRequest"
+    ) {
 
-        $smarty->assign( 'tplFile', $tpl );
-        $config = CRM_Core_Config::singleton();
-        $content = $smarty->fetch( 'CRM/common/'. strtolower($config->userFramework) .'.tpl' );
+      $smarty->assign('tplFile', $tpl);
+      $config = CRM_Core_Config::singleton();
+      $content = $smarty->fetch('CRM/common/' . strtolower($config->userFramework) . '.tpl');
 
-        if ($region = CRM_Core_Region::instance('html-header', FALSE)) {
-          CRM_Utils_System::addHTMLHead($region->render(''));
-        }
-        CRM_Utils_System::appendTPLFile( $tpl, $content );
+      if ($region = CRM_Core_Region::instance('html-header', FALSE)) {
+        CRM_Utils_System::addHTMLHead($region->render(''));
+      }
+      CRM_Utils_System::appendTPLFile($tpl, $content);
 
-        return CRM_Utils_System::theme( 'page', $content, true);
-
-      } else {
-        $content = "<!-- .tpl file embeded: $tpl -->\n";
-        CRM_Utils_System::appendTPLFile( $tpl, $content );
-        echo $content . $smarty->fetch ($tpl);
-        CRM_Utils_System::civiExit( );
+      return CRM_Utils_System::theme('page', $content, TRUE);
+    }
+    else {
+      $content = "<!-- .tpl file embeded: $tpl -->\n";
+      CRM_Utils_System::appendTPLFile($tpl, $content);
+      echo $content . $smarty->fetch($tpl);
+      CRM_Utils_System::civiExit();
     }
   }
 
@@ -689,8 +690,8 @@ class CRM_Utils_REST {
     }
 
     if (!$uid) {
-      $store      = NULL;
-      $api_key    = CRM_Utils_Request::retrieve('api_key', 'String', $store, FALSE, NULL, 'REQUEST');
+      $store = NULL;
+      $api_key = CRM_Utils_Request::retrieve('api_key', 'String', $store, FALSE, NULL, 'REQUEST');
       $contact_id = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $api_key, 'id', 'api_key');
       if ($contact_id) {
         $uid = CRM_Core_BAO_UFMatch::getUFId($contact_id);

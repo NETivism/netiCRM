@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -35,52 +34,49 @@
  */
 
 require_once 'CRM/Contact/Page/View/UserDashBoard.php';
+class CRM_Pledge_Page_UserDashboard extends CRM_Contact_Page_View_UserDashBoard {
 
-class CRM_Pledge_Page_UserDashboard extends CRM_Contact_Page_View_UserDashBoard 
-{
-   /**
-    * This function is called when action is browse
-    * 
-    * return null
-    * @access public
-    */
-    function listPledges( ) 
-    {
-        $controller = new CRM_Core_Controller_Simple( 'CRM_Pledge_Form_Search', ts('Pledges'), null );
-        $controller->setEmbedded( true );
-        $controller->reset( );
-        $controller->set( 'limit', 12 ); 
-        $controller->set( 'cid'  , $this->_contactId );
-        $controller->set( 'context'  , 'user' );
-        $controller->set( 'force'  , 1 );
-        $controller->process( );
-        $controller->run( );
-        
-        //add honor block.
-        require_once 'CRM/Pledge/BAO/Pledge.php';
-        $honorParams = array( );
-        $honorParams = CRM_Pledge_BAO_Pledge::getHonorContacts( $this->_contactId );
-        if ( !empty($honorParams) ) {
-            // assign vars to templates
-            $this->assign( 'pledgeHonorRows', $honorParams );
-            $this->assign( 'pledgeHonor', true );
-        }
-        $session = CRM_Core_Session::singleton( );
-        $loggedUserID = $session->get( 'userID' );
-        $this->assign( 'loggedUserID', $loggedUserID );
+  /**
+   * This function is called when action is browse
+   *
+   * return null
+   * @access public
+   */
+  function listPledges() {
+    $controller = new CRM_Core_Controller_Simple('CRM_Pledge_Form_Search', ts('Pledges'), NULL);
+    $controller->setEmbedded(TRUE);
+    $controller->reset();
+    $controller->set('limit', 12);
+    $controller->set('cid', $this->_contactId);
+    $controller->set('context', 'user');
+    $controller->set('force', 1);
+    $controller->process();
+    $controller->run();
+
+    //add honor block.
+    require_once 'CRM/Pledge/BAO/Pledge.php';
+    $honorParams = array();
+    $honorParams = CRM_Pledge_BAO_Pledge::getHonorContacts($this->_contactId);
+    if (!empty($honorParams)) {
+      // assign vars to templates
+      $this->assign('pledgeHonorRows', $honorParams);
+      $this->assign('pledgeHonor', TRUE);
     }
-    
-    /**
-     * This function is the main function that is called when the page
-     * loads, it decides the which action has to be taken for the page.
-     * 
-     * return null
-     * @access public
-     */
-    function run( ) 
-    {
-        parent::preProcess( );
-        $this->listPledges( );
-    }
+    $session = CRM_Core_Session::singleton();
+    $loggedUserID = $session->get('userID');
+    $this->assign('loggedUserID', $loggedUserID);
+  }
+
+  /**
+   * This function is the main function that is called when the page
+   * loads, it decides the which action has to be taken for the page.
+   *
+   * return null
+   * @access public
+   */
+  function run() {
+    parent::preProcess();
+    $this->listPledges();
+  }
 }
 

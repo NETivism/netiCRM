@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -33,7 +32,7 @@
  * $Id$
  *
  */
-             
+
 require_once 'CRM/Contact/Form/Task/SaveSearch.php';
 
 /**
@@ -42,45 +41,43 @@ require_once 'CRM/Contact/Form/Task/SaveSearch.php';
  */
 class CRM_Contact_Form_Task_SaveSearch_Update extends CRM_Contact_Form_Task_SaveSearch {
 
-    /**
-     * build all the data structures needed to build the form
-     *
-     * @return void
-     * @access public
-     */
-    function preProcess()
-    {
-        parent::preProcess( );
-        
-        $this->_id = $this->get( 'ssID' );
-        if ( ! $this->_id ) {
-            // fetch the value from the group id gid
-            $gid = $this->get( 'gid' );
-            if ( $gid ) {
-                $this->_id = CRM_Core_DAO::getFieldValue( 'CRM_Contact_DAO_Group', $gid, 'saved_search_id' );
-            }
-        }
+  /**
+   * build all the data structures needed to build the form
+   *
+   * @return void
+   * @access public
+   */
+  function preProcess() {
+    parent::preProcess();
+
+    $this->_id = $this->get('ssID');
+    if (!$this->_id) {
+      // fetch the value from the group id gid
+      $gid = $this->get('gid');
+      if ($gid) {
+        $this->_id = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Group', $gid, 'saved_search_id');
+      }
     }
+  }
 
-    /**
-     * This function sets the default values for the form.
-     * the default values are retrieved from the database
-     *
-     * @access public
-     * @return None
-     */
-    function setDefaultValues( ) {
+  /**
+   * This function sets the default values for the form.
+   * the default values are retrieved from the database
+   *
+   * @access public
+   *
+   * @return None
+   */
+  function setDefaultValues() {
 
-        $defaults = array( );
-        $params   = array( );
-        
-        $params = array( 'saved_search_id' => $this->_id );
-        require_once 'CRM/Contact/BAO/Group.php';
-        CRM_Contact_BAO_Group::retrieve( $params, $defaults );
+    $defaults = array();
+    $params = array();
 
-        return $defaults;
-    }
+    $params = array('saved_search_id' => $this->_id);
+    require_once 'CRM/Contact/BAO/Group.php';
+    CRM_Contact_BAO_Group::retrieve($params, $defaults);
 
+    return $defaults;
+  }
 }
-
 

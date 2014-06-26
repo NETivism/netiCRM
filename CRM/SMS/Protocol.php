@@ -1,5 +1,4 @@
 <?php
-
 /* +----------------------------------------------------------------------+
  * | SMS_Clickatell                                                       |
  * +----------------------------------------------------------------------+
@@ -18,6 +17,7 @@
  * +----------------------------------------------------------------------+
  */
 
+
 require_once 'PEAR.php';
 
 /**
@@ -35,87 +35,88 @@ require_once 'PEAR.php';
 
 abstract class CRM_SMS_Protocol {
 
-    /**
-     * We only need one instance of this object. So we use the singleton
-     * pattern and cache the instance in this variable
-     *
-     * @var object
-     * @static
-     */
-    static private $_singleton = null;
+  /**
+   * We only need one instance of this object. So we use the singleton
+   * pattern and cache the instance in this variable
+   *
+   * @var object
+   * @static
+   */
+  static private $_singleton = NULL;
 
-    /**  
-     * singleton function used to manage this object  
-     *  
-     * @return object  
-     * @static  
-     *  
-     */  
-    static function &singleton( ) {
-        if (self::$_singleton === null ) {
-            $config   = CRM_Core_Config::singleton( );
-            
-            $classPath = str_replace( '_', '/', $config->smsClass ) . '.php';
-            require_once($classPath);
-            self::$_singleton = eval( 'return ' . $config->smsClass . '::singleton( $mode );' );
-        }
-        return self::$_singleton;
+  /**
+   * singleton function used to manage this object
+   *
+   * @return object
+   * @static
+   *
+   */
+  static function &singleton() {
+    if (self::$_singleton === NULL) {
+      $config = CRM_Core_Config::singleton();
+
+      $classPath = str_replace('_', '/', $config->smsClass) . '.php';
+      require_once ($classPath);
+      self::$_singleton = eval('return ' . $config->smsClass . '::singleton( $mode );');
     }
+    return self::$_singleton;
+  }
 
-	/**
-	 * Delete message queued by  which has not been passed
-	 * onto the SMSC.
-	 *
-	 * @param	string	$id
-	 * @access	public
-	 */
-	abstract function deleteMessage ( $id );
+  /**
+   * Delete message queued by  which has not been passed
+   * onto the SMSC.
+   *
+   * @param	string	$id
+   * @access	public
+   */
+  abstract function deleteMessage($id);
 
-	/**
-	 * Query balance of remaining SMS credits
-	 *
-	 * @access	public
-	 */
-	abstract function getBalance ();
+  /**
+   * Query balance of remaining SMS credits
+   *
+   * @access	public
+   */
+  abstract function getBalance();
 
-	/**
-	 * Determine the cost of the message which was sent
-	 *
-	 * @param	string	$id
-     *
-	 * @access  public
-	 */
-	abstract function getMessageCharge( $id );
+  /**
+   * Determine the cost of the message which was sent
+   *
+   * @param	string	$id
+   *
+   * @access  public
+   */
+  abstract function getMessageCharge($id);
 
-	/**
-	 * Keep our session to the API Server valid.
-	 *
-	 * @access public
-	 */
-	abstract function ping ();
+  /**
+   * Keep our session to the API Server valid.
+   *
+   * @access public
+   */
+  abstract function ping();
 
-	/**
-	 * Query message status
-	 *
-	 * @access public
-	 */
-	abstract function queryMessage ($id);
+  /**
+   * Query message status
+   *
+   * @access public
+   */
+  abstract function queryMessage($id);
 
-	/**
-	 * Send an SMS Message via the API Server
-	 *
-	 * @param array the message with a to/from/text
-	 *
-	 * @access public
-	 */
-	abstract function sendMessage ( &$message );
+  /**
+   * Send an SMS Message via the API Server
+   *
+   * @param array the message with a to/from/text
+   *
+   * @access public
+   */
+  abstract function sendMessage(&$message);
 
-	/**
-	 * Spend a voucher which can be used for topping up of
-	 * sub user accounts.
-	 *
-	 * @param	string	voucher number
-	 * @access	public
-	 */
-	abstract function pay ($voucher);
+  /**
+   * Spend a voucher which can be used for topping up of
+   * sub user accounts.
+   *
+   * @param	string	voucher number
+   * @access	public
+   */
+  abstract function pay($voucher);
 }
+

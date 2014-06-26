@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -39,170 +38,183 @@ require_once 'CRM/Core/DAO/Cache.php';
 /**
  * BAO object for crm_log table
  */
+class CRM_Core_BAO_Cache extends CRM_Core_DAO_Cache {
+  static $_cache = NULL;
+  static
+  function &getItem($group, $path, $componentID = NULL) {
+    if (self::$_cache === NULL) {
+      self::$_cache = array();
+    }
+    $argString = "CRM_CT_{$group}_{$path}_{$componentID}";
+    if (!array_key_exists($argString, self::$_cache)) {
+      $cache = CRM_Utils_Cache::singleton();
+      self::$_cache[$argString] = $cache->get($argString);
+      if (!self::$_cache[$argString]) {
+        $dao = new CRM_Core_DAO_Cache();
 
-class CRM_Core_BAO_Cache extends CRM_Core_DAO_Cache
-{
-    static $_cache = NULL;
-    static function &getItem( $group, $path, $componentID = null ) {
-        if (self::$_cache === NULL) {
-          self::$_cache = array();
+        $dao->group_name = $group;
+        $dao->path = $path;
+        $dao->component_id = $componentID;
+
+        $data = NULL;
+        if ($dao->find(TRUE)) {
+          $data = unserialize($dao->data);
         }
-        $argString = "CRM_CT_{$group}_{$path}_{$componentID}";
-        if (!array_key_exists($argString, self::$_cache)) {
-          $cache = CRM_Utils_Cache::singleton();
-          self::$_cache[$argString] = $cache->get($argString);
-          if (!self::$_cache[$argString]) {
-            $dao = new CRM_Core_DAO_Cache();
+        $dao->free();
+        self::$_cache[$argString] = $data;
+        $cache->set($argString, self::$_cache[$argString]);
+      }
+    }
+    return self::$_cache[$argString];
+  }
 
-            $dao->group_name   = $group;
-            $dao->path         = $path;
-            $dao->component_id = $componentID;
+  static
+  function setItem(&$data, $group, $path, $componentID = NULL) {
+    if (self::$_cache === NULL) {
+      self::$_cache = array();
+    }
 
-            $data = NULL;
-            if ($dao->find(TRUE)) {
-              $data = unserialize($dao->data);
-            }
-            $dao->free();
-            self::$_cache[$argString] = $data;
-            $cache->set($argString, self::$_cache[$argString]);
+    $dao = new CRM_Core_DAO_Cache();
+
+    $dao->group_name = $group;
+    $dao->path = $path;
+    $dao->component_id = $componentID;
+
+    // get a lock so that multiple ajax requests on the same page
+    // dont trample on each other
+    // CRM-11234
+    $lockName = "civicrm.cache.{$group}_{$path}._{$componentID}";
+    $lock = new CRM_Core_Lock($lockName);
+    if (!$lock->isAcquired()) {
+      CRM_Core_Error::fatal();
+    }
+
+    $dao->find(TRUE);
+    $dao->data = serialize($data);
+    $dao->created_date = date('YmdHis');
+    $dao->save();
+
+    $lock->release();
+
+    $dao->free();
+
+    // cache coherency - refresh or remove dependent caches
+
+    $argString = "CRM_CT_{$group}_{$path}_{$componentID}";
+    $cache = CRM_Utils_Cache::singleton();
+    $data = unserialize($dao->data);
+    self::$_cache[$argString] = $data;
+    $cache->set($argString, $data);
+
+    $argString = "CRM_CT_CI_{$group}_{$componentID}";
+    unset(self::$_cache[$argString]);
+    $cache->delete($argString);
+  }
+
+  static
+  function deleteGroup($group = NULL) {
+    $dao = new CRM_Core_DAO_Cache();
+
+    if (!empty($group)) {
+      $dao->group_name = $group;
+    }
+    $dao->delete();
+
+    // also reset ACL Cache
+    require_once 'CRM/ACL/BAO/Cache.php';
+    CRM_ACL_BAO_Cache::resetCache();
+  }
+
+  static
+  function storeSessionToCache($names,
+    $resetSession = TRUE
+  ) {
+    // CRM_Core_Error::debug_var( 'names in store', $names );
+    foreach ($names as $key => $sessionName) {
+      if (is_array($sessionName)) {
+        if (!empty($_SESSION[$sessionName[0]][$sessionName[1]])) {
+          self::setItem($_SESSION[$sessionName[0]][$sessionName[1]],
+            'CiviCRM Session',
+            "{$sessionName[0]}_{$sessionName[1]}"
+          );
+          // CRM_Core_Error::debug_var( "session value for: {$sessionName[0]}_{$sessionName[1]}",
+          // $_SESSION[$sessionName[0]][$sessionName[1]] );
+          if ($resetSession) {
+            $_SESSION[$sessionName[0]][$sessionName[1]] = NULL;
+            unset($_SESSION[$sessionName[0]][$sessionName[1]]);
           }
         }
-        return self::$_cache[$argString];
-    }
-
-    static function setItem( &$data, $group, $path, $componentID = null ) {
-      if (self::$_cache === NULL) {
-        self::$_cache = array();
       }
-
-      $dao = new CRM_Core_DAO_Cache();
-
-      $dao->group_name   = $group;
-      $dao->path         = $path;
-      $dao->component_id = $componentID;
-
-      // get a lock so that multiple ajax requests on the same page
-      // dont trample on each other
-      // CRM-11234
-      $lockName = "civicrm.cache.{$group}_{$path}._{$componentID}";
-      $lock = new CRM_Core_Lock($lockName);
-      if (!$lock->isAcquired()) {
-        CRM_Core_Error::fatal();
+      else {
+        if (!empty($_SESSION[$sessionName])) {
+          self::setItem($_SESSION[$sessionName],
+            'CiviCRM Session',
+            $sessionName
+          );
+          // CRM_Core_Error::debug_var( "session value for: {$sessionName}",
+          // $_SESSION[$sessionName] );
+          if ($resetSession) {
+            $_SESSION[$sessionName] = NULL;
+            unset($_SESSION[$sessionName]);
+          }
+        }
       }
-
-      $dao->find(TRUE);
-      $dao->data = serialize($data);
-      $dao->created_date = date('YmdHis');
-      $dao->save();
-
-      $lock->release();
-
-      $dao->free();
-
-      // cache coherency - refresh or remove dependent caches
-
-      $argString = "CRM_CT_{$group}_{$path}_{$componentID}";
-      $cache = CRM_Utils_Cache::singleton();
-      $data = unserialize($dao->data);
-      self::$_cache[$argString] = $data;
-      $cache->set($argString, $data);
-
-      $argString = "CRM_CT_CI_{$group}_{$componentID}";
-      unset(self::$_cache[$argString]);
-      $cache->delete($argString);
     }
 
-    static function deleteGroup( $group = null ) {
-        $dao = new CRM_Core_DAO_Cache( );
-        
-        if ( ! empty( $group ) ) {
-            $dao->group_name = $group;
+    // CRM_Core_Error::debug_var( 'SESSION STATE STORE', $_SESSION );
+    self::cleanupCache();
+  }
+
+  static
+  function restoreSessionFromCache($names) {
+    // CRM_Core_Error::debug_var( 'names in restore', $names );
+    foreach ($names as $key => $sessionName) {
+      if (is_array($sessionName)) {
+        $value = self::getItem('CiviCRM Session',
+          "{$sessionName[0]}_{$sessionName[1]}"
+        );
+        if ($value) {
+          // CRM_Core_Error::debug( "session value for: {$sessionName[0]}_{$sessionName[1]}", $value );
+          $_SESSION[$sessionName[0]][$sessionName[1]] = $value;
         }
-        $dao->delete( );
-
-        // also reset ACL Cache
-        require_once 'CRM/ACL/BAO/Cache.php';
-        CRM_ACL_BAO_Cache::resetCache( );
-    }
-
-    static function storeSessionToCache( $names,
-                                         $resetSession = true ) {
-        // CRM_Core_Error::debug_var( 'names in store', $names );
-        foreach ( $names as $key => $sessionName ) {
-            if ( is_array( $sessionName ) ) {
-                if ( ! empty( $_SESSION[$sessionName[0]][$sessionName[1]] ) ) {
-                    self::setItem( $_SESSION[$sessionName[0]][$sessionName[1]],
-                                   'CiviCRM Session',
-                                   "{$sessionName[0]}_{$sessionName[1]}" );
-                    // CRM_Core_Error::debug_var( "session value for: {$sessionName[0]}_{$sessionName[1]}",
-                    // $_SESSION[$sessionName[0]][$sessionName[1]] );
-                    if ( $resetSession ) {
-                        $_SESSION[$sessionName[0]][$sessionName[1]] = null;
-                        unset( $_SESSION[$sessionName[0]][$sessionName[1]] );
-                    }
-                }
-            } else {
-                if ( ! empty( $_SESSION[$sessionName] ) ) {
-                    self::setItem( $_SESSION[$sessionName],
-                                   'CiviCRM Session',
-                                   $sessionName );
-                    // CRM_Core_Error::debug_var( "session value for: {$sessionName}",
-                    // $_SESSION[$sessionName] );
-                    if ( $resetSession ) {
-                        $_SESSION[$sessionName] = null;
-                        unset( $_SESSION[$sessionName] );
-                    }
-                }
-            }
+        else {
+          // CRM_Core_Error::debug_var( "session value for: {$sessionName[0]}_{$sessionName[1]} is null", $value );
         }
-
-        // CRM_Core_Error::debug_var( 'SESSION STATE STORE', $_SESSION );
-        self::cleanupCache( );
-    }
-
-    static function restoreSessionFromCache( $names ) {
-        // CRM_Core_Error::debug_var( 'names in restore', $names );
-        foreach ( $names as $key => $sessionName ) {
-            if ( is_array( $sessionName ) ) {
-                $value = self::getItem( 'CiviCRM Session',
-                                        "{$sessionName[0]}_{$sessionName[1]}" );
-                if ( $value ) {
-                    // CRM_Core_Error::debug( "session value for: {$sessionName[0]}_{$sessionName[1]}", $value ); 
-                    $_SESSION[$sessionName[0]][$sessionName[1]] = $value;
-                } else {
-                    // CRM_Core_Error::debug_var( "session value for: {$sessionName[0]}_{$sessionName[1]} is null", $value );
-                }
-            } else {
-                $value = self::getItem( 'CiviCRM Session',
-                                        $sessionName );
-                if ( $value ) {
-                    // CRM_Core_Error::debug( "session value for: {$sessionName}", $value );
-                    $_SESSION[$sessionName] = $value;
-                } else {
-                    // CRM_Core_Error::debug_var( "session value for: {$sessionName} is null", $value );
-                }
-            }
+      }
+      else {
+        $value = self::getItem('CiviCRM Session',
+          $sessionName
+        );
+        if ($value) {
+          // CRM_Core_Error::debug( "session value for: {$sessionName}", $value );
+          $_SESSION[$sessionName] = $value;
         }
-
-        // CRM_Core_Error::debug_var( 'SESSION STATE RESTORE', $_SESSION );
-        // CRM_Core_Error::debug_var( 'REQUEST', $_REQUEST );
+        else {
+          // CRM_Core_Error::debug_var( "session value for: {$sessionName} is null", $value );
+        }
+      }
     }
 
-    static function cleanupCache( ) {
-        // clean up the session cache every $cacheCleanUpNumber probabilistically
-        $cacheCleanUpNumber     = 1396;
+    // CRM_Core_Error::debug_var( 'SESSION STATE RESTORE', $_SESSION );
+    // CRM_Core_Error::debug_var( 'REQUEST', $_REQUEST );
+  }
 
-        // clean up all sessions older than $cacheTimeIntervalDays days
-        $cacheTimeIntervalDays  = 2;
+  static
+  function cleanupCache() {
+    // clean up the session cache every $cacheCleanUpNumber probabilistically
+    $cacheCleanUpNumber = 1396;
 
-        if ( mt_rand( 1, 100000 ) % 1396 == 0 ) {
-            $sql = "
+    // clean up all sessions older than $cacheTimeIntervalDays days
+    $cacheTimeIntervalDays = 2;
+
+    if (mt_rand(1, 100000) % 1396 == 0) {
+      $sql = "
 DELETE FROM civicrm_cache
 WHERE       group_name = 'CiviCRM Session'
 AND         created_date < date_sub( NOW( ), INTERVAL $cacheTimeIntervalDays day )
 ";
-            CRM_Core_DAO::executeQuery( $sql );
-        }
+      CRM_Core_DAO::executeQuery($sql);
     }
-                                         
+  }
 }
+

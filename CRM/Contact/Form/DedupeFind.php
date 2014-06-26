@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -38,81 +37,78 @@ require_once 'CRM/Admin/Form.php';
 
 /**
  * This class generates form components for DedupeRules
- * 
+ *
  */
-class CRM_Contact_Form_DedupeFind extends CRM_Admin_Form
-{
-    /**
-     * defined defaults
-     * 
-     */
+class CRM_Contact_Form_DedupeFind extends CRM_Admin_Form {
 
-    public $_defaults;
+  /**
+   * defined defaults
+   *
+   */
 
-    /**
-     * Function to pre processing
-     *
-     * @return None
-     * @access public
-     */
-    function preProcess()
-    {
-        $this->rgid   = CRM_Utils_Request::retrieve('rgid', 'Positive', $this, false, 0);
+  public $_defaults;
+
+  /**
+   * Function to pre processing
+   *
+   * @return None
+   * @access public
+   */ function preProcess() {
+    $this->rgid = CRM_Utils_Request::retrieve('rgid', 'Positive', $this, FALSE, 0);
+  }
+
+  /**
+   * Function to build the form
+   *
+   * @return None
+   * @access public
+   */
+  public function buildQuickForm() {
+
+    $groupList = CRM_Core_PseudoConstant::group();
+    $groupList[''] = ts('- All Contacts -');
+    asort($groupList);
+
+    $this->add('select', 'group_id', ts('Select Group'), $groupList);
+    $this->addButtons(array(
+        array('type' => 'next',
+          'name' => ts('Continue'),
+          'isDefault' => TRUE,
+        ),
+        //hack to support cancel button functionality
+        array('type' => 'submit',
+          'name' => ts('Cancel'),
+        ),
+      )
+    );
+  }
+
+  function setDefaultValues() {
+    return $this->_defaults;
+  }
+
+  /**
+   * Function to process the form
+   *
+   * @access public
+   *
+   * @return None
+   */
+  public function postProcess() {
+    $values = $this->exportValues();
+    if (CRM_Utils_Array::value('_qf_DedupeFind_submit', $_POST)) {
+      //used for cancel button
+      CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/contact/deduperules', 'reset=1'));
+      return;
+    }
+    if ($values['group_id']) {
+      $url = CRM_Utils_System::url('civicrm/contact/dedupefind', "reset=1&action=update&rgid={$this->rgid}&gid={$values['group_id']}");
+    }
+    else {
+      $url = CRM_Utils_System::url('civicrm/contact/dedupefind', "reset=1&action=update&rgid={$this->rgid}");
     }
 
-    /**
-     * Function to build the form
-     *
-     * @return None
-     * @access public
-     */
-    public function buildQuickForm()
-    {
-
-        $groupList = CRM_Core_PseudoConstant::group( );
-        $groupList[''] = ts('- All Contacts -') ;
-        asort($groupList);
-        
-        $this->add('select'  , 'group_id', ts('Select Group'), $groupList );
-        $this->addButtons( array(
-                                 array ( 'type'      => 'next',
-                                         'name'      => ts('Continue'),
-                                         'isDefault' => true   ),
-                                 //hack to support cancel button functionality
-                                 array ( 'type'      => 'submit', 
-                                         'name'      => ts('Cancel') ),
-                                 )
-                           );
-    }
-    
-    function setDefaultValues()
-    {
-        return $this->_defaults;
-    }
-
-    /**
-     * Function to process the form
-     *
-     * @access public
-     * @return None
-     */
-    public function postProcess() 
-    {
-        $values = $this->exportValues();
-        if ( CRM_Utils_Array::value( '_qf_DedupeFind_submit', $_POST ) ) {
-            //used for cancel button
-            CRM_Utils_System::redirect( CRM_Utils_System::url( 'civicrm/contact/deduperules','reset=1') );
-            return;
-        }
-        if ( $values['group_id'] ) {
-            $url = CRM_Utils_System::url( 'civicrm/contact/dedupefind', "reset=1&action=update&rgid={$this->rgid}&gid={$values['group_id']}" );
-        } else {
-            $url = CRM_Utils_System::url( 'civicrm/contact/dedupefind', "reset=1&action=update&rgid={$this->rgid}" );
-        }
-        
-        CRM_Utils_System::redirect($url);
-    }
-    
+    CRM_Utils_System::redirect($url);
+  }
 }
-
 

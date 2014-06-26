@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -39,17 +38,18 @@
  * an HTML link to documentation.
  *
  * @param array  $params the function params
- * @param object $smarty reference to the smarty object 
+ * @param object $smarty reference to the smarty object
  *
  * @return string HTML code of a link to documentation
  * @access public
  */
-function smarty_function_docURL( $params, &$smarty ) {
-    if ( ! isset( $smarty ) ) {
-        return;
-    } else {
-        require_once 'CRM/Utils/System.php';
-        return CRM_Utils_System::docURL( $params );
-    }
-    
+function smarty_function_docURL($params, &$smarty) {
+  if (!isset($smarty)) {
+    return;
+  }
+  else {
+    require_once 'CRM/Utils/System.php';
+    return CRM_Utils_System::docURL($params);
+  }
 }
+

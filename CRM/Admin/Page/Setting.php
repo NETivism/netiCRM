@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -40,16 +39,11 @@ require_once 'CRM/Core/Page.php';
  * Page for displaying list of categories for Settings
  */
 class CRM_Admin_Page_Setting extends CRM_Core_Page {
+  function run() {
 
-    function run() {
-        
-        CRM_Utils_System::setTitle(ts("Global Settings"));
-        
-        parent::run();
-    }   
+    CRM_Utils_System::setTitle(ts("Global Settings"));
+
+    parent::run();
+  }
 }
-
-
-
-
 

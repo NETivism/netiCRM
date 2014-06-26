@@ -51,6 +51,7 @@ class CRM_Mailing_Event_BAO_Resubscribe {
   public static function &resub_to_mailing($job_id, $queue_id, $hash) {
     /* First make sure there's a matching queue event */
 
+
     $q = CRM_Mailing_Event_BAO_Queue::verify($job_id, $queue_id, $hash);
     $success = NULL;
     if (!$q) {
@@ -58,8 +59,8 @@ class CRM_Mailing_Event_BAO_Resubscribe {
     }
 
     // check if this queue_id was actually unsubscribed
-    $ue                  = new CRM_Mailing_Event_BAO_Unsubscribe();
-    $ue->event_queue_id  = $queue_id;
+    $ue = new CRM_Mailing_Event_BAO_Unsubscribe();
+    $ue->event_queue_id = $queue_id;
     $ue->org_unsubscribe = 0;
     if (!$ue->find(TRUE)) {
       return $success;
@@ -70,12 +71,12 @@ class CRM_Mailing_Event_BAO_Resubscribe {
     require_once 'CRM/Core/Transaction.php';
     $transaction = new CRM_Core_Transaction();
 
-    $do      = new CRM_Core_DAO();
-    $mg      = CRM_Mailing_DAO_Group::getTableName();
-    $job     = CRM_Mailing_BAO_Job::getTableName();
+    $do = new CRM_Core_DAO();
+    $mg = CRM_Mailing_DAO_Group::getTableName();
+    $job = CRM_Mailing_BAO_Job::getTableName();
     $mailing = CRM_Mailing_BAO_Mailing::getTableName();
-    $group   = CRM_Contact_BAO_Group::getTableName();
-    $gc      = CRM_Contact_BAO_GroupContact::getTableName();
+    $group = CRM_Contact_BAO_Group::getTableName();
+    $gc = CRM_Contact_BAO_GroupContact::getTableName();
 
     //We Need the mailing Id for the hook...
     $do->query("SELECT $job.mailing_id as mailing_id 
@@ -101,6 +102,7 @@ class CRM_Mailing_Event_BAO_Resubscribe {
          * this mailing */
 
 
+
     $groups = array();
     $mailings = array();
 
@@ -115,6 +117,7 @@ class CRM_Mailing_Event_BAO_Resubscribe {
 
     /* As long as we have prior mailings, find their groups and add to the
          * list */
+
 
     while (!empty($mailings)) {
       $do->query("
@@ -144,6 +147,7 @@ class CRM_Mailing_Event_BAO_Resubscribe {
     /* Now we have a complete list of recipient groups.  Filter out all
          * those except smart groups and those that the contact belongs to */
 
+
     $do->query("
             SELECT      $group.id as group_id,
                         $group.title as title
@@ -172,8 +176,8 @@ class CRM_Mailing_Event_BAO_Resubscribe {
     }
 
     // remove entry from Unsubscribe table.
-    $ue                  = new CRM_Mailing_Event_BAO_Unsubscribe();
-    $ue->event_queue_id  = $queue_id;
+    $ue = new CRM_Mailing_Event_BAO_Unsubscribe();
+    $ue->event_queue_id = $queue_id;
     $ue->org_resubscribe = 0;
     if ($ue->find(TRUE)) {
       $ue->delete();
@@ -202,11 +206,11 @@ class CRM_Mailing_Event_BAO_Resubscribe {
     $config = CRM_Core_Config::singleton();
     $domain = CRM_Core_BAO_Domain::getDomain();
 
-    $jobTable     = CRM_Mailing_BAO_Job::getTableName();
+    $jobTable = CRM_Mailing_BAO_Job::getTableName();
     $mailingTable = CRM_Mailing_DAO_Mailing::getTableName();
-    $contacts     = CRM_Contact_DAO_Contact::getTableName();
-    $email        = CRM_Core_DAO_Email::getTableName();
-    $queue        = CRM_Mailing_Event_BAO_Queue::getTableName();
+    $contacts = CRM_Contact_DAO_Contact::getTableName();
+    $email = CRM_Core_DAO_Email::getTableName();
+    $queue = CRM_Mailing_Event_BAO_Queue::getTableName();
 
     //get the default domain email address.
     list($domainEmailName, $domainEmailAddress) = CRM_Core_BAO_Domain::getNameAndEmail();
@@ -251,10 +255,10 @@ class CRM_Mailing_Event_BAO_Resubscribe {
     $message = new Mail_mime("\n");
 
     list($addresses, $urls) = CRM_Mailing_BAO_Mailing::getVerpAndUrls($job, $queue_id, $eq->hash, $eq->email);
-    $bao            = new CRM_Mailing_BAO_Mailing();
+    $bao = new CRM_Mailing_BAO_Mailing();
     $bao->body_text = $text;
     $bao->body_html = $html;
-    $tokens         = $bao->getTokens();
+    $tokens = $bao->getTokens();
     require_once 'CRM/Utils/Token.php';
     if ($eq->format == 'HTML' || $eq->format == 'Both') {
       $html = CRM_Utils_Token::replaceDomainTokens($html, $domain, TRUE, $tokens['html']);

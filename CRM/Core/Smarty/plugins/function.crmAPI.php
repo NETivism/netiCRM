@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -36,57 +35,59 @@
 
 /**
  */
-function smarty_function_crmAPI( $params, &$smarty ) {
+function smarty_function_crmAPI($params, &$smarty) {
 
-    //  $mandatorypVars = array( 'entity', 'method','assign');
-    $fnGroup = ucfirst($params['entity']);
-    if ( strpos( $fnGroup, '_' ) ) {
-        $fnGroup    = explode( '_', $fnGroup );
-        $fnGroup[1] = ucfirst( $fnGroup[1] );
-        $fnGroup    = implode( '', $fnGroup );
-    }
-    
-    if ( $fnGroup == 'Contribution' ) {
-        $fnGroup = 'Contribute';
-    }
-    
-    $apiFile = "api/v2/{$fnGroup}.php";
-    require_once $apiFile;
-    $fnName = "civicrm_{$params['entity']}_{$params['action']}";
-    if ( ! function_exists( $fnName ) ) {
-        $smarty->trigger_error("Unknown function called: $fnName");
-        return;
-    }
-    // trap all fatal errors
-    require_once 'CRM/Utils/REST.php';
-    CRM_Core_Error::setCallback( array( 'CRM_Utils_REST', 'fatal' ) );
-    unset ($params ['entity']);
-    unset ($params ['method']);
-    unset ($params ['assign']);
-    if (!empty($params['return'])) {
-        $return= explode(",", $params['return']);
-        foreach ($return as $r) {
-            $params ["return.".trim($r)] = 1;
-        }
-        unset ($params ['return']);
-    }
-    $result = $fnName( $params );
-    CRM_Core_Error::setCallback( );
-    if ( $result === false ) {
-        $smarty->trigger_error("Unkown error");
-        return;
-    }
-    if (empty($params['var'])) {
-        $smarty->trigger_error("assign: missing 'var' parameter");
-        return;
-    }
+  //  $mandatorypVars = array( 'entity', 'method','assign');
+  $fnGroup = ucfirst($params['entity']);
+  if (strpos($fnGroup, '_')) {
+    $fnGroup = explode('_', $fnGroup);
+    $fnGroup[1] = ucfirst($fnGroup[1]);
+    $fnGroup = implode('', $fnGroup);
+  }
 
-    if (!empty($params['json'])) {
-      $smarty->assign($params["var"],json_encode($result));
-    } else {
-      $smarty->assign($params["var"],$result);
+  if ($fnGroup == 'Contribution') {
+    $fnGroup = 'Contribute';
+  }
+
+  $apiFile = "api/v2/{$fnGroup}.php";
+  require_once $apiFile;
+  $fnName = "civicrm_{$params['entity']}_{$params['action']}";
+  if (!function_exists($fnName)) {
+    $smarty->trigger_error("Unknown function called: $fnName");
+    return;
+  }
+  // trap all fatal errors
+  require_once 'CRM/Utils/REST.php';
+  CRM_Core_Error::setCallback(array('CRM_Utils_REST', 'fatal'));
+  unset($params['entity']);
+  unset($params['method']);
+  unset($params['assign']);
+  if (!empty($params['return'])) {
+    $return = explode(",", $params['return']);
+    foreach ($return as $r) {
+      $params["return." . trim($r)] = 1;
     }
+    unset($params['return']);
+  }
+  $result = $fnName($params);
+  CRM_Core_Error::setCallback();
+  if ($result === FALSE) {
+    $smarty->trigger_error("Unkown error");
+    return;
+  }
+  if (empty($params['var'])) {
+    $smarty->trigger_error("assign: missing 'var' parameter");
+    return;
+  }
+
+  if (!empty($params['json'])) {
+    $smarty->assign($params["var"], json_encode($result));
+  }
+  else {
+    $smarty->assign($params["var"], $result);
+  }
 }
 
 
-?>
+
+

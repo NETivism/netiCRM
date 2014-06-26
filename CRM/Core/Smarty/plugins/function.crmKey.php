@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -42,8 +41,8 @@
  *
  * @return string the generated key
  */
-function smarty_function_crmKey($params, &$smarty)
-{
-    require_once 'CRM/Core/Key.php';
-    return CRM_Core_Key::get($params['name']);
+function smarty_function_crmKey($params, &$smarty) {
+  require_once 'CRM/Core/Key.php';
+  return CRM_Core_Key::get($params['name']);
 }
+

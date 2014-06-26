@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -38,44 +37,47 @@ require_once 'CRM/Admin/Form/Setting.php';
 
 /**
  * This class generates form components for Search Parameters
- * 
+ *
  */
-class CRM_Admin_Form_Setting_Search extends  CRM_Admin_Form_Setting
-{
-    /**
-     * Function to build the form
-     *
-     * @return None
-     * @access public
-     */
-    public function buildQuickForm( ) {
-        CRM_Utils_System::setTitle(ts('Settings - Contacts Search'));
+class CRM_Admin_Form_Setting_Search extends CRM_Admin_Form_Setting {
 
-        $this->addYesNo( 'includeWildCardInName'   , ts( 'Automatic Wildcard' ));
-        $this->addYesNo( 'includeEmailInName'      , ts( 'Include Email' ));
-        $this->addYesNo( 'includeNickNameInName'   , ts( 'Include Nickname' ));
+  /**
+   * Function to build the form
+   *
+   * @return None
+   * @access public
+   */
+  public function buildQuickForm() {
+    CRM_Utils_System::setTitle(ts('Settings - Contacts Search'));
 
-        $this->addYesNo( 'includeAlphabeticalPager', ts( 'Include Alphabetical Pager' ) ); 
-        $this->addYesNo( 'includeOrderByClause'    , ts( 'Include Order By Clause' ) ); 
+    $this->addYesNo('includeWildCardInName', ts('Automatic Wildcard'));
+    $this->addYesNo('includeEmailInName', ts('Include Email'));
+    $this->addYesNo('includeNickNameInName', ts('Include Nickname'));
 
-        $this->addElement('text', 'smartGroupCacheTimeout', ts('Smart group cache timeout'),
-                          array( 'size' => 3, 'maxlength' => 5 ) );
-       
-        require_once "CRM/Core/BAO/UFGroup.php";
-        $types    = array( 'Contact', 'Individual', 'Organization', 'Household' );
-        $profiles = CRM_Core_BAO_UFGroup::getProfiles( $types ); 
+    $this->addYesNo('includeAlphabeticalPager', ts('Include Alphabetical Pager'));
+    $this->addYesNo('includeOrderByClause', ts('Include Order By Clause'));
 
-        $this->add( 'select', 'defaultSearchProfileID', ts('Default Contact Search Profile'),
-                    array('' => ts('- select -')) + $profiles );
-        require_once 'CRM/Core/OptionGroup.php';
-        $options = array( ts('Contact Name') => 1 ) + array_flip( CRM_Core_OptionGroup::values( 'contact_autocomplete_options', 
-                                                                                                false, false, true ) );
-        $this->addCheckBox( 'autocompleteContactSearch', 'Autocomplete Contact Search', $options, 
-                            null, null, null, null, array( '&nbsp;&nbsp;' ) );
-        $element = $this->getElement( 'autocompleteContactSearch' );
-        $element->_elements[0]->_flagFrozen = true;
-        parent::buildQuickForm();    
-    }
+    $this->addElement('text', 'smartGroupCacheTimeout', ts('Smart group cache timeout'),
+      array('size' => 3, 'maxlength' => 5)
+    );
+
+    require_once "CRM/Core/BAO/UFGroup.php";
+    $types = array('Contact', 'Individual', 'Organization', 'Household');
+    $profiles = CRM_Core_BAO_UFGroup::getProfiles($types);
+
+    $this->add('select', 'defaultSearchProfileID', ts('Default Contact Search Profile'),
+      array('' => ts('- select -')) + $profiles
+    );
+    require_once 'CRM/Core/OptionGroup.php';
+    $options = array(ts('Contact Name') => 1) + array_flip(CRM_Core_OptionGroup::values('contact_autocomplete_options',
+        FALSE, FALSE, TRUE
+      ));
+    $this->addCheckBox('autocompleteContactSearch', 'Autocomplete Contact Search', $options,
+      NULL, NULL, NULL, NULL, array('&nbsp;&nbsp;')
+    );
+    $element = $this->getElement('autocompleteContactSearch');
+    $element->_elements[0]->_flagFrozen = TRUE;
+    parent::buildQuickForm();
+  }
 }
-
 

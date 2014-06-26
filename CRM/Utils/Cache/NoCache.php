@@ -32,7 +32,6 @@
  * $Id$
  *
  */
-
 class CRM_Utils_Cache_NoCache implements CRM_Utils_Cache_Interface {
 
   /**
@@ -50,9 +49,7 @@ class CRM_Utils_Cache_NoCache implements CRM_Utils_Cache_Interface {
    * @param array   $config  an array of configuration params
    *
    * @return void
-   */
-  function __construct($config) {
-  }
+   */ function __construct($config) {}
 
   function set($key, &$value) {
     return FALSE;

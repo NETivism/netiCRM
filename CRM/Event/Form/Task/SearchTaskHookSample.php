@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -39,22 +38,21 @@ require_once 'CRM/Event/Form/Task.php';
  * This class provides the functionality to save a search
  * Saved Searches are used for saving frequently used queries
  */
-class CRM_Event_Form_Task_SearchTaskHookSample extends CRM_Event_Form_Task 
-{
-    /**
-     * build all the data structures needed to build the form
-     *
-     * @return void
-     * @access public
-     */
-    function preProcess( ) 
-    {
-        parent::preProcess( );
-        $rows = array( );
-        // display name and participation details of participants
-        $participantIDs = implode( ',', $this->_participantIds );      
+class CRM_Event_Form_Task_SearchTaskHookSample extends CRM_Event_Form_Task {
 
-        $query = "
+  /**
+   * build all the data structures needed to build the form
+   *
+   * @return void
+   * @access public
+   */
+  function preProcess() {
+    parent::preProcess();
+    $rows = array();
+    // display name and participation details of participants
+    $participantIDs = implode(',', $this->_participantIds);
+
+    $query = "
      SELECT p.fee_amount as amount,
             p.register_date as register_date,
             p.source as source,   
@@ -62,32 +60,33 @@ class CRM_Event_Form_Task_SearchTaskHookSample extends CRM_Event_Form_Task
        FROM civicrm_participant p
  INNER JOIN civicrm_contact ct ON ( p.contact_id = ct.id )
       WHERE p.id IN ( $participantIDs )";
-        
-        $dao = CRM_Core_DAO::executeQuery( $query, CRM_Core_DAO::$_nullArray );
-        while ( $dao->fetch( ) ) {
-            $rows[]= array(
-                           'display_name'  => $dao->display_name,
-                           'amount'        => $dao->amount,
-                           'register_date' => CRM_Utils_Date::customFormat( $dao->register_date ),
-                           'source'        => $dao->source
-                           );
-        }
-        $this->assign( 'rows', $rows );
+
+    $dao = CRM_Core_DAO::executeQuery($query, CRM_Core_DAO::$_nullArray);
+    while ($dao->fetch()) {
+      $rows[] = array(
+        'display_name' => $dao->display_name,
+        'amount' => $dao->amount,
+        'register_date' => CRM_Utils_Date::customFormat($dao->register_date),
+        'source' => $dao->source,
+      );
     }
-    
-    /**
-     * Function to actually build the form
-     *
-     * @return None
-     * @access public
-     */
-    public function buildQuickForm( ) 
-    {
-        $this->addButtons( array(
-                                 array ( 'type'      => 'done',
-                                         'name'      => ts('Done'),
-                                         'isDefault' => true ),
-                                 )
-                           );
-    }
+    $this->assign('rows', $rows);
+  }
+
+  /**
+   * Function to actually build the form
+   *
+   * @return None
+   * @access public
+   */
+  public function buildQuickForm() {
+    $this->addButtons(array(
+        array('type' => 'done',
+          'name' => ts('Done'),
+          'isDefault' => TRUE,
+        ),
+      )
+    );
+  }
 }
+

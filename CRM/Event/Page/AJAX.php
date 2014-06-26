@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -37,46 +36,44 @@
 /**
  * This class contains all the function that are called using AJAX
  */
-class CRM_Event_Page_AJAX
-{
-    /**
-     * Function for building Event combo box
-     */
-    function event( )
-    {
-        require_once 'CRM/Utils/Type.php';
-        $name = trim( CRM_Utils_Type::escape( $_GET['s'], 'String' ) );
-        if ( ! $name ){
-            $name = '%';
-        }
-        $whereClause = " title LIKE '$name%' AND ( civicrm_event.is_template IS NULL OR civicrm_event.is_template = 0 )";
-        
-        $query = "
+class CRM_Event_Page_AJAX {
+
+  /**
+   * Function for building Event combo box
+   */
+  function event() {
+    require_once 'CRM/Utils/Type.php';
+    $name = trim(CRM_Utils_Type::escape($_GET['s'], 'String'));
+    if (!$name) {
+      $name = '%';
+    }
+    $whereClause = " title LIKE '$name%' AND ( civicrm_event.is_template IS NULL OR civicrm_event.is_template = 0 )";
+
+    $query = "
 SELECT title, id
 FROM civicrm_event
 WHERE {$whereClause}
 ORDER BY title
 ";
-        $dao = CRM_Core_DAO::executeQuery( $query );
-        while ( $dao->fetch( ) ) {
-            echo $elements = "$dao->title|$dao->id\n";
-        }
-        CRM_Utils_System::civiExit( );
+    $dao = CRM_Core_DAO::executeQuery($query);
+    while ($dao->fetch()) {
+      echo $elements = "$dao->title|$dao->id\n";
     }
+    CRM_Utils_System::civiExit();
+  }
 
-    /**
-     * Function for building Event Type combo box
-     */
-    function eventType( )
-    {
-        require_once 'CRM/Utils/Type.php';
-        $name = trim( CRM_Utils_Type::escape( $_GET['s'], 'String' ) );
-        if( !$name ) {
-            $name = '%';
-        }
-        $whereClause = " v.label LIKE '$name%' ";
-        
-        $query ="
+  /**
+   * Function for building Event Type combo box
+   */
+  function eventType() {
+    require_once 'CRM/Utils/Type.php';
+    $name = trim(CRM_Utils_Type::escape($_GET['s'], 'String'));
+    if (!$name) {
+      $name = '%';
+    }
+    $whereClause = " v.label LIKE '$name%' ";
+
+    $query = "
 SELECT v.label ,v.value
 FROM   civicrm_option_value v,
        civicrm_option_group g
@@ -86,87 +83,89 @@ AND v.is_active = 1
 AND {$whereClause}
 ORDER by v.weight";
 
-        $dao = CRM_Core_DAO::executeQuery( $query );
-            while ( $dao->fetch( ) ) {
-                echo $elements = "$dao->label|$dao->value\n";
-            }
-            CRM_Utils_System::civiExit( );
+    $dao = CRM_Core_DAO::executeQuery($query);
+    while ($dao->fetch()) {
+      echo $elements = "$dao->label|$dao->value\n";
+    }
+    CRM_Utils_System::civiExit();
+  }
+
+  /**
+   * Function for building EventFee combo box
+   */
+  function eventFee() {
+    require_once 'CRM/Utils/Type.php';
+    $name = trim(CRM_Utils_Type::escape($_GET['s'], 'String'));
+    if (!$name) {
+      $name = '%';
     }
 
-    /**
-     * Function for building EventFee combo box
-     */
-    function eventFee( )
-    {
-        require_once 'CRM/Utils/Type.php';
-        $name = trim( CRM_Utils_Type::escape( $_GET['s'], 'String' ) );
-        if( !$name ) {
-            $name = '%';
-        }
-        
-        $whereClause = "cv.label LIKE '$name%' ";
-        
-        $query = "
+    $whereClause = "cv.label LIKE '$name%' ";
+
+    $query = "
 SELECT distinct(cv.label), cv.id
 FROM civicrm_option_value cv, civicrm_option_group cg
 WHERE cg.name LIKE 'civicrm_event.amount%'
    AND cg.id = cv.option_group_id AND {$whereClause}
    GROUP BY cv.label
 ";
-        $dao = CRM_Core_DAO::executeQuery( $query );
-        while ( $dao->fetch( ) ) {
-            echo $elements = "$dao->label|$dao->id\n";
-        }
-        CRM_Utils_System::civiExit( );
+    $dao = CRM_Core_DAO::executeQuery($query);
+    while ($dao->fetch()) {
+      echo $elements = "$dao->label|$dao->id\n";
     }
-    
-    function eventList(  ) {
-        require_once "CRM/Event/BAO/Event.php";
-        $events = CRM_Event_BAO_Event::getEvents( true );
+    CRM_Utils_System::civiExit();
+  }
 
-        $elements = array( array( 'name'  => ts('- select -'),
-                                  'value' => '' ) );
-        foreach ( $events as $id => $name ) {
-            $elements[] = array( 'name'  => $name,
-                                 'value' => $id );
-        }
+  function eventList() {
+    require_once "CRM/Event/BAO/Event.php";
+    $events = CRM_Event_BAO_Event::getEvents(TRUE);
 
-        require_once "CRM/Utils/JSON.php";
-        echo json_encode( $elements );
-        CRM_Utils_System::civiExit( );
-    } 
-
-    /**
-     * Function to get default participant role
-     */
-    function participantRole( ) {
-        
-        require_once 'CRM/Utils/Type.php';
-        
-        $eventID = $_GET['eventId'] ;
-       
-        $defaultRoleId = CRM_Core_DAO::getFieldValue( 'CRM_Event_DAO_Event', 
-                                                      $eventID, 
-                                                      'default_role_id',
-                                                      'id'
-                                                      );
-        require_once "CRM/Utils/JSON.php";
-        $participantRole = array( 'role' => $defaultRoleId );
-        echo json_encode( $participantRole );
-        CRM_Utils_System::civiExit( );
-    } 
-
-    /**
-     * Function to get Event Full or left seat
-     */
-    function eventFull(){
-        $id = $_GET['id'] ? $_GET['id'] : ($_GET['eventId'] ? $_GET['eventId'] : null);
-        $info = array();
-        if(is_numeric($id) && !empty($id)){
-            $seat = CRM_Event_BAO_Participant::eventFull($id, TRUE);
-            $info['seat'] = $seat;
-        }
-        echo json_encode( $info );
-        CRM_Utils_System::civiExit( );
+    $elements = array(array('name' => ts('- select -'),
+        'value' => '',
+      ));
+    foreach ($events as $id => $name) {
+      $elements[] = array('name' => $name,
+        'value' => $id,
+      );
     }
+
+    require_once "CRM/Utils/JSON.php";
+    echo json_encode($elements);
+    CRM_Utils_System::civiExit();
+  }
+
+  /**
+   * Function to get default participant role
+   */
+  function participantRole() {
+
+    require_once 'CRM/Utils/Type.php';
+
+    $eventID = $_GET['eventId'];
+
+    $defaultRoleId = CRM_Core_DAO::getFieldValue('CRM_Event_DAO_Event',
+      $eventID,
+      'default_role_id',
+      'id'
+    );
+    require_once "CRM/Utils/JSON.php";
+    $participantRole = array('role' => $defaultRoleId);
+    echo json_encode($participantRole);
+    CRM_Utils_System::civiExit();
+  }
+
+  /**
+   * Function to get Event Full or left seat
+   */
+  function eventFull() {
+    $id = $_GET['id'] ? $_GET['id'] : ($_GET['eventId'] ? $_GET['eventId'] : NULL);
+    $info = array();
+    if (is_numeric($id) && !empty($id)) {
+      $seat = CRM_Event_BAO_Participant::eventFull($id, TRUE);
+      $info['seat'] = $seat;
+    }
+    echo json_encode($info);
+    CRM_Utils_System::civiExit();
+  }
 }
+

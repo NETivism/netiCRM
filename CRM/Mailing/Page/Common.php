@@ -39,9 +39,9 @@ require_once 'CRM/Core/Page.php';
 class CRM_Mailing_Page_Common extends CRM_Core_Page {
   protected $_type = NULL; function run() {
     require_once 'CRM/Utils/Request.php';
-    $job_id   = CRM_Utils_Request::retrieve('jid', 'Integer', CRM_Core_DAO::$_nullObject);
+    $job_id = CRM_Utils_Request::retrieve('jid', 'Integer', CRM_Core_DAO::$_nullObject);
     $queue_id = CRM_Utils_Request::retrieve('qid', 'Integer', CRM_Core_DAO::$_nullObject);
-    $hash     = CRM_Utils_Request::retrieve('h', 'String', CRM_Core_DAO::$_nullObject);
+    $hash = CRM_Utils_Request::retrieve('h', 'String', CRM_Core_DAO::$_nullObject);
 
     if (!$job_id ||
       !$queue_id ||

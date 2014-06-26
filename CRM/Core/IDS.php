@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -33,60 +32,58 @@
  * $Id$
  *
  */
-
-
 class CRM_Core_IDS {
 
-    /**
-     * define the threshold for the ids reactions
-     */
-    private $threshold = array(
-                               'log'      => 25,
-                               'warn'     => 50,
-                               'kick'     => 75
-                               );
+  /**
+   * define the threshold for the ids reactions
+   */
+  private $threshold = array(
+    'log' => 25,
+    'warn' => 50,
+    'kick' => 75,
+  );
 
+  /**
+   * the init object
+   */
+  private $init = NULL;
 
-    /**
-     * the init object
-     */
-    private $init = NULL;
+  /**
+   * This function includes the IDS vendor parts and runs the
+   * detection routines on the request array.
+   *
+   * @param object cake controller object
+   *
+   * @return boolean
+   */
+  public function check(&$args) {
 
-    /**
-     * This function includes the IDS vendor parts and runs the
-     * detection routines on the request array.
-     *
-     * @param object cake controller object
-     * @return boolean
-     */
-    public function check( &$args ) {
+    // lets bypass a few civicrm urls from this check
+    static $skip = array('civicrm/ajax', 'civicrm/admin/setting/updateConfigBackend', 'civicrm/admin/messageTemplates');
+    $path = implode('/', $args);
+    if (in_array($path, $skip)) {
+      return;
+    }
 
-        // lets bypass a few civicrm urls from this check
-      static $skip = array( 'civicrm/ajax', 'civicrm/admin/setting/updateConfigBackend', 'civicrm/admin/messageTemplates' );
-      $path = implode( '/', $args );
-      if ( in_array( $path, $skip ) ) {
-          return;
-      }
+    #add request url and user agent
+    $_REQUEST['IDS_request_uri'] = $_SERVER['REQUEST_URI'];
+    if (isset($_SERVER['HTTP_USER_AGENT'])) {
+      $_REQUEST['IDS_user_agent'] = $_SERVER['HTTP_USER_AGENT'];
+    }
 
-        #add request url and user agent
-      $_REQUEST['IDS_request_uri'] = $_SERVER['REQUEST_URI'];
-      if (isset($_SERVER['HTTP_USER_AGENT'])) {
-          $_REQUEST['IDS_user_agent'] = $_SERVER['HTTP_USER_AGENT'];
-      }
-      
-      require_once 'IDS/Init.php';
+    require_once 'IDS/Init.php';
 
-      // init the PHPIDS and pass the REQUEST array
-      $config =& CRM_Core_Config::singleton( );
+    // init the PHPIDS and pass the REQUEST array
+    $config = &CRM_Core_Config::singleton();
 
-      $configFile = $config->configAndLogDir . 'Config.IDS.ini';
-      if ( ! file_exists( $configFile ) ) {
-          $tmpDir = empty( $config->uploadDir ) ? CIVICRM_TEMPLATE_COMPILEDIR : $config->uploadDir;
-          // also clear the stat cache in case we are upgrading
-          clearstatcache( );
+    $configFile = $config->configAndLogDir . 'Config.IDS.ini';
+    if (!file_exists($configFile)) {
+      $tmpDir = empty($config->uploadDir) ? CIVICRM_TEMPLATE_COMPILEDIR : $config->uploadDir;
+      // also clear the stat cache in case we are upgrading
+      clearstatcache();
 
-          global $civicrm_root;
-          $contents = "
+      global $civicrm_root;
+      $contents = "
 [General]
     filter_type         = xml
     filter_path         = {$civicrm_root}/packages/IDS/default_filter.xml
@@ -124,113 +121,115 @@ class CRM_Core_IDS {
     exceptions[]        = data
     exceptions[]        = instructions
 ";
-            if ( file_put_contents( $configFile, $contents ) === false ) {
-                require_once 'CRM/Core/Error.php';
-                CRM_Core_Error::movedSiteError( $configFile );
-            }
+      if (file_put_contents($configFile, $contents) === FALSE) {
+        require_once 'CRM/Core/Error.php';
+        CRM_Core_Error::movedSiteError($configFile);
+      }
 
 
-            // also create the .htaccess file so we prevent the reading of the log and ini files
-            // via a browser, CRM-3875
-            require_once 'CRM/Utils/File.php';
-            CRM_Utils_File::restrictAccess($config->configAndLogDir);
-        }
-
-        $init    = IDS_Init::init( $configFile );
-        $ids     = new IDS_Monitor($_REQUEST, $init);
-        $result  = $ids->run();
-
-        if ( ! $result->isEmpty( ) ) {
-            $this->react($result);
-        }
-
-        return true;
+      // also create the .htaccess file so we prevent the reading of the log and ini files
+      // via a browser, CRM-3875
+      require_once 'CRM/Utils/File.php';
+      CRM_Utils_File::restrictAccess($config->configAndLogDir);
     }
 
-    /**
-     * This function rects on the values in
-     * the incoming results array.
-     *
-     * Depending on the impact value certain actions are
-     * performed.
-     *
-     * @param IDS_Report $result
-     * @return boolean
-     */
-    private function react(IDS_Report $result) {
+    $init = IDS_Init::init($configFile);
+    $ids = new IDS_Monitor($_REQUEST, $init);
+    $result = $ids->run();
 
-        $impact = $result->getImpact( );
-        if ($impact >= $this->threshold['kick']) {
-            $this->log($result, 3, $impact);
-            $this->kick($result);
-            return true;
-        } else if ($impact >= $this->threshold['warn']) {
-            $this->log($result, 2, $impact);
-            $this->warn($result);
-            return true;
-        } else if ($impact >= $this->threshold['log']) {
-            $this->log($result, 0, $impact);
-            return true;
-        } else {
-            return true;
-        }
+    if (!$result->isEmpty()) {
+      $this->react($result);
     }
 
-    /**
-     * This function writes an entry about the intrusion
-     * to the intrusion database
-     *
-     * @param array $results
-     * @return boolean
-     */
-    private function log($result, $reaction = 0) {
+    return TRUE;
+  }
 
-        $ip = ($_SERVER['SERVER_ADDR'] != '127.0.0.1') ?
-            $_SERVER['SERVER_ADDR'] :
-            (isset($_SERVER['HTTP_X_FORWARDED_FOR']) ?
-             $_SERVER['HTTP_X_FORWARDED_FOR'] :
-             '127.0.0.1');
+  /**
+   * This function rects on the values in
+   * the incoming results array.
+   *
+   * Depending on the impact value certain actions are
+   * performed.
+   *
+   * @param IDS_Report $result
+   *
+   * @return boolean
+   */
+  private function react(IDS_Report$result) {
 
-        $data = array( );
-        $session = CRM_Core_Session::singleton( );
-        foreach ($result as $event) {
-            $data[] = array(
-                            'name'      => $event->getName(),
-                            'value'     => stripslashes($event->getValue()),
-                            'page'      => $_SERVER['REQUEST_URI'],
-                            'userid'    => $session->get( 'userID' ),
-                            'session'   => session_id() ? session_id() : '0',
-                            'ip'        => $ip,
-                            'reaction'  => $reaction,
-                            'impact'    => $result->getImpact()
-                            );
-        }
+    $impact = $result->getImpact();
+    if ($impact >= $this->threshold['kick']) {
+      $this->log($result, 3, $impact);
+      $this->kick($result);
+      return TRUE;
+    }
+    elseif ($impact >= $this->threshold['warn']) {
+      $this->log($result, 2, $impact);
+      $this->warn($result);
+      return TRUE;
+    }
+    elseif ($impact >= $this->threshold['log']) {
+      $this->log($result, 0, $impact);
+      return TRUE;
+    }
+    else {
+      return TRUE;
+    }
+  }
 
-        CRM_Core_Error::debug_var( 'IDS Detector Details', $data );
-        return true;
+  /**
+   * This function writes an entry about the intrusion
+   * to the intrusion database
+   *
+   * @param array $results
+   *
+   * @return boolean
+   */
+  private function log($result, $reaction = 0) {
+
+    $ip = ($_SERVER['SERVER_ADDR'] != '127.0.0.1') ? $_SERVER['SERVER_ADDR'] : (isset($_SERVER['HTTP_X_FORWARDED_FOR']) ?
+      $_SERVER['HTTP_X_FORWARDED_FOR'] :
+      '127.0.0.1'
+    );
+
+    $data = array();
+    $session = CRM_Core_Session::singleton();
+    foreach ($result as $event) {
+      $data[] = array(
+        'name' => $event->getName(),
+        'value' => stripslashes($event->getValue()),
+        'page' => $_SERVER['REQUEST_URI'],
+        'userid' => $session->get('userID'),
+        'session' => session_id() ? session_id() : '0',
+        'ip' => $ip,
+        'reaction' => $reaction,
+        'impact' => $result->getImpact(),
+      );
     }
 
-    /**
-     * //todo
-     *
-     *
-     */
-    private function warn($result) {
-        return $result;
-    }
+    CRM_Core_Error::debug_var('IDS Detector Details', $data);
+    return TRUE;
+  }
 
-    /**
-     *  //todo
-     *
-     *
-     */
-    private function kick($result) {
-        $session = CRM_Core_Session::singleton( );
-        $session->reset( 2 );
+  /**
+   * //todo
+   *
+   *
+   */
+  private function warn($result) {
+    return $result;
+  }
 
-        CRM_Core_Error::fatal( ts( 'There is a validation error with your HTML input. Your activity is a bit suspicious, hence aborting' ) );
-    }
+  /**
+   *  //todo
+   *
+   *
+   */
+  private function kick($result) {
+    $session = CRM_Core_Session::singleton();
+    $session->reset(2);
+
+    CRM_Core_Error::fatal(ts('There is a validation error with your HTML input. Your activity is a bit suspicious, hence aborting'));
+  }
 }
-
-
 

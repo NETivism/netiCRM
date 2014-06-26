@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -33,89 +32,92 @@
  * $Id$
  *
  */
-
 class CRM_Bridge_OG_Utils {
+  CONST aclEnabled = 1, syncFromCiviCRM = 1;
 
-    const
-        aclEnabled      = 1,
-        syncFromCiviCRM = 1;
+  static
+  function aclEnabled() {
+    return self::aclEnabled;
+  }
 
-    static function aclEnabled( ) {
-        return self::aclEnabled;
+  static
+  function syncFromCiviCRM() {
+    // make sure that acls are not enabled
+    return !self::aclEnabled & self::syncFromCiviCRM;
+  }
+
+  static
+  function ogSyncName($ogID) {
+    return "OG Sync Group :{$ogID}:";
+  }
+
+  static
+  function ogSyncACLName($ogID) {
+    return "OG Sync Group ACL :{$ogID}:";
+  }
+
+  static
+  function ogID($groupID, $abort = TRUE) {
+    $source = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Group',
+      $groupID,
+      'source'
+    );
+
+    if (strpos($source, 'OG Sync Group') !== FALSE) {
+      preg_match('/:(\d+):$/', $source, $matches);
+      if (is_numeric($matches[1])) {
+        return $matches[1];
+      }
+    }
+    if ($abort) {
+      CRM_Core_Error::fatal();
+    }
+    return NULL;
+  }
+
+  static
+  function contactID($ufID) {
+    require_once 'api/v2/UFGroup.php';
+    $contactID = civicrm_uf_match_id_get($ufID);
+    if ($contactID) {
+      return $contactID;
     }
 
-    static function syncFromCiviCRM( ) {
-        // make sure that acls are not enabled
-        return ! self::aclEnabled & self::syncFromCiviCRM;
+    // else create a contact for this user
+    $user = user_load(array('uid' => $ufID));
+    $params = array('contact_type' => 'Individual',
+      'email' => $user->mail,
+    );
+
+    require_once 'api/v2/Contact.php';
+    $values = civicrm_contact_add($params);
+    if ($values['is_error']) {
+      CRM_Core_Error::fatal();
     }
-    
-    static function ogSyncName( $ogID ) {
-        return "OG Sync Group :{$ogID}:";
-    }
+    return $values['contact_id'];
+  }
 
-    static function ogSyncACLName( $ogID ) {
-        return "OG Sync Group ACL :{$ogID}:";
-    }
-
-    static function ogID( $groupID, $abort = true ) {
-        $source = CRM_Core_DAO::getFieldValue( 'CRM_Contact_DAO_Group',
-                                               $groupID,
-                                               'source' );
-
-        if ( strpos( $source, 'OG Sync Group' ) !== false ) {
-            preg_match( '/:(\d+):$/', $source, $matches );
-            if ( is_numeric( $matches[1] ) ) {
-                return $matches[1];
-            }
-        }
-        if ( $abort ) {
-            CRM_Core_Error::fatal( );
-        }
-        return null;
-    }
-
-    static function contactID( $ufID ) {
-        require_once 'api/v2/UFGroup.php';
-        $contactID = civicrm_uf_match_id_get( $ufID );
-        if ( $contactID ) {
-            return $contactID;
-        }
-
-        // else create a contact for this user
-        $user = user_load( array( 'uid' => $ufID ) );
-        $params = array( 'contact_type' => 'Individual',
-                         'email'        => $user->mail, );
-
-        require_once 'api/v2/Contact.php';
-        $values = civicrm_contact_add( $params );
-        if ( $values['is_error'] ) {
-            CRM_Core_Error::fatal( );
-        }
-        return $values['contact_id'];
-    }
-
-    static function groupID( $source, $title = null, $abort = false ) {
-        $query  = "
+  static
+  function groupID($source, $title = NULL, $abort = FALSE) {
+    $query = "
 SELECT id
   FROM civicrm_group
  WHERE source = %1";
-        $params = array( 1 => array( $source, 'String' ) );
+    $params = array(1 => array($source, 'String'));
 
-        if ( $title ) {
-            $query .= " OR title = %2";
-            $params[2] = array( $title, 'String' );
-        }
-                         
-        $groupID = CRM_Core_DAO::singleValueQuery( $query, $params );
-        if ( $abort &&
-             ! $groupID ) {
-            CRM_Core_Error::fatal( );
-        }
-
-        return $groupID;
+    if ($title) {
+      $query .= " OR title = %2";
+      $params[2] = array($title, 'String');
     }
 
+    $groupID = CRM_Core_DAO::singleValueQuery($query, $params);
+    if ($abort &&
+      !$groupID
+    ) {
+      CRM_Core_Error::fatal();
+    }
 
+    return $groupID;
+  }
 }
-
 

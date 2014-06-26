@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -39,8 +38,5 @@
  */
 
 require_once 'CRM/Core/Component/Config.php';
-
-class CRM_Case_Config extends CRM_Core_Component_Config {
-
-}
+class CRM_Case_Config extends CRM_Core_Component_Config {}
 

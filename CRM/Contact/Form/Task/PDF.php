@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -41,84 +40,82 @@ require_once 'CRM/Core/Menu.php';
 require_once 'CRM/Core/BAO/CustomGroup.php';
 require_once 'CRM/Contact/BAO/Contact.php';
 require_once 'CRM/Activity/BAO/Activity.php';
+
 /**
  * This class provides the functionality to create PDF letter for a group of
- * contacts or a single contact. 
+ * contacts or a single contact.
  */
 class CRM_Contact_Form_Task_PDF extends CRM_Contact_Form_Task {
-    /**
-     * all the existing templates in the system
-     *
-     * @var array
-     */
-    public $_templates = null;
-	
-	public $_single    = null;
-	
-	public $_cid       = null;
-	
-    /**
-     * build all the data structures needed to build the form
-     *
-     * @return void
-     * @access public
-     */
-    
-    function preProcess( ) {
-        CRM_Contact_Form_Task_PDFLetterCommon::preProcess( $this );
 
-        // store case id if present
-        $this->_caseId = CRM_Utils_Request::retrieve( 'caseid', 'Positive', $this, false );
+  /**
+   * all the existing templates in the system
+   *
+   * @var array
+   */
+  public $_templates = NULL;
 
-        // retrieve contact ID if this is 'single' mode
-        $cid = CRM_Utils_Request::retrieve( 'cid', 'Positive', $this, false );
-        
-        $this->_activityId = CRM_Utils_Request::retrieve( 'id', 'Positive', $this, false );
-        
-        if ( $cid ) {
-            CRM_Contact_Form_Task_PDFLetterCommon::preProcessSingle( $this, $cid );
-            $this->_single = true;
-            $this->_cid = $cid;
-        } else {
-            parent::preProcess( );
-        }
-        $this->assign( 'single', $this->_single );
+  public $_single = NULL;
 
+  public $_cid = NULL;
+
+  /**
+   * build all the data structures needed to build the form
+   *
+   * @return void
+   * @access public
+   */ function preProcess() {
+    CRM_Contact_Form_Task_PDFLetterCommon::preProcess($this);
+
+    // store case id if present
+    $this->_caseId = CRM_Utils_Request::retrieve('caseid', 'Positive', $this, FALSE);
+
+    // retrieve contact ID if this is 'single' mode
+    $cid = CRM_Utils_Request::retrieve('cid', 'Positive', $this, FALSE);
+
+    $this->_activityId = CRM_Utils_Request::retrieve('id', 'Positive', $this, FALSE);
+
+    if ($cid) {
+      CRM_Contact_Form_Task_PDFLetterCommon::preProcessSingle($this, $cid);
+      $this->_single = TRUE;
+      $this->_cid = $cid;
     }
-    function setDefaultValues( ) 
-    {
-        if ( isset( $this->_activityId ) ) {
-            $params = array( 'id' => $this->_activityId );
-            CRM_Activity_BAO_Activity::retrieve( $params, $defaults );
-            $defaults['html_message'] = $defaults['details'];
-            return $defaults;
-        }
-        
+    else {
+      parent::preProcess();
     }
-    
-    /**
-     * Build the form
-     *
-     * @access public
-     * @return void
-     */
-    public function buildQuickForm()
-    {
-        //enable form element
-        $this->assign( 'suppressForm', false );
-        CRM_Contact_Form_Task_PDFLetterCommon::buildQuickForm( $this );
-    }
+    $this->assign('single', $this->_single);
+  }
 
-    /**
-     * process the form after the input has been submitted and validated
-     *
-     * @access public
-     * @return None
-     */
-    public function postProcess() {
-        CRM_Contact_Form_Task_PDFLetterCommon::postProcess( $this );
+  function setDefaultValues() {
+    if (isset($this->_activityId)) {
+      $params = array('id' => $this->_activityId);
+      CRM_Activity_BAO_Activity::retrieve($params, $defaults);
+      $defaults['html_message'] = $defaults['details'];
+      return $defaults;
     }
+  }
 
+  /**
+   * Build the form
+   *
+   * @access public
+   *
+   * @return void
+   */
+  public function buildQuickForm() {
+    //enable form element
+    $this->assign('suppressForm', FALSE);
+    CRM_Contact_Form_Task_PDFLetterCommon::buildQuickForm($this);
+  }
+
+  /**
+   * process the form after the input has been submitted and validated
+   *
+   * @access public
+   *
+   * @return None
+   */
+  public function postProcess() {
+    CRM_Contact_Form_Task_PDFLetterCommon::postProcess($this);
+  }
 }
-
 

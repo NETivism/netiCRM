@@ -163,8 +163,8 @@ class CRM_Mailing_Form_Schedule extends CRM_Core_Form {
       $this->_scheduleFormOnly
     ) {
       // add the preview elements
-      $preview            = array();
-      $preview['type']    = CRM_Core_DAO::getFieldValue('CRM_Mailing_DAO_Mailing', $this->_mailingID, 'body_html') ? 'html' : 'text';
+      $preview = array();
+      $preview['type'] = CRM_Core_DAO::getFieldValue('CRM_Mailing_DAO_Mailing', $this->_mailingID, 'body_html') ? 'html' : 'text';
       $preview['subject'] = CRM_Core_DAO::getFieldValue('CRM_Mailing_DAO_Mailing',
         $this->_mailingID,
         'subject'
@@ -269,7 +269,8 @@ class CRM_Mailing_Form_Schedule extends CRM_Core_Form {
     }
 
     foreach (array(
-      'now', 'start_date', 'start_date_time') as $parameter) {
+        'now', 'start_date', 'start_date_time',
+      ) as $parameter) {
       $params[$parameter] = $this->controller->exportValue($this->_name,
         $parameter
       );
@@ -278,9 +279,9 @@ class CRM_Mailing_Form_Schedule extends CRM_Core_Form {
     $mailing = new CRM_Mailing_BAO_Mailing();
     $mailing->id = $ids['mailing_id'];
     if ($mailing->find(TRUE)) {
-      $job             = new CRM_Mailing_BAO_Job();
+      $job = new CRM_Mailing_BAO_Job();
       $job->mailing_id = $mailing->id;
-      $job->is_test    = 0;
+      $job->is_test = 0;
       if ($job->find(TRUE)) {
         CRM_Core_Error::fatal(ts('A job for this mailing already exists'));
       }
@@ -315,6 +316,7 @@ class CRM_Mailing_Form_Schedule extends CRM_Core_Form {
         $mailing->approval_date = CRM_Utils_Date::isoToMysql($mailing->approval_date);
       }
       */
+
 
       // also set the scheduled_id
       $session = CRM_Core_Session::singleton();

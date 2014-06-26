@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -35,16 +34,18 @@
  */
 
 /**
- * Function to load a context. If name is asked for only name data is returned. 
+ * Function to load a context. If name is asked for only name data is returned.
  * And if name is not provided whole context is returned.
  *
  */
-function smarty_function_crmDBTpl( $params, &$smarty ) {
-    // $vars = array( 'context', 'name', 'assign' ); out of which name is optional
+function smarty_function_crmDBTpl($params, &$smarty) {
+  // $vars = array( 'context', 'name', 'assign' ); out of which name is optional
 
-    require_once 'CRM/Core/BAO/Persistent.php';
-    $contextNameData = CRM_Core_BAO_Persistent::getContext( $params['context'],
-                                                            CRM_Utils_Array::value( 'name', $params ) );
-    $smarty->assign( $params['var'], $contextNameData );
+  require_once 'CRM/Core/BAO/Persistent.php';
+  $contextNameData = CRM_Core_BAO_Persistent::getContext($params['context'],
+    CRM_Utils_Array::value('name', $params)
+  );
+  $smarty->assign($params['var'], $contextNameData);
 }
-?>
+
+

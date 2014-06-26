@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -35,54 +34,53 @@
  */
 
 require_once 'CRM/Member/DAO/MembershipLog.php';
+class CRM_Member_BAO_MembershipLog extends CRM_Member_DAO_MembershipLog {
 
-class CRM_Member_BAO_MembershipLog extends CRM_Member_DAO_MembershipLog 
-{
+  /**
+   * function to add the membership log record
+   *
+   * @param array $params reference array contains the values submitted by the form
+   * @param array $ids    reference array contains the id
+   *
+   * @access public
+   * @static
+   *
+   * @return object
+   */
+  static
+  function add(&$params, &$ids) {
+    $membershipLog = new CRM_Member_DAO_MembershipLog();
+    $membershipLog->copyValues($params);
 
-    /**
-     * function to add the membership log record
-     *
-     * @param array $params reference array contains the values submitted by the form
-     * @param array $ids    reference array contains the id
-     * 
-     * @access public
-     * @static 
-     * @return object
-     */
-    static function add(&$params, &$ids) 
-    {
-        $membershipLog              = new CRM_Member_DAO_MembershipLog( );
-        $membershipLog->copyValues( $params );
-        
-        $membershipLog->save( );
-        $membershipLog->free( );
-        
-        return $membershipLog;
-    }
-    
-    /**
-     * Function to delete membership log record 
-     * 
-     * @param int $membershipTypeId
-     * @static
-     */
-    
-    static function del( $membershipID ) 
-    {
-        $membershipLog  = new CRM_Member_DAO_MembershipLog( );
-        $membershipLog->membership_id = $membershipID ;
-        return $membershipLog->delete();
-    }
+    $membershipLog->save();
+    $membershipLog->free();
 
-    static function resetModifiedID( $contactID ) {
-        $query = "
+    return $membershipLog;
+  }
+
+  /**
+   * Function to delete membership log record
+   *
+   * @param int $membershipTypeId
+   * @static
+   */
+
+  static
+  function del($membershipID) {
+    $membershipLog = new CRM_Member_DAO_MembershipLog();
+    $membershipLog->membership_id = $membershipID;
+    return $membershipLog->delete();
+  }
+
+  static
+  function resetModifiedID($contactID) {
+    $query = "
 UPDATE civicrm_membership_log
    SET modified_id = null
  WHERE modified_id = %1";
 
-        $params = array( 1 => array( $contactID, 'Integer' ) );
-        CRM_Core_DAO::executeQuery( $query, $params );
-    }
-
+    $params = array(1 => array($contactID, 'Integer'));
+    CRM_Core_DAO::executeQuery($query, $params);
+  }
 }
 

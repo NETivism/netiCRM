@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -41,149 +40,151 @@ require_once 'CRM/Core/DAO/UFJoin.php';
  */
 class CRM_Core_BAO_UFJoin extends CRM_Core_DAO_UFJoin {
 
-    /**
-     * takes an associative array and creates a uf join object
-     *
-     * @param array $params (reference) an assoc array of name/value pairs
-     *
-     * @return object CRM_Core_DAO_UFJoin object 
-     * @access public
-     * @static
-     */
-    public static function &create($params) {
-        // see if a record exists with the same weight
-        $id = self::findJoinEntryId( $params );
-        if ( $id ) {
-            $params['id'] = $id;
-        }
-
-        $dao = new CRM_Core_DAO_UFJoin( ); 
-        $dao->copyValues( $params ); 
-        if ( $params['uf_group_id'] ) {
-            $dao->save( ); 
-        } else { 
-            $dao->delete( );
-        }
-
-        return $dao; 
-    } 
-
-    public static function &deleteAll( &$params ) {
-        $module      = CRM_Utils_Array::value( 'module'     , $params);
-        $entityTable = CRM_Utils_Array::value( 'entity_table', $params);
-        $entityID    = CRM_Utils_Array::value( 'entity_id'   , $params);
-
-        if ( empty( $entityTable ) ||
-             empty( $entityID ) ||
-             empty( $module ) ) {
-            return;
-        }
-
-        $dao = new CRM_Core_DAO_UFJoin( );
-        $dao->module       = $module;
-        $dao->entity_table = $entityTable;
-        $dao->entity_id    = $entityID;
-        $dao->delete();
+  /**
+   * takes an associative array and creates a uf join object
+   *
+   * @param array $params (reference) an assoc array of name/value pairs
+   *
+   * @return object CRM_Core_DAO_UFJoin object
+   * @access public
+   * @static
+   */
+  public static function &create($params) {
+    // see if a record exists with the same weight
+    $id = self::findJoinEntryId($params);
+    if ($id) {
+      $params['id'] = $id;
     }
 
-    /**
-     * Given an assoc list of params, find if there is a record
-     * for this set of params
-     *
-     * @param array $params (reference) an assoc array of name/value pairs 
-     * 
-     * @return int or null
-     * @access public
-     * @static
-     */
-    public static function findJoinEntryId(&$params) {
-        if ( CRM_Utils_Array::value( 'id', $params ) ) {
-            return $params['id'];
-        }
-
-        $dao = new CRM_Core_DAO_UFJoin( );
-        
-        // CRM-4377 (ab)uses the module column
-        if (isset($params['module'])) {
-            $dao->module = CRM_Utils_Array::value('module', $params);
-        }
-        $dao->entity_table = CRM_Utils_Array::value( 'entity_table', $params );
-        $dao->entity_id    = CRM_Utils_Array::value( 'entity_id'   , $params );
-        // user reg / my account can have multiple entries, so we return if thats
-        // the case. (since entity_table/id is empty in those cases
-        if ( ! $dao->entity_table ||
-             ! $dao->entity_id ) {
-            return null;
-        }
-        $dao->weight       = CRM_Utils_Array::value( 'weight'      , $params );
-        if ( $dao->find( true ) ) {
-            return $dao->id;
-        }
-        return null;
+    $dao = new CRM_Core_DAO_UFJoin();
+    $dao->copyValues($params);
+    if ($params['uf_group_id']) {
+      $dao->save();
+    }
+    else {
+      $dao->delete();
     }
 
-    /**
-     * Given an assoc list of params, find if there is a record
-     * for this set of params and return the group id
-     *
-     * @param array $params (reference) an assoc array of name/value pairs 
-     * 
-     * @return int or null
-     * @access public
-     * @static
-     */
-    public static function findUFGroupId(&$params) { 
-    
-        $dao = new CRM_Core_DAO_UFJoin( ); 
-         
-        $dao->entity_table = CRM_Utils_Array::value( 'entity_table', $params );
-        $dao->entity_id    = CRM_Utils_Array::value( 'entity_id'   , $params );
-        $dao->weight       = CRM_Utils_Array::value( 'weight'      , $params );
-        if ( $dao->find( true ) ) { 
-            return $dao->uf_group_id; 
-        } 
-        return null; 
-    } 
+    return $dao;
+  }
 
-    public static function getUFGroupIds(&$params) { 
-    
-        $dao = new CRM_Core_DAO_UFJoin( ); 
-         
-        // CRM-4377 (ab)uses the module column
-        if (isset($params['module'])) {
-            $dao->module = CRM_Utils_Array::value('module', $params);
-        }
-        $dao->entity_table = CRM_Utils_Array::value( 'entity_table', $params );
-        $dao->entity_id    = CRM_Utils_Array::value( 'entity_id'   , $params );
-        $dao->orderBy( 'weight asc' );
+  public static function &deleteAll(&$params) {
+    $module = CRM_Utils_Array::value('module', $params);
+    $entityTable = CRM_Utils_Array::value('entity_table', $params);
+    $entityID = CRM_Utils_Array::value('entity_id', $params);
 
-        $first = $second  = $firstActive = $secondActive = null;
-        $firstWeight = null;
-        $dao->find( );
-        if ( $dao->fetch( ) ) {
-            $first       = $dao->uf_group_id;
-            $firstWeight = $dao->weight;
-            $firstActive = $dao->is_active;
-        }
-        while ( $dao->fetch( ) ) {
-            if ( $first != $dao->uf_group_id ) {
-                $second = $dao->uf_group_id; 
-                $secondActive = $dao->is_active;
-                break;
-            }
-        } 
+    if (empty($entityTable) ||
+      empty($entityID) ||
+      empty($module)
+    ) {
+      return;
+    }
 
-        // if there is only one profile check to see the weight, if > 1 then let it be second
-        // this is an approx rule, but should work in most cases.
-        if ( $second == null &&
-             $firstWeight > 1 ) {
-            $second = $first;
-            $first  = null;
-        }
+    $dao = new CRM_Core_DAO_UFJoin();
+    $dao->module = $module;
+    $dao->entity_table = $entityTable;
+    $dao->entity_id = $entityID;
+    $dao->delete();
+  }
 
-        return array( $first, $second, $firstActive, $secondActive );
-    } 
+  /**
+   * Given an assoc list of params, find if there is a record
+   * for this set of params
+   *
+   * @param array $params (reference) an assoc array of name/value pairs
+   *
+   * @return int or null
+   * @access public
+   * @static
+   */
+  public static function findJoinEntryId(&$params) {
+    if (CRM_Utils_Array::value('id', $params)) {
+      return $params['id'];
+    }
 
+    $dao = new CRM_Core_DAO_UFJoin();
+
+    // CRM-4377 (ab)uses the module column
+    if (isset($params['module'])) {
+      $dao->module = CRM_Utils_Array::value('module', $params);
+    }
+    $dao->entity_table = CRM_Utils_Array::value('entity_table', $params);
+    $dao->entity_id = CRM_Utils_Array::value('entity_id', $params);
+    // user reg / my account can have multiple entries, so we return if thats
+    // the case. (since entity_table/id is empty in those cases
+    if (!$dao->entity_table ||
+      !$dao->entity_id
+    ) {
+      return NULL;
+    }
+    $dao->weight = CRM_Utils_Array::value('weight', $params);
+    if ($dao->find(TRUE)) {
+      return $dao->id;
+    }
+    return NULL;
+  }
+
+  /**
+   * Given an assoc list of params, find if there is a record
+   * for this set of params and return the group id
+   *
+   * @param array $params (reference) an assoc array of name/value pairs
+   *
+   * @return int or null
+   * @access public
+   * @static
+   */
+  public static function findUFGroupId(&$params) {
+
+    $dao = new CRM_Core_DAO_UFJoin();
+
+    $dao->entity_table = CRM_Utils_Array::value('entity_table', $params);
+    $dao->entity_id = CRM_Utils_Array::value('entity_id', $params);
+    $dao->weight = CRM_Utils_Array::value('weight', $params);
+    if ($dao->find(TRUE)) {
+      return $dao->uf_group_id;
+    }
+    return NULL;
+  }
+
+  public static function getUFGroupIds(&$params) {
+
+    $dao = new CRM_Core_DAO_UFJoin();
+
+    // CRM-4377 (ab)uses the module column
+    if (isset($params['module'])) {
+      $dao->module = CRM_Utils_Array::value('module', $params);
+    }
+    $dao->entity_table = CRM_Utils_Array::value('entity_table', $params);
+    $dao->entity_id = CRM_Utils_Array::value('entity_id', $params);
+    $dao->orderBy('weight asc');
+
+    $first = $second = $firstActive = $secondActive = NULL;
+    $firstWeight = NULL;
+    $dao->find();
+    if ($dao->fetch()) {
+      $first = $dao->uf_group_id;
+      $firstWeight = $dao->weight;
+      $firstActive = $dao->is_active;
+    }
+    while ($dao->fetch()) {
+      if ($first != $dao->uf_group_id) {
+        $second = $dao->uf_group_id;
+        $secondActive = $dao->is_active;
+        break;
+      }
+    }
+
+    // if there is only one profile check to see the weight, if > 1 then let it be second
+    // this is an approx rule, but should work in most cases.
+    if ($second == NULL &&
+      $firstWeight > 1
+    ) {
+      $second = $first;
+      $first = NULL;
+    }
+
+    return array($first, $second, $firstActive, $secondActive);
+  }
 }
-
 

@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -47,28 +46,27 @@ require_once 'CRM/Core/Session.php';
  * The second form is used to process search results with the asscociated actions
  *
  */
-
 class CRM_Activity_Controller_Search extends CRM_Core_Controller {
 
-    /**
-     * class constructor
-     */
-    function __construct( $title = null, $modal = true, $action = CRM_Core_Action::NONE ) {
-        require_once 'CRM/Activity/StateMachine/Search.php';
+  /**
+   * class constructor
+   */
+  function __construct($title = NULL, $modal = TRUE, $action = CRM_Core_Action::NONE) {
+    require_once 'CRM/Activity/StateMachine/Search.php';
 
-        parent::__construct( $title, $modal );
+    parent::__construct($title, $modal);
 
-        $this->_stateMachine = new CRM_Activity_StateMachine_Search( $this, $action );
+    $this->_stateMachine = new CRM_Activity_StateMachine_Search($this, $action);
 
-        // create and instantiate the pages
-        $this->addPages( $this->_stateMachine, $action );
+    // create and instantiate the pages
+    $this->addPages($this->_stateMachine, $action);
 
-        // add all the actions
-        $this->addActions( );
-    }
+    // add all the actions
+    $this->addActions();
+  }
 
-    public function selectorName( ) {
-        return $this->get( 'selectorName' );
-    }
-
+  public function selectorName() {
+    return $this->get('selectorName');
+  }
 }
+

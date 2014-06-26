@@ -201,7 +201,7 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
    */
   public function buildQuickForm() {
     $session = CRM_Core_Session::singleton();
-    $config  = CRM_Core_Config::singleton();
+    $config = CRM_Core_Config::singleton();
     $options = array();
     $tempVar = FALSE;
 
@@ -226,14 +226,16 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
 
     $this->add('select', 'from_email_address',
       ts('From Email Address'), array(
-        '' => '- select -') + $fromEmailAddress, TRUE
+        '' => '- select -',
+      ) + $fromEmailAddress, TRUE
     );
 
     // Added code to add custom field as Reply-To on form when it is enabled from Mailer settings
     if ($config->replyTo && !CRM_Utils_Array::value('override_verp', $options)) {
       $this->add('select', 'reply_to_address', ts('Reply-To'),
         array(
-          '' => '- select -') + $fromEmailAddress
+          '' => '- select -',
+        ) + $fromEmailAddress
       );
     }
     elseif (CRM_Utils_Array::value('override_verp', $options)) {
@@ -335,9 +337,9 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
   }
 
   public function postProcess() {
-    $params       = $ids = array();
+    $params = $ids = array();
     $uploadParams = array('header_id', 'footer_id', 'subject', 'from_name', 'from_email');
-    $fileType     = array('textFile', 'htmlFile');
+    $fileType = array('textFile', 'htmlFile');
 
     $formValues = $this->controller->exportValues($this->_name);
 
@@ -465,6 +467,7 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
 
     /* Build the mailing object */
 
+
     require_once 'CRM/Mailing/BAO/Mailing.php';
     CRM_Mailing_BAO_Mailing::create($params, $ids);
 
@@ -498,9 +501,9 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
           $urlParams .= "&qfKey=$qfKey";
         }
 
-        $session  = CRM_Core_Session::singleton();
+        $session = CRM_Core_Session::singleton();
         $draftURL = CRM_Utils_System::url('civicrm/mailing/browse/unscheduled', 'scheduled=false&reset=1');
-        $status   = ts("Your mailing has been saved. You can continue later by clicking the 'Continue' action to resume working on it.<br /> From <a href='%1'>Draft and Unscheduled Mailings</a>.", array(1 => $draftURL));
+        $status = ts("Your mailing has been saved. You can continue later by clicking the 'Continue' action to resume working on it.<br /> From <a href='%1'>Draft and Unscheduled Mailings</a>.", array(1 => $draftURL));
         CRM_Core_Session::setStatus($status);
 
         //replace user context to search.
@@ -572,7 +575,8 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
 
     // set $header and $footer
     foreach (array(
-      'header', 'footer') as $part) {
+        'header', 'footer',
+      ) as $part) {
       $$part = array();
       if ($params["{$part}_id"]) {
         //echo "found<p>";
@@ -612,7 +616,8 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
     }
 
     foreach (array(
-      'text', 'html') as $file) {
+        'text', 'html',
+      ) as $file) {
       if (!$params['upload_type'] && !file_exists(CRM_Utils_Array::value('tmp_name', $files[$file . 'File']))) {
         continue;
       }
@@ -625,18 +630,20 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
         $name = $files[$file . 'File']['name'];
       }
       else {
-        $str  = $params[$file . '_message'];
-        $str  = ($file == 'html') ? str_replace('%7B', '{', str_replace('%7D', '}', $str)) : $str;
+        $str = $params[$file . '_message'];
+        $str = ($file == 'html') ? str_replace('%7B', '{', str_replace('%7D', '}', $str)) : $str;
         $name = $file . ' message';
       }
 
       /* append header/footer */
+
 
       $str = $header[$file . 'File'] . $str . $footer[$file . 'File'];
 
       $dataErrors = array();
 
       /* First look for missing tokens */
+
 
       $err = CRM_Utils_Token::requiredTokens($str);
       if ($err !== TRUE) {
@@ -651,6 +658,7 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
              * contact and domain, and the first organization. */
 
 
+
       // here we make a dummy mailing object so that we
       // can retrieve the tokens that we need to replace
       // so that we do get an invalid token error
@@ -659,10 +667,10 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
       // make it a bit more elegant
 
       require_once 'CRM/Mailing/BAO/Mailing.php';
-      $dummy_mail        = new CRM_Mailing_BAO_Mailing();
-      $mess              = "body_{$file}";
+      $dummy_mail = new CRM_Mailing_BAO_Mailing();
+      $mess = "body_{$file}";
       $dummy_mail->$mess = $str;
-      $tokens            = $dummy_mail->getTokens();
+      $tokens = $dummy_mail->getTokens();
 
       $str = CRM_Utils_Token::replaceSubscribeInviteTokens($str);
       $str = CRM_Utils_Token::replaceDomainTokens($str, $domain, NULL, $tokens[$file]);
@@ -680,7 +688,8 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
       }
       if (!empty($dataErrors)) {
         $errors[$file . 'File'] = ts('The following errors were detected in %1:', array(
-          1 => $name)) . ' <ul>' . implode('', $dataErrors) . '</ul><br /><a href="' . CRM_Utils_System::docURL2('Sample CiviMail Messages', TRUE) . '" target="_blank">' . ts('More information on required tokens...') . '</a>';
+            1 => $name,
+          )) . ' <ul>' . implode('', $dataErrors) . '</ul><br /><a href="' . CRM_Utils_System::docURL2('Sample CiviMail Messages', TRUE) . '" target="_blank">' . ts('More information on required tokens...') . '</a>';
       }
     }
 

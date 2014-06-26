@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /*
  +--------------------------------------------------------------------+
@@ -35,15 +35,17 @@
  */
 
 require_once 'CRM/Utils/Hook.php';
-
 class CRM_Utils_Hook_Standalone extends CRM_Utils_Hook {
 
-    static function invoke( $numParams,
-                            &$arg1, &$arg2, &$arg3, &$arg4, &$arg5,
-                            $fnSuffix ) {
-        require_once 'standalone/hooks.php';
-        return parent::invoke( $numParams, $arg1, $arg2, $arg3, $arg4, $arg5,
-                        $fnSuffix, 'standalone' );
-    }
-
+  static
+  function invoke($numParams,
+    &$arg1, &$arg2, &$arg3, &$arg4, &$arg5,
+    $fnSuffix
+  ) {
+    require_once 'standalone/hooks.php';
+    return parent::invoke($numParams, $arg1, $arg2, $arg3, $arg4, $arg5,
+      $fnSuffix, 'standalone'
+    );
+  }
 }
+

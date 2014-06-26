@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -35,66 +34,63 @@
  */
 
 require_once 'CRM/Core/Page.php';
-
 class CRM_Contact_Page_View_Log extends CRM_Core_Page {
 
-   /**
-     * This function is called when action is browse
-     * 
-     * return null
-     * @access public
-     */
-    function browse( ) {
-        require_once 'CRM/Core/DAO/Log.php';
+  /**
+   * This function is called when action is browse
+   *
+   * return null
+   * @access public
+   */
+  function browse() {
+    require_once 'CRM/Core/DAO/Log.php';
 
-        $log = new CRM_Core_DAO_Log( );
-        
-        $log->entity_table = 'civicrm_contact';
-        $log->entity_id    = $this->_contactId;
-        $log->orderBy( 'modified_date desc' );
-        $log->find( );
+    $log = new CRM_Core_DAO_Log();
 
-        $logEntries = array( );
-        while ( $log->fetch( ) ) {
-            list( $displayName, $contactImage ) = CRM_Contact_BAO_Contact::getDisplayAndImage( $log->modified_id );
-            $logEntries[] = array( 'id'    => $log->modified_id,
-                                   'name'  => $displayName,
-                                   'image' => $contactImage,
-                                   'date'  => $log->modified_date,
-                                   'data'  => $log->data,
-                                 );
-        }
+    $log->entity_table = 'civicrm_contact';
+    $log->entity_id = $this->_contactId;
+    $log->orderBy('modified_date desc');
+    $log->find();
 
-        $this->assign( 'logCount', count( $logEntries ) );
-        $this->assign_by_ref( 'log', $logEntries );
+    $logEntries = array();
+    while ($log->fetch()) {
+      list($displayName, $contactImage) = CRM_Contact_BAO_Contact::getDisplayAndImage($log->modified_id);
+      $logEntries[] = array('id' => $log->modified_id,
+        'name' => $displayName,
+        'image' => $contactImage,
+        'date' => $log->modified_date,
+        'data' => $log->data,
+      );
     }
 
-    function preProcess() {
-        $this->_contactId = CRM_Utils_Request::retrieve( 'cid', 'Positive', $this, true );
-        $this->assign( 'contactId', $this->_contactId );
+    $this->assign('logCount', count($logEntries));
+    $this->assign_by_ref('log', $logEntries);
+  }
 
-        // check logged in url permission
-        require_once 'CRM/Contact/Page/View.php';
-        CRM_Contact_Page_View::checkUserPermission( $this );
-        
-        $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this, false, 'browse');
-        $this->assign( 'action', $this->_action);
-    }
+  function preProcess() {
+    $this->_contactId = CRM_Utils_Request::retrieve('cid', 'Positive', $this, TRUE);
+    $this->assign('contactId', $this->_contactId);
 
-   /**
-     * This function is the main function that is called when the page loads, it decides the which action has to be taken for the page.
-     * 
-     * return null
-     * @access public
-     */
-    function run( ) {
-        $this->preProcess( );
+    // check logged in url permission
+    require_once 'CRM/Contact/Page/View.php';
+    CRM_Contact_Page_View::checkUserPermission($this);
 
-        $this->browse( );
+    $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE, 'browse');
+    $this->assign('action', $this->_action);
+  }
 
-        return parent::run( );
-    }
+  /**
+   * This function is the main function that is called when the page loads, it decides the which action has to be taken for the page.
+   *
+   * return null
+   * @access public
+   */
+  function run() {
+    $this->preProcess();
 
+    $this->browse();
+
+    return parent::run();
+  }
 }
-
 

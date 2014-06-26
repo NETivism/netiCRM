@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -38,99 +37,102 @@ require_once 'CRM/Admin/Form/Setting.php';
 
 /**
  * This class generates form components for Error Handling and Debugging
- * 
+ *
  */
-class CRM_Admin_Form_Setting_UpdateConfigBackend extends CRM_Admin_Form_Setting
-{  
-    protected $_oldBaseDir;
-    protected $_oldBaseURL;
-    protected $_oldSiteName;
-  
-    /**
-     * Function to build the form
-     *
-     * @return None
-     * @access public
-     */
-    public function buildQuickForm( ) {
-        CRM_Utils_System::setTitle(ts('Settings - Update Directory Path and URL'));
-        
-        require_once 'CRM/Core/BAO/Setting.php';
-        list( $this->_oldBaseURL,
-              $this->_oldBaseDir,
-              $this->_oldSiteName ) = CRM_Core_BAO_Setting::getConfigSettings( );
+class CRM_Admin_Form_Setting_UpdateConfigBackend extends CRM_Admin_Form_Setting {
+  protected $_oldBaseDir;
+  protected $_oldBaseURL;
+  protected $_oldSiteName;
 
-        $this->assign( 'oldBaseURL', $this->_oldBaseURL );
-        $this->assign( 'oldBaseDir', $this->_oldBaseDir );
-        $this->assign( 'oldSiteName', $this->_oldSiteName );
+  /**
+   * Function to build the form
+   *
+   * @return None
+   * @access public
+   */
+  public function buildQuickForm() {
+    CRM_Utils_System::setTitle(ts('Settings - Update Directory Path and URL'));
 
-        $this->add( 'text', 'newBaseURL', ts( 'New Base URL' ), null, true );
-        $this->add( 'text', 'newBaseDir', ts( 'New Base Directory' ), null, true );
-        if ( $this->_oldSiteName ) {
-            $this->add( 'text', 'newSiteName', ts( 'New Site Name' ), null, true );
-        }
-        $this->addFormRule( array( 'CRM_Admin_Form_Setting_UpdateConfigBackend', 'formRule' ) );
+    require_once 'CRM/Core/BAO/Setting.php';
+    list($this->_oldBaseURL,
+      $this->_oldBaseDir,
+      $this->_oldSiteName
+    ) = CRM_Core_BAO_Setting::getConfigSettings();
 
-        parent::buildQuickForm();     
+    $this->assign('oldBaseURL', $this->_oldBaseURL);
+    $this->assign('oldBaseDir', $this->_oldBaseDir);
+    $this->assign('oldSiteName', $this->_oldSiteName);
+
+    $this->add('text', 'newBaseURL', ts('New Base URL'), NULL, TRUE);
+    $this->add('text', 'newBaseDir', ts('New Base Directory'), NULL, TRUE);
+    if ($this->_oldSiteName) {
+      $this->add('text', 'newSiteName', ts('New Site Name'), NULL, TRUE);
+    }
+    $this->addFormRule(array('CRM_Admin_Form_Setting_UpdateConfigBackend', 'formRule'));
+
+    parent::buildQuickForm();
+  }
+
+  function setDefaultValues() {
+    if (!$this->_defaults) {
+      parent::setDefaultValues();
+
+      $config = &CRM_Core_Config::singleton();
+      list($this->_defaults['newBaseURL'],
+        $this->_defaults['newBaseDir'],
+        $this->_defaults['newSiteName']
+      ) = CRM_Core_BAO_Setting::getBestGuessSettings();
     }
 
-    function setDefaultValues( ) 
-    {
-        if ( ! $this->_defaults ) {
-            parent::setDefaultValues( );
+    return $this->_defaults;
+  }
 
-            $config =& CRM_Core_Config::singleton( );
-            list( $this->_defaults['newBaseURL'],
-                  $this->_defaults['newBaseDir'],
-                  $this->_defaults['newSiteName'] ) = CRM_Core_BAO_Setting::getBestGuessSettings( );
-        }
+  static
+  function formRule($fields) {
+    $tmpDir = trim($fields['newBaseDir']);
 
-        return $this->_defaults;
+    $errors = array();
+    if (!is_writeable($tmpDir)) {
+      $errors['newBaseDir'] = ts('%1 directory does not exist or cannot be written by webserver',
+        array(1 => $tmpDir)
+      );
+    }
+    return $errors;
+  }
+
+  function postProcess() {
+    // redirect to admin page after saving
+    $session = CRM_Core_Session::singleton();
+    $session->pushUserContext(CRM_Utils_System::url('civicrm/admin'));
+
+    $params = $this->controller->exportValues($this->_name);
+
+    //CRM-5679
+    foreach ($params as $name => & $val) {
+      if ($val && in_array($name, array('newBaseURL', 'newBaseDir', 'newSiteName'))) {
+        $val = CRM_Utils_File::addTrailingSlash($val);
+      }
     }
 
-    static function formRule( $fields) {
-        $tmpDir = trim( $fields['newBaseDir'] );
-
-        $errors = array( );
-        if ( ! is_writeable( $tmpDir ) ) {
-            $errors['newBaseDir'] = ts( '%1 directory does not exist or cannot be written by webserver',
-                                        array( 1 => $tmpDir ) );
-        }
-        return $errors;
+    $from = array($this->_oldBaseURL, $this->_oldBaseDir);
+    $to = array(trim($params['newBaseURL']),
+      trim($params['newBaseDir']),
+    );
+    if ($this->_oldSiteName &&
+      $params['newSiteName']
+    ) {
+      $from[] = $this->_oldSiteName;
+      $to[] = $params['newSiteName'];
     }
 
-    function postProcess( ) {
-        // redirect to admin page after saving
-        $session = CRM_Core_Session::singleton();
-        $session->pushUserContext( CRM_Utils_System::url( 'civicrm/admin') );
+    $newValues = str_replace($from,
+      $to,
+      $this->_defaults
+    );
 
-        $params = $this->controller->exportValues( $this->_name );
+    parent::commonProcess($newValues);
 
-        //CRM-5679
-        foreach ( $params as $name => &$val ) {
-            if ( $val && in_array( $name, array( 'newBaseURL', 'newBaseDir', 'newSiteName' ) ) ) {
-                $val = CRM_Utils_File::addTrailingSlash( $val );
-            }
-        }
-
-        $from = array( $this->_oldBaseURL, $this->_oldBaseDir );
-        $to   = array( trim( $params['newBaseURL'] ),
-                       trim( $params['newBaseDir'] ) );
-        if ( $this->_oldSiteName &&
-             $params['newSiteName'] ) {
-            $from[] = $this->_oldSiteName;
-            $to[]   = $params['newSiteName'];
-        }
-
-        $newValues = str_replace( $from,
-                                  $to,
-                                  $this->_defaults );
-
-        parent::commonProcess( $newValues );
-
-        parent::rebuildMenu( );
-    }
-
+    parent::rebuildMenu();
+  }
 }
-
 

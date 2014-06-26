@@ -73,9 +73,9 @@ class CRM_Mailing_Event_BAO_Delivered extends CRM_Mailing_Event_DAO_Delivered {
     $queue->find(TRUE);
 
     while ($queue->fetch()) {
-      $email             = new CRM_Core_BAO_Email();
-      $email->id         = $queue->email_id;
-      $email->hold_date  = '';
+      $email = new CRM_Core_BAO_Email();
+      $email->id = $queue->email_id;
+      $email->hold_date = '';
       $email->reset_date = date('YmdHis');
       $email->save();
     }
@@ -100,10 +100,10 @@ class CRM_Mailing_Event_BAO_Delivered extends CRM_Mailing_Event_DAO_Delivered {
     $dao = new CRM_Core_DAO();
 
     $delivered = self::getTableName();
-    $bounce    = CRM_Mailing_Event_BAO_Bounce::getTableName();
-    $queue     = CRM_Mailing_Event_BAO_Queue::getTableName();
-    $mailing   = CRM_Mailing_BAO_Mailing::getTableName();
-    $job       = CRM_Mailing_BAO_Job::getTableName();
+    $bounce = CRM_Mailing_Event_BAO_Bounce::getTableName();
+    $queue = CRM_Mailing_Event_BAO_Queue::getTableName();
+    $mailing = CRM_Mailing_BAO_Mailing::getTableName();
+    $job = CRM_Mailing_BAO_Job::getTableName();
 
     $query = "
             SELECT      COUNT($delivered.id) as delivered
@@ -159,12 +159,12 @@ class CRM_Mailing_Event_BAO_Delivered extends CRM_Mailing_Event_DAO_Delivered {
     $dao = new CRM_Core_Dao();
 
     $delivered = self::getTableName();
-    $bounce    = CRM_Mailing_Event_BAO_Bounce::getTableName();
-    $queue     = CRM_Mailing_Event_BAO_Queue::getTableName();
-    $mailing   = CRM_Mailing_BAO_Mailing::getTableName();
-    $job       = CRM_Mailing_BAO_Job::getTableName();
-    $contact   = CRM_Contact_BAO_Contact::getTableName();
-    $email     = CRM_Core_BAO_Email::getTableName();
+    $bounce = CRM_Mailing_Event_BAO_Bounce::getTableName();
+    $queue = CRM_Mailing_Event_BAO_Queue::getTableName();
+    $mailing = CRM_Mailing_BAO_Mailing::getTableName();
+    $job = CRM_Mailing_BAO_Job::getTableName();
+    $contact = CRM_Contact_BAO_Contact::getTableName();
+    $email = CRM_Core_BAO_Email::getTableName();
 
     $query = "
             SELECT      $contact.display_name as display_name,
@@ -244,8 +244,8 @@ class CRM_Mailing_Event_BAO_Delivered extends CRM_Mailing_Event_DAO_Delivered {
 
     while (!empty($values)) {
       $input = array_splice($values, 0, CRM_Core_DAO::BULK_INSERT_COUNT);
-      $str   = implode(',', $input);
-      $sql   = "INSERT INTO civicrm_mailing_event_delivered ( event_queue_id, time_stamp ) VALUES $str;";
+      $str = implode(',', $input);
+      $sql = "INSERT INTO civicrm_mailing_event_delivered ( event_queue_id, time_stamp ) VALUES $str;";
       CRM_Core_DAO::executeQuery($sql);
     }
   }

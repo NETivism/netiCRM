@@ -66,6 +66,7 @@ class CRM_Mailing_Event_BAO_Reply extends CRM_Mailing_Event_DAO_Reply {
   public static function &reply($job_id, $queue_id, $hash, $replyto = NULL) {
     /* First make sure there's a matching queue event */
 
+
     $q = CRM_Mailing_Event_BAO_Queue::verify($job_id, $queue_id, $hash);
 
     $success = NULL;
@@ -74,9 +75,9 @@ class CRM_Mailing_Event_BAO_Reply extends CRM_Mailing_Event_DAO_Reply {
       return $success;
     }
 
-    $mailing  = new CRM_Mailing_BAO_Mailing();
+    $mailing = new CRM_Mailing_BAO_Mailing();
     $mailings = CRM_Mailing_BAO_Mailing::getTableName();
-    $jobs     = CRM_Mailing_BAO_Job::getTableName();
+    $jobs = CRM_Mailing_BAO_Job::getTableName();
     $mailing->query(
       "SELECT * FROM  $mailings 
             INNER JOIN      $jobs 
@@ -88,9 +89,9 @@ class CRM_Mailing_Event_BAO_Reply extends CRM_Mailing_Event_DAO_Reply {
       self::autoRespond($mailing, $queue_id, $replyto);
     }
 
-    $re                 = new CRM_Mailing_Event_BAO_Reply();
+    $re = new CRM_Mailing_Event_BAO_Reply();
     $re->event_queue_id = $queue_id;
-    $re->time_stamp     = date('YmdHis');
+    $re->time_stamp = date('YmdHis');
     $re->save();
 
     if (!$mailing->forward_replies || empty($mailing->replyto_email)) {
@@ -117,9 +118,9 @@ class CRM_Mailing_Event_BAO_Reply extends CRM_Mailing_Event_DAO_Reply {
   public static function send($queue_id, &$mailing, &$bodyTxt, $replyto, &$bodyHTML = NULL, &$fullEmail = NULL) {
     if ($fullEmail) {
       // parse the email and set a new destination
-      $parser     = new ezcMailParser;
-      $set        = new ezcMailVariableSet($fullEmail);
-      $parsed     = array_shift($parser->parseMail($set));
+      $parser = new ezcMailParser;
+      $set = new ezcMailVariableSet($fullEmail);
+      $parsed = array_shift($parser->parseMail($set));
       $parsed->to = array(new ezcMailAddress($mailing->replyto_email));
 
       // CRM-5567: we need to set Reply-To: so that any response
@@ -142,15 +143,15 @@ class CRM_Mailing_Event_BAO_Reply extends CRM_Mailing_Event_DAO_Reply {
         $matches = array();
         preg_match('/^--(.*)$/m', $b, $matches);
         $boundary = rtrim($matches[1]);
-        $parts    = explode('boundary=', $ct);
-        $ct       = "{$parts[0]} boundary=\"$boundary\"";
+        $parts = explode('boundary=', $ct);
+        $ct = "{$parts[0]} boundary=\"$boundary\"";
       }
     }
     else {
       $domain = CRM_Core_BAO_Domain::getDomain();
 
-      $emails   = CRM_Core_BAO_Email::getTableName();
-      $eq       = CRM_Mailing_Event_BAO_Queue::getTableName();
+      $emails = CRM_Core_BAO_Email::getTableName();
+      $eq = CRM_Mailing_Event_BAO_Queue::getTableName();
       $contacts = CRM_Contact_BAO_Contact::getTableName();
 
       $dao = new CRM_Core_DAO();
@@ -218,8 +219,8 @@ class CRM_Mailing_Event_BAO_Reply extends CRM_Mailing_Event_DAO_Reply {
     $config = CRM_Core_Config::singleton();
 
     $contacts = CRM_Contact_DAO_Contact::getTableName();
-    $email    = CRM_Core_DAO_Email::getTableName();
-    $queue    = CRM_Mailing_Event_DAO_Queue::getTableName();
+    $email = CRM_Core_DAO_Email::getTableName();
+    $queue = CRM_Mailing_Event_DAO_Queue::getTableName();
 
     $eq = new CRM_Core_DAO();
     $eq->query(
@@ -257,6 +258,7 @@ class CRM_Mailing_Event_BAO_Reply extends CRM_Mailing_Event_DAO_Reply {
 
     /* TODO: do we need reply tokens? */
 
+
     $html = $component->body_html;
     if ($component->body_text) {
       $text = $component->body_text;
@@ -266,10 +268,10 @@ class CRM_Mailing_Event_BAO_Reply extends CRM_Mailing_Event_DAO_Reply {
     }
 
     require_once 'CRM/Mailing/BAO/Mailing.php';
-    $bao            = new CRM_Mailing_BAO_Mailing();
+    $bao = new CRM_Mailing_BAO_Mailing();
     $bao->body_text = $text;
     $bao->body_html = $html;
-    $tokens         = $bao->getTokens();
+    $tokens = $bao->getTokens();
 
     if ($eq->format == 'HTML' || $eq->format == 'Both') {
       require_once 'CRM/Utils/Token.php';
@@ -313,10 +315,10 @@ class CRM_Mailing_Event_BAO_Reply extends CRM_Mailing_Event_DAO_Reply {
   ) {
     $dao = new CRM_Core_DAO();
 
-    $reply   = self::getTableName();
-    $queue   = CRM_Mailing_Event_BAO_Queue::getTableName();
+    $reply = self::getTableName();
+    $queue = CRM_Mailing_Event_BAO_Queue::getTableName();
     $mailing = CRM_Mailing_BAO_Mailing::getTableName();
-    $job     = CRM_Mailing_BAO_Job::getTableName();
+    $job = CRM_Mailing_BAO_Job::getTableName();
 
     $query = "
             SELECT      COUNT($reply.id) as reply
@@ -368,12 +370,12 @@ class CRM_Mailing_Event_BAO_Reply extends CRM_Mailing_Event_DAO_Reply {
 
     $dao = new CRM_Core_Dao();
 
-    $reply   = self::getTableName();
-    $queue   = CRM_Mailing_Event_BAO_Queue::getTableName();
+    $reply = self::getTableName();
+    $queue = CRM_Mailing_Event_BAO_Queue::getTableName();
     $mailing = CRM_Mailing_BAO_Mailing::getTableName();
-    $job     = CRM_Mailing_BAO_Job::getTableName();
+    $job = CRM_Mailing_BAO_Job::getTableName();
     $contact = CRM_Contact_BAO_Contact::getTableName();
-    $email   = CRM_Core_BAO_Email::getTableName();
+    $email = CRM_Core_BAO_Email::getTableName();
 
     $query = "
             SELECT      $contact.display_name as display_name,

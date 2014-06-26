@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -39,58 +38,55 @@ require_once 'CRM/Contact/Page/View/UserDashBoard.php';
 /**
  * This class is for building membership block on user dashboard
  */
-class CRM_Member_Page_UserDashboard extends CRM_Contact_Page_View_UserDashBoard 
-{
-    /**
-     * Function to list memberships for the UF user
-     * 
-     * return null
-     * @access public
-     */
-    function listMemberships( ) 
-    {
-        $membership = array( );
-        require_once "CRM/Member/BAO/Membership.php";
-        $dao = new CRM_Member_DAO_Membership( );
-        $dao->contact_id = $this->_contactId;
-        $dao->is_test    = 0;
-        $dao->find();
-        
-        while ($dao->fetch()) {
-            $membership[$dao->id] = array( );
-            CRM_Core_DAO::storeValues( $dao, $membership[$dao->id]);
+class CRM_Member_Page_UserDashboard extends CRM_Contact_Page_View_UserDashBoard {
 
-            //get the membership status and type values.
-            $statusANDType = CRM_Member_BAO_Membership::getStatusANDTypeVaues( $dao->id );
-            foreach ( array( 'status', 'membership_type' ) as $fld ) {
-                $membership[$dao->id][$fld] = CRM_Utils_Array::value( $fld, $statusANDType[$dao->id] );
-            }
-            if ( CRM_Utils_Array::value( 'is_current_member', $statusANDType[$dao->id] ) ) {
-                $membership[$dao->id]['active'] = true;
-            }
+  /**
+   * Function to list memberships for the UF user
+   *
+   * return null
+   * @access public
+   */
+  function listMemberships() {
+    $membership = array();
+    require_once "CRM/Member/BAO/Membership.php";
+    $dao = new CRM_Member_DAO_Membership();
+    $dao->contact_id = $this->_contactId;
+    $dao->is_test = 0;
+    $dao->find();
 
-            $membership[$dao->id]['renewPageId'] = CRM_Member_BAO_Membership::getContributionPageId( $dao->id );
-        }
-        
-        $activeMembers   = CRM_Member_BAO_Membership::activeMembers( $membership );
-        $inActiveMembers = CRM_Member_BAO_Membership::activeMembers( $membership, 'inactive' );
+    while ($dao->fetch()) {
+      $membership[$dao->id] = array();
+      CRM_Core_DAO::storeValues($dao, $membership[$dao->id]);
 
-        $this->assign('activeMembers', $activeMembers);
-        $this->assign('inActiveMembers', $inActiveMembers);
+      //get the membership status and type values.
+      $statusANDType = CRM_Member_BAO_Membership::getStatusANDTypeVaues($dao->id);
+      foreach (array('status', 'membership_type') as $fld) {
+        $membership[$dao->id][$fld] = CRM_Utils_Array::value($fld, $statusANDType[$dao->id]);
+      }
+      if (CRM_Utils_Array::value('is_current_member', $statusANDType[$dao->id])) {
+        $membership[$dao->id]['active'] = TRUE;
+      }
+
+      $membership[$dao->id]['renewPageId'] = CRM_Member_BAO_Membership::getContributionPageId($dao->id);
     }
 
-    /**
-     * This function is the main function that is called when the page
-     * loads, it decides the which action has to be taken for the page.
-     * 
-     * return null
-     * @access public
-     */
-    function run( ) 
-    {
-        parent::preProcess( );
-        $this->listMemberships( );
-    }
+    $activeMembers = CRM_Member_BAO_Membership::activeMembers($membership);
+    $inActiveMembers = CRM_Member_BAO_Membership::activeMembers($membership, 'inactive');
+
+    $this->assign('activeMembers', $activeMembers);
+    $this->assign('inActiveMembers', $inActiveMembers);
+  }
+
+  /**
+   * This function is the main function that is called when the page
+   * loads, it decides the which action has to be taken for the page.
+   *
+   * return null
+   * @access public
+   */
+  function run() {
+    parent::preProcess();
+    $this->listMemberships();
+  }
 }
-
 

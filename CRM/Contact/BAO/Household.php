@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -35,44 +34,43 @@
  */
 
 require_once 'CRM/Contact/DAO/Contact.php';
+class CRM_Contact_BAO_Household extends CRM_Contact_DAO_Contact {
 
-class CRM_Contact_BAO_Household extends CRM_Contact_DAO_Contact
-{
-    /**
-     * This is a contructor of the class.
-     */
-    function __construct() 
-    {
-        parent::__construct();
-    }
-    
-    /**
-     * function to update the household with primary contact id
-     *
-     * @param integer $primaryContactId     null if deleting primary contact
-     * @param integer $contactId            contact id
-     *
-     * @return Object     DAO object on success
-     * @access public
-     * @static
-     */
-    static function updatePrimaryContact( $primaryContactId, $contactId ) 
-    {
-        $queryString    = "UPDATE civicrm_contact
+  /**
+   * This is a contructor of the class.
+   */
+  function __construct() {
+    parent::__construct();
+  }
+
+  /**
+   * function to update the household with primary contact id
+   *
+   * @param integer $primaryContactId     null if deleting primary contact
+   * @param integer $contactId            contact id
+   *
+   * @return Object     DAO object on success
+   * @access public
+   * @static
+   */
+  static
+  function updatePrimaryContact($primaryContactId, $contactId) {
+    $queryString = "UPDATE civicrm_contact
                            SET primary_contact_id = ";
-        
-        $params = array( );
-        if ( $primaryContactId ) {
-            $queryString .= '%1';
-            $params[1] = array( $primaryContactId, 'Integer' );
-        } else {
-            $queryString .= "null";
-        }
-        
-        $queryString .=  " WHERE id = %2";
-        $params[2] = array( $contactId, 'Integer' );
-        
-        return  CRM_Core_DAO::executeQuery( $queryString, $params );
+
+    $params = array();
+    if ($primaryContactId) {
+      $queryString .= '%1';
+      $params[1] = array($primaryContactId, 'Integer');
     }
+    else {
+      $queryString .= "null";
+    }
+
+    $queryString .= " WHERE id = %2";
+    $params[2] = array($contactId, 'Integer');
+
+    return CRM_Core_DAO::executeQuery($queryString, $params);
+  }
 }
 

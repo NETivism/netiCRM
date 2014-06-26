@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -40,77 +39,80 @@
  */
 class CRM_Member_PseudoConstant extends CRM_Core_PseudoConstant {
 
-    /**
-     * membership types
-     * @var array
-     * @static
-     */
-    private static $membershipType;
+  /**
+   * membership types
+   * @var array
+   * @static
+   */
+  private static $membershipType;
 
-    /**
-     * membership types
-     * @var array
-     * @static
-     */
-    private static $membershipStatus;
+  /**
+   * membership types
+   * @var array
+   * @static
+   */
+  private static $membershipStatus;
 
-    /**
-     * Get all the membership types
-     *
-     * @access public
-     * @return array - array reference of all membership types if any
-     * @static
-     */
-    public static function &membershipType($id = null, $force = false)
-    {
-        if ( ! self::$membershipType || $force ) {
-            CRM_Core_PseudoConstant::populate( self::$membershipType,
-                                               'CRM_Member_DAO_MembershipType',
-                                               false, 'name', 'is_active', null, 'weight');
-        }
-        if ($id) {
-            if (array_key_exists($id, self::$membershipType)) {
-                return self::$membershipType[$id];
-            } else {
-                $result = null;
-                return $result;
-            }
-        }
-        return self::$membershipType;
+  /**
+   * Get all the membership types
+   *
+   * @access public
+   *
+   * @return array - array reference of all membership types if any
+   * @static
+   */
+  public static function &membershipType($id = NULL, $force = FALSE) {
+    if (!self::$membershipType || $force) {
+      CRM_Core_PseudoConstant::populate(self::$membershipType,
+        'CRM_Member_DAO_MembershipType',
+        FALSE, 'name', 'is_active', NULL, 'weight'
+      );
+    }
+    if ($id) {
+      if (array_key_exists($id, self::$membershipType)) {
+        return self::$membershipType[$id];
+      }
+      else {
+        $result = NULL;
+        return $result;
+      }
+    }
+    return self::$membershipType;
+  }
+
+  /**
+   * Get all the membership statuss
+   *
+   * @access public
+   *
+   * @return array - array reference of all membership statuss if any
+   * @static
+   */
+  public static function &membershipStatus($id = NULL, $cond = NULL, $column = 'name') {
+    if (self::$membershipStatus === NULL) {
+      self::$membershipStatus = array();
     }
 
-    /**
-     * Get all the membership statuss
-     *
-     * @access public
-     * @return array - array reference of all membership statuss if any
-     * @static
-     */
-    public static function &membershipStatus($id = null, $cond = null, $column = 'name')
-    {
-        if ( self::$membershipStatus === null ) {
-            self::$membershipStatus = array( );
-        }
-        
-        $cacheKey = $column;
-        if ( $cond ) $cacheKey .= "_{$cond}"; 
-        if ( !isset( self::$membershipStatus[$cacheKey] ) ) {
-            CRM_Core_PseudoConstant::populate( self::$membershipStatus[$cacheKey],
-                                               'CRM_Member_DAO_MembershipStatus',
-                                               false, $column, 'is_active', $cond, 'weight');
-            
-        }
-        
-        $value = null;
-        if ( $id ) {
-            $value = CRM_Utils_Array::value( $id, self::$membershipStatus[$cacheKey] );
-        } else {
-            $value = self::$membershipStatus[$cacheKey];
-        }
-        
-        return $value;
+    $cacheKey = $column;
+    if ($cond) {
+      $cacheKey .= "_{$cond}";
     }
-    
+    if (!isset(self::$membershipStatus[$cacheKey])) {
+      CRM_Core_PseudoConstant::populate(self::$membershipStatus[$cacheKey],
+        'CRM_Member_DAO_MembershipStatus',
+        FALSE, $column, 'is_active', $cond, 'weight'
+      );
+    }
+
+    $value = NULL;
+    if ($id) {
+      $value = CRM_Utils_Array::value($id, self::$membershipStatus[$cacheKey]);
+    }
+    else {
+      $value = self::$membershipStatus[$cacheKey];
+    }
+
+    return $value;
+  }
 }
-
 

@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 4.1                                                |
@@ -113,11 +112,11 @@ ORDER BY title";
       $dao = CRM_Core_DAO::executeQuery($query, CRM_Core_DAO::$_nullArray);
       $rows = array();
       while ($dao->fetch()) {
-        $row                = array();
-        $row['id']          = $dao->id;
-        $row['title']       = $dao->title;
+        $row = array();
+        $row['id'] = $dao->id;
+        $row['title'] = $dao->title;
         $row['description'] = $dao->description;
-        $row['checkbox']    = CRM_Core_Form::CB_PREFIX . $row['id'];
+        $row['checkbox'] = CRM_Core_Form::CB_PREFIX . $row['id'];
         $this->addElement('checkbox',
           $row['checkbox'],
           NULL, NULL

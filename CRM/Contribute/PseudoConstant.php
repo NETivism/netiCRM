@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -41,262 +40,265 @@ require_once 'CRM/Core/PseudoConstant.php';
  * This class holds all the Pseudo constants that are specific to Contributions. This avoids
  * polluting the core class and isolates the mass mailer class
  */
-class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant 
-{
+class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
 
-    /**
-     * contribution types
-     * @var array
-     * @static
-     */
-    private static $contributionType;
+  /**
+   * contribution types
+   * @var array
+   * @static
+   */
+  private static $contributionType;
 
-    /**
-     * contribution pages
-     * @var array
-     * @static
-     */
-    private static $contributionPage;
+  /**
+   * contribution pages
+   * @var array
+   * @static
+   */
+  private static $contributionPage;
 
-    /**
-     * payment instruments
-     *
-     * @var array
-     * @static
-     */
-    private static $paymentInstrument;
+  /**
+   * payment instruments
+   *
+   * @var array
+   * @static
+   */
+  private static $paymentInstrument;
 
-    /**
-     * credit card
-     *
-     * @var array
-     * @static
-     */
-    private static $creditCard;
+  /**
+   * credit card
+   *
+   * @var array
+   * @static
+   */
+  private static $creditCard;
 
-    /**
-     * contribution status 
-     *
-     * @var array
-     * @static
-     */
-    private static $contributionStatus;
+  /**
+   * contribution status
+   *
+   * @var array
+   * @static
+   */
+  private static $contributionStatus;
 
-    /**
-     * pcp status 
-     *
-     * @var array
-     * @static
-     */
-    private static $pcpStatus;
+  /**
+   * pcp status
+   *
+   * @var array
+   * @static
+   */
+  private static $pcpStatus;
 
-    /**
-     * Personal campaign pages
-     * @var array
-     * @static
-     */
-    private static $pcPage;
+  /**
+   * Personal campaign pages
+   * @var array
+   * @static
+   */
+  private static $pcPage;
 
-    /**
-     * Get all the contribution types
-     *
-     * @access public
-     * @return array - array reference of all contribution types if any
-     * @static
-     */
-    public static function &contributionType($id = null, $dedutible = FALSE)
-    {
-      if ( ! self::$contributionType ) {
-        CRM_Core_PseudoConstant::populate( self::$contributionType, 'CRM_Contribute_DAO_ContributionType' );
-      }
-      if(is_numeric($dedutible)){
-        CRM_Core_PseudoConstant::populate( $types, 'CRM_Contribute_DAO_ContributionType', false, 'is_deductible', 'is_active', 'is_deductible=1' );
-        return array_intersect_key(self::$contributionType, $types);
-      }
-      elseif($dedutible !== FALSE){
-        CRM_Core_PseudoConstant::populate( $types, 'CRM_Contribute_DAO_ContributionType', false, 'is_deductible' );
-        $result = self::$contributionType;
-        foreach($result as $k => $v){
-          if($types[$k] == 1){
-            $result[$k] .= '('.ts('Deductible').')';
-          }
+  /**
+   * Get all the contribution types
+   *
+   * @access public
+   *
+   * @return array - array reference of all contribution types if any
+   * @static
+   */
+  public static function &contributionType($id = NULL, $dedutible = FALSE) {
+    if (!self::$contributionType) {
+      CRM_Core_PseudoConstant::populate(self::$contributionType, 'CRM_Contribute_DAO_ContributionType');
+    }
+    if (is_numeric($dedutible)) {
+      CRM_Core_PseudoConstant::populate($types, 'CRM_Contribute_DAO_ContributionType', FALSE, 'is_deductible', 'is_active', 'is_deductible=1');
+      return array_intersect_key(self::$contributionType, $types);
+    }
+    elseif ($dedutible !== FALSE) {
+      CRM_Core_PseudoConstant::populate($types, 'CRM_Contribute_DAO_ContributionType', FALSE, 'is_deductible');
+      $result = self::$contributionType;
+      foreach ($result as $k => $v) {
+        if ($types[$k] == 1) {
+          $result[$k] .= '(' . ts('Deductible') . ')';
         }
+      }
+      return $result;
+    }
+    else {
+      if ($id) {
+        $result = CRM_Utils_Array::value($id, self::$contributionType);
         return $result;
       }
-      else{
-        if ($id) {
-          $result = CRM_Utils_Array::value( $id, self::$contributionType );
-          return $result;
+    }
+    return self::$contributionType;
+  }
+
+  /**
+   * Get all the contribution pages
+   *
+   * @access public
+   *
+   * @return array - array reference of all contribution pages if any
+   * @static
+   */
+  public static function &contributionPage($id = NULL, $isActive = FALSE) {
+    if (!self::$contributionPage) {
+      CRM_Core_PseudoConstant::populate(self::$contributionPage,
+        'CRM_Contribute_DAO_ContributionPage',
+        $isActive, 'title'
+      );
+    }
+    if ($id) {
+      $pageTitle = CRM_Utils_Array::value($id, self::$contributionPage);
+      return $pageTitle;
+    }
+    return self::$contributionPage;
+  }
+
+  /**
+   * Get all the payment instruments
+   *
+   * @access public
+   *
+   * @return array - array reference of all payment instruments if any
+   * @static
+   */
+  public static function &paymentInstrument($columnName = 'label') {
+    if (!isset(self::$paymentInstrument[$columnName])) {
+      self::$paymentInstrument[$columnName] = CRM_Core_OptionGroup::values('payment_instrument',
+        FALSE, FALSE, FALSE, NULL, $columnName
+      );
+    }
+
+    return self::$paymentInstrument[$columnName];
+  }
+
+  /**
+   * Get all the valid accepted credit cards
+   *
+   * @access public
+   *
+   * @return array - array reference of all payment instruments if any
+   * @static
+   */
+  public static function &creditCard() {
+    $acceptCreditCard = array();
+    $creditCard = CRM_Core_OptionGroup::values('accept_creditcard');
+
+    if (!$creditCard) {
+      $creditCard = array();
+    }
+    foreach ($creditCard as $key => $value) {
+      $acceptCreditCard[$value] = $value;
+    }
+    return $acceptCreditCard;
+  }
+
+  /**
+   * Get all premiums
+   *
+   * @access public
+   *
+   * @return array - array of all Premiums if any
+   * @static
+   */
+  public static function products($pageID = NULL) {
+    $products = array();
+    require_once 'CRM/Contribute/DAO/Product.php';
+    $dao = new CRM_Contribute_DAO_Product();
+    $dao->is_active = 1;
+    $dao->orderBy('id');
+    $dao->find();
+
+    while ($dao->fetch()) {
+      $products[$dao->id] = $dao->name;
+    }
+    if ($pageID) {
+      require_once 'CRM/Contribute/DAO/Premium.php';
+      $dao = new CRM_Contribute_DAO_Premium();
+      $dao->entity_table = 'civicrm_contribution_page';
+      $dao->entity_id = $pageID;
+      $dao->find(TRUE);
+      $premiumID = $dao->id;
+
+      $productID = array();
+
+      require_once 'CRM/Contribute/DAO/PremiumsProduct.php';
+      $dao = new CRM_Contribute_DAO_PremiumsProduct();
+      $dao->premiums_id = $premiumID;
+      $dao->find();
+      while ($dao->fetch()) {
+        $productID[$dao->product_id] = $dao->product_id;
+      }
+
+      $tempProduct = array();
+      foreach ($products as $key => $value) {
+        if (!array_key_exists($key, $productID)) {
+          $tempProduct[$key] = $value;
         }
       }
-      return self::$contributionType;
+
+      return $tempProduct;
     }
 
-    /**
-     * Get all the contribution pages
-     *
-     * @access public
-     * @return array - array reference of all contribution pages if any
-     * @static
-     */
-    public static function &contributionPage($id = null, $isActive = false)
-    {
-        if ( ! self::$contributionPage ) {
-            CRM_Core_PseudoConstant::populate( self::$contributionPage,
-                                               'CRM_Contribute_DAO_ContributionPage',
-                                               $isActive, 'title' );
-        }
-        if ( $id ) {
-            $pageTitle = CRM_Utils_Array::value( $id, self::$contributionPage );
-            return $pageTitle;
-        }
-        return self::$contributionPage;
+    return $products;
+  }
+
+  /**
+   * Get all the contribution statuses
+   *
+   * @access public
+   *
+   * @return array - array reference of all contribution statuses
+   * @static
+   */
+  public static function &contributionStatus($id = NULL, $columnName = 'label') {
+    $cacheKey = $columnName;
+    if (!isset(self::$contributionStatus[$cacheKey])) {
+      self::$contributionStatus[$cacheKey] = CRM_Core_OptionGroup::values('contribution_status',
+        FALSE, FALSE, FALSE, NULL, $columnName
+      );
+    }
+    $result = self::$contributionStatus[$cacheKey];
+    if ($id) {
+      $result = CRM_Utils_Array::value($id, $result);
     }
 
-    /**
-     * Get all the payment instruments
-     *
-     * @access public
-     * @return array - array reference of all payment instruments if any
-     * @static
-     */
-    public static function &paymentInstrument( $columnName = 'label' )
-    {
-        if ( !isset( self::$paymentInstrument[$columnName] ) ) {
-            self::$paymentInstrument[$columnName] = CRM_Core_OptionGroup::values( 'payment_instrument', 
-                                                                                  false, false, false, null, $columnName );
-        }
-        
-        return self::$paymentInstrument[$columnName];
-    }
-    
-    /**
-     * Get all the valid accepted credit cards
-     *               
-     * @access public 
-     * @return array - array reference of all payment instruments if any 
-     * @static 
-     */                  
-    public static function &creditCard( ) 
-    {
-        $acceptCreditCard = array( );    
-        $creditCard = CRM_Core_OptionGroup::values('accept_creditcard');
-        
-        if  ( ! $creditCard ) {
-            $creditCard = array( );
-         }
-        foreach($creditCard as $key => $value) {
-            $acceptCreditCard[$value] = $value;
-        }
-        return $acceptCreditCard;
+    return $result;
+  }
 
+  /**
+   * Get all the pcp status
+   *
+   * @access public
+   *
+   * @return array - array reference of all pcp status
+   * @static
+   */
+  public static function &pcpStatus() {
+    self::$pcpStatus = array();
+    if (!self::$pcpStatus) {
+      self::$pcpStatus = CRM_Core_OptionGroup::values("pcp_status", FALSE, FALSE, FALSE, NULL, 'label');
     }
+    return self::$pcpStatus;
+  }
 
-    /**
-     * Get all premiums 
-     *               
-     * @access public 
-     * @return array - array of all Premiums if any 
-     * @static 
-     */  
-    public static function products( $pageID = null ) {
-        $products = array();
-        require_once 'CRM/Contribute/DAO/Product.php';
-        $dao = new CRM_Contribute_DAO_Product();
-        $dao->is_active = 1;
-        $dao->orderBy( 'id' );
-        $dao->find( );
-        
-        while ( $dao->fetch( ) ) {
-            $products[$dao->id] = $dao->name;
-        }
-        if ( $pageID ) {
-            require_once 'CRM/Contribute/DAO/Premium.php';
-            $dao = new CRM_Contribute_DAO_Premium();
-            $dao->entity_table = 'civicrm_contribution_page';
-            $dao->entity_id = $pageID; 
-            $dao->find(true);
-            $premiumID = $dao->id;
-            
-            $productID = array();  
-            
-            require_once 'CRM/Contribute/DAO/PremiumsProduct.php';
-            $dao = new CRM_Contribute_DAO_PremiumsProduct();
-            $dao->premiums_id = $premiumID;
-            $dao->find();
-            while ($dao->fetch()) {
-                $productID[$dao->product_id] = $dao->product_id;
-            }
-           
-            $tempProduct = array();
-            foreach( $products as $key => $value ) {
-                if ( ! array_key_exists( $key , $productID ) ) {
-                    $tempProduct[$key] = $value;
-                }
-            }
-            
-            return $tempProduct;
-        }
-
-        return $products;        
+  /**
+   * Get all the Personal campaign pages
+   *
+   * @access public
+   *
+   * @return array - array reference of all pcp if any
+   * @static
+   */
+  public static function &pcPage($id = NULL) {
+    if (!self::$pcPage) {
+      CRM_Core_PseudoConstant::populate(self::$pcPage,
+        'CRM_Contribute_DAO_PCP',
+        FALSE, 'title'
+      );
     }
-    
-    /**
-     * Get all the contribution statuses
-     *
-     * @access public
-     * @return array - array reference of all contribution statuses
-     * @static
-     */
-    public static function &contributionStatus( $id = null, $columnName = 'label' )
-    {
-        $cacheKey = $columnName;
-        if ( ! isset( self::$contributionStatus[$cacheKey] ) ) {
-            self::$contributionStatus[$cacheKey] = CRM_Core_OptionGroup::values( 'contribution_status', 
-                                                                                 false, false, false, null, $columnName );
-        }
-        $result = self::$contributionStatus[$cacheKey];
-        if ( $id ) $result = CRM_Utils_Array::value( $id, $result );
-        
-        return $result;
+    if ($id) {
+      return CRM_Utils_Array::value($id, self::$pcPage);
     }
-
-    /**
-     * Get all the pcp status
-     *
-     * @access public
-     * @return array - array reference of all pcp status
-     * @static
-     */
-    public static function &pcpStatus( )
-    {
-        self::$pcpStatus = array();
-        if ( ! self::$pcpStatus ) {
-            self::$pcpStatus = CRM_Core_OptionGroup::values("pcp_status", false, false, false, null, 'label');
-        }
-        return self::$pcpStatus;
-    }
-    
-    /**
-     * Get all the Personal campaign pages
-     *
-     * @access public
-     * @return array - array reference of all pcp if any
-     * @static
-     */
-    public static function &pcPage($id = null)
-    {
-        if ( ! self::$pcPage ) {
-            CRM_Core_PseudoConstant::populate( self::$pcPage,
-                                               'CRM_Contribute_DAO_PCP',
-                                               false, 'title' );
-        }
-        if ( $id ) {
-            return CRM_Utils_Array::value( $id, self::$pcPage );
-        }
-        return self::$pcPage;
-    }
-
+    return self::$pcPage;
+  }
 }
-
 

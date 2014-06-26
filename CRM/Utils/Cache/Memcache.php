@@ -33,10 +33,10 @@
  *
  */
 class CRM_Utils_Cache_Memcache {
-  const DEFAULT_HOST    = 'localhost';
-  const DEFAULT_PORT    = 11211;
-  const DEFAULT_TIMEOUT = 3600;
-  const DEFAULT_PREFIX  = '';
+  CONST DEFAULT_HOST = 'localhost';
+  CONST DEFAULT_PORT = 11211;
+  CONST DEFAULT_TIMEOUT = 3600;
+  CONST DEFAULT_PREFIX = '';
 
   /**
    * The host name of the memcached server
@@ -83,8 +83,7 @@ class CRM_Utils_Cache_Memcache {
    * @param array   $config  an array of configuration params
    *
    * @return void
-   */
-  function __construct($config) {
+   */ function __construct($config) {
     if (isset($config['host'])) {
       $this->_host = $config['host'];
     }

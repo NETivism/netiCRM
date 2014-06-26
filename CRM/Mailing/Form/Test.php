@@ -130,8 +130,8 @@ class CRM_Mailing_Form_Test extends CRM_Core_Form {
     $this->addButtons($buttons);
 
     $mailingID = $this->get('mailing_id');
-    $textFile  = $this->get('textFile');
-    $htmlFile  = $this->get('htmlFile');
+    $textFile = $this->get('textFile');
+    $htmlFile = $this->get('htmlFile');
 
     $this->addFormRule(array('CRM_Mailing_Form_Test', 'testMail'), $this);
     $preview = array();
@@ -168,8 +168,8 @@ class CRM_Mailing_Form_Test extends CRM_Core_Form {
     );
 
     $returnProperties = $mailing->getReturnProperties();
-    $userID           = $session->get('userID');
-    $params           = array('contact_id' => $userID);
+    $userID = $session->get('userID');
+    $params = array('contact_id' => $userID);
 
     require_once 'CRM/Utils/Token.php';
     $details = CRM_Utils_Token::getTokenDetails($params,
@@ -296,9 +296,9 @@ class CRM_Mailing_Form_Test extends CRM_Core_Form {
     }
 
     require_once 'CRM/Mailing/BAO/Job.php';
-    $job             = new CRM_Mailing_BAO_Job();
+    $job = new CRM_Mailing_BAO_Job();
     $job->mailing_id = $self->get('mailing_id');
-    $job->is_test    = TRUE;
+    $job->is_test = TRUE;
     $job->save();
     $newEmails = NULL;
     $session = CRM_Core_Session::singleton();
@@ -335,11 +335,12 @@ class CRM_Mailing_Form_Test extends CRM_Core_Form {
               1 => array('email' => $email,
                 'is_primary' => 1,
                 'location_type_id' => 1,
-              )),
+              ),
+            ),
           );
           require_once 'CRM/Contact/BAO/Contact.php';
-          $contact   = CRM_Contact_BAO_Contact::create($params);
-          $emailId   = $contact->email[0]->id;
+          $contact = CRM_Contact_BAO_Contact::create($params);
+          $emailId = $contact->email[0]->id;
           $contactId = $contact->id;
           $contact->free();
         }

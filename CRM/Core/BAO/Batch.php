@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -40,25 +39,24 @@ require_once 'CRM/Core/DAO/Batch.php';
  *
  */
 class CRM_Core_BAO_Batch extends CRM_Core_DAO_Batch {
-    /**
-     * Cache for the current batch object
-     */
-    static $_batch = null;
 
+  /**
+   * Cache for the current batch object
+   */
+  static $_batch = NULL;
 
-    /**
-     * Create a new batch
-     *
-     * @return batch array
-     * @access public
-     */
-    static function create( $params ) {
-        $batch = new CRM_Core_DAO_Batch( );
-        $batch->copyValues( $params );
-        $batch->save( );
-        return $batch;
-    }
-
+  /**
+   * Create a new batch
+   *
+   * @return batch array
+   * @access public
+   */
+  static
+  function create($params) {
+    $batch = new CRM_Core_DAO_Batch();
+    $batch->copyValues($params);
+    $batch->save();
+    return $batch;
+  }
 }
-
 

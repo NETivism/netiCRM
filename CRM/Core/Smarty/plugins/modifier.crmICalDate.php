@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -44,10 +43,7 @@
  */
 
 require_once 'CRM/Utils/ICalendar.php';
-
-function smarty_modifier_crmICalDate( $str, $gdata = false )
-{
-    return CRM_Utils_ICalendar::formatDate( $str, $gdata );
+function smarty_modifier_crmICalDate($str, $gdata = FALSE) {
+  return CRM_Utils_ICalendar::formatDate($str, $gdata);
 }
-
 

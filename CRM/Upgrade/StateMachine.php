@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -42,22 +41,20 @@ require_once 'CRM/Core/StateMachine.php';
  */
 class CRM_Upgrade_StateMachine extends CRM_Core_StateMachine {
 
-    /**
-     * class constructor
-     *
-     * @param object  CRM_Upgrade_Controller_base
-     * @param int     $action
-     *
-     * @return object CRM_Upgrade_StateMachine_Base
-     */
-    function __construct( &$controller, &$pages, $action = CRM_Core_Action::NONE ) {
-        parent::__construct( $controller, $action );
-        
-        $this->_pages =& $pages;
-        
-        $this->addSequentialPages( $this->_pages, $action );
-    }
+  /**
+   * class constructor
+   *
+   * @param object  CRM_Upgrade_Controller_base
+   * @param int     $action
+   *
+   * @return object CRM_Upgrade_StateMachine_Base
+   */
+  function __construct(&$controller, &$pages, $action = CRM_Core_Action::NONE) {
+    parent::__construct($controller, $action);
 
+    $this->_pages = &$pages;
+
+    $this->addSequentialPages($this->_pages, $action);
+  }
 }
-
 

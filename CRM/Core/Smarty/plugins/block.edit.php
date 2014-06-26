@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -39,7 +38,7 @@
  * $Id$
  */
 
-/** 
+/**
  * Smarty block function providing edit-only display support
  *
  * @param array $params   template call's parameters
@@ -48,10 +47,8 @@
  *
  * @return string  the string, translated by gettext
  */
-function smarty_block_edit($params, $text, &$smarty)
-{
-    $action = $smarty->_tpl_vars['action'];
-    return ( $action & 3 ) ? $text : null;
+function smarty_block_edit($params, $text, &$smarty) {
+  $action = $smarty->_tpl_vars['action'];
+  return ($action & 3) ? $text : NULL;
 }
-
 

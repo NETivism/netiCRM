@@ -24,6 +24,7 @@
 | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
 +--------------------------------------------------------------------+
 */
+
 /**
  *
  * @package CRM
@@ -33,198 +34,214 @@
  */
 require_once 'CRM/Core/DAO.php';
 require_once 'CRM/Utils/Type.php';
-class CRM_ACL_DAO_EntityRole extends CRM_Core_DAO
-{
-    /**
-     * static instance to hold the table name
-     *
-     * @var string
-     * @static
-     */
-    static $_tableName = 'civicrm_acl_entity_role';
-    /**
-     * static instance to hold the field values
-     *
-     * @var array
-     * @static
-     */
-    static $_fields = null;
-    /**
-     * static instance to hold the FK relationships
-     *
-     * @var string
-     * @static
-     */
-    static $_links = null;
-    /**
-     * static instance to hold the values that can
-     * be imported / apu
-     *
-     * @var array
-     * @static
-     */
-    static $_import = null;
-    /**
-     * static instance to hold the values that can
-     * be exported / apu
-     *
-     * @var array
-     * @static
-     */
-    static $_export = null;
-    /**
-     * static value to see if we should log any modifications to
-     * this table in the civicrm_log table
-     *
-     * @var boolean
-     * @static
-     */
-    static $_log = false;
-    /**
-     * Unique table ID
-     *
-     * @var int unsigned
-     */
-    public $id;
-    /**
-     * Foreign Key to ACL Role (which is an option value pair and hence an implicit FK)
-     *
-     * @var int unsigned
-     */
-    public $acl_role_id;
-    /**
-     * Table of the object joined to the ACL Role (Contact or Group)
-     *
-     * @var string
-     */
-    public $entity_table;
-    /**
-     * ID of the group/contact object being joined
-     *
-     * @var int unsigned
-     */
-    public $entity_id;
-    /**
-     * Is this property active?
-     *
-     * @var boolean
-     */
-    public $is_active;
-    /**
-     * class constructor
-     *
-     * @access public
-     * @return civicrm_acl_entity_role
-     */
-    function __construct()
-    {
-        parent::__construct();
+class CRM_ACL_DAO_EntityRole extends CRM_Core_DAO {
+
+  /**
+   * static instance to hold the table name
+   *
+   * @var string
+   * @static
+   */
+  static $_tableName = 'civicrm_acl_entity_role';
+
+  /**
+   * static instance to hold the field values
+   *
+   * @var array
+   * @static
+   */
+  static $_fields = NULL;
+
+  /**
+   * static instance to hold the FK relationships
+   *
+   * @var string
+   * @static
+   */
+  static $_links = NULL;
+
+  /**
+   * static instance to hold the values that can
+   * be imported / apu
+   *
+   * @var array
+   * @static
+   */
+  static $_import = NULL;
+
+  /**
+   * static instance to hold the values that can
+   * be exported / apu
+   *
+   * @var array
+   * @static
+   */
+  static $_export = NULL;
+
+  /**
+   * static value to see if we should log any modifications to
+   * this table in the civicrm_log table
+   *
+   * @var boolean
+   * @static
+   */
+  static $_log = FALSE;
+
+  /**
+   * Unique table ID
+   *
+   * @var int unsigned
+   */
+  public $id;
+
+  /**
+   * Foreign Key to ACL Role (which is an option value pair and hence an implicit FK)
+   *
+   * @var int unsigned
+   */
+  public $acl_role_id;
+
+  /**
+   * Table of the object joined to the ACL Role (Contact or Group)
+   *
+   * @var string
+   */
+  public $entity_table;
+
+  /**
+   * ID of the group/contact object being joined
+   *
+   * @var int unsigned
+   */
+  public $entity_id;
+
+  /**
+   * Is this property active?
+   *
+   * @var boolean
+   */
+  public $is_active;
+
+  /**
+   * class constructor
+   *
+   * @access public
+   *
+   * @return civicrm_acl_entity_role
+   */ function __construct() {
+    parent::__construct();
+  }
+
+  /**
+   * returns all the column names of this table
+   *
+   * @access public
+   *
+   * @return array
+   */
+  function &fields() {
+    if (!(self::$_fields)) {
+      self::$_fields = array(
+        'id' => array(
+          'name' => 'id',
+          'type' => CRM_Utils_Type::T_INT,
+          'required' => TRUE,
+        ),
+        'acl_role_id' => array(
+          'name' => 'acl_role_id',
+          'type' => CRM_Utils_Type::T_INT,
+          'required' => TRUE,
+        ),
+        'entity_table' => array(
+          'name' => 'entity_table',
+          'type' => CRM_Utils_Type::T_STRING,
+          'title' => ts('Entity Table'),
+          'required' => TRUE,
+          'maxlength' => 64,
+          'size' => CRM_Utils_Type::BIG,
+        ),
+        'entity_id' => array(
+          'name' => 'entity_id',
+          'type' => CRM_Utils_Type::T_INT,
+          'required' => TRUE,
+        ),
+        'is_active' => array(
+          'name' => 'is_active',
+          'type' => CRM_Utils_Type::T_BOOLEAN,
+        ),
+      );
     }
-    /**
-     * returns all the column names of this table
-     *
-     * @access public
-     * @return array
-     */
-    function &fields()
-    {
-        if (!(self::$_fields)) {
-            self::$_fields = array(
-                'id' => array(
-                    'name' => 'id',
-                    'type' => CRM_Utils_Type::T_INT,
-                    'required' => true,
-                ) ,
-                'acl_role_id' => array(
-                    'name' => 'acl_role_id',
-                    'type' => CRM_Utils_Type::T_INT,
-                    'required' => true,
-                ) ,
-                'entity_table' => array(
-                    'name' => 'entity_table',
-                    'type' => CRM_Utils_Type::T_STRING,
-                    'title' => ts('Entity Table') ,
-                    'required' => true,
-                    'maxlength' => 64,
-                    'size' => CRM_Utils_Type::BIG,
-                ) ,
-                'entity_id' => array(
-                    'name' => 'entity_id',
-                    'type' => CRM_Utils_Type::T_INT,
-                    'required' => true,
-                ) ,
-                'is_active' => array(
-                    'name' => 'is_active',
-                    'type' => CRM_Utils_Type::T_BOOLEAN,
-                ) ,
-            );
+    return self::$_fields;
+  }
+
+  /**
+   * returns the names of this table
+   *
+   * @access public
+   *
+   * @return string
+   */
+  function getTableName() {
+    return self::$_tableName;
+  }
+
+  /**
+   * returns if this table needs to be logged
+   *
+   * @access public
+   *
+   * @return boolean
+   */
+  function getLog() {
+    return self::$_log;
+  }
+
+  /**
+   * returns the list of fields that can be imported
+   *
+   * @access public
+   * return array
+   */
+  function &import($prefix = FALSE) {
+    if (!(self::$_import)) {
+      self::$_import = array();
+      $fields = &self::fields();
+      foreach ($fields as $name => $field) {
+        if (CRM_Utils_Array::value('import', $field)) {
+          if ($prefix) {
+            self::$_import['acl_entity_role'] = &$fields[$name];
+          }
+          else {
+            self::$_import[$name] = &$fields[$name];
+          }
         }
-        return self::$_fields;
+      }
     }
-    /**
-     * returns the names of this table
-     *
-     * @access public
-     * @return string
-     */
-    function getTableName()
-    {
-        return self::$_tableName;
-    }
-    /**
-     * returns if this table needs to be logged
-     *
-     * @access public
-     * @return boolean
-     */
-    function getLog()
-    {
-        return self::$_log;
-    }
-    /**
-     * returns the list of fields that can be imported
-     *
-     * @access public
-     * return array
-     */
-    function &import($prefix = false)
-    {
-        if (!(self::$_import)) {
-            self::$_import = array();
-            $fields = & self::fields();
-            foreach($fields as $name => $field) {
-                if (CRM_Utils_Array::value('import', $field)) {
-                    if ($prefix) {
-                        self::$_import['acl_entity_role'] = & $fields[$name];
-                    } else {
-                        self::$_import[$name] = & $fields[$name];
-                    }
-                }
-            }
+    return self::$_import;
+  }
+
+  /**
+   * returns the list of fields that can be exported
+   *
+   * @access public
+   * return array
+   */
+  function &export($prefix = FALSE) {
+    if (!(self::$_export)) {
+      self::$_export = array();
+      $fields = &self::fields();
+      foreach ($fields as $name => $field) {
+        if (CRM_Utils_Array::value('export', $field)) {
+          if ($prefix) {
+            self::$_export['acl_entity_role'] = &$fields[$name];
+          }
+          else {
+            self::$_export[$name] = &$fields[$name];
+          }
         }
-        return self::$_import;
+      }
     }
-    /**
-     * returns the list of fields that can be exported
-     *
-     * @access public
-     * return array
-     */
-    function &export($prefix = false)
-    {
-        if (!(self::$_export)) {
-            self::$_export = array();
-            $fields = & self::fields();
-            foreach($fields as $name => $field) {
-                if (CRM_Utils_Array::value('export', $field)) {
-                    if ($prefix) {
-                        self::$_export['acl_entity_role'] = & $fields[$name];
-                    } else {
-                        self::$_export[$name] = & $fields[$name];
-                    }
-                }
-            }
-        }
-        return self::$_export;
-    }
+    return self::$_export;
+  }
 }
+

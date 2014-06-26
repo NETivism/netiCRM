@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -38,107 +37,110 @@ require_once 'CRM/Core/Form.php';
 
 /**
  * This class generates form components generic to Mobile provider
- * 
+ *
  */
-class CRM_Member_Form extends CRM_Core_Form
-{
-    /**
-     * The id of the object being edited / created
-     *
-     * @var int
-     */
-    protected $_id;
+class CRM_Member_Form extends CRM_Core_Form {
 
-    /**
-     * The name of the BAO object for this form
-     *
-     * @var string
-     */
-    protected $_BAOName;
+  /**
+   * The id of the object being edited / created
+   *
+   * @var int
+   */
+  protected $_id;
 
-    function preProcess( ) {
-        $this->_id      = $this->get( 'id'      );
-        $this->_BAOName = $this->get( 'BAOName' );
+  /**
+   * The name of the BAO object for this form
+   *
+   * @var string
+   */
+  protected $_BAOName; function preProcess() {
+    $this->_id = $this->get('id');
+    $this->_BAOName = $this->get('BAOName');
+  }
+
+  /**
+   * This function sets the default values for the form. MobileProvider that in edit/view mode
+   * the default values are retrieved from the database
+   *
+   * @access public
+   *
+   * @return None
+   */
+  function setDefaultValues() {
+    $defaults = array();
+    $params = array();
+
+    if (isset($this->_id)) {
+      $params = array('id' => $this->_id);
+      require_once (str_replace('_', DIRECTORY_SEPARATOR, $this->_BAOName) . ".php");
+      eval($this->_BAOName . '::retrieve( $params, $defaults );');
     }
 
-    /**
-     * This function sets the default values for the form. MobileProvider that in edit/view mode
-     * the default values are retrieved from the database
-     * 
-     * @access public
-     * @return None
-     */
-    function setDefaultValues( ) {
-        $defaults = array( );
-        $params   = array( );
-
-        if ( isset ( $this->_id ) ) {
-            $params = array( 'id' => $this->_id );
-            require_once(str_replace('_', DIRECTORY_SEPARATOR, $this->_BAOName) . ".php");
-            eval( $this->_BAOName . '::retrieve( $params, $defaults );' );
-        }
-
-        if (isset($defaults['minimum_fee'])) {
-            require_once 'CRM/Utils/Money.php';
-            $defaults['minimum_fee'] = CRM_Utils_Money::format($defaults['minimum_fee'], null, '%a');
-        }
-        
-        
-        if ( isset ($defaults['status'] ) ) {
-            $this->assign( 'membershipStatus', $defaults['status'] );
-        }
-        
-        if ( $this->_action & CRM_Core_Action::ADD ) {
-            $defaults['is_active'] = 1;
-        }
-        
-        if ( isset( $defaults['member_of_contact_id'] ) &&
-             $defaults['member_of_contact_id'] ) {
-            $defaults['member_org'] = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', 
-                                                                  $defaults['member_of_contact_id'], 'display_name');
-        }
-        return $defaults;
+    if (isset($defaults['minimum_fee'])) {
+      require_once 'CRM/Utils/Money.php';
+      $defaults['minimum_fee'] = CRM_Utils_Money::format($defaults['minimum_fee'], NULL, '%a');
     }
 
-    /**
-     * Function to actually build the form
-     *
-     * @return None
-     * @access public
-     */
-    public function buildQuickForm( ) 
-    {
-        if ( $this->_action & CRM_Core_Action::RENEW ) {
-            $name = ts('Renew');
-        } else {
-            $name = ts('Save');
-        }
 
-        $this->addButtons( array(
-                                 array ( 'type'      => 'upload',
-                                         'name'      => $name,
-                                         'isDefault' => true   ),
-                                 array ( 'type'      => 'upload',
-                                         'name'      => ts('Save and New'), 
-                                         'subName'   => 'new' ),
-                                 array ( 'type'      => 'cancel',
-                                         'name'      => ts('Cancel') ),
-                                 )
-                           );
-     
-        if ( $this->_action & CRM_Core_Action::DELETE ) {
-            $this->addButtons(array(
-                                    array ('type'      => 'next',
-                                           'name'      => ts('Delete'),
-                                           'isDefault' => true),
-                                    array ('type'      => 'cancel',
-                                           'name'      => ts('Cancel')),
-                                    )
-                              );
-        }
-   
+    if (isset($defaults['status'])) {
+      $this->assign('membershipStatus', $defaults['status']);
     }
 
+    if ($this->_action & CRM_Core_Action::ADD) {
+      $defaults['is_active'] = 1;
+    }
+
+    if (isset($defaults['member_of_contact_id']) &&
+      $defaults['member_of_contact_id']
+    ) {
+      $defaults['member_org'] = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact',
+        $defaults['member_of_contact_id'], 'display_name'
+      );
+    }
+    return $defaults;
+  }
+
+  /**
+   * Function to actually build the form
+   *
+   * @return None
+   * @access public
+   */
+  public function buildQuickForm() {
+    if ($this->_action & CRM_Core_Action::RENEW) {
+      $name = ts('Renew');
+    }
+    else {
+      $name = ts('Save');
+    }
+
+    $this->addButtons(array(
+        array('type' => 'upload',
+          'name' => $name,
+          'isDefault' => TRUE,
+        ),
+        array('type' => 'upload',
+          'name' => ts('Save and New'),
+          'subName' => 'new',
+        ),
+        array('type' => 'cancel',
+          'name' => ts('Cancel'),
+        ),
+      )
+    );
+
+    if ($this->_action & CRM_Core_Action::DELETE) {
+      $this->addButtons(array(
+          array('type' => 'next',
+            'name' => ts('Delete'),
+            'isDefault' => TRUE,
+          ),
+          array('type' => 'cancel',
+            'name' => ts('Cancel'),
+          ),
+        )
+      );
+    }
+  }
 }
-
 

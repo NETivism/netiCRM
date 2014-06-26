@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -36,64 +35,67 @@
 
 
 require_once 'CRM/Event/DAO/ParticipantStatusType.php';
+class CRM_Event_BAO_ParticipantStatusType extends CRM_Event_DAO_ParticipantStatusType {
+  static
+  function add(&$params) {
+    if (empty($params)) {
+      return NULL;
+    }
+    $dao = new CRM_Event_DAO_ParticipantStatusType;
+    $dao->copyValues($params);
+    return $dao->save();
+  }
 
-class CRM_Event_BAO_ParticipantStatusType extends CRM_Event_DAO_ParticipantStatusType
-{
-    static function add(&$params)
-    {
-        if (empty($params)) return null;
-        $dao = new CRM_Event_DAO_ParticipantStatusType;
-        $dao->copyValues($params);
-        return $dao->save();
+  static
+  function &create(&$params) {
+    require_once 'CRM/Core/Transaction.php';
+    $transaction = new CRM_Core_Transaction;
+    $statusType = self::add($params);
+    if (is_a($statusType, 'CRM_Core_Error')) {
+      $transaction->rollback();
+      return $statusType;
+    }
+    $transaction->commit();
+    return $statusType;
+  }
+
+  static
+  function deleteParticipantStatusType($id) {
+    // return early if there are participants with this status
+    require_once 'CRM/Event/DAO/Participant.php';
+    $participant = new CRM_Event_DAO_Participant;
+    $participant->status_id = $id;
+    if ($participant->find()) {
+      return FALSE;
     }
 
-    static function &create(&$params)
-    {
-        require_once 'CRM/Core/Transaction.php';
-        $transaction = new CRM_Core_Transaction;
-        $statusType = self::add($params);
-        if (is_a($statusType, 'CRM_Core_Error')) {
-            $transaction->rollback();
-            return $statusType;
-        }
-        $transaction->commit();
-        return $statusType;
+    require_once 'CRM/Utils/Weight.php';
+    CRM_Utils_Weight::delWeight('CRM_Event_DAO_ParticipantStatusType', $id);
+
+    $dao = new CRM_Event_DAO_ParticipantStatusType;
+    $dao->id = $id;
+    $dao->find(TRUE);
+    $dao->delete();
+    return TRUE;
+  }
+
+  static
+  function retrieve(&$params, &$defaults) {
+    $result = NULL;
+
+    $dao = new CRM_Event_DAO_ParticipantStatusType;
+    $dao->copyValues($params);
+    if ($dao->find(TRUE)) {
+      CRM_Core_DAO::storeValues($dao, $defaults);
+      $result = $dao;
     }
 
-    static function deleteParticipantStatusType($id)
-    {
-        // return early if there are participants with this status
-        require_once 'CRM/Event/DAO/Participant.php';
-        $participant = new CRM_Event_DAO_Participant;
-        $participant->status_id = $id;
-        if ($participant->find()) return false;
+    return $result;
+  }
 
-        require_once 'CRM/Utils/Weight.php';
-        CRM_Utils_Weight::delWeight('CRM_Event_DAO_ParticipantStatusType', $id);
-
-        $dao = new CRM_Event_DAO_ParticipantStatusType;
-        $dao->id = $id;
-        $dao->find(true);
-        $dao->delete();
-        return true;
-    }
-
-    static function retrieve(&$params, &$defaults)
-    {
-        $result = null;
-
-        $dao = new CRM_Event_DAO_ParticipantStatusType;
-        $dao->copyValues($params);
-        if ($dao->find(true)) {
-            CRM_Core_DAO::storeValues($dao, $defaults);
-            $result = $dao;
-        }
-
-        return $result;
-    }
-
-    static function setIsActive($id, $isActive)
-    {
-        return CRM_Core_DAO::setFieldValue('CRM_Event_BAO_ParticipantStatusType', $id, 'is_active', $isActive);
-    }
+  static
+  function setIsActive($id, $isActive) {
+    return CRM_Core_DAO::setFieldValue('CRM_Event_BAO_ParticipantStatusType', $id, 'is_active', $isActive);
+  }
 }
+

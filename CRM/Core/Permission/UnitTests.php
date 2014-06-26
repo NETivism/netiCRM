@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -39,24 +38,24 @@
  */
 class CRM_Core_Permission_UnitTests {
 
-    public static function getPermission( ) {
-        return CRM_Core_Permission::EDIT;
-    }
+  public static function getPermission() {
+    return CRM_Core_Permission::EDIT;
+  }
 
-    public static function whereClause( $type, &$tables, &$whereTables ) {
-        return '( 1 )';
-    }
+  public static function whereClause($type, &$tables, &$whereTables) {
+    return '( 1 )';
+  }
 
-    public static function &group( $groupType = null, $excludeHidden = true ) {
-        return CRM_Core_PseudoConstant::allGroup( $groupType, $excludeHidden );
-    }
+  public static function &group($groupType = NULL, $excludeHidden = TRUE) {
+    return CRM_Core_PseudoConstant::allGroup($groupType, $excludeHidden);
+  }
 
-    // permission mapping to stub check() calls
-    public static $permissions = null;
+  // permission mapping to stub check() calls
+  public static $permissions = NULL;
 
-    static function check($str)
-    {
-        // return the stubbed permission (defaulting to true if the array is missing)
-        return is_array(self::$permissions) ? in_array($str, self::$permissions) : true;
-    }
+  static function check($str) {
+    // return the stubbed permission (defaulting to true if the array is missing)
+    return is_array(self::$permissions) ? in_array($str, self::$permissions) : TRUE;
+  }
 }
+

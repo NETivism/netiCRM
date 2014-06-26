@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -37,42 +36,41 @@
 /**
  * form helper class for an Demographics object
  */
-class CRM_Contact_Form_Edit_Demographics 
-{
-    /**
-     * build the form elements for Demographics object
-     *
-     * @param CRM_Core_Form $form       reference to the form object
-     *
-     * @return void
-     * @access public
-     * @static
-     */
-    static function buildQuickForm( &$form ) {
-        // radio button for gender
-        $genderOptions = array( );
-        $gender =CRM_Core_PseudoConstant::gender();
-        foreach ($gender as $key => $var) {
-            $genderOptions[$key] = HTML_QuickForm::createElement('radio', null, ts('Gender'), $var, $key);
-        }
-        $form->addGroup($genderOptions, 'gender_id', ts('Gender'));
-                
-        $form->addDate('birth_date', ts('Date of birth'), false, array( 'formatType' => 'birth') );
-        
-        $form->addElement('checkbox', 'is_deceased', null, ts('Contact is deceased'), array('onclick' =>"showDeceasedDate()"));
-        $form->addDate('deceased_date', ts('Deceased date'), false, array( 'formatType' => 'birth') );
+class CRM_Contact_Form_Edit_Demographics {
+
+  /**
+   * build the form elements for Demographics object
+   *
+   * @param CRM_Core_Form $form       reference to the form object
+   *
+   * @return void
+   * @access public
+   * @static
+   */
+  static
+  function buildQuickForm(&$form) {
+    // radio button for gender
+    $genderOptions = array();
+    $gender = CRM_Core_PseudoConstant::gender();
+    foreach ($gender as $key => $var) {
+      $genderOptions[$key] = HTML_QuickForm::createElement('radio', NULL, ts('Gender'), $var, $key);
     }
-    
-    /**
-     * This function sets the default values for the form. Note that in edit/view mode
-     * the default values are retrieved from the database
-     * 
-     * @access public
-     * @return None
-     */
-    function setDefaultValues( &$form, &$defaults ) {
-    }
+    $form->addGroup($genderOptions, 'gender_id', ts('Gender'));
+
+    $form->addDate('birth_date', ts('Date of birth'), FALSE, array('formatType' => 'birth'));
+
+    $form->addElement('checkbox', 'is_deceased', NULL, ts('Contact is deceased'), array('onclick' => "showDeceasedDate()"));
+    $form->addDate('deceased_date', ts('Deceased date'), FALSE, array('formatType' => 'birth'));
+  }
+
+  /**
+   * This function sets the default values for the form. Note that in edit/view mode
+   * the default values are retrieved from the database
+   *
+   * @access public
+   *
+   * @return None
+   */
+  function setDefaultValues(&$form, &$defaults) {}
 }
-
-
 

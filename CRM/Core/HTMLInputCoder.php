@@ -50,6 +50,7 @@ class CRM_Core_HTMLInputCoder implements API_Wrapper {
   private static $_singleton = NULL;
 
   /**
+   *
    * @return CRM_Core_HTMLInputCoder
    */
   public static function singleton() {
@@ -60,6 +61,7 @@ class CRM_Core_HTMLInputCoder implements API_Wrapper {
   }
 
   /**
+   *
    * @return array<string> list of field names
    */
   public static function getSkipFields() {
@@ -97,13 +99,19 @@ class CRM_Core_HTMLInputCoder implements API_Wrapper {
         'premiums_intro_text',
         'honor_block_text',
         'pay_later_receipt',
-        'label', // This is needed for FROM Email Address configuration. dgg
-        'url',  // This is needed for navigation items urls
+        // This is needed for FROM Email Address configuration. dgg
+        'label',
+        // This is needed for navigation items urls
+        'url',
         'details',
-        'msg_text', // message templates’ text versions
-        'text_message', // (send an) email to contact’s and CiviMail’s text version
-        'data', // data i/p of persistent table
-        'sqlQuery', // CRM-6673
+        // message templates’ text versions
+        'msg_text',
+        // (send an) email to contact’s and CiviMail’s text version
+        'text_message',
+        // data i/p of persistent table
+        'data',
+        // CRM-6673
+        'sqlQuery',
         'pcp_title',
         'pcp_intro_text',
       );
@@ -112,7 +120,9 @@ class CRM_Core_HTMLInputCoder implements API_Wrapper {
   }
 
   /**
+   *
    * @param string $fldName
+   *
    * @return bool TRUE if encoding should be skipped for this field
    */
   public static function isSkippedField($fldName) {
@@ -136,20 +146,22 @@ class CRM_Core_HTMLInputCoder implements API_Wrapper {
    */
   public static function encodeInput(&$values, $castToString = TRUE) {
     if (is_array($values)) {
-      foreach ($values as &$value) {
+      foreach ($values as & $value) {
         self::encodeInput($value);
       }
-    } elseif ($castToString || is_string($values)) {
+    }
+    elseif ($castToString || is_string($values)) {
       $values = str_replace(array('<', '>'), array('&lt;', '&gt;'), $values);
     }
   }
 
   public static function decodeOutput(&$values, $castToString = TRUE) {
     if (is_array($values)) {
-      foreach ($values as &$value) {
+      foreach ($values as & $value) {
         self::decodeOutput($value);
       }
-    } elseif ($castToString || is_string($values)) {
+    }
+    elseif ($castToString || is_string($values)) {
       $values = str_replace(array('&lt;', '&gt;'), array('<', '>'), $values);
     }
   }
@@ -168,7 +180,8 @@ class CRM_Core_HTMLInputCoder implements API_Wrapper {
           self::encodeInput($apiRequest['params'][$key], FALSE);
         }
       }
-    } elseif ($apiRequest['version'] == 3 && $lowerAction == 'setvalue') {
+    }
+    elseif ($apiRequest['version'] == 3 && $lowerAction == 'setvalue') {
       if (isset($apiRequest['params']['field']) && isset($apiRequest['params']['value'])) {
         if (!self::isSkippedField($apiRequest['params']['field'])) {
           self::encodeInput($apiRequest['params']['value'], FALSE);
@@ -197,9 +210,11 @@ class CRM_Core_HTMLInputCoder implements API_Wrapper {
   }
 
   /**
+   *
    * @return bool
    */
   protected function isApiControlField($key) {
     return (FALSE !== strpos($key, '.'));
   }
 }
+

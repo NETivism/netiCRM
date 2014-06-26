@@ -26,6 +26,7 @@
 */
 
 
+
 require_once 'CRM/Core/Component/Info.php';
 
 /**

@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -38,52 +37,54 @@ require_once 'CRM/Admin/Form/Setting.php';
 
 /**
  * This class generates form components for Site Url
- * 
+ *
  */
-class CRM_Admin_Form_Setting_Url extends CRM_Admin_Form_Setting
-{
-    /**
-     * Function to build the form
-     *
-     * @return None
-     * @access public
-     */
-    public function buildQuickForm( ) {
-        CRM_Utils_System::setTitle(ts('Settings - Resource URLs'));
+class CRM_Admin_Form_Setting_Url extends CRM_Admin_Form_Setting {
 
-        $this->addElement('text','userFrameworkResourceURL' ,ts('CiviCRM Resource URL'));  
-        $this->addElement('text','imageUploadURL', ts('Image Upload URL'));  
-        $this->addElement('text','customCSSURL', ts('Custom CiviCRM CSS URL'));  
-        $this->addYesNo( 'enableSSL', ts( 'Force Secure URLs (SSL)' ));
+  /**
+   * Function to build the form
+   *
+   * @return None
+   * @access public
+   */
+  public function buildQuickForm() {
+    CRM_Utils_System::setTitle(ts('Settings - Resource URLs'));
 
-        $this->addFormRule( array( 'CRM_Admin_Form_Setting_Url', 'formRule' ) );
+    $this->addElement('text', 'userFrameworkResourceURL', ts('CiviCRM Resource URL'));
+    $this->addElement('text', 'imageUploadURL', ts('Image Upload URL'));
+    $this->addElement('text', 'customCSSURL', ts('Custom CiviCRM CSS URL'));
+    $this->addYesNo('enableSSL', ts('Force Secure URLs (SSL)'));
 
-        parent::buildQuickForm( );
+    $this->addFormRule(array('CRM_Admin_Form_Setting_Url', 'formRule'));
+
+    parent::buildQuickForm();
+  }
+
+  static
+  function formRule($fields) {
+    if (isset($fields['enableSSL']) &&
+      $fields['enableSSL']
+    ) {
+      $config = CRM_Core_Config::singleton();
+      $url = str_replace('http://', 'https://',
+        CRM_Utils_System::url('civicrm/dashboard', 'reset=1', TRUE,
+          NULL, FALSE, FALSE
+        )
+      );
+      if (!CRM_Utils_System::checkURL($url, TRUE)) {
+        $errors = array('enableSSL' =>
+          ts('You need to set up a secure server before you can use the Force Secure URLs option'),
+        );
+        return $errors;
+      }
     }
+    return TRUE;
+  }
 
-    static function formRule( $fields) {
-        if ( isset( $fields['enableSSL'] ) &&
-             $fields['enableSSL'] ) {
-            $config = CRM_Core_Config::singleton( );
-            $url = str_replace( 'http://', 'https://',
-                                CRM_Utils_System::url( 'civicrm/dashboard', 'reset=1', true,
-                                                       null, false, false ) );
-            if ( ! CRM_Utils_System::checkURL( $url, true ) ) {
-                $errors = array( 'enableSSL' =>
-                                 ts( 'You need to set up a secure server before you can use the Force Secure URLs option' ) );
-                return $errors;
-            }
-        }
-        return true;
-    }
+  public function postProcess() {
+    parent::postProcess();
 
-    public function postProcess( ) {
-        parent::postProcess( );
-
-        parent::rebuildMenu( );
-    }
-
-
+    parent::rebuildMenu();
+  }
 }
-
 

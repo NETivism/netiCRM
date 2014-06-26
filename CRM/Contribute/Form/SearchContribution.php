@@ -1,5 +1,4 @@
 <?php
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -36,51 +35,49 @@
 
 require_once 'CRM/Core/Form.php';
 require_once 'CRM/Contribute/PseudoConstant.php';
+class CRM_Contribute_Form_SearchContribution extends CRM_Core_Form {
 
-class CRM_Contribute_Form_SearchContribution extends CRM_Core_Form 
-{
+  /**
+   * Build the form
+   *
+   * @access public
+   *
+   * @return void
+   */
+  public function buildQuickForm() {
+    $attributes = CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionPage', 'title');
 
-    /**
-     * Build the form
-     *
-     * @access public
-     * @return void
-     */
-    public function buildQuickForm( ) 
-    {
-        $attributes = CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionPage', 'title');
-        
-        $this->add( 'text', 'title', ts( 'Find' ), $attributes );
-        
-        $contribution_type = CRM_Contribute_PseudoConstant::contributionType( );
-        $attrs = array('multiple' => 'multiple');
-        $this->addElement('select', 'contribution_type_id', 'Contribution Type', $contribution_type, $attrs);
-       
-        $this->addButtons(array( 
-                                array ('type'      => 'refresh', 
-                                       'name'      => ts('Search'), 
-                                       'isDefault' => true ), 
-                                ) ); 
-    }
+    $this->add('text', 'title', ts('Find'), $attributes);
 
+    $contribution_type = CRM_Contribute_PseudoConstant::contributionType();
+    $attrs = array('multiple' => 'multiple');
+    $this->addElement('select', 'contribution_type_id', 'Contribution Type', $contribution_type, $attrs);
 
-    function postProcess( ) 
-    {
-        $params = $this->controller->exportValues( $this->_name );
-        $parent = $this->controller->getParent( );
-        $parent->set( 'searchResult', 1 );
-        if ( ! empty( $params ) ) {
-            $fields = array( 'title', 'contribution_type_id' );
-            foreach ( $fields as $field ) {
-                if ( isset( $params[$field] ) &&
-                     ! CRM_Utils_System::isNull( $params[$field] ) ) {
-                    $parent->set( $field, $params[$field] );
-                } else {
-                    $parent->set( $field, null );
-                }
-            }
+    $this->addButtons(array(
+        array('type' => 'refresh',
+          'name' => ts('Search'),
+          'isDefault' => TRUE,
+        ),
+      ));
+  }
+
+  function postProcess() {
+    $params = $this->controller->exportValues($this->_name);
+    $parent = $this->controller->getParent();
+    $parent->set('searchResult', 1);
+    if (!empty($params)) {
+      $fields = array('title', 'contribution_type_id');
+      foreach ($fields as $field) {
+        if (isset($params[$field]) &&
+          !CRM_Utils_System::isNull($params[$field])
+        ) {
+          $parent->set($field, $params[$field]);
         }
+        else {
+          $parent->set($field, NULL);
+        }
+      }
     }
+  }
 }
-
 
