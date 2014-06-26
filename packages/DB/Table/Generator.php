@@ -231,7 +231,7 @@ class DB_Table_Generator
     * at instantiation time.  To check if there was an instantiation error...
     *
     * <code>
-    *     $obj =& new DB_Table_Generator();
+    *     $obj = new DB_Table_Generator();
     *     if ($obj->error) {
     *         // ... error handling code here ...
     *     }

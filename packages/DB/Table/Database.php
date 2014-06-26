@@ -284,10 +284,10 @@ require_once 'PEAR.php';
  * (3) DB_Table_Database::setErrorMessage(array(
  *                                        DB_TABLE_DATABASE_ERR_.. => '...');
  *                                        DB_TABLE_DATABASE_ERR_.. => '...');
- * (4) $obj =& new DB_Table();
+ * (4) $obj = new DB_Table();
  *     $obj->setErrorMessage(DB_TABLE_DATABASE_ERR_.., '...');
  *     $obj->setErrorMessage(DB_TABLE_DATABASE_ERR_.., '...');
- * (5) $obj =& new DB_Table();
+ * (5) $obj = new DB_Table();
  *     $obj->setErrorMessage(array(DB_TABLE_DATABASE_ERR_.. => '...');
  *                                 DB_TABLE_DATABASE_ERR_.. => '...');
  * </code>
