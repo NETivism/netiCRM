@@ -242,7 +242,7 @@ class CRM_Core_Payment_BaseIPN {
         $contribution->save( );
 
         if ( $membership ) {
-            $failed_id = array_search('Expired', self::$_membershipStatus);
+            $failed_id = array_search('Cancelled', self::$_membershipStatus);
             $membership->status_id = $failed_id;
             $membership->save( );
             
