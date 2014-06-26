@@ -93,7 +93,7 @@ class CRM_Contact_Form_Search_Custom_Proximity
     }
 
     function buildForm( &$form ) {
-        CRM_Core_OptionValue::getValues(array('name' => 'custom_search'), &$custom_search);
+        CRM_Core_OptionValue::getValues(array('name' => 'custom_search'), $custom_search);
         foreach($custom_search as $c){
           if($c['value'] == $_GET['csid']){
             $this->setTitle($c['description']);
