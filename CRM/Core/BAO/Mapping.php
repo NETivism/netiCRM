@@ -136,7 +136,7 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping
     static function getMappings( $mappingTypeId )
     {
         $mapping = array( );
-        $mappingDAO =&  new CRM_Core_DAO_Mapping();
+        $mappingDAO = new CRM_Core_DAO_Mapping();
         $mappingDAO->mapping_type_id = $mappingTypeId;
         $mappingDAO->find();
         

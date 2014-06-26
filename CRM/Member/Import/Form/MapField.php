@@ -262,7 +262,7 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
             $this->assign('loadedMapping', $mappingDetails->name);
             $this->set('loadedMapping', $savedMapping);
             
-            $getMappingName =&  new CRM_Core_DAO_Mapping();
+            $getMappingName = new CRM_Core_DAO_Mapping();
             $getMappingName->id = $savedMapping;
             $getMappingName->mapping_type = 'Import Memberships';
             $getMappingName->find();
