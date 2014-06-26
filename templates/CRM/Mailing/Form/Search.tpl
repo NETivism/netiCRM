@@ -45,11 +45,6 @@
             {$form.mailing_status.html}
         </td>
     </tr>
-
-    {* campaign in mailing search *}
-    {include file="CRM/Campaign/Form/addCampaignToComponent.tpl" 
-    campaignContext="componentSearch" campaignTrClass='' campaignTdClass=''}
-
     <tr>
         <td>{$form.buttons.html}</td><td colspan="2"></td>
     </tr>
