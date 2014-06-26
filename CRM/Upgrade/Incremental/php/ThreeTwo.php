@@ -74,7 +74,7 @@ class CRM_Upgrade_Incremental_php_ThreeTwo {
             CRM_Core_DAO::executeQuery( "DELETE FROM civicrm_acl WHERE object_table = 'access CiviCase'" );
         }
         
-        $upgrade =& new CRM_Upgrade_Form( );
+        $upgrade = new CRM_Upgrade_Form( );
         $upgrade->processSQL( $rev );
     }
 

@@ -695,7 +695,7 @@ WHERE     civicrm_contact.id = " . CRM_Utils_Type::escape($id, 'Integer');
 
             // delete the log entries since we dont have triggers enabled as yet
             require_once 'CRM/Core/DAO/Log.php';
-            $logDAO =& new CRM_Core_DAO_Log();
+            $logDAO = new CRM_Core_DAO_Log();
             $logDAO->entity_table = 'civicrm_contact';
             $logDAO->entity_id    = $id;
             $logDAO->delete();

@@ -111,7 +111,7 @@ WHERE id = %2
         }
         $ufGroup->free( );
         
-        $upgrade =& new CRM_Upgrade_Form( );
+        $upgrade = new CRM_Upgrade_Form( );
         $upgrade->processSQL( $rev );
 
         // now modify the config so that the directories are stored in option group/value
@@ -123,7 +123,7 @@ WHERE id = %2
     
     function upgrade_3_3_beta1( $rev ) 
     {
-        $upgrade =& new CRM_Upgrade_Form( );
+        $upgrade = new CRM_Upgrade_Form( );
         $upgrade->processSQL( $rev );
 
         // CRM-6902
@@ -267,13 +267,13 @@ WHERE id = %2
             CRM_Core_DAO::executeQuery( $sql );
         }
 
-        $upgrade =& new CRM_Upgrade_Form( );
+        $upgrade = new CRM_Upgrade_Form( );
         $upgrade->processSQL( $rev );
     }
      
     function upgrade_3_3_0( $rev ) 
     {        
-        $upgrade =& new CRM_Upgrade_Form( );
+        $upgrade = new CRM_Upgrade_Form( );
         $upgrade->processSQL( $rev );
         
         //CRM-7123 -lets activate needful languages.

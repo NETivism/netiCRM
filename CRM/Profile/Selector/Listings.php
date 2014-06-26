@@ -406,7 +406,7 @@ class CRM_Profile_Selector_Listings extends CRM_Core_Selector_Base implements CR
                 $fieldType = CRM_Utils_Array::value('2',$fieldArray);
                 if ( is_numeric(CRM_Utils_Array::value('1',$fieldArray) ) ) {
                     if ( !in_array( $fieldType, $multipleFields ) ) {
-                        $locationType = & new CRM_Core_DAO_LocationType();
+                        $locationType =  new CRM_Core_DAO_LocationType();
                         $locationType->id = $fieldArray[1];
                         $locationType->find(true);
                         if ($fieldArray[0] == 'email' || $fieldArray[0] == 'im' || $fieldArray[0] == 'phone') {

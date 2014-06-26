@@ -474,7 +474,7 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task
         # exclude individuals belonging to selected households
         require_once 'CRM/Contact/DAO/Relationship.php';
         foreach ( $households as $household_id => $row ) {
-            $dao =& new CRM_Contact_DAO_Relationship();
+            $dao = new CRM_Contact_DAO_Relationship();
             $dao->contact_id_b = $household_id;
             $dao->find( );
             while ( $dao->fetch( ) ) {
