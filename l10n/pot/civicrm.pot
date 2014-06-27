@@ -44698,7 +44698,3 @@ msgstr ""
 #: CRM/Event/Form/Search.php 
 msgid "Place Available"
 msgstr ""
-
-#: templates/CRM/Event/Page/ManageEvent.tpl
-msgid "Participant count"
-msgstr ""
