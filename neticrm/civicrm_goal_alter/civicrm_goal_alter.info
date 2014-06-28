@@ -1,6 +1,0 @@
-name = Goal Amount Change
-description = "When contribution amount reach goal, then alter the amount and notify user."
-dependencies[] = civicrm
-package = NetiCRM
-core = 6.x
-version = 6.x-1.0

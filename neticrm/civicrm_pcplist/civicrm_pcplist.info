@@ -1,6 +1,0 @@
-name = CiviPCP List
-description = Provide Personal Contribution Page directory in drupal.
-package = NetiCRM
-core = 6.x
-dependencies[] = civicrm
-version = 6.x-1.0

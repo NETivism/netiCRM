@@ -1,7 +1,0 @@
-<?php
-
-/**
- * Implementation of hook_install().
- */
-function neticrm_event_stat_uninstall() {
-}

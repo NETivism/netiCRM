@@ -1,7 +1,0 @@
-name = Event sync from cck
-description = Create / update CiviCRM Event for specific content type and configurable field.
-package = NetiCRM
-dependencies[] = civicrm
-dependencies[] = content
-core = 6.x
-version = 6.x-1.0

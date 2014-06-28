@@ -1,7 +1,0 @@
-; $Id$
-name = CiviCRM Phone Format
-description = CiviCRM Taiwan Phone number format plugin. Currently only support event registeration, contribution and profile create page.
-core = 6.x
-package = "NetiCRM"
-version = "6.x-1.0"
-dependencies[] = civicrm
