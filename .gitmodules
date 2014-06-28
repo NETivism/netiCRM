@@ -1,0 +1,4 @@
+[submodule "drupal"]
+	path = drupal
+	url = git@github.com:NETivism/netiCRM-drupal.git
+	branch = 6.x-master
