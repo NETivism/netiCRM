@@ -1,6 +1,0 @@
-name = Event Parent Register 
-description = "Allow a parent to register children to an event"
-dependencies[] = civicrm
-package = NetiCRM
-core = 6.x
-version = 6.x-beta-1.1

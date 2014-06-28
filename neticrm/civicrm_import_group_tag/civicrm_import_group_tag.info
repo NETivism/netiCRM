@@ -1,6 +1,0 @@
-name = CiviCRM Group and Tag Import
-description = Support to import CiviCRM contact by contact_id or external_id
-package = NetiCRM
-core = 6.x
-version = 6.x-1.0
-dependencies[] = civicrm

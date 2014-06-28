@@ -1,6 +1,0 @@
-<?php
-function esunbank_enable(){
-  $dir = 'esunbarcode';
-  $dir = file_create_path($dir);
-  file_check_directory($dir, FILE_CREATE_DIRECTORY);
-}

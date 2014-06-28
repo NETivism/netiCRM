@@ -1,6 +1,0 @@
-name = CiviCRM Legal ID
-description = This module is used for display / save / edit personal legal identification on contact edition.
-dependencies[] = civicrm
-package = NetiCRM
-core = 6.x
-version = 6.x-1.0
