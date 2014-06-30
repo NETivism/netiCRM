@@ -1,6 +1,0 @@
-name = Jquery Form Validation
-description = This module is used for CiviCRM form validation of jquery.validate plug-in.
-dependencies[] = civicrm
-package = NetiCRM
-core = 6.x
-version = 6.x-1.0

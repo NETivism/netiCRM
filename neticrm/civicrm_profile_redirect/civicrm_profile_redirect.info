@@ -1,6 +1,0 @@
-name = Profile redirect
-description = Profile redirect base on url.
-dependencies[] = civicrm
-package = NetiCRM
-core = 6.x
-version = 6.x-1.0

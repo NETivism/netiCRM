@@ -1,6 +1,0 @@
-name = NetiCRM Event Statistics
-description = Show participants infographic on event search page.
-version = 6.x-0.1
-core = 6.x
-package = NetiCRM
-dependencies[] = civicrm

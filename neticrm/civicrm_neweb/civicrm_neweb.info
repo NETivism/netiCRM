@@ -1,7 +1,0 @@
-name = Payment Method of Neweb
-description = Neweb payment functions for civicrm.
-package = NetiCRM Payment Method
-dependencies[] = civicrm
-dependencies[] = civicrm_instrument
-core = 6.x
-version = 6.x-1.9

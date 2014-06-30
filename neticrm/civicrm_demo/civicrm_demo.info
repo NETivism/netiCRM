@@ -1,6 +1,0 @@
-name = Demo data of CiviCRM
-description = "Random generate chinese demo data of CiviCRM"
-dependencies[] = civicrm
-package = NetiCRM
-core = 6.x
-version = 6.x-1.0

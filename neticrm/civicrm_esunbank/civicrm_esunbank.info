@@ -1,8 +1,0 @@
-name = Payment Method of Esunbank easyfee
-description = Esunbank easyfee payment gateway.
-package = NetiCRM Payment Method
-dependencies[] = esunbank
-dependencies[] = colorbox
-dependencies[] = civicrm
-core = 6.x
-version = 6.x-1.0
