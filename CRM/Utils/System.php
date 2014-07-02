@@ -149,26 +149,18 @@ class CRM_Utils_System {
         drupal_set_breadcrumb('');
         drupal_maintenance_theme();
       }
-      $out = theme($type, $content, $args);
-    }
-    else {
-      $out = $content;
-    }
-    if ($type == 'page') {
-      global $civicrm_cache_id;
-      if (!empty($civicrm_cache_id) && function_exists('cache_set')) {
-        $data = array(
-          'ret' => $ret,
-          'out' => $out,
-        );
-        cache_set($civicrm_cache_id, $data, 'cache_block', CACHE_TEMPORARY);
+      if(function_exists('drupal_deliver_page')){ // drupal 7 specific
+        $out = drupal_deliver_page($content);
+      }
+      else{
+        $out = theme($type, $content, $args);
       }
     }
-    if ($ret) {
-      return $out;
+    else{
+      print $content;
     }
-    else {
-      print $out;
+    if($ret) {
+      return $out;
     }
   }
 

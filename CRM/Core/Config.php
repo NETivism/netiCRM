@@ -398,9 +398,8 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
    */
   private function _initVariables() {
     // retrieve serialised settings
-    require_once "CRM/Core/BAO/Setting.php";
     $variables = array();
-    CRM_Core_BAO_Setting::retrieve($variables);
+    CRM_Core_BAO_ConfigSetting::retrieve($variables);
 
     // if settings are not available, go down the full path
     if (empty($variables)) {
@@ -420,7 +419,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
       $this->componentRegistry->addConfig($this);
 
       // serialise settings
-      CRM_Core_BAO_Setting::add($variables);
+      CRM_Core_BAO_ConfigSetting::add($variables);
     }
 
     $urlArray = array('userFrameworkResourceURL', 'imageUploadURL');

@@ -38,7 +38,7 @@
  * file contains functions used in civicrm configuration
  *
  */
-class CRM_Core_BAO_Setting {
+class CRM_Core_BAO_ConfigSetting {
 
   /**
    * Function to add civicrm settings
@@ -50,7 +50,7 @@ class CRM_Core_BAO_Setting {
    */
   static
   function add(&$params) {
-    CRM_Core_BAO_Setting::fixParams($params);
+    CRM_Core_BAO_ConfigSetting::fixParams($params);
 
     // also set a template url so js files can use this
     // CRM-6194
@@ -66,7 +66,7 @@ class CRM_Core_BAO_Setting {
     $domain->find(TRUE);
     if ($domain->config_backend) {
       $values = unserialize($domain->config_backend);
-      CRM_Core_BAO_Setting::formatParams($params, $values);
+      CRM_Core_BAO_ConfigSetting::formatParams($params, $values);
     }
 
     // CRM-6151
@@ -79,14 +79,7 @@ class CRM_Core_BAO_Setting {
     // unset any of the variables we read from file that should not be stored in the database
     // the username and certpath are stored flat with _test and _live
     // check CRM-1470
-    $skipVars = array('dsn', 'templateCompileDir',
-      'userFrameworkDSN',
-      'userFrameworkBaseURL', 'userFrameworkClass', 'userHookClass',
-      'userPermissionClass', 'userFrameworkURLVar',
-      'newBaseURL', 'newBaseDir', 'newSiteName',
-      'qfKey', 'gettextResourceDir', 'cleanURL',
-      'locale_custom_strings', 'localeCustomStrings',
-    );
+    $skipVars = self::skipVars();
     foreach ($skipVars as $var) {
       unset($params[$var]);
     }
@@ -188,14 +181,7 @@ class CRM_Core_BAO_Setting {
     if ($domain->config_backend) {
       $defaults = unserialize($domain->config_backend);
 
-      $skipVars = array('dsn', 'templateCompileDir',
-        'userFrameworkDSN',
-        'userFrameworkBaseURL', 'userFrameworkClass', 'userHookClass',
-        'userPermissionClass', 'userFrameworkURLVar',
-        'newBaseURL', 'newBaseDir', 'newSiteName',
-        'qfKey', 'gettextResourceDir', 'cleanURL',
-        'locale_custom_strings', 'localeCustomStrings',
-      );
+      $skipVars = self::skipVars();
       foreach ($skipVars as $skip) {
         if (array_key_exists($skip, $defaults)) {
           unset($defaults[$skip]);
@@ -525,6 +511,71 @@ WHERE  id = %1
     }
 
     return $moveStatus;
+  }
+
+  /**
+   * takes a componentName and enables it in the config
+   * Primarily used during unit testing
+   *
+   * @param string $componentName name of the component to be enabled, needs to be valid
+   *
+   * @return boolean - true if valid component name and enabling succeeds, else false
+   * @static
+   */
+  static function enableComponent($componentName) {
+    $config = CRM_Core_Config::singleton();
+    if (in_array($componentName, $config->enableComponents)) {
+      // component is already enabled
+      return TRUE;
+    }
+    $components = CRM_Core_Component::getComponents();
+
+    // return if component does not exist
+    if (!array_key_exists($componentName, $components)) {
+      return FALSE;
+    }
+
+    // get enabled-components from DB and add to the list
+    $enabledComponents =
+      CRM_Core_BAO_Setting::getItem(CRM_Core_BAO_Setting::SYSTEM_PREFERENCES_NAME, 'enable_components', NULL, array());
+    $enabledComponents[] = $componentName;
+
+    $enabledComponentIDs = array();
+    foreach ($enabledComponents as $name) {
+      $enabledComponentIDs[] = $components[$name]->componentID;
+    }
+
+    // fix the config object
+    $config->enableComponents = $enabledComponents;
+    $config->enableComponentIDs = $enabledComponentIDs;
+
+    // also force reset of component array
+    CRM_Core_Component::getEnabledComponents(TRUE);
+
+    // update DB
+    CRM_Core_BAO_Setting::setItem($enabledComponents,
+      CRM_Core_BAO_Setting::SYSTEM_PREFERENCES_NAME,'enable_components');
+
+    return TRUE;
+  }
+
+  /**
+   * @return array
+   */
+  static function skipVars() {
+    return array(
+      'dsn', 'templateCompileDir',
+      'userFrameworkDSN',
+      'userFramework',
+      'userFrameworkBaseURL', 'userFrameworkClass', 'userHookClass',
+      'userPermissionClass', 'userFrameworkURLVar', 'userFrameworkVersion',
+      'newBaseURL', 'newBaseDir', 'newSiteName', 'configAndLogDir',
+      'qfKey', 'gettextResourceDir', 'cleanURL',
+      'locale_custom_strings', 'localeCustomStrings',
+      'autocompleteContactSearch',
+      'autocompleteContactReference',
+      'checksumTimeout',
+    );
   }
 }
 

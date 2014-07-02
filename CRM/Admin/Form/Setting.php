@@ -50,7 +50,8 @@ class CRM_Admin_Form_Setting extends CRM_Core_Form {
    * @access public
    *
    * @return None
-   */ function setDefaultValues() {
+   */
+   function setDefaultValues() {
     if (!$this->_defaults) {
       $this->_defaults = array();
       $formArray = array('Component', 'Localization');
@@ -59,8 +60,7 @@ class CRM_Admin_Form_Setting extends CRM_Core_Form {
         $formMode = TRUE;
       }
 
-      require_once "CRM/Core/BAO/Setting.php";
-      CRM_Core_BAO_Setting::retrieve($this->_defaults);
+      CRM_Core_BAO_ConfigSetting::retrieve($this->_defaults);
 
       require_once "CRM/Core/Config/Defaults.php";
       CRM_Core_Config_Defaults::setValues($this->_defaults, $formMode);
@@ -118,8 +118,7 @@ class CRM_Admin_Form_Setting extends CRM_Core_Form {
   }
 
   public function commonProcess(&$params) {
-    require_once "CRM/Core/BAO/Setting.php";
-    CRM_Core_BAO_Setting::add($params);
+    CRM_Core_BAO_ConfigSetting::add($params);
 
     // also delete the CRM_Core_Config key from the database
     $cache = &CRM_Utils_Cache::singleton();

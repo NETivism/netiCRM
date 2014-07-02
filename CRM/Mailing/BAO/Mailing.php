@@ -2583,7 +2583,6 @@ WHERE  civicrm_mailing_job.id = %1
       shuffle($lockArray);
 
       // check if we are using global locks
-      require_once 'CRM/Core/BAO/Setting.php';
       $serverWideLock = CRM_Core_BAO_Setting::getItem(CRM_Core_BAO_Setting::MAILING_PREFERENCES_NAME,
         'civimail_server_wide_lock'
       );

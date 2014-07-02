@@ -318,8 +318,7 @@ ORDER BY parent_id, weight";
    * @return returns html or json object
    * @static
    */
-  static
-  function buildNavigation($json = FALSE) {
+  static function buildNavigation($json = FALSE) {
     $navigations = array();
     self::buildNavigationTree($navigations, $parent = NULL);
     $navigationString = NULL;
@@ -438,7 +437,7 @@ ORDER BY parent_id, weight";
     $i18n = &CRM_Core_I18n::singleton();
 
     $name = $i18n->crm_translate($value['attributes']['label'], array('context' => 'menu'));
-    $url = str_replace('&', '&amp;', $value['attributes']['url']);
+    $url = $value['attributes']['url'];
     $permission = $value['attributes']['permission'];
     $operator = $value['attributes']['operator'];
     $parentID = $value['attributes']['parentID'];
@@ -468,7 +467,9 @@ ORDER BY parent_id, weight";
         $url = $url;
       }
       else {
-        $url = CRM_Utils_System::url($url);
+        $query = '';
+        list($url, $query) = explode('&', $url, 2);
+        $url = CRM_Utils_System::url($url, $query);
       }
       $makeLink = TRUE;
     }

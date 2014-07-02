@@ -72,7 +72,6 @@ class CRM_Mailing_Info extends CRM_Core_Component_Info {
       return FALSE;
     }
 
-    require_once 'CRM/Core/BAO/Setting.php';
     $enableWorkflow = CRM_Core_BAO_Setting::getItem(CRM_Core_BAO_Setting::MAILING_PREFERENCES_NAME,
       'civimail_workflow',
       NULL,

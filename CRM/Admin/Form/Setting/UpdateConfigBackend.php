@@ -53,11 +53,10 @@ class CRM_Admin_Form_Setting_UpdateConfigBackend extends CRM_Admin_Form_Setting 
   public function buildQuickForm() {
     CRM_Utils_System::setTitle(ts('Settings - Update Directory Path and URL'));
 
-    require_once 'CRM/Core/BAO/Setting.php';
     list($this->_oldBaseURL,
       $this->_oldBaseDir,
       $this->_oldSiteName
-    ) = CRM_Core_BAO_Setting::getConfigSettings();
+    ) = CRM_Core_BAO_ConfigSetting::getConfigSettings();
 
     $this->assign('oldBaseURL', $this->_oldBaseURL);
     $this->assign('oldBaseDir', $this->_oldBaseDir);
@@ -81,7 +80,7 @@ class CRM_Admin_Form_Setting_UpdateConfigBackend extends CRM_Admin_Form_Setting 
       list($this->_defaults['newBaseURL'],
         $this->_defaults['newBaseDir'],
         $this->_defaults['newSiteName']
-      ) = CRM_Core_BAO_Setting::getBestGuessSettings();
+      ) = CRM_Core_BAO_ConfigSetting::getBestGuessSettings();
     }
 
     return $this->_defaults;

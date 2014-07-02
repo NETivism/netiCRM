@@ -1,9 +1,9 @@
 <?php
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 3.3                                                |
+ | CiviCRM version 4.5                                                |
  +--------------------------------------------------------------------+
- | Copyright CiviCRM LLC (c) 2004-2010                                |
+ | Copyright CiviCRM LLC (c) 2004-2014                                |
  +--------------------------------------------------------------------+
  | This file is a part of CiviCRM.                                    |
  |                                                                    |
@@ -28,18 +28,39 @@
 /**
  *
  * @package CRM
- * @copyright CiviCRM LLC (c) 2004-2010
+ * @copyright CiviCRM LLC (c) 2004-2014
  * $Id$
  *
  */
 
-require_once 'CRM/Core/DAO/Cache.php';
-
 /**
- * BAO object for crm_log table
+ * BAO object for civicrm_cache table. This is a database cache and is persisted across sessions. Typically we use
+ * this to store meta data (like profile fields, custom fields etc).
+ *
+ * The group_name column is used for grouping together all cache elements that logically belong to the same set.
+ * Thus all session cache entries are grouped under 'CiviCRM Session'. This allows us to delete all entries of
+ * a specific group if needed.
+ *
+ * The path column allows us to differentiate between items in that group. Thus for the session cache, the path is
+ * the unique form name for each form (per user)
  */
 class CRM_Core_BAO_Cache extends CRM_Core_DAO_Cache {
+  /**
+   * @var array ($cacheKey => $cacheValue)
+   */
   static $_cache = NULL;
+
+  /**
+   * Retrieve an item from the DB cache
+   *
+   * @param string $group (required) The group name of the item
+   * @param string $path  (required) The path under which this item is stored
+   * @param int    $componentID The optional component ID (so componenets can share the same name space)
+   *
+   * @return object The data if present in cache, else null
+   * @static
+   * @access public
+   */
   static
   function &getItem($group, $path, $componentID = NULL) {
     if (self::$_cache === NULL) {
@@ -65,6 +86,46 @@ class CRM_Core_BAO_Cache extends CRM_Core_DAO_Cache {
         $cache->set($argString, self::$_cache[$argString]);
       }
     }
+    return self::$_cache[$argString];
+  }
+
+  /**
+   * Retrieve all items in a group
+   *
+   * @param string $group (required) The group name of the item
+   * @param int    $componentID The optional component ID (so componenets can share the same name space)
+   *
+   * @return object The data if present in cache, else null
+   * @static
+   * @access public
+   */
+  static function &getItems($group, $componentID = NULL) {
+    if (self::$_cache === NULL) {
+      self::$_cache = array();
+    }
+
+    $argString = "CRM_CT_CI_{$group}_{$componentID}";
+    if (!array_key_exists($argString, self::$_cache)) {
+      $cache = CRM_Utils_Cache::singleton();
+      self::$_cache[$argString] = $cache->get($argString);
+      if (!self::$_cache[$argString]) {
+        $dao = new CRM_Core_DAO_Cache();
+
+        $dao->group_name   = $group;
+        $dao->component_id = $componentID;
+        $dao->find();
+
+        $result = array(); // array($path => $data)
+        while ($dao->fetch()) {
+          $result[$dao->path] = unserialize($dao->data);
+        }
+        $dao->free();
+
+        self::$_cache[$argString] = $result;
+        $cache->set($argString, self::$_cache[$argString]);
+      }
+    }
+
     return self::$_cache[$argString];
   }
 

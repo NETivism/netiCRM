@@ -68,8 +68,7 @@ class CRM_Upgrade_TwoOne_Form_Step1 extends CRM_Upgrade_Form {
         }
       }
       // serialise settings
-      require_once "CRM/Core/BAO/Setting.php";
-      CRM_Core_BAO_Setting::add($defaults);
+      CRM_Core_BAO_ConfigSetting::add($defaults);
 
       $config = CRM_Core_Config::singleton();
     }

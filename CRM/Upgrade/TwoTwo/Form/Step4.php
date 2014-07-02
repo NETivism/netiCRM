@@ -90,7 +90,7 @@ class CRM_Upgrade_TwoTwo_Form_Step4 extends CRM_Upgrade_Form {
       $defaults['fieldSeparator'] = ',';
       $defaults['fatalErrorTemplate'] = 'CRM/common/fatal.tpl';
       // serialise settings
-      CRM_Core_BAO_Setting::add($defaults);
+      CRM_Core_BAO_ConfigSetting::add($defaults);
     }
 
     return $this->checkVersion('2.2');
