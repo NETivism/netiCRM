@@ -353,11 +353,6 @@ class CRM_Event_BAO_Participant extends CRM_Event_DAO_Participant
                                $includeWaitingList = true, 
                                $returnWaitingCount = false,
                                $considerTestParticipant = false ) {
-        static $event_full;
-        $cid = $eventId.'_'.$returnEmptySeats.$includeWaitingList.$returnWaitingCount.$considerTestParticipant;
-        if(isset($event_full[$cid])){
-          return $event_full[$cid]; 
-        }
         $result = null;
         if ( !$eventId ) return $result; 
         
@@ -447,7 +442,6 @@ INNER JOIN  civicrm_contact contact ON (participant.contact_id = contact.id)
             
             //don't have limit for event seats.
             if ( $participants->max_participants == null ) {
-                $event_full[$cid] = $result;
                 return $result;
             }
         }
@@ -461,7 +455,6 @@ INNER JOIN  civicrm_contact contact ON (participant.contact_id = contact.id)
             } else if ( $returnEmptySeats ) {
                 $result = $eventMaxSeats - $eventRegisteredSeats;
             }
-            $event_full[$cid] = $result;
             return $result;
         } else {
             $query = '
@@ -478,15 +471,12 @@ SELECT  event.event_full_text,
         
         // no limit for registration.
         if ( $eventMaxSeats == null ) {
-            $event_full[$cid] = $result;
             return $result;
         }
         if ( $eventMaxSeats  ) {
-            $event_full[$cid] = $returnEmptySeats ? $eventMaxSeats : false;
-            return $event_full[$cid];
+            return $returnEmptySeats ? $eventMaxSeats : false;
         }
 
-        $event_full[$cid] = $evenFullText;
         return $evenFullText;
     }
     
