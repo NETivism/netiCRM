@@ -144,23 +144,43 @@ class CRM_Utils_System {
    * @access public
    */
   function theme($type, &$content, $args = NULL, $print = FALSE, $ret = FALSE, $maintenance = FALSE) {
-    if (function_exists('theme') && !$print) {
-      if ($maintenance) {
-        drupal_set_breadcrumb('');
-        drupal_maintenance_theme();
-      }
-      if(function_exists('drupal_deliver_page')){ // drupal 7 specific
-        $out = drupal_deliver_page($content);
-      }
-      else{
-        $out = theme($type, $content, $args);
-      }
+    if(defined('VERSION')){  // drupal 7 or 8
+      $version = substr(VERSION, 0, strpos(VERSION, '.'));
+    }
+    else{ // drupal 6 only
+      $version = '6';
+    }
+    switch($version){
+      case '6':
+        if(function_exists('theme') && !$print){
+          if ($maintenance) {
+            drupal_set_breadcrumb('');
+            drupal_maintenance_theme();
+          }
+          $content = theme($type, $content, $args);
+        }
+        break;
+      case '7':
+        if(function_exists('drupal_deliver_page') && !$print){
+          if ($maintenance) {
+            drupal_set_breadcrumb('');
+            drupal_maintenance_theme();
+          }
+          ob_start();
+          drupal_deliver_page($content);
+          $content = ob_end_clean();
+        }
+        break;
+      case '8':
+        drupal_set_message('We havnt support d8 yet');
+        return;
+        break;
+    }
+    if($ret){
+      return $content; 
     }
     else{
       print $content;
-    }
-    if($ret) {
-      return $out;
     }
   }
 
