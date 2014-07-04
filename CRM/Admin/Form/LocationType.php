@@ -56,22 +56,10 @@ class CRM_Admin_Form_LocationType extends CRM_Admin_Form {
     }
 
     $this->applyFilter('__ALL__', 'trim');
-    $this->add('text',
-      'name',
-      ts('Name'),
-      CRM_Core_DAO::getAttribute('CRM_Core_DAO_LocationType', 'name'),
-      TRUE
-    );
-    $this->addRule('name',
-      ts('Name already exists in Database.'),
-      'objectExists',
-      array('CRM_Core_DAO_LocationType', $this->_id)
-    );
-    /*
-        $this->addRule( 'name',
-                        ts( 'Name can only consist of alpha-numeric characters' ),
-                        'variable' );
-        */
+    $this->add('text', 'label', ts('Label'), CRM_Core_DAO::getAttribute('CRM_Core_DAO_LocationType', 'label'), TRUE);
+    $this->addRule('label', ts('Lable already exists in Database.'), 'objectExists',  array('CRM_Core_DAO_LocationType', $this->_id));
+    $this->add('text', 'name', ts('Name'), CRM_Core_DAO::getAttribute('CRM_Core_DAO_LocationType', 'name'), TRUE);
+    $this->addRule('name', ts('Name already exists in Database.'), 'objectExists',  array('CRM_Core_DAO_LocationType', $this->_id));
 
 
     $this->add('text', 'vcard_name', ts('vCard Name'), CRM_Core_DAO::getAttribute('CRM_Core_DAO_LocationType', 'vcard_name'));
@@ -106,6 +94,7 @@ class CRM_Admin_Form_LocationType extends CRM_Admin_Form {
 
     // action is taken depending upon the mode
     $locationType = new CRM_Core_DAO_LocationType();
+    $locationType->label = $params['label'];
     $locationType->name = $params['name'];
     $locationType->vcard_name = $params['vcard_name'];
     $locationType->description = $params['description'];

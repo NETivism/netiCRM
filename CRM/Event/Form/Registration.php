@@ -467,7 +467,7 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
       $params = array('id' => $this->_eventId);
 
       // get the billing location type
-      $locationTypes = &CRM_Core_PseudoConstant::locationType();
+      $locationTypes = CRM_Core_PseudoConstant::locationType(FALSE, 'name');
       $this->_bltID = array_search(ts('Billing'), $locationTypes);
       if (!$this->_bltID) {
         CRM_Core_Error::fatal(ts('Please set a location type of %1', array(1 => 'Billing')));

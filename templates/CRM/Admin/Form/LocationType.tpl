@@ -35,6 +35,10 @@
 {else}
   <table class="form-layout-compressed">
       <tr class="crm-location-type-form-block-label">
+          <td class="label">{$form.label.label}</td>
+          <td>{$form.label.html}</td>
+      </tr>
+      <tr class="crm-location-type-form-block-name">
           <td class="label">{$form.name.label}</td>
           <td>{$form.name.html}<br />
                <span class="description">{ts}WARNING: Do NOT use spaces in the Location Name.{/ts}</span>

@@ -40,7 +40,9 @@
     <table id="options" class="display">
     <thead>
     <tr>
-        <th id="sortable">{ts}Name{/ts}</th>
+        <th id="sortable">id</th>
+        <th>{ts}Label{/ts}</th>
+        <th>{ts}Name{/ts}</th>
         <th>{ts}vCard{/ts}</th>
         <th id="nosort">{ts}Description{/ts}</th>
         <th>{ts}Enabled?{/ts}</th>
@@ -50,6 +52,8 @@
     </thead>
     {foreach from=$rows item=row}
     <tr id="row_{$row.id}"class="{cycle values="odd-row,even-row"} {$row.class} crm-locationType {if NOT $row.is_active} disabled{/if}">
+        <td class="crm-locationType-id">{$row.id}</td>	
+        <td class="crm-locationType-label">{$row.label}</td>	
         <td class="crm-locationType-name">{$row.name}</td>	
         <td class="crm-locationType-vcard_name">{$row.vcard_name}</td>	
       	<td class="crm-locationType-description">{$row.description}</td>
