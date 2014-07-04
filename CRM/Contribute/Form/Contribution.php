@@ -844,7 +844,7 @@ WHERE  contribution_id = {$this->_id}
     $receipt_attr = array_merge($attributes['receipt_id'], array('readonly' => 'readonly'));
     $this->add('text', 'receipt_id', ts('Receipt ID'), $receipt_attr);
     $this->addRule('receipt_id', ts('This Receipt ID already exists in the database.'), 'objectExists', array('CRM_Contribute_DAO_Contribution', $this->_id, 'receipt_id'));
-    $this->assign('receipt_id_setting', url("civicrm/admin/receipt", array('query' => 'reset=1')));
+    $this->assign('receipt_id_setting', CRM_Utils_System::url("civicrm/admin/receipt", 'reset=1'));
 
     $status = CRM_Contribute_PseudoConstant::contributionStatus();
     // supressing contribution statuses that are NOT relevant to pledges (CRM-5169)

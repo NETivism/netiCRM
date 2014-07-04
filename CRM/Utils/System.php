@@ -198,7 +198,7 @@ class CRM_Utils_System {
    * @access public
    *
    */
-  function url($path = NULL, $query = NULL, $absolute = FALSE,
+  static function url($path = NULL, $query = NULL, $absolute = FALSE,
     $fragment = NULL, $htmlize = TRUE, $frontend = FALSE
   ) {
     // we have a valid query and it has not yet been transformed
