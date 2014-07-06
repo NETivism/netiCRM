@@ -24,7 +24,6 @@
 | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
 +--------------------------------------------------------------------+
 */
-
 /**
  *
  * @package CRM
@@ -34,8 +33,8 @@
  */
 require_once 'CRM/Core/DAO.php';
 require_once 'CRM/Utils/Type.php';
-class CRM_Core_DAO_Batch extends CRM_Core_DAO {
-
+class CRM_Core_DAO_Batch extends CRM_Core_DAO
+{
   /**
    * static instance to hold the table name
    *
@@ -43,23 +42,20 @@ class CRM_Core_DAO_Batch extends CRM_Core_DAO {
    * @static
    */
   static $_tableName = 'civicrm_batch';
-
   /**
    * static instance to hold the field values
    *
    * @var array
    * @static
    */
-  static $_fields = NULL;
-
+  static $_fields = null;
   /**
    * static instance to hold the FK relationships
    *
    * @var string
    * @static
    */
-  static $_links = NULL;
-
+  static $_links = null;
   /**
    * static instance to hold the values that can
    * be imported / apu
@@ -67,8 +63,7 @@ class CRM_Core_DAO_Batch extends CRM_Core_DAO {
    * @var array
    * @static
    */
-  static $_import = NULL;
-
+  static $_import = null;
   /**
    * static instance to hold the values that can
    * be exported / apu
@@ -76,8 +71,7 @@ class CRM_Core_DAO_Batch extends CRM_Core_DAO {
    * @var array
    * @static
    */
-  static $_export = NULL;
-
+  static $_export = null;
   /**
    * static value to see if we should log any modifications to
    * this table in the civicrm_log table
@@ -85,82 +79,73 @@ class CRM_Core_DAO_Batch extends CRM_Core_DAO {
    * @var boolean
    * @static
    */
-  static $_log = FALSE;
-
+  static $_log = false;
   /**
    * Unique Address ID
    *
    * @var int unsigned
    */
   public $id;
-
   /**
    * Variable name/programmatic handle for this batch.
    *
    * @var string
    */
   public $name;
-
   /**
    * Friendly Name.
    *
    * @var string
    */
   public $label;
-
   /**
    * Description of this batch set.
    *
    * @var text
    */
   public $description;
-
   /**
    * FK to Contact ID
    *
    * @var int unsigned
    */
   public $created_id;
-
   /**
    * When was this item created
    *
    * @var datetime
    */
   public $created_date;
-
   /**
    * FK to Contact ID
    *
    * @var int unsigned
    */
   public $modified_id;
-
   /**
    * When was this item created
    *
    * @var datetime
    */
   public $modified_date;
-
   /**
    * class constructor
    *
    * @access public
-   *
    * @return civicrm_batch
-   */ function __construct() {
+   */
+  function __construct()
+  {
     parent::__construct();
   }
-
   /**
    * return foreign links
    *
    * @access public
-   *
    * @return array
    */
-  function &links() {
+  function &links()
+  {
     if (!(self::$_links)) {
       self::$_links = array(
         'created_id' => 'civicrm_contact:id',
@@ -169,132 +154,127 @@ class CRM_Core_DAO_Batch extends CRM_Core_DAO {
     }
     return self::$_links;
   }
-
   /**
    * returns all the column names of this table
    *
    * @access public
-   *
    * @return array
    */
-  function &fields() {
+  function &fields()
+  {
     if (!(self::$_fields)) {
       self::$_fields = array(
         'id' => array(
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
-          'required' => TRUE,
-        ),
+          'required' => true,
+        ) ,
         'name' => array(
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
-          'title' => ts('Name'),
+          'title' => ts('Name') ,
           'maxlength' => 64,
           'size' => CRM_Utils_Type::BIG,
-        ),
+        ) ,
         'label' => array(
           'name' => 'label',
           'type' => CRM_Utils_Type::T_STRING,
-          'title' => ts('Label'),
+          'title' => ts('Label') ,
           'maxlength' => 64,
           'size' => CRM_Utils_Type::BIG,
-        ),
+        ) ,
         'description' => array(
           'name' => 'description',
           'type' => CRM_Utils_Type::T_TEXT,
-          'title' => ts('Description'),
+          'title' => ts('Description') ,
           'rows' => 4,
           'cols' => 80,
-        ),
+        ) ,
         'created_id' => array(
           'name' => 'created_id',
           'type' => CRM_Utils_Type::T_INT,
           'FKClassName' => 'CRM_Contact_DAO_Contact',
-        ),
+        ) ,
         'created_date' => array(
           'name' => 'created_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
-          'title' => ts('Created Date'),
-        ),
+          'title' => ts('Created Date') ,
+        ) ,
         'modified_id' => array(
           'name' => 'modified_id',
           'type' => CRM_Utils_Type::T_INT,
           'FKClassName' => 'CRM_Contact_DAO_Contact',
-        ),
+        ) ,
         'modified_date' => array(
           'name' => 'modified_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
-          'title' => ts('Modified Date'),
-        ),
+          'title' => ts('Modified Date') ,
+        ) ,
       );
     }
     return self::$_fields;
   }
-
   /**
    * returns the names of this table
    *
    * @access public
-   *
    * @return string
    */
-  function getTableName() {
+  function getTableName()
+  {
     global $dbLocale;
     return self::$_tableName . $dbLocale;
   }
-
   /**
    * returns if this table needs to be logged
    *
    * @access public
-   *
    * @return boolean
    */
-  function getLog() {
+  function getLog()
+  {
     return self::$_log;
   }
-
   /**
    * returns the list of fields that can be imported
    *
    * @access public
    * return array
    */
-  function &import($prefix = FALSE) {
+  function &import($prefix = false)
+  {
     if (!(self::$_import)) {
       self::$_import = array();
-      $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      $fields = & self::fields();
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
-            self::$_import['batch'] = &$fields[$name];
-          }
-          else {
-            self::$_import[$name] = &$fields[$name];
+            self::$_import['batch'] = & $fields[$name];
+          } else {
+            self::$_import[$name] = & $fields[$name];
           }
         }
       }
     }
     return self::$_import;
   }
-
   /**
    * returns the list of fields that can be exported
    *
    * @access public
    * return array
    */
-  function &export($prefix = FALSE) {
+  function &export($prefix = false)
+  {
     if (!(self::$_export)) {
       self::$_export = array();
-      $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      $fields = & self::fields();
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
-            self::$_export['batch'] = &$fields[$name];
-          }
-          else {
-            self::$_export[$name] = &$fields[$name];
+            self::$_export['batch'] = & $fields[$name];
+          } else {
+            self::$_export[$name] = & $fields[$name];
           }
         }
       }
@@ -302,4 +282,3 @@ class CRM_Core_DAO_Batch extends CRM_Core_DAO {
     return self::$_export;
   }
 }
-

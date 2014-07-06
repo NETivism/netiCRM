@@ -24,7 +24,6 @@
 | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
 +--------------------------------------------------------------------+
 */
-
 /**
  *
  * @package CRM
@@ -34,8 +33,8 @@
  */
 require_once 'CRM/Core/DAO.php';
 require_once 'CRM/Utils/Type.php';
-class CRM_Core_DAO_Phone extends CRM_Core_DAO {
-
+class CRM_Core_DAO_Phone extends CRM_Core_DAO
+{
   /**
    * static instance to hold the table name
    *
@@ -43,23 +42,20 @@ class CRM_Core_DAO_Phone extends CRM_Core_DAO {
    * @static
    */
   static $_tableName = 'civicrm_phone';
-
   /**
    * static instance to hold the field values
    *
    * @var array
    * @static
    */
-  static $_fields = NULL;
-
+  static $_fields = null;
   /**
    * static instance to hold the FK relationships
    *
    * @var string
    * @static
    */
-  static $_links = NULL;
-
+  static $_links = null;
   /**
    * static instance to hold the values that can
    * be imported / apu
@@ -67,8 +63,7 @@ class CRM_Core_DAO_Phone extends CRM_Core_DAO {
    * @var array
    * @static
    */
-  static $_import = NULL;
-
+  static $_import = null;
   /**
    * static instance to hold the values that can
    * be exported / apu
@@ -76,8 +71,7 @@ class CRM_Core_DAO_Phone extends CRM_Core_DAO {
    * @var array
    * @static
    */
-  static $_export = NULL;
-
+  static $_export = null;
   /**
    * static value to see if we should log any modifications to
    * this table in the civicrm_log table
@@ -85,82 +79,73 @@ class CRM_Core_DAO_Phone extends CRM_Core_DAO {
    * @var boolean
    * @static
    */
-  static $_log = TRUE;
-
+  static $_log = true;
   /**
    * Unique Phone ID
    *
    * @var int unsigned
    */
   public $id;
-
   /**
    * FK to Contact ID
    *
    * @var int unsigned
    */
   public $contact_id;
-
   /**
    * Which Location does this phone belong to.
    *
    * @var int unsigned
    */
   public $location_type_id;
-
   /**
    * Is this the primary phone for this contact and location.
    *
    * @var boolean
    */
   public $is_primary;
-
   /**
    * Is this the billing?
    *
    * @var boolean
    */
   public $is_billing;
-
   /**
    * Which Mobile Provider does this phone belong to.
    *
    * @var int unsigned
    */
   public $mobile_provider_id;
-
   /**
    * Complete phone number.
    *
    * @var string
    */
   public $phone;
-
   /**
    * Which type of phone does this number belongs.
    *
    * @var int unsigned
    */
   public $phone_type_id;
-
   /**
    * class constructor
    *
    * @access public
-   *
    * @return civicrm_phone
-   */ function __construct() {
+   */
+  function __construct()
+  {
     parent::__construct();
   }
-
   /**
    * return foreign links
    *
    * @access public
-   *
    * @return array
    */
-  function &links() {
+  function &links()
+  {
     if (!(self::$_links)) {
       self::$_links = array(
         'contact_id' => 'civicrm_contact:id',
@@ -168,127 +153,122 @@ class CRM_Core_DAO_Phone extends CRM_Core_DAO {
     }
     return self::$_links;
   }
-
   /**
    * returns all the column names of this table
    *
    * @access public
-   *
    * @return array
    */
-  function &fields() {
+  function &fields()
+  {
     if (!(self::$_fields)) {
       self::$_fields = array(
         'id' => array(
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
-          'required' => TRUE,
-        ),
+          'required' => true,
+        ) ,
         'contact_id' => array(
           'name' => 'contact_id',
           'type' => CRM_Utils_Type::T_INT,
           'FKClassName' => 'CRM_Contact_DAO_Contact',
-        ),
+        ) ,
         'location_type_id' => array(
           'name' => 'location_type_id',
           'type' => CRM_Utils_Type::T_INT,
-        ),
+        ) ,
         'is_primary' => array(
           'name' => 'is_primary',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ),
+        ) ,
         'is_billing' => array(
           'name' => 'is_billing',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ),
+        ) ,
         'mobile_provider_id' => array(
           'name' => 'mobile_provider_id',
           'type' => CRM_Utils_Type::T_INT,
-        ),
+        ) ,
         'phone' => array(
           'name' => 'phone',
           'type' => CRM_Utils_Type::T_STRING,
-          'title' => ts('Phone'),
+          'title' => ts('Phone') ,
           'maxlength' => 32,
           'size' => CRM_Utils_Type::MEDIUM,
-          'import' => TRUE,
+          'import' => true,
           'where' => 'civicrm_phone.phone',
           'headerPattern' => '/phone/i',
           'dataPattern' => '/^[\d\(\)\-\.\s]+$/',
-          'export' => TRUE,
-        ),
+          'export' => true,
+        ) ,
         'phone_type_id' => array(
           'name' => 'phone_type_id',
           'type' => CRM_Utils_Type::T_INT,
-        ),
+        ) ,
       );
     }
     return self::$_fields;
   }
-
   /**
    * returns the names of this table
    *
    * @access public
-   *
    * @return string
    */
-  function getTableName() {
+  function getTableName()
+  {
     return self::$_tableName;
   }
-
   /**
    * returns if this table needs to be logged
    *
    * @access public
-   *
    * @return boolean
    */
-  function getLog() {
+  function getLog()
+  {
     return self::$_log;
   }
-
   /**
    * returns the list of fields that can be imported
    *
    * @access public
    * return array
    */
-  function &import($prefix = FALSE) {
+  function &import($prefix = false)
+  {
     if (!(self::$_import)) {
       self::$_import = array();
-      $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      $fields = & self::fields();
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
-            self::$_import['phone'] = &$fields[$name];
-          }
-          else {
-            self::$_import[$name] = &$fields[$name];
+            self::$_import['phone'] = & $fields[$name];
+          } else {
+            self::$_import[$name] = & $fields[$name];
           }
         }
       }
     }
     return self::$_import;
   }
-
   /**
    * returns the list of fields that can be exported
    *
    * @access public
    * return array
    */
-  function &export($prefix = FALSE) {
+  function &export($prefix = false)
+  {
     if (!(self::$_export)) {
       self::$_export = array();
-      $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      $fields = & self::fields();
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
-            self::$_export['phone'] = &$fields[$name];
-          }
-          else {
-            self::$_export[$name] = &$fields[$name];
+            self::$_export['phone'] = & $fields[$name];
+          } else {
+            self::$_export[$name] = & $fields[$name];
           }
         }
       }
@@ -296,4 +276,3 @@ class CRM_Core_DAO_Phone extends CRM_Core_DAO {
     return self::$_export;
   }
 }
-

@@ -4357,12 +4357,12 @@ INSERT INTO civicrm_domain (name, version, loc_block_id) VALUES (@domainName, '2
 SELECT @domainID := id FROM civicrm_domain where name = 'Default Domain Name';
 
 -- Sample location types
-INSERT INTO civicrm_location_type( name, vcard_name, description, is_reserved, is_active, is_default ) VALUES( 'Home', 'HOME', '居住地點', 0, 1, 1 );
-INSERT INTO civicrm_location_type( name, vcard_name, description, is_reserved, is_active ) VALUES( '工作', 'WORK', '工作地點', 0, 1 );
-INSERT INTO civicrm_location_type( name, vcard_name, description, is_reserved, is_active ) VALUES( '主要', NULL, '主要辦公地點', 0, 1 );
-INSERT INTO civicrm_location_type( name, vcard_name, description, is_reserved, is_active ) VALUES( '其他', NULL, '其他地點', 0, 1 );
+INSERT INTO civicrm_location_type( label, name, vcard_name, description, is_reserved, is_active, is_default ) VALUES( 'Home', 'Home', 'HOME', '居住地點', 0, 1, 1 );
+INSERT INTO civicrm_location_type( label, name, vcard_name, description, is_reserved, is_active ) VALUES( '工作', 'Work', 'WORK', '工作地點', 0, 1 );
+INSERT INTO civicrm_location_type( label, name, vcard_name, description, is_reserved, is_active ) VALUES( '主要', 'Main', NULL, '主要辦公地點', 0, 1 );
+INSERT INTO civicrm_location_type( label, name, vcard_name, description, is_reserved, is_active ) VALUES( '其他', 'Other', NULL, '其他地點', 0, 1 );
 -- the following location must stay with the untranslated Billing name, CRM-2064
-INSERT INTO civicrm_location_type( name, vcard_name, description, is_reserved, is_active ) VALUES( '帳單', NULL, '帳單地址', 1, 1 );
+INSERT INTO civicrm_location_type( label, name, vcard_name, description, is_reserved, is_active ) VALUES( '帳單', 'Billing', NULL, '帳單地址', 1, 1 );
 
 -- Sample relationship types
 INSERT INTO civicrm_relationship_type( name_a_b,label_a_b, name_b_a,label_b_a, description, contact_type_a, contact_type_b, is_reserved )
@@ -4395,8 +4395,8 @@ INSERT INTO civicrm_tag( name, description, parent_id,used_for )
 INSERT INTO civicrm_mailing_component
     (name,component_type,subject,body_html,body_text,is_default,is_active)
 VALUES
-    ('電子報頁首','Header','頁首標題','HTML 格式的頁首範本。','文字格式的頁首範本。',1,1),
-    ('電子報頁尾','Footer','頁尾標題','電子報頁尾的HTML範本<br/><a href=\"{action.optOutUrl}\">取消訂閱</a><br/> {domain.address}','取消訂閱連結: {action.optOutUrl}\n{domain.address}',1,1),
+    ('電子報頁首','Header','頁首標題','','',1,1),
+    ('電子報頁尾','Footer','頁尾標題','電子報頁尾的HTML範本<br/><a href=\"{action.optOutUrl}\">取消訂閱</a><br/> {domain.address}','to unsubscribe: {action.optOutUrl}\r\n{domain.address}',1,1),
     ('訂閱訊息','Subscribe','訂閱待確認','您有一個{subscribe.group}電子報的訂閱待確認。若您確定要訂閱此份電子報，請回覆此信件或按<a href=\"{subscribe.url}\">這裡</a>。','您有一個{subscribe.group}電子報的訂閱待確認。要確認此訂閱，請回覆此信件或按此連結：{subscribe.url}',1,1),
     ('歡迎訊息','Welcome','您的訂閱已確認！感謝您的訂閱～','您好，您已完成 {welcome.group} 電子報的訂閱。','您好，您已完成 {welcome.group} 電子報的訂閱。',1,1),
     ('退訂訊息','Unsubscribe','取消訂閱','您已取消訂閱：{unsubscribe.group}。您欲重新訂閱，可以寄信給{action.resubscribe}或按 <a href=\"{action.resubscribeUrl}\">這裡</a>。','您已取消訂閱：{unsubscribe.group}。如您要重新訂閱，可寄信到{action.resubscribe}或按%3',1,1),
@@ -6282,7 +6282,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
    <td>
 
     {if $formValues.receipt_text}
-     <p>{$formValues.receipt_text|htmlize}</p>
+     <div>{$formValues.receipt_text|htmlize}</div>
     {else}
      <p>{ts}Thanks for your support.{/ts}</p>
     {/if}
@@ -6642,7 +6642,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
    <td>
 
     {if $formValues.receipt_text}
-     <p>{$formValues.receipt_text|htmlize}</p>
+     <div>{$formValues.receipt_text|htmlize}</div>
     {else}
      <p>{ts}Thanks for your support.{/ts}</p>
     {/if}
@@ -7084,7 +7084,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
    <td>
 
     {if $receipt_text}
-     <p>{$receipt_text|htmlize}</p>
+     <div>{$receipt_text|htmlize}</div>
     {/if}
 
     {if $is_pay_later}
@@ -7647,7 +7647,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
    <td>
 
     {if $receipt_text}
-     <p>{$receipt_text|htmlize}</p>
+     <div>{$receipt_text|htmlize}</div>
     {/if}
 
     {if $is_pay_later}
@@ -9298,7 +9298,7 @@ registration process.{/ts}
    <td>
 
     {if $event.confirm_email_text AND (not $isOnWaitlist AND not $isRequireApproval)}
-     <p>{$event.confirm_email_text|htmlize}</p>
+     <div>{$event.confirm_email_text|htmlize}</div>
     {/if}
 
     {if $isOnWaitlist}
@@ -10037,7 +10037,7 @@ registration process.{/ts}
    <td>
 
     {if $event.confirm_email_text AND (not $isOnWaitlist AND not $isRequireApproval)}
-     <p>{$event.confirm_email_text|htmlize}</p>
+     <div>{$event.confirm_email_text|htmlize}</div>
     {/if}
 
     {if $isOnWaitlist}
@@ -10777,7 +10777,7 @@ registration process.{/ts}
    <td>
 
     {if $event.confirm_email_text AND (not $isOnWaitlist AND not $isRequireApproval)}
-     <p>{$event.confirm_email_text|htmlize}</p>
+     <div>{$event.confirm_email_text|htmlize}</div>
     {/if}
 
     {if $isOnWaitlist}
@@ -11510,7 +11510,7 @@ registration process.{/ts}
    <td>
 
     {if $event.confirm_email_text AND (not $isOnWaitlist AND not $isRequireApproval)}
-     <p>{$event.confirm_email_text|htmlize}</p>
+     <div>{$event.confirm_email_text|htmlize}</div>
     {/if}
 
     {if $isOnWaitlist}
@@ -13512,9 +13512,9 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
   <tr>
    <td>
     {if $formValues.receipt_text_signup}
-     <p>{$formValues.receipt_text_signup|htmlize}</p>
+     <div>{$formValues.receipt_text_signup|htmlize}</div>
     {elseif $formValues.receipt_text_renewal}
-     <p>{$formValues.receipt_text_renewal|htmlize}</p>
+     <div>{$formValues.receipt_text_renewal|htmlize}</div>
     {else}
      <p>{ts}Thanks for your support.{/ts}</p>
     {/if}
@@ -13791,9 +13791,9 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
   <tr>
    <td>
     {if $formValues.receipt_text_signup}
-     <p>{$formValues.receipt_text_signup|htmlize}</p>
+     <div>{$formValues.receipt_text_signup|htmlize}</div>
     {elseif $formValues.receipt_text_renewal}
-     <p>{$formValues.receipt_text_renewal|htmlize}</p>
+     <div>{$formValues.receipt_text_renewal|htmlize}</div>
     {else}
      <p>{ts}Thanks for your support.{/ts}</p>
     {/if}
@@ -14208,7 +14208,7 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
    <td>
 
     {if $receipt_text}
-     <p>{$receipt_text|htmlize}</p>
+     <div>{$receipt_text|htmlize}</div>
     {/if}
 
     {if $is_pay_later}
@@ -14909,7 +14909,7 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
    <td>
 
     {if $receipt_text}
-     <p>{$receipt_text|htmlize}</p>
+     <div>{$receipt_text|htmlize}</div>
     {/if}
 
     {if $is_pay_later}
@@ -17166,4 +17166,4 @@ VALUES
 
 UPDATE civicrm_report_instance SET navigation_id = LAST_INSERT_ID() WHERE id = @instanceID;
 
- UPDATE civicrm_domain SET version = '3.3.1';
+ UPDATE civicrm_domain SET version = '4.0.0';

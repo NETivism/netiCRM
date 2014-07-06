@@ -24,7 +24,6 @@
 | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
 +--------------------------------------------------------------------+
 */
-
 /**
  *
  * @package CRM
@@ -34,8 +33,8 @@
  */
 require_once 'CRM/Core/DAO.php';
 require_once 'CRM/Utils/Type.php';
-class CRM_Mailing_DAO_Spool extends CRM_Core_DAO {
-
+class CRM_Mailing_DAO_Spool extends CRM_Core_DAO
+{
   /**
    * static instance to hold the table name
    *
@@ -43,23 +42,20 @@ class CRM_Mailing_DAO_Spool extends CRM_Core_DAO {
    * @static
    */
   static $_tableName = 'civicrm_mailing_spool';
-
   /**
    * static instance to hold the field values
    *
    * @var array
    * @static
    */
-  static $_fields = NULL;
-
+  static $_fields = null;
   /**
    * static instance to hold the FK relationships
    *
    * @var string
    * @static
    */
-  static $_links = NULL;
-
+  static $_links = null;
   /**
    * static instance to hold the values that can
    * be imported / apu
@@ -67,8 +63,7 @@ class CRM_Mailing_DAO_Spool extends CRM_Core_DAO {
    * @var array
    * @static
    */
-  static $_import = NULL;
-
+  static $_import = null;
   /**
    * static instance to hold the values that can
    * be exported / apu
@@ -76,8 +71,7 @@ class CRM_Mailing_DAO_Spool extends CRM_Core_DAO {
    * @var array
    * @static
    */
-  static $_export = NULL;
-
+  static $_export = null;
   /**
    * static value to see if we should log any modifications to
    * this table in the civicrm_log table
@@ -85,74 +79,66 @@ class CRM_Mailing_DAO_Spool extends CRM_Core_DAO {
    * @var boolean
    * @static
    */
-  static $_log = FALSE;
-
+  static $_log = false;
   /**
    *
    * @var int unsigned
    */
   public $id;
-
   /**
    * The ID of the Job .
    *
    * @var int unsigned
    */
   public $job_id;
-
   /**
    * The email of the receipients this mail is to be sent.
    *
    * @var text
    */
   public $recipient_email;
-
   /**
    * The header information of this mailing .
    *
    * @var text
    */
   public $headers;
-
   /**
    * The body of this mailing.
    *
    * @var text
    */
   public $body;
-
   /**
    * date on which this job was added.
    *
    * @var datetime
    */
   public $added_at;
-
   /**
    * date on which this job was removed.
    *
    * @var datetime
    */
   public $removed_at;
-
   /**
    * class constructor
    *
    * @access public
-   *
    * @return civicrm_mailing_spool
-   */ function __construct() {
+   */
+  function __construct()
+  {
     parent::__construct();
   }
-
   /**
    * return foreign links
    *
    * @access public
-   *
    * @return array
    */
-  function &links() {
+  function &links()
+  {
     if (!(self::$_links)) {
       self::$_links = array(
         'job_id' => 'civicrm_mailing_job:id',
@@ -160,121 +146,116 @@ class CRM_Mailing_DAO_Spool extends CRM_Core_DAO {
     }
     return self::$_links;
   }
-
   /**
    * returns all the column names of this table
    *
    * @access public
-   *
    * @return array
    */
-  function &fields() {
+  function &fields()
+  {
     if (!(self::$_fields)) {
       self::$_fields = array(
         'id' => array(
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
-          'required' => TRUE,
-        ),
+          'required' => true,
+        ) ,
         'job_id' => array(
           'name' => 'job_id',
           'type' => CRM_Utils_Type::T_INT,
-          'required' => TRUE,
+          'required' => true,
           'FKClassName' => 'CRM_Mailing_DAO_Job',
-        ),
+        ) ,
         'recipient_email' => array(
           'name' => 'recipient_email',
           'type' => CRM_Utils_Type::T_TEXT,
-          'title' => ts('Recipient Email'),
-        ),
+          'title' => ts('Recipient Email') ,
+        ) ,
         'headers' => array(
           'name' => 'headers',
           'type' => CRM_Utils_Type::T_TEXT,
-          'title' => ts('Headers'),
-        ),
+          'title' => ts('Headers') ,
+        ) ,
         'body' => array(
           'name' => 'body',
           'type' => CRM_Utils_Type::T_TEXT,
-          'title' => ts('Body'),
-        ),
+          'title' => ts('Body') ,
+        ) ,
         'added_at' => array(
           'name' => 'added_at',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
-          'title' => ts('Added At'),
-        ),
+          'title' => ts('Added At') ,
+        ) ,
         'removed_at' => array(
           'name' => 'removed_at',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
-          'title' => ts('Removed At'),
-        ),
+          'title' => ts('Removed At') ,
+        ) ,
       );
     }
     return self::$_fields;
   }
-
   /**
    * returns the names of this table
    *
    * @access public
-   *
    * @return string
    */
-  function getTableName() {
+  function getTableName()
+  {
     return self::$_tableName;
   }
-
   /**
    * returns if this table needs to be logged
    *
    * @access public
-   *
    * @return boolean
    */
-  function getLog() {
+  function getLog()
+  {
     return self::$_log;
   }
-
   /**
    * returns the list of fields that can be imported
    *
    * @access public
    * return array
    */
-  function &import($prefix = FALSE) {
+  function &import($prefix = false)
+  {
     if (!(self::$_import)) {
       self::$_import = array();
-      $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      $fields = & self::fields();
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
-            self::$_import['mailing_spool'] = &$fields[$name];
-          }
-          else {
-            self::$_import[$name] = &$fields[$name];
+            self::$_import['mailing_spool'] = & $fields[$name];
+          } else {
+            self::$_import[$name] = & $fields[$name];
           }
         }
       }
     }
     return self::$_import;
   }
-
   /**
    * returns the list of fields that can be exported
    *
    * @access public
    * return array
    */
-  function &export($prefix = FALSE) {
+  function &export($prefix = false)
+  {
     if (!(self::$_export)) {
       self::$_export = array();
-      $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      $fields = & self::fields();
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
-            self::$_export['mailing_spool'] = &$fields[$name];
-          }
-          else {
-            self::$_export[$name] = &$fields[$name];
+            self::$_export['mailing_spool'] = & $fields[$name];
+          } else {
+            self::$_export[$name] = & $fields[$name];
           }
         }
       }
@@ -282,4 +263,3 @@ class CRM_Mailing_DAO_Spool extends CRM_Core_DAO {
     return self::$_export;
   }
 }
-

@@ -24,7 +24,6 @@
 | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
 +--------------------------------------------------------------------+
 */
-
 /**
  *
  * @package CRM
@@ -34,8 +33,8 @@
  */
 require_once 'CRM/Core/DAO.php';
 require_once 'CRM/Utils/Type.php';
-class CRM_Core_DAO_Component extends CRM_Core_DAO {
-
+class CRM_Core_DAO_Component extends CRM_Core_DAO
+{
   /**
    * static instance to hold the table name
    *
@@ -43,23 +42,20 @@ class CRM_Core_DAO_Component extends CRM_Core_DAO {
    * @static
    */
   static $_tableName = 'civicrm_component';
-
   /**
    * static instance to hold the field values
    *
    * @var array
    * @static
    */
-  static $_fields = NULL;
-
+  static $_fields = null;
   /**
    * static instance to hold the FK relationships
    *
    * @var string
    * @static
    */
-  static $_links = NULL;
-
+  static $_links = null;
   /**
    * static instance to hold the values that can
    * be imported / apu
@@ -67,8 +63,7 @@ class CRM_Core_DAO_Component extends CRM_Core_DAO {
    * @var array
    * @static
    */
-  static $_import = NULL;
-
+  static $_import = null;
   /**
    * static instance to hold the values that can
    * be exported / apu
@@ -76,8 +71,7 @@ class CRM_Core_DAO_Component extends CRM_Core_DAO {
    * @var array
    * @static
    */
-  static $_export = NULL;
-
+  static $_export = null;
   /**
    * static value to see if we should log any modifications to
    * this table in the civicrm_log table
@@ -85,22 +79,19 @@ class CRM_Core_DAO_Component extends CRM_Core_DAO {
    * @var boolean
    * @static
    */
-  static $_log = FALSE;
-
+  static $_log = false;
   /**
    * Component ID
    *
    * @var int unsigned
    */
   public $id;
-
   /**
    * Name of the component.
    *
    * @var string
    */
   public $name;
-
   /**
    * Path to components main directory in a form of a class
    namespace.
@@ -108,115 +99,110 @@ class CRM_Core_DAO_Component extends CRM_Core_DAO {
    * @var string
    */
   public $namespace;
-
   /**
    * class constructor
    *
    * @access public
-   *
    * @return civicrm_component
-   */ function __construct() {
+   */
+  function __construct()
+  {
     parent::__construct();
   }
-
   /**
    * returns all the column names of this table
    *
    * @access public
-   *
    * @return array
    */
-  function &fields() {
+  function &fields()
+  {
     if (!(self::$_fields)) {
       self::$_fields = array(
         'id' => array(
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
-          'required' => TRUE,
-        ),
+          'required' => true,
+        ) ,
         'name' => array(
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
-          'title' => ts('Component name'),
-          'required' => TRUE,
+          'title' => ts('Component name') ,
+          'required' => true,
           'maxlength' => 64,
           'size' => CRM_Utils_Type::BIG,
-        ),
+        ) ,
         'namespace' => array(
           'name' => 'namespace',
           'type' => CRM_Utils_Type::T_STRING,
-          'title' => ts('Namespace reserved for component.'),
+          'title' => ts('Namespace reserved for component.') ,
           'maxlength' => 128,
           'size' => CRM_Utils_Type::HUGE,
-        ),
+        ) ,
       );
     }
     return self::$_fields;
   }
-
   /**
    * returns the names of this table
    *
    * @access public
-   *
    * @return string
    */
-  function getTableName() {
+  function getTableName()
+  {
     return self::$_tableName;
   }
-
   /**
    * returns if this table needs to be logged
    *
    * @access public
-   *
    * @return boolean
    */
-  function getLog() {
+  function getLog()
+  {
     return self::$_log;
   }
-
   /**
    * returns the list of fields that can be imported
    *
    * @access public
    * return array
    */
-  function &import($prefix = FALSE) {
+  function &import($prefix = false)
+  {
     if (!(self::$_import)) {
       self::$_import = array();
-      $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      $fields = & self::fields();
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
-            self::$_import['component'] = &$fields[$name];
-          }
-          else {
-            self::$_import[$name] = &$fields[$name];
+            self::$_import['component'] = & $fields[$name];
+          } else {
+            self::$_import[$name] = & $fields[$name];
           }
         }
       }
     }
     return self::$_import;
   }
-
   /**
    * returns the list of fields that can be exported
    *
    * @access public
    * return array
    */
-  function &export($prefix = FALSE) {
+  function &export($prefix = false)
+  {
     if (!(self::$_export)) {
       self::$_export = array();
-      $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      $fields = & self::fields();
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
-            self::$_export['component'] = &$fields[$name];
-          }
-          else {
-            self::$_export[$name] = &$fields[$name];
+            self::$_export['component'] = & $fields[$name];
+          } else {
+            self::$_export[$name] = & $fields[$name];
           }
         }
       }
@@ -224,4 +210,3 @@ class CRM_Core_DAO_Component extends CRM_Core_DAO {
     return self::$_export;
   }
 }
-

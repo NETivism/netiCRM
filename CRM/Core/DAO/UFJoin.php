@@ -24,7 +24,6 @@
 | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
 +--------------------------------------------------------------------+
 */
-
 /**
  *
  * @package CRM
@@ -34,8 +33,8 @@
  */
 require_once 'CRM/Core/DAO.php';
 require_once 'CRM/Utils/Type.php';
-class CRM_Core_DAO_UFJoin extends CRM_Core_DAO {
-
+class CRM_Core_DAO_UFJoin extends CRM_Core_DAO
+{
   /**
    * static instance to hold the table name
    *
@@ -43,23 +42,20 @@ class CRM_Core_DAO_UFJoin extends CRM_Core_DAO {
    * @static
    */
   static $_tableName = 'civicrm_uf_join';
-
   /**
    * static instance to hold the field values
    *
    * @var array
    * @static
    */
-  static $_fields = NULL;
-
+  static $_fields = null;
   /**
    * static instance to hold the FK relationships
    *
    * @var string
    * @static
    */
-  static $_links = NULL;
-
+  static $_links = null;
   /**
    * static instance to hold the values that can
    * be imported / apu
@@ -67,8 +63,7 @@ class CRM_Core_DAO_UFJoin extends CRM_Core_DAO {
    * @var array
    * @static
    */
-  static $_import = NULL;
-
+  static $_import = null;
   /**
    * static instance to hold the values that can
    * be exported / apu
@@ -76,8 +71,7 @@ class CRM_Core_DAO_UFJoin extends CRM_Core_DAO {
    * @var array
    * @static
    */
-  static $_export = NULL;
-
+  static $_export = null;
   /**
    * static value to see if we should log any modifications to
    * this table in the civicrm_log table
@@ -85,75 +79,67 @@ class CRM_Core_DAO_UFJoin extends CRM_Core_DAO {
    * @var boolean
    * @static
    */
-  static $_log = TRUE;
-
+  static $_log = true;
   /**
    * Unique table ID
    *
    * @var int unsigned
    */
   public $id;
-
   /**
    * Is this join currently active?
    *
    * @var boolean
    */
   public $is_active;
-
   /**
    * Module which owns this uf_join instance, e.g. User Registration, CiviDonate, etc.
    *
    * @var string
    */
   public $module;
-
   /**
    * Name of table where item being referenced is stored. Modules which only need a single collection of uf_join instances may choose not to populate entity_table and entity_id.
    *
    * @var string
    */
   public $entity_table;
-
   /**
    * Foreign key to the referenced item.
    *
    * @var int unsigned
    */
   public $entity_id;
-
   /**
    * Controls display order when multiple user framework groups are setup for concurrent display.
    *
    * @var int
    */
   public $weight;
-
   /**
    * Which form does this field belong to.
    *
    * @var int unsigned
    */
   public $uf_group_id;
-
   /**
    * class constructor
    *
    * @access public
-   *
    * @return civicrm_uf_join
-   */ function __construct() {
+   */
+  function __construct()
+  {
     parent::__construct();
   }
-
   /**
    * return foreign links
    *
    * @access public
-   *
    * @return array
    */
-  function &links() {
+  function &links()
+  {
     if (!(self::$_links)) {
       self::$_links = array(
         'uf_group_id' => 'civicrm_uf_group:id',
@@ -161,127 +147,122 @@ class CRM_Core_DAO_UFJoin extends CRM_Core_DAO {
     }
     return self::$_links;
   }
-
   /**
    * returns all the column names of this table
    *
    * @access public
-   *
    * @return array
    */
-  function &fields() {
+  function &fields()
+  {
     if (!(self::$_fields)) {
       self::$_fields = array(
         'id' => array(
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
-          'required' => TRUE,
-        ),
+          'required' => true,
+        ) ,
         'is_active' => array(
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'default' => '',
-        ),
+        ) ,
         'module' => array(
           'name' => 'module',
           'type' => CRM_Utils_Type::T_STRING,
-          'title' => ts('Module'),
-          'required' => TRUE,
+          'title' => ts('Module') ,
+          'required' => true,
           'maxlength' => 64,
           'size' => CRM_Utils_Type::BIG,
-        ),
+        ) ,
         'entity_table' => array(
           'name' => 'entity_table',
           'type' => CRM_Utils_Type::T_STRING,
-          'title' => ts('Entity Table'),
+          'title' => ts('Entity Table') ,
           'maxlength' => 64,
           'size' => CRM_Utils_Type::BIG,
-        ),
+        ) ,
         'entity_id' => array(
           'name' => 'entity_id',
           'type' => CRM_Utils_Type::T_INT,
-        ),
+        ) ,
         'weight' => array(
           'name' => 'weight',
           'type' => CRM_Utils_Type::T_INT,
-          'title' => ts('Weight'),
-          'required' => TRUE,
+          'title' => ts('Weight') ,
+          'required' => true,
           'default' => '',
-        ),
+        ) ,
         'uf_group_id' => array(
           'name' => 'uf_group_id',
           'type' => CRM_Utils_Type::T_INT,
-          'required' => TRUE,
+          'required' => true,
           'FKClassName' => 'CRM_Core_DAO_UFGroup',
-        ),
+        ) ,
       );
     }
     return self::$_fields;
   }
-
   /**
    * returns the names of this table
    *
    * @access public
-   *
    * @return string
    */
-  function getTableName() {
+  function getTableName()
+  {
     return self::$_tableName;
   }
-
   /**
    * returns if this table needs to be logged
    *
    * @access public
-   *
    * @return boolean
    */
-  function getLog() {
+  function getLog()
+  {
     return self::$_log;
   }
-
   /**
    * returns the list of fields that can be imported
    *
    * @access public
    * return array
    */
-  function &import($prefix = FALSE) {
+  function &import($prefix = false)
+  {
     if (!(self::$_import)) {
       self::$_import = array();
-      $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      $fields = & self::fields();
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
-            self::$_import['uf_join'] = &$fields[$name];
-          }
-          else {
-            self::$_import[$name] = &$fields[$name];
+            self::$_import['uf_join'] = & $fields[$name];
+          } else {
+            self::$_import[$name] = & $fields[$name];
           }
         }
       }
     }
     return self::$_import;
   }
-
   /**
    * returns the list of fields that can be exported
    *
    * @access public
    * return array
    */
-  function &export($prefix = FALSE) {
+  function &export($prefix = false)
+  {
     if (!(self::$_export)) {
       self::$_export = array();
-      $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      $fields = & self::fields();
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
-            self::$_export['uf_join'] = &$fields[$name];
-          }
-          else {
-            self::$_export[$name] = &$fields[$name];
+            self::$_export['uf_join'] = & $fields[$name];
+          } else {
+            self::$_export[$name] = & $fields[$name];
           }
         }
       }
@@ -289,4 +270,3 @@ class CRM_Core_DAO_UFJoin extends CRM_Core_DAO {
     return self::$_export;
   }
 }
-

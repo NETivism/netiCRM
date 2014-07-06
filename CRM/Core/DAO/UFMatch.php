@@ -24,7 +24,6 @@
 | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
 +--------------------------------------------------------------------+
 */
-
 /**
  *
  * @package CRM
@@ -34,8 +33,8 @@
  */
 require_once 'CRM/Core/DAO.php';
 require_once 'CRM/Utils/Type.php';
-class CRM_Core_DAO_UFMatch extends CRM_Core_DAO {
-
+class CRM_Core_DAO_UFMatch extends CRM_Core_DAO
+{
   /**
    * static instance to hold the table name
    *
@@ -43,23 +42,20 @@ class CRM_Core_DAO_UFMatch extends CRM_Core_DAO {
    * @static
    */
   static $_tableName = 'civicrm_uf_match';
-
   /**
    * static instance to hold the field values
    *
    * @var array
    * @static
    */
-  static $_fields = NULL;
-
+  static $_fields = null;
   /**
    * static instance to hold the FK relationships
    *
    * @var string
    * @static
    */
-  static $_links = NULL;
-
+  static $_links = null;
   /**
    * static instance to hold the values that can
    * be imported / apu
@@ -67,8 +63,7 @@ class CRM_Core_DAO_UFMatch extends CRM_Core_DAO {
    * @var array
    * @static
    */
-  static $_import = NULL;
-
+  static $_import = null;
   /**
    * static instance to hold the values that can
    * be exported / apu
@@ -76,8 +71,7 @@ class CRM_Core_DAO_UFMatch extends CRM_Core_DAO {
    * @var array
    * @static
    */
-  static $_export = NULL;
-
+  static $_export = null;
   /**
    * static value to see if we should log any modifications to
    * this table in the civicrm_log table
@@ -85,68 +79,61 @@ class CRM_Core_DAO_UFMatch extends CRM_Core_DAO {
    * @var boolean
    * @static
    */
-  static $_log = TRUE;
-
+  static $_log = true;
   /**
    * System generated ID.
    *
    * @var int unsigned
    */
   public $id;
-
   /**
    * Which Domain is this match entry for
    *
    * @var int unsigned
    */
   public $domain_id;
-
   /**
    * UF ID
    *
    * @var int unsigned
    */
   public $uf_id;
-
   /**
    * UF Name
    *
    * @var string
    */
   public $uf_name;
-
   /**
    * FK to Contact ID
    *
    * @var int unsigned
    */
   public $contact_id;
-
   /**
    * UI language preferred by the given user/contact
    *
    * @var string
    */
   public $language;
-
   /**
    * class constructor
    *
    * @access public
-   *
    * @return civicrm_uf_match
-   */ function __construct() {
+   */
+  function __construct()
+  {
     parent::__construct();
   }
-
   /**
    * return foreign links
    *
    * @access public
-   *
    * @return array
    */
-  function &links() {
+  function &links()
+  {
     if (!(self::$_links)) {
       self::$_links = array(
         'domain_id' => 'civicrm_domain:id',
@@ -155,120 +142,115 @@ class CRM_Core_DAO_UFMatch extends CRM_Core_DAO {
     }
     return self::$_links;
   }
-
   /**
    * returns all the column names of this table
    *
    * @access public
-   *
    * @return array
    */
-  function &fields() {
+  function &fields()
+  {
     if (!(self::$_fields)) {
       self::$_fields = array(
         'id' => array(
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
-          'required' => TRUE,
-        ),
+          'required' => true,
+        ) ,
         'domain_id' => array(
           'name' => 'domain_id',
           'type' => CRM_Utils_Type::T_INT,
-          'required' => TRUE,
+          'required' => true,
           'FKClassName' => 'CRM_Core_DAO_Domain',
-        ),
+        ) ,
         'uf_id' => array(
           'name' => 'uf_id',
           'type' => CRM_Utils_Type::T_INT,
-          'required' => TRUE,
-        ),
+          'required' => true,
+        ) ,
         'uf_name' => array(
           'name' => 'uf_name',
           'type' => CRM_Utils_Type::T_STRING,
-          'title' => ts('Uf Name'),
+          'title' => ts('Uf Name') ,
           'maxlength' => 128,
           'size' => CRM_Utils_Type::HUGE,
-        ),
+        ) ,
         'contact_id' => array(
           'name' => 'contact_id',
           'type' => CRM_Utils_Type::T_INT,
           'FKClassName' => 'CRM_Contact_DAO_Contact',
-        ),
+        ) ,
         'language' => array(
           'name' => 'language',
           'type' => CRM_Utils_Type::T_STRING,
-          'title' => ts('Language'),
+          'title' => ts('Language') ,
           'maxlength' => 5,
           'size' => CRM_Utils_Type::EIGHT,
-        ),
+        ) ,
       );
     }
     return self::$_fields;
   }
-
   /**
    * returns the names of this table
    *
    * @access public
-   *
    * @return string
    */
-  function getTableName() {
+  function getTableName()
+  {
     return self::$_tableName;
   }
-
   /**
    * returns if this table needs to be logged
    *
    * @access public
-   *
    * @return boolean
    */
-  function getLog() {
+  function getLog()
+  {
     return self::$_log;
   }
-
   /**
    * returns the list of fields that can be imported
    *
    * @access public
    * return array
    */
-  function &import($prefix = FALSE) {
+  function &import($prefix = false)
+  {
     if (!(self::$_import)) {
       self::$_import = array();
-      $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      $fields = & self::fields();
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
-            self::$_import['uf_match'] = &$fields[$name];
-          }
-          else {
-            self::$_import[$name] = &$fields[$name];
+            self::$_import['uf_match'] = & $fields[$name];
+          } else {
+            self::$_import[$name] = & $fields[$name];
           }
         }
       }
     }
     return self::$_import;
   }
-
   /**
    * returns the list of fields that can be exported
    *
    * @access public
    * return array
    */
-  function &export($prefix = FALSE) {
+  function &export($prefix = false)
+  {
     if (!(self::$_export)) {
       self::$_export = array();
-      $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      $fields = & self::fields();
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
-            self::$_export['uf_match'] = &$fields[$name];
-          }
-          else {
-            self::$_export[$name] = &$fields[$name];
+            self::$_export['uf_match'] = & $fields[$name];
+          } else {
+            self::$_export[$name] = & $fields[$name];
           }
         }
       }
@@ -276,4 +258,3 @@ class CRM_Core_DAO_UFMatch extends CRM_Core_DAO {
     return self::$_export;
   }
 }
-

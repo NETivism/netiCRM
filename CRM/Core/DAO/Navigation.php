@@ -24,7 +24,6 @@
 | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
 +--------------------------------------------------------------------+
 */
-
 /**
  *
  * @package CRM
@@ -34,8 +33,8 @@
  */
 require_once 'CRM/Core/DAO.php';
 require_once 'CRM/Utils/Type.php';
-class CRM_Core_DAO_Navigation extends CRM_Core_DAO {
-
+class CRM_Core_DAO_Navigation extends CRM_Core_DAO
+{
   /**
    * static instance to hold the table name
    *
@@ -43,23 +42,20 @@ class CRM_Core_DAO_Navigation extends CRM_Core_DAO {
    * @static
    */
   static $_tableName = 'civicrm_navigation';
-
   /**
    * static instance to hold the field values
    *
    * @var array
    * @static
    */
-  static $_fields = NULL;
-
+  static $_fields = null;
   /**
    * static instance to hold the FK relationships
    *
    * @var string
    * @static
    */
-  static $_links = NULL;
-
+  static $_links = null;
   /**
    * static instance to hold the values that can
    * be imported / apu
@@ -67,8 +63,7 @@ class CRM_Core_DAO_Navigation extends CRM_Core_DAO {
    * @var array
    * @static
    */
-  static $_import = NULL;
-
+  static $_import = null;
   /**
    * static instance to hold the values that can
    * be exported / apu
@@ -76,8 +71,7 @@ class CRM_Core_DAO_Navigation extends CRM_Core_DAO {
    * @var array
    * @static
    */
-  static $_export = NULL;
-
+  static $_export = null;
   /**
    * static value to see if we should log any modifications to
    * this table in the civicrm_log table
@@ -85,102 +79,90 @@ class CRM_Core_DAO_Navigation extends CRM_Core_DAO {
    * @var boolean
    * @static
    */
-  static $_log = FALSE;
-
+  static $_log = false;
   /**
    *
    * @var int unsigned
    */
   public $id;
-
   /**
    * Which Domain is this navigation item for
    *
    * @var int unsigned
    */
   public $domain_id;
-
   /**
    * Navigation Title
    *
    * @var string
    */
   public $label;
-
   /**
    * Internal Name
    *
    * @var string
    */
   public $name;
-
   /**
    * url in case of custom navigation link
    *
    * @var string
    */
   public $url;
-
   /**
    * Permission for menu item
    *
    * @var string
    */
   public $permission;
-
   /**
    * Permission Operator
    *
    * @var string
    */
   public $permission_operator;
-
   /**
    * Parent navigation item, used for grouping
    *
    * @var int unsigned
    */
   public $parent_id;
-
   /**
    * Is this navigation item active?
    *
    * @var boolean
    */
   public $is_active;
-
   /**
    * If separator needs to be added after this menu item
    *
    * @var boolean
    */
   public $has_separator;
-
   /**
    * Ordering of the navigation items in various blocks.
    *
    * @var int
    */
   public $weight;
-
   /**
    * class constructor
    *
    * @access public
-   *
    * @return civicrm_navigation
-   */ function __construct() {
+   */
+  function __construct()
+  {
     parent::__construct();
   }
-
   /**
    * return foreign links
    *
    * @access public
-   *
    * @return array
    */
-  function &links() {
+  function &links()
+  {
     if (!(self::$_links)) {
       self::$_links = array(
         'domain_id' => 'civicrm_domain:id',
@@ -189,150 +171,145 @@ class CRM_Core_DAO_Navigation extends CRM_Core_DAO {
     }
     return self::$_links;
   }
-
   /**
    * returns all the column names of this table
    *
    * @access public
-   *
    * @return array
    */
-  function &fields() {
+  function &fields()
+  {
     if (!(self::$_fields)) {
       self::$_fields = array(
         'id' => array(
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
-          'required' => TRUE,
-        ),
+          'required' => true,
+        ) ,
         'domain_id' => array(
           'name' => 'domain_id',
           'type' => CRM_Utils_Type::T_INT,
-          'required' => TRUE,
+          'required' => true,
           'FKClassName' => 'CRM_Core_DAO_Domain',
-        ),
+        ) ,
         'label' => array(
           'name' => 'label',
           'type' => CRM_Utils_Type::T_STRING,
-          'title' => ts('Label'),
+          'title' => ts('Label') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
-        ),
+        ) ,
         'name' => array(
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
-          'title' => ts('Name'),
+          'title' => ts('Name') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
-        ),
+        ) ,
         'url' => array(
           'name' => 'url',
           'type' => CRM_Utils_Type::T_STRING,
-          'title' => ts('Url'),
+          'title' => ts('Url') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
-        ),
+        ) ,
         'permission' => array(
           'name' => 'permission',
           'type' => CRM_Utils_Type::T_STRING,
-          'title' => ts('Permission'),
+          'title' => ts('Permission') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
-        ),
+        ) ,
         'permission_operator' => array(
           'name' => 'permission_operator',
           'type' => CRM_Utils_Type::T_STRING,
-          'title' => ts('Permission Operator'),
+          'title' => ts('Permission Operator') ,
           'maxlength' => 3,
           'size' => CRM_Utils_Type::FOUR,
-        ),
+        ) ,
         'parent_id' => array(
           'name' => 'parent_id',
           'type' => CRM_Utils_Type::T_INT,
           'FKClassName' => 'CRM_Core_DAO_Navigation',
-        ),
+        ) ,
         'is_active' => array(
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-        ),
+        ) ,
         'has_separator' => array(
           'name' => 'has_separator',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-          'title' => ts('Has Separator'),
-        ),
+          'title' => ts('Has Separator') ,
+        ) ,
         'weight' => array(
           'name' => 'weight',
           'type' => CRM_Utils_Type::T_INT,
-          'title' => ts('Weight'),
-        ),
+          'title' => ts('Weight') ,
+        ) ,
       );
     }
     return self::$_fields;
   }
-
   /**
    * returns the names of this table
    *
    * @access public
-   *
    * @return string
    */
-  function getTableName() {
+  function getTableName()
+  {
     return self::$_tableName;
   }
-
   /**
    * returns if this table needs to be logged
    *
    * @access public
-   *
    * @return boolean
    */
-  function getLog() {
+  function getLog()
+  {
     return self::$_log;
   }
-
   /**
    * returns the list of fields that can be imported
    *
    * @access public
    * return array
    */
-  function &import($prefix = FALSE) {
+  function &import($prefix = false)
+  {
     if (!(self::$_import)) {
       self::$_import = array();
-      $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      $fields = & self::fields();
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
-            self::$_import['navigation'] = &$fields[$name];
-          }
-          else {
-            self::$_import[$name] = &$fields[$name];
+            self::$_import['navigation'] = & $fields[$name];
+          } else {
+            self::$_import[$name] = & $fields[$name];
           }
         }
       }
     }
     return self::$_import;
   }
-
   /**
    * returns the list of fields that can be exported
    *
    * @access public
    * return array
    */
-  function &export($prefix = FALSE) {
+  function &export($prefix = false)
+  {
     if (!(self::$_export)) {
       self::$_export = array();
-      $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      $fields = & self::fields();
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
-            self::$_export['navigation'] = &$fields[$name];
-          }
-          else {
-            self::$_export[$name] = &$fields[$name];
+            self::$_export['navigation'] = & $fields[$name];
+          } else {
+            self::$_export[$name] = & $fields[$name];
           }
         }
       }
@@ -340,4 +317,3 @@ class CRM_Core_DAO_Navigation extends CRM_Core_DAO {
     return self::$_export;
   }
 }
-

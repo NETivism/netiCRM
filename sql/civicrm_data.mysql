@@ -4357,12 +4357,12 @@ INSERT INTO civicrm_domain (name, version, loc_block_id) VALUES (@domainName, '2
 SELECT @domainID := id FROM civicrm_domain where name = 'Default Domain Name';
 
 -- Sample location types
-INSERT INTO civicrm_location_type( name, vcard_name, description, is_reserved, is_active, is_default ) VALUES( 'Home', 'HOME', 'Place of residence', 0, 1, 1 );
-INSERT INTO civicrm_location_type( name, vcard_name, description, is_reserved, is_active ) VALUES( 'Work', 'WORK', 'Work location', 0, 1 );
-INSERT INTO civicrm_location_type( name, vcard_name, description, is_reserved, is_active ) VALUES( 'Main', NULL, 'Main office location', 0, 1 );
-INSERT INTO civicrm_location_type( name, vcard_name, description, is_reserved, is_active ) VALUES( 'Other', NULL, 'Other location', 0, 1 );
+INSERT INTO civicrm_location_type( label, name, vcard_name, description, is_reserved, is_active, is_default ) VALUES( 'Home', 'Home', 'HOME', 'Place of residence', 0, 1, 1 );
+INSERT INTO civicrm_location_type( label, name, vcard_name, description, is_reserved, is_active ) VALUES( 'Work', 'Work', 'WORK', 'Work location', 0, 1 );
+INSERT INTO civicrm_location_type( label, name, vcard_name, description, is_reserved, is_active ) VALUES( 'Main', 'Main', NULL, 'Main office location', 0, 1 );
+INSERT INTO civicrm_location_type( label, name, vcard_name, description, is_reserved, is_active ) VALUES( 'Other', 'Other', NULL, 'Other location', 0, 1 );
 -- the following location must stay with the untranslated Billing name, CRM-2064
-INSERT INTO civicrm_location_type( name, vcard_name, description, is_reserved, is_active ) VALUES( 'Billing', NULL, 'Billing Address location', 1, 1 );
+INSERT INTO civicrm_location_type( label, name, vcard_name, description, is_reserved, is_active ) VALUES( 'Billing', 'Billing', NULL, 'Billing Address location', 1, 1 );
 
 -- Sample relationship types
 INSERT INTO civicrm_relationship_type( name_a_b,label_a_b, name_b_a,label_b_a, description, contact_type_a, contact_type_b, is_reserved )
@@ -4395,8 +4395,8 @@ INSERT INTO civicrm_tag( name, description, parent_id,used_for )
 INSERT INTO civicrm_mailing_component
     (name,component_type,subject,body_html,body_text,is_default,is_active)
 VALUES
-    ('Mailing Header','Header','Descriptive Title for this Header','Sample Header for HTML formatted content.','Sample Header for TEXT formatted content.',1,1),
-    ('Mailing Footer','Footer','Descriptive Title for this Footer.','Sample Footer for HTML formatted content<br/><a href=\"{action.optOutUrl}\">Unsubscribe</a>  <br/> {domain.address}','to unsubscribe: {action.optOutUrl}\n{domain.address}',1,1),
+    ('Mailing Header','Header','Descriptive Title for this Header','','',1,1),
+    ('Mailing Footer','Footer','Descriptive Title for this Footer.','<a href=\"{action.optOutUrl}\">Unsubscribe</a>  <br/> {domain.address}','to unsubscribe: {action.optOutUrl}\r\n{domain.address}',1,1),
     ('Subscribe Message','Subscribe','Subscription Confirmation Request','You have a pending subscription to the {subscribe.group} mailing list. To confirm this subscription, reply to this email or click <a href=\"{subscribe.url}\">here</a>.','You have a pending subscription to the {subscribe.group} mailing list. To confirm this subscription, reply to this email or click on this link: {subscribe.url}',1,1),
     ('Welcome Message','Welcome','Your Subscription has been Activated','Welcome. Your subscription to the {welcome.group} mailing list has been activated.','Welcome. Your subscription to the {welcome.group} mailing list has been activated.',1,1),
     ('Unsubscribe Message','Unsubscribe','Un-subscribe Confirmation','You have been un-subscribed from the following groups: {unsubscribe.group}. You can re-subscribe by mailing {action.resubscribe} or clicking <a href=\"{action.resubscribeUrl}\">here</a>.','You have been un-subscribed from the following groups: {unsubscribe.group}. You can re-subscribe by mailing {action.resubscribe} or clicking %3',1,1),
@@ -6282,7 +6282,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
    <td>
 
     {if $formValues.receipt_text}
-     <p>{$formValues.receipt_text|htmlize}</p>
+     <div>{$formValues.receipt_text|htmlize}</div>
     {else}
      <p>{ts}Thanks for your support.{/ts}</p>
     {/if}
@@ -6642,7 +6642,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
    <td>
 
     {if $formValues.receipt_text}
-     <p>{$formValues.receipt_text|htmlize}</p>
+     <div>{$formValues.receipt_text|htmlize}</div>
     {else}
      <p>{ts}Thanks for your support.{/ts}</p>
     {/if}
@@ -7084,7 +7084,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
    <td>
 
     {if $receipt_text}
-     <p>{$receipt_text|htmlize}</p>
+     <div>{$receipt_text|htmlize}</div>
     {/if}
 
     {if $is_pay_later}
@@ -7647,7 +7647,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
    <td>
 
     {if $receipt_text}
-     <p>{$receipt_text|htmlize}</p>
+     <div>{$receipt_text|htmlize}</div>
     {/if}
 
     {if $is_pay_later}
@@ -9298,7 +9298,7 @@ registration process.{/ts}
    <td>
 
     {if $event.confirm_email_text AND (not $isOnWaitlist AND not $isRequireApproval)}
-     <p>{$event.confirm_email_text|htmlize}</p>
+     <div>{$event.confirm_email_text|htmlize}</div>
     {/if}
 
     {if $isOnWaitlist}
@@ -10037,7 +10037,7 @@ registration process.{/ts}
    <td>
 
     {if $event.confirm_email_text AND (not $isOnWaitlist AND not $isRequireApproval)}
-     <p>{$event.confirm_email_text|htmlize}</p>
+     <div>{$event.confirm_email_text|htmlize}</div>
     {/if}
 
     {if $isOnWaitlist}
@@ -10777,7 +10777,7 @@ registration process.{/ts}
    <td>
 
     {if $event.confirm_email_text AND (not $isOnWaitlist AND not $isRequireApproval)}
-     <p>{$event.confirm_email_text|htmlize}</p>
+     <div>{$event.confirm_email_text|htmlize}</div>
     {/if}
 
     {if $isOnWaitlist}
@@ -11510,7 +11510,7 @@ registration process.{/ts}
    <td>
 
     {if $event.confirm_email_text AND (not $isOnWaitlist AND not $isRequireApproval)}
-     <p>{$event.confirm_email_text|htmlize}</p>
+     <div>{$event.confirm_email_text|htmlize}</div>
     {/if}
 
     {if $isOnWaitlist}
@@ -13512,9 +13512,9 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
   <tr>
    <td>
     {if $formValues.receipt_text_signup}
-     <p>{$formValues.receipt_text_signup|htmlize}</p>
+     <div>{$formValues.receipt_text_signup|htmlize}</div>
     {elseif $formValues.receipt_text_renewal}
-     <p>{$formValues.receipt_text_renewal|htmlize}</p>
+     <div>{$formValues.receipt_text_renewal|htmlize}</div>
     {else}
      <p>{ts}Thanks for your support.{/ts}</p>
     {/if}
@@ -13791,9 +13791,9 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
   <tr>
    <td>
     {if $formValues.receipt_text_signup}
-     <p>{$formValues.receipt_text_signup|htmlize}</p>
+     <div>{$formValues.receipt_text_signup|htmlize}</div>
     {elseif $formValues.receipt_text_renewal}
-     <p>{$formValues.receipt_text_renewal|htmlize}</p>
+     <div>{$formValues.receipt_text_renewal|htmlize}</div>
     {else}
      <p>{ts}Thanks for your support.{/ts}</p>
     {/if}
@@ -14208,7 +14208,7 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
    <td>
 
     {if $receipt_text}
-     <p>{$receipt_text|htmlize}</p>
+     <div>{$receipt_text|htmlize}</div>
     {/if}
 
     {if $is_pay_later}
@@ -14909,7 +14909,7 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
    <td>
 
     {if $receipt_text}
-     <p>{$receipt_text|htmlize}</p>
+     <div>{$receipt_text|htmlize}</div>
     {/if}
 
     {if $is_pay_later}
@@ -17166,4 +17166,4 @@ VALUES
 
 UPDATE civicrm_report_instance SET navigation_id = LAST_INSERT_ID() WHERE id = @instanceID;
 
- UPDATE civicrm_domain SET version = '3.3.1';
+ UPDATE civicrm_domain SET version = '4.0.0';

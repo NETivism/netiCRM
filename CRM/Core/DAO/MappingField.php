@@ -24,7 +24,6 @@
 | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
 +--------------------------------------------------------------------+
 */
-
 /**
  *
  * @package CRM
@@ -34,8 +33,8 @@
  */
 require_once 'CRM/Core/DAO.php';
 require_once 'CRM/Utils/Type.php';
-class CRM_Core_DAO_MappingField extends CRM_Core_DAO {
-
+class CRM_Core_DAO_MappingField extends CRM_Core_DAO
+{
   /**
    * static instance to hold the table name
    *
@@ -43,23 +42,20 @@ class CRM_Core_DAO_MappingField extends CRM_Core_DAO {
    * @static
    */
   static $_tableName = 'civicrm_mapping_field';
-
   /**
    * static instance to hold the field values
    *
    * @var array
    * @static
    */
-  static $_fields = NULL;
-
+  static $_fields = null;
   /**
    * static instance to hold the FK relationships
    *
    * @var string
    * @static
    */
-  static $_links = NULL;
-
+  static $_links = null;
   /**
    * static instance to hold the values that can
    * be imported / apu
@@ -67,8 +63,7 @@ class CRM_Core_DAO_MappingField extends CRM_Core_DAO {
    * @var array
    * @static
    */
-  static $_import = NULL;
-
+  static $_import = null;
   /**
    * static instance to hold the values that can
    * be exported / apu
@@ -76,8 +71,7 @@ class CRM_Core_DAO_MappingField extends CRM_Core_DAO {
    * @var array
    * @static
    */
-  static $_export = NULL;
-
+  static $_export = null;
   /**
    * static value to see if we should log any modifications to
    * this table in the civicrm_log table
@@ -85,123 +79,108 @@ class CRM_Core_DAO_MappingField extends CRM_Core_DAO {
    * @var boolean
    * @static
    */
-  static $_log = FALSE;
-
+  static $_log = false;
   /**
    * Mapping Field ID
    *
    * @var int unsigned
    */
   public $id;
-
   /**
    * Mapping to which this field belongs
    *
    * @var int unsigned
    */
   public $mapping_id;
-
   /**
    * Mapping field key
    *
    * @var string
    */
   public $name;
-
   /**
    * Contact Type in mapping
    *
    * @var string
    */
   public $contact_type;
-
   /**
    * Column number for mapping set
    *
    * @var int unsigned
    */
   public $column_number;
-
   /**
    * Location type of this mapping, if required
    *
    * @var int unsigned
    */
   public $location_type_id;
-
   /**
    * Which type of phone does this number belongs.
    *
    * @var int unsigned
    */
   public $phone_type_id;
-
   /**
    * Which type of IM Provider does this name belong.
    *
    * @var int unsigned
    */
   public $im_provider_id;
-
   /**
    * Which type of website does this site belong
    *
    * @var int unsigned
    */
   public $website_type_id;
-
   /**
    * Relationship type, if required
    *
    * @var int unsigned
    */
   public $relationship_type_id;
-
   /**
    *
    * @var string
    */
   public $relationship_direction;
-
   /**
    * Used to group mapping_field records into related sets (e.g. for criteria sets in search builder mappings).
    *
    * @var int unsigned
    */
   public $grouping;
-
   /**
    * SQL WHERE operator for search-builder mapping fields (search criteria).
    *
    * @var enum('=', '!=', '>', '<', '>=', '<=', 'IN', 'NOT IN', 'LIKE', 'NOT LIKE', 'IS NULL', 'IS NOT NULL')
    */
   public $operator;
-
   /**
    * SQL WHERE value for search-builder mapping fields.
    *
    * @var string
    */
   public $value;
-
   /**
    * class constructor
    *
    * @access public
-   *
    * @return civicrm_mapping_field
-   */ function __construct() {
+   */
+  function __construct()
+  {
     parent::__construct();
   }
-
   /**
    * return foreign links
    *
    * @access public
-   *
    * @return array
    */
-  function &links() {
+  function &links()
+  {
     if (!(self::$_links)) {
       self::$_links = array(
         'mapping_id' => 'civicrm_mapping:id',
@@ -211,185 +190,178 @@ class CRM_Core_DAO_MappingField extends CRM_Core_DAO {
     }
     return self::$_links;
   }
-
   /**
    * returns all the column names of this table
    *
    * @access public
-   *
    * @return array
    */
-  function &fields() {
+  function &fields()
+  {
     if (!(self::$_fields)) {
       self::$_fields = array(
         'id' => array(
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
-          'required' => TRUE,
-        ),
+          'required' => true,
+        ) ,
         'mapping_id' => array(
           'name' => 'mapping_id',
           'type' => CRM_Utils_Type::T_INT,
-          'required' => TRUE,
+          'required' => true,
           'FKClassName' => 'CRM_Core_DAO_Mapping',
-        ),
+        ) ,
         'name' => array(
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
-          'title' => ts('Name'),
+          'title' => ts('Name') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
-        ),
+        ) ,
         'contact_type' => array(
           'name' => 'contact_type',
           'type' => CRM_Utils_Type::T_STRING,
-          'title' => ts('Contact Type'),
+          'title' => ts('Contact Type') ,
           'maxlength' => 64,
           'size' => CRM_Utils_Type::BIG,
-        ),
+        ) ,
         'column_number' => array(
           'name' => 'column_number',
           'type' => CRM_Utils_Type::T_INT,
-          'title' => ts('Column Number'),
-          'required' => TRUE,
-        ),
+          'title' => ts('Column Number') ,
+          'required' => true,
+        ) ,
         'location_type_id' => array(
           'name' => 'location_type_id',
           'type' => CRM_Utils_Type::T_INT,
           'FKClassName' => 'CRM_Core_DAO_LocationType',
-        ),
+        ) ,
         'phone_type_id' => array(
           'name' => 'phone_type_id',
           'type' => CRM_Utils_Type::T_INT,
-        ),
+        ) ,
         'im_provider_id' => array(
           'name' => 'im_provider_id',
           'type' => CRM_Utils_Type::T_INT,
-        ),
+        ) ,
         'website_type_id' => array(
           'name' => 'website_type_id',
           'type' => CRM_Utils_Type::T_INT,
-        ),
+        ) ,
         'relationship_type_id' => array(
           'name' => 'relationship_type_id',
           'type' => CRM_Utils_Type::T_INT,
           'FKClassName' => 'CRM_Contact_DAO_RelationshipType',
-        ),
+        ) ,
         'relationship_direction' => array(
           'name' => 'relationship_direction',
           'type' => CRM_Utils_Type::T_STRING,
-          'title' => ts('Relationship Direction'),
+          'title' => ts('Relationship Direction') ,
           'maxlength' => 6,
           'size' => CRM_Utils_Type::EIGHT,
-        ),
+        ) ,
         'grouping' => array(
           'name' => 'grouping',
           'type' => CRM_Utils_Type::T_INT,
-          'title' => ts('Grouping'),
+          'title' => ts('Grouping') ,
           'default' => '',
-        ),
+        ) ,
         'operator' => array(
           'name' => 'operator',
           'type' => CRM_Utils_Type::T_ENUM,
-          'title' => ts('Operator'),
+          'title' => ts('Operator') ,
           'enumValues' => '=, !=, >, <, >=, <=,
        IN, NOT IN, LIKE, NOT LIKE, IS NULL, IS NOT NULL',
-        ),
+        ) ,
         'value' => array(
           'name' => 'value',
           'type' => CRM_Utils_Type::T_STRING,
-          'title' => ts('Value'),
+          'title' => ts('Value') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
-        ),
+        ) ,
       );
     }
     return self::$_fields;
   }
-
   /**
    * returns the names of this table
    *
    * @access public
-   *
    * @return string
    */
-  function getTableName() {
+  function getTableName()
+  {
     return self::$_tableName;
   }
-
   /**
    * returns if this table needs to be logged
    *
    * @access public
-   *
    * @return boolean
    */
-  function getLog() {
+  function getLog()
+  {
     return self::$_log;
   }
-
   /**
    * returns the list of fields that can be imported
    *
    * @access public
    * return array
    */
-  function &import($prefix = FALSE) {
+  function &import($prefix = false)
+  {
     if (!(self::$_import)) {
       self::$_import = array();
-      $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      $fields = & self::fields();
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
-            self::$_import['mapping_field'] = &$fields[$name];
-          }
-          else {
-            self::$_import[$name] = &$fields[$name];
+            self::$_import['mapping_field'] = & $fields[$name];
+          } else {
+            self::$_import[$name] = & $fields[$name];
           }
         }
       }
     }
     return self::$_import;
   }
-
   /**
    * returns the list of fields that can be exported
    *
    * @access public
    * return array
    */
-  function &export($prefix = FALSE) {
+  function &export($prefix = false)
+  {
     if (!(self::$_export)) {
       self::$_export = array();
-      $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      $fields = & self::fields();
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
-            self::$_export['mapping_field'] = &$fields[$name];
-          }
-          else {
-            self::$_export[$name] = &$fields[$name];
+            self::$_export['mapping_field'] = & $fields[$name];
+          } else {
+            self::$_export[$name] = & $fields[$name];
           }
         }
       }
     }
     return self::$_export;
   }
-
   /**
    * returns an array containing the enum fields of the civicrm_mapping_field table
    *
    * @return array (reference)  the array of enum fields
    */
-  static
-  function &getEnums() {
+  static function &getEnums()
+  {
     static $enums = array(
       'operator',
     );
     return $enums;
   }
-
   /**
    * returns a ts()-translated enum value for display purposes
    *
@@ -398,45 +370,42 @@ class CRM_Core_DAO_MappingField extends CRM_Core_DAO {
    *
    * @return string  the display value of the enum
    */
-  static
-  function tsEnum($field, $value) {
-    static $translations = NULL;
+  static function tsEnum($field, $value)
+  {
+    static $translations = null;
     if (!$translations) {
       $translations = array(
         'operator' => array(
-          '=' => ts('='),
-          '!=' => ts('!='),
-          '>' => ts('>'),
-          '<' => ts('<'),
-          '>=' => ts('>='),
-          '<=' => ts('<='),
-          'IN' => ts('IN'),
-          'NOT IN' => ts('NOT IN'),
-          'LIKE' => ts('LIKE'),
-          'NOT LIKE' => ts('NOT LIKE'),
-          'IS NULL' => ts('IS NULL'),
-          'IS NOT NULL' => ts('IS NOT NULL'),
-        ),
+          '=' => ts('=') ,
+          '!=' => ts('!=') ,
+          '>' => ts('>') ,
+          '<' => ts('<') ,
+          '>=' => ts('>=') ,
+          '<=' => ts('<=') ,
+          'IN' => ts('IN') ,
+          'NOT IN' => ts('NOT IN') ,
+          'LIKE' => ts('LIKE') ,
+          'NOT LIKE' => ts('NOT LIKE') ,
+          'IS NULL' => ts('IS NULL') ,
+          'IS NOT NULL' => ts('IS NOT NULL') ,
+        ) ,
       );
     }
     return $translations[$field][$value];
   }
-
   /**
    * adds $value['foo_display'] for each $value['foo'] enum from civicrm_mapping_field
    *
    * @param array $values (reference)  the array up for enhancing
-   *
    * @return void
    */
-  static
-  function addDisplayEnums(&$values) {
-    $enumFields = &CRM_Core_DAO_MappingField::getEnums();
-    foreach ($enumFields as $enum) {
+  static function addDisplayEnums(&$values)
+  {
+    $enumFields = & CRM_Core_DAO_MappingField::getEnums();
+    foreach($enumFields as $enum) {
       if (isset($values[$enum])) {
         $values[$enum . '_display'] = CRM_Core_DAO_MappingField::tsEnum($enum, $values[$enum]);
       }
     }
   }
 }
-

@@ -24,7 +24,6 @@
 | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
 +--------------------------------------------------------------------+
 */
-
 /**
  *
  * @package CRM
@@ -34,8 +33,8 @@
  */
 require_once 'CRM/Core/DAO.php';
 require_once 'CRM/Utils/Type.php';
-class CRM_Core_DAO_Persistent extends CRM_Core_DAO {
-
+class CRM_Core_DAO_Persistent extends CRM_Core_DAO
+{
   /**
    * static instance to hold the table name
    *
@@ -43,23 +42,20 @@ class CRM_Core_DAO_Persistent extends CRM_Core_DAO {
    * @static
    */
   static $_tableName = 'civicrm_persistent';
-
   /**
    * static instance to hold the field values
    *
    * @var array
    * @static
    */
-  static $_fields = NULL;
-
+  static $_fields = null;
   /**
    * static instance to hold the FK relationships
    *
    * @var string
    * @static
    */
-  static $_links = NULL;
-
+  static $_links = null;
   /**
    * static instance to hold the values that can
    * be imported / apu
@@ -67,8 +63,7 @@ class CRM_Core_DAO_Persistent extends CRM_Core_DAO {
    * @var array
    * @static
    */
-  static $_import = NULL;
-
+  static $_import = null;
   /**
    * static instance to hold the values that can
    * be exported / apu
@@ -76,8 +71,7 @@ class CRM_Core_DAO_Persistent extends CRM_Core_DAO {
    * @var array
    * @static
    */
-  static $_export = NULL;
-
+  static $_export = null;
   /**
    * static value to see if we should log any modifications to
    * this table in the civicrm_log table
@@ -85,162 +79,152 @@ class CRM_Core_DAO_Persistent extends CRM_Core_DAO {
    * @var boolean
    * @static
    */
-  static $_log = FALSE;
-
+  static $_log = false;
   /**
    * Persistent Record Id
    *
    * @var int unsigned
    */
   public $id;
-
   /**
    * Context for which name data pair is to be stored
    *
    * @var string
    */
   public $context;
-
   /**
    * Name of Context
    *
    * @var string
    */
   public $name;
-
   /**
    * data associated with name
    *
    * @var longtext
    */
   public $data;
-
   /**
    * Config Settings
    *
    * @var boolean
    */
   public $is_config;
-
   /**
    * class constructor
    *
    * @access public
-   *
    * @return civicrm_persistent
-   */ function __construct() {
+   */
+  function __construct()
+  {
     parent::__construct();
   }
-
   /**
    * returns all the column names of this table
    *
    * @access public
-   *
    * @return array
    */
-  function &fields() {
+  function &fields()
+  {
     if (!(self::$_fields)) {
       self::$_fields = array(
         'id' => array(
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
-          'required' => TRUE,
-        ),
+          'required' => true,
+        ) ,
         'context' => array(
           'name' => 'context',
           'type' => CRM_Utils_Type::T_STRING,
-          'title' => ts('Context'),
-          'required' => TRUE,
+          'title' => ts('Context') ,
+          'required' => true,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
-        ),
+        ) ,
         'name' => array(
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
-          'title' => ts('Name'),
-          'required' => TRUE,
+          'title' => ts('Name') ,
+          'required' => true,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
-        ),
+        ) ,
         'data' => array(
           'name' => 'data',
           'type' => CRM_Utils_Type::T_LONGTEXT,
-          'title' => ts('Data'),
-        ),
+          'title' => ts('Data') ,
+        ) ,
         'is_config' => array(
           'name' => 'is_config',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-          'required' => TRUE,
-        ),
+          'required' => true,
+        ) ,
       );
     }
     return self::$_fields;
   }
-
   /**
    * returns the names of this table
    *
    * @access public
-   *
    * @return string
    */
-  function getTableName() {
+  function getTableName()
+  {
     return self::$_tableName;
   }
-
   /**
    * returns if this table needs to be logged
    *
    * @access public
-   *
    * @return boolean
    */
-  function getLog() {
+  function getLog()
+  {
     return self::$_log;
   }
-
   /**
    * returns the list of fields that can be imported
    *
    * @access public
    * return array
    */
-  function &import($prefix = FALSE) {
+  function &import($prefix = false)
+  {
     if (!(self::$_import)) {
       self::$_import = array();
-      $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      $fields = & self::fields();
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
-            self::$_import['persistent'] = &$fields[$name];
-          }
-          else {
-            self::$_import[$name] = &$fields[$name];
+            self::$_import['persistent'] = & $fields[$name];
+          } else {
+            self::$_import[$name] = & $fields[$name];
           }
         }
       }
     }
     return self::$_import;
   }
-
   /**
    * returns the list of fields that can be exported
    *
    * @access public
    * return array
    */
-  function &export($prefix = FALSE) {
+  function &export($prefix = false)
+  {
     if (!(self::$_export)) {
       self::$_export = array();
-      $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      $fields = & self::fields();
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
-            self::$_export['persistent'] = &$fields[$name];
-          }
-          else {
-            self::$_export[$name] = &$fields[$name];
+            self::$_export['persistent'] = & $fields[$name];
+          } else {
+            self::$_export[$name] = & $fields[$name];
           }
         }
       }
@@ -248,4 +232,3 @@ class CRM_Core_DAO_Persistent extends CRM_Core_DAO {
     return self::$_export;
   }
 }
-

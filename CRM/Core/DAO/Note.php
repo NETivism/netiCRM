@@ -24,7 +24,6 @@
 | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
 +--------------------------------------------------------------------+
 */
-
 /**
  *
  * @package CRM
@@ -34,8 +33,8 @@
  */
 require_once 'CRM/Core/DAO.php';
 require_once 'CRM/Utils/Type.php';
-class CRM_Core_DAO_Note extends CRM_Core_DAO {
-
+class CRM_Core_DAO_Note extends CRM_Core_DAO
+{
   /**
    * static instance to hold the table name
    *
@@ -43,23 +42,20 @@ class CRM_Core_DAO_Note extends CRM_Core_DAO {
    * @static
    */
   static $_tableName = 'civicrm_note';
-
   /**
    * static instance to hold the field values
    *
    * @var array
    * @static
    */
-  static $_fields = NULL;
-
+  static $_fields = null;
   /**
    * static instance to hold the FK relationships
    *
    * @var string
    * @static
    */
-  static $_links = NULL;
-
+  static $_links = null;
   /**
    * static instance to hold the values that can
    * be imported / apu
@@ -67,8 +63,7 @@ class CRM_Core_DAO_Note extends CRM_Core_DAO {
    * @var array
    * @static
    */
-  static $_import = NULL;
-
+  static $_import = null;
   /**
    * static instance to hold the values that can
    * be exported / apu
@@ -76,8 +71,7 @@ class CRM_Core_DAO_Note extends CRM_Core_DAO {
    * @var array
    * @static
    */
-  static $_export = NULL;
-
+  static $_export = null;
   /**
    * static value to see if we should log any modifications to
    * this table in the civicrm_log table
@@ -85,82 +79,73 @@ class CRM_Core_DAO_Note extends CRM_Core_DAO {
    * @var boolean
    * @static
    */
-  static $_log = TRUE;
-
+  static $_log = true;
   /**
    * Note ID
    *
    * @var int unsigned
    */
   public $id;
-
   /**
    * Name of table where item being referenced is stored.
    *
    * @var string
    */
   public $entity_table;
-
   /**
    * Foreign key to the referenced item.
    *
    * @var int unsigned
    */
   public $entity_id;
-
   /**
    * Note and/or Comment.
    *
    * @var text
    */
   public $note;
-
   /**
    * FK to Contact ID creator
    *
    * @var int unsigned
    */
   public $contact_id;
-
   /**
    * When was this note last modified/edited
    *
    * @var date
    */
   public $modified_date;
-
   /**
    * subject of note description
    *
    * @var string
    */
   public $subject;
-
   /**
    * Foreign Key to Note Privacy Level (which is an option value pair and hence an implicit FK)
    *
    * @var int
    */
   public $privacy;
-
   /**
    * class constructor
    *
    * @access public
-   *
    * @return civicrm_note
-   */ function __construct() {
+   */
+  function __construct()
+  {
     parent::__construct();
   }
-
   /**
    * return foreign links
    *
    * @access public
-   *
    * @return array
    */
-  function &links() {
+  function &links()
+  {
     if (!(self::$_links)) {
       self::$_links = array(
         'contact_id' => 'civicrm_contact:id',
@@ -168,137 +153,132 @@ class CRM_Core_DAO_Note extends CRM_Core_DAO {
     }
     return self::$_links;
   }
-
   /**
    * returns all the column names of this table
    *
    * @access public
-   *
    * @return array
    */
-  function &fields() {
+  function &fields()
+  {
     if (!(self::$_fields)) {
       self::$_fields = array(
         'id' => array(
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
-          'required' => TRUE,
-        ),
+          'required' => true,
+        ) ,
         'entity_table' => array(
           'name' => 'entity_table',
           'type' => CRM_Utils_Type::T_STRING,
-          'title' => ts('Entity Table'),
-          'required' => TRUE,
+          'title' => ts('Entity Table') ,
+          'required' => true,
           'maxlength' => 64,
           'size' => CRM_Utils_Type::BIG,
-        ),
+        ) ,
         'entity_id' => array(
           'name' => 'entity_id',
           'type' => CRM_Utils_Type::T_INT,
-          'required' => TRUE,
-        ),
+          'required' => true,
+        ) ,
         'note' => array(
           'name' => 'note',
           'type' => CRM_Utils_Type::T_TEXT,
-          'title' => ts('Note'),
+          'title' => ts('Note') ,
           'rows' => 4,
           'cols' => 60,
-          'import' => TRUE,
+          'import' => true,
           'where' => 'civicrm_note.note',
           'headerPattern' => '/Note|Comment/i',
           'dataPattern' => '//',
-          'export' => TRUE,
-        ),
+          'export' => true,
+        ) ,
         'contact_id' => array(
           'name' => 'contact_id',
           'type' => CRM_Utils_Type::T_INT,
           'FKClassName' => 'CRM_Contact_DAO_Contact',
-        ),
+        ) ,
         'modified_date' => array(
           'name' => 'modified_date',
           'type' => CRM_Utils_Type::T_DATE,
-          'title' => ts('Modified Date'),
-        ),
+          'title' => ts('Modified Date') ,
+        ) ,
         'subject' => array(
           'name' => 'subject',
           'type' => CRM_Utils_Type::T_STRING,
-          'title' => ts('Subject'),
+          'title' => ts('Subject') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
-        ),
+        ) ,
         'privacy' => array(
           'name' => 'privacy',
           'type' => CRM_Utils_Type::T_INT,
-          'title' => ts('Privacy'),
-        ),
+          'title' => ts('Privacy') ,
+        ) ,
       );
     }
     return self::$_fields;
   }
-
   /**
    * returns the names of this table
    *
    * @access public
-   *
    * @return string
    */
-  function getTableName() {
+  function getTableName()
+  {
     return self::$_tableName;
   }
-
   /**
    * returns if this table needs to be logged
    *
    * @access public
-   *
    * @return boolean
    */
-  function getLog() {
+  function getLog()
+  {
     return self::$_log;
   }
-
   /**
    * returns the list of fields that can be imported
    *
    * @access public
    * return array
    */
-  function &import($prefix = FALSE) {
+  function &import($prefix = false)
+  {
     if (!(self::$_import)) {
       self::$_import = array();
-      $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      $fields = & self::fields();
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
-            self::$_import['note'] = &$fields[$name];
-          }
-          else {
-            self::$_import[$name] = &$fields[$name];
+            self::$_import['note'] = & $fields[$name];
+          } else {
+            self::$_import[$name] = & $fields[$name];
           }
         }
       }
     }
     return self::$_import;
   }
-
   /**
    * returns the list of fields that can be exported
    *
    * @access public
    * return array
    */
-  function &export($prefix = FALSE) {
+  function &export($prefix = false)
+  {
     if (!(self::$_export)) {
       self::$_export = array();
-      $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      $fields = & self::fields();
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
-            self::$_export['note'] = &$fields[$name];
-          }
-          else {
-            self::$_export[$name] = &$fields[$name];
+            self::$_export['note'] = & $fields[$name];
+          } else {
+            self::$_export[$name] = & $fields[$name];
           }
         }
       }
@@ -306,4 +286,3 @@ class CRM_Core_DAO_Note extends CRM_Core_DAO {
     return self::$_export;
   }
 }
-
