@@ -33,8 +33,6 @@
  *
  */
 
-require_once 'PHPgettext/streams.php';
-require_once 'PHPgettext/gettext.php';
 require_once 'CRM/Core/Config.php';
 class CRM_Core_I18n {
 
@@ -54,7 +52,8 @@ class CRM_Core_I18n {
    * @param  $locale string  the base of this certain object's existence
    *
    * @return         void
-   */ function __construct($locale) {
+   */
+  function __construct($locale) {
     if (!empty($locale) and $locale != 'en_US') {
       $config = CRM_Core_Config::singleton();
 
@@ -74,13 +73,14 @@ class CRM_Core_I18n {
         $this->_phpgettext = new CRM_Core_I18n_NativeGettext();
         return;
       }
+      else{
+        // Otherwise, use PHP-gettext
+        require_once 'PHPgettext/streams.php';
+        require_once 'PHPgettext/gettext.php';
 
-      // Otherwise, use PHP-gettext
-      require_once 'PHPgettext/streams.php';
-      require_once 'PHPgettext/gettext.php';
-
-      $streamer = new FileReader($config->gettextResourceDir . $locale . DIRECTORY_SEPARATOR . 'LC_MESSAGES' . DIRECTORY_SEPARATOR . 'civicrm.mo');
-      $this->_phpgettext = new gettext_reader($streamer);
+        $streamer = new FileReader($config->gettextResourceDir . $locale . DIRECTORY_SEPARATOR . 'LC_MESSAGES' . DIRECTORY_SEPARATOR . 'civicrm.mo');
+        $this->_phpgettext = new gettext_reader($streamer);
+      }
     }
   }
 
@@ -223,10 +223,8 @@ class CRM_Core_I18n {
 
     // do all wildcard translations first
     require_once 'CRM/Utils/Array.php';
-    $config = &CRM_Core_Config::singleton();
-    $stringTable = CRM_Utils_Array::value($config->lcMessages,
-      $config->localeCustomStrings
-    );
+    $config = CRM_Core_Config::singleton();
+    $stringTable = CRM_Utils_Array::value($config->lcMessages, $config->localeCustomStrings);
 
     $exactMatch = FALSE;
     if (isset($stringTable['enabled']['exactMatch'])) {
@@ -239,15 +237,10 @@ class CRM_Core_I18n {
       }
     }
 
-    if (!$exactMatch &&
-      isset($stringTable['enabled']['wildcardMatch'])
-    ) {
+    if (!$exactMatch && isset($stringTable['enabled']['wildcardMatch']) ) {
       $search = array_keys($stringTable['enabled']['wildcardMatch']);
       $replace = array_values($stringTable['enabled']['wildcardMatch']);
-      $text = str_replace($search,
-        $replace,
-        $text
-      );
+      $text = str_replace($search, $replace, $text);
     }
 
     // dont translate if we've done exactMatch already
@@ -362,8 +355,7 @@ class CRM_Core_I18n {
   /**
    * Static instance provider - return the instance for the current locale.
    */
-  static
-  function &singleton() {
+  static function singleton() {
     static $singleton = array();
 
     global $tsLocale;
@@ -379,8 +371,7 @@ class CRM_Core_I18n {
    *
    * @return string  the final LC_TIME that got set
    */
-  static
-  function setLcTime() {
+  static function setLcTime() {
     static $locales = array();
 
     global $tsLocale;
@@ -403,16 +394,16 @@ class CRM_Core_I18n {
  * @return         string  the translated string
  */
 function ts($text, $params = array()) {
-  static $config = NULL;
-  static $locale = NULL;
-  static $i18n = NULL;
-  static $function = NULL;
+  static $config;
+  static $function;
+  static $locale;
   global $tsLocale;
+
   if (empty($tsLocale)) {
-    return '';
+    return $text;
   }
 
-  if ($text == '') {
+  if ($text === '') {
     return '';
   }
 
@@ -420,20 +411,16 @@ function ts($text, $params = array()) {
     $config = CRM_Core_Config::singleton();
   }
 
-  if ($i18n === NULL) {
+  if(!$i18n || $locale != $tsLocale){
     $i18n = CRM_Core_I18n::singleton();
-  }
-
-  if (empty($locale) && $locale != $tsLocale) {
     $locale = $tsLocale;
-  }
-
-  if (!empty($config->customTranslateFunction) && $function === NULL) {
-    if (function_exists($config->customTranslateFunction)) {
-      $function = $config->customTranslateFunction;
-    }
-    else {
-      $function = FALSE;
+    if (!empty($config->customTranslateFunction) && $function === NULL) {
+      if (function_exists($config->customTranslateFunction)) {
+        $function = $config->customTranslateFunction;
+      }
+      else {
+        $function = FALSE;
+      }
     }
   }
 
