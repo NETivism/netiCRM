@@ -397,6 +397,7 @@ function ts($text, $params = array()) {
   static $config;
   static $function;
   static $locale;
+  static $i18n;
   global $tsLocale;
 
   if (empty($tsLocale)) {
