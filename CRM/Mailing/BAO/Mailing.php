@@ -2248,8 +2248,7 @@ LEFT JOIN civicrm_mailing_group g ON g.mailing_id   = m.id
     $numberofContacts = count($contactIDs);
 
     require_once 'CRM/Contact/BAO/Query.php';
-    $query = new CRM_Contact_BAO_Query($params, $returnProperties);
-    $details = $query->apiQuery($params, $returnProperties, NULL, NULL, 0, $numberofContacts);
+    $details = CRM_Contact_BAO_Query::apiQuery( $params, $returnProperties, NULL, NULL, 0, $numberofContacts, TRUE, TRUE);
 
     $contactDetails = &$details[0];
 
@@ -2583,11 +2582,14 @@ WHERE  civicrm_mailing_job.id = %1
       shuffle($lockArray);
 
       // check if we are using global locks
-      $serverWideLock = CRM_Core_BAO_Setting::getItem(CRM_Core_BAO_Setting::MAILING_PREFERENCES_NAME,
-        'civimail_server_wide_lock'
-      );
+      /*
+      // $serverWideLock = CRM_Core_BAO_Setting::getItem(CRM_Core_BAO_Setting::MAILING_PREFERENCES_NAME,
+      //  'civimail_server_wide_lock'
+      // );
+      */
+      $serverWideLock = FALSE;
       foreach ($lockArray as $lockID) {
-        $cronLock = new CRM_Core_Lock("civimail.cronjob.{$lockID}", NULL, $serverWideLock);
+        $cronLock = new CRM_Core_Lock("civimail.cronjob.{$lockID}", NULL);
         if ($cronLock->isAcquired()) {
           $gotCronLock = TRUE;
           break;

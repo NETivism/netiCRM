@@ -3699,7 +3699,8 @@ civicrm_relationship.start_date > {$today}
     $sort = NULL,
     $offset = 0,
     $row_count = 25,
-    $smartGroupCache = TRUE
+    $smartGroupCache = TRUE,
+    $groupBy = NULL
   ) {
     $query = new CRM_Contact_BAO_Query($params, $returnProperties,
       NULL, TRUE, FALSE, 1,
@@ -3710,7 +3711,7 @@ civicrm_relationship.start_date > {$today}
     $options = $query->_options;
     $sql = "$select $from $where $having";
     // add group by
-    if ($query->_useGroupBy) {
+    if ($query->_useGroupBy || $groupBy) {
       $sql .= ' GROUP BY contact_a.id';
     }
     if (!empty($sort)) {
