@@ -2221,8 +2221,7 @@ LEFT JOIN civicrm_mailing_group g ON g.mailing_id   = m.id
         $numberofContacts = count( $contactIDs );
 
         require_once 'CRM/Contact/BAO/Query.php';
-        $query   = new CRM_Contact_BAO_Query( $params, $returnProperties );
-        $details = $query->apiQuery( $params, $returnProperties, NULL, NULL, 0, $numberofContacts );
+        $details = CRM_Contact_BAO_Query::apiQuery( $params, $returnProperties, NULL, NULL, 0, $numberofContacts, TRUE, TRUE);
         
         $contactDetails =& $details[0];
                 
