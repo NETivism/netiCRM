@@ -72,10 +72,7 @@ class CRM_Contact_Form_Task_EmailCommon {
 
     foreach ($contactEmails as $emailId => $item) {
       $email = $item['email'];
-      if (!$email &&
-        (count($emails) <= 1)
-      ) {
-        $emails[$emailId] = '"' . $fromDisplayName . '"';
+      if (!$email && (count($emails) < 1)) {
         $form->_noEmails = TRUE;
       }
       else {
@@ -87,6 +84,7 @@ class CRM_Contact_Form_Task_EmailCommon {
 
           $emails[$emailId] = '"' . $fromDisplayName . '" <' . $email . '> ';
           $form->_onHold[$emailId] = $item['on_hold'];
+          $form->_noEmails = FALSE;
         }
       }
 
