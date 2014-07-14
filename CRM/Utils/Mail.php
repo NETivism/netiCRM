@@ -278,5 +278,38 @@ class CRM_Utils_Mail {
     }
     return $message->get($params);
   }
+
+  static
+  function formatRFC822Email($name, $email, $useQuote = FALSE) {
+    $result = NULL;
+
+    $name = trim($name);
+
+    // strip out double quotes if present at the beginning AND end
+    if (substr($name, 0, 1) == '"' &&
+      substr($name, -1, 1) == '"'
+    ) {
+      $name = substr($name, 1, -1);
+    }
+
+    if (!empty($name)) {
+      // escape the special characters
+      $name = str_replace(array('<', '"', '>'),
+        array('\<', '\"', '\>'),
+        $name
+      );
+      if (strpos($name, ',') !== FALSE ||
+        $useQuote
+      ) {
+        // quote the string if it has a comma
+        $name = '"' . $name . '"';
+      }
+
+      $result = "$name ";
+    }
+
+    $result .= "<{$email}>";
+    return $result;
+  }
 }
 

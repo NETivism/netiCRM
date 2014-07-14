@@ -545,5 +545,50 @@ class CRM_Utils_String {
     }
     return $result;
   }
+
+  /**
+   * This function is used to clean the URL 'path' variable that we use
+   * to construct CiviCRM urls by removing characters from the path variable
+   *
+   * @param string $string  the input string to be sanitized
+   * @param array  $search  the characters to be sanitized
+   * @param string $replace the character to replace it with
+   *
+   * @return string the sanitized string
+   * @access public
+   * @static
+   */
+  static function stripPathChars($string,
+    $search = NULL,
+    $replace = NULL
+  ) {
+    static $_searchChars = NULL;
+    static $_replaceChar = NULL;
+
+    if (empty($string)) {
+      return $string;
+    }
+
+    if ($_searchChars == NULL) {
+      $_searchChars = array(
+        '&', ';', ',', '=', '$',
+        '"', "'", '\\',
+        '<', '>', '(', ')',
+        ' ', "\r", "\r\n", "\n", "\t",
+      );
+      $_replaceChar = '_';
+    }
+
+
+    if ($search == NULL) {
+      $search = $_searchChars;
+    }
+
+    if ($replace == NULL) {
+      $replace = $_replaceChar;
+    }
+
+    return str_replace($search, $replace, $string);
+  }
 }
 

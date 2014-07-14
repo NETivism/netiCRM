@@ -2578,6 +2578,71 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
 
     return $groupType;
   }
+  /**
+   * Update the profile type 'group_type' as per profile fields including group types and group subtype values.
+   * Build and store string like: group_type1,group_type2[VALUE_SEPERATOR]group_type1Type:1:2:3,group_type2Type:1:2
+   *
+   * @param  Integer $gid         profile id
+   * @param  Array   $groupTypes  With key having group type names
+   *
+   * @return Boolean
+   */
+  static function updateGroupTypes($gId, $groupTypes = array(
+    )) {
+    if (!is_array($groupTypes) || !$gId) {
+      return FALSE;
+    }
+
+    // If empty group types set group_type as 'null'
+    if (empty($groupTypes)) {
+      return CRM_Core_DAO::setFieldValue('CRM_Core_DAO_UFGroup', $gId, 'group_type', 'null');
+    }
+
+    $componentGroupTypes = array('Contribution', 'Participant', 'Membership', 'Activity');
+    $validGroupTypes = array_merge(array('Contact', 'Individual', 'Organization', 'Household'), $componentGroupTypes, CRM_Contact_BAO_ContactType::subTypes());
+
+    $gTypes = $gTypeValues = array();
+
+    $participantExtends = array('ParticipantRole', 'ParticipantEventName', 'ParticipantEventType');
+    // Get valid group type and group subtypes
+    foreach ($groupTypes as $groupType => $value) {
+      if (in_array($groupType, $validGroupTypes) && !in_array($groupType, $gTypes)) {
+        $gTypes[] = $groupType;
+      }
+
+      $subTypesOf = NULL;
+
+      if (in_array($groupType, $participantExtends)) {
+        $subTypesOf = $groupType;
+      }
+      elseif (strpos($groupType, 'Type') > 0) {
+        $subTypesOf = substr($groupType, 0, strpos($groupType, 'Type'));
+      }
+      else {
+        continue;
+      }
+
+      if (!empty($value) &&
+        (in_array($subTypesOf, $componentGroupTypes) ||
+          in_array($subTypesOf, $participantExtends)
+        )
+      ) {
+        $gTypeValues[$subTypesOf] = $groupType . ":" . implode(':', $value);
+      }
+    }
+
+    if (empty($gTypes)) {
+      return FALSE;
+    }
+
+    // Build String to store group types and group subtypes
+    $groupTypeString = implode(',', $gTypes);
+    if (!empty($gTypeValues)) {
+      $groupTypeString .= CRM_Core_DAO::VALUE_SEPARATOR . implode(',', $gTypeValues);
+    }
+
+    return CRM_Core_DAO::setFieldValue('CRM_Core_DAO_UFGroup', $gId, 'group_type', $groupTypeString);
+  }
 
   /**
    * This function is used to setDefault componet specific profile fields.
@@ -2895,5 +2960,55 @@ SELECT  group_id
     }
     return $mixProfile;
   }
+
+  /**
+     * function to get group type values of the profile
+     *
+     * @params Integer $profileId       Profile Id
+     * @params String  $groupType       Group Type
+     *
+     * @return Array   group type values
+     * @static
+     * @access public
+     */
+  static function groupTypeValues($profileId, $groupType = NULL) {
+    $groupTypeValue = array();
+    $groupTypes = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_UFGroup', $profileId, 'group_type');
+
+    $groupTypeParts = explode(CRM_Core_DAO::VALUE_SEPARATOR, $groupTypes);
+    if (!CRM_Utils_Array::value(1, $groupTypeParts)) {
+      return $groupTypeValue;
+    }
+    $participantExtends = array('ParticipantRole', 'ParticipantEventName', 'ParticipantEventType');
+
+    foreach (explode(',', $groupTypeParts[1]) as $groupTypeValues) {
+      $values = array();
+      $valueParts = explode(':', $groupTypeValues);
+      if ($groupType &&
+        ($valueParts[0] != "{$groupType}Type" ||
+          ($groupType == 'Participant' &&
+            !in_array($valueParts[0], $participantExtends)
+          )
+        )
+      ) {
+        continue;
+      }
+      foreach ($valueParts as $val) {
+        if (CRM_Utils_Rule::integer($val)) {
+          $values[$val] = $val;
+        }
+      }
+      if (!empty($values)) {
+        $typeName = substr($valueParts[0], 0, -4);
+        if (in_array($valueParts[0], $participantExtends)) {
+          $typeName = $valueParts[0];
+        }
+        $groupTypeValue[$typeName] = $values;
+      }
+    }
+
+    return $groupTypeValue;
+  }
+
 }
 

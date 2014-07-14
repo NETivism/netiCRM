@@ -548,15 +548,15 @@ class CRM_Core_Error extends PEAR_ErrorStack {
 
   public static function &createAPIError($msg, $data = NULL) {
     if (self::$modeException) {
-      throw CRM_Exception($msg, $data);
+      throw new Exception($msg, $data);
     }
 
     $values = array();
 
     $values['is_error'] = 1;
     $values['error_message'] = $msg;
-    if ($data) {
-      $values['error_data'] = $data;
+    if (isset($data)) {
+      $values = array_merge($values, $data);
     }
     return $values;
   }

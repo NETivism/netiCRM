@@ -517,7 +517,7 @@ class DB
      *
      * @uses DB::parseDSN(), DB_common::setOption(), PEAR::isError()
      */
-    function &connect($dsn, $options = array())
+    static function &connect($dsn, $options = array())
     {
         $dsninfo = DB::parseDSN($dsn);
         $type = $dsninfo['phptype'];

@@ -63,6 +63,7 @@ function civicrm_api3_option_value_create($params) {
     }
   }
 
+  /*
   if (CRM_Utils_Array::value('component', $params)) {
     // convert 'component' to 'component_id'
     if (empty($params['component'])) {
@@ -72,6 +73,7 @@ function civicrm_api3_option_value_create($params) {
     }
     unset($params['component']);
   }
+  */
 
   if (CRM_Utils_Array::value('id', $params)) {
     $ids = array('optionValue' => $params['id']);
@@ -92,7 +94,7 @@ function civicrm_api3_option_value_create($params) {
 function _civicrm_api3_option_value_create_spec(&$params) {
   $params['is_active']['api.default'] = 1;
   $params['component']['type'] = CRM_Utils_Type::T_STRING;
-  $params['component']['options'] = array_values(CRM_Core_PseudoConstant::component());
+  // $params['component']['options'] = array_values(CRM_Core_PseudoConstant::component());
   $params['name']['api.aliases'] = array('label');
   // $params['component_id']['pseudoconstant'] = 'component';
 }

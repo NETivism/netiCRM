@@ -54,6 +54,14 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
   public static $_dataType = NULL;
 
   /**
+   * Array for valid combinations of data_type & html_type
+   *
+   * @var array
+   * @static
+   */
+  public static $_dataToHtml = NULL;
+
+  /**
    * Array to hold (formatted) fields for import
    *
    * @var array
@@ -88,6 +96,32 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
       );
     }
     return self::$_dataType;
+  }
+
+  static function dataToHtml() {
+    if (!self::$_dataToHtml) {
+      self::$_dataToHtml = array(
+        array(
+          'Text' => 'Text', 'Select' => 'Select',
+          'Radio' => 'Radio', 'CheckBox' => 'CheckBox',
+          'Multi-Select' => 'Multi-Select',
+          'AdvMulti-Select' => 'AdvMulti-Select',
+          'Autocomplete-Select' => 'Autocomplete-Select',
+        ),
+        array('Text' => 'Text', 'Select' => 'Select', 'Radio' => 'Radio'),
+        array('Text' => 'Text', 'Select' => 'Select', 'Radio' => 'Radio'),
+        array('Text' => 'Text', 'Select' => 'Select', 'Radio' => 'Radio'),
+        array('TextArea' => 'TextArea', 'RichTextEditor' => 'RichTextEditor'),
+        array('Date' => 'Select Date'),
+        array('Radio' => 'Radio'),
+        array('StateProvince' => 'Select State/Province', 'Multi-Select' => 'Multi-Select State/Province'),
+        array('Country' => 'Select Country', 'Multi-Select' => 'Multi-Select Country'),
+        array('File' => 'File'),
+        array('Link' => 'Link'),
+        array('ContactReference' => 'Autocomplete-Select'),
+      );
+    }
+    return self::$_dataToHtml;
   }
 
   /**

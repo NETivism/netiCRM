@@ -154,7 +154,7 @@ Alternatively you can get a version of CiviCRM that matches your PHP version
     $tables = $this->orderTables($tables);
 
     $this->generateListAll($tables);
-    //$this->generateCiviTestTruncate($tables);
+    $this->generateCiviTestTruncate($tables);
     $this->generateCreateSql($database, $tables);
     $this->generateDropSql($tables);
     $this->generateNavigation();

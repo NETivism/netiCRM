@@ -88,7 +88,6 @@ function civicrm_api3_verify_mandatory($params, $daoName = NULL, $keys = array(
     // always define to prevent E_NOTICE warning
     $unmatched = array();
   }
-  require_once 'CRM/Utils/Array.php';
   if (CRM_Utils_Array::value('id', $params)) {
     $keys = array('version');
   }
@@ -122,7 +121,7 @@ function civicrm_api3_verify_mandatory($params, $daoName = NULL, $keys = array(
     }
   }
   if (!empty($unmatched)) {
-    throw new API_Exception("Mandatory key(s) missing from params array: " . implode(", ", $unmatched),"mandatory_missing",array("fields"=>$unmatched));
+    throw new API_Exception("Mandatory key(s) missing from params array: " . implode(", ", $unmatched)."\n", "mandatory_missing",array("fields"=>$unmatched));
   }
 }
 

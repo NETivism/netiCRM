@@ -56,7 +56,6 @@
  * @access public
  */
 function civicrm_api3_contact_create($params) {
-
   $contactID = CRM_Utils_Array::value('contact_id', $params, CRM_Utils_Array::value('id', $params));
   $dupeCheck = CRM_Utils_Array::value('dupe_check', $params, FALSE);
   $values = _civicrm_api3_contact_check_params($params, $dupeCheck);
@@ -186,8 +185,8 @@ function civicrm_api3_contact_get($params) {
 function civicrm_api3_contact_getcount($params) {
   $options = array();
   _civicrm_api3_contact_get_supportanomalies($params, $options);
-  $count = _civicrm_api3_get_using_query_object('contact', $params, $options,1);
-  return $count;
+  $count = _civicrm_api3_get_using_query_object('contact', $params, $options, 1);
+  return (int) $count;
 }
 /*
  * Adjust Metadata for Get action
@@ -535,12 +534,11 @@ function civicrm_api3_contact_getquick($params) {
   civicrm_api3_verify_mandatory($params, NULL, array('name'));
   $name = CRM_Utils_Array::value('name', $params);
 
+  $setting = new CRM_Core_BAO_ConfigSetting();
+  $setting->add($params);
   // get the autocomplete options from settings
-  $acpref = explode(CRM_Core_DAO::VALUE_SEPARATOR,
-    CRM_Core_BAO_Setting::getItem(CRM_Core_BAO_Setting::SYSTEM_PREFERENCES_NAME,
-      'contact_autocomplete_options'
-    )
-  );
+
+  $acpref = array(1=>1, 2=>1);
 
   // get the option values for contact autocomplete
   $acOptions = CRM_Core_OptionGroup::values('contact_autocomplete_options', FALSE, FALSE, FALSE, NULL, 'name');

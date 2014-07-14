@@ -874,5 +874,29 @@ Group By  componentId";
     }
     return $contactNames;
   }
+
+  /**
+   * Fetch the default greeting for a given contact type
+   *
+   * @param string $contactType contact type
+   * @param string $greetingType greeting type
+   *
+   * @return int or null
+   */
+  static function defaultGreeting($contactType, $greetingType) {
+    $contactTypeFilters = array('Individual' => 1, 'Household' => 2, 'Organization' => 3);
+    if (!isset($contactTypeFilters[$contactType])) {
+      return;
+    }
+    $filter = $contactTypeFilters[$contactType];
+
+    $id = CRM_Core_OptionGroup::values($greetingType, NULL, NULL, NULL,
+      " AND is_default = 1 AND (filter = {$filter} OR filter = 0)",
+      'value'
+    );
+    if (!empty($id)) {
+      return current($id);
+    }
+  }
 }
 

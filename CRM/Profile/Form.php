@@ -550,6 +550,45 @@ class CRM_Profile_Form extends CRM_Core_Form {
   }
 
   /**
+   * Function to validate profile and provided activity Id
+   *
+   * @params Integer $activityId Activity Id
+   * @params Integer $gid        Profile Id
+   *
+   * @return Array   $errors     Errors ( if any ).
+   */
+  static function validateContactActivityProfile($activityId, $contactId, $gid) {
+    $errors = array();
+    if (!$activityId) {
+      $errors[] = 'Profile is using one or more activity fields, and is missing the activity Id (aid) in the URL.';
+      return $errors;
+    }
+
+    $activityDetails = array();
+    $activityParams = array('id' => $activityId);
+    CRM_Activity_BAO_Activity::retrieve($activityParams, $activityDetails);
+
+    if (empty($activityDetails)) {
+      $errors[] = 'Invalid Activity Id (aid).';
+      return $errors;
+    }
+
+    $profileActivityTypes = CRM_Core_BAO_UFGroup::groupTypeValues($gid, 'Activity');
+
+    if ((CRM_Utils_Array::value('Activity', $profileActivityTypes) &&
+        !in_array($activityDetails['activity_type_id'], $profileActivityTypes['Activity'])
+      ) ||
+      (!in_array($contactId, $activityDetails['assignee_contact']) &&
+        !in_array($contactId, $activityDetails['target_contact'])
+      )
+    ) {
+      $errors[] = 'This activity cannot be edited or viewed via this profile.';
+    }
+
+    return $errors;
+  }
+
+  /**
    * global form rule
    *
    * @param array  $fields the input form values
@@ -952,5 +991,6 @@ class CRM_Profile_Form extends CRM_Core_Form {
     }
     return parent::getTemplateFileName();
   }
+
 }
 

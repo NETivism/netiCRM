@@ -41,6 +41,12 @@ require_once 'CRM/Core/PseudoConstant.php';
  * polluting the core class and isolates the mass mailer class
  */
 class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
+  /**
+   * financial types
+   * @var array
+   * @static
+   */
+  private static $financialType;
 
   /**
    * contribution types
@@ -94,6 +100,20 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
    * @static
    */
   private static $pcPage;
+
+  /**
+   * Get all the financial types
+   *
+   * @access public
+   *
+   * @param null $id
+   *
+   * @return array - array reference of all financial types if any
+   * @static
+   */
+  public static function &financialType($id = NULL) {
+    return self::contributionType($id);
+  }
 
   /**
    * Get all the contribution types

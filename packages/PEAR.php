@@ -212,7 +212,7 @@ class PEAR
     * @return mixed   A reference to the variable. If not set it will be
     *                 auto initialised to NULL.
     */
-    function &getStaticProperty($class, $var)
+    static function &getStaticProperty($class, $var)
     {
         static $properties;
         if (!isset($properties[$class])) {

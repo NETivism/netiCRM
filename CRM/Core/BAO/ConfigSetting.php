@@ -514,52 +514,6 @@ WHERE  id = %1
   }
 
   /**
-   * takes a componentName and enables it in the config
-   * Primarily used during unit testing
-   *
-   * @param string $componentName name of the component to be enabled, needs to be valid
-   *
-   * @return boolean - true if valid component name and enabling succeeds, else false
-   * @static
-   */
-  static function enableComponent($componentName) {
-    $config = CRM_Core_Config::singleton();
-    if (in_array($componentName, $config->enableComponents)) {
-      // component is already enabled
-      return TRUE;
-    }
-    $components = CRM_Core_Component::getComponents();
-
-    // return if component does not exist
-    if (!array_key_exists($componentName, $components)) {
-      return FALSE;
-    }
-
-    // get enabled-components from DB and add to the list
-    $enabledComponents =
-      CRM_Core_BAO_Setting::getItem(CRM_Core_BAO_Setting::SYSTEM_PREFERENCES_NAME, 'enable_components', NULL, array());
-    $enabledComponents[] = $componentName;
-
-    $enabledComponentIDs = array();
-    foreach ($enabledComponents as $name) {
-      $enabledComponentIDs[] = $components[$name]->componentID;
-    }
-
-    // fix the config object
-    $config->enableComponents = $enabledComponents;
-    $config->enableComponentIDs = $enabledComponentIDs;
-
-    // also force reset of component array
-    CRM_Core_Component::getEnabledComponents(TRUE);
-
-    // update DB
-    CRM_Core_BAO_Setting::setItem($enabledComponents,
-      CRM_Core_BAO_Setting::SYSTEM_PREFERENCES_NAME,'enable_components');
-
-    return TRUE;
-  }
-
-  /**
    * @return array
    */
   static function skipVars() {

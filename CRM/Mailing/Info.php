@@ -72,11 +72,10 @@ class CRM_Mailing_Info extends CRM_Core_Component_Info {
       return FALSE;
     }
 
-    $enableWorkflow = CRM_Core_BAO_Setting::getItem(CRM_Core_BAO_Setting::MAILING_PREFERENCES_NAME,
-      'civimail_workflow',
-      NULL,
-      FALSE
-    );
+    /*
+    // $enableWorkflow = CRM_Core_BAO_Setting::getItem(CRM_Core_BAO_Setting::MAILING_PREFERENCES_NAME, 'civimail_workflow', NULL, FALSE);
+    */
+    $enableWorkflow = FALSE;
 
     return ($enableWorkflow &&
       $config->userSystem->is_drupal
