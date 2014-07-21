@@ -438,5 +438,10 @@ class CRM_Utils_System_Drupal {
     }
     return $url;
   }
+
+  function notFound(){
+    drupal_not_found();
+    return;
+  }
 }
 

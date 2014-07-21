@@ -235,8 +235,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
    */
   static
   function fatal($message = NULL, $code = NULL, $email = NULL) {
-    if (!$message) {
-      $message = ts('We experienced an unexpected error. Please post a detailed description and the backtrace on the CiviCRM forums: %1', array(1 => 'http://forum.civicrm.org/'));
+    if (empty($message)) {
     }
     else {
       $message = htmlspecialchars($message, ENT_QUOTES);
@@ -264,12 +263,17 @@ class CRM_Core_Error extends PEAR_ErrorStack {
       self::backtrace();
     }
 
-    $template = CRM_Core_Smarty::singleton();
-    $template->assign($vars);
+    if($message){
+      $template = CRM_Core_Smarty::singleton();
+      $template->assign($vars);
+      $content = $template->fetch($config->fatalErrorTemplate);
+    }
+    else{
+      $content = '';
+    }
 
     CRM_Core_Error::debug_var('Fatal Error Details', $vars);
     CRM_Core_Error::backtrace('backTrace', TRUE);
-    $content = $template->fetch($config->fatalErrorTemplate);
     echo CRM_Utils_System::theme('page', $content);
     // print $content;
     self::abend(CRM_Core_Error::FATAL_ERROR);

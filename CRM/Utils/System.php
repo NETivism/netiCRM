@@ -144,6 +144,9 @@ class CRM_Utils_System {
    * @access public
    */
   function theme($type, &$content, $args = NULL, $print = FALSE, $ret = FALSE, $maintenance = FALSE) {
+    if(empty($content)){
+      return self::notFound();
+    }
     if(defined('VERSION')){  // drupal 7 or 8
       $version = substr(VERSION, 0, strpos(VERSION, '.'));
     }
@@ -1339,6 +1342,18 @@ class CRM_Utils_System {
   function languageNegotiationURL($url, $addLanguagePart = TRUE, $removeLanguagePart = FALSE) {
     $config = &CRM_Core_Config::singleton();
     return eval('return ' . $config->userFrameworkClass . '::languageNegotiationURL($url, $addLanguagePart, $removeLanguagePart);');
+  }
+
+  /**
+   * Redirect to not found page of CMS
+   *
+   * @return string  the used locale or null for none
+   */
+  static
+  function notFound() {
+    $config = CRM_Core_Config::singleton();
+    require_once (str_replace('_', DIRECTORY_SEPARATOR, $config->userFrameworkClass) . '.php');
+    return eval("return {$config->userFrameworkClass}::notFound();");
   }
 }
 

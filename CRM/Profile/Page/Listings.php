@@ -103,9 +103,16 @@ class CRM_Profile_Page_Listings extends CRM_Core_Page {
    * @return void
    * @access public
    *
-   */ function preProcess() {
-
+   */
+  function preProcess() {
     $this->_search = TRUE;
+    $session = CRM_Core_Session::singleton();
+    // disable anon user for access profile
+    $ufid = $session->get("ufID");
+    if(empty($ufid)){
+      CRM_Core_Error::fatal();
+      return;
+    }
 
     $search = CRM_Utils_Request::retrieve('search', 'Boolean',
       $this, FALSE, 0, 'GET'
@@ -262,9 +269,6 @@ class CRM_Profile_Page_Listings extends CRM_Core_Page {
       }
     }
 
-
-    // set the params in session
-    $session = CRM_Core_Session::singleton();
     $session->set('profileParams', $this->_params);
   }
 
@@ -363,9 +367,7 @@ class CRM_Profile_Page_Listings extends CRM_Core_Page {
       // edit permissions as determined by the mask, CRM-4341
       // do not allow edit for anon users in joomla frontend, CRM-4668
       $config = CRM_Core_Config::singleton();
-      if (!CRM_Core_Permission::check('access CiviCRM') ||
-        $config->userFrameworkFrontend == 1
-      ) {
+      if (!CRM_Core_Permission::check('access CiviCRM') || $config->userFrameworkFrontend == 1) {
         $editLink = FALSE;
       }
 

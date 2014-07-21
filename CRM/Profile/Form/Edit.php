@@ -59,7 +59,17 @@ class CRM_Profile_Form_Edit extends CRM_Profile_Form {
    *
    * @access public
    *
-   */ function preProcess() {
+   */
+  function preProcess() {
+    $session = CRM_Core_Session::singleton();
+
+    // disable anon user for access some profile
+    $ufid = $session->get("ufID");
+    if(empty($ufid) && $this->get('edit')){
+      CRM_Core_Error::fatal();
+      return;
+    }
+
     $this->_mode = CRM_Profile_Form::MODE_CREATE;
 
     //set the context for the profile
@@ -85,7 +95,6 @@ class CRM_Profile_Form_Edit extends CRM_Profile_Form {
       $this->_mode = CRM_Profile_Form::MODE_EDIT;
 
       // make sure we have right permission to edit this user
-      $session = CRM_Core_Session::singleton();
       $userID = $session->get('userID');
       $id = CRM_Utils_Request::retrieve('id', 'Positive', $this, FALSE, $userID);
 
@@ -269,9 +278,7 @@ SELECT module
         $gidString = implode(',', $this->_profileIds);
       }
 
-      $url = CRM_Utils_System::url('civicrm/profile/view',
-        "reset=1&id={$this->_id}&gid={$gidString}"
-      );
+      $url = CRM_Utils_System::url('civicrm/profile/create', "reset=1&gid={$gidString}");
     }
 
     $session->replaceUserContext($url);
