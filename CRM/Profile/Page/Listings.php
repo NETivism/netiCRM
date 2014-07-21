@@ -105,8 +105,15 @@ class CRM_Profile_Page_Listings extends CRM_Core_Page {
      * 
      */ 
     function preProcess( ) {
-        
         $this->_search = true;
+
+        $session = CRM_Core_Session::singleton();
+        // disable anon user for access profile
+        $ufid = $session->get("ufID");
+        if(empty($ufid)){
+          CRM_Core_Error::fatal();
+          return;
+        }
         
         $search = CRM_Utils_Request::retrieve( 'search', 'Boolean',
                                                $this, false, 0, 'GET' );
@@ -243,7 +250,6 @@ class CRM_Profile_Page_Listings extends CRM_Core_Page {
         
         
         // set the params in session
-        $session = CRM_Core_Session::singleton();
         $session->set('profileParams', $this->_params);
    }
 

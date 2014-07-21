@@ -71,6 +71,12 @@ class CRM_Profile_Form extends CRM_Core_Form
     protected $_gid; 
     
     /** 
+     * @var array details of the UFGroup used on this page
+     */
+    protected $_ufGroup = array('name' => 'unknown');
+   
+
+    /**
      * The group id that we are passing in url
      * 
      * @var int 
@@ -193,8 +199,14 @@ class CRM_Profile_Form extends CRM_Core_Form
             if ( $dao->find( true ) ) {
                 $this->_isUpdateDupe = $dao->is_update_dupe;
                 $this->_isAddCaptcha = $dao->add_captcha;
+                $this->_ufGroup = (array) $dao;
             }
             $dao->free( );
+        }
+        if (!CRM_Utils_Array::value('is_active', $this->_ufGroup)) {
+          CRM_Core_Error::fatal(ts('The requested profile (gid=%1) is inactive or does not exist.', array(
+            1 => $this->_gid,
+          )));
         }
 
         if ( empty( $this->_profileIds ) ) {

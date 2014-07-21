@@ -65,10 +65,19 @@ class CRM_Profile_Page_View extends CRM_Core_Page
      */
     function preProcess( )
     {
+        $session = CRM_Core_Session::singleton();
+        // disable anon user for access some profile
+        $ufid = $session->get("ufID");
+        if(empty($ufid)){
+          CRM_Core_Error::fatal();
+          return;
+        }
+
         $this->_id = CRM_Utils_Request::retrieve('id', 'Positive',
                                                  $this, false);
+
+
         if ( ! $this->_id ) {
-            $session = CRM_Core_Session::singleton();
             $this->_id = $session->get( 'userID' );
             if ( ! $this->_id ) {
                 CRM_Core_Error::fatal( ts( 'Could not find the required contact id parameter (id=) for viewing a contact record with a Profile.' ) );
