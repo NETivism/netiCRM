@@ -148,28 +148,18 @@ SELECT module
     // add the hidden field to redirect the postProcess from
     require_once 'CRM/UF/Form/Group.php';
     require_once 'CRM/Core/DAO/UFGroup.php';
-    $ufGroup = new CRM_Core_DAO_UFGroup();
-
-    $ufGroup->id = $this->_gid;
-    if (!$ufGroup->find(TRUE)) {
-      CRM_Core_Error::fatal();
-    }
 
     // set the title
-    CRM_Utils_System::setTitle($ufGroup->title);
+    CRM_Utils_System::setTitle($this->_ufGroup['title']);
     $this->assign('recentlyViewed', FALSE);
 
     if ($this->_context != 'dialog') {
-      $this->_postURL = CRM_Utils_Array::value('postURL', $_POST);
-      $this->_cancelURL = CRM_Utils_Array::value('cancelURL', $_POST);
+      $this->_postURL = $this->_ufGroup['post_URL'];;
+      $this->_cancelURL = $this->_ufGroup['cancel_URL'];
 
       $gidString = $this->_gid;
       if (!empty($this->_profileIds)) {
         $gidString = implode(',', $this->_profileIds);
-      }
-
-      if (!$this->_postURL) {
-        $this->_postURL = $ufGroup->post_URL;
       }
 
       if (!$this->_postURL) {
@@ -184,24 +174,12 @@ SELECT module
       }
 
       if (!$this->_cancelURL) {
-        if ($ufGroup->cancel_URL) {
-          $this->_cancelURL = $ufGroup->cancel_URL;
-        }
-        else {
-          $this->_cancelURL = CRM_Utils_System::url('civicrm/profile',
-            "reset=1&gid={$gidString}"
-          );
-        }
+        $this->_cancelURL = CRM_Utils_System::url('civicrm/profile', "reset=1&gid={$gidString}");
       }
 
       // we do this gross hack since qf also does entity replacement
       $this->_postURL = str_replace('&amp;', '&', $this->_postURL);
       $this->_cancelURL = str_replace('&amp;', '&', $this->_cancelURL);
-
-      $this->addElement('hidden', 'postURL', $this->_postURL);
-      if ($this->_cancelURL) {
-        $this->addElement('hidden', 'cancelURL', $this->_cancelURL);
-      }
 
       // also retain error URL if set
       $this->_errorURL = CRM_Utils_Array::value('errorURL', $_POST);
@@ -235,9 +213,11 @@ SELECT module
     );
 
     if ($this->_context != 'dialog') {
-      $buttons[] = array('type' => 'cancel',
+      $buttons[] = array(
+        'type' => 'cancel',
         'name' => ts('Cancel'),
         'isDefault' => TRUE,
+        'js' => array('onclick' => "location.href='{$this->_cancelURL}'; return false;"),
       );
     }
 

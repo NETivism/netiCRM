@@ -65,6 +65,12 @@ class CRM_Profile_Form extends CRM_Core_Form {
   protected $_gid;
 
   /**
+   * @var array details of the UFGroup used on this page
+   */
+  protected $_ufGroup = array('name' => 'unknown');
+ 
+
+  /**
    * The group id that we are passing in url
    *
    * @var int
@@ -187,6 +193,7 @@ class CRM_Profile_Form extends CRM_Core_Form {
       if ($dao->find(TRUE)) {
         $this->_isUpdateDupe = $dao->is_update_dupe;
         $this->_isAddCaptcha = $dao->add_captcha;
+        $this->_ufGroup = (array) $dao;
       }
       $dao->free();
     }
