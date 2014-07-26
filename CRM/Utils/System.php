@@ -169,9 +169,13 @@ class CRM_Utils_System {
             drupal_set_breadcrumb('');
             drupal_maintenance_theme();
           }
-          ob_start();
-          drupal_deliver_page($content);
-          $content = ob_end_clean();
+          if($ret){
+            $content = drupal_render_page($content);
+          }
+          else{
+            drupal_deliver_page($content);
+            return;
+          }
         }
         break;
       case '8':
