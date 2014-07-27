@@ -207,6 +207,7 @@ class CRM_Core_BAO_Tag extends CRM_Core_DAO_Tag {
     // $roots represents the current leaf nodes that need to be checked for
     // children. $rows represents the unplaced nodes, not all of much
     // are necessarily placed.
+    $rows = array();
     while ($dao->fetch()) {
       if (!$dao->parent_id && $dao->is_tagset == 0) {
         $roots[] = array('id' => $dao->id, 'prefix' => '', 'name' => $dao->name);

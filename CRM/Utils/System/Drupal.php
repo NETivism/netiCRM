@@ -38,6 +38,10 @@
  */
 class CRM_Utils_System_Drupal {
 
+  function __construct() {
+    $this->is_drupal = TRUE;
+  }
+
   /**
    * sets the title of the page
    *

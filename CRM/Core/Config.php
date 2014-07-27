@@ -75,6 +75,14 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
   public $userFrameworkDSN = NULL;
 
   /**
+   * The connector module for the CMS/UF
+   * @todo Introduce an interface.
+   *
+   * @var CRM_Utils_System_Base
+   */
+  public $userSystem = NULL;
+
+  /**
    * The root directory where Smarty should store
    * compiled files
    * @var string
@@ -175,8 +183,6 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
       if($timezone == 'UTC') {
           CRM_Core_Error::fatal('We detect your timezone setting is UTC. You need setup your php timezone setting. Check php.ini or add into civicrm.settings.php');
       }
-      // lets ensure we minimize errors
-      error_reporting(error_reporting() & ~E_DEPRECATED & ~E_STRICT);
 
       // first, attempt to get configuration object from cache
       require_once 'CRM/Utils/Cache.php';
@@ -239,6 +245,10 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
     $this->userFrameworkClass = 'CRM_Utils_System_' . $userFramework;
     $this->userHookClass = 'CRM_Utils_Hook_' . $userFramework;
     $this->userPermissionClass = 'CRM_Core_Permission_' . $userFramework;
+
+    $class = $this->userFrameworkClass;
+    // redundant with _initVariables
+    $this->userSystem = new $class();
 
     if ($userFramework == 'Joomla') {
       $this->userFrameworkURLVar = 'task';
