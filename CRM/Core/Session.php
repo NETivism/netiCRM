@@ -62,8 +62,7 @@ class CRM_Core_Session {
    * pattern and cache the instance in this variable
    *
    * @var object
-   * @static
-   */
+   * @static  */
   static private $_singleton = NULL;
 
   /**
@@ -82,18 +81,17 @@ class CRM_Core_Session {
    * the session and one is not available.
    *
    * @return void
-   */ function __construct() {
-    $this->_session = &$_SESSION;
+   */
+  function __construct() {
+    $this->_session = NULL;
   }
 
   /**
    * singleton function used to manage this object
    *
    * @return object
-   * @static
-   */
-  static
-  function &singleton() {
+   * @static  */
+  static function &singleton() {
     if (self::$_singleton === NULL) {
       self::$_singleton = new CRM_Core_Session;
     }
@@ -104,11 +102,39 @@ class CRM_Core_Session {
    * Creates an array in the session. All variables now will be stored
    * under this array
    *
+   * @param boolean isRead is this a read operation, in this case, the session will not be touched
+   *
    * @access private
    *
    * @return void
    */
-  function create() {
+  function initialize($isRead = FALSE) {
+    // lets initialize the _session variable just before we need it
+    // hopefully any bootstrapping code will actually load the session from the CMS
+    if (!isset($this->_session)) {
+      // CRM-9483
+      if (!isset($_SESSION) && PHP_SAPI !== 'cli') {
+        if ($isRead) {
+          return;
+        }
+        if (function_exists('drupal_session_start')) {
+          // https://issues.civicrm.org/jira/browse/CRM-14356
+          if (! (isset($GLOBALS['lazy_session']) && $GLOBALS['lazy_session'] == true)) {
+            drupal_session_start();
+          }
+          $_SESSION = array();
+        }
+        else {
+          session_start();
+        }
+      }
+      $this->_session =& $_SESSION;
+    }
+
+    if ($isRead) {
+      return;
+    }
+
     if (!isset($this->_session[$this->_key]) ||
       !is_array($this->_session[$this->_key])
     ) {
@@ -145,12 +171,14 @@ class CRM_Core_Session {
    *
    * @return void
    */
-  function createScope($prefix) {
-    if (empty($prefix)) {
+  function createScope($prefix, $isRead = FALSE) {
+    $this->initialize($isRead);
+
+    if ($isRead || empty($prefix)) {
       return;
     }
 
-    if (!CRM_Utils_Array::value($prefix, $this->_session[$this->_key])) {
+    if (empty($this->_session[$this->_key][$prefix])) {
       $this->_session[$this->_key][$prefix] = array();
     }
   }
@@ -164,6 +192,8 @@ class CRM_Core_Session {
    * @return void
    */
   function resetScope($prefix) {
+    $this->initialize();
+
     if (empty($prefix)) {
       return;
     }
@@ -192,7 +222,7 @@ class CRM_Core_Session {
    */
   function set($name, $value = NULL, $prefix = NULL) {
     // create session scope
-    $this->create();
+    $this->initialize();
     $this->createScope($prefix);
 
     if (empty($prefix)) {
@@ -227,15 +257,20 @@ class CRM_Core_Session {
    *
    */
   function get($name, $prefix = NULL) {
-    // create session scope
-    $this->create();
-    $this->createScope($prefix);
+    $this->createScope($prefix, TRUE);
+
+    if (empty($this->_session) || empty($this->_session[$this->_key])) {
+      return null;
+    }
 
     if (empty($prefix)) {
-      $session = &$this->_session[$this->_key];
+      $session =& $this->_session[$this->_key];
     }
     else {
-      $session = &$this->_session[$this->_key][$prefix];
+      if (empty($this->_session[$this->_key][$prefix])) {
+        return null;
+      }
+      $session =& $this->_session[$this->_key][$prefix];
     }
 
     return CRM_Utils_Array::value($name, $session);
@@ -255,8 +290,7 @@ class CRM_Core_Session {
    */
   function getVars(&$vars, $prefix = '') {
     // create session scope
-    $this->create();
-    $this->createScope($prefix);
+    $this->createScope($prefix, TRUE);
 
     if (empty($prefix)) {
       $values = &$this->_session[$this->_key];
@@ -367,6 +401,7 @@ class CRM_Core_Session {
    * dumps the session to the log
    */
   function debug($all = 1) {
+    $this->initialize();
     if ($all != 1) {
       CRM_Core_Error::debug('CRM Session', $this->_session);
     }
@@ -383,7 +418,7 @@ class CRM_Core_Session {
    * @return string        the status message if any
    */
   function getStatus($reset = FALSE) {
-    $this->create();
+    $this->initialize();
 
     $status = NULL;
     if (array_key_exists('status', $this->_session[$this->_key])) {
@@ -402,12 +437,13 @@ class CRM_Core_Session {
    * @param $status string the status message
    * @param $append boolean if you want to append or set new status
    *
-   * @static
-   *
+   * @static  *
    * @return void
    */
-  static
-  function setStatus($status, $append = TRUE) {
+  static function setStatus($status, $append = TRUE) {
+    $session = self::singleton();
+    $session->initialize();
+
     if (isset(self::$_singleton->_session[self::$_singleton->_key]['status'])) {
       if ($append) {
         if (is_array($status)) {
@@ -433,8 +469,7 @@ class CRM_Core_Session {
     }
   }
 
-  static
-  function registerAndRetrieveSessionObjects($names) {
+  static function registerAndRetrieveSessionObjects($names) {
     if (!is_array($names)) {
       $names = array($names);
     }
@@ -450,8 +485,7 @@ class CRM_Core_Session {
     CRM_Core_BAO_Cache::restoreSessionFromCache($names);
   }
 
-  static
-  function storeSessionObjects($reset = TRUE) {
+  static function storeSessionObjects($reset = TRUE) {
     if (empty(self::$_managedNames)) {
       return;
     }
