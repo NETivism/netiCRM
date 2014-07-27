@@ -17,6 +17,14 @@
        <name>id</name>
        <autoincrement>true</autoincrement>
   </primaryKey>
+  <field>                                                                                                                     
+       <name>label</name>                                                                                                     
+       <title>Location Type Label</title>                                                                                     
+       <type>varchar</type>                                                                                                   
+       <length>128</length>                                                                                                   
+       <comment>Location Type Label.</comment>                                                                                
+       <add>3.3</add>                                                                                                         
+  </field>
   <field>
        <name>name</name>
        <title>Location Type</title>
