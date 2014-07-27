@@ -424,18 +424,61 @@ class CRM_Utils_System_Drupal {
     if (empty($url)) {
       return $url;
     }
-    global $language, $base_url, $base_path;
-    if ($addLanguagePart) {
-      if (strstr($url, $_SERVER['HTTP_HOST'] . $base_path . $language->prefix)) {
-        return $url;
-      }
-      else {
-        return str_replace($_SERVER['HTTP_HOST'] . $base_path, $_SERVER['HTTP_HOST'] . $base_path . $language->prefix, $url);
+
+    //CRM-7803 -from d7 onward.
+    $config = CRM_Core_Config::singleton();
+    if (function_exists('variable_get') &&
+      module_exists('locale') &&
+      function_exists('language_negotiation_get')
+    ) {
+      global $language;
+
+      //does user configuration allow language
+      //support from the URL (Path prefix or domain)
+      if (language_negotiation_get('language') == 'locale-url') {
+        $urlType = variable_get('locale_language_negotiation_url_part');
+
+        //url prefix
+        if ($urlType == LOCALE_LANGUAGE_NEGOTIATION_URL_PREFIX) {
+          if (isset($language->prefix) && $language->prefix) {
+            if ($addLanguagePart) {
+              $url .= $language->prefix . '/';
+            }
+            if ($removeLanguagePart) {
+              $url = str_replace("/{$language->prefix}/", '/', $url);
+            }
+          }
+        }
+        //domain
+        if ($urlType == LOCALE_LANGUAGE_NEGOTIATION_URL_DOMAIN) {
+          if (isset($language->domain) && $language->domain) {
+            if ($addLanguagePart) {
+              $cleanedUrl = preg_replace('#^https?://#', '', $language->domain);
+              // drupal function base_path() adds a "/" to the beginning and end of the returned path
+              if (substr($cleanedUrl, -1) == '/') {
+                $cleanedUrl = substr($cleanedUrl, 0, -1);
+              }
+              $url = (CRM_Utils_System::isSSL() ? 'https' : 'http') . '://' . $cleanedUrl . base_path();
+            }
+            if ($removeLanguagePart && defined('CIVICRM_UF_BASEURL')) {
+              $url = str_replace('\\', '/', $url);
+              $parseUrl = parse_url($url);
+
+              //kinda hackish but not sure how to do it right
+              //hope http_build_url() will help at some point.
+              if (is_array($parseUrl) && !empty($parseUrl)) {
+                $urlParts           = explode('/', $url);
+                $hostKey            = array_search($parseUrl['host'], $urlParts);
+                $ufUrlParts         = parse_url(CIVICRM_UF_BASEURL);
+                $urlParts[$hostKey] = $ufUrlParts['host'];
+                $url                = implode('/', $urlParts);
+              }
+            }
+          }
+        }
       }
     }
-    if ($removeLanguagePart && $language->prefix) {
-      return str_replace('/' . $language->prefix . '/', '/', $url);
-    }
+
     return $url;
   }
 

@@ -246,25 +246,12 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
 
     if (defined('CIVICRM_UF_BASEURL')) {
       $this->userFrameworkBaseURL = CRM_Utils_File::addTrailingSlash(CIVICRM_UF_BASEURL, '/');
-      if ($userFramework == 'Drupal' and function_exists('variable_get')) {
-        global $language;
-        if (module_exists('locale') && $mode = variable_get('language_negotiation', LANGUAGE_NEGOTIATION_NONE)) {
-          if (isset($language->prefix) and $language->prefix
-            and ($mode == LANGUAGE_NEGOTIATION_PATH_DEFAULT or $mode == LANGUAGE_NEGOTIATION_PATH)
-          ) {
-            $this->userFrameworkBaseURL .= $language->prefix . '/';
-          }
-          if (isset($language->domain) and $language->domain and $mode == LANGUAGE_NEGOTIATION_DOMAIN) {
-            $this->userFrameworkBaseURL = CRM_Utils_File::addTrailingSlash($language->domain, '/');
-          }
-        }
-      }
-      if (isset($_SERVER['HTTPS']) &&
-        strtolower($_SERVER['HTTPS']) != 'off'
-      ) {
-        $this->userFrameworkBaseURL = str_replace('http://', 'https://',
-          $this->userFrameworkBaseURL
-        );
+      
+      //format url for language negotiation, CRM-7803
+      $this->userFrameworkBaseURL = CRM_Utils_System::languageNegotiationURL($this->userFrameworkBaseURL);
+
+      if (CRM_Utils_System::isSSL()) {
+        $this->userFrameworkBaseURL = str_replace('http://', 'https://', $this->userFrameworkBaseURL);
       }
     }
 

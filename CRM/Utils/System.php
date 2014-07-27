@@ -1359,5 +1359,18 @@ class CRM_Utils_System {
     require_once (str_replace('_', DIRECTORY_SEPARATOR, $config->userFrameworkClass) . '.php');
     return eval("return {$config->userFrameworkClass}::notFound();");
   }
+
+  /**
+   * Determine whether this is an SSL request.
+   *
+   * Note that we inline this function in install/civicrm.php, so if you change
+   * this function, please go and change the code in the install script as well.
+   */
+  static function isSSL( ) {
+    return
+      (isset($_SERVER['HTTPS']) &&
+        !empty($_SERVER['HTTPS']) &&
+        strtolower($_SERVER['HTTPS']) != 'off') ? TRUE : FALSE;
+  }
 }
 
