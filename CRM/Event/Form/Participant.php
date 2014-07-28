@@ -286,7 +286,7 @@ class CRM_Event_Form_Participant extends CRM_Contact_Form_Task {
       // also check for billing information
       // get the billing location type
       $locationTypes = CRM_Core_PseudoConstant::locationType(FALSE, 'name');
-      $this->_bltID = array_search(ts('Billing'), $locationTypes);
+      $this->_bltID = array_search('Billing', $locationTypes);
       if (!$this->_bltID) {
         CRM_Core_Error::fatal(ts('Please set a location type of %1', array(1 => 'Billing')));
       }

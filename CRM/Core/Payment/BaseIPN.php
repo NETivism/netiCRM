@@ -543,7 +543,7 @@ class CRM_Core_Payment_BaseIPN {
     // get the billing location type
     require_once "CRM/Core/PseudoConstant.php";
     $locationTypes = CRM_Core_PseudoConstant::locationType(FALSE, 'name');
-    $ids['billing'] = array_search(ts('Billing'), $locationTypes);
+    $ids['billing'] = array_search('Billing', $locationTypes);
     if (!$ids['billing']) {
       CRM_Core_Error::debug_log_message(ts('Please set a location type of %1', array(1 => 'Billing')));
       echo "Failure: Could not find billing location type<p>";
