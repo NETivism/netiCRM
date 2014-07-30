@@ -24,7 +24,7 @@ color = [
   '#cecece' // white grey
 ];
 
-cj(document).ready(function(){
+cj(document).ready(function($){
   /**
    * participants status
    */
