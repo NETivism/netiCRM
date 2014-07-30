@@ -84,19 +84,19 @@
     			document.getElementById("saveMappingDesc").disabled = true;
     		 }
          }
-        cj(document).ready(function(){
-          cj('Select[id^="mapper[1]"][id$="[1]"]').addClass('huge');
-          var mappers = cj("#map-field select").filter(function(){
-            var n = cj(this).attr('name');
+        cj(document).ready(function($){
+          $('Select[id^="mapper[1]"][id$="[1]"]').addClass('huge');
+          var mappers = $("#map-field select").filter(function(){
+            var n = $(this).attr('name');
             if(n.match(/mapper\[1\]\[\d+\]\[0\]/)){
               return true;
             }
             return false;
           });
           mappers.each(function(){
-            var n = cj(this).attr('name');
+            var n = $(this).attr('name');
             var name = n.replace(/\[0\]$/, '[1]').replace(/\[/g, '\\[').replace(/\]/g,'\\]');
-            cj("select[name="+name+"]:visible").chosen({
+            $("select[name="+name+"]:visible").chosen({
               "search_contains": true,
               "placeholder_text": "{/literal}{ts}-- Select --{/ts}{literal}",
               "no_results_text": "{/literal}{ts}No matches found.{/ts}{literal}"
@@ -104,20 +104,20 @@
           });
           mappers.bind('change', function( ) {
             // trigger change first
-            var ochange = cj('<div>').append($(this).clone()).html();
+            var ochange = $('<div>').append($(this).clone()).html();
             var m = ochange.match(/swapOptions\([^)]+\);/);
             if(m[0]){
               eval(m[0]);
             }
             // now start chosen
-            var n = cj(this).attr('name');
+            var n = $(this).attr('name');
             var name = n.replace(/\[0\]$/, '[1]').replace(/\[/g, '\\[').replace(/\]/g,'\\]');
-            cj("select[name="+name+"]").chosen({
+            $("select[name="+name+"]").chosen({
               "search_contains": true,
               "placeholder_text": "{/literal}{ts}-- Select --{/ts}{literal}",
               "no_results_text": "{/literal}{ts}No matches found.{/ts}{literal}"
             }).hide();
-            cj("select[name="+name+"]").trigger("liszt:updated");
+            $("select[name="+name+"]").trigger("liszt:updated");
           });
         });
        {/literal}	     

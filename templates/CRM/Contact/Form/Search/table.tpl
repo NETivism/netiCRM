@@ -53,3 +53,44 @@
     <div class="underline-effect">{$form.addBlock.html}</div> 
   {/strip}
  </div>
+<script>
+  {literal}
+  cj(document).ready(function($){
+    $('Select[id^="mapper[1]"][id$="[1]"]').addClass('huge');
+    var mappers = $("#map-field select").filter(function(){
+      var n = $(this).attr('name');
+      if(n.match(/mapper\[\d+\]\[\d+\]\[0\]/)){
+        return true;
+      }
+      return false;
+    });
+    mappers.each(function(){
+      var n = $(this).attr('name');
+      var name = n.replace(/\[0\]$/, '[1]').replace(/\[/g, '\\[').replace(/\]/g,'\\]');
+      $("select[name="+name+"]:visible").chosen({
+        "search_contains": true,
+        "placeholder_text": "{/literal}{ts}-- Select --{/ts}{literal}",
+        "no_results_text": "{/literal}{ts}No matches found.{/ts}{literal}"
+      }).hide();
+    });
+    mappers.bind('change', function( ) {
+      // trigger change first
+      var ochange = $('<div>').append($(this).clone()).html();
+      var m = ochange.match(/swapOptions\([^)]+\);/);
+      if(m[0]){
+        eval(m[0]);
+      }
+      // now start chosen
+      var n = $(this).attr('name');
+      var name = n.replace(/\[0\]$/, '[1]').replace(/\[/g, '\\[').replace(/\]/g,'\\]');
+      $("select[name="+name+"]").chosen({
+        "search_contains": true,
+        "placeholder_text": "{/literal}{ts}-- Select --{/ts}{literal}",
+        "no_results_text": "{/literal}{ts}No matches found.{/ts}{literal}"
+      }).hide();
+      $("select[name="+name+"]").trigger("liszt:updated");
+    });
+  });
+ {/literal}	     
+
+</script>

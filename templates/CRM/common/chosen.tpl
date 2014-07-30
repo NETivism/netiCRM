@@ -1,5 +1,5 @@
+{if !$nowrapper}<script type="text/javascript"> {/if}
 {literal}
-<script type="text/javascript"> 
 cj(document).ready(function(){
   cj('{/literal}{$selector}{literal}').chosen({
     "search_contains": true,
@@ -7,5 +7,5 @@ cj(document).ready(function(){
     "no_results_text": "{/literal}{ts}No matches found.{/ts}{literal}"
   });
 });
-</script>
 {/literal}
+{if !$nowrapper}</script>{/if}

@@ -185,16 +185,10 @@
 	    }	
 	}
   cj(document).ready(function(){
-    cj(".crm-report-criteria-filter select.form-select").not("[name$=op]").chosen({
-      "search_contains": true,
-      "placeholder_text": "{/literal}{ts}-- Select --{/ts}{literal}",
-      "no_results_text": "{/literal}{ts}No matches found.{/ts}{literal}"
-    });
-    cj("select#groups").chosen({
-      "search_contains": true,
-      "placeholder_text": "{/literal}{ts}-- Select --{/ts}{literal}",
-      "no_results_text": "{/literal}{ts}No matches found.{/ts}{literal}"
-    });
+    {/literal}
+    {include file="CRM/common/chosen.tpl" selector='.crm-report-criteria-filter select.form-select:not([name$=op])' nowrapper=1}
+    {include file="CRM/common/chosen.tpl" selector='select#groups' nowrapper=1}
+    {literal}
   });
     </script>
     {/literal}
