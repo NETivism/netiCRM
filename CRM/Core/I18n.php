@@ -404,7 +404,7 @@ function ts($text, $params = array()) {
     return $text;
   }
 
-  if ($text === '') {
+  if (empty($text)) {
     return '';
   }
 
