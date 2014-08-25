@@ -195,7 +195,7 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
 
         list($displayName, $contactImage) = CRM_Contact_BAO_Contact::getDisplayAndImage($this->_contactId);
 
-        CRM_Utils_System::setTitle($displayName, $contactImage . ' ' . $displayName);
+        CRM_Utils_System::setTitle($displayName, $displayName);
         $context = CRM_Utils_Request::retrieve('context', 'String', $this);
         $qfKey = CRM_Utils_Request::retrieve('key', 'String', $this);
         require_once 'CRM/Utils/Rule.php';
