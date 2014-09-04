@@ -81,8 +81,15 @@ class CRM_Event_BAO_ParticipantPayment extends CRM_Event_DAO_ParticipantPayment
         }
 
         if ( $participantPayment->find( true ) ) {
-            require_once 'CRM/Contribute/BAO/Contribution.php';
-            CRM_Contribute_BAO_Contribution::deleteContribution( $participantPayment->contribution_id );
+            if($participantPayment->N > 1 && !empty($participantPayment->participant_id)){
+              $results = CRM_Core_DAO::executeQuery("SELECT contribution_id FROM civicrm_participant_payment WHERE participant_id = %1", array('1' => array($participantPayment->participant_id, 'Integer')));
+              while($results->fetch()){
+                CRM_Contribute_BAO_Contribution::deleteContribution( $results->contribution_id );
+              }
+            }
+            else{
+              CRM_Contribute_BAO_Contribution::deleteContribution( $participantPayment->contribution_id );
+            }
             $participantPayment->delete( ); 
             return $participantPayment;
         }

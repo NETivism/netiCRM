@@ -159,6 +159,11 @@ class CRM_Contribute_Form_Contribution extends CRM_Core_Form
      */
     public $_lineItems;
 
+    /**
+     *
+     */
+    public $_participantId;
+
     protected $_formType;
     protected $_cdType;
 
@@ -174,7 +179,6 @@ class CRM_Contribute_Form_Contribution extends CRM_Core_Form
         if ( !CRM_Core_Permission::checkActionPermission( 'CiviContribute', $this->_action ) ) {
             CRM_Core_Error::fatal( ts( 'You do not have permission to access this page' ) );  
         }
-
         $this->_cdType = CRM_Utils_Array::value( 'type', $_GET );
         
         $this->assign('cdType', false);
@@ -199,6 +203,17 @@ class CRM_Contribute_Form_Contribution extends CRM_Core_Form
         //get the action.
         $this->_action = CRM_Utils_Request::retrieve( 'action', 'String', $this, false, 'add' );
         $this->assign( 'action', $this->_action );
+
+        // add participant payment links for this contribution
+        if($this->_action & CRM_Core_Action::ADD && CRM_Utils_Request::retrieve( 'participant_id', 'Positive', $this)) {
+          $pid = CRM_Utils_Request::retrieve( 'participant_id', 'Positive', $this);
+          $pcid = CRM_Core_DAO::getFieldValue('CRM_Event_DAO_Participant', $pid, 'contact_id');
+          // check if participant is the same with this contact
+          if($this->_contactID == $pcid){
+            $this->_participantId = CRM_Utils_Request::retrieve('participant_id', 'Positive', $this);
+            $this->assign( 'participantId', $this->_participantId);
+          }
+        }
 
         //get the contribution id if update
         $this->_id = CRM_Utils_Request::retrieve( 'id', 'Positive', $this );
@@ -253,6 +268,7 @@ class CRM_Contribute_Form_Contribution extends CRM_Core_Form
             list( $this->userDisplayName, 
                 $this->userEmail ) = CRM_Contact_BAO_Contact_Location::getEmailDetails( $this->_contactID );
             $this->assign( 'displayName', $this->userDisplayName );
+            $this->assign( 'contactID', $this->_contactID);
         }
         
         // Assign pageTitle to be "Contribution - "+ Contributor name
@@ -476,6 +492,10 @@ WHERE  contribution_id = {$this->_id}
             $defaults['honor_contact_id'] = CRM_Utils_Array::value( 'honor_contact_id', $this->_pledgeValues );
             $defaults['contribution_type_id'] = CRM_Utils_Array::value( 'contribution_type_id', $this->_pledgeValues );
             $defaults['option_type'] = 1;
+        }
+
+        if( $this->_participantId ){
+            $defaults['participant_id'] = $this->_participantId;
         }
         
         $fields   = array( );
@@ -924,6 +944,13 @@ WHERE  contribution_id = {$this->_id}
         $this->assign('dataUrl',$dataUrl );                                          
         $this->addElement( 'text', 'soft_credit_to', ts('Soft Credit To') );
         $this->addElement( 'hidden', 'soft_contact_id', '', array( 'id' => 'soft_contact_id' ) );
+
+        // add form element for participant
+        if(!empty($this->_participantId)){
+          $element = $this->add( 'text', 'participant_id', ts('Link Participant'));
+          $element->freeze();
+        }
+
         if ( CRM_Utils_Array::value( 'pcp_made_through_id', $defaults ) &&
              $this->_action & CRM_Core_Action::UPDATE ) {
             $ele = $this->addElement('select', 'pcp_made_through_id', 
@@ -1394,6 +1421,16 @@ WHERE  contribution_id = {$this->_id}
                                                                             $contribution->contribution_status_id,
                                                                             CRM_Utils_Array::value( 'contribution_status_id',
                                                                                                     $this->_values  ) );
+            }
+
+            // process associated participant
+            if ( $contribution->id && $this->_action & CRM_Core_Action::ADD && $submittedValues['participant_id']) {
+                $paymentParticipant = array(
+                  'participant_id' => $submittedValues['participant_id'],
+                  'contribution_id' => $contribution->id,
+                );
+                $ids = array();
+                CRM_Event_BAO_ParticipantPayment::create( $paymentParticipant, $ids);
             }
             
             //process  note
