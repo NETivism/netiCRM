@@ -241,7 +241,6 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
 
 
   private function _setUserFrameworkConfig($userFramework) {
-
     $this->userFrameworkClass = 'CRM_Utils_System_' . $userFramework;
     $this->userHookClass = 'CRM_Utils_Hook_' . $userFramework;
     $this->userPermissionClass = 'CRM_Core_Permission_' . $userFramework;
@@ -249,6 +248,9 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
     $class = $this->userFrameworkClass;
     // redundant with _initVariables
     $this->userSystem = new $class();
+    if(isset($this->userSystem->version)){
+      $this->userFrameworkVersion = $this->userSystem->version;
+    }
 
     if ($userFramework == 'Joomla') {
       $this->userFrameworkURLVar = 'task';
@@ -275,22 +277,6 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
     }
     else {
       $this->cleanURL = 0;
-    }
-
-    if ($userFramework == 'Joomla') {
-      $this->userFrameworkVersion = '1.5';
-      if (class_exists('JVersion')) {
-        $version = new JVersion;
-        $this->userFrameworkVersion = $version->getShortVersion();
-      }
-
-      global $mainframe;
-      $dbprefix = $mainframe ? $mainframe->getCfg('dbprefix') : 'jos_';
-      $this->userFrameworkUsersTableName = $dbprefix . 'users';
-    }
-
-    if ($userFramework == 'Drupal' && defined('VERSION')) {
-      $this->userFrameworkVersion = VERSION;
     }
   }
 

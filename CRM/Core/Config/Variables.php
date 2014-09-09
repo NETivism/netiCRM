@@ -234,7 +234,6 @@ class CRM_Core_Config_Variables extends CRM_Core_Config_Defaults {
    * Default user framework
    */
   public $userFramework = 'Drupal';
-  public $userFrameworkVersion = 6.3;
   public $userFrameworkUsersTableName = 'users';
   public $userFrameworkClass = 'CRM_Utils_System_Drupal';
   public $userHookClass = 'CRM_Utils_Hook_Drupal';

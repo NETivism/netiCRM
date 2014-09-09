@@ -99,7 +99,7 @@ class CRM_Utils_VersionCheck {
         set_error_handler(array('CRM_Utils_VersionCheck', 'downloadError'));
         $hash = md5($config->userFrameworkBaseURL);
 
-        $url = self::LATEST_VERSION_AT . "?version={$this->localVersion}&uf={$config->userFramework}&hash=$hash&lang={$config->lcMessages}&ufv={$config->userFrameworkVersion}";
+        $url = self::LATEST_VERSION_AT . "?version={$this->localVersion}&uf={$config->userFramework}&hash=$hash&lang={$config->lcMessages}&ufv={$config->userSystem->version}";
 
         // add PHP and MySQL versions
         $dao = new CRM_Core_DAO;

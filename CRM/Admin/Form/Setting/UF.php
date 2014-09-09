@@ -55,7 +55,8 @@ class CRM_Admin_Form_Setting_UF extends CRM_Admin_Form_Setting {
         array(1 => $uf)
       ));
 
-    $this->addElement('text', 'userFrameworkVersion', ts('%1 Version', array(1 => $uf)));
+    $ele = $this->addElement('text', 'userSystemVersion', ts('%1 Version', array(1 => $uf)));
+    $ele->freeze();
     $this->addElement('text', 'userFrameworkUsersTableName', ts('%1 Users Table Name', array(1 => $uf)));
     if (function_exists('module_exists') &&
       module_exists('views') &&
@@ -72,6 +73,25 @@ class CRM_Admin_Form_Setting_UF extends CRM_Admin_Form_Setting {
     }
 
     parent::buildQuickForm();
+  }
+
+  /**
+   * This function sets the default values for the form. MobileProvider that in edit/view mode
+   * the default values are retrieved from the database
+   *
+   * @access public
+   *
+   * @return None
+   */
+  public function setDefaultValues() {
+    $defaults = array();
+    $params = array();
+
+    $config = CRM_Core_Config::singleton();
+    $version = $config->userSystem->version;
+    $defaults['userSystemVersion'] = $version;
+
+    return $defaults;
   }
 }
 

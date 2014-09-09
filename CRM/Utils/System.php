@@ -145,41 +145,35 @@ class CRM_Utils_System {
     if(empty($content)){
       return self::notFound();
     }
-    if(defined('VERSION')){  // drupal 7 or 8
-      $version = substr(VERSION, 0, strpos(VERSION, '.'));
-    }
-    else{ // drupal 6 only
-      $version = '6';
-    }
-    switch($version){
-      case '6':
-        if(function_exists('theme') && !$print){
-          if ($maintenance) {
-            drupal_set_breadcrumb('');
-            drupal_maintenance_theme();
-          }
-          $content = theme($type, $content, $args);
+    $config = CRM_Core_Config::singleton();
+    $version = $config->userSystem->version;
+    if($version >= 6 && $version < 7){
+      if(function_exists('theme') && !$print){
+        if ($maintenance) {
+          drupal_set_breadcrumb('');
+          drupal_maintenance_theme();
         }
-        break;
-      case '7':
-        if(function_exists('drupal_deliver_page') && !$print){
-          if ($maintenance) {
-            drupal_set_breadcrumb('');
-            drupal_maintenance_theme();
-          }
-          if($ret){
-            $content = drupal_render_page($content);
-          }
-          else{
-            drupal_deliver_page($content);
-            return;
-          }
+        $content = theme($type, $content, $args);
+      }
+    }
+    elseif($version >= 7 && $version < 8){
+      if(function_exists('drupal_deliver_page') && !$print){
+        if ($maintenance) {
+          drupal_set_breadcrumb('');
+          drupal_maintenance_theme();
         }
-        break;
-      case '8':
-        drupal_set_message('We havnt support d8 yet');
-        return;
-        break;
+        if($ret){
+          $content = drupal_render_page($content);
+        }
+        else{
+          drupal_deliver_page($content);
+          return;
+        }
+      }
+    }
+    elseif($version >= 8){
+      drupal_set_message('We havnt support d8 yet');
+      return;
     }
     if($ret){
       return $content; 

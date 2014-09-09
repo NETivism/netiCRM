@@ -574,7 +574,7 @@ WHERE sort_name LIKE '%$name%'";
 
     $errors = array();
     require_once 'CRM/Core/BAO/CMSUser.php';
-    CRM_Core_BAO_CMSUser::checkUserNameEmailExists($params, $errors);
+    $config->userSystem->checkUserNameEmailExists($params, $errors);
 
     if (isset($errors['cms_name']) || isset($errors['name'])) {
       //user name is not availble
