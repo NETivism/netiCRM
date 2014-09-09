@@ -39,7 +39,7 @@
 class CRM_Utils_System_Drupal {
   public $is_drupal;
   public $version;
-  private $_methods;
+  private $_pseudoClass;
 
   function __construct() {
     $this->is_drupal = TRUE;
@@ -58,22 +58,21 @@ class CRM_Utils_System_Drupal {
       $this->version = (float) $info['version'];
     }
 
-    // I don't like this but life will easier
-    $v = round($this->version);
-    require_once('CRM/Utils/System/Drupal'.$v.'.php');
-    $this->_methods = array(
-      'checkUserNameEmailExists',
-      'createUser',
-      'updateCMSName',
-    );
+    // pseudoMethods make life easier
+    $v = floor($this->version);
+    $class = 'CRM_Utils_System_Drupal'.$v;
+    $this->_pseudoClass = new $class();
   }
 
   /**
-   * Magic method handling for calling custom function
+   * Magic method handling
    */
   function __call($method, $args) {
-    if(in_array($method, $this->_methods)) {
-      return call_user_func_array($method, $args);
+    if(method_exists($this->_pseudoClass, $method)) {
+      return call_user_func_array(array($this->_pseudoClass, $method), $args);
+    }
+    else{
+      return FALSE;
     }
   }
 
