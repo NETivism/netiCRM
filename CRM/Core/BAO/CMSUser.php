@@ -125,38 +125,20 @@ class CRM_Core_BAO_CMSUser {
   function create(&$params, $mail) {
     $config = CRM_Core_Config::singleton();
 
-    $isDrupal = ucfirst($config->userFramework) == 'Drupal' ? TRUE : FALSE;
-    $isJoomla = ucfirst($config->userFramework) == 'Joomla' ? TRUE : FALSE;
+    $ufID = $config->userSystem->createUser($params, $mail);
 
-    if ($isDrupal) {
-      $ufID = self::createDrupalUser($params, $mail);
-      if ((variable_get('user_register', TRUE) == 1) && !variable_get('user_email_verification', TRUE)) {
-        $contact = array('email' => $params[$mail]);
-        if (self::userExists($contact)) {
-          return $ufID;
-        }
-      }
-    }
-    elseif ($isJoomla) {
-      $ufID = self::createJoomlaUser($params, $mail);
-    }
-
-    if ($ufID !== FALSE &&
-      isset($params['contactID'])
-    ) {
+    //if contact doesn't already exist create UF Match
+    if ($ufID !== FALSE && isset($params['contactID'])) {
       // create the UF Match record
-      $ufmatch = new CRM_Core_DAO_UFMatch();
-      $ufmatch->domain_id = CRM_Core_Config::domainID();
-      $ufmatch->uf_id = $ufID;
+      $ufmatch             = new CRM_Core_DAO_UFMatch();
+      $ufmatch->domain_id  = CRM_Core_Config::domainID();
+      $ufmatch->uf_id      = $ufID;
       $ufmatch->contact_id = $params['contactID'];
-      $ufmatch->uf_name = $params[$mail];
-      $ufmatch->save();
+      $ufmatch->uf_name    = $params[$mail];
 
-      // Simulate user login by storing details in session.
-      // Might break if we ever allow admins to create CMS users.
-      // This allows anonymous creator of PCP to see their page after they create it.
-      //$session = CRM_Core_Session::singleton();
-      //$session->set( 'userID'  , $ufmatch->contact_id );
+      if (!$ufmatch->find(TRUE)) {
+        $ufmatch->save();
+      }
     }
 
     return $ufID;
@@ -346,96 +328,9 @@ class CRM_Core_BAO_CMSUser {
         );
       }
 
-      self::checkUserNameEmailExists($params, $errors, $emailName);
+      $config->userSystem->checkUserNameEmailExists($params, $errors, $emailName);
     }
     return (!empty($errors)) ? $errors : TRUE;
-  }
-
-  /**
-   * Check if username and email exists in the drupal db
-   *
-   * @params $params    array   array of name and mail values
-   * @params $errors    array   array of errors
-   * @params $emailName string  field label for the 'email'
-   *
-   * @return void
-   * @static
-   */
-  static
-  function checkUserNameEmailExists(&$params, &$errors, $emailName = 'email') {
-    $config = CRM_Core_Config::singleton();
-
-    $isDrupal = ucfirst($config->userFramework) == 'Drupal' ? TRUE : FALSE;
-    $isJoomla = ucfirst($config->userFramework) == 'Joomla' ? TRUE : FALSE;
-
-    $dao = new CRM_Core_DAO();
-    $name = $dao->escape(CRM_Utils_Array::value('name', $params));
-    $email = $dao->escape(CRM_Utils_Array::value('mail', $params));
-
-
-    if ($isDrupal) {
-      _user_edit_validate(NULL, $params);
-      $errors = form_get_errors();
-
-      if ($errors) {
-        if (CRM_Utils_Array::value('name', $errors)) {
-          $errors['cms_name'] = $errors['name'];
-        }
-
-        if (CRM_Utils_Array::value('mail', $errors)) {
-          $errors[$emailName] = $errors['mail'];
-        }
-
-        // also unset drupal messages to avoid twice display of errors
-        unset($_SESSION['messages']);
-      }
-
-      // drupal api sucks
-      // do the name check manually
-      $nameError = user_validate_name($params['name']);
-      if ($nameError) {
-        $errors['cms_name'] = $nameError;
-      }
-
-      $sql = "
-SELECT name, mail
-  FROM {$config->userFrameworkUsersTableName}
- WHERE (LOWER(name) = LOWER('$name')) OR (LOWER(mail) = LOWER('$email'))";
-    }
-    elseif ($isJoomla) {
-      //don't allow the special characters and min. username length is two
-      //regex \\ to match a single backslash would become '/\\\\/'
-      $isNotValid = (bool) preg_match('/[\<|\>|\"|\'|\%|\;|\(|\)|\&|\\\\|\/]/im', $name);
-      if ($isNotValid || strlen($name) < 2) {
-        $errors['cms_name'] = ts("Your username contains invalid characters or is too short");
-      }
-      $sql = "
-SELECT username, email
-  FROM {$config->userFrameworkUsersTableName}
- WHERE (LOWER(username) = LOWER('$name')) OR (LOWER(email) = LOWER('$email'))
-";
-    }
-
-    $db_cms = DB::connect($config->userFrameworkDSN);
-    if (DB::isError($db_cms)) {
-      die("Cannot connect to UF db via $dsn, " . $db_cms->getMessage());
-    }
-    $query = $db_cms->query($sql);
-    $row = $query->fetchRow();
-    if (!empty($row)) {
-      $dbName = CRM_Utils_Array::value(0, $row);
-      $dbEmail = CRM_Utils_Array::value(1, $row);
-      if (strtolower($dbName) == strtolower($name)) {
-        $errors['cms_name'] = ts('The username %1 is already taken. Please select another username.',
-          array(1 => $name)
-        );
-      }
-      if (strtolower($dbEmail) == strtolower($email)) {
-        $errors[$emailName] = ts('This email %1 is already registered. Please select another email.',
-          array(1 => $email)
-        );
-      }
-    }
   }
 
   /**
@@ -537,98 +432,6 @@ SELECT username, email
     $id_query = db_query($id_sql, $params['cms_name']);
     $id_row = db_fetch_array($id_query);
     return $id_row['uid'];
-  }
-
-  /**
-   * Function to create a user of Joomla.
-   *
-   * @param array  $params associated array
-   * @param string $mail email id for cms user
-   *
-   * @return uid if user exists, false otherwise
-   *
-   * @access public
-   * @static
-   */
-  static
-  function createJoomlaUser(&$params, $mail) {
-    $userParams = &JComponentHelper::getParams('com_users');
-
-    // get the default usertype
-    $userType = $userParams->get('new_usertype');
-    if (!$usertype) {
-      $usertype = 'Registered';
-    }
-
-    $acl = &JFactory::getACL();
-
-    // Prepare the values for a new Joomla! user.
-    $values = array();
-    $values['name'] = trim($params['cms_name']);
-    $values['username'] = trim($params['cms_name']);
-    $values['password'] = $params['cms_pass'];
-    $values['password2'] = $params['cms_confirm_pass'];
-    $values['email'] = trim($params[$mail]);
-    $values['gid'] = $acl->get_group_id('', $userType);
-    $values['sendEmail'] = 0;
-
-    $useractivation = $userParams->get('useractivation');
-    if ($useractivation == 1) {
-      jimport('joomla.user.helper');
-      // block the User
-      $values['block'] = 1;
-      $values['activation'] = JUtility::getHash(JUserHelper::genRandomPassword());
-    }
-    else {
-      // don't block the user
-      $values['block'] = 0;
-    }
-
-    // Get an empty JUser instance.
-    $user = &JUser::getInstance(0);
-    $user->bind($values);
-
-    // Store the Joomla! user.
-    if (!$user->save()) {
-      // Error can be accessed via $user->getError();
-      return FALSE;
-    }
-    //since civicrm don't have own tokens to use in user
-    //activation email. we have to use com_user tokens, CRM-5809
-    $lang = &JFactory::getLanguage();
-    $lang->load('com_user');
-    require_once 'components/com_user/controller.php';
-    UserController::_sendMail($user, $user->password2);
-    return $user->get('id');
-  }
-
-  static
-  function updateUFName($ufID, $ufName) {
-    $config = CRM_Core_Config::singleton();
-
-    if ($config->userFramework == 'Drupal') {
-      // CRM-5555
-      if (function_exists('user_load')) {
-        $user = user_load(array('uid' => $ufID));
-        if ($user->mail != $ufName) {
-          user_save($user, array('mail' => $ufName));
-          $user = user_load(array('uid' => $ufID));
-        }
-      }
-    }
-    elseif ($config->userFramework == 'Joomla') {
-      $db_uf = self::dbHandle($config);
-      $ufID = CRM_Utils_Type::escape($ufID, 'Integer');
-      $ufName = CRM_Utils_Type::escape($ufName, 'String');
-
-      $sql = "
-UPDATE {$config->userFrameworkUsersTableName}
-SET    email = '$ufName'
-WHERE  id    = $ufID";
-
-      $db_uf->query($sql);
-      $db_uf->disconnect();
-    }
   }
 
   static
