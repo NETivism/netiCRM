@@ -328,7 +328,7 @@ class CRM_Core_BAO_CMSUser {
         );
       }
 
-      $config->userSystem->checkUserNameEmailExists($params, $errors, $emailName);
+      $errors = $config->userSystem->checkUserNameEmailExists($params, $emailName);
     }
     return (!empty($errors)) ? $errors : TRUE;
   }
