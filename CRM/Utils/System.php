@@ -1092,6 +1092,7 @@ class CRM_Utils_System {
       $codeVersion = CRM_Utils_System::version();
 
       // if db.ver < code.ver, time to upgrade
+      /* // remove for neticrm will use neticrm_update for upgrade handling
       if (version_compare($dbVersion, $codeVersion) < 0) {
         $upgradeUrl = CRM_Utils_System::url("civicrm/upgrade", "reset=1");
         $errorMessage = ts('New codebase version detected. You might want to visit <a href=\'%1\'>upgrade screen</a> to upgrade the database.', array(1 => $upgradeUrl));
@@ -1106,6 +1107,7 @@ class CRM_Utils_System {
         $errorMessage .= "<p>" . ts('OR if this is an svn install, you might want to fix version.txt file.') . "</p>";
         return FALSE;
       }
+      */
     }
     // FIXME: there should be another check to make sure version is in valid format - X.Y.alpha_num
 
