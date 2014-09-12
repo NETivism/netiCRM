@@ -40,30 +40,40 @@
 <tr>
 	<td><label>{ts}Contribution Amounts{/ts}</label> <br />
 	{$form.contribution_amount_low.label}
-	{$form.contribution_amount_low.html} &nbsp;&nbsp;
+	{$form.contribution_amount_low.html} 
 	{$form.contribution_amount_high.label}
 	{$form.contribution_amount_high.html} </td>
 	<td><label>{ts}Contribution Status{/ts}</label> <br />
 	{$form.contribution_status_id.html} </td>
 </tr>
 <tr>
-	<td><label>{ts}Paid By{/ts}</label> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	{$form.contribution_check_number.label} <br />
-	{$form.contribution_payment_instrument_id.html}&nbsp;&nbsp;&nbsp;&nbsp;
-	{$form.contribution_check_number.html}
+	<td>
+    <div>
+      <label>{ts}Paid By{/ts}</label> 
+	    {$form.contribution_payment_instrument_id.html}
+    </div>
+    <div>
+      {$form.contribution_check_number.label} {$form.contribution_check_number.html}
+    </div>
 	</td>
-	<td>{$form.contribution_transaction_id.label} <br />
-	{$form.contribution_transaction_id.html}</td>
+	<td>
+    <div>
+      {$form.contribution_transaction_id.label} {$form.contribution_transaction_id.html}
+    </div>
+    <div>
+      {$form.contribution_receipt_id.label} {$form.contribution_receipt_id.html}
+    </div>
+  </td>
 </tr>
 <tr>
 	<td>
-	{$form.contribution_receipt_date_isnull.html}&nbsp;{$form.contribution_receipt_date_isnull.label}<br />
-	{$form.contribution_thankyou_date_isnull.html}&nbsp;{$form.contribution_thankyou_date_isnull.label}
+	{$form.contribution_receipt_date_isnull.html}{$form.contribution_receipt_date_isnull.label}<br />
+	{$form.contribution_thankyou_date_isnull.html}{$form.contribution_thankyou_date_isnull.label}
 	</td>
 	<td>
-	{$form.contribution_pay_later.html}&nbsp;{$form.contribution_pay_later.label}<br />
-	{$form.contribution_recurring.html}&nbsp;{$form.contribution_recurring.label}<br />
-	{$form.contribution_test.html}&nbsp;{$form.contribution_test.label}</td>
+	{$form.contribution_pay_later.html}{$form.contribution_pay_later.label}<br />
+	{$form.contribution_recurring.html}{$form.contribution_recurring.label}<br />
+	{$form.contribution_test.html}{$form.contribution_test.label}</td>
 </tr>
 <tr>
 	<td><label>{ts}Contribution Type{/ts}</label> <br />

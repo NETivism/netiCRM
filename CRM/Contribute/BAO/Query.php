@@ -354,8 +354,19 @@ class CRM_Contribute_BAO_Query {
       case 'contribution_trxn_id':
       case 'contribution_transaction_id':
         $wc = ($op != 'LIKE') ? "LOWER(civicrm_contribution.trxn_id)" : "civicrm_contribution.trxn_id";
+        $value = ($op != 'LIKE') ? $value.'%' : $value;
+        $op = 'LIKE';
         $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause($wc, $op, $value, "String");
         $query->_qill[$grouping][] = ts('Transaction ID %1 %2', array(1 => $op, 2 => $quoteValue));
+        $query->_tables['civicrm_contribution'] = $query->_whereTables['civicrm_contribution'] = 1;
+        return;
+
+      case 'contribution_receipt_id':
+        $wc = ($op != 'LIKE') ? "LOWER(civicrm_contribution.receipt_id)" : "civicrm_contribution.receipt_id";
+        $value = ($op != 'LIKE') ? $value.'%' : $value;
+        $op = 'LIKE';
+        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause($wc, $op, $value, "String");
+        $query->_qill[$grouping][] = ts('Receipt ID %1 %2', array(1 => $op, 2 => $quoteValue));
         $query->_tables['civicrm_contribution'] = $query->_whereTables['civicrm_contribution'] = 1;
         return;
 
@@ -691,6 +702,7 @@ class CRM_Contribute_BAO_Query {
 
     //add field for transaction ID search
     $form->addElement('text', 'contribution_transaction_id', ts("Transaction ID"));
+    $form->addElement('text', 'contribution_receipt_id', ts("Receipt ID"));
 
     $form->addElement('checkbox', 'contribution_recurring', ts('Find Recurring Contributions?'));
     $form->addElement('text', 'contribution_check_number', ts('Check Number'));
