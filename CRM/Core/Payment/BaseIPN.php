@@ -232,6 +232,7 @@ class CRM_Core_Payment_BaseIPN {
   }
 
   function failed(&$objects, &$transaction) {
+    CRM_Utils_Hook::ipnPre('failed', $objects);
     $contribution = &$objects['contribution'];
     $membership = &$objects['membership'];
     $participant = &$objects['participant'];
@@ -259,19 +260,23 @@ class CRM_Core_Payment_BaseIPN {
     }
 
     $transaction->commit();
+    CRM_Utils_Hook::ipnPost('failed', $objects);
     CRM_Core_Error::debug_log_message("Setting contribution status to failed");
     //echo "Success: Setting contribution status to failed<p>";
     return TRUE;
   }
 
   function pending(&$objects, &$transaction) {
+    CRM_Utils_Hook::ipnPre('pending', $objects);
     $transaction->commit();
+    CRM_Utils_Hook::ipnPost('pending', $objects);
     CRM_Core_Error::debug_log_message("returning since contribution status is pending");
     //echo "Success: Returning since contribution status is pending<p>";
     return TRUE;
   }
 
   function cancelled(&$objects, &$transaction) {
+    CRM_Utils_Hook::ipnPre('cancelled', $objects);
     $contribution = &$objects['contribution'];
     $membership = &$objects['membership'];
     $participant = &$objects['participant'];
@@ -301,6 +306,7 @@ class CRM_Core_Payment_BaseIPN {
     }
 
     $transaction->commit();
+    CRM_Utils_Hook::ipnPost('cancelled', $objects);
     CRM_Core_Error::debug_log_message("Setting contribution status to cancelled");
     //echo "Success: Setting contribution status to cancelled<p>";
     return TRUE;
@@ -315,13 +321,14 @@ class CRM_Core_Payment_BaseIPN {
   }
 
   function completeTransaction(&$input, &$ids, &$objects, &$transaction, $recur = FALSE) {
+    $values = array();
+    CRM_Utils_Hook::ipnPre('complete', $objects, $input, $ids, $values);
     $contribution = &$objects['contribution'];
     $membership = &$objects['membership'];
     $participant = &$objects['participant'];
     $event = &$objects['event'];
     $changeToday = CRM_Utils_Array::value('trxn_date', $input, self::$_now);
 
-    $values = array();
     if ($input['component'] == 'contribute') {
       require_once 'CRM/Contribute/BAO/ContributionPage.php';
       CRM_Contribute_BAO_ContributionPage::setValues($contribution->contribution_page_id, $values);
@@ -533,6 +540,7 @@ class CRM_Core_Payment_BaseIPN {
 
     CRM_Core_Error::debug_log_message("Contribution record updated successfully");
     $transaction->commit();
+    CRM_Utils_Hook::ipnPost('complete', $objects, $input, $ids, $values);
 
     self::sendMail($input, $ids, $objects, $values, $recur, FALSE);
 
