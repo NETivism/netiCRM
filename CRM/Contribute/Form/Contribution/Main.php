@@ -998,14 +998,8 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     if ((float ) $amount <= 0.0) {
       return $errors;
     }
-
-    foreach ($self->_fields as $name => $fld) {
-      if ($fld['is_required'] &&
-        CRM_Utils_System::isNull(CRM_Utils_Array::value($name, $fields))
-      ) {
-        $errors[$name] = ts('%1 is a required field.', array(1 => $fld['title']));
-      }
-    }
+    
+    $self->addFieldRequiredRule($errors);
 
     // make sure that credit card number and cvv are valid
     require_once 'CRM/Utils/Rule.php';
