@@ -364,5 +364,15 @@ SELECT p.payment_processor_id
       }
     }
   }
+
+  static function calculateRecurDay($id, $today = NULL, $base = 'start_date'){
+    $recur = new CRM_Contribute_DAO_ContributionRecur();
+    $recur->id = $id;
+    if($recur->find(TRUE) && !empty($recur->$base)){
+      $result = CRM_Utils_Date::intervalAdd($recur->frequency_unit, $recur->frequency_interval, $recur->$base);
+      return $result;
+    }
+    return FALSE;
+  }
 }
 

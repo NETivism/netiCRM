@@ -2000,5 +2000,115 @@ SELECT source_contact_id
       return $last;
     }
   }
+
+  /**
+   * Get ids from saved Contribution
+   *
+   * @param  int $idcontribution id
+   */
+  static function buildIds($id, $type = 'form'){
+    $query = "SELECT c.id as contributionID,
+       c.contact_id         as contactID,
+       c.contribution_recur_id as contributionRecurID,
+       c.contribution_page_id as contributionPageID,
+       mp.membership_id     as membershipID,
+       pp.participant_id    as participantID,
+       p.event_id           as eventID
+FROM civicrm_contribution c
+LEFT JOIN civicrm_membership_payment  mp ON mp.contribution_id = c.id
+LEFT JOIN civicrm_participant_payment pp ON pp.contribution_id = c.id
+LEFT JOIN civicrm_participant         p  ON pp.participant_id  = p.id
+WHERE c.id = $id";
+    
+    $dao = CRM_Core_DAO::executeQuery($query);
+    $dao->fetch();
+    if(!empty($dao->N)){
+      if($type == 'form'){
+        $params = array(
+          'contributionID' => $dao->contributionID,
+          'contactID' => $dao->contactID,
+          'membershipID' => $dao->membershipID,
+          'participantID' => $dao->participantID,
+          'eventID' => $dao->eventID,
+          'contributionRecurID' => $dao->contributionRecurID,
+          'contributionPageID' => $dao->contributionPageID,
+        );
+      }
+      else{
+        $params = array(
+          'contribution' => $dao->contributionID,
+          'contact' => $dao->contactID,
+          'membership' => $dao->membershipID,
+          'participant' => $dao->participantID,
+          'event' => $dao->eventID,
+          'contributionRecur' => $dao->contributionRecurID,
+          'contributionPage' => $dao->contributionPage,
+        );
+      }
+
+      foreach($params as $k => $v){
+        if(empty($v)){
+          unset($params[$k]);
+        }
+      }
+      return $params;
+    }
+    else{
+      return FALSE;
+    }
+  }
+
+  /**
+   * Make notify url
+   *
+   * This function may be used for payment method transfer_checkout
+   *
+   * @param array $params variables for notify url
+   * @param string $path url path to notify
+   * @param boolean $return_query to only return query string 
+   * when TRUE, default FALSE
+   */
+  function makeNotifyUrl(&$params, $path, $return_query = FALSE){
+    $query = array();
+    $query[] = "contact_id={$params['contactID']}";
+    $query[] = "cid={$params['contributionID']}";
+
+    if($params['eventID']) {
+      $query[] = "module=event";
+      $query[] = "eid={$params['eventID']}";
+      $query[] = "pid={$params['participantID']}";
+    }
+    else {
+      $query[] = "module=contribute";
+      if ( $params['membershipID'] ) {
+        $query[] = "mid=".$params['membershipID'];
+      }
+      if ($params['related_contact']) {
+        $query[] = "rid=".$params['related_contact'];
+        if ($params['onbehalf_dupe_alert']) {
+          $query[] = "onbehalf_dupe_alert=".$params['onbehalf_dupe_alert'];
+        }
+      }
+    }
+
+    // if recurring donations, add a few more items
+    if(!empty($params['contributionRecurID'])) {
+      $query[] = "crid={$params['contributionRecurID']}";
+    }
+    if(!empty($params['contributionPageID'])){
+      $query[] = "cpid={$params['contributionPageID']}";
+    }
+
+    if($return_query){
+      return implode('&', $query);
+    }
+    $url = CRM_Utils_System::url($path, implode('&', $query), TRUE, NULL, FALSE);
+    if($_SERVER['HTTP_HTTPS'] == 'on' || $_SERVER['HTTPS'] == 'on'){
+      return str_replace('http://', 'https://', $url);
+    }
+    else{
+      return $url;
+    }
+  }
 }
 
