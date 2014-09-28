@@ -28,7 +28,10 @@ else
 }
 
 // Joomla, libraries/loader.php, already defined __autoload
-if ( !function_exists("__autoload") ) {
+if ( spl_autoload_functions() !== false ) {
+    spl_autoload_register(array('ezcBase', 'autoload'));
+}
+elseif ( !function_exists("__autoload") ) {
     /**
      * Implements the __autoload mechanism for PHP - which can only be done once
      * per request.
