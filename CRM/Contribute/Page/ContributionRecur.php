@@ -75,6 +75,17 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page
             }
             $values['contribution_status'] = $status[$values['contribution_status_id']];
             $this->assign( 'recur', $values );
+      
+            // Recurring Contributions
+            $controller = new CRM_Core_Controller_Simple('CRM_Contribute_Form_Search', ts('Contributions'), CRM_Core_Action::BROWSE);
+            $controller->setEmbedded(TRUE);
+            $controller->reset();
+            $controller->set('cid', $recur->contact_id);
+            $controller->set('id', NULL);
+            $controller->set('recur', $recur->id);
+            $controller->set('force', 1);
+            $controller->process();
+            $controller->run();
         }
     }
 

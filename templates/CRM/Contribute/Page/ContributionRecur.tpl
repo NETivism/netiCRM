@@ -50,6 +50,15 @@
             <tr><td class="label">{ts}Auto Renew{/ts}</td><td>{if $recur.auto_renew}{ts}Yes{/ts}{else}{ts}No{/ts}{/if}</td></tr>
             {if $recur.payment_processor}<tr><td class="label">{ts}Payment processor:{/ts}</td><td>{$recur.payment_processor}</td></tr>{/if}
           </table>
+          {* Recurring Contribution *}
+          {if $rows}
+            {include file="CRM/Contribute/Form/Selector.tpl"}
+          {else}
+            <div class="messages status">
+                    <div class="icon inform-icon"></div>
+                    {ts}No contributions have been recorded from this contact.{/ts}
+            </div>
+          {/if}
           <div class="crm-submit-buttons"><input type="button" name='cancel' value="{ts}Done{/ts}" onclick="location.href='{crmURL p='civicrm/contact/view' q='action=browse&selectedChild=contribute'}';"/></div>
         </div>
     {/if}
