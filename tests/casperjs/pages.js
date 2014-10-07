@@ -22,8 +22,8 @@ casper.test.begin('Page output correct test', url.length*2+1, function suite(tes
       casper.thenOpen(base_url+url[i].url, function(){
         var title = url[i].title;
         var full_title = title + ' | ' + site_name;
-        test.assertTitle(full_title, 'Page title should be matched: ' + title);
-        test.assertDoesntExist('.error-ci');
+        test.assertTitle(full_title, title + 'should match page title');
+        test.assertDoesntExist('.error-ci', title + ' page have no error');
       });
     }
   });
