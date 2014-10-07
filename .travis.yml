@@ -36,6 +36,9 @@ install:
   - composer global require drush/drush:6.*
 
 before_script:
+  # php environment
+  - phpenv config-add tools/scripts/travis-php-env.ini
+  
   # navigate out of module directory to prevent blown stack by recursive module lookup
   - cd ../..
   - ln -s $(readlink -e $(cd -)) civicrm
