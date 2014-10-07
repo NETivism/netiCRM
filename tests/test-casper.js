@@ -4,14 +4,22 @@
  * read more at http://casperjs.org/
  */
 function run(){
-  this.echo(this.getTitle());
+  var title = this.getTitle();
+  casper.log("Testing... "+title, 'info');
+  if(this.exists('.error-ci')){
+    var error = this.getHTML('.error-ci');
+    casper.log(error, 'error');
+  }
 }
-var casper = require('casper').create();
+var casper = require('casper').create({
+  verbose: true,
+  logLevel: 'debug'
+});
 var base_url = 'http://127.0.0.1:8080/';
 
 // login for test
 casper.start(base_url, function() {
-  this.echo(this.getTitle());
+  casper.log("Start casper debug", 'debug');
   this.fill('#user-login-form', {
     'name':'admin',
     'pass':'123456'
@@ -30,3 +38,4 @@ casper.thenOpen(base_url+'civicrm/event&reset=1', run);
 casper.thenOpen(base_url+'civicrm/participant/add&reset=1&action=add&context=standalone', run);
 
 casper.run();
+casper.exit();

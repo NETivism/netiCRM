@@ -23,7 +23,7 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
-<div class="messages warning">
+<div class="messages error error-ci">
     {if $message}{$message}{/if}
     {if $error.message && $message != $error.message}
         {$error.message}
