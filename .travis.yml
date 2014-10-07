@@ -61,7 +61,7 @@ before_script:
   - until netstat -an 2>/dev/null | grep '8080.*LISTEN'; do true; done
 
 script:
-  - casperjs test sites/all/modules/civicrm/tests/casperjs/googletest.js
+  - casperjs test sites/all/modules/civicrm/tests/casperjs/pages.js
   - drush test-run 'Travis-CI Drupal Module Example' --uri=http://127.0.0.1:8080
 
 notifications:
