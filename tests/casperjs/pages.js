@@ -13,12 +13,14 @@ var url = [
 ];
 casper.test.begin('Page output correct test', url.length*2+1, function suite(test) {
   casper.start(base_url, function() {
-    test.assertExists('form#user-login-form', "Found login form");
+    test.assertExists('#user-login-form', "Found login form");
     this.fill('#user-login-form', {
       'name':'admin',
       'pass':'123456'
     }, true);
   });
+
+  /*
   this.runpage = function(title){
     var full_title = title + ' | ' + site_name;
     test.assertTitle(full_title, 'Page title should be matched: ' + title);
@@ -27,6 +29,7 @@ casper.test.begin('Page output correct test', url.length*2+1, function suite(tes
   for(var i in url){
     casper.thenOpen(base_url+url[i].url, this.runpage(url[i].title));
   }
+  */
 
   casper.run(function(){
     test.done();
