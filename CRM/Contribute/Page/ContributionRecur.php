@@ -50,7 +50,8 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
    *
    * @return void
    * @access public
-   */ function view() {
+   */
+  function view() {
     require_once 'CRM/Contribute/DAO/ContributionRecur.php';
     require_once 'CRM/Contribute/PseudoConstant.php';
     $status = CRM_Contribute_Pseudoconstant::contributionStatus();
@@ -62,7 +63,7 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
       $values = array();
       CRM_Core_DAO::storeValues($recur, $values);
       // if there is a payment processor ID, get the name of the payment processor
-      if ($values['payment_processor_id']) {
+      if (!empty($values['payment_processor_id'])) {
         $values['payment_processor'] = CRM_Core_DAO::getFieldValue(
           'CRM_Core_DAO_PaymentProcessor',
           $values['payment_processor_id'],
@@ -71,6 +72,17 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
       }
       $values['contribution_status'] = $status[$values['contribution_status_id']];
       $this->assign('recur', $values);
+      
+      // Recurring Contributions
+      $controller = new CRM_Core_Controller_Simple('CRM_Contribute_Form_Search', ts('Contributions'), CRM_Core_Action::BROWSE);
+      $controller->setEmbedded(TRUE);
+      $controller->reset();
+      $controller->set('cid', $recur->contact_id);
+      $controller->set('id', NULL);
+      $controller->set('recur', $recur->id);
+      $controller->set('force', 1);
+      $controller->process();
+      $controller->run();
     }
   }
 
