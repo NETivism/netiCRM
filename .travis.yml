@@ -64,3 +64,6 @@ script:
   - casperjs sites/all/modules/civicrm/tools/scripts/test-casper.js
   - drush test-run 'Travis-CI Drupal Module Example' --uri=http://127.0.0.1:8080
 
+notifications:
+  irc:
+    - "chat.freenode.net#neticrm"
