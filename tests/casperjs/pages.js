@@ -18,18 +18,15 @@ casper.test.begin('Page output correct test', url.length*2+1, function suite(tes
       'name':'admin',
       'pass':'123456'
     }, true);
+    for(var i in url){
+      casper.thenOpen(base_url+url[i].url, function(){
+        var title = url[i].title;
+        var full_title = title + ' | ' + site_name;
+        test.assertTitle(full_title, 'Page title should be matched: ' + title);
+        test.assertDoesntExist('.error-ci');
+      });
+    }
   });
-
-  /*
-  this.runpage = function(title){
-    var full_title = title + ' | ' + site_name;
-    test.assertTitle(full_title, 'Page title should be matched: ' + title);
-    test.assertDoesntExist('.error-ci');
-  }
-  for(var i in url){
-    casper.thenOpen(base_url+url[i].url, this.runpage(url[i].title));
-  }
-  */
 
   casper.run(function(){
     test.done();
