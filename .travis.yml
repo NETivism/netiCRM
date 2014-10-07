@@ -37,7 +37,7 @@ install:
 
 before_script:
   # php environment
-  - phpenv config-add tools/scripts/travis-php-env.ini
+  - echo 'date.timezone="Asia/Taipei"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
   
   # navigate out of module directory to prevent blown stack by recursive module lookup
   - cd ../..
