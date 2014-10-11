@@ -10,8 +10,8 @@ var base_url = 'http://127.0.0.1:8080/';
 var site_name = 'netiCRM';
 var url = [
  {title:'New 個人', url:'civicrm/contact/add?reset=1&ct=Individual'},
- {title:'自訂欄位', url:'civicrm/admin/custom/group?reset=1'},
- {title:'寄送 Email', url:'civicrm/activity/add?atype=3&action=add&reset=1&context=standalone'}
+ {title:'Custom Data', url:'civicrm/admin/custom/group?reset=1'},
+ {title:'Activities', url:'civicrm/activity/add?atype=3&action=add&reset=1&context=standalone'}
 ];
 casper.test.begin('Page output correct test', url.length*2+1, function suite(test) {
   casper.start(base_url, function() {
