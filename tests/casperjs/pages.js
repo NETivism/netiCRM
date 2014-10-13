@@ -21,6 +21,7 @@ casper.test.begin('Page output correct test', url.length*2+1, function suite(tes
       'pass':'123456'
     }, true);
     for(var i in url){
+      var options = {'method':'get'};
       casper.thenOpen(base_url+url[i].url, options, function(obj){
         console.log(obj);
         var title = '';
