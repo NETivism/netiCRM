@@ -65,5 +65,13 @@ script:
   - drush test-run 'Travis-CI Drupal Module Example' --uri=http://127.0.0.1:8080
 
 notifications:
+  email:
+    recipients:
+      - jimmy@netivism.com.tw
+    on_success: always
+    on_failure: always
   irc:
-    - "chat.freenode.net#neticrm"
+    channels:
+      - "chat.freenode.net#neticrm"
+    on_success: always
+    on_failure: always
