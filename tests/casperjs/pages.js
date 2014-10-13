@@ -21,8 +21,9 @@ casper.test.begin('Page output correct test', url.length*2+1, function suite(tes
       'pass':'123456'
     }, true);
     for(var i in url){
-      var title = url[i].title;
-      casper.thenOpen(base_url+url[i].url, function(){
+      casper.thenOpen(base_url+url[i].url, options, function(obj){
+        console.log(obj);
+        var title = '';
         var full_title = title + ' | ' + site_name;
         test.assertTitle(full_title, title + ' should match page title');
         test.assertDoesntExist('.error-ci', title + ' page have no error');
