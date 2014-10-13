@@ -22,10 +22,9 @@ casper.test.begin('Page output correct test', url.length*2+1, function suite(tes
     }, true);
     for(var i in url){
       casper.thenOpen(base_url+url[i].url, function(){
-        var title = url[i].title;
-        var full_title = title + ' | ' + site_name;
-        test.assertTitle(full_title, title + 'should match page title');
-        test.assertDoesntExist('.error-ci', title + ' page have no error');
+        var full_title = uri[i].title + ' | ' + site_name;
+        test.assertTitle(full_title, uri[i].title + ' should match page title');
+        test.assertDoesntExist('.error-ci', uri[i].title + ' page have no error');
       });
     }
   });
