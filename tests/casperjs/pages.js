@@ -8,17 +8,17 @@
 var base_url = 'http://127.0.0.1:8080/';
 var site_name = 'netiCRM';
 var url = [
-  {title:"Administer 支持者關係系統", url:"civicrm/admin?reset=1"},
-  {title:"首頁", url:"civicrm/dashboard"},
-  {title:"Administer", url:"admin"},
-  {title:"Content Management", url:"admin/content"},
-  {title:"Reports", url:"admin/reports"},
-  {title:"Site Building", url:"admin/build"},
-  {title:"Custom Data", url:"civicrm/admin/custom/group?reset=1"},
-  {title:"支持者關係系統 Profile", url:"civicrm/admin/uf/group?reset=1"},
-  {title:"支持者關係系統 Home", url:"civicrm/civicrm/admin/configtask?reset=1"},
-  {title:"User Management", url:"admin/user"},
-  {title:"Synchronize Users to Contacts", url:"civicrm/admin/synchUser?reset=1"}
+  {title:'Administer 支持者關係系統', url:'civicrm/admin?reset=1'},
+  {title:'首頁', url:'civicrm/dashboard'},
+  {title:'Administer', url:'admin'},
+  {title:'Content Management', url:'admin/content'},
+  {title:'Reports', url:'admin/reports'},
+  {title:'Site Building', url:'admin/build'},
+  {title:'Custom Data', url:'civicrm/admin/custom/group?reset=1'},
+  {title:'支持者關係系統 Profile', url:'civicrm/admin/uf/group?reset=1'},
+  {title:'支持者關係系統 Home', url:'civicrm/civicrm/admin/configtask?reset=1'},
+  {title:'User Management', url:'admin/user'},
+  {title:'Synchronize Users to Contacts', url:'civicrm/admin/synchUser?reset=1'}
 ];
 var lookup_title = function(u){
   for(var i in url){
@@ -26,7 +26,7 @@ var lookup_title = function(u){
       return url[i].title;
     }
   }
-}
+};
 casper.test.begin('Page output correct test', url.length*2+1, function suite(test) {
   casper.start(base_url, function() {
     test.assertExists('#user-login-form', "Found login form");
@@ -40,4 +40,14 @@ casper.test.begin('Page output correct test', url.length*2+1, function suite(tes
           var url = obj.url.replace(base_url, '');
           var title = lookup_title(url);
           var full_title = title + ' | ' + site_name;
-          test.assertTitle(full_title, 
+          test.assertTitle(full_title, title + ' should match page title');
+          test.assertDoesntExist('.error-ci', title + ' page have no error');
+        }
+      });
+    }
+  });
+
+  casper.run(function(){
+    test.done();
+  });
+});
