@@ -8,6 +8,10 @@
 var base_url = 'http://127.0.0.1:8080/';
 var site_name = 'netiCRM';
 var url = [
+  {title:'New 個人', url:'civicrm/contact/add?reset=1&ct=Individual'},
+  {title:'Custom Data', url:'civicrm/admin/custom/group?reset=1'},
+  {title:'New Activity', url:'civicrm/activity?reset=1&action=add&context=standalone'},
+  {title:'Administer 支持者關係系統', url:'civicrm/admin?reset=1'},
   {title:'Administer 支持者關係系統', url:'civicrm/admin?reset=1'},
   {title:'首頁', url:'civicrm/dashboard'},
   {title:'Administer', url:'admin'},
