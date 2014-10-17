@@ -313,7 +313,12 @@ contact_a.display_name   as display_name";
 
   function alterRow(&$row) {
     $row['contribution_status_id'] = $this->_cstatus[$row['contribution_status_id']];
-  }
+    $action = array(
+      '<a href="'.CRM_Utils_System::url('civicrm/contact/view/contribution', "reset=1&id={$row['entity_id']}&cid={$row['contact_id']}&action=view").'" class="action-item" target="_blank">'.ts('View').'</a>',
+      '<a href="'.CRM_Utils_System::url('civicrm/contact/view/contribution', "reset=1&id={$row['entity_id']}&cid={$row['contact_id']}&action=update").'" class="action-item" target="_blank">'.ts('Edit').'</a>',
+    );                                      
+    $row['action'] = implode('<br>', $action);
+  } 
 
   function setTitle($title) {
     if ($title) {
