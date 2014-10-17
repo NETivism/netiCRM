@@ -18,7 +18,7 @@ var url = [
   {title:'Reports', url:'admin/reports'},
   {title:'Administration', url:'admin/build'},
   {title:'Custom Data', url:'civicrm/admin/custom/group?reset=1'},
-  {title:'"CiviCRM Profile', url:'civicrm/admin/uf/group?reset=1'},
+  {title:'CiviCRM Profile', url:'civicrm/admin/uf/group?reset=1'},
   {title:'CiviCRM Home', url:'civicrm/civicrm/admin/configtask?reset=1'},
   {title:'Administration', url:'admin/user'},
   {title:'Synchronize Users to Contacts', url:'civicrm/admin/synchUser?reset=1'}
