@@ -66,8 +66,7 @@ var url = [
   {title:'New Price Set', url:'civicrm/admin/price?reset=1&action=add'},
   {title:'Price Sets', url:'civicrm/admin/price?reset=1'},
   {title:'Find Mailings', url:'civicrm/mailing/browse?reset=1&scheduled=true'},
-  // Can't find '.error-ci', avoid this pages.
-  // {title:'New Mailing', url:'civicrm/mailing/send?reset=1'},
+  {title:'New Mailing', url:'civicrm/mailing/send?reset=1'},
   {title:'Draft and Unscheduled Mailings', url:'civicrm/mailing/browse/unscheduled?reset=1&scheduled=false'},
   {title:'Scheduled and Sent Mailings', url:'civicrm/mailing/browse/scheduled?reset=1&scheduled=true'},
   {title:'Archived Mailings', url:'civicrm/mailing/browse/archived?reset=1'},
