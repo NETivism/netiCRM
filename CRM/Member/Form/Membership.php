@@ -51,6 +51,8 @@ class CRM_Member_Form_Membership extends CRM_Member_Form
 
     protected $_mode;
 
+    public $_membershipID;
+
     public function preProcess()  
     {  
         //custom data related code
@@ -896,6 +898,7 @@ class CRM_Member_Form_Membership extends CRM_Member_Form
                 $membership =& CRM_Member_BAO_Membership::create( $params, $ids );
             }
         }
+        $this->_membershipID = $membership->id;
 
         $receiptSend = false;
         if ( CRM_Utils_Array::value( 'send_receipt', $formValues ) ) {
