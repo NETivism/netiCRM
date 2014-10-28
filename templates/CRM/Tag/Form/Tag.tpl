@@ -59,28 +59,29 @@ function initTagTree() {
         tagid = this.id.replace("check_", "");
 
         //get current tags from Summary and convert to array
-        var tagLabels = cj.trim( cj("#tags").text( ) );
+        var tagLabels = cj.trim( cj("#tags").text() );
         if ( tagLabels ) {
-            var tagsArray = tagLabels.split(',');
-        } else{
-            var tagsArray = new Array();
+          var tagsArray = tagLabels.split(',');
+        }
+        else{
+          var tagsArray = new Array();
         }
 
         //get current tag label
         var currentTagLabel = cj("#tagLabel_" + tagid ).text( );
         if (this.checked) {
-            //civiREST ('entity_tag','add',{entity_table:entityTable,entity_id:entityID,tag_id:tagid},image);
-            cj().crmAPI ('entity_tag','add',{entity_table:entityTable,entity_id:entityID,tag_id:tagid},options);
+            cj().crmAPI('entity_tag', 'create', {entity_table:entityTable,entity_id:entityID,tag_id:tagid},options);
             // add check to tab label array
             tagsArray.push( currentTagLabel );
-        } else {
-            cj().crmAPI ('entity_tag','remove',{entity_table:entityTable,entity_id:entityID,tag_id:tagid},options);
-            // build array of tag labels
-            tagsArray = cj.map(tagsArray, function (a) { 
-                 if ( cj.trim( a ) != currentTagLabel ) {
-                     return cj.trim( a );
-                 }
-             });
+        } 
+        else {
+          cj().crmAPI ('entity_tag', 'delete', {entity_table:entityTable,entity_id:entityID,tag_id:tagid},options);
+          // build array of tag labels
+          tagsArray = cj.map(tagsArray, function (a) { 
+               if ( cj.trim( a ) != currentTagLabel ) {
+                   return cj.trim( a );
+               }
+          });
         }
 		//showing count of tags in summary tab
 		cj( '.ui-tabs-nav #tab_tag a' ).html( 'Tags <em>' + cj("#tagtree input:checkbox:checked").length + '</em>');
