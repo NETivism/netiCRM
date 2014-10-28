@@ -1,7 +1,9 @@
 <?php
 ini_set('include_path', '.' . PATH_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'packages' . PATH_SEPARATOR . '..');
 ini_set('memory_limit', '512M');
+
 define('CIVICRM_UF', 'Drupal');
+define('VERSION', '7.32'); // specified Drupal Version
 
 require_once 'CRM/Core/ClassLoader.php';
 CRM_Core_ClassLoader::singleton()->register();
