@@ -153,7 +153,7 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
       $errors['extends'] = ts("You need to select the type of record that this set of custom fields is applicable for.");
     }
 
-    $extends = array('Activity', 'Relationship', 'Group', 'Contribution', 'Membership', 'Event', 'Participant');
+    $extends = array('Activity', 'Relationship', 'Group', 'Contribution', 'ContributionPage', 'Membership', 'Event', 'Participant');
     if (in_array($fields['extends'][0], $extends) && $fields['style'] == 'Tab') {
       $errors['style'] = ts("Display Style should be Inline for this Class");
       $self->assign('showStyle', TRUE);
@@ -261,6 +261,7 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
     $sel2['ParticipantEventName'] = CRM_Event_PseudoConstant::event(NULL, FALSE, "( is_template IS NULL OR is_template != 1 )");
     $sel2['ParticipantEventType'] = $eventType;
     $sel2['Contribution'] = CRM_Contribute_PseudoConstant::contributionType();
+    $sel2['ContributionPage'] = CRM_Contribute_PseudoConstant::contributionType();
     $sel2['Relationship'] = $allRelationshipType;
 
     $sel2['Individual'] = CRM_Contact_BAO_ContactType::subTypePairs('Individual', FALSE, NULL);

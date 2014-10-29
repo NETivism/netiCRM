@@ -249,6 +249,7 @@ class CRM_Custom_Page_Group extends CRM_Core_Page {
 
     $subTypes['Activity'] = CRM_Core_PseudoConstant::activityType(FALSE, TRUE);
     $subTypes['Contribution'] = CRM_Contribute_PseudoConstant::contributionType();
+    $subTypes['ContributionPage'] = CRM_Contribute_PseudoConstant::contributionType();
     $subTypes['Membership'] = CRM_Member_BAO_MembershipType::getMembershipTypes(FALSE);
     $subTypes['Event'] = CRM_Core_OptionGroup::values('event_type');
     $subTypes['Participant'] = array();

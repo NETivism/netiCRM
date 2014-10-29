@@ -1450,6 +1450,9 @@ SELECT $select
       case 'Contribution':
         return 'civicrm_contribution';
 
+      case 'ContributionPage':
+        return 'civicrm_contribution_page';
+
       case 'Relationship':
         return 'civicrm_relationship';
 
