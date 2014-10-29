@@ -37,7 +37,7 @@
      <name>extends</name>
      <type>enum</type>
      <values>Contact, Individual, Household, Organization, Location, Address,
-       Contribution, Activity, Relationship, Group, Membership, Participant,
+       Contribution, ContributionPage, Activity, Relationship, Group, Membership, Participant,
        Event, Grant, Pledge, Case</values>
      <default>'Contact'</default>
      <comment>Type of object this group extends (can add other options later e.g. contact_address, etc.).</comment>

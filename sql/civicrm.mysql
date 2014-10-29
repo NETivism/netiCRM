@@ -2175,7 +2175,7 @@ CREATE TABLE civicrm_custom_group (
      id int unsigned NOT NULL AUTO_INCREMENT  COMMENT 'Unique Custom Group ID',
      name varchar(64)    COMMENT 'Variable name/programmatic handle for this group.',
      title varchar(64)    COMMENT 'Friendly Name.',
-     extends enum('Contact', 'Individual', 'Household', 'Organization', 'Location', 'Address', 'Contribution', 'Activity', 'Relationship', 'Group', 'Membership', 'Participant', 'Event', 'Grant', 'Pledge', 'Case')   DEFAULT 'Contact' COMMENT 'Type of object this group extends (can add other options later e.g. contact_address, etc.).',
+     extends enum('Contact', 'Individual', 'Household', 'Organization', 'Location', 'Address', 'Contribution', 'ContributionPage', 'Activity', 'Relationship', 'Group', 'Membership', 'Participant', 'Event', 'Grant', 'Pledge', 'Case')   DEFAULT 'Contact' COMMENT 'Type of object this group extends (can add other options later e.g. contact_address, etc.).',
      extends_entity_column_id int unsigned   DEFAULT NULL COMMENT 'FK to civicrm_option_value.id (for option group custom_data_type.)',
      extends_entity_column_value varchar(64)    COMMENT 'linking custom group for dynamic object',
      style enum('Tab', 'Inline')    COMMENT 'Visual relationship between this form and its parent.',
