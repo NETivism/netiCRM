@@ -50,9 +50,15 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
    * @static
    */
   public static function &create(&$params) {
+    $transaction = new CRM_Core_Transaction();
     $dao = new CRM_Contribute_DAO_ContributionPage();
     $dao->copyValues($params);
     $dao->save();
+
+    if (CRM_Utils_Array::value('custom', $params) && is_array($params['custom'])) {
+      CRM_Core_BAO_CustomValueTable::store($params['custom'], 'civicrm_contribution_page', $dao->id);
+    }
+    $transaction->commit();
     return $dao;
   }
 

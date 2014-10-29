@@ -23,6 +23,10 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
+{if $cdType} 
+<div class="crm-block crm-form-block crm-contribution-contributionpage-settings-form-block">
+	{include file="CRM/Custom/Form/CustomData.tpl"} 
+{else} 
 {* WizardHeader.tpl provides visual display of steps thru the wizard as well as title for current step *}
 {include file="CRM/common/WizardHeader.tpl"}
 <div class="crm-block crm-form-block crm-contribution-contributionpage-settings-form-block">
@@ -110,6 +114,22 @@
 	</td>
 	</tr>    	
      	</table>
+	<div id="customData"></div>
+	{*include custom data js file*}
+	{include file="CRM/common/customData.tpl"}	
+	{literal}
+		<script type="text/javascript">
+			cj(document).ready(function() {
+				{/literal}
+				{if $customDataSubType} 
+					buildCustomData( '{$customDataType}', {$customDataSubType} );
+				{else}
+					buildCustomData( '{$customDataType}' );
+				{/if}
+				{literal}
+			});
+		</script>
+	{/literal}
 	 <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
 </div>
 
@@ -147,3 +167,4 @@
 {* include jscript to warn if unsaved form field changes *}
 {include file="CRM/common/formNavigate.tpl"}
 
+{/if}{* end cdtype *}

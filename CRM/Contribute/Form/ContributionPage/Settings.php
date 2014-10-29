@@ -37,6 +37,42 @@ require_once 'CRM/Contribute/Form/ContributionPage.php';
 require_once 'CRM/Contribute/PseudoConstant.php';
 class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_ContributionPage {
 
+  protected $_contributionType = NULL;
+
+  /**
+   * Function to set variables up before form is built
+   *
+   * @return void
+   * @access public
+   */
+  public function preProcess() {
+    //custom data related code
+    $this->_cdType = CRM_Utils_Array::value('type', $_GET);
+    $this->assign('cdType', FALSE);
+    if ($this->_cdType) {
+      $this->assign('cdType', TRUE);
+      return CRM_Custom_Form_CustomData::preProcess($this);
+    }
+
+    parent::preProcess();
+
+    // custom data need entityID for template
+    if ($this->_id) {
+      $this->assign('entityID', $this->_id);
+    }
+
+    // when custom data is included in this page
+    if (CRM_Utils_Array::value("hidden_custom", $_POST)) {
+      $this->set('type', 'ContributionPage');
+      $this->set('subType', CRM_Utils_Array::value('contribution_type_id', $_POST));
+      $this->set('entityId', $this->_id);
+
+      CRM_Custom_Form_CustomData::preProcess($this);
+      CRM_Custom_Form_CustomData::buildQuickForm($this);
+      CRM_Custom_Form_CustomData::setDefaultValues($this);
+    }
+  }
+
   /**
    * This function sets the default values for the form. Note that in edit/view mode
    * the default values are retrieved from the database
@@ -46,6 +82,11 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
    * @return void
    */
   function setDefaultValues() {
+    // custom data related
+    if ($this->_cdType) {
+      return CRM_Custom_Form_CustomData::setDefaultValues($this);
+    }
+
     if ($this->_id) {
       $title = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage',
         $this->_id,
@@ -58,7 +99,12 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
     else {
       CRM_Utils_System::setTitle(ts('Title and Settings'));
     }
-    return parent::setDefaultValues();
+    $defaults = parent::setDefaultValues();
+    // in update mode, we need to set custom data subtype to tpl
+    if (CRM_Utils_Array::value('contribution_type_id', $defaults)) {
+      $this->assign('customDataSubType', $defaults["contribution_type_id"]);
+    }
+    return $defaults;
   }
 
   /**
@@ -68,6 +114,13 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
    * @access public
    */
   public function buildQuickForm() {
+    // custom data related
+    if ($this->_cdType) {
+      return CRM_Custom_Form_CustomData::buildQuickForm($this);
+    }
+    //need to assign custom data type and subtype to the template
+    $this->assign('customDataType', 'ContributionPage');
+
     require_once 'CRM/Utils/Money.php';
 
     $this->_first = TRUE;
@@ -79,7 +132,8 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
     $this->add('select', 'contribution_type_id',
       ts('Contribution Type'),
       CRM_Contribute_PseudoConstant::contributionType(),
-      TRUE
+      TRUE,
+      array('onChange' => "buildCustomData( 'ContributionPage', this.value );")
     );
 
     $this->addWysiwyg('intro_text', ts('Introductory Message'), $attributes['intro_text']);
@@ -176,6 +230,9 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
     }
 
     require_once 'CRM/Contribute/BAO/ContributionPage.php';
+    $customFields = CRM_Core_BAO_CustomField::getFields('ContributionPage', FALSE, FALSE, CRM_Utils_Array::value('contribution_type_id', $params));
+    $params['custom'] = CRM_Core_BAO_CustomField::postProcess($params, $customFields, $this->_id, 'ContributionPage');
+
     $dao = &CRM_Contribute_BAO_ContributionPage::create($params);
 
     $this->set('id', $dao->id);

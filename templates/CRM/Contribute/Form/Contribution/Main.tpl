@@ -276,6 +276,7 @@ function clearAmountOther() {
     	</div>
     </fieldset>
     {/if} 
+  {include file="CRM/Custom/Page/CustomDataView.tpl"}
   <div class="crm-group custom_post_profile-group">
     	{include file="CRM/UF/Form/Block.tpl" fields=$customPost}
 	</div>

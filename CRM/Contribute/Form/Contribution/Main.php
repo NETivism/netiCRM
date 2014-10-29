@@ -136,6 +136,11 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
       CRM_Core_Payment_ProcessorForm::buildQuickForm($this);
     }
     $this->assign('contribution_type_id', $this->_values['contribution_type_id']);
+
+    //retrieve custom field information
+    require_once 'CRM/Core/BAO/CustomGroup.php';
+    $groupTree = &CRM_Core_BAO_CustomGroup::getTree("ContributionPage", $this, $this->_id, 0, $this->_values['contribution_type_id']);
+    CRM_Core_BAO_CustomGroup::buildCustomDataView($this, $groupTree);
   }
 
   function setDefaultValues() {
