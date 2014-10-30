@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!--  Truncate all tables that will be used in the tests  -->
-<dataset>
+        <!--  Truncate all tables that will be used in the tests  -->
+        <dataset>
   <civicrm_address_format />
 
   <civicrm_currency />
@@ -19,6 +19,8 @@
 
   <civicrm_mapping />
 
+  <civicrm_msg_template />
+
   <civicrm_navigation />
 
   <civicrm_option_group />
@@ -29,6 +31,8 @@
 
   <civicrm_preferences_date />
 
+  <civicrm_tag />
+
   <civicrm_worldregion />
 
   <civicrm_component />
@@ -36,10 +40,6 @@
   <civicrm_discount />
 
   <civicrm_persistent />
-
-  <civicrm_prevnext_cache />
-
-  <civicrm_action_mapping />
 
   <civicrm_acl />
 
@@ -57,9 +57,19 @@
 
   <civicrm_mailing_component />
 
+  <civicrm_mailing />
+
+  <civicrm_mailing_group />
+
+  <civicrm_mailing_trackable_url />
+
+  <civicrm_mailing_job />
+
   <civicrm_mailing_bounce_type />
 
   <civicrm_mailing_bounce_pattern />
+
+  <civicrm_mailing_spool />
 
   <civicrm_contribution_recur />
 
@@ -76,6 +86,8 @@
   <civicrm_task />
 
   <civicrm_task_status />
+
+  <civicrm_membership_type />
 
   <civicrm_membership_status />
 
@@ -100,6 +112,10 @@
   <civicrm_grant />
 
   <civicrm_tell_friend />
+
+  <civicrm_openid_nonces />
+
+  <civicrm_openid_associations />
 
   <civicrm_pledge_block />
 
@@ -129,6 +145,8 @@
 
   <civicrm_entity_financial_trxn />
 
+  <civicrm_entity_tag />
+
   <civicrm_im />
 
   <civicrm_log />
@@ -146,8 +164,6 @@
   <civicrm_preferences />
 
   <civicrm_state_province />
-
-  <civicrm_tag />
 
   <civicrm_uf_match />
 
@@ -173,55 +189,7 @@
 
   <civicrm_relationship />
 
-  <civicrm_mailing_event_subscribe />
-
-  <civicrm_mailing_event_confirm />
-
-  <civicrm_contribution_page />
-
-  <civicrm_contribution_widget />
-
-  <civicrm_pcp />
-
-  <civicrm_activity />
-
-  <civicrm_activity_assignment />
-
-  <civicrm_activity_target />
-
-  <civicrm_case_activity />
-
-  <civicrm_pledge />
-
-  <civicrm_price_field />
-
-  <civicrm_county />
-
-  <civicrm_entity_tag />
-
-  <civicrm_msg_template />
-
-  <civicrm_uf_group />
-
-  <civicrm_uf_field />
-
-  <civicrm_uf_join />
-
-  <civicrm_action_schedule />
-
-  <civicrm_action_log />
-
-  <civicrm_mailing />
-
-  <civicrm_mailing_group />
-
-  <civicrm_mailing_trackable_url />
-
-  <civicrm_mailing_job />
-
   <civicrm_mailing_recipients />
-
-  <civicrm_mailing_spool />
 
   <civicrm_mailing_event_queue />
 
@@ -235,13 +203,19 @@
 
   <civicrm_mailing_event_reply />
 
+  <civicrm_mailing_event_subscribe />
+
+  <civicrm_mailing_event_confirm />
+
   <civicrm_mailing_event_trackable_url_open />
 
   <civicrm_mailing_event_unsubscribe />
 
-  <civicrm_pcp_block />
+  <civicrm_contribution_page />
 
-  <civicrm_membership_type />
+  <civicrm_contribution_widget />
+
+  <civicrm_pcp />
 
   <civicrm_membership />
 
@@ -249,9 +223,31 @@
 
   <civicrm_membership_log />
 
+  <civicrm_activity />
+
+  <civicrm_activity_assignment />
+
+  <civicrm_activity_target />
+
+  <civicrm_case_activity />
+
+  <civicrm_pledge />
+
+  <civicrm_price_field />
+
   <civicrm_price_field_value />
 
   <civicrm_line_item />
+
+  <civicrm_county />
+
+  <civicrm_uf_group />
+
+  <civicrm_uf_field />
+
+  <civicrm_uf_join />
+
+  <civicrm_pcp_block />
 
   <civicrm_address />
 
