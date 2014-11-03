@@ -2713,5 +2713,34 @@ LEFT JOIN civicrm_address add2 ON ( add1.master_id = add2.id )
     $masterDisplayName = CRM_Core_DAO::singleValueQuery($sql);
     return $masterDisplayName;
   }
+
+  static function redirectPreferredLanguage($id, $url = NULL){
+    if($_SERVER['REQUEST_METHOD'] == 'GET'){
+      $contact = new CRM_Contact_DAO_Contact();
+      $contact->id = $id;
+      if ($contact->find(TRUE)) {
+        $config = CRM_Core_Config::singleton();
+        $ufLocale = $config->userSystem->getUFLocale();
+        if(!empty($contact->preferred_language) && $contact->preferred_language != $ufLocale){
+          if(empty($url)){
+            $url = parse_url($_SERVER['REQUEST_URI']);
+          }
+          else{
+            $url = parse_url($url);
+          }
+
+          // switch language
+          $config->userSystem->switchUFLocale($contact->preferred_language);
+
+          // make url in different language
+          $base = CRM_Utils_File::addTrailingSlash(CIVICRM_UF_BASEURL, '/');
+          $base = $config->userSystem->languageNegotiationURL($base);
+
+          $redirect = $base.$_GET['q'].'?'.$url['query'];
+          CRM_Utils_System::redirect($redirect);
+        }
+      }
+    }
+  }
 }
 

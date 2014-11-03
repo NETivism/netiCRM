@@ -102,6 +102,7 @@ class CRM_Mailing_Event_BAO_Queue extends CRM_Mailing_Event_DAO_Queue {
       $q->job_id = $job_id;
       $q->hash = $hash;
       if ($q->find(TRUE)) {
+        CRM_Contact_BAO_Contact::redirectPreferredLanguage($q->contact_id);
         $success = $q;
       }
     }
