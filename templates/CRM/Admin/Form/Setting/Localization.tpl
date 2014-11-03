@@ -121,14 +121,14 @@
           </tr>
           <tr class="crm-localization-form-block-makeSinglelingual">
               <td class="label">{$form.makeSinglelingual.label}</td>
-              <td>{$form.makeSinglelingual.html}<br />          
+              <td><input type="checkbox" disabled="disabled"><!--{$form.makeSinglelingual.html}--><br />
               <span class="description">{ts}Check this box and click 'Save' to switch this installation from multi- to single-language.{/ts}</span><br /><br />
               <span class="description" style="color:red">{$warning}</span></td>
           </tr>
         {elseif $form.makeMultilingual}
           <tr class="crm-localization-form-block-makeMultilingual">
               <td class="label">{$form.makeMultilingual.label}</td>
-              <td>{$form.makeMultilingual.html}<br />
+              <td><input type="checkbox" disabled="disabled"><!--{$form.makeMultilingual.html}--><br />
               <span class="description">{ts}Check this box and click 'Save' to switch this installation from single- to multi-language, then add further languages.{/ts}</span><br /><br />
               <span class="description" style="color:red">{$warning}</span></td>
         {else}
