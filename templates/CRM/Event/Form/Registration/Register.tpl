@@ -63,11 +63,12 @@
       <p>{$event.intro_text}</p>
   </div>
 {/if}
-{if $contact_id}
+{if $contact_id and $smarty.get.id}
   <div id="register-who">
     <a href="#register-now" id="register-me" class="button"><span><i class="fa fa-sign-in"></i>{ts 1=$display_name}Registering Yourself (%1){/ts}</span></a>
     <a href="{crmURL p='civicrm/event/register' q="cid=0&reset=1&id=`$event.id`"}" title="{ts}Click here to register a different person for this event.{/ts}" class="button"><span><i class="fa fa-external-link"></i>{ts}Registering Others{/ts}</span></a>
   </div>
+  <div class="clear"></div>
 {/if}
 <div id="register-now">
   {if $form.additional_participants.html}
@@ -290,7 +291,7 @@
       cj("#billing-payment-block").html('<div class="crm-section payment-description"><div class="label"></div><div class="content">{/literal}{$event.pay_later_receipt|nl2br|regex_replace:"/[\r\n]/":""}{literal}</div><div class="clear"></div></div>');
     }
   });
-  if(cj("#register-who").length){
+  if(cj("#register-who").length && location.hash != '#register-now'){
     cj("#register-now").hide();
     cj("#register-me").click(function(){
       cj("#register-now").slideDown();
