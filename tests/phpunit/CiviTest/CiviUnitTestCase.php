@@ -173,7 +173,7 @@ class CiviUnitTestCase extends PHPUnit_Extensions_Database_TestCase {
       $dbName = self::getDBName();
 
       //  install test database
-      echo PHP_EOL . "Installing {$dbName} database" . PHP_EOL;
+      // echo PHP_EOL . "Installing {$dbName} database" . PHP_EOL;
 
       self::_populateDB( FALSE, $this );
 
@@ -329,12 +329,8 @@ class CiviUnitTestCase extends PHPUnit_Extensions_Database_TestCase {
 
     $tablesToTruncate = array('civicrm_contact');
     $this->quickCleanup($tablesToTruncate);
-    if($this->_eNoticeCompliant ){
-      error_reporting(E_ALL & ~E_STRICT);
-    }
-    else{
-      error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT);
-    }
+    error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT);
+
   }
 
   /**
