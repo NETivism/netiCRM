@@ -362,6 +362,37 @@ class CRM_Utils_System_Drupal {
   }
 
   /**
+   * Get the locale set in the hosting CMS
+   *
+   * @return string  with the locale or null for none
+   */
+  static function switchUFLocale($crmLocale = NULL) {
+    if(empty($crmLocale)){
+      global $tsLocale;
+      $crmLocale = $tsLocale;
+    }
+    if(function_exists('language_list') && !empty($crmLocale)){
+      global $language;
+      $locale = $language->language;
+      $languages = language_list(); 
+      switch ($crmLocale){
+        case 'zh_TW':
+          $locale = 'zh-hant';
+          break;
+        case 'zh_CN':
+          $locale = 'zh-hans';
+          break;
+        default:
+          $locale = CRM_Core_I18n_PseudoConstant::shortForLong(substr($crmLocale, 0, 2));
+          break; 
+      }
+      if(!empty($languages[$locale])){
+        $language = $languages[$locale];
+      }
+    }
+  }
+
+  /**
    * load drupal bootstrap
    *
    * @param $name string  optional username for login
@@ -465,10 +496,7 @@ class CRM_Utils_System_Drupal {
 
     //CRM-7803 -from d7 onward.
     $config = CRM_Core_Config::singleton();
-    if (function_exists('variable_get') &&
-      module_exists('locale') &&
-      function_exists('language_negotiation_get')
-    ) {
+    if (module_exists('locale') && function_exists('language_negotiation_get')) {
       global $language;
 
       //does user configuration allow language
@@ -516,7 +544,56 @@ class CRM_Utils_System_Drupal {
         }
       }
     }
+    else{
+      //upto d6 only, already we have code in place for d7
+      $config = CRM_Core_Config::singleton();
+      if (module_exists('locale')) {
+        global $language;
 
+        //get the mode.
+        $mode = variable_get('language_negotiation', LANGUAGE_NEGOTIATION_NONE);
+
+        //url prefix / path.
+        if (isset($language->prefix) &&
+          $language->prefix &&
+          in_array($mode, array(
+            LANGUAGE_NEGOTIATION_PATH,
+              LANGUAGE_NEGOTIATION_PATH_DEFAULT,
+            ))
+        ) {
+
+          if ($addLanguagePart) {
+            $url .= $language->prefix . '/';
+          }
+          if ($removeLanguagePart) {
+            $url = str_replace("/{$language->prefix}/", '/', $url);
+          }
+        }
+        if (isset($language->domain) &&
+          $language->domain &&
+          $mode == LANGUAGE_NEGOTIATION_DOMAIN
+        ) {
+
+          if ($addLanguagePart) {
+            $url = CRM_Utils_File::addTrailingSlash($language->domain, '/');
+          }
+          if ($removeLanguagePart && defined('CIVICRM_UF_BASEURL')) {
+            $url = str_replace('\\', '/', $url);
+            $parseUrl = parse_url($url);
+
+            //kinda hackish but not sure how to do it right
+            //hope http_build_url() will help at some point.
+            if (is_array($parseUrl) && !empty($parseUrl)) {
+              $urlParts           = explode('/', $url);
+              $hostKey            = array_search($parseUrl['host'], $urlParts);
+              $ufUrlParts         = parse_url(CIVICRM_UF_BASEURL);
+              $urlParts[$hostKey] = $ufUrlParts['host'];
+              $url                = implode('/', $urlParts);
+            }
+          }
+        }
+      }
+    }
     return $url;
   }
 

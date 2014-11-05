@@ -2,6 +2,7 @@
 /**
  * We always locate at sites/all/modules/civicrm/bin/
  */
+error_reporting(E_ERROR | E_WARNING);
 global $civicrm_root, $db_url, $user;
 date_default_timezone_set("Asia/Taipei");
 
@@ -50,6 +51,9 @@ else{
   include_once $conf_dir . '/civicrm.settings.php'; 
   $_REQUEST['key']= CIVICRM_SITE_KEY;
   ini_set('session.save_handler', 'files');
+  if(!is_dir('/tmp/php')){
+    mkdir('/tmp/php');
+  }
   ini_set('session.save_path', '/tmp/php');
 }
 
