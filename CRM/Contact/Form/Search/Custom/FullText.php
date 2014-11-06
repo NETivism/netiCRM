@@ -58,7 +58,11 @@ class CRM_Contact_Form_Search_Custom_FullText implements CRM_Contact_Form_Search
 
   protected $_limitNumber = 10;
 
-  protected $_foundRows = array(); function __construct(&$formValues) {
+  protected $_foundRows = array();
+  function __construct(&$formValues) {
+    if(empty($formValues['text'])){
+      return;
+    }
     $this->_formValues = &$formValues;
 
     $this->_text = CRM_Utils_Array::value('text',
