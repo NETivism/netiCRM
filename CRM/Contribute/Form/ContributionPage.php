@@ -141,7 +141,7 @@ class CRM_Contribute_Form_ContributionPage extends CRM_Core_Form {
 
     if ($this->_single) {
       $this->addButtons(array(
-          array('type' => 'next',
+          array('type' => 'upload',
             'name' => ts('Save'),
             'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
             'isDefault' => TRUE,
@@ -160,7 +160,7 @@ class CRM_Contribute_Form_ContributionPage extends CRM_Core_Form {
           'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
         );
       }
-      $buttons[] = array('type' => 'next',
+      $buttons[] = array('type' => 'upload',
         'name' => ts('Continue >>'),
         'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
         'isDefault' => TRUE,
