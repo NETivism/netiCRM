@@ -57,6 +57,7 @@ class CRM_Mailing_Page_Common extends CRM_Core_Page {
     if (!$q) {
       CRM_Core_Error::fatal(ts("There was an error in your request"));
     }
+    CRM_Contact_BAO_Contact::redirectPreferredLanguage($q->contact_id);
 
     $cancel = CRM_Utils_Request::retrieve("_qf_{$this->_type}_cancel", 'String', CRM_Core_DAO::$_nullObject,
       FALSE, NULL, $_REQUEST

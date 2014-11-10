@@ -68,6 +68,7 @@ class CRM_Mailing_Event_BAO_Unsubscribe extends CRM_Mailing_Event_DAO_Unsubscrib
     if (!$q) {
       return FALSE;
     }
+    CRM_Contact_BAO_Contact::redirectPreferredLanguage($q->contact_id);
     require_once 'CRM/Core/Transaction.php';
     $transaction = new CRM_Core_Transaction();
     $contact = new CRM_Contact_BAO_Contact();
