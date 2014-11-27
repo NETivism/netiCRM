@@ -1115,10 +1115,17 @@ class CRM_Utils_System {
   }
 
   static function civiExit($status = 0) {
-    // move things to CiviCRM cache as needed
-    require_once 'CRM/Core/Session.php';
+    $config = CRM_Core_Config::singleton();
     CRM_Core_Session::storeSessionObjects();
-
+    if ($config->userFramework == 'Drupal') {
+      // drupal needs handling exit for it self
+      if(function_exists('drupal_exit')){
+        drupal_exit();
+      }
+      else{
+        exit($status);
+      }
+    }
     exit($status);
   }
 
