@@ -1,5 +1,5 @@
 <?php
-include './extern.inc';
+require_once '../civicrm.config.php';
 
 $config   = CRM_Core_Config::singleton();
 $queue_id =  CRM_Utils_Array::value( 'q', $_GET );

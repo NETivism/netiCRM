@@ -33,7 +33,7 @@
  * $Id$
  *
  */
-include './extern.inc';
+require_once '../civicrm.config.php';
 
 $config   = CRM_Core_Config::singleton( );
 $template = CRM_Core_Smarty::singleton( );

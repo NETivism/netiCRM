@@ -35,7 +35,7 @@
  */
 
 session_start( );
-include './extern.inc';
+require_once '../civicrm.config.php';
 
 /* Cache the real UF, override it with the SOAP environment */
 $config = CRM_Core_Config::singleton();
