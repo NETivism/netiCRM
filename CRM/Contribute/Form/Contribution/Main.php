@@ -432,12 +432,14 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
       && !CRM_Utils_Array::value('pledge_id', $this->_values)
     ) {
       $this->buildAmount($this->_separateMembershipPayment);
-
       if ($this->_values['is_monetary'] &&
-        $this->_values['is_recur'] &&
-        $this->_paymentProcessor['is_recur']
+        $this->_values['is_recur']
       ) {
-        $this->buildRecur();
+        foreach ($this->_paymentProcessors as $value) {
+          if($value['is_recur']){
+            $this->buildRecur();
+          }
+        }
       }
     }
 
