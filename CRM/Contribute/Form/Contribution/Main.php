@@ -840,8 +840,20 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
       $productDAO->id = $fields['selectProduct'];
       $productDAO->find(TRUE);
       $min_amount = $productDAO->min_contribution;
-
-      if ($amount < $min_amount) {
+      if(!empty($fields['is_recur'])){
+        if(!empty($fields['installments'])){
+          $total = $amount * $fields['installments'];
+          if($total < $min_amount){
+            $errors['selectProduct'] = ts('The premium you have selected requires a minimum contribution of %1', array(1 => CRM_Utils_Money::format($min_amount)));
+          }
+        }
+        else{
+          if(empty($amount)){
+            $errors['selectProduct'] = ts('The premium you have selected requires a minimum contribution of %1', array(1 => CRM_Utils_Money::format($min_amount)));
+          }
+        }
+      }
+      elseif($amount < $min_amount) {
         $errors['selectProduct'] = ts('The premium you have selected requires a minimum contribution of %1', array(1 => CRM_Utils_Money::format($min_amount)));
       }
     }
