@@ -548,7 +548,7 @@ class CRM_Utils_System_Drupal {
     else{
       //upto d6 only, already we have code in place for d7
       $config = CRM_Core_Config::singleton();
-      CRM_Utils_System_Drupal6::languageNegotiationURL($url, $addLanguagePart = TRUE, $removeLanguagePart = FALSE);
+      $url = CRM_Utils_System_Drupal6::languageNegotiationURL($url, $addLanguagePart, $removeLanguagePart);
     }
     return $url;
   }
