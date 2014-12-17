@@ -548,52 +548,7 @@ class CRM_Utils_System_Drupal {
     else{
       //upto d6 only, already we have code in place for d7
       $config = CRM_Core_Config::singleton();
-      if (function_exists('locale')) {
-        global $language;
-
-        //get the mode.
-        $mode = variable_get('language_negotiation', LANGUAGE_NEGOTIATION_NONE);
-
-        //url prefix / path.
-        if (isset($language->prefix) &&
-          $language->prefix &&
-          in_array($mode, array(
-            LANGUAGE_NEGOTIATION_PATH,
-              LANGUAGE_NEGOTIATION_PATH_DEFAULT,
-            ))
-        ) {
-
-          if ($addLanguagePart) {
-            $url .= $language->prefix . '/';
-          }
-          if ($removeLanguagePart) {
-            $url = str_replace("/{$language->prefix}/", '/', $url);
-          }
-        }
-        if (isset($language->domain) &&
-          $language->domain &&
-          $mode == LANGUAGE_NEGOTIATION_DOMAIN
-        ) {
-
-          if ($addLanguagePart) {
-            $url = CRM_Utils_File::addTrailingSlash($language->domain, '/');
-          }
-          if ($removeLanguagePart && defined('CIVICRM_UF_BASEURL')) {
-            $url = str_replace('\\', '/', $url);
-            $parseUrl = parse_url($url);
-
-            //kinda hackish but not sure how to do it right
-            //hope http_build_url() will help at some point.
-            if (is_array($parseUrl) && !empty($parseUrl)) {
-              $urlParts           = explode('/', $url);
-              $hostKey            = array_search($parseUrl['host'], $urlParts);
-              $ufUrlParts         = parse_url(CIVICRM_UF_BASEURL);
-              $urlParts[$hostKey] = $ufUrlParts['host'];
-              $url                = implode('/', $urlParts);
-            }
-          }
-        }
-      }
+      CRM_Utils_System_Drupal6::languageNegotiationURL($url, $addLanguagePart = TRUE, $removeLanguagePart = FALSE);
     }
     return $url;
   }
