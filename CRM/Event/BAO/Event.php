@@ -1193,6 +1193,10 @@ WHERE civicrm_event.is_active = 1
           if (CRM_Utils_Array::value('data_type', $v, '') == 'File' || CRM_Utils_Array::value('name', $v, '') == 'image_URL') {
             unset($fields[$k]);
           }
+          // unset all view only profile field
+          if ($v['is_view']){
+            unset($fields[$k]);
+          }
         }
 
         if ($groupTitle) {

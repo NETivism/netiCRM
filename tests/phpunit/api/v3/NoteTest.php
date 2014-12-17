@@ -25,8 +25,10 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 */
-
-require_once 'tests/phpunit/CiviTest/CiviUnitTestCase.php';
+/**
+ *  Include class definitions
+ */
+require_once 'CiviTest/CiviUnitTestCase.php';
 
 /**
  * Class contains api test cases for "civicrm_note"
@@ -364,9 +366,53 @@ class api_v3_NoteTest extends CiviUnitTestCase {
  *  Test civicrm_activity_create() using example code
  */
 function testNoteCreateExample() {
-  require_once 'api/v3/examples/NoteCreate.php';
   $result = UF_match_get_example();
   $expectedResult = UF_match_get_expectedresult();
   $this->assertEquals($result, $expectedResult);
+}
+
+
+function note_create_example(){
+  $params = array( 
+    'entity_table' => 'civicrm_contact',
+    'entity_id' => 1,
+    'note' => 'Hello!!! m testing Note',
+    'contact_id' => 1,
+    'modified_date' => '2011-01-31',
+    'subject' => 'Test Note',
+    'version' => 3,
+  );
+
+  require_once 'api/api.php';
+  $result = civicrm_api( 'note','create',$params );
+
+  return $result;
+}
+
+/*
+ * Function returns array of result expected from previous function
+ */
+function note_create_expectedresult(){
+
+  $expectedResult = array( 
+    'is_error' => 0,
+    'version' => 3,
+    'count' => 1,
+    'id' => 2,
+    'values' => array( 
+      '2' => array( 
+          'id' => 2,
+          'entity_table' => 'civicrm_contact',
+          'entity_id' => 1,
+          'note' => 'Hello!!! m testing Note',
+          'contact_id' => 1,
+          'modified_date' => '20110131000000',
+          'subject' => 'Test Note',
+          'privacy' => 0,
+        ),
+    ),
+  );
+
+  return $expectedResult  ;
 }
 

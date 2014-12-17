@@ -92,8 +92,10 @@
         <div class="clear"></div> 
         </div> 
     {else} 
-        <div class="crm-section {$classname}-section"> 
+        <div class="crm-section {$classname}-section {if $field.is_view}hide-block{/if}"> 
+           {if !$field.is_view}
            <div class="label">{$form.$n.label}</div>
+           {/if}
            <div class="content">
              {if $n|substr:0:3 eq 'im-'}
                {assign var="provider" value=$n|cat:"-provider_id"}
@@ -126,11 +128,13 @@
                  {include file="CRM/Custom/Form/AutoComplete.tpl" element_name = $n }
              {/if}  
              {* Show explanatory text for field if not in 'view' or 'preview' modes *} 
-             {if $field.help_post && $action neq 4 && $action neq 1028}
-                <br /><span class="description">{$field.help_post}</span> 
+             {if $field.help_post && $action neq 4 && $action neq 1028 && !$field.is_view}
+                <div class="description">{$field.help_post}</div> 
              {/if} 
            </div>
+           {if !$field.is_view}
            <div class="clear"></div> 
+           {/if}
         </div> 
     {/if}     
     {/foreach} 

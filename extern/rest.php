@@ -27,7 +27,7 @@
 */
 session_start( );
 
-include './extern.inc';
+require_once '../civicrm.config.php';
 $rest = new CRM_Utils_REST();
 
 $config = CRM_Core_Config::singleton();

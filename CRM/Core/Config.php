@@ -245,6 +245,10 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
     $this->userHookClass = 'CRM_Utils_Hook_' . $userFramework;
     $this->userPermissionClass = 'CRM_Core_Permission_' . $userFramework;
 
+    if (defined('CIVICRM_UF_DSN')) {
+      $this->userFrameworkDSN = CIVICRM_UF_DSN;
+    }
+
     $class = $this->userFrameworkClass;
     // redundant with _initVariables
     $this->userSystem = new $class();
@@ -265,10 +269,6 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
       if (CRM_Utils_System::isSSL()) {
         $this->userFrameworkBaseURL = str_replace('http://', 'https://', $this->userFrameworkBaseURL);
       }
-    }
-
-    if (defined('CIVICRM_UF_DSN')) {
-      $this->userFrameworkDSN = CIVICRM_UF_DSN;
     }
 
     // this is dynamically figured out in the civicrm.settings.php file

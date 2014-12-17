@@ -405,6 +405,10 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
           if (CRM_Utils_Array::value('data_type', $v, '') == 'File' || CRM_Utils_Array::value('name', $v, '') == 'image_URL') {
             unset($fields[$k]);
           }
+          // unset all view only profile field
+          if ($v['is_view']){
+            unset($fields[$k]);
+          }
         }
 
         if ($groupTitle) {

@@ -32,7 +32,7 @@ if ( phpversion( ) == "5.2.2" && ! isset( $GLOBALS['HTTP_RAW_POST_DATA'] ) ) {
 }
 
 session_start( );
-include './extern.inc';
+require_once '../civicrm.config.php';
 
 $server = new SoapServer(null, array('uri' => 'urn:civicrm', 'soap_version' => SOAP_1_2 ) );
 
