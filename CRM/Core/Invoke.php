@@ -151,6 +151,9 @@ class CRM_Core_Invoke {
       }
 
       if (isset($item['breadcrumb']) && !isset($item['is_public'])) {
+        foreach($item['breadcrumb'] as $k => $b){
+          $item['breadcrumb'][$k]['url'] = CRM_Utils_System::url($b['url']);
+        }
         CRM_Utils_System::appendBreadCrumb($item['breadcrumb']);
       }
 

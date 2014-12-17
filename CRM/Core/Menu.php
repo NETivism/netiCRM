@@ -301,7 +301,7 @@ class CRM_Core_Menu {
             ',' => '_', '/' => '_',
           )
         ),
-        'url' => CRM_Utils_System::url($path, $query, FALSE),
+        'url' => CRM_Core_Menu::buildMenuUrl($path, $query),
         'icon' => CRM_Utils_Array::value('icon', $item),
         'extra' => CRM_Utils_Array::value('extra', $item),
       );
@@ -477,10 +477,9 @@ class CRM_Core_Menu {
         isset($menu[$currentPath]['title'])
       ) {
         $urlVar = CRM_Utils_Array::value('path_arguments', $menu[$currentPath]) ? '&' . $menu[$currentPath]['path_arguments'] : '';
-        $crumbs[] = array('title' => $menu[$currentPath]['title'],
-          'url' => CRM_Utils_System::url($currentPath,
-            'reset=1' . $urlVar, FALSE
-          ),
+        $crumbs[] = array(
+          'title' => $menu[$currentPath]['title'],
+          'url' => CRM_Core_Menu::buildMenuUrl($currentPath, 'reset=1' . $urlVar),
         );
       }
     }
@@ -668,6 +667,11 @@ UNION (
       $arr['urlToSession'] = $urlToSession;
     }
     return $arr;
+  }
+
+  static
+  function buildMenuUrl($url, $query){
+    return $url.'?'.$query;
   }
 }
 
