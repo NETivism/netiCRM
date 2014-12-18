@@ -621,7 +621,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
         ));
     }
 
-    if (isset($this->_params['amount_other']) || isset($this->_params['selectMembership'])) {
+    if (!empty($this->_params['amount_other']) || isset($this->_params['selectMembership'])) {
       $this->_params['amount_level'] = '';
     }
 
