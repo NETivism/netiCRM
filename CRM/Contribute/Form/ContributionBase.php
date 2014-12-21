@@ -400,9 +400,18 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
           self::authenticatePledgeUser();
         }
       }
+      //retrieve custom field information
+      $groupTree = &CRM_Core_BAO_CustomGroup::getTree("ContributionPage", $this, $this->_id, 0, $this->_values['contribution_type_id']);
+      $this->_values['custom_data_view'] = CRM_Core_BAO_CustomGroup::buildCustomDataView($this, $groupTree);
+
       $this->set('values', $this->_values);
       $this->set('fields', $this->_fields);
     }
+    else{
+      // assign tempalte 
+      $this->assign_by_ref("viewCustomData", $this->_values['custom_data_view']);
+    }
+
     require_once 'CRM/Contribute/BAO/PCP.php';
     $pcpId = CRM_Utils_Request::retrieve('pcpId', 'Positive', $this);
     if ($pcpId) {
