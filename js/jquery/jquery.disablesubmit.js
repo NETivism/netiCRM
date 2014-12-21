@@ -14,9 +14,9 @@
       }
       else{
         // set cookie
-        setCookie(qfkey, 1, 3600);
         var code = $obj.attr('onclick').replace('return', '');
-        $obj.click(function(){
+        $obj.bind('click', function(){
+          setCookie(qfkey, 1, 3600);
           eval(code);
         });
       }
