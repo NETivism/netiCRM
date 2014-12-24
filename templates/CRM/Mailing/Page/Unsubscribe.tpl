@@ -26,7 +26,7 @@
 {if $confirm}
     <div class="messages status">
           <div class="icon inform-icon"></div>&nbsp;
-          <label>{$display_name} ({$email})</label> {ts}has been successfully removed from the specified mailing list(s).{/ts}
+          <label>{$display_name} ({$email})</label> {ts}has been successfully unsubscribed.{/ts}
     </div>
 {else}
     <div>
@@ -34,7 +34,7 @@
       {if $groupExist}
         <div class="messages status">
           {ts 1=$display_name 2=$email} %1 (%2){/ts}<br/>
-          {ts}Are you sure you want to be removed from the mailing list(s) shown below:{/ts}<br/>
+          {ts}Are you sure you want to be unsubscribed from mailing lists:{/ts}<br/>
         </div>
         <table class="selector" style="width: auto; margin-top: 20px;">
             {counter start=0 skip=1 print=false}
@@ -52,7 +52,7 @@
       {else}
         <div class="messages status">
           {ts 1=$display_name 2=$email} %1 (%2){/ts}<br/>
-          {ts}Sorry you are not currently on this mailing list. Perhaps you have already unsubscribed.{/ts}<br/>
+          {ts}Sorry you are not on the mailing list. Probably you are already unsubscribed.{/ts}<br/>
         </div>
       {/if}
     </form>
