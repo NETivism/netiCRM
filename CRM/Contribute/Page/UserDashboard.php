@@ -82,9 +82,7 @@ class CRM_Contribute_Page_UserDashboard extends CRM_Contact_Page_View_UserDashBo
     $recurIDs = array();
     while ($recur->fetch()) {
       $mode = $recur->is_test ? 'test' : 'live';
-      $paymentProcessor = CRM_Contribute_BAO_ContributionRecur::getPaymentProcessor($recur->id,
-        $mode
-      );
+      $paymentProcessor = CRM_Contribute_BAO_ContributionRecur::getPaymentProcessor($recur->id, $mode);
       if (!$paymentProcessor) {
         continue;
       }
@@ -95,6 +93,7 @@ class CRM_Contribute_Page_UserDashboard extends CRM_Contact_Page_View_UserDashBo
       _civicrm_object_to_array($recur, $values);
       $values['cancelSubscriptionUrl'] = $paymentObject->cancelSubscriptionURL();
       $values['recur_status'] = $recurStatus[$values['contribution_status_id']];
+      $values['installments'] = empty($values['installments']) ? ts('Until expires') : $values['installments'];
       $recurRow[$values['id']] = $values;
       $recurIDs[] = $values['id'];
 
@@ -106,9 +105,7 @@ class CRM_Contribute_Page_UserDashboard extends CRM_Contact_Page_View_UserDashBo
       $getCount = CRM_Contribute_BAO_ContributionRecur::getCount($recurIDs);
       foreach ($getCount as $key => $val) {
         $recurRow[$key]['completed'] = $val;
-        $recurRow[$key]['link'] = CRM_Utils_System::url('civicrm/contribute/search',
-          "reset=1&force=1&recur=$key"
-        );
+        $recurRow[$key]['link'] = CRM_Utils_System::url('civicrm/contribute/search', "reset=1&force=1&recur=$key");
       }
     }
     $this->assign('recurRows', $recurRow);

@@ -147,25 +147,19 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
 
   static
   function getPaymentProcessor($id, $mode) {
-    $sql = "
-SELECT p.payment_processor_id
-  FROM civicrm_contribution c,
-       civicrm_contribution_recur r,
-       civicrm_contribution_page  p
- WHERE c.contribution_recur_id = %1
-   AND c.contribution_page_id  = p.id
-   AND p.payment_processor_id is not null
- LIMIT 1";
+    $sql = "SELECT c.payment_processor_id, r.processor_id FROM civicrm_contribution c INNER JOIN civicrm_contribution_recur r ON c.contribution_recur_id = r.id WHERE c.payment_processor_id IS NOT NULL AND r.id = %1 ORDER BY c.id ASC LiMIT 0, 1";
+
     $params = array(1 => array($id, 'Integer'));
-    $paymentProcessorID = &CRM_Core_DAO::singleValueQuery($sql,
-      $params
-    );
-    if (!$paymentProcessorID) {
+    $query = CRM_Core_DAO::executeQuery($sql, $params);
+    $query->fetch();
+    if(empty($query->payment_processor_id) && empty($query->processor_id)){
       return NULL;
     }
+    else{
+      $pid = $query->processor_id ? $query->processor_id : $query->payment_processor_id;
+    }
 
-    require_once 'CRM/Core/BAO/PaymentProcessor.php';
-    return CRM_Core_BAO_PaymentProcessor::getPayment($paymentProcessorID, $mode);
+    return CRM_Core_BAO_PaymentProcessor::getPayment($pid, $mode);
   }
 
   /**
