@@ -1351,7 +1351,8 @@ LEFT JOIN  civicrm_contribution contribution ON ( componentPayment.contribution_
 
     if (!$componentName || !$componentId) {
       // get the related component details.
-      $componentDetails = self::getComponentDetails($contributionId);
+      $componentDetails = self::getComponentDetails(array($contributionId));
+      $componentDetails = reset($componentDetails);
     }
     else {
       $componentDetails['contact_id'] = $contactId;
@@ -1622,12 +1623,14 @@ LEFT JOIN  civicrm_contribution contribution ON ( componentPayment.contribution_
   /**
    * This function return all contribution related object ids.
    *
+   * @param array $ids contribution ids 
    */
-  function getComponentDetails($contributionId) {
+  function getComponentDetails($ids) {
     $componentDetails = $pledgePayment = array();
-    if (!$contributionId) {
+    if (empty($ids)) {
       return $componentDetails;
     }
+    $contributionIds = implode(',', $ids);
 
     $query = "
 SELECT    c.id                 as contribution_id,
@@ -1643,24 +1646,27 @@ LEFT JOIN civicrm_participant_payment pp   ON pp.contribution_id = c.id
 LEFT JOIN civicrm_participant         p    ON pp.participant_id  = p.id
 LEFT JOIN civicrm_membership          m    ON m.id  = mp.membership_id
 LEFT JOIN civicrm_pledge_payment      pgp  ON pgp.contribution_id  = c.id
-WHERE     c.id = $contributionId";
+WHERE c.id IN ({$contributionIds}) ORDER BY c.id ASC";
 
     $dao = CRM_Core_DAO::executeQuery($query);
     while ($dao->fetch()) {
-      $componentDetails = array('component' => $dao->participant_id ? 'event' : 'contribute',
+      $componentDetails[$dao->contribution_id] = array(
+        'component' => $dao->participant_id ? 'event' : 'contribute',
         'contact_id' => $dao->contact_id,
         'event' => $dao->event_id,
         'participant' => $dao->participant_id,
         'membership' => $dao->membership_id,
         'membership_type' => $dao->membership_type_id,
       );
-      if ($dao->pledge_payment_id) {
-        $pledgePayment[] = $dao->pledge_payment_id;
+      if(!empty($dao->pledge_payment_id)) {
+        $pledgePayment[$dao->contribution_id][] = $dao->pledge_payment_id;
       }
     }
 
-    if ($pledgePayment) {
-      $componentDetails['pledge_payment'] = $pledgePayment;
+    if(!empty($pledgePayment)) {
+      foreach($pledgePayment as $cid => $p){
+        $componentDetails[$cid]['pledge_payment'] = $pledgePayment;
+      }
     }
 
     return $componentDetails;

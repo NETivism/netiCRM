@@ -905,7 +905,8 @@ WHERE  contribution_id = {$this->_id}
       // don't allow price set for contribution if it is related to participant, or if it is a pledge payment
       // and if we already have line items for that participant. CRM-5095
       if ($buildPriceSet && $this->_id) {
-        $componentDetails = CRM_Contribute_BAO_Contribution::getComponentDetails($this->_id);
+        $componentDetails = CRM_Contribute_BAO_Contribution::getComponentDetails(array($this->_id));
+        $componentDetails = reset($componentDetails);
         $pledgePaymentId = CRM_Core_DAO::getFieldValue('CRM_Pledge_DAO_Payment',
           $this->_id,
           'id',
