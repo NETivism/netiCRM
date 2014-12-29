@@ -169,7 +169,8 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
    *
    * @return CRM_Contact_Selector
    * @access public
-   */ function __construct(&$queryParams,
+   */
+  function __construct(&$queryParams,
     $action = CRM_Core_Action::NONE,
     $contributionClause = NULL,
     $single = FALSE,
@@ -341,9 +342,10 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
 
     // get all contribution status
     $contributionStatuses = CRM_Core_OptionGroup::values('contribution_status', FALSE, FALSE, FALSE, NULL, 'name', FALSE);
-
+    $ids = array();
     While ($result->fetch()) {
       $row = array();
+      $ids[] = $result->id;
       // the columns we are interested in
       foreach (self::$_properties as $property) {
         if (property_exists($result, $property)) {
@@ -367,8 +369,6 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
 
       $row['checkbox'] = CRM_Core_Form::CB_PREFIX . $result->contribution_id;
 
-
-
       $actions = array('id' => $result->contribution_id,
         'cid' => $result->contact_id,
         'cxt' => $this->_context,
@@ -391,6 +391,14 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
       }
 
       $rows[] = $row;
+    }
+    if(!empty($ids)){
+      $details = CRM_Contribute_BAO_Contribution::getComponentDetails($ids);
+      foreach($rows as $k => $r){
+        if(!empty($details[$r['contribution_id']])){
+          $rows[$k]['ids'] = $details[$r['contribution_id']];
+        }
+      }
     }
     return $rows;
   }

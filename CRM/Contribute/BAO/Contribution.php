@@ -708,6 +708,72 @@ INNER JOIN  civicrm_contact contact ON ( contact.id = civicrm_contribution.conta
   }
 
   /**
+   * Check contribution related object can still process payment
+   *
+   * @param array  $id of contribution
+   * @param array  $ids from getComponentDetails
+   * @param object $form from form
+   *
+   * @return boolean true if 
+   * @access public
+   * static
+   */
+  static function checkPaymentAvailable($id, $ids, $form = NULL){
+    $return = FALSE;
+    switch($ids['component']){
+      case 'event':
+        $pending_status = CRM_Event_PseudoConstant::participantStatus(NULL, "class = 'Pending'", 'name'); 
+        $positive_status = CRM_Event_PseudoConstant::participantStatus(NULL, "is_counted = 1", 'name');
+        $participant_status_id = CRM_Core_DAO::getFieldValue("CRM_Event_DAO_Participant", $ids['participant'], 'status_id');
+        $contribution_status_id = CRM_Core_DAO::getFieldValue("CRM_Contribute_DAO_Contribution", $id, 'contribution_status_id');
+        $registration_end_date = CRM_Core_DAO::getFieldValue("CRM_Event_DAO_Event", $ids['event'], 'registration_end_date');
+        if(!empty($pending_status[$participant_status_id]) && $contribution_status_id == 2){
+          if(empty($registration_end_date) || strtotime($registration_end_date) > time()){
+            $is_full = CRM_Event_BAO_Participant::eventFull($ids['event']);
+            if($is_full){
+              if(!empty($positive_status[$participant_status_id])){
+                $return = TRUE;
+              }
+            }
+            else{
+              $return = TRUE;
+            }
+          }
+        }
+        if($return){
+          $pp = CRM_Core_DAO::getFieldValue("CRM_Event_DAO_Event", $ids['event'], 'payment_processor');
+          $ppids = explode(CRM_Core_DAO::VALUE_SEPARATOR, $pp);
+          $pps = CRM_Core_BAO_PaymentProcessor::getPayments($ppids, 'live');
+          if($form){
+            $form->set('paymentProcessors', $pps);
+          }
+        }
+        break;
+      case 'contribute':
+        $page_id = CRM_Core_DAO::getFieldValue("CRM_Conribute_DAO_Contribution", $id, 'contribution_page_id');
+        if($page_id){
+          if($this->_ids['membership']){
+          
+          }
+          else{
+            $return = TRUE;
+          }
+        }
+        if($return){
+          $pp = CRM_Core_DAO::getFieldValue("CRM_Contribute_DAO_ContributionPage", $page_id, 'payment_processor');
+          $ppids = explode(CRM_Core_DAO::VALUE_SEPARATOR, $pp);
+          $pps = CRM_Core_BAO_PaymentProcessor::getPayments($ppids, 'live');
+          if($form){
+            $form->set('paymentProcessors', $pps);
+          }
+        }
+        break;
+    }
+    return $return;
+  }
+
+
+  /**
    * takes an associative array and creates a contribution_product object
    *
    * the function extract all the params it needs to initialize the create a
