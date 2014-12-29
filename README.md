@@ -28,29 +28,25 @@ https://github.com/NETivism/netiCRM/issues
 
 5. Installation
 --------------
-First, install Drupal 7.
+1. First, install Drupal 7.
 (Please refer install guide of Drupal 7)
-
-1. Clone repository to modules folder of Drupal.
+2. Clone repository to modules folder of Drupal.
 (You can use following command under all/modules folder.)
 ```
 git clone git@github.com:NETivism/netiCRM.git civicrm
 ```
-
-1. Checkout the branch to 2.0-dev.
+3. Checkout the branch to 2.0-dev.
 (You can use following command under civicrm folder.)
 ```
 git checkout 2.0-dev
 ```
-
-1. Enable submodules and update them.
+4. Enable submodules and update them.
 (You can use following command under civicrm folder.)
 ```
 git submodule init
 git submodule update
 ```
-
-1. Checkout submodules to the branch for Drupal 7.
+5. Checkout submodules to the branch for Drupal 7.
 (You can use following command under civicrm folder.)
 ```
 cd neticrm/
@@ -58,10 +54,8 @@ git checkout 7.x-develop
 cd drupal/
 git checkout 7.x-develop
 ```
-
-1. Go to the modules configuration page. You should see NetiCRM is available. Enable it and Press "Submit" button.
-
-1. Complete!!
+6. Go to the modules configuration page. You should see NetiCRM is available. Enable it and Press "Submit" button.
+7. Complete!!
 
 
 6. User Guide
