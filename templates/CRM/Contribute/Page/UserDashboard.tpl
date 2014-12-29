@@ -29,24 +29,28 @@
     
         <table class="selector">
             <tr class="columnheader">
+                <th>{ts}Transaction ID{/ts}</th>
+                <th>{ts}Receipt ID{/ts}</th>
+                <th>{ts}Payment Instrument{/ts}</th>
                 <th>{ts}Total Amount{/ts}</th>
                 <th>{ts}Contribution Type{/ts}</th>
-                <th>{ts}Received date{/ts}</th>
-                <th>{ts}Receipt Sent{/ts}</th>
+                <th>{ts}Created Date{/ts} - <br />{ts}Received date{/ts}</th>
                 <th>{ts}Status{/ts}</th>
             </tr>
         
             {foreach from=$contribute_rows item=row}
                 <tr id='rowid{$row.contribution_id}' class="{cycle values="odd-row,even-row"}{if $row.cancel_date} disabled{/if}">
+                    <td>{$row.trxn_id}</td>
+                    <td>{if $row.receipt_id}{$row.receipt_id}<br />{ts}Receipt Date{/ts}: {$row.receipt_date|truncate:10:''|crmDate}{/if}</td>
+                    <td>{$row.payment_instrument}</td>
                     <td>{$row.total_amount|crmMoney:$row.currency} {if $row.amount_level } - {$row.amount_level} {/if}
                         {if $row.contribution_recur_id}
                             <br /> {ts}(Recurring Contribution){/ts}
                         {/if}
                     </td>
                     <td>{$row.contribution_type}</td>
-                    <td>{$row.receive_date|truncate:10:''|crmDate}</td>
-                    <td>{$row.receipt_date|truncate:10:''|crmDate}</td>
-                    <td>{$row.contribution_status}</td>
+                    <td>{ts}created{/ts}: {$row.created_date|crmDate}<br />{ts}Received{/ts}: {if $row.receive_date}{$row.receive_date|crmDate}{else}{ts}None{/ts}{/if}</td>
+                    <td>{$row.contribution_status}{if $row.contribution_status_id eq 2}<br /><a href="{crmURL p="civicrm/contribute/payment" q="reset=1&id=`$row.contribution_id`"}">{ts}Change Payment Method{/ts}</a>{/if}</td>
                 </tr>
             {/foreach}
         </table>
