@@ -340,6 +340,83 @@ class CRM_Contribute_BAO_Contribution extends CRM_Contribute_DAO_Contribution {
   }
 
   /**
+   * This function is to make a copy of a Contribution
+   * including all related payment record of participant and membership
+   *
+   * @param int $id the contribution id
+   *
+   * @return void
+   * @access public
+   */
+  static function copy($id) {
+    $exclude = array(
+      'payment_processor_id' => 'null',
+      'payment_instrument_id' => 'null',
+      'receive_date' => 'null',
+      'trxn_id' => 'null',
+      'invoice_id' => 'null',
+      'cancel_date' => 'null',
+      'cancel_reason' => 'null',
+      'receipt_date' => 'null',
+      'thankyou_date' => 'null',
+      'contribution_recur_id' => 'null',
+      'check_number' => 'null',
+      'receipt_id' => 'null',
+      'created_date' => date('YmdHis'),
+      'contribution_status_id' => 2,
+    );
+    $copyContrib = &CRM_Core_DAO::copyGeneric('CRM_Contribute_DAO_Contribution',
+      array('id' => $id),
+      $exclude
+    );
+
+    //copy custom data
+    $extends = array('Contribution');
+    $groupTree = CRM_Core_BAO_CustomGroup::getGroupDetail(NULL, NULL, $extends);
+    if ($groupTree) {
+      foreach ($groupTree as $groupID => $group) {
+        $table[$groupTree[$groupID]['table_name']] = array('entity_id');
+        foreach ($group['fields'] as $fieldID => $field) {
+          if ($field['data_type'] == 'File') {
+            continue;
+          }
+          $table[$groupTree[$groupID]['table_name']][] = $groupTree[$groupID]['fields'][$fieldID]['column_name'];
+        }
+      }
+
+      foreach ($table as $tableName => $tableColumns) {
+        $insert = 'INSERT INTO ' . $tableName . ' (' . implode(', ', $tableColumns) . ') ';
+        $tableColumns[0] = $copyContrib->id;
+        $select = 'SELECT ' . implode(', ', $tableColumns);
+        $from = ' FROM ' . $tableName;
+        $where = " WHERE {$tableName}.entity_id = {$id}";
+        $query = $insert . $select . $from . $where;
+        $dao = CRM_Core_DAO::executeQuery($query, CRM_Core_DAO::$_nullArray);
+      }
+    }
+
+    // copy participant payment
+    $copyPP = &CRM_Core_DAO::copyGeneric('CRM_Event_DAO_ParticipantPayment',
+      array(
+        'contribution_id' => $id,
+      ),
+      array('contribution_id' => $copyContrib->id)
+    );
+
+    // copy membership payment
+    $copyMP = &CRM_Core_DAO::copyGeneric('CRM_Member_DAO_MembershipPayment',
+      array(
+        'contribution_id' => $id,
+      ),
+      array('contribution_id' => $copyContrib->id)
+    );
+
+    CRM_Utils_Hook::copy('Contribution', $copyContrib);
+
+    return $copyContrib;
+  }
+
+  /**
    * Get the values for pseudoconstants for name->value and reverse.
    *
    * @param array   $defaults (reference) the default values, some of which need to be resolved.
@@ -1701,6 +1778,7 @@ LEFT JOIN  civicrm_contribution contribution ON ( componentPayment.contribution_
     $query = "
 SELECT    c.id                 as contribution_id,
           c.contact_id         as contact_id,
+          c.contribution_page_id as page_id,
           mp.membership_id     as membership_id,
           m.membership_type_id as membership_type_id,
           pp.participant_id    as participant_id,
@@ -1723,6 +1801,7 @@ WHERE c.id IN ({$contributionIds}) ORDER BY c.id ASC";
         'participant' => $dao->participant_id,
         'membership' => $dao->membership_id,
         'membership_type' => $dao->membership_type_id,
+        'page_id' => $dao->page_id,
       );
       if(!empty($dao->pledge_payment_id)) {
         $pledgePayment[$dao->contribution_id][] = $dao->pledge_payment_id;

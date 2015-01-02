@@ -4,6 +4,16 @@ class CRM_Contribute_Form_Payment extends CRM_Core_Form {
 
   public $_id;
 
+  public $_entityid;
+
+  public $_entityTable;
+  
+  public $_action;
+
+  public $_mode;
+
+  public $_values;
+
   protected $_ids;
 
   protected $_component;
@@ -12,6 +22,7 @@ class CRM_Contribute_Form_Payment extends CRM_Core_Form {
 
   protected $_ppType;
 
+
   /**
    * Function to set variables up before form is built
    *
@@ -19,13 +30,7 @@ class CRM_Contribute_Form_Payment extends CRM_Core_Form {
    * @access public
    */
   public function preProcess() {
-    $this->_ppType = CRM_Utils_Array::value('type', $_GET);
-    $this->assign('ppType', FALSE);
-    if ($this->_ppType) {
-      $this->assign('ppType', TRUE);
-      return CRM_Core_Payment_ProcessorForm::preProcess($this);
-    }
-
+    $this->_mode = ($this->_action == 1024) ? 'test' : 'live';
     $pass = TRUE;
     if (!CRM_Core_Permission::checkActionPermission('CiviContribute', $this->_action)) {
       $pass = FALSE;
@@ -78,11 +83,15 @@ class CRM_Contribute_Form_Payment extends CRM_Core_Form {
       $pass = FALSE;
     }
 
-    // check payment processors
+    // set entity id and entity table
     switch($this->_component){
       case 'event':
+        $this->_entityId = $ids['event'];
+        $this->_entityTable =  'civicrm_event';
         break;
       case 'contribute':
+        $this->_entityId = $ids['page_id'];
+        $this->_entityTable = 'civicrm_contribution_page';
         break;
     }
 
@@ -90,9 +99,14 @@ class CRM_Contribute_Form_Payment extends CRM_Core_Form {
       CRM_Utils_System::notFound();
       CRM_Utils_Ssytem::civiExit();
     }
-  }
-
-  function setDefaultValues() {
+    else{
+      $this->_ppType = CRM_Utils_Array::value('type', $_GET);
+      $this->assign('ppType', FALSE);
+      if ($this->_ppType) {
+        $this->assign('ppType', TRUE);
+        return CRM_Core_Payment_ProcessorForm::preProcess($this);
+      }
+    }
   }
 
   /**
@@ -113,14 +127,6 @@ class CRM_Contribute_Form_Payment extends CRM_Core_Form {
       }
     }
 
-/*
-    if (CRM_Utils_Array::value('is_pay_later', $this->_values['event']) &&
-      ($this->_allowConfirmation || (!$this->_requireApproval && !$this->_allowWaitlist))
-    ) {
-      $pps[0] = $this->_values['event']['pay_later_text'];
-    }
-*/
-
     if (count($pps) >= 1) {
       $this->addRadio('payment_processor', ts('Payment Method'), $pps, NULL, "&nbsp;", TRUE);
     }
@@ -128,7 +134,7 @@ class CRM_Contribute_Form_Payment extends CRM_Core_Form {
     $this->addButtons(array(
         array(
           'type' => 'next',
-          'name' => ts('Continue >>'),
+          'name' => '>> ' . ts('Change Payment Method'),
           'isDefault' => TRUE,
         ),
       )
@@ -158,7 +164,40 @@ class CRM_Contribute_Form_Payment extends CRM_Core_Form {
    * @return None
    */
   public function postProcess() {
+    $params = $this->controller->exportValues($this->_name);
+    $processor = $this->_paymentProcessors[$params['payment_processor']];
+    $contrib = CRM_Contribute_BAO_Contribution::copy($this->_id);
+    if(!empty($params['payment_processor'])){
+      $contrib->payment_processor_id = $params['payment_processor'];
+    }
+    if(!empty($params['payment_instrument_id'])){
+      $contrib->payment_instrument_id = $params['payment_instrument_id'];
+    }
+    if(!empty($contrib->source)){
+      $contrib->source = str_replace(' '. ts('Change Payment Method'), '', $params['source']).' '.ts('Change Payment Method');
+    }
+    else{
+      $contrib->source = ' '.ts('Change Payment Method');
+    }
+    if(!empty($contrib->invoice_id)){
+      $invoice_id = md5(uniqid(rand(), TRUE));
+      $contrib->invoice_id = $invoice_id;;
+    }
+    $contrib->save();
+    $payment = &CRM_Core_Payment::singleton($this->_mode, $processor, $this);
+    $vars = $payment->prepareTransferCheckoutParams($contrib, $params);
+
+    // TODO: we have to redirect to correct thank you page 
+    // maybe create own controller for that
+    $payment->doTransferCheckout($vars, $this->_component);
   }
 
-  
+  function getAction() {
+    if ($this->_action & CRM_Core_Action::PREVIEW) {
+      return CRM_Core_Action::VIEW | CRM_Core_Action::PREVIEW;
+    }
+    else {
+      return CRM_Core_Action::VIEW;
+    }
+  }
 }

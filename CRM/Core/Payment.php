@@ -186,8 +186,7 @@ abstract class CRM_Core_Payment {
    * Function to get Payment Processor Info
    *
    */
-  static
-  function getPaymentProcessorInfo() {
+  static function getPaymentProcessorInfo() {
     $ppID = CRM_Utils_Type::escape($_POST['ppID'], 'Positive');
     $action = CRM_Utils_Type::escape($_POST['action'], 'String');
 
@@ -200,6 +199,54 @@ abstract class CRM_Core_Payment {
 
     require_once 'CRM/Utils/System.php';
     CRM_Utils_System::civiExit();
+  }
+
+  function prepareTransferCheckoutParams($contrib, $params){
+    if(is_object($contrib)){
+      $values = array();
+      if(strstr(get_class($contrib), 'DAO')){
+        $contrib = CRM_Core_DAO::storeValues($contrib, $values);
+      }
+    }
+    else{
+      $values = $contrib;
+    }
+
+    if(!empty($this->_paymentForm) && isset($this->_paymentForm->_ids)){
+      $details = $this->_paymentForm->_ids;
+    }
+    else{
+      $details = CRM_Contribute_BAO_Contribution::getComponentDetails(array($values['id']));
+      $details = reset($details);
+    }
+
+    // prepare vars
+    $vars = array(
+      'qfKey' => $params['qfKey'],
+      'payment_processor' => $params['payment_processor'],
+      'civicrm_instrument_id' => $params['civicrm_instrument_id'],
+      'amount' => $values['total_amount'],
+      'amount_level' => $values['amount_level'],
+      'item_name' => $values['amount_level'] ? $values['amount_level'] : $values['total_amount'],
+      'description' => $values['source'],
+    );
+
+    if(!empty($details['participant'])){
+      $vars += array(
+        'contributionID' => $values['id'],
+        'contributionTypeID' => $values['contribution_type_id'],
+        'contactID' => $values['contact_id'],
+        'eventID' => $details['event'],
+        'participantID' => $details['participant'],
+      );
+    }
+    elseif(!empty($details['membership'])){
+      // TODO
+    }
+    else{
+      // TODO 
+    }
+    return $vars;  
   }
 }
 
