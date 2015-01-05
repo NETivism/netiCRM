@@ -261,7 +261,7 @@
   <item>
      <path>civicrm/contribute/payment</path>
      <title>Change Payment Method</title>
-     <page_callback>CRM_Contribute_Form_Payment</page_callback>
+     <page_callback>CRM_Contribute_Controller_Payment</page_callback>
      <access_arguments>make online contributions</access_arguments>
      <weight>0</weight>
   </item>

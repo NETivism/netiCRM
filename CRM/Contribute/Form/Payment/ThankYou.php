@@ -1,8 +1,9 @@
-{*
+<?php
+/*
  +--------------------------------------------------------------------+
- | CiviCRM version 4.2                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
- | Copyright CiviCRM LLC (c) 2004-2012                                |
+ | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
  | This file is a part of CiviCRM.                                    |
  |                                                                    |
@@ -22,58 +23,62 @@
  | GNU Affero General Public License or the licensing of CiviCRM,     |
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
-*}
-{literal}
-<script type="text/javascript">
+*/
 
-function buildPaymentBlock( type ) {
-  if ( type == 0 ) { 
-    if (cj("#billing-payment-block").length) {
-      cj("#billing-payment-block").html('');
+/**
+ *
+ * @package CRM
+ * @copyright CiviCRM LLC (c) 2004-2010
+ * $Id$
+ *
+ */
+
+/**
+ * form for thank-you / success page - 2nd step of online contribution process
+ */
+class CRM_Contribute_Form_Payment_ThankYou extends CRM_Contribute_Form_Payment {
+
+  /**
+   * Function to set variables up before form is built
+   *
+   * @return void
+   * @access public
+   */
+  public function preProcess() {
+    parent::preProcess();
+    if($this->_ids){
+      $this->_params = $this->controller->exportValues('Main');
+      $this->_contrib = $this->get('contrib');
     }
-    return;
-  } 
-	 
-  var dataUrl = {/literal}"{crmURL p=$urlPath h=0 q='snippet=4&type='}"{literal} + type;{/literal}
-	{if $urlPathVar}
-    dataUrl = dataUrl + '&' + '{$urlPathVar}'
-  {/if}
-		
-	{if $contributionPageID}
-    dataUrl = dataUrl + '&id=' + '{$contributionPageID}'
-  {/if}
-	
-	{if $qfKey}
-    dataUrl = dataUrl + '&qfKey=' + '{$qfKey}'
-	{/if}
-  {literal}
+    CRM_Utils_System::setTitle('Thank you');
+  }
 
-	var fname = '#billing-payment-block';	
-	var response = cj.ajax({	
-    url: dataUrl,
-    async: false
-  }).responseText;
-  cj( fname ).html( response );	
+  /**
+   * Function to actually build the form
+   *
+   * @return void
+   * @access public
+   */
+  public function buildQuickForm() {
+
+    $this->freeze();
+    // can we blow away the session now to prevent hackery
+  }
+
+  /**
+   * overwrite action, since we are only showing elements in frozen mode
+   * no help display needed
+   *
+   * @return int
+   * @access public
+   */
+  function getAction() {
+    if ($this->_action & CRM_Core_Action::PREVIEW) {
+      return CRM_Core_Action::VIEW | CRM_Core_Action::PREVIEW;
+    }
+    else {
+      return CRM_Core_Action::VIEW;
+    }
+  }
 }
 
-cj(document).ready(function() {
-  var processorTypeObj = cj('input[name="payment_processor"]');
-
-  if ( processorTypeObj.attr('type') == 'hidden' ) {
-    var processorTypeValue = processorTypeObj.val( );
-  }
-  else {
-    var processorTypeValue = processorTypeObj.filter(':checked').val();
-  }
-
-  if ( processorTypeValue ) {
-    buildPaymentBlock( processorTypeValue );
-  }
-
-  cj('input[name="payment_processor"]').change( function() {
-    buildPaymentBlock( cj(this).val() );    
-  });
-});
-
-</script>
-{/literal}
