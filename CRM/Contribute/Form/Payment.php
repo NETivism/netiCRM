@@ -12,8 +12,6 @@ class CRM_Contribute_Form_Payment extends CRM_Core_Form {
 
   public $_mode;
 
-  public $_values;
-
   public $_pass;
 
   protected $_ids;
@@ -75,7 +73,8 @@ class CRM_Contribute_Form_Payment extends CRM_Core_Form {
       }
 
       // check status and end date
-      if(!empty($this->_ids)){
+      $state = $this->controller->_actionName[0];
+      if(!empty($this->_ids) && $state != 'ThankYou'){
         $available = CRM_Contribute_BAO_Contribution::checkPaymentAvailable($this->_id, $this->_ids, $this);
         if($available === FALSE){
           CRM_Core_Error::fatal(ts('Payment expired.'));

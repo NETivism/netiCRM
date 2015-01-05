@@ -797,6 +797,7 @@ INNER JOIN  civicrm_contact contact ON ( contact.id = civicrm_contribution.conta
    */
   static function checkPaymentAvailable($id, $ids, $form = NULL){
     $return = FALSE;
+    $mode = isset($form->_mode) ? $form->_mode : 'live';
     switch($ids['component']){
       case 'event':
         $pending_status = CRM_Event_PseudoConstant::participantStatus(NULL, "class = 'Pending'", 'name'); 
@@ -820,7 +821,7 @@ INNER JOIN  civicrm_contact contact ON ( contact.id = civicrm_contribution.conta
         if($return){
           $pp = CRM_Core_DAO::getFieldValue("CRM_Event_DAO_Event", $ids['event'], 'payment_processor');
           $ppids = explode(CRM_Core_DAO::VALUE_SEPARATOR, $pp);
-          $pps = CRM_Core_BAO_PaymentProcessor::getPayments($ppids, 'live');
+          $pps = CRM_Core_BAO_PaymentProcessor::getPayments($ppids, $mode);
           if($form){
             $form->set('paymentProcessors', $pps);
           }
@@ -839,7 +840,7 @@ INNER JOIN  civicrm_contact contact ON ( contact.id = civicrm_contribution.conta
         if($return){
           $pp = CRM_Core_DAO::getFieldValue("CRM_Contribute_DAO_ContributionPage", $page_id, 'payment_processor');
           $ppids = explode(CRM_Core_DAO::VALUE_SEPARATOR, $pp);
-          $pps = CRM_Core_BAO_PaymentProcessor::getPayments($ppids, 'live');
+          $pps = CRM_Core_BAO_PaymentProcessor::getPayments($ppids, $mode);
           if($form){
             $form->set('paymentProcessors', $pps);
           }
