@@ -30,6 +30,7 @@ https://github.com/NETivism/netiCRM/issues
 --------------
 1\. First, install Drupal 7.
 (Please refer install guide of Drupal 7)
+
 2\. Clone repository to modules folder of Drupal.
 (You can use following command under all/modules folder.)
 ```
@@ -55,6 +56,7 @@ cd drupal/
 git checkout 7.x-develop
 ```
 6\. Go to the modules configuration page. You should see NetiCRM is available. Enable it and Press "Submit" button.
+
 7\. Complete!!
 
 
