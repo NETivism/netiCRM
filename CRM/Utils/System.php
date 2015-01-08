@@ -1280,7 +1280,7 @@ class CRM_Utils_System {
    */
   static function notFound() {
     $config = CRM_Core_Config::singleton();
-    return $config->userSystem->notFound($action);
+    return $config->userSystem->notFound();
   }
 
   /**

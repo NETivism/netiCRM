@@ -1,8 +1,9 @@
-{*
+<?php
+/*
  +--------------------------------------------------------------------+
- | CiviCRM version 4.2                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
- | Copyright CiviCRM LLC (c) 2004-2012                                |
+ | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
  | This file is a part of CiviCRM.                                    |
  |                                                                    |
@@ -22,58 +23,40 @@
  | GNU Affero General Public License or the licensing of CiviCRM,     |
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
-*}
-{literal}
-<script type="text/javascript">
+*/
 
-function buildPaymentBlock( type ) {
-  if ( type == 0 ) { 
-    if (cj("#billing-payment-block").length) {
-      cj("#billing-payment-block").html('');
-    }
-    return;
-  } 
-	 
-  var dataUrl = {/literal}"{crmURL p=$urlPath h=0 q='snippet=4&type='}"{literal} + type;{/literal}
-	{if $urlPathVar}
-    dataUrl = dataUrl + '&' + '{$urlPathVar}'
-  {/if}
-		
-	{if $contributionPageID}
-    dataUrl = dataUrl + '&id=' + '{$contributionPageID}'
-  {/if}
-	
-	{if $qfKey}
-    dataUrl = dataUrl + '&qfKey=' + '{$qfKey}'
-	{/if}
-  {literal}
+/**
+ *
+ * @package CRM
+ * @copyright CiviCRM LLC (c) 2004-2010
+ * $Id$
+ *
+ */
 
-	var fname = '#billing-payment-block';	
-	var response = cj.ajax({	
-    url: dataUrl,
-    async: false
-  }).responseText;
-  cj( fname ).html( response );	
+/**
+ * This class is used by the Search functionality.
+ *
+ *  - the search controller is used for building/processing multiform
+ *    searches.
+ *
+ * Typically the first form will display the search criteria and it's results
+ *
+ * The second form is used to process search results with the asscociated actions
+ *
+ */
+class CRM_Contribute_Controller_Payment extends CRM_Core_Controller {
+
+  /**
+   * class constructor
+   */
+  function __construct($title = NULL, $action = CRM_Core_Action::NONE, $modal = TRUE) {
+    parent::__construct($title, $modal);
+
+    $this->_stateMachine = new CRM_Contribute_StateMachine_Payment($this, $action);
+    $this->addPages($this->_stateMachine, $action);
+
+    // add all the actions
+    $this->addActions();
+  }
 }
 
-cj(document).ready(function() {
-  var processorTypeObj = cj('input[name="payment_processor"]');
-
-  if ( processorTypeObj.attr('type') == 'hidden' ) {
-    var processorTypeValue = processorTypeObj.val( );
-  }
-  else {
-    var processorTypeValue = processorTypeObj.filter(':checked').val();
-  }
-
-  if ( processorTypeValue ) {
-    buildPaymentBlock( processorTypeValue );
-  }
-
-  cj('input[name="payment_processor"]').change( function() {
-    buildPaymentBlock( cj(this).val() );    
-  });
-});
-
-</script>
-{/literal}

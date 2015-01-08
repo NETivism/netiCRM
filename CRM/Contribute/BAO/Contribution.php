@@ -340,6 +340,83 @@ class CRM_Contribute_BAO_Contribution extends CRM_Contribute_DAO_Contribution {
   }
 
   /**
+   * This function is to make a copy of a Contribution
+   * including all related payment record of participant and membership
+   *
+   * @param int $id the contribution id
+   *
+   * @return void
+   * @access public
+   */
+  static function copy($id) {
+    $exclude = array(
+      'payment_processor_id' => 'null',
+      'payment_instrument_id' => 'null',
+      'receive_date' => 'null',
+      'trxn_id' => 'null',
+      'invoice_id' => 'null',
+      'cancel_date' => 'null',
+      'cancel_reason' => 'null',
+      'receipt_date' => 'null',
+      'thankyou_date' => 'null',
+      'contribution_recur_id' => 'null',
+      'check_number' => 'null',
+      'receipt_id' => 'null',
+      'created_date' => date('YmdHis'),
+      'contribution_status_id' => 2,
+    );
+    $copyContrib = &CRM_Core_DAO::copyGeneric('CRM_Contribute_DAO_Contribution',
+      array('id' => $id),
+      $exclude
+    );
+
+    //copy custom data
+    $extends = array('Contribution');
+    $groupTree = CRM_Core_BAO_CustomGroup::getGroupDetail(NULL, NULL, $extends);
+    if ($groupTree) {
+      foreach ($groupTree as $groupID => $group) {
+        $table[$groupTree[$groupID]['table_name']] = array('entity_id');
+        foreach ($group['fields'] as $fieldID => $field) {
+          if ($field['data_type'] == 'File') {
+            continue;
+          }
+          $table[$groupTree[$groupID]['table_name']][] = $groupTree[$groupID]['fields'][$fieldID]['column_name'];
+        }
+      }
+
+      foreach ($table as $tableName => $tableColumns) {
+        $insert = 'INSERT INTO ' . $tableName . ' (' . implode(', ', $tableColumns) . ') ';
+        $tableColumns[0] = $copyContrib->id;
+        $select = 'SELECT ' . implode(', ', $tableColumns);
+        $from = ' FROM ' . $tableName;
+        $where = " WHERE {$tableName}.entity_id = {$id}";
+        $query = $insert . $select . $from . $where;
+        $dao = CRM_Core_DAO::executeQuery($query, CRM_Core_DAO::$_nullArray);
+      }
+    }
+
+    // copy participant payment
+    $copyPP = &CRM_Core_DAO::copyGeneric('CRM_Event_DAO_ParticipantPayment',
+      array(
+        'contribution_id' => $id,
+      ),
+      array('contribution_id' => $copyContrib->id)
+    );
+
+    // copy membership payment
+    $copyMP = &CRM_Core_DAO::copyGeneric('CRM_Member_DAO_MembershipPayment',
+      array(
+        'contribution_id' => $id,
+      ),
+      array('contribution_id' => $copyContrib->id)
+    );
+
+    CRM_Utils_Hook::copy('Contribution', $copyContrib);
+
+    return $copyContrib;
+  }
+
+  /**
    * Get the values for pseudoconstants for name->value and reverse.
    *
    * @param array   $defaults (reference) the default values, some of which need to be resolved.
@@ -706,6 +783,73 @@ INNER JOIN  civicrm_contact contact ON ( contact.id = civicrm_contribution.conta
     }
     return $result;
   }
+
+  /**
+   * Check contribution related object can still process payment
+   *
+   * @param array  $id of contribution
+   * @param array  $ids from getComponentDetails
+   * @param object $form from form
+   *
+   * @return boolean true if 
+   * @access public
+   * static
+   */
+  static function checkPaymentAvailable($id, $ids, $form = NULL){
+    $return = FALSE;
+    $mode = isset($form->_mode) ? $form->_mode : 'live';
+    switch($ids['component']){
+      case 'event':
+        $pending_status = CRM_Event_PseudoConstant::participantStatus(NULL, "class = 'Pending'", 'name'); 
+        $positive_status = CRM_Event_PseudoConstant::participantStatus(NULL, "is_counted = 1", 'name');
+        $participant_status_id = CRM_Core_DAO::getFieldValue("CRM_Event_DAO_Participant", $ids['participant'], 'status_id');
+        $contribution_status_id = CRM_Core_DAO::getFieldValue("CRM_Contribute_DAO_Contribution", $id, 'contribution_status_id');
+        $registration_end_date = CRM_Core_DAO::getFieldValue("CRM_Event_DAO_Event", $ids['event'], 'registration_end_date');
+        if(!empty($pending_status[$participant_status_id]) && $contribution_status_id == 2){
+          if(empty($registration_end_date) || strtotime($registration_end_date) > time()){
+            $is_full = CRM_Event_BAO_Participant::eventFull($ids['event']);
+            if($is_full){
+              if(!empty($positive_status[$participant_status_id])){
+                $return = TRUE;
+              }
+            }
+            else{
+              $return = TRUE;
+            }
+          }
+        }
+        if($return){
+          $pp = CRM_Core_DAO::getFieldValue("CRM_Event_DAO_Event", $ids['event'], 'payment_processor');
+          $ppids = explode(CRM_Core_DAO::VALUE_SEPARATOR, $pp);
+          $pps = CRM_Core_BAO_PaymentProcessor::getPayments($ppids, $mode);
+          if($form){
+            $form->set('paymentProcessors', $pps);
+          }
+        }
+        break;
+      case 'contribute':
+        $page_id = CRM_Core_DAO::getFieldValue("CRM_Conribute_DAO_Contribution", $id, 'contribution_page_id');
+        if($page_id){
+          if($this->_ids['membership']){
+          
+          }
+          else{
+            $return = TRUE;
+          }
+        }
+        if($return){
+          $pp = CRM_Core_DAO::getFieldValue("CRM_Contribute_DAO_ContributionPage", $page_id, 'payment_processor');
+          $ppids = explode(CRM_Core_DAO::VALUE_SEPARATOR, $pp);
+          $pps = CRM_Core_BAO_PaymentProcessor::getPayments($ppids, $mode);
+          if($form){
+            $form->set('paymentProcessors', $pps);
+          }
+        }
+        break;
+    }
+    return $return;
+  }
+
 
   /**
    * takes an associative array and creates a contribution_product object
@@ -1351,7 +1495,8 @@ LEFT JOIN  civicrm_contribution contribution ON ( componentPayment.contribution_
 
     if (!$componentName || !$componentId) {
       // get the related component details.
-      $componentDetails = self::getComponentDetails($contributionId);
+      $componentDetails = self::getComponentDetails(array($contributionId));
+      $componentDetails = reset($componentDetails);
     }
     else {
       $componentDetails['contact_id'] = $contactId;
@@ -1622,16 +1767,19 @@ LEFT JOIN  civicrm_contribution contribution ON ( componentPayment.contribution_
   /**
    * This function return all contribution related object ids.
    *
+   * @param array $ids contribution ids 
    */
-  function getComponentDetails($contributionId) {
+  function getComponentDetails($ids) {
     $componentDetails = $pledgePayment = array();
-    if (!$contributionId) {
+    if (empty($ids)) {
       return $componentDetails;
     }
+    $contributionIds = implode(',', $ids);
 
     $query = "
 SELECT    c.id                 as contribution_id,
           c.contact_id         as contact_id,
+          c.contribution_page_id as page_id,
           mp.membership_id     as membership_id,
           m.membership_type_id as membership_type_id,
           pp.participant_id    as participant_id,
@@ -1643,24 +1791,28 @@ LEFT JOIN civicrm_participant_payment pp   ON pp.contribution_id = c.id
 LEFT JOIN civicrm_participant         p    ON pp.participant_id  = p.id
 LEFT JOIN civicrm_membership          m    ON m.id  = mp.membership_id
 LEFT JOIN civicrm_pledge_payment      pgp  ON pgp.contribution_id  = c.id
-WHERE     c.id = $contributionId";
+WHERE c.id IN ({$contributionIds}) ORDER BY c.id ASC";
 
     $dao = CRM_Core_DAO::executeQuery($query);
     while ($dao->fetch()) {
-      $componentDetails = array('component' => $dao->participant_id ? 'event' : 'contribute',
+      $componentDetails[$dao->contribution_id] = array(
+        'component' => $dao->participant_id ? 'event' : 'contribute',
         'contact_id' => $dao->contact_id,
         'event' => $dao->event_id,
         'participant' => $dao->participant_id,
         'membership' => $dao->membership_id,
         'membership_type' => $dao->membership_type_id,
+        'page_id' => $dao->page_id,
       );
-      if ($dao->pledge_payment_id) {
-        $pledgePayment[] = $dao->pledge_payment_id;
+      if(!empty($dao->pledge_payment_id)) {
+        $pledgePayment[$dao->contribution_id][] = $dao->pledge_payment_id;
       }
     }
 
-    if ($pledgePayment) {
-      $componentDetails['pledge_payment'] = $pledgePayment;
+    if(!empty($pledgePayment)) {
+      foreach($pledgePayment as $cid => $p){
+        $componentDetails[$cid]['pledge_payment'] = $pledgePayment;
+      }
     }
 
     return $componentDetails;

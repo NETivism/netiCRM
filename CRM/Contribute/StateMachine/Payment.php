@@ -1,8 +1,9 @@
-{*
+<?php
+/*
  +--------------------------------------------------------------------+
- | CiviCRM version 4.2                                                |
+ | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
- | Copyright CiviCRM LLC (c) 2004-2012                                |
+ | Copyright CiviCRM LLC (c) 2004-2010                                |
  +--------------------------------------------------------------------+
  | This file is a part of CiviCRM.                                    |
  |                                                                    |
@@ -22,58 +23,39 @@
  | GNU Affero General Public License or the licensing of CiviCRM,     |
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
-*}
-{literal}
-<script type="text/javascript">
+*/
 
-function buildPaymentBlock( type ) {
-  if ( type == 0 ) { 
-    if (cj("#billing-payment-block").length) {
-      cj("#billing-payment-block").html('');
-    }
-    return;
-  } 
-	 
-  var dataUrl = {/literal}"{crmURL p=$urlPath h=0 q='snippet=4&type='}"{literal} + type;{/literal}
-	{if $urlPathVar}
-    dataUrl = dataUrl + '&' + '{$urlPathVar}'
-  {/if}
-		
-	{if $contributionPageID}
-    dataUrl = dataUrl + '&id=' + '{$contributionPageID}'
-  {/if}
-	
-	{if $qfKey}
-    dataUrl = dataUrl + '&qfKey=' + '{$qfKey}'
-	{/if}
-  {literal}
+/**
+ *
+ * @package CRM
+ * @copyright CiviCRM LLC (c) 2004-2010
+ * $Id$
+ *
+ */
 
-	var fname = '#billing-payment-block';	
-	var response = cj.ajax({	
-    url: dataUrl,
-    async: false
-  }).responseText;
-  cj( fname ).html( response );	
+/**
+ * State machine for managing different states of the Import process.
+ *
+ */
+class CRM_Contribute_StateMachine_Payment extends CRM_Core_StateMachine {
+
+  /**
+   * class constructor
+   *
+   * @param object  CRM_Import_Controller
+   * @param int     $action
+   *
+   * @return object CRM_Import_StateMachine
+   */
+  function __construct($controller, $action = CRM_Core_Action::NONE) {
+    parent::__construct($controller, $action);
+
+    $this->_pages = array(
+      'CRM_Contribute_Form_Payment_Main' => NULL,
+      'CRM_Contribute_Form_Payment_ThankYou' => NULL,
+    );
+
+    $this->addSequentialPages($this->_pages, $action);
+  }
 }
 
-cj(document).ready(function() {
-  var processorTypeObj = cj('input[name="payment_processor"]');
-
-  if ( processorTypeObj.attr('type') == 'hidden' ) {
-    var processorTypeValue = processorTypeObj.val( );
-  }
-  else {
-    var processorTypeValue = processorTypeObj.filter(':checked').val();
-  }
-
-  if ( processorTypeValue ) {
-    buildPaymentBlock( processorTypeValue );
-  }
-
-  cj('input[name="payment_processor"]').change( function() {
-    buildPaymentBlock( cj(this).val() );    
-  });
-});
-
-</script>
-{/literal}
