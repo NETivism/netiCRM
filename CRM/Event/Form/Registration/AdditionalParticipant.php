@@ -210,7 +210,7 @@ class CRM_Event_Form_Registration_AdditionalParticipant extends CRM_Event_Form_R
     //add buttons
     $js = NULL;
     if ($this->isLastParticipant(TRUE) && !CRM_Utils_Array::value('is_monetary', $this->_values['event'])) {
-      $js = array('onclick' => "return submitOnce(this,'" . $this->_name . "','" . ts('Processing') . "');");
+      $js = array('data' => 'submit-once');
     }
 
     //handle case where user might sart with waiting by group

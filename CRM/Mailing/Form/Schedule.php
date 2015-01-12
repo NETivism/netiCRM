@@ -148,7 +148,7 @@ class CRM_Mailing_Form_Schedule extends CRM_Core_Form {
             'name' => ts('Submit Mailing'),
             'spacing' => '&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;',
             'isDefault' => TRUE,
-            'js' => array('onclick' => "return submitOnce(this,'" . $this->_name . "','" . ts('Processing') . "');"),
+            'js' => array('data' => 'submit-once'),
           ),
           array(
             'type' => 'cancel',

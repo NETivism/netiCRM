@@ -510,7 +510,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
       $js = NULL;
 
       if (!CRM_Utils_Array::value('is_monetary', $this->_values['event'])) {
-        $js = array('onclick' => "return submitOnce(this,'" . $this->_name . "','" . ts('Processing') . "');");
+        $js = array('data' => 'submit-once');
       }
 
       if (!$this->_isEventFull || $this->_allowWaitlist) {

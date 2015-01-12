@@ -342,7 +342,7 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
             array('type' => 'next',
               'name' => $contribButton,
               'isDefault' => TRUE,
-              'js' => array('onclick' => "return submitOnce(this,'" . $this->_name . "','" . ts('Processing') . "');"),
+              'js' => array('data' => "submit-once"),
             ),
           )
         );

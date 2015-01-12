@@ -32,6 +32,15 @@
  *
  */
 
+/**
+ * IE 8 support of trim
+ **/
+if(typeof String.prototype.trim !== 'function') {
+  String.prototype.trim = function() {
+    return this.replace(/^\s+|\s+$/g, ''); 
+  }
+}
+
 /** 
  *  This function can be used to clear default 'suggestive text' from an input field
  *  When the cursor is moved into the field.
@@ -614,27 +623,10 @@ function unselectRadio(fieldName, form)
  * @param string procText - button text after user clicks it
  * @return null
  */
-var submitcount=0;
-/* Changes button label on submit, and disables button after submit for newer browsers.
-Puts up alert for older browsers. */
-function submitOnce(obj,formId,procText) {
+function submitOnce(obj, formId, procText) {
     // if named button clicked, change text
     if (obj.value != null) {
         obj.value = procText + " ...";
-    }
-    if (document.getElementById) { // disable submit button for newer browsers
-        obj.disabled = true;
-        document.getElementById(formId).submit();
-        return true;
-    }
-    else { // for older browsers
-        if (submitcount == 0) {
-            submitcount++;
-            return true;
-        } else {
-            alert("Your request is currently being processed ... Please wait.");
-            return false;
-        }
     }
 }
 
