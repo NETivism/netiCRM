@@ -222,19 +222,14 @@ class CRM_Utils_Token {
     ) {
       return $str;
     }
-    global $_targs;
-    $_targs[] = $domain;
-    $_targs[] = $html;
 
     $str = preg_replace_callback(
       self::tokenRegex($key),
-      create_function(
-        '$matches',
-        'global $_targs; return CRM_Utils_Token::getDomainTokenReplacement($matches[1], $_targs[0], $_targs[1]);'
-      ),
+      function ($matches) use (&$domain, $html, $escapeSmarty) {
+        return CRM_Utils_Token::getDomainTokenReplacement($matches[1], $domain, $html, $escapeSmarty);
+      },
       $str
     );
-    unset($_targs);
     return $str;
   }
 
@@ -388,19 +383,14 @@ class CRM_Utils_Token {
     ) {
       return $str;
     }
-    global $_targs;
-    $_targs[] = $mailing;
-    $_targs[] = $escapeSmarty;
 
     $str = preg_replace_callback(
       self::tokenRegex($key),
-      create_function(
-        '$matches, $mailing, $escapeSmarty',
-        'global $_targs; return CRM_Utils_Token::getMailingTokenReplacement($matches[1],$_targs[0], $_targs[1]);'
-      ),
+      function ($matches) use (&$mailing, $escapeSmarty) {
+        return CRM_Utils_Token::getMailingTokenReplacement($matches[1], $mailing, $escapeSmarty);
+      },
       $str
     );
-    unset($_targs);
     return $str;
   }
 
@@ -512,20 +502,13 @@ class CRM_Utils_Token {
       return $str;
     }
 
-    global $_targs;
-    $_targs[] = $addresses;
-    $_targs[] = $urls;
-    $_targs[] = $escapeSmarty;
-
     $str = preg_replace_callback(
       self::tokenRegex($key),
-      create_function(
-        '$matches',
-        'global $_targs; return CRM_Utils_Token::getActionTokenReplacement($matches[1],$_targs[0], $_targs[1], $_targs[2]);'
-      ),
+      function ($matches) use (&$addresses, &$urls, $html, $escapeSmarty) {
+        return CRM_Utils_Token::getActionTokenReplacement($matches[1], $addresses, $urls, $html, $escapeSmarty);
+      },
       $str
     );
-    unset($_targs);
 
     return $str;
   }
@@ -595,21 +578,13 @@ class CRM_Utils_Token {
       return $str;
     }
 
-    global $_targs;
-    $_targs[] = $contact;
-    $_targs[] = $html;
-    $_targs[] = $returnBlankToken;
-    $_targs[] = $escapeSmarty;
-
     $str = preg_replace_callback(
       self::tokenRegex($key),
-      create_function(
-        '$matches',
-        'global $_targs; return CRM_Utils_Token::getContactTokenReplacement($matches[1], $_targs[0], $_targs[1], $_targs[2], $_targs[3]);'
-      ),
+      function ($matches) use (&$contact, $html, $returnBlankToken, $escapeSmarty) {
+        return CRM_Utils_Token::getContactTokenReplacement($matches[1], $contact, $html, $returnBlankToken, $escapeSmarty);
+      },
       $str
     );
-    unset($_targs);
 
     $str = preg_replace('/\\\\|\{(\s*)?\}/', ' ', $str);
     return $str;
@@ -675,23 +650,17 @@ class CRM_Utils_Token {
    * @static
    */
   public static function &replaceHookTokens($str, &$contact, &$categories, $html = FALSE, $escapeSmarty = FALSE) {
-    global $_targs;
-    $_targs[0] = $contact;
-    $_targs[2] = $html;
-    $_targs[3] = $escapeSmarty;
 
     foreach ($categories as $key) {
       $_targs[1] = $key;
       $str = preg_replace_callback(
         self::tokenRegex($key),
-        create_function(
-          '$matches',
-          'global $_targs; return CRM_Utils_Token::getHookTokenReplacement($matches[1], $_targs[0], $_targs[1], $_targs[2], $_targs[3]);'
-        ),
+        function ($matches) use ($escapeSmarty) {
+          return CRM_Utils_Token::getUserTokenReplacement($matches[1], $escapeSmarty);
+        },
         $str
       );
     }
-    unset($_targs);
     return $str;
   }
 
@@ -1172,17 +1141,13 @@ class CRM_Utils_Token {
       return $str;
     }
     
-    global $_targs;
-    $_targs[0] = $escapeSmarty;
     $str = preg_replace_callback(
       self::tokenRegex($key),
-      create_function(
-        '$matches, $escapeSmarty',
-        'global $_targs; return CRM_Utils_Token::getUserTokenReplacement($matches[1],$_targs[0]);'
-      ),
+      function ($matches) use ($escapeSmarty) {
+        return CRM_Utils_Token::getUserTokenReplacement($matches[1], $escapeSmarty);
+      },
       $str
     );
-    unset($_targs);
     return $str;
   }
 
