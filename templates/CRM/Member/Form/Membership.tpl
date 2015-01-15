@@ -162,7 +162,7 @@
                         <div id='notice' style="display:none;">
                             <div class="label">{$form.receipt_text_signup.label}</div>
                             <div class="html-adjust"><span class="description">{ts}If you need to include a special message for this member, enter it here. Otherwise, the confirmation email will include the standard receipt message configured under System Message Templates.{/ts}</span>
-                                 {$form.receipt_text_signup.html|crmReplace:class:huge}</div>
+                                 {$form.receipt_text_signup.html}</div>
                         </div>
                         <div class="crm-receipt-option">
                           <div class="label">{$form.receipt_date.label}</div>

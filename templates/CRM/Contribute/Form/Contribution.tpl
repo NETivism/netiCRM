@@ -190,7 +190,7 @@
                    </td>
                   </tr>
                   <tr id="cancelDescription" class="crm-contribution-form-block-cancel_reason"><td class="label">&nbsp;</td><td class="description">{ts}Enter the cancellation date, or you can skip this field and the cancellation date will be automatically set to TODAY.{/ts}</td></tr>
-                  <tr id="cancelReason"><td class="label" style="vertical-align: top;">{$form.cancel_reason.label}</td><td>{$form.cancel_reason.html|crmReplace:class:huge}</td></tr>
+                  <tr id="cancelReason"><td class="label" style="vertical-align: top;">{$form.cancel_reason.label}</td><td>{$form.cancel_reason.html}</td></tr>
                </table>
                </fieldset>
                </td>

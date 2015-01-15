@@ -121,7 +121,7 @@
                           <div id="notice" class="crm-member-membershiprenew-form-block-receipt_text_renewal">	
                               <div class="label">{$form.receipt_text_renewal.label}</div>
                               <div><span class="description">{ts}Enter a message you want included at the beginning of the emailed receipt. EXAMPLE: 'Thanks for supporting our organization with your membership.'{/ts}</span>
-                              {$form.receipt_text_renewal.html|crmReplace:class:huge}</div> 
+                              {$form.receipt_text_renewal.html}</div> 
                           </div>
                           <div class="crm-receipt-option">
                             <div class="label">{$form.receipt_date.label}</div>
