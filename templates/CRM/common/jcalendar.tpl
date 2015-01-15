@@ -55,8 +55,8 @@
 <script type="text/javascript">
     {literal}
     cj( function() {
-      {/literal}	
-      var element_date   = "#{$elementId}"; 
+      {/literal}
+      var element_date   = "#{$elementId}";
       {if $timeElement}
           var element_time  = "#{$timeElement}";
           var time_format   = cj( element_time ).attr('timeFormat');
@@ -67,15 +67,16 @@
       var currentYear = new Date().getFullYear();
       var date_format = cj( element_date ).attr('format');
       var alt_field   = 'input#{$dateFormated}';
-      var yearRange   = currentYear - parseInt( cj( element_date ).attr('startOffset') ); 
+      var yearRange   = currentYear - parseInt( cj( element_date ).attr('startOffset') );
           yearRange  += ':';
-          yearRange  += currentYear + parseInt( cj( element_date ).attr('endOffset'  ) ); 
+          yearRange  += currentYear + parseInt( cj( element_date ).attr('endOffset'  ) );
       {literal}
 
       var lcMessage = {/literal}"{$config->lcMessages}"{literal};
       var localisation = lcMessage.replace("_", "-");
+      var defaultDate = (cj( element_date ).attr('formattype') == "birth")?'-30y':'today';
       cj(element_date).datepicker({
-                                    closeAtTop        : true, 
+                                    closeAtTop        : true,
                                     dateFormat        : date_format,
                                     changeMonth       : true,
                                     changeYear        : true,
@@ -83,23 +84,24 @@
                                     altFormat         : 'mm/dd/yy',
                                     yearRange         : yearRange,
                                     regional          : localisation
+                                    defaultDate       : defaultDate
                                 });
 
       cj(element_date).click( function( ) {
           hideYear( this );
-      });  
+      });
       cj('.ui-datepicker-trigger').click( function( ) {
           hideYear( cj(this).prev() );
-      });  
+      });
     });
-    
+
     function hideYear( element ) {
         var format = cj( element ).attr('format');
         if ( format == 'dd-mm' || format == 'mm/dd' ) {
             cj(".ui-datepicker-year").css( 'display', 'none' );
         }
     }
-    
+
     function clearDateTime( element ) {
         cj('input#' + element + ',input#' + element + '_time').val('');
     }
