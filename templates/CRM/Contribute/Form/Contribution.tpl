@@ -122,7 +122,7 @@
                 <span class="description">{ts}Date that a receipt was sent to the contributor.{/ts}</span></td></tr>
             <tr id="receiptId" class="crm-contribution-form-block-receipt_id">
                 <td class="label">{$form.receipt_id.label}</td>
-                <div>{$form.receipt_id.html} <a href="#receipt" id="manual-receipt-id">Change receipt number</a><br />
+                <td>{$form.receipt_id.html} <a href="#receipt" id="manual-receipt-id">Change receipt number</a><br />
                 <span class="description">{ts 1=$receipt_id_setting}Receipt Id will generate automatically based on <a href="%1" target="_blank">settings</a>.{/ts}</span></td></tr>
         {/if}
         {if !$contributionMode}
