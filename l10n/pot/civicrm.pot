@@ -44702,3 +44702,9 @@ msgstr ""
 #: templates/CRM/Event/Page/ManageEvent.tpl
 msgid "Participant count"
 msgstr ""
+
+msgid "Installments should be greater than %1."
+msgstr ""
+
+msgid "no limit"
+msgstr ""
