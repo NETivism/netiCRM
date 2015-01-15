@@ -153,7 +153,7 @@ class HTML_QuickForm_radio extends HTML_QuickForm_input
     function getFrozenHtml()
     {
         if ($this->getChecked()) {
-            return '<tt>(V)</tt>' .
+            return '<tt>(&#10004;)</tt>' .
                    $this->_getPersistantData();
         } else {
             return '<tt>( )</tt>';
