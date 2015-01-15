@@ -368,10 +368,15 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     $pps = array();
     if (!empty($this->_paymentProcessors)) {
       $pps = $this->_paymentProcessors;
-      foreach ($pps as $key => & $name) {
-        $pps[$key] = $name['name'];
+      $recur_support = array();
+      foreach ($pps as $key => $v) {
+        $pps[$key] = $v['name'];
+        if(!empty($v['is_recur'])){
+          $recur_support[] = $key;
+        }
       }
     }
+    $this->assign('recur_support', json_encode($recur_support));
     if (CRM_Utils_Array::value('is_pay_later', $this->_values)) {
       $pps[0] = $this->_values['pay_later_text'];
       $this->assign('pay_later_receipt', $this->_values['pay_later_receipt']);
@@ -737,7 +742,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     $extraOption = array('onclick' => "enablePeriod();");
     $elements = array();
     $elements[] = &$this->createElement('radio', NULL, '', ts('I want to make a one-time contribution.'), 0, $extraOption);
-    $elements[] = &$this->createElement('radio', NULL, '', ts('I want to contribute this amount'), 1, $extraOption);
+    $elements[] = &$this->createElement('radio', NULL, '', ts('Recurring contributions'), 1, $extraOption);
     $this->addGroup($elements, 'is_recur', NULL, '<br />');
     $this->_defaults['is_recur'] = 0;
 
@@ -758,7 +763,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     $frequencyUnits = CRM_Core_OptionGroup::values('recur_frequency_units');
     foreach ($unitVals as $key => $val) {
       if (array_key_exists($val, $frequencyUnits)) {
-        $units[$val] = $this->_values['is_recur_interval'] ? "{$frequencyUnits[$val]}(s)" : $frequencyUnits[$val];
+        $units[$val] = $this->_values['is_recur_interval'] ? "{$frequencyUnits[$val]}" : $frequencyUnits[$val];
       }
     }
 
@@ -770,6 +775,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     //$frequencyUnit->freeze( );
     //}
 
+    $attributes['installments']['placeholder'] = ts('no limit');
     $this->add('text', 'installments', ts('installments'),
       $attributes['installments']
     );
@@ -875,6 +881,9 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
 
     if (CRM_Utils_Array::value('is_recur', $fields) && (CRM_Utils_Array::value('payment_processor', $fields) == 0 || CRM_Utils_Array::value('civicrm_instrument_id', $fields) != 1)) {
       $errors['_qf_default'] = ts('You cannot set up a recurring contribution if you are not paying online by credit card.');
+    }
+    if (CRM_Utils_Array::value('installments', $fields) <= 1){
+      $errors['installments'] = ts('Installments should be greater than %1.', array(1 => 'one'));
     }
 
     if (CRM_Utils_Array::value('is_for_organization', $fields)) {

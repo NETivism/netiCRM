@@ -389,6 +389,9 @@ div.spacer,
 #crm-container .no-label .content {
     margin-left: 0px;
 }
+#crm-container .is_recur-section .content span {
+  vertical-align: middle;
+}
 
 #crm-container #cvv2 {vertical-align: top; }
 
@@ -3415,3 +3418,22 @@ div#crm-toolTip
 #stat_ps .people-count{
   float:right;
 }
+
+/**
+ * Placeholder
+ */
+#crm-container input::-webkit-input-placeholder {
+  color: #777;
+}
+#crm-container input:-moz-placeholder {
+  color: #777;
+  opacity: 1;
+}
+#crm-container input::-moz-placeholder {
+  color: #777;
+  opacity: 1;
+}
+#crm-container input:-ms-input-placeholder {
+  color: #777;
+}
+
