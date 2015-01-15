@@ -38,8 +38,10 @@
     <tr class="crm-contactEmail-form-block-recipient">
        <td class="label">{if $single eq false}{ts}Recipient(s){/ts}{else}{$form.to.label}{/if}</td>
        <td>{$form.to.html}{if $noEmails eq true}&nbsp;&nbsp;{$form.emailAddress.html}{/if}
+       <!--
     <div class="spacer"></div>
        <span class="bold"><a href="#" id="addcc">{ts}Add CC{/ts}</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="#" id="addbcc">{ts}Add BCC{/ts}</a></span>
+       -->
        </td>
     </tr>
     <tr class="crm-contactEmail-form-block-cc_id" id="cc" {if ! $form.cc_id.value}style="display:none;"{/if}>
