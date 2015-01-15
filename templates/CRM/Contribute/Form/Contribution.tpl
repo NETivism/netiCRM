@@ -122,7 +122,7 @@
                 <span class="description">{ts}Date that a receipt was sent to the contributor.{/ts}</span></td></tr>
             <tr id="receiptId" class="crm-contribution-form-block-receipt_id">
                 <td class="label">{$form.receipt_id.label}</td>
-                <td>{$form.receipt_id.html}<br />
+                <div>{$form.receipt_id.html} <a href="#receipt" id="manual-receipt-id">Change receipt number</a><br />
                 <span class="description">{ts 1=$receipt_id_setting}Receipt Id will generate automatically based on <a href="%1" target="_blank">settings</a>.{/ts}</span></td></tr>
         {/if}
         {if !$contributionMode}
@@ -165,7 +165,7 @@
                   </div>
                   <div class="crm-receipt-option">
                     <div class="label">{$form.receipt_id.label}</div>
-                    <div>{$form.receipt_id.html}<br />
+                    <div>{$form.receipt_id.html} <a href="#receipt" id="manual-receipt-id">{ts}Change receipt number{/ts}</a><br />
                     <span class="description">{ts 1=$receipt_id_setting}Receipt ID will generate automatically based on receive date and <a href="%1" target="_blank">prefix settings</a>.{/ts}</span></div>
                   </div>
                 </div>
@@ -406,6 +406,14 @@ cj(document).ready(function(){
        cj('#receipt-option').hide();
        clearDateTime('receipt_date');
      }
+   });
+   cj("#manual-receipt-id").click(function(e){
+     var okok = confirm("This action will break auto serial number. Please confirm you really want to change receipt number manually.");
+     if(okok){
+       cj("#receipt_id").removeAttr("readonly").focus();
+       cj("#manual-receipt-id").remove();
+     }
+     unbind("#manual-receipt-id", 'click');
    });
 });
 cj(function() {
