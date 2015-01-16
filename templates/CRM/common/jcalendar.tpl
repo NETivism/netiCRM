@@ -83,7 +83,7 @@
                                     altField          : alt_field,
                                     altFormat         : 'mm/dd/yy',
                                     yearRange         : yearRange,
-                                    regional          : localisation
+                                    regional          : localisation,
                                     defaultDate       : defaultDate
                                 });
 
