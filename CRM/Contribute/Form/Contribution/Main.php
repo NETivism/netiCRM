@@ -871,6 +871,9 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     }
 
     if (isset($fields['is_recur']) && $fields['is_recur']) {
+      if (CRM_Utils_Array::value('installments', $fields) <= 1){
+        $errors['installments'] = ts('Installments should be greater than %1.', array(1 => 'one'));
+      }
       if ($fields['frequency_interval'] <= 0) {
         $errors['frequency_interval'] = ts('Please enter a number for how often you want to make this recurring contribution (EXAMPLE: Every 3 months).');
       }
@@ -881,9 +884,6 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
 
     if (CRM_Utils_Array::value('is_recur', $fields) && (CRM_Utils_Array::value('payment_processor', $fields) == 0 || CRM_Utils_Array::value('civicrm_instrument_id', $fields) != 1)) {
       $errors['_qf_default'] = ts('You cannot set up a recurring contribution if you are not paying online by credit card.');
-    }
-    if (CRM_Utils_Array::value('installments', $fields) <= 1){
-      $errors['installments'] = ts('Installments should be greater than %1.', array(1 => 'one'));
     }
 
     if (CRM_Utils_Array::value('is_for_organization', $fields)) {
