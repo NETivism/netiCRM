@@ -366,6 +366,18 @@ class CRM_Contribute_Form_ManagePremiums extends CRM_Contribute_Form {
     $widthOrig = $imageInfo[0];
     $heightOrig = $imageInfo[1];
 
+    if($widthOrig > $width){
+        $widthNew = $width;
+        $heightNew = $heightOrig * $widthNew / $widthOrig;
+      }else{
+        $widthNew = $widthOrig;
+        $heightNew = $heightOrig;
+      }
+      // $cropX = 0;
+      // $cropY = 0;
+      $image = imagecreatetruecolor($widthNew, $heightNew);
+
+/*
     if($resizedName == "_full"){
       if($widthOrig > $width){
         $widthNew = $width;
@@ -374,8 +386,8 @@ class CRM_Contribute_Form_ManagePremiums extends CRM_Contribute_Form {
         $widthNew = $widthOrig;
         $heightNew = $heightOrig;
       }
-      $cropX = 0;
-      $cropY = 0;
+      // $cropX = 0;
+      // $cropY = 0;
       $image = imagecreatetruecolor($widthNew, $heightNew);
 
     }else{
@@ -383,21 +395,21 @@ class CRM_Contribute_Form_ManagePremiums extends CRM_Contribute_Form {
         //  height >> width
         $heightNew = $height;
         $widthNew = $widthOrig * $heightNew / $heightOrig;
-        $cropX = ( $widthOrig - ( $width * $heightOrig / $height )) / 2 ;
-        $cropY = 0;
+        // $cropX = ( $widthOrig - ( $width * $heightOrig / $height )) / 2 ;
+        // $cropY = 0;
         
 
       }else{
         $widthNew = $width;
         $heightNew = $heightOrig * $widthNew / $widthOrig;
-        $cropX = 0;
-        $cropY = ( $heightOrig - ( $height * $widthOrig / $width )) / 2 ;
+        // $cropX = 0;
+        // $cropY = ( $heightOrig - ( $height * $widthOrig / $width )) / 2 ;
       }
         
         
-        $image = imagecreatetruecolor($width, $height);
+        $image = imagecreatetruecolor($widthNew, $heightNew);
 
-    }
+    }*/
 
 
     
@@ -413,7 +425,7 @@ class CRM_Contribute_Form_ManagePremiums extends CRM_Contribute_Form {
 
     
     // resize
-    imagecopyresized($image, $source, 0, 0, $cropX, $cropY, $widthNew, $heightNew, $widthOrig, $heightOrig);
+    imagecopyresized($image, $source, 0, 0, 0, 0, $widthNew, $heightNew, $widthOrig, $heightOrig);
 
     // save the resized image
     $fp = fopen($newFilename, 'w+');
