@@ -44702,3 +44702,15 @@ msgstr ""
 #: templates/CRM/Event/Page/ManageEvent.tpl
 msgid "Participant count"
 msgstr ""
+
+msgid "Installments should be greater than %1."
+msgstr ""
+
+msgid "no limit"
+msgstr ""
+
+msgid "Change receipt number"
+msgstr ""
+
+msgid "This action will break auto serial number. Please confirm you really want to change receipt number m  anually."
+msgstr ""
