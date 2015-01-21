@@ -298,8 +298,8 @@ class CRM_Contribute_Form_ManagePremiums extends CRM_Contribute_Form {
             if($gdSupport) {
               if($imageFile) {
                 $error = false;
-                $params['image'] = $this->_resizeImage($imageFile, "_full", 200, 200);
-                $params['thumbnail'] = $this->_resizeImage($imageFile, "_thumb", 50, 50);
+                $params['image'] = $this->_resizeImage($imageFile, "_full", 800, 200);
+                $params['thumbnail'] = $this->_resizeImage($imageFile, "_thumb", 200, 50);
               }
             }
             else {
@@ -356,7 +356,7 @@ class CRM_Contribute_Form_ManagePremiums extends CRM_Contribute_Form {
    *
    * @return Path to image
    */
-  private function _resizeImage($filename, $resizedName, $width, $height) {
+  private function _resizeImage($filename, $resizedName, $width, $height ) {
     // figure out the new filename
     $pathParts = pathinfo($filename);
     $newFilename = $pathParts['dirname']."/".$pathParts['filename'].$resizedName.".".$pathParts['extension'];
@@ -365,7 +365,16 @@ class CRM_Contribute_Form_ManagePremiums extends CRM_Contribute_Form {
     $imageInfo = getimagesize($filename);
     $widthOrig = $imageInfo[0];
     $heightOrig = $imageInfo[1];
-    $image = imagecreatetruecolor($width, $height);
+
+    if($widthOrig > $width){
+      $widthNew = $width;
+      $heightNew = $heightOrig * $widthNew / $widthOrig;
+    }else{
+      $widthNew = $widthOrig;
+      $heightNew = $heightOrig;
+    }
+    $image = imagecreatetruecolor($widthNew, $heightNew);
+    
     if($imageInfo['mime'] == 'image/gif') {
       $source = imagecreatefromgif($filename);
     }
@@ -376,8 +385,9 @@ class CRM_Contribute_Form_ManagePremiums extends CRM_Contribute_Form {
       $source = imagecreatefromjpeg($filename);
     }
 
+    
     // resize
-    imagecopyresized($image, $source, 0, 0, 0, 0, $width, $height, $widthOrig, $heightOrig);
+    imagecopyresized($image, $source, 0, 0, 0, 0, $widthNew, $heightNew, $widthOrig, $heightOrig);
 
     // save the resized image
     $fp = fopen($newFilename, 'w+');
