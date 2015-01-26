@@ -227,6 +227,7 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
 
       // set email in the template here
       $tplParams = array(
+        'createdDate' => CRM_Utils_Array::value('created_date', $values),
         'email' => $email,
         'receiptFromEmail' => $values['receipt_from_email'],
         'contactID' => $contactID,
