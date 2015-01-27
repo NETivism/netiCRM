@@ -126,7 +126,7 @@ class CRM_Contribute_Form_Payment_Main extends CRM_Contribute_Form_Payment {
       $contrib->payment_instrument_id = $params['payment_instrument_id'];
     }
     if(!empty($contrib->source)){
-      $contrib->source = str_replace(' '. ts('Change Payment Method'), '', $params['source']).' '.ts('Change Payment Method');
+      $contrib->source = str_replace(' '. ts('Change Payment Method'), '', $contrib->source).' '.ts('Change Payment Method');
     }
     else{
       $contrib->source = ' '.ts('Change Payment Method');
@@ -137,7 +137,9 @@ class CRM_Contribute_Form_Payment_Main extends CRM_Contribute_Form_Payment {
       $this->set('invoiceID', $invoiceID);
     }
     $contrib->save();
-    $this->set('contrib', $contrib);
+    $values = array();
+    $contrib->storeValues($contrib, $values);
+    $this->set('contrib', $values);
     $payment = &CRM_Core_Payment::singleton($this->_mode, $processor, $this);
     $vars = $payment->prepareTransferCheckoutParams($contrib, $params);
 

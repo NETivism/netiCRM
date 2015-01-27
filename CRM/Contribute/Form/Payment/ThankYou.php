@@ -46,11 +46,24 @@ class CRM_Contribute_Form_Payment_ThankYou extends CRM_Contribute_Form_Payment {
    */
   public function preProcess() {
     parent::preProcess();
-    if($this->_ids){
-      $this->_params = $this->controller->exportValues('Main');
-      $this->_contrib = $this->get('contrib');
+    if(!empty($this->_values)){
+      if(!empty($this->_values['event'])){
+        $this->assign('thankyou_text', CRM_Utils_Array::value('thankyou_text', $this->_values['event']));
+      }
+      else{
+        $this->assign('thankyou_text', CRM_Utils_Array::value('thankyou_text', $this->_values));
+      }
     }
-    CRM_Utils_System::setTitle('Thank you');
+
+    $this->assign('trxn_id', CRM_Utils_Array::value('trxn_id', $this->_params));
+    if($this->_ids){
+      $this->_contrib = $this->get('contrib');
+      $this->assign('source', CRM_Utils_Array::value('source', $this->_contrib));
+      $this->assign('is_pay_later', CRM_Utils_Array::value('is_pay_later', $this->_contrib));
+      $this->assign('amount', CRM_Utils_Array::value('total_amount', $this->_contrib));
+      $this->assign('amount_level', CRM_Utils_Array::value('amount_level', $this->_contrib));
+    }
+    CRM_Utils_System::setTitle(ts("Thank you for your support."));
   }
 
   /**
