@@ -15,7 +15,7 @@ git:
   submodules: false
 
 before_install:
-  - sudo apt-get update
+  - apt-get update
   - git submodule init
   - git submodule update --remote
 
@@ -27,7 +27,7 @@ before_install:
 
 install:
   # install php packages required for running a web server from drush on php 5.4
-  - sudo apt-get install -y --force-yes php5-cgi php5-fpm php5-mysql php5-curl php5-gd
+  - apt-get install -y --force-yes php5-cgi php5-fpm php5-mysql php5-curl php5-gd
 
   # add composer's global bin directory to the path
   # see: https://github.com/drush-ops/drush#install---composer
