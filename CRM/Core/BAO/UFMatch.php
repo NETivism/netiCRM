@@ -282,7 +282,7 @@ WHERE     openid = %1";
         }
       }
 
-      if ($dao) {
+      if (!empty($dao)) {
         //print "Found contact with uniqId $uniqId<br/>";
         $ufmatch->contact_id = $dao->contact_id;
         $ufmatch->uf_name = $uniqId;

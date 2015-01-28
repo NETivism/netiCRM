@@ -285,7 +285,7 @@ abstract class CRM_Core_Page_Basic extends CRM_Core_Page {
     $newAction = $action;
     $hasDelete = $hasDisable = TRUE;
 
-    if (in_array($values['name'], array('encounter_medium', 'case_type', 'case_status'))) {
+    if (!empty($values['name']) && in_array($values['name'], array('encounter_medium', 'case_type', 'case_status'))) {
       static $caseCount = NULL;
       require_once 'CRM/Case/BAO/Case.php';
       if (!isset($caseCount)) {

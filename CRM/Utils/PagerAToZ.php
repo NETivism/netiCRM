@@ -118,43 +118,47 @@ class CRM_Utils_PagerAToZ {
     //get the current path
     $path = CRM_Utils_System::currentPath();
 
-    $qfKey = CRM_Utils_Array::value('qfKey', $query->_formValues);
-
-    $aToZBar = array();
-    foreach ($AToZBar as $key => $link) {
-      if (!$link) {
-        continue;
-      }
-
-      $element = array();
-      if (in_array($link, $dynamicAlphabets)) {
-        $klass = '';
-        if ($link == $sortByCharacter) {
-          $element['class'] = "active";
-          $klass = 'class="active"';
+    if(!empty($query->_formValues)){
+      $qfKey = CRM_Utils_Array::value('qfKey', $query->_formValues);
+      $aToZBar = array();
+      foreach ($AToZBar as $key => $link) {
+        if (!$link) {
+          continue;
         }
-        $url = CRM_Utils_System::url($path, "force=1&qfKey=$qfKey&sortByCharacter=");
-        // we do it this way since we want the url to be encoded but not the link character
-        // since that seems to mess up drupal utf-8 encoding etc
-        $url .= $link;
-        $element['item'] = sprintf('<a href="%s" %s>%s</a>',
-          $url,
-          $klass,
-          $link
-        );
-      }
-      else {
-        $element['item'] = $link;
-      }
-      $aToZBar[] = $element;
-    }
 
-    $url = sprintf('<a href="%s">%s</a>',
-      CRM_Utils_System::url($path, "force=1&qfKey=$qfKey&sortByCharacter=1"),
-      'All'
-    );
-    $aToZBar[] = array('item' => $url);
-    return $aToZBar;
+        $element = array();
+        if (in_array($link, $dynamicAlphabets)) {
+          $klass = '';
+          if ($link == $sortByCharacter) {
+            $element['class'] = "active";
+            $klass = 'class="active"';
+          }
+          $url = CRM_Utils_System::url($path, "force=1&qfKey=$qfKey&sortByCharacter=");
+          // we do it this way since we want the url to be encoded but not the link character
+          // since that seems to mess up drupal utf-8 encoding etc
+          $url .= $link;
+          $element['item'] = sprintf('<a href="%s" %s>%s</a>',
+            $url,
+            $klass,
+            $link
+          );
+        }
+        else {
+          $element['item'] = $link;
+        }
+        $aToZBar[] = $element;
+      }
+
+      $url = sprintf('<a href="%s">%s</a>',
+        CRM_Utils_System::url($path, "force=1&qfKey=$qfKey&sortByCharacter=1"),
+        'All'
+      );
+      $aToZBar[] = array('item' => $url);
+      return $aToZBar;
+    }
+    else{
+      return NULL;
+    }
   }
 }
 
