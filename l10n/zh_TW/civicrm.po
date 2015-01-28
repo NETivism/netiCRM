@@ -1,13 +1,13 @@
 # 
 # Translators:
-# Fuyuan Cheng <gloomcheng@gmail.com>, 2013-2014
+# Fuyuan Cheng <gloomcheng@gmail.com>, 2013-2015
 # IreneLin, 2013
 # jimyhuang <jimmy@netivism.com.tw>, 2013
-# charlesc <yeouhsin@gmail.com>, 2013
+# charlesc <yeouhsin@gmail.com>, 2013-2014
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2014-06-16 02:25+0000\n"
+"PO-Revision-Date: 2015-01-27 05:54+0000\n"
 "Last-Translator: Fuyuan Cheng <gloomcheng@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/projects/p/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -2912,7 +2912,7 @@ msgstr "欄位"
 #: CRM/Contact/Form/Edit/Address.php CRM/Contact/Form/Search/Criteria.php
 #: CRM/Core/DAO/Address.php
 msgid "Address Name"
-msgstr "地址名稱"
+msgstr "地點名稱"
 
 #: CRM/Contact/Form/Edit/Address.php CRM/Contact/Form/Search/Criteria.php
 #: CRM/Core/Form.php
@@ -10640,7 +10640,7 @@ msgstr "我想要進行單次捐/繳款。"
 
 #: CRM/Contribute/Form/Contribution/Main.php
 msgid "I want to contribute this amount"
-msgstr "我想要捐款這個金額"
+msgstr "我想要"
 
 #: CRM/Contribute/Form/Contribution/Main.php
 msgid "Frequency must be a whole number (EXAMPLE: Every 3 months)."
@@ -26275,7 +26275,7 @@ msgstr "編輯完整街道地址"
 #: templates/CRM/Contact/Form/OnBehalfOf.tpl
 msgid ""
 "Supplemental address info, e.g. c/o, department name, building name, etc."
-msgstr "補充地址資料，例如c/o、 公寓名稱、大廈名稱等。"
+msgstr "補充地址資料，例如轉交人、 公寓名稱、大廈名稱等。"
 
 #: templates/CRM/Contact/Form/Edit/Address.tpl
 msgid "Additional Address"
@@ -28053,14 +28053,14 @@ msgid ""
 "of installments you specify. You can leave the number of installments blank "
 "if you want to make an open-ended commitment. In either case, you can choose"
 " to cancel at any time."
-msgstr "您的定期捐款會於您指定的期間內自動扣款，自動扣款的期數也是您上面指定的。若將期數留空，表示您願意一直定期捐款支持。也請您放心，無論是何種模式，您可以隨時取消您的自動扣款。"
+msgstr "我們將依照您指定的方式（每月或每年），由您的信用卡定時扣款。若您未指定捐贈期數，我們將持續扣款至您主動告知停止捐款為止。"
 
 #: templates/CRM/Contribute/Form/Contribution/Main.tpl
 msgid ""
 "You will receive an email receipt for each recurring contribution. The "
 "receipts will include a link you can use if you decide to modify or cancel "
 "your future contributions."
-msgstr "每一次捐款時，您都會接收到一個 Email 收據，若有需要更動您的定期捐款，歡迎您直接與我們聯繫。"
+msgstr "每一期捐款，您都會收到一份 Email 收據，表示捐款成功，正式捐款收據我們將另行郵寄給您。若您要停止捐款或改變捐款方式或金額，請與我們聯繫。"
 
 #: templates/CRM/Contribute/Form/Contribution/Main.tpl
 msgid ""
@@ -28897,7 +28897,7 @@ msgstr "付款確認信已Email到%1。"
 msgid ""
 "Your contribution has been submitted to %1 for processing. Please print this"
 " page for your records."
-msgstr "您的捐/繳款資料已經送到%1作處理。請保存此信件，以作存查。"
+msgstr "您的捐/繳款資料已使用%1繳付。請保存此信件，以作存查。"
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid ""
@@ -28937,7 +28937,7 @@ msgstr "會籍交易編號"
 msgid ""
 "This recurring contribution will be automatically processed every %1 %2(s) "
 "for a total %3 installments (including this initial contribution)."
-msgstr "這個定期定額捐款，將會於每%1 %2由系統自動處理，包含這次付款，總共%3期。"
+msgstr "您的定期定額捐款總共有 %3 期（包含本次），每次扣款將由系統於每%1個%2自動處理。"
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid ""
@@ -28948,7 +28948,7 @@ msgstr "每%1 %2此定期定額捐款會自動被處理。"
 msgid ""
 "You can modify or cancel future contributions at any time by <a "
 "href='%1'>logging in to your account</a>."
-msgstr ""
+msgstr "您可以取消日後的定期定額捐款。"
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid "To modify or cancel future contributions please contact us at %1."
@@ -28962,7 +28962,7 @@ msgstr "每次定期定額捐款，我們都會發送收據至您的 Email 中�
 msgid ""
 "The receipts will also include a link you can use if you decide to modify or"
 " cancel your future contributions."
-msgstr "若您要修改/取消後續捐款，也請直接聯繫我們。"
+msgstr "若您要修改/取消後續捐款，請透過 Email 內的聯繫方式直接聯繫我們。"
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid ""
@@ -29979,7 +29979,7 @@ msgstr "瀏覽相關捐款"
 
 #: templates/CRM/Contribute/Page/ContributionTotals.tpl
 msgid "# Contributions"
-msgstr "捐款編號"
+msgstr "# 捐款次數"
 
 #: templates/CRM/Contribute/Page/ContributionTotals.tpl
 msgid "Avg Amount"
@@ -38319,7 +38319,7 @@ msgstr "訂閱訊息"
 msgid ""
 "You have a pending subscription to the %1 mailing list. To confirm this "
 "subscription, reply to this email or click <a href=\"%2\">here</a>."
-msgstr "您有一個%1電子報的訂閱待確認。若您確定要訂閱此份電子報，請回覆此信件或按<a href=\"%2\">這裡</a>。"
+msgstr "謝謝您訂閱 %1。請您按下<a href=\"%2\">這裡</a>完成確認訂閱的動作。"
 
 #: xml/templates/civicrm_data.tpl
 msgid ""
@@ -39635,14 +39635,14 @@ msgstr "請保存此信件，以做存查。"
 #: xml/templates/message_templates/event_online_receipt_text.tpl
 #: xml/templates/message_templates/membership_online_receipt_html.tpl
 msgid "Please print this confirmation for your records."
-msgstr "請列印此報名確認信，作為存查之用。"
+msgstr "請保存此報名確認信，作為存查之用。"
 
 #: xml/templates/message_templates/contribution_online_receipt_html.tpl
 #: xml/templates/message_templates/membership_online_receipt_html.tpl
 msgid ""
 "This is a recurring contribution. You can modify or cancel future "
 "contributions by <a href=\"%1\">logging in to your account</a>."
-msgstr "這是一個定期定額捐款。您可以隨時 <a href=\"%1\">登入</a>，以取消日後的定期定額捐款。"
+msgstr "這是一個定期定額捐款。您可以隨時與我們聯絡，以取消日後的定期定額捐款。"
 
 #: xml/templates/message_templates/contribution_online_receipt_html.tpl
 #: xml/templates/message_templates/contribution_online_receipt_text.tpl
@@ -39829,7 +39829,7 @@ msgstr "您 %1 申請已通過審核"
 msgid ""
 "Your pending event registration for %1 has expired\n"
 "because you did not confirm your registration."
-msgstr "由於您沒有確認報名資訊，因此已取消您報名「%1」活動的候補資格。"
+msgstr "由於您沒有完成報名活動所需要的步驟（點選通過審核的 Email 確認連結，或是在期限內繳交活動費用），已取消您的「%1」活動報名資格。"
 
 #: xml/templates/message_templates/participant_expired_html.tpl
 #: xml/templates/message_templates/participant_expired_text.tpl
@@ -40015,7 +40015,7 @@ msgstr "謝謝您慷慨的認捐。請保存此信件，以作存查。"
 #: xml/templates/message_templates/pledge_acknowledge_html.tpl
 #: xml/templates/message_templates/pledge_acknowledge_text.tpl
 msgid "%1 every %2 %3 for %4 installments."
-msgstr "%1 每 %2 %3 共 %4 期定期定額捐款。"
+msgstr "%1每 %2 %3 捐款，共捐 %4 期。"
 
 #: xml/templates/message_templates/pledge_acknowledge_html.tpl
 #: xml/templates/message_templates/pledge_acknowledge_text.tpl
@@ -44276,10 +44276,8 @@ msgstr "支持者承諾"
 msgid "Planned"
 msgstr "已規劃"
 
-msgid ""
-"Sample Footer for HTML formatted content<br/><a "
-"href=\"{action.optOutUrl}\">Unsubscribe</a>  <br/> {domain.address}"
-msgstr "電子報頁尾的HTML範本<br/><a href=\"{action.optOutUrl}\">取消訂閱</a><br/> {domain.address}"
+msgid "<a href=\"{action.optOutUrl}\">Unsubscribe</a>  <br/> {domain.address}"
+msgstr ""
 
 msgid ""
 "to unsubscribe: {action.optOutUrl}\n"
@@ -44660,6 +44658,14 @@ msgid ""
 "reserve any spaces for your registeration."
 msgstr "提醒您，您尚未完成報名程序。在進行到最後一個步驟完成報名之前，我們不會為您保留名額。"
 
-#: CRM/Event/Search.php
+#: templates/CRM/Event/Form/Registration/Register.tpl
+msgid "Registering Yourself (%1)"
+msgstr ""
+
+#: templates/CRM/Event/Form/Registration/Register.tpl
+msgid "Registering Others"
+msgstr ""
+
+#: CRM/Event/Form/Search.php
 msgid "Place Available"
-msgstr "剩餘名額"
+msgstr ""
