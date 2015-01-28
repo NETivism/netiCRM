@@ -130,7 +130,7 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
     require_once 'CRM/Core/ShowHideBlocks.php';
     $showHide = new CRM_Core_ShowHideBlocks();
     $showGroupSelector = TRUE;
-    if ($this->_searchBasedMailing) {
+    if (!empty($this->_searchBasedMailing)) {
       $showGroupSelector = FALSE;
       $formElements = array('includeGroups', 'excludeGroups', 'includeMailings', 'excludeMailings');
       $formValues = $this->controller->exportValues($this->_name);
@@ -166,7 +166,7 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
 
     //get the context
     $context = $this->get('context');
-    if ($this->_searchBasedMailing) {
+    if (!empty($this->_searchBasedMailing)) {
       $context = 'search';
     }
     $this->assign('context', $context);
@@ -204,7 +204,7 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
     CRM_Utils_Hook::mailingGroups($this, $groups, $mailings);
 
     //when the context is search add base group's.
-    if ($this->_searchBasedMailing) {
+    if (!empty($this->_searchBasedMailing)) {
       //get the static groups
       $staticGroups = CRM_Core_PseudoConstant::staticGroup(FALSE, 'Mailing');
       $this->add('select', 'baseGroup',
@@ -227,7 +227,7 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
     );
 
     //as we are having hidden smart group so no need.
-    if (!$this->_searchBasedMailing) {
+    if (empty($this->_searchBasedMailing)) {
       $this->addRule('includeGroups', ts('Please select a group to be mailed.'), 'required');
     }
 
@@ -294,7 +294,7 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
       ),
     );
 
-    if ($this->_searchBasedMailing) {
+    if (!empty($this->_searchBasedMailing)) {
       $buttons = array(
         array('type' => 'next',
           'name' => ts('Next >>'),

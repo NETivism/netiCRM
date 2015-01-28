@@ -449,7 +449,7 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
     $this->addRule('receipt_id', ts('This Receipt ID already exists in the database.'), 'objectExists', array('CRM_Contribute_DAO_Contribution', $this->_id, 'receipt_id'));
     $this->assign('receipt_id_setting', CRM_Utils_System::url("civicrm/admin/receipt", 'reset=1'));
     $this->addDateTime('receipt_date', ts('Receipt Date'), FALSE, array('formatType' => 'activityDateTime'));
-    if ($this->_values['receipt_id']) {
+    if (!empty($this->_values['receipt_id'])) {
       $this->assign('receipt_id', $this->_values['receipt_id']);
       $this->getElement('receipt_date')->freeze();
       $this->getElement('receipt_date_time')->freeze();
