@@ -3623,7 +3623,7 @@ INSERT INTO civicrm_state_province (id, country_id, abbreviation, name) VALUES
 (4857, 1208, "PIF", "Pingtung County"),
 (4860, 1208, "TPQ", "Taipei County"),
 (4861, 1208, "TTT", "Taitung County"),
-(4862, 1208, "TAO", "Taoyuan County"),
+(4862, 1208, "TAO", "Taoyuan City"),
 (4863, 1208, "YUN", "Yunlin Conuty"),
 (4864, 1208, "KEE", "Keelung City"),
 (4865, 1210, "01", "Arusha"),

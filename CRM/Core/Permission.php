@@ -393,6 +393,7 @@ class CRM_Core_Permission {
         'import contacts' => ts('import contacts'),
         'edit groups' => ts('edit groups'),
         'administer CiviCRM' => ts('administer CiviCRM'),
+        'administer Reserved Option' => ts('administer Reserved Option'),
         'access uploaded files' => ts('access uploaded files'),
         'profile listings and forms' => ts('profile listings and forms'),
         'profile listings' => ts('profile listings'),

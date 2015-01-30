@@ -876,7 +876,7 @@ WHERE  contribution_id = {$this->_id}
     }
 
     $this->addDateTime('receipt_date', ts('Receipt Date'), FALSE, array('formatType' => 'activityDateTime'));
-    if ($this->_values['receipt_id']) {
+    if (!empty($this->_values['receipt_id'])) {
       $this->assign('receipt_id', $this->_values['receipt_id']);
       $this->getElement('receipt_date')->freeze();
       $this->getElement('receipt_date_time')->freeze();
