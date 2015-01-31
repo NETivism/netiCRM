@@ -227,6 +227,7 @@ cj(document).ready(function(){
    }
    cj('#have_receipt').live('click', function(){
      if(cj(this).attr('checked') == 'checked'){
+       cj('#send_receipt').attr("checked", "checked");
        var d = new Date();
        if(cj("#receive_date").length){
          cj("#receipt_date").datepicker('setDate', cj("#receive_date").val());
@@ -246,6 +247,7 @@ cj(document).ready(function(){
      }
      else{
        cj('#receipt-option').hide();
+       cj('#send_receipt').removeAttr("checked");
        clearDateTime('receipt_date');
      }
    });
