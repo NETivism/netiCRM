@@ -880,6 +880,16 @@ class CRM_Core_Payment_BaseIPN {
       if ($contribution->is_test) {
         $isTest = TRUE;
       }
+      // 2015.1.30 Add variable to mail message.
+      require_once 'CRM/Core/BAO/CustomGroup.php';
+      $groupTree = &CRM_Core_BAO_CustomGroup::getTree("ContributionPage", $template, $values['id'], 0, $values['contribution_type_id']);
+      $values['custom_data_view'] = CRM_Core_BAO_CustomGroup::buildCustomDataView($template, $groupTree);
+
+      require_once 'CRM/Core/OptionGroup.php';
+      $values['amount_level'] = CRM_Core_OptionGroup::optionLabel("civicrm_contribution_page.amount.".(string)$values['id'],(int)($template->get_template_vars('amount')));
+      $template->assign('amount_level', $values['amount_level']);      
+      // 2015.1.30 End
+
       // CRM_Core_Error::debug('val',$values);
 
       return CRM_Contribute_BAO_ContributionPage::sendMail($ids['contact'], $values, $isTest, $returnMessageText);
