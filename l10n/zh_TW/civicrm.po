@@ -36744,8 +36744,8 @@ msgstr "新北市"
 msgid "Taitung County"
 msgstr "台東縣"
 
-msgid "Taoyuan County"
-msgstr "桃園縣"
+msgid "Taoyuan City"
+msgstr "桃園市"
 
 msgid "Yunlin County"
 msgstr "雲林縣"

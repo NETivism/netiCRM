@@ -36778,7 +36778,7 @@ msgstr ""
 msgid "Taitung County"
 msgstr ""
 
-msgid "Taoyuan County"
+msgid "Taoyuan City"
 msgstr ""
 
 msgid "Yunlin County"
