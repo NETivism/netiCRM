@@ -1978,6 +1978,7 @@ SELECT source_contact_id
     }
 
     $sort_name = $custom_values[$custom_title] ? $custom_values[$custom_title] : $contact->sort_name;
+    $template->assign('id' , $contribution->id);
     $template->assign('sort_name', $sort_name);
     $template->assign('logo', $receipt_logo);
     $template->assign('trxn_id', $contribution->trxn_id);
