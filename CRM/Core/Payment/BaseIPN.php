@@ -890,6 +890,8 @@ class CRM_Core_Payment_BaseIPN {
       $template->assign('amount_level', $values['amount_level']);      
       // 2015.1.30 End
 
+      $template->assign('paymentProcessor',$objects['paymentProcessor']);
+
       // CRM_Core_Error::debug('val',$values);
 
       return CRM_Contribute_BAO_ContributionPage::sendMail($ids['contact'], $values, $isTest, $returnMessageText);
