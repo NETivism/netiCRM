@@ -127,7 +127,7 @@ class CRM_Core_Permission_Drupal {
    * @return string the group where clause for this user
    * @access public
    */
-  public static function groupClause($type, &$tables, &$whereTables) {
+  public static function groupClause($type, &$tables, &$whereTables, $context) {
     if (!isset(self::$_viewPermissionedGroups)) {
       self::group();
     }
@@ -147,17 +147,19 @@ class CRM_Core_Permission_Drupal {
         $whereTables['civicrm_group_contact'] = 1;
 
         // foreach group that is potentially a saved search, add the saved search clause
-        foreach (array_keys(self::$_editPermissionedGroups) as $id) {
-          $group = new CRM_Contact_DAO_Group();
-          $group->id = $id;
-          if ($group->find(TRUE) && $group->saved_search_id) {
-            require_once 'CRM/Contact/BAO/SavedSearch.php';
-            $clause = CRM_Contact_BAO_SavedSearch::whereClause($group->saved_search_id,
-              $tables,
-              $whereTables
-            );
-            if (trim($clause)) {
-              $clauses[] = $clause;
+        if($context == 'contact'){
+          foreach (array_keys(self::$_editPermissionedGroups) as $id) {
+            $group = new CRM_Contact_DAO_Group();
+            $group->id = $id;
+            if ($group->find(TRUE) && $group->saved_search_id) {
+              require_once 'CRM/Contact/BAO/SavedSearch.php';
+              $clause = CRM_Contact_BAO_SavedSearch::whereClause($group->saved_search_id,
+                $tables,
+                $whereTables
+              );
+              if (trim($clause)) {
+                $clauses[] = $clause;
+              }
             }
           }
         }
@@ -180,21 +182,22 @@ class CRM_Core_Permission_Drupal {
 
 
         // foreach group that is potentially a saved search, add the saved search clause
-        foreach (array_keys(self::$_viewPermissionedGroups) as $id) {
-          $group = new CRM_Contact_DAO_Group();
-          $group->id = $id;
-          if ($group->find(TRUE) && $group->saved_search_id) {
-            require_once 'CRM/Contact/BAO/SavedSearch.php';
-            $clause = CRM_Contact_BAO_SavedSearch::whereClause($group->saved_search_id,
-              $tables,
-              $whereTables
-            );
-            if (trim($clause)) {
-              $clauses[] = $clause;
+        if($context == 'contact'){
+          foreach (array_keys(self::$_viewPermissionedGroups) as $id) {
+            $group = new CRM_Contact_DAO_Group();
+            $group->id = $id;
+            if ($group->find(TRUE) && $group->saved_search_id) {
+              require_once 'CRM/Contact/BAO/SavedSearch.php';
+              $clause = CRM_Contact_BAO_SavedSearch::whereClause($group->saved_search_id,
+                $tables,
+                $whereTables
+              );
+              if (trim($clause)) {
+                $clauses[] = $clause;
+              }
             }
           }
         }
-
         $clause = ' ( ' . implode(' OR ', $clauses) . ' ) ';
       }
     }
@@ -229,10 +232,10 @@ class CRM_Core_Permission_Drupal {
    * @return string the group where clause for this user
    * @access public
    */
-  public static function whereClause($type, &$tables, &$whereTables) {
+  public static function whereClause($type, &$tables, &$whereTables, $context) {
     self::group();
 
-    return self::groupClause($type, $tables, $whereTables);
+    return self::groupClause($type, $tables, $whereTables, $context);
   }
 
   /**

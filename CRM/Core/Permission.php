@@ -90,10 +90,10 @@ class CRM_Core_Permission {
    * @return string the group where clause for this user
    * @access public
    */
-  public static function whereClause($type, &$tables, &$whereTables) {
+  public static function whereClause($type, &$tables, &$whereTables, $context = 'contact') {
     $config = CRM_Core_Config::singleton();
     require_once (str_replace('_', DIRECTORY_SEPARATOR, $config->userPermissionClass) . '.php');
-    return eval('return ' . $config->userPermissionClass . '::whereClause( $type, $tables, $whereTables );');
+    return eval('return ' . $config->userPermissionClass . '::whereClause( $type, $tables, $whereTables, $context );');
   }
 
   /**
