@@ -839,7 +839,7 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
         }
         $element = &$qf->add(strtolower($field->html_type), $elementName, $label,
           $field->attributes,
-          (($useRequired && $field->is_required) && !$search)
+          (($useRequired || ($useRequired && $field->is_required)) && !$search)
         );
         $qf->addUploadElement($elementName);
         break;
