@@ -207,7 +207,17 @@
     </div>
     <div id="billing-payment-block"></div>
     {include file="CRM/common/paymentBlock.tpl'}
+  {elseif $is_pay_later}
+    <div class="crm-section pay_later_receipt-section">
+      <div class="label">{ts}Payment Method{/ts}</div>
+      <div class="content">
+        <input type="checkbox" checked="checked" disabled="disabled"/>{$pay_later_text|nl2br}<br />
+        <span class="description">{$pay_later_receipt|nl2br}</span>
+      </div>
+      <div class="clear"></div>
+    </div>
   {/if}
+	
 
 {if $priceSet}
   <div id="priceset">
@@ -267,20 +277,6 @@
 	    </div>
 	{/if} 
 
-    {if $is_pay_later}
-      <fieldset class="crm-group pay_later-group">
-        <legend>{ts}Payment Options{/ts}</legend>
-        <div class="crm-section pay_later_receipt-section">
-          <div class="label">{ts}Payment Method{/ts}</div>
-          <div class="content">
-            <input type="checkbox" checked="checked" disabled="disabled"/>{$pay_later_text|nl2br}<br />
-            <span class="description">{$pay_later_receipt|nl2br}</span>
-          </div>
-          <div class="clear"></div>
-        </div>
-      </fieldset>
-    {/if}
-	
     {if $is_monetary and $form.bank_account_number}
     <div id="payment_notice">
       <fieldset class="crm-group payment_notice-group">
