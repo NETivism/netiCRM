@@ -256,9 +256,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     //if contribution pay later is enabled and payment
     //processor is not available then freeze the pay later checkbox with
     //default check
-    if (CRM_Utils_Array::value('is_pay_later', $this->_values) &&
-      empty($this->_paymentProcessor)
-    ) {
+    if (CRM_Utils_Array::value('is_pay_later', $this->_values) && empty($this->_paymentProcessors) ) {
       $this->_defaults['is_pay_later'] = 1;
     }
 
@@ -335,9 +333,15 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     }
 
     if (!empty($this->_paymentProcessors)) {
-      foreach ($this->_paymentProcessors as $pid => $value) {
-        if (CRM_Utils_Array::value('is_default', $value)) {
-          $this->_defaults['payment_processor'] = $pid;
+      if(count($this->_paymentProcessors == 1)){
+        $pid = key($this->_paymentProcessors);
+        $this->_defaults['payment_processor'] = $pid;
+      }
+      else{
+        foreach ($this->_paymentProcessors as $pid => $value) {
+          if (CRM_Utils_Array::value('is_default', $value)) {
+            $this->_defaults['payment_processor'] = $pid;
+          }
         }
       }
     }
@@ -377,17 +381,15 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
       }
     }
     $this->assign('recur_support', json_encode($recur_support));
-    if (CRM_Utils_Array::value('is_pay_later', $this->_values)) {
-      $pps[0] = $this->_values['pay_later_text'];
-      $this->assign('pay_later_receipt', $this->_values['pay_later_receipt']);
-    }
 
-    if (count($pps) > 1) {
-      $this->addRadio('payment_processor', ts('Payment Method'), $pps,
-        NULL, "&nbsp;", TRUE
-      );
+    if (count($pps)) {
+      if (CRM_Utils_Array::value('is_pay_later', $this->_values)) {
+        $pps[0] = $this->_values['pay_later_text'];
+        $this->assign('pay_later_receipt', $this->_values['pay_later_receipt']);
+      }
+      $this->addRadio('payment_processor', ts('Payment Method'), $pps, NULL, "&nbsp;", TRUE);
     }
-    elseif (!empty($pps)) {
+    else {
       $key = array_pop(array_keys($pps));
       $this->addElement('hidden', 'payment_processor', $key);
       if ($key === 0) {
