@@ -261,8 +261,8 @@
 
 	function showRecurInterval( ) {
 		 if ( cj("#is_recur").attr( 'checked' ) ) {
-		     cj("#is_recur_interval").attr( 'checked', true );    
-		 } else {
+		 } 
+     else {
 		     cj("#is_recur_interval").attr( 'checked', false ); 
 		 }
 	}
