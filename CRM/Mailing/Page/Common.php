@@ -37,11 +37,14 @@ require_once 'CRM/Core/Config.php';
 require_once 'CRM/Core/Error.php';
 require_once 'CRM/Core/Page.php';
 class CRM_Mailing_Page_Common extends CRM_Core_Page {
-  protected $_type = NULL; function run() {
+  protected $_type = NULL;
+  
+  function run() {
     require_once 'CRM/Utils/Request.php';
     $job_id = CRM_Utils_Request::retrieve('jid', 'Integer', CRM_Core_DAO::$_nullObject);
     $queue_id = CRM_Utils_Request::retrieve('qid', 'Integer', CRM_Core_DAO::$_nullObject);
     $hash = CRM_Utils_Request::retrieve('h', 'String', CRM_Core_DAO::$_nullObject);
+    $session = CRM_Core_Session::singleton();
 
     if (!$job_id ||
       !$queue_id ||
@@ -90,8 +93,10 @@ class CRM_Mailing_Page_Common extends CRM_Core_Page {
     if ($confirm) {
       if ($this->_type == 'unsubscribe') {
         $groups = CRM_Mailing_Event_BAO_Unsubscribe::unsub_from_mailing($job_id, $queue_id, $hash);
-        if (count($groups)) {
+        if (count($groups) && empty($session->get($hash, 'unsubscribe')) ) {
           CRM_Mailing_Event_BAO_Unsubscribe::send_unsub_response($queue_id, $groups, FALSE, $job_id);
+          // prevent double sent
+          $session->set($hash, 1, 'unsubscribe');
         }
         else {
           // should we indicate an error, or just ignore?
@@ -122,8 +127,9 @@ class CRM_Mailing_Page_Common extends CRM_Core_Page {
       );
       $this->assign('confirmURL', $confirmURL);
       //push context for further process CRM-4431
-      $session = CRM_Core_Session::singleton();
       $session->pushUserContext($confirmURL);
+      // reset hash check
+      $session->resetScope('unsubscribe');
     }
 
     return parent::run();
