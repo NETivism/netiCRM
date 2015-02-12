@@ -5569,11 +5569,11 @@ INSERT INTO civicrm_uf_field
 	   (27, 7, 			 'tag', 				  1, 		   0, 			9, 	  	'User and User Admin Only',  0, 	      0, 		     NULL, 			   '標籤/Tag', 						'Contact', 	   NULL,  NULL),
 	   (28  ,7  	    ,'gender'  				 ,1  	      ,0  			,10  	,'User and User Admin Only' ,0  		 ,0  			,NULL,  			 '性別'  						,'Individual' ,NULL,  NULL),
 	   (29 	,7 		    ,'birth_date' 			 ,1  	      ,0 			,11 	,'User and User Admin Only' ,0 		 	 ,0 			,NULL, 			  'Date of Birth' 			    ,'Individual' ,NULL,  NULL),
-	   (30,  8,           'street_address',        1,           1,           1,      'User and User Admin Only',  0,           0,             1,                '街道地址（住家）', 		'Contact',     NULL,  NULL),
-       (31,  8,           'city',                  1,           1,           2,      'User and User Admin Only',  0,           0,             1,                '鄉鎮市區（住家）',           		'Contact',     NULL,  NULL),
-       (32,  8,           'postal_code',           0,           0,           3,      'User and User Admin Only',  0,           0,             1,                '郵遞區號（住家）',    		'Contact',     NULL,  NULL),
-       (33,  8,           'country',               0,           0,           4,      'Public Pages and Listings', 0,           1,             1,                '國家（住家）',        		'Contact',     NULL,  NULL),
-       (34,  8,           'state_province',        0,           0,           5,      'Public Pages and Listings', 1,           1,             1,                '縣市（住家）',          		'Contact',     NULL,  NULL);
+	   (30,  8,           'street_address',        1,           0,           1,      'User and User Admin Only',  0,           0,             1,                '街道地址', 		'Contact',     NULL,  NULL),
+       (31,  8,           'city',                  1,           0,           2,      'User and User Admin Only',  0,           0,             1,                '鄉鎮市區',           		'Contact',     NULL,  NULL),
+       (32,  8,           'postal_code',           0,           0,           3,      'User and User Admin Only',  0,           0,             1,                '郵遞區號',    		'Contact',     NULL,  NULL),
+       (33,  8,           'country',               0,           0,           4,      'User and User Admin Only', 0,           1,             1,                '國家',        		'Contact',     NULL,  NULL),
+       (34,  8,           'state_province',        0,           0,           5,      'User and User Admin Only', 1,           1,             1,                '縣市',          		'Contact',     NULL,  NULL);
 
 INSERT INTO civicrm_participant_status_type
   (id, name,                                  label,                                                       class,      is_reserved, is_active, is_counted, weight, visibility_id) VALUES

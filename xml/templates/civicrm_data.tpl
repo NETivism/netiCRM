@@ -1087,11 +1087,11 @@ INSERT INTO civicrm_uf_field
 	   (27, 7, 			 'tag', 				  1, 		   0, 			9, 	  	'User and User Admin Only',  0, 	      0, 		     NULL, 			   '{ts escape="sql"}Tags{/ts}', 						'Contact', 	   NULL,  NULL),
 	   (28  ,7  	    ,'gender'  				 ,1  	      ,0  			,10  	,'User and User Admin Only' ,0  		 ,0  			,NULL,  			 '{ts escape="sql"}Gender{/ts}'  						,'Individual' ,NULL,  NULL),
 	   (29 	,7 		    ,'birth_date' 			 ,1  	      ,0 			,11 	,'User and User Admin Only' ,0 		 	 ,0 			,NULL, 			  '{ts escape="sql"}Date of Birth{/ts}' 			    ,'Individual' ,NULL,  NULL),
-	   (30,  8,           'street_address',        1,           1,           1,      'User and User Admin Only',  0,           0,             1,                '{ts escape="sql"}Street Address (Home){/ts}', 		'Contact',     NULL,  NULL),
-       (31,  8,           'city',                  1,           1,           2,      'User and User Admin Only',  0,           0,             1,                '{ts escape="sql"}City (Home){/ts}',           		'Contact',     NULL,  NULL),
-       (32,  8,           'postal_code',           0,           0,           3,      'User and User Admin Only',  0,           0,             1,                '{ts escape="sql"}Postal Code (Home){/ts}',    		'Contact',     NULL,  NULL),
-       (33,  8,           'country',               0,           0,           4,      'Public Pages and Listings', 0,           1,             1,                '{ts escape="sql"}Country (Home){/ts}',        		'Contact',     NULL,  NULL),
-       (34,  8,           'state_province',        0,           0,           5,      'Public Pages and Listings', 1,           1,             1,                '{ts escape="sql"}State (Home){/ts}',          		'Contact',     NULL,  NULL);
+	   (30,  8,           'street_address',        1,           0,           1,      'User and User Admin Only',  0,           0,             1,                '{ts escape="sql"}Street Address{/ts}', 		'Contact',     NULL,  NULL),
+       (31,  8,           'city',                  1,           0,           2,      'User and User Admin Only',  0,           0,             1,                '{ts escape="sql"}City{/ts}',           		'Contact',     NULL,  NULL),
+       (32,  8,           'postal_code',           0,           0,           3,      'User and User Admin Only',  0,           0,             1,                '{ts escape="sql"}Postal Code{/ts}',    		'Contact',     NULL,  NULL),
+       (33,  8,           'country',               0,           0,           4,      'User and User Admin Only', 0,           1,             1,                '{ts escape="sql"}Country{/ts}',        		'Contact',     NULL,  NULL),
+       (34,  8,           'state_province',        0,           0,           5,      'User and User Admin Only', 1,           1,             1,                '{ts escape="sql"}State{/ts}',          		'Contact',     NULL,  NULL);
 
 INSERT INTO civicrm_participant_status_type
   (id, name,                                  label,                                                       class,      is_reserved, is_active, is_counted, weight, visibility_id) VALUES
