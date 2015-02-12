@@ -79,7 +79,7 @@
      </script>
      
      <tr>
-        <td>
+        <td colspan="3">
             {$form.address.$blockId.use_shared_address.html}{$form.address.$blockId.use_shared_address.label}{help id="id-sharedAddress" file="CRM/Contact/Form/Contact.hlp"}<br />
             {if $sharedAddresses.$blockId.shared_address_display}
                 <span class="shared-address-display" id="shared-address-display-name-{$blockId}">
