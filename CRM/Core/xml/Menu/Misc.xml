@@ -81,6 +81,11 @@
      <access_arguments>access CiviCRM</access_arguments>
   </item>
   <item>
+     <path>civicrm/ajax/inline</path>
+     <page_callback>CRM_Core_Page_AJAX::run</page_callback>
+     <access_arguments>access CiviCRM</access_arguments> 
+  </item>
+  <item>
      <path>civicrm/ajax/chart</path>
      <page_callback>CRM_Contribute_Form_ContributionCharts</page_callback> 
      <access_arguments>access CiviCRM</access_arguments> 

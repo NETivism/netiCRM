@@ -918,5 +918,106 @@ LIMIT {$offset}, {$rowCount}
     echo json_encode(array('status' => ($status) ? $oper : $status));
     CRM_Utils_System::civiExit();
   }
+
+  /**
+   * Function to retrieve a PDF Page Format for the PDF Letter form
+   */
+  function pdfFormat() {
+    $formatId = CRM_Utils_Type::escape($_REQUEST['formatId'], 'Integer');
+
+    $pdfFormat = CRM_Core_BAO_PdfFormat::getById($formatId);
+
+    echo json_encode($pdfFormat);
+    CRM_Utils_System::civiExit();
+  }
+
+  /**
+   * Function to retrieve Paper Size dimensions
+   */
+  static function paperSize() {
+    $paperSizeName = CRM_Utils_Type::escape($_REQUEST['paperSizeName'], 'String');
+
+    $paperSize = CRM_Core_BAO_PaperSize::getByName($paperSizeName);
+
+    echo json_encode($paperSize);
+    CRM_Utils_System::civiExit();
+  }
+
+  static function relationshipContactTypeList() {
+    $relType = CRM_Utils_Array::value('relType', $_REQUEST);
+
+    $types = CRM_Contact_BAO_Relationship::getValidContactTypeList($relType);
+
+    $elements = array();
+    foreach ($types as $key => $label) {
+      $elements[] = array(
+        'name' => $label,
+        'value' => $key,
+      );
+    }
+
+    echo json_encode($elements);
+    CRM_Utils_System::civiExit();
+  }
+
+  static function selectUnselectContacts() {
+    $name         = CRM_Utils_Array::value('name', $_REQUEST);
+    $cacheKey     = CRM_Utils_Array::value('qfKey', $_REQUEST);
+    $state        = CRM_Utils_Array::value('state', $_REQUEST, 'checked');
+    $variableType = CRM_Utils_Array::value('variableType', $_REQUEST, 'single');
+
+    $actionToPerform = CRM_Utils_Array::value('action', $_REQUEST, 'select');
+
+    if ($variableType == 'multiple') {
+      // action post value only works with multiple type variable
+      if ($name) {
+        //multiple names like mark_x_1-mark_x_2 where 1,2 are cids
+        $elements = explode('-', $name);
+        foreach ($elements as $key => $element) {
+          $elements[$key] = self::_convertToId($element);
+        }
+        CRM_Core_BAO_PrevNextCache::markSelection($cacheKey, $actionToPerform, $elements);
+      }
+      else {
+        CRM_Core_BAO_PrevNextCache::markSelection($cacheKey, $actionToPerform);
+      }
+    }
+    elseif ($variableType == 'single') {
+      $cId = self::_convertToId($name);
+      $action = ($state == 'checked') ? 'select' : 'unselect';
+      CRM_Core_BAO_PrevNextCache::markSelection($cacheKey, $action, $cId);
+    }
+    $contactIds = CRM_Core_BAO_PrevNextCache::getSelection($cacheKey);
+    $countSelectionCids = count($contactIds[$cacheKey]);
+
+    $arrRet = array('getCount' => $countSelectionCids);
+    echo json_encode($arrRet);
+    CRM_Utils_System::civiExit();
+  }
+
+  static function _convertToId($name) {
+    if (substr($name, 0, CRM_Core_Form::CB_PREFIX_LEN) == CRM_Core_Form::CB_PREFIX) {
+      $cId = substr($name, CRM_Core_Form::CB_PREFIX_LEN);
+    }
+    return $cId;
+  }
+
+  static function getAddressDisplay() {
+    $contactId = CRM_Utils_Array::value('contact_id', $_REQUEST);
+    if (!$contactId) {
+      $addressVal["error_message"] = "no contact id found";
+    }
+    else {
+      $entityBlock =
+        array(
+          'contact_id' => $contactId,
+          'entity_id' => $contactId,
+        );
+      $addressVal = CRM_Core_BAO_Address::getValues($entityBlock);
+    }
+
+    echo json_encode($addressVal);
+    CRM_Utils_System::civiExit();
+  }
 }
 
