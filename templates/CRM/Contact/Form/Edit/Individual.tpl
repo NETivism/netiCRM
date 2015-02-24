@@ -40,10 +40,10 @@ var checkSimilar =  {$checkSimilar};
      if (!isNaN(cid) || ! checkSimilar)
        return;//no dupe check if this is a modif or if checkSimilar is disabled (CIVICRM_CONTACT_AJAX_CHECK_SIMILAR in civicrm_setting)
 
-	     cj('#last_name').blur(function () {
+	     cj('#first_name').blur(function () {
          cj('#lastname_msg').remove();
              if (this.value =='') return;
-	     cj.getJSON(contactIndividual,{sort_name:cj('#last_name').val()},
+	     cj.getJSON(contactIndividual,{sort_name:cj('#first_name').val()},
          function(data){
            if (data.is_error== 1) {
              return;
