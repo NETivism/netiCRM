@@ -43,6 +43,10 @@ class CRM_Admin_Page_APIExplorer extends CRM_Core_Page {
       'version' => 3,
     ));
     self::$_template->assign('entities', $result);
+
+    $civicrm_path = '/'.drupal_get_path('module', 'civicrm').'/';
+    drupal_add_js(array('resourceBase' => $civicrm_path), 'setting');
+
     return parent::run();
   }
   function getTemplateFileName() {
