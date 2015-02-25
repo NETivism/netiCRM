@@ -4381,6 +4381,10 @@ msgstr ""
 msgid "Created Date"
 msgstr ""
 
+#: CRM/Contribute/BAO/Query.php
+msgid "Created Date - From"
+msgstr ""
+
 #: CRM/Core/DAO/Cache.php CRM/Core/DAO/Menu.php
 msgid "Path"
 msgstr ""
