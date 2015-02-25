@@ -76,14 +76,14 @@
     <access_arguments>translate CiviCRM</access_arguments>
   </item>
   <item>
-     <path>civicrm/ajax/rest</path>
-     <page_callback>CRM_Utils_REST::ajax</page_callback>
+     <path>civicrm/api/explorer</path>
+     <page_callback>CRM_Admin_Page_APIExplorer</page_callback>
      <access_arguments>access CiviCRM</access_arguments>
   </item>
   <item>
-     <path>civicrm/ajax/inline</path>
-     <page_callback>CRM_Core_Page_AJAX::run</page_callback>
-     <access_arguments>access CiviCRM</access_arguments> 
+     <path>civicrm/ajax/rest</path>
+     <page_callback>CRM_Utils_REST::ajax</page_callback>
+     <access_arguments>access CiviCRM</access_arguments>
   </item>
   <item>
      <path>civicrm/ajax/chart</path>
