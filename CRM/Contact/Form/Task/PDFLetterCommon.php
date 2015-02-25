@@ -176,7 +176,7 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
 
 
     require_once 'dompdf/dompdf_config.inc.php';
-    $html = '<html><head><style>body { margin: 56px; }</style></head><body>';
+    $html = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><style>body { margin: 56px; }</style></head><body>';
     require_once 'api/v2/Contact.php';
     require_once 'CRM/Utils/Token.php';
 
@@ -220,7 +220,7 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
       }
 
       $tokenHtml = CRM_Utils_Token::replaceContactTokens($html_message, $contact[$contactId], TRUE, $messageToken);
-      $tokenHtml = CRM_Utils_Token::replaceHookTokens($tokenHtml, $contact[$contactId], $categories, TRUE);
+      $tokenHtml = CRM_Utils_Token::replaceHookTokens($html_message, $contact[$contactId], $categories, TRUE);
 
       if (defined('CIVICRM_MAIL_SMARTY')) {
         $smarty = CRM_Core_Smarty::singleton();
@@ -234,7 +234,7 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
         $html .= $tokenHtml;
       }
       else {
-        $html .= "<div STYLE='page-break-after: always'></div>$tokenHtml";
+        $html .= '<div style="page-break-after: always;"></div>'.$tokenHtml;
       }
     }
 
@@ -276,14 +276,7 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
 
 
     require_once 'CRM/Utils/PDF/Utils.php';
-    CRM_Utils_PDF_Utils::html2pdf($html, "CiviLetter.pdf", 'portrait', 'letter');
-
-    // we need to call the hook manually here since we redirect and never
-    // go back to CRM/Core/Form.php
-    CRM_Utils_Hook::postProcess(get_class($form),
-      $form
-    );
-
+    CRM_Utils_PDF_Utils::domlib($html, 'CiviLetter.pdf', FALSE, 'portrait', 'a4');
 
     CRM_Utils_System::civiExit(1);
   }
