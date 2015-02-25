@@ -31,12 +31,18 @@
  * $Id$
  *
  */
+
 /**
  * Page for displaying list of contact Subtypes
  */
 class CRM_Admin_Page_APIExplorer extends CRM_Core_Page {
   function run() {
     CRM_Utils_System::setTitle(ts('API explorer and generator'));
+    $result = civicrm_api('Entity', 'get', array(
+      'sequential' => 1,
+      'version' => 3,
+    ));
+    self::$_template->assign('entities', $result);
     return parent::run();
   }
   function getTemplateFileName() {
