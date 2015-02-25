@@ -655,8 +655,8 @@ class CRM_Utils_Token {
       $_targs[1] = $key;
       $str = preg_replace_callback(
         self::tokenRegex($key),
-        function ($matches) use ($escapeSmarty) {
-          return CRM_Utils_Token::getUserTokenReplacement($matches[1], $escapeSmarty);
+        function ($matches) use (&$contact, $key, $html, $escapeSmarty) {
+          return CRM_Utils_Token::getHookTokenReplacement($matches[1], $contact, $key, $html, $escapeSmarty);
         },
         $str
       );
