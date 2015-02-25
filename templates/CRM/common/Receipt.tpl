@@ -3,6 +3,7 @@
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 <style>
 {literal}
+@media print {
 
 table { width: 100%; border-collapse:collapse; }
 table, td { border:1px solid black; }
@@ -11,6 +12,7 @@ table td { padding: 2px 4px; }
 .row { display:table-row;}
 .line { border-top: 1px dashed #aaa; padding-top: 20px;}
 
+.wrapper { page-break-after: always !important; height: 1355px; }
 .receipt{ position:relative; font-size: 11pt; min-height:490px;max-height:490px;}
 .receipt-head { position: relative; width: 100%;}
 .receipt-head .logo {text-align: center;}
@@ -32,6 +34,11 @@ table td { padding: 2px 4px; }
 .receipt-body li.amount .second-line { padding-left: 50px; }
 .receipt-body .start.unit { font-size: 12pt; padding-left: 5px;}
 
+.receipt-record { margin: 10px 0;}
+.receipt-record table { font-size: 11pt; }
+.receipt-record table th { border: 1px solid #777; }
+.receipt-record table td { border: 1px solid #777; }
+
 .receipt-footer {clear:both; position: relative; margin-top: 10px; font-size: 10pt;}
 .receipt-footer table {font-size: 10pt;}
 .receipt-footer table .col-1 {text-align: center;}
@@ -46,6 +53,10 @@ table td { padding: 2px 4px; }
 .single-page-header { height: 440px; position: relative;}
 .single-page-header .info {position: absolute; top: 45px; left: 90px;}
 .single-page-header .web-name {margin-right: 120px;}
+
+.page-break { page-break-after: always !important; }
+
+}
 {/literal}
 </style>
 </head>

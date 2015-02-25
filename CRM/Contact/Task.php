@@ -189,6 +189,13 @@ class CRM_Contact_Task {
           'result' => FALSE,
         );
       }
+      if (CRM_Core_Permission::access('CiviContribute')) {
+        self::$_tasks[23] = array(
+          'title' => ts('Print Yearly Receipt'),
+          'class' => 'CRM_Contact_Form_Task_YearlyReceipt',
+          'result' => TRUE,
+        );
+      }
 
       self::$_tasks += CRM_Core_Component::taskList();
 

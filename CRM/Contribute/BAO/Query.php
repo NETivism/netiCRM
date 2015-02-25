@@ -196,6 +196,15 @@ class CRM_Contribute_BAO_Query {
         );
         return;
 
+      case 'contribution_receipt_date':
+      case 'contribution_receipt_date_low':
+      case 'contribution_receipt_date_low_time':
+      case 'contribution_receipt_date_high':
+      case 'contribution_receipt_date_high_time':
+        // process to / from date
+        $query->dateQueryBuilder($values, 'civicrm_contribution', 'contribution_receipt_date', 'receipt_date', 'Receipt Date');
+        return;
+
       case 'contribution_amount':
       case 'contribution_amount_low':
       case 'contribution_amount_high':
@@ -640,6 +649,9 @@ class CRM_Contribute_BAO_Query {
 
     $form->addDate('contribution_date_low', ts('Contribution Dates - From'), FALSE, array('formatType' => 'searchDate'));
     $form->addDate('contribution_date_high', ts('To'), FALSE, array('formatType' => 'searchDate'));
+
+    $form->addDate('contribution_receipt_date_low', ts('Receipt Date - From'), FALSE, array('formatType' => 'searchDate'));
+    $form->addDate('contribution_receipt_date_high', ts('To'), FALSE, array('formatType' => 'searchDate'));
 
     $form->add('text', 'contribution_amount_low', ts('From'), array('size' => 8, 'maxlength' => 8));
     $form->addRule('contribution_amount_low', ts('Please enter a valid money value (e.g. %1).', array(1 => CRM_Utils_Money::format('9.99', ' '))), 'money');

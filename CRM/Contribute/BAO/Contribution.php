@@ -2054,6 +2054,107 @@ SELECT source_contact_id
     return $html;
   }
 
+  static function getReceiptYearly($contact_id, $year, &$template) {
+    $config = CRM_Core_Config::singleton();
+    $domain = CRM_Core_BAO_Domain::getDomain();
+    $location = $domain->getLocationValues();
+
+    $params = array('id' => $contact_id);
+    $contact = array();
+    CRM_Contact_BAO_Contact::retrieve($params, $contact);
+    
+    // set display address of contact
+    if ($contact['contact_type'] == 'Individual') {
+      $legal_identifier = $contact['legal_identifier'];
+      $template->assign('serial_id', $legal_identifier);
+    }
+    elseif ($contact['contact_type'] == 'Organization') {
+      $sic_code = $contact['sic_code'];
+      $template->assign('serial_id', $sic_code);
+    }
+
+    $sort_name = $contact['sort_name'];
+    $receipt_logo = $config->receiptLogo;
+
+    $entityBlock = array('contact_id' => $contact_id);
+    $addresses = CRM_Core_BAO_Address::getValues($entityBlock);
+    $addr = reset($addresses);
+    if (!empty($addr)) {
+      $addr['state_province_name'] = CRM_Core_PseudoConstant::stateProvince($addr['state_province_id'], FALSE);
+    }
+    $address = CRM_Utils_Address::format($addr, NULL, FALSE, TRUE);
+
+    // get primary location email if no email exist( for billing location).
+    if (!$email) {
+      list($displayName, $email) = CRM_Contact_BAO_Contact_Location::getEmailDetails($contact_id);
+    }
+
+    // set email in the template here
+    $tplParams = array(
+      'email' => $email,
+      'receiptFromEmail' => $values['receipt_from_email'],
+      'contactID' => $contact_id,
+      'sort_name' => $sort_name,
+      'address' => $address,
+      'logo' => $receipt_logo,
+      'domain_name' => $domain->name,
+      'domain_email' => $location['email'][1]['email'],
+      'domain_phone' => $location['phone'][1]['phone'],
+      'domain_address' => $location['address'][1]['display_text'],
+      'receiptOrgInfo' => htmlspecialchars_decode($config->receiptOrgInfo),
+      'receiptDescription' => htmlspecialchars_decode($config->receiptDescription),
+      'record' => self::getReceiptYearlyRecord($contact_id, $year),
+      'recordHeader' => array(
+        ts('Receipt ID'),
+        ts('Contribution Types'),
+        ts('Payment Instrument'),
+        ts('Receipt Date'),
+        ts('Total Amount'),
+      ),
+    );
+
+    // use either the contribution or membership receipt, based on whether it’s a membership-related contrib or not
+    $sendTemplateParams = array(
+      'groupName' => 'msg_tpl_workflow_receipt',
+      'valueName' => 'receipt_letter_year',
+      'contactId' => $contact_id,
+      'tplParams' => $tplParams,
+      'isTest' => $isTest,
+    );
+
+    list($sent, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate($sendTemplateParams);
+    return $html;
+  }
+
+  static function getReceiptYearlyRecord($contact_id, $year = 'all'){
+    if($year == 'all'){
+      $where = '';
+    }
+    else{
+      $start = $year.'-01-01 00:00:00';
+      $end = $year.'-12-31 23:59:59';
+      $where = "AND c.receipt_date >= '$start' AND c.receipt_date <= '$end'";
+    }
+    $args = array(
+      1 => array($contact_id, 'Integer'),
+    );
+    $query = CRM_Core_DAO::executeQuery("SELECT c.id, c.contribution_type_id, c.payment_instrument_id, c.receipt_id, DATE(c.receipt_date) as receipt_date, c.total_amount FROM civicrm_contribution c WHERE c.contact_id = %1 AND c.is_test = 0 AND c.contribution_status_id = 1 $where ORDER BY c.receipt_date ASC", $args);
+   
+    $contribution_type = CRM_Contribute_PseudoConstant::contributionType();
+    $instruments = CRM_Contribute_PseudoConstant::paymentInstrument();
+    $record = array();
+    while($query->fetch()){
+      $record[] = array(
+        $query->receipt_id,
+        $contribution_type[$query->contribution_type_id],
+        $instruments[$query->payment_instrument_id],
+        $query->receipt_date,
+        $query->total_amount,
+      );
+    }
+    return $record;
+  }
+
   static
   function genReceiptID(&$contrib, $save = TRUE, $is_online = FALSE, $reset = FALSE) {
     if (is_numeric($contrib)) {

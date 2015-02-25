@@ -38,6 +38,13 @@
 	{include file="CRM/common/jcalendar.tpl" elementName=contribution_date_high}</td>
 </tr>
 <tr>
+	<td>{$form.contribution_receipt_date_low.label} <br />
+	{include file="CRM/common/jcalendar.tpl" elementName=contribution_receipt_date_low}</td>
+
+	<td>{$form.contribution_receipt_date_high.label}<br />
+	{include file="CRM/common/jcalendar.tpl" elementName=contribution_receipt_date_high}</td>
+</tr>
+<tr>
 	<td><label>{ts}Contribution Amounts{/ts}</label> <br />
 	{$form.contribution_amount_low.label}
 	{$form.contribution_amount_low.html} 
