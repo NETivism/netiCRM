@@ -484,6 +484,7 @@ WHERE entity_table = 'civicrm_contribution_page'
         }
         
         $copy->save( );
+        $copy->originId = $id;
         
         require_once 'CRM/Utils/Hook.php';
         CRM_Utils_Hook::copy( 'ContributionPage', $copy );
