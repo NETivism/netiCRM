@@ -322,7 +322,7 @@
       <p>{$footer_text}</p>
     </div>
   {/if}
-</div><!-- crm-contribution-main-form-block -->>
+</div><!-- crm-contribution-main-form-block -->
 
 {* Hide Credit Card Block and Billing information if contribution is pay later. *}
 {if $form.is_pay_later and $hidePaymentInformation} 
