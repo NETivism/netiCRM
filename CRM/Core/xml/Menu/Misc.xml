@@ -76,7 +76,7 @@
     <access_arguments>translate CiviCRM</access_arguments>
   </item>
   <item>
-     <path>civicrm/api/explorer</path>
+     <path>civicrm/apibrowser</path>
      <page_callback>CRM_Admin_Page_APIExplorer</page_callback>
      <access_arguments>access CiviCRM</access_arguments>
   </item>
