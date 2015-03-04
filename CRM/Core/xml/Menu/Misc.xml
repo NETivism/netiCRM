@@ -78,11 +78,16 @@
   <item>
      <path>civicrm/apibrowser</path>
      <page_callback>CRM_Admin_Page_APIExplorer</page_callback>
+     <access_arguments>access CiviCRM</access_arguments>
+     <access_callback>1</access_callback>
+     <is_public>true</is_public>
   </item>
   <item>
      <path>civicrm/ajax/rest</path>
      <page_callback>CRM_Utils_REST::ajax</page_callback>
      <access_arguments>access CiviCRM</access_arguments>
+     <access_callback>1</access_callback>
+     <is_public>true</is_public>
   </item>
   <item>
      <path>civicrm/ajax/chart</path>
