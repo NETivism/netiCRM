@@ -565,7 +565,6 @@ VALUES (%1, %2, %3, %4, %5, %6, %7)
       $params[] = $field['contact_id'];
     }
 
-    require_once 'CRM/Utils/Token.php';
     $details = CRM_Utils_Token::getTokenDetails($params,
       $returnProperties,
       TRUE, TRUE, NULL,

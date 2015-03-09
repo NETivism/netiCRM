@@ -91,7 +91,6 @@ class CRM_Mailing_Page_Preview extends CRM_Core_Page {
     $returnProperties = $mailing->getReturnProperties();
     $params = array('contact_id' => $session->get('userID'));
 
-    require_once 'CRM/Utils/Token.php';
     $details = CRM_Utils_Token::getTokenDetails($params,
       $returnProperties,
       TRUE, TRUE, NULL,

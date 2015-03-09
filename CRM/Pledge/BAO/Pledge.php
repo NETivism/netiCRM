@@ -570,7 +570,6 @@ WHERE  $whereCond
     $tokens = array('domain' => array('name', 'phone', 'address', 'email'),
       'contact' => CRM_Core_SelectValues::contactTokens(),
     );
-    require_once 'CRM/Utils/Token.php';
     $domainValues = array();
     foreach ($tokens['domain'] as $token) {
       $domainValues[$token] = CRM_Utils_Token::getDomainTokenReplacement($token, $domain);

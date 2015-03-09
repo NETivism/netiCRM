@@ -160,7 +160,6 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
   function sendReminder($contactId, $email, $messageTemplateID, $from) {
     require_once "CRM/Core/BAO/Domain.php";
     require_once "CRM/Utils/String.php";
-    require_once "CRM/Utils/Token.php";
 
     $messageTemplates = new CRM_Core_DAO_MessageTemplates();
     $messageTemplates->id = $messageTemplateID;
@@ -415,7 +414,6 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
     }
 
     // replace tokens in the three elements (in subject as if it was the text body)
-    require_once 'CRM/Utils/Token.php';
     require_once 'CRM/Core/BAO/Domain.php';
     require_once 'api/v2/Contact.php';
     require_once 'CRM/Mailing/BAO/Mailing.php';

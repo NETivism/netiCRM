@@ -592,8 +592,6 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
       }
     }
 
-    require_once 'CRM/Utils/Token.php';
-
     $skipTextFile = $self->get('skipTextFile');
     $skipHtmlFile = $self->get('skipHtmlFile');
 

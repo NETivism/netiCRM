@@ -132,7 +132,6 @@ class CRM_Mailing_Page_View extends CRM_Core_Page {
       //get details of contact with token value including Custom Field Token Values.CRM-3734
       $returnProperties = $this->_mailing->getReturnProperties();
       $params = array('contact_id' => $this->_contactID);
-      require_once 'CRM/Utils/Token.php';
       $details = CRM_Utils_Token::getTokenDetails($params,
         $returnProperties,
         TRUE, TRUE, NULL,

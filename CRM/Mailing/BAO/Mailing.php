@@ -750,7 +750,6 @@ ORDER BY   i.contact_id, i.email_id
     if (!$this->flattenedTokens) {
       $tokens = $this->getTokens();
 
-      require_once 'CRM/Utils/Token.php';
       $this->flattenedTokens = CRM_Utils_Token::flattenTokens($tokens);
     }
 
@@ -776,7 +775,6 @@ ORDER BY   i.contact_id, i.email_id
   private function _getTokens($prop) {
     $templates = $this->getTemplates();
 
-    require_once 'CRM/Utils/Token.php';
     $newTokens = CRM_Utils_Token::getTokens($templates[$prop]);
 
     foreach ($newTokens as $type => $names) {
@@ -1008,7 +1006,6 @@ AND civicrm_contact.is_opt_out =0";
     $contactDetails, &$attachments, $isForward = FALSE,
     $fromEmail = NULL, $replyToEmail = NULL
   ) {
-    require_once 'CRM/Utils/Token.php';
     require_once 'CRM/Activity/BAO/Activity.php';
     $config = CRM_Core_Config::singleton();
     $knownTokens = $this->getTokens();
@@ -1238,7 +1235,6 @@ AND civicrm_contact.is_opt_out =0";
     foreach (array(
         'text', 'html',
       ) as $type) {
-      require_once 'CRM/Utils/Token.php';
       $tokens = $mailing->getTokens();
       if (isset($mailing->templates[$type])) {
         $mailing->templates[$type] = CRM_Utils_Token::replaceSubscribeInviteTokens($mailing->templates[$type]);

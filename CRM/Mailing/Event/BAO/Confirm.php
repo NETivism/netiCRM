@@ -130,7 +130,6 @@ class CRM_Mailing_Event_BAO_Confirm extends CRM_Mailing_Event_DAO_Confirm {
     $bao->body_html = $html;
     $tokens = $bao->getTokens();
 
-    require_once 'CRM/Utils/Token.php';
     $html = CRM_Utils_Token::replaceDomainTokens($html, $domain, TRUE, $tokens['html']);
     $html = CRM_Utils_Token::replaceWelcomeTokens($html, $group->title, TRUE);
 

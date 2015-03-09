@@ -1251,7 +1251,6 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
       $escapeSmarty = TRUE;
     }
 
-    require_once 'CRM/Utils/Token.php';
     $sent = $notSent = array();
     foreach ($contactDetails as $values) {
       $contactId = $values['contact_id'];
@@ -1962,7 +1961,6 @@ AND cl.modified_id  = c.id
     if (!empty($greetingTokens)) {
       // first use the existing contact object for token replacement
       if (!empty($contactDetails)) {
-        require_once 'CRM/Utils/Token.php';
         $tokenString = CRM_Utils_Token::replaceContactTokens($tokenString, $contactDetails, TRUE, $greetingTokens, TRUE);
       }
 

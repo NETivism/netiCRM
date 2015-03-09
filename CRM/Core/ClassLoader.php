@@ -56,18 +56,18 @@ class CRM_Core_ClassLoader {
   }
 
   function loadClass($class) {
-    if (
-      // Only load classes that clearly belong to CiviCRM.
-      //0 === strncmp($class, 'CRM_', 4) &&
-      // Do not load PHP 5.3 namespaced classes.
-      // (in a future version, maybe)
-      FALSE === strpos($class, '\\')
-    ) {
+    if ( FALSE === strpos($class, '\\') ) {
+      $file_by_ver = strtr($class, '_', '/') . '.'.PHP_MAJOR_VERSION.'_'.PHP_MINOR_VERSION.'.php';
       $file = strtr($class, '_', '/') . '.php';
       $include_paths = explode(PATH_SEPARATOR, get_include_path());
       foreach ($include_paths as $base_dir) {
-        $absolute_path = implode(DIRECTORY_SEPARATOR, array($base_dir, $file));
-        if (file_exists($absolute_path)) {
+        $file_by_ver = $base_dir.DIRECTORY_SEPARATOR.$file_by_ver;
+        $file = $base_dir.DIRECTORY_SEPARATOR.$file;
+        if (file_exists($file_by_ver) ){
+          require $file_by_ver;
+          return;
+        }
+        elseif (file_exists($file) ){
           require $file;
           return;
         }

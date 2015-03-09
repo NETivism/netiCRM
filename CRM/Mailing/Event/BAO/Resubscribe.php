@@ -259,7 +259,6 @@ class CRM_Mailing_Event_BAO_Resubscribe {
     $bao->body_text = $text;
     $bao->body_html = $html;
     $tokens = $bao->getTokens();
-    require_once 'CRM/Utils/Token.php';
     if ($eq->format == 'HTML' || $eq->format == 'Both') {
       $html = CRM_Utils_Token::replaceDomainTokens($html, $domain, TRUE, $tokens['html']);
       $html = CRM_Utils_Token::replaceResubscribeTokens($html, $domain, $groups, TRUE, $eq->contact_id, $eq->hash);

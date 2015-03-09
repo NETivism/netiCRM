@@ -1281,7 +1281,6 @@ UPDATE  civicrm_participant
         'contact' => CRM_Core_SelectValues::contactTokens(),
       );
 
-      require_once 'CRM/Utils/Token.php';
       foreach ($tokens['domain'] as $token) {
         $domainValues[$token] = CRM_Utils_Token::getDomainTokenReplacement($token, $domain);
       }

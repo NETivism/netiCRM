@@ -178,7 +178,6 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
     require_once 'dompdf/dompdf_config.inc.php';
     $html = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><style>body { margin: 56px; }</style></head><body>';
     require_once 'api/v2/Contact.php';
-    require_once 'CRM/Utils/Token.php';
 
     $tokens = array();
     CRM_Utils_Hook::tokens($tokens);

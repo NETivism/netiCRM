@@ -171,7 +171,6 @@ class CRM_Mailing_Form_Test extends CRM_Core_Form {
     $userID = $session->get('userID');
     $params = array('contact_id' => $userID);
 
-    require_once 'CRM/Utils/Token.php';
     $details = CRM_Utils_Token::getTokenDetails($params,
       $returnProperties,
       TRUE, TRUE, NULL,

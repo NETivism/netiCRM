@@ -278,7 +278,6 @@ SELECT     civicrm_email.id as email_id
     $bao->body_html = $html;
     $tokens = $bao->getTokens();
 
-    require_once 'CRM/Utils/Token.php';
     $html = CRM_Utils_Token::replaceDomainTokens($html, $domain, TRUE, $tokens['html']);
     $html = CRM_Utils_Token::replaceSubscribeTokens($html,
       $group->title,

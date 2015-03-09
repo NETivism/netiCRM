@@ -186,7 +186,7 @@ class CRM_Utils_Token {
    * @static
    */
   private static function tokenRegex($token_type) {
-    return '/(?<!\{|\\\\)\{' . $token_type . '\.(\w+)\}(?!\})/';
+    return '/(?<!\{|\\\\)\{' . $token_type . '\.(\w+)\}(?!\})/e';
   }
 
   /**
@@ -223,13 +223,7 @@ class CRM_Utils_Token {
       return $str;
     }
 
-    $str = preg_replace_callback(
-      self::tokenRegex($key),
-      function ($matches) use (&$domain, $html, $escapeSmarty) {
-        return CRM_Utils_Token::getDomainTokenReplacement($matches[1], $domain, $html, $escapeSmarty);
-      },
-      $str
-    );
+    $str = preg_replace(self::tokenRegex($key), 'self::getDomainTokenReplacement(\'\\1\',$domain,$html)', $str);
     return $str;
   }
 
@@ -384,12 +378,8 @@ class CRM_Utils_Token {
       return $str;
     }
 
-    $str = preg_replace_callback(
-      self::tokenRegex($key),
-      function ($matches) use (&$mailing, $escapeSmarty) {
-        return CRM_Utils_Token::getMailingTokenReplacement($matches[1], $mailing, $escapeSmarty);
-      },
-      $str
+    $str = preg_replace(self::tokenRegex($key),
+      'self::getMailingTokenReplacement(\'\\1\',$mailing,$escapeSmarty)', $str
     );
     return $str;
   }
@@ -502,14 +492,10 @@ class CRM_Utils_Token {
       return $str;
     }
 
-    $str = preg_replace_callback(
-      self::tokenRegex($key),
-      function ($matches) use (&$addresses, &$urls, $html, $escapeSmarty) {
-        return CRM_Utils_Token::getActionTokenReplacement($matches[1], $addresses, $urls, $html, $escapeSmarty);
-      },
+    $str = preg_replace(self::tokenRegex($key),
+      'self::getActionTokenReplacement(\'\\1\',$addresses,$urls,$escapeSmarty)',
       $str
     );
-
     return $str;
   }
 
@@ -578,11 +564,8 @@ class CRM_Utils_Token {
       return $str;
     }
 
-    $str = preg_replace_callback(
-      self::tokenRegex($key),
-      function ($matches) use (&$contact, $html, $returnBlankToken, $escapeSmarty) {
-        return CRM_Utils_Token::getContactTokenReplacement($matches[1], $contact, $html, $returnBlankToken, $escapeSmarty);
-      },
+    $str = preg_replace(self::tokenRegex($key),
+      'self::getContactTokenReplacement(\'\\1\', $contact, $html, $returnBlankToken, $escapeSmarty)',
       $str
     );
 
@@ -614,7 +597,7 @@ class CRM_Utils_Token {
     }
     elseif ($token == 'checksum') {
       require_once 'CRM/Contact/BAO/Contact/Utils.php';
-      $cs = CRM_Contact_BAO_Contact_Utils::generateChecksum($contact->contact_id);
+      $cs = CRM_Contact_BAO_Contact_Utils::generateChecksum($contact['contact_id']);
       $value = "cs={$cs}";
     }
     else {
@@ -652,12 +635,8 @@ class CRM_Utils_Token {
   public static function &replaceHookTokens($str, &$contact, &$categories, $html = FALSE, $escapeSmarty = FALSE) {
 
     foreach ($categories as $key) {
-      $_targs[1] = $key;
-      $str = preg_replace_callback(
-        self::tokenRegex($key),
-        function ($matches) use (&$contact, $key, $html, $escapeSmarty) {
-          return CRM_Utils_Token::getHookTokenReplacement($matches[1], $contact, $key, $html, $escapeSmarty);
-        },
+      $str = preg_replace(self::tokenRegex($key),
+        'self::getHookTokenReplacement(\'\\1\', $contact, $key, $html, $escapeSmarty)',
         $str
       );
     }
@@ -1138,13 +1117,9 @@ class CRM_Utils_Token {
     ) {
       return $str;
     }
-    
-    $str = preg_replace_callback(
-      self::tokenRegex($key),
-      function ($matches) use ($escapeSmarty) {
-        return CRM_Utils_Token::getUserTokenReplacement($matches[1], $escapeSmarty);
-      },
-      $str
+
+    $str = preg_replace(self::tokenRegex($key),
+      'self::getUserTokenReplacement(\'\\1\',$escapeSmarty)', $str
     );
     return $str;
   }
