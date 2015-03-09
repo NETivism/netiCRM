@@ -37,20 +37,26 @@
  */
 class CRM_Admin_Page_APIExplorer extends CRM_Core_Page {
   function run() {
-    CRM_Utils_System::setTitle(ts('API explorer and generator'));
-    $result = civicrm_api('Entity', 'get', array(
-      'sequential' => 1,
-      'version' => 3,
-    ));
-    self::$_template->assign('entities', $result);
+    $pattern = '/dev.*neticrm\.tw/';
+    if(preg_match($pattern, $_SERVER['HTTP_HOST'])){
+      CRM_Utils_System::setTitle(ts('API explorer and generator'));
+      $result = civicrm_api('Entity', 'get', array(
+        'sequential' => 1,
+        'version' => 3,
+      ));
+      self::$_template->assign('entities', $result);
 
-    $civicrm_path = '/'.drupal_get_path('module', 'civicrm').'/';
-    drupal_add_js(array('resourceBase' => $civicrm_path), 'setting');
-
+      $civicrm_path = '/'.drupal_get_path('module', 'civicrm').'/';
+      drupal_add_js(array('resourceBase' => $civicrm_path), 'setting');
+    }
     return parent::run();
   }
+
   function getTemplateFileName() {
-    return 'CRM/Core/AjaxDoc.tpl';
+    $pattern = '/dev.*neticrm\.tw/';
+    if(preg_match($pattern, $_SERVER['HTTP_HOST'])){
+      return 'CRM/Core/AjaxDoc.tpl';
+    }
   }
   /**
    * Get user context.

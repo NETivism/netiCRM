@@ -204,7 +204,7 @@ cj(function($) {
         return true;
       },
       error: function(result, settings) {
-        $().crmError(result.error_message, ts('Error'));
+        // $().crmError(result.error_message, {/literal}"{ts}Error{/ts}"{literal});
         return false;
       },
       callBack: function(result, settings) {

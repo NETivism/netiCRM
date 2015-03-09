@@ -39121,7 +39121,7 @@ msgstr "每週"
 
 #: xml/templates/civicrm_data.tpl
 msgid "monthly"
-msgstr "每週"
+msgstr "每月"
 
 #: xml/templates/civicrm_data.tpl
 msgid "yearly"

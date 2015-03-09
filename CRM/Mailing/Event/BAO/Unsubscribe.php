@@ -175,6 +175,7 @@ class CRM_Mailing_Event_BAO_Unsubscribe extends CRM_Mailing_Event_DAO_Unsubscrib
 
     /* As long as we have prior mailings, find their groups and add to the
          * list */
+    $mailings_this_job = $mailings;
 
 
     while (!empty($mailings)) {
@@ -191,7 +192,7 @@ class CRM_Mailing_Event_BAO_Unsubscribe extends CRM_Mailing_Event_DAO_Unsubscrib
         if ($do->entity_table == $group) {
           $groups[$do->entity_id] = TRUE;
         }
-        elseif ($do->entity_table == $mailing) {
+        elseif ($do->entity_table == $mailing && !in_array($do->entity_id, $mailings_this_job)) {
           $mailings[] = $do->entity_id;
         }
       }
