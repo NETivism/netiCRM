@@ -93,7 +93,8 @@ class CRM_Mailing_Page_Common extends CRM_Core_Page {
     if ($confirm) {
       if ($this->_type == 'unsubscribe') {
         $groups = CRM_Mailing_Event_BAO_Unsubscribe::unsub_from_mailing($job_id, $queue_id, $hash);
-        if (count($groups) && empty($session->get($hash, 'unsubscribe')) ) {
+        $unsubscribe_state = $session->get($hash, 'unsubscribe');
+        if (count($groups) && empty($unsubscribe_state) ) {
           CRM_Mailing_Event_BAO_Unsubscribe::send_unsub_response($queue_id, $groups, FALSE, $job_id);
           // prevent double sent
           $session->set($hash, 1, 'unsubscribe');
