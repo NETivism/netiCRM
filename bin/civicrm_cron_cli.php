@@ -47,6 +47,9 @@ if(!file_exists($conf_dir.'/civicrm.settings.php')){
   return;
 }
 else{
+  require_once dirname(__FILE__) . '/../CRM/Core/ClassLoader.php';
+  CRM_Core_ClassLoader::singleton()->register();
+
   include_once $conf_dir . '/settings.php'; 
   include_once $conf_dir . '/civicrm.settings.php'; 
   $_REQUEST['key']= CIVICRM_SITE_KEY;
@@ -130,20 +133,15 @@ function cli_error($e){
 
 function cli_authenticate($uid) {
   session_start();                               
-  require_once 'CRM/Core/Config.php'; 
-  // this does not return on failure
-  require_once 'CRM/Utils/System.php';
-  require_once 'CRM/Utils/System/Drupal.php';
-
-  $config =& CRM_Core_Config::singleton(); 
+  require_once 'DB.php';
+  $error = include_once( 'CRM/Core/Config.php' );
+  $config = CRM_Core_Config::singleton(); 
 
   if(!CRM_Utils_System::authenticateKey( true ) ){
     cli_error('Authenticate Key error');
     return;
   }
-  require_once 'DB.php';
 
-  $config = CRM_Core_Config::singleton( );
   $dbDrupal = DB::connect( $config->userFrameworkDSN );
   if ( DB::isError( $dbDrupal ) ) {
     cli_error("Cannot connect to drupal db via $config->userFrameworkDSN, " . $dbDrupal->getMessage( ));

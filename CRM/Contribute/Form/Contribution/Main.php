@@ -333,7 +333,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     }
 
     if (!empty($this->_paymentProcessors)) {
-      if(count($this->_paymentProcessors == 1)){
+      if(count($this->_paymentProcessors) == 1){
         $pid = key($this->_paymentProcessors);
         $this->_defaults['payment_processor'] = $pid;
       }
