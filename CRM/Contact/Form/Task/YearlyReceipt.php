@@ -103,7 +103,7 @@ class CRM_Contact_Form_Task_YearlyReceipt extends CRM_Contact_Form_Task {
     $template = &CRM_Core_Smarty::singleton();
     $pages = self::popFile();
     $template->assign('pages', $pages);
-    $pages = $template->fetch('CRM/common/Receipt.tpl');
+    $pages = $template->fetch('CRM/common/YearlyReceipt.tpl');
     $pdf = CRM_Utils_PDF_Utils::domlib($pages, 'ReceiptYear.pdf', $output, 'portrait', 'a4');
     if ($output) {
       print $pdf;
