@@ -24,9 +24,6 @@ class CRM_Contact_Form_Task_YearlyReceipt extends CRM_Contact_Form_Task {
    * @access public
    */
   function preProcess() {
-    // store case id if present
-    $this->_caseId = CRM_Utils_Request::retrieve('caseid', 'Positive', $this, FALSE);
-
     // retrieve contact ID if this is 'single' mode
     $cid = CRM_Utils_Request::retrieve('cid', 'Positive', $this, FALSE);
 
@@ -43,7 +40,7 @@ class CRM_Contact_Form_Task_YearlyReceipt extends CRM_Contact_Form_Task {
     $this->assign('single', $this->_single);
     
     CRM_Utils_System::appendBreadCrumb($breadCrumb);
-    CRM_Utils_System::setTitle(ts('Print Yearly Receipt'));
+    CRM_Utils_System::setTitle(ts('Print Annual Receipt'));
   }
 
   static function preProcessSingle(&$form, $cid) {
@@ -60,10 +57,20 @@ class CRM_Contact_Form_Task_YearlyReceipt extends CRM_Contact_Form_Task {
    */
   public function buildQuickForm() {
     $years = array();
-    for($year = date('Y'); $year < date('Y') + 4; $year++) {
-      $years[$year - 3] = $year - 3;
+    $session = CRM_Core_Session::singleton();
+    if(!empty($session->get('year', 'YearlyReceipt'))){
+      $year = $session->get('year', 'YearlyReceipt');
+      $years[$year] = $year;
+      $ele = $this->addElement('select', 'year', ts('Receipt Date'), $years);
+      $ele->freeze();
     }
-    $this->addElement('select', 'year', ts('Receipt Date'), $years);
+    else{
+      for($year = date('Y'); $year < date('Y') + 4; $year++) {
+        $years[$year - 3] = $year - 3;
+      }
+      $this->addElement('select', 'year', ts('Receipt Date'), $years);
+    }
+
     $this->addButtons(array(
         array('type' => 'next',
           'name' => ts('Download Receipt(s)'),
