@@ -33,7 +33,7 @@
  *
  */
 
-class CRM_Contact_Form_Search_Custom_YearlyReceipt extends CRM_Contact_Form_Search_Custom_Base implements CRM_Contact_Form_Search_Interface {
+class CRM_Contact_Form_Search_Custom_AnnualReceipt extends CRM_Contact_Form_Search_Custom_Base implements CRM_Contact_Form_Search_Interface {
   function __construct(&$formValues) {
     parent::__construct($formValues);
 
@@ -57,13 +57,13 @@ class CRM_Contact_Form_Search_Custom_YearlyReceipt extends CRM_Contact_Form_Sear
       $years[$year - 3] = $year - 3;
     }
     $form->addElement('select', 'year', ts('Receipt Date'), $years);
-    $this->setTitle(ts('Printt Yearly Receipt'));
+    $this->setTitle(ts('Print Annual Receipt'));
     $form->assign('elements', array('year'));
 
     // reset session when visit first selection
     $session = CRM_Core_Session::singleton();
     if(!empty($_GET['csid'])){
-      $session->resetScope('YearlyReceipt');
+      $session->resetScope('AnnualReceipt');
     }
   }
 
@@ -88,10 +88,10 @@ SUM(contribution.total_amount) as total_amount
     $year = CRM_Utils_Array::value('year', $this->_formValues);
     if(!empty($year)){
       $session = CRM_Core_Session::singleton();
-      $session->set('year', $year, 'YearlyReceipt');
+      $session->set('year', $year, 'AnnualReceipt');
     }
     else{
-      $session->set('year', $year, 'YearlyReceipt');
+      $session->set('year', $year, 'AnnualReceipt');
     }
     return $sql;
   }

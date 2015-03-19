@@ -3,7 +3,7 @@
  * This
  * contacts.
  */
-class CRM_Contact_Form_Task_YearlyReceipt extends CRM_Contact_Form_Task {
+class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
 
   /**
    * Are we operating in "single mode", i.e. updating the task of only
@@ -11,11 +11,10 @@ class CRM_Contact_Form_Task_YearlyReceipt extends CRM_Contact_Form_Task {
    *
    * @var boolean
    */
-  public $_single = NULL;
-
-  public $_cid = NULL;
 
   protected $_tmpreceipt = NULL;
+
+  protected $_year = NULL;
 
   /**
    * build all the data structures needed to build the form
@@ -24,28 +23,16 @@ class CRM_Contact_Form_Task_YearlyReceipt extends CRM_Contact_Form_Task {
    * @access public
    */
   function preProcess() {
-    // retrieve contact ID if this is 'single' mode
-    $cid = CRM_Utils_Request::retrieve('cid', 'Positive', $this, FALSE);
+    parent::preProcess();
+    $session = CRM_Core_Session::singleton();
 
-    $this->_activityId = CRM_Utils_Request::retrieve('id', 'Positive', $this, FALSE);
-
-    if ($cid) {
-      CRM_Contact_Form_Task_PDFLetterCommon::preProcessSingle($this, $cid);
-      $this->_single = TRUE;
-      $this->_cid = $cid;
+    // this session comes from custom search
+    if(!empty($session->get('year', 'AnnualReceipt'))){
+      $this->_year = $session->get('year', 'AnnualReceipt');
     }
-    else {
-      parent::preProcess();
-    }
-    $this->assign('single', $this->_single);
     
     CRM_Utils_System::appendBreadCrumb($breadCrumb);
     CRM_Utils_System::setTitle(ts('Print Annual Receipt'));
-  }
-
-  static function preProcessSingle(&$form, $cid) {
-    $form->_contactIds = array($cid);
-    CRM_Contact_Page_View::setTitle($cid);
   }
 
   /**
@@ -57,12 +44,9 @@ class CRM_Contact_Form_Task_YearlyReceipt extends CRM_Contact_Form_Task {
    */
   public function buildQuickForm() {
     $years = array();
-    $session = CRM_Core_Session::singleton();
-    if(!empty($session->get('year', 'YearlyReceipt'))){
-      $year = $session->get('year', 'YearlyReceipt');
-      $years[$year] = $year;
+    if(!empty($this->_year)){
+      $years[$this->_year] = $this->_year;
       $ele = $this->addElement('select', 'year', ts('Receipt Date'), $years);
-      $ele->freeze();
     }
     else{
       for($year = date('Y'); $year < date('Y') + 4; $year++) {
@@ -70,9 +54,9 @@ class CRM_Contact_Form_Task_YearlyReceipt extends CRM_Contact_Form_Task {
       }
       $this->addElement('select', 'year', ts('Receipt Date'), $years);
     }
-
     $this->addButtons(array(
-        array('type' => 'next',
+        array(
+          'type' => 'next',
           'name' => ts('Download Receipt(s)'),
           'isDefault' => TRUE,
         ),
@@ -90,6 +74,9 @@ class CRM_Contact_Form_Task_YearlyReceipt extends CRM_Contact_Form_Task {
   public function postProcess() {
     $params = $this->controller->exportValues($this->_name);
     if(!empty($params['year'])){
+      $session = CRM_Core_Session::singleton();
+      $session->resetScope('AnnualReceipt');
+      $this->_year = $params['year'];
       self::makeReceipt($this->_contactIds, $params['year']);
       self::makePDF();
     }
@@ -110,8 +97,9 @@ class CRM_Contact_Form_Task_YearlyReceipt extends CRM_Contact_Form_Task {
     $template = &CRM_Core_Smarty::singleton();
     $pages = self::popFile();
     $template->assign('pages', $pages);
-    $pages = $template->fetch('CRM/common/YearlyReceipt.tpl');
-    $pdf = CRM_Utils_PDF_Utils::domlib($pages, 'ReceiptYear.pdf', $output, 'portrait', 'a4');
+    $pages = $template->fetch('CRM/common/AnnualReceipt.tpl');
+    $filename = 'AnnualReceipt'.$this->_year.'.pdf';
+    $pdf = CRM_Utils_PDF_Utils::domlib($pages, $filename, $output, 'portrait', 'a4');
     if ($output) {
       print $pdf;
     }
@@ -126,7 +114,7 @@ class CRM_Contact_Form_Task_YearlyReceipt extends CRM_Contact_Form_Task {
       if ($count) {
         $html = '<div class="page-break" style="page-break-after: always;"></div>';
       }
-      $html .= CRM_Contribute_BAO_Contribution::getReceiptYearly($contact_id, $year, $template);
+      $html .= CRM_Contribute_BAO_Contribution::getAnnualReceipt($contact_id, $year, $template);
       self::pushFile($html);
 
       // reset template values before processing next transactions

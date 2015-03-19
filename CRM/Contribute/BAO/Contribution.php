@@ -2054,7 +2054,7 @@ SELECT source_contact_id
     return $html;
   }
 
-  static function getReceiptYearly($contact_id, $year, &$template) {
+  static function getAnnualReceipt($contact_id, $year, &$template) {
     $config = CRM_Core_Config::singleton();
     $domain = CRM_Core_BAO_Domain::getDomain();
     $location = $domain->getLocationValues();
@@ -2103,7 +2103,7 @@ SELECT source_contact_id
       'domain_address' => $location['address'][1]['display_text'],
       'receiptOrgInfo' => htmlspecialchars_decode($config->receiptOrgInfo),
       'receiptDescription' => htmlspecialchars_decode($config->receiptDescription),
-      'record' => self::getReceiptYearlyRecord($contact_id, $year),
+      'record' => self::getAnnualReceiptRecord($contact_id, $year),
       'recordHeader' => array(
         ts('Receipt ID'),
         ts('Contribution Types'),
@@ -2116,7 +2116,7 @@ SELECT source_contact_id
     // use either the contribution or membership receipt, based on whether it’s a membership-related contrib or not
     $sendTemplateParams = array(
       'groupName' => 'msg_tpl_workflow_receipt',
-      'valueName' => 'receipt_letter_year',
+      'valueName' => 'receipt_letter_annual',
       'contactId' => $contact_id,
       'tplParams' => $tplParams,
       'isTest' => $isTest,
@@ -2126,7 +2126,7 @@ SELECT source_contact_id
     return $html;
   }
 
-  static function getReceiptYearlyRecord($contact_id, $year = 'all'){
+  static function getAnnualReceiptRecord($contact_id, $year = 'all'){
     if($year == 'all'){
       $where = '';
     }

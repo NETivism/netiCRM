@@ -23,7 +23,7 @@ cj(document).ready(function(){
     buttons: {
       "Go!": function() {
         cj( this ).dialog( "close" );
-        document.YearlyReceipt.submit();
+        document.AnnualReceipt.submit();
       },
       Cancel: function() {
         cj( this ).dialog( "close" );
@@ -31,7 +31,7 @@ cj(document).ready(function(){
       }
     }
   });
-  cj("#YearlyReceipt").submit(function(){
+  cj("#AnnualReceipt").submit(function(){
     var result = cj('#dialog-confirm').dialog('open');
     return false;
   });
