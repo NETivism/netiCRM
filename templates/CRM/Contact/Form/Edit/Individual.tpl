@@ -40,15 +40,16 @@ var checkSimilar = {$checkSimilar};
      if(!isNaN(cid) || !checkSimilar)
        return;//no dupe check if this is a modif or if checkSimilar is disabled (CIVICRM_CONTACT_AJAX_CHECK_SIMILAR in civicrm_setting)
 
-	     cj('#first_name').blur(function(){
+	     cj('#first_name').bind("keyup input paste",function(){
          cj('#lastname_msg').remove();
              if(this.value == '')return;
 	     cj.getJSON(contactIndividual,{sort_name:cj('#first_name').val()},
          function(data){
            if(data.is_error == 1){
              return;
-           }
-           var msg = "<tr id='lastname_msg'><td colspan='5'><div class='messages status'><div class='icon inform-icon'></div>";
+           }else if(data.values.length !== 0){
+            cj('#lastname_msg').remove();
+             var msg = "<tr id='lastname_msg'><td colspan='5'><div class='messages status'><div class='icon inform-icon'></div>";
 
            if(data.values.length == 1){
              msg = msg + "{/literal}{ts}There is a contact with a similar last name. If the person you were trying to add is listed below, click on their name to view or edit their record{/ts}{literal}";  
@@ -63,6 +64,7 @@ var checkSimilar = {$checkSimilar};
            msg = msg + '</table>';
            cj('#last_name').parent().parent().after(msg + '</div><td></tr>');
            cj('#lastname_msg a').click(function(){global_formNavigate = true; return true;});// No confirmation dialog on click
+           }
          });
 	    });
   });
@@ -86,10 +88,10 @@ var checkSimilar = {$checkSimilar};
             {$form.first_name.html}
         </td>
         {if $form.prefix_id}
-	    <td>
-                {$form.prefix_id.label}<br/>
-                {$form.prefix_id.html}
-            </td>    
+  	    <td>
+            {$form.prefix_id.label}<br/>
+            {$form.prefix_id.html}
+        </td>    
         {/if}
         <td>
             {$form.middle_name.label}<br />
@@ -98,15 +100,15 @@ var checkSimilar = {$checkSimilar};
             {/if}
             {$form.middle_name.html}
         </td>
-	{if $form.suffix_id}
-            <td>
-                {$form.suffix_id.label}<br/>
-                {$form.suffix_id.html}
-            </td>
-	{/if}
-    </tr>
+	      {if $form.suffix_id}
+        <td>
+            {$form.suffix_id.label}<br/>
+            {$form.suffix_id.html}
+        </td>
+	      {/if}
+        </tr>
     
-    <tr>
+        <tr>
         <td>
             {$form.job_title.label}<br />
             {$form.job_title.html}
