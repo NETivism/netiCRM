@@ -27,8 +27,9 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
     $session = CRM_Core_Session::singleton();
 
     // this session comes from custom search
-    if(!empty($session->get('year', 'AnnualReceipt'))){
-      $this->_year = $session->get('year', 'AnnualReceipt');
+    $year = $session->get('year', 'AnnualReceipt');
+    if(!empty($year)){
+      $this->_year = $year;
     }
     
     CRM_Utils_System::appendBreadCrumb($breadCrumb);
