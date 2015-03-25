@@ -74,6 +74,7 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
    */
   public function postProcess() {
     $params = $this->controller->exportValues($this->_name);
+    set_time_limit(1800);
     if(!empty($params['year'])){
       $session = CRM_Core_Session::singleton();
       $session->resetScope('AnnualReceipt');

@@ -10,7 +10,7 @@ table td { padding: 2px 4px; }
 .row { display:table-row;}
 .line { border-top: 1px dashed #aaa; padding-top: 20px;}
 
-.receipt{ position:relative; font-size: 11pt; min-height:490px;max-height:490px;}
+.receipt{ position:relative; font-size: 11pt; min-height:490px;}
 .receipt-head { position: relative; width: 100%;}
 .receipt-head .logo {text-align: center;}
 .receipt-head .title {font-size: 16pt; text-align:center; margin-top: 10px;}
