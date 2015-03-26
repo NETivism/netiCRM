@@ -109,6 +109,14 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup {
             $fields[$ctype][$cg['table_name']][$cf['column_name']] = $cf['label'];
           }
         }
+
+        // add special field only for contact table to speed up name dedupe
+        $special_contact_field = array('sort_name' => ts('Sort Name'), 'display_name' => ts('Display Name'));
+        foreach($special_contact_field as $value => $name){
+          foreach($fields as $ctype => $table){
+            $fields[$ctype]['civicrm_contact'][$value] = $name;
+          }
+        }
       }
     }
     return $fields[$requestedType];
@@ -153,13 +161,13 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup {
     $tableQueries = $this->tableQuery();
 
     if ($this->params && !$this->noRules) {
-      $tempTableQuery = "CREATE TEMPORARY TABLE dedupe (id1 int, weight int, UNIQUE UI_id1 (id1))";
+      $tempTableQuery = "CREATE TEMPORARY TABLE dedupe (id1 int, weight int, UNIQUE UI_id1 (id1)) ENGINE=MyISAM";
       $insertClause = "INSERT INTO dedupe (id1, weight)";
       $groupByClause = "GROUP BY id1";
       $dupeCopyJoin = " JOIN dedupe_copy ON dedupe_copy.id1 = t1.column WHERE ";
     }
     else {
-      $tempTableQuery = "CREATE TEMPORARY TABLE dedupe (id1 int, id2 int, weight int, UNIQUE UI_id1_id2 (id1, id2))";
+      $tempTableQuery = "CREATE TEMPORARY TABLE dedupe (id1 int, id2 int, weight int, UNIQUE UI_id1_id2 (id1, id2)) ENGINE=MyISAM";
       $insertClause = "INSERT INTO dedupe (id1, id2, weight)";
       $groupByClause = "GROUP BY id1, id2";
       $dupeCopyJoin = " JOIN dedupe_copy ON dedupe_copy.id1 = t1.column AND dedupe_copy.id2 = t2.column WHERE ";
