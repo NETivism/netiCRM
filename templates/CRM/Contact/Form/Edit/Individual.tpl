@@ -31,42 +31,57 @@ var viewIndividual = "{crmURL p='civicrm/contact/view?reset=1&cid='}";
 var editIndividual = "{crmURL p='civicrm/contact/add?reset=1&action=update&cid='}";
 var checkSimilar = {$checkSimilar};
 {literal}
-
   cj(function(){
      if(cj('#contact_sub_type *').length == 1){//if they aren't any subtype we don't offer the option
         cj('#contact_sub_type').parent().hide();
      }
 
-     if(!isNaN(cid) || !checkSimilar)
+     if(!isNaN(cid) || !checkSimilar) {
        return;//no dupe check if this is a modif or if checkSimilar is disabled (CIVICRM_CONTACT_AJAX_CHECK_SIMILAR in civicrm_setting)
+     }
 
-       cj('#first_name').bind("keyup input paste",function(){
+     // prevent multiple trigger ajax when ime input
+     var queue = [];
+     cj('#first_name').bind("keyup input paste",function(e){
+       queue.push('run');
+     });
+
+     setInterval(function(){
+       if(queue.length > 0){
          cj('#lastname_msg').remove();
-             if(this.value == '')return;
-       cj.getJSON(contactIndividual,{sort_name:cj('#first_name').val()},
-         function(data){
-           if(data.is_error == 1){
-             return;
-           }else if(data.values.length !== 0){
-            cj('#lastname_msg').remove();
-             var msg = "<tr id='lastname_msg'><td colspan='5'><div class='messages status'><div class='icon inform-icon'></div>";
+         cj.getJSON(contactIndividual, {sort_name:cj('#first_name').val()}, dupelist);
+       }
+       queue = [];
+     }, 1500);
 
-           if(data.values.length == 1){
-             msg = msg + "{/literal}{ts}There is a contact with a similar last name. If the person you were trying to add is listed below, click on their name to view or edit their record{/ts}{literal}";  
-           }else{
-             // ideally, should use a merge with data.values.length
-             msg = msg + "{/literal}{ts}There are contacts with a similar last name. If the person you were trying to add is listed below, click on their name to view or edit their record{/ts}{literal}";
-           }
-           msg = msg + '<table class="matching-contacts-actions">';
-           cj.each(data.values, function(i,contact){
-             msg = msg + '<tr><td><a href="'+viewIndividual+contact.contact_id+'">'+ contact.display_name + '</a></td><td>' + contact.email + '</td><td class="action-items"><a class="action-item action-item-first" href="' + viewIndividual + contact.contact_id + '">{/literal}{ts}View{/ts}{literal}</a><a class="action-item" href="' + editIndividual + contact.contact_id + '">{/literal}{ts}Edit{/ts}{literal}</a></td></tr>';
-           });
-           msg = msg + '</table>';
-           cj('#last_name').parent().parent().after(msg + '</div><td></tr>');
-           cj('#lastname_msg a').click(function(){global_formNavigate = true; return true;});// No confirmation dialog on click
-           }
+     cj('#first_name').blur(function(){
+       cj.getJSON(contactIndividual,{sort_name:cj(this).val()}, dupelist);
+     });
+     var dupelist = function(data){
+       if(data.is_error == 1){
+         return;
+       }
+       else if(data.values.length !== 0){
+         cj('#lastname_msg').remove();
+         var msg = "<tr id='lastname_msg'><td colspan='5'><div class='messages status'><div class='icon inform-icon'></div>";
+
+         if(data.values.length == 1){
+           msg = msg + "{/literal}{ts}There is a contact with a similar last name. If the person you were trying to add is listed below, click on their name to view or edit their record{/ts}{literal}";  
+         }
+         else{
+           // ideally, should use a merge with data.values.length
+           msg = msg + "{/literal}{ts}There are contacts with a similar last name. If the person you were trying to add is listed below, click on their name to view or edit their record{/ts}{literal}";
+         }
+         msg = msg + '<table class="matching-contacts-actions">';
+         cj.each(data.values, function(i,contact){
+           msg = msg + '<tr><td><a href="'+viewIndividual+contact.contact_id+'">'+ contact.display_name + '</a></td><td>' + contact.email + '</td><td class="action-items"><a class="action-item action-item-first" href="' + viewIndividual + contact.contact_id + '">{/literal}{ts}View{/ts}{literal}</a><a class="action-item" href="' + editIndividual + contact.contact_id + '">{/literal}{ts}Edit{/ts}{literal}</a></td></tr>';
          });
-      });
+         msg = msg + '</table>';
+         cj('#last_name').parent().parent().after(msg + '</div><td></tr>');
+         cj('#lastname_msg a').click(function(){global_formNavigate = true; return true;});// No confirmation dialog on click
+       }
+       queue = [];
+     }
   });
 </script>
 {/literal}
