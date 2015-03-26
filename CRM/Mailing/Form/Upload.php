@@ -642,13 +642,15 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
 
       /* First look for missing tokens */
 
-
-      $err = CRM_Utils_Token::requiredTokens($str);
-      if ($err !== TRUE) {
-        foreach ($err as $token => $desc) {
-          $dataErrors[] = '<li>' . ts('This message is missing a required token - {%1}: %2',
-            array(1 => $token, 2 => $desc)
-          ) . '</li>';
+      // refs #14980, on specific way to skip check. Use carefully
+      if(empty($params['skip_unsubscribe_check'])){
+        $err = CRM_Utils_Token::requiredTokens($str);
+        if ($err !== TRUE) {
+          foreach ($err as $token => $desc) {
+            $dataErrors[] = '<li>' . ts('This message is missing a required token - {%1}: %2',
+              array(1 => $token, 2 => $desc)
+            ) . '</li>';
+          }
         }
       }
 
