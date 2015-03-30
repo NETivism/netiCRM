@@ -2054,7 +2054,7 @@ SELECT source_contact_id
     return $html;
   }
 
-  static function getAnnualReceipt($contact_id, $year, &$template) {
+  static function getAnnualReceipt($contact_id, $option, &$template) {
     $config = CRM_Core_Config::singleton();
     $domain = CRM_Core_BAO_Domain::getDomain();
     $location = $domain->getLocationValues();
@@ -2074,6 +2074,7 @@ SELECT source_contact_id
     }
 
     $sort_name = $contact['sort_name'];
+    $addressee = !empty($contact['addressee_custom']) ? $contact['addressee_custom'] : (!empty($contact['addressee_display']) ? $contact['addressee_display'] : $sort_name);
     $receipt_logo = $config->receiptLogo;
 
     $entityBlock = array('contact_id' => $contact_id);
@@ -2090,66 +2091,102 @@ SELECT source_contact_id
     }
 
     // set email in the template here
-    $tplParams = array(
-      'email' => $email,
-      'receiptFromEmail' => $values['receipt_from_email'],
-      'contactID' => $contact_id,
-      'sort_name' => $sort_name,
-      'address' => $address,
-      'logo' => $receipt_logo,
-      'domain_name' => $domain->name,
-      'domain_email' => $location['email'][1]['email'],
-      'domain_phone' => $location['phone'][1]['phone'],
-      'domain_address' => $location['address'][1]['display_text'],
-      'receiptOrgInfo' => htmlspecialchars_decode($config->receiptOrgInfo),
-      'receiptDescription' => htmlspecialchars_decode($config->receiptDescription),
-      'record' => self::getAnnualReceiptRecord($contact_id, $year),
-      'recordHeader' => array(
-        ts('Receipt ID'),
-        ts('Contribution Types'),
-        ts('Payment Instrument'),
-        ts('Receipt Date'),
-        ts('Total Amount'),
-      ),
-    );
+    $records = self::getAnnualReceiptRecord($contact_id, $option);
+    if(!empty($records)){
+      $tplParams = array(
+        'email' => $email,
+        'receiptFromEmail' => $values['receipt_from_email'],
+        'contactID' => $contact_id,
+        'addressee' => $addressee,
+        'sort_name' => $sort_name,
+        'address' => $address,
+        'logo' => $receipt_logo,
+        'domain_name' => $domain->name,
+        'domain_email' => $location['email'][1]['email'],
+        'domain_phone' => $location['phone'][1]['phone'],
+        'domain_address' => $location['address'][1]['display_text'],
+        'receiptOrgInfo' => htmlspecialchars_decode($config->receiptOrgInfo),
+        'receiptDescription' => htmlspecialchars_decode($config->receiptDescription),
+        'record' => $records,
+        'recordHeader' => array(
+          ts('Receipt ID'),
+          ts('Contribution Types'),
+          ts('Payment Instrument'),
+          ts('Receipt Date'),
+          ts('Total Amount'),
+        ),
+      );
 
-    // use either the contribution or membership receipt, based on whether it’s a membership-related contrib or not
-    $sendTemplateParams = array(
-      'groupName' => 'msg_tpl_workflow_receipt',
-      'valueName' => 'receipt_letter_annual',
-      'contactId' => $contact_id,
-      'tplParams' => $tplParams,
-      'isTest' => $isTest,
-    );
+      // use either the contribution or membership receipt, based on whether it’s a membership-related contrib or not
+      $sendTemplateParams = array(
+        'groupName' => 'msg_tpl_workflow_receipt',
+        'valueName' => 'receipt_letter_annual',
+        'contactId' => $contact_id,
+        'tplParams' => $tplParams,
+        'isTest' => $isTest,
+      );
 
-    list($sent, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate($sendTemplateParams);
-    return $html;
+      list($sent, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate($sendTemplateParams);
+      return $html;
+    }
   }
 
-  static function getAnnualReceiptRecord($contact_id, $year = 'all'){
-    if($year == 'all'){
-      $where = '';
-    }
-    else{
+  static function getAnnualReceiptRecord($contact_id, $option = NULL){
+    $where = array();
+
+    // filter by year by receipt date
+    if(!empty($option['year'])){
+      $year = $option['year'];
       $start = $year.'-01-01 00:00:00';
       $end = $year.'-12-31 23:59:59';
-      $where = "AND c.receipt_date >= '$start' AND c.receipt_date <= '$end'";
+      $where[] = "c.receipt_date >= '$start' AND c.receipt_date <= '$end'";
     }
+
+    // filter by contribution type, default only dedutible contribution type
+    if(is_array($option['contribution_type_id']) && array_search(0, $option['contribution_type_id']) !== FAlSE) {
+      $empty = array_search(0, $option['contribution_type_id']);
+      unset($option['contribution_type_id'][$empty]);
+    }
+    if(!empty($option['contribution_type_id'])){
+      if(is_array($option['contribution_type_id'])){
+        $where[] = "c.contribution_type_id IN (".implode(',', $option['contribution_type_id']).')';
+      }
+      else{
+        $where[] = "c.contribution_type_id = ".$option['contribution_type_id'];
+      }
+    }
+    else{
+      $types = CRM_Contribute_PseudoConstant::contributionType(NULL, 1);
+      $where[] = "c.contribution_type_id IN (".implode(',', array_keys($types)).")";
+    }
+
+    // filter by recurring contribution
+    if(!empty($option['is_recur'])){
+      if($option['is_recur'] === 1){
+        $where[] = "c.contribution_recur_id IS NOT NULL";
+      }
+      elseif($option['is_recur'] === -1){
+        $where[] = "c.contribution_recur_id IS NULL";
+      }
+    }
+    $where = !empty($where) ? ' AND '.implode(' AND ', $where) : NULL;
+
     $args = array(
       1 => array($contact_id, 'Integer'),
     );
-    $query = CRM_Core_DAO::executeQuery("SELECT c.id, c.contribution_type_id, c.payment_instrument_id, c.receipt_id, DATE(c.receipt_date) as receipt_date, c.total_amount FROM civicrm_contribution c WHERE c.contact_id = %1 AND c.is_test = 0 AND c.contribution_status_id = 1 $where ORDER BY c.receipt_date ASC", $args);
+    $query = "SELECT c.id, c.contribution_type_id, c.payment_instrument_id, c.receipt_id, DATE(c.receipt_date) as receipt_date, c.total_amount FROM civicrm_contribution c WHERE c.contact_id = %1 AND c.is_test = 0 AND c.contribution_status_id = 1 $where ORDER BY c.receipt_date ASC";
+    $result = CRM_Core_DAO::executeQuery($query, $args);
    
     $contribution_type = CRM_Contribute_PseudoConstant::contributionType();
     $instruments = CRM_Contribute_PseudoConstant::paymentInstrument();
     $record = array();
-    while($query->fetch()){
+    while($result->fetch()){
       $record[] = array(
-        $query->receipt_id,
-        $contribution_type[$query->contribution_type_id],
-        $instruments[$query->payment_instrument_id],
-        $query->receipt_date,
-        $query->total_amount,
+        $result->receipt_id,
+        $contribution_type[$result->contribution_type_id],
+        $instruments[$result->payment_instrument_id],
+        $result->receipt_date,
+        $result->total_amount,
       );
     }
     return $record;

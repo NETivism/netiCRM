@@ -2,9 +2,20 @@
     <p><span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>{ts}This will take a period of time.{/ts}<br />{ts}Are you sure you want to continue?{/ts}</p>
   </div>
 <div class="form-item">
-  <div>
-  <label>{$form.year.label}</label>
-  {$form.year.html}
+  <div class="crm-section">
+    <div class="label"><label>{$form.year.label}</label></div>
+    <div class="content">{$form.year.html}</div>
+    <div class="clear"></div>
+  </div>
+  <div class="crm-section">
+    <div class="label"><label>{$form.contribution_type_id.label}</label></div>
+    <div class="content">{$form.contribution_type_id.html}</div>
+    <div class="clear"></div>
+  </div>
+  <div class="crm-section">
+    <div class="label"><label>{$form.is_recur.label}</label></div>
+    <div class="content">{$form.is_recur.html}</div>
+    <div class="clear"></div>
   </div>
 </div>
 <div class="spacer"></div>

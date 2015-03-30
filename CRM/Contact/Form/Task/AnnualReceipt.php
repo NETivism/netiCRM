@@ -55,6 +55,20 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
       }
       $this->addElement('select', 'year', ts('Receipt Date'), $years);
     }
+
+    $contribution_type = CRM_Contribute_PseudoConstant::contributionType();
+    array_unshift($contribution_type, '- '.ts('Deductible').' -');
+    $attrs = array('multiple' => 'multiple');
+    $this->addElement('select', 'contribution_type_id', ts('Contribution Type'), $contribution_type, $attrs);
+
+    $contribution_type = CRM_Contribute_PseudoConstant::contributionType();
+    $is_recur = array(
+      '' => '- '.ts('All').' -' ,
+      -1 => ts('Normal'),
+      1 => ts('Recurring Contribution'),
+    );
+    $this->addElement('select', 'is_recur', ts('Recurring Contribution'), $is_recur);
+
     $this->addButtons(array(
         array(
           'type' => 'next',
@@ -79,7 +93,14 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
       $session = CRM_Core_Session::singleton();
       $session->resetScope('AnnualReceipt');
       $this->_year = $params['year'];
-      self::makeReceipt($this->_contactIds, $params['year']);
+
+      $option = array();
+      foreach($params as $k => $p){
+        if($k != 'qfKey' && !empty($p)){
+          $option[$k] = $p;
+        }
+      }
+      self::makeReceipt($this->_contactIds, $option);
       self::makePDF();
     }
     CRM_Utils_System::civiExit();
@@ -107,7 +128,7 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
     }
   }
 
-  public function makeReceipt($contactIds, $year) {
+  public function makeReceipt($contactIds, $option) {
     $this->_tmpreceipt = tempnam('/tmp', 'receiptyear');
     $count = 0;
 
@@ -116,7 +137,7 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
       if ($count) {
         $html = '<div class="page-break" style="page-break-after: always;"></div>';
       }
-      $html .= CRM_Contribute_BAO_Contribution::getAnnualReceipt($contact_id, $year, $template);
+      $html .= CRM_Contribute_BAO_Contribution::getAnnualReceipt($contact_id, $option, $template);
       self::pushFile($html);
 
       // reset template values before processing next transactions
