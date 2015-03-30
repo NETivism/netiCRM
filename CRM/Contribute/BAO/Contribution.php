@@ -2143,7 +2143,7 @@ SELECT source_contact_id
     }
 
     // filter by contribution type, default only dedutible contribution type
-    if(is_array($option['contribution_type_id']) && array_search(0, $option['contribution_type_id']) !== FAlSE) {
+    if(is_array($option['contribution_type_id']) && array_search(0, $option['contribution_type_id']) !== FALSE) {
       $empty = array_search(0, $option['contribution_type_id']);
       unset($option['contribution_type_id'][$empty]);
     }
