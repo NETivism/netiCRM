@@ -47,7 +47,6 @@ class HTML_QuickForm_Rule_Required extends HTML_QuickForm_Rule
      */
     function validate($value, $options = null)
     {
-        var_export($value);
         if ( is_array( $value ) ) {
             // check if file type, if so permit empty type
             $fileType =
