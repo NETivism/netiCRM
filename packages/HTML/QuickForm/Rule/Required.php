@@ -1,4 +1,4 @@
-<?php
+<?php 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
 /**
@@ -57,7 +57,7 @@ class HTML_QuickForm_Rule_Required extends HTML_QuickForm_Rule
             $return = false;    
             foreach ( $value as $k => $v ) {
                 // dont check type field. Safari3 Beta does not set this
-                if ( $fileType && ($k == 'type' || $k == 'error' || $k == 'size') ) {
+                if ( $fileType && $k == 'type' ) {
                     continue;
                 }
                 if ( ( string ) $v != '' ) {
