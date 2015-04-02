@@ -128,7 +128,7 @@ cj(function($) {
     $.post(query,function(data) {
       $('#result').text(data);
     },'text').fail(function(){
-      $('#result').text({/literal}"{ts escape='js'}You have no permission to use this feature. Please login to NetiCRM.{/ts}"{literal});
+      $('#result').text({/literal}"{ts escape='js'}You have no permission to use this feature. Please join to netiCRM.tw .{/ts}"{literal});
     });
     link="<a href='"+query+"' title='open in a new tab' target='_blank'>ajax query</a>&nbsp;";
     var RESTquery = Drupal.settings.resourceBase + "extern/rest.php?"+ query.substring(restURL.length,query.length) + "&api_key={yoursitekey}&key={yourkey}";
