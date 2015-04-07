@@ -109,5 +109,13 @@ class CRM_Core_Payment_Neweb extends CRM_Core_Payment {
       civicrm_neweb_do_transfer_checkout($params, $component, $this->_paymentProcessor, $is_test);
     }
   }
+
+  function cancelRecuringMessage(){
+    if (function_exists("_civicrm_neweb_cancel_recuring_message")) {
+      return _civicrm_neweb_cancel_recuring_message(); 
+    }else{
+      CRM_Core_Error::fatal('Module civicrm_neweb doesn\'t exists.');
+    }
+  }
 }
 
