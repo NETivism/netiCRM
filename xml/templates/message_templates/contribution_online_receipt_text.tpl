@@ -44,13 +44,13 @@
 {/if}
 
 {if $is_recur}
-{if $contributeMode eq 'notify'}
-{ts}This is a recurring contribution. You can modify or cancel future contributions by logging in to your account at:{/ts}
-
-{$cancelSubscriptionUrl}
-{elseif $contributeMode eq 'directIPN' and $receiptFromEmail}
-{ts 1=$receiptFromEmail}This is a recurring contribution. To modify or cancel future contributions please contact us at %1.{/ts}
-
+{if $recur.end_date}{capture assign="recur_date"}{ts 1=$recur.start_date 2=$recur.end_date}Between %1 and %2{/ts}{/capture}{else}{capture assign="recur_date"}{ts}From{/ts} {$recur.start_date}{/capture}{/if}
+{capture assign="recur_frequency_unit"}{ts}{$recur.frequency_unit}{/ts}{/capture}
+{ts 1=$recur.frequency_interval 2=$recur_frequency_unit 3=$paidBy 4=$recur_date}This is a recurring contribution. %4, every %1 %2 will charge from %3 payment.{/ts}
+{if $receiptFromEmail}
+{ts 1=$receiptFromEmail}To modify or cancel future contributions please contact %1{/ts}
+{else}
+{ts}To modify or cancel future contributions please contact us{/ts}
 {/if}
 {/if}
 

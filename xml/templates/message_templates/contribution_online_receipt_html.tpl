@@ -128,19 +128,22 @@
      {/if}
 
      {if $is_recur}
-      {if $contributeMode eq 'notify'}
-       <tr>
-        <td {$labelStyle}>
-         {ts 1=$cancelSubscriptionUrl}This is a recurring contribution. You can modify or cancel future contributions by <a href="%1">logging in to your account</a>.{/ts}
-        </td>
-       </tr>
-      {elseif $contributeMode eq 'directIPN' and $receiptFromEmail}
-       <tr>
-        <td {$labelStyle}>
-         {ts 1=$receiptFromEmail}This is a recurring contribution. To modify or cancel future contributions please contact us at %1.{/ts}
-        </td>
-       </tr>
+      {if $recur.end_date}
+        {capture assign="recur_date"}{ts 1=$recur.start_date 2=$recur.end_date}Between %1 and %2{/ts}{/capture}
+      {else}
+        {capture assign="recur_date"}{ts}From{/ts} {$recur.start_date}{/capture}
       {/if}
+      {capture assign="recur_frequency_unit"}{ts}{$recur.frequency_unit}{/ts}{/capture}
+       <tr>
+        <td {$labelStyle}>
+         {ts 1=$recur.frequency_interval 2=$recur_frequency_unit 3=$paidBy 4=$recur_date}This is a recurring contribution. %4, every %1 %2 will charge from %3 payment.{/ts}<br />
+         {if $receiptFromEmail}
+           {ts 1=$receiptFromEmail}To modify or cancel future contributions please contact %1{/ts}
+         {else}
+           {ts}To modify or cancel future contributions please contact us{/ts}
+         {/if}
+        </td>
+       </tr>
      {/if}
 
      {if $honor_block_is_active}

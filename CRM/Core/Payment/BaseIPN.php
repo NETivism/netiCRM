@@ -565,6 +565,7 @@ class CRM_Core_Payment_BaseIPN {
     $membership = &$objects['membership'];
     $participant = &$objects['participant'];
     $event = &$objects['event'];
+    $config = CRM_Core_Config::singleton();
 
     if (empty($values)) {
       $values = array();
@@ -759,6 +760,30 @@ class CRM_Core_Payment_BaseIPN {
       if ($objects['paymentProcessor']['billing_mode'] & CRM_Core_Payment::BILLING_MODE_FORM) {
         //direct mode showing billing block, so use directIPN for temporary
         $template->assign('contributeMode', 'directIPN');
+      }
+
+      if(!empty($objects['contributionRecur'])){
+        $recurring = array(
+          'frequency_unit' => NULL,
+          'frequency_interval' => NULL,
+          'installments' => NULL,
+          'start_date' => NULL,
+          'end_date' => NULL,
+        );
+        foreach($recurring as $k => $v){
+          if(isset($objects['contributionRecur']->$k)){
+            $value = $objects['contributionRecur']->$k;
+            if(!empty($value)){
+              if(strstr($k, '_date')){
+                $recurring[$k] = CRM_Utils_Date::customFormat($value, $config->dateformatFull);
+              }
+              else{
+                $recurring[$k] = $value;
+              }
+            }
+          }
+        }
+        $template->assign('recur', $recurring);
       }
     }
 

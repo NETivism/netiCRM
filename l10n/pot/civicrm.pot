@@ -44722,3 +44722,12 @@ msgstr ""
 
 msgid "This action will break auto serial number. Please confirm you really want to change receipt number m  anually."
 msgstr ""
+
+msgid "This is a recurring contribution. %4, every %1 %2 will charge from %3 payment."
+msgstr ""
+
+msgid "To modify or cancel future contributions please contact %1"
+msgstr ""
+
+msgid "To modify or cancel future contributions please contact us"
+msgstr ""
