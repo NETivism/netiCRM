@@ -33,11 +33,9 @@
  *
  */
 
-require_once 'CRM/Contact/DAO/GroupContactCache.php';
 class CRM_Contact_BAO_GroupContactCache extends CRM_Contact_DAO_GroupContactCache {
 
   static $_alreadyLoaded = array();
-  CONST NUM_CONTACTS_TO_INSERT = 200;
 
   /**
    * Check to see if we have cache entries for this group
@@ -47,8 +45,7 @@ class CRM_Contact_BAO_GroupContactCache extends CRM_Contact_DAO_GroupContactCach
    *
    * @return boolean true if we did not regenerate, false if we did
    */
-  static
-  function check($groupID) {
+  static function check($groupID) {
     if (empty($groupID)) {
       return TRUE;
     }
@@ -63,6 +60,12 @@ class CRM_Contact_BAO_GroupContactCache extends CRM_Contact_DAO_GroupContactCach
 
     $config = CRM_Core_Config::singleton();
     $smartGroupCacheTimeout = isset($config->smartGroupCacheTimeout) && is_numeric($config->smartGroupCacheTimeout) ? $config->smartGroupCacheTimeout : 0;
+
+    //make sure to give original timezone settings again.
+    $originalTimezone = date_default_timezone_get();
+    date_default_timezone_set('UTC');
+    $now = date('YmdHis');
+    date_default_timezone_set($originalTimezone);
     $query = "
 SELECT     g.id
 FROM       civicrm_group g
@@ -70,7 +73,7 @@ WHERE      g.id IN ( {$groupID} ) AND g.saved_search_id = 1 AND
           (g.cache_date IS NULL OR (TIMESTAMPDIFF(MINUTE, g.cache_date, NOW()) >= $smartGroupCacheTimeout))
 ";
 
-    $dao = &CRM_Core_DAO::executeQuery($query);
+    $dao = CRM_Core_DAO::executeQuery($query);
     $groupIDs = array();
     while ($dao->fetch()) {
       $groupIDs[] = $dao->id;
@@ -85,34 +88,22 @@ WHERE      g.id IN ( {$groupID} ) AND g.saved_search_id = 1 AND
     }
   }
 
-  static
-  function add($groupID) {
+  static function add($groupID) {
     // first delete the current cache
     self::remove($groupID);
     if (!is_array($groupID)) {
       $groupID = array($groupID);
     }
 
-    $params['return.contact_id'] = 1;
-    $params['offset'] = 0;
-    $params['rowCount'] = 0;
-    $params['sort'] = NULL;
-    $params['smartGroupCache'] = FALSE;
-
-    require_once 'api/v2/Contact.php';
-
-    $values = array();
+    $returnProperties = array('contact_id');
     foreach ($groupID as $gid) {
-      $params['group'] = array();
-      $params['group'][$gid] = 1;
-
+      $params = array(array('group', 'IN', array($gid => 1), 0, 0));
       // the below call update the cache table as a byproduct of the query
-      $contacts = civicrm_contact_search($params);
+      CRM_Contact_BAO_Query::apiQuery($params, $returnProperties, NULL, NULL, 0, 0, FALSE);
     }
   }
 
-  static
-  function store(&$groupID, &$values) {
+  static function store(&$groupID, &$values) {
     $processed = FALSE;
 
     // sort the values so we put group IDs in front and hence optimize
@@ -130,8 +121,7 @@ WHERE      g.id IN ( {$groupID} ) AND g.saved_search_id = 1 AND
     self::updateCacheTime($groupID, $processed);
   }
 
-  static
-  function remove($groupID = NULL, $onceOnly = TRUE) {
+  static function remove($groupID = NULL, $onceOnly = TRUE) {
     static $invoked = FALSE;
 
     // typically this needs to happy only once per instance
@@ -148,32 +138,48 @@ WHERE      g.id IN ( {$groupID} ) AND g.saved_search_id = 1 AND
 
     if ($groupID == NULL) {
       $invoked = TRUE;
+    } else if (is_array($groupID)) {
+      foreach ($groupID as $gid)
+        unset(self::$_alreadyLoaded[$gid]);
+    } else if ($groupID && array_key_exists($groupID, self::$_alreadyLoaded)) {
+      unset(self::$_alreadyLoaded[$groupID]);
     }
 
     //when there are difference in timezones for mysql and php.
     //cache_date set null not behaving properly, CRM-6855
-    $now = date('YmdHis');
 
-    $config = CRM_Core_Config::singleton();
-    $smartGroupCacheTimeout = isset($config->smartGroupCacheTimeout) && is_numeric($config->smartGroupCacheTimeout) ? $config->smartGroupCacheTimeout : 0;
+    //make sure to give original timezone settings again.
+    $originalTimezone = date_default_timezone_get();
+    date_default_timezone_set('UTC');
+    $now = date('YmdHis');
+    date_default_timezone_set($originalTimezone);
 
     if (!isset($groupID)) {
-      $query = "
-DELETE     g
-FROM       civicrm_group_contact_cache g
-INNER JOIN civicrm_contact c ON c.id = g.contact_id
-WHERE      g.group_id IN (
-    SELECT id
-    FROM   civicrm_group
-    WHERE  TIMESTAMPDIFF(MINUTE, cache_date, $now) >= $smartGroupCacheTimeout   
-)
-";
+      $config = CRM_Core_Config::singleton();
+      $smartGroupCacheTimeout = isset($config->smartGroupCacheTimeout) && is_numeric($config->smartGroupCacheTimeout) ? $config->smartGroupCacheTimeout : 0;
 
-      $update = "
+      if ($smartGroupCacheTimeout == 0) {
+        $query = "
+TRUNCATE civicrm_group_contact_cache
+";
+        $update = "
+UPDATE civicrm_group g
+SET    cache_date = null
+";
+      }
+      else {
+        $query = "
+DELETE     gc
+FROM       civicrm_group_contact_cache gc
+INNER JOIN civicrm_group g ON g.id = gc.group_id
+WHERE      TIMESTAMPDIFF(MINUTE, g.cache_date, $now) >= $smartGroupCacheTimeout
+";
+        $update = "
 UPDATE civicrm_group g
 SET    cache_date = null
 WHERE  TIMESTAMPDIFF(MINUTE, cache_date, $now) >= $smartGroupCacheTimeout
 ";
+      }
       $params = array();
     }
     elseif (is_array($groupID)) {
@@ -213,8 +219,7 @@ WHERE  id = %1
   /**
    * load the smart group cache for a saved search
    */
-  static
-  function load(&$group) {
+  static function load(&$group, $fresh = FALSE) {
     $groupID = $group->id;
     $savedSearchID = $group->saved_search_id;
     if (array_key_exists($groupID, self::$_alreadyLoaded) && !$fresh) {
@@ -248,7 +253,8 @@ WHERE  id = %1
         // we split it up and store custom class
         // so temp tables are not destroyed if they are used
         // hence customClass is defined above at top of function
-        $customClass = CRM_Contact_BAO_SearchCustom::customClass($ssParams['customSearchID'], $savedSearchID);
+        $customClass =
+          CRM_Contact_BAO_SearchCustom::customClass($ssParams['customSearchID'], $savedSearchID);
         $searchSQL = $customClass->contactIDs();
         $idName = 'contact_id';
       }
@@ -344,8 +350,7 @@ WHERE  id = %1
    * @param $groupID array(int)
    * @param $processed bool, whether the cache data was recently modified
    */
-  static
-  function updateCacheTime($groupID, $processed) {
+  static function updateCacheTime($groupID, $processed) {
     // only update cache entry if we had any values
     if ($processed) {
       // also update the group with cache date information
