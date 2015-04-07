@@ -101,6 +101,16 @@ function civicrm_conf_init() {
     return $conf;
 }
 
+function civicrm_conf_set(){
+  global $civicrm_root, $db_url;
+  $civicrm_root = dirname(__FILE__);
+  if( file_exists(civicrm_conf_init( ) . '/settings.php')){
+    include_once civicrm_conf_init( ) . '/settings.php';
+  }
+}
+
+civicrm_conf_set();
+
 $settingsFile = civicrm_conf_init( ) . '/civicrm.settings.php';
 define('CIVICRM_SETTINGS_PATH', $settingsFile);
 $error = @include_once( $settingsFile );

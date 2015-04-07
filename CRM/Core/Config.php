@@ -35,7 +35,10 @@
  * $Id$
  *
  */
+/* we must load db first, never delete this require */
+require_once 'DB.php';
 
+/* these may be delete future */
 require_once 'Log.php';
 require_once 'Mail.php';
 
