@@ -419,7 +419,14 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
      */
     static function copy( $id ) 
     {
-        $fieldsFix = array('prefix' => array('title' => ts('Copy of') . ' '));
+      $fieldsFix = array(
+        'prefix' => array(
+          'title' => ts('Copy of') . ' ',
+        ),
+        'replace' => array(
+          'is_active' => 0,
+        ),
+      );
         $copy =& CRM_Core_DAO::copyGeneric( 'CRM_Contribute_DAO_ContributionPage', 
                                             array( 'id' => $id ), 
                                             null, 
