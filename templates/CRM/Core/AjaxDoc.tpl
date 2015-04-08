@@ -127,7 +127,6 @@ cj(function($) {
     $('#result').html('<i>Loading...</i>');
     $.post(query,function(data) {
       var dataJson = JSON.parse(data);
-      console.log(dataJson);
       if(dataJson.is_error == 1 && dataJson.error_message.match(/missing permission: access CiviCRM/)){
         showPermissionDenyMessage();
       }else{
