@@ -209,16 +209,16 @@ class CRM_Admin_Page_AJAX {
           $status = ts('Are you sure you want to mark this recurring contribution as cancelled?');
           // Judge $recurID is belong to neweb or not.
           $ccid = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution cc WHERE cc.contribution_recur_id = {$recordID}");          
-          $contri = new CRM_Contribute_DAO_Contribution( );
-          $contri->id = $ccid;
+          $contrib = new CRM_Contribute_DAO_Contribution( );
+          $contrib->id = $ccid;
           
-          if($contri->find(true)){
-            if(!empty($contri->payment_processor_id)){
-              $pp = CRM_Core_BAO_PaymentProcessor::getPayment($contri->payment_processor_id,$contri->is_test);
+          if($contrib->find(true)){
+            if(!empty($contrib->payment_processor_id)){
+              $pp = CRM_Core_BAO_PaymentProcessor::getPayment($contrib->payment_processor_id, $contrib->is_test);
               if($pp['class_name']){
                 $classname = 'CRM_Core_'.$pp['class_name']; 
-                $payment = new $classname($contri->is_test,$contri->payment_processor_id);
-                if(method_exists($payment,'cancelRecuringMessage')){
+                $payment = new $classname($contrib->is_test, $contrib->payment_processor_id);
+                if(method_exists($payment, 'cancelRecuringMessage')){
                   $status = $payment->cancelRecuringMessage();  
                 }
               }
