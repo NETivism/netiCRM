@@ -126,10 +126,14 @@ cj(function($) {
     window.location.hash = query;
     $('#result').html('<i>Loading...</i>');
     $.post(query,function(data) {
-      $('#result').text(data);
-    },'text').fail(function(){
-      $('#result').text({/literal}"{ts escape='js'}You have no permission to use this feature. Please join to netiCRM.tw .{/ts}"{literal});
-    });
+      var dataJson = JSON.parse(data);
+      console.log(dataJson);
+      if(dataJson.is_error == 1 && dataJson.error_message.match(/missing permission: access CiviCRM/)){
+        showPermissionDenyMessage();
+      }else{
+        $('#result').text(data);
+      }
+    },'text').fail(showPermissionDenyMessage);
     link="<a href='"+query+"' title='open in a new tab' target='_blank'>ajax query</a>&nbsp;";
     var RESTquery = Drupal.settings.resourceBase + "extern/rest.php?"+ query.substring(restURL.length,query.length) + "&api_key={yoursitekey}&key={yourkey}";
     $("#link").html(link+"|<a href='"+RESTquery+"' title='open in a new tab' target='_blank'>REST query</a>.");
@@ -166,6 +170,10 @@ cj(function($) {
   $('#selector').on('click', 'a', function() {
     toggleField($(this).data('id'), this.innerHTML, this.class);
   });
+
+  function showPermissionDenyMessage(){
+      $('#result').text({/literal}"{ts escape='js'}You have no permission to use this feature. Please join to netiCRM.tw .{/ts}"{literal});
+    }
 
   function CRMurl(p, params) {
     var tplURL = '/civicrm/example?placeholder';
