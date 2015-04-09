@@ -1113,6 +1113,9 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
   }
 
   function addFieldRequiredRule(&$errors){
+    // Files : Write in $this->_submitFiles['custom_4']['name']
+    // if is no Files : $this->_submitFiles['custom_4']['error'] == 4
+    // or $this->_submitFiles['custom_4']['name'] is null.
     foreach ($this->_fields as $name => $fld) {
       $data_type = isset($fld['data_type']) ? $fld['data_type'] : '';
       if ($fld['is_required'] && CRM_Utils_System::isNull(CRM_Utils_Array::value($name, $fields) && $data_type != 'File')
@@ -1120,7 +1123,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
         $errors[$name] = ts('%1 is a required field.', array(1 => $fld['title']));
       }
       if($fld['is_required'] && $data_type == 'File'){
-        $uploaded = $_FILES[$name];
+        $uploaded = $this->_submitFiles[$name];
         if(empty($uploaded['name'])){
           $errors[$name] = ts('%1 is a required field.', array(1 => $fld['title']));
         }

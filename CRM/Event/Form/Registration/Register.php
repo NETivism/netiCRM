@@ -863,9 +863,8 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
       ) {
         return empty($errors) ? TRUE : $errors;
       }
-
-      $self->addFieldRequiredRule($errors);
     }
+    $self->addFieldRequiredRule($errors);
 
     // make sure that credit card number and cvv are valid
     require_once 'CRM/Utils/Rule.php';
