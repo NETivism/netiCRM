@@ -117,5 +117,13 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
       civicrm_allpay_do_transfer_checkout($params, $component, $this->_paymentProcessor, $is_test);
     }
   }
+
+  function cancelRecuringMessage(){
+    if (function_exists("_civicrm_allpay_cancel_recuring_message")) {
+      return _civicrm_allpay_cancel_recuring_message(); 
+    }else{
+      CRM_Core_Error::fatal('Module civicrm_allpay doesn\'t exists.');
+    }
+  }
 }
 
