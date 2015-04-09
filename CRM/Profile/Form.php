@@ -571,6 +571,11 @@ class CRM_Profile_Form extends CRM_Core_Form {
       return $errors;
     }
 
+     dpm("Wohahaha");
+      print("Wohahaha");
+      dd("Wohahah");
+      watchdog('CustomField', 'message');
+
     $activityDetails = array();
     $activityParams = array('id' => $activityId);
     CRM_Activity_BAO_Activity::retrieve($activityParams, $activityDetails);
@@ -625,6 +630,8 @@ class CRM_Profile_Form extends CRM_Core_Form {
     if ($form->_mode == CRM_Profile_Form::MODE_REGISTER) {
       $register = TRUE;
     }
+
+    $form->addFieldRequiredRule($errors);
 
     // dont check for duplicates during registration validation: CRM-375
     if (!$register && !CRM_Utils_Array::value('_qf_Edit_upload_duplicate', $fields)) {
