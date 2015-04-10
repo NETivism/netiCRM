@@ -96,6 +96,8 @@ cj("#field_name\\[0\\]").bind( 'change', function( ) {
     "search_contains": true,
     "placeholder_text": "{/literal}{ts}-- Select --{/ts}{literal}",
     "no_results_text": "{/literal}{ts}No matches found.{/ts}{literal}"
+  }).change(function(){
+    showLabel();mixProfile();
   }).hide();
   cj("#field_name\\[1\\]").trigger("liszt:updated");
 }); 
