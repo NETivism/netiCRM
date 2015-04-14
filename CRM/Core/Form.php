@@ -1122,7 +1122,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
       ) {
         $errors[$name] = ts('%1 is a required field.', array(1 => $fld['title']));
       }
-      if($fld['is_required'] && $data_type == 'File'){
+      if($fld['is_required'] && $data_type == 'File' || $name == 'image_URL'){
         $uploaded = $this->_submitFiles[$name];
         if(empty($uploaded['name'])){
           $errors[$name] = ts('%1 is a required field.', array(1 => $fld['title']));
