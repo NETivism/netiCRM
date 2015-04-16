@@ -331,6 +331,7 @@ class CRM_Contact_Selector_Custom extends CRM_Core_Selector_Base implements CRM_
           array('id' => $contactID)
         );
         $row['contact_id'] = $contactID;
+        $row['#dao'] = (array) $dao;
 
         if ($alterRow) {
           $this->_search->alterRow($row);

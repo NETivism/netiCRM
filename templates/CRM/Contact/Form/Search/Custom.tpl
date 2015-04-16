@@ -39,10 +39,9 @@
             {foreach from=$elements item=element}
                 <tr class="crm-contact-custom-search-form-row-{$element}">
                     <td class="label">{$form.$element.label}</td>
-                    {if $element eq 'start_date'}
-                        <td>{include file="CRM/common/jcalendar.tpl" elementName=start_date}</td>
-                    {elseif $element eq 'end_date'}
-                        <td>{include file="CRM/common/jcalendar.tpl" elementName=end_date}</td>
+                    {capture assign=is_date}{$element|substr:-5}{/capture}
+                    {if $is_date eq '_date'}
+                        <td>{include file="CRM/common/jcalendar.tpl" elementName=$element}</td>
                     {else}
                         <td>{$form.$element.html}</td>
                     {/if}
