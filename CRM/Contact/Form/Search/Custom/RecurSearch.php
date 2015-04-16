@@ -56,7 +56,7 @@ class CRM_Contact_Form_Search_Custom_RecurSearch  extends CRM_Contact_Form_Searc
   }
 
   function buildColumn(){
-    $filter_month = !empty($this->_formValues['created_date']) ? CRM_Utils_Date::customFormat($this->_formValues['created_date'], $this->_config->dateformatPartial).' ' : ts('Most Recent').' ';
+    $filter_month = !empty($this->_formValues['contribution_created_date']) ? CRM_Utils_Date::customFormat($this->_formValues['contribution_created_date'], $this->_config->dateformatPartial).' ' : ts('Most Recent').' ';
     $this->_queryColumns = array( 
       'r.id' => 'id',
       'contact_a.sort_name' => 'sort_name',
@@ -70,7 +70,7 @@ class CRM_Contact_Form_Search_Custom_RecurSearch  extends CRM_Contact_Form_Searc
       'r.end_date' => 'end_date',
       'r.cancel_date' => 'cancel_date',
       'c.contribution_status_id' => 'last_status_id',
-      'c.receive_date' => 'last_receive_date',
+      'c.receive_date' => 'current_receive_date',
       'COUNT(IF(c.contribution_status_id = 1, 1, NULL))' => 'donation_count',
       'COUNT(c.id)' => 'total_count',
       'SUM(c.total_amount)' => 'total_amount', 
@@ -87,7 +87,7 @@ class CRM_Contact_Form_Search_Custom_RecurSearch  extends CRM_Contact_Form_Searc
       ts('Start Date') => 'start_date',
       ts('End Date') => 'end_date',
       ts('Cancel Date') => 'cancel_date',
-      ts('Completed').'/'.ts('All') => 'donation_count',
+      ts('Completed Donation') => 'donation_count',
       ts('Total') => 'total_amount',
       $filter_month. ts('Contribution Status') => 'last_status_id',
       $filter_month. ts('Created Date') => 'current_receive_date',
@@ -185,7 +185,7 @@ $having
     if ($startDate) {
       $clauses[] = "r.start_date >= $startDate";
     }
-    $createDate = CRM_Utils_Date::processDate($this->_formValues['created_date']);
+    $createDate = CRM_Utils_Date::processDate($this->_formValues['contribution_created_date']);
     if(!empty($createDate)){
       $clauses[] = "c.created_date >= ".$createDate;
       $next_month = strtotime('+1 month', strtotime($createDate));
@@ -235,13 +235,13 @@ $having
     // Define the search form fields here
     
     $form->addDate('start_date', ts('First recurring date'), FALSE, array('formatType' => 'custom'));
-    $form->addDate('created_date', ts('Filter by month'), FALSE, array('formatType' => 'custom', 'format' => 'yy-mm'));
+    $form->addDate('contribution_created_date', ts('Filter by month'), FALSE, array('formatType' => 'custom', 'format' => 'yy-mm'));
 
     /**
      * If you are using the sample template, this array tells the template fields to render
      * for the search form.
      */
-    $form->assign('elements', array('start_date', 'created_date'));
+    $form->assign('elements', array('start_date', 'contribution_created_date'));
   }
 
   function count(){
@@ -259,6 +259,11 @@ $having
    * Construct the search query
    */
   function all($offset = 0, $rowcount = 0, $sort = NULL, $includeRecurIds= FALSE, $onlyIDs = FALSE){
+    $task = $this->_formValues['task'] ? $this->_formValues['task'] : FALSE;
+    if($task && !empty($this->_formValues['qfKey']) && !$this->_filled){
+      $this->fillTable();
+      $this->_filled = TRUE;
+    }
     return $this->sql('*',
       $offset, $rowcount, $sort,
       FALSE, NULL
@@ -370,12 +375,20 @@ SUM(total_amount) as total_amount
         $row[$d] = CRM_Utils_Date::customFormat($row[$d], $this->_config->dateformatFull);
       }
     }
-    $row['donation_count'] = $row['donation_count'].'/'.$dao['total_count'];
+
+    if($this->_formValues['contribution_created_date'] || $this->_formValues['start_date']){
+      $sql = "SELECT count(*) FROM civicrm_contribution WHERE contribution_status_id = 1 AND contribution_recur_id = {$row['id']}";
+      $row['donation_count'] = CRM_Core_DAO::singleValueQuery($sql, CRM_Core_DAO::$_nullArray);
+    }
+    if(empty($row['last_receive_date'])){
+      $sql = "SELECT receive_date FROM civicrm_contribution WHERE contribution_status_id = 1 AND contribution_recur_id = {$row['id']} ORDER BY receive_date DESC";
+      $row['last_receive_date'] = CRM_Core_DAO::singleValueQuery($sql, CRM_Core_DAO::$_nullArray);
+    }
     if(!empty($row['frequency_unit'])){
       $row['frequency_unit'] = ts($row['frequency_unit']);
     }
-    if(empty($row['current_receive_date'])){
-      $row['current_receive_date'] = $row['last_receive_date'];
+    if(!empty($row['gender_id'])){
+      $row['gender_id'] = $this->_gender[$row['gender_id']];
     }
     $row['last_status_id'] = $this->_cstatus[$row['last_status_id']];
     $row['action'] = '<a href="'.CRM_Utils_System::url('civicrm/contact/view/contributionrecur', "reset=1&id={$row['id']}&cid={$row['contact_id']}").'" target="_blank">'.ts('View').'</a>';
