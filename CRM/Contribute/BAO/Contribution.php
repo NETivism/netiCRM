@@ -2156,7 +2156,8 @@ SELECT source_contact_id
       }
     }
     else{
-      $types = CRM_Contribute_PseudoConstant::contributionType(NULL, 1);
+      $types = array();
+      CRM_Core_PseudoConstant::populate($types, 'CRM_Contribute_DAO_ContributionType', TRUE);
       $where[] = "c.contribution_type_id IN (".implode(',', array_keys($types)).")";
     }
 
@@ -2177,7 +2178,8 @@ SELECT source_contact_id
     $query = "SELECT c.id, c.contribution_type_id, c.payment_instrument_id, c.receipt_id, DATE(c.receipt_date) as receipt_date, c.total_amount FROM civicrm_contribution c WHERE c.contact_id = %1 AND c.is_test = 0 AND c.contribution_status_id = 1 $where ORDER BY c.receipt_date ASC";
     $result = CRM_Core_DAO::executeQuery($query, $args);
    
-    $contribution_type = CRM_Contribute_PseudoConstant::contributionType();
+    $contribution_type = array();
+    CRM_Core_PseudoConstant::populate($contribution_type, 'CRM_Contribute_DAO_ContributionType', TRUE);
     $instruments = CRM_Contribute_PseudoConstant::paymentInstrument();
     $record = array();
     while($result->fetch()){
