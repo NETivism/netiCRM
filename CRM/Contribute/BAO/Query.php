@@ -206,7 +206,7 @@ class CRM_Contribute_BAO_Query {
         return;
       case 'contribution_month':
         $v = preg_replace('/[^0-9]/i', '', $value);
-        $created_clause = "EXTRACT(YEAR_MONTH FROM civicrm_contribution.created_date) = '$v'";
+        $created_clause = "(EXTRACT(YEAR_MONTH FROM civicrm_contribution.created_date) = '$v' AND civicrm_contribution.receive_date IS NULL)";
         $receive_clause = "EXTRACT(YEAR_MONTH FROM civicrm_contribution.receive_date) = '$v'";
 
         $query->_where[$grouping][] = "( $created_clause OR $receive_clause )";
