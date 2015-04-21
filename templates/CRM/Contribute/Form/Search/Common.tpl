@@ -104,6 +104,8 @@
 <tr>
 	<td><label>{ts}Currency{/ts}</label> <br />
 	{$form.contribution_currency_type.html}</td>
+	<td><label>{$form.contribution_month.label}</label> <br />
+	{include file="CRM/common/jcalendar.tpl" elementName=contribution_month}</td>
 </tr>
 {if $contributeGroupTree}
 <tr>

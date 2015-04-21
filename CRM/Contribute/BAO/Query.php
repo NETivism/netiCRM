@@ -204,6 +204,15 @@ class CRM_Contribute_BAO_Query {
         // process to / from date
         $query->dateQueryBuilder($values, 'civicrm_contribution', 'contribution_receipt_date', 'receipt_date', 'Receipt Date');
         return;
+      case 'contribution_month':
+        $v = preg_replace('/[^0-9]/i', '', $value);
+        $created_clause = "EXTRACT(YEAR_MONTH FROM civicrm_contribution.created_date) = '$v'";
+        $receive_clause = "EXTRACT(YEAR_MONTH FROM civicrm_contribution.receive_date) = '$v'";
+
+        $query->_where[$grouping][] = "( $created_clause OR $receive_clause )";
+        $query->_qill[$grouping][] = ts('Filter by month');
+        $query->_tables['civicrm_contribution'] = $query->_whereTables['civicrm_contribution'] = 1;
+        return;
 
       case 'contribution_amount':
       case 'contribution_amount_low':
