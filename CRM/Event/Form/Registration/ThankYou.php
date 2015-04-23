@@ -56,6 +56,7 @@ class CRM_Event_Form_Registration_ThankYou extends CRM_Event_Form_Registration {
     $this->_totalAmount = $this->get('totalAmount');
     $this->_receiveDate = $this->get('receiveDate');
     $this->_trxnId = $this->get('trxnId');
+    $this->_isOnWaitlist = $this->get('isOnWaitlist');
     $finalAmount = $this->get('finalAmount');
     $this->assign('finalAmount', $finalAmount);
     $participantInfo = $this->get('participantInfo');
@@ -166,7 +167,7 @@ class CRM_Event_Form_Registration_ThankYou extends CRM_Event_Form_Registration {
 
     //lets give meaningful status message, CRM-4320.
     $isOnWaitlist = $isRequireApproval = FALSE;
-    if ($this->_allowWaitlist && !$this->_allowConfirmation) {
+    if ($this->_isOnWaitlist && !$this->_allowConfirmation) {
       $isOnWaitlist = TRUE;
     }
     if ($this->_requireApproval && !$this->_allowConfirmation) {

@@ -386,7 +386,7 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
     $this->freeze();
 
     //lets give meaningful status message, CRM-4320.
-    $this->assign('isOnWaitlist', $this->_allowWaitlist);
+    $this->assign('isOnWaitlist', $this->_isOnWaitlist);
     $this->assign('isRequireApproval', $this->_requireApproval);
 
     // Assign Participant Count to Lineitem Table
@@ -410,19 +410,15 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
   static
   function formRule($fields, $files, $self) {
     $errors = array();
-    $seat = CRM_Event_BAO_Participant::eventFull($self->_eventId, TRUE);
+    $self->isEventFull();
+    $seat = is_numeric($self->_availableRegistrations) ? $self->_availableRegistrations : 0;
     $part = count($self->_part);
-    if (!is_null($seat)) {
-      if ($seat === 0) {
-        $errors['qfKey'] = $self->_values['event']['event_full_text'] ? $self->_values['event']['event_full_text'] : ts('This event is currently full.');
-      }
-      elseif ($seat < $part) {
-        if ($self->_values['event']['has_waitlist']) {
-          // civicrm will passed these attendee to waitlist (because over the seat)
-        }
-        else {
-          $errors['qfKey'] = ts('It looks like you are now registering a group of %1 participants. The event has %2 available spaces (you will not be wait listed). Please go back to the main registration page and reduce the number of additional people. You will also need to complete payment information.', array(1 => $part, 2 => $seat));
-        }
+    if ($seat === 0 && !$self->_allowWaitlist) {
+      $errors['qfKey'] = $self->_values['event']['event_full_text'] ? $self->_values['event']['event_full_text'] : ts('This event is currently full.');
+    }
+    elseif ($seat < $part) {
+      if(!$self->_allowWaitlist){
+        $errors['qfKey'] = ts('It looks like you are now registering a group of %1 participants. The event has %2 available spaces (you will not be wait listed). Please go back to the main registration page and reduce the number of additional people. You will also need to complete payment information.', array(1 => $part, 2 => $seat));
       }
     }
     return $errors;
@@ -436,7 +432,6 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
    * @return None
    */
   public function postProcess() {
-
     require_once 'CRM/Event/BAO/Participant.php';
 
     $now = date('YmdHis');
@@ -457,6 +452,7 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
     else {
       $contactID = parent::getContactID();
     }
+
 
     // if a discount has been applied, lets now deduct it from the amount
     // and fix the fee level
@@ -505,8 +501,7 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
     }
 
     // if waiting is enabled
-    if (!$this->_allowConfirmation && is_numeric($this->_availableRegistrations)) {
-      $this->_allowWaitlist = FALSE;
+    if ($this->_allowWaitlist) {
       //get the current page count.
       $currentCount = self::getParticipantCount($this, $params);
       if (is_numeric($currentCount)) {
@@ -515,12 +510,14 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
       else {
         $totalParticipants = 0;
       }
-      if (CRM_Utils_Array::value('has_waitlist', $this->_values['event']) &&
-        $totalParticipants > $this->_availableRegistrations
-      ) {
-        $this->_allowWaitlist = TRUE;
+      $seat = is_numeric($this->_availableRegistrations) ? $this->_availableRegistrations : 0;
+      if ($totalParticipants > $seat ) {
+        $this->_isOnWaitlist = TRUE;
       }
-      $this->set('allowWaitlist', $this->_allowWaitlist);
+      else{
+        $this->_isOnWaitlist = FALSE;
+      }
+      $this->set('isOnWaitlist', $this->_isOnWaitlist);
     }
 
     $payment = $registerByID = $primaryCurrencyID = $contribution = NULL;
@@ -528,7 +525,7 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
       $this->fixLocationFields($value, $fields);
       //unset the billing parameters if it is pay later mode
       //to avoid creation of billing location
-      if ($this->_allowWaitlist || $this->_requireApproval ||
+      if ($this->_isOnWaitlist || $this->_requireApproval ||
         CRM_Utils_Array::value('is_pay_later', $value) || !CRM_Utils_Array::value('is_primary', $value)
       ) {
         $billingFields = array("email-{$this->_bltID}",
@@ -589,7 +586,7 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
         $result = NULL;
 
         require_once 'CRM/Event/PseudoConstant.php';
-        if ($this->_allowWaitlist || $this->_requireApproval) {
+        if ($this->_isOnWaitlist || $this->_requireApproval) {
           //get the participant statuses.
           $waitingStatuses = CRM_Event_PseudoConstant::participantStatus(NULL, "class = 'Waiting'");
           if ($this->_allowWaitlist) {
@@ -803,7 +800,7 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
         TRUE
       );
       //lets send  mails to all with meaningful text, CRM-4320.
-      $this->assign('isOnWaitlist', $this->_allowWaitlist);
+      $this->assign('isOnWaitlist', $this->_isOnWaitlist);
       $this->assign('isRequireApproval', $this->_requireApproval);
 
       //need to copy, since we are unsetting on the way.
@@ -866,7 +863,7 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
         }
 
         //pass these variables since these are run time calculated.
-        $this->_values['params']['isOnWaitlist'] = $this->_allowWaitlist;
+        $this->_values['params']['isOnWaitlist'] = $this->_isOnWaitlist;
         $this->_values['params']['isRequireApproval'] = $this->_requireApproval;
 
         //send mail to primary as well as additional participants.

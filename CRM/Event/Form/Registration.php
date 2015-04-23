@@ -190,7 +190,8 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
    *
    * @return void
    * @access public
-   */ function preProcess() {
+   */
+  function preProcess() {
     $this->_eventId = CRM_Utils_Request::retrieve('id', 'Positive', $this, TRUE);
     $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE);
 
@@ -1274,13 +1275,13 @@ WHERE  v.option_group_id = g.id
 
   function isEventFull() {
     // count with waitlist
-    $eventFull = CRM_Event_BAO_Participant::eventFull($this->_eventId);
-    $this->_allowWaitlist = FALSE;
+    $this->_availableRegistrations = CRM_Event_BAO_Participant::eventFull($this->_values['event']['id'], TRUE);
+    $this->_allowWaitlist = CRM_Utils_Array::value('has_waitlist', $this->_values['event']);
+    $eventFull = is_numeric($this->_availableRegistrations) ? FALSE : $this->_availableRegistrations;
+
     $this->_isEventFull = FALSE;
     if ($eventFull && !$this->_allowConfirmation) {
       $this->_isEventFull = TRUE;
-      //lets redirecting to info only when to waiting list.
-      $this->_allowWaitlist = CRM_Utils_Array::value('has_waitlist', $this->_values['event']);
 
       if ($this->_allowWaitlist) {
         $wait_list_msg = CRM_Utils_Array::value('waitlist_text', $this->_values['event']) ? CRM_Utils_Array::value('waitlist_text', $this->_values['event']) : ts('This event is currently full. However you can register now and get added to a waiting list. You will be notified if spaces become available.');
@@ -1296,6 +1297,7 @@ WHERE  v.option_group_id = g.id
     }
     $this->set('isEventFull', $this->_isEventFull);
     $this->set('allowWaitlist', $this->_allowWaitlist);
+    $this->set('availableRegistrations', $this->_availableRegistrations);
   }
 }
 
