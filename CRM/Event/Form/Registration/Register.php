@@ -69,7 +69,8 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
    *
    * @return void
    * @access public
-   */ function preProcess() {
+   */
+  function preProcess() {
     parent::preProcess();
     parent::isEventFull();
 
@@ -935,8 +936,15 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
       is_numeric($this->_availableRegistrations) &&
       $totalParticipants > $this->_availableRegistrations
     ) {
-      $this->_allowWaitlist = TRUE;
-      $this->set('allowWaitlist', TRUE);
+      $this->_isOnWaitlist = TRUE;
+      $this->set('isOnWaitlist', TRUE);
+    }
+
+    if ($this->_allowWaitlist) {
+      if(($totalParticipants > $this->_availableRegistrations) || !is_numeric($this->_availableRegistrations)){
+        $this->_isOnWaitlist = TRUE;
+        $this->set('isOnWaitlist', TRUE);
+      }
     }
 
     //carry participant id if pre-registered.
@@ -1239,7 +1247,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
       }
 
       //lets send  mails to all with meanigful text, CRM-4320.
-      $this->assign('isOnWaitlist', $this->_allowWaitlist);
+      $this->assign('isOnWaitlist', $this->_isOnWaitlist);
       $this->assign('isRequireApproval', $this->_requireApproval);
 
       foreach ($additionalIDs as $participantID => $contactId) {
