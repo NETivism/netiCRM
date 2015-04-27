@@ -44734,3 +44734,6 @@ msgstr ""
 
 msgid "Filter by month"
 msgstr ""
+
+msgid "Receipt Settings"
+msgstr ""
