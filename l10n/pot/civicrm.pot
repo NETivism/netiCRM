@@ -44731,3 +44731,6 @@ msgstr ""
 
 msgid "To modify or cancel future contributions please contact us"
 msgstr ""
+
+msgid "Filter by month"
+msgstr ""
