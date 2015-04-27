@@ -662,6 +662,8 @@ class CRM_Contribute_BAO_Query {
     $form->addDate('contribution_receipt_date_low', ts('Receipt Date - From'), FALSE, array('formatType' => 'searchDate'));
     $form->addDate('contribution_receipt_date_high', ts('To'), FALSE, array('formatType' => 'searchDate'));
 
+    $form->addDate('contribution_month', ts('Filter by month'), FALSE, array('formatType' => 'custom', 'format' => 'yy-mm'));
+
     $form->add('text', 'contribution_amount_low', ts('From'), array('size' => 8, 'maxlength' => 8));
     $form->addRule('contribution_amount_low', ts('Please enter a valid money value (e.g. %1).', array(1 => CRM_Utils_Money::format('9.99', ' '))), 'money');
 

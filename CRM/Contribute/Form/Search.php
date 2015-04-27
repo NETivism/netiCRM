@@ -294,7 +294,6 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
       $this->addElement('radio', 'radio_ts', NULL, '', 'ts_sel', array('checked' => 'checked'));
       $this->addElement('radio', 'radio_ts', NULL, '', 'ts_all', array('onclick' => $this->getName() . ".toggleSelect.checked = false; toggleCheckboxVals('mark_x_',this); toggleTaskAction( true );"));
     }
-    $this->addDate('contribution_month', ts('Filter by month'), FALSE, array('formatType' => 'custom', 'format' => 'yy-mm'));
 
     // add buttons
     $this->addButtons(array(
