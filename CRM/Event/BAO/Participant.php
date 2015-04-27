@@ -728,17 +728,20 @@ GROUP BY  participant.event_id
 
       require_once 'CRM/Core/DAO/Note.php';
       $participantFields = CRM_Event_DAO_Participant::export();
-      $noteField = array('participant_note' => array('title' => 'Participant Note',
-          'name' => 'participant_note',
-        ));
+      $noteField = array('participant_note' => array(
+        'title' => ts('Note'),
+        'name' => 'participant_note',
+      ));
 
-      $participantStatus = array('participant_status' => array('title' => 'Participant Status',
-          'name' => 'participant_status',
-        ));
+      $participantStatus = array('participant_status' => array(
+        'title' => ts('Participant Status'),
+        'name' => 'participant_status',
+      ));
 
-      $participantRole = array('participant_role' => array('title' => 'Participant Role',
-          'name' => 'participant_role',
-        ));
+      $participantRole = array('participant_role' => array(
+        'title' => ts('Participant Role'),
+        'name' => 'participant_role',
+      ));
 
       require_once 'CRM/Core/DAO/Discount.php';
       $discountFields = CRM_Core_DAO_Discount::export();
