@@ -2,13 +2,14 @@
 # Translators:
 # Fuyuan Cheng <gloomcheng@gmail.com>, 2013-2015
 # IreneLin, 2013
-# jimyhuang <jimmy@netivism.com.tw>, 2013
+# jimyhuang <jimmy@netivism.com.tw>, 2013,2015
+# SharonKwan <sharon@netivism.com.tw>, 2015
 # charlesc <yeouhsin@gmail.com>, 2013-2014
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2015-01-28 13:58+0000\n"
-"Last-Translator: Fuyuan Cheng <gloomcheng@gmail.com>\n"
+"PO-Revision-Date: 2015-04-27 07:21+0000\n"
+"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/projects/p/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3288,7 +3289,7 @@ msgid ""
 "The following contact(s) have address records which were shared with the "
 "address you removed from this contact. These address records are no longer "
 "shared - but they have not been removed or altered."
-msgstr "下列的聯絡人的地址有設為共享地址資訊。這些地址資訊將不再共享，但不會刪除或更改這些地址資訊。"
+msgstr "您所刪除的地址已被下列聯絡人設有共用地址。這個地址資訊將變更為非共用地址，但不會刪除或更改這些地址資訊。"
 
 #: CRM/Contact/Form/Task/EmailCommon.php CRM/Event/BAO/Event.php
 #: CRM/SMS/Form/Task/SMS.php
@@ -3714,6 +3715,10 @@ msgstr "取消日期"
 #: CRM/Contribute/Form/Task/Status.php
 msgid "Receipt Date"
 msgstr "收據開立日期"
+
+#: CRM/Contribute/BAO/Query.php
+msgid "Receipt Date - From"
+msgstr ""
 
 #: CRM/Contribute/DAO/Contribution.php CRM/Event/DAO/Participant.php
 #: CRM/Member/DAO/Membership.php
@@ -4389,6 +4394,10 @@ msgstr "地址格式"
 #: CRM/Core/DAO/Batch.php CRM/Core/DAO/Cache.php CRM/Core/DAO/Dashboard.php
 msgid "Created Date"
 msgstr "建立日期"
+
+#: CRM/Contribute/BAO/Query.php
+msgid "Created Date - From"
+msgstr ""
 
 #: CRM/Core/DAO/Cache.php CRM/Core/DAO/Menu.php
 msgid "Path"
@@ -9558,7 +9567,7 @@ msgid ""
 "This contact has an address record which is shared with %1 other contact(s)."
 " Shared addresses will not be removed or altered but will no longer be "
 "shared."
-msgstr ""
+msgstr "這個聯絡人有一個地址資訊與其他 %1 位聯絡人共用。共用的地址將變更為非共用地址，但不會刪除或更新這些地址資訊。"
 
 #: CRM/Contact/Form/Task/Delete.php
 msgid "Restore Contact(s)"
@@ -10378,7 +10387,7 @@ msgstr "至少捐款多少金額時才顯示感謝禮"
 
 #: CRM/Contribute/DAO/Product.php
 msgid "Product Name"
-msgstr "產品名稱"
+msgstr "感謝禮品名"
 
 #: CRM/Contribute/DAO/Product.php templates/CRM/Contact/Page/View/Sunlight.tpl
 msgid "Image"
@@ -16446,7 +16455,7 @@ msgstr "新群組的描述"
 
 #: CRM/Import/Form/Preview.php
 msgid "Add imported records to existing group(s)"
-msgstr "新增已匯入的資料到現有的群組"
+msgstr "新增匯入資料到現有的群組"
 
 #: CRM/Import/Form/Preview.php
 msgid "Tag '%1' already exists."
@@ -26285,7 +26294,7 @@ msgstr "額外地址 1"
 msgid ""
 "This address is shared with %1 contact record(s). Modifying this address "
 "will automatically update the shared address for these contacts."
-msgstr ""
+msgstr "這個地址已被 %1 位聯絡人共用。修改此共用地址將自動更新這些聯絡人的地址資訊。"
 
 #: templates/CRM/Contact/Form/Edit/Address.tpl
 msgid "Delete Address Block"
@@ -36745,7 +36754,7 @@ msgid "Taitung County"
 msgstr "台東縣"
 
 msgid "Taoyuan City"
-msgstr "桃園市"
+msgstr ""
 
 msgid "Yunlin County"
 msgstr "雲林縣"
@@ -44668,4 +44677,36 @@ msgstr ""
 
 #: CRM/Event/Form/Search.php
 msgid "Place Available"
+msgstr ""
+
+#: templates/CRM/Event/Page/ManageEvent.tpl
+msgid "Participant count"
+msgstr ""
+
+msgid "Installments should be greater than %1."
+msgstr ""
+
+msgid "no limit"
+msgstr ""
+
+msgid "Change receipt number"
+msgstr "更改收據編號"
+
+msgid ""
+"This action will break auto serial number. Please confirm you really want to"
+" change receipt number m  anually."
+msgstr ""
+
+msgid ""
+"This is a recurring contribution. %4, every %1 %2 will charge from %3 "
+"payment."
+msgstr ""
+
+msgid "To modify or cancel future contributions please contact %1"
+msgstr ""
+
+msgid "To modify or cancel future contributions please contact us"
+msgstr ""
+
+msgid "Filter by month"
 msgstr ""
