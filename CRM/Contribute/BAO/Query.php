@@ -210,7 +210,7 @@ class CRM_Contribute_BAO_Query {
         $receive_clause = "EXTRACT(YEAR_MONTH FROM civicrm_contribution.receive_date) = '$v'";
 
         $query->_where[$grouping][] = "( $created_clause OR $receive_clause )";
-        $query->_qill[$grouping][] = ts('Filter by month');
+        $query->_qill[$grouping][] = ts('Filter by month') .' - '. $value;
         $query->_tables['civicrm_contribution'] = $query->_whereTables['civicrm_contribution'] = 1;
         return;
 
