@@ -51,7 +51,11 @@ class CRM_Core_Report_Excel {
       echo $titleHeader;
     }
 
-    $result = '';
+    $bom = chr(255) . chr(254); // UTF-16LE byte order mark, BOM
+    $result = $bom;
+    if($print){
+      echo $bom;
+    }
 
     $config = CRM_Core_Config::singleton();
     $seperator = $config->fieldSeparator;
@@ -72,14 +76,13 @@ class CRM_Core_Report_Excel {
     // end while
 
     if ($outputHeader) {
-      // need to add PMA_exportOutputHandler functionality out here, rather than
-      // doing it the moronic way of assembling a buffer
+      // refs` #2216
       $out = trim(substr($schema_insert, 0, -1)) . $add_character;
       if ($print) {
-        echo $out;
+        echo mb_convert_encoding($out, 'UTF-16LE', 'UTF-8');
       }
       else {
-        $result .= $out;
+        $result .= mb_convert_encoding($out, 'UTF-16LE', 'UTF-8');
       }
     }
 
@@ -135,7 +138,7 @@ class CRM_Core_Report_Excel {
       }
       // end for
 
-      $out = $schema_insert . $add_character;
+      $out = mb_convert_encoding($schema_insert . $add_character, 'UTF-16LE', 'UTF-8');
       if ($print) {
         echo $out;
       }
