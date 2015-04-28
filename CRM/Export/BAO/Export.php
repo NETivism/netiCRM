@@ -1030,7 +1030,9 @@ class CRM_Export_BAO_Export {
     require_once "CRM/Core/Extensions.php";
     $ext = new CRM_Core_Extensions();
     if (!$ext->isExtensionClass($customSearchClass)) {
-      require_once (str_replace('_', DIRECTORY_SEPARATOR, $customSearchClass) . '.php');
+      if(!class_exists($customSearchClass)){
+        require_once (str_replace('_', DIRECTORY_SEPARATOR, $customSearchClass) . '.php');
+      }
     }
     else {
       require_once ($ext->classToPath($customSearchClass));

@@ -147,7 +147,9 @@ class CRM_Contact_Selector_Custom extends CRM_Core_Selector_Base implements CRM_
         require_once ($customSearchFile);
       }
       else {
-        require_once (str_replace('_', DIRECTORY_SEPARATOR, $customSearchClass) . '.php');
+        if(!class_exists($customSearchClass)){
+          require_once (str_replace('_', DIRECTORY_SEPARATOR, $customSearchClass) . '.php');
+        }
       }
       eval('$this->_search = new ' . $customSearchClass . '( $formValues );');
     }
