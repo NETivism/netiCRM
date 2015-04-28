@@ -591,7 +591,7 @@ class DB
      *
      * @return bool  whether $value is DB_Error object
      */
-    function isError($value)
+    static function isError($value)
     {
         return is_a($value, 'DB_Error');
     }
@@ -732,7 +732,7 @@ class DB
      *  + username: User name for login
      *  + password: Password for login
      */
-    function parseDSN($dsn)
+    static function parseDSN($dsn)
     {
         $parsed = array(
             'phptype'  => false,
