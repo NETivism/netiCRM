@@ -386,6 +386,7 @@ class CRM_Event_Form_Registration_AdditionalParticipant extends CRM_Event_Form_R
     $errors = array();
     //get the button name.
     $button = substr($self->controller->getButtonName(), -4);
+    $self->isEventFull();
 
     $realPayLater = FALSE;
     if (CRM_Utils_Array::value('is_monetary', $self->_values['event']) &&
@@ -508,7 +509,7 @@ class CRM_Event_Form_Registration_AdditionalParticipant extends CRM_Event_Form_R
     if (!$this->_allowConfirmation &&
       is_numeric($this->_availableRegistrations)
     ) {
-      $this->_allowWaitlist = FALSE;
+      $this->_isOnWaitlist = FALSE;
       //get the current page count.
       $currentCount = self::getParticipantCount($this, $params);
       if ($button == 'skip') {
@@ -524,9 +525,9 @@ class CRM_Event_Form_Registration_AdditionalParticipant extends CRM_Event_Form_R
       if (CRM_Utils_Array::value('has_waitlist', $this->_values['event']) &&
         $totalParticipants > $this->_availableRegistrations
       ) {
-        $this->_allowWaitlist = TRUE;
+        $this->_isOnWaitlist = TRUE;
       }
-      $this->set('allowWaitlist', $this->_allowWaitlist);
+      $this->set('isOnWaitlist', TRUE);
       $this->_lineItemParticipantsCount[$addParticipantNum] = $currentCount;
     }
 

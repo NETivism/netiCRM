@@ -766,6 +766,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
   static
   function formRule($fields, $files, $self) {
     $errors = array();
+    $self->isEventFull();
 
     //To check if the user is already registered for the event(CRM-2426)
     $checked = $self->checkRegistration($fields, $self);
@@ -932,6 +933,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
     if (CRM_Utils_Array::value('additional_participants', $params)) {
       $totalParticipants += $params['additional_participants'];
     }
+
     if (!$this->_allowConfirmation && CRM_Utils_Array::value('bypass_payment', $params) &&
       is_numeric($this->_availableRegistrations) &&
       $totalParticipants > $this->_availableRegistrations
@@ -1172,7 +1174,10 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
         //lets get the status if require approval or waiting.
         require_once 'CRM/Event/PseudoConstant.php';
         $waitingStatuses = CRM_Event_PseudoConstant::participantStatus(NULL, "class = 'Waiting'");
-        if ($this->_allowWaitlist && !$this->_allowConfirmation) {
+        dpm('wait');
+        dpm($this->_isOnWaitlist);
+        dpm($this->_allowConfirmation);
+        if ($this->_isOnWaitlist && !$this->_allowConfirmation) {
           $value['participant_status_id'] = array_search('On waitlist', $waitingStatuses);
         }
         elseif ($this->_requireApproval && !$this->_allowConfirmation) {
