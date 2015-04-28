@@ -183,9 +183,6 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
     if (self::$_singleton === NULL || $force) {
       // make sure date.timezone set, support php 5.3 / 5.4
       $timezone = date_default_timezone_get();
-      if($timezone == 'UTC') {
-          CRM_Core_Error::fatal('We detect your timezone setting is UTC. You need setup your php timezone setting. Check php.ini or add into civicrm.settings.php');
-      }
 
       // first, attempt to get configuration object from cache
       require_once 'CRM/Utils/Cache.php';
