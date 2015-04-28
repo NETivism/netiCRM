@@ -2192,7 +2192,8 @@ class DB_common extends PEAR
      */
     function _checkManip($query)
     {
-        if ($this->_next_query_manip || (new DB)->isManip($query)) {
+        $db = new DB;
+        if ($this->_next_query_manip || $db->isManip($query)) {
             $this->_last_query_manip = true;
         } else {
             $this->_last_query_manip = false;
