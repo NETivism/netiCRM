@@ -8,7 +8,12 @@
 var system = require('system'); 
 var port = system.env.RUNPORT; 
 
-var base_url = 'http://127.0.0.1:' + port + '/';
+if(port == '80'){
+  var base_url = 'http://127.0.0.1/';
+}
+else{
+  var base_url = 'http://127.0.0.1:' + port + '/';
+}
 var site_name = 'netiCRM';
 var url = [
   {title:'New 個人', url:'civicrm/contact/add?reset=1&ct=Individual'},
