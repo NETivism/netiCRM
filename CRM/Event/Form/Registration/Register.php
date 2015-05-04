@@ -1174,9 +1174,6 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
         //lets get the status if require approval or waiting.
         require_once 'CRM/Event/PseudoConstant.php';
         $waitingStatuses = CRM_Event_PseudoConstant::participantStatus(NULL, "class = 'Waiting'");
-        dpm('wait');
-        dpm($this->_isOnWaitlist);
-        dpm($this->_allowConfirmation);
         if ($this->_isOnWaitlist && !$this->_allowConfirmation) {
           $value['participant_status_id'] = array_search('On waitlist', $waitingStatuses);
         }
