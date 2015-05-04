@@ -5,7 +5,10 @@
  * read more at http://casperjs.org/
  */
 
-var base_url = 'http://127.0.0.1:' + casper.cli.get(0) + '/';
+var system = require('system'); 
+var port = system.env.RUNPORT; 
+
+var base_url = 'http://127.0.0.1:' + port + '/';
 var site_name = 'netiCRM';
 var url = [
   {title:'New 個人', url:'civicrm/contact/add?reset=1&ct=Individual'},

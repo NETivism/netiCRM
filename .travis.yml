@@ -6,6 +6,9 @@ php:
   - 5.5
   - 5.6
 
+env:
+  - RUNPORT=8080
+
 mysql:
   database: netivism_neticrm_build
   username: root
@@ -63,7 +66,7 @@ before_script:
   - until netstat -an 2>/dev/null | grep '8080.*LISTEN'; do true; done
 
 script:
-  - casperjs test sites/all/modules/civicrm/tests/casperjs/pages.js 8080
+  - casperjs test sites/all/modules/civicrm/tests/casperjs/pages.js
   - drush test-run 'Travis-CI Drupal Module Example' --uri=http://127.0.0.1:8080
 
 notifications:
