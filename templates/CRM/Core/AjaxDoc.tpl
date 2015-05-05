@@ -126,13 +126,8 @@ cj(function($) {
     window.location.hash = query;
     $('#result').html('<i>Loading...</i>');
     $.post(query,function(data) {
-      var dataJson = JSON.parse(data);
-      if(dataJson.is_error == 1 && dataJson.error_message.match(/missing permission: access CiviCRM/)){
-        showPermissionDenyMessage();
-      }else{
-        $('#result').text(data);
-      }
-    },'text').fail(showPermissionDenyMessage);
+      $('#result').text(data);
+    },'text');
     link="<a href='"+query+"' title='open in a new tab' target='_blank'>ajax query</a>&nbsp;";
     var RESTquery = Drupal.settings.resourceBase + "extern/rest.php?"+ query.substring(restURL.length,query.length) + "&api_key={yoursitekey}&key={yourkey}";
     $("#link").html(link+"|<a href='"+RESTquery+"' title='open in a new tab' target='_blank'>REST query</a>.");
@@ -169,10 +164,6 @@ cj(function($) {
   $('#selector').on('click', 'a', function() {
     toggleField($(this).data('id'), this.innerHTML, this.class);
   });
-
-  function showPermissionDenyMessage(){
-      $('#result').text({/literal}"{ts escape='js'}You have no permission to use this feature. Please join to netiCRM.tw .{/ts}"{literal});
-    }
 
   function CRMurl(p, params) {
     var tplURL = '/civicrm/example?placeholder';
@@ -304,10 +295,12 @@ cj(function($) {
 </select>
 &nbsp;|&nbsp;
 
+{if $admin eq 1}
 <label for="debug-checkbox">
   <input type="checkbox" id="debug-checkbox" data-id="debug" checked="checked" value="1">debug
 </label>
 &nbsp;|&nbsp;
+{/if}
 
 <label for="sequential-checkbox" title="{ts}sequential is a more compact format, that is nicer and general and easier to use for json and smarty.{/ts}">
   <input type="checkbox" id="sequential-checkbox" data-id="sequential" checked="checked" value="1">sequential

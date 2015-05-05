@@ -48,6 +48,8 @@ class CRM_Admin_Page_APIExplorer extends CRM_Core_Page {
 
       $civicrm_path = '/'.drupal_get_path('module', 'civicrm').'/';
       drupal_add_js(array('resourceBase' => $civicrm_path), 'setting');
+
+      $this->assign('admin',user_access("administer CiviCRM"));
     }
     return parent::run();
   }
@@ -58,6 +60,8 @@ class CRM_Admin_Page_APIExplorer extends CRM_Core_Page {
       return 'CRM/Core/AjaxDoc.tpl';
     }
   }
+
+
   /**
    * Get user context.
    *
