@@ -113,7 +113,7 @@
 
 	{if $location.phone.1.phone || $location.email.1.email}
 	    <div class="crm-section event_contact-section">
-	        <div class="label"><label>{ts}Contact{/ts}</label></div>
+	        <div class="label"><label>{ts}Contact info{/ts}</label></div>
 	        <div class="content">
 	            {* loop on any phones and emails for this event *}
 	            {foreach from=$location.phone item=phone}
