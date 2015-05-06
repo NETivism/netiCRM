@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2015-05-07 07:02+0000\n"
+"PO-Revision-Date: 2015-05-07 09:04+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/projects/p/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -3718,7 +3718,7 @@ msgstr "收據開立日期"
 
 #: CRM/Contribute/BAO/Query.php
 msgid "Receipt Date - From"
-msgstr ""
+msgstr "收據日期 - 自"
 
 #: CRM/Contribute/DAO/Contribution.php CRM/Event/DAO/Participant.php
 #: CRM/Member/DAO/Membership.php
@@ -4397,7 +4397,7 @@ msgstr "建立日期"
 
 #: CRM/Contribute/BAO/Query.php
 msgid "Created Date - From"
-msgstr ""
+msgstr "建立日期 - 自"
 
 #: CRM/Core/DAO/Cache.php CRM/Core/DAO/Menu.php
 msgid "Path"
