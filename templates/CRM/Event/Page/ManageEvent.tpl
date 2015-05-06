@@ -65,7 +65,7 @@
             <td class="crm-event-title crm-event_{$row.id}">
               <a href="{crmURL p='civicrm/event/search' q="reset=1&force=1&event=`$row.id`"}" class="bold">{$row.title}</a>
               <ul class="crm-nav-menu crm-nav-links-event">
-                <li><a href="{crmURL p='civicrm/event/search' q="reset=1&force=1&event=`$row.id`"}" title="{ts}Statistics{/ts}"><i class="fa fa-bar-chart-o"></i>{ts}Participant count{/ts}: {$row.counted}{if $row.max_participants}/{$row.max_participants}{/if}</a></li>
+                <li><a href="{crmURL p='civicrm/event/search' q="reset=1&force=1&event=`$row.id`"}" title="{ts}Statistics{/ts}"><i class="fa fa-bar-chart-o"></i>{ts}Participant Count{/ts}: {$row.counted}{if $row.max_participants}/{$row.max_participants}{/if}</a></li>
                 <li><a href="{crmURL p='civicrm/participant/add' q="reset=1&action=add&context=standalone&eid=`$row.id`"}" title="{ts}Register New Participant{/ts}"><i class="fa fa-plus-square-o"></i>{ts}Register Event Participant{/ts}</a></li>
                 <li>
                   <div class="crm-configure-actions">
