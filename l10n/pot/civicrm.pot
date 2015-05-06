@@ -44707,10 +44707,6 @@ msgstr ""
 msgid "Place Available"
 msgstr ""
 
-#: templates/CRM/Event/Page/ManageEvent.tpl
-msgid "Participant count"
-msgstr ""
-
 msgid "Installments should be greater than %1."
 msgstr ""
 
@@ -44736,4 +44732,7 @@ msgid "Filter by month"
 msgstr ""
 
 msgid "Receipt Settings"
+msgstr ""
+
+msgid "Contact info"
 msgstr ""

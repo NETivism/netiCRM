@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2015-04-27 07:21+0000\n"
+"PO-Revision-Date: 2015-05-07 07:02+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/projects/p/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -4654,11 +4654,11 @@ msgstr "頁尾"
 
 #: CRM/Core/SelectValues.php CRM/Mailing/Form/Settings.php
 msgid "Opt-out Message"
-msgstr "選擇退出收信訊息"
+msgstr "全站退訂的訊息文字"
 
 #: CRM/Core/SelectValues.php CRM/Mailing/Form/Settings.php
 msgid "Unsubscribe Message"
-msgstr "退訂訊息"
+msgstr "取消訂閱的訊息文字"
 
 #: CRM/Core/SelectValues.php CRM/Mailing/Form/Settings.php
 msgid "Resubscribe Message"
@@ -5113,7 +5113,7 @@ msgstr "取消訂閱"
 
 #: CRM/Mailing/BAO/Mailing.php CRM/Mailing/Selector/Event.php
 msgid "Opt-Out"
-msgstr "選擇退出"
+msgstr "全站退訂"
 
 #: CRM/Mailing/DAO/BounceType.php CRM/Report/Form/Contact/Relationship.php
 msgid "Inactive"
@@ -12342,15 +12342,15 @@ msgstr "街道號碼後定向"
 
 #: CRM/Core/DAO/Address.php
 msgid "Supplemental Address 1"
-msgstr "附加地址1"
+msgstr "地址額外資訊1"
 
 #: CRM/Core/DAO/Address.php
 msgid "Supplemental Address 2"
-msgstr "附加地址2"
+msgstr "地址額外資訊2"
 
 #: CRM/Core/DAO/Address.php
 msgid "Supplemental Address 3"
-msgstr "附加地址3"
+msgstr "地址額外資訊3"
 
 #: CRM/Core/DAO/Address.php
 msgid "Usps Adc"
@@ -16724,7 +16724,7 @@ msgstr "模組名稱"
 
 #: CRM/Mailing/DAO/Component.php
 msgid "OptOut"
-msgstr "選擇退出"
+msgstr "全站退訂"
 
 #: CRM/Mailing/DAO/Component.php templates/CRM/Mailing/Page/Resubscribe.tpl
 #: msgctxt "menu"
@@ -26173,7 +26173,7 @@ msgid ""
 "Enter the name of the organization or entity which owns this CiviCRM domain."
 " Use the %1 token to include this value in mailing content. It is used in "
 "the default Opt-out Message."
-msgstr "輸入組織名稱或實際擁有此 CiviCRM 網域的擁有者。使用替代符號 %1，可在電子報秀出組織資訊。這將會在預設的「選擇退出」訊息中使用到。"
+msgstr "輸入組織名稱或實際擁有此 CiviCRM 網域的擁有者。使用替代符號 %1，可在電子報秀出組織資訊。這將會在預設的「全站退訂」訊息中使用到。"
 
 #: templates/CRM/Contact/Form/Domain.hlp
 msgid ""
@@ -44669,44 +44669,46 @@ msgstr "提醒您，您尚未完成報名程序。在進行到最後一個步驟
 
 #: templates/CRM/Event/Form/Registration/Register.tpl
 msgid "Registering Yourself (%1)"
-msgstr ""
+msgstr "替自己註冊（%1）"
 
 #: templates/CRM/Event/Form/Registration/Register.tpl
 msgid "Registering Others"
-msgstr ""
+msgstr "替其他人註冊"
 
 #: CRM/Event/Form/Search.php
 msgid "Place Available"
-msgstr ""
-
-#: templates/CRM/Event/Page/ManageEvent.tpl
-msgid "Participant count"
-msgstr ""
+msgstr "剩餘名額"
 
 msgid "Installments should be greater than %1."
-msgstr ""
+msgstr "期數須大於 %1。"
 
 msgid "no limit"
-msgstr ""
+msgstr "不限"
 
 msgid "Change receipt number"
 msgstr "更改收據編號"
 
 msgid ""
 "This action will break auto serial number. Please confirm you really want to"
-" change receipt number m  anually."
-msgstr ""
+" change receipt number manually."
+msgstr "此操作會影響自動編序收據編號的功能。請確認您知道此項操作的影響並確定要手動變更收據編號。"
 
 msgid ""
 "This is a recurring contribution. %4, every %1 %2 will charge from %3 "
 "payment."
-msgstr ""
+msgstr "這是定期定額捐款。%4，每 %1 %2將會從您的 %3 扣款。"
 
 msgid "To modify or cancel future contributions please contact %1"
-msgstr ""
+msgstr "若要修改或取消後續的定期定額捐款，請聯繫%1"
 
 msgid "To modify or cancel future contributions please contact us"
-msgstr ""
+msgstr "若要修改或取消後續的定期定額捐款，請聯繫我們"
 
 msgid "Filter by month"
-msgstr ""
+msgstr "依月份篩選"
+
+msgid "Receipt Settings"
+msgstr "收據設定"
+
+msgid "Contact info"
+msgstr "聯絡資訊"
