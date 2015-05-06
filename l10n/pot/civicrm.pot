@@ -44720,7 +44720,7 @@ msgstr ""
 msgid "Change receipt number"
 msgstr ""
 
-msgid "This action will break auto serial number. Please confirm you really want to change receipt number m  anually."
+msgid "This action will break auto serial number. Please confirm you really want to change receipt number manually."
 msgstr ""
 
 msgid "This is a recurring contribution. %4, every %1 %2 will charge from %3 payment."
