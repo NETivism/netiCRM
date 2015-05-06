@@ -101,11 +101,11 @@ VALUES
 INSERT INTO `civicrm_contact_type`
   ( `name`, `label`,`image_URL`, `parent_id`, `is_active`,`is_reserved`)
  VALUES
-  ( 'Student'     , 'Student'     , NULL, 1, 1, 0),
-  ( 'Parent'      , 'Parent'      , NULL, 1, 1, 0),
-  ( 'Staff'       , 'Staff'       , NULL, 1, 1, 0),
-  ( 'Team'        , 'Team'        , NULL, 3, 1, 0),
-  ( 'Sponsor'     , 'Sponsor'     , NULL, 3, 1, 0);
+  ( 'Student'     , '學生'     , NULL, 1, 1, 0),
+  ( 'Parent'      , '父層'      , NULL, 1, 1, 0),
+  ( 'Staff'       , '職員'       , NULL, 1, 1, 0),
+  ( 'Team'        , '團隊'        , NULL, 3, 1, 0),
+  ( 'Sponsor'     , '贊助者'     , NULL, 3, 1, 0);
   
     SELECT @domain_id   := min(id) FROM civicrm_domain;
     SELECT @nav_indi    := id FROM civicrm_navigation WHERE name = 'New Individual';
@@ -124,10 +124,10 @@ INSERT INTO `civicrm_contact_type`
 INSERT INTO `civicrm_dashboard` 
     ( `domain_id`, `label`, `url`, `content`, `permission`, `permission_operator`, `column_no`, `is_minimized`, `is_active`, `weight`, `created_date`, `is_fullscreen`) 
     VALUES 
-    ( @domain_id, 'Donor Report (Summary)'       , 'civicrm/report/instance/3&reset=1&section=1&snippet=4&charts=barChart',  NULL, 'access CiviCRM,access CiviContribute', 'AND', 0, 0,'1', 4, NULL, '0'),
-    ( @domain_id, 'Top Donors Report'            , 'civicrm/report/instance/20&reset=1&section=2&snippet=4',                 NULL, 'access CiviCRM,access CiviContribute', 'AND', 0, 0,'1', 5, NULL, '1'),
-    ( @domain_id, 'Event Income Report (Summary)', 'civicrm/report/instance/13&reset=1&section=1&snippet=4&charts=pieChart', NULL, 'access CiviCRM,access CiviEvent'     , 'AND', 0, 0,'1', 6, NULL, '0'),
-    ( @domain_id, 'Membership Report (Summary)'  , 'civicrm/report/instance/9&reset=1&section=2&snippet=4',                  NULL, 'access CiviCRM,access CiviMember'    , 'AND', 0, 0,'1', 7, NULL, '1');
+    ( @domain_id, '捐款者報表（概況）'       , 'civicrm/report/instance/3&reset=1&section=1&snippet=4&charts=barChart',  NULL, 'access CiviCRM,access CiviContribute', 'AND', 0, 0,'1', 4, NULL, '0'),
+    ( @domain_id, '最高捐款者名錄報表'            , 'civicrm/report/instance/20&reset=1&section=2&snippet=4',                 NULL, 'access CiviCRM,access CiviContribute', 'AND', 0, 0,'1', 5, NULL, '1'),
+    ( @domain_id, '活動收入報表（摘要）', 'civicrm/report/instance/13&reset=1&section=1&snippet=4&charts=pieChart', NULL, 'access CiviCRM,access CiviEvent'     , 'AND', 0, 0,'1', 6, NULL, '0'),
+    ( @domain_id, '會員報表（概況）'  , 'civicrm/report/instance/9&reset=1&section=2&snippet=4',                  NULL, 'access CiviCRM,access CiviMember'    , 'AND', 0, 0,'1', 7, NULL, '1');
    -- +--------------------------------------------------------------------+
 -- | CiviCRM version 3.3                                                |
 -- +--------------------------------------------------------------------+
@@ -223,7 +223,7 @@ VALUES
 ('Core ACL', 0, 'civicrm_acl_role', 2, 'All', 'view event info', NULL, NULL, NULL, 1);
 
 -- Create default Groups for User Permissioning
-INSERT INTO civicrm_group (`id`, `name`, `title`, `description`, `source`, `saved_search_id`, `is_active`, `visibility`, `group_type`) VALUES (1, 'Administrators', 'Administrators', 'Contacts in this group are assigned Administrator role permissions.', NULL, NULL, 1, 'User and User Admin Only', '1');
+INSERT INTO civicrm_group (`id`, `name`, `title`, `description`, `source`, `saved_search_id`, `is_active`, `visibility`, `group_type`) VALUES (1, 'Administrators', '管理員', '此群組的聯絡人為管理者權限。', NULL, NULL, 1, 'User and User Admin Only', '1');
 
 -- Assign above Group (entity) to the Administrator Role
 INSERT INTO civicrm_acl_entity_role
