@@ -440,7 +440,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
 
 
       if (count($pps)) {
-        if (CRM_Utils_Array::value('is_pay_later', $this->_values['event']) && ($this->_allowConfirmation || (!$this->_requireApproval && !$this->_allowWaitlist))) {
+        if (CRM_Utils_Array::value('is_pay_later', $this->_values['event']) && ($this->_allowConfirmation || (!$this->_requireApproval && !$this->_isOnWaitlist))) {
           $pps[0] = $this->_values['event']['pay_later_text'];
         }
         $this->addRadio('payment_processor', ts('Payment Method'), $pps, NULL, "&nbsp;", TRUE);

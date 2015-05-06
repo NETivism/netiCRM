@@ -646,7 +646,7 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
         }
 
         if ($createContrib && CRM_Utils_Array::value('is_primary', $value) &&
-          !$this->_allowWaitlist && !$this->_requireApproval
+          !$this->_isOnWaitlist && !$this->_requireApproval
         ) {
           // if paid event add a contribution record
           //if primary participant contributing additional amount
@@ -765,7 +765,7 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
     require_once "CRM/Event/BAO/Event.php";
     if (($this->_contributeMode == 'checkout' || $this->_contributeMode == 'notify') &&
       !CRM_Utils_Array::value('is_pay_later', $params[0]) &&
-      !$this->_allowWaitlist && !$this->_requireApproval &&
+      !$this->_isOnWaitlist && !$this->_requireApproval &&
       $this->_totalAmount > 0
     ) {
 
