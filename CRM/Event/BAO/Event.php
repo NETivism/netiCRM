@@ -966,6 +966,9 @@ WHERE civicrm_event.is_active = 1
     $copyEvent->is_active = 0;
     $copyEvent->save();
 
+    // Need original ID to duplicate Instrument. refs #14946
+    $copyEvent->originId = $id;
+
     require_once 'CRM/Utils/Hook.php';
     CRM_Utils_Hook::copy('Event', $copyEvent);
 
