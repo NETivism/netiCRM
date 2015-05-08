@@ -411,14 +411,16 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
   function formRule($fields, $files, $self) {
     $errors = array();
     $self->isEventFull();
-    $seat = is_numeric($self->_availableRegistrations) ? $self->_availableRegistrations : 0;
+    $seat = is_numeric($self->_availableRegistrations) ? $self->_availableRegistrations : NULL;
     $part = count($self->_part);
-    if ($seat === 0 && !$self->_allowWaitlist) {
-      $errors['qfKey'] = $self->_values['event']['event_full_text'] ? $self->_values['event']['event_full_text'] : ts('This event is currently full.');
-    }
-    elseif ($seat < $part) {
-      if(!$self->_allowWaitlist){
-        $errors['qfKey'] = ts('It looks like you are now registering a group of %1 participants. The event has %2 available spaces (you will not be wait listed). Please go back to the main registration page and reduce the number of additional people. You will also need to complete payment information.', array(1 => $part, 2 => $seat));
+    if($self->_isEventFull){
+      if ($seat === 0 && !$self->_allowWaitlist) {
+        $errors['qfKey'] = $self->_values['event']['event_full_text'] ? $self->_values['event']['event_full_text'] : ts('This event is currently full.');
+      }
+      elseif ($seat < $part) {
+        if(!$self->_allowWaitlist){
+          $errors['qfKey'] = ts('It looks like you are now registering a group of %1 participants. The event has %2 available spaces (you will not be wait listed). Please go back to the main registration page and reduce the number of additional people. You will also need to complete payment information.', array(1 => $part, 2 => $seat));
+        }
       }
     }
     return $errors;
