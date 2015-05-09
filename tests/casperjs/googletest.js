@@ -9,7 +9,7 @@ casper.test.begin('Google search retrieves 10 or more results', 5, function suit
     });
 
     casper.then(function() {
-        test.assertTitle("casperjs - Recherche Google", "google title is ok");
+        test.assertTitle("casperjs - Google 搜尋", "google title is ok");
         test.assertUrlMatch(/q=casperjs/, "search term has been submitted");
         test.assertEval(function() {
             return __utils__.findAll("h3.r").length >= 10;

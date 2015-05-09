@@ -103,6 +103,9 @@ casper.test.begin('Page output correct test', url.length*2+1, function suite(tes
       'name':'admin',
       'pass':'123456'
     }, true);
+  });
+
+  casper.waitForUrl('user', function(){
     for(var i in url){
       casper.thenOpen(base_url+url[i].url, function(obj){
         if(obj.url){
