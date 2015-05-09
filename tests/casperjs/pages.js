@@ -105,7 +105,7 @@ casper.test.begin('Page output correct test', url.length*2+1, function suite(tes
     }, true);
   });
 
-  casper.waitForUrl('user', function(){
+  casper.waitForSelector('body.logged-in', function(){
     for(var i in url){
       casper.thenOpen(base_url+url[i].url, function(obj){
         if(obj.url){
