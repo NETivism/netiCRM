@@ -268,7 +268,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     //         $this->_defaults['credit_card_exp_date'] = array( 'Y' => '2012', 'M' => '05' );
 
     //         // hack to simplify direct debit entry for testing
-    //         $this->_defaults['account_holder'] = 'Max MÃ¼ller';
+    //         $this->_defaults['account_holder'] = 'Max M«äller';
     //         $this->_defaults['bank_account_number'] = '12345678';
     //         $this->_defaults['bank_identification_number'] = '12030000';
     //         $this->_defaults['bank_name'] = 'Bankname';
@@ -870,7 +870,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     }
 
     if (isset($fields['is_recur']) && $fields['is_recur']) {
-      if (CRM_Utils_Array::value('installments', $fields) <= 1){
+      if (CRM_Utils_Array::value('installments', $fields) == "0" || CRM_Utils_Array::value('installments', $fields) == "1"){
         $errors['installments'] = ts('Installments should be greater than %1.', array(1 => 'one'));
       }
       if ($fields['frequency_interval'] <= 0) {
