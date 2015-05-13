@@ -107,13 +107,12 @@ class CRM_Contact_BAO_RelationshipType extends CRM_Contact_DAO_RelationshipType 
 
     // set label to name if it's not set - but *only* for
     // ADD action. CRM-3336 as part from (CRM-3522)
-    if (!CRM_Utils_Array::value('relationshipType', $ids)) {
-      if (!CRM_Utils_Array::value('name_a_b', $params) && CRM_Utils_Array::value('label_a_b', $params)) {
-        $params['name_a_b'] = $params['label_a_b'];
-      }
-      if (!CRM_Utils_Array::value('name_b_a', $params) && CRM_Utils_Array::value('label_b_a', $params)) {
-        $params['name_b_a'] = $params['label_b_a'];
-      }
+    // Modify by junsuwhy in NetiCRM, refs #15343 
+    if (!CRM_Utils_Array::value('name_a_b', $params) && CRM_Utils_Array::value('label_a_b', $params)) {
+      $params['name_a_b'] = $params['label_a_b'];
+    }
+    if (!CRM_Utils_Array::value('name_b_a', $params) && CRM_Utils_Array::value('label_b_a', $params)) {
+      $params['name_b_a'] = $params['label_b_a'];
     }
 
     // action is taken depending upon the mode
