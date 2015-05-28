@@ -1458,6 +1458,7 @@ cj(function() {
       }
     }
 
+
     if (CRM_Utils_Array::value('send_receipt', $params)) {
       $receiptFrom = CRM_Utils_Array::value($params['from_email_address'], $this->_fromEmails['name']);
 
@@ -1574,14 +1575,51 @@ cj(function() {
       }
 
       $template = CRM_Core_Smarty::singleton();
+
+      // load event id related custom profile field and values, #15622
+      $ufJoinParams = array(
+        'entity_table' => 'civicrm_event',
+        'module' => !empty($participants[0]->registered_by_id) ? 'CiviEvent_Additional' : 'CiviEvent',
+        'entity_id' => $params['event_id'],
+      );
+      $eventCustomGroups = CRM_Core_BAO_UFJoin::getUFGroupIds($ufJoinParams);
+      foreach($eventCustomGroups as $k => $v){
+        if($k > 1) {
+          break;
+        }
+        if(!empty($v)){
+          $customGroupVars[$k] = CRM_Event_BAO_Event::buildCustomDisplay(
+            $eventCustomGroups[$k],
+            NULL,
+            $participants[0]->contact_id,
+            $template,
+            $participants[0]->id,
+            $participants[0]->is_test,
+            TRUE
+          );
+        }
+      }
+
       $customGroup = array();
-      //format submitted data
-      foreach ($params['custom'] as $fieldID => $values) {
-        foreach ($values as $fieldValue) {
-          $customValue = array('data' => $fieldValue['value']);
-          $customFields[$fieldID]['id'] = $fieldID;
-          $formattedValue = CRM_Core_BAO_CustomGroup::formatCustomValues($customValue, $customFields[$fieldID], TRUE);
-          $customGroup[$customFields[$fieldID]['groupTitle']][$customFields[$fieldID]['label']] = str_replace('&nbsp;', '', $formattedValue);
+      if(!empty($customGroupVars)){
+        foreach($customGroupVars as $k => $v){
+          if(!empty($v[1]['_grouptitle'])){
+            $grouptitle = $v[1]['_grouptitle'];
+            foreach($v[0] as $label => $value){
+              $customGroup[$grouptitle][$label] = $value;
+            }
+          }
+        } 
+      }
+      else{
+        // format submitted data
+        foreach ($params['custom'] as $fieldID => $values) {
+          foreach ($values as $fieldValue) {
+            $customValue = array('data' => $fieldValue['value']);
+            $customFields[$fieldID]['id'] = $fieldID;
+            $formattedValue = CRM_Core_BAO_CustomGroup::formatCustomValues($customValue, $customFields[$fieldID], TRUE);
+            $customGroup[$customFields[$fieldID]['groupTitle']][$customFields[$fieldID]['label']] = str_replace('&nbsp;', '', $formattedValue);
+          }
         }
       }
 
