@@ -66,7 +66,7 @@ class CRM_Member_Form_MembershipView extends CRM_Core_Form {
 
       // build associated contributions
       require_once 'CRM/Member/Page/Tab.php';
-      CRM_Member_Page_Tab::associatedContribution($values['contact_id'], $id);
+      CRM_Member_Page_Tab::associatedContribution($values['contact_id'], $id, $values['is_test']);
 
 
       //Provide information about membership source when it is the result of a relationship (CRM-1901)

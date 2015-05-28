@@ -55,6 +55,14 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
   protected $_force;
 
   /**
+   * Are we search test contribution
+   *
+   * @var int
+   * @access protected
+   */
+  protected $_test;
+
+  /**
    * name of search button
    *
    * @var string
@@ -160,6 +168,7 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
 
     $this->_reset = CRM_Utils_Request::retrieve('reset', 'Boolean', CRM_Core_DAO::$_nullObject);
     $this->_force = CRM_Utils_Request::retrieve('force', 'Boolean', $this, FALSE);
+    $this->_test = CRM_Utils_Request::retrieve('test', 'Boolean', $this);
     $this->_limit = CRM_Utils_Request::retrieve('limit', 'Positive', $this);
     $this->_context = CRM_Utils_Request::retrieve('context', 'String', $this, FALSE, 'search');
 
@@ -478,9 +487,7 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
       $this
     );
 
-    $test = CRM_Utils_Request::retrieve('test', 'Boolean',
-      CRM_Core_DAO::$_nullObject
-    );
+    $test = CRM_Utils_Request::retrieve('test', 'Boolean', $this);
     if (isset($test)) {
       $test = CRM_Utils_Type::escape($test, 'Boolean');
       $this->_formValues['contribution_test'] = $test;

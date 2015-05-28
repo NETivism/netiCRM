@@ -68,7 +68,8 @@ class CRM_Event_Page_Tab extends CRM_Core_Page {
    */
   function view() {
     // build associated contributions
-    $this->associatedContribution();
+    $is_test = CRM_Core_DAO::getFieldValue('CRM_Event_DAO_Participant', $this->_id, 'is_test', 'id');
+    $this->associatedContribution($is_test);
 
     $controller = new CRM_Core_Controller_Simple('CRM_Event_Form_ParticipantView',
       'View Participant',
@@ -283,12 +284,13 @@ class CRM_Event_Page_Tab extends CRM_Core_Page {
    * return null
    * @access public
    */
-  function associatedContribution() {
+  function associatedContribution($is_test = 0) {
     if (CRM_Core_Permission::access('CiviContribute')) {
       $this->assign('accessContribution', TRUE);
       $controller = new CRM_Core_Controller_Simple('CRM_Contribute_Form_Search', ts('Contributions'), NULL);
       $controller->setEmbedded(TRUE);
       $controller->set('force', 1);
+      $controller->set('test', $is_test);
       $controller->set('cid', $this->_contactId);
       $controller->set('participantId', $this->_id);
       $controller->set('context', 'contribution');

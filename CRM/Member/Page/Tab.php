@@ -449,7 +449,7 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
    * return null
    * @access public
    */
-  function associatedContribution($contactId = NULL, $membershipId = NULL) {
+  function associatedContribution($contactId = NULL, $membershipId = NULL, $is_test = 0) {
     if (!$contactId) {
       $contactId = $this->_contactId;
     }
@@ -465,6 +465,7 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
       $controller->setEmbedded(TRUE);
       $controller->reset();
       $controller->set('force', 1);
+      $controller->set('test', $is_test);
       $controller->set('cid', $contactId);
       $controller->set('memberId', $membershipId);
       $controller->set('context', 'contribution');
