@@ -26,6 +26,8 @@
 <div class="crm-block crm-form-block crm-debugging-form-block">
 <div id="help">
     {ts}In addition to the settings on this screen, there are a number of settings you can add to your sites's settings file (civicrm.settings.php) to provide additional debugging information.{/ts} {docURL page="Debugging"}
+    <br />
+    {ts 1=$logPath}CiviCRM log file path : %1{/ts}
 </div>
 <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>
          <table class="form-layout">

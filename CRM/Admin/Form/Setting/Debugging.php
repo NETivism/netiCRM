@@ -62,5 +62,19 @@ class CRM_Admin_Form_Setting_Debugging extends CRM_Admin_Form_Setting {
 
     parent::buildQuickForm();
   }
+
+  /**
+   * Function to process the form
+   *
+   * @access public
+   *
+   * @return None
+   */
+  public function preProcess() {
+    // Reference from CRM/Core/Error.php Line.397
+    $config = CRM_Core_Config::singleton();
+    $fileName = "{$config->configAndLogDir}CiviCRM." . $comp . md5($config->dsn . $config->userFrameworkResourceURL) . '.log';
+    $this->assign('logPath',$fileName);
+  }
 }
 
