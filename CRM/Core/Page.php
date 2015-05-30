@@ -157,7 +157,8 @@ class CRM_Core_Page {
     }
 
     self::$_template->assign('mode', $this->_mode);
-    self::$_template->assign('tplFile', $this->getTemplateFileName());
+    $pageTemplateFile = $this->getHookedTemplateFileName();
+    self::$_template->assign('tplFile', $pageTemplateFile);
 
     // invoke the pagRun hook, CRM-3906
     require_once 'CRM/Utils/Hook.php';
@@ -172,6 +173,7 @@ class CRM_Core_Page {
       else {
         $content = self::$_template->fetch('CRM/common/print.tpl');
       }
+      CRM_Utils_Hook::alterContent($content, 'page', $pageTemplateFile, $this);
       if ($this->_print == CRM_Core_Smarty::PRINT_PDF) {
         require_once 'CRM/Utils/PDF/Utils.php';
         CRM_Utils_PDF_Utils::domlib($content, "{$this->_name}.pdf");
@@ -183,6 +185,7 @@ class CRM_Core_Page {
     }
     $config = CRM_Core_Config::singleton();
     $content = self::$_template->fetch('CRM/common/' . strtolower($config->userFramework) . '.tpl');
+    CRM_Utils_Hook::alterContent($content, 'page', $pageTemplateFile, $this);
     CRM_Utils_System::theme('page', $content, TRUE, $this->_print);
     return;
   }
@@ -264,6 +267,16 @@ class CRM_Core_Page {
       DIRECTORY_SEPARATOR,
       CRM_Utils_System::getClassName($this)
     ) . '.tpl';
+  }
+
+  /**
+   * A wrapper for getTemplateFileName that includes calling the hook to
+   * prevent us from having to copy & paste the logic of calling the hook
+   */ 
+  function getHookedTemplateFileName() {
+    $pageTemplateFile = $this->getTemplateFileName();
+    CRM_Utils_Hook::alterTemplateFile(get_class($this), $this, 'page', $pageTemplateFile);
+    return $pageTemplateFile;
   }
 
   /**

@@ -233,7 +233,7 @@ class CRM_Profile_Page_Dynamic extends CRM_Core_Page {
     require_once 'CRM/Utils/Hook.php';
     CRM_Utils_Hook::pageRun($this);
 
-    return trim($template->fetch($this->getTemplateFileName()));
+    return trim($template->fetch($this->getHookedTemplateFileName()));
   }
 
   function getTemplateFileName() {

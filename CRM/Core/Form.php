@@ -563,6 +563,16 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
   }
 
   /**
+   * A wrapper for getTemplateFileName that includes calling the hook to
+   * prevent us from having to copy & paste the logic of calling the hook
+   */ 
+  function getHookedTemplateFileName() {
+    $pageTemplateFile = $this->getTemplateFileName();
+    CRM_Utils_Hook::alterTemplateFile(get_class($this), $this, 'page', $pageTemplateFile);
+    return $pageTemplateFile;
+  }
+
+  /**
    * Error reporting mechanism
    *
    * @param string  $message Error Message

@@ -864,5 +864,48 @@ class CRM_Utils_Hook {
     $null = &CRM_Core_DAO::$_nullObject;
     return eval("return {$config->userHookClass}::invoke(5, \$type, \$objects, \$input, \$ids, \$values, 'civicrm_ipnPost');");
   }
+
+  /**
+   * This hooks allows alteration of generated page content.
+   *
+   * @param $content
+   *   Previously generated content.
+   * @param $context
+   *   Context of content - page or form.
+   * @param $tplName
+   *   The file name of the tpl.
+   * @param $object
+   *   A reference to the page or form object.
+   *
+   * @return mixed
+   */
+  static function alterContent(&$content, $context, $tplName, &$object) {
+    $config = CRM_Core_Config::singleton();
+    require_once (str_replace('_', DIRECTORY_SEPARATOR, $config->userHookClass) . '.php');
+    $null = &CRM_Core_DAO::$_nullObject;
+    return eval("return {$config->userHookClass}::invoke(4, \$content, \$context, \$tplName, \$object, \$null, 'civicrm_alterContent');");
+  }
+
+  /**
+   * This hooks allows alteration of the tpl file used to generate content. It differs from the
+   * altercontent hook as the content has already been rendered through the tpl at that point
+   *
+   * @param $formName
+   *   Previously generated content.
+   * @param $form
+   *   Reference to the form object.
+   * @param $context
+   *   Context of content - page or form.
+   * @param $tplName
+   *   Reference the file name of the tpl.
+   *
+   * @return mixed
+   */
+  static function alterTemplateFile($formName, &$form, $context, &$tplName) {
+    $config = CRM_Core_Config::singleton();
+    require_once (str_replace('_', DIRECTORY_SEPARATOR, $config->userHookClass) . '.php');
+    $null = &CRM_Core_DAO::$_nullObject;
+    return eval("return {$config->userHookClass}::invoke(4, \$formName, \$form, \$context, \$tplName, \$null, 'civicrm_alterTemplateFile');");
+  }
 }
 
