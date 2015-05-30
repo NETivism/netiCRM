@@ -59,7 +59,8 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
    *
    * @return array $_actionLinks
    *
-   */ function &actionLinks() {
+   */
+  function &actionLinks() {
     // check if variable _actionsLinks is populated
     if (!self::$_actionLinks) {
       // helper variable for nicer formatting

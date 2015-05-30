@@ -55,7 +55,8 @@ class CRM_Event_Form_ManageEvent_EventInfo extends CRM_Event_Form_ManageEvent {
    *
    * @return void
    * @access public
-   */ function preProcess() {
+   */
+  function preProcess() {
     //custom data related code
     $this->_cdType = CRM_Utils_Array::value('type', $_GET);
     $this->assign('cdType', FALSE);

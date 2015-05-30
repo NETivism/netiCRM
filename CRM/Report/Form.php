@@ -189,7 +189,8 @@ class CRM_Report_Form extends CRM_Core_Form {
 
   /**
    *
-   */ function __construct() {
+   */
+  function __construct() {
     parent::__construct();
 
     // build tag filter

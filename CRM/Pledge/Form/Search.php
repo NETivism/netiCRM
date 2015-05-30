@@ -134,7 +134,8 @@ class CRM_Pledge_Form_Search extends CRM_Core_Form {
    *
    * @return void
    * @access public
-   */ function preProcess() {
+   */
+  function preProcess() {
 
     /**
      * set the button names

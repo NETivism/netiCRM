@@ -95,7 +95,8 @@ class CRM_Core_StateMachine {
    *
    * @return object
    * @access public
-   */ function __construct(&$controller, $action = CRM_Core_Action::NONE) {
+   */
+  function __construct(&$controller, $action = CRM_Core_Action::NONE) {
     $this->_controller = &$controller;
     $this->_action = $action;
 

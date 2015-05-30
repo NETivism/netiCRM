@@ -63,7 +63,8 @@ class CRM_Core_Smarty extends Smarty {
    *
    * @return CRM_Core_Smarty
    * @access private
-   */ function __construct() {
+   */
+  function __construct() {
     parent::__construct();
 
     $config = CRM_Core_Config::singleton();

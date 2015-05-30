@@ -70,7 +70,8 @@ class CRM_Contribute_Page_ContributionPage extends CRM_Core_Page {
    *
    * @return array $_actionLinks
    *
-   */ function &actionLinks() {
+   */
+  function &actionLinks() {
     // check if variable _actionsLinks is populated
     if (!isset(self::$_actionLinks)) {
       // helper variable for nicer formatting

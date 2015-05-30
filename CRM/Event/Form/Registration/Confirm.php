@@ -63,7 +63,8 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
    *
    * @return void
    * @access public
-   */ function preProcess() {
+   */
+  function preProcess() {
     parent::preProcess();
     parent::isEventFull();
 

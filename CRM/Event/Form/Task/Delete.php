@@ -56,7 +56,8 @@ class CRM_Event_Form_Task_Delete extends CRM_Event_Form_Task {
    *
    * @return void
    * @access public
-   */ function preProcess() {
+   */
+  function preProcess() {
 
     //check for delete
     if (!CRM_Core_Permission::checkActionPermission('CiviEvent', CRM_Core_Action::DELETE)) {

@@ -78,7 +78,8 @@ class CRM_Campaign_Page_SurveyType extends CRM_Core_Page_Basic {
    * @return void
    * @access public
    *
-   */ function preProcess() {
+   */
+  function preProcess() {
     $this->_gName = 'activity_type';
 
     $this->_gid = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionGroup', $this->_gName, 'id', 'name');

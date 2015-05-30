@@ -55,7 +55,8 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
    *
    * @return void
    * @access public
-   */ function preProcess() {
+   */
+  function preProcess() {
     parent::preProcess();
   }
 

@@ -78,7 +78,8 @@ class CRM_Campaign_Form_Task_Interview extends CRM_Campaign_Form_Task {
    *
    * @return void
    * @access public
-   */ function preProcess() {
+   */
+  function preProcess() {
     $this->_votingTab = $this->get('votingTab');
     $this->_reserveToInterview = $this->get('reserveToInterview');
     if ($this->_reserveToInterview || $this->_votingTab) {

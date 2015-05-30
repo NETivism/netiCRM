@@ -63,7 +63,8 @@ class CRM_Contact_Form_Task_AddToTag extends CRM_Contact_Form_Task {
    * @access public
    *
    * @return void
-   */ function buildQuickForm() {
+   */
+  function buildQuickForm() {
     // add select for tag
     $this->_tags = CRM_Core_BAO_Tag::getTags();
 

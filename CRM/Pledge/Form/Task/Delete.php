@@ -55,7 +55,8 @@ class CRM_Pledge_Form_Task_Delete extends CRM_Pledge_Form_Task {
    *
    * @return void
    * @access public
-   */ function preProcess() {
+   */
+  function preProcess() {
     //check for delete
     if (!CRM_Core_Permission::checkActionPermission('CiviPledge', CRM_Core_Action::DELETE)) {
       CRM_Core_Error::fatal(ts('You do not have permission to access this page'));

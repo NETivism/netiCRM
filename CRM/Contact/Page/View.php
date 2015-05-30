@@ -88,7 +88,8 @@ class CRM_Contact_Page_View extends CRM_Core_Page {
    * @return void
    * @access public
    *
-   */ function preProcess() {
+   */
+  function preProcess() {
     // process url params
     $this->_id = CRM_Utils_Request::retrieve('id', 'Positive', $this);
     $this->assign('id', $this->_id);

@@ -112,7 +112,8 @@ class CRM_Core_Payment_eWAY extends CRM_Core_Payment {
    * @param string $mode the mode of operation: live or test
    *
    * @return void
-   **********************************************************/ function __construct($mode, &$paymentProcessor) {
+   **********************************************************/
+  function __construct($mode, &$paymentProcessor) {
     // require Standaard eWAY API libraries
     require_once 'eWAY/eWAY_GatewayRequest.php';
     require_once 'eWAY/eWAY_GatewayResponse.php';

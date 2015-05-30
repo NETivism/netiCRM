@@ -68,7 +68,8 @@ class CRM_Custom_Page_Field extends CRM_Core_Page {
    *
    * @return array  array of action links that we need to display for the browse screen
    * @access public
-   */ function &actionLinks() {
+   */
+  function &actionLinks() {
     if (!isset(self::$_actionLinks)) {
       $deleteExtra = ts('Are you sure you want to delete this custom data field?');
       self::$_actionLinks = array(

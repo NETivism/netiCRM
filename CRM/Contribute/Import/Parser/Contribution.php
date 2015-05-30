@@ -59,7 +59,8 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
 
   /**
    * class constructor
-   */ function __construct(&$mapperKeys, $mapperSoftCredit = NULL, $mapperPhoneType = NULL) {
+   */
+  function __construct(&$mapperKeys, $mapperSoftCredit = NULL, $mapperPhoneType = NULL) {
     parent::__construct();
     $this->_mapperKeys = &$mapperKeys;
     $this->_mapperSoftCredit = &$mapperSoftCredit;

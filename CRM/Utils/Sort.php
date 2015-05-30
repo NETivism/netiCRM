@@ -121,7 +121,8 @@ class CRM_Utils_Sort {
    *
    * @return void
    * @access public
-   */ function __construct(&$vars, $defaultSortOrder = NULL) {
+   */
+  function __construct(&$vars, $defaultSortOrder = NULL) {
     $this->_vars = array();
     $this->_response = array();
 

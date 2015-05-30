@@ -86,7 +86,8 @@ class CRM_Event_Form_ManageEvent extends CRM_Core_Form {
    *
    * @return void
    * @access public
-   */ function preProcess() {
+   */
+  function preProcess() {
     $config = CRM_Core_Config::singleton();
     if (in_array("CiviEvent", $config->enableComponents)) {
       $this->assign('CiviEvent', TRUE);

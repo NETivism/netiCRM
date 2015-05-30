@@ -123,7 +123,8 @@ class CRM_Utils_PDF_Label extends TCPDF {
    * @param unit type of unit used we can define your label properties in inches by setting metric to 'in'
    *
    * @access public
-   */ function __construct($format, $unit = 'mm') {
+   */
+  function __construct($format, $unit = 'mm') {
     if (is_array($format)) {
       // Custom format
       $tFormat = $format;

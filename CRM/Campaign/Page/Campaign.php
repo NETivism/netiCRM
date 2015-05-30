@@ -52,7 +52,8 @@ class CRM_Campaign_Page_Campaign extends CRM_Core_Page {
    *
    * @return array $_actionLinks
    *
-   */ function &actionLinks() {
+   */
+  function &actionLinks() {
     // check if variable _actionsLinks is populated
     if (!isset(self::$_actionLinks)) {
       $deleteExtra = ts('Are you sure you want to delete this Campaign?');

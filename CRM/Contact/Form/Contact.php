@@ -124,7 +124,8 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
    *
    * @return void
    * @access public
-   */ function preProcess() {
+   */
+  function preProcess() {
     $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE, 'add');
 
     $this->_dedupeButtonName = $this->getButtonName('refresh', 'dedupe');

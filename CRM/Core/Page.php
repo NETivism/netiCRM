@@ -117,7 +117,8 @@ class CRM_Core_Page {
    * @param int    $mode  mode of the page
    *
    * @return CRM_Core_Page
-   */ function __construct($title = NULL, $mode = NULL) {
+   */
+  function __construct($title = NULL, $mode = NULL) {
     $this->_name = CRM_Utils_System::getClassName($this);
     $this->_title = $title;
     $this->_mode = $mode;

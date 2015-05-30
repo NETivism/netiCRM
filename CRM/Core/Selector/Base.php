@@ -70,7 +70,8 @@ class CRM_Core_Selector_Base {
    *
    * @access public
    *
-   */ function getActionAttribute($match, $attribute = 'name') {
+   */
+  function getActionAttribute($match, $attribute = 'name') {
     $links = &$this->links();
 
     foreach ($link as $action => $item) {

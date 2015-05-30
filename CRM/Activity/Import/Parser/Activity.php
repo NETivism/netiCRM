@@ -58,7 +58,8 @@ class CRM_Activity_Import_Parser_Activity extends CRM_Activity_Import_Parser {
 
   /**
    * class constructor
-   */ function __construct(&$mapperKeys, $mapperLocType = NULL, $mapperPhoneType = NULL) {
+   */
+  function __construct(&$mapperKeys, $mapperLocType = NULL, $mapperPhoneType = NULL) {
     parent::__construct();
     $this->_mapperKeys = &$mapperKeys;
   }

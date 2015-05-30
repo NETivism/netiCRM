@@ -12,7 +12,8 @@ private $_cache;
  * @param array   $config  an array of configuration params
  *
  * @return void
- */ function __construct($config) {
+ */
+  function __construct($config) {
   $this->_cache = array();
   }
 

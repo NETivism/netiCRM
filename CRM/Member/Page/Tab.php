@@ -54,7 +54,8 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
    *
    * return null
    * @access public
-   */ function browse() {
+   */
+  function browse() {
     $links = &self::links('all', $this->_isPaymentProcessor, $this->_accessContribution);
 
     $membership = array();

@@ -71,7 +71,8 @@ class CRM_Campaign_Form_Task_Release extends CRM_Campaign_Form_Task {
    *
    * @return void
    * @access public
-   */ function preProcess() {
+   */
+  function preProcess() {
     $this->_interviewToRelease = $this->get('interviewToRelease');
     if ($this->_interviewToRelease) {
       //user came from interview form.

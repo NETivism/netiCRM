@@ -148,7 +148,8 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
    *
    * @return CRM_Contact_Selector
    * @access public
-   */ function __construct($customSearchClass,
+   */
+  function __construct($customSearchClass,
     $formValues = NULL,
     $params = NULL,
     $returnProperties = NULL,

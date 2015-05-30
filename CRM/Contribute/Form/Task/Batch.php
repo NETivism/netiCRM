@@ -65,7 +65,8 @@ class CRM_Contribute_Form_Task_Batch extends CRM_Contribute_Form_Task {
    *
    * @return void
    * @access public
-   */ function preProcess() {
+   */
+  function preProcess() {
     /*
          * initialize the task and row fields
          */

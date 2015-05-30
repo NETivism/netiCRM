@@ -59,7 +59,8 @@ class CRM_Event_Import_Parser_Participant extends CRM_Event_Import_Parser {
 
   /**
    * class constructor
-   */ function __construct(&$mapperKeys, $mapperLocType = NULL, $mapperPhoneType = NULL) {
+   */
+  function __construct(&$mapperKeys, $mapperLocType = NULL, $mapperPhoneType = NULL) {
     parent::__construct();
     $this->_mapperKeys = &$mapperKeys;
   }

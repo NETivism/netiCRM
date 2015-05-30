@@ -60,7 +60,8 @@ class CRM_Contact_Page_View_Relationship extends CRM_Core_Page {
    * @return void
    *
    * @access public
-   */ function view() {
+   */
+  function view() {
     require_once 'CRM/Core/DAO.php';
     $viewRelationship = CRM_Contact_BAO_Relationship::getRelationship($this->_contactId, NULL, NULL, NULL, $this->_id);
     //To check whether selected contact is a contact_id_a in

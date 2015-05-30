@@ -80,7 +80,8 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity {
    *
    * @return None
    * @access public
-   */ function preProcess() {
+   */
+  function preProcess() {
     $this->_caseId = CRM_Utils_Request::retrieve('caseid', 'Positive', $this);
     $this->_context = CRM_Utils_Request::retrieve('context', 'String', $this);
     if (!$this->_context) {

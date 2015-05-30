@@ -117,7 +117,8 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
    * The _fields var can be used by sub class to set/unset/edit the
    * form fields based on their requirement
    *
-   */ function setFields() {
+   */
+  function setFields() {
     $this->_fields = array(
       'subject' => array('type' => 'text',
         'label' => ts('Subject'),

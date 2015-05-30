@@ -162,7 +162,8 @@ class CRM_Activity_Selector_Search extends CRM_Core_Selector_Base implements CRM
    *
    * @return CRM_Contact_Selector
    * @access public
-   */ function __construct(&$queryParams,
+   */
+  function __construct(&$queryParams,
     $action = CRM_Core_Action::NONE,
     $activityClause = NULL,
     $single = FALSE,

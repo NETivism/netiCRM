@@ -63,7 +63,8 @@ class CRM_Core_ShowHideBlocks {
    *
    * @return Object     the newly created object
    * @access public
-   */ function __construct($show = NULL, $hide = NULL) {
+   */
+  function __construct($show = NULL, $hide = NULL) {
     if (!empty($show)) {
       $this->_show = $show;
     }

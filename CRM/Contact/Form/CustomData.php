@@ -116,7 +116,8 @@ class CRM_Contact_Form_CustomData extends CRM_Core_Form {
    *
    * @access public
    *
-   */ function preProcess() {
+   */
+  function preProcess() {
 
     $this->_cdType = CRM_Utils_Array::value('type', $_GET);
 

@@ -56,7 +56,8 @@ class CRM_Mailing_Page_Event extends CRM_Core_Page {
    * run this page (figure out the action needed and perform it).
    *
    * @return void
-   */ function run() {
+   */
+  function run() {
     require_once 'CRM/Mailing/Selector/Event.php';
     $selector = new CRM_Mailing_Selector_Event(
       CRM_Utils_Request::retrieve('event', 'String',

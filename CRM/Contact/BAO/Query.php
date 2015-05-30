@@ -370,7 +370,8 @@ class CRM_Contact_BAO_Query {
    *
    * @return Object
    * @access public
-   */ function __construct($params = NULL, $returnProperties = NULL, $fields = NULL,
+   */
+  function __construct($params = NULL, $returnProperties = NULL, $fields = NULL,
     $includeContactIds = FALSE, $strict = FALSE, $mode = 1,
     $skipPermission = FALSE, $searchDescendentGroups = TRUE,
     $smartGroupCache = TRUE, $displayRelationshipType = NULL,

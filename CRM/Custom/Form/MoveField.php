@@ -81,7 +81,8 @@ class CRM_Custom_Form_MoveField extends CRM_Core_Form {
    *
    * @return void
    * @acess protected
-   */ function preProcess() {
+   */
+  function preProcess() {
     $this->_srcFID = CRM_Utils_Request::retrieve('fid', 'Positive',
       $this, TRUE
     );

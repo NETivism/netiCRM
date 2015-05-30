@@ -83,7 +83,8 @@ class CRM_Member_Form_Task extends CRM_Core_Form {
    *
    * @return void
    * @access public
-   */ function preProcess() {
+   */
+  function preProcess() {
     self::preProcessCommon($this);
   }
 

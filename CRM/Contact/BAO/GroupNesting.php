@@ -51,7 +51,8 @@ class CRM_Contact_BAO_GroupNesting extends CRM_Contact_DAO_GroupNesting implemen
 
   /**
    * class constructor
-   */ function __construct($styleLabels = FALSE) {
+   */
+  function __construct($styleLabels = FALSE) {
     parent::__construct();
     $this->_styleLabels = $styleLabels;
   }

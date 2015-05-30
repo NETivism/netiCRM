@@ -54,7 +54,8 @@ class CRM_Utils_Request {
 
   /**
    * class constructor
-   */ function __construct() {}
+   */
+  function __construct() {}
 
   /**
    * get the variable information from the request (GET/POST/SESSION

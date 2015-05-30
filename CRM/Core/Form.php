@@ -124,7 +124,8 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
    *
    * @return object
    * @access public
-   */ function __construct($state = NULL,
+   */
+  function __construct($state = NULL,
     $action = CRM_Core_Action::NONE,
     $method = 'post',
     $name = NULL

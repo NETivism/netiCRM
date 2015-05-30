@@ -53,7 +53,8 @@ class CRM_Contact_Form_Task_SaveSearch extends CRM_Contact_Form_Task {
    *
    * @return void
    * @access public
-   */ function preProcess() {
+   */
+  function preProcess() {
     $this->_id = NULL;
 
     // get the submitted values of the search form

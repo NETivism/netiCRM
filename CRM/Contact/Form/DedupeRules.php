@@ -53,7 +53,8 @@ class CRM_Contact_Form_DedupeRules extends CRM_Admin_Form {
    *
    * @return None
    * @access public
-   */ function preProcess() {
+   */
+  function preProcess() {
     // Ensure user has permission to be here
     require_once 'CRM/Core/Permission.php';
     require_once 'CRM/Contact/BAO/ContactType.php';

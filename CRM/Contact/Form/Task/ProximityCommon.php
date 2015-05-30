@@ -66,7 +66,8 @@ class CRM_Contact_Form_Task_ProximityCommon extends CRM_Contact_Form_Task {
    *
    * @return void
    * @access public
-   */ function preProcess() {
+   */
+  function preProcess() {
     /*
          * initialize the task and row fields
          */

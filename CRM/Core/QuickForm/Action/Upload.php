@@ -58,7 +58,8 @@ class CRM_Core_QuickForm_Action_Upload extends CRM_Core_QuickForm_Action {
    *
    * @return object
    * @access public
-   */ function __construct(&$stateMachine, $uploadDir, $uploadNames) {
+   */
+  function __construct(&$stateMachine, $uploadDir, $uploadNames) {
     parent::__construct($stateMachine);
 
     $this->_uploadDir = $uploadDir;
