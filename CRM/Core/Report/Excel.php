@@ -51,7 +51,7 @@ class CRM_Core_Report_Excel {
       echo $titleHeader;
     }
 
-    $bom = chr(255) . chr(254); // UTF-16LE byte order mark, BOM
+    $bom = "\xEF\xBB\xBF";
     $result = $bom;
     if($print){
       echo $bom;
@@ -79,10 +79,10 @@ class CRM_Core_Report_Excel {
       // refs` #2216
       $out = trim(substr($schema_insert, 0, -1)) . $add_character;
       if ($print) {
-        echo mb_convert_encoding($out, 'UTF-16LE', 'UTF-8');
+        echo $out;
       }
       else {
-        $result .= mb_convert_encoding($out, 'UTF-16LE', 'UTF-8');
+        $result .= $out;
       }
     }
 
@@ -138,7 +138,7 @@ class CRM_Core_Report_Excel {
       }
       // end for
 
-      $out = mb_convert_encoding($schema_insert . $add_character, 'UTF-16LE', 'UTF-8');
+      $out = $schema_insert . $add_character;
       if ($print) {
         echo $out;
       }
@@ -198,6 +198,7 @@ class CRM_Core_Report_Excel {
         'csv',
         FALSE
       );
+      echo "\xEF\xBB\xBF";
     }
 
     if (!empty($rows)) {
