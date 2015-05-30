@@ -186,8 +186,7 @@ class CRM_Member_Selector_Search extends CRM_Core_Selector_Base implements CRM_C
    * @access public
    *
    */
-  static
-  function &links($status = 'all',
+  static function &links($status = 'all',
     $isPaymentProcessor = NULL,
     $accessContribution = NULL,
     $qfKey = NULL,

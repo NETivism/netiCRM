@@ -92,8 +92,7 @@ class CRM_Price_Form_Set extends CRM_Core_Form {
    * @access public
    * @static
    */
-  static
-  function formRule($fields, $files, $options) {
+  static function formRule($fields, $files, $options) {
     $errors = array();
 
     //checks the given price set doesnot start with digit

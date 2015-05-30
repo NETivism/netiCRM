@@ -1034,8 +1034,7 @@ WHERE  contribution_id = {$this->_id}
    * @access public
    * @static
    */
-  static
-  function formRule($fields, $files, $self) {
+  static function formRule($fields, $files, $self) {
     $errors = array();
 
     //check if contact is selected in standalone mode

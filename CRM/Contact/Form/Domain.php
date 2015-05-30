@@ -192,8 +192,7 @@ class CRM_Contact_Form_Domain extends CRM_Core_Form {
    * @static
    * @access public
    */
-  static
-  function formRule($fields) {
+  static function formRule($fields) {
     $errors = array();
     // check for state/country mapping
     CRM_Contact_Form_Edit_Address::formRule($fields, $errors);

@@ -41,35 +41,29 @@ class CRM_Utils_System_UnitTests {
     return;
   }
 
-  static
-  function authenticate($name, $password) {
+  static function authenticate($name, $password) {
     $retVal = array(1, 1, 12345);
     return $retVal;
   }
 
-  static
-  function appendBreadCrumb($breadCrumbs) {
+  static function appendBreadCrumb($breadCrumbs) {
     return;
   }
 
-  static
-  function resetBreadCrumb() {
+  static function resetBreadCrumb() {
     return;
   }
 
-  static
-  function addHTMLHead($head) {
+  static function addHTMLHead($head) {
     return;
   }
 
-  static
-  function mapConfigToSSL() {
+  static function mapConfigToSSL() {
     global $base_url;
     $base_url = str_replace('http://', 'https://', $base_url);
   }
 
-  static
-  function postURL($action) {
+  static function postURL($action) {
     return;
   }
 
@@ -127,8 +121,7 @@ class CRM_Utils_System_UnitTests {
     }
   }
 
-  static
-  function getUserID($user) {
+  static function getUserID($user) {
     //FIXME: look here a bit closer when testing UFMatch
     require_once 'CRM/Core/BAO/UFMatch.php';
 
@@ -137,29 +130,24 @@ class CRM_Utils_System_UnitTests {
     CRM_Core_BAO_UFMatch::synchronize($user, TRUE, 'Standalone', 'Individual');
   }
 
-  static
-  function getAllowedToLogin($user) {
+  static function getAllowedToLogin($user) {
     return TRUE;
   }
 
-  static
-  function setMessage($message) {
+  static function setMessage($message) {
     return;
   }
 
-  static
-  function permissionDenied() {
+  static function permissionDenied() {
     CRM_Core_Error::fatal(ts('You do not have permission to access this page'));
   }
 
-  static
-  function logout() {
+  static function logout() {
     session_destroy();
     header("Location:index.php");
   }
 
-  static
-  function getUFLocale() {
+  static function getUFLocale() {
     return NULL;
   }
 

@@ -58,8 +58,7 @@ class CRM_Price_BAO_Set extends CRM_Price_DAO_Set {
    * @access public
    * @static
    */
-  static
-  function create(&$params) {
+  static function create(&$params) {
     $priceSetBAO = new CRM_Price_BAO_Set();
     $priceSetBAO->copyValues($params);
     if (defined('CIVICRM_EVENT_PRICE_SET_DOMAIN_ID') && CIVICRM_EVENT_PRICE_SET_DOMAIN_ID) {
@@ -82,8 +81,7 @@ class CRM_Price_BAO_Set extends CRM_Price_DAO_Set {
    * @access public
    * @static
    */
-  static
-  function retrieve(&$params, &$defaults) {
+  static function retrieve(&$params, &$defaults) {
     return CRM_Core_DAO::commonRetrieve('CRM_Price_DAO_Set', $params, $defaults);
   }
 
@@ -97,8 +95,7 @@ class CRM_Price_BAO_Set extends CRM_Price_DAO_Set {
    * @static
    * @access public
    */
-  static
-  function setIsActive($id, $isActive) {
+  static function setIsActive($id, $isActive) {
     return CRM_Core_DAO::setFieldValue('CRM_Price_DAO_Set', $id, 'is_active', $isActive);
   }
 
@@ -460,8 +457,7 @@ WHERE  id = %1";
     return $setTree;
   }
 
-  static
-  function initSet(&$form, $id, $entityTable = 'civicrm_event') {
+  static function initSet(&$form, $id, $entityTable = 'civicrm_event') {
     // get price info
     if ($priceSetId = self::getFor($entityTable, $id)) {
       if ($form->_action & CRM_Core_Action::UPDATE) {
@@ -540,8 +536,7 @@ WHERE  id = %1";
     return FALSE;
   }
 
-  static
-  function processAmount(&$fields, &$params, &$lineItem) {
+  static function processAmount(&$fields, &$params, &$lineItem) {
     // using price set
     $totalPrice = 0;
     $radioLevel = $checkboxLevel = $selectLevel = $textLevel = array();

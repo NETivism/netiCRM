@@ -284,8 +284,7 @@ class CRM_Case_Form_Case extends CRM_Core_Form {
    * @static
    * @access public
    */
-  static
-  function formRule($values, $files, $form) {
+  static function formRule($values, $files, $form) {
     return TRUE;
   }
 

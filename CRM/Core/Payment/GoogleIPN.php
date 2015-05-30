@@ -266,8 +266,7 @@ class CRM_Core_Payment_GoogleIPN extends CRM_Core_Payment_BaseIPN {
    * @return object
    * @static
    */
-  static
-  function &singleton($mode, $component, &$paymentProcessor) {
+  static function &singleton($mode, $component, &$paymentProcessor) {
     if (self::$_singleton === NULL) {
       self::$_singleton = new CRM_Core_Payment_GoogleIPN($mode, $paymentProcessor);
     }
@@ -305,8 +304,7 @@ class CRM_Core_Payment_GoogleIPN extends CRM_Core_Payment_BaseIPN {
    * @return array context of this call (test, module, payment processor id)
    * @static
    */
-  static
-  function getContext($xml_response, $privateData, $orderNo, $root) {
+  static function getContext($xml_response, $privateData, $orderNo, $root) {
     require_once 'CRM/Contribute/DAO/Contribution.php';
 
     $isTest = NULL;
@@ -407,8 +405,7 @@ class CRM_Core_Payment_GoogleIPN extends CRM_Core_Payment_BaseIPN {
    * a notification or request is sent by the Google Server.
    *
    */
-  static
-  function main($xml_response) {
+  static function main($xml_response) {
     require_once ('Google/library/googleresponse.php');
     require_once ('Google/library/googlemerchantcalculations.php');
     require_once ('Google/library/googleresult.php');
@@ -549,8 +546,7 @@ class CRM_Core_Payment_GoogleIPN extends CRM_Core_Payment_BaseIPN {
      * Converts the comma separated name-value pairs in <merchant-private-data>
      * to an array of name-value pairs.
      */
-    static
-    function stringToArray($str) {
+    static   function stringToArray($str) {
       $vars = $labels = array();
       $labels = explode(',', $str);
       foreach ($labels as $label) {

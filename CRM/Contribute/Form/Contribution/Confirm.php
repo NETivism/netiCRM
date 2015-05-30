@@ -726,8 +726,7 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
    * @return void
    * @access public
    */
-  static
-  function processContribution(&$form, $params, $result, $contactID, $contributionType, $deductibleMode = TRUE, $pending = FALSE, $online = TRUE) {
+  static function processContribution(&$form, $params, $result, $contactID, $contributionType, $deductibleMode = TRUE, $pending = FALSE, $online = TRUE) {
     require_once 'CRM/Core/Transaction.php';
     $transaction = new CRM_Core_Transaction();
 
@@ -1161,8 +1160,7 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
    * @return void
    * @access public
    */
-  static
-  function processOnBehalfOrganization(&$behalfOrganization, &$contactID, &$values, &$params) {
+  static function processOnBehalfOrganization(&$behalfOrganization, &$contactID, &$values, &$params) {
     $isCurrentEmployer = FALSE;
     if ($behalfOrganization['organization_id'] && $behalfOrganization['org_option']) {
       $orgID = $behalfOrganization['organization_id'];

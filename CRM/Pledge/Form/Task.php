@@ -81,8 +81,7 @@ class CRM_Pledge_Form_Task extends CRM_Core_Form {
     self::preProcessCommon($this);
   }
 
-  static
-  function preProcessCommon(&$form, $useTable = FALSE) {
+  static function preProcessCommon(&$form, $useTable = FALSE) {
     $form->_pledgeIds = array();
 
     $values = $form->controller->exportValues('Search');

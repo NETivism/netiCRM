@@ -611,8 +611,7 @@ class CRM_Profile_Form extends CRM_Core_Form {
    * @access public
    * @static
    */
-  static
-  function formRule($fields, $files, $form) {
+  static function formRule($fields, $files, $form) {
     $errors = array();
     // if no values, return
     if (empty($fields)) {

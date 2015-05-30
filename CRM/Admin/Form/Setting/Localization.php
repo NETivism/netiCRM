@@ -172,8 +172,7 @@ class CRM_Admin_Form_Setting_Localization extends CRM_Admin_Form_Setting {
     parent::buildQuickForm();
   }
 
-  static
-  function formRule($fields) {
+  static function formRule($fields) {
     $errors = array();
     if (CRM_Utils_Array::value('monetaryThousandSeparator', $fields) ==
       CRM_Utils_Array::value('monetaryDecimalPoint', $fields)

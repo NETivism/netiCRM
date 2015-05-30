@@ -157,8 +157,7 @@ class CRM_Core_Smarty extends Smarty {
    * Method providing static instance of SmartTemplate, as
    * in Singleton pattern.
    */
-  static
-  function &singleton() {
+  static function &singleton() {
     if (!isset(self::$_singleton)) {
       $config = CRM_Core_Config::singleton();
       self::$_singleton = new CRM_Core_Smarty($config->templateDir, $config->templateCompileDir);

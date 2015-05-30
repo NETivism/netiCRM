@@ -52,8 +52,7 @@ class CRM_SMS_BAO_History extends CRM_SMS_DAO_History {
    * @access public
    * @static
    */
-  static
-  function send(&$contactIds, &$message, $smsNumber) {
+  static function send(&$contactIds, &$message, $smsNumber) {
     $session = CRM_Core_Session::singleton();
     $userID = $session->get('userID');
     list($fromDisplayName,
@@ -99,8 +98,7 @@ class CRM_SMS_BAO_History extends CRM_SMS_DAO_History {
    * @access public
    * @static
    */
-  static
-  function sendMessage($from, $toID, &$message, $smsNumber, $activityID) {
+  static function sendMessage($from, $toID, &$message, $smsNumber, $activityID) {
     list($toDisplayName,
       $toSMS
     ) = CRM_Contact_BAO_Contact_Location::getPhoneDetails($toID, 'Mobile');

@@ -53,8 +53,7 @@ Class CRM_Campaign_BAO_Survey extends CRM_Campaign_DAO_Survey {
    * @var array
    */
 
-  static
-  function retrieve(&$params, &$defaults) {
+  static function retrieve(&$params, &$defaults) {
     $dao = new CRM_Campaign_DAO_Survey();
 
     $dao->copyValues($params);
@@ -77,8 +76,7 @@ Class CRM_Campaign_BAO_Survey extends CRM_Campaign_DAO_Survey {
    * @access public
    * @static
    */
-  static
-  function create(&$params) {
+  static function create(&$params) {
     if (empty($params)) {
       return;
     }
@@ -113,8 +111,7 @@ Class CRM_Campaign_BAO_Survey extends CRM_Campaign_DAO_Survey {
    * @param int $id
    * @static
    */
-  static
-  function getSurvey($all = FALSE,
+  static function getSurvey($all = FALSE,
     $id = NULL,
     $defaultOnly = FALSE
   ) {
@@ -151,8 +148,7 @@ Class CRM_Campaign_BAO_Survey extends CRM_Campaign_DAO_Survey {
    * @param int $id
    * @static
    */
-  static
-  function getSurveyList($all = FALSE) {
+  static function getSurveyList($all = FALSE) {
     require_once 'CRM/Campaign/BAO/Campaign.php';
 
     $survey = array();
@@ -176,8 +172,7 @@ Class CRM_Campaign_BAO_Survey extends CRM_Campaign_DAO_Survey {
    *
    * @static
    */
-  static
-  function getSurveyActivityType() {
+  static function getSurveyActivityType() {
     require_once 'CRM/Core/OptionGroup.php';
     $activityTypes = array();
 
@@ -195,8 +190,7 @@ Class CRM_Campaign_BAO_Survey extends CRM_Campaign_DAO_Survey {
    *
    * @static
    */
-  static
-  function getSurveyCustomGroups($surveyTypes = array()) {
+  static function getSurveyCustomGroups($surveyTypes = array()) {
     $customGroups = array();
     if (!is_array($surveyTypes)) {
       $surveyTypes = array($surveyTypes);
@@ -237,8 +231,7 @@ Class CRM_Campaign_BAO_Survey extends CRM_Campaign_DAO_Survey {
    * @return Object             DAO object on sucess, null otherwise
    * @static
    */
-  static
-  function setIsActive($id, $is_active) {
+  static function setIsActive($id, $is_active) {
     return CRM_Core_DAO::setFieldValue('CRM_Campaign_DAO_Survey', $id, 'is_active', $is_active);
   }
 
@@ -251,8 +244,7 @@ Class CRM_Campaign_BAO_Survey extends CRM_Campaign_DAO_Survey {
    * @static
    *
    */
-  static
-  function del($id) {
+  static function del($id) {
     if (!$id) {
       return NULL;
     }
@@ -271,8 +263,7 @@ Class CRM_Campaign_BAO_Survey extends CRM_Campaign_DAO_Survey {
    * @return $voterDetails array of contact info.
    * @static
    */
-  static
-  function voterDetails($voterIds, $returnProperties = array()) {
+  static function voterDetails($voterIds, $returnProperties = array()) {
     $voterDetails = array();
     if (!is_array($voterIds) || empty($voterIds)) {
       return $voterDetails;
@@ -360,8 +351,7 @@ Group By  contact.id";
    * @return $activityDetails array of survey activity.
    * @static
    */
-  static
-  function voterActivityDetails($surveyId, $voterIds, $interviewerId = NULL, $statusIds = array()) {
+  static function voterActivityDetails($surveyId, $voterIds, $interviewerId = NULL, $statusIds = array()) {
     $activityDetails = array();
     if (!$surveyId ||
       !is_array($voterIds) || empty($voterIds)
@@ -416,8 +406,7 @@ INNER JOIN  civicrm_activity_assignment activityAssignment ON ( activityAssignme
    * @return $activities an array of survey activity.
    * @static
    */
-  static
-  function getSurveyActivities($surveyId, $interviewerId = NULL, $statusIds = array()) {
+  static function getSurveyActivities($surveyId, $interviewerId = NULL, $statusIds = array()) {
     $activities = array();
     if (!$surveyId) {
       return $activities;
@@ -481,8 +470,7 @@ INNER JOIN  civicrm_activity_assignment activityAssignment ON ( activityAssignme
    * @return survey related contact ids.
    * @static
    */
-  static
-  function getSurveyVoterInfo($surveyId, $interviewerId = NULL, $statusIds = array()) {
+  static function getSurveyVoterInfo($surveyId, $interviewerId = NULL, $statusIds = array()) {
     $voterIds = array();
     if (!$surveyId) {
       return $voterIds;
@@ -515,8 +503,7 @@ INNER JOIN  civicrm_activity_assignment activityAssignment ON ( activityAssignme
      * @static
      */
 
-  static
-  function getResultSets() {
+  static function getResultSets() {
     $resultSets = array();
     $query = "SELECT id, label FROM civicrm_option_group WHERE name LIKE 'civicrm_survey_%' AND is_active=1";
     $dao = CRM_Core_DAO::executeQuery($query);
@@ -536,8 +523,7 @@ INNER JOIN  civicrm_activity_assignment activityAssignment ON ( activityAssignme
      * @static
      */
 
-  static
-  function isSurveyActivity($activityId) {
+  static function isSurveyActivity($activityId) {
     $isSurveyActivity = FALSE;
     if (!$activityId) {
       return $isSurveyActivity;
@@ -567,8 +553,7 @@ INNER JOIN  civicrm_activity_assignment activityAssignment ON ( activityAssignme
      * @static
      */
 
-  static
-  function getResponsesOptions($surveyId) {
+  static function getResponsesOptions($surveyId) {
     $responseOptions = array();
     if (!$surveyId) {
       return $responseOptions;
@@ -590,8 +575,7 @@ INNER JOIN  civicrm_activity_assignment activityAssignment ON ( activityAssignme
      * @static
      */
 
-  static
-  function buildPermissionLinks($surveyId) {
+  static function buildPermissionLinks($surveyId) {
     $menuLinks = array();
     if (!$surveyId) {
       return $menuLinks;

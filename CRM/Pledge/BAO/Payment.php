@@ -51,8 +51,7 @@ class CRM_Pledge_BAO_Payment extends CRM_Pledge_DAO_Payment {
    * @return array associated array of pledge payment details
    * @static
    */
-  static
-  function getPledgePayments($pledgeId) {
+  static function getPledgePayments($pledgeId) {
     $query = "
 SELECT    civicrm_pledge_payment.id id, 
           scheduled_amount,
@@ -93,8 +92,7 @@ WHERE     pledge_id = %1
     return $paymentDetails;
   }
 
-  static
-  function create($params) {
+  static function create($params) {
     require_once 'CRM/Contribute/PseudoConstant.php';
     require_once 'CRM/Core/Transaction.php';
     $transaction = new CRM_Core_Transaction();
@@ -199,8 +197,7 @@ WHERE     pledge_id = %1
    * @return pledge payment id
    * @static
    */
-  static
-  function add($params) {
+  static function add($params) {
     require_once 'CRM/Pledge/DAO/Payment.php';
     $payment = new CRM_Pledge_DAO_Payment();
     $payment->copyValues($params);
@@ -230,8 +227,7 @@ WHERE     pledge_id = %1
    * @access public
    * @static
    */
-  static
-  function retrieve(&$params, &$defaults) {
+  static function retrieve(&$params, &$defaults) {
     $payment = new CRM_Pledge_DAO_Payment;
     $payment->copyValues($params);
     if ($payment->find(TRUE)) {
@@ -250,8 +246,7 @@ WHERE     pledge_id = %1
    * @static
    *
    */
-  static
-  function deletePayments($id) {
+  static function deletePayments($id) {
     require_once 'CRM/Utils/Rule.php';
     if (!CRM_Utils_Rule::positiveInteger($id)) {
       return FALSE;
@@ -287,8 +282,7 @@ WHERE     pledge_id = %1
    * @access public
    * @static
    */
-  static
-  function resetPledgePayment($contributionID) {
+  static function resetPledgePayment($contributionID) {
     //get all status
     require_once 'CRM/Contribute/PseudoConstant.php';
     $allStatus = CRM_Contribute_PseudoConstant::contributionStatus(NULL, 'name');
@@ -491,8 +485,7 @@ WHERE  civicrm_pledge.id = %2
    * @return int $statusId calculated status id of pledge
    * @static
    */
-  static
-  function calculatePledgeStatus($pledgeId) {
+  static function calculatePledgeStatus($pledgeId) {
     require_once 'CRM/Contribute/PseudoConstant.php';
     $paymentStatusTypes = CRM_Contribute_PseudoConstant::contributionStatus(NULL, 'name');
 
@@ -532,8 +525,7 @@ WHERE  civicrm_pledge.id = %2
    * @param int   $paymentStatusId payment status id
    * @static
    */
-  static
-  function updatePledgePayments($pledgeId, $paymentStatusId, $paymentIds = NULL, $actualAmount = 0, $contributionId = NULL, $isScriptUpdate = FALSE) {
+  static function updatePledgePayments($pledgeId, $paymentStatusId, $paymentIds = NULL, $actualAmount = 0, $contributionId = NULL, $isScriptUpdate = FALSE) {
     $allStatus = CRM_Contribute_PseudoConstant::contributionStatus(NULL, 'name');
     $paymentClause = NULL;
     if (!empty($paymentIds)) {
@@ -574,8 +566,7 @@ WHERE  civicrm_pledge_payment.pledge_id = %1
    *
    * @static
    */
-  static
-  function updateReminderDetails($paymentId) {
+  static function updateReminderDetails($paymentId) {
     $query = "
 UPDATE civicrm_pledge_payment
 SET civicrm_pledge_payment.reminder_date = CURRENT_TIMESTAMP,
@@ -593,8 +584,7 @@ WHERE  civicrm_pledge_payment.id = {$paymentId}
    * @return array associated array of pledge details
    * @static
    */
-  static
-  function getOldestPledgePayment($pledgeID, $limit = 1) {
+  static function getOldestPledgePayment($pledgeID, $limit = 1) {
     //get pending / overdue statuses
     $pledgeStatuses = CRM_Contribute_PseudoConstant::contributionStatus(NULL, 'name');
 
@@ -629,8 +619,7 @@ LIMIT 0, %2
     return end($paymentDetails);
   }
 
-  static
-  function adjustPledgePayment($pledgeID, $actualAmount, $pledgeScheduledAmount, $paymentContributionId = NULL, $pPaymentId = NULL) {
+  static function adjustPledgePayment($pledgeID, $actualAmount, $pledgeScheduledAmount, $paymentContributionId = NULL, $pPaymentId = NULL) {
     $allStatus = CRM_Contribute_PseudoConstant::contributionStatus(NULL, 'name');
     $oldestPayment = self::getOldestPledgePayment($pledgeID);
     if (!$paymentContributionId) {

@@ -65,8 +65,7 @@ class CRM_Utils_Cache {
    * @static
    *
    */
-  static
-  function &singleton() {
+  static function &singleton() {
     if (self::$_singleton === NULL) {
       // default to ArrayCache for now
       $className = 'ArrayCache';
@@ -101,8 +100,7 @@ class CRM_Utils_Cache {
    *   associative array of settings for the cache
    * @static
    */
-  static
-  function getCacheSettings($cachePlugin) {
+  static function getCacheSettings($cachePlugin) {
     switch ($cachePlugin) {
       case 'ArrayCache':
       case 'NoCache':

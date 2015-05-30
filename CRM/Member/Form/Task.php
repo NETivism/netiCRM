@@ -87,8 +87,7 @@ class CRM_Member_Form_Task extends CRM_Core_Form {
     self::preProcessCommon($this);
   }
 
-  static
-  function preProcessCommon(&$form, $useTable = FALSE) {
+  static function preProcessCommon(&$form, $useTable = FALSE) {
     $form->_memberIds = array();
 
     $values = $form->controller->exportValues('Search');

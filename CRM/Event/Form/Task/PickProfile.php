@@ -133,8 +133,7 @@ class CRM_Event_Form_Task_PickProfile extends CRM_Event_Form_Task {
    * @static
    * @access public
    */
-  static
-  function formRule($fields) {
+  static function formRule($fields) {
     return TRUE;
   }
 

@@ -265,8 +265,7 @@ SELECT id
    * @access public
    * @static
    */
-  static
-  function formRule($fields, $files, $self) {
+  static function formRule($fields, $files, $self) {
     $errors = array();
 
     $minAmount = CRM_Utils_Array::value('min_amount', $fields);

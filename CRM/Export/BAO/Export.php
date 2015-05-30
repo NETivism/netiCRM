@@ -58,8 +58,7 @@ class CRM_Export_BAO_Export {
    * @static
    * @access public
    */
-  static
-  function exportComponents($selectAll,
+  static function exportComponents($selectAll,
     $ids,
     $params,
     $order = NULL,
@@ -1074,8 +1073,7 @@ class CRM_Export_BAO_Export {
     CRM_Utils_System::civiExit();
   }
 
-  static
-  function sqlColumnDefn(&$query, &$sqlColumns, $field) {
+  static function sqlColumnDefn(&$query, &$sqlColumns, $field) {
     if (substr($field, -4) == '_a_b' ||
       substr($field, -4) == '_b_a'
     ) {
@@ -1164,8 +1162,7 @@ class CRM_Export_BAO_Export {
     }
   }
 
-  static
-  function writeDetailsToTable($tableName, &$details, &$sqlColumns) {
+  static function writeDetailsToTable($tableName, &$details, &$sqlColumns) {
     if (empty($details)) {
       return;
     }
@@ -1208,8 +1205,7 @@ VALUES $sqlValueString
     CRM_Core_DAO::executeQuery($sql);
   }
 
-  static
-  function createTempTable(&$sqlColumns) {
+  static function createTempTable(&$sqlColumns) {
     //creating a temporary table for the search result that need be exported
     $exportTempTable = CRM_Core_DAO::createTempTableName('civicrm_export', FALSE);
 
@@ -1244,8 +1240,7 @@ CREATE TABLE {$exportTempTable} (
     return $exportTempTable;
   }
 
-  static
-  function mergeSameAddress($tableName, &$headerRows, &$sqlColumns, $drop = FALSE) {
+  static function mergeSameAddress($tableName, &$headerRows, &$sqlColumns, $drop = FALSE) {
     // find all the records that have the same street address BUT not in a household
     $sql = "
 SELECT    r1.id as master_id,
@@ -1367,8 +1362,7 @@ DROP  $drop";
    * @param array  $sqlColumns array of names of the table columns of the temp table
    * @param string $prefix name of the relationship type that is prefixed to the table columns
    */
-  static
-  function mergeSameHousehold($exportTempTable, &$headerRows, &$sqlColumns, $prefix) {
+  static function mergeSameHousehold($exportTempTable, &$headerRows, &$sqlColumns, $prefix) {
     $prefixColumn = $prefix . '_';
     $allKeys = array_keys($sqlColumns);
     $replaced = array();
@@ -1448,8 +1442,7 @@ GROUP BY civicrm_primary_id ";
     $dao = CRM_Core_DAO::executeQuery($query);
   }
 
-  static
-  function writeCSVFromTable($exportTempTable, $headerRows, $sqlColumns, $exportMode) {
+  static function writeCSVFromTable($exportTempTable, $headerRows, $sqlColumns, $exportMode) {
     $writeHeader = TRUE;
     $saveFile = TRUE;
     $fileName = self::getExportFileName('csv', $exportMode);

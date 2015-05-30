@@ -189,8 +189,7 @@ class CRM_Pledge_Selector_Search extends CRM_Core_Selector_Base {
    * @access public
    *
    */
-  static
-  function &links($hideOption, $key = NULL) {
+  static function &links($hideOption, $key = NULL) {
     $extraParams = ($key) ? "&key={$key}" : NULL;
 
     $cancelExtra = ts('Cancelling this pledge will also cancel any scheduled (and not completed) pledge payments.') . ' ' . ts('This action cannot be undone.') . ' ' . ts('Do you want to continue?');

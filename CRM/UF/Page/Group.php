@@ -420,8 +420,7 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
     $session->pushUserContext($url);
   }
 
-  static
-  function extractGroupTypes($groupType) {
+  static function extractGroupTypes($groupType) {
     $returnGroupTypes = array();
     if (!$groupType) {
       return $returnGroupTypes;

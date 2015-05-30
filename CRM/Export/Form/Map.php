@@ -112,8 +112,7 @@ class CRM_Export_Form_Map extends CRM_Core_Form {
    * @static
    * @access public
    */
-  static
-  function formRule($fields, $values, $mappingTypeId) {
+  static function formRule($fields, $values, $mappingTypeId) {
     $errors = array();
 
     if (CRM_Utils_Array::value('saveMapping', $fields) && $fields['_qf_Map_next']) {

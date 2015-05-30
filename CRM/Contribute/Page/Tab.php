@@ -96,8 +96,7 @@ class CRM_Contribute_Page_Tab extends CRM_Core_Page {
    * @access public
    *
    */
-  static
-  function &recurLinks() {
+  static function &recurLinks() {
     if (!(self::$_links)) {
       self::$_links = array(
         CRM_Core_Action::VIEW => array(

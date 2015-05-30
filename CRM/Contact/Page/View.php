@@ -305,8 +305,7 @@ class CRM_Contact_Page_View extends CRM_Core_Page {
     return CRM_Utils_System::url($urlString, $urlParams);
   }
 
-  static
-  function checkUserPermission($page) {
+  static function checkUserPermission($page) {
     // check for permissions
     $page->_permission = NULL;
 

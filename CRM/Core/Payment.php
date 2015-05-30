@@ -165,8 +165,7 @@ abstract class CRM_Core_Payment {
     return NULL;
   }
 
-  static
-  function paypalRedirect(&$paymentProcessor) {
+  static function paypalRedirect(&$paymentProcessor) {
     if (!$paymentProcessor) {
       return FALSE;
     }

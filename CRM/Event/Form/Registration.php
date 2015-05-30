@@ -715,8 +715,7 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
     }
   }
 
-  static
-  function initEventFee(&$form, $eventID) {
+  static function initEventFee(&$form, $eventID) {
     // get price info
     require_once 'CRM/Price/BAO/Set.php';
     $price = CRM_Price_BAO_Set::initSet($form, $eventID, 'civicrm_event');

@@ -79,8 +79,7 @@ class CRM_Core_Form_Renderer extends HTML_QuickForm_Renderer_ArraySmarty {
    *
    * Method providing static instance of as in Singleton pattern.
    */
-  static
-  function &singleton() {
+  static function &singleton() {
     if (!isset(self::$_singleton)) {
       self::$_singleton = new CRM_Core_Form_Renderer();
     }

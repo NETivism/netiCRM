@@ -117,8 +117,7 @@ class CRM_Mailing_Selector_Event extends CRM_Core_Selector_Base implements CRM_C
    * @access public
    * @static
    */
-  static
-  function &links() {
+  static function &links() {
     return self::$_links;
   }
   //end of function

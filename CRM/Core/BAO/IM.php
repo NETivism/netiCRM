@@ -49,8 +49,7 @@ class CRM_Core_BAO_IM extends CRM_Core_DAO_IM {
    * @access public
    * @static
    */
-  static
-  function add(&$params) {
+  static function add(&$params) {
     $im = new CRM_Core_DAO_IM();
 
     $im->copyValues($params);
@@ -68,8 +67,7 @@ class CRM_Core_BAO_IM extends CRM_Core_DAO_IM {
    * @access public
    * @static
    */
-  static
-  function &getValues($entityBlock) {
+  static function &getValues($entityBlock) {
     return CRM_Core_BAO_Block::getValues('im', $entityBlock);
   }
 
@@ -82,8 +80,7 @@ class CRM_Core_BAO_IM extends CRM_Core_DAO_IM {
    * @access public
    * @static
    */
-  static
-  function allIMs($id, $updateBlankLocInfo = FALSE) {
+  static function allIMs($id, $updateBlankLocInfo = FALSE) {
     if (!$id) {
       return NULL;
     }
@@ -131,8 +128,7 @@ ORDER BY
    * @access public
    * @static
    */
-  static
-  function allEntityIMs(&$entityElements) {
+  static function allEntityIMs(&$entityElements) {
     if (empty($entityElements)) {
       return NULL;
     }

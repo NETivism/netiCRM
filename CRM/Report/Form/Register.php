@@ -126,8 +126,7 @@ class CRM_Report_Form_Register extends CRM_Core_Form {
     $this->addFormRule(array('CRM_Report_Form_Register', 'formRule'), $this);
   }
 
-  static
-  function formRule($fields, $files, $self) {
+  static function formRule($fields, $files, $self) {
     $errors = array();
     $dupeClass = FALSE;
     $reportUrl = new CRM_Core_DAO_OptionValue();

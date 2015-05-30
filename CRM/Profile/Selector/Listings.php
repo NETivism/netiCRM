@@ -207,8 +207,7 @@ class CRM_Profile_Selector_Listings extends CRM_Core_Selector_Base implements CR
    * @access public
    *
    */
-  static
-  function &links($map = FALSE, $editLink = FALSE, $ufLink = FALSE, $gids = NULL) {
+  static function &links($map = FALSE, $editLink = FALSE, $ufLink = FALSE, $gids = NULL) {
     if (!self::$_links) {
       self::$_links = array();
 

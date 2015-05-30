@@ -48,8 +48,7 @@ class CRM_Utils_Address {
    *
    * @static
    */
-  static
-  function format($fields,
+  static function format($fields,
     $format = NULL,
     $microformat = FALSE,
     $mailing = FALSE,

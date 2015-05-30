@@ -50,8 +50,7 @@ class CRM_Contact_Form_Edit_OpenID {
    * @access public
    * @static
    */
-  static
-  function buildQuickForm(&$form) {
+  static function buildQuickForm(&$form) {
     $blockId = ($form->get('OpenID_Block_Count')) ? $form->get('OpenID_Block_Count') : 1;
 
     $form->applyFilter('__ALL__', 'trim');

@@ -1078,8 +1078,7 @@ class CRM_Utils_Token {
     }
   }
 
-  static
-  function flattenTokens(&$tokens) {
+  static function flattenTokens(&$tokens) {
     $flattenTokens = array();
 
     foreach (array(

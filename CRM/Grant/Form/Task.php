@@ -81,8 +81,7 @@ class CRM_Grant_Form_Task extends CRM_Core_Form {
     self::preProcessCommon($this);
   }
 
-  static
-  function preProcessCommon(&$form, $useTable = FALSE) {
+  static function preProcessCommon(&$form, $useTable = FALSE) {
     $form->_grantIds = array();
 
     $values = $form->controller->exportValues('Search');

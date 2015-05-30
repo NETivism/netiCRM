@@ -183,8 +183,7 @@ class CRM_Admin_Form_OptionValue extends CRM_Admin_Form {
    * @access public
    * @static
    */
-  static
-  function formRule($fields, $files, $self) {
+  static function formRule($fields, $files, $self) {
     $errors = array();
 
     //don't allow duplicate value within group.

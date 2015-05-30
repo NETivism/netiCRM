@@ -69,8 +69,7 @@ class CRM_Grant_BAO_Grant extends CRM_Grant_DAO_Grant {
    *
    * @return array Array of event summary values
    */
-  static
-  function getGrantSummary($admin = FALSE) {
+  static function getGrantSummary($admin = FALSE) {
     $query = "
             SELECT status_id, count(id) as status_total 
             FROM civicrm_grant  GROUP BY status_id";
@@ -107,8 +106,7 @@ class CRM_Grant_BAO_Grant extends CRM_Grant_DAO_Grant {
    *
    * @return array Array of event summary values
    */
-  static
-  function getGrantStatusOptGroup() {
+  static function getGrantStatusOptGroup() {
     require_once 'CRM/Core/BAO/OptionGroup.php';
 
     $params = array();
@@ -126,8 +124,7 @@ class CRM_Grant_BAO_Grant extends CRM_Grant_DAO_Grant {
     return $og;
   }
 
-  static
-  function getGrantStatuses() {
+  static function getGrantStatuses() {
     $og = CRM_Grant_BAO_Grant::getGrantStatusOptGroup();
 
     require_once 'CRM/Core/BAO/OptionValue.php';
@@ -152,8 +149,7 @@ class CRM_Grant_BAO_Grant extends CRM_Grant_DAO_Grant {
    *
    * @return array Array of grant summary statistics
    */
-  static
-  function getGrantTypes() {
+  static function getGrantTypes() {
     require_once 'CRM/Core/BAO/OptionValue.php';
     return CRM_Core_OptionGroup::values(CRM_Grant_BAO_Grant::$typeGroupName);
   }
@@ -165,8 +161,7 @@ class CRM_Grant_BAO_Grant extends CRM_Grant_DAO_Grant {
    *
    * @return array Array of grant summary statistics
    */
-  static
-  function getGrantStatistics($admin = FALSE) {
+  static function getGrantStatistics($admin = FALSE) {
     $grantStatuses = array();
   }
 
@@ -184,8 +179,7 @@ class CRM_Grant_BAO_Grant extends CRM_Grant_DAO_Grant {
    * @access public
    * @static
    */
-  static
-  function retrieve(&$params, &$defaults) {
+  static function retrieve(&$params, &$defaults) {
     $grant = new CRM_Grant_DAO_Grant();
     $grant->copyValues($params);
     if ($grant->find(TRUE)) {
@@ -206,8 +200,7 @@ class CRM_Grant_BAO_Grant extends CRM_Grant_DAO_Grant {
    *
    * @return object
    */
-  static
-  function add(&$params, &$ids) {
+  static function add(&$params, &$ids) {
     require_once 'CRM/Utils/Hook.php';
 
     if (CRM_Utils_Array::value('grant', $ids)) {
@@ -358,8 +351,7 @@ class CRM_Grant_BAO_Grant extends CRM_Grant_DAO_Grant {
    * @static
    *
    */
-  static
-  function deleteContact($id) {
+  static function deleteContact($id) {
     require_once 'CRM/Grant/DAO/Grant.php';
     $grant = new CRM_Grant_DAO_Grant();
     $grant->contact_id = $id;
@@ -376,8 +368,7 @@ class CRM_Grant_BAO_Grant extends CRM_Grant_DAO_Grant {
    * @static
    *
    */
-  static
-  function del($id) {
+  static function del($id) {
     require_once 'CRM/Grant/DAO/Grant.php';
     $grant = new CRM_Grant_DAO_Grant();
     $grant->id = $id;
@@ -461,8 +452,7 @@ class CRM_Grant_BAO_Grant extends CRM_Grant_DAO_Grant {
    * @access public
    * @static
    */
-  static
-  function getContactGrantCount($contactID) {
+  static function getContactGrantCount($contactID) {
     $query = "SELECT count(*) FROM civicrm_grant WHERE civicrm_grant.contact_id = {$contactID} ";
     return CRM_Core_DAO::singleValueQuery($query);
   }

@@ -369,8 +369,7 @@ class CRM_Campaign_Form_Task_Interview extends CRM_Campaign_Form_Task {
     }
   }
 
-  static
-  function registerInterview($params) {
+  static function registerInterview($params) {
     $activityId = CRM_Utils_Array::value('activity_id', $params);
     $surveyTypeId = CRM_Utils_Array::value('activity_type_id', $params);
     if (!is_array($params) || !$surveyTypeId || !$activityId) {

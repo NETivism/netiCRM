@@ -742,8 +742,7 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
    * @static
    * @access public
    */
-  static
-  function formRuleSubType($fieldType, $groupType, $errors) {
+  static function formRuleSubType($fieldType, $groupType, $errors) {
     if (in_array($fieldType, array('Participant', 'Contribution', 'Membership', 'Activity'))) {
       $individualSubTypes = CRM_Contact_BAO_ContactType::subTypes('Individual');
       foreach ($groupType as $value) {
@@ -781,8 +780,7 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
    * @static
    * @access public
    */
-  static
-  function formRule($fields, $files, $self) {
+  static function formRule($fields, $files, $self) {
     $is_required = CRM_Utils_Array::value('is_required', $fields, FALSE);
     $is_registration = CRM_Utils_Array::value('is_registration', $fields, FALSE);
     $is_view = CRM_Utils_Array::value('is_view', $fields, FALSE);

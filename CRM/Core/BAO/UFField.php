@@ -55,8 +55,7 @@ class CRM_Core_BAO_UFField extends CRM_Core_DAO_UFField {
    * @access public
    * @static
    */
-  static
-  function retrieve(&$params, &$defaults) {
+  static function retrieve(&$params, &$defaults) {
     return CRM_Core_DAO::commonRetrieve('CRM_Core_DAO_UFField', $params, $defaults);
   }
 
@@ -85,8 +84,7 @@ class CRM_Core_BAO_UFField extends CRM_Core_DAO_UFField {
    * @access public
    * @static
    */
-  static
-  function setIsActive($id, $is_active) {
+  static function setIsActive($id, $is_active) {
     //check if custom data profile field is disabled
     if ($is_active) {
       if (CRM_Core_BAO_UFField::checkUFStatus($id)) {
@@ -156,8 +154,7 @@ class CRM_Core_BAO_UFField extends CRM_Core_DAO_UFField {
    * @static
    *
    */
-  static
-  function add(&$params, &$ids) {
+  static function add(&$params, &$ids) {
     // set values for uf field properties and save
     $ufField = new CRM_Core_DAO_UFField();
     $ufField->field_type = $params['field_name'][0];
@@ -229,8 +226,7 @@ class CRM_Core_BAO_UFField extends CRM_Core_DAO_UFField {
    * @static
    * @access public
    */
-  static
-  function setUFField($customFieldId, $is_active) {
+  static function setUFField($customFieldId, $is_active) {
     //find the profile id given custom field
     $ufField = new CRM_Core_DAO_UFField();
     $ufField->field_name = "custom_" . $customFieldId;
@@ -253,8 +249,7 @@ class CRM_Core_BAO_UFField extends CRM_Core_DAO_UFField {
    * @static
    * @access public
    */
-  static
-  function copy($old_id, $new_id) {
+  static function copy($old_id, $new_id) {
     $ufField = new CRM_Core_DAO_UFField();
     $ufField->uf_group_id = $old_id;
     $ufField->find();
@@ -322,8 +317,7 @@ class CRM_Core_BAO_UFField extends CRM_Core_DAO_UFField {
    * @static
    * @access public
    */
-  static
-  function checkUFStatus($UFFieldId) {
+  static function checkUFStatus($UFFieldId) {
     $fieldName = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_UFField', $UFFieldId, 'field_name');
     // return if field is not a custom field
     require_once 'CRM/Core/BAO/CustomField.php';
@@ -451,8 +445,7 @@ class CRM_Core_BAO_UFField extends CRM_Core_DAO_UFField {
    * @acess public
    * @static
    */
-  static
-  function checkProfileType($ufGroupId) {
+  static function checkProfileType($ufGroupId) {
     $ufGroup = new CRM_Core_DAO_UFGroup();
     $ufGroup->id = $ufGroupId;
     $ufGroup->find(TRUE);
@@ -518,8 +511,7 @@ class CRM_Core_BAO_UFField extends CRM_Core_DAO_UFField {
    * @acess public
    * @static
    */
-  static
-  function getProfileType($ufGroupId, $returnMixType = TRUE, $onlyPure = FALSE, $skipComponentType = FALSE) {
+  static function getProfileType($ufGroupId, $returnMixType = TRUE, $onlyPure = FALSE, $skipComponentType = FALSE) {
     // profile types
     $contactTypes = array('Contact', 'Individual', 'Household', 'Organization');
     require_once 'CRM/Contact/BAO/ContactType.php';
@@ -627,8 +619,7 @@ class CRM_Core_BAO_UFField extends CRM_Core_DAO_UFField {
    * @acess public
    * @static
    */
-  static
-  function checkProfileGroupType($ctype) {
+  static function checkProfileGroupType($ctype) {
     $ufGroup = new CRM_Core_DAO_UFGroup();
 
     $query = "

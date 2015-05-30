@@ -58,8 +58,7 @@ class CRM_Utils_Mail {
    *
    * @return boolean true if a mail was sent, else false
    */
-  static
-  function send(&$params) {
+  static function send(&$params) {
     require_once 'CRM/Core/BAO/MailSettings.php';
     $returnPath = CRM_Core_BAO_MailSettings::defaultReturnPath();
     $from = CRM_Utils_Array::value('from', $params);
@@ -170,8 +169,7 @@ class CRM_Utils_Mail {
     return FALSE;
   }
 
-  static
-  function errorMessage($mailer, $result) {
+  static function errorMessage($mailer, $result) {
     $message = '<p>' . ts('An error occurred when CiviCRM attempted to send an email (via %1). If you received this error after submitting on online contribution or event registration - the transaction was completed, but we were unable to send the email receipt.', array(1 => 'SMTP')) . '</p>' . '<p>' . ts('The mail library returned the following error message:') . '<br /><span class="font-red"><strong>' . $result->getMessage() . '</strong></span></p>' . '<p>' . ts('This is probably related to a problem in your Outbound Email Settings (Administer CiviCRM &raquo; Global Settings &raquo; Outbound Email), OR the FROM email address specifically configured for your contribution page or event. Possible causes are:') . '</p>';
 
     if (is_a($mailer, 'Mail_smtp')) {
@@ -236,8 +234,7 @@ class CRM_Utils_Mail {
    * @access public
    * @static
    */
-  static
-  function validOutBoundMail() {
+  static function validOutBoundMail() {
     require_once "CRM/Core/BAO/Preferences.php";
     $mailingInfo = &CRM_Core_BAO_Preferences::mailingPreferences();
     if ($mailingInfo['outBound_option'] == 3) {
@@ -261,8 +258,7 @@ class CRM_Utils_Mail {
     return FALSE;
   }
 
-  static
-  function &setMimeParams(&$message, $params = NULL) {
+  static function &setMimeParams(&$message, $params = NULL) {
     static $mimeParams = NULL;
     if (!$params) {
       if (!$mimeParams) {
@@ -279,8 +275,7 @@ class CRM_Utils_Mail {
     return $message->get($params);
   }
 
-  static
-  function formatRFC822Email($name, $email, $useQuote = FALSE) {
+  static function formatRFC822Email($name, $email, $useQuote = FALSE) {
     $result = NULL;
 
     $name = trim($name);

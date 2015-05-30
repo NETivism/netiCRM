@@ -301,8 +301,7 @@ class CRM_Core_Payment_Form {
    * @return void
    * @static
    */
-  static
-  function mapParams($id, &$src, &$dst, $reverse = FALSE) {
+  static function mapParams($id, &$src, &$dst, $reverse = FALSE) {
     static $map = NULL;
     if (!$map) {
       $map = array('first_name' => 'billing_first_name',

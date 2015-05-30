@@ -49,8 +49,7 @@ class CRM_Core_BAO_MailSettings extends CRM_Core_DAO_MailSettings {
    *
    * @return object  DAO with the default mail settings set
    */
-  static
-  function &defaultDAO() {
+  static function &defaultDAO() {
     static $dao = NULL;
     if (!$dao) {
       $dao = new self;
@@ -66,8 +65,7 @@ class CRM_Core_BAO_MailSettings extends CRM_Core_DAO_MailSettings {
    *
    * @return string  default domain
    */
-  static
-  function defaultDomain() {
+  static function defaultDomain() {
     return self::defaultDAO()->domain;
   }
 
@@ -76,8 +74,7 @@ class CRM_Core_BAO_MailSettings extends CRM_Core_DAO_MailSettings {
    *
    * @return string  default localpart
    */
-  static
-  function defaultLocalpart() {
+  static function defaultLocalpart() {
     return self::defaultDAO()->localpart;
   }
 
@@ -86,8 +83,7 @@ class CRM_Core_BAO_MailSettings extends CRM_Core_DAO_MailSettings {
    *
    * @return string  default return path
    */
-  static
-  function defaultReturnPath() {
+  static function defaultReturnPath() {
     return self::defaultDAO()->return_path;
   }
 
@@ -104,8 +100,7 @@ class CRM_Core_BAO_MailSettings extends CRM_Core_DAO_MailSettings {
    * @access public
    * @static
    */
-  static
-  function retrieve(&$params, &$defaults) {
+  static function retrieve(&$params, &$defaults) {
     $mailSettings = new CRM_Core_DAO_MailSettings();
     $mailSettings->copyValues($params);
 
@@ -128,8 +123,7 @@ class CRM_Core_BAO_MailSettings extends CRM_Core_DAO_MailSettings {
    *
    * @return object
    */
-  static
-  function add(&$params) {
+  static function add(&$params) {
     $result = NULL;
     if (empty($params)) {
       return $result;
@@ -161,8 +155,7 @@ class CRM_Core_BAO_MailSettings extends CRM_Core_DAO_MailSettings {
    * @access public
    * @static
    */
-  static
-  function &create(&$params) {
+  static function &create(&$params) {
     require_once 'CRM/Core/Transaction.php';
     $transaction = new CRM_Core_Transaction();
 
@@ -186,8 +179,7 @@ class CRM_Core_BAO_MailSettings extends CRM_Core_DAO_MailSettings {
    * @static
    *
    */
-  static
-  function deleteMailSettings($id) {
+  static function deleteMailSettings($id) {
     $results = NULL;
     require_once 'CRM/Core/Transaction.php';
     $transaction = new CRM_Core_Transaction();

@@ -227,8 +227,7 @@ class CRM_Case_Page_Tab extends CRM_Core_Page {
    * @return array (reference) of action links
    * @static
    */
-  static
-  function &links() {
+  static function &links() {
     $config = CRM_Core_Config::singleton();
 
     if (!(self::$_links)) {

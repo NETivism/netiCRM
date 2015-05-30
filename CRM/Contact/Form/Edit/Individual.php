@@ -123,8 +123,7 @@ class CRM_Contact_Form_Edit_Individual {
    * @access public
    * @static
    */
-  static
-  function formRule($fields, $files, $contactID = NULL) {
+  static function formRule($fields, $files, $contactID = NULL) {
     $errors = array();
     $primaryID = CRM_Contact_Form_Contact::formRule($fields, $errors, $contactID);
 

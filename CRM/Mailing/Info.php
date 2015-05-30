@@ -57,8 +57,7 @@ class CRM_Mailing_Info extends CRM_Core_Component_Info {
   }
 
 
-  static
-  function workflowEnabled() {
+  static function workflowEnabled() {
     $config = CRM_Core_Config::singleton();
 
     // early exit, since not true for most

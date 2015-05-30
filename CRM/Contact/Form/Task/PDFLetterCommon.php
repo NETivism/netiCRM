@@ -45,8 +45,7 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
    * @return void
    * @access public
    */
-  static
-  function preProcess(&$form) {
+  static function preProcess(&$form) {
     require_once 'CRM/Core/BAO/MessageTemplates.php';
     $messageText = array();
     $messageSubject = array();
@@ -62,8 +61,7 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
     $form->assign('messageSubject', $messageSubject);
   }
 
-  static
-  function preProcessSingle(&$form, $cid) {
+  static function preProcessSingle(&$form, $cid) {
     $form->_contactIds = array($cid);
     // put contact display name in title for single contact mode
     require_once 'CRM/Contact/Page/View.php';
@@ -77,8 +75,7 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
    *
    * @return void
    */
-  static
-  function buildQuickForm(&$form) {
+  static function buildQuickForm(&$form) {
     $form->assign('totalSelectedContacts', count($form->_contactIds));
 
     require_once "CRM/Mailing/BAO/Mailing.php";
@@ -129,8 +126,7 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
    * @access public
    *
    */
-  static
-  function formRule($fields, $dontCare, $self) {
+  static function formRule($fields, $dontCare, $self) {
     $errors = array();
     $template = CRM_Core_Smarty::singleton();
 
@@ -148,8 +144,7 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
    *
    * @return None
    */
-  static
-  function postProcess(&$form) {
+  static function postProcess(&$form) {
     $formValues = $form->controller->exportValues($form->getName());
 
     // process message template

@@ -57,8 +57,7 @@ class CRM_Pledge_BAO_PledgeBlock extends CRM_Pledge_DAO_PledgeBlock {
    * @access public
    * @static
    */
-  static
-  function retrieve(&$params, &$defaults) {
+  static function retrieve(&$params, &$defaults) {
     $pledgeBlock = new CRM_Pledge_DAO_PledgeBlock();
     $pledgeBlock->copyValues($params);
     if ($pledgeBlock->find(TRUE)) {
@@ -77,8 +76,7 @@ class CRM_Pledge_BAO_PledgeBlock extends CRM_Pledge_DAO_PledgeBlock {
    * @access public
    * @static
    */
-  static
-  function &create(&$params) {
+  static function &create(&$params) {
     require_once 'CRM/Core/Transaction.php';
     $transaction = new CRM_Core_Transaction();
     $pledgeBlock = self::add($params);
@@ -105,8 +103,7 @@ class CRM_Pledge_BAO_PledgeBlock extends CRM_Pledge_DAO_PledgeBlock {
    *
    * @return object
    */
-  static
-  function add(&$params) {
+  static function add(&$params) {
     require_once 'CRM/Utils/Hook.php';
 
     if (CRM_Utils_Array::value('id', $params)) {
@@ -162,8 +159,7 @@ class CRM_Pledge_BAO_PledgeBlock extends CRM_Pledge_DAO_PledgeBlock {
    * @access public
    * @static
    */
-  static
-  function deletePledgeBlock($id) {
+  static function deletePledgeBlock($id) {
     CRM_Utils_Hook::pre('delete', 'PledgeBlock', $id, CRM_Core_DAO::$_nullArray);
 
     require_once 'CRM/Core/Transaction.php';
@@ -189,8 +185,7 @@ class CRM_Pledge_BAO_PledgeBlock extends CRM_Pledge_DAO_PledgeBlock {
    *
    * @static
    */
-  static
-  function getPledgeBlock($pageID) {
+  static function getPledgeBlock($pageID) {
     $pledgeBlock = array();
 
     $dao = new CRM_Pledge_DAO_PledgeBlock();

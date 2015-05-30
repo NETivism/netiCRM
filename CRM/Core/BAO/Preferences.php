@@ -56,8 +56,7 @@ class CRM_Core_BAO_Preferences extends CRM_Core_DAO_Preferences {
     return self::$_systemObject;
   }
 
-  static
-  function mailingPreferences() {
+  static function mailingPreferences() {
     if (!self::$_mailingPref) {
       $mailingPref = new CRM_Core_DAO_Preferences();
       $mailingPref->domain_id = CRM_Core_Config::domainID();
@@ -72,8 +71,7 @@ class CRM_Core_BAO_Preferences extends CRM_Core_DAO_Preferences {
   }
 
 
-  static
-  function userObject($userID = NULL) {
+  static function userObject($userID = NULL) {
     if (!self::$_userObject) {
       if (!$userID) {
         $session = CRM_Core_Session::singleton();
@@ -88,8 +86,7 @@ class CRM_Core_BAO_Preferences extends CRM_Core_DAO_Preferences {
     return self::$_userObject;
   }
 
-  static
-  function value($name, $system = TRUE, $userID = NULL) {
+  static function value($name, $system = TRUE, $userID = NULL) {
     if ($system) {
       $object = self::systemObject();
     }
@@ -107,8 +104,7 @@ class CRM_Core_BAO_Preferences extends CRM_Core_DAO_Preferences {
     return self::$_systemObject->$name;
   }
 
-  static
-  function addressSequence($format) {
+  static function addressSequence($format) {
     // also compute and store the address sequence
     $addressSequence = array('address_name',
       'street_address',
@@ -138,8 +134,7 @@ class CRM_Core_BAO_Preferences extends CRM_Core_DAO_Preferences {
     return $newSequence;
   }
 
-  static
-  function valueOptions($name, $system = TRUE, $userID = NULL, $localize = FALSE,
+  static function valueOptions($name, $system = TRUE, $userID = NULL, $localize = FALSE,
     $returnField = 'name', $returnNameANDLabels = FALSE, $condition = NULL
   ) {
     if ($system) {
@@ -192,8 +187,7 @@ class CRM_Core_BAO_Preferences extends CRM_Core_DAO_Preferences {
     return ($returnNameANDLabels) ? $nameAndLabels : $returnValues;
   }
 
-  static
-  function setValue($name, $value, $system = TRUE, $userID = NULL, $keyField = 'name') {
+  static function setValue($name, $value, $system = TRUE, $userID = NULL, $keyField = 'name') {
     if ($system) {
       $object = self::systemObject();
     }
@@ -231,8 +225,7 @@ class CRM_Core_BAO_Preferences extends CRM_Core_DAO_Preferences {
     $object->save();
   }
 
-  static
-  function fixAndStoreDirAndURL(&$params) {
+  static function fixAndStoreDirAndURL(&$params) {
     $sql = "
 SELECT v.name as valueName, g.name as optionName
 FROM   civicrm_option_value v,
@@ -268,8 +261,7 @@ AND    v.is_active = 1
     }
   }
 
-  static
-  function storeDirectoryOrURLPreferences(&$params, $type = 'directory') {
+  static function storeDirectoryOrURLPreferences(&$params, $type = 'directory') {
     $optionName = ($type == 'directory') ? 'directory_preferences' : 'url_preferences';
 
     $sql = "
@@ -299,8 +291,7 @@ AND    v.name = %3
     }
   }
 
-  static
-  function retrieveDirectoryAndURLPreferences(&$params, $setInConfig = FALSE) {
+  static function retrieveDirectoryAndURLPreferences(&$params, $setInConfig = FALSE) {
     if ($setInConfig) {
       $config = &CRM_Core_Config::singleton();
     }

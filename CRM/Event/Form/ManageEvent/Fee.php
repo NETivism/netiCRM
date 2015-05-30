@@ -414,8 +414,7 @@ class CRM_Event_Form_ManageEvent_Fee extends CRM_Event_Form_ManageEvent {
    * @static
    * @access public
    */
-  static
-  function formRule($values) {
+  static function formRule($values) {
     $errors = array();
     if (CRM_Utils_Array::value('is_discount', $values)) {
       $occurDiscount = array_count_values($values['discount_name']);

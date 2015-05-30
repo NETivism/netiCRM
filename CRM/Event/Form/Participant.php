@@ -912,8 +912,7 @@ cj(function() {
    * @static
    * @access public
    */
-  static
-  function formRule($values, $files, $self) {
+  static function formRule($values, $files, $self) {
     // If $values['_qf_Participant_next'] is Delete or
     // $values['event_id'] is empty, then return
     // instead of proceeding further.

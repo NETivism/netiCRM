@@ -187,8 +187,7 @@ class CRM_Case_Selector_Search extends CRM_Core_Selector_Base {
    * @access public
    *
    */
-  static
-  function &links($isDeleted = FALSE, $key = NULL) {
+  static function &links($isDeleted = FALSE, $key = NULL) {
     $extraParams = ($key) ? "&key={$key}" : NULL;
 
     if ($isDeleted) {

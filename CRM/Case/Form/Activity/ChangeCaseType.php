@@ -41,8 +41,7 @@ require_once "CRM/Core/Form.php";
  */
 class CRM_Case_Form_Activity_ChangeCaseType {
 
-  static
-  function preProcess(&$form) {
+  static function preProcess(&$form) {
     if (!isset($form->_caseId)) {
       CRM_Core_Error::fatal(ts('Case Id not found.'));
     }
@@ -68,8 +67,7 @@ class CRM_Case_Form_Activity_ChangeCaseType {
     return $defaults;
   }
 
-  static
-  function buildQuickForm(&$form) {
+  static function buildQuickForm(&$form) {
     require_once 'CRM/Case/PseudoConstant.php';
     $form->_caseType = CRM_Case_PseudoConstant::caseType();
     $caseTypeId = explode(CRM_Case_BAO_Case::VALUE_SEPARATOR, CRM_Core_DAO::getFieldValue('CRM_Case_DAO_Case',
@@ -99,8 +97,7 @@ class CRM_Case_Form_Activity_ChangeCaseType {
    * @static
    * @access public
    */
-  static
-  function formRule($values, $files, $form) {
+  static function formRule($values, $files, $form) {
     return TRUE;
   }
 

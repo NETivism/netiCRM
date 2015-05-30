@@ -50,8 +50,7 @@ class CRM_Contact_Form_Edit_Email {
    * @access public
    * @static
    */
-  static
-  function buildQuickForm(&$form, $addressBlockCount = NULL) {
+  static function buildQuickForm(&$form, $addressBlockCount = NULL) {
     // passing this via the session is AWFUL. we need to fix this
     if (!$addressBlockCount) {
       $blockId = ($form->get('Email_Block_Count')) ? $form->get('Email_Block_Count') : 1;

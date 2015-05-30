@@ -184,8 +184,7 @@ class CRM_Contact_Form_Task_AddToGroup extends CRM_Contact_Form_Task {
    * @static
    * @access public
    */
-  static
-  function formRule($params) {
+  static function formRule($params) {
     $errors = array();
 
     if ($params['group_option'] && !$params['title']) {

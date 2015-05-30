@@ -62,8 +62,7 @@ class CRM_Member_BAO_MembershipStatus extends CRM_Member_DAO_MembershipStatus {
    * @access public
    * @static
    */
-  static
-  function retrieve(&$params, &$defaults) {
+  static function retrieve(&$params, &$defaults) {
     $membershipStatus = new CRM_Member_DAO_MembershipStatus();
     $membershipStatus->copyValues($params);
     if ($membershipStatus->find(TRUE)) {
@@ -82,8 +81,7 @@ class CRM_Member_BAO_MembershipStatus extends CRM_Member_DAO_MembershipStatus {
    * @return Object             DAO object on sucess, null otherwise
    * @static
    */
-  static
-  function setIsActive($id, $is_active) {
+  static function setIsActive($id, $is_active) {
     return CRM_Core_DAO::setFieldValue('CRM_Member_DAO_MembershipStatus', $id, 'is_active', $is_active);
   }
 
@@ -98,8 +96,7 @@ class CRM_Member_BAO_MembershipStatus extends CRM_Member_DAO_MembershipStatus {
    *
    * @return object
    */
-  static
-  function add(&$params, &$ids) {
+  static function add(&$params, &$ids) {
     $params['is_active'] = CRM_Utils_Array::value('is_active', $params, FALSE);
     $params['is_current_member'] = CRM_Utils_Array::value('is_current_member', $params, FALSE);
     $params['is_admin'] = CRM_Utils_Array::value('is_admin', $params, FALSE);
@@ -161,8 +158,7 @@ class CRM_Member_BAO_MembershipStatus extends CRM_Member_DAO_MembershipStatus {
    * @param int $membershipStatusId
    * @static
    */
-  static
-  function del($membershipStatusId, $skipRedirect = FALSE) {
+  static function del($membershipStatusId, $skipRedirect = FALSE) {
     //check dependencies
     //checking if any membership status is present in some other table
     $check = FALSE;
@@ -211,8 +207,7 @@ class CRM_Member_BAO_MembershipStatus extends CRM_Member_DAO_MembershipStatus {
    * @return
    * @static
    */
-  static
-  function getMembershipStatusByDate($startDate, $endDate, $joinDate,
+  static function getMembershipStatusByDate($startDate, $endDate, $joinDate,
     $statusDate = 'today', $excludeIsAdmin = FALSE
   ) {
     $membershipDetails = array();

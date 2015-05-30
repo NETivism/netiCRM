@@ -193,8 +193,7 @@ class CRM_ACL_Form_ACL extends CRM_Admin_Form {
   }
 
 
-  static
-  function formRule($params) {
+  static function formRule($params) {
     $showHide = new CRM_Core_ShowHideBlocks();
 
     // Make sure role is not -1

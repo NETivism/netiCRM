@@ -43,8 +43,7 @@ class CRM_Contact_BAO_Contact_Location {
    * @static
    * @access public
    */
-  static
-  function getEmailDetails($id, $isPrimary = TRUE, $locationTypeID = NULL) {
+  static function getEmailDetails($id, $isPrimary = TRUE, $locationTypeID = NULL) {
     $primaryClause = NULL;
     if ($isPrimary) {
       $primaryClause = " AND civicrm_email.is_primary = 1";
@@ -82,8 +81,7 @@ WHERE     civicrm_contact.id = %1";
    * @static
    * @access public
    */
-  static
-  function getPhoneDetails($id, $type = NULL) {
+  static function getPhoneDetails($id, $type = NULL) {
     if (!$id) {
       return array(NULL, NULL);
     }
@@ -120,8 +118,7 @@ LEFT JOIN civicrm_phone ON ( civicrm_phone.contact_id = civicrm_contact.id )
    * @static
    * @access public
    */
-  static
-  function &getMapInfo($ids, $locationTypeID = NULL, $imageUrlOnly = FALSE) {
+  static function &getMapInfo($ids, $locationTypeID = NULL, $imageUrlOnly = FALSE) {
     require_once 'CRM/Utils/Address.php';
     $idString = ' ( ' . implode(',', $ids) . ' ) ';
     $sql = "

@@ -309,8 +309,7 @@ class CRM_Core_Page {
     return $this->_print;
   }
 
-  static
-  function &getTemplate() {
+  static function &getTemplate() {
     return self::$_template;
   }
 

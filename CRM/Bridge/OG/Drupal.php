@@ -34,8 +34,7 @@
  */
 class CRM_Bridge_OG_Drupal {
 
-  static
-  function nodeapi(&$params, $op) {
+  static function nodeapi(&$params, $op) {
     require_once 'CRM/Bridge/OG/Utils.php';
 
     require_once 'CRM/Core/Transaction.php';
@@ -64,8 +63,7 @@ class CRM_Bridge_OG_Drupal {
     $transaction->commit();
   }
 
-  static
-  function updateCiviGroup(&$params, $op, $groupType = NULL) {
+  static function updateCiviGroup(&$params, $op, $groupType = NULL) {
     $abort = ($op == 'delete') ? TRUE : FALSE;
     $params['id'] = CRM_Bridge_OG_Utils::groupID($params['source'], $params['title'], $abort);
 
@@ -91,8 +89,7 @@ class CRM_Bridge_OG_Drupal {
     unset($params['id']);
   }
 
-  static
-  function updateCiviACLTables($aclParams, $op) {
+  static function updateCiviACLTables($aclParams, $op) {
     if ($op == 'delete') {
       self::updateCiviACL($aclParams, $op);
       self::updateCiviACLEntityRole($aclParams, $op);
@@ -105,8 +102,7 @@ class CRM_Bridge_OG_Drupal {
     }
   }
 
-  static
-  function updateCiviACLRole(&$params, $op) {
+  static function updateCiviACLRole(&$params, $op) {
     require_once 'CRM/Core/DAO/OptionValue.php';
 
     $optionGroupID = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionGroup',
@@ -150,8 +146,7 @@ SELECT v.id
     $params['acl_role_id'] = $dao->value;
   }
 
-  static
-  function updateCiviACLEntityRole(&$params, $op) {
+  static function updateCiviACLEntityRole(&$params, $op) {
     require_once 'CRM/ACL/DAO/EntityRole.php';
     $dao = new CRM_ACL_DAO_EntityRole();
 
@@ -170,8 +165,7 @@ SELECT v.id
     $params['acl_entity_role_id'] = $dao->id;
   }
 
-  static
-  function updateCiviACL(&$params, $op) {
+  static function updateCiviACL(&$params, $op) {
     require_once 'CRM/ACL/DAO/ACL.php';
     $dao = new CRM_ACL_DAO_ACL();
 
@@ -194,8 +188,7 @@ SELECT v.id
     $params['acl_id'] = $dao->id;
   }
 
-  static
-  function og(&$params, $op) {
+  static function og(&$params, $op) {
     require_once 'CRM/Bridge/OG/Utils.php';
 
     $contactID = CRM_Bridge_OG_Utils::contactID($params['uf_id']);

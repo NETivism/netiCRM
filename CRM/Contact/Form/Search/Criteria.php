@@ -34,8 +34,7 @@
  */
 class CRM_Contact_Form_Search_Criteria {
 
-  static
-  function basic(&$form) {
+  static function basic(&$form) {
     $form->addElement('hidden', 'hidden_basic', 1);
 
     if ($form->_searchOptions['contactType']) {
@@ -238,8 +237,7 @@ class CRM_Contact_Form_Search_Criteria {
     $form->add('select', 'preferred_language', ts('Preferred Language'), array('' => ts('- select language -')) + $langPreff);
   }
 
-  static
-  function location(&$form) {
+  static function location(&$form) {
     $form->addElement('hidden', 'hidden_location', 1);
 
     require_once 'CRM/Core/BAO/Preferences.php';
@@ -358,15 +356,13 @@ class CRM_Contact_Form_Search_Criteria {
     }
   }
 
-  static
-  function activity(&$form) {
+  static function activity(&$form) {
     $form->add('hidden', 'hidden_activity', 1);
     require_once 'CRM/Activity/BAO/Query.php';
     CRM_Activity_BAO_Query::buildSearchForm($form);
   }
 
-  static
-  function changeLog(&$form) {
+  static function changeLog(&$form) {
     $form->add('hidden', 'hidden_changeLog', 1);
 
     // block for change log
@@ -376,8 +372,7 @@ class CRM_Contact_Form_Search_Criteria {
     $form->addDate('log_date_high', ts('and'), FALSE, array('formatType' => 'searchDate'));
   }
 
-  static
-  function task(&$form) {
+  static function task(&$form) {
     $form->add('hidden', 'hidden_task', 1);
 
     if (CRM_Core_Permission::access('Quest')) {
@@ -391,8 +386,7 @@ class CRM_Contact_Form_Search_Criteria {
     }
   }
 
-  static
-  function relationship(&$form) {
+  static function relationship(&$form) {
     $form->add('hidden', 'hidden_relationship', 1);
 
     require_once 'CRM/Contact/BAO/Relationship.php';
@@ -426,8 +420,7 @@ class CRM_Contact_Form_Search_Criteria {
     }
   }
 
-  static
-  function demographics(&$form) {
+  static function demographics(&$form) {
     $form->add('hidden', 'hidden_demographics', 1);
     // radio button for gender
     $genderOptions = array();
@@ -444,8 +437,7 @@ class CRM_Contact_Form_Search_Criteria {
     $form->addDate('deceased_date_high', ts('To'), FALSE, array('formatType' => 'birth'));
   }
 
-  static
-  function notes(&$form) {
+  static function notes(&$form) {
     $form->add('hidden', 'hidden_notes', 1);
 
     $form->addElement('text', 'note', ts('Note Text'), CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Contact', 'sort_name'));
@@ -459,8 +451,7 @@ class CRM_Contact_Form_Search_Criteria {
    *
    * @return void
    */
-  static
-  function custom(&$form) {
+  static function custom(&$form) {
     $form->add('hidden', 'hidden_custom', 1);
     $extends = array_merge(array('Contact', 'Individual', 'Household', 'Organization'),
       CRM_Contact_BAO_ContactType::subTypes()
@@ -491,8 +482,7 @@ class CRM_Contact_Form_Search_Criteria {
     //TODO: validate for only one state if prox_distance isset
   }
 
-  static
-  function CiviCase(&$form) {
+  static function CiviCase(&$form) {
     //Looks like obsolete code, since CiviCase is a component, but might be used by HRD
     $form->add('hidden', 'hidden_CiviCase', 1);
     require_once 'CRM/Case/BAO/Query.php';

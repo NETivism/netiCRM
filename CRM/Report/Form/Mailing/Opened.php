@@ -175,8 +175,7 @@ class CRM_Report_Form_Mailing_Opened extends CRM_Report_Form {
     //print_r($this->_select);
   }
 
-  static
-  function formRule($fields, $files, $self) {
+  static function formRule($fields, $files, $self) {
     $errors = $grouping = array();
     return $errors;
   }

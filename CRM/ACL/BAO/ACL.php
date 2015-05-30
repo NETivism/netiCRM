@@ -44,8 +44,7 @@ class CRM_ACL_BAO_ACL extends CRM_ACL_DAO_ACL {
   static $_operation = NULL;
 
   static $_fieldKeys = NULL;
-  static
-  function entityTable() {
+  static function entityTable() {
     if (!self::$_entityTable) {
       self::$_entityTable = array(
         'civicrm_contact' => ts('Contact'),
@@ -55,8 +54,7 @@ class CRM_ACL_BAO_ACL extends CRM_ACL_DAO_ACL {
     return self::$_entityTable;
   }
 
-  static
-  function objectTable() {
+  static function objectTable() {
     if (!self::$_objectTable) {
       self::$_objectTable = array(
         'civicrm_contact' => ts('Contact'),
@@ -69,8 +67,7 @@ class CRM_ACL_BAO_ACL extends CRM_ACL_DAO_ACL {
     return self::$_objectTable;
   }
 
-  static
-  function operation() {
+  static function operation() {
     if (!self::$_operation) {
       self::$_operation = array(
         'View' => ts('View'),
@@ -644,15 +641,13 @@ SELECT $acl.*
     return $result;
   }
 
-  static
-  function create(&$params) {
+  static function create(&$params) {
     $dao = new CRM_ACL_DAO_ACL();
     $dao->copyValues($params);
     $dao->save();
   }
 
-  static
-  function retrieve(&$params, &$defaults) {
+  static function retrieve(&$params, &$defaults) {
     CRM_Core_DAO::commonRetrieve('CRM_ACL_DAO_ACL', $params, $defaults);
   }
 
@@ -665,8 +660,7 @@ SELECT $acl.*
    * @return Object             DAO object on sucess, null otherwise
    * @static
    */
-  static
-  function setIsActive($id, $is_active) {
+  static function setIsActive($id, $is_active) {
     require_once 'CRM/Core/BAO/Cache.php';
     // note this also resets any ACL cache
     CRM_Core_BAO_Cache::deleteGroup('contact fields');
@@ -674,8 +668,7 @@ SELECT $acl.*
     return CRM_Core_DAO::setFieldValue('CRM_ACL_DAO_ACL', $id, 'is_active', $is_active);
   }
 
-  static
-  function check($str, $contactID) {
+  static function check($str, $contactID) {
     require_once 'CRM/ACL/BAO/Cache.php';
 
     $acls = &CRM_ACL_BAO_Cache::build($contactID);
@@ -852,8 +845,7 @@ ORDER BY a.object_id
     return $ids;
   }
 
-  static
-  function matchType($type, $operation) {
+  static function matchType($type, $operation) {
     $typeCheck = FALSE;
     switch ($operation) {
       case 'All':
@@ -901,8 +893,7 @@ ORDER BY a.object_id
    * @access public
    * @static
    */
-  static
-  function del($aclId) {
+  static function del($aclId) {
     // delete all entries from the acl cache
     require_once 'CRM/ACL/BAO/Cache.php';
     CRM_ACL_BAO_Cache::resetCache();

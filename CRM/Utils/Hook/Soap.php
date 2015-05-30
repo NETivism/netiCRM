@@ -54,8 +54,7 @@ class CRM_Utils_Hook_Soap extends CRM_Utils_Hook {
    *                           an error message which aborts the operation
    * @access public
    */
-  static
-  function pre($op, $objectName, $id, &$params) {
+  static function pre($op, $objectName, $id, &$params) {
     return;
   }
 
@@ -76,8 +75,7 @@ class CRM_Utils_Hook_Soap extends CRM_Utils_Hook {
    *                           an error message which aborts the operation
    * @access public
    */
-  static
-  function post($op, $objectName, $objectId, &$objectRef) {
+  static function post($op, $objectName, $objectId, &$objectRef) {
     return;
   }
 
@@ -93,8 +91,7 @@ class CRM_Utils_Hook_Soap extends CRM_Utils_Hook {
    *
    * @access public
    */
-  static
-  function links($op, $objectName, $objectId) {
+  static function links($op, $objectName, $objectId) {
     return NULL;
   }
 }

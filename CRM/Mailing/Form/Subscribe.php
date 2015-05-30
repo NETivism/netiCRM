@@ -171,8 +171,7 @@ ORDER BY title";
     );
   }
 
-  static
-  function formRule($fields) {
+  static function formRule($fields) {
     foreach ($fields as $name => $dontCare) {
       if (substr($name, 0, CRM_Core_Form::CB_PREFIX_LEN) == CRM_Core_Form::CB_PREFIX) {
         return TRUE;

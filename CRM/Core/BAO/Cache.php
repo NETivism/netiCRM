@@ -61,8 +61,7 @@ class CRM_Core_BAO_Cache extends CRM_Core_DAO_Cache {
    * @static
    * @access public
    */
-  static
-  function &getItem($group, $path, $componentID = NULL) {
+  static function &getItem($group, $path, $componentID = NULL) {
     if (self::$_cache === NULL) {
       self::$_cache = array();
     }
@@ -129,8 +128,7 @@ class CRM_Core_BAO_Cache extends CRM_Core_DAO_Cache {
     return self::$_cache[$argString];
   }
 
-  static
-  function setItem(&$data, $group, $path, $componentID = NULL) {
+  static function setItem(&$data, $group, $path, $componentID = NULL) {
     if (self::$_cache === NULL) {
       self::$_cache = array();
     }
@@ -172,8 +170,7 @@ class CRM_Core_BAO_Cache extends CRM_Core_DAO_Cache {
     $cache->delete($argString);
   }
 
-  static
-  function deleteGroup($group = NULL) {
+  static function deleteGroup($group = NULL) {
     $dao = new CRM_Core_DAO_Cache();
 
     if (!empty($group)) {
@@ -186,8 +183,7 @@ class CRM_Core_BAO_Cache extends CRM_Core_DAO_Cache {
     CRM_ACL_BAO_Cache::resetCache();
   }
 
-  static
-  function storeSessionToCache($names,
+  static function storeSessionToCache($names,
     $resetSession = TRUE
   ) {
     // CRM_Core_Error::debug_var( 'names in store', $names );
@@ -226,8 +222,7 @@ class CRM_Core_BAO_Cache extends CRM_Core_DAO_Cache {
     self::cleanupCache();
   }
 
-  static
-  function restoreSessionFromCache($names) {
+  static function restoreSessionFromCache($names) {
     // CRM_Core_Error::debug_var( 'names in restore', $names );
     foreach ($names as $key => $sessionName) {
       if (is_array($sessionName)) {
@@ -260,8 +255,7 @@ class CRM_Core_BAO_Cache extends CRM_Core_DAO_Cache {
     // CRM_Core_Error::debug_var( 'REQUEST', $_REQUEST );
   }
 
-  static
-  function cleanupCache() {
+  static function cleanupCache() {
     // clean up the session cache every $cacheCleanUpNumber probabilistically
     $cacheCleanUpNumber = 1396;
 

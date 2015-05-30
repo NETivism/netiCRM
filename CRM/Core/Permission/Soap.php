@@ -84,8 +84,7 @@ class CRM_Core_Permission_Soap {
    * @static
    * @access public
    */
-  static
-  function check($str) {
+  static function check($str) {
     return TRUE;
   }
 }

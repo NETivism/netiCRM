@@ -1653,8 +1653,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
    * @static
    * @access public
    */
-  static
-  function addToErrorMsg($errorName, &$errorMessage) {
+  static function addToErrorMsg($errorName, &$errorMessage) {
     if ($errorMessage) {
       $errorMessage .= "; $errorName";
     }

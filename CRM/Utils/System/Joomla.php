@@ -71,8 +71,7 @@ class CRM_Utils_System_Joomla {
    * @access public
    * @static
    */
-  static
-  function appendBreadCrumb($breadCrumbs) {
+  static function appendBreadCrumb($breadCrumbs) {
     $template = CRM_Core_Smarty::singleton();
     $bc = $template->get_template_vars('breadcrumb');
 
@@ -105,8 +104,7 @@ class CRM_Utils_System_Joomla {
    * @access public
    * @static
    */
-  static
-  function resetBreadCrumb() {
+  static function resetBreadCrumb() {
     return;
   }
 
@@ -119,8 +117,7 @@ class CRM_Utils_System_Joomla {
    * @access public
    * @static
    */
-  static
-  function addHTMLHead($string = NULL, $includeAll = FALSE) {
+  static function addHTMLHead($string = NULL, $includeAll = FALSE) {
     $document = &JFactory::getDocument();
 
     if ($string) {
@@ -226,8 +223,7 @@ class CRM_Utils_System_Joomla {
    * access public
    * @static
    */
-  static
-  function mapConfigToSSL() {
+  static function mapConfigToSSL() {
     // dont need to do anything, let CMS handle their own switch to SSL
     return;
   }
@@ -277,8 +273,7 @@ class CRM_Utils_System_Joomla {
    * @access public
    * @static
    */
-  static
-  function authenticate($name, $password) {
+  static function authenticate($name, $password) {
     require_once 'DB.php';
 
     $config = CRM_Core_Config::singleton();
@@ -328,18 +323,15 @@ class CRM_Utils_System_Joomla {
    * @access public
    * @static
    */
-  static
-  function setMessage($message) {
+  static function setMessage($message) {
     return;
   }
 
-  static
-  function permissionDenied() {
+  static function permissionDenied() {
     CRM_Core_Error::fatal(ts('You do not have permission to access this page'));
   }
 
-  static
-  function logout() {
+  static function logout() {
     session_destroy();
     header("Location:index.php");
   }
@@ -349,8 +341,7 @@ class CRM_Utils_System_Joomla {
    *
    * @return string  the used locale or null for none
    */
-  static
-  function getUFLocale() {
+  static function getUFLocale() {
     if (defined('_JEXEC')) {
       $conf = &JFactory::getConfig();
       $locale = $conf->getValue('config.language');
@@ -366,8 +357,7 @@ class CRM_Utils_System_Joomla {
      * @param $pass string  optional password for login
      */
 
-  static
-  function loadBootStrap($user = NULL, $pass = NULL) {
+  static function loadBootStrap($user = NULL, $pass = NULL) {
     return TRUE;
   }
 

@@ -369,8 +369,7 @@ class CRM_Core_DAO extends DB_DataObject {
    * @access public
    * @static
    */
-  static
-  function makeAttribute($field) {
+  static function makeAttribute($field) {
     if ($field) {
       if (CRM_Utils_Array::value('type', $field) == CRM_Utils_Type::T_STRING) {
         $maxLength = CRM_Utils_Array::value('maxlength', $field);
@@ -444,8 +443,7 @@ class CRM_Core_DAO extends DB_DataObject {
     return NULL;
   }
 
-  static
-  function transaction($type) {
+  static function transaction($type) {
     CRM_Core_Error::fatal('This function is obsolete, please use CRM_Core_Transaction');
   }
 
@@ -462,8 +460,7 @@ class CRM_Core_DAO extends DB_DataObject {
    * @access public
    * @static
    */
-  static
-  function objectExists($value, $daoName, $daoID, $fieldName = 'name') {
+  static function objectExists($value, $daoName, $daoID, $fieldName = 'name') {
     $object = new $daoName( );
     $object->$fieldName = $value;
 
@@ -541,8 +538,7 @@ LIKE %1
     return $values;
   }
 
-  static
-  function isDBMyISAM($maxTablesToCheck = 10) {
+  static function isDBMyISAM($maxTablesToCheck = 10) {
     // show error if any of the tables, use 'MyISAM' storage engine.
     $engines = self::getStorageValues(NULL, $maxTablesToCheck);
     if (array_key_exists('MyISAM', $engines)) {
@@ -683,8 +679,7 @@ FROM   civicrm_domain
    * @static
    * @access public
    */
-  static
-  function getFieldValue($daoName, $searchValue, $returnColumn = 'name', $searchColumn = 'id', $force = FALSE) {
+  static function getFieldValue($daoName, $searchValue, $returnColumn = 'name', $searchColumn = 'id', $force = FALSE) {
     if (empty($searchValue)) {
       // adding this year since developers forget to check for an id
       // and hence we get the first value in the db
@@ -730,8 +725,7 @@ FROM   civicrm_domain
    * @static
    * @access public
    */
-  static
-  function setFieldValue($daoName, $searchValue, $setColumn, $setValue, $searchColumn = 'id') {
+  static function setFieldValue($daoName, $searchValue, $setColumn, $setValue, $searchColumn = 'id') {
     $object = new $daoName();
     $object->selectAdd();
     $object->selectAdd("$searchColumn, $setColumn");
@@ -757,8 +751,7 @@ FROM   civicrm_domain
    * @access public
    * @static
    */
-  static
-  function getSortString($sort, $default = NULL) {
+  static function getSortString($sort, $default = NULL) {
     // check if sort is of type CRM_Utils_Sort
     if (is_a($sort, 'CRM_Utils_Sort')) {
       return $sort->orderBy();
@@ -790,8 +783,7 @@ FROM   civicrm_domain
    * @access public
    * @static
    */
-  static
-  function commonRetrieve($daoName, &$params, &$defaults, $returnProperities = NULL) {
+  static function commonRetrieve($daoName, &$params, &$defaults, $returnProperities = NULL) {
     $object = new $daoName();
     $object->copyValues($params);
 
@@ -818,8 +810,7 @@ FROM   civicrm_domain
    * @access public
    * @static
    */
-  static
-  function deleteEntityContact($daoName, $contactId) {
+  static function deleteEntityContact($daoName, $contactId) {
     $object = new $daoName();
 
     $object->entity_table = 'civicrm_contact';
@@ -836,8 +827,7 @@ FROM   civicrm_domain
    * @static
    * @access public
    */
-  static
-  function &executeQuery($query,
+  static function &executeQuery($query,
     $params = array(),
     $abort = TRUE,
     $daoName = NULL,
@@ -874,8 +864,7 @@ FROM   civicrm_domain
    * @static
    * @access public
    */
-  static
-  function &singleValueQuery($query,
+  static function &singleValueQuery($query,
     $params = array(),
     $abort = TRUE,
     $i18nRewrite = TRUE
@@ -902,8 +891,7 @@ FROM   civicrm_domain
     return $ret;
   }
 
-  static
-  function composeQuery($query, &$params, $abort) {
+  static function composeQuery($query, &$params, $abort) {
     require_once 'CRM/Utils/Type.php';
 
     $tr = array();
@@ -941,8 +929,7 @@ FROM   civicrm_domain
     return strtr($query, $tr);
   }
 
-  static
-  function freeResult($ids = NULL) {
+  static function freeResult($ids = NULL) {
     global $_DB_DATAOBJECT;
 
     /***
@@ -994,8 +981,7 @@ FROM   civicrm_domain
    * @return (reference )                   the newly created copy of the object
    * @access public
    */
-  static
-  function &copyGeneric($daoName, $criteria, $newData = NULL, $fieldsFix = NULL, $blockCopyOfDependencies = NULL) {
+  static function &copyGeneric($daoName, $criteria, $newData = NULL, $fieldsFix = NULL, $blockCopyOfDependencies = NULL) {
     $object = new $daoName();
 
     if (!$newData) {
@@ -1111,8 +1097,7 @@ SELECT contact_id
    * @access public
    * @static
    */
-  static
-  function commonRetrieveAll($daoName, $fieldIdName = 'id', $fieldId, &$details, $returnProperities = NULL) {
+  static function commonRetrieveAll($daoName, $fieldIdName = 'id', $fieldId, &$details, $returnProperities = NULL) {
     $object = new $daoName();
     $object->$fieldIdName = $fieldId;
 
@@ -1133,8 +1118,7 @@ SELECT contact_id
     return $details;
   }
 
-  static
-  function dropAllTables() {
+  static function dropAllTables() {
 
     // first drop all the custom tables we've created
     require_once 'CRM/Core/BAO/CustomGroup.php';
@@ -1154,8 +1138,7 @@ SELECT contact_id
     );
   }
 
-  static
-  function escapeString($string) {
+  static function escapeString($string) {
     static $_dao = NULL;
 
     if (!$_dao) {
@@ -1164,8 +1147,7 @@ SELECT contact_id
     return $_dao->escape($string);
   }
 
-  static
-  function escapeWildCardString($string) {
+  static function escapeWildCardString($string) {
     // CRM-9155
     // ensure we escape the single characters % and _ which are mysql wild
     // card characters and could come in via sortByCharacter
@@ -1182,8 +1164,7 @@ SELECT contact_id
   //Creates a test object, including any required objects it needs via recursion
   //createOnly: only create in database, do not store or return the objects (useful for perf testing)
   //ONLY USE FOR TESTING
-  static
-  function createTestObject($daoName, $params = array(), $numObjects = 1, $createOnly = FALSE) {
+  static function createTestObject($daoName, $params = array(), $numObjects = 1, $createOnly = FALSE) {
 
     static $counter = 0;
 
@@ -1297,8 +1278,7 @@ SELECT contact_id
   //deletes the this object plus any dependent objects that are associated with it
   //ONLY USE FOR TESTING
 
-  static
-  function deleteTestObjects($daoName, $params = array()) {
+  static function deleteTestObjects($daoName, $params = array()) {
     $object = new $daoName();
     $object->id = CRM_Utils_Array::value('id', $params);
 
@@ -1322,8 +1302,7 @@ SELECT contact_id
     $object->delete();
   }
 
-  static
-  function createTempTableName($prefix = 'civicrm', $addRandomString = TRUE) {
+  static function createTempTableName($prefix = 'civicrm', $addRandomString = TRUE) {
     $tableName = $prefix . "_temp";
 
     if ($addRandomString) {

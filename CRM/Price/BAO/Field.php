@@ -81,8 +81,7 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
    * @access public
    * @static
    */
-  static
-  function create(&$params, $ids) {
+  static function create(&$params, $ids) {
     require_once 'CRM/Core/Transaction.php';
     require_once 'CRM/Price/BAO/FieldValue.php';
 
@@ -166,8 +165,7 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
    * @access public
    * @static
    */
-  static
-  function retrieve(&$params, &$defaults) {
+  static function retrieve(&$params, &$defaults) {
     return CRM_Core_DAO::commonRetrieve('CRM_Price_DAO_Field', $params, $defaults);
   }
 
@@ -182,8 +180,7 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
    * @access public
    * @static
    */
-  static
-  function setIsActive($id, $is_active) {
+  static function setIsActive($id, $is_active) {
     return CRM_Core_DAO::setFieldValue('CRM_Price_DAO_Field', $id, 'is_active', $is_active);
   }
 
@@ -463,8 +460,7 @@ WHERE
     return NULL;
   }
 
-  static
-  function &htmlTypes() {
+  static function &htmlTypes() {
     static $htmlTypes = NULL;
     if (!$htmlTypes) {
       $htmlTypes = array(

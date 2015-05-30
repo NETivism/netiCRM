@@ -83,8 +83,7 @@ class CRM_Contact_Form_Task_AddToTag extends CRM_Contact_Form_Task {
     $this->addFormRule(array('CRM_Contact_Form_Task_AddToTag', 'formRule'));
   }
 
-  static
-  function formRule($form, $rule) {
+  static function formRule($form, $rule) {
     $errors = array();
     if (empty($form['tag']) && empty($form['taglist'])) {
       $errors['_qf_default'] = "Please select atleast one tag.";

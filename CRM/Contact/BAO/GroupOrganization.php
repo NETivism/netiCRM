@@ -52,8 +52,7 @@ class CRM_Contact_BAO_GroupOrganization extends CRM_Contact_DAO_GroupOrganizatio
    * @access public
    * @static
    */
-  static
-  function add(&$params) {
+  static function add(&$params) {
     $formatedValues = array();
     self::formatValues($params, $formatedValues);
     $dataExists = self::dataExists($formatedValues);
@@ -76,8 +75,7 @@ class CRM_Contact_BAO_GroupOrganization extends CRM_Contact_DAO_GroupOrganizatio
    * @access public
    * @static
    */
-  static
-  function formatValues(&$params, &$formatedValues) {
+  static function formatValues(&$params, &$formatedValues) {
     if (CRM_Utils_Array::value('group_organization', $params)) {
       $formatedValues['id'] = $params['group_organization'];
     }
@@ -100,8 +98,7 @@ class CRM_Contact_BAO_GroupOrganization extends CRM_Contact_DAO_GroupOrganizatio
    * @access public
    * @static
    */
-  static
-  function dataExists($params) {
+  static function dataExists($params) {
     // return if no data present
     if (CRM_Utils_Array::value('organization_id', $params) &&
       CRM_Utils_Array::value('group_id', $params)
@@ -111,8 +108,7 @@ class CRM_Contact_BAO_GroupOrganization extends CRM_Contact_DAO_GroupOrganizatio
     return FALSE;
   }
 
-  static
-  function &retrieve($groupID, &$defaults) {
+  static function &retrieve($groupID, &$defaults) {
     $dao = new CRM_Contact_DAO_GroupOrganization();
     $dao->group_id = $groupID;
     if ($dao->find(TRUE)) {
@@ -130,8 +126,7 @@ class CRM_Contact_BAO_GroupOrganization extends CRM_Contact_DAO_GroupOrganizatio
    * @access public
    * @static
    */
-  static
-  function hasGroupAssociated($contactID) {
+  static function hasGroupAssociated($contactID) {
     $orgID = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_GroupOrganization',
       $contactID, 'group_id', 'organization_id'
     );

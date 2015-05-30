@@ -39,8 +39,7 @@ require_once 'CRM/Utils/Type.php';
  */
 class CRM_Campaign_Page_AJAX {
 
-  static
-  function registerInterview() {
+  static function registerInterview() {
     $voterId = CRM_Utils_Array::value('voter_id', $_POST);
     $activityId = CRM_Utils_Array::value('activity_id', $_POST);
     $params = array('voter_id' => $voterId,
@@ -83,8 +82,7 @@ class CRM_Campaign_Page_AJAX {
     CRM_Utils_System::civiExit();
   }
 
-  static
-  function loadOptionGroupDetails() {
+  static function loadOptionGroupDetails() {
 
     $id = CRM_Utils_Array::value('option_group_id', $_POST);
     $status = 'fail';

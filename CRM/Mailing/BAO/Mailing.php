@@ -879,8 +879,7 @@ AND civicrm_contact.is_opt_out =0";
    *
    * @return (reference) array    array ref that hold array refs to the verp info and urls
    */
-  static
-  function getVerpAndUrls($job_id, $event_queue_id, $hash, $email) {
+  static function getVerpAndUrls($job_id, $event_queue_id, $hash, $email) {
     // create a skeleton object and set its properties that are required by getVerpAndUrlsAndHeaders()
     require_once 'CRM/Core/BAO/Domain.php';
     $config = CRM_Core_Config::singleton();
@@ -1359,8 +1358,7 @@ AND civicrm_contact.is_opt_out =0";
    *
    * @return object
    */
-  static
-  function add(&$params, $ids = array()) {
+  static function add(&$params, $ids = array()) {
     $id = CRM_Utils_Array::value('mailing_id', $ids, CRM_Utils_Array::value('id', $params));
     if ($id) {
       CRM_Utils_Hook::pre('edit', 'Mailing', $id, $params);
@@ -1937,8 +1935,7 @@ AND civicrm_contact.is_opt_out =0";
   }
 
 
-  static
-  function checkPermission($id) {
+  static function checkPermission($id) {
     if (!$id) {
       return;
     }
@@ -1952,8 +1949,7 @@ AND civicrm_contact.is_opt_out =0";
     return;
   }
 
-  static
-  function mailingACL($alias = NULL) {
+  static function mailingACL($alias = NULL) {
     $mailingACL = " ( 0 ) ";
 
     $mailingIDs = self::mailingACLIDs();
@@ -1965,8 +1961,7 @@ AND civicrm_contact.is_opt_out =0";
     return $mailingACL;
   }
 
-  static
-  function &mailingACLIDs($count = FALSE, $condition = NULL) {
+  static function &mailingACLIDs($count = FALSE, $condition = NULL) {
     $mailingIDs = array();
 
     // get all the groups that this user can access
@@ -2098,8 +2093,7 @@ LEFT JOIN civicrm_mailing_group g ON g.mailing_id   = m.id
    * @access public
    */
 
-  static
-  function showEmailDetails($id) {
+  static function showEmailDetails($id) {
     return CRM_Utils_System::url('civicrm/mailing/report', "mid=$id");
   }
 
@@ -2540,8 +2534,7 @@ SELECT  $mailing.id as mailing_id
     return $report;
   }
 
-  static
-  function overrideVerp($jobID) {
+  static function overrideVerp($jobID) {
     static $_cache = array();
 
     if (!isset($_cache[$jobID])) {
@@ -2557,8 +2550,7 @@ WHERE  civicrm_mailing_job.id = %1
     return $_cache[$jobID];
   }
 
-  static
-  function processQueue() {
+  static function processQueue() {
     require_once 'CRM/Core/Config.php';
     $config = &CRM_Core_Config::singleton();
     CRM_Core_Error::debug_log_message("Beginning processQueue run: {$config->mailerJobsMax}, {$config->mailerJobSize}");

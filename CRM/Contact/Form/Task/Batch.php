@@ -201,8 +201,7 @@ class CRM_Contact_Form_Task_Batch extends CRM_Contact_Form_Task {
    * @access public
    * @static
    */
-  static
-  function formRule($fields) {
+  static function formRule($fields) {
     $errors = array();
     $externalIdentifiers = array();
     foreach ($fields['field'] as $componentId => $field) {

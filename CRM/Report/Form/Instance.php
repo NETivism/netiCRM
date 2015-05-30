@@ -36,8 +36,7 @@ require_once 'CRM/Core/BAO/Navigation.php';
 require_once 'CRM/Core/Permission.php';
 class CRM_Report_Form_Instance {
 
-  static
-  function buildForm(&$form) {
+  static function buildForm(&$form) {
     $attributes = CRM_Core_DAO::getAttribute('CRM_Report_DAO_Instance');
 
     $form->add('text',
@@ -115,8 +114,7 @@ class CRM_Report_Form_Instance {
     $form->addFormRule(array('CRM_Report_Form_Instance', 'formRule'), $form);
   }
 
-  static
-  function formRule($fields, $errors, $self) {
+  static function formRule($fields, $errors, $self) {
     $buttonName = $self->controller->getButtonName();
     $selfButtonName = $self->getVar('_instanceButtonName');
 
@@ -131,8 +129,7 @@ class CRM_Report_Form_Instance {
     return empty($errors) ? TRUE : $errors;
   }
 
-  static
-  function setDefaultValues(&$form, &$defaults) {
+  static function setDefaultValues(&$form, &$defaults) {
     $instanceID = $form->getVar('_id');
     $navigationDefaults = array();
     require_once 'CRM/Core/Config.php';
@@ -182,8 +179,7 @@ class CRM_Report_Form_Instance {
     }
   }
 
-  static
-  function postProcess(&$form) {
+  static function postProcess(&$form) {
     $params = $form->getVar('_params');
     $config = CRM_Core_Config::singleton();
     $params['header'] = $params['report_header'];

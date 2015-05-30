@@ -298,8 +298,7 @@ SELECT DISTINCT(civicrm_mailing_event_queue.contact_id) as contact_id,
     return array($displayName, $email);
   }
 
-  static
-  function bulkCreate($params, $now = NULL) {
+  static function bulkCreate($params, $now = NULL) {
     if (!$now) {
       $now = time();
     }

@@ -176,8 +176,7 @@ class CRM_Utils_Sort {
    * @static
    * @access public
    */
-  static
-  function sortIDValue($index, $dir) {
+  static function sortIDValue($index, $dir) {
     return ($dir == self::DESCENDING) ? $index . '_d' : $index . '_u';
   }
 
@@ -280,8 +279,7 @@ class CRM_Utils_Sort {
    * @return array of items sorted by weight
    * @access public
    */
-  static
-  function cmpFunc($a, $b) {
+  static function cmpFunc($a, $b) {
     return ($a['weight'] <= $b['weight']) ? -1 : 1;
   }
 }

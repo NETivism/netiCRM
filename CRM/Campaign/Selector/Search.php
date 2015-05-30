@@ -191,8 +191,7 @@ class CRM_Campaign_Selector_Search extends CRM_Core_Selector_Base implements CRM
    * @access public
    *
    */
-  static
-  function &links() {
+  static function &links() {
     return self::$_links = array();
   }
 

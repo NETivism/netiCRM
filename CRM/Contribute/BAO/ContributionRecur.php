@@ -50,8 +50,7 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
    * @access public
    * @static
    */
-  static
-  function add(&$params, &$ids) {
+  static function add(&$params, &$ids) {
     // pre-processing hooks
     require_once 'CRM/Utils/Hook.php';
     if (CRM_Utils_Array::value('id', $params)) {
@@ -104,10 +103,8 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
    *
    * @return boolean true if duplicate, false otherwise
    * @access public
-   * static
-   */
-  static
-  function checkDuplicate($params, &$duplicates) {
+   * static  */
+  static function checkDuplicate($params, &$duplicates) {
     $id = CRM_Utils_Array::value('id', $params);
     $trxn_id = CRM_Utils_Array::value('trxn_id', $params);
     $invoice_id = CRM_Utils_Array::value('invoice_id', $params);
@@ -145,8 +142,7 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
     return $result;
   }
 
-  static
-  function getPaymentProcessor($id, $mode) {
+  static function getPaymentProcessor($id, $mode) {
     $sql = "SELECT c.payment_processor_id, r.processor_id FROM civicrm_contribution c INNER JOIN civicrm_contribution_recur r ON c.contribution_recur_id = r.id WHERE c.payment_processor_id IS NOT NULL AND r.id = %1 ORDER BY c.id ASC LiMIT 0, 1";
 
     $params = array(1 => array($id, 'Integer'));
@@ -169,10 +165,8 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
    *
    * @return array $totalCount an array of recurring ids count
    * @access public
-   * static
-   */
-  static
-  function getCount(&$ids) {
+   * static  */
+  static function getCount(&$ids) {
     $recurID = implode(',', $ids);
     $totalCount = array();
 
@@ -197,8 +191,7 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
    * @access public
    * @static
    */
-  static
-  function deleteRecurContribution($recurId) {
+  static function deleteRecurContribution($recurId) {
     $result = FALSE;
     if (!$recurId) {
       return $result;
@@ -222,8 +215,7 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
    * @access public
    * @static
    */
-  static
-  function cancelRecurContribution($recurId, $objects, $canceledId = 2) {
+  static function cancelRecurContribution($recurId, $objects, $canceledId = 2) {
     if (!$recurId) {
       return FALSE;
     }
@@ -267,8 +259,7 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
    * @access public
    * @static
    */
-  static
-  function getRecurContributions($contactId) {
+  static function getRecurContributions($contactId) {
     $params = array();
     require_once 'CRM/Contribute/DAO/ContributionRecur.php';
     $recurDAO = new CRM_Contribute_DAO_ContributionRecur();
@@ -311,8 +302,7 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
    * @return Object             DAO object on sucess, null otherwise
    * @static
    */
-  static
-  function setIsActive($id, $is_active) {
+  static function setIsActive($id, $is_active) {
     if (!$is_active) {
       return self::cancelRecurContribution($id, CRM_Core_DAO::$_nullObject);
     }
@@ -325,8 +315,7 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
    * @param int      $id             id of the recurring
    * @param int      $contributionId id of the contribution target to sync
    */
-  static
-  function syncContribute($id, $contributionId = NULL) {
+  static function syncContribute($id, $contributionId = NULL) {
     $query = CRM_Core_DAO::executeQuery("SELECT id, trxn_id FROM civicrm_contribution WHERE contribution_recur_id = %1 ORDER BY id ASC", array(1 => array($id, 'Integer')));
     $i = 1;
     $children = array();

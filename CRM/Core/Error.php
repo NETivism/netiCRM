@@ -234,8 +234,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
    * @static
    * @acess public
    */
-  static
-  function fatal($message = NULL, $code = NULL, $email = NULL) {
+  static function fatal($message = NULL, $code = NULL, $email = NULL) {
     if (empty($message)) {
     }
     else {
@@ -293,8 +292,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
    * @access public
    * @static
    */
-  static
-  function debug($name, $variable = NULL, $log = TRUE, $html = TRUE) {
+  static function debug($name, $variable = NULL, $log = TRUE, $html = TRUE) {
     $error = &self::singleton();
 
     if ($variable === NULL) {
@@ -342,8 +340,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
    * @see CRM_Core_Error::debug()
    * @see CRM_Core_Error::debug_log_message()
    */
-  static
-  function debug_var($variable_name,
+  static function debug_var($variable_name,
     $variable,
     $print = TRUE,
     $log = TRUE,
@@ -386,8 +383,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
    *
    * @static
    */
-  static
-  function debug_log_message($message, $out = FALSE, $comp = '') {
+  static function debug_log_message($message, $out = FALSE, $comp = '') {
     $config = CRM_Core_Config::singleton();
 
     if ($comp) {
@@ -429,8 +425,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
     return $str;
   }
 
-  static
-  function backtrace($msg = 'backTrace', $log = FALSE) {
+  static function backtrace($msg = 'backTrace', $log = FALSE) {
     $backTrace = debug_backtrace();
 
     $msgs = array();
@@ -453,8 +448,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
     }
   }
 
-  static
-  function createError($message, $code = 8000, $level = 'Fatal', $params = NULL) {
+  static function createError($message, $code = 8000, $level = 'Fatal', $params = NULL) {
     $error = &CRM_Core_Error::singleton();
     $error->push($code, $level, array($params), $message);
     return $error;

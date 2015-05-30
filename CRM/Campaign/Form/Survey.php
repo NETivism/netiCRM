@@ -371,8 +371,7 @@ class CRM_Campaign_Form_Survey extends CRM_Core_Form {
    * global validation rules for the form
    *
    */
-  static
-  function formRule($fields, $files, $form) {
+  static function formRule($fields, $files, $form) {
     $errors = array();
 
     if (CRM_Utils_Array::value('option_label', $fields) &&

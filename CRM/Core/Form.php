@@ -150,8 +150,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
     }
   }
 
-  static
-  function generateID() {}
+  static function generateID() {}
 
   /**
    * register all the standard rules that most forms potentially use
@@ -925,8 +924,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
     return $this->getRootTitle() . $this->getTitle();
   }
 
-  static
-  function &getTemplate() {
+  static function &getTemplate() {
     return self::$_template;
   }
 

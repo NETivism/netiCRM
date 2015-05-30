@@ -43,8 +43,7 @@ class CRM_Contact_BAO_Contact_Utils {
    * @access public
    * @static
    */
-  static
-  function getImage($contactType, $urlOnly = FALSE, $contactId = NULL) {
+  static function getImage($contactType, $urlOnly = FALSE, $contactId = NULL) {
     static $imageInfo = array();
     if (!array_key_exists($contactType, $imageInfo)) {
       $imageInfo[$contactType] = array();
@@ -129,8 +128,7 @@ WHERE  id IN ( $idString )
    * @static
    * @access public
    */
-  static
-  function generateChecksum($contactID, $ts = NULL, $live = NULL) {
+  static function generateChecksum($contactID, $ts = NULL, $live = NULL) {
     $hash = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact',
       $contactID, 'hash'
     );
@@ -166,8 +164,7 @@ WHERE  id IN ( $idString )
    * @static
    * @access public
    */
-  static
-  function validChecksum($contactID, $inputCheck) {
+  static function validChecksum($contactID, $inputCheck) {
     $input = explode('_', $inputCheck);
 
     $inputCS = CRM_Utils_Array::value(0, $input);
@@ -199,8 +196,7 @@ WHERE  id IN ( $idString )
    * @static
    * @access public
    */
-  static
-  function maxLocations($contactId) {
+  static function maxLocations($contactId) {
     // find the system config related location blocks
     require_once 'CRM/Core/BAO/Preferences.php';
     $locationCount = CRM_Core_BAO_Preferences::value('location_count');
@@ -236,8 +232,7 @@ UNION
    * @access public
    * @static
    */
-  static
-  function createCurrentEmployerRelationship($contactID, $organization) {
+  static function createCurrentEmployerRelationship($contactID, $organization) {
     require_once 'CRM/Contact/BAO/Relationship.php';
     $organizationId = NULL;
 
@@ -321,8 +316,7 @@ UNION
    * @access public
    * @static
    */
-  static
-  function currentEmployerRelatedMembership($contactID, $employerID, $relationshipParams, $duplicate = FALSE) {
+  static function currentEmployerRelatedMembership($contactID, $employerID, $relationshipParams, $duplicate = FALSE) {
     $ids = array();
     $action = CRM_Core_Action::ADD;
 
@@ -353,8 +347,7 @@ UNION
    * @param array $currentEmployerParams associated array of contact id and its employer id
    *
    */
-  static
-  function setCurrentEmployer($currentEmployerParams) {
+  static function setCurrentEmployer($currentEmployerParams) {
     foreach ($currentEmployerParams as $contactId => $orgId) {
       $query = "UPDATE civicrm_contact contact_a,civicrm_contact contact_b
 SET contact_a.employer_id=contact_b.id, contact_a.organization_name=contact_b.organization_name 
@@ -372,8 +365,7 @@ WHERE contact_a.id ={$contactId} AND contact_b.id={$orgId}; ";
    * @param int $organizationId current employer id
    *
    */
-  static
-  function updateCurrentEmployer($organizationId) {
+  static function updateCurrentEmployer($organizationId) {
     $query = "UPDATE civicrm_contact contact_a,civicrm_contact contact_b
 SET contact_a.organization_name=contact_b.organization_name 
 WHERE contact_a.employer_id=contact_b.id AND contact_b.id={$organizationId}; ";
@@ -388,8 +380,7 @@ WHERE contact_a.employer_id=contact_b.id AND contact_b.id={$organizationId}; ";
    * @param int $employerId contact id ( mostly organization contact id)
    *
    */
-  static
-  function clearCurrentEmployer($contactId, $employerId = NULL) {
+  static function clearCurrentEmployer($contactId, $employerId = NULL) {
     $query = "UPDATE civicrm_contact 
 SET organization_name=NULL, employer_id = NULL
 WHERE id={$contactId}; ";
@@ -439,8 +430,7 @@ WHERE id={$contactId}; ";
    * @static
    *
    */
-  static
-  function buildOnBehalfForm(&$form,
+  static function buildOnBehalfForm(&$form,
     $contactType = 'Individual',
     $countryID = NULL,
     $stateID = NULL,
@@ -572,8 +562,7 @@ WHERE id={$contactId}; ";
    * @param int $employerId contact id of employer ( organization id )
    *
    */
-  static
-  function clearAllEmployee($employerId) {
+  static function clearAllEmployee($employerId) {
     $query = "
 UPDATE civicrm_contact 
    SET organization_name=NULL, employer_id = NULL 
@@ -593,8 +582,7 @@ UPDATE civicrm_contact
    * @static
    * @access public
    */
-  static
-  function formatContactIDSToLinks($contactIDs, $addViewLink = TRUE, $addEditLink = TRUE, $originalId = NULL) {
+  static function formatContactIDSToLinks($contactIDs, $addViewLink = TRUE, $addEditLink = TRUE, $originalId = NULL) {
     $contactLinks = array();
     if (!is_array($contactIDs) || empty($contactIDs)) {
       return $contactLinks;
@@ -698,8 +686,7 @@ LEFT JOIN  civicrm_email ce ON ( ce.contact_id=c.id AND ce.is_primary = 1 )
    * @return $contactDetails array of contact info.
    * @static
    */
-  static
-  function contactDetails($componentIds, $componentName, $returnProperties = array()) {
+  static function contactDetails($componentIds, $componentName, $returnProperties = array()) {
     $contactDetails = array();
     if (empty($componentIds) ||
       !in_array($componentName, array('CiviContribute', 'CiviMember', 'CiviEvent', 'Activity'))
@@ -799,8 +786,7 @@ Group By  componentId";
    * @static
    * @access public
    */
-  static
-  function processSharedAddress(&$address) {
+  static function processSharedAddress(&$address) {
     if (!is_array($address)) {
       return;
     }
@@ -847,8 +833,7 @@ Group By  componentId";
    * @return $contactNames associated array of contact names
    * @static
    */
-  static
-  function getAddressShareContactNames(&$addresses) {
+  static function getAddressShareContactNames(&$addresses) {
     $contactNames = array();
     // get the list of master id's for address
     $masterAddressIds = array();

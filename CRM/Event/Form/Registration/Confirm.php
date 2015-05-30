@@ -407,8 +407,7 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
    * @access public
    * @static
    */
-  static
-  function formRule($fields, $files, $self) {
+  static function formRule($fields, $files, $self) {
     $errors = array();
     $self->isEventFull();
     $seat = is_numeric($self->_availableRegistrations) ? $self->_availableRegistrations : NULL;
@@ -883,8 +882,7 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
    * @return void
    * @access public
    */
-  static
-  function processContribution(&$form, $params, $result, $contactID,
+  static function processContribution(&$form, $params, $result, $contactID,
     $pending = FALSE, $isAdditionalAmount = FALSE
   ) {
     require_once 'CRM/Core/Transaction.php';

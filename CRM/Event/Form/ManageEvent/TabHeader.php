@@ -38,8 +38,7 @@
  */
 class CRM_Event_Form_ManageEvent_TabHeader {
 
-  static
-  function build(&$form) {
+  static function build(&$form) {
     $tabs = $form->get('tabHeader');
     if (!$tabs || !CRM_Utils_Array::value('reset', $_GET)) {
       $tabs = &self::process($form);
@@ -50,8 +49,7 @@ class CRM_Event_Form_ManageEvent_TabHeader {
     return $tabs;
   }
 
-  static
-  function process(&$form) {
+  static function process(&$form) {
     if ($form->getVar('_id') <= 0) {
       return NULL;
     }
@@ -150,14 +148,12 @@ WHERE      e.id = %1
     return $tabs;
   }
 
-  static
-  function reset(&$form) {
+  static function reset(&$form) {
     $tabs = &self::process($form);
     $form->set('tabHeader', $tabs);
   }
 
-  static
-  function getCurrentTab($tabs) {
+  static function getCurrentTab($tabs) {
     static $current = FALSE;
 
     if ($current) {

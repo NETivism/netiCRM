@@ -106,8 +106,7 @@ class CRM_Upgrade_Form extends CRM_Core_Form {
     parent::__construct($state, $action, $method, $name);
   }
 
-  static
-  function &incrementalPhpObject($version) {
+  static function &incrementalPhpObject($version) {
     static $incrementalPhpObject = array();
 
     $versionParts = explode('.', $version);

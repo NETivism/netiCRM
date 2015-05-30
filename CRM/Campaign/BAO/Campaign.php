@@ -50,8 +50,7 @@ Class CRM_Campaign_BAO_Campaign extends CRM_Campaign_DAO_Campaign {
    * @access public
    * @static
    */
-  static
-  function create(&$params) {
+  static function create(&$params) {
     if (empty($params)) {
       return;
     }
@@ -159,8 +158,7 @@ WHERE c.title IS NOT NULL" . $whereClause;
    *
    * @static
    */
-  static
-  function getCampaign($all = FALSE, $id = FALSE) {
+  static function getCampaign($all = FALSE, $id = FALSE) {
     $campaign = array();
     $dao = new CRM_Campaign_DAO_Campaign();
     if (!$all) {
@@ -185,8 +183,7 @@ WHERE c.title IS NOT NULL" . $whereClause;
    *
    * @static
    */
-  static
-  function getCampaignGroups($campaignId) {
+  static function getCampaignGroups($campaignId) {
     $campaignGroups = array();
     if (!$campaignId) {
       return $campaignGroups;
@@ -213,13 +210,11 @@ WHERE c.title IS NOT NULL" . $whereClause;
    * @return Object             DAO object on sucess, null otherwise
    * @static
    */
-  static
-  function setIsActive($id, $is_active) {
+  static function setIsActive($id, $is_active) {
     return CRM_Core_DAO::setFieldValue('CRM_Campaign_DAO_Campaign', $id, 'is_active', $is_active);
   }
 
-  static
-  function accessCampaignDashboard() {
+  static function accessCampaignDashboard() {
     $allow = FALSE;
     if (CRM_Core_Permission::check('manage campaign') ||
       CRM_Core_Permission::check('administer CiviCampaign')

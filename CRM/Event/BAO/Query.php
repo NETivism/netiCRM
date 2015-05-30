@@ -35,8 +35,7 @@
  */
 class CRM_Event_BAO_Query {
 
-  static
-  function &getFields() {
+  static function &getFields() {
     $fields = array();
     require_once 'CRM/Event/DAO/Event.php';
     require_once 'CRM/Core/DAO/Discount.php';
@@ -47,8 +46,7 @@ class CRM_Event_BAO_Query {
     return $fields;
   }
 
-  static
-  function &getParticipantFields($onlyParticipant = FALSE) {
+  static function &getParticipantFields($onlyParticipant = FALSE) {
     require_once 'CRM/Event/BAO/Participant.php';
     $fields = &CRM_Event_BAO_Participant::importableFields('Individual', TRUE, $onlyParticipant);
     return $fields;
@@ -60,8 +58,7 @@ class CRM_Event_BAO_Query {
    * @return void
    * @access public
    */
-  static
-  function select(&$query) {
+  static function select(&$query) {
     if (($query->_mode & CRM_Contact_BAO_Query::MODE_EVENT) ||
       CRM_Utils_Array::value('participant_id', $query->_returnProperties)
     ) {
@@ -207,8 +204,7 @@ class CRM_Event_BAO_Query {
     }
   }
 
-  static
-  function where(&$query) {
+  static function where(&$query) {
     $isTest = FALSE;
     $grouping = NULL;
     foreach (array_keys($query->_params) as $id) {
@@ -235,8 +231,7 @@ class CRM_Event_BAO_Query {
   }
 
 
-  static
-  function whereClauseSingle(&$values, &$query) {
+  static function whereClauseSingle(&$values, &$query) {
     list($name, $op, $value, $grouping, $wildcard) = $values;
     switch ($name) {
       case 'event_start_date_low':
@@ -448,8 +443,7 @@ class CRM_Event_BAO_Query {
     }
   }
 
-  static
-  function from($name, $mode, $side) {
+  static function from($name, $mode, $side) {
     $from = NULL;
     switch ($name) {
       case 'civicrm_participant':
@@ -498,8 +492,7 @@ class CRM_Event_BAO_Query {
     return (isset($this->_qill)) ? $this->_qill : "";
   }
 
-  static
-  function defaultReturnProperties($mode) {
+  static function defaultReturnProperties($mode) {
     $properties = NULL;
     if ($mode & CRM_Contact_BAO_Query::MODE_EVENT) {
       $properties = array(
@@ -540,8 +533,7 @@ class CRM_Event_BAO_Query {
     return $properties;
   }
 
-  static
-  function buildSearchForm(&$form) {
+  static function buildSearchForm(&$form) {
     $dataURLEvent = CRM_Utils_System::url('civicrm/ajax/event',
       "reset=1",
       FALSE, NULL, FALSE
@@ -611,11 +603,9 @@ class CRM_Event_BAO_Query {
     $form->assign('validCiviEvent', TRUE);
   }
 
-  static
-  function searchAction(&$row, $id) {}
+  static function searchAction(&$row, $id) {}
 
-  static
-  function tableNames(&$tables) {
+  static function tableNames(&$tables) {
     //add participant table
     if (CRM_Utils_Array::value('civicrm_event', $tables)) {
       $tables = array_merge(array('civicrm_participant' => 1), $tables);

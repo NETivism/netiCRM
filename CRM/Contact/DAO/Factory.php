@@ -36,8 +36,7 @@ class CRM_Contact_DAO_Factory {
   );
 
 
-  static
-  function &create($className) {
+  static function &create($className) {
     $type = CRM_Utils_Array::value($className, self::$_classes);
     if (!$type) {
       return CRM_Core_DAO_Factory::create($className);

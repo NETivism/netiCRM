@@ -114,8 +114,7 @@ class CRM_Admin_Form_Preferences_Address extends CRM_Admin_Form_Preferences {
     parent::buildQuickForm();
   }
 
-  static
-  function formRule($fields) {
+  static function formRule($fields) {
     $p = $fields['address_standardization_provider'];
     $u = $fields['address_standardization_userid'];
     $w = $fields['address_standardization_url'];

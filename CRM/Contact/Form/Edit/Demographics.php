@@ -47,8 +47,7 @@ class CRM_Contact_Form_Edit_Demographics {
    * @access public
    * @static
    */
-  static
-  function buildQuickForm(&$form) {
+  static function buildQuickForm(&$form) {
     // radio button for gender
     $genderOptions = array();
     $gender = CRM_Core_PseudoConstant::gender();

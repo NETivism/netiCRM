@@ -41,8 +41,7 @@ require_once "CRM/Core/Form.php";
  */
 class CRM_Case_Form_Activity_ChangeCaseStatus {
 
-  static
-  function preProcess(&$form) {
+  static function preProcess(&$form) {
     if (!isset($form->_caseId)) {
       CRM_Core_Error::fatal(ts('Case Id not found.'));
     }
@@ -63,8 +62,7 @@ class CRM_Case_Form_Activity_ChangeCaseStatus {
     return $defaults;
   }
 
-  static
-  function buildQuickForm(&$form) {
+  static function buildQuickForm(&$form) {
     require_once 'CRM/Case/PseudoConstant.php';
     $form->_caseStatus = CRM_Case_PseudoConstant::caseStatus();
     $form->_defaultCaseStatus = CRM_Core_DAO::getFieldValue('CRM_Case_DAO_Case', $form->_caseId, 'status_id');
@@ -89,8 +87,7 @@ class CRM_Case_Form_Activity_ChangeCaseStatus {
    * @static
    * @access public
    */
-  static
-  function formRule($values, $files, $form) {
+  static function formRule($values, $files, $form) {
     return TRUE;
   }
 

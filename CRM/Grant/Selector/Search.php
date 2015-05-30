@@ -189,8 +189,7 @@ class CRM_Grant_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
    * @access public
    *
    */
-  static
-  function &links($key = NULL) {
+  static function &links($key = NULL) {
     $cid = CRM_Utils_Request::retrieve('cid', 'Integer', $this);
     $extraParams = ($key) ? "&key={$key}" : NULL;
 

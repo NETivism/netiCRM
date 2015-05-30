@@ -37,8 +37,7 @@
  *
  */
 class CRM_Core_Payment_ProcessorForm {
-  static
-  function preProcess(&$form, $type = NULL, $mode = NULL) {
+  static function preProcess(&$form, $type = NULL, $mode = NULL) {
     if ($type) {
       $form->_type = $type;
     }
@@ -115,8 +114,7 @@ class CRM_Core_Payment_ProcessorForm {
     }
   }
 
-  static
-  function buildQuickform(&$form) {
+  static function buildQuickform(&$form) {
     $form->addElement('hidden', 'hidden_processor', 1);
 
     if (($form->_paymentProcessor['payment_type'] & CRM_Core_Payment::PAYMENT_TYPE_DIRECT_DEBIT

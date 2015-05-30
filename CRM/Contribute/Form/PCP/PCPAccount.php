@@ -218,8 +218,7 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
    * @access public
    * @static
    */
-  static
-  function formRule($fields, $files, $self) {
+  static function formRule($fields, $files, $self) {
     $errors = array();
     require_once "CRM/Utils/Rule.php";
     foreach ($fields as $key => $value) {

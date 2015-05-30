@@ -66,8 +66,7 @@ class CRM_Utils_System_Soap {
    * @static
    * @access public
    */
-  static
-  function checkPermission($str) {
+  static function checkPermission($str) {
     return TRUE;
   }
 
@@ -81,8 +80,7 @@ class CRM_Utils_System_Soap {
    * @access public
    * @static
    */
-  static
-  function appendBreadCrumb($title, $url) {
+  static function appendBreadCrumb($title, $url) {
     return;
   }
 
@@ -95,8 +93,7 @@ class CRM_Utils_System_Soap {
    * @access public
    * @static
    */
-  static
-  function addHTMLHead($head) {
+  static function addHTMLHead($head) {
     return;
   }
 
@@ -156,8 +153,7 @@ class CRM_Utils_System_Soap {
    * @access public
    * @static
    */
-  static
-  function &authenticate($name, $pass) {
+  static function &authenticate($name, $pass) {
     if (isset(self::$ufClass)) {
       eval('$result =& ' . self::$ufClass . '::authenticate($name, $pass);');
       return $result;
@@ -188,8 +184,7 @@ class CRM_Utils_System_Soap {
    *
    * @return null  as the language is set elsewhere
    */
-  static
-  function getUFLocale() {
+  static function getUFLocale() {
     return NULL;
   }
 }

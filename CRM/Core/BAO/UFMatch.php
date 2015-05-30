@@ -54,8 +54,7 @@ class CRM_Core_BAO_UFMatch extends CRM_Core_DAO_UFMatch {
    * @access public
    * @static
    */
-  static
-  function synchronize(&$user, $update, $uf, $ctype, $isLogin = FALSE) {
+  static function synchronize(&$user, $update, $uf, $ctype, $isLogin = FALSE) {
     $session = CRM_Core_Session::singleton();
     if (!is_object($session)) {
       CRM_Core_Error::fatal('wow, session is not an object?');
@@ -216,8 +215,7 @@ WHERE     openid = %1";
    * @access public
    * @static
    */
-  static
-  function &synchronizeUFMatch(&$user, $userKey, $uniqId, $uf, $status = NULL, $ctype = NULL, $isLogin = FALSE) {
+  static function &synchronizeUFMatch(&$user, $userKey, $uniqId, $uf, $status = NULL, $ctype = NULL, $isLogin = FALSE) {
     // validate that uniqId is a valid url. it will either be
     // an OpenID (which should always be a valid url) or a
     // http://uf_username/ construction (so that it can
@@ -393,8 +391,7 @@ AND    domain_id    = %4
    * @access public
    * @static
    */
-  static
-  function updateUFName($contactId) {
+  static function updateUFName($contactId) {
     if (!$contactId) {
       return;
     }
@@ -457,8 +454,7 @@ AND    domain_id    = %4
    * @access public
    * @static
    */
-  static
-  function updateContactEmail($contactId, $emailAddress) {
+  static function updateContactEmail($contactId, $emailAddress) {
     $strtolower = function_exists('mb_strtolower') ? 'mb_strtolower' : 'strtolower';
     $emailAddress = $strtolower($emailAddress);
 
@@ -515,8 +511,7 @@ AND    domain_id    = %4
    * @access public
    * @static
    */
-  static
-  function deleteUser($ufID) {
+  static function deleteUser($ufID) {
     $ufmatch = new CRM_Core_DAO_UFMatch();
 
     $ufmatch->uf_id = $ufID;
@@ -533,8 +528,7 @@ AND    domain_id    = %4
    * @access public
    * @static
    */
-  static
-  function getContactId($ufID) {
+  static function getContactId($ufID) {
     if (!isset($ufID)) {
       return NULL;
     }
@@ -558,8 +552,7 @@ AND    domain_id    = %4
    * @access public
    * @static
    */
-  static
-  function getUFId($contactID) {
+  static function getUFId($contactID) {
     if (!isset($contactID)) {
       return NULL;
     }
@@ -573,8 +566,7 @@ AND    domain_id    = %4
     return NULL;
   }
 
-  static
-  function isEmptyTable() {
+  static function isEmptyTable() {
     $sql = "SELECT count(id) FROM civicrm_uf_match";
     return CRM_Core_DAO::singleValueQuery($sql) > 0 ? FALSE : TRUE;
   }
@@ -587,8 +579,7 @@ AND    domain_id    = %4
    * @access public
    * @static
    */
-  static
-  function getContactIDs() {
+  static function getContactIDs() {
     $id = array();
     $dao = new CRM_Core_DAO_UFMatch();
     $dao->find();
@@ -606,8 +597,7 @@ AND    domain_id    = %4
    * @access public
    * @static
    */
-  static
-  function getAllowedToLogin($openId) {
+  static function getAllowedToLogin($openId) {
     $ufmatch = new CRM_Core_DAO_UFMatch();
     $ufmatch->uf_name = $openId;
     $ufmatch->allowed_to_login = 1;
@@ -626,8 +616,7 @@ AND    domain_id    = %4
    * @access public
    * @static
    */
-  static
-  function getNextUfIdValue() {
+  static function getNextUfIdValue() {
     $query = "SELECT MAX(uf_id)+1 AS next_uf_id FROM civicrm_uf_match";
     $dao = CRM_Core_DAO::executeQuery($query);
     if ($dao->fetch()) {
@@ -640,8 +629,7 @@ AND    domain_id    = %4
     return $ufId;
   }
 
-  static
-  function isDuplicateUser($email) {
+  static function isDuplicateUser($email) {
     $session = CRM_Core_Session::singleton();
     $contactID = $session->get('userID');
     if (!empty($email) &&
@@ -665,8 +653,7 @@ AND    domain_id    = %4
    *
    * return array  $ufValues uf values.
    **/
-  static
-  function getUFValues($ufID = NULL) {
+  static function getUFValues($ufID = NULL) {
     if (!$ufID) {
       //get logged in user uf id.
       require_once 'CRM/Utils/System.php';
