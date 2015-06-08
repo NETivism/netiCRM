@@ -84,7 +84,7 @@ var url = [
   {title:'Membership Status Rules', url:'civicrm/admin/member/membershipStatus?reset=1'},
   {title:'CiviCRM Reports', url:'civicrm/report/list?reset=1'},
   {title:'Create Reports from Templates', url:'civicrm/admin/report/template/list?reset=1'},
-  {title:'Registered Templates', url:'civicrm/admin/report/options/report_template&reset=1'},
+  {title:'Registered Templates', url:'civicrm/admin/report/options/report_template?reset=1'},
   {title:'Search Builder', url:'civicrm/contact/search/builder?reset=1'},
   {title:'Full-text Search', url:'civicrm/contact/search/custom?csid=15&reset=1'},
   {title:'Advanced Search', url:'civicrm/contact/search/advanced?reset=1'}
