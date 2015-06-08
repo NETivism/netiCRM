@@ -36,9 +36,12 @@
  * Page for displaying list of contact Subtypes
  */
 class CRM_Admin_Page_APIExplorer extends CRM_Core_Page {
+
+  private $_allowed;
+
+
   function run() {
-    $pattern = '/dev.*neticrm\.tw/';
-    if(preg_match($pattern, $_SERVER['HTTP_HOST'])){
+    if($this->allowVisit()){
       CRM_Utils_System::setTitle(ts('API explorer and generator'));
       $result = civicrm_api('Entity', 'get', array(
         'sequential' => 1,
@@ -49,14 +52,13 @@ class CRM_Admin_Page_APIExplorer extends CRM_Core_Page {
       $civicrm_path = '/'.drupal_get_path('module', 'civicrm').'/';
       drupal_add_js(array('resourceBase' => $civicrm_path), 'setting');
 
-      $this->assign('admin',user_access("administer CiviCRM"));
+      $this->assign('admin', user_access("administer CiviCRM"));
     }
     return parent::run();
   }
 
   function getTemplateFileName() {
-    $pattern = '/dev.*neticrm\.tw/';
-    if(preg_match($pattern, $_SERVER['HTTP_HOST'])){
+    if($this->allowVisit()){
       return 'CRM/Core/AjaxDoc.tpl';
     }
   }
@@ -68,6 +70,19 @@ class CRM_Admin_Page_APIExplorer extends CRM_Core_Page {
    * @return string user context.
    */
   function userContext($mode = NULL) {
-    return 'civicrm/api/explorer';
+    return 'civicrm/apibrowser';
+  }
+
+  function allowVisit() {
+    if(defined('CIVICRM_APIEXPLORER_ENABLED') && CIVICRM_APIEXPLORER_ENABLED == 1){
+      return TRUE;
+    }
+    else{
+      $pattern = '/dev.*neticrm\.tw/';
+      if(preg_match($pattern, $_SERVER['HTTP_HOST'])){
+        return TRUE;
+      }
+    }
+    return FALSE;
   }
 }
