@@ -56,7 +56,7 @@ function civicrm_api3_contribution_page_create($params) {
  * @param array $params array or parameters determined by getfields
  */
 function _civicrm_api3_contribution_page_create_spec(&$params) {
-  $params['financial_type_id']['api.required'] = 1;
+  $params['contribution_type_id']['api.required'] = 1;
 }
 
 /**
