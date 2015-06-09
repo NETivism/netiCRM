@@ -36,6 +36,7 @@ $civicrm_root = dirname (dirname (dirname (dirname( __FILE__ ) )));
 $include_path = '.' . PATH_SEPARATOR .
                 $civicrm_root . PATH_SEPARATOR .
                 $civicrm_root . DIRECTORY_SEPARATOR . 'packages' . PATH_SEPARATOR .
+                $civicrm_root . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'phpunit'. DIRECTORY_SEPARATOR . 'dbunit' . PATH_SEPARATOR .
                 get_include_path();
 if ( set_include_path( $include_path ) === false ) {
    echo "Could not set the include path<p>";

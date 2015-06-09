@@ -102,10 +102,6 @@ class api_v3_PriceSetTest extends CiviUnitTestCase {
     $this->assertEquals(16, $result['values']['is_quick_config']['type']);
   }
 
-  public static function setUpBeforeClass() {
-      // put stuff here that should happen before all tests in this unit
-  }
-
   public static function tearDownAfterClass(){
     $tablesToTruncate = array(
       'civicrm_contact',

@@ -51,7 +51,8 @@ class api_v3_ContactTest extends CiviUnitTestCase {
    *  Constructor
    *
    *  Initialize configuration
-   */ function __construct() {
+   */
+  function __construct() {
     parent::__construct();
   }
 

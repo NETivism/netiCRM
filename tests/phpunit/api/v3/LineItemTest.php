@@ -101,10 +101,6 @@ class api_v3_LineItemTest extends CiviUnitTestCase {
     $this->assertEquals(1, $result['values']['entity_id']['api.required']);
   }
 
-  public static function setUpBeforeClass() {
-      // put stuff here that should happen before all tests in this unit
-  }
-
   public static function tearDownAfterClass(){
     $tablesToTruncate = array(
       'civicrm_contact',

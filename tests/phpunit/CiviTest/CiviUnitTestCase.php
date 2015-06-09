@@ -36,6 +36,7 @@ if(file_exists(CIVICRM_SETTINGS_LOCAL_PATH)){
   require_once CIVICRM_SETTINGS_LOCAL_PATH;
 }
 require_once CIVICRM_SETTINGS_PATH;
+
 /**
  *  Include class definitions
  */
@@ -99,12 +100,13 @@ class CiviUnitTestCase extends PHPUnit_Extensions_Database_TestCase {
    * Allow classes to state E-notice compliance
    */
   public $_eNoticeCompliant = FALSE;
+
   /**
    *  @var boolean DBResetRequired allows skipping DB reset
-   *               in specific test case. If you still need
-   *               to reset single test (method) of such case, call
-   *               $this->cleanDB() in the first line of this
-   *               test (method).
+   *  in specific test case. If you still need
+   *  to reset single test (method) of such case, call
+   *  $this->cleanDB() in the first line of this
+   *  test (method).
    */
   public $DBResetRequired = TRUE;
 
@@ -121,12 +123,11 @@ class CiviUnitTestCase extends PHPUnit_Extensions_Database_TestCase {
    *  @param  string $name
    *  @param  array  $data
    *  @param  string $dataName
-   */ function __construct($name = NULL, array$data = array(
-     ), $dataName = '') {
+   */
+  function __construct($name = NULL, array $data = array(), $dataName = '') {
     parent::__construct($name, $data, $dataName);
 
-
-    // we need full error reporting
+    // we need warning and error reporting
     error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT);
 
     if (!empty($GLOBALS['mysql_db'])) {
@@ -136,26 +137,31 @@ class CiviUnitTestCase extends PHPUnit_Extensions_Database_TestCase {
       self::$_dbName = 'civicrm_tests_dev';
     }
 
-    //  create test database
-    self::$utils = new Utils($GLOBALS['mysql_host'],
-      $GLOBALS['mysql_user'],
-      $GLOBALS['mysql_pass']
+    // Setup test database
+    self::$utils = new Utils($GLOBALS['mysql_host'], $GLOBALS['mysql_user'], $GLOBALS['mysql_pass']);
+    $queries = array(
+      "USE ".self::$_dbName.';',
+      "SET foreign_key_checks = 0",
+      // SQL mode needs to be strict, that's our standard
+      "SET SQL_MODE = 'STRICT_ALL_TABLES';",
+      "SET global innodb_flush_log_at_trx_commit = 2;",
     );
+    foreach ($queries as $query) {
+      if (self::$utils->do_query($query) === FALSE) {
+        exit;
+      }
+    }
 
     // also load the class loader
     require_once 'CRM/Core/ClassLoader.php';
     CRM_Core_ClassLoader::singleton()->register();
-    if (function_exists('_civix_phpunit_setUp')) { // FIXME: loosen coupling
-      _civix_phpunit_setUp();
-    }
   }
 
   function requireDBReset() {
     return $this->DBResetRequired;
   }
 
-  static
-  function getDBName() {
+  static function getDBName() {
     $dbName = !empty($GLOBALS['mysql_db']) ? $GLOBALS['mysql_db'] : 'civicrm_tests_dev';
     return $dbName;
   }
@@ -172,16 +178,11 @@ class CiviUnitTestCase extends PHPUnit_Extensions_Database_TestCase {
     if (!self::$dbInit) {
       $dbName = self::getDBName();
 
-      //  install test database
-      // echo PHP_EOL . "Installing {$dbName} database" . PHP_EOL;
-
-      self::_populateDB( FALSE, $this );
+      self::_populateDB(FALSE, $this);
 
       self::$dbInit = TRUE;
     }
-    return $this->createDefaultDBConnection(self::$utils->pdo,
-      $dbName
-    );
+    return $this->createDefaultDBConnection(self::$utils->pdo, $dbName);
   }
 
   /**
@@ -198,12 +199,12 @@ class CiviUnitTestCase extends PHPUnit_Extensions_Database_TestCase {
       $dbreset = $object->requireDBReset();
     }
 
+    $dbName = self::getDBName();
     if (self::$populateOnce || !$dbreset) {
       return;
     }
     self::$populateOnce = NULL;
 
-    $dbName = self::getDBName();
     $pdo    = self::$utils->pdo;
     // only consider real tables and not views
     $tables = $pdo->query("SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{$dbName}' AND TABLE_TYPE = 'BASE TABLE'");
@@ -246,8 +247,6 @@ class CiviUnitTestCase extends PHPUnit_Extensions_Database_TestCase {
       }
     }
 
-
-
     //  initialize test database
     $sql_file2 = dirname(dirname(dirname(dirname(__FILE__)))) . "/sql/civicrm_data.mysql";
     $sql_file3 = dirname(dirname(dirname(dirname(__FILE__)))) . "/sql/test_data.mysql";
@@ -276,13 +275,6 @@ class CiviUnitTestCase extends PHPUnit_Extensions_Database_TestCase {
     unset($query, $query2, $query3);
   }
 
-  public static function setUpBeforeClass() {
-    self::_populateDB(TRUE);
-
-    // also set this global hack
-    $GLOBALS['_PEAR_ERRORSTACK_OVERRIDE_CALLBACK'] = array( );
-  }
-
   /**
    *  Common setup functions for all unit tests
    */
@@ -296,9 +288,6 @@ class CiviUnitTestCase extends PHPUnit_Extensions_Database_TestCase {
 
     //  Get and save a connection to the database
     $this->_dbconn = $this->getConnection();
-
-    // reload database before each test
-    //        $this->_populateDB();
 
     // "initialize" CiviCRM to avoid problems when running single tests
     // FIXME: look at it closer in second stage
@@ -330,7 +319,6 @@ class CiviUnitTestCase extends PHPUnit_Extensions_Database_TestCase {
     $tablesToTruncate = array('civicrm_contact');
     $this->quickCleanup($tablesToTruncate);
     error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT);
-
   }
 
   /**
@@ -865,14 +853,12 @@ class CiviUnitTestCase extends PHPUnit_Extensions_Database_TestCase {
    *
    * @return int $id of contribution type created
    */
-  function contributionTypeCreate($apiversion = 2) {
-
+  function contributionTypeCreate($apiversion = 3) {
     $op = new PHPUnit_Extensions_Database_Operation_Insert();
-    $op->execute($this->_dbconn,
-      new PHPUnit_Extensions_Database_DataSet_XMLDataSet(
-        dirname(__FILE__) . '/../api/v' . $apiversion . '/dataset/contribution_types.xml'
-      )
-    );
+    $path = dirname(__FILE__) . '/../api/v' . $apiversion . '/dataset/contribution_types.xml';
+    $dataset = $this->createXMLDataSet($path);
+
+    $op->execute($this->_dbconn, $dataset);
 
     require_once 'CRM/Contribute/PseudoConstant.php';
     CRM_Contribute_PseudoConstant::flush('contributionType');
@@ -1664,9 +1650,6 @@ class CiviUnitTestCase extends PHPUnit_Extensions_Database_TestCase {
       'is_active' => 1,
       'version' => API_LATEST_VERSION,
     );
-
-
-
 
     $result = civicrm_api('custom_field', 'create', $params);
 

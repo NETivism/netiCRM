@@ -36,103 +36,52 @@
  */
 class Utils {
 
-    /**
-     *  PDO for the database
-     *  @var PDO
-     */
-    public $pdo;
+  /**
+   *  PDO for the database
+   *  @var PDO
+   */
+  public $pdo;
 
-    /**
-     *  Construct an object for this database
-     */
-    public function __construct( $host, $user, $pass )
-    {
-        try {
-          $this->pdo = new PDO("mysql:host={$host}", $user, $pass, array(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true ));
-        } catch ( PDOException $e ) {
-            echo "Can't connect to MySQL server:" . PHP_EOL
-                . $e->getMessage() . PHP_EOL;
-            exit(1);
-        }
+  /**
+   *  Construct an object for this database
+   */
+  public function __construct( $host, $user, $pass ) {
+    try {
+      $this->pdo = new PDO("mysql:host={$host}", $user, $pass, array(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true ));
     }
+    catch ( PDOException $e ) {
+      echo "Can't connect to MySQL server:" . PHP_EOL . $e->getMessage() . PHP_EOL;
+      exit(1);
+    }
+  }
 
-    /**
-     *  Prepare and execute a query
-     *
-     *  If the query fails, output a diagnostic message
-     *  @param  string  Query to run
-     *  @return mixed   PDOStatement => Results of the query
-     *                  false        => Query failed
-     */
-    function do_query( $query )
-    {
-        // echo "do_query($query)\n";
-        // $stmt = $this->pdo->query( $query, PDO::FETCH_ASSOC );
-        // echo "PDO returned";
-        // var_dump($stmt);
-        $string = preg_replace("/^#[^\n]*$/m", "\n", $query );
-        $string = preg_replace("/^(--[^-]).*/m", "\n", $string );
-        
-        $queries  = preg_split('/;$/m', $string);
-        foreach ( $queries as $query ) {
-            $query = trim( $query );
-            if ( ! empty( $query ) ) {
-                $result = $this->pdo->query( $query );
-                if ( $this->pdo->errorCode() == 0 ) {
-                    continue;
-                } else { 
-                    var_dump( $result );
-                   var_dump( $this->pdo->errorInfo() );
-                    // die( "Cannot execute $query: " . $this->pdo->errorInfo() );
-                }
-            }
-        }
-
-        /*******
+  /**
+   *  Prepare and execute a query
+   *
+   *  If the query fails, output a diagnostic message
+   *  @param  string  Query to run
+   *  @return mixed   PDOStatement => Results of the query
+   *          false    => Query failed
+   */
+  function do_query( $query ) {
+    $string = preg_replace("/^#[^\n]*$/m", "\n", $query );
+    $string = preg_replace("/^(--[^-]).*/m", "\n", $string );
+    
+    $queries  = preg_split('/;$/m', $string);
+    foreach ( $queries as $query ) {
+      $query = trim( $query );
+      if ( ! empty( $query ) ) {
+        $result = $this->pdo->query( $query );
         if ( $this->pdo->errorCode() == 0 ) {
-            //echo "returning the PDOStmt\n";
-            return $stmt;
+          continue;
+        } 
+        else { 
+          var_dump( $result );
+          var_dump( $this->pdo->errorInfo() );
         }
-
-        //  operation failed, so output description of where and why
-        $errorInfo = $this->pdo->errorInfo();
-        echo "Oops, can't do query:\n    {$query}\n    in "
-            . basename( __FILE__) . " line " . __LINE__.":\n    "
-            . $errorInfo[0] . ": " . $errorInfo[2] . "\n    Call stack:\n";
-        $backtrace = debug_backtrace();
-        $dir_name = dirname( __FILE__ );
-        $cwd_len = strlen( $dir_name ) + 1;
-        foreach( $backtrace as $frame ){
-            echo "      ";
-            if ( array_key_exists( 'class', $frame ) ) {
-                echo " class {$frame['class']}";
-                if ( array_key_exists( 'function', $frame ) ) {
-                    echo " method {$frame['function']}";
-                }
-            } else {
-                if ( array_key_exists( 'function', $frame ) ) {
-                    echo " function {$frame['function']}";
-                }
-            }
-            if ( array_key_exists( 'file', $frame ) ) {
-                echo " file ". substr( $frame['file'], $cwd_len );
-            }
-            if ( array_key_exists( 'line', $frame ) ) {
-                echo " line {$frame['line']}";
-            }
-            echo "\n";
-        }
-        ******/
-        return true;
+      }
     }
+    return true;
+  }
 
-} // class Utils
-
-// -- set Emacs parameters --
-// Local variables:
-// mode: php;
-// tab-width: 4
-// c-basic-offset: 4
-// c-hanging-comment-ender-p: nil
-// indent-tabs-mode: nil
-// End:
+}
