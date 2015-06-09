@@ -7,6 +7,7 @@ class CRM_Core_ClassLoader {
    * @static
    */
   private static $_singleton = NULL;
+  private static $_composer_classmap = array();
 
   /**
    * @param bool $force
@@ -29,7 +30,13 @@ class CRM_Core_ClassLoader {
    * Initializer
    */
   function __construct() {
+    global $civicrm_root;
+
     $this->_registered = FALSE;
+    $composer_classmap = $civicrm_root.'/vendor/composer/autoload_classmap.php';
+    if(file_exists($composer_classmap)){
+      $this->_composer_classmap = include_once($composer_classmap);
+    }
   }
 
   /**
@@ -57,6 +64,10 @@ class CRM_Core_ClassLoader {
 
   function loadClass($class) {
     if ( FALSE === strpos($class, '\\') ) {
+      if(isset($this->_composer_classmap[$class])){
+        require $this->_composer_classmap[$class];
+        return;
+      }
       $file_by_ver = strtr($class, '_', '/') . '.'.PHP_MAJOR_VERSION.'_'.PHP_MINOR_VERSION.'.php';
       $file = strtr($class, '_', '/') . '.php';
       $include_paths = explode(PATH_SEPARATOR, get_include_path());
