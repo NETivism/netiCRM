@@ -311,8 +311,13 @@ function _civicrm_api3_get_DAO($name) {
  */
 function _civicrm_api3_get_BAO($name) {
   $dao = _civicrm_api3_get_DAO($name);
-  $dao = str_replace("DAO", "BAO", $dao);
-  return $dao;
+  if (!$dao) {
+    return NULL;
+  }
+  $bao = str_replace("DAO", "BAO", $dao);
+  $file = strtr($bao, '_', '/') . '.php';
+  // Check if this entity actually has a BAO. Fall back on the DAO if not.
+  return file_exists($file) ? $bao : $dao;
 }
 
 /**
@@ -949,16 +954,31 @@ function _civicrm_api3_basic_create($bao_name, &$params) {
   $args = array(&$params);
   if (method_exists($bao_name, 'create')) {
     $fct = 'create';
+    $fct_name = $bao_name . '::' . $fct;
+    $bao = call_user_func_array(array($bao_name, $fct), $args);
   }
   elseif (method_exists($bao_name, 'add')) {
     $fct = 'add';
+    $fct_name = $bao_name . '::' . $fct;
+    $bao = call_user_func_array(array($bao_name, $fct), $args);
   }
-  if (!isset($fct)) {
-    return civicrm_api3_create_error('Entity not created, missing create or add method for ' . $bao_name);
+  else {
+    $fct_name = '_civicrm_api3_basic_create_fallback';
+    $bao = _civicrm_api3_basic_create_fallback($bao_name, $params);
   }
-  $bao = call_user_func_array(array($bao_name, $fct), $args);
+
   if (is_null($bao)) {
     return civicrm_api3_create_error('Entity not created ' . $bao_name . '::' . $fct);
+  }
+  elseif (is_a($bao, 'CRM_Core_Error')) {
+    //some weird circular thing means the error takes itself as an argument
+    $msg = $bao->getMessages($bao);
+    // the api deals with entities on a one-by-one basis. However, the contribution bao pushes entities
+    // onto the error object - presumably because the contribution import is not handling multiple errors correctly
+    // so we need to reset the error object here to avoid getting concatenated errors
+    //@todo - the mulitple error handling should be moved out of the contribution object to the import / multiple entity processes
+    CRM_Core_Error::singleton()->reset();
+    throw new API_Exception($msg);
   }
   else {
     $values = array();
@@ -966,6 +986,46 @@ function _civicrm_api3_basic_create($bao_name, &$params) {
     return civicrm_api3_create_success($values, $params, null, 'create', $bao);
   }
 }
+
+/**
+ * For BAO's which don't have a create() or add() functions, use this fallback implementation.
+ *
+ * @fixme There's an intuitive sense that this behavior should be defined somehow in the BAO/DAO class
+ * structure. In practice, that requires a fair amount of refactoring and/or kludgery.
+ *
+ * @param string $bao_name
+ * @param array $params
+ *
+ * @throws API_Exception
+ *
+ * @return CRM_Core_DAO|NULL
+ *   An instance of the BAO
+ */
+function _civicrm_api3_basic_create_fallback($bao_name, &$params) {
+  $dao_name = get_parent_class($bao_name);
+  if ($dao_name === 'CRM_Core_DAO' || !$dao_name) {
+    $dao_name = $bao_name;
+  }
+  static $dao = NULL;
+  if (!$dao) {
+    require ('CRM/Core/DAO/.listAll.php');
+  }
+  $entityName = array_search($bao_name, $dao);
+
+  if (empty($entityName)) {
+    throw new API_Exception("Class \"$bao_name\" does not map to an entity name", "unmapped_class_to_entity", array(
+      'class_name' => $bao_name,
+    ));
+  }
+  $hook = empty($params['id']) ? 'create' : 'edit';
+  CRM_Utils_Hook::pre($hook, $entityName, CRM_Utils_Array::value('id', $params), $params);
+  $instance = new $dao_name();
+  $instance->copyValues($params);
+  $instance->save();
+  CRM_Utils_Hook::post($hook, $entityName, $instance->id, $instance);
+  return $instance;
+}
+
 
 /*
  * Function to do a 'standard' api del - when the api is only doing a $bao::del then use this

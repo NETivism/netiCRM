@@ -47,6 +47,14 @@
  * @access public
  */
 function civicrm_api3_contribution_page_create($params) {
+  if(is_array($params['payment_processor']) && !empty($params['payment_processor'])){
+    if(is_numeric(reset($params['payment_processor']))){
+      $params['payment_processor'] = implode(CRM_Core_DAO::VALUE_SEPARATOR, $params['payment_processor']);
+    }
+    else{
+      $params['payment_processor'] = implode(CRM_Core_DAO::VALUE_SEPARATOR, array_keys($params['payment_processor']));
+    }
+  }
   return _civicrm_api3_basic_create(_civicrm_api3_get_BAO(__FUNCTION__), $params);
 }
 /*
