@@ -37,9 +37,6 @@
  */
 class CRM_Admin_Page_APIExplorer extends CRM_Core_Page {
 
-  private $_allowed;
-
-
   function run() {
     if($this->allowVisit()){
       CRM_Utils_System::setTitle(ts('API explorer and generator'));
