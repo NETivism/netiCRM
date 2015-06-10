@@ -1,8 +1,9 @@
 phantom.casperPath = '/usr/local/lib/node_modules/casperjs';
 phantom.injectJs('/usr/local/lib/node_modules/casperjs/bin/bootstrap.js');
 var casper = require('casper').create();
+var url_prefix = 'http://temp.deb:8000';
 
-casper.start('http://temp.deb:8000/civicrm/event/register?reset=1&action=preview&id=1', function() {
+casper.start(url_prefix + '/civicrm/event/register?reset=1&action=preview&id=1', function() {
     this.echo(this.getTitle());
     this.capture("neticrm-1-0.png");
 });
@@ -24,7 +25,7 @@ casper.then(function(){
 
 // 測試名額限制、不可候補
 
-casper.thenOpen('http://temp.deb:8000/civicrm/event/register?reset=1&id=2', function() {
+casper.thenOpen(url_prefix + '/civicrm/event/register?reset=1&id=2', function() {
     this.echo(this.getTitle());
     this.capture("neticrm-2-0.png");
 });
@@ -42,7 +43,7 @@ casper.then(function(){
 casper.then(function(){
   this.capture("neticrm-2-2.png");
   this.echo(this.getTitle());
-  this.thenOpen('http://temp.deb:8000/civicrm/event/register?reset=1&id=2');
+  this.thenOpen(url_prefix + '/civicrm/event/register?reset=1&id=2');
 });
 
 casper.then(function(){
@@ -53,7 +54,7 @@ casper.then(function(){
 
 // 測試名額限制、可候補
 
-casper.thenOpen('http://temp.deb:8000/civicrm/event/register?reset=1&id=3', function() {
+casper.thenOpen(url_prefix + '/civicrm/event/register?reset=1&id=3', function() {
     this.echo(this.getTitle());
     this.capture("neticrm-3-0.png");
 });
@@ -71,7 +72,7 @@ casper.then(function(){
 casper.then(function(){
   this.capture("neticrm-3-2.png");
   this.echo(this.getTitle());
-  this.thenOpen('http://temp.deb:8000/civicrm/event/register?reset=1&id=3');
+  this.thenOpen(url_prefix + '/civicrm/event/register?reset=1&id=3');
 });
 
 casper.then(function(){
@@ -90,7 +91,7 @@ casper.then(function(){
 casper.then(function(){
   this.capture("neticrm-3-5.png");
   this.echo(this.getTitle());
-  this.echo('Message : ' + this.getHTML('.help p'));
+  this.echo('Message : ' + this.getHTML('#help p'));
 });
 
 
