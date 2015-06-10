@@ -125,9 +125,12 @@ class CRM_Core_QuickForm_Action_Display extends CRM_Core_QuickForm_Action {
     }
 
     $template->assign('action', $page->getAction());
-    $template->assign('tplFile', $page->getTemplateFileName());
+    $pageTemplateFile = $page->getHookedTemplateFileName();
+    $template->assign('tplFile', $pageTemplateFile);
 
     $content = $template->fetch($controller->getTemplateFile());
+
+    CRM_Utils_Hook::alterContent($content, 'form', $pageTemplateFile, $page);
 
     $print = $controller->getPrint();
     if ($print) {

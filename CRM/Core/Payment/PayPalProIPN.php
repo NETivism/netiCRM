@@ -67,8 +67,7 @@ class CRM_Core_Payment_PayPalProIPN extends CRM_Core_Payment_BaseIPN {
     }
   }
 
-  static
-  function retrieve($name, $type, $location = 'POST', $abort = TRUE) {
+  static function retrieve($name, $type, $location = 'POST', $abort = TRUE) {
     static $store = NULL;
     $value = CRM_Utils_Request::retrieve($name, $type, $store,
       FALSE, NULL, $location

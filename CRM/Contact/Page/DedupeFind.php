@@ -47,7 +47,8 @@ class CRM_Contact_Page_DedupeFind extends CRM_Core_Page_Basic {
    * Get BAO Name
    *
    * @return string Classname of BAO.
-   */ function getBAOName() {
+   */
+  function getBAOName() {
     return 'CRM_Dedupe_BAO_RuleGroup';
   }
 

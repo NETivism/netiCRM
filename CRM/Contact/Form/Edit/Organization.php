@@ -75,8 +75,7 @@ class CRM_Contact_Form_Edit_Organization {
     );
   }
 
-  static
-  function formRule($fields, $files, $contactID = NULL) {
+  static function formRule($fields, $files, $contactID = NULL) {
 
     $errors = array();
 

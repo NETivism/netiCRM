@@ -95,8 +95,7 @@ class CRM_Core_Payment_PaymentExpressIPN extends CRM_Core_Payment_BaseIPN {
    * @return object
    * @static
    */
-  static
-  function &singleton($mode, $component, &$paymentProcessor) {
+  static function &singleton($mode, $component, &$paymentProcessor) {
     if (self::$_singleton === NULL) {
       self::$_singleton = new CRM_Core_Payment_PaymentExpressIPN($mode, $paymentProcessor);
     }
@@ -200,8 +199,7 @@ class CRM_Core_Payment_PaymentExpressIPN extends CRM_Core_Payment_BaseIPN {
    * @return array context of this call (test, component, payment processor id)
    * @static
    */
-  static
-  function getContext($privateData, $orderNo) {
+  static function getContext($privateData, $orderNo) {
     require_once 'CRM/Contribute/DAO/Contribution.php';
 
     $component = NULL;
@@ -286,8 +284,7 @@ class CRM_Core_Payment_PaymentExpressIPN extends CRM_Core_Payment_BaseIPN {
    * $dps_method is either pxaccess or pxpay
    */
 
-  static
-  function main($dps_method, $rawPostData, $dps_url, $dps_user, $dps_key, $mac_key) {
+  static function main($dps_method, $rawPostData, $dps_url, $dps_user, $dps_key, $mac_key) {
 
     $config = CRM_Core_Config::singleton();
     define('RESPONSE_HANDLER_LOG_FILE', $config->uploadDir . 'CiviCRM.PaymentExpress.log');
@@ -443,8 +440,7 @@ class CRM_Core_Payment_PaymentExpressIPN extends CRM_Core_Payment_BaseIPN {
    * Converts the comma separated name-value pairs in <TxnData2>
    * to an array of values.
    */
-  static
-  function stringToArray($str) {
+  static function stringToArray($str) {
     $vars = $labels = array();
     $labels = explode(',', $str);
     foreach ($labels as $label) {

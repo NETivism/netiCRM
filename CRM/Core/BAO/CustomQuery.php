@@ -127,7 +127,8 @@ class CRM_Core_BAO_CustomQuery {
    * @param  array  $ids     the set of custom field ids
    *
    * @access public
-   */ function __construct($ids) {
+   */
+  function __construct($ids) {
     $this->_ids = &$ids;
 
     $this->_select = array();

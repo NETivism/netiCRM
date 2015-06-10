@@ -57,7 +57,8 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
    *
    * @return void
    * @access public
-   */ function preProcess() {
+   */
+  function preProcess() {
     $id = CRM_Utils_Request::retrieve('id', 'Positive', $this, FALSE);
 
     if ($id) {

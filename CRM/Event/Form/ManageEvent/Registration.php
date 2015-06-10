@@ -55,7 +55,8 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
    *
    * @return void
    * @access public
-   */ function preProcess() {
+   */
+  function preProcess() {
     parent::preProcess();
   }
 
@@ -327,8 +328,7 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
    * @static
    * @access public
    */
-  static
-  function formRule($values) {
+  static function formRule($values) {
     if ($values['is_online_registration']) {
       if (!$values['confirm_title']) {
         $errorMsg['confirm_title'] = ts('Please enter a Title for the registration Confirmation Page');

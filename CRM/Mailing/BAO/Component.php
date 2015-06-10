@@ -57,8 +57,7 @@ class CRM_Mailing_BAO_Component extends CRM_Mailing_DAO_Component {
    * @access public
    * @static
    */
-  static
-  function retrieve(&$params, &$defaults) {
+  static function retrieve(&$params, &$defaults) {
     $component = new CRM_Mailing_DAO_Component();
     $component->copyValues($params);
     if ($component->find(TRUE)) {
@@ -77,8 +76,7 @@ class CRM_Mailing_BAO_Component extends CRM_Mailing_DAO_Component {
    * @return Object             DAO object on sucess, null otherwise
    * @static
    */
-  static
-  function setIsActive($id, $is_active) {
+  static function setIsActive($id, $is_active) {
     return CRM_Core_DAO::setFieldValue('CRM_Mailing_DAO_Component', $id, 'is_active', $is_active);
   }
 
@@ -93,8 +91,7 @@ class CRM_Mailing_BAO_Component extends CRM_Mailing_DAO_Component {
    * @access public
    * @static
    */
-  static
-  function add(&$params, &$ids) {
+  static function add(&$params, &$ids) {
     // action is taken depending upon the mode
     $component = new CRM_Mailing_DAO_Component();
     $component->name = $params['name'];

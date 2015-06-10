@@ -247,8 +247,7 @@ class CRM_Core_Permission_Drupal {
    * @static
    * @access public
    */
-  static
-  function check($str, $contactID = NULL) {
+  static function check($str, $contactID = NULL) {
     if (function_exists('user_access')) {
       return user_access($str) ? TRUE : FALSE;
     }

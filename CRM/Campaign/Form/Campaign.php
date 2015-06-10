@@ -270,8 +270,7 @@ class CRM_Campaign_Form_Campaign extends CRM_Core_Form {
    * @see valid_date
    */
 
-  static
-  function formRule($fields, $files, $errors) {
+  static function formRule($fields, $files, $errors) {
     $errors = array();
 
     return empty($errors) ? TRUE : $errors;

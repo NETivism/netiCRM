@@ -55,7 +55,8 @@ class CRM_Contribute_Form_Task_Status extends CRM_Contribute_Form_Task {
    *
    * @return void
    * @access public
-   */ function preProcess() {
+   */
+  function preProcess() {
     $id = CRM_Utils_Request::retrieve('id', 'Positive',
       $this, FALSE
     );
@@ -206,8 +207,7 @@ AND    co.id IN ( $contribIDs )";
    * @static
    * @access public
    */
-  static
-  function formRule($fields) {
+  static function formRule($fields) {
     $seen = $errors = array();
     foreach ($fields as $name => $value) {
       if (strpos($name, 'trxn_id_') !== FALSE) {
@@ -315,8 +315,7 @@ AND    co.id IN ( $contribIDs )";
     CRM_Core_Session::setStatus(ts('Contribution status has been updated for selected record(s).'));
   }
 
-  static
-  function &getDetails($contributionIDs) {
+  static function &getDetails($contributionIDs) {
     $query = "
 SELECT    c.id              as contribution_id,
           c.contact_id      as contact_id     ,

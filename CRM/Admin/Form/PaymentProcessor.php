@@ -201,8 +201,7 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
     $this->addFormRule(array('CRM_Admin_Form_PaymentProcessor', 'formRule'));
   }
 
-  static
-  function formRule($fields) {
+  static function formRule($fields) {
 
     // make sure that at least one of live or test is present
     // and we have at least name and url_site
@@ -222,8 +221,7 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
     return empty($errors) ? TRUE : $errors;
   }
 
-  static
-  function checkSection(&$fields, &$errors, $section = NULL) {
+  static function checkSection(&$fields, &$errors, $section = NULL) {
     $names = array('user_name');
 
     $present = FALSE;

@@ -454,8 +454,7 @@ AND    $cond
    * @return array
    * @static
    */
-  static
-  function setValues(&$params) {
+  static function setValues(&$params) {
     require_once 'CRM/Utils/Type.php';
 
     if (!isset($params['entityID']) ||
@@ -573,8 +572,7 @@ AND    cf.id IN ( $fieldIDList )
    * @return array
    * @static
    */
-  static
-  function &getValues(&$params) {
+  static function &getValues(&$params) {
     if (empty($params)) {
       return NULL;
     }

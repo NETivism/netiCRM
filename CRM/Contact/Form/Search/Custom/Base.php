@@ -94,8 +94,7 @@ class CRM_Contact_Form_Search_Custom_Base {
     return $this->_columns;
   }
 
-  static
-  function includeContactIDs(&$sql, &$formValues) {
+  static function includeContactIDs(&$sql, &$formValues) {
     $contactIDs = array();
     foreach ($formValues as $id => $value) {
       if ($value &&

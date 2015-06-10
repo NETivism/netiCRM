@@ -34,8 +34,7 @@
  */
 class CRM_Report_Utils_Get {
 
-  static
-  function getTypedValue($name, $type) {
+  static function getTypedValue($name, $type) {
     $value = CRM_Utils_Array::value($name, $_GET);
     if ($value === NULL) {
       return NULL;
@@ -46,8 +45,7 @@ class CRM_Report_Utils_Get {
     );
   }
 
-  static
-  function dateParam($fieldName, &$field, &$defaults) {
+  static function dateParam($fieldName, &$field, &$defaults) {
     // type = 12 (datetime) is not recognized by Utils_Type::escape() method,
     // and therefore the below hack
     $type = 4;
@@ -89,8 +87,7 @@ class CRM_Report_Utils_Get {
     }
   }
 
-  static
-  function stringParam($fieldName, &$field, &$defaults) {
+  static function stringParam($fieldName, &$field, &$defaults) {
     $fieldOP = CRM_Utils_Array::value("{$fieldName}_op", $_GET, 'like');
 
     switch ($fieldOP) {
@@ -110,8 +107,7 @@ class CRM_Report_Utils_Get {
     }
   }
 
-  static
-  function intParam($fieldName, &$field, &$defaults) {
+  static function intParam($fieldName, &$field, &$defaults) {
     $fieldOP = CRM_Utils_Array::value("{$fieldName}_op", $_GET, 'eq');
 
     switch ($fieldOP) {

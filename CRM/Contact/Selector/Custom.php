@@ -125,7 +125,8 @@ class CRM_Contact_Selector_Custom extends CRM_Core_Selector_Base implements CRM_
    *
    * @return CRM_Contact_Selector
    * @access public
-   */ function __construct($customSearchClass,
+   */
+  function __construct($customSearchClass,
     $formValues = NULL,
     $params = NULL,
     $returnProperties = NULL,
@@ -172,8 +173,7 @@ class CRM_Contact_Selector_Custom extends CRM_Core_Selector_Base implements CRM_
    * @access public
    *
    */
-  static
-  function &links() {
+  static function &links() {
 
     if (!(self::$_links)) {
       self::$_links = array(

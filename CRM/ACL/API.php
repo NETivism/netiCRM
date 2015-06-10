@@ -51,8 +51,7 @@ class CRM_ACL_API {
    * @static
    * @access public
    */
-  static
-  function check($str, $contactID = NULL) {
+  static function check($str, $contactID = NULL) {
     if ($contactID == NULL) {
       $session = CRM_Core_Session::singleton();
       $contactID = $session->get('userID');

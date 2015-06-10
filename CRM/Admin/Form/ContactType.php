@@ -91,8 +91,7 @@ class CRM_Admin_Form_ContactType extends CRM_Admin_Form {
    * @access public
    * @static
    */
-  static
-  function formRule($fields, $files, $self) {
+  static function formRule($fields, $files, $self) {
 
     $errors = array();
 

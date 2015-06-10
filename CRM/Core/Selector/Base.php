@@ -70,7 +70,8 @@ class CRM_Core_Selector_Base {
    *
    * @access public
    *
-   */ function getActionAttribute($match, $attribute = 'name') {
+   */
+  function getActionAttribute($match, $attribute = 'name') {
     $links = &$this->links();
 
     foreach ($link as $action => $item) {
@@ -93,8 +94,7 @@ class CRM_Core_Selector_Base {
    * qs      : the parameters to the above url along with any dynamic substitutions
    * title   : A more descriptive name, typically used in breadcrumbs / navigation
    */
-  static
-  function &links() {
+  static function &links() {
     return NULL;
   }
 

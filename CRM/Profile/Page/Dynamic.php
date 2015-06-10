@@ -91,7 +91,8 @@ class CRM_Profile_Page_Dynamic extends CRM_Core_Page {
    *
    * @return void
    * @access public
-   */ function __construct($id, $gid, $restrict, $skipPermission = FALSE, $profileIds = NULL) {
+   */
+  function __construct($id, $gid, $restrict, $skipPermission = FALSE, $profileIds = NULL) {
     $this->_id = $id;
     $this->_gid = $gid;
     $this->_restrict = $restrict;
@@ -232,7 +233,7 @@ class CRM_Profile_Page_Dynamic extends CRM_Core_Page {
     require_once 'CRM/Utils/Hook.php';
     CRM_Utils_Hook::pageRun($this);
 
-    return trim($template->fetch($this->getTemplateFileName()));
+    return trim($template->fetch($this->getHookedTemplateFileName()));
   }
 
   function getTemplateFileName() {

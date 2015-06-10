@@ -127,8 +127,7 @@ class CRM_Contact_Form_Search_Builder extends CRM_Contact_Form_Search {
    * @static
    * @access public
    */
-  static
-  function formRule($values) {
+  static function formRule($values) {
     //CRM_Core_Error::debug('s', $values);
     if (CRM_Utils_Array::value('addMore', $values) || CRM_Utils_Array::value('addBlock', $values)) {
       return TRUE;

@@ -50,7 +50,8 @@ class CRM_Core_QuickForm_Action extends HTML_QuickForm_Action {
    *
    * @return object
    * @access public
-   */ function __construct(&$stateMachine) {
+   */
+  function __construct(&$stateMachine) {
     $this->_stateMachine = &$stateMachine;
   }
 

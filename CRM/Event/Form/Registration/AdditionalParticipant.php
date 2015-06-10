@@ -59,7 +59,8 @@ class CRM_Event_Form_Registration_AdditionalParticipant extends CRM_Event_Form_R
    *
    * @return void
    * @access public
-   */ function preProcess() {
+   */
+  function preProcess() {
     parent::preProcess();
     parent::isEventFull();
 
@@ -381,8 +382,7 @@ class CRM_Event_Form_Registration_AdditionalParticipant extends CRM_Event_Form_R
    * @access public
    * @static
    */
-  static
-  function formRule($fields, $files, $self) {
+  static function formRule($fields, $files, $self) {
     $errors = array();
     //get the button name.
     $button = substr($self->controller->getButtonName(), -4);

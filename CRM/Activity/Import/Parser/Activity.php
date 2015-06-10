@@ -58,7 +58,8 @@ class CRM_Activity_Import_Parser_Activity extends CRM_Activity_Import_Parser {
 
   /**
    * class constructor
-   */ function __construct(&$mapperKeys, $mapperLocType = NULL, $mapperPhoneType = NULL) {
+   */
+  function __construct(&$mapperKeys, $mapperLocType = NULL, $mapperPhoneType = NULL) {
     parent::__construct();
     $this->_mapperKeys = &$mapperKeys;
   }
@@ -377,8 +378,7 @@ class CRM_Activity_Import_Parser_Activity extends CRM_Activity_Import_Parser {
    */
   function fini() {}
 
-  static
-  function formatDate($date, $dateType) {
+  static function formatDate($date, $dateType) {
     $formattedDate = NULL;
     if (empty($date)) {
       return $formattedDate;

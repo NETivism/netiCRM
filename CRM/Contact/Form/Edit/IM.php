@@ -58,8 +58,7 @@ class CRM_Contact_Form_Edit_IM {
    * @access public
    * @static
    */
-  static
-  function buildQuickForm(&$form) {
+  static function buildQuickForm(&$form) {
 
     $blockId = ($form->get('IM_Block_Count')) ? $form->get('IM_Block_Count') : 1;
 

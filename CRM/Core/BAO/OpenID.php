@@ -49,8 +49,7 @@ class CRM_Core_BAO_OpenID extends CRM_Core_DAO_OpenID {
    * @access public
    * @static
    */
-  static
-  function add(&$params) {
+  static function add(&$params) {
     $openId = new CRM_Core_DAO_OpenID();
 
     // normalize the OpenID URL
@@ -72,8 +71,7 @@ class CRM_Core_BAO_OpenID extends CRM_Core_DAO_OpenID {
    * @access public
    * @static
    */
-  static
-  function &getValues($entityBlock) {
+  static function &getValues($entityBlock) {
     return CRM_Core_BAO_Block::getValues('openid', $entityBlock);
   }
 
@@ -86,8 +84,7 @@ class CRM_Core_BAO_OpenID extends CRM_Core_DAO_OpenID {
    * @access public
    * @static
    */
-  static
-  function isAllowedToLogin($identity_url) {
+  static function isAllowedToLogin($identity_url) {
     $openId = new CRM_Core_DAO_OpenID();
     $openId->openid = $identity_url;
     if ($openId->find(TRUE)) {
@@ -105,8 +102,7 @@ class CRM_Core_BAO_OpenID extends CRM_Core_DAO_OpenID {
    * @access public
    * @static
    */
-  static
-  function allOpenIDs($id, $updateBlankLocInfo = FALSE) {
+  static function allOpenIDs($id, $updateBlankLocInfo = FALSE) {
     if (!$id) {
       return NULL;
     }

@@ -148,7 +148,8 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
    *
    * @return CRM_Contact_Selector
    * @access public
-   */ function __construct($customSearchClass,
+   */
+  function __construct($customSearchClass,
     $formValues = NULL,
     $params = NULL,
     $returnProperties = NULL,
@@ -246,8 +247,7 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
    * @access public
    *
    */
-  static
-  function &links($context = NULL, $contextMenu = NULL, $key = NULL) {
+  static function &links($context = NULL, $contextMenu = NULL, $key = NULL) {
     $extraParams = ($key) ? "&key={$key}" : NULL;
     $searchContext = ($context) ? "&context=$context" : NULL;
 

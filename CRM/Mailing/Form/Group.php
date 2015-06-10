@@ -548,8 +548,7 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
    * @static
    * @access public
    */
-  static
-  function formRule($fields) {
+  static function formRule($fields) {
     $errors = array();
     if (isset($fields['includeGroups']) &&
       is_array($fields['includeGroups']) &&

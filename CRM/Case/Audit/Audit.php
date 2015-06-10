@@ -190,8 +190,7 @@ class Audit {
     }
   }
 
-  static
-  function run($xmlString, $clientID, $caseID, $printReport = FALSE) {
+  static function run($xmlString, $clientID, $caseID, $printReport = FALSE) {
     /*
 $fh = fopen('C:/temp/audit2.xml', 'w');
 fwrite($fh, $xmlString);

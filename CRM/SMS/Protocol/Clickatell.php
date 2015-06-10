@@ -136,7 +136,8 @@ class CRM_SMS_Protocol_Clickatell extends CRM_SMS_Protocol {
    * Create and auth a Clickatell session.
    *
    * @return void
-   */ function __construct() {
+   */
+  function __construct() {
     // first create the curl handle
 
     /**
@@ -165,8 +166,7 @@ class CRM_SMS_Protocol_Clickatell extends CRM_SMS_Protocol {
    * @static
    *
    */
-  static
-  function &singleton() {
+  static function &singleton() {
     if (self::$_singleton === NULL) {
       self::$_singleton = new CRM_SMS_Protocol_Clickatell();
     }

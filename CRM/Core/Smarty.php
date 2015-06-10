@@ -63,7 +63,8 @@ class CRM_Core_Smarty extends Smarty {
    *
    * @return CRM_Core_Smarty
    * @access private
-   */ function __construct() {
+   */
+  function __construct() {
     parent::__construct();
 
     $config = CRM_Core_Config::singleton();
@@ -157,8 +158,7 @@ class CRM_Core_Smarty extends Smarty {
    * Method providing static instance of SmartTemplate, as
    * in Singleton pattern.
    */
-  static
-  function &singleton() {
+  static function &singleton() {
     if (!isset(self::$_singleton)) {
       $config = CRM_Core_Config::singleton();
       self::$_singleton = new CRM_Core_Smarty($config->templateDir, $config->templateCompileDir);

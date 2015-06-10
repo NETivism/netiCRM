@@ -56,8 +56,7 @@ class CRM_Core_BAO_Note extends CRM_Core_DAO_Note {
    * @access public
    * @static
    */
-  static
-  function getNoteText($id) {
+  static function getNoteText($id) {
     return CRM_Core_DAO::getFieldValue('CRM_Core_DAO_Note', $id, 'note');
   }
 
@@ -71,8 +70,7 @@ class CRM_Core_BAO_Note extends CRM_Core_DAO_Note {
    * @access public
    * @static
    */
-  static
-  function getNoteSubject($id) {
+  static function getNoteSubject($id) {
     return CRM_Core_DAO::getFieldValue('CRM_Core_DAO_Note', $id, 'subject');
   }
 
@@ -86,8 +84,7 @@ class CRM_Core_BAO_Note extends CRM_Core_DAO_Note {
    * @access public
    * @static
    */
-  static
-  function getNotePrivacyHidden($note) {
+  static function getNotePrivacyHidden($note) {
     if (CRM_Core_Permission::check('view all notes')) {
       return FALSE;
     }
@@ -143,8 +140,7 @@ class CRM_Core_BAO_Note extends CRM_Core_DAO_Note {
    * @access public
    * @static
    */
-  static
-  function &add(&$params, $ids) {
+  static function &add(&$params, $ids) {
     $dataExists = self::dataExists($params);
     if (!$dataExists) {
       return CRM_Core_DAO::$_nullObject;
@@ -234,8 +230,7 @@ class CRM_Core_BAO_Note extends CRM_Core_DAO_Note {
    * @access public
    * @static
    */
-  static
-  function dataExists(&$params) {
+  static function dataExists(&$params) {
     // return if no data present
     if (!strlen($params['note'])) {
       return FALSE;
@@ -256,8 +251,7 @@ class CRM_Core_BAO_Note extends CRM_Core_DAO_Note {
    * @access public
    * @static
    */
-  static
-  function &getValues(&$params, &$values, $numNotes = self::MAX_NOTES) {
+  static function &getValues(&$params, &$values, $numNotes = self::MAX_NOTES) {
     if (empty($params)) {
       return NULL;
     }
@@ -300,8 +294,7 @@ class CRM_Core_BAO_Note extends CRM_Core_DAO_Note {
    * @static
    *
    */
-  static
-  function del($id, $showStatus = TRUE) {
+  static function del($id, $showStatus = TRUE) {
     $return = NULL;
     $recent = array($id);
     $note = new CRM_Core_DAO_Note();
@@ -401,8 +394,7 @@ ORDER BY modified_date desc";
    * @access public
    * @static
    */
-  static
-  function getContactNoteCount($contactID) {
+  static function getContactNoteCount($contactID) {
     $note = new CRM_Core_DAO_Note();
     $note->entity_id = $contactID;
     $note->entity_table = 'civicrm_contact';

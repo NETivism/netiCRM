@@ -55,7 +55,8 @@ class CRM_Grant_Form_Task_Delete extends CRM_Grant_Form_Task {
    *
    * @return void
    * @access public
-   */ function preProcess() {
+   */
+  function preProcess() {
     parent::preProcess();
 
     //check permission for delete.

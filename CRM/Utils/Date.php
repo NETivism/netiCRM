@@ -49,8 +49,7 @@ class CRM_Utils_Date {
    *
    * @static
    */
-  static
-  function format($date, $separator = '', $invalidDate = 0) {
+  static function format($date, $separator = '', $invalidDate = 0) {
     if (is_numeric($date) &&
       ((strlen($date) == 8) || (strlen($date) == 14))
     ) {
@@ -171,8 +170,7 @@ class CRM_Utils_Date {
    *
    * @static
    */
-  static
-  function &getAbbrWeekdayNames() {
+  static function &getAbbrWeekdayNames() {
     static $abbrWeekdayNames;
     if (!isset($abbrWeekdayNames)) {
 
@@ -193,8 +191,7 @@ class CRM_Utils_Date {
    *
    * @static
    */
-  static
-  function &getFullWeekdayNames() {
+  static function &getFullWeekdayNames() {
     static $fullWeekdayNames;
     if (!isset($fullWeekdayNames)) {
 
@@ -215,8 +212,7 @@ class CRM_Utils_Date {
    *
    * @static
    */
-  static
-  function &getAbbrMonthNames($month = FALSE) {
+  static function &getAbbrMonthNames($month = FALSE) {
     static $abbrMonthNames;
     if (!isset($abbrMonthNames)) {
 
@@ -239,8 +235,7 @@ class CRM_Utils_Date {
    *
    * @static
    */
-  static
-  function &getFullMonthNames() {
+  static function &getFullMonthNames() {
     static $fullMonthNames;
     if (!isset($fullMonthNames)) {
 
@@ -253,8 +248,7 @@ class CRM_Utils_Date {
     return $fullMonthNames;
   }
 
-  static
-  function unixTime($string) {
+  static function unixTime($string) {
     if (empty($string)) {
       return 0;
     }
@@ -295,8 +289,7 @@ class CRM_Utils_Date {
    *
    * @static
    */
-  static
-  function customFormat($dateString, $format = NULL, $dateParts = NULL) {
+  static function customFormat($dateString, $format = NULL, $dateParts = NULL) {
     // 1-based (January) month names arrays
     $abbrMonths = self::getAbbrMonthNames();
     $fullMonths = self::getFullMonthNames();
@@ -425,8 +418,7 @@ class CRM_Utils_Date {
    * @return string        date/datetime in ISO format
    * @static
    */
-  static
-  function mysqlToIso($mysql) {
+  static function mysqlToIso($mysql) {
     $year = substr($mysql, 0, 4);
     $month = substr($mysql, 4, 2);
     $day = substr($mysql, 6, 2);
@@ -465,8 +457,7 @@ class CRM_Utils_Date {
    * @return string      date/datetime in MySQL format
    * @static
    */
-  static
-  function isoToMysql($iso) {
+  static function isoToMysql($iso) {
     $dropArray = array('-' => '', ':' => '', ' ' => '');
     return strtr($iso, $dropArray);
   }
@@ -656,21 +647,18 @@ class CRM_Utils_Date {
     return FALSE;
   }
 
-  static
-  function isDate(&$date) {
+  static function isDate(&$date) {
     if (CRM_Utils_System::isNull($date)) {
       return FALSE;
     }
     return TRUE;
   }
 
-  static
-  function currentDBDate($timeStamp = NULL) {
+  static function currentDBDate($timeStamp = NULL) {
     return $timeStamp ? date('YmdHis', $timeStamp) : date('YmdHis');
   }
 
-  static
-  function overdue($date, $now = NULL) {
+  static function overdue($date, $now = NULL) {
     $mysqlDate = self::isoToMysql($date);
     if (!$now) {
       $now = self::currentDBDate();
@@ -699,8 +687,7 @@ class CRM_Utils_Date {
    * @return string  Return the customized todays date (Y-m-d)
    * @static
    */
-  static
-  function getToday($dayParams = NULL, $format = "Y-m-d") {
+  static function getToday($dayParams = NULL, $format = "Y-m-d") {
     if (is_null($dayParams) || empty($dayParams)) {
       $today = date($format);
     }
@@ -725,8 +712,7 @@ class CRM_Utils_Date {
    * @return true              todays date is in the given date range
    * @static
    */
-  static
-  function getRange($startDate, $endDate) {
+  static function getRange($startDate, $endDate) {
     $today = date("Y-m-d");
     $mysqlStartDate = self::isoToMysql($startDate);
     $mysqlEndDate = self::isoToMysql($endDate);
@@ -1363,8 +1349,7 @@ class CRM_Utils_Date {
    *
    *  @return string $mysqlDate date format that is excepted by mysql
    */
-  static
-  function processDate($date, $time = NULL, $returnNullString = FALSE, $format = 'YmdHis', $inputCustomFormat = NULL) {
+  static function processDate($date, $time = NULL, $returnNullString = FALSE, $format = 'YmdHis', $inputCustomFormat = NULL) {
     $mysqlDate = NULL;
 
     if ($returnNullString) {
@@ -1394,8 +1379,7 @@ class CRM_Utils_Date {
    *
    *  @return array $date and time
    */
-  static
-  function setDateDefaults($mysqlDate = NULL, $formatType = NULL, $format = NULL, $timeFormat = NULL) {
+  static function setDateDefaults($mysqlDate = NULL, $formatType = NULL, $format = NULL, $timeFormat = NULL) {
     // if date is not passed assume it as today
     if (!$mysqlDate) {
       $mysqlDate = date('Y-m-d G:i:s');
@@ -1456,8 +1440,7 @@ class CRM_Utils_Date {
    *
    * @return string $format
    */
-  static
-  function getDateFormat($formatType = NULL) {
+  static function getDateFormat($formatType = NULL) {
     $format = NULL;
     if ($formatType) {
       $format = CRM_Core_Dao::getFieldValue('CRM_Core_DAO_PreferencesDate',

@@ -62,8 +62,7 @@ class CRM_Contribute_BAO_ManagePremiums extends CRM_Contribute_DAO_Product {
    * @access public
    * @static
    */
-  static
-  function retrieve(&$params, &$defaults) {
+  static function retrieve(&$params, &$defaults) {
     $premium = new CRM_Contribute_DAO_Product();
     $premium->copyValues($params);
     if ($premium->find(TRUE)) {
@@ -83,8 +82,7 @@ class CRM_Contribute_BAO_ManagePremiums extends CRM_Contribute_DAO_Product {
    * @return Object             DAO object on sucess, null otherwise
    * @static
    */
-  static
-  function setIsActive($id, $is_active) {
+  static function setIsActive($id, $is_active) {
     if (!$is_active) {
       require_once 'CRM/Contribute/DAO/PremiumsProduct.php';
       $dao = new CRM_Contribute_DAO_PremiumsProduct();
@@ -105,8 +103,7 @@ class CRM_Contribute_BAO_ManagePremiums extends CRM_Contribute_DAO_Product {
    *
    * @return object
    */
-  static
-  function add(&$params, &$ids) {
+  static function add(&$params, &$ids) {
 
     $params['is_active'] = CRM_Utils_Array::value('is_active', $params, FALSE);
     $params['is_deductible'] = CRM_Utils_Array::value('is_deductible', $params, FALSE);
@@ -134,8 +131,7 @@ class CRM_Contribute_BAO_ManagePremiums extends CRM_Contribute_DAO_Product {
    * @static
    */
 
-  static
-  function del($productID) {
+  static function del($productID) {
     //check dependencies
     require_once 'CRM/Contribute/DAO/PremiumsProduct.php';
     $premiumsProduct = new CRM_Contribute_DAO_PremiumsProduct();

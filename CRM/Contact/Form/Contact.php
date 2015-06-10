@@ -124,7 +124,8 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
    *
    * @return void
    * @access public
-   */ function preProcess() {
+   */
+  function preProcess() {
     $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE, 'add');
 
     $this->_dedupeButtonName = $this->getButtonName('refresh', 'dedupe');
@@ -594,8 +595,7 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
    * @static
    * @access public
    */
-  static
-  function formRule($fields, $errors, $contactId = NULL) {
+  static function formRule($fields, $errors, $contactId = NULL) {
     $config = CRM_Core_Config::singleton();
 
     // validations.
@@ -1039,8 +1039,7 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
    * @static
    * @access public
    */
-  static
-  function blockDataExists(&$fields) {
+  static function blockDataExists(&$fields) {
     if (!is_array($fields)) {
       return FALSE;
     }
@@ -1083,8 +1082,7 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
    *  @param int    $contactID   contact id
    *  @param string $contactType contact type
    */
-  static
-  function checkDuplicateContacts(&$fields, &$errors, $contactID, $contactType) {
+  static function checkDuplicateContacts(&$fields, &$errors, $contactID, $contactType) {
     // if this is a forced save, ignore find duplicate rule
     if (!CRM_Utils_Array::value('_qf_Contact_upload_duplicate', $fields)) {
 

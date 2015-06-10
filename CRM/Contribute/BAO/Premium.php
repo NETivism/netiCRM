@@ -57,8 +57,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
    * @access public
    * @static
    */
-  static
-  function retrieve(&$params, &$defaults) {
+  static function retrieve(&$params, &$defaults) {
     $premium = new CRM_Contribute_DAO_Product();
     $premium->copyValues($params);
     if ($premium->find(TRUE)) {
@@ -77,8 +76,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
    * @return Object             DAO object on sucess, null otherwise
    * @static
    */
-  static
-  function setIsActive($id, $is_active) {
+  static function setIsActive($id, $is_active) {
     return CRM_Core_DAO::setFieldValue('CRM_Contribute_DAO_Premium', $id, 'premiums_active ', $is_active);
   }
 
@@ -89,8 +87,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
    * @static
    */
 
-  static
-  function del($premiumID) {
+  static function del($premiumID) {
     //check dependencies
 
     //delete from contribution Type table
@@ -219,8 +216,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
    * @param int $contribution page id
    * @static
    */
-  static
-  function deletePremium($contributionPageID) {
+  static function deletePremium($contributionPageID) {
     if (!$contributionPageID) {
       return;
     }

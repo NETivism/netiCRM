@@ -163,8 +163,7 @@ class CRM_Admin_Form_WordReplacements extends CRM_Core_Form {
    * @static
    * @access public
    */
-  static
-  function formRule($values) {
+  static function formRule($values) {
     $errors = array();
 
     $oldValues = CRM_Utils_Array::value('old', $values);

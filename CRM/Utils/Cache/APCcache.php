@@ -60,7 +60,8 @@ class CRM_Utils_Cache_APCcache {
    * @param array   $config  an array of configuration params
    *
    * @return void
-   */ function __construct(&$config) {
+   */
+  function __construct(&$config) {
     if (isset($config['timeout'])) {
       $this->_timeout = intval($config['timeout']);
     }

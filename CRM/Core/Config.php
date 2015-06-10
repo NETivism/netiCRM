@@ -178,8 +178,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
    * @return object
    * @static
    */
-  static
-  function &singleton($loadFromDB = TRUE, $force = FALSE) {
+  static function &singleton($loadFromDB = TRUE, $force = FALSE) {
     if (self::$_singleton === NULL || $force) {
       // make sure date.timezone set, support php 5.3 / 5.4
       $timezone = date_default_timezone_get();
@@ -470,8 +469,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
    *
    * @return object
    */
-  static
-  function &getMailer() {
+  static function &getMailer() {
     if (!isset(self::$_mail)) {
       require_once "CRM/Core/BAO/Preferences.php";
       $mailingInfo = &CRM_Core_BAO_Preferences::mailingPreferences();;
@@ -564,8 +562,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
    * @static
    * @access public
    */
-  static
-  function check(&$config, &$required) {
+  static function check(&$config, &$required) {
     foreach ($required as $name) {
       if (CRM_Utils_System::isNull($config->$name)) {
         return FALSE;
@@ -586,8 +583,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
   /**
    * one function to get domain ID
    */
-  static
-  function domainID($domainID = NULL, $reset = FALSE) {
+  static function domainID($domainID = NULL, $reset = FALSE) {
     static $domain;
     if ($domainID) {
       $domain = $domainID;

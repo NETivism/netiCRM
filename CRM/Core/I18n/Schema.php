@@ -43,8 +43,7 @@ class CRM_Core_I18n_Schema {
    *
    * @return void
    */
-  static
-  function dropAllViews() {
+  static function dropAllViews() {
     $domain = new CRM_Core_DAO_Domain();
     $domain->find(TRUE);
     if (!$domain->locales) {
@@ -246,8 +245,7 @@ class CRM_Core_I18n_Schema {
    *
    * @return void
    */
-  static
-  function rebuildMultilingualSchema($locales, $version = NULL) {
+  static function rebuildMultilingualSchema($locales, $version = NULL) {
     if ($version) {
       // fetch all the SchemaStructure versions we ship and sort by version
       $schemas = array();
@@ -324,8 +322,7 @@ class CRM_Core_I18n_Schema {
    *
    * @return string        the rewritten query
    */
-  static
-  function rewriteQuery($query) {
+  static function rewriteQuery($query) {
     static $tables = NULL;
     if ($tables === NULL) {
       $tables = &CRM_Core_I18n_SchemaStructure::tables();

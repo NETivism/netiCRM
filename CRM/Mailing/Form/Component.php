@@ -157,8 +157,7 @@ class CRM_Mailing_Form_Component extends CRM_Core_Form {
    * @access public
    * @static
    */
-  static
-  function dataRule($params, $files, $options) {
+  static function dataRule($params, $files, $options) {
     if ($params['component_type'] == 'Header' || $params['component_type'] == 'Footer') {
       $InvalidTokens = array();
     }

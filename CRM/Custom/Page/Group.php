@@ -59,7 +59,8 @@ class CRM_Custom_Page_Group extends CRM_Core_Page {
    *
    * @return  array   array of action links that we need to display for the browse screen
    * @access public
-   */ function &actionLinks() {
+   */
+  function &actionLinks() {
     // check if variable _actionsLinks is populated
     if (!isset(self::$_actionLinks)) {
       self::$_actionLinks = array(

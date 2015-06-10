@@ -289,8 +289,7 @@ class CRM_UF_Form_Group extends CRM_Core_Form {
    * @access public
    * @static
    */
-  static
-  function formRule($fields, $files, $self) {
+  static function formRule($fields, $files, $self) {
     $errors = array();
 
     //validate profile title as well as name.

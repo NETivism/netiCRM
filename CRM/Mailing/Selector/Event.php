@@ -101,7 +101,8 @@ class CRM_Mailing_Selector_Event extends CRM_Core_Selector_Base implements CRM_C
    *
    * @return CRM_Contact_Selector_Profile
    * @access public
-   */ function __construct($event, $distinct, $mailing, $job = NULL, $url = NULL) {
+   */
+  function __construct($event, $distinct, $mailing, $job = NULL, $url = NULL) {
     $this->_event_type = $event;
     $this->_is_distinct = $distinct;
     $this->_mailing_id = $mailing;
@@ -117,8 +118,7 @@ class CRM_Mailing_Selector_Event extends CRM_Core_Selector_Base implements CRM_C
    * @access public
    * @static
    */
-  static
-  function &links() {
+  static function &links() {
     return self::$_links;
   }
   //end of function

@@ -147,7 +147,8 @@ class CRM_Event_Form_Search extends CRM_Core_Form {
    *
    * @return void
    * @access public
-   */ function preProcess() {
+   */
+  function preProcess() {
     $this->set('searchFormName', 'Search');
 
     /**
@@ -462,8 +463,7 @@ class CRM_Event_Form_Search extends CRM_Core_Form {
    * @static
    * @access public
    */
-  static
-  function formRule($fields) {
+  static function formRule($fields) {
     $errors = array();
 
     if ($fields['event_name'] && !is_numeric($fields['event_id'])) {

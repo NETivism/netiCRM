@@ -42,7 +42,8 @@ class CRM_Logging_Schema {
 
   /**
    * Populate $this->tables and $this->logs with current db state.
-   */ function __construct() {
+   */
+  function __construct() {
     $dsn = defined('CIVICRM_LOGGING_DSN') ? DB::parseDSN(CIVICRM_LOGGING_DSN) : DB::parseDSN(CIVICRM_DSN);
     $this->loggingDB = $dsn['database'];
 

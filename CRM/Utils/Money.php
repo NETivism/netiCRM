@@ -57,8 +57,7 @@ class CRM_Utils_Money {
    *
    * @static
    */
-  static
-  function format($amount, $currency = NULL, $format = NULL, $onlyNumber = FALSE) {
+  static function format($amount, $currency = NULL, $format = NULL, $onlyNumber = FALSE) {
 
     if (CRM_Utils_System::isNull($amount)) {
       return '';
@@ -127,8 +126,7 @@ class CRM_Utils_Money {
     return strtr($format, $replacements);
   }
 
-  static
-  function toChinese($amount) {
+  static function toChinese($amount) {
     $amount = floor($amount);
     $amount = (string) $amount;
 

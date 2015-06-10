@@ -57,8 +57,7 @@ class CRM_Friend_BAO_Friend extends CRM_Friend_DAO_Friend {
    * @access public
    * @static
    */
-  static
-  function add(&$params) {
+  static function add(&$params) {
     require_once 'CRM/Contact/BAO/Contact.php';
     $friend = CRM_Contact_BAO_Contact::createProfileContact($params, CRM_Core_DAO::$_nullArray);
     return $friend;
@@ -75,8 +74,7 @@ class CRM_Friend_BAO_Friend extends CRM_Friend_DAO_Friend {
    * @access public
    * @static
    */
-  static
-  function retrieve(&$params, &$values) {
+  static function retrieve(&$params, &$values) {
     $friend = new CRM_Friend_DAO_Friend();
 
     $friend->copyValues($params);
@@ -97,8 +95,7 @@ class CRM_Friend_BAO_Friend extends CRM_Friend_DAO_Friend {
    * @access public
    * @static
    */
-  static
-  function create(&$params) {
+  static function create(&$params) {
     require_once 'CRM/Core/Transaction.php';
     $transaction = new CRM_Core_Transaction();
 
@@ -263,8 +260,7 @@ class CRM_Friend_BAO_Friend extends CRM_Friend_DAO_Friend {
    *
    * @return booelan  whether anything was found
    */
-  static
-  function getValues(&$defaults) {
+  static function getValues(&$defaults) {
     if (empty($defaults)) {
       return NULL;
     }
@@ -284,8 +280,7 @@ class CRM_Friend_BAO_Friend extends CRM_Friend_DAO_Friend {
    * @return void
    * @access public
    */
-  static
-  function sendMail($contactID, &$values) {
+  static function sendMail($contactID, &$values) {
     require_once 'CRM/Contact/BAO/Contact.php';
     list($fromName, $email) = CRM_Contact_BAO_Contact::getContactDetails($contactID);
     // if no $fromName (only email collected from originating contact) - list returns single space
@@ -338,8 +333,7 @@ class CRM_Friend_BAO_Friend extends CRM_Friend_DAO_Friend {
    * @access public
    * @static
    */
-  static
-  function addTellAFriend(&$params) {
+  static function addTellAFriend(&$params) {
     $friendDAO = new CRM_Friend_DAO_Friend();
 
     $friendDAO->copyValues($params);

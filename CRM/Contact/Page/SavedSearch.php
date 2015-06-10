@@ -145,8 +145,7 @@ class CRM_Contact_Page_SavedSearch extends CRM_Core_Page {
    * @return array (reference) of action links
    * @static
    */
-  static
-  function &links() {
+  static function &links() {
 
     if (!(self::$_links)) {
 

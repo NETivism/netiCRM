@@ -66,7 +66,8 @@ class CRM_Utils_Cache_SqlGroup implements CRM_Utils_Cache_Interface {
    *   - prefetch: bool, whether to preemptively read the entire cache group; default: TRUE
    *
    * @return void
-   */ function __construct($config) {
+   */
+  function __construct($config) {
     if (isset($config['group'])) {
       $this->group = $config['group'];
     }

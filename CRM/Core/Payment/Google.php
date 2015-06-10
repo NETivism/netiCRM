@@ -62,7 +62,8 @@ class CRM_Core_Payment_Google extends CRM_Core_Payment {
    * @param string $mode the mode of operation: live or test
    *
    * @return void
-   */ function __construct($mode, &$paymentProcessor) {
+   */
+  function __construct($mode, &$paymentProcessor) {
     $this->_mode = $mode;
     $this->_paymentProcessor = $paymentProcessor;
     $this->_processorName = ts('Google Checkout');
@@ -77,8 +78,7 @@ class CRM_Core_Payment_Google extends CRM_Core_Payment {
    * @static
    *
    */
-  static
-  function &singleton($mode, &$paymentProcessor) {
+  static function &singleton($mode, &$paymentProcessor) {
     $processorName = $paymentProcessor['name'];
     if (self::$_singleton[$processorName] === NULL) {
       self::$_singleton[$processorName] = new CRM_Core_Payment_Google($mode, $paymentProcessor);
@@ -271,8 +271,7 @@ class CRM_Core_Payment_Google extends CRM_Core_Payment {
     return self::getArrayFromXML($xmlResponse);
   }
 
-  static
-  function buildXMLQuery($searchParams) {
+  static function buildXMLQuery($searchParams) {
     $xml = '<?xml version="1.0" encoding="UTF-8"?>
 <notification-history-request xmlns="http://checkout.google.com/schema/2">';
 
@@ -305,8 +304,7 @@ class CRM_Core_Payment_Google extends CRM_Core_Payment {
     return $xml;
   }
 
-  static
-  function getArrayFromXML($xmlData) {
+  static function getArrayFromXML($xmlData) {
     require_once 'Google/library/xml-processing/xmlparser.php';
     $xmlParser = new XmlParser($xmlData);
     $root = $xmlParser->GetRoot();

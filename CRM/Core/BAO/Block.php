@@ -59,8 +59,7 @@ class CRM_Core_BAO_Block {
    * @access public
    * @static
    */
-  static
-  function &getValues($blockName, $params) {
+  static function &getValues($blockName, $params) {
     if (empty($params)) {
       return NULL;
     }
@@ -105,8 +104,7 @@ class CRM_Core_BAO_Block {
    * @access public
    * @static
    */
-  static
-  function retrieveBlock(&$block, $blockName) {
+  static function retrieveBlock(&$block, $blockName) {
     // we first get the primary location due to the order by clause
     $block->orderBy('is_primary desc, id');
     $block->find();
@@ -136,8 +134,7 @@ class CRM_Core_BAO_Block {
    * @access public
    * @static
    */
-  static
-  function dataExists($blockFields, &$params) {
+  static function dataExists($blockFields, &$params) {
     foreach ($blockFields as $field) {
       if (CRM_Utils_System::isNull($params[$field])) {
         return FALSE;
@@ -156,8 +153,7 @@ class CRM_Core_BAO_Block {
    * @access public
    * @static
    */
-  static
-  function blockExists($blockName, &$params) {
+  static function blockExists($blockName, &$params) {
     // return if no data present
     if (!CRM_Utils_Array::value($blockName, $params) || !is_array($params[$blockName])) {
       return FALSE;
@@ -177,8 +173,7 @@ class CRM_Core_BAO_Block {
    * @access public
    * @static
    */
-  static
-  function getBlockIds($blockName, $contactId = NULL, $entityElements = NULL, $updateBlankLocInfo = FALSE) {
+  static function getBlockIds($blockName, $contactId = NULL, $entityElements = NULL, $updateBlankLocInfo = FALSE) {
     $allBlocks = array();
     $name = ucfirst($blockName);
     if ($contactId) {
@@ -202,8 +197,7 @@ class CRM_Core_BAO_Block {
    * @access public
    * @static
    */
-  static
-  function create($blockName, &$params, $entity = NULL) {
+  static function create($blockName, &$params, $entity = NULL) {
     if (!self::blockExists($blockName, $params)) {
       return NULL;
     }
@@ -353,8 +347,7 @@ class CRM_Core_BAO_Block {
    * @return void
    * @static
    */
-  static
-  function blockDelete($blockName, $params) {
+  static function blockDelete($blockName, $params) {
     eval('$block = new CRM_Core_DAO_' . $blockName . '( );');
 
     $block->copyValues($params);

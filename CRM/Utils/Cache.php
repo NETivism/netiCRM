@@ -54,7 +54,8 @@ class CRM_Utils_Cache {
    * @param array   $config  an array of configuration params
    *
    * @return void
-   */ function __construct(&$config) {
+   */
+  function __construct(&$config) {
     CRM_Core_Error::fatal(ts('this is just an interface and should not be called directly'));
   }
 
@@ -65,8 +66,7 @@ class CRM_Utils_Cache {
    * @static
    *
    */
-  static
-  function &singleton() {
+  static function &singleton() {
     if (self::$_singleton === NULL) {
       // default to ArrayCache for now
       $className = 'ArrayCache';
@@ -101,8 +101,7 @@ class CRM_Utils_Cache {
    *   associative array of settings for the cache
    * @static
    */
-  static
-  function getCacheSettings($cachePlugin) {
+  static function getCacheSettings($cachePlugin) {
     switch ($cachePlugin) {
       case 'ArrayCache':
       case 'NoCache':

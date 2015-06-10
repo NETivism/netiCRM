@@ -157,8 +157,7 @@ class CRM_Event_PseudoConstant extends CRM_Core_PseudoConstant {
    *
    * @return array  of status classes, keyed by status type
    */
-  static
-  function &participantStatusClass() {
+  static function &participantStatusClass() {
     static $statusClasses = NULL;
 
     if ($statusClasses === NULL) {

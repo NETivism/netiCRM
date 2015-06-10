@@ -50,8 +50,7 @@ class CRM_Contact_Form_Edit_Address {
    * @access public
    * @static
    */
-  static
-  function buildQuickForm(&$form, $addressBlockCount = NULL) {
+  static function buildQuickForm(&$form, $addressBlockCount = NULL) {
 
     // passing this via the session is AWFUL. we need to fix this
     if (!$addressBlockCount) {
@@ -261,8 +260,7 @@ class CRM_Contact_Form_Edit_Address {
    * @access public
    * @static
    */
-  static
-  function formRule($fields, $errors) {
+  static function formRule($fields, $errors) {
     $errors = array();
     // check for state/county match if not report error to user.
     if (is_array($fields['address'])) {
@@ -334,8 +332,7 @@ class CRM_Contact_Form_Edit_Address {
     return empty($errors) ? TRUE : $errors;
   }
 
-  static
-  function fixStateSelect(&$form,
+  static function fixStateSelect(&$form,
     $countryElementName,
     $stateElementName,
     $countryDefaultValue

@@ -36,8 +36,7 @@
 
 require_once 'CRM/Utils/Hook.php';
 class CRM_Utils_Hook_Drupal extends CRM_Utils_Hook {
-  static
-  function invoke($numParams,
+  static function invoke($numParams,
     &$arg1, &$arg2, &$arg3, &$arg4, &$arg5,
     $fnSuffix
   ) {
@@ -70,8 +69,7 @@ class CRM_Utils_Hook_Drupal extends CRM_Utils_Hook {
     return empty($result) ? TRUE : $result;
   }
 
-  static
-  function runHook($fnName, $numParams, &$arg1, &$arg2, &$arg3, &$arg4, &$arg5) {
+  static function runHook($fnName, $numParams, &$arg1, &$arg2, &$arg3, &$arg4, &$arg5) {
     if ($numParams == 1) {
       $fResult = $fnName($arg1);
     }

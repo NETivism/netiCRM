@@ -148,7 +148,8 @@ class CRM_Profile_Form extends CRM_Core_Form {
    * @return void
    *
    * @access public
-   */ function preProcess() {
+   */
+  function preProcess() {
     require_once 'CRM/Core/BAO/UFGroup.php';
     require_once "CRM/Core/BAO/UFField.php";
 
@@ -611,8 +612,7 @@ class CRM_Profile_Form extends CRM_Core_Form {
    * @access public
    * @static
    */
-  static
-  function formRule($fields, $files, $form) {
+  static function formRule($fields, $files, $form) {
     $errors = array();
     // if no values, return
     if (empty($fields)) {

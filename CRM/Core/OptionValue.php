@@ -73,8 +73,7 @@ class CRM_Core_OptionValue {
    * @access public
    * @static
    */
-  static
-  function getRows($groupParams, $links, $orderBy = 'weight') {
+  static function getRows($groupParams, $links, $orderBy = 'weight') {
     $optionValue = array();
 
     $optionGroupID = NULL;
@@ -191,8 +190,7 @@ class CRM_Core_OptionValue {
    * @access public
    * @static
    */
-  static
-  function addOptionValue(&$params, &$groupParams, &$action, &$optionValueID) {
+  static function addOptionValue(&$params, &$groupParams, &$action, &$optionValueID) {
     require_once 'CRM/Utils/Weight.php';
     $params['is_active'] = CRM_Utils_Array::value('is_active', $params, FALSE);
     // checking if the group name with the given id or name (in $groupParams) exists
@@ -261,8 +259,7 @@ class CRM_Core_OptionValue {
    * @access public
    * @static
    */
-  static
-  function optionExists($value, $daoName, $daoID, $optionGroupID, $fieldName = 'name') {
+  static function optionExists($value, $daoName, $daoID, $optionGroupID, $fieldName = 'name') {
     require_once (str_replace('_', DIRECTORY_SEPARATOR, $daoName) . ".php");
     eval('$object = new ' . $daoName . '( );');
     $object->$fieldName = $value;
@@ -289,8 +286,7 @@ class CRM_Core_OptionValue {
    * @access public
    * @static
    */
-  static
-  function getFields($mode = '', $contactType = 'Individual') {
+  static function getFields($mode = '', $contactType = 'Individual') {
     $key = "$mode $contactType";
     if (empty(self::$_fields[$key]) || !self::$_fields[$key]) {
       self::$_fields[$key] = array();
@@ -375,8 +371,7 @@ class CRM_Core_OptionValue {
    * @return void
    * @access public
    */
-  static
-  function select(&$query) {
+  static function select(&$query) {
     if (!empty($query->_params) || !empty($query->_returnProperties)) {
       $field = &self::getFields();
       foreach ($field as $name => $title) {
@@ -408,8 +403,7 @@ class CRM_Core_OptionValue {
    * @access public
    * @static
    */
-  static
-  function getValues($groupParams, &$values, $orderBy = 'weight', $isActive = FALSE) {
+  static function getValues($groupParams, &$values, $orderBy = 'weight', $isActive = FALSE) {
     if (empty($groupParams)) {
       return NULL;
     }

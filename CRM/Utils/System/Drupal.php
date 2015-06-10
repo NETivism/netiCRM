@@ -106,8 +106,7 @@ class CRM_Utils_System_Drupal {
    * @access public
    * @static
    */
-  static
-  function appendBreadCrumb($breadCrumbs) {
+  static function appendBreadCrumb($breadCrumbs) {
     $breadCrumb = drupal_get_breadcrumb();
 
     if (is_array($breadCrumbs)) {
@@ -136,8 +135,7 @@ class CRM_Utils_System_Drupal {
    * @access public
    * @static
    */
-  static
-  function resetBreadCrumb() {
+  static function resetBreadCrumb() {
     $bc = array();
     drupal_set_breadcrumb($bc);
   }
@@ -151,8 +149,7 @@ class CRM_Utils_System_Drupal {
    * @access public
    * @static
    */
-  static
-  function addHTMLHead($head) {
+  static function addHTMLHead($head) {
     drupal_set_html_head($head);
   }
 
@@ -165,8 +162,7 @@ class CRM_Utils_System_Drupal {
    * @access public
    * @static
    */
-  static
-  function mapConfigToSSL() {
+  static function mapConfigToSSL() {
     global $base_url;
     $base_url = str_replace('http://', 'https://', $base_url);
   }
@@ -180,8 +176,7 @@ class CRM_Utils_System_Drupal {
    * @access public
    * @static
    */
-  static
-  function postURL($action) {
+  static function postURL($action) {
     if (!empty($action)) {
       return $action;
     }
@@ -273,8 +268,7 @@ class CRM_Utils_System_Drupal {
    * @access public
    * @static
    */
-  static
-  function authenticate($name, $password) {
+  static function authenticate($name, $password) {
     require_once 'DB.php';
 
     $config = CRM_Core_Config::singleton();
@@ -312,24 +306,20 @@ class CRM_Utils_System_Drupal {
    * @access public
    * @static
    */
-  static
-  function setMessage($message) {
+  static function setMessage($message) {
     drupal_set_message($message);
   }
 
-  static
-  function permissionDenied() {
+  static function permissionDenied() {
     drupal_access_denied();
   }
 
-  static
-  function logout() {
+  static function logout() {
     module_load_include('inc', 'user', 'user.pages');
     return user_logout();
   }
 
-  static
-  function updateCategories() {
+  static function updateCategories() {
     // copied this from profile.module. Seems a bit inefficient, but i dont know a better way
     // CRM-3600
     cache_clear_all();
@@ -341,8 +331,7 @@ class CRM_Utils_System_Drupal {
    *
    * @return string  with the locale or null for none
    */
-  static
-  function getUFLocale() {
+  static function getUFLocale() {
     // return CiviCRM’s xx_YY locale that either matches Drupal’s Chinese locale
     // (for CRM-6281), Drupal’s xx_YY or is retrieved based on Drupal’s xx
     global $language;
@@ -399,8 +388,7 @@ class CRM_Utils_System_Drupal {
    * @param $name string  optional username for login
    * @param $pass string  optional password for login
    */
-  static
-  function loadBootStrap($name = NULL, $pass = NULL) {
+  static function loadBootStrap($name = NULL, $pass = NULL) {
     //take the cms root path.
     $cmsPath = self::cmsRootPath();
 
@@ -432,8 +420,7 @@ class CRM_Utils_System_Drupal {
     }
   }
 
-  static
-  function cmsRootPath() {
+  static function cmsRootPath() {
     $cmsRoot = $valid = NULL;
     $pathVars = explode('/', str_replace('\\', '/', $_SERVER['SCRIPT_FILENAME']));
 

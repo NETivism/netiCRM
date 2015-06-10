@@ -79,8 +79,7 @@ class CRM_Contact_BAO_SavedSearch extends CRM_Contact_DAO_SavedSearch {
    * @access public
    * @static
    */
-  static
-  function retrieve(&$params, &$defaults) {
+  static function retrieve(&$params, &$defaults) {
     $savedSearch = new CRM_Contact_DAO_SavedSearch();
     $savedSearch->copyValues($params);
     if ($savedSearch->find(TRUE)) {
@@ -99,8 +98,7 @@ class CRM_Contact_BAO_SavedSearch extends CRM_Contact_DAO_SavedSearch {
    * @access public
    * @static
    */
-  static
-  function &getFormValues($id) {
+  static function &getFormValues($id) {
     $fv = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_SavedSearch', $id, 'form_values');
     $result = NULL;
     if ($fv) {
@@ -110,8 +108,7 @@ class CRM_Contact_BAO_SavedSearch extends CRM_Contact_DAO_SavedSearch {
     return $result;
   }
 
-  static
-  function getSearchParams($id) {
+  static function getSearchParams($id) {
     $fv = &self::getFormValues($id);
     //check if the saved seach has mapping id
     if (CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_SavedSearch', $id, 'mapping_id')) {
@@ -138,8 +135,7 @@ class CRM_Contact_BAO_SavedSearch extends CRM_Contact_DAO_SavedSearch {
    * @access public
    * @static
    */
-  static
-  function whereClause($id, &$tables, &$whereTables) {
+  static function whereClause($id, &$tables, &$whereTables) {
     $params = &self::getSearchParams($id);
     if ($params) {
       return CRM_Contact_BAO_Query::getWhereClause($params, NULL, $tables, $whereTables);
@@ -147,8 +143,7 @@ class CRM_Contact_BAO_SavedSearch extends CRM_Contact_DAO_SavedSearch {
     return NULL;
   }
 
-  static
-  function contactIDsSQL($id) {
+  static function contactIDsSQL($id) {
     $params = &self::getSearchParams($id);
     if ($params) {
       if (CRM_Utils_Array::value('customSearchID', $params)) {
@@ -173,8 +168,7 @@ WHERE  $where";
     }
   }
 
-  static
-  function fromWhereEmail($id) {
+  static function fromWhereEmail($id) {
     $params = &self::getSearchParams($id);
 
     if ($params) {
@@ -240,8 +234,7 @@ WHERE  $where";
    * @access public
    * @static
    */
-  static
-  function getName($id, $value = 'name') {
+  static function getName($id, $value = 'name') {
     require_once 'CRM/Contact/DAO/Group.php';
     $group = new CRM_Contact_DAO_Group();
     $group->saved_search_id = $id;

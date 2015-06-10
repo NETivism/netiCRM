@@ -77,8 +77,7 @@ class CRM_Utils_Recent {
    * @access public
    * @static
    */
-  static
-  function &get() {
+  static function &get() {
     self::initialize();
     return self::$_recent;
   }
@@ -95,8 +94,7 @@ class CRM_Utils_Recent {
    * @access public
    * @static
    */
-  static
-  function add($title,
+  static function add($title,
     $url,
     $id,
     $type,
@@ -153,8 +151,7 @@ class CRM_Utils_Recent {
    * @access public
    * @static
    */
-  static
-  function del($recentItem) {
+  static function del($recentItem) {
     self::initialize();
     $tempRecent = self::$_recent;
 
@@ -182,8 +179,7 @@ class CRM_Utils_Recent {
    * @access public
    * @static
    */
-  static
-  function delContact($id) {
+  static function delContact($id) {
     self::initialize();
 
     $tempRecent = self::$_recent;

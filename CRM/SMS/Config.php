@@ -127,8 +127,7 @@ class CRM_SMS_Config {
    * @static
    * @access public
    */
-  static
-  function check(&$config) {
+  static function check(&$config) {
     $requiredParameters = array('smsUsername', 'smsPassword', 'smsAPIID', 'smsAPIServer', 'smsClass');
     return CRM_Core_Config::check($config, $requiredParameters);
   }

@@ -85,7 +85,8 @@ class CRM_Case_Form_Case extends CRM_Core_Form {
    *
    * @return None
    * @access public
-   */ function preProcess() {
+   */
+  function preProcess() {
     $this->_caseId = CRM_Utils_Request::retrieve('id', 'Positive', $this);
 
     $this->_currentlyViewedContactId = CRM_Utils_Request::retrieve('cid', 'Positive', $this);
@@ -284,8 +285,7 @@ class CRM_Case_Form_Case extends CRM_Core_Form {
    * @static
    * @access public
    */
-  static
-  function formRule($values, $files, $form) {
+  static function formRule($values, $files, $form) {
     return TRUE;
   }
 

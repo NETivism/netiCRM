@@ -357,8 +357,7 @@ class CRM_Utils_REST {
     return self::process($args);
   }
 
-  static
-  function process(&$args, $restInterface = TRUE) {
+  static function process(&$args, $restInterface = TRUE) {
     $params = &self::buildParamList();
 
     $params['check_permissions'] = TRUE;
@@ -418,8 +417,7 @@ class CRM_Utils_REST {
     return $result;
   }
 
-  static
-  function &buildParamList() {
+  static function &buildParamList() {
     $params = array();
 
     $skipVars = array(
@@ -449,8 +447,7 @@ class CRM_Utils_REST {
     return $params;
   }
 
-  static
-  function fatal($pearError) {
+  static function fatal($pearError) {
     header('Content-Type: text/xml');
     $error = array();
     $error['code'] = $pearError->getCode();
@@ -467,8 +464,7 @@ class CRM_Utils_REST {
     CRM_Utils_System::civiExit();
   }
 
-  static
-  function APIDoc() {
+  static function APIDoc() {
 
     CRM_Utils_System::setTitle("API Parameters");
     $template = CRM_Core_Smarty::singleton();
@@ -478,8 +474,7 @@ class CRM_Utils_REST {
     );
   }
 
-  static
-  function ajaxDoc() {
+  static function ajaxDoc() {
 
     CRM_Utils_System::setTitle("API explorer and generator");
     $template = CRM_Core_Smarty::singleton();
@@ -490,8 +485,7 @@ class CRM_Utils_REST {
   }
 
   /** used to load a template "inline", eg. for ajax, without having to build a menu for each template */
-  static
-  function loadTemplate() {
+  static function loadTemplate() {
     $request = CRM_Utils_Request::retrieve('q', 'String');
     if (FALSE !== strpos($request, '..')) {
       die("SECURITY FATAL: the url can't contain '..'. Please report the issue on the forum at civicrm.org");
@@ -549,8 +543,7 @@ class CRM_Utils_REST {
    * http://example.org/civicrm/api/json?entity=Contact&action=Get"&json={"contact_type":"Individual","email.get.email":{}} to take all the emails from individuals
    * works for POST & GET (POST recommended)
    **/
-  static
-  function ajaxJson() {
+  static function ajaxJson() {
     require_once 'api/v3/utils.php';
     if (!$config->debug && (!array_key_exists('HTTP_X_REQUESTED_WITH', $_SERVER) ||
         $_SERVER['HTTP_X_REQUESTED_WITH'] != "XMLHttpRequest"
@@ -601,8 +594,7 @@ class CRM_Utils_REST {
     CRM_Utils_System::civiExit();
   }
 
-  static
-  function ajax() {
+  static function ajax() {
     // this is driven by the menu system, so we can use permissioning to
     // restrict calls to this etc
     // the request has to be sent by an ajax call. First line of protection against csrf

@@ -766,8 +766,7 @@ abstract class CRM_Contribute_Import_Parser {
    * @return void
    * @access public
    */
-  static
-  function exportCSV($fileName, $header, $data) {
+  static function exportCSV($fileName, $header, $data) {
     $fileName = str_replace("csv", "xls", $fileName);
     $result = CRM_Core_Report_Excel::writeCSVFile($fileName, $header, $data, NULL, $writeHeader = TRUE, $saveFile = TRUE);
     file_put_contents($fileName, $result);
@@ -784,8 +783,7 @@ abstract class CRM_Contribute_Import_Parser {
    * @static
    * @access public
    */
-  static
-  function encloseScrub(&$values, $enclosure = "'") {
+  static function encloseScrub(&$values, $enclosure = "'") {
     if (empty($values)) {
       return;
     }

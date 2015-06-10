@@ -124,7 +124,8 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
    *
    * @return object
    * @access public
-   */ function __construct($state = NULL,
+   */
+  function __construct($state = NULL,
     $action = CRM_Core_Action::NONE,
     $method = 'post',
     $name = NULL
@@ -150,8 +151,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
     }
   }
 
-  static
-  function generateID() {}
+  static function generateID() {}
 
   /**
    * register all the standard rules that most forms potentially use
@@ -563,6 +563,16 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
   }
 
   /**
+   * A wrapper for getTemplateFileName that includes calling the hook to
+   * prevent us from having to copy & paste the logic of calling the hook
+   */ 
+  function getHookedTemplateFileName() {
+    $pageTemplateFile = $this->getTemplateFileName();
+    CRM_Utils_Hook::alterTemplateFile(get_class($this), $this, 'page', $pageTemplateFile);
+    return $pageTemplateFile;
+  }
+
+  /**
    * Error reporting mechanism
    *
    * @param string  $message Error Message
@@ -925,8 +935,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
     return $this->getRootTitle() . $this->getTitle();
   }
 
-  static
-  function &getTemplate() {
+  static function &getTemplate() {
     return self::$_template;
   }
 

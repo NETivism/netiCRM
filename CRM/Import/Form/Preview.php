@@ -195,8 +195,7 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
    * @static
    * @access public
    */
-  static
-  function formRule($fields, $files, $self) {
+  static function formRule($fields, $files, $self) {
     $errors = array();
     $invalidTagName = $invalidGroupName = FALSE;
 

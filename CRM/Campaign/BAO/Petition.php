@@ -49,8 +49,7 @@ Class CRM_Campaign_BAO_Petition extends CRM_Campaign_BAO_Survey {
    * @param int $id
    * @static
    */
-  static
-  function getPetition($all = FALSE, $id = FALSE, $defaultOnly = FALSE) {
+  static function getPetition($all = FALSE, $id = FALSE, $defaultOnly = FALSE) {
 
     $petitionTypeID = CRM_Core_OptionGroup::getValue('activity_type', 'petition', 'name');
 
@@ -173,8 +172,7 @@ Class CRM_Campaign_BAO_Petition extends CRM_Campaign_BAO_Survey {
    * @param int $id
    * @static
    */
-  static
-  function getPetitionSignatureTotalbyCountry($surveyId) {
+  static function getPetitionSignatureTotalbyCountry($surveyId) {
     $countries = array();
     $sql = "
 SELECT count(civicrm_address.country_id) as total,
@@ -210,8 +208,7 @@ WHERE
    * @param int $id
    * @static
    */
-  static
-  function getPetitionSignatureTotal($surveyId) {
+  static function getPetitionSignatureTotal($surveyId) {
     $surveyInfo = CRM_Campaign_BAO_Petition::getSurveyInfo((int) $surveyId);
     //$activityTypeID = $surveyInfo['activity_type_id'];
     $signature = array();
@@ -269,8 +266,7 @@ AND og.name = 'activity_type'";
    * @param int $id
    * @static
    */
-  static
-  function getPetitionSignature($surveyId, $status_id = NULL) {
+  static function getPetitionSignature($surveyId, $status_id = NULL) {
 
     // sql injection protection
     $surveyId = (int)$surveyId;
@@ -342,8 +338,7 @@ WHERE
    * @param int $contactId
    * @static
    */
-  static
-  function checkSignature($surveyId, $contactId) {
+  static function checkSignature($surveyId, $contactId) {
 
     $surveyInfo = CRM_Campaign_BAO_Petition::getSurveyInfo($surveyId);
     $signature = array();

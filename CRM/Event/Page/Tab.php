@@ -44,7 +44,8 @@ class CRM_Event_Page_Tab extends CRM_Core_Page {
    *
    * return null
    * @access public
-   */ function browse() {
+   */
+  function browse() {
     $controller = new CRM_Core_Controller_Simple('CRM_Event_Form_Search', ts('Events'), $this->_action);
     $controller->setEmbedded(TRUE);
     $controller->reset();

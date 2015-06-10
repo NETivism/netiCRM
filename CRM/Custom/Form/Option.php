@@ -237,8 +237,7 @@ class CRM_Custom_Form_Option extends CRM_Core_Form {
    * @static
    * @access public
    */
-  static
-  function formRule($fields, $files, $form) {
+  static function formRule($fields, $files, $form) {
     $optionLabel = CRM_Utils_Type::escape($fields['label'], 'String');
     $optionValue = CRM_Utils_Type::escape($fields['value'], 'String');
     $fieldId = $form->_fid;

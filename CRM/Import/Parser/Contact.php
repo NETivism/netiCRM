@@ -101,7 +101,8 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
 
   /**
    * class constructor
-   */ function __construct(&$mapperKeys, $mapperLocType = NULL, $mapperPhoneType = NULL,
+   */
+  function __construct(&$mapperKeys, $mapperLocType = NULL, $mapperPhoneType = NULL,
     $mapperImProvider = NULL, $mapperRelated = NULL, $mapperRelatedContactType = NULL,
     $mapperRelatedContactDetails = NULL, $mapperRelatedContactLocType = NULL,
     $mapperRelatedContactPhoneType = NULL, $mapperRelatedContactImProvider = NULL,
@@ -1653,8 +1654,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
    * @static
    * @access public
    */
-  static
-  function addToErrorMsg($errorName, &$errorMessage) {
+  static function addToErrorMsg($errorName, &$errorMessage) {
     if ($errorMessage) {
       $errorMessage .= "; $errorName";
     }

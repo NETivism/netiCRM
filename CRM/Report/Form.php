@@ -189,7 +189,8 @@ class CRM_Report_Form extends CRM_Core_Form {
 
   /**
    *
-   */ function __construct() {
+   */
+  function __construct() {
     parent::__construct();
 
     // build tag filter
@@ -849,8 +850,7 @@ class CRM_Report_Form extends CRM_Core_Form {
     }
   }
 
-  static
-  function getSQLOperator($operator = "like") {
+  static function getSQLOperator($operator = "like") {
     switch ($operator) {
       case 'eq':
         return '=';
@@ -1055,8 +1055,7 @@ class CRM_Report_Form extends CRM_Core_Form {
     return NULL;
   }
 
-  static
-  function dateDisplay($relative, $from, $to) {
+  static function dateDisplay($relative, $from, $to) {
     list($from, $to) = self::getFromTo($relative, $from, $to);
 
     if ($from) {
@@ -1080,8 +1079,7 @@ class CRM_Report_Form extends CRM_Core_Form {
     return NULL;
   }
 
-  static
-  function getFromTo($relative, $from, $to) {
+  static function getFromTo($relative, $from, $to) {
     require_once 'CRM/Utils/Date.php';
     //FIX ME not working for relative
     if ($relative) {

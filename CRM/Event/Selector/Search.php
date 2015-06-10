@@ -166,7 +166,8 @@ class CRM_Event_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
    *
    * @return CRM_Contact_Selector
    * @access public
-   */ function __construct(&$queryParams,
+   */
+  function __construct(&$queryParams,
     $action = CRM_Core_Action::NONE,
     $eventClause = NULL,
     $single = FALSE,
@@ -216,8 +217,7 @@ class CRM_Event_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
    * @access public
    *
    */
-  static
-  function &links($qfKey = NULL, $context = NULL, $compContext = NULL) {
+  static function &links($qfKey = NULL, $context = NULL, $compContext = NULL) {
     $extraParams = NULL;
     if ($compContext) {
       $extraParams .= "&compContext={$compContext}";

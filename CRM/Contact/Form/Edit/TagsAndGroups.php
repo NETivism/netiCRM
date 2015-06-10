@@ -63,8 +63,7 @@ class CRM_Contact_Form_Edit_TagsandGroups {
    * @static
    * @access public
    */
-  static
-  function buildQuickForm(&$form,
+  static function buildQuickForm(&$form,
     $contactId = 0,
     $type = CRM_Contact_Form_Edit_TagsandGroups::ALL,
     $visibility = FALSE,
@@ -172,8 +171,7 @@ class CRM_Contact_Form_Edit_TagsandGroups {
    * @access public
    * @static
    */
-  static
-  function setDefaults($id, &$defaults, $type = CRM_Contact_Form_Edit_TagsandGroups::ALL, $fieldName = NULL) {
+  static function setDefaults($id, &$defaults, $type = CRM_Contact_Form_Edit_TagsandGroups::ALL, $fieldName = NULL) {
     $type = (int ) $type;
     if ($type & self::GROUP) {
       $fName = 'group';

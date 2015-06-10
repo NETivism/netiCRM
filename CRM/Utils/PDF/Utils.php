@@ -34,13 +34,11 @@
  */
 class CRM_Utils_PDF_Utils {
 
-  static
-  function domlib($text, $fileName = 'output.pdf', $output = FALSE, $orientation = 'landscape', $paperSize = 'a3') {
+  static function domlib($text, $fileName = 'output.pdf', $output = FALSE, $orientation = 'landscape', $paperSize = 'a3') {
     return self::html2pdf($text, $fileName, $orientation, $paperSize, $output);
   }
 
-  static
-  function html2pdf($text, $fileName = 'output.pdf', $orientation = 'landscape', $paperSize = 'a4', $output = FALSE) {
+  static function html2pdf($text, $fileName = 'output.pdf', $orientation = 'landscape', $paperSize = 'a4', $output = FALSE) {
     $config = CRM_Core_Config::singleton();
 
     // make whole html first

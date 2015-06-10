@@ -251,8 +251,7 @@ where (cg.extends='Contact' OR cg.extends='Individual' OR cg.extends_entity_colu
     $this->_select = "SELECT " . implode(', ', $select) . " ";
   }
 
-  static
-  function formRule($fields, $files, $self) {
+  static function formRule($fields, $files, $self) {
     $errors = $grouping = array();
     return $errors;
   }

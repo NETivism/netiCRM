@@ -44,8 +44,7 @@ class CRM_Contact_Form_Edit_CustomData {
    * @return void
    * @access public
    */
-  static
-  function preProcess(&$form) {
+  static function preProcess(&$form) {
     $form->_type = CRM_Utils_Request::retrieve('type', 'String', CRM_Core_DAO::$_nullObject);
     $form->_subType = CRM_Utils_Request::retrieve('subType', 'String', CRM_Core_DAO::$_nullObject);
 
@@ -74,8 +73,7 @@ class CRM_Contact_Form_Edit_CustomData {
    * @access public
    * @static
    */
-  static
-  function buildQuickForm(&$form) {
+  static function buildQuickForm(&$form) {
     CRM_Custom_Form_Customdata::buildQuickForm($form);
 
     //build custom data.

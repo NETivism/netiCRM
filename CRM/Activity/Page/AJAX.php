@@ -36,8 +36,7 @@
  * This class contains all the function that are called using AJAX (jQuery)
  */
 class CRM_Activity_Page_AJAX {
-  static
-  function getCaseActivity() {
+  static function getCaseActivity() {
     $caseID = CRM_Utils_Type::escape($_GET['caseID'], 'Integer');
     $contactID = CRM_Utils_Type::escape($_GET['cid'], 'Integer');
     $userID = CRM_Utils_Type::escape($_GET['userID'], 'Integer');
@@ -73,8 +72,7 @@ class CRM_Activity_Page_AJAX {
     CRM_Utils_System::civiExit();
   }
 
-  static
-  function convertToCaseActivity() {
+  static function convertToCaseActivity() {
     $params = array('caseID', 'activityID', 'contactID', 'newSubject', 'targetContactIds', 'mode');
     foreach ($params as $param) {
       $$param = CRM_Utils_Array::value($param, $_POST);

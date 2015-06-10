@@ -90,7 +90,8 @@ class CRM_Group_Form_Edit extends CRM_Core_Form {
    *
    * @return void
    * @acess protected
-   */ function preProcess() {
+   */
+  function preProcess() {
     $this->_id = $this->get('id');
 
     if ($this->_id) {
@@ -347,8 +348,7 @@ class CRM_Group_Form_Edit extends CRM_Core_Form {
    * @static
    * @access public
    */
-  static
-  function formRule($fields, $fileParams, $options) {
+  static function formRule($fields, $fileParams, $options) {
     $errors = array();
 
     $doParentCheck = $options['doParentCheck'];

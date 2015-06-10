@@ -36,7 +36,8 @@ class CRM_Core_Payment_PayJunction extends CRM_Core_Payment {
    * @param string $mode the mode of operation: live or test
    *
    * @return void
-   */ function __construct($mode, &$paymentProcessor) {
+   */
+  function __construct($mode, &$paymentProcessor) {
     //require PayJunction API library
     require_once 'PayJunction/pjClasses.php';
 
@@ -54,8 +55,7 @@ class CRM_Core_Payment_PayJunction extends CRM_Core_Payment {
    * @static
    *
    */
-  static
-  function &singleton($mode, &$paymentProcessor) {
+  static function &singleton($mode, &$paymentProcessor) {
     $processorName = $paymentProcessor['name'];
     if (self::$_singleton[$processorName] === NULL) {
       self::$_singleton[$processorName] = new CRM_Core_Payment_PayJunction($mode, $paymentProcessor);

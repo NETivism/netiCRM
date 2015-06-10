@@ -180,8 +180,7 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
    * @static
    * @access public
    */
-  static
-  function formRule($values) {
+  static function formRule($values) {
     $errors = array();
 
     //CRM-4286

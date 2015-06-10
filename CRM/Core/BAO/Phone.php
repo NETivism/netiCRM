@@ -49,8 +49,7 @@ class CRM_Core_BAO_Phone extends CRM_Core_DAO_Phone {
    * @access public
    * @static
    */
-  static
-  function add(&$params) {
+  static function add(&$params) {
     $phone = new CRM_Core_DAO_Phone();
 
     $phone->copyValues($params);
@@ -68,8 +67,7 @@ class CRM_Core_BAO_Phone extends CRM_Core_DAO_Phone {
    * @access public
    * @static
    */
-  static
-  function &getValues($entityBlock) {
+  static function &getValues($entityBlock) {
     $getValues = &CRM_Core_BAO_Block::getValues('phone', $entityBlock);
     return $getValues;
   }
@@ -83,8 +81,7 @@ class CRM_Core_BAO_Phone extends CRM_Core_DAO_Phone {
    * @access public
    * @static
    */
-  static
-  function allPhones($id, $updateBlankLocInfo = FALSE, $type = NULL) {
+  static function allPhones($id, $updateBlankLocInfo = FALSE, $type = NULL) {
     if (!$id) {
       return NULL;
     }
@@ -140,8 +137,7 @@ ORDER BY civicrm_phone.is_primary DESC,  phone_id ASC ";
    * @access public
    * @static
    */
-  static
-  function allEntityPhones($entityElements, $type = NULL) {
+  static function allEntityPhones($entityElements, $type = NULL) {
     if (empty($entityElements)) {
       return NULL;
     }
@@ -189,8 +185,7 @@ ORDER BY ph.is_primary DESC, phone_id ASC ";
    * return void
    * @static
    */
-  static
-  function setOptionToNull($optionId) {
+  static function setOptionToNull($optionId) {
     if (!$optionId) {
       return;
     }

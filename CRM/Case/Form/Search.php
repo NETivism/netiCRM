@@ -135,7 +135,8 @@ class CRM_Case_Form_Search extends CRM_Core_Form {
    *
    * @return void
    * @access public
-   */ function preProcess() {
+   */
+  function preProcess() {
     //check for civicase access.
     if (!CRM_Case_BAO_Case::accessCiviCase()) {
       CRM_Core_Error::fatal(ts('You are not authorized to access this page.'));
@@ -444,8 +445,7 @@ class CRM_Case_Form_Search extends CRM_Core_Form {
    * @static
    * @access public
    */
-  static
-  function formRule($fields) {
+  static function formRule($fields) {
     $errors = array();
 
     if (!empty($errors)) {

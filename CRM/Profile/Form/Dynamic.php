@@ -105,8 +105,7 @@ class CRM_Profile_Form_Dynamic extends CRM_Profile_Form {
    * @access public
    * @static
    */
-  static
-  function formRule($fields, $files, $form) {
+  static function formRule($fields, $files, $form) {
     $errors = array();
 
     // if no values, return

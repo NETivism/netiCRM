@@ -147,7 +147,8 @@ class CRM_Profile_Selector_Listings extends CRM_Core_Selector_Base implements CR
    *
    * @return CRM_Contact_Selector_Profile
    * @access public
-   */ function __construct(&$params, &$customFields, $ufGroupIds = NULL, $map = FALSE,
+   */
+  function __construct(&$params, &$customFields, $ufGroupIds = NULL, $map = FALSE,
     $editLink = FALSE, $linkToUF = FALSE
   ) {
     $this->_params = $params;
@@ -207,8 +208,7 @@ class CRM_Profile_Selector_Listings extends CRM_Core_Selector_Base implements CR
    * @access public
    *
    */
-  static
-  function &links($map = FALSE, $editLink = FALSE, $ufLink = FALSE, $gids = NULL) {
+  static function &links($map = FALSE, $editLink = FALSE, $ufLink = FALSE, $gids = NULL) {
     if (!self::$_links) {
       self::$_links = array();
 

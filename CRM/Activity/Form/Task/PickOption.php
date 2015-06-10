@@ -70,7 +70,8 @@ class CRM_Activity_Form_Task_PickOption extends CRM_Activity_Form_Task {
    *
    * @return void
    * @access public
-   */ function preProcess() {
+   */
+  function preProcess() {
     /*
          * initialize the task and row fields
          */
@@ -128,8 +129,7 @@ class CRM_Activity_Form_Task_PickOption extends CRM_Activity_Form_Task {
    * @static
    * @access public
    */
-  static
-  function formRule($fields) {
+  static function formRule($fields) {
     return TRUE;
   }
 

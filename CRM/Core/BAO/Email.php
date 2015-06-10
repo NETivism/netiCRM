@@ -49,8 +49,7 @@ class CRM_Core_BAO_Email extends CRM_Core_DAO_Email {
    * @access public
    * @static
    */
-  static
-  function add(&$params) {
+  static function add(&$params) {
     $email = new CRM_Core_DAO_Email();
     $email->copyValues($params);
 
@@ -85,8 +84,7 @@ contact_id = {$params['contact_id']}";
    * @access public
    * @static
    */
-  static
-  function &getValues($entityBlock) {
+  static function &getValues($entityBlock) {
     return CRM_Core_BAO_Block::getValues('email', $entityBlock);
   }
 
@@ -99,8 +97,7 @@ contact_id = {$params['contact_id']}";
    * @access public
    * @static
    */
-  static
-  function allEmails($id, $updateBlankLocInfo = FALSE) {
+  static function allEmails($id, $updateBlankLocInfo = FALSE) {
     if (!$id) {
       return NULL;
     }
@@ -149,8 +146,7 @@ ORDER BY
    * @access public
    * @static
    */
-  static
-  function allEntityEmails(&$entityElements) {
+  static function allEntityEmails(&$entityElements) {
     if (empty($entityElements)) {
       return NULL;
     }
@@ -192,8 +188,7 @@ ORDER BY e.is_primary DESC, email_id ASC ";
    * @return void
    * @static
    */
-  static
-  function holdEmail(&$email) {
+  static function holdEmail(&$email) {
     //check for update mode
     if ($email->id) {
       //get hold date

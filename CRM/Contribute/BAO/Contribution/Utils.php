@@ -51,8 +51,7 @@ class CRM_Contribute_BAO_Contribution_Utils {
    * @static
    * @access public
    */
-  static
-  function processConfirm(&$form,
+  static function processConfirm(&$form,
     &$paymentParams,
     &$premiumParams,
     $contactID,
@@ -295,8 +294,7 @@ class CRM_Contribute_BAO_Contribution_Utils {
    * @static
    * @access public
    */
-  static
-  function contributionChartMonthly($param) {
+  static function contributionChartMonthly($param) {
     if ($param) {
       $param = array(1 => array($param, 'Integer'));
     }
@@ -337,8 +335,7 @@ INNER JOIN   civicrm_contact AS contact ON ( contact.id = contrib.contact_id )
    * @static
    * @access public
    */
-  static
-  function contributionChartYearly() {
+  static function contributionChartYearly() {
     $query = '
     SELECT   sum(contrib.total_amount) AS ctAmt,
              year(contrib.receive_date) as contribYear
@@ -360,8 +357,7 @@ INNER JOIN   civicrm_contact contact ON ( contact.id = contrib.contact_id )
     return $params;
   }
 
-  static
-  function createCMSUser(&$params, $contactID, $mail) {
+  static function createCMSUser(&$params, $contactID, $mail) {
     // lets ensure we only create one CMS user
     static $created = FALSE;
 
@@ -379,8 +375,7 @@ INNER JOIN   civicrm_contact contact ON ( contact.id = contrib.contact_id )
     }
   }
 
-  static
-  function _fillCommonParams(&$params, $type = 'paypal') {
+  static function _fillCommonParams(&$params, $type = 'paypal') {
     if (array_key_exists('transaction', $params)) {
       $transaction = &$params['transaction'];
     }
@@ -445,8 +440,7 @@ INNER JOIN   civicrm_contact contact ON ( contact.id = contrib.contact_id )
     return TRUE;
   }
 
-  static
-  function formatAPIParams($apiParams, $mapper, $type = 'paypal', $category = TRUE) {
+  static function formatAPIParams($apiParams, $mapper, $type = 'paypal', $category = TRUE) {
     $type = strtolower($type);
 
     if (!in_array($type, array('paypal', 'google', 'csv'))) {
@@ -601,8 +595,7 @@ INNER JOIN   civicrm_contact contact ON ( contact.id = contrib.contact_id )
     }
   }
 
-  static
-  function processAPIContribution($params) {
+  static function processAPIContribution($params) {
     if (empty($params) || array_key_exists('error', $params)) {
       return FALSE;
     }

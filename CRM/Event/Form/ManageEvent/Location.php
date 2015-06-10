@@ -78,7 +78,8 @@ class CRM_Event_Form_ManageEvent_Location extends CRM_Event_Form_ManageEvent {
    *
    * @return void
    * @access public
-   */ function preProcess() {
+   */
+  function preProcess() {
     parent::preProcess();
 
     $this->_values = $this->get('values');
@@ -162,8 +163,7 @@ class CRM_Event_Form_ManageEvent_Location extends CRM_Event_Form_ManageEvent {
    * @static
    * @access public
    */
-  static
-  function formRule($fields) {
+  static function formRule($fields) {
     $errors = array();
     // check for state/country mapping
     CRM_Contact_Form_Edit_Address::formRule($fields, $errors);

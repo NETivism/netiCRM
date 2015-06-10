@@ -51,8 +51,7 @@ class CRM_Core_BAO_Batch extends CRM_Core_DAO_Batch {
    * @return batch array
    * @access public
    */
-  static
-  function create($params) {
+  static function create($params) {
     $batch = new CRM_Core_DAO_Batch();
     $batch->copyValues($params);
     $batch->save();

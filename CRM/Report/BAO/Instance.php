@@ -49,8 +49,7 @@ class CRM_Report_BAO_Instance extends CRM_Report_DAO_Instance {
     return $dao->delete();
   }
 
-  static
-  function retrieve($params, &$defaults) {
+  static function retrieve($params, &$defaults) {
     $instance = new CRM_Report_DAO_Instance();
     $instance->copyValues($params);
 

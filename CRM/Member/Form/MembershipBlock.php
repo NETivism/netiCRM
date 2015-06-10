@@ -150,8 +150,7 @@ class CRM_Member_Form_MembershipBlock extends CRM_Contribute_Form_ContributionPa
    * @access public
    * @static
    */
-  static
-  function formRule($params, $files, $contributionPageId = NULL) {
+  static function formRule($params, $files, $contributionPageId = NULL) {
     $errors = array();
     if (CRM_Utils_Array::value('is_active', $params)) {
 

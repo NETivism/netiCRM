@@ -71,13 +71,11 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
    * @return Object             DAO object on sucess, null otherwise
    * @static
    */
-  static
-  function setIsActive($id, $is_active) {
+  static function setIsActive($id, $is_active) {
     return CRM_Core_DAO::setFieldValue('CRM_Contribute_DAO_ContributionPage', $id, 'is_active', $is_active);
   }
 
-  static
-  function setValues($id, &$values) {
+  static function setValues($id, &$values) {
     $params = array('id' => $id);
 
     CRM_Core_DAO::commonRetrieve('CRM_Contribute_DAO_ContributionPage', $params, $values);
@@ -117,8 +115,7 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
    * @access public
    * @static
    */
-  static
-  function sendMail($contactID, &$values, $isTest = FALSE, $returnMessageText = FALSE) {
+  static function sendMail($contactID, &$values, $isTest = FALSE, $returnMessageText = FALSE) {
     require_once "CRM/Core/BAO/UFField.php";
     $gIds = array();
     $params = array();
@@ -331,8 +328,7 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
    * @access public
    * @static
    */
-  static
-  function recurringNofify($type, $contactID, $pageID, $recur) {
+  static function recurringNofify($type, $contactID, $pageID, $recur) {
     $value = array();
     CRM_Core_DAO::commonRetrieveAll('CRM_Contribute_DAO_ContributionPage', 'id',
       $pageID, $value,
@@ -435,8 +431,7 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
    * @access public
    * @static
    */
-  static
-  function copy($id) {
+  static function copy($id) {
     $fieldsFix = array(
       'prefix' => array(
         'title' => ts('Copy of') . ' ',
@@ -546,8 +541,7 @@ WHERE entity_table = 'civicrm_contribution_page'
    * @access public
    * @static
    */
-  static
-  function checkRecurPaymentProcessor($contributionPageId) {
+  static function checkRecurPaymentProcessor($contributionPageId) {
     //FIXME
     $sql = "
     SELECT pp.is_recur

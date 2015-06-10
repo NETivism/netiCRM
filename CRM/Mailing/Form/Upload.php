@@ -528,8 +528,7 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
    * @access public
    * @static
    */
-  static
-  function formRule($params, $files, $self) {
+  static function formRule($params, $files, $self) {
     if (CRM_Utils_Array::value('_qf_Import_refresh', $_POST)) {
       return TRUE;
     }

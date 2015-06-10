@@ -77,12 +77,12 @@ class CRM_Event_Form_Task extends CRM_Core_Form {
    *
    * @return void
    * @access public
-   */ function preProcess() {
+   */
+  function preProcess() {
     self::preProcessCommon($this);
   }
 
-  static
-  function preProcessCommon(&$form, $useTable = FALSE) {
+  static function preProcessCommon(&$form, $useTable = FALSE) {
     $form->_participantIds = array();
 
     $values = $form->controller->exportValues($form->get('searchFormName'));

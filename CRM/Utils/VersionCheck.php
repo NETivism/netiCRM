@@ -71,7 +71,8 @@ class CRM_Utils_VersionCheck {
    * Class constructor
    *
    * @access private
-   */ function __construct() {
+   */
+  function __construct() {
     global $civicrm_root;
     $config = CRM_Core_Config::singleton();
 
@@ -179,8 +180,7 @@ class CRM_Utils_VersionCheck {
    *
    * @return CRM_Utils_VersionCheck
    */
-  static
-  function &singleton() {
+  static function &singleton() {
     if (!isset(self::$_singleton)) {
       self::$_singleton = new CRM_Utils_VersionCheck();
     }

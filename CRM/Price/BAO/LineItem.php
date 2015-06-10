@@ -56,8 +56,7 @@ class CRM_Price_BAO_LineItem extends CRM_Price_DAO_LineItem {
    * @access public
    * @static
    */
-  static
-  function create(&$params) {
+  static function create(&$params) {
     $lineItemBAO = new CRM_Price_BAO_LineItem();
     $lineItemBAO->copyValues($params);
     return $lineItemBAO->save();
@@ -76,8 +75,7 @@ class CRM_Price_BAO_LineItem extends CRM_Price_DAO_LineItem {
    * @access public
    * @static
    */
-  static
-  function retrieve(&$params, &$defaults) {
+  static function retrieve(&$params, &$defaults) {
     $lineItem = new CRM_Price_BAO_LineItem();
     $lineItem->copyValues($params);
     if ($lineItem->find(TRUE)) {
@@ -96,8 +94,7 @@ class CRM_Price_BAO_LineItem extends CRM_Price_DAO_LineItem {
    *
    * @return array of line items
    */
-  static
-  function getLineItems($entityId, $entity = 'participant') {
+  static function getLineItems($entityId, $entity = 'participant') {
     $selectClause = $whereClause = $fromClause = NULL;
 
     $selectClause = "
@@ -166,10 +163,8 @@ WHERE     %2.id = %1";
    *                          lineItem array)
    *
    * @return void
-   * @access static
-   */
-  static
-  function format($fid, &$params, &$fields, &$values) {
+   * @access static  */
+  static function format($fid, &$params, &$fields, &$values) {
     if (empty($params["price_{$fid}"])) {
       return;
     }

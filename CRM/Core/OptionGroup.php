@@ -46,8 +46,7 @@ class CRM_Core_OptionGroup {
     'grant_type',
   );
 
-  static
-  function &valuesCommon($dao, $flip = FALSE, $grouping = FALSE,
+  static function &valuesCommon($dao, $flip = FALSE, $grouping = FALSE,
     $localize = FALSE, $labelColumnName = 'label'
   ) {
     self::$_values = array();
@@ -77,8 +76,7 @@ class CRM_Core_OptionGroup {
     return self::$_values;
   }
 
-  static
-  function &values($name, $flip = FALSE, $grouping = FALSE,
+  static function &values($name, $flip = FALSE, $grouping = FALSE,
     $localize = FALSE, $condition = NULL,
     $labelColumnName = 'label', $onlyActive = TRUE, $fresh = FALSE, $keyColumnName = 'value'
   ) {
@@ -157,8 +155,7 @@ WHERE  v.option_group_id = g.id
     return $cacheKey;
   }
 
-  static
-  function &valuesByID($id, $flip = FALSE, $grouping = FALSE, $localize = FALSE, $labelColumnName = 'label', $onlyActive = TRUE, $fresh = FALSE) {
+  static function &valuesByID($id, $flip = FALSE, $grouping = FALSE, $localize = FALSE, $labelColumnName = 'label', $onlyActive = TRUE, $fresh = FALSE) {
     $cacheKey = self::createCacheKey($id, $flip, $grouping, $localize, $labelColumnName, $onlyActive);
 
     $cache = CRM_Utils_Cache::singleton();
@@ -211,8 +208,7 @@ WHERE  v.option_group_id = g.id
    * @access public
    * @static
    */
-  static
-  function lookupValues(&$params, &$names, $flip = FALSE) {
+  static function lookupValues(&$params, &$names, $flip = FALSE) {
     require_once "CRM/Core/BAO/CustomOption.php";
     foreach ($names as $postName => $value) {
       // See if $params field is in $names array (i.e. is a value that we need to lookup)
@@ -259,8 +255,7 @@ WHERE  v.option_group_id = g.id
     }
   }
 
-  static
-  function getLabel($groupName, $value, $onlyActiveValue = TRUE) {
+  static function getLabel($groupName, $value, $onlyActiveValue = TRUE) {
     if (empty($groupName) ||
       empty($value)
     ) {
@@ -289,8 +284,7 @@ WHERE  v.option_group_id = g.id
     return NULL;
   }
 
-  static
-  function getValue($groupName,
+  static function getValue($groupName,
     $label,
     $labelField = 'label',
     $labelType = 'String',
@@ -321,8 +315,7 @@ WHERE  v.option_group_id = g.id
     return NULL;
   }
 
-  static
-  function createAssoc($groupName, &$values, &$defaultID, $groupLabel = NULL) {
+  static function createAssoc($groupName, &$values, &$defaultID, $groupLabel = NULL) {
     self::deleteAssoc($groupName);
     if (!empty($values)) {
       require_once 'CRM/Core/DAO/OptionGroup.php';
@@ -358,8 +351,7 @@ WHERE  v.option_group_id = g.id
     return $group->id;
   }
 
-  static
-  function getAssoc($groupName, &$values, $flip = FALSE, $field = 'name') {
+  static function getAssoc($groupName, &$values, $flip = FALSE, $field = 'name') {
     $query = "
 SELECT v.id as amount_id, v.value, v.label, v.name, v.description, v.weight
   FROM civicrm_option_group g,
@@ -399,8 +391,7 @@ ORDER BY v.weight
     }
   }
 
-  static
-  function deleteAssoc($groupName, $operator = "=") {
+  static function deleteAssoc($groupName, $operator = "=") {
     $query = "
 DELETE g, v
   FROM civicrm_option_group g,
@@ -413,8 +404,7 @@ DELETE g, v
     $dao = CRM_Core_DAO::executeQuery($query, $params);
   }
 
-  static
-  function optionLabel($groupName, $value) {
+  static function optionLabel($groupName, $value) {
     $query = "
 SELECT v.label
   FROM civicrm_option_group g,
@@ -428,8 +418,7 @@ SELECT v.label
     return CRM_Core_DAO::singleValueQuery($query, $params);
   }
 
-  static
-  function getRowValues($groupName, $fieldValue, $field = 'name',
+  static function getRowValues($groupName, $fieldValue, $field = 'name',
     $fieldType = 'String', $active = TRUE
   ) {
     $query = "
@@ -470,8 +459,7 @@ WHERE  v.option_group_id = g.id
      * will do a couple of variations & aspire to someone cleaning it up later
      */
 
-  static
-  function flush($name, $params = array()) {
+  static function flush($name, $params = array()) {
     $defaults = array(
       'flip' => FALSE,
       'grouping' => FALSE,
@@ -503,8 +491,7 @@ WHERE  v.option_group_id = g.id
     );
   }
 
-  static
-  function flushAll() {
+  static function flushAll() {
     self::$_values = array();
     self::$_cache = array();
     CRM_Utils_Cache::singleton()->flush();

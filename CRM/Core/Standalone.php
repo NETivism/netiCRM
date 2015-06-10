@@ -48,8 +48,7 @@ class CRM_Core_Standalone {
    * @access public
    * @static
    */
-  static
-  function sidebarLeft() {
+  static function sidebarLeft() {
     $config = CRM_Core_Config::singleton();
 
     require_once 'CRM/Core/Block.php';

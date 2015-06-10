@@ -54,7 +54,8 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
    *
    * return null
    * @access public
-   */ function browse() {
+   */
+  function browse() {
     $links = &self::links('all', $this->_isPaymentProcessor, $this->_accessContribution);
 
     $membership = array();
@@ -364,8 +365,7 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
    * @return array (reference) of action links
    * @static
    */
-  static
-  function &links($status = 'all', $isPaymentProcessor = NULL, $accessContribution = NULL) {
+  static function &links($status = 'all', $isPaymentProcessor = NULL, $accessContribution = NULL) {
     if (!CRM_Utils_Array::value('view', self::$_links)) {
       self::$_links['view'] = array(
         CRM_Core_Action::VIEW => array(
@@ -421,8 +421,7 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
    * @return array self::$_membershipTypesLinks array of action links
    * @access public
    */
-  static
-  function &membershipTypesLinks() {
+  static function &membershipTypesLinks() {
     if (!self::$_membershipTypesLinks) {
       self::$_membershipTypesLinks = array(
         CRM_Core_Action::VIEW => array(

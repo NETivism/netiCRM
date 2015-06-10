@@ -192,7 +192,8 @@ class CRM_Core_Selector_Controller {
    *
    * @return Object
    * @access public
-   */ function __construct($object, $pageID, $sortID, $action, $store = NULL, $output = self::TEMPLATE, $prefix = NULL, $case = NULL) {
+   */
+  function __construct($object, $pageID, $sortID, $action, $store = NULL, $output = self::TEMPLATE, $prefix = NULL, $case = NULL) {
 
     $this->_object = $object;
     $this->_pageID = $pageID ? $pageID : 1;
@@ -461,7 +462,7 @@ class CRM_Core_Selector_Controller {
       return;
     }
 
-    self::$_template->assign('tplFile', $this->_object->getTemplateFileName());
+    self::$_template->assign('tplFile', $this->_object->getHookedTemplateFileName());
     if ($this->_print) {
       $content = self::$_template->fetch('CRM/common/print.tpl');
     }

@@ -237,8 +237,7 @@ class CRM_Contact_Page_View_Note extends CRM_Core_Page {
    * @return array (reference) of action links
    * @static
    */
-  static
-  function &links() {
+  static function &links() {
     if (!(self::$_links)) {
       $deleteExtra = ts('Are you sure you want to delete this note?');
 
@@ -279,8 +278,7 @@ class CRM_Contact_Page_View_Note extends CRM_Core_Page {
    * @return array (reference) of action links
    * @static
    */
-  static
-  function &commentLinks() {
+  static function &commentLinks() {
     if (!(self::$_commentLinks)) {
       $deleteExtra = ts('Are you sure you want to delete this comment?');
       self::$_commentLinks = array(

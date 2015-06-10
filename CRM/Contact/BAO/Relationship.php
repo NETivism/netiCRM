@@ -55,8 +55,7 @@ class CRM_Contact_BAO_Relationship extends CRM_Contact_DAO_Relationship {
    * @access public
    * @static
    */
-  static
-  function create(&$params, &$ids) {
+  static function create(&$params, &$ids) {
     $valid = $invalid = $duplicate = $saved = 0;
     require_once 'CRM/Utils/Array.php';
     $relationshipId = CRM_Utils_Array::value('relationship', $ids);
@@ -184,8 +183,7 @@ class CRM_Contact_BAO_Relationship extends CRM_Contact_DAO_Relationship {
    * @access public
    * @static
    */
-  static
-  function add(&$params, &$ids, $contactId) {
+  static function add(&$params, &$ids, $contactId) {
     require_once 'CRM/Utils/Hook.php';
     if (CRM_Utils_Array::value('relationship', $ids)) {
       CRM_Utils_Hook::pre('edit', 'Relationship', $ids['relationship'], $params);
@@ -259,8 +257,7 @@ class CRM_Contact_BAO_Relationship extends CRM_Contact_DAO_Relationship {
    * @access public
    * @static
    */
-  static
-  function dataExists(&$params) {
+  static function dataExists(&$params) {
     // return if no data present
     if (!is_array(CRM_Utils_Array::value('contact_check', $params))) {
       return FALSE;
@@ -371,8 +368,7 @@ class CRM_Contact_BAO_Relationship extends CRM_Contact_DAO_Relationship {
    *
    * @static
    */
-  static
-  function del($id) {
+  static function del($id) {
     // delete from relationship table
     require_once 'CRM/Utils/Hook.php';
     CRM_Utils_Hook::pre('delete', 'Relationship', $id, CRM_Core_DAO::$_nullArray);
@@ -437,8 +433,7 @@ class CRM_Contact_BAO_Relationship extends CRM_Contact_DAO_Relationship {
 
    * @static
    */
-  static
-  function disableEnableRelationship($id, $action) {
+  static function disableEnableRelationship($id, $action) {
     $relationship = new CRM_Contact_DAO_Relationship();
     $relationship->id = $id;
 
@@ -480,8 +475,7 @@ class CRM_Contact_BAO_Relationship extends CRM_Contact_DAO_Relationship {
    * @access public
    * @static
    */
-  static
-  function deleteContact($contactId) {
+  static function deleteContact($contactId) {
     $relationship = new CRM_Contact_DAO_Relationship();
     $relationship->contact_id_a = $contactId;
     $relationship->delete();
@@ -503,8 +497,7 @@ class CRM_Contact_BAO_Relationship extends CRM_Contact_DAO_Relationship {
    * @access public
    * @static
    */
-  static
-  function getContactIds($id) {
+  static function getContactIds($id) {
     $relationship = new CRM_Contact_DAO_Relationship();
 
     $relationship->id = $id;
@@ -526,8 +519,7 @@ class CRM_Contact_BAO_Relationship extends CRM_Contact_DAO_Relationship {
    * @access public
    * @static
    */
-  static
-  function checkRelationshipType($contact_a, $contact_b, $relationshipTypeId) {
+  static function checkRelationshipType($contact_a, $contact_b, $relationshipTypeId) {
     $relationshipType = new CRM_Contact_DAO_RelationshipType();
     $relationshipType->id = $relationshipTypeId;
     $relationshipType->selectAdd();
@@ -565,8 +557,7 @@ class CRM_Contact_BAO_Relationship extends CRM_Contact_DAO_Relationship {
    * @access public
    * @static
    */
-  static
-  function checkValidRelationship(&$params, &$ids, $contactId) {
+  static function checkValidRelationship(&$params, &$ids, $contactId) {
     $errors = '';
 
     // get the string of relationship type
@@ -594,8 +585,7 @@ class CRM_Contact_BAO_Relationship extends CRM_Contact_DAO_Relationship {
    * @access public
    * @static
    */
-  static
-  function checkDuplicateRelationship(&$params, $id, $contactId = 0, $relationshipId = 0) {
+  static function checkDuplicateRelationship(&$params, $id, $contactId = 0, $relationshipId = 0) {
     $start_date = CRM_Utils_Date::format(CRM_Utils_Array::value('start_date', $params));
     $end_date = CRM_Utils_Date::format(CRM_Utils_Array::value('end_date', $params));
 
@@ -638,8 +628,7 @@ class CRM_Contact_BAO_Relationship extends CRM_Contact_DAO_Relationship {
    * @return Object             DAO object on success, null otherwise
    * @static
    */
-  static
-  function setIsActive($id, $is_active) {
+  static function setIsActive($id, $is_active) {
     // set the userContext stack
     return CRM_Core_DAO::setFieldValue('CRM_Contact_DAO_Relationship', $id, 'is_active', $is_active);
   }
@@ -656,8 +645,7 @@ class CRM_Contact_BAO_Relationship extends CRM_Contact_DAO_Relationship {
    * @access public
    * @static
    */
-  static
-  function &getValues(&$params, &$values) {
+  static function &getValues(&$params, &$values) {
     if (empty($params)) {
       return NULL;
     }
@@ -694,8 +682,7 @@ class CRM_Contact_BAO_Relationship extends CRM_Contact_DAO_Relationship {
    * @static
    * @access public
    */
-  static
-  function makeURLClause($contactId, $status, $numRelationship, $count, $relationshipId, $direction) {
+  static function makeURLClause($contactId, $status, $numRelationship, $count, $relationshipId, $direction) {
     $select = $from = $where = '';
 
     $select = '( ';
@@ -823,8 +810,7 @@ LEFT JOIN  civicrm_country ON (civicrm_address.country_id = civicrm_country.id)
    * @static
    * @access public
    */
-  static
-  function getRelationship($contactId = NULL,
+  static function getRelationship($contactId = NULL,
     $status = 0, $numRelationship = 0,
     $count = 0, $relationshipId = 0,
     $links = NULL, $permissionMask = NULL,
@@ -997,8 +983,7 @@ LEFT JOIN  civicrm_country ON (civicrm_address.country_id = civicrm_country.id)
    * @static
    *
    */
-  static
-  function relatedMemberships($contactId, &$params, $ids, $action = CRM_Core_Action::ADD, $active = TRUE) {
+  static function relatedMemberships($contactId, &$params, $ids, $action = CRM_Core_Action::ADD, $active = TRUE) {
     // Check the end date and set the status of the relationship
     // accrodingly.
     $status = self::CURRENT;
@@ -1195,8 +1180,7 @@ SELECT relationship_type_id, relationship_direction
    * @static
    *
    */
-  static
-  function getCurrentEmployer($contactIds) {
+  static function getCurrentEmployer($contactIds) {
     $contacts = implode(',', $contactIds);
 
     $query = "
@@ -1227,8 +1211,7 @@ WHERE id IN ( {$contacts} )
    * @return array array of employers.
    *
    */
-  static
-  function getPermissionedEmployer($contactID, $name = '%') {
+  static function getPermissionedEmployer($contactID, $name = '%') {
     $employers = array();
 
     //get the relationship id

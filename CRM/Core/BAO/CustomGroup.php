@@ -59,8 +59,7 @@ class CRM_Core_BAO_CustomGroup extends CRM_Core_DAO_CustomGroup {
    * @access public
    * @static
    */
-  static
-  function create(&$params) {
+  static function create(&$params) {
     // create custom group dao, populate fields and then save.
     $group = new CRM_Core_DAO_CustomGroup();
     $group->title = $params['title'];
@@ -218,8 +217,7 @@ class CRM_Core_BAO_CustomGroup extends CRM_Core_DAO_CustomGroup {
    * @access public
    * @static
    */
-  static
-  function retrieve(&$params, &$defaults) {
+  static function retrieve(&$params, &$defaults) {
     return CRM_Core_DAO::commonRetrieve('CRM_Core_DAO_CustomGroup', $params, $defaults);
   }
 
@@ -233,8 +231,7 @@ class CRM_Core_BAO_CustomGroup extends CRM_Core_DAO_CustomGroup {
    * @static
    * @access public
    */
-  static
-  function setIsActive($id, $is_active) {
+  static function setIsActive($id, $is_active) {
     // reset the cache
     CRM_Core_BAO_Cache::deleteGroup('contact fields');
 
@@ -997,8 +994,7 @@ SELECT $select
     return TRUE;
   }
 
-  static
-  function setDefaults(&$groupTree, &$defaults, $viewMode = FALSE, $inactiveNeeded = FALSE, $action = CRM_Core_Action::NONE) {
+  static function setDefaults(&$groupTree, &$defaults, $viewMode = FALSE, $inactiveNeeded = FALSE, $action = CRM_Core_Action::NONE) {
     require_once 'CRM/Core/BAO/CustomOption.php';
     foreach ($groupTree as $id => $group) {
       if (!isset($group['fields'])) {
@@ -1145,8 +1141,7 @@ SELECT $select
     }
   }
 
-  static
-  function postProcess(&$groupTree, &$params, $skipFile = FALSE) {
+  static function postProcess(&$groupTree, &$params, $skipFile = FALSE) {
     // Get the Custom form values and groupTree
     // first reset all checkbox and radio data
     foreach ($groupTree as $groupID => $group) {
@@ -1262,8 +1257,7 @@ SELECT $select
    * @access public
    * @static
    */
-  static
-  function buildQuickForm(&$form,
+  static function buildQuickForm(&$form,
     &$groupTree,
     $inactiveNeeded = FALSE,
     $groupCount = 1,
@@ -1318,8 +1312,7 @@ SELECT $select
    * @access public
    * @static
    */
-  static
-  function extractGetParams(&$form, $type) {
+  static function extractGetParams(&$form, $type) {
     // if not GET params return
     if (empty($_GET)) {
       return;
@@ -1417,8 +1410,7 @@ SELECT $select
    * @static
    * @access public
    */
-  static
-  function checkCustomField($customFieldId, &$removeCustomFieldTypes) {
+  static function checkCustomField($customFieldId, &$removeCustomFieldTypes) {
     $query = "SELECT cg.extends as extends
                   FROM civicrm_custom_group as cg, civicrm_custom_field as cf
                   WHERE cg.id = cf.custom_group_id
@@ -1432,8 +1424,7 @@ SELECT $select
     return TRUE;
   }
 
-  static
-  function mapTableName($table) {
+  static function mapTableName($table) {
     switch ($table) {
       case 'Contact':
       case 'Individual':
@@ -1489,8 +1480,7 @@ SELECT IF( EXISTS(SELECT name FROM civicrm_contact_type WHERE name like %1), 1, 
     }
   }
 
-  static
-  function createTable($group) {
+  static function createTable($group) {
     $params = array(
       'name' => $group->table_name,
       'is_multiple' => $group->is_multiple ? 1 : 0,
@@ -1513,8 +1503,7 @@ SELECT IF( EXISTS(SELECT name FROM civicrm_contact_type WHERE name like %1), 1, 
    *
    * @return array $formattedGroupTree
    */
-  static
-  function formatGroupTree(&$groupTree, $groupCount = 1, &$form) {
+  static function formatGroupTree(&$groupTree, $groupCount = 1, &$form) {
     $formattedGroupTree = array();
     $uploadNames = array();
 
@@ -1578,8 +1567,7 @@ SELECT IF( EXISTS(SELECT name FROM civicrm_contact_type WHERE name like %1), 1, 
    *  @param array   $groupTree associated array
    *  @param boolean $returnCount true if customValue count needs to be returned
    */
-  static
-  function buildCustomDataView(&$form, &$groupTree, $returnCount = FALSE, $groupID = NULL, $prefix = NULL) {
+  static function buildCustomDataView(&$form, &$groupTree, $returnCount = FALSE, $groupID = NULL, $prefix = NULL) {
     foreach ($groupTree as $key => $group) {
       if ($key === 'info') {
         continue;
@@ -1646,8 +1634,7 @@ SELECT IF( EXISTS(SELECT name FROM civicrm_contact_type WHERE name like %1), 1, 
    * @param boolean $dncOptionPerLine true if optionPerLine should not be consider
    *
    */
-  static
-  function formatCustomValues(&$values, &$field, $dncOptionPerLine = FALSE) {
+  static function formatCustomValues(&$values, &$field, $dncOptionPerLine = FALSE) {
     $value = $values['data'];
 
     //changed isset CRM-4601
@@ -1891,8 +1878,7 @@ SELECT  civicrm_custom_group.id as groupID, civicrm_custom_group.title as groupT
             return $groupLabels;
           }
 
-          static
-          function dropAllTables() {
+          static         function dropAllTables() {
             $query = "SELECT table_name FROM civicrm_custom_group";
             $dao = CRM_Core_DAO::executeQuery($query);
 

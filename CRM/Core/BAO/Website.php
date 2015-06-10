@@ -49,8 +49,7 @@ class CRM_Core_BAO_Website extends CRM_Core_DAO_Website {
    * @access public
    * @static
    */
-  static
-  function add(&$params) {
+  static function add(&$params) {
     $website = new CRM_Core_DAO_Website();
     $website->copyValues($params);
     return $website->save();
@@ -66,8 +65,7 @@ class CRM_Core_BAO_Website extends CRM_Core_DAO_Website {
    * @access public
    * @static
    */
-  static
-  function create(&$params, $contactID, $skipDelete) {
+  static function create(&$params, $contactID, $skipDelete) {
     if (empty($params)) {
       return FALSE;
     }
@@ -113,8 +111,7 @@ class CRM_Core_BAO_Website extends CRM_Core_DAO_Website {
    * @return void
    * @static
    */
-  static
-  function del($ids) {
+  static function del($ids) {
     $query = 'DELETE FROM civicrm_website WHERE id IN ( ' . implode(',', $ids) . ')';
     CRM_Core_DAO::executeQuery($query);
   }
@@ -129,8 +126,7 @@ class CRM_Core_BAO_Website extends CRM_Core_DAO_Website {
    * @access public
    * @static
    */
-  static
-  function &getValues(&$params, &$values) {
+  static function &getValues(&$params, &$values) {
     $websites = array();
     $website = new CRM_Core_DAO_Website();
     $website->contact_id = $params['contact_id'];
@@ -157,8 +153,7 @@ class CRM_Core_BAO_Website extends CRM_Core_DAO_Website {
    * @access public
    * @static
    */
-  static
-  function allWebsites($id, $updateBlankLocInfo = FALSE) {
+  static function allWebsites($id, $updateBlankLocInfo = FALSE) {
     if (!$id) {
       return NULL;
     }

@@ -33,8 +33,7 @@ class CRM_Core_DAO_Factory {
   );
 
 
-  static
-  function &create($className) {
+  static function &create($className) {
     $type = CRM_Utils_Array::value($className, self::$_classes);
     if (!$type) {
       CRM_Core_Error::fatal("class $className not found");

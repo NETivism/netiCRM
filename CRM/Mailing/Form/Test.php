@@ -200,8 +200,7 @@ class CRM_Mailing_Form_Test extends CRM_Core_Form {
    * @return boolean          true on succesful SMTP handoff
    * @access public
    */
-  static
-  function &testMail($testParams, $files, $self) {
+  static function &testMail($testParams, $files, $self) {
     $error = NULL;
 
     $urlString = 'civicrm/mailing/send';

@@ -48,7 +48,8 @@ class CRM_Mailing_Page_View extends CRM_Core_Page {
    * First check for valid mailing, if false return fatal
    * Second check for visibility
    * Call a hook to see if hook wants to override visibility setting
-   */ function checkPermission() {
+   */
+  function checkPermission() {
     if (!$this->_mailing) {
       return FALSE;
     }

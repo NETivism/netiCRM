@@ -436,15 +436,19 @@ class CRM_Core_Payment_BaseIPN {
       $values['location'] = CRM_Core_BAO_Location::getValues($locationParams);
 
       require_once 'CRM/Core/BAO/UFJoin.php';
-      $ufJoinParams = array('entity_table' => 'civicrm_event',
+      $ufJoinParams = array(
+        'entity_table' => 'civicrm_event',
         'entity_id' => $ids['event'],
         'weight' => 1,
       );
-
       $values['custom_pre_id'] = CRM_Core_BAO_UFJoin::findUFGroupId($ufJoinParams);
-
       $ufJoinParams['weight'] = 2;
       $values['custom_post_id'] = CRM_Core_BAO_UFJoin::findUFGroupId($ufJoinParams);
+      $ufJoinParams['weight'] = 1;
+      $ufJoinParams['module'] = 'CiviEvent_Additional';
+      $values['additional_custom_pre_id'] = CRM_Core_BAO_UFJoin::findUFGroupId($ufJoinParams);
+      $ufJoinParams['weight'] = 2;
+      $values['additional_custom_post_id'] = CRM_Core_BAO_UFJoin::findUFGroupId($ufJoinParams);
 
       $contribution->source = !empty($contribution->source) ? $contribution->source : ts('Online Event Registration') . ':' . $values['event']['title'];
 

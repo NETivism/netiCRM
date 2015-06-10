@@ -167,8 +167,7 @@ class CRM_Report_Form_Case_Summary extends CRM_Report_Form {
     $this->_select = "SELECT " . implode(', ', $select) . " ";
   }
 
-  static
-  function formRule($fields, $files, $self) {
+  static function formRule($fields, $files, $self) {
     $errors = $grouping = array();
     if (empty($fields['relationship_type_id_value']) && (array_key_exists('sort_name', $fields['fields']) || array_key_exists('label_b_a', $fields['fields']))) {
       $errors['fields'] = ts('Either filter on at least one relationship type, or de-select Staff Member and Relationship from the list of fields.');

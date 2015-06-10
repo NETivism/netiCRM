@@ -281,8 +281,7 @@ class CRM_Admin_Form_Options extends CRM_Admin_Form {
    * @access public
    * @static
    */
-  static
-  function formRule($fields, $files, $self) {
+  static function formRule($fields, $files, $self) {
     $errors = array();
     if ($self->_gName == 'case_status' && !CRM_Utils_Array::value('grouping', $fields)) {
       $errors['grouping'] = ts('Status class is a required field');

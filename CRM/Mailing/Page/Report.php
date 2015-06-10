@@ -46,7 +46,8 @@ class CRM_Mailing_Page_Report extends CRM_Core_Page_Basic {
    * Get BAO Name
    *
    * @return string Classname of BAO
-   */ function getBAOName() {
+   */
+  function getBAOName() {
     return 'CRM_Mailing_BAO_Mailing';
   }
 

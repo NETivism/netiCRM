@@ -61,7 +61,8 @@ class CRM_Event_Page_ManageEvent extends CRM_Core_Page {
    * Get action Links
    *
    * @return array (reference) of action links
-   */ function &links() {
+   */
+  function &links() {
     if (!(self::$_actionLinks)) {
       // helper variable for nicer formatting
       $copyExtra = ts('Are you sure you want to make a copy of this Event?');

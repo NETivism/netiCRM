@@ -879,8 +879,7 @@ abstract class CRM_Import_Parser {
    * @return void
    * @access public
    */
-  static
-  function exportCSV($fileName, $header, $data) {
+  static function exportCSV($fileName, $header, $data) {
 
     if (file_exists($fileName) && !is_writable($fileName)) {
       CRM_Core_Error::movedSiteError($fileName);
