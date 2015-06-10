@@ -64,8 +64,6 @@ class api_v3_ActivityTest extends CiviUnitTestCase {
 
     $this->quickCleanup($tablesToTruncate);
 
-
-
     //  Insert a row in civicrm_contact creating contact 17
     $op = new PHPUnit_Extensions_Database_Operation_Insert();
     $op->execute($this->_dbconn,

@@ -108,7 +108,7 @@ class CiviUnitTestCase extends PHPUnit_Extensions_Database_TestCase {
    *  $this->cleanDB() in the first line of this
    *  test (method).
    */
-  public $DBResetRequired = TRUE;
+  public $DBResetRequired = FALSE;
 
   /**
    *  Constructor
