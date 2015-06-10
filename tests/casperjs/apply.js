@@ -9,7 +9,7 @@ casper.start(url_prefix + '/civicrm/event/register?reset=1&action=preview&id=1',
 });
 
 casper.then(function(){
-  var email = 'test@netivism.com.tw';
+  var email = 'test@aipvo.com';
   this.fill('#Register',{
     'email-5': email
   },true);
@@ -31,7 +31,7 @@ casper.thenOpen(url_prefix + '/civicrm/event/register?reset=1&id=2', function() 
 });
 
 casper.then(function(){
-  var email = 'test@netivism.com.tw';
+  var email = 'test@kvien.com';
   this.fill('#Register',{
     'email-5': email
   },true);
@@ -60,7 +60,7 @@ casper.thenOpen(url_prefix + '/civicrm/event/register?reset=1&id=3', function() 
 });
 
 casper.then(function(){
-  var email = 'test@netivism.com.tw';
+  var email = 'test@ovoqnj.com';
   this.fill('#Register',{
     'email-5': email
   },true);
@@ -78,7 +78,7 @@ casper.then(function(){
 casper.then(function(){
   this.capture("neticrm-3-3.png");
   this.echo(this.getTitle());
-  var email = 'test2@netivism.com.tw';
+  var email = 'test2@soosovk.com';
   this.fill('#Register',{
     'email-5': email
   },true);
