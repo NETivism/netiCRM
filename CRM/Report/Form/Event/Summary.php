@@ -180,6 +180,7 @@ class CRM_Report_Form_Event_Summary extends CRM_Report_Form {
                  SUM( civicrm_participant.fee_amount ) AS amount
 
             FROM civicrm_participant
+            INNER JOIN  civicrm_contact ON (civicrm_contact.id = civicrm_participant.contact_id AND civicrm_contact.is_deleted = 0)
 
             WHERE civicrm_participant.is_test = 0 
                   $this->_participantWhere

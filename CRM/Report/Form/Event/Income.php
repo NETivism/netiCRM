@@ -114,7 +114,7 @@ class CRM_Report_Form_Event_Income extends CRM_Report_Form {
                          civicrm_option_value.option_group_id = {$optionGroupId} )
             LEFT JOIN  civicrm_participant ON ( civicrm_event.id = civicrm_participant.event_id 
                        {$activeParticipantClause} AND civicrm_participant.is_test  = 0 )
-
+            INNER JOIN  civicrm_contact ON (civicrm_contact.id = civicrm_participant.contact_id AND civicrm_contact.is_deleted = 0)
             WHERE      civicrm_event.id IN( {$eventID}) 
                       
             GROUP BY   civicrm_event.id
@@ -137,6 +137,7 @@ class CRM_Report_Form_Event_Income extends CRM_Report_Form {
             SELECT COUNT(civicrm_participant.id ) as count, civicrm_participant.event_id as event_id
 
             FROM     civicrm_participant
+            INNER JOIN  civicrm_contact ON (civicrm_contact.id = civicrm_participant.contact_id AND civicrm_contact.is_deleted = 0)
 
             WHERE    civicrm_participant.event_id IN( {$eventID}) AND 
                      civicrm_participant.is_test  = 0 
@@ -157,6 +158,7 @@ class CRM_Report_Form_Event_Income extends CRM_Report_Form {
                    civicrm_participant.event_id        as event_id
 
             FROM     civicrm_participant
+            INNER JOIN  civicrm_contact ON (civicrm_contact.id = civicrm_participant.contact_id AND civicrm_contact.is_deleted = 0)
 
             WHERE    civicrm_participant.event_id IN ( {$eventID}) AND
                      civicrm_participant.is_test  = 0 
@@ -198,6 +200,7 @@ class CRM_Report_Form_Event_Income extends CRM_Report_Form {
                    civicrm_participant.event_id        as event_id
 
             FROM     civicrm_participant
+            INNER JOIN  civicrm_contact ON (civicrm_contact.id = civicrm_participant.contact_id AND civicrm_contact.is_deleted = 0)
 
             WHERE    civicrm_participant.event_id IN ({$eventID}) AND
                      civicrm_participant.is_test  = 0 
@@ -224,6 +227,7 @@ class CRM_Report_Form_Event_Income extends CRM_Report_Form {
                    civicrm_participant.event_id          as event_id
 
             FROM      civicrm_participant
+            INNER JOIN  civicrm_contact ON (civicrm_contact.id = civicrm_participant.contact_id AND civicrm_contact.is_deleted = 0)
             LEFT JOIN civicrm_participant_payment pp ON(pp.participant_id = civicrm_participant.id )
             LEFT JOIN civicrm_contribution c ON ( pp.contribution_id = c.id)
 
