@@ -419,7 +419,9 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
     CRM_Utils_Hook::tokens($hookTokens);
     $categories = array_keys($hookTokens);
 
-    if ($params['contactId']) {
+    $contactID = CRM_Utils_Array::value('contactId', $params);
+
+    if ($contactID) {
       $contactParams = array('contact_id' => $params['contactId']);
       $returnProperties = array();
 
@@ -441,11 +443,20 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
     $subject = CRM_Utils_Token::replaceDomainTokens($subject, $domain, TRUE, $tokens['text'], TRUE);
     $text = CRM_Utils_Token::replaceDomainTokens($text, $domain, TRUE, $tokens['text'], TRUE);
     $html = CRM_Utils_Token::replaceDomainTokens($html, $domain, TRUE, $tokens['html'], TRUE);
-    if ($params['contactId']) {
+    if ($contactID) {
       $subject = CRM_Utils_Token::replaceContactTokens($subject, $contact, FALSE, $tokens['text'], FALSE, TRUE);
       $text = CRM_Utils_Token::replaceContactTokens($text, $contact, FALSE, $tokens['text'], FALSE, TRUE);
       $html = CRM_Utils_Token::replaceContactTokens($html, $contact, FALSE, $tokens['html'], FALSE, TRUE);
-      CRM_Utils_Hook::tokenValues($contact[$params['contactId']], $params['contactId']);
+
+      $contactArray = array($contactID => $contact);
+      CRM_Utils_Hook::tokenValues($contactArray,
+        array($contactID),
+        NULL,
+        CRM_Utils_Token::flattenTokens($tokens),
+        'CRM_Core_BAO_MessageTemplate'
+      );
+      $contact = $contactArray[$contactID];
+
       $subject = CRM_Utils_Token::replaceHookTokens($subject, $contact[$params['contactId']], $categories, TRUE);
       $text = CRM_Utils_Token::replaceHookTokens($text, $contact[$params['contactId']], $categories, TRUE);
       $html = CRM_Utils_Token::replaceHookTokens($html, $contact[$params['contactId']], $categories, TRUE);
