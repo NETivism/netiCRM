@@ -1814,7 +1814,7 @@ INNER JOIN  civicrm_price_field field ON ( value.price_field_id = field.id )
       $setting['neticrm_event_stat']['state'][$key] = array('name' => $value, 'isfinish' => 'notcounted');
     }
 
-    $sql = "SELECT id, status_id FROM civicrm_participant WHERE event_id = %1 AND is_test = 0";
+    $sql = "SELECT cp.id, cp.status_id FROM civicrm_participant cp LEFT JOIN civicrm_contact cc ON cc.id = cp.contact_id WHERE cp.event_id = %1 AND cp.is_test = 0 AND cc.is_deleted = 0";
     $query = CRM_Core_DAO::executeQuery($sql, array(1 => array($event_id, 'Integer')));
     $participant_status = array();
     while ($query->fetch()) {
