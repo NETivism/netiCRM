@@ -36,6 +36,15 @@
        <a id='notDuplicate' href="#" title={ts}Mark this pair as not a duplicate.{/ts} onClick="processDupes( {$main_cid}, {$other_cid}, 'dupe-nondupe', 'merge-contact', '{$userContextURL}' );return false;">&raquo; {ts}Mark this pair as not a duplicate.{/ts}</a>
 </div>	
 
+{literal}
+<style type="text/css">
+  .is-erase{
+    color: red;
+    text-decoration: line-through;
+  }
+</style>
+{/literal}
+
 <table>
   <tr class="columnheader">
     <th>&nbsp;</th>
@@ -137,8 +146,17 @@ cj(document).ready(function(){
           });
        }
     });
-    cj('#toggleSelect').click();
-    cj('table td input.form-checkbox').click();
+    
+    cj('[id*="move_"]').change(onChangeCheckBox);
+    defaultCheckAllIsReplace();
+
+    cj('#toggleSelect').change(function(){
+      if(cj(this).attr('checked')){
+        alert("{/literal}{ts}WARNING: The duplicate contact record WILL BE DELETED after the merge is complete.{/ts}{literal}");
+      }
+    })
+
+    
 });
 
 function mergeAddress( element, blockId ) {
@@ -153,6 +171,26 @@ function mergeAddress( element, blockId ) {
 
    cj( "#main_address_" + blockId ).html( address );	
    cj( "#main_address_" + blockId +"_overwrite" ).html( label );
+}
+
+function defaultCheckAllIsReplace(){
+  cj('[id*="move_"]').each(function(){
+    if(cj(this).parent().prev().text().split(/\s+/)[1] !== ""){
+      cj(this).click();
+    }
+  })
+}
+
+function onChangeCheckBox(){
+  var cj_this = cj(this);
+
+  if(cj_this.attr('checked')){
+    cj_this.parent().next().find('span').addClass('is-erase');
+  }else{
+    cj_this.parent().next().find('span').removeClass('is-erase');
+  }
+
+  cj('#toggleSelect').removeAttr('checked');
 }
 
 </script>
