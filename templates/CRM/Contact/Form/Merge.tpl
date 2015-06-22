@@ -147,13 +147,20 @@ cj(document).ready(function(){
        }
     });
     
-    cj('[id*="move_"]').change(onChangeCheckBox);
-    defaultCheckAllIsReplace();
+    cj('[id^="move_"]').change(onChangeOverlayCheckBox);
+    cj('[id^="location"][type=checkbox]').change(onChangeAddnewCheckbox);
+    doCheckAllIsReplace();
 
     cj('#toggleSelect').change(function(){
       if(cj(this).attr('checked')){
         alert("{/literal}{ts}WARNING: The duplicate contact record WILL BE DELETED after the merge is complete.{/ts}{literal}");
+        
       }
+      var is_checked = cj(this).attr('checked')== 'checked';
+      cj('[id^="location"][type=checkbox][disabled!=disabled]').each(function(){
+        cj(this).attr('checked',is_checked );
+      })
+      setTimeout(checkDataIsErase,100);
     })
 
     
@@ -173,24 +180,98 @@ function mergeAddress( element, blockId ) {
    cj( "#main_address_" + blockId +"_overwrite" ).html( label );
 }
 
-function defaultCheckAllIsReplace(){
-  cj('[id*="move_"]').each(function(){
-    if(cj(this).parent().prev().text().split(/\s+/)[1] !== ""){
-      cj(this).click();
+/**
+ * Check all the ==[]==> checkbox 
+ * Only do once when page ready.
+ */
+function doCheckAllIsReplace(){
+  cj('[id^="move_"]').each(function(){
+    var cj_this = cj(this);
+    var cj_left_td = cj_this.parent().prev();
+    var cj_right_td = cj_this.parent().next();
+
+    if(cj_this.parent().next().text().split(/\s+/)[1] == ""){
+      cj_this.click();
+    }
+    if(cj_this.attr('id').match(/^move_location_/)){
+      if(cj_right_td.find('span').text() == ""){
+        cj_this.click();
+        cj_right_td.find('input[type="checkbox"]').attr('checked',true).attr("disabled", true);
+      }
     }
   })
 }
 
-function onChangeCheckBox(){
+/**
+ * When click ==[]==> checkbox
+ */
+function onChangeOverlayCheckBox(){
   var cj_this = cj(this);
+  var cj_left_td = cj_this.parent().prev();
+  var cj_right_td = cj_this.parent().next();
 
-  if(cj_this.attr('checked')){
-    cj_this.parent().next().find('span').addClass('is-erase');
-  }else{
-    cj_this.parent().next().find('span').removeClass('is-erase');
+
+  if(cj_this.attr('id').match(/^move_location_/)){
+    if(cj_right_td.find('span').text() !== ""){
+      cj_right_td.find('input[type="checkbox"]').attr('checked',cj_this.attr('checked')=='checked');
+    }
   }
 
+  checkDataIsErase(cj_this);
+
+  
+
   cj('#toggleSelect').removeAttr('checked');
+}
+
+/**
+ * When click "Add new " checkbox on location type field
+ */
+function onChangeAddnewCheckbox(){
+  if(cj(this).attr('checked')){
+    cj(this).parent().prev().find('[id^="move_"]').attr('checked',true);
+  }
+  checkDataIsErase(cj(this));
+}
+
+
+/**
+ * Check if right column need to show "will be erased" or not.
+ * @param  jQuery_element cjCheckboxElement The cj checkbox element which want to check.
+*                                           If null. than check all the ==[]==> element.
+ */
+function checkDataIsErase(cjCheckboxElement){
+  if(!cjCheckboxElement){
+    cj('[id^="move_"]').each(function(){
+      checkDataIsErase(cj(this));  
+    })
+    
+    return ;
+  }
+
+  var cj_left_td = cjCheckboxElement.parent().prev();
+  var cj_right_td = cjCheckboxElement.parent().next();
+
+  if(cjCheckboxElement.attr('id').match(/^location/)){
+    checkDataIsErase(cj_left_td.find('input[id^="move_"]'));
+  }else if(cjCheckboxElement.attr('id').match(/^move_/)){
+    var is_erase = false;
+
+    
+
+    if(cjCheckboxElement.attr('checked')){
+      if(!cjCheckboxElement.attr('id').match(/^move_location_/)){
+        is_erase = true;
+      }else if(typeof cj_right_td.find('input[type="checkbox"]').attr('checked') == "undefined"){
+        is_erase = true;
+      }
+      
+    }
+
+    is_erase?cj_right_td.find('span').addClass('is-erase'):cj_right_td.find('span').removeClass('is-erase');
+
+  }
+
 }
 
 </script>
