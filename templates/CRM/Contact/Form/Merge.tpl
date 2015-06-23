@@ -50,7 +50,7 @@
     <th>&nbsp;</th>
     <th><a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=$other_cid"}">{$other_name}&nbsp;<em>{$other_contact_subtype}</em></a> ({ts}duplicate{/ts})</th>
     <th>{ts}Mark All{/ts}<br />=={$form.toggleSelect.html} ==&gt;</th>
-    <th><a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=$main_cid"}">{$main_name}&nbsp;<em>{$main_contact_subtype}</em></a></th>
+    <th><a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=$main_cid"}">{$main_name}&nbsp;<em>{$main_contact_subtype}</em></a> ({ts}Reserved{/ts}) </th>
   </tr>
   {foreach from=$rows item=row key=field}
      <tr class="{cycle values="odd-row,even-row"}">
@@ -76,7 +76,7 @@
 
                 {$form.location.$blockName.$blockId.locTypeId.html}&nbsp;
                 {if $blockName eq 'address'}
-                <span id="main_{$blockName}_{$blockId}_overwrite">{if $row.main}(overwrite){else}(add){/if}</span>
+                <span id="main_{$blockName}_{$blockId}_overwrite">{if $row.main}({ts}overwrite{/ts}){else}({ts}add{/ts}){/if}</span>
                 {/if} 
 
                 {$form.location.$blockName.$blockId.operation.html}&nbsp;<br />
@@ -169,11 +169,11 @@ cj(document).ready(function(){
 function mergeAddress( element, blockId ) {
    var allAddress = {/literal}{$mainLocAddress}{literal};
    var address    = eval( "allAddress." + 'main_' + element.value );
-   var label      = '(overwrite)';
+   var label      = '({/literal}{ts}overwrite{/ts}{literal})';
 
    if ( !address ) { 
      address = '';
-     label   = '(add)';
+     label   = '({/literal}{ts}Add{/ts}{literal})';
    }
 
    cj( "#main_address_" + blockId ).html( address );	
@@ -190,13 +190,17 @@ function doCheckAllIsReplace(){
     var cj_left_td = cj_this.parent().prev();
     var cj_right_td = cj_this.parent().next();
 
-    if(cj_this.parent().next().text().split(/\s+/)[1] == ""){
+    if(cj_right_td.text().split(/\s+/)[1] == ""){
       cj_this.click();
-    }
-    if(cj_this.attr('id').match(/^move_location_/)){
+    }else if(cj_this.attr('id').match(/^move_location_/)){
       if(cj_right_td.find('span').text() == ""){
         cj_this.click();
         cj_right_td.find('input[type="checkbox"]').attr('checked',true).attr("disabled", true);
+      }
+    }else{
+      var cj_left_left_td = cj_left_td.prev();
+      if(cj_left_left_td.text().match("{/literal}{ts}Move related...{/ts}{literal}")){
+        cj_this.attr('checked',true);
       }
     }
   })
@@ -255,14 +259,13 @@ function checkDataIsErase(cjCheckboxElement){
   if(cjCheckboxElement.attr('id').match(/^location/)){
     checkDataIsErase(cj_left_td.find('input[id^="move_"]'));
   }else if(cjCheckboxElement.attr('id').match(/^move_/)){
-    var is_erase = false;
 
-    
+    var is_erase = false;
 
     if(cjCheckboxElement.attr('checked')){
       if(!cjCheckboxElement.attr('id').match(/^move_location_/)){
         is_erase = true;
-      }else if(typeof cj_right_td.find('input[type="checkbox"]').attr('checked') == "undefined"){
+      }else if(cj_right_td.find('input[type="checkbox"]').length > 0 && typeof cj_right_td.find('input[type="checkbox"]').attr('checked') == "undefined"){
         is_erase = true;
       }
       
