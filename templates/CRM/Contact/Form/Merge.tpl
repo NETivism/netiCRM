@@ -259,14 +259,13 @@ function checkDataIsErase(cjCheckboxElement){
   if(cjCheckboxElement.attr('id').match(/^location/)){
     checkDataIsErase(cj_left_td.find('input[id^="move_"]'));
   }else if(cjCheckboxElement.attr('id').match(/^move_/)){
-    var is_erase = false;
 
-    
+    var is_erase = false;
 
     if(cjCheckboxElement.attr('checked')){
       if(!cjCheckboxElement.attr('id').match(/^move_location_/)){
         is_erase = true;
-      }else if(typeof cj_right_td.find('input[type="checkbox"]').attr('checked') == "undefined"){
+      }else if(cj_right_td.find('input[type="checkbox"]').length > 0 && typeof cj_right_td.find('input[type="checkbox"]').attr('checked') == "undefined"){
         is_erase = true;
       }
       
