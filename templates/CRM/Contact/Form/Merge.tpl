@@ -76,7 +76,7 @@
 
                 {$form.location.$blockName.$blockId.locTypeId.html}&nbsp;
                 {if $blockName eq 'address'}
-                <span id="main_{$blockName}_{$blockId}_overwrite">{if $row.main}(overwrite){else}(add){/if}</span>
+                <span id="main_{$blockName}_{$blockId}_overwrite">{if $row.main}({ts}overwrite{/ts}){else}({ts}add{/ts}){/if}</span>
                 {/if} 
 
                 {$form.location.$blockName.$blockId.operation.html}&nbsp;<br />
