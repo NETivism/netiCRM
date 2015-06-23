@@ -160,7 +160,8 @@ define( 'CIVICRM_TEMPLATE_COMPILEDIR', '%%templateCompileDir%%' );
  *      define( 'CIVICRM_UF_BASEURL' , 'http://www.example.com/joomla/' );
  *
  */
-define( 'CIVICRM_UF_BASEURL'      , '%%baseURL%%' );
+$https = (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on') ? 'https://' : 'http://';
+define( 'CIVICRM_UF_BASEURL'      , $https.$_SERVER['HTTP_HOST'].'%%baseURL%%' );
 
 /*
  * If you are using any CiviCRM script in the bin directory that
