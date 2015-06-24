@@ -449,8 +449,9 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
       $html = CRM_Utils_Token::replaceContactTokens($html, $contact, FALSE, $tokens['html'], FALSE, TRUE);
 
       $contactArray = array($contactID => $contact);
+      $contactIDArray = array($contactID);
       CRM_Utils_Hook::tokenValues($contactArray,
-        array($contactID),
+        $contactIDArray,
         NULL,
         CRM_Utils_Token::flattenTokens($tokens),
         'CRM_Core_BAO_MessageTemplate'
