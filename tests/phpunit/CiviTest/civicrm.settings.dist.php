@@ -1,26 +1,39 @@
 <?php
+$drupal_root = getenv("DRUPAL_ROOT");
 
-//--- you shouldn't have to modify anything under this line, but might want to put the compiled templates CIVICRM_TEMPLATE_COMPILEDIR in a different folder than our default location ----------
+if($drupal_root && is_dir($drupal_root)){
+  define('DRUPAL_ROOT', $drupal_root);
+  chdir($drupal_root);
+  $_SERVER['HTTP_HOST'] = 'mysite.com';
+  $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
+  require_once DRUPAL_ROOT . '/includes/bootstrap.inc';
+  drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
 
-if ( ! defined( 'CIVICRM_DSN' ) && ! empty( $GLOBALS['mysql_user'] ) ) {
-  $dbName = ! empty( $GLOBALS['mysql_db'] ) ? $GLOBALS['mysql_db'] : 'civicrm_tests_dev';
-  define( 'CIVICRM_DSN'          , "mysql://{$GLOBALS['mysql_user']}:{$GLOBALS['mysql_pass']}@{$GLOBALS['mysql_host']}/{$dbName}?new_link=true" );
+  // fixes base_path problem
+  $GLOBALS['base_path'] = '/';
+}
+
+if(!defined('CIVICRM_DSN')&&!empty($GLOBALS['mysql_user'])){
+  $dbName = !empty($GLOBALS['mysql_db']) ? $GLOBALS['mysql_db'] : 'civicrm_tests_dev';
+  define('CIVICRM_DSN', "mysql://{$GLOBALS['mysql_user']}:{$GLOBALS['mysql_pass']}@{$GLOBALS['mysql_host']}/{$dbName}?new_link=true");
 }
 
 
-if (!defined("CIVICRM_DSN")) {
-  $dsn= getenv("CIVICRM_TEST_DSN");
+if(!defined("CIVICRM_DSN")) {
+  $dsn = getenv("CIVICRM_TEST_DSN");
   if (!empty ($dsn)) {
     define("CIVICRM_DSN",$dsn);
-  } else {
+  }
+  else {
     echo "\nFATAL: no DB connection configured (CIVICRM_DSN). \nYou can either create/edit " . __DIR__ . "/civicrm.settings.local.php\n";
     if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
       echo "OR set it in your shell:\n \$export CIVICRM_TEST_DSN=mysql://db_username:db_password@localhost/civicrm_tests_dev \n";
-    } else {
+    }
+    else {
       echo "OR set it in your shell:\n SETX CIVICRM_TEST_DSN mysql://db_username:db_password@localhost/civicrm_tests_dev \n
       (you will need to open a new command shell before it takes effect)";
     }
-echo "\n\n
+    echo "\n\n
 If you haven't done so already, you need to create (once) a database dedicated to the unit tests:
 mysql -uroot -p
 create database civicrm_tests_dev;
@@ -31,13 +44,13 @@ grant SUPER on *.* to db_username@localhost identified by 'db_password';\n";
 }
 
 global $civicrm_root;
-$civicrm_root = dirname (dirname (dirname (dirname( __FILE__ ) )));
+$civicrm_root = dirname(dirname(dirname(dirname( __FILE__ ))));
 
 $include_path = '.' . PATH_SEPARATOR .
-                $civicrm_root . PATH_SEPARATOR .
-                $civicrm_root . DIRECTORY_SEPARATOR . 'packages' . PATH_SEPARATOR .
-                $civicrm_root . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'phpunit'. DIRECTORY_SEPARATOR . 'dbunit' . PATH_SEPARATOR .
-                get_include_path();
+              $civicrm_root . PATH_SEPARATOR .
+              $civicrm_root . DIRECTORY_SEPARATOR . 'packages' . PATH_SEPARATOR .
+              $civicrm_root . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'phpunit'. DIRECTORY_SEPARATOR . 'dbunit' . PATH_SEPARATOR .
+              get_include_path();
 if ( set_include_path( $include_path ) === false ) {
    echo "Could not set the include path<p>";
    exit();
@@ -73,45 +86,14 @@ if (!defined("CIVICRM_TEMPLATE_COMPILEDIR")) {
 }
 
 define( 'CIVICRM_SITE_KEY', 'phpunittestfakekey' );
+define( 'CIVICRM_UF_BASEURL' , 'http://FIX ME' );
 
-/**
- * Site URLs:
- *
- * This section defines absolute and relative URLs to access the host CMS (Drupal or Joomla) resources.
- *
- * IMPORTANT: Trailing slashes should be used on all URL settings.
- *
- *
- * EXAMPLE - Drupal Installations:
- * If your site's home url is http://www.example.com/drupal/
- * these variables would be set as below. Modify as needed for your install.
- *
- * CIVICRM_UF_BASEURL - home URL for your site:
- *      define( 'CIVICRM_UF_BASEURL' , 'http://www.example.com/drupal/' );
- *
- * EXAMPLE - Joomla Installations:
- * If your site's home url is http://www.example.com/joomla/
- *
- * CIVICRM_UF_BASEURL - home URL for your site:
- * Administration site:
- *      define( 'CIVICRM_UF_BASEURL' , 'http://www.example.com/joomla/administrator/' );
- * Front-end site:
- *      define( 'CIVICRM_UF_BASEURL' , 'http://www.example.com/joomla/' );
- *
- */
-define( 'CIVICRM_UF_BASEURL'      , 'http://FIX ME' );
-
-
-/**
- *
- * Do not change anything below this line. Keep as is
- *
- */
 
 if ( function_exists( 'variable_get' ) && variable_get('clean_url', '0') != '0' ) {
-    define( 'CIVICRM_CLEANURL', 1 );
-} else {
-    define( 'CIVICRM_CLEANURL', 0 );
+  define( 'CIVICRM_CLEANURL', 1 );
+}
+else {
+  define( 'CIVICRM_CLEANURL', 0 );
 }
 
 // force PHP to auto-detect Mac line endings
@@ -122,13 +104,14 @@ $memLimitString = trim(ini_get('memory_limit'));
 $memLimitUnit   = strtolower(substr($memLimitString, -1));
 $memLimit       = (int) $memLimitString;
 switch ($memLimitUnit) {
-    case 'g': $memLimit *= 1024;
-    case 'm': $memLimit *= 1024;
-    case 'k': $memLimit *= 1024;
+  case 'g': $memLimit *= 1024;
+  case 'm': $memLimit *= 1024;
+  case 'k': $memLimit *= 1024;
 }
-if ($memLimit >= 0 and $memLimit < 67108864) {
-    ini_set('memory_limit', '64M');
+if($memLimit >= 0 and $memLimit < 67108864) {
+  ini_set('memory_limit', '64M');
 }
 
 require_once 'CRM/Core/ClassLoader.php';
 CRM_Core_ClassLoader::singleton()->register();
+
