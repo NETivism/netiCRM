@@ -1,4 +1,4 @@
-casper.optionvars.waitTimeout = 10000;
+casper.options.waitTimeout = 10000;
 
 var system = require('system'); 
 var port = system.env.RUNPORT; 
@@ -82,12 +82,12 @@ var vars = {
     {title:'Search Builder', url:'civicrm/contact/search/builder?reset=1'},
     {title:'Full-text Search', url:'civicrm/contact/search/custom?csid=15&reset=1'},
     {title:'Advanced Search', url:'civicrm/contact/search/advanced?reset=1'}
-  ];
+  ],
 };
-vars.testNum = url.length*2+1;
+vars.testNum = vars.url.length*2+1;
 
 
-var var lookup_title = function(u){
+var lookup_title = function(u){
   for(var i in vars.url){
     if(vars.url[i].url == u){
       return vars.url[i].title;
