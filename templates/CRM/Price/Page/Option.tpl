@@ -58,7 +58,7 @@
             <th>{ts}Option Label{/ts}</th>
             <th>{ts}Option Amount{/ts}</th>
     	    <th>{ts}Default{/ts}</th>
-            <th id="order" class="sortable">{ts}Order{/ts}</th>
+            <th id="nosort" class="sortable">{ts}Order{/ts}</th>
 	        <th>{ts}Enabled?{/ts}</th>
             <th></th>
             <th class="hiddenElement"></th>
