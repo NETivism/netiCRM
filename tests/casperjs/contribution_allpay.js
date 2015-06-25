@@ -1,4 +1,4 @@
-casper.optionvars.waitTimeout = 10000;
+casper.options.waitTimeout = 10000;
 
 var system = require('system'); 
 var port = system.env.RUNPORT; 
@@ -6,30 +6,34 @@ var port = system.env.RUNPORT;
 var vars = {
   testNum: 13,
   baseURL: port == '80' ? 'http://127.0.0.1/' : 'http://127.0.0.1:' + port + '/',
+  path: 'civicrm/contribute/transact',
+  query: 'reset=1&action=preview&id=1',
   siteName: 'netiCRM',
 
 // you should add your own testing variables below
   pageTitle: '捐款贊助',
   userEmail: 'youremail@test.tw',
-  amountValue: '579',
-  amountLabel: 'NT$ 100.00 ',
+  amountValue: '101',
+  amountLabel: '101',
   allpayCpage: '信用卡資料填寫-歐付寶allPay第三方支付',
   allpayVpage: 'OTP刷卡簡訊驗證-歐付寶allPay第三方支付'
 };
 
 // Step 1: Contribution page
 casper.test.begin('Contribution page test (payment processors: allpay)...', vars.testNum, function suite(test) {
-  casper.start(vars.baseURL, function() {
+  casper.start(vars.baseURL+vars.path+'?'+vars.query, function() {
     var pageTitle = vars.pageTitle + ' | ' + vars.siteName;
-    test.assertTitle(pageTitle, 'Contribution page: page title is OK. (' + pageTitle + ')');
+    test.assertTitle(pageTitle, 'Contribution page: page title is ' + this.getTitle());
     test.assertExists('div.crm-contribution-main-form-block', 'Contribution page: main form block is exist.');
     test.assertExists('form#Main', 'Contribution page: main form is exist.');
-    this.captureSelector('contribution_page_1.png', 'div.page');
-    this.fill('form[action="/civicrm/contribute/transact"]', {
-      'email-5': vars.userEmail,
-      'amount': vars.amountValue,
-    },
-    true);
+    this.waitForSelector('input[name="payment_processor"]', function(){
+      this.fill('form[action="/civicrm/contribute/transact"]', {
+        'email-5': vars.userEmail,
+        'amount_other': vars.amountValue,
+        'payment_processor': "2",
+      },
+      true);
+    });
   });
 
   // Step 2: Contribution Confirm
@@ -39,7 +43,6 @@ casper.test.begin('Contribution page test (payment processors: allpay)...', vars
     test.assertSelectorHasText('.amount_display-group .display-block strong', vars.amountLabel, 'Contribution Confirm: amount label is OK. (' + vars.amountLabel + ')');
     test.assertExists('.contributor_email-section .content', 'Contribution Confirm: email field is exist.');
     test.assertSelectorHasText('.contributor_email-section .content', vars.userEmail, 'Contribution Confirm: email value is OK. (' + vars.userEmail + ')');
-    this.captureSelector('contribution_page_2.png', 'div.page');
     this.click('input[name="_qf_Confirm_next"]');
   });
 
@@ -48,10 +51,9 @@ casper.test.begin('Contribution page test (payment processors: allpay)...', vars
     test.assertUrlMatch(/CreateCreditCardInfo/, "Allpay CreditCard Info");
     test.assertTitle(vars.allpayCpage, 'Allpay CreditCard Info: page title is OK. (' + vars.allpayCpage + ')');
     test.assertExists('form[action="/CreditPayment/CreateCreditCardInfo"]', 'Allpay CreditCard Info: form is exist.');
-    this.captureSelector('contribution_page_3.png', 'div.pay_content');
     this.fill('form[action="/CreditPayment/CreateCreditCardInfo"]', {
-      'CardHolder': 'Poliphilo',
-      'Cellphone': 'your cellphone number',
+      'CardHolder': 'TEST',
+      'Cellphone': '123456789',
       'CardType': 'VISA',
       'CardNoPart1': '4311',
       'CardNoPart2': '9522',
