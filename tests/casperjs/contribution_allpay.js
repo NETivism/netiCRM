@@ -1,26 +1,33 @@
-casper.options.waitTimeout = 10000;
+casper.optionvars.waitTimeout = 10000;
 
-var s = {
-  testNum : 13,
-  baseURL : 'http://d7.neticrm.deb:8080/civicrm/contribute/transact?reset=1&action=preview&id=2',
-  cPage : 'CasperJS測試金流 | d7.neticrm.deb',
-  userEmail : 'youremail@test.tw',
-  amountValue : '579',
-  amountLabel : 'NT$ 100.00 ',
-  allpayCpage : '信用卡資料填寫-歐付寶allPay第三方支付',
-  allpayVpage : 'OTP刷卡簡訊驗證-歐付寶allPay第三方支付'
+var system = require('system'); 
+var port = system.env.RUNPORT; 
+
+var vars = {
+  testNum: 13,
+  baseURL: port == '80' ? 'http://127.0.0.1/' : 'http://127.0.0.1:' + port + '/',
+  siteName: 'netiCRM',
+
+// you should add your own testing variables below
+  pageTitle: '捐款贊助',
+  userEmail: 'youremail@test.tw',
+  amountValue: '579',
+  amountLabel: 'NT$ 100.00 ',
+  allpayCpage: '信用卡資料填寫-歐付寶allPay第三方支付',
+  allpayVpage: 'OTP刷卡簡訊驗證-歐付寶allPay第三方支付'
 };
 
 // Step 1: Contribution page
-casper.test.begin('Contribution page test (payment processors: allpay)...', s.testNum, function suite(test) {
-  casper.start(s.baseURL, function() {
-    test.assertTitle(s.cPage, 'Contribution page: page title is OK. (' + s.cPage + ')');
+casper.test.begin('Contribution page test (payment processors: allpay)...', vars.testNum, function suite(test) {
+  casper.start(vars.baseURL, function() {
+    var pageTitle = vars.pageTitle + ' | ' + vars.siteName;
+    test.assertTitle(pageTitle, 'Contribution page: page title is OK. (' + pageTitle + ')');
     test.assertExists('div.crm-contribution-main-form-block', 'Contribution page: main form block is exist.');
     test.assertExists('form#Main', 'Contribution page: main form is exist.');
     this.captureSelector('contribution_page_1.png', 'div.page');
     this.fill('form[action="/civicrm/contribute/transact"]', {
-      'email-5': s.userEmail,
-      'amount': s.amountValue,
+      'email-5': vars.userEmail,
+      'amount': vars.amountValue,
     },
     true);
   });
@@ -29,9 +36,9 @@ casper.test.begin('Contribution page test (payment processors: allpay)...', s.te
   casper.waitForUrl(/_qf_Confirm_display/, function(){
     test.assertUrlMatch(/_qf_Confirm_display=true/, 'Contribution Confirm');
     test.assertExists('.amount_display-group .display-block strong', 'Contribution Confirm: amount field is exist.');
-    test.assertSelectorHasText('.amount_display-group .display-block strong', s.amountLabel, 'Contribution Confirm: amount label is OK. (' + s.amountLabel + ')');
+    test.assertSelectorHasText('.amount_display-group .display-block strong', vars.amountLabel, 'Contribution Confirm: amount label is OK. (' + vars.amountLabel + ')');
     test.assertExists('.contributor_email-section .content', 'Contribution Confirm: email field is exist.');
-    test.assertSelectorHasText('.contributor_email-section .content', s.userEmail, 'Contribution Confirm: email value is OK. (' + s.userEmail + ')');
+    test.assertSelectorHasText('.contributor_email-section .content', vars.userEmail, 'Contribution Confirm: email value is OK. (' + vars.userEmail + ')');
     this.captureSelector('contribution_page_2.png', 'div.page');
     this.click('input[name="_qf_Confirm_next"]');
   });
@@ -39,7 +46,7 @@ casper.test.begin('Contribution page test (payment processors: allpay)...', s.te
   // Step 3: Allpay CreditCard Info
   casper.waitForUrl('http://pay-stage.allpay.com.tw/CreditPayment/CreateCreditCardInfo', function(){
     test.assertUrlMatch(/CreateCreditCardInfo/, "Allpay CreditCard Info");
-    test.assertTitle(s.allpayCpage, 'Allpay CreditCard Info: page title is OK. (' + s.allpayCpage + ')');
+    test.assertTitle(vars.allpayCpage, 'Allpay CreditCard Info: page title is OK. (' + vars.allpayCpage + ')');
     test.assertExists('form[action="/CreditPayment/CreateCreditCardInfo"]', 'Allpay CreditCard Info: form is exist.');
     this.captureSelector('contribution_page_3.png', 'div.pay_content');
     this.fill('form[action="/CreditPayment/CreateCreditCardInfo"]', {
@@ -61,7 +68,7 @@ casper.test.begin('Contribution page test (payment processors: allpay)...', s.te
   // Step 4: Allpay VerifySMS
   casper.waitForUrl('http://pay-stage.allpay.com.tw/CreditPayment/VerifySMS', function(){
     test.assertUrlMatch(/VerifySMS/, "Allpay VerifySMS");
-    test.assertTitle(s.allpayVpage, 'Allpay VerifySMS: page title is OK. (' + s.allpayVpage + ')');
+    test.assertTitle(vars.allpayVpage, 'Allpay VerifySMS: page title is OK. (' + vars.allpayVpage + ')');
   });
 
   casper.run(function() {
