@@ -34,12 +34,17 @@
  */
 class CRM_Utils_PDF_Utils {
 
-  static function domlib($text, $fileName = 'output.pdf', $output = FALSE, $orientation = 'landscape', $paperSize = 'a3') {
-    return self::html2pdf($text, $fileName, $orientation, $paperSize, $output);
-  }
-
-  static function html2pdf($text, $fileName = 'output.pdf', $orientation = 'landscape', $paperSize = 'a4', $output = FALSE) {
+  /**
+   * @param string $text        
+   * @param string $fileName
+   * @param string $orientation landscape or portrait
+   * @param string $paperSize spcific page size when generate pdf file, default is 'a4'
+   * @param $download FALSE for return filename of pdf file, TRUE for download directly
+   */
+  static function html2pdf($text, $fileName = 'output.pdf', $orientation = 'portrait', $paperSize = 'a4', $download = TRUE) {
     $config = CRM_Core_Config::singleton();
+    $dest = $config->templateCompileDir . CRM_Utils_File::makeFileName($fileName);
+    $paperSize = $paperSize ? $paperSize : 'a4';
 
     // make whole html first
     $values = array();
@@ -55,16 +60,15 @@ class CRM_Utils_PDF_Utils {
 
     if ($config->wkhtmltopdfPath) {
       $option = "--page-size '$paperSize'";
-      $pdf = self::wkhtmltopdf($html, $option);
-      if ($output) {
+      $pdf = self::wkhtmltopdf($html, $dest, $option);
+      if ($download) {
         header('Content-type: application/pdf');
-        return file_get_contents($pdf);
-      }
-      else {
-        header('Content-type: application/pdf');
-        header('Content-Disposition: attachment; filename=' . $fileName);
+        header('Content-Disposition: inline; filename=' . $fileName);
         header('Pragma: no-cache');
         echo file_get_contents($pdf);
+      }
+      else {
+        return $dest;
       }
       return;
     }
@@ -131,13 +135,18 @@ class CRM_Utils_PDF_Utils {
       $pdf->writeHTML($html, TRUE, FALSE, TRUE, FALSE, '');
       $pdf->lastPage();
 
-      if ($output) {
-        return $pdf->Output($fileName, 'S');
-      }
-      else {
+      if ($download) {
         $pdf->Output($fileName, 'D');
       }
+      else {
+        file_put_contents($dest, $pdf->Output($fileName, 'S'));
+        return $dest;
+      }
     }
+  }
+
+  static function domlib($text, $fileName = 'output.pdf', $orientation = 'portrait', $paperSize = 'a4', $download = TRUE) {
+    return self::html2pdf($text, $fileName, $orientation, $paperSize, $download);
   }
 
   /**
@@ -146,17 +155,20 @@ class CRM_Utils_PDF_Utils {
    * @ $html string
    * source html.
    *
+   * @ $dest string
+   * destination of pdf out
+   *
    * @ $option string
    * see /usr/local/bin/wkhtmltopdf-i386 --help
    */
-  function wkhtmltopdf($html, $option = '-n') {
+  function wkhtmltopdf($html, $dest, $option = '-n') {
     $config = CRM_Core_Config::singleton();
     $wkhtmltopdf = $config->wkhtmltopdfPath;
 
     if (exec("test -x $wkhtmltopdf && echo 1")) {
       $temp_prefix = 'pdf_';
       $temp_dir = '/tmp';
-      $dest = tempnam($temp_dir, $temp_prefix);
+      $dest = $dest ? $dest : tempnam($temp_dir, $temp_prefix);
       if (preg_match('/^http:\/\//i', $html)) {
         $source = $html;
       }
@@ -175,6 +187,7 @@ class CRM_Utils_PDF_Utils {
       return $dest;
     }
     else {
+      CRM_Core_Error::debug_log_message("Could not find wkhtmltopdf library");
       return FALSE;
     }
   }

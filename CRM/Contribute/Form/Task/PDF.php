@@ -153,14 +153,14 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
     return $return;
   }
 
-  public function makePDF($output = FALSE) {
+  public function makePDF($download = TRUE) {
     $template = &CRM_Core_Smarty::singleton();
     $pages = self::popFile();
     $template->assign('pages', $pages);
     $pages = $template->fetch('CRM/common/Receipt.tpl');
-    $pdf = CRM_Utils_PDF_Utils::domlib($pages, 'Receipt.pdf', $output, 'portrait', 'a4');
-    if ($output) {
-      print $pdf;
+    $pdf_real_filename = CRM_Utils_PDF_Utils::html2pdf($pages, 'Receipt.pdf', 'portrait', 'a4', $download);
+    if (!$download) {
+      return $pdf_real_filename;
     }
   }
 

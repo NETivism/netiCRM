@@ -20,10 +20,10 @@ public $_contactId = NULL; function preProcess() {
     $this->preProcess();
     // don't through template
     // send pdf directly
-    $output = TRUE;
+    $download = TRUE;
     $task = new CRM_Contribute_Form_Task_PDF();
     $task->makeReceipt($this->_id);
-    $task->makePDF($output);
+    $task->makePDF($download);
     return;
   }
 }

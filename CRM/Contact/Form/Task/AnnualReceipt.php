@@ -117,15 +117,15 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
     return $return;
   }
 
-  public function makePDF($output = FALSE) {
+  public function makePDF($download = TRUE) {
     $template = &CRM_Core_Smarty::singleton();
     $pages = self::popFile();
     $template->assign('pages', $pages);
     $pages = $template->fetch('CRM/common/AnnualReceipt.tpl');
     $filename = 'AnnualReceipt'.$this->_year.'.pdf';
-    $pdf = CRM_Utils_PDF_Utils::domlib($pages, $filename, $output, 'portrait', 'a4');
-    if ($output) {
-      print $pdf;
+    $pdf_real_filename = CRM_Utils_PDF_Utils::html2pdf($pages, $filename, 'portrait', 'a4', $download);
+    if(!$download){
+      return $pdf_real_filename;
     }
   }
 
