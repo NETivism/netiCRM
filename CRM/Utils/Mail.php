@@ -95,7 +95,7 @@ class CRM_Utils_Mail {
     $headers['Subject'] = CRM_Utils_Array::value('subject', $params);
     $headers['Content-Type'] = $htmlMessage ? 'multipart/mixed; charset=utf-8' : 'text/plain; charset=utf-8';
     $headers['Content-Disposition'] = 'inline';
-    $headers['Content-Transfer-Encoding'] = '8bit';
+    $headers['Content-Transfer-Encoding'] = 'quoted-printable';
     $headers['Return-Path'] = CRM_Utils_Array::value('returnPath', $params);
     $headers['Reply-To'] = CRM_Utils_Array::value('replyTo', $params, $from);
     $headers['Date'] = date('r');
@@ -263,8 +263,9 @@ class CRM_Utils_Mail {
     if (!$params) {
       if (!$mimeParams) {
         $mimeParams = array(
-          'text_encoding' => '8bit',
-          'html_encoding' => '8bit',
+          'head_encoding' => 'base64',
+          'text_encoding' => 'quoted-printable',
+          'html_encoding' => 'quoted-printable',
           'head_charset' => 'utf-8',
           'text_charset' => 'utf-8',
           'html_charset' => 'utf-8',
