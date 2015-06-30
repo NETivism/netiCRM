@@ -59,6 +59,7 @@ before_script:
   - chmod -R 777 sites/default
   - drush --yes pm-download simpletest
   - drush --yes pm-enable civicrm simpletest
+  - drush --yes pm-enable civicrm_demo 
   - drush --yes variable-set error_level 0
 
   # start a web server on port 8080, run in the background; wait for initialization
@@ -73,10 +74,5 @@ notifications:
   email:
     recipients:
       - jimmy@netivism.com.tw
-    on_success: always
-    on_failure: always
-  irc:
-    channels:
-      - "chat.freenode.net#neticrm"
     on_success: always
     on_failure: always
