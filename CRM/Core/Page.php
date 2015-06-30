@@ -176,7 +176,7 @@ class CRM_Core_Page {
       CRM_Utils_Hook::alterContent($content, 'page', $pageTemplateFile, $this);
       if ($this->_print == CRM_Core_Smarty::PRINT_PDF) {
         require_once 'CRM/Utils/PDF/Utils.php';
-        CRM_Utils_PDF_Utils::domlib($content, "{$this->_name}.pdf");
+        CRM_Utils_PDF_Utils::html2pdf($content, "{$this->_name}.pdf");
       }
       else {
         echo $content;
