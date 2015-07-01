@@ -54,7 +54,7 @@ before_script:
   - php -d sendmail_path=`which true` ~/.composer/vendor/bin/drush.php --yes core-quick-drupal --core=drupal --no-server --db-url=mysql://root:@127.0.0.1/netivism_neticrm_build --account-pass=123456 --site-name=netiCRM --enable=transliteration netivism_neticrm_build 
 
   # reference and enable civicrm in build site
-  - ln -s $(readlink -e $(cd -)) netivism_neticrm_build/drupal-7.36/sites/all/modules/civicrm
+  - ln -s $(readlink -e $(cd -)) netivism_neticrm_build/$(ls netivism_neticrm_build -1 | tail -1)/sites/all/modules/civicrm
   - cd netivism_neticrm_build/drupal-7.36
   - chmod -R 777 sites/default
   - drush --yes pm-download simpletest
