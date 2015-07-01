@@ -55,7 +55,7 @@ before_script:
 
   # reference and enable civicrm in build site
   - ln -s $(readlink -e $(cd -)) netivism_neticrm_build/$(ls netivism_neticrm_build -1 | tail -1)/sites/all/modules/civicrm
-  - cd netivism_neticrm_build/drupal-7.36
+  - cd netivism_neticrm_build/$(ls netivism_neticrm_build -1 | tail -1)
   - chmod -R 777 sites/default
   - drush --yes pm-download simpletest
   - drush --yes pm-enable civicrm simpletest
