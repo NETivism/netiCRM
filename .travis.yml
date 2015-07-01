@@ -51,7 +51,7 @@ before_script:
 
   # create new site, stubbing sendmail path with true to prevent delivery errors and manually resolving drush path
   - mysql -e 'create database netivism_neticrm_build CHARACTER SET utf8 COLLATE utf8_general_ci'
-  - php -d sendmail_path=`which true` ~/.composer/vendor/bin/drush.php --yes core-quick-drupal --core=drupal-7.36 --no-server --db-url=mysql://root:@127.0.0.1/netivism_neticrm_build --account-pass=123456 --site-name=netiCRM --enable=transliteration netivism_neticrm_build 
+  - php -d sendmail_path=`which true` ~/.composer/vendor/bin/drush.php --yes core-quick-drupal --core=drupal --no-server --db-url=mysql://root:@127.0.0.1/netivism_neticrm_build --account-pass=123456 --site-name=netiCRM --enable=transliteration netivism_neticrm_build 
 
   # reference and enable civicrm in build site
   - ln -s $(readlink -e $(cd -)) netivism_neticrm_build/drupal-7.36/sites/all/modules/civicrm
@@ -59,7 +59,7 @@ before_script:
   - chmod -R 777 sites/default
   - drush --yes pm-download simpletest
   - drush --yes pm-enable civicrm simpletest
-  - drush --yes pm-enable civicrm_demo 
+  - drush --yes pm-enable civicrm_allpay civicrm_demo 
   - drush --yes variable-set error_level 0
 
   # start a web server on port 8080, run in the background; wait for initialization
