@@ -503,7 +503,7 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
     }
 
     // if waiting is enabled
-    if ($this->_allowWaitlist) {
+    if (!$this->_allowConfirmation && $this->_allowWaitlist) {
       //get the current page count.
       $currentCount = self::getParticipantCount($this, $params);
       if (is_numeric($currentCount)) {
