@@ -226,7 +226,7 @@ class CRM_Event_Form_ManageEvent_EventInfo extends CRM_Event_Form_ManageEvent
         $this->addDateTime( 'end_date', ts('End Date / Time'), false, array('formatType' => 'activityDateTime') );
      
         $this->add('text','max_participants', ts('Max Number of Participants'),
-                    array('onchange' => "if (this.value != '') {show('id-waitlist','table-row'); showHideByValue('has_waitlist','0','id-waitlist-text','table-row','radio',false); showHideByValue('has_waitlist','0','id-event_full','table-row','radio',true); return;} else {hide('id-event_full','table-row'); hide('id-waitlist','table-row'); hide('id-waitlist-text','table-row'); return;}"));
+                    array('onchange' => "if (this.value != '') {show('id-waitlist','table-row'); showHideByValue('has_waitlist','0','id-waitlist-text','table-row','radio',false); showHideByValue('has_waitlist','0','id-event_full','table-row','radio',true); return;} else {hide('id-event_full','table-row'); hide('id-waitlist','table-row'); hide('id-waitlist-text','table-row');cj('#has_waitlist').attr('checked',false); return;}"));
         $this->addRule('max_participants', ts('Max participants should be a positive number') , 'positiveInteger');
 
         require_once 'CRM/Event/PseudoConstant.php';
