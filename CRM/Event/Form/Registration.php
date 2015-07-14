@@ -1294,6 +1294,9 @@ WHERE  v.option_group_id = g.id
         $this->assign('eventFullText', $event_full_text);
       }
     }
+    elseif($this->_allowConfirmation){
+      $this->assign('allowConfirmation', TRUE);
+    }
     $this->set('isEventFull', $this->_isEventFull);
     $this->set('allowWaitlist', $this->_allowWaitlist);
     $this->set('availableRegistrations', $this->_availableRegistrations);

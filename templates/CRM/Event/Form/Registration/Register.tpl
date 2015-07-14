@@ -63,7 +63,7 @@
       <p>{$event.intro_text}</p>
   </div>
 {/if}
-{if $contact_id and $smarty.get.id}
+{if $contact_id and $smarty.get.id and !$allowConfirmation}
   <div id="register-who">
     <a href="#register-now" id="register-me" class="button"><span><i class="fa fa-sign-in"></i>{ts 1=$display_name}Registering Yourself (%1){/ts}</span></a>
     <a href="{crmURL p='civicrm/event/register' q="cid=0&reset=1&id=`$event.id`"}" title="{ts}Click here to register a different person for this event.{/ts}" class="button"><span><i class="fa fa-external-link"></i>{ts}Registering Others{/ts}</span></a>
@@ -299,4 +299,6 @@
   }
 </script>
 {/literal} 
+{if !$allowConfirmation}
 {include file="CRM/Event/Form/Registration/UpdateSeat.tpl"}
+{/if}
