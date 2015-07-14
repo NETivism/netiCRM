@@ -113,7 +113,7 @@ class CRM_Core_Payment_Esunbank extends CRM_Core_Payment {
       CRM_Core_Error::fatal('Module civicrm_esunbank doesn\'t exists.');
     }
     else {
-      civicrm_esunbank_do_transfer_checkout($params, $component, $this->_paymentProcessor);
+      civicrm_esunbank_do_transfer_checkout($params, $component, $this->_paymentProcessor, $this->_paymentForm);
     }
   }
 }

@@ -74,11 +74,14 @@ class CRM_Event_BAO_ParticipantPayment extends CRM_Event_DAO_ParticipantPayment 
     if (!$valid) {
       CRM_Core_Error::fatal();
     }
+    $participantPayment->find();
 
-    if ($participantPayment->find(TRUE)) {
+    while ($participantPayment->fetch()) {
       require_once 'CRM/Contribute/BAO/Contribution.php';
       CRM_Contribute_BAO_Contribution::deleteContribution($participantPayment->contribution_id);
       $participantPayment->delete();
+    }
+    if($participantPayment){
       return $participantPayment;
     }
     return FALSE;

@@ -34,6 +34,8 @@ class CRM_Contribute_Form_Payment extends CRM_Core_Form {
    * @access public
    */
   public function preProcess() {
+    $this->_values = $this->get('values');
+    $this->_params = $this->get('params');
     if(!$this->_pass){
       $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE, 'add');
       $this->_mode = ($this->_action == 1024) ? 'test' : 'live';
@@ -94,7 +96,7 @@ class CRM_Contribute_Form_Payment extends CRM_Core_Form {
       switch($this->_component){
         case 'event':
           $this->_entityId = $ids['event'];
-          $this->_entityTable =  'civicrm_event';
+          $this->_entityTable = 'civicrm_event';
           break;
         case 'contribute':
           $this->_entityId = $ids['page_id'];

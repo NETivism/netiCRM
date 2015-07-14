@@ -791,19 +791,32 @@ INNER JOIN  civicrm_contact contact ON ( contact.id = civicrm_contribution.conta
     switch($ids['component']){
       case 'event':
         $pending_status = CRM_Event_PseudoConstant::participantStatus(NULL, "class = 'Pending'", 'name'); 
+        $negative_status = CRM_Event_PseudoConstant::participantStatus(NULL, "class = 'Negative'", 'name'); 
         $positive_status = CRM_Event_PseudoConstant::participantStatus(NULL, "is_counted = 1", 'name');
         $participant_status_id = CRM_Core_DAO::getFieldValue("CRM_Event_DAO_Participant", $ids['participant'], 'status_id');
         $contribution_status_id = CRM_Core_DAO::getFieldValue("CRM_Contribute_DAO_Contribution", $id, 'contribution_status_id');
         $registration_end_date = CRM_Core_DAO::getFieldValue("CRM_Event_DAO_Event", $ids['event'], 'registration_end_date');
-        if(!empty($pending_status[$participant_status_id]) && $contribution_status_id == 2){
-          if(empty($registration_end_date) || strtotime($registration_end_date) > time()){
-            $is_full = CRM_Event_BAO_Participant::eventFull($ids['event']);
+
+        // event not end
+        if(empty($registration_end_date) || strtotime($registration_end_date) > time()){
+          $is_full = CRM_Event_BAO_Participant::eventFull($ids['event']);
+          if(!empty($pending_status[$participant_status_id])){
+            // full but pending status can count in
             if($is_full){
               if(!empty($positive_status[$participant_status_id])){
                 $return = TRUE;
               }
             }
+            // not full and contribution status not fail
             else{
+              if($contribution_status_id == 2){
+                $return = TRUE;
+              }
+            }
+          }
+          elseif(!empty($negative_status[$participant_status_id])){
+            // failed, but event not full
+            if(empty($is_full) && $contribution_status_id == 4){
               $return = TRUE;
             }
           }
@@ -818,9 +831,9 @@ INNER JOIN  civicrm_contact contact ON ( contact.id = civicrm_contribution.conta
         }
         break;
       case 'contribute':
-        $page_id = CRM_Core_DAO::getFieldValue("CRM_Conribute_DAO_Contribution", $id, 'contribution_page_id');
+        $page_id = CRM_Core_DAO::getFieldValue("CRM_Contribute_DAO_Contribution", $id, 'contribution_page_id');
         if($page_id){
-          if($this->_ids['membership']){
+          if($ids['membership']){
           
           }
           else{
