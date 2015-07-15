@@ -1,10 +1,10 @@
-casper.options.waitTimeout = 10000;
+casper.options.waitTimeout = 30000;
 
 var system = require('system'); 
 var port = system.env.RUNPORT; 
 
 var vars = {
-  testNum: 13,
+  testNum: 11,
   baseURL: port == '80' ? 'http://127.0.0.1/' : 'http://127.0.0.1:' + port + '/',
   path: 'civicrm/contribute/transact',
   query: 'reset=1&action=preview&id=1',
@@ -52,7 +52,6 @@ casper.test.begin('Contribution page test (payment processors: allpay)...', vars
     test.assertTitle(vars.allpayCpage, 'Allpay CreditCard Info: page title is OK. (' + vars.allpayCpage + ')');
     test.assertExists('form[action="/CreditPayment/CreateCreditCardInfo"]', 'Allpay CreditCard Info: form is exist.');
     this.fill('form[action="/CreditPayment/CreateCreditCardInfo"]', {
-      'CardHolder': 'TEST',
       'Cellphone': '123456789',
       'CardType': 'VISA',
       'CardNoPart1': '4311',
@@ -65,12 +64,6 @@ casper.test.begin('Contribution page test (payment processors: allpay)...', vars
       'Agree': '1',
     },
     true);
-  });
-
-  // Step 4: Allpay VerifySMS
-  casper.waitForUrl('http://pay-stage.allpay.com.tw/CreditPayment/VerifySMS', function(){
-    test.assertUrlMatch(/VerifySMS/, "Allpay VerifySMS");
-    test.assertTitle(vars.allpayVpage, 'Allpay VerifySMS: page title is OK. (' + vars.allpayVpage + ')');
   });
 
   casper.run(function() {
