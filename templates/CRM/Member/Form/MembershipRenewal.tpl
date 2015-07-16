@@ -218,19 +218,17 @@ cj(document).ready(function(){
        clearDateTime('receipt_date');
      }
    });
+   cj("#record_contribution").live('click', function(){
+     if(cj(this).attr('checked') == 'checked'){
+       $("#recordContribution").show();
+     }
+     else{
+       cj('#send_receipt, #have_receipt').removeAttr("checked");
+       cj('#receipt-option').hide();
+       clearDateTime('receipt_date');
+       $("#recordContribution").hide();
+     }
+   });
 });
-function checkPayment()
-{
-    showHideByValue('record_contribution','','recordContribution','table-row','radio',false);
-    {/literal}{if $email and $outBound_option != 2}{literal}
-    var record_contribution = document.getElementsByName('record_contribution');
-    if ( record_contribution[0].checked ) {
-        document.getElementsByName('send_receipt')[0].checked = true;
-    } else {
-        document.getElementsByName('send_receipt')[0].checked = false;
-    }
-    showHideByValue('send_receipt','','notice','table-row','radio',false);  
-    {/literal}{/if}{literal}
-}        
 </script>
 {/literal}

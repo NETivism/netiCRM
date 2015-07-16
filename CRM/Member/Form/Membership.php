@@ -1025,7 +1025,6 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
         ));
       $this->assign('customValues', $customValues);
 
-      /* #14664, remove un-notice strange design to send member notice
       require_once 'CRM/Core/BAO/MessageTemplates.php';
       list($mailSend, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate(
         array(
@@ -1038,7 +1037,6 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
           'isTest' => (bool)($this->_action & CRM_Core_Action::PREVIEW),
         )
       );
-      */
     }
 
     //end date can be modified by hooks, so if end date is set then use it.
