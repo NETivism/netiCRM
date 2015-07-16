@@ -552,7 +552,13 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
       list($this->_contributorDisplayName,
         $this->_contributorEmail
       ) = CRM_Contact_BAO_Contact_Location::getEmailDetails($this->_contactID);
-      $receiptFrom = '"' . $userName . '" <' . $userEmail . '>';
+      $fromEmail = CRM_Core_PseudoConstant::fromEmailAddress();
+      if(!empty($fromEmail['default'])){
+        $receiptFrom = reset($fromEmail);
+      }
+      else{
+        $receiptFrom = '"' . $userName . '" <' . $userEmail . '>';
+      }
 
       $paymentInstrument = CRM_Contribute_PseudoConstant::paymentInstrument();
       $formValues['paidBy'] = $paymentInstrument[$formValues['payment_instrument_id']];

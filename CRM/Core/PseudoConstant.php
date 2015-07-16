@@ -647,7 +647,13 @@ class CRM_Core_PseudoConstant {
   public static function &fromEmailAddress() {
     if (!self::$fromEmailAddress) {
       require_once 'CRM/Core/OptionGroup.php';
-      self::$fromEmailAddress = CRM_Core_OptionGroup::values('from_email_address');
+      $default = CRM_Core_OptionGroup::values('from_email_address', NULL, NULL, NULL, ' AND is_default = 1');
+      $others = CRM_Core_OptionGroup::values('from_email_address', NULL, NULL, NULL, ' AND is_default = 0');
+      if(!empty($default)){
+        $default_mail = array('default' => reset($default));
+        $others = array_merge($default_mail, $others);
+      }
+      self::$fromEmailAddress = $others;
     }
     return self::$fromEmailAddress;
   }
