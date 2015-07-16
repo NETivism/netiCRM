@@ -107,13 +107,16 @@ class CRM_Contact_Form_Task_EmailCommon {
     // now add domain from addresses
     $domainEmails = array();
     $domainFrom = CRM_Core_PseudoConstant::fromEmailAddress();
+    $defaultEmail = array_shift($domainFrom);
     foreach (array_keys($domainFrom) as $k) {
       $domainEmail = $domainFrom[$k];
       $domainEmails[$domainEmail] = htmlspecialchars($domainEmail);
       $form->_emails[$domainEmail] = $domainEmail;
     }
 
-    $form->_fromEmails = CRM_Utils_Array::crmArrayMerge($emails, $domainEmails);
+    $defaultFrom = array($defaultEmail => htmlspecialchars($defaultEmail));
+    $form->_fromEmails = array_merge($defaultFrom, $emails, $domainEmails);
+    $form->_emails = array($defaultEmail => $defaultEmail) + $form->_emails;
   }
 
   /**

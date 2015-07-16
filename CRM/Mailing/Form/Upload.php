@@ -211,7 +211,7 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
     );
 
     require_once 'CRM/Core/PseudoConstant.php';
-    $fromEmailAddress = CRM_Core_PseudoConstant::fromEmailAddress('from_email_address');
+    $fromEmailAddress = CRM_Core_PseudoConstant::fromEmailAddress();
     if (empty($fromEmailAddress)) {
       //redirect user to enter from email address.
       $url = CRM_Utils_System::url('civicrm/admin/options/from_email_address', 'group=from_email_address&action=add&reset=1');
