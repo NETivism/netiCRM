@@ -633,6 +633,7 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
         }
       }
 
+      /* #14664, remove un-notice strange design to send member notice
       require_once 'CRM/Core/BAO/MessageTemplates.php';
       list($mailSend, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate(
         array(
@@ -645,6 +646,7 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
           'isTest' => $this->_mode == 'test',
         )
       );
+      */
     }
 
     $statusMsg = ts('%1 membership for %2 has been renewed.', array(1 => $memType, 2 => $this->_contributorDisplayName));
