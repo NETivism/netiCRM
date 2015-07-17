@@ -52,7 +52,7 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
     CRM_Utils_System::setTitle(ts('Settings - Payment Processor'));
 
     // get the payment processor meta information
-
+    
     if ($this->_id) {
       $this->_ppType = CRM_Utils_Request::retrieve('pp', 'String', $this, FALSE, NULL);
       if (!$this->_ppType) {
@@ -64,7 +64,7 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
       $this->set('pp', $this->_ppType);
     }
     else {
-      $this->_ppType = CRM_Utils_Request::retrieve('pp', 'String', $this, TRUE, NULL);
+      $this->_ppType = CRM_Utils_Request::retrieve('pp', 'String', $this, FALSE, NULL);
     }
 
     $this->assign('ppType', $this->_ppType);
@@ -72,6 +72,9 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
     $this->_ppDAO = new CRM_Core_DAO_PaymentProcessorType();
     $this->_ppDAO->name = $this->_ppType;
 
+    if(empty($this->_ppDAO->name)){
+      $this->_ppDAO->is_active = 1;
+    }
     if (!$this->_ppDAO->find(TRUE)) {
       CRM_Core_Error::fatal(ts('Could not find payment processor meta information'));
     }
@@ -359,4 +362,3 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
     $dao->save();
   }
 }
-
