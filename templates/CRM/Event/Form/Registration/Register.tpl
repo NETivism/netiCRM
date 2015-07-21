@@ -35,6 +35,8 @@
     </div>
   {/if}
 
+{else}{*ppType if else*}
+
 <div id="paypalExpress">
 {* Put PayPal Express button after customPost block since it's the submit button in this case. *}
 {if $paymentProcessor.payment_processor_type EQ 'PayPal_Express'}
@@ -46,8 +48,6 @@
     </fieldset>
 {/if}
 </div>
-{else}
-
 {include file="CRM/Event/Form/Registration/Progress.tpl"}
 {if $action & 1024}
   {include file="CRM/Event/Form/Registration/PreviewHeader.tpl"}
@@ -154,7 +154,6 @@
 </div><!-- end register-me -->
 
 </div><!-- end crm-event-register-form-block -->
-{/if}{*end pptype else*}
 {literal} 
 <script type="text/javascript">
 
@@ -302,3 +301,5 @@
 {if !$allowConfirmation}
 {include file="CRM/Event/Form/Registration/UpdateSeat.tpl"}
 {/if}
+
+{/if}{*end pptype else*}

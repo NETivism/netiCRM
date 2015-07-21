@@ -72,14 +72,14 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
    */
   function preProcess() {
     parent::preProcess();
-    parent::isEventFull();
-
     $this->_ppType = CRM_Utils_Array::value('type', $_GET);
     $this->assign('ppType', FALSE);
     if ($this->_ppType) {
       $this->assign('ppType', TRUE);
       return CRM_Core_Payment_ProcessorForm::preProcess($this);
     }
+
+    parent::isEventFull();
 
     //get payPal express id and make it available to template
     $paymentProcessors = $this->get('paymentProcessors');
@@ -1000,8 +1000,8 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
       if (is_array($this->_paymentProcessor)) {
         $payment = &CRM_Core_Payment::singleton($this->_mode, $this->_paymentProcessor, $this);
       }
-      // default mode is direct
-      $this->set('contributeMode', 'direct');
+      // default mode is notify
+      $this->set('contributeMode', 'notify');
 
       if (isset($params["state_province_id-{$this->_bltID}"]) && $params["state_province_id-{$this->_bltID}"]) {
         $params["state_province-{$this->_bltID}"] = CRM_Core_PseudoConstant::stateProvinceAbbreviation($params["state_province_id-{$this->_bltID}"]);
