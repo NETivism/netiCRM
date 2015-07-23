@@ -66,13 +66,17 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form
             }
             $this->set( 'pp', $this->_ppType );
         } else {
-            $this->_ppType = CRM_Utils_Request::retrieve( 'pp', 'String', $this, true, null );
+            $this->_ppType = CRM_Utils_Request::retrieve( 'pp', 'String', $this, false, null );
         }
 
         $this->assign( 'ppType', $this->_ppType );
         require_once 'CRM/Core/DAO/PaymentProcessorType.php';
         $this->_ppDAO = new CRM_Core_DAO_PaymentProcessorType( );
         $this->_ppDAO->name = $this->_ppType;
+
+	if(empty($this->_ppDAO->name)){  
+          $this->_ppDAO->is_active = 1;  
+        }
 
         if ( ! $this->_ppDAO->find( true ) ) {
             CRM_Core_Error::fatal( ts( 'Could not find payment processor meta information' ) );
