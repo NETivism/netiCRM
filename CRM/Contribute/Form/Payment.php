@@ -40,10 +40,6 @@ class CRM_Contribute_Form_Payment extends CRM_Core_Form {
       $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE, 'add');
       $this->_mode = ($this->_action == 1024) ? 'test' : 'live';
       $pass = TRUE;
-      if (!CRM_Core_Permission::checkActionPermission('CiviContribute', $this->_action)) {
-        $pass = FALSE;
-        CRM_Core_Error::fatal(ts('You do not have permission to access this page'));
-      }
 
       $this->_ids = array();
       $session = CRM_Core_Session::singleton();
