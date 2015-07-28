@@ -450,27 +450,22 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
     }
 
     // need to perform tasks on all or selected items ? using radio_ts(task selection) for it
-    $selectedRowsRadio = $this->addElement('radio', 'radio_ts', NULL, '', 'ts_sel', array('checked' => 'checked',
-        'onclick' => 'toggleTaskAction( true );',
-      ));
+    $selectedRowsRadio = $this->addElement('radio', 'radio_ts', NULL, '', 'ts_sel');
     $this->assign('ts_sel_id', $selectedRowsRadio->_attributes['id']);
 
-    $allRowsRadio = $this->addElement('radio', 'radio_ts', NULL, '', 'ts_all', array('onclick' => $this->getName() . ".toggleSelect.checked = false; toggleCheckboxVals('mark_x_', this);toggleTaskAction( true );"));
+    $allRowsRadio = $this->addElement('radio', 'radio_ts', NULL, '', 'ts_all', array('checked' => 'checked'));
     $this->assign('ts_all_id', $allRowsRadio->_attributes['id']);
 
     /*
-         * add form checkboxes for each row. This is needed out here to conform to QF protocol
-         * of all elements being declared in builQuickForm
-         */
+     * add form checkboxes for each row. This is needed out here to conform to QF protocol
+     * of all elements being declared in builQuickForm
+     */
 
     $rows = $this->get('rows');
     if (is_array($rows)) {
       $this->addElement('checkbox', 'toggleSelect', NULL, NULL, array('onclick' => "toggleTaskAction( true ); return toggleCheckboxVals('mark_x_',this);"));
       foreach ($rows as $row) {
-        $this->addElement('checkbox', $row['checkbox'],
-          NULL, NULL,
-          array('onclick' => "toggleTaskAction( true ); return checkSelectedBox('" . $row['checkbox'] . "', '" . $this->getName() . "');")
-        );
+        $this->addElement('checkbox', $row['checkbox'], NULL, NULL);
       }
     }
 

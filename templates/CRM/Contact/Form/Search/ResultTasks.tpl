@@ -112,6 +112,18 @@
 
 {literal}
 <script type="text/javascript">
-toggleTaskAction( );
+cj(document).ready(function(){
+  cj("input[name=radio_ts]").click(function(){
+    if(cj(this).val() == 'ts_all'){
+      cj("table.selector input[type=checkbox]:checked").attr("checked", false);
+    }
+  });
+  cj("table.selector td > input[type=checkbox]").click(function(){
+    if($(this).attr("checked")){
+      cj("input[name=radio_ts][value=ts_sel]").trigger("click");
+    }
+  });
+  cj("input[name=radio_ts][value=ts_all]").trigger("click");
+});
 </script>
 {/literal}
