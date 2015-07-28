@@ -391,7 +391,10 @@ SUM(total_amount) as total_amount
       $row['gender_id'] = $this->_gender[$row['gender_id']];
     }
     $row['last_status_id'] = $this->_cstatus[$row['last_status_id']];
-    $row['action'] = '<a href="'.CRM_Utils_System::url('civicrm/contact/view/contributionrecur', "reset=1&id={$row['id']}&cid={$row['contact_id']}").'" target="_blank">'.ts('View').'</a>';
+
+    if(isset($row['action'])){ // prevent export contain this field
+      $row['action'] = '<a href="'.CRM_Utils_System::url('civicrm/contact/view/contributionrecur', "reset=1&id={$row['id']}&cid={$row['contact_id']}").'" target="_blank">'.ts('View').'</a>';
+    }
   }
 
   /**
