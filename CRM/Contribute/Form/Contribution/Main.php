@@ -144,7 +144,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
       // return $this->_defaults;
     }
 
-    if ($this->_onbehalf) {
+    if (!empty($this->_onbehalf)) {
       return;
     }
 
@@ -268,7 +268,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     //         $this->_defaults['credit_card_exp_date'] = array( 'Y' => '2012', 'M' => '05' );
 
     //         // hack to simplify direct debit entry for testing
-    //         $this->_defaults['account_holder'] = 'Max M«äller';
+    //         $this->_defaults['account_holder'] = 'User Name';
     //         $this->_defaults['bank_account_number'] = '12345678';
     //         $this->_defaults['bank_identification_number'] = '12030000';
     //         $this->_defaults['bank_name'] = 'Bankname';
