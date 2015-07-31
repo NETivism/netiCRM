@@ -1222,11 +1222,13 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
       }
     }
     if (!empty($returnProperties) || !empty($allTokens)) {
+      $flatten = array('html' => $allTokens);
+      $flatten = CRM_Utils_Token::flattenTokens($flatten);
       list($details) = CRM_Utils_Token::getTokenDetails(
         $contactIds,
         $returnProperties,
         NULL, NULL, FALSE,
-        $allTokens,
+        $flatten,
         $class
       );
     }

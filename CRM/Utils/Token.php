@@ -1103,9 +1103,7 @@ class CRM_Utils_Token {
   static function flattenTokens(&$tokens) {
     $flattenTokens = array();
 
-    foreach (array(
-        'html', 'text', 'subject',
-      ) as $prop) {
+    foreach (array('html', 'text', 'subject') as $prop) {
       if (!isset($tokens[$prop])) {
         continue;
       }
