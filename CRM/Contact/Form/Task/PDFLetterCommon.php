@@ -185,7 +185,7 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
     self::formatMessage($html_message);
 
     require_once 'CRM/Activity/BAO/Activity.php';
-    $messageToken = CRM_Activity_BAO_Activity::getTokens($html_message);
+    $messageToken = CRM_Utils_Token::getTokens($html_message);
 
     $returnProperties = array();
     if (isset($messageToken['contact'])) {

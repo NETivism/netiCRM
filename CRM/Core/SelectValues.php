@@ -37,7 +37,8 @@
  */
 class CRM_Core_SelectValues {
 
-  /**CRM/Core/SelectValues.php
+  /**
+   * CRM/Core/SelectValues.php
    * different types of phones
    * @static
    */
@@ -535,7 +536,45 @@ class CRM_Core_SelectValues {
       }
 
       // might as well get all the hook tokens to
-      require_once 'CRM/Utils/Hook.php';
+      $hookTokens = array();
+      CRM_Utils_Hook::tokens($hookTokens);
+      foreach ($hookTokens as $category => $tokenValues) {
+        foreach ($tokenValues as $key => $value) {
+          if (is_numeric($key)) {
+            $key = $value;
+          }
+          if (!preg_match('/^\{[^\}]+\}$/', $key)) {
+            $key = '{' . $key . '}';
+          }
+          if (preg_match('/^\{([^\}]+)\}$/', $value, $matches)) {
+            $value = $matches[1];
+          }
+          $tokens[$key] = $value;
+        }
+      }
+    }
+
+    return $tokens;
+  }
+
+  /**
+   * different type of Participant Tokens
+   *
+   * @static
+   * return array
+   */
+  static function &participantTokens() {
+    static $tokens = NULL;
+
+    if (!$tokens) {
+      $customFields = array();
+      $customFields = CRM_Core_BAO_CustomField::getFields('Participant');
+
+      foreach ($customFields as $key => $val) {
+        $tokens["{participant.custom_$key}"] = $val['label'] . " :: " . $val['groupTitle'];
+      }
+
+      // might as well get all the hook tokens to
       $hookTokens = array();
       CRM_Utils_Hook::tokens($hookTokens);
       foreach ($hookTokens as $category => $tokenValues) {

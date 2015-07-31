@@ -2329,7 +2329,7 @@ UNION
       }
 
       if ($emailGreetingString) {
-        CRM_Activity_BAO_Activity::replaceGreetingTokens($emailGreetingString, $contactDetails, $contact->id);
+        CRM_Utils_Token::replaceGreetingTokens($emailGreetingString, $contactDetails, $contact->id);
         $emailGreetingString = CRM_Core_DAO::escapeString(CRM_Utils_String::stripSpaces($emailGreetingString));
         $updateQueryString[] = " email_greeting_display = '{$emailGreetingString}'";
       }
@@ -2351,7 +2351,7 @@ UNION
       }
 
       if ($postalGreetingString) {
-        CRM_Activity_BAO_Activity::replaceGreetingTokens($postalGreetingString, $contactDetails, $contact->id);
+        CRM_Utils_Token::replaceGreetingTokens($postalGreetingString, $contactDetails, $contact->id);
         $postalGreetingString = CRM_Core_DAO::escapeString(CRM_Utils_String::stripSpaces($postalGreetingString));
         $updateQueryString[] = " postal_greeting_display = '{$postalGreetingString}'";
       }
@@ -2375,7 +2375,7 @@ UNION
     }
 
     if ($addresseeString) {
-      CRM_Activity_BAO_Activity::replaceGreetingTokens($addresseeString, $contactDetails, $contact->id);
+      CRM_Utils_Token::replaceGreetingTokens($addresseeString, $contactDetails, $contact->id);
       $addresseeString = CRM_Core_DAO::escapeString(CRM_Utils_String::stripSpaces($addresseeString));
       $updateQueryString[] = " addressee_display = '{$addresseeString}'";
     }

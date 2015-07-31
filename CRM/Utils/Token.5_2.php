@@ -875,7 +875,7 @@ class CRM_Utils_Token {
    * @access public
    * @static
    */
-  function getTokens($string) {
+  public static function getTokens($string) {
     $matches = array();
     $tokens = array();
     preg_match_all('/(?<!\{|\\\\)\{(\w+\.\w+)\}(?!\})/',
@@ -1037,7 +1037,7 @@ class CRM_Utils_Token {
    *
    * @access public
    */
-  function replaceGreetingTokens(&$tokenString, $contactDetails = NULL, $contactId = NULL, $className = NULL) {
+  public static function replaceGreetingTokens(&$tokenString, $contactDetails = NULL, $contactId = NULL, $className = NULL) {
     if (!$contactDetails && !$contactId) {
       return;
     }
@@ -1150,5 +1150,20 @@ class CRM_Utils_Token {
   function getPermissionEmails($permissionName) {}
 
   function getRoleEmails($roleName) {}
+
+  /**
+   * Formats a token list for the select2 widget
+   *
+   * @param $tokens
+   * @return array
+   */
+  public static function formatTokensForDisplay($tokens) {
+    $sorted = $output = array();
+
+    // Sort in ascending order by ignoring word case
+    natcasesort($tokens);
+
+    return json_encode($tokens);
+  }
 }
 

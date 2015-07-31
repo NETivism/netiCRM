@@ -379,7 +379,8 @@ class CRM_Contact_Form_Task_EmailCommon {
 
     // send the mail
     require_once 'CRM/Activity/BAO/Activity.php';
-    list($sent, $activityId) = CRM_Activity_BAO_Activity::sendEmail($formattedContactDetails,
+    list($sent, $activityId) = CRM_Activity_BAO_Activity::sendEmail(
+      $formattedContactDetails,
       $subject,
       $formValues['text_message'],
       $formValues['html_message'],
@@ -389,7 +390,8 @@ class CRM_Contact_Form_Task_EmailCommon {
       $attachments,
       $cc,
       $bcc,
-      array_keys($form->_contactDetails)
+      array_keys($form->_contactDetails),
+      $form
     );
 
     if ($sent) {

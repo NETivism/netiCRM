@@ -1125,12 +1125,14 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
    * @param string $cc           cc recepient
    * @param string $bcc          bcc recepient
    * @param array $contactIds    contact ids
+   * @param object form object for processing this email
    *
    * @return array               ( sent, activityId) if any email is sent and activityId
    * @access public
    * @static
    */
-  static function sendEmail(&$contactDetails,
+  static function sendEmail(
+    &$contactDetails,
     &$subject,
     &$text,
     &$html,
@@ -1140,8 +1142,11 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
     $attachments = NULL,
     $cc = NULL,
     $bcc = NULL,
-    &$contactIds
+    &$contactIds = NULL,
+    &$object = NULL
   ) {
+    $class = is_object($object) ? get_class($object) : 'CRM_Activity_BAO_Activity';
+
     // get the contact details of logged in contact, which we set as from email
     if ($userID == NULL) {
       $session = CRM_Core_Session::singleton();
@@ -1159,9 +1164,10 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
     //CRM-4575
     //token replacement of addressee/email/postal greetings
     // get the tokens added in subject and message
-    $messageToken = self::getTokens($text);
-    $subjectToken = self::getTokens($subject);
-    $messageToken = array_merge($messageToken, self::getTokens($html));
+    $messageToken = CRM_Utils_Token::getTokens($text);
+    $subjectToken = CRM_Utils_Token::getTokens($subject);
+    $messageToken = array_merge($messageToken, CRM_Utils_Token::getTokens($html));
+    $allTokens = array_merge($messageToken, $subjectToken);
 
     require_once 'CRM/Utils/Mail.php';
     if (!$from) {
@@ -1208,28 +1214,21 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
     $attachments = &CRM_Core_BAO_File::getEntityFile('civicrm_activity',
       $activity->id
     );
-    $returnProperties = array();
-    if (isset($messageToken['contact'])) {
-      foreach ($messageToken['contact'] as $key => $value) {
+    
+    $returnProperties = $details = array();
+    if (isset($allTokens['contact'])) {
+      foreach ($allTokens['contact'] as $key => $value) {
         $returnProperties[$value] = 1;
       }
     }
-
-    if (isset($subjectToken['contact'])) {
-      foreach ($subjectToken['contact'] as $key => $value) {
-        if (!isset($returnProperties[$value])) {
-          $returnProperties[$value] = 1;
-        }
-      }
-    }
-
-
-    // get token details for contacts, call only if tokens are used
-    $details = array();
-    if (!empty($returnProperties)) {
-      require_once 'CRM/Mailing/BAO/Mailing.php';
-      $mailing = new CRM_Mailing_BAO_Mailing();
-      list($details) = $mailing->getDetails($contactIds, $returnProperties);
+    if (!empty($returnProperties) || !empty($allTokens)) {
+      list($details) = CRM_Utils_Token::getTokenDetails(
+        $contactIds,
+        $returnProperties,
+        NULL, NULL, FALSE,
+        $allTokens,
+        $class
+      );
     }
 
     // call token hook
@@ -1241,7 +1240,6 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
     if (defined('CIVICRM_MAIL_SMARTY')) {
       $smarty = CRM_Core_Smarty::singleton();
 
-      require_once 'CRM/Core/Smarty/resources/String.php';
       civicrm_smarty_register_string_resource();
 
       $escapeSmarty = TRUE;
@@ -1902,72 +1900,6 @@ AND cl.modified_id  = c.id
       self::$_exportableFields[$name] = $fields;
     }
     return self::$_exportableFields[$name];
-  }
-
-  /**
-   * Get array of message/subject tokens
-   *
-   * @return $tokens array of tokens mentioned in field
-   * @access public
-   */
-  function getTokens($property) {
-    $matches = array();
-    $tokens = array();
-    preg_match_all('/(?<!\{|\\\\)\{(\w+\.\w+)\}(?!\})/',
-      $property,
-      $matches,
-      PREG_PATTERN_ORDER
-    );
-
-    if ($matches[1]) {
-      foreach ($matches[1] as $token) {
-        list($type, $name) = preg_split('/\./', $token, 2);
-        if ($name) {
-          if (!isset($tokens['contact'])) {
-            $tokens['contact'] = array();
-          }
-          $tokens['contact'][] = $name;
-        }
-      }
-    }
-    return $tokens;
-  }
-
-  /**
-   * replace greeting tokens exists in message/subject
-   *
-   * @access public
-   */
-  function replaceGreetingTokens(&$tokenString, $contactDetails = NULL, $contactId = NULL) {
-    if (!$contactDetails && !$contactId) {
-      return;
-    }
-
-    // check if there are any tokens
-    $greetingTokens = self::getTokens($tokenString);
-
-    if (!empty($greetingTokens)) {
-      // first use the existing contact object for token replacement
-      if (!empty($contactDetails)) {
-        $tokenString = CRM_Utils_Token::replaceContactTokens($tokenString, $contactDetails, TRUE, $greetingTokens, TRUE);
-      }
-
-      // check if there are any unevaluated tokens
-      $greetingTokens = self::getTokens($tokenString);
-
-      // $greetingTokens not empty, means there are few tokens which are not evaluated, like custom data etc
-      // so retrieve it from database
-      if (!empty($greetingTokens)) {
-        $greetingsReturnProperties = array_flip(CRM_Utils_Array::value('contact', $greetingTokens));
-        $greetingsReturnProperties = array_fill_keys(array_keys($greetingsReturnProperties), 1);
-        $contactParams = array('contact_id' => $contactId);
-        require_once 'CRM/Mailing/BAO/Mailing.php';
-        $greetingDetails = CRM_Mailing_BAO_Mailing::getDetails($contactParams, $greetingsReturnProperties, FALSE, FALSE);
-
-        // again replace tokens
-        $tokenString = CRM_Utils_Token::replaceContactTokens($tokenString, $greetingDetails, TRUE, $greetingTokens);
-      }
-    }
   }
 
   /**

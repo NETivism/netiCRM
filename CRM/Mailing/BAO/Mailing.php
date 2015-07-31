@@ -2300,9 +2300,15 @@ LEFT JOIN civicrm_mailing_group g ON g.mailing_id   = m.id
 
   public function commonCompose(&$form) {
     //get the tokens.
-    $tokens = CRM_Core_SelectValues::contactTokens();
+    $tokens = array();
+    if (method_exists($form, 'listTokens')) {
+      $tokens = $form->listTokens();
+    }
 
     //token selector for subject
+    //sorted in ascending order tokens by ignoring word case
+    $form->assign('tokens', CRM_Utils_Token::formatTokensForDisplay($tokens));
+
     //CRM-5058
     $form->add('select', 'token3', ts('Insert Token'),
       $tokens, FALSE,
@@ -2312,21 +2318,6 @@ LEFT JOIN civicrm_mailing_group g ON g.mailing_id   = m.id
         'onclick' => "return tokenReplText(this);",
       )
     );
-    $className = CRM_Utils_System::getClassName($form);
-    if ($className == 'CRM_Mailing_Form_Upload') {
-      $tokens = array_merge(CRM_Core_SelectValues::mailingTokens(), $tokens);
-    }
-    elseif ($className == 'CRM_Admin_Form_ScheduleReminders') {
-      $tokens = array_merge(CRM_Core_SelectValues::activityTokens(), $tokens);
-      $tokens = array_merge(CRM_Core_SelectValues::eventTokens(), $tokens);
-    }
-    elseif ($className == 'CRM_Event_Form_ManageEvent_ScheduleReminders') {
-      $tokens = array_merge(CRM_Core_SelectValues::eventTokens(), $tokens);
-    }
-
-    //sorted in ascending order tokens by ignoring word case
-    natcasesort($tokens);
-    $form->assign('tokens', json_encode($tokens));
 
     $form->add('select', 'token1', ts('Insert Tokens'),
       $tokens, FALSE,
