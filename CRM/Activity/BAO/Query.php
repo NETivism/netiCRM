@@ -318,12 +318,11 @@ class CRM_Activity_BAO_Query {
                                  AND civicrm_activity.is_deleted = 0 AND civicrm_activity.is_current_revision = 1 )";
                 
             }
-            */
 
 
         $from .= " $side JOIN civicrm_activity_target ON civicrm_activity_target.target_contact_id = contact_a.id ";
-        $from .= " $side JOIN civicrm_activity ON ( civicrm_activity.id = civicrm_activity_target.activity_id 
-                             AND civicrm_activity.is_deleted = 0 AND civicrm_activity.is_current_revision = 1 )";
+        */
+        $from .= " $side JOIN civicrm_activity ON ( civicrm_activity.source_contact_id = contact_a.id AND civicrm_activity.is_deleted = 0 AND civicrm_activity.is_current_revision = 1 )";
         break;
 
       case 'civicrm_activity_contact':
