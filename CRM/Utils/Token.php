@@ -615,7 +615,7 @@ class CRM_Utils_Token {
     }
     elseif ($token == 'checksum') {
       require_once 'CRM/Contact/BAO/Contact/Utils.php';
-      $cs = CRM_Contact_BAO_Contact_Utils::generateChecksum($contact->contact_id);
+      $cs = CRM_Contact_BAO_Contact_Utils::generateChecksum($contact['contact_id']);
       $value = "cs={$cs}";
     }
     else {
