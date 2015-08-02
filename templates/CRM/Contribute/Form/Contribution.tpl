@@ -73,6 +73,9 @@
         {else}
             {include file="CRM/Contact/Form/NewContact.tpl"}
         {/if}
+        {if $participantId}
+           <tr class="crm-contribution-form-block-participant_id"><td class="label nowrap">{$form.participant_id.label}</td><td><a href="{crmURL p='civicrm/contact/view/participant' q="reset=1&action=view&id=$participantId&cid=$contactID"}" target="_blank">{$participantId}</a></td></tr>
+        {/if}
         {if $contributionMode}
            <tr class="crm-contribution-form-block-payment_processor_id"><td class="label nowrap">{$form.payment_processor_id.label}<span class="marker"> * </span></td><td>{$form.payment_processor_id.html}</td></tr>
         {/if}
