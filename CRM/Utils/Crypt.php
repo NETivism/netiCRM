@@ -43,7 +43,7 @@ class CRM_Utils_Crypt {
       defined('CIVICRM_SITE_KEY')
     ) {
       $td = mcrypt_module_open(MCRYPT_RIJNDAEL_256, '', MCRYPT_MODE_ECB, '');
-      $iv = mcrypt_create_iv(32);
+      $iv = mcrypt_create_iv(32, MCRYPT_RAND);
       $ks = mcrypt_enc_get_key_size($td);
       $key = substr(sha1(CIVICRM_SITE_KEY), 0, $ks);
 
@@ -66,7 +66,7 @@ class CRM_Utils_Crypt {
       defined('CIVICRM_SITE_KEY')
     ) {
       $td = mcrypt_module_open(MCRYPT_RIJNDAEL_256, '', MCRYPT_MODE_ECB, '');
-      $iv = mcrypt_create_iv(32);
+      $iv = mcrypt_create_iv(32, MCRYPT_RAND);
       $ks = mcrypt_enc_get_key_size($td);
       $key = substr(sha1(CIVICRM_SITE_KEY), 0, $ks);
 
