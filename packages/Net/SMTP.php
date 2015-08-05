@@ -397,11 +397,17 @@ class Net_SMTP
      * @access public
      * @since  1.0
      */
-    function connect($timeout = null, $persistent = false)
+    function connect($timeout = 30, $persistent = false)
     {
         $this->_greeting = null;
-        $result = $this->_socket->connect($this->host, $this->port,
-                                          $persistent, $timeout);
+        $socket_option = array(
+          'ssl' => array(
+            'verify_peer' => false,
+            'verify_peer_name' => false,
+            'allow_self_signed' => true,
+          ),
+        );
+        $result = $this->_socket->connect($this->host, $this->port, $persistent, $timeout, $socket_option);
         if (PEAR::isError($result)) {
             return PEAR::raiseError('Failed to connect socket: ' .
                                     $result->getMessage());

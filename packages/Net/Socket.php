@@ -136,7 +136,7 @@ class Net_Socket extends PEAR {
             if (function_exists('stream_socket_client')) {
                 $flags = $this->persistent ? STREAM_CLIENT_PERSISTENT : STREAM_CLIENT_CONNECT;
                 $addr = $this->addr . ':' . $this->port;
-                $fp = stream_socket_client($addr, $errno, $errstr, $timeout, $flags, $context);
+                $fp = stream_socket_client($addr, $errno, $errstr, 30, $flags, $context);
             } else {
                 $fp = @$openfunc($this->addr, $this->port, $errno, $errstr, $timeout, $context);
             }
