@@ -613,13 +613,7 @@ class CRM_Utils_System {
   }
 
   static function memory($title = NULL) {
-    static $pid = NULL;
-    if (!$pid) {
-      $pid = posix_getpid();
-    }
-
-    $memory = str_replace("\n", '', shell_exec("ps -p" . $pid . " -o rss="));
-    $memory .= ", " . time();
+    $memory = memory_get_usage() . ", ". time();
     if ($title) {
       CRM_Core_Error::debug_var($title, $memory);
     }
@@ -1294,6 +1288,28 @@ class CRM_Utils_System {
       (isset($_SERVER['HTTPS']) &&
         !empty($_SERVER['HTTPS']) &&
         strtolower($_SERVER['HTTPS']) != 'off') ? TRUE : FALSE;
+  }
+
+  /**
+   * Free memory of given object
+   */
+  static function freeObject(&$obj, $debug = FALSE){
+    if($debug){
+      $classname = get_class($obj);
+      $memory = CRM_Utils_System::memory();
+      CRM_Core_Error::debug("before free $classname: $memory", NULL, TRUE, FALSE);
+    }
+    if(is_object($obj)){
+      foreach($obj as $key => $o) {
+        unset($obj->$key);
+      }
+    }
+    if($debug){
+      $mem = CRM_Utils_System::memory();
+      CRM_Core_Error::debug("after free $classname: $mem", NULL, TRUE, FALSE);
+      $diff = $memory - $mem;
+      CRM_Core_Error::debug("decrease $diff", NULL, TRUE, FALSE);
+    }
   }
 }
 
