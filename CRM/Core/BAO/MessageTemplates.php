@@ -406,9 +406,6 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
     }
 
     // replace tokens in the three elements (in subject as if it was the text body)
-    require_once 'CRM/Core/BAO/Domain.php';
-    require_once 'api/v2/Contact.php';
-    require_once 'CRM/Mailing/BAO/Mailing.php';
 
     $domain = CRM_Core_BAO_Domain::getDomain();
     $hookTokens = array();
@@ -463,6 +460,11 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
       $html = CRM_Utils_Token::replaceHookTokens($html, $contact[$params['contactId']], $categories, TRUE);
     }
 
+    // free memory
+    unset($contact);
+    unset($domain);
+    unset($mailing);
+
     // strip whitespace from ends and turn into a single line
     $subject = "{strip}$subject{/strip}";
 
@@ -486,9 +488,12 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
     $params['html'] = $html;
 
     if ($params['toEmail']) {
-      $contactParams = array('email' => $params['toEmail']);
-      $contact = &civicrm_contact_get($contactParams);
-      $prefs = array_pop($contact);
+      $contactParams = array( 
+        'email' => $params['toEmail'],
+        'version' => 3,
+      );
+      $result = civicrm_api('contact', 'get', $contactParams);
+      $prefs = !empty($result['values']) ? array_pop($result['values']) : array();
 
       if (isset($prefs['preferred_mail_format']) and $prefs['preferred_mail_format'] == 'HTML') {
         $params['text'] = NULL;
@@ -501,8 +506,6 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
       $config = CRM_Core_Config::singleton();
       $pdf_filename = '';
       if (!$config->doNotAttachPDFReceipt && $params['PDFFilename'] && $params['html']) {
-        require_once 'CRM/Utils/PDF/Utils.php';
-        require_once 'CRM/Utils/File.php';
         $pdf_filename =  CRM_Utils_PDF_Utils::html2pdf($params['html'], 'pdf_'.microtime().'.pdf', NULL, NULL, FALSE);
 
         if (empty($params['attachments'])) {
@@ -514,8 +517,7 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
           'cleanName' => $params['PDFFilename'],
         );
       }
-
-      require_once 'CRM/Utils/Mail.php';
+    
       $sent = CRM_Utils_Mail::send($params);
 
       if ($pdf_filename) {
@@ -523,6 +525,7 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
       }
     }
 
+    // CRM_Core_Error::debug(CRM_Utils_System::memory('end')); // memory leak detection
     return array($sent, $subject, $text, $html);
   }
 }

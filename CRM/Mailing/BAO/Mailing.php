@@ -32,21 +32,6 @@
  * $Id$
  *
  */
-require_once 'Mail/mime.php';
-require_once 'CRM/Utils/Mail.php';
-
-require_once 'CRM/Contact/BAO/SavedSearch.php';
-require_once 'CRM/Contact/BAO/Query.php';
-require_once 'CRM/Contact/BAO/Group.php';
-
-require_once 'CRM/Mailing/DAO/Mailing.php';
-require_once 'CRM/Mailing/DAO/Group.php';
-require_once 'CRM/Mailing/Event/BAO/Queue.php';
-require_once 'CRM/Mailing/Event/BAO/Delivered.php';
-require_once 'CRM/Mailing/Event/BAO/Bounce.php';
-require_once 'CRM/Mailing/BAO/TrackableURL.php';
-require_once 'CRM/Mailing/BAO/Component.php';
-require_once 'CRM/Mailing/BAO/Spool.php';
 class CRM_Mailing_BAO_Mailing extends CRM_Mailing_DAO_Mailing {
 
   /**
