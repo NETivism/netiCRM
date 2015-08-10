@@ -84,7 +84,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
    *
    * @return object
    */
-  function &singleton($package, $msgCallback = false, $contextCallback = false, $throwPEAR_Error = false, $stackClass = 'PEAR_ErrorStack') {
+  function &singleton($package = NULL, $msgCallback = false, $contextCallback = false, $throwPEAR_Error = false, $stackClass = 'PEAR_ErrorStack') {
     if (self::$_singleton === NULL) {
       self::$_singleton = new CRM_Core_Error('CiviCRM');
     }
