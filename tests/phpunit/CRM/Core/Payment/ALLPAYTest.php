@@ -197,6 +197,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
     $amount = 111;
 
     // create recurring
+    $date = date('YmdHis', $now);
     $recur = array(
       'contact_id' => $this->_cid,
       'amount' => $amount,
@@ -204,10 +205,12 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
       'frequency_interval' => 1,
       'installments' => 12,
       'is_test' => $this->_is_test,
-      'start_date'] => $recur['create_date'] => $recur['modified_date' => date('YmdHis', $now),
+      'start_date' => $date,
+      'create_date' => $date,
+      'modified_date' => $date,
       'invoice_id' => md5($now),
       'contribution_status_id' => 2,
-      'trxn_id'] => CRM_Utils_Array::value('trxn_id', $params, $params['invoiceID'),
+      'trxn_id' => CRM_Utils_Array::value('trxn_id', $params),
     );
     $ids = array();
     $recurring = &CRM_Contribute_BAO_ContributionRecur::add($recur, $ids);
