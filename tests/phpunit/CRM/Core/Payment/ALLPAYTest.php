@@ -313,7 +313,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
     $params = array(
       1 => array($recurring->id, 'Integer'),
     );
-    $this->assertSql(2, "SELECT count(*) FROM civicrm_contribution WHERE contribution_recur_id = %1", $params);
+    $this->assertDBQuery(2, "SELECT count(*) FROM civicrm_contribution WHERE contribution_recur_id = %1", $params);
     $cid2 = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution WHERE contribution_recur_id = %1 ORDER BY id DESC", $params);
     $cid2 = db_query("SELECT cid FROM {civicrm_contribution_allpay} WHERE cid = :cid", array(':cid' => $cid2))->fetchField();
     $this->assertNotEmpty($cid2, "In line " . __LINE__);
