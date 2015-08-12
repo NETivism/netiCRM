@@ -174,7 +174,6 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
       'SimulatePaid' => '1',
     );
     civicrm_allpay_ipn('Credit', $post, $get);
-    $this->expectOutputString('1|OK', "In line " . __LINE__);
 
     // verify contribution status after trigger
     $this->assertDBCompareValue(
@@ -192,7 +191,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
   }
 
   function testRecurringPaymentNotify(){
-    $now = time();
+    $now = time()+60;
     $trxn_id = 'ut'.substr($now, -5);
     $amount = 111;
 
@@ -239,7 +238,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
       'amount_level' => '',
       'is_test' => $this->_is_test,
       'is_pay_later' => 0,
-      'contribution_status_id' => 1,
+      'contribution_status_id' => 2,
       'contribution_recur_id' => $recurring->id,
     );
     $contribution = CRM_Contribute_BAO_Contribution::create($contrib, CRM_Core_DAO::$_nullArray);
@@ -255,7 +254,6 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
     $ids = CRM_Contribute_BAO_Contribution::buildIds($contribution->id);
     $query = CRM_Contribute_BAO_Contribution::makeNotifyUrl($ids, NULL, $return_query = TRUE);
     parse_str($query, $get);
-    // $get['is_recur'] = 1;
     $post = array(
       'MerchantID' => '2000132',
       'MerchantTradeNo' => $trxn_id,
@@ -285,11 +283,10 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
     $cid = db_query("SELECT cid FROM {civicrm_contribution_allpay} WHERE cid = :cid", array(':cid' => $contribution->id))->fetchField();
     $this->assertNotEmpty($cid, "In line " . __LINE__);
 
-
     // second payment
-    $now = time();
-    $get = $post = $ids = array();
+    $now = time()+120;
     $gwsr1 = 99999;
+    $get = $post = $ids = array();
     $ids = CRM_Contribute_BAO_Contribution::buildIds($contribution->id);
     $query = CRM_Contribute_BAO_Contribution::makeNotifyUrl($ids, NULL, $return_query = TRUE);
     parse_str($query, $get);
@@ -303,7 +300,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
       'Frequency' => '1',
       'ExecTimes' => '12',
       'Amount' => $amount,
-      'gwsr' => $gwsr1,
+      'Gwsr' => $gwsr1,
       'ProcessDate' => date('Y-m-d H:i:s', $now),
       'AuthCode' => '777777',
       'FirstAuthAmount' => $amount,
