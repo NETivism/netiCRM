@@ -458,6 +458,30 @@ SUM(total_amount) as total_amount
   }
 
   
+  function validateUserSQL(&$sql, $onlyWhere = FALSE){
+    $includeStrings = array('contact_a');
+    $excludeStrings = array('insert', 'delete', 'update');
+
+    if (!$onlyWhere) {
+      $includeStrings += array('select', 'from', 'where');
+    }
+
+    foreach ($includeStrings as $string) {
+      if (stripos($sql, $string) === FALSE) {
+        CRM_Core_Error::fatal(ts('Could not find \'%1\' string in SQL clause.',
+            array(1 => $string)
+          ));
+      }
+    }
+
+    foreach ($excludeStrings as $string) {
+      if (preg_match('/(\s' . $string . ')|(' . $string . '\s)/i', $sql)) {
+        CRM_Core_Error::fatal(ts('Found illegal \'%1\' string in SQL clause.',
+            array(1 => $string)
+          ));
+      }
+    }
+  }
 
 }
 
