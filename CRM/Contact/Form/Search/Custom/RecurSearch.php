@@ -143,7 +143,7 @@ GROUP BY r.id, c.contribution_status_id
 $having
 ";
     // for only contact ids ignore order.
-    $sql .= " ORDER BY r.id ASC";
+    $sql .= " ORDER BY r.id ASC, c.id DESC";
     $dao = CRM_Core_DAO::executeQuery($sql, CRM_Core_DAO::$_nullArray);
 
     while ($dao->fetch()) {
@@ -194,6 +194,8 @@ $having
       $clauses[] = "c.created_date < ".$next_str;
     }
 
+    
+
     if ($includeRecurIds) {
       $recurIds = array();
       foreach ($this->_formValues as $id => $value) {
@@ -208,6 +210,7 @@ $having
         $clauses[] = "r.id IN ($recurIds)";
       }
     }
+    
 
     return implode(' AND ', $clauses);
   }
@@ -236,12 +239,19 @@ $having
     
     $form->addDate('start_date', ts('First recurring date'), FALSE, array('formatType' => 'custom'));
     $form->addDate('contribution_created_date', ts('Filter by month'), FALSE, array('formatType' => 'custom', 'format' => 'yy-mm'));
+    $options = array(
+      'second_times' => '兩期以上有效',
+      'last_time' => '餘一期有效',
+      'is_expired' => '已過期',
+      'is_failed' => '已失敗',
+      );
+    $form->addRadio('other_options',NULL,$options,NULL,"<br/>" );
 
     /**
      * If you are using the sample template, this array tells the template fields to render
      * for the search form.
      */
-    $form->assign('elements', array('start_date', 'contribution_created_date'));
+    $form->assign('elements', array('start_date', 'contribution_created_date','other_options'));
   }
 
   function count(){
@@ -264,6 +274,12 @@ $having
       $this->fillTable();
       $this->_filled = TRUE;
     }
+    $sql = ($this->sql('*',
+      $offset, $rowcount, $sort,
+      FALSE, NULL
+    ));
+    dpm($sql);
+    $dao = CRM_Core_DAO::executeQuery($sql);
     return $this->sql('*',
       $offset, $rowcount, $sort,
       FALSE, NULL
@@ -295,6 +311,39 @@ $having
       }
     }
 
+    $other_options = $this->_formValues['other_options'];
+    $or_clauses = array();
+
+    $year = date('Y');
+    $month = date('m');
+    $day = date('d');
+    $today = $year."-".$month."-".$day;
+    if($month == 12){
+      $year++;
+      $month = 1;
+    }else{
+      $month++;
+    }
+    $month_later = $year."-".$month."-".$day;
+    dpm($other_options);
+    switch($other_options){
+      case 'second_times':
+        $clauses[] = "(`end_date` > '$month_later' AND last_status_id = 1 AND contribution_status_id = 2)";
+        break;
+      case 'last_time':
+        $clauses[] = "(`end_date` > '$today' AND `end_date` < '$month_later' AND last_status_id = 1  AND contribution_status_id = 2)";
+        break;
+      case 'is_expired':
+        $clauses[] = " ( DATE(`end_date`) = DATE(`cancel_date`) AND `cancel_date` < '$today' AND last_status_id = 1  AND contribution_status_id = 4 ) ";
+        break;
+      case 'is_failed':
+        $clauses[] = " last_status_id = 4 AND contribution_status_id = 4";
+        break;
+    }
+
+    dpm($clauses);
+
+
     if(!empty($clauses)){
       return implode(' AND ', $clauses);
     }
@@ -305,6 +354,9 @@ $having
 
   function having(){
     $clauses = array();
+
+
+
     if(count($clauses)){
       return implode(' AND ', $clauses);
     }
@@ -391,10 +443,7 @@ SUM(total_amount) as total_amount
       $row['gender_id'] = $this->_gender[$row['gender_id']];
     }
     $row['last_status_id'] = $this->_cstatus[$row['last_status_id']];
-
-    if(isset($row['action'])){ // prevent export contain this field
-      $row['action'] = '<a href="'.CRM_Utils_System::url('civicrm/contact/view/contributionrecur', "reset=1&id={$row['id']}&cid={$row['contact_id']}").'" target="_blank">'.ts('View').'</a>';
-    }
+    $row['action'] = '<a href="'.CRM_Utils_System::url('civicrm/contact/view/contributionrecur', "reset=1&id={$row['id']}&cid={$row['contact_id']}").'" target="_blank">'.ts('View').'</a>';
   }
 
   /**
@@ -403,6 +452,12 @@ SUM(total_amount) as total_amount
   function templateFile(){
     return 'CRM/Contact/Form/Search/Custom.tpl';
   }
+
+  function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
+    return $this->all($offset, $rowcount, $sort, FALSE, TRUE);
+  }
+
+  
 
 }
 
