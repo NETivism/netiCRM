@@ -998,7 +998,7 @@ class CRM_Utils_Token {
     require_once 'CRM/Contact/BAO/Query.php';
     $query = new CRM_Contact_BAO_Query($params, $returnProperties);
 
-    $details = $query->apiQuery($params, $returnProperties, NULL, NULL, 0);
+    $details = $query->apiQuery($params, $returnProperties, NULL, NULL, 0, $numberofContacts, $smartyCache = TRUE, $groupBy = TRUE);
 
     $contactDetails = &$details[0];
 
