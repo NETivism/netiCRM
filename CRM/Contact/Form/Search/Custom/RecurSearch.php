@@ -70,7 +70,7 @@ class CRM_Contact_Form_Search_Custom_RecurSearch  extends CRM_Contact_Form_Searc
       'r.end_date' => 'end_date',
       'r.cancel_date' => 'cancel_date',
       'c.contribution_status_id' => 'last_status_id',
-      'c.receive_date' => 'current_receive_date',
+      'MAX(c.receive_date)' => 'current_receive_date',
       'COUNT(IF(c.contribution_status_id = 1, 1, NULL))' => 'donation_count',
       'COUNT(c.id)' => 'total_count',
       'SUM(c.total_amount)' => 'total_amount', 
@@ -143,7 +143,7 @@ GROUP BY r.id, c.contribution_status_id
 $having
 ";
     // for only contact ids ignore order.
-    $sql .= " ORDER BY r.id ASC, c.id DESC";
+    $sql .= " ORDER BY r.id ASC";
     $dao = CRM_Core_DAO::executeQuery($sql, CRM_Core_DAO::$_nullArray);
 
     while ($dao->fetch()) {
@@ -334,7 +334,7 @@ $having
         $clauses[] = "(`end_date` > '$today' AND `end_date` < '$month_later' AND last_status_id = 1  AND contribution_status_id = 2)";
         break;
       case 'is_expired':
-        $clauses[] = " ( DATE(`end_date`) = DATE(`cancel_date`) AND `cancel_date` < '$today' AND last_status_id = 1  AND contribution_status_id = 4 ) ";
+        $clauses[] = " ( DATE(`end_date`) = DATE(`cancel_date`) AND `cancel_date` < '$today' AND last_status_id = 1  AND contribution_status_id = 1 ) ";
         break;
       case 'is_failed':
         $clauses[] = " last_status_id = 4 AND contribution_status_id = 4";
@@ -457,7 +457,7 @@ SUM(total_amount) as total_amount
     return $this->all($offset, $rowcount, $sort, FALSE, TRUE);
   }
 
-  
+
   function validateUserSQL(&$sql, $onlyWhere = FALSE){
     $includeStrings = array('contact_a');
     $excludeStrings = array('insert', 'delete', 'update');
