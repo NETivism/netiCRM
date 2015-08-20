@@ -25,6 +25,7 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
     }
     $this->addElement('select', 'receiptTitle', ts('Field for receipt title'), $option);
     $this->addElement('select', 'receiptSerial', ts('Field for receipt serial number'), $option);
+    $this->addElement('select', 'receiptDonorCredit', ts('Field for donor credit'), $option);
     $check = TRUE;
 
     // redirect to Administer Section After hitting either Save or Cancel button.

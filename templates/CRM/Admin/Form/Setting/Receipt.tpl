@@ -50,6 +50,10 @@
             <td class="label">{$form.receiptSerial.label}</td><td>{$form.receiptSerial.html}<br />
             <span class="description">{ts}When your serial code save in another field, use this to select the field.{/ts}</span></td>
         </tr>
+        <tr class="crm-mail-form-block-receiptDonorCredit">
+            <td class="label">{$form.receiptDonorCredit.label}</td><td>{$form.receiptDonorCredit.html}<br />
+            <span class="description">{ts}When use custom field to record donor credit, use this to select the field.{/ts}</span></td>
+        </tr>
       </table>
 <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>     
 <div class="spacer"></div>

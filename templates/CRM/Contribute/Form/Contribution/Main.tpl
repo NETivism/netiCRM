@@ -501,4 +501,5 @@ function enableHonorType( ) {
   });
 {/literal}
 </script>
+{include file="CRM/common/betterContributionForm.tpl"}
 {/if}

@@ -44655,6 +44655,10 @@ msgstr ""
 msgid "Field for receipt serial number"
 msgstr ""
 
+#: civicrm/CRM/Admin/Form/Setting/Receipt.php
+msgid "Field for donor credit"
+msgstr ""
+
 #: templates/CRM/Admin/Form/Setting/Receipt.tpl
 msgid "Selected Participants was deleted sucessfully."
 msgstr ""
@@ -44681,6 +44685,10 @@ msgstr ""
 
 #: templates/CRM/Admin/Form/Setting/Receipt.tpl
 msgid "When your serial code save in another field, use this to select the field."
+msgstr ""
+
+#: templates/CRM/Admin/Form/Setting/Receipt.tpl
+msgid "When use custom field to record donor credit, use this to select the field."
 msgstr ""
 
 #: templates/CRM/Event/Form/Registration/Register.tpl
