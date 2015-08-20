@@ -278,7 +278,6 @@ $having
       $offset, $rowcount, $sort,
       FALSE, NULL
     ));
-    dpm($sql);
     $dao = CRM_Core_DAO::executeQuery($sql);
     return $this->sql('*',
       $offset, $rowcount, $sort,
@@ -325,7 +324,6 @@ $having
       $month++;
     }
     $month_later = $year."-".$month."-".$day;
-    dpm($other_options);
     switch($other_options){
       case 'second_times':
         $clauses[] = "(`end_date` > '$month_later' AND last_status_id = 1 AND contribution_status_id = 2)";
@@ -340,8 +338,6 @@ $having
         $clauses[] = " last_status_id = 4 AND contribution_status_id = 4";
         break;
     }
-
-    dpm($clauses);
 
 
     if(!empty($clauses)){
