@@ -88,6 +88,7 @@ class CRM_Contact_Form_Search_Custom_RecurSearch  extends CRM_Contact_Form_Searc
       ts('End Date') => 'end_date',
       ts('Cancel Date') => 'cancel_date',
       ts('Completed Donation') => 'donation_count',
+      ts('Total Count') => 'total_count',
       ts('Total') => 'total_amount',
       $filter_month. ts('Contribution Status') => 'last_status_id',
       $filter_month. ts('Created Date') => 'current_receive_date',
@@ -139,7 +140,7 @@ PRIMARY KEY (id)
 SELECT $select
 FROM   $from
 WHERE  $where
-GROUP BY r.id, c.contribution_status_id
+GROUP BY r.id
 $having
 ";
     // for only contact ids ignore order.
