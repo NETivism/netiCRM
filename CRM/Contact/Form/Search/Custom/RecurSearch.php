@@ -326,16 +326,16 @@ $having
     $month_later = $year."-".$month."-".$day;
     switch($other_options){
       case 'second_times':
-        $clauses[] = "(`end_date` > '$month_later' AND last_status_id = 1 AND contribution_status_id = 2)";
+        $clauses[] = "(`end_date` > '$month_later' AND contribution_status_id = 5)";
         break;
       case 'last_time':
-        $clauses[] = "(`end_date` > '$today' AND `end_date` < '$month_later' AND last_status_id = 1  AND contribution_status_id = 2)";
+        $clauses[] = "(`end_date` > '$today' AND `end_date` < '$month_later'  AND contribution_status_id = 5)";
         break;
       case 'is_expired':
-        $clauses[] = " ( DATE(`end_date`) = DATE(`cancel_date`) AND `cancel_date` < '$today' AND last_status_id = 1  AND contribution_status_id = 1 ) ";
+        $clauses[] = " ( contribution_status_id = 1 ) ";
         break;
       case 'is_failed':
-        $clauses[] = " last_status_id = 4 AND contribution_status_id = 4";
+        $clauses[] = "  contribution_status_id = 4 OR  contribution_status_id = 3";
         break;
     }
 
