@@ -4,7 +4,7 @@
 var system = require('system'); 
 var port = system.env.RUNPORT; 
 
-var url = (port == '80') ? 'http://127.0.0.1/' : 'http://127.0.0.1:' + port + '/',;
+var url = (port == '80') ? 'http://127.0.0.1/' : 'http://127.0.0.1:' + port + '/';
 var item = {
   url_prefix: url,
   event_name_1: '測試活動',
