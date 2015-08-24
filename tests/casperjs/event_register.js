@@ -7,9 +7,9 @@ var port = system.env.RUNPORT;
 var url = (port == '80') ? 'http://127.0.0.1/' : 'http://127.0.0.1:' + port + '/';
 var item = {
   url_prefix: url,
-  event_name_1: '測試活動',
-  event_name_2: '測試有名額、不可候補',
-  event_name_3: '測試有名額、可候補',
+  event_name_1: '無名額限制，填表完成送出',
+  event_name_2: '有名額限制，不開放候補',
+  event_name_3: '有名額限制，開放候補',
   event_name_4: '有名額限制，需事先審核',
   event_name_5: '無名額限制，需事先審核',
   site_name: 'netiCRM'
