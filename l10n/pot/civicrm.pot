@@ -44772,3 +44772,23 @@ msgstr ""
 #: CRM/Contact/Form/Search/Custom/RecurSearch.php
 msgid "Current Total Amount"
 msgstr ""
+
+#: betterContributionForm.tpl
+msgid "Legal"
+msgstr ""
+
+#: betterContributionForm.tpl
+msgid "Same as Contributor"
+msgstr ""
+
+#: betterContributionForm.tpl
+msgid "Part of Name"
+msgstr ""
+
+#: betterContributionForm.tpl
+msgid "Anonymity"
+msgstr ""
+
+#: betterContributionForm.tpl
+msgid "Custom Name"
+msgstr ""

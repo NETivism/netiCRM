@@ -555,6 +555,11 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     }
 
     $this->addFormRule(array('CRM_Contribute_Form_Contribution_Main', 'formRule'), $this);
+
+    $this->assign('receiptTitle',$config->receiptTitle);
+    $this->assign('receiptSerial',$config->receiptSerial);
+    $this->assign('receiptDonorCredit',$config->receiptDonorCredit);
+
   }
 
   /**
