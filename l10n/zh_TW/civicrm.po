@@ -44712,3 +44712,31 @@ msgstr "收據設定"
 
 msgid "Contact info"
 msgstr "聯絡資訊"
+
+#: templates/CRM/Contact/Form/Merge.tpl
+msgid "overwrite"
+msgstr "覆蓋"
+
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php
+msgid "Completed Donation"
+msgstr "成功次數"
+
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php
+msgid "Total Count"
+msgstr "請款次數"
+
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php
+msgid "Total Receive Amount"
+msgstr "實際總金額"
+
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php
+msgid "Last Receive Date"
+msgstr "最近一筆收到日期"
+
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php
+msgid "Recuring Status"
+msgstr "定期定額狀態"
+
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php
+msgid "Current Total Amount"
+msgstr "應捐總金額"
