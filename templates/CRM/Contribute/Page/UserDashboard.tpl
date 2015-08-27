@@ -50,7 +50,7 @@
                     </td>
                     <td>{$row.contribution_type}</td>
                     <td>{ts}created{/ts}: {$row.created_date|crmDate}<br />{ts}Received{/ts}: {if $row.receive_date}{$row.receive_date|crmDate}{else}{ts}None{/ts}{/if}</td>
-                    <td>{$row.contribution_status}{if $row.contribution_status_id eq 2}<br /><a href="{crmURL p="civicrm/contribute/payment" q="reset=1&id=`$row.contribution_id`"}">{ts}Change Payment Method{/ts}</a>{/if}</td>
+                    <td>{$row.contribution_status}{if $row.contribution_status_id eq 2 && $row.ids.participant}<br /><a href="{crmURL p="civicrm/contribute/payment" q="reset=1&id=`$row.contribution_id`"}">{ts}Change Payment Method{/ts}</a>{/if}</td>
                 </tr>
             {/foreach}
         </table>
