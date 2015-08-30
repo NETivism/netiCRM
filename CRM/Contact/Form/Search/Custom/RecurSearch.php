@@ -338,7 +338,7 @@ $having
         $clauses[] = " ( contribution_status_id = 1 ) ";
         break;
       case 'is_failed':
-        $clauses[] = "  contribution_status_id = 4 OR  contribution_status_id = 3";
+        $clauses[] = " ( last_status_id = 4 )";
         break;
     }
 
