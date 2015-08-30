@@ -75,18 +75,42 @@
       var lcMessage = {/literal}"{$config->lcMessages}"{literal};
       var localisation = lcMessage.replace("_", "-");
       var defaultDate = (cj( element_date ).attr('formattype') == "birth")?'-30y':'today';
-      cj(element_date).datepicker({
-                                    closeAtTop        : true,
-                                    dateFormat        : date_format,
-                                    changeMonth       : true,
-                                    changeYear        : true,
-                                    altField          : alt_field,
-                                    altFormat         : 'mm/dd/yy',
-                                    yearRange         : yearRange,
-                                    regional          : localisation,
-                                    defaultDate       : defaultDate
-                                });
-
+      if(date_format.search('d') == -1){
+        cj(element_date).click(function(){
+          cj('.ui-datepicker-calendar').hide();
+          cj('.ui-corner-all').click(function(){
+            cj('.ui-datepicker-calendar').hide();
+          });
+        });
+        cj(element_date).datepicker({  
+          changeMonth: true,
+          changeYear: true,
+          showButtonPanel: true,
+          dateFormat: date_format,
+          onChangeMonthYear: function(dateText, inst){
+            setTimeout(function(){cj('.ui-datepicker-calendar').hide();},1);
+          },
+          onClose: function(dateText, inst) { 
+            cj(".ui-datepicker-calendar").show();
+            var month = cj("#ui-datepicker-div .ui-datepicker-month :selected").val();
+            var year = cj("#ui-datepicker-div .ui-datepicker-year :selected").val();
+            cj(this).datepicker('setDate', new Date(year, month, 1));
+            cj('.ui-corner-all').off('click');
+          }
+        })
+      }else{
+        cj(element_date).datepicker({
+                                      closeAtTop        : true,
+                                      dateFormat        : date_format,
+                                      changeMonth       : true,
+                                      changeYear        : true,
+                                      altField          : alt_field,
+                                      altFormat         : 'mm/dd/yy',
+                                      yearRange         : yearRange,
+                                      regional          : localisation,
+                                      defaultDate       : defaultDate
+                                  });
+      }
       cj(element_date).click( function( ) {
           hideYear( this );
       });
