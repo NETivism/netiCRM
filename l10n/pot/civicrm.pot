@@ -44792,3 +44792,11 @@ msgstr ""
 #: betterContributionForm.tpl
 msgid "Custom Name"
 msgstr ""
+
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php
+msgid "In progress and having over 2 times."
+msgstr ""
+
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php
+msgid "In progress and last 1 time."
+msgstr ""

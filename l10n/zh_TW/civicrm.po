@@ -44760,3 +44760,11 @@ msgstr "匿名"
 #: betterContributionForm.tpl
 msgid "Custom Name"
 msgstr "自訂名稱"
+
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php
+msgid "In progress and having over 2 times."
+msgstr "兩期以上有效"
+
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php
+msgid "In progress and last 1 time."
+msgstr "餘一期有效"

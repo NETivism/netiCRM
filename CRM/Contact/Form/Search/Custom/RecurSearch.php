@@ -243,10 +243,10 @@ $having
     $form->addDate('start_date', ts('First recurring date'), FALSE, array('formatType' => 'custom'));
     $form->addDate('contribution_created_date', ts('Filter by month'), FALSE, array('formatType' => 'custom', 'format' => 'yy-mm'));
     $options = array(
-      'second_times' => '兩期以上有效',
-      'last_time' => '餘一期有效',
-      'is_expired' => '已過期',
-      'is_failed' => '已失敗',
+      'second_times' => ts('In progress and having over 2 times.'),
+      'last_time' => ts('In progress and last 1 time.'),
+      'is_expired' => ts('Expired'),
+      'is_failed' => ts('Failed'),
       );
     $form->addRadio('other_options',NULL,$options,NULL,"<br/>" );
 
@@ -272,17 +272,19 @@ $having
    * Construct the search query
    */
   function all($offset = 0, $rowcount = 0, $sort = NULL, $includeRecurIds= FALSE, $onlyIDs = FALSE){
+    $fields = !$onlyIDs ? "*" : "contact_id" ;
+
     $task = $this->_formValues['task'] ? $this->_formValues['task'] : FALSE;
     if($task && !empty($this->_formValues['qfKey']) && !$this->_filled){
       $this->fillTable();
       $this->_filled = TRUE;
     }
-    $sql = ($this->sql('*',
+    $sql = ($this->sql($fields,
       $offset, $rowcount, $sort,
       FALSE, NULL
     ));
     $dao = CRM_Core_DAO::executeQuery($sql);
-    return $this->sql('*',
+    return $this->sql($fields,
       $offset, $rowcount, $sort,
       FALSE, NULL
     );
