@@ -115,7 +115,7 @@ class CRM_Utils_Geocode_Google {
       $add .= '+' . urlencode(str_replace('', '+', $values['country']));
     }
 
-    if ($_SERVER['HTTPS']) {
+    if(CRM_Utils_System::isSSL()){
       $query = 'https://' . self::$_server . self::$_uri . $add;
     }
     else {

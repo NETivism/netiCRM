@@ -2381,7 +2381,7 @@ WHERE c.id = $id";
       return implode('&', $query);
     }
     $url = CRM_Utils_System::url($path, implode('&', $query), TRUE, NULL, FALSE);
-    if($_SERVER['HTTP_HTTPS'] == 'on' || $_SERVER['HTTPS'] == 'on'){
+    if (CRM_Utils_System::isSSL()) {
       return str_replace('http://', 'https://', $url);
     }
     else{

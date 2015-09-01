@@ -112,7 +112,8 @@ class CRM_Core_Config_Defaults {
   public function setValues(&$defaults, $formMode = FALSE) {
     $config = CRM_Core_Config::singleton();
 
-    $baseURL = $config->userFrameworkBaseURL;
+    $scheme = CRM_Utils_System::isSSL() ? 'https://' : 'http://';
+    $baseURL = !empty($_SERVER['HTTP_HOST']) ? $scheme.$_SERVER['HTTP_HOST'] : $config->userFrameworkBaseURL;
 
     // CRM-6216: Drupal’s $baseURL might have a trailing LANGUAGE_NEGOTIATION_PATH,
     // which needs to be stripped before we start basing ResourceURL on it

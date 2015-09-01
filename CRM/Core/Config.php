@@ -438,9 +438,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
 
     if ($this->userFrameworkResourceURL) {
       // we need to do this here so all blocks also load from an ssl server
-      if (isset($_SERVER['HTTPS']) &&
-        strtolower($_SERVER['HTTPS']) != 'off'
-      ) {
+      if(CRM_Utils_System::isSSL()) {
         CRM_Utils_System::mapConfigToSSL();
       }
       $rrb = parse_url($this->userFrameworkResourceURL);

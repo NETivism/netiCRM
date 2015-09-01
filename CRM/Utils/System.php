@@ -891,10 +891,8 @@ class CRM_Utils_System {
     $config = CRM_Core_Config::singleton();
     $req_headers = CRM_Utils_System::getRequestHeaders();
     if ($config->enableSSL &&
-      (!isset($_SERVER['HTTPS']) ||
-        strtolower($_SERVER['HTTPS']) == 'off'
-      ) &&
-      strtolower($req_headers['X_FORWARDED_PROTO']) != 'https'
+       (!isset($_SERVER['HTTPS']) || strtolower($_SERVER['HTTPS']) == 'off') &&
+       strtolower($req_headers['X_FORWARDED_PROTO']) != 'https'
     ) {
       // ensure that SSL is enabled on a civicrm url (for cookie reasons etc)
       $url = "https://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
@@ -1287,7 +1285,7 @@ class CRM_Utils_System {
     return
       (isset($_SERVER['HTTPS']) &&
         !empty($_SERVER['HTTPS']) &&
-        strtolower($_SERVER['HTTPS']) != 'off') ? TRUE : FALSE;
+        strtolower($_SERVER['HTTPS']) == 'on') ? TRUE : FALSE;
   }
 
   /**
