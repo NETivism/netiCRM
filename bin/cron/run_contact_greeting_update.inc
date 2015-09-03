@@ -34,7 +34,7 @@ function run_contact_greeting_update( ){
       }
 
       // build return properties based on tokens
-      $greetingTokens = CRM_Activity_BAO_Activity::getTokens( $greetingString );
+      $greetingTokens = CRM_Utils_Token::getTokens( $greetingString );
       $tokens = CRM_Utils_Array::value( 'contact', $greetingTokens );
       $greetingsReturnProperties = array( );
       if ( is_array( $tokens ) ) {
