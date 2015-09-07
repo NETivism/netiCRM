@@ -676,5 +676,44 @@ INNER JOIN   civicrm_contact contact ON ( contact.id = contrib.contact_id )
 
     return TRUE;
   }
-}
 
+  /**
+   * Payment result message after submit contribution
+   *
+   * @param object  $form   form object
+   * @param array   $params array with contribution related field to find contribution
+   * @param int     $status contribution status for indicate message type
+   */
+  public static Function paymentResultType(&$form, $params, $status = NULL, $message = NULL){
+    if(empty($status)){
+      $contribution = new CRM_Contribute_BAO_Contribution();
+      $contribution->copyValues($params);
+      if($contribution->find(TRUE)) {
+        $status = $contribution->contribution_status_id;
+      }
+    }
+
+    switch ($status){
+      case 4: // failed
+        $form->assign('payment_result_type', 4);
+        break;
+      case 1: // success
+        $form->assign('payment_result_type', 1);
+        break;
+      case 2:
+        if(empty($contribution)){
+          $contribution = new CRM_Contribute_BAO_Contribution();
+          $contribution->copyValues($params);
+          $contribution->find(TRUE);
+        }
+        if(!empty($contribution->is_pay_later)){
+          $form->assign('payment_result_type', 2);
+        }
+        else{
+          $form->assign('payment_result_type', 4);
+        }
+        break;
+    }
+    $form->assign('payment_result_message', $message);
+  }
+}

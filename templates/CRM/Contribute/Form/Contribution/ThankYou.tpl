@@ -28,6 +28,7 @@
 {/if}
 
 {include file="CRM/common/TrackingFields.tpl"}
+{debug}
 
 <div class="crm-block crm-contribution-thankyou-form-block">
     {if $thankyou_text}
@@ -53,6 +54,7 @@
         {* PayPal_Standard sets contribution_mode to 'notify'. We don't know if transaction is successful until we receive the IPN (payment notification) *}
         {if $is_pay_later}
 	    <div class="bold">{$pay_later_receipt}</div>
+      {if $payment_result_type}{ts 1=$payment_result_message}{/ts}{/if}
 	    {if $is_email_receipt}
                 <div>
 		    {if $onBehalfEmail AND ($onBehalfEmail neq $email)}		    
