@@ -7,6 +7,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
   protected $_apiversion;
   protected $_processor;
   protected $_is_test;
+  protected $_page_id;
 
   /**
    *  Constructor
@@ -20,6 +21,11 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
     }
     if(!module_exists('civicrm_allpay')){
       die("You must enable civicrm_allpay module first before test.");
+    }
+    $payment_page = variable_get('civicrm_demo_payment_page', array());
+    $class_name = 'Payment_ALLPAY';
+    if(isset($payment_page[$class_name])){
+      $this->_page_id = $payment_page[$class_name];
     }
     parent::__construct();
   }
@@ -132,7 +138,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
       'contact_id' => $this->_cid,
       'contribution_contact_id' => $this->_cid,
       'contribution_type_id' => 1,
-      'contribution_page_id' => 1,
+      'contribution_page_id' => $this->_page_id,
       'payment_processor_id' => $this->_processor['id'],
       'payment_instrument_id' => 1,
       'created_date' => date('YmdHis', $now),
@@ -225,7 +231,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
       'contact_id' => $this->_cid,
       'contribution_contact_id' => $this->_cid,
       'contribution_type_id' => 1,
-      'contribution_page_id' => 1,
+      'contribution_page_id' => $this->_page_id,
       'payment_processor_id' => $this->_processor['id'],
       'payment_instrument_id' => 1,
       'created_date' => date('YmdHis', $now),
