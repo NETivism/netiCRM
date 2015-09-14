@@ -44800,3 +44800,47 @@ msgstr ""
 #: CRM/Contact/Form/Search/Custom/RecurSearch.php
 msgid "In progress and last 1 time."
 msgstr ""
+
+#: CRM/Contact/Form/Search.php
+msgid "Unsubscription Group"
+msgstr ""
+
+#: CRM/Contact/Form/Search.php
+msgid "Unsubscription Group"
+msgstr ""
+
+#: templates/CRM/Mailing/Form/Group.hlp
+msgid "Search-based mailings require an \"unsubscribe tracking\" group."
+msgstr ""
+
+#: templates/CRM/Mailing/Form/Group.hlp
+msgid ""
+"Because this mailing is using the results of a search to provide the "
+"recipient list, you need to specify a group to track people who unsubscribe "
+"in response to this mailing."
+msgstr ""
+
+#: templates/CRM/Mailing/Form/Group.hlp
+msgid ""
+"If a recipient unsubscribes from this mailing, they will be excluded from "
+"future mailings which use the same \"Unsubscription Group\". This is "
+"achieved through actually marking the contact as \"unsubscribed from the "
+"group\". If a contact in your search results has already been marked as "
+"unsubscribed from that group, they will be excluded from this mailing."
+msgstr ""
+
+#: templates/CRM/Mailing/Form/Group.hlp
+msgid ""
+"If a recipient clicks the unsubscribe link they will see the "
+"\"Unsubscription Group\" title on the unsubscribe page. The selected group "
+"should have a title that corresponds to the content / type of mailing being "
+"sent."
+msgstr ""
+
+#: templates/CRM/Mailing/Form/Group.hlp
+msgid ""
+"NOTE: Contacts who are in the \"Unsubscription Group\" but do not match your "
+"search critera will not be included in the mailing regardless of their "
+"status in that group. This is a change from previous versions which used the "
+"term \"Base Group\"."
+msgstr ""
