@@ -44844,3 +44844,7 @@ msgid ""
 "status in that group. This is a change from previous versions which used the "
 "term \"Base Group\"."
 msgstr ""
+
+#: CRM/Core/Permission.php
+msgid "administer Reserved Option"
+msgstr ""
