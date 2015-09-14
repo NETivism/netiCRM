@@ -2,7 +2,7 @@
 
 require_once 'CiviTest/CiviUnitTestCase.php';
 
-class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
+class CRM_Core_Payment_NewebTest extends CiviUnitTestCase {
   public $DBResetRequired = FALSE;
   protected $_apiversion;
   protected $_processor;
@@ -58,6 +58,10 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
         'class_name' => 'Payment_Neweb',
       );
       $result = civicrm_api('PaymentProcessorType', 'get', $params);
+      // print_r($result, TRUE);
+      // var_dump($result, TRUE);
+      // var_export($result, TRUE);
+      fwrite(STDERR, print_r($result, TRUE));
       $this->assertAPISuccess($result);
       if(!empty($result['count'])){
         $domain_id = CRM_Core_Config::domainID();
@@ -71,11 +75,13 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
             'is_active' => 1,
             'is_default' => 0,
             'is_test' => 0,
-            'user_name' => !empty($p['user_name_label']) ? 'abcd' : NULL,
-            'password' => !empty($p['password_label']) ? 'abcd' : NULL,
-            'signature' => !empty($p['signature_label']) ? 'abcd' : NULL,
+            'user_name' => !empty($p['user_name_label']) ? '123456' : NULL,
+            'password' => !empty($p['password_label']) ? '123456' : NULL,
+            'signature' => !empty($p['signature_label']) ? 'xxxx' : NULL,
+            'subject' => !empty($p['subject_label']) ? 'xxxx' : NULL,
             'url_site' => !empty($p['url_site_default']) ? $p['url_site_default'] : NULL,
             'url_api' => !empty($p['url_api_default']) ? $p['url_api_default'] : NULL,
+            'url_recur' => !empty($p['url_site_default']) ? $p['url_site_default'] : NULL,
             'class_name' => $p['class_name'],
             'billing_mode' => $p['billing_mode'],
             'is_recur' => $p['is_recur'],
@@ -84,13 +90,23 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
           $result = civicrm_api('PaymentProcessor', 'create', $payment_processor);
           $this->assertAPISuccess($result);
           if(is_numeric($result['id'])){
+            $ftp = array();
+            $ftp['ftp_host'] = '127.0.0.1';
+            $ftp['ftp_user'] = 'user'; 
+            $ftp['ftp_password'] = 'xxxx';
+            variable_set("civicrm_neweb_ftp_".$result['id'], $ftp);
             $payment_processors[] = $result['id'];
           }
 
           $payment_processor['is_test'] = 1;
           $payment_processor['url_site'] = !empty($p['url_site_test_default']) ? $p['url_site_test_default'] : NULL;
           $payment_processor['url_api'] = !empty($p['url_api_test_default']) ? $p['url_api_test_default'] : NULL;
+          $payment_processor['url_recur'] = !empty($p['url_site_test_default']) ? $p['url_site_test_default'] : NULL;
           $result = civicrm_api('PaymentProcessor', 'create', $payment_processor);
+          if(is_numeric($result['id'])){
+            variable_set("civicrm_neweb_ftp_test_".$result['id'], $ftp);
+            $payment_processors[] = $result['id'];
+          }
           $this->assertAPISuccess($result);
         }
       }
@@ -161,6 +177,40 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
     $this->assertDBState('CRM_Contribute_DAO_Contribution', $contribution->id, $params);
 
     // manually trigger ipn
+    /*
+    $get = $post = $ids = array();
+    $ids = CRM_Contribute_BAO_Contribution::buildIds($contribution->id);
+    $query = CRM_Contribute_BAO_Contribution::makeNotifyUrl($ids, NULL, $return_query = TRUE);
+    parse_str($query, $get);
+    $post = array(
+      'MerchantID' => '2000132',
+      'MerchantTradeNo' => $trxn_id,
+      'RtnCode' => '1',
+      'RtnMsg' => 'success',
+      'TradeNo' => '201203151740582564',
+      'TradeAmt' => $amount,
+      'PaymentDate' => date('Y-m-d H:i:s', $now),
+      'PaymentType' => 'Credit',
+      'PaymentTypeChargeFee' => '10',
+      'TradeDate' => date('Y-m-d H:i:s', $now),
+      'SimulatePaid' => '1',
+    );
+    civicrm_neweb_ipn('Credit', $post, $get);
+
+    // verify contribution status after trigger
+    $this->assertDBCompareValue(
+      'CRM_Contribute_DAO_Contribution',
+      $searchValue = $contribution->id,
+      $returnColumn = 'contribution_status_id',
+      $searchColumn = 'id',
+      $expectedValue = 1,
+      "In line " . __LINE__
+    );
+
+    // verify data in drupal module
+    $cid = db_query("SELECT cid FROM {civicrm_contribution_allpay} WHERE cid = :cid", array(':cid' => $contribution->id))->fetchField();
+    $this->assertNotEmpty($cid, "In line " . __LINE__);
+    */
   }
 
 }
