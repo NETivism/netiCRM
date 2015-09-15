@@ -4212,7 +4212,7 @@ SELECT COUNT( civicrm_contribution.total_amount ) as cancel_count,
 
       if ($name == $fieldName . '_low') {
         $firstOP = '>=';
-        $firstPhrase = 'greater than or equal to';
+        $firstPhrase = 'greater than or equal to \'%1\'';
         $firstDate = CRM_Utils_Date::processDate($value);
 
         $secondValues = $this->getWhereValues("{$fieldName}_high", $grouping);
@@ -4220,7 +4220,7 @@ SELECT COUNT( civicrm_contribution.total_amount ) as cancel_count,
           $secondValues[2]
         ) {
           $secondOP = '<=';
-          $secondPhrase = 'less than or equal to';
+          $secondPhrase = 'less than or equal to \'%1\'';
           $secondValue = $secondValues[2];
 
           if ($appendTimeStamp &&
@@ -4233,7 +4233,7 @@ SELECT COUNT( civicrm_contribution.total_amount ) as cancel_count,
       }
       elseif ($name == $fieldName . '_high') {
         $firstOP = '<=';
-        $firstPhrase = 'less than or equal to';
+        $firstPhrase = 'less than or equal to \'%1\'';
 
         if ($appendTimeStamp &&
           strlen($value) == 10
@@ -4247,7 +4247,7 @@ SELECT COUNT( civicrm_contribution.total_amount ) as cancel_count,
           $secondValues[2]
         ) {
           $secondOP = '>=';
-          $secondPhrase = 'greater than or equal to';
+          $secondPhrase = 'greater than or equal to \'%1\'';
           $secondValue = $secondValues[2];
           $secondDate = CRM_Utils_Date::processDate($secondValue);
         }
@@ -4271,11 +4271,11 @@ SELECT COUNT( civicrm_contribution.total_amount ) as cancel_count,
 ( {$tableName}.{$dbFieldName} $firstOP '$firstDate' ) AND
 ( {$tableName}.{$dbFieldName} $secondOP '$secondDate' )
 ";
-        $this->_qill[$grouping][] = "$fieldTitle - $firstPhrase \"$firstDateFormat\" " . ts('AND') . " $secondPhrase \"$secondDateFormat\"";
+        $this->_qill[$grouping][] = ts($fieldTitle) . " - " . ts($firstPhrase ,array(1 => "$firstDateFormat")) . ts('AND') . " " . ts($secondPhrase ,array(1 => "$secondDateFormat"));
       }
       else {
         $this->_where[$grouping][] = "{$tableName}.{$dbFieldName} $firstOP '$firstDate'";
-        $this->_qill[$grouping][] = "$fieldTitle - $firstPhrase \"$firstDateFormat\"";
+        $this->_qill[$grouping][] = ts($fieldTitle) . " - " . ts($firstPhrase ,array(1 => "$firstDateFormat"));
       }
     }
 
