@@ -1444,6 +1444,9 @@ cj(function() {
     if ($params['event_id']) {
       $eventEndDate = CRM_Core_DAO::getFieldValue('CRM_Event_DAO_Event', $params['event_id'], 'end_date');
     }
+    else{
+      $eventEndDate = NULL;
+    }
     if ($this->_id && $this->_statusId &&
       $this->_statusId != CRM_Utils_Array::value('status_id', $params) &&
       CRM_Utils_Array::value('is_notify', $params)
@@ -1688,7 +1691,10 @@ cj(function() {
       }
     }
 
-    if (($this->_action & CRM_Core_Action::UPDATE)) {
+    if ($skipMSG) {
+      $statusMsg .= ' ' . ts('This event was ended by %1, we don\'t send notify message to them.', array(1 => $eventEndDate));
+    }
+    elseif (($this->_action & CRM_Core_Action::UPDATE)) {
       $statusMsg = ts('Event registration information for %1 has been updated.', array(1 => $this->_contributorDisplayName));
       if (CRM_Utils_Array::value('send_receipt', $params) && count($sent)) {
         $statusMsg .= ' ' . ts('A confirmation email has been sent to %1', array(1 => $this->_contributorEmail));
@@ -1713,10 +1719,6 @@ cj(function() {
         elseif (isset($params['send_receipt'])) {
           $statusMsg .= ' ' . ts('A confirmation email has been sent to ALL participants');
         }
-      }
-
-      if ($skipMSG) {
-        $statusMsg .= ' ' . ts('This event was ended by %1, we don\'t send notify message to them.', array(1 => $eventEndDate));
       }
     }
     require_once "CRM/Core/Session.php";
