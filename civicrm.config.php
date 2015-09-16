@@ -34,7 +34,7 @@
  */
 
 function civicrm_conf_init() {
-    global $skipConfigError;
+    global $skipConfigError, $civicrm_root;
 
     static $conf = '';
 
@@ -46,30 +46,22 @@ function civicrm_conf_init() {
      * We are within the civicrm module, the drupal root is 2 links
      * above us, so use that
      */
-    $currentDir = dirname( __FILE__ ) . DIRECTORY_SEPARATOR;
+    $scriptFile = preg_replace('/sites\/([^\/]+)\/modules\/civicrm\/.*$/', 'sites/whatever', $_SERVER['SCRIPT_FILENAME']);
+    preg_match('/(.*)(sites\/[^\/]+\/modules\/civicrm)\/.*$/', $_SERVER['SCRIPT_FILENAME'], $matches);
+    if(!empty($matches[1]) && !empty($matches[2])){
+      $civicrm_root = $matches[1].$matches[2];
+    }
+
+    $currentDir = dirname( $scriptFile ) . DIRECTORY_SEPARATOR;
     if ( file_exists( $currentDir . 'settings_location.php' ) ) {
         include $currentDir . 'settings_location.php';
     }
 
     if ( defined( 'CIVICRM_CONFDIR' ) && ! isset( $confdir ) ) {
         $confdir = CIVICRM_CONFDIR;
-    } else {
-        // make it relative to civicrm.config.php, else php makes it relative
-        // to the script that invokes it
-        $moduleDir  = 'sites' . DIRECTORY_SEPARATOR . 'all' . DIRECTORY_SEPARATOR . 'modules';
-        $contribDir = $moduleDir . DIRECTORY_SEPARATOR . 'contrib';
-        // check to see if this is under sites/all/modules/contrib or subdir civicrm-core
-        if ( strpos( $currentDir, $contribDir ) !== false || strpos( $currentDir, 'civicrm-core' ) !== false) {
-            $confdir = $currentDir . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..';
-        // check to see if this is under sites/all/modules
-        } else if ( strpos( $currentDir, $moduleDir ) !== false ) {
-            $confdir = $currentDir . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..';
-        } else if ( strpos( $currentDir, 'plugins' . DIRECTORY_SEPARATOR . 'civicrm' . DIRECTORY_SEPARATOR . 'civicrm' ) !== false ) {
-             //if its wordpress
-            $confdir = $currentDir . DIRECTORY_SEPARATOR . '..';
-        } else {
-            $confdir = $currentDir . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR;
-        }
+    }
+    else {
+        $confdir= $currentDir;
     }
 
     if ( file_exists( $confdir . DIRECTORY_SEPARATOR . 'civicrm.settings.php' ) ) {
@@ -84,16 +76,9 @@ function civicrm_conf_init() {
     $phpSelf  = array_key_exists( 'PHP_SELF' , $_SERVER ) ? $_SERVER['PHP_SELF' ] : '';
     $httpHost = array_key_exists( 'HTTP_HOST', $_SERVER ) ? $_SERVER['HTTP_HOST'] : '';
 
-    $uri    = explode('/', $phpSelf );
     $server = explode('.', implode('.', array_reverse(explode(':', rtrim($httpHost, '.')))));
-    for ($i = count($uri) - 1; $i > 0; $i--) {
-        for ($j = count($server); $j > 0; $j--) {
-            $dir = implode('.', array_slice($server, -$j)) . implode('.', array_slice($uri, 0, $i));
-            if (file_exists("$confdir/$dir/civicrm.settings.php")) {
-                $conf = "$confdir/$dir";
-                return $conf;
-            }
-        }
+    if(file_exists($currentDir.$server.'/civicrm.settings.php')){
+    
     }
 
     // FIXME: problem spot for Drupal 5.1 config dir layout
@@ -102,10 +87,8 @@ function civicrm_conf_init() {
 }
 
 function civicrm_conf_set(){
-  global $civicrm_root, $db_url;
-  $civicrm_root = dirname(__FILE__);
   if( file_exists(civicrm_conf_init( ) . '/settings.php')){
-    include_once civicrm_conf_init( ) . '/settings.php';
+    $error = include_once civicrm_conf_init( ) . '/settings.php';
   }
 }
 
