@@ -44805,10 +44805,6 @@ msgstr ""
 msgid "Unsubscription Group"
 msgstr ""
 
-#: CRM/Contact/Form/Search.php
-msgid "Unsubscription Group"
-msgstr ""
-
 #: templates/CRM/Mailing/Form/Group.hlp
 msgid "Search-based mailings require an \"unsubscribe tracking\" group."
 msgstr ""
