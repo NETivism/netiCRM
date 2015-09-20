@@ -479,10 +479,10 @@ class CRM_Core_Payment_BaseIPN {
       $contribution->payment_instrument_id = $input['payment_instrument_id'];
     }
 
+    $contribution->save();
+
     // check and generate receipt id here for every online contribution
     CRM_Contribute_BAO_Contribution::genReceiptID($contribution, TRUE, $is_online = TRUE);
-
-    $contribution->save();
 
     // next create the transaction record
     if (isset($objects['paymentProcessor'])) {
