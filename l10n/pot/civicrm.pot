@@ -44844,3 +44844,52 @@ msgstr ""
 #: CRM/Core/Permission.php
 msgid "administer Reserved Option"
 msgstr ""
+
+#: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl"
+msgid "Congratulations! Your donation has been completed!"
+msgstr ""
+
+#: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl"
+msgid "You will receive an email acknowledgement of this donation."
+msgstr ""
+
+#: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl"
+msgid "An email with your donation details has been sent to %1."
+msgstr ""
+
+#: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl"
+msgid "Keep supporting it. Donation has not been completed yet with entire process."
+msgstr ""
+
+#: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl"
+msgid ""
+"Please note the expiration date of donation, "
+"you could pay with chosen donation payment method due to the date. "
+"If you have overdue donations, or if your donation payment method has expired, "
+"it might require you to donate again."
+msgstr ""
+
+#: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl"
+msgid "Remider email has been sent to %1."
+msgstr ""
+
+#: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl"
+msgid "Remider email has been sent to %1 and to %2."
+msgstr ""
+
+#: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl"
+msgid "Payment failed."
+msgstr ""
+
+#: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl"
+msgid "We were unalbe to process your donation. Your will not been charged in this transaction."
+msgstr ""
+
+#: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl"
+msgid "Possible reason"
+msgstr ""
+
+#: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl"
+msgid "We apologize for any inconvenience caused, please go back to the <a href='%1'>donation page</a> to retry."
+msgstr ""
+

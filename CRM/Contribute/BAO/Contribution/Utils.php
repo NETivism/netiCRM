@@ -694,9 +694,6 @@ INNER JOIN   civicrm_contact contact ON ( contact.id = contrib.contact_id )
     }
 
     switch ($status){
-      case 4: // failed
-        $form->assign('payment_result_type', 4);
-        break;
       case 1: // success
         $form->assign('payment_result_type', 1);
         break;
@@ -706,12 +703,12 @@ INNER JOIN   civicrm_contact contact ON ( contact.id = contrib.contact_id )
           $contribution->copyValues($params);
           $contribution->find(TRUE);
         }
-        if(!empty($contribution->is_pay_later)){
+        if(!empty($contribution->payment_instrument_id)){
           $form->assign('payment_result_type', 2);
         }
-        else{
-          $form->assign('payment_result_type', 4);
-        }
+        break;
+      case 4: // failed
+        $form->assign('payment_result_type', 4);
         break;
     }
     $form->assign('payment_result_message', $message);
