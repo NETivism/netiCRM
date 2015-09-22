@@ -9395,6 +9395,10 @@ msgstr ""
 msgid "Export Price Set Info for an Event"
 msgstr ""
 
+#: CRM/Contact/Form/Search/Custom/PriceSet.php
+msgid "Export Price Set Info for a Contribution Page"
+msgstr ""
+
 #: CRM/Contact/Form/Search/Custom/Proximity.php
 msgid "Could not geocode input"
 msgstr ""

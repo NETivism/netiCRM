@@ -373,7 +373,7 @@ $having
       CRM_Utils_System::setTitle($title);
     }
     else {
-      CRM_Utils_System::setTitle(ts('Search'));
+      CRM_Utils_System::setTitle(ts('Recurring contributions'));
     }
   }
 

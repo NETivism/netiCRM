@@ -325,7 +325,7 @@ contact_a.display_name   as display_name";
       CRM_Utils_System::setTitle($title);
     }
     else {
-      CRM_Utils_System::setTitle(ts('Export Price Set Info for an Event'));
+      CRM_Utils_System::setTitle(ts('Export Price Set Info for a Contribution Page'));
     }
   }
 }
