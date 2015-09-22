@@ -375,10 +375,6 @@ Alternatively you can get a version of CiviCRM that matches your PHP version
       echo "Config file for '{$cms}' not known.";
       exit();
     }
-    elseif ($cms !== 'joomla') {
-      echo "Generating civicrm.config.php\n";
-      copy("../{$cms}/civicrm.config.php.{$cms}", '../civicrm.config.php');
-    }
 
     echo "Generating civicrm-version file\n";
     $svnversion = `git rev-parse --short HEAD`;
