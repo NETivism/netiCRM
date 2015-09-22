@@ -128,7 +128,7 @@ INSERT INTO `civicrm_dashboard`
     ( @domain_id, '最高捐款者名錄報表'            , 'civicrm/report/instance/20&reset=1&section=2&snippet=4',                 NULL, 'access CiviCRM,access CiviContribute', 'AND', 0, 0,'1', 5, NULL, '1'),
     ( @domain_id, '活動收入報表（摘要）', 'civicrm/report/instance/13&reset=1&section=1&snippet=4&charts=pieChart', NULL, 'access CiviCRM,access CiviEvent'     , 'AND', 0, 0,'1', 6, NULL, '0'),
     ( @domain_id, '會員報表（概況）'  , 'civicrm/report/instance/9&reset=1&section=2&snippet=4',                  NULL, 'access CiviCRM,access CiviMember'    , 'AND', 0, 0,'1', 7, NULL, '1');
-   -- +--------------------------------------------------------------------+
+   -- +--------------------------------------------------------------------+
 -- | CiviCRM version 3.3                                                |
 -- +--------------------------------------------------------------------+
 -- | Copyright CiviCRM LLC (c) 2004-2010                                |
@@ -230,3 +230,4 @@ INSERT INTO civicrm_acl_entity_role
     (`acl_role_id`, `entity_table`, `entity_id`, `is_active`)
 VALUES
     (1, 'civicrm_group', 1, 1);
+
