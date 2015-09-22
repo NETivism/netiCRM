@@ -1,4 +1,4 @@
-﻿/**
+/**
  * jQuery.FormNavigate.js
  * jQuery Form onChange Navigate Confirmation plugin
  * Browser Compatibility : IE 6.0, 7.0, 8.0; Firefox 2.0+;  Safari 3+; Opera 9+; Chrome 1+;
