@@ -70,7 +70,7 @@
         {ts}Possible reason{/ts}:
         <ul>
         {if $payment_result_message}
-          <li>$payment_result_message</li>
+          <li>{$payment_result_message}</li>
         {else}
           <li>{ts}Network or system error. Please try again a minutes later, if you still can't success, please contact us for further assistance.{/ts}</li>
         {/if}
