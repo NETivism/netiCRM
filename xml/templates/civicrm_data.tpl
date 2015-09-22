@@ -471,6 +471,8 @@ VALUES
   (@option_group_id_csearch , 'CRM_Contact_Form_Search_Custom_ContribSYBNT'         ,13, 'CRM_Contact_Form_Search_Custom_ContribSYBNT', NULL, 0, NULL, 13, '{ts escape="sql"}Contributions made in Year X and not Year Y{/ts}', 0, 0, 1, NULL, NULL),
   (@option_group_id_csearch , 'CRM_Contact_Form_Search_Custom_TagContributions'     ,14, 'CRM_Contact_Form_Search_Custom_TagContributions', NULL, 0, NULL, 14, '{ts escape="sql"}Find Contribution Amounts by Tag{/ts}', 0, 0, 1, NULL, NULL),
   (@option_group_id_csearch , 'CRM_Contact_Form_Search_Custom_FullText'             ,15, 'CRM_Contact_Form_Search_Custom_FullText', NULL, 0, NULL, 15, '{ts escape="sql"}Full-text Search{/ts}', 0, 0, 1, NULL, NULL),
+  (@option_group_id_csearch , 'CRM_Contact_Form_Search_Custom_PriceSetContribution' ,16, 'CRM_Contact_Form_Search_Custom_PriceSetContribution', NULL, 0, NULL, 16, '{ts escape="sql"}Export Price Set Info for a Contribution Page{/ts}', 0, 0, 1, NULL, NULL),
+  (@option_group_id_csearch , 'CRM_Contact_Form_Search_Custom_RecurSearch'          ,17, 'CRM_Contact_Form_Search_Custom_RecurSearch', NULL, 0, NULL, 17, '{ts escape="sql"}Recurring contributions{/ts}', 0, 0, 1, NULL, NULL),
 
 -- report templates
   (@option_group_id_report , '{ts escape="sql"}Constituent Report (Summary){/ts}',            'contact/summary',                'CRM_Report_Form_Contact_Summary',                NULL, 0, NULL, 1,  '{ts escape="sql"}Provides a list of address and telephone information for constituent records in your system.{/ts}', 0, 0, 1, NULL, NULL),
