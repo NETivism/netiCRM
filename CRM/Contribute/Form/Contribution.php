@@ -226,7 +226,7 @@ class CRM_Contribute_Form_Contribution extends CRM_Core_Form {
     $this->assign('showCheckNumber', FALSE);
 
     // refs #13651
-    $form->assign('payment_result_type', 0);
+    $this->assign('payment_result_type', 0);
 
     //ensure that processor has a valid config
     //only valid processors get display to user
