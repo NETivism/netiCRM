@@ -62,10 +62,6 @@ class CRM_Core_Payment_NewebTest extends CiviUnitTestCase {
         'class_name' => 'Payment_Neweb',
       );
       $result = civicrm_api('PaymentProcessorType', 'get', $params);
-      // print_r($result, TRUE);
-      // var_dump($result, TRUE);
-      // var_export($result, TRUE);
-      fwrite(STDERR, print_r($result, TRUE));
       $this->assertAPISuccess($result);
       if(!empty($result['count'])){
         $domain_id = CRM_Core_Config::domainID();
@@ -150,9 +146,6 @@ class CRM_Core_Payment_NewebTest extends CiviUnitTestCase {
     $now = time();
     $amount = 111;
 
-    print("<=".$this->_processor['id']."=>");
-    print("<=".$this->_page_id."=>");
-
     // create contribution
     $contrib = array(
       'trxn_id' => $contribution->id,
@@ -188,7 +181,7 @@ class CRM_Core_Payment_NewebTest extends CiviUnitTestCase {
     $ids = CRM_Contribute_BAO_Contribution::buildIds($contribution->id);
     $query = CRM_Contribute_BAO_Contribution::makeNotifyUrl($ids, NULL, $return_query = TRUE);
     parse_str($query, $get);
-    $post = array(
+    $_POST = array(
       'MerchantNumber'=>__MerchantNumber__,
       'OrderNumber'=>$contribution->id,
       'Amount'=>$amount,
@@ -199,16 +192,13 @@ class CRM_Core_Payment_NewebTest extends CiviUnitTestCase {
       'BankResponseCode'=>'0/00',
       'BatchNumber'=>''
     );
-    $get = array(
+    $_GET = array(
       "module"=>"contribute",
       "contact_id" => 1,
       "cid" => $contribution->id,
       );
-    print($trxn_id);
-    print(__MerchantNumber__);
-    print(__MerchantPass__);
 
-    civicrm_neweb_ipn('Credit', $post, $get);
+    civicrm_neweb_ipn();
 
     // verify contribution status after trigger
     $this->assertDBCompareValue(
@@ -221,7 +211,7 @@ class CRM_Core_Payment_NewebTest extends CiviUnitTestCase {
     );
 
     // verify data in drupal module
-    $cid = db_query("SELECT cid FROM {civicrm_contribution_neweb} WHERE cid = :cid", array(':cid' => $contribution->id))->fetchField();
+    $cid = db_result(db_query("SELECT id FROM {civicrm_contribution} WHERE id = $contribution->id"));
     $this->assertNotEmpty($cid, "In line " . __LINE__);
     
   }
