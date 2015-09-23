@@ -147,7 +147,7 @@ $.Autocompleter = function(input, options) {
 				break;
 				
 			default:
-				clearTimeout(timeout);
+				if (timeout) clearTimeout(timeout);
 				timeout = setTimeout(onChange, options.delay);
 				break;
 		}
@@ -196,7 +196,8 @@ $.Autocompleter = function(input, options) {
 		$input.unbind();
 		$(input.form).unbind(".autocomplete");
 	}).bind("input", function() {
-    onChange(0, true);
+    if (timeout) clearTimeout(timeout);
+		timeout = setTimeout(function(){onChange(0, true);}, options.delay);
   });
 	
 	function selectCurrent() {
