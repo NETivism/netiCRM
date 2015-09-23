@@ -1028,10 +1028,10 @@ AND civicrm_contact.is_opt_out =0";
     }
     else {
       $params = array(array('contact_id', '=', $contactId, 0, 0));
-      list($contact, $_) = CRM_Contact_BAO_Query::apiQuery($params);
+      list($contactArray, $_) = CRM_Contact_BAO_Query::apiQuery($params);
 
       //CRM-4524
-      $contact = reset($contact);
+      $contact = reset($contactArray);
 
       if (!$contact || is_a($contact, 'CRM_Core_Error')) {
         // setting this because function is called by reference
@@ -1042,7 +1042,8 @@ AND civicrm_contact.is_opt_out =0";
 
       // also call the hook to get contact details
       require_once 'CRM/Utils/Hook.php';
-      CRM_Utils_Hook::tokenValues($contact, $contactId, $job_id);
+      $contactIds = array($contactId);
+      CRM_Utils_Hook::tokenValues($contactArray, $contactIds, $job_id, array(), 'CRM_Mailing_BAO_Mailing_compose');
     }
 
     $pTemplates = $this->getPreparedTemplates();
@@ -2269,8 +2270,7 @@ LEFT JOIN civicrm_mailing_group g ON g.mailing_id   = m.id
     }
 
     // also call a hook and get token details
-    require_once 'CRM/Utils/Hook.php';
-    CRM_Utils_Hook::tokenValues($details[0], $contactIDs);
+    CRM_Utils_Hook::tokenValues($details[0], $contactIDs, NULL, array(), 'CRM_Mailing_BAO_Mailing_getDetails');
     return $details;
   }
 

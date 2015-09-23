@@ -382,8 +382,11 @@ class CRM_Utils_Hook {
    * This hook is called when sending an email / printing labels to get the values for all the
    * tokens returned by the 'tokens' hook
    *
-   * @param array       $details    - the array to store the token values indexed by contactIDs (unless it a single)
-   * @param int / array $contactIDs - an array of contactIDs, in some situations we also send a single contactID.
+   * @param array   $details    - the array to store the token values indexed by contactIDs (unless it a single)
+   * @param array   $contactIDs - an array of contactIDs.
+   * @param integer $job        - job id from mailing
+   * @param array   $tokens     - token generated from hook::tokens
+   * @param string  $context    - context when call this hook
    *
    * @return null
    * @access public

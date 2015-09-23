@@ -181,11 +181,11 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
         return NULL;
       }
 
-      //CRM-5734
-      require_once 'CRM/Utils/Hook.php';
-      CRM_Utils_Hook::tokenValues($contact, $contactId);
-
       CRM_Utils_Hook::tokens($hookTokens);
+      $contactArray = array($contactId => $contact);
+      $contactIDArray = array($contactId);
+      CRM_Utils_Hook::tokenValues($contactArray, $contactIDArray, NULL, $hookTokens, 'CRM_Core_BAO_MessageTemplates_sendReminder');
+
       $categories = array_keys($hookTokens);
 
       $type = array('html', 'text');
