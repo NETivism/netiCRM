@@ -135,7 +135,7 @@
       {/if}
       {capture assign="recur_frequency_unit"}{ts}{$recur.frequency_unit}{/ts}{/capture}
        <tr>
-        <td {$labelStyle}>
+        <td colspan="2" {$labelStyle}>
          {ts 1=$recur.frequency_interval 2=$recur_frequency_unit 3=$paidBy 4=$recur_date}This is a recurring contribution. %4, every %1 %2 will charge from %3 payment.{/ts}<br />
          {if $receiptFromEmail}
            {ts 1=$receiptFromEmail}To modify or cancel future contributions please contact %1{/ts}

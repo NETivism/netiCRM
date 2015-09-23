@@ -739,6 +739,10 @@ class CRM_Core_Payment_BaseIPN {
     if ($contribution->contribution_type_id) {
       $values['contribution_type_id'] = $contribution->contribution_type_id;
     }
+    if ($contribution->payment_instrument_id) {
+      $paymentInstrument = CRM_Contribute_PseudoConstant::paymentInstrument();
+      $template->assign('paidBy', $paymentInstrument[$contribution->payment_instrument_id]);
+    }
 
     $template->assign('trxn_id', $contribution->trxn_id);
     $template->assign('receive_date',
@@ -859,11 +863,6 @@ class CRM_Core_Payment_BaseIPN {
       $template->assign('isPrimary', 1);
       $template->assign('amount', $primaryAmount);
       $template->assign('register_date', CRM_Utils_Date::isoToMysql($participant->register_date));
-      if ($contribution->payment_instrument_id) {
-        require_once 'CRM/Contribute/PseudoConstant.php';
-        $paymentInstrument = CRM_Contribute_PseudoConstant::paymentInstrument();
-        $template->assign('paidBy', $paymentInstrument[$contribution->payment_instrument_id]);
-      }
       // carry paylater, since we did not created billing,
       // so need to pull email from primary location, CRM-4395
       $values['params']['is_pay_later'] = $participant->is_pay_later;
