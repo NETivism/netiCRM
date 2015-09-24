@@ -1,9 +1,5 @@
 <?php
 
-define("__MerchantNumber__","123456");
-define("__MerchantPass__","xxxx");
-
-
 require_once 'CiviTest/CiviUnitTestCase.php';
 
 class CRM_Core_Payment_NewebTest extends CiviUnitTestCase {
@@ -12,7 +8,8 @@ class CRM_Core_Payment_NewebTest extends CiviUnitTestCase {
   protected $_processor;
   protected $_is_test;
   protected $_page_id;
-  static $current_cid;
+  protected $_merchant_no;
+  protected $_merchant_pass;
 
   /**
    *  Constructor
@@ -32,6 +29,10 @@ class CRM_Core_Payment_NewebTest extends CiviUnitTestCase {
     if(isset($payment_page[$class_name])){
       $this->_page_id = $payment_page[$class_name];
     }
+
+    $this->_merchant_no = "123456";
+    $this->_merchant_pass = "xxxx";    
+
     parent::__construct();
   }
 
@@ -76,10 +77,10 @@ class CRM_Core_Payment_NewebTest extends CiviUnitTestCase {
             'is_active' => 1,
             'is_default' => 0,
             'is_test' => 0,
-            'user_name' => !empty($p['user_name_label']) ? __MerchantNumber__ : NULL,
-            'password' => !empty($p['password_label']) ? __MerchantNumber__ : NULL,
-            'signature' => !empty($p['signature_label']) ? __MerchantPass__ : NULL,
-            'subject' => !empty($p['subject_label']) ? __MerchantPass__ : NULL,
+            'user_name' => !empty($p['user_name_label']) ? $this->_merchant_no : NULL,
+            'password' => !empty($p['password_label']) ? $this->_merchant_no : NULL,
+            'signature' => !empty($p['signature_label']) ? $this->_merchant_pass : NULL,
+            'subject' => !empty($p['subject_label']) ? $this->_merchant_pass : NULL,
             'url_site' => !empty($p['url_site_default']) ? $p['url_site_default'] : NULL,
             'url_api' => !empty($p['url_api_default']) ? $p['url_api_default'] : NULL,
             'url_recur' => !empty($p['url_site_default']) ? $p['url_site_default'] : NULL,
@@ -94,7 +95,7 @@ class CRM_Core_Payment_NewebTest extends CiviUnitTestCase {
             $ftp = array();
             $ftp['ftp_host'] = '127.0.0.1';
             $ftp['ftp_user'] = 'user'; 
-            $ftp['ftp_password'] = __MerchantPass__;
+            $ftp['ftp_password'] = $this->_merchant_pass;
             variable_set("civicrm_neweb_ftp_".$result['id'], $ftp);
             $payment_processors[] = $result['id'];
           }
@@ -178,17 +179,14 @@ class CRM_Core_Payment_NewebTest extends CiviUnitTestCase {
     $this->assertDBState('CRM_Contribute_DAO_Contribution', $contribution->id, $params);
 
     // manually trigger ipn
-    
-    $get = $post = $ids = array();
     $ids = CRM_Contribute_BAO_Contribution::buildIds($contribution->id);
     $_POST = array(
-      'MerchantNumber'=>__MerchantNumber__,
+      'MerchantNumber'=>$this->_merchant_no,
       'OrderNumber'=>$contribution->id,
       'Amount'=>$amount,
-      'CheckSum'=>md5(__MerchantNumber__.$contribution->id.'0'.'0'.__MerchantPass__.$amount),
+      'CheckSum'=>md5($this->_merchant_no.$contribution->id.'0'.'0'.$this->_merchant_pass.$amount),
       'PRC'=>'0',
       'SRC'=>'0',
-      // 'ApproveCode'=>'ET7373',
       'BankResponseCode'=>'0/00',
       'BatchNumber'=>''
     );
@@ -211,16 +209,15 @@ class CRM_Core_Payment_NewebTest extends CiviUnitTestCase {
     );
 
     // verify data in drupal module
-    CRM_Core_Payment_NewebTest::$current_cid = db_result(db_query("SELECT id FROM {civicrm_contribution} WHERE id = $contribution->id"));
-    $this->assertNotEmpty(CRM_Core_Payment_NewebTest::$current_cid, "In line " . __LINE__);
+    $cid = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution WHERE id = $contribution->id");
+    $this->assertNotEmpty($cid, "In line " . __LINE__);
     
   }
 
 
   function testRecurringPaymentNotify(){
     // Can't use this code to get id. so use static variable : " CRM_Core_Payment_NewebTest::$current_cid "
-    // $id = db_result(db_query("SELECT id FROM {civicrm_contribution} ORDER BY id DESC LIMIT 1"));
-    $id = CRM_Core_Payment_NewebTest::$current_cid ? CRM_Core_Payment_NewebTest::$current_cid : db_result(db_query("SELECT id FROM {civicrm_contribution} ORDER BY id DESC LIMIT 1"));
+    $id =  CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution ORDER BY id DESC LIMIT 1");
     $id = $id ? $id + 1 : 1;
 
     $now = time()+60;
@@ -228,6 +225,7 @@ class CRM_Core_Payment_NewebTest extends CiviUnitTestCase {
     $trxn_id = 990000000 + $id;
     // print($trxn_id);
     $amount = 222;
+    $cycle_day = date('d', $before_yesterday+86400);
 
     // create recurring
     $date = date('YmdHis', $now);
@@ -242,6 +240,7 @@ class CRM_Core_Payment_NewebTest extends CiviUnitTestCase {
       'start_date' => $by_date,
       'create_date' => $by_date,
       'modified_date' => $by_date,
+      'cycle_day' => $cycle_day,
       'invoice_id' => md5($before_yesterday),
       'contribution_status_id' => 2,
       'trxn_id' => CRM_Utils_Array::value('trxn_id', $params),
@@ -288,13 +287,12 @@ class CRM_Core_Payment_NewebTest extends CiviUnitTestCase {
     $get = $post = $ids = array();
     $ids = CRM_Contribute_BAO_Contribution::buildIds($contribution->id);
     $_POST = array(
-      'MerchantNumber'=>__MerchantNumber__,
+      'MerchantNumber'=>$this->_merchant_no,
       'OrderNumber'=>$trxn_id,
       'Amount'=>$amount,
-      'CheckSum'=>md5(__MerchantNumber__.$trxn_id.'0'.'0'.__MerchantPass__.$amount),
+      'CheckSum'=>md5($this->_merchant_no.$trxn_id.'0'.'0'.$this->_merchant_pass.$amount),
       'PRC'=>'0',
       'SRC'=>'0',
-      // 'ApproveCode'=>'ET7373',
       'BankResponseCode'=>'0/00',
       'BatchNumber'=>''
     );
@@ -303,7 +301,7 @@ class CRM_Core_Payment_NewebTest extends CiviUnitTestCase {
       "contact_id" => 1,
       "cid" => $contribution->id,
       "crid" => $recurring->id,
-      );
+    );
 
     civicrm_neweb_ipn();
 
@@ -318,27 +316,75 @@ class CRM_Core_Payment_NewebTest extends CiviUnitTestCase {
     );
 
     // verify data in drupal module
-    $cid = db_result(db_query("SELECT id FROM {civicrm_contribution} WHERE id = $contribution->id"));
+    $cid = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution WHERE id = $contribution->id");
     $this->assertNotEmpty($cid, "In line " . __LINE__);
+
+
+
+    $today = date('Ymd', $now);
+    $_test = $this->_is_test? "_test":"";
 
     // Create recuring .dat file.
     $loaded = module_load_include('inc', 'civicrm_neweb', 'civicrm_neweb.cron');
     civicrm_neweb_process_upload($this->_is_test, $this->_processor['id']);
 
-    // TODO : check .dat file is correct.
+    // Check the last line is correct.
+    $file_path = DRUPAL_ROOT . "/sites/default/files/neweb" . $_test ."/RP_" . $this->_merchant_no . "_" . $today . ".dat";
+    $this->assertFileExists($file_path);
+
+    $file = fopen($file_path,"r");
+    while($line = fgets($file)){
+      $last_line = $line;
+    }
+    $results = explode(",",$last_line);
+    fclose($file);
+
+    $expects = array(
+      $this->_merchant_no,
+      strval($recurring->id), 
+      strval($trxn_id), 
+      "", 
+      "", 
+      strval($amount), 
+      strval($cycle_day), 
+      "New",
+      "01",
+      "0",
+    );
+
+    $this->assertEquals($expects, $results);
 
     // Update recuring by .out file.
-    $today = date('Ymd', $now);
-    $recur_day = date('d', $now);
-    $_test = $this->_is_test? "_test":"";
-
-    $file_path = DRUPAL_ROOT . "/sites/default/files/neweb$_test/RP_" . __MerchantNumber__ . "_$today.out";
+    $file_path = DRUPAL_ROOT . "/sites/default/files/neweb" . $_test . "/RP_" . $this->_merchant_no . "_" . $today . ".out";
     $file = fopen($file_path,"w");
-    $line = __MerchantNumber__ . ",$recurring->id,1234********4321,VISA,202212,$amount,$recur_day,New,01,0,0";
+    $line = "$this->_merchant_no,$recurring->id,1234********4321,VISA,202212,$amount,$cycle_day,New,01,0,0";
     fwrite($file,$line);
     fclose($file);
 
     civicrm_neweb_process_response($this->_is_test,$now, $this->_processor['id']);
+
+
+    // verify start_dat, end_date and status
+    // TO DO : check if date is over 25th each month. 
+    $this->assertDBCompareValue(
+      'CRM_Contribute_DAO_ContributionRecur',
+      $searchValue = $recurring->id,
+      $returnColumn = 'start_date',
+      $searchColumn = 'id',
+      $expectedValue = date('Y-m-d 00:00:00', $before_yesterday + 86400),
+      "In line " . __LINE__
+    );
+
+    $after_year = strtotime("+11 month");
+    $date_end_date = date('Y-m-d 00:00:00', $after_year - 86400);
+    $this->assertDBCompareValue(
+      'CRM_Contribute_DAO_ContributionRecur',
+      $searchValue = $recurring->id,
+      $returnColumn = 'end_date',
+      $searchColumn = 'id',
+      $expectedValue = $date_end_date,
+      "In line " . __LINE__
+    );
 
     // verify contribution status after trigger
     $this->assertDBCompareValue(
@@ -354,11 +400,11 @@ class CRM_Core_Payment_NewebTest extends CiviUnitTestCase {
     $next_id = $id + 1;
     $next_trxn_id = 900000000 + $next_id;
     
-    $file_path = DRUPAL_ROOT . "/sites/default/files/neweb$_test/RP_Trans_" . __MerchantNumber__ . "_$today.log";
+    $file_path = DRUPAL_ROOT . "/sites/default/files/neweb" . $_test . "/RP_Trans_" . $this->_merchant_no . "_" . $today . ".log";
     $file = fopen($file_path,"w");
     $line = "#Merchantnumber,Refnumber,Ordernumber,Httpcode,Prc,Src,Bankresponsecode,Approvalcode,Batchnumber,Orgordernumber,Mode\n";
     fwrite($file,$line);
-    $line = __MerchantNumber__ . ",$recurring->id,$next_trxn_id,200,0,0,0/00,654321,$today01,$today$next_trxn_id,0";
+    $line = "$this->_merchant_no,$recurring->id,$next_trxn_id,200,0,0,0/00,654321,$today01,$today$next_trxn_id,0";
     fwrite($file,$line);
     fclose($file);
 
