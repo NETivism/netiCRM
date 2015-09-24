@@ -44898,7 +44898,7 @@ msgid "We apologize for any inconvenience caused, please go back to the <a href=
 msgstr ""
 
 #: templates/CRM/Contribute/Form/Contribution/Main.tpl
-msgid "Please logout before you want to rigister event or contribute for other people. If you want to rigister event or contribute for yourself, and update your own personal information,click here to unlock fields."
+msgid "To prevent overwrite personal info, we locked some field above for logged user. Please logout before you help other people to complete this form."
 msgstr ""
 
 #: templates/CRM/Contribute/Form/Contribution/Main.tpl
