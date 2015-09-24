@@ -77,17 +77,6 @@
         </ul>
         {capture assign=contribution_page_url}{crmURL p='civicrm/contribute/transact' q="reset=1&id=$id" h=0 }{/capture}
         {ts 1=$contribution_page_url}We apologize for any inconvenience caused, please go back to the <a href='%1'>donation page</a> to retry.{/ts}
-        {if $is_email_receipt}
-          <div>
-          {ts}You will receive an email acknowledgement of this donation.{/ts} 
-
-          {if $onBehalfEmail AND ($onBehalfEmail neq $email)}
-            {ts 1=$email 2=$onBehalfEmail}An email with your donation details has been sent to %1 and to %2.{/ts}
-          {else}
-            {ts 1=$email}An email with your donation details has been sent to %1.{/ts}
-          {/if}
-          </div>
-        {/if}
       {elseif $is_pay_later}
         <h3>{ts}Keep supporting it. Donation has not been completed yet with entire process.{/ts}</h3>
         <div class="">
