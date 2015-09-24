@@ -4448,7 +4448,7 @@ VALUES
    ('case_type'                     , '個案類型'                          , 0, 1),
    ('case_status'                   , '個案狀態'                        , 0, 1),
    ('participant_listing'           , '參加者列表'                , 0, 1),
-   ('safe_file_extension'           , '安全的副檔名'                , 0, 1),
+   ('safe_file_extension'           , '可接受的檔案格式'                , 0, 1),
    ('from_email_address'            , '寄件者 Email '                 , 0, 1),
    ('mapping_type'                  , '對應類型'                       , 0, 1),
    ('wysiwyg_editor'                , '所見即所得編輯器'                     , 0, 1),
@@ -4749,7 +4749,7 @@ VALUES
   (@option_group_id_csearch , 'CRM_Contact_Form_Search_Custom_ContribSYBNT'         ,13, 'CRM_Contact_Form_Search_Custom_ContribSYBNT', NULL, 0, NULL, 13, 'X年且非Y年的捐款', 0, 0, 1, NULL, NULL),
   (@option_group_id_csearch , 'CRM_Contact_Form_Search_Custom_TagContributions'     ,14, 'CRM_Contact_Form_Search_Custom_TagContributions', NULL, 0, NULL, 14, '依標籤搜尋捐款金額', 0, 0, 1, NULL, NULL),
   (@option_group_id_csearch , 'CRM_Contact_Form_Search_Custom_FullText'             ,15, 'CRM_Contact_Form_Search_Custom_FullText', NULL, 0, NULL, 15, '全文搜尋', 0, 0, 1, NULL, NULL),
-  (@option_group_id_csearch , 'CRM_Contact_Form_Search_Custom_PriceSetContribution' ,16, 'CRM_Contact_Form_Search_Custom_PriceSetContribution', NULL, 0, NULL, 16, 'Export Price Set Info for a Contribution Page', 0, 0, 1, NULL, NULL),
+  (@option_group_id_csearch , 'CRM_Contact_Form_Search_Custom_PriceSetContribution' ,16, 'CRM_Contact_Form_Search_Custom_PriceSetContribution', NULL, 0, NULL, 16, '匯出募款專頁的價格表內容', 0, 0, 1, NULL, NULL),
   (@option_group_id_csearch , 'CRM_Contact_Form_Search_Custom_RecurSearch'          ,17, 'CRM_Contact_Form_Search_Custom_RecurSearch', NULL, 0, NULL, 17, '定期捐款', 0, 0, 1, NULL, NULL),
 
 -- report templates
@@ -7198,7 +7198,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
       {/if}
       {capture assign="recur_frequency_unit"}{ts}{$recur.frequency_unit}{/ts}{/capture}
        <tr>
-        <td {$labelStyle}>
+        <td colspan="2" {$labelStyle}>
          {ts 1=$recur.frequency_interval 2=$recur_frequency_unit 3=$paidBy 4=$recur_date}This is a recurring contribution. %4, every %1 %2 will charge from %3 payment.{/ts}<br />
          {if $receiptFromEmail}
            {ts 1=$receiptFromEmail}To modify or cancel future contributions please contact %1{/ts}
@@ -7764,7 +7764,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
       {/if}
       {capture assign="recur_frequency_unit"}{ts}{$recur.frequency_unit}{/ts}{/capture}
        <tr>
-        <td {$labelStyle}>
+        <td colspan="2" {$labelStyle}>
          {ts 1=$recur.frequency_interval 2=$recur_frequency_unit 3=$paidBy 4=$recur_date}This is a recurring contribution. %4, every %1 %2 will charge from %3 payment.{/ts}<br />
          {if $receiptFromEmail}
            {ts 1=$receiptFromEmail}To modify or cancel future contributions please contact %1{/ts}

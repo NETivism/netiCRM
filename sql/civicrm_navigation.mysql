@@ -852,4 +852,3 @@ VALUES
     ( @domainID, CONCAT('civicrm/report/instance/', @instanceID,'&reset=1'), 'Mail Clickthrough Report', 'Mail Clickthrough Report', 'access CiviMail', '',@reportlastID, '1', NULL, 29 );
 
 UPDATE civicrm_report_instance SET navigation_id = LAST_INSERT_ID() WHERE id = @instanceID;
-

@@ -3,14 +3,15 @@
 # Fuyuan Cheng <gloomcheng@gmail.com>, 2013-2015
 # IreneLin, 2013
 # jimyhuang <jimmy@netivism.com.tw>, 2013,2015
+# 張書懷 <junsuwhy@gmail.com>, 2015
 # SharonKwan <sharon@netivism.com.tw>, 2015
 # charlesc <yeouhsin@gmail.com>, 2013-2014
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2015-05-07 09:04+0000\n"
+"PO-Revision-Date: 2015-09-24 06:31+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
-"Language-Team: Chinese (Taiwan) (http://www.transifex.com/projects/p/neticrm/language/zh_TW/)\n"
+"Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -5250,7 +5251,7 @@ msgstr "會籍開始日期"
 #: CRM/Member/DAO/MembershipStatus.php CRM/Member/Form/MembershipStatus.php
 #: templates/CRM/Member/Page/MembershipStatus.tpl
 msgid "Start Event"
-msgstr "活動開始"
+msgstr "開始日期"
 
 #: CRM/Member/DAO/MembershipStatus.php CRM/Member/Form/MembershipStatus.php
 msgid "Start Event Adjust Interval"
@@ -9400,6 +9401,10 @@ msgstr "參加者編號"
 msgid "Export Price Set Info for an Event"
 msgstr "匯出活動的價目表資訊"
 
+#: CRM/Contact/Form/Search/Custom/PriceSet.php
+msgid "Export Price Set Info for a Contribution Page"
+msgstr "匯出募款專頁的價格表內容"
+
 #: CRM/Contact/Form/Search/Custom/Proximity.php
 msgid "Could not geocode input"
 msgstr "無法將輸入做地理編碼"
@@ -10810,7 +10815,7 @@ msgstr "支持定期捐款區間"
 
 #: CRM/Contribute/Form/ContributionPage/Amount.php
 msgid "Pay later option"
-msgstr "稍後付款選項"
+msgstr "稍後付款"
 
 #: CRM/Contribute/Form/ContributionPage/Amount.php
 msgid "Pay later label"
@@ -19645,7 +19650,7 @@ msgstr "已儲存您的更新。"
 
 #: CRM/UF/Form/AdvanceSetting.php
 msgid "Enable mapping for this profile?"
-msgstr "為此資料表單啟用對應？"
+msgstr "在表單啟用地圖？"
 
 #: CRM/UF/Form/AdvanceSetting.php
 msgid "Issue warning and do not save"
@@ -23851,7 +23856,7 @@ msgstr "預設狀況中，CiviCRM 在傳送 Email 給聯絡人時，會使用主
 msgid ""
 "The existing option choices for %1 group are listed below. You can add, edit"
 " or delete them from this screen."
-msgstr "現存可供%1群組選擇的選項如下，您可以新增、編輯或刪除它們。"
+msgstr "目前可 %1 列表如下，您可以新增、編輯或刪除它們。"
 
 #: templates/CRM/Admin/Page/Options.tpl
 #: templates/CRM/Campaign/Page/SurveyType.tpl
@@ -27008,13 +27013,13 @@ msgstr "您確定要還原所選取的聯絡人？這些聯絡人及其相關資
 
 #: templates/CRM/Contact/Form/Task/Delete.tpl
 msgid "Are you sure you want to delete the selected contact(s)?"
-msgstr "您確定要刪除所選連絡人？"
+msgstr "您確定要刪除選取的聯絡人？"
 
 #: templates/CRM/Contact/Form/Task/Delete.tpl
 msgid ""
 "The contact(s) and all related data will be moved to trash and only users "
 "with the relevant permission will be able to restore it."
-msgstr "聯絡人與其相關資料將會被丟到資源回收桶，僅能由管理員進行還原。"
+msgstr "請注意，此動作將刪除聯絡人的基本資料記錄，及相關的活動報名記錄與捐款記錄。刪除的聯絡人將移至回收桶，可由有相關權限的管理者進行還原。"
 
 #: templates/CRM/Contact/Form/Task/Delete.tpl
 msgid "The contact(s) and all related data will be permanently removed."
@@ -27146,7 +27151,7 @@ msgid ""
 msgid_plural ""
 "Email will NOT be sent to %count contacts - (no email address on file, or "
 "communication preferences specify DO NOT EMAIL, or contact is deceased)."
-msgstr[0] "Email 不會寄送給 % 位聯絡人（沒有 Email、或已設定為「不要寄送 Email」、或聯絡人已過世）。"
+msgstr[0] "Email 不會寄送給 %count 位聯絡人（沒有 Email、或已設定為「不要寄送 Email」、或聯絡人已過世）。"
 
 #: templates/CRM/Contact/Form/Task/Email.tpl
 #: templates/CRM/SMS/Form/Task/SMS.tpl
@@ -27164,7 +27169,7 @@ msgstr "新增密件副本"
 #: templates/CRM/Contact/Form/Task/Email.tpl
 msgid "Email will NOT be sent to %count contact."
 msgid_plural "Email will NOT be sent to %count contacts."
-msgstr[0] "Email 不會寄送給 % 位聯絡人。"
+msgstr[0] "Email 不會寄送給 %count 位聯絡人。"
 
 #: templates/CRM/Contact/Form/Task/Map/Google.tpl
 #: templates/CRM/Contact/Form/Task/Map/Yahoo.tpl
@@ -29803,7 +29808,7 @@ msgstr "啓用認捐或定期定額捐款（不是所有金流機制都支援定
 msgid ""
 "Give contributors the option to 'pay later' (e.g. mail in a check, call in a"
 " credit card, etc.)."
-msgstr "提供「廷後付款」選項給捐款人（例如郵寄支票、來電進行信用卡授權等)。"
+msgstr "提供「稍後付款」選項給捐款人（例如郵寄支票、來電進行信用卡授權等)。"
 
 #: templates/CRM/Contribute/Page/ContributionPageEdit.tpl
 msgid "Configure membership sign-up and renewal options."
@@ -35729,7 +35734,7 @@ msgid ""
 "Pages and Listings', users can also click the field value when viewing a "
 "contact in order to locate other contacts with the same value(s) (i.e. other"
 " contacts who live in Poland)."
-msgstr "此欄位是否設定為不讓其他使用者看到（只有本人和管理員可以看到），或設定為讓其他人可能搜尋的到（「公開頁面」或「公開頁面列表」）？如果設定為「公開頁面和列表」，使用者可以點選該欄位，以帶出所有其他聯絡人並具有相同欄位設定的值（例如：列出所有住在台北聯絡人）。"
+msgstr "此欄位是否設定為不讓其他使用者看到（只有本人和管理員可以看到），或設定為讓其他人可能搜尋的到（「公開頁面」或「公開頁面及瀏覽」）？如果設定為「公開頁面及瀏覽」，使用者可以點選該欄位，以帶出所有其他聯絡人並具有相同欄位設定的值（例如：列出所有住在台北聯絡人）。"
 
 #: templates/CRM/UF/Form/Field.tpl
 msgid "Do you want to include this field in the Profile's Search form?"
@@ -36632,7 +36637,7 @@ msgstr "報表清單"
 
 #: msgctxt "menu"
 msgid "Safe File Extension Options"
-msgstr "安全檔案延伸選項"
+msgstr "設定可接受的檔案格式"
 
 #: msgctxt "menu"
 msgid "Sending Mail"
@@ -38436,7 +38441,7 @@ msgstr "地址選項"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Safe File Extension"
-msgstr "安全的副檔名"
+msgstr "可接受的檔案格式"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Recurring Frequency Units"
@@ -39530,7 +39535,7 @@ msgstr "其他（版本檢查，reCAPTCHA 驗證服務...）"
 
 #: xml/templates/civicrm_navigation.tpl
 msgid "Safe File Extensions"
-msgstr "安全及檔案副檔名"
+msgstr "可接受的檔案格式"
 
 #: xml/templates/civicrm_navigation.tpl
 msgid "FROM Email Addresses"
@@ -44623,6 +44628,10 @@ msgstr "收據抬頭所使用的欄位"
 msgid "Field for receipt serial number"
 msgstr "收據編號欄位"
 
+#: civicrm/CRM/Admin/Form/Setting/Receipt.php
+msgid "Field for donor credit"
+msgstr ""
+
 #: templates/CRM/Admin/Form/Setting/Receipt.tpl
 msgid "Selected Participants was deleted sucessfully."
 msgstr "已成功刪除選取的參加者。"
@@ -44652,6 +44661,11 @@ msgstr "當使用者填寫的抬頭在另外的欄位，請選擇所使用的欄
 msgid ""
 "When your serial code save in another field, use this to select the field."
 msgstr "當使用者填寫統一編號在其他的欄位，請選擇欄位名稱，收據將會根據欄位填寫的值印出統一編號。"
+
+#: templates/CRM/Admin/Form/Setting/Receipt.tpl
+msgid ""
+"When use custom field to record donor credit, use this to select the field."
+msgstr ""
 
 #: templates/CRM/Event/Form/Registration/Register.tpl
 msgid "Update per minute."
@@ -44730,7 +44744,7 @@ msgid "Total Receive Amount"
 msgstr "實際總金額"
 
 #: CRM/Contact/Form/Search/Custom/RecurSearch.php
-msgid "Last Receive Date"
+msgid "Last receive Date"
 msgstr "最近一筆收到日期"
 
 #: CRM/Contact/Form/Search/Custom/RecurSearch.php
@@ -44768,3 +44782,110 @@ msgstr "兩期以上有效"
 #: CRM/Contact/Form/Search/Custom/RecurSearch.php
 msgid "In progress and last 1 time."
 msgstr "餘一期有效"
+
+#: CRM/Contact/Form/Search.php
+msgid "Unsubscription Group"
+msgstr "退訂群組"
+
+#: templates/CRM/Mailing/Form/Group.hlp
+msgid "Search-based mailings require an \"unsubscribe tracking\" group."
+msgstr "以「搜尋聯絡人」為基礎的電子報名單需要使用「退訂群組」記錄退訂名單"
+
+#: templates/CRM/Mailing/Form/Group.hlp
+msgid ""
+"Because this mailing is using the results of a search to provide the "
+"recipient list, you need to specify a group to track people who unsubscribe "
+"in response to this mailing."
+msgstr "由於此份電子報的寄送名單是直接擷取「搜尋聯絡人」的結果，因此您必須要再設定一個「退訂群組」來追蹤哪些人要退訂此份電子報。"
+
+#: templates/CRM/Mailing/Form/Group.hlp
+msgid ""
+"If a recipient unsubscribes from this mailing, they will be excluded from "
+"future mailings which use the same \"Unsubscription Group\". This is "
+"achieved through actually marking the contact as \"unsubscribed from the "
+"group\". If a contact in your search results has already been marked as "
+"unsubscribed from that group, they will be excluded from this mailing."
+msgstr "如果有收件人退訂了此份電子報，就會被記錄在「退訂群組」內，因此採用相同「退訂群組」的電子報也會排除掉此位收件人。退訂的聯絡人會被標記「從這個群組退訂」，所以，如果您搜尋聯絡人的結果當中，有聯絡人被標記「從這個群組退訂」的話，那麼這些聯絡人就會被排除在收件人名單外。"
+
+#: templates/CRM/Mailing/Form/Group.hlp
+msgid ""
+"If a recipient clicks the unsubscribe link they will see the "
+"\"Unsubscription Group\" title on the unsubscribe page. The selected group "
+"should have a title that corresponds to the content / type of mailing being "
+"sent."
+msgstr "如果收件人按了「退訂電子報」的連結，他們將會被引導到以退訂群組名稱為標題的退訂頁面。建議退訂群組的名稱應與電子報的內容、類型有關聯，如此退訂頁面的標題才有足夠的識別性。"
+
+#: templates/CRM/Mailing/Form/Group.hlp
+msgid ""
+"NOTE: Contacts who are in the \"Unsubscription Group\" but do not match your"
+" search critera will not be included in the mailing regardless of their "
+"status in that group. This is a change from previous versions which used the"
+" term \"Base Group\"."
+msgstr "注意：在「退訂群組」的聯絡人但不符合搜尋條件的都不會被列在電子報的收件人。"
+
+#: CRM/Core/Permission.php
+msgid "administer Reserved Option"
+msgstr "管理保留的選項"
+
+#: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
+msgid "Congratulations! Your donation has been completed!"
+msgstr "恭喜！您的捐款已經完成了！"
+
+#: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
+msgid "You will receive an email acknowledgement of this donation."
+msgstr "稍後您將會收到一封捐款成功確認信。"
+
+#: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
+msgid "An email with your donation details has been sent to %1."
+msgstr "捐款明細將寄至 %1。"
+
+#: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
+msgid ""
+"Keep supporting it. Donation has not been completed yet with entire process."
+msgstr "加油，您的捐款尚未完成喔！"
+
+#: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
+msgid ""
+"Please note the expiration date of donation, you could pay with chosen "
+"donation payment method due to the date. If you have overdue donations, or "
+"if your donation payment method has expired, it might require you to donate "
+"again."
+msgstr "請注意，您需在繳費截止日前，依照您選擇的繳款方式完成捐款，逾期則需重新捐款．"
+
+#: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
+msgid "Remider email has been sent to %1."
+msgstr "繳費提醒稍後將寄至 %1，敬請留意喔！"
+
+#: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
+msgid "Remider email has been sent to %1 and to %2."
+msgstr "繳費提醒稍後將寄至 %1以及 %2，敬請留意喔！"
+
+#: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
+msgid "Payment failed."
+msgstr "抱歉，您的捐款失敗了！"
+
+#: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
+msgid ""
+"We were unalbe to process your donation. Your will not been charged in this "
+"transaction."
+msgstr "您不會被扣除任何款項，"
+
+#: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
+msgid "Possible reason"
+msgstr "交易失敗原因有可能是："
+
+#: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
+msgid ""
+"We apologize for any inconvenience caused, please go back to the <a "
+"href='%1'>donation page</a> to retry."
+msgstr "造成您的不便請見諒，麻煩請回到<a href='%1'>捐款頁面</a> 重新嘗試捐款。"
+
+#: templates/CRM/Contribute/Form/Contribution/Main.tpl
+msgid ""
+"To prevent overwrite personal info, we locked some field above for logged "
+"user. Please logout before you help other people to complete this form."
+msgstr "您現在登入中，系統自動帶入一些欄位的資料並鎖住，以避免替自己之外的人填寫表單後，自己的個資被覆蓋。若您要為其他人填寫表單，請先登出系統。"
+
+#: templates/CRM/Contribute/Form/Contribution/Main.tpl
+msgid "To change your personal info, go My Account page for further setting."
+msgstr "您現在登入中，系統已自動帶入您的個資。若要更改你的個資，請到「我的帳號」頁面做進一步的修改。"
