@@ -59,7 +59,7 @@ function civicrm_conf_init() {
       $civicrm_root = $matches[1].$matches[2];
     }
 
-    $currentDir = dirname( $scriptFile ) . DIRECTORY_SEPARATOR;
+    $currentDir = dirname( $scriptFile );
     if ( file_exists( $currentDir . 'settings_location.php' ) ) {
       include $currentDir . 'settings_location.php';
     }
@@ -83,21 +83,25 @@ function civicrm_conf_init() {
     $phpSelf  = array_key_exists( 'PHP_SELF' , $_SERVER ) ? $_SERVER['PHP_SELF' ] : '';
     $httpHost = array_key_exists( 'HTTP_HOST', $_SERVER ) ? $_SERVER['HTTP_HOST'] : '';
 
+    $uri = explode('/', $phpSelf );
     $server = explode('.', implode('.', array_reverse(explode(':', rtrim($httpHost, '.')))));
-    if(file_exists($currentDir.$server.'/civicrm.settings.php')){
-      $confdir = $currentDir.$server; 
+    for ($i = count($uri) - 1; $i > 0; $i--) {
+      for ($j = count($server); $j > 0; $j--) {
+        $dir = implode('.', array_slice($server, -$j)) . implode('.', array_slice($uri, 0, $i));
+        if (file_exists("$confdir/$dir/civicrm.settings.php")) {
+          $conf = "$confdir/$dir";
+          return $conf;
+        }
+      }
     }
-    else{
-      $conf = "$confdir/default";
-    }
+
+    $conf = "$confdir/default";
 
     return $conf;
 }
 
-function civicrm_conf_set(){
-  if( file_exists(civicrm_conf_init( ) . '/settings.php')){
-    $error = include_once civicrm_conf_init( ) . '/settings.php';
-  }
+if( file_exists(civicrm_conf_init( ) . '/settings.php')){
+  $error = include_once civicrm_conf_init( ) . '/settings.php';
 }
 
 civicrm_conf_set();
