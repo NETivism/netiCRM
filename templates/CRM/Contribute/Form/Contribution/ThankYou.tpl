@@ -52,21 +52,21 @@
     <div id="help">
       {* PayPal_Standard sets contribution_mode to 'notify'. We don't know if transaction is successful until we receive the IPN (payment notification) *}
       {if $payment_result_type eq 1}
-        <h3>{ts}Congratulations! Your donation has been completed!{/ts}</h3>
+        <h3>{ts}Congratulations! Your payment has been completed!{/ts}</h3>
         {if $is_email_receipt}
           <div>
-          {ts}You will receive an email acknowledgement of this donation.{/ts} 
+          {ts}You will receive an email acknowledgement of this payment.{/ts} 
 
           {if $onBehalfEmail AND ($onBehalfEmail neq $email)}
-            {ts 1=$email 2=$onBehalfEmail}An email with your donation details has been sent to %1 and to %2.{/ts}
+            {ts 1=$email 2=$onBehalfEmail}An email with your payment details has been sent to %1 and to %2.{/ts}
           {else}
-            {ts 1=$email}An email with your donation details has been sent to %1.{/ts}
+            {ts 1=$email}An email with your payment details has been sent to %1.{/ts}
           {/if}
           </div>
         {/if}
       {elseif $payment_result_type eq 4}
         <h3 class="crm-error">{ts}Payment failed.{/ts}</h3>
-        {ts}We were unalbe to process your donation. Your will not been charged in this transaction.{/ts}
+        {ts}We were unalbe to process your payment. Your will not been charged in this transaction.{/ts}
         {ts}Possible reason{/ts}:
         <ul>
         {if $payment_result_message}
@@ -78,12 +78,12 @@
         {capture assign=contribution_page_url}{crmURL p='civicrm/contribute/transact' q="reset=1&id=$id" h=0 }{/capture}
         {ts 1=$contribution_page_url}We apologize for any inconvenience caused, please go back to the <a href='%1'>donation page</a> to retry.{/ts}
       {elseif $is_pay_later}
-        <h3>{ts}Keep supporting it. Donation has not been completed yet with entire process.{/ts}</h3>
+        <h3>{ts}Keep supporting it. Payment has not been completed yet with entire process.{/ts}</h3>
         <div class="">
         {if $pay_later_receipt and !$payment_result_type}
           {$pay_later_receipt}
         {else}
-          {ts}Please note the expiration date of donation, you could pay with chosen donation payment method due to the date. If you have overdue donations, or if your donation payment method has expired, it might require you to donate again.{/ts}
+          {ts}Please note the expiration date of payment, you could pay with chosen payment payment method due to the date. If you have overdue payment, or if your payment method has expired, it might require you to do again.{/ts}
         {/if}
         </div>
         {if $is_email_receipt}

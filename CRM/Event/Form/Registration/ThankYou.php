@@ -181,8 +181,8 @@ class CRM_Event_Form_Registration_ThankYou extends CRM_Event_Form_Registration {
     $this->assign('pricesetFieldsCount', CRM_Price_BAO_Set::getPricesetCount($this->_priceSetId));
 
     // can we blow away the session now to prevent hackery
-    $this->controller->reset();
-    $session = CRM_Core_Session::singleton();
+    // $this->controller->reset();
+    // $session = CRM_Core_Session::singleton();
   }
 
   /**

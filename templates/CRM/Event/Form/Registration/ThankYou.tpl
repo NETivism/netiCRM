@@ -57,12 +57,33 @@
                 <span class="bold">{ts}Your registration has been submitted.{/ts}
                 {ts}Once your registration has been reviewed, you will receive an email with a link to a web page where you can complete the registration process.{/ts}</span>
             </p>
+        {elseif $payment_result_type eq 1 and $paidEvent}
+          {$payment_result_type}
+          <h3>{ts}Congratulations! Your payment has been completed!{/ts}</h3>
+          {if $is_email_confirm}
+            <div>
+            {if $is_email_confirm}
+               <p>{ts}You will receive an email acknowledgement of this payment.{/ts}</p>
+            {/if}
+            </div>
+          {/if}
+        {elseif $payment_result_type eq 4 and $paidEvent}
+          <h3 class="crm-error">{ts}Payment failed.{/ts}</h3>
+          {ts}We were unalbe to process your payment. Your will not been charged in this transaction.{/ts}
+          {ts}Possible reason{/ts}:
+          <ul>
+          {if $payment_result_message}
+            <li>{$payment_result_message}</li>
+          {else}
+            <li>{ts}Network or system error. Please try again a minutes later, if you still can't success, please contact us for further assistance.{/ts}</li>
+          {/if}
+          </ul>
         {elseif $is_pay_later and $paidEvent}
+          <h3>{ts}Keep supporting it. Payment has not been completed yet with entire process.{/ts}</h3>
             <div class="bold">{$pay_later_receipt}</div>
             {if $is_email_confirm}
                 <p>{ts 1=$email}An email with event details has been sent to %1.{/ts}</p>
             {/if}
-        {* PayPal_Standard sets contribution_mode to 'notify'. We don't know if transaction is successful until we receive the IPN (payment notification) *}
         {elseif $contributeMode EQ 'notify' and $paidEvent}
             <p>{ts 1=$paymentProcessor.processorName}Your registration payment has been submitted to %1 for processing. Please print this page for your records.{/ts}</p>
             {if $is_email_confirm}
