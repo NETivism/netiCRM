@@ -44828,29 +44828,25 @@ msgid "administer Reserved Option"
 msgstr "管理保留的選項"
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
-msgid "Congratulations! Your donation has been completed!"
-msgstr "恭喜！您的捐款已經完成了！"
+msgid "Congratulations! Your payment has been completed!"
+msgstr "恭喜！您的付款已經完成了！"
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
-msgid "You will receive an email acknowledgement of this donation."
-msgstr "稍後您將會收到一封捐款成功確認信。"
+msgid "You will receive an email acknowledgement of this payment."
+msgstr "稍後您將會收到一封此次付款成功確認信。"
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
-msgid "An email with your donation details has been sent to %1."
-msgstr "捐款明細將寄至 %1。"
-
-#: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
-msgid ""
-"Keep supporting it. Donation has not been completed yet with entire process."
-msgstr "加油，您的捐款尚未完成喔！"
+msgid "An email with your payment details has been sent to %1."
+msgstr "付款明細將寄至 %1。"
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid ""
-"Please note the expiration date of donation, you could pay with chosen "
-"donation payment method due to the date. If you have overdue donations, or "
-"if your donation payment method has expired, it might require you to donate "
-"again."
-msgstr "請注意，您需在繳費截止日前，依照您選擇的繳款方式完成捐款，逾期則需重新捐款．"
+"Keep supporting it. Payment has not been completed yet with entire process."
+msgstr "加油，您的付款尚未完成喔！"
+
+#: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
+msgid "Please note the expiration date of payment, you could pay with chosen payment payment method due to the date. If you have overdue payment, or if your payment method has expired, it might require you to do again."
+msgstr "請注意，您需在繳費截止日前，依照您選擇的繳款方式完成繳款，逾期則需重新繳款．"
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid "Remider email has been sent to %1."
@@ -44862,11 +44858,11 @@ msgstr "繳費提醒稍後將寄至 %1以及 %2，敬請留意喔！"
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid "Payment failed."
-msgstr "抱歉，您的捐款失敗了！"
+msgstr "抱歉，付款失敗了！"
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid ""
-"We were unalbe to process your donation. Your will not been charged in this "
+"We were unalbe to process your payment. Your will not been charged in this "
 "transaction."
 msgstr "您不會被扣除任何款項，"
 

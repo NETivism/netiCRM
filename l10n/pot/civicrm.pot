@@ -44850,27 +44850,23 @@ msgid "administer Reserved Option"
 msgstr ""
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
-msgid "Congratulations! Your donation has been completed!"
+msgid "Congratulations! Your payment has been completed!"
 msgstr ""
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
-msgid "You will receive an email acknowledgement of this donation."
+msgid "You will receive an email acknowledgement of this payment."
 msgstr ""
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
-msgid "An email with your donation details has been sent to %1."
+msgid "An email with your payment details has been sent to %1."
 msgstr ""
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
-msgid "Keep supporting it. Donation has not been completed yet with entire process."
+msgid "Keep supporting it. Payment has not been completed yet with entire process."
 msgstr ""
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
-msgid ""
-"Please note the expiration date of donation, "
-"you could pay with chosen donation payment method due to the date. "
-"If you have overdue donations, or if your donation payment method has expired, "
-"it might require you to donate again."
+msgid "Please note the expiration date of payment, you could pay with chosen payment payment method due to the date. If you have overdue payment, or if your payment method has expired, it might require you to do again."
 msgstr ""
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
@@ -44886,7 +44882,7 @@ msgid "Payment failed."
 msgstr ""
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
-msgid "We were unalbe to process your donation. Your will not been charged in this transaction."
+msgid "We were unalbe to process your payment. Your will not been charged in this transaction."
 msgstr ""
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
