@@ -309,6 +309,12 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
       $name = CRM_Contact_BAO_Contact::displayName($contactID);
       $this->assign('display_name', $name);
       $this->assign('contact_id', $contactID);
+      if(CRM_Core_Permission::check('edit all contacts')){
+        $this->assign('is_contact_admin', 1);
+      }
+      else{
+        $this->assign('is_contact_admin', 0);
+      }
     }
 
     $config = CRM_Core_Config::singleton();

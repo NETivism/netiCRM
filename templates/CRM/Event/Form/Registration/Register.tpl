@@ -290,6 +290,23 @@
       cj("#billing-payment-block").html('<div class="crm-section payment-description"><div class="label"></div><div class="content">{/literal}{$event.pay_later_receipt|nl2br|regex_replace:"/[\r\n]/":""}{literal}</div><div class="clear"></div></div>');
     }
   });
+  var lockfield = function($obj){
+    $obj.attr('title', '{/literal}{ts}To change your personal info, go My Account page for further setting.{/ts}{literal}');
+    $obj.attr("readonly", "readonly").addClass("readonly");
+  }
+  // prevent overwrite others contact info
+  {/literal}
+  {if $contact_id}
+    {if isset($form.last_name.value) and $form.last_name.value and isset($form.first_name.value) and $form.first_name.value}
+      lockfield(cj("input#last_name"));
+      lockfield(cj("input#first_name"));
+    {/if}
+    lockfield(cj("input#email-5"));
+  {/if}
+  {if $is_contact_admin}
+    cj(".first_name-section .content .description").html('{ts}To prevent overwrite personal info, we locked some field above for logged user. Please logout before you help other people to complete this form.{/ts}');
+  {/if}
+  {literal}
   if(cj("#register-who").length && location.hash != '#register-now'){
     cj("#register-now").hide();
     cj("#register-me").click(function(){

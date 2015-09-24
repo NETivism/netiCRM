@@ -212,6 +212,13 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
     $this->_userID = $session->get('userID');
     $this->_mid = NULL;
     if ($this->_userID) {
+      $this->assign('contact_id', $this->_userID);
+      if(CRM_Core_Permission::check('edit all contacts')){
+        $this->assign('is_contact_admin', 1);
+      }
+      else{
+        $this->assign('is_contact_admin', 0);
+      }
       $this->_mid = CRM_Utils_Request::retrieve('mid', 'Positive', $this);
       if ($this->_mid) {
         require_once 'CRM/Member/DAO/Membership.php';
