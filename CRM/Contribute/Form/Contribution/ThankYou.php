@@ -148,8 +148,8 @@ class CRM_Contribute_Form_Contribution_ThankYou extends CRM_Contribute_Form_Cont
     $this->_separateMembershipPayment = $this->get('separateMembershipPayment');
     $this->assign("is_separate_payment", $this->_separateMembershipPayment);
 
-    $this->buildCustom($this->_values['custom_pre_id'], 'customPre', TRUE);
-    $this->buildCustom($this->_values['custom_post_id'], 'customPost', TRUE);
+    $this->buildCustom($this->_values['custom_pre_id'], 'customPreGroup', TRUE);
+    $this->buildCustom($this->_values['custom_post_id'], 'customPostGroup', TRUE);
 
     $this->assign('trxn_id', CRM_Utils_Array::value('trxn_id', $this->_params));
     $this->assign('receive_date', CRM_Utils_Date::mysqlToIso(CRM_Utils_Array::value('receive_date', $this->_params)));

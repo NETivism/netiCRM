@@ -170,8 +170,8 @@
         </div>
     {/if}
 
-    {if $customPre}
-        {foreach from=$customPre item=field key=customName}
+    {if $customPreGroup}
+        {foreach from=$customPreGroup item=field key=customName}
             {if $field.groupTitle}
                 {assign var=groupTitlePre  value=$field.groupTitle} 
             {/if}
@@ -181,13 +181,13 @@
     	        {$groupTitlePre}
             </div>
             <fieldset class="label-left">
-                {include file="CRM/UF/Form/Block.tpl" fields=$customPre}
+                {include file="CRM/UF/Form/Block.tpl" fields=$customPreGroup}
             </fieldset>
         </div>
     {/if}
 
-    {if $customPost}
-        {foreach from=$customPost item=field key=customName}
+    {if $customPostGroup}
+        {foreach from=$customPostGroup item=field key=customName}
             {if $field.groupTitle}
                 {assign var=groupTitlePost  value=$field.groupTitle} 
             {/if}
@@ -197,7 +197,7 @@
                 {$groupTitlePost}
             </div>
             <fieldset class="label-left">  
-                {include file="CRM/UF/Form/Block.tpl" fields=$customPost}
+                {include file="CRM/UF/Form/Block.tpl" fields=$customPostGroup}
             </fieldset>
         </div>
     {/if}

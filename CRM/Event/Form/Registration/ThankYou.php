@@ -92,8 +92,8 @@ class CRM_Event_Form_Registration_ThankYou extends CRM_Event_Form_Registration {
   public function buildQuickForm() {
     $this->assignToTemplate();
 
-    $this->buildCustom($this->_values['custom_pre_id'], 'customPre', TRUE);
-    $this->buildCustom($this->_values['custom_post_id'], 'customPost', TRUE);
+    $this->buildCustom($this->_values['custom_pre_id'], 'customPreGroup', TRUE);
+    $this->buildCustom($this->_values['custom_post_id'], 'customPostGroup', TRUE);
 
     $this->assign('lineItem', $this->_lineItem);
     $this->assign('totalAmount', $this->_totalAmount);
