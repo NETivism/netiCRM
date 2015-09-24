@@ -104,8 +104,6 @@ if( file_exists(civicrm_conf_init( ) . '/settings.php')){
   $error = include_once civicrm_conf_init( ) . '/settings.php';
 }
 
-civicrm_conf_set();
-
 $settingsFile = civicrm_conf_init( ) . '/civicrm.settings.php';
 define('CIVICRM_SETTINGS_PATH', $settingsFile);
 $error = @include_once( $settingsFile );
