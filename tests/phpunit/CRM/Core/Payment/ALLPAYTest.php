@@ -192,7 +192,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
     );
 
     // verify data in drupal module
-    $cid = db_query("SELECT cid FROM {civicrm_contribution_allpay} WHERE cid = :cid", array(':cid' => $contribution->id))->fetchField();
+    $cid = CRM_Core_DAO::singleValueQuery("SELECT cid FROM civicrm_contribution_allpay WHERE cid = $contribution->id");
     $this->assertNotEmpty($cid, "In line " . __LINE__);
   }
 
@@ -286,7 +286,8 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
     );
 
     // verify data in drupal module
-    $cid = db_query("SELECT cid FROM {civicrm_contribution_allpay} WHERE cid = :cid", array(':cid' => $contribution->id))->fetchField();
+    $cid = CRM_Core_DAO::singleValueQuery("SELECT cid FROM civicrm_contribution_allpay WHERE cid = $contribution->id");
+
     $this->assertNotEmpty($cid, "In line " . __LINE__);
 
     // second payment
@@ -321,7 +322,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
     );
     $this->assertDBQuery(2, "SELECT count(*) FROM civicrm_contribution WHERE contribution_recur_id = %1", $params);
     $cid2 = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution WHERE contribution_recur_id = %1 ORDER BY id DESC", $params);
-    $cid2 = db_query("SELECT cid FROM {civicrm_contribution_allpay} WHERE cid = :cid", array(':cid' => $cid2))->fetchField();
+    $cid2 = CRM_Core_DAO::singleValueQuery("SELECT cid FROM civicrm_contribution_allpay WHERE cid = $cid2");
     $this->assertNotEmpty($cid2, "In line " . __LINE__);
 
     // TODO: use civicrm_allpay_recur_check to insert ant third payment
