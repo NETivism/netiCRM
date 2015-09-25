@@ -137,7 +137,12 @@ class CRM_Core_Payment_NewebTest extends CiviUnitTestCase {
     }
 
     // load drupal module file
-    $loaded = module_load_include('inc', 'civicrm_neweb', 'civicrm_neweb.extern');
+    if(!defined('VERSION')){
+      $loaded = module_load_include('inc', 'civicrm_neweb', 'civicrm_neweb.extern');  
+    }else{
+      $loaded = module_load_include('inc', 'civicrm_neweb', 'civicrm_neweb.ipn');  
+    }
+    
   }
 
   function tearDown() {
