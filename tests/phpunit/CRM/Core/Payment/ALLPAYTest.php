@@ -219,9 +219,11 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
     );
     $ids = array();
     $recurring = &CRM_Contribute_BAO_ContributionRecur::add($recur, $ids);
+
+    // verify recurring status
     $params = array(
-      'is_test' => $this->_is_test,
       'id' => $recurring->id,
+      'contribution_status_id' => 2,
     );
     $this->assertDBState('CRM_Contribute_DAO_ContributionRecur', $recurring->id, $params);
 
@@ -287,12 +289,18 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
 
     // verify data in drupal module
     $cid = CRM_Core_DAO::singleValueQuery("SELECT cid FROM civicrm_contribution_allpay WHERE cid = $contribution->id");
-
     $this->assertNotEmpty($cid, "In line " . __LINE__);
+
+    // verify recurring status
+    $params = array(
+      'id' => $recurring->id,
+      'contribution_status_id' => 5,
+    );
+    $this->assertDBState('CRM_Contribute_DAO_ContributionRecur', $recurring->id, $params);
 
     // second payment
     $now = time()+120;
-    $gwsr1 = 99999;
+    $gwsr1 = 111111;
     $get = $post = $ids = array();
     $ids = CRM_Contribute_BAO_Contribution::buildIds($contribution->id);
     $query = CRM_Contribute_BAO_Contribution::makeNotifyUrl($ids, NULL, $return_query = TRUE);
@@ -308,23 +316,123 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
       'ExecTimes' => '12',
       'Amount' => $amount,
       'Gwsr' => $gwsr1,
-      'ProcessDate' => date('Y-m-d H:i:s', $now),
+      'ProcessDate' => date('Y-m-d H:i:s', $now+3600),
       'AuthCode' => '777777',
       'FirstAuthAmount' => $amount,
       'TotalSuccessTimes' => 2,
       'SimulatePaid' => '1',
     );
     civicrm_allpay_ipn('Credit', $post, $get);
+    $trxn_id2 = _civicrm_allpay_recur_trxn($trxn_id, $gwsr1);
 
     // check second payment contribution exists
+    $params = array(
+      'id' => $recurring->id,
+      'contribution_status_id' => 5,
+    );
+    $this->assertDBState('CRM_Contribute_DAO_ContributionRecur', $recurring->id, $params);
+
     $params = array(
       1 => array($recurring->id, 'Integer'),
     );
     $this->assertDBQuery(2, "SELECT count(*) FROM civicrm_contribution WHERE contribution_recur_id = %1", $params);
-    $cid2 = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution WHERE contribution_recur_id = %1 ORDER BY id DESC", $params);
-    $cid2 = CRM_Core_DAO::singleValueQuery("SELECT cid FROM civicrm_contribution_allpay WHERE cid = $cid2");
-    $this->assertNotEmpty($cid2, "In line " . __LINE__);
 
-    // TODO: use civicrm_allpay_recur_check to insert ant third payment
+    $params = array(
+      1 => array($trxn_id2, 'String'),
+    );
+    $this->assertDBQuery(1, "SELECT contribution_status_id FROM civicrm_contribution WHERE trxn_id = %1", $params);
+    $cid2 = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution WHERE trxn_id = %1", $params);
+
+    $data = CRM_Core_DAO::singleValueQuery("SELECT data FROM civicrm_contribution_allpay WHERE cid = $cid2");
+    $this->assertNotEmpty($data, "In line " . __LINE__);
+
+    // use civicrm_allpay_recur_check to insert third Payment_ALLPAY
+    $gwsr2 = 222222;
+    $get = $post = $ids = array();
+    $order_base = (object)(array(
+      'ExecStatus' => '1',
+      'MerchantID' => '2000132',
+      'MerchantTradeNo' => $trxn_id,
+      'TradeNo' => '1501101152542267',
+      'RtnCode' => 1,
+      'PeriodType' => 'M',
+      'Frequency' => 1,
+      'ExecTimes' => 99,
+      'PeriodAmount' => $amount,
+      'amount' => $amount,
+      'gwsr' => '000000',
+      'process_date' => date('Y-m-d H:i:s', $now+86400*2),
+      'auth_code' => '777777',
+      'card4no' => '1234',
+      'card6no' => '123456',
+      'TotalSuccessTimes' => 2,
+      'TotalSuccessAmount' => $amount*2,
+      'ExecLog' => array (
+        0 => (object)(array(
+           'RtnCode' => 1,
+           'amount' => $amount,
+           'gwsr' => '000000',
+           'process_date' => date('Y-m-d H:i:s', $now),
+           'auth_code' => '777777',
+        )),
+        1 => (object)(array(
+           'RtnCode' => 1,
+           'amount' => $amount,
+           'gwsr' => $gwsr1,
+           'process_date' => date('Y-m-d H:i:s', $now+3600),
+           'auth_code' => '777777',
+        )),
+        2 => (object)(array(
+           'RtnCode' => 1,
+           'amount' => $amount,
+           'gwsr' => $gwsr2,
+           'process_date' => date('Y-m-d H:i:s', $now+86400*2),
+           'auth_code' => '777777',
+        )),
+      ),
+    ));
+    $trxn_id3 = _civicrm_allpay_recur_trxn($trxn_id, $gwsr2);
+    $order_json = json_encode($order_base);
+    $order_sample = json_decode($order_json);
+
+    // add new payment from recurring notification
+    civicrm_allpay_recur_check($recurring->id, $order_sample);
+    $params = array(
+      'id' => $recurring->id,
+      'contribution_status_id' => 5,
+    );
+    $this->assertDBState('CRM_Contribute_DAO_ContributionRecur', $recurring->id, $params);
+
+    $params = array(
+      1 => array($recurring->id, 'Integer'),
+    );
+    $this->assertDBQuery(3, "SELECT count(*) FROM civicrm_contribution WHERE contribution_recur_id = %1", $params);
+
+    $params = array(
+      1 => array($trxn_id3, 'String'),
+    );
+    $this->assertDBQuery(1, "SELECT contribution_status_id FROM civicrm_contribution WHERE trxn_id = %1", $params);
+    $cid3 = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution WHERE trxn_id = %1", $params);
+
+    $data = CRM_Core_DAO::singleValueQuery("SELECT data FROM civicrm_contribution_allpay WHERE cid = $cid3");
+    $this->assertNotEmpty($data, "In line " . __LINE__);
+
+    // completed recurring
+    $order_base->ExecStatus = 2;
+    civicrm_allpay_recur_check($recurring->id, $order_base);
+    $params = array(
+      'id' => $recurring->id,
+      'contribution_status_id' => 1,
+    );
+    $this->assertDBState('CRM_Contribute_DAO_ContributionRecur', $recurring->id, $params);
+
+    // cancelled recurring
+    $order_base->ExecStatus = 0;
+    civicrm_allpay_recur_check($recurring->id, $order_base);
+    $params = array(
+      'id' => $recurring->id,
+      'contribution_status_id' => 3,
+    );
+    $this->assertDBState('CRM_Contribute_DAO_ContributionRecur', $recurring->id, $params);
   }
 }
