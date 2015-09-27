@@ -9,8 +9,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2015-09-24 06:31+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
+"PO-Revision-Date: 2015-09-27 11:34+0000\n"
+"Last-Translator: 張書懷 <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44776,6 +44776,14 @@ msgid "Custom Name"
 msgstr "自訂名稱"
 
 #: CRM/Contact/Form/Search/Custom/RecurSearch.php
+msgid "First recurring date"
+msgstr "開始捐款日期"
+
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php
+msgid "Last Receive Date"
+msgstr "最近一筆收到日期"
+
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php
 msgid "In progress and having over 2 times."
 msgstr "兩期以上有效"
 
@@ -44845,7 +44853,10 @@ msgid ""
 msgstr "加油，您的付款尚未完成喔！"
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
-msgid "Please note the expiration date of payment, you could pay with chosen payment payment method due to the date. If you have overdue payment, or if your payment method has expired, it might require you to do again."
+msgid ""
+"Please note the expiration date of payment, you could pay with chosen "
+"payment payment method due to the date. If you have overdue payment, or if "
+"your payment method has expired, it might require you to do again."
 msgstr "請注意，您需在繳費截止日前，依照您選擇的繳款方式完成繳款，逾期則需重新繳款．"
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
