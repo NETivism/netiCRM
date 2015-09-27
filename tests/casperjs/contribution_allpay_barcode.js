@@ -58,7 +58,7 @@ casper.test.begin('Contribution page test (payment processors: allpay, payment t
   });
 
   // Step 3: Allpay AioTransaction
-  casper.waitForUrl('https://payment-stage.allpay.com.tw/AioTransaction/AioPaymentTransaction', function(){
+  casper.waitForUrl('http://payment-stage.allpay.com.tw/AioTransaction/AioPaymentTransaction', function(){
     test.assertUrlMatch(/AioPaymentTransaction/, "Allpay AioPaymentTransaction");
     test.assertTitle(vars.allpayCpage, 'Allpay AioPaymentTransaction: page title is OK. (' + vars.allpayCpage + ')');
     this.waitForSelector('div.BarcodePay', function() {
@@ -75,7 +75,7 @@ casper.test.begin('Contribution page test (payment processors: allpay, payment t
   });
 
   // Step 4: Allpay BarcodePaymentInfo
-  casper.waitForUrl('https://payment-stage.allpay.com.tw/PaymentRule/BarcodePaymentInfo', function() {
+  casper.waitForUrl('http://payment-stage.allpay.com.tw/PaymentRule/BarcodePaymentInfo', function() {
     test.assertUrlMatch(/BarcodePaymentInfo/, "Allpay BarcodePaymentInfo");
     test.assertTitle(vars.allpayFpage, 'Allpay BarcodePaymentInfo: page title is OK. (' + vars.allpayFpage + ')');
     test.assertExists('div.print > a[href*="' + vars.path + '"]', 'Allpay BarcodePaymentInfo: "back to contribution page" button is exist.');

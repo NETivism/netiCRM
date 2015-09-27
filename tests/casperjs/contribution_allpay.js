@@ -47,7 +47,7 @@ casper.test.begin('Contribution page test (payment processors: allpay)...', vars
   });
 
   // Step 3: Allpay CreditCard Info
-  casper.waitForUrl('https://pay-stage.allpay.com.tw/CreditPayment/CreateCreditCardInfo', function(){
+  casper.waitForUrl('http://pay-stage.allpay.com.tw/CreditPayment/CreateCreditCardInfo', function(){
     test.assertUrlMatch(/CreateCreditCardInfo/, "Allpay CreditCard Info");
     test.assertTitle(vars.allpayCpage, 'Allpay CreditCard Info: page title is OK. (' + vars.allpayCpage + ')');
     test.assertExists('form[action="/CreditPayment/CreateCreditCardInfo"]', 'Allpay CreditCard Info: form is exist.');
