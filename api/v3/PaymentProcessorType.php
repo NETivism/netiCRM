@@ -41,7 +41,7 @@
 /**
  * Include common API util functions
  */
-require_once 'CRM/Financial/BAO/PaymentProcessorType.php';
+require_once 'CRM/Core/BAO/PaymentProcessorType.php';
 
 /**
  * Function to create payment_processor type
