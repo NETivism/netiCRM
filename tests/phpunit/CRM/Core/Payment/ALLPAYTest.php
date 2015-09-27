@@ -365,8 +365,8 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
       'auth_code' => '777777',
       'card4no' => '1234',
       'card6no' => '123456',
-      'TotalSuccessTimes' => 2,
-      'TotalSuccessAmount' => $amount*2,
+      'TotalSuccessTimes' => 3,
+      'TotalSuccessAmount' => $amount*3,
       'ExecLog' => array (
         0 => (object)(array(
            'RtnCode' => 1,
