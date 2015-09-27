@@ -302,7 +302,7 @@ function civicrm_api3_contribution_transact($params) {
     $params['invoiceID'] = $params['invoice_id'];
   }
 
-  require_once 'CRM/Financial/BAO/PaymentProcessor.php';
+  require_once 'CRM/Core/BAO/PaymentProcessor.php';
   $paymentProcessor = CRM_Financial_BAO_PaymentProcessor::getPayment($params['payment_processor_id'], $params['payment_processor_mode']);
   if (civicrm_error($paymentProcessor)) {
     return $paymentProcessor;
