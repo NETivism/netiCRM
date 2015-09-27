@@ -40,7 +40,7 @@ casper.test.begin('Event register page test ...',4,function(test){
   });
 
   casper.waitForUrl('_qf_ThankYou_display',function(){
-    var page_title = getPageTitle('感謝您的報名');
+    var page_title = getPageTitle(item.event_name_1);
     test.assertTitle(page_title,'Event register page: page title is OK. (' + page_title + ')');
     this.capture("picture/event_register_1_2.png");
   });
@@ -73,7 +73,7 @@ casper.test.begin('Event register page test ...',7,function(test){
   });
 
   casper.then(function(){
-    var page_title = getPageTitle('感謝您的報名');
+    var page_title = getPageTitle(item.event_name_2);
     test.assertTitle(page_title,'Event register page: page title is OK. (' + page_title + ')');
     this.capture("picture/event_register_2_2.png");
     this.thenOpen(item.url_prefix + '/civicrm/event/register?reset=1&id=2');
@@ -84,7 +84,7 @@ casper.test.begin('Event register page test ...',7,function(test){
     test.assertTitle(page_title,'Event register page: page title is OK. (' + page_title + ')');
     this.capture("picture/event_register_2_3.png");
     test.assertExists('.messages');
-    test.assertSelectorHasText('.messages','此活動目前已報名額滿。');
+    test.assertSelectorHasText('.messages','此活動已額滿');
   });
 
   casper.run(function() {
@@ -113,7 +113,7 @@ casper.test.begin('Event register page test ...',10,function(test){
   });
 
   casper.then(function(){
-    var page_title = getPageTitle('感謝您的報名');
+    var page_title = getPageTitle(item.event_name_3);
     test.assertTitle(page_title,'Event register page: page title is OK. (' + page_title + ')');
     this.capture("picture/event_register_3_2.png");
     this.thenOpen(item.url_prefix + '/civicrm/event/register?reset=1&id=3');
@@ -133,7 +133,7 @@ casper.test.begin('Event register page test ...',10,function(test){
   });
 
   casper.then(function(){
-    var page_title = getPageTitle('感謝您的報名');
+    var page_title = getPageTitle(item.event_name_3);
     test.assertTitle(page_title,'Event register page: page title is OK. (' + page_title + ')');
     this.capture("picture/event_register_3_5.png");
     test.assertExists('#help p');
@@ -171,7 +171,7 @@ casper.test.begin('Event register page test ...',9,function(test){
   });
 
   casper.then(function(){
-    var page_title = getPageTitle('感謝您的報名');
+    var page_title = getPageTitle(item.event_name_4);
     // Checked-1
     test.assertTitle(page_title,'Event register page: page title is OK. (' + page_title + ')');
     this.capture("picture/event_register_4_2.png");
@@ -188,7 +188,7 @@ casper.test.begin('Event register page test ...',9,function(test){
     this.capture("picture/event_register_4_3.png");
     test.assertExists('.messages');
     // Checked-3 
-    test.assertSelectorHasText('.messages','此活動目前已報名額滿。');
+    test.assertSelectorHasText('.messages','此活動已額滿');
   });
 
   casper.run(function() {
@@ -222,7 +222,7 @@ casper.test.begin('Event register page test ...',12,function(test){
   });
 
   casper.then(function(){
-    var page_title = getPageTitle('感謝您的報名');
+    var page_title = getPageTitle(item.event_name_5);
     // Checked-1
     test.assertTitle(page_title,'Event register page: page title is OK. (' + page_title + ')');
     this.capture("picture/event_register_5_2.png");
@@ -250,7 +250,7 @@ casper.test.begin('Event register page test ...',12,function(test){
   });
 
   casper.then(function(){
-    var page_title = getPageTitle('感謝您的報名');
+    var page_title = getPageTitle(item.event_name_5);
     test.assertTitle(page_title,'Event register page: page title is OK. (' + page_title + ')');
     this.capture("picture/event_register_3_5.png");
     test.assertExists('#help p');
