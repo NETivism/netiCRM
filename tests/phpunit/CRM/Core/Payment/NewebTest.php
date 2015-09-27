@@ -30,8 +30,8 @@ class CRM_Core_Payment_NewebTest extends CiviUnitTestCase {
       $this->_page_id = $payment_page[$class_name];
     }
 
-    $this->_merchant_no = "123456";
-    $this->_merchant_pass = "xxxx";    
+    $this->_merchant_no = "758200";
+    $this->_merchant_pass = "abcd1234";    
 
     parent::__construct();
   }
