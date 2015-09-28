@@ -371,10 +371,9 @@ class CRM_Core_Payment_NewebTest extends CiviUnitTestCase {
       strval($cycle_day), 
       "New",
       "01",
-      "0\n",
     );
 
-    $this->assertEquals($expects, $results);
+    $this->assertArraySubset($expects, $results);
 
     // Update recuring by .out file.
     $file_path = DRUPAL_ROOT . "/sites/default/files/neweb" . $_test . "/RP_" . $this->_merchant_no . "_" . $today . ".out";
