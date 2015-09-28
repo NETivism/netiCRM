@@ -30,8 +30,8 @@ class CRM_Core_Payment_NewebTest extends CiviUnitTestCase {
       $this->_page_id = $payment_page[$class_name];
     }
 
-    $this->_merchant_no = "123456";
-    $this->_merchant_pass = "xxxx";    
+    $this->_merchant_no = "758200";
+    $this->_merchant_pass = "abcd1234";    
 
     parent::__construct();
   }
@@ -225,16 +225,28 @@ class CRM_Core_Payment_NewebTest extends CiviUnitTestCase {
     $id =  CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution ORDER BY id DESC LIMIT 1");
     $id = $id ? $id + 1 : 1;
 
-    $now = time()+60;
-    $before_yesterday = $now - 86400 * 2;
+    // create_date is last 15th day in month.
+    $now = time();
+    if(date('d',$now)>15){
+      $create_date = strtotime(date('Y-m-15 H:i:s',$now));
+    }else{
+      $last_month = $now - 28 * 86400;
+      $create_date = strtotime(date('Y-m-15 H:i:s',$last_month));
+    }
+    // $before_yesterday = $now - 86400 * 2;
     $trxn_id = 990000000 + $id;
-    // print($trxn_id);
     $amount = 222;
-    $cycle_day = date('d', $before_yesterday+86400);
+
+    if(date('d',$create_date) < 25){
+      $cycle_day = date('d', $create_date+86400);  
+    }else{
+      $cycle_day = 5;  
+    }
+    
 
     // create recurring
     $date = date('YmdHis', $now);
-    $by_date = date('YmdHis', $before_yesterday);
+    $by_date = date('YmdHis', $create_date);
     $recur = array(
       'contact_id' => $this->_cid,
       'amount' => $amount,
@@ -246,7 +258,7 @@ class CRM_Core_Payment_NewebTest extends CiviUnitTestCase {
       'create_date' => $by_date,
       'modified_date' => $by_date,
       'cycle_day' => $cycle_day,
-      'invoice_id' => md5($before_yesterday),
+      'invoice_id' => md5($create_date),
       'contribution_status_id' => 2,
       'trxn_id' => CRM_Utils_Array::value('trxn_id', $params),
     );
@@ -267,7 +279,7 @@ class CRM_Core_Payment_NewebTest extends CiviUnitTestCase {
       'contribution_page_id' => $this->_page_id,
       'payment_processor_id' => $this->_processor['id'],
       'payment_instrument_id' => 1,
-      'created_date' => date('YmdHis', $before_yesterday),
+      'created_date' => date('YmdHis', $create_date),
       'non_deductible_amount' => 0,
       'total_amount' => $amount,
       'currency' => 'TWD',
@@ -287,6 +299,7 @@ class CRM_Core_Payment_NewebTest extends CiviUnitTestCase {
       'id' => $contribution->id,
     );
     $this->assertDBState('CRM_Contribute_DAO_Contribution', $contribution->id, $params);
+    $this->assertEquals($id,$contribution->id);
 
     // manually trigger ipn
     $get = $post = $ids = array();
@@ -339,8 +352,12 @@ class CRM_Core_Payment_NewebTest extends CiviUnitTestCase {
 
     $file = fopen($file_path,"r");
     while($line = fgets($file)){
-      $last_line = $line;
+      if(strpos($line,strval($trxn_id))){
+        $last_line = $line;
+        break;
+      }
     }
+    $this->assertNotEmpty($last_line, "In line " . __LINE__);
     $results = explode(",",$last_line);
     fclose($file);
 
@@ -354,10 +371,9 @@ class CRM_Core_Payment_NewebTest extends CiviUnitTestCase {
       strval($cycle_day), 
       "New",
       "01",
-      "0",
     );
 
-    $this->assertEquals($expects, $results);
+    $this->assertArraySubset($expects, $results);
 
     // Update recuring by .out file.
     $file_path = DRUPAL_ROOT . "/sites/default/files/neweb" . $_test . "/RP_" . $this->_merchant_no . "_" . $today . ".out";
@@ -376,12 +392,12 @@ class CRM_Core_Payment_NewebTest extends CiviUnitTestCase {
       $searchValue = $recurring->id,
       $returnColumn = 'start_date',
       $searchColumn = 'id',
-      $expectedValue = date('Y-m-d 00:00:00', $before_yesterday + 86400),
+      $expectedValue = date('Y-m-d 00:00:00', $create_date + 86400),
       "In line " . __LINE__
     );
 
-    $after_year = strtotime("+11 month");
-    $date_end_date = date('Y-m-d 00:00:00', $after_year - 86400);
+    $after_year = strtotime(date('Y-m-d', $create_date + 86400) . " +11 month");
+    $date_end_date = date('Y-m-d 00:00:00', $after_year);
     $this->assertDBCompareValue(
       'CRM_Contribute_DAO_ContributionRecur',
       $searchValue = $recurring->id,
