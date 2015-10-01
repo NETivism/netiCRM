@@ -317,7 +317,9 @@ contact_a.display_name   as display_name";
       '<a href="'.CRM_Utils_System::url('civicrm/contact/view/contribution', "reset=1&id={$row['entity_id']}&cid={$row['contact_id']}&action=view").'" class="action-item" target="_blank">'.ts('View').'</a>',
       '<a href="'.CRM_Utils_System::url('civicrm/contact/view/contribution', "reset=1&id={$row['entity_id']}&cid={$row['contact_id']}&action=update").'" class="action-item" target="_blank">'.ts('Edit').'</a>',
     );                                      
-    $row['action'] = implode('<br>', $action);
+    if(isset($row['action'])){
+      $row['action'] = implode('<br>', $action);
+    }
   } 
 
   function setTitle($title) {
