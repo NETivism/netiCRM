@@ -1,2 +1,10 @@
 * text=auto eol=lf
 *.mo binary
+*.png binary
+*.jpg binary
+*.gif binary
+*.swf binary
+*.woff binary
+*.ttf binary
+*.otf binary
+*.fdf binary

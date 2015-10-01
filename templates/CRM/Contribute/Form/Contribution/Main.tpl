@@ -510,7 +510,10 @@ function enableHonorType( ) {
         lockfield(cj("input#last_name"));
         lockfield(cj("input#first_name"));
       {/if}
-      lockfield(cj("input#email-5"));
+      {assign var="email_f" value="email-5"}
+      {if isset($form.$email_f.value) and $form.$email_f.value}
+        lockfield(cj("input#email-5"));
+      {/if}
     {/if}
     {if $is_contact_admin}
       cj(".first_name-section .content .description").html('{ts}To prevent overwrite personal info, we locked some field above for logged user. Please logout before you help other people to complete this form.{/ts}');
