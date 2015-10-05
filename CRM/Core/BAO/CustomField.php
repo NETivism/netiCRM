@@ -411,7 +411,7 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
     else {
       $cacheKey = $customDataType;
     }
-    $cacheKey .= is_array($customDataSubType) ? ('_' . implode('_', $customDataSubType)) : '_0';
+    $cacheKey .= is_array($customDataSubType) ? ('_' . implode('_', $customDataSubType)) : '_'.$customDataSubType.'_0';
     $cacheKey .= $customDataSubName ? "{$customDataSubName}_" : "_0";
     $cacheKey .= $showAll ? "_1" : "_0";
     $cacheKey .= $inline ? "_1_" : "_0_";
