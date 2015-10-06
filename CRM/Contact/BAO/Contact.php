@@ -1675,16 +1675,12 @@ ORDER BY civicrm_email.is_primary DESC";
     }
 
     //fix contact sub type CRM-5125
-    if (array_key_exists('contact_sub_type', $params) &&
-      !empty($params['contact_sub_type'])
-    ) {
-      $data['contact_sub_type'] = CRM_Core_DAO::VALUE_SEPARATOR . implode(CRM_Core_DAO::VALUE_SEPARATOR, (array)$params['contact_sub_type']) . CRM_Core_DAO::VALUE_SEPARATOR;
+    if ( $subType = CRM_Utils_Array::value('contact_sub_type', $params) ) {
+      $data['contact_sub_type'] = $subType;
     }
-    elseif (array_key_exists('contact_sub_type_hidden', $params) &&
-      !empty($params['contact_sub_type_hidden'])
-    ) {
-      // if profile was used, and had any subtype, we obtain it from there
-      $data['contact_sub_type'] = CRM_Core_DAO::VALUE_SEPARATOR . implode(CRM_Core_DAO::VALUE_SEPARATOR, (array)$params['contact_sub_type_hidden']) . CRM_Core_DAO::VALUE_SEPARATOR;
+    elseif ( $subType = CRM_Utils_Array::value('contact_sub_type_hidden', $params ) ) {
+      // if profile was used, and had any subtype, we obtain it from there 
+      $data['contact_sub_type'] = $subType;
     }
 
     if ($ctype == 'Organization') {
@@ -1888,15 +1884,7 @@ ORDER BY civicrm_email.is_primary DESC";
             $value .= ' ' . $params[$key . '_time'];
           }
 
-          $type = $data['contact_type'];
-          if ( CRM_Utils_Array::value('contact_sub_type', $data) ) { 
-            $type = $data['contact_sub_type'];
-            $type = explode(CRM_Core_DAO::VALUE_SEPARATOR, trim($type, CRM_Core_DAO::VALUE_SEPARATOR));
-            // generally a contact even if, has multiple subtypes the parent-type is going to be one only
-            // and since formatCustomField() would be interested in parent type, lets consider only one subtype
-            // as the results going to be same.
-            $type = $type[0];
-          }
+          $type = CRM_Utils_Array::value('contact_sub_type', $data) ? $data['contact_sub_type'] : $data['contact_type'];
 
           CRM_Core_BAO_CustomField::formatCustomField($customFieldId,
             $data['custom'],
