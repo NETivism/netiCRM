@@ -61,19 +61,19 @@ install:
   # reference and enable civicrm in build site
   - ln -s $(readlink -e $(cd -)) neticrmci/$(ls neticrmci -1 | tail -1)/sites/all/modules/civicrm
   - cd neticrmci/$(ls neticrmci -1 | tail -1)
+  - export DRUPAL_ROOT=$PWD
   - chmod -R 777 sites/default
   - drush --yes pm-download simpletest
   - drush --yes pm-enable civicrm simpletest
-  - drush --yes pm-enable civicrm_allpay civicrm_neweb civicrm_demo 
+  - drush --yes pm-enable civicrm_allpay civicrm_neweb
+  - drush --yes pm-enable civicrm_demo
   - drush --yes variable-set error_level 0
-
-before_script:
   # start a web server on port 8080, run in the background; wait for initialization
   - drush runserver 127.0.0.1:8080 >> /dev/null &
   - until netstat -an 2>/dev/null | grep '8080.*LISTEN'; do true; done
-  - export DRUPAL_ROOT=$PWD
+
+before_script:
   - export CIVICRM_TEST_DSN=mysql://root@127.0.0.1/neticrmci
-  - export
   - echo 'date_default_timezone_set("Asia/Taipei");' >> $DRUPAL_ROOT/sites/default/settings.php
   - echo 'ini_set("error_reporting", E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED & ~E_WARNING);' >> $DRUPAL_ROOT/sites/default/settings.php
 
