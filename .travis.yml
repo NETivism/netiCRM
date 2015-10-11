@@ -73,13 +73,14 @@ before_script:
   - until netstat -an 2>/dev/null | grep '8080.*LISTEN'; do true; done
   - export DRUPAL_ROOT=$PWD
   - export CIVICRM_TEST_DSN=mysql://root@127.0.0.1/neticrmci
+  - export
+  - echo 'date_default_timezone_set("Asia/Taipei");' >> $DRUPAL_ROOT/sites/default/settings.php
+  - echo 'ini_set("error_reporting", E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED & ~E_WARNING);' >> $DRUPAL_ROOT/sites/default/settings.php
 
 script:
-  - cd sites/all/modules/civicrm/tests/phpunit
-  - phpunit --colors=always CRM/Core/Payment/ALLPAYTest.php
-  - phpunit --colors=always CRM/Core/Payment/NewebTest.php
-  - cd -
-  - casperjs test sites/all/modules/civicrm/tests/casperjs/pages.js
+  - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/ALLPAYTest.php
+  - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/NewebTest.php
+  - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/pages.js
   - drush test-run 'Travis-CI Drupal Module Example' --uri=http://127.0.0.1:8080
 
 notifications:
