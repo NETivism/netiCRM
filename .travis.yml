@@ -35,10 +35,9 @@ before_install:
   - wget https://github.com/n1k0/casperjs/archive/1.0.2.tar.gz -O /tmp/casper.tar.gz
   - tar -xvf /tmp/casper.tar.gz
   - export PATH=$PATH:$PWD/casperjs-1.0.2/bin/
+  - netstat -an
 
 install:
-
-
   # add composer's global bin directory to the path
   # see: https://github.com/drush-ops/drush#install---composer
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
@@ -68,6 +67,9 @@ before_script:
   - drush --yes pm-enable civicrm simpletest
   - drush --yes pm-enable civicrm_allpay civicrm_demo 
   - drush --yes variable-set error_level 0
+  - drush runserver 127.0.0.1:8080 >> /tmp/drush.log &
+  - sleep 10
+  - cat /tmp/drush.log
 
   # start a web server on port 8080, run in the background; wait for initialization
   - drush runserver 127.0.0.1:8080 >> /dev/null &
