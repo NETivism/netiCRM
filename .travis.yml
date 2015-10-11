@@ -43,7 +43,7 @@ install:
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
 
   # install drush globally
-  - composer global require drush/drush:6.5.0
+  - composer global require drush/drush:7.0.0
 
   # php environment
   - echo 'date.timezone="Asia/Taipei"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
