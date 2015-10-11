@@ -32,13 +32,12 @@ before_install:
   - git submodule init
   - git submodule update --remote
 
+install:
   # casperjs
   - wget https://github.com/n1k0/casperjs/archive/1.0.2.tar.gz -O /tmp/casper.tar.gz
-  - tar -xvf /tmp/casper.tar.gz
-  - export PATH=$PATH:$PWD/casperjs-1.0.2/bin/
-  - netstat -an
+  - tar -xf /tmp/casper.tar.gz
+  - export PATH="/tmp/casperjs-1.0.2/bin:$PATH"
 
-install:
   # add composer's global bin directory to the path
   # see: https://github.com/drush-ops/drush#install---composer
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
@@ -46,7 +45,6 @@ install:
   # install drush globally
   - composer global require drush/drush:6.5.0
 
-before_script:
   # php environment
   - echo 'date.timezone="Asia/Taipei"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
   - echo 'error_reporting=E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED & ~E_WARNING' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
@@ -69,11 +67,9 @@ before_script:
   - drush --yes pm-enable civicrm_allpay civicrm_demo 
   - drush --yes variable-set error_level 0
 
+before_script:
   # start a web server on port 8080, run in the background; wait for initialization
   - drush runserver 127.0.0.1:8080 >> /tmp/drush.log &
-  - sleep 5
-  - cat /tmp/drush.log
-  - netstat -an
   - until netstat -an 2>/dev/null | grep '8080.*LISTEN'; do true; done
 
 script:
