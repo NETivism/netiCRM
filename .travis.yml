@@ -64,15 +64,21 @@ install:
   - chmod -R 777 sites/default
   - drush --yes pm-download simpletest
   - drush --yes pm-enable civicrm simpletest
-  - drush --yes pm-enable civicrm_allpay civicrm_demo 
+  - drush --yes pm-enable civicrm_allpay civicrm_neweb civicrm_demo 
   - drush --yes variable-set error_level 0
 
 before_script:
   # start a web server on port 8080, run in the background; wait for initialization
-  - drush runserver 127.0.0.1:8080 >> /tmp/drush.log &
+  - drush runserver 127.0.0.1:8080 >> /dev/null &
   - until netstat -an 2>/dev/null | grep '8080.*LISTEN'; do true; done
+  - export DRUPAL_ROOT=$PWD
+  - export CIVICRM_TEST_DSN=mysql://root@127.0.0.1/neticrmci
 
 script:
+  - cd sites/all/modules/civicrm/tests/phpunit
+  - phpunit --colors=always CRM/Core/Payment/ALLPAYTest.php
+  - phpunit --colors=always CRM/Core/Payment/NewebTest.php
+  - cd -
   - casperjs test sites/all/modules/civicrm/tests/casperjs/pages.js
   - drush test-run 'Travis-CI Drupal Module Example' --uri=http://127.0.0.1:8080
 
