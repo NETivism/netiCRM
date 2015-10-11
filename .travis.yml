@@ -1,3 +1,4 @@
+sudo: false
 language: php
 
 php:
@@ -10,27 +11,33 @@ env:
   - RUNPORT=8080
 
 mysql:
-  database: netivism_neticrm_build
+  database: neticrmci
   username: root
   encoding: utf8
 
 git:
   submodules: false
 
+addons:
+  apt:
+    packages:
+    - php5-cgi
+    - php5-fpm
+    - php5-mysql
+    - php5-curl
+    - php5-gd
+
 before_install:
-  - sudo apt-get update
   - git submodule init
   - git submodule update --remote
 
   # casperjs
-  - git clone git://github.com/n1k0/casperjs.git
-  - cd casperjs
-  - export PATH=$PATH:`pwd`/bin
-  - cd -
+  - wget https://github.com/n1k0/casperjs/archive/1.0.2.tar.gz -O /tmp/casper.tar.gz
+  - tar -xvf /tmp/casper.tar.gz
+  - export PATH=$PATH:$PWD/casperjs-1.0.2/bin/
 
 install:
-  # install php packages required for running a web server from drush on php 5.4
-  - sudo apt-get install -y --force-yes php5-cgi php5-fpm php5-mysql php5-curl php5-gd
+
 
   # add composer's global bin directory to the path
   # see: https://github.com/drush-ops/drush#install---composer
@@ -50,12 +57,12 @@ before_script:
   - ln -s $(readlink -e $(cd -)) civicrm
 
   # create new site, stubbing sendmail path with true to prevent delivery errors and manually resolving drush path
-  - mysql -e 'create database netivism_neticrm_build CHARACTER SET utf8 COLLATE utf8_general_ci'
-  - php -d sendmail_path=`which true` ~/.composer/vendor/bin/drush.php --yes core-quick-drupal --core=drupal --no-server --db-url=mysql://root:@127.0.0.1/netivism_neticrm_build --account-pass=123456 --site-name=netiCRM --enable=transliteration netivism_neticrm_build 
+  - mysql -e 'create database neticrmci CHARACTER SET utf8 COLLATE utf8_general_ci'
+  - php -d sendmail_path=`which true` ~/.composer/vendor/bin/drush.php --yes core-quick-drupal --core=drupal --no-server --db-url=mysql://root:@127.0.0.1/neticrmci --account-pass=123456 --site-name=netiCRM --enable=transliteration neticrmci 
 
   # reference and enable civicrm in build site
-  - ln -s $(readlink -e $(cd -)) netivism_neticrm_build/$(ls netivism_neticrm_build -1 | tail -1)/sites/all/modules/civicrm
-  - cd netivism_neticrm_build/$(ls netivism_neticrm_build -1 | tail -1)
+  - ln -s $(readlink -e $(cd -)) neticrmci/$(ls neticrmci -1 | tail -1)/sites/all/modules/civicrm
+  - cd neticrmci/$(ls neticrmci -1 | tail -1)
   - chmod -R 777 sites/default
   - drush --yes pm-download simpletest
   - drush --yes pm-enable civicrm simpletest
