@@ -26,6 +26,7 @@ addons:
     - php5-mysql
     - php5-curl
     - php5-gd
+    - net-tools
 
 before_install:
   - git submodule init
@@ -67,12 +68,12 @@ before_script:
   - drush --yes pm-enable civicrm simpletest
   - drush --yes pm-enable civicrm_allpay civicrm_demo 
   - drush --yes variable-set error_level 0
-  - drush runserver 127.0.0.1:8080 >> /tmp/drush.log &
-  - sleep 10
-  - cat /tmp/drush.log
 
   # start a web server on port 8080, run in the background; wait for initialization
-  - drush runserver 127.0.0.1:8080 >> /dev/null &
+  - drush runserver 127.0.0.1:8080 >> /tmp/drush.log &
+  - sleep 5
+  - cat /tmp/drush.log
+  - netstat -an
   - until netstat -an 2>/dev/null | grep '8080.*LISTEN'; do true; done
 
 script:
