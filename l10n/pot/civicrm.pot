@@ -44908,3 +44908,8 @@ msgstr ""
 #: templates/CRM/Contribute/Form/Contribution/Main.tpl
 msgid "To change your personal info, go My Account page for further setting."
 msgstr ""
+
+#: templates/CRM/Contribute/Form/Contribution/Confirm.tpl
+#: templates/CRM/Event/Form/Registration/Confirm.tpl
+msgid "Order submitted. You can create another <a href="%1">here</a>."
+msgstr ""
