@@ -288,11 +288,13 @@
         </div>
     {/if}
     
-    <div class="action-link section event_info_link-section">
+    <div class="action-link section event_info_link-section float-right">
         <a href="{crmURL p='civicrm/event/info' q="reset=1&id=`$event.id`"}">&raquo; {ts 1=$event.event_title}Back to "%1" event information{/ts}</a>
     </div>
 
     {if $event.is_public }
         {include file="CRM/Event/Page/iCalLinks.tpl"}
     {/if} 
+
+    <div class="clear"></div>
 </div>
