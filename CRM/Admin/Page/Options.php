@@ -99,7 +99,7 @@ class CRM_Admin_Page_Options extends CRM_Core_Page_Basic {
     self::$_GName = ucwords(str_replace('_', ' ', self::$_gName));
 
     $this->assign('gName', self::$_gName);
-    $this->assign('GName', self::$_GName);
+    $this->assign('GName', ts(self::$_GName));
 
     if (self::$_gName == 'acl_role') {
       CRM_Utils_System::setTitle(ts('Manage ACL Roles'));
