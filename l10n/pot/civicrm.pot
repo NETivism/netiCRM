@@ -44921,3 +44921,7 @@ msgstr ""
 #: templates/CRM/Event/Form/Registration/Confirm.tpl
 msgid "Order submitted. You can create another <a href=\"%1\">here</a>."
 msgstr ""
+
+#: CRM/Contact/Form/Task/PickProfile.php
+msgid "Batch update requires that all selected contacts be the same type (e.g. all Individuals OR all Organizations...). Please modify your selected contacts and try again."
+msgstr ""
