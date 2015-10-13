@@ -60,30 +60,24 @@ class CRM_Contact_Form_Search_Custom_RecurSearch  extends CRM_Contact_Form_Searc
     $this->_queryColumns = array( 
       'r.id' => 'id',
       'contact_a.sort_name' => 'sort_name',
-      'contact_a.birth_date' => 'birth_date',
-      'contact_a.gender_id' => 'gender_id',
       'r.contact_id' => 'contact_id',
       'TRUNCATE(r.amount,0)' => 'amount',
-      'r.frequency_unit' => 'frequency_unit',
       'r.installments' => 'installments',
       'r.start_date' => 'start_date',
       'r.end_date' => 'end_date',
       'r.cancel_date' => 'cancel_date',
-      'c.contribution_status_id' => 'last_status_id',
-      'MAX(c.receive_date)' => 'current_receive_date',
       'COUNT(IF(c.contribution_status_id = 1, 1, NULL))' => 'donation_count',
       'COUNT(c.id)' => 'total_count',
-      'TRUNCATE(SUM(c.total_amount),0)' => 'total_amount', 
       'TRUNCATE(SUM(IF(c.contribution_status_id = 1, c.total_amount, 0)),0)' => 'receive_amount', 
+      'TRUNCATE(SUM(c.total_amount),0)' => 'total_amount', 
+      'c.contribution_status_id' => 'last_status_id',
+      'MAX(c.receive_date)' => 'current_receive_date',
       'r.contribution_status_id' => 'contribution_status_id',
     );
     $this->_columns = array(
       ts('ID') => 'id',
       ts('Name') => 'sort_name',
-      ts('Gender') => 'gender_id',
-      ts('Birth Date') => 'birth_date',
       ts('Amount') => 'amount',
-      ts('Frequency Unit') => 'frequency_unit',
       ts('Installments') => 'installments',
       ts('Start Date') => 'start_date',
       ts('End Date') => 'end_date',
@@ -91,8 +85,8 @@ class CRM_Contact_Form_Search_Custom_RecurSearch  extends CRM_Contact_Form_Searc
       ts('Recuring Status') => 'contribution_status_id',
       ts('Completed Donation') => 'donation_count',
       ts('Total Count') => 'total_count',
-      ts('Current Total Amount') => 'total_amount',
       ts('Total Receive Amount') => 'receive_amount',
+      ts('Current Total Amount') => 'total_amount',
       $filter_month. ts('Contribution Status') => 'last_status_id',
       $filter_month. ts('Created Date') => 'current_receive_date',
       ts('Last Receive Date') => 'last_receive_date',
@@ -422,7 +416,7 @@ SUM(total_amount) as total_amount
   function alterRow(&$row) {
     $dao = $row['#dao'];
     $row['contribution_status_id'] = $this->_cstatus[$row['contribution_status_id']];
-    $date = array('start_date', 'end_date', 'cancel_date', 'birth_date');
+    $date = array('start_date', 'end_date', 'cancel_date');
     foreach($date as $d){
       if(!empty($row[$d])){
         $row[$d] = CRM_Utils_Date::customFormat($row[$d], $this->_config->dateformatFull);
@@ -437,18 +431,10 @@ SUM(total_amount) as total_amount
       $sql = "SELECT receive_date FROM civicrm_contribution WHERE contribution_status_id = 1 AND contribution_recur_id = {$row['id']} ORDER BY receive_date DESC";
       $row['last_receive_date'] = CRM_Core_DAO::singleValueQuery($sql, CRM_Core_DAO::$_nullArray);
     }
-    if(!empty($row['frequency_unit'])){
-      $row['frequency_unit'] = ts($row['frequency_unit']);
-    }
-    if(!empty($row['gender_id'])){
-      $row['gender_id'] = $this->_gender[$row['gender_id']];
-    }
     $sql = "SELECT contribution_status_id FROM civicrm_contribution WHERE contribution_recur_id = {$row['id']} ORDER BY receive_date DESC LIMIT 1";
     $row['last_status_id'] = CRM_Core_DAO::singleValueQuery($sql, CRM_Core_DAO::$_nullArray);
     $row['last_status_id'] = $this->_cstatus[$row['last_status_id']];
-    if(isset($row['action'])){
-      $row['action'] = '<a href="'.CRM_Utils_System::url('civicrm/contact/view/contributionrecur', "reset=1&id={$row['id']}&cid={$row['contact_id']}").'" target="_blank">'.ts('View').'</a>';
-    }
+    $row['action'] = '<a href="'.CRM_Utils_System::url('civicrm/contact/view/contributionrecur', "reset=1&id={$row['id']}&cid={$row['contact_id']}").'" target="_blank">'.ts('View').'</a>';
   }
 
   /**
