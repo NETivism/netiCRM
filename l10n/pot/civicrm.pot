@@ -44919,5 +44919,5 @@ msgstr ""
 
 #: templates/CRM/Contribute/Form/Contribution/Confirm.tpl
 #: templates/CRM/Event/Form/Registration/Confirm.tpl
-msgid "Order submitted. You can create another <a href="%1">here</a>."
+msgid "Order submitted. You can create another <a href=\"%1\">here</a>."
 msgstr ""
