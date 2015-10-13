@@ -44908,3 +44908,7 @@ msgstr ""
 #: templates/CRM/Contribute/Form/Contribution/Main.tpl
 msgid "To change your personal info, go My Account page for further setting."
 msgstr ""
+
+#: CRM/Event/BAO/Participant.php
+msgid "Participant Note"
+msgstr ""

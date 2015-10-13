@@ -431,26 +431,26 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
     $this->_location_types = array(ts('Primary')) + $this->_location_types;
 
     $contactTypes = !empty($contactTypes) ? array('Contact' => ts('Contacts')) + $contactTypes : array();
-    $sel1 = array('' => '- select -') + $contactTypes;
+    $sel1 = array('' => ts('- select -')) + $contactTypes;
 
     if (CRM_Core_Permission::access('Quest')) {
-      $sel1['Student'] = 'Students';
+      $sel1['Student'] = ts('Students');
     }
 
     if (!empty($activityFields)) {
-      $sel1['Activity'] = 'Activity';
+      $sel1['Activity'] = ts('Activity');
     }
 
     if (CRM_Core_Permission::access('CiviEvent')) {
-      $sel1['Participant'] = 'Participants';
+      $sel1['Participant'] = ts('Participants');
     }
 
     if (!empty($contribFields)) {
-      $sel1['Contribution'] = 'Contributions';
+      $sel1['Contribution'] = ts('Contributions');
     }
 
     if (!empty($membershipFields)) {
-      $sel1['Membership'] = 'Membership';
+      $sel1['Membership'] = ts('Membership');
     }
 
     foreach ($sel1 as $key => $sel) {

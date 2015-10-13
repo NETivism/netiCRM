@@ -644,25 +644,29 @@ GROUP BY  participant.event_id
       require_once 'CRM/Core/DAO/Note.php';
       $tmpFields = CRM_Event_DAO_Participant::import();
 
-      $note = array('participant_note' => array('title' => 'Participant Note',
-          'name' => 'participant_note',
-          'headerPattern' => '/(participant.)?note$/i',
-        ));
+      $note = array('participant_note' => array(
+        'title' => ts('Participant Note'),
+        'name' => 'participant_note',
+        'headerPattern' => '/(participant.)?note$/i',
+      ));
 
-      $participantStatus = array('participant_status' => array('title' => 'Participant Status',
-          'name' => 'participant_status',
-          'data_type' => CRM_Utils_Type::T_STRING,
-        ));
+      $participantStatus = array('participant_status' => array(
+        'title' => ts('Participant Status'),
+        'name' => 'participant_status',
+        'data_type' => CRM_Utils_Type::T_STRING,
+      ));
 
-      $participantRole = array('participant_role' => array('title' => 'Participant Role',
-          'name' => 'participant_role',
-          'data_type' => CRM_Utils_Type::T_STRING,
-        ));
+      $participantRole = array('participant_role' => array(
+        'title' => ts('Participant Role'),
+        'name' => 'participant_role',
+        'data_type' => CRM_Utils_Type::T_STRING,
+      ));
 
-      $eventType = array('event_type' => array('title' => 'Event Type',
-          'name' => 'event_type',
-          'data_type' => CRM_Utils_Type::T_STRING,
-        ));
+      $eventType = array('event_type' => array(
+        'title' => ts('Event Type'),
+        'name' => 'event_type',
+        'data_type' => CRM_Utils_Type::T_STRING,
+      ));
       $tmpConatctField = array();
       if (!$onlyParticipant) {
         require_once 'CRM/Contact/BAO/Contact.php';
