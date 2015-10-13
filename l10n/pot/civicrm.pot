@@ -44912,3 +44912,7 @@ msgstr ""
 #: CRM/Event/BAO/Participant.php
 msgid "Participant Note"
 msgstr ""
+
+#: CRM/Contribute/DAO/Contribution.php
+msgid "Contribution Page ID"
+msgstr ""
