@@ -1,7 +1,7 @@
+sudo: false
 language: php
 
 php:
-  - 5.3
   - 5.4
   - 5.5
   - 5.6
@@ -10,36 +10,40 @@ env:
   - RUNPORT=8080
 
 mysql:
-  database: netivism_neticrm_build
+  database: neticrmci
   username: root
   encoding: utf8
 
 git:
   submodules: false
 
+addons:
+  apt:
+    packages:
+    - php5-cgi
+    - php5-fpm
+    - php5-mysql
+    - php5-curl
+    - php5-gd
+    - net-tools
+
 before_install:
-  - sudo apt-get update
   - git submodule init
   - git submodule update --remote
 
-  # casperjs
-  - git clone git://github.com/n1k0/casperjs.git
-  - cd casperjs
-  - export PATH=$PATH:`pwd`/bin
-  - cd -
-
 install:
-  # install php packages required for running a web server from drush on php 5.4
-  - sudo apt-get install -y --force-yes php5-cgi php5-fpm php5-mysql php5-curl php5-gd
+  # casperjs
+  - wget https://github.com/n1k0/casperjs/archive/master.tar.gz -O /tmp/casper.tar.gz
+  - tar -xf /tmp/casper.tar.gz
+  - export PATH="$PWD/casperjs-master/bin:$PATH"
 
   # add composer's global bin directory to the path
   # see: https://github.com/drush-ops/drush#install---composer
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
 
   # install drush globally
-  - composer global require drush/drush:6.5.0
+  - composer global require drush/drush:7.0.0
 
-before_script:
   # php environment
   - echo 'date.timezone="Asia/Taipei"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
   - echo 'error_reporting=E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED & ~E_WARNING' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
@@ -50,25 +54,33 @@ before_script:
   - ln -s $(readlink -e $(cd -)) civicrm
 
   # create new site, stubbing sendmail path with true to prevent delivery errors and manually resolving drush path
-  - mysql -e 'create database netivism_neticrm_build CHARACTER SET utf8 COLLATE utf8_general_ci'
-  - php -d sendmail_path=`which true` ~/.composer/vendor/bin/drush.php --yes core-quick-drupal --core=drupal --no-server --db-url=mysql://root:@127.0.0.1/netivism_neticrm_build --account-pass=123456 --site-name=netiCRM --enable=transliteration netivism_neticrm_build 
+  - mysql -e 'create database neticrmci CHARACTER SET utf8 COLLATE utf8_general_ci'
+  - php -d sendmail_path=`which true` ~/.composer/vendor/bin/drush.php --yes core-quick-drupal --core=drupal --no-server --db-url=mysql://root:@127.0.0.1/neticrmci --account-pass=123456 --site-name=netiCRM --enable=transliteration neticrmci 
 
   # reference and enable civicrm in build site
-  - ln -s $(readlink -e $(cd -)) netivism_neticrm_build/$(ls netivism_neticrm_build -1 | tail -1)/sites/all/modules/civicrm
-  - cd netivism_neticrm_build/$(ls netivism_neticrm_build -1 | tail -1)
+  - ln -s $(readlink -e $(cd -)) neticrmci/$(ls neticrmci -1 | tail -1)/sites/all/modules/civicrm
+  - cd neticrmci/$(ls neticrmci -1 | tail -1)
+  - export DRUPAL_ROOT=$PWD
   - chmod -R 777 sites/default
   - drush --yes pm-download simpletest
   - drush --yes pm-enable civicrm simpletest
-  - drush --yes pm-enable civicrm_allpay civicrm_demo 
+  - drush --yes pm-enable civicrm_allpay civicrm_neweb
+  - drush --yes pm-enable civicrm_demo
   - drush --yes variable-set error_level 0
-
   # start a web server on port 8080, run in the background; wait for initialization
   - drush runserver 127.0.0.1:8080 >> /dev/null &
   - until netstat -an 2>/dev/null | grep '8080.*LISTEN'; do true; done
 
+before_script:
+  - export CIVICRM_TEST_DSN=mysql://root@127.0.0.1/neticrmci
+  - echo 'date_default_timezone_set("Asia/Taipei");' >> $DRUPAL_ROOT/sites/default/settings.php
+  - echo 'ini_set("error_reporting", E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED & ~E_WARNING);' >> $DRUPAL_ROOT/sites/default/settings.php
+
 script:
-  - casperjs test sites/all/modules/civicrm/tests/casperjs/pages.js
-  - drush test-run 'Travis-CI Drupal Module Example' --uri=http://127.0.0.1:8080
+  - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/ALLPAYTest.php
+  - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/NewebTest.php
+  - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/pages.js
+  #- drush test-run 'Travis-CI Drupal Module Example' --uri=http://127.0.0.1:8080
 
 notifications:
   email:
