@@ -2,7 +2,7 @@
 /**
  * Update contact greeting
  */
-function run_contact_greeting_update( ){
+function run_contact_greeting_update($limit = 100){
   date_default_timezone_set("Asia/Taipei");
   require_once 'CRM/Utils/Request.php';
   require_once 'CRM/Core/PseudoConstant.php';
@@ -52,7 +52,11 @@ function run_contact_greeting_update( ){
       $filterContactFldIds = array();
       if ( $idFldName ) {
         $sql = "SELECT DISTINCT id, $idFldName FROM civicrm_contact WHERE contact_type = %1 AND ( {$idFldName} IS NULL OR ( {$idFldName} IS NOT NULL AND {$displayFldName} IS NULL ) )";
-        $dao = CRM_Core_DAO::executeQuery( $sql, array( 1 => array( $contactType, 'String' ) ) );
+        if($limit > 0){
+          $sql .= ' LIMIT %2';
+        }
+
+        $dao = CRM_Core_DAO::executeQuery( $sql, array( 1 => array( $contactType, 'String' ) , 2 => array($limit, 'Integer')) );
         while ( $dao->fetch( ) ) {
           $filterContactFldIds[$dao->id] = $dao->$idFldName;
         }
