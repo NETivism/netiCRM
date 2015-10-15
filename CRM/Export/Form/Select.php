@@ -339,7 +339,7 @@ FROM   {$this->_componentTable}
 
     $mappings = CRM_Core_BAO_Mapping::getMappings($mappingTypeId);
     if (!empty($mappings)) {
-      $this->add('select', 'mapping', ts('Use Saved Field Mapping'), array('' => '-select-') + $mappings);
+      $this->add('select', 'mapping', ts('Use Saved Field Mapping'), array('' => ts('-select-')) + $mappings);
     }
   }
 }

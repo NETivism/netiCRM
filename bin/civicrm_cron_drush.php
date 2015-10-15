@@ -49,7 +49,7 @@ if($user->uid){
 
     // process greeting update
     'run_contact_greeting_update' => array(
-      'frequency' => '604800', // strtotime format
+      'frequency' => '21600', // strtotime format
       'last' => 0, // unix timestamp
     ),
 
@@ -61,6 +61,9 @@ if($user->uid){
   );
   if(file_exists($schedule_file)){
     $s = json_decode(file_get_contents($schedule_file), TRUE);
+    foreach($s as $k => $v){
+      unset($s[$k]['frequency']);  
+    }
     $schedule = array_merge($schedule, $s);
   }
 
