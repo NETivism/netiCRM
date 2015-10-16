@@ -9,7 +9,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2015-10-15 04:58+0000\n"
+"PO-Revision-Date: 2015-10-16 08:26+0000\n"
 "Last-Translator: 張書懷 <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -27918,7 +27918,7 @@ msgstr "總計"
 
 #: templates/CRM/Contribute/Form/Contribution/Confirm.tpl
 msgid "I want to contribute this amount every %1 %2(s) for %3 installments."
-msgstr "我每%1 %2想捐獻這個金額，總共捐獻%3期。"
+msgstr "我想要每%1 %2捐款此金額，總共捐款%3期。"
 
 #: templates/CRM/Contribute/Form/Contribution/Confirm.tpl
 msgid "I want to contribute this amount every %1 %2(s)."
@@ -27939,7 +27939,7 @@ msgstr "我每%1 %2認捐這個金額，一共%3期。"
 #: templates/CRM/Contribute/Form/Contribution/Confirm.tpl
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid "I pledge to contribute this amount every %2 for %3 installments."
-msgstr "我想要每%2捐款此金額，總共捐款%3期。"
+msgstr "我想要每%2認捐此金額，總共捐款%3期。"
 
 #: templates/CRM/Contribute/Form/Contribution/Confirm.tpl
 msgid ""
