@@ -36,7 +36,7 @@ casper.test.begin('Event register page test ...',4,function(test){
     },true);
     this.capture("picture/event_register_1_1.png");
     test.assertField('email-5', email);
-    this.thenClick('.form-submit');
+    this.thenClick('#_qf_Register_upload-bottom');
   });
 
   casper.waitForUrl('_qf_ThankYou_display',function(){
@@ -68,7 +68,7 @@ casper.test.begin('Event register page test ...',7,function(test){
     },true);
     this.capture("picture/event_register_2_1.png");
     test.assertField('email-5', email);
-    this.thenClick('.form-submit');
+    this.thenClick('#_qf_Register_upload-bottom');
   });
 
   casper.then(function(){
@@ -104,7 +104,7 @@ casper.test.begin('Event register page test ...',10,function(test){
     },true);
     this.capture("picture/event_register_3_1.png");
     test.assertField('email-5', email);
-    this.thenClick('.form-submit');
+    this.thenClick('#_qf_Register_upload-bottom');
   });
 
   casper.then(function(){
@@ -124,7 +124,7 @@ casper.test.begin('Event register page test ...',10,function(test){
     },true);
     this.capture("picture/event_register_3_4.png");
     test.assertField('email-5', email);
-    this.thenClick('.form-submit');
+    this.thenClick('#_qf_Register_upload-bottom');
   });
 
   casper.then(function(){
@@ -162,7 +162,7 @@ casper.test.begin('Event register page test ...',9,function(test){
     },true);
     this.capture("picture/event_register_4_1.png");
     test.assertField('email-5', email);
-    this.thenClick('.form-submit');
+    this.thenClick('#_qf_Register_upload-bottom');
   });
 
   casper.then(function(){
@@ -213,7 +213,7 @@ casper.test.begin('Event register page test ...',12,function(test){
     },true);
     this.capture("picture/event_register_5_1.png");
     test.assertField('email-5', email);
-    this.thenClick('.form-submit');
+    this.thenClick('#_qf_Register_upload-bottom');
   });
 
   casper.then(function(){
@@ -240,7 +240,7 @@ casper.test.begin('Event register page test ...',12,function(test){
     },true);
     this.capture("picture/event_register_4_4.png");
     test.assertField('email-5', email);
-    this.thenClick('.form-submit');
+    this.thenClick('#_qf_Register_upload-bottom');
     
   });
 
