@@ -1,4 +1,4 @@
-<div class="messages status">
+<div class="messages status msg-event-full">
   <div class="icon inform-icon"></div>
   {if $eventFullText}
     {$eventFullText} <br />

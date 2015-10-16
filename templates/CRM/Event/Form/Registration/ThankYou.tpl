@@ -90,7 +90,7 @@
                 <p>{ts 1=$email}A registration confirmation email will be sent to %1 once the transaction is processed successfully.{/ts}</p>
             {/if}
         {else}
-            <p>{ts}Your registration has been processed successfully. Please print this page for your records.{/ts}</p>
+            <p class="msg-register-success">{ts}Your registration has been processed successfully. Please print this page for your records.{/ts}</p>
             {if $is_email_confirm}
                 <p>{ts 1=$email}A registration confirmation email has also been sent to %1{/ts}</p>
             {/if}
@@ -288,13 +288,11 @@
         </div>
     {/if}
     
-    <div class="action-link section event_info_link-section float-right">
+    <div class="action-link section event_info_link-section">
         <a href="{crmURL p='civicrm/event/info' q="reset=1&id=`$event.id`"}">&raquo; {ts 1=$event.event_title}Back to "%1" event information{/ts}</a>
     </div>
 
     {if $event.is_public }
         {include file="CRM/Event/Page/iCalLinks.tpl"}
     {/if} 
-
-    <div class="clear"></div>
 </div>
