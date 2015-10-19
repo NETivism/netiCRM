@@ -36,7 +36,6 @@ casper.test.begin('Event register page test ...',4,function(test){
     },true);
     this.capture("picture/event_register_1_1.png");
     test.assertField('email-5', email);
-    this.thenClick('#_qf_Register_upload-bottom');
   });
 
   casper.waitForUrl('_qf_ThankYou_display',function(){
@@ -68,7 +67,6 @@ casper.test.begin('Event register page test ...',7,function(test){
     },true);
     this.capture("picture/event_register_2_1.png");
     test.assertField('email-5', email);
-    this.thenClick('#_qf_Register_upload-bottom');
   });
 
   casper.then(function(){
@@ -93,7 +91,7 @@ casper.test.begin('Event register page test ...',10,function(test){
   casper.start(item.url_prefix + '/civicrm/event/register?reset=1&id=3', function() {
     var page_title = getPageTitle(item.event_name_3);
     test.assertTitle(page_title,'Event register page: page title is OK. (' + page_title + ')');
-    this.capture("event_register_3_0.png");
+    this.capture("picture/event_register_3_0.png");
   });
 
   casper.then(function(){
@@ -104,7 +102,6 @@ casper.test.begin('Event register page test ...',10,function(test){
     },true);
     this.capture("picture/event_register_3_1.png");
     test.assertField('email-5', email);
-    this.thenClick('#_qf_Register_upload-bottom');
   });
 
   casper.then(function(){
@@ -124,7 +121,6 @@ casper.test.begin('Event register page test ...',10,function(test){
     },true);
     this.capture("picture/event_register_3_4.png");
     test.assertField('email-5', email);
-    this.thenClick('#_qf_Register_upload-bottom');
   });
 
   casper.then(function(){
@@ -150,7 +146,7 @@ casper.test.begin('Event register page test ...',9,function(test){
   casper.start(item.url_prefix + '/civicrm/event/register?reset=1&id=4', function() {
     var page_title = getPageTitle(item.event_name_4);
     test.assertTitle(page_title,'Event register page: page title is OK. (' + page_title + ')');
-    this.capture("event_register_4_0.png");
+    this.capture("picture/event_register_4_0.png");
   });
 
   // First register.
@@ -162,7 +158,6 @@ casper.test.begin('Event register page test ...',9,function(test){
     },true);
     this.capture("picture/event_register_4_1.png");
     test.assertField('email-5', email);
-    this.thenClick('#_qf_Register_upload-bottom');
   });
 
   casper.then(function(){
@@ -201,7 +196,7 @@ casper.test.begin('Event register page test ...',12,function(test){
   casper.start(item.url_prefix + '/civicrm/event/register?reset=1&id=5', function() {
     var page_title = getPageTitle(item.event_name_5);
     test.assertTitle(page_title,'Event register page: page title is OK. (' + page_title + ')');
-    this.capture("event_register_5_0.png");
+    this.capture("picture/event_register_5_0.png");
   });
 
   // First register.
@@ -213,7 +208,6 @@ casper.test.begin('Event register page test ...',12,function(test){
     },true);
     this.capture("picture/event_register_5_1.png");
     test.assertField('email-5', email);
-    this.thenClick('#_qf_Register_upload-bottom');
   });
 
   casper.then(function(){
@@ -238,16 +232,15 @@ casper.test.begin('Event register page test ...',12,function(test){
     this.fill('#Register',{
       'email-5': email
     },true);
-    this.capture("picture/event_register_4_4.png");
+    this.capture("picture/event_register_5_4.png");
     test.assertField('email-5', email);
-    this.thenClick('#_qf_Register_upload-bottom');
     
   });
 
   casper.then(function(){
     var page_title = getPageTitle(item.event_name_5);
     test.assertTitle(page_title,'Event register page: page title is OK. (' + page_title + ')');
-    this.capture("picture/event_register_3_5.png");
+    this.capture("picture/event_register_5_5.png");
     test.assertExists('#help p');
     test.assertSelectorHasText('#help p','一旦您通過審核，我們將會傳一封電子郵件確認信到您的信箱，您可以點選確認信中的連結網址以完成報名程序。');
   });
