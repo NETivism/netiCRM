@@ -104,7 +104,7 @@ casper.test.begin('Event register page test ...',10,function(test){
     test.assertField('email-5', email);
   });
 
-  casper.then(function(){
+  casper.waitForUrl('_qf_ThankYou_display',function(){
     var page_title = getPageTitle(item.event_name_3);
     test.assertTitle(page_title,'Event register page: page title is OK. (' + page_title + ')');
     this.capture("picture/event_register_3_2.png");
@@ -123,7 +123,7 @@ casper.test.begin('Event register page test ...',10,function(test){
     test.assertField('email-5', email);
   });
 
-  casper.then(function(){
+  casper.waitForUrl('_qf_ThankYou_display',function(){
     var page_title = getPageTitle(item.event_name_3);
     test.assertTitle(page_title,'Event register page: page title is OK. (' + page_title + ')');
     this.capture("picture/event_register_3_5.png");
@@ -160,7 +160,7 @@ casper.test.begin('Event register page test ...',9,function(test){
     test.assertField('email-5', email);
   });
 
-  casper.then(function(){
+  casper.waitForUrl('_qf_ThankYou_display',function(){
     var page_title = getPageTitle(item.event_name_4);
     // Checked-1
     test.assertTitle(page_title,'Event register page: page title is OK. (' + page_title + ')');
@@ -210,7 +210,7 @@ casper.test.begin('Event register page test ...',12,function(test){
     test.assertField('email-5', email);
   });
 
-  casper.then(function(){
+  casper.waitForUrl('_qf_ThankYou_display',function(){
     var page_title = getPageTitle(item.event_name_5);
     // Checked-1
     test.assertTitle(page_title,'Event register page: page title is OK. (' + page_title + ')');
@@ -237,7 +237,7 @@ casper.test.begin('Event register page test ...',12,function(test){
     
   });
 
-  casper.then(function(){
+  casper.waitForUrl('_qf_ThankYou_display',function(){
     var page_title = getPageTitle(item.event_name_5);
     test.assertTitle(page_title,'Event register page: page title is OK. (' + page_title + ')');
     this.capture("picture/event_register_5_5.png");
