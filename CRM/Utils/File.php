@@ -393,26 +393,19 @@ HTACCESS;
     static $_path = NULL;
     if (!$_path) {
       if ($templateCompileDir == NULL) {
-        $config = &CRM_Core_Config::singleton();
-        if ($config->userFramework == 'Drupal' && function_exists('file_directory_path')) {
-          $templateCompileDir = file_directory_path() . '/civicrm/template_c';
-        }
-        else {
-          $templateCompileDir = $config->templateCompileDir;
-        }
+        $config = CRM_Core_Config::singleton();
+        $templateCompileDir = $config->templateCompileDir;
       }
-
       $path = dirname($templateCompileDir);
-
       //this fix is to avoid creation of upload dirs inside templates_c directory
       $checkPath = explode(DIRECTORY_SEPARATOR, $path);
-
-      $cnt = count($checkPath) - 1;
-      if ($checkPath[$cnt] == 'templates_c') {
-        unset($checkPath[$cnt]);
-        $path = implode(DIRECTORY_SEPARATOR, $checkPath);
+      $unset = array(php_sapi_name(), 'templates_c');
+      foreach($checkPath as $k => $c){
+        if (in_array($c, $unset)) {
+          unset($checkPath[$k]);
+        }
       }
-
+      $path = implode(DIRECTORY_SEPARATOR, $checkPath);
       $_path = CRM_Utils_File::addTrailingSlash($path);
     }
     return $_path;

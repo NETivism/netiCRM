@@ -113,7 +113,12 @@ class CRM_Core_Config_Defaults {
     $config = CRM_Core_Config::singleton();
 
     $scheme = CRM_Utils_System::isSSL() ? 'https://' : 'http://';
-    $baseURL = !empty($_SERVER['HTTP_HOST']) ? $scheme.$_SERVER['HTTP_HOST'] : $config->userFrameworkBaseURL;
+    if(!empty($_SERVER['HTTP_HOST'])){
+      $baseURL = CRM_Utils_File::addTrailingSlash($scheme.$_SERVER['HTTP_HOST'], '/');
+    }
+    else{
+      $baseURL = $config->userFrameworkBaseURL;
+    }
 
     // CRM-6216: Drupal’s $baseURL might have a trailing LANGUAGE_NEGOTIATION_PATH,
     // which needs to be stripped before we start basing ResourceURL on it
@@ -128,7 +133,7 @@ class CRM_Core_Config_Defaults {
 
     $baseCMSURL = CRM_Utils_System::baseCMSURL();
     if ($config->templateCompileDir) {
-      $path = CRM_Utils_File::baseFilePath($config->templateCompileDir);
+      $path = CRM_Utils_File::baseFilePath(CRM_Utils_File::baseFilePath($config->templateCompileDir));
     }
 
     //set defaults if not set in db
@@ -154,9 +159,7 @@ class CRM_Core_Config_Defaults {
         global $civicrm_root;
         require_once "CRM/Utils/System/Drupal.php";
         $cmsPath = CRM_Utils_System_Drupal::cmsRootPath();
-        $defaults['userFrameworkResourceURL'] = $baseURL . str_replace("$cmsPath/", '',
-          str_replace('\\', '/', $civicrm_root)
-        );
+        $defaults['userFrameworkResourceURL'] = $baseURL . str_replace("$cmsPath/", '', str_replace('\\', '/', $civicrm_root));
 
         if (strpos($civicrm_root,
             DIRECTORY_SEPARATOR . 'sites' .
