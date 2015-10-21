@@ -261,13 +261,16 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
 
     if (defined('CIVICRM_UF_BASEURL')) {
       $this->userFrameworkBaseURL = CRM_Utils_File::addTrailingSlash(CIVICRM_UF_BASEURL, '/');
-      
-      //format url for language negotiation, CRM-7803
-      $this->userFrameworkBaseURL = CRM_Utils_System::languageNegotiationURL($this->userFrameworkBaseURL);
+    }
+    else{
+      $https = (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on') ? 'https://' : 'http://';
+      $this->userFrameworkBaseURL = $https.$_SERVER['HTTP_HOST'].'/';
+    }
+    //format url for language negotiation, CRM-7803
+    $this->userFrameworkBaseURL = CRM_Utils_System::languageNegotiationURL($this->userFrameworkBaseURL);
 
-      if (CRM_Utils_System::isSSL()) {
-        $this->userFrameworkBaseURL = str_replace('http://', 'https://', $this->userFrameworkBaseURL);
-      }
+    if (CRM_Utils_System::isSSL()) {
+      $this->userFrameworkBaseURL = str_replace('http://', 'https://', $this->userFrameworkBaseURL);
     }
 
     // this is dynamically figured out in the civicrm.settings.php file
@@ -429,7 +432,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
       elseif ($key == 'lcMessages') {
         // reset the templateCompileDir to locale-specific and make sure it exists
         $this->templateCompileDir = str_replace('/' . $this->lcMessages . '/', '/', $this->templateCompileDir);
-        $this->templateCompileDir .= CRM_Utils_File::addTrailingSlash($value);
+        $this->templateCompileDir .= CRM_Utils_File::addTrailingSlash($value, '/');
         CRM_Utils_File::createDir($this->templateCompileDir);
       }
 

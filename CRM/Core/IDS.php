@@ -108,6 +108,7 @@ class CRM_Core_IDS {
     exceptions[]        = thankyou_text
     exceptions[]        = thankyou_footer
     exceptions[]        = thankyou_footer_text
+    exceptions[]        = receipt_text
     exceptions[]        = new_text
     exceptions[]        = renewal_text
     exceptions[]        = help_pre

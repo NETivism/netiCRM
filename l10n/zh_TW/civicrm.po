@@ -9,7 +9,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2015-09-27 11:34+0000\n"
+"PO-Revision-Date: 2015-10-16 08:26+0000\n"
 "Last-Translator: 張書懷 <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -10727,7 +10727,7 @@ msgstr "金額欄位為必填。"
 
 #: CRM/Contribute/Form/Contribution/Main.php
 msgid "Contribution amount must be at least %1"
-msgstr "捐款金額要大於 %1"
+msgstr "捐款金額要大於等於 %1"
 
 #: CRM/Contribute/Form/Contribution/Main.php
 msgid "Contribution amount cannot be more than %1."
@@ -27918,18 +27918,18 @@ msgstr "總計"
 
 #: templates/CRM/Contribute/Form/Contribution/Confirm.tpl
 msgid "I want to contribute this amount every %1 %2(s) for %3 installments."
-msgstr "我每%1 %2想捐獻這個金額，總共捐獻%3期。"
+msgstr "我想要每%1 %2捐款此金額，總共捐款%3期。"
 
 #: templates/CRM/Contribute/Form/Contribution/Confirm.tpl
 msgid "I want to contribute this amount every %1 %2(s)."
-msgstr "我在每%1 %2時捐獻此金額。"
+msgstr "我每隔%1 %2捐款此金額。"
 
 #: templates/CRM/Contribute/Form/Contribution/Confirm.tpl
 msgid ""
 "Your initial contribution will be processed once you complete the "
 "confirmation step. You will be able to modify or cancel future contributions"
 " at any time by logging in to your account."
-msgstr "您一旦完成確認的步驟，您的初始捐款就會被處理。您登入之後，將可在任何時間修改或取消日後的定期的捐款。"
+msgstr "您一旦完成確認的步驟，第一期捐款就會執行。您登入之後，將可在任何時間修改或取消日後的定期的捐款。"
 
 #: templates/CRM/Contribute/Form/Contribution/Confirm.tpl
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
@@ -27939,7 +27939,7 @@ msgstr "我每%1 %2認捐這個金額，一共%3期。"
 #: templates/CRM/Contribute/Form/Contribution/Confirm.tpl
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid "I pledge to contribute this amount every %2 for %3 installments."
-msgstr "我每%2願意捐獻此金額，總共捐獻%3期。"
+msgstr "我想要每%2認捐此金額，總共捐款%3期。"
 
 #: templates/CRM/Contribute/Form/Contribution/Confirm.tpl
 msgid ""
@@ -38847,7 +38847,7 @@ msgstr "列出一個 / 全部聯絡人的詳細捐款資料。捐款總結報表
 
 #: xml/templates/civicrm_data.tpl xml/templates/civicrm_navigation.tpl
 msgid "Donation Summary Report (Repeat)"
-msgstr "捐贈摘要報表（重複）"
+msgstr "捐款摘要報表（重複）"
 
 #: xml/templates/civicrm_data.tpl
 msgid ""
@@ -39640,7 +39640,7 @@ msgstr "捐款提醒：可能有重複的聯絡人"
 #: xml/templates/message_templates/membership_offline_receipt_text.tpl
 #: xml/templates/message_templates/membership_online_receipt_text.tpl
 msgid "Please print this receipt for your records."
-msgstr "請保存此信件，以做存查。"
+msgstr "請保存此信件，作為存查之用。"
 
 #: xml/templates/message_templates/contribution_online_receipt_html.tpl
 #: xml/templates/message_templates/event_offline_receipt_html.tpl
@@ -39649,7 +39649,7 @@ msgstr "請保存此信件，以做存查。"
 #: xml/templates/message_templates/event_online_receipt_text.tpl
 #: xml/templates/message_templates/membership_online_receipt_html.tpl
 msgid "Please print this confirmation for your records."
-msgstr "請保存此報名確認信，作為存查之用。"
+msgstr "請保存此信件，作為存查之用。"
 
 #: xml/templates/message_templates/contribution_online_receipt_html.tpl
 #: xml/templates/message_templates/membership_online_receipt_html.tpl
@@ -44896,3 +44896,23 @@ msgstr "您現在登入中，系統自動帶入一些欄位的資料並鎖住，
 #: templates/CRM/Contribute/Form/Contribution/Main.tpl
 msgid "To change your personal info, go My Account page for further setting."
 msgstr "您現在登入中，系統已自動帶入您的個資。若要更改你的個資，請到「我的帳號」頁面做進一步的修改。"
+
+#: CRM/Event/BAO/Participant.php
+msgid "Participant Note"
+msgstr ""
+
+#: CRM/Contribute/DAO/Contribution.php
+msgid "Contribution Page ID"
+msgstr ""
+
+#: templates/CRM/Contribute/Form/Contribution/Confirm.tpl
+#: templates/CRM/Event/Form/Registration/Confirm.tpl
+msgid "Order submitted. You can create another <a href=\"%1\">here</a>."
+msgstr "表單已提交，無法重覆提交。你可以按<a href=\"%1\">這裡</a>重新提交一份。"
+
+#: CRM/Contact/Form/Task/PickProfile.php
+msgid ""
+"Batch update requires that all selected contacts be the same type (e.g. all "
+"Individuals OR all Organizations...). Please modify your selected contacts "
+"and try again."
+msgstr ""
