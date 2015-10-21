@@ -42,23 +42,23 @@ do_merge(){
   git checkout ${VERSION_PREFIX}develop
 }
 
-## auto fetch transifex translations
-#if [ -d $CALLEDPATH/../../l10n/$LANGUAGE ]; then
-#  if [ ! -d $CALLEDPATH/../../l10n/$LANGUAGE/LC_MESSAGES ]; then
-#    mkdir $CALLEDPATH/../../l10n/$LANGUAGE/LC_MESSAGES
-#  fi
-#  read -p "Enter transifex username: " TRANSIFEXUSER
-#  read -p "Enter transifex password: " TRANSIFEXPASS
-#  cd $CALLEDPATH/../../l10n/$LANGUAGE/
-#  curl -L --user $TRANSIFEXUSER:$TRANSIFEXPASS -X GET "https://www.transifex.com/api/2/project/neticrm/resource/neticrmpot/translation/$LANGUAGE/?mode=default&file" -o civicrm.po
-#  msgfmt $CALLEDPATH/../../l10n/$LANGUAGE/civicrm.po -o $CALLEDPATH/../../l10n/$LANGUAGE/LC_MESSAGES/civicrm.mo
-#fi
-#
-## gen code for new translations 
-#if [ -d $CALLEDPATH/../../xml ]; then
-#  cd $CALLEDPATH/../../xml
-#  php GenCode.php
-#fi
+# auto fetch transifex translations
+if [ -d $CALLEDPATH/../../l10n/$LANGUAGE ]; then
+  if [ ! -d $CALLEDPATH/../../l10n/$LANGUAGE/LC_MESSAGES ]; then
+    mkdir $CALLEDPATH/../../l10n/$LANGUAGE/LC_MESSAGES
+  fi
+  read -p "Enter transifex username: " TRANSIFEXUSER
+  read -p "Enter transifex password: " TRANSIFEXPASS
+  cd $CALLEDPATH/../../l10n/$LANGUAGE/
+  curl -L --user $TRANSIFEXUSER:$TRANSIFEXPASS -X GET "https://www.transifex.com/api/2/project/neticrm/resource/neticrmpot/translation/$LANGUAGE/?mode=default&file" -o civicrm.po
+  msgfmt $CALLEDPATH/../../l10n/$LANGUAGE/civicrm.po -o $CALLEDPATH/../../l10n/$LANGUAGE/LC_MESSAGES/civicrm.mo
+fi
+
+# gen code for new translations 
+if [ -d $CALLEDPATH/../../xml ]; then
+  cd $CALLEDPATH/../../xml
+  php GenCode.php
+fi
 
 # verify if we have anything to commit
 echo -e "Done.\n\n"
