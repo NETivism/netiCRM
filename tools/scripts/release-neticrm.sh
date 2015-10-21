@@ -62,7 +62,10 @@ fi
 
 # verify if we have anything to commit
 echo -e "Done.\n\n"
+
 echo "Git status checking ..."
+cd $CIVICRMPATH
+git commit civicrm-version.txt -m "Update to lastest version tag of git"
 NEED_COMMIT=`git status --porcelain | grep "^ M"`
 
 if [ -n "$NEED_COMMIT" ]; then
