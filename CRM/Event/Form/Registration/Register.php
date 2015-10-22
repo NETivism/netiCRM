@@ -189,7 +189,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
     if (CRM_Utils_Array::value('is_pay_later', $this->_values['event']) && !is_array($this->_paymentProcessors)) {
       $this->_defaults['is_pay_later'] = 1;
     }
-    if(count($this->_paymentProcessors == 1)){
+    if(count($this->_paymentProcessors) == 1){
       $pid = key($this->_paymentProcessors);
       $this->_defaults['payment_processor'] = $pid;
     }
