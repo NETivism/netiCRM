@@ -3,6 +3,7 @@
   font-size: 13px;
   position: relative;
   display: inline-block;
+  min-width: 100px;
   zoom: 1;
   *display: inline;
 }
@@ -11,6 +12,7 @@
   border: 1px solid #aaa;
   border-top: 0;
   position: absolute;
+  min-width: 98px;
   top: 29px;
   left: 0;
   -webkit-box-shadow: 0 4px 5px rgba(0,0,0,.15);
@@ -114,6 +116,7 @@
   border: 1px solid #aaa;
   font-family: sans-serif;
   font-size: 1em;
+  min-width: 85px;
 }
 .chzn-container-single .chzn-drop {
   -webkit-border-radius: 0 0 4px 4px;
@@ -394,3 +397,4 @@
   direction: rtl;
 }
 /* @end */
+
