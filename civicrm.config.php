@@ -47,7 +47,7 @@ function civicrm_conf_init() {
      * above us, so use that
      */
     if(php_sapi_name() == 'cli' && !empty($_SERVER['PWD'])){
-      $sfile = $_SERVER['PWD'].'/'.$_SERVER['SCRIPT_FILE'];
+      $sfile = $_SERVER['PWD'].'/'.$_SERVER['SCRIPT_FILENAME'];
       $scriptFile = preg_replace('/sites\/([^\/]+)\/modules\/civicrm\/.*$/', 'sites/whatever', $sfile);
       preg_match('/(.*)(sites\/[^\/]+\/modules\/civicrm)\/.*$/', $sfile, $matches);
     }

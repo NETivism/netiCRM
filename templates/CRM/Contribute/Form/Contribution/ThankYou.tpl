@@ -89,9 +89,9 @@
         {if $is_email_receipt}
           <div>
           {if $onBehalfEmail AND ($onBehalfEmail neq $email)}
-            {ts 1=$email 2=$onBehalfEmail}Remider email has been sent to %1 and to %2.{/ts}
+            <!-- {ts 1=$email 2=$onBehalfEmail}Remider email has been sent to %1 and to %2.{/ts} -->
           {else}
-            {ts 1=$email}Remider email has been sent to %1.{/ts}
+            <!-- {ts 1=$email}Remider email has been sent to %1.{/ts} -->
           {/if}
           </div>
         {/if}{*is_email_receipt*}
