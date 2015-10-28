@@ -244,11 +244,13 @@ $having
       );
     $form->addRadio('other_options',NULL,$options,NULL,"<br/>" );
 
+    $form->addElement('text', 'sort_name', ts('Name'));
+
     /**
      * If you are using the sample template, this array tells the template fields to render
      * for the search form.
      */
-    $form->assign('elements', array('start_date', 'contribution_created_date','other_options'));
+    $form->assign('elements', array('start_date', 'contribution_created_date','other_options','sort_name'));
   }
 
   function count(){
@@ -336,6 +338,11 @@ $having
       case 'is_failed':
         $clauses[] = " ( last_status_id = 4 )";
         break;
+    }
+
+    $sort_name = $this->_formValues['sort_name'];
+    if($sort_name){
+      $clauses[] = "(`sort_name` LIKE '%$sort_name%')";
     }
 
 
