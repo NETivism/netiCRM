@@ -508,6 +508,8 @@ class CRM_Event_Form_Search extends CRM_Core_Form {
       $this->_formValues['event_name'] = $object['event_title'];
       $this->assign('isOnlineRegistration', $object['is_online_registration']);
       $this->assign('hideParticipantLink', 1);
+      $participantListingURL = CRM_Utils_System::url('civicrm/event/participant', "reset=1&id={$event}", TRUE, NULL, TRUE, TRUE);
+      $this->assign('participantListingURL', $participantListingURL);
       CRM_Utils_System::setTitle($object['event_title']);
 
       // participant count
