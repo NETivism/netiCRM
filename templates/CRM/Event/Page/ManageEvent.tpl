@@ -88,9 +88,12 @@
                       <ul class="panel" id="panel_links_{$row.id}">
                         <li><a title="Register Participant" class="action-item" href="{crmURL p='civicrm/participant/add' q="reset=1&action=add&context=standalone&eid=`$row.id`"}">{ts}Register Participant{/ts}</a></li>
                         <li><a title="Event Info" class="action-item" href="{crmURL p='civicrm/event/info' q="reset=1&id=`$row.id`" fe='true'}" target="_blank">{ts}Event Info{/ts}</a></li>
-                            {if $row.is_online_registration}
+                        {if $row.is_online_registration}
                             <li><a title="Online Registration (Test-drive)" class="action-item" href="{crmURL p='civicrm/event/register' q="reset=1&action=preview&id=`$row.id`"}">{ts}Registration (Test-drive){/ts}</a></li>
                             <li><a title="Online Registration (Live)" class="action-item" href="{crmURL p='civicrm/event/register' q="reset=1&id=`$row.id`" fe='true'}" target="_blank">{ts}Registration (Live){/ts}</a></li>
+                        {/if}
+                        {if $row.participant_listing_id}
+                            <li><a title="Participant Listing" class="action-item" href="{crmURL p='civicrm/event/participant' q="reset=1&id=`$row.id`"}">{ts}Public Participant Listing{/ts}</a></li>
                         {/if}
                       </ul>
                     </span>
