@@ -515,7 +515,7 @@ class CRM_Event_Form_Registration_AdditionalParticipant extends CRM_Event_Form_R
       ) {
         $this->_isOnWaitlist = TRUE;
       }
-      $this->set('isOnWaitlist', TRUE);
+      $this->set('isOnWaitlist', $this->_isOnWaitlist);
       $this->_lineItemParticipantsCount[$addParticipantNum] = $currentCount;
     }
 
