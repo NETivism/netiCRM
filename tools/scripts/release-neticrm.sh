@@ -58,7 +58,8 @@ if [ -d $CALLEDPATH/../../l10n/$LANGUAGE ]; then
 fi
 
 # gen code for new translations 
-if [ -d $CALLEDPATH/../../xml ]; then
+read -p "  Generate civicrm DAO code(y/empty to skip): " GENCODE
+if [ -d $CALLEDPATH/../../xml ] && [ -n "$GENCODE" ]; then
   cd $CALLEDPATH/../../xml
   php GenCode.php
 fi
