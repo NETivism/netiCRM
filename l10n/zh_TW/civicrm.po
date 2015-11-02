@@ -9,8 +9,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2015-10-29 07:54+0000\n"
-"Last-Translator: 張書懷 <junsuwhy@gmail.com>\n"
+"PO-Revision-Date: 2015-10-29 09:18+0000\n"
+"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -15826,7 +15826,7 @@ msgstr "- 選擇狀態 -"
 #: CRM/Event/Form/Task/ParticipantStatus.php
 #: templates/CRM/Admin/Page/ParticipantStatus.hlp
 msgid "Pending from waitlist"
-msgstr "待處理-在候補名單中"
+msgstr "待處理-在正取名單中"
 
 #: CRM/Event/Form/Task/ParticipantStatus.php
 #: templates/CRM/Admin/Page/ParticipantStatus.hlp
