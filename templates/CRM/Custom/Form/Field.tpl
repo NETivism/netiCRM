@@ -209,7 +209,11 @@ function custom_option_html_type( ) {
         </tr>
         <tr class="crm-custom-field-form-block-is_required">
             <td class="label">{$form.is_required.label}</td>
-            <td class="html-adjust">{$form.is_required.html}</td>
+            <td class="html-adjust">{$form.is_required.html}
+            {if $action neq 4}
+                <span class="description">{ts}When 'Required' is active, it is necessary to fill value on contact add/edit page. If you need this feature to visitor, please enable it in profiles setting.{/ts}</span>
+            {/if}
+            </td>
         </tr>
         <tr id ="searchable" class="crm-custom-field-form-block-is_searchable">
             <td class="label">{$form.is_searchable.label}</td>

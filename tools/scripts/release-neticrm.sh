@@ -47,15 +47,19 @@ if [ -d $CALLEDPATH/../../l10n/$LANGUAGE ]; then
   if [ ! -d $CALLEDPATH/../../l10n/$LANGUAGE/LC_MESSAGES ]; then
     mkdir $CALLEDPATH/../../l10n/$LANGUAGE/LC_MESSAGES
   fi
-  read -p "Enter transifex username: " TRANSIFEXUSER
-  read -p "Enter transifex password: " TRANSIFEXPASS
+  echo "Fetch lastest translation from transifex:"
+  read -p "  Enter transifex username (empty to skip): " TRANSIFEXUSER
+  read -p "  Enter transifex password (empty to skip): " TRANSIFEXPASS
   cd $CALLEDPATH/../../l10n/$LANGUAGE/
-  curl -L --user $TRANSIFEXUSER:$TRANSIFEXPASS -X GET "https://www.transifex.com/api/2/project/neticrm/resource/neticrmpot/translation/$LANGUAGE/?mode=default&file" -o civicrm.po
+  if [ -n "$TRANSIFEXUSER" ] && [ -n "$TRANSIFEXPASS" ]; then
+    curl -L --user $TRANSIFEXUSER:$TRANSIFEXPASS -X GET "https://www.transifex.com/api/2/project/neticrm/resource/neticrmpot/translation/$LANGUAGE/?mode=default&file" -o civicrm.po
+  fi
   msgfmt $CALLEDPATH/../../l10n/$LANGUAGE/civicrm.po -o $CALLEDPATH/../../l10n/$LANGUAGE/LC_MESSAGES/civicrm.mo
 fi
 
 # gen code for new translations 
-if [ -d $CALLEDPATH/../../xml ]; then
+read -p "  Generate civicrm DAO code(y/empty to skip): " GENCODE
+if [ -d $CALLEDPATH/../../xml ] && [ -n "$GENCODE" ]; then
   cd $CALLEDPATH/../../xml
   php GenCode.php
 fi

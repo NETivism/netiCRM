@@ -1536,11 +1536,10 @@ UPDATE  civicrm_participant
     if (is_array($results) && !empty($results)) {
       if (is_array($results['updatedParticipantIds']) && !empty($results['updatedParticipantIds'])) {
         foreach ($results['updatedParticipantIds'] as $processedId) {
-          if (is_array($results['mailedParticipants']) &&
-            array_key_exists($processedId, $results['mailedParticipants'])
-          ) {
+          if (is_array($results['mailedParticipants']) && array_key_exists($processedId, $results['mailedParticipants'])) {
             $statusMsg .= '<br /> ' . ts("Participant status has been updated to '%1'. An email has been sent to %2.",
-              array(1 => $allStatuses[$statusChangeTo],
+              array(
+                1 => ts($allStatuses[$statusChangeTo]),
                 2 => $results['mailedParticipants'][$processedId],
               )
             );
