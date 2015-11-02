@@ -125,6 +125,7 @@ class CRM_Core_Session {
           $_SESSION = array();
         }
         else {
+          ini_set('session.save_handler', 'files');
           session_start();
         }
       }

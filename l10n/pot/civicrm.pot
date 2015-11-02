@@ -44925,3 +44925,7 @@ msgstr ""
 #: CRM/Contact/Form/Task/PickProfile.php
 msgid "Batch update requires that all selected contacts be the same type (e.g. all Individuals OR all Organizations...). Please modify your selected contacts and try again."
 msgstr ""
+
+#: CRM/Custom/Form/Field.tpl
+msgid "When 'Required' is active, it is necessary to fill value on contact add/edit page. If you need this feature to visitor, please enable it in profiles setting."
+msgstr ""

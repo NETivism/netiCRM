@@ -3,8 +3,10 @@
 jQuery(function($){
   if($('#custom_{/literal}{$receiptTitle}{literal},#custom_{/literal}{$receiptSerial}{literal}').length>=1){
     // receiptTitle, receiptSerial
-    $('<div class="crm-section receipt_type crm-even"><div class="label"></div><div class="content"><input type="radio" name="receipt_type" id="r_person" ><label for="r_person">{/literal}{ts}Individual{/ts}{literal}</label><input name="receipt_type" type="radio" id="r_company" ><label for="r_company">{/literal}{ts}Legal{/ts}{literal}</label></div></div>')
+    $('<div class="crm-section receipt_type"><div class="label"></div><div class="content"><input type="radio" name="receipt_type" id="r_person" ><label for="r_person">{/literal}{ts}Individual{/ts}{literal}</label><input name="receipt_type" type="radio" id="r_company" ><label for="r_company">{/literal}{ts}Legal{/ts}{literal}</label></div></div>')
     .insertBefore($('.custom_{/literal}{$receiptTitle}{literal}-section'));
+    var OddOrEven = $('.custom_{/literal}{$receiptTitle}{literal}-section').attr('class').match(/crm-odd|crm-even/)[0];
+    $('.receipt_type').addClass(OddOrEven);
 
     $('<span><input type="checkbox" name="same_as_post" id="same-as"><label for="same-as">{/literal}{ts}Same as Contributor{/ts}{literal}</label></span>').insertAfter($('#custom_{/literal}{$receiptTitle}{literal}'));
     $('#same-as').change(update_name);

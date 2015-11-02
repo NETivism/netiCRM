@@ -16,7 +16,7 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.               |
  | See the GNU Affero General Public License for more details.        |
  |                                                                    |
- | You should have receive a copy of the GNU Affero General Public   |
+ | You should have receive a copy of the GNU Affero General Public    |
  | License and the CiviCRM Licensing Exception along                  |
  | with this program; if not, contact CiviCRM LLC                     |
  | at info[AT]civicrm[DOT]org. If you have questions about the        |
@@ -244,11 +244,13 @@ $having
       );
     $form->addRadio('other_options',NULL,$options,NULL,"<br/>" );
 
+    $form->addElement('text', 'sort_name', ts('Name'));
+
     /**
      * If you are using the sample template, this array tells the template fields to render
      * for the search form.
      */
-    $form->assign('elements', array('start_date', 'contribution_created_date','other_options'));
+    $form->assign('elements', array('start_date', 'contribution_created_date','other_options','sort_name'));
   }
 
   function count(){
@@ -336,6 +338,11 @@ $having
       case 'is_failed':
         $clauses[] = " ( last_status_id = 4 )";
         break;
+    }
+
+    $sort_name = $this->_formValues['sort_name'];
+    if($sort_name){
+      $clauses[] = "(`sort_name` LIKE '%$sort_name%')";
     }
 
 
@@ -434,7 +441,15 @@ SUM(total_amount) as total_amount
     $sql = "SELECT contribution_status_id FROM civicrm_contribution WHERE contribution_recur_id = {$row['id']} ORDER BY receive_date DESC LIMIT 1";
     $row['last_status_id'] = CRM_Core_DAO::singleValueQuery($sql, CRM_Core_DAO::$_nullArray);
     $row['last_status_id'] = $this->_cstatus[$row['last_status_id']];
-    $row['action'] = '<a href="'.CRM_Utils_System::url('civicrm/contact/view/contributionrecur', "reset=1&id={$row['id']}&cid={$row['contact_id']}").'" target="_blank">'.ts('View').'</a>';
+    // $row['action'] = '<a href="'.CRM_Utils_System::url('civicrm/contact/view/contributionrecur', "reset=1&id={$row['id']}&cid={$row['contact_id']}").'" target="_blank">'.ts('View').'</a>';
+
+    $action = array_sum(array_keys(CRM_Contribute_Page_Tab::recurLinks()));
+    $row['action'] = CRM_Core_Action::formLink(CRM_Contribute_Page_Tab::recurLinks(), $action,
+            array('cid' => $row['contact_id'],
+              'id' => $row['id'],
+              'cxt' => 'contribution',
+              )
+          );
   }
 
   /**

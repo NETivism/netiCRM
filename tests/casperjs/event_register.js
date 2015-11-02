@@ -52,7 +52,7 @@ casper.test.begin('Event register page test ...',4,function(test){
 
 // 2. limit participants. Not fot waiting.
 
-casper.test.begin('Event register page test ...',7,function(test){
+casper.test.begin('Event register page test ...',6,function(test){
   casper.start(item.url_prefix + '/civicrm/event/register?reset=1&id=2', function() {
     var page_title = getPageTitle(item.event_name_2);
     test.assertTitle(page_title,'Event register page: page title is OK. (' + page_title + ')');
@@ -69,7 +69,7 @@ casper.test.begin('Event register page test ...',7,function(test){
     test.assertField('email-5', email);
   });
 
-  casper.then(function(){
+  casper.waitForUrl('_qf_ThankYou_display', function(){
     test.assertExists('#help .msg-register-success');
     this.capture("picture/event_register_2_2.png");
     this.thenOpen(item.url_prefix + '/civicrm/event/register?reset=1&id=2');
@@ -77,7 +77,11 @@ casper.test.begin('Event register page test ...',7,function(test){
 
   casper.then(function(){
     this.capture("picture/event_register_2_3.png");
-    test.assertExists('#help .msg-event-full');
+    // test.assertExists('#help .msg-event-full');
+    test.assertExists('.messages.status');
+    text = this.evaluate( function(){ return __utils__.findOne('.messages.status').textContent; } );
+    console.log('Messages : '+text);
+    test.assertMatch(text,/額滿|full/i,'Message contains "full" words.');
   });
 
   casper.run(function() {
@@ -87,12 +91,13 @@ casper.test.begin('Event register page test ...',7,function(test){
 
 // limit participants. Not fot waiting.
 
-casper.test.begin('Event register page test ...',10,function(test){
+casper.test.begin('Event register page test ...',9,function(test){
   casper.start(item.url_prefix + '/civicrm/event/register?reset=1&id=3', function() {
     var page_title = getPageTitle(item.event_name_3);
     test.assertTitle(page_title,'Event register page: page title is OK. (' + page_title + ')');
     this.capture("picture/event_register_3_0.png");
   });
+
 
   casper.then(function(){
     test.assertExists('form#Register', 'Event register page: main form is exist.');
@@ -111,11 +116,12 @@ casper.test.begin('Event register page test ...',10,function(test){
     this.thenOpen(item.url_prefix + '/civicrm/event/register?reset=1&id=3');
   });
 
+
   casper.then(function(){
     var page_title = getPageTitle(item.event_name_3);
     test.assertTitle(page_title,'Event register page: page title is OK. (' + page_title + ')');
     this.capture("picture/event_register_3_3.png");
-    var email = 'test2@soosovk.com';
+    var email = 'test2@soossovk.com';
     this.fill('#Register',{
       'email-5': email
     },true);
@@ -128,16 +134,18 @@ casper.test.begin('Event register page test ...',10,function(test){
     test.assertTitle(page_title,'Event register page: page title is OK. (' + page_title + ')');
     this.capture("picture/event_register_3_5.png");
     test.assertExists('#help p');
-    test.assertSelectorHasText('#help p','已為您加入到本活動的的候補名單中。');
-    test.assertSelectorHasText('#help p','若活動尚有名額，您將會收到一封電子郵件，您可以點選信件中的連結網址以完成報名程序。');
+    text = this.evaluate( function(){ return __utils__.findOne('#help').textContent; } );
+    console.log('Messages : '+text);
+    test.assertMatch(text,/候補|wait list/i,'Message contains "wait list" words.');
   });
+
   casper.run(function() {
     test.done();
   });
 
 });
 
-// event 4 : limit participants. Need verify.
+// event 4 : limit participants. Need approval.
 // Checked-1 register success
 // Checked-2 participant have get verify message.
 // Checked-3 second participant message is correct.
@@ -167,7 +175,9 @@ casper.test.begin('Event register page test ...',9,function(test){
     this.capture("picture/event_register_4_2.png");
     // Checked-2 
     test.assertExists('#help p');
-    test.assertSelectorHasText('#help p','一旦您通過審核，我們將會傳一封電子郵件確認信到您的信箱，您可以點選確認信中的連結網址以完成報名程序。');
+    text = this.evaluate( function(){ return __utils__.findOne('#help').textContent; } );
+    console.log('Messages : '+text);
+    test.assertMatch(text,/審核|reviewed/i,'Message contains "reviewed" words.');
     this.thenOpen(item.url_prefix + '/civicrm/event/register?reset=1&id=4');
   });
 
@@ -176,9 +186,11 @@ casper.test.begin('Event register page test ...',9,function(test){
     var page_title  = getPageTitle(item.event_name_4);
     test.assertTitle(page_title,'Event register page: page title is OK. (' + page_title + ')');
     this.capture("picture/event_register_4_3.png");
-    test.assertExists('.messages');
+    test.assertExists('.messages.status');
     // Checked-3 
-    test.assertSelectorHasText('.messages','此活動已額滿');
+    text = this.evaluate( function(){ return __utils__.findOne('.messages.status').textContent; } );
+    console.log('Messages : '+text);
+    test.assertMatch(text,/額滿|full/i,'Message contains "full" words.');
   });
 
   casper.run(function() {
@@ -186,7 +198,7 @@ casper.test.begin('Event register page test ...',9,function(test){
   });
 });
 
-// event 5 : unlimit participants. Need verify. 
+// event 5 : unlimit participants. Need approval. 
 // Checked-1 register success
 // Checked-2 participant have get verify message.
 // Checked-3 Second register success
@@ -217,7 +229,9 @@ casper.test.begin('Event register page test ...',12,function(test){
     this.capture("picture/event_register_5_2.png");
     // Checked-2 
     test.assertExists('#help p');
-    test.assertSelectorHasText('#help p','一旦您通過審核，我們將會傳一封電子郵件確認信到您的信箱，您可以點選確認信中的連結網址以完成報名程序。');
+    text = this.evaluate( function(){ return __utils__.findOne('#help').textContent; } );
+    console.log('Messages : '+text);
+    test.assertMatch(text,/審核|reviewed/i,'Message contains "reviewed" words.');
     this.thenOpen(item.url_prefix + '/civicrm/event/register?reset=1&id=5');
   });
 
@@ -242,7 +256,9 @@ casper.test.begin('Event register page test ...',12,function(test){
     test.assertTitle(page_title,'Event register page: page title is OK. (' + page_title + ')');
     this.capture("picture/event_register_5_5.png");
     test.assertExists('#help p');
-    test.assertSelectorHasText('#help p','一旦您通過審核，我們將會傳一封電子郵件確認信到您的信箱，您可以點選確認信中的連結網址以完成報名程序。');
+    text = this.evaluate( function(){ return __utils__.findOne('#help').textContent; } );
+    console.log('Messages : '+text);
+    test.assertMatch(text,/審核|reviewed/i,'Message contains "reviewed" words.');
   });
 
   casper.run(function() {
