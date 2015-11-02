@@ -9,8 +9,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2015-10-22 07:50+0000\n"
-"Last-Translator: Fuyuan Cheng <gloomcheng@gmail.com>\n"
+"PO-Revision-Date: 2015-10-29 07:54+0000\n"
+"Last-Translator: 張書懷 <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -15570,7 +15570,7 @@ msgstr "請按下「確認登記」鍵，確認您已完成在 %1 的登記。�
 
 #: CRM/Event/Form/Registration/ParticipantConfirm.php
 msgid "Confirm your registration for %1."
-msgstr "請確認您的 %1 登記。"
+msgstr "您在 %1 的登記已可進行下一步報名作業"
 
 #: CRM/Event/Form/Registration/ParticipantConfirm.php
 msgid ""
@@ -39836,7 +39836,7 @@ msgstr "請確認您的報名"
 
 #: xml/templates/message_templates/participant_confirm_subject.tpl
 msgid "Confirm your registration for %1"
-msgstr "您 %1 申請已通過審核"
+msgstr "您在 %1 的登記已可進行下一步報名作業"
 
 #: xml/templates/message_templates/participant_expired_html.tpl
 #: xml/templates/message_templates/participant_expired_text.tpl
@@ -44630,7 +44630,7 @@ msgstr "收據編號欄位"
 
 #: civicrm/CRM/Admin/Form/Setting/Receipt.php
 msgid "Field for donor credit"
-msgstr ""
+msgstr "捐款徵信名稱使用的欄位"
 
 #: templates/CRM/Admin/Form/Setting/Receipt.tpl
 msgid "Selected Participants was deleted sucessfully."
@@ -44665,7 +44665,7 @@ msgstr "當使用者填寫統一編號在其他的欄位，請選擇欄位名稱
 #: templates/CRM/Admin/Form/Setting/Receipt.tpl
 msgid ""
 "When use custom field to record donor credit, use this to select the field."
-msgstr ""
+msgstr "當使用自訂欄位記錄捐款人的捐款徵信名稱時，請選擇該欄位。"
 
 #: templates/CRM/Event/Form/Registration/Register.tpl
 msgid "Update per minute."
@@ -44916,3 +44916,10 @@ msgid ""
 "Individuals OR all Organizations...). Please modify your selected contacts "
 "and try again."
 msgstr ""
+
+#: CRM/Custom/Form/Field.tpl
+msgid ""
+"When 'Required' is active, it is necessary to fill value on contact add/edit"
+" page. If you need this feature to visitor, please enable it in profiles "
+"setting."
+msgstr "如果自訂欄位設定必填，未來管理員建立、編輯資料時，該欄位都會被要求填入值。若是要給捐款人、參加者填寫，請到資料表單再設定必填。"
