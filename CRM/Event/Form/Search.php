@@ -498,6 +498,12 @@ class CRM_Event_Form_Search extends CRM_Core_Form {
     // then see if there are any get values, and if so over-ride the post values
     // note that this means that GET over-rides POST :)
     $event = CRM_Utils_Request::retrieve('event', 'Positive', CRM_Core_DAO::$_nullObject);
+    if(empty($event)){
+      $sessionFormValues = $this->controller->get('formValues');
+      if(!empty($sessionFormValues['event_id'])){
+        $event = $sessionFormValues['event_id'];
+      }
+    }
     if ($event) {
       require_once 'CRM/Event/PseudoConstant.php';
       $this->_formValues['event_id'] = $event;
@@ -508,6 +514,8 @@ class CRM_Event_Form_Search extends CRM_Core_Form {
       $this->_formValues['event_name'] = $object['event_title'];
       $this->assign('isOnlineRegistration', $object['is_online_registration']);
       $this->assign('hideParticipantLink', 1);
+      $participantListingURL = CRM_Utils_System::url('civicrm/event/participant', "reset=1&id={$event}", TRUE, NULL, TRUE, TRUE);
+      $this->assign('participantListingURL', $participantListingURL);
       CRM_Utils_System::setTitle($object['event_title']);
 
       // participant count
