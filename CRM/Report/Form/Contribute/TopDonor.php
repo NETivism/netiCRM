@@ -107,6 +107,28 @@ class CRM_Report_Form_Contribute_TopDonor extends CRM_Report_Form {
           ),
         ),
       ),
+      'civicrm_address' =>
+      array('dao' => 'CRM_Core_DAO_Address',
+        'grouping' => 'contact-fields',
+        'fields' =>
+        array(
+          'country_id' =>
+          array('title' => ts('Country'),
+            'default' => TRUE,
+            ),
+          'state_province_id' =>
+          array('title' => ts('State/Province'),
+            'default' => TRUE
+            ),
+          'city' =>
+          array('default' => TRUE),
+          'postal_code' => 
+          array('default' => TRUE),
+          'street_address' =>
+          array('default' => TRUE),
+        ),
+      ),
+
     );
 
     $this->_tagFilter = TRUE;
@@ -189,8 +211,13 @@ class CRM_Report_Form_Contribute_TopDonor extends CRM_Report_Form {
   function from() {
     $this->_from = "
         FROM civicrm_contact {$this->_aliases['civicrm_contact']} {$this->_aclFrom}
-        	 INNER JOIN civicrm_contribution {$this->_aliases['civicrm_contribution']} 
-		             ON {$this->_aliases['civicrm_contact']}.id = {$this->_aliases['civicrm_contribution']}.contact_id AND {$this->_aliases['civicrm_contribution']}.is_test = 0
+        	INNER JOIN civicrm_contribution {$this->_aliases['civicrm_contribution']} 
+		          ON {$this->_aliases['civicrm_contact']}.id = {$this->_aliases['civicrm_contribution']}.contact_id AND {$this->_aliases['civicrm_contribution']}.is_test = 0
+        ";
+    $this->_from .= "
+    LEFT JOIN civicrm_address {$this->_aliases['civicrm_address']} 
+                   ON ({$this->_aliases['civicrm_contact']}.id = {$this->_aliases['civicrm_address']}.contact_id AND 
+                      {$this->_aliases['civicrm_address']}.is_primary = 1 ) 
         ";
   }
 
@@ -339,6 +366,20 @@ class CRM_Report_Form_Contribute_TopDonor extends CRM_Report_Form {
           $rows[$rowNum]['civicrm_contact_display_name_link'] = $url;
           $entryFound = TRUE;
         }
+
+        // handle country
+      if (array_key_exists('civicrm_address_country_id', $row)) {
+        if ($value = $row['civicrm_address_country_id']) {
+          $rows[$rowNum]['civicrm_address_country_id'] = CRM_Core_PseudoConstant::country($value, FALSE);
+        }
+        $entryFound = TRUE;
+      }
+      if (array_key_exists('civicrm_address_state_province_id', $row)) {
+        if ($value = $row['civicrm_address_state_province_id']) {
+          $rows[$rowNum]['civicrm_address_state_province_id'] = CRM_Core_PseudoConstant::stateProvince($value, FALSE);
+        }
+        $entryFound = TRUE;
+      }
 
         // skip looking further in rows, if first row itself doesn't
         // have the column we need
