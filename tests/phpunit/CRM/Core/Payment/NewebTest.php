@@ -439,6 +439,56 @@ class CRM_Core_Payment_NewebTest extends CiviUnitTestCase {
     
     //test 7 days ago missing contribution
     $last_7_days_array = array();
+    for ($i=0; $i < 4; $i++) { 
+      $last_7_days_array[] = $now - (7-$i) * 86400;
+    }
+
+    // Success 
+    $date_i = $last_7_days_array[0];
+    $next_trxn_id = $next_trxn_id + 1;
+    $today = date('Ymd',$date_i);
+    $file_path = DRUPAL_ROOT . "/sites/default/files/neweb" . $_test . "/RP_Trans_" . $this->_merchant_no . "_" . $today . ".log";
+    $line = array(
+      "#Merchantnumber,Refnumber,Ordernumber,Httpcode,Prc,Src,Bankresponsecode,Approvalcode,Batchnumber,Orgordernumber,Mode\n",
+      "$this->_merchant_no,$recurring->id,$next_trxn_id,200,0,0,0/00,654321,$today01,$today$next_trxn_id,0"
+      );
+    write_file($file_path,$line);
+
+    // Success duplicated
+    $date_i = $last_7_days_array[1];
+    $today = date('Ymd',$date_i);
+    $file_path = DRUPAL_ROOT . "/sites/default/files/neweb" . $_test . "/RP_Trans_" . $this->_merchant_no . "_" . $today . ".log";
+    $line = array(
+      "#Merchantnumber,Refnumber,Ordernumber,Httpcode,Prc,Src,Bankresponsecode,Approvalcode,Batchnumber,Orgordernumber,Mode\n",
+      "$this->_merchant_no,$recurring->id,$next_trxn_id,200,0,0,0/00,654321,$today01,$today$next_trxn_id,0"
+      );
+    write_file($file_path,$line);
+
+    // Failed
+    $date_i = $last_7_days_array[2];
+    $next_trxn_id = $next_trxn_id + 1;
+    $today = date('Ymd',$date_i);
+    $file_path = DRUPAL_ROOT . "/sites/default/files/neweb" . $_test . "/RP_Trans_" . $this->_merchant_no . "_" . $today . ".log";
+    $line = array(
+      "#Merchantnumber,Refnumber,Ordernumber,Httpcode,Prc,Src,Bankresponsecode,Approvalcode,Batchnumber,Orgordernumber,Mode\n",
+      "$this->_merchant_no,$recurring->id,$next_trxn_id,200,34,171,3/54,,,$today$next_trxn_id,0"
+      );
+    write_file($file_path,$line);
+
+    // Failed duplicated
+    $date_i = $last_7_days_array[3];
+    $today = date('Ymd',$date_i);
+    $file_path = DRUPAL_ROOT . "/sites/default/files/neweb" . $_test . "/RP_Trans_" . $this->_merchant_no . "_" . $today . ".log";
+    $line = array(
+      "#Merchantnumber,Refnumber,Ordernumber,Httpcode,Prc,Src,Bankresponsecode,Approvalcode,Batchnumber,Orgordernumber,Mode\n",
+      "$this->_merchant_no,$recurring->id,$next_trxn_id,200,34,171,3/54,,,$today$next_trxn_id,0"
+      );
+    write_file($file_path,$line);
+    
+    variable_set('civicrm_neweb_scan', 0);
+    _civicrm_neweb_scan_missing_transaction($now, 3, $now - 86400 , $this->_processor['id']);
+    
+
     $next_ids_array = array();
 
 
