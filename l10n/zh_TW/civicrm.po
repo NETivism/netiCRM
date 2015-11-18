@@ -9,8 +9,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2015-10-29 09:18+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
+"PO-Revision-Date: 2015-11-18 07:05+0000\n"
+"Last-Translator: Fuyuan Cheng <gloomcheng@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -6271,7 +6271,7 @@ msgstr "分隔？"
 
 #: CRM/Admin/Form/Navigation.php
 msgid "Parent"
-msgstr "父層"
+msgstr "上層"
 
 #: CRM/Admin/Form/Navigation.php
 msgid "Menu '%1' has been saved."
@@ -13003,11 +13003,11 @@ msgstr "本週"
 
 #: CRM/Core/Form/Date.php
 msgid "This Day"
-msgstr "今日"
+msgstr "今天"
 
 #: CRM/Core/Form/Date.php
 msgid "Previous Year"
-msgstr "前一年"
+msgstr "去年"
 
 #: CRM/Core/Form/Date.php
 msgid "Previous Fiscal Year"
@@ -13015,39 +13015,39 @@ msgstr "上個會計年度"
 
 #: CRM/Core/Form/Date.php
 msgid "Previous Quarter"
-msgstr "前一季"
+msgstr "上一季"
 
 #: CRM/Core/Form/Date.php
 msgid "Previous Month"
-msgstr "前一月"
+msgstr "上個月"
 
 #: CRM/Core/Form/Date.php
 msgid "Previous Week"
-msgstr "前一週"
+msgstr "上一週"
 
 #: CRM/Core/Form/Date.php
 msgid "Previous Day"
-msgstr "前一天"
+msgstr "昨天"
 
 #: CRM/Core/Form/Date.php
 msgid "Prior to Previous Year"
-msgstr "在此之前的前一年"
+msgstr "前年"
 
 #: CRM/Core/Form/Date.php
 msgid "Prior to Previous Quarter"
-msgstr "在此之前的前一季"
+msgstr "上上一季"
 
 #: CRM/Core/Form/Date.php
 msgid "Prior to Previuos Month"
-msgstr "在此之前的上個月"
+msgstr "上上個月"
 
 #: CRM/Core/Form/Date.php
 msgid "Prior to Previous Week"
-msgstr "在此之前的前一週"
+msgstr "上上一週"
 
 #: CRM/Core/Form/Date.php
 msgid "Prior to Previous Day"
-msgstr "在此之前的前一天"
+msgstr "前天"
 
 #: CRM/Core/Form/Date.php
 msgid "Previous 2 Years"
@@ -13071,23 +13071,23 @@ msgstr "兩天前"
 
 #: CRM/Core/Form/Date.php
 msgid "To End of Prior Year"
-msgstr "到期前一年"
+msgstr "到去年為止"
 
 #: CRM/Core/Form/Date.php
 msgid "To End of Prior Quarter"
-msgstr "到期前一季"
+msgstr "到上一季為止"
 
 #: CRM/Core/Form/Date.php
 msgid "To End of Prior Month"
-msgstr "到期前一個月"
+msgstr "到上個月為止"
 
 #: CRM/Core/Form/Date.php
 msgid "To End of Prior Week"
-msgstr "到期前一星期"
+msgstr "到上星期為止"
 
 #: CRM/Core/Form/Date.php
 msgid "To End of Prior Day"
-msgstr "到期前一天"
+msgstr "到昨天為止"
 
 #: CRM/Core/Form/Date.php
 msgid "Current Year to-date"
@@ -13111,19 +13111,19 @@ msgstr "今天"
 
 #: CRM/Core/Form/Date.php
 msgid "From 12 Months Ago"
-msgstr "一年前"
+msgstr "過去十二個月"
 
 #: CRM/Core/Form/Date.php
 msgid "From 3 Months Ago"
-msgstr "三個月前"
+msgstr "過去三個月"
 
 #: CRM/Core/Form/Date.php
 msgid "From 1 Month Ago"
-msgstr "一個月前"
+msgstr "過去一個月"
 
 #: CRM/Core/Form/Date.php
 msgid "From 1 Week Ago"
-msgstr "一星期前"
+msgstr "過去一週"
 
 #: CRM/Core/Form/Date.php
 msgid "Relative Date Range"
@@ -19650,7 +19650,7 @@ msgstr "已儲存您的更新。"
 
 #: CRM/UF/Form/AdvanceSetting.php
 msgid "Enable mapping for this profile?"
-msgstr "在表單啟用地圖？"
+msgstr "在表單啟用線上地圖？"
 
 #: CRM/UF/Form/AdvanceSetting.php
 msgid "Issue warning and do not save"
@@ -20051,7 +20051,7 @@ msgstr "有一個或多個會籍狀態規則，在更新過程中因為無法辨
 
 #: CRM/Upgrade/Page/Upgrade.php
 msgid "Upgrade CiviCRM from v %1 To v %2"
-msgstr "v %1 CiviCRM 升級至 v %2"
+msgstr "v%1 CiviCRM 升級至 v%2"
 
 #: CRM/Upgrade/ThreeOne/ThreeOne.php
 msgid ""
@@ -20823,7 +20823,7 @@ msgstr "建議："
 msgid ""
 "If you are searching by activity name, check your spelling or use fewer "
 "letters."
-msgstr "如果您用任務名稱搜尋，檢查您的字串或使用更少字每。"
+msgstr "如果您用任務名稱搜尋，請檢查您輸入的內容或試著用更少字再次搜尋看看。"
 
 #: templates/CRM/Activity/Form/Search/EmptyResults.tpl
 msgid ""
@@ -37535,15 +37535,15 @@ msgstr "-日-"
 
 #: packages/HTML/QuickForm/date.php
 msgid "-month-"
-msgstr "-月份-"
+msgstr "-月-"
 
 #: packages/HTML/QuickForm/date.php
 msgid "-year-"
-msgstr "-年份-"
+msgstr "-年-"
 
 #: packages/HTML/QuickForm/date.php
 msgid "-hour-"
-msgstr "-小時-"
+msgstr "-時-"
 
 #: packages/HTML/QuickForm/date.php
 msgid "-min-"
