@@ -428,7 +428,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
     // fail contribution from recurring
     $trxn_id4 = _civicrm_allpay_recur_trxn($trxn_id, 'qwerasdf');
     $params = array(
-      1 => array($trxn_id3, 'String'),
+      1 => array($trxn_id4, 'String'),
     );
     $this->assertDBQuery(4, "SELECT contribution_status_id FROM civicrm_contribution WHERE trxn_id = %1", $params);
     $cid4 = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution WHERE trxn_id = %1", $params);
