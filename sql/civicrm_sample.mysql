@@ -102,7 +102,7 @@ INSERT INTO `civicrm_contact_type`
   ( `name`, `label`,`image_URL`, `parent_id`, `is_active`,`is_reserved`)
  VALUES
   ( 'Student'     , '學生'     , NULL, 1, 1, 0),
-  ( 'Parent'      , '父層'      , NULL, 1, 1, 0),
+  ( 'Parent'      , '上層'      , NULL, 1, 1, 0),
   ( 'Staff'       , '職員'       , NULL, 1, 1, 0),
   ( 'Team'        , '團隊'        , NULL, 3, 1, 0),
   ( 'Sponsor'     , '贊助者'     , NULL, 3, 1, 0);

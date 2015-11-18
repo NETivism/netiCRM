@@ -689,15 +689,12 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
         $row['postal_code'] .= "-" . $result->postal_code_suffix;
       }
 
-      if ($output != CRM_Core_Selector_Controller::EXPORT &&
-        $this->_searchContext == 'smog'
-      ) {
-        if (empty($result->status) &&
-          $groupID
-        ) {
+      if ($output != CRM_Core_Selector_Controller::EXPORT && $this->_searchContext == 'smog') {
+        if (empty($result->status) && $groupID) {
           $contactID = $result->contact_id;
           if ($contactID) {
-            $gcParams = array('contact_id' => $contactID,
+            $gcParams = array(
+              'contact_id' => $contactID,
               'group_id' => $groupID,
             );
 
@@ -723,9 +720,7 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
       if ($output != CRM_Core_Selector_Controller::EXPORT) {
         $row['checkbox'] = CRM_Core_Form::CB_PREFIX . $result->contact_id;
 
-        if (CRM_Utils_Array::value('deleted_contacts', $this->_formValues)
-          and CRM_Core_Permission::check('access deleted contacts')
-        ) {
+        if (CRM_Utils_Array::value('deleted_contacts', $this->_formValues) && CRM_Core_Permission::check('access deleted contacts') ) {
           $row['is_deleted'] = TRUE;
           $links = array(
             array(

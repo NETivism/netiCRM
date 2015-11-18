@@ -250,6 +250,12 @@ class CRM_Event_Form_Participant extends CRM_Contact_Form_Task {
     $this->assign('eventNameCustomDataTypeID', $this->_eventNameCustomDataTypeID);
     $this->assign('eventTypeCustomDataTypeID', $this->_eventTypeCustomDataTypeID);
 
+    // participant status id <-> name
+    $participantStatus = CRM_Event_PseudoConstant::participantStatus();
+    $participantStatusCounted = CRM_Event_PseudoConstant::participantStatus(NULL, 'is_counted = 1');
+    $this->assign('participantStatus', json_encode($participantStatus));
+    $this->assign('participantStatusCounted', json_encode($participantStatusCounted));
+
     if ($this->_mode) {
       $this->assign('participantMode', $this->_mode);
 

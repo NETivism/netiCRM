@@ -26,6 +26,8 @@
 {* Default template custom searches. This template is used automatically if templateFile() function not defined in
    custom search .php file. If you want a different layout, clone and customize this file and point to new file using
    templateFile() function.*}
+   {* handle enable/disable actions*}
+   {include file="CRM/common/enableDisable.tpl"}
 <div class="crm-block crm-form-block crm-contact-custom-search-form-block">
 <div class="crm-accordion-wrapper crm-custom_search_form-accordion {if $rows}crm-accordion-closed{else}crm-accordion-open{/if}">
     <div class="crm-accordion-header crm-master-accordion-header">

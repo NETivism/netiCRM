@@ -38,7 +38,9 @@ do_merge(){
   git checkout ${VERSION_PREFIX}master
   git merge ${VERSION_PREFIX}develop -m "Release merge."
   git commit
-  git tag -a $TAG -m "Release $TAG"
+  if [ "$2" = "7.x" ]; then
+    git tag -a $TAG -m "Release $TAG"
+  fi
   git checkout ${VERSION_PREFIX}develop
 }
 

@@ -377,11 +377,10 @@ class CRM_Core_Payment_NewebTest extends CiviUnitTestCase {
 
     // Update recuring by .out file.
     $file_path = DRUPAL_ROOT . "/sites/default/files/neweb" . $_test . "/RP_" . $this->_merchant_no . "_" . $today . ".out";
-    $file = fopen($file_path,"w");
-    $line = "$this->_merchant_no,$recurring->id,1234********4321,VISA,202212,$amount,$cycle_day,New,01,0,0";
-    fwrite($file,$line);
-    fclose($file);
-
+    
+    $line = array("$this->_merchant_no,$recurring->id,1234********4321,VISA,202212,$amount,$cycle_day,New,01,0,0");
+    write_file($file_path,$line);
+    
     civicrm_neweb_process_response($this->_is_test,$now, $this->_processor['id']);
 
 
@@ -422,12 +421,11 @@ class CRM_Core_Payment_NewebTest extends CiviUnitTestCase {
     $next_trxn_id = 900000000 + $next_id;
     
     $file_path = DRUPAL_ROOT . "/sites/default/files/neweb" . $_test . "/RP_Trans_" . $this->_merchant_no . "_" . $today . ".log";
-    $file = fopen($file_path,"w");
-    $line = "#Merchantnumber,Refnumber,Ordernumber,Httpcode,Prc,Src,Bankresponsecode,Approvalcode,Batchnumber,Orgordernumber,Mode\n";
-    fwrite($file,$line);
-    $line = "$this->_merchant_no,$recurring->id,$next_trxn_id,200,0,0,0/00,654321,$today01,$today$next_trxn_id,0";
-    fwrite($file,$line);
-    fclose($file);
+    $line = array(
+      "#Merchantnumber,Refnumber,Ordernumber,Httpcode,Prc,Src,Bankresponsecode,Approvalcode,Batchnumber,Orgordernumber,Mode\n",
+      "$this->_merchant_no,$recurring->id,$next_trxn_id,200,0,0,0/00,654321,$today01,$today$next_trxn_id,0"
+      );
+    write_file($file_path,$line);
 
     civicrm_neweb_process_transaction($this->_is_test,$now, $this->_processor['id']);
 
@@ -439,10 +437,14 @@ class CRM_Core_Payment_NewebTest extends CiviUnitTestCase {
     );
     $this->assertDBState('CRM_Contribute_DAO_Contribution', $next_id, $params);
     
-
-    
   }
 }
 
-
+function write_file($file_path, $line_array){
+  $file = fopen($file_path,"w");
+  foreach ($line_array as $key => $value) {
+    fwrite($file,$value);
+  }
+  fclose($file);
+}
 

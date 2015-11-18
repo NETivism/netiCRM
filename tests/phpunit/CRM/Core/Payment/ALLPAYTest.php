@@ -389,6 +389,14 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
            'process_date' => date('Y-m-d H:i:s', $now+86400*2),
            'auth_code' => '777777',
         )),
+        // fail contribution from recurring
+        3 => (object)(array(
+           'RtnCode' => '',
+           'amount' => '',
+           'gwsr' => '',
+           'process_date' => date('Y-m-d H:i:s', $now+86400*3),
+           'auth_code' => '',
+        )),
       ),
     ));
     $trxn_id3 = _civicrm_allpay_recur_trxn($trxn_id, $gwsr2);
@@ -406,7 +414,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
     $params = array(
       1 => array($recurring->id, 'Integer'),
     );
-    $this->assertDBQuery(3, "SELECT count(*) FROM civicrm_contribution WHERE contribution_recur_id = %1", $params);
+    $this->assertDBQuery(4, "SELECT count(*) FROM civicrm_contribution WHERE contribution_recur_id = %1", $params);
 
     $params = array(
       1 => array($trxn_id3, 'String'),
@@ -415,6 +423,17 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
     $cid3 = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution WHERE trxn_id = %1", $params);
 
     $data = CRM_Core_DAO::singleValueQuery("SELECT data FROM civicrm_contribution_allpay WHERE cid = $cid3");
+    $this->assertNotEmpty($data, "In line " . __LINE__);
+
+    // fail contribution from recurring
+    $hash = substr(md5(implode('', (array)$order_base->ExecLog[3])), 0, 8);
+    $trxn_id4 = _civicrm_allpay_recur_trxn($trxn_id, $hash);
+    $params = array(
+      1 => array($trxn_id4, 'String'),
+    );
+    $this->assertDBQuery(4, "SELECT contribution_status_id FROM civicrm_contribution WHERE trxn_id = %1", $params);
+    $cid4 = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution WHERE trxn_id = %1", $params);
+    $data = CRM_Core_DAO::singleValueQuery("SELECT data FROM civicrm_contribution_allpay WHERE cid = $cid4");
     $this->assertNotEmpty($data, "In line " . __LINE__);
 
     // completed recurring
