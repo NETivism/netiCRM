@@ -2366,7 +2366,7 @@ class CRM_Contact_BAO_Query {
     list($name, $op, $value, $grouping, $wildcard) = $values;
 
     $subTypes = array();
-    $clause = array();
+    $clause = $clause_display = array();
     if (is_array($value)) {
       foreach ($value as $k => $v) {
         // fix for CRM-771
@@ -2383,6 +2383,7 @@ class CRM_Contact_BAO_Query {
             $subTypes[$subType] = 1;
           }
           $clause[$contactType] = "'" . CRM_Utils_Type::escape($contactType, 'String') . "'";
+          $clause_display[$contactType] = ts($contactType);
         }
       }
     }

@@ -247,6 +247,8 @@ WHERE  id = %1
         $returnProperties = CRM_Core_BAO_Mapping::returnProperties($fv);
       }
 
+      $groupID = CRM_Utils_Type::escape($groupID, 'Integer');
+      $additionalWhereClause = " contact_a.id NOT IN ( SELECT contact_id FROM civicrm_group_contact WHERE civicrm_group_contact.status = 'Removed' AND civicrm_group_contact.group_id = $groupID )";
       if (isset($ssParams['customSearchID'])) {
         // if custom search
 
@@ -256,6 +258,7 @@ WHERE  id = %1
         $customClass =
           CRM_Contact_BAO_SearchCustom::customClass($ssParams['customSearchID'], $savedSearchID);
         $searchSQL = $customClass->contactIDs();
+        $searchSQL .= " AND " .$additionalWhereClause;
         $idName = 'contact_id';
       }
       else {
@@ -276,15 +279,11 @@ WHERE  id = %1
           FALSE, FALSE,
           FALSE, TRUE,
           TRUE,
-          NULL, NULL, NULL,
+          $additionalWhereClause, NULL, NULL,
           TRUE
         );
       }
-      $groupID = CRM_Utils_Type::escape($groupID, 'Integer');
-      $sql = $searchSQL . " AND contact_a.id NOT IN (
-                                SELECT contact_id FROM civicrm_group_contact
-                                WHERE civicrm_group_contact.status = 'Removed'
-                                AND   civicrm_group_contact.group_id = $groupID ) ";
+      $sql = $searchSQL;
     }
 
     if ($sql) {

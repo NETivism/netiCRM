@@ -89,7 +89,6 @@
             {$form._qf_Contact_refresh_dedupe.html}
         </span>
         {if $isDuplicate}
-            &nbsp;&nbsp;
             <span class="crm-button crm-button_qf_Contact_upload_duplicate">
                 {$form._qf_Contact_upload_duplicate.html}
             </span>
