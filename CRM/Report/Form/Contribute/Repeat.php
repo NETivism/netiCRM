@@ -399,9 +399,7 @@ LEFT  JOIN (
   }
 
   function formRule($fields, $files, $self) {
-    $errors = $grouping = array();
-
-    $errors = $checkDate = $errorCount = array();
+    $errors = $grouping = $checkDate = $errorCount = array();
 
     $rules = array('id' => array('display_name', 'email', 'phone',
         'state_province_id', 'country_id',
