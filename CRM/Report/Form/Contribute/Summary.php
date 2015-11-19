@@ -138,7 +138,7 @@ class CRM_Report_Form_Contribute_Summary extends CRM_Report_Form {
       array('dao' => 'CRM_Contribute_DAO_ContributionPage',
         'fields' =>
         array('title' => array(
-            'title' => t('Contribution Page'),
+            'title' => ts('Contribution Page'),
           ),
         ),
         'grouping' => 'contri-fields',
@@ -153,6 +153,9 @@ class CRM_Report_Form_Contribute_Summary extends CRM_Report_Form {
         array('contribution_source' => NULL,
           'payment_instrument_id' => array(
             'title' => ts('Payment Instrument'),
+          ),
+          'receipt_id' => array(
+            'title' => ts('Receipt ID'),
           ),
           'total_amount' =>
           array('title' => ts('Amount Statistics'),

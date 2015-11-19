@@ -144,8 +144,8 @@ contribution2_total_amount_count, contribution2_total_amount_sum',
         'grouping' => 'contri-fields',
         'filters' =>
         array(
-          'receive_date1' =>
-          array('title' => ts('Date Range One'),
+          'receive_date1' => array(
+            'title' => ts('Date Range One'),
             'default' => 'previous.year',
             'type' => CRM_Utils_Type::T_DATE,
             'operatorType' => CRM_Report_Form::OP_DATE,
@@ -398,8 +398,8 @@ LEFT  JOIN (
     }
   }
 
-  function formRule(&$fields, &$files, &$self) {
-    require_once 'CRM/Utils/Date.php';
+  function formRule($fields, $files, $self) {
+    $errors = $grouping = array();
 
     $errors = $checkDate = $errorCount = array();
 

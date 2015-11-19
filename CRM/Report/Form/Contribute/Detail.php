@@ -136,6 +136,7 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
           'receive_date' => array('default' => TRUE),
           'receipt_date' => NULL,
           'fee_amount' => NULL,
+          'receipt_id' => NULL,
           'net_amount' => NULL,
           'total_amount' => array('title' => ts('Amount'),
             'required' => TRUE,
