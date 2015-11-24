@@ -162,16 +162,6 @@
     invert              = 0
 }
 {/if}
-{if $email and $outBound_option != 2}
-{include file="CRM/common/showHideByFieldValue.tpl" 
-    trigger_field_id    ="send_receipt"
-    trigger_value       =""
-    target_element_id   ="notice" 
-    target_element_type ="table-row"
-    field_type          ="radio"
-    invert              = 0
-}
-{/if}
 {if !$membershipMode}
 {include file="CRM/common/showHideByFieldValue.tpl" 
     trigger_field_id    ="payment_instrument_id"
@@ -194,7 +184,10 @@ cj(document).ready(function(){
    }
    cj('#have_receipt').live('click', function(){
      if(cj(this).attr('checked') == 'checked'){
-       cj('#send_receipt').attr("checked", "checked");
+       cj('#send_receipt').attr("checked", "checked");{/literal}
+{if $email and $outBound_option != 2}
+       cj('#notice').show();
+{/if}{literal}
        var d = new Date();
        if(cj("#receive_date").length){
          cj("#receipt_date").datepicker('setDate', cj("#receive_date").val());
@@ -214,6 +207,7 @@ cj(document).ready(function(){
      }
      else{
        cj('#receipt-option').hide();
+       cj('#notice').hide();
        cj('#send_receipt').removeAttr("checked");
        clearDateTime('receipt_date');
      }
