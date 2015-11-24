@@ -6284,7 +6284,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
    <td>
 
     {if $formValues.receipt_text}
-     <div>{$formValues.receipt_text|htmlize}</div>
+     <div>{$formValues.receipt_text}</div>
     {else}
      <p>{ts}Thanks for your support.{/ts}</p>
     {/if}
@@ -6644,7 +6644,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
    <td>
 
     {if $formValues.receipt_text}
-     <div>{$formValues.receipt_text|htmlize}</div>
+     <div>{$formValues.receipt_text}</div>
     {else}
      <p>{ts}Thanks for your support.{/ts}</p>
     {/if}
@@ -7086,7 +7086,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
    <td>
 
     {if $receipt_text}
-     <div>{$receipt_text|htmlize}</div>
+     <div>{$receipt_text}</div>
     {/if}
 
     {if $is_pay_later}
@@ -7652,7 +7652,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
    <td>
 
     {if $receipt_text}
-     <div>{$receipt_text|htmlize}</div>
+     <div>{$receipt_text}</div>
     {/if}
 
     {if $is_pay_later}
@@ -9306,7 +9306,7 @@ registration process.{/ts}
    <td>
 
     {if $event.confirm_email_text AND (not $isOnWaitlist AND not $isRequireApproval)}
-     <div>{$event.confirm_email_text|htmlize}</div>
+     <div>{$event.confirm_email_text}</div>
     {/if}
 
     {if $isOnWaitlist}
@@ -10045,7 +10045,7 @@ registration process.{/ts}
    <td>
 
     {if $event.confirm_email_text AND (not $isOnWaitlist AND not $isRequireApproval)}
-     <div>{$event.confirm_email_text|htmlize}</div>
+     <div>{$event.confirm_email_text}</div>
     {/if}
 
     {if $isOnWaitlist}
@@ -10785,7 +10785,7 @@ registration process.{/ts}
    <td>
 
     {if $event.confirm_email_text AND (not $isOnWaitlist AND not $isRequireApproval)}
-     <div>{$event.confirm_email_text|htmlize}</div>
+     <div>{$event.confirm_email_text}</div>
     {/if}
 
     {if $isOnWaitlist}
@@ -11518,7 +11518,7 @@ registration process.{/ts}
    <td>
 
     {if $event.confirm_email_text AND (not $isOnWaitlist AND not $isRequireApproval)}
-     <div>{$event.confirm_email_text|htmlize}</div>
+     <div>{$event.confirm_email_text}</div>
     {/if}
 
     {if $isOnWaitlist}
@@ -14216,7 +14216,7 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
    <td>
 
     {if $receipt_text}
-     <div>{$receipt_text|htmlize}</div>
+     <div>{$receipt_text}</div>
     {/if}
 
     {if $is_pay_later}
@@ -14917,7 +14917,7 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
    <td>
 
     {if $receipt_text}
-     <div>{$receipt_text|htmlize}</div>
+     <div>{$receipt_text}</div>
     {/if}
 
     {if $is_pay_later}
