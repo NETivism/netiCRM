@@ -239,6 +239,7 @@ $having
     $options = array(
       'second_times' => ts('In progress and having over 2 times.'),
       'last_time' => ts('In progress and last 1 time.'),
+      'in_progress' => ts('In Progress'),
       'is_expired' => ts('Expired'),
       'is_failed' => ts('Failed'),
       );
@@ -338,6 +339,8 @@ $having
       case 'is_failed':
         $clauses[] = " ( last_status_id = 4 )";
         break;
+      case 'in_progress':
+        $clauses[] = " ( contribution_status_id = 5 ) ";
     }
 
     $sort_name = $this->_formValues['sort_name'];
