@@ -431,7 +431,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
                 }
             }
 */
-      if(count($this->_paymentProcessors == 1)){
+      if(!empty($this->_paymentProcessors) && count($this->_paymentProcessors == 1)){
         $pid = key($this->_paymentProcessors);
         $this->_defaults['payment_processor'] = $pid;
       }
@@ -455,7 +455,9 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
         $this->assign('is_pay_later', $this->_values['is_pay_later']);
         $this->assign('pay_later_text', $this->_values['pay_later_text']);
         $this->assign('pay_later_receipt', $this->_values['pay_later_receipt']);
-        $this->addElement('hidden', 'payment_processor', array_pop(array_keys($pps)));
+        if(!empty($pps)){
+          $this->addElement('hidden', 'payment_processor', array_pop(array_keys($pps)));
+        }
       }
     }
 
