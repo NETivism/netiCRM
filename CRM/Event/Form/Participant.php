@@ -395,6 +395,7 @@ class CRM_Event_Form_Participant extends CRM_Contact_Form_Task {
       // assign participant id to the template
       $this->assign('participantId', $this->_id);
       $this->_roleId = CRM_Core_DAO::getFieldValue("CRM_Event_DAO_Participant", $this->_id, 'role_id');
+      $this->_registeredById = CRM_Core_DAO::getFieldValue("CRM_Event_DAO_Participant", $this->_id, 'registered_by_id');
     }
 
     // when fee amount is included in form
@@ -817,10 +818,9 @@ cj(function() {
 
 
     //frozen the field fix for CRM-4171
+    $checkRegisteredBy = !empty($this->_registeredById) ? $this->_registeredById : $this->_id;
     if ($this->_action & CRM_Core_Action::UPDATE && $this->_id) {
-      if (CRM_Core_DAO::getFieldValue('CRM_Event_DAO_ParticipantPayment',
-          $this->_id, 'contribution_id', 'participant_id'
-        )) {
+      if (CRM_Core_DAO::getFieldValue('CRM_Event_DAO_ParticipantPayment', $checkRegisteredBy, 'contribution_id', 'participant_id')) {
         $element->freeze();
       }
     }
