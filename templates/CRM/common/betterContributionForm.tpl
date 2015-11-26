@@ -12,12 +12,26 @@ jQuery(function($){
     $('#same-as').change(update_name);
     $('.receipt_type input').change(function(){
       if($('#r_person').is(':checked')){
-        $('label[for="custom_{/literal}{$receiptTitle}{literal}"]').text('{/literal}{ts}Contact Name{/ts}{literal}');
-        $('label[for="custom_{/literal}{$receiptSerial}{literal}"]').text('{/literal}{ts}Legal Identifier{/ts}{literal}');
+        $label = $('label[for="custom_{/literal}{$receiptTitle}{literal}"]')
+        html_label = $label.html();
+        html_label = html_label.replace(html_label.match(/([^<]+)(<span.+>$)?/)[1],"{/literal}{ts}Contact Name{/ts}{literal}");
+        $label.html(html_label);
+
+        $label = $('label[for="custom_{/literal}{$receiptSerial}{literal}"]');
+        html_label = $label.html();
+        html_label = html_label.replace(html_label.match(/([^<]+)(<span.+>$)?/)[1],"{/literal}{ts}Legal Identifier{/ts}{literal}");
+        $label.html(html_label);
       }
       if($('#r_company').is(':checked')){
-        $('label[for="custom_{/literal}{$receiptTitle}{literal}"]').text('{/literal}{ts}Organization Name{/ts}{literal}');
-        $('label[for="custom_{/literal}{$receiptSerial}{literal}"]').text('{/literal}{ts}Sic Code{/ts}{literal}');
+        $label = $('label[for="custom_{/literal}{$receiptTitle}{literal}"]');
+        html_label = $label.html();
+        html_label = html_label.replace(html_label.match(/([^<]+)(<span.+>$)?/)[1],"{/literal}{ts}Organization{/ts}{literal}");
+        $label.html(html_label);
+
+        $label = $('label[for="custom_{/literal}{$receiptSerial}{literal}"]');
+        html_label = $label.html();
+        html_label = html_label.replace(html_label.match(/([^<]+)(<span.+>$)?/)[1],"{/literal}{ts}Sic Code{/ts}{literal}");
+        $label.html(html_label);
       }
     })
   }
@@ -64,8 +78,8 @@ items += "<input name='receipt_name' type='radio' id='r_name_custom' ><label for
 
     // checkbox 
     if($('.custom_{/literal}{$receiptYesNo}{literal}-section .content input.form-checkbox').attr('type') == 'checkbox'){
-      var checkbox_is_no = $('.custom_12-section input+label').text().match(/不|{/literal}{ts}No{/ts}{literal}|no|don't|No|Don't/)?true:false;
-      var showFields = checkbox_is_no ^ $('.custom_12-section .content input.form-checkbox').is(':checked');
+      var checkbox_is_no = $('.custom_{/literal}{$receiptYesNo}{literal}-section input+label').text().match(/不|{/literal}{ts}No{/ts}{literal}|no|don't|No|Don't/)?true:false;
+      var showFields = checkbox_is_no ^ $('.custom_{/literal}{$receiptYesNo}{literal}-section .content input.form-checkbox').is(':checked');
     }
     if(showFields){
       {/literal}{if $receiptTitle}{literal}
