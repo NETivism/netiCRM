@@ -44929,3 +44929,11 @@ msgstr ""
 #: CRM/Custom/Form/Field.tpl
 msgid "When 'Required' is active, it is necessary to fill value on contact add/edit page. If you need this feature to visitor, please enable it in profiles setting."
 msgstr ""
+
+#: CRM/Admin/Form/Setting/Receipt.tpl
+msgid "Choose a Checkbox or a Radio field. If the field is selected to 'Yes' by contributor, then the receipt title and serial field will be required. On the contrary, the receipt title and serial field will hide."
+msgstr ""
+
+#: CRM/Admin/Form/Setting/Receipt.php
+msgid "Field to request receipt"
+msgstr ""

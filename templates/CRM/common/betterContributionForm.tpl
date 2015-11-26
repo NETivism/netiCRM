@@ -22,7 +22,7 @@ jQuery(function($){
     })
   }
 
-  // Display Donor ßCredit 
+  // Display Donor Credit 
   if($('#custom_{/literal}{$receiptDonorCredit}{literal}').length>=1){
 
     var items = "<input type='radio' name='receipt_name' id='r_name_full' ><label for='r_name_full'>{/literal}{ts}Full Name{/ts}{literal}</label>";
@@ -41,6 +41,57 @@ items += "<input name='receipt_name' type='radio' id='r_name_custom' ><label for
     update_name();
 
   }
+
+
+  // Yes No Selection
+  if($('.custom_{/literal}{$receiptYesNo}{literal}-section').length>=1){
+    $('.custom_{/literal}{$receiptYesNo}{literal}-section .content input').change(showHideReceiptFields);
+    $('.custom_{/literal}{$receiptYesNo}{literal}-section .content input').trigger('change');
+  }
+
+
+  function showHideReceiptFields(){
+    // radio option 
+    if($($('[name=custom_{/literal}{$receiptYesNo}{literal}]')[0]).attr('type') == 'radio'){
+      var $no_label = false;
+      $('.custom_{/literal}{$receiptYesNo}{literal}-section .content label').each(function(){
+        if($(this).text().match(/不|{/literal}{ts}No{/ts}{literal}|no|don't|No|Don't/)){
+          $no_label = $(this);
+        }
+      });
+      var showFields = !$('#'+$no_label.attr('for')).is(':checked');
+    }
+
+    // checkbox 
+    if($('.custom_{/literal}{$receiptYesNo}{literal}-section .content input.form-checkbox').attr('type') == 'checkbox'){
+      var checkbox_is_no = $('.custom_12-section input+label').text().match(/不|{/literal}{ts}No{/ts}{literal}|no|don't|No|Don't/)?true:false;
+      var showFields = checkbox_is_no ^ $('.custom_12-section .content input.form-checkbox').is(':checked');
+    }
+    if(showFields){
+      {/literal}{if $receiptTitle}{literal}
+      $('.custom_{/literal}{$receiptTitle}{literal}-section').show('slow');
+      $('.custom_{/literal}{$receiptTitle}{literal}-section .label label .crm-marker').remove();
+      $('.custom_{/literal}{$receiptTitle}{literal}-section').find('.label label').append('<span class="crm-marker" title="{/literal}{ts}This field is required.{/ts}{literal}">*</span>');
+      {/literal}{/if}{literal}
+      {/literal}{if $receiptSerial}{literal}
+      $('.custom_{/literal}{$receiptSerial}{literal}-section').show('slow');
+      $('.custom_{/literal}{$receiptSerial}{literal}-section .label label .crm-marker').remove();
+      $('.custom_{/literal}{$receiptSerial}{literal}-section').find('.label label').append('<span class="crm-marker" title="{/literal}{ts}This field is required.{/ts}{literal}">*</span>');
+      {/literal}{/if}{literal}
+      $('.receipt_type').show('slow');
+    }else{
+      {/literal}{if $receiptTitle}{literal}
+      $('.custom_{/literal}{$receiptTitle}{literal}-section').hide('slow');
+      $('.custom_{/literal}{$receiptTitle}{literal}-section .label label .crm-marker').remove();
+      {/literal}{/if}{literal}
+      {/literal}{if $receiptSerial}{literal}
+      $('.custom_{/literal}{$receiptSerial}{literal}-section').hide('slow');
+      $('.custom_{/literal}{$receiptSerial}{literal}-section .label label .crm-marker').remove();
+      {/literal}{/if}{literal}
+      $('.receipt_type').hide('slow');
+    }
+  }
+
 
   function update_name(){
     if($('#same-as').is(':checked') && $('#last_name,#first_name').length > 1 && $('#r_person').is(':checked')){
@@ -106,7 +157,7 @@ items += "<input name='receipt_name' type='radio' id='r_name_custom' ><label for
     // Anonymity
     if($('#r_name_hide[@checked]').val()){
       if($('#last_name,#first_name').length>1){
-        $('#custom_{/literal}{$receiptDonorCredit}{literal}').val("不具名");
+        $('#custom_{/literal}{$receiptDonorCredit}{literal}').val('{/literal}{ts}Anonymity{/ts}{literal}');
         $('#custom_{/literal}{$receiptDonorCredit}{literal}').attr('disabled','true');
       }
     }
