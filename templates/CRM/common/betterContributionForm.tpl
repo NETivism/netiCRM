@@ -9,10 +9,8 @@ jQuery(function($){
     var OddOrEven = $('.custom_{/literal}{$receiptTitle}{literal}-section').attr('class').match(/crm-odd|crm-even/)[0];
     $('.receipt_type').addClass(OddOrEven);
 
-    $('<div class="crm-section same_as_section"><div class="label"></div><div class="content"><input type="checkbox" name="same_as_post" id="same-as"><label for="same-as">{/literal}{ts}Title, Sic are same as Contributor{/ts}{literal}</label></div></div>')
-    .insertBefore($('.custom_{/literal}{$receiptTitle}{literal}-section'));
-    OddOrEven = $('.custom_{/literal}{$receiptTitle}{literal}-section').attr('class').match(/crm-odd/)?'crm-even':'crm-odd';
-    $('.same_as_section').addClass(OddOrEven);
+    $('<div><input type="checkbox" name="same_as_post" id="same-as"><label for="same-as">{/literal}{ts}Same as Contributor{/ts}{literal}</label></div>')
+    .insertBefore($('#custom_{/literal}{$receiptTitle}{literal}'));
 
     
     $('#same-as').change(update_name);
@@ -66,7 +64,7 @@ items += "<input name='receipt_name' type='radio' id='r_name_custom' ><label for
       {/literal}{if $receiptSerial}{literal}
       $('.custom_{/literal}{$receiptSerial}{literal}-section').show('slow');
       {/literal}{/if}{literal}
-      $('.receipt_type,.same_as_section').show('slow');
+      $('.receipt_type').show('slow');
     }else{
       {/literal}{if $receiptTitle}{literal}
       $('.custom_{/literal}{$receiptTitle}{literal}-section').hide('slow');
@@ -74,7 +72,7 @@ items += "<input name='receipt_name' type='radio' id='r_name_custom' ><label for
       {/literal}{if $receiptSerial}{literal}
       $('.custom_{/literal}{$receiptSerial}{literal}-section').hide('slow');
       {/literal}{/if}{literal}
-      $('.receipt_type,.same_as_section').hide('slow');
+      $('.receipt_type').hide('slow');
     }
   }
 
