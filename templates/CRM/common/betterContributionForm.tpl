@@ -25,7 +25,7 @@ jQuery(function($){
       }
     });
   }
-  $('.receipt_type input').trigger('change');
+  $('.receipt_type input').trigger('change').change(update_name);
 
   // Display Donor Credit 
   if($('#custom_{/literal}{$receiptDonorCredit}{literal}').length>=1){
@@ -104,17 +104,18 @@ items += "<input name='receipt_name' type='radio' id='r_name_custom' ><label for
         // radio option 
     if($($('[name=custom_{/literal}{$receiptYesNo}{literal}]')[0]).attr('type') == 'radio'){
       var $no_label = false;
-      $('.custom_{/literal}{$receiptYesNo}{literal}-section .content label').each(function(){
-        if($(this).text().match(/不|{/literal}{ts}No{/ts}{literal}|no|don't|No|Don't/)){
+      $('.custom_{/literal}{$receiptYesNo}{literal}-section .content input[type="radio"]').each(function(){
+        if(!$(this).val().match(/1|true|yes/)){
           $no_label = $(this);
         }
       });
-      var showFields = !$('#'+$no_label.attr('for')).is(':checked');
+      var showFields = !$no_label.is(':checked');
+      return showFields;
     }
 
     // checkbox 
     if($('.custom_{/literal}{$receiptYesNo}{literal}-section .content input.form-checkbox').attr('type') == 'checkbox'){
-      var checkbox_is_no = $('.custom_{/literal}{$receiptYesNo}{literal}-section input+label').text().match(/不|{/literal}{ts}No{/ts}{literal}|no|don't|No|Don't/)?true:false;
+      var checkbox_is_no = $('.custom_{/literal}{$receiptYesNo}{literal}-section input:checked').text().match(/{/literal}{ts}No{/ts}{literal}|no|don't|No|Don't/)?true:false;
       var showFields = checkbox_is_no ^ $('.custom_{/literal}{$receiptYesNo}{literal}-section .content input.form-checkbox').is(':checked');
     }
     return showFields;
