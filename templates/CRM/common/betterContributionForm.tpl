@@ -124,23 +124,16 @@ items += "<input name='receipt_name' type='radio' id='r_name_custom' ><label for
   function update_name(){
     if($('#same-as').is(':checked') && $('#last_name,#first_name').length > 1 && $('#r_person').is(':checked')){
         $('#custom_{/literal}{$receiptTitle}{literal}').val($('#last_name').val()+$('#first_name').val());
-        //$('#custom_{/literal}{$receiptTitle}{literal}').attr('disabled','true');
       }
     if($('#same-as').is(':checked') && $('#legal_identifier').length >= 1 && $('#r_person').is(':checked')){
      $('#custom_{/literal}{$receiptSerial}{literal}').val($('#legal_identifier').val());
-     $('#custom_{/literal}{$receiptSerial}{literal}').attr('disabled','true');
     }
-    /*
-    if(!$('#same-as').is(':checked')){
-      $('#custom_{/literal}{$receiptSerial}{literal},#custom_{/literal}{$receiptTitle}{literal}').removeAttr('disabled');
-    }
-    */
 
     //Full Name
     if($('#r_name_full[@checked]').val()){
       if($('#last_name,#first_name').length>1){
         $('#custom_{/literal}{$receiptDonorCredit}{literal}').val($('#last_name').val()+$('#first_name').val());
-        $('#custom_{/literal}{$receiptDonorCredit}{literal}').attr('disabled','true');
+        $('#custom_{/literal}{$receiptDonorCredit}{literal}').attr('readonly','readonly');
       }
     }
 
@@ -178,7 +171,7 @@ items += "<input name='receipt_name' type='radio' id='r_name_custom' ><label for
 
         
         $('#custom_{/literal}{$receiptDonorCredit}{literal}').val(name);
-        $('#custom_{/literal}{$receiptDonorCredit}{literal}').attr('disabled','true');
+        $('#custom_{/literal}{$receiptDonorCredit}{literal}').attr('readonly','readonly');
       }
     }
 
@@ -186,7 +179,7 @@ items += "<input name='receipt_name' type='radio' id='r_name_custom' ><label for
     if($('#r_name_hide[@checked]').val()){
       if($('#last_name,#first_name').length>1){
         $('#custom_{/literal}{$receiptDonorCredit}{literal}').val('{/literal}{ts}Anonymity{/ts}{literal}');
-        $('#custom_{/literal}{$receiptDonorCredit}{literal}').attr('disabled','true');
+        $('#custom_{/literal}{$receiptDonorCredit}{literal}').attr('readonly','readonly');
       }
     }
 
@@ -194,7 +187,7 @@ items += "<input name='receipt_name' type='radio' id='r_name_custom' ><label for
     if($('#r_name_custom[@checked]').val()){
       if($('#last_name,#first_name').length>1){
         $('#custom_{/literal}{$receiptDonorCredit}{literal}').val($('#last_name').val()+$('#first_name').val());
-        $('#custom_{/literal}{$receiptDonorCredit}{literal}').removeAttr('disabled');
+        $('#custom_{/literal}{$receiptDonorCredit}{literal}').removeAttr('readonly');
       }
     }
 
