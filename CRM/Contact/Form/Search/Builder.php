@@ -295,8 +295,16 @@ class CRM_Contact_Form_Search_Builder extends CRM_Contact_Form_Search {
 
   public function normalizeFormValues() {}
 
-  public function &convertFormValues(&$formValues) {
-    return CRM_Core_BAO_Mapping::formattedFields($formValues);
+  public function &convertFormValues(&$formValues, $wildcard = FALSE) {
+    $fields = CRM_Core_BAO_Mapping::formattedFields($formValues);
+    if($wildcard){
+      foreach($fields as $k => $v){
+        if(isset($v[4]) && $v[1] == 'LIKE'){
+          $fields[$k][4] = 1;
+        }
+      }
+    }
+    return $fields;
   }
 
   public function &returnProperties() {
@@ -373,7 +381,7 @@ class CRM_Contact_Form_Search_Builder extends CRM_Contact_Form_Search {
       }
     }
 
-    $this->_params = &$this->convertFormValues($this->_formValues);
+    $this->_params = &$this->convertFormValues($this->_formValues, $wildcard = TRUE);
     $this->_returnProperties = &$this->returnProperties();
     parent::postProcess();
   }

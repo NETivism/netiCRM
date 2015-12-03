@@ -1599,7 +1599,7 @@ class CRM_Contact_BAO_Query {
       $this->_where[$grouping] = array();
     }
     if ($op == 'LIKE' && !$wildcard) {
-      $value = trim($value, '%') . '%';
+      $value = '%' . trim($value, '%') . '%';
     }
 
     $multipleFields = array('url');
@@ -1884,7 +1884,7 @@ class CRM_Contact_BAO_Query {
           $value = $strtolower(CRM_Core_DAO::escapeString($value));
         }
         if ($wildcard) {
-          $value = "'%$value%'";
+          $value = "%$value%";
           $op = 'LIKE';
         }
 
