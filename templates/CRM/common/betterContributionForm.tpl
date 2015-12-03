@@ -123,12 +123,21 @@ items += "<input name='receipt_name' type='radio' id='r_name_custom' ><label for
 
 
   function update_name(){
+    if($('#r_person').is(':checked')){
+      $('#same-as').parent('div').show();
+    }else{
+      $('#same-as').parent('div').hide();
+    }
     if($('#same-as').is(':checked') && $('#last_name,#first_name').length > 1 && $('#r_person').is(':checked')){
-        $('#custom_{/literal}{$receiptTitle}{literal}').val($('#last_name').val()+$('#first_name').val());
+        $('#custom_{/literal}{$receiptTitle}{literal}').val($('#last_name').val()+$('#first_name').val()).attr('readonly','readonly');
+      }else{
+        $('#custom_{/literal}{$receiptTitle}{literal}').removeAttr('readonly');
       }
     if($('#same-as').is(':checked') && $('#legal_identifier').length >= 1 && $('#r_person').is(':checked')){
-     $('#custom_{/literal}{$receiptSerial}{literal}').val($('#legal_identifier').val());
-    }
+     $('#custom_{/literal}{$receiptSerial}{literal}').val($('#legal_identifier').val()).attr('readonly','readonly');
+    }else{
+        $('#custom_{/literal}{$receiptSerial}{literal}').removeAttr('readonly');
+      }
 
     //Full Name
     if($('#r_name_full[@checked]').val()){
