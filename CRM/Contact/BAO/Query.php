@@ -2482,14 +2482,14 @@ class CRM_Contact_BAO_Query {
       }
     }
     else {
-      $statii[] = '"Added"';
+      $statii[] = "'Added'";
       $in = TRUE;
     }
 
     $skipGroup = FALSE;
     if (count($value) == 1 &&
       count($statii) == 1 &&
-      $statii[0] == '"Added"'
+      $statii[0] == "'Added'"
     ) {
       // check if smart group, if so we can get rid of that one additional
       // left join
@@ -2510,16 +2510,25 @@ class CRM_Contact_BAO_Query {
       $this->_tables[$gcTable] = $this->_whereTables[$gcTable] = " LEFT JOIN civicrm_group_contact {$gcTable} ON contact_a.id = {$gcTable}.contact_id ";
     }
 
-    $qill = ts('Contacts %1', array(1 => $op));
-    $qill .= ' ' . implode(' ' . ts('or') . ' ', $names);
-
     $groupClause = NULL;
 
     if (!$skipGroup) {
-      $groupClause = "{$gcTable}.group_id $op ( $groupIds )";
-      if (!empty($statii)) {
+      if(strstr($op, 'NULL')) {
+        $groupClause = "{$gcTable}.group_id $op";
+        $qill = ts('Group').ts($op);
+      }
+      else{
+        $groupClause = "{$gcTable}.group_id $op ( $groupIds )";
+        $qill = ts('Contacts %1', array(1 => $op));
+        $qill .= ' ' . implode(' ' . ts('or') . ' ', $names);
+      }
+      if (!empty($statii) && $op != 'IS NULL') {
         $groupClause .= " AND {$gcTable}.status IN (" . implode(', ', $statii) . ")";
-        $qill .= " " . ts('AND') . " " . ts('Group Status') . ' - ' . implode(' ' . ts('or') . ' ', $statii);
+        foreach($statii as $v){
+          $v = trim($v, "'");
+          $statii_qill[] = ts($v);
+        }
+        $qill .= " " . ts('AND') . " " . ts('Group Status') . ' - ' . implode(' ' . ts('or') . ' ', $statii_qill);
       }
     }
 
