@@ -2422,24 +2422,28 @@ class CRM_Contact_BAO_Query {
   }
 
   function includeContactSubTypes($value, $grouping) {
-
     $clause = array();
     $alias = "contact_a.contact_sub_type";
 
     if (is_array($value)) {
       foreach ($value as $k => $v) {
         if (!empty($k)) {
-          $clause[$k] = "($alias like '%" . CRM_Core_DAO::VALUE_SEPARATOR . CRM_Utils_Type::escape($k, 'String') . CRM_Core_DAO::VALUE_SEPARATOR . "%')";
+          $clause[$k] = "($alias like '" . CRM_Utils_Type::escape($k, 'String') . "')";
         }
       }
     }
     else {
-      $clause[$value] = "($alias like '%" . CRM_Core_DAO::VALUE_SEPARATOR . CRM_Utils_Type::escape($value, 'String') . CRM_Core_DAO::VALUE_SEPARATOR . "%')";
+      $clause[$value] = "($alias = '" . CRM_Utils_Type::escape($value, 'String') . "')";
     }
 
     if (!empty($clause)) {
+      $subTypes = CRM_Contact_BAO_ContactType::subTypeInfo();
+      $subTypeLabel = array();
+      foreach($clause as $k => $v){
+        $subTypeLabel[] = $subTypes[$k]['label'];
+      }
       $this->_where[$grouping][] = "( " . implode(' OR ', $clause) . " )";
-      $this->_qill[$grouping][] = ts('Contact Subtype') . ' - ' . implode(' ' . ts('or') . ' ', array_keys($clause));
+      $this->_qill[$grouping][] = ts('Contact Subtype') . ' - ' . implode( ' ' . ts('or') . ' ', $subTypeLabel);
     }
   }
 
