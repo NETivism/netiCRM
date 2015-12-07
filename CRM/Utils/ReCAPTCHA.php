@@ -67,53 +67,69 @@ class CRM_Utils_ReCAPTCHA {
     return self::$_singleton;
   }
 
-  function __construct() {}
+  function __construct() {
+    $require_path = 'packages/recaptcha/src/ReCaptcha';
+    if(function_exists('module_exists')){
+      if(module_exists('recaptcha')){
+        $possible_path = drupal_get_path('module', 'recaptcha').'/recaptcha-php/src/ReCaptcha';
+        if(is_file($possible_path.'/ReCaptcha.php')){
+          $require_path = $possible_path;
+        }
+      }
+    }
+    require_once $require_path . '/ReCaptcha.php';
+    require_once $require_path . '/RequestMethod.php';
+    require_once $require_path . '/RequestParameters.php';
+    require_once $require_path . '/Response.php';
+    require_once $require_path . '/RequestMethod/Post.php';
+  }
 
   /**
    * Add element to form
    *
    */
   function add(&$form) {
-    $error = NULL;
     $config = CRM_Core_Config::singleton();
-    $useSSL = FALSE;
-    require_once 'packages/recaptcha/recaptchalib.php';
-
-    // See if we are using SSL
-    if(CRM_Utils_System::isSSL()) {
-      $useSSL = TRUE;
-    }
-    $html = recaptcha_get_html($config->recaptchaPublicKey, $error, $useSSL);
+    $html = self::getHTML($config->recaptchaPublicKey);
 
     $form->assign('recaptchaHTML', $html);
-    $form->add('text',
-      'recaptcha_challenge_field',
-      NULL,
+    $form->add(
+      'textarea',
+      'g-recaptcha-response',
+      'ReCaptcha',
       NULL,
       TRUE
     );
-    $form->add('hidden',
-      'recaptcha_response_field',
-      'manual_challenge'
-    );
-
     $form->registerRule('recaptcha', 'callback', 'validate', 'CRM_Utils_ReCAPTCHA');
-    $form->addRule('recaptcha_challenge_field',
+    $form->addRule(
+      'g-recaptcha-response',
       ts('Input text must match the phrase in the image. Please review the image and re-enter matching text.'),
       'recaptcha',
       $form
     );
   }
 
-  function validate($value, $form) {
+  static function validate($value, $form) {
     $config = CRM_Core_Config::singleton();
 
-    $resp = recaptcha_check_answer($config->recaptchaPrivateKey,
-      $_SERVER['REMOTE_ADDR'],
-      $_POST["recaptcha_challenge_field"],
-      $_POST["recaptcha_response_field"]
-    );
-    return $resp->is_valid;
+    $resp = self::checkAnswer($config->recaptchaPrivateKey, $_POST['g-recaptcha-response'], $_SERVER['REMOTE_ADDR']);
+    if ($resp->isSuccess()) {
+      return TRUE;
+    }
+    return FALSE; 
   }
+
+  static function getHTML($pubkey){
+    $output = '<div class="g-recaptcha" data-sitekey="'.$pubkey.'"></div>'; 
+    $output .= '<script src="//www.google.com/recaptcha/api.js"></script>';
+    return $output;
+  }
+
+  static function checkAnswer($key, $response, $ip){
+    $recaptcha = new \ReCaptcha\ReCaptcha($key);
+    $resp = $recaptcha->verify($_POST['g-recaptcha-response'], $_SERVER['REMOTE_ADDR']);
+    return $resp;
+  }
+
 }
 
