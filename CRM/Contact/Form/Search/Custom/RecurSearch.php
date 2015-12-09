@@ -341,6 +341,7 @@ $having
         break;
       case 'in_progress':
         $clauses[] = " ( contribution_status_id = 5 ) ";
+        break;
     }
 
     $sort_name = $this->_formValues['sort_name'];
