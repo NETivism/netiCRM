@@ -291,10 +291,14 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page {
     $this->assign('event', $values['event']);
 
     // Used is Add to Google Calendar button. refs #16572
+    $start_date_time = strtotime($values['event']['event_start_date']);
+    $this->assign('gcal_start_date',gmstrftime('%Y%m%dT%H%M%SZ', $start_date_time));
     if(!empty($values['event']['event_end_date'])){
-      $this->assign('end_date',$values['event']['event_end_date']);
+      $end_date_time = strtotime($values['event']['event_end_date']);
+      $this->assign('gcal_end_date',gmstrftime('%Y%m%dT%H%M%SZ',$end_date_time));
     }else if(!empty($values['event']['event_start_date'])){
-      $this->assign('end_date', strtotime('+1 hour',strtotime($values['event']['event_start_date']) ));
+      $end_date_time = strtotime('+1 hour',$start_date_time);
+      $this->assign('gcal_end_date', gmstrftime('%Y%m%dT%H%M%SZ',$end_date_time));
     }
 
     if (isset($values['feeBlock'])) {
