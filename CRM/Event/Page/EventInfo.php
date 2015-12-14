@@ -289,6 +289,14 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page {
     CRM_Utils_System::setTitle($values['event']['title']);
 
     $this->assign('event', $values['event']);
+
+    // Used is Add to Google Calendar button. refs #16572
+    if(!empty($values['event']['event_end_date'])){
+      $this->assign('end_date',$values['event']['event_end_date']);
+    }else if(!empty($values['event']['event_start_date'])){
+      $this->assign('end_date', strtotime('+1 hour',strtotime($values['event']['event_start_date']) ));
+    }
+
     if (isset($values['feeBlock'])) {
       $this->assign('feeBlock', $values['feeBlock']);
     }

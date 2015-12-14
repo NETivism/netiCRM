@@ -77,6 +77,9 @@
                     </abbr> 	
                 {/if}
             {/if}
+            <br/>
+            <span>
+<a target="_blank" href="http://www.google.com/calendar/event?action=TEMPLATE&text={$event.event_title}&dates={$event.event_start_date|date_format:"%Y%m%dT%H%I00Z"}/{$end_date|date_format:"%Y%m%dT%H%I00Z"}{if $event.summary}&details={$event.summary}{/if}{if $location.address.1}&location={$location.address.1.display|nl2br}{/if}&trp=true&sprop={if $smarty.server.HTTPS}https{else}http{/if}%3A%2F%2F{$smarty.server.HTTP_HOST|escape:'url'}{$smarty.server.REQUEST_URI|escape:'url'}&sprop=name:{$smarty.server.HTTP_HOST}">{ts}Add to Google Calendar{/ts}</a></span>
         </div>
 		<div class="clear"></div>
 	</div>
