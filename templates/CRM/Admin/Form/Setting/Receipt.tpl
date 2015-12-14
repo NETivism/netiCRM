@@ -44,8 +44,7 @@
         </tr>
         <tr class="crm-mail-form-block-receiptYesNo">
             <td class="label">{$form.receiptYesNo.label}</td><td>{$form.receiptYesNo.html}<br />
-            <span class="description">{ts}Choose a Checkbox or a Radio field. If the field is selected to 'Yes' by contributor, then the receipt title and serial field will be required. On the contrary, the receipt title and serial field will hide.{/ts}
-            {ts}You can also set the option label like "No, I don't". The field will be hide when contributors select the option.{/ts}</span></td>
+            <span class="description">{ts}Choose a Checkbox or a Radio field. If the field is selected to 'Yes' by contributor, then the receipt title and serial field will be required. On the contrary, the receipt title and serial field will hide.{/ts}</span></td>
         </tr>
         <tr class="crm-mail-form-block-receiptTitle">
             <td class="label">{$form.receiptTitle.label}</td><td>{$form.receiptTitle.html}<br />

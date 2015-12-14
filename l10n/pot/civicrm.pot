@@ -44938,10 +44938,6 @@ msgstr ""
 msgid "Field to request receipt"
 msgstr ""
 
-#: CRM/Admin/Form/Setting/Receipt.tpl
-msgid "You can also set the option label like \"No, I don't\". The field will be hide when contributors select the option."
-msgstr ""
-
 #: CRM/Event/Page/EventInfo.tpl
 msgid "Add to Google Calendar"
 msgstr ""
