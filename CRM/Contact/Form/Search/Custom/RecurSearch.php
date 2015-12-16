@@ -72,7 +72,7 @@ class CRM_Contact_Form_Search_Custom_RecurSearch  extends CRM_Contact_Form_Searc
       'TRUNCATE(SUM(IF(c.contribution_status_id = 1, c.total_amount, 0)),0)' => 'receive_amount', 
       'TRUNCATE(SUM(c.total_amount),0)' => 'total_amount', 
       'c.contribution_status_id' => 'last_status_id',
-      'MAX(c.receive_date)' => 'current_receive_date',
+      'MAX(c.created_date)' => 'current_created_date',
       'r.contribution_status_id' => 'contribution_status_id',
     );
     $this->_columns = array(
@@ -89,7 +89,7 @@ class CRM_Contact_Form_Search_Custom_RecurSearch  extends CRM_Contact_Form_Searc
       ts('Total Receive Amount') => 'receive_amount',
       ts('Current Total Amount') => 'total_amount',
       $filter_month. ts('Contribution Status') => 'last_status_id',
-      $filter_month. ts('Created Date') => 'current_receive_date',
+      $filter_month. ts('Created Date') => 'current_created_date',
       ts('Last Receive Date') => 'last_receive_date',
     );
   }
@@ -451,7 +451,14 @@ SUM(total_amount) as total_amount
       $sql = "SELECT receive_date FROM civicrm_contribution WHERE contribution_status_id = 1 AND contribution_recur_id = {$row['id']} ORDER BY receive_date DESC";
       $row['last_receive_date'] = CRM_Core_DAO::singleValueQuery($sql, CRM_Core_DAO::$_nullArray);
     }
-    $sql = "SELECT contribution_status_id FROM civicrm_contribution WHERE contribution_recur_id = {$row['id']} ORDER BY receive_date DESC LIMIT 1";
+    if($this->_formValues['contribution_created_date']){
+      $month = $this->_formValues['contribution_created_date'].'-01 00:00:00';
+      $next_month = date('Y-m-d H:i:s',strtotime('+1 month',strtotime($month)));
+      $sql = "SELECT contribution_status_id FROM civicrm_contribution WHERE contribution_recur_id = {$row['id']} AND created_date >= '$month' AND created_date < '$next_month'";
+    }else{
+      $sql = "SELECT contribution_status_id FROM civicrm_contribution WHERE contribution_recur_id = {$row['id']} ORDER BY created_date DESC LIMIT 1";
+    }
+
     $row['last_status_id'] = CRM_Core_DAO::singleValueQuery($sql, CRM_Core_DAO::$_nullArray);
     $row['last_status_id'] = $this->_cstatus[$row['last_status_id']];
     // $row['action'] = '<a href="'.CRM_Utils_System::url('civicrm/contact/view/contributionrecur', "reset=1&id={$row['id']}&cid={$row['contact_id']}").'" target="_blank">'.ts('View').'</a>';
