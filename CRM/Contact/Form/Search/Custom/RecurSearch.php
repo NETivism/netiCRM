@@ -61,6 +61,7 @@ class CRM_Contact_Form_Search_Custom_RecurSearch  extends CRM_Contact_Form_Searc
       'r.id' => 'id',
       'contact_a.sort_name' => 'sort_name',
       'r.contact_id' => 'contact_id',
+      'contact_email.email' => 'email',
       'TRUNCATE(r.amount,0)' => 'amount',
       'r.installments' => 'installments',
       'r.start_date' => 'start_date',
@@ -166,7 +167,8 @@ $having
   function _from() {
     return "civicrm_contribution_recur AS r 
     INNER JOIN civicrm_contribution AS c ON c.contribution_recur_id = r.id
-    INNER JOIN civicrm_contact AS contact_a ON contact_a.id = r.contact_id";
+    INNER JOIN civicrm_contact AS contact_a ON contact_a.id = r.contact_id
+    INNER JOIN civicrm_email AS contact_email ON contact_email.contact_id = r.contact_id";
   }
 
   /**
@@ -247,11 +249,13 @@ $having
 
     $form->addElement('text', 'sort_name', ts('Name'));
 
+    $form->addElement('text', 'email', ts('Email'));
+
     /**
      * If you are using the sample template, this array tells the template fields to render
      * for the search form.
      */
-    $form->assign('elements', array('start_date', 'contribution_created_date','other_options','sort_name'));
+    $form->assign('elements', array('start_date', 'contribution_created_date','other_options','sort_name','email'));
   }
 
   function count(){
@@ -347,6 +351,11 @@ $having
     $sort_name = $this->_formValues['sort_name'];
     if($sort_name){
       $clauses[] = "(`sort_name` LIKE '%$sort_name%')";
+    }
+
+    $email = $this->_formValues['email'];
+    if($email){
+      $clauses[] = "(`email` LIKE '%$email%')";
     }
 
 
