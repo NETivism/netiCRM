@@ -44890,7 +44890,7 @@ msgid "Payment failed."
 msgstr ""
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
-msgid "We were unalbe to process your payment. Your will not been charged in this transaction."
+msgid "We were unable to process your payment. Your will not been charged in this transaction."
 msgstr ""
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl

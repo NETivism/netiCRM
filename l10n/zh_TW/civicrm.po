@@ -44873,7 +44873,7 @@ msgstr "抱歉，付款失敗了！"
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid ""
-"We were unalbe to process your payment. Your will not been charged in this "
+"We were unable to process your payment. Your will not been charged in this "
 "transaction."
 msgstr "您不會被扣除任何款項，"
 

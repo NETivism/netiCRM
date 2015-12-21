@@ -66,7 +66,7 @@
         {/if}
       {elseif $payment_result_type eq 4}
         <h3 class="crm-error">{ts}Payment failed.{/ts}</h3>
-        {ts}We were unalbe to process your payment. Your will not been charged in this transaction.{/ts}
+        {ts}We were unable to process your payment. Your will not been charged in this transaction.{/ts}
         {ts}Possible reason{/ts}:
         <ul>
         {if $payment_result_message}
@@ -131,10 +131,10 @@
         </div>
         <div class="display-block">
           {if $trxn_id}
-          {ts}Transaction ID{/ts}: <strong>{$trxn_id}</strong><br />
+          <div><label>{ts}Transaction ID{/ts}:</label> <strong>{$trxn_id}</strong></div>
           {/if}
           {if $payment_instrument}
-          {ts}Payment Instrument{/ts}: <strong>{$payment_instrument}</strong><br />
+          <div><label>{ts}Payment Instrument{/ts}:</label> {$payment_instrument}</div>
           {/if}
         	{if $lineItem and $priceSetID}
     	    {if !$amount}{assign var="amount" value=0}{/if}
