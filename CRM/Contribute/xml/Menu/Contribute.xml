@@ -265,4 +265,12 @@
      <access_arguments>make online contributions</access_arguments>
      <weight>0</weight>
   </item>
+  <item>
+     <path>civicrm/contribute/invoice</path>
+     <title>Invoice</title>
+     <page_callback>CRM_Contribute_Page_Invoice</page_callback>
+     <access_arguments>make online contributions</access_arguments>
+     <is_public>true</is_public>
+     <weight>0</weight>
+  </item>
   </menu>

@@ -909,5 +909,22 @@ class CRM_Utils_Hook {
     $null = &CRM_Core_DAO::$_nullObject;
     return eval("return {$config->userHookClass}::invoke(4, \$formName, \$form, \$context, \$tplName, \$null, 'civicrm_alterTemplateFile');");
   }
+
+  /**
+   * This hooks allows other module prepare variable to pass into invoice
+   *
+   * @param $contribution_id
+   *   Contribution id
+   * @param $tplParams
+   *   Variable to save variables 
+   *
+   * @return mixed
+   */
+  static function prepareInvoice($contribution_id, &$tplParams, $message) {
+    $config = CRM_Core_Config::singleton();
+    require_once (str_replace('_', DIRECTORY_SEPARATOR, $config->userHookClass) . '.php');
+    $null = &CRM_Core_DAO::$_nullObject;
+    return eval('return '.$config->userHookClass.'::invoke(3, $contribution_id, $tplParams, $message, $null, $null, \'civicrm_prepareInvoice\' );');
+  }
 }
 

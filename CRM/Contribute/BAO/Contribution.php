@@ -2388,5 +2388,84 @@ WHERE c.id = $id";
       return $url;
     }
   }
+
+  static function getInvoice($contributionId, $paymentInfo, $message, $sendMail = FALSE) {
+    $contribution = new CRM_Contribute_DAO_Contribution();
+    $contribution->id = $contributionId;
+    if($contribution->find(TRUE)){
+      $instruments = CRM_Contribute_PseudoConstant::paymentInstrument();
+      if(!empty($contribution->payment_instrument_id)){
+        $contribution->payment_instrument = $instruments[$contribution->payment_instrument_id];
+      }
+      $details = CRM_Contribute_BAO_Contribution::getComponentDetails(array($contributionId));
+      $ids = reset($details);
+      $pageValues = $sendParams = array();
+
+      if(!empty($ids)){
+        // get primary location email if no email exist( for billing location).
+        if($ids['component'] == 'event'){
+          if(!empty($ids['event'])){
+            $event_params = array('id' => $ids['id']);
+            CRM_Event_BAO_Event::retrieve($event_params, $pageValues);
+            $pageValues['url'] = CRM_Utils_System::url('civicrm/event/info', 'reset=1&id='.$pageValues['id'], TRUE);
+            if($pageValues['is_email_receipt']){
+              $sendParams['from'] = $pageValues['receipt_from_name'].' <'.$pageValues['receipt_from_email'].'>';
+            }
+          }
+        }
+        elseif($ids['component'] == 'contribute'){
+          if(!empty($ids['page_id'])){
+            CRM_Contribute_BAO_ContributionPage::setValues($ids['page_id'], $pageValues);
+            $pageValues['url'] = CRM_Utils_System::url('civicrm/contribute/transact', 'reset=1&id='.$pageValues['id'], TRUE);
+            if($pageValues['is_email_confirm']){
+              $sendParams['from'] = $pageValues['confirm_from_name']. ' <'.$pageValues['confirm_from_email'].'>';
+            }
+          }
+        }
+      }
+      if(empty($sendParams['from'])){
+        $from_emails = array();
+        CRM_Core_OptionValue::getValues(array('name' => 'from_email_address'), $from_emails);
+        foreach($from_emails as $id => $v){
+          if($v['is_default'] == 1){
+            $sendParams['from'] = $v['label'];
+            break;
+          }
+        }
+      }
+      list($displayName, $email) = CRM_Contact_BAO_Contact_Location::getEmailDetails($contribution->contact_id);
+      if($sendMail){
+        $sendParams['toName'] = $displayName;
+        $sendParams['toEmail'] = $email;
+      }
+
+      $config = CRM_Core_Config::singleton();
+      $tplParams = array(
+        'contact_id' => $contact_id,
+        'contribution' => (array)$contribution,
+        'message' => $message,
+        'payment_info' => $paymentInfo,
+        'component' => !empty($ids['component']) ? $ids['component'] : '',
+        'page' => $pageValues,
+        'title' => $pageValues['title'],
+        'logo' => !empty($config->receiptLogo) ? $config->receiptLogo : '',
+      );
+
+      // use either the contribution or membership receipt, based on whether it’s a membership-related contrib or not
+      $sendTemplateParams = array(
+        'groupName' => 'msg_tpl_workflow_contribution',
+        'valueName' => 'contribution_invoice_notify',
+        'contactId' => $ids['contact_id'],
+        'tplParams' => $tplParams,
+        'isTest' => $contribution->is_test,
+      );
+      $sendTemplateParams = array_merge($sendTemplateParams, $sendParams); 
+      list($sent, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate($sendTemplateParams);
+
+      if(!$sendMail){
+        return $html;
+      }
+    }
+  }
 }
 

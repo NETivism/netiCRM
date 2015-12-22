@@ -713,4 +713,17 @@ INNER JOIN   civicrm_contact contact ON ( contact.id = contrib.contact_id )
     }
     $form->assign('payment_result_message', $message);
   }
+
+  /**
+   * Payment result message after submit contribution
+   *
+   * @param int     $contribution_id
+   */
+  public static Function invoiceLink($contribution_id){
+    $invoice_id = CRM_Core_DAO::singleValueQuery("SELECT invoice_id FROM civicrm_contribution WHERE id = %1", array(1 => array($contribution_id, 'Integer')));
+    if(!empty($invoice_id)){
+      return CRM_Utils_System::url('civicrm/contribute/invoice', 'reset=1&ii='.$invoice_id, TRUE);
+    }
+    return FALSE;
+  }
 }
