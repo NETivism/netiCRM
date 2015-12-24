@@ -9,8 +9,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2015-11-18 07:05+0000\n"
-"Last-Translator: Fuyuan Cheng <gloomcheng@gmail.com>\n"
+"PO-Revision-Date: 2015-12-24 07:27+0000\n"
+"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -210,7 +210,7 @@ msgstr "所有"
 #: CRM/Member/DAO/MembershipBlock.php CRM/Pledge/DAO/PledgeBlock.php
 #: CRM/Price/DAO/LineItem.php CRM/Price/DAO/SetEntity.php
 msgid "Entity Table"
-msgstr "表格"
+msgstr ""
 
 #: CRM/ACL/DAO/ACL.php CRM/ACL/Form/ACL.php
 #: CRM/Contact/DAO/ACLContactCache.php templates/CRM/ACL/Page/ACL.tpl
@@ -1159,7 +1159,7 @@ msgstr "- 選擇資料表單 -"
 
 #: CRM/Activity/Form/Task/Print.php CRM/Activity/Task.php
 msgid "Print Activities"
-msgstr "匯出任務記錄"
+msgstr "列印任務記錄"
 
 #: CRM/Activity/Import/Form/MapField.php
 #: CRM/Contribute/Import/Form/MapField.php CRM/Core/BAO/Mapping.php
@@ -1231,7 +1231,7 @@ msgstr "系統編號"
 #: CRM/Contribute/Import/Form/MapField.php CRM/Event/Import/Form/MapField.php
 #: CRM/Member/Import/Form/MapField.php
 msgid "Missing required contact matching fields."
-msgstr "缺少必要的聯絡人欄位。"
+msgstr "缺少必要的聯絡人對應欄位（以避免產生重複的聯絡人）"
 
 #: CRM/Activity/Import/Form/MapField.php
 #: CRM/Contribute/Import/Form/MapField.php CRM/Event/Import/Form/MapField.php
@@ -1289,7 +1289,7 @@ msgstr "已經使用所匯入的資料更新了這些記錄。"
 #: CRM/Event/Import/Form/Summary.php CRM/Import/Form/Summary.php
 #: CRM/Member/Import/Form/Summary.php
 msgid "These records have been filled in with the imported data."
-msgstr "已經使用所匯入的資料填入了這些記錄。"
+msgstr "已經把資料匯入到這些紀錄裡。"
 
 #: CRM/Activity/Import/Form/Summary.php CRM/Contribute/Import/Form/Summary.php
 #: CRM/Event/Import/Form/Summary.php CRM/Import/Form/Summary.php
@@ -1323,7 +1323,7 @@ msgstr "必須上傳有效的檔案。"
 #: CRM/Event/Import/Form/UploadFile.php CRM/Import/DataSource/CSV.php
 #: CRM/Member/Import/Form/UploadFile.php
 msgid "File size should be less than %1 MBytes (%2 bytes)"
-msgstr "檔案不能大於 %1 MBytes（%2 bytes）"
+msgstr "檔案必須小於 %1 MB（%2 bytes）"
 
 #: CRM/Activity/Import/Form/UploadFile.php
 #: CRM/Contribute/Import/Form/UploadFile.php
@@ -1813,7 +1813,7 @@ msgstr "選項群組名稱"
 
 #: CRM/Admin/Form/OptionValue.php CRM/Core/Extensions/Extension.php
 msgid "Selected option value has been deleted."
-msgstr "已刪除取的選項值。"
+msgstr "已刪除所選取的選項值。"
 
 #: CRM/Admin/Form/ParticipantStatus.php
 #: CRM/Event/DAO/ParticipantStatusType.php CRM/Report/Form/Register.php
@@ -1855,7 +1855,7 @@ msgstr "定期定額金流網址"
 
 #: CRM/Admin/Form/PaymentProcessor.php CRM/Core/DAO/PaymentProcessor.php
 msgid "Button URL"
-msgstr "按鈕圖像網址"
+msgstr "按鈕圖片網址"
 
 #: CRM/Admin/Form/PaymentProcessor.php CRM/Core/DAO/PaymentProcessor.php
 msgid "API URL"
@@ -1969,7 +1969,7 @@ msgstr "報表"
 
 #: CRM/Admin/Page/Admin.php CRM/Campaign/Info.php
 msgid "CiviCampaign"
-msgstr "動員"
+msgstr "募款活動"
 
 #: CRM/Admin/Page/EventTemplate.php CRM/Event/Form/ManageEvent.php
 msgid "Edit Event Template"
@@ -2096,7 +2096,7 @@ msgstr "外部編號"
 
 #: CRM/Campaign/DAO/Campaign.php CRM/Campaign/DAO/Survey.php
 msgid "Campaign Created Date"
-msgstr "動員頁建立日期"
+msgstr "活動建立日期"
 
 #: CRM/Campaign/DAO/Campaign.php CRM/Campaign/DAO/Survey.php
 msgid "Last Modified Date"
@@ -2111,7 +2111,7 @@ msgstr "再聯絡間隔"
 #: CRM/Campaign/Form/Campaign.php CRM/Campaign/Page/Campaign.php
 #: CRM/Campaign/Page/DashBoard.php CRM/Contribute/Form/PCP/PCP.php
 msgid "Delete Campaign"
-msgstr "刪除動員頁"
+msgstr "刪除活動"
 
 #: CRM/Campaign/Form/Campaign.php CRM/Contact/DAO/Relationship.php
 #: CRM/Contact/Form/Relationship.php
@@ -2216,7 +2216,7 @@ msgstr "簡介"
 #: templates/CRM/Campaign/Page/Survey.tpl
 #: templates/CRM/Contribute/Page/PcpUserDashboard.tpl
 msgid "Campaign"
-msgstr "動員"
+msgstr "募款活動"
 
 #: CRM/Campaign/Form/Search.php CRM/Campaign/Form/Task/Interview.php
 msgid "Record %1 Responses"
@@ -2291,19 +2291,19 @@ msgstr "預約受訪者"
 #: CRM/Campaign/Page/Campaign.php CRM/Campaign/Page/DashBoard.php
 #: templates/CRM/Campaign/Form/Campaign.tpl
 msgid "Are you sure you want to delete this Campaign?"
-msgstr "您確定要刪除此動員頁嗎？"
+msgstr "您確定要刪除此活動嗎？"
 
 #: CRM/Campaign/Page/Campaign.php CRM/Campaign/Page/DashBoard.php
 msgid "Update Campaign"
-msgstr "更新動員頁"
+msgstr "更新募款活動頁"
 
 #: CRM/Campaign/Page/Campaign.php CRM/Campaign/Page/DashBoard.php
 msgid "Disable Campaign"
-msgstr "停用動員頁"
+msgstr "停用募款活動頁"
 
 #: CRM/Campaign/Page/Campaign.php CRM/Campaign/Page/DashBoard.php
 msgid "Enable Campaign"
-msgstr "啟用動員頁"
+msgstr "啟用募款活動頁"
 
 #: CRM/Campaign/Page/DashBoard.php CRM/Campaign/Page/Survey.php
 msgid "Update Survey"
@@ -2947,11 +2947,11 @@ msgstr "收件人"
 
 #: CRM/Contact/Form/Edit/CommunicationPreferences.php CRM/Core/BAO/UFGroup.php
 msgid "Custom Email Greeting"
-msgstr "Email 問候語"
+msgstr "自訂 Email 問候語"
 
 #: CRM/Contact/Form/Edit/CommunicationPreferences.php CRM/Core/BAO/UFGroup.php
 msgid "Custom Postal Greeting"
-msgstr "郵件問候語"
+msgstr "自訂郵件問候語"
 
 #: CRM/Contact/Form/Edit/Email.php CRM/Contribute/Form/AdditionalInfo.php
 #: CRM/Contribute/Form/Contribution/Main.php
@@ -3008,7 +3008,7 @@ msgstr "地址"
 msgid ""
 "The contact record which is linked to the currently logged in user account -"
 " '%1' - cannot be deleted."
-msgstr "無法刪除已登入的使用者：%1。"
+msgstr "無法刪除目前正在登入的使用者：%1。"
 
 #: CRM/Contact/Form/Merge.php CRM/Contact/Task.php
 msgid "Merge Contacts"
@@ -3326,7 +3326,7 @@ msgstr "請輸入名稱以儲存訊息範本"
 msgid ""
 "Please do not use this task to send a lot of emails (greater than %1). We "
 "recommend using CiviMail instead."
-msgstr "請不要使用此任務發送給大量的聯絡人（尤其大於 %1）。我們建議使用電子報發送系統代替，以防止發送的郵件被歸為垃圾信。"
+msgstr "請不要使用此功能寄送大量的信件（不可以超過 %1 封）。我們建議使用電子報功能來寄信給群組/智慧群組，以避免被誤判為垃圾信。"
 
 #: CRM/Contact/Form/Task/Label.php CRM/Core/BAO/Mapping.php
 msgid "Primary"
@@ -3413,7 +3413,7 @@ msgstr "已傳送簡訊"
 #: CRM/Contribute/Page/ContributionPage.php
 #: templates/CRM/Contribute/Page/ContributionPageEdit.tpl msgctxt "menu"
 msgid "Personal Campaign Pages"
-msgstr "個人動員頁"
+msgstr "個人募款頁"
 
 #: CRM/Contact/Selector/Custom.php CRM/Contact/Selector.php
 msgid "View Contact Details"
@@ -3460,7 +3460,7 @@ msgstr "儲存搜尋條件為智慧群組"
 
 #: CRM/Contribute/BAO/ContributionPage.php CRM/Event/BAO/Event.php
 msgid "Copy of"
-msgstr "副本"
+msgstr "複製："
 
 #: CRM/Contribute/BAO/Contribution.php CRM/Contribute/Form/Task/Status.php
 #: CRM/Core/Payment/BaseIPN.php CRM/Core/Payment/GoogleIPN.php
@@ -3570,7 +3570,7 @@ msgstr "付款工具"
 #: CRM/Contribute/BAO/Query.php CRM/Contribute/Form/Contribution.php
 #: CRM/Contribute/Page/PCP.php
 msgid "Personal Campaign Page"
-msgstr "個人動員頁"
+msgstr "個人募款頁"
 
 #: CRM/Contribute/BAO/Query.php CRM/Contribute/Form/Contribution.php
 #: CRM/Contribute/Form/Task/Status.php CRM/Contribute/Import/Form/MapField.php
@@ -3919,7 +3919,7 @@ msgid ""
 "Oops. The membership you're trying to renew appears to be invalid. Contact "
 "your site administrator if you need assistance. If you continue, you will be"
 " issued a new membership."
-msgstr "糟糕，您的會員資格無法更新，如您需要協助，請聯繫網站管理員。如果您仍要繼續下一步，我們將會為您建立另一個新的會員資料，而非更新既有的會員資格。"
+msgstr "喔喔...您想要更新的會員資格似乎是無效的。如果您需要協助，請聯絡網站管理者。如果您仍要繼續下一步，我們將會為您建立一個新的會員資料，而非更新現有的會員資格。"
 
 #: CRM/Contribute/Form/ContributionBase.php CRM/Event/Page/EventInfo.php
 msgid "The page you requested is currently unavailable."
@@ -4457,7 +4457,7 @@ msgstr "備忘錄"
 
 #: CRM/Core/DAO/CustomField.php CRM/Custom/Form/Field.php
 msgid "TextArea"
-msgstr "文字欄位"
+msgstr "文字欄位（多行）"
 
 #: CRM/Core/DAO/CustomField.php CRM/Custom/Form/Field.php
 #: CRM/Price/BAO/Field.php CRM/Price/DAO/Field.php
@@ -5255,7 +5255,7 @@ msgstr "開始日期"
 
 #: CRM/Member/DAO/MembershipStatus.php CRM/Member/Form/MembershipStatus.php
 msgid "Start Event Adjust Interval"
-msgstr "活動開始調整間隔"
+msgstr "開始日期調整間隔"
 
 #: CRM/Member/DAO/MembershipStatus.php CRM/Member/Form/MembershipStatus.php
 #: templates/CRM/Member/Page/MembershipStatus.tpl
@@ -5401,14 +5401,14 @@ msgstr "一開始的提醒日期"
 
 #: CRM/Pledge/DAO/PledgeBlock.php CRM/Pledge/DAO/Pledge.php
 msgid "Additional Reminder Days"
-msgstr "其他提醒日期"
+msgstr "額外提醒日期"
 
 #: CRM/Pledge/DAO/Pledge.php CRM/Pledge/Form/Pledge.php
 #: CRM/Pledge/Selector/Search.php CRM/Report/Form/Pledge/Pbnp.php
 #: templates/CRM/Pledge/Form/Pledge.tpl
 #: templates/CRM/Pledge/Form/PledgeView.tpl
 msgid "Pledge Made"
-msgstr "認捐模式"
+msgstr "已認捐"
 
 #: CRM/Pledge/Form/Payment.php CRM/Pledge/Form/Pledge.php
 msgid "Please enter a valid monetary amount."
@@ -6037,7 +6037,7 @@ msgstr "分派給聯絡人"
 
 #: CRM/Activity/Form/Task/PickProfile.php
 msgid "Batch Profile Update for Activities"
-msgstr "批次更新資料表單"
+msgstr "批次更新資料表單裡的任務紀錄"
 
 #: CRM/Activity/Import/Form/MapField.php
 msgid "Activity Type Id"
@@ -6144,7 +6144,7 @@ msgstr "基本聯絡人類型"
 msgid ""
 "This contact type name already exists in database. Contact type names must "
 "be unique."
-msgstr "此聯絡人類型已存在於資料庫，聯絡人類型不能重複。"
+msgstr "此聯絡人類型已存在於資料庫，類型名稱不能重複。"
 
 #: CRM/Admin/Form/ContactType.php
 msgid "Selected contact type has been deleted."
@@ -6318,7 +6318,7 @@ msgstr "請輸入有效的 Email。"
 
 #: CRM/Admin/Form/Options.php
 msgid "Please follow the proper format for From Email Address"
-msgstr "請依正確的格式填寫 Email"
+msgstr "請使用正確的格式填寫寄件人 Email"
 
 #: CRM/Admin/Form/Options.php
 msgid "Selected %1 type has been deleted."
@@ -6344,7 +6344,7 @@ msgstr "已刪除選取的參加者狀態。"
 msgid ""
 "Selected participant status has <strong>NOT</strong> been deleted; there are"
 " still participants with this status."
-msgstr "您選取的參加者狀態<strong>無法</strong>刪除；仍有參加者在此狀態中。"
+msgstr "<strong>無法刪除</strong>您選取的參加者狀態；因為仍有參加者屬於此狀態。"
 
 #: CRM/Admin/Form/ParticipantStatus.php
 msgid "The Participant Status has been updated."
@@ -6493,7 +6493,7 @@ msgstr "網站使用者編號"
 
 #: CRM/Admin/Form/Preferences/Address.php
 msgid "Web Service URL"
-msgstr "Web 服務網址"
+msgstr "Web Service 網址"
 
 #: CRM/Admin/Form/Preferences/Address.php
 msgid "Address Standardization features require PHP version 5 or greater."
@@ -6556,7 +6556,7 @@ msgstr "聯絡人總覽"
 
 #: CRM/Admin/Form/Preferences/Display.php
 msgid "Textarea"
-msgstr "文字區域（多行）"
+msgstr "文字欄位（多行）"
 
 #: CRM/Admin/Form/Preferences/Display.php
 msgid "WYSIWYG Editor"
@@ -6695,7 +6695,7 @@ msgid ""
 "WARNING: Enabling multiple languages changes the schema of your database, so"
 " make sure you know what you are doing when enabling this function; making a"
 " database backup is strongly recommended."
-msgstr "警告：允許多國語系會改變您資料庫的模式，啟用這個功能前，請再度確認您知道啟用本功能的風險。強列建議保留資料庫備份。"
+msgstr "警告：啟用多語功能將會改變您的資料庫結構。啟用這個功能前，請再次確認您知道啟用本功能的風險。強列建議先備份資料庫。"
 
 #: CRM/Admin/Form/Setting/Localization.php
 msgid "Enable Multiple Languages"
@@ -6703,7 +6703,7 @@ msgstr "啟用多語功能"
 
 #: CRM/Admin/Form/Setting/Localization.php
 msgid "Inherit CMS Language"
-msgstr "繼承 CMS 語系"
+msgstr "繼承網站管理系統（CMS）的語系"
 
 #: CRM/Admin/Form/Setting/Localization.php
 msgid "Thousands Separator"
@@ -6823,7 +6823,7 @@ msgstr "附加檔案數量上限"
 
 #: CRM/Admin/Form/Setting/Miscellaneous.php
 msgid "Maximum File Size"
-msgstr "最高檔案大小"
+msgstr "最大檔案大小"
 
 #: CRM/Admin/Form/Setting/Miscellaneous.php
 msgid "Public Key"
@@ -6835,7 +6835,7 @@ msgstr "私密金鑰"
 
 #: CRM/Admin/Form/Setting/Miscellaneous.php
 msgid "Dashboard cache timeout"
-msgstr "總覽快取已超過時限"
+msgstr "總覽頁面快取保存時限"
 
 #: CRM/Admin/Form/Setting/Path.php
 msgid "Settings - Upload Directories"
@@ -6899,7 +6899,7 @@ msgstr "包含排序條件"
 
 #: CRM/Admin/Form/Setting/Search.php
 msgid "Smart group cache timeout"
-msgstr "智慧群組快取超過時限"
+msgstr "智慧群組快取保存時限"
 
 #: CRM/Admin/Form/Setting/Search.php
 msgid "Default Contact Search Profile"
@@ -7042,7 +7042,7 @@ msgstr "強制安全網址（ SSL）"
 msgid ""
 "You need to set up a secure server before you can use the Force Secure URLs "
 "option"
-msgstr "您需要在使用 SSL 之前設立一臺憑證伺服器"
+msgstr "您需要在使用 https:// 之前，先設定好加密伺服器"
 
 #: CRM/Admin/Form/Tag.php
 msgid ""
@@ -7321,14 +7321,14 @@ msgstr "刪除對應"
 msgid ""
 "Are you sure you want to revert this template to the default for this "
 "workflow? You will lose any customizations you have made."
-msgstr "您確定要將此工作流程回復到預設值？所有自訂的內容都將被刪除。"
+msgstr "您確定要將此流程的範本回復到預設值？所有自訂的內容都將被刪除哦！"
 
 #: CRM/Admin/Page/MessageTemplates.php
 msgid ""
 "We recommend that you save a copy of the your customized Text and HTML "
 "message content to a text file before reverting so you can combine your "
 "changes with the system default messages as needed."
-msgstr "在您回復到預值值前，我們強烈建議您先將現有的文字訊息和 HTML 訊息都複製到文字檔案，如此一來您可以在回復到預設值後再將根據您的需求將這些文字調整至預設文字內。"
+msgstr "在您回復到預值之前，我們強烈建議您先將現有的文字和 HTML 內容都另存到檔案裡，如此一來您可以在回復到預設值後，再根據您的需求，將想要的文案調整至預設範本內。"
 
 #: CRM/Admin/Page/MessageTemplates.php
 msgid "Edit this message template"
@@ -7537,35 +7537,35 @@ msgstr "找不到 %1 受訪者的問卷。"
 
 #: CRM/Campaign/DAO/Campaign.php
 msgid "Campaign ID"
-msgstr "動員編號"
+msgstr "募款頁編號"
 
 #: CRM/Campaign/DAO/Campaign.php
 msgid "Campaign Name"
-msgstr "動員頁名稱"
+msgstr "募款頁名稱"
 
 #: CRM/Campaign/DAO/Campaign.php templates/CRM/Campaign/Page/Campaign.tpl
 msgid "Campaign Title"
-msgstr "動員頁標題"
+msgstr "募款頁標題"
 
 #: CRM/Campaign/DAO/Campaign.php
 msgid "Campaign Description"
-msgstr "動員描述"
+msgstr "募款頁說明"
 
 #: CRM/Campaign/DAO/Campaign.php
 msgid "Campaign Start Date"
-msgstr "動員開始日期"
+msgstr "開始募款時間"
 
 #: CRM/Campaign/DAO/Campaign.php
 msgid "Campaign End Date"
-msgstr "動員結束日期"
+msgstr "結束募款時間"
 
 #: CRM/Campaign/DAO/Campaign.php
 msgid "Campaign Type ID"
-msgstr "動員類型編號"
+msgstr "募款類型編號"
 
 #: CRM/Campaign/DAO/Campaign.php
 msgid "Campaign Status ID"
-msgstr "動員狀態編號"
+msgstr "募款狀態編號"
 
 #: CRM/Campaign/DAO/Survey.php templates/CRM/Activity/Form/Activity.tpl
 msgid "Survey Title"
@@ -7591,35 +7591,35 @@ msgstr "預設的聯絡人數"
 
 #: CRM/Campaign/Form/Campaign.php
 msgid "Edit Campaign"
-msgstr "編輯動員"
+msgstr "編輯募款活動"
 
 #: CRM/Campaign/Form/Campaign.php templates/CRM/Campaign/Page/Campaign.tpl
 msgid "Campaign Type"
-msgstr "動員類型"
+msgstr "募款活動類型"
 
 #: CRM/Campaign/Form/Campaign.php msgctxt "menu"
 msgid "Campaign Status"
-msgstr "動員狀態"
+msgstr "募款活動狀態"
 
 #: CRM/Campaign/Form/Campaign.php
 msgid "Parent Id"
-msgstr "父層編號"
+msgstr "上層編號"
 
 #: CRM/Campaign/Form/Campaign.php
 msgid "- select Parent -"
-msgstr "- 選擇父層 -"
+msgstr "- 選擇上層 -"
 
 #: CRM/Campaign/Form/Campaign.php
 msgid " Campaign has been deleted."
-msgstr "已刪除動員頁。"
+msgstr "已刪除募款活動。"
 
 #: CRM/Campaign/Form/Campaign.php
 msgid "Campaign %1 has been saved."
-msgstr "已儲存動員頁「%1」。"
+msgstr "已儲存募款活動「%1」。"
 
 #: CRM/Campaign/Form/Campaign.php
 msgid " You can add another Campaign."
-msgstr "您可以新增其他動員頁。"
+msgstr "您可以新增其他募款活動。"
 
 #: CRM/Campaign/Form/Gotv.php
 msgid "GOTV (Voter Tracking)"
@@ -7883,7 +7883,7 @@ msgstr "列出簽名"
 
 #: CRM/Campaign/Page/DashBoard.php
 msgid "Campaigns"
-msgstr "動員"
+msgstr "募款活動"
 
 #: CRM/Campaign/Page/DashBoard.php
 msgid "Surveys"
@@ -8273,7 +8273,7 @@ msgstr "已還原個案: %1"
 
 #: CRM/Case/Info.php
 msgid "CiviCase Engine"
-msgstr "個案引擎"
+msgstr "CiviCRM 個案"
 
 #: CRM/Case/Page/DashBoard.php msgctxt "menu"
 msgid "CiviCase Dashboard"
@@ -8458,7 +8458,7 @@ msgstr "我們偵測到一個無法處理的問題。終止"
 
 #: CRM/Contact/BAO/ProximityQuery.php
 msgid "Proximity searching requires you to set a valid geocoding provider"
-msgstr "你需要先選擇正確的地圖供應者，以進行鄰近搜尋"
+msgstr "您需要先設定有效的地理編碼服務，以進行鄰近搜尋"
 
 #: CRM/Contact/BAO/ProximityQuery.php
 msgid "Proximity search to a distance of %1 from %2"
@@ -8570,11 +8570,11 @@ msgstr "聯絡人資料來源"
 
 #: CRM/Contact/DAO/Contact.php
 msgid "Email Greeting Custom"
-msgstr "自訂 Email 開頭問候語"
+msgstr "自訂 Email 問候語"
 
 #: CRM/Contact/DAO/Contact.php
 msgid "Postal Greeting Custom"
-msgstr "自訂郵件開頭問候語"
+msgstr "自訂郵件問候語"
 
 #: CRM/Contact/DAO/Contact.php
 msgid "Addressee Custom"
@@ -8598,11 +8598,11 @@ msgstr "快取日期"
 
 #: CRM/Contact/DAO/Group.php
 msgid "Parents"
-msgstr "父層"
+msgstr "上層"
 
 #: CRM/Contact/DAO/Group.php
 msgid "Children"
-msgstr "子層"
+msgstr "下層"
 
 #: CRM/Contact/DAO/RelationshipType.php
 msgid "Name A B"
@@ -8655,7 +8655,7 @@ msgstr "無法取得聯絡人類型「%1」的有效聯絡人子類型"
 
 #: CRM/Contact/Form/Contact.php
 msgid "The Location Type should be set if there is  %1 information."
-msgstr "如果有 %1 資訊，地點類型需要被設定。"
+msgstr "如果有 %1 資訊，需要設定地點類型。"
 
 #: CRM/Contact/Form/Contact.php
 msgid "%1 already exist."
@@ -8773,7 +8773,7 @@ msgstr "寄件者 Email 位址"
 msgid ""
 "Domain Email Address must use a valid email address format (e.g. "
 "'info@example.org')."
-msgstr "Email 網域必需使用一個有效的 Email 位址格式（例如info@example.org）。"
+msgstr "必需使用一個有效的 Email 位址格式（例如 info@example.org）。"
 
 #: CRM/Contact/Form/Domain.php
 msgid "Double quotes are not allow in from name."
@@ -9768,7 +9768,7 @@ msgstr "從標籤裡移除聯絡人"
 
 #: CRM/Contact/Form/Task/Unhold.php
 msgid "Unhold Email"
-msgstr "解凍封鎖的 Email"
+msgstr "解除凍結的 Email"
 
 #: CRM/Contact/Form/Task/Unhold.php
 msgid "%1 emails were found on hold and updated."
@@ -9906,7 +9906,7 @@ msgstr "聯絡人頁面"
 
 #: CRM/Contact/Page/View/Summary.php
 msgid "Elected Officials"
-msgstr ""
+msgstr "經由選舉投票當選之政府官員"
 
 #: CRM/Contact/Page/View/Tag.php
 msgid "Contact Tags"
@@ -9994,7 +9994,7 @@ msgstr "列印-PDF信件"
 
 #: CRM/Contact/Task.php
 msgid "Unhold Emails"
-msgstr "Email-解凍封鎖的Email"
+msgstr "解除凍結的 Email"
 
 #: CRM/Contact/Task.php
 msgid "Restore Contacts"
@@ -10048,19 +10048,19 @@ msgstr "捐款處理器：%1 API"
 msgid ""
 "This Premium is being linked to <a href='%1'>Online Contribution page</a>. "
 "Please remove it in order to delete this Premium."
-msgstr "此感謝禮已使用在<a href='%1'>線上募款頁</a>。若要移除此感謝禮，請先移除該募款頁。"
+msgstr "此感謝禮已使用在<a href='%1'>線上募款頁</a>。若要移除此感謝禮，請先移除該募款頁裡的感謝禮。"
 
 #: CRM/Contribute/BAO/PCP.php
 msgid "Are you sure you want to delete this Personal Campaign Page?"
-msgstr "您確定要刪除此個人動員頁嗎？"
+msgstr "您確定要刪除此個人募款頁嗎？"
 
 #: CRM/Contribute/BAO/PCP.php
 msgid "Create a Personal Campaign Page"
-msgstr "建立個人動員頁"
+msgstr "建立個人募款頁"
 
 #: CRM/Contribute/BAO/PCP.php
 msgid "Edit Your Page"
-msgstr "編輯您的專頁"
+msgstr "編輯您的個人募款頁"
 
 #: CRM/Contribute/BAO/PCP.php
 msgid "Tell Friends"
@@ -10070,7 +10070,7 @@ msgstr "分享給朋友"
 msgid ""
 "Supporter profile is not set for this Personal Campaign Page or the profile "
 "is disabled. Please contact the site administrator if you need assistance."
-msgstr "此個人動員頁尚未設定資料表單，或資料表單已停用，無法供支持者填寫個人資料。如您需要協助，請聯繫網站管理員。"
+msgstr "此個人募款頁尚未設定支持者資料表單，或已停用該資料表單，無法供支持者填寫個人資料。如您需要協助，請聯繫網站管理員。"
 
 #: CRM/Contribute/BAO/Premium.php
 msgid "Selected Option"
@@ -10174,15 +10174,15 @@ msgstr "顯示在名單？"
 
 #: CRM/Contribute/BAO/Widget.php
 msgid "Campaign is ongoing"
-msgstr "進行中的動員"
+msgstr "募款活動進行中"
 
 #: CRM/Contribute/BAO/Widget.php
 msgid "Campaign starts on %1"
-msgstr "動員開始於 %1"
+msgstr "募款活動開始於 %1"
 
 #: CRM/Contribute/BAO/Widget.php
 msgid "Campaign ends on %1"
-msgstr "動員結束於 %1"
+msgstr "募款活動結束於 %1"
 
 #: CRM/Contribute/BAO/Widget.php
 msgid "Raised %1 of %2"
@@ -10344,15 +10344,15 @@ msgstr "連結文字"
 
 #: CRM/Contribute/DAO/PCP.php
 msgid "Personal Campaign Page ID"
-msgstr "個人動員頁編號"
+msgstr "個人募款頁編號"
 
 #: CRM/Contribute/DAO/PCP.php
 msgid "Personal Campaign Page Status"
-msgstr "個人動員頁狀態"
+msgstr "個人募款頁狀態"
 
 #: CRM/Contribute/DAO/PCP.php
 msgid "Personal Campaign Page Title"
-msgstr "個人動員頁標題"
+msgstr "個人募款頁標題"
 
 #: CRM/Contribute/DAO/PCP.php
 msgid "Page Text"
@@ -10440,19 +10440,19 @@ msgstr "主要色彩"
 
 #: CRM/Contribute/DAO/Widget.php
 msgid "Color Main Bg"
-msgstr "主要背景色彩"
+msgstr "主要背景的顏色"
 
 #: CRM/Contribute/DAO/Widget.php
 msgid "Color Bg"
-msgstr "背景色彩"
+msgstr "背景的顏色"
 
 #: CRM/Contribute/DAO/Widget.php
 msgid "Color About Link"
-msgstr "關於連結色彩"
+msgstr "關於連結的顏色"
 
 #: CRM/Contribute/DAO/Widget.php
 msgid "Color Homepage Link"
-msgstr "首頁連結色彩"
+msgstr "首頁連結的顏色"
 
 #: CRM/Contribute/Form/AdditionalInfo.php
 #: templates/CRM/Contribute/Form/ContributionView.tpl
@@ -10507,47 +10507,47 @@ msgstr "此頁面使用的資料表單包含有會員資料欄位，但未啟用
 msgid ""
 "This contribution page is not related to the Personal Campaign Page you have"
 " just visited. However you can still make a contribution here."
-msgstr "此募款頁與您剛瀏覽的個人動員頁無關，但您仍可在此捐款來表達你的支持。"
+msgstr "此募款頁與您剛瀏覽的個人募款頁無關，但您仍可在此捐款來表達你的支持。"
 
 #: CRM/Contribute/Form/ContributionBase.php
 msgid ""
 "The Personal Campaign Page you have just visited is currently %1. However "
 "you can still support the campaign by making a contribution here."
-msgstr "您剛瀏覽的個人動員頁目前是 %1。但您仍可在此捐款來表達你的支持。"
+msgstr "您剛瀏覽的個人募款頁目前 %1。但您仍可在此捐款來表達你的支持。"
 
 #: CRM/Contribute/Form/ContributionBase.php
 msgid ""
 "Personal Campaign Pages are currently not enabled for this contribution "
 "page. However you can still support the campaign by making a contribution "
 "here."
-msgstr "個人動員頁目前並未在這個募款頁面啟用。但您仍可在此捐款來表達你的支持。"
+msgstr "這個募款頁面目前並未啟用個人募款活動的功能。但您仍可在這裡捐款，來表達你的支持。"
 
 #: CRM/Contribute/Form/ContributionBase.php
 msgid ""
 "The Personal Campaign Page you have just visited is current inactive. "
 "However you can still make a contribution here."
-msgstr "您剛瀏覽的個人動員頁目前停用中。但您仍可在此捐款來表達你的支持。"
+msgstr "您剛瀏覽的個人募款頁目前停用中。但您仍可在此捐款來表達你的支持。"
 
 #: CRM/Contribute/Form/ContributionBase.php
 msgid ""
 "The Personal Campaign Page you have just visited is only active between %1 "
 "to %2. However you can still support the campaign by making a contribution "
 "here."
-msgstr "您剛瀏覽的個人動員頁只於 %1 和 %2 提供服務。但您仍可在此捐款來表達你的支持。"
+msgstr "您剛瀏覽的個人募款頁的有效期間是 %1 到 %2。但您仍可在此捐款來表達你的支持。"
 
 #: CRM/Contribute/Form/ContributionBase.php
 msgid ""
 "The Personal Campaign Page you have just visited will be active beginning on"
 " %1. However you can still support the campaign by making a contribution "
 "here."
-msgstr "您剛瀏覽的個人動員頁將於 %1 啟用。但您仍可在此捐款來表達你的支持。"
+msgstr "您剛瀏覽的個人募款頁將於 %1 啟用。您現在就可在此捐款來表達你的支持。"
 
 #: CRM/Contribute/Form/ContributionBase.php
 msgid ""
 "The Personal Campaign Page you have just visited is not longer active (as of"
 " %1). However you can still support the campaign by making a contribution "
 "here."
-msgstr "您剛瀏覽的個人動員頁已不再提供服務（像 %1）。但您仍可在此捐款來表達你的支持。"
+msgstr "您剛瀏覽的個人募款頁已經過期（%1）。但您仍可在此捐款來表達你的支持。"
 
 #: CRM/Contribute/Form/ContributionBase.php
 msgid "Payment processor is not set for this page"
@@ -10616,7 +10616,7 @@ msgid ""
 "This contribution is being made thanks to effort of <strong>%1</strong>, who"
 " supports our campaign. You can support it as well - once you complete the "
 "donation, you will be able to create your own Personal Campaign Page!"
-msgstr "這捐款是為了對 <strong>%1</strong>支持我們的募款活動所作的感謝。一旦您完成捐款，您將可以建立自己的個人動員頁！"
+msgstr "除了感謝您的捐款，我們也感謝 <strong>%1</strong> 協助我們募款、給我們支持。當您完成捐款，您也可以建立自己的個人募款頁！"
 
 #: CRM/Contribute/Form/Contribution/Main.php
 msgid "Show my contribution in the public honor roll"
@@ -10654,7 +10654,7 @@ msgstr "我想要進行單次捐/繳款。"
 
 #: CRM/Contribute/Form/Contribution/Main.php
 msgid "I want to contribute this amount"
-msgstr "我想要"
+msgstr "我想捐款的金額"
 
 #: CRM/Contribute/Form/Contribution/Main.php
 msgid "Frequency must be a whole number (EXAMPLE: Every 3 months)."
@@ -10871,7 +10871,7 @@ msgstr "在同一個繳款頁中，您無法同時啟用價目表功能和會員
 
 #: CRM/Contribute/Form/ContributionPage/Amount.php
 msgid "At least one recurring frequency option needs to be checked."
-msgstr "要勾選至少一個定期捐款週期選項。"
+msgstr "至少要勾選一個定期捐款週期選項。"
 
 #: CRM/Contribute/Form/ContributionPage/Amount.php
 msgid "At least one pledge frequency option needs to be checked."
@@ -10914,7 +10914,7 @@ msgstr "已刪除募款頁「%1」。"
 
 #: CRM/Contribute/Form/ContributionPage/PCP.php
 msgid "Personal Campaign Page Settings (%1)"
-msgstr "個人動員頁設定 （%1）"
+msgstr "個人募款頁設定 （%1）"
 
 #: CRM/Contribute/Form/ContributionPage/PCP.php
 msgid "Create your own fundraising page"
@@ -10922,7 +10922,7 @@ msgstr "建立您的個人募款頁"
 
 #: CRM/Contribute/Form/ContributionPage/PCP.php
 msgid "Enable Personal Campaign Pages (for this contribution page)?"
-msgstr "是否要為這個募款頁啟用個人動員頁的功能？"
+msgstr "啟用個人募款頁功能？"
 
 #: CRM/Contribute/Form/ContributionPage/PCP.php
 msgid "Approval required"
@@ -10946,7 +10946,7 @@ msgstr "請輸入一個有效數值。"
 
 #: CRM/Contribute/Form/ContributionPage/PCP.php
 msgid "'Create Personal Campaign Page' link text"
-msgstr "「建立個人動員頁」連結文字"
+msgstr "「建立個人募款頁」連結文字"
 
 #: CRM/Contribute/Form/ContributionPage/PCP.php
 msgid ""
@@ -10969,7 +10969,7 @@ msgstr "必須指定一個有效的通知信寄送Email地址"
 
 #: CRM/Contribute/Form/ContributionPage/PCP.php
 msgid "Enable Personal Campaign Pages"
-msgstr "啟用個人動員頁"
+msgstr "啟用個人募款頁"
 
 #: CRM/Contribute/Form/ContributionPage.php
 msgid "Configure Page - %1"
@@ -11398,15 +11398,15 @@ msgstr "提醒：縮圖沒有建立成功，因為您安裝 PHP 時，GD Image L
 
 #: CRM/Contribute/Form/ManagePremiums.php
 msgid "The Premium '%1' has been saved."
-msgstr "已儲存捐款禮「%1」。"
+msgstr "已儲存感謝禮「%1」"
 
 #: CRM/Contribute/Form/PCP/Campaign.php
 msgid "Setup a Personal Campaign Page - Step 2"
-msgstr "設定個人動員頁 - 第二步"
+msgstr "設定個人募款頁 - 步驟二"
 
 #: CRM/Contribute/Form/PCP/Campaign.php
 msgid "Edit Your Personal Campaign Page"
-msgstr "編輯您的個人動員頁"
+msgstr "編輯個人募款頁"
 
 #: CRM/Contribute/Form/PCP/Campaign.php
 msgid "Your Goal"
@@ -11470,13 +11470,13 @@ msgstr "專頁審核完成後，您會立刻收到 Email 通知。"
 
 #: CRM/Contribute/Form/PCP/Campaign.php
 msgid "Your Personal Campaign Page has been %1 %2 %3"
-msgstr "您的個人動員頁已經 %1 %2 %3"
+msgstr "您的個人募款頁已 %1 %2 %3"
 
 #: CRM/Contribute/Form/PCP/PCPAccount.php
 msgid ""
 "You must login with your OpenID provider before you can create a Personal "
 "Campaign Page."
-msgstr "在您建立個人動員頁之前，您必需以您的 OpenID 登入。"
+msgstr "在您建立個人募款頁之前，您必需以您的 OpenID 登入。"
 
 #: CRM/Contribute/Form/PCP/PCPAccount.php
 msgid ""
@@ -11486,15 +11486,15 @@ msgstr "已經有使用者採用此 Email 位址。請輸入一個不同的 Emai
 
 #: CRM/Contribute/Form/PCP/PCP.php
 msgid "The Campaign Page '%1' has been deleted."
-msgstr "已刪除動員頁「%1」。"
+msgstr "已刪除募款活動「%1」。"
 
 #: CRM/Contribute/Form/PCP/PCP.php
 msgid "The Campaign Page '%1' has been disabled."
-msgstr "已停用動員頁 「%1」。"
+msgstr "已停用募款活動頁 「%1」。"
 
 #: CRM/Contribute/Form/PCP/PCP.php
 msgid "The Campaign Page '%1' has been enabled."
-msgstr "已啟用動員頁 「%1」。"
+msgstr "已啟用募款活動頁 「%1」。"
 
 #: CRM/Contribute/Form/Search.php
 msgid "Contributor Name or Email"
@@ -11556,11 +11556,11 @@ msgstr "已寄出 mail。"
 
 #: CRM/Contribute/Form/Task/PickProfile.php
 msgid "Batch Profile Update for Contribution"
-msgstr "批次更新捐款資料表單"
+msgstr "批次更新捐款的資料表單"
 
 #: CRM/Contribute/Form/Task/Status.php
 msgid "Please select only online contributions with Pending status."
-msgstr ""
+msgstr "請選擇狀態為「待處理」的線上捐款。"
 
 #: CRM/Contribute/Form/Task/Status.php
 msgid "Update Pending Status"
@@ -11574,7 +11574,7 @@ msgstr "交易編號必需是獨一無二的。包括支票的帳戶號碼。"
 #: CRM/Contribute/Form/Task/Status.php
 msgid ""
 "Paid By should be Check when a check number is entered for a contribution."
-msgstr "當輸入支票號碼到捐款記錄時，您需要勾選「付款自」欄位。"
+msgstr "若有輸入支票號碼到某筆捐款記錄時，所選擇的付款方式必須是「支票」。"
 
 #: CRM/Contribute/Form/Task/Status.php
 msgid "Contribution status has been updated for selected record(s)."
@@ -11623,7 +11623,7 @@ msgstr "瀏覽捐款的URL"
 
 #: CRM/Contribute/Info.php
 msgid "CiviCRM Contribution Engine"
-msgstr "CiviCRM 捐款引擎"
+msgstr "CiviCRM 捐款"
 
 #: CRM/Contribute/Info.php
 msgid "Your Contribution(s)"
@@ -11709,7 +11709,7 @@ msgstr "募款頁 '%1' 已建立。"
 msgid ""
 "The '%1' cannot be deleted! You must Delete all Personal Campaign Page(s) "
 "related with this contribution page prior to deleting the page."
-msgstr "群組 '%1' 無法被刪除！您必須刪除所有在此群組裡的自訂欄位，才能刪除此群組。"
+msgstr "「%1」無法被刪除！您必須先刪除所有與此募款頁相關的個人募款頁，才能刪除此募款頁。"
 
 #: CRM/Contribute/Page/ContributionPage.php
 msgid "Links"
@@ -11755,27 +11755,27 @@ msgstr "刪除感謝禮"
 
 #: CRM/Contribute/Page/PCPInfo.php
 msgid "The personal campaign page you requested is currently unavailable."
-msgstr "此個人動員頁目前停用中。"
+msgstr "此個人募款頁暫時停用。但您仍可在此捐款以支持這個活動。"
 
 #: CRM/Contribute/Page/PCPInfo.php
 msgid ""
 "Once you've received your new account welcome email, you can <a "
 "href=%1>click here</a> to login and promote your campaign page."
-msgstr "當您收到帳號啟用 Email，您可以<a href=%1>按此</a>登入及推廣您的動員頁。"
+msgstr "當您收到新帳號啟用通知信時，您可以<a href=%1>按此</a>登入，以推廣您的個人募款頁。"
 
 #: CRM/Contribute/Page/PCPInfo.php
 msgid ""
 "The personal campaign page you requested is currently unavailable. However "
 "you can still support the campaign by making a contribution here."
-msgstr "此個人動員頁暫時停用。但您仍可在這裡捐款支持這個活動。"
+msgstr "此個人募款頁暫時停用。但您仍可在這裡捐款支持這個活動。"
 
 #: CRM/Contribute/Page/PCPInfo.php
 msgid "Change the content and appearance of your page"
-msgstr "更改專頁的內容及外觀"
+msgstr "更改您的個人募款頁的內容與外觀"
 
 #: CRM/Contribute/Page/PCPInfo.php
 msgid "Send emails inviting your friends to support your campaign!"
-msgstr "發送 Email 邀請朋友支持您的動員活動！"
+msgstr "發送 Email，邀請朋友支持您的募款活動！"
 
 #: CRM/Contribute/Page/PCPInfo.php
 msgid "Update your personal contact information"
@@ -11783,7 +11783,7 @@ msgstr "更新您的個人連絡資料"
 
 #: CRM/Contribute/Page/PCPInfo.php
 msgid "De-activate the page (you can re-activate it later)"
-msgstr "停用專頁（可以稍後再啟用）"
+msgstr "停用個人募款頁（您可以稍後再啟用）"
 
 #: CRM/Contribute/Page/PCPInfo.php
 msgid "Remove the page (this cannot be undone!)"
@@ -11795,11 +11795,11 @@ msgstr "立即捐款"
 
 #: CRM/Contribute/Page/PCP.php
 msgid "Are you sure you want to delete this Campaign Page ?"
-msgstr "您確定要刪除此動員頁嗎？"
+msgstr "您確定要刪除此募款頁嗎？"
 
 #: CRM/Contribute/Page/PCP.php
 msgid "Edit Personal Campaign Page"
-msgstr "編輯個人動員頁"
+msgstr "編輯個人募款頁"
 
 #: CRM/Contribute/Page/PCP.php
 msgid "Approve"
@@ -11807,7 +11807,7 @@ msgstr "批准"
 
 #: CRM/Contribute/Page/PCP.php
 msgid "Approve Personal Campaign Page"
-msgstr "批准個人動員頁"
+msgstr "批准個人募款頁"
 
 #: CRM/Contribute/Page/PCP.php
 msgid "Reject"
@@ -11815,15 +11815,15 @@ msgstr "拒絕"
 
 #: CRM/Contribute/Page/PCP.php
 msgid "Reject Personal Campaign Page"
-msgstr "拒絕個人動員頁"
+msgstr "拒絕個人募款頁"
 
 #: CRM/Contribute/Page/PCP.php
 msgid "Delete Personal Campaign Page"
-msgstr "刪除個人動員頁"
+msgstr "刪除個人募款頁"
 
 #: CRM/Contribute/Page/PCP.php
 msgid "Search Campaign Pages"
-msgstr "搜尋動員頁"
+msgstr "搜尋募款活動頁"
 
 #: CRM/Contribute/Page/Premium.php
 msgid "Are you sure you want to remove this product form this page?"
@@ -11927,7 +11927,7 @@ msgstr "無法經由 %1 連到 UF 資料庫。請檢查 civicrm.settings.php 檔
 
 #: CRM/Core/BAO/CustomField.php
 msgid "Alphanumeric"
-msgstr "字母"
+msgstr "字母及數字"
 
 #: CRM/Core/BAO/CustomField.php
 msgid "Number"
@@ -11947,11 +11947,11 @@ msgstr "選取則檢查「任一」符合；不選取則檢查「所有」符合
 
 #: CRM/Core/BAO/CustomField.php
 msgid "Select a valid contact for %1."
-msgstr "選擇一個有效的聯絡人給 %1。"
+msgstr "為 %1 選擇一個有效的聯絡人。"
 
 #: CRM/Core/BAO/CustomField.php
 msgid "Select a valid value for %1."
-msgstr "給 %1 選擇一個有效值。"
+msgstr "為 %1 選擇一個有效值。"
 
 #: CRM/Core/BAO/CustomField.php
 msgid "%1 From must be an integer (whole number)."
@@ -12143,7 +12143,7 @@ msgstr "無效數值傳送到刪除功能"
 
 #: CRM/Core/BAO/PaymentProcessor.php
 msgid "Invalid value passed to getPayment function"
-msgstr "無效數值傳送到付款功能"
+msgstr "傳送了無效的數值到 getPayment 函式"
 
 #: CRM/Core/BAO/PaymentProcessor.php
 msgid "Could not retrieve payment processor details"
@@ -12307,7 +12307,7 @@ msgid ""
 "There is no valid SMTP server Setting Or SendMail path setting. Click <a "
 "href='%1'>Administer CiviCRM >> Global Settings</a> to set the OutBound "
 "Email."
-msgstr "沒有有效的 SMTP 伺服器，或是 Sendmail 路徑錯誤。請點選按<a href='%1'>管理 CiviCRM >> 全域設定</a>，以設定外寄 Email。"
+msgstr "沒有有效的 SMTP 伺服器，或是 Sendmail 路徑錯誤。請點選<a href='%1'>管理 CiviCRM >> 全域設定</a>，以設定外寄 Email。"
 
 #: CRM/Core/Controller.php
 msgid ""
@@ -12547,7 +12547,7 @@ msgstr "凍結"
 
 #: CRM/Core/DAO/Email.php
 msgid "Use for Bulk Mail"
-msgstr "用於 EDM 郵件寄送"
+msgstr "用於大量郵件"
 
 #: CRM/Core/DAO/Email.php
 msgid "Hold Date"
@@ -12699,7 +12699,7 @@ msgstr "頁面參數"
 
 #: CRM/Core/DAO/Menu.php
 msgid "Breadcrumb"
-msgstr "導引列"
+msgstr "所在路徑（麵包屑）"
 
 #: CRM/Core/DAO/Menu.php
 msgid "Return Url"
@@ -12874,7 +12874,7 @@ msgstr "地址標準化網址"
 
 #: CRM/Core/DAO/Preferences.php
 msgid "Mailing Backend"
-msgstr ""
+msgstr "電子郵件後端設定"
 
 #: CRM/Core/DAO/Preferences.php
 msgid "Navigation"
@@ -12945,7 +12945,7 @@ msgstr "語系"
 msgid ""
 "We experienced an unexpected error. Please post a detailed description and "
 "the backtrace on the CiviCRM forums: %1"
-msgstr "我們遇到未預期的錯誤。請至 CiviCRM 討論區 %1 張貼錯誤描述及錯誤追蹤結果。"
+msgstr "網站遇到未預期的錯誤。請聯絡網站管理者。"
 
 #: CRM/Core/Form/Date.php
 msgid ""
@@ -14091,7 +14091,7 @@ msgstr "單行輸入欄位（文字或數字）"
 
 #: CRM/Core/SelectValues.php
 msgid "Multi-line text box (textarea)"
-msgstr "多行文字欄位（文字區域）"
+msgstr "文字欄位（多行）"
 
 #: CRM/Core/SelectValues.php
 msgid "Drop-down (select list)"
@@ -14794,7 +14794,7 @@ msgstr "電子報"
 
 #: CRM/Dedupe/Merger.php
 msgid "PCPs"
-msgstr "個人動員頁"
+msgstr "個人募款頁"
 
 #: CRM/Event/BAO/Event.php
 msgid "Cannot find participant ID"
@@ -15891,7 +15891,7 @@ msgstr "瀏覽參加者網址"
 
 #: CRM/Event/Info.php
 msgid "CiviCRM Event Engine"
-msgstr "CiviCRM 活動引擎"
+msgstr "CiviCRM 活動"
 
 #: CRM/Event/Info.php
 msgid "Your Event(s)"
@@ -16125,7 +16125,7 @@ msgstr "謝謝您將本活動資訊轉告您身邊的親朋好友。"
 
 #: CRM/Friend/Form.php
 msgid "Tell Friend is disable for this Personal Campaign Page"
-msgstr "此個人動員頁的轉寄朋友功能已停用"
+msgstr "此個人募款頁的轉寄朋友功能已停用"
 
 #: CRM/Friend/Form.php
 msgid "page argument missing or invalid"
@@ -16746,7 +16746,7 @@ msgstr "基礎"
 
 #: CRM/Mailing/DAO/Job.php
 msgid "Job Type"
-msgstr "職"
+msgstr "工作類別"
 
 #: CRM/Mailing/DAO/Job.php
 msgid "Job Offset"
@@ -17477,7 +17477,7 @@ msgstr "基本會員編號"
 
 #: CRM/Member/DAO/MembershipStatus.php
 msgid "Start Event Adjust Unit"
-msgstr "開始活動調整單位"
+msgstr "開始日期調整單位"
 
 #: CRM/Member/DAO/MembershipStatus.php
 msgid "End Event Adjust Unit"
@@ -17629,7 +17629,7 @@ msgstr "噢，看來您所提供的會籍日期，沒有有效的會籍狀態可
 
 #: CRM/Member/Form/Membership.php
 msgid "OR You can sign up by setting Status Override? to true."
-msgstr ""
+msgstr "或是您可以勾選覆蓋會員狀態來設定會籍"
 
 #: CRM/Member/Form/Membership.php
 msgid "Please enter the join date."
@@ -17697,7 +17697,7 @@ msgstr "此會籍狀態名稱已存在。請設定不同的名稱。"
 
 #: CRM/Member/Form/MembershipStatus.php
 msgid "Start Event Adjustment"
-msgstr "開始時間調整"
+msgstr "開始日期調整"
 
 #: CRM/Member/Form/MembershipStatus.php
 msgid "End Event Adjustment"
@@ -18178,7 +18178,7 @@ msgstr "列印認捐清單"
 
 #: CRM/Pledge/Info.php
 msgid "CiviCRM Pledge Engine"
-msgstr "CiviCRM 認捐引擎"
+msgstr "CiviCRM 認捐"
 
 #: CRM/Pledge/Info.php
 msgid "Your Pledge(s)"
@@ -18650,7 +18650,7 @@ msgstr "工作擁有者編號"
 
 #: CRM/Project/DAO/Task.php
 msgid "Parent Entity Table"
-msgstr "父層工作組織表"
+msgstr ""
 
 #: CRM/Project/DAO/Task.php
 msgid "Task Parent"
@@ -18666,7 +18666,7 @@ msgstr "工作類別"
 
 #: CRM/Project/DAO/TaskStatus.php
 msgid "Responsible Entity Table"
-msgstr "負責人組織表"
+msgstr ""
 
 #: CRM/Project/DAO/TaskStatus.php
 msgid "Responsible"
@@ -18674,7 +18674,7 @@ msgstr "負責人"
 
 #: CRM/Project/DAO/TaskStatus.php
 msgid "Target Entity Table"
-msgstr "目標聯絡人組織表"
+msgstr ""
 
 #: CRM/Project/DAO/TaskStatus.php
 msgid "Target"
@@ -19021,7 +19021,7 @@ msgstr "查看本組織的聯絡人概況。"
 
 #: CRM/Report/Form/Contribute/Repeat.php
 msgid "Range One Stat"
-msgstr "區間 2 統計"
+msgstr "區間 1 統計"
 
 #: CRM/Report/Form/Contribute/Repeat.php
 msgid "Range Two Stat"
@@ -21330,7 +21330,7 @@ msgstr "檔案格式必須為 CSV。"
 #: templates/CRM/Import/Form/CSV.tpl
 #: templates/CRM/Member/Import/Form/UploadFile.tpl
 msgid "Maximum Upload File Size: %1 MB"
-msgstr "最高上傳檔案大小： %1MB"
+msgstr "最大檔案大小： %1MB"
 
 #: templates/CRM/Activity/Import/Form/UploadFile.tpl
 msgid ""
@@ -21712,7 +21712,7 @@ msgstr "編輯 %1 選項"
 msgid ""
 "WARNING: Deleting this option will result in the loss of all %1 related "
 "records which use the option."
-msgstr "警告：刪除此選項，也會刪除所有跟此選項關聯的記錄。"
+msgstr "警告：刪除此選項，也會刪除所有跟「%1」選項關聯的記錄。"
 
 #: templates/CRM/Admin/Form/Options.tpl
 msgid "Custom Search Path"
@@ -21758,7 +21758,7 @@ msgid ""
 "Matched values are replaced with this prefix plus a unique code. EX: If "
 "replacement prefix for &quot;Vancouver&quot; is <em>city_</em>, occurrences "
 "will be replaced with <em>city_39121</em>."
-msgstr "符合的值將以此前綴詞加上唯一的數值所產生的名稱來置換。例如：如果要置換的是&quot;溫哥華&quot;，且前綴詞是<em>city_</em>，那麼置換後的名稱會是<em>city_39121</em>。"
+msgstr ""
 
 #: templates/CRM/Admin/Form/Options.tpl
 msgid "The class name which implements this functionality."
@@ -22046,7 +22046,7 @@ msgid ""
 "Select the HTML WYSIWYG Editor provided for fields that allow HTML "
 "formatting. Select 'Textarea' if you don't want to provide a WYSIWYG Editor "
 "(users will type text and / or HTML code into plain text fields)."
-msgstr "選擇 HTML 所見即所得編輯器，可用於 HTML 格式。若您不想提供所見即所得編輯器，請選擇「Textarea」（使用者將鍵入文本和/或HTML代碼純文本字段）。"
+msgstr "選擇 HTML 所見即所得編輯器，可用於 HTML 格式。若您不想提供所見即所得編輯器，請選擇「文字欄位（多行）」（使用者將鍵入文本和/或HTML代碼純文本字段）。"
 
 #: templates/CRM/Admin/Form/Preferences/Display.hlp
 msgid ""
@@ -22275,7 +22275,7 @@ msgstr "除錯輸出是因為，加入特定的名稱對值到CiviCRM查詢字�
 
 #: templates/CRM/Admin/Form/Setting/Debugging.hlp
 msgid "Smarty Debug Window"
-msgstr "智慧除錯視窗"
+msgstr "Smarty 除錯視窗"
 
 #: templates/CRM/Admin/Form/Setting/Debugging.hlp
 msgid ""
@@ -22691,7 +22691,7 @@ msgid ""
 "('%' or '_') to the beginning of the search term if they want to find all "
 "records which contain those letters. EXAMPLE: '%ada' will return 'Nadal, "
 "Jorge'."
-msgstr "如果開啟，當使用者以名字搜尋聯絡人時，系統會同時搜尋聯絡人的姓氏和名字。例如，搜尋「林」會找到所有姓名包含 ada 的聯絡人，例如「林東陽」、「陸玉林」 等。如果關閉，則系統只會搜尋名字，以上例而言，結果只會顯示「陸玉林」。若資料庫數據較多，關閉此功能可以加快搜尋速度，但是如果您想要在搜尋時也同時找尋姓氏符合的聯絡人資料，您必須自行在搜尋字詞「前」加上萬用字元（即 % 或 _）。"
+msgstr "啟用此功能的話，系統會自動在搜尋字前加上萬用字元來搜尋所有相符的聯絡人資料，例如搜尋「林」會找到所有姓氏、名字有「林」的聯絡人，例如「林東陽」、「陸玉林」等。關閉此功能的話，系統則只會在搜尋字串後加上萬用字元，因而只會找到以搜尋字串開頭的資料；以上例而言，結果只會顯示「林東陽」。若資料庫數據較多，關閉此功能可以加快搜尋速度，但是如果您想要在搜尋時也同時找尋姓氏符合的聯絡人資料，您必須自行在搜尋字串「前」加上萬用字元（即 % 或 _）。"
 
 #: templates/CRM/Admin/Form/Setting/Search.tpl
 msgid ""
@@ -22699,7 +22699,7 @@ msgid ""
 "Name. Disabling this feature will speed up search significantly for larger "
 "databases, but users will need to use the Email search fields (from Advanced"
 " Search, Search Builder, or Profiles) to find contacts by email address."
-msgstr "如果開啟，當使用者以名字搜尋聯絡人時，系統會同時搜尋 Email。若資料庫數據較多，關閉此功能可以加快搜尋速度，但是如果您想要在搜尋 Email，則必須自行使用進階搜尋、自訂搜尋、或資料表單，並使用 Email 來搜尋符合條件的聯絡人。"
+msgstr "啟用此功能的話，系統會以使用者輸入的字串同時比對聯絡人姓名及 Email。關閉此功能可以加快搜尋速度，尤其是資料庫已儲存大量的聯絡人資料時，但是如果您想要直接搜尋 Email 地址的話，則必須利用進階搜尋、自訂搜尋或資料表單來針對 Email 欄位進行搜尋。"
 
 #: templates/CRM/Admin/Form/Setting/Search.tpl
 msgid ""
@@ -23650,7 +23650,7 @@ msgstr "此螢幕顯示的為目前您網站的CiviCRM導覽選單 - 以\"樹狀
 msgid ""
 "You can customize the CiviCRM navigation menu bar to better meet the needs "
 "of your users. You can:"
-msgstr "您可以自訂 CiviCRM 導覽列以貼進網站使用者的需求。您可以："
+msgstr "您可以自訂導覽選單項目，以符合您的需求。您可以："
 
 #: templates/CRM/Admin/Page/Navigation.hlp
 msgid ""
@@ -23737,7 +23737,7 @@ msgid ""
 "date using 'Advanced Search'. Other applications may record activities for "
 "CiviCRM contacts using our APIs. For more information, refer to the online "
 "%1."
-msgstr "已排定及已完成的任務，可依照類型或任務日期來做進階搜尋。。其他應用程式也許透過 API 程式，也會將任務記錄放置 CiviCRM 的聯絡人。詳情可以參考線上資訊 %1。"
+msgstr "已排定及已完成的任務，可依照任務類型或日期來做進階搜尋。其他應用程式可能透過 API 程式將任務記錄存入 CiviCRM 的聯絡人資料中。詳情可以參考線上資訊 %1。"
 
 #: templates/CRM/Admin/Page/Options.hlp
 msgid "API Documentation"
@@ -24816,7 +24816,7 @@ msgstr "編號"
 
 #: templates/CRM/Admin/Page/Tag.tpl
 msgid "Parent ID"
-msgstr "父層編號"
+msgstr "上層編號"
 
 #: templates/CRM/Admin/Page/Tag.tpl
 msgid "Tag set?"
@@ -25004,7 +25004,7 @@ msgstr "問卷的標題。"
 
 #: templates/CRM/Campaign/Form/Survey.tpl
 msgid "Select the campaign for which survey is created."
-msgstr "請選擇要使用此問卷的動員頁。"
+msgstr "請選擇要使用此問卷的募款活動頁。"
 
 #: templates/CRM/Campaign/Form/Survey.tpl
 msgid "Select the Activity Type."
@@ -25099,15 +25099,15 @@ msgstr "您要預約 %1 的受訪者嗎？"
 #: templates/CRM/Campaign/Page/Campaign.tpl
 #: templates/CRM/Campaign/Page/DashBoard.tpl
 msgid "Add Campaign"
-msgstr "新增動員"
+msgstr "新增募款活動"
 
 #: templates/CRM/Campaign/Page/Campaign.tpl
 msgid "No Campaigns found."
-msgstr "找不到動員。"
+msgstr "找不到結果"
 
 #: templates/CRM/Campaign/Page/DashBoard.tpl
 msgid "No campaigns found."
-msgstr "找不到動員。"
+msgstr "找不到結果"
 
 #: templates/CRM/Campaign/Page/DashBoard.tpl
 #: templates/CRM/Campaign/Page/Petition.tpl
@@ -25155,7 +25155,7 @@ msgstr "建立新問卷"
 
 #: templates/CRM/Campaign/Page/DashBoard.tpl
 msgid "Create New Campaign"
-msgstr "建立動員"
+msgstr "建立募款活動"
 
 #: templates/CRM/Campaign/Page/DashBoard.tpl
 msgid "Response Options for"
@@ -27211,7 +27211,7 @@ msgstr "已選取聯絡人人數： %1"
 
 #: templates/CRM/Contact/Form/Task/Unhold.tpl
 msgid "Are you sure you want to unhold email of selected contact(s)?."
-msgstr "您確定要解凍所選取的 Email？"
+msgstr "您確定要解除凍結選取的 Email？"
 
 #: templates/CRM/Contact/Page/CustomSearch.tpl
 msgid "Use this search"
@@ -28453,7 +28453,7 @@ msgid ""
 " Page linked to this contribution page is either created or updated. The "
 "notification will include links to view the campaign page as well as the "
 "contact record of the creator of the page."
-msgstr "連結此募款頁的個人動員頁被建立或編輯時，系統會自動寄送通知此 Email。通信內會附上連結至個人動員頁的網址，以及建立動員頁的聯絡人資料。"
+msgstr "連結此募款頁的個人募款頁被建立或編輯時，系統會自動寄送通知此 Email。通信內會附上連結至個人募款頁的網址，以及建立募款頁的聯絡人資料。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/PCP.hlp
 msgid ""
@@ -28509,7 +28509,7 @@ msgid ""
 "constituents to create personal fundraising pages using the Menu Manager. "
 "Select <strong>CiviCRM &raquo; Create Personal Campaign Pages</strong> and "
 "then select <strong>%1</strong> for the contribution page."
-msgstr "當啟用個人動員頁時，應在選單加入「建立個人募款頁」的連結以邀請支持者捐款。按<strong>CiviCRM &raquo; 建立個人動員頁</strong>然後選<strong>%1</strong>以建立募款頁。"
+msgstr "當啟用個人募款頁時，應在選單加入「建立個人募款頁」的連結以邀請支持者捐款。按<strong>CiviCRM &raquo; 建立個人募款頁</strong>然後選<strong>%1</strong>以建立募款頁。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/PCP.tpl
 msgid ""
@@ -28637,7 +28637,7 @@ msgid ""
 "create one or more different Contribution Pages for different purposes, "
 "audiences, campaigns, etc. Each page can have it's own introductory message,"
 " pre-configured contribution amounts, custom data collection fields, etc."
-msgstr "這是建立新的線上募款頁面的第一個步驟。您可以建立一個或更多不同的募款頁給不同的計劃、觀眾、募款等。每一頁可以有自己的介紹訊息、預設捐款金額、數據收集欄位等。"
+msgstr "這是建立新的線上募款活動頁的第一個步驟。您可以建立一個或更多不同的募款活動頁給不同的計劃、觀眾、募款等。每一頁可以有自己的介紹訊息、預設捐款金額、數據收集欄位等。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/Settings.tpl
 msgid ""
@@ -29171,15 +29171,15 @@ msgstr "選項"
 
 #: templates/CRM/Contribute/Form/ContributionView.tpl
 msgid "Personal Campaign Page Contribution Information"
-msgstr "個人動員頁募款資訊"
+msgstr "個人募款頁資訊"
 
 #: templates/CRM/Contribute/Form/ContributionView.tpl
 msgid "Campaign Page"
-msgstr "動員頁"
+msgstr "募款活動頁"
 
 #: templates/CRM/Contribute/Form/ContributionView.tpl
 msgid "Contribution was made through this personal campaign page."
-msgstr "已透過此個人動員頁捐款。"
+msgstr "已透過此個人募款頁捐款。"
 
 #: templates/CRM/Contribute/Form/ContributionView.tpl
 msgid "In Public Honor Roll?"
@@ -29372,11 +29372,11 @@ msgstr "您的個人募款頁是否啓用中？您可以隨時啓用/停用它�
 
 #: templates/CRM/Contribute/Form/PCP/Delete.tpl
 msgid "Delete Campaign Page "
-msgstr "刪除動員頁"
+msgstr "刪除募款活動頁"
 
 #: templates/CRM/Contribute/Form/PCP/Delete.tpl
 msgid "Are you sure you want to delete Campaign Page '%1'?"
-msgstr "您確定要刪除%1募款頁？"
+msgstr "您確定要刪除「%1」募款頁？"
 
 #: templates/CRM/Contribute/Form/PCP/PCPAccount.tpl
 msgid ""
@@ -29387,7 +29387,7 @@ msgstr "您只需填寫一些基本資料，便能建立自己的個人募款頁
 
 #: templates/CRM/Contribute/Form/PCP/PCP.tpl
 msgid "Find Campaign Pages"
-msgstr "搜尋動員頁"
+msgstr "搜尋募款活動頁"
 
 #: templates/CRM/Contribute/Form/SearchContribution.tpl
 msgid "Find Contribution Pages"
@@ -29932,7 +29932,7 @@ msgstr "新增募款頁"
 
 #: templates/CRM/Contribute/Page/ContributionPage.tpl
 msgid "Manage Personal Campaign Pages"
-msgstr "管理個人動員頁"
+msgstr "管理個人募款頁"
 
 #: templates/CRM/Contribute/Page/ContributionPage.tpl
 msgid ""
@@ -29972,7 +29972,7 @@ msgstr ""
 
 #: templates/CRM/Contribute/Page/ContributionSoft.tpl
 msgid "Personal Campaign Page?"
-msgstr "個人動員頁？"
+msgstr "個人募款頁？"
 
 #: templates/CRM/Contribute/Page/ContributionSoft.tpl
 msgid "View contributor contact record"
@@ -29981,7 +29981,7 @@ msgstr "瀏覽捐款人聯絡記錄"
 #: templates/CRM/Contribute/Page/ContributionSoft.tpl
 #: templates/CRM/Contribute/Page/PCP.tpl
 msgid "View Personal Campaign Page"
-msgstr "瀏覽個人動員頁"
+msgstr "瀏覽個人募款頁"
 
 #: templates/CRM/Contribute/Page/ContributionSoft.tpl
 msgid "( n/a )"
@@ -30129,7 +30129,7 @@ msgid ""
 "photo, text, and personal information. She can then send a link to the page "
 "to her friends, soliciting support for your organization. This is a powerful"
 " way to widely and quickly spread the message about your campaign."
-msgstr "個人動員頁(PCPs)可讓外部使用者建立募款頁面，用來為您的組織募款。意思是說，捐款者在捐款給您的組織後，可以建立一個募款頁面為您的組織募款，在這個個人化的募款頁面中，可以放置自己挑選的照片、編寫文案以及個人資訊。也可發送該頁面的連結給朋友，幫您的組織推廣捐款活動。這個方法可以更廣泛、更迅速的將您的捐款活動推廣出去。"
+msgstr "「個人募款頁」可讓外部使用者建立募款頁面，用來為您的組織募款。意思是說，捐款者在捐款給您的組織後，可以建立一個募款頁面為您的組織募款，在這個個人化的募款頁面中，可以放置自己挑選的照片、編寫文案以及個人資訊。也可發送該頁面的連結給朋友，幫您的組織推廣捐款活動。這個方法可以更廣泛、更迅速的將您的捐款活動推廣出去。"
 
 #: templates/CRM/Contribute/Page/PCP.hlp
 msgid ""
@@ -30138,7 +30138,7 @@ msgid ""
 "contribution. CiviContribute has a section that allows you to administer all"
 " of the PCPs for your organization. You can require approval before a PCP "
 "goes 'live', and disable or delete any campaign pages you don't approve of."
-msgstr "當有人透過「個人動員頁」進行捐款時，建立此個人動員頁的使用者會得到「間接貢獻」，以感謝動員人對募款活動的支持。您可以在「捐款」功能下管理並審核個人動員頁，以及停用或刪除審核未通過的個人動員頁。"
+msgstr "當有人透過「個人募款頁」進行捐款時，建立此個人募款頁的使用者會得到「間接貢獻」，以感謝動員人對募款活動的支持。您可以在「捐款」功能下管理並審核個人募款頁，以及停用或刪除審核未通過的個人募款頁。"
 
 #: templates/CRM/Contribute/Page/PCPInfo.tpl
 msgid "Personal Fundraiser View"
@@ -30148,7 +30148,7 @@ msgstr "檢視個人募款頁"
 msgid ""
 "This is a preview of your Personal Campaign Page in support of <a "
 "href=\"%1\"><strong>\"%2\"</strong></a>."
-msgstr "這是您的個人動員頁的預覽畫面（為了支持<a href=\"%1\"><strong>\"%2\"</strong></a> ) "
+msgstr "這是您的個人募款頁的預覽畫面（為了支持<a href=\"%1\"><strong>\"%2\"</strong></a> ) "
 
 #: templates/CRM/Contribute/Page/PCPInfo.tpl
 msgid "The current status of your page is"
@@ -30243,11 +30243,11 @@ msgstr "繼續"
 
 #: templates/CRM/Contribute/Page/PCP.tpl
 msgid "There are no Personal Campaign Pages which match your search criteria."
-msgstr "沒有個人動員頁符合您的搜尋條件。"
+msgstr "沒有個人募款頁符合您的搜尋條件。"
 
 #: templates/CRM/Contribute/Page/PCP.tpl
 msgid "There are currently no Personal Campaign Pages."
-msgstr "目前沒有個人動員頁。"
+msgstr "目前沒有個人募款頁。"
 
 #: templates/CRM/Contribute/Page/PcpUserDashboard.tpl
 msgid "Your Page"
@@ -30259,27 +30259,27 @@ msgstr "支持對象"
 
 #: templates/CRM/Contribute/Page/PcpUserDashboard.tpl
 msgid "Campaign Ends"
-msgstr "動員結束日期"
+msgstr "結束日期"
 
 #: templates/CRM/Contribute/Page/PcpUserDashboard.tpl
 msgid "Preview your Personal Campaign Page"
-msgstr "預覽您的個人動員頁"
+msgstr "預覽您的個人募款頁"
 
 #: templates/CRM/Contribute/Page/PcpUserDashboard.tpl
 msgid "You do not have any active Personal Campaign pages."
-msgstr "您沒有任何啓用中的個人動員頁。"
+msgstr "您沒有任何啓用中的個人募款頁。"
 
 #: templates/CRM/Contribute/Page/PcpUserDashboard.tpl
 msgid "Create a Personal Campaign Page for another campaign:"
-msgstr "建立其他的個人動員頁："
+msgstr "建立其他的個人募款頁："
 
 #: templates/CRM/Contribute/Page/PcpUserDashboard.tpl
 msgid "Become a supporter by creating a Personal Campaign Page:"
-msgstr "透過建立個人動員頁來成為支持者："
+msgstr "透過建立個人募款頁來成為支持者："
 
 #: templates/CRM/Contribute/Page/PcpUserDashboard.tpl
 msgid "View campaign page"
-msgstr "檢視動員頁"
+msgstr "檢視募款活動頁"
 
 #: templates/CRM/Contribute/Page/Premium.tpl
 msgid ""
@@ -30343,7 +30343,7 @@ msgid ""
 "When a contribution is made via a Personal Campaign Page, a soft credit for "
 "that contribution is automatically assigned to the contact who created the "
 "Personal Campaign Page."
-msgstr "從個人動員頁所進行的捐款，會加上「間接貢獻」的註記給建立該個人動員頁的聯絡人，進而記錄該聯絡人所募得的款項（也就是該聯絡人間接貢獻給組織的協助）。"
+msgstr "從個人募款頁所進行的捐款，會加上「間接貢獻」的註記給建立該個人募款頁的聯絡人，進而記錄該聯絡人所募得的款項（也就是該聯絡人間接貢獻給組織的協助）。"
 
 #: templates/CRM/Contribute/Page/Tab.hlp
 msgid ""
@@ -33651,7 +33651,7 @@ msgstr "更多資訊及訊息範例..."
 msgid ""
 "You can either <strong>upload</strong> the mailing content from your "
 "computer OR <strong>compose</strong> the content on this screen."
-msgstr "您可以從您的電腦<strong>上載</strong>郵件內容或在此螢幕<strong>編寫</strong>內容。"
+msgstr "您可以從電腦中<strong>上傳</strong>已編寫好的郵件內容或在此螢幕<strong>直接編寫</strong>內容"
 
 #: templates/CRM/Mailing/Form/Upload.tpl
 msgid ""
@@ -34448,7 +34448,7 @@ msgstr[0] "CiviCRM已偵測到不相符的會員籍編號。這些記錄沒有�
 msgid ""
 "You can <a href='%1'>Download Mismatched Memberships</a>. You may then "
 "correct them, and import the new file with the corrected data."
-msgstr "您可以<a href='%1'>下載不相符的會籍記錄</a>。您可以改正它們，再匯入已訂正數據的新檔案。"
+msgstr "您可以<a href='%1'>下載不相符的會籍記錄</a>。並且在您修正之後，再次匯入修正過的新檔案。"
 
 #: templates/CRM/Member/Import/Form/Summary.tpl
 msgid ""
@@ -35905,7 +35905,7 @@ msgid ""
 "target=\"_blank\">reCAPTCHA.net</a>, and enter the key information in <a "
 "href=\"%2\">Administer CiviCRM &raquo; Global Settings &raquo; Miscellaneous"
 " Settings</a>."
-msgstr "為了使用 reCAPTCHA 驗證服務，您必需先至<a href=\"%1\" target=\"_blank\">reCAPTCHA.net</a>取得一組 API  key，並且在 <a href=\"%2\">管理 CiviCRM &raquo; 全域設定 &raquo; 其他設定</a> 輸入 key 值。"
+msgstr "為了使用 reCAPTCHA 驗證服務，您必須先至<a href=\"%1\" target=\"_blank\">reCAPTCHA.net</a>取得一組 API  key，並且在 <a href=\"%2\">管理 CiviCRM &raquo; 全域設定 &raquo; 其他設定</a> 輸入 key 值。"
 
 #: templates/CRM/UF/Form/Group.hlp
 msgid ""
@@ -35983,7 +35983,7 @@ msgid ""
 "If enabled, a Map link is included on the profile listings rows and detail "
 "screens for any contacts whose records include sufficient location data for "
 "your mapping provider."
-msgstr "如果開啟，在顯示有地址資料的聯絡人時，會自動加上「地圖連結」，可供查看電子地圖。"
+msgstr "如果啟用此功能，在顯示有地址資料的聯絡人時，會自動加上『地圖連結』，可供查看電子地圖。"
 
 #: templates/CRM/UF/Form/Group.hlp
 msgid ""
@@ -36257,11 +36257,11 @@ msgstr "為個案建立任務"
 
 #: msgctxt "menu"
 msgid "Campaign Dashboard"
-msgstr "動員總覽頁面"
+msgstr "募款活動總覽頁面"
 
 #: msgctxt "menu"
 msgid "Campaign Types"
-msgstr "動員類型"
+msgstr "募款活動類型"
 
 #: msgctxt "menu"
 msgid "Case Dashlet"
@@ -36533,7 +36533,7 @@ msgstr "導覽選單"
 
 #: msgctxt "menu"
 msgid "New Campaign"
-msgstr "新增動員"
+msgstr "新增募款活動"
 
 #: msgctxt "menu"
 msgid "New Contribution Page"
@@ -36585,7 +36585,7 @@ msgstr "付款工具"
 
 #: msgctxt "menu"
 msgid "Personal Campaign Page Settings"
-msgstr "個人動員頁設定"
+msgstr "個人募款頁設定"
 
 #: msgctxt "menu"
 msgid "Phone Type"
@@ -37275,7 +37275,7 @@ msgstr "已成功刪除選取的註記。"
 #: CRM/Core/Error.php
 msgid ""
 "We experienced an unexpected error. Please file an issue with the backtrace"
-msgstr "我們遇到未預期的錯誤。請在後端追蹤平台提出問題。"
+msgstr "網站遇到未預期的錯誤。請聯絡網站管理者。"
 
 #: CRM/Core/Form/Date.php
 msgid "Previous Before Year"
@@ -38433,7 +38433,7 @@ msgstr "接受的信用卡"
 
 #: xml/templates/civicrm_data.tpl
 msgid "PCP Status"
-msgstr ""
+msgstr "個人募款頁狀態"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Addressing Options"
@@ -39423,15 +39423,15 @@ msgstr "捐款 - 定期捐款的開始和結束通知"
 
 #: xml/templates/civicrm_msg_template.tpl
 msgid "Personal Campaign Pages - Admin Notification"
-msgstr "個人動員頁 - 管理通知"
+msgstr "個人募款頁 - 管理通知"
 
 #: xml/templates/civicrm_msg_template.tpl
 msgid "Personal Campaign Pages - Supporter Status Change Notification"
-msgstr "個人動員頁 - 支持者狀態更改通知"
+msgstr "個人募款頁 - 支持者狀態更改通知"
 
 #: xml/templates/civicrm_msg_template.tpl
 msgid "Personal Campaign Pages - Supporter Welcome"
-msgstr "個人動員頁 - 歡迎支持者"
+msgstr "個人募款頁 - 歡迎支持者"
 
 #: xml/templates/civicrm_msg_template.tpl
 msgid "Events - Registration Confirmation and Receipt (off-line)"
@@ -39860,17 +39860,17 @@ msgstr "您在本站的活動報名已過期：%1 "
 #: xml/templates/message_templates/pcp_notify_subject.tpl
 #: xml/templates/message_templates/pcp_notify_text.tpl
 msgid "Personal Campaign Page Notification"
-msgstr "個人動員頁通知"
+msgstr "個人募款頁通知"
 
 #: xml/templates/message_templates/pcp_notify_html.tpl
 #: xml/templates/message_templates/pcp_notify_text.tpl
 msgid "Updated personal campaign page"
-msgstr "更新個人動員頁"
+msgstr "更新個人募款頁"
 
 #: xml/templates/message_templates/pcp_notify_html.tpl
 #: xml/templates/message_templates/pcp_notify_text.tpl
 msgid "New personal campaign page"
-msgstr "新增個人動員頁"
+msgstr "新增個人募款頁"
 
 #: xml/templates/message_templates/pcp_notify_html.tpl
 #: xml/templates/message_templates/pcp_notify_text.tpl
@@ -39919,14 +39919,14 @@ msgstr "登入後，您可以使用此表格去宣傳您的募款頁。"
 #: xml/templates/message_templates/pcp_supporter_notify_html.tpl
 #: xml/templates/message_templates/pcp_supporter_notify_text.tpl
 msgid "Questions? Send email to"
-msgstr "我們將儘速確認並發佈您的個人動員頁，請靜待通知。若有任何問題？ 請 email 到"
+msgstr "我們將儘速確認並發佈您的個人募款頁，請靜待通知。若有任何問題？ 請 email 到"
 
 #: xml/templates/message_templates/pcp_status_change_html.tpl
 #: xml/templates/message_templates/pcp_status_change_text.tpl
 msgid ""
 "Your personal campaign page has been reviewed. There were some issues with the content\n"
 "which prevented us from approving the page. We are sorry for any inconvenience."
-msgstr "我們已檢視過您的個人動員頁，但因為某些原因無法核准通過。非常抱歉。"
+msgstr "我們已檢視過您的個人募款頁，但因為某些原因無法核准通過。非常抱歉。"
 
 #: xml/templates/message_templates/pcp_status_change_html.tpl
 #: xml/templates/message_templates/pcp_status_change_text.tpl
@@ -39936,7 +39936,7 @@ msgstr "請聯繫網站管理者，以瞭解詳情"
 #: xml/templates/message_templates/pcp_status_change_subject.tpl
 #: xml/templates/message_templates/pcp_supporter_notify_subject.tpl
 msgid "Your Personal Campaign Page for %1"
-msgstr "您為 %1 所建立的個人動員頁"
+msgstr "您為 %1 所建立的個人募款頁"
 
 #: xml/templates/message_templates/pcp_status_change_text.tpl
 #: xml/templates/message_templates/pcp_supporter_notify_text.tpl
@@ -39951,7 +39951,7 @@ msgstr "親愛的支持者"
 #: xml/templates/message_templates/pcp_supporter_notify_html.tpl
 #: xml/templates/message_templates/pcp_supporter_notify_text.tpl
 msgid "Thanks for creating a personal campaign page in support of %1."
-msgstr "謝謝您建立個人動員頁，以支持 %1。"
+msgstr "謝謝您建立個人募款頁來支持 %1。"
 
 #: xml/templates/message_templates/pcp_supporter_notify_html.tpl
 #: xml/templates/message_templates/pcp_supporter_notify_text.tpl
@@ -40191,7 +40191,7 @@ msgid ""
 "\n"
 "<p><strong>Changes you make to the menu are saved immediately. However, you will need reload this page to see your changes in\n"
 "the menu bar above.</strong></p>"
-msgstr "您可自訂CiviCRM導覽選單已符合您的使用需求。您可以：\n<ul>\n<li>在任何階層加入選單項目，以符合您自身的工作流程需求。舉例：若您的組織使用設定檔\n來輸入資料，您可以在選單項目裡加入這些設定檔。新的選單項目也可設定連到外部（非CiviCRM）\n網頁與網路應用程式。請按\"新選單項目\"來新增。</li>\n<li>重新命名選單物件。將游標移到選單物件上並點滑鼠右鍵。然後選擇\"重新命名\"。</li>\n<li>刪除您不用的選單項目。點滑鼠右鍵並選擇\"刪除\"。</li>\n<li>修改選單項目的權限。點滑鼠右鍵並選擇\"編輯\"</li> \n<li>重新排列選單項目（包括把他們從一個選單的分支裡移到另一個。您可用滑鼠\"拖曳\n與放置\"選單物件到一個新的位置。</li>\n</ul>\n\n<p><strong>您對選單的修改會立即儲存。您必須重新載入頁面才能看到您所做的修改。</strong></p>"
+msgstr "您可自訂導覽選單以符合您的使用需求。您可以：\n<ul>\n<li>在任何階層加入選單項目，以符合您自身的工作流程需求。舉例：若您的組織使用設定檔\n來輸入資料，您可以在選單項目裡加入這些設定檔。新的選單項目也可設定連到外部（非CiviCRM）\n網頁與網路應用程式。請按「新增選單項目」來新增。</li>\n<li>重新命名選單物件。將游標移到選單物件上並點滑鼠右鍵。然後選擇「重新命名」。</li>\n<li>刪除您不用的選單項目。點滑鼠右鍵並選擇「刪除」。</li>\n<li>修改選單項目的權限。點滑鼠右鍵並選擇「編輯」。</li> \n<li>重新排列選單項目。您可用滑鼠拖曳\n選單項目到其他位置，例如從一個選單次層裡移到另一個。</li>\n</ul>\n\n<p><strong>您對選單的修改會立即儲存。您必須重新載入頁面才能看到您所做的修改。</strong></p>"
 
 #: templates/CRM/Admin/Page/PaymentProcessor.hlp
 msgid ""
@@ -40286,7 +40286,7 @@ msgstr ""
 msgid ""
 "Notification will be sent to this email address whenever a Personal Campaign Page linked to this contribution page is either created or updated.\n"
 "The notification will include links to view the campaign page as well as the contact record of the creator of the page."
-msgstr "連結此募款頁的個人動員頁被建立或編輯時，系統會自動寄送通知此 Email。\n通信內會附上連結至個人動員頁的網址，以及建立動員頁的聯絡人資料。"
+msgstr "連結此募款頁的個人募款頁被建立或編輯時，系統會自動寄送通知此 Email。\n通信內會附上連結至個人募款頁的網址，以及建立募款頁的聯絡人資料。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/PCP.hlp
 msgid ""
@@ -40326,7 +40326,7 @@ msgstr "「間接貢獻」可讓您記錄實際捐款人（直接貢獻）與促
 msgid ""
 "When a contribution is made via a Personal Campaign Page, a soft credit for that contribution is automatically assigned to the\n"
 "contact who created the Personal Campaign Page."
-msgstr "從個人動員頁所進行的捐款，會加上「間接貢獻」的註記給建立該個人動員頁的聯絡人，進而記錄該聯絡人所募得的款項（也就是該聯絡人間接貢獻給組織的協助）。"
+msgstr "從個人募款頁所進行的捐款，會加上「間接貢獻」的註記給建立該個人募款頁的聯絡人，進而記錄該聯絡人所募得的款項（也就是該聯絡人間接貢獻給組織的協助）。"
 
 #: templates/CRM/Custom/Page/Group.hlp
 msgid ""
@@ -40550,7 +40550,7 @@ msgstr "跟進"
 msgid ""
 "Are you sure you want to delete this Personal Campaign Page ?\\n This action"
 " can not be undone."
-msgstr "您確定要刪除此個人動員頁？\\n提醒您，此動作不能復原。"
+msgstr "您確定要刪除此個人募款頁？\\n提醒您，此動作不能復原。"
 
 #: CRM/Contribute/DAO/ContributionPage.php
 msgid "Receipt"
@@ -40607,7 +40607,7 @@ msgstr "這位聯絡人有尚未繳付或已逾期的款項 %2，預定應於 %3
 
 #: CRM/Contribute/Form/PCP/PCP.php
 msgid "Personal Campaign Pages Status"
-msgstr "個人動員頁狀態"
+msgstr "個人募款頁狀態"
 
 #: CRM/Contribute/Form/PCP/PCP.php
 msgid "Show"
@@ -40933,7 +40933,7 @@ msgid ""
 "You can either <strong>upload</strong> the mailing content from your "
 "computer OR <strong>compose</strong> the content on this screen. Click the "
 "help (?) icon for more information on formats and requirements."
-msgstr "您可以從您的電腦<strong>上載</strong>郵件內容或在此螢幕<strong>編寫</strong>內容。按幫助(?)以得到更多格式及要求的資料。"
+msgstr "您可以從電腦中<strong>上傳</strong>已編寫好的郵件內容或在此螢幕<strong>直接編寫</strong>內容。按「幫助（『?』圖示）」看完整說明。"
 
 #: templates/CRM/Mailing/Page/Browse.tpl
 msgid "Are you sure you want to delete the mailing '%1'?"
@@ -42411,15 +42411,15 @@ msgstr "間接貢獻人募款總額"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "Personal Campaign Page Nickname"
-msgstr "個人動員頁別名"
+msgstr "個人募款頁別名"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "Personal Campaign Page Personal Note"
-msgstr "個人動員頁的個人註記"
+msgstr "個人募款頁的個人註記"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "The Personal note form PCP"
-msgstr "個人註記表單（個人動員頁）"
+msgstr "個人註記表單（個人募款頁）"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "CiviCRM  Recurring Contributions"
@@ -42563,11 +42563,11 @@ msgstr "此任務的優先性"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "Parent Activity ID"
-msgstr "父層任務編號"
+msgstr "上層任務編號"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "The numeric ID of the Parent Activity "
-msgstr "父層任務的數字編號"
+msgstr "上層任務的數字編號"
 
 #: drupal/modules/views/civicrm.views.inc
 msgid "A short description of the activity.."
@@ -44875,7 +44875,7 @@ msgstr "抱歉，付款失敗了！"
 msgid ""
 "We were unable to process your payment. Your will not been charged in this "
 "transaction."
-msgstr "您不會被扣除任何款項，"
+msgstr ""
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid "Possible reason"
@@ -44923,3 +44923,40 @@ msgid ""
 " page. If you need this feature to visitor, please enable it in profiles "
 "setting."
 msgstr "如果自訂欄位設定必填，未來管理員建立、編輯資料時，該欄位都會被要求填入值。若是要給捐款人、參加者填寫，請到資料表單再設定必填。"
+
+#: CRM/Admin/Form/Setting/Receipt.tpl
+msgid ""
+"Choose a Checkbox or a Radio field. If the field is selected to 'Yes' by "
+"contributor, then the receipt title and serial field will be required. On "
+"the contrary, the receipt title and serial field will hide."
+msgstr "選擇一個核選框或單選方塊，當這欄位被捐款者勾選「是」，則下列的收據抬頭和編號欄位會設成必填，反之則隱藏。"
+
+#: CRM/Admin/Form/Setting/Receipt.php
+msgid "Field to request receipt"
+msgstr "詢問是否需要收據欄位"
+
+#: CRM/Event/Page/EventInfo.tpl
+msgid "Add to Google Calendar"
+msgstr ""
+
+#: xml/templates/civicrm_msg_template.tpl
+msgid "Contributions - Invoice Notification"
+msgstr ""
+
+#: xml/templates/message_templates/contribution_invoice_notify.tpl
+msgid ""
+"We send this invoice because you have submitted data at <a "
+"href=\"%1\">{$page.title}</a>."
+msgstr "這是您透過 <a href=\"%1\">{$page.title}</a> 所產生的繳費單。"
+
+#: xml/templates/message_templates/contribution_invoice_notify.tpl
+msgid ""
+"You need to follow instruction below to complete transaction before "
+"<strong>%1</strong> (expire date)."
+msgstr "您需要在 <strong>%1</strong>，以下列方式完成繳費動作。"
+
+#: xml/templates/message_templates/contribution_invoice_notify.tpl
+msgid ""
+"If you can make it before expire date, you can <a href=\"%1\">go page</a> "
+"submit again."
+msgstr "若本繳費單逾期，則需請您<a href=\"%1\">重新產生</a>新的繳費資訊。"
