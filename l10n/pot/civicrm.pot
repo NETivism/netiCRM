@@ -44957,20 +44957,3 @@ msgstr ""
 #: xml/templates/message_templates/contribution_invoice_notify.tpl
 msgid "If you can make it before expire date, you can <a href=\"%1\">go page</a> submit again."
 msgstr ""
-
-
-#: civicrm_neweb/civicrm_neweb.module
-msgid " neweb sftp setting is error."
-msgstr ""
-
-#: civicrm_neweb/civicrm_neweb.module
-msgid "There are some errors about connecting to neweb sftp, Please check the payment processor settings."
-msgstr ""
-
-#: civicrm_neweb/civicrm_neweb.module
-msgid "Host information : "
-msgstr ""
-
-#: civicrm_neweb/civicrm_neweb.module
-msgid "More information please checked the configurations of the site. You can modify it by this path : {your domain}"
-msgstr ""
