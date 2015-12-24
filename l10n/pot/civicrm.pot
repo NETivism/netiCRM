@@ -44947,7 +44947,7 @@ msgid "Contributions - Invoice Notification"
 msgstr ""
 
 #: xml/templates/message_templates/contribution_invoice_notify.tpl
-msgid "We send this invoice because you have submitted data at <a href=\"%1\">{$page.title}</a>."
+msgid "We send this invoice because you have submitted data at <a href=\"%1\">%2</a>."
 msgstr ""
 
 #: xml/templates/message_templates/contribution_invoice_notify.tpl

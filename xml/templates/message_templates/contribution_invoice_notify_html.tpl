@@ -20,7 +20,7 @@
       {$message}
     {else}
       <p>
-        {ts 1=$page.url}We send this invoice because you have submitted data at <a href="%1">{$title}</a>.{/ts}<br>
+        {ts 1=$page.url 2=$title}We send this invoice because you have submitted data at <a href="%1">%2</a>.{/ts}<br>
         {ts 1=$payment_info.$expire}You need to follow instruction below to complete transaction before <strong>%1</strong> (expire date).{/ts}<br>
         {ts 1=$page.url}If you can make it before expire date, you can <a href="%1">go page</a> submit again.{/ts}
       </p>

@@ -9,7 +9,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2015-12-24 07:27+0000\n"
+"PO-Revision-Date: 2015-12-24 08:13+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -44946,8 +44946,8 @@ msgstr ""
 #: xml/templates/message_templates/contribution_invoice_notify.tpl
 msgid ""
 "We send this invoice because you have submitted data at <a "
-"href=\"%1\">{$page.title}</a>."
-msgstr "這是您透過 <a href=\"%1\">{$page.title}</a> 所產生的繳費單。"
+"href=\"%1\">%2</a>."
+msgstr "這是您透過 <a href=\"%1\">%2</a> 所產生的繳費單。"
 
 #: xml/templates/message_templates/contribution_invoice_notify.tpl
 msgid ""
