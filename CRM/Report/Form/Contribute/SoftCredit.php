@@ -48,9 +48,9 @@ class CRM_Report_Form_Contribute_SoftCredit extends CRM_Report_Form {
     $this->_columns = array('civicrm_contact' =>
       array('dao' => 'CRM_Contact_DAO_Contact',
         'fields' =>
-        array('display_name_creditor' =>
+        array('sort_name_creditor' =>
           array('title' => ts('Soft Credit Name'),
-            'name' => 'display_name',
+            'name' => 'sort_name',
             'alias' => 'contact_civireport',
             'required' => TRUE,
             'no_repeat' => TRUE,
@@ -62,9 +62,9 @@ class CRM_Report_Form_Contribute_SoftCredit extends CRM_Report_Form {
             'no_display' => TRUE,
             'required' => TRUE,
           ),
-          'display_name_constituent' =>
+          'sort_name_constituent' =>
           array('title' => ts('Contributor Name'),
-            'name' => 'display_name',
+            'name' => 'sort_name',
             'alias' => 'constituentname',
             'required' => TRUE,
           ),
@@ -334,7 +334,7 @@ class CRM_Report_Form_Contribute_SoftCredit extends CRM_Report_Form {
     $alias_creditor = 'contact_civireport';
     $this->_groupBy = "GROUP BY {$this->_aliases['civicrm_contribution_soft']}.contact_id,
                                        {$alias_constituent}.id, 
-                                       {$alias_creditor}.display_name";
+                                       {$alias_creditor}.sort_name";
   }
 
   function where() {
@@ -408,7 +408,7 @@ class CRM_Report_Form_Contribute_SoftCredit extends CRM_Report_Form {
 
     foreach ($rows as $rowNum => $row) {
       // Link constituent (contributor) to contribution detail
-      if (array_key_exists('civicrm_contact_display_name_constituent', $row) &&
+      if (array_key_exists('civicrm_contact_sort_name_constituent', $row) &&
         array_key_exists('civicrm_contact_id_constituent', $row)
       ) {
 
@@ -416,14 +416,14 @@ class CRM_Report_Form_Contribute_SoftCredit extends CRM_Report_Form {
           'reset=1&force=1&id_op=eq&id_value=' . $row['civicrm_contact_id_constituent'],
           $this->_absoluteUrl, $this->_id
         );
-        $rows[$rowNum]['civicrm_contact_display_name_constituent_link'] = $url;
-        $rows[$rowNum]['civicrm_contact_display_name_constituent_hover'] = ts("List all direct contribution(s) from this contact.");
+        $rows[$rowNum]['civicrm_contact_sort_name_constituent_link'] = $url;
+        $rows[$rowNum]['civicrm_contact_sort_name_constituent_hover'] = ts("List all direct contribution(s) from this contact.");
         $entryFound = TRUE;
       }
 
-      // Handling Creditor's display_name no Repeat
-      if (array_key_exists('civicrm_contact_display_name_creditor', $row) && $this->_outputMode != 'csv') {
-        if ($value = $row['civicrm_contact_display_name_creditor']) {
+      // Handling Creditor's sort_name no Repeat
+      if (array_key_exists('civicrm_contact_sort_name_creditor', $row) && $this->_outputMode != 'csv') {
+        if ($value = $row['civicrm_contact_sort_name_creditor']) {
           if ($rowNum == 0) {
             $prev_dispname = $value;
           }
@@ -439,15 +439,15 @@ class CRM_Report_Form_Contribute_SoftCredit extends CRM_Report_Form {
           }
 
           if ($dispname_flag) {
-            unset($rows[$rowNum]['civicrm_contact_display_name_creditor']);
+            unset($rows[$rowNum]['civicrm_contact_sort_name_creditor']);
           }
           else {
             $url = CRM_Report_Utils_Report::getNextUrl('contribute/detail',
               'reset=1&force=1&id_op=eq&id_value=' . $row['civicrm_contact_id_creditor'],
               $this->_absoluteUrl, $this->_id
             );
-            $rows[$rowNum]['civicrm_contact_display_name_creditor_link'] = $url;
-            $rows[$rowNum]['civicrm_contact_display_name_creditor_hover'] = ts("List direct contribution(s) from this contact.");
+            $rows[$rowNum]['civicrm_contact_sort_name_creditor_link'] = $url;
+            $rows[$rowNum]['civicrm_contact_sort_name_creditor_hover'] = ts("List direct contribution(s) from this contact.");
           }
           $entryFound = TRUE;
         }
