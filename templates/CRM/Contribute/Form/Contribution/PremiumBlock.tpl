@@ -51,7 +51,7 @@ function selectPremium(optionField) {
         {/if}
         {if $premiumBlock.premiums_intro_text}
             <div id="premiums-intro" class="crm-section premiums_intro-section">
-                {$premiumBlock.premiums_intro_text}
+                {$premiumBlock.premiums_intro_text|nl2br}
             </div> 
         {/if}
     {/if}
@@ -79,8 +79,8 @@ function selectPremium(optionField) {
             {/if}
             <td>{if $row.thumbnail}<a href="javascript:popUp('{$row.image}')" ><img src="{$row.thumbnail}" alt="{$row.name}" class="no-border" /></a>{/if}</td>    	
 	        <td>
-                <strong>{$row.name}</strong><br />
-                {$row.description} &nbsp;
+                <label><strong>{$row.name}</strong></label>
+                <div>{$row.description|nl2br}</div>
                 {if ( ($premiumBlock.premiums_display_min_contribution AND $context EQ "makeContribution") OR $preview EQ 1) AND $row.min_contribution GT 0 }
                     {ts 1=$row.min_contribution|crmMoney}(Contribute at least %1 to be eligible for this gift.){/ts}
                 {/if}
@@ -88,12 +88,12 @@ function selectPremium(optionField) {
                 {assign var="pid" value="options_"|cat:$row.id}
                 {if $pid}
                     <div id="product-options">
-                      <p>{$form.$pid.html}</p>
+                      <div>{$form.$pid.html}</div>
                     </div>
                 {/if}
             {else}
                 <div id="product-options">
-                    <p><strong>{$row.options}</strong></p> 
+                    <div><strong>{$row.options}</strong></div>
                 </div>
             {/if}
             {if $context EQ "thankContribution" AND $is_deductible AND $row.price}
