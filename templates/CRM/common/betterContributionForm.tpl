@@ -1,19 +1,17 @@
 <script>
 {literal}
-jQuery(function($){
+cj(function($){
   if($('#custom_{/literal}{$receiptTitle}{literal},#custom_{/literal}{$receiptSerial}{literal}').length >= 1){
-
     // receiptTitle, receiptSerial
     $('<div class="crm-section receipt_type"><div class="label"></div><div class="content"><input type="radio" name="receipt_type" id="r_person" checked="checked"><label for="r_person">{/literal}{ts}Individual{/ts}{literal}</label><input name="receipt_type" type="radio" id="r_company" ><label for="r_company">{/literal}{ts}Legal{/ts}{literal}</label></div></div>')
     .insertBefore($('.custom_{/literal}{$receiptTitle}{literal}-section'));
-    var OddOrEven = $('.custom_{/literal}{$receiptTitle}{literal}-section').attr('class').match(/crm-odd|crm-even/)[0];
-    $('.receipt_type').addClass(OddOrEven);
+    //var OddOrEven = $('.custom_{/literal}{$receiptTitle}{literal}-section').attr('class').match(/crm-odd|crm-even/)[0];
+    //$('.receipt_type').addClass(OddOrEven);
 
     $('<div><input type="checkbox" name="same_as_post" id="same-as"><label for="same-as">{/literal}{ts}Same as Contributor{/ts}{literal}</label></div>')
     .insertBefore($('#custom_{/literal}{$receiptTitle}{literal}'));
 
-    
-    $('#same-as').change(update_name);
+    $('#same-as').change(updateName);
     $('.receipt_type input').change(function(){
       if($('#r_person').is(':checked')){
         $('#custom_{/literal}{$receiptTitle}{literal}').attr('placeholder',"{/literal}{ts}Contact Name{/ts}{literal}");
@@ -25,7 +23,7 @@ jQuery(function($){
       }
     });
   }
-  $('.receipt_type input').trigger('change').change(update_name);
+  $('.receipt_type input').trigger('change').change(updateName);
 
   // Display Donor Credit 
   if($('#custom_{/literal}{$receiptDonorCredit}{literal}').length>=1){
@@ -37,22 +35,16 @@ items += "<input name='receipt_name' type='radio' id='r_name_custom' ><label for
 
     $(items).insertBefore($('#custom_{/literal}{$receiptDonorCredit}{literal}'));
 
-    
-
-
-
-    $('#last_name,#first_name,#legal_identifier').keyup(update_name);
-    $('.custom_{/literal}{$receiptDonorCredit}{literal}-section input[type=radio]').change(update_name);
-    update_name();
-
+    $('#last_name,#first_name,#legal_identifier').keyup(updateName);
+    $('.custom_{/literal}{$receiptDonorCredit}{literal}-section input[type=radio]').change(updateName);
+    updateName;
   }
 
 
   // Yes No Selection
-  if($('.custom_{/literal}{$receiptYesNo}{literal}-section').length>=1){
+  if($('.custom_{/literal}{$receiptYesNo}{literal}-section').length >= 1){
     $('.custom_{/literal}{$receiptYesNo}{literal}-section .content input').change(showHideReceiptFields);
     $('.custom_{/literal}{$receiptYesNo}{literal}-section .content input').trigger('change');
-
     $('.custom_{/literal}{$receiptYesNo}{literal}-section .content input').change(setRequiredFields);
   }
 
@@ -65,7 +57,8 @@ items += "<input name='receipt_name' type='radio' id='r_name_custom' ><label for
       $('.custom_{/literal}{$receiptSerial}{literal}-section').show('slow');
       {/literal}{/if}{literal}
       $('.receipt_type').show('slow');
-    }else{
+    }
+    else{
       {/literal}{if $receiptTitle}{literal}
       $('.custom_{/literal}{$receiptTitle}{literal}-section').hide('slow');
       {/literal}{/if}{literal}
@@ -88,7 +81,8 @@ items += "<input name='receipt_name' type='radio' id='r_name_custom' ><label for
       $('.custom_{/literal}{$receiptSerial}{literal}-section').find('.label label').append('<span class="crm-marker" title="{/literal}{ts}This field is required.{/ts}{literal}">*</span>');
       $('#custom_{/literal}{$receiptSerial}{literal}').addClass('required');
       {/literal}{/if}{literal}
-    }else{
+    }
+    else{
       {/literal}{if $receiptTitle}{literal}
       $('.custom_{/literal}{$receiptTitle}{literal}-section .label label .crm-marker').remove();
       $('#custom_{/literal}{$receiptTitle}{literal}').removeClass('required');
@@ -101,7 +95,7 @@ items += "<input name='receipt_name' type='radio' id='r_name_custom' ><label for
   }
 
   function isShowChecked(){
-        // radio option 
+    // radio option 
     if($($('[name=custom_{/literal}{$receiptYesNo}{literal}]')[0]).attr('type') == 'radio'){
       var $no_label = false;
       $('.custom_{/literal}{$receiptYesNo}{literal}-section .content input[type="radio"]').each(function(){
@@ -113,34 +107,37 @@ items += "<input name='receipt_name' type='radio' id='r_name_custom' ><label for
       return showFields;
     }
 
-    // checkbox 
+    // checkbox
     if($('.custom_{/literal}{$receiptYesNo}{literal}-section .content input.form-checkbox').attr('type') == 'checkbox'){
-      var checkbox_is_no = $('.custom_{/literal}{$receiptYesNo}{literal}-section input:checked').text().match(/{/literal}{ts}No{/ts}{literal}|no|don't|No|Don't/)?true:false;
+      var checkbox_is_no = $('.custom_{/literal}{$receiptYesNo}{literal}-section input:checked').text().match(/{/literal}{ts}No{/ts}{literal}|no|don't|No|Don't/) ? true : false;
       var showFields = checkbox_is_no ^ $('.custom_{/literal}{$receiptYesNo}{literal}-section .content input.form-checkbox').is(':checked');
     }
     return showFields;
   }
 
 
-  function update_name(){
+  function updateName(){
     if($('#r_person').is(':checked')){
       $('#same-as').parent('div').show();
-    }else{
+    }
+    else{
       $('#same-as').parent('div').hide();
     }
     if($('#same-as').is(':checked') && $('#last_name,#first_name').length > 1 && $('#r_person').is(':checked')){
         $('#custom_{/literal}{$receiptTitle}{literal}').val($('#last_name').val()+$('#first_name').val()).attr('readonly','readonly');
-      }else{
-        $('#custom_{/literal}{$receiptTitle}{literal}').removeAttr('readonly');
-      }
+    }
+    else{
+      $('#custom_{/literal}{$receiptTitle}{literal}').removeAttr('readonly');
+    }
     if($('#same-as').is(':checked') && $('#legal_identifier').length >= 1 && $('#r_person').is(':checked')){
-     $('#custom_{/literal}{$receiptSerial}{literal}').val($('#legal_identifier').val()).attr('readonly','readonly');
-    }else{
-        $('#custom_{/literal}{$receiptSerial}{literal}').removeAttr('readonly');
-      }
+      $('#custom_{/literal}{$receiptSerial}{literal}').val($('#legal_identifier').val()).attr('readonly', 'readonly');
+    }
+    else{
+      $('#custom_{/literal}{$receiptSerial}{literal}').removeAttr('readonly');
+    }
 
     //Full Name
-    if($('#r_name_full[@checked]').val()){
+    if($('#r_name_full:checked').val()){
       if($('#last_name,#first_name').length>1){
         $('#custom_{/literal}{$receiptDonorCredit}{literal}').val($('#last_name').val()+$('#first_name').val());
         $('#custom_{/literal}{$receiptDonorCredit}{literal}').attr('readonly','readonly');
@@ -148,7 +145,7 @@ items += "<input name='receipt_name' type='radio' id='r_name_custom' ><label for
     }
 
     // Part of Name
-    if($('#r_name_half[@checked]').val()){
+    if($('#r_name_half:checked').val()){
       if($('#last_name,#first_name').length>1){
         var last_name = $('#last_name').val()?$('#last_name').val():"";
         var first_name = $('#first_name').val()?$('#first_name').val():"";
@@ -170,23 +167,23 @@ items += "<input name='receipt_name' type='radio' id='r_name_custom' ><label for
               first_name = "*"+first_name;
 
             };
-          }else{
+          }
+          else{
             first_name = "*";
           }
           var name = last_name+first_name;
-        }else{
+        }
+        else{
           var name = "";
         }
-        
 
-        
         $('#custom_{/literal}{$receiptDonorCredit}{literal}').val(name);
         $('#custom_{/literal}{$receiptDonorCredit}{literal}').attr('readonly','readonly');
       }
     }
 
     // Anonymity
-    if($('#r_name_hide[@checked]').val()){
+    if($('#r_name_hide:checked').val()){
       if($('#last_name,#first_name').length>1){
         $('#custom_{/literal}{$receiptDonorCredit}{literal}').val('{/literal}{ts}Anonymity{/ts}{literal}');
         $('#custom_{/literal}{$receiptDonorCredit}{literal}').attr('readonly','readonly');
@@ -194,7 +191,7 @@ items += "<input name='receipt_name' type='radio' id='r_name_custom' ><label for
     }
 
     // Custom Name
-    if($('#r_name_custom[@checked]').val()){
+    if($('#r_name_custom:checked').val()){
       if($('#last_name,#first_name').length>1){
         $('#custom_{/literal}{$receiptDonorCredit}{literal}').val($('#last_name').val()+$('#first_name').val());
         $('#custom_{/literal}{$receiptDonorCredit}{literal}').removeAttr('readonly');
