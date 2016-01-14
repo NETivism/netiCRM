@@ -241,7 +241,7 @@ class CRM_Report_Form_Contact_Participate extends CRM_Report_Form {
 
   function from() {
     $this->_from = "
-       FROM civicrm_contact {$this->_aliases['civicrm_contact']} {$this->_aclFrom}
+       FROM civicrm_contact {$this->_aliases['civicrm_contact']}
          LEFT JOIN civicrm_participant {$this->_aliases['civicrm_participant']}
               ON ({$this->_aliases['civicrm_participant']}.contact_id = {$this->_aliases['civicrm_contact']}.id )
 				 LEFT JOIN civicrm_event {$this->_aliases['civicrm_event']} 
