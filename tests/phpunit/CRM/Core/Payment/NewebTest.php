@@ -32,6 +32,7 @@ class CRM_Core_Payment_NewebTest extends CiviUnitTestCase {
 
     $this->_merchant_no = "758200";
     $this->_merchant_pass = "abcd1234";    
+    $this->_is_test = 1;
 
     parent::__construct();
   }
@@ -221,6 +222,7 @@ class CRM_Core_Payment_NewebTest extends CiviUnitTestCase {
 
 
   function testRecurringPaymentNotify(){
+    $this->_is_test = 1;
     // Can't use this code to get id. so use static variable : " CRM_Core_Payment_NewebTest::$current_cid "
     $id =  CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution ORDER BY id DESC LIMIT 1");
     $id = $id ? $id + 1 : 1;
