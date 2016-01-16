@@ -911,6 +911,25 @@ class CRM_Utils_Hook {
   }
 
   /**
+   * This hooks allows alteration of the template variables before render content.
+   * It differs from the alterContent hook as the content has already been rendered
+   * through the tpl at that point
+   *
+   * @param $resourceName
+   *   Previously generated content.
+   * @param $vars
+   *   Variables before render template.
+   *
+   * @return mixed
+   */
+  static function alterTemplateVars($resourceName, &$vars) {
+    $config = CRM_Core_Config::singleton();
+    require_once (str_replace('_', DIRECTORY_SEPARATOR, $config->userHookClass) . '.php');
+    $null = &CRM_Core_DAO::$_nullObject;
+    return eval("return {$config->userHookClass}::invoke(2, \$resourceName, \$vars, \$null, \$null, \$null, 'civicrm_alterTemplateVars');");
+  }
+
+  /**
    * This hooks allows other module prepare variable to pass into invoice
    *
    * @param $contribution_id
