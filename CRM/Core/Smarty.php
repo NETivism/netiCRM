@@ -176,6 +176,8 @@ class CRM_Core_Smarty extends Smarty {
    */
   function fetch($resource_name, $cache_id = NULL, $compile_id = NULL, $display = FALSE) {
     require_once 'CRM/Core/Menu.php';
+    $all_vars =& $this->get_template_vars();
+    CRM_Utils_Hook::alterTemplateVars($resource_name, $all_vars);
     return parent::fetch($resource_name, $cache_id, $compile_id, $display);
   }
 
