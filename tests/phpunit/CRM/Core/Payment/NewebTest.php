@@ -337,14 +337,13 @@ class CRM_Core_Payment_NewebTest extends CiviUnitTestCase {
     $cid = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution WHERE id = $contribution->id");
     $this->assertNotEmpty($cid, "In line " . __LINE__);
 
-
-
     $today = date('Ymd', $now);
     $_test = $this->_is_test? "_test":"";
 
     // Create recuring .dat file.
     $loaded = module_load_include('inc', 'civicrm_neweb', 'civicrm_neweb.cron');
-    civicrm_neweb_process_upload($this->_is_test, $this->_processor['id']);
+    $upload_result = civicrm_neweb_process_upload($this->_is_test, $this->_processor['id']);
+    $this->assertNotEmpty($upload_result, "In line " . __LINE__);
 
     // Check the last line is correct.
     $file_path = DRUPAL_ROOT . "/sites/default/files/neweb" . $_test ."/RP_" . $this->_merchant_no . "_" . $today . ".dat";
