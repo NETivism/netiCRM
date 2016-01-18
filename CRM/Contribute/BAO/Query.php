@@ -410,10 +410,14 @@ class CRM_Contribute_BAO_Query {
         return;
 
       case 'contribution_recurring':
-        if ($value) {
+        if ($value == 1) {
           $query->_where[$grouping][] = "civicrm_contribution.contribution_recur_id IS NOT NULL";
           $query->_qill[$grouping][] = ts("Displaying Recurring Contributions");
           $query->_tables['civicrm_contribution_recur'] = $query->_whereTables['civicrm_contribution_recur'] = 1;
+        }
+        elseif($value == 2){
+          $query->_where[$grouping][] = "civicrm_contribution.contribution_recur_id IS NULL";
+          $query->_qill[$grouping][] = ts("Displaying Non-Recurring Contributions");
         }
         return;
 
@@ -720,7 +724,11 @@ class CRM_Contribute_BAO_Query {
     $form->addElement('text', 'contribution_transaction_id', ts("Transaction ID"));
     $form->addElement('text', 'contribution_receipt_id', ts("Receipt ID"));
 
-    $form->addElement('checkbox', 'contribution_recurring', ts('Find Recurring Contributions?'));
+    $form->add('select', 'contribution_recurring', ts('Find Recurring Contributions?'), array(
+      '' => ts('All'),
+      1 => ts('Recurring Contribution'),
+      2 => ts('Non-Recurring Contribution'),
+    ));
     $form->addElement('text', 'contribution_check_number', ts('Check Number'));
 
     //add field for pcp display in roll search

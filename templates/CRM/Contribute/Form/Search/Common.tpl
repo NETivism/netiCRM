@@ -74,6 +74,9 @@
     <div>
       {$form.contribution_receipt_id.label} {$form.contribution_receipt_id.html}
     </div>
+    <div>
+      {$form.contribution_recurring.label}{$form.contribution_recurring.html}
+    </div>
   </td>
 </tr>
 <tr>
@@ -83,7 +86,6 @@
 	</td>
 	<td>
 	{$form.contribution_pay_later.html}{$form.contribution_pay_later.label}<br />
-	{$form.contribution_recurring.html}{$form.contribution_recurring.label}<br />
 	{$form.contribution_test.html}{$form.contribution_test.label}</td>
 </tr>
 <tr>

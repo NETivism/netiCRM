@@ -44965,3 +44965,7 @@ msgstr ""
 #: CRM/Contribute/Page/Invoice.php
 msgid "Because response of this payment doesn't correct. This receipt doesn't have enough information for printing. Check with administrator for further assistant."
 msgstr ""
+
+#: CRM/Contribute/BAO/Query.php
+msgid "Non-recurring Contribution"
+msgstr ""
