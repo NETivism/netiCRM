@@ -44969,3 +44969,7 @@ msgstr ""
 #: CRM/Contribute/BAO/Query.php
 msgid "Non-recurring Contribution"
 msgstr ""
+
+#: templates/CRM/Contact/Form/Task/Email.tpl
+msgid "Send email to contacts one by one listed above. Your won't leak email of contacts."
+msgstr ""
