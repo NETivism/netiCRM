@@ -44957,3 +44957,11 @@ msgstr ""
 #: xml/templates/message_templates/contribution_invoice_notify.tpl
 msgid "If you can make it before expire date, you can <a href=\"%1\">go page</a> submit again."
 msgstr ""
+
+#: CRM/Contribute/Page/Invoice.php
+msgid "Completed or cancelled transaction doesn't need invoice."
+msgstr ""
+
+#: CRM/Contribute/Page/Invoice.php
+msgid "Because response of this payment doesn't correct. This receipt doesn't have enough information for printing. Check with administrator for further assistant."
+msgstr ""

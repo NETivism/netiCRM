@@ -719,8 +719,23 @@ INNER JOIN   civicrm_contact contact ON ( contact.id = contrib.contact_id )
    *
    * @param int     $contribution_id
    */
-  public static function invoiceLink($contribution_id){
-    $invoice_id = CRM_Core_DAO::singleValueQuery("SELECT invoice_id FROM civicrm_contribution WHERE id = %1", array(1 => array($contribution_id, 'Integer')));
+  public static function invoiceLink($contribution_id, $check = FALSE){
+    if($check){
+      $contribution = new CRM_Contribute_DAO_Contribution();
+      $contribution->id = $contribution_id;
+      if($contribution->find(TRUE)){
+        if($contribution->contribution_status_id == 2){
+          CRM_Utils_Hook::prepareInvoice($contribution_id, $tplParams, $message);
+          if(!empty($tplParams)){
+          dpm($tplParams);
+            $invoice_id = $contribution->invoice_id;
+          }
+        }
+      }
+    }
+    else{
+      $invoice_id = CRM_Core_DAO::singleValueQuery("SELECT invoice_id FROM civicrm_contribution WHERE id = %1", array(1 => array($contribution_id, 'Integer')));
+    }
     if(!empty($invoice_id)){
       return CRM_Utils_System::url('civicrm/contribute/invoice', 'reset=1&ii='.$invoice_id, TRUE);
     }
