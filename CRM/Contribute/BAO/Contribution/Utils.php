@@ -684,7 +684,7 @@ INNER JOIN   civicrm_contact contact ON ( contact.id = contrib.contact_id )
    * @param array   $params array with contribution related field to find contribution
    * @param int     $status contribution status for indicate message type
    */
-  public static Function paymentResultType(&$form, $params, $status = NULL, $message = NULL){
+  public static function paymentResultType(&$form, $params, $status = NULL, $message = NULL){
     if(empty($status)){
       $contribution = new CRM_Contribute_BAO_Contribution();
       $contribution->copyValues($params);
@@ -719,7 +719,7 @@ INNER JOIN   civicrm_contact contact ON ( contact.id = contrib.contact_id )
    *
    * @param int     $contribution_id
    */
-  public static Function invoiceLink($contribution_id){
+  public static function invoiceLink($contribution_id){
     $invoice_id = CRM_Core_DAO::singleValueQuery("SELECT invoice_id FROM civicrm_contribution WHERE id = %1", array(1 => array($contribution_id, 'Integer')));
     if(!empty($invoice_id)){
       return CRM_Utils_System::url('civicrm/contribute/invoice', 'reset=1&ii='.$invoice_id, TRUE);
