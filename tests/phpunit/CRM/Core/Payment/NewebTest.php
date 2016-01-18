@@ -345,7 +345,6 @@ class CRM_Core_Payment_NewebTest extends CiviUnitTestCase {
     // Create recuring .dat file.
     $loaded = module_load_include('inc', 'civicrm_neweb', 'civicrm_neweb.cron');
     $upload_result = civicrm_neweb_process_upload($this->_is_test, $this->_processor['id']);
-    //$this->assertNotEmpty($upload_result, "In line " . __LINE__);
 
     // Check the last line is correct.
     $file_path = DRUPAL_ROOT . "/sites/default/files/neweb" . $_test ."/RP_" . $this->_merchant_no . "_" . $today . ".dat";
