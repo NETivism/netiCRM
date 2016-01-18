@@ -130,14 +130,24 @@ class HTML_QuickForm_radio extends HTML_QuickForm_input
      */
     function toHtml()
     {
+        $output = '';
+
         if (0 == strlen($this->_text)) {
             $label = '';
-        } elseif ($this->_flagFrozen) {
-            $label = $this->_text;
-        } else {
-            $label = '<label for="' . $this->getAttribute('id') . '">' . $this->_text . '</label>';
+            $output = HTML_QuickForm_input::toHtml();
         }
-        return HTML_QuickForm_input::toHtml() . $label;
+        elseif ($this->_flagFrozen) {
+            $label = $this->_text;
+            $output = HTML_QuickForm_input::toHtml() . $label;
+        }
+        else {
+            $output = '<label class="crm-form-elem crm-form-radio" for="' . $this->getAttribute('id') . '">'
+                . HTML_QuickForm_input::toHtml()
+                . '<span class="elem-label">' . $this->_text . '</span>'
+                . '</label>';
+        }
+
+        return $output;
     } //end func toHtml
 
     // }}}
