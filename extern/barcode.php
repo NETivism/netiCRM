@@ -1,5 +1,5 @@
 <?php
-require_once(dirname(__FILE__).'/barcode39.inc');
+require_once(dirname(__FILE__).'../packages/barcode/barcode39.inc');
 
 if(!empty($_GET['c']) && !empty($_GET['t'])){
   $code = preg_replace('/[^a-z0-9*]/i', '', $_GET['c']);
