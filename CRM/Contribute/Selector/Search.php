@@ -389,6 +389,13 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
         CRM_Event_BAO_Participant::fixEventLevel($row['amount_level']);
       }
 
+      if(!empty($row['payment_instrument'])){
+        $invoiceLink = CRM_Contribute_BAO_Contribution_Utils::invoiceLink($row['contribution_id'], TRUE);
+        if($invoiceLink){
+          $row['payment_instrument'] .= '<br>(<a href="'.$invoiceLink.'" target="_blank">'.ts('Invoice').'</a>)';
+        }
+      }
+
       $rows[] = $row;
     }
     if(!empty($ids)){

@@ -60,6 +60,7 @@ class CRM_Contribute_Form_Contribution_ThankYou extends CRM_Contribute_Form_Cont
     $this->assign('max_reminders', CRM_Utils_Array::value('max_reminders', $this->_values));
     $this->assign('initial_reminder_day', CRM_Utils_Array::value('initial_reminder_day', $this->_values));
     $this->assign('contribution_type_id', $this->_values['contribution_type_id']);
+    $this->assign_by_ref('contributionPage', $this->_values);
 
     $instruments = CRM_Contribute_PseudoConstant::paymentInstrument();
     if($this->_params['payment_instrument_id']){
