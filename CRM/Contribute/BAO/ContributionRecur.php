@@ -267,7 +267,6 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
     $recurDAO->find();
     require_once 'CRM/Contribute/PseudoConstant.php';
     $contributionStatus = CRM_Contribute_Pseudoconstant::contributionStatus();
-    $contributionStatus[1] = ts('Current');
 
     while ($recurDAO->fetch()) {
       $params[$recurDAO->id]['id'] = $recurDAO->id;
