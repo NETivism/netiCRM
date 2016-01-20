@@ -381,6 +381,9 @@ WHERE contact_a.employer_id=contact_b.id AND contact_b.id={$organizationId}; ";
    *
    */
   static function clearCurrentEmployer($contactId, $employerId = NULL) {
+    if(empty($contactId)){
+      return;
+    }
     $query = "UPDATE civicrm_contact 
 SET organization_name=NULL, employer_id = NULL
 WHERE id={$contactId}; ";
