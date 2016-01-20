@@ -516,12 +516,7 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form {
       //if relationship type change and previously it was
       //employer / emplyee relationship with current employer
       //than clear the current employer. CRM-3235.
-      if ((CRM_Utils_Array::value('current_employee_id', $this->_values) &&
-          $relationshipTypeId != $this->_values['relationship_type_id']
-        ) ||
-        (!$params['is_active'])
-      ) {
-        require_once 'CRM/Contact/BAO/Contact/Utils.php';
+      if ((CRM_Utils_Array::value('current_employee_id', $this->_values) && $relationshipTypeId != $this->_values['relationship_type_id']) || (!$params['is_active'])) {
         CRM_Contact_BAO_Contact_Utils::clearCurrentEmployer($this->_values['current_employee_id']);
       }
     }
