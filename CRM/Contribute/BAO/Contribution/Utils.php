@@ -727,7 +727,6 @@ INNER JOIN   civicrm_contact contact ON ( contact.id = contrib.contact_id )
         if($contribution->contribution_status_id == 2){
           CRM_Utils_Hook::prepareInvoice($contribution_id, $tplParams, $message);
           if(!empty($tplParams)){
-          dpm($tplParams);
             $invoice_id = $contribution->invoice_id;
           }
         }
