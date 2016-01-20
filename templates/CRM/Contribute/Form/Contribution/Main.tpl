@@ -497,7 +497,7 @@ function enableHonorType( ) {
       if(cj('html').attr('lang') === 'en'){
         var frequency_unit = cj('#frequency_unit option:eq(0)').val();
         var unit = '<strong class="frequency-unit-dummy" style="margin:0 5px;border-bottom:1px dashed #555">' + frequency_unit + '</strong>';
-        var $label = $('#recur-options-interval').next();
+        var $label = cj('#recur-options-interval').next();
         $label.html($label.html().toLowerCase());
       }
       else{
