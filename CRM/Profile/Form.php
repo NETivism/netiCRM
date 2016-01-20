@@ -572,11 +572,6 @@ class CRM_Profile_Form extends CRM_Core_Form {
       return $errors;
     }
 
-     dpm("Wohahaha");
-      print("Wohahaha");
-      dd("Wohahah");
-      watchdog('CustomField', 'message');
-
     $activityDetails = array();
     $activityParams = array('id' => $activityId);
     CRM_Activity_BAO_Activity::retrieve($activityParams, $activityDetails);
