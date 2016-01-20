@@ -543,6 +543,13 @@ VALUES
   (@option_group_id_sfe, 'ppt'      , 11, NULL   ,  NULL, 0, 0, 11, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_sfe, 'docx'     , 12, NULL   ,  NULL, 0, 0, 12, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_sfe, 'xlsx'     , 13, NULL   ,  NULL, 0, 0, 13, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_sfe, 'pptx'     , 14, NULL   ,  NULL, 0, 0, 14, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_sfe, 'odt'      , 15, NULL   ,  NULL, 0, 0, 15, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_sfe, 'ods'      , 16, NULL   ,  NULL, 0, 0, 16, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_sfe, 'odp'      , 17, NULL   ,  NULL, 0, 0, 17, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_sfe, 'zip'      , 18, NULL   ,  NULL, 0, 0, 18, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_sfe, 'rar'      , 19, NULL   ,  NULL, 0, 0, 19, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_sfe, '7z'       , 20, NULL   ,  NULL, 0, 0, 20, NULL, 0, 0, 1, NULL, NULL),
 
  
   (@option_group_id_we, 'TinyMCE'    , 1, NULL, NULL, 0, NULL, 1, NULL, 0, 1, 1, NULL, NULL),

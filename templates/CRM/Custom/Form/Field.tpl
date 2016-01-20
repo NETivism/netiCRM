@@ -252,23 +252,25 @@ function custom_option_html_type( ) {
 
     function showSearchRange(chkbox) {
         var html_type = document.getElementsByName("data_type[1]")[0].value;
-	var data_type = document.getElementsByName("data_type[0]")[0].value;
+      	var data_type = document.getElementsByName("data_type[0]")[0].value;
 
         if ( ((data_type == 1 || data_type == 2 || data_type == 3) && (html_type == "Text")) || data_type == 5) {
             if (chkbox.checked) {
-		document.getElementsByName("is_search_range")[0].checked = true;
-                cj("#searchByRange").show();
-            } else {
-                clearSearchBoxes( );
+              document.getElementsByName("is_search_range")[0].checked = true;
+              cj("#searchByRange").show();
+            }
+            else {
+              clearSearchBoxes( );
+              document.getElementsByName("is_searchable")[0].checked   = false; 
+              document.getElementsByName("is_search_range")[1].checked = true;
             }
         }
     }
       
     //should not clear search boxes for update mode. 
     function clearSearchBoxes( ) {
-    	document.getElementsByName("is_searchable")[0].checked   = false; 
-	document.getElementsByName("is_search_range")[1].checked = true;
-        cj("#searchByRange").hide();
+      document.getElementsByName("is_search_range")[1].checked = true;
+      cj("#searchByRange").hide();
     }
 </script>
 {/literal}

@@ -4431,7 +4431,7 @@ VALUES
    ('accept_creditcard'             , '接受的信用卡'              , 0, 1),
    ('payment_instrument'            , '付款工具'                , 0, 1),
    ('contribution_status'           , '捐款狀態'                , 0, 1),
-   ('pcp_status'                    , 'PCP Status'                         , 0, 1),
+   ('pcp_status'                    , '個人募款頁狀態'                         , 0, 1),
    ('participant_role'              , '參加者角色'                   , 0, 1),
    ('event_type'                    , '活動類型'                         , 0, 1),
    ('contact_view_options'          , '聯絡人查看選項'               , 0, 1),
@@ -4470,8 +4470,8 @@ VALUES
    ('currencies_enabled'            , 'List of currencies enabled for this site', 0, 1),
    ('event_badge'                   , 'Event Name Badge'                   , 0, 1),
    ('note_privacy'                  , 'Privacy levels for notes'           , 0, 1),
-   ('campaign_type'                 , '動員類型'                      , 0, 1),
-   ('campaign_status'               , '動員狀態'                    , 0, 1),
+   ('campaign_type'                 , '募款活動類型'                      , 0, 1),
+   ('campaign_status'               , '募款活動狀態'                    , 0, 1),
    ('system_extensions'             , 'CiviCRM 套件'                 , 0, 1),
    ('directory_preferences'         , 'Directory Preferences'              , 0, 1),
    ('url_preferences'               , 'URL Preferences'                    , 0, 1);
@@ -4702,7 +4702,7 @@ VALUES
   (@option_group_id_udOpt, '活動'                     , 4, 'CiviEvent', NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_udOpt, '我的聯絡人 / 組織', 5, 'Permissioned Orgs', NULL, 0, NULL, 5, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_udOpt, '認捐'                    , 7, 'CiviPledge', NULL, 0, NULL, 7, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_udOpt, '個人動員頁'    , 8, 'PCP', NULL, 0, NULL, 8, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_udOpt, '個人募款頁'    , 8, 'PCP', NULL, 0, NULL, 8, NULL, 0, 0, 1, NULL, NULL),
 
   (@option_group_id_acsOpt, '電子郵件地址'   , 2, 'email'         , NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_acsOpt, '電話'           , 3, 'phone'         , NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL),
@@ -4821,6 +4821,13 @@ VALUES
   (@option_group_id_sfe, 'ppt'      , 11, NULL   ,  NULL, 0, 0, 11, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_sfe, 'docx'     , 12, NULL   ,  NULL, 0, 0, 12, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_sfe, 'xlsx'     , 13, NULL   ,  NULL, 0, 0, 13, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_sfe, 'pptx'     , 14, NULL   ,  NULL, 0, 0, 14, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_sfe, 'odt'      , 15, NULL   ,  NULL, 0, 0, 15, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_sfe, 'ods'      , 16, NULL   ,  NULL, 0, 0, 16, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_sfe, 'odp'      , 17, NULL   ,  NULL, 0, 0, 17, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_sfe, 'zip'      , 18, NULL   ,  NULL, 0, 0, 18, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_sfe, 'rar'      , 19, NULL   ,  NULL, 0, 0, 19, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_sfe, '7z'       , 20, NULL   ,  NULL, 0, 0, 20, NULL, 0, 0, 1, NULL, NULL),
 
  
   (@option_group_id_we, 'TinyMCE'    , 1, NULL, NULL, 0, NULL, 1, NULL, 0, 1, 1, NULL, NULL),
@@ -5583,7 +5590,7 @@ INSERT INTO civicrm_participant_status_type
   (2,  'Attended',                            '出席',                            'Positive', 0,           1,         1,          2,      2            ),
   (3,  'No-show',                             '失約',                             'Negative', 0,           1,         0,          3,      2            ),
   (4,  'Cancelled',                           '已取消',                           'Negative', 1,           1,         0,          4,      2            ),
-  (5,  'Pending from pay later',              '待處理-後續付款',              'Pending',  1,           1,         1,          5,      2            ),
+  (5,  'Pending from pay later',              '待處理-稍後付款',              'Pending',  1,           1,         1,          5,      2            ),
   (6,  'Pending from incomplete transaction', '待處理-未完成交易', 'Pending',  1,           1,         0,          6,      2            ),
   (7,  'On waitlist',                         '在候補名單',                         'Waiting',  1,           0,         0,          7,      2            ),
   (8,  'Awaiting approval',                   '等待審核',                   'Waiting',  1,           0,         1,          8,      2            ),
@@ -5638,12 +5645,13 @@ INSERT INTO civicrm_option_group
 
 INSERT INTO civicrm_option_value
   (option_group_id,        name,       label,   value,                                  weight) VALUES
-      (@tpl_ogid_case, 'case_activity', '個案 - 寄出任務複本',            1, 1) ,      (@tpl_ogid_contribution, 'contribution_dupalert', '捐款 - 重複組織警示',            1, 1) ,      (@tpl_ogid_contribution, 'contribution_offline_receipt', '捐款 - 收據（離線）',            2, 2) ,      (@tpl_ogid_contribution, 'contribution_online_receipt', '捐款 - 收據（在線）',            3, 3) ,      (@tpl_ogid_contribution, 'contribution_recurring_notify', '捐款 - 定期捐款的開始和結束通知',            4, 4) ,      (@tpl_ogid_contribution, 'pcp_notify', '個人動員頁 - 管理通知',            5, 5) ,      (@tpl_ogid_contribution, 'pcp_status_change', '個人動員頁 - 支持者狀態更改通知',            6, 6) ,      (@tpl_ogid_contribution, 'pcp_supporter_notify', '個人動員頁 - 歡迎支持者',            7, 7) ,      (@tpl_ogid_event, 'event_offline_receipt', '活動 - 登記確認與收據（離線）',            1, 1) ,      (@tpl_ogid_event, 'event_online_receipt', '活動 - 登記確認與收據（在線）',            2, 2) ,      (@tpl_ogid_event, 'participant_cancelled', '活動 - 登記取消通知',            3, 3) ,      (@tpl_ogid_event, 'participant_confirm', '活動 - 登記確認邀請',            4, 4) ,      (@tpl_ogid_event, 'participant_expired', '活動- 等候登記過期通知',            5, 5) ,      (@tpl_ogid_friend, 'friend', 'Email 推薦給朋友',            1, 1) ,      (@tpl_ogid_membership, 'membership_offline_receipt', '會員 - 註冊與資格更新收據（離線）',            1, 1) ,      (@tpl_ogid_membership, 'membership_online_receipt', '會員 - 收據（在線）',            2, 2) ,      (@tpl_ogid_meta, 'test_preview', '測試 - 收據頁首',            1, 1) ,      (@tpl_ogid_pledge, 'pledge_acknowledge', '認捐 - 感謝函',            1, 1) ,      (@tpl_ogid_pledge, 'pledge_reminder', '認捐 - 付款提醒',            2, 2) ,      (@tpl_ogid_uf, 'uf_notify', '資料表單 - 管理提示',            1, 1) ,      (@tpl_ogid_petition, 'petition_sign', 'Petition - signature added',            1, 1) ,      (@tpl_ogid_petition, 'petition_confirmation_needed', 'Petition - need verification',            2, 2) ;
+      (@tpl_ogid_case, 'case_activity', '個案 - 寄出任務複本',            1, 1) ,      (@tpl_ogid_contribution, 'contribution_dupalert', '捐款 - 重複組織警示',            1, 1) ,      (@tpl_ogid_contribution, 'contribution_offline_receipt', '捐款 - 收據（離線）',            2, 2) ,      (@tpl_ogid_contribution, 'contribution_online_receipt', '捐款 - 收據（在線）',            3, 3) ,      (@tpl_ogid_contribution, 'contribution_recurring_notify', '捐款 - 定期捐款的開始和結束通知',            4, 4) ,      (@tpl_ogid_contribution, 'contribution_invoice_notify', '捐款 - 帳單通知',            5, 5) ,      (@tpl_ogid_contribution, 'pcp_notify', '個人募款頁 - 管理通知',            6, 6) ,      (@tpl_ogid_contribution, 'pcp_status_change', '個人募款頁 - 支持者狀態更改通知',            7, 7) ,      (@tpl_ogid_contribution, 'pcp_supporter_notify', '個人募款頁 - 歡迎支持者',            8, 8) ,      (@tpl_ogid_event, 'event_offline_receipt', '活動 - 登記確認與收據（離線）',            1, 1) ,      (@tpl_ogid_event, 'event_online_receipt', '活動 - 登記確認與收據（在線）',            2, 2) ,      (@tpl_ogid_event, 'participant_cancelled', '活動 - 登記取消通知',            3, 3) ,      (@tpl_ogid_event, 'participant_confirm', '活動 - 登記確認邀請',            4, 4) ,      (@tpl_ogid_event, 'participant_expired', '活動- 等候登記過期通知',            5, 5) ,      (@tpl_ogid_friend, 'friend', 'Email 推薦給朋友',            1, 1) ,      (@tpl_ogid_membership, 'membership_offline_receipt', '會員 - 註冊與資格更新收據（離線）',            1, 1) ,      (@tpl_ogid_membership, 'membership_online_receipt', '會員 - 收據（在線）',            2, 2) ,      (@tpl_ogid_meta, 'test_preview', '測試 - 收據頁首',            1, 1) ,      (@tpl_ogid_pledge, 'pledge_acknowledge', '認捐 - 感謝函',            1, 1) ,      (@tpl_ogid_pledge, 'pledge_reminder', '認捐 - 付款提醒',            2, 2) ,      (@tpl_ogid_uf, 'uf_notify', '資料表單 - 管理提示',            1, 1) ,      (@tpl_ogid_petition, 'petition_sign', 'Petition - signature added',            1, 1) ,      (@tpl_ogid_petition, 'petition_confirmation_needed', 'Petition - need verification',            2, 2) ;
     SELECT @tpl_ovid_case_activity := MAX(id) FROM civicrm_option_value WHERE option_group_id = @tpl_ogid_case AND name = 'case_activity';
     SELECT @tpl_ovid_contribution_dupalert := MAX(id) FROM civicrm_option_value WHERE option_group_id = @tpl_ogid_contribution AND name = 'contribution_dupalert';
     SELECT @tpl_ovid_contribution_offline_receipt := MAX(id) FROM civicrm_option_value WHERE option_group_id = @tpl_ogid_contribution AND name = 'contribution_offline_receipt';
     SELECT @tpl_ovid_contribution_online_receipt := MAX(id) FROM civicrm_option_value WHERE option_group_id = @tpl_ogid_contribution AND name = 'contribution_online_receipt';
     SELECT @tpl_ovid_contribution_recurring_notify := MAX(id) FROM civicrm_option_value WHERE option_group_id = @tpl_ogid_contribution AND name = 'contribution_recurring_notify';
+    SELECT @tpl_ovid_contribution_invoice_notify := MAX(id) FROM civicrm_option_value WHERE option_group_id = @tpl_ogid_contribution AND name = 'contribution_invoice_notify';
     SELECT @tpl_ovid_pcp_notify := MAX(id) FROM civicrm_option_value WHERE option_group_id = @tpl_ogid_contribution AND name = 'pcp_notify';
     SELECT @tpl_ovid_pcp_status_change := MAX(id) FROM civicrm_option_value WHERE option_group_id = @tpl_ogid_contribution AND name = 'pcp_status_change';
     SELECT @tpl_ovid_pcp_supporter_notify := MAX(id) FROM civicrm_option_value WHERE option_group_id = @tpl_ogid_contribution AND name = 'pcp_supporter_notify';
@@ -6284,7 +6292,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
    <td>
 
     {if $formValues.receipt_text}
-     <div>{$formValues.receipt_text|htmlize}</div>
+     <div>{$formValues.receipt_text}</div>
     {else}
      <p>{ts}Thanks for your support.{/ts}</p>
     {/if}
@@ -6644,7 +6652,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
    <td>
 
     {if $formValues.receipt_text}
-     <div>{$formValues.receipt_text|htmlize}</div>
+     <div>{$formValues.receipt_text}</div>
     {else}
      <p>{ts}Thanks for your support.{/ts}</p>
     {/if}
@@ -7086,7 +7094,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
    <td>
 
     {if $receipt_text}
-     <div>{$receipt_text|htmlize}</div>
+     <div>{$receipt_text}</div>
     {/if}
 
     {if $is_pay_later}
@@ -7652,7 +7660,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
    <td>
 
     {if $receipt_text}
-     <div>{$receipt_text|htmlize}</div>
+     <div>{$receipt_text}</div>
     {/if}
 
     {if $is_pay_later}
@@ -8229,7 +8237,239 @@ rule for Organizations to find the potential duplicates and merge them if approp
 ', @tpl_ovid_contribution_recurring_notify, 0,          1) ,      
       
       
-      ('個人動員頁 - 管理通知', '{ts}Personal Campaign Page Notification{/ts}
+      ('捐款 - 帳單通知', '{ts}Invoice{/ts} - {$title}
+', '', '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+ <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+ <title></title>
+</head>
+<body>
+{capture assign=headerStyle}colspan="2" style="text-align: left; padding: 10px; border-bottom: 1px solid #999; background-color: #eee;font-size:1.1em;"{/capture}
+{capture assign=labelStyle}style="padding: 5px; border-bottom: 1px solid #999; background-color: #f7f7f7;font-weight:bold;"{/capture}
+{capture assign=valueStyle}style="padding: 5px; border-bottom: 1px solid #999;"{/capture}
+{capture assign=highlightStyle}style="color:#red;"{/capture}
+{capture assign=expire}#expire{/capture}
+<center>
+{if $logo}<img src="{$logo}" style="max-height:80px" />{/if}
+ <table width="620" border="0" cellpadding="0" cellspacing="0" id="crm-event_receipt" style="font-family: Arial, Verdana, sans-serif; text-align: left;">
+  <tr>
+    <td>
+    <h3>{ts}Invoice{/ts} - {$title}</h3>
+    {if $message}
+      {$message}
+    {else}
+      <p>
+        {ts 1=$page.url 2=$title}We send this invoice because you have submitted data at <a href="%1">%2</a>.{/ts}<br>
+        {ts 1=$payment_info.$expire}You need to follow instruction below to complete transaction before <strong>%1</strong> (expire date).{/ts}<br>
+        {ts 1=$page.url}If you can make it before expire date, you can <a href="%1">go page</a> submit again.{/ts}
+      </p>
+    {/if}
+    </td>
+  </tr>
+  <tr>
+    <td>
+    <table style="border: 1px solid #999; margin: 1em 0em 1em; border-collapse: collapse; width:100%;">
+      <tr>
+        <th colspan=2 {$headerStyle}>
+          {ts}Payment Information{/ts} <span>{ts}Original Receipts{/ts}</span>
+        </th>
+      </tr>
+      <tr>
+        <td {$labelStyle}>
+          {ts}Amount{/ts}
+        </td>
+        <td {$valueStyle}>
+          {$contribution.total_amount|crmMoney}
+        </td>
+      </tr>
+      <tr>
+        <td {$labelStyle}>
+          {ts}Transaction ID{/ts}
+        </td>
+        <td {$valueStyle}>
+          {$contribution.trxn_id}
+        </td>
+      </tr>
+      <tr>
+        <td {$labelStyle}>
+          {ts}Payment Instrument{/ts}
+        </td>
+        <td {$valueStyle}>
+          {$contribution.payment_instrument}
+        </td>
+      </tr>
+      <tr>
+        <td colspan=2 {$valueStyle}>
+          {$payment_info.display}
+        </td>
+      </tr>
+{if $payment_info.has_receipt}
+      <tr>
+        <td colspan=2 {$valueStyle}><hr style="border:1px dashed #AAA;"></td>
+      </tr>
+      <tr>
+        <th colspan=2 {$headerStyle}>
+          <span>{ts}Copy Receipts{/ts}</span>
+        </th>
+      </tr>
+      <tr>
+        <td {$labelStyle}>
+          {ts}Amount{/ts}
+        </td>
+        <td {$valueStyle}>
+          <strong>{$contribution.total_amount|crmMoney}</strong>
+        </td>
+      </tr>
+      <tr>
+        <td {$labelStyle}>
+          {ts}Transaction ID{/ts}
+        </td>
+        <td {$valueStyle}>
+          {$contribution.trxn_id}
+        </td>
+      </tr>
+      <tr>
+        <td {$labelStyle}>
+          {ts}Payment Instrument{/ts}
+        </td>
+        <td {$valueStyle}>
+          {$contribution.payment_instrument}
+        </td>
+      </tr>
+      <tr>
+        <td colspan=2 {$valueStyle}>
+          {$payment_info.display}
+        </td>
+      </tr>
+    </table>
+    </td>
+  </tr>
+{/if}
+ </table>
+</center>
+
+</body>
+</html>
+', @tpl_ovid_contribution_invoice_notify, 1,          0),
+      ('捐款 - 帳單通知', '{ts}Invoice{/ts} - {$title}
+', '', '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+ <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+ <title></title>
+</head>
+<body>
+{capture assign=headerStyle}colspan="2" style="text-align: left; padding: 10px; border-bottom: 1px solid #999; background-color: #eee;font-size:1.1em;"{/capture}
+{capture assign=labelStyle}style="padding: 5px; border-bottom: 1px solid #999; background-color: #f7f7f7;font-weight:bold;"{/capture}
+{capture assign=valueStyle}style="padding: 5px; border-bottom: 1px solid #999;"{/capture}
+{capture assign=highlightStyle}style="color:#red;"{/capture}
+{capture assign=expire}#expire{/capture}
+<center>
+{if $logo}<img src="{$logo}" style="max-height:80px" />{/if}
+ <table width="620" border="0" cellpadding="0" cellspacing="0" id="crm-event_receipt" style="font-family: Arial, Verdana, sans-serif; text-align: left;">
+  <tr>
+    <td>
+    <h3>{ts}Invoice{/ts} - {$title}</h3>
+    {if $message}
+      {$message}
+    {else}
+      <p>
+        {ts 1=$page.url 2=$title}We send this invoice because you have submitted data at <a href="%1">%2</a>.{/ts}<br>
+        {ts 1=$payment_info.$expire}You need to follow instruction below to complete transaction before <strong>%1</strong> (expire date).{/ts}<br>
+        {ts 1=$page.url}If you can make it before expire date, you can <a href="%1">go page</a> submit again.{/ts}
+      </p>
+    {/if}
+    </td>
+  </tr>
+  <tr>
+    <td>
+    <table style="border: 1px solid #999; margin: 1em 0em 1em; border-collapse: collapse; width:100%;">
+      <tr>
+        <th colspan=2 {$headerStyle}>
+          {ts}Payment Information{/ts} <span>{ts}Original Receipts{/ts}</span>
+        </th>
+      </tr>
+      <tr>
+        <td {$labelStyle}>
+          {ts}Amount{/ts}
+        </td>
+        <td {$valueStyle}>
+          {$contribution.total_amount|crmMoney}
+        </td>
+      </tr>
+      <tr>
+        <td {$labelStyle}>
+          {ts}Transaction ID{/ts}
+        </td>
+        <td {$valueStyle}>
+          {$contribution.trxn_id}
+        </td>
+      </tr>
+      <tr>
+        <td {$labelStyle}>
+          {ts}Payment Instrument{/ts}
+        </td>
+        <td {$valueStyle}>
+          {$contribution.payment_instrument}
+        </td>
+      </tr>
+      <tr>
+        <td colspan=2 {$valueStyle}>
+          {$payment_info.display}
+        </td>
+      </tr>
+{if $payment_info.has_receipt}
+      <tr>
+        <td colspan=2 {$valueStyle}><hr style="border:1px dashed #AAA;"></td>
+      </tr>
+      <tr>
+        <th colspan=2 {$headerStyle}>
+          <span>{ts}Copy Receipts{/ts}</span>
+        </th>
+      </tr>
+      <tr>
+        <td {$labelStyle}>
+          {ts}Amount{/ts}
+        </td>
+        <td {$valueStyle}>
+          <strong>{$contribution.total_amount|crmMoney}</strong>
+        </td>
+      </tr>
+      <tr>
+        <td {$labelStyle}>
+          {ts}Transaction ID{/ts}
+        </td>
+        <td {$valueStyle}>
+          {$contribution.trxn_id}
+        </td>
+      </tr>
+      <tr>
+        <td {$labelStyle}>
+          {ts}Payment Instrument{/ts}
+        </td>
+        <td {$valueStyle}>
+          {$contribution.payment_instrument}
+        </td>
+      </tr>
+      <tr>
+        <td colspan=2 {$valueStyle}>
+          {$payment_info.display}
+        </td>
+      </tr>
+    </table>
+    </td>
+  </tr>
+{/if}
+ </table>
+</center>
+
+</body>
+</html>
+', @tpl_ovid_contribution_invoice_notify, 0,          1) ,      
+      
+      
+      ('個人募款頁 - 管理通知', '{ts}Personal Campaign Page Notification{/ts}
 ', '===========================================================
 {ts}Personal Campaign Page Notification{/ts}
 
@@ -8345,7 +8585,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
 </body>
 </html>
 ', @tpl_ovid_pcp_notify, 1,          0),
-      ('個人動員頁 - 管理通知', '{ts}Personal Campaign Page Notification{/ts}
+      ('個人募款頁 - 管理通知', '{ts}Personal Campaign Page Notification{/ts}
 ', '===========================================================
 {ts}Personal Campaign Page Notification{/ts}
 
@@ -8463,7 +8703,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
 ', @tpl_ovid_pcp_notify, 0,          1) ,      
       
       
-      ('個人動員頁 - 支持者狀態更改通知', '{ts 1=$contribPageTitle}Your Personal Campaign Page for %1{/ts}
+      ('個人募款頁 - 支持者狀態更改通知', '{ts 1=$contribPageTitle}Your Personal Campaign Page for %1{/ts}
 ', '{if $pcpStatus eq \'Approved\'}
 ============================
 {ts}Your Personal Campaign Page{/ts}
@@ -8571,7 +8811,7 @@ which prevented us from approving the page. We are sorry for any inconvenience.{
 </body>
 </html>
 ', @tpl_ovid_pcp_status_change, 1,          0),
-      ('個人動員頁 - 支持者狀態更改通知', '{ts 1=$contribPageTitle}Your Personal Campaign Page for %1{/ts}
+      ('個人募款頁 - 支持者狀態更改通知', '{ts 1=$contribPageTitle}Your Personal Campaign Page for %1{/ts}
 ', '{if $pcpStatus eq \'Approved\'}
 ============================
 {ts}Your Personal Campaign Page{/ts}
@@ -8681,7 +8921,7 @@ which prevented us from approving the page. We are sorry for any inconvenience.{
 ', @tpl_ovid_pcp_status_change, 0,          1) ,      
       
       
-      ('個人動員頁 - 歡迎支持者', '{ts 1=$contribPageTitle}Your Personal Campaign Page for %1{/ts}
+      ('個人募款頁 - 歡迎支持者', '{ts 1=$contribPageTitle}Your Personal Campaign Page for %1{/ts}
 ', '{ts}Dear supporter{/ts},
 {ts 1="$contribPageTitle"}Thanks for creating a personal campaign page in support of %1.{/ts}
 
@@ -8841,7 +9081,7 @@ your page, tell friends, and update your contact info.{/ts}</p>
 </body>
 </html>
 ', @tpl_ovid_pcp_supporter_notify, 1,          0),
-      ('個人動員頁 - 歡迎支持者', '{ts 1=$contribPageTitle}Your Personal Campaign Page for %1{/ts}
+      ('個人募款頁 - 歡迎支持者', '{ts 1=$contribPageTitle}Your Personal Campaign Page for %1{/ts}
 ', '{ts}Dear supporter{/ts},
 {ts 1="$contribPageTitle"}Thanks for creating a personal campaign page in support of %1.{/ts}
 
@@ -9306,7 +9546,7 @@ registration process.{/ts}
    <td>
 
     {if $event.confirm_email_text AND (not $isOnWaitlist AND not $isRequireApproval)}
-     <div>{$event.confirm_email_text|htmlize}</div>
+     <div>{$event.confirm_email_text}</div>
     {/if}
 
     {if $isOnWaitlist}
@@ -10045,7 +10285,7 @@ registration process.{/ts}
    <td>
 
     {if $event.confirm_email_text AND (not $isOnWaitlist AND not $isRequireApproval)}
-     <div>{$event.confirm_email_text|htmlize}</div>
+     <div>{$event.confirm_email_text}</div>
     {/if}
 
     {if $isOnWaitlist}
@@ -10785,7 +11025,7 @@ registration process.{/ts}
    <td>
 
     {if $event.confirm_email_text AND (not $isOnWaitlist AND not $isRequireApproval)}
-     <div>{$event.confirm_email_text|htmlize}</div>
+     <div>{$event.confirm_email_text}</div>
     {/if}
 
     {if $isOnWaitlist}
@@ -11518,7 +11758,7 @@ registration process.{/ts}
    <td>
 
     {if $event.confirm_email_text AND (not $isOnWaitlist AND not $isRequireApproval)}
-     <div>{$event.confirm_email_text|htmlize}</div>
+     <div>{$event.confirm_email_text}</div>
     {/if}
 
     {if $isOnWaitlist}
@@ -14216,7 +14456,7 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
    <td>
 
     {if $receipt_text}
-     <div>{$receipt_text|htmlize}</div>
+     <div>{$receipt_text}</div>
     {/if}
 
     {if $is_pay_later}
@@ -14917,7 +15157,7 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
    <td>
 
     {if $receipt_text}
-     <div>{$receipt_text|htmlize}</div>
+     <div>{$receipt_text}</div>
     {/if}
 
     {if $is_pay_later}

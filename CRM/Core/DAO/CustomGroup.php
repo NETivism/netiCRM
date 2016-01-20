@@ -253,9 +253,7 @@ class CRM_Core_DAO_CustomGroup extends CRM_Core_DAO
           'type' => CRM_Utils_Type::T_ENUM,
           'title' => ts('Extends') ,
           'default' => 'Contact',
-          'enumValues' => 'Contact, Individual, Household, Organization, Location, Address,
-       Contribution, ContributionPage, Activity, Relationship, Group, Membership, Participant,
-       Event, Grant, Pledge, Case',
+          'enumValues' => 'Contact, Individual, Household, Organization, Location, Address, Contribution, ContributionPage, Activity, Relationship, Group, Membership, Participant, Event, Grant, Pledge, Case',
         ) ,
         'extends_entity_column_id' => array(
           'name' => 'extends_entity_column_id',

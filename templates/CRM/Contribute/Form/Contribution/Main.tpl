@@ -490,13 +490,22 @@ function enableHonorType( ) {
     }
 
     // recurring - replace select box to text
-    if(cj('#frequency_unit option').length == 1){
-      var unit = '<span class="frequency-unit-dummy">' + cj('#frequency_unit option:eq(0)').text() + '</span>';
-      cj('#frequency_unit').hide();
-      cj(unit).insertAfter(cj('#frequency_unit'));
-    }
     if(!cj("#frequency_interval").length){
       cj('#recur-options-interval').insertAfter('input[name=is_recur][value=1]');
+    }
+    if(cj('#frequency_unit option').length == 1){
+      if(cj('html').attr('lang') === 'en'){
+        var frequency_unit = cj('#frequency_unit option:eq(0)').val();
+        var unit = '<strong class="frequency-unit-dummy" style="margin:0 5px;border-bottom:1px dashed #555">' + frequency_unit + '</strong>';
+        var $label = cj('#recur-options-interval').next();
+        $label.html($label.html().toLowerCase());
+      }
+      else{
+        var frequency_unit = cj('#frequency_unit option:eq(0)').text();
+        var unit = '<strong class="frequency-unit-dummy">' + frequency_unit + '</strong>';
+      }
+      cj('#frequency_unit').hide();
+      cj(unit).insertAfter(cj('#frequency_unit'));
     }
 
     // prevent overwrite others contact info

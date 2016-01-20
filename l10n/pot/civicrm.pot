@@ -44890,7 +44890,7 @@ msgid "Payment failed."
 msgstr ""
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
-msgid "We were unalbe to process your payment. Your will not been charged in this transaction."
+msgid "We were unable to process your payment. Your will not been charged in this transaction."
 msgstr ""
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
@@ -44928,4 +44928,48 @@ msgstr ""
 
 #: CRM/Custom/Form/Field.tpl
 msgid "When 'Required' is active, it is necessary to fill value on contact add/edit page. If you need this feature to visitor, please enable it in profiles setting."
+msgstr ""
+
+#: CRM/Admin/Form/Setting/Receipt.tpl
+msgid "Choose a Checkbox or a Radio field. If the field is selected to 'Yes' by contributor, then the receipt title and serial field will be required. On the contrary, the receipt title and serial field will hide."
+msgstr ""
+
+#: CRM/Admin/Form/Setting/Receipt.php
+msgid "Field to request receipt"
+msgstr ""
+
+#: CRM/Event/Page/EventInfo.tpl
+msgid "Add to Google Calendar"
+msgstr ""
+
+#: xml/templates/civicrm_msg_template.tpl
+msgid "Contributions - Invoice Notification"
+msgstr ""
+
+#: xml/templates/message_templates/contribution_invoice_notify.tpl
+msgid "We send this invoice because you have submitted data at <a href=\"%1\">%2</a>."
+msgstr ""
+
+#: xml/templates/message_templates/contribution_invoice_notify.tpl
+msgid "You need to follow instruction below to complete transaction before <strong>%1</strong> (expire date)."
+msgstr ""
+
+#: xml/templates/message_templates/contribution_invoice_notify.tpl
+msgid "If you can make it before expire date, you can <a href=\"%1\">go page</a> submit again."
+msgstr ""
+
+#: CRM/Contribute/Page/Invoice.php
+msgid "Completed or cancelled transaction doesn't need invoice."
+msgstr ""
+
+#: CRM/Contribute/Page/Invoice.php
+msgid "Because response of this payment doesn't correct. This receipt doesn't have enough information for printing. Check with administrator for further assistant."
+msgstr ""
+
+#: CRM/Contribute/BAO/Query.php
+msgid "Non-recurring Contribution"
+msgstr ""
+
+#: templates/CRM/Contact/Form/Task/Email.tpl
+msgid "Send email to contacts one by one listed above. Your won't leak email of contacts."
 msgstr ""

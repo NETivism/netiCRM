@@ -1459,6 +1459,16 @@ SELECT id
         elseif ($format == 'yy') {
           $value = "01-01-{$value}";
         }
+        elseif (in_array($format, array('mm/yy', 'yy-mm'))){
+          if($format == 'mm/yy'){
+            list($month, $year) = explode('/', $value);
+          }
+          else{
+            list($year, $month) = explode('-', $value);
+          }
+          $value = '01-'.$month.'-'.$year;
+          $format = NULL;
+        }
 
         $date = CRM_Utils_Date::processDate($value, NULL, FALSE, 'YmdHis', $format);
       }

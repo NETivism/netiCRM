@@ -2564,8 +2564,11 @@ span.icon {
 
 
 /* civicrm admin menu */
+body.civicrm-menu-enabled {
+  padding-top: 25px;
+}
 #civicrm-menu {
-    height:27px;
+    height:25px;
 }
 
 #civicrm-menu .ac_input, #crm-container .ac_input {

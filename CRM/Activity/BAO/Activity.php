@@ -1241,7 +1241,7 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
     $escapeSmarty = FALSE;
     if (defined('CIVICRM_MAIL_SMARTY')) {
       $smarty = CRM_Core_Smarty::singleton();
-
+      require_once('CRM/Core/Smarty/resources/String.php');
       civicrm_smarty_register_string_resource();
 
       $escapeSmarty = TRUE;

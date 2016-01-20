@@ -134,6 +134,18 @@ function civicrm_api3_address_delete(&$params) {
  * @access public
  */
 function civicrm_api3_address_get(&$params) {
-  return _civicrm_api3_basic_get(_civicrm_api3_get_BAO(__FUNCTION__), $params, TRUE, 'Address');
+  $results = _civicrm_api3_basic_get(_civicrm_api3_get_BAO(__FUNCTION__), $params, TRUE, 'Address');
+  $options = _civicrm_api3_get_options_from_params($params);
+  if(!empty($options['return']['display']) && !empty($results['values'])){
+    foreach($results['values'] as $id => $fields){
+      if(!empty($fields['state_province_id'])){
+        $results['values'][$id]['state_province_name'] = CRM_Core_PseudoConstant::stateProvince($fields['state_province_id']);
+      }
+      if(!empty($fields['country_id'])){
+        $results['values'][$id]['country'] = CRM_Core_PseudoConstant::country($fields['country_id']);
+      }
+      $results['values'][$id]['display'] = CRM_Utils_Address::format($results['values'][$id]);
+    }
+  }
+  return $results;
 }
-

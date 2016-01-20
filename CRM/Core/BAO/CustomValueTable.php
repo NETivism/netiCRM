@@ -514,7 +514,7 @@ AND    cf.id IN ( $fieldIDList )
 
     while ($dao->fetch()) {
       // ensure that value is of the right data type
-      $dataType = $dao->data_type == 'Date' ? 'Timestamp' : $dao->data_type;
+      $dataType = $dao->data_type;
       foreach ($fieldValues[$dao->cf_id] as $fieldValue) {
         if (CRM_Utils_Type::escape($fieldValue['value'],
             $dataType, FALSE

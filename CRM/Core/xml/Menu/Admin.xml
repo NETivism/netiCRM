@@ -83,15 +83,6 @@
      <weight>0</weight>
   </item>  
   <item>
-     <path>civicrm/admin/menu</path>
-     <title>Navigation Menu</title>
-     <desc>Add or remove menu items, and modify the order of items on the navigation menu.</desc>
-     <page_callback>CRM_Admin_Page_Navigation</page_callback>
-     <adminGroup>Customize</adminGroup>
-     <icon>admin/small/template.png</icon>
-     <weight>25</weight>
-  </item>
-  <item>
      <path>civicrm/admin/options/custom_search</path>
      <title>Manage Custom Searches</title>
      <desc>Developers and accidental techies with a bit of PHP and SQL knowledge can create new search forms to handle specific search and reporting needs which aren't covered by the built-in Advanced Search and Search Builder features.</desc>

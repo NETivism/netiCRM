@@ -2566,8 +2566,7 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
    *
    * @return Boolean
    */
-  static function updateGroupTypes($gId, $groupTypes = array(
-    )) {
+  static function updateGroupTypes($gId, $groupTypes = array()) {
     if (!is_array($groupTypes) || !$gId) {
       return FALSE;
     }
@@ -2584,7 +2583,7 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
 
     $participantExtends = array('ParticipantRole', 'ParticipantEventName', 'ParticipantEventType');
     // Get valid group type and group subtypes
-    foreach ($groupTypes as $groupType => $value) {
+    foreach ($groupTypes as $groupType) {
       if (in_array($groupType, $validGroupTypes) && !in_array($groupType, $gTypes)) {
         $gTypes[] = $groupType;
       }
@@ -2599,14 +2598,6 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
       }
       else {
         continue;
-      }
-
-      if (!empty($value) &&
-        (in_array($subTypesOf, $componentGroupTypes) ||
-          in_array($subTypesOf, $participantExtends)
-        )
-      ) {
-        $gTypeValues[$subTypesOf] = $groupType . ":" . implode(':', $value);
       }
     }
 

@@ -47,7 +47,7 @@ class CRM_Report_Form_Contribute_Summary extends CRM_Report_Form {
     $this->_columns = array('civicrm_contact' =>
       array('dao' => 'CRM_Contact_DAO_Contact',
         'fields' =>
-        array('display_name' =>
+        array('sort_name' =>
           array('title' => ts('Contact Name'),
             'no_repeat' => TRUE,
           ),
@@ -62,7 +62,7 @@ class CRM_Report_Form_Contribute_Summary extends CRM_Report_Form {
         'group_bys' =>
         array('id' =>
           array('title' => ts('Contact ID')),
-          'display_name' =>
+          'sort_name' =>
           array('title' => ts('Contact Name'),
           ),
         ),
@@ -135,15 +135,18 @@ class CRM_Report_Form_Contribute_Summary extends CRM_Report_Form {
         ),
       ),
       'civicrm_contribution_page' =>
-      array('dao' => 'CRM_Contribute_DAO_ContributionPage',
+        array(
+        'dao' => 'CRM_Contribute_DAO_ContributionPage',
         'fields' =>
-        array('title' => array(
-            'title' => t('Contribution Page'),
+          array('title' => array(
+            'title' => ts('Contribution Page'),
           ),
         ),
         'grouping' => 'contri-fields',
         'group_bys' =>
-        array('contribution_page' => NULL,
+        array('title' => array(
+            'title' => ts('Contribution Page'),
+          )
         ),
       ),
       'civicrm_contribution' =>
@@ -153,6 +156,9 @@ class CRM_Report_Form_Contribute_Summary extends CRM_Report_Form {
         array('contribution_source' => NULL,
           'payment_instrument_id' => array(
             'title' => ts('Payment Instrument'),
+          ),
+          'receipt_id' => array(
+            'title' => ts('Receipt ID'),
           ),
           'total_amount' =>
           array('title' => ts('Amount Statistics'),
@@ -356,7 +362,7 @@ class CRM_Report_Form_Contribute_Summary extends CRM_Report_Form {
     $errors = $grouping = array();
     //check for searching combination of dispaly columns and
     //grouping criteria
-    $ignoreFields = array('total_amount', 'display_name');
+    $ignoreFields = array('total_amount', 'sort_name');
     $errors = $self->customDataFormRule($fields, $ignoreFields);
 
     if (CRM_Utils_Array::value('receive_date', $fields['group_bys'])) {
@@ -365,7 +371,7 @@ class CRM_Report_Form_Contribute_Summary extends CRM_Report_Form {
           foreach ($table['fields'] as $fieldName => $field) {
             if (CRM_Utils_Array::value($field['name'], $fields['fields']) &&
               $fields['fields'][$field['name']] &&
-              in_array($field['name'], array('display_name', 'postal_greeting_display', 'contribution_source', 'contribution_type', 'contribution_page'))
+              in_array($field['name'], array('sort_name', 'postal_greeting_display', 'contribution_source', 'contribution_type', 'contribution_page'))
             ) {
               $grouping[] = $field['title'];
             }
@@ -626,15 +632,15 @@ class CRM_Report_Form_Contribute_Summary extends CRM_Report_Form {
       }
 
       // convert display name to links
-      if (array_key_exists('civicrm_contact_display_name', $row) &&
+      if (array_key_exists('civicrm_contact_sort_name', $row) &&
         array_key_exists('civicrm_contact_id', $row)
       ) {
         $url = CRM_Report_Utils_Report::getNextUrl('contribute/detail',
           'reset=1&force=1&id_op=eq&id_value=' . $row['civicrm_contact_id'],
           $this->_absoluteUrl, $this->_id
         );
-        $rows[$rowNum]['civicrm_contact_display_name_link'] = $url;
-        $rows[$rowNum]['civicrm_contact_display_name_hover'] = ts("Lists detailed contribution(s) for this record.");
+        $rows[$rowNum]['civicrm_contact_sort_name_link'] = $url;
+        $rows[$rowNum]['civicrm_contact_sort_name_hover'] = ts("Lists detailed contribution(s) for this record.");
         $entryFound = TRUE;
       }
 

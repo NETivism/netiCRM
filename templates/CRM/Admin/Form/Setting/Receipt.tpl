@@ -42,6 +42,10 @@
             <td class="label">{$form.receiptOrgInfo.label}</td><td>{$form.receiptOrgInfo.html}<br />
             <span class="description">{ts}Organization info will appear at the end of receipt.{/ts}</span></td>
         </tr>
+        <tr class="crm-mail-form-block-receiptYesNo">
+            <td class="label">{$form.receiptYesNo.label}</td><td>{$form.receiptYesNo.html}<br />
+            <span class="description">{ts}Choose a Checkbox or a Radio field. If the field is selected to 'Yes' by contributor, then the receipt title and serial field will be required. On the contrary, the receipt title and serial field will hide.{/ts}</span></td>
+        </tr>
         <tr class="crm-mail-form-block-receiptTitle">
             <td class="label">{$form.receiptTitle.label}</td><td>{$form.receiptTitle.html}<br />
             <span class="description">{ts}When your receipt title save in another field, use this to select the field.{/ts}</span></td>

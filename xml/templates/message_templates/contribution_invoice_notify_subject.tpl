@@ -1,0 +1,1 @@
+{ts}Invoice{/ts} - {$title}

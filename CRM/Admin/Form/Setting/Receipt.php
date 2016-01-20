@@ -23,6 +23,7 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
     foreach ($fields as $custom_id => $f) {
       $option[$custom_id] = $f['label'];
     }
+    $this->addElement('select', 'receiptYesNo', ts('Field to request receipt'), $option);
     $this->addElement('select', 'receiptTitle', ts('Field for receipt title'), $option);
     $this->addElement('select', 'receiptSerial', ts('Field for receipt serial number'), $option);
     $this->addElement('select', 'receiptDonorCredit', ts('Field for donor credit'), $option);

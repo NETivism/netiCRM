@@ -122,58 +122,49 @@
 
        // observe changes
        cj( contactHiddenElement ).change(function( ) {
-        var sharedContactId = cj( this ).val( );
-        if ( !sharedContactId || isNaN( sharedContactId ) ) {
-          return;
-        }
-        
-        var addressHTML = '';
-        var postUrl = {/literal}"{crmURL p='civicrm/ajax/inline' h=0}"{literal};
+          var sharedContactId = cj( this ).val();
+          if ( !sharedContactId || isNaN( sharedContactId ) ) {
+            return;
+          }
 
-        addCiviOverlay('div.crm-address_' + blockNo);
-
-        cj.post( postUrl, {
-          'contact_id': sharedContactId,
-          'type': 'method',
-          'class_name': 'CRM_Contact_Page_AJAX',
-          'fn_name': 'getAddressDisplay'
-          },
-          function( response ) {
-            if ( response ) {
-              var selected = 'checked';
-              var addressExists = false;
-
-              cj.each( response, function( i, val ) {
-                if ( i > 1 ) {
-                  selected = '';
-                } else {
-                  cj( 'input[name="address[' + blockNo + '][master_id]"]' ).val( val.id );
-                }
-
-                addressHTML = addressHTML + '<input type="radio" name="selected_shared_address-'+ blockNo +'" value=' + val.id + ' ' + selected +'>' + val.display_text + '<br/>';
-
-                addressExists = true;
-              });
-
-              if ( addressExists  ) {
-                cj( '#shared-address-' + blockNo + ' .shared-address-list' ).remove( );
-                cj( '#shared-address-' + blockNo ).append( '<tr class="shared-address-list"><td></td><td>' + addressHTML + '</td></tr>');
-                cj( 'input[name^=selected_shared_address-]' ).click( function( ) {
-
-                // get the block id
-                var elemId = cj(this).attr( 'name' ).split('-');
-                cj( 'input[name="address[' + elemId[1] + '][master_id]"]' ).val( cj(this).val( ) );
+          var addressHTML = '';
+          cj().crmAPI('Address', 'get', { 'contact_id': sharedContactId, 'return':'display', 'version' : 3 }, {
+            success: function( response ) {
+              if ( response.values) {
+                var selected = 'checked';
+                var addressExists = false;
+                cj.each( response.values , function( i, val ) {
+                  if ( i > 1 ) {
+                    selected = '';
+                  }
+                  else {
+                    cj( 'input[name="address[' + blockNo + '][master_id]"]' ).val( val.id );
+                  }
+                  addressHTML = addressHTML + '<input type="radio" name="selected_shared_address-'+ blockNo +'" value=' + val.id + ' ' + selected +'>' + val.display + '<br/>';
+                  addressExists = true;
                 });
-              } else {
-                var helpText = {/literal}"{ts escape='js'}Selected contact does not have an address. Please edit that contact to add an address, or select a different contact.{/ts}"{literal};
-                cj( '#shared-address-' + blockNo + ' .shared-address-list' ).remove( );
-                cj( '#shared-address-' + blockNo ).append( '<tr class="shared-address-list"><td></td><td>' + helpText + '</td></tr>');
-              }
 
-              removeCiviOverlay('div.crm-address_' + blockNo);
-            }
-          },'json');
-        });
+                if ( addressExists  ) {
+                  cj( '#shared-address-' + blockNo + ' .shared-address-list' ).remove( );
+                  cj( '#shared-address-' + blockNo ).append( '<tr class="shared-address-list"><td></td><td>' + addressHTML + '</td></tr>');
+                  cj( 'input[name^=selected_shared_address-]' ).click( function( ) {
+                    // get the block id
+                    var elemId = cj(this).attr( 'name' ).split('-');
+                    cj( 'input[name="address[' + elemId[1] + '][master_id]"]' ).val( cj(this).val( ) );
+                  });
+                }
+                else {
+                  var helpText = {/literal}"{ts}Selected contact does not have an address. Please edit that contact to add an address, or select a different contact.{/ts}"{literal};
+                  cj( '#shared-address-' + blockNo + ' .shared-address-list' ).remove( );
+                  cj( '#shared-address-' + blockNo ).append( '<tr class="shared-address-list"><td></td><td>' + helpText + '</td></tr>');
+                }
+              }
+            },
+            ajaxURL: {/literal}"{crmURL p='civicrm/ajax/rest' h=0}"{literal}
+          });
+       });
+
+
 
         // continuous check for changed value
         setInterval(function( ) {

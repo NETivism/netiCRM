@@ -416,7 +416,15 @@ SELECT label, value
                 }
 
                 //FIX for custom data query fired against no value(NULL/NOT NULL)
-                $this->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause($sql, $op, $val, $field['data_type']);
+                // handling empty sting
+                if($op == 'IS NOT NULL'){
+                  $whereQuery = CRM_Contact_BAO_Query::buildClause($sql, $op, $val, $field['data_type']);
+                  $whereQuery .= ' AND '. CRM_Contact_BAO_Query::buildClause($sql, '!=', '', $field['data_type']); 
+                  $this->_where[$grouping][] = '( '.$whereQuery.' )';
+                }
+                else{
+                  $this->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause($sql, $op, $val, $field['data_type']);
+                }
                 $this->_qill[$grouping][] = "$field[label] $op $qillValue";
               }
             }

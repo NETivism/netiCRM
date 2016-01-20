@@ -1599,7 +1599,7 @@ class CRM_Contact_BAO_Query {
       $this->_where[$grouping] = array();
     }
     if ($op == 'LIKE' && !$wildcard) {
-      $value = trim($value, '%') . '%';
+      $value = '%' . trim($value, '%') . '%';
     }
 
     $multipleFields = array('url');
@@ -1884,7 +1884,7 @@ class CRM_Contact_BAO_Query {
           $value = $strtolower(CRM_Core_DAO::escapeString($value));
         }
         if ($wildcard) {
-          $value = "'%$value%'";
+          $value = "%$value%";
           $op = 'LIKE';
         }
 
@@ -2422,24 +2422,28 @@ class CRM_Contact_BAO_Query {
   }
 
   function includeContactSubTypes($value, $grouping) {
-
     $clause = array();
     $alias = "contact_a.contact_sub_type";
 
     if (is_array($value)) {
       foreach ($value as $k => $v) {
         if (!empty($k)) {
-          $clause[$k] = "($alias like '%" . CRM_Core_DAO::VALUE_SEPARATOR . CRM_Utils_Type::escape($k, 'String') . CRM_Core_DAO::VALUE_SEPARATOR . "%')";
+          $clause[$k] = "($alias like '" . CRM_Utils_Type::escape($k, 'String') . "')";
         }
       }
     }
     else {
-      $clause[$value] = "($alias like '%" . CRM_Core_DAO::VALUE_SEPARATOR . CRM_Utils_Type::escape($value, 'String') . CRM_Core_DAO::VALUE_SEPARATOR . "%')";
+      $clause[$value] = "($alias = '" . CRM_Utils_Type::escape($value, 'String') . "')";
     }
 
     if (!empty($clause)) {
+      $subTypes = CRM_Contact_BAO_ContactType::subTypeInfo();
+      $subTypeLabel = array();
+      foreach($clause as $k => $v){
+        $subTypeLabel[] = $subTypes[$k]['label'];
+      }
       $this->_where[$grouping][] = "( " . implode(' OR ', $clause) . " )";
-      $this->_qill[$grouping][] = ts('Contact Subtype') . ' - ' . implode(' ' . ts('or') . ' ', array_keys($clause));
+      $this->_qill[$grouping][] = ts('Contact Subtype') . ' - ' . implode( ' ' . ts('or') . ' ', $subTypeLabel);
     }
   }
 
@@ -2482,14 +2486,14 @@ class CRM_Contact_BAO_Query {
       }
     }
     else {
-      $statii[] = '"Added"';
+      $statii[] = "'Added'";
       $in = TRUE;
     }
 
     $skipGroup = FALSE;
     if (count($value) == 1 &&
       count($statii) == 1 &&
-      $statii[0] == '"Added"'
+      $statii[0] == "'Added'"
     ) {
       // check if smart group, if so we can get rid of that one additional
       // left join
@@ -2510,16 +2514,25 @@ class CRM_Contact_BAO_Query {
       $this->_tables[$gcTable] = $this->_whereTables[$gcTable] = " LEFT JOIN civicrm_group_contact {$gcTable} ON contact_a.id = {$gcTable}.contact_id ";
     }
 
-    $qill = ts('Contacts %1', array(1 => $op));
-    $qill .= ' ' . implode(' ' . ts('or') . ' ', $names);
-
     $groupClause = NULL;
 
     if (!$skipGroup) {
-      $groupClause = "{$gcTable}.group_id $op ( $groupIds )";
-      if (!empty($statii)) {
+      if(strstr($op, 'NULL')) {
+        $groupClause = "{$gcTable}.group_id $op";
+        $qill = ts('Group').ts($op);
+      }
+      else{
+        $groupClause = "{$gcTable}.group_id $op ( $groupIds )";
+        $qill = ts('Contacts %1', array(1 => $op));
+        $qill .= ' ' . implode(' ' . ts('or') . ' ', $names);
+      }
+      if (!empty($statii) && $op != 'IS NULL') {
         $groupClause .= " AND {$gcTable}.status IN (" . implode(', ', $statii) . ")";
-        $qill .= " " . ts('AND') . " " . ts('Group Status') . ' - ' . implode(' ' . ts('or') . ' ', $statii);
+        foreach($statii as $v){
+          $v = trim($v, "'");
+          $statii_qill[] = ts($v);
+        }
+        $qill .= " " . ts('AND') . " " . ts('Group Status') . ' - ' . implode(' ' . ts('or') . ' ', $statii_qill);
       }
     }
 

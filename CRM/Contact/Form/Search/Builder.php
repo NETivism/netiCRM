@@ -153,8 +153,9 @@ class CRM_Contact_Form_Search_Builder extends CRM_Contact_Form_Search {
         $errorMsg["operator[$v[3]][$v[4]]"] = ts("Please enter the operator.");
       }
       else {
-        if (in_array($v[1], array('IS NULL', 'IS NOT NULL')) && $v[2]) {
-          $errorMsg["value[$v[3]][$v[4]]"] = ts('Please clear your value if you want to use %1 operator.', array(1 => $v[1]));
+        $entered = is_array($v[2]) ? key($v[2]) : $v[2];
+        if (in_array($v[1], array('IS NULL', 'IS NOT NULL')) && !empty($entered)) {
+          $errorMsg["value[$v[3]][$v[4]]"] = ts('Please clear your value if you want to use %1 operator.', array(1 => ts($v[1])));
         }
         elseif (empty($v[2]) && !in_array($v[1], array('IS NULL', 'IS NOT NULL'))) {
           $errorMsg["value[$v[3]][$v[4]]"] = ts("Please enter the value.");
@@ -294,8 +295,16 @@ class CRM_Contact_Form_Search_Builder extends CRM_Contact_Form_Search {
 
   public function normalizeFormValues() {}
 
-  public function &convertFormValues(&$formValues) {
-    return CRM_Core_BAO_Mapping::formattedFields($formValues);
+  public function &convertFormValues(&$formValues, $wildcard = FALSE) {
+    $fields = CRM_Core_BAO_Mapping::formattedFields($formValues);
+    if($wildcard){
+      foreach($fields as $k => $v){
+        if(isset($v[4]) && $v[1] == 'LIKE'){
+          $fields[$k][4] = 1;
+        }
+      }
+    }
+    return $fields;
   }
 
   public function &returnProperties() {
@@ -372,7 +381,7 @@ class CRM_Contact_Form_Search_Builder extends CRM_Contact_Form_Search {
       }
     }
 
-    $this->_params = &$this->convertFormValues($this->_formValues);
+    $this->_params = &$this->convertFormValues($this->_formValues, $wildcard = TRUE);
     $this->_returnProperties = &$this->returnProperties();
     parent::postProcess();
   }

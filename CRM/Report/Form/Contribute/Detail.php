@@ -46,7 +46,7 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
     $this->_columns = array('civicrm_contact' =>
       array('dao' => 'CRM_Contact_DAO_Contact',
         'fields' =>
-        array('display_name' =>
+        array('sort_name' =>
           array('title' => ts('Contact Name'),
             'required' => TRUE,
             'no_repeat' => TRUE,
@@ -136,6 +136,7 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
           'receive_date' => array('default' => TRUE),
           'receipt_date' => NULL,
           'fee_amount' => NULL,
+          'receipt_id' => NULL,
           'net_amount' => NULL,
           'total_amount' => array('title' => ts('Amount'),
             'required' => TRUE,
@@ -394,16 +395,16 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
       }
 
       // convert display name to links
-      if (array_key_exists('civicrm_contact_display_name', $row) &&
-        CRM_Utils_Array::value('civicrm_contact_display_name', $rows[$rowNum]) &&
+      if (array_key_exists('civicrm_contact_sort_name', $row) &&
+        CRM_Utils_Array::value('civicrm_contact_sort_name', $rows[$rowNum]) &&
         array_key_exists('civicrm_contact_id', $row)
       ) {
         $url = CRM_Utils_System::url("civicrm/contact/view",
           'reset=1&cid=' . $row['civicrm_contact_id'],
           $this->_absoluteUrl
         );
-        $rows[$rowNum]['civicrm_contact_display_name_link'] = $url;
-        $rows[$rowNum]['civicrm_contact_display_name_hover'] = ts("View Contact Summary for this Contact.");
+        $rows[$rowNum]['civicrm_contact_sort_name_link'] = $url;
+        $rows[$rowNum]['civicrm_contact_sort_name_hover'] = ts("View Contact Summary for this Contact.");
       }
       if ($value = CRM_Utils_Array::value('civicrm_contribution_contribution_type_id', $row)) {
         $rows[$rowNum]['civicrm_contribution_contribution_type_id'] = $contributionTypes[$value];

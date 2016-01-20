@@ -110,7 +110,7 @@ function civicrm_api3_uf_field_create($params) {
   }
   $ufField = CRM_Core_BAO_UFField::add($params, $ids);
 
-  $fieldsType = CRM_Core_BAO_UFGroup::calculateGroupType($groupId, TRUE);
+  $fieldsType = CRM_Core_BAO_UFGroup::calculateGroupType($groupId);
   CRM_Core_BAO_UFGroup::updateGroupTypes($groupId, $fieldsType);
 
   _civicrm_api3_object_to_array($ufField, $ufFieldArray[$ufField->id]);

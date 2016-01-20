@@ -58,7 +58,7 @@ class CRM_Report_Form_Contribute_Lybunt extends CRM_Report_Form {
       array('dao' => 'CRM_Contact_DAO_Contact',
         'grouping' => 'contact-field',
         'fields' =>
-        array('display_name' =>
+        array('sort_name' =>
           array('title' => ts('Donor Name'),
             'default' => TRUE,
             'required' => TRUE,

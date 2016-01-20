@@ -454,4 +454,17 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
     );
     $this->assertDBState('CRM_Contribute_DAO_ContributionRecur', $recurring->id, $params);
   }
+
+  function testNonCreditNotify(){
+    // update
+    $cid = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution_allpay ORDER BY id DESC LIMIT 0,1");
+    $_POST = array(
+      'MerchantID' => $cid,
+      'TEST1' => 'AAA',
+      'TEST2' => 'BBB',
+    );
+    $_GET['q'] = 'allpay/record';
+    civicrm_allpay_record($cid);
+    $this->assertDBQuery($cid, "SELECT cid FROM civicrm_contribution_allpay WHERE data LIKE '%#info%TEST1%' AND cid = $cid");
+  }
 }

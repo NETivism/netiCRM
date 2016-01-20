@@ -50,7 +50,7 @@ class CRM_Report_Form_Contribute_TopDonor extends CRM_Report_Form {
           array('no_display' => TRUE,
             'required' => TRUE,
           ),
-          'display_name' =>
+          'sort_name' =>
           array('title' => ts('Contact Name'),
             'required' => TRUE,
             'no_repeat' => TRUE,
@@ -356,14 +356,14 @@ class CRM_Report_Form_Contribute_TopDonor extends CRM_Report_Form {
 
         $rows[$rowNum]['civicrm_donor_rank'] = $rank++;
         // convert display name to links
-        if (array_key_exists('civicrm_contact_display_name', $row) &&
+        if (array_key_exists('civicrm_contact_sort_name', $row) &&
           array_key_exists('civicrm_contact_id', $row)
         ) {
           $url = CRM_Report_Utils_Report::getNextUrl('contribute/detail',
             'reset=1&force=1&id_op=eq&id_value=' . $row['civicrm_contact_id'],
             $this->_absoluteUrl, $this->_id
           );
-          $rows[$rowNum]['civicrm_contact_display_name_link'] = $url;
+          $rows[$rowNum]['civicrm_contact_sort_name_link'] = $url;
           $entryFound = TRUE;
         }
 

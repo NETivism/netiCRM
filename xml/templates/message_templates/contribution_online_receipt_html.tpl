@@ -23,7 +23,7 @@
    <td>
 
     {if $receipt_text}
-     <div>{$receipt_text|htmlize}</div>
+     <div>{$receipt_text}</div>
     {/if}
 
     {if $is_pay_later}

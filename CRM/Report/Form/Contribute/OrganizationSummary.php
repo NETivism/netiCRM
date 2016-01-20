@@ -90,7 +90,7 @@ class CRM_Report_Form_Contribute_OrganizationSummary extends CRM_Report_Form {
       'civicrm_contact' =>
       array('dao' => 'CRM_Contact_DAO_Contact',
         'fields' =>
-        array('display_name' =>
+        array('sort_name' =>
           array('title' => ts('Contact Name'),
             'required' => TRUE,
           ),
@@ -418,7 +418,7 @@ class CRM_Report_Form_Contribute_OrganizationSummary extends CRM_Report_Form {
           }
 
           if ($flagContact == 1 && $flagOrganization == 1) {
-            $rows[$rowNum]['civicrm_contact_display_name'] = "";
+            $rows[$rowNum]['civicrm_contact_sort_name'] = "";
             $rows[$rowNum]['civicrm_relationship_relationship_type_id'] = "";
           }
 
@@ -449,8 +449,8 @@ class CRM_Report_Form_Contribute_OrganizationSummary extends CRM_Report_Form {
       }
 
       // convert Individual display name to links
-      if (array_key_exists('civicrm_contact_display_name', $row) &&
-        $rows[$rowNum]['civicrm_contact_display_name'] &&
+      if (array_key_exists('civicrm_contact_sort_name', $row) &&
+        $rows[$rowNum]['civicrm_contact_sort_name'] &&
         array_key_exists('civicrm_contact_id', $row)
       ) {
         $url = CRM_Report_Utils_Report::getNextUrl('contribute/detail',
@@ -458,7 +458,7 @@ class CRM_Report_Form_Contribute_OrganizationSummary extends CRM_Report_Form {
           $row['civicrm_contact_id'],
           $this->_absoluteUrl, $this->_id
         );
-        $rows[$rowNum]['civicrm_contact_display_name_link'] = $url;
+        $rows[$rowNum]['civicrm_contact_sort_name_link'] = $url;
 
         $entryFound = TRUE;
       }
