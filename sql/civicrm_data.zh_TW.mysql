@@ -4431,7 +4431,7 @@ VALUES
    ('accept_creditcard'             , '接受的信用卡'              , 0, 1),
    ('payment_instrument'            , '付款工具'                , 0, 1),
    ('contribution_status'           , '捐款狀態'                , 0, 1),
-   ('pcp_status'                    , 'PCP Status'                         , 0, 1),
+   ('pcp_status'                    , '個人募款頁狀態'                         , 0, 1),
    ('participant_role'              , '參加者角色'                   , 0, 1),
    ('event_type'                    , '活動類型'                         , 0, 1),
    ('contact_view_options'          , '聯絡人查看選項'               , 0, 1),
@@ -4470,8 +4470,8 @@ VALUES
    ('currencies_enabled'            , 'List of currencies enabled for this site', 0, 1),
    ('event_badge'                   , 'Event Name Badge'                   , 0, 1),
    ('note_privacy'                  , 'Privacy levels for notes'           , 0, 1),
-   ('campaign_type'                 , '動員類型'                      , 0, 1),
-   ('campaign_status'               , '動員狀態'                    , 0, 1),
+   ('campaign_type'                 , '募款活動類型'                      , 0, 1),
+   ('campaign_status'               , '募款活動狀態'                    , 0, 1),
    ('system_extensions'             , 'CiviCRM 套件'                 , 0, 1),
    ('directory_preferences'         , 'Directory Preferences'              , 0, 1),
    ('url_preferences'               , 'URL Preferences'                    , 0, 1);
@@ -4702,7 +4702,7 @@ VALUES
   (@option_group_id_udOpt, '活動'                     , 4, 'CiviEvent', NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_udOpt, '我的聯絡人 / 組織', 5, 'Permissioned Orgs', NULL, 0, NULL, 5, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_udOpt, '認捐'                    , 7, 'CiviPledge', NULL, 0, NULL, 7, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_udOpt, '個人動員頁'    , 8, 'PCP', NULL, 0, NULL, 8, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_udOpt, '個人募款頁'    , 8, 'PCP', NULL, 0, NULL, 8, NULL, 0, 0, 1, NULL, NULL),
 
   (@option_group_id_acsOpt, '電子郵件地址'   , 2, 'email'         , NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_acsOpt, '電話'           , 3, 'phone'         , NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL),
@@ -5590,7 +5590,7 @@ INSERT INTO civicrm_participant_status_type
   (2,  'Attended',                            '出席',                            'Positive', 0,           1,         1,          2,      2            ),
   (3,  'No-show',                             '失約',                             'Negative', 0,           1,         0,          3,      2            ),
   (4,  'Cancelled',                           '已取消',                           'Negative', 1,           1,         0,          4,      2            ),
-  (5,  'Pending from pay later',              '待處理-後續付款',              'Pending',  1,           1,         1,          5,      2            ),
+  (5,  'Pending from pay later',              '待處理-稍後付款',              'Pending',  1,           1,         1,          5,      2            ),
   (6,  'Pending from incomplete transaction', '待處理-未完成交易', 'Pending',  1,           1,         0,          6,      2            ),
   (7,  'On waitlist',                         '在候補名單',                         'Waiting',  1,           0,         0,          7,      2            ),
   (8,  'Awaiting approval',                   '等待審核',                   'Waiting',  1,           0,         1,          8,      2            ),
@@ -5645,7 +5645,7 @@ INSERT INTO civicrm_option_group
 
 INSERT INTO civicrm_option_value
   (option_group_id,        name,       label,   value,                                  weight) VALUES
-      (@tpl_ogid_case, 'case_activity', '個案 - 寄出任務複本',            1, 1) ,      (@tpl_ogid_contribution, 'contribution_dupalert', '捐款 - 重複組織警示',            1, 1) ,      (@tpl_ogid_contribution, 'contribution_offline_receipt', '捐款 - 收據（離線）',            2, 2) ,      (@tpl_ogid_contribution, 'contribution_online_receipt', '捐款 - 收據（在線）',            3, 3) ,      (@tpl_ogid_contribution, 'contribution_recurring_notify', '捐款 - 定期捐款的開始和結束通知',            4, 4) ,      (@tpl_ogid_contribution, 'contribution_invoice_notify', 'Contributions - Invoice Notification',            5, 5) ,      (@tpl_ogid_contribution, 'pcp_notify', '個人動員頁 - 管理通知',            6, 6) ,      (@tpl_ogid_contribution, 'pcp_status_change', '個人動員頁 - 支持者狀態更改通知',            7, 7) ,      (@tpl_ogid_contribution, 'pcp_supporter_notify', '個人動員頁 - 歡迎支持者',            8, 8) ,      (@tpl_ogid_event, 'event_offline_receipt', '活動 - 登記確認與收據（離線）',            1, 1) ,      (@tpl_ogid_event, 'event_online_receipt', '活動 - 登記確認與收據（在線）',            2, 2) ,      (@tpl_ogid_event, 'participant_cancelled', '活動 - 登記取消通知',            3, 3) ,      (@tpl_ogid_event, 'participant_confirm', '活動 - 登記確認邀請',            4, 4) ,      (@tpl_ogid_event, 'participant_expired', '活動- 等候登記過期通知',            5, 5) ,      (@tpl_ogid_friend, 'friend', 'Email 推薦給朋友',            1, 1) ,      (@tpl_ogid_membership, 'membership_offline_receipt', '會員 - 註冊與資格更新收據（離線）',            1, 1) ,      (@tpl_ogid_membership, 'membership_online_receipt', '會員 - 收據（在線）',            2, 2) ,      (@tpl_ogid_meta, 'test_preview', '測試 - 收據頁首',            1, 1) ,      (@tpl_ogid_pledge, 'pledge_acknowledge', '認捐 - 感謝函',            1, 1) ,      (@tpl_ogid_pledge, 'pledge_reminder', '認捐 - 付款提醒',            2, 2) ,      (@tpl_ogid_uf, 'uf_notify', '資料表單 - 管理提示',            1, 1) ,      (@tpl_ogid_petition, 'petition_sign', 'Petition - signature added',            1, 1) ,      (@tpl_ogid_petition, 'petition_confirmation_needed', 'Petition - need verification',            2, 2) ;
+      (@tpl_ogid_case, 'case_activity', '個案 - 寄出任務複本',            1, 1) ,      (@tpl_ogid_contribution, 'contribution_dupalert', '捐款 - 重複組織警示',            1, 1) ,      (@tpl_ogid_contribution, 'contribution_offline_receipt', '捐款 - 收據（離線）',            2, 2) ,      (@tpl_ogid_contribution, 'contribution_online_receipt', '捐款 - 收據（在線）',            3, 3) ,      (@tpl_ogid_contribution, 'contribution_recurring_notify', '捐款 - 定期捐款的開始和結束通知',            4, 4) ,      (@tpl_ogid_contribution, 'contribution_invoice_notify', '捐款 - 帳單通知',            5, 5) ,      (@tpl_ogid_contribution, 'pcp_notify', '個人募款頁 - 管理通知',            6, 6) ,      (@tpl_ogid_contribution, 'pcp_status_change', '個人募款頁 - 支持者狀態更改通知',            7, 7) ,      (@tpl_ogid_contribution, 'pcp_supporter_notify', '個人募款頁 - 歡迎支持者',            8, 8) ,      (@tpl_ogid_event, 'event_offline_receipt', '活動 - 登記確認與收據（離線）',            1, 1) ,      (@tpl_ogid_event, 'event_online_receipt', '活動 - 登記確認與收據（在線）',            2, 2) ,      (@tpl_ogid_event, 'participant_cancelled', '活動 - 登記取消通知',            3, 3) ,      (@tpl_ogid_event, 'participant_confirm', '活動 - 登記確認邀請',            4, 4) ,      (@tpl_ogid_event, 'participant_expired', '活動- 等候登記過期通知',            5, 5) ,      (@tpl_ogid_friend, 'friend', 'Email 推薦給朋友',            1, 1) ,      (@tpl_ogid_membership, 'membership_offline_receipt', '會員 - 註冊與資格更新收據（離線）',            1, 1) ,      (@tpl_ogid_membership, 'membership_online_receipt', '會員 - 收據（在線）',            2, 2) ,      (@tpl_ogid_meta, 'test_preview', '測試 - 收據頁首',            1, 1) ,      (@tpl_ogid_pledge, 'pledge_acknowledge', '認捐 - 感謝函',            1, 1) ,      (@tpl_ogid_pledge, 'pledge_reminder', '認捐 - 付款提醒',            2, 2) ,      (@tpl_ogid_uf, 'uf_notify', '資料表單 - 管理提示',            1, 1) ,      (@tpl_ogid_petition, 'petition_sign', 'Petition - signature added',            1, 1) ,      (@tpl_ogid_petition, 'petition_confirmation_needed', 'Petition - need verification',            2, 2) ;
     SELECT @tpl_ovid_case_activity := MAX(id) FROM civicrm_option_value WHERE option_group_id = @tpl_ogid_case AND name = 'case_activity';
     SELECT @tpl_ovid_contribution_dupalert := MAX(id) FROM civicrm_option_value WHERE option_group_id = @tpl_ogid_contribution AND name = 'contribution_dupalert';
     SELECT @tpl_ovid_contribution_offline_receipt := MAX(id) FROM civicrm_option_value WHERE option_group_id = @tpl_ogid_contribution AND name = 'contribution_offline_receipt';
@@ -8237,7 +8237,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
 ', @tpl_ovid_contribution_recurring_notify, 0,          1) ,      
       
       
-      ('Contributions - Invoice Notification', '{ts}Invoice{/ts} - {$title}
+      ('捐款 - 帳單通知', '{ts}Invoice{/ts} - {$title}
 ', '', '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -8260,7 +8260,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
       {$message}
     {else}
       <p>
-        {ts 1=$page.url}We send this invoice because you have submitted data at <a href="%1">{$title}</a>.{/ts}<br>
+        {ts 1=$page.url 2=$title}We send this invoice because you have submitted data at <a href="%1">%2</a>.{/ts}<br>
         {ts 1=$payment_info.$expire}You need to follow instruction below to complete transaction before <strong>%1</strong> (expire date).{/ts}<br>
         {ts 1=$page.url}If you can make it before expire date, you can <a href="%1">go page</a> submit again.{/ts}
       </p>
@@ -8352,7 +8352,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
 </body>
 </html>
 ', @tpl_ovid_contribution_invoice_notify, 1,          0),
-      ('Contributions - Invoice Notification', '{ts}Invoice{/ts} - {$title}
+      ('捐款 - 帳單通知', '{ts}Invoice{/ts} - {$title}
 ', '', '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -8375,7 +8375,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
       {$message}
     {else}
       <p>
-        {ts 1=$page.url}We send this invoice because you have submitted data at <a href="%1">{$title}</a>.{/ts}<br>
+        {ts 1=$page.url 2=$title}We send this invoice because you have submitted data at <a href="%1">%2</a>.{/ts}<br>
         {ts 1=$payment_info.$expire}You need to follow instruction below to complete transaction before <strong>%1</strong> (expire date).{/ts}<br>
         {ts 1=$page.url}If you can make it before expire date, you can <a href="%1">go page</a> submit again.{/ts}
       </p>
@@ -8469,7 +8469,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
 ', @tpl_ovid_contribution_invoice_notify, 0,          1) ,      
       
       
-      ('個人動員頁 - 管理通知', '{ts}Personal Campaign Page Notification{/ts}
+      ('個人募款頁 - 管理通知', '{ts}Personal Campaign Page Notification{/ts}
 ', '===========================================================
 {ts}Personal Campaign Page Notification{/ts}
 
@@ -8585,7 +8585,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
 </body>
 </html>
 ', @tpl_ovid_pcp_notify, 1,          0),
-      ('個人動員頁 - 管理通知', '{ts}Personal Campaign Page Notification{/ts}
+      ('個人募款頁 - 管理通知', '{ts}Personal Campaign Page Notification{/ts}
 ', '===========================================================
 {ts}Personal Campaign Page Notification{/ts}
 
@@ -8703,7 +8703,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
 ', @tpl_ovid_pcp_notify, 0,          1) ,      
       
       
-      ('個人動員頁 - 支持者狀態更改通知', '{ts 1=$contribPageTitle}Your Personal Campaign Page for %1{/ts}
+      ('個人募款頁 - 支持者狀態更改通知', '{ts 1=$contribPageTitle}Your Personal Campaign Page for %1{/ts}
 ', '{if $pcpStatus eq \'Approved\'}
 ============================
 {ts}Your Personal Campaign Page{/ts}
@@ -8811,7 +8811,7 @@ which prevented us from approving the page. We are sorry for any inconvenience.{
 </body>
 </html>
 ', @tpl_ovid_pcp_status_change, 1,          0),
-      ('個人動員頁 - 支持者狀態更改通知', '{ts 1=$contribPageTitle}Your Personal Campaign Page for %1{/ts}
+      ('個人募款頁 - 支持者狀態更改通知', '{ts 1=$contribPageTitle}Your Personal Campaign Page for %1{/ts}
 ', '{if $pcpStatus eq \'Approved\'}
 ============================
 {ts}Your Personal Campaign Page{/ts}
@@ -8921,7 +8921,7 @@ which prevented us from approving the page. We are sorry for any inconvenience.{
 ', @tpl_ovid_pcp_status_change, 0,          1) ,      
       
       
-      ('個人動員頁 - 歡迎支持者', '{ts 1=$contribPageTitle}Your Personal Campaign Page for %1{/ts}
+      ('個人募款頁 - 歡迎支持者', '{ts 1=$contribPageTitle}Your Personal Campaign Page for %1{/ts}
 ', '{ts}Dear supporter{/ts},
 {ts 1="$contribPageTitle"}Thanks for creating a personal campaign page in support of %1.{/ts}
 
@@ -9081,7 +9081,7 @@ your page, tell friends, and update your contact info.{/ts}</p>
 </body>
 </html>
 ', @tpl_ovid_pcp_supporter_notify, 1,          0),
-      ('個人動員頁 - 歡迎支持者', '{ts 1=$contribPageTitle}Your Personal Campaign Page for %1{/ts}
+      ('個人募款頁 - 歡迎支持者', '{ts 1=$contribPageTitle}Your Personal Campaign Page for %1{/ts}
 ', '{ts}Dear supporter{/ts},
 {ts 1="$contribPageTitle"}Thanks for creating a personal campaign page in support of %1.{/ts}
 
