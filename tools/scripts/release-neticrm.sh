@@ -2,7 +2,7 @@
 CALLEDPATH=`dirname $0`
 CIVICRMPATH=`cd $CALLEDPATH/../../ && pwd`
 LANGUAGE='zh_TW'
-MAJOR_VERSION='2.0'
+MAJOR_VERSION='2.1'
 
 neticrm_merge(){
   TAG=`git tag | grep "^$MAJOR_VERSION" | awk -F "." '{print $3}' | sort -nr | head -n 1`
@@ -25,6 +25,7 @@ neticrm_merge(){
   echo -e "\n###### netiCRM ######\n"
   cd $CIVICRMPATH
   do_merge $TAG
+  git tag -a $TAG -m "Release $TAG"
 }
 
 do_merge(){
@@ -38,7 +39,7 @@ do_merge(){
   git checkout ${VERSION_PREFIX}master
   git merge ${VERSION_PREFIX}develop -m "Release merge."
   git commit
-  if [ "$2" = "7.x" ]; then
+  if [ "$2" = "7.x" ] || [ -z "$2" ]; then
     git tag -a $TAG -m "Release $TAG"
   fi
   git checkout ${VERSION_PREFIX}develop

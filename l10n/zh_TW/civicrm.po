@@ -2,14 +2,14 @@
 # Translators:
 # Fuyuan Cheng <gloomcheng@gmail.com>, 2013-2015
 # IreneLin, 2013
-# jimyhuang <jimmy@netivism.com.tw>, 2013,2015
+# jimyhuang <jimmy@netivism.com.tw>, 2013,2015-2016
 # 張書懷 <junsuwhy@gmail.com>, 2015
-# SharonKwan <sharon@netivism.com.tw>, 2015
+# SharonKwan <sharon@netivism.com.tw>, 2015-2016
 # charlesc <yeouhsin@gmail.com>, 2013-2014
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2015-12-24 08:13+0000\n"
+"PO-Revision-Date: 2016-01-19 07:08+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -1916,7 +1916,7 @@ msgid ""
 "href=\"%1\">Administer CiviCRM &raquo; Configure &raquo; Domain "
 "Information</a>. The email address used may need to be a valid mail account "
 "with your email service provider."
-msgstr "網站管理者需要在<a href=\"%1\">管理 CiviCRM &raquo; 設定 &raquo; 資訊資訊</a>輸入一個有效的「寄件者 Email」。您必須填入有效的 Email。"
+msgstr "網站管理者需要在<a href=\"%1\">管理 CiviCRM &raquo; 設定 &raquo; 組織資訊</a>輸入一個有效的「寄件者 Email」。您必須填入有效的 Email。"
 
 #: CRM/Admin/Form/Tag.php CRM/Group/Form/Edit.php
 msgid "select"
@@ -10300,7 +10300,7 @@ msgstr "定期捐款狀態"
 
 #: CRM/Contribute/DAO/ContributionRecur.php
 msgid "Cycle Day"
-msgstr "週期"
+msgstr "定期捐款日"
 
 #: CRM/Contribute/DAO/ContributionRecur.php
 msgid "Next Sched Contribution"
@@ -10849,13 +10849,13 @@ msgstr "最低金額必需小於最高金額"
 msgid ""
 "Please enter the text for the 'pay later' checkbox displayed on the "
 "contribution form."
-msgstr "請輸入募款頁表單裡「後續付款」勾選框所要顯示的文字。"
+msgstr "請輸入募款頁表單裡「稍後付款」勾選框所要顯示的文字。"
 
 #: CRM/Contribute/Form/ContributionPage/Amount.php
 msgid ""
 "Please enter the instructions to be sent to the contributor when they choose"
 " to 'pay later'."
-msgstr "請輸入「後續付款」時顯示給捐款者的操作指引。"
+msgstr "請輸入「稍後付款」時顯示給捐款者的操作指引。"
 
 #: CRM/Contribute/Form/ContributionPage/Amount.php
 msgid ""
@@ -19570,7 +19570,7 @@ msgstr "找不到適合此選項的範本。"
 
 #: CRM/Report/Page/Options.php
 msgid "Registered Templates"
-msgstr "已註冊的範本。"
+msgstr "報表範本管理"
 
 #: CRM/Report/Page/Report.php
 msgid ""
@@ -30907,7 +30907,7 @@ msgid ""
 "The Payment Status for this participant is Completed. The Participant Status"
 " is set to Pending from pay later. Click Cancel if you want to review or "
 "modify these values before saving this record"
-msgstr "此參加者的付款狀態為「已完成」。此參加者狀態設定為「待處理-後續付款」。如果您要在儲存記錄之前查看或修改這些設定，請按取消鍵。"
+msgstr "此參加者的付款狀態為「已完成」。此參加者狀態設定為「待處理-稍後付款」。如果您要在儲存記錄之前查看或修改這些設定，請按取消鍵。"
 
 #: templates/CRM/Event/Form/ManageEvent/Delete.tpl
 msgid ""
@@ -31105,7 +31105,7 @@ msgid ""
 "below without setting up a payment processor. All users will then be asked "
 "to submit payment offline (e.g. mail in a check, call in a credit card, "
 "etc.)."
-msgstr "注意：或者，您可以在沒有設立付款機制的情況下，啟用下方<strong>後續付款</strong>功能。所有的使用者將會被要求提交離線付款（例如郵寄支票、信用卡來電等）。"
+msgstr "注意：或者，您可以在沒有設立付款機制的情況下，啟用下方<strong>稍後付款</strong>功能。所有的使用者將會被要求提交離線付款（例如郵寄支票、信用卡來電等）。"
 
 #: templates/CRM/Event/Form/ManageEvent/Fee.tpl
 msgid ""
@@ -39363,7 +39363,7 @@ msgstr "失約"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Pending from pay later"
-msgstr "待處理-後續付款"
+msgstr "待處理-稍後付款"
 
 #: xml/templates/civicrm_data.tpl
 msgid "Pending from incomplete transaction"
@@ -44937,11 +44937,11 @@ msgstr "詢問是否需要收據欄位"
 
 #: CRM/Event/Page/EventInfo.tpl
 msgid "Add to Google Calendar"
-msgstr ""
+msgstr "加入 Google 行事曆"
 
 #: xml/templates/civicrm_msg_template.tpl
 msgid "Contributions - Invoice Notification"
-msgstr ""
+msgstr "捐款 - 帳單通知"
 
 #: xml/templates/message_templates/contribution_invoice_notify.tpl
 msgid ""
@@ -44953,10 +44953,31 @@ msgstr "這是您透過 <a href=\"%1\">%2</a> 所產生的繳費單。"
 msgid ""
 "You need to follow instruction below to complete transaction before "
 "<strong>%1</strong> (expire date)."
-msgstr "您需要在 <strong>%1</strong>，以下列方式完成繳費動作。"
+msgstr "您需要在 <strong>%1</strong> 前（繳費期限），以下列方式完成繳費動作。"
 
 #: xml/templates/message_templates/contribution_invoice_notify.tpl
 msgid ""
 "If you can make it before expire date, you can <a href=\"%1\">go page</a> "
 "submit again."
 msgstr "若本繳費單逾期，則需請您<a href=\"%1\">重新產生</a>新的繳費資訊。"
+
+#: CRM/Contribute/Page/Invoice.php
+msgid "Completed or cancelled transaction doesn't need invoice."
+msgstr "已完成、已取消的交易，無法產生帳單。"
+
+#: CRM/Contribute/Page/Invoice.php
+msgid ""
+"Because response of this payment doesn't correct. This receipt doesn't have "
+"enough information for printing. Check with administrator for further "
+"assistant."
+msgstr "這個繳款紀錄並不正確，沒有足夠的付款資訊以供產生帳單。請跟網站管理員做進一步確認。"
+
+#: CRM/Contribute/BAO/Query.php
+msgid "Non-recurring Contribution"
+msgstr "非定期捐款"
+
+#: templates/CRM/Contact/Form/Task/Email.tpl
+msgid ""
+"Send email to contacts one by one listed above. Your won't leak email of "
+"contacts."
+msgstr "您不用擔心聯絡人的電子郵件曝光，這功能將會一封封分開寄信給上列的聯絡人。"
