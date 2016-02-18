@@ -734,7 +734,7 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
           'url' => 'civicrm/contact/image',
           'qs' => 'reset=1&cid=%%id%%&action=delete',
           'extra' =>
-          'onclick = "if (confirm( \'' . $deleteExtra . '\' ) ) {  this.href+=\'&amp;confirmed=1\'; else return false;}"',
+          'onclick = "if (confirm( \'' . $deleteExtra . '\' ) ) {  this.href+=\'&confirmed=1\'; } else { return false; }"',
         ),
       );
       $deleteURL = CRM_Core_Action::formLink($deleteURL,
