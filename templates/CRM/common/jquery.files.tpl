@@ -23,7 +23,7 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
-{* 
+{*
  * If you MODIFY this file, please make sure you also modify jquery.tpl.
  * We will unify the two files in a future release
  *}
@@ -86,3 +86,11 @@ js/jquery/jquery.crmtooltip.js
 js/jquery/jquery.disablesubmit.js
 
 packages/fontawesome/css/font-awesome.min.css
+
+packages/mdl/material.min.js
+packages/mdl/material.indigo-pink.min.css
+
+packages/material-design-iconic-font/css/material-design-iconic-font.min.css
+
+packages/neticrm_md/md-init.js
+packages/neticrm_md/md-style.css
