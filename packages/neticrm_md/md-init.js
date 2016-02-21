@@ -2,15 +2,10 @@
 
   "use strict";
 
-  /*
   var wlPath = window.location.pathname;
   var wlPathArr = window.location.pathname.split("/");
   var wlSearch = window.location.search;
   var wlPathSearch = wlPath + wlSearch;
-  console.log(wlPath);
-  console.log(wlSearch);
-  console.log(wlPathSearch);
-  */
 
   // Get viewport
   var viewport;
@@ -94,12 +89,12 @@
   }
 
   var isFrontend = function() {
-    var allow_path = [
+    var allowPath = [
       "/civicrm/event/register",
       "/civicrm/event/info",
       "/civicrm/contribute/transact",
     ];
-    var result = $.inArray(path, allow_path) != -1 ? true : false;
+    var result = $.inArray(wlPath, allowPath) != -1 ? true : false;
 
     return result;
   }
