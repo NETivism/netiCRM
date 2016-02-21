@@ -77,7 +77,7 @@ textarea.md-textarea + .grippie {
   top: 3px;
   right: 0;
   font-family: 'Material-Design-Iconic-Font';
-  font-size: 20px;
+  font-size: 1rem;
   color: #9e9e9e;
 }
 
@@ -105,13 +105,15 @@ input.md-textfield,
   top: 5px;
   right: 0;
   font-weight: bold;
-  font-size: 30px;
+  font-size: 1.75rem;
   color: #666;
   z-index: 5;
 }
-.md-select-single select {
+.md-select-single select,
+.md-select-single select.form-select {
   position: relative;
   z-index: 10;
+  padding-right: 24px;
   -webkit-appearance: none;
 }
 .md-select-multiple select > option:hover,
@@ -121,4 +123,16 @@ input.md-textfield,
   cursor: pointer;
   color: #fff;
   background-color: #3F51B5;
+}
+
+/* mdl radio */
+.mdl-radio { margin-right: 16px; }
+
+/* mdl checkbox */
+.mdl-checkbox { margin-right: 16px; }
+
+/* crm tw address */
+.state_province-1-section .md-select-single {
+  width: 10rem;
+  margin-right: 15px;
 }
