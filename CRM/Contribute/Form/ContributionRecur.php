@@ -63,11 +63,10 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
     $this->_id = $this->get('id');
     $this->_contactID = $this->get('cid');
 
-    $query = "SELECT c.payment_processor_id FROM civicrm_contribution c WHERE c.contribution_recur_id = %1 AND c.payment_processor_id IS NOT NULL";
+    $query = "SELECT c.payment_processor_id FROM civicrm_contribution c WHERE c.contribution_recur_id = %1 AND c.payment_processor_id IS NOT NULL && c.payment_processor_id > 0";
     $sqlParams = array(1 => array($this->_id, 'Integer'));
     $dao = CRM_Core_DAO::executeQuery($query, $sqlParams);
-    $dao->fetch();
-    if($dao->id){
+    if($dao->N){
       $this->_online = TRUE;
     }
     else{
