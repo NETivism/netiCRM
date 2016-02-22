@@ -31,7 +31,7 @@
         <h3>{ts}Recurring contributions{/ts}</h3>
         <div class="crm-block crm-content-block crm-recurcontrib-view-block">
           <table class="crm-info-panel">
-            <tr><td class="label">{ts}Status{/ts}</td><td>{$recur.contribution_status}</td></tr>
+            <tr><td class="label">{ts}Recurring Contribution ID{/ts}</td><td>{$recur.id}</td></tr>
             <tr><td class="label">{ts}Amount{/ts}</td><td>{$recur.amount} {$recur.currency}</td></tr>
             <tr><td class="label">{ts}Frequency{/ts}</td><td>{ts}every{/ts} {$recur.frequency_interval} {ts}{$recur.frequency_unit}{/ts}</td></tr>
             <tr><td class="label">{ts}Installments{/ts}</td><td>{$recur.installments}</td></tr>
@@ -41,14 +41,17 @@
             {if $recur.cancel_date}<tr><td class="label">{ts}Cancel Date{/ts}</td><td>{$recur.cancel_date|crmDate}</td></tr>{/if}
             {if $recur.cancel_date}<tr><td class="label">{ts}End Date{/ts}</td><td>{$recur.end_date|crmDate}</td></tr>{/if}
             {if $recur.processor_id}<tr><td class="label">{ts}Processor ID{/ts}</td><td>{$recur.processor_id}</td></tr>{/if}
+            <tr><td class="label">{ts}Cycle Day{/ts}</td><td>{ts}every{/ts} {ts}{$recur.frequency_unit}{/ts} {$recur.cycle_day} {if $recur.frequency_unit == 'week'}{else}{ts}day{/ts}{/if}</td></tr>
+            {if $recur.contribution_status_id neq 3}<tr><td class="label">{ts}Next Sched Contribution{/ts}</td><td>{$recur.next_sched_contribution|crmDate}</td></tr>{/if}
+            <!--
             <tr><td class="label">{ts}Transaction ID{/ts}</td><td>{$recur.trxn_id}</td></tr>
             {if $recur.invoice_id}<tr><td class="label">{ts}Invoice ID{/ts}</td><td>{$recur.invoice_id}</td></tr>{/if}
-            <tr><td class="label">{ts}Cycle Day{/ts}</td><td>{$recur.cycle_day}</td></tr>
-            {if $recur.contribution_status_id neq 3}<tr><td class="label">{ts}Next Sched Contribution{/ts}</td><td>{$recur.next_sched_contribution|crmDate}</td></tr>{/if}
-            <tr><td class="label">{ts}Failure Count{/ts}</td><td>{$recur.failure_count}</td></tr>
-            {if $recur.invoice_id}<tr><td class="label">{ts}Failure Retry Date{/ts}</td><td>{$recur.next_sched_contribution|crmDate}</td></tr>{/if}
-            <tr><td class="label">{ts}Auto Renew{/ts}</td><td>{if $recur.auto_renew}{ts}Yes{/ts}{else}{ts}No{/ts}{/if}</td></tr>
+            {if $recur.failure_count}<tr><td class="label">{ts}Failure Count{/ts}</td><td>{$recur.failure_count}</td></tr>{/if}
+            {if $recur.next_sched_contribution}<tr><td class="label">{ts}Failure Retry Date{/ts}</td><td>{$recur.next_sched_contribution|crmDate}</td></tr>{/if}
+            {if $recur.auto_renew}<tr><td class="label">{ts}Auto Renew{/ts}</td><td>{if $recur.auto_renew}{ts}Yes{/ts}{else}{ts}No{/ts}{/if}</td></tr>{/if}
             {if $recur.payment_processor}<tr><td class="label">{ts}Payment processor:{/ts}</td><td>{$recur.payment_processor}</td></tr>{/if}
+            -->
+            <tr><td class="label">{ts}Recuring Status{/ts}</td><td>{$recur.contribution_status}</td></tr>
           </table>
           {* Recurring Contribution *}
           {if $rows}
@@ -59,7 +62,7 @@
                     {ts}No contributions have been recorded from this contact.{/ts}
             </div>
           {/if}
-          <div class="crm-submit-buttons"><input type="button" name='cancel' value="{ts}Done{/ts}" onclick="location.href='{crmURL p='civicrm/contact/view' q='action=browse&selectedChild=contribute'}';"/></div>
+          <div class="crm-submit-buttons"><input type="button" name='cancel' value="{ts}Back to Listings{/ts}" onclick="location.href='{crmURL p='civicrm/contact/view' q='action=browse&selectedChild=contribute'}';"/></div>
         </div>
     {/if}
 {/if}
@@ -106,40 +109,19 @@
       {if $action eq 1}{ts}New Recurring Payment{/ts}{else}{ts}Recurring contributions{/ts}{/if}
     </h3>
     <div class="crm-block crm-form-block crm-recurcontrib-form-block">
-    <div class="content crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
-      <table class="form-layout">
-        <tr>
-          <td class="label">{$form.amount.label}</td>
-            <td>
-              {$form.amount.html}
-            </td>
-        </tr>
-        <tr>
-          <td class="label">{$form.currency.label}</td>
-            <td>
-              {$form.currency.html}
-            </td>
-        </tr>
-        <tr>
-          <td class="label">{$form.frequency_interval.label}</td>
-            <td>
-              {$form.frequency_interval.html}
-            </td>
-        </tr>
-        <tr>
-          <td class="label">{$form.frequency_unit.label}</td>
-            <td>
-              {$form.frequency_unit.html}
-            </td>
-        </tr>
-        <tr>
-          <td class="label">{$form.cycle_day.label}</td>
-            <td>
-              {$form.cycle_day.html}<br />
-            </td>
-        </tr>
-      </table>
-
+      {foreach from=$form key=name item=ele}
+      {if $ele|is_array && $name != 'buttons' && !$name|strstr:"_time"}
+      <div class="crm-section">
+        <div class="label">{$ele.label}</div>
+        <div class="content">
+          {$ele.html}
+          {if name == 'contribution_status_id' && $ele.freeze}
+            <div class="description"></div>
+          {/if}
+        </div>
+      </div>
+      {/if}
+      {/foreach}
       <div class="crm-section recurcontrib-buttons-section no-label">
         <div class="content crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
         <div class="clear"></div> 
