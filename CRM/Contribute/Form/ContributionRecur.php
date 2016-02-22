@@ -59,7 +59,9 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
    * @var int
    * @public
    */
-  public $_contactID; function preProcess() {
+  public $_contactID;
+
+  function preProcess() {
     $this->_id = $this->get('id');
     $this->_contactID = $this->get('cid');
 
