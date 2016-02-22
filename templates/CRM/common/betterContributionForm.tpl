@@ -8,7 +8,7 @@ cj(function($){
     //var OddOrEven = $('.custom_{/literal}{$receiptTitle}{literal}-section').attr('class').match(/crm-odd|crm-even/)[0];
     //$('.receipt_type').addClass(OddOrEven);
 
-    $('<div><input type="checkbox" name="same_as_post" id="same-as"><label for="same-as">{/literal}{ts}Same as Contributor{/ts}{literal}</label></div>')
+    $('<div><input type="checkbox" name="same_as_post" id="same-as" novalidate="novalidate"><label for="same-as">{/literal}{ts}Same as Contributor{/ts}{literal}</label></div>')
     .insertBefore($('#custom_{/literal}{$receiptTitle}{literal}'));
 
     $('#same-as').change(updateName);
