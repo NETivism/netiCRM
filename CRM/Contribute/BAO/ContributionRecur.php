@@ -303,7 +303,7 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
    */
   static function setIsActive($id, $is_active) {
     if (!$is_active) {
-      return self::cancelRecurContribution($id, CRM_Core_DAO::$_nullObject, 3);
+      return self::cancelRecurContribution($id, CRM_Core_DAO::$_nullObject, 2);
     }
     return FALSE;
   }
