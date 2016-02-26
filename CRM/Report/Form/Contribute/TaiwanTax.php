@@ -225,9 +225,9 @@ class CRM_Report_Form_Contribute_TaiwanTax extends CRM_Report_Form {
     $this->_columnHeaders = array();
     $this->_columnSort = array(
       'receive_date' => '捐贈年度',
-      $this->_receiptSerial => '捐贈者身分證統一編號',
-      $this->_receiptTitle => '捐贈者姓名',
       'total_amount' => '捐款金額',
+      $this->_receiptSerial => '捐贈者身分證統一編號',
+      $this->_receiptTitle => '受贈者名稱',
     );
     foreach($this->_columnSort as $c => $name){
       foreach($columnHeaders as $header => $value){
