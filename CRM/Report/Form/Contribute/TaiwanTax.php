@@ -207,7 +207,7 @@ class CRM_Report_Form_Contribute_TaiwanTax extends CRM_Report_Form {
   }
 
   function groupBy(){
-    $this->_groupBy = " GROUP BY {$this->_aliases['civicrm_contact']}.id ";
+    $this->_groupBy = " GROUP BY (CASE WHEN {$this->_aliases['civicrm_contact']}.legal_identifier IS NULL OR {$this->_aliases['civicrm_contact']}.legal_identifier = '' THEN {$this->_aliases['civicrm_contact']}.id ELSE {$this->_aliases['civicrm_contact']}.legal_identifier END)";
   }
 
   function orderBy() {
