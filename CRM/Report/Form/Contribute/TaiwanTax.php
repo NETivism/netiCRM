@@ -171,7 +171,12 @@ class CRM_Report_Form_Contribute_TaiwanTax extends CRM_Report_Form {
             CRM_Utils_Array::value($fieldName, $this->_params['fields'])
           ) {
             // only include statistics columns if set
-            $select[] = "{$field['dbAlias']} as {$tableName}_{$fieldName}";
+            if($fieldName == 'total_amount'){
+              $select[] = "SUM({$field['dbAlias']}) as {$tableName}_{$fieldName}";
+            }
+            else{
+              $select[] = "{$field['dbAlias']} as {$tableName}_{$fieldName}";
+            }
             $columnHeaders["{$tableName}_{$fieldName}"]['type'] = $field['type'];
             $columnHeaders["{$tableName}_{$fieldName}"]['title'] = $field['title'];
           }
@@ -202,7 +207,7 @@ class CRM_Report_Form_Contribute_TaiwanTax extends CRM_Report_Form {
   }
 
   function groupBy(){
-    $this->_groupBy = " GROUP BY {$this->_aliases['civicrm_contact']}.id, {$this->_aliases['civicrm_contribution']}.id ";
+    $this->_groupBy = " GROUP BY {$this->_aliases['civicrm_contact']}.id ";
   }
 
   function orderBy() {
