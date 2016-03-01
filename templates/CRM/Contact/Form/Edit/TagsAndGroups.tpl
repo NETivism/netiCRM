@@ -43,12 +43,14 @@
 			    {if $k|is_numeric}
 				<tr class={cycle values="'odd-row','even-row'" name=$key} id="crm-tagRow{$k}">
 				    <td>
-					<strong>{$it.html}</strong><br />
-					{if $item.$k.description}
-					    <div class="description">
-						{$item.$k.description}
-					    </div>
-					{/if}
+					    <label>
+              {$it.html}
+              {if $item.$k.description}
+					    <span class="description">
+						   ( {$item.$k.description} )
+					    </span>
+              {/if}
+              </label>
 				    </td>
 				</tr>
 			    {/if}
