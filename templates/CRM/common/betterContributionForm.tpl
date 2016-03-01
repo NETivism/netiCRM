@@ -16,10 +16,24 @@ cj(function($){
       if($('#r_person').is(':checked')){
         $('#custom_{/literal}{$receiptTitle}{literal}').attr('placeholder',"{/literal}{ts}Contact Name{/ts}{literal}");
         $('#custom_{/literal}{$receiptSerial}{literal}').attr('placeholder',"{/literal}{ts}Legal Identifier{/ts}{literal}");
+        $('#custom_{/literal}{$receiptSerial}{literal}').off("keyup").keyup(function(){
+          var value = $(this).val();
+          while($(this).next().attr('class')=='error'){
+            $(this).next().remove();
+          }
+          console.log(value);
+          if(validTWID(value)){
+            $(this).removeClass('error');
+          }else{
+            $(this).addClass('error').parent().append('<label for="custom_{/literal}{$receiptSerial}{literal}" class="error" style="padding-left: 10px;">{/literal}{ts}Please enter correct Data ( in valid format ).{/ts}{literal}</label>');
+          }
+        })
+        
       }
       if($('#r_company').is(':checked')){
         $('#custom_{/literal}{$receiptTitle}{literal}').attr('placeholder',"{/literal}{ts}Organization{/ts}{literal}");
         $('#custom_{/literal}{$receiptSerial}{literal}').attr('placeholder',"{/literal}{ts}Sic Code{/ts}{literal}");
+        $('#custom_{/literal}{$receiptSerial}{literal}').off("keyup")
       }
     });
   }
@@ -203,6 +217,36 @@ items += "<input name='receipt_name' type='radio' id='r_name_custom' ><label for
   }
 
 });
+
+function validTWID(value){
+  value = value.toUpperCase();
+  var tab = "ABCDEFGHJKLMNPQRSTUVXYWZIO";
+  var A1 = new Array (1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,3,3,3,3,3,3 );
+  var A2 = new Array (0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5 );
+  var Mx = new Array (9,8,7,6,5,4,3,2,1,1);
+
+  if ( value.length != 10 ){
+    return false;
+  }
+  var i = tab.indexOf( value.charAt(0) );
+  if ( i == -1 ){
+    return false;
+  }
+  var sum = A1[i] + A2[i]*9;
+
+  for( i=1; i<10; i++ ){
+    var v = parseInt( value.charAt(i) );
+    if ( isNaN(v) ){
+      return false;
+    }
+    sum = sum + v * Mx[i];
+  }
+  if ( sum % 10 != 0 ){
+    return false;
+  }
+  return true;
+}
+
 
 {/literal}
 </script>
