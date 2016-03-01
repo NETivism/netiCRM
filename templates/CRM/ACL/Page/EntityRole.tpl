@@ -73,7 +73,6 @@
 </div>
 {elseif $action ne 1 and $action ne 2 and $action ne 8}
     <div class="messages status">
-         <img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}"/>
         {capture assign=crmURL}{crmURL q="action=add&reset=1"}{/capture}
         {ts 1=$crmURL}There are no Role Assignments. You can <a href='%1'>add one</a> now.{/ts}
     </div>    

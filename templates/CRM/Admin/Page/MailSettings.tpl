@@ -75,7 +75,6 @@
 </div>
 {else}
     <div class="messages status">
-        <img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}"/>
         {capture assign=crmURL}{crmURL p='civicrm/admin/mailSettings' q="action=add&reset=1"}{/capture}
         {ts 1=$crmURL}There are no Mail Settings present. You can <a href='%1'>add one</a>.{/ts} 
     </div>    

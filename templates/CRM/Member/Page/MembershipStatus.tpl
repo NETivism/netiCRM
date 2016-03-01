@@ -76,7 +76,7 @@
 {else}
   {if $action ne 1}
     <div class="messages status">
-         <img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}"/>{ts 1=$crmURL}There are no custom membership status entered. You can <a href='%1'>add one</a>.{/ts}
+         {ts 1=$crmURL}There are no custom membership status entered. You can <a href='%1'>add one</a>.{/ts}
     </div>    
   {/if}
 {/if}

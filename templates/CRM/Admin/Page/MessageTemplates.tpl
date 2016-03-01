@@ -158,7 +158,6 @@
 
 {elseif $action ne 1 and $action ne 2 and $action ne 4 and $action ne 8}
   <div class="messages status">
-      <img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}"/>
       {ts 1=$crmURL}There are no Message Templates entered. You can <a href='%1'>add one</a>.{/ts}
   </div>
 {/if}

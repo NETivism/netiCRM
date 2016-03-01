@@ -79,7 +79,6 @@
     {else}
       {if $action ne 1}
         <div class="messages status">
-       	    <img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}"/>
             {capture assign=crmURL}{crmURL p='civicrm/admin/member/membershipType' q="action=add&reset=1"}{/capture}{ts 1=$crmURL}There are no membership types entered. You can <a href='%1'>add one</a>.{/ts}
         </div>    
       {/if}

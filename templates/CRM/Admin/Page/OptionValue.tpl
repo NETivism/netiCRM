@@ -79,7 +79,6 @@
 </div>
 {elseif $action ne 1}
     <div class="messages status">
-        <img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}"/>
         {capture assign=crmURL}{crmURL p='civicrm/admin/optionValue' q="action=add&reset=1&gid=$gid"}{/capture}
         {ts 1=$crmURL}There are no option choices entered for this option group. You can <a href='%1'>add one</a>.{/ts}
     </div>    

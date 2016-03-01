@@ -73,7 +73,6 @@
 </div>
 {else}
     <div class="messages status">
-          <img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}"/>
         {capture assign=crmURL}{crmURL p='civicrm/admin/locationType' q="action=add&reset=1"}{/capture}
         {ts 1=$crmURL}There are no Location Types entered for this Contact. You can <a href='%1'>add one</a>.{/ts}
     </div>    

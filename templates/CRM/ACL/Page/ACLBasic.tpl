@@ -70,11 +70,8 @@
 </div>
 {elseif $action ne 1 and $action ne 2 and $action ne 8}
     <div class="messages status">
-    <dl>
-        <dt><img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}"/></dt>
-        {capture assign=crmURL}{crmURL q="action=add&reset=1"}{/capture}
-        <dd>{ts 1=$crmURL}There are no ACLs entered. You can <a href='%1'>add one</a>.{/ts}</dd>
-        </dl>
+      {capture assign=crmURL}{crmURL q="action=add&reset=1"}{/capture}
+      {ts 1=$crmURL}There are no ACLs entered. You can <a href='%1'>add one</a>.{/ts}
     </div>    
 {/if}
 </div>
