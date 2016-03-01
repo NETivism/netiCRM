@@ -40,7 +40,13 @@ var options {ajaxURL:"{$config->userFrameworkResourceURL}";
 (function($){
       var defaults = {
     	  success: function(result,settings){
-    	      var successMsg = 'Saved &nbsp; <a href="#" id="closerestmsg">'+ settings.closetxt +'</a>'; 
+    	      var successMsg = '<a href="#" id="closerestmsg">'+ settings.closetxt +'</a> '; 
+            if(settings.successtxt){
+              successMsg += settings.successtxt;
+            }
+            else{
+              successMsg += 'Saved';
+            }
     	      $(settings.msgbox).addClass('msgok').html( successMsg ).show();
     	      $("#closerestmsg").click(function(){$(settings.msgbox).fadeOut("slow");return false;});
     	      return true;
@@ -60,7 +66,7 @@ var options {ajaxURL:"{$config->userFrameworkResourceURL}";
     	    }
     	      return settings.success.call(this,result,settings);
     	  },
-    	  closetxt: "<div class='icon close-icon' title='Close'>[X]</div>",
+    	  closetxt: "<span class='zmdi zmdi-close' title='Close'></span>",
     	  ajaxURL: "/civicrm/ajax/rest",
     	  msgbox: '#restmsg'
       };
@@ -100,7 +106,6 @@ var options {ajaxURL:"{$config->userFrameworkResourceURL}";
           field :'name',
           skip : ['id','contact_id','contact_type','contact_is_deleted',"email_id",'address_id', 'country_id'],
           result: function(data){
-               console.log(data);
           return false;
         },
     	  formatItem: function(data,i,max,value,term){
