@@ -5,3 +5,69 @@
 ** if you don't want to modify system provided
 ** civicrm.css.
 */
+
+/* crm messages */
+#crm-container div.messages,
+#crm-container div.status,
+#crm-container div.crm-error,
+#crm-container #help {
+  position: relative;
+  margin: 0 0 8px 0;
+  padding: 12px 12px 12px 55px;
+  border: none;
+  border-radius: 0;
+  color: #fff;
+  line-height: 1.5;
+  font-size: 1rem;
+}
+#crm-container div.messages::before,
+#crm-container div.status::before,
+#crm-container div.crm-error::before,
+#crm-container #help::before {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 3px 0 0 15px;
+  font-family: 'Material-Design-Iconic-Font';
+  font-size: 30px;
+}
+#crm-container div.messages .icon,
+#crm-container div.status .icon,
+#crm-container div.crm-error .icon,
+#crm-container #help .icon {
+  display: none;
+}
+#crm-container div.messages a,
+#crm-container div.status a,
+#crm-container div.crm-error a,
+#crm-container #help a {
+  color: #fff;
+  text-decoration: underline;
+}
+
+/* crm messages: status */
+#crm-container div.messages,
+#crm-container div.status {
+  background: #2196f3;
+}
+#crm-container div.messages::before,
+#crm-container div.status::before {
+  content: "\f1f7";
+}
+
+/* crm messages: error */
+#crm-container div.crm-error {
+  background: #ff1744;
+}
+#crm-container div.crm-error::before {
+  content: "\f135";
+}
+
+/* crm messages: help */
+#crm-container #help {
+  background-color: #4b6572;
+}
+#crm-container #help::before {
+  content: "\f1f5";
+}
