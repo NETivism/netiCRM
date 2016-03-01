@@ -71,3 +71,10 @@
 #crm-container #help::before {
   content: "\f1f5";
 }
+
+/* crm form element */
+.crm-form-textfield,
+.crm-form-select {
+  display: inline-block;
+  vertical-align: middle;
+}
