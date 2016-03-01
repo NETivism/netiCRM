@@ -27,7 +27,7 @@
 <fieldset>
 {if $rows}
     {foreach from=$rows item=customTitle key=csid}
-        <div class="action-link">
+        <div class="action-link-button">
             <a href="{crmURL p="civicrm/contact/search/custom" q="csid=`$csid`&reset=1"}" title="{ts}Use this search{/ts}">&raquo; {$customTitle}</a>
         </div>
     {/foreach}

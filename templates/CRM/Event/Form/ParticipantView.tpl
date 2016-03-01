@@ -26,7 +26,7 @@
 {* View existing event registration record. *}
 <div class="crm-block crm-content-block crm-event-participant-view-form-block">
     <h3>{ts}View Participant{/ts}</h3>
-    <div class="action-link">
+    <div class="action-link-button">
         <div class="crm-submit-buttons">
             {if call_user_func(array('CRM_Core_Permission','check'), 'edit event participants')}
 	       {assign var='urlParams' value="reset=1&id=$id&cid=$contact_id&action=update&context=$context&selectedChild=event"}

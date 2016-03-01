@@ -33,8 +33,8 @@
   {/if}
 <div class="crm-block crm-content-block">
   {if $action NEQ 1 AND $action NEQ 2 AND $permission EQ 'edit'}
-        <div class="action-link">
-            <a accesskey="N" href="{crmURL p='civicrm/contact/view/rel' q="cid=`$contactId`&action=add&reset=1"}" class="button"><span><div class="icon add-icon"></div>{ts}Add Relationship{/ts}</span></a>
+        <div class="action-link-button">
+            <a accesskey="N" href="{crmURL p='civicrm/contact/view/rel' q="cid=`$contactId`&action=add&reset=1"}" class="button"><span><i class="zmdi zmdi-plus-circle-o"></i>{ts}Add Relationship{/ts}</span></a>
         </div>
   {/if}
   {include file="CRM/common/jsortable.tpl" useAjax=0}   

@@ -161,7 +161,7 @@
  
     {if $hasAccessToAllCases}
     <div class="crm-submit-buttons">
-      <a class="button" href="#" onClick="Javascript:addRole();return false;"><span><div class="icon add-icon"></div>{ts}Add new role{/ts}</span></a>
+      <a class="button" href="#" onClick="Javascript:addRole();return false;"><span><i class="zmdi zmdi-plus-circle-o"></i>{ts}Add new role{/ts}</span></a>
     </div>
     {/if}
 
@@ -362,7 +362,7 @@ function createRelationship( relType, contactID, relID, rowNumber, relTypeName )
 			   var errorMsg = '{/literal}{ts 1="' + relTypeName + '" 2="' + relTypeAdminLink + '" }The relationship type definition for the %1 case role is not valid. Both sides of the relationship type must be an Individual or a subtype of Individual. You can review and edit relationship types at <a href="%2">Administer >> Option Lists >> Relationship Types</a>{/ts}{literal}.'; 
 
 			   //display error message.
-			   var imageIcon = "<a href='#'  onclick='cj( \"#restmsg\" ).hide( ); return false;'>" + '<div class="ui-icon ui-icon-close" style="float:left"></div>' + '</a>';
+			   var imageIcon = "<a href='#'  onclick='cj( \"#restmsg\" ).hide( ); return false;'>" + '<span class="zmdi zmdi-close"></span>' + '</a>';
 			   cj( '#restmsg' ).html( imageIcon + errorMsg  ).show( );
 			}
 
@@ -453,7 +453,7 @@ cj(document).ready(function(){
   {if $clientRelationships}
     <div class="crm-submit-buttons">
     <a class="button" href="#" onClick="window.location='{crmURL p='civicrm/contact/view/rel' q="action=add&reset=1&cid=`$contactId`&caseID=`$caseID`"}'; return false;">
-    <span><div class="icon add-icon"></div>{ts}Add client relationship{/ts}</a></span>
+    <span><i class="zmdi zmdi-plus-circle-o"></i>{ts}Add client relationship{/ts}</a></span>
     </div>
 	
     <table class="report-layout otherRelationships">
@@ -486,7 +486,7 @@ cj(document).ready(function(){
   {if $globalRelationships}
     <div class="crm-submit-buttons">
         <a class="button" href="#"  onClick="window.location='{crmURL p='civicrm/group/search' q="reset=1&context=amtg&amtgID=`$globalGroupInfo.id`"}'; return false;">
-        <span><div class="icon add-icon"></div>{ts 1=$globalGroupInfo.title}Add members to %1{/ts}</a></span>
+        <span><i class="zmdi zmdi-plus-circle-o"></i>{ts 1=$globalGroupInfo.title}Add members to %1{/ts}</a></span>
     </div>
 	
     <table class="report-layout globalrelationship">
@@ -604,7 +604,7 @@ function addRole() {
 			  				     var errorMsg = '{/literal}{ts 1="' + relTypeName + '" 2="' + relTypeAdminLink + '"  }The relationship type definition for the %1 case role is not valid. Both sides of the relationship type must be an Individual or a subtype of Individual. You can review and edit relationship types at <a href="%2">Administer >> Option Lists >> Relationship Types</a>{/ts}{literal}.'; 
 
 			   				     //display error message.
-			   				     var imageIcon = "<a href='#'  onclick='cj( \"#restmsg\" ).hide( ); return false;'>" + '<div class="ui-icon ui-icon-close" style="float:left"></div>' + '</a>';
+                     var imageIcon = "<a href='#'  onclick='cj( \"#restmsg\" ).hide( ); return false;'>" + '<span class="zmdi zmdi-close"></span>' + '</a>';
 			   				     cj( '#restmsg' ).html( imageIcon + errorMsg  ).show( );  
 							}
 					  	    }

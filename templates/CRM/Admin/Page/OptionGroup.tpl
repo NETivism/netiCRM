@@ -60,7 +60,7 @@
         {/strip}
 
         {if $action ne 1 and $action ne 2}
-	    <div class="action-link">
+	    <div class="action-link-button">
     	<a href="{crmURL q="action=add&reset=1"}" id="newOptionGroup">&raquo; {ts}New Option Group{/ts}</a>
         </div>
         {/if}

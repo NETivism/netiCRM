@@ -34,37 +34,37 @@
 {else}
 
 <div class="crm-actions-ribbon">
-                    <ul id="actions">
+                    <ul class="actions">
                     	{* CRM-4418 *}
                         {* user should have edit permission to delete contact *}
                         {if (call_user_func(array('CRM_Core_Permission','check'), 'delete contacts') and $permission == 'edit') or (call_user_func(array('CRM_Core_Permission','check'), 'access deleted contacts') and $is_deleted)}
                         {if call_user_func(array('CRM_Core_Permission','check'), 'access deleted contacts') and $is_deleted}
-                        <li class="crm-delete-action crm-contact-restore">
-                        <a href="{crmURL p='civicrm/contact/view/delete' q="reset=1&cid=$contactId&restore=1"}" class="delete button" title="{ts}Restore{/ts}">
-                        <span><div class="icon restore-icon"></div>{ts}Restore from Trash{/ts}</span>
-                        </a>
+                        <li class="crm-delete-action crm-contact-restore action-link-button">
+                          <a href="{crmURL p='civicrm/contact/view/delete' q="reset=1&cid=$contactId&restore=1"}" class="delete button" title="{ts}Restore{/ts}">
+                            <i class="zmdi zmdi-undo"></i>{ts}Restore from Trash{/ts}
+                          </a>
                         </li>
                         
-                        <li class="crm-delete-action crm-contact-permanently-delete">
-                        <a href="{crmURL p='civicrm/contact/view/delete' q="reset=1&delete=1&cid=$contactId&skip_undelete=1"}" class="delete button" title="{ts}Delete Permanently{/ts}">
-                        <span><div class="icon delete-icon"></div>{ts}Delete Permanently{/ts}</span>
-                        </a>
+                        <li class="crm-delete-action crm-contact-permanently-delete action-link-button">
+                          <a href="{crmURL p='civicrm/contact/view/delete' q="reset=1&delete=1&cid=$contactId&skip_undelete=1"}" class="delete button" title="{ts}Delete Permanently{/ts}">
+                            <i class="zmdi zmdi-delete"></i>{ts}Delete Permanently{/ts}
+                          </a>
                         </li>
                         {else}
-                        <li class="crm-delete-action crm-contact-delete">
-                        <a href="{crmURL p='civicrm/contact/view/delete' q="reset=1&delete=1&cid=$contactId"}" class="delete button" title="{ts}Delete{/ts}">
-                        <span><div class="icon delete-icon"></div>{ts}Delete{/ts}</span>
-                        </a>
+                        <li class="crm-delete-action crm-contact-delete action-link-button">
+                          <a href="{crmURL p='civicrm/contact/view/delete' q="reset=1&delete=1&cid=$contactId"}" class="delete button" title="{ts}Delete{/ts}">
+                            <i class="zmdi zmdi-delete"></i>{ts}Delete{/ts}
+                          </a>
                         </li>
                         {/if}
                         {/if}
                     
                     	{* Include the Actions button with dropdown if session has 'edit' permission *}
                         {if $permission EQ 'edit' and !$isDeleted}
-                        <li class="crm-contact-activity">
+                        <li class="crm-contact-activity action-link-button">
                             {include file="CRM/Contact/Form/ActionsButton.tpl"}
                         </li>
-                        <li>
+                        <li class="action-link-button">
 			{assign var='urlParams' value="reset=1&action=update&cid=$contactId"}
 		        {if $searchKey}
 		            {assign var='urlParams' value="reset=1&action=update&cid=$contactId&key=$searchKey"}
@@ -74,7 +74,7 @@
 			{/if}
 			
                         <a href="{crmURL p='civicrm/contact/add' q=$urlParams}" class="edit button" title="{ts}Edit{/ts}">
-                        <span><div class="icon edit-icon"></div>{ts}Edit{/ts}</span>
+                          <i class="zmdi zmdi-edit"></i>{ts}Edit{/ts}
                         </a>
                         </li>
                         {/if}
@@ -82,7 +82,7 @@
                         {if $groupOrganizationUrl}
                         <li class="crm-contact-associated-groups">
                         <a href="{$groupOrganizationUrl}" class="associated-groups button" title="{ts}Associated Multi-Org Group{/ts}">
-                        <span><div class="icon associated-groups-icon"></div>{ts}Associated Multi-Org Group{/ts}</span>
+                          <i class="zmdi zmdi-accounts-alt"></i>{ts}Associated Multi-Org Group{/ts}
                         </a>   
                         </li>
                         {/if}

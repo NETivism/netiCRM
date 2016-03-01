@@ -79,7 +79,7 @@
         </table>
         {/strip}
         {if $addMoreFields}
-        <div class="action-link">
+        <div class="action-link-button">
             <a href="{crmURL q="reset=1&action=add&fid=$fid"}" class="button"><span>&raquo; {ts 1=$fieldTitle}New Option for '%1'{/ts}</span></a>
         </div>
 	{/if}

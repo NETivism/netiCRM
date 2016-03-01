@@ -56,8 +56,8 @@
         {/strip}
     </div>
     {if $products ne null }
-        <div class="action-link">
-            <a href="{crmURL p='civicrm/admin/contribute/addProductToPage' q="reset=1&action=update&id=$id"}">&raquo; {ts}Offer Another Premium on this Contribution Page{/ts}</a>
+        <div class="action-link-button">
+            <a class="button" href="{crmURL p='civicrm/admin/contribute/addProductToPage' q="reset=1&action=update&id=$id"}">{ts}Offer Another Premium on this Contribution Page{/ts}</a>
         </div>
 	{/if}
 </div>

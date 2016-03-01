@@ -63,7 +63,7 @@
           <td>{$form.timeInputFormat.html}</td>
        </tr>
    </table>
-      <div class="action-link">
+      <div class="action-link-button">
     	<a href="{crmURL p="civicrm/admin/setting/preferences/date" q="reset=1"}" id="advDateSetting" title="{ts}Manage available date ranges and input formats for different types of date fields.{/ts}">&raquo; {ts}Advanced Date Input Settings{/ts}</a>
     </div>
 </fieldset>

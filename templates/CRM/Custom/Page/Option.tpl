@@ -62,8 +62,8 @@
         </table>
         {/strip}
         
-        <div class="action-link">
-            <a href="{crmURL q="reset=1&action=add&fid=$fid&gid=$gid"}" class="button"><span><div class="icon add-icon"></div> {ts 1=$fieldTitle}Add Option for '%1'{/ts}</span></a>
+        <div class="action-link-button">
+            <a href="{crmURL q="reset=1&action=add&fid=$fid&gid=$gid"}" class="button"><span><i class="zmdi zmdi-plus-circle-o"></i> {ts 1=$fieldTitle}Add Option for '%1'{/ts}</span></a>
         </div>
 
         </div>

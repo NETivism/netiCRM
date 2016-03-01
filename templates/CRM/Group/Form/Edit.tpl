@@ -104,7 +104,7 @@
 	
     <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
     {if $action neq 1}
-	<div class="action-link">
+	<div class="action-link-button">
 	    <a href="{$crmURL}">&raquo; {ts}Contacts in this Group{/ts}</a>
 	    {if $group.saved_search_id} 
 	        <br />

@@ -38,7 +38,7 @@
       </div>
     {else} {* extEnabled *}
       {if $action ne 1 and $action ne 2}
-          <div class="action-link">
+          <div class="action-link-button">
               <a href="{crmURL q="reset=1"}" id="new" class="button"><span><div class="icon refresh-icon"></div>{ts}Refresh{/ts}</span></a>
           </div>
       {/if}
@@ -142,7 +142,7 @@
           {/if}
 
           {if $action ne 1 and $action ne 2}
-              <div class="action-link">
+              <div class="action-link-button">
                 <a href="{crmURL q="reset=1"}" id="new" class="button"><span><div class="icon refresh-icon"></div>{ts}Refresh{/ts}</span></a>
               </div>
           {/if}

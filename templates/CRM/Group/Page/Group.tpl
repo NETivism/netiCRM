@@ -25,8 +25,8 @@
 *}
 {* Actions: 1=add, 2=edit, browse=16, delete=8 *}
 {if $action ne 1 and $action ne 2 and $action ne 8 and $groupPermission eq 1}
-<div class="crm-submit-buttons">
-    <a accesskey="N" href="{crmURL p='civicrm/group/add' q='reset=1'}" id="newGroup" class="button"><span><div class="icon add-icon"></div>{ts}Add Group{/ts}</span></a><br/>
+<div class="crm-actions-ribbon action-link-button">
+    <a accesskey="N" href="{crmURL p='civicrm/group/add' q='reset=1'}" id="newGroup" class="button"><i class="zmdi zmdi-plus-circle-o"></i>{ts}Add Group{/ts}</a>
 </div>
 {/if} {* action ne add or edit *}
 {if $action ne 2 AND $action ne 8}	
@@ -114,8 +114,8 @@
 {/if}
 </div>
 {if $action ne 1 and $action ne 2 and $action ne 8 and $groupPermission eq 1}
-<div class="crm-submit-buttons">
-        <a accesskey="N" href="{crmURL p='civicrm/group/add' q='reset=1'}" id="newGroup" class="button"><span><div class="icon add-icon"></div>{ts}Add Group{/ts}</span></a><br/>
+<div class="crm-actions-ribbon action-link-button">
+        <a accesskey="N" href="{crmURL p='civicrm/group/add' q='reset=1'}" id="newGroup" class="button"><i class="zmdi zmdi-plus-circle-o"></i>{ts}Add Group{/ts}</a>
 </div>
 {/if} {* action ne add or edit *}
 </div>

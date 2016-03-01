@@ -72,7 +72,7 @@
     {/strip}
 
     {if $action ne 1 and $action ne 2}
-	    <div class="action-link">
+	    <div class="action-link-button">
     	    <a href="{crmURL q="action=add&reset=1&gid=$gid"}" id="newOptionValue">&raquo; {ts}New Option Value{/ts}</a>
         </div>
     {/if}

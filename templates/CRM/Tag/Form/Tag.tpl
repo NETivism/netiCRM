@@ -33,8 +33,8 @@
 </style>
 <script type="text/javascript">
 
-options = {ldelim} ajaxURL:"{crmURL p='civicrm/ajax/rest' h=0}"
-       ,closetxt:'<div class="ui-icon ui-icon-close" style="float:left"></div>'
+var options = {ldelim} ajaxURL:"{crmURL p='civicrm/ajax/rest' h=0}"
+       ,successtxt:"{ts}updated{/ts}"
       {rdelim} 
 entityID={$entityID};
 entityTable='{$entityTable}';

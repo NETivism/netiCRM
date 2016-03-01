@@ -28,8 +28,8 @@
 {capture assign=icalFeed}{crmURL p='civicrm/event/ical' q="reset=1&page=1" fe=1}{/capture}
 {capture assign=rssFeed}{crmURL p='civicrm/event/ical' q="reset=1&page=1&rss=1" fe=1}{/capture}
 
-<div class="action-link">
-  <a accesskey="N" href="{$newEventURL}" id="newManageEvent" class="button"><span><div class="icon add-icon"></div>{ts}Add Event{/ts}</span></a>
+<div class="crm-actions-ribbon action-link-button">
+  <a accesskey="N" href="{$newEventURL}" id="newManageEvent" class="button"><i class="zmdi zmdi-plus-circle-o"></i>{ts}Add Event{/ts}</a>
   <div class="float-right top-icon">
     <a href="{$rssFeed}" target="_blank" title="{ts}Get RSS 2.0 feed for current and future public events.{/ts}"><i class="fa fa-rss-square"></i>RSS</a> 
     <a href="{$icalFeed}" target="_blank" title="{ts}Get iCalendar feed for current and future public events.{/ts}"><i class="fa fa-calendar"></i>iCAL</a>

@@ -128,8 +128,8 @@
               {/if}
 
             {if $action ne 1 and $action ne 2 and $type eq 'userTemplates'}
-              <div class="action-link">
-                <a href="{crmURL p='civicrm/admin/messageTemplates/add' q="action=add&reset=1"}" id="newMessageTemplates" class="button"><span><div class="icon add-icon"></div>{ts}Add Message Template{/ts}</span></a>
+              <div class="action-link-button">
+                <a href="{crmURL p='civicrm/admin/messageTemplates/add' q="action=add&reset=1"}" id="newMessageTemplates" class="button"><span><i class="zmdi zmdi-plus-circle-o"></i>{ts}Add Message Template{/ts}</span></a>
               </div>
               <div class="spacer"></div>
             {/if}

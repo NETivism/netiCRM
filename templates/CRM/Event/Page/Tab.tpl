@@ -41,10 +41,10 @@
         </p>
     </div>
     {if $action eq 16 and $permission EQ 'edit'}
-       <div class="action-link">
-           <a accesskey="N" href="{$newEventURL}" class="button"><span><div class="icon add-icon"></div>{ts}Add Event Registration{/ts}</span></a>
+       <div class="action-link-button">
+           <a accesskey="N" href="{$newEventURL}" class="button"><span><i class="zmdi zmdi-plus-circle-o"></i>{ts}Add Event Registration{/ts}</span></a>
             {if $accessContribution and $newCredit}
-                <a accesskey="N" href="{$newCreditURL}" class="button"><span><div class="icon add-icon"></div>{ts}Submit Credit Card Event Registration{/ts}</a></span>
+                <a accesskey="N" href="{$newCreditURL}" class="button"><span><i class="zmdi zmdi-plus-circle-o"></i>{ts}Submit Credit Card Event Registration{/ts}</a></span>
             {/if}
             <br/ ><br/ >
        </div>

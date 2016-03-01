@@ -41,8 +41,8 @@
         </p>
     </div>
 {if $action eq 16 and $permission EQ 'edit'}
-            <div class="action-link">
-            <a href="{$newGrantURL}" class="button"><span><div class="icon add-icon"></div>{ts}Add Grant{/ts}</span></a><br/><br/>
+            <div class="action-link-button">
+            <a href="{$newGrantURL}" class="button"><i class="zmdi zmdi-plus-circle-o"></i>{ts}Add Grant{/ts}</a>
             </div>
         {/if}
     {if $rows}

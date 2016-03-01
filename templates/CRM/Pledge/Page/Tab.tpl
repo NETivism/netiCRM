@@ -38,8 +38,8 @@
 </div>
 
 {if $action eq 16 and $permission EQ 'edit'}
-    <div class="action-link">
-       <a accesskey="N" href="{$newContribURL}" class="button"><span><div class="icon add-icon"></div>{ts}Add Pledge{/ts}</a></span>
+    <div class="action-link-button">
+       <a accesskey="N" href="{$newContribURL}" class="button"><span><i class="zmdi zmdi-plus-circle-o"></i>{ts}Add Pledge{/ts}</a></span>
        <br/><br/>
     </div>
 {/if}

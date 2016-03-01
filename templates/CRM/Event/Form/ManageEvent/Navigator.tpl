@@ -3,17 +3,17 @@
     	<ul id="actions">
       <li>
         <div class="action-wrapper">
-    	    <div class="action-link-button" id="crm-event-nav-link"><span><a href="{crmURL p='civicrm/event/search' q="reset=1&force=1&event=`$id`"}">{ts}Participant Count{/ts}<div class="icon dashboard-icon"></div></a></span></div>
+    	    <div class="action-link-button" id="crm-event-nav-link"><a href="{crmURL p='civicrm/event/search' q="reset=1&force=1&event=`$id`"}" class="button">{ts}Participant Count{/ts}<i class="icon dashboard-icon"></i></a></div>
         </div>
       </li>
       <li>
         <div class="action-wrapper">
-    	    <div class="action-link-button" id="crm-event-nav-link"><span><a href="{crmURL p='civicrm/participant/add' q="reset=1&action=add&context=standalone&eid=`$id`"}">{ts}Register New Participant{/ts}<div class="icon add-icon"></div></a></span></div>
+    	    <div class="action-link-button" id="crm-event-nav-link"><a href="{crmURL p='civicrm/participant/add' q="reset=1&action=add&context=standalone&eid=`$id`"}">{ts}Register New Participant{/ts}<i class="icon add-icon"></i></a></div>
         </div>
       </li>
       <li>
-        <div class="action-wrapper">
-    	    <div class="action-link-button" id="crm-eventsetting-link"><span>{ts}Configure{/ts}<div class="icon dropdown-icon"></div></div>
+        <div class="action-wrapper action-link-button">
+    	    <div calss="button" id="crm-eventsetting-link">{ts}Configure{/ts}<i class="zmdi zmdi-arrow-right-top zmdi-hc-rotate-90"></i></div>
           <div class="action-link-result ac_results" id="crm-eventsetting-list">
             <div class="action-link-result-inner crm-eventsetting-list-inner">
               <ul>
@@ -28,8 +28,8 @@
         </div>
       </li>
     	<li>
-        <div class="action-wrapper">
-    	    <div class="action-link-button" id="crm-event-links-link"><span><div class="icon dropdown-icon"></div>{ts}Event Links{/ts}</span></div>
+        <div class="action-wrapper action-link-button">
+    	    <div class="button" id="crm-event-links-link">{ts}Event Links{/ts}<i class="zmdi zmdi-arrow-right-top zmdi-hc-rotate-90"></i></div>
     	    <div class="action-link-result ac_results" id="crm-event-links-list">
     	      <div class="action-link-result-inner crm-event-links-list-inner">
               <ul>

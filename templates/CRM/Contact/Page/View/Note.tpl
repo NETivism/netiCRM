@@ -100,8 +100,8 @@
 {/if}
 
 {if $permission EQ 'edit' AND ($action eq 16 or $action eq 4 or $action eq 8)}
-   <div class="action-link">
-	 <a accesskey="N" href="{crmURL p='civicrm/contact/view/note' q="cid=`$contactId`&action=add"}" class="button"><span><div class="icon add-icon"></div>{ts}Add Note{/ts}</span></a>
+   <div class="action-link-button">
+	 <a accesskey="N" href="{crmURL p='civicrm/contact/view/note' q="cid=`$contactId`&action=add"}" class="button"><span><i class="zmdi zmdi-plus-circle-o"></i>{ts}Add Note{/ts}</span></a>
    </div>
    <div class="clear"></div>
 {/if}

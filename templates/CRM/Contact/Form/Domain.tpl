@@ -78,7 +78,7 @@
     <div class="spacer"></div>
     
     {if ($action eq 4)}
-    <div class="action-link">
+    <div class="action-link-button">
     <a href="{crmURL q="action=update&reset=1"}" id="editDomainInfo">&raquo; {ts}Edit Domain Information{/ts}</a>
     </div>
     {/if}

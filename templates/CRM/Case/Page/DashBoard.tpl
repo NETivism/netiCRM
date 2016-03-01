@@ -34,7 +34,7 @@
 
 <div class="crm-submit-buttons">
     {if $newClient and $allowToAddNewCase}	
-	    <a href="{$newCaseURL}" class="button"><span><div class="icon add-icon"></div> {ts}Add Case{/ts}</span></a>
+	    <a href="{$newCaseURL}" class="button"><span><i class="zmdi zmdi-plus-circle-o"></i> {ts}Add Case{/ts}</span></a>
     {/if}
     <div class="crm-case-dashboard-switch-view-buttons">
         {if $myCases}

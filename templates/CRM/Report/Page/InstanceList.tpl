@@ -53,7 +53,7 @@
 </div>
 
     {if $reportUrl}
-    <div class="action-link">
+    <div class="action-link-button">
 	<a href="{$reportUrl}" class="button"><span>&raquo; {ts}View All Reports{/ts}</span></a>
     </div>
     {/if}
