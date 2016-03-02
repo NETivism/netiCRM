@@ -47,13 +47,13 @@ var options {ajaxURL:"{$config->userFrameworkResourceURL}";
             else{
               successMsg += 'Saved';
             }
-    	      $(settings.msgbox).addClass('msgok').html( successMsg ).show();
+    	      $(settings.msgbox).addClass('messages status').html( successMsg ).show();
     	      $("#closerestmsg").click(function(){$(settings.msgbox).fadeOut("slow");return false;});
     	      return true;
     	  },
     	  error: function(result,settings){
           if ($(settings.msgbox).length>0)  {
-      		  $(settings.msgbox).addClass('msgnok').html(result.error_message);
+      		  $(settings.msgbox).addClass('messages crm-error').html(result.error_message);
           } else {
             alert (result.error_message);
           }
@@ -77,7 +77,7 @@ var options {ajaxURL:"{$config->userFrameworkResourceURL}";
     	  params ['action'] = action;
     	  params ['json'] = 1;
     	  var settings = $.extend({}, defaults, options);
-    	  $(settings.msgbox).removeClass('msgok').removeClass('msgnok').html("");
+    	  $(settings.msgbox).removeClass('messages status crm-error').html("");
         $.ajax({
           url: settings.ajaxURL,
           dataType: 'json',

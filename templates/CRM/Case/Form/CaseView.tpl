@@ -157,7 +157,7 @@
 	{ts}Case Roles{/ts}
  </div><!-- /.crm-accordion-header -->
  <div class="crm-accordion-body">
-    <span id="restmsg" class="msgok" style="display:none"></span>
+    <div id="restmsg" class="msgok" style="display:none"></div>
  
     {if $hasAccessToAllCases}
     <div class="crm-submit-buttons">

@@ -102,7 +102,7 @@ function initTagTree() {
 };
 {/literal}
 </script>
-<span id="restmsg" style="display:none"></span>
+<div id="restmsg" style="display:none"></div>
 <div id="Tag" class="view-content">
 <h3>{if !$hideContext}{ts}Tags{/ts}{/if}</h3>
     <p>
