@@ -31,13 +31,15 @@ cj(function($){
     });
 
     $('#Main').submit('#custom_{/literal}{$receiptSerial}{literal}',function(){
-      if($('#r_person').length>=1){
-        if($('#r_person').is(':checked')){
-          if(checkTWID()){
-            return true;
-          }else{
-            $(window).scrollTop($('#custom_{/literal}{$receiptSerial}{literal}').offset().top - $(window).height()/2);
-            return false;
+      if(isShowChecked()){
+        if($('#r_person').length>=1){
+          if($('#r_person').is(':checked')){
+            if(checkTWID()){
+              return true;
+            }else{
+              $(window).scrollTop($('#custom_{/literal}{$receiptSerial}{literal}').offset().top - $(window).height()/2);
+              return false;
+            }
           }
         }
       }
