@@ -353,6 +353,7 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
       }
 
       // add contribution status name
+      $row['id'] = $result->id;
       $row['contribution_status_name'] = CRM_Utils_Array::value($row['contribution_status_id'], $contributionStatuses);
 
       if ($result->is_pay_later && CRM_Utils_Array::value('contribution_status_name', $row) == 'Pending') {
@@ -434,6 +435,11 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
   public function &getColumnHeaders($action = NULL, $output = NULL) {
     if (!isset(self::$_columnHeaders)) {
       self::$_columnHeaders = array(
+        array(
+          'name' => ts('ID'),
+          'sort' => 'id',
+          'direction' => CRM_Utils_Sort::DONTCARE,
+        ),
         array(
           'name' => ts('Transaction ID'),
           'sort' => 'trxn_id',

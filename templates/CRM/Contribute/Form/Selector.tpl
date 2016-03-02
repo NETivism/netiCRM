@@ -58,12 +58,13 @@
   	<td>{$row.contact_type}</td>	
     	<td class="crm-search-display_name"><a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$row.contact_id`"}">{$row.sort_name}</a></td>
     {/if}
+    <td class="crm-contribution-id">{$row.id}</td>
     <td class="crm-contribution-trxn-id">{$row.trxn_id}</td>
     <td class="crm-contribution-receipt-id">{$row.receipt_id}</td>
     <td class="crm-contribution-instrument">{$row.payment_instrument}</td>
     <td class="right bold crm-contribution-amount"><span class="nowrap">{$row.total_amount|crmMoney:$row.currency}</span> {if $row.amount_level }<br /> ({$row.amount_level}){/if}
     {if $row.contribution_recur_id}
-     <br /> {ts}(Recurring Contribution){/ts}
+     <br /><a href="{crmURL p='civicrm/contact/view/contributionrecur' q="reset=1&id=`$row.contribution_recur_id`&cid=`$row.contact_id`"}">{ts}(Recurring Contribution){/ts}</a>
     {/if}
     </td>
     <td class="crm-contribution-type crm-contribution-type_{$row.contribution_type_id}">{$row.contribution_type}</td>

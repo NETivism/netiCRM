@@ -2405,7 +2405,7 @@ WHERE c.id = $id";
         // get primary location email if no email exist( for billing location).
         if($ids['component'] == 'event'){
           if(!empty($ids['event'])){
-            $event_params = array('id' => $ids['id']);
+            $event_params = array('id' => $ids['event']);
             CRM_Event_BAO_Event::retrieve($event_params, $pageValues);
             $pageValues['url'] = CRM_Utils_System::url('civicrm/event/info', 'reset=1&id='.$pageValues['id'], TRUE);
             if($pageValues['is_email_receipt']){

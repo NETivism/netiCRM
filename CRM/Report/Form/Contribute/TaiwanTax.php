@@ -171,7 +171,12 @@ class CRM_Report_Form_Contribute_TaiwanTax extends CRM_Report_Form {
             CRM_Utils_Array::value($fieldName, $this->_params['fields'])
           ) {
             // only include statistics columns if set
-            $select[] = "{$field['dbAlias']} as {$tableName}_{$fieldName}";
+            if($fieldName == 'total_amount'){
+              $select[] = "SUM({$field['dbAlias']}) as {$tableName}_{$fieldName}";
+            }
+            else{
+              $select[] = "{$field['dbAlias']} as {$tableName}_{$fieldName}";
+            }
             $columnHeaders["{$tableName}_{$fieldName}"]['type'] = $field['type'];
             $columnHeaders["{$tableName}_{$fieldName}"]['title'] = $field['title'];
           }
@@ -202,7 +207,7 @@ class CRM_Report_Form_Contribute_TaiwanTax extends CRM_Report_Form {
   }
 
   function groupBy(){
-    $this->_groupBy = " GROUP BY {$this->_aliases['civicrm_contact']}.id, {$this->_aliases['civicrm_contribution']}.id ";
+    $this->_groupBy = " GROUP BY (CASE WHEN {$this->_aliases['civicrm_contact']}.legal_identifier IS NULL OR {$this->_aliases['civicrm_contact']}.legal_identifier = '' THEN {$this->_aliases['civicrm_contact']}.id ELSE {$this->_aliases['civicrm_contact']}.legal_identifier END)";
   }
 
   function orderBy() {
@@ -220,9 +225,9 @@ class CRM_Report_Form_Contribute_TaiwanTax extends CRM_Report_Form {
     $this->_columnHeaders = array();
     $this->_columnSort = array(
       'receive_date' => '捐贈年度',
-      $this->_receiptSerial => '捐贈者身分證統一編號',
-      $this->_receiptTitle => '捐贈者姓名',
       'total_amount' => '捐款金額',
+      $this->_receiptSerial => '捐贈者身分證統一編號',
+      $this->_receiptTitle => '受贈者名稱',
     );
     foreach($this->_columnSort as $c => $name){
       foreach($columnHeaders as $header => $value){

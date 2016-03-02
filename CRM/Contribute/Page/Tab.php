@@ -156,13 +156,22 @@ class CRM_Contribute_Page_Tab extends CRM_Core_Page {
     $params = array();
     $params = CRM_Contribute_BAO_ContributionRecur::getRecurContributions($this->_contactId);
     if (!empty($params)) {
-
       foreach ($params as $ids => $recur) {
         // no action allowed if it's not active
         $params[$ids]['is_active'] = ($recur['contribution_status_id'] != 3);
-
+        $links = self::recurLinks();
         if ($params[$ids]['is_active']) {
-          $params[$ids]['action'] = CRM_Core_Action::formLink(self::recurLinks(), $action,
+          $params[$ids]['action'] = CRM_Core_Action::formLink($links, $action,
+            array('cid' => $this->_contactId,
+              'id' => $ids,
+              'cxt' => 'contribution',
+            )
+          );
+        }
+        else{
+          unset($links[CRM_Core_Action::DISABLE]);
+          unset($links[CRM_Core_Action::UPDATE]);
+          $params[$ids]['action'] = CRM_Core_Action::formLink($links, $action,
             array('cid' => $this->_contactId,
               'id' => $ids,
               'cxt' => 'contribution',
