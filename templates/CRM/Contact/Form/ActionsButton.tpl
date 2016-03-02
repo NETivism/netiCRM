@@ -27,12 +27,12 @@
 
 <div id="crm-contact-actions-wrapper">
 	<div id="crm-contact-actions-link" class="button">{ts}Actions{/ts}<i class="zmdi zmdi-arrow-right-top zmdi-hc-rotate-90"></i></div>
-		<div class="ac_results" id="crm-contact-actions-list">
+		<div class="action-link-result ac_results" id="crm-contact-actions-list">
 			<div class="crm-contact-actions-list-inner">
 			  <div class="crm-contact_activities-list">
 			  {include file="CRM/Activity/Form/ActivityLinks.tpl"}
 			  </div>
-			  
+
               <div class="crm-contact_print-list">
               <ul class="contact-print">
                   <li class="crm-contact-print">
@@ -71,8 +71,8 @@
 				{/foreach}
               </ul>
               </div>
-			  
-			  
+
+
 			  <div class="clear"></div>
 			</div>
 		</div>
@@ -83,7 +83,7 @@
 cj('body').click(function() {
     cj('#crm-contact-actions-list').hide();
 });
-	
+
 cj('#crm-contact-actions-list').click(function(event){
     event.stopPropagation();
 });

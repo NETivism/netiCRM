@@ -8,12 +8,12 @@
       </li>
       <li>
         <div class="action-wrapper">
-    	    <div class="action-link-button" id="crm-event-nav-link"><a href="{crmURL p='civicrm/participant/add' q="reset=1&action=add&context=standalone&eid=`$id`"}">{ts}Register New Participant{/ts}<i class="icon add-icon"></i></a></div>
+    	    <div class="action-link-button" id="crm-event-nav-link"><a class="button" href="{crmURL p='civicrm/participant/add' q="reset=1&action=add&context=standalone&eid=`$id`"}">{ts}Register New Participant{/ts}<i class="icon add-icon"></i></a></div>
         </div>
       </li>
       <li>
         <div class="action-wrapper action-link-button">
-    	    <div calss="button" id="crm-eventsetting-link">{ts}Configure{/ts}<i class="zmdi zmdi-arrow-right-top zmdi-hc-rotate-90"></i></div>
+    	    <div class="button" id="crm-eventsetting-link">{ts}Configure{/ts}<i class="zmdi zmdi-arrow-right-top zmdi-hc-rotate-90"></i></div>
           <div class="action-link-result ac_results" id="crm-eventsetting-list">
             <div class="action-link-result-inner crm-eventsetting-list-inner">
               <ul>

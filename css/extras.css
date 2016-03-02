@@ -66,10 +66,265 @@
 
 /* crm messages: help */
 #crm-container #help {
-  background-color: #4b6572;
+  background: #4b6572;
 }
 #crm-container #help::before {
   content: "\f1f5";
+}
+
+/* ac results */
+.ac_results {
+  position: relative;
+  padding: 8px 0;
+  width: 450px !important;
+  border: none;
+  background: transparent;
+}
+.ac_results::after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 10px;
+  z-index: 100;
+  width: 0;
+  border-width: 0 6px 8px;
+  border-color: #e0e0e0 transparent;
+  border-style: solid;
+}
+.ac_results-inner {
+  border: 1px solid #e0e0e0;
+}
+.ac_results li,
+#crm-container .ac_results li {
+  background-color: transparent;
+}
+.ac_results li.ac_over,
+.ac_results li:hover,
+.ac_results li.ac_over a,
+.ac_results li.ac_over a:hover,
+.ac_results li.ac_over a:visited,
+#crm-container .ac_results li.ac_over,
+#crm-container .ac_results li:hover,
+#crm-container .ac_results li:hover a,
+#crm-container .ac_results li.ac_over a,
+#crm-container .ac_results li.ac_over a:hover,
+#crm-container .ac_results li.ac_over a:visited {
+  cursor: pointer;
+  color: #424242;
+}
+.ac_results li strong,
+#crm-container .ac_results li strong {
+  color: #ff80ab;
+}
+.ac_results li:hover strong,
+.ac_results li.ac_over strong,
+.ac_results li.ac_over:hover strong,
+.ac_results li.ac_over:visited strong,
+#crm-container .ac_results li:hover strong,
+#crm-container .ac_results li.ac_over:hover strong,
+#crm-container .ac_results li.ac_over:visited strong {
+  color: #f50057;
+}
+
+/* crm button */
+.crm-container button,
+.crm-container input[type="button"],
+.crm-container .button,
+.crm-container a.button:link,
+.crm-container a.button:visited,
+.crm-container .form-submit {
+  display: inline-block;
+  cursor: pointer;
+  margin: .5em 1em .5em 0;
+  padding: 6px 10px;
+  font-size: .875rem;
+  line-height: 1.2;
+  color: #fff;
+  border: none;
+  border-radius: 0;
+  background: #333030;
+  -webkit-transition: color .2s linear,background .2s linear;
+  -webkit-font-smoothing: subpixel-antialiased;
+}
+.crm-container button:hover,
+.crm-container button:focus,
+.crm-container input[type="button"]:hover,
+.crm-container input[type="button"]:focus,
+.crm-container .button:hover,
+.crm-container .button:focus,
+.crm-container a.button:hover,
+.crm-container a.button:focus,
+.crm-container .form-submit:hover,
+.crm-container .form-submit:focus {
+  color: #fff;
+  background: #555;
+}
+.crm-container button:focus,
+.crm-container input[type="button"]:focus,
+.crm-container .form-submit:focus {
+  outline: 0; /* remove button focus highlight  */
+}
+.crm-container button:active,
+.crm-container input[type="button"]:active,
+.crm-container .button:active,
+.crm-container a.button:active,
+.crm-container .form-submit:active {
+  background: #111;
+}
+
+/* button: save, submit */
+.crm-button-type-upload button,
+.crm-button-type-upload input[type="button"],
+.crm-button-type-upload .button,
+.crm-button-type-upload a.button:link,
+.crm-button-type-upload a.button:visited,
+.crm-button-type-upload .form-submit {
+  color: #fff;
+  background: #3f51b5;
+}
+.crm-button-type-upload button:hover,
+.crm-button-type-upload button:focus,
+.crm-button-type-upload input[type="button"]:hover,
+.crm-button-type-upload input[type="button"]:focus,
+.crm-button-type-upload .button:hover,
+.crm-button-type-upload .button:focus,
+.crm-button-type-upload .form-submit:hover,
+.crm-button-type-upload .form-submit:focus {
+  color: #fff;
+  background: #5C6BC0;
+}
+.crm-button-type-upload button:active,
+.crm-button-type-upload input[type="button"]:active,
+.crm-button-type-upload .button:active,
+.crm-button-type-upload .form-submit:active {
+  background: #303F9F;
+}
+
+/* button: cancel */
+.crm-button-type-cancel button,
+.crm-button-type-cancel input[type="button"],
+.crm-button-type-cancel .button,
+.crm-button-type-cancel a.button:link,
+.crm-button-type-cancel a.button:visited,
+.crm-button-type-cancel .form-submit {
+  color: #000;
+  background: #e0e0e0;
+}
+.crm-button-type-cancel button:hover,
+.crm-button-type-cancel button:focus,
+.crm-button-type-cancel input[type="button"]:hover,
+.crm-button-type-cancel input[type="button"]:focus,
+.crm-button-type-cancel .button:hover,
+.crm-button-type-cancel .button:focus,
+.crm-button-type-cancel .form-submit:hover,
+.crm-button-type-cancel .form-submit:focus {
+  color: #000;
+  background: #bdbdbd;
+}
+.crm-button-type-cancel button:active,
+.crm-button-type-cancel input[type="button"]:active,
+.crm-button-type-cancel .button:active,
+.crm-button-type-cancel .form-submit:active {
+  background: #9e9e9e;
+}
+
+/* button: delete */
+.crm-delete-action .button,
+.crm-delete-action a.button:link,
+.crm-delete-action a.button:visited,
+.crm-container input[id*="Delete_done"] {
+  color: #fff;
+  background: #D32F2F;
+}
+.crm-delete-action .button:hover,
+.crm-delete-action .button:focus,
+.crm-delete-action a.button:hover,
+.crm-delete-action a.button:focus,
+.crm-container input[id*="Delete_done"]:hover,
+.crm-container input[id*="Delete_done"]:focus {
+  color: #fff;
+  background: #F44336;
+}
+.crm-delete-action .button:active,
+.crm-delete-action a.button:active,
+.crm-container input[id*="Delete_done"]:active {
+  background: #B71C1C;
+}
+
+/* button: icon & text */
+.crm-container .button i {
+  margin: 0 5px;
+  font-size: inherit;
+  vertical-align: baseline;
+}
+
+/* action link button and ac results */
+.action-link-button {
+  position: relative;
+}
+.action-link-button .action-link-result {
+  position: absolute;
+  display: none;
+  top: 35px;
+  width: 220px !important;
+  left: 0px;
+  z-index: 15;
+}
+.action-link-button .ac_results::after {
+  border-color: #2f2f2e transparent;
+}
+.action-link-button .ac_results li {
+  font-size: .8125rem;
+}
+
+/* crm contact actions list */
+#crm-contact-actions-list {
+  width: 495px !important;
+}
+
+/* crm submit buttons */
+.crm-submit-buttons {
+  margin: 15px 0;
+}
+
+/* printer friendly */
+.crm-container #printer-friendly {
+  position: relative;
+  float: right;
+  margin: 0 10px;
+}
+.crm-container #printer-friendly .print-icon {
+  display: block;
+  position: relative;
+  text-indent: -9999em;
+  overflow: hidden;
+  line-height: 1;
+  font-size: 24px;
+}
+.crm-container #printer-friendly .print-icon:hover {
+  color: #5C6BC0;
+}
+.crm-container #printer-friendly .print-icon:active {
+  color: #303F9F;
+}
+.crm-container #printer-friendly .print-icon::after {
+  content: "\f1b0";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  text-indent: 0;
+  font-family: 'Material-Design-Iconic-Font';
+  font-size: inherit;
+}
+
+/* clear printer friendly float */
+.crm-container .messages,
+.crm-block {
+  clear: both;
 }
 
 /* crm form element */
