@@ -105,12 +105,10 @@ class CRM_Contact_Form_Edit_TagsandGroups {
     ORDER BY title
     ";
         $dao = CRM_Core_DAO::executeQuery($sql);
-        $attributes['skiplabel'] = TRUE;
+        // $attributes['skiplabel'] = TRUE;
         while ($dao->fetch()) {
           // make sure that this group has public visibility
-          if ($visibility &&
-            $dao->visibility == 'User and User Admin Only'
-          ) {
+          if ($visibility && $dao->visibility == 'User and User Admin Only') {
             continue;
           }
           $form->_tagGroup[$fName][$dao->id]['description'] = $dao->description;
@@ -118,7 +116,7 @@ class CRM_Contact_Form_Edit_TagsandGroups {
         }
 
         if (!empty($elements)) {
-          $form->addGroup($elements, $fName, ts($groupName), '&nbsp;<br />');
+          $form->addGroup($elements, $fName, ts($groupName));
           $form->assign('groupCount', count($elements));
           if ($isRequired) {
             $form->addRule($fName, ts('%1 is a required field.', array(1 => $groupName)), 'required');
