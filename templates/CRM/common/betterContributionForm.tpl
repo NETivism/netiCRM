@@ -16,25 +16,32 @@ cj(function($){
       if($('#r_person').is(':checked')){
         $('#custom_{/literal}{$receiptTitle}{literal}').attr('placeholder',"{/literal}{ts}Contact Name{/ts}{literal}");
         $('#custom_{/literal}{$receiptSerial}{literal}').attr('placeholder',"{/literal}{ts}Legal Identifier{/ts}{literal}");
-        $('#custom_{/literal}{$receiptSerial}{literal}').off("keyup").keyup(function(){
-          var value = $(this).val();
-          while($(this).next().attr('class')=='error'){
-            $(this).next().remove();
-          }
-          console.log(value);
-          if(validTWID(value)){
-            $(this).removeClass('error');
-          }else{
-            $(this).addClass('error').parent().append('<label for="custom_{/literal}{$receiptSerial}{literal}" class="error" style="padding-left: 10px;">{/literal}{ts}Please enter correct Data ( in valid format ).{/ts}{literal}</label>');
-          }
-        })
+        $('#custom_{/literal}{$receiptSerial}{literal}').off("keyup").keyup(checkTWID).off('blur').blur(checkTWID);
+        
         
       }
       if($('#r_company').is(':checked')){
         $('#custom_{/literal}{$receiptTitle}{literal}').attr('placeholder',"{/literal}{ts}Organization{/ts}{literal}");
         $('#custom_{/literal}{$receiptSerial}{literal}').attr('placeholder',"{/literal}{ts}Sic Code{/ts}{literal}");
-        $('#custom_{/literal}{$receiptSerial}{literal}').off("keyup")
+        $('#custom_{/literal}{$receiptSerial}{literal}').off("keyup").off('blur');
+        while($('#custom_{/literal}{$receiptSerial}{literal}').parent().find('.error-twid').length>=1){
+          $('#custom_{/literal}{$receiptSerial}{literal}').parent().find('.error-twid').remove();
+        }
       }
+    });
+
+    $('#Main').submit('#custom_{/literal}{$receiptSerial}{literal}',function(){
+      if($('#r_person').length>=1){
+        if($('#r_person').is(':checked')){
+          if(checkTWID()){
+            return true;
+          }else{
+            $(window).scrollTop($('#custom_{/literal}{$receiptSerial}{literal}').offset().top - $(window).height()/2);
+            return false;
+          }
+        }
+      }
+      return true;
     });
   }
   $('.receipt_type input').trigger('change').change(updateName);
@@ -219,6 +226,7 @@ items += "<input name='receipt_name' type='radio' id='r_name_custom' ><label for
 });
 
 function validTWID(value){
+  if(value=='')return true;
   value = value.toUpperCase();
   var tab = "ABCDEFGHJKLMNPQRSTUVXYWZIO";
   var A1 = new Array (1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,3,3,3,3,3,3 );
@@ -247,6 +255,19 @@ function validTWID(value){
   return true;
 }
 
+function checkTWID(){
+  while($('#custom_{/literal}{$receiptSerial}{literal}').parent().find('.error-twid').length>=1){
+    $('#custom_{/literal}{$receiptSerial}{literal}').parent().find('.error-twid').remove();
+  }
+  var value = $('#custom_{/literal}{$receiptSerial}{literal}').val();
+  if(validTWID(value)){
+    $('#custom_{/literal}{$receiptSerial}{literal}').removeClass('error');
+    return true;
+  }else{
+    $('#custom_{/literal}{$receiptSerial}{literal}').addClass('error').parent().append('<label for="custom_{/literal}{$receiptSerial}{literal}" class="error-twid" style="padding-left: 10px;color: #e55;">{/literal}{ts}Please enter correct Data ( in valid format ).{/ts}{literal}</label>');
+    return false;
+  }
+}
 
 {/literal}
 </script>
