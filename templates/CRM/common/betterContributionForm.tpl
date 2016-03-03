@@ -3,15 +3,18 @@
 cj(function($){
   if($('#custom_{/literal}{$receiptTitle}{literal},#custom_{/literal}{$receiptSerial}{literal}').length >= 1){
     // receiptTitle, receiptSerial
-    $('<div class="crm-section receipt_type"><div class="label"></div><div class="content"><input type="radio" name="receipt_type" id="r_person" checked="checked"><label for="r_person">{/literal}{ts}Individual{/ts}{literal}</label><input name="receipt_type" type="radio" id="r_company" ><label for="r_company">{/literal}{ts}Legal{/ts}{literal}</label></div></div>')
+    var r_person = mdFormElement('radio', '{/literal}{ts}Individual{/ts}{literal}', {name:'receipt_type', id:'r_person', checked:'checked'});
+    var receipt_type = mdFormElement('radio', '{/literal}{ts}Legal{/ts}{literal}', {name:'receipt_type', id:'r_company'});
+
+    $('<div class="crm-section receipt_type"><div class="label"></div><div class="content">' + r_person + receipt_type +'</div></div>')
     .insertBefore($('.custom_{/literal}{$receiptTitle}{literal}-section'));
     //var OddOrEven = $('.custom_{/literal}{$receiptTitle}{literal}-section').attr('class').match(/crm-odd|crm-even/)[0];
     //$('.receipt_type').addClass(OddOrEven);
 
-    $('<div><input type="checkbox" name="same_as_post" id="same-as"><label for="same-as">{/literal}{ts}Same as Contributor{/ts}{literal}</label></div>')
-    .insertBefore($('#custom_{/literal}{$receiptTitle}{literal}'));
+    var same_as = mdFormElement('checkbox', '{/literal}{ts}Same as Contributor{/ts}{literal}', { name:'same_as_post', id:'same_as'});
+    $('<div>'+same_as+'</div>').insertBefore($('#custom_{/literal}{$receiptTitle}{literal}'));
 
-    $('#same-as').change(updateName);
+    $('#same_as').change(updateName);
     $('.receipt_type input').change(function(){
       if($('#r_person').is(':checked')){
         $('#custom_{/literal}{$receiptTitle}{literal}').attr('placeholder',"{/literal}{ts}Contact Name{/ts}{literal}");
@@ -27,11 +30,13 @@ cj(function($){
 
   // Display Donor Credit 
   if($('#custom_{/literal}{$receiptDonorCredit}{literal}').length>=1){
-
-    var items = "<input type='radio' name='receipt_name' id='r_name_full' ><label for='r_name_full'>{/literal}{ts}Full Name{/ts}{literal}</label>";
-items += "<input name='receipt_name' type='radio' id='r_name_half' ><label for='r_name_half'>{/literal}{ts}Part of Name{/ts}{literal}</label>";
-items += "<input name='receipt_name' type='radio' id='r_name_hide' ><label for='r_name_hide'>{/literal}{ts}Anonymity{/ts}{literal}</label>";
-items += "<input name='receipt_name' type='radio' id='r_name_custom' ><label for='r_name_custom'>{/literal}{ts}Custom Name{/ts}{literal}</label>";
+    var hornor_name = [
+      mdFormElement('radio', '{/literal}{ts}Full Name{/ts}{literal}', {name:'receipt_name', id:'r_name_full'}),
+      mdFormElement('radio', '{/literal}{ts}Part of Name{/ts}{literal}', {name:'receipt_name', id:'r_name_half'}),
+      mdFormElement('radio', '{/literal}{ts}Anonymity{/ts}{literal}', {name:'receipt_name', id:'r_name_hide'}),
+      mdFormElement('radio', '{/literal}{ts}Custom Name{/ts}{literal}', {name:'receipt_name', id:'r_name_custom'})
+    ];
+    var items = hornor_name.join('');
 
     $(items).insertBefore($('#custom_{/literal}{$receiptDonorCredit}{literal}'));
 
@@ -118,18 +123,18 @@ items += "<input name='receipt_name' type='radio' id='r_name_custom' ><label for
 
   function updateName(){
     if($('#r_person').is(':checked')){
-      $('#same-as').parent('div').show();
+      $('#same_as').parent('div').show();
     }
     else{
-      $('#same-as').parent('div').hide();
+      $('#same_as').parent('div').hide();
     }
-    if($('#same-as').is(':checked') && $('#last_name,#first_name').length > 1 && $('#r_person').is(':checked')){
+    if($('#same_as').is(':checked') && $('#last_name,#first_name').length > 1 && $('#r_person').is(':checked')){
         $('#custom_{/literal}{$receiptTitle}{literal}').val($('#last_name').val()+$('#first_name').val()).attr('readonly','readonly');
     }
     else{
       $('#custom_{/literal}{$receiptTitle}{literal}').removeAttr('readonly');
     }
-    if($('#same-as').is(':checked') && $('#legal_identifier').length >= 1 && $('#r_person').is(':checked')){
+    if($('#same_as').is(':checked') && $('#legal_identifier').length >= 1 && $('#r_person').is(':checked')){
       $('#custom_{/literal}{$receiptSerial}{literal}').val($('#legal_identifier').val()).attr('readonly', 'readonly');
     }
     else{
