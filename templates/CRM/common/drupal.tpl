@@ -27,7 +27,7 @@
 {include file="CRM/common/debug.tpl"}
 {/if}
 
-<div id="crm-container" lang="{$config->lcMessages|truncate:2:"":true}" xml:lang="{$config->lcMessages|truncate:2:"":true}">
+<div id="crm-container" class="crm-container" lang="{$config->lcMessages|truncate:2:"":true}" xml:lang="{$config->lcMessages|truncate:2:"":true}">
 
 {* we should uncomment below code only when we are experimenting with new css for specific pages and comment css inclusion in civicrm.module*}
 {*if $config->customCSSURL}
@@ -39,7 +39,7 @@
             {assign var="revamp" value=1}
         {/if}
     {/foreach}
-    
+
     {if $revamp eq 0}
         <link rel="stylesheet" href="{$config->resourceBase}css/civicrm.css" type="text/css" />
     {else}
@@ -99,7 +99,7 @@
 {literal}
 <script type="text/javascript">
 cj(function() {
-   cj().crmtooltip(); 
+   cj().crmtooltip();
 });
 </script>
 {/literal}
