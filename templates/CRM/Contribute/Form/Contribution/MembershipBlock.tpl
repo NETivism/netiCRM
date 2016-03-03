@@ -77,6 +77,7 @@
                   {assign var="pid" value=$row.id}
                   {$form.selectMembership.$pid.html}
                 {/if}
+                <span class="elem-label md-radio-label">
                 {$row.name}
                 {if ($membershipBlock.display_min_fee AND $context EQ "makeContribution") AND $row.minimum_fee GT 0 }
                     {if $is_separate_payment OR ! $form.amount.label}
@@ -85,6 +86,7 @@
                       {ts 1=$row.minimum_fee|crmMoney}(contribute at least %1 to be eligible for this membership){/ts}
                     {/if}
                 {/if}
+                </span>
                 </label>
                 <span class="description">{$row.description}</spann>
            </td>
@@ -110,7 +112,9 @@
               <td colspan="2">
                 <label class="crm-form-elem crm-form-radio">
                   {$form.selectMembership.no_thanks.html}
+                  <span class="elem-label md-radio-label">
                   {ts}No thank you{/ts}
+                  </span>
                 </label>
               </td>
             </tr> 
