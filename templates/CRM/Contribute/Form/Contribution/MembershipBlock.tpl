@@ -71,21 +71,22 @@
         <table id="membership-listings">
         {foreach from=$membershipTypes item=row }
         <tr {if $context EQ "makeContribution" OR $context EQ "thankContribution" }class="odd-row" {/if}valign="top">
-            {if $showRadio }
-                {assign var="pid" value=$row.id}
-                <td style="width: 1em;">{$form.selectMembership.$pid.html}</td>
-            {/if}
            <td style="width: auto;">
-                <span class="bold">{$row.name} &nbsp;
+                <label class="crm-form-elem crm-form-radio">
+                {if $showRadio }
+                  {assign var="pid" value=$row.id}
+                  {$form.selectMembership.$pid.html}
+                {/if}
+                {$row.name}
                 {if ($membershipBlock.display_min_fee AND $context EQ "makeContribution") AND $row.minimum_fee GT 0 }
                     {if $is_separate_payment OR ! $form.amount.label}
-                        - {$row.minimum_fee|crmMoney}
+                      ( {$row.minimum_fee|crmMoney} )
                     {else}
-                        {ts 1=$row.minimum_fee|crmMoney}(contribute at least %1 to be eligible for this membership){/ts}
+                      {ts 1=$row.minimum_fee|crmMoney}(contribute at least %1 to be eligible for this membership){/ts}
                     {/if}
                 {/if}
-                </span><br />
-                {$row.description} &nbsp;                      
+                </label>
+                <span class="description">{$row.description}</spann>
            </td>
             
             <td style="width: auto;">
@@ -106,8 +107,12 @@
         {if $showRadio}
             {if $showRadioNoThanks } {* Provide no-thanks option when Membership signup is not required - per membership block configuration. *}
             <tr class="odd-row">
-              <td>{$form.selectMembership.no_thanks.html}</td>
-              <td colspan="2"><strong>{ts}No thank you{/ts}</strong></td>      
+              <td colspan="2">
+                <label class="crm-form-elem crm-form-radio">
+                  {$form.selectMembership.no_thanks.html}
+                  {ts}No thank you{/ts}
+                </label>
+              </td>
             </tr> 
             {/if}
         {/if}          
