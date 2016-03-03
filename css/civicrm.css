@@ -22,23 +22,41 @@
 ** Size input fields in crm-container by class. Classes are assigned by the
 ** module in relation to the data object max size.
 */
-#crm-container .two {width: 2em;}
-#crm-container .four {width: 4em;}
-#crm-container .six {width: 6em;}
-#crm-container .eight {width: 8em;}
-#crm-container .twelve {width: 12em;}
-#crm-container .twenty {width: 20em;}
-#crm-container .medium {width: 12em;}
-#crm-container .big {width: 15em;}
-#crm-container .huge {width: 25em;}
-#crm-container .huge40 {width: 40em;}
-#crm-container textarea.big {width: 35em; height: 4em;}
-#crm-container textarea.huge {width: 45em; height: 16em;}
-#crm-container textarea.huge12 {width: 40em; height: 12em;}
-#crm-container textarea.huge40 {width: 40em; height: 16em;}
-#crm-container textarea.nowrap {width: 45em; height: 4.5em; white-space: nowrap; overflow: auto;}
-#crm-container .bigSelect {width: 15em; height: 12em;}
+.crm-container .two {width: 2em;}
+.crm-container .four {width: 4em;}
+.crm-container .six {width: 6em;}
+.crm-container .eight {width: 8em;}
+.crm-container .twelve {width: 12em;}
+.crm-container .twenty {width: 20em;}
+.crm-container .medium {width: 12em;}
+.crm-container .big {width: 15em;}
+.crm-container .huge {width: 25em;}
+.crm-container .huge40 {width: 40em;}
+.crm-container textarea.big {width: 35em; height: 4em;}
+.crm-container textarea.huge {width: 45em; height: 16em;}
+.crm-container textarea.huge12 {width: 40em; height: 12em;}
+.crm-container textarea.huge40 {width: 40em; height: 16em;}
+.crm-container textarea.nowrap {width: 45em; height: 4.5em; white-space: nowrap; overflow: auto;}
+.crm-container .bigSelect {width: 15em; height: 12em;}
 
+.crm-container .crm-form-elem.two,
+.crm-container .crm-form-elem.four,
+.crm-container .crm-form-elem.six,
+.crm-container .crm-form-elem.eight,
+.crm-container .crm-form-elem.twelve,
+.crm-container .crm-form-elem.twenty,
+.crm-container .crm-form-elem.medium,
+.crm-container .crm-form-elem.big,
+.crm-container .crm-form-elem.huge,
+.crm-container .crm-form-elem.huge40,
+.crm-container .crm-form-elem.big,
+.crm-container .crm-form-elem.huge,
+.crm-container .crm-form-elem.huge12,
+.crm-container .crm-form-elem.huge40,
+.crm-container .crm-form-elem.nowrap,
+.crm-container .crm-form-elem.bigSelect{
+  width: auto;
+}
 
 /*
 ** Override line-height from style.css
