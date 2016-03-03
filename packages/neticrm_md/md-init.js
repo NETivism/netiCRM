@@ -20,15 +20,15 @@
   var mdInit = function() {
     $(".crm-form-elem").each(function() {
       if ($(this).hasClass("crm-form-radio")) {
-        $(this).addClass("mdl-radio mdl-js-radio mdl-js-ripple-effect");
-        $(this).children("input[type='radio']").addClass("mdl-radio__button");
-        $(this).children(".elem-label").addClass("mdl-radio__label");
+        $(this).addClass("md-radio");
+        $(this).children("input[type='radio']").addClass("md-radio-input");
+        $(this).children(".elem-label").addClass("md-radio-label");
       }
 
       if ($(this).hasClass("crm-form-checkbox")) {
-        $(this).addClass("mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect");
-        $(this).children("input[type='checkbox']").addClass("mdl-checkbox__input");
-        $(this).children(".elem-label").addClass("mdl-checkbox__label");
+        $(this).addClass("md-checkbox");
+        $(this).children("input[type='checkbox']").addClass("md-checkbox-input");
+        $(this).children(".elem-label").addClass("md-checkbox-label");
       }
 
       if ($(this).hasClass("crm-form-select")) {
