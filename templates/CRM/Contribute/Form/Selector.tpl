@@ -78,7 +78,7 @@
         {/if}
     </td>
     {* <td class="crm-contribution-product_name">{$row.product_name}</td> *}
-    <td>{$row.action|replace:'xx':$row.contribution_id}</td>
+    <td class="row-action">{$row.action|replace:'xx':$row.contribution_id}</td>
   </tr>
   {/foreach}
 

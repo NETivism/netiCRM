@@ -101,7 +101,7 @@
         <td class="crm-activity-date_time">{$row.activity_date_time|crmDate}</td>
         <td class="crm-activity-duration">{if $row.duration}{$row.duration}{ts}minutes{/ts}{/if}</td>
         <td class="crm-activity-status crm-activity-status_{$row.status_id}">{$row.status}</td>
-        <td>{$row.action|replace:'xx':$row.id}</td>
+        <td class="row-action">{$row.action|replace:'xx':$row.id}</td>
       </tr>
       {/foreach}
 
