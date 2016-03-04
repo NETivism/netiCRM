@@ -127,6 +127,8 @@ class CRM_Contribute_BAO_Contribution_Utils {
         }
         else {
           if (!$form->_params['is_pay_later']) {
+            // before leave to transfercheckout, call hook
+            CRM_Utils_Hook::postProcess(get_class($form), $form);
             $result = &$payment->doTransferCheckout($form->_params, 'contribute');
           }
           else {
