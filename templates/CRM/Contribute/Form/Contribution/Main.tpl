@@ -503,6 +503,9 @@ function enableHonorType( ) {
     var lockfield = function($obj){
       $obj.attr('title', '{/literal}{ts}To change your personal info, go My Account page for further setting.{/ts}{literal}');
       $obj.attr("readonly", "readonly").addClass("readonly");
+      if($obj.parent('.crm-form-elem').length){
+        $obj.parent('.crm-form-elem').addClass('crm-form-readonly');
+      }
     }
     {/literal}
     {if $contact_id}
