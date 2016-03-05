@@ -44973,3 +44973,7 @@ msgstr ""
 #: templates/CRM/Contact/Form/Task/Email.tpl
 msgid "Send email to contacts one by one listed above. Your won't leak email of contacts."
 msgstr ""
+
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php
+msgid "Recurring contributions estimated in next %1 %2"
+msgstr ""

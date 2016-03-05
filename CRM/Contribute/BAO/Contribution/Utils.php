@@ -321,12 +321,13 @@ INNER JOIN   civicrm_contact AS contact ON ( contact.id = contrib.contact_id )
     $dao = CRM_Core_DAO::executeQuery($query, $param);
 
     $params = NULL;
+    $slot = array_fill(1, 12, 0);
     while ($dao->fetch()) {
       if ($dao->contribMonth) {
-        $params['By Month'][$dao->contribMonth] = $dao->ctAmt;
+        $slot[$dao->contribMonth] = $dao->ctAmt;
       }
     }
-    return $params;
+    return array('By Month' => $slot);
   }
 
   /**
