@@ -223,6 +223,10 @@ $having
   }
 
   function buildForm(&$form){
+    // chartis
+    CRM_Contribute_BAO_ContributionRecur::chartEstimateMonthly(12);
+
+    //
     CRM_Core_OptionValue::getValues(array('name' => 'custom_search'), $custom_search);
     $csid = !empty($form->_formValues['customSearchID']) ? $form->_formValues['customSearchID'] : (!empty($_GET['csid']) ? $_GET['csid'] : NULL);
     if($csid){
@@ -476,7 +480,7 @@ SUM(total_amount) as total_amount
    * Define the smarty template used to layout the search form and results listings.
    */
   function templateFile(){
-    return 'CRM/Contact/Form/Search/Custom.tpl';
+    return 'CRM/Contact/Form/Search/Custom/RecurSearch.tpl';
   }
 
   function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
@@ -508,6 +512,6 @@ SUM(total_amount) as total_amount
       }
     }
   }
-
+  
 }
 
