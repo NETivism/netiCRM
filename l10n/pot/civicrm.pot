@@ -19660,6 +19660,10 @@ msgid "Your update(s) have been saved."
 msgstr ""
 
 #: CRM/UF/Form/AdvanceSetting.php
+msgid "Advanced options"
+msgstr ""
+
+#: CRM/UF/Form/AdvanceSetting.php
 msgid "Enable mapping for this profile?"
 msgstr ""
 
