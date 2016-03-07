@@ -25,7 +25,7 @@
 *}
 {if $groupCount == 0 and $mailingCount == 0}
   <div class="status">
-	<div class="icon inform-icon"></div>
+	
         {ts}To send a mailing, you must have a valid group of recipients - either at least one group that's a Mailing List or at least one previous mailing.{/ts}
   </div>
 {else}

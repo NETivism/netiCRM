@@ -61,7 +61,7 @@
 {else}
 <div class="crm-content-block">    
 <div class="messages status">
-	<div class="icon inform-icon"></div>&nbsp;
+	&nbsp;
         {ts}No report instances have been created for your site.{/ts} &nbsp;
         {if $templateUrl}
             {ts 1=$templateUrl}You can create reports by selecting from the <a href="%1">list of report templates here.</a>{/ts}

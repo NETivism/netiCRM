@@ -150,7 +150,7 @@
 </div>
 {else}
     <div class="messages status">
-         <div class="icon inform-icon"></div>
+         
         {capture assign=crmURL}{crmURL  q="group="|cat:$gName|cat:"&action=add&reset=1"}{/capture}
         {ts 1=$crmURL}There are no option values entered. You can <a href='%1'>add one</a>.{/ts}
     </div>    

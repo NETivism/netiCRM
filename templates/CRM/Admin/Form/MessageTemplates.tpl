@@ -35,7 +35,7 @@
 <h3>{if $action eq 1}{ts}New Message Template{/ts}{elseif $action eq 2}{ts}Edit Message Template{/ts}{else}{ts}Delete Message Template{/ts}{/if}</h3>
 {if $action eq 8}
    <div class="messages status">
-       <div class="icon inform-icon"></div>
+       
        {ts}Do you want to delete this message template?{/ts}
    </div>
 {else}

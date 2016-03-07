@@ -55,7 +55,7 @@
 {/strip}
 {else}
    <div class="messages status">
-        <div class="icon inform-icon"></div>&nbsp;
+        &nbsp;
         {ts 1=$title}There are currently no %1.{/ts}
     </div>    
 {/if}  

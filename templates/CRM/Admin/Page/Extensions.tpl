@@ -30,7 +30,7 @@
     {if not $extEnabled}
       <div class="crm-content-block crm-block">
         <div class="messages status">
-             <div class="icon inform-icon"></div>
+             
              {capture assign='returnURL'}{crmURL p='civicrm/admin/extensions' q='reset=1'}{/capture}
              {capture assign='adminURL'}{crmURL p='civicrm/admin/setting/path' q="reset=1&destination=$returnURL"}{/capture}
              {ts 1=$adminURL}Your extensions directory is not set. Click <a href='%1'>here</a> to set the extension directory.{/ts}
@@ -90,7 +90,7 @@
 
       {else}
         <div class="messages status">
-             <div class="icon inform-icon"></div>
+             
             {ts}You have not installed any extensions.{/ts}
         </div>    
       {/if}
@@ -136,7 +136,7 @@
             </div>
           {else}
               <div class="messages status">
-                   <div class="icon inform-icon"></div>
+                   
                   {ts}There are no uploaded extensions to be installed.{/ts}
               </div>    
           {/if}

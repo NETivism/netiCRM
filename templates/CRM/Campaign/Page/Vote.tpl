@@ -69,7 +69,7 @@ cj(document).ready( function( ) {
 {/literal}
 {else}
  <div class="messages status">
-     <div class="icon inform-icon"></div> 
+      
      {ts}You are not authorized to access this page.{/ts}
  </div>
 {/if}

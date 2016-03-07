@@ -25,7 +25,7 @@
 *}
 {* Confirmation of contribution deletes  *}
 <div class="messages status">
-  <div class="icon inform-icon"></div>
+  
         &nbsp;{ts}Are you sure you want to delete the selected cases? This will move the case(s) and all associated activities to the Trash.{/ts}<br/>
         <p>{include file="CRM/Case/Form/Task.tpl"}</p>
     

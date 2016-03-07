@@ -35,7 +35,7 @@
 {/if}
 {if !$emailExists and $action neq 8 and $context neq 'standalone'}
 <div class="messages status">
-    <div class="icon inform-icon"></div>
+    
         <p>{ts}You will not be able to send an automatic email receipt for this Membership because there is no email address recorded for this contact. If you want a receipt to be sent when this Membership is recorded, click Cancel and then click Edit from the Summary tab to add an email address before recording the Membership.{/ts}</p>
 </div>
 {/if}
@@ -51,7 +51,7 @@
    <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>
     {if $action eq 8}
       <div class="messages status">
-          <div class="icon inform-icon"></div>       
+                 
           {ts}WARNING: Deleting this membership will also delete related membership log and payment records.{/ts} {ts}This action cannot be undone.{/ts} {ts}Consider modifying the membership status instead if you want to maintain a record of this membership.{/ts}
           {ts}Do you want to continue?{/ts}    
       </div>

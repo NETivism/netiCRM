@@ -60,7 +60,7 @@
 
 {else} 
     <div class="messages status">
-        <div class="icon inform-icon"></div> &nbsp;
+         &nbsp;
         {ts}No Campaigns found.{/ts}
     </div>
 {/if}

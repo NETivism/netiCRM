@@ -55,7 +55,7 @@
     {else}
        <div class="messages status">
            <table class="form-layout">
-             <tr><div class="icon inform-icon"></div>
+             <tr>
                    {ts}No event registrations have been recorded for this contact.{/ts}
              </tr>
            </table>

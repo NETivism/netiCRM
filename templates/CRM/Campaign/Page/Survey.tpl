@@ -64,7 +64,7 @@
 
 {else} 
   <div class="status">
-    <div class="icon inform-icon"></div>&nbsp;{ts}No survey found.{/ts}
+    &nbsp;{ts}No survey found.{/ts}
   </div> 
 {/if}
 <div class="action-link-button">

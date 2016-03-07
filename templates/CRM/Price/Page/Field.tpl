@@ -34,7 +34,7 @@
  {if $usedBy}
     <div class='spacer'></div>
     <div id="price_set_used_by" class="messages status">
-      <div class="icon inform-icon"></div>     
+           
         {if $action eq 8}
             {ts 1=$usedPriceSetTitle}Unable to delete the '%1' Price Field - it is currently in use by one or more active events or contribution pages or contributions.{/ts}
        	{/if}<br />        
@@ -101,7 +101,7 @@
   {else}
         {if $action eq 16}
         <div class="messages status">
-            <div class="icon inform-icon"></div>
+            
             {capture assign=crmURL}{crmURL p='civicrm/admin/price/field q="action=add&reset=1&sid=$sid"}{/capture}
             {ts 1=$groupTitle 2=$crmURL}There are no fields for price set '%1', <a href='%2'>add one</a>.{/ts}
         </div>

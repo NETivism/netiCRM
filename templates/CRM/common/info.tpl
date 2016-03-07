@@ -26,6 +26,6 @@
 {* Handles display of passed $infoMessage. *}
 {if $infoMessage}
 <div class="messages status">
-    <div class="icon inform-icon"></div> &nbsp;{$infoMessage}
+     &nbsp;{$infoMessage}
 </div>
 {/if}

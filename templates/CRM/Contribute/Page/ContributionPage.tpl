@@ -111,7 +111,7 @@
     	</div>
     	{else}
     	<div class="messages status">
-             <div class="icon inform-icon"></div> &nbsp;
+              &nbsp;
              {ts 1=$newPageURL}No contribution pages have been created yet. Click <a accesskey="N" href='%1'>here</a> to create a new contribution page using the step-by-step wizard.{/ts}
     	</div>
       	{/if}

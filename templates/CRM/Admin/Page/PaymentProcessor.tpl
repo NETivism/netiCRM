@@ -67,7 +67,7 @@
 </div>
 {elseif $action ne 1}
     <div class="messages status">
-      <div class="icon inform-icon"></div>
+      
         {capture assign=crmURL}{crmURL p='civicrm/admin/paymentProcessor' q="action=add&reset=1"}{/capture}
       {ts 1=$crmURL}There are no Payment Processors entered. You can <a href='%1'>add one</a>.{/ts}
      </div>    

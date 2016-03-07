@@ -24,7 +24,7 @@
  +--------------------------------------------------------------------+
 *}
 <div class="messages status">
-      <div class="icon inform-icon"></div>&nbsp;
+      &nbsp;
 {if $success}
       {ts 1=$display_name 2=$email 3=$group}<strong>%1 (%2)</strong> has been successfully subscribed to the <strong>%3</strong> mailing list.{/ts}
 {else}

@@ -30,7 +30,7 @@
 {if $usedBy}
     <div class='spacer'></div>
     <div id="price_set_used_by" class="messages status">
-    <div class="icon inform-icon"></div>
+    
         {if $action eq 8}
             {ts 1=$usedPriceSetTitle}Unable to delete the '%1' Price Field Option - it is currently in use by one or more active events  or contribution pages or contributions.{/ts}
        	{/if}

@@ -68,7 +68,7 @@
 
 {else} 
     <div class="messages status">
-        <div class="icon inform-icon"></div> &nbsp;
+         &nbsp;
         {ts}No campaigns found.{/ts}
     </div>
 {/if}
@@ -139,7 +139,7 @@
 
 {else} 
   <div class="status">
-    <div class="icon inform-icon"></div>&nbsp;{ts}No surveys found.{/ts}
+    &nbsp;{ts}No surveys found.{/ts}
   </div> 
 {/if}
 <div class="action-link-button">
@@ -197,7 +197,7 @@
 
 {else} 
   <div class="status">
-    <div class="icon inform-icon"></div>&nbsp;{ts}No petitions found.{/ts}
+    &nbsp;{ts}No petitions found.{/ts}
   </div> 
 {/if}
 <div class="action-link-button">

@@ -38,7 +38,7 @@
      <h2> {ts}Delete CiviCRM Profile{/ts}</h2>
     {/if}
             <div class="messages status">
-                   <div class="icon inform-icon"></div>
+                   
                    {$message}
             </div>   
 	       

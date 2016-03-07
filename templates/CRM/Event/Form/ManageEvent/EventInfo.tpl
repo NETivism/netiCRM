@@ -29,7 +29,7 @@
 	{capture assign=etUrl}{crmURL p='civicrm/admin/eventTemplate' q="reset=1"}{/capture}
         <div class="status message">
 	<table class="form-layout">
-	        <tr><td><div class="icon inform-icon"></div></td>
+	        <tr><td></td>
 	            <td class="status">{ts 1=$etUrl}If you find that you are creating multiple events with similar settings, you may want to use the <a href='%1'>Event Templates</a> feature to streamline your workflow.{/ts}</td>
 	        </tr>
 	</table>

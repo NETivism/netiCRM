@@ -61,7 +61,7 @@
 	    {/foreach}
         {else}
             <div class="messages status">
-                <div class="icon inform-icon"></div>&nbsp; {ts}There are currently no Reports.{/ts}
+                &nbsp; {ts}There are currently no Reports.{/ts}
             </div>
         {/if}
     </fieldset>

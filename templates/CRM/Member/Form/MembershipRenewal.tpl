@@ -31,7 +31,7 @@
 {/if}
 {if !$email}
 <div class="messages status">
-    <div class="icon inform-icon"></div> 
+     
         <p>{ts}You will not be able to send an automatic email receipt for this Renew Membership because there is no email address recorded for this contact. If you want a receipt to be sent when this Membership is recorded, click Cancel and then click Edit from the Summary tab to add an email address before Renewal the Membership.{/ts}</p>
 </div>
 {/if}

@@ -51,7 +51,7 @@
     
 {else}
    <div class="messages status">
-       <div class="icon inform-icon"></div>
+       
             {ts}No pledges have been recorded from this contact.{/ts}
        </div>
 {/if}

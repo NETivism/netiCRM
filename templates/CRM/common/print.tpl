@@ -47,7 +47,7 @@
 {* Check for Status message for the page (stored in session->getStatus). Status is cleared on retrieval. *}
 {if $session->getStatus(false)}
 <div class="messages status">
-  <div class="icon inform-icon"></div>
+  
   {$session->getStatus(true)}
 </div>
 {/if}

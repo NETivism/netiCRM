@@ -28,7 +28,7 @@
 {capture assign=docLink}{docURL page="CiviCase Admin" text="CiviCase Administration Documentation"}{/capture}
 
 <div class="messages status">
-      <div class="icon inform-icon"></div>&nbsp;    
+      &nbsp;    
       <strong>{ts}You need to setup and load Case and Activity configuration files before you can begin using the CiviCase component.{/ts}</strong>
       {ts 1=$docLink}Refer to the %1 to learn about this process.{/ts}
 </div>

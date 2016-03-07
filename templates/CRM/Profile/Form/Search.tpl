@@ -150,12 +150,12 @@ cj(function() {
 
 {elseif $statusMessage}
     <div class="messages status">
-        <div class="icon inform-icon"></div>
+        
         {$statusMessage}
     </div>
 {else} {* empty fields *}
     <div class="messages status">
-        <div class="icon inform-icon"></div>
+        
         {ts}No fields in this Profile have been configured as searchable. Ask the site administrator to check the Profile setup.{/ts}
     </div>
 {/if}

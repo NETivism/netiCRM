@@ -28,7 +28,7 @@
 {if $registerClosed }
 <div class="spacer"></div>
 <div class="messages status">
-  <div class="icon inform-icon"></div>
+  
      &nbsp;{ts}Registration is closed for this event{/ts}
   </div>
 {/if}

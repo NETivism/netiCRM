@@ -107,7 +107,7 @@ cj( "#source_contact_id").autocomplete( sourceDataUrl, { width : 180, selectFirs
         </legend>
         {if $action eq 8 or $action eq 32768 }
             <div class="messages status"> 
-              <div class="icon inform-icon"></div> &nbsp;
+               &nbsp;
               {if $action eq 8}
                  {ts 1=$activityTypeName}Click Delete to move this &quot;%1&quot; activity to the Trash.{/ts}
               {else}

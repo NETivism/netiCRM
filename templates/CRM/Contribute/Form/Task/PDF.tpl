@@ -25,7 +25,7 @@
 *}
 {* Confirmation of contribution deletes  *}
 <div class="messages status">
-  <div class="icon inform-icon"></div>
+  
       {include file="CRM/Contribute/Form/Task.tpl"}
 </div>
 <div id="help">
