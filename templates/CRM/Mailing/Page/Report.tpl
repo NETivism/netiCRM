@@ -31,10 +31,10 @@
   <tr><td class="label"><a href="{$report.event_totals.links.queue}">{ts}Intended Recipients{/ts}</a></td><td>{$report.event_totals.queue}</td></tr>
   <tr><td class="label"><a href="{$report.event_totals.links.delivered}">{ts}Successful Deliveries{/ts}</a></td><td>{$report.event_totals.delivered} ({$report.event_totals.delivered_rate|string_format:"%0.2f"}%)</td></tr>
   {if $report.mailing.open_tracking}
-    <tr><td class="label"><a href="{$report.event_totals.links.opened}">{ts}Tracked Opens{/ts}</a></td><td>{$report.event_totals.opened}</td></tr>
+    <tr><td class="label"><a href="{$report.event_totals.links.opened}">{ts}Tracked Opens{/ts}</a></td><td>{$report.event_totals.opened} ({$report.event_totals.opened_rate|string_format:"%0.2f"}%)</td></tr>
   {/if}
   {if $report.mailing.url_tracking}
-    <tr><td class="label"><a href="{$report.event_totals.links.clicks}">{ts}Click-throughs{/ts}</a></td><td>{$report.event_totals.url}</td></tr>
+    <tr><td class="label"><a href="{$report.event_totals.links.clicks}">{ts}Click-throughs{/ts}</a></td><td>{$report.event_totals.url} ({$report.event_totals.clicked_rate|string_format:"%0.2f"}%)</td></tr>
   {/if}
   <tr><td class="label"><a href="{$report.event_totals.links.forward}">{ts}Forwards{/ts}</a></td><td>{$report.event_totals.forward}</td></tr>
   <tr><td class="label"><a href="{$report.event_totals.links.reply}">{ts}Replies{/ts}</a></td><td>{$report.event_totals.reply}</td></tr>
@@ -135,7 +135,6 @@
 {/strip}
 </fieldset>
 {/if}
-
 <fieldset>
 <legend>{ts}Content / Components{/ts}</legend>
 {strip}
@@ -167,6 +166,14 @@
   <td class="label nowrap">{ts}Attachments{/ts}</td>
   <td>
     {$report.mailing.attachment}
+  </td>
+</tr>
+{/if}
+{if $report.mailing.visibility}
+<tr>
+  <td class="label nowrap">{ts}Mailing Visibility{/ts}</td>
+  <td>
+    {ts}{$report.mailing.visibility}{/ts}
   </td>
 </tr>
 {/if}
