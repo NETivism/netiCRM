@@ -5,7 +5,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: POEditor.com\n"
+"PO-Revision-Date: 2016-03-07\n"
+"Last-Translator: \n"
+"Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 
 #: CRM/ACL/BAO/ACL.php CRM/ACL/BAO/EntityRole.php CRM/Admin/Form/Options.php
 #: CRM/Contact/Form/Task/Map.php CRM/Core/DAO/CustomGroup.php
@@ -17054,6 +17056,14 @@ msgid "From Email Address"
 msgstr ""
 
 #: CRM/Mailing/Form/Upload.php
+msgid "Auto-Generated"
+msgstr ""
+
+#: CRM/Mailing/Form/Upload.php
+msgid "Reply-to email"
+msgstr ""
+
+#: CRM/Mailing/Form/Upload.php
 msgid "Mailing Subject"
 msgstr ""
 
@@ -33841,10 +33851,6 @@ msgstr ""
 
 #: templates/CRM/Mailing/Page/Report.tpl
 msgid "Mailing Settings"
-msgstr ""
-
-#: templates/CRM/Mailing/Page/Report.tpl
-msgid "Reply-to email"
 msgstr ""
 
 #: templates/CRM/Mailing/Page/Report.tpl
