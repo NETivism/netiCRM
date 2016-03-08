@@ -153,7 +153,7 @@
 
 <div class="crm-accordion-wrapper crm-accordion_title-accordion crm-accordion-closed crm-case-roles-block">
  <div class="crm-accordion-header">
-  <div class="icon crm-accordion-pointer"></div> 
+  <div class="zmdi crm-accordion-pointer"></div> 
 	{ts}Case Roles{/ts}
  </div><!-- /.crm-accordion-header -->
  <div class="crm-accordion-body">
@@ -445,7 +445,7 @@ cj(document).ready(function(){
 {if $hasAccessToAllCases}
 <div class="crm-accordion-wrapper crm-accordion_title-accordion crm-accordion-closed crm-case-other-relationships-block">
  <div class="crm-accordion-header">
-  <div class="icon crm-accordion-pointer"></div> 
+  <div class="zmdi crm-accordion-pointer"></div> 
 	{ts}Other Relationships{/ts}
  </div><!-- /.crm-accordion-header -->
  <div class="crm-accordion-body">
@@ -631,7 +631,7 @@ function addRole() {
 
 <div id="casetags" class="crm-accordion-wrapper crm-accordion_title-accordion crm-accordion-open crm-case-tags-block">
  <div class="crm-accordion-header">
-  <div class="icon crm-accordion-pointer"></div> 
+  <div class="zmdi crm-accordion-pointer"></div> 
   {ts}Case Tags{/ts}
  </div><!-- /.crm-accordion-header -->
  <div class="crm-accordion-body">
@@ -764,7 +764,7 @@ function addTags() {
 
 <div class="crm-accordion-wrapper crm-case_activities-accordion crm-accordion-open crm-case-activities-block">
  <div class="crm-accordion-header">
-  <div class="icon crm-accordion-pointer"></div> 
+  <div class="zmdi crm-accordion-pointer"></div> 
 {ts}Case Activities{/ts}
  </div><!-- /.crm-accordion-header -->
  <div id="activities" class="crm-accordion-body">
@@ -777,7 +777,7 @@ function addTags() {
   <div>
 <div class="crm-accordion-wrapper crm-accordion-inner crm-search_filters-accordion crm-accordion-closed">
  <div class="crm-accordion-header">
-  <div class="icon crm-accordion-pointer"></div> 
+  <div class="zmdi crm-accordion-pointer"></div> 
 	{ts}Search Filters{/ts}</a>
  </div><!-- /.crm-accordion-header -->
  <div class="crm-accordion-body">

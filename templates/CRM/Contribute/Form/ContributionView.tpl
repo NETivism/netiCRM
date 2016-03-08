@@ -197,7 +197,7 @@
 {if $premium}
     <div class="crm-accordion-wrapper crm-accordion_title-accordion crm-accordion-open">
         <div class="crm-accordion-header">
-            <div class="icon crm-accordion-pointer"></div> 
+            <div class="zmdi crm-accordion-pointer"></div> 
             {ts}Premium Information{/ts}
         </div>
         <div class="crm-accordion-body">			   
@@ -213,7 +213,7 @@
 {if $pcp_id}
     <div class="crm-accordion-wrapper crm-accordion_title-accordion crm-accordion-open">
          <div class="crm-accordion-header">
-              <div class="icon crm-accordion-pointer"></div> 
+              <div class="zmdi crm-accordion-pointer"></div> 
               {ts}Personal Campaign Page Contribution Information{/ts}
          </div>
          <div class="crm-accordion-body">			   

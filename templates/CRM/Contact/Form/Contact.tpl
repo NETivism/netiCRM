@@ -38,7 +38,7 @@
 <div class="crm-jquery-accordion">
 <div class="crm-accordion-wrapper crm-contactDetails-accordion crm-accordion-open">
  <div class="crm-accordion-header">
-  <div class="icon crm-accordion-pointer"></div> 
+  <div class="zmdi crm-accordion-pointer"></div> 
 	{ts}Contact Details{/ts}
 	
  </div><!-- /.crm-accordion-header -->

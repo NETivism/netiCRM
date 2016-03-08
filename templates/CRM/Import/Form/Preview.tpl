@@ -149,7 +149,7 @@ function verify( ) {
  {* New Group *}
 <div id="new-group" class="crm-accordion-wrapper crm-accordion_title-accordion crm-accordion-closed">
  <div class="crm-accordion-header">
-  <div class="icon crm-accordion-pointer"></div> 
+  <div class="zmdi crm-accordion-pointer"></div> 
     {ts}Add imported records to a new group{/ts}
  </div><!-- /.crm-accordion-header -->
  <div class="crm-accordion-body">
@@ -171,7 +171,7 @@ function verify( ) {
 
 <div class="crm-accordion-wrapper crm-existing_group-accordion {if $form.groups}crm-accordion-open{else}crm-accordion-closed{/if}">
  <div class="crm-accordion-header">
-  <div class="icon crm-accordion-pointer"></div>
+  <div class="zmdi crm-accordion-pointer"></div>
   {$form.groups.label}
  </div><!-- /.crm-accordion-header -->
  <div class="crm-accordion-body">
@@ -186,7 +186,7 @@ function verify( ) {
     {* New Tag *}
 <div id="new-tag" class="crm-accordion-wrapper crm-accordion_title-accordion crm-accordion-closed">
  <div class="crm-accordion-header">
-  <div class="icon crm-accordion-pointer"></div>
+  <div class="zmdi crm-accordion-pointer"></div>
   {ts}Create a new tag and assign it to imported records{/ts}            
  </div><!-- /.crm-accordion-header -->
  <div class="crm-accordion-body">
@@ -209,7 +209,7 @@ function verify( ) {
 
 <div class="crm-accordion-wrapper crm-accordion_title-accordion crm-accordion-closed">
  <div class="crm-accordion-header">
-  <div class="icon crm-accordion-pointer"></div>
+  <div class="zmdi crm-accordion-pointer"></div>
   {ts}Tag imported records{/ts}
 </div><!-- /.crm-accordion-header -->
  <div class="crm-accordion-body">

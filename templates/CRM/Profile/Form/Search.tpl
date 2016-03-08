@@ -28,7 +28,7 @@
     {if $groupId }
 <div class="crm-accordion-wrapper crm-group-{$groupId}-accordion {if $rows}crm-accordion-closed{else}crm-accordion-open{/if}">
  <div class="crm-accordion-header crm-master-accordion-header">
-  <div class="icon crm-accordion-pointer"></div> 
+  <div class="zmdi crm-accordion-pointer"></div> 
 	{ts}Edit Search Criteria{/ts}
  </div>
  <div class="crm-accordion-body">

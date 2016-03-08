@@ -27,7 +27,7 @@
 <div {if !$criteriaForm}style="display: none;"{/if}> {* criteria section starts *}
 <div class="crm-accordion-wrapper crm-report_criteria-accordion crm-accordion_title-accordion {if $rows}crm-accordion-closed{else}crm-accordion-open{/if}">
  <div class="crm-accordion-header">
-  <div class="icon crm-accordion-pointer"></div> 
+  <div class="zmdi crm-accordion-pointer"></div> 
   	{ts}Report Criteria{/ts}
    </div><!-- /.crm-accordion-header -->
  <div class="crm-accordion-body">	
@@ -41,7 +41,7 @@
 {if $instanceForm OR $instanceFormError} {* settings section starts *}
 <div class="crm-accordion-wrapper crm-report_setting-accordion crm-accordion_title-accordion {if $rows}crm-accordion-closed{else}crm-accordion-open{/if}">
  <div class="crm-accordion-header" {if $updateReportButton} onclick="hide('update-button'); return false;" {/if} >
-  <div class="icon crm-accordion-pointer"></div> 
+  <div class="zmdi crm-accordion-pointer"></div> 
   	{if $mode eq 'template'}{ts}Create Report{/ts}{else}{ts}Report Settings{/ts}{/if}
      </div><!-- /.crm-accordion-header -->
  <div class="crm-accordion-body">

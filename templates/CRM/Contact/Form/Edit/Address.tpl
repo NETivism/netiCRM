@@ -30,7 +30,7 @@
 {if $title and $className eq 'CRM_Contact_Form_Contact'}
 <div id = "addressBlockId" class="crm-accordion-wrapper crm-address-accordion crm-accordion-closed">
  <div class="crm-accordion-header">
-  <div class="icon crm-accordion-pointer"></div> 
+  <div class="zmdi crm-accordion-pointer"></div> 
 	{$title}
  </div><!-- /.crm-accordion-header -->
  <div class="crm-accordion-body" id="addressBlock">

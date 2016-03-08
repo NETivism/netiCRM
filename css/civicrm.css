@@ -1885,9 +1885,9 @@ span.icon {
 .crm-accordion-header {
     padding:4px 8px;
     cursor: pointer;
+    font-size: 1.2em;
+    font-weight: bold;
 }
-
-.crm-accordion-header .crm-accordion-pointer {margin-right:4px;}
 
 .crm-accordion-body {
     padding:4px 0px;
@@ -1895,26 +1895,14 @@ span.icon {
 
 .crm-accordion-open .crm-accordion-body { display: block; }
 .crm-accordion-closed .crm-accordion-body { display: none!important; }
-
-.crm-accordion-open .crm-accordion-header .crm-accordion-pointer {
-    background-position: -64px -16px;
+.crm-accordion-header .crm-accordion-pointer {
+    margin-right: 0.5em;
 }
-
-.crm-accordion-closed .crm-accordion-header .crm-accordion-pointer {
-    background-position: -32px -16px;
+.crm-accordion-open .crm-accordion-header .crm-accordion-pointer::before {
+  content: "\f272";
 }
-
-.crm-accordion-wrapper .crm-accordion-header .crm-accordion-pointer {
-    background-image:url(../packages/jquery/jquery-ui/css/custom-theme/images/ui-icons_454545_256x240.png);
-}
-
-.crm-accordion-wrapper .crm-accordion-header-hover .crm-accordion-pointer {
-    background-image:url("../i/icons/jquery-ui-FFFFFF.png");
-    color: #FFF;
-}
-
-.crm-accordion-wrapper.crm-accordion-open > .crm-accordion-header-hover .crm-accordion-pointer {
-    background-image:url(../packages/jquery/jquery-ui/css/custom-theme/images/ui-icons_454545_256x240.png);
+.crm-accordion-closed .crm-accordion-header .crm-accordion-pointer::before {
+  content: "\f277";
 }
 
 .crm-accordion-wrapper .crm-master-accordion-header {
@@ -1930,15 +1918,6 @@ span.icon {
     color: #3e3e3e;
 }
 
-.crm-accordion-wrapper .crm-master-accordion-header .crm-accordion-pointer,
-.crm-accordion-inner .crm-accordion-header .crm-accordion-pointer {
-    background-image:url("../i/icons/jquery-ui-3E3E3E.png")
-}
-
-.crm-accordion-email-signature .crm-accordion-header .crm-accordion-pointer {
-	background-image:url("../i/icons/jquery-ui-2786C2.png")
-}
-
 .crm-accordion-hasContent .crm-accordion-header {
     font-weight:bold;
 }
@@ -1951,7 +1930,7 @@ span.icon {
 }
 
 .crm-accordion-wrapper {
-    margin-bottom:4px;
+    margin: 10px 0;
 }
 
 .crm-accordion-closed .crm-accordion-header {
@@ -1962,11 +1941,6 @@ span.icon {
 }
 
 .crm-accordion-open>.crm-accordion-header {
-    -moz-border-radius: 4px 4px 0px 0px; 
-    -webkit-border-radius: 4px 4px 0px 0px;   
-    -khtml-border-radius: 4px 4px 0px 0px; 
-    border-radius:4px 4px 0px 0px;
-    border: 1px solid #AAA;
     background: #EEE;
 }
 .crm-accordion-open>.crm-accordion-header:hover {
@@ -1975,13 +1949,10 @@ span.icon {
 }
 
 .crm-accordion-open>.crm-accordion-body {
-    -moz-border-radius: 0px 0px 4px 4px; 
-    -webkit-border-radius: 0px 0px 4px 4px;   
-    -khtml-border-radius: 0px 0px 4px 4px; 
-    border-radius:0px 0px 4px 4px;
-    border:1px solid #AAA;
-    border-top:0px;
     padding: 4px; 
+}
+.crm-accordion-open {
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12);
 }
 
 /* ==================================================================================== */
@@ -2399,11 +2370,6 @@ table.crm-info-panel td.label {
 .crm-form-block { 
     color:#3E3E3E;
 }
-.crm-accordion-header {
-    background: #E6E6E6 url(../packages/jquery/jquery-ui/css/custom-theme/images/ui-bg_glass_75_e6e6e6_1x400.png) 50% 50%;
-    color:#555;
-}
-
 .crm-accordion-header-hover {
     background: #575757;
     color:#FFF;
@@ -2413,10 +2379,6 @@ table.crm-info-panel td.label {
 	background-color:transparent;
 	color: #3e3e3e;
 }
-
-#contact-summary .crm-accordion-wrapper .crm-accordion-header .crm-accordion-pointer {
-	background-image:url(../i/icons/jquery-ui-3e3e3e.png);
-}		
 
 /* warning labels and messages */
 del,

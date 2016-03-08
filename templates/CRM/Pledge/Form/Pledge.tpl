@@ -149,7 +149,7 @@ function loadPanes( id ) {
 {foreach from=$allPanes key=paneName item=paneValue}
 <div class="crm-accordion-wrapper crm-ajax-accordion crm-{$paneValue.id}-accordion {if $paneValue.open eq 'true'}crm-accordion-open{else}crm-accordion-closed{/if}">
 <div class="crm-accordion-header" id="{$paneValue.id}">
-  <div class="icon crm-accordion-pointer"></div> 
+  <div class="zmdi crm-accordion-pointer"></div> 
 
         {$paneName}
   </div><!-- /.crm-accordion-header -->

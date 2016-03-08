@@ -83,7 +83,7 @@
     {*Form Block*}
     <div class="crm-accordion-wrapper crm-accordion-closed" id="">
       <div class="crm-accordion-header">
-        <div class="icon crm-accordion-pointer"></div>{ts}Include Profiles{/ts}
+        <div class="zmdi crm-accordion-pointer"></div>{ts}Include Profiles{/ts}
       </div>
       <div class="crm-accordion-body">
         <table class="form-layout-compressed">
@@ -124,7 +124,7 @@
     {*Registration Block*}
     <div class="crm-accordion-wrapper crm-accordion-closed" id="registration">
       <div class="crm-accordion-header">
-        <div class="icon crm-accordion-pointer"></div>{ts}Registration Screen{/ts}
+        <div class="zmdi crm-accordion-pointer"></div>{ts}Registration Screen{/ts}
       </div>
       <div class="crm-accordion-body">
         <table class="form-layout-compressed">
@@ -146,7 +146,7 @@
     {*Confirmation Block*}
     <div class="crm-accordion-wrapper crm-accordion-closed" id="confirm_show">
       <div class="crm-accordion-header">
-        <div class="icon crm-accordion-pointer"></div>{ts}Confirmation Screen{/ts}
+        <div class="zmdi crm-accordion-pointer"></div>{ts}Confirmation Screen{/ts}
       </div>
       <div class="crm-accordion-body">
          <table class= "form-layout-compressed">
@@ -175,7 +175,7 @@
     {*ThankYou Block*}
     <div class="crm-accordion-wrapper crm-accordion-closed" id="">
       <div class="crm-accordion-header">
-        <div class="icon crm-accordion-pointer"></div>{ts}Thank-you Screen{/ts}
+        <div class="zmdi crm-accordion-pointer"></div>{ts}Thank-you Screen{/ts}
       </div>
       <div class="crm-accordion-body">
          <table class= "form-layout-compressed">
@@ -204,7 +204,7 @@
     {* Confirmation Email Block *}
     <div class="crm-accordion-wrapper crm-accordion-closed" id="">
       <div class="crm-accordion-header">
-        <div class="icon crm-accordion-pointer"></div>{ts}Confirmation Email{/ts}
+        <div class="zmdi crm-accordion-pointer"></div>{ts}Confirmation Email{/ts}
       </div>
       <div class="crm-accordion-body">
           <table class= "form-layout-compressed">

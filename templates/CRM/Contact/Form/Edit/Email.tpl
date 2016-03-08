@@ -46,7 +46,7 @@
 {if $className eq 'CRM_Contact_Form_Contact'}
 <div class="crm-accordion-wrapper crm-accordion-email-signature crm-accordion_title-accordion crm-accordion-closed">
  <div class="crm-accordion-header">
-  <div class="icon crm-accordion-pointer"></div> 
+  <div class="zmdi crm-accordion-pointer"></div> 
 {ts}Signature{/ts} 
   </div><!-- /.crm-accordion-header -->
   <div id="signatureBlock{$blockId}" class="crm-accordion-body">
