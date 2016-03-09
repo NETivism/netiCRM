@@ -87,9 +87,6 @@ js/jquery/jquery.disablesubmit.js
 
 packages/fontawesome/css/font-awesome.min.css
 
-packages/mdl/material.min.js
-packages/mdl/material.indigo-pink.min.css
-
 packages/material-design-iconic-font/css/material-design-iconic-font.min.css
 
 packages/neticrm_md/md-init.js
