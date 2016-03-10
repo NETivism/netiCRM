@@ -6,6 +6,9 @@
   var wlPathArr = window.location.pathname.split("/");
   var wlSearch = window.location.search;
   var wlPathSearch = wlPath + wlSearch;
+  console.log(wlPath);
+  console.log(wlSearch);
+  console.log(wlPathSearch);
 
   // Get viewport
   var viewport;
@@ -52,6 +55,10 @@
 
       if ($(this).find("[readonly]").length > 0) {
         $(this).addClass("md-elem-readonly");
+      }
+
+      if ($(this).find("[disabled]").length > 0) {
+        $(this).addClass("md-elem-disabled");
       }
     });
 

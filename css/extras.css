@@ -5,6 +5,31 @@
 ** if you don't want to modify system provided
 ** civicrm.css.
 */
+.crm-container {
+  line-height: 1.5;
+}
+
+/**
+ * Placeholder
+ */
+.crm-container ::-webkit-input-placeholder {
+   color: #777;
+}
+.crm-container :-moz-placeholder { /* Firefox 18- */
+   color: #777;
+   opacity: 1;
+}
+.crm-container ::-moz-placeholder {  /* Firefox 19+ */
+   color: #777;
+   opacity: 1;
+}
+.crm-container :-ms-input-placeholder {
+   color: #777;
+}
+.crm-container input[type="text"].readonly {
+  color: #777;
+  background: #F3F3F3 url("../i/ic_lock_outline_24px.png") no-repeat 98% 50%;
+}
 
 /* crm messages */
 .crm-container div.messages,
@@ -71,6 +96,103 @@
 .crm-container #help::before {
   content: "\f1f5";
 }
+
+/* crm status */
+.crm-container .crm-marker {
+  color: #F44336;
+  font-weight: bold;
+}
+.crm-container .crm-error {
+  border: none;
+  padding: 5px;
+  color: #B71C1C;
+}
+.crm-container input.error {
+  border-color: #F44336;
+}
+
+/* fieldset */
+.crm-container fieldset {
+  background: none;
+  padding: 4px 0;
+  margin: 10px 0;
+  border: none;
+  border-top: 1px solid #CFCEC3;
+  top: 0;
+  border-radius: 0;
+}
+.crm-container fieldset legend {
+  display: block;
+  font-size: 1.25rem;
+  padding: 4px;
+  background: none;
+  border: medium none;
+  background-color: transparent;
+  color: #3E3E3E;
+  position: relative;
+  text-indent: 0;
+  width: auto;
+  top: 0;
+}
+
+/* step */
+#crm-container .wizard-title {
+  margin: 2rem 0;
+  font-size: 1.5rem;
+}
+
+/* Event page */
+.crm-container #register-who {
+  margin: 0 0 60px 0;
+  text-align: center;
+}
+
+
+/* contribution page styles */
+.crm-container #Main fieldset table td {
+  background-color: transparent;
+  border:none;
+}
+
+.crm-container .crm-section,
+.crm-section {
+  margin-bottom: 1rem;
+}
+
+.crm-container .crm-section .label,
+.crm-section .label {
+  float: left;
+  width: 18%;
+  text-align: right;
+  font-size: 1rem;
+}
+
+.crm-container .label-left .label {
+  text-align: left;
+}
+
+.crm-container .crm-section .content,
+.crm-section .content {
+  margin-top: 0;
+  margin-left: 20%;
+}
+
+.crm-container .no-label .content {
+    margin-left: 0;
+}
+.crm-container .is_recur-section .content span {
+  vertical-align: middle;
+}
+
+.crm-container #cvv2 {vertical-align: top; }
+
+.crm-container .description {
+  font-size: .875rem;
+  color: #757575;
+  margin: 5px 0;
+}
+
+
 
 /* form elements */
 @media screen and (min-width: 960px) and (max-width: 1279px) {
@@ -198,7 +320,8 @@
 .crm-button-type-upload .button,
 .crm-button-type-upload a.button:link,
 .crm-button-type-upload a.button:visited,
-.crm-button-type-upload .form-submit {
+.crm-button-type-upload .form-submit,
+.crm-container #register-me {
   color: #fff;
   background: #3f51b5;
 }
@@ -209,14 +332,17 @@
 .crm-button-type-upload .button:hover,
 .crm-button-type-upload .button:focus,
 .crm-button-type-upload .form-submit:hover,
-.crm-button-type-upload .form-submit:focus {
+.crm-button-type-upload .form-submit:focus,
+.crm-container #register-me:hover,
+.crm-container #register-me:focus {
   color: #fff;
   background: #5C6BC0;
 }
 .crm-button-type-upload button:active,
 .crm-button-type-upload input[type="button"]:active,
 .crm-button-type-upload .button:active,
-.crm-button-type-upload .form-submit:active {
+.crm-button-type-upload .form-submit:active,
+.crm-container #register-me:active {
   background: #303F9F;
 }
 
@@ -476,7 +602,7 @@ tbody.scrollContent tr.alternateRow {
   text-align: center;
 }
 .crm-container tr.columnheader a.sorting {
-	color:#a7a7a7;
+  color:#a7a7a7;
 }
 
 .crm-container a.sorting { color:#A7A7A7; }
@@ -754,7 +880,7 @@ tbody.scrollContent tr.alternateRow {
     border           : 1px solid #CDCDC3;
     padding          : 4px;
     font-size        : 0.95em;
-    text-align	    : right;
+    text-align      : right;
 }
 
 .crm-container table.report-layout td {

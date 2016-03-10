@@ -7,50 +7,120 @@ input[type="text"].md-textfield, input[type="password"].form-control, input[type
 .md-elem {
   position: relative;
 }
-input.md-textfield,
-textarea.md-textarea,
 .md-elem input[type="text"],
+.md-elem input.form-text,
+.md-elem select,
+.md-elem select.form-select,
 .md-elem textarea,
-.md-elem select {
+.md-elem textarea.form-textarea {
   display: block;
+  margin: 0;
   padding: 5px 0;
-  width: 100%;
+  font-size: 1rem;
   color: #424242;
+  line-height: 1.5;
+  outline: 0;
   border: none !important;
+  border-bottom: 2px solid #9E9E9E !important;
   border-radius: 0 !important;
   background-color: transparent !important;
   -webkit-transition: all .15s ease-out;
   transition: all .15s ease-out;
-  -webkit-box-shadow: 0 1px 0 #999;
-  box-shadow: 0 1px 0 #999;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
 }
-input.md-textfield,
-textarea.md-textarea,
+.md-elem input[type="text"],
+.md-elem input.form-text,
+.md-elem select,
+.md-elem select.form-select {
+  width: 16rem;
+}
+.md-elem textarea,
+.md-elem textarea.form-textarea {
+  width: 40rem;
+}
+.md-elem input[type="text"].error,
+.md-elem input.form-text.error,
+.md-elem select.error,
+.md-elem select.form-select.error,
+.md-elem textarea.error,
+.md-elem textarea.form-textarea.error {
+  border-bottom: 2px solid #F44336 !important;
+}
+.md-elem input[type="text"]:hover,
+.md-elem input.form-text:hover,
+.md-elem select:hover,
+.md-elem select.form-select:hover,
+.md-elem textarea:hover,
+.md-elem textarea.form-textarea:hover,
 .md-elem input[type="text"]:focus,
+.md-elem input.form-text:focus,
 .md-elem select:focus,
-.md-elem textarea:focus
-{
+.md-elem select.form-select:focus,
+.md-elem textarea:focus,
+.md-elem textarea.form-textarea:focus {
+  outline: 0;
   color: #000;
-  -webkit-box-shadow: 0 2px 0 #3F51B5;
-  box-shadow: 0 2px 0 #3F51B5;
+  border: 0;
 }
-
+.md-elem input[type="text"].readonly:hover,
+.md-elem select.readonly:hover,
+.md-elem textarea.readonly:hover {
+  outline: 0;
+  border: 0;
+}
+.md-elem input[type="text"]:focus,
+.md-elem input.form-text:focus,
+.md-elem select:focus,
+.md-elem select.form-select:focus,
+.md-elem textarea:focus,
+.md-elem textarea.form-textarea:focus {
+  border-bottom: 2px solid #3F51B5 !important;
+}
+.md-elem input[type="text"].error:focus,
+.md-elem input.form-text.error:focus,
+.md-elem select.error:focus,
+.md-elem select.form-select.error:focus,
+.md-elem textarea.error:focus,
+.md-elem textarea.form-textarea.error:focus {
+  border-bottom: 2px solid #3F51B5 !important;
+}
 .md-elem .resizable-textarea .grippie,
 textarea.md-textarea + .grippie {
   display: none;
 }
-
 .md-elem input[disabled],
 .md-elem select[disabled],
 .md-elem textarea[disabled],
 .md-elem input[readonly],
 .md-elem select[readonly],
-.md-elem textarea[readonly]
-{
+.md-elem textarea[readonly],
+.md-elem input.readonly,
+.md-elem select.readonly,
+.md-elem textarea.readonly,
+.crm-container .md-elem .readonly,
+.crm-container .md-elem input[type="text"].readonly {
   cursor: not-allowed;
+  color: #9E9E9E;
+  border: none !important;
+  outline: 0 !important;
   border-bottom: 1px dashed #999 !important;
-  background-color: transparent !important;
+  background-color: #f2f2f2 !important;
   box-shadow: none;
+}
+.md-elem input[disabled]:hover,
+.md-elem select[disabled]:hover,
+.md-elem textarea[disabled]:hover,
+.md-elem input[readonly]:hover,
+.md-elem select[readonly]:hover,
+.md-elem textarea[readonly]:hover,
+.md-elem input.readonly:hover,
+.md-elem select.readonly:hover,
+.md-elem textarea.readonly:hover,
+.md-elem option:disabled,
+.md-elem select[disabled] > option {
+  color: #9E9E9E;
 }
 .md-elem input[disabled]:before {
   content: "tets";
@@ -61,24 +131,46 @@ textarea.md-textarea + .grippie {
 .md-elem textarea[disabled]:focus,
 .md-elem input[readonly]:focus,
 .md-elem select[readonly]:focus,
-.md-elem textarea[readonly]:focus
+.md-elem textarea[readonly]:focus,
+.md-elem input.readonly:focus,
+.md-elem select.readonly:focus,
+.md-elem textarea.readonly:focus
 {
+  border-bottom: 1px dashed #999 !important;
   box-shadow: none;
 }
-
-/* md-elem-readonly */
-.md-elem-readonly {
-  display: inline-block;
+.md-elem select[disabled] > option:hover {
+  cursor: not-allowed;
+  color: #9E9E9E;
+  background-color: transparent;
 }
-.md-elem-readonly::after {
-  content: "\f191";
+.crm-container .md-elem + .description {
+  margin: .5rem 0;
+}
+.md-select-multiple-adv + .crm-error,
+.md-textarea + .crm-error {
   display: block;
-  position: absolute;
-  top: 3px;
-  right: 0;
-  font-family: 'Material-Design-Iconic-Font';
-  font-size: 1rem;
-  color: #9e9e9e;
+}
+
+.md-elem ::-webkit-input-placeholder,
+.crm-container .md-elem ::-webkit-input-placeholder {
+   color: #bdbdbd;
+}
+/* Firefox 18- */
+.md-elem :-moz-placeholder,
+.crm-container .md-elem :-moz-placeholder {
+   color: #bdbdbd;
+   opacity: 1;
+}
+/* Firefox 19+ */
+.md-elem ::-moz-placeholder,
+.crm-container .md-elem ::-moz-placeholder {
+   color: #bdbdbd;
+   opacity: 1;
+}
+.md-elem :-ms-input-placeholder,
+.crm-container .md-elem :-ms-input-placeholder {
+   color: #bdbdbd;
 }
 
 /* md-textfield */
@@ -102,12 +194,13 @@ input.md-textfield,
   content: "\025BE";
   position: absolute;
   display: block;
-  top: 5px;
+  top: 2px;
   right: 0;
   font-weight: bold;
   font-size: 1.75rem;
   color: #666;
-  z-index: 5;
+  z-index: 11;
+  line-height: 1;
 }
 .md-select-single select,
 .md-select-single select.form-select {
@@ -253,14 +346,35 @@ input.md-textfield,
   transform: rotate(0deg);
 }
 
-/* mdl radio */
-.mdl-radio { margin-right: 16px; }
+/* md-elem readonly */
+.md-elem-readonly,
+.crm-form-readonly {
+  display: inline-block;
+}
+.md-elem-readonly::after,
+.crm-form-readonly::after {
+  content: "\f191";
+  display: block;
+  position: absolute;
+  top: 4px;
+  right: 0;
+  font-family: 'Material-Design-Iconic-Font';
+  font-size: 1rem;
+  color: #9e9e9e;
+}
 
-/* mdl checkbox */
-.mdl-checkbox { margin-right: 16px; }
+/* md-elem disabled */
+.md-elem-disabled.md-select-single::after {
+  color: #bdbdbd;
+}
 
+/* civicrm */
+/* crm form elements */
 /* crm tw address */
-.state_province-1-section .md-select-single {
+div[class*="crm-section state_province-"] .md-select-single {
   width: 10rem;
   margin-right: 15px;
+}
+div[class*="crm-section state_province-"] .crm-form-post-code {
+  width: 10rem;
 }

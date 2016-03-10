@@ -7,11 +7,11 @@
 }
 
 .crm-container .hiddenElement {
-    display   	    : none;
+    display         : none;
 }
 
 .crm-container .clear {
-    clear 	    : both;
+    clear       : both;
 }
 
 .crm-container .crm-content-block {padding: 0px 0px;}
@@ -56,13 +56,6 @@
 .crm-container .crm-form-elem.nowrap,
 .crm-container .crm-form-elem.bigSelect{
   width: auto;
-}
-
-/*
-** Override line-height from style.css
-*/
-div.crm-container {
-    line-height: 135%;
 }
 
 /* Base .crm-container styles */
@@ -235,30 +228,6 @@ div.spacer,
     margin: 0em 0.5em 0.25em 0em;
 }
 
-.crm-container fieldset{
-    background:none;
-    padding:4px 0px;
-    margin:10px 0px;
-    border:none;
-    border-top: 1px solid #CFCEC3;
-
-}
-
-.crm-container fieldset legend {
-	display:block;
-	font-size:14px;
-	font-weight:bold;
-	padding:4px;
-    background: none;
-    border: medium none;
-    background-color: transparent;
-    color: #3E3E3E;
-    position: relative;
-    text-indent: 0px;
-    width: auto;
-}
-
-
 .crm-container fieldset.form-layout {
     margin: .25em 0em .5em 0em;
     padding: 1px 10px 1px 10px;
@@ -281,43 +250,6 @@ div.spacer,
     margin: 0;
 }
 
-
-/* contribution page styles */
-
-.crm-container #Main fieldset table td {
-    background-color: transparent;
-    border:none;
-}
-
-.crm-container .crm-section,
-.crm-section {
-    margin-bottom:1em;
-}
-
-.crm-container .crm-section .label,
-.crm-section .label {
-    float:left;
-    width:15%;
-    text-align: right;
-}
-
-.crm-container .label-left .label {
-    text-align: left;
-}
-
-.crm-container .crm-section .content,
-.crm-section .content {
-    margin-left:16%;
-}
-
-.crm-container .no-label .content {
-    margin-left: 0px;
-}
-.crm-container .is_recur-section .content span {
-  vertical-align: middle;
-}
-
-.crm-container #cvv2 {vertical-align: top; }
 
 /* Use definition lists for simple 2 col forms - <dt> for labels, <dd> for fields */
 .crm-container div.form-item dt,
@@ -453,20 +385,6 @@ div.spacer,
     color: #000080;
 }
 
-.crm-container .crm-marker {
-    color:#8A1F11;
-    font-weight: bold;
-}
-.crm-container .crm-error {
-    background:#FBE3E4 none repeat scroll 0 0;
-    border:none;
-    padding:4px;
-    color:#8A1F11;
-}
-.crm-container input.error {
-    border-color: red;
-}
-
 #restmsg {
     z-index:10000;
     padding:4px;
@@ -591,12 +509,7 @@ div.block-civicrm li, .crm-container ul li, .crm-container ul.treeview li {
 ** Styles for formatting text
 */
 /* Inline form field 'post-help' */
-.crm-container .description {
-    font-size: 0.9em;
-    white-space: normal;
-    width: auto;
-    color: #696969;
-}
+
 
 .crm-container .form-layout-compressed td.description {
     padding: 0px 0px 5px 20px;
@@ -1273,11 +1186,11 @@ table.campaign td,
 }
 
 .crm-container .ac_results li {
-	float:none;
-	padding: 4px;
-	margin:0px;
-	line-height: 15px;
-	}
+    float:none;
+    padding: 4px;
+    margin:0px;
+    line-height: 15px;
+    }
 
 /* Styles for Action Items &  Action Link pop-up */
 
@@ -1514,8 +1427,8 @@ div.grippie {
 
 .crm-container div#contactTopBar table,
 .crm-container div.contact_panel table {
-	margin-bottom: 4px;
-	}
+    margin-bottom: 4px;
+    }
 
 .crm-container div#contactTopBar .label,
 .crm-container div.contactCardLeft .label,
@@ -1695,14 +1608,14 @@ div.grippie {
 
 /* create new XXX style (drupal block) */
 #actions .action-wrapper {
-	position:relative;
-	float: left;
+    position:relative;
+    float: left;
 }
 #crm-contribpage-links-wrapper,
 #crm-create-new-wrapper,
 #crm-contact-actions-wrapper{
-	position:relative;
-	float: left;
+    position:relative;
+    float: left;
 }
 
 #crm-create-new-list{width:124px;}
@@ -1711,7 +1624,7 @@ div.grippie {
 #crm-contact-actions-list .icon { background-image:url("../i/icons/jquery-ui-FFFFFF.png"); }
 
 #crm-contact-actions-list .crm-contact_activities-list select {
-	margin-top:4px;
+    margin-top:4px;
 }
 
 #crm-contact-actions-list .crm-contact_activities-list,
@@ -1786,8 +1699,8 @@ div.grippie {
 }
 
 span.icon {
-	float:none;
-	display:inline-block;
+    float:none;
+    display:inline-block;
 }
 
 .action-link-button .icon,
@@ -1923,10 +1836,10 @@ span.icon {
 }
 
 .crm-accordion-email-signature .crm-accordion-header {
-	background-color: transparent;
-	color: #2786C2;
-	font-weight: normal;
-	padding-left: 0px;
+    background-color: transparent;
+    color: #2786C2;
+    font-weight: normal;
+    padding-left: 0px;
 }
 
 .crm-accordion-wrapper {
@@ -2118,11 +2031,11 @@ div#crm-toolTip #hide-tooltip {
 .crm-tooltip-active .crm-tooltip-wrapper {display:block;}
 
 .crm-summary-group h2 {
-	padding:2px 4px 0 4px;
-	font-size: 14px;
-	color:#FFF;
-	margin-bottom:0px;
-	}
+    padding:2px 4px 0 4px;
+    font-size: 14px;
+    color:#FFF;
+    margin-bottom:0px;
+    }
 
 
 .crm-tooltip {
@@ -2262,7 +2175,7 @@ div#civicrm-dashboard form {
 
 /* skin */
 .crm-container .crm-title {
-	margin-bottom: 8px;
+    margin-bottom: 8px;
 }
 
 /*contact summary page */
@@ -2376,8 +2289,8 @@ table.crm-info-panel td.label {
 }
 
 #contact-summary .crm-accordion-header {
-	background-color:transparent;
-	color: #3e3e3e;
+    background-color:transparent;
+    color: #3e3e3e;
 }
 
 /* warning labels and messages */
@@ -2644,11 +2557,6 @@ div#crm-toolTip
   margin: 8px 0 8px 15px;
 }
 
-.crm-container #register-who {
-  margin: 10px 0;
-  text-align: center;
-}
-
 /* fontawesome */
 .crm-container .fa {
   padding-right: 3px;
@@ -2741,26 +2649,4 @@ div#crm-toolTip
 }
 #stat_ps .people-count{
   float:right;
-}
-
-/**
- * Placeholder
- */
-.crm-container input::-webkit-input-placeholder {
-  color: #777;
-}
-.crm-container input:-moz-placeholder {
-  color: #777;
-  opacity: 1;
-}
-.crm-container input::-moz-placeholder {
-  color: #777;
-  opacity: 1;
-}
-.crm-container input:-ms-input-placeholder {
-  color: #777;
-}
-.crm-container input[type="text"].readonly {
-  color: #777;
-  background: #F3F3F3 url("../i/ic_lock_outline_24px.png") no-repeat 98% 50%;
 }
