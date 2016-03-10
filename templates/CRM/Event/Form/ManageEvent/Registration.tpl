@@ -292,7 +292,6 @@ invert              = 0
     cj().crmaccordions(); 
 
     cj("#is_multiple_registrations").change( function( ) {
-        console.log(123);
         if ( !cj(this).attr( 'checked') ) {
             cj("#additional_custom_pre_id").val('');
             cj("#additional_custom_post_id").val('');
@@ -320,6 +319,15 @@ invert              = 0
     cj('select[id^="additional_custom_p"]').each( function(e) {
         buildLinks( cj(this), cj(this).val()); 
     });
+
+    cj('#registration_blocks>table').append(cj('<tr class="crm-event-manage-registration-form-block-expiration_day"><td scope="row" class="label" width="20%"><label for="expiration_day">{/literal}{ts}Pending participant expiration (days){/ts}{literal}</label></td><td><input name="expiration_day" type="text" id="expiration_day" class="four"><div class="helpicon">&nbsp;<span id="id-expiration_time_help" style="display:none"><div class="crm-help">{/literal}{ts}Time limit <strong>in days</strong> for confirming/finishing registration by participants with any of the pending statuses. Enter 0 (or leave empty) to disable this feature.{/ts}{literal}</div></span></div></td></tr>'));
+    cj('#expiration_day').keyup(function(){
+      var val = cj('#expiration_day').val();
+      hour = val * 24 ;
+      cj('#expiration_time').val(hour);
+    })
+    cj('#expiration_day').val(Math.floor(cj('#expiration_time').val()/24));
+    cj('.crm-event-manage-registration-form-block-expiration_time').hide();
 
     {/literal}
 </script>

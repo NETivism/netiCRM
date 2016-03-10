@@ -15277,6 +15277,9 @@ msgstr ""
 msgid "Pending participant expiration (hours)"
 msgstr ""
 
+#: templates/CRM/Event/Form/ManageEvent/Registration.tpl
+msgid "Pending participant expiration (days)"
+
 #: CRM/Event/Form/ManageEvent/Registration.php
 msgid "Please enter the number of hours (as an integer)."
 msgstr ""
@@ -31336,6 +31339,13 @@ msgstr ""
 #: templates/CRM/Event/Form/ManageEvent/Registration.hlp
 msgid ""
 "Time limit <strong>in hours</strong> for confirming/finishing registration "
+"by participants with any of the pending statuses. Enter 0 (or leave empty) "
+"to disable this feature."
+msgstr ""
+
+#: templates/CRM/Event/Form/ManageEvent/Registration.hlp
+msgid ""
+"Time limit <strong>in days</strong> for confirming/finishing registration "
 "by participants with any of the pending statuses. Enter 0 (or leave empty) "
 "to disable this feature."
 msgstr ""
