@@ -256,14 +256,14 @@
        {if ( $context eq 'fulltext' || $context eq 'search' ) && $searchKey}
        {assign var='urlParams' value="reset=1&id=$id&cid=$contact_id&action=update&context=$context&key=$searchKey"}	   
        {/if}
-       <a class="button" href="{crmURL p='civicrm/contact/view/contribution' q=$urlParams}" accesskey="e"><span><div class="icon edit-icon"></div>{ts}Edit{/ts}</span></a>
+       <a class="button" href="{crmURL p='civicrm/contact/view/contribution' q=$urlParams}" accesskey="e"><span><i class="zmdi zmdi-edit"></i>{ts}Edit{/ts}</span></a>
 
        {if $receipt_id}
          {assign var='urlParams' value="reset=1&id=$id&cid=$contact_id&action=pdf&context=$context"}
          {if ( $context eq 'fulltext' || $context eq 'search' ) && $searchKey}
          {assign var='urlParams' value="reset=1&id=$id&cid=$contact_id&action=view&context=$context&key=$searchKey"}
          {/if}
-         <a class="button" href="{crmURL p='civicrm/contact/view/contribution/receipt' q=$urlParams}" accesskey="e" target="_blank"><span><div class="icon ui-icon-circle-arrow-s"></div>{ts}Receipt{/ts}</span></a>
+         <a class="button" href="{crmURL p='civicrm/contact/view/contribution/receipt' q=$urlParams}" accesskey="e" target="_blank"><span><i class="zmdi zmdi-collection-text"></i>{ts}Receipt{/ts}</span></a>
        {/if}
     {/if}
     {if call_user_func(array('CRM_Core_Permission','check'), 'delete in CiviContribute')}
@@ -271,7 +271,7 @@
        {if ( $context eq 'fulltext' || $context eq 'search' ) && $searchKey}
        {assign var='urlParams' value="reset=1&id=$id&cid=$contact_id&action=delete&context=$context&key=$searchKey"}	   
        {/if}
-       <a class="button" href="{crmURL p='civicrm/contact/view/contribution' q=$urlParams}"><span><div class="icon delete-icon"></div>{ts}Delete{/ts}</span></a>
+       <a class="button" href="{crmURL p='civicrm/contact/view/contribution' q=$urlParams}"><span><i class="zmdi zmdi-delete"></i>{ts}Delete{/ts}</span></a>
     {/if}
     {include file="CRM/common/formButtons.tpl" location="bottom"}
 </div>

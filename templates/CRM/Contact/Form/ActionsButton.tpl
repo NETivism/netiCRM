@@ -37,24 +37,24 @@
               <ul class="contact-print">
                   <li class="crm-contact-print">
                  		<a class="print" title="{ts}Printer-friendly view of this page.{/ts}" href='{crmURL p='civicrm/contact/view/print' q="reset=1&print=1&cid=$contactId"}'">
-                 		<span><div class="icon print-icon"></div>{ts}Print Summary{/ts}</span>
+                 		<span><div class="zmdi zmdi-print"></div>{ts}Print Summary{/ts}</span>
                  		</a>
                   </li>
                   <li>
-                        <a class="vcard " title="{ts}vCard record for this contact.{/ts}" href="{crmURL p='civicrm/contact/view/vcard' q="reset=1&cid=$contactId"}"><span><div class="icon vcard-icon"></div>{ts}vCard{/ts}</span>
+                        <a class="vcard " title="{ts}vCard record for this contact.{/ts}" href="{crmURL p='civicrm/contact/view/vcard' q="reset=1&cid=$contactId"}"><span><div class="zmdi zmdi-account-box-o"></div>{ts}vCard{/ts}</span>
                         </a>
                   </li>
                  {if $dashboardURL }
                    <li class="crm-contact-dashboard">
                       <a href="{$dashboardURL}" class="dashboard " title="{ts}dashboard{/ts}">
-                       	<span><div class="icon dashboard-icon"></div>{ts}Contact Dashboard{/ts}</span>
+                       	<span><div class="zmdi zmdi-view-subtitles"></div>{ts}Contact Dashboard{/ts}</span>
                        </a>
                    </li>
                  {/if}
                  {if $userRecordUrl }
                    <li class="crm-contact-user-record">
                       <a href="{$userRecordUrl}" class="user-record " title="{ts}User Record{/ts}">
-                         <span><div class="icon user-record-icon"></div>{ts}User Record{/ts}</span>
+                         <span><div class="zmdi zmdi-account-circle"></div>{ts}User Record{/ts}</span>
                       </a>
                    </li>
                  {/if}

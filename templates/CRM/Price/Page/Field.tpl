@@ -50,7 +50,7 @@
   {if $priceField}
     <div class="action-link-button">
         <a href="{crmURL q="reset=1&action=add&sid=$sid"}" id="newPriceField" class="button"><span><i class="zmdi zmdi-plus-circle-o"></i>{ts}Add Price Field{/ts}</span></a>
-        <a href="{crmURL p="civicrm/admin/price" q="action=preview&sid=`$sid`&reset=1&context=field"}" class="button"><span><div class="icon preview-icon"></div>{ts}Preview (all fields){/ts}</span></a>
+        <a href="{crmURL p="civicrm/admin/price" q="action=preview&sid=`$sid`&reset=1&context=field"}" class="button"><span><div class="zmdi zmdi-flip-to-front"></div>{ts}Preview (all fields){/ts}</span></a>
     </div>
     <div id="field_page">
     {strip}
@@ -95,7 +95,7 @@
      </div>
      <div class="action-link-button">
          <a href="{crmURL q="reset=1&action=add&sid=$sid"}" id="newPriceField" class="button"><span><i class="zmdi zmdi-plus-circle-o"></i>{ts}Add Price Field{/ts}</span></a>
-         <a href="{crmURL p="civicrm/admin/price" q="action=preview&sid=`$sid`&reset=1&context=field"}" class="button"><span><div class="icon preview-icon"></div>{ts}Preview (all fields){/ts}</span></a>
+         <a href="{crmURL p="civicrm/admin/price" q="action=preview&sid=`$sid`&reset=1&context=field"}" class="button"><span><div class="zmdi zmdi-flip-to-front"></div>{ts}Preview (all fields){/ts}</span></a>
      </div>
 
   {else}

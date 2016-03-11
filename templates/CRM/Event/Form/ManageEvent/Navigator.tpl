@@ -3,12 +3,12 @@
     	<ul id="actions">
       <li>
         <div class="action-wrapper">
-    	    <div class="action-link-button" id="crm-event-nav-link"><a href="{crmURL p='civicrm/event/search' q="reset=1&force=1&event=`$id`"}" class="button">{ts}Participant Count{/ts}<i class="icon dashboard-icon"></i></a></div>
+    	    <div class="action-link-button" id="crm-event-nav-link"><a href="{crmURL p='civicrm/event/search' q="reset=1&force=1&event=`$id`"}" class="button"><i class="zmdi zmdi-assignment-account"></i>{ts}Participant Count{/ts}</a></div>
         </div>
       </li>
       <li>
         <div class="action-wrapper">
-    	    <div class="action-link-button" id="crm-event-nav-link"><a class="button" href="{crmURL p='civicrm/participant/add' q="reset=1&action=add&context=standalone&eid=`$id`"}">{ts}Register New Participant{/ts}<i class="icon add-icon"></i></a></div>
+    	    <div class="action-link-button" id="crm-event-nav-link"><a class="button" href="{crmURL p='civicrm/participant/add' q="reset=1&action=add&context=standalone&eid=`$id`"}"><i class="zmdi zmdi-plus-circle-o"></i>{ts}Register New Participant{/ts}</a></div>
         </div>
       </li>
       <li>
@@ -49,7 +49,7 @@
       <!--
     	<li>
         <div class="action-wrapper">
-    	    <div class="action-link-button" id="crm-participant-link"><span>{ts}Find Participants{/ts}<div class="icon dropdown-icon"></div></div>
+    	    <div class="action-link-button" id="crm-participant-link"><span>{ts}Find Participants{/ts}<div class="zmdi zmdi-arrow-right-top zmdi-hc-rotate-90"></div></div>
           <div class="action-link-result ac_results" id="crm-participant-list">
             <div class="action-link-result-inner crm-participant-list-inner">
               <ul>

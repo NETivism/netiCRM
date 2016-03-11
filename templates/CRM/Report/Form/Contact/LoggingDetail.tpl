@@ -29,7 +29,7 @@
     {include file="CRM/Report/Form/Layout/Table.tpl"}
   {else}
     <div class='messages status'>
-        <div class='icon inform-icon'></div>&nbsp; {ts}This report can not be displayed because there are no entries in the logging tables yet.{/ts}
+        {ts}This report can not be displayed because there are no entries in the logging tables yet.{/ts}
     </div>
   {/if}
   <div class="action-link-button">

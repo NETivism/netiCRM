@@ -43,7 +43,7 @@
 	 	 </tr>
         {/foreach}
   	   </table>
-	<div class="icon tip-icon"></div>
+	<i class="zmdi zmdi-lamp"></i>
      <strong>{ts}Tip{/ts}</strong> - <span class="description">{ts}You must be logged in to your account to access the editing options above. (If you visit this page without logging in, you will be viewing the page in "live" mode - as your visitors and friends see it.){/ts}</span>
 </div>
 {/if}

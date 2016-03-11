@@ -63,7 +63,7 @@ var checkSimilar = {$checkSimilar};
        }
        else if(data.values.length !== 0){
          cj('#lastname_msg').remove();
-         var msg = "<tr id='lastname_msg'><td colspan='5'><div class='messages status'><div class='icon inform-icon'></div>";
+         var msg = "<tr id='lastname_msg'><td colspan='5'><div class='messages status'>";
 
          if(data.values.length == 1){
            msg = msg + "{/literal}{ts}There is a contact with a similar last name. If the person you were trying to add is listed below, click on their name to view or edit their record{/ts}{literal}";  

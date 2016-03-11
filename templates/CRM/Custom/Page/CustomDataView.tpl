@@ -32,7 +32,7 @@
 	    {if $editOwnCustomData or ($showEdit and $editCustomData and $groupId)}	
 		<tr>
 		    <td>
-			<a href="{crmURL p="civicrm/contact/view/cd/edit" q="tableId=`$contactId`&cid=`$contactId`&groupId=`$groupId`&action=update&reset=1"}" class="button" style="margin-left: 6px;"><span><div class="icon edit-icon"></div>{ts 1=$cd_edit.title}Edit %1{/ts}</span></a><br/><br/>
+			<a href="{crmURL p="civicrm/contact/view/cd/edit" q="tableId=`$contactId`&cid=`$contactId`&groupId=`$groupId`&action=update&reset=1"}" class="button" style="margin-left: 6px;"><span><div class="zmdi zmdi-edit"></div>{ts 1=$cd_edit.title}Edit %1{/ts}</span></a><br/><br/>
 		    </td>
 		</tr>      
 	    {/if}
@@ -51,7 +51,7 @@
 	        {if $groupId and $cvID and $editCustomData}
 	        <div class="crm-submit-buttons">
 			<a href="javascript:showDelete( {$cvID}, '{$cd_edit.name}_{$index}', {$customGroupId}, {$contactId} );" class="button delete-button" title="{ts 1=$cd_edit.title}Delete this %1 record{/ts}">
-			 <span><div class="icon delete-icon"></div>{ts}Delete{/ts}</span>
+			 <span><div class="zmdi zmdi-delete"></div>{ts}Delete{/ts}</span>
             </a>
             </div>
             {/if}

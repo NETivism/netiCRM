@@ -117,7 +117,7 @@
      }
      
      if ( showError ) {
-         cj('#validate_pricefield').show().html("<span class='icon red-icon alert-icon'></span>{/literal}{ts}This Option is already full for this event.{/ts}{literal}");
+         cj('#validate_pricefield').show().html("<span class='icon red-zmdi zmdi-alert-circle'></span>{/literal}{ts}This Option is already full for this event.{/ts}{literal}");
      } else {
        cj('#validate_pricefield').hide( ).html('');
      }

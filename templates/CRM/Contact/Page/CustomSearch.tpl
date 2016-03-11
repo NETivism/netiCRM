@@ -33,7 +33,7 @@
     {/foreach}
 {else}
     <div class="messages status">
-      <div class="icon alert-icon"></div>
+      <div class="zmdi zmdi-alert-circle"></div>
        {ts}There are currently no Custom Searches.{/ts}
     </div>
 {/if}

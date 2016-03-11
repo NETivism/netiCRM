@@ -2650,3 +2650,16 @@ div#crm-toolTip
 #stat_ps .people-count{
   float:right;
 }
+
+/* Sortable */
+ul.ui-sortable {
+  margin: 0;
+}
+.ui-sortable li {
+  list-style-type: none; 
+  cursor: move;
+}
+.ui-sortable span.zmdi{
+  margin: 0 5px;
+  color: #999;
+}

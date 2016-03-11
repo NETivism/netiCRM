@@ -35,7 +35,7 @@
 
 {if ! $suppressForm and count($form.errors) gt 0}
    <div class="messages crm-error">
-   		<div class="icon red-icon alert-icon"></div>
+   		<div class="icon red-zmdi zmdi-alert-circle"></div>
 	   {ts}Please correct the following errors in the form fields below:{/ts}
 	   <ul id="errorList">
 	   {foreach from=$form.errors key=errorName item=error}
