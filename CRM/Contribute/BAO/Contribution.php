@@ -568,7 +568,7 @@ class CRM_Contribute_BAO_Contribution extends CRM_Contribute_DAO_Contribution {
       $expFieldsContrib = CRM_Contribute_DAO_ContributionProduct::export();
       $typeField = CRM_Contribute_DAO_ContributionType::export();
       $optionField = CRM_Core_OptionValue::getFields($mode = 'contribute');
-      $contributionStatus = array('contribution_status' => array('title' => 'Contribution Status',
+      $contributionStatus = array('contribution_status' => array('title' => ts('Contribution Status'),
           'name' => 'contribution_status',
           'data_type' => CRM_Utils_Type::T_STRING,
         ));
