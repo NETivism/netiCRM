@@ -38,7 +38,7 @@
 .crm-container #help {
   position: relative;
   margin: 0 0 8px 0;
-  padding: 12px 12px 12px 55px;
+  padding: 12px 12px 12px 55px !important; /* In order to display messages status icon */
   border: none;
   border-radius: 0;
   color: #fff;
