@@ -580,7 +580,7 @@ table.crm-table-group-summary tbody {
 .crm-container table {
   border:1px solid #efefef;
 }
-.crm-tooltip .crm-container table {
+.crm-container .crm-tooltip table {
   border-color:transparent;
 }
 
@@ -714,6 +714,9 @@ tbody.scrollContent tr.alternateRow {
 
 .crm-container table.selector tr:hover {
   background-color: #D2D4E1;
+}
+.crm-container table.selector .crm-tooltip tr:hover {
+  background-color: transparent;
 }
 
 .crm-container table.selector td {

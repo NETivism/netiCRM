@@ -2009,32 +2009,39 @@ div#crm-toolTip #hide-tooltip {
 .crm-tooltip-wrapper {
     position:absolute;
     bottom:0px;
-    left:-36px;
     overflow:hidden;
     z-index:1000;
     padding-bottom: 10px;
-    background: transparent url('../i/overlay-pointer.png') no-repeat bottom left;
-    font-size:12px;
-    display:none;
+    font-size:13px;
+}
+.crm-tooltip-wrapper table td,
+.crm-tooltip-wrapper table tr {
+  color: #FFF;
 }
 
 .crm-tooltip-down .crm-tooltip-wrapper {
-    top:20px;
+    top:15px;
     padding-top: 10px;
-    background: transparent url('../i/overlay-pointer.png') no-repeat top left;
     overflow: visible;
 }
 
-.crm-tooltip-active {z-index: 20;}
+.crm-tooltip-active {
+  z-index: 20;
+}
 
-.crm-tooltip-active .crm-tooltip-wrapper {display:block;}
+.crm-tooltip-active .crm-tooltip-wrapper {
+  display:block;
+}
+.crm-tooltip-wrapper .crm-section .label {
+  text-align: right;
+}
 
 .crm-summary-group h2 {
     padding:2px 4px 0 4px;
     font-size: 14px;
     color:#FFF;
     margin-bottom:0px;
-    }
+}
 
 
 .crm-tooltip {
@@ -2055,10 +2062,13 @@ div#crm-toolTip #hide-tooltip {
 /* crm-summary-group appears outside crm-container for contact summary icon overlay */
 .crm-container .crm-summary-group .crm-section .label,
 .crm-summary-group .crm-section .label {
-    text-align: left;
+    text-align: right;
     width:40%;
-    font-size:11px;
+    font-size:13px;
     color:#A7A7A7;
+}
+.crm-summary-group .crm-section .label:after {
+    content: ': ';
 }
 
 .crm-container .crm-summary-group .crm-section .content,
