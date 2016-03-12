@@ -1769,29 +1769,28 @@ span.icon {
 
 .block-civicrm #recently-viewed .crm-icon,
 .crm-icon {
-    background-image: url('../i/item_sprites.png');
-    margin:2px 4px 0 0;
-    text-indent:-10000px; /* for accessibility reason, put the name of the type/subtype in the icon div (it will be hidden and replaced by the icon) */
+  margin:2px 4px 0 0;
+  font: normal normal normal 14px/1 'Material-Design-Iconic-Font';
 }
 
-.Individual-icon { background-position: 0px 0px; }
-.Group-icon { background-position: -16px 0px; }
-.Household-icon { background-position: -32px 0px; }
+.Individual-icon:before { content: "\f207"; }
+.Group-icon:before { content: "\f209"; }
+.Household-icon:before { content: "\f175"; }
+.Organization-icon:before { content: "\f133"; }
 
-.Individual-subtype-icon { background-position: 0px -48px; }
-.Household-subtype-icon { background-position: -32px -48px; }
-.Organization-subtype-icon { background-position: -48px -48px; }
+.Individual-subtype-icon:before { content: "\f207"; }
+.Household-subtype-icon:before { content: "\f175"; }
+.Organization-subtype-icon:before { content: "\f133"; }
 
-.Organization-icon { background-position: -48px 0px; }
-.Activity-icon { background-position: -64px 0px; }
-.Case-icon { background-position: -80px 0px; }
-.Grant-icon { background-position: 0px -16px; }
-.Contribution-icon { background-position: -16px -16px; }
-.Pledge-icon { background-position: -16px -16px; }
-.Membership-icon { background-position: -32px -16px; }
-.Participant-icon { background-position: 0px -32px; }
-.Note-icon { background-position: -16px -32px; }
-.Relationship-icon { background-position: -32px -32px; }
+.Activity-icon:before { content: "\f19c"; }
+.Case-icon:before { content: "\f12a"; }
+.Grant-icon:before { content: "\f198"; }
+.Contribution-icon:before { content: "\f198"; }
+.Pledge-icon:before { content: "\f198"; }
+.Membership-icon:before { content: "\f106"; }
+.Participant-icon:before { content: "\f1da"; }
+.Note-icon:before { content: "\f25b"; }
+.Relationship-icon:before { content: "\f30d"; }
 
 /* accordion styles */
 

@@ -60,7 +60,7 @@ class CRM_Contact_BAO_Contact_Utils {
         if (!preg_match("/^(\/|(http(s)?:)).+$/i", $imageUrl)) {
           $imageUrl = $config->resourceBase . $imageUrl;
         }
-        $imageInfo[$contactType]['image'] = "<div class=\"icon crm-icon {$typeInfo['name']}-icon\" style=\"background: url('{$imageUrl}')\" title=\"{$contactType}\"></div>";
+        $imageInfo[$contactType]['image'] = "<span class=\"crm-icon {$typeInfo['name']}-icon\" title=\"{$contactType}\"></span>";
         $imageInfo[$contactType]['url'] = $imageUrl;
       }
       else {
@@ -76,7 +76,7 @@ class CRM_Contact_BAO_Contact_Utils {
         }
 
 
-        $imageInfo[$contactType]['image'] = "<div class=\"icon crm-icon {$type}-icon\" title=\"{$contactType}\"></div>";
+        $imageInfo[$contactType]['image'] = "<span class=\"crm-icon {$type}-icon\" title=\"{$contactType}\"></span>";
         $imageInfo[$contactType]['url'] = NULL;
       }
     }
