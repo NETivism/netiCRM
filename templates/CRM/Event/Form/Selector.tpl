@@ -61,11 +61,11 @@
         {assign var="next" value=$rows[$nk]}
         {if !$smarty.get.crmSID or $smarty.get.crmSID == '1_d'}
           {if $row.participant_registered_by_id}
-            <span>&nbsp;</span><i class="fa fa-level-up fa-rotate-90 fa-grey"></i><span>&nbsp;</span>
+            <span>&nbsp;</span><i class="zmdi zmdi-long-arrow-return zmdi-hc-flip-horizontal"></i><span>&nbsp;</span>
           {elseif $next.participant_registered_by_id}
-            <i class="fa fa-group fa-grey" title="{ts}Registered by ID{/ts}"></i>
+            <i class="zmdi zmdi-accounts" title="{ts}Registered by ID{/ts}"></i>
           {else}
-            <i class="fa fa-user fa-grey"></i>
+            <i class="zmdi zmdi-account"></i>
           {/if}
         {/if}
         {$row.participant_id}
@@ -77,7 +77,7 @@
       <a href="{crmURL p='civicrm/event/search' q="reset=1&force=1&event=`$row.event_id`"}" title="{ts}List participants for this event (all statuses){/ts}">{$row.event_title}</a>
       {if $contactId}
       <ul class="crm-nav-links">
-        <li><a href="{crmURL p='civicrm/event/info' q="reset=1&id=`$row.event_id`"}" title="{ts}View event info page{/ts}" target="_blank"><i class="fa fa-info-circle"></i>{ts}View event info page{/ts}</a></li>
+        <li><a href="{crmURL p='civicrm/event/info' q="reset=1&id=`$row.event_id`"}" title="{ts}View event info page{/ts}" target="_blank"><i class="zmdi zmdi-info"></i>{ts}View event info page{/ts}</a></li>
       </ul>
       {/if}
     </td> 

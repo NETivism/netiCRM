@@ -1,6 +1,6 @@
 <div>
   <div id="stat_ps">
-    <span class="fa fa-minus-square-o expand-icon"></span>
+    <span class="zmdi zmdi-minus-square expand-icon"></span>
     <div class="stat_ps_graph" id="stat_ps_graph1"></div>
     <div class="stat_ps_graph" id="stat_ps_graph2"></div>
     <div class="stat_ps_label" id="stat_ps_label1"></div>

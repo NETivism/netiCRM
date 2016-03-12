@@ -49,14 +49,14 @@
     {if $participant_registered_by_id} {* Display primary participant *}
         <tr class="crm-event-participantview-form-block-registeredBy">
             <td class="label">{ts}Registered by ID{/ts}</td>
-            <td><i class="fa fa-dot-circle-o fa-grey"></i><a href="{crmURL p='civicrm/contact/view/participant' q="reset=1&id=$participant_registered_by_id&cid=$registered_by_contact_id&action=view"}" title="{ts}view primary participant{/ts}">{$registered_by_display_name}</a></td>
+            <td><i class="zmdi zmdi-dot-circle"></i><a href="{crmURL p='civicrm/contact/view/participant' q="reset=1&id=$participant_registered_by_id&cid=$registered_by_contact_id&action=view"}" title="{ts}view primary participant{/ts}">{$registered_by_display_name}</a></td>
         </tr>
     {/if}
     <tr class="crm-event-participantview-form-block-displayName">
 	    <td class="label">{ts}Participant Name{/ts}</td>
 	    <td class="bold">
         {if $participant_registered_by_id}
-            &nbsp; <i class="fa fa-level-up fa-rotate-90 fa-grey"></i> 
+            &nbsp; <i class="zmdi zmdi-long-arrow-return zmdi-hc-flip-horizontal"></i> 
         {/if}
 	    	<a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=$contact_id"}" title="view contact record">{$displayName}</a>
 	    	<div class="crm-submit-buttons">
@@ -69,7 +69,7 @@
             <td class="label">{ts}Also Registered by this Participant{/ts}</td>
             <td>
                 {foreach from=$additionalParticipants key=apName item=apURL}
-                    <i class="fa fa-level-up fa-rotate-90 fa-grey"></i> <a href="{$apURL}" title="{ts}view additional participant{/ts}">{$apName}</a><br />
+                    <i class="zmdi zmdi-long-arrow-return zmdi-hc-flip-horizontal"></i> <a href="{$apURL}" title="{ts}view additional participant{/ts}">{$apName}</a><br />
                 {/foreach}
             </td>
         </tr>
