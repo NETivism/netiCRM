@@ -9,6 +9,16 @@
   line-height: 1.5;
 }
 
+/* crm icon */
+.crm-container div i,
+.crm-container span i,
+.crm-container button i,
+.crm-container a i {
+  color: #555;
+  margin: 0 5px;
+  vertical-align: baseline;
+}
+
 /**
  * Placeholder
  */
@@ -398,7 +408,9 @@
 }
 
 /* button: icon & text */
+.button i,
 .crm-container .button i {
+  color: #fff;
   margin: 0 5px;
   font-size: inherit;
   vertical-align: baseline;

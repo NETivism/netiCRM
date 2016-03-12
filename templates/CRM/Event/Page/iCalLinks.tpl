@@ -28,10 +28,10 @@
 {capture assign=icalFeed}{crmURL p='civicrm/event/ical' q="reset=1&page=1&id=`$event.id`" fe=1 a=1}{/capture}
 <div class="action-link section iCal_links-section">
     <a href="{$icalFile}" title="{ts}Download iCalendar entry for this event.{/ts}">
-      <i class="fa fa-calendar"></i>{ts}Download iCalendar entry for this event.{/ts}
+      <i class="zmdi zmdi-calendar"></i>{ts}Download iCalendar entry for this event.{/ts}
     </a>
 
     <a href="{$icalFeed}" title="{ts}iCalendar feed for this event.{/ts}" target="_blank">
-      <i class="fa fa-calendar-o"></i>{ts}iCalendar feed for this event.{/ts}
+      <i class="zmdi zmdi-calendar-note"></i>{ts}iCalendar feed for this event.{/ts}
     </a> 
 </div>

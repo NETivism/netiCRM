@@ -31,8 +31,8 @@
 <div class="crm-actions-ribbon action-link-button">
   <a accesskey="N" href="{$newEventURL}" id="newManageEvent" class="button"><i class="zmdi zmdi-plus-circle-o"></i>{ts}Add Event{/ts}</a>
   <div class="float-right top-icon">
-    <a href="{$rssFeed}" target="_blank" title="{ts}Get RSS 2.0 feed for current and future public events.{/ts}"><i class="fa fa-rss-square"></i>RSS</a> 
-    <a href="{$icalFeed}" target="_blank" title="{ts}Get iCalendar feed for current and future public events.{/ts}"><i class="fa fa-calendar"></i>iCAL</a>
+    <a href="{$rssFeed}" target="_blank" title="{ts}Get RSS 2.0 feed for current and future public events.{/ts}"><i class="zmdi zmdi-rss"></i>RSS</a> 
+    <a href="{$icalFeed}" target="_blank" title="{ts}Get iCalendar feed for current and future public events.{/ts}"><i class="zmdi zmdi-calendar"></i>iCAL</a>
   </div>
   <div class="clear"></div>
 </div>
@@ -65,11 +65,11 @@
             <td class="crm-event-title crm-event_{$row.id}">
               <a href="{crmURL p='civicrm/event/search' q="reset=1&force=1&event=`$row.id`"}" class="bold">{$row.title}</a>
               <ul class="crm-nav-menu crm-nav-links-event">
-                <li><a href="{crmURL p='civicrm/event/search' q="reset=1&force=1&event=`$row.id`"}" title="{ts}Statistics{/ts}"><i class="fa fa-bar-chart-o"></i>{ts}Participant Count{/ts}: {$row.counted}{if $row.max_participants}/{$row.max_participants}{/if}</a></li>
-                <li><a href="{crmURL p='civicrm/participant/add' q="reset=1&action=add&context=standalone&eid=`$row.id`"}" title="{ts}Register New Participant{/ts}"><i class="fa fa-plus-square-o"></i>{ts}Register Event Participant{/ts}</a></li>
+                <li><a href="{crmURL p='civicrm/event/search' q="reset=1&force=1&event=`$row.id`"}" title="{ts}Statistics{/ts}"><i class="zmdi zmdi-chart"></i>{ts}Participant Count{/ts}: {$row.counted}{if $row.max_participants}/{$row.max_participants}{/if}</a></li>
+                <li><a href="{crmURL p='civicrm/participant/add' q="reset=1&action=add&context=standalone&eid=`$row.id`"}" title="{ts}Register New Participant{/ts}"><i class="zmdi zmdi-account-add"></i>{ts}Register Event Participant{/ts}</a></li>
                 <li>
                   <div class="crm-configure-actions">
-                    <i class="fa fa-edit"></i>
+                    <i class="zmdi zmdi-settings"></i>
                     <span id="event-configure-{$row.id}" class="btn-slide">{ts}Configure{/ts}
                       <ul class="panel" id="panel_info_{$row.id}">
                       <li><a title="Info and Settings" class="action-item-wrap" href="{crmURL p='civicrm/event/manage/eventInfo' q="reset=1&action=update&id=`$row.id`"}">{ts}Info and Settings{/ts}</a></li>
@@ -83,7 +83,7 @@
                 </li>
                 <li>
                   <div class="crm-event-links">
-                    <i class="fa fa-external-link"></i>
+                    <i class="zmdi zmdi-link"></i>
                     <span id="event-links-{$row.id}" class="btn-slide">{ts}Event Links{/ts}
                       <ul class="panel" id="panel_links_{$row.id}">
                         <li><a title="Register Participant" class="action-item" href="{crmURL p='civicrm/participant/add' q="reset=1&action=add&context=standalone&eid=`$row.id`"}">{ts}Register Participant{/ts}</a></li>
