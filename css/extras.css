@@ -123,26 +123,26 @@
 
 /* fieldset */
 .crm-container fieldset {
-  background: none;
+  top: 0;
+  margin: 30px 0;
   padding: 4px 0;
-  margin: 10px 0;
   border: none;
   border-top: 1px solid #CFCEC3;
-  top: 0;
   border-radius: 0;
+  background: none;
 }
 .crm-container fieldset legend {
   display: block;
-  font-size: 1.25rem;
-  padding: 4px;
-  background: none;
-  border: medium none;
-  background-color: transparent;
-  color: #3E3E3E;
   position: relative;
-  text-indent: 0;
-  width: auto;
   top: 0;
+  margin-bottom: 20px;
+  padding: 4px;
+  width: auto;
+  text-indent: 0;
+  font-size: 1.25rem;
+  color: #3E3E3E;
+  border: none;
+  background: none;
 }
 
 /* step */
@@ -324,14 +324,16 @@
   background: #111;
 }
 
-/* button: save, submit */
+/* button: primary, save, submit, register, next */
 .crm-button-type-upload button,
 .crm-button-type-upload input[type="button"],
 .crm-button-type-upload .button,
 .crm-button-type-upload a.button:link,
 .crm-button-type-upload a.button:visited,
 .crm-button-type-upload .form-submit,
-.crm-container #register-me {
+.crm-button-type-next .form-submit,
+.crm-container #register-me,
+.crm-container a.button.crm-register-button {
   color: #fff;
   background: #3f51b5;
 }
@@ -343,8 +345,12 @@
 .crm-button-type-upload .button:focus,
 .crm-button-type-upload .form-submit:hover,
 .crm-button-type-upload .form-submit:focus,
+.crm-button-type-next .form-submit:hover,
+.crm-button-type-next .form-submit:focus,
 .crm-container #register-me:hover,
-.crm-container #register-me:focus {
+.crm-container #register-me:focus,
+.crm-container a.button.crm-register-button:hover,
+.crm-container a.button.crm-register-button:focus {
   color: #fff;
   background: #5C6BC0;
 }
@@ -352,7 +358,9 @@
 .crm-button-type-upload input[type="button"]:active,
 .crm-button-type-upload .button:active,
 .crm-button-type-upload .form-submit:active,
-.crm-container #register-me:active {
+.crm-button-type-next .form-submit:active,
+.crm-container #register-me:active,
+.crm-container a.button.crm-register-button:active {
   background: #303F9F;
 }
 
@@ -461,7 +469,7 @@
   font-size: 24px;
 }
 .crm-container #printer-friendly .print-icon:hover {
-  color: #5C6BC0;
+  color: #536DFE;
 }
 .crm-container #printer-friendly .print-icon:active {
   color: #303F9F;
@@ -950,4 +958,52 @@ tbody.scrollContent tr.alternateRow {
 
 .crm-container th.contriTotalLeft {
     border-left: 1px solid #999999;
+}
+
+/* Contribute Page */
+.crm-container form[action="/civicrm/contribute/transact"] .crm-submit-buttons {
+  text-align: right;
+}
+
+/* Events Page */
+.crm-container .event_summary-section {
+  position: relative;
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: #E8EAF6;
+}
+.crm-container .event_summary-section .action-link {
+  float: right; 
+}
+.crm-container .event-info .register_link-section a.crm-register-button {
+  padding: 15px 30px;
+  font-size: 1.5rem;
+  box-shadow: 0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12);
+}
+.crm-container .event-info .register_link-section a.crm-register-button:active {
+  box-shadow: 0 4px 5px 0 rgba(0,0,0,.14),0 1px 10px 0 rgba(0,0,0,.12),0 2px 4px -1px rgba(0,0,0,.2);
+}
+.crm-container .event-info .register_link-top a.crm-register-button {
+  padding: 8px 15px;
+  font-size: .9375rem;
+}
+.crm-container .event-info .action-link a.crm-register-button:last-child {
+  margin-right: 0;
+}
+.crm-container .event-info .register_link-section {
+  margin: 30px 0 15px 0;
+  text-align: center;
+}
+.crm-container .event-info .register_link-top {
+  margin: 0 0 0 15px;
+  text-align: left;
+}
+.crm-container form[action="/civicrm/event/register"] .crm-submit-buttons {
+  text-align: right;
+}
+
+/* Profiles Page */
+.crm-container form[action="/civicrm/profile/create"] .crm-submit-buttons {
+  margin-top: 80px;
+  text-align: center;
 }

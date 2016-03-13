@@ -2422,11 +2422,6 @@ div#crm-toolTip
     text-decoration: none;
 }
 
-/* Special styling for specific form buttons */
-.crm-container span.crm-button_qf_Main_upload input {
-    font-size: 1.2em;
-}
-
 /*Import progress bar */
 .ui-progressbar-value { background-image:url("../packages/jquery/css/images/pbar-ani.gif"); }
 

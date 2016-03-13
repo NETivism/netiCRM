@@ -100,6 +100,7 @@
       "/civicrm/event/register",
       "/civicrm/event/info",
       "/civicrm/contribute/transact",
+      "/civicrm/profile/create"
     ];
     var result = $.inArray(wlPath, allowPath) != -1 ? true : false;
 
