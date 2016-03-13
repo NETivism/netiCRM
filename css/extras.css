@@ -396,7 +396,8 @@
 .crm-delete-action .button,
 .crm-delete-action a.button:link,
 .crm-delete-action a.button:visited,
-.crm-container input[id*="Delete_done"] {
+.crm-container input[id*="Delete_done"],
+.crm-container a.delete.button {
   color: #fff;
   background: #D32F2F;
 }
@@ -405,13 +406,16 @@
 .crm-delete-action a.button:hover,
 .crm-delete-action a.button:focus,
 .crm-container input[id*="Delete_done"]:hover,
-.crm-container input[id*="Delete_done"]:focus {
+.crm-container input[id*="Delete_done"]:focus,
+.crm-container a.delete.button:hover,
+.crm-container a.delete.button:focus {
   color: #fff;
   background: #F44336;
 }
 .crm-delete-action .button:active,
 .crm-delete-action a.button:active,
-.crm-container input[id*="Delete_done"]:active {
+.crm-container input[id*="Delete_done"]:active,
+.crm-container a.delete.button:active {
   background: #B71C1C;
 }
 
@@ -488,8 +492,9 @@
 }
 
 /* clear printer friendly float */
-.crm-container .messages,
-.crm-block {
+#printer-friendly + .messages,
+#printer-friendly + .crm-block,
+#printer-friendly + #help {
   clear: both;
 }
 
@@ -970,31 +975,32 @@ tbody.scrollContent tr.alternateRow {
   position: relative;
   margin-bottom: 20px;
   padding: 15px;
+  overflow: hidden;
   background-color: #E8EAF6;
 }
 .crm-container .event_summary-section .action-link {
   float: right; 
 }
-.crm-container .event-info .register_link-section a.crm-register-button {
+.crm-container .crm-event-info-form-block .register_link-section a.crm-register-button {
   padding: 15px 30px;
   font-size: 1.5rem;
   box-shadow: 0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12);
 }
-.crm-container .event-info .register_link-section a.crm-register-button:active {
+.crm-container .crm-event-info-form-block .register_link-section a.crm-register-button:active {
   box-shadow: 0 4px 5px 0 rgba(0,0,0,.14),0 1px 10px 0 rgba(0,0,0,.12),0 2px 4px -1px rgba(0,0,0,.2);
 }
-.crm-container .event-info .register_link-top a.crm-register-button {
+.crm-container .crm-event-info-form-block .register_link-top a.crm-register-button {
   padding: 8px 15px;
   font-size: .9375rem;
 }
-.crm-container .event-info .action-link a.crm-register-button:last-child {
+.crm-container .crm-event-info-form-block .action-link a.crm-register-button:last-child {
   margin-right: 0;
 }
-.crm-container .event-info .register_link-section {
+.crm-container .crm-event-info-form-block .register_link-section {
   margin: 30px 0 15px 0;
   text-align: center;
 }
-.crm-container .event-info .register_link-top {
+.crm-container .crm-event-info-form-block .register_link-top {
   margin: 0 0 0 15px;
   text-align: left;
 }
