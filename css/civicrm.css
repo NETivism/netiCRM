@@ -1768,7 +1768,7 @@ span.icon {
 .block-civicrm #recently-viewed .crm-icon,
 .crm-icon {
   margin:2px 4px 0 0;
-  font: normal normal normal 14px/1 'Material-Design-Iconic-Font';
+  font: normal normal normal 16px/1 'Material-Design-Iconic-Font';
 }
 
 .Individual-icon:before { content: "\f207"; }
@@ -2002,6 +2002,8 @@ div#crm-toolTip #hide-tooltip {
 .crm-summary-link {
     position: relative;
     z-index: 16;
+    display: block;
+    cursor: pointer;
 }
 
 .crm-tooltip-wrapper {
@@ -2042,19 +2044,38 @@ div#crm-toolTip #hide-tooltip {
 }
 
 
+.crm-tooltip-wrapper {
+  color:#FFF;
+  left: 20px;
+  overflow: visible;
+}
+.crm-tooltip-wrapper .close {
+  font-size: 20px;
+  position: absolute;
+  cursor: pointer;
+  left: -5px;
+  background: #000;
+  border-radius: 20px;
+  bottom: 0;
+  line-height: 20px;
+}
 .crm-tooltip {
-    padding:4px;
-    background-color: #2f2f2e;
-    color:#FFF;
-    margin-left:11px;
-    min-width: 20px;
-    min-height: 20px;
+  padding:4px;
+  background-color: #2f2f2e;
+  min-width: 20px;
+  min-height: 20px;
+}
+.crm-table-group-summary td {
+  width: 45%;
 }
 .crm-container .crm-tooltip table,
 .crm-container .crm-tooltip table tr td {border:none;}
 .crm-tooltip .crm-summary-group {
-    width:700px;
-    margin-bottom: 0px;
+  width: 700px;
+}
+.crm-tooltip .crm-table-group-summary {
+  width: 95%;
+  margin-bottom: 0px;
 }
 
 /* crm-summary-group appears outside crm-container for contact summary icon overlay */

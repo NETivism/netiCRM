@@ -507,8 +507,7 @@
 }
 
 /* crm site-wide table style */
-.crm-container table,
-.crm-container table.crm-table-group-summary {
+.crm-container table {
   margin: 0em 0em 1em;
   border-collapse: collapse;
   width: 100%;
@@ -555,8 +554,7 @@
 
 .crm-container table.form-layout-compressed tbody th.label { background-color: #F7F7F7; }
 
-.crm-container tbody,
-table.crm-table-group-summary tbody {
+.crm-container tbody{
   border-top: none
 }
 
