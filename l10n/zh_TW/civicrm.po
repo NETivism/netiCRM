@@ -3,13 +3,13 @@
 # Fuyuan Cheng <gloomcheng@gmail.com>, 2013-2015
 # IreneLin, 2013
 # jimyhuang <jimmy@netivism.com.tw>, 2013,2015-2016
-# 張書懷 <junsuwhy@gmail.com>, 2015
+# 張書懷 <junsuwhy@gmail.com>, 2015-2016
 # SharonKwan <sharon@netivism.com.tw>, 2015-2016
 # charlesc <yeouhsin@gmail.com>, 2013-2014
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2016-01-19 07:08+0000\n"
+"PO-Revision-Date: 2016-03-14 06:12+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -17,7 +17,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: POEditor.com\n"
 
 #: CRM/ACL/BAO/ACL.php CRM/ACL/BAO/EntityRole.php CRM/Admin/Form/Options.php
 #: CRM/Contact/Form/Task/Map.php CRM/Core/DAO/CustomGroup.php
@@ -3012,7 +3011,7 @@ msgstr "無法刪除目前正在登入的使用者：%1。"
 
 #: CRM/Contact/Form/Merge.php CRM/Contact/Task.php
 msgid "Merge Contacts"
-msgstr "合併聯絡人"
+msgstr "檢查重覆聯絡人（選擇兩位直接合併）"
 
 #: CRM/Contact/Form/Relationship.php CRM/Member/Form/MembershipType.php
 msgid "Search Again"
@@ -17055,6 +17054,14 @@ msgid "From Email Address"
 msgstr "寄件者 Email "
 
 #: CRM/Mailing/Form/Upload.php
+msgid "Auto-Generated"
+msgstr "自動產生"
+
+#: CRM/Mailing/Form/Upload.php
+msgid "Reply-to email"
+msgstr "回覆 Email"
+
+#: CRM/Mailing/Form/Upload.php
 msgid "Mailing Subject"
 msgstr "電子報主旨"
 
@@ -19647,6 +19654,10 @@ msgstr "更新標籤"
 #: CRM/Tag/Form/Tag.php
 msgid "Your update(s) have been saved."
 msgstr "已儲存您的更新。"
+
+#: CRM/UF/Form/AdvanceSetting.php
+msgid "Advanced options"
+msgstr "進階選項"
 
 #: CRM/UF/Form/AdvanceSetting.php
 msgid "Enable mapping for this profile?"
@@ -31065,7 +31076,7 @@ msgstr "活動名稱僅能輸入字母、數字、空格、連字號及破折號
 
 #: templates/CRM/Event/Form/ManageEvent/EventInfo.tpl
 msgid "Include this event in iCalendar feeds?"
-msgstr "將此活動列在 iCalendar？"
+msgstr "若勾選公開活動，則此活動可被新增到google calendar 或 iCal。"
 
 #: templates/CRM/Event/Form/ManageEvent/EventInfo.tpl
 msgid ""
@@ -33813,10 +33824,6 @@ msgstr "成功率"
 #: templates/CRM/Mailing/Page/Report.tpl
 msgid "Mailing Settings"
 msgstr "電子報設定"
-
-#: templates/CRM/Mailing/Page/Report.tpl
-msgid "Reply-to email"
-msgstr "回覆 Email"
 
 #: templates/CRM/Mailing/Page/Report.tpl
 msgid "Forward replies"
@@ -44981,3 +44988,7 @@ msgid ""
 "Send email to contacts one by one listed above. Your won't leak email of "
 "contacts."
 msgstr "您不用擔心聯絡人的電子郵件曝光，這功能將會一封封分開寄信給上列的聯絡人。"
+
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php
+msgid "Recurring contributions estimated in next %1 %2"
+msgstr "估計在 %1 %2 的定期捐款"
