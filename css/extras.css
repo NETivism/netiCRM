@@ -527,7 +527,7 @@
   border-style:solid;
   border-width:1px 1px 2px;
   color:#A7A7A7;
-  font-size:12px;
+  font-size:1.0em;
   font-weight:bold;
   padding:4px;
   text-align:left;
@@ -561,7 +561,7 @@ table.crm-table-group-summary tbody {
 }
 
 .crm-container tr {
-  font-size: .95em;
+  font-size: 1em;
   background: none;
 }
 
