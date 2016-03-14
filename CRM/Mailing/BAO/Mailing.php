@@ -957,11 +957,11 @@ AND civicrm_contact.is_opt_out =0";
     );
 
     $headers = array(
+      'List-Unsubscribe' => '<'.str_replace('&amp;', '&', $urls['unsubscribeUrl']).'>',
+      'From' => "\"{$this->from_name}\" <{$this->from_email}>",
       'Reply-To' => $verp['reply'],
       'Return-Path' => $verp['bounce'],
-      'From' => "\"{$this->from_name}\" <{$this->from_email}>",
       'Subject' => $this->subject,
-      'List-Unsubscribe' => "<mailto:{$verp['unsubscribe']}>",
     );
 
     if ($isForward) {
