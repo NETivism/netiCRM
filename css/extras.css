@@ -197,9 +197,9 @@
 .crm-container #cvv2 {vertical-align: top; }
 
 .crm-container .description {
+  margin: 5px 0;
   font-size: .875rem;
   color: #757575;
-  margin: 5px 0;
 }
 
 
@@ -972,6 +972,35 @@ tbody.scrollContent tr.alternateRow {
 .crm-container .r-name-items {
   margin-bottom: 10px;
 }
+.crm-container .amount_other-section .md-elem {
+  vertical-align: top;
+}
+
+/* recur */
+.crm-container .is_recur-section label.crm-form-elem span.elem-label{
+  font-weight: bold;
+}
+.crm-container .recur-element {
+  margin-left: 1.5rem;
+}
+.crm-container .recur-element label {
+  color: #555;
+  font-size: 1rem;
+}
+.crm-container .is_recur-section .md-elem {
+  margin-bottom: 10px;
+}
+.crm-container .recur-element label[for="installments"],
+.crm-container .recur-element label[for="installments"] + .md-elem {
+  vertical-align: baseline;
+  display: inline-block;
+}
+.crm-container .is_recur-section .description {
+  display: block;
+  line-height: 1.7;
+}
+
+
 
 /* Events Page */
 .crm-container .event_summary-section {
@@ -1017,14 +1046,3 @@ tbody.scrollContent tr.alternateRow {
   text-align: center;
 }
 
-/* recur */
-.crm-container .is_recur-section label.crm-form-elem span.elem-label{
-  font-weight: bold;
-}
-.crm-container .recur-element {
-  margin-left: 1.5rem;
-}
-.crm-container .recur-element label {
-  color: #555;
-  font-size: 1rem;
-}
