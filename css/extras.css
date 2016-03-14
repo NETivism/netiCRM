@@ -1017,3 +1017,15 @@ tbody.scrollContent tr.alternateRow {
   margin-top: 80px;
   text-align: center;
 }
+
+/* recur */
+.crm-container .is_recur-section label.crm-form-elem span.elem-label{
+  font-weight: bold;
+}
+.crm-container .recur-element {
+  margin-left: 1.5rem;
+}
+.crm-container .recur-element label {
+  color: #555;
+  font-size: 1rem;
+}
