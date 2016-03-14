@@ -151,12 +151,18 @@ class HTML_QuickForm_input extends HTML_QuickForm_element
         if ($this->_flagFrozen) {
             return $this->getFrozenHtml();
         } else {
-            //dpm($this->_attributes);
-            if ($this->_attributes['type'] == 'text') {
-                return '<div class="crm-form-elem crm-form-textfield">' . $this->_getTabs() . '<input' . $this->_getAttrString($this->_attributes) . ' /></div>';
-            }
-            else {
-                return $this->_getTabs() . '<input' . $this->_getAttrString($this->_attributes) . ' />';
+            switch ($this->_attributes['type']) {
+                case 'text':
+                    return '<div class="crm-form-elem crm-form-textfield">' . $this->_getTabs() . '<input' . $this->_getAttrString($this->_attributes) . ' /></div>';
+                    break;
+
+                case 'file':
+                    return '<div class="crm-form-elem crm-form-file">' . $this->_getTabs() . '<input' . $this->_getAttrString($this->_attributes) . ' /></div>';
+                    break;
+                
+                default:
+                    return $this->_getTabs() . '<input' . $this->_getAttrString($this->_attributes) . ' />';
+                    break;
             }
         }
     } //end func toHtml

@@ -7,6 +7,7 @@ input[type="text"].md-textfield, input[type="password"].form-control, input[type
 .md-elem {
   position: relative;
 }
+.md-elem input[type="file"],
 .md-elem input[type="text"],
 .md-elem input.form-text,
 .md-elem select,
@@ -100,7 +101,8 @@ textarea.md-textarea + .grippie {
 .md-elem select.readonly,
 .md-elem textarea.readonly,
 .crm-container .md-elem .readonly,
-.crm-container .md-elem input[type="text"].readonly {
+.crm-container .md-elem input[type="text"].readonly,
+.crm-container .md-elem input[type="file"].readonly {
   cursor: not-allowed;
   color: #9E9E9E;
   border: none !important;
@@ -121,10 +123,6 @@ textarea.md-textarea + .grippie {
 .md-elem option:disabled,
 .md-elem select[disabled] > option {
   color: #9E9E9E;
-}
-.md-elem input[disabled]:before {
-  content: "tets";
-  display: block;
 }
 .md-elem input[disabled]:focus,
 .md-elem select[disabled]:focus,
@@ -180,6 +178,29 @@ input.md-textfield,
   /*margin: 0 0 10px 0;*/
 }
 
+/* md file */
+.md-file input[type="file"] {
+  padding: 6px;
+  width: auto;
+  font-size: .875rem;
+  color: #424242;
+  border: 2px solid #9E9E9E !important;
+}
+.md-file input[type="file"].error {
+  border: 2px solid #F44336 !important;
+  outline: 0;
+}
+.md-file input[type="file"]:focus,
+.md-file input[type="file"].error:focus {
+  border: 2px solid #3F51B5 !important;
+  outline: 0;
+}
+.md-file input[type="file"][disabled],
+.md-file input[type="file"][readonly],
+.md-file input[type="file"].readonly {
+  color: #9E9E9E;
+}
+
 /* md-select */
 .md-select select {
   padding: 6px 12px;
@@ -202,6 +223,9 @@ input.md-textfield,
   z-index: 11;
   line-height: 1;
 }
+.md-select-single.md-elem-focus::after {
+  color: #3F51B5;
+}
 .md-select-single select,
 .md-select-single select.form-select {
   position: relative;
@@ -216,6 +240,10 @@ input.md-textfield,
   cursor: pointer;
   color: #fff;
   background-color: #3F51B5;
+}
+.md-select-multiple-adv,
+.crm-container table.md-select-multiple-adv {
+  border: 2px solid #9E9E9E !important;
 }
 
 /* md radio & checkbox */

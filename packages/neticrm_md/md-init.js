@@ -23,13 +23,13 @@
   var mdInit = function() {
     $(".crm-form-elem").each(function() {
       if ($(this).hasClass("crm-form-radio")) {
-        $(this).addClass("md-radio");
+        $(this).addClass("md-elem md-radio");
         $(this).children("input[type='radio']").addClass("md-radio-input");
         $(this).children(".elem-label").addClass("md-radio-label");
       }
 
       if ($(this).hasClass("crm-form-checkbox")) {
-        $(this).addClass("md-checkbox");
+        $(this).addClass("md-elem md-checkbox");
         $(this).children("input[type='checkbox']").addClass("md-checkbox-input");
         $(this).children(".elem-label").addClass("md-checkbox-label");
       }
@@ -48,6 +48,10 @@
         $(this).addClass("md-elem md-textfield");
       }
 
+      if ($(this).hasClass("crm-form-file")) {
+        $(this).addClass("md-elem md-file");
+      }
+
       if ($(this).hasClass("crm-form-textarea")) {
         $(this).addClass("md-elem md-textarea");
         $(this).find("textarea").attr("placeholder", "請在此輸入...");
@@ -59,6 +63,20 @@
 
       if ($(this).find("[disabled]").length > 0) {
         $(this).addClass("md-elem-disabled");
+      }
+    });
+
+    $(".md-elem > input, .md-elem select, .md-elem textarea, .md-select-multiple-adv input").live("focus", function() {
+      var $elem = $(this).closest('.md-elem');
+      if (!$elem.hasClass("md-elem-focus")) {
+        $elem.addClass("md-elem-focus");
+      }
+    });
+
+    $(".md-elem > input, .md-elem select, .md-elem textarea, .md-select-multiple-adv input").live("blur", function() {
+      var $elem = $(this).closest('.md-elem');
+      if ($elem.hasClass("md-elem-focus")) {
+        $elem.removeClass("md-elem-focus");
       }
     });
 
