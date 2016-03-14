@@ -471,6 +471,7 @@
   overflow: hidden;
   line-height: 1;
   font-size: 24px;
+  color: #6D7294;
 }
 .crm-container #printer-friendly .print-icon:hover {
   color: #536DFE;
