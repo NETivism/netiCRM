@@ -969,6 +969,10 @@ tbody.scrollContent tr.alternateRow {
 .crm-container form[action="/civicrm/contribute/transact"] .crm-submit-buttons {
   text-align: right;
 }
+.crm-container .same-as-wrapper,
+.crm-container .r-name-items {
+  margin-bottom: 10px;
+}
 
 /* Events Page */
 .crm-container .event_summary-section {

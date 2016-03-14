@@ -12,9 +12,22 @@ cj(function($){
     //$('.receipt_type').addClass(OddOrEven);
 
     var same_as = mdFormElement('checkbox', '{/literal}{ts}Same as Contributor{/ts}{literal}', { name:'same_as_post', id:'same_as'});
-    $('<div>'+same_as+'</div>').insertBefore($('#custom_{/literal}{$receiptTitle}{literal}'));
+    $(same_as).insertBefore($('#custom_{/literal}{$receiptTitle}{literal}'));
+
+    var $same_as_md = $('.md-checkbox[for="same_as"]');
+    var $same_as_md_parent = $same_as_md.parent('.md-elem');
+    $same_as_md.insertBefore($same_as_md_parent);
+    $same_as_md.wrap('<div class="same-as-wrapper" />');
 
     $('#same_as').change(updateName);
+    $('#same_as').change(function (){
+      if ($(this).is(':checked')) {
+        $('#custom_{/literal}{$receiptTitle}{literal}').parent('.md-elem').addClass('md-elem-readonly');
+      } 
+      else {
+        $('#custom_{/literal}{$receiptTitle}{literal}').parent('.md-elem').removeClass('md-elem-readonly');
+      }
+    });
     $('.receipt_type input').change(function(){
       if($('#r_person').is(':checked')){
         $('#custom_{/literal}{$receiptTitle}{literal}').attr('placeholder',"{/literal}{ts}Contact Name{/ts}{literal}");
@@ -40,9 +53,25 @@ cj(function($){
 
     $(items).insertBefore($('#custom_{/literal}{$receiptDonorCredit}{literal}'));
 
+    $r_name_items_md = $('.md-radio[for^="r_name"]');
+    $r_name_items_md_parent = $r_name_items_md.parent('.md-elem');
+    $r_name_items_md.insertBefore($r_name_items_md_parent);
+    $r_name_items_md.wrapAll('<div class="r-name-items" />');
+
     $('#last_name,#first_name,#legal_identifier').keyup(updateName);
     $('.custom_{/literal}{$receiptDonorCredit}{literal}-section input[type=radio]').change(updateName);
     updateName;
+
+    $('.custom_{/literal}{$receiptDonorCredit}{literal}-section input[type=radio]').change(function (){
+      var r_name_id = $(this).attr('id');
+      var $r_name_textfield = $(this).closest('.r-name-items').next('.md-elem');
+      if (r_name_id != 'r_name_custom') {
+        $r_name_textfield.addClass('md-elem-readonly');
+      } 
+      else {
+        $r_name_textfield.removeClass('md-elem-readonly');
+      }
+    });
   }
 
 
