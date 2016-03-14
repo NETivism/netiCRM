@@ -42,6 +42,77 @@
 }
 
 /* crm messages */
+.crm-container .messages {
+    margin: 1em 0 1em;
+    border: none;
+    font-weight: normal;
+}
+.crm-container .messages table, 
+.crm-container-snippet .messages table {
+    margin: 15px 0;
+    width: auto;
+    color: #000;
+}
+.crm-container .messages table a, 
+.crm-container-snippet .messages table a {
+    color: #304ffe;
+}
+.crm-container .messages table td, .crm-container-snippet .messages table td {
+    background-color: #F7F7F7;
+    border-bottom: 1px solid #DDDDDD;
+}
+
+.crm-container div.status {
+    margin:0.5em 0px;
+    padding:0.25em 0.5em;
+    color: #3e3e3e;
+    font-weight: normal;
+    background: #C5DDFC url(../packages/jquery/jquery-ui/css/custom-theme/images/ui-bg_diagonals-small_55_c5ddfc_40x40.png);
+}
+.status dl {margin:2px 5px;}
+.crm-container div.status dt {
+    clear:none;
+    float:left;
+    width:20px;
+}
+.crm-container div.status dd {margin-left:0px;}
+
+.crm-container div.status ul {
+    margin: 0 0 1em 16px;
+}
+
+.status-pending {
+    color: green;
+}
+
+.status-completed {
+    color: #000080;
+}
+
+#restmsg {
+    z-index:10000;
+    padding:4px;
+    margin-bottom: 4px;
+}
+#restmsg.msgok, span.msgok {
+    display:block;
+    background:#B0D730;
+    background-color:#F1F8EB;
+    border:1px solid #B0D730;
+    color:#3E3E3E;
+    font-size: .9em;
+    margin:0 0 8px;
+    padding:4px;
+}
+
+.crm-container div.view-data {
+    padding: .25em .5em .25em .5em;
+    border: 1px solid DimGray;
+    width: auto;
+    background-color: #ffffff;
+}
+
+
 .crm-container div.messages,
 .crm-container div.status,
 .crm-container div.crm-error,
@@ -79,6 +150,20 @@
 .crm-container #help a {
   color: #fff;
   text-decoration: underline;
+}
+.crm-container div.messages table a,
+.crm-container div.status table a,
+.crm-container div.crm-error table a,
+.crm-container #help table a {
+  text-decoration: none;
+  color: #304ffe;
+}
+.crm-container div.messages table a:hover,
+.crm-container div.status table a:hover,
+.crm-container div.crm-error table a:hover,
+.crm-container #help table a:hover {
+  text-decoration: underline;
+  color: #536DFE;
 }
 
 /* crm messages: status */

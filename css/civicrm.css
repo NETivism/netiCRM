@@ -345,68 +345,6 @@ div.spacer,
     padding-left: 3em;
 }
 
-/* messages and status */
-.crm-container .messages {
-    margin: 1.0em 0em 1.0em;
-    border: none;
-    font-weight: normal;
-}
-.crm-container .messages table, .crm-container-snippet .messages table {width: auto;}
-.crm-container .messages table td, .crm-container-snippet .messages table td {
-    background-color: #F7F7F7;
-    border-bottom: 1px solid #DDDDDD;
-}
-
-.crm-container div.status {
-    margin:0.5em 0px;
-    padding:0.25em 0.5em;
-    color: #3e3e3e;
-    font-weight: normal;
-    background: #C5DDFC url(../packages/jquery/jquery-ui/css/custom-theme/images/ui-bg_diagonals-small_55_c5ddfc_40x40.png);
-}
-.status dl {margin:2px 5px;}
-.crm-container div.status dt {
-    clear:none;
-    float:left;
-    width:20px;
-}
-.crm-container div.status dd {margin-left:0px;}
-
-.crm-container div.status ul {
-    margin: 0 0 1em 16px;
-}
-
-.status-pending {
-    color: green;
-}
-
-.status-completed {
-    color: #000080;
-}
-
-#restmsg {
-    z-index:10000;
-    padding:4px;
-    margin-bottom: 4px;
-}
-#restmsg.msgok, span.msgok {
-    display:block;
-    background:#B0D730;
-    background-color:#F1F8EB;
-    border:1px solid #B0D730;
-    color:#3E3E3E;
-    font-size: .9em;
-    margin:0 0 8px;
-    padding:4px;
-}
-
-.crm-container div.view-data {
-    padding: .25em .5em .25em .5em;
-    border: 1px solid DimGray;
-    width: auto;
-    background-color: #ffffff;
-}
-
 .crm-container .footer {
     font-size: 0.8em;
 }
