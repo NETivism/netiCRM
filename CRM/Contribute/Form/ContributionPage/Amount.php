@@ -129,7 +129,8 @@ SELECT id
         NULL, NULL, NULL, NULL,
         array('&nbsp;&nbsp;', '&nbsp;&nbsp;', '&nbsp;&nbsp;', '<br/>')
       );
-      $this->addElement('checkbox', 'is_recur_interval', ts('Support recurring intervals'));
+      // $this->addElement('checkbox', 'is_recur_interval', ts('Support recurring intervals'));
+      $this->addElement('hidden', 'is_recur_interval', 0);
     }
 
     // add pay later options
