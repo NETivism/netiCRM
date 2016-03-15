@@ -571,8 +571,8 @@ VALUES
   (@option_group_id_mt, '{ts escape="sql"}Export Grant{/ts}',       13, 'Export Grant',        NULL, 0, 0,   13, NULL, 0, 1, 1, NULL, NULL),
   (@option_group_id_mt, '{ts escape="sql"}Export Activity{/ts}',    14, 'Export Activity',     NULL, 0, 0,   14, NULL, 0, 1, 1, NULL, NULL),
 
-  (@option_group_id_fu, '{ts escape="sql"}day{/ts}'    , 'day'  ,    'day',  NULL, 0, NULL, 1, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_fu, '{ts escape="sql"}week{/ts}'   , 'week' ,   'week',  NULL, 0, NULL, 2, NULL, 0, 1, 1, NULL, NULL),
+  (@option_group_id_fu, '{ts escape="sql"}day{/ts}'    , 'day'  ,    'day',  NULL, 0, NULL, 1, NULL, 0, 1, 0, NULL, NULL),
+  (@option_group_id_fu, '{ts escape="sql"}week{/ts}'   , 'week' ,   'week',  NULL, 0, NULL, 2, NULL, 0, 1, 0, NULL, NULL),
   (@option_group_id_fu, '{ts escape="sql"}month{/ts}'  , 'month',  'month',  NULL, 0, NULL, 3, NULL, 0, 1, 1, NULL, NULL),
   (@option_group_id_fu, '{ts escape="sql"}year{/ts}'   , 'year' ,   'year',  NULL, 0, NULL, 4, NULL, 0, 1, 1, NULL, NULL),
 
