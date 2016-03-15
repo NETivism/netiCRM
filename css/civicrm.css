@@ -1705,8 +1705,10 @@ span.icon {
 
 .block-civicrm #recently-viewed .crm-icon,
 .crm-icon {
-  margin:2px 4px 0 0;
   font: normal normal normal 16px/1 'Material-Design-Iconic-Font';
+}
+.block-civicrm #recently-viewed .crm-icon {
+  margin:2px 4px 0 0;
 }
 
 .Individual-icon:before { content: "\f207"; }
@@ -1939,6 +1941,7 @@ div#crm-toolTip #hide-tooltip {
     z-index: 16;
     display: block;
     cursor: pointer;
+    max-width: 16px;
 }
 
 .crm-tooltip-wrapper {
