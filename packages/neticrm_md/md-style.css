@@ -61,14 +61,14 @@ input[type="text"].md-textfield, input[type="password"].form-control, input[type
 .md-elem select.form-select:focus,
 .md-elem textarea:focus,
 .md-elem textarea.form-textarea:focus {
-  outline: 0;
+  outline: 0 !important;
   color: #000;
   border: 0;
 }
 .md-elem input[type="text"].readonly:hover,
 .md-elem select.readonly:hover,
 .md-elem textarea.readonly:hover {
-  outline: 0;
+  outline: 0 !important;
   border: 0;
 }
 .md-elem input[type="text"]:focus,
