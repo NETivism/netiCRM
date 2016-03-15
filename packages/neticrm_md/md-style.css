@@ -232,6 +232,11 @@ input.md-textfield,
   z-index: 10;
   padding-right: 24px;
   -webkit-appearance: none;
+  -moz-appearance: none;
+}
+.md-select-single select::-ms-expand,
+.md-select-single select.form-select::-ms-expand {
+  display: none;
 }
 .md-select-multiple select > option:hover,
 .md-select-multiple select > option:active,
