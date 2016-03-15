@@ -60,7 +60,7 @@
         {/if}
     {else}
         <div class="messages status">
-           <div class="icon inform-icon"></div>
+           
                     {ts}There are no contributions on record for you.{/ts}
         </div>
     {/if}

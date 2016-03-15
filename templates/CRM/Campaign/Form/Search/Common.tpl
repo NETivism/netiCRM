@@ -33,7 +33,7 @@
 
   <div id="{$searchForm}" class="crm-accordion-wrapper crm-contribution_search_form-accordion {if $rows}crm-accordion-closed{else}crm-accordion-open{/if}">
     <div class="crm-accordion-header crm-master-accordion-header">
-    <div class="icon crm-accordion-pointer"></div> 
+    <div class="zmdi crm-accordion-pointer"></div> 
         {ts}Edit Search Criteria{/ts}
     </div><!-- /.crm-accordion-header -->
 

@@ -833,3 +833,37 @@ function getUrlParams(name) {
     return query_string;
   }
 }
+
+function mdFormElement(type, label, attr){
+  var tag = type == 'select' ? 'select' : 'input';
+  var tag_class = ['form-'+type, 'md-'+type+'-'+tag];
+  var wrap_class = ['crm-form-elem', 'crm-form-'+type, 'md-'+type];
+  var label_class = ['elem-label', 'md-'+type+'-label'];
+  var attributes = ['type="'+ type +'"'];
+  var opt = []
+  var id;
+  for(i in attr) {
+    if(type == 'select' && i == 'values') {
+      opt = values;
+      continue;
+    }
+    if(i == 'class') {
+      tag_class.push(attr[i]);
+    }
+    if(i == 'id'){
+      id = attr[i];
+    }
+    attributes.push(i+'="'+attr[i]+'"')
+  }
+  attributes.push('class="'+ tag_class.join(' ') +'"')
+  var ele = '<' + tag + ' ' + attributes.join(' ') + ' >';
+  if(tag == 'select'){
+    for (i in opt) {
+      ele += '<option value="'+i+'">' + opt[i] + '</option>';
+    }
+    ele += '</'+tag+'>';
+  }
+  var text = '<span class="'+ label_class.join(' ') +'">'+ label +'</span>';
+  var label_for = id ? ' for="'+id+'"' : '';
+  return '<label class="'+ wrap_class.join(' ') +'"' + label_for +'>' + ele + text + '</label>';
+}

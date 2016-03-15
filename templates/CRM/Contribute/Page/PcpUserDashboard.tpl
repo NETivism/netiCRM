@@ -52,7 +52,7 @@
 </div>
 {else}
 <div class="messages status">
-	<div class="icon inform-icon"></div>
+	
 	{ts}You do not have any active Personal Campaign pages.{/ts}
 </div>
 {/if}

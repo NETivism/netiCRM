@@ -3,8 +3,8 @@
   {include file="CRM/Campaign/Form/SurveyType.tpl" }
 {else}
 {if $rows}
-<div class="action-link">
-  <a href="{$addSurveyType}" class="button"><span><div class="icon add-icon"></div>{ts 1=$GName}Add %1{/ts}</span></a>
+<div class="action-link-button">
+  <a href="{$addSurveyType}" class="button"><span><i class="zmdi zmdi-plus-circle-o"></i>{ts 1=$GName}Add %1{/ts}</span></a>
 </div>
 
 <div id={$gName}>
@@ -43,15 +43,14 @@
         {/foreach}
         </table>
         {/strip}
-        <div class="action-link">
-          <a href="{$addSurveyType}" class="button"><span><div class="icon add-icon"></div>{ts 1=$GName}Add %1{/ts}</span></a>
+        <div class="action-link-button">
+          <a href="{$addSurveyType}" class="button"><span><i class="zmdi zmdi-plus-circle-o"></i>{ts 1=$GName}Add %1{/ts}</span></a>
         </div>
         
 </div>
 {else}
     <div class="messages status">
-         <div class="icon inform-icon"> &nbsp;
-         {ts 1=$addSurveyType}There are no survey type entered. You can <a href='%1'>add one</a>.{/ts}</div>
+         {ts 1=$addSurveyType}There are no survey type entered. You can <a href='%1'>add one</a>.{/ts}
     </div>    
 {/if}
 {/if}

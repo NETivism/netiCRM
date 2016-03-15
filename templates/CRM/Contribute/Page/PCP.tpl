@@ -73,7 +73,7 @@
 </div>
 {else}
 <div class="messages status">
-<div class="icon inform-icon"></div>
+
     {if $isSearch}
         {ts}There are no Personal Campaign Pages which match your search criteria.{/ts}
     {else}

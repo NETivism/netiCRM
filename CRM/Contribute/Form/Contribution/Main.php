@@ -744,11 +744,6 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
    */
   function buildRecur() {
     $attributes = CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionRecur');
-    $extraOption = array('onclick' => "enablePeriod();");
-    $elements = array();
-    $elements[] = &$this->createElement('radio', NULL, '', ts('I want to make a one-time contribution.'), 0, $extraOption);
-    $elements[] = &$this->createElement('radio', NULL, '', ts('Recurring contributions'), 1, $extraOption);
-    $this->addGroup($elements, 'is_recur', NULL, '<br />');
     $this->_defaults['is_recur'] = 0;
 
     if ($this->_values['is_recur_interval']) {
@@ -765,25 +760,35 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
 
     $units = array();
     $unitVals = explode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, $this->_values['recur_frequency_unit']);
+    $unitTrans = array(
+      'day' => 'daily',
+      'week' => 'weekly',
+      'month' => 'monthly',
+      'year' => 'yearly',
+    );
     $frequencyUnits = CRM_Core_OptionGroup::values('recur_frequency_units');
     foreach ($unitVals as $key => $val) {
       if (array_key_exists($val, $frequencyUnits)) {
-        $units[$val] = $this->_values['is_recur_interval'] ? "{$frequencyUnits[$val]}" : $frequencyUnits[$val];
+        $units[$val] = ts($unitTrans[$val]);
       }
     }
-
-    $frequencyUnit = &$this->add('select', 'frequency_unit', NULL, $units);
-
-    // FIXME: Ideally we should freeze select box if there is only
-    // one option but looks there is some problem /w QF freeze.
-    //if ( count( $units ) == 1 ) {
-    //$frequencyUnit->freeze( );
-    //}
+     
+    if (count($units) > 1) {
+      $this->add('select', 'frequency_unit', ts('Frequency'), $units);
+      $recurOptionLabel = ts('Recurring contributions');
+    }
+    else {
+      $unitVal = key($units);
+      $this->addElement('hidden', 'frequency_unit', $unitVal);
+      $recurOptionLabel = ts('Recurring contributions').' - '.$units[$unitVal];
+    }
+    $elements = array();
+    $elements[] = &$this->createElement('radio', NULL, '', ts('I want to make a one-time contribution.'), 0);
+    $elements[] = &$this->createElement('radio', NULL, '', $recurOptionLabel, 1);
+    $this->addGroup($elements, 'is_recur', NULL, '<br />');
 
     $attributes['installments']['placeholder'] = ts('no limit');
-    $this->add('text', 'installments', ts('installments'),
-      $attributes['installments']
-    );
+    $this->add('text', 'installments', ts('Installments'), $attributes['installments']);
     $this->addRule('installments', ts('Number of installments must be a whole number.'), 'integer');
   }
 

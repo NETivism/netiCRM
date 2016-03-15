@@ -67,15 +67,14 @@
         </table>
         {/strip}
         
-        <div class="action-link">
-            <a href="{crmURL p='civicrm/admin/custom/group/field/add' q="reset=1&action=add&gid=$gid"}" id="newCustomField" class="button"><span><div class="icon add-icon"></div>{ts}Add Custom Field{/ts}</span></a>
+        <div class="crm-actions-ribbon action-link-button">
+            <a href="{crmURL p='civicrm/admin/custom/group/field/add' q="reset=1&action=add&gid=$gid"}" id="newCustomField" class="button"><i class="zmdi zmdi-plus-circle-o"></i>{ts}Add Custom Field{/ts}</a>
         </div>
      </div>
 
     {else}
         {if $action eq 16}
         <div class="messages status">
-        <img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}"/>
         {capture assign=crmURL}{crmURL p='civicrm/admin/custom/group/field/add' q="action=add&reset=1&gid=$gid"}{/capture}
         {ts 1=$groupTitle 2=$crmURL}There are no custom fields for custom group '%1', <a href='%2'>add one</a>.{/ts}
         </div>

@@ -40,7 +40,7 @@
        </table>
      {else}
      <div class="messages status">	
-      <div class="icon inform-icon"></div> &nbsp;
+       &nbsp;
       {ts}No modifications have been logged for this contact.{/ts}
      </div>	
      {/if}

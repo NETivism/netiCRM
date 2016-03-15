@@ -29,9 +29,9 @@
     {foreach from=$recentlyViewed item=item}
          <li class="crm-recently-viewed" ><a  href="{$item.url}" title="{$item.title}">
          {if $item.image_url}
-            <span class="icon crm-icon {if $item.subtype}{$item.subtype}{else}{$item.type}{/if}-icon" style="background: url('{$item.image_url}')"></span>
+            <span class="crm-icon {if $item.subtype}{$item.subtype}{else}{$item.type}{/if}-icon"></span>
          {else}
-            <span class="icon crm-icon {$item.type}{if $item.subtype}-subtype{/if}-icon"></span>
+            <span class="crm-icon {$item.type}{if $item.subtype}-subtype{/if}-icon"></span>
          {/if}
          {if $item.isDeleted}<del>{/if}{$item.title|mb_truncate:25:"..":true}{if $item.isDeleted}</del>{/if}</a>
          <ul class="crm-recentview-wrapper" style="display:none;">

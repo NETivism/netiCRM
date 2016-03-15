@@ -25,21 +25,20 @@
 *}
 <div class="crm-block crm-content-block crm-contribution-view-form-block">
 <h3>{ts}View Contribution{/ts}</h3>
-<div class="action-link">
-    <div class="crm-submit-buttons">
+<div class="crm-actions-ribbon action-link-button">
     {if call_user_func(array('CRM_Core_Permission','check'), 'edit contributions')}
        {assign var='urlParams' value="reset=1&id=$id&cid=$contact_id&action=update&context=$context"}
        {if ( $context eq 'fulltext' || $context eq 'search' ) && $searchKey}
        {assign var='urlParams' value="reset=1&id=$id&cid=$contact_id&action=update&context=$context&key=$searchKey"}	   
        {/if}
-       <a class="button" href="{crmURL p='civicrm/contact/view/contribution' q=$urlParams}" accesskey="e"><span><div class="icon edit-icon"></div>{ts}Edit{/ts}</span></a>
+       <a class="button" href="{crmURL p='civicrm/contact/view/contribution' q=$urlParams}" accesskey="e"><i class="zmdi zmdi-edit"></i>{ts}Edit{/ts}</a>
 
        {if $receipt_id}
          {assign var='urlParams' value="reset=1&id=$id&cid=$contact_id&action=pdf&context=$context"}
          {if ( $context eq 'fulltext' || $context eq 'search' ) && $searchKey}
          {assign var='urlParams' value="reset=1&id=$id&cid=$contact_id&action=view&context=$context&key=$searchKey"}
          {/if}
-         <a class="button" href="{crmURL p='civicrm/contact/view/contribution/receipt' q=$urlParams}" accesskey="e" target="_blank"><span><div class="icon ui-icon-circle-arrow-s"></div>{ts}Receipt{/ts}</span></a>
+         <a class="button" href="{crmURL p='civicrm/contact/view/contribution/receipt' q=$urlParams}" accesskey="e" target="_blank"><i class="zmdi zmdi-collection-text"></i>{ts}Receipt{/ts}</a>
        {/if}
     {/if}
     {if call_user_func(array('CRM_Core_Permission','check'), 'delete in CiviContribute')}
@@ -47,10 +46,9 @@
        {if ( $context eq 'fulltext' || $context eq 'search' ) && $searchKey}
        {assign var='urlParams' value="reset=1&id=$id&cid=$contact_id&action=delete&context=$context&key=$searchKey"}	   
        {/if}
-       <a class="button" href="{crmURL p='civicrm/contact/view/contribution' q=$urlParams}"><span><div class="icon delete-icon"></div>{ts}Delete{/ts}</span></a>
+       <a class="button" href="{crmURL p='civicrm/contact/view/contribution' q=$urlParams}"><i class="zmdi zmdi-delete"></i>{ts}Delete{/ts}</a>
     {/if}
     {include file="CRM/common/formButtons.tpl" location="top"}
-    </div>
 </div>
 <table class="crm-info-panel">
     <tr>
@@ -199,7 +197,7 @@
 {if $premium}
     <div class="crm-accordion-wrapper crm-accordion_title-accordion crm-accordion-open">
         <div class="crm-accordion-header">
-            <div class="icon crm-accordion-pointer"></div> 
+            <div class="zmdi crm-accordion-pointer"></div> 
             {ts}Premium Information{/ts}
         </div>
         <div class="crm-accordion-body">			   
@@ -215,7 +213,7 @@
 {if $pcp_id}
     <div class="crm-accordion-wrapper crm-accordion_title-accordion crm-accordion-open">
          <div class="crm-accordion-header">
-              <div class="icon crm-accordion-pointer"></div> 
+              <div class="zmdi crm-accordion-pointer"></div> 
               {ts}Personal Campaign Page Contribution Information{/ts}
          </div>
          <div class="crm-accordion-body">			   
@@ -258,14 +256,14 @@
        {if ( $context eq 'fulltext' || $context eq 'search' ) && $searchKey}
        {assign var='urlParams' value="reset=1&id=$id&cid=$contact_id&action=update&context=$context&key=$searchKey"}	   
        {/if}
-       <a class="button" href="{crmURL p='civicrm/contact/view/contribution' q=$urlParams}" accesskey="e"><span><div class="icon edit-icon"></div>{ts}Edit{/ts}</span></a>
+       <a class="button" href="{crmURL p='civicrm/contact/view/contribution' q=$urlParams}" accesskey="e"><span><i class="zmdi zmdi-edit"></i>{ts}Edit{/ts}</span></a>
 
        {if $receipt_id}
          {assign var='urlParams' value="reset=1&id=$id&cid=$contact_id&action=pdf&context=$context"}
          {if ( $context eq 'fulltext' || $context eq 'search' ) && $searchKey}
          {assign var='urlParams' value="reset=1&id=$id&cid=$contact_id&action=view&context=$context&key=$searchKey"}
          {/if}
-         <a class="button" href="{crmURL p='civicrm/contact/view/contribution/receipt' q=$urlParams}" accesskey="e" target="_blank"><span><div class="icon ui-icon-circle-arrow-s"></div>{ts}Receipt{/ts}</span></a>
+         <a class="button" href="{crmURL p='civicrm/contact/view/contribution/receipt' q=$urlParams}" accesskey="e" target="_blank"><span><i class="zmdi zmdi-collection-text"></i>{ts}Receipt{/ts}</span></a>
        {/if}
     {/if}
     {if call_user_func(array('CRM_Core_Permission','check'), 'delete in CiviContribute')}
@@ -273,7 +271,7 @@
        {if ( $context eq 'fulltext' || $context eq 'search' ) && $searchKey}
        {assign var='urlParams' value="reset=1&id=$id&cid=$contact_id&action=delete&context=$context&key=$searchKey"}	   
        {/if}
-       <a class="button" href="{crmURL p='civicrm/contact/view/contribution' q=$urlParams}"><span><div class="icon delete-icon"></div>{ts}Delete{/ts}</span></a>
+       <a class="button" href="{crmURL p='civicrm/contact/view/contribution' q=$urlParams}"><span><i class="zmdi zmdi-delete"></i>{ts}Delete{/ts}</span></a>
     {/if}
     {include file="CRM/common/formButtons.tpl" location="bottom"}
 </div>

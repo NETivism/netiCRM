@@ -56,8 +56,8 @@
         {/strip}
     </div>
     {if $products ne null }
-        <div class="action-link">
-            <a href="{crmURL p='civicrm/admin/contribute/addProductToPage' q="reset=1&action=update&id=$id"}">&raquo; {ts}Offer Another Premium on this Contribution Page{/ts}</a>
+        <div class="action-link-button">
+            <a class="button" href="{crmURL p='civicrm/admin/contribute/addProductToPage' q="reset=1&action=update&id=$id"}">{ts}Offer Another Premium on this Contribution Page{/ts}</a>
         </div>
 	{/if}
 </div>
@@ -65,11 +65,9 @@
     {if $showForm eq false}
     <div class="messages status">
 	{if $products ne null }
-          <img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}"/>
           {capture assign=crmURL}{crmURL p='civicrm/admin/contribute/addProductToPage' q="reset=1&action=update&id=$id"}{/capture}
           {ts 1=$crmURL}There are no premiums offered on this contribution page yet. You can <a href='%1'>add one</a>.{/ts}
 	{else}
-	   <img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}"/>
            {ts 1=$managePremiumsURL}There are no active premiums for your site. You can <a href='%1'>create and/or enable premiums here</a>.{/ts}
 	
 	{/if}

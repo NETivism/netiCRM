@@ -55,12 +55,12 @@
 {/strip}
 {else}
    <div class="messages status">
-        <div class="icon inform-icon"></div>&nbsp;
+        &nbsp;
         {ts 1=$title}There are currently no %1.{/ts}
     </div>    
 {/if}  
 
-        <div class="action-link">
+        <div class="action-link-button">
         <a href="{crmURL p='civicrm/mailing/report' q="mid=`$mailing_id`&reset=1"}" >&raquo; {ts}Back to Report{/ts}</a>
         </div>
 

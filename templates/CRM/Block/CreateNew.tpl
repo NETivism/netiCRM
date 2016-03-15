@@ -25,7 +25,7 @@
 *}
 <div class="block-civicrm">
 <div id="crm-create-new-wrapper">
-	<div id="crm-create-new-link"><span><div class="icon dropdown-icon"></div>{ts}Create New{/ts}</span></div>
+	<div id="crm-create-new-link"><span><i class="zmdi zmdi-arrow-right-top zmdi-hc-rotate-90"></i>{ts}Create New{/ts}</span></div>
 		<div id="crm-create-new-list" class="ac_results">
 			<div class="crm-create-new-list-inner">
 			<ul>

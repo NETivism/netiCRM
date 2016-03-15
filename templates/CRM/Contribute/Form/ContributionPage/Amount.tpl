@@ -131,10 +131,6 @@
                         <td>{$form.recur_frequency_unit.html}<br />
                         <span class="description">{ts}Select recurring units supported for recurring payments.{/ts}</span></td>
                     </tr> 
-                    <tr class="crm-contribution-form-block-is_recur_interval"><th scope="row" class="label">{$form.is_recur_interval.label}</th>
-                        <td>{$form.is_recur_interval.html}<br />
-                        <span class="description">{ts}Can users also set an interval (e.g. every '3' months)?{/ts}</span></td>
-                    </tr>
                   </table>
                 </td>
             </tr>

@@ -32,7 +32,7 @@
             {if $grpFields.group_title}
                 <div class="crm-accordion-wrapper crm-accordion crm-accordion-closed">
                     <div class="crm-accordion-header">
-                        <div class="icon crm-accordion-pointer"></div>
+                        <div class="zmdi crm-accordion-pointer"></div>
                         {$grpFields.group_title}
                     </div><!-- /.crm-accordion-header -->
                     <div class="crm-accordion-body">
@@ -104,7 +104,7 @@
 	            </table>
                 <div class="crm-accordion-wrapper crm-accordion crm-accordion-closed">
                     <div class="crm-accordion-header">
-                        <div class="icon crm-accordion-pointer"></div>
+                        <div class="zmdi crm-accordion-pointer"></div>
                         {$colGroups.$tableName.group_title}
                     </div><!-- /.crm-accordion-header -->
                     <div class="crm-accordion-body">

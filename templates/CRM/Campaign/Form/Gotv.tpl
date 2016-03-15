@@ -26,7 +26,7 @@
 
 {if $errorMessages}
   <div class='messages status'>
-     <div class="icon inform-icon"></div>
+     
         <ul>
 	   {foreach from=$errorMessages item=errorMsg}	
              <li>{ts}{$errorMsg}{/ts}</li>

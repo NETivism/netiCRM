@@ -30,7 +30,7 @@
 {if $action eq 8}
   <div class="messages status">
     <dl>
-      <dt><div class="icon inform-icon"></div></dt>
+      <dt></dt>
       <dd>    
         {ts}WARNING: Delete will remove this permission from the specified ACL Role.{/ts} {ts}Do you want to continue?{/ts}
       </dd>

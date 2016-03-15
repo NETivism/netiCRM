@@ -27,7 +27,7 @@
 <div class="view-content">
 {if $groupCount eq 0 }
   <div class="messages status">
-    <div class="icon inform-icon"></div>&nbsp;{ts}This contact does not currently belong to any groups.{/ts}  
+    &nbsp;{ts}This contact does not currently belong to any groups.{/ts}  
   </div>
  {/if}
     {include file="CRM/common/jsortable.tpl"}

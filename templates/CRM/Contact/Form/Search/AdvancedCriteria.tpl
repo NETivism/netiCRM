@@ -63,7 +63,7 @@ function loadPanes( id ) {
 {strip}
 <div class="crm-accordion-wrapper crm-search_criteria_basic-accordion crm-accordion-open">
  <div class="crm-accordion-header">
-  <div class="icon crm-accordion-pointer"></div>
+  <div class="zmdi crm-accordion-pointer"></div>
   {ts}Basic Criteria{/ts} 
  </div><!-- /.crm-accordion-header -->
  <div class="crm-accordion-body">
@@ -74,7 +74,7 @@ function loadPanes( id ) {
     {foreach from=$allPanes key=paneName item=paneValue}
       <div class="crm-accordion-wrapper crm-ajax-accordion crm-{$paneValue.id}-accordion {if $paneValue.open eq 'true'}crm-accordion-open{else}crm-accordion-closed{/if}">
        <div class="crm-accordion-header" id="{$paneValue.id}">
-       	<div class="icon crm-accordion-pointer"></div>
+       	<div class="zmdi crm-accordion-pointer"></div>
        	{$paneName}
        </div>
        <div class="crm-accordion-body {$paneValue.id}"></div>

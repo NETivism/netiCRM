@@ -64,7 +64,7 @@
         {/strip}
     {else}
         <div class="messages status">
-           <div class="icon inform-icon"></div>&nbsp;
+           &nbsp;
                  {ts}You are not registered for any current or upcoming Events.{/ts}
                
         </div>

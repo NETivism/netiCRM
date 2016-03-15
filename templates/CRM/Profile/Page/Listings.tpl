@@ -85,7 +85,7 @@
 
 {else}
     <div class="messages status">
-        <div class="icon inform-icon"></div>
+        
         {ts}No fields in this Profile have been configured to display as a result column in the search results table. Ask the site administrator to check the Profile setup.{/ts}
     </div>
 {/if}

@@ -49,7 +49,7 @@
 
 {if !$email and $action neq 8 and $context neq 'standalone'}
 <div class="messages status">
-  <div class="icon inform-icon"></div>&nbsp;{ts}You will not be able to send an automatic email receipt for this contribution because there is no email address recorded for this contact. If you want a receipt to be sent when this contribution is recorded, click Cancel and then click Edit from the Summary tab to add an email address before recording the contribution.{/ts}
+  &nbsp;{ts}You will not be able to send an automatic email receipt for this contribution because there is no email address recorded for this contact. If you want a receipt to be sent when this contribution is recorded, click Cancel and then click Edit from the Summary tab to add an email address before recording the contribution.{/ts}
 </div>
 {/if}
 {if $contributionMode}
@@ -59,7 +59,7 @@
 {/if}
    {if $action eq 8} 
       <div class="messages status"> 
-          <div class="icon inform-icon"></div> 
+           
           {ts}WARNING: Deleting this contribution will result in the loss of the associated financial transactions (if any).{/ts} {ts}Do you want to continue?{/ts}
       </div> 
    {else}
@@ -310,7 +310,7 @@ function loadPanes( id ) {
             
 <div class="crm-accordion-wrapper crm-ajax-accordion crm-{$paneValue.id}-accordion {if $paneValue.open eq 'true'}crm-accordion-open{else}crm-accordion-closed{/if}">
  <div class="crm-accordion-header" id="{$paneValue.id}">
-  <div class="icon crm-accordion-pointer"></div> 
+  <div class="zmdi crm-accordion-pointer"></div> 
 
         {$paneName}
   </div><!-- /.crm-accordion-header -->

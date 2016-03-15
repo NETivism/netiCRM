@@ -25,7 +25,7 @@
 *}
 {* No matches for submitted search request. *}
 <div class="messages status">
-    <div class="icon inform-icon"></div>&nbsp;
+    &nbsp;
         {if $qill}{ts}No matches found for:{/ts}
             {include file="CRM/common/displaySearchCriteria.tpl"}
         {else}

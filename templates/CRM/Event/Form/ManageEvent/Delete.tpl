@@ -29,7 +29,7 @@
     {include file="CRM/common/formButtons.tpl" location="top"}
 </div>
 <div class="messages status">
-   <div class="icon inform-icon"></div>
+   
    <div>
        {if $isTemplate}
          {ts}Warning: Deleting this event template will also delete associated Event Registration Page and Event Fee configurations.{/ts} {ts}This operation cannot be undone.{/ts} {ts}Do you want to continue?{/ts}

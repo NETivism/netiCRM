@@ -26,7 +26,7 @@
 {* template for assigning the current case to another client*}
 <div class="crm-block crm-form-block crm-case-editclient-form-block">
 <div class="messages status">
-    <div class="icon inform-icon"></div> {ts 1=$currentClientName}This is case is currently assigned to %1.{/ts}
+     {ts 1=$currentClientName}This is case is currently assigned to %1.{/ts}
 </div>
 <div class="crm-form-block">
 <table class="form-layout-compressed">

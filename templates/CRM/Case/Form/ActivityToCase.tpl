@@ -180,7 +180,7 @@ function fileOnCase( action, activityID, currentCaseId ) {
 						      	  window.location.reload( ); 
 						      } else {
 						          var activitySubject = cj("#case_activity_subject").val( );
-						          var statusMsg = '<a id="closeFileOnCaseStatusMsg" href="#"><div class="ui-icon ui-icon-close" style="float:left"></div></a> "' + activitySubject + '" has been filed to selected case: ' + cj("#unclosed_cases").val( ) + '. Click <a href="' + caseUrl + '">here</a> to view that case.';
+						          var statusMsg = '<a id="closeFileOnCaseStatusMsg" href="#"><span class="zmdi zmdi-close"></span></a> "' + activitySubject + '" has been filed to selected case: ' + cj("#unclosed_cases").val( ) + '. Click <a href="' + caseUrl + '">here</a> to view that case.';
 						          cj('#fileOnCaseStatusMsg').addClass('msgok').html( statusMsg ).show( );
                                   cj("#closeFileOnCaseStatusMsg").click(function(){ cj('#fileOnCaseStatusMsg').fadeOut("slow");return false;}).focus( );
                              }
