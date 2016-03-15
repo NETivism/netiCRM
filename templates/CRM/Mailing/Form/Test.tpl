@@ -34,7 +34,10 @@
 <fieldset>
   <legend>{ts}Test Mailing:{/ts}</legend>
   <table class="form-layout">
-    <tr class="crm-mailing-test-form-block-test_email"><td class="label">{$form.test_email.label}</td><td>{$form.test_email.html} {ts}(filled with your contact's token values){/ts}</td></tr>
+    <tr class="crm-mailing-test-form-block-test_email">
+    <td class="label">{$form.test_email.label}</td>
+    <td>{$form.test_email.html} <div class="description">{ts}Enter e-mail address of recipient. (Use a comma to separate multiple e-mail addresses.){/ts}</div></td>
+    </tr>
     <tr class="crm-mailing-test-form-block-test_group"><td class="label">{$form.test_group.label}</td><td>{$form.test_group.html}</td></tr>
     <tr><td></td><td>{$form.sendtest.html}</td>  
   </table>

@@ -266,7 +266,8 @@ class CRM_UF_Form_Group extends CRM_Core_Form {
     else {
       $defaults['is_active'] = 1;
       $defaults['is_map'] = 0;
-      $defaults['is_update_dupe'] = 0;
+      $defaults['is_cms_user'] = 0;
+      $defaults['is_update_dupe'] = 1;
       $defaults['is_proximity_search'] = 0;
       $defaults['uf_group_type[Profile]'] = 1;
     }

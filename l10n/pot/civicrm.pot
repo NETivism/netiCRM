@@ -5,7 +5,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: POEditor.com\n"
+"PO-Revision-Date: 2016-03-07\n"
+"Last-Translator: \n"
+"Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 
 #: CRM/ACL/BAO/ACL.php CRM/ACL/BAO/EntityRole.php CRM/Admin/Form/Options.php
 #: CRM/Contact/Form/Task/Map.php CRM/Core/DAO/CustomGroup.php
@@ -15275,6 +15277,9 @@ msgstr ""
 msgid "Pending participant expiration (hours)"
 msgstr ""
 
+#: templates/CRM/Event/Form/ManageEvent/Registration.tpl
+msgid "Pending participant expiration (days)"
+
 #: CRM/Event/Form/ManageEvent/Registration.php
 msgid "Please enter the number of hours (as an integer)."
 msgstr ""
@@ -17051,6 +17056,14 @@ msgstr ""
 
 #: CRM/Mailing/Form/Upload.php
 msgid "From Email Address"
+msgstr ""
+
+#: CRM/Mailing/Form/Upload.php
+msgid "Auto-Generated"
+msgstr ""
+
+#: CRM/Mailing/Form/Upload.php
+msgid "Reply-to email"
 msgstr ""
 
 #: CRM/Mailing/Form/Upload.php
@@ -19647,6 +19660,10 @@ msgstr ""
 
 #: CRM/Tag/Form/Tag.php
 msgid "Your update(s) have been saved."
+msgstr ""
+
+#: CRM/UF/Form/AdvanceSetting.php
+msgid "Advanced options"
 msgstr ""
 
 #: CRM/UF/Form/AdvanceSetting.php
@@ -31326,6 +31343,13 @@ msgid ""
 "to disable this feature."
 msgstr ""
 
+#: templates/CRM/Event/Form/ManageEvent/Registration.hlp
+msgid ""
+"Time limit <strong>in days</strong> for confirming/finishing registration "
+"by participants with any of the pending statuses. Enter 0 (or leave empty) "
+"to disable this feature."
+msgstr ""
+
 #: templates/CRM/Event/Form/ManageEvent/Registration.tpl
 msgid ""
 "If you want to provide an Online Registration page for this event, check the"
@@ -33841,10 +33865,6 @@ msgstr ""
 
 #: templates/CRM/Mailing/Page/Report.tpl
 msgid "Mailing Settings"
-msgstr ""
-
-#: templates/CRM/Mailing/Page/Report.tpl
-msgid "Reply-to email"
 msgstr ""
 
 #: templates/CRM/Mailing/Page/Report.tpl
@@ -44972,4 +44992,8 @@ msgstr ""
 
 #: templates/CRM/Contact/Form/Task/Email.tpl
 msgid "Send email to contacts one by one listed above. Your won't leak email of contacts."
+msgstr ""
+
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php
+msgid "Recurring contributions estimated in next %1 %2"
 msgstr ""

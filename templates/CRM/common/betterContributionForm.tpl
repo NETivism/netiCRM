@@ -32,11 +32,34 @@ cj(function($){
       if($('#r_person').is(':checked')){
         $('#custom_{/literal}{$receiptTitle}{literal}').attr('placeholder',"{/literal}{ts}Contact Name{/ts}{literal}");
         $('#custom_{/literal}{$receiptSerial}{literal}').attr('placeholder',"{/literal}{ts}Legal Identifier{/ts}{literal}");
+        $('#custom_{/literal}{$receiptSerial}{literal}').off("keyup").keyup(checkTWID).off('blur').blur(checkTWID);
+        
+        
       }
       if($('#r_company').is(':checked')){
         $('#custom_{/literal}{$receiptTitle}{literal}').attr('placeholder',"{/literal}{ts}Organization{/ts}{literal}");
         $('#custom_{/literal}{$receiptSerial}{literal}').attr('placeholder',"{/literal}{ts}Sic Code{/ts}{literal}");
+        $('#custom_{/literal}{$receiptSerial}{literal}').off("keyup").off('blur');
+        while($('#custom_{/literal}{$receiptSerial}{literal}').parent().find('.error-twid').length>=1){
+          $('#custom_{/literal}{$receiptSerial}{literal}').parent().find('.error-twid').remove();
+        }
       }
+    });
+
+    $('#Main').submit('#custom_{/literal}{$receiptSerial}{literal}',function(){
+      if(isShowChecked()){
+        if($('#r_person').length>=1){
+          if($('#r_person').is(':checked')){
+            if(checkTWID()){
+              return true;
+            }else{
+              $(window).scrollTop($('#custom_{/literal}{$receiptSerial}{literal}').offset().top - $(window).height()/2);
+              return false;
+            }
+          }
+        }
+      }
+      return true;
     });
   }
   $('.receipt_type input').trigger('change').change(updateName);
@@ -237,6 +260,50 @@ cj(function($){
   }
 
 });
+
+function validTWID(value){
+  if(value=='')return true;
+  value = value.toUpperCase();
+  var tab = "ABCDEFGHJKLMNPQRSTUVXYWZIO";
+  var A1 = new Array (1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,3,3,3,3,3,3 );
+  var A2 = new Array (0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5 );
+  var Mx = new Array (9,8,7,6,5,4,3,2,1,1);
+
+  if ( value.length != 10 ){
+    return false;
+  }
+  var i = tab.indexOf( value.charAt(0) );
+  if ( i == -1 ){
+    return false;
+  }
+  var sum = A1[i] + A2[i]*9;
+
+  for( i=1; i<10; i++ ){
+    var v = parseInt( value.charAt(i) );
+    if ( isNaN(v) ){
+      return false;
+    }
+    sum = sum + v * Mx[i];
+  }
+  if ( sum % 10 != 0 ){
+    return false;
+  }
+  return true;
+}
+
+function checkTWID(){
+  while($('#custom_{/literal}{$receiptSerial}{literal}').parent().find('.error-twid').length>=1){
+    $('#custom_{/literal}{$receiptSerial}{literal}').parent().find('.error-twid').remove();
+  }
+  var value = $('#custom_{/literal}{$receiptSerial}{literal}').val();
+  if(validTWID(value)){
+    $('#custom_{/literal}{$receiptSerial}{literal}').removeClass('error');
+    return true;
+  }else{
+    $('#custom_{/literal}{$receiptSerial}{literal}').addClass('error').parent().append('<label for="custom_{/literal}{$receiptSerial}{literal}" class="error-twid" style="padding-left: 10px;color: #e55;">{/literal}{ts}Please enter correct Data ( in valid format ).{/ts}{literal}</label>');
+    return false;
+  }
+}
 
 {/literal}
 </script>

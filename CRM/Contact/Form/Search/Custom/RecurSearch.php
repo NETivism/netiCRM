@@ -62,16 +62,15 @@ class CRM_Contact_Form_Search_Custom_RecurSearch  extends CRM_Contact_Form_Searc
       'contact_a.sort_name' => 'sort_name',
       'r.contact_id' => 'contact_id',
       'contact_email.email' => 'email',
-      'TRUNCATE(r.amount,0)' => 'amount',
-      'r.installments' => 'installments',
+      'ROUND(r.amount,0)' => 'amount',
+      'CAST(r.installments AS SIGNED) - COUNT(c.id)' => 'installments',
       'r.start_date' => 'start_date',
       'r.end_date' => 'end_date',
       'r.cancel_date' => 'cancel_date',
       'COUNT(IF(c.contribution_status_id = 1, 1, NULL))' => 'donation_count',
       'COUNT(c.id)' => 'total_count',
-      'TRUNCATE(SUM(IF(c.contribution_status_id = 1, c.total_amount, 0)),0)' => 'receive_amount', 
-      'TRUNCATE(SUM(c.total_amount),0)' => 'total_amount', 
-      'c.contribution_status_id' => 'last_status_id',
+      'ROUND(SUM(IF(c.contribution_status_id = 1, c.total_amount, 0)),0)' => 'receive_amount', 
+      'ROUND(SUM(c.total_amount),0)' => 'total_amount', 
       'MAX(c.created_date)' => 'current_created_date',
       'r.contribution_status_id' => 'contribution_status_id',
     );
@@ -79,7 +78,7 @@ class CRM_Contact_Form_Search_Custom_RecurSearch  extends CRM_Contact_Form_Searc
       ts('ID') => 'id',
       ts('Name') => 'sort_name',
       ts('Amount') => 'amount',
-      ts('Installments') => 'installments',
+      ts('Remain Installments') => 'installments',
       ts('Start Date') => 'start_date',
       ts('End Date') => 'end_date',
       ts('Cancel Date') => 'cancel_date',
@@ -88,7 +87,6 @@ class CRM_Contact_Form_Search_Custom_RecurSearch  extends CRM_Contact_Form_Searc
       ts('Total Count') => 'total_count',
       ts('Total Receive Amount') => 'receive_amount',
       ts('Current Total Amount') => 'total_amount',
-      $filter_month. ts('Contribution Status') => 'last_status_id',
       $filter_month. ts('Created Date') => 'current_created_date',
       ts('Last Receive Date') => 'last_receive_date',
     );
@@ -141,7 +139,7 @@ GROUP BY r.id
 $having
 ";
     // for only contact ids ignore order.
-    $sql .= " ORDER BY r.id ASC";
+    $sql .= " ORDER BY -installments ASC";
     $dao = CRM_Core_DAO::executeQuery($sql, CRM_Core_DAO::$_nullArray);
 
     while ($dao->fetch()) {
@@ -223,6 +221,10 @@ $having
   }
 
   function buildForm(&$form){
+    // chartis
+    CRM_Contribute_BAO_ContributionRecur::chartEstimateMonthly(12);
+
+    //
     CRM_Core_OptionValue::getValues(array('name' => 'custom_search'), $custom_search);
     $csid = !empty($form->_formValues['customSearchID']) ? $form->_formValues['customSearchID'] : (!empty($_GET['csid']) ? $_GET['csid'] : NULL);
     if($csid){
@@ -239,11 +241,10 @@ $having
     $form->addDate('start_date', ts('First recurring date'), FALSE, array('formatType' => 'custom'));
     $form->addDate('contribution_created_date', ts('Filter by month'), FALSE, array('formatType' => 'custom', 'format' => 'yy-mm'));
     $options = array(
+      'unlimit' => ts('no limit'),
       'second_times' => ts('In progress and having over 2 times.'),
       'last_time' => ts('In progress and last 1 time.'),
-      'in_progress' => ts('In Progress'),
-      'is_expired' => ts('Expired'),
-      'is_failed' => ts('Failed'),
+      'completed' => ts('Completed'),
       );
     $form->addRadio('other_options',NULL,$options,NULL,"<br/>" );
 
@@ -332,19 +333,13 @@ $having
     $month_later = $year."-".$month."-".$day;
     switch($other_options){
       case 'second_times':
-        $clauses[] = "(`end_date` > '$month_later' AND contribution_status_id = 5)";
+        $clauses[] = "(installments >= 2)";
         break;
       case 'last_time':
-        $clauses[] = "(`end_date` > '$today' AND `end_date` < '$month_later'  AND contribution_status_id = 5)";
+        $clauses[] = "(installments = 1)";
         break;
-      case 'is_expired':
-        $clauses[] = " ( contribution_status_id = 1 ) ";
-        break;
-      case 'is_failed':
-        $clauses[] = " ( last_status_id = 4 )";
-        break;
-      case 'in_progress':
-        $clauses[] = " ( contribution_status_id = 5 ) ";
+      case 'completed':
+        $clauses[] = "(installments < 1)";
         break;
     }
 
@@ -458,9 +453,6 @@ SUM(total_amount) as total_amount
     }else{
       $sql = "SELECT contribution_status_id FROM civicrm_contribution WHERE contribution_recur_id = {$row['id']} ORDER BY created_date DESC LIMIT 1";
     }
-
-    $row['last_status_id'] = CRM_Core_DAO::singleValueQuery($sql, CRM_Core_DAO::$_nullArray);
-    $row['last_status_id'] = $this->_cstatus[$row['last_status_id']];
     // $row['action'] = '<a href="'.CRM_Utils_System::url('civicrm/contact/view/contributionrecur', "reset=1&id={$row['id']}&cid={$row['contact_id']}").'" target="_blank">'.ts('View').'</a>';
 
     $action = array_sum(array_keys(CRM_Contribute_Page_Tab::recurLinks()));
@@ -476,7 +468,7 @@ SUM(total_amount) as total_amount
    * Define the smarty template used to layout the search form and results listings.
    */
   function templateFile(){
-    return 'CRM/Contact/Form/Search/Custom.tpl';
+    return 'CRM/Contact/Form/Search/Custom/RecurSearch.tpl';
   }
 
   function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
@@ -508,6 +500,6 @@ SUM(total_amount) as total_amount
       }
     }
   }
-
+  
 }
 
