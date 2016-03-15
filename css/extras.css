@@ -287,9 +287,25 @@
   color: #757575;
 }
 
-
-
 /* form elements */
+.crm-container input[type="text"], 
+.crm-container textarea, 
+.crm-container select,
+.crm-container input.form-autocomplete, 
+.crm-container input.form-text, 
+.crm-container textarea.form-textarea, 
+.crm-container select.form-select {
+  padding: 5px;
+  border: 1px solid #9e9e9e;
+  -moz-border-radius: 0;
+  -webkit-border-radius: 0;
+  border-radius: 0;
+}
+.crm-container select,
+.crm-container select.form-select {
+  padding: 4px 5px;
+}
+
 @media screen and (min-width: 960px) and (max-width: 1279px) {
   .crm-accordion-wrapper .big,
   .crm-accordion-wrapper .twenty,
@@ -578,9 +594,7 @@
 }
 
 /* clear printer friendly float */
-#printer-friendly + .messages,
-#printer-friendly + .crm-block,
-#printer-friendly + #help {
+#printer-friendly + * {
   clear: both;
 }
 
