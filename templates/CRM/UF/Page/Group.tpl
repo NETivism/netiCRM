@@ -41,7 +41,7 @@
         <div class="spacer"></div>    
         <a href="#" onclick="html_code.profile.select(); return false;" class="button"><span>Select HTML Code</span></a> 
     </div>
-    <div class="action-link">
+    <div class="action-link-button">
         &nbsp; <a href="{crmURL p='civicrm/admin/uf/group' q="reset=1"}">&raquo;  {ts}Back to Profile Listings{/ts}</a>
     </div>
     </form>
@@ -53,7 +53,7 @@
 
     {if NOT ($action eq 1 or $action eq 2)}
     <div class="crm-submit-buttons">
-        <a href="{crmURL p='civicrm/admin/uf/group/add' q="action=add&reset=1"}" id="newCiviCRMProfile-top" class="button"><span><div class="icon add-icon"></div>{ts}Add Profile{/ts}</span></a>
+        <a href="{crmURL p='civicrm/admin/uf/group/add' q="action=add&reset=1"}" id="newCiviCRMProfile-top" class="button"><span><i class="zmdi zmdi-plus-circle-o"></i>{ts}Add Profile{/ts}</span></a>
     </div>
     {/if}
     {if $rows}
@@ -95,7 +95,7 @@
 
             {if NOT ($action eq 1 or $action eq 2)}
             <div class="crm-submit-buttons">
-                <a href="{crmURL p='civicrm/admin/uf/group/add' q='action=add&reset=1'}" id="newCiviCRMProfile-bottom" class="button"><span><div class="icon add-icon"></div>{ts}Add Profile{/ts}</span></a>
+                <a href="{crmURL p='civicrm/admin/uf/group/add' q='action=add&reset=1'}" id="newCiviCRMProfile-bottom" class="button"><span><i class="zmdi zmdi-plus-circle-o"></i>{ts}Add Profile{/ts}</span></a>
             </div>
             {/if}
             </div>
@@ -130,7 +130,7 @@
 
             {if NOT ($action eq 1 or $action eq 2)}
             <div class="crm-submit-buttons">
-                <a href="{crmURL p='civicrm/admin/uf/group/add' q='action=add&reset=1'}" id="newCiviCRMProfile-bottom" class="button"><span><div class="icon add-icon"></div>{ts}Add Profile{/ts}</span></a>
+                <a href="{crmURL p='civicrm/admin/uf/group/add' q='action=add&reset=1'}" id="newCiviCRMProfile-bottom" class="button"><span><i class="zmdi zmdi-plus-circle-o"></i>{ts}Add Profile{/ts}</span></a>
             </div>
             {/if}
             </div>
@@ -150,7 +150,7 @@
     {else}
     {if $action ne 1} {* When we are adding an item, we should not display this message *}
        <div class="messages status">
-         <div class="icon inform-icon"></div> &nbsp;
+          &nbsp;
          {capture assign=crmURL}{crmURL p='civicrm/admin/uf/group/add' q='action=add&reset=1'}{/capture}{ts 1=$crmURL}No CiviCRM Profiles have been created yet. You can <a href='%1'>add one now</a>.{/ts}
        </div>
     {/if}

@@ -28,7 +28,7 @@
 {if $session->getStatus(false)}
     {assign var="status" value=$session->getStatus(true)}
     <div class="messages status">
-    	<div class="icon inform-icon"></div>&nbsp;
+    	&nbsp;
         {if is_array($status)}
             {foreach name=statLoop item=statItem from=$status}
                 {if $smarty.foreach.statLoop.first}
@@ -45,7 +45,7 @@
 
 {if ! $urlIsPublic AND $config->debug}
     <div class="messages status">
-      <div class="icon inform-icon"></div>
+      
         &nbsp;{ts}WARNING: Debug is currently enabled in Global Settings.{/ts} {docURL page="Debugging"}
     </div>
 {/if}

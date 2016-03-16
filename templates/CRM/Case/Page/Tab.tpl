@@ -28,7 +28,7 @@
 
 {elseif $redirectToCaseAdmin}
     <div class="messages status">
-      <div class="icon inform-icon"></div>&nbsp; 
+      &nbsp; 
          <strong>{ts}Oops, It looks like there are no active case types.{/ts}</strong>
            {if call_user_func(array('CRM_Core_Permission','check'), ' administer CiviCase')}
              {capture assign=adminCaseTypeURL}{crmURL p='civicrm/admin/options/case_type' q='reset=1&group=case_type'}
@@ -59,8 +59,8 @@
 
     {if $action eq 16 and $permission EQ 'edit' and 
         call_user_func(array('CRM_Core_Permission','check'), 'access all cases and activities') and $allowToAddNewCase}
-        <div class="action-link">
-        <a accesskey="N" href="{$newCaseURL}" class="button"><span><div class="icon add-icon"></div> {ts}Add Case{/ts}</span></a>
+        <div class="action-link-button">
+        <a accesskey="N" href="{$newCaseURL}" class="button"><span><i class="zmdi zmdi-plus-circle-o"></i> {ts}Add Case{/ts}</span></a>
         </div>
     {/if}
 
@@ -68,7 +68,7 @@
         {include file="CRM/Case/Form/Selector.tpl"}
     {else}
        <div class="messages status">
-          <div class="icon inform-icon"></div>
+          
                 {ts}There are no case records for this contact.{/ts}
                 {if $permission EQ 'edit' and 
 		    call_user_func(array('CRM_Core_Permission','check'), 'access all cases and activities') and 

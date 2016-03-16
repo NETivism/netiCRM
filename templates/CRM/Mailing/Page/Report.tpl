@@ -209,7 +209,7 @@
 </table>
 {/strip}
 </fieldset>
-<div class="action-link">
+<div class="action-link-button">
     <a href="{$backUrl}" >&raquo; {$backUrlTitle}</a>
 </div>
 

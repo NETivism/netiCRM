@@ -68,15 +68,14 @@
         </table>
     {/strip}
     {if $action ne 1 and $action ne 2}
-	    <div class="action-link">
-    	<a href="{crmURL q="action=add&reset=1"}" id="newManagePremium" class="button"><span><div class="icon add-icon"></div>{ts}Add Premium{/ts}</span></a>
-        </div>
+	    <div class="action-link-button">
+        <a href="{crmURL q="action=add&reset=1"}" id="newManagePremium" class="button"><i class="zmdi zmdi-plus-circle-o"></i>{ts}Add Premium{/ts}</a>
+      </div>
     {/if}
 </div>
 {else}
     {if $action ne 1 and $action ne 2}
     <div class="messages status">
-        <img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}"/>
         {capture assign=crmURL}{crmURL p='civicrm/admin/contribute/managePremiums' q="action=add&reset=1"}{/capture}
         {ts 1=$crmURL}No premium products have been created for your site. You can <a href='%1'>add one</a>.{/ts}
     </div>  

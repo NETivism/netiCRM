@@ -266,13 +266,21 @@
 	{if $form.is_recur}
 	    <div class="crm-section {$form.is_recur.name}-section">
 			<div class="content">
-				<p><strong>{$form.is_recur.html}<span id="recur-options-interval">{ts}every{/ts}{$form.frequency_interval.html}{$form.frequency_unit.html}</span><span id="recur-options-installmnts"> {ts}for{/ts} {$form.installments.html} {$form.installments.label}</span></strong>
-				</p>
+  		  {$form.is_recur.html}
+        {if $form.frequency_unit.html}
+        <div class="recur-element" id="recur-options-interval">
+          {$form.frequency_unit.label}: {$form.frequency_unit.html}
+        </div>
+        {/if}
+        <div class="recur-element" id="recur-options-installmnts">
+          {$form.installments.label}: {$form.installments.html}
+        </div>
 				<p><span class="description">{ts}Your recurring contribution will be processed automatically for the number of installments you specify. You can leave the number of installments blank if you want to make an open-ended commitment. In either case, you can choose to cancel at any time.{/ts} 
         		{if $is_email_receipt}
         		    {ts}You will receive an email receipt for each recurring contribution. The receipts will include a link you can use if you decide to modify or cancel your future contributions.{/ts} 
         		{/if}
-        		</p>
+        </p>
+      </div>
 		    </div>
 	    </div>
 	{/if} 
@@ -382,36 +390,7 @@ function pcpAnonymous( ) {
     }
   }
 }
-{/literal}{/if}{literal}
-
-if ( {/literal}"{$form.is_recur}"{literal} ) {
-  if ( document.getElementsByName("is_recur")[0].checked == true ) {
-    window.onload = function() {
-      enablePeriod();
-    }
-  }
-}
-function enablePeriod ( ) {
-  var frqInt  = {/literal}"{$form.frequency_interval}"{literal};
-  if ( document.getElementsByName("is_recur")[0].checked == true ) { 
-    document.getElementById('installments').value = '';
-    if ( frqInt ) {
-	    document.getElementById('frequency_interval').value    = '';
-	    document.getElementById('frequency_interval').disabled = true;
-    }
-    document.getElementById('installments').disabled   = true;
-    document.getElementById('frequency_unit').disabled = true;
-  }
-  else {
-    if ( frqInt ) {
-      document.getElementById('frequency_interval').disabled = false;
-    }
-    document.getElementById('installments').disabled   = false;
-    document.getElementById('frequency_unit').disabled = false;
-  }
-}
-
-{/literal}
+{/literal}{/if}
 {if $honor_block_is_active AND $form.honor_type_id.html}{literal}
 enableHonorType();
 function enableHonorType( ) {
@@ -468,6 +447,27 @@ function enableHonorType( ) {
   });
   
   cj(document).ready(function(){
+    var enablePeriod = function($isRecur){
+      var $installments = cj('#installments');
+      var $frequencyUnits = cj('#frequency_unit');
+      if(parseInt($isRecur.val())){
+        $installments.attr('disabled', false);
+        $frequencyUnits.attr('disabled', false);
+        cj('.is_recur-section .recur-element').show();
+      }
+      else{
+        $installments.attr('disabled', true);
+        $frequencyUnits.attr('disabled', true);
+        cj('.is_recur-section .recur-element').hide();
+      }
+    }
+    if (cj('input[name=is_recur]').length > 1) {
+      cj('input[name=is_recur]').click(function(){
+        enablePeriod(cj(this));
+      });
+      enablePeriod(cj('input[name=is_recur]:checked'));
+    }
+
     // don't submit at input
     cj('#crm-container form input:not([type="submit"])').keydown(function (e) {
       if (e.keyCode == 13) {
@@ -489,29 +489,13 @@ function enableHonorType( ) {
       cj('#crm-container .email-5-section').insertAfter('#crm-container .custom_pre_profile-group fieldset legend');
     }
 
-    // recurring - replace select box to text
-    if(!cj("#frequency_interval").length){
-      cj('#recur-options-interval').insertAfter('input[name=is_recur][value=1]');
-    }
-    if(cj('#frequency_unit option').length == 1){
-      if(cj('html').attr('lang') === 'en'){
-        var frequency_unit = cj('#frequency_unit option:eq(0)').val();
-        var unit = '<strong class="frequency-unit-dummy" style="margin:0 5px;border-bottom:1px dashed #555">' + frequency_unit + '</strong>';
-        var $label = cj('#recur-options-interval').next();
-        $label.html($label.html().toLowerCase());
-      }
-      else{
-        var frequency_unit = cj('#frequency_unit option:eq(0)').text();
-        var unit = '<strong class="frequency-unit-dummy">' + frequency_unit + '</strong>';
-      }
-      cj('#frequency_unit').hide();
-      cj(unit).insertAfter(cj('#frequency_unit'));
-    }
-
     // prevent overwrite others contact info
     var lockfield = function($obj){
       $obj.attr('title', '{/literal}{ts}To change your personal info, go My Account page for further setting.{/ts}{literal}');
       $obj.attr("readonly", "readonly").addClass("readonly");
+      if($obj.parent('.crm-form-elem').length){
+        $obj.parent('.crm-form-elem').addClass('crm-form-readonly');
+      }
     }
     {/literal}
     {if $contact_id}

@@ -216,7 +216,7 @@ invert              = 0
 }
 {elseif $statusMessage}
     <div class="messages status">
-        <div class="icon inform-icon"></div>
+        
         {$statusMessage}
     </div>
 {/if}

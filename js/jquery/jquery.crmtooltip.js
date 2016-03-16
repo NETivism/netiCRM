@@ -22,31 +22,42 @@
 * | GNU Affero General Public License or the licensing of CiviCRM,     |
 * | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
 * +--------------------------------------------------------------------+
-*/ 
-(function($){ $.fn.crmtooltip = function(){
-	$('a.crm-summary-link')
-	.addClass('crm-processed')
-	.hover(
-		function(e)  {
-		    $(this).addClass('crm-tooltip-active');
-		    topDistance = e.pageY - $(window).scrollTop();
-		    if (topDistance < 300 | topDistance < $(this).children('.crm-tooltip-wrapper').height()) {
-		          $(this).addClass('crm-tooltip-down');
-		      }
-			if ($(this).children('.crm-tooltip-wrapper').length == '') {
-				$(this).append('<div class="crm-tooltip-wrapper"><div class="crm-tooltip"></div></div>');
-				$(this).children().children('.crm-tooltip')
-					.html('<div class="crm-loading-element"></div>')
-					.load(this.href);
-			}
-		},
-		function(){
-		  $(this).removeClass('crm-tooltip-active');
-		  $(this).removeClass('crm-tooltip-down');
-		  }
-		)
-	.click(function() {return false});	
-	
-	};
-	})(jQuery);
+*/
+(function($){
+
+$.fn.crmtooltip = function(){
+  $('a.crm-summary-link').each(function(){
+    $(this).replaceWith($('<div data="'+this.href+'" class="'+ $(this).attr('class')+'">' + this.innerHTML + '</div>'));
+  });
+  $('.crm-summary-link')
+    .addClass('crm-processed')
+    .hover(function(e) {
+      $(this).css('cursor', 'text');
+      $('.crm-tooltip-wrapper').hide();
+      $('.crm-summary-link').removeClass('crm-tooltip-active');
+      $(this).addClass('crm-tooltip-active');
+      if ($(this).parent().find('.crm-tooltip-wrapper').length == '') {
+        var $tooltip = $('<div class="crm-tooltip-wrapper"><div class="crm-tooltip"></div></div>');
+        var $close = $('<div class="zmdi zmdi-close-circle-o close"></div>');
+        $tooltip.appendTo($(this));
+        $tooltip.children('.crm-tooltip')
+          .html('<div class="crm-loading-element"></div>')
+          .load($(this).attr('data'), function(){
+            $close.click(function(){
+              $('.crm-tooltip-wrapper').remove();
+              $('.crm-summary-link').removeClass('crm-tooltip-active');
+              $('.crm-summary-link').removeClass('crm-tooltip-down');
+            });
+            $close.appendTo($(this)); 
+          });
+      }
+      else{
+        $(this).parent().find('.crm-tooltip-wrapper').show();
+      }
+    }, function(e){
+      $(this).css('cursor', 'pointer');
+    });
+};
+
+})(jQuery);
 

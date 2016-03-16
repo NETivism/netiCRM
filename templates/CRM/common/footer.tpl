@@ -24,7 +24,6 @@
  +--------------------------------------------------------------------+
 *}
 {include file="CRM/common/version.tpl" assign=version}
-{include file="CRM/common/accesskeys.tpl"}
 {if isset($contactId) and $contactId} {* Display contact-related footer. *}
     <div class="footer" id="record-log">
     {if isset($legal_identifier) and $legal_identifier}<span class="col">{ts}Legal Identifier{/ts}: {$legal_identifier}</span>{/if} {if isset($external_identifier) and $external_identifier}<span class="col">{ts}External ID{/ts}:&nbsp;{$external_identifier}</span>{/if}{if $action NEQ 2}<span class="col">&nbsp; &nbsp;{ts}CiviCRM ID{/ts}:&nbsp;{$contactId}</span>{/if}

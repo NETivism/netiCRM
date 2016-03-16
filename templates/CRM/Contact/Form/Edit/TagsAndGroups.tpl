@@ -26,7 +26,7 @@
 {if $title}
 <div class="crm-accordion-wrapper crm-tagGroup-accordion crm-accordion-closed">
  <div class="crm-accordion-header">
-  <div class="icon crm-accordion-pointer"></div> 
+  <div class="zmdi crm-accordion-pointer"></div> 
 	{$title} 
   </div><!-- /.crm-accordion-header -->
   <div class="crm-accordion-body" id="tagGroup">
@@ -43,12 +43,14 @@
 			    {if $k|is_numeric}
 				<tr class={cycle values="'odd-row','even-row'" name=$key} id="crm-tagRow{$k}">
 				    <td>
-					<strong>{$it.html}</strong><br />
-					{if $item.$k.description}
-					    <div class="description">
-						{$item.$k.description}
-					    </div>
-					{/if}
+					    <label>
+              {$it.html}
+              {if $item.$k.description}
+					    <span class="description">
+						   ( {$item.$k.description} )
+					    </span>
+              {/if}
+              </label>
 				    </td>
 				</tr>
 			    {/if}

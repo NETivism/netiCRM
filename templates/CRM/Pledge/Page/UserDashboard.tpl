@@ -64,7 +64,7 @@
 {/strip}
 {else}
 <div class="messages status">
-         <div class="icon inform-icon"></div>
+         
              {ts}There are no Pledges for your record.{/ts}
          </div>
 {/if}

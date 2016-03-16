@@ -25,7 +25,7 @@
 *}
 {if $action eq 8}
       <div class="messages status">
-       <div class="icon inform-icon"></div>   
+          
           {ts}WARNING: Deleting this option will result in the loss of all data.{/ts} {ts}This action cannot be undone.{/ts} {ts}Do you want to continue?{/ts}
          
       </div>

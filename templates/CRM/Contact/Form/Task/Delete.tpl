@@ -26,7 +26,7 @@
 {* Confirmation of contact deletes  *}
 <div class="crm-block crm-form-block crm-contact-task-delete-form-block">
 <div class="messages status">
-  <div class="icon inform-icon"></div>&nbsp;
+  &nbsp;
       {if $restore}
 		{ts}Are you sure you want to restore the selected contact(s)? The contact(s) and all related data will be fully restored.{/ts}
       {elseif $trash}

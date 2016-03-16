@@ -50,22 +50,15 @@
     </table>
 {else}
     <div class="messages status">
-      <dl>
-        <dt><img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}"/></dt>
-        <dd>
-            {ts}There are currently no Saved Searches. To create a Saved search:{/ts}
-            <p>
-            <ul>
-            {capture assign=crmURLsearch}{crmURL p='civicrm/contact/search/basic' q='reset=1'}{/capture}
-            {capture assign=crmURLadvanced}{crmURL p='civicrm/contact/search/advanced' q='reset=1'}{/capture}
-            <li>{ts 1=$crmURLsearch 2=$crmURLadvanced}Use <a href='%1'>Find</a> or <a href='%2'>Advanced Search</a> form to enter search criteria{/ts}</li>
-            <li>{ts}Run and refine the search criteria as necessary{/ts}</li>
-            <li>{ts}Select 'New Saved Search' from the '- more actions -' drop-down menu and click 'Go'{/ts}</li>
-            <li>{ts}Enter a name and description for your Saved Search{/ts}</li>
-            </ul>
-            </p>
-        </dd>
-      </dl>
+        {ts}There are currently no Saved Searches. To create a Saved search:{/ts}
+        <ul>
+        {capture assign=crmURLsearch}{crmURL p='civicrm/contact/search/basic' q='reset=1'}{/capture}
+        {capture assign=crmURLadvanced}{crmURL p='civicrm/contact/search/advanced' q='reset=1'}{/capture}
+        <li>{ts 1=$crmURLsearch 2=$crmURLadvanced}Use <a href='%1'>Find</a> or <a href='%2'>Advanced Search</a> form to enter search criteria{/ts}</li>
+        <li>{ts}Run and refine the search criteria as necessary{/ts}</li>
+        <li>{ts}Select 'New Saved Search' from the '- more actions -' drop-down menu and click 'Go'{/ts}</li>
+        <li>{ts}Enter a name and description for your Saved Search{/ts}</li>
+        </ul>
     </div>
 {/if}
 </p>

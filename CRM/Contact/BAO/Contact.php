@@ -2447,7 +2447,7 @@ UNION
         'key' => 'add',
         'permissions' => array('edit all contacts'),
       ),
-      'delete' => array('title' => ts('Delete Contact'),
+      'delete' => array('title' => ts('Delete'),
         'weight' => 1,
         'weight' => 0,
         'ref' => 'delete-contact',

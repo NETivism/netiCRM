@@ -25,7 +25,7 @@
 *}
 <div class="crm-accordion-wrapper crm-notesBlock-accordion crm-accordion-closed">
  <div class="crm-accordion-header">
-  <div class="icon crm-accordion-pointer"></div> 
+  <div class="zmdi crm-accordion-pointer"></div> 
 	{$title} 
   </div><!-- /.crm-accordion-header -->
   <div class="crm-accordion-body" id="notesBlock">

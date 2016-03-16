@@ -30,7 +30,7 @@
 {foreach from=$list item=rows key=report}		
 <div class="crm-accordion-wrapper crm-accordion_title-accordion crm-accordion_{$report}-accordion crm-accordion-open">
  <div class="crm-accordion-header">
-  <div class="icon crm-accordion-pointer"></div> 
+  <div class="zmdi crm-accordion-pointer"></div> 
     {if $report}{if $report EQ 'Contribute'}{ts}Contribution{/ts}{elseif $report EQ 'Mail'}{ts}Mailing{/ts}{else}{ts}{$report}{/ts}{/if}{/if} {ts}Report{/ts}
  </div><!-- /.crm-accordion-header -->
  <div class="crm-accordion-body">
@@ -53,7 +53,7 @@
 </div>
 
     {if $reportUrl}
-    <div class="action-link">
+    <div class="action-link-button">
 	<a href="{$reportUrl}" class="button"><span>&raquo; {ts}View All Reports{/ts}</span></a>
     </div>
     {/if}
@@ -61,7 +61,7 @@
 {else}
 <div class="crm-content-block">    
 <div class="messages status">
-	<div class="icon inform-icon"></div>&nbsp;
+	&nbsp;
         {ts}No report instances have been created for your site.{/ts} &nbsp;
         {if $templateUrl}
             {ts 1=$templateUrl}You can create reports by selecting from the <a href="%1">list of report templates here.</a>{/ts}

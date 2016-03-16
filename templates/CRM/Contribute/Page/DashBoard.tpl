@@ -66,7 +66,7 @@
 
 <div class="float-right">
      <span><a href="{$configPagesURL}" class="button"><span>{ts}Manage Contribution Pages{/ts}</span></a></span>
-    <span><a href="{$newPageURL}" class="button"><span><div class="icon add-icon"></div>{ts}Add Contribution Page{/ts}</span></a></span>
+    <span><a href="{$newPageURL}" class="button"><span><i class="zmdi zmdi-plus-circle-o"></i>{ts}Add Contribution Page{/ts}</span></a></span>
 </tr>
 </table>
 </div>

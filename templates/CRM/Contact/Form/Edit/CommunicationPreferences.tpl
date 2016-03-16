@@ -28,7 +28,7 @@
 
 <div class="crm-accordion-wrapper crm-commPrefs-accordion crm-accordion-closed">
  <div class="crm-accordion-header">
-  <div class="icon crm-accordion-pointer"></div> 
+  <div class="zmdi crm-accordion-pointer"></div> 
 	{$title} 
   </div><!-- /.crm-accordion-header -->
 <div id="commPrefs" class="crm-accordion-body">

@@ -67,7 +67,7 @@
     <td class="crm-membership-end_date">{$row.membership_end_date|truncate:10:''|crmDate}</td>
     <td class="crm-membership-source">{$row.membership_source}</td>
     <td class="crm-membership-status crm-membership-status_{$row.membership_status}">{$row.membership_status}</td>
-    <td>
+    <td class="row-action">
         {$row.action|replace:'xx':$row.membership_id}
         {if $row.owner_membership_id}
             &nbsp;|&nbsp;<a href="{crmURL p='civicrm/membership/view' q="reset=1&id=`$row.owner_membership_id`&action=view&context=search"}" title="{ts}View Primary member record{/ts}">{ts}View Primary{/ts}</a>

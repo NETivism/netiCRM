@@ -34,7 +34,7 @@
             {capture assign=editSmartGroupURL}{crmURL p="civicrm/contact/search/advanced" q="reset=1&force=1&ssID=`$ssID`"}{/capture}
         {/if} 
         <div class="crm-submit-buttons">
-            <a href="{$editSmartGroupURL}" class="button"><span><div class="icon edit-icon"></div> {ts 1=$group.title}Edit Smart Group Search Criteria for %1{/ts}</span></a>
+            <a href="{$editSmartGroupURL}" class="button"><span><div class="zmdi zmdi-edit"></div> {ts 1=$group.title}Edit Smart Group Search Criteria for %1{/ts}</span></a>
             {help id="id-edit-smartGroup"}
         </div>
     {/if}
@@ -42,7 +42,7 @@
     {if $permissionedForGroup}
         {capture assign=addMembersURL}{crmURL q="context=amtg&amtgID=`$group.id`&reset=1"}{/capture}
         <div class="crm-submit-buttons">
-            <a href="{$addMembersURL}" class="button"><span><div class="icon add-icon"></div> {ts 1=$group.title}Add Contacts to %1{/ts}</span></a>
+            <a href="{$addMembersURL}" class="button"><span><i class="zmdi zmdi-plus-circle-o"></i> {ts 1=$group.title}Add Contacts to %1{/ts}</span></a>
             {if $ssID}{help id="id-add-to-smartGroup"}{/if}
         </div>
     {/if}

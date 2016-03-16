@@ -5,3 +5,1143 @@
 ** if you don't want to modify system provided
 ** civicrm.css.
 */
+.crm-container {
+  line-height: 1.5;
+}
+
+/* crm icon */
+.crm-container div i,
+.crm-container span i,
+.crm-container button i,
+.crm-container a i {
+  color: #555;
+  margin: 0 5px;
+  vertical-align: baseline;
+}
+
+/**
+ * Placeholder
+ */
+.crm-container ::-webkit-input-placeholder {
+   color: #777;
+}
+.crm-container :-moz-placeholder { /* Firefox 18- */
+   color: #777;
+   opacity: 1;
+}
+.crm-container ::-moz-placeholder {  /* Firefox 19+ */
+   color: #777;
+   opacity: 1;
+}
+.crm-container :-ms-input-placeholder {
+   color: #777;
+}
+.crm-container input[type="text"].readonly {
+  color: #777;
+  background: #F3F3F3 url("../i/ic_lock_outline_24px.png") no-repeat 98% 50%;
+}
+
+/* crm messages */
+.crm-container .messages {
+    margin: 1em 0 1em;
+    border: none;
+    font-weight: normal;
+}
+.crm-container .messages table, 
+.crm-container-snippet .messages table {
+    margin: 15px 0;
+    width: auto;
+    color: #000;
+}
+.crm-container .messages table a, 
+.crm-container-snippet .messages table a {
+    color: #304ffe;
+}
+.crm-container .messages table td, .crm-container-snippet .messages table td {
+    background-color: #F7F7F7;
+    border-bottom: 1px solid #DDDDDD;
+}
+
+.crm-container div.status {
+    margin:0.5em 0px;
+    padding:0.25em 0.5em;
+    color: #3e3e3e;
+    font-weight: normal;
+    background: #C5DDFC url(../packages/jquery/jquery-ui/css/custom-theme/images/ui-bg_diagonals-small_55_c5ddfc_40x40.png);
+}
+.status dl {margin:2px 5px;}
+.crm-container div.status dt {
+    clear:none;
+    float:left;
+    width:20px;
+}
+.crm-container div.status dd {margin-left:0px;}
+
+.crm-container div.status ul {
+    margin: 0 0 1em 16px;
+}
+
+.status-pending {
+    color: green;
+}
+
+.status-completed {
+    color: #000080;
+}
+
+#restmsg {
+    z-index:10000;
+    padding:4px;
+    margin-bottom: 4px;
+}
+#restmsg.msgok, span.msgok {
+    display:block;
+    background:#B0D730;
+    background-color:#F1F8EB;
+    border:1px solid #B0D730;
+    color:#3E3E3E;
+    font-size: .9em;
+    margin:0 0 8px;
+    padding:4px;
+}
+
+.crm-container div.view-data {
+    padding: .25em .5em .25em .5em;
+    border: 1px solid DimGray;
+    width: auto;
+    background-color: #ffffff;
+}
+
+
+.crm-container div.messages,
+.crm-container div.status,
+.crm-container div.crm-error,
+.crm-container #help {
+  position: relative;
+  margin: 0 0 8px 0;
+  padding: 12px 12px 12px 55px !important; /* In order to display messages status icon */
+  border: none;
+  border-radius: 0;
+  color: #fff;
+  line-height: 1.5;
+  font-size: 1rem;
+}
+.crm-container div.messages::before,
+.crm-container div.status::before,
+.crm-container div.crm-error::before,
+.crm-container #help::before {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 3px 0 0 15px;
+  font-family: 'Material-Design-Iconic-Font';
+  font-size: 30px;
+}
+.crm-container div.messages .icon,
+.crm-container div.status .icon,
+.crm-container div.crm-error .icon,
+.crm-container #help .icon {
+  display: none;
+}
+.crm-container div.messages a,
+.crm-container div.status a,
+.crm-container div.crm-error a,
+.crm-container #help a {
+  color: #fff;
+  text-decoration: underline;
+}
+.crm-container div.messages table a,
+.crm-container div.status table a,
+.crm-container div.crm-error table a,
+.crm-container #help table a {
+  text-decoration: none;
+  color: #304ffe;
+}
+.crm-container div.messages table a:hover,
+.crm-container div.status table a:hover,
+.crm-container div.crm-error table a:hover,
+.crm-container #help table a:hover {
+  text-decoration: underline;
+  color: #536DFE;
+}
+
+/* crm messages: status */
+.crm-container div.messages,
+.crm-container div.status {
+  background: #2196f3;
+}
+.crm-container div.messages::before,
+.crm-container div.status::before {
+  content: "\f1f7";
+}
+
+/* crm messages: error */
+.crm-container div.crm-error {
+  background: #ff1744;
+}
+.crm-container div.crm-error::before {
+  content: "\f135";
+}
+
+/* crm messages: help */
+.crm-container #help {
+  background: #4b6572;
+}
+.crm-container #help::before {
+  content: "\f1f5";
+}
+
+/* crm status */
+.crm-container .crm-marker {
+  color: #F44336;
+  font-weight: bold;
+}
+.crm-container .crm-error {
+  border: none;
+  padding: 5px;
+  color: #B71C1C;
+}
+.crm-container input.error {
+  border-color: #F44336;
+}
+
+/* fieldset */
+.crm-container fieldset {
+  top: 0;
+  margin: 30px 0;
+  padding: 4px 0;
+  border: none;
+  border-top: 1px solid #CFCEC3;
+  border-radius: 0;
+  background: none;
+}
+.crm-container fieldset legend {
+  display: block;
+  position: relative;
+  top: 0;
+  margin-bottom: 20px;
+  padding: 4px;
+  width: auto;
+  text-indent: 0;
+  font-size: 1.25rem;
+  color: #3E3E3E;
+  border: none;
+  background: none;
+}
+
+/* step */
+#crm-container .wizard-title {
+  margin: 2rem 0;
+  font-size: 1.5rem;
+}
+
+/* Event page */
+.crm-container #register-who {
+  margin: 0 0 60px 0;
+  text-align: center;
+}
+
+
+/* contribution page styles */
+.crm-container #Main fieldset table td {
+  background-color: transparent;
+  border:none;
+}
+
+.crm-container .crm-section,
+.crm-section {
+  margin-bottom: 1rem;
+}
+
+.crm-container .crm-section .label,
+.crm-section .label {
+  float: left;
+  width: 18%;
+  text-align: right;
+  font-size: 1rem;
+}
+
+.crm-container .label-left .label {
+  text-align: left;
+}
+
+.crm-container .crm-section .content,
+.crm-section .content {
+  margin-top: 0;
+  margin-left: 20%;
+}
+
+.crm-container .no-label .content {
+    margin-left: 0;
+}
+.crm-container .is_recur-section .content span {
+  vertical-align: middle;
+}
+
+.crm-container #cvv2 {vertical-align: top; }
+
+.crm-container .description {
+  margin: 5px 0;
+  font-size: .875rem;
+  color: #757575;
+}
+
+/* form elements */
+.crm-container input[type="text"], 
+.crm-container textarea, 
+.crm-container select,
+.crm-container input.form-autocomplete, 
+.crm-container input.form-text, 
+.crm-container textarea.form-textarea, 
+.crm-container select.form-select {
+  padding: 5px;
+  border: 1px solid #9e9e9e;
+  -moz-border-radius: 0;
+  -webkit-border-radius: 0;
+  border-radius: 0;
+}
+.crm-container select,
+.crm-container select.form-select {
+  padding: 4px 5px;
+}
+
+@media screen and (min-width: 960px) and (max-width: 1279px) {
+  .crm-accordion-wrapper .big,
+  .crm-accordion-wrapper .twenty,
+  .crm-accordion-wrapper .huge,
+  .crm-accordion-wrapper .huge40,
+  .crm-accordion-wrapper .bigSelect {
+    max-width: 10rem;
+  }
+}
+@media screen and (min-width: 1280px) and (max-width: 1440px) {
+  .crm-accordion-wrapper .twenty,
+  .crm-accordion-wrapper .huge,
+  .crm-accordion-wrapper .huge40 {
+    max-width: 15rem;
+  }
+}
+
+
+/* ac results */
+.ac_results {
+  position: relative;
+  padding: 8px 0;
+  width: 450px !important;
+  border: none;
+  background: transparent;
+}
+.ac_results::after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 10px;
+  z-index: 100;
+  width: 0;
+  border-width: 0 6px 8px;
+  border-color: #e0e0e0 transparent;
+  border-style: solid;
+}
+.ac_results-inner {
+  border: 1px solid #e0e0e0;
+}
+.ac_results li,
+.crm-container .ac_results li {
+  background-color: transparent;
+}
+.ac_results li.ac_over,
+.ac_results li:hover,
+.ac_results li.ac_over a,
+.ac_results li.ac_over a:hover,
+.ac_results li.ac_over a:visited,
+.crm-container .ac_results li.ac_over,
+.crm-container .ac_results li:hover,
+.crm-container .ac_results li:hover a,
+.crm-container .ac_results li.ac_over a,
+.crm-container .ac_results li.ac_over a:hover,
+.crm-container .ac_results li.ac_over a:visited {
+  cursor: pointer;
+  color: #424242;
+}
+.ac_results li strong,
+.crm-container .ac_results li strong {
+  color: #ff80ab;
+}
+.ac_results li:hover strong,
+.ac_results li.ac_over strong,
+.ac_results li.ac_over:hover strong,
+.ac_results li.ac_over:visited strong,
+.crm-container .ac_results li:hover strong,
+.crm-container .ac_results li.ac_over:hover strong,
+.crm-container .ac_results li.ac_over:visited strong {
+  color: #f50057;
+}
+
+/* crm button */
+.crm-container button,
+.crm-container input[type="button"],
+.crm-container .button,
+.crm-container a.button:link,
+.crm-container a.button:visited,
+.crm-container .form-submit {
+  display: inline-block;
+  cursor: pointer;
+  margin: .5em 1em .5em 0;
+  padding: 6px 10px;
+  font-size: .875rem;
+  line-height: 1.2;
+  color: #fff;
+  border: none;
+  border-radius: 0;
+  background: #333030;
+  -webkit-transition: color .2s linear,background .2s linear;
+  -webkit-font-smoothing: subpixel-antialiased;
+}
+.crm-container button:hover,
+.crm-container button:focus,
+.crm-container input[type="button"]:hover,
+.crm-container input[type="button"]:focus,
+.crm-container .button:hover,
+.crm-container .button:focus,
+.crm-container a.button:hover,
+.crm-container a.button:focus,
+.crm-container .form-submit:hover,
+.crm-container .form-submit:focus {
+  color: #fff;
+  background: #555;
+}
+.crm-container button:focus,
+.crm-container input[type="button"]:focus,
+.crm-container .form-submit:focus {
+  outline: 0; /* remove button focus highlight  */
+}
+.crm-container button:active,
+.crm-container input[type="button"]:active,
+.crm-container .button:active,
+.crm-container a.button:active,
+.crm-container .form-submit:active {
+  background: #111;
+}
+
+/* button: primary, save, submit, register, next */
+.crm-button-type-upload button,
+.crm-button-type-upload input[type="button"],
+.crm-button-type-upload .button,
+.crm-button-type-upload a.button:link,
+.crm-button-type-upload a.button:visited,
+.crm-button-type-upload .form-submit,
+.crm-button-type-next .form-submit,
+.crm-container #register-me,
+.crm-container a.button.crm-register-button {
+  color: #fff;
+  background: #3f51b5;
+}
+.crm-button-type-upload button:hover,
+.crm-button-type-upload button:focus,
+.crm-button-type-upload input[type="button"]:hover,
+.crm-button-type-upload input[type="button"]:focus,
+.crm-button-type-upload .button:hover,
+.crm-button-type-upload .button:focus,
+.crm-button-type-upload .form-submit:hover,
+.crm-button-type-upload .form-submit:focus,
+.crm-button-type-next .form-submit:hover,
+.crm-button-type-next .form-submit:focus,
+.crm-container #register-me:hover,
+.crm-container #register-me:focus,
+.crm-container a.button.crm-register-button:hover,
+.crm-container a.button.crm-register-button:focus {
+  color: #fff;
+  background: #5C6BC0;
+}
+.crm-button-type-upload button:active,
+.crm-button-type-upload input[type="button"]:active,
+.crm-button-type-upload .button:active,
+.crm-button-type-upload .form-submit:active,
+.crm-button-type-next .form-submit:active,
+.crm-container #register-me:active,
+.crm-container a.button.crm-register-button:active {
+  background: #303F9F;
+}
+
+/* button: cancel */
+.crm-button-type-cancel button,
+.crm-button-type-cancel input[type="button"],
+.crm-button-type-cancel .button,
+.crm-button-type-cancel a.button:link,
+.crm-button-type-cancel a.button:visited,
+.crm-button-type-cancel .form-submit {
+  color: #000;
+  background: #e0e0e0;
+}
+.crm-button-type-cancel button:hover,
+.crm-button-type-cancel button:focus,
+.crm-button-type-cancel input[type="button"]:hover,
+.crm-button-type-cancel input[type="button"]:focus,
+.crm-button-type-cancel .button:hover,
+.crm-button-type-cancel .button:focus,
+.crm-button-type-cancel .form-submit:hover,
+.crm-button-type-cancel .form-submit:focus {
+  color: #000;
+  background: #bdbdbd;
+}
+.crm-button-type-cancel button:active,
+.crm-button-type-cancel input[type="button"]:active,
+.crm-button-type-cancel .button:active,
+.crm-button-type-cancel .form-submit:active {
+  background: #9e9e9e;
+}
+
+/* button: delete */
+.crm-delete-action .button,
+.crm-delete-action a.button:link,
+.crm-delete-action a.button:visited,
+.crm-container input[id*="Delete_done"],
+.crm-container a.delete.button {
+  color: #fff;
+  background: #D32F2F;
+}
+.crm-delete-action .button:hover,
+.crm-delete-action .button:focus,
+.crm-delete-action a.button:hover,
+.crm-delete-action a.button:focus,
+.crm-container input[id*="Delete_done"]:hover,
+.crm-container input[id*="Delete_done"]:focus,
+.crm-container a.delete.button:hover,
+.crm-container a.delete.button:focus {
+  color: #fff;
+  background: #F44336;
+}
+.crm-delete-action .button:active,
+.crm-delete-action a.button:active,
+.crm-container input[id*="Delete_done"]:active,
+.crm-container a.delete.button:active {
+  background: #B71C1C;
+}
+
+/* button: icon & text */
+.button i,
+.crm-container .button i {
+  color: #fff;
+  margin: 0 5px;
+  font-size: inherit;
+  vertical-align: baseline;
+}
+
+/* action link button and ac results */
+.action-link-button {
+  position: relative;
+}
+.action-link-button .action-link-result {
+  position: absolute;
+  display: none;
+  top: 35px;
+  width: 220px !important;
+  left: 0px;
+  z-index: 15;
+}
+.action-link-button .ac_results::after {
+  border-color: #2f2f2e transparent;
+}
+.action-link-button .ac_results li {
+  font-size: .8125rem;
+}
+
+/* crm contact actions list */
+#crm-contact-actions-list {
+  width: 495px !important;
+}
+
+/* crm submit buttons */
+.crm-submit-buttons {
+  margin: 15px 0;
+}
+
+/* printer friendly */
+.crm-container #printer-friendly {
+  position: relative;
+  float: right;
+  margin: 0 10px;
+  z-index: 10;
+}
+.crm-container #printer-friendly .print-icon {
+  display: block;
+  position: relative;
+  text-indent: -9999em;
+  overflow: hidden;
+  line-height: 1;
+  font-size: 24px;
+  color: #6D7294;
+}
+.crm-container #printer-friendly .print-icon:hover {
+  color: #536DFE;
+}
+.crm-container #printer-friendly .print-icon:active {
+  color: #303F9F;
+}
+.crm-container #printer-friendly .print-icon::after {
+  content: "\f1b0";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  text-indent: 0;
+  font-family: 'Material-Design-Iconic-Font';
+  font-size: inherit;
+}
+
+/* clear printer friendly float */
+#printer-friendly + * {
+  clear: both;
+}
+
+/* crm form element */
+.crm-form-textfield,
+.crm-form-select {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* crm site-wide table style */
+.crm-container table {
+  margin: 0em 0em 1em;
+  border-collapse: collapse;
+  width: 100%;
+}
+.crm-container table.criteria-group {
+  margin-bottom: .1em;
+}
+
+
+.crm-container th,
+.crm-container table.display thead th,
+.crm-container table thead.sticky th,
+.crm-container table.caseSelector tr.columnheader th {
+  background-color:#FFFFFF;
+  border-color:#FFFFFF #FFFFFF #CFCEC3;
+  border-style:solid;
+  border-width:1px 1px 2px;
+  color:#A7A7A7;
+  font-size:1.0em;
+  font-weight:bold;
+  padding:4px;
+  text-align:left;
+  vertical-align:top;
+}
+/* Styles for Sticky Header */
+.crm-container table thead.sticky {background-color:#FFF;}
+.crm-container thead div.sticky-header {
+  height: 15px;
+  border-bottom:2px solid #CFCEC3;
+  background-color:#FFF;
+  z-index: 10;
+}
+
+/* Styles for Sorting Header */
+.crm-container table.display thead th.sorting_asc,
+.crm-container table.display thead th.sorting_desc,
+.crm-container table .sticky th a.sort-ascending,
+.crm-container table .sticky th a.sort-descending,
+.crm-container table.caseSelector tr.columnheader th a.sort-ascending,
+.crm-container table.caseSelector tr.columnheader th a.sort-descending {
+  color:#3e3e3e;
+  background-color: #FFF;
+}
+
+.crm-container table.form-layout-compressed tbody th.label { background-color: #F7F7F7; }
+
+.crm-container tbody{
+  border-top: none
+}
+
+.crm-container tr {
+  font-size: 1em;
+  background: none;
+}
+
+.crm-container td,
+#activity-content td {
+  padding: 4px;
+  vertical-align: top;
+}
+
+.crm-container tr.even-row td,
+.crm-container tr.odd-row td,
+.crm-container table.display td,
+.crm-container table.pagerDisplay td {
+  border-collapse: collapse;
+}
+
+.crm-container .crm-row-selected {
+  margin: 0px;
+  padding: 3px 0px 3px 0px;
+  clear: none;
+  background-color: #FFFFCC !important;
+}
+
+.crm-container .row-highlighted {
+  margin: 0px;
+  padding: 3px 0px 3px 0px;
+  clear: none;
+  background-color: #FFFFCC;
+}
+.crm-container table {
+  border:1px solid #efefef;
+}
+.crm-container .crm-tooltip table {
+  border-color:transparent;
+}
+
+.crm-container .crm-form-block table {
+  border:none;
+}
+.crm-container tr.even,
+.crm-container tr.odd,
+.crm-container tbody th {
+  border-color:#FFF #FFF #efefef #FFF;
+}
+
+.crm-container tr.even-row td,
+.crm-container tr.odd-row td,
+.crm-container table.display td,
+.crm-container table.pagerDisplay td {
+  border-color:#efefef;
+  border-right: 1px solid #dddddd;
+}
+.crm-container .odd-row, .crm-container .odd,
+tbody.scrollContent {
+  background-color: #FAFAFA;
+}
+.crm-container .even-row, .crm-container .even,
+tbody.scrollContent tr.alternateRow {
+  background-color: #EFEFEF;
+}
+
+.crm-container td.checkbox {
+  vertical-align: middle;
+  text-align: center;
+}
+.crm-container tr.columnheader a.sorting {
+  color:#a7a7a7;
+}
+
+.crm-container a.sorting { color:#A7A7A7; }
+.crm-container a.sorting_desc,
+.crm-container a.sorting_asc { color:#000; }
+
+.crm-container tr a.sorting,
+.crm-container tr a.sorting_asc,
+.crm-container tr a.sorting_desc {
+  color:#52534D;
+}
+
+/* table layout */
+.crm-container table.form-layout,
+.ui-dialog-content table.form-layout,
+.crm-container table.control-panel,
+.crm-container table.no-border {
+  margin: 0em;
+  border-collapse: collapse;
+  border: 0px none;
+}
+
+.crm-container table.form-layout-compressed {
+  margin: 0em 0em .5em;
+  width: auto;
+  border-collapse: collapse;
+  border: 1px none;
+}
+
+.crm-container table.crm-profile-tagsandgroups {
+  margin-top: -1.25em;
+}
+
+.crm-container table.advmultiselect {
+  margin: 0em;
+  width: auto;
+  border-collapse: collapse;
+  border: 1px solid #696969;
+}
+
+.crm-container table.advmultiselect td {
+  padding: 10px;
+}
+
+.crm-container table.advmultiselect td select {
+  width: 150px;
+}
+.crm-container .form-layout td {
+  vertical-align: top;
+  padding: 5px;
+  white-space: normal;
+  border: none;
+}
+
+.crm-container .form-layout td.report,
+.crm-container .form-layout td.description,
+.crm-container .form-layout-compressed td.description {
+  white-space   : normal;
+}
+
+.crm-container .form-layout-compressed td,
+.crm-container .form-layout-compressed th {
+  vertical-align: top;
+  border: none;
+}
+
+.crm-container .control-panel td {
+  padding: 3px;
+  width: 25%;
+  white-space: nowrap;
+  border: 0px none;
+  text-align: center;
+}
+
+.crm-container .form-layout td.label,
+.ui-dialog-content .form-layout td.label,
+.crm-container .form-layout-compressed td.label,
+.crm-container .selector td.label,
+.crm-container .form-layout-compressed th.label {
+  text-align: right;
+  padding: 4px 4px 4px 6px;
+  border: 0px none;
+  vertical-align: top;
+}
+.crm-container td.op-checkbox label {
+  font-weight: normal;
+  font-style: italic;
+}
+
+.crm-container .form-layout td.label-left,
+.crm-container .form-layout-compressed td.label-left {
+  text-align: left;
+  padding: 4px 4px 4px 6px;
+  border: 0px none;
+  vertical-align: top;
+}
+
+.crm-container table.selector tr:hover {
+  background-color: #D2D4E1;
+}
+.crm-container table.selector .crm-tooltip tr:hover {
+  background-color: transparent;
+}
+
+.crm-container table.selector td {
+  word-wrap: break-word;
+}
+.crm-container table.selector td a{
+  word-wrap: break-word;
+  max-width: 100px;
+  display: inline-block;
+}
+.crm-container td.overflow-safe {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 15em;
+  overflow:hidden;
+}
+
+.crm-container .form-layout td.view-value,
+.crm-container .form-layout-compressed td.view-value {
+  text-align: left;
+  padding: 4px;
+  border: 0px none;
+  vertical-align: top;
+}
+
+
+/*
+** Styles for record browser and report tables, and pager bar
+*/
+
+.crm-container #map-field table,
+.crm-container table.report,
+.crm-container table.chart  {
+  width: auto;
+}
+
+.crm-container .crm-flashchart {
+  overflow: scroll;
+}
+
+.crm-container td.enclosingNested {
+  padding: 0px;
+}
+
+.crm-container .nowrap {
+  white-space: nowrap;
+}
+
+.crm-container tr.columnheader {
+  background-color: #E6E6E6;
+  color: #000000;
+  border: 1px solid #DDD;
+}
+
+.crm-container tr.columnheader a {
+  color: #000;
+  text-decoration: none;
+  vertical-align: top;
+}
+
+.crm-container tr.columnheader-dark th {
+  /*background-color: #B0B0B0;*/
+  background-color: #999999;
+  /*color: #FFFFFF;*/
+  color: #FAFAFA;
+  /*border: 1px solid #000000;*/
+  border: 1px solid #696969;
+}
+
+.crm-container tr.columnheader-dark td,
+.crm-container tr.columnheader-dark th,
+.crm-container tr.columnheader td,
+.crm-container tr.columnfooter td {
+  font-size: 1.1em;
+  font-weight: bold;
+}
+
+.crm-container tr.columnheader-dark th span.extra {
+  font-size: .95em;
+  font-weight: normal;
+}
+
+.crm-container tr.columnfooter {
+  border-top: 2px solid #999999;
+  font-size: 1.1em;
+}
+
+.crm-container #map-field th {
+  border-right: 1px solid #999999;
+}
+
+.crm-container #map-field td,
+.crm-container .report td,
+.crm-container .chart td {
+  padding: 10px 10px 4px 10px;
+}
+
+.crm-container .report td {
+  border: 1px solid #999999;
+  background-color: #F6F6F6;
+}
+
+/* double line right border for last cell in a horizontal grouping */
+.crm-container table.report td.splitter {
+  border-right: 5px double #999999;
+}
+
+.crm-container .report td.separator {
+  padding-top: 1em;
+  background-color: #FFFFFF;
+  border-left-color: #FFFFFF;
+  border-right-color: #FFFFFF;
+}
+
+.crm-container .chart td {
+  border: 2px solid #999999;
+}
+
+.crm-container td.yes-no {
+  text-align: center;
+}
+
+.crm-container .horizontal-position {
+  margin-right: 30px;
+  margin-left: 30px;
+}
+
+.crm-container .horizontal-center {
+  text-align: center;
+  margin: 0 auto;
+  width: 80%;
+}
+
+.crm-container .place-left {
+  float: left;
+  margin-left: 30px;
+  margin-right: 30px;
+}
+
+.crm-container .float-right {
+  float: right;
+  width: auto;
+  padding: 4px 0px;
+  clear: none;
+}
+
+.crm-container .align-right {
+  display: block;
+  margin-right: 20px;
+  text-align: right;
+}
+
+.crm-container .element-right {
+  float : right;
+  margin-right: 35px;
+}
+
+.crm-container .report-layout {
+    border           : none;
+}
+
+.crm-container .reports-header-right {
+    text-align       : right;
+}
+
+.crm-container .report-contents {
+    background-color : #F5F5F5;
+    border           : 1px solid #CDCDC3;
+    padding          : 4px;
+    width            : 20%;
+    white-space      : normal;
+    font-size        : 0.95em;
+}
+
+.crm-container .report-contents-right {
+    border           : 1px solid #CDCDC3;
+    padding          : 4px;
+    font-size        : 0.95em;
+    text-align      : right;
+}
+
+.crm-container table.report-layout td {
+    padding: 4px;
+    border-bottom: 1px solid #CDCDC3;
+    vertical-align   : top;
+}
+
+.crm-container table.report-layout tr {
+    font-size        : 0.95em;
+}
+
+.crm-container .report-label {
+    text-align        : right;
+    font-weight       : bold;
+}
+
+.crm-container table.report-layout th.report-contents {
+    background-color : #F5F5F5;
+
+}
+
+.crm-container table.report-layout th.statistics {
+    width            : 5%;
+    white-space      : nowrap;
+}
+
+/*override default pager for report*/
+.report-pager .crm-pager-nav a {
+    color: #000000;
+}
+
+.crm-container table.view-layout {
+    margin: 0em;
+    border-collapse: collapse;
+    border: 0px none;
+}
+
+.crm-container table.view-layout .label {
+    color          : DimGray;
+    FONT-SIZE      : 0.95em;
+    VERTICAL-ALIGN : top;
+    FONT-WEIGHT    : bold;
+    MARGIN-RIGHT   : 10px;
+    background-color:#EEEEEE;
+    width: 20%;
+}
+
+.crm-container th.contriTotalRight {
+    border-right: 1px solid #999999;
+}
+
+.crm-container th.contriTotalLeft {
+    border-left: 1px solid #999999;
+}
+
+/* Contribute Page */
+.crm-container form[action="/civicrm/contribute/transact"] .crm-submit-buttons {
+  text-align: right;
+}
+.crm-container .same-as-wrapper,
+.crm-container .r-name-items {
+  margin-bottom: 10px;
+}
+.crm-container .amount_other-section .md-elem {
+  vertical-align: top;
+}
+
+/* recur */
+.crm-container .is_recur-section label.crm-form-elem span.elem-label{
+  font-weight: bold;
+}
+.crm-container .recur-element {
+  margin-left: 1.5rem;
+}
+.crm-container .recur-element label {
+  color: #555;
+  font-size: 1rem;
+}
+.crm-container .is_recur-section .md-elem {
+  margin-bottom: 10px;
+}
+.crm-container .recur-element label[for="installments"],
+.crm-container .recur-element label[for="installments"] + .md-elem {
+  vertical-align: baseline;
+  display: inline-block;
+}
+.crm-container .is_recur-section .description {
+  display: block;
+  line-height: 1.7;
+}
+
+
+
+/* Events Page */
+.crm-container .event_summary-section {
+  position: relative;
+  margin-bottom: 20px;
+  padding: 15px;
+  overflow: hidden;
+  background-color: #E8EAF6;
+}
+.crm-container .event_summary-section .action-link {
+  float: right; 
+}
+.crm-container .crm-event-info-form-block .register_link-section a.crm-register-button {
+  padding: 15px 30px;
+  font-size: 1.5rem;
+  box-shadow: 0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12);
+}
+.crm-container .crm-event-info-form-block .register_link-section a.crm-register-button:active {
+  box-shadow: 0 4px 5px 0 rgba(0,0,0,.14),0 1px 10px 0 rgba(0,0,0,.12),0 2px 4px -1px rgba(0,0,0,.2);
+}
+.crm-container .crm-event-info-form-block .register_link-top a.crm-register-button {
+  padding: 8px 15px;
+  font-size: .9375rem;
+}
+.crm-container .crm-event-info-form-block .action-link a.crm-register-button:last-child {
+  margin-right: 0;
+}
+.crm-container .crm-event-info-form-block .register_link-section {
+  margin: 30px 0 15px 0;
+  text-align: center;
+}
+.crm-container .crm-event-info-form-block .register_link-top {
+  margin: 0 0 0 15px;
+  text-align: left;
+}
+.crm-container form[action="/civicrm/event/register"] .crm-submit-buttons {
+  text-align: right;
+}
+
+/* Profiles Page */
+.crm-container form[action="/civicrm/profile/create"] .crm-submit-buttons {
+  margin-top: 80px;
+  text-align: center;
+}
+

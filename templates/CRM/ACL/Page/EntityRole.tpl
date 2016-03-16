@@ -67,13 +67,12 @@
 
         {if $action ne 1 and $action ne 2}
 	    <div class="crm-submit-buttons">
-            <a href="{crmURL q="action=add&reset=1"}" id="newACL" class="button"><span><div class="icon add-icon"></div>{ts}Add Role Assignment{/ts}</span></a>
+            <a href="{crmURL q="action=add&reset=1"}" id="newACL" class="button"><span><i class="zmdi zmdi-plus-circle-o"></i>{ts}Add Role Assignment{/ts}</span></a>
         </div>
         {/if}
 </div>
 {elseif $action ne 1 and $action ne 2 and $action ne 8}
     <div class="messages status">
-         <img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}"/>
         {capture assign=crmURL}{crmURL q="action=add&reset=1"}{/capture}
         {ts 1=$crmURL}There are no Role Assignments. You can <a href='%1'>add one</a> now.{/ts}
     </div>    

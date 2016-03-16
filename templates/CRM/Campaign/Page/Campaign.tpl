@@ -25,7 +25,7 @@
 *}
 {* this template is used for displaying survey information *}
 {if $campaigns} 
-  <div class="action-link">
+  <div class="action-link-button">
       <a href="{$addCampaignUrl}" class="button"><span>&raquo; {ts}Add Campaign{/ts}</span></a>
   </div>
   {include file="CRM/common/enableDisable.tpl"}
@@ -60,10 +60,10 @@
 
 {else} 
     <div class="messages status">
-        <div class="icon inform-icon"></div> &nbsp;
+         &nbsp;
         {ts}No Campaigns found.{/ts}
     </div>
 {/if}
-<div class="action-link">
+<div class="action-link-button">
    <a href="{$addCampaignUrl}" class="button"><span>&raquo; {ts}Add Campaign{/ts}</span></a>
 </div>

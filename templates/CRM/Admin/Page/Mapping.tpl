@@ -57,7 +57,6 @@
 </div>
 {else}
     <div class="messages status">
-        <img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}"/>
         {ts}There are currently no saved import or export mappings. You create saved mappings as part of an Import or Export task.{/ts}
     </div>    
 {/if}

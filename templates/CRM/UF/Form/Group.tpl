@@ -27,7 +27,7 @@
   <div class=" crm-block crm-form-block crm-uf_group-form-block">  
  <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>
 {if $action eq 2 or $action eq 4 } {* Update or View*}
-    <div class="action-link">
+    <div class="action-link-button">
 	<a href="{crmURL p='civicrm/admin/uf/group/field' q="action=browse&reset=1&gid=$gid"}" class="button"><span>{ts}View or Edit Fields for this Profile{/ts}</a></span>
 	<div class="clear"></div>
     </div>
@@ -38,7 +38,7 @@
      <h2> {ts}Delete CiviCRM Profile{/ts}</h2>
     {/if}
             <div class="messages status">
-                   <div class="icon inform-icon"></div>
+                   
                    {$message}
             </div>   
 	       

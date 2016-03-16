@@ -83,7 +83,7 @@
 </div>
 {if $action eq 2 or $action eq 4} {* Update or View*}
     <p></p>
-    <div class="action-link">
+    <div class="action-link-button">
     <a href="{crmURL p='civicrm/admin/price/field' q="action=browse&reset=1&sid=$sid"}" class="button"><span>{ts}Fields for this Set{/ts}</span></a>
     </div>
 {/if}

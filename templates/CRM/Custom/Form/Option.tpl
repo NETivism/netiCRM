@@ -30,7 +30,7 @@
     {/if} {* $action ne view *}
     {if $action eq 8}
       <div class="messages status">
-          <div class="icon inform-icon"></div> 
+           
           {ts}WARNING: Deleting this custom field option will result in the loss of all related data.{/ts} {ts}This action cannot be undone.{/ts} {ts}Do you want to continue?{/ts}
       </div>
     {else}

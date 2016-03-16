@@ -50,7 +50,6 @@
        </table>
      {else}
      <div class="messages status">	
-     <img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}"> &nbsp;
       {ts}No data available for this contact. Please check city/state/zipcode{/ts}
      </div>	
      {/if}
