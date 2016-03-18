@@ -63,12 +63,12 @@ class CRM_Contact_Form_Search_Custom_RecurSearch  extends CRM_Contact_Form_Searc
       'r.contact_id' => 'contact_id',
       'contact_email.email' => 'email',
       'ROUND(r.amount,0)' => 'amount',
+      'COUNT(IF(c.contribution_status_id = 1, 1, NULL))' => 'donation_count',
       'CAST(r.installments AS SIGNED) - COUNT(c.id)' => 'remain_installments',
       'r.Installments' => 'installments',
       'r.start_date' => 'start_date',
       'r.end_date' => 'end_date',
       'r.cancel_date' => 'cancel_date',
-      'COUNT(IF(c.contribution_status_id = 1, 1, NULL))' => 'donation_count',
       'COUNT(c.id)' => 'total_count',
       'ROUND(SUM(IF(c.contribution_status_id = 1, c.total_amount, 0)),0)' => 'receive_amount', 
       'ROUND(SUM(c.total_amount),0)' => 'total_amount', 
@@ -79,12 +79,12 @@ class CRM_Contact_Form_Search_Custom_RecurSearch  extends CRM_Contact_Form_Searc
       ts('ID') => 'id',
       ts('Name') => 'sort_name',
       ts('Amount') => 'amount',
+      ts('Completed Donation') => 'donation_count',
       ts('Remain Installments') => 'remain_installments',
       ts('Start Date') => 'start_date',
       ts('End Date') => 'end_date',
       ts('Cancel Date') => 'cancel_date',
       ts('Recuring Status') => 'contribution_status_id',
-      ts('Completed Donation') => 'donation_count',
       ts('Total Count') => 'total_count',
       ts('Total Receive Amount') => 'receive_amount',
       ts('Current Total Amount') => 'total_amount',
@@ -426,7 +426,7 @@ SUM(total_amount) as total_amount
     $dao = $row['#dao'];
     $row['contribution_status_id'] = $this->_cstatus[$row['contribution_status_id']];
     if(!empty($row['#dao']['installments'])){
-      $row['remain_installments'] = $row['remain_installments'];
+      $row['remain_installments'] = $row['remain_installments'] . ' / ' . $row['#dao']['installments'];
     }
     else{
       $row['remain_installments'] = ts('no limit');
