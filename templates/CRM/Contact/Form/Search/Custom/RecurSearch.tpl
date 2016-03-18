@@ -1,5 +1,4 @@
 {* handle enable/disable actions*}
-{include file="CRM/common/chartist.tpl" chartist=$chart}
 {include file="CRM/common/enableDisable.tpl"}
 <div class="crm-block crm-form-block crm-contact-custom-search-form-block">
 <div class="crm-accordion-wrapper crm-custom_search_form-accordion {if $rows}crm-accordion-closed{else}crm-accordion-open{/if}">

@@ -63,7 +63,8 @@ class CRM_Contact_Form_Search_Custom_RecurSearch  extends CRM_Contact_Form_Searc
       'r.contact_id' => 'contact_id',
       'contact_email.email' => 'email',
       'ROUND(r.amount,0)' => 'amount',
-      'CAST(r.installments AS SIGNED) - COUNT(c.id)' => 'installments',
+      'CAST(r.installments AS SIGNED) - COUNT(c.id)' => 'remain_installments',
+      'r.Installments' => 'installments',
       'r.start_date' => 'start_date',
       'r.end_date' => 'end_date',
       'r.cancel_date' => 'cancel_date',
@@ -78,7 +79,7 @@ class CRM_Contact_Form_Search_Custom_RecurSearch  extends CRM_Contact_Form_Searc
       ts('ID') => 'id',
       ts('Name') => 'sort_name',
       ts('Amount') => 'amount',
-      ts('Remain Installments') => 'installments',
+      ts('Remain Installments') => 'remain_installments',
       ts('Start Date') => 'start_date',
       ts('End Date') => 'end_date',
       ts('Cancel Date') => 'cancel_date',
@@ -102,7 +103,12 @@ CREATE TEMPORARY TABLE IF NOT EXISTS {$this->_tableName} (
       if (in_array($field, array('id'))) {
         continue;
       }
-      $type = "VARCHAR(32) default ''";
+      if($field == 'remain_installments'){
+        $type = "INTEGER(10) default NULL";
+      }
+      else{
+        $type = "VARCHAR(32) default ''";
+      }
       if(strstr($field, '_date')){
         $type = 'DATETIME NULL default NULL';
       }
@@ -138,8 +144,6 @@ WHERE  $where
 GROUP BY r.id
 $having
 ";
-    // for only contact ids ignore order.
-    $sql .= " ORDER BY -installments ASC";
     $dao = CRM_Core_DAO::executeQuery($sql, CRM_Core_DAO::$_nullArray);
 
     while ($dao->fetch()) {
@@ -191,8 +195,6 @@ $having
       $clauses[] = "c.created_date < ".$next_str;
     }
 
-    
-
     if ($includeRecurIds) {
       $recurIds = array();
       foreach ($this->_formValues as $id => $value) {
@@ -207,7 +209,6 @@ $having
         $clauses[] = "r.id IN ($recurIds)";
       }
     }
-    
 
     return implode(' AND ', $clauses);
   }
@@ -221,10 +222,6 @@ $having
   }
 
   function buildForm(&$form){
-    // chartis
-    CRM_Contribute_BAO_ContributionRecur::chartEstimateMonthly(12);
-
-    //
     CRM_Core_OptionValue::getValues(array('name' => 'custom_search'), $custom_search);
     $csid = !empty($form->_formValues['customSearchID']) ? $form->_formValues['customSearchID'] : (!empty($_GET['csid']) ? $_GET['csid'] : NULL);
     if($csid){
@@ -239,16 +236,15 @@ $having
     // Define the search form fields here
     
     $form->addDate('start_date', ts('First recurring date'), FALSE, array('formatType' => 'custom'));
-    $form->addDate('contribution_created_date', ts('Filter by month'), FALSE, array('formatType' => 'custom', 'format' => 'yy-mm'));
     $options = array(
       'unlimit' => ts('no limit'),
       'second_times' => ts('In progress and having over 2 times.'),
       'last_time' => ts('In progress and last 1 time.'),
       'completed' => ts('Completed'),
       );
-    $form->addRadio('other_options',NULL,$options,NULL,"<br/>" );
+    $form->addRadio('other_options', ts('Installments'), $options, NULL, "<br/>" );
 
-    $form->addElement('text', 'sort_name', ts('Name'));
+    $form->addElement('text', 'sort_name', ts('Contact Name'));
 
     $form->addElement('text', 'email', ts('Email'));
 
@@ -256,7 +252,7 @@ $having
      * If you are using the sample template, this array tells the template fields to render
      * for the search form.
      */
-    $form->assign('elements', array('start_date', 'contribution_created_date','other_options','sort_name','email'));
+    $form->assign('elements', array('start_date', 'other_options', 'sort_name', 'email'));
   }
 
   function count(){
@@ -333,13 +329,13 @@ $having
     $month_later = $year."-".$month."-".$day;
     switch($other_options){
       case 'second_times':
-        $clauses[] = "(installments >= 2)";
+        $clauses[] = "(remain_installments >= 2)";
         break;
       case 'last_time':
-        $clauses[] = "(installments = 1)";
+        $clauses[] = "(remain_installments = 1)";
         break;
       case 'completed':
-        $clauses[] = "(installments < 1)";
+        $clauses[] = "(remain_installments < 1)";
         break;
     }
 
@@ -364,8 +360,6 @@ $having
 
   function having(){
     $clauses = array();
-
-
 
     if(count($clauses)){
       return implode(' AND ', $clauses);
@@ -431,6 +425,12 @@ SUM(total_amount) as total_amount
   function alterRow(&$row) {
     $dao = $row['#dao'];
     $row['contribution_status_id'] = $this->_cstatus[$row['contribution_status_id']];
+    if(!empty($row['#dao']['installments'])){
+      $row['remain_installments'] = $row['remain_installments'];
+    }
+    else{
+      $row['remain_installments'] = ts('no limit');
+    }
     $date = array('start_date', 'end_date', 'cancel_date');
     foreach($date as $d){
       if(!empty($row[$d])){
