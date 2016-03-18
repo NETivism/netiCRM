@@ -407,10 +407,12 @@ input.md-textfield,
 /* civicrm */
 /* crm form elements */
 /* crm tw address */
-div[class*="crm-section state_province-"] .md-select-single {
+.crm-container div[class*="crm-section state_province-"] .md-select-single,
+.crm-container div[class*="crm-section state_province-"] .md-select-single .form-select {
   width: 10rem;
   margin-right: 15px;
 }
-div[class*="crm-section state_province-"] .crm-form-post-code {
+.crm-container div[class*="crm-section state_province-"] .crm-form-post-code,
+.crm-container div[class*="crm-section state_province-"] .crm-form-post-code .form-text {
   width: 10rem;
 }

@@ -82,20 +82,17 @@
     <td class="row-action">{$row.action|replace:'xx':$row.contribution_id}</td>
   </tr>
   {/foreach}
-
+</table>
 {* Link to "View all contributions" for Contact Summary selector display *}
 {if $limit and $pager->_totalItems GT $limit }
+  <div class="crm-actions-ribbon action-link-button">
   {if $context eq 'dashboard' } 
-      <tr class="even-row">
-      <td colspan="10"><a href="{crmURL p='civicrm/contribute/search' q='reset=1'}">&raquo; {ts}Find more contributions{/ts}... </a></td>
-      </tr>
+      <a href="{crmURL p='civicrm/contribute/search' q='reset=1'}" class="button"><i class="zmdi zmdi-search"></i>{ts}Find more contributions{/ts}</a>
   {elseif $context eq 'contribution' } 
-      <tr class="even-row">
-      <td colspan="8"><a href="{crmURL p='civicrm/contact/view' q="reset=1&force=1&selectedChild=contribute&cid=$contactId"}">&raquo; {ts}View all contributions from this contact{/ts}... </a></td>
-      </tr>
+      <a href="{crmURL p='civicrm/contact/view' q="reset=1&force=1&selectedChild=contribute&cid=$contactId"}" class="button"><i class="zmdi zmdi-search"></i>{ts}View all contributions from this contact{/ts}</a>
   {/if}
+  </div>
 {/if}
-</table>
 {/strip}
 
 {if $context EQ 'Search'}

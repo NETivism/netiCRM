@@ -33,7 +33,6 @@
  *
  */
 
-require_once 'CRM/Core/DAO/MailSettings.php';
 class CRM_Mailing_MailStore {
   // flag to decide whether to print debug messages
   var $_debug = FALSE;
@@ -46,41 +45,44 @@ class CRM_Mailing_MailStore {
    * @return object        mail store implementation for processing CiviMail-bound emails
    */
   function getStore($name = NULL) {
-    $dao = new CRM_Core_DAO_MailSettings;
-    $dao->domain_id = CRM_Core_Config::domainID();
-    $name ? $dao->name = $name : $dao->is_default = 1;
-    if (!$dao->find(TRUE)) {
-      throw new Exception("Could not find entry named $name in civicrm_mail_settings");
+    if($name) {
+      $params = array(
+        'name' => $name,
+      );
     }
-
+    else{
+      $params = array(
+        'is_default' => 1,
+      );
+    }
+    $setting = array();
+    CRM_Core_BAO_MailSettings::retrieve($params, $setting);
     $protocols = CRM_Core_PseudoConstant::mailProtocol();
 
-    switch ($protocols[$dao->protocol]) {
+    switch ($protocols[$setting['protocol']]) {
       case 'IMAP':
         require_once 'CRM/Mailing/MailStore/Imap.php';
-        return new CRM_Mailing_MailStore_Imap($dao->server, $dao->username, $dao->password, (bool) $dao->is_ssl, $dao->source);
-
+        return new CRM_Mailing_MailStore_Imap($setting['server'], $setting['username'], $setting['password'], (bool) $setting['is_ssl'], $setting['source']);
       case 'POP3':
         require_once 'CRM/Mailing/MailStore/Pop3.php';
-        return new CRM_Mailing_MailStore_Pop3($dao->server, $dao->username, $dao->password, (bool) $dao->is_ssl);
-
+        return new CRM_Mailing_MailStore_Pop3($setting['server'], $setting['username'], $setting['password'], (bool) $setting['is_ssl']);
       case 'Maildir':
         require_once 'CRM/Mailing/MailStore/Maildir.php';
-        return new CRM_Mailing_MailStore_Maildir($dao->source);
+        return new CRM_Mailing_MailStore_Maildir($setting['source']);
 
       case 'Localdir':
         require_once 'CRM/Mailing/MailStore/Localdir.php';
-        return new CRM_Mailing_MailStore_Localdir($dao->source);
+        return new CRM_Mailing_MailStore_Localdir($setting['source']);
 
       // DO NOT USE the mbox transport for anything other than testing
       // in particular, it does not clear the mbox afterwards
 
       case 'mbox':
         require_once 'CRM/Mailing/MailStore/Mbox.php';
-        return new CRM_Mailing_MailStore_Mbox($dao->source);
+        return new CRM_Mailing_MailStore_Mbox($setting['source']);
 
       default:
-        throw new Exception("Unknown protocol {$dao->protocol}");
+        throw new Exception("Unknown protocol {$setting['protocol']}");
     }
   }
 

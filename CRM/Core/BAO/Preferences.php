@@ -57,7 +57,12 @@ class CRM_Core_BAO_Preferences extends CRM_Core_DAO_Preferences {
   }
 
   static function mailingPreferences() {
+    global $civicrm_conf;
     if (!self::$_mailingPref) {
+      if(isset($civicrm_conf['mailing_backend'])){
+        self::$_mailingPref = $civicrm_conf['mailing_backend'];
+        return $civicrm_conf['mailing_backend'];
+      }
       $mailingPref = new CRM_Core_DAO_Preferences();
       $mailingPref->domain_id = CRM_Core_Config::domainID();
       $mailingPref->is_domain = TRUE;
