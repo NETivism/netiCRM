@@ -358,7 +358,6 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
   }
 
   static function chartEstimateMonthly($limit = 12){
-    $template =& CRM_Core_Smarty::singleton();
     $frequency_unit = 'month';
     $sql = "SELECT SUM(result.amount) as amount, result.installments FROM (SELECT r.amount, r.installments-count(c.id) as installments FROM civicrm_contribution_recur r INNER JOIN civicrm_contribution c ON c.contribution_recur_id = r.id WHERE r.contribution_status_id = 5 AND r.is_test = 0 AND r.frequency_unit = '".$frequency_unit."' AND c.contribution_status_id = 1 AND c.is_test = 0 GROUP BY r.id ORDER BY installments ASC) as result GROUP BY result.installments DESC";
     $dao = CRM_Core_DAO::executeQuery($sql);
@@ -401,8 +400,8 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
       'title' => ts('Recurring contributions estimated in next %1 %2', array(1 => $limit, 2 => ts($frequency_unit))),
       'labels' => json_encode(array_values($labels)),
       'series' => json_encode(array(array_values($values))),
+      'type' => 'Line',
     );
-    $template->assign('chart', $chart);
     return $chart;
   }
 }

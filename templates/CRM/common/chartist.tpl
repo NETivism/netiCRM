@@ -6,6 +6,7 @@
   {if $chartist.title}<h3>{$chartist.title}</h3>{/if}
   <div class="chartist-chart ct-major-twelfth"></div>
 <script>{literal}
+(function(){
   var data = {
     // A labels array that can contain any sort of values
     "labels": {/literal}{$chartist.labels}{literal},
@@ -15,7 +16,7 @@
   // Create a new line chart object where as first parameter we pass in a selector
   // that is resolving to our chart container element. The Second parameter
   // is the actual data object.
-  var chartType = "{/literal}{$chart.type|capitalize|default:'Line'}{literal}";
+  var chartType = "{/literal}{$chartist.type|capitalize|default:'Line'}{literal}";
   var options = {};
   if(chartType == 'Line' || chartType == 'Bar') {
     options = {
@@ -48,17 +49,17 @@
     }; 
   }
   options.plugins = [];
-{/literal}{if $chart.axisx || $chart.axisy}{literal}
+{/literal}{if $chartist.axisx || $chartist.axisy}{literal}
   var axis = Chartist.plugins.ctAxisTitle({
     axisX: {
-      axisTitle: '{/literal}{$chart.axisx}{literal}',
+      axisTitle: '{/literal}{$chartist.axisx}{literal}',
       axisClass: 'ct-axis-title ct-axis-x',
       textAnchor: 'end',
       position: 'end',
       offset: { x: 40, y: 15 }
     },
     axisY: {
-      axisTitle: '{/literal}{$chart.axisy}{literal}',
+      axisTitle: '{/literal}{$chartist.axisy}{literal}',
       axisClass: 'ct-axis-title ct-axis-y',
       textAnchor: 'end',
       position: 'end',
@@ -67,7 +68,8 @@
   });
   options.plugins.push(axis);
 {/literal}{/if}{literal}
-  new Chartist.{/literal}{$chart.type|capitalize|default:'Line'}{literal}('.chartist-chart', data, options);
+  new Chartist.{/literal}{$chartist.type|capitalize|default:'Line'}{literal}('.chartist-chart', data, options);
+})();
 {/literal}</script>
 {/if}
 </div>

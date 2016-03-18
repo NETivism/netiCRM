@@ -75,7 +75,8 @@
 <div id="chartData"></div>
 <div id="tableData"></div></div>
 <div class="spacer"></div>
-
+{include file="CRM/common/chartist.tpl" chartist=$chartRecur}
+<div class="spacer"></div>
 {if $pager->_totalItems}
     <h3>{ts}Recent Contributions{/ts}</h3>
     <div>
