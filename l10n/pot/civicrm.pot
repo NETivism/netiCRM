@@ -15279,6 +15279,7 @@ msgstr ""
 
 #: templates/CRM/Event/Form/ManageEvent/Registration.tpl
 msgid "Pending participant expiration (days)"
+msgstr ""
 
 #: CRM/Event/Form/ManageEvent/Registration.php
 msgid "Please enter the number of hours (as an integer)."
@@ -44996,4 +44997,8 @@ msgstr ""
 
 #: CRM/Contact/Form/Search/Custom/RecurSearch.php
 msgid "Recurring contributions estimated in next %1 %2"
+msgstr ""
+
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php
+msgid "Remain"
 msgstr ""
