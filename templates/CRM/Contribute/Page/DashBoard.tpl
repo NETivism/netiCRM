@@ -52,6 +52,7 @@
 {elseif $buildChart}
   {include file = "CRM/Contribute/Form/ContributionCharts.tpl"}
 {else} 
+<div class="crm-section dashboard-section">
   <h3>{ts}Contribution Summary{/ts} {help id="id-contribute-intro"}</h3>
       <div id="mainTabContainer" class="ui-tabs ui-widget ui-widget-content ui-corner-all">
         <ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
@@ -72,16 +73,25 @@
 </div>
 {/if}
 </ul>
-<div id="chartData"></div>
-<div id="tableData"></div></div>
-<div class="spacer"></div>
-{include file="CRM/common/chartist.tpl" chartist=$chartRecur}
-<div class="spacer"></div>
+  <div id="chartData"></div>
+  <div id="tableData"></div></div>
+</div><!-- end dashboard -->
+<div class="crm-section dashboard-section">
+  {include file="CRM/common/chartist.tpl" chartist=$chartRecur}
+  {capture assign=frequency_unit}{ts}{$frequencyUnit}{/ts}{/capture}
+  {foreach from=$summaryRecur key=currency item=summary}
+    <ul>
+      <li><strong>{ts 1=$summary.contributions 2=$frequency_unit 3=$summary.contacts 4=$summary.amount|crmMoney}There are %1 contributions in this %2 by %3 contacts. Total amount: %4{/ts}</strong></li>
+    </ul>
+  {/foreach}
+</div>
 {if $pager->_totalItems}
+<div class="crm-section dashboard-section">
     <h3>{ts}Recent Contributions{/ts}</h3>
     <div>
         {include file="CRM/Contribute/Form/Selector.tpl" context="dashboard"}
     </div>
+</div>
 {/if}{literal}
 <script type="text/javascript">
        

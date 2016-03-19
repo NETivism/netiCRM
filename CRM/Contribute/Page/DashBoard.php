@@ -109,9 +109,14 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
     $this->preProcess();
 
     // block recur
-    $chart = CRM_Contribute_BAO_ContributionRecur::chartEstimateMonthly(12);
     $template =& CRM_Core_Smarty::singleton();
-    $template->assign('chartRecur', $chart);
+    $summary = CRM_Contribute_BAO_ContributionRecur::currentRunningSummary();
+    if(!empty($summary)){
+      $template->assign('summaryRecur', $summary);
+      $template->assign('frequencyUnit', 'month');
+      $chart = CRM_Contribute_BAO_ContributionRecur::chartEstimateMonthly(12);
+      $template->assign('chartRecur', $chart);
+    }
 
     // block last contribution
     $controller = new CRM_Core_Controller_Simple('CRM_Contribute_Form_Search',

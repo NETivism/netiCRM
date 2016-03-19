@@ -357,9 +357,31 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
     return FALSE;
   }
 
+  static function currentRunningSummary(){
+    $sql = " SELECT SUM( c.contributions ) AS contributions, SUM( c.amount ) AS amount, SUM( c.groupby ) AS contacts, c.currency
+FROM (
+  SELECT COUNT( r.id ) AS contributions, SUM( r.amount ) AS amount,  '1' AS groupby, r.currency
+  FROM civicrm_contribution_recur r
+  WHERE r.contribution_status_id =5
+  AND r.frequency_unit =  'month'
+  GROUP BY r.contact_id
+  ) c
+GROUP BY c.currency";
+    $dao = CRM_Core_DAO::executeQuery($sql);
+    $summary = array();
+    while($dao->fetch()){
+      $summary[$dao->currency] = array(
+        'contacts' => $dao->contacts,
+        'contributions' => $dao->contributions,
+        'amount' => $dao->amount,
+      );
+    }
+    return $summary;
+  }
+
   static function chartEstimateMonthly($limit = 12){
     $frequency_unit = 'month';
-    $sql = "SELECT SUM(result.amount) as amount, result.installments FROM (SELECT r.amount, r.installments-count(c.id) as installments FROM civicrm_contribution_recur r INNER JOIN civicrm_contribution c ON c.contribution_recur_id = r.id WHERE r.contribution_status_id = 5 AND r.is_test = 0 AND r.frequency_unit = '".$frequency_unit."' AND c.contribution_status_id = 1 AND c.is_test = 0 GROUP BY r.id ORDER BY installments ASC) as result GROUP BY result.installments DESC";
+    $sql = "SELECT SUM(result.amount) as amount, result.installments FROM (SELECT r.amount, r.installments-count(c.id) as installments FROM civicrm_contribution_recur r INNER JOIN civicrm_contribution c ON c.contribution_recur_id = r.id WHERE r.contribution_status_id = 5 AND r.is_test = 0 AND r.frequency_unit = 'month' AND c.contribution_status_id = 1 AND c.is_test = 0 GROUP BY r.id ORDER BY installments ASC) as result GROUP BY result.installments DESC";
     $dao = CRM_Core_DAO::executeQuery($sql);
     $unlimit = $over = NULL;
     $slot = array_fill(1, $limit, 0);
