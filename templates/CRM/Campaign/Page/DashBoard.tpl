@@ -274,7 +274,7 @@ cj(document).ready( function( ) {
      cj.ajax({
          url: dataURL,
          success: function( content ) {
-             content = '<div id="crm-container">'+content+'</div>';
+             content = '<div id="crm-container" class="crm-container">'+content+'</div>';
              cj(modalElement).show( ).html( content ).dialog({
          	    	title: formTitle,
              		modal: true,

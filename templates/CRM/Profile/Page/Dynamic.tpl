@@ -28,7 +28,7 @@
     {if $overlayProfile }
         {include file="CRM/Profile/Page/Overlay.tpl"}
     {else}
-        <div id="crm-container" lang="{$config->lcMessages|truncate:2:"":true}" xml:lang="{$config->lcMessages|truncate:2:"":true}">
+        <div id="crm-container" class="crm-container" lang="{$config->lcMessages|truncate:2:"":true}" xml:lang="{$config->lcMessages|truncate:2:"":true}">
             {foreach from=$profileFields item=field key=rowName}
               <div id="row-{$rowName}" class="crm-section {$rowName}-section">
                 <div class="label">

@@ -32,7 +32,7 @@
 </head>
 
 <body>
-<div id="crm-container">
+<div id="crm-container" class="crm-container">
 <h1>{$pageTitle}</h1>
 <div id="report-date">{$reportDate}</div>
 <h2>{ts}Case Summary{/ts}</h2>
