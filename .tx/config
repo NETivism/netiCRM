@@ -1,0 +1,8 @@
+[main]
+host = https://www.transifex.com
+
+[neticrm.neticrmpot]
+source_file = l10n/pot/civicrm.pot
+source_lang = en
+type = PO
+
