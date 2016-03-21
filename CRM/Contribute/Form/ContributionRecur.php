@@ -160,6 +160,13 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
       $params['id'] = $this->_id;
     }
 
+    // refs #17486. Date format should be YmdHis.
+    foreach ($params as $key => $value) {
+      if(preg_match('/\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}/',$value)){
+        $params[$key] = preg_replace('/-| |:/', '', $value);
+      }
+    }
+
     // save the changes
     $ids = array();
     require_once 'CRM/Contribute/BAO/ContributionRecur.php';
