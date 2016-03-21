@@ -1,11 +1,16 @@
-/* form element */
-input[type="text"].md-textfield, input[type="password"].form-control, input[type="email"].form-control {
-  -webkit-appearance: none;
-}
-
 /* md-elem */
 .md-elem {
   position: relative;
+}
+.md-elem button,
+.md-elem input,
+.md-elem textarea,
+.md-elem select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+.md-elem select::-ms-expand {
+  display: none;
 }
 .md-elem input[type="file"],
 .md-elem input[type="text"],
@@ -231,12 +236,7 @@ input.md-textfield,
   position: relative;
   z-index: 10;
   padding-right: 24px;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-}
-.md-select-single select::-ms-expand,
-.md-select-single select.form-select::-ms-expand {
-  display: none;
+
 }
 .md-select-multiple select > option:hover,
 .md-select-multiple select > option:active,
@@ -407,12 +407,12 @@ input.md-textfield,
 /* civicrm */
 /* crm form elements */
 /* crm tw address */
-.crm-container div[class*="crm-section state_province-"] .md-select-single,
-.crm-container div[class*="crm-section state_province-"] .md-select-single .form-select {
-  width: 10rem;
+.crm-container div[class*="crm-section state_province-"] .md-select-single {
   margin-right: 15px;
 }
-.crm-container div[class*="crm-section state_province-"] .crm-form-post-code,
+.crm-container div[class*="crm-section state_province-"] .md-select-single .form-select {
+  width: 10rem;
+}
 .crm-container div[class*="crm-section state_province-"] .crm-form-post-code .form-text {
   width: 10rem;
 }
