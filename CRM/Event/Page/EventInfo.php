@@ -306,6 +306,22 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page {
     }
     $this->assign('location', $values['location']);
 
+    $meta = array();
+    $meta['og:title'] = $values['event']['title'] . ' - ' . variable_get('site_name', 'Drupal');
+    $descript = substr(trim(str_replace("&nbsp;", '', strip_tags($values['event']['description']))),0,150);
+    $meta['description'] = $descript;
+    $meta['og:description'] = $descript;
+    preg_match('/< *img[^>]*src *= *["\']?([^"\']*)/i', $values['event']['description'], $matches);
+    if(count($matches)>=2){
+      $image = $matches[1];
+      $meta['og:image'] = $image;
+    }
+    foreach ($meta as $key => $value) {
+      $prop_name = preg_match('/^og:/', $key)?'property':'name';
+      $meta_line = "<meta $prop_name='$key' content='$value'/>";
+      CRM_Utils_System::addHTMLHead($meta_line);
+    }
+
     parent::run();
   }
 
