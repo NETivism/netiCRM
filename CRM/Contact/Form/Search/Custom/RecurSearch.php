@@ -84,7 +84,7 @@ class CRM_Contact_Form_Search_Custom_RecurSearch  extends CRM_Contact_Form_Searc
       ts('Start Date') => 'start_date',
       ts('End Date') => 'end_date',
       ts('Cancel Date') => 'cancel_date',
-      ts('Recuring Status') => 'contribution_status_id',
+      ts('Recurring Status') => 'contribution_status_id',
       ts('Total Count') => 'total_count',
       ts('Total Receive Amount') => 'receive_amount',
       ts('Current Total Amount') => 'total_amount',
@@ -240,7 +240,7 @@ $having
       'unlimit' => ts('no limit'),
       'second_times' => ts('In progress and having over 2 times.'),
       'last_time' => ts('In progress and last 1 time.'),
-      'completed' => ts('Completed'),
+      'recur_ended' => ts('Recurring ended'),
       );
     $form->addRadio('other_options', ts('Installments'), $options, NULL, "<br/>" );
 
@@ -334,7 +334,7 @@ $having
       case 'last_time':
         $clauses[] = "(remain_installments = 1)";
         break;
-      case 'completed':
+      case 'recur_ended':
         $clauses[] = "(remain_installments < 1)";
         break;
     }

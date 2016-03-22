@@ -44791,7 +44791,7 @@ msgid "Last receive Date"
 msgstr ""
 
 #: CRM/Contact/Form/Search/Custom/RecurSearch.php
-msgid "Recuring Status"
+msgid "Recurring Status"
 msgstr ""
 
 #: CRM/Contact/Form/Search/Custom/RecurSearch.php
@@ -45005,4 +45005,8 @@ msgstr ""
 
 #: templates/CRM/Contribute/Page/DashBoard.tpl
 msgid "There are %1 contributions in this %2 by %3 contacts. Total amount: %4"
+msgstr ""
+
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php
+msgid "Recurring ended"
 msgstr ""
