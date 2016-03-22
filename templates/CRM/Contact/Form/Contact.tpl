@@ -198,14 +198,16 @@ function highlightTabs( ) {
 }
 
 function removeDefaultCustomFields( ) {
-     //execute only once
-     if (removeCustomData) {
-	 cj(".crm-accordion-wrapper").children().each( function() {
-	    var eleId = cj(this).attr("id");
-	    if ( eleId.substr(0,10) == "customData" ) { cj(this).parent("div").remove(); }
-	 });
-	 removeCustomData = false;
-     }
+  //execute only once
+  if (removeCustomData) {
+    cj(".crm-accordion-wrapper").find('.crm-accordion-body').each( function() {
+      var eleId = cj(this).attr("id");
+      if ( eleId.substr(0,10) == "customData" ) {
+        cj(this).parent("div").remove();
+      }
+    });
+    removeCustomData = false;
+  }
 }
  
 </script>
