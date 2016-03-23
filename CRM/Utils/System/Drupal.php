@@ -97,6 +97,61 @@ class CRM_Utils_System_Drupal {
   }
 
   /**
+   * if we are using a theming system, invoke theme, else just print the
+   * content
+   *
+   * @param string  $type    name of theme object/file
+   * @param string  $content the content that will be themed
+   * @param array   $args    the args for the themeing function if any
+   * @param boolean $print   are we displaying to the screen or bypassing theming?
+   * @param boolean $ret     should we echo or return output
+   * @param boolean $maintenance  for maintenance mode
+   *
+   * @return void           prints content on stdout
+   * @access public
+   */
+  function theme($type, &$content, $args = NULL, $print = FALSE, $ret = FALSE, $maintenance = FALSE){
+    $config = CRM_Core_Config::singleton();
+    $version = $config->userSystem->version;
+    if($version >= 6 && $version < 7){
+      if(!$print){
+        if ($maintenance) {
+          drupal_set_breadcrumb('');
+          drupal_maintenance_theme();
+        }
+        $content = theme($type, $content, $args);
+        if($ret) {
+          return $content;
+        }
+        else{
+          echo $content;
+          return;
+        }
+      }
+    }
+    elseif($version >= 7 && $version < 8){
+      if(!$print && $type == 'page'){
+        if ($maintenance) {
+          drupal_set_breadcrumb('');
+          drupal_maintenance_theme();
+        }
+        if($ret){
+          return drupal_render_page($content);
+        }
+        else{
+          drupal_deliver_page($content);
+          return;
+        }
+      }
+    }
+    elseif($version >= 8){
+      echo 'We havnt support d8 yet';
+      return;
+    }
+
+  }
+
+  /**
    * Append an additional breadcrumb tag to the existing breadcrumb
    *
    * @param string $title
@@ -150,7 +205,16 @@ class CRM_Utils_System_Drupal {
    * @static
    */
   static function addHTMLHead($head) {
-    drupal_set_html_head($head);
+    $config = CRM_Core_Config::singleton();
+    $version = $config->userSystem->version;
+    if($version >= 6 && $version < 7){
+      drupal_set_html_head($head);
+      return;
+    }
+    elseif($version >= 7 && $version < 8){
+      drupal_add_html_head($head);
+      return;
+    }
   }
 
   /**
@@ -549,5 +613,6 @@ class CRM_Utils_System_Drupal {
     drupal_not_found();
     return;
   }
+
 }
 
