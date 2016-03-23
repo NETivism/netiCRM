@@ -9,8 +9,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2016-03-14 06:12+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
+"PO-Revision-Date: 2016-03-23 09:53+0000\n"
+"Last-Translator: 張書懷 <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -15277,6 +15277,10 @@ msgstr "審核訊息"
 msgid "Pending participant expiration (hours)"
 msgstr "報名後未繳費，取消資格的時間（小時）"
 
+#: templates/CRM/Event/Form/ManageEvent/Registration.tpl
+msgid "Pending participant expiration (days)"
+msgstr "報名後未繳費，取消資格的時間（天數，不包含報名當天）"
+
 #: CRM/Event/Form/ManageEvent/Registration.php
 msgid "Please enter the number of hours (as an integer)."
 msgstr "請輸入整數值（小時）"
@@ -28085,7 +28089,7 @@ msgid ""
 "You will receive an email receipt for each recurring contribution. The "
 "receipts will include a link you can use if you decide to modify or cancel "
 "your future contributions."
-msgstr "每一期捐款，您都會收到一份 Email 收據，表示捐款成功，正式捐款收據我們將另行郵寄給您。若您要停止捐款或改變捐款方式或金額，請與我們聯繫。"
+msgstr "每一期捐款，您都會收到一份 Email 通知，表示捐款成功，正式捐款收據我們將另行郵寄給您。若您要停止捐款或改變捐款方式或金額，請與我們聯繫。"
 
 #: templates/CRM/Contribute/Form/Contribution/Main.tpl
 msgid ""
@@ -28297,7 +28301,7 @@ msgstr "如果您想啟用定期定額捐款功能讓使用者選擇，請勾選
 
 #: templates/CRM/Contribute/Form/ContributionPage/Amount.tpl
 msgid "Select recurring units supported for recurring payments."
-msgstr "選擇再次付款的單位。"
+msgstr "選擇定期方式。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/Amount.tpl
 msgid "Can users also set an interval (e.g. every '3' months)?"
@@ -31320,6 +31324,13 @@ msgid ""
 "by participants with any of the pending statuses. Enter 0 (or leave empty) "
 "to disable this feature."
 msgstr "限制報名者在<strong>設定時間之內（小時）</strong>確認/完成報名程序。輸入 0 （或留空）即取消此功能。"
+
+#: templates/CRM/Event/Form/ManageEvent/Registration.hlp
+msgid ""
+"Time limit <strong>in days</strong> for confirming/finishing registration by"
+" participants with any of the pending statuses. Enter 0 (or leave empty) to "
+"disable this feature."
+msgstr "限制報名者在<strong>設定時間之內（天數）</strong>確認/完成報名程序。輸入 0 （或留空）即取消此功能。"
 
 #: templates/CRM/Event/Form/ManageEvent/Registration.tpl
 msgid ""
@@ -44755,7 +44766,7 @@ msgid "Last receive Date"
 msgstr "最近一筆收到日期"
 
 #: CRM/Contact/Form/Search/Custom/RecurSearch.php
-msgid "Recuring Status"
+msgid "Recurring Status"
 msgstr "定期定額狀態"
 
 #: CRM/Contact/Form/Search/Custom/RecurSearch.php
@@ -44991,4 +45002,16 @@ msgstr "您不用擔心聯絡人的電子郵件曝光，這功能將會一封封
 
 #: CRM/Contact/Form/Search/Custom/RecurSearch.php
 msgid "Recurring contributions estimated in next %1 %2"
-msgstr "估計在 %1 %2 的定期捐款"
+msgstr "估計在未來 %1 %2的定期捐款"
+
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php
+msgid "Remain Installments"
+msgstr "剩餘期數"
+
+#: templates/CRM/Contribute/Page/DashBoard.tpl
+msgid "There are %1 contributions in this %2 by %3 contacts. Total amount: %4"
+msgstr ""
+
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php
+msgid "Recurring ended"
+msgstr "已結束定期"
