@@ -45000,7 +45000,7 @@ msgid "Recurring contributions estimated in next %1 %2"
 msgstr ""
 
 #: CRM/Contact/Form/Search/Custom/RecurSearch.php
-msgid "Remain"
+msgid "Remain Installments"
 msgstr ""
 
 #: templates/CRM/Contribute/Page/DashBoard.tpl
