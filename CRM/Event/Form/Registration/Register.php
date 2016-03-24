@@ -118,19 +118,43 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
     }
 
     $meta = array();
-    $meta['og:title'] = $this->_values['event']['title'] . ' - ' . variable_get('site_name', 'Drupal');
+    $meta[] = array(
+      'tag' => 'meta',
+      'attributes' => array(
+        'property' => 'og:title',
+        'value' => $this->_values['event']['title'] . ' - ' . CRM_Utils_System::variable_get('site_name', 'Drupal'),
+      ),
+    );
     $descript = substr(trim(str_replace("&nbsp;", '', strip_tags($this->_values['event']['description']))),0,150);
-    $meta['description'] = $descript;
-    $meta['og:description'] = $descript;
+    $meta[] = array(
+      'tag' => 'meta',
+      'attributes' => array(
+        'property' => 'description',
+        'value' => $descript,
+      ),
+    );
+    $meta[] = array(
+      'tag' => 'meta',
+      'attributes' => array(
+        'property' => 'og:description',
+        'value' => $descript,
+      ),
+    );
     preg_match('/< *img[^>]*src *= *["\']?([^"\']*)/i', $this->_values['event']['description'], $matches);
     if(count($matches)>=2){
       $image = $matches[1];
-      $meta['og:image'] = $image;
+      $meta[] = array(
+        'tag' => 'meta',
+        'attributes' => array(
+          'property' => 'og:image',
+          'value' => $image,
+        ),
+      );
     }
     foreach ($meta as $key => $value) {
-      $prop_name = preg_match('/^og:/', $key)?'property':'name';
-      $meta_line = "<meta $prop_name='$key' content='$value'/>";
-      CRM_Utils_System::addHTMLHead($meta_line);
+      // $prop_name = preg_match('/^og:/', $key)?'property':'name';
+      // $meta_line = "<meta $prop_name='$key' content='$value'/>";
+      CRM_Utils_System::addHTMLHead($value);
     }
 
   }

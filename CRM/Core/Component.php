@@ -135,7 +135,13 @@ class CRM_Core_Component {
             $template->assign('formTpl', $comp->info[$name]['formTpl']);
           }
           if (CRM_Utils_Array::value('css', $comp->info[$name])) {
-            $styleSheets = '<style type="text/css">@import url(' . "{$config->resourceBase}css/{$comp->info[$name]['css']});</style>";
+            $styleSheets = array(
+              'tag' => 'style',
+              'attributes' => array(
+                'type' => 'text/css',
+              ),
+              'value' => '@import url(' . "{$config->resourceBase}css/{$comp->info[$name]['css']});",
+            );
             CRM_Utils_System::addHTMLHead($styleSheet);
           }
         }

@@ -146,12 +146,40 @@ class CRM_Utils_System {
       return self::notFound();
     }
     $config = CRM_Core_Config::singleton();
-    
+    $version = $config->userSystem->version;
+    if($version >= 6 && $version < 7){
+      if(function_exists('theme') && !$print){
+        if ($maintenance) {
+          drupal_set_breadcrumb('');
+          drupal_maintenance_theme();
+        }
+        $content = theme($type, $content, $args);
+      }
+    }
+    elseif($version >= 7 && $version < 8){
+      if(function_exists('drupal_deliver_page') && !$print){
+        if ($maintenance) {
+          drupal_set_breadcrumb('');
+          drupal_maintenance_theme();
+        }
+        if($ret){
+          $content = drupal_render_page($content);
+        }
+        else{
+          drupal_deliver_page($content);
+          return;
+        }
+      }
+    }
+    elseif($version >= 8){
+      drupal_set_message('We havnt support d8 yet');
+      return;
+    }
     if($ret){
-      return $config->userSystem->theme($type, $content, $args, $print, $ret, $maintenance);
+      return $content; 
     }
     else{
-      $config->userSystem->theme($type, $content, $args, $print, $ret, $maintenance);
+      print $content;
     }
   }
 
@@ -367,6 +395,20 @@ class CRM_Utils_System {
   static function postURL($action) {
     $config = CRM_Core_Config::singleton();
     return $config->userSystem->postURL($action);
+  }
+
+  /**
+   * Get variable from CMS system
+   *
+   * @param variable name
+   * @param Default value when variable is null.
+   * 
+   * @return void
+   * @access public
+   * @static  */
+  static function variable_get($name, $default) {
+    $config = CRM_Core_Config::singleton();
+    return $config->userSystem->variable_get($name, $default);
   }
 
   /**
