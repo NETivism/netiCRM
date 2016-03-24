@@ -4849,8 +4849,8 @@ VALUES
   (@option_group_id_mt, '匯出補助',       13, 'Export Grant',        NULL, 0, 0,   13, NULL, 0, 1, 1, NULL, NULL),
   (@option_group_id_mt, '匯出任務',    14, 'Export Activity',     NULL, 0, 0,   14, NULL, 0, 1, 1, NULL, NULL),
 
-  (@option_group_id_fu, '日'    , 'day'  ,    'day',  NULL, 0, NULL, 1, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_fu, '週'   , 'week' ,   'week',  NULL, 0, NULL, 2, NULL, 0, 1, 1, NULL, NULL),
+  (@option_group_id_fu, '日'    , 'day'  ,    'day',  NULL, 0, NULL, 1, NULL, 0, 1, 0, NULL, NULL),
+  (@option_group_id_fu, '週'   , 'week' ,   'week',  NULL, 0, NULL, 2, NULL, 0, 1, 0, NULL, NULL),
   (@option_group_id_fu, '月'  , 'month',  'month',  NULL, 0, NULL, 3, NULL, 0, 1, 1, NULL, NULL),
   (@option_group_id_fu, '年'   , 'year' ,   'year',  NULL, 0, NULL, 4, NULL, 0, 1, 1, NULL, NULL),
 
@@ -5549,13 +5549,13 @@ VALUES
    
 INSERT INTO civicrm_uf_field
        (id, uf_group_id, field_name,              is_required, is_reserved, weight, visibility,                  in_selector, is_searchable, location_type_id, label,                                         		field_type,    help_post, phone_type_id ) VALUES
-       (1,  1,           'first_name',            1,           0,           1,      'Public Pages and Listings', 0,           1,             NULL,             '名字 ',            		'Individual',  NULL,  NULL),
-       (2,  1,           'last_name',             1,           0,           2,      'Public Pages and Listings', 0,           1,             NULL,             '姓氏',             		'Individual',  '其他人將可瀏覽您的姓名。',  NULL),
+       (1,  1,           'first_name',            1,           0,           1,      'User and User Admin Only', 0,           1,             NULL,             '名字 ',            		'Individual',  NULL,  NULL),
+       (2,  1,           'last_name',             1,           0,           2,      'User and User Admin Only', 0,           1,             NULL,             '姓氏',             		'Individual',  NULL,  NULL),
        (3,  1,           'street_address',        0,           0,           3,      'User and User Admin Only',  0,           0,             1,                '街道地址（住家）', 		'Contact',     NULL,  NULL),
        (4,  1,           'city',                  0,           0,           4,      'User and User Admin Only',  0,           0,             1,                '鄉鎮市區（住家）',           		'Contact',     NULL,  NULL),
        (5,  1,           'postal_code',           0,           0,           5,      'User and User Admin Only',  0,           0,             1,                '郵遞區號（住家）',    		'Contact',     NULL,  NULL),
-       (6,  1,           'country',               0,           0,           6,      'Public Pages and Listings', 0,           1,             1,                '國家（住家）',        		'Contact',     '您所在的縣市和居住國將與他人共享，以便人們可以找到其他住在他們社區的聯絡人。',  NULL),
-       (7,  1,           'state_province',        0,           0,           7,      'Public Pages and Listings', 1,           1,             1,                '縣市（住家）',          		'Contact',     NULL,  NULL),
+       (6,  1,           'country',               0,           0,           6,      'User and User Admin Only', 0,           1,             1,                '國家（住家）',        		'Contact',     NULL,  NULL),
+       (7,  1,           'state_province',        0,           0,           7,      'User and User Admin Only', 1,           1,             1,                '縣市（住家）',          		'Contact',     NULL,  NULL),
        (8,  2,           'first_name',            1,           0,           1,      'User and User Admin Only',  0,           0,             NULL,             '名字 ',            		'Individual',  NULL,  NULL),
        (9,  2,           'last_name',             1,           0,           2,      'User and User Admin Only',  0,           0,             NULL,             '姓氏',             		'Individual',  NULL,  NULL),
        (10, 2,           'email',                 1,           0,           3,      'User and User Admin Only',  0,           0,             NULL,             '電子郵件地址',         		'Contact',     NULL,  NULL),

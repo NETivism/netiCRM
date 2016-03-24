@@ -4849,8 +4849,8 @@ VALUES
   (@option_group_id_mt, 'Export Grant',       13, 'Export Grant',        NULL, 0, 0,   13, NULL, 0, 1, 1, NULL, NULL),
   (@option_group_id_mt, 'Export Activity',    14, 'Export Activity',     NULL, 0, 0,   14, NULL, 0, 1, 1, NULL, NULL),
 
-  (@option_group_id_fu, 'day'    , 'day'  ,    'day',  NULL, 0, NULL, 1, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_fu, 'week'   , 'week' ,   'week',  NULL, 0, NULL, 2, NULL, 0, 1, 1, NULL, NULL),
+  (@option_group_id_fu, 'day'    , 'day'  ,    'day',  NULL, 0, NULL, 1, NULL, 0, 1, 0, NULL, NULL),
+  (@option_group_id_fu, 'week'   , 'week' ,   'week',  NULL, 0, NULL, 2, NULL, 0, 1, 0, NULL, NULL),
   (@option_group_id_fu, 'month'  , 'month',  'month',  NULL, 0, NULL, 3, NULL, 0, 1, 1, NULL, NULL),
   (@option_group_id_fu, 'year'   , 'year' ,   'year',  NULL, 0, NULL, 4, NULL, 0, 1, 1, NULL, NULL),
 
@@ -5549,13 +5549,13 @@ VALUES
    
 INSERT INTO civicrm_uf_field
        (id, uf_group_id, field_name,              is_required, is_reserved, weight, visibility,                  in_selector, is_searchable, location_type_id, label,                                         		field_type,    help_post, phone_type_id ) VALUES
-       (1,  1,           'first_name',            1,           0,           1,      'Public Pages and Listings', 0,           1,             NULL,             'First Name',            		'Individual',  NULL,  NULL),
-       (2,  1,           'last_name',             1,           0,           2,      'Public Pages and Listings', 0,           1,             NULL,             'Last Name',             		'Individual',  'First and last name will be shared with other visitors to the site.',  NULL),
+       (1,  1,           'first_name',            1,           0,           1,      'User and User Admin Only', 0,           1,             NULL,             'First Name',            		'Individual',  NULL,  NULL),
+       (2,  1,           'last_name',             1,           0,           2,      'User and User Admin Only', 0,           1,             NULL,             'Last Name',             		'Individual',  NULL,  NULL),
        (3,  1,           'street_address',        0,           0,           3,      'User and User Admin Only',  0,           0,             1,                'Street Address (Home)', 		'Contact',     NULL,  NULL),
        (4,  1,           'city',                  0,           0,           4,      'User and User Admin Only',  0,           0,             1,                'City (Home)',           		'Contact',     NULL,  NULL),
        (5,  1,           'postal_code',           0,           0,           5,      'User and User Admin Only',  0,           0,             1,                'Postal Code (Home)',    		'Contact',     NULL,  NULL),
-       (6,  1,           'country',               0,           0,           6,      'Public Pages and Listings', 0,           1,             1,                'Country (Home)',        		'Contact',     'Your state/province and country of residence will be shared with others so folks can find others in their community.',  NULL),
-       (7,  1,           'state_province',        0,           0,           7,      'Public Pages and Listings', 1,           1,             1,                'State (Home)',          		'Contact',     NULL,  NULL),
+       (6,  1,           'country',               0,           0,           6,      'User and User Admin Only', 0,           1,             1,                'Country (Home)',        		'Contact',     NULL,  NULL),
+       (7,  1,           'state_province',        0,           0,           7,      'User and User Admin Only', 1,           1,             1,                'State (Home)',          		'Contact',     NULL,  NULL),
        (8,  2,           'first_name',            1,           0,           1,      'User and User Admin Only',  0,           0,             NULL,             'First Name',            		'Individual',  NULL,  NULL),
        (9,  2,           'last_name',             1,           0,           2,      'User and User Admin Only',  0,           0,             NULL,             'Last Name',             		'Individual',  NULL,  NULL),
        (10, 2,           'email',                 1,           0,           3,      'User and User Admin Only',  0,           0,             NULL,             'Email Address',         		'Contact',     NULL,  NULL),
