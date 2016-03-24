@@ -318,6 +318,8 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
     $query = CRM_Core_DAO::executeQuery("SELECT id, trxn_id FROM civicrm_contribution WHERE contribution_recur_id = %1 ORDER BY id ASC", array(1 => array($id, 'Integer')));
     $i = 1;
     $children = array();
+    $config = CRM_Core_Config::singleton();
+    $exclude = !empty($config->recurringSyncExclude) ? $config->recurringSyncExclude : array();
     while ($query->fetch()) {
       if ($i == 1) {
         // load custom field values
@@ -342,6 +344,17 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
       foreach ($children as $cid) {
         $params = array('entityID' => $cid);
         $params = array_merge($params, $params_parent);
+        foreach($exclude as $e){
+          if(isset($params['custom_'.$e])) {
+            unset($params['custom_'.$e]);
+          }
+        }
+        $exists = CRM_Core_BAO_CustomValueTable::getValues($params);
+        foreach($exists as $k => $e){
+          if(!empty($e) && strstr($k, 'custom_') && isset($params[$k])) {
+            unset($params[$k]);
+          }
+        }
         CRM_Core_BAO_CustomValueTable::setValues($params);
       }
     }

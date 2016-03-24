@@ -45010,3 +45010,19 @@ msgstr ""
 #: CRM/Contact/Form/Search/Custom/RecurSearch.php
 msgid "Recurring ended"
 msgstr ""
+
+#: CRM/Contribute/xml/Menu/Contribute.xml
+msgid "Recurring Settings"
+msgstr ""
+
+#: CRM/Admin/Form/Setting/Recurring.php
+msgid "Exclude to sync"
+msgstr ""
+
+#: templates/CRM/Admin/Form/Setting/Recurring.tpl
+msgid "When recurring contribution being triggered, new contribution will copy custom fields value from first one. Fields you selected in this option will exclude to synchronize value from old contribution."
+msgstr ""
+
+#: CRM/Contribute/BAO/Query.php
+msgid "Non-Recurring Contribution"
+msgstr ""
