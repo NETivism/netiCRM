@@ -231,7 +231,16 @@ class CRM_Utils_System_Drupal {
       foreach ($head as $key => $value) {
         $element['#' . $key] = $value;
       }
-      drupal_add_html_head($element);
+      $head_key = '';
+      foreach ($element['#attributes'] as $key => $value) {
+        if($key == 'name' || $key == 'property'){
+          if($head_key !== ''){
+            $head_key .= '-';
+          }
+          $head_key = $key . '-' . $value;
+        }
+      }
+      drupal_add_html_head($element,$head_key);
       return;
     }
   }

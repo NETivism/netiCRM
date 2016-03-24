@@ -142,7 +142,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
       'tag' => 'meta',
       'attributes' => array(
         'property' => 'og:title',
-        'value' => $this->_values['title'] . ' - ' . CRM_Utils_System::variable_get('site_name', 'Drupal'),
+        'content' => $this->_values['title'] . ' - ' . CRM_Utils_System::variable_get('site_name', 'Drupal'),
       ),
     );
       
@@ -151,14 +151,14 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
       'tag' => 'meta',
       'attributes' => array(
         'name' => 'description',
-        'value' => $descript,
+        'content' => $descript,
       ),
     );
     $meta[] = array(
       'tag' => 'meta',
       'attributes' =>  array(
         'property' => 'og:description',
-        'value' => $descript,
+        'content' => $descript,
       ),
     );
     preg_match('/< *img[^>]*src *= *["\']?([^"\']*)/i', $this->_values['intro_text'], $matches);
@@ -168,13 +168,11 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
         'tag' => 'meta',
         'attributes' => array(
           'property' => 'og:image',
-          'value' => $image,
+          'content' => $image,
         ),
       );
     }
     foreach ($meta as $key => $value) {
-      // $prop_name = preg_match('/^og:/', $key)?'property':'name';
-      // $meta_line = "<meta $prop_name='$key' content='$value'/>";
       CRM_Utils_System::addHTMLHead($value);
     }
 

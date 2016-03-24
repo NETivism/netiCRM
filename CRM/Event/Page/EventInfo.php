@@ -311,7 +311,7 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page {
       'tag' => 'meta',
       'attributes' => array(
         'property' => 'og:title',
-        'value' => $values['event']['title'] . ' - ' . CRM_Utils_System::variable_get('site_name', 'Drupal')
+        'content' => $values['event']['title'] . ' - ' . CRM_Utils_System::variable_get('site_name', 'Drupal')
       ),
     );
     $descript = substr(trim(str_replace("&nbsp;", '', strip_tags($values['event']['description']))),0,150);
@@ -319,14 +319,14 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page {
       'tag' => 'meta',
       'attributes' => array(
         'name' => 'description',
-        'value' => $descript,
+        'content' => $descript,
       ),
     );
     $meta[] = array(
       'tag' => 'meta',
       'attributes' => array(
         'property' => 'og:description',
-        'value' => $descript,
+        'content' => $descript,
       ),
     );
     preg_match('/< *img[^>]*src *= *["\']?([^"\']*)/i', $values['event']['description'], $matches);
@@ -336,13 +336,11 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page {
         'tag' => 'meta',
         'attributes' => array(
           'property' => 'og:image',
-          'array' => $image,
+          'content' => $image,
         ),
       );
     }
     foreach ($meta as $key => $value) {
-      // $prop_name = preg_match('/^og:/', $key)?'property':'name';
-      // $meta_line = "<meta $prop_name='$key' content='$value'/>";
       CRM_Utils_System::addHTMLHead($value);
     }
 
