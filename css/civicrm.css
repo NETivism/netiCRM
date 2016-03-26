@@ -387,12 +387,9 @@ div.spacer,
 /* Data display layouts */
 
 .crm-container h3 { /* h3 used as table header for civicrm */
-    background-color: #C1C1C1;
-    font-size: 1.1em;
-    font-weight: bold;
-    color:#121A2D;
-    padding:4px 6px;
-    margin-bottom: 4px;
+    margin-bottom: 10px;
+    line-height: 1.3;
+    font-size: 1.5rem;
 }
 
 .crm-container .crm-form-block h3 {background-color: transparent;}
@@ -3700,17 +3697,10 @@ tbody.scrollContent tr.alternateRow {
 .crm-container .is_recur-section .md-elem {
   margin-bottom: 10px;
 }
-.crm-container .recur-element label[for="installments"],
-.crm-container .recur-element label[for="installments"] + .md-elem {
-  vertical-align: baseline;
-  display: inline-block;
-}
 .crm-container .is_recur-section .description {
   display: block;
   line-height: 1.7;
 }
-
-
 
 /* Events Page */
 .crm-container .event_summary-section {
