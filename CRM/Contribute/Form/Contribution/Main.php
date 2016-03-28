@@ -138,19 +138,42 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     $this->assign('contribution_type_id', $this->_values['contribution_type_id']);
 
     $meta = array();
-    $meta['og:title'] = $this->_values['title'] . ' - ' . variable_get('site_name', 'Drupal');
+    $meta[] = array(
+      'tag' => 'meta',
+      'attributes' => array(
+        'property' => 'og:title',
+        'content' => $this->_values['title'] . ' - ' . CRM_Utils_System::variable_get('site_name', 'Drupal'),
+      ),
+    );
+      
     $descript = substr(trim(str_replace("&nbsp;", '', strip_tags($this->_values['intro_text']))),0,150);
-    $meta['description'] = $descript;
-    $meta['og:description'] = $descript;
+    $meta[] = array(
+      'tag' => 'meta',
+      'attributes' => array(
+        'name' => 'description',
+        'content' => $descript,
+      ),
+    );
+    $meta[] = array(
+      'tag' => 'meta',
+      'attributes' =>  array(
+        'property' => 'og:description',
+        'content' => $descript,
+      ),
+    );
     preg_match('/< *img[^>]*src *= *["\']?([^"\']*)/i', $this->_values['intro_text'], $matches);
     if(count($matches)>=2){
       $image = $matches[1];
-      $meta['og:image'] = $image;
+      $meta[] = array(
+        'tag' => 'meta',
+        'attributes' => array(
+          'property' => 'og:image',
+          'content' => $image,
+        ),
+      );
     }
     foreach ($meta as $key => $value) {
-      $prop_name = preg_match('/^og:/', $key)?'property':'name';
-      $meta_line = "<meta $prop_name='$key' content='$value'/>";
-      CRM_Utils_System::addHTMLHead($meta_line);
+      CRM_Utils_System::addHTMLHead($value);
     }
 
   }

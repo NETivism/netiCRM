@@ -205,16 +205,57 @@ class CRM_Utils_System_Drupal {
    * @static
    */
   static function addHTMLHead($head) {
+    if(!is_array($head)){
+      $message = 'Variable $head should be an Array';
+      drupal_set_message($message);
+      CRM_Core_Error::debug($message);
+      return;
+    }
     $config = CRM_Core_Config::singleton();
     $version = $config->userSystem->version;
     if($version >= 6 && $version < 7){
-      drupal_set_html_head($head);
+      // $head 應該塞入 "<meta brabrabra.... >"
+      $line = '<' . $head['tag'] . ' ';
+      foreach ($head['attributes'] as $key => $value) {
+        $line .=  $key . "='$value' ";
+      }
+      $line .= '>';
+      if(!empty($head['value'])){
+        $line .= $head['value'] . '</' . $head['tag'] . '>';
+      }
+      drupal_set_html_head($line);
       return;
     }
     elseif($version >= 7 && $version < 8){
-      drupal_add_html_head($head);
+      $element = array();
+      foreach ($head as $key => $value) {
+        $element['#' . $key] = $value;
+      }
+      $head_key = '';
+      foreach ($element['#attributes'] as $key => $value) {
+        if($key == 'name' || $key == 'property'){
+          if($head_key !== ''){
+            $head_key .= '-';
+          }
+          $head_key = $key . '-' . $value;
+        }
+      }
+      drupal_add_html_head($element,$head_key);
       return;
     }
+  }
+
+  /**
+   * Get variable from CMS system
+   *
+   * @param variable name
+   * @param Default value when variable is null.
+   * 
+   * @return void
+   * @access public
+   * @static  */
+  static function variable_get($name, $default) {
+    return variable_get($name, $default);
   }
 
   /**
