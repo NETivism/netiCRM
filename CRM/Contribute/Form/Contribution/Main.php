@@ -161,16 +161,48 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
         'content' => $descript,
       ),
     );
-    preg_match('/< *img[^>]*src *= *["\']?([^"\']*)/i', $this->_values['intro_text'], $matches);
-    if(count($matches)>=2){
-      $image = $matches[1];
-      $meta[] = array(
-        'tag' => 'meta',
-        'attributes' => array(
-          'property' => 'og:image',
-          'content' => $image,
-        ),
-      );
+        if(is_array($this->_values['custom_data_view'])){
+      foreach ($this->_values['custom_data_view'] as $ufg) {
+        foreach($ufg as $ufg_inner){
+          if(is_array($ufg_inner['fields'])){
+            foreach ($ufg_inner['fields'] as $uffield) {
+              if(is_array($uffield)){
+                if($uffield['field_type'] == 'File'){
+                  if(!empty($uffield['field_value']['fileURL']) && preg_match('/\.(jpg|png|jpeg)$/',$uffield['field_value']['data'])){
+                    $proto = explode('/', $_SERVER['SERVER_PROTOCOL']);
+                    $image = strtolower($proto[0]) . '://' . $_SERVER['HTTP_HOST'] . $uffield['field_value']['fileURL'];
+                    $meta_ogimg = array(
+                      'tag' => 'meta',
+                      'attributes' => array(
+                        'property' => 'og:image',
+                        'value' => $image,
+                      ),
+                    );
+                    break;
+                    break;
+                    break;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    if(!empty($meta_ogimg)){
+      $meta[] = $meta_ogimg;
+    }else{
+      preg_match('/< *img[^>]*src *= *["\']?([^"\']*)/i', $this->_values['intro_text'], $matches);
+      if(count($matches)>=2){
+        $image = $matches[1];
+        $meta[] = array(
+          'tag' => 'meta',
+          'attributes' => array(
+            'property' => 'og:image',
+            'content' => $image,
+          ),
+        );
+      }
     }
     foreach ($meta as $key => $value) {
       CRM_Utils_System::addHTMLHead($value);

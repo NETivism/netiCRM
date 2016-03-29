@@ -329,16 +329,45 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page {
         'content' => $descript,
       ),
     );
-    preg_match('/< *img[^>]*src *= *["\']?([^"\']*)/i', $values['event']['description'], $matches);
-    if(count($matches)>=2){
-      $image = $matches[1];
-      $meta[] = array(
-        'tag' => 'meta',
-        'attributes' => array(
-          'property' => 'og:image',
-          'content' => $image,
-        ),
-      );
+    $groupTree = &CRM_Core_BAO_CustomGroup::getTree("Event", $this, $this->_id, 0, $values['event']['event_type_id']);
+    foreach($groupTree as $ufg_inner){
+      if(is_array($ufg_inner['fields'])){
+        foreach ($ufg_inner['fields'] as $uffield) {
+          if(is_array($uffield)){
+            if($uffield['data_type'] == 'File'){
+              if(!empty($uffield['customValue'][1]) && preg_match('/\.(jpg|png|jpeg)$/',$uffield['customValue'][1]['data'])){
+                $proto = explode('/', $_SERVER['SERVER_PROTOCOL']);
+                $image = strtolower($proto[0]) . '://' . $_SERVER['HTTP_HOST'] . $uffield['customValue'][1]['fileURL'];
+                $meta_ogimg = array(
+                  'tag' => 'meta',
+                  'attributes' => array(
+                    'property' => 'og:image',
+                    'content' => $image,
+                  ),
+                );
+                break;
+                break;
+                break;
+              }
+            }
+          }
+        }
+      }
+    }
+    if(!empty($meta_ogimg)){
+      $meta[] = $meta_ogimg;
+    }else{
+      preg_match('/< *img[^>]*src *= *["\']?([^"\']*)/i', $values['event']['description'], $matches);
+      if(count($matches)>=2){
+        $image = $matches[1];
+        $meta[] = array(
+          'tag' => 'meta',
+          'attributes' => array(
+            'property' => 'og:image',
+            'content' => $image,
+          ),
+        );
+      }
     }
     foreach ($meta as $key => $value) {
       CRM_Utils_System::addHTMLHead($value);
