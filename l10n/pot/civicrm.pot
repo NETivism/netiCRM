@@ -45026,3 +45026,23 @@ msgstr ""
 #: CRM/Contribute/BAO/Query.php
 msgid "Non-Recurring Contribution"
 msgstr ""
+
+#: CRM/Contact/Form/Search/Custom/AnnualReceipt.php
+msgid "Print Annual Receipt"
+msgstr ""
+
+#: CRM/Contact/Form/Search/Custom/AnnualReceipt.php
+msgid "Receipt info in this year"
+msgstr ""
+
+#: CRM/Contact/Form/Search/Custom/AnnualReceipt.php
+msgid "Receipt info in last year"
+msgstr ""
+
+#: CRM/Contact/Form/Search/Custom/AnnualReceipt.php
+msgid "Receipt info in all lifetime"
+msgstr ""
+
+#: CRM/Contact/Form/Search/Custom/AnnualReceipt.php
+msgid "Price Set Export"
+msgstr ""
