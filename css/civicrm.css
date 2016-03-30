@@ -2790,19 +2790,20 @@ ul.ui-sortable {
  * Placeholder
  */
 .crm-container ::-webkit-input-placeholder {
-   color: #777;
+   color: #999;
 }
 .crm-container :-moz-placeholder { /* Firefox 18- */
-   color: #777;
+   color: #999;
    opacity: 1;
 }
 .crm-container ::-moz-placeholder {  /* Firefox 19+ */
-   color: #777;
+   color: #999;
    opacity: 1;
 }
 .crm-container :-ms-input-placeholder {
-   color: #777;
+   color: #999;
 }
+
 .crm-container input[type="text"].readonly {
   color: #777;
   background: #F3F3F3 url("../i/ic_lock_outline_24px.png") no-repeat 98% 50%;

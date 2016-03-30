@@ -45058,3 +45058,6 @@ msgstr ""
 #: templates/CRM/Admin/Form/Setting/Miscellaneous.tpl
 msgid "Do not attach PDF copy to receipts"
 msgstr ""
+
+msgid "Type here"
+msgstr ""
