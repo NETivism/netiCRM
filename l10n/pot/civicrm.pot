@@ -45046,3 +45046,15 @@ msgstr ""
 #: CRM/Contact/Form/Search/Custom/AnnualReceipt.php
 msgid "Price Set Export"
 msgstr ""
+
+#: templates/CRM/Contact/Form/Task/AnnualReceipt.tpl
+msgid "This will take a period of time"
+msgstr ""
+
+#: templates/CRM/Admin/Form/Setting/Miscellaneous.tpl
+msgid "If enabled, PDF receipt wont't be an attachment during event signup or online contribution."
+msgstr ""
+
+#: templates/CRM/Admin/Form/Setting/Miscellaneous.tpl
+msgid "Do not attach PDF copy to receipts"
+msgstr ""

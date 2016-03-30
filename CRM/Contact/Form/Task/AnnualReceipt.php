@@ -57,7 +57,7 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
     }
 
     $contribution_type = CRM_Contribute_PseudoConstant::contributionType();
-    $deductible = array( 0 => '- '.ts('Deductible').' -');
+    $deductible = array( 0 => '- '.ts('All').' '.ts('Deductible').' -');
     $contribution_type = $deductible + $contribution_type;
     $attrs = array('multiple' => 'multiple');
     $this->addElement('select', 'contribution_type_id', ts('Contribution Type'), $contribution_type, $attrs);

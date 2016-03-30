@@ -52,12 +52,18 @@ class CRM_Contact_Form_Search_Custom_AnnualReceipt extends CRM_Contact_Form_Sear
   }
 
   function buildForm(&$form) {
+    CRM_Core_OptionValue::getValues(array('name' => 'custom_search'), $custom_search);
+    foreach ($custom_search as $c) {
+      if ($c['value'] == $_GET['csid']) {
+        $this->setTitle($c['description']);
+        break;
+      }
+    }
     $years = array();
     for($year = date('Y'); $year < date('Y') + 4; $year++) {
       $years[$year - 3] = $year - 3;
     }
     $form->addElement('select', 'year', ts('Receipt Date'), $years);
-    $this->setTitle(ts('Print Annual Receipt'));
     $form->assign('elements', array('year'));
 
     // reset session when visit first selection
