@@ -25,6 +25,7 @@
 *}
 <div class="crm-block crm-form-block crm-miscellaneous-form-block">
   <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>
+{if $admin}
 <fieldset>
     <table class="form-layout">
         <tr class="crm-miscellaneous-form-block-dashboardCacheTimeout">
@@ -34,9 +35,17 @@
         </tr>
     </table>
 </fieldset>
+{/if}
 
 <fieldset>
     <table class="form-layout">
+        <tr class="crm-miscellaneous-form-block-doNotAttachPDFReceipt">
+            <td class="label">{$form.doNotAttachPDFReceipt.label}</td>
+            <td>{$form.doNotAttachPDFReceipt.html}<br />
+                <p class="description">{ts}If enabled, PDF receipt wont't be an attachment during event signup or online contribution.{/ts}</p>
+            </td>
+        </tr>
+     {if $admin}
         <tr class="crm-miscellaneous-form-block-contactUndelete">
           <td class="label">{$form.contactUndelete.label}</td>
           <td>
@@ -51,12 +60,6 @@
             <p class="description">{ts}If enabled, all actions performed on non-cache tables will be logged (in the respective log_* tables).{/ts}</p>
             <p class="description">{ts}(This functionality currenly cannot be enabled on multilingual installations.){/ts}</p>
           </td>
-        </tr>
-        <tr class="crm-miscellaneous-form-block-doNotAttachPDFReceipt">
-            <td class="label">{$form.doNotAttachPDFReceipt.label}</td>
-            <td>{$form.doNotAttachPDFReceipt.html}<br />
-                <p class="description">{ts}If enabled, CiviCRM sends PDF receipt as an attachment during event signup or online contribution.{/ts}</p>
-            </td>
         </tr>
         <tr class="crm-miscellaneous-form-block-wkhtmltopdfPath">
             <td class="label">{$form.wkhtmltopdfPath.label}</td>
@@ -80,6 +83,7 @@
             <td>{$form.maxFileSize.html}<br />
                 <span class="description">{ts}Maximum Size of file (documents, images, etc.) which can attached to emails or activities.<br />Note: php.ini should support this file size.{/ts}</span></td>
         </tr>
+      {/if}
     </table>
 </fieldset>
 <fieldset><legend>{ts}reCAPTCHA Keys{/ts}</legend>

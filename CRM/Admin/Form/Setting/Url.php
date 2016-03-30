@@ -50,10 +50,16 @@ class CRM_Admin_Form_Setting_Url extends CRM_Admin_Form_Setting {
   public function buildQuickForm() {
     CRM_Utils_System::setTitle(ts('Settings - Resource URLs'));
 
-    $this->addElement('text', 'userFrameworkResourceURL', ts('CiviCRM Resource URL'));
-    $this->addElement('text', 'imageUploadURL', ts('Image Upload URL'));
+    if (CRM_Core_Permission::check('administer neticrm')) {
+      $this->addElement('text', 'userFrameworkResourceURL', ts('CiviCRM Resource URL'));
+      $this->addElement('text', 'imageUploadURL', ts('Image Upload URL'));
+      $this->addYesNo('enableSSL', ts('Force Secure URLs (SSL)'));
+      $this->assign('admin', TRUE);
+    }
+    else{
+      $this->assign('admin', FALSE);
+    }
     $this->addElement('text', 'customCSSURL', ts('Custom CiviCRM CSS URL'));
-    $this->addYesNo('enableSSL', ts('Force Secure URLs (SSL)'));
 
     $this->addFormRule(array('CRM_Admin_Form_Setting_Url', 'formRule'));
 
