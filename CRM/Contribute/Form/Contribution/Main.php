@@ -145,8 +145,12 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
         'content' => $this->_values['title'] . ' - ' . CRM_Utils_System::variable_get('site_name', 'Drupal'),
       ),
     );
-      
-    $descript = substr(trim(str_replace("&nbsp;", '', strip_tags($this->_values['intro_text']))),0,150);
+
+    $descript = $this->_values['intro_text'];
+    $descript = preg_replace("/ *<(?<tag>(style|script))( [^=]+=['\"][^'\"]*['\"])*>(.*?(\n))+.*?<\/\k<tag>>/", "", $descript);
+    $descript = strip_tags($descript);
+    $descript = preg_replace("/(?:(?:&nbsp;)|\n|\r|\s)/", '', $descript);
+    $descript = substr($descript,0,150);
     $meta[] = array(
       'tag' => 'meta',
       'attributes' => array(

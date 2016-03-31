@@ -125,7 +125,11 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
         'content' => $this->_values['event']['title'] . ' - ' . CRM_Utils_System::variable_get('site_name', 'Drupal'),
       ),
     );
-    $descript = substr(trim(str_replace("&nbsp;", '', strip_tags($this->_values['event']['description']))),0,150);
+    $descript = $this->_values['event']['description'];
+    $descript = preg_replace("/ *<(?<tag>(style|script))( [^=]+=['\"][^'\"]*['\"])*>(.*?(\n))+.*?<\/\k<tag>>/", "", $descript);
+    $descript = strip_tags($descript);
+    $descript = preg_replace("/(?:(?:&nbsp;)|\n|\r|\s)/", '', $descript);
+    $descript = substr($descript,0,150);
     $meta[] = array(
       'tag' => 'meta',
       'attributes' => array(
