@@ -859,7 +859,7 @@ WHERE  contribution_id = {$this->_id}
     $this->addElement('checkbox', 'is_email_receipt', ts('Send Receipt?'), NULL);
 
     // add receipt id text area
-    $receipt_attr = array_merge($attributes['receipt_id'], array('readonly' => 'readonly'));
+    $receipt_attr = array_merge($attributes['receipt_id'], array('readonly' => 'readonly', 'class' => 'readonly'));
     $this->add('text', 'receipt_id', ts('Receipt ID'), $receipt_attr);
     $this->addRule('receipt_id', ts('This Receipt ID already exists in the database.'), 'objectExists', array('CRM_Contribute_DAO_Contribution', $this->_id, 'receipt_id'));
     $this->assign('receipt_id_setting', CRM_Utils_System::url("civicrm/admin/receipt", 'reset=1'));

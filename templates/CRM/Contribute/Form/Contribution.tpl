@@ -411,9 +411,9 @@ cj(document).ready(function(){
      }
    });
    cj("#manual-receipt-id").click(function(e){
-     var okok = confirm("This action will break auto serial number. Please confirm you really want to change receipt number manually.");
+     var okok = confirm("{/literal}{ts}This action will break auto serial number. Please confirm you really want to change receipt number manually.{/ts}{literal}");
      if(okok){
-       cj("#receipt_id").removeAttr("readonly").focus();
+       cj("#receipt_id").removeAttr("readonly").removeClass("readonly").focus();
        cj("#manual-receipt-id").remove();
      }
      unbind("#manual-receipt-id", 'click');
