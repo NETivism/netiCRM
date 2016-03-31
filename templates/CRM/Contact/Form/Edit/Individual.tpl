@@ -133,7 +133,7 @@ var checkSimilar = {$checkSimilar};
             {$form.nick_name.html|crmReplace:class:big}
         </td>
         <td>
-            {if $buildContactSubType}&nbsp;
+            {if $buildContactSubType}
                {$form.contact_sub_type.label}<br />
                {$form.contact_sub_type.html}
             {/if}

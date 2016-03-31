@@ -101,6 +101,8 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
 
   protected $_editOptions = array();
 
+  protected $_availableSubtypes = array();
+
   public $_blocks;
 
   public $_values = array();
@@ -267,9 +269,14 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
     $this->assign('contactSubType', $this->_contactSubType);
 
     //build contact subtype form element, CRM-6864
-    $buildContactSubType = TRUE;
+    $subtypes = CRM_Contact_BAO_ContactType::subTypePairs($this->_contactType);
+    $this->_availableSubtypes = $subtypes;
+    $buildContactSubType = FALSE;
     if ($this->_contactSubType && ($this->_action & CRM_Core_Action::ADD)) {
       $buildContactSubType = FALSE;
+    }
+    elseif(!empty($this->_availableSubtypes)){
+      $buildContactSubType = TRUE;
     }
     $this->assign('buildContactSubType', $buildContactSubType);
 
@@ -757,9 +764,8 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
 
     // subtype is a common field. lets keep it here
     $typeLabel = CRM_Contact_BAO_ContactType::getLabel($this->_contactType);
-    $subtypes = CRM_Contact_BAO_ContactType::subTypePairs($this->_contactType);
     $subtypeElem = &$this->addElement('select', 'contact_sub_type',
-      ts('Contact Type'), array('' => $typeLabel) + $subtypes,
+      ts('Contact Type'), array('' => $typeLabel) + $this->_availableSubtypes,
       array('onchange' => $buildCustomData)
     );
 
