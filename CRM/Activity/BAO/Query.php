@@ -178,12 +178,12 @@ class CRM_Activity_BAO_Query {
         $types = CRM_Core_PseudoConstant::activityType(TRUE, TRUE);
         $clause = array();
         if (is_array($value)) {
-          foreach ($value as $id => $dontCare) {
-            if (array_key_exists($id, $types) && $dontCare) {
+          foreach ($value as $id) {
+            if (array_key_exists($id, $types)) {
               $clause[] = "'" . CRM_Utils_Type::escape($types[$id], 'String') . "'";
             }
           }
-          $activityTypes = implode(',', array_keys($value));
+          $activityTypes = implode(',', $value);
         }
         else {
           $clause[] = "'" . CRM_Utils_Type::escape($value, 'String') . "'";
@@ -215,17 +215,22 @@ class CRM_Activity_BAO_Query {
           $name = strtolower(CRM_Core_DAO::escapeString($name));
         }
 
-        $query->_where[$grouping][] = " contact_b.is_deleted = 0 AND contact_b.sort_name LIKE '%{$name}%'";
+        $query->_tables['civicrm_activity_contact'] = $query->_whereTables['civicrm_activity_contact'] = 1;
+
         if ($values[2] == 1) {
+          $query->_where[$grouping][] = " contact_b.is_deleted = 0 AND contact_b.sort_name LIKE '%{$name}%'";
           $query->_where[$grouping][] = " civicrm_activity.source_contact_id = contact_b.id";
           $query->_qill[$grouping][] = ts('Activity created by') . " '$name'";
-          $query->_tables['civicrm_activity_contact'] = $query->_whereTables['civicrm_activity_contact'] = 1;
         }
         elseif ($values[2] == 2) {
+          $query->_where[$grouping][] = " contact_b.is_deleted = 0 AND contact_b.sort_name LIKE '%{$name}%'";
           $query->_where[$grouping][] = " civicrm_activity_assignment.activity_id = civicrm_activity.id AND civicrm_activity_assignment.assignee_contact_id = contact_b.id";
           $query->_tables['civicrm_activity_assignment'] = $query->_whereTables['civicrm_activity_assignment'] = 1;
-          $query->_tables['civicrm_activity_contact'] = $query->_whereTables['civicrm_activity_contact'] = 1;
           $query->_qill[$grouping][] = ts('Activity assigned to') . " '$name'";
+        }
+        elseif ($values[2] == 3){
+          $query->_where[$grouping][] = " civicrm_activity_contact.record_type_id = $targetID";
+          $query->_qill[$grouping][] = ts('Activity targeted to');
         }
         break;
 
@@ -233,16 +238,14 @@ class CRM_Activity_BAO_Query {
         $status = CRM_Core_PseudoConstant::activityStatus();
         $clause = array();
         if (is_array($value)) {
-          foreach ($value as $k => $v) {
-            if ($k) {
-              $clause[] = "'" . CRM_Utils_Type::escape($status[$k], 'String') . "'";
-            }
+          foreach ($value as $v) {
+            $clause[] = "'" . CRM_Utils_Type::escape($status[$v], 'String') . "'";
           }
         }
         else {
           $clause[] = "'" . CRM_Utils_Type::escape($value, 'String') . "'";
         }
-        $query->_where[$grouping][] = ' civicrm_activity.status_id IN (' . implode(',', array_keys($value)) . ')';
+        $query->_where[$grouping][] = ' civicrm_activity.status_id IN (' . implode(',', $value) . ')';
         $query->_qill[$grouping][] = ts('Activity Status') . ' - ' . implode(' ' . ts('or') . ' ', $clause);
         break;
 
@@ -378,11 +381,13 @@ class CRM_Activity_BAO_Query {
    * @static
    */
   static function buildSearchForm(&$form) {
+    $form->addElement('text', 'activity_contact_name', ts('Contact Name'), CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Contact', 'sort_name'));
+
     $activityOptions = CRM_Core_PseudoConstant::activityType(TRUE, TRUE, FALSE, 'label', TRUE);
     asort($activityOptions);
-    foreach ($activityOptions as $activityID => $activity) {
-      $form->_activityElement = &$form->addElement('checkbox', "activity_type_id[$activityID]", NULL, $activity, array('onClick' => 'showCustomData( this.id );'));
-    }
+    $attrmultiple = array('multiple' => 'multiple');
+    $form->addElement('select', 'activity_type_id', ts('Activity Type(s)'), $activityOptions, $attrmultiple);
+
     $form->addDate('activity_date_low', ts('Activity Dates - From'), FALSE, array('formatType' => 'searchDate'));
     $form->addDate('activity_date_high', ts('To'), FALSE, array('formatType' => 'searchDate'));
 
@@ -390,25 +395,18 @@ class CRM_Activity_BAO_Query {
     $form->addRadio('activity_role', NULL, $activityRoles, NULL, '<br />');
     $form->setDefaults(array('activity_role' => 1));
 
-    $form->addElement('text', 'activity_contact_name', ts('Contact Name'), CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Contact', 'sort_name'));
-
     $activityStatus = CRM_Core_PseudoConstant::activityStatus();
-    foreach ($activityStatus as $activityStatusID => $activityStatusName) {
-      $activity_status[] = HTML_QuickForm::createElement('checkbox', $activityStatusID, NULL, $activityStatusName);
-    }
-    $form->addGroup($activity_status, 'activity_status', ts('Activity Status'));
-    $form->setDefaults(array('activity_status[1]' => 1, 'activity_status[2]' => 1));
+    $form->addElement('select', 'activity_status', ts('Activity Status'), $activityStatus, $attrmultiple);
+
+    $form->setDefaults(array('activity_status' => array(1, 2)));
     $form->addElement('text', 'activity_subject', ts('Subject'), CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Contact', 'sort_name'));
     $form->addElement('checkbox', 'activity_test', ts('Find Test Activities?'));
-    require_once 'CRM/Core/BAO/Tag.php';
+
     $activity_tags = CRM_Core_BAO_Tag::getTags('civicrm_activity');
-    if ($activity_tags) {
-      foreach ($activity_tags as $tagID => $tagName) {
-        $form->_tagElement = &$form->addElement('checkbox', "activity_tags[$tagID]",
-          NULL, $tagName
-        );
-      }
+    if (!empty($activity_tags)) {
+      $form->addElement('select', 'activity_tags', ts('Activity Tag(s)'), $activity_tags, $attrmultiple);
     }
+
     require_once ('CRM/Campaign/BAO/Survey.php');
     $surveys = array('' => ts('- none -')) + CRM_Campaign_BAO_Survey::getSurveyList();
     $form->add('select', 'activity_survey_id', ts('Survey'), $surveys, FALSE);
