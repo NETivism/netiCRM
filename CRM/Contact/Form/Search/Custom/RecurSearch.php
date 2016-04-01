@@ -335,7 +335,7 @@ $having
         $clauses[] = "(remain_installments = 1)";
         break;
       case 'recur_ended':
-        $clauses[] = "(remain_installments < 1)";
+        $clauses[] = "( contribution_status_id = 1 )";
         break;
     }
 
