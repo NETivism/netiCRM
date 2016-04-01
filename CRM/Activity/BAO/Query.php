@@ -216,21 +216,20 @@ class CRM_Activity_BAO_Query {
         }
 
         $query->_tables['civicrm_activity_contact'] = $query->_whereTables['civicrm_activity_contact'] = 1;
+        $query->_where[$grouping][] = " contact_b.is_deleted = 0 AND contact_b.sort_name LIKE '%{$name}%'";
 
         if ($values[2] == 1) {
-          $query->_where[$grouping][] = " contact_b.is_deleted = 0 AND contact_b.sort_name LIKE '%{$name}%'";
           $query->_where[$grouping][] = " civicrm_activity.source_contact_id = contact_b.id";
           $query->_qill[$grouping][] = ts('Activity created by') . " '$name'";
         }
         elseif ($values[2] == 2) {
-          $query->_where[$grouping][] = " contact_b.is_deleted = 0 AND contact_b.sort_name LIKE '%{$name}%'";
           $query->_where[$grouping][] = " civicrm_activity_assignment.activity_id = civicrm_activity.id AND civicrm_activity_assignment.assignee_contact_id = contact_b.id";
           $query->_tables['civicrm_activity_assignment'] = $query->_whereTables['civicrm_activity_assignment'] = 1;
           $query->_qill[$grouping][] = ts('Activity assigned to') . " '$name'";
         }
-        elseif ($values[2] == 3){
-          $query->_where[$grouping][] = " civicrm_activity_contact.record_type_id = $targetID";
-          $query->_qill[$grouping][] = ts('Activity targeted to');
+        elseif ($values[3] == 3) {
+          $query->_where[$grouping][] = " civicrm_activity_target.target_contact_id = contact_b.id";
+          $query->_qill[$grouping][] = ts('Target Contact') . " '$name'";
         }
         break;
 
@@ -308,23 +307,6 @@ class CRM_Activity_BAO_Query {
     $from = NULL;
     switch ($name) {
       case 'civicrm_activity':
-        /*
-        	if ( $mode & CRM_Contact_BAO_Query::MODE_ACTIVITY ) {
-		        $from = " FROM civicrm_activity 
-		                  LEFT JOIN civicrm_activity_target  ON ( civicrm_activity_target.activity_id = civicrm_activity.id 
-		                       AND civicrm_activity.is_deleted = 0 AND civicrm_activity.is_current_revision = 1  ) 
-                          LEFT JOIN civicrm_contact contact_a ON ( civicrm_activity_target.target_contact_id = contact_a.id AND contact_a.is_deleted = 0)
-                          LEFT JOIN civicrm_email ON (contact_a.id = civicrm_email.contact_id AND civicrm_email.is_primary = 1)";
-            } else {
-                $from .= " $side JOIN civicrm_activity_target ON civicrm_activity_target.target_contact_id = contact_a.id ";
-                $from .= " $side JOIN civicrm_activity ON ( civicrm_activity.id = civicrm_activity_target.activity_id 
-                                 AND civicrm_activity.is_deleted = 0 AND civicrm_activity.is_current_revision = 1 )";
-                
-            }
-
-
-        $from .= " $side JOIN civicrm_activity_target ON civicrm_activity_target.target_contact_id = contact_a.id ";
-        */
         $from .= " $side JOIN civicrm_activity ON ( civicrm_activity.source_contact_id = contact_a.id AND civicrm_activity.is_deleted = 0 AND civicrm_activity.is_current_revision = 1 )";
         break;
 
@@ -338,6 +320,11 @@ class CRM_Activity_BAO_Query {
         elseif ($activityRole == 2) {
           $from .= " $side JOIN civicrm_activity_assignment ON civicrm_activity.id = civicrm_activity_assignment.activity_id ";
           $from .= " $side JOIN civicrm_contact contact_b ON civicrm_activity_assignment.assignee_contact_id = contact_b.id
+                           LEFT JOIN civicrm_email email_b ON (contact_b.id = email_b.contact_id AND email_b.is_primary = 1)";
+        }
+        elseif ($activityRole == 3) {
+          $from .= " $side JOIN civicrm_activity_target ON civicrm_activity_target.activity_id = civicrm_activity.id ";
+          $from .= " $side JOIN civicrm_contact contact_b ON civicrm_activity_target.target_contact_id = contact_b.id
                            LEFT JOIN civicrm_email email_b ON (contact_b.id = email_b.contact_id AND email_b.is_primary = 1)";
         }
         break;
@@ -391,7 +378,7 @@ class CRM_Activity_BAO_Query {
     $form->addDate('activity_date_low', ts('Activity Dates - From'), FALSE, array('formatType' => 'searchDate'));
     $form->addDate('activity_date_high', ts('To'), FALSE, array('formatType' => 'searchDate'));
 
-    $activityRoles = array(1 => ts('Created by'), 2 => ts('Assigned to'));
+    $activityRoles = array(1 => ts('Created by'), 2 => ts('Assigned to'), 3 => ts('Target Contact'));
     $form->addRadio('activity_role', NULL, $activityRoles, NULL, '<br />');
     $form->setDefaults(array('activity_role' => 1));
 
