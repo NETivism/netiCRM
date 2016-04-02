@@ -329,7 +329,7 @@ class CRM_Report_Form_Contact_Participate extends CRM_Report_Form {
       if(!empty($this->_columns['civicrm_participant']['filters']['participant_count'])) {
         $pcount = $this->_columns['civicrm_participant']['filters']['participant_count'];
         $pcount['dbAlias'] = "COUNT({$pcount['alias']}.id)";
-        $clause = $this->whereClause($pcount, $op, $value);
+        $clause = $this->whereClause($pcount, $op, $value, NULL, NULL);
         $this->_groupBy .= ' HAVING ' . $clause;
         print $this->groupBy;
       }
