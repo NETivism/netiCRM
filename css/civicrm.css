@@ -109,23 +109,26 @@
 /*
 ** Size input fields in crm-container by class. Classes are assigned by the
 ** module in relation to the data object max size.
+**
+** Because crm form fields border-sizing is border-box (element width 
+** contain padding), so add one more em to each class to avoid inside text be cut off.
 */
-.crm-container .two {width: 2em;}
-.crm-container .four {width: 4em;}
-.crm-container .six {width: 6em;}
-.crm-container .eight {width: 8em;}
-.crm-container .twelve {width: 12em;}
-.crm-container .twenty {width: 20em;}
-.crm-container .medium {width: 12em;}
-.crm-container .big {width: 15em;}
-.crm-container .huge {width: 25em;}
-.crm-container .huge40 {width: 40em;}
-.crm-container textarea.big {width: 35em; height: 4em;}
-.crm-container textarea.huge {width: 45em; height: 16em;}
-.crm-container textarea.huge12 {width: 40em; height: 12em;}
-.crm-container textarea.huge40 {width: 40em; height: 16em;}
-.crm-container textarea.nowrap {width: 45em; height: 4.5em; white-space: nowrap; overflow: auto;}
-.crm-container .bigSelect {width: 15em; height: 12em;}
+.crm-container .two {width: 3em;}
+.crm-container .four {width: 5em;}
+.crm-container .six {width: 7em;}
+.crm-container .eight {width: 9em;}
+.crm-container .twelve {width: 13em;}
+.crm-container .twenty {width: 21em;}
+.crm-container .medium {width: 13em;}
+.crm-container .big {width: 16em;}
+.crm-container .huge {width: 26em;}
+.crm-container .huge40 {width: 41em;}
+.crm-container textarea.big {width: 36em; height: 4em;}
+.crm-container textarea.huge {width: 46em; height: 16em;}
+.crm-container textarea.huge12 {width: 41em; height: 12em;}
+.crm-container textarea.huge40 {width: 41em; height: 16em;}
+.crm-container textarea.nowrap {width: 46em; height: 4.5em; white-space: nowrap; overflow: auto;}
+.crm-container .bigSelect {width: 16em; height: 12em;}
 
 .crm-container .crm-form-elem.two,
 .crm-container .crm-form-elem.four,
@@ -3893,3 +3896,8 @@ tbody.scrollContent tr.alternateRow {
   text-align: center;
 }
 
+/* Search */
+/* custom search */
+#Custom .crm-search-form-block td .form-submit {
+  margin-top: 0;
+}
