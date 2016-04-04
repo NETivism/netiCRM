@@ -355,8 +355,8 @@ input.md-textfield,
 .md-checkbox-input:disabled + .md-checkbox-label::before {
   display: none;
 }
-.md-radio-input:disabled[checked] + .md-radio-label::before,
-.md-checkbox-input:disabled[checked] + .md-checkbox-label::before {
+.md-radio-input:disabled:checked + .md-radio-label::before,
+.md-checkbox-input:disabled:checked + .md-checkbox-label::before {
   display: block;
   opacity: .3;
 }
