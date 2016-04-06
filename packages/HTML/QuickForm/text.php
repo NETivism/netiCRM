@@ -56,7 +56,7 @@ class HTML_QuickForm_text extends HTML_QuickForm_input
     function HTML_QuickForm_text($elementName=null, $elementLabel=null, $attributes=null)
     {
         if (!isset($attributes['placeholder'])) {
-          $attributes['placeholder'] = ts('Type here') . ' ...';
+          $attributes['placeholder'] = $elementLabel;
         }
         HTML_QuickForm_input::HTML_QuickForm_input($elementName, $elementLabel, $attributes);
         $this->_persistantFreeze = true;
