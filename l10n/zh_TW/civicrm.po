@@ -10,8 +10,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2016-04-06 03:38+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
+"PO-Revision-Date: 2016-04-08 08:53+0000\n"
+"Last-Translator: 張書懷 <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34283,7 +34283,7 @@ msgid ""
 "Select the contribution type assigned to fees for this membership type (for "
 "example 'Membership Fees'). This is required for all membership types - "
 "including free or complimentary memberships."
-msgstr ""
+msgstr "請為這個會員類型的會費選一個捐款類型（例如「會費」）。本欄位必需設定才能儲存，包括免費的會員或暫時性的會員。"
 
 #: templates/CRM/Member/Form/MembershipType.tpl
 msgid ""
@@ -34294,7 +34294,7 @@ msgstr "此會員期限（例如三十日、兩個月、五年、終生）"
 msgid ""
 "Select 'rolling' if membership periods begin at date of signup. Select "
 "'fixed' if membership periods begin on a set calendar date."
-msgstr ""
+msgstr "若此會籍於繳費日當天起算，請選「依繳費日期起算」。若無論哪天填表入會，會籍都固定從該會籍所設定的起始日起算，請選「固定起始日期」。"
 
 #: templates/CRM/Member/Form/MembershipType.tpl
 msgid ""
@@ -34315,13 +34315,13 @@ msgstr ""
 msgid ""
 "Memberships can be automatically granted to related contacts by selecting a "
 "Relationship Type."
-msgstr ""
+msgstr "利用「關係」自動建立會籍資格。例如家長入會，其子女也自動擁有會籍資格。"
 
 #: templates/CRM/Member/Form/MembershipType.tpl
 msgid ""
 "Is this membership type available for self-service signups ('Public') or "
 "assigned by CiviCRM 'staff' users only ('Admin')"
-msgstr ""
+msgstr "若選「公開」，則此會籍資格可公開在入會頁面讓入會者選擇加入。若選「管理」，則必須由管理員進行設定才能擁有此會籍。"
 
 #: templates/CRM/Member/Form/MembershipType.tpl
 msgid "Renewal Reminders"
@@ -34332,7 +34332,7 @@ msgid ""
 "If you would like Membership Renewal Reminder emails sent to members "
 "automatically, you need to create a reminder message template and you need "
 "to configure and periodically run a 'cron' job on your server."
-msgstr ""
+msgstr "會籍到期自動通知功能，須先建立會籍到期通知信範本，或是從已建立的範本中選用。"
 
 #: templates/CRM/Member/Form/MembershipType.tpl
 msgid ""
@@ -34346,11 +34346,11 @@ msgstr "沒有建立訊息範本。如果您想自動寄送更新會員的通知
 msgid ""
 "Select the renewal reminder message to be sent to the members of this "
 "membership type."
-msgstr ""
+msgstr "請在此選擇此會籍的到期通知信範本。"
 
 #: templates/CRM/Member/Form/MembershipType.tpl
 msgid "Send Reminder these many days prior to membership expiration."
-msgstr ""
+msgstr "請填入天數，系統將在會籍到期日前依您填入的天數寄送到期通知信。"
 
 #: templates/CRM/Member/Form/MembershipView.tpl
 msgid "View contact summary"
@@ -34690,7 +34690,7 @@ msgid ""
 "Use the <strong>Relationship Type</strong> field to configure Membership "
 "Types where memberships are automatically granted to related contacts. "
 "Examples are listed below:"
-msgstr ""
+msgstr "利用「關係類型」可自動替與會員本人有特定關係的聯絡人建立會籍。範例如下表："
 
 #: templates/CRM/Member/Page/MembershipType.hlp
 msgid "Direct member is:"
@@ -34744,7 +34744,7 @@ msgid ""
 "and day for memberships to start. If membership duration is specified in "
 "months, memberships will start on the 1st of the current month and run for "
 "the number of specified months."
-msgstr ""
+msgstr "若此會籍於繳費日當天起算，請選「依繳費日期起算」。若無論哪天填表入會，會籍從該會籍所設定的起始日起算，請選「固定起始日期」。若會籍期間設定為年，您必須在該會籍設定起算的日期（月日）。若會籍期間設定為月，則會籍將從入會月的1日起算，然後持續到所設定的月份數。"
 
 #: templates/CRM/Member/Page/MembershipType.hlp
 msgid "EXAMPLES"
