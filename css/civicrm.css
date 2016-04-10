@@ -948,6 +948,13 @@ div.block-civicrm li, .crm-container ul li, .crm-container ul.treeview li {
     overflow: auto;
 }
 
+.crm-container table,
+.crm-container table p, 
+.crm-container table ul, 
+.crm-container table ol {
+  font-size: .875rem;
+}
+
 /*
 editor specific classes
 */
@@ -1370,8 +1377,7 @@ div.grippie {
 }
 .resizable-textarea textarea {
     display       : block;
-    margin-bottom : 0pt;
-    width         : 95%;
+    margin-bottom : 0;
     height        : 20%;
 }
 
@@ -1484,7 +1490,6 @@ div.grippie {
 .crm-container div#contactTopBar .label,
 .crm-container div.contactCardLeft .label,
 .crm-container div.contactCardRight .label {
-    FONT-SIZE      : 11px;
     VERTICAL-ALIGN : top;
     MARGIN-RIGHT   : 10px;
 }
@@ -1493,7 +1498,6 @@ div.grippie {
 .crm-container div.contactCardRight .grouplabel {
     BORDER-BOTTOM    : grey 1px solid;
     WIDTH            : 100%;
-    FONT-SIZE        : 0.95em;
     FONT-WEIGHT      : bold;
     background-color : #ddd;
 }
@@ -1583,13 +1587,13 @@ div.grippie {
 }
 
 .crm-container .collapsed {
-    background: url("../i/TreePlus.gif") no-repeat 0 0;
+    background: url("../i/TreePlus.gif") no-repeat 0 3px;
     padding-left: 19px;
     cursor:pointer
 }
 
 .crm-container .expanded {
-    background: url("../i/TreeMinus.gif") no-repeat 0 0;
+    background: url("../i/TreeMinus.gif") no-repeat 0 2px;
     padding-left: 19px;
     cursor:pointer
 }
@@ -2099,7 +2103,7 @@ div#crm-toolTip #hide-tooltip {
 .crm-summary-link {
     position: relative;
     z-index: 16;
-    display: block;
+    display: inline-block;
     cursor: pointer;
     max-width: 16px;
 }
@@ -2356,6 +2360,7 @@ table.crm-info-panel td.label {
     background-color: #fafafa;
     width:100px;
     text-align: left;
+    font-size: .875rem;
     color: #7a7a60;
 }
     table.crm-info-panel td.label {
