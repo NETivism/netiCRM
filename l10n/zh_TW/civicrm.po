@@ -10,8 +10,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2016-04-08 08:53+0000\n"
-"Last-Translator: 張書懷 <junsuwhy@gmail.com>\n"
+"PO-Revision-Date: 2016-04-11 06:44+0000\n"
+"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -8969,7 +8969,7 @@ msgstr "此聯絡人已被合併。"
 
 #: CRM/Contact/Form/Merge.php
 msgid "Oops, these contacts seems to be marked as non duplicates."
-msgstr ""
+msgstr "這些聯絡人似乎已被標注為「非重複」。"
 
 #: CRM/Contact/Form/NewContact.php
 msgid "Create New Contact"
@@ -25791,7 +25791,7 @@ msgstr "使用者名稱已被使用。"
 
 #: templates/CRM/common/dedupe.tpl
 msgid "Mark as Dedupe Exception"
-msgstr ""
+msgstr "標注為非重複"
 
 #: templates/CRM/common/dedupe.tpl
 msgid "Are you sure you want to mark these contacts as dedupe exception."
@@ -27380,7 +27380,7 @@ msgstr "標示為非重複"
 
 #: templates/CRM/Contact/Page/DedupeFind.tpl
 msgid "Insufficient access rights - cannot merge"
-msgstr ""
+msgstr "權限不足，無法合併"
 
 #: templates/CRM/Contact/Page/DedupeFind.tpl
 msgid "Merge %1 with"
@@ -27811,7 +27811,7 @@ msgstr "退訂群組"
 msgid ""
 "You are no longer subscribed to these group(s). Click Rejoin Group if you "
 "want to re-subscribe."
-msgstr ""
+msgstr "你並不在這些群組裡頭，若你想要重新加入，請點選「重新加入群組」"
 
 #: templates/CRM/Contact/Page/View/UserDashBoard/GroupContact.tpl
 msgid "Are you sure you want to add back into %1?"
@@ -30001,7 +30001,7 @@ msgstr "瀏覽個人募款頁"
 
 #: templates/CRM/Contribute/Page/ContributionSoft.tpl
 msgid "( n/a )"
-msgstr ""
+msgstr "（無）"
 
 #: templates/CRM/Contribute/Page/ContributionSoft.tpl
 msgid "View related contribution"
@@ -35438,7 +35438,7 @@ msgstr "以欄位為群組"
 
 #: templates/CRM/Report/Form/Criteria.tpl
 msgid "Other Options"
-msgstr ""
+msgstr "其他選項"
 
 #: templates/CRM/Report/Form/Criteria.tpl
 msgid "Set Filters"
@@ -44918,11 +44918,11 @@ msgstr "您現在登入中，系統已自動帶入您的個資。若要更改你
 
 #: CRM/Event/BAO/Participant.php
 msgid "Participant Note"
-msgstr ""
+msgstr "參加者註記"
 
 #: CRM/Contribute/DAO/Contribution.php
 msgid "Contribution Page ID"
-msgstr ""
+msgstr "募款頁編號"
 
 #: templates/CRM/Contribute/Form/Contribution/Confirm.tpl
 #: templates/CRM/Event/Form/Registration/Confirm.tpl
@@ -45019,22 +45019,22 @@ msgstr "已結束定期"
 
 #: CRM/Contribute/xml/Menu/Contribute.xml
 msgid "Recurring Settings"
-msgstr ""
+msgstr "定期定額設定"
 
 #: CRM/Admin/Form/Setting/Recurring.php
 msgid "Exclude to sync"
-msgstr ""
+msgstr "排除同步"
 
 #: templates/CRM/Admin/Form/Setting/Recurring.tpl
 msgid ""
 "When recurring contribution being triggered, new contribution will copy "
 "custom fields value from first one. Fields you selected in this option will "
 "exclude to synchronize value from old contribution."
-msgstr ""
+msgstr "當定期捐款自動由系統觸發時，新的繳款紀錄將會同步第一筆捐款紀錄的自訂欄位。本選項可選擇不同步的欄位，讓此欄位不會複製第一筆繳款的自訂欄位。"
 
 #: CRM/Contribute/BAO/Query.php
 msgid "Non-Recurring Contribution"
-msgstr ""
+msgstr "非定期捐款"
 
 #: CRM/Contact/Form/Search/Custom/AnnualReceipt.php
 msgid "Print Annual Receipt"
@@ -45054,29 +45054,29 @@ msgstr "開始至今的收據資訊"
 
 #: CRM/Contact/Form/Search/Custom/AnnualReceipt.php
 msgid "Price Set Export"
-msgstr ""
+msgstr "價格表匯出"
 
 #: templates/CRM/Contact/Form/Task/AnnualReceipt.tpl
 msgid "This will take a period of time"
-msgstr ""
+msgstr "這會花上一點時間"
 
 #: templates/CRM/Admin/Form/Setting/Miscellaneous.tpl
 msgid ""
 "If enabled, PDF receipt wont't be an attachment during event signup or "
 "online contribution."
-msgstr ""
+msgstr "如果選「是」，PDF 版本的信件內文，將「不會」夾帶於信件中。"
 
 #: templates/CRM/Admin/Form/Setting/Miscellaneous.tpl
 msgid "Do not attach PDF copy to receipts"
-msgstr ""
+msgstr "信件不要夾帶 PDF"
 
 msgid "Type here"
-msgstr ""
+msgstr "請輸入"
 
 #: CRM/Report/Form/Contact/Participte.php
 msgid "Top Participant"
-msgstr ""
+msgstr "參加最多活動的人"
 
 #: CRM/Report/Form/Contact/Participte.php
 msgid "Report for list top participants."
-msgstr ""
+msgstr "列出參加過最多活動的聯絡人報表"
