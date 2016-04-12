@@ -103,6 +103,7 @@ cj(function($){
     $('.custom_{/literal}{$receiptYesNo}{literal}-section .content input').change(showHideReceiptFields);
     $('.custom_{/literal}{$receiptYesNo}{literal}-section .content input').trigger('change');
     $('.custom_{/literal}{$receiptYesNo}{literal}-section .content input').change(setRequiredFields);
+    setRequiredFields();
   }
 
   function showHideReceiptFields(){
