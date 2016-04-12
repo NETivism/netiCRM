@@ -55,7 +55,7 @@ class CRM_Event_Form_Registration_ThankYou extends CRM_Event_Form_Registration {
     $this->_part = $this->get('part');
     $this->_totalAmount = $this->get('totalAmount');
     $this->_receiveDate = $this->get('receiveDate');
-    $this->_trxnId = $this->get('trxnId');
+    $this->_trxnId = !empty($this->get('trxnId')) ? $this->get('trxnId') : isset($this->_params['trxn_id']) ? $this->_params['trxn_id'] : '';
     $this->_isOnWaitlist = $this->get('isOnWaitlist');
     $finalAmount = $this->get('finalAmount');
     $this->assign('finalAmount', $finalAmount);
@@ -91,6 +91,10 @@ class CRM_Event_Form_Registration_ThankYou extends CRM_Event_Form_Registration {
    */
   public function buildQuickForm() {
     $this->assignToTemplate();
+    // change pay later option if needed
+    if(isset($this->_params['is_pay_later'])){
+      $this->assign('is_pay_later', $this->_params['is_pay_later']);
+    }
 
     $this->buildCustom($this->_values['custom_pre_id'], 'customPreGroup', TRUE);
     $this->buildCustom($this->_values['custom_post_id'], 'customPostGroup', TRUE);

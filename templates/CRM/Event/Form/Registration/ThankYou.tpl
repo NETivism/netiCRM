@@ -84,7 +84,7 @@
                 <p>{ts 1=$email}An email with event details has been sent to %1.{/ts}</p>
             {/if}
         {elseif $contributeMode EQ 'notify' and $paidEvent}
-            <p>{ts 1=$paymentProcessor.processorName}Your registration payment has been submitted to %1 for processing. Please print this page for your records.{/ts}</p>
+            <p>{ts 1=$paymentProcessor.name}Your registration payment has been submitted to %1 for processing. Please print this page for your records.{/ts}</p>
             {if $is_email_confirm}
                 <p>{ts 1=$email}A registration confirmation email will be sent to %1 once the transaction is processed successfully.{/ts}</p>
             {/if}
@@ -140,11 +140,16 @@
                 	<div class="clear"></div>
                 </div>
             {/if}
-            {if $contributeMode ne 'notify' AND $trxn_id}
+            {if $trxn_id}
                 <div class="crm-section no-label trxn_id-section">
                     <div class="content bold">{ts}Transaction #{/ts}: {$trxn_id}</div>
             		<div class="clear"></div>
             	</div>
+            {/if}
+            {if $payment_instrument}
+              <div class="crm-section no-label trxn_id-section">
+                <div class="content bold">{ts}Payment Instrument{/ts}: {$payment_instrument}</div>
+              </div>
             {/if}
         </div>
     
