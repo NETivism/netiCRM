@@ -58,7 +58,6 @@
                 {ts}Once your registration has been reviewed, you will receive an email with a link to a web page where you can complete the registration process.{/ts}</span>
             </p>
         {elseif $payment_result_type eq 1 and $paidEvent}
-          {$payment_result_type}
           <h3>{ts}Congratulations! Your payment has been completed!{/ts}</h3>
           {if $is_email_confirm}
             <div>
