@@ -45061,3 +45061,11 @@ msgstr ""
 
 msgid "Type here"
 msgstr ""
+
+#: CRM/Report/Form/Contact/Participte.php
+msgid "Top Participant"
+msgstr ""
+
+#: CRM/Report/Form/Contact/Participte.php
+msgid "Report for list top participants."
+msgstr ""

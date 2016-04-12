@@ -112,24 +112,33 @@ class CRM_Utils_ReCAPTCHA {
   static function validate($value, $form) {
     $config = CRM_Core_Config::singleton();
 
-    $resp = self::checkAnswer($config->recaptchaPrivateKey, $_POST['g-recaptcha-response'], $_SERVER['REMOTE_ADDR']);
+    $resp = self::checkAnswer($config->recaptchaPrivateKey, $_POST['g-recaptcha-response'], self::getIp());
+    // refs #17773, when submit twice, we will get false but no error codes
+    $errors = $resp->getErrorCodes();
     if ($resp->isSuccess()) {
       return TRUE;
     }
-    return FALSE; 
+    elseif(empty($errors)){
+      return TRUE;
+    }
+    return FALSE;
   }
 
   static function getHTML($pubkey){
-    $output = '<div class="g-recaptcha" data-sitekey="'.$pubkey.'"></div>'; 
+    $output = '<div class="g-recaptcha" data-sitekey="'.$pubkey.'"></div>';
     $output .= '<script src="//www.google.com/recaptcha/api.js"></script>';
     return $output;
   }
 
   static function checkAnswer($key, $response, $ip){
     $recaptcha = new \ReCaptcha\ReCaptcha($key);
-    $resp = $recaptcha->verify($_POST['g-recaptcha-response'], $_SERVER['REMOTE_ADDR']);
+    $resp = $recaptcha->verify($_POST['g-recaptcha-response'], $ip);
     return $resp;
   }
 
+  static function getIp(){
+    return ($_SERVER['REMOTE_ADDR'] != '127.0.0.1') ? $_SERVER['REMOTE_ADDR'] :
+      (isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : '127.0.0.1');
+  }
 }
 

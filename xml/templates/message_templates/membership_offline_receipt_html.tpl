@@ -22,9 +22,9 @@
   <tr>
    <td>
     {if $formValues.receipt_text_signup}
-     <div>{$formValues.receipt_text_signup|htmlize}</div>
+     <div>{$formValues.receipt_text_signup}</div>
     {elseif $formValues.receipt_text_renewal}
-     <div>{$formValues.receipt_text_renewal|htmlize}</div>
+     <div>{$formValues.receipt_text_renewal}</div>
     {else}
      <p>{ts}Thanks for your support.{/ts}</p>
     {/if}

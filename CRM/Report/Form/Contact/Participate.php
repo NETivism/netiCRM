@@ -111,7 +111,13 @@ class CRM_Report_Form_Contact_Participate extends CRM_Report_Form {
         ),
         'grouping' => 'event-fields',
         'filters' =>
-        array('event_id' =>
+        array(
+          'participant_count' => array(
+            'title' => ts('Count'),
+            'type' => CRM_Utils_Type::T_INT,
+            'default_op' => 'gte',
+          ),
+          'event_id' =>
           array('name' => 'event_id',
             'title' => ts('Event'),
             'operatorType' => CRM_Report_Form::OP_MULTISELECT,
@@ -208,23 +214,9 @@ class CRM_Report_Form_Contact_Participate extends CRM_Report_Form {
           if (CRM_Utils_Array::value('required', $field) ||
             CRM_Utils_Array::value($fieldName, $this->_params['fields'])
           ) {
-            if (CRM_Utils_Array::value('statistics', $field)) {
-              foreach ($field['statistics'] as $stat => $label) {
-                switch (strtolower($stat)) {
-                  case 'sum':
-                    $select[] = "SUM({$field['dbAlias']}) as {$tableName}_{$fieldName}_{$stat}";
-                    $this->_columnHeaders["{$tableName}_{$fieldName}_{$stat}"]['type'] = CRM_Utils_Type::T_INT;
-                    $this->_columnHeaders["{$tableName}_{$fieldName}_{$stat}"]['title'] = $label;
-                    $this->_statFields[] = "{$tableName}_{$fieldName}_{$stat}";
-                    break;
-                }
-              }
-            }
-            else {
-              $select[] = "{$field['dbAlias']} as {$tableName}_{$fieldName}";
-              $this->_columnHeaders["{$tableName}_{$fieldName}"]['type'] = CRM_Utils_Array::value('type', $field);
-              $this->_columnHeaders["{$tableName}_{$fieldName}"]['title'] = $field['title'];
-            }
+            $select[] = "{$field['dbAlias']} as {$tableName}_{$fieldName}";
+            $this->_columnHeaders["{$tableName}_{$fieldName}"]['type'] = CRM_Utils_Array::value('type', $field);
+            $this->_columnHeaders["{$tableName}_{$fieldName}"]['title'] = $field['title'];
           }
         }
       }
@@ -282,6 +274,9 @@ class CRM_Report_Form_Contact_Participate extends CRM_Report_Form {
             }
 
             if ($op) {
+              if($field['name'] == 'participant_count') {
+                continue;
+              }
               $clause = $this->whereClause($field,
                 $op,
                 CRM_Utils_Array::value("{$fieldName}_value", $this->_params),
@@ -326,7 +321,23 @@ class CRM_Report_Form_Contact_Participate extends CRM_Report_Form {
       }
     }
 
-    $this->_groupBy = "GROUP BY {$this->_aliases['civicrm_participant']}.contact_id " . " ORDER BY participant_count DESC";
+    $this->_groupBy = "GROUP BY {$this->_aliases['civicrm_participant']}.contact_id ";
+
+    $op = CRM_Utils_Array::value("participant_count_op", $this->_params);
+    $value = CRM_Utils_Array::value("participant_count_value", $this->_params);
+    if(!empty($op) && !empty($value) && is_numeric($value)) {
+      if(!empty($this->_columns['civicrm_participant']['filters']['participant_count'])) {
+        $pcount = $this->_columns['civicrm_participant']['filters']['participant_count'];
+        $pcount['dbAlias'] = "COUNT({$pcount['alias']}.id)";
+        $clause = $this->whereClause($pcount, $op, $value, NULL, NULL);
+        $this->_groupBy .= ' HAVING ' . $clause;
+        print $this->groupBy;
+      }
+    }
+  }
+  
+  function orderBy() {
+    $this->_orderBy = " ORDER BY participant_count DESC ";
   }
 
   function postProcess() {

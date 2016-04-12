@@ -6,6 +6,10 @@
   left: 0;
   z-index: 99999;
 }
+#tiptip_holder:hover {
+  display: block !important;
+  opacity: 1 !important;
+}
 #tiptip_holder.tip_top {
   padding-bottom: 5px;
 }
@@ -24,19 +28,23 @@
 }
 #tiptip_content * {
   color: #fff;
-  font-size: 13px;
+  font-size: 14px;
 }
 #tiptip_content strong {
   font-weight: normal;
 }
 #tiptip_content a {
-  color: #8c9eff;
+  color: #c5cae9;
+  text-decoration: underline;
+}
+#tiptip_content a:hover {
+  color: #9fa8da;
 }
 #tiptip_content p,
 #tiptip_content ul,
 #tiptip_content ol,
 #tiptip_content table {
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 #tiptip_content p:last-child,
 #tiptip_content ul:last-child,
@@ -84,6 +92,13 @@
   border-left-color: rgba(0,0,0,.8);
 }
 
+/* chosen jquery plugin */
+.chzn-container-multi .chzn-choices .search-field input {
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+}
+
 /* CRM */
 .crm-container {
   line-height: 1.5;
@@ -109,23 +124,26 @@
 /*
 ** Size input fields in crm-container by class. Classes are assigned by the
 ** module in relation to the data object max size.
+**
+** Because crm form fields border-sizing is border-box (element width 
+** contain padding), so add one more em to each class to avoid inside text be cut off.
 */
-.crm-container .two {width: 2em;}
-.crm-container .four {width: 4em;}
-.crm-container .six {width: 6em;}
-.crm-container .eight {width: 8em;}
-.crm-container .twelve {width: 12em;}
-.crm-container .twenty {width: 20em;}
-.crm-container .medium {width: 12em;}
-.crm-container .big {width: 15em;}
-.crm-container .huge {width: 25em;}
-.crm-container .huge40 {width: 40em;}
-.crm-container textarea.big {width: 35em; height: 4em;}
-.crm-container textarea.huge {width: 45em; height: 16em;}
-.crm-container textarea.huge12 {width: 40em; height: 12em;}
-.crm-container textarea.huge40 {width: 40em; height: 16em;}
-.crm-container textarea.nowrap {width: 45em; height: 4.5em; white-space: nowrap; overflow: auto;}
-.crm-container .bigSelect {width: 15em; height: 12em;}
+.crm-container .two {width: 3em;}
+.crm-container .four {width: 5em;}
+.crm-container .six {width: 7em;}
+.crm-container .eight {width: 9em;}
+.crm-container .twelve {width: 13em;}
+.crm-container .twenty {width: 21em;}
+.crm-container .medium {width: 13em;}
+.crm-container .big {width: 16em;}
+.crm-container .huge {width: 26em;}
+.crm-container .huge40 {width: 41em;}
+.crm-container textarea.big {width: 36em; height: 4em;}
+.crm-container textarea.huge {width: 46em; height: 16em;}
+.crm-container textarea.huge12 {width: 41em; height: 12em;}
+.crm-container textarea.huge40 {width: 41em; height: 16em;}
+.crm-container textarea.nowrap {width: 46em; height: 4.5em; white-space: nowrap; overflow: auto;}
+.crm-container .bigSelect {width: 16em; height: 12em;}
 
 .crm-container .crm-form-elem.two,
 .crm-container .crm-form-elem.four,
@@ -477,12 +495,21 @@ div.spacer,
 /* Data display layouts */
 
 .crm-container h3 { /* h3 used as table header for civicrm */
-    margin-bottom: 10px;
-    line-height: 1.3;
-    font-size: 1.5rem;
+  margin-bottom: 10px;
+  line-height: 1.3;
+  font-size: 1.5rem;
 }
-
-.crm-container .crm-form-block h3 {background-color: transparent;}
+.crm-container .crm-form-block h3 {
+  font-size: 1.125rem;
+  background-color: transparent;
+}
+.crm-container .messages + h3,
+.crm-container .message + h3,
+.crm-container .status + h3,
+.crm-container .help + h3,
+.crm-container #help + h3 {
+  margin-top: 25px;
+}
 
 .crm-container .col1 {
     float: left;
@@ -577,18 +604,28 @@ div.block-civicrm li, .crm-container ul li, .crm-container ul.treeview li {
     margin-bottom:4px;
     padding:4px;
 }
-
 .crm-search-results {
     margin-bottom:4px;
     padding:0px;
 }
-
-
 .crm-container #search-status {
     border:none;
     font-size: 1em;
     font-weight:normal;
 }
+.crm-container #search-status ul {
+    margin: 0em;
+}
+.crm-container #search-status ul li,
+.crm-container ul.left-alignment li{
+    display: list-item;
+    margin-left: 2.0em;
+    list-style-position: inside;
+}
+.crm-accordion-body .crm-search-block {
+  margin-bottom: 20px;
+}
+
 .crm-container .crm-pager {
     border:none;
     background-color:#F5F6F1;
@@ -597,28 +634,12 @@ div.block-civicrm li, .crm-container ul li, .crm-container ul.treeview li {
     padding-top: 5px;
     margin-bottom: 4px
 }
-
-
-.crm-container #search-status ul {
-    margin: 0em;
-}
-
-.crm-container #search-status ul li,
-.crm-container ul.left-alignment li{
-    display: list-item;
-    margin-left: 2.0em;
-    list-style-position: inside;
-}
-
-
 .crm-pager a {
     color: #FAFAFA;
 }
-
 .crm-pager input {
     text-align: center;
 }
-
 .crm-pager-nav {
     display:block;
     margin-top:7px;
@@ -877,24 +898,29 @@ div.block-civicrm li, .crm-container ul li, .crm-container ul.treeview li {
 }
 
 .crm-container input.submit-link {
-    color: #285286;
+    color: #304ffe;
     background-color: transparent;
     border: none;
     cursor: pointer;
     cursor: hand;
     margin: 0em -0.5em 0em -0.5em;
 }
+.crm-container input.submit-link:hover {
+  color: #536DFE;
+}
 
 .crm-container .underline-effect {
-    color: #285286;
+    color: #304ffe;
 }
 
 .crm-container .underline-effect:hover {
-    text-decoration: underline;
+  color: #536DFE;
+  text-decoration: underline;
 }
 
 .crm-container .underline-effect:before {
     content: "\00BB";
+    margin-right: 5px;
 }
 
 .crm-container #main {
@@ -920,6 +946,13 @@ div.block-civicrm li, .crm-container ul li, .crm-container ul.treeview li {
 
 .crm-container .content-pane {
     overflow: auto;
+}
+
+.crm-container table,
+.crm-container table p, 
+.crm-container table ul, 
+.crm-container table ol {
+  font-size: .875rem;
 }
 
 /*
@@ -1344,8 +1377,7 @@ div.grippie {
 }
 .resizable-textarea textarea {
     display       : block;
-    margin-bottom : 0pt;
-    width         : 95%;
+    margin-bottom : 0;
     height        : 20%;
 }
 
@@ -1458,7 +1490,6 @@ div.grippie {
 .crm-container div#contactTopBar .label,
 .crm-container div.contactCardLeft .label,
 .crm-container div.contactCardRight .label {
-    FONT-SIZE      : 11px;
     VERTICAL-ALIGN : top;
     MARGIN-RIGHT   : 10px;
 }
@@ -1467,7 +1498,6 @@ div.grippie {
 .crm-container div.contactCardRight .grouplabel {
     BORDER-BOTTOM    : grey 1px solid;
     WIDTH            : 100%;
-    FONT-SIZE        : 0.95em;
     FONT-WEIGHT      : bold;
     background-color : #ddd;
 }
@@ -1557,13 +1587,13 @@ div.grippie {
 }
 
 .crm-container .collapsed {
-    background: url("../i/TreePlus.gif") no-repeat 0 0;
+    background: url("../i/TreePlus.gif") no-repeat 0 3px;
     padding-left: 19px;
     cursor:pointer
 }
 
 .crm-container .expanded {
-    background: url("../i/TreeMinus.gif") no-repeat 0 0;
+    background: url("../i/TreeMinus.gif") no-repeat 0 2px;
     padding-left: 19px;
     cursor:pointer
 }
@@ -1819,10 +1849,9 @@ span.icon {
 /* accordion styles */
 
 .crm-accordion-header {
-    padding:4px 8px;
-    cursor: pointer;
-    font-size: 1.2em;
-
+  padding: 4px 8px;
+  cursor: pointer;
+  font-size: 1rem;
 }
 
 .crm-accordion-body {
@@ -2012,6 +2041,7 @@ div.helpicon:focus::before {
 .messages div.helpicon::before,
 .message div.helpicon::before,
 .status div.helpicon::before,
+.help div.helpicon::before,
 #help div.helpicon::before {
   color: #757575;
   background: #fff;
@@ -2020,6 +2050,7 @@ div.helpicon:focus::before {
 .messages div.helpicon:hover::before,
 .message div.helpicon:hover::before,
 .status div.helpicon:hover::before,
+.help div.helpicon:hover::before,
 #help div.helpicon:hover::before {
  color: #212121;
  background: #fafafa;
@@ -2072,7 +2103,7 @@ div#crm-toolTip #hide-tooltip {
 .crm-summary-link {
     position: relative;
     z-index: 16;
-    display: block;
+    display: inline-block;
     cursor: pointer;
     max-width: 16px;
 }
@@ -2329,6 +2360,7 @@ table.crm-info-panel td.label {
     background-color: #fafafa;
     width:100px;
     text-align: left;
+    font-size: .875rem;
     color: #7a7a60;
 }
     table.crm-info-panel td.label {
@@ -2339,7 +2371,7 @@ table.crm-info-panel td.label {
 .crm-container .form-layout-compressed td.label,
 .crm-container #customFields div.contact_panel td.label
 table.crm-info-panel td.label {
-    width:150px;
+    width: 200px;
     text-align: right;
     color: #7a7a60;
 }
@@ -2782,11 +2814,6 @@ ul.ui-sortable {
    color: #999;
 }
 
-.crm-container input[type="text"].readonly {
-  color: #777;
-  background: #F3F3F3 url("../i/ic_lock_outline_24px.png") no-repeat 98% 50%;
-}
-
 /* crm messages */
 .crm-container .messages {
     margin: 1em 0 1em;
@@ -2864,6 +2891,7 @@ ul.ui-sortable {
 .crm-container div.messages,
 .crm-container div.status,
 .crm-container div.crm-error,
+.crm-container .help,
 .crm-container #help {
   position: relative;
   margin: 0 0 8px 0;
@@ -2877,6 +2905,7 @@ ul.ui-sortable {
 .crm-container div.messages::before,
 .crm-container div.status::before,
 .crm-container div.crm-error::before,
+.crm-container .help::before,
 .crm-container #help::before {
   display: block;
   position: absolute;
@@ -2889,12 +2918,14 @@ ul.ui-sortable {
 .crm-container div.messages .icon,
 .crm-container div.status .icon,
 .crm-container div.crm-error .icon,
+.crm-container .help .icon,
 .crm-container #help .icon {
   display: none;
 }
 .crm-container div.messages a,
 .crm-container div.status a,
 .crm-container div.crm-error a,
+.crm-container .help a,
 .crm-container #help a {
   color: #fff;
   text-decoration: underline;
@@ -2902,6 +2933,7 @@ ul.ui-sortable {
 .crm-container div.messages table a,
 .crm-container div.status table a,
 .crm-container div.crm-error table a,
+.crm-container .help table a,
 .crm-container #help table a {
   text-decoration: none;
   color: #304ffe;
@@ -2909,6 +2941,7 @@ ul.ui-sortable {
 .crm-container div.messages table a:hover,
 .crm-container div.status table a:hover,
 .crm-container div.crm-error table a:hover,
+.crm-container .help table a:hover,
 .crm-container #help table a:hover {
   text-decoration: underline;
   color: #536DFE;
@@ -2933,18 +2966,22 @@ ul.ui-sortable {
 }
 
 /* crm messages: help */
+.crm-container .help,
 .crm-container #help {
   background: #4b6572;
 }
+.crm-container .help::before,
 .crm-container #help::before {
   content: "\f1f5";
 }
 
 /* crm status */
+.crm-marker,
 .crm-container .crm-marker {
   color: #F44336;
   font-weight: bold;
 }
+.crm-error,
 .crm-container .crm-error {
   border: none;
   padding: 5px;
@@ -3005,7 +3042,7 @@ ul.ui-sortable {
 .crm-container .crm-section .label,
 .crm-section .label {
   float: left;
-  width: 18%;
+  width: 28%;
   text-align: right;
   font-size: 1rem;
 }
@@ -3017,7 +3054,7 @@ ul.ui-sortable {
 .crm-container .crm-section .content,
 .crm-section .content {
   margin-top: 0;
-  margin-left: 20%;
+  margin-left: 30%;
 }
 
 .crm-container .no-label .content {
@@ -3058,7 +3095,36 @@ ul.ui-sortable {
 .crm-container select.form-select {
   padding: 4px 5px;
 }
+/* readonly & disabled */
+.crm-container input[disabled], 
+.crm-container textarea[disabled], 
+.crm-container select[disabled],
+.crm-container input[disabled]:focus, 
+.crm-container textarea[disabled]:focus, 
+.crm-container select[disabled]:focus,
+.crm-container input[readonly], 
+.crm-container textarea[readonly], 
+.crm-container select[readonly],
+.crm-container input[readonly]:focus, 
+.crm-container textarea[readonly]:focus, 
+.crm-container select[readonly]:focus
+{
+  cursor: not-allowed !important;
+  color: #9e9e9e !important;
+  border: 1px solid #e0e0e0 !important;
+  outline: 0 !important;
+  background-color: #f5f5f5 !important;
+  box-shadow: none !important;
+}
+.crm-container input.dateplugin[readonly],
+.crm-container input.dateplugin[readonly]:focus {
+  cursor: auto !important;
+  border: 1px solid #9e9e9e !important;
+  background-color: #fff !important;
+}
 
+.crm-accordion-wrapper .twelve,
+.crm-accordion-wrapper .medium,
 .crm-accordion-wrapper .big,
 .crm-accordion-wrapper .twenty,
 .crm-accordion-wrapper .huge,
@@ -3066,6 +3132,8 @@ ul.ui-sortable {
 .crm-accordion-wrapper .bigSelect {
   max-width: 10rem;
 }
+.one-sidebar .crm-accordion-wrapper .twelve,
+.one-sidebar .crm-accordion-wrapper .medium,
 .one-sidebar .crm-accordion-wrapper .big,
 .one-sidebar .crm-accordion-wrapper .twenty,
 .one-sidebar .crm-accordion-wrapper .huge,
@@ -3073,6 +3141,13 @@ ul.ui-sortable {
 .one-sidebar .crm-accordion-wrapper .bigSelect {
   max-width: 8rem;
 }
+.crm-accordion-wrapper #Phone_Block_1 .crm-form-textfield {
+  max-width: 20rem;
+}
+.crm-accordion-wrapper > .crm-submit-buttons {
+  padding: 6px 18px;
+}
+
 
 /* ac results */
 .ac_results {
@@ -3146,7 +3221,7 @@ ul.ui-sortable {
   border: none;
   border-radius: 0;
   background: #333030;
-  -webkit-transition: color .2s linear,background .2s linear;
+  transition: border .2s linear, color .2s linear, background-color .2s linear;
   -webkit-font-smoothing: subpixel-antialiased;
 }
 .crm-container button:hover,
@@ -3477,6 +3552,7 @@ tbody.scrollContent tr.alternateRow {
 
 .crm-container td.label {
   font-weight: bold;
+  font-size: .9375rem;
 }
 
 .crm-container tr.columnheader a.sorting {
@@ -3561,7 +3637,7 @@ tbody.scrollContent tr.alternateRow {
 .crm-container .selector td.label,
 .crm-container .form-layout-compressed th.label {
   text-align: right;
-  padding: 4px 4px 4px 6px;
+  padding: 5px 12px 5px 5px;
   border: 0px none;
   vertical-align: top;
 }
@@ -3819,6 +3895,10 @@ tbody.scrollContent tr.alternateRow {
 }
 
 /* Contribute Page */
+.crm-container #SearchContribution .crm-submit-buttons,
+.crm-container #SearchContribution .crm-submit-buttons .form-submit {
+  margin: 0;
+}
 .crm-container form[action="/civicrm/contribute/transact"] .crm-submit-buttons {
   text-align: right;
 }
@@ -3893,3 +3973,8 @@ tbody.scrollContent tr.alternateRow {
   text-align: center;
 }
 
+/* Search */
+/* custom search */
+#Custom .crm-search-form-block td .form-submit {
+  margin-top: 0;
+}
