@@ -66,7 +66,7 @@
         {/if}
       {elseif $payment_result_type eq 4}
         <h3 class="crm-error">{ts}Payment failed.{/ts}</h3>
-        {ts}We were unable to process your payment. Your will not been charged in this transaction.{/ts}
+        {ts}We were unable to process your payment. You will not be charged in this transaction.{/ts}
         {ts}Possible reason{/ts}:
         <ul>
         {if $payment_result_message}
