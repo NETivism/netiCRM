@@ -201,7 +201,9 @@ WHERE  p.price_set_id = e.id
     }
 
     if (empty($price_set)) {
-      CRM_Core_Error::fatal(ts('There are no Price Sets'));
+      $url = CRM_Utils_System::url('civicrm/admin/price', 'action=add&reset=1');
+      CRM_Core_Session::setStatus(ts("No price sets have been created yet. You can <a href='%1'>add one</a>.", array(1 => $url)));
+      return;
     }
 
     $form->add('select',

@@ -202,7 +202,8 @@ AND    p.entity_id    = e.id
     }
 
     if (empty($event)) {
-      CRM_Core_Error::fatal(ts('There are no events with Price Sets'));
+      CRM_Core_Session::setStatus(ts('There are no events with Price Sets'));
+      return;
     }
 
     $form->add('select',
@@ -242,7 +243,8 @@ AND    p.entity_id    = e.id
     if ($dao->fetch() &&
       !$dao->price_set_id
     ) {
-      CRM_Core_Error::fatal(ts('There are no events with Price Sets'));
+      CRM_Core_Session::setStatus(ts('There are no events with Price Sets'));
+      return;
     }
 
     // get all the fields and all the option values associated with it
