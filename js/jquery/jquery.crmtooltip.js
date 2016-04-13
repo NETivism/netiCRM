@@ -29,33 +29,40 @@ $.fn.crmtooltip = function(){
   $('a.crm-summary-link').each(function(){
     $(this).replaceWith($('<div data="'+this.href+'" class="'+ $(this).attr('class')+'">' + this.innerHTML + '</div>'));
   });
+  var timeout;
   $('.crm-summary-link')
     .addClass('crm-processed')
     .hover(function(e) {
-      $(this).css('cursor', 'text');
-      $('.crm-tooltip-wrapper').hide();
-      $('.crm-summary-link').removeClass('crm-tooltip-active');
-      $(this).addClass('crm-tooltip-active');
-      if ($(this).parent().find('.crm-tooltip-wrapper').length == '') {
-        var $tooltip = $('<div class="crm-tooltip-wrapper"><div class="crm-tooltip"></div></div>');
-        var $close = $('<div class="zmdi zmdi-close-circle-o close"></div>');
-        $tooltip.appendTo($(this));
-        $tooltip.children('.crm-tooltip')
-          .html('<div class="crm-loading-element"></div>')
-          .load($(this).attr('data'), function(){
-            $close.click(function(){
-              $('.crm-tooltip-wrapper').remove();
-              $('.crm-summary-link').removeClass('crm-tooltip-active');
-              $('.crm-summary-link').removeClass('crm-tooltip-down');
+      var $container = $(this);
+      $container.css('cursor', 'wait');
+      timeout = setTimeout(function(){
+        $container.css('cursor', 'text');
+        $('.crm-tooltip-wrapper').hide();
+        $('.crm-summary-link').removeClass('crm-tooltip-active');
+        $container.addClass('crm-tooltip-active');
+        if ($container.parent().find('.crm-tooltip-wrapper').length == '') {
+          var $tooltip = $('<div class="crm-tooltip-wrapper"><div class="crm-tooltip"></div></div>');
+          var $close = $('<div class="zmdi zmdi-close-circle-o close"></div>');
+          $tooltip.appendTo($container);
+          $tooltip.children('.crm-tooltip')
+            .html('<div class="crm-loading-element"></div>')
+            .load($container.attr('data'), function(){
+              $close.click(function(){
+                $('.crm-tooltip-wrapper').remove();
+                $('.crm-summary-link').removeClass('crm-tooltip-active');
+                $('.crm-summary-link').removeClass('crm-tooltip-down');
+              });
+              $close.appendTo($(this)); 
             });
-            $close.appendTo($(this)); 
-          });
-      }
-      else{
-        $(this).parent().find('.crm-tooltip-wrapper').show();
-      }
+        }
+        else{
+          $container.parent().find('.crm-tooltip-wrapper').show();
+        }
+        clearTimeout(timeout);
+      }, 450);
     }, function(e){
       $(this).css('cursor', 'pointer');
+      clearTimeout(timeout);
     });
 };
 
