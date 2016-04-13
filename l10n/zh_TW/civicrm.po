@@ -10,8 +10,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2016-04-11 06:44+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
+"PO-Revision-Date: 2016-04-13 07:06+0000\n"
+"Last-Translator: 張書懷 <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44892,9 +44892,9 @@ msgstr "抱歉，付款失敗了！"
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid ""
-"We were unable to process your payment. Your will not been charged in this "
+"We were unable to process your payment. You will not be charged in this "
 "transaction."
-msgstr ""
+msgstr "我們無法處理本次付款，您不會支付任何款項。"
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid "Possible reason"
