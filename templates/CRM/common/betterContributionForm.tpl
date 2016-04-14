@@ -33,8 +33,6 @@ cj(function($){
         $('#custom_{/literal}{$receiptTitle}{literal}').attr('placeholder',"{/literal}{ts}Contact Name{/ts}{literal}");
         $('#custom_{/literal}{$receiptSerial}{literal}').attr('placeholder',"{/literal}{ts}Legal Identifier{/ts}{literal}");
         $('#custom_{/literal}{$receiptSerial}{literal}').off("keyup").keyup(checkTWID).off('blur').blur(checkTWID);
-        
-        
       }
       if($('#r_company').is(':checked')){
         $('#custom_{/literal}{$receiptTitle}{literal}').attr('placeholder',"{/literal}{ts}Organization{/ts}{literal}");
@@ -176,10 +174,13 @@ cj(function($){
 
   function updateName(){
     if($('#r_person').is(':checked')){
-      $('#same_as').parent('div').show();
+      // $('#same_as').parents('.same-as-wrapper').show('slow');
     }
     else{
-      $('#same_as').parent('div').hide();
+      // $('#same_as').parents('.same-as-wrapper').hide('slow');
+      if($('#same_as').is(':checked')){
+        $('#same_as').trigger('click');
+      }
     }
     if($('#same_as').is(':checked') && $('#last_name,#first_name').length > 1 && $('#r_person').is(':checked')){
         $('#custom_{/literal}{$receiptTitle}{literal}').val($('#last_name').val()+$('#first_name').val()).attr('readonly','readonly');
