@@ -2,7 +2,7 @@
 CALLEDPATH=`dirname $0`
 CIVICRMPATH=`cd $CALLEDPATH/../../ && pwd`
 LANGUAGE='zh_TW'
-MAJOR_VERSION='2.1'
+MAJOR_VERSION='2.2'
 
 neticrm_merge(){
   TAG=`git tag | grep "^$MAJOR_VERSION" | awk -F "." '{print $3}' | sort -nr | head -n 1`
@@ -37,12 +37,12 @@ do_merge(){
   fi
   git checkout ${VERSION_PREFIX}develop
   git checkout ${VERSION_PREFIX}master
+  git pull
   git merge ${VERSION_PREFIX}develop -m "Release merge."
   git commit
   if [ "$2" = "7.x" ] || [ -z "$2" ]; then
     git tag -a $TAG -m "Release $TAG"
   fi
-  git checkout ${VERSION_PREFIX}develop
 }
 
 # auto fetch transifex translations
