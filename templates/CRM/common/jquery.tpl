@@ -23,7 +23,7 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
-{* 
+{*
  * If you MODIFY this file, please make sure you also modify jquery.files.tpl.
  * Cannot get rid of this since we use it for joomla, standalone, print
  * html profile etc
@@ -99,3 +99,5 @@
 <script type="text/javascript">var cj = jQuery.noConflict(); $ = cj;</script>
 
 <style type="text/css">@import url("{$config->resourceBase}packages/fontawesome/css/font-awesome.min.css");</style>
+
+<style type="text/css">@import url("{$config->resourceBase}packages/material-design-iconic-font/css/material-design-iconic-font.min.css");</style>

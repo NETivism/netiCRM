@@ -398,21 +398,35 @@ class CRM_Utils_System {
   }
 
   /**
+   * Get variable from CMS system
+   *
+   * @param variable name
+   * @param Default value when variable is null.
+   * 
+   * @return void
+   * @access public
+   * @static  */
+  static function variable_get($name, $default) {
+    $config = CRM_Core_Config::singleton();
+    return $config->userSystem->variable_get($name, $default);
+  }
+
+  /**
    * rewrite various system urls to https
    *
    * @return void
    * access public
    * @static  */
   static function mapConfigToSSL() {
-    $config = CRM_Core_Config::singleton();
-    $config->userFrameworkResourceURL = str_replace('http://', 'https://', $config->userFrameworkResourceURL);
-    $config->resourceBase = $config->userFrameworkResourceURL;
+    $config =& CRM_Core_Config::singleton();
+    $url = str_replace('http://', 'https://', $config->userFrameworkResourceURL);
+    $config->userFrameworkResourceURL = $url;
+    $config->resourceBase = $url;
 
-    if (! empty($config->extensionsURL)) {
+    if (!empty($config->extensionsURL)) {
       $config->extensionsURL = str_replace('http://', 'https://', $config->extensionsURL);
     }
-
-    return $config->userSystem->mapConfigToSSL();
+    $config->userSystem->mapConfigToSSL();
   }
 
   /**
@@ -1282,10 +1296,18 @@ class CRM_Utils_System {
    * this function, please go and change the code in the install script as well.
    */
   static function isSSL( ) {
-    return
-      (isset($_SERVER['HTTPS']) &&
-        !empty($_SERVER['HTTPS']) &&
-        strtolower($_SERVER['HTTPS']) == 'on') ? TRUE : FALSE;
+    if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
+      return TRUE;
+    }
+    elseif (isset($_SERVER['HTTP_FRONT_END_HTTPS']) && $_SERVER['HTTP_FRONT_END_HTTPS'] == 'on') {
+      return TRUE;
+    }
+    elseif (isset($_SERVER['HTTP_X_FORWARDED_PROTO'])) {
+      if($_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') {
+        return TRUE;
+      }
+    }
+    return FALSE;
   }
 
   /**

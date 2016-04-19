@@ -97,6 +97,61 @@ class CRM_Utils_System_Drupal {
   }
 
   /**
+   * if we are using a theming system, invoke theme, else just print the
+   * content
+   *
+   * @param string  $type    name of theme object/file
+   * @param string  $content the content that will be themed
+   * @param array   $args    the args for the themeing function if any
+   * @param boolean $print   are we displaying to the screen or bypassing theming?
+   * @param boolean $ret     should we echo or return output
+   * @param boolean $maintenance  for maintenance mode
+   *
+   * @return void           prints content on stdout
+   * @access public
+   */
+  function theme($type, &$content, $args = NULL, $print = FALSE, $ret = FALSE, $maintenance = FALSE){
+    $config = CRM_Core_Config::singleton();
+    $version = $config->userSystem->version;
+    if($version >= 6 && $version < 7){
+      if(!$print){
+        if ($maintenance) {
+          drupal_set_breadcrumb('');
+          drupal_maintenance_theme();
+        }
+        $content = theme($type, $content, $args);
+        if($ret) {
+          return $content;
+        }
+        else{
+          echo $content;
+          return;
+        }
+      }
+    }
+    elseif($version >= 7 && $version < 8){
+      if(!$print && $type == 'page'){
+        if ($maintenance) {
+          drupal_set_breadcrumb('');
+          drupal_maintenance_theme();
+        }
+        if($ret){
+          return drupal_render_page($content);
+        }
+        else{
+          drupal_deliver_page($content);
+          return;
+        }
+      }
+    }
+    elseif($version >= 8){
+      echo 'We havnt support d8 yet';
+      return;
+    }
+
+  }
+
+  /**
    * Append an additional breadcrumb tag to the existing breadcrumb
    *
    * @param string $title
@@ -150,7 +205,57 @@ class CRM_Utils_System_Drupal {
    * @static
    */
   static function addHTMLHead($head) {
-    drupal_set_html_head($head);
+    if(!is_array($head)){
+      $message = 'Variable $head should be an Array';
+      drupal_set_message($message);
+      CRM_Core_Error::debug($message);
+      return;
+    }
+    $config = CRM_Core_Config::singleton();
+    $version = $config->userSystem->version;
+    if($version >= 6 && $version < 7){
+      // $head 應該塞入 "<meta brabrabra.... >"
+      $line = '<' . $head['tag'] . ' ';
+      foreach ($head['attributes'] as $key => $value) {
+        $line .=  $key . "='$value' ";
+      }
+      $line .= '>';
+      if(!empty($head['value'])){
+        $line .= $head['value'] . '</' . $head['tag'] . '>';
+      }
+      drupal_set_html_head($line);
+      return;
+    }
+    elseif($version >= 7 && $version < 8){
+      $element = array();
+      foreach ($head as $key => $value) {
+        $element['#' . $key] = $value;
+      }
+      $head_key = '';
+      foreach ($element['#attributes'] as $key => $value) {
+        if($key == 'name' || $key == 'property'){
+          if($head_key !== ''){
+            $head_key .= '-';
+          }
+          $head_key = $key . '-' . $value;
+        }
+      }
+      drupal_add_html_head($element,$head_key);
+      return;
+    }
+  }
+
+  /**
+   * Get variable from CMS system
+   *
+   * @param variable name
+   * @param Default value when variable is null.
+   * 
+   * @return void
+   * @access public
+   * @static  */
+  static function variable_get($name, $default) {
+    return variable_get($name, $default);
   }
 
   /**
@@ -549,5 +654,6 @@ class CRM_Utils_System_Drupal {
     drupal_not_found();
     return;
   }
+
 }
 

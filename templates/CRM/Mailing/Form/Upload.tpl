@@ -38,7 +38,7 @@
     </tr>
     {if $trackReplies}
     <tr class="crm-mailing-upload-form-block-reply_to_address">
-        <td style="color:#3E3E3E;"class="label">{ts}Reply-To{/ts}<span class="crm-marker">*</span></td>
+        <td style="color:#3E3E3E;"class="label">{ts}Reply-to email{/ts}<span class="crm-marker">*</span></td>
         <td>{ts}Auto-Generated{/ts}</td>
     </tr>
     {else}

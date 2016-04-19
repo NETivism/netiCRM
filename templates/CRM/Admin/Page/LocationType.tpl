@@ -66,14 +66,13 @@
     {/strip}
 
     {if $action ne 1 and $action ne 2}
-    <div class="action-link">
+    <div class="action-link-button">
 	<a href="{crmURL q="action=add&reset=1"}" id="newLocationType" class="button"><span>&raquo; {ts}New Location Type{/ts}</span></a>
     </div>
     {/if}
 </div>
 {else}
     <div class="messages status">
-          <img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}"/>
         {capture assign=crmURL}{crmURL p='civicrm/admin/locationType' q="action=add&reset=1"}{/capture}
         {ts 1=$crmURL}There are no Location Types entered for this Contact. You can <a href='%1'>add one</a>.{/ts}
     </div>    

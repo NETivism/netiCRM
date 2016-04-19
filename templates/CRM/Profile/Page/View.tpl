@@ -39,7 +39,7 @@
         	 {$group.content}
         </div>
     {/foreach}
-    <div class="action-link">
+    <div class="action-link-button">
         {if $listingURL}
             <a href="{$listingURL}">&raquo; {ts}Back to Listings{/ts}</a>&nbsp;&nbsp;&nbsp;&nbsp;
         {/if}

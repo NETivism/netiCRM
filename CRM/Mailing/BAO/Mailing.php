@@ -957,11 +957,11 @@ AND civicrm_contact.is_opt_out =0";
     );
 
     $headers = array(
+      'List-Unsubscribe' => '<'.str_replace('&amp;', '&', $urls['unsubscribeUrl']).'>',
+      'From' => "\"{$this->from_name}\" <{$this->from_email}>",
       'Reply-To' => $verp['reply'],
       'Return-Path' => $verp['bounce'],
-      'From' => "\"{$this->from_name}\" <{$this->from_email}>",
       'Subject' => $this->subject,
-      'List-Unsubscribe' => "<mailto:{$verp['unsubscribe']}>",
     );
 
     if ($isForward) {
@@ -1746,6 +1746,8 @@ AND civicrm_contact.is_opt_out =0";
 
       if ($mailing->queue) {
         $row['delivered_rate'] = (100.0 * $mailing->delivered) / $mailing->queue;
+        $row['opened_rate'] = (100.0 * $row['opened']) / $mailing->delivered;
+        $row['clicked_rate'] = (100.0 * $row['url']) / $mailing->delivered;
         $row['bounce_rate'] = (100.0 * $mailing->bounce) / $mailing->queue;
         $row['unsubscribe_rate'] = (100.0 * $row['unsubscribe']) / $mailing->queue;
       }
@@ -2020,6 +2022,7 @@ LEFT JOIN civicrm_mailing_group g ON g.mailing_id   = m.id
                         $mailing.created_id as created_id, 
                         $mailing.scheduled_id as scheduled_id,
                         $mailing.is_archived as archived,
+                        $mailing.visibility as visibility,
                         $mailing.created_date as created_date
             FROM        $mailing
             LEFT JOIN   $job ON ( $job.mailing_id = $mailing.id AND $job.is_test = 0 AND $job.parent_id IS NULL )
@@ -2061,6 +2064,7 @@ LEFT JOIN civicrm_mailing_group g ON g.mailing_id   = m.id
         'created_id' => $dao->created_id,
         'scheduled_id' => $dao->scheduled_id,
         'archived' => $dao->archived,
+        'visibility' => $dao->visibility,
         /*
         'approval_status_id' => $dao->approval_status_id,
         'campaign_id' => $dao->campaign_id,

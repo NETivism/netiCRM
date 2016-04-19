@@ -1,10 +1,10 @@
 {foreach from=$rows item=template_row key=type}
 {if $type eq 'configTemplates'}
     <table class="report-layout">
-      <div class="action-link">
+      <div class="action-link-button">
         <a href="{crmURL p='civicrm/admin/tplstrings/add' q='reset=1&action=add'}"  class="button">
           <span>
-             <div class="icon add-icon"></div>{ts}Add New String{/ts}
+             <i class="zmdi zmdi-plus-circle-o"></i>{ts}Add New String{/ts}
           </span>
         </a>
       </div>
@@ -36,10 +36,10 @@
         <h1>Config String</h1>
       </head>
       <br/>
-      <div class="action-link">
+      <div class="action-link-button">
          <a href="{crmURL p='civicrm/admin/tplstrings/add' q='reset=1&action=add&config=1'}"  class="button">
            <span>
-              <div class="icon add-icon"></div>{ts}Add New Config{/ts}
+              <i class="zmdi zmdi-plus-circle-o"></i>{ts}Add New Config{/ts}
            </span>
          </a>
       </div>

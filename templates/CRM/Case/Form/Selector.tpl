@@ -94,7 +94,7 @@
 	{$row.case_recent_activity_type}<br />{$row.case_recent_activity_date|crmDate}{else}---{/if}</td>
     <td class="crm-case-case_scheduled_activity_type">{if $row.case_scheduled_activity_type}
 	{$row.case_scheduled_activity_type}<br />{$row.case_scheduled_activity_date|crmDate}{else}---{/if}</td>
-    <td>{$row.action|replace:'xx':$row.case_id}</td>
+    <td class="row-action">{$row.action|replace:'xx':$row.case_id}</td>
    </tr>
 {if $context != 'case'}
    <tr id="{$list}{$row.case_id}_hide" class='{$rowClass}'>

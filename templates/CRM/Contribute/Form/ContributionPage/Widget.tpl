@@ -28,7 +28,7 @@
 <h3>{ts}Configure Widget{/ts}</h3>
 {if $showStatus}
 <div class="messages status">
-    <div class="icon inform-icon"></div>
+    
     {ts}It looks like you may have posted and / or distributed the flash version of the Contribution widget. We won't be supporting the flash version in next release. You should try and get all sites using the flash widget to update to the improved HTML widget code below as soon as possible.{/ts}
 </div>
 {/if}
@@ -90,7 +90,7 @@
         
         <div class="crm-accordion-wrapper crm-accordion_title-accordion crm-accordion-closed crm-case-roles-block">
          <div class="crm-accordion-header">
-          <div class="icon crm-accordion-pointer"></div> 
+          <div class="zmdi crm-accordion-pointer"></div> 
         	{ts}Edit Widget Colors{/ts}
          </div><!-- /.crm-accordion-header -->
          <div class="crm-accordion-body">

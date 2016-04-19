@@ -29,7 +29,7 @@
 {else}
 <div class="crm-form-block crm-search-form-block">
 {if call_user_func(array('CRM_Core_Permission','check'), 'administer CiviCRM') }
-    <a href='{crmURL p="civicrm/admin/setting/preferences/display" q="reset=1"}' title="{ts}Click here to configure the panes.{/ts}"><span class="icon settings-icon"></span></a>
+    <a href='{crmURL p="civicrm/admin/setting/preferences/display" q="reset=1"}' title="{ts}Click here to configure the panes.{/ts}"><span class="zmdi zmdi-settings"></span></a>
 {/if}
 <span style="float:right;"><a href="#expand" id="expand">{ts}Expand all tabs{/ts}</a></span>
 <div class="crm-submit-buttons">
@@ -38,7 +38,7 @@
 <div class="crm-jquery-accordion">
 <div class="crm-accordion-wrapper crm-contactDetails-accordion crm-accordion-open">
  <div class="crm-accordion-header">
-  <div class="icon crm-accordion-pointer"></div> 
+  <div class="zmdi crm-accordion-pointer"></div> 
 	{ts}Contact Details{/ts}
 	
  </div><!-- /.crm-accordion-header -->
@@ -198,14 +198,16 @@ function highlightTabs( ) {
 }
 
 function removeDefaultCustomFields( ) {
-     //execute only once
-     if (removeCustomData) {
-	 cj(".crm-accordion-wrapper").children().each( function() {
-	    var eleId = cj(this).attr("id");
-	    if ( eleId.substr(0,10) == "customData" ) { cj(this).parent("div").remove(); }
-	 });
-	 removeCustomData = false;
-     }
+  //execute only once
+  if (removeCustomData) {
+    cj(".crm-accordion-wrapper").find('.crm-accordion-body').each( function() {
+      var eleId = cj(this).attr("id");
+      if ( eleId.substr(0,10) == "customData" ) {
+        cj(this).parent("div").remove();
+      }
+    });
+    removeCustomData = false;
+  }
 }
  
 </script>

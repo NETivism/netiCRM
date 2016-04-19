@@ -202,7 +202,8 @@ AND    p.entity_id    = e.id
     }
 
     if (empty($event)) {
-      CRM_Core_Error::fatal(ts('There are no events with Price Sets'));
+      CRM_Core_Session::setStatus(ts('There are no events with Price Sets'));
+      return;
     }
 
     $form->add('select',
@@ -215,7 +216,7 @@ AND    p.entity_id    = e.id
     /**
      * You can define a custom title for the search form
      */
-    $this->setTitle('Price Set Export');
+    $this->setTitle(ts('Price Set Export') .' - '. ts('Event'));
 
     /**
      * if you are using the standard template, this array tells the template what elements
@@ -242,7 +243,8 @@ AND    p.entity_id    = e.id
     if ($dao->fetch() &&
       !$dao->price_set_id
     ) {
-      CRM_Core_Error::fatal(ts('There are no events with Price Sets'));
+      CRM_Core_Session::setStatus(ts('There are no events with Price Sets'));
+      return;
     }
 
     // get all the fields and all the option values associated with it

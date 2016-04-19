@@ -52,7 +52,17 @@
      <access_arguments>administer CiviCRM</access_arguments>
      <adminGroup>CiviContribute</adminGroup>
      <icon>admin/small/accepted_creditcards.png</icon>
-     <weight>400</weight>
+     <weight>380</weight>
+  </item>
+  <item>
+     <path>civicrm/admin/recurring</path>
+     <title>Recurring Settings</title>
+     <page_callback>CRM_Admin_Form_Setting_Recurring</page_callback>
+     <desc>Configure reucrring related settings.</desc>
+     <access_arguments>administer CiviCRM</access_arguments>
+     <adminGroup>CiviContribute</adminGroup>
+     <icon>admin/small/online_contribution_pages.png</icon>
+     <weight>390</weight>
   </item>
   <item>
      <path>civicrm/admin/contribute/settings</path>

@@ -117,7 +117,7 @@
      }
      
      if ( showError ) {
-         cj('#validate_pricefield').show().html("<span class='icon red-icon alert-icon'></span>{/literal}{ts}This Option is already full for this event.{/ts}{literal}");
+         cj('#validate_pricefield').show().html("<span class='icon red-zmdi zmdi-alert-circle'></span>{/literal}{ts}This Option is already full for this event.{/ts}{literal}");
      } else {
        cj('#validate_pricefield').hide( ).html('');
      }
@@ -161,7 +161,7 @@
         <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>
     <div class="crm-participant-form-block-delete messages status">
                 <div class="crm-content">
-                    <div class="icon inform-icon"></div> &nbsp;
+                     &nbsp;
                     {ts}WARNING: Deleting this registration will result in the loss of related payment records (if any).{/ts} {ts}Do you want to continue?{/ts}
                 </div>
           {if $additionalParticipant}

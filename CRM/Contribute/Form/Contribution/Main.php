@@ -136,6 +136,82 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
       CRM_Core_Payment_ProcessorForm::buildQuickForm($this);
     }
     $this->assign('contribution_type_id', $this->_values['contribution_type_id']);
+
+    $meta = array();
+    $meta[] = array(
+      'tag' => 'meta',
+      'attributes' => array(
+        'property' => 'og:title',
+        'content' => $this->_values['title'] . ' - ' . CRM_Utils_System::variable_get('site_name', 'Drupal'),
+      ),
+    );
+
+    $descript = $this->_values['intro_text'];
+    $descript = preg_replace("/ *<(?<tag>(style|script))( [^=]+=['\"][^'\"]*['\"])*>(.*?(\n))+.*?<\/\k<tag>>/", "", $descript);
+    $descript = strip_tags($descript);
+    $descript = preg_replace("/(?:(?:&nbsp;)|\n|\r|\s)/", '', $descript);
+    $descript = substr($descript,0,150);
+    $meta[] = array(
+      'tag' => 'meta',
+      'attributes' => array(
+        'name' => 'description',
+        'content' => $descript,
+      ),
+    );
+    $meta[] = array(
+      'tag' => 'meta',
+      'attributes' =>  array(
+        'property' => 'og:description',
+        'content' => $descript,
+      ),
+    );
+        if(is_array($this->_values['custom_data_view'])){
+      foreach ($this->_values['custom_data_view'] as $ufg) {
+        foreach($ufg as $ufg_inner){
+          if(is_array($ufg_inner['fields'])){
+            foreach ($ufg_inner['fields'] as $uffield) {
+              if(is_array($uffield)){
+                if($uffield['field_type'] == 'File'){
+                  if(!empty($uffield['field_value']['fileURL']) && preg_match('/\.(jpg|png|jpeg)$/',$uffield['field_value']['data'])){
+                    $proto = explode('/', $_SERVER['SERVER_PROTOCOL']);
+                    $image = strtolower($proto[0]) . '://' . $_SERVER['HTTP_HOST'] . $uffield['field_value']['fileURL'];
+                    $meta_ogimg = array(
+                      'tag' => 'meta',
+                      'attributes' => array(
+                        'property' => 'og:image',
+                        'value' => $image,
+                      ),
+                    );
+                    break;
+                    break;
+                    break;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    if(!empty($meta_ogimg)){
+      $meta[] = $meta_ogimg;
+    }else{
+      preg_match('/< *img[^>]*src *= *["\']?([^"\']*)/i', $this->_values['intro_text'], $matches);
+      if(count($matches)>=2){
+        $image = $matches[1];
+        $meta[] = array(
+          'tag' => 'meta',
+          'attributes' => array(
+            'property' => 'og:image',
+            'content' => $image,
+          ),
+        );
+      }
+    }
+    foreach ($meta as $key => $value) {
+      CRM_Utils_System::addHTMLHead($value);
+    }
+
   }
 
   function setDefaultValues() {
@@ -744,11 +820,6 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
    */
   function buildRecur() {
     $attributes = CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionRecur');
-    $extraOption = array('onclick' => "enablePeriod();");
-    $elements = array();
-    $elements[] = &$this->createElement('radio', NULL, '', ts('I want to make a one-time contribution.'), 0, $extraOption);
-    $elements[] = &$this->createElement('radio', NULL, '', ts('Recurring contributions'), 1, $extraOption);
-    $this->addGroup($elements, 'is_recur', NULL, '<br />');
     $this->_defaults['is_recur'] = 0;
 
     if ($this->_values['is_recur_interval']) {
@@ -765,25 +836,35 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
 
     $units = array();
     $unitVals = explode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, $this->_values['recur_frequency_unit']);
+    $unitTrans = array(
+      'day' => 'daily',
+      'week' => 'weekly',
+      'month' => 'monthly',
+      'year' => 'yearly',
+    );
     $frequencyUnits = CRM_Core_OptionGroup::values('recur_frequency_units');
     foreach ($unitVals as $key => $val) {
       if (array_key_exists($val, $frequencyUnits)) {
-        $units[$val] = $this->_values['is_recur_interval'] ? "{$frequencyUnits[$val]}" : $frequencyUnits[$val];
+        $units[$val] = ts($unitTrans[$val]);
       }
     }
-
-    $frequencyUnit = &$this->add('select', 'frequency_unit', NULL, $units);
-
-    // FIXME: Ideally we should freeze select box if there is only
-    // one option but looks there is some problem /w QF freeze.
-    //if ( count( $units ) == 1 ) {
-    //$frequencyUnit->freeze( );
-    //}
+     
+    if (count($units) > 1) {
+      $this->add('select', 'frequency_unit', ts('Frequency'), $units);
+      $recurOptionLabel = ts('Recurring contributions');
+    }
+    else {
+      $unitVal = key($units);
+      $this->addElement('hidden', 'frequency_unit', $unitVal);
+      $recurOptionLabel = ts('Recurring contributions').' - '.$units[$unitVal];
+    }
+    $elements = array();
+    $elements[] = &$this->createElement('radio', NULL, '', ts('I want to make a one-time contribution.'), 0);
+    $elements[] = &$this->createElement('radio', NULL, '', $recurOptionLabel, 1);
+    $this->addGroup($elements, 'is_recur', NULL, '<br />');
 
     $attributes['installments']['placeholder'] = ts('no limit');
-    $this->add('text', 'installments', ts('installments'),
-      $attributes['installments']
-    );
+    $this->add('text', 'installments', ts('Installments'), $attributes['installments']);
     $this->addRule('installments', ts('Number of installments must be a whole number.'), 'integer');
   }
 

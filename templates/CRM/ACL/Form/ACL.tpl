@@ -29,8 +29,7 @@
  <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>
 {if $action eq 8}
   <div class="messages status">
-    <img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}" />
-        {ts}WARNING: Delete will remove this permission from the specified ACL Role.{/ts} {ts}Do you want to continue?{/ts}
+    {ts}WARNING: Delete will remove this permission from the specified ACL Role.{/ts} {ts}Do you want to continue?{/ts}
   </div>
 {else}
    <table class="form-layout-compressed">

@@ -60,7 +60,7 @@
         {/strip}
 
         {if $action ne 1 and $action ne 2}
-	    <div class="action-link">
+	    <div class="action-link-button">
     	<a href="{crmURL q="action=add&reset=1"}" id="newOptionGroup">&raquo; {ts}New Option Group{/ts}</a>
         </div>
         {/if}
@@ -68,7 +68,6 @@
 </div>
 {elseif $action ne 1}
     <div class="messages status">
-        <img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}"/>
         {capture assign=crmURL}{crmURL p='civicrm/admin/optionGroup' q="action=add&reset=1"}{/capture}
         {ts 1=$crmURL}There are no Option Group entered. You can <a href='%1'>add one</a>.{/ts}
     </div>    

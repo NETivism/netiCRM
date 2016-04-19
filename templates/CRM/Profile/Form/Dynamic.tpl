@@ -30,7 +30,7 @@
 {if ! empty( $fields )}
 {* Wrap in crm-container div so crm styles are used.*}
 {* Replace div id with this logic if you want CMS account create and CMS edit to use CMS theme styles: id="{if $mode eq 4}crm-container{else}crm-profile-block{/if}" *}
-<div id="crm-container" lang="{$config->lcMessages|truncate:2:"":true}" xml:lang="{$config->lcMessages|truncate:2:"":true}">
+<div id="crm-container" class="crm-container" lang="{$config->lcMessages|truncate:2:"":true}" xml:lang="{$config->lcMessages|truncate:2:"":true}">
     {if $isDuplicate and ( ($action eq 1 and $mode eq 4 ) or ($action eq 2) or ($action eq 8192) ) }
         <div class="crm-submit-buttons"> 
              <span class="crm-button">{$form._qf_Edit_upload_duplicate.html}</span>
@@ -216,7 +216,7 @@ invert              = 0
 }
 {elseif $statusMessage}
     <div class="messages status">
-        <div class="icon inform-icon"></div>
+        
         {$statusMessage}
     </div>
 {/if}

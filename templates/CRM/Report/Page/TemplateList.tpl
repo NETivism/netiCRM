@@ -33,7 +33,7 @@
     {foreach from=$list item=rows key=report}		
 <div class="crm-accordion-wrapper crm-accordion_{$report}-accordion crm-accordion_title-accordion crm-accordion-open">
  <div class="crm-accordion-header">
-  <div class="icon crm-accordion-pointer"></div>
+  <div class="zmdi crm-accordion-pointer"></div>
   {if $report}{if $report EQ 'Contribute'}{ts}Contribution{/ts}{elseif $report EQ 'Mail'}{ts}Mailing{/ts}{else}{ts}{$report}{/ts}{/if}{/if} {ts}Report Templates{/ts}
  </div><!-- /.crm-accordion-header -->
  <div class="crm-accordion-body">
@@ -61,7 +61,7 @@
 {/foreach}
 {else}
     <div class="messages status">
-        <div class="icon inform-icon"></div>&nbsp; {ts}There are currently no Report Templates.{/ts}
+        &nbsp; {ts}There are currently no Report Templates.{/ts}
     </div>
 {/if}
 {/strip}

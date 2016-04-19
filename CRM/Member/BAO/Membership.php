@@ -1162,8 +1162,8 @@ AND civicrm_membership.is_test = %2";
 
     if ($form->_contributeMode == 'notify') {
       if ($form->_values['is_monetary'] && $form->_amount > 0.0 && !$form->_params['is_pay_later']) {
-        // this does not return
-        require_once 'CRM/Core/Payment.php';
+        // before leave for transfer, trigger hook
+        CRM_Utils_Hook::postProcess(get_class($form), $form);
         $payment = &CRM_Core_Payment::singleton($form->_mode, $form->_paymentProcessor, $form);
         $payment->doTransferCheckout($form->_params, 'contribute');
       }

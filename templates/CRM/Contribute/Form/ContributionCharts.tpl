@@ -24,76 +24,18 @@
  +--------------------------------------------------------------------+
 *}
 {* Display monthly and yearly contributions using Google charts (Bar and Pie) *} 
-{if $hasContributions}
-<div id="chartData">
-<table class="chart">
-  <tr class="crm-contribution-form-block-open_flash_chart">
-     <td>
-         {if $hasByMonthChart}
-      	     {* display monthly chart *}
-             <div id="open_flash_chart_by_month"></div>
-         {else}
-	     {ts}There were no contributions during the selected year.{/ts}  
-         {/if}	
-     </td> 
-     <td>
-       	 {* display yearly chart *}
-         <div id="open_flash_chart_by_year"></div>
-     </td>
-  </tr>
-</table>
+{if $hasChart}
+
+{* chartist *}
+{include file="CRM/common/chartist.tpl" chartist=$chart}
+
 <div class="form-layout-compressed" >
-<table >
+<table>
       <td class="label">{$form.select_year.label}</td><td>{$form.select_year.html}</td> 
-      <td class="label">{$form.chart_type.label}</td><td>{$form.chart_type.html}</td> 
 </table> 
 </div>
 {else}
  <div class="messages status"> 
     {ts}There are no live contribution records to display.{/ts}  
  </div>
-{/if}
-
-{if $hasOpenFlashChart}
-{include file="CRM/common/openFlashChart.tpl"}
-
-{literal}
-<script type="text/javascript">
-   
-  cj( function( ) {
-      buildChart( );
-  });
-
-  function buildChart( ) {
-     var chartData = {/literal}{$openFlashChartData}{literal};	
-     cj.each( chartData, function( chartID, chartValues ) {
-
-	 var xSize   = eval( "chartValues.size.xSize" );
-	 var ySize   = eval( "chartValues.size.ySize" );
-	 var divName = eval( "chartValues.divName" );
-
-	 createSWFObject( chartID, divName, xSize, ySize, 'loadData' );  
-     });
-  }
-  
-  function loadData( chartID ) {
-     var allData = {/literal}{$openFlashChartData}{literal};
-     var data    = eval( "allData." + chartID + ".object" );
-     return JSON.stringify( data );
-  }
- 
-  function byMonthOnClick( barIndex ) {
-     var allData = {/literal}{$openFlashChartData}{literal};
-     var url     = eval( "allData.by_month.on_click_urls.url_" + barIndex );
-     if ( url ) window.location = url;
-  }
-
-  function byYearOnClick( barIndex ) {
-     var allData = {/literal}{$openFlashChartData}{literal};
-     var url     = eval( "allData.by_year.on_click_urls.url_" + barIndex );
-     if ( url ) window.location = url;
-  }
-
- </script>
-{/literal}
 {/if}

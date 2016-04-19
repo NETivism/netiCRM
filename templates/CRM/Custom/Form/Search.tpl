@@ -27,7 +27,7 @@
 {foreach from=$groupTree item=cd_edit key=group_id}
   <div class="crm-accordion-wrapper crm-contactDetails-accordion crm-accordion-open" id="{$cd_edit.name}" >
     <div class="crm-accordion-header">
-    <div class="icon crm-accordion-pointer"></div> 
+    <div class="zmdi crm-accordion-pointer"></div> 
         {$cd_edit.title}	
     </div><!-- /.crm-accordion-header -->
 

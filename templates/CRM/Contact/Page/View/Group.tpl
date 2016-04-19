@@ -46,7 +46,7 @@
        </table>
      {else}
      <div class="messages status">	
-     <div class="icon inform-icon"></div> &nbsp;
+      &nbsp;
       {ts}This contact does not belong to any groups.{/ts}
      </div>	
      {/if}

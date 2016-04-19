@@ -514,6 +514,7 @@ VALUES
   (@option_group_id_report, {localize}'{ts escape="sql"}Mail Clickthrough Report{/ts}'{/localize}, 'Mailing/clicks', 'CRM_Report_Form_Mailing_Clicks', NULL, 0, NULL, 37, {localize}'{ts escape="sql"}Display clicks from each mailing{/ts}'{/localize}, 0, 0, 1, @mailCompId, NULL),
   (@option_group_id_report, {localize}'{ts escape="sql"}Contact Logging Report (Summary){/ts}'{/localize}, 'logging/contact/summary', 'CRM_Report_Form_Contact_LoggingSummary', NULL, 0, NULL, 38, {localize}'{ts escape="sql"}Contact modification report for the logging infrastructure (summary).{/ts}'{/localize}, 0, 0, 0, NULL, NULL),
   (@option_group_id_report, {localize}'{ts escape="sql"}Contact Logging Report (Detail){/ts}'{/localize}, 'logging/contact/detail', 'CRM_Report_Form_Contact_LoggingDetail', NULL, 0, NULL, 39, {localize}'{ts escape="sql"}Contact modification report for the logging infrastructure (detail).{/ts}'{/localize}, 0, 0, 0, NULL, NULL),
+  (@option_group_id_report, {localize}'{ts escape="sql"}Top Participant{/ts}'{/localize}, 'contact/topparticipant', 'CRM_Report_Form_Contact_Participate', NULL, 0, NULL, 40, {localize}'{ts escape="sql"}Report for list top participants.{/ts}'{/localize}, 0, 0, 1, NULL, NULL),
   
   (@option_group_id_acs, '{ts escape="sql"}Scheduled{/ts}',  1, 'Scheduled',  NULL, 0, 1,    1, NULL, 0, 1, 1, NULL, NULL),
   (@option_group_id_acs, '{ts escape="sql"}Completed{/ts}',  2, 'Completed',  NULL, 0, NULL, 2, NULL, 0, 1, 1, NULL, NULL),
@@ -571,8 +572,8 @@ VALUES
   (@option_group_id_mt, '{ts escape="sql"}Export Grant{/ts}',       13, 'Export Grant',        NULL, 0, 0,   13, NULL, 0, 1, 1, NULL, NULL),
   (@option_group_id_mt, '{ts escape="sql"}Export Activity{/ts}',    14, 'Export Activity',     NULL, 0, 0,   14, NULL, 0, 1, 1, NULL, NULL),
 
-  (@option_group_id_fu, '{ts escape="sql"}day{/ts}'    , 'day'  ,    'day',  NULL, 0, NULL, 1, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_fu, '{ts escape="sql"}week{/ts}'   , 'week' ,   'week',  NULL, 0, NULL, 2, NULL, 0, 1, 1, NULL, NULL),
+  (@option_group_id_fu, '{ts escape="sql"}day{/ts}'    , 'day'  ,    'day',  NULL, 0, NULL, 1, NULL, 0, 1, 0, NULL, NULL),
+  (@option_group_id_fu, '{ts escape="sql"}week{/ts}'   , 'week' ,   'week',  NULL, 0, NULL, 2, NULL, 0, 1, 0, NULL, NULL),
   (@option_group_id_fu, '{ts escape="sql"}month{/ts}'  , 'month',  'month',  NULL, 0, NULL, 3, NULL, 0, 1, 1, NULL, NULL),
   (@option_group_id_fu, '{ts escape="sql"}year{/ts}'   , 'year' ,   'year',  NULL, 0, NULL, 4, NULL, 0, 1, 1, NULL, NULL),
 
@@ -674,7 +675,7 @@ INSERT INTO
    `civicrm_option_value` (`option_group_id`, `label`, `value`, `name`, `grouping`, `filter`, `is_default`, `weight`, `description`, `is_optgroup`, `is_reserved`, `is_active`, `component_id`, `domain_id`, `visibility_id`) 
 VALUES
 -- from email address.
-  (@option_group_id_fma, '"{ts escape="sql"}FIXME{/ts}" <info@FIXME.ORG>', '1', '"{ts escape="sql"}FIXME{/ts}" <info@FIXME.ORG>', NULL, 0, 1, 1, '{ts escape="sql"}Default domain email address and from name.{/ts}', 0, 0, 1, NULL, @domainID, NULL ),
+  (@option_group_id_fma, '"FIXME" <info@FIXME.ORG>', '1', '"FIXME" <info@FIXME.ORG>', NULL, 0, 1, 1, '{ts escape="sql"}Default domain email address and from name.{/ts}', 0, 0, 1, NULL, @domainID, NULL ),
 
 -- grant types
   (@option_group_id_grantTyp, '{ts escape="sql"}Emergency{/ts}'          , 1, 'Emergency'         , NULL, 0, 1,    1, NULL, 0, 0, 1, NULL, @domainID, NULL),    
@@ -1067,13 +1068,13 @@ VALUES
    
 INSERT INTO civicrm_uf_field
        (id, uf_group_id, field_name,              is_required, is_reserved, weight, visibility,                  in_selector, is_searchable, location_type_id, label,                                         		field_type,    help_post, phone_type_id ) VALUES
-       (1,  1,           'first_name',            1,           0,           1,      'Public Pages and Listings', 0,           1,             NULL,             '{ts escape="sql"}First Name{/ts}',            		'Individual',  NULL,  NULL),
-       (2,  1,           'last_name',             1,           0,           2,      'Public Pages and Listings', 0,           1,             NULL,             '{ts escape="sql"}Last Name{/ts}',             		'Individual',  '{ts escape="sql"}First and last name will be shared with other visitors to the site.{/ts}',  NULL),
+       (1,  1,           'first_name',            1,           0,           1,      'User and User Admin Only', 0,           1,             NULL,             '{ts escape="sql"}First Name{/ts}',            		'Individual',  NULL,  NULL),
+       (2,  1,           'last_name',             1,           0,           2,      'User and User Admin Only', 0,           1,             NULL,             '{ts escape="sql"}Last Name{/ts}',             		'Individual',  NULL,  NULL),
        (3,  1,           'street_address',        0,           0,           3,      'User and User Admin Only',  0,           0,             1,                '{ts escape="sql"}Street Address (Home){/ts}', 		'Contact',     NULL,  NULL),
        (4,  1,           'city',                  0,           0,           4,      'User and User Admin Only',  0,           0,             1,                '{ts escape="sql"}City (Home){/ts}',           		'Contact',     NULL,  NULL),
        (5,  1,           'postal_code',           0,           0,           5,      'User and User Admin Only',  0,           0,             1,                '{ts escape="sql"}Postal Code (Home){/ts}',    		'Contact',     NULL,  NULL),
-       (6,  1,           'country',               0,           0,           6,      'Public Pages and Listings', 0,           1,             1,                '{ts escape="sql"}Country (Home){/ts}',        		'Contact',     '{ts escape="sql"}Your state/province and country of residence will be shared with others so folks can find others in their community.{/ts}',  NULL),
-       (7,  1,           'state_province',        0,           0,           7,      'Public Pages and Listings', 1,           1,             1,                '{ts escape="sql"}State (Home){/ts}',          		'Contact',     NULL,  NULL),
+       (6,  1,           'country',               0,           0,           6,      'User and User Admin Only', 0,           1,             1,                '{ts escape="sql"}Country (Home){/ts}',        		'Contact',     NULL,  NULL),
+       (7,  1,           'state_province',        0,           0,           7,      'User and User Admin Only', 1,           1,             1,                '{ts escape="sql"}State (Home){/ts}',          		'Contact',     NULL,  NULL),
        (8,  2,           'first_name',            1,           0,           1,      'User and User Admin Only',  0,           0,             NULL,             '{ts escape="sql"}First Name{/ts}',            		'Individual',  NULL,  NULL),
        (9,  2,           'last_name',             1,           0,           2,      'User and User Admin Only',  0,           0,             NULL,             '{ts escape="sql"}Last Name{/ts}',             		'Individual',  NULL,  NULL),
        (10, 2,           'email',                 1,           0,           3,      'User and User Admin Only',  0,           0,             NULL,             '{ts escape="sql"}Email Address{/ts}',         		'Contact',     NULL,  NULL),
@@ -1123,5 +1124,7 @@ INSERT INTO `civicrm_contact_type`
   ( 1, 'Individual'  , '{ts escape="sql"}Individual{/ts}'  , NULL, NULL, 1, 1),
   ( 2, 'Household'   , '{ts escape="sql"}Household{/ts}'   , NULL, NULL, 1, 1),
   ( 3, 'Organization', '{ts escape="sql"}Organization{/ts}', NULL, NULL, 1, 1);
+
+INSERT INTO civicrm_group (`id`, `name`, `title`, `description`, `source`, `saved_search_id`, `is_active`, `visibility`, `group_type`) VALUES (2, 'Mailing', '{ts escape="sql"}Mailing{/ts}', '', NULL, NULL, 1, 'Public Pages', '2');
 
 {include file='civicrm_msg_template.tpl'}

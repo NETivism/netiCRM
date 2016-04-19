@@ -30,7 +30,7 @@
 {if $customOption}
     {if $reusedNames}
         <div class="message status">
-            <img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}"/></dt><dd>{ts 1=$reusedNames}These Multiple Choice Options are shared by the following custom fields: %1{/ts}
+          {ts 1=$reusedNames}These Multiple Choice Options are shared by the following custom fields: %1{/ts}
         </div>
     {/if}
     
@@ -62,8 +62,8 @@
         </table>
         {/strip}
         
-        <div class="action-link">
-            <a href="{crmURL q="reset=1&action=add&fid=$fid&gid=$gid"}" class="button"><span><div class="icon add-icon"></div> {ts 1=$fieldTitle}Add Option for '%1'{/ts}</span></a>
+        <div class="action-link-button">
+            <a href="{crmURL q="reset=1&action=add&fid=$fid&gid=$gid"}" class="button"><span><i class="zmdi zmdi-plus-circle-o"></i> {ts 1=$fieldTitle}Add Option for '%1'{/ts}</span></a>
         </div>
 
         </div>
@@ -72,7 +72,6 @@
 {else}
     {if $action eq 16}
         <div class="messages status">
-           <img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}"/>
            {capture assign=crmURL}{crmURL p='civicrm/admin/custom/group/field/option' q="action=add&fid=$fid&gid=$gid"}{/capture}{ts 1=$fieldTitle 2=$crmURL}There are no multiple choice options for the custom field '%1', <a href='%2'>add one</a>.{/ts}
         </div>
     {/if}

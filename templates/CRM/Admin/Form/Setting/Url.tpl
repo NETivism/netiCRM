@@ -29,6 +29,7 @@
 </div>
 <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>
 <table class="form-layout">
+  {if $admin}
     <tr class="crm-url-form-block-userFrameworkResourceURL">
         <td class="label">
             {$form.userFrameworkResourceURL.label}
@@ -45,20 +46,21 @@
             {$form.imageUploadURL.html|crmReplace:class:'huge40'} {help id='id-image_url'}
         </td>
     </tr>
-    <tr class="crm-url-form-block-customCSSURL">
-        <td class="label">
-            {$form.customCSSURL.label}
-        </td>
-        <td>
-            {$form.customCSSURL.html|crmReplace:class:'huge40'} {help id='id-css_url'}
-        </td>
-    </tr>
     <tr class="crm-url-form-block-enableSSL">
         <td class="label">
             {$form.enableSSL.label}
         </td>
         <td>
             {$form.enableSSL.html} {help id='id-enable_ssl'}
+        </td>
+    </tr>
+  {/if}
+    <tr class="crm-url-form-block-customCSSURL">
+        <td class="label">
+            {$form.customCSSURL.label}
+        </td>
+        <td>
+            {$form.customCSSURL.html|crmReplace:class:'huge40'} {help id='id-css_url'}
         </td>
     </tr>
 </table>

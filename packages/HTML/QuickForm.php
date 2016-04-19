@@ -1968,9 +1968,9 @@ class HTML_QuickForm extends HTML_Common
                              'msg_text', // message templates’ text versions
                              'text_message', // (send an) email to contact’s and CiviMail’s text version
                              'data', // data i/p of persistent table
-                             'sqlQuery' // CRM-6673
+                             'sqlQuery', // CRM-6673
+                             'receipt_text' // Use in CRM/Event/Form/Participant.php refs #17694
                              );
-                                  
         $values = array();
         if (null === $elementList) {
             // iterate over all elements, calling their exportValue() methods

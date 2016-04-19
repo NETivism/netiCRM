@@ -96,17 +96,12 @@ class CRM_Contribute_Import_Form_Summary extends CRM_Core_Form {
     }
     else {
       /* Skip by default */
-
       $dupeActionString = ts('These records have not been imported.');
-
       $this->assign('dupeError', TRUE);
-
-      /* only subtract dupes from succesful import if we're skipping */
-
-      $this->set('validRowCount', $totalRowCount - $invalidRowCount -
-        $conflictRowCount - $duplicateRowCount - $mismatchCount - $invalidSoftCreditRowCount - $invalidPledgePaymentRowCount
-      );
     }
+    $this->set('validRowCount', $totalRowCount - $invalidRowCount -
+      $conflictRowCount - $duplicateRowCount - $mismatchCount - $invalidSoftCreditRowCount - $invalidPledgePaymentRowCount
+    );
     $this->assign('dupeActionString', $dupeActionString);
 
     $properties = array('totalRowCount', 'validRowCount', 'invalidRowCount', 'validSoftCreditRowCount', 'invalidSoftCreditRowCount', 'conflictRowCount', 'downloadConflictRecordsUrl', 'downloadErrorRecordsUrl', 'duplicateRowCount', 'downloadDuplicateRecordsUrl', 'downloadMismatchRecordsUrl', 'groupAdditions', 'unMatchCount', 'validPledgePaymentRowCount', 'invalidPledgePaymentRowCount', 'downloadPledgePaymentErrorRecordsUrl', 'downloadSoftCreditErrorRecordsUrl');

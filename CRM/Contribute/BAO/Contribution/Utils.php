@@ -127,6 +127,8 @@ class CRM_Contribute_BAO_Contribution_Utils {
         }
         else {
           if (!$form->_params['is_pay_later']) {
+            // before leave to transfercheckout, call hook
+            CRM_Utils_Hook::postProcess(get_class($form), $form);
             $result = &$payment->doTransferCheckout($form->_params, 'contribute');
           }
           else {
@@ -319,12 +321,13 @@ INNER JOIN   civicrm_contact AS contact ON ( contact.id = contrib.contact_id )
     $dao = CRM_Core_DAO::executeQuery($query, $param);
 
     $params = NULL;
+    $slot = array_fill(1, 12, 0);
     while ($dao->fetch()) {
       if ($dao->contribMonth) {
-        $params['By Month'][$dao->contribMonth] = $dao->ctAmt;
+        $slot[$dao->contribMonth] = $dao->ctAmt;
       }
     }
-    return $params;
+    return array('By Month' => $slot);
   }
 
   /**

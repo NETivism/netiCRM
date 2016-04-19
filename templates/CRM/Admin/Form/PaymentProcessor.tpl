@@ -30,7 +30,7 @@
 
 {if $action eq 8}
   <div class="messages status">  
-      <div class="icon inform-icon"></div> 
+       
         {ts}WARNING: Deleting this Payment Processor may result in some transaction pages being rendered inactive.{/ts} {ts}Do you want to continue?{/ts}
   </div>
 {else}

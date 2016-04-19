@@ -53,6 +53,11 @@ function smarty_modifier_crmReplace($string, $attribute, $value) {
   // we need to search and replace the string: $attribute=XXX or $attribute="XXX"
   // with $attribute=\"$value\"
   $pattern = '/' . $attribute . '="([^"]+?)"/';
-  return preg_replace($pattern, $attribute . '="' . $value . '"', $string);
+  if(strstr($attribute, 'class')){
+    return preg_replace($pattern, $attribute . '="$1 ' . $value . '"', $string);
+  }
+  else{
+    return preg_replace($pattern, $attribute . '="' . $value . '"', $string);
+  }
 }
 

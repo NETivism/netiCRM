@@ -139,6 +139,11 @@ class CRM_Mailing_Selector_Browse extends CRM_Core_Selector_Base implements CRM_
           'direction' => CRM_Utils_Sort::DONTCARE,
         ),
         array(
+          'name' => ts('Mailing Visibility'),
+          'sort' => 'visibility',
+          'direction' => CRM_Utils_Sort::DONTCARE,
+        ),
+        array(
           'name' => ts('Status'),
           'sort' => 'status',
           'direction' => CRM_Utils_Sort::DONTCARE,

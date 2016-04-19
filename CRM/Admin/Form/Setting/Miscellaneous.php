@@ -55,16 +55,8 @@ class CRM_Admin_Form_Setting_Miscellaneous extends CRM_Admin_Form_Setting {
     // FIXME: for now, disable logging for multilingual sites
     $domain = new CRM_Core_DAO_Domain;
     $domain->find(TRUE);
-    $attribs = $domain->locales ? array('disabled' => 'disabled') : NULL;
-    $this->addYesNo('logging', ts('Logging'), NULL, NULL, $attribs);
-
-    $this->addYesNo('versionCheck', ts('Version Check & Statistics Reporting'));
 
     $this->addYesNo('doNotAttachPDFReceipt', ts('Do not attach PDF copy to receipts'));
-
-    $this->addElement('text', 'wkhtmltopdfPath', ts('Path to wkhtmltopdf executable'),
-      array('size' => 64, 'maxlength' => 256)
-    );
 
     $this->addElement('text', 'maxAttachments', ts('Maximum Attachments'),
       array('size' => 2, 'maxlength' => 8)
@@ -79,12 +71,23 @@ class CRM_Admin_Form_Setting_Miscellaneous extends CRM_Admin_Form_Setting {
       array('size' => 64, 'maxlength' => 64)
     );
 
-    $this->addElement('text', 'dashboardCacheTimeout', ts('Dashboard cache timeout'),
-      array('size' => 3, 'maxlength' => 5)
-    );
-
-    $this->addRule('maxAttachments', ts('Value should be a positive number'), 'positiveInteger');
-    $this->addRule('maxFileSize', ts('Value should be a positive number'), 'positiveInteger');
+    if (CRM_Core_Permission::check('administer neticrm')) {
+      $attribs = $domain->locales ? array('disabled' => 'disabled') : NULL;
+      $this->addYesNo('logging', ts('Logging'), NULL, NULL, $attribs);
+      $this->addRule('maxAttachments', ts('Value should be a positive number'), 'positiveInteger');
+      $this->addRule('maxFileSize', ts('Value should be a positive number'), 'positiveInteger');
+      $this->addElement('text', 'dashboardCacheTimeout', ts('Dashboard cache timeout'),
+        array('size' => 3, 'maxlength' => 5)
+      );
+      $this->addElement('text', 'wkhtmltopdfPath', ts('Path to wkhtmltopdf executable'),
+        array('size' => 64, 'maxlength' => 256)
+      );
+      $this->addYesNo('versionCheck', ts('Version Check & Statistics Reporting'));
+      $this->assign('admin', TRUE);
+    }
+    else {
+      $this->assign('admin', FALSE);
+    }
 
     parent::buildQuickForm();
   }

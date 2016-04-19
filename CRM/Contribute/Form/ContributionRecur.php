@@ -51,6 +51,7 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
    * @var int
    */
   protected $_id;
+  protected $_online;
 
   /**
    * the id of the contact associated with this recurring contribution
@@ -58,9 +59,22 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
    * @var int
    * @public
    */
-  public $_contactID; function preProcess() {
+  public $_contactID;
+
+  function preProcess() {
     $this->_id = $this->get('id');
     $this->_contactID = $this->get('cid');
+
+    $query = "SELECT c.payment_processor_id FROM civicrm_contribution c WHERE c.contribution_recur_id = %1 AND c.payment_processor_id IS NOT NULL && c.payment_processor_id > 0";
+    $sqlParams = array(1 => array($this->_id, 'Integer'));
+    $dao = CRM_Core_DAO::executeQuery($query, $sqlParams);
+    if($dao->N){
+      $this->_online = TRUE;
+    }
+    else{
+      $this->_online = FALSE;
+    }
+    $dao->free();
   }
 
   /**
@@ -92,20 +106,39 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
   public function buildQuickForm() {
 
     // define the fields
-    $this->add('text', 'amount', ts('Amount'), array('size' => 20), TRUE);
-    $this->add('text', 'currency', ts('Currency'), array('size' => 20, 'readonly' => 'readonly'), TRUE);
-    $this->add('text', 'frequency_interval', ts('Frequency Interval'), array('size' => 20, 'readonly' => 'readonly'), TRUE);
-    $this->add('text', 'frequency_unit', ts('Frequency Unit'), array('size' => 20, 'readonly' => 'readonly'), TRUE);
-    $this->add('text', 'cycle_day', ts('Cycle Day'), array('size' => 20, 'readonly' => 'readonly'), TRUE);
+    $field = array(
+      'id' => ts('Recurring Contribution ID'),
+      'amount' => ts('Amount'),
+      'currency' => ts('Currency'),
+      'frequency_interval' => ts('Frequency Interval'),
+      'installments' => ts('Installments'),
+      'frequency_unit' => ts('Frequency Unit'),
+      'create_date' => ts('Create date'),
+      'start_date' => ts('Start date'),
+      'end_date' => ts('End date'),
+      'modified_date' => ts('Modified Date'),
+      'cancel_date' => ts('Cancel Date'),
+      'processor_id' => ts('Payment Processor'),
+      'is_test' => ts('Is Test'),
+      'cycle_day' => ts('Cycle Day'),
+      'next_sched_contribution' => ts('Next Sched Contribution'),
+    );
 
+    foreach($field as $name => $label){
+      $ele = $this->add('text', $name, $label, array('size' => 20, 'readonly' => 'readonly'));
+      $ele->freeze();
+    }
+    $statuses = CRM_Contribute_PseudoConstant::contributionStatus();
+
+    $ele = $this->add('select', 'contribution_status_id', ts('Recuring Status'), $statuses);
+    if($this->_online){
+      $ele->freeze();
+    }
     // define the buttons
     $this->addButtons(array(
         array('type' => 'next',
           'name' => ts('Save'),
           'isDefault' => TRUE,
-        ),
-        array('type' => 'cancel',
-          'name' => ts('Cancel'),
         ),
       )
     );
@@ -125,6 +158,13 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
     // if this is an update of an existing recurring contribution, pass the ID
     if ($this->_action & CRM_Core_Action::UPDATE) {
       $params['id'] = $this->_id;
+    }
+
+    // refs #17486. Date format should be YmdHis.
+    foreach ($params as $key => $value) {
+      if(preg_match('/\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}/',$value)){
+        $params[$key] = preg_replace('/-| |:/', '', $value);
+      }
     }
 
     // save the changes

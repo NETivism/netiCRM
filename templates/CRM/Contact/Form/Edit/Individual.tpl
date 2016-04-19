@@ -63,7 +63,7 @@ var checkSimilar = {$checkSimilar};
        }
        else if(data.values.length !== 0){
          cj('#lastname_msg').remove();
-         var msg = "<tr id='lastname_msg'><td colspan='5'><div class='messages status'><div class='icon inform-icon'></div>";
+         var msg = "<tr id='lastname_msg'><td colspan='5'><div class='messages status'>";
 
          if(data.values.length == 1){
            msg = msg + "{/literal}{ts}There is a contact with a similar last name. If the person you were trying to add is listed below, click on their name to view or edit their record{/ts}{literal}";  
@@ -77,7 +77,7 @@ var checkSimilar = {$checkSimilar};
            msg = msg + '<tr><td><a href="'+viewIndividual+contact.contact_id+'">'+ contact.display_name + '</a></td><td>' + contact.email + '</td><td class="action-items"><a class="action-item action-item-first" href="' + viewIndividual + contact.contact_id + '">{/literal}{ts}View{/ts}{literal}</a><a class="action-item" href="' + editIndividual + contact.contact_id + '">{/literal}{ts}Edit{/ts}{literal}</a></td></tr>';
          });
          msg = msg + '</table>';
-         cj('#last_name').parent().parent().after(msg + '</div><td></tr>');
+         cj('#last_name').closest('tr').after(msg + '</div><td></tr>');
          cj('#lastname_msg a').click(function(){global_formNavigate = true; return true;});// No confirmation dialog on click
        }
        queue = [];
@@ -133,7 +133,7 @@ var checkSimilar = {$checkSimilar};
             {$form.nick_name.html|crmReplace:class:big}
         </td>
         <td>
-            {if $buildContactSubType}&nbsp;
+            {if $buildContactSubType}
                {$form.contact_sub_type.label}<br />
                {$form.contact_sub_type.html}
             {/if}

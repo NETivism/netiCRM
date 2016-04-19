@@ -139,7 +139,7 @@ class CRM_Report_Form_Instance {
     <title>CiviCRM Report</title>
     <style type=\"text/css\">@import url({$config->userFrameworkResourceURL}css/print.css);</style>
   </head>
-  <body><div id=\"crm-container\">";
+  <body><div id=\"crm-container\" class=\"crm-container\">";
 
     $defaults['report_footer'] = $report_footer = "<p><img src=\"{$config->userFrameworkResourceURL}i/powered_by.png\" /></p></div></body>
 </html>

@@ -27,7 +27,7 @@
     {ts 1=$GName}The existing option choices for %1 group are listed below. You can add, edit or delete them from this screen.{/ts}
 </div>
 {if $action ne 1 and $action ne 2}
-    <div class="action-link">
+    <div class="action-link-button">
 	<a href="{$newReport}"  id="new"|cat:$GName class="button"><span>&raquo; {ts 1=$GName}Register New %1{/ts}</span></a>
     </div>
     <div class="spacer"></div>
@@ -75,13 +75,13 @@
 	{/strip}
 
         {if $action ne 1 and $action ne 2}
-            <div class="action-link">
+            <div class="action-link-button">
 		<a href="{$newReport}"  id="new"|cat:$GName class="button"><span>&raquo; {ts 1=$GName}Register New %1{/ts}</span></a>
             </div>
         {/if}
     </div>
 {else}
     <div class="messages status">
-        <img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}"/>&nbsp; {ts 1=$newReport}There are no option values entered. You can <a href="%1">add one</a>.{/ts}
+        {ts 1=$newReport}There are no option values entered. You can <a href="%1">add one</a>.{/ts}
     </div>    
 {/if}    

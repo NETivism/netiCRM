@@ -134,17 +134,25 @@ class HTML_QuickForm_checkbox extends HTML_QuickForm_input
     function toHtml()
     {
         $attributes = $this->getAttributes();
+        $output = '';
 
         if (0 == strlen($this->_text)) {
             $label = '';
-        } elseif ($this->_flagFrozen || isset( $attributes['skiplabel']) ) {
+            $output = HTML_QuickForm_input::toHtml();
+        }
+        elseif ($this->_flagFrozen || isset( $attributes['skiplabel']) ) {
             $label = $this->_text;
-        } else {
-            $label = '<label for="' . $this->getAttribute('id') . '">' . $this->_text . '</label>';
+            $output = HTML_QuickForm_input::toHtml() . $label;
+        }
+        else {
+            $output = '<label class="crm-form-elem crm-form-checkbox" for="' . $this->getAttribute('id') . '">'
+                . HTML_QuickForm_input::toHtml()
+                . '<span class="elem-label">' . $this->_text . '</span>'
+                . '</label>';
         }
 
         unset( $attributes['skipLabel'] );
-        return HTML_QuickForm_input::toHtml() . $label;
+        return $output;
     } //end func toHtml
 
     // }}}

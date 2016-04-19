@@ -107,7 +107,7 @@ cj( "#source_contact_id").autocomplete( sourceDataUrl, { width : 180, selectFirs
         </legend>
         {if $action eq 8 or $action eq 32768 }
             <div class="messages status"> 
-              <div class="icon inform-icon"></div> &nbsp;
+               &nbsp;
               {if $action eq 8}
                  {ts 1=$activityTypeName}Click Delete to move this &quot;%1&quot; activity to the Trash.{/ts}
               {else}
@@ -216,7 +216,7 @@ cj( "#source_contact_id").autocomplete( sourceDataUrl, { width : 180, selectFirs
                 <td colspan="2">
                     <div id="sendcopy" class="crm-accordion-wrapper crm-accordion_title-accordion crm-accordion-closed">
  <div class="crm-accordion-header">
-  <div class="icon crm-accordion-pointer"></div> {ts}Send a Copy{/ts}
+  <div class="zmdi crm-accordion-pointer"></div> {ts}Send a Copy{/ts}
    </div><!-- /.crm-accordion-header -->
  <div id="sendcopy" class="crm-accordion-body">
                    
@@ -251,7 +251,7 @@ cj( "#source_contact_id").autocomplete( sourceDataUrl, { width : 180, selectFirs
               
 <div id="follow-up" class="crm-accordion-wrapper crm-accordion_title-accordion crm-accordion-closed">
  <div class="crm-accordion-header">
-  <div class="icon crm-accordion-pointer"></div> 
+  <div class="zmdi crm-accordion-pointer"></div> 
  {ts}Schedule Follow-up{/ts}
   </div><!-- /.crm-accordion-header -->
  <div class="crm-accordion-body">

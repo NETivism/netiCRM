@@ -66,7 +66,7 @@
        	    </td>
 	</tr>
     </table>
- <div class="crm-submit-buttons" ><a class="button" onClick="Javascript:buildStringOverrideRow( false );return false;"><span><div class="icon add-icon"></div>{ts}Add row{/ts}</span></a>{include file="CRM/common/formButtons.tpl"} </div>
+ <div class="crm-submit-buttons" ><a class="button" onClick="Javascript:buildStringOverrideRow( false );return false;"><span><i class="zmdi zmdi-plus-circle-o"></i>{ts}Add row{/ts}</span></a>{include file="CRM/common/formButtons.tpl"} </div>
 	
 </div>
 {/if}

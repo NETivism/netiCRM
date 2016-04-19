@@ -65,6 +65,7 @@ install:
   - drush --yes pm-download simpletest
   - drush --yes pm-enable civicrm simpletest
   - drush --yes pm-enable civicrm_allpay civicrm_neweb
+  - drush --yes variable-set civicrm_demo_sample_data 1
   - drush --yes pm-enable civicrm_demo
   - drush --yes variable-set error_level 0
   # start a web server on port 8080, run in the background; wait for initialization

@@ -303,7 +303,7 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
    */
   static function setIsActive($id, $is_active) {
     if (!$is_active) {
-      return self::cancelRecurContribution($id, CRM_Core_DAO::$_nullObject);
+      return self::cancelRecurContribution($id, CRM_Core_DAO::$_nullObject, 2);
     }
     return FALSE;
   }
@@ -318,6 +318,8 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
     $query = CRM_Core_DAO::executeQuery("SELECT id, trxn_id FROM civicrm_contribution WHERE contribution_recur_id = %1 ORDER BY id ASC", array(1 => array($id, 'Integer')));
     $i = 1;
     $children = array();
+    $config = CRM_Core_Config::singleton();
+    $exclude = !empty($config->recurringSyncExclude) ? $config->recurringSyncExclude : array();
     while ($query->fetch()) {
       if ($i == 1) {
         // load custom field values
@@ -342,6 +344,17 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
       foreach ($children as $cid) {
         $params = array('entityID' => $cid);
         $params = array_merge($params, $params_parent);
+        foreach($exclude as $e){
+          if(isset($params['custom_'.$e])) {
+            unset($params['custom_'.$e]);
+          }
+        }
+        $exists = CRM_Core_BAO_CustomValueTable::getValues($params);
+        foreach($exists as $k => $e){
+          if(!empty($e) && strstr($k, 'custom_') && isset($params[$k])) {
+            unset($params[$k]);
+          }
+        }
         CRM_Core_BAO_CustomValueTable::setValues($params);
       }
     }
@@ -355,6 +368,76 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
       return $result;
     }
     return FALSE;
+  }
+
+  static function currentRunningSummary(){
+    $sql = " SELECT SUM( c.contributions ) AS contributions, SUM( c.amount ) AS amount, SUM( c.groupby ) AS contacts, c.currency
+FROM (
+  SELECT COUNT( r.id ) AS contributions, SUM( r.amount ) AS amount,  '1' AS groupby, r.currency
+  FROM civicrm_contribution_recur r
+  WHERE r.contribution_status_id =5
+  AND r.frequency_unit =  'month'
+  GROUP BY r.contact_id
+  ) c
+GROUP BY c.currency";
+    $dao = CRM_Core_DAO::executeQuery($sql);
+    $summary = array();
+    while($dao->fetch()){
+      $summary[$dao->currency] = array(
+        'contacts' => $dao->contacts,
+        'contributions' => $dao->contributions,
+        'amount' => $dao->amount,
+      );
+    }
+    return $summary;
+  }
+
+  static function chartEstimateMonthly($limit = 12){
+    $frequency_unit = 'month';
+    $sql = "SELECT SUM(result.amount) as amount, result.installments FROM (SELECT r.amount, r.installments-count(c.id) as installments FROM civicrm_contribution_recur r INNER JOIN civicrm_contribution c ON c.contribution_recur_id = r.id WHERE r.contribution_status_id = 5 AND r.is_test = 0 AND r.frequency_unit = 'month' AND c.contribution_status_id = 1 AND c.is_test = 0 GROUP BY r.id ORDER BY installments ASC) as result GROUP BY result.installments DESC";
+    $dao = CRM_Core_DAO::executeQuery($sql);
+    $unlimit = $over = NULL;
+    $slot = array_fill(1, $limit, 0);
+    krsort($slot);
+    while($dao ->fetch()){
+      if(empty($dao->installments)){
+        $unlimit = $dao->amount;
+      }
+      elseif($dao->installments > $limit) {
+        $over += $dao->amount;
+      }
+      elseif(isset($slot[$dao->installments])){
+        $slot[$dao->installments] = $dao->amount;
+      }
+      else{
+        break;
+      }
+    }
+    $dao->free();
+
+    $labels = $values = array();
+    $increment = NULL;
+    $axisformat = array(
+      'month' => 'n',
+      'year' => 'Y',
+      'day' => 'd',
+    );
+    foreach($slot as $installment => $amount){
+      $increment += $amount;
+      $amount = $unlimit + $over + $increment;
+      $labels[$installment] = strftime('%b', strtotime('+'.$installment.' '.$frequency_unit));
+      $values[$installment] = $amount;
+    }
+    ksort($values);
+    ksort($labels);
+    
+    $chart = array(
+      'title' => ts('Recurring contributions estimated in next %1 %2', array(1 => $limit, 2 => ts($frequency_unit))),
+      'labels' => json_encode(array_values($labels)),
+      'series' => json_encode(array(array_values($values))),
+      'type' => 'Line',
+    );
+    return $chart;
   }
 }
 

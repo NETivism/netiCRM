@@ -32,7 +32,7 @@
 	    {if $editOwnCustomData or ($showEdit and $editCustomData and $groupId)}	
 		<tr>
 		    <td>
-			<a href="{crmURL p="civicrm/contact/view/cd/edit" q="tableId=`$contactId`&cid=`$contactId`&groupId=`$groupId`&action=update&reset=1"}" class="button" style="margin-left: 6px;"><span><div class="icon edit-icon"></div>{ts 1=$cd_edit.title}Edit %1{/ts}</span></a><br/><br/>
+			<a href="{crmURL p="civicrm/contact/view/cd/edit" q="tableId=`$contactId`&cid=`$contactId`&groupId=`$groupId`&action=update&reset=1"}" class="button" style="margin-left: 6px;"><span><div class="zmdi zmdi-edit"></div>{ts 1=$cd_edit.title}Edit %1{/ts}</span></a><br/><br/>
 		    </td>
 		</tr>      
 	    {/if}
@@ -44,14 +44,14 @@
 		<td id="{$cd_edit.name}_{$index}" class="section-shown form-item">
 		    <div class="crm-accordion-wrapper crm-accordion_title-accordion {if $cd_edit.collapse_display eq 0 }crm-accordion-open{else}crm-accordion-closed{/if}">
              <div class="crm-accordion-header">
-              <div class="icon crm-accordion-pointer"></div> 
+              <div class="zmdi crm-accordion-pointer"></div> 
 		      {$cd_edit.title}
              </div>
             <div class="crm-accordion-body">			   
 	        {if $groupId and $cvID and $editCustomData}
 	        <div class="crm-submit-buttons">
 			<a href="javascript:showDelete( {$cvID}, '{$cd_edit.name}_{$index}', {$customGroupId}, {$contactId} );" class="button delete-button" title="{ts 1=$cd_edit.title}Delete this %1 record{/ts}">
-			 <span><div class="icon delete-icon"></div>{ts}Delete{/ts}</span>
+			 <span><div class="zmdi zmdi-delete"></div>{ts}Delete{/ts}</span>
             </a>
             </div>
             {/if}

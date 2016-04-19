@@ -35,7 +35,7 @@
     {if NOT ($action eq 1 or $action eq 2) }
     	<table class="form-layout-compressed">
     	<tr>
-	    <td><a href="{$newPageURL}" class="button"><span><div class="icon add-icon"></div>{ts}Add Contribution Page{/ts}</span></a></td>
+	    <td><a href="{$newPageURL}" class="button"><span><i class="zmdi zmdi-plus-circle-o"></i>{ts}Add Contribution Page{/ts}</span></a></td>
             <td style="vertical-align: top"><a class="button" href="{crmURL p="civicrm/admin/pcp" q="reset=1"}"><span>{ts}Manage Personal Campaign Pages{/ts}</span></a> {help id="id-pcp-intro" file="CRM/Contribute/Page/PCP.hlp"}</td>
     	</tr>
     	</table>
@@ -99,7 +99,6 @@
     {else}
 	{if $isSearch eq 1}
     	<div class="status messages">
-                <img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}"/>
                 {capture assign=browseURL}{crmURL p='civicrm/contribute/manage' q="reset=1"}{/capture}
                     {ts}No available Contribution Pages match your search criteria. Suggestions:{/ts}
                     <div class="spacer"></div>
@@ -112,7 +111,7 @@
     	</div>
     	{else}
     	<div class="messages status">
-             <div class="icon inform-icon"></div> &nbsp;
+              &nbsp;
              {ts 1=$newPageURL}No contribution pages have been created yet. Click <a accesskey="N" href='%1'>here</a> to create a new contribution page using the step-by-step wizard.{/ts}
     	</div>
       	{/if}

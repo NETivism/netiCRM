@@ -25,6 +25,6 @@
 *}	
 {if $outputMode eq 'html' && !$rows}	
     <div class="messages status">	
-        <div class="icon inform-icon"></div>&nbsp; {ts}Sorry. No results found.{/ts}		
+        &nbsp; {ts}Sorry. No results found.{/ts}		
     </div>
 {/if}

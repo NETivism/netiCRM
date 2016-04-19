@@ -37,7 +37,7 @@
     {if $usedBy}
     <div class='spacer'></div>
     <div id="price_set_used_by" class="messages status">
-       <div class="icon inform-icon"></div> 
+        
        {if $action eq 8}
             {ts 1=$usedPriceSetTitle}Unable to delete the '%1' price set - it is currently in use by one or more active events or contribution pages or contributions.{/ts}
         {/if}<br />
@@ -76,8 +76,8 @@
         </table>
         
         {if NOT ($action eq 1 or $action eq 2) }
-        <div class="action-link">
-            <a href="{crmURL p='civicrm/admin/price' q="action=add&reset=1"}" id="newPriceSet" class="button"><span><div class="icon add-icon"></div>{ts}Add Set of Price Fields{/ts}</span></a>
+        <div class="action-link-button">
+            <a href="{crmURL p='civicrm/admin/price' q="action=add&reset=1"}" id="newPriceSet" class="button"><span><i class="zmdi zmdi-plus-circle-o"></i>{ts}Add Set of Price Fields{/ts}</span></a>
         </div>
         {/if}
 
@@ -86,7 +86,7 @@
     {else}
        {if $action ne 1} {* When we are adding an item, we should not display this message *}
        <div class="messages status">
-         <div class="icon inform-icon"></div> &nbsp;
+          &nbsp;
          {capture assign=crmURL}{crmURL p='civicrm/admin/price' q='action=add&reset=1'}{/capture}
          {ts 1=$crmURL}No price sets have been created yet. You can <a href='%1'>add one</a>.{/ts}
        </div>

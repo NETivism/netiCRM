@@ -55,7 +55,16 @@ class CRM_Core_BAO_MailSettings extends CRM_Core_DAO_MailSettings {
       $dao = new self;
       $dao->is_default = 1;
       $dao->domain_id = CRM_Core_Config::domainID();
-      $dao->find(TRUE);
+      if($dao->find(TRUE)){
+        global $civicrm_conf;
+        if(isset($civicrm_conf['mailing_mailstore'])) {
+          foreach($civicrm_conf['mailing_mailstore'] as $k => $v){
+            if(isset($dao->$k) && !empty($v)){
+              $dao->$k = $v;
+            }
+          }
+        }
+      }
     }
     return $dao;
   }
@@ -106,6 +115,14 @@ class CRM_Core_BAO_MailSettings extends CRM_Core_DAO_MailSettings {
 
     $result = NULL;
     if ($mailSettings->find(TRUE)) {
+      global $civicrm_conf;
+      if(isset($civicrm_conf['mailing_mailstore'])) {
+        foreach($civicrm_conf['mailing_mailstore'] as $k => $v){
+          if(isset($mailSettings->$k) && !empty($v)){
+            $mailSettings->$k = $v;
+          }
+        }
+      }
       CRM_Core_DAO::storeValues($mailSettings, $defaults);
       $result = $mailSettings;
     }

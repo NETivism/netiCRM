@@ -142,6 +142,7 @@ class CRM_Mailing_Page_View extends CRM_Core_Page {
       $details = $details[0][$this->_contactID];
     }
     else {
+      require_once 'Mail/mime.php';
       $details = array('test');
     }
     $mime = &$this->_mailing->compose(NULL, NULL, NULL, 0,

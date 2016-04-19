@@ -217,7 +217,7 @@ class CRM_Contribute_BAO_Contribution extends CRM_Contribute_DAO_Contribution {
     }
 
     // calculate receipt id
-    if (!$params['receipt_id']) {
+    if (!$params['receipt_id'] && empty($params['skipRecentView'])) {
       $params['receipt_id'] = CRM_Contribute_BAO_Contribution::genReceiptID($params, FALSE);
     }
 
@@ -568,7 +568,7 @@ class CRM_Contribute_BAO_Contribution extends CRM_Contribute_DAO_Contribution {
       $expFieldsContrib = CRM_Contribute_DAO_ContributionProduct::export();
       $typeField = CRM_Contribute_DAO_ContributionType::export();
       $optionField = CRM_Core_OptionValue::getFields($mode = 'contribute');
-      $contributionStatus = array('contribution_status' => array('title' => 'Contribution Status',
+      $contributionStatus = array('contribution_status' => array('title' => ts('Contribution Status'),
           'name' => 'contribution_status',
           'data_type' => CRM_Utils_Type::T_STRING,
         ));
@@ -2405,7 +2405,7 @@ WHERE c.id = $id";
         // get primary location email if no email exist( for billing location).
         if($ids['component'] == 'event'){
           if(!empty($ids['event'])){
-            $event_params = array('id' => $ids['id']);
+            $event_params = array('id' => $ids['event']);
             CRM_Event_BAO_Event::retrieve($event_params, $pageValues);
             $pageValues['url'] = CRM_Utils_System::url('civicrm/event/info', 'reset=1&id='.$pageValues['id'], TRUE);
             if($pageValues['is_email_receipt']){

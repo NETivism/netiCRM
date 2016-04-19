@@ -55,7 +55,7 @@
 		  <a href="{crmURL p='civicrm/contact/view' q="action=view&reset=1&cid=`$client.contact_id`"}" title="view contact record">{$client.display_name}</a>{if not $smarty.foreach.clients.last}, &nbsp; {/if}
         {/foreach}
 		<a href="#" title="{ts}add new client to the case{/ts}" onclick="addClient( );return false;">
-			<span class="icon edit-icon"></span>
+			<span class="zmdi zmdi-edit"></span>
 		</a>
 	     {if $hasRelatedCases}
         	<div class="crm-block relatedCases-link"><a href='#' onClick='viewRelatedCases( {$caseID}, {$contactID} ); return false;'>{ts}Related Cases{/ts}</a></div>
@@ -89,13 +89,13 @@
              </td>
 	    {/if}
         <td class="crm-case-caseview-case_type label">
-            <span class="crm-case-summary-label">{ts}Case Type{/ts}:</span>&nbsp;{$caseDetails.case_type}&nbsp;<a href="{crmURL p='civicrm/case/activity' q="action=add&reset=1&cid=`$contactId`&caseid=`$caseId`&selectedChild=activity&atype=`$changeCaseTypeId`"}" title="Change case type (creates activity record)"><span class="icon edit-icon"></span></a>
+            <span class="crm-case-summary-label">{ts}Case Type{/ts}:</span>&nbsp;{$caseDetails.case_type}&nbsp;<a href="{crmURL p='civicrm/case/activity' q="action=add&reset=1&cid=`$contactId`&caseid=`$caseId`&selectedChild=activity&atype=`$changeCaseTypeId`"}" title="Change case type (creates activity record)"><span class="zmdi zmdi-edit"></span></a>
         </td>
         <td class="crm-case-caseview-case_status label">
-            <span class="crm-case-summary-label">{ts}Status{/ts}:</span>&nbsp;{$caseDetails.case_status}&nbsp;<a href="{crmURL p='civicrm/case/activity' q="action=add&reset=1&cid=`$contactId`&caseid=`$caseId`&selectedChild=activity&atype=`$changeCaseStatusId`"}" title="Change case status (creates activity record)"><span class="icon edit-icon"></span></a>
+            <span class="crm-case-summary-label">{ts}Status{/ts}:</span>&nbsp;{$caseDetails.case_status}&nbsp;<a href="{crmURL p='civicrm/case/activity' q="action=add&reset=1&cid=`$contactId`&caseid=`$caseId`&selectedChild=activity&atype=`$changeCaseStatusId`"}" title="Change case status (creates activity record)"><span class="zmdi zmdi-edit"></span></a>
         </td>
         <td class="crm-case-caseview-case_start_date label">
-            <span class="crm-case-summary-label">{ts}Start Date{/ts}:</span>&nbsp;{$caseDetails.case_start_date|crmDate}&nbsp;<a href="{crmURL p='civicrm/case/activity' q="action=add&reset=1&cid=`$contactId`&caseid=`$caseId`&selectedChild=activity&atype=`$changeCaseStartDateId`"}" title="Change case start date (creates activity record)"><span class="icon edit-icon"></span></a>
+            <span class="crm-case-summary-label">{ts}Start Date{/ts}:</span>&nbsp;{$caseDetails.case_start_date|crmDate}&nbsp;<a href="{crmURL p='civicrm/case/activity' q="action=add&reset=1&cid=`$contactId`&caseid=`$caseId`&selectedChild=activity&atype=`$changeCaseStartDateId`"}" title="Change case start date (creates activity record)"><span class="zmdi zmdi-edit"></span></a>
         </td>
         <td class="crm-case-caseview-{$caseID} label">
             <span class="crm-case-summary-label">{ts}Case ID{/ts}:</span>&nbsp;{$caseID}
@@ -115,7 +115,7 @@
             <td>{$form.activity_type_id.label}<br />{$form.activity_type_id.html}&nbsp;<input type="button" accesskey="N" value="Go" name="new_activity" onclick="checkSelection( this );"/></td>
 	    {if $hasAccessToAllCases}	
             <td>
-                <span class="crm-button"><div class="icon print-icon"></div><input type="button"  value="Print Case Report" name="case_report_all" onclick="printCaseReport( );"/></span>
+                <span class="crm-button"><div class="zmdi zmdi-print"></div><input type="button"  value="Print Case Report" name="case_report_all" onclick="printCaseReport( );"/></span>
             </td> 
         </tr>
         <tr>
@@ -153,15 +153,15 @@
 
 <div class="crm-accordion-wrapper crm-accordion_title-accordion crm-accordion-closed crm-case-roles-block">
  <div class="crm-accordion-header">
-  <div class="icon crm-accordion-pointer"></div> 
+  <div class="zmdi crm-accordion-pointer"></div> 
 	{ts}Case Roles{/ts}
  </div><!-- /.crm-accordion-header -->
  <div class="crm-accordion-body">
-    <span id="restmsg" class="msgok" style="display:none"></span>
+    <div id="restmsg" class="msgok" style="display:none"></div>
  
     {if $hasAccessToAllCases}
     <div class="crm-submit-buttons">
-      <a class="button" href="#" onClick="Javascript:addRole();return false;"><span><div class="icon add-icon"></div>{ts}Add new role{/ts}</span></a>
+      <a class="button" href="#" onClick="Javascript:addRole();return false;"><span><i class="zmdi zmdi-plus-circle-o"></i>{ts}Add new role{/ts}</span></a>
     </div>
     {/if}
 
@@ -184,16 +184,16 @@
             <td class="crm-case-caseview-role-phone" id="phone_{$rowNumber}">{$row.phone}</td>
             <td class="crm-case-caseview-role-email" id="email_{$rowNumber}">{if $row.email}
             <a href="{crmURL p='civicrm/contact/view/activity' q="reset=1&action=add&atype=3&cid=`$row.cid`&caseid=`$caseID`"}" title="{ts}compose and send an email{/ts}">
-            	<div class="icon email-icon" title="{ts}compose and send an email{/ts}"></div>
+            	<div class="zmdi zmdi-email" title="{ts}compose and send an email{/ts}"></div>
            	</a>{/if}
             </td>
           {if $relId neq 'client' and $hasAccessToAllCases}
             <td id ="edit_{$rowNumber}">
             	<a href="#" title="edit case role" onclick="createRelationship( {$row.relation_type}, {$row.cid}, {$relId}, {$rowNumber}, '{$row.relation}' );return false;">
-            	<div class="icon edit-icon" ></div>
+            	<div class="zmdi zmdi-edit" ></div>
             	</a> &nbsp;&nbsp;
             	<a href="{crmURL p='civicrm/contact/view/rel' q="action=delete&reset=1&cid=`$contactID`&id=`$relId`&caseID=`$caseID`"}" onclick = "if (confirm('{ts}Are you sure you want to remove this person from their case role{/ts}?') ) this.href+='&confirmed=1'; else return false;">
-            	<div class="icon delete-icon" title="remove contact from case role"></div>
+            	<div class="zmdi zmdi-delete" title="remove contact from case role"></div>
             	</a>
             	
             </td>
@@ -212,7 +212,7 @@
 	       {if $hasAccessToAllCases}               
 	       <td id ="edit_{$rowNumber}">
 	       <a href="#" title="edit case role" onclick="createRelationship( {$relTypeID}, null, null, {$rowNumber}, '{$relName}' );return false;">
-	       	<div class="icon edit-icon"></div>
+	       	<div class="zmdi zmdi-edit"></div>
 	       </a> 
 	       </td>
 	       {else}
@@ -226,7 +226,7 @@
                {if not $smarty.foreach.clientsRoles.first}</tr>{/if}
                <td class="crm-case-caseview-role-sort_name" id="relName_{$rowNumber}"><a href="{crmURL p='civicrm/contact/view' q="action=view&reset=1&cid=`$client.contact_id`"}" title="view contact record">{$client.sort_name}</a></td>
                <td class="crm-case-caseview-role-phone" id="phone_{$rowNumber}">{$client.phone}</td>
-               <td class="crm-case-caseview-role-email" id="email_{$rowNumber}">{if $client.email}<a href="{crmURL p='civicrm/contact/view/activity' q="reset=1&action=add&atype=3&cid=`$client.contact_id`&caseid=`$caseID`"}" title="{ts}compose and send an email{/ts}"><div class="icon email-icon"></div></a>&nbsp;{/if}</td>
+               <td class="crm-case-caseview-role-email" id="email_{$rowNumber}">{if $client.email}<a href="{crmURL p='civicrm/contact/view/activity' q="reset=1&action=add&atype=3&cid=`$client.contact_id`&caseid=`$caseID`"}" title="{ts}compose and send an email{/ts}"><div class="zmdi zmdi-email"></div></a>&nbsp;{/if}</td>
                <td></td>
            </tr>
            {/foreach}
@@ -353,7 +353,7 @@ function createRelationship( relType, contactID, relID, rowNumber, relTypeName )
                             var html = '<a href=' + contactViewUrl + data.cid +' title="view contact record">' +  data.name +'</a>';
                             cj('#relName_' + rowNumber ).html( html );
                             html = '';
-                            html = '<a onclick="createRelationship( ' + relType +','+ data.cid +', ' + data.rel_id +', ' + rowNumber +', \''+ relTypeName +'\' ); return false" title="edit case role" href="#"><div class="icon edit-icon" ></div></a> &nbsp;&nbsp; <a href=' + deleteUrl + data.rel_id +' onclick = "if (confirm(\'{/literal}{ts escape="js"}Are you sure you want to delete this relationship{/ts}{literal}?\') ) this.href +=\'&confirmed=1\'; else return false;"><div title="remove contact from case role" class="icon delete-icon"></div></a>';
+                            html = '<a onclick="createRelationship( ' + relType +','+ data.cid +', ' + data.rel_id +', ' + rowNumber +', \''+ relTypeName +'\' ); return false" title="edit case role" href="#"><div class="zmdi zmdi-edit" ></div></a> &nbsp;&nbsp; <a href=' + deleteUrl + data.rel_id +' onclick = "if (confirm(\'{/literal}{ts escape="js"}Are you sure you want to delete this relationship{/ts}{literal}?\') ) this.href +=\'&confirmed=1\'; else return false;"><div title="remove contact from case role" class="zmdi zmdi-delete"></div></a>';
                             cj('#edit_' + rowNumber ).html( html );
 
 			} else {
@@ -362,7 +362,7 @@ function createRelationship( relType, contactID, relID, rowNumber, relTypeName )
 			   var errorMsg = '{/literal}{ts 1="' + relTypeName + '" 2="' + relTypeAdminLink + '" }The relationship type definition for the %1 case role is not valid. Both sides of the relationship type must be an Individual or a subtype of Individual. You can review and edit relationship types at <a href="%2">Administer >> Option Lists >> Relationship Types</a>{/ts}{literal}.'; 
 
 			   //display error message.
-			   var imageIcon = "<a href='#'  onclick='cj( \"#restmsg\" ).hide( ); return false;'>" + '<div class="ui-icon ui-icon-close" style="float:left"></div>' + '</a>';
+			   var imageIcon = "<a href='#'  onclick='cj( \"#restmsg\" ).hide( ); return false;'>" + '<span class="zmdi zmdi-close"></span>' + '</a>';
 			   cj( '#restmsg' ).html( imageIcon + errorMsg  ).show( );
 			}
 
@@ -375,7 +375,7 @@ function createRelationship( relType, contactID, relID, rowNumber, relTypeName )
                         html = '';
                         if ( data.email ) {
                             var activityUrl = {/literal}"{crmURL p='civicrm/contact/view/activity' q="atype=3&action=add&reset=1&caseid=`$caseID`&cid=" h=0 }"{literal};
-                            html = '<a href=' + activityUrl + data.cid + '><div title="compose and send an email" class="icon email-icon"></div></a>&nbsp;';
+                            html = '<a href=' + activityUrl + data.cid + '><div title="compose and send an email" class="zmdi zmdi-email"></div></a>&nbsp;';
                         } 
                         cj('#email_' + rowNumber ).html( html );
 
@@ -445,7 +445,7 @@ cj(document).ready(function(){
 {if $hasAccessToAllCases}
 <div class="crm-accordion-wrapper crm-accordion_title-accordion crm-accordion-closed crm-case-other-relationships-block">
  <div class="crm-accordion-header">
-  <div class="icon crm-accordion-pointer"></div> 
+  <div class="zmdi crm-accordion-pointer"></div> 
 	{ts}Other Relationships{/ts}
  </div><!-- /.crm-accordion-header -->
  <div class="crm-accordion-body">
@@ -453,7 +453,7 @@ cj(document).ready(function(){
   {if $clientRelationships}
     <div class="crm-submit-buttons">
     <a class="button" href="#" onClick="window.location='{crmURL p='civicrm/contact/view/rel' q="action=add&reset=1&cid=`$contactId`&caseID=`$caseID`"}'; return false;">
-    <span><div class="icon add-icon"></div>{ts}Add client relationship{/ts}</a></span>
+    <span><i class="zmdi zmdi-plus-circle-o"></i>{ts}Add client relationship{/ts}</a></span>
     </div>
 	
     <table class="report-layout otherRelationships">
@@ -468,14 +468,14 @@ cj(document).ready(function(){
             <td class="crm-case-caseview-otherrelationship-relation label">{$row.relation}</td>
             <td class="crm-case-caseview-otherrelationship-name" id="relName_{$rowNumber}"><a href="{crmURL p='civicrm/contact/view' q="action=view&reset=1&cid=`$row.cid`"}" title="view contact record">{$row.name}</a></td>
             <td class="crm-case-caseview-otherrelationship-phone" id="phone_{$rowNumber}">{$row.phone}</td>
-	        <td class="crm-case-caseview-otherrelationship-email" id="email_{$rowNumber}">{if $row.email}<a href="{crmURL p='civicrm/contact/view/activity' q="reset=1&action=add&atype=3&cid=`$row.cid`&caseid=`$caseID`"}" title="{ts}compose and send an email{/ts}"><div class="icon email-icon"></div></a>&nbsp;{/if}</td>
+	        <td class="crm-case-caseview-otherrelationship-email" id="email_{$rowNumber}">{if $row.email}<a href="{crmURL p='civicrm/contact/view/activity' q="reset=1&action=add&atype=3&cid=`$row.cid`&caseid=`$caseID`"}" title="{ts}compose and send an email{/ts}"><div class="zmdi zmdi-email"></div></a>&nbsp;{/if}</td>
         </tr>
 		{assign var=rowNumber value = `$rowNumber+1`}
         {/foreach}
     </table>
   {else}
     <div class="messages status">
-      <div class="icon inform-icon"></div>
+      
           {capture assign=crmURL}{crmURL p='civicrm/contact/view/rel' q="action=add&reset=1&cid=`$contactId`&caseID=`$caseID`"}{/capture}
           {ts 1=$crmURL}There are no Relationships entered for this client. You can <a accesskey="N" href='%1'>add one</a>.{/ts}
     </div>
@@ -486,7 +486,7 @@ cj(document).ready(function(){
   {if $globalRelationships}
     <div class="crm-submit-buttons">
         <a class="button" href="#"  onClick="window.location='{crmURL p='civicrm/group/search' q="reset=1&context=amtg&amtgID=`$globalGroupInfo.id`"}'; return false;">
-        <span><div class="icon add-icon"></div>{ts 1=$globalGroupInfo.title}Add members to %1{/ts}</a></span>
+        <span><i class="zmdi zmdi-plus-circle-o"></i>{ts 1=$globalGroupInfo.title}Add members to %1{/ts}</a></span>
     </div>
 	
     <table class="report-layout globalrelationship">
@@ -499,14 +499,14 @@ cj(document).ready(function(){
         <tr id="caseResource-{$row.contact_id}">
             <td class="crm-case-caseview-globalrelationship-sort_name label" id="relName_{$rowNumber}"><a href="{crmURL p='civicrm/contact/view' q="action=view&reset=1&cid=`$row.contact_id`"}" title="view contact record">{$row.sort_name}</a></td>
             <td class="crm-case-caseview-globalrelationship-phone" id="phone_{$rowNumber}">{$row.phone}</td>
-	    <td class="crm-case-caseview-globalrelationship-email" id="email_{$rowNumber}">{if $row.email}<a href="{crmURL p='civicrm/contact/view/activity' q="reset=1&action=add&atype=3&cid=`$row.contact_id`&caseid=`$caseID`"}" title="{ts}compose and send an email{/ts}"><div title="compose and send an email" class="icon email-icon"></div></a>&nbsp;{/if}</td>
+	    <td class="crm-case-caseview-globalrelationship-email" id="email_{$rowNumber}">{if $row.email}<a href="{crmURL p='civicrm/contact/view/activity' q="reset=1&action=add&atype=3&cid=`$row.contact_id`&caseid=`$caseID`"}" title="{ts}compose and send an email{/ts}"><div title="compose and send an email" class="zmdi zmdi-email"></div></a>&nbsp;{/if}</td>
         </tr>
 		{assign var=rowNumber value = `$rowNumber+1`}
         {/foreach}
     </table>
   {elseif $globalGroupInfo.id}
     <div class="messages status">
-      <div class="icon inform-icon"></div>&nbsp;        
+      &nbsp;        
           {capture assign=crmURL}{crmURL p='civicrm/group/search' q="reset=1&context=amtg&amtgID=`$globalGroupInfo.id`"}{/capture}
           {ts 1=$crmURL 2=$globalGroupInfo.title}The group %2 has no members. You can <a href='%1'>add one</a>.{/ts}
     </div>
@@ -604,7 +604,7 @@ function addRole() {
 			  				     var errorMsg = '{/literal}{ts 1="' + relTypeName + '" 2="' + relTypeAdminLink + '"  }The relationship type definition for the %1 case role is not valid. Both sides of the relationship type must be an Individual or a subtype of Individual. You can review and edit relationship types at <a href="%2">Administer >> Option Lists >> Relationship Types</a>{/ts}{literal}.'; 
 
 			   				     //display error message.
-			   				     var imageIcon = "<a href='#'  onclick='cj( \"#restmsg\" ).hide( ); return false;'>" + '<div class="ui-icon ui-icon-close" style="float:left"></div>' + '</a>';
+                     var imageIcon = "<a href='#'  onclick='cj( \"#restmsg\" ).hide( ); return false;'>" + '<span class="zmdi zmdi-close"></span>' + '</a>';
 			   				     cj( '#restmsg' ).html( imageIcon + errorMsg  ).show( );  
 							}
 					  	    }
@@ -631,7 +631,7 @@ function addRole() {
 
 <div id="casetags" class="crm-accordion-wrapper crm-accordion_title-accordion crm-accordion-open crm-case-tags-block">
  <div class="crm-accordion-header">
-  <div class="icon crm-accordion-pointer"></div> 
+  <div class="zmdi crm-accordion-pointer"></div> 
   {ts}Case Tags{/ts}
  </div><!-- /.crm-accordion-header -->
  <div class="crm-accordion-body">
@@ -764,7 +764,7 @@ function addTags() {
 
 <div class="crm-accordion-wrapper crm-case_activities-accordion crm-accordion-open crm-case-activities-block">
  <div class="crm-accordion-header">
-  <div class="icon crm-accordion-pointer"></div> 
+  <div class="zmdi crm-accordion-pointer"></div> 
 {ts}Case Activities{/ts}
  </div><!-- /.crm-accordion-header -->
  <div id="activities" class="crm-accordion-body">
@@ -777,7 +777,7 @@ function addTags() {
   <div>
 <div class="crm-accordion-wrapper crm-accordion-inner crm-search_filters-accordion crm-accordion-closed">
  <div class="crm-accordion-header">
-  <div class="icon crm-accordion-pointer"></div> 
+  <div class="zmdi crm-accordion-pointer"></div> 
 	{ts}Search Filters{/ts}</a>
  </div><!-- /.crm-accordion-header -->
  <div class="crm-accordion-body">

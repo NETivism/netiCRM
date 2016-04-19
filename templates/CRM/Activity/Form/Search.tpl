@@ -27,16 +27,16 @@
 <div class="crm-form-block crm-form-block-search crm-search-form-block">
 <div class="crm-accordion-wrapper crm-advanced_search_form-accordion {if $rows}crm-accordion-closed{else}crm-accordion-open{/if}">
  <div class="crm-accordion-header crm-master-accordion-header">
-  <div class="icon crm-accordion-pointer"></div>
+  <div class="zmdi crm-accordion-pointer"></div>
         {ts}Edit Search Criteria{/ts}
 </div><!-- /.crm-accordion-header -->
 <div class="crm-accordion-body">
-  <div id="searchForm" class="form-item">
+  <div id="searchForm">
     {strip} 
         <table class="form-layout">
         <tr>
            <td class="font-size12pt" colspan="2">
-               {$form.sort_name.label}&nbsp;&nbsp;{$form.sort_name.html|crmReplace:class:'twenty'}&nbsp;&nbsp;&nbsp;{$form.buttons.html}
+               {$form.sort_name.label} {$form.sort_name.html|crmReplace:class:'twenty'} {$form.buttons.html}
            </td>       
         </tr>
      

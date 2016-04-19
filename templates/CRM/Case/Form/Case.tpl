@@ -36,7 +36,7 @@
 <h3>{if $action eq 8}{ts}Delete Case{/ts}{elseif $action eq 32768}{ts}Restore Case{/ts}{/if}</h3>
 {if $action eq 8 or $action eq 32768 } 
       <div class="messages status"> 
-        <div class="icon inform-icon"></div> 
+         
           {if $action eq 8}
             {ts}Click Delete to move this case and all associated activities to the Trash.{/ts} 
           {else}

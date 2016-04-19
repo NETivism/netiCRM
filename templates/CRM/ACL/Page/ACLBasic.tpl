@@ -62,19 +62,16 @@
         {/strip}
 
         {if $action ne 1 and $action ne 2}
-	    <div class="action-link">
-    	<a href="{crmURL q="action=add&reset=1"}" id="newACL"><div class="icon add-icon"></div>{ts}Add ACL{/ts}</a>
+	    <div class="action-link-button">
+    	<a href="{crmURL q="action=add&reset=1"}" id="newACL"><i class="zmdi zmdi-plus-circle-o"></i>{ts}Add ACL{/ts}</a>
         </div>
         {/if}
     </div>
 </div>
 {elseif $action ne 1 and $action ne 2 and $action ne 8}
     <div class="messages status">
-    <dl>
-        <dt><img src="{$config->resourceBase}i/Inform.gif" alt="{ts}status{/ts}"/></dt>
-        {capture assign=crmURL}{crmURL q="action=add&reset=1"}{/capture}
-        <dd>{ts 1=$crmURL}There are no ACLs entered. You can <a href='%1'>add one</a>.{/ts}</dd>
-        </dl>
+      {capture assign=crmURL}{crmURL q="action=add&reset=1"}{/capture}
+      {ts 1=$crmURL}There are no ACLs entered. You can <a href='%1'>add one</a>.{/ts}
     </div>    
 {/if}
 </div>

@@ -63,11 +63,11 @@
         </div>
     {/if}
     {if $hasperm_administer_dedupe_rules}
-	    <div class="action-link">
-    	<a href="{crmURL q="action=add&contact_type=Individual&reset=1"}" class="button"><span><div class="icon add-icon"></div>{ts}Add Dedupe Rule for Individuals{/ts}</span></a>
-    	<a href="{crmURL q="action=add&contact_type=Household&reset=1"}" class="button"><span><div class="icon add-icon"></div>{ts}Add Dedupe Rule for Households{/ts}</span></a>
-    	<a href="{crmURL q="action=add&contact_type=Organization&reset=1"}" class="button"><span><div class="icon add-icon"></div>{ts}Add Dedupe Rule for Organizations{/ts}</span></a>
-	<a href="{crmURL p='civicrm/dedupe/exception' q='reset=1'}" class="button"><span><div class="icon add-icon"></div>{ts}Dedupe Exceptions{/ts}</span></a>
+	    <div class="action-link-button">
+    	<a href="{crmURL q="action=add&contact_type=Individual&reset=1"}" class="button"><span><i class="zmdi zmdi-plus-circle-o"></i>{ts}Add Dedupe Rule for Individuals{/ts}</span></a>
+    	<a href="{crmURL q="action=add&contact_type=Household&reset=1"}" class="button"><span><i class="zmdi zmdi-plus-circle-o"></i>{ts}Add Dedupe Rule for Households{/ts}</span></a>
+    	<a href="{crmURL q="action=add&contact_type=Organization&reset=1"}" class="button"><span><i class="zmdi zmdi-plus-circle-o"></i>{ts}Add Dedupe Rule for Organizations{/ts}</span></a>
+	<a href="{crmURL p='civicrm/dedupe/exception' q='reset=1'}" class="button"><span><i class="zmdi zmdi-plus-circle-o"></i>{ts}Dedupe Exceptions{/ts}</span></a>
         </div>
     {/if}
 {/if}

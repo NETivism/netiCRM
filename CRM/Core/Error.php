@@ -235,13 +235,8 @@ class CRM_Core_Error extends PEAR_ErrorStack {
    * @acess public
    */
   static function fatal($message = NULL, $code = NULL, $email = NULL) {
-    if (empty($message)) {
-    }
-    else {
-      $message = htmlspecialchars($message, ENT_QUOTES);
-    }
-
-    $vars = array('message' => $message,
+    $vars = array(
+      'message' => $message,
       'code' => $code,
     );
 

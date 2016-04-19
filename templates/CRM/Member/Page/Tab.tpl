@@ -46,10 +46,10 @@
             {/if}
         </div>
 
-        <div class="action-link">
-            <a accesskey="N" href="{$newURL}" class="button"><span><div class="icon add-icon"></div>{ts}Add Membership{/ts}</span></a>
+        <div class="action-link-button">
+            <a accesskey="N" href="{$newURL}" class="button"><span><i class="zmdi zmdi-plus-circle-o"></i>{ts}Add Membership{/ts}</span></a>
             {if $accessContribution and $newCredit}
-                <a accesskey="N" href="{$newCreditURL}" class="button"><span><div class="icon add-icon"></div>{ts}Submit Credit Card Membership{/ts}</span></a><br /><br />
+                <a accesskey="N" href="{$newCreditURL}" class="button"><span><i class="zmdi zmdi-plus-circle-o"></i>{ts}Submit Credit Card Membership{/ts}</span></a><br /><br />
             {else}
                 <br/ ><br/ >
             {/if}
@@ -57,7 +57,7 @@
     {/if}
     {if NOT ($activeMembers or $inActiveMembers) and $action ne 2 and $action ne 1 and $action ne 8 and $action ne 4 and $action ne 32768}
        	<div class="messages status">
-          <div class="icon inform-icon"></div>
+          
               {ts}No memberships have been recorded for this contact.{/ts}
          </div>
     {/if}

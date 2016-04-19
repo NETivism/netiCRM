@@ -27,13 +27,13 @@
 {include file="CRM/common/openFlashChart.tpl"}
 <div class="crm-submit-buttons">
 <a href="javascript:addDashlet( );" class="button show-add">
-	<span><div class="icon settings-icon"></div>{ts}Configure Your Dashboard{/ts}</span></a>
+	<span><div class="zmdi zmdi-settings"></div>{ts}Configure Your Dashboard{/ts}</span></a>
 
 <a style="display:none;" href="{crmURL p="civicrm/dashboard" q="reset=1"}" class="button show-done" style="margin-left: 6px;">
-	<span><div class="icon check-icon"></div>{ts}Done{/ts}</span></a>
+	<span><div class="zmdi zmdi-check-square"></div>{ts}Done{/ts}</span></a>
 
 <a style="float:right;" href="{crmURL p="civicrm/dashboard" q="reset=1&resetCache=1"}" class="button show-refresh" style="margin-left: 6px;">
-	<span> <div class="icon refresh-icon"></div>{ts}Refresh Dashboard Data{/ts}</span></a>
+	<span> <div class="zmdi zmdi-refresh-alt"></div>{ts}Refresh Dashboard Data{/ts}</span></a>
 
 </div>
 <div class="crm-block crm-content-block">

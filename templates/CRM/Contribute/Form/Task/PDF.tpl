@@ -25,7 +25,7 @@
 *}
 {* Confirmation of contribution deletes  *}
 <div class="messages status">
-  <div class="icon inform-icon"></div>
+  
       {include file="CRM/Contribute/Form/Task.tpl"}
 </div>
 <div id="help">
@@ -41,7 +41,7 @@
 <div class="form-item">{$form.single_page_letter.html}<label>{$form.single_page_letter.label}</label><div class="description">{ts}By default we generate one receipt in every A4 page. After you check this option, receipt will include default address of donor in every page instead. We will generate their address in the top of page. This is useful when you want to send by post directly without envelop.{/ts}</div></div>
 
   <div id="dialog-confirm" title="{ts}Procceed Receipt Generation?{/ts}" style="display:none;">
-    <p><span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>{ts}In order to prevent non-continues receipt id. After generate, you can't insert any receipt number between these contribution.{/ts}<br />{ts}Are you sure you want to continue?{/ts}</p>
+    <p><span class="zmdi zmdi-alert-circle" style="margin: 0 7px 20px 0;"></span>{ts}In order to prevent non-continues receipt id. After generate, you can't insert any receipt number between these contribution.{/ts}<br />{ts}Are you sure you want to continue?{/ts}</p>
   </div>
 
 <div class="spacer"></div>

@@ -3,21 +3,21 @@
 # Fuyuan Cheng <gloomcheng@gmail.com>, 2013-2015
 # IreneLin, 2013
 # jimyhuang <jimmy@netivism.com.tw>, 2013,2015-2016
-# 張書懷 <junsuwhy@gmail.com>, 2015
+# 張書懷 <junsuwhy@gmail.com>, 2015-2016
 # SharonKwan <sharon@netivism.com.tw>, 2015-2016
 # charlesc <yeouhsin@gmail.com>, 2013-2014
+# 花玉婷 <klavier1976@netivism.com.tw>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2016-01-19 07:08+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
+"PO-Revision-Date: 2016-04-13 07:06+0000\n"
+"Last-Translator: 張書懷 <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: POEditor.com\n"
 
 #: CRM/ACL/BAO/ACL.php CRM/ACL/BAO/EntityRole.php CRM/Admin/Form/Options.php
 #: CRM/Contact/Form/Task/Map.php CRM/Core/DAO/CustomGroup.php
@@ -3012,7 +3012,7 @@ msgstr "無法刪除目前正在登入的使用者：%1。"
 
 #: CRM/Contact/Form/Merge.php CRM/Contact/Task.php
 msgid "Merge Contacts"
-msgstr "合併聯絡人"
+msgstr "檢查重覆聯絡人（選擇兩位直接合併）"
 
 #: CRM/Contact/Form/Relationship.php CRM/Member/Form/MembershipType.php
 msgid "Search Again"
@@ -6564,11 +6564,11 @@ msgstr "所見即所得編輯器"
 
 #: CRM/Admin/Form/Preferences/Display.php
 msgid "Individual Display Name Format"
-msgstr "個人名稱"
+msgstr "個人顯示名稱格式"
 
 #: CRM/Admin/Form/Preferences/Display.php
 msgid "Individual Sort Name Format"
-msgstr "個人名稱"
+msgstr "個人排序名稱格式"
 
 #: CRM/Admin/Form/RelationshipType.php
 msgid "Relationship Label-A to B"
@@ -8969,7 +8969,7 @@ msgstr "此聯絡人已被合併。"
 
 #: CRM/Contact/Form/Merge.php
 msgid "Oops, these contacts seems to be marked as non duplicates."
-msgstr ""
+msgstr "這些聯絡人似乎已被標注為「非重複」。"
 
 #: CRM/Contact/Form/NewContact.php
 msgid "Create New Contact"
@@ -15131,7 +15131,7 @@ msgstr "折扣結束日期"
 
 #: CRM/Event/Form/ManageEvent/Fee.php
 msgid "Add Discount Set to Fee Table"
-msgstr "為費用表格設定折扣細節"
+msgstr "進一步設定折扣細節"
 
 #: CRM/Event/Form/ManageEvent/Fee.php
 msgid "The discount end date cannot be prior to the start date."
@@ -15277,6 +15277,10 @@ msgstr "審核訊息"
 #: CRM/Event/Form/ManageEvent/Registration.php
 msgid "Pending participant expiration (hours)"
 msgstr "報名後未繳費，取消資格的時間（小時）"
+
+#: templates/CRM/Event/Form/ManageEvent/Registration.tpl
+msgid "Pending participant expiration (days)"
+msgstr "報名後未繳費，取消資格的時間（天數，不包含報名當天）"
 
 #: CRM/Event/Form/ManageEvent/Registration.php
 msgid "Please enter the number of hours (as an integer)."
@@ -17055,6 +17059,14 @@ msgid "From Email Address"
 msgstr "寄件者 Email "
 
 #: CRM/Mailing/Form/Upload.php
+msgid "Auto-Generated"
+msgstr "自動產生"
+
+#: CRM/Mailing/Form/Upload.php
+msgid "Reply-to email"
+msgstr "回覆 Email"
+
+#: CRM/Mailing/Form/Upload.php
 msgid "Mailing Subject"
 msgstr "電子報主旨"
 
@@ -17657,7 +17669,7 @@ msgstr "確認信函與收據已寄送給%1。"
 
 #: CRM/Member/Form/Membership.php
 msgid "%1 membership for %2 has been added."
-msgstr "已新增 %1 位 %2 會籍。"
+msgstr "已新增 %2 的 %1 會籍。"
 
 #: CRM/Member/Form/Membership.php
 msgid "A membership confirmation and receipt has been sent to %1."
@@ -19647,6 +19659,10 @@ msgstr "更新標籤"
 #: CRM/Tag/Form/Tag.php
 msgid "Your update(s) have been saved."
 msgstr "已儲存您的更新。"
+
+#: CRM/UF/Form/AdvanceSetting.php
+msgid "Advanced options"
+msgstr "進階選項"
 
 #: CRM/UF/Form/AdvanceSetting.php
 msgid "Enable mapping for this profile?"
@@ -23424,7 +23440,7 @@ msgstr "目前沒有任何聯絡人類型。您可以<a href='%1'>新增一個</
 
 #: templates/CRM/Admin/Page/EventTemplate.tpl
 msgid "Add Event Template"
-msgstr "編輯活動範本"
+msgstr "新增活動範本"
 
 #: templates/CRM/Admin/Page/EventTemplate.tpl
 msgid "Public Event"
@@ -25775,7 +25791,7 @@ msgstr "使用者名稱已被使用。"
 
 #: templates/CRM/common/dedupe.tpl
 msgid "Mark as Dedupe Exception"
-msgstr ""
+msgstr "標注為非重複"
 
 #: templates/CRM/common/dedupe.tpl
 msgid "Are you sure you want to mark these contacts as dedupe exception."
@@ -26321,7 +26337,7 @@ msgstr ""
 
 #: templates/CRM/Contact/Form/Edit/Address.tpl
 msgid "Another Address"
-msgstr "街道地址"
+msgstr "地址"
 
 #: templates/CRM/Contact/Form/Edit/Address.tpl
 msgid "Location type"
@@ -27364,7 +27380,7 @@ msgstr "標示為非重複"
 
 #: templates/CRM/Contact/Page/DedupeFind.tpl
 msgid "Insufficient access rights - cannot merge"
-msgstr ""
+msgstr "權限不足，無法合併"
 
 #: templates/CRM/Contact/Page/DedupeFind.tpl
 msgid "Merge %1 with"
@@ -27795,7 +27811,7 @@ msgstr "退訂群組"
 msgid ""
 "You are no longer subscribed to these group(s). Click Rejoin Group if you "
 "want to re-subscribe."
-msgstr ""
+msgstr "你並不在這些群組裡頭，若你想要重新加入，請點選「重新加入群組」"
 
 #: templates/CRM/Contact/Page/View/UserDashBoard/GroupContact.tpl
 msgid "Are you sure you want to add back into %1?"
@@ -28074,7 +28090,7 @@ msgid ""
 "You will receive an email receipt for each recurring contribution. The "
 "receipts will include a link you can use if you decide to modify or cancel "
 "your future contributions."
-msgstr "每一期捐款，您都會收到一份 Email 收據，表示捐款成功，正式捐款收據我們將另行郵寄給您。若您要停止捐款或改變捐款方式或金額，請與我們聯繫。"
+msgstr "每一期捐款，您都會收到一份 Email 通知，表示捐款成功，正式捐款收據我們將另行郵寄給您。若您要停止捐款或改變捐款方式或金額，請與我們聯繫。"
 
 #: templates/CRM/Contribute/Form/Contribution/Main.tpl
 msgid ""
@@ -28164,7 +28180,7 @@ msgid ""
 "allow people to enter their own dollar amounts, you can also set minimum and"
 " maximum values. Depending on your choice of Payment Processor, you may be "
 "able to offer a recurring contribution option."
-msgstr "使用此表單設定捐款金額選項。您可以提供捐款者自行輸入捐款金額、或提供一個固定金額的選項列表。若提供固定金額選項列表，您可以為不同級別的捐款金額選項（例如朋友、支持者等）設定名稱。如果您允許他們自行輸入捐款金額，您還可以設定最低及最高的捐款金額。如果您的金流服務商有提供定期定額的功能，您甚至可以提供定期定額選項。"
+msgstr "在此步驟設定捐款金額選項。您可提供捐款者自行輸入捐款金額、或提供一個固定金額的選項列表。若提供固定金額選項列表，您可以為不同級別的捐款金額選項（例如朋友、支持者等）設定名稱。如果您允許他們自行輸入捐款金額，您還可以設定最低及最高的捐款金額。如果您的金流服務商有提供定期定額的功能，您甚至可以提供定期定額選項。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/Amount.tpl
 msgid ""
@@ -28286,7 +28302,7 @@ msgstr "如果您想啟用定期定額捐款功能讓使用者選擇，請勾選
 
 #: templates/CRM/Contribute/Form/ContributionPage/Amount.tpl
 msgid "Select recurring units supported for recurring payments."
-msgstr "選擇再次付款的單位。"
+msgstr "選擇定期方式。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/Amount.tpl
 msgid "Can users also set an interval (e.g. every '3' months)?"
@@ -28391,7 +28407,7 @@ msgid ""
 "volunteer availability and skills. Add any number of fields to your "
 "contribution form by selecting CiviCRM Profiles (collections of fields) to "
 "include at the beginning of the page, and/or at the bottom."
-msgstr "您可能想從捐款者收集其他資料。例如，您可能想詢問加入志工的意願與能力。您可從資料表單新增字段到您的捐款表格，包含在頁面頂部，與/或頁面底部。"
+msgstr "您必須從捐款者收集必要資料（例如基本個資）與其他非必要的參考資料（例如加入志工的意願）。我們提供頁面頂部與頁面底部，您可在這兩個位置放入資料表單，以便收集資料。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/Custom.tpl
 msgid ""
@@ -28406,7 +28422,7 @@ msgid ""
 "href='%1'>Administer CiviCRM Profiles</a> if you need to review, modify or "
 "create profiles (you can come back at any time to select or update the "
 "Profile(s) used for this page)."
-msgstr "您可以使用頁面上現有的資料表單 - 或指定建立資料表單供在線上募款頁使用。到<a href='%1'>管理資料表單</a>如果您需要重新檢查、修改或建立資料表單(您可以在任何時間回來或更新此頁的資料表單)。"
+msgstr "您可使用現有的資料表單，或建立新的資料表單來使用，請到聯絡人 > 管理 > <a href='%1'>資料表單</a>，查看、修改或建立新的資料表單，之後可隨時回到此步驟重新設定所用的資料表單。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/Custom.tpl
 msgid ""
@@ -28707,7 +28723,7 @@ msgid ""
 "layout of the thank-you section below. You also control whether an "
 "electronic receipt is automatically emailed to each contributor - and can "
 "add a custom message to that receipt."
-msgstr "您可以使用此表格設置致謝訊息及收據選項。捐款人會在線上捐款完成後，看到一個確認及致謝頁面。您在下方提供致謝部分的格式及設計。您還可在收據中加入自訂文字，並設定電子收據是否自動 Email 給捐/繳款人。"
+msgstr "您可在此步驟設定致謝訊息及收據選項。捐款人完成捐款後，將會看到確認及致謝頁面，請您在下方提供的致謝頁與收據頁設定欄位中輸入自訂文案，也可選擇要不要自動將電子收據Email給捐款人。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/ThankYou.tpl
 msgid ""
@@ -28818,7 +28834,7 @@ msgid ""
 "fund-raising campaign. Widget code can be added to any web page - and will "
 "provide a real-time display of current contribution results, and a direct "
 "link to this contribution page."
-msgstr "捐款嚮導可讓您及您的支持者容易宣傳這個募款。小工具的語法可加入到任何網頁 - 它會提供一個顯示即時捐款結果的展示小工具，及一個連結可直接到此募款頁。"
+msgstr "利用捐款小工具，可讓您的支持者協助您宣傳此募款活動。捐款小工具將提供一段原始碼，可放進任何網頁，它將提供一個展示小進度條，顯示即時捐款累積金額，並提供連結讓人連結到此募款頁。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/Widget.tpl
 msgid ""
@@ -29243,7 +29259,7 @@ msgid ""
 "version will be automatically created for you. If you don't have an image "
 "available at this time, you may also choose to display a 'No Image "
 "Available' icon - by selecting the 'default image'."
-msgstr "您可以從您的電腦上傳一個圖片，或輸入圖片的url。如果您選擇上傳圖片，縮圖將會自動產生。如果您此時沒有圖片可使用，您可以從「預設圖片」中選擇「沒有圖像」icon。"
+msgstr "您可以從您的電腦上傳一個圖片，或輸入圖片的url。如果您選擇上傳圖片，縮圖將會自動產生。如果您此時沒有圖片可使用，您可勾選「預設圖片」，將顯示「沒有圖像」icon。"
 
 #: templates/CRM/Contribute/Form/ManagePremiums.tpl
 msgid ""
@@ -29276,7 +29292,7 @@ msgid ""
 "Enter a comma-delimited list of color, size, etc. options for the product if"
 " applicable. Contributors will be presented a drop-down menu of these "
 "options when they select this product."
-msgstr "如果有的話，請輸入此物品的選項列表（以逗號分隔），包括顏色、大小，。當捐款者要選擇產品時，頁面上會顯示一個下拉式選單提供選擇。"
+msgstr "如果有的話，請輸入此物品的選項列表（以逗號分隔），包括顏色、大小（例如「綠色t恤,L」），每一行放一個選項。當捐款者要選擇產品時，頁面上會顯示一個下拉式選單提供選擇。 "
 
 #: templates/CRM/Contribute/Form/ManagePremiums.tpl
 msgid "Subscription or Service Settings"
@@ -29745,13 +29761,13 @@ msgstr "如果您匯入檔案的欄位與先前的匯入檔案相似，您可以
 
 #: templates/CRM/Contribute/Page/ContributionPageEdit.tpl
 msgid "Go to this LIVE Online Contribution page"
-msgstr "前往使用中線上募款頁"
+msgstr "前往募款頁"
 
 #: templates/CRM/Contribute/Page/ContributionPageEdit.tpl
 msgid ""
 "Create links to this contribution page by copying and pasting the following "
 "URL into any web page."
-msgstr "透過複製及貼上以下URL到任何網頁，來建立連結到此募款頁。"
+msgstr "或複製下方URL，貼到任何需要的地方。"
 
 #: templates/CRM/Contribute/Page/ContributionPageEdit.tpl
 msgid ""
@@ -29777,7 +29793,7 @@ msgid ""
 "Use the links below to update features and content for this Online "
 "Contribution Page, as well as to run through the contribution process in "
 "<strong>test mode</strong>. Refer to the %1 for more information."
-msgstr "使用以下連結為此線上募款頁更新功能及內容，只要透過捐款處理在 <strong>測試模式</strong>。請參閱 %1 獲得更多資訊。"
+msgstr "您可利用下方的設定列表，來修改募款頁的功能與內容。"
 
 #: templates/CRM/Contribute/Page/ContributionPageEdit.tpl
 msgid ""
@@ -29985,7 +30001,7 @@ msgstr "瀏覽個人募款頁"
 
 #: templates/CRM/Contribute/Page/ContributionSoft.tpl
 msgid "( n/a )"
-msgstr ""
+msgstr "（無）"
 
 #: templates/CRM/Contribute/Page/ContributionSoft.tpl
 msgid "View related contribution"
@@ -30011,7 +30027,7 @@ msgid ""
 "code which can be used to map contributions to codes in your accounting "
 "system. Commonly used contribution types are: Donation, Campaign "
 "Contribution, Membership Dues..."
-msgstr "費用類型是用來將捐款分類，以便於做報表與會計用途。這些分類也參考到<strong>捐款</strong>。您可視需要，自由設置費用類型。每一個費用類型可配置一個會計代碼，讓您可容易的與您的會計系統做配對。一般常用的捐款類別有：捐款、募款、會費……"
+msgstr "費用類型是用來將捐款分類，以便於做報表與會計用途，並且可設定哪個類型的捐款可以自動產生捐款收據pdf檔。這些分類會與出現在募款頁設定時供選用。您可視需要，自由設置費用類型。每一個費用類型可配置一個會計代碼，讓您可容易的與您的會計系統做配對。一般常用的捐款類別有：捐款、募款、會費……"
 
 #: templates/CRM/Contribute/Page/ContributionType.tpl
 msgid "Acctg Code"
@@ -31065,7 +31081,7 @@ msgstr "活動名稱僅能輸入字母、數字、空格、連字號及破折號
 
 #: templates/CRM/Event/Form/ManageEvent/EventInfo.tpl
 msgid "Include this event in iCalendar feeds?"
-msgstr "將此活動列在 iCalendar？"
+msgstr "若勾選公開活動，則此活動可被新增到google calendar 或 iCal。"
 
 #: templates/CRM/Event/Form/ManageEvent/EventInfo.tpl
 msgid ""
@@ -31309,6 +31325,13 @@ msgid ""
 "by participants with any of the pending statuses. Enter 0 (or leave empty) "
 "to disable this feature."
 msgstr "限制報名者在<strong>設定時間之內（小時）</strong>確認/完成報名程序。輸入 0 （或留空）即取消此功能。"
+
+#: templates/CRM/Event/Form/ManageEvent/Registration.hlp
+msgid ""
+"Time limit <strong>in days</strong> for confirming/finishing registration by"
+" participants with any of the pending statuses. Enter 0 (or leave empty) to "
+"disable this feature."
+msgstr "限制報名者在<strong>設定時間之內（天數）</strong>確認/完成報名程序。輸入 0 （或留空）即取消此功能。"
 
 #: templates/CRM/Event/Form/ManageEvent/Registration.tpl
 msgid ""
@@ -32520,7 +32543,7 @@ msgid ""
 "link to a form where they can enter their friends' email addresses, along "
 "with a personalized message. CiviCRM will record these solicitation "
 "activities, and will add the friends to your database."
-msgstr "告知朋友令您的捐款人更容易傳開此募款活動到全世界。捐款致謝頁會包括一連結到表格，讓他們可以輸入朋友的 Email 及個人訊息。CiviCRM 會記錄這些邀請活動，及會新增朋友到您的資料庫。"
+msgstr "啟用「轉寄朋友」功能，可讓捐款人協助您宣傳募款活動。啟用此功能後，捐款致謝頁面會提供連結到一個表格，讓捐款人輸入要轉寄的朋友Email及個人訊息。CiviCRM會紀錄轉寄的動作，並將填入的朋友資料新增到資料庫。"
 
 #: templates/CRM/Friend/Form/Friend.tpl
 msgid ""
@@ -33815,10 +33838,6 @@ msgid "Mailing Settings"
 msgstr "電子報設定"
 
 #: templates/CRM/Mailing/Page/Report.tpl
-msgid "Reply-to email"
-msgstr "回覆 Email"
-
-#: templates/CRM/Mailing/Page/Report.tpl
 msgid "Forward replies"
 msgstr "轉寄回覆"
 
@@ -33939,7 +33958,7 @@ msgid ""
 "Use this form to enable and configure a Membership Signup and Renewal "
 "section for this Online Contribution Page. If you're not using this page for"
 " membership signup, leave the <strong>Enabled</strong> box un-checked.."
-msgstr "使用此表格去啓用及設定一個會籍註冊，及更新此線上募款頁。如果您不是在此頁面加入會員，請取消勾選<strong>已啓用</strong>框..."
+msgstr "您可在此步驟啟用及設定會籍註冊功能。若不需要在此頁面加入會員，請將「<strong>啓用</strong>」取消勾選。"
 
 #: templates/CRM/Member/Form/MembershipBlock.tpl
 msgid "Include a Membership Signup section in this Online Contribution page?"
@@ -34221,7 +34240,7 @@ msgstr "例如'學生'，'長輩'，'榮譽會員'…"
 msgid ""
 "Description of this membership type for display on signup forms. May include"
 " eligibility, benefits, terms, etc."
-msgstr ""
+msgstr "請描述這個會員類型，例如本種類會員的權益、相關規定等等。這個類型將會出現在會員申請表單。"
 
 #: templates/CRM/Member/Form/MembershipType.tpl
 msgid ""
@@ -34229,7 +34248,7 @@ msgid ""
 "this is for membership in 'Save the Whales - Northwest Chapter'). NOTE: This"
 " organization/group/chapter must exist as a CiviCRM Organization type "
 "contact."
-msgstr ""
+msgstr "被加入到此類型的會員，屬於組織或分會？（例如：這個會員屬於「拯救鯨魚 - 西北分會」）。也請注意，所選擇的組織，必須存在於 CiviCRM 的組織聯絡人。"
 
 #: templates/CRM/Member/Form/MembershipType.tpl
 msgid "Select Target Contact for the Membership-Organization"
@@ -34264,7 +34283,7 @@ msgid ""
 "Select the contribution type assigned to fees for this membership type (for "
 "example 'Membership Fees'). This is required for all membership types - "
 "including free or complimentary memberships."
-msgstr ""
+msgstr "請為這個會員類型的會費選一個捐款類型（例如「會費」）。本欄位必需設定才能儲存，包括免費的會員或暫時性的會員。"
 
 #: templates/CRM/Member/Form/MembershipType.tpl
 msgid ""
@@ -34275,7 +34294,7 @@ msgstr "此會員期限（例如三十日、兩個月、五年、終生）"
 msgid ""
 "Select 'rolling' if membership periods begin at date of signup. Select "
 "'fixed' if membership periods begin on a set calendar date."
-msgstr ""
+msgstr "若此會籍於繳費日當天起算，請選「依繳費日期起算」。若無論哪天填表入會，會籍都固定從該會籍所設定的起始日起算，請選「固定起始日期」。"
 
 #: templates/CRM/Member/Form/MembershipType.tpl
 msgid ""
@@ -34296,13 +34315,13 @@ msgstr ""
 msgid ""
 "Memberships can be automatically granted to related contacts by selecting a "
 "Relationship Type."
-msgstr ""
+msgstr "利用「關係」自動建立會籍資格。例如家長入會，其子女也自動擁有會籍資格。"
 
 #: templates/CRM/Member/Form/MembershipType.tpl
 msgid ""
 "Is this membership type available for self-service signups ('Public') or "
 "assigned by CiviCRM 'staff' users only ('Admin')"
-msgstr ""
+msgstr "若選「公開」，則此會籍資格可公開在入會頁面讓入會者選擇加入。若選「管理」，則必須由管理員進行設定才能擁有此會籍。"
 
 #: templates/CRM/Member/Form/MembershipType.tpl
 msgid "Renewal Reminders"
@@ -34313,7 +34332,7 @@ msgid ""
 "If you would like Membership Renewal Reminder emails sent to members "
 "automatically, you need to create a reminder message template and you need "
 "to configure and periodically run a 'cron' job on your server."
-msgstr ""
+msgstr "會籍到期自動通知功能，須先建立會籍到期通知信範本，或是從已建立的範本中選用。"
 
 #: templates/CRM/Member/Form/MembershipType.tpl
 msgid ""
@@ -34327,11 +34346,11 @@ msgstr "沒有建立訊息範本。如果您想自動寄送更新會員的通知
 msgid ""
 "Select the renewal reminder message to be sent to the members of this "
 "membership type."
-msgstr ""
+msgstr "請在此選擇此會籍的到期通知信範本。"
 
 #: templates/CRM/Member/Form/MembershipType.tpl
 msgid "Send Reminder these many days prior to membership expiration."
-msgstr ""
+msgstr "請填入天數，系統將在會籍到期日前依您填入的天數寄送到期通知信。"
 
 #: templates/CRM/Member/Form/MembershipView.tpl
 msgid "View contact summary"
@@ -34671,7 +34690,7 @@ msgid ""
 "Use the <strong>Relationship Type</strong> field to configure Membership "
 "Types where memberships are automatically granted to related contacts. "
 "Examples are listed below:"
-msgstr ""
+msgstr "利用「關係類型」可自動替與會員本人有特定關係的聯絡人建立會籍。範例如下表："
 
 #: templates/CRM/Member/Page/MembershipType.hlp
 msgid "Direct member is:"
@@ -34725,7 +34744,7 @@ msgid ""
 "and day for memberships to start. If membership duration is specified in "
 "months, memberships will start on the 1st of the current month and run for "
 "the number of specified months."
-msgstr ""
+msgstr "若此會籍於繳費日當天起算，請選「依繳費日期起算」。若無論哪天填表入會，會籍從該會籍所設定的起始日起算，請選「固定起始日期」。若會籍期間設定為年，您必須在該會籍設定起算的日期（月日）。若會籍期間設定為月，則會籍將從入會月的1日起算，然後持續到所設定的月份數。"
 
 #: templates/CRM/Member/Page/MembershipType.hlp
 msgid "EXAMPLES"
@@ -35419,7 +35438,7 @@ msgstr "以欄位為群組"
 
 #: templates/CRM/Report/Form/Criteria.tpl
 msgid "Other Options"
-msgstr ""
+msgstr "其他選項"
 
 #: templates/CRM/Report/Form/Criteria.tpl
 msgid "Set Filters"
@@ -44748,7 +44767,7 @@ msgid "Last receive Date"
 msgstr "最近一筆收到日期"
 
 #: CRM/Contact/Form/Search/Custom/RecurSearch.php
-msgid "Recuring Status"
+msgid "Recurring Status"
 msgstr "定期定額狀態"
 
 #: CRM/Contact/Form/Search/Custom/RecurSearch.php
@@ -44785,11 +44804,11 @@ msgstr "最近一筆收到日期"
 
 #: CRM/Contact/Form/Search/Custom/RecurSearch.php
 msgid "In progress and having over 2 times."
-msgstr "兩期以上有效"
+msgstr "剩餘兩期以上"
 
 #: CRM/Contact/Form/Search/Custom/RecurSearch.php
 msgid "In progress and last 1 time."
-msgstr "餘一期有效"
+msgstr "剩餘一期"
 
 #: CRM/Contact/Form/Search.php
 msgid "Unsubscription Group"
@@ -44873,9 +44892,9 @@ msgstr "抱歉，付款失敗了！"
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid ""
-"We were unable to process your payment. Your will not been charged in this "
+"We were unable to process your payment. You will not be charged in this "
 "transaction."
-msgstr ""
+msgstr "我們無法處理本次付款，您不會支付任何款項。"
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid "Possible reason"
@@ -44899,11 +44918,11 @@ msgstr "您現在登入中，系統已自動帶入您的個資。若要更改你
 
 #: CRM/Event/BAO/Participant.php
 msgid "Participant Note"
-msgstr ""
+msgstr "參加者註記"
 
 #: CRM/Contribute/DAO/Contribution.php
 msgid "Contribution Page ID"
-msgstr ""
+msgstr "募款頁編號"
 
 #: templates/CRM/Contribute/Form/Contribution/Confirm.tpl
 #: templates/CRM/Event/Form/Registration/Confirm.tpl
@@ -44981,3 +45000,83 @@ msgid ""
 "Send email to contacts one by one listed above. Your won't leak email of "
 "contacts."
 msgstr "您不用擔心聯絡人的電子郵件曝光，這功能將會一封封分開寄信給上列的聯絡人。"
+
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php
+msgid "Recurring contributions estimated in next %1 %2"
+msgstr "預估未來%1 %2定期定額捐款金額"
+
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php
+msgid "Remain Installments"
+msgstr "剩餘期數"
+
+#: templates/CRM/Contribute/Page/DashBoard.tpl
+msgid "There are %1 contributions in this %2 by %3 contacts. Total amount: %4"
+msgstr "本 %2 有 %3 人捐了 %1 筆定期定額，總金額為 %4"
+
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php
+msgid "Recurring ended"
+msgstr "已結束定期"
+
+#: CRM/Contribute/xml/Menu/Contribute.xml
+msgid "Recurring Settings"
+msgstr "定期定額設定"
+
+#: CRM/Admin/Form/Setting/Recurring.php
+msgid "Exclude to sync"
+msgstr "排除同步"
+
+#: templates/CRM/Admin/Form/Setting/Recurring.tpl
+msgid ""
+"When recurring contribution being triggered, new contribution will copy "
+"custom fields value from first one. Fields you selected in this option will "
+"exclude to synchronize value from old contribution."
+msgstr "當定期捐款自動由系統觸發時，新的繳款紀錄將會同步第一筆捐款紀錄的自訂欄位。本選項可選擇不同步的欄位，讓此欄位不會複製第一筆繳款的自訂欄位。"
+
+#: CRM/Contribute/BAO/Query.php
+msgid "Non-Recurring Contribution"
+msgstr "非定期捐款"
+
+#: CRM/Contact/Form/Search/Custom/AnnualReceipt.php
+msgid "Print Annual Receipt"
+msgstr "產生年度收據"
+
+#: CRM/Contact/Form/Search/Custom/AnnualReceipt.php
+msgid "Receipt info in this year"
+msgstr "本年度的收據"
+
+#: CRM/Contact/Form/Search/Custom/AnnualReceipt.php
+msgid "Receipt info in last year"
+msgstr "去年度的收據資訊"
+
+#: CRM/Contact/Form/Search/Custom/AnnualReceipt.php
+msgid "Receipt info in all lifetime"
+msgstr "開始至今的收據資訊"
+
+#: CRM/Contact/Form/Search/Custom/AnnualReceipt.php
+msgid "Price Set Export"
+msgstr "價格表匯出"
+
+#: templates/CRM/Contact/Form/Task/AnnualReceipt.tpl
+msgid "This will take a period of time"
+msgstr "這會花上一點時間"
+
+#: templates/CRM/Admin/Form/Setting/Miscellaneous.tpl
+msgid ""
+"If enabled, PDF receipt wont't be an attachment during event signup or "
+"online contribution."
+msgstr "如果選「是」，PDF 版本的信件內文，將「不會」夾帶於信件中。"
+
+#: templates/CRM/Admin/Form/Setting/Miscellaneous.tpl
+msgid "Do not attach PDF copy to receipts"
+msgstr "信件不要夾帶 PDF"
+
+msgid "Type here"
+msgstr "請輸入"
+
+#: CRM/Report/Form/Contact/Participte.php
+msgid "Top Participant"
+msgstr "參加最多活動的人"
+
+#: CRM/Report/Form/Contact/Participte.php
+msgid "Report for list top participants."
+msgstr "列出參加過最多活動的聯絡人報表"

@@ -844,7 +844,7 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
       case 'Select State/Province':
         //Add State
         $stateOption = array('' => ts('- select -')) + CRM_Core_PseudoConstant::stateProvince();
-        $qf->add('select', $elementName, $label, $stateOption, (($useRequired && $field->is_required) && !$search));
+        $qf->add('select', $elementName, $label, $stateOption, (($useRequired || ($useRequired && $field->is_required)) && !$search));
         break;
 
       case 'Multi-Select State/Province':
@@ -860,7 +860,7 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
       case 'Select Country':
         //Add Country
         $countryOption = array('' => ts('- select -')) + CRM_Core_PseudoConstant::country();
-        $qf->add('select', $elementName, $label, $countryOption, (($useRequired && $field->is_required) && !$search));
+        $qf->add('select', $elementName, $label, $countryOption, (($useRequired || ($useRequired && $field->is_required)) && !$search));
         break;
 
       case 'Multi-Select Country':

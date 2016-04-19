@@ -270,7 +270,7 @@
                     <td colspan="2">
                      	<div class="crm-accordion-wrapper crm-accordion_title-accordion crm-accordion-closed">
 						 <div class="crm-accordion-header">
-						  <div class="icon crm-accordion-pointer"></div>
+						  <div class="zmdi crm-accordion-pointer"></div>
 							{ts}Schedule Follow-up{/ts}                    
 						  </div><!-- /.crm-accordion-header -->
 					 	<div class="crm-accordion-body">
@@ -308,7 +308,7 @@
 		            {if ($context eq 'fulltext' || $context eq 'search') && $searchKey}
 		                {assign var='urlParams' value="reset=1&atype=$atype&action=update&reset=1&id=$entityID&cid=$contactId&context=$context&key=$searchKey"}
 		            {/if}
-                    <a href="{crmURL p='civicrm/contact/view/activity' q=$urlParams}" class="edit button" title="{ts}Edit{/ts}"><span><div class="icon edit-icon"></div>{ts}Edit{/ts}</span></a>
+                    <a href="{crmURL p='civicrm/contact/view/activity' q=$urlParams}" class="edit button" title="{ts}Edit{/ts}"><span><div class="zmdi zmdi-edit"></div>{ts}Edit{/ts}</span></a>
                  {/if}
                  
                  {if call_user_func(array('CRM_Core_Permission','check'), 'delete activities')}
@@ -316,7 +316,7 @@
 		            {if ($context eq 'fulltext' || $context eq 'search') && $searchKey}
 		                {assign var='urlParams' value="reset=1&atype=$atype&action=delete&reset=1&id=$entityID&cid=$contactId&context=$context&key=$searchKey"}	
 		            {/if}
-                    <a href="{crmURL p='civicrm/contact/view/activity' q=$urlParams}" class="delete button" title="{ts}Delete{/ts}"><span><div class="icon delete-icon"></div>{ts}Delete{/ts}</span></a>
+                    <a href="{crmURL p='civicrm/contact/view/activity' q=$urlParams}" class="delete button" title="{ts}Delete{/ts}"><span><div class="zmdi zmdi-delete"></div>{ts}Delete{/ts}</span></a>
                  {/if}
 	        {/if}
             {include file="CRM/common/formButtons.tpl" location="bottom"}

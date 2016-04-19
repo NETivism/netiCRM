@@ -37,12 +37,12 @@
     {if $smarty.get.snippet eq 2}
     {include file="CRM/common/print.tpl"}
     {else}
-    <div id="crm-container-snippet" bgColor="white">
+    <div id="crm-container-snippet" class="crm-container" bgColor="white">
 
     {* Check for Status message for the page (stored in session->getStatus). Status is cleared on retrieval. *}
     {if $session->getStatus(false)}
     <div class="messages status">
-      <div class="icon alert-icon"></div>
+      <div class="zmdi zmdi-alert-circle"></div>
       {$session->getStatus(true)}
     </div>
     {/if}

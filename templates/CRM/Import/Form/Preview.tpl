@@ -118,7 +118,7 @@ function verify( ) {
         <td class="data">{$invalidRowCount}</td>
         <td class="explanation">{ts}Rows with invalid data in one or more fields (for example, invalid email address formatting). These rows will be skipped (not imported).{/ts}
             {if $invalidRowCount}
-                <div class="action-link"><a href="{$downloadErrorRecordsUrl}">&raquo; {ts}Download Errors{/ts}</a></div>
+                <div class="action-link-button"><a class="button" href="{$downloadErrorRecordsUrl}">&raquo; {ts}Download Errors{/ts}</a></div>
             {/if}
         </td>
     </tr>
@@ -129,7 +129,7 @@ function verify( ) {
         <td class="data">{$conflictRowCount}</td>
         <td class="explanation">{ts}Rows with conflicting email addresses within this file. These rows will be skipped (not imported).{/ts}
             {if $conflictRowCount}
-                <div class="action-link"><a href="{$downloadConflictRecordsUrl}">&raquo; {ts}Download Conflicts{/ts}</a></div>
+                <div class="action-link-button"><a class="button" href="{$downloadConflictRecordsUrl}">&raquo; {ts}Download Conflicts{/ts}</a></div>
             {/if}
         </td>
     </tr>
@@ -149,7 +149,7 @@ function verify( ) {
  {* New Group *}
 <div id="new-group" class="crm-accordion-wrapper crm-accordion_title-accordion crm-accordion-closed">
  <div class="crm-accordion-header">
-  <div class="icon crm-accordion-pointer"></div> 
+  <div class="zmdi crm-accordion-pointer"></div> 
     {ts}Add imported records to a new group{/ts}
  </div><!-- /.crm-accordion-header -->
  <div class="crm-accordion-body">
@@ -171,7 +171,7 @@ function verify( ) {
 
 <div class="crm-accordion-wrapper crm-existing_group-accordion {if $form.groups}crm-accordion-open{else}crm-accordion-closed{/if}">
  <div class="crm-accordion-header">
-  <div class="icon crm-accordion-pointer"></div>
+  <div class="zmdi crm-accordion-pointer"></div>
   {$form.groups.label}
  </div><!-- /.crm-accordion-header -->
  <div class="crm-accordion-body">
@@ -186,7 +186,7 @@ function verify( ) {
     {* New Tag *}
 <div id="new-tag" class="crm-accordion-wrapper crm-accordion_title-accordion crm-accordion-closed">
  <div class="crm-accordion-header">
-  <div class="icon crm-accordion-pointer"></div>
+  <div class="zmdi crm-accordion-pointer"></div>
   {ts}Create a new tag and assign it to imported records{/ts}            
  </div><!-- /.crm-accordion-header -->
  <div class="crm-accordion-body">
@@ -209,7 +209,7 @@ function verify( ) {
 
 <div class="crm-accordion-wrapper crm-accordion_title-accordion crm-accordion-closed">
  <div class="crm-accordion-header">
-  <div class="icon crm-accordion-pointer"></div>
+  <div class="zmdi crm-accordion-pointer"></div>
   {ts}Tag imported records{/ts}
 </div><!-- /.crm-accordion-header -->
  <div class="crm-accordion-body">

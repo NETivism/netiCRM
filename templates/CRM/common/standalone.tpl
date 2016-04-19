@@ -55,7 +55,7 @@
 {include file="CRM/common/debug.tpl"}
 {/if}
 
-<div id="crm-container" lang="{$config->lcMessages|truncate:2:"":true}" xml:lang="{$config->lcMessages|truncate:2:"":true}">
+<div id="crm-container" class="crm-container" lang="{$config->lcMessages|truncate:2:"":true}" xml:lang="{$config->lcMessages|truncate:2:"":true}">
 <table border="0" cellpadding="0" cellspacing="0" id="content">
   <tr>
     {if $sidebarLeft}

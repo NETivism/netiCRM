@@ -29,7 +29,7 @@
     {include file="CRM/common/formButtons.tpl" location="top"}
   </div>
   <div class="messages status">
-     <div class="icon inform-icon"></div>
+     
         <span>{ts}Are you sure you want to delete the selected memberships? This delete operation cannot be undone and will delete all transactions and activity associated with these members.{/ts}</span>
         <p>{include file="CRM/Member/Form/Task.tpl"}</p>
   </div>

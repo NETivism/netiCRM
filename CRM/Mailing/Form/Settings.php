@@ -97,14 +97,8 @@ class CRM_Mailing_Form_Settings extends CRM_Core_Form {
    * @access public
    */
   public function buildQuickForm() {
-    require_once 'CRM/Mailing/PseudoConstant.php';
-
-    $this->addElement('checkbox', 'override_verp', ts('Track Replies?'));
-
-    $defaults['override_verp'] = defined('CIVICRM_TRACK_CIVIMAIL_REPLIES') ? CIVICRM_TRACK_CIVIMAIL_REPLIES : FALSE;
-
-    $this->add('checkbox', 'forward_replies', ts('Forward Replies?'));
-    $defaults['forward_replies'] = FALSE;
+    $this->add('hidden', 'override_verp', TRUE);
+    $this->add('hidden', 'forward_replies', 1);
 
     $this->add('checkbox', 'url_tracking', ts('Track Click-throughs?'));
     $defaults['url_tracking'] = TRUE;
@@ -112,15 +106,8 @@ class CRM_Mailing_Form_Settings extends CRM_Core_Form {
     $this->add('checkbox', 'open_tracking', ts('Track Opens?'));
     $defaults['open_tracking'] = TRUE;
 
-    $this->add('checkbox', 'auto_responder', ts('Auto-respond to Replies?'));
-    $defaults['auto_responder'] = FALSE;
-
     $this->add('select', 'visibility', ts('Mailing Visibility'),
       CRM_Core_SelectValues::ufVisibility(TRUE), TRUE
-    );
-
-    $this->add('select', 'reply_id', ts('Auto-responder'),
-      CRM_Mailing_PseudoConstant::component('Reply'), TRUE
     );
 
     $this->add('select', 'unsubscribe_id', ts('Unsubscribe Message'),

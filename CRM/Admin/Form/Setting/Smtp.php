@@ -235,10 +235,10 @@ class CRM_Admin_Form_Setting_Smtp extends CRM_Admin_Form_Setting {
       $this->_defaults = array();
 
       require_once "CRM/Core/DAO/Preferences.php";
-      $mailingDomain = new CRM_Core_DAO_Preferences();
-      $mailingDomain->find(TRUE);
-      if ($mailingDomain->mailing_backend) {
-        $this->_defaults = unserialize($mailingDomain->mailing_backend);
+      $mailingPref = CRM_Core_BAO_Preferences::mailingPreferences();
+
+      if (!empty($mailingPref)) {
+        $this->_defaults = $mailingPref;
 
         if (!empty($this->_defaults['smtpPassword'])) {
           require_once 'CRM/Utils/Crypt.php';

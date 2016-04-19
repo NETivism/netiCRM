@@ -85,7 +85,7 @@
 
 {if NOT ($activeMembers or $inActiveMembers)}
    <div class="messages status">
-       <div class="icon inform-icon"></div></dt>
+       </dt>
            {ts}There are no memberships on record for you.{/ts}
    </div>
 {/if}

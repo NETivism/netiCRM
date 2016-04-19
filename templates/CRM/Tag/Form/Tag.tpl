@@ -33,8 +33,8 @@
 </style>
 <script type="text/javascript">
 
-options = {ldelim} ajaxURL:"{crmURL p='civicrm/ajax/rest' h=0}"
-       ,closetxt:'<div class="ui-icon ui-icon-close" style="float:left"></div>'
+var options = {ldelim} ajaxURL:"{crmURL p='civicrm/ajax/rest' h=0}"
+       ,successtxt:"{ts}updated{/ts}"
       {rdelim} 
 entityID={$entityID};
 entityTable='{$entityTable}';
@@ -102,7 +102,7 @@ function initTagTree() {
 };
 {/literal}
 </script>
-<span id="restmsg" style="display:none"></span>
+<div id="restmsg" style="display:none"></div>
 <div id="Tag" class="view-content">
 <h3>{if !$hideContext}{ts}Tags{/ts}{/if}</h3>
     <p>
@@ -163,7 +163,7 @@ function initTagTree() {
     {if $permission EQ 'edit' AND $action eq 16}
         </fieldset>
         <div class="action-link unobstructive">
-          <a accesskey="N" href="{crmURL p='civicrm/contact/view/tag' q='action=update'}" class="button"><span><div class="icon edit-icon"></div>{ts}Edit Tags{/ts}</span></a>
+          <a accesskey="N" href="{crmURL p='civicrm/contact/view/tag' q='action=update'}" class="button"><span><div class="zmdi zmdi-edit"></div>{ts}Edit Tags{/ts}</span></a>
         </div>
     {else}
        <div class="form-item unobstructive">{$form.buttons.html}</div>

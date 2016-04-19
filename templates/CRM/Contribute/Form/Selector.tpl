@@ -58,12 +58,13 @@
   	<td>{$row.contact_type}</td>	
     	<td class="crm-search-display_name"><a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$row.contact_id`"}">{$row.sort_name}</a></td>
     {/if}
+    <td class="crm-contribution-id">{$row.id}</td>
     <td class="crm-contribution-trxn-id">{$row.trxn_id}</td>
     <td class="crm-contribution-receipt-id">{$row.receipt_id}</td>
     <td class="crm-contribution-instrument">{$row.payment_instrument}</td>
     <td class="right bold crm-contribution-amount"><span class="nowrap">{$row.total_amount|crmMoney:$row.currency}</span> {if $row.amount_level }<br /> ({$row.amount_level}){/if}
     {if $row.contribution_recur_id}
-     <br /> {ts}(Recurring Contribution){/ts}
+     <br /><a href="{crmURL p='civicrm/contact/view/contributionrecur' q="reset=1&id=`$row.contribution_recur_id`&cid=`$row.contact_id`"}">{ts}(Recurring Contribution){/ts}</a>
     {/if}
     </td>
     <td class="crm-contribution-type crm-contribution-type_{$row.contribution_type_id}">{$row.contribution_type}</td>
@@ -78,23 +79,20 @@
         {/if}
     </td>
     {* <td class="crm-contribution-product_name">{$row.product_name}</td> *}
-    <td>{$row.action|replace:'xx':$row.contribution_id}</td>
+    <td class="row-action">{$row.action|replace:'xx':$row.contribution_id}</td>
   </tr>
   {/foreach}
-
+</table>
 {* Link to "View all contributions" for Contact Summary selector display *}
 {if $limit and $pager->_totalItems GT $limit }
+  <div class="crm-actions-ribbon action-link-button">
   {if $context eq 'dashboard' } 
-      <tr class="even-row">
-      <td colspan="10"><a href="{crmURL p='civicrm/contribute/search' q='reset=1'}">&raquo; {ts}Find more contributions{/ts}... </a></td>
-      </tr>
+      <a href="{crmURL p='civicrm/contribute/search' q='reset=1'}" class="button"><i class="zmdi zmdi-search"></i>{ts}Find more contributions{/ts}</a>
   {elseif $context eq 'contribution' } 
-      <tr class="even-row">
-      <td colspan="8"><a href="{crmURL p='civicrm/contact/view' q="reset=1&force=1&selectedChild=contribute&cid=$contactId"}">&raquo; {ts}View all contributions from this contact{/ts}... </a></td>
-      </tr>
+      <a href="{crmURL p='civicrm/contact/view' q="reset=1&force=1&selectedChild=contribute&cid=$contactId"}" class="button"><i class="zmdi zmdi-search"></i>{ts}View all contributions from this contact{/ts}</a>
   {/if}
+  </div>
 {/if}
-</table>
 {/strip}
 
 {if $context EQ 'Search'}

@@ -24,8 +24,8 @@
  +--------------------------------------------------------------------+
 *}
 {if $showLinks}
-    <div class="action-link">
-    	<a accesskey="N" href="{crmURL p='civicrm/mailing/send' q='reset=1'}" class="button"><span><div class="icon email-icon"></div>{ts}New Mailing{/ts}</span></a><br/><br/>
+    <div class="action-link-button">
+    	<a accesskey="N" href="{crmURL p='civicrm/mailing/send' q='reset=1'}" class="button"><span><div class="zmdi zmdi-email"></div>{ts}New Mailing{/ts}</span></a><br/><br/>
     </div>
 {/if}
 {include file="CRM/Mailing/Form/Search.tpl"}
@@ -66,6 +66,7 @@
       {foreach from=$rows item=row}
       <tr id="crm-mailing_{$row.id}" class="{cycle values="odd-row,even-row"} crm-mailing crm-mailing_status-{$row.status}">
         <td class="crm-mailing-name">{$row.name}</td>
+        <td class="crm-mailing-visibility">{ts}{$row.visibility}{/ts}</td>
         <td class="crm-mailing-status crm-mailing_status-{$row.status}">{$row.status}</td>
         <td class="crm-mailing-created_by"><a href ={crmURL p='civicrm/contact/view' q="reset=1&cid="}{$row.created_id}>{$row.created_by}</a></td>
         {if $unscheduled}
@@ -87,8 +88,8 @@
 
     {include file="CRM/common/pager.tpl" location="bottom"}
     {if $showLinks}
-    	<div class="action-link">
-            <a accesskey="N" href="{crmURL p='civicrm/mailing/send' q='reset=1'}" class="button"><span><div class="icon email-icon"></div>{ts}New Mailing{/ts}</span></a><br/>
+    	<div class="action-link-button">
+            <a accesskey="N" href="{crmURL p='civicrm/mailing/send' q='reset=1'}" class="button"><span><div class="zmdi zmdi-email"></div>{ts}New Mailing{/ts}</span></a><br/>
     	</div>
     {/if}
 
@@ -106,7 +107,7 @@
     {/if}
     <div class="status messages">
         <table class="form-layout">
-            <tr><div class="icon inform-icon"></div>
+            <tr>
                {ts}No Mailings match your search criteria. Suggestions:{/ts} 
 	    </tr>
                 <div class="spacer"></div>
@@ -120,7 +121,7 @@
 {elseif $unscheduled}
 
     <div class="messages status">
-            <div class="icon inform-icon"></div>&nbsp;
+            &nbsp;
             {capture assign=crmURL}{crmURL p='civicrm/mailing/send' q='reset=1'}{/capture}
             {ts}There are no Unscheduled Mailings.{/ts}
 	    {if $showLinks}{ts 1=$crmURL}You can <a href='%1'>create and send one</a>.{/ts}{/if}
@@ -128,13 +129,13 @@
 
 {elseif $archived}
     <div class="messages status">
-            <div class="icon inform-icon"></div>&nbsp
+            &nbsp
             {capture assign=crmURL}{crmURL p='civicrm/mailing/browse/scheduled' q='scheduled=true&reset=1'}{/capture}
             {ts 1=$crmURL}There are no Archived Mailings. You can archive mailings from <a href='%1'>Scheduled or Sent Mailings</a>.{/ts}
    </div>
 {else}
     <div class="messages status">
-            <div class="icon inform-icon"></div>&nbsp;
+            &nbsp;
             {capture assign=crmURL}{crmURL p='civicrm/mailing/send' q='reset=1'}{/capture}
             {capture assign=archiveURL}{crmURL p='civicrm/mailing/browse/archived' q='reset=1'}{/capture}
             {ts 1=$crmURL 2=$archiveURL}There are no Scheduled or Sent Mailings. You can <a href='%1'>create and send one</a> OR you can search the <a href='%2'>Archived Mailings</a>.{/ts}

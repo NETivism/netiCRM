@@ -26,7 +26,7 @@
 <div class="crm-form-block crm-form-block-search crm-search-form-block">
 	<div class="crm-accordion-wrapper crm-member_search_form-accordion {if $rows}crm-accordion-closed{else}crm-accordion-open{/if}">
 	 <div class="crm-accordion-header crm-master-accordion-header">
-	    <div class="icon crm-accordion-pointer"></div> 
+	    <div class="zmdi crm-accordion-pointer"></div> 
 	    {ts}Edit Search Criteria{/ts}
  	 </div><!-- /.crm-accordion-header -->
 	<div class="crm-accordion-body">

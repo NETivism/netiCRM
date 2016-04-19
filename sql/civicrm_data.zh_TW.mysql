@@ -4792,6 +4792,7 @@ VALUES
   (@option_group_id_report, 'Email 點擊率報表', 'Mailing/clicks', 'CRM_Report_Form_Mailing_Clicks', NULL, 0, NULL, 37, 'Display clicks from each mailing', 0, 0, 1, @mailCompId, NULL),
   (@option_group_id_report, '聯絡人日誌報表（摘要）', 'logging/contact/summary', 'CRM_Report_Form_Contact_LoggingSummary', NULL, 0, NULL, 38, 'Contact modification report for the logging infrastructure (summary).', 0, 0, 0, NULL, NULL),
   (@option_group_id_report, '聯絡人日誌報表（詳情）', 'logging/contact/detail', 'CRM_Report_Form_Contact_LoggingDetail', NULL, 0, NULL, 39, 'Contact modification report for the logging infrastructure (detail).', 0, 0, 0, NULL, NULL),
+  (@option_group_id_report, '參加最多活動的人', 'contact/topparticipant', 'CRM_Report_Form_Contact_Participate', NULL, 0, NULL, 40, '列出參加過最多活動的聯絡人報表', 0, 0, 1, NULL, NULL),
   
   (@option_group_id_acs, '已排程',  1, 'Scheduled',  NULL, 0, 1,    1, NULL, 0, 1, 1, NULL, NULL),
   (@option_group_id_acs, '已完成',  2, 'Completed',  NULL, 0, NULL, 2, NULL, 0, 1, 1, NULL, NULL),
@@ -4849,8 +4850,8 @@ VALUES
   (@option_group_id_mt, '匯出補助',       13, 'Export Grant',        NULL, 0, 0,   13, NULL, 0, 1, 1, NULL, NULL),
   (@option_group_id_mt, '匯出任務',    14, 'Export Activity',     NULL, 0, 0,   14, NULL, 0, 1, 1, NULL, NULL),
 
-  (@option_group_id_fu, '日'    , 'day'  ,    'day',  NULL, 0, NULL, 1, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_fu, '週'   , 'week' ,   'week',  NULL, 0, NULL, 2, NULL, 0, 1, 1, NULL, NULL),
+  (@option_group_id_fu, '日'    , 'day'  ,    'day',  NULL, 0, NULL, 1, NULL, 0, 1, 0, NULL, NULL),
+  (@option_group_id_fu, '週'   , 'week' ,   'week',  NULL, 0, NULL, 2, NULL, 0, 1, 0, NULL, NULL),
   (@option_group_id_fu, '月'  , 'month',  'month',  NULL, 0, NULL, 3, NULL, 0, 1, 1, NULL, NULL),
   (@option_group_id_fu, '年'   , 'year' ,   'year',  NULL, 0, NULL, 4, NULL, 0, 1, 1, NULL, NULL),
 
@@ -5549,13 +5550,13 @@ VALUES
    
 INSERT INTO civicrm_uf_field
        (id, uf_group_id, field_name,              is_required, is_reserved, weight, visibility,                  in_selector, is_searchable, location_type_id, label,                                         		field_type,    help_post, phone_type_id ) VALUES
-       (1,  1,           'first_name',            1,           0,           1,      'Public Pages and Listings', 0,           1,             NULL,             '名字 ',            		'Individual',  NULL,  NULL),
-       (2,  1,           'last_name',             1,           0,           2,      'Public Pages and Listings', 0,           1,             NULL,             '姓氏',             		'Individual',  '其他人將可瀏覽您的姓名。',  NULL),
+       (1,  1,           'first_name',            1,           0,           1,      'User and User Admin Only', 0,           1,             NULL,             '名字 ',            		'Individual',  NULL,  NULL),
+       (2,  1,           'last_name',             1,           0,           2,      'User and User Admin Only', 0,           1,             NULL,             '姓氏',             		'Individual',  NULL,  NULL),
        (3,  1,           'street_address',        0,           0,           3,      'User and User Admin Only',  0,           0,             1,                '街道地址（住家）', 		'Contact',     NULL,  NULL),
        (4,  1,           'city',                  0,           0,           4,      'User and User Admin Only',  0,           0,             1,                '鄉鎮市區（住家）',           		'Contact',     NULL,  NULL),
        (5,  1,           'postal_code',           0,           0,           5,      'User and User Admin Only',  0,           0,             1,                '郵遞區號（住家）',    		'Contact',     NULL,  NULL),
-       (6,  1,           'country',               0,           0,           6,      'Public Pages and Listings', 0,           1,             1,                '國家（住家）',        		'Contact',     '您所在的縣市和居住國將與他人共享，以便人們可以找到其他住在他們社區的聯絡人。',  NULL),
-       (7,  1,           'state_province',        0,           0,           7,      'Public Pages and Listings', 1,           1,             1,                '縣市（住家）',          		'Contact',     NULL,  NULL),
+       (6,  1,           'country',               0,           0,           6,      'User and User Admin Only', 0,           1,             1,                '國家（住家）',        		'Contact',     NULL,  NULL),
+       (7,  1,           'state_province',        0,           0,           7,      'User and User Admin Only', 1,           1,             1,                '縣市（住家）',          		'Contact',     NULL,  NULL),
        (8,  2,           'first_name',            1,           0,           1,      'User and User Admin Only',  0,           0,             NULL,             '名字 ',            		'Individual',  NULL,  NULL),
        (9,  2,           'last_name',             1,           0,           2,      'User and User Admin Only',  0,           0,             NULL,             '姓氏',             		'Individual',  NULL,  NULL),
        (10, 2,           'email',                 1,           0,           3,      'User and User Admin Only',  0,           0,             NULL,             '電子郵件地址',         		'Contact',     NULL,  NULL),
@@ -5605,6 +5606,8 @@ INSERT INTO `civicrm_contact_type`
   ( 1, 'Individual'  , '個人'  , NULL, NULL, 1, 1),
   ( 2, 'Household'   , '家庭'   , NULL, NULL, 1, 1),
   ( 3, 'Organization', '組織', NULL, NULL, 1, 1);
+
+INSERT INTO civicrm_group (`id`, `name`, `title`, `description`, `source`, `saved_search_id`, `is_active`, `visibility`, `group_type`) VALUES (2, 'Mailing', '電子報', '', NULL, NULL, 1, 'Public Pages', '2');
 
 -- +--------------------------------------------------------------------+
 -- | CiviCRM version 3.3                                                |
@@ -13760,9 +13763,9 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
   <tr>
    <td>
     {if $formValues.receipt_text_signup}
-     <div>{$formValues.receipt_text_signup|htmlize}</div>
+     <div>{$formValues.receipt_text_signup}</div>
     {elseif $formValues.receipt_text_renewal}
-     <div>{$formValues.receipt_text_renewal|htmlize}</div>
+     <div>{$formValues.receipt_text_renewal}</div>
     {else}
      <p>{ts}Thanks for your support.{/ts}</p>
     {/if}
@@ -14039,9 +14042,9 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
   <tr>
    <td>
     {if $formValues.receipt_text_signup}
-     <div>{$formValues.receipt_text_signup|htmlize}</div>
+     <div>{$formValues.receipt_text_signup}</div>
     {elseif $formValues.receipt_text_renewal}
-     <div>{$formValues.receipt_text_renewal|htmlize}</div>
+     <div>{$formValues.receipt_text_renewal}</div>
     {else}
      <p>{ts}Thanks for your support.{/ts}</p>
     {/if}
@@ -17414,4 +17417,16 @@ VALUES
 
 UPDATE civicrm_report_instance SET navigation_id = LAST_INSERT_ID() WHERE id = @instanceID;
 
+INSERT INTO `civicrm_report_instance`
+    ( `domain_id`, `title`, `report_id`, `description`, `permission`, `form_values`)
+VALUES 
+    ( @domainID, '參加最多活動的人', 'contact/topparticipant', '列出參加過最多活動的聯絡人報表', 'access CiviEvent', 'a:34:{s:6:"fields";a:3:{s:9:"sort_name";s:1:"1";s:2:"id";s:1:"1";s:9:"status_id";s:1:"1";}s:12:"sort_name_op";s:3:"has";s:15:"sort_name_value";s:0:"";s:8:"email_op";s:3:"has";s:11:"email_value";s:0:"";s:21:"participant_count_min";s:0:"";s:21:"participant_count_max";s:0:"";s:20:"participant_count_op";s:3:"gte";s:23:"participant_count_value";s:0:"";s:11:"event_id_op";s:2:"in";s:14:"event_id_value";a:0:{}s:6:"sid_op";s:2:"in";s:9:"sid_value";a:0:{}s:6:"rid_op";s:2:"in";s:9:"rid_value";a:0:{}s:34:"participant_register_date_relative";s:1:"0";s:30:"participant_register_date_from";s:0:"";s:28:"participant_register_date_to";s:0:"";s:6:"eid_op";s:2:"in";s:9:"eid_value";a:0:{}s:25:"event_start_date_relative";s:1:"0";s:21:"event_start_date_from";s:0:"";s:19:"event_start_date_to";s:0:"";s:23:"event_end_date_relative";s:1:"0";s:19:"event_end_date_from";s:0:"";s:17:"event_end_date_to";s:0:"";s:11:"description";s:33:"Report for list top participants.";s:13:"email_subject";s:0:"";s:8:"email_to";s:0:"";s:8:"email_cc";s:0:"";s:10:"permission";s:1:"0";s:9:"parent_id";s:0:"";s:6:"groups";s:0:"";s:9:"domain_id";i:1;}');
+
+SET @instanceID:=LAST_INSERT_ID( );
+INSERT INTO civicrm_navigation
+    ( domain_id, url, label, name, permission, permission_operator, parent_id, is_active, has_separator, weight )
+VALUES
+    ( @domainID, CONCAT('civicrm/report/instance/', @instanceID,'&reset=1'), 'Top Participant', 'Top Participant', 'access CiviEvent', '',@reportlastID, '1', NULL, 30 );
+
+UPDATE civicrm_report_instance SET navigation_id = LAST_INSERT_ID() WHERE id = @instanceID;
  UPDATE civicrm_domain SET version = '4.0.0';
