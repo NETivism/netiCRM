@@ -37,7 +37,8 @@ do_merge(){
   fi
   git checkout ${VERSION_PREFIX}develop
   git checkout ${VERSION_PREFIX}master
-  git pull
+  git fetch --all
+  git reset --hard origin/master
   git merge ${VERSION_PREFIX}develop -m "Release merge."
   git commit
   if [ "$2" = "7.x" ] || [ -z "$2" ]; then
