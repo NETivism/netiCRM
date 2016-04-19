@@ -4792,7 +4792,7 @@ VALUES
   (@option_group_id_report, 'Email 點擊率報表', 'Mailing/clicks', 'CRM_Report_Form_Mailing_Clicks', NULL, 0, NULL, 37, 'Display clicks from each mailing', 0, 0, 1, @mailCompId, NULL),
   (@option_group_id_report, '聯絡人日誌報表（摘要）', 'logging/contact/summary', 'CRM_Report_Form_Contact_LoggingSummary', NULL, 0, NULL, 38, 'Contact modification report for the logging infrastructure (summary).', 0, 0, 0, NULL, NULL),
   (@option_group_id_report, '聯絡人日誌報表（詳情）', 'logging/contact/detail', 'CRM_Report_Form_Contact_LoggingDetail', NULL, 0, NULL, 39, 'Contact modification report for the logging infrastructure (detail).', 0, 0, 0, NULL, NULL),
-  (@option_group_id_report, 'Top Participant', 'contact/topparticipant', 'CRM_Report_Form_Contact_Participate', NULL, 0, NULL, 40, 'Report for list top participants.', 0, 0, 1, NULL, NULL),
+  (@option_group_id_report, '參加最多活動的人', 'contact/topparticipant', 'CRM_Report_Form_Contact_Participate', NULL, 0, NULL, 40, '列出參加過最多活動的聯絡人報表', 0, 0, 1, NULL, NULL),
   
   (@option_group_id_acs, '已排程',  1, 'Scheduled',  NULL, 0, 1,    1, NULL, 0, 1, 1, NULL, NULL),
   (@option_group_id_acs, '已完成',  2, 'Completed',  NULL, 0, NULL, 2, NULL, 0, 1, 1, NULL, NULL),
@@ -5606,6 +5606,8 @@ INSERT INTO `civicrm_contact_type`
   ( 1, 'Individual'  , '個人'  , NULL, NULL, 1, 1),
   ( 2, 'Household'   , '家庭'   , NULL, NULL, 1, 1),
   ( 3, 'Organization', '組織', NULL, NULL, 1, 1);
+
+INSERT INTO civicrm_group (`id`, `name`, `title`, `description`, `source`, `saved_search_id`, `is_active`, `visibility`, `group_type`) VALUES (2, 'Mailing', '電子報', '', NULL, NULL, 1, 'Public Pages', '2');
 
 -- +--------------------------------------------------------------------+
 -- | CiviCRM version 3.3                                                |
