@@ -224,6 +224,10 @@ msgstr ""
 msgid "Modified Date"
 msgstr ""
 
+#: CRM/ACL/DAO/Cache.php CRM/Contribute/DAO/ContributionRecur.php
+msgid "Modified Date"
+msgstr ""
+
 #: CRM/ACL/Form/ACLBasic.php CRM/ACL/Form/ACL.php
 #: CRM/Event/Selector/Search.php CRM/Report/Form/Contact/Detail.php
 #: CRM/Report/Form/Event/ParticipantListCount.php
