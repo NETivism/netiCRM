@@ -54,7 +54,7 @@
             {if $recur.auto_renew}<tr><td class="label">{ts}Auto Renew{/ts}</td><td>{if $recur.auto_renew}{ts}Yes{/ts}{else}{ts}No{/ts}{/if}</td></tr>{/if}
             {if $recur.payment_processor}<tr><td class="label">{ts}Payment processor:{/ts}</td><td>{$recur.payment_processor}</td></tr>{/if}
             -->
-            <tr><td class="label">{ts}Recuring Status{/ts}</td><td>{$recur.contribution_status}</td></tr>
+            <tr><td class="label">{ts}Recurring Status{/ts}</td><td>{$recur.contribution_status}</td></tr>
           </table>
           {* Recurring Contribution *}
           {if $rows}
