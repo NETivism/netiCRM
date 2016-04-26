@@ -34,6 +34,7 @@
             <tr><td class="label">{ts}Recurring Contribution ID{/ts}</td><td>{$recur.id}</td></tr>
             <tr><td class="label">{ts}Amount{/ts}</td><td>{$recur.amount} {$recur.currency}</td></tr>
             <tr><td class="label">{ts}Frequency{/ts}</td><td>{ts}every{/ts} {$recur.frequency_interval} {ts}{$recur.frequency_unit}{/ts}</td></tr>
+            <tr><td class="label">{ts}Cycle Day{/ts}</td><td>{$recur.cycle_day} {if $recur.frequency_unit == 'week'}{else}{ts}day{/ts}{/if}</td></tr>
             <tr><td class="label">{ts}Installments{/ts}</td><td>{$recur.installments}</td></tr>
             <tr><td></td><td></td></tr>
             <tr><td class="label">{ts}Create date{/ts}</td><td>{$recur.create_date|crmDate}</td></tr>
@@ -44,7 +45,6 @@
             {/if}
             <tr><td></td><td></td></tr>
             {if $recur.processor_id}<tr><td class="label">{ts}Processor ID{/ts}</td><td>{$recur.processor_id}</td></tr>{/if}
-            <tr><td class="label">{ts}Cycle Day{/ts}</td><td>{ts}every{/ts} {ts}{$recur.frequency_unit}{/ts} {$recur.cycle_day} {if $recur.frequency_unit == 'week'}{else}{ts}day{/ts}{/if}</td></tr>
             {if $recur.contribution_status_id neq 3}<tr><td class="label">{ts}Next Sched Contribution{/ts}</td><td>{$recur.next_sched_contribution|crmDate}</td></tr>{/if}
             <!--
             <tr><td class="label">{ts}Transaction ID{/ts}</td><td>{$recur.trxn_id}</td></tr>
