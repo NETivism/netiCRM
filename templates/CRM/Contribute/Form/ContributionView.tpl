@@ -137,6 +137,12 @@
       <td>{$contribution_page_title}</td>
   </tr>
   {/if}
+  {if $contribution_recur_id}
+      <tr>
+          <td class="label">{ts}Recurring Contribution ID{/ts}</td>
+          <td><a href="{$recur_info_url}">{$contribution_recur_id}</a></td>
+      </tr>
+  {/if}
 	{if $receipt_date}
     	<tr>
     	    <td class="label">{ts}Receipt Date{/ts}</td>
