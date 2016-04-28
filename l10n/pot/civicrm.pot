@@ -44818,6 +44818,10 @@ msgstr ""
 msgid "Custom Name"
 msgstr ""
 
+#: betterContributionForm.tpl
+msgid "Please verify name and Legal Identifier fields."
+msgstr ""
+
 #: CRM/Contact/Form/Search/Custom/RecurSearch.php
 msgid "First recurring date"
 msgstr ""
