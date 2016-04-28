@@ -10,7 +10,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2016-04-26 09:41+0000\n"
+"PO-Revision-Date: 2016-04-28 10:21+0000\n"
 "Last-Translator: 張書懷 <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -44793,6 +44793,10 @@ msgstr "匿名"
 #: betterContributionForm.tpl
 msgid "Custom Name"
 msgstr "自訂名稱"
+
+#: betterContributionForm.tpl
+msgid "Please verify name and Legal Identifier fields."
+msgstr "請確認聯絡人姓名或身份證字號欄位是否正確"
 
 #: CRM/Contact/Form/Search/Custom/RecurSearch.php
 msgid "First recurring date"

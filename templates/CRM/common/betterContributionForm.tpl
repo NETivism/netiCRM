@@ -284,11 +284,27 @@ cj(function($){
 
   }
 
+  function clearNameIdErrorMessage(){
+    $('.name-id-error').remove();
+  }
+
+  function checkTWID(){
+    while($('#custom_{/literal}{$receiptSerial}{literal}').parent().find('.error-twid').length>=1){
+      $('#custom_{/literal}{$receiptSerial}{literal}').parent().find('.error-twid').remove();
+    }
+    var value = $('#custom_{/literal}{$receiptSerial}{literal}').val();
+    if(validTWID(value)){
+      $('#custom_{/literal}{$receiptSerial}{literal}').removeClass('error');
+      return true;
+    }else{
+      $('#custom_{/literal}{$receiptSerial}{literal}').addClass('error').parent().append('<label for="custom_{/literal}{$receiptSerial}{literal}" class="error-twid" style="padding-left: 10px;color: #e55;">{/literal}{ts}Please enter correct Data ( in valid format ).{/ts}{literal}</label>');
+      return false;
+    }
+  }
+
+
 });
 
-function clearNameIdErrorMessage(){
-  $('.name-id-error').remove();
-}
 
 function validTWID(value){
   if(value=='')return true;
@@ -318,20 +334,6 @@ function validTWID(value){
     return false;
   }
   return true;
-}
-
-function checkTWID(){
-  while($('#custom_{/literal}{$receiptSerial}{literal}').parent().find('.error-twid').length>=1){
-    $('#custom_{/literal}{$receiptSerial}{literal}').parent().find('.error-twid').remove();
-  }
-  var value = $('#custom_{/literal}{$receiptSerial}{literal}').val();
-  if(validTWID(value)){
-    $('#custom_{/literal}{$receiptSerial}{literal}').removeClass('error');
-    return true;
-  }else{
-    $('#custom_{/literal}{$receiptSerial}{literal}').addClass('error').parent().append('<label for="custom_{/literal}{$receiptSerial}{literal}" class="error-twid" style="padding-left: 10px;color: #e55;">{/literal}{ts}Please enter correct Data ( in valid format ).{/ts}{literal}</label>');
-    return false;
-  }
 }
 
 {/literal}
