@@ -280,9 +280,7 @@ cj(function($){
 
     $('#custom_{/literal}{$receiptTitle}{literal} input.required:visible:not([type=checkbox])').trigger('blur');
 
-    if(($('#legal_identifier').val() !== '' ) && validTWID($('#legal_identifier').val()) && (($('#last_name').val()+$('#first_name').val()) !== '')){
-      clearNameIdErrorMessage()
-    }
+    clearNameIdErrorMessage();
 
   }
 
