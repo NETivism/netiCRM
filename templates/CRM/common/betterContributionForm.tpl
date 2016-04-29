@@ -19,15 +19,7 @@ cj(function($){
     $same_as_md.insertBefore($same_as_md_parent);
     $same_as_md.wrap('<div class="same-as-wrapper" />');
 
-    $('#same_as').change(updateName);
-    $('#same_as').change(function (){
-      if ($(this).is(':checked')) {
-        $('#custom_{/literal}{$receiptTitle}{literal}').parent('.md-elem').addClass('md-elem-readonly');
-      } 
-      else {
-        $('#custom_{/literal}{$receiptTitle}{literal}').parent('.md-elem').removeClass('md-elem-readonly');
-      }
-    });
+    $('#same_as').change(doCheckSameAs);
     $('.receipt_type input').change(function(){
       if($('#r_person').is(':checked')){
         $('#custom_{/literal}{$receiptTitle}{literal}').attr('placeholder',"{/literal}{ts}Contact Name{/ts}{literal}");
@@ -59,6 +51,7 @@ cj(function($){
       }
       return true;
     });
+    $('#custom_{/literal}{$receiptTitle}{literal},#custom_{/literal}{$receiptSerial}{literal}').focus(clearNameIdErrorMessage);
   }
   $('.receipt_type input').trigger('change').change(updateName);
 
@@ -171,6 +164,34 @@ cj(function($){
     return showFields;
   }
 
+  function doCheckSameAs(){
+    var $sameas = $('#same_as');
+    var error = false;
+    if( $sameas.is(':checked') ){
+      if($('#legal_identifier').length >= 1){
+        if(($('#legal_identifier').val() == '' ) || !validTWID($('#legal_identifier').val())){
+          error = true;
+        }
+      }
+      if($('#last_name,#first_name').length>1){
+        if(($('#last_name').val()+$('#first_name').val()) == ''){
+          error = true;
+        }
+      }
+      if(error){
+        $sameas.prop('checked', false);
+        if($('.name-id-error').length === 0){
+          $sameas.parent().append('<label for="same_as" generated="true" class="error name-id-error" style="color: rgb(238, 85, 85); padding-left: 10px;">{/literal}{ts}Please verify name and Legal Identifier fields.{/ts}{literal}</label>');
+        }
+        return
+      }
+      $('#custom_{/literal}{$receiptTitle}{literal}').parent('.md-elem').addClass('md-elem-readonly');
+    }
+    else {
+      $('#custom_{/literal}{$receiptTitle}{literal}').parent('.md-elem').removeClass('md-elem-readonly');
+    }
+    updateName();
+  }
 
   function updateName(){
     if($('#r_person').is(':checked')){
@@ -259,9 +280,31 @@ cj(function($){
 
     $('#custom_{/literal}{$receiptTitle}{literal} input.required:visible:not([type=checkbox])').trigger('blur');
 
+    clearNameIdErrorMessage();
+
   }
 
+  function clearNameIdErrorMessage(){
+    $('.name-id-error').remove();
+  }
+
+  function checkTWID(){
+    while($('#custom_{/literal}{$receiptSerial}{literal}').parent().find('.error-twid').length>=1){
+      $('#custom_{/literal}{$receiptSerial}{literal}').parent().find('.error-twid').remove();
+    }
+    var value = $('#custom_{/literal}{$receiptSerial}{literal}').val();
+    if(validTWID(value)){
+      $('#custom_{/literal}{$receiptSerial}{literal}').removeClass('error');
+      return true;
+    }else{
+      $('#custom_{/literal}{$receiptSerial}{literal}').addClass('error').parent().append('<label for="custom_{/literal}{$receiptSerial}{literal}" class="error-twid" style="padding-left: 10px;color: #e55;">{/literal}{ts}Please enter correct Data ( in valid format ).{/ts}{literal}</label>');
+      return false;
+    }
+  }
+
+
 });
+
 
 function validTWID(value){
   if(value=='')return true;
@@ -291,20 +334,6 @@ function validTWID(value){
     return false;
   }
   return true;
-}
-
-function checkTWID(){
-  while($('#custom_{/literal}{$receiptSerial}{literal}').parent().find('.error-twid').length>=1){
-    $('#custom_{/literal}{$receiptSerial}{literal}').parent().find('.error-twid').remove();
-  }
-  var value = $('#custom_{/literal}{$receiptSerial}{literal}').val();
-  if(validTWID(value)){
-    $('#custom_{/literal}{$receiptSerial}{literal}').removeClass('error');
-    return true;
-  }else{
-    $('#custom_{/literal}{$receiptSerial}{literal}').addClass('error').parent().append('<label for="custom_{/literal}{$receiptSerial}{literal}" class="error-twid" style="padding-left: 10px;color: #e55;">{/literal}{ts}Please enter correct Data ( in valid format ).{/ts}{literal}</label>');
-    return false;
-  }
 }
 
 {/literal}
