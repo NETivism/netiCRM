@@ -708,17 +708,11 @@ INNER JOIN  civicrm_membership_type type ON ( type.id = membership.membership_ty
         if (!$membershipBlock['is_required']) {
           $form->assign('showRadioNoThanks', TRUE);
           $radio[''] = $form->createElement('radio', NULL, NULL, NULL, 'no_thanks', NULL);
-          $form->addGroup($radio, 'selectMembership', NULL);
         }
         elseif ($membershipBlock['is_required'] && count($radio) == 1) {
-          $temp = array_keys($radio);
-          $form->addElement('hidden', "selectMembership", $temp[0]);
           $form->assign('singleMembership', TRUE);
-          $form->assign('showRadio', FALSE);
         }
-        else {
-          $form->addGroup($radio, 'selectMembership', NULL);
-        }
+        $form->addGroup($radio, 'selectMembership', NULL);
         $form->addRule('selectMembership', ts("Please select one of the memberships"), 'required');
       }
 
