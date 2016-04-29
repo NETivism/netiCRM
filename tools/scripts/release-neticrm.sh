@@ -36,6 +36,7 @@ do_merge(){
     VERSION_PREFIX=""
   fi
   git checkout ${VERSION_PREFIX}develop
+  git pull
   git checkout ${VERSION_PREFIX}master
   git fetch --all
   git reset --hard origin/master
