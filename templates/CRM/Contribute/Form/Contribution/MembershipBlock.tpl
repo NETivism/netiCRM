@@ -72,23 +72,25 @@
         {foreach from=$membershipTypes item=row }
         <tr {if $context EQ "makeContribution" OR $context EQ "thankContribution" }class="odd-row" {/if}valign="top">
            <td style="width: auto;">
-                <label class="crm-form-elem crm-form-radio">
                 {if $showRadio }
-                  {assign var="pid" value=$row.id}
-                  {$form.selectMembership.$pid.html}
-                {/if}
-                <span class="elem-label md-radio-label">
-                {$row.name}
-                {if ($membershipBlock.display_min_fee AND $context EQ "makeContribution") AND $row.minimum_fee GT 0 }
+                  <label class="crm-form-elem crm-form-radio">
+                    {assign var="pid" value=$row.id}
+                    {$form.selectMembership.$pid.html}
+                    <span class="elem-label md-radio-label">
+                    {$row.name}
+                    </span>
+                  </label>
+                {else}
+                  {$row.name}
+                  {if ($membershipBlock.display_min_fee AND $context EQ "makeContribution") AND $row.minimum_fee GT 0 }
                     {if $is_separate_payment OR ! $form.amount.label}
                       ( {$row.minimum_fee|crmMoney} )
                     {else}
                       {ts 1=$row.minimum_fee|crmMoney}(contribute at least %1 to be eligible for this membership){/ts}
                     {/if}
+                  {/if}
                 {/if}
-                </span>
-                </label>
-                <span class="description">{$row.description}</spann>
+                <span class="description">{$row.description}</span>
            </td>
             
             <td style="width: auto;">
@@ -99,8 +101,6 @@
                     {else}
                         <br /><em>{ts 1=$row.current_membership|crmDate 2=$row.name}Your <strong>%2</strong> membership expires on %1.{/ts}</em>
                     {/if}
-              {else}
-                &nbsp;
               {/if}
            </td> 
         </tr>
