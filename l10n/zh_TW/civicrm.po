@@ -10,7 +10,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2016-04-13 07:06+0000\n"
+"PO-Revision-Date: 2016-04-28 10:21+0000\n"
 "Last-Translator: 張書懷 <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -1711,7 +1711,7 @@ msgstr "值"
 #: templates/CRM/Member/Page/MembershipStatus.tpl
 #: templates/CRM/Price/Form/OptionFields.tpl
 msgid "Weight"
-msgstr "順序"
+msgstr "權重"
 
 #: CRM/Admin/Form/Options.php CRM/Custom/Form/Field.php
 #: CRM/Custom/Form/Group.php CRM/Custom/Form/Option.php
@@ -2100,7 +2100,7 @@ msgstr "活動建立日期"
 
 #: CRM/Campaign/DAO/Campaign.php CRM/Campaign/DAO/Survey.php
 msgid "Last Modified Date"
-msgstr "修改日期"
+msgstr "上次修改日期"
 
 #: CRM/Campaign/DAO/Survey.php CRM/Campaign/Form/Survey.php
 #: templates/CRM/Campaign/Form/ResultOptions.tpl
@@ -44794,6 +44794,10 @@ msgstr "匿名"
 msgid "Custom Name"
 msgstr "自訂名稱"
 
+#: betterContributionForm.tpl
+msgid "Please verify name and Legal Identifier fields."
+msgstr "請確認聯絡人姓名或身份證字號欄位是否正確"
+
 #: CRM/Contact/Form/Search/Custom/RecurSearch.php
 msgid "First recurring date"
 msgstr "開始捐款日期"
@@ -44898,7 +44902,7 @@ msgstr "我們無法處理本次付款，您不會支付任何款項。"
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid "Possible reason"
-msgstr "交易失敗原因有可能是："
+msgstr "交易失敗原因有可能是"
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid ""
