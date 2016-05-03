@@ -1243,5 +1243,27 @@ cc.sort_name LIKE '%$name%'";
 
     return $employers;
   }
+
+  static function currentPermittedOrganization($contactId){
+    $permitted = self::getPermissionedEmployer($contactId);
+
+    if(!empty($permitted)){
+      if(count($permitted) ==  1){
+        return key($permitted);
+      }
+      else{
+        // find current active employer
+        $employerId = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $contactId, 'employer_id');
+        if(!empty($permitted[$employerId])){
+          return $employerId;
+        }
+        else{
+          return key($permitted);
+        }
+      }
+    }
+    return FALSE;
+  }
+
 }
 

@@ -272,14 +272,14 @@
                     </tr>
                     <tr class="crm-relationship-form-block-is_permission_a_b">
                         <td class="label"></td><td>{$form.is_permission_a_b.html}
-                        <span id='permision_a_b-a_b' class="hiddenElement">
+                        <span id='permision_a_b-a_b'>
                             {if $action eq 1}
                                 <strong>'{$sort_name_a}'</strong> {ts}can view and update information for selected contact(s){/ts}
                             {else}
                                 <strong>'{$sort_name_a}'</strong> 可以查看或更新 <strong>'{$sort_name_b}'</strong> 的資訊
                             {/if}
                         </span>
-                        <span id ='permision_a_b-b_a' class="hiddenElement">
+                        <span id ='permision_a_b-b_a'>
                             {if $action eq 1}
                                 <strong> 所選擇的聯絡人</strong>可以查看或更新 <strong>'{$sort_name_a}'</strong> 的資訊
                             {else}
@@ -290,14 +290,14 @@
                     </tr>
                     <tr class="crm-relationship-form-block-is_permission_b_a">
                         <td class="label"></td><td>{$form.is_permission_b_a.html}
-                        <span id='permision_b_a-b_a' class="hiddenElement">
+                        <span id='permision_b_a-b_a'>
                             {if $action eq 1}
                                 <strong>'{$sort_name_a}'</strong> {ts}can view and update information for selected contact(s){/ts}
                             {else}
                                 <strong>'{$sort_name_a}'</strong> 可以查看或更新 <strong>'{$sort_name_b}'</strong> 的資訊
                             {/if}
                         </span>
-                        <span id ='permision_b_a-a_b' class="hiddenElement">
+                        <span id ='permision_b_a-a_b'>
                             {if $action eq 1}
                                 <strong> 所選擇的聯絡人</strong>可以查看或更新 <strong>'{$sort_name_a}'</strong> 的資訊
                             {else}
