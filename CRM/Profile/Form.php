@@ -257,6 +257,59 @@ class CRM_Profile_Form extends CRM_Core_Form {
       return CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm', 'reset=1'));
     }
 
+    //lets have single status message, CRM-4363
+    $disallowed = FALSE;
+    $statusMessage = NULL;
+
+    //we should not allow component and mix profiles in search mode
+    if ($this->_mode != self::MODE_REGISTER) {
+      //check for mix profile fields (eg:  individual + other contact type)
+      if (CRM_Core_BAO_UFField::checkProfileType($this->_gid)) {
+        $statusMessage = ts('Profile search, view and edit are not supported for Profiles which include fields for more than one record type.');
+      }
+
+      $profileType = CRM_Core_BAO_UFField::getProfileType($this->_gid);
+
+
+      if ($this->_id) {
+        list($contactType, $contactSubType) = CRM_Contact_BAO_Contact::getContactTypes($this->_id);
+
+        $profileSubType = FALSE;
+        if (CRM_Contact_BAO_ContactType::isaSubType($profileType)) {
+          $profileSubType = $profileType;
+          $profileType = CRM_Contact_BAO_ContactType::getBasicType($profileType);
+        }
+
+        if (($profileType != 'Contact') &&
+          (($profileSubType && $contactSubType && ($profileSubType != $contactSubType)) ||
+            ($profileType != $contactType)
+          )
+        ) {
+          $orgId = CRM_Contact_BAO_Relationship::currentPermittedOrganization($this->_id);
+          if ($orgId && $profileType == 'Organization') {
+            $this->_id = $orgId;
+          }
+          else{
+            $disallowed = TRUE;
+            if (!$statusMessage) {
+              $statusMessage = ts("This profile is configured for contact type '%1'. It cannot be used to edit contacts of other types.", array(1 => $profileSubType ? $profileSubType : $profileType));
+            }
+          }
+        }
+      }
+
+      if (in_array($profileType, array("Membership", "Participant", "Contribution"))) {
+        $disallowed = TRUE;
+        if (!$statusMessage) {
+          $statusMessage = ts('Profile is not configured for the selected action.');
+        }
+      }
+    }
+
+    // lets have sigle status message,
+    $this->assign('statusMessage', $statusMessage);
+    $this->_disallowed = $disallowed;
+
     if ($this->_mode != self::MODE_SEARCH) {
       CRM_Core_BAO_UFGroup::setRegisterDefaults($this->_fields, $defaults);
       $this->setDefaults($defaults);
@@ -334,55 +387,9 @@ class CRM_Profile_Form extends CRM_Core_Form {
    * @access public
    */
   public function buildQuickForm() {
-    //lets have single status message, CRM-4363
-    $return = FALSE;
-    $statusMessage = NULL;
-
-    //we should not allow component and mix profiles in search mode
-    if ($this->_mode != self::MODE_REGISTER) {
-      //check for mix profile fields (eg:  individual + other contact type)
-      if (CRM_Core_BAO_UFField::checkProfileType($this->_gid)) {
-        $statusMessage = ts('Profile search, view and edit are not supported for Profiles which include fields for more than one record type.');
-      }
-
-      $profileType = CRM_Core_BAO_UFField::getProfileType($this->_gid);
-
-
-      if ($this->_id) {
-        list($contactType, $contactSubType) = CRM_Contact_BAO_Contact::getContactTypes($this->_id);
-
-        $profileSubType = FALSE;
-        if (CRM_Contact_BAO_ContactType::isaSubType($profileType)) {
-          $profileSubType = $profileType;
-          $profileType = CRM_Contact_BAO_ContactType::getBasicType($profileType);
-        }
-
-        if (($profileType != 'Contact') &&
-          (($profileSubType && $contactSubType && ($profileSubType != $contactSubType)) ||
-            ($profileType != $contactType)
-          )
-        ) {
-          $return = TRUE;
-          if (!$statusMessage) {
-            $statusMessage = ts("This profile is configured for contact type '%1'. It cannot be used to edit contacts of other types.", array(1 => $profileSubType ? $profileSubType : $profileType));
-          }
-        }
-      }
-
-      if (in_array($profileType, array("Membership", "Participant", "Contribution"))) {
-        $return = TRUE;
-        if (!$statusMessage) {
-          $statusMessage = ts('Profile is not configured for the selected action.');
-        }
-      }
-    }
-
-    //lets have sigle status message,
-    $this->assign('statusMessage', $statusMessage);
-    if ($return) {
+    if ($this->_disallowed) {
       return FALSE;
     }
-
     $sBlocks = array();
     $hBlocks = array();
     $config = CRM_Core_Config::singleton();
