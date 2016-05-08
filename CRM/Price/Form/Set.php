@@ -114,6 +114,7 @@ class CRM_Price_Form_Set extends CRM_Core_Form {
    * @access public
    */
   public function buildQuickForm() {
+    dpm(123);
     $this->applyFilter('__ALL__', 'trim');
 
     $this->assign('sid', $this->_sid);

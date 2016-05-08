@@ -90,6 +90,13 @@
       <add>3.3</add>
   </field>
   <field>
+      <name>is_member</name>
+      <type>boolean</type>
+      <comment>Is this option for member only</comment>
+      <default>0</default>
+      <add>3.3</add>
+  </field>
+  <field>
       <name>is_default</name>
       <type>boolean</type>
       <comment>Is this default price field option</comment>

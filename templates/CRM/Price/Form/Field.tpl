@@ -32,7 +32,9 @@
 
         if (html_type_name == "Text") {
             document.getElementById("price-block").style.display="block";
+            document.getElementById("price-block").style.display="block";
             document.getElementById("showoption").style.display="none";
+
 
         } else {
             document.getElementById("price-block").style.display="none";
@@ -118,6 +120,10 @@
               </td>
             </tr>
 	  {/if}
+            <tr class="crm-price-field-form-block-is_member">
+                <td class="label">{$form.is_member.label}</td>
+                <td>{$form.is_member.html}</td>
+            </tr>
         </table>
     </div>
 

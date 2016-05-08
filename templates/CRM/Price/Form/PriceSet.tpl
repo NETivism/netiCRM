@@ -24,23 +24,30 @@
  +--------------------------------------------------------------------+
 *}
 <div id="priceset" class="crm-section price_set-section">
-    {if $priceSet.help_pre}
-        <div class="messages help">{$priceSet.help_pre}</div>
+    {if $priceSet.help_pre || $optionMember}
+      <div class="messages help">
+      {if $priceSet.help_pre}
+        {$priceSet.help_pre}
+      {/if}
+      {if $optionMember}
+        <p>{ts}Member price only available when you are our members.{/ts}</p>
+      {/if}
+      </div>
     {/if}
           
     {foreach from=$priceSet.fields item=element key=field_id}
         {* Skip 'Admin' visibility price fields since this tpl is used in online registration. *}
-        {if $element.visibility EQ 'public' || $context eq 'standalone'}
-            <div class="crm-section {$element.name}-section">
+        {assign var="element_name" value=price_$field_id}
+        {if ($element.visibility EQ 'public' || $context eq 'standalone') && $form.$element_name.label}
+            <div class="crm-section {$element.name}-section price-field-{$field_id}">
             {if ($element.html_type eq 'CheckBox' || $element.html_type == 'Radio') && $element.options_per_line}
-              {assign var="element_name" value=price_$field_id}
                 <div class="label">{$form.$element_name.label}</div>
                 <div class="content">
                     <div class="price-set-row">
                 {assign var="count" value="1"}
                 {foreach name=outer key=key item=item from=$form.$element_name}
                     {if is_numeric($key) }
-                        <span class="price-set-option-content">{$form.$element_name.$key.html}</span>
+                        <span class="price-set-option-content ">{$form.$element_name.$key.html}</span>
                         {if $count == $element.options_per_line}
                             </div><div class="price-set-row">
                             {assign var="count" value="1"}
@@ -77,5 +84,4 @@
     {/if}
 
     {include file="CRM/Price/Form/Calculate.tpl"} 
-
 </div>

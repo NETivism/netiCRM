@@ -16,7 +16,7 @@
       }
       var seat_msg = '<div class="messages status float-right left-seat" style="opacity:0.5;">'+msg+'</div>';
       cj('.left-seat').remove();
-      if($('#wizard-steps').length){
+      if(cj('#wizard-steps').length){
         cj('#wizard-steps').before(seat_msg);
       }
       else{
