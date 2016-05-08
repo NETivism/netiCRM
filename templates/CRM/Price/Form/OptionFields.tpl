@@ -40,6 +40,7 @@
 	        <th>{ts}Max Participant{/ts}</th>
 	    {/if}
         <th>{ts}Weight{/ts}</th>
+	    <th>{ts}Member only?{/ts}</th>
 	    <th>{ts}Active?{/ts}</th>
     </tr>
 	
@@ -62,11 +63,12 @@
 	    <td> {$form.option_label.$index.html}</td>
 	    <td> {$form.option_amount.$index.html|crmReplace:class:eight}</td>
 	    <td> {$form.option_description.$index.html}</td>
-        {if $useForEvent}
+      {if $useForEvent}
 	      <td> {$form.option_count.$index.html}</td>
 	      <td> {$form.option_max_value.$index.html}</td>
 	    {/if}  
 	    <td> {$form.option_weight.$index.html}</td>
+	    <td> {$form.option_member.$index.html}</td>
  	    <td> {$form.option_status.$index.html}</td>
 	</tr>
     {/section}

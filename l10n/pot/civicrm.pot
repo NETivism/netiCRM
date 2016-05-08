@@ -1,4 +1,4 @@
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
@@ -44736,7 +44736,7 @@ msgstr ""
 msgid "Registering Others"
 msgstr ""
 
-#: CRM/Event/Form/Search.php 
+#: CRM/Event/Form/Search.php
 msgid "Place Available"
 msgstr ""
 
@@ -45072,4 +45072,16 @@ msgstr ""
 
 #: CRM/Report/Form/Contact/Participte.php
 msgid "Report for list top participants."
+msgstr ""
+
+#: CRM/Price/Form/Option.php
+msgid "Member only?"
+msgstr ""
+
+#: templates/CRM/Price/Form/PriceSet.tpl
+msgid "Member price only available when you are our members."
+msgstr ""
+
+#: CRM/Price/BAO/Field.php
+msgid "membership required"
 msgstr ""

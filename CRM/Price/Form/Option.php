@@ -173,6 +173,9 @@ class CRM_Price_Form_Option extends CRM_Core_Form {
       $this->add('text', 'weight', ts('Order'), NULL, TRUE);
       $this->addRule('weight', ts('is a numeric field'), 'numeric');
 
+      // is member?
+      $this->add('checkbox', 'is_member', ts('Member only?'));
+
       // is active ?
       $this->add('checkbox', 'is_active', ts('Active?'));
 
@@ -265,6 +268,7 @@ class CRM_Price_Form_Option extends CRM_Core_Form {
 
       $params['amount'] = CRM_Utils_Rule::cleanMoney(trim($params['amount']));
       $params['price_field_id'] = $this->_fid;
+      $params['is_member'] = CRM_Utils_Array::value('is_member', $params, FALSE);
       $params['is_default'] = CRM_Utils_Array::value('is_default', $params, FALSE);
 
       $ids = array();
