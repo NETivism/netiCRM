@@ -1362,7 +1362,7 @@ SELECT $select
       return;
     }
 
-    $groupTree = &CRM_Core_BAO_CustomGroup::getTree($type);
+    $groupTree = CRM_Core_BAO_CustomGroup::getTree($type);
     $customValue = array();
     $htmlType = array('CheckBox', 'Multi-Select', 'AdvMulti-Select', 'Select', 'Radio');
 

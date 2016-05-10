@@ -204,7 +204,7 @@ function civicrm_event_search(&$params) {
   while ($eventDAO->fetch()) {
     $event[$eventDAO->id] = array();
     CRM_Core_DAO::storeValues($eventDAO, $event[$eventDAO->id]);
-    $groupTree = &CRM_Core_BAO_CustomGroup::getTree('Event',
+    $groupTree = CRM_Core_BAO_CustomGroup::getTree('Event',
       CRM_Core_DAO::$_nullObject,
       $eventDAO->id,
       FALSE,
