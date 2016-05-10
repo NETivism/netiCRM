@@ -279,7 +279,7 @@ function civicrm_contact_relationship_get($contact_a, $contact_b = NULL, $relati
   require_once 'CRM/Core/BAO/CustomGroup.php';
 
   foreach ($relationships as $relationshipId => $values) {
-    $groupTree = &CRM_Core_BAO_CustomGroup::getTree('Relationship', CRM_Core_DAO::$_nullObject, $relationshipId, FALSE,
+    $groupTree = CRM_Core_BAO_CustomGroup::getTree('Relationship', CRM_Core_DAO::$_nullObject, $relationshipId, FALSE,
       $values['civicrm_relationship_type_id']
     );
     $formatTree = CRM_Core_BAO_CustomGroup::formatGroupTree($groupTree, 1, CRM_Core_DAO::$_nullObject);

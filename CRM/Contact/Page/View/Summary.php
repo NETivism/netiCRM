@@ -62,7 +62,7 @@ class CRM_Contact_Page_View_Summary extends CRM_Contact_Page_View {
     $entityType = $this->get('contactType');
     $entitySubType = $this->get('contactSubtype');
 
-    $groupTree = &CRM_Core_BAO_CustomGroup::getTree($entityType,
+    $groupTree = CRM_Core_BAO_CustomGroup::getTree($entityType,
       $this,
       $this->_contactId,
       NULL,

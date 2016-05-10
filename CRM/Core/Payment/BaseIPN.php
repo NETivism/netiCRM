@@ -910,7 +910,7 @@ class CRM_Core_Payment_BaseIPN {
       }
       // 2015.1.30 Add variable to mail message.
       require_once 'CRM/Core/BAO/CustomGroup.php';
-      $groupTree = &CRM_Core_BAO_CustomGroup::getTree("ContributionPage", $template, $values['id'], 0, $values['contribution_type_id']);
+      $groupTree = CRM_Core_BAO_CustomGroup::getTree("ContributionPage", $template, $values['id'], 0, $values['contribution_type_id']);
       $values['custom_data_view'] = CRM_Core_BAO_CustomGroup::buildCustomDataView($template, $groupTree);
 
       require_once 'CRM/Core/OptionGroup.php';
