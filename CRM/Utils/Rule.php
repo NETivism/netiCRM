@@ -69,6 +69,48 @@ class CRM_Utils_Rule {
     return TRUE;
   }
 
+  /**
+   * Validate an acceptable column name for sorting results.
+   *
+   * @param $str
+   *
+   * @return bool
+   */
+  public static function mysqlColumnName($str) {
+    // Check not empty.
+    if (empty($str)) {
+      return FALSE;
+    }
+
+    // Ensure it only contains valid characters (alphanumeric and underscores).
+   if (!preg_match('/^\w{1,64}(\.\w{1,64})?$/i', $str)) {
+      return FALSE;
+    }
+
+    return TRUE;
+  }
+
+  /**
+   * Validate that a string is ASC or DESC.
+   *
+   * Empty string should be treated as invalid and ignored => default = ASC.
+   *
+   * @param $str
+   * @return bool
+   */
+  public static function mysqlOrderByDirection($str) {
+    if (!preg_match('/^(asc|desc)$/i', $str)) {
+      return FALSE;
+    }
+
+    return TRUE;
+  }
+
+  /**
+   * @param $str
+   *
+   * @return bool
+   */
   static function qfVariable($str) {
     // check length etc
     //if ( empty( $str ) || strlen( $str ) > 31 ) {
