@@ -242,6 +242,9 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
       // weight
       $this->add('text', 'option_weight[' . $i . ']', ts('Order'), $attributes['weight']);
 
+      // is member only?
+      $this->add('checkbox', 'option_member[' . $i . ']', ts('Member only?'));
+
       // is active ?
       $this->add('checkbox', 'option_status[' . $i . ']', ts('Active?'));
 
@@ -284,6 +287,9 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
 
     // is required ?
     $this->add('checkbox', 'is_required', ts('Required?'));
+
+    // is member??
+    $this->add('checkbox', 'is_member', ts('Member only?'));
 
     // is active ?
     $this->add('checkbox', 'is_active', ts('Active?'));
@@ -540,6 +546,7 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
       $params['option_max_value'] = array(1 => $params['max_value']);
       $params['option_description'] = array(1 => $params['description']);
       $params['option_weight'] = array(1 => $params['weight']);
+      $params['option_member'] = array(1 => $params['is_member']);
       $params['is_active'] = array(1 => 1);
     }
 

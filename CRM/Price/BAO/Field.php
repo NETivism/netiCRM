@@ -140,6 +140,7 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
           'max_value' => CRM_Utils_Array::value($index, $params['option_max_value'], NULL),
           'description' => CRM_Utils_Array::value($index, $params['option_description'], NULL),
           'weight' => $params['option_weight'][$index],
+          'is_member' => $params['option_member'][$index],
           'is_active' => 1,
           'is_default' => CRM_Utils_Array::value($index, $defaultArray),
         );
@@ -245,11 +246,59 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
       $customOption = CRM_Price_BAO_Field::getOptions($field->id, $inactiveNeeded);
     }
 
+    // validate member related fields
+    static $optionMemberJson;
+    $optionMember = array();
+    foreach ($customOption as $optId => $opt) {
+      if ($opt['is_member']) {
+        $optionMember[$optId] = $opt;
+      }
+    }
+
+    $isMember = FALSE;
+    $currentContactId = FALSE;
+    if(!empty($optionMember)) {
+      if( method_exists($qf, 'getContactID')) {
+        $currentContactId = $qf->getContactID();
+      }
+      else{
+        $session = CRM_Core_Session::singleton();
+        $currentContactId = $session->get('userID');
+      }
+      if ($currentContactId) {
+        $membershipTypes = CRM_Member_PseudoConstant::membershipType();
+        foreach ($membershipTypes as $membershipTypeId => $mtype) {
+          $currentMembership = CRM_Member_BAO_Membership::getContactMembership($currentContactId, $membershipTypeId, $is_test = 0);
+          if( !empty($currentMembership) && $currentMembership['is_current_member']) {
+            $isMember = TRUE;
+            break;
+          }
+        }
+      }
+    }
     //use value field.
     $valueFieldName = 'amount';
     $seperator = '|';
+
+    if (!empty($optionMember) && !$isMember) {
+      foreach($optionMember as $optId => $opt){
+        if ($field->is_display_amounts) {
+          $opt['label'] .= ' - ';
+          $opt['label'] .= CRM_Utils_Money::format($opt[$valueFieldName]);
+        }
+        $opt['label'] .= ' ('.ts('membership required').')'; 
+        $id = strtolower($field->html_type).'_'.$opt['price_field_id'].'_'.$optId;
+        $optionMemberJson[$id] = $opt['label'];
+        unset($customOption[$optId]);
+      }
+    }
+    $qf->assign('optionMember', json_encode($optionMemberJson));
+
     switch ($field->html_type) {
       case 'Text':
+        if (empty($customOption)) {
+          return;
+        }
         $optionKey = key($customOption);
         $count = CRM_Utils_Array::value('count', $customOption[$optionKey], '');
         $max_value = CRM_Utils_Array::value('max_value', $customOption[$optionKey], '');
@@ -261,7 +310,7 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
         }
 
         if ($field->is_display_amounts) {
-          $label .= '&nbsp;-&nbsp;';
+          $label .= ' - ';
           $label .= CRM_Utils_Money::format(CRM_Utils_Array::value($valueFieldName, $customOption[$optionKey]));
         }
 
@@ -286,7 +335,7 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
 
         foreach ($customOption as $opId => $opt) {
           if ($field->is_display_amounts) {
-            $opt['label'] .= '&nbsp;-&nbsp;';
+            $opt['label'] .= ' - ';
             $opt['label'] .= CRM_Utils_Money::format($opt[$valueFieldName]);
           }
           $count = CRM_Utils_Array::value('count', $opt, '');
@@ -305,7 +354,7 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
 
         if (!$field->is_required) {
           // add "none" option
-          $choice[] = $qf->createElement('radio', NULL, '', '-none-', '0',
+          $choice[] = $qf->createElement('radio', NULL, '', ts('- none -'), '0',
             array('price' => json_encode(array($elementName, "0")))
           );
         }
@@ -326,7 +375,7 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
           $priceVal[$opt['id']] = implode($seperator, array($opt[$valueFieldName], $count, $max_value));
 
           if ($field->is_display_amounts) {
-            $opt['label'] .= '&nbsp;-&nbsp;';
+            $opt['label'] .= ' - ';
             $opt['label'] .= CRM_Utils_Money::format($opt[$valueFieldName]);
           }
           $selectOption[$opt['id']] = $opt['label'];
@@ -357,7 +406,7 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
           $priceVal = implode($seperator, array($opt[$valueFieldName], $count, $max_value));
 
           if ($field->is_display_amounts) {
-            $opt['label'] .= '&nbsp;-&nbsp;';
+            $opt['label'] .= ' - ';
             $opt['label'] .= CRM_Utils_Money::format($opt[$valueFieldName]);
           }
           $check[$opId] = &$qf->createElement('checkbox', $opt['id'], NULL, $opt['label'],

@@ -35,8 +35,9 @@ var totalfee       = 0;
 var thousandMarker = '{/literal}{$config->monetaryThousandSeparator}{literal}';
 var seperator      = '{/literal}{$config->monetaryDecimalPoint}{literal}';
 var symbol         = '{/literal}{$currencySymbol}{literal}';
+var optionMember   = '{/literal}{$optionMember}{literal}';
 var optionSep      = '|';
-var priceSet = price = Array( );
+var priceSet = price = [];
 cj("#priceset select, #priceset input").each(function () {
   if ( cj(this).attr('price') ) {
     var thetype = cj(this)[0].tagName == "INPUT" ? cj(this).attr('type') : cj(this)[0].tagName.toLowerCase();
@@ -163,6 +164,23 @@ cj("#priceset select, #priceset input").each(function () {
     }
   }
 });
+if(optionMember){
+  optionMember = JSON.parse(optionMember);
+  for (opt in optionMember) {
+    var label = optionMember[opt];
+    var ids = opt.split('_');
+    var field = '.price-field-' + ids[1];
+    var type = ids[0];
+    if( cj(field).find('.content').length ) {
+      var attr = {'disabled':'disabled'}; 
+      if(type == 'radio' || type == 'checkbox') {
+        var input = mdFormElement(type, label, attr);
+        var $dummyOption = cj('<div class="price-set-row">'+input+'</div>');
+        $dummyOption.appendTo(cj(field).find('.content'));
+      }
+    }
+  }
+}
 
 //calculation for text box.
 function calculateText( object ) {

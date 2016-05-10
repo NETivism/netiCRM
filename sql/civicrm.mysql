@@ -3821,6 +3821,7 @@ CREATE TABLE civicrm_price_field_value (
      count int unsigned   DEFAULT NULL COMMENT 'Number of participants per field option',
      max_value int unsigned   DEFAULT NULL COMMENT 'Max number of participants per field options',
      weight int   DEFAULT 1 COMMENT 'Order in which the field options should appear',
+     is_member tinyint   DEFAULT 0 COMMENT 'Is this option for member only',
      is_default tinyint   DEFAULT 0 COMMENT 'Is this default price field option',
      is_active tinyint   DEFAULT 1 COMMENT 'Is this price field active' 
 ,

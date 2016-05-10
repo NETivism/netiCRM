@@ -135,6 +135,12 @@ class CRM_Price_DAO_FieldValue extends CRM_Core_DAO
    */
   public $weight;
   /**
+   * Is this option for member only
+   *
+   * @var boolean
+   */
+  public $is_member;
+  /**
    * Is this default price field option
    *
    * @var boolean
@@ -241,6 +247,10 @@ class CRM_Price_DAO_FieldValue extends CRM_Core_DAO
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Weight') ,
           'default' => '',
+        ) ,
+        'is_member' => array(
+          'name' => 'is_member',
+          'type' => CRM_Utils_Type::T_BOOLEAN,
         ) ,
         'is_default' => array(
           'name' => 'is_default',

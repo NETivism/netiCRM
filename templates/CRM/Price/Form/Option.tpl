@@ -58,11 +58,16 @@
                <td class="label">{$form.weight.label}</td>
                <td>{$form.weight.html}</td>
             </tr>
+            <tr class="crm-price-option-form-block-is_member">
+               <td class="label">{$form.is_member.label}</td>
+               <td>{$form.is_member.html}</td>
+            </tr>
             <tr class="crm-price-option-form-block-is_active">
                <td class="label">{$form.is_active.label}</td>
                <td>{$form.is_active.html}</td>
+            </tr>
 	{if !$hideDefaultOption}
-	    <tr class="crm-price-option-form-block-is_default">
+	          <tr class="crm-price-option-form-block-is_default">
                <td class="label">{$form.is_default.label}</td>
                <td>{$form.is_default.html}</td>
             </tr>
