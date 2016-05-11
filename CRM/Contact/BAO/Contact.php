@@ -193,9 +193,10 @@ class CRM_Contact_BAO_Contact extends CRM_Contact_DAO_Contact {
       $contact->save();
 
       require_once 'CRM/Core/BAO/Log.php';
+      $message = !empty($params['log_data']) ? $params['log_data'] : ts('Updated contact');
       CRM_Core_BAO_Log::register($contact->id,
         'civicrm_contact',
-        $contact->id, NULL, ts('Updated contact')
+        $contact->id, NULL, $message
       );
     }
 
@@ -1555,6 +1556,9 @@ ORDER BY civicrm_email.is_primary DESC";
 
     require_once 'CRM/Contact/BAO/Contact.php';
     if ($data['contact_type'] != 'Student') {
+      if(!empty($params['log_data'])) {
+        $data['log_data'] = $params['log_data'];
+      }
       $contact = &self::create($data);
     }
 

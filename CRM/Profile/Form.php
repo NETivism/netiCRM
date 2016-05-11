@@ -870,6 +870,12 @@ class CRM_Profile_Form extends CRM_Core_Form {
       require_once 'CRM/Core/BAO/Address.php';
       CRM_Core_BAO_Address::setOverwrite(FALSE);
     }
+    if (!empty($params['log_data'])) {
+      $params['log_data'] .= ' ('.ts('Profile').' - '.$this->_gid.')';
+    }
+    else{
+      $params['log_data'] = ts('Profile').' - '.$this->_gid;
+    }
 
     require_once 'CRM/Core/Transaction.php';
     $transaction = new CRM_Core_Transaction();
