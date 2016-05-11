@@ -360,10 +360,30 @@ LEFT JOIN civicrm_custom_field ON (civicrm_custom_field.custom_group_id = civicr
       foreach ($subTypes as $key => $subType) {
         $subTypeClauses[] = self::whereListHas("civicrm_custom_group.extends_entity_column_value", self::validateSubTypeByEntity($entityType, $subType));
       }
+      $subTypeClause = '(' .  implode(' OR ', $subTypeClauses) . ')';
+      if (!$onlySubType) {
+        $subTypeClause = '(' . $subTypeClause . '  OR civicrm_custom_group.extends_entity_column_value IS NULL )';
+      }
+
+      $strWhere = "
+ WHERE civicrm_custom_group.is_active = 1
+   AND civicrm_custom_field.is_active = 1
+   AND civicrm_custom_group.extends IN ($in)
+   AND $subTypeClause
+ ";
+      if ($subName) {
+        $strWhere .= " AND civicrm_custom_group.extends_entity_column_id = {$subName} ";
+      }
     }
-    $subTypeClause = '(' .  implode(' OR ', $subTypeClauses) . ')';
-    if (!$onlySubType) {
-      $subTypeClause = '(' . $subTypeClause . '  OR civicrm_custom_group.extends_entity_column_value IS NULL )';
+    else {
+      $strWhere = "
+WHERE civicrm_custom_group.is_active = 1
+  AND civicrm_custom_field.is_active = 1
+  AND civicrm_custom_group.extends IN ($in)
+";
+      if (!$returnAll) {
+        $strWhere .= "AND civicrm_custom_group.extends_entity_column_value IS NULL";
+      }
     }
 
     $params = array();
@@ -648,13 +668,25 @@ SELECT $select
     if (is_numeric($subType)) {
       return $subType;
     }
-    $contactTypes = civicrm_api3('Contact', 'getoptions', array('field' => 'contact_type'));
+    $params = array(
+      'version' => 3,
+      'sequential' => 1,
+      'field' => 'contact_type',
+    );
+    $contactTypes = civicrm_api('Contact', 'getoptions', $params);
+    // $contactTypes = civicrm_api3('Contact', 'getoptions', array('field' => 'contact_type'));
     if ($entityType != 'Contact' && !in_array($entityType, $contactTypes['values'])) {
       // Not quite sure if we want to fail this hard. But quiet ignore would be pretty bad too.
       // Am inclined to go with this for RC release & considering softening.
       throw new CRM_Core_Exception('Invalid Entity Filter');
     }
-    $subTypes = civicrm_api3('Contact', 'getoptions', array('field' => 'contact_sub_type'));
+    $params = array(
+      'version' => 3,
+      'sequential' => 1,
+      'field' => 'contact_sub_type',
+    );
+    $subTypes = civicrm_api('Contact', 'getoptions', $params);
+    // $subTypes = civicrm_api3('Contact', 'getoptions', array('field' => 'contact_sub_type'));
     if (!in_array($subType, $subTypes['values'])) {
       // Same comments about fail hard as above.
       throw new CRM_Core_Exception('Invalid Filter');
