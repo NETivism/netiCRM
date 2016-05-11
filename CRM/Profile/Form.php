@@ -874,19 +874,33 @@ class CRM_Profile_Form extends CRM_Core_Form {
     require_once 'CRM/Core/Transaction.php';
     $transaction = new CRM_Core_Transaction();
 
-    //used to send subcribe mail to the group which user want.
-    //if the profile double option in is enabled
+    // first, trying to add contact from profile without group
+    $submittedGroup = !empty($params['group']) ? $params['group'] : array();
+    $fieldGroup = !empty($this->_fields['group']) ? $this->_fields['group'] : array(); 
+    unset($params['group']);
+    unset($this->_fields['group']);
+    $this->_id = CRM_Contact_BAO_Contact::createProfileContact(
+      $params,
+      $this->_fields,
+      $this->_id,
+      $this->_addToGroupID,
+      $this->_gid,
+      $this->_ctype,
+      TRUE
+    );
+
+    // second, trying to send mail to subscrber.
     $mailingType = array();
     $config = CRM_Core_Config::singleton();
-    if ($config->profileDoubleOptIn && CRM_Utils_Array::value('group', $params)) {
-      $result = NULL;
+    if ($config->profileDoubleOptIn && !empty($submittedGroup)) {
+      $profile = NULL;
       foreach ($params as $name => $values) {
         if (substr($name, 0, 6) == 'email-') {
-          $result['email'] = $values;
+          $profile['email'] = $values;
         }
       }
       $groupSubscribed = array();
-      if (CRM_Utils_Array::value('email', $result)) {
+      if (!empty($profile['email'])) {
         require_once 'CRM/Contact/DAO/Group.php';
         //array of group id, subscribed by contact
         $contactGroup = array();
@@ -897,61 +911,46 @@ class CRM_Profile_Form extends CRM_Core_Form {
           $contactGroups->find();
           $contactGroup = array();
           while ($contactGroups->fetch()) {
-            $contactGroup[] = $contactGroups->group_id;
+            $contactGroup[$contactGroups->group_id] = 1;
             $groupSubscribed[$contactGroups->group_id] = 1;
           }
         }
-        foreach ($params['group'] as $key => $val) {
-          if (!$val) {
-            unset($params['group'][$key]);
-            continue;
-          }
-          $groupTypes = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Group',
-            $key, 'group_type', 'id'
-          );
-          $groupType = explode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
-            substr($groupTypes, 1, -1)
-          );
-          //filter group of mailing type and unset it from params
-          if (in_array(2, $groupType)) {
-            //if group is already subscribed , ignore it
-            $groupExist = CRM_Utils_Array::key($key, $contactGroup);
-            if (!isset($groupExist)) {
+        foreach ($submittedGroup as $key => $val) {
+          if ($val) {
+            // only add who not subscribed
+            if (empty($groupSubscribed[$key])) {
               $mailingType[] = $key;
-              unset($params['group'][$key]);
+              unset($submittedGroup[$key]);
             }
+          }
+          else{
+            unset($submittedGroup[$key]);
           }
         }
       }
     }
 
+    // third, keep subscribed contact remain in group
     if (CRM_Utils_Array::value('add_to_group', $params)) {
       $addToGroupId = $params['add_to_group'];
-
-      // since we are directly adding contact to group lets unset it from mailing
-      if ($key = array_search($addToGroupId, $mailingType)) {
+      $key = array_search($addToGroupId, $mailingType);
+      if ($key) {
         unset($mailingType[$key]);
+        $submittedGroup[$addToGroupId] = 1;
       }
     }
-
-    if ($this->_grid) {
-      $params['group'] = $groupSubscribed;
+    if (!empty($submittedGroup)) {
+      // this means we are coming in via profile, not admin
+      $method = 'Web';
+      $visibility = TRUE;
+      $submittedGroup = array_merge($submittedGroup, $groupSubscribed);
+      CRM_Contact_BAO_GroupContact::create($submittedGroup, $this->_id, $visibility, $method);
     }
 
-    // commenting below code, since we potentially
-    // triggered maximum name field formatting cases during CRM-4430.
-    // CRM-4343
-    // $params['preserveDBName'] = true;
-
-    $this->_id = CRM_Contact_BAO_Contact::createProfileContact($params, $this->_fields,
-      $this->_id, $this->_addToGroupID,
-      $this->_gid, $this->_ctype,
-      TRUE
-    );
-    //mailing type group
+    // last, if still have mail to subscribe group, send mail
     if (!empty($mailingType)) {
       require_once 'CRM/Mailing/Event/BAO/Subscribe.php';
-      CRM_Mailing_Event_BAO_Subscribe::commonSubscribe($mailingType, $result);
+      CRM_Mailing_Event_BAO_Subscribe::commonSubscribe($mailingType, $profile, $this->_id);
     }
 
     require_once 'CRM/Core/BAO/UFGroup.php';
