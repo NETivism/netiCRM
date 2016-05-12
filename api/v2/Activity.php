@@ -523,7 +523,7 @@ function civicrm_activity_custom_get($params) {
   }
 
   require_once 'CRM/Core/BAO/CustomGroup.php';
-  $groupTree = CRM_Core_BAO_CustomGroup::getTree('Activity',
+  $groupTree = &CRM_Core_BAO_CustomGroup::getTree('Activity',
     CRM_Core_DAO::$_nullObject,
     $params['activity_id'],
     NULL,
