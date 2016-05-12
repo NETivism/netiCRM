@@ -286,6 +286,7 @@ class CRM_Profile_Form extends CRM_Core_Form {
           )
         ) {
           $orgId = CRM_Contact_BAO_Relationship::currentPermittedOrganization($this->_id);
+          $this->set('orgId', $orgId);
           if ($orgId && $profileType == 'Organization') {
             $this->_id = $orgId;
           }
@@ -420,6 +421,7 @@ class CRM_Profile_Form extends CRM_Core_Form {
       require_once 'CRM/ACL/API.php';
       if (CRM_Core_Permission::check('administer users') ||
         $this->_id == $session->get('userID') ||
+        $this->_id == $this->get('orgId') ||
         $this->_isPermissionedChecksum ||
         in_array($this->_gid,
           CRM_ACL_API::group(CRM_Core_Permission::EDIT,
