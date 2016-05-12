@@ -263,7 +263,7 @@ class CRM_Core_BAO_CustomGroup extends CRM_Core_DAO_CustomGroup {
    * @static
    *
    */
-  public static function getTree($entityType,
+  public static function &getTree($entityType,
     $deprecated = NULL,
     $entityID = NULL,
     $groupID = NULL,
