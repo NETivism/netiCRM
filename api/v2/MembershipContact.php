@@ -190,7 +190,7 @@ function civicrm_membership_contact_get(&$params) {
       $membershipValues[$membershipId]['relationship_name'] = $relationshipType->name_a_b;
     }
     require_once 'CRM/Core/BAO/CustomGroup.php';
-    $groupTree = CRM_Core_BAO_CustomGroup::getTree('Membership', CRM_Core_DAO::$_nullObject, $membershipId, FALSE,
+    $groupTree = &CRM_Core_BAO_CustomGroup::getTree('Membership', CRM_Core_DAO::$_nullObject, $membershipId, FALSE,
       $values['membership_type_id']
     );
     $groupTree = CRM_Core_BAO_CustomGroup::formatGroupTree($groupTree, 1, CRM_Core_DAO::$_nullObject);

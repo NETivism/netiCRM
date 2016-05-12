@@ -94,7 +94,7 @@ class CRM_Custom_Form_CustomData {
 
     $form->_groupID = CRM_Utils_Request::retrieve('groupID', 'Positive', $form);
 
-    $groupTree = CRM_Core_BAO_CustomGroup::getTree($form->_type,
+    $groupTree = &CRM_Core_BAO_CustomGroup::getTree($form->_type,
       $form,
       $form->_entityId,
       $form->_groupID,

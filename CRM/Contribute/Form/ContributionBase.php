@@ -408,7 +408,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
         }
       }
       //retrieve custom field information
-      $groupTree = CRM_Core_BAO_CustomGroup::getTree("ContributionPage", $this, $this->_id, 0, $this->_values['contribution_type_id']);
+      $groupTree = &CRM_Core_BAO_CustomGroup::getTree("ContributionPage", $this, $this->_id, 0, $this->_values['contribution_type_id']);
       $this->_values['custom_data_view'] = CRM_Core_BAO_CustomGroup::buildCustomDataView($this, $groupTree);
 
       $this->set('values', $this->_values);

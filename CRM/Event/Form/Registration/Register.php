@@ -147,7 +147,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
     $event = new stdClass();
     $event->_id = $this->_eventId;
     $values = $this->_values;
-    $groupTree = CRM_Core_BAO_CustomGroup::getTree("Event", $event, $event->_id, 0, $values['event']['event_type_id']);
+    $groupTree = &CRM_Core_BAO_CustomGroup::getTree("Event", $event, $event->_id, 0, $values['event']['event_type_id']);
     foreach($groupTree as $ufg_inner){
       if(is_array($ufg_inner['fields'])){
         foreach ($ufg_inner['fields'] as $uffield) {

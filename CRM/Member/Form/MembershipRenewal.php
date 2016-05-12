@@ -564,7 +564,7 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
       $formValues['paidBy'] = $paymentInstrument[$formValues['payment_instrument_id']];
 
       //get the group Tree
-      $this->_groupTree = CRM_Core_BAO_CustomGroup::getTree('Membership', $this, $this->_id, FALSE, $this->_memType);
+      $this->_groupTree = &CRM_Core_BAO_CustomGroup::getTree('Membership', $this, $this->_id, FALSE, $this->_memType);
 
       // retrieve custom data
       require_once "CRM/Core/BAO/UFGroup.php";
