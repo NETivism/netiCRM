@@ -2590,5 +2590,27 @@ WHERE  civicrm_mailing_job.id = %1
     CRM_Core_Error::debug_log_message('Ending processQueue run');
     return TRUE;
   }
+
+  /**
+   * @return mixed
+   */
+  public static function getMailingsList() {
+    static $list = array();
+
+    if (empty($list)) {
+      $query = "
+SELECT civicrm_mailing.id, civicrm_mailing.name, civicrm_mailing_job.end_date
+FROM   civicrm_mailing
+INNER JOIN civicrm_mailing_job ON civicrm_mailing.id = civicrm_mailing_job.mailing_id WHERE 1
+ORDER BY civicrm_mailing.name";
+      $mailing = CRM_Core_DAO::executeQuery($query);
+
+      while ($mailing->fetch()) {
+        $list[$mailing->id] = "{$mailing->name} :: {$mailing->end_date}";
+      }
+    }
+
+    return $list;
+  }
 }
 

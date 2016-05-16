@@ -1,47 +1,80 @@
 <tr>
-  <td colspan="2">
-    {$form.mailing_name.label}
+  <td>
+  {$form.mailing_id.label}
     <br />
-    {$form.mailing_name.html}
+  {$form.mailing_id.html}
+  </td>
+<td>
+  {$form.mailing_job_status.label}
+    <br />
+  {$form.mailing_job_status.html}
+</td>
+</tr>
+<tr><td><label>{ts}Mailing Date{/ts}</label></td></tr>
+<tr>
+  <td>
+  {$form.mailing_date_low.label}
+  {include file="CRM/common/jcalendar.tpl" elementName=mailing_date_low} 
+  </td>
+  <td>
+  {$form.mailing_date_high.label}
+  {include file="CRM/common/jcalendar.tpl" elementName=mailing_date_high} 
   </td>
 </tr>
 <tr>
   <td>
-    {$form.mailing_date_low.label} 
+  {$form.mailing_delivery_status.label}
     <br />
-    {include file="CRM/common/jcalendar.tpl" elementName=mailing_date_low}
+  {$form.mailing_delivery_status.html}
+  <br />
+  {$form.mailing_bounce_types.label}
+  {$form.mailing_bounce_types.html}
   </td>
   <td>
-    {$form.mailing_date_high.label}
+  {$form.mailing_open_status.label}
     <br />
-    {include file="CRM/common/jcalendar.tpl" elementName=mailing_date_high}
-  </td>
-</tr>
-<tr>
-  <td>
-    {$form.mailing_delivery_status.label}
-    <br />
-    {$form.mailing_delivery_status.html}
-    <span class="crm-clear-link">(<a href="javascript:unselectRadio('mailing_delivery_status','{$form.formName}')">{ts}clear{/ts}</a>)</span>
-  </td>
-  <td>
-    {$form.mailing_open_status.label}
-    <br />
-    {$form.mailing_open_status.html}
-    <span class="crm-clear-link">(<a href="javascript:unselectRadio('mailing_open_status','{$form.formName}')">{ts}clear{/ts}</a>)</span>
+  {$form.mailing_open_status.html}
   </td>
 </tr>
 <tr>
   <td>
-    {$form.mailing_click_status.label}
+  {$form.mailing_click_status.label}
     <br />
-    {$form.mailing_click_status.html}
-    <span class="crm-clear-link">(<a href="javascript:unselectRadio('mailing_click_status','{$form.formName}')">{ts}clear{/ts}</a>)</span>
+  {$form.mailing_click_status.html}
   </td>
   <td>
-    {$form.mailing_reply_status.label}
+  {$form.mailing_reply_status.label}
     <br />
-    {$form.mailing_reply_status.html}
-    <span class="crm-clear-link">(<a href="javascript:unselectRadio('mailing_reply_status','{$form.formName}')">{ts}clear{/ts}</a>)</span>
+  {$form.mailing_reply_status.html}
+  </td>
+</tr>
+<tr>
+  <td>
+    <table>
+      <tr>
+      {$form.mailing_unsubscribe.html}&nbsp;
+      {$form.mailing_unsubscribe.label}
+      </tr>
+    </table>
+  </td>
+  <td>
+    <table>
+      <tr>
+        <td>
+        {$form.mailing_optout.html}&nbsp;
+        {$form.mailing_optout.label}
+        </td>
+        <td>
+        {$form.mailing_forward.html}&nbsp;
+        {$form.mailing_forward.label}
+        </td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+  <td>{* campaign in Advance search *}
+      {include file="CRM/Campaign/Form/addCampaignToComponent.tpl" campaignContext="componentSearch"
+       campaignTrClass='crmCampaign' campaignTdClass='crmCampaignContainer'}
   </td>
 </tr>
