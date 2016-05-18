@@ -68,6 +68,16 @@ class CRM_Core_TableHierarchy {
     'case_relationship' => '31',
     'case_relation_type' => '32',
     'civicrm_activity' => '33',
+    'civicrm_mailing_summary' => '35',
+    'civicrm_mailing_recipients' => '36',
+    'civicrm_mailing' => '37',
+    'civicrm_mailing_job' => '38',
+    'civicrm_mailing_event_queue' => '39',
+    'civicrm_mailing_event_bounce' => '40',
+    'civicrm_mailing_event_opened' => '41',
+    'civicrm_mailing_event_reply' => '42',
+    'civicrm_mailing_event_trackable_url_open' => '43',
+
   );
 
   static function &info() {

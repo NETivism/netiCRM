@@ -5,9 +5,14 @@
   {$form.mailing_id.html}
   </td>
 <td>
-  {$form.mailing_job_status.label}
-    <br />
+  <div>
+  {$form.mailing_job_status.label}<br />
   {$form.mailing_job_status.html}
+  </div>
+  <div>
+  {$form.mailing_bounce_types.label}<br />
+  {$form.mailing_bounce_types.html}
+  </div>
 </td>
 </tr>
 <tr><td><label>{ts}Mailing Date{/ts}</label></td></tr>
@@ -23,53 +28,32 @@
 </tr>
 <tr>
   <td>
-  {$form.mailing_delivery_status.label}
-    <br />
+  {$form.mailing_delivery_status.label}<br />
   {$form.mailing_delivery_status.html}
-  <br />
-  {$form.mailing_bounce_types.label}
-  {$form.mailing_bounce_types.html}
   </td>
   <td>
-  {$form.mailing_open_status.label}
-    <br />
+  {$form.mailing_open_status.label}<br />
   {$form.mailing_open_status.html}
   </td>
 </tr>
 <tr>
   <td>
-  {$form.mailing_click_status.label}
-    <br />
+  {$form.mailing_click_status.label}<br />
   {$form.mailing_click_status.html}
   </td>
   <td>
-  {$form.mailing_reply_status.label}
-    <br />
+  {$form.mailing_reply_status.label}<br />
   {$form.mailing_reply_status.html}
   </td>
 </tr>
 <tr>
   <td>
-    <table>
-      <tr>
-      {$form.mailing_unsubscribe.html}&nbsp;
-      {$form.mailing_unsubscribe.label}
-      </tr>
-    </table>
+    {$form.mailing_unsubscribe.html} 
+    {$form.mailing_unsubscribe.label}
   </td>
   <td>
-    <table>
-      <tr>
-        <td>
-        {$form.mailing_optout.html}&nbsp;
-        {$form.mailing_optout.label}
-        </td>
-        <td>
-        {$form.mailing_forward.html}&nbsp;
-        {$form.mailing_forward.label}
-        </td>
-      </tr>
-    </table>
+    {$form.mailing_optout.html} 
+    {$form.mailing_optout.label}
   </td>
 </tr>
 <tr>

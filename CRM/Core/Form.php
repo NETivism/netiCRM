@@ -671,12 +671,19 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
 
   function &addRadio($name, $title, &$values, $attributes = NULL, $separator = NULL, $required = FALSE) {
     $options = array();
+    $attributes = $attributes ? $attributes : array();
+    $allowClear = !empty($attributes['allowClear']) ? TRUE : FALSE;
+    unset($attributes['allowClear']);
+
     foreach ($values as $key => $var) {
       $options[] = &HTML_QuickForm::createElement('radio', NULL, NULL, $var, $key, $attributes);
     }
     $group = &$this->addGroup($options, $name, $title, $separator);
     if ($required) {
       $this->addRule($name, ts('%1 is a required field.', array(1 => $title)), 'required');
+    }
+    if ($allowClear) {
+      $group->setAttribute('allowClear', TRUE);
     }
     return $group;
   }
