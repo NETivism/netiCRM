@@ -45085,3 +45085,24 @@ msgstr ""
 #: CRM/Price/BAO/Field.php
 msgid "membership required"
 msgstr ""
+
+#: CRM/Mailing/BAO/Query.php
+msgid "Delivery Status"
+msgstr ""
+
+#: CRM/Mailing/BAO/Query.php
+msgid "Trackable Open"
+msgstr ""
+
+#: CRM/Mailing/BAO/Query.php
+msgid "Trackable URL Click"
+msgstr ""
+
+#: CRM/Mailing/BAO/Query.php
+msgid "Trackable Reply"
+msgstr ""
+
+#: CRM/Mailing/BAO/Query.php
+msgid "Opt-out Requests"
+msgstr ""
+
