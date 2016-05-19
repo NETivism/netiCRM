@@ -54,6 +54,9 @@ class CRM_Contact_Page_View_GroupContact extends CRM_Core_Page {
     $this->assign_by_ref('groupIn', $in);
     $this->assign_by_ref('groupPending', $pending);
     $this->assign_by_ref('groupOut', $out);
+
+    $ajaxSmartGroupUrl = CRM_Utils_System::url('civicrm/contact/view/smartgroup',"cid={$this->_contactId}");
+    $this->assign('ajaxSmartGroupUrl',$ajaxSmartGroupUrl);
   }
 
   /**
