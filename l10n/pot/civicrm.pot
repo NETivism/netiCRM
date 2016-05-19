@@ -45106,3 +45106,26 @@ msgstr ""
 msgid "Opt-out Requests"
 msgstr ""
 
+#: CRM/Mailing/BAO/Query.php
+msgid "Not delivered"
+msgstr ""
+
+#: CRM/Mailing/BAO/Query.php
+msgid "Unopened/Hidden"
+msgstr ""
+
+#: CRM/Mailing/BAO/Query.php
+msgid "Clicked"
+msgstr ""
+
+#: CRM/Mailing/BAO/Query.php
+msgid "Not Clicked"
+msgstr ""
+
+#: CRM/Mailing/BAO/Query.php
+msgid "Replied"
+msgstr ""
+
+#: CRM/Mailing/BAO/Query.php
+msgid "No Reply"
+msgstr ""
