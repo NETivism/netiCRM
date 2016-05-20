@@ -90,6 +90,7 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
     CRM_Mailing_BAO_Mailing::checkPermission($mailingID);
 
     $defaults = array();
+    $defaults['dedupe_email'] = 1;
 
     if ($mailingID) {
       $mailing = new CRM_Mailing_DAO_Mailing();
