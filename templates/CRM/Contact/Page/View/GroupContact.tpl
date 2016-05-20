@@ -58,7 +58,7 @@
     <div class="accordion ui-accordion ui-widget ui-helper-reset">
       <div class="crm-accordion-wrapper crm-ajax-accordion crm-smartgroup-accordion collapsed">
         <div class="crm-accordion-header" id="crm-contact_smartgroup" contact_id="{$contactId}">
-          {ts}Smart Groups{/ts}
+          {ts}Smart Group{/ts}
         </div>
         <!-- /.crm-accordion-header -->
         <div class="crm-accordion-body">

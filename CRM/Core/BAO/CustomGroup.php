@@ -568,7 +568,7 @@ SELECT $select
                           'url' => 'civicrm/file',
                           'qs' => 'reset=1&id=%%id%%&eid=%%eid%%&fid=%%fid%%&action=delete',
                           'extra' =>
-                          'onclick = "if (confirm( \'' . $deleteExtra . '\' ) ) {  this.href+=\'&amp;confirmed=1\'; else return false;}"',
+                          'onclick = "if (confirm( \'' . $deleteExtra . '\' ) ) this.href+=\'&confirmed=1\'; else return false;"',
                         ),
                       );
                       $customValue['deleteURL'] = CRM_Core_Action::formLink($deleteURL,
