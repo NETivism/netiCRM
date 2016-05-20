@@ -151,7 +151,7 @@
       var loading = '<img src="{/literal}{$config->resourceBase}i/loading.gif{literal}" alt="{/literal}{ts escape='js'}loading{/ts}{literal}" />&nbsp;{/literal}{ts escape='js'}Loading{/ts}{literal}...';
       cj('div.' + id).html(loading);
       cj.ajax({
-        url: '{/literal}{$ajaxSmartGroupUrl}{literal}',
+        url: '{/literal}{crmURL p='civicrm/contact/view/smartgroup' q="snippet=4&cid=`$contactId`" h=0}{literal}',
         success: function (data) {
           cj('div.' + id).html(data);
         }

@@ -45129,3 +45129,19 @@ msgstr ""
 #: CRM/Mailing/BAO/Query.php
 msgid "No Reply"
 msgstr ""
+
+#: CRM/Contact/Page/View/ContactSmartGroup.tpl
+msgid "%1 is currently included in these Smart group(s) (e.g. saved searches)."
+msgstr ""
+
+#: CRM/Contact/Page/View/ContactSmartGroup.tpl
+msgid "This contact does not currently belong to any smart groups."
+msgstr ""
+
+#: CRM/Contact/Page/View/ContactSmartGroup.tpl
+msgid "Smart groups."
+msgstr ""
+
+#: CRM/Contact/Page/View/ContactSmartGroup.tpl
+msgid "%1 is included in these Parent group(s) based on belonging to group(s) which are their children."
+msgstr ""
