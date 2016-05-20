@@ -50,32 +50,77 @@
 
 
 <div id="id-additional" class="form-item">
+<h3>{if $context EQ 'search'}{ts}Additional Mailing Recipients{/ts}{else}{ts}Mailing Recipients{/ts}{/if}</h3>
+{if $groupCount > 0}
 <div class="crm-accordion-wrapper crm-accordion_title-accordion crm-accordion-open">
  <div class="crm-accordion-header">
-  <div class="zmdi crm-accordion-pointer"></div> 
- {if $context EQ 'search'}{ts}Additional Mailing Recipients{/ts}{else}{ts}Mailing Recipients{/ts}{/if}
+   <div class="zmdi crm-accordion-pointer"></div>
+   {ts}Group{/ts}
  </div><!-- /.crm-accordion-header -->
  <div class="crm-accordion-body">
   {strip}
-
   <table>
-  {if $groupCount > 0}
     <tr class="crm-mailing-group-form-block-includeGroups"><td class="label">{$form.includeGroups.label} {help id="include-groups"}</td></tr>
     <tr class="crm-mailing-group-form-block-includeGroups"><td>{$form.includeGroups.html}</td></tr>
     <tr class="crm-mailing-group-form-block-excludeGroups"><td class="label">{$form.excludeGroups.label} {help id="exclude-groups"}</td></tr>
     <tr class="crm-mailing-group-form-block-excludeGroups"><td>{$form.excludeGroups.html}</td></tr>
-  {/if}
-  {if $mailingCount > 0}
+  </table>
+  {/strip}
+ </div><!-- /.crm-accordion-body -->
+</div><!-- /.crm-accordion-wrapper -->
+{/if}{* group *}
+{if $mailingCount > 0}
+<div class="crm-accordion-wrapper crm-accordion_title-accordion crm-accordion-closed">
+ <div class="crm-accordion-header">
+   <div class="zmdi crm-accordion-pointer"></div>
+   {ts}Mailing{/ts}
+ </div><!-- /.crm-accordion-header -->
+ <div class="crm-accordion-body">
+  {strip}
+  <table>
   <tr class="crm-mailing-group-form-block-includeMailings"><td class="label">{$form.includeMailings.label} {help id="include-mailings"}</td></tr>
   <tr class="crm-mailing-group-form-block-includeMailings"><td>{$form.includeMailings.html}</td></tr>
   <tr class="crm-mailing-group-form-block-excludeMailings"><td class="label">{$form.excludeMailings.label} {help id="exclude-mailings"}</td></tr>
   <tr class="crm-mailing-group-form-block-excludeMailings"><td>{$form.excludeMailings.html}</td></tr>
-  {/if}
   </table>
-
   {/strip}
  </div><!-- /.crm-accordion-body -->
 </div><!-- /.crm-accordion-wrapper -->
+
+<div class="crm-accordion-wrapper crm-accordion_title-accordion crm-accordion-closed">
+ <div class="crm-accordion-header">
+   <div class="zmdi crm-accordion-pointer"></div>
+   {ts}Open tracking{/ts}
+ </div><!-- /.crm-accordion-header -->
+ <div class="crm-accordion-body">
+  {strip}
+  <table>
+  <tr class="crm-mailing-group-form-block-includeOpened"><td class="label">{$form.includeOpened.label} {help id="include-opened"}</td></tr>
+  <tr class="crm-mailing-group-form-block-includeOpened"><td>{$form.includeOpened.html}</td></tr>
+  <tr class="crm-mailing-group-form-block-excludeOpened"><td class="label">{$form.excludeOpened.label} {help id="exclude-opened"}</td></tr>
+  <tr class="crm-mailing-group-form-block-excludeOpened"><td>{$form.excludeOpened.html}</td></tr>
+  </table>
+  {/strip}
+ </div><!-- /.crm-accordion-body -->
+</div><!-- /.crm-accordion-wrapper -->
+
+<div class="crm-accordion-wrapper crm-accordion_title-accordion crm-accordion-closed">
+ <div class="crm-accordion-header">
+   <div class="zmdi crm-accordion-pointer"></div>
+   {ts}Clicked{/ts}
+ </div><!-- /.crm-accordion-header -->
+ <div class="crm-accordion-body">
+  {strip}
+  <table>
+  <tr class="crm-mailing-group-form-block-includeClicked"><td class="label">{$form.includeClicked.label} {help id="include-clicked"}</td></tr>
+  <tr class="crm-mailing-group-form-block-includeClicked"><td>{$form.includeClicked.html}</td></tr>
+  <tr class="crm-mailing-group-form-block-excludeClicked"><td class="label">{$form.excludeClicked.label} {help id="exclude-clicked"}</td></tr>
+  <tr class="crm-mailing-group-form-block-excludeClicked"><td>{$form.excludeClicked.html}</td></tr>
+  </table>
+  {/strip}
+ </div><!-- /.crm-accordion-body -->
+</div><!-- /.crm-accordion-wrapper -->
+{/if}{*mailing*}
 
   <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl"}</div>
 </div>
@@ -83,7 +128,14 @@
 {literal}
 <script type="text/javascript">
 cj(function() {
-   cj().crmaccordions(); 
+  cj().crmaccordions(); 
+  cj('.advmultiselect select[name$="t\\\[\\\]"]').each(function(){
+    if (!cj(this).attr('disabled')) {
+      cj(this).parents('.crm-accordion-closed').each(function(){
+        cj(this).find('.crm-accordion-header').trigger('click');
+      });
+    }
+  });
 });
 </script>
 {/literal}
