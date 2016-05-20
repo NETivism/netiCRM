@@ -53,32 +53,41 @@
             <td>&nbsp;</td>
 {/if}
 {if $form.group}
-            <td><label>{ts}Group(s){/ts}</label>
-                {$form.group.html}
-                {literal}
-                <script type="text/javascript">
-                cj("select#group").crmasmSelect({
-                    addItemTarget: 'bottom',
-                    animate: false,
-                    highlight: true,
-                    sortable: true,
-                    respectParents: true
-                });
+            <td colspan="2">
+               <table class="form-layout-compressed">
+                 <tr>
+                 <td>
+                   <label>{ts}Group(s){/ts}</label>
+                    <br>
+                    {$form.group.html}
+                    {literal}
+                    <script type="text/javascript">
+                    cj("select#group").crmasmSelect({
+                        addItemTarget: 'bottom',
+                        animate: false,
+                        highlight: true,
+                        sortable: true,
+                        respectParents: true
+                    });
 
-                </script>
-                {/literal}
+                    </script>
+                    {/literal}
+                 </td>
+                 <td>{$form.operator.label}<br />{$form.operator.html}{help id="id-search-operator"}</td>
+                 </tr>
+               </table>
             </td>
 {else}
             <td>&nbsp;</td>
 {/if}
-            <td>{$form.operator.label} {help id="id-search-operator"}<br />{$form.operator.html}</td>
+            
             <td colspan="2">
                 {if $form.deleted_contacts}{$form.deleted_contacts.html} {$form.deleted_contacts.label}{else}&nbsp;{/if}
             </td>
     </tr>
     <tr class="odd">
 {if $form.contact_tags}
-            <td><label>{ts}Select Tag(s){/ts}</label>
+            <td><label>{ts}Select Tag(s){/ts}</label><br>
                 {$form.contact_tags.html}
                 {literal}
                 <script type="text/javascript">
