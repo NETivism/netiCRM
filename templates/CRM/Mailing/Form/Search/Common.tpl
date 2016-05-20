@@ -15,7 +15,7 @@
   </div>
 </td>
 </tr>
-<tr><td><label>{ts}Mailing Date{/ts}</label></td></tr>
+<tr><td><label>{ts}Date of delivery{/ts}</label></td></tr>
 <tr>
   <td>
   {$form.mailing_date_low.label}

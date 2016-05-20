@@ -45086,6 +45086,50 @@ msgstr ""
 msgid "membership required"
 msgstr ""
 
+#: CRM/Mailing/BAO/Query.php
+msgid "Delivery Status"
+msgstr ""
+
+#: CRM/Mailing/BAO/Query.php
+msgid "Trackable Open"
+msgstr ""
+
+#: CRM/Mailing/BAO/Query.php
+msgid "Trackable URL Click"
+msgstr ""
+
+#: CRM/Mailing/BAO/Query.php
+msgid "Trackable Reply"
+msgstr ""
+
+#: CRM/Mailing/BAO/Query.php
+msgid "Opt-out Requests"
+msgstr ""
+
+#: CRM/Mailing/BAO/Query.php
+msgid "Not delivered"
+msgstr ""
+
+#: CRM/Mailing/BAO/Query.php
+msgid "Unopened/Hidden"
+msgstr ""
+
+#: CRM/Mailing/BAO/Query.php
+msgid "Clicked"
+msgstr ""
+
+#: CRM/Mailing/BAO/Query.php
+msgid "Not Clicked"
+msgstr ""
+
+#: CRM/Mailing/BAO/Query.php
+msgid "Replied"
+msgstr ""
+
+#: CRM/Mailing/BAO/Query.php
+msgid "No Reply"
+msgstr ""
+
 #: CRM/Contact/Page/View/ContactSmartGroup.tpl
 msgid "%1 is currently included in these Smart group(s) (e.g. saved searches)."
 msgstr ""

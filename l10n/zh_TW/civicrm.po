@@ -3,15 +3,15 @@
 # Fuyuan Cheng <gloomcheng@gmail.com>, 2013-2015
 # IreneLin, 2013
 # jimyhuang <jimmy@netivism.com.tw>, 2013,2015-2016
-# 張書懷 <junsuwhy@gmail.com>, 2015-2016
+# Chang Shu-huai <junsuwhy@gmail.com>, 2015-2016
 # SharonKwan <sharon@netivism.com.tw>, 2015-2016
 # charlesc <yeouhsin@gmail.com>, 2013-2014
 # 花玉婷 <klavier1976@netivism.com.tw>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2016-04-28 10:21+0000\n"
-"Last-Translator: 張書懷 <junsuwhy@gmail.com>\n"
+"PO-Revision-Date: 2016-05-19 09:12+0000\n"
+"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45084,3 +45084,59 @@ msgstr "參加最多活動的人"
 #: CRM/Report/Form/Contact/Participte.php
 msgid "Report for list top participants."
 msgstr "列出參加過最多活動的聯絡人報表"
+
+#: CRM/Price/Form/Option.php
+msgid "Member only?"
+msgstr ""
+
+#: templates/CRM/Price/Form/PriceSet.tpl
+msgid "Member price only available when you are our members."
+msgstr ""
+
+#: CRM/Price/BAO/Field.php
+msgid "membership required"
+msgstr ""
+
+#: CRM/Mailing/BAO/Query.php
+msgid "Delivery Status"
+msgstr "寄送狀態"
+
+#: CRM/Mailing/BAO/Query.php
+msgid "Trackable Open"
+msgstr "追蹤開信"
+
+#: CRM/Mailing/BAO/Query.php
+msgid "Trackable URL Click"
+msgstr "追蹤網址點擊"
+
+#: CRM/Mailing/BAO/Query.php
+msgid "Trackable Reply"
+msgstr "追蹤回覆"
+
+#: CRM/Mailing/BAO/Query.php
+msgid "Opt-out Requests"
+msgstr "退出全站訊息請求"
+
+#: CRM/Mailing/BAO/Query.php
+msgid "Not delivered"
+msgstr "未遞送"
+
+#: CRM/Mailing/BAO/Query.php
+msgid "Unopened/Hidden"
+msgstr "未開信或無法偵測"
+
+#: CRM/Mailing/BAO/Query.php
+msgid "Clicked"
+msgstr "已點擊"
+
+#: CRM/Mailing/BAO/Query.php
+msgid "Not Clicked"
+msgstr "未點擊"
+
+#: CRM/Mailing/BAO/Query.php
+msgid "Replied"
+msgstr "已回應"
+
+#: CRM/Mailing/BAO/Query.php
+msgid "No Reply"
+msgstr "未回應"
