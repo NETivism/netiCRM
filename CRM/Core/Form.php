@@ -1128,32 +1128,35 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
     $this->setDefaults(array($name => $defaultCurrency));
   }
 
-  function addFieldRequiredRule(&$errors){
+  function addFieldRequiredRule(&$errors,$fields,$files){
     // Files : Write in $this->_submitFiles['custom_4']['name']
     // if is no Files : $this->_submitFiles['custom_4']['error'] == 4
     // or $this->_submitFiles['custom_4']['name'] is null.
     foreach ($this->_fields as $name => $fld) {
       if($fld['is_required']){
         $data_type = isset($fld['data_type']) ? $fld['data_type'] : '';
-        if (CRM_Utils_System::isNull(CRM_Utils_Array::value($name, $this->_fields) && $data_type != 'File')) {
+        if (CRM_Utils_System::isNull(CRM_Utils_Array::value($name, $fields) && $data_type != 'File')) {
           $errors[$name] = ts('%1 is a required field.', array(1 => $fld['title']));
         }
 
-        if(substr($name,0,7)=='custom_'){
-          $customFieldID = CRM_Core_BAO_CustomField::getKeyID($name);
-          $file = CRM_Core_BAO_CustomField::getFileURL($this->_id, $customFieldID);
-          $file = isset($file['file_id'])?$file['file_id']:FALSE;
-        }else{
-          $file  = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $this->_id , 'image_URL');
-        }
-
-        if(empty($file) && ($data_type == 'File' || $name == 'image_URL')){
-          $uploaded = $this->_submitFiles[$name];
-          if(empty($uploaded['name'])){
+        if(empty($files[$name]['name']) && ($data_type == 'File' || $name == 'image_URL')){
+          if($this->_action == 1){
+            // profile : create
             $errors[$name] = ts('%1 is a required field.', array(1 => $fld['title']));
+          }else{
+            if($data_type == 'File'){
+              $customFieldID = CRM_Core_BAO_CustomField::getKeyID($name);
+              $file = CRM_Core_BAO_CustomField::getFileURL($this->_id, $customFieldID);
+              $file = isset($file['file_id'])?$file['file_id']:FALSE;
+            }
+            if($name == 'image_URL'){
+              $file  = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $this->_id , 'image_URL');
+            }
+            if(empty($file)){
+              $errors[$name] = ts('%1 is a required field.', array(1 => $fld['title']));
+            }
           }
         }
-
       }
     }
   }
