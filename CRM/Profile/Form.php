@@ -633,7 +633,7 @@ class CRM_Profile_Form extends CRM_Core_Form {
       $register = TRUE;
     }
 
-    $form->addFieldRequiredRule($errors);
+    $form->addFieldRequiredRule($errors, $fields ,$files);
 
     // dont check for duplicates during registration validation: CRM-375
     if (!$register && !CRM_Utils_Array::value('_qf_Edit_upload_duplicate', $fields)) {

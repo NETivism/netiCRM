@@ -1116,7 +1116,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
       return $errors;
     }
     
-    $self->addFieldRequiredRule($errors);
+    $self->addFieldRequiredRule($errors, $fields ,$files);
 
     // make sure that credit card number and cvv are valid
     require_once 'CRM/Utils/Rule.php';
