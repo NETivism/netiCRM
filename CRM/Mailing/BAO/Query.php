@@ -247,9 +247,9 @@ class CRM_Mailing_BAO_Query {
         foreach ($selectedMailings as $id => $dnc) {
           $selectedMailings[$id] = $mailings[$id];
         }
-        $selectedMailings = implode(' or ', $selectedMailings);
+        $selectedMailings = implode(' '.ts('or').' ', $selectedMailings);
 
-        $query->_qill[$grouping][] = ts("Mailing Name")." $op \"$selectedMailings\"";
+        $query->_qill[$grouping][] = ts("Mailing Name")." - \"$selectedMailings\"";
         $query->_tables['civicrm_mailing'] = $query->_whereTables['civicrm_mailing'] = 1;
         $query->_tables['civicrm_mailing_recipients'] = $query->_whereTables['civicrm_mailing_recipients'] = 1;
         return;
@@ -261,7 +261,7 @@ class CRM_Mailing_BAO_Query {
           $op = 'LIKE';
         }
         $query->_where[$grouping][] = "LOWER(civicrm_mailing.name) $op '$value'";
-        $query->_qill[$grouping][] = ts("Mailing Name")." $op \"$value\"";
+        $query->_qill[$grouping][] = ts("Mailing Name")." - \"$value\"";
         $query->_tables['civicrm_mailing'] = $query->_whereTables['civicrm_mailing'] = 1;
         $query->_tables['civicrm_mailing_recipients'] = $query->_whereTables['civicrm_mailing_recipients'] = 1;
         return;
@@ -372,7 +372,7 @@ class CRM_Mailing_BAO_Query {
           $query->_tables['civicrm_mailing_recipients'] = $query->_whereTables['civicrm_mailing_recipients'] = 1;
 
           $query->_where[$grouping][] = " civicrm_mailing_job.status = '{$value}' ";
-          $query->_qill[$grouping][] = ts("Mailing Status")." IS \"$value\"";
+          $query->_qill[$grouping][] = ts("Mailing Status")." - ".ts($value);
         }
         return;
 
@@ -478,7 +478,7 @@ class CRM_Mailing_BAO_Query {
 
     if (is_array($value)) {
       $query->_where[$grouping][] = "$tableName.$fieldName $op (" . implode(',', $value) . ")";
-      $query->_qill[$grouping][] = "$fieldTitle $op " . implode(', ', array_intersect_key($valueTitles, array_flip($value)));
+      $query->_qill[$grouping][] = "$fieldTitle - " . implode(', ', array_intersect_key($valueTitles, array_flip($value)));
     }
     else {
       $query->_qill[$grouping][] = $fieldTitle . ' - ' . $valueTitles[$value];
