@@ -1114,6 +1114,7 @@ WHERE id={$id}; ";
         }
         asort($sortArray);
         $fields = array_merge($sortArray, $fields);
+        $fields = CRM_Core_FieldHierarchy::arrange($fields);
 
         CRM_Core_BAO_Cache::setItem($fields, 'contact fields', $cacheKeyString);
       }
