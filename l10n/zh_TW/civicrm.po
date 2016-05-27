@@ -1,5 +1,6 @@
 # 
 # Translators:
+# Chang Shu-huai <junsuwhy@gmail.com>, 2016
 # Fuyuan Cheng <gloomcheng@gmail.com>, 2013-2015
 # IreneLin, 2013
 # jimyhuang <jimmy@netivism.com.tw>, 2013,2015-2016
@@ -10,8 +11,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2016-05-19 09:12+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
+"PO-Revision-Date: 2016-05-27 09:39+0000\n"
+"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27757,7 +27758,7 @@ msgstr "(允許登入)"
 
 #: templates/CRM/Contact/Page/View/Summary.tpl
 msgid "%1&nbsp;Address"
-msgstr "地址"
+msgstr "地址(%1)"
 
 #: templates/CRM/Contact/Page/View/Summary.tpl
 msgid "Map %1 Address"
@@ -45140,3 +45141,18 @@ msgstr "已回應"
 #: CRM/Mailing/BAO/Query.php
 msgid "No Reply"
 msgstr "未回應"
+
+#: CRM/Contact/Page/View/ContactSmartGroup.tpl
+msgid ""
+"%1 is currently included in these Smart group(s) (e.g. saved searches)."
+msgstr "%1 目前包含在下列智慧群組（搜尋結果）中"
+
+#: CRM/Contact/Page/View/ContactSmartGroup.tpl
+msgid "This contact does not currently belong to any smart groups."
+msgstr "此聯絡人不包含在任何智慧群組中"
+
+#: CRM/Contact/Page/View/ContactSmartGroup.tpl
+msgid ""
+"%1 is included in these Parent group(s) based on belonging to group(s) which"
+" are their children."
+msgstr ""
