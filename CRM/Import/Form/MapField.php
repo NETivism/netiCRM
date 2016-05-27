@@ -503,6 +503,10 @@ class CRM_Import_Form_MapField extends CRM_Core_Form {
 
     $js = "<script type='text/javascript'>\n";
     $formName = 'document.forms.' . $this->_name;
+    $mapperFieldsShortName = array();
+    foreach($this->_mapperFields as $key => $value){
+      $mapperFieldsShortName[$key] = trim(str_replace(ts('(match to contact)'), '', $value));
+    }
 
     //used to warn for mismatch column count or mismatch mapping
     $warning = 0;
@@ -587,7 +591,8 @@ class CRM_Import_Form_MapField extends CRM_Core_Form {
               $jsSet = TRUE;
             }
             else {
-              $mappingHeader = array_keys($this->_mapperFields, $mappingName[$i]);
+              $currentMappingName = trim(str_replace(ts('(match to contact)'), '', $mappingName[$i]));
+              $mappingHeader = array_keys($mapperFieldsShortName, $currentMappingName);
               $websiteTypeId = isset($mappingWebsiteType[$i]) ? $mappingWebsiteType[$i] : NULL;
               $locationId = isset($mappingLocation[$i]) ? $mappingLocation[$i] : 0;
               $phoneType = isset($mappingPhoneType[$i]) ? $mappingPhoneType[$i] : NULL;
