@@ -62,14 +62,21 @@ class HTML_QuickForm_CKeditor extends HTML_QuickForm_textarea
         if ($this->_flagFrozen) {
             return $this->getFrozenHtml();
         } else {
+            $perm = CRM_Core_Permission::check('access CiviCRM');
             $name = $this->getAttribute('name');
+            if($perm) {
+              $allowedContent = "editor.config.allowedContent = true;";
+            }
+            else{
+              $allowedContent = "editor.config.allowedContent = 'h1 h2 h3 p blockquote; strong em; a[!href]; img(left,right)[!src,alt,width,height];';";
+            }
             $html = parent::toHtml() . "<script type='text/javascript'>
                 cj( function( ) {
                     cj('#{$name}').removeClass();
                     if ( CKEDITOR.instances['{$name}'] ) {
                         CKEDITOR.remove(CKEDITOR.instances['{$name}']);
                     }
-                    CKEDITOR.replace( '{$name}' );
+                    CKEDITOR.replace('{$name}');
                     var editor = CKEDITOR.instances['{$name}'];
                     if ( editor ) {
                         editor.on( 'key', function( evt ){
@@ -77,6 +84,7 @@ class HTML_QuickForm_CKeditor extends HTML_QuickForm_textarea
                         } );
                         editor.config.width  = '".$this->width."';
                         editor.config.height = '".$this->height."';
+                        ".$allowedContent."
                     }
                 }); 
             </script>";
