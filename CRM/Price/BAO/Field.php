@@ -220,7 +220,7 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
     $useRequired = TRUE,
     $label = NULL,
     $fieldOptions = NULL,
-    $feezeOptions = array()
+    $freezeOptions = array()
   ) {
     require_once 'CRM/Utils/Money.php';
     $field = new CRM_Price_DAO_Field();
@@ -279,6 +279,7 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
     //use value field.
     $valueFieldName = 'amount';
     $seperator = '|';
+    $disabledOptions = array();
 
     if (!empty($optionMember) && !$isMember) {
       foreach($optionMember as $optId => $opt){
@@ -289,9 +290,11 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
         $opt['label'] .= ' ('.ts('membership required').')'; 
         $id = strtolower($field->html_type).'_'.$opt['price_field_id'].'_'.$optId;
         $optionMemberJson[$id] = $opt['label'];
+        $disabledOptions[$optId] = $customOption[$optId];
         unset($customOption[$optId]);
       }
     }
+    $qf->_priceSet['fields'][$fieldId]['disabled_options'] = $disabledOptions;
     $qf->assign('optionMember', json_encode($optionMemberJson));
 
     switch ($field->html_type) {
@@ -322,7 +325,7 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
         );
 
         // CRM-6902
-        if (in_array($optionKey, $feezeOptions)) {
+        if (in_array($optionKey, $freezeOptions)) {
           $element->freeze();
         }
 
@@ -347,7 +350,7 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
           );
 
           // CRM-6902
-          if (in_array($opId, $feezeOptions)) {
+          if (in_array($opId, $freezeOptions)) {
             $choice[$opId]->freeze();
           }
         }
@@ -380,7 +383,7 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
           }
           $selectOption[$opt['id']] = $opt['label'];
 
-          if (!in_array($opt['id'], $feezeOptions)) {
+          if (!in_array($opt['id'], $freezeOptions)) {
             $allowedOptions[] = $opt['id'];
           }
         }
@@ -392,7 +395,7 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
 
         // CRM-6902
         $button = substr($qf->controller->getButtonName(), -4);
-        if (!empty($feezeOptions) && $button != 'skip') {
+        if (!empty($freezeOptions) && $button != 'skip') {
           $qf->addRule($elementName, ts('Participant count for this option is full.'), 'regex', "/" . implode('|', $allowedOptions) . "/");
         }
         break;
@@ -414,7 +417,7 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
           );
 
           // CRM-6902
-          if (in_array($opId, $feezeOptions)) {
+          if (in_array($opId, $freezeOptions)) {
             $check[$opId]->freeze();
           }
         }
