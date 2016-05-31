@@ -1213,6 +1213,8 @@ AND civicrm_contact.is_opt_out =0";
         $htmlBody = $smarty->fetch("string:$htmlBody");
         $smarty->security = FALSE;
       }
+      // #17688, rwd support for newsletter image
+      $htmlBody = CRM_Utils_String::removeImageHeight($htmlBody);
       $mailParams['html'] = $htmlBody;
     }
 
@@ -1239,7 +1241,6 @@ AND civicrm_contact.is_opt_out =0";
     );
     $mailParams['toEmail'] = $email;
 
-    require_once 'CRM/Utils/Hook.php';
     CRM_Utils_Hook::alterMailParams($mailParams, 'civimail');
 
     //cycle through mailParams and set headers array
