@@ -81,7 +81,7 @@
                 </span>
   		        <div class="clear"></div>
                 <div class='text'>
-                    {$form.msg_text.html|crmReplace:class:huge}
+                    {$form.msg_text.html}
                     <div class="description">{ts}Text formatted message.{/ts} {ts 1=$tokenDocsRepeated}Tokens may be included (%1).{/ts}</div>
                 </div>
             </div><!-- /.crm-accordion-body -->
@@ -105,7 +105,7 @@
                 </span>
                 <div class="clear"></div>
                 <div class='html'>
-                    {$form.msg_html.html|crmReplace:class:huge}
+                    {$form.msg_html.html}
                     <div class="description">{ts}You may optionally create an HTML formatted version of this message. It will be sent to contacts whose Email Format preference is 'HTML' or 'Both'.{/ts} {ts 1=$tokenDocsRepeated}Tokens may be included (%1).{/ts}</div>
                 </div>  
 		    </div><!-- /.crm-accordion-body -->
