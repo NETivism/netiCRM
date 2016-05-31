@@ -388,7 +388,7 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
         if ($customFieldId = CRM_Core_BAO_CustomField::getKeyID($key1)) {
           $customGroupId = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_CustomField', $customFieldId, 'custom_group_id');
           $customGroupName = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_CustomGroup', $customGroupId, 'title');
-          $this->_mapperFields[$key][$key1] = '#' . $customGroupName . '::' . $value1['title'];
+          $this->_mapperFields[$key][$key1] = ts("Customized").' - '.$customGroupName . '::' . $value1['title'];
           if (in_array($key1, $addressCustomFields)) {
             $noSearchable[] = $value1['title'] . ' :: ' . $customGroupName;
           }
@@ -530,12 +530,6 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
             $js .= "{$formName}['field_name[$k]'].style.display = 'none';\n";
           }
         }
-      }
-    }
-
-    foreach ($sel2 as $k => $v) {
-      if (is_array($sel2[$k])) {
-        asort($sel2[$k]);
       }
     }
 

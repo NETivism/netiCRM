@@ -573,5 +573,13 @@ class CRM_Utils_String {
 
     return str_replace($search, $replace, $string);
   }
+
+  static function removeImageHeight($html){
+    $html = preg_replace('/(<img[^>]+)(line-height\s*:[^;]+;)([^>]+>)/i', '$1$3', $html); 
+    $html = preg_replace('/(<img[^>]+)(min-height\s*:[^;]+;)([^>]+>)/i', '$1$3', $html); 
+    $html = preg_replace('/(<img[^>]+)(height\s*:[^;]+;)([^>]+>)/i', '$1$3', $html); 
+    $html = preg_replace('/(<img[^>]+)(height=[\'"][^\'"]+[\'"])([^>]+>)/i', '$1 $3', $html); 
+    return $html;
+  }
 }
 
