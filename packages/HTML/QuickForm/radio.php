@@ -137,8 +137,11 @@ class HTML_QuickForm_radio extends HTML_QuickForm_input
             $output = HTML_QuickForm_input::toHtml();
         }
         elseif ($this->_flagFrozen) {
-            $label = $this->_text;
-            $output = HTML_QuickForm_input::toHtml() . $label;
+            $class = $this->getChecked() ? 'checked' : 'unchecked';
+            $output = '<label class="freeze-'.$class.' crm-form-elem md-elem">'
+                . HTML_QuickForm_input::toHtml()
+                . '<span class="elem-label">' . $this->_text . '</span>'
+                . '</label>';
         }
         else {
             $output = '<label class="crm-form-elem crm-form-radio" for="' . $this->getAttribute('id') . '">'
@@ -163,10 +166,10 @@ class HTML_QuickForm_radio extends HTML_QuickForm_input
     function getFrozenHtml()
     {
         if ($this->getChecked()) {
-            return '<tt>(&#10004;)</tt>' .
+            return '<span class="freeze-icon freeze-radio-checked"></span>'.
                    $this->_getPersistantData();
         } else {
-            return '<tt>( )</tt>';
+            return '<span class="freeze-icon freeze-radio"></span>';
         }
     } //end func getFrozenHtml
 

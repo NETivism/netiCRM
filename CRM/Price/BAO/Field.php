@@ -289,17 +289,18 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
         }
         $opt['label'] .= ' ('.ts('membership required').')'; 
         $id = strtolower($field->html_type).'_'.$opt['price_field_id'].'_'.$optId;
-        $optionMemberJson[$id] = $opt['label'];
         $disabledOptions[$optId] = $customOption[$optId];
-        unset($customOption[$optId]);
+        $freezeOptions[] = $optId;
       }
     }
     $qf->_priceSet['fields'][$fieldId]['disabled_options'] = $disabledOptions;
-    $qf->assign('optionMember', json_encode($optionMemberJson));
 
     switch ($field->html_type) {
       case 'Text':
         if (empty($customOption)) {
+          return;
+        }
+        if($disabledOptions[$optId]) {
           return;
         }
         $optionKey = key($customOption);
