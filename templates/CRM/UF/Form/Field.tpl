@@ -129,7 +129,7 @@ function showLabel( ) {
     }
     
     var input = document.getElementById('label');
-    input.value = labelValue;
+    input.value = labelValue.indexOf('::') ? labelValue.substring(labelValue.indexOf('::')+2) : labelValue;
 
     /* Code to hide searchable attribute for no searchable fields */
     if (document.getElementsByName("field_name[1]")[0].selectedIndex == -1) {
