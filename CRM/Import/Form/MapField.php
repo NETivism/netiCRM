@@ -199,6 +199,13 @@ class CRM_Import_Form_MapField extends CRM_Core_Form {
     $this->_mapperFields = $this->get('fields');
     $this->_mapperFields = CRM_Core_FieldHierarchy::arrange($this->_mapperFields);
 
+    // For #17825
+    foreach ($this->_mapperFields as $key => $value) {
+      if($key == 'openid'){
+        unset($this->_mapperFields[$key]);
+      }
+    }
+
     $this->_importTableName = $this->get('importTableName');
     $this->_onDuplicate = $this->get('onDuplicate');
     $highlightedFields = array();
