@@ -1,17 +1,18 @@
 # 
 # Translators:
+# Chang Shu-huai <junsuwhy@gmail.com>, 2016
 # Fuyuan Cheng <gloomcheng@gmail.com>, 2013-2015
 # IreneLin, 2013
 # jimyhuang <jimmy@netivism.com.tw>, 2013,2015-2016
-# 張書懷 <junsuwhy@gmail.com>, 2015-2016
+# Chang Shu-huai <junsuwhy@gmail.com>, 2015-2016
 # SharonKwan <sharon@netivism.com.tw>, 2015-2016
 # charlesc <yeouhsin@gmail.com>, 2013-2014
 # 花玉婷 <klavier1976@netivism.com.tw>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2016-04-28 10:21+0000\n"
-"Last-Translator: 張書懷 <junsuwhy@gmail.com>\n"
+"PO-Revision-Date: 2016-05-31 10:46+0000\n"
+"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -11844,7 +11845,7 @@ msgstr "由資料表單進行批次更新捐款"
 
 #: CRM/Contribute/Task.php
 msgid "Update Pending Contribution Status"
-msgstr "更新「等待中」的捐款狀態"
+msgstr "更新「待處理」的捐款狀態"
 
 #: CRM/Contribute/Task.php
 msgid "Print or Email Contribution Receipts"
@@ -27757,7 +27758,7 @@ msgstr "(允許登入)"
 
 #: templates/CRM/Contact/Page/View/Summary.tpl
 msgid "%1&nbsp;Address"
-msgstr "地址"
+msgstr "%1&nbsp;地址"
 
 #: templates/CRM/Contact/Page/View/Summary.tpl
 msgid "Map %1 Address"
@@ -45084,3 +45085,74 @@ msgstr "參加最多活動的人"
 #: CRM/Report/Form/Contact/Participte.php
 msgid "Report for list top participants."
 msgstr "列出參加過最多活動的聯絡人報表"
+
+#: CRM/Price/Form/Option.php
+msgid "Member only?"
+msgstr "會員限定？"
+
+#: templates/CRM/Price/Form/PriceSet.tpl
+msgid "Member price only available when you are our members."
+msgstr "只有在您符合我們會員資格，才可選擇會員價。"
+
+#: CRM/Price/BAO/Field.php
+msgid "membership required"
+msgstr ""
+
+#: CRM/Mailing/BAO/Query.php
+msgid "Delivery Status"
+msgstr "寄送狀態"
+
+#: CRM/Mailing/BAO/Query.php
+msgid "Trackable Open"
+msgstr "追蹤開信"
+
+#: CRM/Mailing/BAO/Query.php
+msgid "Trackable URL Click"
+msgstr "追蹤網址點擊"
+
+#: CRM/Mailing/BAO/Query.php
+msgid "Trackable Reply"
+msgstr "追蹤回覆"
+
+#: CRM/Mailing/BAO/Query.php
+msgid "Opt-out Requests"
+msgstr "退出全站訊息請求"
+
+#: CRM/Mailing/BAO/Query.php
+msgid "Not delivered"
+msgstr "未遞送"
+
+#: CRM/Mailing/BAO/Query.php
+msgid "Unopened/Hidden"
+msgstr "未開信或無法偵測"
+
+#: CRM/Mailing/BAO/Query.php
+msgid "Clicked"
+msgstr "已點擊"
+
+#: CRM/Mailing/BAO/Query.php
+msgid "Not Clicked"
+msgstr "未點擊"
+
+#: CRM/Mailing/BAO/Query.php
+msgid "Replied"
+msgstr "已回應"
+
+#: CRM/Mailing/BAO/Query.php
+msgid "No Reply"
+msgstr "未回應"
+
+#: CRM/Contact/Page/View/ContactSmartGroup.tpl
+msgid ""
+"%1 is currently included in these Smart group(s) (e.g. saved searches)."
+msgstr "%1 目前包含在下列智慧群組（搜尋結果）中"
+
+#: CRM/Contact/Page/View/ContactSmartGroup.tpl
+msgid "This contact does not currently belong to any smart groups."
+msgstr "此聯絡人不包含在任何智慧群組中"
+
+#: CRM/Contact/Page/View/ContactSmartGroup.tpl
+msgid ""
+"%1 is included in these Parent group(s) based on belonging to group(s) which"
+" are their children."
+msgstr ""
