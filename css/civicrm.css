@@ -3978,3 +3978,39 @@ tbody.scrollContent tr.alternateRow {
 #Custom .crm-search-form-block td .form-submit {
   margin-top: 0;
 }
+
+.crm-container .freeze-unchecked, .container .freeze-checked {
+  cursor: not-allowed;
+}
+.crm-container .freeze-unchecked {
+  color: #AAA;
+  font-weight: normal;
+}
+.crm-container .freeze-unchecked:before {
+  color: #999;
+  font-weight: normal;
+}
+.crm-container .freeze-icon:before {
+  font: normal normal normal 16px/1 'Material-Design-Iconic-Font';
+  font-size: 1.4em;
+  margin: 0 6px 1px 1px;
+  display: inline-block;
+  vertical-align: middle;
+  cursor: not-allowed;
+}
+.crm-container .freeze-checkbox:before {
+  content: "\f279";
+  font-size: 24px;
+}
+.crm-container .freeze-checkbox-checked:before {
+  content: "\f26a";
+  font-size: 24px;
+}
+.crm-container .freeze-radio:before {
+  content: "\f26c";
+}
+.crm-container .freeze-radio-checked:before {
+  content: "\f269";
+}
+.crm-container .freeze-checked:before {
+}

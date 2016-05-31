@@ -610,6 +610,7 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
 
       if ($profileID) {
         // make sure profileID and ctype match if ctype exists
+        $orgID = CRM_Contact_BAO_Relationship::currentPermittedOrganization($userID);
         if ($ctype) {
           require_once 'CRM/Core/BAO/UFField.php';
           $profileType = CRM_Core_BAO_UFField::getProfileType($profileID);
@@ -618,7 +619,14 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
           }
 
           if (($profileType != 'Contact') && ($profileType != $ctype)) {
-            return NULL;
+            if(empty($orgID)) {
+              return NULL;
+            }
+            else{
+              if($profileType != 'Organization'){
+                return NULL;
+              }
+            }
           }
         }
 

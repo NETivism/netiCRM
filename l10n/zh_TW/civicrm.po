@@ -11,8 +11,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2016-05-27 09:39+0000\n"
-"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
+"PO-Revision-Date: 2016-05-31 10:46+0000\n"
+"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -11845,7 +11845,7 @@ msgstr "由資料表單進行批次更新捐款"
 
 #: CRM/Contribute/Task.php
 msgid "Update Pending Contribution Status"
-msgstr "更新「等待中」的捐款狀態"
+msgstr "更新「待處理」的捐款狀態"
 
 #: CRM/Contribute/Task.php
 msgid "Print or Email Contribution Receipts"
@@ -27758,7 +27758,7 @@ msgstr "(允許登入)"
 
 #: templates/CRM/Contact/Page/View/Summary.tpl
 msgid "%1&nbsp;Address"
-msgstr "地址(%1)"
+msgstr "%1&nbsp;地址"
 
 #: templates/CRM/Contact/Page/View/Summary.tpl
 msgid "Map %1 Address"
@@ -45088,11 +45088,11 @@ msgstr "列出參加過最多活動的聯絡人報表"
 
 #: CRM/Price/Form/Option.php
 msgid "Member only?"
-msgstr ""
+msgstr "會員限定？"
 
 #: templates/CRM/Price/Form/PriceSet.tpl
 msgid "Member price only available when you are our members."
-msgstr ""
+msgstr "只有在您符合我們會員資格，才可選擇會員價。"
 
 #: CRM/Price/BAO/Field.php
 msgid "membership required"

@@ -1071,7 +1071,7 @@ function _civicrm_api3_custom_data_get(&$returnArray, $entity, $entity_id, $grou
   require_once 'CRM/Core/BAO/CustomGroup.php';
   require_once 'CRM/Core/BAO/CustomField.php';
   $groupTree = &CRM_Core_BAO_CustomGroup::getTree($entity,
-    CRM_Core_DAO::$_nullObject,
+    NULL,
     $entity_id,
     $groupID,
     $subType,
