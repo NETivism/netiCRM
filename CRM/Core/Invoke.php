@@ -51,14 +51,6 @@ class CRM_Core_Invoke {
       return;
     }
 
-    require_once 'CRM/Core/I18n.php';
-    require_once 'CRM/Utils/Wrapper.php';
-    require_once 'CRM/Core/Action.php';
-    require_once 'CRM/Utils/Request.php';
-    require_once 'CRM/Core/Menu.php';
-    require_once 'CRM/Core/Component.php';
-    require_once 'CRM/Core/Permission.php';
-
     if (isset($args[1]) and $args[1] == 'menu' and
       isset($args[2]) and $args[2] == 'rebuild'
     ) {
@@ -68,7 +60,6 @@ class CRM_Core_Invoke {
         CRM_Core_Session::setStatus(ts('Menu has been rebuilt'));
 
         // also reset navigation
-        require_once 'CRM/Core/BAO/Navigation.php';
         CRM_Core_BAO_Navigation::resetNavigation();
 
         return CRM_Utils_System::redirect();
@@ -82,7 +73,6 @@ class CRM_Core_Invoke {
 
     // first fire up IDS and check for bad stuff
     if ($config->useIDS) {
-      require_once 'CRM/Core/IDS.php';
       $ids = new CRM_Core_IDS();
       $ids->check($args);
     }
@@ -91,10 +81,8 @@ class CRM_Core_Invoke {
     $i18n = &CRM_Core_I18n::singleton();
 
     if ($config->userFramework == 'Standalone') {
-      require_once 'CRM/Core/Session.php';
       $session = CRM_Core_Session::singleton();
       if ($session->get('new_install') !== TRUE) {
-        require_once 'CRM/Core/Standalone.php';
         CRM_Core_Standalone::sidebarLeft();
       }
       elseif ($args[1] == 'standalone' && $args[2] == 'register') {
@@ -116,7 +104,6 @@ class CRM_Core_Invoke {
     if ($config->userFramework == 'Joomla' && $item) {
       $config->userFrameworkURLVar = 'task';
 
-      require_once 'CRM/Core/Joomla.php';
       // joomla 1.5RC1 seems to push this in the POST variable, which messes
       // QF and checkboxes
       unset($_POST['option']);
@@ -162,9 +149,7 @@ class CRM_Core_Invoke {
       }
 
       $template = CRM_Core_Smarty::singleton();
-      if (isset($item['is_public']) &&
-        $item['is_public']
-      ) {
+      if (isset($item['is_public']) && $item['is_public']) {
         $template->assign('urlIsPublic', TRUE);
       }
       else {
@@ -173,65 +158,44 @@ class CRM_Core_Invoke {
 
       if (isset($item['return_url'])) {
         $session = CRM_Core_Session::singleton();
-        $args = CRM_Utils_Array::value('return_url_args',
-          $item,
-          'reset=1'
-        );
-        $session->pushUserContext(CRM_Utils_System::url($item['return_url'],
-            $args
-          ));
+        $args = CRM_Utils_Array::value('return_url_args', $item, 'reset=1');
+        $session->pushUserContext(CRM_Utils_System::url($item['return_url'], $args));
       }
       $template->assign('callbackPath', $item['page_callback']);
 
       $result = NULL;
       if (is_array($item['page_callback'])) {
-        $newArgs = explode('/',
-          $_GET[$config->userFrameworkURLVar]
-        );
-        require_once (str_replace('_',
-            DIRECTORY_SEPARATOR,
-            $item['page_callback'][0]
-          ) . '.php');
-        $result = call_user_func($item['page_callback'],
-          $newArgs
-        );
+        $newArgs = explode('/', $_GET[$config->userFrameworkURLVar]);
+        $result = call_user_func($item['page_callback'], $newArgs);
       }
       elseif (strstr($item['page_callback'], '_Form')) {
         $wrapper = new CRM_Utils_Wrapper();
-        $result = $wrapper->run(CRM_Utils_Array::value('page_callback', $item),
+        $result = $wrapper->run(
+          CRM_Utils_Array::value('page_callback', $item),
           CRM_Utils_Array::value('title', $item),
           isset($pageArgs) ? $pageArgs : NULL
         );
       }
       else {
-        $newArgs = explode('/',
-          $_GET[$config->userFrameworkURLVar]
-        );
-        require_once (str_replace('_',
-            DIRECTORY_SEPARATOR,
-            $item['page_callback']
-          ) . '.php');
+        $newArgs = explode('/', $_GET[$config->userFrameworkURLVar]);
         $mode = 'null';
         if (isset($pageArgs['mode'])) {
           $mode = $pageArgs['mode'];
           unset($pageArgs['mode']);
         }
         $title = CRM_Utils_Array::value('title', $item);
-        if (strstr($item['page_callback'], '_Page')) {
-          eval('$object = ' .
-            "new {$item['page_callback']}( \$title, \$mode );"
-          );
+        $callback = $item['page_callback'];
+        if (strstr($callback, '_Page')) {
+          $object = new $callback($title, $mode);
         }
-        elseif (strstr($item['page_callback'], '_Controller')) {
+        elseif (strstr($callback, '_Controller')) {
           $addSequence = 'false';
           if (isset($pageArgs['addSequence'])) {
             $addSequence = $pageArgs['addSequence'];
             $addSequence = $addSequence ? 'true' : 'false';
             unset($pageArgs['addSequence']);
           }
-          eval('$object = ' .
-            "new {$item['page_callback']} ( \$title, true, \$mode, null, \$addSequence );"
-          );
+          $object = new $callback($title, TRUE, $mode, NULL, $addSequence);
         }
         else {
           CRM_Core_Error::fatal();
