@@ -43,19 +43,20 @@
 class CRM_Core_Config_Defaults {
   function setCoreVariables() {
     global $civicrm_root;
+    $crm_root = rtrim($civicrm_root, DIRECTORY_SEPARATOR);
 
     // set of base directories relying on $civicrm_root
-    $this->smartyDir = $civicrm_root . DIRECTORY_SEPARATOR . 'packages' . DIRECTORY_SEPARATOR . 'Smarty' . DIRECTORY_SEPARATOR;
+    $this->smartyDir = $crm_root . DIRECTORY_SEPARATOR . 'packages' . DIRECTORY_SEPARATOR . 'Smarty' . DIRECTORY_SEPARATOR;
 
-    $this->pluginsDir = $civicrm_root . DIRECTORY_SEPARATOR . 'CRM' . DIRECTORY_SEPARATOR . 'Core' . DIRECTORY_SEPARATOR . 'Smarty' . DIRECTORY_SEPARATOR . 'plugins' . DIRECTORY_SEPARATOR;
+    $this->pluginsDir = $crm_root . DIRECTORY_SEPARATOR . 'CRM' . DIRECTORY_SEPARATOR . 'Core' . DIRECTORY_SEPARATOR . 'Smarty' . DIRECTORY_SEPARATOR . 'plugins' . DIRECTORY_SEPARATOR;
 
-    $this->templateDir = array($civicrm_root . DIRECTORY_SEPARATOR .
+    $this->templateDir = array($crm_root . DIRECTORY_SEPARATOR .
       'templates' . DIRECTORY_SEPARATOR,
     );
 
-    $this->importDataSourceDir = $civicrm_root . DIRECTORY_SEPARATOR . 'CRM' . DIRECTORY_SEPARATOR . 'Import' . DIRECTORY_SEPARATOR . 'DataSource' . DIRECTORY_SEPARATOR;
+    $this->importDataSourceDir = $crm_root . DIRECTORY_SEPARATOR . 'CRM' . DIRECTORY_SEPARATOR . 'Import' . DIRECTORY_SEPARATOR . 'DataSource' . DIRECTORY_SEPARATOR;
 
-    $this->gettextResourceDir = $civicrm_root . DIRECTORY_SEPARATOR . 'l10n' . DIRECTORY_SEPARATOR;
+    $this->gettextResourceDir = $crm_root . DIRECTORY_SEPARATOR . 'l10n' . DIRECTORY_SEPARATOR;
 
     // This should be moved to database config.
     $this->sunlight = defined('CIVICRM_SUNLIGHT') ? TRUE : FALSE;
@@ -157,29 +158,30 @@ class CRM_Core_Config_Defaults {
         // the system for a loop on lobo's macosx box
         // or in modules
         global $civicrm_root;
+        $crm_root = rtrim($civicrm_root, DIRECTORY_SEPARATOR);
         require_once "CRM/Utils/System/Drupal.php";
         $cmsPath = CRM_Utils_System_Drupal::cmsRootPath();
         $defaults['userFrameworkResourceURL'] = $baseURL . str_replace("$cmsPath/", '', str_replace('\\', '/', $civicrm_root));
 
-        if (strpos($civicrm_root,
+        if (strpos($crm_root,
             DIRECTORY_SEPARATOR . 'sites' .
             DIRECTORY_SEPARATOR . 'all' .
             DIRECTORY_SEPARATOR . 'modules'
           ) === FALSE) {
-          $startPos = strpos($civicrm_root,
+          $startPos = strpos($crm_root,
             DIRECTORY_SEPARATOR . 'sites' . DIRECTORY_SEPARATOR
           );
-          $endPos = strpos($civicrm_root,
+          $endPos = strpos($crm_root,
             DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR
           );
           if ($startPos && $endPos) {
             // if component is in sites/SITENAME/modules
-            $siteName = substr($civicrm_root,
+            $siteName = substr($crm_root,
               $startPos + 7,
               $endPos - $startPos - 7
             );
 
-            $civicrmDirName = trim(basename($civicrm_root));
+            $civicrmDirName = trim(basename($crm_root));
             $defaults['userFrameworkResourceURL'] = $baseURL . "sites/$siteName/modules/$civicrmDirName/";
             if (!isset($defaults['imageUploadURL'])) {
               $defaults['imageUploadURL'] = $baseURL . "sites/$siteName/files/civicrm/persist/contribute/";
