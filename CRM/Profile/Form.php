@@ -332,6 +332,11 @@ class CRM_Profile_Form extends CRM_Core_Form {
     if ($this->_id) {
       CRM_Core_BAO_UFGroup::setProfileDefaults($this->_id, $this->_fields, $this->_defaults, TRUE);
     }
+    else{
+      if (isset($this->_fields['group'])) {
+        CRM_Contact_BAO_Group::publicDefaultGroups($this->_defaults);
+      }
+    }
 
     //set custom field defaults
     require_once "CRM/Core/BAO/CustomField.php";

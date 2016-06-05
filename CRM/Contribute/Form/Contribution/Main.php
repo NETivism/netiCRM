@@ -291,6 +291,11 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
         }
       }
     }
+    else{
+      if (isset($this->_fields['group'])) {
+        CRM_Contact_BAO_Group::publicDefaultGroups($this->_defaults);
+      }
+    }
 
     //set custom field defaults set by admin if value is not set
     if (!empty($this->_fields)) {

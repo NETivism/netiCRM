@@ -135,6 +135,9 @@ class CRM_Event_Form_Registration_AdditionalParticipant extends CRM_Event_Form_R
         }
       }
     }
+    if (isset($this->_fields['group'])) {
+      CRM_Contact_BAO_Group::publicDefaultGroups($defaults);
+    }
 
     //CRM-4320, setdefault additional participant values.
     if ($this->_allowConfirmation && $this->_additionalParticipantId) {
