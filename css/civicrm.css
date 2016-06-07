@@ -3609,7 +3609,7 @@ tbody.scrollContent tr.alternateRow {
 
 .crm-container table.form-layout-compressed {
   margin: 0em 0em .5em;
-  width: auto;
+  width: 100%;
   border-collapse: collapse;
   border: 1px none;
 }
