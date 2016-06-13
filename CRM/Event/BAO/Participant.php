@@ -1271,6 +1271,7 @@ UPDATE  civicrm_participant
       foreach ($tokens['domain'] as $token) {
         $domainValues[$token] = CRM_Utils_Token::getDomainTokenReplacement($token, $domain);
       }
+      list($domainValues['name'], $domainValues['email']) = CRM_Core_BAO_Domain::getNameAndEmail();
     }
 
     //get all required contacts detail.
