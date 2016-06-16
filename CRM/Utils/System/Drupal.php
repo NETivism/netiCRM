@@ -92,7 +92,14 @@ class CRM_Utils_System_Drupal {
     }
     if (arg(0) == 'civicrm') {
       //set drupal title
-      drupal_set_title($pageTitle);
+      $config = CRM_Core_Config::singleton();
+      $version = $config->userSystem->version;
+      if($version >= 6 && $version < 7){
+        drupal_set_title($pageTitle);
+      }
+      else{
+        drupal_set_title($pageTitle, PASS_THROUGH);
+      }
     }
   }
 
