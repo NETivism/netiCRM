@@ -668,28 +668,14 @@ SELECT $select
     if (is_numeric($subType)) {
       return $subType;
     }
-    $params = array(
-      'version' => 3,
-      'sequential' => 1,
-      'field' => 'contact_type',
-    );
-    $contactTypes = civicrm_api('Contact', 'getoptions', $params);
-    // $contactTypes = civicrm_api3('Contact', 'getoptions', array('field' => 'contact_type'));
-    if ($entityType != 'Contact' && !in_array($entityType, $contactTypes['values'])) {
-      // Not quite sure if we want to fail this hard. But quiet ignore would be pretty bad too.
-      // Am inclined to go with this for RC release & considering softening.
-      throw new CRM_Core_Exception('Invalid Entity Filter');
+
+    $contactTypes = CRM_Contact_BAO_ContactType::contactTypes();
+    if ($entityType != 'Contact' && !in_array($entityType, $contactTypes)) {
+      CRM_Core_Error::fatal('Invalid Entity Filter');
     }
-    $params = array(
-      'version' => 3,
-      'sequential' => 1,
-      'field' => 'contact_sub_type',
-    );
-    $subTypes = civicrm_api('Contact', 'getoptions', $params);
-    // $subTypes = civicrm_api3('Contact', 'getoptions', array('field' => 'contact_sub_type'));
-    if (!in_array($subType, $subTypes['values'])) {
-      // Same comments about fail hard as above.
-      throw new CRM_Core_Exception('Invalid Filter');
+    $subTypes = CRM_Contact_BAO_ContactType::subTypes($entityType);
+    if (!in_array($subType, $subTypes)) {
+      CRM_Core_Error::fatal('Invalid Filter');
     }
     return $subType;
   }
