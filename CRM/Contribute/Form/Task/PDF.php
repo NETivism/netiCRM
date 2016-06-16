@@ -105,7 +105,17 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
    */
   public function buildQuickForm() {
 
-    $this->addElement('checkbox', 'single_page_letter', ts('Single page with address letter'));
+      $options = array(
+        'none' => ts('None'),
+        'single_page_letter' => ts('Single page with address letter'),
+        'two_pages_letter' => ts('Two pages with address letter'),
+      );
+
+    $this->addRadio( 'window_envelope',ts('Apply to window envelope'),$options,null,'<br/>',true );
+
+    $this->assign('elements', array('window_envelope'));
+
+    // $this->addElement('checkbox', 'single_page_letter', ts('Single page with address letter'));
     /*
         $this->addElement( 'radio', 'output', null, ts('Copy Receipts'), 'copy_receipt' ); 
         $this->addElement( 'radio', 'output', null, ts('Original Receipts'), 'original_receipt' );
@@ -138,7 +148,7 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
 
     $params = $this->controller->exportValues($this->_name);
 
-    self::makeReceipt($details, $params['single_page_letter']);
+    self::makeReceipt($details, $params['window_envelope']);
     self::makePDF();
     CRM_Utils_System::civiExit();
   }
@@ -164,22 +174,32 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
     }
   }
 
-  public function makeReceipt($details, $single_page_letter = NULL) {
+  public function makeReceipt($details, $window_envelope = NULL) {
     $this->_tmpreceipt = tempnam('/tmp', 'receipt');
     if (is_numeric($details)) {
       $details = &CRM_Contribute_Form_Task_Status::getDetails($details);
     }
-    if (empty($single_page_letter)) {
-      $print_type = array(
-        'original' => ts('Original Receipts'),
-        'copy' => ts('Copy Receipts'),
-      );
-      $single_page_letter = '';
-    }
-    else {
-      $print_type = array(
-        'copy' => ts('Copy Receipts'),
-      );
+    switch ($window_envelope) {
+      case 'none':
+        $print_type = array(
+          'original' => ts('Original Receipts'),
+          'copy' => ts('Copy Receipts'),
+        );
+        $window_envelope = '';
+        break;
+
+      case 'single_page_letter':
+        $print_type = array(
+          'copy' => ts('Copy Receipts'),
+        );
+        break;
+      case 'two_pages_letter':
+        $print_type = array(
+          'original' => ts('Original Receipts'),
+          'copy' => ts('Copy Receipts'),
+        );
+      break;
+
     }
     // domain info
     $domain = CRM_Core_BAO_Domain::getDomain();
@@ -193,7 +213,7 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
       $input = $ids = $objects = array();
       $template = &CRM_Core_Smarty::singleton();
       $template->assign('print_type', $print_type);
-      $template->assign('single_page_letter', $single_page_letter);
+      $template->assign('single_page_letter', $window_envelope);
       $template->assign('domain_name', $domain->name);
       $template->assign('domain_email', $location['email'][1]['email']);
       $template->assign('domain_phone', $location['phone'][1]['phone']);
