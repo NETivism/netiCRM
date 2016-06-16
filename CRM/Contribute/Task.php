@@ -39,7 +39,7 @@
  *
  */
 class CRM_Contribute_Task {
-  CONST DELETE_CONTRIBUTIONS = 1, PRINT_CONTRIBUTIONS = 2, EXPORT_CONTRIBUTIONS = 3, BATCH_CONTRIBUTIONS = 4, EMAIL_CONTACTS = 5, UPDATE_STATUS = 6, PDF_RECEIPT = 7;
+  CONST PRINT_CONTRIBUTIONS = 2, EXPORT_CONTRIBUTIONS = 3, BATCH_CONTRIBUTIONS = 4, EMAIL_CONTACTS = 5, UPDATE_STATUS = 6, PDF_RECEIPT = 7, DELETE_CONTRIBUTIONS = 1;
 
   /**
    * the task array
@@ -68,14 +68,14 @@ class CRM_Contribute_Task {
   static function &tasks() {
     if (!(self::$_tasks)) {
       self::$_tasks = array(
-        1 => array('title' => ts('Print Contributions'),
-          'class' => 'CRM_Contribute_Form_Task_Print',
+      /*
+        1 => array('title' => ts('Delete Contributions'),
+          'class' => 'CRM_Contribute_Form_Task_Delete',
           'result' => FALSE,
         ),
-        2 => array('title' => ts('Export Contributions'),
-          'class' => array('CRM_Export_Form_Select',
-            'CRM_Export_Form_Map',
-          ),
+       */
+        2 => array('title' => ts('Print Contributions'),
+          'class' => 'CRM_Contribute_Form_Task_Print',
           'result' => FALSE,
         ),
         3 => array('title' => ts('Batch Update Contributions Via Profile'),
@@ -84,24 +84,24 @@ class CRM_Contribute_Task {
           ),
           'result' => TRUE,
         ),
-        4 => array('title' => ts('Send Email to Contacts'),
+        4 => array('title' => ts('Export Contributions'),
+          'class' => array('CRM_Export_Form_Select',
+            'CRM_Export_Form_Map',
+          ),
+          'result' => FALSE,
+        ),
+        5 => array('title' => ts('Send Email to Contacts'),
           'class' => 'CRM_Contribute_Form_Task_Email',
           'result' => TRUE,
         ),
-        5 => array('title' => ts('Update Pending Contribution Status'),
+        6 => array('title' => ts('Update Pending Contribution Status'),
           'class' => 'CRM_Contribute_Form_Task_Status',
           'result' => TRUE,
         ),
-        6 => array('title' => ts('Print or Email Contribution Receipts'),
+        7 => array('title' => ts('Print or Email Contribution Receipts'),
           'class' => 'CRM_Contribute_Form_Task_PDF',
           'result' => FALSE,
         ),
-        /*
-        7 => array('title' => ts('Delete Contributions'),
-          'class' => 'CRM_Contribute_Form_Task_Delete',
-          'result' => FALSE,
-        ),
-        */
       );
 
       //CRM-4418, check for delete
