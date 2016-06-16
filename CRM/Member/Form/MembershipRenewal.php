@@ -656,10 +656,7 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
 
     $statusMsg = ts('%1 membership for %2 has been renewed.', array(1 => $memType, 2 => $this->_contributorDisplayName));
 
-    $endDate = CRM_Utils_Date::customFormat(CRM_Core_DAO::getFieldValue("CRM_Member_DAO_Membership",
-        $this->_id,
-        "end_date"
-      ));
+    $endDate = $endDate ?  CRM_Utils_Date::customFormat($endDate) : CRM_Utils_Date::customFormat($renewMembership->end_date);
     if ($endDate) {
       $statusMsg .= ' ' . ts('The new membership End Date is %1.', array(1 => $endDate));
     }
