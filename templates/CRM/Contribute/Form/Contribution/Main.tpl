@@ -146,15 +146,15 @@
 	</fieldset>
   {/if} 
 
+    {assign var=n value=email-$bltID}
+    <div class="crm-section email-section {$form.$n.name}-section">
+      <div class="label">{$form.$n.label}</div>
+      <div class="content">
+        {$form.$n.html}
+      </div>
+      <div class="clear"></div> 
+    </div>
     <div class="crm-group custom_pre_profile-group">
-	    {assign var=n value=email-$bltID}
-	    <div class="crm-section {$form.$n.name}-section">
-	    	<div class="label">{$form.$n.label}</div>
-	    	<div class="content">
-	    		{$form.$n.html}
-	    	</div>
-	    	<div class="clear"></div> 
-	    </div>
     	{include file="CRM/UF/Form/Block.tpl" fields=$customPre} 	
     </div>
 
@@ -196,6 +196,7 @@
   <div class="crm-group custom_post_profile-group">
     	{include file="CRM/UF/Form/Block.tpl" fields=$customPost}
 	</div>
+  {include file="CRM/common/moveEmail.tpl"}
 
   <fieldset class="crm-group payment_options-group">
     <legend>{ts}Payment Options{/ts}</legend>
@@ -488,6 +489,7 @@ function enableHonorType( ) {
     if(cj('#crm-container .custom_pre_profile-group fieldset legend').length){
       cj('#crm-container .email-5-section').insertAfter('#crm-container .custom_pre_profile-group fieldset legend');
     }
+
 
     // prevent overwrite others contact info
     var lockfield = function($obj){

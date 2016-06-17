@@ -3149,6 +3149,7 @@ ul.ui-sortable {
   cursor: auto !important;
   border: 1px solid #9e9e9e !important;
   background-color: #fff !important;
+  color: #333 !important;
 }
 
 .crm-accordion-wrapper .twelve,

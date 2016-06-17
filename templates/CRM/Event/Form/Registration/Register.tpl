@@ -94,6 +94,7 @@
   {include file="CRM/common/CMSUser.tpl"}
   {include file="CRM/UF/Form/Block.tpl" fields=$customPre} 
   {include file="CRM/UF/Form/Block.tpl" fields=$customPost}   
+  {include file="CRM/common/moveEmail.tpl"}
 
   {if $priceSet}
     <fieldset id="priceset" class="crm-group priceset-group"><legend>{$event.fee_label}</legend>

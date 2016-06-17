@@ -201,5 +201,20 @@ class CRM_Core_Smarty extends Smarty {
       unset($this->_tpl_vars[$key]);
     }
   }
+
+  function isAssigned($var, $value = NULL) { 
+    if(isset($this->_tpl_vars[$var])) {
+      $exists = $this->_tpl_vars[$var];
+      if($value) {
+        if ($value === $exits) {
+          return TRUE;
+        } 
+      }
+      else{
+        return TRUE;
+      }
+    }
+    return FALSE;
+  }
 }
 

@@ -552,10 +552,12 @@
 
 <script type="text/javascript">
 {literal}
-  sendNotification();
-  function sendNotification( ) {
+  sendNotification(false);
+  function sendNotification(checked) {
     cj("#notify").hide();
     cj('#send_confirmation_receipt').hide();
+    cj("#is_notify").attr('checked', false);
+
     var status_id = cj("select#status_id option:selected").val();
     {/literal} 
     var participant_status = {$participantStatus};
@@ -567,8 +569,19 @@
          status == 'Pending from approval' || 
          status == 'Expired' ) {literal}{
       cj("#notify").show();
-      cj("#is_notify").attr('checked',true);
+      if(checked === false || checked === true) {
+        cj("#is_notify").attr('checked', checked);
+      }
+      else{
+        if(status == 'Cancelled' || status == 'Expired') {
+          cj("#is_notify").attr('checked', false);
+        }
+        else{
+          cj("#is_notify").attr('checked', true);
+        }
+      }
       cj('#send_confirmation_receipt').hide();
+      cj('#send_receipt').attr('checked', false);
     }
     else
     if(is_counted){

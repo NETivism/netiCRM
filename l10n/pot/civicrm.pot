@@ -45141,3 +45141,10 @@ msgstr ""
 #: CRM/Contact/Page/View/ContactSmartGroup.tpl
 msgid "%1 is included in these Parent group(s) based on belonging to group(s) which are their children."
 msgstr ""
+
+#: CRM/Event/Form/Registration.php
+msgid "Some of the profile fields cannot be configured for this page."
+msgstr ""
+
+msgid "Organiser"
+msgstr ""

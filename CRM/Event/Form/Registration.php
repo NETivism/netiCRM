@@ -641,8 +641,16 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
 
       // we don't allow conflicting fields to be
       // configured via profile
-      $fieldsToIgnore = array('participant_fee_amount' => 1,
+      $fieldsToIgnore = array(
+        'participant_fee_amount' => 1,
         'participant_fee_level' => 1,
+        'participant_status_id' => 1,
+        'participant_register_date' => 1,
+        'participant_registered_by_id' => 1,
+        'participant_fee_currency' => 1,
+        'participant_status' => 1,
+        'participant_role' => 1,
+        'event_type' => 1,
       );
       if ($contactID) {
         if (CRM_Core_BAO_UFGroup::filterUFGroups($id, $contactID)) {
@@ -657,6 +665,9 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
         // unset any email-* fields since we already collect it, CRM-2888
         foreach (array_keys($fields) as $fieldName) {
           if (substr($fieldName, 0, 6) == 'email-') {
+            if(!$this->isAssigned('moveEmail')){
+              $this->assign('moveEmail', 'profile-group-'.$fields[$fieldName]['group_id']);
+            }
             unset($fields[$fieldName]);
           }
         }
@@ -664,7 +675,9 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
 
       if (array_intersect_key($fields, $fieldsToIgnore)) {
         $fields = array_diff_key($fields, $fieldsToIgnore);
-        CRM_Core_Session::setStatus("Some of the profile fields cannot be configured for this page.");
+        if (CRM_Core_Permission::check('access CiviEvent')) {
+          CRM_Core_Session::setStatus(ts("Some of the profile fields cannot be configured for this page."));
+        }
       }
       $addCaptcha = FALSE;
       $fields = array_diff_assoc($fields, $this->_fields);

@@ -62,10 +62,9 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
       $this->_memType = CRM_Core_DAO::getFieldValue("CRM_Member_DAO_Membership", $this->_id, "membership_type_id");
     }
 
-    $this->assign("endDate", CRM_Utils_Date::customFormat(CRM_Core_DAO::getFieldValue("CRM_Member_DAO_Membership",
-          $this->_id, "end_date"
-        )
-      ));
+    
+    $this->_endDate = CRM_Core_DAO::getFieldValue("CRM_Member_DAO_Membership", $this->_id, "end_date");
+    $this->assign("endDate", $this->_endDate);
     $this->assign("membershipStatus",
       CRM_Core_DAO::getFieldValue("CRM_Member_DAO_MembershipStatus",
         CRM_Core_DAO::getFieldValue("CRM_Member_DAO_Membership",
@@ -159,9 +158,8 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
     $defaults = array();
     $defaults = &parent::setDefaultValues();
     $this->_memType = $defaults["membership_type_id"];
-    $defaults['renewal_date'] = CRM_Utils_Date::getToday(CRM_Utils_Array::value('renewal_date', $defaults),
-      'm/d/Y'
-    );
+    $renewalDate = date('Y-m-d', strtotime($this->_endDate) + 86400);
+    $defaults['renewal_date'] = $renewalDate;
 
     if ($defaults['id']) {
       $defaults['record_contribution'] = CRM_Core_DAO::getFieldValue('CRM_Member_DAO_MembershipPayment',
@@ -656,10 +654,7 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
 
     $statusMsg = ts('%1 membership for %2 has been renewed.', array(1 => $memType, 2 => $this->_contributorDisplayName));
 
-    $endDate = CRM_Utils_Date::customFormat(CRM_Core_DAO::getFieldValue("CRM_Member_DAO_Membership",
-        $this->_id,
-        "end_date"
-      ));
+    $endDate = $endDate ?  CRM_Utils_Date::customFormat($endDate) : CRM_Utils_Date::customFormat($renewMembership->end_date);
     if ($endDate) {
       $statusMsg .= ' ' . ts('The new membership End Date is %1.', array(1 => $endDate));
     }

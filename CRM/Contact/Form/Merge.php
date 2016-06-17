@@ -53,7 +53,9 @@ class CRM_Contact_Form_Merge extends CRM_Core_Form {
   // see HTML_QuickForm_advcheckbox::setValues() - but patching that doesn't
   // help, as QF doesn't put the 0-value elements in exportValues() anyway...
   // to side-step this, we use the below UUID as a (re)placeholder
-  var $_qfZeroBug = 'e8cddb72-a257-11dc-b9cc-0016d3330ee9'; function preProcess() {
+  var $_qfZeroBug = 'e8cddb72-a257-11dc-b9cc-0016d3330ee9';
+
+  function preProcess() {
     require_once 'api/v2/Contact.php';
     require_once 'CRM/Core/BAO/CustomGroup.php';
     require_once 'CRM/Core/OptionGroup.php';
@@ -219,15 +221,15 @@ class CRM_Contact_Form_Merge extends CRM_Core_Form {
             $label = ts('[x]');
           }
         }
+
         $rows["move_$field"][$moniker] = $label;
         if ($moniker == 'other') {
-          if ($value === NULL) {
-            $value = 'null';
-          }
-          if ($value === 0 or $value === '0') {
+          if ($value === 0 || $value === '0') {
             $value = $this->_qfZeroBug;
           }
-          $this->addElement('advcheckbox', "move_$field", NULL, NULL, NULL, $value);
+          if(!empty($value)){
+            $this->addElement('advcheckbox', "move_$field", NULL, NULL, NULL, $value);
+          }
         }
       }
       $rows["move_$field"]['title'] = $fields[$field]['title'];
@@ -344,12 +346,16 @@ class CRM_Contact_Form_Merge extends CRM_Core_Form {
               $rows["move_custom_$fid"]['other'] = CRM_Core_BAO_CustomGroup::formatCustomValues($values,
                 $field, TRUE
               );
-              $value = $values['data'] ? $values['data'] : $this->_qfZeroBug;
+              $value = $values['data'];
+              if ($value === 0 || $value === '0') {
+                $value = $this->_qfZeroBug;
+              }
             }
           }
           $rows["move_custom_$fid"]['title'] = $field['label'];
-
-          $this->addElement('advcheckbox', "move_custom_$fid", NULL, NULL, NULL, $value);
+          if(!empty($value)){
+            $this->addElement('advcheckbox', "move_custom_$fid", NULL, NULL, NULL, $value);
+          }
         }
       }
     }

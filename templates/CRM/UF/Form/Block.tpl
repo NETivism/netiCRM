@@ -41,7 +41,7 @@
         {/if} 
 
         {if $mode ne 8 && $action ne 1028 && $action ne 4} 
-            <fieldset><legend>{$field.groupTitle}</legend> 
+            <fieldset id="profile-group-{$field.group_id}"><legend>{$field.groupTitle}</legend> 
         {/if} 
         {assign var=fieldset  value=`$field.groupTitle`} 
         {assign var=groupHelpPost  value=`$field.groupHelpPost`} 
