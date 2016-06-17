@@ -45145,3 +45145,6 @@ msgstr ""
 #: CRM/Event/Form/Registration.php
 msgid "Some of the profile fields cannot be configured for this page."
 msgstr ""
+
+msgid "Organiser"
+msgstr ""
