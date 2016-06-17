@@ -552,8 +552,8 @@
 
 <script type="text/javascript">
 {literal}
-  sendNotification();
-  function sendNotification( ) {
+  sendNotification(false);
+  function sendNotification(checked) {
     cj("#notify").hide();
     cj('#send_confirmation_receipt').hide();
     cj("#is_notify").attr('checked', false);
@@ -569,13 +569,19 @@
          status == 'Pending from approval' || 
          status == 'Expired' ) {literal}{
       cj("#notify").show();
-      if(status == 'Cancelled' || status == 'Expired') {
-        cj("#is_notify").attr('checked', false);
+      if(checked === false || checked === true) {
+        cj("#is_notify").attr('checked', checked);
       }
       else{
-        cj("#is_notify").attr('checked', true);
+        if(status == 'Cancelled' || status == 'Expired') {
+          cj("#is_notify").attr('checked', false);
+        }
+        else{
+          cj("#is_notify").attr('checked', true);
+        }
       }
       cj('#send_confirmation_receipt').hide();
+      cj('#send_receipt').attr('checked', false);
     }
     else
     if(is_counted){
