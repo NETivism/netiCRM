@@ -644,6 +644,13 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
       $fieldsToIgnore = array(
         'participant_fee_amount' => 1,
         'participant_fee_level' => 1,
+        'participant_status_id' => 1,
+        'participant_register_date' => 1,
+        'participant_registered_by_id' => 1,
+        'participant_fee_currency' => 1,
+        'participant_status' => 1,
+        'participant_role' => 1,
+        'event_type' => 1,
       );
       if ($contactID) {
         if (CRM_Core_BAO_UFGroup::filterUFGroups($id, $contactID)) {
