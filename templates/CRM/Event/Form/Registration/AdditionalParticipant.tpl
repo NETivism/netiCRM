@@ -66,14 +66,15 @@
 {/if}
 
 {assign var=n value=email-$bltID}
-<table class="form-layout-compressed">
-    <tr>
-        <td class="label nowrap">{$form.$n.label}</td><td>{$form.$n.html}</td>
-    </tr>
-</table>
+  <div class="crm-section email-section">
+    <div class="label">{$form.$n.label}</div>
+    <div class="content">{$form.$n.html}</div>
+    <div class="clear"></div>
+  </div>
 
 {include file="CRM/UF/Form/Block.tpl" fields=$additionalCustomPre} 
 {include file="CRM/UF/Form/Block.tpl" fields=$additionalCustomPost} 
+{include file="CRM/common/moveEmail.tpl"}
 
 <div id="crm-submit-buttons">
     {include file="CRM/common/formButtons.tpl"}

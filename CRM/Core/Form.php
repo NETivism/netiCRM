@@ -669,6 +669,20 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
     self::$_template->assign_by_ref($var, $value);
   }
 
+  /**
+   * check if variables assigned
+   *
+   * @param string $name  name  of variable
+   * @param mixed $value value of varaible, if value will check equality
+   *        default only check isset 
+   *
+   * @return void
+   * @access public
+   */
+  function isAssigned($var, $value = NULL) {
+    self::$_template->isAssigned($var, $value);
+  }
+
   function &addRadio($name, $title, &$values, $attributes = NULL, $separator = NULL, $required = FALSE) {
     $options = array();
     $attributes = $attributes ? $attributes : array();

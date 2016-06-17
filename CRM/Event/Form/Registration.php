@@ -665,6 +665,9 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
         // unset any email-* fields since we already collect it, CRM-2888
         foreach (array_keys($fields) as $fieldName) {
           if (substr($fieldName, 0, 6) == 'email-') {
+            if(!$this->isAssigned('moveEmail')){
+              $this->assign('moveEmail', 'profile-group-'.$fields[$fieldName]['group_id']);
+            }
             unset($fields[$fieldName]);
           }
         }
