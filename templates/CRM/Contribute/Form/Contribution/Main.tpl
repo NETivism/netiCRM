@@ -485,6 +485,12 @@ function enableHonorType( ) {
       }
     });
 
+    // email position
+    if(cj('#crm-container .custom_pre_profile-group fieldset legend').length){
+      cj('#crm-container .email-5-section').insertAfter('#crm-container .custom_pre_profile-group fieldset legend');
+    }
+
+
     // prevent overwrite others contact info
     var lockfield = function($obj){
       $obj.attr('title', '{/literal}{ts}To change your personal info, go My Account page for further setting.{/ts}{literal}');
