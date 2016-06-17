@@ -641,7 +641,8 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
 
       // we don't allow conflicting fields to be
       // configured via profile
-      $fieldsToIgnore = array('participant_fee_amount' => 1,
+      $fieldsToIgnore = array(
+        'participant_fee_amount' => 1,
         'participant_fee_level' => 1,
       );
       if ($contactID) {
@@ -664,7 +665,9 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
 
       if (array_intersect_key($fields, $fieldsToIgnore)) {
         $fields = array_diff_key($fields, $fieldsToIgnore);
-        CRM_Core_Session::setStatus("Some of the profile fields cannot be configured for this page.");
+        if (CRM_Core_Permission::check('access CiviEvent')) {
+          CRM_Core_Session::setStatus(ts("Some of the profile fields cannot be configured for this page."));
+        }
       }
       $addCaptcha = FALSE;
       $fields = array_diff_assoc($fields, $this->_fields);
