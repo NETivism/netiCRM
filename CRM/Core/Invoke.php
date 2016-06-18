@@ -70,6 +70,12 @@ class CRM_Core_Invoke {
     }
 
     $config = CRM_Core_Config::singleton();
+    if ($config->debug) {
+      $sessionReset = CRM_Utils_Request::retrieve('sessionReset', 'Boolean', CRM_Core_DAO::$_nullObject, FALSE, 0, 'GET');
+      if ($sessionReset) {
+        $config->sessionReset();
+      }
+    }
 
     // first fire up IDS and check for bad stuff
     if ($config->useIDS) {

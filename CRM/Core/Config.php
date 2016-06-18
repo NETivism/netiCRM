@@ -618,6 +618,14 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
   }
 
   /**
+   * clear up session
+   */
+  function sessionReset(){
+    $session = CRM_Core_Session::singleton();
+    $session->reset(2);
+  }
+
+  /**
    * clear leftover temporary tables
    */
   function clearTempTables() {
