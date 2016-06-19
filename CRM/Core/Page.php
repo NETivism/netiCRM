@@ -58,6 +58,22 @@ class CRM_Core_Page {
   protected $_name;
 
   /**
+   * session scope of this page
+   *
+   * @var string
+   * @access protected
+   */
+  protected $_scope;
+
+  /**
+   * quickform key of this page
+   *
+   * @var string
+   * @access protected
+   */
+  protected $_qfKey = NULL;
+
+  /**
    * the title associated with this page
    *
    * @var object
@@ -122,6 +138,16 @@ class CRM_Core_Page {
     $this->_name = CRM_Utils_System::getClassName($this);
     $this->_title = $title;
     $this->_mode = $mode;
+
+    $null = CRM_Core_DAO::$_nullObject;
+    $qfKey = CRM_Utils_Request::retrieve('qfKey', 'String', $null, FALSE, NULL, 'REQUEST');
+    if (!empty($qfKey)) {
+      $this->_scope = $this->_name . '_' . $qfKey;
+      $this->_qfKey = $qfKey;
+    }
+    else {
+      $this->_scope = $this->_name;
+    }
 
     // let the constructor initialize this, should happen only once
     if (!isset(self::$_template)) {
@@ -202,7 +228,7 @@ class CRM_Core_Page {
    *
    */
   function set($name, $value = NULL) {
-    self::$_session->set($name, $value, $this->_name);
+    self::$_session->set($name, $value, $this->_scope);
   }
 
   /**
@@ -216,7 +242,18 @@ class CRM_Core_Page {
    *
    */
   function get($name) {
-    return self::$_session->get($name, $this->_name);
+    return self::$_session->get($name, $this->_scope);
+  }
+
+  function changeScope($qfKey = NULL){
+    $qfKey = $qfKey ? $qfKey : $this->_qfKey;
+    $this->_qfKey = $qfKey;
+
+    $newScope = $this->_name . '_'. $qfKey;
+    if($newScope != $this->_scope && $qfKey) {
+      self::$_session->changeScope($this->_scope, $newScope);
+      $this->_scope = $newScope;
+    }
   }
 
   /**
@@ -272,7 +309,7 @@ class CRM_Core_Page {
   /**
    * A wrapper for getTemplateFileName that includes calling the hook to
    * prevent us from having to copy & paste the logic of calling the hook
-   */ 
+   */
   function getHookedTemplateFileName() {
     $pageTemplateFile = $this->getTemplateFileName();
     CRM_Utils_Hook::alterTemplateFile(get_class($this), $this, 'page', $pageTemplateFile);

@@ -205,6 +205,30 @@ class CRM_Core_Session {
   }
 
   /**
+   * Change scope name and move old scope to new
+   *
+   * @param string old scope name
+   * @access public
+   *
+   * @param new scope name
+   * @access public
+   *
+   * @return Boolean
+   */
+  function changeScope($oldPrefix, $newPrefix) {
+    $this->initialize();
+
+    if (!empty($oldPrefix) && !empty($newPrefix)) {
+      if (array_key_exists($oldPrefix, $this->_session[$this->_key]) && !isset($this->_session[$this->_key][$newPrefix])) {
+        $this->_session[$this->_key][$newPrefix] = $this->_session[$this->_key][$oldPrefix];
+        unset($this->_session[$this->_key][$oldPrefix]);
+        return TRUE;
+      }
+    }
+    return FALSE;
+  }
+
+  /**
    * Store the variable with the value in the session scope
    *
    * This function takes a name, value pair and stores this
