@@ -3995,6 +3995,13 @@ tbody.scrollContent tr.alternateRow {
 .crm-container form[action="/civicrm/event/register"] .crm-submit-buttons {
   text-align: right;
 }
+.crm-container .messages.msg-event-full::before {
+  content: "\f20d";
+}
+.crm-container .msg-event-full .seat-msg {
+  font-weight: bold;
+  color: #0D47A1;
+}
 
 /* Profiles Page */
 .crm-container form[action="/civicrm/profile/create"] .crm-submit-buttons {

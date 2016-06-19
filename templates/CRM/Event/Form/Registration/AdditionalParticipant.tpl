@@ -125,6 +125,3 @@ function allowGroupOnWaitlist( participantCount, currentCount )
 </script>
 {/literal} 	
 {/if}
-{if !$allowConfirmation}
-{include file="CRM/Event/Form/Registration/UpdateSeat.tpl"}
-{/if}
