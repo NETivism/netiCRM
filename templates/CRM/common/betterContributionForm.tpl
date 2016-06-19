@@ -11,8 +11,11 @@ cj(function($){
     //var OddOrEven = $('.custom_{/literal}{$receiptTitle}{literal}-section').attr('class').match(/crm-odd|crm-even/)[0];
     //$('.receipt_type').addClass(OddOrEven);
 
+    $('#custom_{/literal}{$receiptTitle}{literal}').addClass('ignore-required');
+    $('#custom_{/literal}{$receiptSerial}{literal}').addClass('ignore-required');
+
     var same_as = mdFormElement('checkbox', '{/literal}{ts}Same as Contributor{/ts}{literal}', { name:'same_as_post', id:'same_as'});
-    $(same_as).insertBefore($('#custom_{/literal}{$receiptTitle}{literal}'));
+    $(same_as).insertBefore($('#custom_{/literal}{$receiptTitle}{literal}')).find('input').addClass('ignore-required');
 
     var $same_as_md = $('.md-checkbox[for="same_as"]');
     var $same_as_md_parent = $same_as_md.parent('.md-elem');
