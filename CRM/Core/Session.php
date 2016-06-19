@@ -229,6 +229,20 @@ class CRM_Core_Session {
   }
 
   /**
+   * Check local scope exists
+   *
+   * @param string for check
+   * @access public
+   *
+   * @return Boolean
+   */
+  function checkScope($prefix) {
+    $this->initialize();
+
+    return isset($this->_session[$this->_key][$prefix]);
+  }
+
+  /**
    * Store the variable with the value in the session scope
    *
    * This function takes a name, value pair and stores this

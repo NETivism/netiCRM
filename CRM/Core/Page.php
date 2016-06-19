@@ -138,21 +138,22 @@ class CRM_Core_Page {
     $this->_name = CRM_Utils_System::getClassName($this);
     $this->_title = $title;
     $this->_mode = $mode;
-
-    $null = CRM_Core_DAO::$_nullObject;
-    $qfKey = CRM_Utils_Request::retrieve('qfKey', 'String', $null, FALSE, NULL, 'REQUEST');
-    if (!empty($qfKey)) {
-      $this->_scope = $this->_name . '_' . $qfKey;
-      $this->_qfKey = $qfKey;
-    }
-    else {
-      $this->_scope = $this->_name;
-    }
+    $this->_scope = $this->_name;
 
     // let the constructor initialize this, should happen only once
     if (!isset(self::$_template)) {
       self::$_template = CRM_Core_Smarty::singleton();
       self::$_session = CRM_Core_Session::singleton();
+    }
+
+    $null = CRM_Core_DAO::$_nullObject;
+    $qfKey = CRM_Utils_Request::retrieve('qfKey', 'String', $null, FALSE, NULL, 'REQUEST');
+    if (!empty($qfKey)) {
+      $scope = $this->_name . '_' . $qfKey;
+      if(self::$_session->checkScope($scope)){
+        $this->_scope = $this->_name . '_' . $qfKey;
+        $this->_qfKey = $qfKey;
+      }
     }
 
     if (isset($_GET['snippet']) && $_GET['snippet']) {
