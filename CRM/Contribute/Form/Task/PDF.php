@@ -108,19 +108,12 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
       $options = array(
         'none' => ts('None'),
         'single_page_letter' => ts('Single page with address letter'),
-        'two_pages_letter' => ts('Two pages with address letter'),
+        'single_page_letter_with_copied' => ts('Single page with address letter and copied receipt'),
       );
 
     $this->addRadio( 'window_envelope',ts('Apply to window envelope'),$options,null,'<br/>',true );
 
     $this->assign('elements', array('window_envelope'));
-
-    // $this->addElement('checkbox', 'single_page_letter', ts('Single page with address letter'));
-    /*
-        $this->addElement( 'radio', 'output', null, ts('Copy Receipts'), 'copy_receipt' ); 
-        $this->addElement( 'radio', 'output', null, ts('Original Receipts'), 'original_receipt' );
-        $this->addRule( 'output', ts('%1 is a required field.', array(1 => ts('Receipt Type'))), 'required' );
-        */
 
     $this->addButtons(array(
         array('type' => 'next',
@@ -181,6 +174,7 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
     }
     switch ($window_envelope) {
       case 'none':
+      default:
         $print_type = array(
           'original' => ts('Original Receipts'),
           'copy' => ts('Copy Receipts'),
@@ -193,10 +187,10 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
           'copy' => ts('Copy Receipts'),
         );
         break;
-      case 'two_pages_letter':
+      case 'single_page_letter_with_copied':
         $print_type = array(
-          'original' => ts('Original Receipts'),
           'copy' => ts('Copy Receipts'),
+          'original' => ts('Original Receipts'),
         );
       break;
 

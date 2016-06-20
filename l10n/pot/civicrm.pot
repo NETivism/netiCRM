@@ -45148,3 +45148,10 @@ msgstr ""
 
 msgid "Organiser"
 msgstr ""
+
+#: CRM/Contribute/Form/Task/PDF.php
+msgid "Single page with address letter and copied receipt"
+msgstr ""
+
+msgid "Apply to window envelope"
+msgstr ""

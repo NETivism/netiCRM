@@ -10,6 +10,7 @@ table td { padding: 2px 4px; }
 
 .row { display:table-row;}
 .line { border-top: 1px dashed #aaa; padding-top: 20px;}
+.address-label{float:left;width: 50px;}
 
 .receipt{ position:relative; font-size: 11pt; min-height:490px;max-height:490px;}
 .receipt-head { position: relative; width: 100%;}
@@ -23,7 +24,7 @@ table td { padding: 2px 4px; }
 .receipt-body table .col-1 {width: 24%;}
 .receipt-body table .col-2 {width: 48.6%;}
 .receipt-body table .signature {text-align: center;}
-.receipt-body .content { float: left; maring:0; margin-left:10px; padding-left:10px;}
+.receipt-body .content { float: left; margin:0; margin-left:10px; padding-left:10px;}
 .receipt-body .content li { margin: 8px 0;}
 .receipt-body .stamp { position: absolute; left:50%;}
 .receipt-body .handle { margin-top:50px;}
@@ -46,6 +47,19 @@ table td { padding: 2px 4px; }
 .single-page-header { height: 440px; position: relative;}
 .single-page-header .info {position: absolute; top: 45px; left: 90px;}
 .single-page-header .web-name {margin-right: 120px;}
+
+.two-sections-header { height: 270px; position: relative;}
+.two-sections-header .info {position: absolute; top: 15px; left: 19px;}
+.two-sections-header .web-name {margin-right: 120px;}
+
+.page-contain-2-sections.receipt-with-address .line.copy{padding-top: 10px;}
+.page-contain-2-sections.receipt-with-address .line.original{padding-top: 30px;}
+.page-contain-2-sections.receipt-with-address .receipt-head .title { margin-top: 10px;}
+.page-contain-2-sections.receipt-with-address .receipt.copy { min-height: 360px; max-height: 360px;}
+.page-contain-2-sections.receipt-with-address .receipt.original { min-height: 320px; max-height: 320px;}
+.page-contain-2-sections.receipt-with-address .receipt-body td{line-height: 21px;}
+
+
 {/literal}
 </style>
 </head>
