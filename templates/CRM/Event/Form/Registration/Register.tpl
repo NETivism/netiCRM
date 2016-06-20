@@ -322,8 +322,5 @@
   }
 </script>
 {/literal} 
-{if !$allowConfirmation}
-{include file="CRM/Event/Form/Registration/UpdateSeat.tpl"}
-{/if}
 
 {/if}{*end pptype else*}

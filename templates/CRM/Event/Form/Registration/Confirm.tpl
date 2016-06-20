@@ -262,7 +262,3 @@
     {/if}
 </div>
 {include file="CRM/common/showHide.tpl"}
-
-{if !$allowConfirmation}
-{include file="CRM/Event/Form/Registration/UpdateSeat.tpl"}
-{/if}
