@@ -192,6 +192,10 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
     $controller->set('BAOName', $this->getBAOName());
     $controller->set('id', $this->_id);
     $controller->set('cid', $this->_contactId);
+    if(!empty($controller->_key) && empty($this->_qfKey)) {
+      $this->changeScope($controller->_key);
+    }
+
     return $controller->run();
   }
 
