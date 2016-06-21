@@ -3614,6 +3614,9 @@ tbody.scrollContent tr.alternateRow {
   border-collapse: collapse;
   border: 1px none;
 }
+.crm-container .crm-accordion-wrapper table.form-layout-compressed {
+  width: auto;
+}
 
 .crm-container table.crm-profile-tagsandgroups {
   margin-top: -1.25em;
