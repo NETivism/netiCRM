@@ -163,7 +163,6 @@ class CRM_Core_Page {
       }
       $this->_scope = $this->_name . '_' . $qfKey;
       $this->_qfKey = $qfKey;
-      CRM_Core_Error::debug_log_message($qfKey);
     }
 
     if (isset($_GET['snippet']) && $_GET['snippet']) {
