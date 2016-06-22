@@ -11,7 +11,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2016-05-31 10:46+0000\n"
+"PO-Revision-Date: 2016-06-22 12:46+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -15734,7 +15734,7 @@ msgstr "活動費用不可低於零。請選擇相應的選項。"
 
 #: CRM/Event/Form/Registration/Register.php
 msgid "Registration information for participant 1 has been saved."
-msgstr "已儲存參加者 %1 的報名資料。"
+msgstr "已儲存參加者 1 的報名資料。"
 
 #: CRM/Event/Form/Registration/Register.php
 msgid "You can also <a href=\"%1\">register another participant</a>."
@@ -45096,7 +45096,7 @@ msgstr "只有在您符合我們會員資格，才可選擇會員價。"
 
 #: CRM/Price/BAO/Field.php
 msgid "membership required"
-msgstr ""
+msgstr "需要會員資格"
 
 #: CRM/Mailing/BAO/Query.php
 msgid "Delivery Status"
@@ -45155,4 +45155,26 @@ msgstr "此聯絡人不包含在任何智慧群組中"
 msgid ""
 "%1 is included in these Parent group(s) based on belonging to group(s) which"
 " are their children."
+msgstr "已經將 %1 群組內的聯絡人也包含近來，因為這是他們的母群組。"
+
+#: CRM/Event/Form/Registration.php
+msgid "Some of the profile fields cannot be configured for this page."
+msgstr "一些資料表單欄位將不會顯示於頁面。"
+
+msgid "Organiser"
+msgstr "主辦"
+
+#: CRM/Contribute/Form/Task/PDF.php
+msgid "Single page with address letter and copied receipt"
+msgstr "包含存根聯的開窗信封"
+
+msgid "Apply to window envelope"
 msgstr ""
+
+#: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
+msgid "An email with details has been sent to %1 and to %2."
+msgstr "一封 Email 已經寄送至 %1 和 %2。"
+
+#: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
+msgid "An email with details has been sent to %1."
+msgstr "一封 Email 已經寄送至 %1 。"
