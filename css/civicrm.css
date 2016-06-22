@@ -3843,6 +3843,18 @@ tbody.scrollContent tr.alternateRow {
   text-align: right;
 }
 
+.crm-container img[style*="float:left"],
+.crm-container .image[style*="float:left"]
+{
+  margin-right:10px;
+}
+
+.crm-container img[style*="float:right"],
+.crm-container .image[style*="float:right"]
+{
+  margin-left:10px;
+}
+
 .crm-container .element-right {
   float : right;
   margin-right: 35px;
@@ -4058,16 +4070,43 @@ tbody.scrollContent tr.alternateRow {
   .crm-container .wizard-bar > li {
     width: 100px;
   }
+  .crm-container img[style*="float:left"],
+  .crm-container .image[style*="float:left"],
+  .crm-container img[style*="float:right"],
+  .crm-container .image[style*="float:right"]
+  {
+    float: none !important;
+    text-align: center;
+    margin: 0;
+  }
 }
 
 @media screen and (max-width: 375px) {
   .crm-container .wizard-bar > li {
     width: 80px;
   }
+  .crm-container img[style*="float:left"],
+  .crm-container .image[style*="float:left"],
+  .crm-container img[style*="float:right"],
+  .crm-container .image[style*="float:right"]
+  {
+    float: none !important;
+    text-align: center;
+    margin: 0;
+  }
 }
 
 @media screen and (max-width: 360px) {
   .crm-container .wizard-bar > li {
     width: 70px;
+  }
+  .crm-container img[style*="float:left"],
+  .crm-container .image[style*="float:left"],
+  .crm-container img[style*="float:right"],
+  .crm-container .image[style*="float:right"]
+  {
+    float: none !important;
+    text-align: center;
+    margin: 0;
   }
 }
