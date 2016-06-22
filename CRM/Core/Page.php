@@ -150,10 +150,20 @@ class CRM_Core_Page {
     $qfKey = CRM_Utils_Request::retrieve('qfKey', 'String', $null, FALSE, NULL, 'REQUEST');
     if (!empty($qfKey)) {
       $scope = $this->_name . '_' . $qfKey;
-      if(self::$_session->checkScope($scope)){
-        $this->_scope = $this->_name . '_' . $qfKey;
-        $this->_qfKey = $qfKey;
+      $limit = 500;
+      $count = 0;
+      while(!self::$_session->checkScope($scope)) {
+        $count++;
+        if(50 * $count < $limit) {
+          usleep(50);
+        }
+        else{
+          break;
+        }
       }
+      $this->_scope = $this->_name . '_' . $qfKey;
+      $this->_qfKey = $qfKey;
+      CRM_Core_Error::debug_log_message($qfKey);
     }
 
     if (isset($_GET['snippet']) && $_GET['snippet']) {
