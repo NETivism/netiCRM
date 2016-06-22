@@ -51,7 +51,7 @@
 
     <div id="help">
       {* PayPal_Standard sets contribution_mode to 'notify'. We don't know if transaction is successful until we receive the IPN (payment notification) *}
-      {if $payment_result_type eq 1}
+      {if $payment_result_type eq 1 && $is_monetary}
         <h3>{ts}Congratulations! Your payment has been completed!{/ts}</h3>
         {if $is_email_receipt}
           <div>
@@ -64,7 +64,7 @@
           {/if}
           </div>
         {/if}
-      {elseif $payment_result_type eq 4}
+      {elseif $payment_result_type eq 4 && $is_monetary}
         <h3 class="crm-error">{ts}Payment failed.{/ts}</h3>
         {ts}We were unable to process your payment. You will not be charged in this transaction.{/ts}
         {ts}Possible reason{/ts}:
@@ -77,7 +77,7 @@
         </ul>
         {capture assign=contribution_page_url}{crmURL p='civicrm/contribute/transact' q="reset=1&id=$id" h=0 }{/capture}
         {ts 1=$contribution_page_url}We apologize for any inconvenience caused, please go back to the <a href='%1'>donation page</a> to retry.{/ts}
-      {elseif $is_pay_later}
+      {elseif $is_pay_later && $is_monetary}
         <h3>{ts}Keep supporting it. Payment has not been completed yet with entire process.{/ts}</h3>
         <div class="">
         {if $pay_later_receipt and !$payment_result_type}
@@ -112,9 +112,9 @@
         {if $is_email_receipt}
           <div>		    
           {if $onBehalfEmail AND ($onBehalfEmail neq $email)}
-            {ts 1=$email 2=$onBehalfEmail}An email with your donation details has been sent to %1 and to %2.{/ts}
+            {ts 1=$email 2=$onBehalfEmail}An email with details has been sent to %1 and to %2.{/ts}
           {else}
-            {ts 1=$email}An email with your donation details has been sent to %1.{/ts}
+            {ts 1=$email}An email with details has been sent to %1.{/ts}
           {/if}
           </div>
         {/if}

@@ -197,7 +197,9 @@
     	{include file="CRM/UF/Form/Block.tpl" fields=$customPost}
 	</div>
   {include file="CRM/common/moveEmail.tpl"}
+  {include file="CRM/Contribute/Form/Contribution/MembershipBlock.tpl" context="makeContribution"}
 
+{if $is_monetary}
   <fieldset class="crm-group payment_options-group">
     <legend>{ts}Payment Options{/ts}</legend>
   {if $form.payment_processor.label}
@@ -228,7 +230,6 @@
     </fieldset>
   </div>
 {else}
-  {include file="CRM/Contribute/Form/Contribution/MembershipBlock.tpl" context="makeContribution"}
 	{if $form.amount}
 	    <div class="crm-section {$form.amount.name}-section">
 			<div class="label">{$form.amount.label}</div>
@@ -262,7 +263,7 @@
 	    </div>
 	    {/if} 
 	{/if} 
-{/if}
+{/if}{*priceset*}
   </fieldset>
 	{if $form.is_recur}
 	    <div class="crm-section {$form.is_recur.name}-section">
@@ -284,7 +285,8 @@
       </div>
 		    </div>
 	    </div>
-	{/if} 
+	{/if}{*is_recur*}
+{/if}{*is_monetary*}
 
     {if $is_monetary and $form.bank_account_number}
     <div id="payment_notice">
