@@ -45157,9 +45157,9 @@ msgid "Apply to window envelope"
 msgstr ""
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
-msgid "An email with your donation details has been sent to %1 and to %2."
+msgid "An email with details has been sent to %1 and to %2."
 msgstr ""
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
-msgid "An email with your donation details has been sent to %1."
+msgid "An email with details has been sent to %1."
 msgstr ""
