@@ -4070,15 +4070,6 @@ tbody.scrollContent tr.alternateRow {
   .crm-container .wizard-bar > li {
     width: 100px;
   }
-  .crm-container img[style*="float:left"],
-  .crm-container .image[style*="float:left"],
-  .crm-container img[style*="float:right"],
-  .crm-container .image[style*="float:right"]
-  {
-    float: none !important;
-    text-align: center;
-    margin: 0;
-  }
 }
 
 @media screen and (max-width: 375px) {
@@ -4092,6 +4083,8 @@ tbody.scrollContent tr.alternateRow {
   {
     float: none !important;
     text-align: center;
+    display: block;
+    width: 100%;
     margin: 0;
   }
 }
@@ -4107,6 +4100,8 @@ tbody.scrollContent tr.alternateRow {
   {
     float: none !important;
     text-align: center;
+    display: block;
+    width: 100%;
     margin: 0;
   }
 }
