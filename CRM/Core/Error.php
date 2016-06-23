@@ -258,20 +258,27 @@ class CRM_Core_Error extends PEAR_ErrorStack {
       self::backtrace();
     }
 
-    if($message){
-      $template = CRM_Core_Smarty::singleton();
-      $template->assign($vars);
-      $content = $template->fetch($config->fatalErrorTemplate);
-    }
-    else{
-      $content = '';
-    }
-
     CRM_Core_Error::debug_var('Fatal Error Details', $vars);
     CRM_Core_Error::backtrace('backTrace', TRUE);
-    echo CRM_Utils_System::theme('page', $content);
-    // print $content;
+    self::output($config->fatalErrorTemplate, $vars);
     self::abend(CRM_Core_Error::FATAL_ERROR);
+  }
+
+  /**
+   * display timeout message
+   *
+   * @param string message 
+   *
+   * @return void
+   * @static
+   * @acess public
+   */
+  static function timeout($message){
+    $vars = array(
+      'message' => $message,
+    );
+    self::output('CRM/common/timeout.tpl', $vars);
+    CRM_Utils_System::civiExit();
   }
 
   /**
@@ -582,6 +589,31 @@ class CRM_Core_Error extends PEAR_ErrorStack {
     require_once 'CRM/Core/Transaction.php';
     CRM_Core_Transaction::forceRollbackIfEnabled();
     CRM_Utils_System::civiExit($code);
+  }
+
+  /**
+   * Error template
+   */
+  protected static function output($tplFile, $vars){
+    $template = CRM_Core_Smarty::singleton();
+    $template->assign('tplFile', $tplFile);
+    $template->assign($vars);
+    if (isset($_GET['snippet']) && $_GET['snippet']) {
+      if($_GET['snippet'] == CRM_Core_Smarty::PRINT_SNIPPET ||
+         $_GET['snippet'] == CRM_Core_Smarty::PRINT_PDF ) {
+        $content = $template->fetch('CRM/common/snippet.tpl');
+      }
+      else {
+        $content = $template->fetch('CRM/common/print.tpl');
+      }
+      $null = CRM_Core_DAO::$_nullObject;
+      CRM_Utils_Hook::alterContent($content, 'page', $tplFile, $null);
+      echo $content;
+    }
+    else{
+      $content = $template->fetch($tplFile);
+      echo CRM_Utils_System::theme('page', $content);
+    }
   }
 }
 

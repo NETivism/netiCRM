@@ -158,7 +158,7 @@ class CRM_Core_Page {
           usleep(50);
         }
         else{
-          CRM_Core_Error::fatal(ts('Too many connections.'));
+          CRM_Core_Error::timeout(ts('Too many connections.'));
           break;
         }
       }
