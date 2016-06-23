@@ -106,7 +106,7 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
   public function buildQuickForm() {
 
       $options = array(
-        'none' => ts('None'),
+        'none' => ts('Contain copied receipt without address'),
         'single_page_letter' => ts('Single page with address letter'),
         'single_page_letter_with_copied' => ts('Single page with address letter and copied receipt'),
       );
