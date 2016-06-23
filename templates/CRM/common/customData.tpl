@@ -80,13 +80,12 @@ function buildCustomData( type, subType, subName, cgCount, groupID, isMultiple )
 	
   window.setTimeout(function(){
     var response = cj.ajax({
-      url: dataUrl,
-      async: true
+      url: dataUrl
     })
     .done(function(data){
       cj(fname).html(data);
     });
-  }, 600);
+  }, 1000);
 }
 
 </script>

@@ -335,13 +335,15 @@
       dataUrl = dataUrl + '&discountId=' + discountId;  
     }
 
-    cj.ajax({
-      url: dataUrl,
-      global: false
-    })
-    .done(function(data){
-      cj("#feeBlock").html(data);
-    });
+    window.setTimeout(function(){
+      cj.ajax({
+        url: dataUrl,
+        global: false
+      })
+      .done(function(data){
+        cj("#feeBlock").html(data);
+      });
+    }, 1000);
               
         cj("#feeBlock").ajaxStart(function(){
             cj(".disable-buttons input").attr('disabled', true);
@@ -380,10 +382,11 @@
          if ( eventId ) {
            dataUrl = dataUrl + '&eventId=' + eventID;  
          }
-       cj.ajax({
-         url: dataUrl,
-         global: false,
-         dataType: "json"
+      window.setTimeout(function(){
+      cj.ajax({
+        url: dataUrl,
+        global: false,
+        dataType: "json"
       })
       .done(function(response){
         if ( response.role ) {
@@ -400,6 +403,8 @@
           }
         }
       });
+      
+      }, 1000);
     }
 
   
@@ -502,20 +507,22 @@
                var fname = '#customData';
            }    
   
-       var response = cj.ajax({
-          url: dataUrl
-       })
-       .done(function(response){
-         if ( subType != 'null' ) {
-           if ( document.getElementById(roleid).checked == true ) {
-             var response_text = '<div style="display:block;" id = '+subType+'_chk >'+response+'</div>';
-             cj( fname ).append(response_text);
-           }
-           else {
-             cj('#'+subType+'_chk').remove();
-           }
-         }                 
-       });
+       window.setTimeout(function(){
+         cj.ajax({
+            url: dataUrl
+         })
+         .done(function(response){
+           if ( subType != 'null' ) {
+             if ( document.getElementById(roleid).checked == true ) {
+               var response_text = '<div style="display:block;" id = '+subType+'_chk >'+response+'</div>';
+               cj( fname ).append(response_text);
+             }
+             else {
+               cj('#'+subType+'_chk').remove();
+             }
+           }                 
+         });
+       }, 1000); 
    }
   cj(function() {        
     {/literal}

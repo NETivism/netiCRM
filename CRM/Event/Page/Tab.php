@@ -109,9 +109,6 @@ class CRM_Event_Page_Tab extends CRM_Core_Page {
     $controller->setEmbedded(TRUE);
     $controller->set('id', $this->_id);
     $controller->set('cid', $this->_contactId);
-    if(!empty($controller->_key) && empty($this->_qfKey)) {
-      $this->changeScope($controller->_key);
-    }
 
     return $controller->run();
   }

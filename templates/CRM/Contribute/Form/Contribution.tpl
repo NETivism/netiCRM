@@ -261,12 +261,14 @@ function loadPanes( id ) {
   if ( ! cj('div.'+id).html() ) {
     var loading = '<img src="{/literal}{$config->resourceBase}i/loading.gif{literal}" alt="{/literal}{ts}loading{/ts}{literal}" />&nbsp;{/literal}{ts}Loading{/ts}{literal}...';
     cj('div.'+id).html(loading);
-    cj.ajax({
-      url : url
-    })
-    .done(function(data){
-      cj('div.'+id).html(data);
-    });
+    window.setTimeout(function(){
+      cj.ajax({
+        url : url
+      })
+      .done(function(data){
+        cj('div.'+id).html(data);
+      });
+    }, 1000);
   }
 }
 

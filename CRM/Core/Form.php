@@ -320,12 +320,20 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
       $this->assign('qfKey', $this->controller->_key);
     }
 
-    require_once 'CRM/Utils/Hook.php';
+    // #16953, hack for page based form session
+    global $pageKey;
+    if (!empty($pageKey)) {
+      $this->addElement('hidden', 'pageKey', $pageKey);
+      $this->assign('pageKey', $pageKey);
+      $session = CRM_Core_Session::singleton();
+      $session->set('qfKey', $this->controller->_key, $pageKey);
+    }
 
     $this->buildQuickForm();
 
     $defaults = &$this->setDefaultValues();
     unset($defaults['qfKey']);
+    unset($defaults['pageKey']);
 
     if (!empty($defaults)) {
       $this->setDefaults($defaults);

@@ -59,9 +59,6 @@ class CRM_Utils_Wrapper {
    *
    * @param string  formName    name of the form processing this action
    * @param string  formLabel   label for the above form
-   * @param int     mode        mode of operation.
-   * @param boolean addSequence should we add a unique sequence number to the end of the key
-   * @param boolean ignoreKey   should we not set a qfKey for this controller (for standalone forms)
    *
    * @return none.
    * @access public

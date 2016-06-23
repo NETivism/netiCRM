@@ -133,9 +133,6 @@ class CRM_Activity_Page_Tab extends CRM_Core_Page {
     $controller->set('pid', $this->get('pid'));
     $controller->set('action', $this->_action);
     $controller->set('context', $context);
-    if(!empty($controller->_key) && empty($this->_qfKey)) {
-      $this->changeScope($controller->_key);
-    }
 
     $controller->process();
     $controller->run();

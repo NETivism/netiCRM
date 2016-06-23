@@ -243,6 +243,32 @@ class CRM_Core_Session {
   }
 
   /**
+   * Lookup scope name by inner value
+   *
+   * @param string for lookup
+   * @param string name of inner prefix to find
+   * @param string value of inner prefix to find
+   * @access public
+   *
+   * @return Boolean
+   */
+  function lookupScope($lookup, $name, $value) {
+    $this->initialize();
+    foreach($this->_session[$this->_key] as $prefix => $v){
+      if (strstr($prefix, $lookup)) {
+        if(is_array($v) && isset($v[$name]) && $v[$name] == $value) {
+          return $prefix;
+        }
+        else{
+          if($v === $value) {
+            return $prefix;
+          }
+        }
+      }
+    }
+  }
+
+  /**
    * Store the variable with the value in the session scope
    *
    * This function takes a name, value pair and stores this

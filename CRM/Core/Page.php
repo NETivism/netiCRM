@@ -135,35 +135,33 @@ class CRM_Core_Page {
    * @return CRM_Core_Page
    */
   function __construct($title = NULL, $mode = NULL) {
+    // #16953, hack for page key
+    global $pageKey;
+    
     $this->_name = CRM_Utils_System::getClassName($this);
     $this->_title = $title;
     $this->_mode = $mode;
-    $this->_scope = $this->_name;
+    $pageKey = CRM_Utils_Array::value('pageKey', $_REQUEST, NULL);
+    if (empty($pageKey)) {
+      // use qfkey to get pagekey
+      $qfKey = CRM_Utils_Array::value('qfKey', $_REQUEST, NULL);
+      if (!empty($qfKey)) {
+        $session = CRM_Core_Session::singleton();
+        $scope = $session->lookupScope($this->_name, 'qfKey', $qfKey);
+        if ($scope) {
+          $pageKey = $scope;
+        }
+      }
+    }
+    if (empty($pageKey)) {
+      $pageKey = $this->_name . '_' . CRM_Utils_String::createRandom(8, CRM_Utils_String::ALPHANUMERIC);
+    }
+    $this->_scope = $pageKey;
 
     // let the constructor initialize this, should happen only once
     if (!isset(self::$_template)) {
       self::$_template = CRM_Core_Smarty::singleton();
       self::$_session = CRM_Core_Session::singleton();
-    }
-
-    $null = CRM_Core_DAO::$_nullObject;
-    $qfKey = CRM_Utils_Request::retrieve('qfKey', 'String', $null, FALSE, NULL, 'REQUEST');
-    if (!empty($qfKey)) {
-      $scope = $this->_name . '_' . $qfKey;
-      $count = 0;
-      $limit = 30;
-      while(!self::$_session->checkScope($scope)) {
-        if($count*50 < $limit*1000) {
-          $count++;
-          usleep(50);
-        }
-        else{
-          CRM_Core_Error::timeout(ts('Too many connections.'));
-          break;
-        }
-      }
-      $this->_scope = $this->_name . '_' . $qfKey;
-      $this->_qfKey = $qfKey;
     }
 
     if (isset($_GET['snippet']) && $_GET['snippet']) {
