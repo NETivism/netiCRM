@@ -337,12 +337,11 @@
 
     cj.ajax({
       url: dataUrl,
-      async: false,
-      global: false,
-      success: function ( html ) {
-          cj("#feeBlock").html( html );
-      }
-      });
+      global: false
+    })
+    .done(function(data){
+      cj("#feeBlock").html(data);
+    });
               
         cj("#feeBlock").ajaxStart(function(){
             cj(".disable-buttons input").attr('disabled', true);
@@ -381,27 +380,26 @@
          if ( eventId ) {
            dataUrl = dataUrl + '&eventId=' + eventID;  
          }
-         cj.ajax({
-      url: dataUrl,
-      async: false,
-      global: false,
-            dataType: "json",
-      success: function ( response ) {
-                     
-          if ( response.role ) {
-                    for ( var i in roleGroupMapper ) {
-                        if ( i != 0 ) {
-                            if ( i == response.role ) {
-                                document.getElementById("role_id[" +i+ "]"  ).checked = true;
-                            } else {
-                                document.getElementById("role_id[" +i+ "]"  ).checked = false;
-                            }  
-                            showCustomData( 'Participant', i, {/literal} {$roleCustomDataTypeID} {literal} );
-                        }
-                    }
-                }
-      }
-      });  
+       cj.ajax({
+         url: dataUrl,
+         global: false,
+         dataType: "json"
+      })
+      .done(function(response){
+        if ( response.role ) {
+          for ( var i in roleGroupMapper ) {
+            if ( i != 0 ) {
+              if ( i == response.role ) {
+                document.getElementById("role_id[" +i+ "]"  ).checked = true;
+              }
+              else {
+                document.getElementById("role_id[" +i+ "]"  ).checked = false;
+              }  
+              showCustomData( 'Participant', i, {/literal} {$roleCustomDataTypeID} {literal} );
+            }
+          }
+        }
+      });
     }
 
   
@@ -504,18 +502,20 @@
                var fname = '#customData';
            }    
   
-       var response = cj.ajax({url: dataUrl,
-          async: false
-       }).responseText;
-
-       if ( subType != 'null' ) {
+       var response = cj.ajax({
+          url: dataUrl
+       })
+       .done(function(response){
+         if ( subType != 'null' ) {
            if ( document.getElementById(roleid).checked == true ) {
-               var response_text = '<div style="display:block;" id = '+subType+'_chk >'+response+'</div>';
-               cj( fname ).append(response_text);
-           } else {
-               cj('#'+subType+'_chk').remove();
+             var response_text = '<div style="display:block;" id = '+subType+'_chk >'+response+'</div>';
+             cj( fname ).append(response_text);
            }
-       }                 
+           else {
+             cj('#'+subType+'_chk').remove();
+           }
+         }                 
+       });
    }
   cj(function() {        
     {/literal}
