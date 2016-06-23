@@ -150,14 +150,15 @@ class CRM_Core_Page {
     $qfKey = CRM_Utils_Request::retrieve('qfKey', 'String', $null, FALSE, NULL, 'REQUEST');
     if (!empty($qfKey)) {
       $scope = $this->_name . '_' . $qfKey;
-      $limit = 1000;
       $count = 0;
+      $limit = 30;
       while(!self::$_session->checkScope($scope)) {
-        $count++;
-        if(100 * $count < $limit) {
-          usleep(100);
+        if($count*50 < $limit*1000) {
+          $count++;
+          usleep(50);
         }
         else{
+          CRM_Core_Error::fatal(ts('Too many connections.'));
           break;
         }
       }

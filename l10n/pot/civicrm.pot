@@ -45163,3 +45163,7 @@ msgstr ""
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid "An email with details has been sent to %1."
 msgstr ""
+
+#: CRM/Core/Page.php
+msgid "Too many connections."
+msgstr ""
