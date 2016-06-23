@@ -45156,6 +45156,9 @@ msgstr ""
 msgid "Apply to window envelope"
 msgstr ""
 
+msgid "Contain copied receipt without address"
+msgstr ""
+
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid "An email with details has been sent to %1 and to %2."
 msgstr ""

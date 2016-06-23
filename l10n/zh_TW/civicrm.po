@@ -11,8 +11,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2016-06-22 12:46+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
+"PO-Revision-Date: 2016-06-23 08:38+0000\n"
+"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44599,14 +44599,14 @@ msgid ""
 msgstr "請注意，由於收據編號必須是連號，當您按下列印收據，系統產生的收據編號是不能修改的。請務必確認您搜尋條件的「收到日期」是正確的，以免產生錯誤的收據編號。"
 
 msgid "Single page with address letter"
-msgstr "適用於開窗信封的收據"
+msgstr "包含開窗信封地址的單聯收據"
 
 msgid ""
 "By default we generate one receipt in every A4 page. After you check this "
 "option, receipt will include default address of donor in every page instead."
 " We will generate their address in the top of page. This is useful when you "
 "want to send by post directly without envelop."
-msgstr "當您勾選此選項，系統將產生 A4 格式收據，並在頁面上方附上捐/繳款人收據寄送地址。您可摺疊 A4 收據，放進開窗信封並讓收件人姓名地址露出。"
+msgstr "當您勾選「包含開窗信封地址」，系統將產生 A4 格式收據，並在頁面上方附上捐/繳款人收據寄送地址。您可摺疊 A4 收據，放進開窗信封並讓收件人姓名地址露出。"
 
 msgid ""
 "Contribution record must dedutible.(base on <a href=\"%1\">Contribution "
@@ -45166,10 +45166,13 @@ msgstr "主辦"
 
 #: CRM/Contribute/Form/Task/PDF.php
 msgid "Single page with address letter and copied receipt"
-msgstr "包含存根聯的開窗信封"
+msgstr "包含開窗信封地址與存根聯的收據"
 
 msgid "Apply to window envelope"
-msgstr ""
+msgstr "開窗信封樣式"
+
+msgid "Contain copied receipt without address"
+msgstr "上下兩聯，無使用開窗信封"
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid "An email with details has been sent to %1 and to %2."
@@ -45178,3 +45181,7 @@ msgstr "一封 Email 已經寄送至 %1 和 %2。"
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid "An email with details has been sent to %1."
 msgstr "一封 Email 已經寄送至 %1 。"
+
+#: CRM/Core/Page.php
+msgid "Too many connections."
+msgstr ""
