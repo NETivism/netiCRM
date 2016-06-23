@@ -600,7 +600,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
     $template->assign($vars);
     if (isset($_GET['snippet']) && $_GET['snippet']) {
       if($_GET['snippet'] == CRM_Core_Smarty::PRINT_SNIPPET ||
-         $_GET['snippet'] == CRM_Core_Smarty::PRINT_PDF ) {
+        $_GET['snippet'] == CRM_Core_Smarty::PRINT_NOFORM) {
         $content = $template->fetch('CRM/common/snippet.tpl');
       }
       else {
