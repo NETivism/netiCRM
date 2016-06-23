@@ -150,12 +150,12 @@ class CRM_Core_Page {
     $qfKey = CRM_Utils_Request::retrieve('qfKey', 'String', $null, FALSE, NULL, 'REQUEST');
     if (!empty($qfKey)) {
       $scope = $this->_name . '_' . $qfKey;
-      $limit = 500;
+      $limit = 1000;
       $count = 0;
       while(!self::$_session->checkScope($scope)) {
         $count++;
-        if(50 * $count < $limit) {
-          usleep(50);
+        if(100 * $count < $limit) {
+          usleep(100);
         }
         else{
           break;
