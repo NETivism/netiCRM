@@ -1,1 +1,1 @@
-{ts}Receipt{/ts}
+{ts}Invoice{/ts} - {$title}

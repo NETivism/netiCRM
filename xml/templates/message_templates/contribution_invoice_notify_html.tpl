@@ -1,80 +1,113 @@
-{counter start=1 skip=1 assign="count"}
-{if $single_page_letter}
-<div class="{if $single_page_letter eq 'single_page_letter'}single-page-header{else}two-sections-header{/if}">
-  <div class="info">
-    {if $single_page_letter eq 'two_pages_letter'}
-    <div class="logo"><img src="{$logo}" height="30" /></div>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+ <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+ <title></title>
+</head>
+<body>
+{capture assign=headerStyle}colspan="2" style="text-align: left; padding: 10px; border-bottom: 1px solid #999; background-color: #eee;font-size:1.1em;"{/capture}
+{capture assign=labelStyle}style="padding: 5px; border-bottom: 1px solid #999; background-color: #f7f7f7;font-weight:bold;"{/capture}
+{capture assign=valueStyle}style="padding: 5px; border-bottom: 1px solid #999;"{/capture}
+{capture assign=highlightStyle}style="color:#red;"{/capture}
+{capture assign=expire}#expire{/capture}
+<center>
+{if $logo}<img src="{$logo}" style="max-height:80px" />{/if}
+ <table width="620" border="0" cellpadding="0" cellspacing="0" id="crm-event_receipt" style="font-family: Arial, Verdana, sans-serif; text-align: left;">
+  <tr>
+    <td>
+    <h3>{ts}Invoice{/ts} - {$title}</h3>
+    {if $message}
+      {$message}
+    {else}
+      <p>
+        {ts 1=$page.url 2=$title}We send this invoice because you have submitted data at <a href="%1">%2</a>.{/ts}<br>
+        {ts 1=$payment_info.$expire}You need to follow instruction below to complete transaction before <strong>%1</strong> (expire date).{/ts}<br>
+        {ts 1=$page.url}If you can make it before expire date, you can <a href="%1">go page</a> submit again.{/ts}
+      </p>
     {/if}
-    {if $single_page_letter eq 'two_pages_letter'}<div class="address"><div class="address-label">From: </div>{$domain_address}</div>{/if}
-    {if $address}<div class="address">{if $single_page_letter eq 'two_pages_letter'}<div class="address-label">To: </div>{/if}{$address}</div>{/if}
-    <div><span class="web-name">{$sort_name}收</span></div>
-  </div>
-</div>
-{counter print=false}
-{/if}
-
-
-
-<div class="receipts page-contain-{$print_type|@count}-sections {if $single_page_letter neq ''}receipt-with-address{/if}">
-{foreach from=$print_type key=type item=type_label}
-{if $count > 1}
-<div class="line {$type}"></div>
-{/if}
-<div class="receipt {$type}">
-  <div class="receipt-head">
-    <div class="logo"><img src="{$logo}" height="30" /></div>
-    <div class="title">收據 Receipt</div>
-    <div class="date"><label>日期：</label>{$receipt_date}</div>
-    <div class="serial">
-      <label class="type">{$type_label}</label><br />
-      <label>收據編號：</label>{$receipt_id}<br />
-    </div>
-  </div>
-  <div class="receipt-body">
-    <table>
+    </td>
+  </tr>
+  <tr>
+    <td>
+    <table style="border: 1px solid #999; margin: 1em 0em 1em; border-collapse: collapse; width:100%;">
       <tr>
-        <td class="col-1">姓名/抬頭</td>
-        <td class="col-2">{$sort_name}</td>
-        <td class="col-3 signature">協會簽章</td>
+        <th colspan=2 {$headerStyle}>
+          {ts}Payment Information{/ts} <span>{ts}Original Receipts{/ts}</span>
+        </th>
       </tr>
       <tr>
-        <td class="col-1">身分證字號/統一編號</td>
-        <td class="col-2">{$serial_id}</td>
-        <td class="col-3" rowspan="4">&nbsp;</td>
+        <td {$labelStyle}>
+          {ts}Amount{/ts}
+        </td>
+        <td {$valueStyle}>
+          {$contribution.total_amount|crmMoney}
+        </td>
       </tr>
       <tr>
-        <td class="col-1">收入用途/類別</td>
-        <td class="col-2">{$contributionTypeName}</td>
+        <td {$labelStyle}>
+          {ts}Transaction ID{/ts}
+        </td>
+        <td {$valueStyle}>
+          {$contribution.trxn_id}
+        </td>
       </tr>
       <tr>
-        <td class="col-1">繳費方式</td>
-        <td class="col-2">{$instrument}</td>
+        <td {$labelStyle}>
+          {ts}Payment Instrument{/ts}
+        </td>
+        <td {$valueStyle}>
+          {$contribution.payment_instrument}
+        </td>
       </tr>
       <tr>
-        <td class="col-1">金額（大寫）新台幣</td>
-        <td class="col-2">{$amount|crmMoney:$currency:"chinese"}</td>
+        <td colspan=2 {$valueStyle}>
+          {$payment_info.display}
+        </td>
+      </tr>
+{if $payment_info.has_receipt}
+      <tr>
+        <td colspan=2 {$valueStyle}><hr style="border:1px dashed #AAA;"></td>
       </tr>
       <tr>
-        <td class="col-1">金額（小寫）</td>
-        <td class="col-2">{$amount|crmMoney:$currency} 元整</td>
-        <td class="col-3">經辦人：</td>
+        <th colspan=2 {$headerStyle}>
+          <span>{ts}Copy Receipts{/ts}</span>
+        </th>
+      </tr>
+      <tr>
+        <td {$labelStyle}>
+          {ts}Amount{/ts}
+        </td>
+        <td {$valueStyle}>
+          <strong>{$contribution.total_amount|crmMoney}</strong>
+        </td>
+      </tr>
+      <tr>
+        <td {$labelStyle}>
+          {ts}Transaction ID{/ts}
+        </td>
+        <td {$valueStyle}>
+          {$contribution.trxn_id}
+        </td>
+      </tr>
+      <tr>
+        <td {$labelStyle}>
+          {ts}Payment Instrument{/ts}
+        </td>
+        <td {$valueStyle}>
+          {$contribution.payment_instrument}
+        </td>
+      </tr>
+      <tr>
+        <td colspan=2 {$valueStyle}>
+          {$payment_info.display}
+        </td>
       </tr>
     </table>
-  </div>
-  <div class="receipt-footer">
-    <table>
-      <tr>
-        <td class="col-1">組織資訊</td>
-        <td class="col-2">{$receiptOrgInfo}</td>
-        <td class="col-3">備註說明</td>
-        <td class="col-4">{$receiptDescription}</td>
-      </tr>
-    </table>
-  </div>
-</div>
-{if $type eq "address"}
-address here
+    </td>
+  </tr>
 {/if}
-{counter print=false}
-{/foreach}
-</div>
+ </table>
+</center>
+
+</body>
+</html>
