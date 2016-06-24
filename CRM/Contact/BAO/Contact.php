@@ -1592,12 +1592,12 @@ ORDER BY civicrm_email.is_primary DESC";
     if (is_array($addToGroupID)) {
       $contactIds = array($contactID);
       foreach ($addToGroupID as $groupId) {
-        CRM_Contact_BAO_GroupContact::addContactsToGroup($contactIds, $groupId);
+        CRM_Contact_BAO_GroupContact::addContactsToGroup($contactIds, $groupId, 'Web');
       }
     }
     elseif ($addToGroupID) {
       $contactIds = array($contactID);
-      CRM_Contact_BAO_GroupContact::addContactsToGroup($contactIds, $addToGroupID);
+      CRM_Contact_BAO_GroupContact::addContactsToGroup($contactIds, $addToGroupID, 'Web');
     }
 
 
