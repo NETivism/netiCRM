@@ -104,12 +104,7 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
    * @return void
    */
   public function buildQuickForm() {
-
-      $options = array(
-        'none' => ts('Contain copied receipt without address'),
-        'single_page_letter' => ts('Single page with address letter'),
-        'single_page_letter_with_copied' => ts('Single page with address letter and copied receipt'),
-      );
+    $options = self::getPrintingTypes();
 
     $this->addRadio( 'window_envelope',ts('Apply to window envelope'),$options,null,'<br/>',true );
 
@@ -172,16 +167,8 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
     if (is_numeric($details)) {
       $details = &CRM_Contribute_Form_Task_Status::getDetails($details);
     }
-    switch ($window_envelope) {
-      case 'none':
-      default:
-        $print_type = array(
-          'original' => ts('Original Receipts'),
-          'copy' => ts('Copy Receipts'),
-        );
-        $window_envelope = '';
-        break;
 
+    switch ($window_envelope) {
       case 'single_page_letter':
         $print_type = array(
           'copy' => ts('Copy Receipts'),
@@ -192,8 +179,15 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
           'copy' => ts('Copy Receipts'),
           'original' => ts('Original Receipts'),
         );
-      break;
-
+        break;
+      case 'none':
+      default:
+        $print_type = array(
+          'original' => ts('Original Receipts'),
+          'copy' => ts('Copy Receipts'),
+        );
+        $window_envelope = '';
+        break;
     }
     // domain info
     $domain = CRM_Core_BAO_Domain::getDomain();
@@ -254,6 +248,14 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
       $count++;
       unset($html);
     }
+  }
+
+  static public function getPrintingTypes(){
+    return array(
+      'none' => ts('Contain copied receipt without address'),
+      'single_page_letter' => ts('Single page with address letter'),
+      'single_page_letter_with_copied' => ts('Single page with address letter and copied receipt'),
+    );
   }
 }
 
