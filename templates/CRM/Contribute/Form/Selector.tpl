@@ -49,7 +49,7 @@
 
   {counter start=0 skip=1 print=false}
   {foreach from=$rows item=row}
-  <tr id="rowid{$row.contribution_id}" class="{cycle values="odd-row,even-row"}{if $row.cancel_date} disabled{/if} crm-contribution_{$row.contribution_id}">
+  <tr id="rowid{$row.contribution_id}" class="{cycle values="odd-row,even-row"}{if $row.cancel_date} disabled{/if}{if $row.contribution_status_id} contribution-status-{$row.contribution_status_id}{/if} crm-contribution_{$row.contribution_id}">
     {if !$single }
         {if $context eq 'Search' }       
     	    {assign var=cbName value=$row.checkbox}

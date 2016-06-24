@@ -3573,7 +3573,6 @@ tbody.scrollContent {
 tbody.scrollContent tr.alternateRow {
   background-color: #EFEFEF;
 }
-
 .crm-container td.checkbox {
   vertical-align: middle;
   text-align: center;
@@ -3715,6 +3714,21 @@ tbody.scrollContent tr.alternateRow {
   border: 0px none;
   vertical-align: top;
 }
+
+/* Special case for tr style*/
+.crm-container tr.contribution-status-4 {
+  background-color: #DCC5C5;
+}
+.crm-container tr.contribution-status-3 {
+  background-color: #CCCCCC;
+}
+.crm-container tr.contribution-status-2 {
+  background-color: #EFEFEF;
+}
+.crm-container tr.contribution-status-1 {
+  background-color: #FFF;
+}
+
 
 
 /*
