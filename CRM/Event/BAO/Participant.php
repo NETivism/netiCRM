@@ -650,18 +650,6 @@ GROUP BY  participant.event_id
         'headerPattern' => '/(participant.)?note$/i',
       ));
 
-      $participantStatus = array('participant_status' => array(
-        'title' => ts('Participant Status'),
-        'name' => 'participant_status',
-        'data_type' => CRM_Utils_Type::T_STRING,
-      ));
-
-      $participantRole = array('participant_role' => array(
-        'title' => ts('Participant Role'),
-        'name' => 'participant_role',
-        'data_type' => CRM_Utils_Type::T_STRING,
-      ));
-
       $eventType = array('event_type' => array(
         'title' => ts('Event Type'),
         'name' => 'event_type',
@@ -700,7 +688,7 @@ GROUP BY  participant.event_id
 
       $fields = array_merge($fields, $tmpContactField);
       $fields = array_merge($fields, $tmpFields);
-      $fields = array_merge($fields, $note, $participantStatus, $participantRole, $eventType);
+      $fields = array_merge($fields, $note, $eventType);
       //$fields = array_merge($fields, $optionFields);
 
       $fields = array_merge($fields, CRM_Core_BAO_CustomField::getFieldsForImport('Participant'));
@@ -1271,6 +1259,7 @@ UPDATE  civicrm_participant
       foreach ($tokens['domain'] as $token) {
         $domainValues[$token] = CRM_Utils_Token::getDomainTokenReplacement($token, $domain);
       }
+      list($domainValues['name'], $domainValues['email']) = CRM_Core_BAO_Domain::getNameAndEmail();
     }
 
     //get all required contacts detail.

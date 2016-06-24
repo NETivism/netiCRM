@@ -209,6 +209,9 @@ class CRM_Contact_Form_Search_Basic extends CRM_Contact_Form_Search {
       $this->normalizeFormValues();
     }
 
+    if (isset($this->_tagID) && !CRM_Utils_Array::value('tag', $this->_formValues)) {
+      $this->_formValues['tag'][$this->_tagID] = 1;
+    }
     if (isset($this->_groupID) && !CRM_Utils_Array::value('group', $this->_formValues)) {
       $this->_formValues['group'][$this->_groupID] = 1;
     }

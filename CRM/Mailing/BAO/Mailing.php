@@ -108,6 +108,8 @@ class CRM_Mailing_BAO_Mailing extends CRM_Mailing_DAO_Mailing {
     $eq = CRM_Mailing_Event_DAO_Queue::getTableName();
     $ed = CRM_Mailing_Event_DAO_Delivered::getTableName();
     $eb = CRM_Mailing_Event_DAO_Bounce::getTableName();
+    $eo = CRM_Mailing_Event_BAO_Opened::getTableName();
+    $ec = CRM_Mailing_Event_BAO_TrackableURLOpen::getTableName();
 
     $email = CRM_Core_DAO_Email::getTableName();
     $contact = CRM_Contact_DAO_Contact::getTableName();
@@ -170,6 +172,36 @@ class CRM_Mailing_BAO_Mailing extends CRM_Mailing_DAO_Mailing {
                                         $mg.mailing_id = {$mailing_id}
                         AND             $mg.group_type = 'Exclude'";
     $mailingGroup->query($excludeSubMailing);
+
+    /* exclude all clicked mailing in specific mailnig */
+    $excludeClickedMailing = "INSERT IGNORE INTO X_$job_id (contact_id)
+                    SELECT  DISTINCT    $eq.contact_id
+                    FROM                $eq
+                    INNER JOIN          $job
+                            ON          $eq.job_id = $job.id
+                    INNER JOIN          $mg
+                            ON          $job.mailing_id = $mg.entity_id AND $mg.entity_table = '$ec'
+                    INNER JOIN          $ec
+                            ON          $ec.event_queue_id = $eq.id
+                    WHERE
+                                        $mg.mailing_id = {$mailing_id}
+                        AND             $mg.group_type = 'Exclude'";
+    $mailingGroup->query($excludeClickedMailing);
+
+    /* exclude all clicked mailing in specific mailnig */
+    $excludeOpenedMailing = "INSERT IGNORE INTO X_$job_id (contact_id)
+                    SELECT  DISTINCT    $eq.contact_id
+                    FROM                $eq
+                    INNER JOIN          $job
+                            ON          $eq.job_id = $job.id
+                    INNER JOIN          $mg
+                            ON          $job.mailing_id = $mg.entity_id AND $mg.entity_table = '$eo'
+                    INNER JOIN          $eo
+                            ON          $eo.event_queue_id = $eq.id
+                    WHERE
+                                        $mg.mailing_id = {$mailing_id}
+                        AND             $mg.group_type = 'Exclude'";
+    $mailingGroup->query($excludeOpenedMailing);
 
     // get all the saved searches AND hierarchical groups
     // and load them in the cache
@@ -251,8 +283,6 @@ WHERE  c.group_id = {$groupDAO->id}
     $mailingGroup->query($query);
 
     /* Query prior mailings */
-
-
     $mailingGroup->query(
       "REPLACE INTO       I_$job_id (email_id, contact_id)
                     SELECT DISTINCT     $email.id as email_id,
@@ -280,6 +310,63 @@ WHERE  c.group_id = {$groupDAO->id}
                     ORDER BY $email.is_bulkmail"
     );
 
+    /* Query opened mailings */
+    $includeOpened = "REPLACE INTO       I_$job_id (email_id, contact_id)
+                    SELECT DISTINCT     $email.id as email_id,
+                                        $contact.id as contact_id
+                    FROM                $email
+                    INNER JOIN          $contact
+                            ON          $email.contact_id = $contact.id
+                    INNER JOIN          $eq
+                            ON          $eq.contact_id = $contact.id
+                    INNER JOIN          $job
+                            ON          $eq.job_id = $job.id
+                    INNER JOIN          $mg
+                            ON          $job.mailing_id = $mg.entity_id AND $mg.entity_table = '$eo'
+                    INNER JOIN          $eo
+                            ON          $eo.event_queue_id = $eq.id
+                    LEFT JOIN           X_$job_id
+                            ON          $contact.id = X_$job_id.contact_id
+                    WHERE
+                                       ($mg.group_type = 'Include')
+                        AND             $contact.do_not_email = 0
+                        AND             $contact.is_opt_out = 0
+                        AND             $contact.is_deceased = 0
+                        AND            ($email.is_bulkmail = 1 OR $email.is_primary = 1)
+                        AND             $email.on_hold = 0
+                        AND             $mg.mailing_id = {$mailing_id}
+                        AND             X_$job_id.contact_id IS null
+                    ORDER BY $email.is_bulkmail";
+    $mailingGroup->query($includeOpened);
+
+    /* Query clicked mailings */
+    $includeClicked = "REPLACE INTO       I_$job_id (email_id, contact_id)
+                    SELECT DISTINCT     $email.id as email_id,
+                                        $contact.id as contact_id
+                    FROM                $email
+                    INNER JOIN          $contact
+                            ON          $email.contact_id = $contact.id
+                    INNER JOIN          $eq
+                            ON          $eq.contact_id = $contact.id
+                    INNER JOIN          $job
+                            ON          $eq.job_id = $job.id
+                    INNER JOIN          $mg
+                            ON          $job.mailing_id = $mg.entity_id AND $mg.entity_table = '$ec'
+                    INNER JOIN          $ec
+                            ON          $ec.event_queue_id = $eq.id
+                    LEFT JOIN           X_$job_id
+                            ON          $contact.id = X_$job_id.contact_id
+                    WHERE
+                                       ($mg.group_type = 'Include')
+                        AND             $contact.do_not_email = 0
+                        AND             $contact.is_opt_out = 0
+                        AND             $contact.is_deceased = 0
+                        AND            ($email.is_bulkmail = 1 OR $email.is_primary = 1)
+                        AND             $email.on_hold = 0
+                        AND             $mg.mailing_id = {$mailing_id}
+                        AND             X_$job_id.contact_id IS null
+                    ORDER BY $email.is_bulkmail";
+    $mailingGroup->query($includeClicked);
 
     $sql = "
 SELECT     $group.id, $group.cache_date, $group.saved_search_id, $group.children
@@ -1126,6 +1213,8 @@ AND civicrm_contact.is_opt_out =0";
         $htmlBody = $smarty->fetch("string:$htmlBody");
         $smarty->security = FALSE;
       }
+      // #17688, rwd support for newsletter image
+      $htmlBody = CRM_Utils_String::removeImageHeight($htmlBody);
       $mailParams['html'] = $htmlBody;
     }
 
@@ -1152,7 +1241,6 @@ AND civicrm_contact.is_opt_out =0";
     );
     $mailParams['toEmail'] = $email;
 
-    require_once 'CRM/Utils/Hook.php';
     CRM_Utils_Hook::alterMailParams($mailParams, 'civimail');
 
     //cycle through mailParams and set headers array
@@ -1467,13 +1555,19 @@ AND civicrm_contact.is_opt_out =0";
 
 
     $mg = new CRM_Mailing_DAO_Group();
-    foreach (array('groups', 'mailings') as $entity) {
+    $tables = array(
+      'groups' => CRM_Contact_BAO_Group::getTableName(),
+      'mailings' =>  CRM_Mailing_BAO_Mailing::getTableName(),
+      'opened' =>  CRM_Mailing_Event_BAO_Opened::getTableName(),
+      'clicked' =>  CRM_Mailing_Event_BAO_TrackableURLOpen::getTableName(),
+    );
+    foreach ($tables as $entity => $table) {
       foreach (array('include', 'exclude', 'base') as $type) {
         if (isset($params[$entity]) && CRM_Utils_Array::value($type, $params[$entity]) && is_array($params[$entity][$type])) {
           foreach ($params[$entity][$type] as $entityId) {
             $mg->reset();
             $mg->mailing_id = $mailing->id;
-            $mg->entity_table = ($entity == 'groups') ? $groupTableName : $mailingTableName;
+            $mg->entity_table = $table;
             $mg->entity_id = $entityId;
             $mg->group_type = $type;
             $mg->save();
@@ -2589,6 +2683,28 @@ WHERE  civicrm_mailing_job.id = %1
 
     CRM_Core_Error::debug_log_message('Ending processQueue run');
     return TRUE;
+  }
+
+  /**
+   * @return mixed
+   */
+  public static function getMailingsList() {
+    static $list = array();
+
+    if (empty($list)) {
+      $query = "
+SELECT civicrm_mailing.id, civicrm_mailing.name, civicrm_mailing_job.end_date
+FROM   civicrm_mailing
+INNER JOIN civicrm_mailing_job ON civicrm_mailing.id = civicrm_mailing_job.mailing_id WHERE 1
+ORDER BY civicrm_mailing.name";
+      $mailing = CRM_Core_DAO::executeQuery($query);
+
+      while ($mailing->fetch()) {
+        $list[$mailing->id] = "{$mailing->name} :: {$mailing->end_date}";
+      }
+    }
+
+    return $list;
   }
 }
 

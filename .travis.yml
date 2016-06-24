@@ -69,7 +69,7 @@ install:
   - drush --yes pm-enable civicrm_demo
   - drush --yes variable-set error_level 0
   # start a web server on port 8080, run in the background; wait for initialization
-  - drush runserver 127.0.0.1:8080 >> /dev/null &
+  - drush runserver 127.0.0.1:8080 >& /dev/null &
   - until netstat -an 2>/dev/null | grep '8080.*LISTEN'; do true; done
 
 before_script:

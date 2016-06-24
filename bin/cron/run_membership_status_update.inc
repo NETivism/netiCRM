@@ -161,9 +161,12 @@ AND    civicrm_membership.is_test = 0
             $today_date    = CRM_Utils_DATE::unixTime( $today );
             
             //send reminder for membership renewal
+            $current_member = CRM_Member_PseudoConstant::membershipStatus(NULL, 'is_current_member = 1');
             if ( $dao->reminder_date &&
                  $dao->reminder_date != '0000-00-00' &&
-                 ( $reminder_date <= $today_date ) ) {
+                 ( $reminder_date <= $today_date ) && 
+                 !empty($current_member[$dao->status_id])
+                ) {
                 $memType = new CRM_Member_BAO_MembershipType( );
                 
                 $memType->id = $dao->membership_type_id;

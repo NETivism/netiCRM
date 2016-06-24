@@ -116,6 +116,12 @@ class CRM_Core_Form_Renderer extends HTML_QuickForm_Renderer_ArraySmarty {
         $el['label'] = "<label>{$el['label']}</label>";
       }
     }
+    // Active form elements
+    if (empty($el['frozen'])) {
+      if ($element->getType() == 'group' && $element->getAttribute('allowClear')) {
+        $this->appendUnselectButton($el, $element);
+      }
+    }
 
     return $el;
   }
@@ -171,6 +177,17 @@ class CRM_Core_Form_Renderer extends HTML_QuickForm_Renderer_ArraySmarty {
 
     $attributes['class'] = $class;
     $element->updateAttributes($attributes);
+  }
+
+  /**
+   * @param array $el
+   * @param HTML_QuickForm_element $field
+   */
+  public function appendUnselectButton(&$el, $field) {
+    // Initially hide if not needed
+    // Note: visibility:hidden prevents layout jumping around unlike display:none
+    $display = $field->getValue() !== NULL ? '' : ' style="visibility:hidden;"';
+    $el['html'] .= '<span class="crm-clear-link"><a href="#" title="unselect" onclick="unselectRadio(\''.$el['name'].'\'); return false;">'.ts('unselect').'</a></span>';
   }
 }
 // end CRM_Core_Form_Renderer

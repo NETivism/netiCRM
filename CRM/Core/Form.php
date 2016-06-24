@@ -320,12 +320,20 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
       $this->assign('qfKey', $this->controller->_key);
     }
 
-    require_once 'CRM/Utils/Hook.php';
+    // #16953, hack for page based form session
+    global $pageKey;
+    if (!empty($pageKey)) {
+      $this->addElement('hidden', 'pageKey', $pageKey);
+      $this->assign('pageKey', $pageKey);
+      $session = CRM_Core_Session::singleton();
+      $session->set('qfKey', $this->controller->_key, $pageKey);
+    }
 
     $this->buildQuickForm();
 
     $defaults = &$this->setDefaultValues();
     unset($defaults['qfKey']);
+    unset($defaults['pageKey']);
 
     if (!empty($defaults)) {
       $this->setDefaults($defaults);
@@ -669,14 +677,35 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
     self::$_template->assign_by_ref($var, $value);
   }
 
+  /**
+   * check if variables assigned
+   *
+   * @param string $name  name  of variable
+   * @param mixed $value value of varaible, if value will check equality
+   *        default only check isset 
+   *
+   * @return void
+   * @access public
+   */
+  function isAssigned($var, $value = NULL) {
+    self::$_template->isAssigned($var, $value);
+  }
+
   function &addRadio($name, $title, &$values, $attributes = NULL, $separator = NULL, $required = FALSE) {
     $options = array();
+    $attributes = $attributes ? $attributes : array();
+    $allowClear = !empty($attributes['allowClear']) ? TRUE : FALSE;
+    unset($attributes['allowClear']);
+
     foreach ($values as $key => $var) {
       $options[] = &HTML_QuickForm::createElement('radio', NULL, NULL, $var, $key, $attributes);
     }
     $group = &$this->addGroup($options, $name, $title, $separator);
     if ($required) {
       $this->addRule($name, ts('%1 is a required field.', array(1 => $title)), 'required');
+    }
+    if ($allowClear) {
+      $group->setAttribute('allowClear', TRUE);
     }
     return $group;
   }
@@ -1121,20 +1150,34 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
     $this->setDefaults(array($name => $defaultCurrency));
   }
 
-  function addFieldRequiredRule(&$errors){
+  function addFieldRequiredRule(&$errors,$fields,$files){
     // Files : Write in $this->_submitFiles['custom_4']['name']
     // if is no Files : $this->_submitFiles['custom_4']['error'] == 4
     // or $this->_submitFiles['custom_4']['name'] is null.
     foreach ($this->_fields as $name => $fld) {
-      $data_type = isset($fld['data_type']) ? $fld['data_type'] : '';
-      if ($fld['is_required'] && CRM_Utils_System::isNull(CRM_Utils_Array::value($name, $fields) && $data_type != 'File')
-      ) {
-        $errors[$name] = ts('%1 is a required field.', array(1 => $fld['title']));
-      }
-      if($fld['is_required'] && $data_type == 'File' || $name == 'image_URL'){
-        $uploaded = $this->_submitFiles[$name];
-        if(empty($uploaded['name'])){
+      if($fld['is_required']){
+        $data_type = isset($fld['data_type']) ? $fld['data_type'] : '';
+        if (CRM_Utils_System::isNull(CRM_Utils_Array::value($name, $fields) && $data_type != 'File')) {
           $errors[$name] = ts('%1 is a required field.', array(1 => $fld['title']));
+        }
+
+        if(empty($files[$name]['name']) && ($data_type == 'File' || $name == 'image_URL')){
+          if($this->_action == 1){
+            // profile : create
+            $errors[$name] = ts('%1 is a required field.', array(1 => $fld['title']));
+          }else{
+            if($data_type == 'File'){
+              $customFieldID = CRM_Core_BAO_CustomField::getKeyID($name);
+              $file = CRM_Core_BAO_CustomField::getFileURL($this->_id, $customFieldID);
+              $file = isset($file['file_id'])?$file['file_id']:FALSE;
+            }
+            if($name == 'image_URL'){
+              $file  = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $this->_id , 'image_URL');
+            }
+            if(empty($file)){
+              $errors[$name] = ts('%1 is a required field.', array(1 => $fld['title']));
+            }
+          }
         }
       }
     }

@@ -599,7 +599,11 @@ class CRM_Contact_BAO_Query {
               }
             }
             else {
-              $this->_tables[$tableName] = 1;
+              if($tableName == 'civicrm_contribution_product'){
+                $this->_tables['civicrm_product'] = 1;
+              }else{
+                $this->_tables[$tableName] = 1;
+              }
 
               // also get the id of the tableName
               $tName = substr($tableName, 8);

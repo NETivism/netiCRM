@@ -44818,6 +44818,10 @@ msgstr ""
 msgid "Custom Name"
 msgstr ""
 
+#: betterContributionForm.tpl
+msgid "Please verify name and Legal Identifier fields."
+msgstr ""
+
 #: CRM/Contact/Form/Search/Custom/RecurSearch.php
 msgid "First recurring date"
 msgstr ""
@@ -45080,4 +45084,89 @@ msgstr ""
 
 #: CRM/Price/BAO/Field.php
 msgid "membership required"
+msgstr ""
+
+#: CRM/Mailing/BAO/Query.php
+msgid "Delivery Status"
+msgstr ""
+
+#: CRM/Mailing/BAO/Query.php
+msgid "Trackable Open"
+msgstr ""
+
+#: CRM/Mailing/BAO/Query.php
+msgid "Trackable URL Click"
+msgstr ""
+
+#: CRM/Mailing/BAO/Query.php
+msgid "Trackable Reply"
+msgstr ""
+
+#: CRM/Mailing/BAO/Query.php
+msgid "Opt-out Requests"
+msgstr ""
+
+#: CRM/Mailing/BAO/Query.php
+msgid "Not delivered"
+msgstr ""
+
+#: CRM/Mailing/BAO/Query.php
+msgid "Unopened/Hidden"
+msgstr ""
+
+#: CRM/Mailing/BAO/Query.php
+msgid "Clicked"
+msgstr ""
+
+#: CRM/Mailing/BAO/Query.php
+msgid "Not Clicked"
+msgstr ""
+
+#: CRM/Mailing/BAO/Query.php
+msgid "Replied"
+msgstr ""
+
+#: CRM/Mailing/BAO/Query.php
+msgid "No Reply"
+msgstr ""
+
+#: CRM/Contact/Page/View/ContactSmartGroup.tpl
+msgid "%1 is currently included in these Smart group(s) (e.g. saved searches)."
+msgstr ""
+
+#: CRM/Contact/Page/View/ContactSmartGroup.tpl
+msgid "This contact does not currently belong to any smart groups."
+msgstr ""
+
+#: CRM/Contact/Page/View/ContactSmartGroup.tpl
+msgid "%1 is included in these Parent group(s) based on belonging to group(s) which are their children."
+msgstr ""
+
+#: CRM/Event/Form/Registration.php
+msgid "Some of the profile fields cannot be configured for this page."
+msgstr ""
+
+msgid "Organiser"
+msgstr ""
+
+#: CRM/Contribute/Form/Task/PDF.php
+msgid "Single page with address letter and copied receipt"
+msgstr ""
+
+msgid "Apply to window envelope"
+msgstr ""
+
+msgid "Contain copied receipt without address"
+msgstr ""
+
+#: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
+msgid "An email with details has been sent to %1 and to %2."
+msgstr ""
+
+#: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
+msgid "An email with details has been sent to %1."
+msgstr ""
+
+#: CRM/Core/Page.php
+msgid "Too many connections."
 msgstr ""

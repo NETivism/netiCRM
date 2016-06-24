@@ -1085,6 +1085,7 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
     }
 
     require_once "CRM/Contact/BAO/Contact.php";
+    $params['log_data'] = !empty($params['log_data']) ? $params['log_data'] : ts('Event').' - '.$this->_eventId;
     if ($contactID) {
       $ctype = CRM_Core_DAO::getFieldValue("CRM_Contact_DAO_Contact",
         $contactID,

@@ -205,6 +205,70 @@ class CRM_Core_Session {
   }
 
   /**
+   * Change scope name and move old scope to new
+   *
+   * @param string old scope name
+   * @access public
+   *
+   * @param new scope name
+   * @access public
+   *
+   * @return Boolean
+   */
+  function changeScope($oldPrefix, $newPrefix) {
+    $this->initialize();
+
+    if (!empty($oldPrefix) && !empty($newPrefix)) {
+      if (array_key_exists($oldPrefix, $this->_session[$this->_key]) && !isset($this->_session[$this->_key][$newPrefix])) {
+        $this->_session[$this->_key][$newPrefix] = $this->_session[$this->_key][$oldPrefix];
+        unset($this->_session[$this->_key][$oldPrefix]);
+        return TRUE;
+      }
+    }
+    return FALSE;
+  }
+
+  /**
+   * Check local scope exists
+   *
+   * @param string for check
+   * @access public
+   *
+   * @return Boolean
+   */
+  function checkScope($prefix) {
+    $this->initialize();
+
+    return isset($this->_session[$this->_key][$prefix]);
+  }
+
+  /**
+   * Lookup scope name by inner value
+   *
+   * @param string for lookup
+   * @param string name of inner prefix to find
+   * @param string value of inner prefix to find
+   * @access public
+   *
+   * @return Boolean
+   */
+  function lookupScope($lookup, $name, $value) {
+    $this->initialize();
+    foreach($this->_session[$this->_key] as $prefix => $v){
+      if (strstr($prefix, $lookup)) {
+        if(is_array($v) && isset($v[$name]) && $v[$name] == $value) {
+          return $prefix;
+        }
+        else{
+          if($v === $value) {
+            return $prefix;
+          }
+        }
+      }
+    }
+  }
+
+  /**
    * Store the variable with the value in the session scope
    *
    * This function takes a name, value pair and stores this

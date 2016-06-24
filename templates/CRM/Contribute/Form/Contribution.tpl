@@ -254,21 +254,23 @@ cj(document).ready( function() {
 });
 // load panes function calls for snippet based on id of crm-accordion-header
 function loadPanes( id ) {
-    var url = "{/literal}{crmURL p='civicrm/contact/view/contribution' q='snippet=4&formType=' h=0}{literal}" + id;
-    {/literal}
-        {if $contributionMode}
-            url = url + "&mode={$contributionMode}";
-        {/if}
-    {literal}
-   if ( ! cj('div.'+id).html() ) {
-	    var loading = '<img src="{/literal}{$config->resourceBase}i/loading.gif{literal}" alt="{/literal}{ts}loading{/ts}{literal}" />&nbsp;{/literal}{ts}Loading{/ts}{literal}...';
-	    cj('div.'+id).html(loading);
-	    cj.ajax({
-	        url    : url,
-	        success: function(data) { cj('div.'+id).html(data); }
-	        });
-    	}
-	}
+  var url = "{/literal}{crmURL p='civicrm/contact/view/contribution' q="qfKey=`$qfKey`&snippet=4&formType=" h=0}{literal}" + id;
+  {/literal}{if $contributionMode}
+  url = url + "&mode={$contributionMode}";
+  {/if}{literal}
+  if ( ! cj('div.'+id).html() ) {
+    var loading = '<img src="{/literal}{$config->resourceBase}i/loading.gif{literal}" alt="{/literal}{ts}loading{/ts}{literal}" />&nbsp;{/literal}{ts}Loading{/ts}{literal}...';
+    cj('div.'+id).html(loading);
+    window.setTimeout(function(){
+      cj.ajax({
+        url : url
+      })
+      .done(function(data){
+        cj('div.'+id).html(data);
+      });
+    }, 1000);
+  }
+}
 
     var url = "{/literal}{$dataUrl}{literal}";
 
@@ -478,17 +480,17 @@ function buildAmount( priceSetId ) {
 
   var dataUrl = {/literal}"{crmURL h=0 q='snippet=4'}"{literal} + '&priceSetId=' + priceSetId;
 
-  var response = cj.ajax({
-		         url: dataUrl,
-			 async: false
-			}).responseText;
-  cj( fname ).show( ).html( response );
-  // freeze total amount text field.
-  cj( "#total_amount").val( '' );
+  cj.ajax({
+		url: dataUrl,
+  })
+  .done(function(data){
+    cj(fname).html(data).show();
 
-  cj( "#totalAmountORPriceSet" ).hide( );
-  cj( "#totalAmount").hide( );
-  
+    // freeze total amount text field.
+    cj( "#total_amount").val('');
+    cj( "#totalAmountORPriceSet" ).hide();
+    cj( "#totalAmount").hide();
+  });
 }
 function adjustPayment( ) {
 cj('#adjust-option-type').show();		    	    

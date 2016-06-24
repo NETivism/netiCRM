@@ -536,6 +536,9 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
       $this,
       FALSE, 1, $_REQUEST
     );
+    $this->_tagID = CRM_Utils_Request::retrieve( 'tid' , 'Positive',
+      $this 
+    );
 
     /**
      * set the button names

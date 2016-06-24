@@ -617,5 +617,13 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group {
 
     return array($smartGroupId, $ssId);
   }
+
+  static function publicDefaultGroups(&$defaults){
+    $query = CRM_Core_DAO::executeQuery("SELECT id FROM civicrm_group WHERE visibility LIKE 'Public Pages' && is_hidden = 0");
+    while ($query->fetch()) {
+      $defaults['group['.$query->id.']'] = 1;
+    }
+    return $defaults;
+  }
 }
 

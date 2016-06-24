@@ -29,3 +29,7 @@
     </div>
   {/if}
 {/if}
+
+{if !$allowConfirmation}
+  {include file="CRM/Event/Form/Registration/UpdateSeat.tpl"}
+{/if}

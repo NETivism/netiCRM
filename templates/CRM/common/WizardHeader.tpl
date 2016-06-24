@@ -26,7 +26,16 @@
 {if count( $wizard.steps ) > 1}
 {* wizard.style variable is passed by some Wizards to allow alternate styling for progress "bar". *}
 <div id="wizard-steps">
-   <ul class="wizard-bar{if $wizard.style.barClass}-{$wizard.style.barClass}{/if}">
+    {if count( $wizard.steps ) < 5}
+        {assign var="stepType" value="small"}
+    {/if}
+    {if count( $wizard.steps ) >= 5 && count( $wizard.steps ) < 7}
+        {assign var="stepType" value="medium"}
+    {/if}
+    {if count( $wizard.steps ) >= 7}
+        {assign var="stepType" value="big"}
+    {/if}
+   <ol class="wizard-bar{if $wizard.style.barClass}-{$wizard.style.barClass}{/if} {if $stepType}wizard-bar-{$stepType}{/if}">
     {section name=step loop=$wizard.steps}
         {if count ( $wizard.steps ) > 5 }
             {* truncate step titles so header isn't too wide *}
@@ -76,10 +85,10 @@
             {/if}
             {* This code w/in link will submit current form...need to define targetPage hidden field on all forms. onclick="submitCurrentForm('{$form.formName}','{$wizard.steps[step].link}'); return false;" *}
             {* wizard.steps[step].link value is passed for wizards/steps which allow clickable navigation *} 
-            <li class="{$stepClass}">{$stepPrefix}{if $wizard.steps[step].link}<a href="{$wizard.steps[step].link}">{/if}{$title}{if $wizard.steps[step].link}</a>{/if}</li>
+            <li class="{$stepClass}">{if $wizard.steps[step].link}<a href="{$wizard.steps[step].link}">{$title}</a>{else}<span>{$title}</span>{/if}</li>
         {/if} 
     {/section}
-   </ul>
+   </ol>
 </div>
 {if $wizard.style.showTitle}
     <h2 class="wizard-title">{$wizard.currentStepTitle} {ts 1=$wizard.currentStepNumber 2=$wizard.stepCount}(step %1 of %2){/ts}</h2>

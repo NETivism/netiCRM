@@ -195,8 +195,13 @@ class CRM_Contact_Page_View_Summary extends CRM_Contact_Page_View {
     require_once 'CRM/Core/BAO/EntityTag.php';
     $contactTags = CRM_Core_BAO_EntityTag::getContactTags($this->_contactId);
 
-    if (!empty($contactTags)) {
-      $defaults['contactTag'] = implode(', ', $contactTags);
+    if ( !empty( $contactTags ) ) {
+      $contactTagsHtml = array();
+      foreach ($contactTags as $key => $value) {
+        $tagUrl = CRM_Utils_System::url('civicrm/contact/search','reset=1&force=1&tid=' . $key);
+        $contactTagsHtml[] = '<a href="' . $tagUrl . '">' . $value . '</a>';
+      }
+      $defaults['contactTag'] = implode( ', ', $contactTagsHtml );
     }
 
     $defaults['privacy_values'] = CRM_Core_SelectValues::privacy();

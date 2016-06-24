@@ -605,9 +605,17 @@ function on_load_init_check(form)
  */
 function unselectRadio(fieldName, form)
 {
-  for( i=0; i < document.forms[form].elements.length; i++) {
-    if (document.forms[form].elements[i].name == fieldName) {
-      document.forms[form].elements[i].checked = false;
+  if(typeof form !== 'undefined'){
+    for( i=0; i < document.forms[form].elements.length; i++) {
+      if (document.forms[form].elements[i].name == fieldName) {
+        document.forms[form].elements[i].checked = false;
+      }
+    }
+  }
+  else{
+    var fields = document.getElementsByName(fieldName);
+    for( i=0; i < fields.length; i++) {
+      fields[i].checked = false;
     }
   }
   return;

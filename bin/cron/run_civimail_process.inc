@@ -117,12 +117,12 @@ class CiviMailProcessor {
 
                 // CRM-5471: if $matches is empty, it still might be a soft bounce sent
                 // to another address, so scan the body for ‘Return-Path: …bounce-pattern…’
-                if (!$matches and preg_match($rpRegex, $mail->generateBody(), $matches)) {
+                if (!$matches && preg_match($rpRegex, $mail->generateBody(), $matches)) {
                     list($match, $action, $job, $queue, $hash) = $matches;
                 }
 
                 // if all else fails, check Delivered-To for possible pattern
-                if (!$matches and preg_match($regex, $mail->getHeader('Delivered-To'), $matches)) {
+                if (!$matches && preg_match($regex, $mail->getHeader('Delivered-To'), $matches)) {
                     list($match, $action, $job, $queue, $hash) = $matches;
                 }
 
@@ -147,14 +147,14 @@ class CiviMailProcessor {
                     } elseif ($mail->body instanceof ezcMailMultipart) {
                         if ($mail->body instanceof ezcMailMultipartRelated) {
                            foreach ($mail->body->getRelatedParts() as $part) {
-                               if (isset($part->subType) and $part->subType == 'plain') {
+                               if (isset($part->subType) && $part->subType == 'plain') {
                                    $text = $part->text;
                                    break;
                                }
                            }                           
                         } else {   
                            foreach ($mail->body->getParts() as $part) {
-                               if (isset($part->subType) and $part->subType == 'plain') {
+                               if (isset($part->subType) && $part->subType == 'plain') {
                                    $text = $part->text;
                                    break;
                                }

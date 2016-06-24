@@ -335,14 +335,15 @@
       dataUrl = dataUrl + '&discountId=' + discountId;  
     }
 
-    cj.ajax({
-      url: dataUrl,
-      async: false,
-      global: false,
-      success: function ( html ) {
-          cj("#feeBlock").html( html );
-      }
+    window.setTimeout(function(){
+      cj.ajax({
+        url: dataUrl,
+        global: false
+      })
+      .done(function(data){
+        cj("#feeBlock").html(data);
       });
+    }, 1000);
               
         cj("#feeBlock").ajaxStart(function(){
             cj(".disable-buttons input").attr('disabled', true);
@@ -381,27 +382,29 @@
          if ( eventId ) {
            dataUrl = dataUrl + '&eventId=' + eventID;  
          }
-         cj.ajax({
-      url: dataUrl,
-      async: false,
-      global: false,
-            dataType: "json",
-      success: function ( response ) {
-                     
-          if ( response.role ) {
-                    for ( var i in roleGroupMapper ) {
-                        if ( i != 0 ) {
-                            if ( i == response.role ) {
-                                document.getElementById("role_id[" +i+ "]"  ).checked = true;
-                            } else {
-                                document.getElementById("role_id[" +i+ "]"  ).checked = false;
-                            }  
-                            showCustomData( 'Participant', i, {/literal} {$roleCustomDataTypeID} {literal} );
-                        }
-                    }
-                }
-      }
-      });  
+      window.setTimeout(function(){
+      cj.ajax({
+        url: dataUrl,
+        global: false,
+        dataType: "json"
+      })
+      .done(function(response){
+        if ( response.role ) {
+          for ( var i in roleGroupMapper ) {
+            if ( i != 0 ) {
+              if ( i == response.role ) {
+                document.getElementById("role_id[" +i+ "]"  ).checked = true;
+              }
+              else {
+                document.getElementById("role_id[" +i+ "]"  ).checked = false;
+              }  
+              showCustomData( 'Participant', i, {/literal} {$roleCustomDataTypeID} {literal} );
+            }
+          }
+        }
+      });
+      
+      }, 1000);
     }
 
   
@@ -504,18 +507,22 @@
                var fname = '#customData';
            }    
   
-       var response = cj.ajax({url: dataUrl,
-          async: false
-       }).responseText;
-
-       if ( subType != 'null' ) {
-           if ( document.getElementById(roleid).checked == true ) {
+       window.setTimeout(function(){
+         cj.ajax({
+            url: dataUrl
+         })
+         .done(function(response){
+           if ( subType != 'null' ) {
+             if ( document.getElementById(roleid).checked == true ) {
                var response_text = '<div style="display:block;" id = '+subType+'_chk >'+response+'</div>';
                cj( fname ).append(response_text);
-           } else {
+             }
+             else {
                cj('#'+subType+'_chk').remove();
-           }
-       }                 
+             }
+           }                 
+         });
+       }, 1000); 
    }
   cj(function() {        
     {/literal}
@@ -552,10 +559,12 @@
 
 <script type="text/javascript">
 {literal}
-  sendNotification();
-  function sendNotification( ) {
+  sendNotification(false);
+  function sendNotification(checked) {
     cj("#notify").hide();
     cj('#send_confirmation_receipt').hide();
+    cj("#is_notify").attr('checked', false);
+
     var status_id = cj("select#status_id option:selected").val();
     {/literal} 
     var participant_status = {$participantStatus};
@@ -567,8 +576,19 @@
          status == 'Pending from approval' || 
          status == 'Expired' ) {literal}{
       cj("#notify").show();
-      cj("#is_notify").attr('checked',true);
+      if(checked === false || checked === true) {
+        cj("#is_notify").attr('checked', checked);
+      }
+      else{
+        if(status == 'Cancelled' || status == 'Expired') {
+          cj("#is_notify").attr('checked', false);
+        }
+        else{
+          cj("#is_notify").attr('checked', true);
+        }
+      }
       cj('#send_confirmation_receipt').hide();
+      cj('#send_receipt').attr('checked', false);
     }
     else
     if(is_counted){

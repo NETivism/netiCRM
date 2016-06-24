@@ -90,6 +90,7 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
     CRM_Mailing_BAO_Mailing::checkPermission($mailingID);
 
     $defaults = array();
+    $defaults['dedupe_email'] = 1;
 
     if ($mailingID) {
       $mailing = new CRM_Mailing_DAO_Mailing();
@@ -216,6 +217,7 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
       );
     }
 
+    // group
     $inG = &$this->addElement('advmultiselect', 'includeGroups',
       ts('Include Group(s)') . ' ',
       $groups,
@@ -246,6 +248,7 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
     $inG->setButtonAttributes('remove', array('value' => ts('<< Remove')));
     $outG->setButtonAttributes('remove', array('value' => ts('<< Remove')));
 
+    // mailing
     $inM = &$this->addElement('advmultiselect', 'includeMailings',
       ts('INCLUDE Recipients of These Mailing(s)') . ' ',
       $mailings,
@@ -264,15 +267,58 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
         'class' => 'advmultiselect',
       )
     );
-
     $inM->setButtonAttributes('add', array('value' => ts('Add >>')));
     $outM->setButtonAttributes('add', array('value' => ts('Add >>')));
     $inM->setButtonAttributes('remove', array('value' => ts('<< Remove')));
     $outM->setButtonAttributes('remove', array('value' => ts('<< Remove')));
+    
+    // open
+    $inO = &$this->addElement('advmultiselect', 'includeOpened',
+      ts('INCLUDE Recipients who opened these mailing') . ' ',
+      $mailings,
+      array(
+        'size' => 5,
+        'style' => 'width:240px',
+        'class' => 'advmultiselect',
+      )
+    );
+    $outO = &$this->addElement('advmultiselect', 'excludeOpened',
+      ts('EXCLUDE Recipients who opened these mailing') . ' ',
+      $mailings,
+      array(
+        'size' => 5,
+        'style' => 'width:240px',
+        'class' => 'advmultiselect',
+      )
+    );
+    $inO->setButtonAttributes('add', array('value' => ts('Add >>')));
+    $outO->setButtonAttributes('add', array('value' => ts('Add >>')));
+    $inO->setButtonAttributes('remove', array('value' => ts('<< Remove')));
+    $outO->setButtonAttributes('remove', array('value' => ts('<< Remove')));
 
-    require_once 'CRM/Contact/Page/CustomSearch.php';
-    $urls = array('' => ts('- select -'), -1 => ts('CiviCRM Search'),
-    ) + CRM_Contact_Page_CustomSearch::info();
+    // clicked1
+    $inC = &$this->addElement('advmultiselect', 'includeClicked',
+      ts('INCLUDE Recipients who clicked these mailing') . ' ',
+      $mailings,
+      array(
+        'size' => 5,
+        'style' => 'width:240px',
+        'class' => 'advmultiselect',
+      )
+    );
+    $outC = &$this->addElement('advmultiselect', 'excludeClicked',
+      ts('EXCLUDE Recipients who clicked these mailing') . ' ',
+      $mailings,
+      array(
+        'size' => 5,
+        'style' => 'width:240px',
+        'class' => 'advmultiselect',
+      )
+    );
+    $inC->setButtonAttributes('add', array('value' => ts('Add >>')));
+    $outC->setButtonAttributes('add', array('value' => ts('Add >>')));
+    $inC->setButtonAttributes('remove', array('value' => ts('<< Remove')));
+    $outC->setButtonAttributes('remove', array('value' => ts('<< Remove')));
 
     $this->addFormRule(array('CRM_Mailing_Form_Group', 'formRule'));
 
@@ -318,7 +364,7 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
 
     //build hidden smart group. when user want to send  mailing
     //through search contact-> more action -> send Mailing. CRM-3711
-    $groups = array();
+    $rules = array();
     if ($this->_searchBasedMailing && $this->_contactIds) {
       $session = CRM_Core_Session::singleton();
       require_once "CRM/Contact/BAO/Group.php";
@@ -371,8 +417,8 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
       }
 
       //get the base group for this mailing, CRM-3711
-      $groups['base'] = array($values['baseGroup']);
-      $values['includeGroups'][] = $smartGroupId;
+      $rules['groups']['base'] = array($values['baseGroup']);
+      $rules['groups']['include'][] = $smartGroupId;
     }
 
     foreach (array(
@@ -387,62 +433,40 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
     $qf_Group_submit = $this->controller->exportValue($this->_name, '_qf_Group_submit');
     $this->set('name', $params['name']);
 
-    $inGroups = $values['includeGroups'];
-    $outGroups = $values['excludeGroups'];
-    $inMailings = $values['includeMailings'];
-    $outMailings = $values['excludeMailings'];
-
-    if (is_array($inGroups)) {
-      foreach ($inGroups as $key => $id) {
-        if ($id) {
-          $groups['include'][] = $id;
-        }
-      }
-    }
-    if (is_array($outGroups)) {
-      foreach ($outGroups as $key => $id) {
-        if ($id) {
-          $groups['exclude'][] = $id;
-        }
-      }
-    }
-
-    $mailings = array();
-    if (is_array($inMailings)) {
-      foreach ($inMailings as $key => $id) {
-        if ($id) {
-          $mailings['include'][] = $id;
-        }
-      }
-    }
-    if (is_array($outMailings)) {
-      foreach ($outMailings as $key => $id) {
-        if ($id) {
-          $mailings['exclude'][] = $id;
+    foreach($values as $key => $args){
+      if(preg_match('/^(include|exclude)/i', $key)){
+        $rulekey = str_replace(array('include', 'exclude'), '', $key);
+        $rulekey = strtolower($rulekey);
+        $ruletype = strstr($key, 'include') ? 'include' : 'exclude';
+        if (!empty($args) && is_array($args)) {
+          foreach($args as $k => $id){
+            if (!empty($id)) {
+              $rules[$rulekey][$ruletype][] = $id;
+            }
+          }
         }
       }
     }
 
     $session = CRM_Core_Session::singleton();
-    $params['groups'] = $groups;
-    $params['mailings'] = $mailings;
+    $params = array_merge($params, $rules);
 
     if ($this->get('mailing_id')) {
       $ids = array();
       // don't create a new mailing if already exists
       $ids['mailing_id'] = $this->get('mailing_id');
-
-      $groupTableName = CRM_Contact_BAO_Group::getTableName();
-      $mailingTableName = CRM_Mailing_BAO_Mailing::getTableName();
-
+      $tables = array(
+        'groups' => CRM_Contact_BAO_Group::getTableName(),
+        'mailings' =>  CRM_Mailing_BAO_Mailing::getTableName(),
+        'opened' =>  CRM_Mailing_Event_BAO_Opened::getTableName(),
+        'clicked' =>  CRM_Mailing_Event_BAO_TrackableURLOpen::getTableName(),
+      );
       // delete previous includes/excludes, if mailing already existed
       require_once 'CRM/Contact/DAO/Group.php';
-      foreach (array(
-          'groups', 'mailings',
-        ) as $entity) {
+      foreach ($tables as $entity => $table) {
         $mg = new CRM_Mailing_DAO_Group();
         $mg->mailing_id = $ids['mailing_id'];
-        $mg->entity_table = ($entity == 'groups') ? $groupTableName : $mailingTableName;
+        $mg->entity_table = $table;
         $mg->find();
         while ($mg->fetch()) {
           $mg->delete();
@@ -478,8 +502,9 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
     $count = CRM_Mailing_BAO_Recipients::mailingSize($mailing->id);
     $this->set('count', $count);
     $this->assign('count', $count);
-    $this->set('groups', $groups);
-    $this->set('mailings', $mailings);
+    foreach($rules as $key => $rule){
+      $this->set($key, $rule);
+    }
 
     if ($qf_Group_submit) {
       //when user perform mailing from search context

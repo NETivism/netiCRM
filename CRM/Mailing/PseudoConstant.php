@@ -73,6 +73,11 @@ class CRM_Mailing_PseudoConstant extends CRM_Core_PseudoConstant {
   private static $defaultComponent;
 
   /**
+   * default component id's, indexed by component type
+   */
+  private static $bounceType = array();
+
+  /**
    * Get all the mailing components of a particular type
    *
    * @param $type the type of component needed
@@ -210,21 +215,37 @@ class CRM_Mailing_PseudoConstant extends CRM_Core_PseudoConstant {
     static $options;
     if (!$options) {
       $options = array(
+        'delivered' => array(
+          'Y' => ts('Delivered'), 'N' => ts('Not delivered'),
+        ),
         'bounce' => array(
-          'N' => ts('Successful '), 'Y' => ts('Bounced '),
+          'N' => ts('Successful'), 'Y' => ts('Bounced'),
         ),
         'open' => array(
-          'Y' => ts('Opened '), 'N' => ts('Unopened/Hidden '),
+          'Y' => ts('Opened'), 'N' => ts('Unopened/Hidden'),
         ),
         'click' => array(
-          'Y' => ts('Clicked '), 'N' => ts('Not Clicked '),
+          'Y' => ts('Clicked'), 'N' => ts('Not Clicked'),
         ),
         'reply' => array(
-          'Y' => ts('Replied '), 'N' => ts('No Reply '),
+          'Y' => ts('Replied'), 'N' => ts('No Reply'),
         ),
       );
     }
     return $options[$field];
+  }
+
+  public static function bounceType($key = 'id', $label = 'name'){
+    $types = CRM_Core_DAO::commonRetrieveAll('CRM_Mailing_DAO_BounceType');
+    $bounceType =& self::$bounceType;
+    if(!isset($bounceType[$key.$label])){
+      foreach($types as $t){
+        if(isset($t[$key]) && isset($t[$label])){
+          $bounceType[$key.$label][$t[$key]] = $t[$label];
+        }
+      }
+    }
+    return $bounceType[$key.$label];
   }
 }
 

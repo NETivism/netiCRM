@@ -62,7 +62,7 @@
                {$row.other.fileName}
            {/if} 
         </td>
-        <td style='white-space: nowrap'>{if $form.$field}=={$form.$field.html}==&gt;{/if}</td>
+        <td style='white-space: nowrap'>{if $form.$field}=={$form.$field.html}==&gt;{else}{ts}Skip{/ts}{/if}</td>
         <td>
             {if $row.title|substr:0:5 == "Email"   OR 
                 $row.title|substr:0:7 == "Address" OR 

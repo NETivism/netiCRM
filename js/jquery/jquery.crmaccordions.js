@@ -23,21 +23,27 @@
 * | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
 * +--------------------------------------------------------------------+
 */ 
-(function($){ $.fn.crmaccordions = function(){
-	if ($('.crm-accordion-processed').length == 0){
-	  var crmAccordionHeader = $('.crm-accordion-header');  
-	  crmAccordionHeader.live('mouseover',
-		function() {$(this).addClass('crm-accordion-header-hover')});
-	  crmAccordionHeader.live('mouseout',	
-		function() {$(this).removeClass('crm-accordion-header-hover')});
-	  crmAccordionHeader.die('click');
-	  crmAccordionHeader.live('click', function () {
-		$(this).parent().toggleClass('crm-accordion-open');
-		$(this).parent().toggleClass('crm-accordion-closed');
-		//return false to prevent wiring of click event
-		return false;
-		});
-	$('.crm-accordion-wrapper').addClass('crm-accordion-processed'); // only attached to accordions processed during first run
-	};
+(function($){
+
+$.fn.crmaccordions = function(){
+  $('.crm-accordion-header').each(function(){
+    var accordionWrapper = $(this).parent();
+    if(!accordionWrapper.hasClass('crm-accordion-processed')) {
+      $(this).die('click');
+      $(this).live('click', function (e) {
+        accordionWrapper.toggleClass('crm-accordion-open');
+        accordionWrapper.toggleClass('crm-accordion-closed');
+        e.preventDefault();
+      });
+      $(this).live('mouseover', function() {
+        $(this).addClass('crm-accordion-header-hover');
+      });
+      $(this).live('mouseout', function() {
+        $(this).removeClass('crm-accordion-header-hover');
+      });
+      accordionWrapper.addClass('crm-accordion-processed');
+    }
+  });
 };
+
 })(jQuery);

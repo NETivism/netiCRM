@@ -48,12 +48,26 @@
         	<td class="bold"><a href="{crmURL p='civicrm/group/search' q="reset=1&force=1&context=smog&gid=`$row.group_id`"}">{$row.title}</a></td>
 	    	<td>{ts 1=$row.in_method}Added (by %1){/ts}</td> 
             <td>{$row.in_date|crmDate}</td>
-	        <td>{if $permission EQ 'edit'}<a href="{crmURL p='civicrm/contact/view/group' q="gcid=`$row.id`&action=delete&st=o"}" onclick ="return confirm('{ts 1=$displayName 2=$row.title}Are you sure you want to remove %1 from %2?{/ts}');">[ {ts}Remove{/ts} ]</a>{/if}</td> 
+	        <td>{if $permission EQ 'edit'}<a href="{crmURL p='civicrm/contact/view/group' q="gcid=`$row.id`&action=delete&st=o&pageKey=`$pageKey`"}" onclick ="return confirm('{ts 1=$displayName 2=$row.title}Are you sure you want to remove %1 from %2?{/ts}');">[ {ts}Remove{/ts} ]</a>{/if}</td> 
         </tr>
      	{/foreach}
         </table>
 	{/strip}
 	{/if}
+
+    <div class="accordion ui-accordion ui-widget ui-helper-reset">
+      <div class="crm-accordion-wrapper crm-ajax-accordion crm-smartgroup-accordion collapsed">
+        <div class="crm-accordion-header" id="crm-contact_smartgroup" contact_id="{$contactId}">
+          {ts}Smart Group{/ts}
+        </div>
+        <!-- /.crm-accordion-header -->
+        <div class="crm-accordion-body">
+          <div class="crm-contact_smartgroup"></div>
+        </div>
+        <!-- /.crm-accordion-body -->
+      </div>
+      <!-- /.crm-accordion-wrapper -->
+    </div>
     
 	{* Include 'add to new group' form if session has edit contact permissions *}
     {if $permission EQ 'edit'}
@@ -113,3 +127,36 @@
 	{/if}
 </div>
 </div>
+
+
+{literal}
+<script type="text/javascript">
+  // bind first click of accordion header to load crm-accordion-body with snippet
+  // everything else taken care of by cj().crm-accordions()
+  cj(function () {
+    cj('.crm-ajax-accordion .crm-accordion-header').one('click', function () {
+      loadPanes(cj(this));
+    });
+    cj('.crm-ajax-accordion:not(.collapsed) .crm-accordion-header').each(function (index) {
+      loadPanes(cj(this));
+    });
+  });
+
+  // load panes function calls for snippet based on id of crm-accordion-header
+  function loadPanes(paneObj) {
+    var id = paneObj.attr('id');
+    var contactId = paneObj.attr('contact_id');
+
+    if (!cj('div.' + id).html()) {
+      var loading = '<img src="{/literal}{$config->resourceBase}i/loading.gif{literal}" alt="{/literal}{ts escape='js'}loading{/ts}{literal}" />&nbsp;{/literal}{ts escape='js'}Loading{/ts}{literal}...';
+      cj('div.' + id).html(loading);
+      cj.ajax({
+        url: '{/literal}{crmURL p='civicrm/contact/view/smartgroup' q="snippet=4&cid=`$contactId`" h=0}{literal}',
+        success: function (data) {
+          cj('div.' + id).html(data);
+        }
+      });
+    }
+  }
+</script>
+{/literal} 

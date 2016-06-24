@@ -87,6 +87,7 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form {
         $values["recur_installments"] = $dao->installments;
         $values["recur_frequency_unit"] = $dao->frequency_unit;
         $values["recur_frequency_interval"] = $dao->frequency_interval;
+        $values["recur_info_url"] = CRM_Utils_System::url('civicrm/contact/view/contributionrecur', "reset=1&id={$values['contribution_recur_id']}&cid={$values['contact_id']}");
       }
     }
 
@@ -185,6 +186,9 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form {
         "action=delete&reset=1&id={$values['id']}&cid={$values['contact_id']}&context=home"
       );
     }
+    $pdfTypes = CRM_Contribute_Form_Task_PDF::getPrintingTypes();
+    $this->assign('pdfTypes', $pdfTypes);
+
     CRM_Utils_Recent::add($title,
       $url,
       $values['id'],

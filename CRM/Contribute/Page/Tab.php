@@ -268,7 +268,8 @@ class CRM_Contribute_Page_Tab extends CRM_Core_Page {
       CRM_Utils_System::redirectToSSL();
     }
 
-    $controller = new CRM_Core_Controller_Simple('CRM_Contribute_Form_Contribution',
+    $controller = new CRM_Core_Controller_Simple(
+      'CRM_Contribute_Form_Contribution',
       'Create Contribution',
       $this->_action
     );

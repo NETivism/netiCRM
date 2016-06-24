@@ -258,6 +258,11 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
         }
       }
     }
+    else {
+      if (isset($this->_fields['group'])) {
+        CRM_Contact_BAO_Group::publicDefaultGroups($this->_defaults);
+      }
+    }
     //if event is monetary and pay later is enabled and payment
     //processor is not available then freeze the pay later checkbox with
     //default check
@@ -948,7 +953,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
         return empty($errors) ? TRUE : $errors;
       }
     }
-    $self->addFieldRequiredRule($errors);
+    $self->addFieldRequiredRule($errors, $fields ,$files);
 
     // make sure that credit card number and cvv are valid
     require_once 'CRM/Utils/Rule.php';

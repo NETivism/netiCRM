@@ -373,5 +373,178 @@ WHERE  id = %1
       CRM_Core_DAO::$_nullArray
     );
   }
+
+/**
+   * Check to see if we have cache entries for this group
+   * if not, regenerate, else return
+   *
+   * @param int/array $groupID groupID of group that we are checking against
+   *                           if empty, all groups are checked
+   * @param int       $limit   limits the number of groups we evaluate
+   *
+   * @return boolean true if we did not regenerate, false if we did
+   */
+  static function loadAll($groupIDs = null, $limit = 0) {
+    // ensure that all the smart groups are loaded
+    // this function is expensive and should be sparingly used if groupIDs is empty
+
+    if (empty($groupIDs)) {
+      $groupIDClause = null;
+      $groupIDs = array( );
+    }
+    else {
+      if (!is_array($groupIDs)) {
+        $groupIDs = array($groupIDs);
+      }
+
+      // note escapeString is a must here and we can't send the imploded value as second arguement to
+      // the executeQuery(), since that would put single quote around the string and such a string
+      // of comma separated integers would not work.
+      $groupIDString = CRM_Core_DAO::escapeString(implode(', ', $groupIDs));
+
+      $groupIDClause = "AND (g.id IN ( {$groupIDString} ))";
+    }
+
+    $smartGroupCacheTimeout = self::smartGroupCacheTimeout();
+
+    //make sure to give original timezone settings again.
+    $now = CRM_Utils_Date::getUTCTime();
+
+    $limitClause = $orderClause = NULL;
+    if ($limit > 0) {
+      $limitClause = " LIMIT 0, $limit";
+      $orderClause = " ORDER BY g.cache_date";
+    }
+    // We ignore hidden groups and disabled groups
+    $query = "
+SELECT  g.id
+FROM    civicrm_group g
+WHERE   ( g.saved_search_id IS NOT NULL OR g.children IS NOT NULL )
+AND     ( g.is_hidden = 0 OR g.is_hidden IS NULL )
+AND     g.is_active = 1
+AND     ( g.cache_date IS NULL OR
+          ( TIMESTAMPDIFF(MINUTE, g.cache_date, $now) >= $smartGroupCacheTimeout )
+        )
+        $groupIDClause
+        $orderClause
+        $limitClause
+";
+
+    $dao = CRM_Core_DAO::executeQuery($query);
+    $processGroupIDs = array();
+    $refreshGroupIDs = $groupIDs;
+    while ($dao->fetch()) {
+      $processGroupIDs[] = $dao->id;
+
+      // remove this id from refreshGroupIDs
+      foreach ($refreshGroupIDs as $idx => $gid) {
+        if ($gid == $dao->id) {
+          unset($refreshGroupIDs[$idx]);
+          break;
+        }
+      }
+    }
+
+    if (empty($processGroupIDs)) {
+      return TRUE;
+    }
+    else {
+      self::add($processGroupIDs);
+      return FALSE;
+    }
+  }
+
+  static function smartGroupCacheTimeout() {
+    $config = CRM_Core_Config::singleton();
+
+    if (
+      isset($config->smartGroupCacheTimeout) &&
+      is_numeric($config->smartGroupCacheTimeout) &&
+      $config->smartGroupCacheTimeout > 0) {
+      return $config->smartGroupCacheTimeout;
+    }
+
+    // lets have a min cache time of 5 mins if not set
+    return 5;
+  }
+
+  /**
+   * Get all the smart groups that this contact belongs to
+   * Note that this could potentially be a super slow function since
+   * it ensure that all contact groups are loaded in the cache
+   *
+   * @param int     $contactID
+   * @param boolean $showHidden - hidden groups are shown only if this flag is set
+   *
+   * @return array an array of groups that this contact belongs to
+   */
+  static function contactGroup($contactID, $showHidden = FALSE) {
+    if (empty($contactID)) {
+      return;
+    }
+
+    if (is_array($contactID)) {
+      $contactIDs = $contactID;
+    }
+    else {
+      $contactIDs = array($contactID);
+    }
+
+    self::loadAll();
+
+    $hiddenClause = '';
+    if (!$showHidden) {
+      $hiddenClause = ' AND (g.is_hidden = 0 OR g.is_hidden IS NULL) ';
+    }
+
+    $contactIDString = CRM_Core_DAO::escapeString(implode(', ', $contactIDs));
+    $sql = "
+SELECT     gc.group_id, gc.contact_id, g.title, g.children, g.description
+FROM       civicrm_group_contact_cache gc
+INNER JOIN civicrm_group g ON g.id = gc.group_id
+WHERE      g.saved_search_id IS NOT NULL AND
+           gc.contact_id IN ($contactIDString)
+           $hiddenClause
+ORDER BY   gc.contact_id, g.children
+";
+
+    $dao = CRM_Core_DAO::executeQuery($sql);
+    $contactGroup = array();
+    $prevContactID = null;
+    while ($dao->fetch()) {
+      if (
+        $prevContactID &&
+        $prevContactID != $dao->contact_id
+      ) {
+        $contactGroup[$prevContactID]['groupTitle'] = implode(', ', $contactGroup[$prevContactID]['groupTitle']);
+      }
+      $prevContactID = $dao->contact_id;
+      if (!array_key_exists($dao->contact_id, $contactGroup)) {
+        $contactGroup[$dao->contact_id] =
+          array( 'group' => array(), 'groupTitle' => array());
+      }
+
+      $contactGroup[$dao->contact_id]['group'][] =
+        array(
+          'id' => $dao->group_id,
+          'title' => $dao->title,
+          'description' => $dao->description,
+          'children' => $dao->children
+        );
+      $contactGroup[$dao->contact_id]['groupTitle'][] = $dao->title;
+    }
+
+    if ($prevContactID) {
+      $contactGroup[$prevContactID]['groupTitle'] = implode(', ', $contactGroup[$prevContactID]['groupTitle']);
+    }
+
+    if (is_numeric($contactID)) {
+      return $contactGroup[$contactID];
+    }
+    else {
+      return $contactGroup;
+    }
+  }
+
 }
 

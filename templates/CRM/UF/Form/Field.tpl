@@ -121,15 +121,13 @@ function showLabel( ) {
 
     var custom = document.forms.Field['field_name[1]'].value;
     if ( custom.substring( 0, 7 ) == 'custom_' ) {
-        var customFieldLabel = labelValue.split(' :: ', 2);
-        labelValue = customFieldLabel[0];
         if ( document.forms.Field['field_name[2]'].value ) { 
             labelValue = labelValue + ' (' + document.forms.Field['field_name[2]'].options[document.forms.Field['field_name[2]'].selectedIndex].text + ')'; 
         }
     }
     
     var input = document.getElementById('label');
-    input.value = labelValue;
+    input.value = labelValue.indexOf('::') >= 0 ? labelValue.substring(labelValue.indexOf('::') + 2).trim() : labelValue;
 
     /* Code to hide searchable attribute for no searchable fields */
     if (document.getElementsByName("field_name[1]")[0].selectedIndex == -1) {

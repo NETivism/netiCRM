@@ -78,12 +78,14 @@ function buildCustomData( type, subType, subName, cgCount, groupID, isMultiple )
 		}		
 	}
 	
-	var response = cj.ajax({
-						url: dataUrl,
-						async: false
-					}).responseText;
-
-	cj( fname ).html( response );
+  window.setTimeout(function(){
+    var response = cj.ajax({
+      url: dataUrl
+    })
+    .done(function(data){
+      cj(fname).html(data);
+    });
+  }, 1000);
 }
 
 </script>

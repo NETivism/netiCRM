@@ -361,7 +361,10 @@ class CRM_Member_Selector_Search extends CRM_Core_Selector_Base implements CRM_C
       if (!isset($result->owner_membership_id)) {
         // unset renew and followup link for deceased membership
         $currentMask = $mask;
-        if ($result->membership_status == 'Deceased') {
+        if ($result->membership_status == ts('Deceased')) {
+          $currentMask = $currentMask & ~CRM_Core_Action::RENEW & ~CRM_Core_Action::FOLLOWUP;
+        }
+        if ($result->membership_status == ts('Pending')) {
           $currentMask = $currentMask & ~CRM_Core_Action::RENEW & ~CRM_Core_Action::FOLLOWUP;
         }
         $row['action'] = CRM_Core_Action::formLink(self::links('all',

@@ -242,12 +242,6 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
           'title' => ts('Receipt'),
           'fe' => 1,
         ),
-        CRM_Core_Action::DELETE => array(
-          'name' => ts('Delete'),
-          'url' => 'civicrm/contact/view/contribution',
-          'qs' => "reset=1&action=delete&id=%%id%%&cid=%%cid%%&context=%%cxt%%{$extraParams}",
-          'title' => ts('Delete Contribution'),
-        ),
       );
     }
     return self::$_links;

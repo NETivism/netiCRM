@@ -189,6 +189,9 @@ WHERE  inst.report_id = %1";
     // Replace internal header names with friendly ones, where available.
     foreach ($columnHeaders as $header) {
       if (isset($form->_columnHeaders[$header])) {
+        if(CRM_Utils_Array::value('type', $form->_columnHeaders[$header]) == 1024){
+          $headers[] = '"' . $form->_columnHeaders[$header]['title'] . ':' . ts('Currency') . '"';
+        }
         $headers[] = '"' . html_entity_decode(strip_tags($form->_columnHeaders[$header]['title'])) . '"';
       }
     }
@@ -217,7 +220,8 @@ WHERE  inst.report_id = %1";
             }
           }
           elseif (CRM_Utils_Array::value('type', $form->_columnHeaders[$v]) == 1024) {
-            $value = CRM_Utils_Money::format($value);
+            $currency = $config->defaultCurrency;
+            $value = $currency . '","' . $value;
           }
           $displayRows[$v] = '"' . $value . '"';
         }

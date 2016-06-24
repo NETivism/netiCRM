@@ -11,7 +11,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2016-05-31 10:46+0000\n"
+"PO-Revision-Date: 2016-06-24 08:04+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -15734,7 +15734,7 @@ msgstr "活動費用不可低於零。請選擇相應的選項。"
 
 #: CRM/Event/Form/Registration/Register.php
 msgid "Registration information for participant 1 has been saved."
-msgstr "已儲存參加者 %1 的報名資料。"
+msgstr "已儲存參加者 1 的報名資料。"
 
 #: CRM/Event/Form/Registration/Register.php
 msgid "You can also <a href=\"%1\">register another participant</a>."
@@ -44599,14 +44599,14 @@ msgid ""
 msgstr "請注意，由於收據編號必須是連號，當您按下列印收據，系統產生的收據編號是不能修改的。請務必確認您搜尋條件的「收到日期」是正確的，以免產生錯誤的收據編號。"
 
 msgid "Single page with address letter"
-msgstr "適用於開窗信封的收據"
+msgstr "包含開窗信封地址的單聯收據"
 
 msgid ""
 "By default we generate one receipt in every A4 page. After you check this "
 "option, receipt will include default address of donor in every page instead."
 " We will generate their address in the top of page. This is useful when you "
 "want to send by post directly without envelop."
-msgstr "當您勾選此選項，系統將產生 A4 格式收據，並在頁面上方附上捐/繳款人收據寄送地址。您可摺疊 A4 收據，放進開窗信封並讓收件人姓名地址露出。"
+msgstr "當您勾選「包含開窗信封地址」，系統將產生 A4 格式收據，並在頁面上方附上捐/繳款人收據寄送地址。您可摺疊 A4 收據，放進開窗信封並讓收件人姓名地址露出。"
 
 msgid ""
 "Contribution record must dedutible.(base on <a href=\"%1\">Contribution "
@@ -45096,7 +45096,7 @@ msgstr "只有在您符合我們會員資格，才可選擇會員價。"
 
 #: CRM/Price/BAO/Field.php
 msgid "membership required"
-msgstr ""
+msgstr "需要會員資格"
 
 #: CRM/Mailing/BAO/Query.php
 msgid "Delivery Status"
@@ -45155,4 +45155,33 @@ msgstr "此聯絡人不包含在任何智慧群組中"
 msgid ""
 "%1 is included in these Parent group(s) based on belonging to group(s) which"
 " are their children."
-msgstr ""
+msgstr "已經將 %1 群組內的聯絡人也包含近來，因為這是他們的母群組。"
+
+#: CRM/Event/Form/Registration.php
+msgid "Some of the profile fields cannot be configured for this page."
+msgstr "一些資料表單欄位將不會顯示於頁面。"
+
+msgid "Organiser"
+msgstr "主辦"
+
+#: CRM/Contribute/Form/Task/PDF.php
+msgid "Single page with address letter and copied receipt"
+msgstr "包含開窗信封地址與存根聯的收據"
+
+msgid "Apply to window envelope"
+msgstr "開窗信封樣式"
+
+msgid "Contain copied receipt without address"
+msgstr "上下兩聯，無使用開窗信封"
+
+#: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
+msgid "An email with details has been sent to %1 and to %2."
+msgstr "一封 Email 已經寄送至 %1 和 %2。"
+
+#: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
+msgid "An email with details has been sent to %1."
+msgstr "一封 Email 已經寄送至 %1 。"
+
+#: CRM/Core/Page.php
+msgid "Too many connections."
+msgstr "同時間有太多連線，請稍候再試"
