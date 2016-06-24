@@ -1479,6 +1479,9 @@ WHERE  contribution_id = {$this->_id}
       //create contribution.
       require_once 'CRM/Contribute/BAO/Contribution.php';
       $contribution = CRM_Contribute_BAO_Contribution::create($params, $ids);
+      if(empty($this->_id)){
+        $this->_id = $contribution->id;
+      }
 
       // process line items, until no previous line items.
       if (empty($this->_lineItems) && $contribution->id && !empty($lineItem)) {
