@@ -2363,7 +2363,12 @@ table.crm-info-panel .label  {
     font-weight:normal;
 }
 
-.disabled { text-decoration:line-through; }
+.crm-container .disabled { 
+  text-decoration:line-through;
+}
+.crm-container tr.disabled { 
+  background-color: #CCCCCC; 
+}
     #mainTabContainer li.disabled {
         text-decoration: none;
     }
