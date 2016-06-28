@@ -43,16 +43,6 @@ class CRM_Core_Payment_BaseIPN {
   }
 
   function validateData(&$input, &$ids, &$objects, $required = TRUE, $paymentProcessorID = NULL) {
-    // make sure contact exists and is valid
-    require_once 'CRM/Contact/DAO/Contact.php';
-    $contact = new CRM_Contact_DAO_Contact();
-    $contact->id = $ids['contact'];
-    if (!$contact->find(TRUE)) {
-      CRM_Core_Error::debug_log_message("Could not find contact record: $contactID");
-      echo "Failure: Could not find contact record: $contactID<p>";
-      return FALSE;
-    }
-
     // make sure contribution exists and is valid
     require_once 'CRM/Contribute/DAO/Contribution.php';
     $contribution = new CRM_Contribute_DAO_Contribution();
@@ -64,6 +54,19 @@ class CRM_Core_Payment_BaseIPN {
     }
     $contribution->receive_date = CRM_Utils_Date::isoToMysql($contribution->receive_date);
     $contribution->created_date = CRM_Utils_Date::isoToMysql($contribution->created_date);
+
+    // make sure contact exists and is valid
+    require_once 'CRM/Contact/DAO/Contact.php';
+    $contact = new CRM_Contact_DAO_Contact();
+    if (!empty($contribution->contact_id)) {
+      $ids['contact'] = $contribution->contact_id;
+    }
+    $contact->id = $ids['contact'];
+    if (!$contact->find(TRUE)) {
+      CRM_Core_Error::debug_log_message("Could not find contact record: $contactID");
+      echo "Failure: Could not find contact record: $contactID<p>";
+      return FALSE;
+    }
 
     $objects['contact'] = &$contact;
     $objects['contribution'] = &$contribution;
