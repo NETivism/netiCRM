@@ -1849,6 +1849,8 @@ AND civicrm_contact.is_opt_out =0";
         $row['delivered_rate'] = 0;
         $row['bounce_rate'] = 0;
         $row['unsubscribe_rate'] = 0;
+        $row['opened_rate'] = 0;
+        $row['clicked_rate'] = 0;
       }
 
       $row['links'] = array(
@@ -1910,11 +1912,15 @@ AND civicrm_contact.is_opt_out =0";
       $report['event_totals']['delivered_rate'] = (100.0 * $report['event_totals']['delivered']) / $report['event_totals']['queue'];
       $report['event_totals']['bounce_rate'] = (100.0 * $report['event_totals']['bounce']) / $report['event_totals']['queue'];
       $report['event_totals']['unsubscribe_rate'] = (100.0 * $report['event_totals']['unsubscribe']) / $report['event_totals']['queue'];
+      $report['event_totals']['opened_rate'] = $row['opened_rate'];
+      $report['event_totals']['clicked_rate'] = $row['clicked_rate'];
     }
     else {
       $report['event_totals']['delivered_rate'] = 0;
       $report['event_totals']['bounce_rate'] = 0;
       $report['event_totals']['unsubscribe_rate'] = 0;
+      $report['event_totals']['opened_rate'] = 0;
+      $report['event_totals']['clicked_rate'] = 0;
     }
 
     /* Get the click-through totals, grouped by URL */
