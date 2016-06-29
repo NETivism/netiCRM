@@ -45170,3 +45170,19 @@ msgstr ""
 #: CRM/Core/Page.php
 msgid "Too many connections."
 msgstr ""
+
+#: CRM/Mailing/Form/Group.php
+msgid "INCLUDE Recipients who clicked these mailing"
+msgstr ""
+
+#: CRM/Mailing/Form/Group.php
+msgid "EXCLUDE Recipients who clicked these mailing"
+msgstr ""
+
+#: CRM/Mailing/Form/Group.php
+msgid "INCLUDE Recipients who opened these mailing"
+msgstr ""
+
+#: CRM/Mailing/Form/Group.php
+msgid "EXCLUDE Recipients who opened these mailing"
+msgstr ""
