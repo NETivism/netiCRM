@@ -3959,13 +3959,17 @@ CREATE TABLE civicrm_uf_field (
      is_searchable tinyint   DEFAULT 0 COMMENT 'Is this field included search form of profile?',
      location_type_id int unsigned    COMMENT 'Location type of this mapping, if required',
      phone_type_id int unsigned    COMMENT 'Phone Type Id, if required',
+     website_type_id int unsigned    COMMENT 'Website Type Id, if required',
      label varchar(255)    COMMENT 'To save label for fields.',
      field_type varchar(255)    COMMENT 'This field saves field type (ie individual,household.. field etc).',
      is_reserved tinyint    COMMENT 'Is this field reserved for use by some other CiviCRM functionality?' 
 ,
     PRIMARY KEY ( id )
  
- 
+    ,     INDEX IX_website_type_id(
+        website_type_id
+  )
+  
 ,      
      CONSTRAINT FK_civicrm_uf_field_uf_group_id FOREIGN KEY (uf_group_id) REFERENCES civicrm_uf_group(id) ON DELETE CASCADE,      
      CONSTRAINT FK_civicrm_uf_field_location_type_id FOREIGN KEY (location_type_id) REFERENCES civicrm_location_type(id) ON DELETE SET NULL  

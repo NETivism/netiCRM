@@ -165,6 +165,12 @@ class CRM_Core_DAO_UFField extends CRM_Core_DAO
    */
   public $phone_type_id;
   /**
+   * Website Type Id, if required
+   *
+   * @var int unsigned
+   */
+  public $website_type_id;
+  /**
    * To save label for fields.
    *
    * @var string
@@ -289,6 +295,10 @@ class CRM_Core_DAO_UFField extends CRM_Core_DAO
         ) ,
         'phone_type_id' => array(
           'name' => 'phone_type_id',
+          'type' => CRM_Utils_Type::T_INT,
+        ) ,
+        'website_type_id' => array(
+          'name' => 'website_type_id',
           'type' => CRM_Utils_Type::T_INT,
         ) ,
         'label' => array(

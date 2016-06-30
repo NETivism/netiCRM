@@ -1062,6 +1062,7 @@ WHERE civicrm_event.is_active = 1
       }
 
       //send email only when email is present
+      $template->clear_assign(array('customPre', 'customPost', 'additionalCustomPre', 'additionalCustomPost'));
       if (isset($email) || $returnMessageText) {
         $preProfileID = $values['custom_pre_id'];
         $postProfileID = $values['custom_post_id'];
@@ -1584,9 +1585,10 @@ WHERE  id = $cfID
     }
 
     //else build array of Additional participant's information.
+    $template = CRM_Core_Smarty::singleton();
+    $template->clear_assign(array('additionalCustomPre', 'additionalCustomPost'));
     if (count($additionalIDs)) {
       if ($values['additional_custom_pre_id'] || $values['additional_custom_post_id']) {
-        $template = CRM_Core_Smarty::singleton();
         $isCustomProfile = TRUE;
         $i = 1;
         foreach ($additionalIDs as $pId => $cId) {

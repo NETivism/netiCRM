@@ -1072,6 +1072,7 @@ WHERE id={$id}; ";
 
         //website fields
         $fields = array_merge($fields, CRM_Core_DAO_Website::import());
+        $fields['url']['hasWebsiteType'] = TRUE;
 
         if ($contactType != 'All') {
           $fields = array_merge($fields,
@@ -1858,12 +1859,8 @@ ORDER BY civicrm_email.is_primary DESC";
       else {
         if (substr($key, 0, 4) === 'url-') {
           $websiteField = explode('-', $key);
-          if (isset($websiteField[2])) {
-            $data['website'][$websiteField[1]]['website_type_id'] = $value;
-          }
-          else {
-            $data['website'][$websiteField[1]]['url'] = $value;
-          }
+          $data['website'][$websiteField[1]]['website_type_id'] = $websiteField[1];
+          $data['website'][$websiteField[1]]['url'] = $value;
         }
         elseif ($key === 'individual_suffix') {
           $data['suffix_id'] = $value;

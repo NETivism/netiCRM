@@ -492,8 +492,11 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
     require_once 'CRM/Core/OptionGroup.php';
     $defPhoneTypeId = key(CRM_Core_OptionGroup::values('phone_type', FALSE, FALSE, FALSE, ' AND is_default = 1'));
     $defIMProviderId = key(CRM_Core_OptionGroup::values('instant_messenger_service',
-        FALSE, FALSE, FALSE, ' AND is_default = 1'
-      ));
+      FALSE, FALSE, FALSE, ' AND is_default = 1'
+    ));
+    $defWebsiteTypeId = key(CRM_Core_OptionGroup::values('website_type',
+      FALSE, FALSE, FALSE, ' AND is_default = 1'
+    ));
 
     $allBlocks = $this->_blocks;
     if (array_key_exists('Address', $this->_editOptions)) {
@@ -541,6 +544,11 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
         //set default phone type.
         if ($name == 'phone' && $defPhoneTypeId) {
           $defaults[$name][$instance]['phone_type_id'] = $defPhoneTypeId;
+        }
+
+        //set default website type.
+        if ($name == 'website' && $defWebsiteTypeId) {
+          $defaults[$name][$instance]['website_type_id'] = $defWebsiteTypeId;
         }
 
         //set default im provider.
