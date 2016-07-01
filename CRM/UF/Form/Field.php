@@ -107,8 +107,13 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
    * @access public
    */
   public function preProcess() {
-    $this->_gid = CRM_Utils_Request::retrieve('gid', 'Positive', $this);
     $this->_id = CRM_Utils_Request::retrieve('id', 'Positive', $this);
+    if ($this->_id) {
+      $this->_gid = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_UFField', $this->_id, 'uf_group_id');
+    }
+    else{
+      $this->_gid = CRM_Utils_Request::retrieve('gid', 'Positive', $this);
+    }
     if ($this->_gid) {
       $this->_title = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_UFGroup', $this->_gid, 'title');
       CRM_Utils_System::setTitle($this->_title . ' - ' . ts('CiviCRM Profile Fields'));
@@ -634,7 +639,6 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
         //set group type
         CRM_Core_DAO::setFieldValue('CRM_Core_DAO_UFGroup', $this->_gid, 'group_type', $groupType);
       }
-
       CRM_Core_Session::setStatus(ts('Selected Profile Field has been deleted.'));
       return;
     }

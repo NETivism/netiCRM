@@ -71,7 +71,7 @@ class CRM_Core_BAO_UFField extends CRM_Core_DAO_UFField {
    *
    */
   public static function getTitle($id) {
-    return CRM_Core_DAO::getFieldValue('CRM_Core_DAO_UFField', $groupId, 'title');
+    return CRM_Core_DAO::getFieldValue('CRM_Core_DAO_UFField', $id, 'title');
   }
 
   /**
