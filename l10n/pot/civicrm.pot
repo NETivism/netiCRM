@@ -45186,3 +45186,7 @@ msgstr ""
 #: CRM/Mailing/Form/Group.php
 msgid "EXCLUDE Recipients who opened these mailing"
 msgstr ""
+
+#: xml/templates/civicrm_data.tpl
+msgid "Home"
+msgstr ""

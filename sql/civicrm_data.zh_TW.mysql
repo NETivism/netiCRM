@@ -4357,7 +4357,7 @@ INSERT INTO civicrm_domain (name, version, loc_block_id) VALUES (@domainName, '2
 SELECT @domainID := id FROM civicrm_domain where name = 'Default Domain Name';
 
 -- Sample location types
-INSERT INTO civicrm_location_type( label, name, vcard_name, description, is_reserved, is_active, is_default ) VALUES( 'Home', 'Home', 'HOME', '居住地點', 0, 1, 1 );
+INSERT INTO civicrm_location_type( label, name, vcard_name, description, is_reserved, is_active, is_default ) VALUES( '住家', 'Home', 'HOME', '居住地點', 0, 1, 1 );
 INSERT INTO civicrm_location_type( label, name, vcard_name, description, is_reserved, is_active ) VALUES( '工作', 'Work', 'WORK', '工作地點', 0, 1 );
 INSERT INTO civicrm_location_type( label, name, vcard_name, description, is_reserved, is_active ) VALUES( '主要', 'Main', NULL, '主要辦公地點', 0, 1 );
 INSERT INTO civicrm_location_type( label, name, vcard_name, description, is_reserved, is_active ) VALUES( '其他', 'Other', NULL, '其他地點', 0, 1 );
@@ -4912,7 +4912,7 @@ VALUES
    (@option_group_id_accTp, 'Expense', 4, 'Expense',  NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
 
 -- website type
-   (@option_group_id_website, 'Home',     1, 'Home',     NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
+   (@option_group_id_website, '住家',     1, 'Home',     NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
    (@option_group_id_website, '工作',     2, 'Work',     NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
    (@option_group_id_website, 'Facebook', 3, 'Facebook', NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL),
    (@option_group_id_website, 'Twitter',  4, 'Twitter',  NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL),

@@ -11,7 +11,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2016-06-29 06:06+0000\n"
+"PO-Revision-Date: 2016-07-01 07:27+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -45201,3 +45201,7 @@ msgstr "包含開啟這些郵件的收件人"
 #: CRM/Mailing/Form/Group.php
 msgid "EXCLUDE Recipients who opened these mailing"
 msgstr "排除開啟這些郵件的收件人"
+
+#: xml/templates/civicrm_data.tpl
+msgid "Home"
+msgstr "住家"
