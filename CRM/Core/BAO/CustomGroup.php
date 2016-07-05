@@ -673,7 +673,7 @@ SELECT $select
     if ($entityType != 'Contact' && !in_array($entityType, $contactTypes)) {
       CRM_Core_Error::fatal('Invalid Entity Filter');
     }
-    $subTypes = CRM_Contact_BAO_ContactType::subTypes($entityType);
+    $subTypes = CRM_Contact_BAO_ContactType::subTypes($entityType, TRUE);
     if (!in_array($subType, $subTypes)) {
       CRM_Core_Error::fatal('Invalid Filter');
     }
