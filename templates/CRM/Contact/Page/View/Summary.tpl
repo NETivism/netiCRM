@@ -370,9 +370,10 @@
                     cj('.columnheader').click( function( ) {
                         var aTagObj = cj(this).find('a');
                         if ( aTagObj.hasClass( "expanded" ) ) {
-                            cj(this).parent().find('tr:not(".columnheader")').hide( );
+                            cj(this).parent().find('tr:not(".columnheader")').hide();
                         } else {    
-                            cj(this).parent().find('tr:not(".columnheader")').show( );
+                            cj(this).parent().find('tr:not(".columnheader")').show();
+                            cj(this).parent().find('tr:not(".columnheader")').removeClass('hiddenElement');
                         }
                         aTagObj.toggleClass("expanded");
                         return false;
