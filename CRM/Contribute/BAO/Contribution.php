@@ -217,7 +217,7 @@ class CRM_Contribute_BAO_Contribution extends CRM_Contribute_DAO_Contribution {
     }
 
     // calculate receipt id
-    if (!$params['receipt_id'] && empty($params['skipRecentView'])) {
+    if (!$params['receipt_id'] && empty($params['skipRecentView']) && !empty($params['receipt_date'])) {
       $params['receipt_id'] = CRM_Contribute_BAO_Contribution::genReceiptID($params, FALSE);
     }
 
