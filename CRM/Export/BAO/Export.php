@@ -550,6 +550,7 @@ class CRM_Export_BAO_Export {
 
     $componentDetails = $headerRows = $sqlColumns = array();
     $setHeader = TRUE;
+    $fieldOrder = array();
 
     $rowCount = self::EXPORT_ROW_COUNT;
     $offset = 0;
@@ -567,9 +568,6 @@ class CRM_Export_BAO_Export {
       if ($dao->N <= 0) {
         break;
       }
-
-
-      $fieldOrder = array();
 
       while ($dao->fetch()) {
         $count++;
