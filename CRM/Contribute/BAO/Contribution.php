@@ -1977,7 +1977,10 @@ SELECT source_contact_id
     $template->assign('instrument', $instruments[$contribution->payment_instrument_id]);
 
     // refs #18399
-    $template->assign('source' , $contribution->source);
+    $source_name_array = explode(': ', $contribution->source);
+    $prefix = $source_name_array[0].': ';
+    $source_name = str_replace($prefix, '', $contribution->source);
+    $template->assign('source_name' , $source_name);
 
     $entityBlock = array('contact_id' => $contact->id);
     $addresses = CRM_Core_BAO_Address::getValues($entityBlock);
