@@ -1978,9 +1978,11 @@ SELECT source_contact_id
 
     // refs #18399
     $source_name_array = explode(': ', $contribution->source);
-    $prefix = $source_name_array[0].': ';
-    $source_name = str_replace($prefix, '', $contribution->source);
-    $template->assign('source_name' , $source_name);
+    if(count($source_name_array) >= 2){
+      $prefix = $source_name_array[0].': ';
+      $source_name = str_replace($prefix, '', $contribution->source);
+      $template->assign('source_name' , $source_name);
+    }
 
     $entityBlock = array('contact_id' => $contact->id);
     $addresses = CRM_Core_BAO_Address::getValues($entityBlock);
