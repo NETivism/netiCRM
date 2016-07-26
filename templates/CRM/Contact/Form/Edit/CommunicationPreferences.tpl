@@ -131,11 +131,11 @@ cj( function( ) {
             if ( cj(this).val( ) == 4 ) {
                 cj("#greetings1").removeClass( "hiddenElement" );
                 cj("#greetings2").removeClass( "hiddenElement" );
-                cj( "#" + fldName + "_html").removeClass( "hiddenElement" ).show( );
-                cj( "#" + fldName + "_label").removeClass( "hiddenElement" ).show( );
+                cj( "#" + fldName + "_html").removeClass( "hiddenElement" );
+                cj( "#" + fldName + "_label").removeClass( "hiddenElement" );
             } else {
-                cj( "#" + fldName + "_html").hide( );
-                cj( "#" + fldName + "_label").hide( );
+                cj( "#" + fldName + "_html").addClass( "hiddenElement" );
+                cj( "#" + fldName + "_label").addClass( "hiddenElement" );
                 cj( "#" + fldName.slice(0, -3) + "_custom" ).val('');
             }
         });
@@ -151,8 +151,8 @@ function showGreeting( element ) {
     if ( cj( fldName ).val( ) == 4 ) {
         cj("#greetings1").removeClass( "hiddenElement" );
         cj("#greetings2").removeClass( "hiddenElement" );
-        cj( fldName + "_html").removeClass( "hiddenElement" ).show( );
-        cj( fldName + "_label").removeClass( "hiddenElement" ).show( );
+        cj( fldName + "_html").removeClass( "hiddenElement" );
+        cj( fldName + "_label").removeClass( "hiddenElement" );
     }
 }
 
