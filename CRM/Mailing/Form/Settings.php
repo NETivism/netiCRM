@@ -83,7 +83,8 @@ class CRM_Mailing_Form_Settings extends CRM_Core_Form {
       // override_verp must be flipped, as in 3.2 we reverted
       // its meaning to ‘should CiviMail manage replies?’ – i.e.,
       // ‘should it *not* override Reply-To: with VERP-ed address?’
-      $dao->override_verp = !$dao->override_verp;
+      $dao->override_verp = 1;
+      $dao->forward_replies = 1;
       $dao->storeValues($dao, $defaults);
       $defaults['visibility'] = $dao->visibility;
     }
@@ -97,8 +98,8 @@ class CRM_Mailing_Form_Settings extends CRM_Core_Form {
    * @access public
    */
   public function buildQuickForm() {
-    $this->add('hidden', 'override_verp', TRUE);
-    $this->add('hidden', 'forward_replies', 1);
+    $this->addElement('hidden', 'override_verp', 1);
+    $this->addElement('hidden', 'forward_replies', 1);
 
     $this->add('checkbox', 'url_tracking', ts('Track Click-throughs?'));
     $defaults['url_tracking'] = TRUE;
