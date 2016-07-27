@@ -2692,9 +2692,7 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
           $groupTree = array();
           require_once 'CRM/Core/BAO/CustomGroup.php';
           foreach ($componentSubType as $subType) {
-            $subTree = CRM_Core_BAO_CustomGroup::getTree($componentBAOName, CRM_Core_DAO::$_nullObject,
-              $componentId, 0, $values[$subType]
-            );
+            $subTree = CRM_Core_BAO_CustomGroup::getTree($componentBAOName, CRM_Core_DAO::$_nullObject, $componentId, 0, $values[$subType]);
             $groupTree = CRM_Utils_Array::crmArrayMerge($groupTree, $subTree);
           }
           $formattedGroupTree = CRM_Core_BAO_CustomGroup::formatGroupTree($groupTree, 1, CRM_Core_DAO::$_nullObject);

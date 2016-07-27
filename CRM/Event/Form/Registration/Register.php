@@ -245,6 +245,10 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
       require_once 'CRM/Core/BAO/UFGroup.php';
       CRM_Core_BAO_UFGroup::setProfileDefaults($contactID, $fields, $this->_defaults);
 
+      if (!empty($this->_participantId)) {
+        parent::setParticipantCustomDefault($this->_participantId, $fields, $this->_defaults);
+      }
+
       // use primary email address if billing email address is empty
       if (empty($this->_defaults["email-{$this->_bltID}"]) &&
         !empty($this->_defaults["email-Primary"])
