@@ -1319,7 +1319,17 @@ WHERE  v.option_group_id = g.id
     $participantDefault = array();
     CRM_Core_BAO_UFGroup::setComponentDefaults($fields, $participantId, 'Event', $participantDefault);
     foreach($participantDefault as $cfKey => $value) {
-      if(preg_match('/^field\[(\d+)\]\[([^\]]+)\]/i', $cfKey, $matches)) {
+      if($cfKey == 'field' && is_array($value) && is_array($value[$participantId])) {
+        foreach($value[$participantId] as $key => $opt){
+          if(is_array($opt)) {
+            $defaults[$key] = $opt;
+            foreach($opt as $optlabel => $tmp){
+              $defaults[$key."[$optlabel]"] = 1;
+            }
+          }
+        }
+      }
+      elseif(preg_match('/^field\[(\d+)\]\[([^\]]+)\]/i', $cfKey, $matches)) {
         if(!empty($matches[2]) && !empty($value)) {
           $defaults[$matches[2]] = $value;
         }
