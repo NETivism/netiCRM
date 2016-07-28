@@ -147,6 +147,7 @@ class CRM_Event_Form_Registration_AdditionalParticipant extends CRM_Event_Form_R
       $this->_pId = $this->_additionalParticipantId;
       $this->_contactId = CRM_Core_DAO::getFieldValue('CRM_Event_DAO_Participant', $this->_additionalParticipantId, 'contact_id');
       $participantDefaults = CRM_Event_Form_EventFees::setDefaultValues($this);
+      parent::setParticipantCustomDefault($this->_additionalParticipantId, $this->_fields, $participantDefaults);
       $participantDefaults = array_merge($this->_defaults, $participantDefaults);
       // use primary email address if billing email address is empty
       if (empty($this->_defaults["email-{$this->_bltID}"]) &&

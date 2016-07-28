@@ -279,7 +279,12 @@ class CRM_Core_BAO_CustomGroup extends CRM_Core_DAO_CustomGroup {
         $subTypes = array();
       }
       else {
-        $subTypes = explode(',', $subTypes);
+        if(strpos($subTypes, CRM_Core_DAO::VALUE_SEPARATOR) !== -1) {
+          $subTypes = explode(CRM_Core_DAO::VALUE_SEPARATOR, trim($subTypes, CRM_Core_DAO::VALUE_SEPARATOR));
+        }
+        else{
+          $subTypes = explode(',', $subTypes);
+        }
       }
     }
 

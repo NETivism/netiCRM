@@ -1314,5 +1314,17 @@ WHERE  v.option_group_id = g.id
     $this->set('allowWaitlist', $this->_allowWaitlist);
     $this->set('availableRegistrations', $this->_availableRegistrations);
   }
+
+  function setParticipantCustomDefault($participantId, $fields, &$defaults){
+    $participantDefault = array();
+    CRM_Core_BAO_UFGroup::setComponentDefaults($fields, $participantId, 'Event', $participantDefault);
+    foreach($participantDefault as $cfKey => $value) {
+      if(preg_match('/^field\[(\d+)\]\[([^\]]+)\]/i', $cfKey, $matches)) {
+        if(!empty($matches[2]) && !empty($value)) {
+          $defaults[$matches[2]] = $value;
+        }
+      }
+    }
+  }
 }
 
