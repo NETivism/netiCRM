@@ -119,7 +119,7 @@
 	    	<td class="status-removed">{ts 1=$row.out_method}Removed (by %1){/ts}</td> 
             <td>{$row.date_added|crmDate}</td>
             <td>{$row.out_date|crmDate}</td>
-	        <td>{if $permission EQ 'edit'}<a href="{crmURL p='civicrm/contact/view/group' q="gcid=`$row.id`&action=delete&st=i"}" onclick ="return confirm('{ts 1=$displayName 2=$row.title}Are you sure you want to add %1 back into %2?{/ts}');">[ {ts}Rejoin Group{/ts} ]</a>{/if}</td>
+	        <td>{if $permission EQ 'edit'}<a href="{crmURL p='civicrm/contact/view/group' q="gcid=`$row.id`&action=delete&st=i&pageKey=`$pageKey`"}" onclick ="return confirm('{ts 1=$displayName 2=$row.title}Are you sure you want to add %1 back into %2?{/ts}');">[ {ts}Rejoin Group{/ts} ]</a>{/if}</td>
     	</tr>
     {/foreach}
    	</table>
