@@ -634,9 +634,6 @@ div.block-civicrm li, .crm-container ul li, .crm-container ul.treeview li {
     padding-top: 5px;
     margin-bottom: 4px
 }
-.crm-pager a {
-    color: #FAFAFA;
-}
 .crm-pager input {
     text-align: center;
 }
