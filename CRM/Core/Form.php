@@ -802,9 +802,9 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
     $this->addButtons($buttons);
   }
 
-  function addDateRange($name, $label = 'From:', $dateFormat = 'searchDate', $required = FALSE) {
-    $this->addDate($name . '_from', $label, $required, array('formatType' => $dateFormat));
-    $this->addDate($name . '_to', ts('To:'), $required, array('formatType' => $dateFormat));
+  function addDateRange($name, $label = 'From', $dateFormat = 'searchDate', $required = FALSE) {
+    $this->addDate($name . '_from', ts($label), $required, array('formatType' => $dateFormat));
+    $this->addDate($name . '_to', ts('To'), $required, array('formatType' => $dateFormat));
   }
 
   function addSelect($name, $label, $prefix = NULL, $required = NULL, $extra = NULL, $select = '- select -') {
