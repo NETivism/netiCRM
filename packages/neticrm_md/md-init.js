@@ -6,9 +6,9 @@
   var wlPathArr = window.location.pathname.split("/");
   var wlSearch = window.location.search;
   var wlPathSearch = wlPath + wlSearch;
-  console.log(wlPath);
-  console.log(wlSearch);
-  console.log(wlPathSearch);
+  // console.log(wlPath);
+  // console.log(wlSearch);
+  // console.log(wlPathSearch);
 
   // Get viewport
   var viewport;
@@ -114,13 +114,20 @@
   }
 
   var isFrontend = function() {
+    var result = false;
     var allowPath = [
       "/civicrm/event/register",
       "/civicrm/event/info",
       "/civicrm/contribute/transact",
       "/civicrm/profile/create"
     ];
-    var result = $.inArray(wlPath, allowPath) != -1 ? true : false;
+    
+    for (var i = 0; i < allowPath.length; i++) {
+      if (wlPath.indexOf(allowPath[i]) != -1) {
+        result = true;
+        break;
+      }
+    }
 
     return result;
   }
