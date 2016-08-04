@@ -3,6 +3,7 @@ class CRM_Core_FieldHierarchy {
   public static function arrange($fields){
     $priority = array(
       'reserved' => array(
+        'do_not_import' => 1,
         'id' => 1,
         'external_identifier' => 1,
       ),
