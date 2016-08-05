@@ -422,25 +422,29 @@ function countSelectedCheckboxes(fldPrefix, form) {
  * Function to enable task action select
  */
 function toggleTaskAction( status ) {
-    var radio_ts = document.getElementsByName('radio_ts');
-    if (!radio_ts[1]) {
-	radio_ts[0].checked = true;
-    }
-    if ( radio_ts[0].checked || radio_ts[1].checked ) {
-	status = true;
-    }
+  var $radio_ts_all = cj("input[name=radio_ts][value=ts_all]");
+  var $radio_ts_sel = cj("input[name=radio_ts][value=ts_sel]");
 
-    var formElements = ['task', 'Go', 'Print'];
-    for(var i=0; i<formElements.length; i++ ) {
-	var element = document.getElementById( formElements[i] );
-	if ( element ) {
-	    if ( status ) {
-		element.disabled = false;
-	    } else {
-		element.disabled = true;
-	    }
-	}
+  if (!$radio_ts_sel.length) {
+    $radio_ts_all.attr("checked", "checked");
+  }
+
+  if ($radio_ts_all.attr("checked") == 'checked' || $radio_ts_sel.attr("checked") == 'checked') {
+    status = true;
+  }
+
+  var formElements = ['task', 'Go', 'Print'];
+  for(var i=0; i<formElements.length; i++ ) {
+    var $ele = cj('#' + formElements[i]);
+    if ($ele.length) {
+      if (status) {
+        $ele.removeAttr('disabled');
+      }
+      else{
+        $ele.attr('disabled', 'disabled');
+      }
     }
+  }
 }
 
 /**
