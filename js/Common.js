@@ -399,9 +399,11 @@ function hide(block_id)
  */
 function toggleCheckboxVals(fldPrefix,object) {
     if ( object.id == 'toggleSelect' && cj(object).is(':checked') ) {
-       cj( 'Input[id*="' + fldPrefix + '"],Input[id*="toggleSelect"]').attr('checked', true);
+       cj('input[id*="' + fldPrefix + '"],Input[id*="toggleSelect"]').attr('checked', true);
+       cj('input[name=radio_ts][value=ts_all]').removeAttr('checked');
+       cj('input[name=radio_ts][value=ts_sel]').trigger('click');
     } else {
-       cj( 'Input[id*="' + fldPrefix + '"],Input[id*="toggleSelect"]').attr('checked', false);
+       cj('input[id*="' + fldPrefix + '"],Input[id*="toggleSelect"]').attr('checked', false);
     }
 }
 
