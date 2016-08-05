@@ -37,18 +37,20 @@
     </span>   
             
 </td>
-{literal}
 <script type="text/javascript">
-    var val       = document.getElementById("{/literal}{$relativeName}{literal}").value;
-    var fieldName = "{/literal}{$relativeName}{literal}";
-    showAbsoluteRange( val, fieldName );
-
-    function showAbsoluteRange( val, fieldName ) {
-        if ( val == "0" ) {
-            cj('#absolute_'+ fieldName).show();
-        } else {
-            cj('#absolute_'+ fieldName).hide();
-        }
+{literal}
+cj(document).ready(function($){
+  var id = "{/literal}{$relativeName}{literal}";
+  $("#"+id).change(function(){
+    var val = this.value;
+    if (val == "0") {
+      $('#absolute_' + id).show();
     }
-</script>
+    else{
+      $('#absolute_' + id).hide();
+    }
+  });
+  $("#"+id).trigger('change');
+});
 {/literal}        
+</script>
