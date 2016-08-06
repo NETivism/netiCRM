@@ -48,7 +48,7 @@ class CRM_Contribute_Form_ContributionCharts extends CRM_Core_Form {
    * @var string
    */
   protected $_chartType = NULL;
-  
+
   function preProcess() {
     $this->_year = CRM_Utils_Request::retrieve('year', 'Int', $this);
     $this->postProcess();
@@ -93,28 +93,41 @@ class CRM_Contribute_Form_ContributionCharts extends CRM_Core_Form {
     else{
       $selectedYear = date('Y');
     }
+    $group = 'Contribution Chart';
+    $path = get_class($this);
+    $components = CRM_Core_Component::getEnabledComponents();
 
-    $chartInfoYearly = CRM_Contribute_BAO_Contribution_Utils::contributionChartYearly();
-    $this->_years = $chartInfoYearly['By Year'];
+    $chartYears = CRM_Core_BAO_Cache::getItem($group, $path.'_chartYearsList', $components['CiviContribute']->componentID);
+    $chartData = CRM_Core_BAO_Cache::getItem($group, $path.'_chartData'.$selectedYear, $components['CiviContribute']->componentID);
+    $chartTime = CRM_Core_BAO_Cache::getItem($group, $path.'_chartTime'.$selectedYear, $components['CiviContribute']->componentID);
+    $abbrMonthNames = array();
+    for ($i = 0; $i < 12; $i++) {
+      $abbrMonthNames[$i] = strftime('%b', mktime(0, 0, 0, $i+1, 10, 1970));
+    }
 
-    //take contribution information monthly
-    $chartInfoMonthly = CRM_Contribute_BAO_Contribution_Utils::contributionChartMonthly($selectedYear);
-    $chartData = $abbrMonthNames = array();
-    if (is_array($chartInfoMonthly)) {
-      for ($i = 1; $i <= 12; $i++) {
-        $abbrMonthNames[$i] = strftime('%b', mktime(0, 0, 0, $i, 10, 1970));
+    if(empty($chartData) || time() - $chartTime > 86400) {
+      $chartInfoYearly = CRM_Contribute_BAO_Contribution_Utils::contributionChartYearly();
+      $this->_years = $chartInfoYearly['By Year'];
+
+      //take contribution information monthly
+      $chartInfoMonthly = CRM_Contribute_BAO_Contribution_Utils::contributionChartMonthly($selectedYear);
+      $chartData = $abbrMonthNames = array();
+      if (is_array($chartInfoMonthly)) {
+        foreach ($chartInfoMonthly['By Month'] as $value) {
+          $chartData[] = $value;
+        }
       }
-
-      foreach ($abbrMonthNames as $monthKey => $monthName) {
-        $val = CRM_Utils_Array::value($monthKey, $chartInfoMonthly['By Month'], 0);
-        //build the params for chart.
-        $chartData[$monthName] = $val;
-      }
+      $chartYears = CRM_Core_BAO_Cache::setItem($this->_years, $group, $path.'_chartYearsList', $components['CiviContribute']->componentID);
+      $chartData = CRM_Core_BAO_Cache::setItem($chartData, $group, $path.'_chartData'.$selectedYear, $components['CiviContribute']->componentID);
+      $chartTime = CRM_Core_BAO_Cache::setItem(time(), $group, $path.'_chartTime'.$selectedYear, $components['CiviContribute']->componentID);
+    }
+    else{
+      $this->_years = $chartYears;
     }
     if(!empty($chartData)){
       $chart = array(
         'type' => 'bar',
-        'labels' => json_encode(array_keys($chartData)),
+        'labels' => json_encode($abbrMonthNames),
         'series' => json_encode(array(array_values($chartData))),
       );
       $this->assign('chart', $chart);
