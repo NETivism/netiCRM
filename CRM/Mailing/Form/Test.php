@@ -302,9 +302,9 @@ class CRM_Mailing_Form_Test extends CRM_Core_Form {
     $session = CRM_Core_Session::singleton();
     if (!empty($testParams['emails'])) {
       $query = "
-                      SELECT e.id, e.contact_id, e.email  
-                      FROM civicrm_email e INNER JOIN civicrm_contact c ON c.id = e.contact_id 
-                      WHERE civicrm_email.email IN ($emails) AND c.is_deleted = 0";
+                      SELECT e.id, e.contact_id, e.email
+                      FROM civicrm_email e INNER JOIN civicrm_contact c ON c.id = e.contact_id
+                      WHERE e.email IN ($emails) AND c.is_deleted = 0";
 
       $dao = CRM_Core_DAO::executeQuery($query);
       $emailDetail = array();
