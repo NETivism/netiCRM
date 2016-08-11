@@ -393,7 +393,7 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
       $customFields = array_merge($customFields, $addressCustomFields);
 
       while ($field->fetch()) {
-        $name = $title = $locType = $phoneType = '';
+        $name = $title = $phoneType = '';
         $name = $field->field_name;
         $title = $field->label;
 
@@ -407,14 +407,15 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
           $name = "address_{$name}";
         }
 
-        if ($field->location_type_id) {
+        if ($field->field_name == 'url') {
+          $name .= "-{$field->website_type_id}";
+        }
+        elseif (!empty($field->location_type_id)) {
           $name .= "-{$field->location_type_id}";
-          $locType = " ( {$locationType[$field->location_type_id]} ) ";
         }
         else {
           if (in_array($field->field_name, $locationFields) || $addressCustom) {
             $name .= '-Primary';
-            $locType = ' ( Primary ) ';
           }
         }
 
@@ -442,6 +443,7 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
           'in_selector' => $field->in_selector,
           'rule' => CRM_Utils_Array::value('rule', $importableFields[$field->field_name]),
           'location_type_id' => $field->location_type_id,
+          'website_type_id' => isset($field->website_type_id) ? $field->website_type_id : NULL,
           'phone_type_id' => isset($field->phone_type_id) ? $field->phone_type_id : NULL,
           'group_id' => $group->id,
           'add_to_group_id' => $group->add_to_group_id,
@@ -1743,10 +1745,6 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
       );
 
       $form->addRule($name, ts('Enter a valid Website.'), 'url');
-
-      //Website type select
-      $form->addElement('select', $name . '-website_type_id', NULL, CRM_Core_PseudoConstant::websiteType());
-      // added because note appeared as a standard text input
     }
     elseif ($fieldName == 'note') {
       $form->add('textarea', $name, $title, $attributes, $required);
@@ -2112,13 +2110,10 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
           }
           else {
             if (is_array($details)) {
-              if ($fieldName === 'url') {
-                if (!empty($details['website'])) {
-                  foreach ($details['website'] as $val) {
-                    $defaults[$fldName] = $val['url'];
-                    $defaults[$fldName . '-website_type_id'] = $val['website_type_id'];
-                  }
-                }
+              if ($fieldName === 'url' 
+                && !empty($details['website']) 
+                && !empty($details['website'][$locTypeId])) {
+                $defaults[$fldName] = CRM_Utils_Array::value('url', $details['website'][$locTypeId]);
               }
             }
           }
@@ -2697,9 +2692,7 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
           $groupTree = array();
           require_once 'CRM/Core/BAO/CustomGroup.php';
           foreach ($componentSubType as $subType) {
-            $subTree = CRM_Core_BAO_CustomGroup::getTree($componentBAOName, CRM_Core_DAO::$_nullObject,
-              $componentId, 0, $values[$subType]
-            );
+            $subTree = CRM_Core_BAO_CustomGroup::getTree($componentBAOName, CRM_Core_DAO::$_nullObject, $componentId, 0, $values[$subType]);
             $groupTree = CRM_Utils_Array::crmArrayMerge($groupTree, $subTree);
           }
           $formattedGroupTree = CRM_Core_BAO_CustomGroup::formatGroupTree($groupTree, 1, CRM_Core_DAO::$_nullObject);

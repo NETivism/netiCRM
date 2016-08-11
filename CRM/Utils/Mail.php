@@ -98,13 +98,14 @@ class CRM_Utils_Mail {
     $headers['Content-Transfer-Encoding'] = 'quoted-printable';
     $headers['Return-Path'] = CRM_Utils_Array::value('returnPath', $params);
     $headers['Reply-To'] = CRM_Utils_Array::value('replyTo', $params, $from);
+    $headers['Sender'] = CRM_Utils_Array::value('replyTo', $params, $from);
     $headers['Date'] = date('r');
     if (CRM_Utils_Array::value('autoSubmitted', $params)) {
       $headers['Auto-Submitted'] = "Auto-Generated";
     }
 
     //make sure we has to have space, CRM-6977
-    foreach (array('From', 'To', 'Cc', 'Bcc', 'Reply-To', 'Return-Path') as $fld) {
+    foreach (array('From', 'To', 'Cc', 'Bcc', 'Reply-To', 'Return-Path', 'Sender') as $fld) {
       $headers[$fld] = str_replace('"<', '" <', $headers[$fld]);
     }
 

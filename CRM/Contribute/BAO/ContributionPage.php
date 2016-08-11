@@ -200,6 +200,7 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
       //IF Individual type not present in profile then it is consider as Organization data.
       require_once 'CRM/Core/BAO/UFGroup.php';
       $userID = $contactID;
+      $template->clear_assign(array('customPre', 'customPost'));
       if ($preID = CRM_Utils_Array::value('custom_pre_id', $values)) {
         if (CRM_Utils_Array::value('related_contact', $values)) {
           $preProfileTypes = CRM_Core_BAO_UFGroup::profileGroups($preID);

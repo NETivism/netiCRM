@@ -186,7 +186,6 @@
 	}
   cj(document).ready(function(){
     {/literal}
-    {include file="CRM/common/chosen.tpl" selector='.crm-report-criteria-filter select.form-select:not([name$=op])' nowrapper=1}
     {include file="CRM/common/chosen.tpl" selector='select#groups' nowrapper=1}
     {literal}
   });

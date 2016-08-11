@@ -974,7 +974,8 @@ class ezcMailImapTransport
             if ( $ids !== "" )
             {
                 $messageList = explode( ' ', $ids , 201);
-                array_pop($messageList);
+                // #18265, don't know why we need pop first mail, fix that
+                // array_pop($messageList);
             }
         }
         // skip the OK response ("{$tag} OK Search completed.")

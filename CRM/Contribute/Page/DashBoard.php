@@ -110,7 +110,14 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
 
     // block recur
     $template =& CRM_Core_Smarty::singleton();
-    $summary = CRM_Contribute_BAO_ContributionRecur::currentRunningSummary();
+    $components = CRM_Core_Component::getEnabledComponents();
+    $path = get_class($this);
+    $summary = CRM_Core_BAO_Cache::getItem('Contribution Chart', $path.'_currentRunningSummary', $components['CiviContribute']->componentID);
+    $summaryTime = CRM_Core_BAO_Cache::getItem('Contribution Chart', $path.'_currentRunningSummary_time', $components['CiviContribute']->componentID);
+    if(empty($summary) || time() - $summaryTime > 86400) {
+      $summary = CRM_Contribute_BAO_ContributionRecur::currentRunningSummary();
+      CRM_Core_BAO_Cache::setItem($summary, 'Contribution Chart', $path.'_currentRunningSummary', $components['CiviContribute']->componentID);
+    }
     if(!empty($summary)){
       $template->assign('summaryRecur', $summary);
       $template->assign('frequencyUnit', 'month');

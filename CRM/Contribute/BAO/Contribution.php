@@ -2236,7 +2236,7 @@ SELECT source_contact_id
         else {
           $prefix = 'M';
         }
-        if (strstr($config->receiptPrefix, '%')) {
+        if(!empty($config->receiptPrefix)){
           $prefix .= CRM_Utils_Date::customFormat($contribution->receipt_date, $config->receiptPrefix);
         }
 
@@ -2279,7 +2279,7 @@ SELECT source_contact_id
   }
 
   function lastReceiptID($prefix) {
-    $query = "SELECT receipt_id FROM civicrm_contribution WHERE UPPER(receipt_id) LIKE UPPER('{$prefix}%') AND receipt_id IS NOT NULL AND receipt_id != '' ORDER BY receipt_id DESC";
+    $query = "SELECT receipt_id FROM civicrm_contribution WHERE UPPER(receipt_id) LIKE UPPER('{$prefix}-%') AND receipt_id IS NOT NULL AND receipt_id != '' ORDER BY receipt_id DESC";
     $last = CRM_Core_DAO::singleValueQuery($query);
 
     if ($last) {

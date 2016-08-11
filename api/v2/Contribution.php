@@ -314,7 +314,15 @@ function _civicrm_contribute_check_params(&$params) {
   }
 
   foreach ($required as $field => $eitherField) {
-    if (!CRM_Utils_Array::value($field, $params)) {
+    if ($field == 'total_amount') {
+      $amount = CRM_Utils_Array::value($field, $params);
+      if(empty($amount) && $amount !== 0 && $amount !== "0") {
+        $valid = FALSE;
+        $error .= $field;
+        break;
+      }
+    }
+    elseif (!CRM_Utils_Array::value($field, $params)) {
       if ($eitherField && CRM_Utils_Array::value($eitherField, $params)) {
         continue;
       }

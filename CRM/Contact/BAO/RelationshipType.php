@@ -102,18 +102,28 @@ class CRM_Contact_BAO_RelationshipType extends CRM_Contact_DAO_RelationshipType 
       $params['label_b_a'] = $params['name_b_a'];
     }
 
+    // action is taken depending upon the mode
+    $relationshipType = new CRM_Contact_DAO_RelationshipType();
+    if(CRM_Utils_Array::value('relationshipType', $ids)) {
+      $relationshipType->id = CRM_Utils_Array::value('relationshipType', $ids);
+      $relationshipType->find(true);
+    }
+
     // set label to name if it's not set - but *only* for
     // ADD action. CRM-3336 as part from (CRM-3522)
     // Modify by junsuwhy in NetiCRM, refs #15343 
-    if (!CRM_Utils_Array::value('name_a_b', $params) && CRM_Utils_Array::value('label_a_b', $params)) {
-      $params['name_a_b'] = $params['label_a_b'];
+    if ($relationshipType->id && ($relationshipType->is_reserved || !preg_match('/[^A-Za-z0-9 ]/', $relationshipType->name_a_b))) {
+      $params['name_a_b'] = $relationshipType->name_a_b;
+      $params['name_b_a'] = $relationshipType->name_b_a;
     }
-    if (!CRM_Utils_Array::value('name_b_a', $params) && CRM_Utils_Array::value('label_b_a', $params)) {
-      $params['name_b_a'] = $params['label_b_a'];
+    else{
+      if (!CRM_Utils_Array::value('name_a_b', $params) && CRM_Utils_Array::value('label_a_b', $params)) {
+        $params['name_a_b'] = $params['label_a_b'];
+      }
+      if (!CRM_Utils_Array::value('name_b_a', $params) && CRM_Utils_Array::value('label_b_a', $params)) {
+        $params['name_b_a'] = $params['label_b_a'];
+      }
     }
-
-    // action is taken depending upon the mode
-    $relationshipType = new CRM_Contact_DAO_RelationshipType();
 
     $relationshipType->copyValues($params);
 
@@ -121,8 +131,6 @@ class CRM_Contact_BAO_RelationshipType extends CRM_Contact_DAO_RelationshipType 
     if (!strlen(trim($strName = CRM_Utils_Array::value('name_b_a', $params)))) {
       $relationshipType->name_b_a = CRM_Utils_Array::value('name_a_b', $params);
     }
-
-    $relationshipType->id = CRM_Utils_Array::value('relationshipType', $ids);
 
     return $relationshipType->save();
   }

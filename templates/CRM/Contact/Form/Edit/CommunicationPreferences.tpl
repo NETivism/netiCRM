@@ -129,13 +129,13 @@ cj( function( ) {
         cj( "#" + fields[i] + "_id").change( function( ) {
             var fldName = cj(this).attr( 'id' );
             if ( cj(this).val( ) == 4 ) {
-                cj("#greetings1").show( );
-                cj("#greetings2").show( );
-                cj( "#" + fldName + "_html").show( );
-                cj( "#" + fldName + "_label").show( );
+                cj("#greetings1").removeClass( "hiddenElement" );
+                cj("#greetings2").removeClass( "hiddenElement" );
+                cj( "#" + fldName + "_html").removeClass( "hiddenElement" );
+                cj( "#" + fldName + "_label").removeClass( "hiddenElement" );
             } else {
-                cj( "#" + fldName + "_html").hide( );
-                cj( "#" + fldName + "_label").hide( );
+                cj( "#" + fldName + "_html").addClass( "hiddenElement" );
+                cj( "#" + fldName + "_label").addClass( "hiddenElement" );
                 cj( "#" + fldName.slice(0, -3) + "_custom" ).val('');
             }
         });
@@ -143,16 +143,16 @@ cj( function( ) {
 });
 
 function showGreeting( element ) {
-    cj("#" + element ).show( );
+    cj("#" + element ).removeClass( "hiddenElement" ).show( );
     cj("#" + element + '_display' ).hide( );
     
     // TO DO fix for custom greeting
     var fldName = '#' + element + '_id';
     if ( cj( fldName ).val( ) == 4 ) {
-        cj("#greetings1").show( );
-        cj("#greetings2").show( );
-        cj( fldName + "_html").show( );
-        cj( fldName + "_label").show( );
+        cj("#greetings1").removeClass( "hiddenElement" );
+        cj("#greetings2").removeClass( "hiddenElement" );
+        cj( fldName + "_html").removeClass( "hiddenElement" );
+        cj( fldName + "_label").removeClass( "hiddenElement" );
     }
 }
 

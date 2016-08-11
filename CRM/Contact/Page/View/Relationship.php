@@ -290,7 +290,8 @@ class CRM_Contact_Page_View_Relationship extends CRM_Core_Page {
       );
     }
     else {
-      $url = CRM_Utils_System::url('civicrm/contact/view', 'action=browse&selectedChild=rel');
+      $cid = CRM_Utils_Request::retrieve('cid', 'Integer', $this, FALSE);
+      $url = CRM_Utils_System::url('civicrm/contact/view', 'action=browse&selectedChild=rel&cid='.$cid);
     }
     $session = CRM_Core_Session::singleton();
     $session->pushUserContext($url);

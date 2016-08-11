@@ -279,7 +279,12 @@ class CRM_Core_BAO_CustomGroup extends CRM_Core_DAO_CustomGroup {
         $subTypes = array();
       }
       else {
-        $subTypes = explode(',', $subTypes);
+        if(strpos($subTypes, CRM_Core_DAO::VALUE_SEPARATOR) !== -1) {
+          $subTypes = explode(CRM_Core_DAO::VALUE_SEPARATOR, trim($subTypes, CRM_Core_DAO::VALUE_SEPARATOR));
+        }
+        else{
+          $subTypes = explode(',', $subTypes);
+        }
       }
     }
 
@@ -354,36 +359,38 @@ LEFT JOIN civicrm_custom_field ON (civicrm_custom_field.custom_group_id = civicr
       $in = "'$entityType'";
     }
 
-
-
     if (!empty($subTypes)) {
       foreach ($subTypes as $key => $subType) {
-        $subTypeClauses[] = self::whereListHas("civicrm_custom_group.extends_entity_column_value", self::validateSubTypeByEntity($entityType, $subType));
+        $validatedSubType = self::validateSubTypeByEntity($entityType, $subType);
+        if ($validatedSubType) {
+          $subTypeClauses[] = self::whereListHas("civicrm_custom_group.extends_entity_column_value", $validatedSubType);
+        }
       }
-      $subTypeClause = '(' .  implode(' OR ', $subTypeClauses) . ')';
-      if (!$onlySubType) {
-        $subTypeClause = '(' . $subTypeClause . '  OR civicrm_custom_group.extends_entity_column_value IS NULL )';
-      }
+      if(!empty($subTypeClauses)) {
+        $subTypeClause = '(' .  implode(' OR ', $subTypeClauses) . ')';
+        if (!$onlySubType) {
+          $subTypeClause = '(' . $subTypeClause . '  OR civicrm_custom_group.extends_entity_column_value IS NULL )';
+        }
 
-      $strWhere = "
- WHERE civicrm_custom_group.is_active = 1
-   AND civicrm_custom_field.is_active = 1
-   AND civicrm_custom_group.extends IN ($in)
-   AND $subTypeClause
- ";
-      if ($subName) {
-        $strWhere .= " AND civicrm_custom_group.extends_entity_column_id = {$subName} ";
+        $strWhere = "
+   WHERE civicrm_custom_group.is_active = 1
+     AND civicrm_custom_field.is_active = 1
+     AND civicrm_custom_group.extends IN ($in)
+     AND $subTypeClause
+   ";
+        if ($subName) {
+          $strWhere .= " AND civicrm_custom_group.extends_entity_column_id = {$subName} ";
+        }
       }
     }
-    else {
+
+    if(empty($strWhere)) {
       $strWhere = "
 WHERE civicrm_custom_group.is_active = 1
   AND civicrm_custom_field.is_active = 1
   AND civicrm_custom_group.extends IN ($in)
+  AND civicrm_custom_group.extends_entity_column_value IS NULL
 ";
-      if (!$returnAll) {
-        $strWhere .= "AND civicrm_custom_group.extends_entity_column_value IS NULL";
-      }
     }
 
     $params = array();
@@ -458,7 +465,10 @@ ORDER BY civicrm_custom_group.weight,
             // This is an old bit of code - per the CRM number & probably does not work reliably if
             // that one contact sub-type exists.
             if ($fieldName == 'extends_entity_column_value' && !empty($subTypes[0])) {
-              $groupTree[$groupID]['subtype'] = self::validateSubTypeByEntity($entityType, $subType);
+              $validatedSubType = self::validateSubTypeByEntity($entityType, $subType);
+              if($validatedSubType) {
+                $groupTree[$groupID]['subtype'] = $validatedSubType;
+              }
             }
             $groupTree[$groupID][$fieldName] = $crmDAO->$fullFieldName;
           }
@@ -671,11 +681,13 @@ SELECT $select
 
     $contactTypes = CRM_Contact_BAO_ContactType::contactTypes();
     if ($entityType != 'Contact' && !in_array($entityType, $contactTypes)) {
-      CRM_Core_Error::fatal('Invalid Entity Filter');
+      CRM_Core_Error::debug_log_message('Invalid Entity Type - '.$entityType);
+      return FALSE;
     }
-    $subTypes = CRM_Contact_BAO_ContactType::subTypes($entityType);
+    $subTypes = CRM_Contact_BAO_ContactType::subTypes($entityType, TRUE);
     if (!in_array($subType, $subTypes)) {
-      CRM_Core_Error::fatal('Invalid Filter');
+      CRM_Core_Error::debug_log_message('Invalid Sub Type - '.$subType);
+      return FALSE;
     }
     return $subType;
   }

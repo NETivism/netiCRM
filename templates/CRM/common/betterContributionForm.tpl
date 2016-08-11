@@ -20,7 +20,7 @@ cj(function($){
     var $same_as_md = $('.md-checkbox[for="same_as"]');
     var $same_as_md_parent = $same_as_md.parent('.md-elem');
     $same_as_md.insertBefore($same_as_md_parent);
-    $same_as_md.wrap('<div class="same-as-wrapper" />');
+    $same_as_md.wrap('<div class="same-as-wrapper"></div>');
 
     $('#same_as').change(doCheckSameAs);
     $('.receipt_type input').change(function(){
@@ -73,7 +73,7 @@ cj(function($){
     $r_name_items_md = $('.md-radio[for^="r_name"]');
     $r_name_items_md_parent = $r_name_items_md.parent('.md-elem');
     $r_name_items_md.insertBefore($r_name_items_md_parent);
-    $r_name_items_md.wrapAll('<div class="r-name-items" />');
+    $r_name_items_md.wrapAll('<div class="r-name-items"></div>');
 
     $('#last_name,#first_name,#legal_identifier').keyup(updateName);
     $('.custom_{/literal}{$receiptDonorCredit}{literal}-section input[type=radio]').change(updateName);

@@ -110,7 +110,7 @@
 }
 
 .crm-container .hiddenElement {
-  display : none !important;
+  display : none;
 }
 
 .crm-container .clear {
@@ -633,9 +633,6 @@ div.block-civicrm li, .crm-container ul li, .crm-container ul.treeview li {
     height: 35px;
     padding-top: 5px;
     margin-bottom: 4px
-}
-.crm-pager a {
-    color: #FAFAFA;
 }
 .crm-pager input {
     text-align: center;

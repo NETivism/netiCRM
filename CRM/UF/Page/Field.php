@@ -213,8 +213,7 @@ class CRM_UF_Page_Field extends CRM_Core_Page {
 
     // set the userContext stack
     $session = CRM_Core_Session::singleton();
-    $session->pushUserContext(CRM_Utils_System::url('civicrm/admin/uf/group/field',
-        'reset=1&action=browse&gid=' . $this->_gid
+    $session->pushUserContext(CRM_Utils_System::url('civicrm/admin/uf/group/field', 'reset=1&action=browse&gid=' . $this->_gid
       ));
     $controller->set('gid', $this->_gid);
     $controller->setEmbedded(TRUE);

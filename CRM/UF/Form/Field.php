@@ -107,8 +107,13 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
    * @access public
    */
   public function preProcess() {
-    $this->_gid = CRM_Utils_Request::retrieve('gid', 'Positive', $this);
     $this->_id = CRM_Utils_Request::retrieve('id', 'Positive', $this);
+    if ($this->_id) {
+      $this->_gid = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_UFField', $this->_id, 'uf_group_id');
+    }
+    else{
+      $this->_gid = CRM_Utils_Request::retrieve('gid', 'Positive', $this);
+    }
     if ($this->_gid) {
       $this->_title = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_UFGroup', $this->_gid, 'title');
       CRM_Utils_System::setTitle($this->_title . ' - ' . ts('CiviCRM Profile Fields'));
@@ -217,9 +222,10 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
         $defaults['location_type_id'] = 0;
       }
 
-      $defaults['field_name'] = array($defaults['field_type'],
+      $defaults['field_name'] = array(
+        $defaults['field_type'],
         $defaults['field_name'],
-        $defaults['location_type_id'],
+        ($defaults['field_name'] == "url") ? $defaults['website_type_id'] : $defaults['location_type_id'],
         CRM_Utils_Array::value('phone_type_id', $defaults),
       );
       $this->_gid = $defaults['uf_group_id'];
@@ -378,7 +384,7 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
       $fields['Activity'] = $activityFields;
     }
 
-    $noSearchable = array();
+    $noSearchable = $hasWebsiteTypes = array();
     $addressCustomFields = array_keys(CRM_Core_BAO_CustomField::getFieldsForImport('Address'));
 
     foreach ($fields as $key => $value) {
@@ -397,6 +403,7 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
           $this->_mapperFields[$key][$key1] = $value1['title'];
         }
         $hasLocationTypes[$key][$key1] = CRM_Utils_Array::value('hasLocationType', $value1);
+        $hasWebsiteTypes[$key][$key1] = CRM_Utils_Array::value('hasWebsiteType', $value1);
 
         // hide the 'is searchable' field for 'File' custom data
         if (isset($value1['data_type']) &&
@@ -414,8 +421,9 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
     $this->assign('noSearchable', $noSearchable);
 
     require_once 'CRM/Core/BAO/LocationType.php';
-    $this->_location_types = &CRM_Core_PseudoConstant::locationType();
-    $defaultLocationType = &CRM_Core_BAO_LocationType::getDefault();
+    $this->_location_types = CRM_Core_PseudoConstant::locationType();
+    $defaultLocationType = CRM_Core_BAO_LocationType::getDefault();
+    $this->_website_types = CRM_Core_PseudoConstant::websiteType();
 
     /* FIXME: dirty hack to make the default option show up first.  This
         * avoids a mozilla browser bug with defaults on dynamically constructed
@@ -476,6 +484,9 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
           foreach ($this->_mapperFields[$k] as $key => $value) {
             if ($hasLocationTypes[$k][$key]) {
               $sel3[$k][$key] = $this->_location_types;
+            }
+            elseif ($hasWebsiteTypes[$k][$key]) {
+              $sel3[$k][$key] = $this->_website_types;
             }
             else {
               $sel3[$key] = NULL;
@@ -601,10 +612,6 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
       );
     }
 
-    if (CRM_Utils_Array::value(1, $defaults['field_name']) == 'url-1') {
-      $defaults['field_name'][1] = 'url';
-    }
-
     $this->setDefaults($defaults);
   }
 
@@ -632,7 +639,6 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
         //set group type
         CRM_Core_DAO::setFieldValue('CRM_Core_DAO_UFGroup', $this->_gid, 'group_type', $groupType);
       }
-
       CRM_Core_Session::setStatus(ts('Selected Profile Field has been deleted.'));
       return;
     }
@@ -645,11 +651,6 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
 
     if ($this->_action & CRM_Core_Action::UPDATE) {
       $ids['uf_field'] = $this->_id;
-    }
-
-    // temporary hack to for website
-    if ($params['field_name'][1] == 'url') {
-      $params['field_name'][1] = 'url-1';
     }
 
     //check for duplicate fields
