@@ -117,9 +117,9 @@ class CRM_Contribute_Form_ContributionCharts extends CRM_Core_Form {
           $chartData[] = $value;
         }
       }
-      $chartYears = CRM_Core_BAO_Cache::setItem($this->_years, $group, $path.'_chartYearsList', $components['CiviContribute']->componentID);
-      $chartData = CRM_Core_BAO_Cache::setItem($chartData, $group, $path.'_chartData'.$selectedYear, $components['CiviContribute']->componentID);
-      $chartTime = CRM_Core_BAO_Cache::setItem(time(), $group, $path.'_chartTime'.$selectedYear, $components['CiviContribute']->componentID);
+      CRM_Core_BAO_Cache::setItem($this->_years, $group, $path.'_chartYearsList', $components['CiviContribute']->componentID);
+      CRM_Core_BAO_Cache::setItem($chartData, $group, $path.'_chartData'.$selectedYear, $components['CiviContribute']->componentID);
+      CRM_Core_BAO_Cache::setItem(time(), $group, $path.'_chartTime'.$selectedYear, $components['CiviContribute']->componentID);
     }
     else{
       $this->_years = $chartYears;
