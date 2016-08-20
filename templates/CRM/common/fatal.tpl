@@ -24,8 +24,8 @@
  +--------------------------------------------------------------------+
 *}
 <div class="messages crm-error error-ci">
-    {if $message}{$message}{/if}
-    {if $error.message && $message != $error.message}
-        {$error.message}
-    {/if}
+  {if $message}{$message}{/if}
+  {if $error.message && $message != $error.message}
+    {$error.message}
+  {/if}
 </div>
