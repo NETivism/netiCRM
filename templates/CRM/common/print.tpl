@@ -36,6 +36,9 @@
   <style type="text/css" media="print">@import url({$config->resourceBase}css/print.css);</style>
   <style type="text/css">@import url({$config->resourceBase}css/skins/aqua/theme.css);</style>
   <script type="text/javascript" src="{$config->resourceBase}js/Common.js"></script>
+  <script>
+    javascript:window.print();
+  </script>
 </head>
 
 <body>
