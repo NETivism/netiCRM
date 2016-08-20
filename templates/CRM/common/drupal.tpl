@@ -28,26 +28,6 @@
 {/if}
 
 <div id="crm-container" class="crm-container" lang="{$config->lcMessages|truncate:2:"":true}" xml:lang="{$config->lcMessages|truncate:2:"":true}">
-
-{* we should uncomment below code only when we are experimenting with new css for specific pages and comment css inclusion in civicrm.module*}
-{*if $config->customCSSURL}
-    <link rel="stylesheet" href="{$config->customCSSURL}" type="text/css" />
-{else}
-    {assign var="revamp" value=0}
-    {foreach from=$config->revampPages item=page}
-        {if $page eq $tplFile}
-            {assign var="revamp" value=1}
-        {/if}
-    {/foreach}
-
-    {if $revamp eq 0}
-        <link rel="stylesheet" href="{$config->resourceBase}css/civicrm.css" type="text/css" />
-    {else}
-        <link rel="stylesheet" href="{$config->resourceBase}css/civicrm-new.css" type="text/css" />
-    {/if}
-    <link rel="stylesheet" href="{$config->resourceBase}css/extras.css" type="text/css" />
-{/if*}
-
 {include file="CRM/common/action.tpl"}
 {if $buildNavigation }
     {include file="CRM/common/Navigation.tpl" }
@@ -64,23 +44,17 @@
 {if isset($browserPrint) and $browserPrint}
 {* Javascript window.print link. Used for public pages where we can't do printer-friendly view. *}
 <div id="printer-friendly">
-<a href="javascript:window.print()" title="{ts}Print this page.{/ts}" class="print-icon">
-  列印
-</a>
+  <a href="javascript:window.print()" title="{ts}Print this page.{/ts}" class="print-icon">{ts}Print{/ts}</a>
 </div>
 {else}
 {* Printer friendly link/icon. *}
 <div id="printer-friendly">
-<a href="{$printerFriendly}" title="{ts}Printer-friendly view of this page.{/ts}" class="print-icon">
-  列印
-</a>
+  <a href="{$printerFriendly}" title="{ts}Printer-friendly view of this page.{/ts}" class="print-icon" target="_blank">{ts}Print{/ts}</a>
 </div>
 {/if}
 
-{*{include file="CRM/common/langSwitch.tpl"}*}
-
 {if isset($localTasks) and $localTasks}
-    {include file="CRM/common/localNav.tpl"}
+   {include file="CRM/common/localNav.tpl"}
 {/if}
 
 {include file="CRM/common/status.tpl"}
@@ -96,13 +70,7 @@
 {include file="CRM/common/footer.tpl"}
 {/if}
 
-{literal}
-<script type="text/javascript">
-cj(function() {
-   cj().crmtooltip();
-});
-</script>
-{/literal}
+{include file="CRM/common/footerJs.tpl"}
 {* We need to set jquery $ object back to $*}
 
 </div> {* end crm-container div *}

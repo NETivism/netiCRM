@@ -126,7 +126,7 @@ class CRM_Report_Form_Instance {
       }
     }
 
-    return empty($errors) ? TRUE : $errors;
+    return $errors;
   }
 
   static function setDefaultValues(&$form, &$defaults) {

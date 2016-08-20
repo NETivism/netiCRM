@@ -85,7 +85,7 @@
 
 	<div class="crm-section note-buttons-section no-label">
 	 <div class="content crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
-	 <div class="clear"></div> 
+	 <div class="clear"></div>
 	</div>
     </div>
     {* include jscript to warn if unsaved form field changes *}
@@ -111,7 +111,7 @@
 
 <script type="text/javascript">
     var commentAction = '{$commentAction|escape:quotes}'
-    
+
     {literal}
     var commentRows = {};
 
@@ -132,15 +132,15 @@
 
     }
 
-    function showComments (response) {
-
+    function showComments (resp) {
+        var response = resp.values;
         var urlTemplate = '{/literal}{crmURL p='civicrm/contact/view' q="reset=1&cid=" h=0 }{literal}'
-        if (response[0] && response[0].entity_id) {
-            var noteId = response[0].entity_id
+        if (resp.count) {
+            var key1 = Object.keys(response)[0];
+            var noteId = response[key1].entity_id;
+
             var row = cj('tr#cnote_'+ noteId);
-
             row.addClass('view-comments');
-
             if (row.hasClass('odd') ) {
                 var rowClassOddEven = 'odd'
             } else {
@@ -148,11 +148,12 @@
             }
 
             if ( commentRows['cnote_'+ noteId] ) {
-                for ( var i in commentRows['cnote_'+ noteId] ) { 
+                for ( var i in commentRows['cnote_'+ noteId] ) {
                     return false;
                 }
-            } else {
-                commentRows['cnote_'+ noteId] = {}; 
+            }
+            else {
+                commentRows['cnote_'+ noteId] = {};
             }
             for (i in response) {
                 if ( response[i].id ) {
@@ -208,7 +209,7 @@
             var tabId = cj.fn.dataTableSettings[0].sInstance;
 
             cj('table#'+ tabId).dataTable().fnSettings().aoDrawCallback.push( {
-                    "fn": function () { 
+                    "fn": function () {
                         cj('#'+ tabId +' tr').each( function() {
                             drawCommentRows(this.id)
                         });
@@ -268,7 +269,7 @@
 </div>
 {elseif ! ($action eq 1)}
    <div class="messages status">
-        
+
         {capture assign=crmURL}{crmURL p='civicrm/contact/view/note' q="cid=`$contactId`&action=add"}{/capture}
         {ts 1=$crmURL}There are no Notes for this contact. You can <a accesskey="N" href='%1'>add one</a>.{/ts}
    </div>

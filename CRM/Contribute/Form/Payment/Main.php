@@ -151,6 +151,9 @@ class CRM_Contribute_Form_Payment_Main extends CRM_Contribute_Form_Payment {
     $payment = &CRM_Core_Payment::singleton($this->_mode, $processor, $this);
     $vars = $payment->prepareTransferCheckoutParams($contrib, $params);
 
+    // before leave to transfercheckout, call hook
+    CRM_Utils_Hook::postProcess(get_class($this), $this);
+
     // TODO: we have to redirect to correct thank you page 
     // maybe create own controller for that
     $payment->doTransferCheckout($vars, $this->_component);
