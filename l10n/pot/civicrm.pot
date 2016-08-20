@@ -45190,3 +45190,11 @@ msgstr ""
 #: xml/templates/civicrm_data.tpl
 msgid "Home"
 msgstr ""
+
+#: CRM/Core/Form.php
+msgid "This message indicate that your have submitted this form before. You stop here because we need to prevent your double submissions."
+msgstr ""
+
+#: CRM/Core/Form.php
+msgid "Correct page to add another submission"
+msgstr ""

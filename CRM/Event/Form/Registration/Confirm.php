@@ -59,6 +59,14 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
   public $_totalAmount;
 
   /**
+   * Prevent multiple submission
+   *
+   * @var Boolean
+   * @public
+   */
+  public $_preventMultipleSubmission;
+
+  /**
    * Function to set variables up before form is built
    *
    * @return void
@@ -194,6 +202,7 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
       CRM_Utils_System::setTitle($this->_values['event']['confirm_title']);
     }
     $this->set('params', $this->_params);
+    $this->_preventMultipleSubmission = TRUE;
   }
 
   /**

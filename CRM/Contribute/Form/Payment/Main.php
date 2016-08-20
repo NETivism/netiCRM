@@ -38,6 +38,13 @@
  * form for thank-you / success page - 1st step of payment
  */
 class CRM_Contribute_Form_Payment_Main extends CRM_Contribute_Form_Payment {
+  /**
+   * Prevent multiple submission
+   *
+   * @var Boolean
+   * @protected
+   */
+  protected $_preventMultipleSubmission;
 
   /**
    * Function to set variables up before form is built
@@ -57,6 +64,7 @@ class CRM_Contribute_Form_Payment_Main extends CRM_Contribute_Form_Payment {
       if ($this->_ppType) {
         $this->assign('ppType', TRUE);
         CRM_Core_Payment_ProcessorForm::preProcess($this);
+        $this->_preventMultipleSubmission = TRUE;
       }
     }
   }
