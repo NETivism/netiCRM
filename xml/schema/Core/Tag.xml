@@ -20,6 +20,7 @@
   </primaryKey>
   <field>
        <name>name</name>
+       <import>true</import>
        <type>varchar</type>
        <length>64</length>
        <comment>Name of Tag.</comment>

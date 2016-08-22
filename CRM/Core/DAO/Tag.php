@@ -171,6 +171,11 @@ class CRM_Core_DAO_Tag extends CRM_Core_DAO
           'title' => ts('Name') ,
           'maxlength' => 64,
           'size' => CRM_Utils_Type::BIG,
+          'import' => true,
+          'where' => 'civicrm_tag.name',
+          'headerPattern' => '',
+          'dataPattern' => '',
+          'export' => true,
         ) ,
         'description' => array(
           'name' => 'description',

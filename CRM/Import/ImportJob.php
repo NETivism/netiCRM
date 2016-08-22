@@ -396,6 +396,61 @@ class CRM_Import_ImportJob {
     return FALSE;
   }
 
+  public function addContactToGroupTag($contactId, $groups = array(), $tags = array()) {
+    static $existsGroups, $existsTag;
+
+    $contactIds = array($contactId);
+    if(!empty($groups) && is_array($groups)) {
+      foreach ($groups as $groupName) {
+        $groupId = 0;
+        if ($existsGroups[$groupName]) {
+          $groupId = $existsGroups[$groupName];
+        }
+        else{
+          $query = "SELECT id FROM civicrm_group WHERE title LIKE %1";
+          $groupId = CRM_Core_DAO::singleValueQuery($query, array(1 => array($groupName, 'String')));
+          if (empty($groupId)) {
+            $gParams = array(
+              'title' => $groupName,
+              'description' => '',
+              'is_active' => TRUE,
+            );
+            $group = CRM_Contact_BAO_Group::create($gParams);
+            $groupId = $group->id;
+          }
+        }
+        $existsGroups[$groupName] = $groupId;
+        CRM_Contact_BAO_GroupContact::addContactsToGroup($contactIds, $groupId);
+      }
+    }
+
+    if(!empty($tags) && is_array($tags)) {
+      foreach ($tags as $tagName) {
+        if ($existsTag[$tagName]) {
+          $tagId = $existsTag[$tagName];
+        }
+        else {
+          $query = "SELECT id FROM civicrm_tag WHERE name LIKE %1";
+          $tagId = CRM_Core_DAO::singleValueQuery($query, array(1 => array($tagName, 'String')));
+          if (empty($tagId)) {
+            $tagParams = array(
+              'name' => $tagName,
+              'title' => $tagName,
+              'description' => '',
+              'is_selectable' => TRUE,
+              'used_for' => 'civicrm_contact',
+            );
+            $id = array();
+            $tag = CRM_Core_BAO_Tag::add($tagParams, $id);
+            $tagId = $tag->id;
+          }
+        }
+        $existsTag[$tagName] = $tagId;
+        $addTagCount = CRM_Core_BAO_EntityTag::addEntitiesToTag($contactIds, $tagId);
+      }
+    }
+  }
+
   public static function getIncompleteImportTables() {
     $dao = new CRM_Core_DAO();
     $database = $dao->database();

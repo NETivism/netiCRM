@@ -229,6 +229,11 @@ class CRM_Contact_DAO_Group extends CRM_Core_DAO
           'title' => ts('Title') ,
           'maxlength' => 64,
           'size' => CRM_Utils_Type::BIG,
+          'import' => true,
+          'where' => 'civicrm_group.title',
+          'headerPattern' => '',
+          'dataPattern' => '',
+          'export' => true,
         ) ,
         'description' => array(
           'name' => 'description',

@@ -465,6 +465,17 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
     }
 
     $params = &$this->getActiveFieldParams();
+    $groupNames = $tagNames = array();
+    if (!empty($params['group_name'])) {
+      $params['group_name'] = str_replace('|', ',', $params['group_name']);
+      $groupNames = explode(',', $params['group_name']);
+      unset($params['group_name']);
+    }
+    if (!empty($params['tag_name'])) {
+      $params['tag_name'] = str_replace('|', ',', $params['tag_name']);
+      $tagNames = explode(',', $params['tag_name']);
+      unset($params['tag_name']);
+    }
     $formatted = array('contact_type' => $this->_contactType);
 
     static $contactFields = NULL;
@@ -767,6 +778,9 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
       }
       if ($this->_job->_newTagName || count($this->_job->_tag)) {
         $this->_job->tagImportedContactsWithNewTag($addIds, $this->_job->_newTagName, $this->_job->_newTagDesc);
+      }
+      if (!empty($groupNames) || !empty($tagNames)) {
+        $this->_job->addContactToGroupTag($contactID, $groupNames, $tagNames);
       }
     }
 
