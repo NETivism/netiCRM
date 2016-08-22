@@ -759,6 +759,15 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
         $this,
         $hookParams
       );
+
+      // import group and tag when each contact
+      $addIds = array($contactID);
+      if ($this->_job->_newGroupName || count($this->_job->_groups)) {
+        $this->_job->addImportedContactsToNewGroup($addIds, $this->_job->_newGroupName, $this->_job->_newGroupDesc);
+      }
+      if ($this->_job->_newTagName || count($this->_job->_tag)) {
+        $this->_job->tagImportedContactsWithNewTag($addIds, $this->_job->_newTagName, $this->_job->_newTagDesc);
+      }
     }
 
     if ($relationship) {
