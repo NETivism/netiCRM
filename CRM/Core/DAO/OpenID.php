@@ -99,7 +99,7 @@ class CRM_Core_DAO_OpenID extends CRM_Core_DAO
    */
   public $location_type_id;
   /**
-   * the OpenID (or OpenID-style http://username.domain/) unique identifier for this contact mainly used for logging in to CiviCRM
+   * OpenID
    *
    * @var string
    */
@@ -173,10 +173,9 @@ class CRM_Core_DAO_OpenID extends CRM_Core_DAO
           'size' => CRM_Utils_Type::HUGE,
           'import' => true,
           'where' => 'civicrm_openid.openid',
-          'headerPattern' => '/^Open.?ID|u(niq\w*)?.?ID/i',
-          'dataPattern' => '/^[\w\/\:\.]+$/',
+          'headerPattern' => '',
+          'dataPattern' => '',
           'export' => true,
-          'rule' => 'url',
         ) ,
         'allowed_to_login' => array(
           'name' => 'allowed_to_login',
