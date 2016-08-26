@@ -96,8 +96,6 @@ cj(function($){
   if($('.custom_{/literal}{$receiptYesNo}{literal}-section').length >= 1){
     $('.custom_{/literal}{$receiptYesNo}{literal}-section .content input').change(showHideReceiptFields);
     $('.custom_{/literal}{$receiptYesNo}{literal}-section .content input').trigger('change');
-    $('.custom_{/literal}{$receiptYesNo}{literal}-section .content input').change(setRequiredFields);
-    setRequiredFields();
   }
 
   function showHideReceiptFields(){
@@ -121,6 +119,7 @@ cj(function($){
     }
   }
 
+  // temporarily deprecated in #18692
   function setRequiredFields(){
     if(isShowChecked()){
       {/literal}{if $receiptTitle}{literal}
