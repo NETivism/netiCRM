@@ -77,9 +77,10 @@ LEFT JOIN  civicrm_event event ON ( event.id = participant.event_id )
                     //get the expiration and registration pending time.
                     $expirationSeconds = $expirationTime * 3600;
                     $registrationPendingSeconds = CRM_Utils_Date::unixTime( $values['register_date'] );
+                    $expirationDay = date('Y-m-d', $expirationSeconds + $registrationPendingSeconds).' 23:59:59';
                     
                     // expired registration since registration cross allow confirmation time.
-                    if ( ( $expirationSeconds + $registrationPendingSeconds ) < time( ) ) {
+                    if ( strtotime($expirationDay) < time( ) ) {
                         
                         //lets get the transaction mechanism.
                         require_once 'CRM/Core/Transaction.php';

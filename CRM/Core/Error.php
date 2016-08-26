@@ -238,13 +238,13 @@ class CRM_Core_Error extends PEAR_ErrorStack {
     $vars = array(
       'message' => $message,
       'code' => $code,
+      'server' => $_SERVER,
+      'post' => $_POST,
     );
 
     $config = CRM_Core_Config::singleton();
 
-    if ($config->fatalErrorHandler &&
-      function_exists($config->fatalErrorHandler)
-    ) {
+    if ($config->fatalErrorHandler && function_exists($config->fatalErrorHandler)) {
       $name = $config->fatalErrorHandler;
       $ret = $name($vars);
       if ($ret) {
@@ -254,10 +254,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
       }
     }
 
-    if ($config->backtrace) {
-      self::backtrace();
-    }
-
+    // fallback
     CRM_Core_Error::debug_var('Fatal Error Details', $vars);
     CRM_Core_Error::backtrace('backTrace', TRUE);
     self::output($config->fatalErrorTemplate, $vars);
@@ -611,8 +608,12 @@ class CRM_Core_Error extends PEAR_ErrorStack {
       echo $content;
     }
     else{
-      $content = $template->fetch($tplFile);
-      echo CRM_Utils_System::theme('page', $content);
+      $config = CRM_Core_Config::singleton();
+      $tplCommon = 'CRM/common/' . strtolower($config->userFramework) . '.tpl';
+      $content = $template->fetch($tplCommon);
+      $null = &CRM_Core_DAO::$_nullObject;
+      CRM_Utils_Hook::alterContent($content, 'page', $tplCommon, $null);
+      CRM_Utils_System::theme('page', $content);
     }
   }
 }
