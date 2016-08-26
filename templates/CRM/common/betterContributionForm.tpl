@@ -96,6 +96,8 @@ cj(function($){
   if($('.custom_{/literal}{$receiptYesNo}{literal}-section').length >= 1){
     $('.custom_{/literal}{$receiptYesNo}{literal}-section .content input').change(showHideReceiptFields);
     $('.custom_{/literal}{$receiptYesNo}{literal}-section .content input').trigger('change');
+    $('.custom_{/literal}{$receiptYesNo}{literal}-section .content input').change(setRequiredFields);
+    setRequiredFields();
   }
 
   function showHideReceiptFields(){
@@ -119,7 +121,6 @@ cj(function($){
     }
   }
 
-  // temporarily deprecated in #18692
   function setRequiredFields(){
     if(isShowChecked()){
       {/literal}{if $receiptTitle}{literal}
@@ -127,21 +128,14 @@ cj(function($){
       $('.custom_{/literal}{$receiptTitle}{literal}-section').find('.label label').append('<span class="crm-marker" title="{/literal}{ts}This field is required.{/ts}{literal}">*</span>');
       $('#custom_{/literal}{$receiptTitle}{literal}').addClass('required');
       {/literal}{/if}{literal}
-      {/literal}{if $receiptSerial}{literal}
-      $('.custom_{/literal}{$receiptSerial}{literal}-section .label label .crm-marker').remove();
-      $('.custom_{/literal}{$receiptSerial}{literal}-section').find('.label label').append('<span class="crm-marker" title="{/literal}{ts}This field is required.{/ts}{literal}">*</span>');
-      $('#custom_{/literal}{$receiptSerial}{literal}').addClass('required');
-      {/literal}{/if}{literal}
+      // remove $receiptSerial part in #18692
     }
     else{
       {/literal}{if $receiptTitle}{literal}
       $('.custom_{/literal}{$receiptTitle}{literal}-section .label label .crm-marker').remove();
       $('#custom_{/literal}{$receiptTitle}{literal}').removeClass('required');
       {/literal}{/if}{literal}
-      {/literal}{if $receiptSerial}{literal}
-      $('.custom_{/literal}{$receiptSerial}{literal}-section .label label .crm-marker').remove();
-      $('#custom_{/literal}{$receiptSerial}{literal}').removeClass('required');
-      {/literal}{/if}{literal}
+      // remove $receiptSerial part in #18692
     }
   }
 
