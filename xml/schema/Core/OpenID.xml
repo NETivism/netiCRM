@@ -44,7 +44,6 @@
        <name>openid</name>
        <type>varchar</type>
        <length>255</length>
-       <import>true</import>
        <comment>OpenID</comment>
        <add>2.0</add>
   </field>

@@ -842,11 +842,6 @@ class CRM_Contact_DAO_Contact extends CRM_Core_DAO
           'title' => ts('Unique ID (OpenID)') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
-          'import' => true,
-          'where' => 'civicrm_contact.user_unique_id',
-          'headerPattern' => '/^Open\s?ID|u(niq\w*)?\s?ID/i',
-          'dataPattern' => '/^[\w\/\:\.]+$/',
-          'export' => true,
           'rule' => 'url',
         ) ,
         'current_employer_id' => array(

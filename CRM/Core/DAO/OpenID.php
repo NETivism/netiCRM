@@ -171,11 +171,6 @@ class CRM_Core_DAO_OpenID extends CRM_Core_DAO
           'title' => ts('Openid') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
-          'import' => true,
-          'where' => 'civicrm_openid.openid',
-          'headerPattern' => '',
-          'dataPattern' => '',
-          'export' => true,
         ) ,
         'allowed_to_login' => array(
           'name' => 'allowed_to_login',
