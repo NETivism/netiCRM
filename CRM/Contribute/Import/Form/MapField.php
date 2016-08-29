@@ -106,16 +106,11 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
   public function defaultFromHeader($header, &$patterns) {
     foreach ($patterns as $key => $re) {
       /* Skip the first (empty) key/pattern */
-
-      if (empty($re)) {
-
+      if (empty($re) || $re == '//') {
         continue;
-
       }
 
-      /* Scan through the headerPatterns defined in the schema for a
-             * match */
-
+      /* Scan through the headerPatterns defined in the schema for a match */
       if (preg_match($re, $header)) {
         $this->_fieldUsed[$key] = TRUE;
         return $key;
@@ -400,10 +395,7 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
         if ($hasHeaders) {
           // Infer the default from the skipped headers if we have them
           $defaults["mapper[$i]"] = array(
-            $this->defaultFromHeader(CRM_Utils_Array::value($i, $this->_columnHeaders),
-              $headerPatterns
-            ),
-            //                     $defaultLocationType->id
+            $this->defaultFromHeader(CRM_Utils_Array::value($i, $this->_columnHeaders), $headerPatterns), 
             0,
           );
         }
@@ -411,7 +403,6 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
           // Otherwise guess the default from the form of the data
           $defaults["mapper[$i]"] = array(
             $this->defaultFromData($dataPatterns, $i),
-            //                     $defaultLocationType->id
             0,
           );
         }
