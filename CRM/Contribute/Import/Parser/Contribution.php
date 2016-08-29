@@ -42,6 +42,10 @@ require_once 'api/v2/Contribution.php';
 class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Parser {
 
   protected $_mapperKeys;
+  protected $_mapperLocType;
+  protected $_mapperPhoneType;
+  protected $_mapperImProvider;
+  protected $_mapperWebsiteType;
 
   private $_contactIdIndex;
   private $_totalAmountIndex;
@@ -60,10 +64,14 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
   /**
    * class constructor
    */
-  function __construct(&$mapperKeys, $mapperSoftCredit = NULL, $mapperPhoneType = NULL) {
+  function __construct(&$mapperKeys, $mapperSoftCredit = NULL, $mapperLocType = NULL, $mapperPhoneType = NULL, $mapperWebsiteType = NULL, $mapperImProvider = NULL) {
     parent::__construct();
     $this->_mapperKeys = &$mapperKeys;
     $this->_mapperSoftCredit = &$mapperSoftCredit;
+    $this->_mapperLocType = &$mapperLocType;
+    $this->_mapperPhoneType = &$mapperPhoneType;
+    $this->_mapperWebsiteType = $mapperWebsiteType;
+    $this->_mapperImProvider = &$mapperImProvider;
   }
 
   /**
@@ -96,34 +104,73 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
       $fields = array_merge($fields, $pledgeFields);
     }
     foreach ($fields as $name => $field) {
-      $this->addField($name, $field['title'], $field['type'], $field['headerPattern'], $field['dataPattern']);
+      $this->addField($name, $field['title'], $field['type'], $field['headerPattern'], $field['dataPattern'], $field['hasLocationType']);
     }
 
     $this->_newContributions = array();
 
     $this->setActiveFields($this->_mapperKeys);
     $this->setActiveFieldSoftCredit($this->_mapperSoftCredit);
+    $this->setActiveFieldLocationTypes($this->_mapperLocType);
+    $this->setActiveFieldPhoneTypes($this->_mapperPhoneType);
+    $this->setActiveFieldWebsiteTypes($this->_mapperWebsiteType);
+    $this->setActiveFieldImProviders($this->_mapperImProvider);
 
     // FIXME: we should do this in one place together with Form/MapField.php
+    $index = 0;
+    foreach ($this->_mapperKeys as $key) {
+      switch ($key) {
+      }
+      $index++;
+    }
+
     $this->_contactIdIndex = -1;
     $this->_totalAmountIndex = -1;
     $this->_contributionTypeIndex = -1;
 
+    $this->_phoneIndex = -1;
+    $this->_emailIndex = -1;
+    $this->_firstNameIndex = -1;
+    $this->_lastNameIndex = -1;
+    $this->_householdNameIndex = -1;
+    $this->_organizationNameIndex = -1;
+    $this->_externalIdentifierIndex = -1;
+
     $index = 0;
     foreach ($this->_mapperKeys as $key) {
-      switch ($key) {
-        case 'contribution_contact_id':
-          $this->_contactIdIndex = $index;
-          break;
-
-        case 'total_amount':
-          $this->_totalAmountIndex = $index;
-          break;
-
-        case 'contribution_type':
-          $this->_contributionTypeIndex = $index;
-          break;
+      if (preg_match('/^contact_email/', $key) && !strstr($key, 'email_greeting')) {
+        $this->_emailIndex = $index;
+        $this->_allEmails = array();
       }
+      elseif (preg_match('/^contact__phone/', $key)) {
+        $this->_phoneIndex = $index;
+      }
+      elseif ($key == 'contact__first_name') {
+        $this->_firstNameIndex = $index;
+      }
+      elseif ($key == 'contact__last_name') {
+        $this->_lastNameIndex = $index;
+      }
+      elseif ($key == 'contact__household_name') {
+        $this->_householdNameIndex = $index;
+      }
+      elseif ($key == 'contact__organization_name') {
+        $this->_organizationNameIndex = $index;
+      }
+      elseif ($key == 'contact__external_identifier') {
+        $this->_externalIdentifierIndex = $index;
+        $this->_allExternalIdentifiers = array();
+      }
+      elseif($key == 'contribution_contact_id'){
+        $this->_contactIdIndex = $index;
+      }
+      elseif($key == 'total_amount'){
+        $this->_totalAmountIndex = $index;
+      }
+      elseif($key == 'contribution_type') {
+        $this->_contributionTypeIndex = $index;
+      }
+
       $index++;
     }
   }

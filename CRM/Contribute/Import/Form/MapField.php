@@ -103,7 +103,13 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
    * @return string
    * @access public
    */
-  public function defaultFromHeader($header, &$patterns) {
+  public function defaultFromHeader($columnName, &$patterns) {
+    if (!preg_match('/^[a-z0-9 ]$/i', $columnName)) {
+      if ($columnKey = array_search($columnName, $this->_mapperFields)) {
+        $this->_fieldUsed[$columnKey] = TRUE;
+        return $columnKey;
+      }
+    }
     foreach ($patterns as $key => $re) {
       /* Skip the first (empty) key/pattern */
       if (empty($re) || $re == '//') {
@@ -111,7 +117,7 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
       }
 
       /* Scan through the headerPatterns defined in the schema for a match */
-      if (preg_match($re, $header)) {
+      if (preg_match($re, $columnName)) {
         $this->_fieldUsed[$key] = TRUE;
         return $key;
       }
@@ -167,7 +173,6 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
    */
   public function preProcess() {
     $this->_mapperFields = $this->get('fields');
-    asort($this->_mapperFields);
 
     $this->_columnCount = $this->get('columnCount');
     $this->assign('columnCount', $this->_columnCount);
@@ -284,14 +289,43 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
     $dataPatterns = $this->get('dataPatterns');
     $hasLocationTypes = $this->get('fieldTypes');
 
-
     /* Initialize all field usages to false */
+
+    $this->_location_types = &CRM_Core_PseudoConstant::locationType();
+    $defaultLocationType = &CRM_Core_BAO_LocationType::getDefault();
+    /* FIXME: dirty hack to make the default option show up first.  This
+         * avoids a mozilla browser bug with defaults on dynamically constructed
+         * selector widgets. */
+    if ($defaultLocationType) {
+      $defaultLocation = $this->_location_types[$defaultLocationType->id];
+      unset($this->_location_types[$defaultLocationType->id]);
+      $this->_location_types = array($defaultLocationType->id => $defaultLocation) + $this->_location_types;
+    }
+
+    $sel1 = $this->_mapperFields;
+    $sel2[''] = NULL;
+
+    $phoneTypes = CRM_Core_PseudoConstant::phoneType();
+    $imProviders = CRM_Core_PseudoConstant::IMProvider();
+    $websiteTypes = CRM_Core_PseudoConstant::websiteType();
+
+    foreach ($this->_location_types as $key => $value) {
+      $sel3['contact__phone'][$key] = &$phoneTypes;
+      //build array for IM service provider type for contact
+      $sel3['contact__im'][$key] = &$imProviders;
+    }
 
     foreach ($mapperKeys as $key) {
       $this->_fieldUsed[$key] = FALSE;
+      $options = NULL;
+      if ($hasLocationTypes[$key]) {
+        $options = $this->_location_types;
+      }
+      elseif ($key == 'url') {
+        $options = $websiteTypes;
+      }
+      $sel2[$key] = $options;
     }
-    $this->_location_types = &CRM_Core_PseudoConstant::locationType();
-    $sel1 = $this->_mapperFields;
 
     if (!$this->get('onDuplicate')) {
       unset($sel1['id']);
@@ -375,17 +409,6 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
             for ($k = 1; $k < 4; $k++) {
               $js .= "{$formName}['mapper[$i][$k]'].style.display = 'none';\n";
             }
-          }
-        }
-        else {
-          // this load section to help mapping if we ran out of saved columns when doing Load Mapping
-          $js .= "swapOptions($formName, 'mapper[$i]', 0, 3, 'hs_mapper_" . $i . "_');\n";
-
-          if ($hasHeaders) {
-            $defaults["mapper[$i]"] = array($this->defaultFromHeader($this->_columnHeaders[$i], $headerPatterns));
-          }
-          else {
-            $defaults["mapper[$i]"] = array($this->defaultFromData($dataPatterns, $i));
           }
         }
         //end of load mapping

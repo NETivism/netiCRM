@@ -554,7 +554,6 @@ abstract class CRM_Contribute_Import_Parser {
    */
   function setActiveFields($fieldKeys) {
     $this->_activeFieldCount = count($fieldKeys);
-    require_once 'CRM/Contribute/Import/Field.php';
     foreach ($fieldKeys as $key) {
       if (empty($this->_fields[$key])) {
         $this->_activeFields[] = new CRM_Contribute_Import_Field('', ts('- do not import -'));
@@ -595,6 +594,38 @@ abstract class CRM_Contribute_Import_Parser {
     return $valid;
   }
 
+  function setActiveFieldLocationTypes($elements) {
+    for ($i = 0; $i < count($elements); $i++) {
+      $this->_activeFields[$i]->_hasLocationType = $elements[$i];
+    }
+  }
+
+  function setActiveFieldPhoneTypes($elements) {
+    for ($i = 0; $i < count($elements); $i++) {
+      $this->_activeFields[$i]->_phoneType = $elements[$i];
+    }
+  }
+
+  function setActiveFieldWebsiteTypes($elements) {
+    for ($i = 0; $i < count($elements); $i++) {
+      $this->_activeFields[$i]->_websiteType = $elements[$i];
+    }
+  }
+
+  /**
+   * Function to set IM Service Provider type fields
+   *
+   * @param array $elements IM service provider type ids
+   *
+   * @return void
+   * @access public
+   */
+  function setActiveFieldImProviders($elements) {
+    for ($i = 0; $i < count($elements); $i++) {
+      $this->_activeFields[$i]->_imProvider = $elements[$i];
+    }
+  }
+
   /**
    * function to format the field values for input to the api
    *
@@ -610,6 +641,37 @@ abstract class CRM_Contribute_Import_Parser {
             $params[$this->_activeFields[$i]->_name] = array();
           }
           $params[$this->_activeFields[$i]->_name][$this->_activeFields[$i]->_softCreditField] = $this->_activeFields[$i]->_value;
+        }
+
+        if (isset($this->_activeFields[$i]->_hasLocationType)) {
+          if (!isset($params[$this->_activeFields[$i]->_name])) {
+            $params[$this->_activeFields[$i]->_name] = array();
+          }
+
+          $value = array(
+            $this->_activeFields[$i]->_name =>
+            $this->_activeFields[$i]->_value,
+            'location_type_id' =>
+            $this->_activeFields[$i]->_hasLocationType,
+          );
+
+          if (isset($this->_activeFields[$i]->_phoneType)) {
+            $value['phone_type_id'] = $this->_activeFields[$i]->_phoneType;
+          }
+
+          // get IM service Provider type id
+          if (isset($this->_activeFields[$i]->_imProvider)) {
+            $value['provider_id'] = $this->_activeFields[$i]->_imProvider;
+          }
+
+          $params[$this->_activeFields[$i]->_name][] = $value;
+        }
+        elseif (isset($this->_activeFields[$i]->_websiteType)) {
+          $value = array($this->_activeFields[$i]->_name => $this->_activeFields[$i]->_value,
+            'website_type_id' => $this->_activeFields[$i]->_websiteType,
+          );
+
+          $params[$this->_activeFields[$i]->_name][] = $value;
         }
 
         if (!isset($params[$this->_activeFields[$i]->_name])) {
@@ -658,20 +720,17 @@ abstract class CRM_Contribute_Import_Parser {
     return $values;
   }
 
-  function addField($name, $title, $type = CRM_Utils_Type::T_INT, $headerPattern = '//', $dataPattern = '//') {
+  function addField($name, $title, $type = CRM_Utils_Type::T_INT, $headerPattern = '//', $dataPattern = '//', $hasLocationType = FALSE) {
     if (empty($name)) {
-      $this->_fields['doNotImport'] = new CRM_Contribute_Import_Field($name, $title, $type, $headerPattern, $dataPattern);
+      $this->_fields['doNotImport'] = new CRM_Contribute_Import_Field($name, $title, $type, $headerPattern, $dataPattern, $hasLocationType);
     }
     else {
       $tempField = CRM_Contact_BAO_Contact::importableFields('All', NULL);
       if (!array_key_exists($name, $tempField)) {
-        $this->_fields[$name] = new CRM_Contribute_Import_Field($name, $title, $type, $headerPattern, $dataPattern);
+        $this->_fields[$name] = new CRM_Contribute_Import_Field($name, $title, $type, $headerPattern, $dataPattern, $hasLocationType);
       }
       else {
-        require_once 'CRM/Import/Field.php';
-        $this->_fields[$name] = new CRM_Import_Field($name, $title, $type, $headerPattern, $dataPattern,
-          CRM_Utils_Array::value('hasLocationType', $tempField[$name])
-        );
+        $this->_fields[$name] = new CRM_Import_Field($name, $title, $type, $headerPattern, $dataPattern, $hasLocationType);
       }
     }
   }

@@ -503,51 +503,46 @@ class CRM_Contribute_BAO_Contribution extends CRM_Contribute_DAO_Contribution {
         $fields = array('' => array('title' => ts('- Contribution Fields -')));
       }
 
-      require_once 'CRM/Core/DAO/Note.php';
       $note = CRM_Core_DAO_Note::import();
       $tmpFields = CRM_Contribute_DAO_Contribution::import();
+      $tmpFields['contribution_contact_id']['title'] = ts('Contact') . '::' .$tmpFields['contribution_contact_id']['title'] . ' ' . ts('(match to contact)');
       unset($tmpFields['option_value']);
-      require_once 'CRM/Core/OptionValue.php';
       $optionFields = CRM_Core_OptionValue::getFields($mode = 'contribute');
-      require_once 'CRM/Contact/BAO/Contact.php';
-      $contactFields = CRM_Contact_BAO_Contact::importableFields($contacType, NULL);
+
+      $contactFields = array();
+      $tmpContactFields = CRM_Contact_BAO_Contact::importableFields($contacType, NULL);
+      $contactFieldsIgnore = array('id', 'note', 'do_not_import', 'contact_sub_type');
 
       // Using new Dedupe rule.
       $ruleParams = array(
         'contact_type' => $contacType,
         'level' => 'Strict',
       );
-      require_once 'CRM/Dedupe/BAO/Rule.php';
-      $fieldsArray = CRM_Dedupe_BAO_Rule::dedupeRuleFields($ruleParams);
-      $tmpConatctField = array();
-      if (is_array($fieldsArray)) {
-        foreach ($fieldsArray as $value) {
-          //skip if there is no dupe rule
-          if ($value == 'none') {
-            continue;
-          }
-
-          $tmpConatctField[trim($value)] = $contactFields[trim($value)];
+      $dupeFields = CRM_Dedupe_BAO_Rule::dedupeRuleFields($ruleParams);
+      if (!is_array($dupeFields)) {
+        $dupeFields = array();
+      }
+      foreach ($tmpContactFields as $fieldName => $fieldData) {
+        $fieldName = trim($fieldName);
+        if (in_array($fieldName, $contactFieldsIgnore)) {
+          continue;
+        }
+        $index = 'contact__'.$fieldName;
+        $contactFields[$index] = $fieldData;
+        $contactFields[$index]['title'] = ts('Contact') . '::' .$contactFields[$index]['title'];
+        if (in_array($fieldName, $dupeFields) || $fieldName == 'external_identifier') {
           if (!$status) {
-            $title = $tmpConatctField[trim($value)]['title'] . ' ' . ts('(match to contact)');
+            $contactFields[$index]['title'] .= ts('(match to contact)') . ' *';
           }
-          else {
-            $title = $tmpConatctField[trim($value)]['title'];
-          }
-          $tmpConatctField[trim($value)]['title'] = $title;
         }
       }
 
-      $tmpConatctField['external_identifier'] = $contactFields['external_identifier'];
-      $tmpConatctField['external_identifier']['title'] = $contactFields['external_identifier']['title'] . ' ' . ts('(match to contact)');
-      $tmpFields['contribution_contact_id']['title'] = $tmpFields['contribution_contact_id']['title'] . ' ' . ts('(match to contact)');
-      $fields = array_merge($fields, $tmpConatctField);
-      $fields = array_merge($fields, $tmpFields);
-      $fields = array_merge($fields, $note);
-      $fields = array_merge($fields, $optionFields);
-      require_once 'CRM/Contribute/DAO/ContributionType.php';
       $fields = array_merge($fields, CRM_Contribute_DAO_ContributionType::export());
+      $fields = array_merge($fields, $tmpFields);
       $fields = array_merge($fields, CRM_Core_BAO_CustomField::getFieldsForImport('Contribution'));
+      $fields = array_merge($fields, $optionFields);
+      $fields = array_merge($fields, $note);
+      $fields = array_merge($fields, $contactFields);
       self::$_importableFields = $fields;
     }
     return self::$_importableFields;
