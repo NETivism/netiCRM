@@ -47,7 +47,7 @@ class CRM_Event_Page_AJAX {
     if (!$name) {
       $name = '%';
     }
-    $whereClause = " title LIKE '$name%' AND ( civicrm_event.is_template IS NULL OR civicrm_event.is_template = 0 )";
+    $whereClause = " title LIKE '%$name%' AND ( civicrm_event.is_template IS NULL OR civicrm_event.is_template = 0 )";
 
     $query = "
 SELECT title, id
@@ -71,7 +71,7 @@ ORDER BY title
     if (!$name) {
       $name = '%';
     }
-    $whereClause = " v.label LIKE '$name%' ";
+    $whereClause = " v.label LIKE '%$name%' ";
 
     $query = "
 SELECT v.label ,v.value
