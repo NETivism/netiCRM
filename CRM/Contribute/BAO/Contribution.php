@@ -56,6 +56,7 @@ class CRM_Contribute_BAO_Contribution extends CRM_Contribute_DAO_Contribution {
    * @static
    */
   static $_exportableFields = NULL;
+
   function __construct() {
     parent::__construct();
   }
@@ -527,12 +528,12 @@ class CRM_Contribute_BAO_Contribution extends CRM_Contribute_DAO_Contribution {
         if (in_array($fieldName, $contactFieldsIgnore)) {
           continue;
         }
-        $index = 'contact__'.$fieldName;
+        $index = $fieldName;
         $contactFields[$index] = $fieldData;
         $contactFields[$index]['title'] = ts('Contact') . '::' .$contactFields[$index]['title'];
         if (in_array($fieldName, $dupeFields) || $fieldName == 'external_identifier') {
           if (!$status) {
-            $contactFields[$index]['title'] .= ts('(match to contact)') . ' *';
+            $contactFields[$index]['title'] .= ts('(match to contact)');
           }
         }
       }

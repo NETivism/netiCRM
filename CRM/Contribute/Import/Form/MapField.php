@@ -310,9 +310,9 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
     $websiteTypes = CRM_Core_PseudoConstant::websiteType();
 
     foreach ($this->_location_types as $key => $value) {
-      $sel3['contact__phone'][$key] = &$phoneTypes;
+      $sel3['phone'][$key] = &$phoneTypes;
       //build array for IM service provider type for contact
-      $sel3['contact__im'][$key] = &$imProviders;
+      $sel3['im'][$key] = &$imProviders;
     }
 
     foreach ($mapperKeys as $key) {

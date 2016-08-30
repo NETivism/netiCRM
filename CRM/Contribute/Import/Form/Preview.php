@@ -162,7 +162,6 @@ class CRM_Contribute_Import_Form_Preview extends CRM_Core_Form {
     $mapper = $this->controller->exportValue('MapField', 'mapper');
     $mapperKeys = array();
     $mapperSoftCredit = array();
-    $mapperPhoneType = array();
     foreach ($mapper as $key => $value) {
       $mapperKeys[$key] = $mapper[$key][0];
       if (isset($mapper[$key][0]) && $mapper[$key][0] == 'soft_credit') {
@@ -173,7 +172,7 @@ class CRM_Contribute_Import_Form_Preview extends CRM_Core_Form {
       }
     }
 
-    $parser = new CRM_Contribute_Import_Parser_Contribution($mapperKeys, $mapperSoftCredit, $mapperPhoneType);
+    $parser = new CRM_Contribute_Import_Parser_Contribution($mapperKeys, $mapperSoftCredit);
 
     $mapFields = $this->get('fields');
 
