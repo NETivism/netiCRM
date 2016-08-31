@@ -61,6 +61,9 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
    */
   protected $_newContributions;
 
+  protected $_importableContactFields;
+  protected $_parserContact;
+
   /**
    * class constructor
    */
@@ -72,6 +75,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
     $this->_mapperPhoneType = &$mapperPhoneType;
     $this->_mapperWebsiteType = $mapperWebsiteType;
     $this->_mapperImProvider = &$mapperImProvider;
+
   }
 
   /**
@@ -83,6 +87,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
   function init() {
     require_once 'CRM/Contribute/BAO/Contribution.php';
     $fields = &CRM_Contribute_BAO_Contribution::importableFields($this->_contactType, FALSE);
+    $this->_importableContactFields = $fields;
 
     $fields = array_merge($fields,
       array('soft_credit' => array('title' => ts('Soft Credit'),
@@ -173,6 +178,18 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
 
       $index++;
     }
+
+    // create parser object for contact import, #18222
+    $this->_parserContact = new CRM_Import_Parser_Contact(
+      $this->_mapperKeys,
+      $this->_mapperLocType,
+      $this->_mapperPhoneType,
+      $this->_mapperImProvider
+    );
+    $this->_parserContact->_onDuplicate = CRM_Import_Parser::DUPLICATE_FILL;
+    $this->_parserContact->_contactType = $this->_contactType;
+    $this->_parserContact->init();
+
   }
 
   /**
@@ -294,6 +311,8 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
    * @access public
    */
   function import($onDuplicate, &$values) {
+    $contactValues = $values;
+
     // first make sure this is a valid line
     $response = $this->summary($values);
     if ($response != CRM_Contribute_Import_Parser::VALID) {
@@ -469,8 +488,6 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
 
           // process pledge payment assoc w/ the contribution
           return self::processPledgePayments($formatted);
-
-          return CRM_Contribute_Import_Parser::VALID;
         }
         else {
           $labels = array(
@@ -508,66 +525,58 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
         else {
           $cid = $matchedIDs[0];
           $formatted['contact_id'] = $cid;
-
-          $newContribution = civicrm_contribution_format_create($formatted);
-          if (civicrm_error($newContribution)) {
-            if (is_array($newContribution['error_message'])) {
-              array_unshift($values, $newContribution['error_message']['message']);
-              if ($newContribution['error_message']['params'][0]) {
-                return CRM_Contribute_Import_Parser::DUPLICATE;
-              }
-            }
-            else {
-              array_unshift($values, $newContribution['error_message']);
-              return CRM_Contribute_Import_Parser::ERROR;
-            }
-          }
-
-          $this->_newContributions[] = $newContribution['id'];
-
-          //return soft valid since we need to show how soft credits were added
-          if (CRM_Utils_Array::value('soft_credit_to', $formatted)) {
-            return CRM_Contribute_Import_Parser::SOFT_CREDIT;
-          }
-
-          // process pledge payment assoc w/ the contribution
-          return self::processPledgePayments($formatted);
-
-          return CRM_Contribute_Import_Parser::VALID;
+          return $this->importContribution($formatted, $values);
         }
       }
       else {
-        // Using new Dedupe rule.
-        $ruleParams = array(
-          'contact_type' => $this->_contactType,
-          'level' => 'Strict',
-        );
-        require_once 'CRM/Dedupe/BAO/Rule.php';
-        $fieldsArray = CRM_Dedupe_BAO_Rule::dedupeRuleFields($ruleParams);
+        // trying to create new contact base on exists contact related params
+        $paramValuesContact = array();
+        foreach ($paramValues as $key => $field) {
+          if (isset($this->_importableContactFields[$key])) {
+            $paramValuesContact[$key] = $field;
+          }
+        }
+        
+        $doGeocodeAddress = FALSE;
+        $contactImportResult = $this->_parserContact->import(CRM_Import_Parser::DUPLICATE_SKIP, $contactValues, $doGeocodeAddress);
+        $contactID = $this->_parserContact->getLastImportContactId();
+        if (!empty($contactID) && $contactImportResult == CRM_Import_Parser::VALID) {
+          $formatted['contact_id'] = $contactID;
+          return $this->importContribution($formatted, $values);
+        }
+        else {
+          // Using new Dedupe rule.
+          $ruleParams = array(
+            'contact_type' => $this->_contactType,
+            'level' => 'Strict',
+          );
+          require_once 'CRM/Dedupe/BAO/Rule.php';
+          $fieldsArray = CRM_Dedupe_BAO_Rule::dedupeRuleFields($ruleParams);
 
-        foreach ($fieldsArray as $value) {
-          if (array_key_exists(trim($value), $params)) {
-            $paramValue = $params[trim($value)];
-            if (is_array($paramValue)) {
-              $disp .= $params[trim($value)][0][trim($value)] . " ";
+          foreach ($fieldsArray as $value) {
+            if (array_key_exists(trim($value), $params)) {
+              $paramValue = $params[trim($value)];
+              if (is_array($paramValue)) {
+                $disp .= $params[trim($value)][0][trim($value)] . " ";
+              }
+              else {
+                $disp .= $params[trim($value)] . " ";
+              }
+            }
+          }
+
+          if (CRM_Utils_Array::value('external_identifier', $params)) {
+            if ($disp) {
+              $disp .= "AND {$params['external_identifier']}";
             }
             else {
-              $disp .= $params[trim($value)] . " ";
+              $disp = $params['external_identifier'];
             }
           }
-        }
 
-        if (CRM_Utils_Array::value('external_identifier', $params)) {
-          if ($disp) {
-            $disp .= "AND {$params['external_identifier']}";
-          }
-          else {
-            $disp = $params['external_identifier'];
-          }
+          array_unshift($values, "No matching Contact found for (" . $disp . ")");
+          return CRM_Contribute_Import_Parser::ERROR;
         }
-
-        array_unshift($values, "No matching Contact found for (" . $disp . ")");
-        return CRM_Contribute_Import_Parser::ERROR;
       }
     }
     else {
@@ -580,31 +589,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
           return CRM_Contribute_Import_Parser::ERROR;
         }
       }
-      $newContribution = civicrm_contribution_format_create($formatted);
-      if (civicrm_error($newContribution)) {
-        if (is_array($newContribution['error_message'])) {
-          array_unshift($values, $newContribution['error_message']['message']);
-          if ($newContribution['error_message']['params'][0]) {
-            return CRM_Contribute_Import_Parser::DUPLICATE;
-          }
-        }
-        else {
-          array_unshift($values, $newContribution['error_message']);
-          return CRM_Contribute_Import_Parser::ERROR;
-        }
-      }
-
-      $this->_newContributions[] = $newContribution['id'];
-
-      //return soft valid since we need to show how soft credits were added
-      if (CRM_Utils_Array::value('soft_credit_to', $formatted)) {
-        return CRM_Contribute_Import_Parser::SOFT_CREDIT;
-      }
-
-      // process pledge payment assoc w/ the contribution
-      return self::processPledgePayments($formatted);
-
-      return CRM_Contribute_Import_Parser::VALID;
+      return $this->importContribution($formatted, $values);
     }
   }
 
@@ -643,6 +628,38 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
    */
   function &getImportedContributions() {
     return $this->_newContributions;
+  }
+
+  /**
+   * import contribution wrapper
+   *
+   * @return array
+   * @access public
+   */
+  function importContribution($formatted, &$values) {
+    $newContribution = civicrm_contribution_format_create($formatted);
+    if (civicrm_error($newContribution)) {
+      if (is_array($newContribution['error_message'])) {
+        array_unshift($values, $newContribution['error_message']['message']);
+        if ($newContribution['error_message']['params'][0]) {
+          return CRM_Contribute_Import_Parser::DUPLICATE;
+        }
+      }
+      else {
+        array_unshift($values, $newContribution['error_message']);
+        return CRM_Contribute_Import_Parser::ERROR;
+      }
+    }
+
+    $this->_newContributions[] = $newContribution['id'];
+
+    //return soft valid since we need to show how soft credits were added
+    if (CRM_Utils_Array::value('soft_credit_to', $formatted)) {
+      return CRM_Contribute_Import_Parser::SOFT_CREDIT;
+    }
+
+    // process pledge payment assoc w/ the contribution
+    return self::processPledgePayments($formatted);
   }
 
   /**

@@ -70,6 +70,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
   protected $_externalIdentifierIndex;
   protected $_allExternalIdentifiers;
   protected $_parseStreetAddress;
+  protected $_lastImportContactId;
 
   /**
    * Array of succesfully imported contact id's
@@ -445,6 +446,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
    * @access public
    */
   function import($onDuplicate, &$values, $doGeocodeAddress = FALSE) {
+    $this->_lastImportContactId = 0;
     $config = &CRM_Core_Config::singleton();
     $this->_unparsedStreetAddressContacts = array();
     if (!$doGeocodeAddress) {
@@ -757,6 +759,8 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
       // call import hook
       require_once 'CRM/Utils/Hook.php';
       $currentImportID = end($values);
+      $this->_lastImportContactId = $contactID;
+      dpm($this->_lastImportContactId);
 
       $hookParams = array('contactID' => $contactID,
         'importID' => $currentImportID,
@@ -2199,6 +2203,10 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
     }
 
     return $allowToCreate;
+  }
+  
+  function getLastImportContactId() {
+    return $this->_lastImportContactId;
   }
 }
 
