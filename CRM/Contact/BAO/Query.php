@@ -3303,17 +3303,7 @@ WHERE  id IN ( $groupIDs )
 
   function modifiedDates($values) {
     $this->_useDistinct = TRUE;
-    foreach (array_keys($this->_params) as $id) {
-      if ($this->_params[$id][0] == 'log_date') {
-        if ($this->_params[$id][2] == 1) {
-          $fieldTitle = 'Added Date';
-        }
-        elseif ($this->_params[$id][2] == 2) {
-          $fieldTitle = 'Modified Date';
-        }
-      }
-    }
-
+    $fieldTitle = 'Modified Date';
     $this->dateQueryBuilder($values,
       'civicrm_log', 'log_date', 'modified_date', $fieldTitle
     );
@@ -4231,9 +4221,14 @@ SELECT COUNT( civicrm_contribution.total_amount ) as cancel_count,
       if ($name == $fieldName . '_low') {
         $firstOP = '>=';
         $firstPhrase = 'greater than or equal to \'%1\'';
+        $time = $this->timeFieldValue($name);
+        if ($time) {
+          $value .= ' '.$time;
+        }
         $firstDate = CRM_Utils_Date::processDate($value);
 
         $secondValues = $this->getWhereValues("{$fieldName}_high", $grouping);
+        $secondTime = $this->timeFieldValue("{$fieldName}_high");
         if (!empty($secondValues) &&
           $secondValues[2]
         ) {
@@ -4241,9 +4236,10 @@ SELECT COUNT( civicrm_contribution.total_amount ) as cancel_count,
           $secondPhrase = 'less than or equal to \'%1\'';
           $secondValue = $secondValues[2];
 
-          if ($appendTimeStamp &&
-            strlen($secondValue) == 10
-          ) {
+          if ($secondTime) {
+            $secondValue .= ' '.$secondTime;
+          }
+          elseif ($appendTimeStamp && strlen($secondValue) == 10) {
             $secondValue .= ' 23:59:59';
           }
           $secondDate = CRM_Utils_Date::processDate($secondValue);
@@ -4253,22 +4249,25 @@ SELECT COUNT( civicrm_contribution.total_amount ) as cancel_count,
         $firstOP = '<=';
         $firstPhrase = 'less than or equal to \'%1\'';
 
-        if ($appendTimeStamp &&
-          strlen($value) == 10
-        ) {
+        if ($time) {
+          $value .= ' '.$time;
+        }
+        elseif ($appendTimeStamp && strlen($value) == 10) {
           $value .= ' 23:59:59';
         }
         $firstDate = CRM_Utils_Date::processDate($value);
 
         $secondValues = $this->getWhereValues("{$fieldName}_low", $grouping);
-        if (!empty($secondValues) &&
-          $secondValues[2]
-        ) {
-          $secondOP = '>=';
-          $secondPhrase = 'greater than or equal to \'%1\'';
-          $secondValue = $secondValues[2];
-          $secondDate = CRM_Utils_Date::processDate($secondValue);
+        $secondOP = '>=';
+        $secondPhrase = 'greater than or equal to \'%1\'';
+        $secondTime = $this->timeFieldValue("{$fieldName}_low");
+        if ($secondTime) {
+          $secondValue .= ' '.$secondTime;
         }
+        if (!empty($secondValues) && $secondValues[2]) {
+          $secondValue = $secondValues[2];
+        }
+        $secondDate = CRM_Utils_Date::processDate($secondValue);
       }
 
       if (!$appendTimeStamp) {
@@ -4319,15 +4318,26 @@ SELECT COUNT( civicrm_contribution.total_amount ) as cancel_count,
       $this->_qill[$grouping][] = "$fieldTitle - $phrase \"$format\"";
     }
 
-    if (
-      $tableName == 'civicrm_log' &&
-      $fieldTitle == 'Added Date'
-    ) {
+    if ($tableName == 'civicrm_log' && $fieldTitle == 'Added Date') {
       //CRM-6903 --hack to check modified date of first record.
       //as added date means first modified date of object.
       $addedDateQuery = 'select id from civicrm_log group by entity_id order by id';
       $this->_where[$grouping][] = "civicrm_log.id IN ( {$addedDateQuery} )";
     }
+  }
+
+  function timeFieldValue($fieldName){
+    $timeField = $fieldName . '_time';
+    foreach($this->_params as $p){
+      if ($p[0] == $timeField) {
+        $time = explode(':', $p[2]);
+        if (count($time) < 3) {
+          $time[] = '00';
+        }
+        return implode(':', $time);
+      }
+    }
+    return FALSE;
   }
 
   function numberRangeBuilder(&$values,

@@ -128,21 +128,14 @@ cj(function($){
       $('.custom_{/literal}{$receiptTitle}{literal}-section').find('.label label').append('<span class="crm-marker" title="{/literal}{ts}This field is required.{/ts}{literal}">*</span>');
       $('#custom_{/literal}{$receiptTitle}{literal}').addClass('required');
       {/literal}{/if}{literal}
-      {/literal}{if $receiptSerial}{literal}
-      $('.custom_{/literal}{$receiptSerial}{literal}-section .label label .crm-marker').remove();
-      $('.custom_{/literal}{$receiptSerial}{literal}-section').find('.label label').append('<span class="crm-marker" title="{/literal}{ts}This field is required.{/ts}{literal}">*</span>');
-      $('#custom_{/literal}{$receiptSerial}{literal}').addClass('required');
-      {/literal}{/if}{literal}
+      // remove $receiptSerial part in #18692
     }
     else{
       {/literal}{if $receiptTitle}{literal}
       $('.custom_{/literal}{$receiptTitle}{literal}-section .label label .crm-marker').remove();
       $('#custom_{/literal}{$receiptTitle}{literal}').removeClass('required');
       {/literal}{/if}{literal}
-      {/literal}{if $receiptSerial}{literal}
-      $('.custom_{/literal}{$receiptSerial}{literal}-section .label label .crm-marker').remove();
-      $('#custom_{/literal}{$receiptSerial}{literal}').removeClass('required');
-      {/literal}{/if}{literal}
+      // remove $receiptSerial part in #18692
     }
   }
 

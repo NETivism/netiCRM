@@ -780,25 +780,22 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
       }
 
       if (strpos($this->_selectorName, 'CRM_Contact_Selector') !== FALSE) {
-        eval('$selector = new ' . $this->_selectorName .
-          '( $this->_customSearchClass,
-                         $this->_formValues,
-                         $this->_params,
-                         $this->_returnProperties,
-                         $this->_action,
-                         false,
-                         $searchChildGroups,
-                         $this->_context,
-                         $this->_contextMenu );'
+        $selectorName = $this->_selectorName;
+        $selector = new $selectorName(
+          $this->_customSearchClass,
+          $this->_formValues,
+          $this->_params,
+          $this->_returnProperties,
+          $this->_action,
+          false,
+          $searchChildGroups,
+          $this->_context,
+          $this->_contextMenu
         );
       }
       else {
-        eval('$selector = new ' . $this->_selectorName .
-          '( $this->_params,
-                         $this->_action,
-                         null, false, null,
-                         "search", "advanced" );'
-        );
+        $selectorName = $this->_selectorName;
+        $selector = new $selectorName($this->_params, $this->_action, NULL, FALSE, NULL, "search", "advanced");
       }
 
       $selector->setKey($this->controller->_key);
