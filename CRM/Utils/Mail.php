@@ -98,7 +98,7 @@ class CRM_Utils_Mail {
     $headers['Content-Transfer-Encoding'] = 'quoted-printable';
     $headers['Return-Path'] = CRM_Utils_Array::value('returnPath', $params);
     $headers['Reply-To'] = CRM_Utils_Array::value('replyTo', $params, $from);
-    $headers['Sender'] = CRM_Utils_Array::value('replyTo', $params, $from);
+    $headers['Sender'] = CRM_Utils_Array::value('returnPath', $params);
     $headers['Date'] = date('r');
     if (CRM_Utils_Array::value('autoSubmitted', $params)) {
       $headers['Auto-Submitted'] = "Auto-Generated";
