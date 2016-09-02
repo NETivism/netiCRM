@@ -113,6 +113,11 @@
      <page_callback>CRM_Contact_Form_Merge</page_callback>
   </item>
   <item>
+     <path>civicrm/contact/task/annualreceipt</path>
+     <title>Print Annual Receipt</title>
+     <page_callback>CRM_Contact_Form_Task_AnnualReceipt</page_callback>
+  </item>
+  <item>
      <path>civicrm/contact/email</path>
      <title>Email a Contact</title>
      <page_callback>CRM_Contact_Form_Task_Email</page_callback>

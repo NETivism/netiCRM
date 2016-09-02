@@ -23,15 +23,20 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
    * @access public
    */
   function preProcess() {
-    parent::preProcess();
-    $session = CRM_Core_Session::singleton();
+    $cid = CRM_Utils_Request::retrieve('cid', 'Positive', $this, FALSE);
+    if ($cid) {
+      $this->_contactIds = array($cid);
+    }
+    else {
+      parent::preProcess();
+      $session = CRM_Core_Session::singleton();
+      $year = $session->get('year', 'AnnualReceipt');
+      if(!empty($year)){
+        $this->_year = $year;
+      }
+    }
 
     // this session comes from custom search
-    $year = $session->get('year', 'AnnualReceipt');
-    if(!empty($year)){
-      $this->_year = $year;
-    }
-    
     CRM_Utils_System::appendBreadCrumb($breadCrumb);
     CRM_Utils_System::setTitle(ts('Print Annual Receipt'));
   }
