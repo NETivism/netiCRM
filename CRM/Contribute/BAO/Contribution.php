@@ -2153,10 +2153,10 @@ SELECT source_contact_id
 
     // filter by recurring contribution
     if(!empty($option['is_recur'])){
-      if($option['is_recur'] === 1){
+      if($option['is_recur'] == 1){
         $where[] = "c.contribution_recur_id IS NOT NULL";
       }
-      elseif($option['is_recur'] === -1){
+      elseif($option['is_recur'] == -1){
         $where[] = "c.contribution_recur_id IS NULL";
       }
     }

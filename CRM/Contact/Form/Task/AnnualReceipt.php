@@ -70,10 +70,10 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
     $contribution_type = CRM_Contribute_PseudoConstant::contributionType();
     $is_recur = array(
       '' => '- '.ts('All').' -' ,
-      -1 => ts('Normal'),
+      -1 => ts('Non-Recurring Contribution'),
       1 => ts('Recurring Contribution'),
     );
-    $this->addElement('select', 'is_recur', ts('Recurring Contribution'), $is_recur);
+    $this->addElement('select', 'is_recur', ts('Find Recurring Contributions?'), $is_recur);
 
     $this->addButtons(array(
         array(
