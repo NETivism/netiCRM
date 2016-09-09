@@ -41,6 +41,10 @@ require_once 'CRM/Contribute/Import/Parser/Contribution.php';
  */
 class CRM_Contribute_Import_Form_UploadFile extends CRM_Core_Form {
 
+  private $_dedupeRuleGroups;
+  private $_dedupeRuleFields;
+  private $_contactTypes;
+
   /**
    * Function to set variables up before form is built
    *
@@ -50,6 +54,25 @@ class CRM_Contribute_Import_Form_UploadFile extends CRM_Core_Form {
   public function preProcess() {
     $session = CRM_Core_Session::singleton();
     $session->pushUserContext(CRM_Utils_System::url('civicrm/contribute/import', 'reset=1'));
+
+    $this->_contactTypes = array(
+      CRM_Contribute_Import_Parser::CONTACT_INDIVIDUAL,
+      CRM_Contribute_Import_Parser::CONTACT_HOUSEHOLD,
+      CRM_Contribute_Import_Parser::CONTACT_ORGANIZATION,
+    );
+    foreach ($this->_contactTypes as $type) {
+      $supportFields = &CRM_Dedupe_BAO_RuleGroup::supportedFields($type);
+      foreach($supportFields as $array) {
+        foreach($array as $name => $label){
+          if (!isset($this->_dedupeRuleFields[$name])) {
+            $this->_dedupeRuleFields[$name] = $label;
+          }  
+        }
+      }
+    }
+
+    $dedupeGroupParams = array('level' => 'Strict');
+    $this->_dedupeRuleGroups = CRM_Dedupe_BAO_RuleGroup::getDetailsByParams($dedupeGroupParams);
   }
 
   /**
@@ -81,25 +104,45 @@ class CRM_Contribute_Import_Form_UploadFile extends CRM_Core_Form {
 
     $this->addElement('checkbox', 'skipColumnHeader', ts('First row contains column headers'));
 
-    $duplicateOptions = array();
+    $duplicateOptions = array(
+      CRM_Contribute_Import_Parser::DUPLICATE_SKIP => ts('Insert new contributions'),
+      CRM_Contribute_Import_Parser::DUPLICATE_UPDATE => ts('Update existing contributions'),
+    );
+    $this->addRadio('onDuplicate', ts('Import mode'), $duplicateOptions);
 
-    $duplicateOptions[] = HTML_QuickForm::createElement('radio',
-      NULL, NULL, ts('Insert new contributions'), CRM_Contribute_Import_Parser::DUPLICATE_SKIP
+    $duplicateContactOptions = array(
+      CRM_Contribute_Import_Parser::CONTACT_NOIDCREATE => ts('Create new contact only on identifier not import'),
+      CRM_Contribute_Import_Parser::CONTACT_AUTOCREATE => ts('Create new contact when not found'),
+      CRM_Contribute_Import_Parser::CONTACT_DONTCREATE => ts('Do not create new contact'),
     );
-    $duplicateOptions[] = HTML_QuickForm::createElement('radio',
-      NULL, NULL, ts('Update existing contributions'), CRM_Contribute_Import_Parser::DUPLICATE_UPDATE
-    );
-    $this->addGroup($duplicateOptions, 'onDuplicate',
-      ts('Import mode')
-    );
+    $this->addRadio('createContactOption', ts('Create New Contact'), $duplicateContactOptions, NULL, '<br>');
+
+    //contact types option
+    $contactOptions = array();
+    foreach($this->_contactTypes as $type) {
+      if (CRM_Contact_BAO_ContactType::isActive($type)) {
+        $contactOptions[$type] = ts($type);
+      }
+    }
+    $this->addRadio('contactType', ts('Contact Type'), $contactOptions);
+
+    foreach ($this->_dedupeRuleGroups as $dedupegroup_id => $groupValues) {
+      $fields = array();
+      foreach($groupValues['fields'] as $name){
+        if (isset($this->_dedupeRuleFields[$name])) {
+          $fields[] = $this->_dedupeRuleFields[$name];
+        }
+      }
+      $label = ts($groupValues['contact_type']);
+      if ($groupValues['is_default']) {
+        $label .= ts('Default');
+      }
+      $dedupeRule[$dedupegroup_id] = $label . ' - '.$groupValues['name'] . ' (' . implode(', ', $fields) .')';
+    }
+    $this->add('select', 'dedupeRuleGroup', ts('Dedupe Rule of Contact'), $dedupeRule);
 
     //get the saved mapping details
-    require_once "CRM/Core/BAO/Mapping.php";
-    require_once "CRM/Core/OptionGroup.php";
-    $mappingArray = CRM_Core_BAO_Mapping::getMappings(CRM_Core_OptionGroup::getValue('mapping_type',
-        'Import Contribution',
-        'name'
-      ));
+    $mappingArray = CRM_Core_BAO_Mapping::getMappings(CRM_Core_OptionGroup::getValue('mapping_type', 'Import Contribution', 'name'));
     $this->assign('savedMapping', $mappingArray);
     $this->add('select', 'savedMapping', ts('Mapping Option'), array('' => ts('- select -')) + $mappingArray);
     $this->addElement('submit', 'loadMapping', ts('Load Mapping'), NULL, array('onclick' => 'checkSelect()'));
@@ -109,39 +152,14 @@ class CRM_Contribute_Import_Form_UploadFile extends CRM_Core_Form {
       $this->setDefaults(array('savedMapping' => $loadeMapping));
     }
 
-    $this->setDefaults(array('onDuplicate' =>
-        CRM_Contribute_Import_Parser::DUPLICATE_SKIP,
-      ));
 
-    //contact types option
-    require_once 'CRM/Contact/BAO/ContactType.php';
-    $contactOptions = array();
-    if (CRM_Contact_BAO_ContactType::isActive('Individual')) {
-      $contactOptions[] = HTML_QuickForm::createElement('radio',
-        NULL, NULL, ts('Individual'), CRM_Contribute_Import_Parser::CONTACT_INDIVIDUAL
-      );
-    }
-    if (CRM_Contact_BAO_ContactType::isActive('Household')) {
-      $contactOptions[] = HTML_QuickForm::createElement('radio',
-        NULL, NULL, ts('Household'), CRM_Contribute_Import_Parser::CONTACT_HOUSEHOLD
-      );
-    }
-    if (CRM_Contact_BAO_ContactType::isActive('Organization')) {
-      $contactOptions[] = HTML_QuickForm::createElement('radio',
-        NULL, NULL, ts('Organization'), CRM_Contribute_Import_Parser::CONTACT_ORGANIZATION
-      );
-    }
-
-    $this->addGroup($contactOptions, 'contactType',
-      ts('Contact Type')
-    );
-
-    $this->setDefaults(array('contactType' =>
-        CRM_Contribute_Import_Parser::CONTACT_INDIVIDUAL,
-      ));
+    $this->setDefaults(array(
+      'onDuplicate' => CRM_Contribute_Import_Parser::DUPLICATE_SKIP,
+      'createContactOption' => CRM_Contribute_Import_Parser::CONTACT_NOIDCREATE,
+      'contactType' => CRM_Contribute_Import_Parser::CONTACT_INDIVIDUAL,
+    ));
 
     //build date formats
-    require_once 'CRM/Core/Form/Date.php';
     CRM_Core_Form_Date::buildAllowedDateFormats($this);
 
     $this->addButtons(array(

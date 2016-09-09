@@ -42,3 +42,10 @@
 {htxt id="id-onDuplicate"}
     <p>{ts}For each import, you can either INSERT new contribution records, or UPDATE existing records. You can not do both types of operations in a single import session. If you are UPDATING existing contributions, you will need to include a unique identifer to match to the existing records. This can be either the CiviCRM-assigned contribution ID, a unique Invoice ID, or a unique Transaction ID.{/ts}</p>
 {/htxt}
+
+{htxt id="id-createContactOption"}
+    <p>{ts}For each import, system will find your match contact record in each contribution. When contact not found, you can choose default action of import:<ul>
+<li><strong>Create new contact only on identifier not import</strong> is default option, also the secure way to prevent import too many contacts. This will try to match each contribution import row to see if your import have these contact identifier or external identifier. If none of these column found, we will create new contact.</li>
+<li><strong>Create new contact when not found</strong> will always create new contact when duplicate rule doesn't found of this contact.</li>
+<li><strong>Do not create new contact</strong> will never create new contact during contribution. Use this when you are sure you just want to insert or update contribution of exists contact.</li></ul>{/ts}</p>
+{/htxt}

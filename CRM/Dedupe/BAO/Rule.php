@@ -184,12 +184,17 @@ class CRM_Dedupe_BAO_Rule extends CRM_Dedupe_DAO_Rule {
    * @return rule fields array associated to rule group
    * @access public
    */
-  function dedupeRuleFields($params) {
-    require_once 'CRM/Dedupe/BAO/RuleGroup.php';
+  static function dedupeRuleFields($params) {
     $rgBao = new CRM_Dedupe_BAO_RuleGroup();
-    $rgBao->level = $params['level'];
-    $rgBao->contact_type = $params['contact_type'];
-    $rgBao->is_default = 1;
+    if (!empty($params['rulegroup_id'])) {
+      $rgBao->id = $params['rulegroup_id'];
+    }
+    else{
+      // find default
+      $rgBao->level = $params['level'];
+      $rgBao->contact_type = $params['contact_type'];
+      $rgBao->is_default = 1;
+    }
     $rgBao->find(TRUE);
 
     $ruleBao = new CRM_Dedupe_BAO_Rule();
