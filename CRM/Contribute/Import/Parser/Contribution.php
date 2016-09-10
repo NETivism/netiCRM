@@ -186,7 +186,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
       $this->_mapperPhoneType,
       $this->_mapperImProvider
     );
-    $this->_parserContact->_onDuplicate = CRM_Import_Parser::DUPLICATE_FILL;
+    $this->_parserContact->_onDuplicate = CRM_Import_Parser::DUPLICATE_SKIP;
     $this->_parserContact->_contactType = $this->_contactType;
     $this->_parserContact->init();
 
@@ -514,10 +514,10 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
       }
 
       //retrieve contact id using contact dedupe rule
-      $error = civicrm_check_contact_dedupe($paramValues);
+      $found = civicrm_check_contact_dedupe($paramValues, $this->_dedupeRuleGroupId);
 
-      if (civicrm_duplicate($error)) {
-        $matchedIDs = explode(',', $error['error_message']['params'][0]);
+      if (civicrm_duplicate($found)) {
+        $matchedIDs = explode(',', $found['error_message']['params'][0]);
         if (count($matchedIDs) > 1) {
           array_unshift($values, "Multiple matching contact records detected for this row. The contribution was not imported");
           return CRM_Contribute_Import_Parser::ERROR;
@@ -545,7 +545,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
           return $this->importContribution($formatted, $values);
         }
         else {
-          // Using new Dedupe rule.
+          // Using new Dedupe rule for error message handling
           $ruleParams = array(
             'contact_type' => $this->_contactType,
             'level' => 'Strict',

@@ -1362,7 +1362,7 @@ function _civicrm_activity_formatted_param(&$params, &$values, $create = FALSE) 
 /**
  *  Function to check duplicate contacts based on de-deupe parameters
  */
-function civicrm_check_contact_dedupe(&$params) {
+function civicrm_check_contact_dedupe(&$params, $dedupeRuleGroupID = NULL) {
   static $cIndieFields = NULL;
   static $defaultLocationId = NULL;
 
@@ -1427,7 +1427,7 @@ function civicrm_check_contact_dedupe(&$params) {
 
   $contactFormatted['contact_type'] = $contactType;
 
-  return _civicrm_duplicate_formatted_contact($contactFormatted);
+  return _civicrm_duplicate_formatted_contact($contactFormatted, $dedupeRuleGroupID);
 }
 
 /**

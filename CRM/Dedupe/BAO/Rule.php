@@ -186,8 +186,8 @@ class CRM_Dedupe_BAO_Rule extends CRM_Dedupe_DAO_Rule {
    */
   static function dedupeRuleFields($params) {
     $rgBao = new CRM_Dedupe_BAO_RuleGroup();
-    if (!empty($params['rulegroup_id'])) {
-      $rgBao->id = $params['rulegroup_id'];
+    if (!empty($params['id'])) {
+      $rgBao->id = $params['id'];
     }
     else{
       // find default

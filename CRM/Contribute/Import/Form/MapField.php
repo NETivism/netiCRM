@@ -210,15 +210,28 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
     }
     elseif ($this->_onDuplicate == CRM_Contribute_Import_Parser::DUPLICATE_SKIP) {
       unset($this->_mapperFields['contribution_id']);
-      $highlightedFieldsArray = array('contribution_contact_id', 'email', 'first_name', 'last_name', 'external_identifier', 'total_amount');
-      foreach ($highlightedFieldsArray as $name) {
-        $highlightedFields[] = $name;
+      $dedupeRuleGroup = $this->get('dedupeRuleGroup');
+      if(!empty($dedupeRuleGroup)) {
+        $ruleParams = array('id' => $dedupeRuleGroup);
       }
+      else{
+        // default rule group
+        $ruleParams = array(
+          'contact_type' => $contactType,
+          'level' => 'Strict',
+        );
+      }
+      $dedupeFields = CRM_Dedupe_BAO_Rule::dedupeRuleFields($ruleParams);
+      $dedupeFields = array_merge($dedupeFields, array('contribution_contact_id', 'external_identifier'));
+      foreach ($dedupeFields as $fieldName) {
+        $this->_mapperFields[$fieldName] .= ' '. ts('(match to contact)');
+        $highlightedFields[] = $fieldName;
+      }
+      $highlightedFields = array_merge($highlightedFields, array('total_amount'));
     }
 
     // modify field title for contribution status
     $this->_mapperFields['contribution_status_id'] = ts('Contribution Status');
-
     $this->assign('highlightedFields', $highlightedFields);
   }
 
@@ -493,12 +506,19 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
         CRM_Contribute_Import_Parser::CONTACT_HOUSEHOLD => 'Household',
         CRM_Contribute_Import_Parser::CONTACT_ORGANIZATION => 'Organization',
       );
-      $params = array(
-        'level' => 'Strict',
-        'contact_type' => $contactTypes[$contactTypeId],
-      );
+      $dedupeRuleGroup = $self->get('dedupeRuleGroup');
+      if(!empty($dedupeRuleGroup)) {
+        $ruleParams = array('id' => $dedupeRuleGroup);
+      }
+      else{
+        // default rule group
+        $ruleParams = array(
+          'contact_type' => $contactType,
+          'level' => 'Strict',
+        );
+      }
       require_once 'CRM/Dedupe/BAO/RuleGroup.php';
-      list($ruleFields, $threshold) = CRM_Dedupe_BAO_RuleGroup::dedupeRuleFieldsWeight($params);
+      list($ruleFields, $threshold) = CRM_Dedupe_BAO_RuleGroup::dedupeRuleFieldsWeight($ruleParams);
       $weightSum = 0;
       foreach ($importKeys as $key => $val) {
         if (array_key_exists($val, $ruleFields)) {

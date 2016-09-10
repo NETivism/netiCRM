@@ -39,7 +39,12 @@ require_once 'CRM/Utils/Type.php';
 require_once 'CRM/Contribute/Import/Field.php';
 
 abstract class CRM_Contribute_Import_Parser {
-  CONST MAX_ERRORS = 250, MAX_WARNINGS = 25, VALID = 1, WARNING = 2, ERROR = 3, CONFLICT = 4, STOP = 5, DUPLICATE = 6, MULTIPLE_DUPE = 7, NO_MATCH = 8, SOFT_CREDIT = 9, SOFT_CREDIT_ERROR = 10, PLEDGE_PAYMENT = 11, PLEDGE_PAYMENT_ERROR = 12, CONTACT_NOIDCREATE = 100, CONTACT_AUTOCREATE = 101, CONTACT_DONTCREATE = 102;
+  CONST MAX_ERRORS = 250, MAX_WARNINGS = 25, VALID = 1, WARNING = 2, ERROR = 3, CONFLICT = 4, STOP = 5, DUPLICATE = 6, MULTIPLE_DUPE = 7, NO_MATCH = 8, SOFT_CREDIT = 9, SOFT_CREDIT_ERROR = 10, PLEDGE_PAYMENT = 11, PLEDGE_PAYMENT_ERROR = 12;
+
+  /**
+   * import contact when import contribution
+   */
+  CONST CONTACT_NOIDCREATE = 100, CONTACT_AUTOCREATE = 101, CONTACT_DONTCREATE = 102;
 
   /**
    * various parser modes
@@ -247,6 +252,20 @@ abstract class CRM_Contribute_Import_Parser {
   protected $_haveColumnHeader;
 
   /**
+   * Dedupe group id for contact matching
+   *
+   * @var integer 
+   */
+  protected $_dedupeRuleGroupId;
+
+  /**
+   * Create contact mode
+   *
+   * @var integer
+   */
+  protected $_createContactOption;
+
+  /**
    * contact type
    *
    * @var int
@@ -264,25 +283,17 @@ abstract class CRM_Contribute_Import_Parser {
     $skipColumnHeader = FALSE,
     $mode = self::MODE_PREVIEW,
     $contactType = self::CONTACT_INDIVIDUAL,
-    $onDuplicate = self::DUPLICATE_SKIP
+    $onDuplicate = self::DUPLICATE_SKIP,
+    $createContactOption = self::CONTACT_NOIDCREATE,
+    $dedupeRuleGroupId = 0
   ) {
     if (!is_array($fileName)) {
       CRM_Core_Error::fatal();
     }
     $fileName = $fileName['name'];
-
-    switch ($contactType) {
-      case self::CONTACT_INDIVIDUAL:
-        $this->_contactType = 'Individual';
-        break;
-
-      case self::CONTACT_HOUSEHOLD:
-        $this->_contactType = 'Household';
-        break;
-
-      case self::CONTACT_ORGANIZATION:
-        $this->_contactType = 'Organization';
-    }
+    $this->_contactType = $contactType;
+    $this->_createContactOption = $createContactOption;
+    $this->_dedupeRuleGroupId = $dedupeRuleGroupId;
 
     $this->init();
 
@@ -317,7 +328,7 @@ abstract class CRM_Contribute_Import_Parser {
     while (!feof($fd)) {
       $this->_lineCount++;
 
-      $values = fgetcsv($fd, 8192, $seperator);
+      $values = fgetcsv($fd, 20000, $seperator);
       if (!$values) {
         continue;
       }

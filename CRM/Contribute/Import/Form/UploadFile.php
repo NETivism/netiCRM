@@ -190,11 +190,27 @@ class CRM_Contribute_Import_Form_UploadFile extends CRM_Core_Form {
     $contactType = $this->controller->exportValue($this->_name, 'contactType');
     $dateFormats = $this->controller->exportValue($this->_name, 'dateFormats');
     $savedMapping = $this->controller->exportValue($this->_name, 'savedMapping');
+    $createContactOption = $this->controller->exportValue($this->_name, 'createContactOption');
+    $dedupeRuleGroup = $this->controller->exportValue($this->_name, 'dedupeRuleGroup');
 
     $this->set('onDuplicate', $onDuplicate);
     $this->set('contactType', $contactType);
     $this->set('dateFormats', $dateFormats);
     $this->set('savedMapping', $savedMapping);
+    if ($onDuplicate == CRM_Contribute_Import_Parser::DUPLICATE_UPDATE) {
+      $createContactOption = CRM_Contribute_Import_Parser::CONTACT_DONTCREATE; 
+      $this->set('createContactOption', $createContactOption);
+    }
+    else{
+      $this->set('createContactOption', $createContactOption);
+    }
+    if ($createContactOption == CRM_Contribute_Import_Parser::CONTACT_DONTCREATE) {
+      $dedupeRuleGroup = '';
+      $this->set('dedupeRuleGroup', '');
+    }
+    else{
+      $this->set('dedupeRuleGroup', $dedupeRuleGroup);
+    }
 
     $session = CRM_Core_Session::singleton();
     $session->set("dateTypes", $dateFormats);
