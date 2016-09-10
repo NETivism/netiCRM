@@ -125,8 +125,10 @@ class CRM_Import_Form_MapField extends CRM_Core_Form {
    * @access public
    */
   public function defaultFromColumnName($columnName, &$patterns) {
-    if (!preg_match('/^[a-z0-9 ]$/i', $columnName)) {
-      if ($columnKey = array_search($columnName, $this->_mapperFields)) {
+    if (!preg_match('/^[0-9a-z]$/i', $columnName)) {
+      $matches = preg_grep('/^'.$columnName.'/iu', $this->_mapperFields);
+      if (count($matches)) {
+        $columnKey = key($matches);
         $this->_fieldUsed[$columnKey] = TRUE;
         return $columnKey;
       }
