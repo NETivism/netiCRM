@@ -188,8 +188,8 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
     );
     $this->_parserContact->_onDuplicate = CRM_Import_Parser::DUPLICATE_SKIP;
     $this->_parserContact->_contactType = $this->_contactType;
+    $this->_parserContact->_dedupeRuleGroupId = $this->_dedupeRuleGroupId;
     $this->_parserContact->init();
-
   }
 
   /**
@@ -312,7 +312,6 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
    */
   function import($onDuplicate, &$values) {
     $contactValues = $values;
-
     // first make sure this is a valid line
     $response = $this->summary($values);
     if ($response != CRM_Contribute_Import_Parser::VALID) {
@@ -507,7 +506,25 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
       }
     }
 
-    if ($this->_contactIdIndex < 0) {
+    $doCreateContact = FALSE;
+    $checkContactId = $this->checkContactById($paramValues);
+
+    if ($this->_createContactOption == self::CONTACT_DONTCREATE) {
+      $doCreateContact = FALSE;
+    }
+    elseif ($this->_createContactOption == self::CONTACT_NOIDCREATE) {
+      if (!empty($paramValues['external_identifier']) || !empty($paramValues['contribution_contact_id'])) {
+        $doCreateContact = FALSE;
+      }
+      else {
+        $doCreateContact = TRUE;
+      }
+    }
+    elseif ($this->_createContactOption == self::CONTACT_AUTOCREATE) {
+      $doCreateContact = TRUE;
+    }
+
+    if ($doCreateContact && empty($checkContactId)) {
       // set the contact type if its not set
       if (!isset($paramValues['contact_type'])) {
         $paramValues['contact_type'] = $this->_contactType;
@@ -530,15 +547,8 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
       }
       else {
         // trying to create new contact base on exists contact related params
-        $paramValuesContact = array();
-        foreach ($paramValues as $key => $field) {
-          if (isset($this->_importableContactFields[$key])) {
-            $paramValuesContact[$key] = $field;
-          }
-        }
-        
         $doGeocodeAddress = FALSE;
-        $contactImportResult = $this->_parserContact->import(CRM_Import_Parser::DUPLICATE_SKIP, $contactValues, $doGeocodeAddress);
+        $contactImportResult = $this->_parserContact->import(CRM_Import_Parser::DUPLICATE_FILL, $contactValues, $doGeocodeAddress);
         $contactID = $this->_parserContact->getLastImportContactId();
         if (!empty($contactID) && $contactImportResult == CRM_Import_Parser::VALID) {
           $formatted['contact_id'] = $contactID;
@@ -580,16 +590,19 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
       }
     }
     else {
-      if ($paramValues['external_identifier']) {
-        $checkCid = new CRM_Contact_DAO_Contact();
-        $checkCid->external_identifier = $paramValues['external_identifier'];
-        $checkCid->find(TRUE);
-        if ($checkCid->id != $formatted['contact_id']) {
-          array_unshift($values, "Mismatch of External identifier :" . $paramValues['external_identifier'] . " and Contact Id:" . $formatted['contact_id']);
-          return CRM_Contribute_Import_Parser::ERROR;
-        }
+      if ($checkContactId) {
+        $formatted['contact_id'] = $checkContactId;
+        unset($formatted['contribution_contact_id']);
+        return $this->importContribution($formatted, $values);
       }
-      return $this->importContribution($formatted, $values);
+      elseif ($checkContactId === FALSE) {
+        array_unshift($values, "Mismatch of External identifier :" . $paramValues['external_identifier'] . " and Contact Id:" . $formatted['contact_id']);
+        return CRM_Contribute_Import_Parser::ERROR;
+      }
+      else {
+        array_unshift($values, "Invalid Contact ID: There is no contact record with contact_id = {$formatted['contribution_contact_id']}.");
+        return CRM_Contribute_Import_Parser::ERROR;
+      }
     }
   }
 
@@ -660,6 +673,43 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
 
     // process pledge payment assoc w/ the contribution
     return self::processPledgePayments($formatted);
+  }
+
+  function checkContactById($params) {
+    $pass = $contactID = 0;
+    $checkCid = new CRM_Contact_DAO_Contact();
+    if (!empty($params['external_identifier'])) {
+      $checkCid->external_identifier = $param['external_identifier'];
+      $checkCid->is_deleted = 0;
+      if($checkCid->find(TRUE)){
+        $contactID = $checkCid->id;
+      }
+    }
+
+    if (!empty($params['contribution_contact_id'])) {
+      if (!empty($contactID)) {
+        if ($contactID != $params['contribution_contact_id'] ){
+          $pass = FALSE;
+        }
+        else {
+          $pass = $contactID;
+        }
+      }
+      else {
+        $checkCid->id = $param['contribution_contact_id'];
+        $checkCid->is_deleted = 0;
+        if($checkCid->find(TRUE)){
+          $contactID = $checkCid->id;
+          $pass = $contactID;
+        }
+      }
+    }
+    elseif(!empty($contactID)) {
+      $pass = $contactID;
+    }
+    $checkCid->free();
+
+    return $pass;
   }
 
   /**

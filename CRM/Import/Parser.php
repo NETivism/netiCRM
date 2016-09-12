@@ -236,6 +236,13 @@ abstract class CRM_Import_Parser {
     $this->_maxErrorCount = self::MAX_ERRORS;
   }
 
+  /**
+   * on duplicate check rule group id
+   *
+   * @var int
+   */
+  public $_dedupeRuleGroupId;
+
   abstract function init();
   function run($tableName,
     &$mapper,

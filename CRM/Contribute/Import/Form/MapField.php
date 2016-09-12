@@ -725,7 +725,6 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
     );
     foreach ($properties as $propertyName => $propertyVal) {
       $this->set($propertyName, $$propertyVal);
-      dpm($$propertyVal);
     }
 
     // store mapping Id to display it in the preview page

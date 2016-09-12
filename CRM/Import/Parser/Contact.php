@@ -760,7 +760,6 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
       require_once 'CRM/Utils/Hook.php';
       $currentImportID = end($values);
       $this->_lastImportContactId = $contactID;
-      dpm($this->_lastImportContactId);
 
       $hookParams = array('contactID' => $contactID,
         'importID' => $currentImportID,
@@ -1710,7 +1709,8 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
     require_once 'api/v2/Contact.php';
     // setting required check to false, CRM-2839
     // plus we do our own required check in import
-    $error = civicrm_contact_check_params($formatted, $dupeCheck, TRUE, FALSE);
+    $dedupeRuleGroupId = $this->_dedupeRuleGroupId ? $this->_dedupeRuleGroupId : NULL;
+    $error = civicrm_contact_check_params($formatted, $dupeCheck, TRUE, FALSE, $dedupeRuleGroupId);
 
     if ((is_null($error)) &&
       (civicrm_error(_civicrm_validate_formatted_contact($formatted)))
