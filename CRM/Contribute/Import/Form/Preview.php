@@ -171,8 +171,17 @@ class CRM_Contribute_Import_Form_Preview extends CRM_Core_Form {
         $mapperSoftCredit[$key] = NULL;
       }
     }
-
-    $parser = new CRM_Contribute_Import_Parser_Contribution($mapperKeys, $mapperSoftCredit);
+    $properties = array(
+      'ims' => 'mapperImProvider',
+      'phones' => 'mapperPhoneType',
+      'websites' => 'mapperWebsiteType',
+      'locationTypes' => 'mapperLocType',
+      'locations' => 'locations',
+    );
+    foreach ($properties as $propertyName => $propertyVal) {
+      $$propertyVal = $this->get($propertyName);
+    }
+    $parser = new CRM_Contribute_Import_Parser_Contribution($mapperKeys, $mapperSoftCredit, $mapperLocType, $mapperPhoneType, $mapperWebsiteType, $mapperImProvider);
 
     $mapFields = $this->get('fields');
 

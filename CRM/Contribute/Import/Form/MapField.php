@@ -691,16 +691,17 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
       else {
         if ($selOne && is_numeric($selOne)) {
           if ($fldName == 'url') {
-            $mapperWebsiteTypeVal = $websiteTypes[$selOne];
+            $mapperWebsiteTypeVal = $selOne;
           }
-          else {$locationsVal = $locationTypes[$selOne];
+          else {
+            $locationsVal = $locationTypes[$selOne];
             $mapperLocTypeVal = $selOne;
             if ($selTwo && is_numeric($selTwo)) {
               if ($fldName == 'phone') {
-                $mapperPhoneTypeVal = $phoneTypes[$selTwo];
+                $mapperPhoneTypeVal = $selTwo;
               }
               elseif ($fldName == 'im') {
-                $mapperImProviderVal = $imProviders[$selTwo];
+                $mapperImProviderVal = $selTwo;
               }
             }
           }
@@ -721,6 +722,7 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
       'ims' => 'mapperImProvider',
       'phones' => 'mapperPhoneType',
       'websites' => 'mapperWebsiteType',
+      'locationTypes' => 'mapperLocType',
       'locations' => 'locations',
     );
     foreach ($properties as $propertyName => $propertyVal) {
@@ -807,7 +809,7 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
       $this->set('savedMapping', $saveMappingFields->mapping_id);
     }
 
-    $parser = new CRM_Contribute_Import_Parser_Contribution($mapperKeysMain, $mapperSoftCredit, $mapperPhoneType);
+    $parser = new CRM_Contribute_Import_Parser_Contribution($mapperKeysMain, $mapperSoftCredit, $mapperLocType,  $mapperPhoneType, $mapperWebsiteType, $mapperImProvider);
     $parser->run($fileName, $seperator, $mapper, $skipColumnHeader,
       CRM_Contribute_Import_Parser::MODE_PREVIEW, $this->get('contactType')
     );
