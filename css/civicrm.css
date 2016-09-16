@@ -4083,6 +4083,51 @@ tbody.scrollContent tr.alternateRow {
 }
 
 @media screen and (max-width: 768px) {
+  .md-elem {
+    position: relative;
+  }
+  .md-textfield,
+  .md-file,
+  .md-select,
+  .md-elem-textarea {
+    width: 100%;
+    display: block;
+  }
+  .md-elem input[type="file"],
+  .md-elem input[type="text"],
+  .md-elem input.form-text,
+  .md-elem select,
+  .md-elem select.form-select,
+  .md-elem textarea,
+  .md-elem textarea.form-textarea,
+  .crm-container .md-elem input[type="text"], 
+  .crm-container .md-elem input[type="password"] {
+    width: 100%;
+  }
+  .crm-container .crm-section .label, 
+  .crm-section .label {
+    float: none;
+    width: 100%;
+    text-align: left;
+  }
+  .crm-container .crm-section .content, 
+  .crm-section .content {
+    margin-left: 0;
+  }
+  .crm-container div[class*="crm-section state_province-"] .md-select-single,
+  .crm-container div[class*="crm-section state_province-"] .crm-form-post-code {
+    margin-bottom: 15px;
+  }
+  .crm-container div[class*="crm-section state_province-"] .md-select-single .form-select,
+  .crm-container div[class*="crm-section state_province-"] .crm-form-post-code .form-text {
+    width: 100%;
+  }
+  .crm-container div.messages, .crm-container div.status, .crm-container div.crm-error, .crm-container #help {
+    font-size: .9375rem;
+  }
+  .crm-container div#printer-friendly {
+    display: none;
+  }
   .crm-container .wizard-bar > li {
     width: 100px;
   }
