@@ -341,8 +341,8 @@ class CRM_Member_Selector_Search extends CRM_Core_Selector_Base implements CRM_C
       $permissions[] = CRM_Core_Permission::DELETE;
     }
     $mask = CRM_Core_Action::mask($permissions);
-    $memberNameStatus = CRM_Member_PseudoConstant();
-    $memberLabelStatus = CRM_Member_PseudoConstant(NULL, NULL, 'label');
+    $memberNameStatus = CRM_Member_PseudoConstant::membershipStatus();
+    $memberLabelStatus = CRM_Member_PseudoConstant::membershipStatus(NULL, NULL, 'label');
 
     while ($result->fetch()) {
       $row = array();
