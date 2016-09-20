@@ -290,6 +290,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
    */
   function summary(&$values) {
     $response = $this->setActiveFieldValues($values);
+    $this->_lineCount++;
 
     $errorMessage = NULL;
     $errorRequired = FALSE;
@@ -390,8 +391,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
     $externalID = CRM_Utils_Array::value($this->_externalIdentifierIndex, $values);
     if ($externalID) {
       /* If it's a dupe,external Identifier  */
-
-      if ($externalDupe = CRM_Utils_Array::value($externalID,
+      if ($externalDupe = CRM_Utils_Array::key($externalID,
           $this->_allExternalIdentifiers
         )) {
         $errorMessage = ts('External Identifier conflicts with record %1', array(1 => $externalDupe));
@@ -401,7 +401,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
         return CRM_Import_Parser::ERROR;
       }
       //otherwise, count it and move on
-      $this->_allExternalIdentifiers[$externalID] = $this->_lineCount;
+      $this->_allExternalIdentifiers[$this->_lineCount] = $externalID;
     }
 
     //Checking error in custom data
@@ -2204,7 +2204,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
 
     return $allowToCreate;
   }
-  
+
   function getLastImportContactId() {
     return $this->_lastImportContactId;
   }
