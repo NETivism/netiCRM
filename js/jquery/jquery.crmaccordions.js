@@ -25,23 +25,33 @@
 */ 
 (function($){
 
-$.fn.crmaccordions = function(){
-  $('.crm-accordion-header').each(function(){
-    var accordionWrapper = $(this).parent();
-    if(!accordionWrapper.hasClass('crm-accordion-processed')) {
-      $(this).die('click');
-      $(this).live('click', function (e) {
-        accordionWrapper.toggleClass('crm-accordion-open');
-        accordionWrapper.toggleClass('crm-accordion-closed');
-        e.preventDefault();
+$.fn.crmaccordions = function() {
+  $(".crm-accordion-wrapper").each(function() {
+    var $this = $(this);
+    
+    if (!$this.hasClass("crm-accordion-processed")) {
+      $this.on("click mouseenter mouseleave", ".crm-accordion-header", function(e) {
+        var $header = $(this);
+        var $wrapper = $header.parent();
+
+        switch (e.type) {
+          case "click":
+              $wrapper.toggleClass("crm-accordion-open");
+              $wrapper.toggleClass("crm-accordion-closed");
+              return false; 
+            break;
+
+          case "mouseenter":
+            $header.addClass("crm-accordion-header-hover");
+            break;
+
+          case "mouseleave":
+            $header.removeClass("crm-accordion-header-hover");
+            break;
+        }
       });
-      $(this).live('mouseover', function() {
-        $(this).addClass('crm-accordion-header-hover');
-      });
-      $(this).live('mouseout', function() {
-        $(this).removeClass('crm-accordion-header-hover');
-      });
-      accordionWrapper.addClass('crm-accordion-processed');
+    
+      $this.addClass("crm-accordion-processed");
     }
   });
 };
