@@ -234,7 +234,7 @@ function onChangeOverlayCheckBox(){
 function onChangeAddnewCheckbox(){
   $this = cj(this);
   if($this.attr('checked')){
-    $this.parents('td').prev().find('[id^="move_"]').attr('checked',true);
+    $this.closest('td').prev().find('[id^="move_"]').attr('checked',true);
   }
   checkDataIsErase($this);
 }
@@ -254,8 +254,13 @@ function checkDataIsErase(cjCheckboxElement){
     return ;
   }
 
-  var cj_left_td = cjCheckboxElement.parents('td').prev();
-  var cj_right_td = cjCheckboxElement.parents('td').next();
+  var cj_left_td = cjCheckboxElement.closest('td').prev();
+  var cj_right_td = cjCheckboxElement.closest('td').next();
+
+  if(cjCheckboxElement.length <= 0){
+    console.log('The query element cjCheckboxElement have error, Please check your code.');
+    return ;
+  }
 
   if(cjCheckboxElement.attr('id').match(/^location/)){
     checkDataIsErase(cj_left_td.find('input[id^="move_"]'));
