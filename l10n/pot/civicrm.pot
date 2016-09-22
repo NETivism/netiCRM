@@ -45198,3 +45198,7 @@ msgstr ""
 #: CRM/Core/Form.php
 msgid "Correct page to add another submission"
 msgstr ""
+
+#: CRM/Import/Parser/Contact.php
+msgid "Invalid value for field(s)"
+msgstr ""
