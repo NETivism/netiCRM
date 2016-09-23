@@ -30,15 +30,16 @@
   color: #fff;
   font-size: 14px;
 }
-#tiptip_content strong {
-  font-weight: normal;
+#tiptip_content strong,
+#tiptip_content em {
+  color: #90caf9;
 }
 #tiptip_content a {
-  color: #c5cae9;
+  color: #b3e5fc;
   text-decoration: underline;
 }
 #tiptip_content a:hover {
-  color: #9fa8da;
+  color: #81d4fa;
 }
 #tiptip_content p,
 #tiptip_content ul,
