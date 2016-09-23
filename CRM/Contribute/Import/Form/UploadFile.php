@@ -147,18 +147,6 @@ class CRM_Contribute_Import_Form_UploadFile extends CRM_Core_Form {
     $this->add('select', 'savedMapping', ts('Mapping Option'), array('' => ts('- select -')) + $mappingArray);
     $this->addElement('submit', 'loadMapping', ts('Load Mapping'), NULL, array('onclick' => 'checkSelect()'));
 
-    if ($loadeMapping = $this->get('loadedMapping')) {
-      $this->assign('loadedMapping', $loadeMapping);
-      $this->setDefaults(array('savedMapping' => $loadeMapping));
-    }
-
-
-    $this->setDefaults(array(
-      'onDuplicate' => CRM_Contribute_Import_Parser::DUPLICATE_SKIP,
-      'createContactOption' => CRM_Contribute_Import_Parser::CONTACT_NOIDCREATE,
-      'contactType' => CRM_Contribute_Import_Parser::CONTACT_INDIVIDUAL,
-    ));
-
     //build date formats
     CRM_Core_Form_Date::buildAllowedDateFormats($this);
 
@@ -173,6 +161,26 @@ class CRM_Contribute_Import_Form_UploadFile extends CRM_Core_Form {
         ),
       )
     );
+  }
+
+  public function setDefaultValues(){
+    $defaults = $this->_submitValues;
+    if (!$defaults['onDuplicate']) {
+      $defaults['onDuplicate'] = CRM_Contribute_Import_Parser::DUPLICATE_SKIP;
+    }
+    if (!$defaults['createContactOption']) {
+      $defaults['createContactOption'] = CRM_Contribute_Import_Parser::CONTACT_NOIDCREATE;
+    }
+    if (!$defaults['contactType']) {
+      $defaults['contactType'] = CRM_Contribute_Import_Parser::CONTACT_INDIVIDUAL;
+    }
+
+    if ($loadeMapping = $this->get('loadedMapping')) {
+      $this->assign('loadedMapping', $loadeMapping);
+      $defaults['savedMapping'] = $loadeMapping;
+    }
+
+    return $defaults;
   }
 
   /**

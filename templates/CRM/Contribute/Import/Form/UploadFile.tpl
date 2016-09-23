@@ -85,9 +85,9 @@
  </div>
  <script>{literal}
 cj(document).ready(function($){
-  var showHideCreateContact = function(){
+  var showHideCreateContact = function(init){
     $("input[name=onDuplicate]:checked").each(function(){
-      if($(this).val() == 4) {
+      if ($(this).val() == 4) {
         $("input[name=createContactOption]").not("[value=102]").closest("label").addClass("disabled");
         $("input[name=createContactOption]").not("[value=102]").attr('disabled', 'disabled');
         $("input[name=createContactOption][value=102]").click();
@@ -95,7 +95,9 @@ cj(document).ready(function($){
       }
       else {
         $("input[name=createContactOption]").not("[value=102]").removeAttr('disabled');
-        $("input[name=createContactOption][value=100]").click();
+        if (!init) {
+          $("input[name=createContactOption][value=100]").click();
+        }
         $("tr.create-new-contact label").removeClass("disabled");
         showHideDedupeSelect();
       }
@@ -130,12 +132,13 @@ cj(document).ready(function($){
       }
     });
   }
+
   $("input[name=onDuplicate]").click(showHideCreateContact);
   $("input[name=contactType]").click(showHideDedupeRule);
   $("input[name=createContactOption]").click(showHideDedupeSelect);
   $("tr.create-new-contact label.crm-form-elem").css('display', 'block');
   $("tr.create-new-contact").find("br").remove();
-  showHideCreateContact();
+  showHideCreateContact(true);
   showHideDedupeRule();
   showHideDedupeSelect();
 });
