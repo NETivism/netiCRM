@@ -111,9 +111,9 @@ class CRM_Contribute_Import_Form_UploadFile extends CRM_Core_Form {
     $this->addRadio('onDuplicate', ts('Import mode'), $duplicateOptions);
 
     $duplicateContactOptions = array(
-      CRM_Contribute_Import_Parser::CONTACT_NOIDCREATE => ts('Create new contact only on identifier not import'),
-      CRM_Contribute_Import_Parser::CONTACT_AUTOCREATE => ts('Create new contact when not found'),
-      CRM_Contribute_Import_Parser::CONTACT_DONTCREATE => ts('Do not create new contact'),
+      CRM_Contribute_Import_Parser::CONTACT_NOIDCREATE => ts('Create contact only on identifier not import'),
+      CRM_Contribute_Import_Parser::CONTACT_AUTOCREATE => ts('Create contact when not found'),
+      CRM_Contribute_Import_Parser::CONTACT_DONTCREATE => ts('Do not create or update contact'),
     );
     $this->addRadio('createContactOption', ts('Create New Contact'), $duplicateContactOptions, NULL, '<br>');
 
