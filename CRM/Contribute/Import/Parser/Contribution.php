@@ -428,14 +428,13 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
     else {
       //fix for CRM-2219 - Update Contribution
       // onDuplicate == CRM_Contribute_Import_Parser::DUPLICATE_UPDATE
-      if ($paramValues['invoice_id'] || $paramValues['trxn_id'] || $paramValues['contribution_id']) {
-        require_once 'CRM/Contribute/BAO/Contribution.php';
-        $dupeIds = array(
-          'id' => CRM_Utils_Array::value('contribution_id', $paramValues),
-          'trxn_id' => CRM_Utils_Array::value('trxn_id', $paramValues),
-          'invoice_id' => CRM_Utils_Array::value('invoice_id', $paramValues),
-        );
+      $dupeIds = array(
+        'id' => CRM_Utils_Array::value('contribution_id', $paramValues),
+        'trxn_id' => CRM_Utils_Array::value('trxn_id', $paramValues),
+        'invoice_id' => CRM_Utils_Array::value('invoice_id', $paramValues),
+      );
 
+      if ($paramValues['invoice_id'] || $paramValues['trxn_id'] || $paramValues['contribution_id']) {
         $ids['contribution'] = CRM_Contribute_BAO_Contribution::checkDuplicateIds($dupeIds);
         if ($ids['contribution']) {
           $formatted['id'] = $ids['contribution'];
@@ -488,26 +487,27 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
           // process pledge payment assoc w/ the contribution
           return self::processPledgePayments($formatted);
         }
-        else {
-          $labels = array(
-            'id' => 'Contribution ID',
-            'trxn_id' => 'Transaction ID',
-            'invoice_id' => 'Invoice ID',
-          );
-          foreach ($dupeIds as $k => $v) {
-            if ($v) {
-              $errorMsg[] = "$labels[$k] $v";
-            }
-          }
-          $errorMsg = implode(' AND ', $errorMsg);
-          array_unshift($values, "Matching Contribution record not found for " . $errorMsg . ". Row was skipped.");
-          return CRM_Contribute_Import_Parser::ERROR;
+      }
+
+      // cache all error when CRM_Contribute_Import_Parser::DUPLICATE_UPDATE
+      $labels = array(
+        'id' => 'Contribution ID',
+        'trxn_id' => 'Transaction ID',
+        'invoice_id' => 'Invoice ID',
+      );
+      foreach ($dupeIds as $k => $v) {
+        if ($v) {
+          $errorMsg[] = "$labels[$k] $v";
         }
       }
+      $errorMsg = implode(' AND ', $errorMsg);
+      array_unshift($values, "Matching Contribution record not found for " . $errorMsg . ". Row was skipped.");
+      return CRM_Contribute_Import_Parser::ERROR;
     }
 
     $doCreateContact = FALSE;
     $checkContactId = $this->checkContactById($paramValues);
+    $errDisp = "";
 
     if ($this->_createContactOption == self::CONTACT_DONTCREATE) {
       $doCreateContact = FALSE;
@@ -524,69 +524,67 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
       $doCreateContact = TRUE;
     }
 
-    if ($doCreateContact && empty($checkContactId)) {
+    // using duplicate rule when we don't have contact id and external identifier
+    if (empty($checkContactId)) {
       // set the contact type if its not set
       if (!isset($paramValues['contact_type'])) {
         $paramValues['contact_type'] = $this->_contactType;
       }
-
       //retrieve contact id using contact dedupe rule
       $found = civicrm_check_contact_dedupe($paramValues, $this->_dedupeRuleGroupId);
-
       if (civicrm_duplicate($found)) {
         $matchedIDs = explode(',', $found['error_message']['params'][0]);
         if (count($matchedIDs) > 1) {
-          array_unshift($values, "Multiple matching contact records detected for this row. The contribution was not imported");
+          $errDisp = "Multiple matching contact records detected for this row. The contribution was not imported";
+          array_unshift($values, $errDisp);
           return CRM_Contribute_Import_Parser::ERROR;
         }
         else {
-          $cid = $matchedIDs[0];
-          $formatted['contact_id'] = $cid;
-          return $this->importContribution($formatted, $values);
+          $checkContactId = $matchedIDs[0];
+          $doCreateContact = FALSE;
         }
       }
       else {
-        // trying to create new contact base on exists contact related params
-        $doGeocodeAddress = FALSE;
-        $contactImportResult = $this->_parserContact->import(CRM_Import_Parser::DUPLICATE_FILL, $contactValues, $doGeocodeAddress);
-        $contactID = $this->_parserContact->getLastImportContactId();
-        if (!empty($contactID) && $contactImportResult == CRM_Import_Parser::VALID) {
-          $formatted['contact_id'] = $contactID;
-          return $this->importContribution($formatted, $values);
-        }
-        else {
-          // Using new Dedupe rule for error message handling
-          $ruleParams = array(
-            'contact_type' => $this->_contactType,
-            'level' => 'Strict',
-          );
-          require_once 'CRM/Dedupe/BAO/Rule.php';
-          $fieldsArray = CRM_Dedupe_BAO_Rule::dedupeRuleFields($ruleParams);
+        // Using new Dedupe rule for error message handling
+        $ruleParams = array(
+          'contact_type' => $this->_contactType,
+          'level' => 'Strict',
+        );
+        require_once 'CRM/Dedupe/BAO/Rule.php';
+        $fieldsArray = CRM_Dedupe_BAO_Rule::dedupeRuleFields($ruleParams);
 
-          foreach ($fieldsArray as $value) {
-            if (array_key_exists(trim($value), $params)) {
-              $paramValue = $params[trim($value)];
-              if (is_array($paramValue)) {
-                $disp .= $params[trim($value)][0][trim($value)] . " ";
-              }
-              else {
-                $disp .= $params[trim($value)] . " ";
-              }
-            }
-          }
-
-          if (CRM_Utils_Array::value('external_identifier', $params)) {
-            if ($disp) {
-              $disp .= "AND {$params['external_identifier']}";
+        foreach ($fieldsArray as $value) {
+          if (array_key_exists(trim($value), $params)) {
+            $paramValue = $params[trim($value)];
+            if (is_array($paramValue)) {
+              $errDisp .= $params[trim($value)][0][trim($value)] . " ";
             }
             else {
-              $disp = $params['external_identifier'];
+              $errDisp .= $params[trim($value)] . " ";
             }
           }
-
-          array_unshift($values, "No matching Contact found for (" . $disp . ")");
-          return CRM_Contribute_Import_Parser::ERROR;
         }
+
+        if (CRM_Utils_Array::value('external_identifier', $params)) {
+          if ($errDisp) {
+            $errDisp .= "AND {$params['external_identifier']}";
+          }
+          else {
+            $errDisp = $params['external_identifier'];
+          }
+        }
+        $errDisp = "No matching Contact found for (" . $errDisp . ")";
+      }
+    }
+
+    if ($doCreateContact && empty($checkContactId)) {
+      // trying to create new contact base on exists contact related params
+      $doGeocodeAddress = FALSE;
+      $contactImportResult = $this->_parserContact->import(CRM_Import_Parser::DUPLICATE_FILL, $contactValues, $doGeocodeAddress);
+      $contactID = $this->_parserContact->getLastImportContactId();
+      if (!empty($contactID) && $contactImportResult == CRM_Import_Parser::VALID) {
+        $formatted['contact_id'] = $contactID;
+        return $this->importContribution($formatted, $values);
       }
     }
     else {
@@ -596,14 +594,14 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
         return $this->importContribution($formatted, $values);
       }
       elseif ($checkContactId === FALSE) {
-        array_unshift($values, "Mismatch of External identifier :" . $paramValues['external_identifier'] . " and Contact Id:" . $formatted['contact_id']);
-        return CRM_Contribute_Import_Parser::ERROR;
+        $errDisp = "Mismatch of External identifier :" . $paramValues['external_identifier'] . " and Contact Id:" . $formatted['contact_id'];
       }
-      else {
-        array_unshift($values, "Invalid Contact ID: There is no contact record with contact_id = {$formatted['contribution_contact_id']}.");
-        return CRM_Contribute_Import_Parser::ERROR;
-      }
+      // $errDisp = "Invalid Contact ID: There is no contact record with contact_id = {$formatted['contribution_contact_id']}.";
     }
+
+    // cache all for CRM_Contribute_Import_Parser::DUPLICATE_SKIP
+    array_unshift($values, $errDisp);
+    return CRM_Contribute_Import_Parser::ERROR;
   }
 
   /**
