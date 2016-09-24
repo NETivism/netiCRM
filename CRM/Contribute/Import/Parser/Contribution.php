@@ -189,6 +189,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
     $this->_parserContact->_onDuplicate = CRM_Import_Parser::DUPLICATE_SKIP;
     $this->_parserContact->_contactType = $this->_contactType;
     $this->_parserContact->_dedupeRuleGroupId = $this->_dedupeRuleGroupId;
+    $this->_parserContact->_contactLog = ts('Import Contact').' '.ts('From').' '.ts('Import Contribution');
     $this->_parserContact->init();
   }
 

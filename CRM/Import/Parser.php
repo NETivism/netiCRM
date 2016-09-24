@@ -231,10 +231,7 @@ abstract class CRM_Import_Parser {
    *
    * @var int
    */
-  public $_onDuplicate; function __construct() {
-    $this->_maxLinesToProcess = 0;
-    $this->_maxErrorCount = self::MAX_ERRORS;
-  }
+  public $_onDuplicate;
 
   /**
    * on duplicate check rule group id
@@ -242,6 +239,18 @@ abstract class CRM_Import_Parser {
    * @var int
    */
   public $_dedupeRuleGroupId;
+
+  /**
+   * contact log register message
+   *
+   * @var int
+   */
+  public $_contactLog;
+
+  function __construct() {
+    $this->_maxLinesToProcess = 0;
+    $this->_maxErrorCount = self::MAX_ERRORS;
+  }
 
   abstract function init();
   function run($tableName,

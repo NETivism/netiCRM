@@ -1960,6 +1960,11 @@ ORDER BY civicrm_email.is_primary DESC";
       }
     }
 
+    // log
+    if (isset($params['log_data'])) {
+      $data['log_data'] = $params['log_data'];
+    }
+
     return array($data, $contactDetails);
   }
 
