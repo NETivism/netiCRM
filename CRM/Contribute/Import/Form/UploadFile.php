@@ -205,19 +205,13 @@ class CRM_Contribute_Import_Form_UploadFile extends CRM_Core_Form {
     $this->set('contactType', $contactType);
     $this->set('dateFormats', $dateFormats);
     $this->set('savedMapping', $savedMapping);
+    $this->set('dedupeRuleGroup', $dedupeRuleGroup);
     if ($onDuplicate == CRM_Contribute_Import_Parser::DUPLICATE_UPDATE) {
       $createContactOption = CRM_Contribute_Import_Parser::CONTACT_DONTCREATE; 
       $this->set('createContactOption', $createContactOption);
     }
     else{
       $this->set('createContactOption', $createContactOption);
-    }
-    if ($createContactOption == CRM_Contribute_Import_Parser::CONTACT_DONTCREATE) {
-      $dedupeRuleGroup = '';
-      $this->set('dedupeRuleGroup', '');
-    }
-    else{
-      $this->set('dedupeRuleGroup', $dedupeRuleGroup);
     }
 
     $session = CRM_Core_Session::singleton();

@@ -91,7 +91,6 @@ cj(document).ready(function($){
         $("input[name=createContactOption]").not("[value=102]").closest("label").addClass("disabled");
         $("input[name=createContactOption]").not("[value=102]").attr('disabled', 'disabled');
         $("input[name=createContactOption][value=102]").click();
-        showHideDedupeSelect();
       }
       else {
         $("input[name=createContactOption]").not("[value=102]").removeAttr('disabled');
@@ -99,7 +98,6 @@ cj(document).ready(function($){
           $("input[name=createContactOption][value=100]").click();
         }
         $("tr.create-new-contact label").removeClass("disabled");
-        showHideDedupeSelect();
       }
     });
   }
@@ -120,26 +118,12 @@ cj(document).ready(function($){
       $("#dedupeRuleGroup").val($("#dedupeRuleGroup option:visible:first").attr("value"));
     });
   }
-  var showHideDedupeSelect = function(){
-    $("input[name=createContactOption]:checked").each(function(){
-      if($(this).val() == "102"){
-        $("tr.dedupe-rule-group label").addClass("disabled");
-        $("tr.dedupe-rule-group select").attr("disabled", "disabled");
-      }
-      else{
-        $("tr.dedupe-rule-group label").removeClass("disabled");
-        $("tr.dedupe-rule-group select").removeAttr("disabled");
-      }
-    });
-  }
 
   $("input[name=onDuplicate]").click(showHideCreateContact);
   $("input[name=contactType]").click(showHideDedupeRule);
-  $("input[name=createContactOption]").click(showHideDedupeSelect);
   $("tr.create-new-contact label.crm-form-elem").css('display', 'block');
   $("tr.create-new-contact").find("br").remove();
   showHideCreateContact(true);
   showHideDedupeRule();
-  showHideDedupeSelect();
 });
 {/literal}</script>
