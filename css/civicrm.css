@@ -3253,6 +3253,7 @@ ul.ui-sortable {
   border: none;
   border-radius: 0;
   background: #333030;
+  text-shadow: none;
   transition: border .2s linear, color .2s linear, background-color .2s linear;
   -webkit-font-smoothing: subpixel-antialiased;
 }
@@ -3268,11 +3269,9 @@ ul.ui-sortable {
 .crm-container .form-submit:focus {
   color: #fff;
   background: #555;
-}
-.crm-container button:focus,
-.crm-container input[type="button"]:focus,
-.crm-container .form-submit:focus {
-  outline: 0; /* remove button focus highlight  */
+  outline: 0;
+  text-decoration: none;
+  box-shadow: none;
 }
 .crm-container button:active,
 .crm-container input[type="button"]:active,
