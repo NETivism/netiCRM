@@ -696,7 +696,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
         }
       }
       else {
-        $checkCid->id = $param['contribution_contact_id'];
+        $checkCid->id = $params['contribution_contact_id'];
         $checkCid->is_deleted = 0;
         if($checkCid->find(TRUE)){
           $contactID = $checkCid->id;
