@@ -782,7 +782,7 @@ function _civicrm_participant_formatted_param(&$params, &$values, $create = FALS
         break;
 
       case 'participant_register_date':
-        if (!CRM_Utils_Rule::date($value)) {
+        if (!CRM_Utils_Rule::dateTime($value)) {
           return civicrm_create_error("$key not a valid date: $value");
         }
         break;
@@ -968,7 +968,7 @@ function _civicrm_contribute_formatted_param(&$params, &$values, $create = FALSE
       case 'cancel_date':
       case 'receipt_date':
       case 'thankyou_date':
-        if (!CRM_Utils_Rule::date($value)) {
+        if (!CRM_Utils_Rule::dateTime($value)) {
           return civicrm_create_error("$key not a valid date: $value");
         }
         break;
