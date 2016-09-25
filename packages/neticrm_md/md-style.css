@@ -428,6 +428,33 @@ input.md-textfield,
   color: #bdbdbd;
 }
 
+/* md-elem dateplugin */
+.md-elem.dateplugin input.dateplugin {
+  width: 16rem;
+}
+.md-elem.dateplugin input.dateplugin,
+.md-elem.dateplugin input.dateplugin[readonly] {
+  outline: 0 !important;
+  cursor: auto !important;
+  border: none !important;
+  border-bottom: 2px solid #9E9E9E !important;
+  background: none !important;
+}
+.md-elem.dateplugin input.dateplugin:focus,
+.md-elem.dateplugin input.dateplugin[readonly]:focus {
+  outline: 0 !important;
+  cursor: auto !important;
+  border: none !important;
+  border-bottom: 2px solid #3F51B5 !important;
+  background: none !important;
+}
+.md-elem.dateplugin::after {
+  content: "\f331";
+}
+.md-elem-focus.dateplugin::after {
+  color: #3F51B5;
+}
+
 /* civicrm */
 /* crm form elements */
 /* crm tw address */
