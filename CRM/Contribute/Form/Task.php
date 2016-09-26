@@ -111,7 +111,15 @@ class CRM_Contribute_Form_Task extends CRM_Core_Form {
       $query = new CRM_Contact_BAO_Query($queryParams, NULL, NULL, FALSE, FALSE,
         CRM_Contact_BAO_Query::MODE_CONTRIBUTE
       );
-      $result = $query->searchQuery(0, 0, NULL);
+
+      $sortOrder = $form->controller->get('sortOrder');
+
+      if ( $form->get( CRM_Utils_Sort::SORT_ID  ) ) {
+        $sortID = CRM_Utils_Sort::sortIDValue( $form->get( CRM_Utils_Sort::SORT_ID  ),$form->get( CRM_Utils_Sort::SORT_DIRECTION ) );
+        $form->_sort = new CRM_Utils_Sort($sortOrder, $sortID);
+      }
+
+      $result = $query->searchQuery(0, 0, $form->_sort);
       while ($result->fetch()) {
         $ids[] = $result->contribution_id;
       }
