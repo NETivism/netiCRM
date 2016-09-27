@@ -646,7 +646,7 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
       $colCnt = 0;
 
       list($mappingName, $mappingContactType, $mappingLocation, $mappingPhoneType, $mappingImProvider,
-        $mappingRelation, $mappingOperator, $mappingValue
+        $mappingRelation, $mappingOperator, $mappingValue, $mappingWebsiteType
       ) = CRM_Core_BAO_Mapping::getMappingFields($mappingId);
 
       $blkCnt = count($mappingName);
@@ -659,6 +659,9 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
           $columnCount[$x] = $colCnt;
         }
       }
+    }
+    elseif (is_array($form->_mappingObject) && !empty($form->_mappingObject)) {
+      extract($form->_mappingObject);
     }
 
     $form->_blockCount = $blockCount;
@@ -681,7 +684,7 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
         $sel = &$form->addElement('hierselect', "mapper[$x][$i]", ts('Mapper for Field %1', array(1 => $i)), NULL);
         $jsSet = FALSE;
 
-        if (isset($mappingId)) {
+        if (!empty($mappingName)) {
           $locationId = isset($mappingLocation[$x][$i]) ? $mappingLocation[$x][$i] : 0;
           if (isset($mappingName[$x][$i])) {
             if (is_array($mapperFields[$mappingContactType[$x][$i]])) {
@@ -1168,6 +1171,70 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
         }
       }
     }
+  }
+
+  static function getMappingFieldsUfJoin($entityTable, $entityId){
+    if ($entityTable == 'civicrm_event') {
+      $module = 'CiviEvent';
+    }
+    elseif($entityTable == 'civicrm_contribution_page') {
+      $module = 'CiviContribute';
+    }
+    $ufJoinParams = array(
+      'entity_table' => $entityTable,
+      'entity_id' => $entityId,
+      'module' => $module,
+    );
+    $gids = CRM_Core_BAO_UFJoin::getUFGroupIds($ufJoinParams);
+    if(count($gids)) {
+      return self::getMappingFieldsUfGroup($gids);
+    }
+    else{
+      return array();
+    }
+  }
+
+  static function getMappingFieldsUfGroup($gids){
+    $mappingObject = array();
+    foreach ($gids as $gid) {
+      if (!isset($ufFields[$gid])) {
+        $ufFields[$gid] = CRM_Core_BAO_UFGroup::getFields($gid, FALSE, CRM_Core_Action::ADD);
+      }
+    }
+
+    $fieldCount = 0;
+    $defaultLocationType = CRM_Core_BAO_LocationType::getDefault();
+    foreach(array('mappingName', 'mappingContactType', 'mappingLocation', 'mappingPhoneType', 'mappingImProvider', 'mappingRelation', 'mappingOperator', 'mappingValue', 'mappingWebsiteType') as $objName) {
+      $mappingObject[$objName] = array(1 => array());
+    }
+    foreach($ufFields as $gid => $fields){
+      foreach ($fields as $fieldName => $field) {
+        if (strstr($field['name'], '-')) {
+          list($fieldName, $locationTypeId) = explode('-', $field['name']);
+          if(empty($field['location_type_id'])){
+            if (!is_numeric($locationTypeId)) {
+              $field['location_type_id'] = $defaultLocationType->id;
+            }
+          }
+        }
+        if ($field['field_type'] == 'Contact') {
+          $field['field_type'] = 'Individual';
+        }
+        $mappingObject['mappingName'][1][$fieldCount] = $fieldName;
+        $mappingObject['mappingContactType'][1][$fieldCount] = $field['field_type'];
+        if (!empty($field['location_type_id'])) {
+          $mappingObject['mappingLocation'][1][$fieldCount] = $field['location_type_id'];
+        }
+        if (!empty($field['phone_type_id'])) {
+          $mappingObject['mappingPhoneType'][1][$fieldCount] = $field['phone_type_id'];
+        }
+        if (!empty($field['website_type_id'])) {
+          $mappingObject['mappingWebsiteType'][1][$fieldCount] = $field['website_type_id'];
+        }
+        $fieldCount++;
+      }
+    }
+    return $mappingObject;
   }
 }
 

@@ -173,6 +173,26 @@ FROM   {$this->_componentTable}
     $this->set('exportMode', $this->_exportMode);
     $this->set('componentClause', $this->_componentClause);
     $this->set('componentTable', $this->_componentTable);
+
+    $exportOption = $this->controller->exportValue($this->_name, 'exportOption');
+    $this->_force = CRM_Utils_Request::retrieve('force', 'Boolean', $this, FALSE);
+    $this->_mappingId = CRM_Utils_Request::retrieve('mappingId', 'Integer', $this, FALSE);
+    if ($this->_force) {
+      if (is_numeric($this->_mappingId) && !empty($this->_mappingId)) {
+        $this->set('mappingId', $this->_mappingId);
+      }
+      else {
+        $entityTable = CRM_Utils_Request::retrieve('entityTable', 'String', $this);
+        $entityId = CRM_Utils_Request::retrieve('entityId', 'Integer', $this);
+        if($entityTable && $entityId) {
+          $mappingObject = CRM_Core_BAO_Mapping::getMappingFieldsUfJoin($entityTable, $entityId);
+          $this->set('mappingObject', $mappingObject);
+        }
+      }
+      $this->set('force', 0);
+      $this->postProcess();
+      CRM_Utils_System::redirect(CRM_Utils_System::url(CRM_Utils_System::currentPath(), '_qf_Map_display=true&qfKey='.$this->controller->_key));
+    }
   }
 
   /**
@@ -245,7 +265,10 @@ FROM   {$this->_componentTable}
     $merge_same_address = $this->controller->exportValue($this->_name, 'merge_same_address');
     $merge_same_household = $this->controller->exportValue($this->_name, 'merge_same_household');
 
-    $mappingId = $this->controller->exportValue($this->_name, 'mapping');
+    $mappingId = $this->get('mappingId');
+    if (empty($mappingId)) {
+      $mappingId = $this->controller->exportValue($this->_name, 'mapping');
+    }
     if ($mappingId) {
       $this->set('mappingId', $mappingId);
     }

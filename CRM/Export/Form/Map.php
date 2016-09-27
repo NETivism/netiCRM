@@ -66,6 +66,14 @@ class CRM_Export_Form_Map extends CRM_Core_Form {
   protected $_mappingId;
 
   /**
+   * mapping object when we don't have mapping id
+   *
+   * @var int
+   * @access protected
+   */
+  public $_mappingObject;
+
+  /**
    * Function to actually build the form
    *
    * @return None
@@ -75,13 +83,20 @@ class CRM_Export_Form_Map extends CRM_Core_Form {
 
     $this->_mappingId =  $this->get('mappingId');
     $this->_exportColumnCount = $this->get('exportColumnCount');
-    
+    if (!$this->_mappingId) {
+      $this->_mappingObject = $this->get('mappingObject');
+    }
+
     if (! $this->_exportColumnCount ) {
       if( $this->_mappingId ){
         $mapping = CRM_Core_BAO_Mapping::getMappingFields($this->_mappingId);
         $mappingFields = $mapping[0][1];
-        $this->_exportColumnCount = count($mappingFields) + 10;
-      }else{
+        $this->_exportColumnCount = count($mappingFields) + 5;
+      }
+      elseif (!empty($this->_mappingObject)){
+        $this->_exportColumnCount = count($this->_mappingObject['mappingName'][1]) + 5;
+      }
+      else {
         $this->_exportColumnCount = 10;
       }
     } else {
@@ -224,25 +239,25 @@ class CRM_Export_Form_Map extends CRM_Core_Form {
   }
 
   /**
-   * Execute when press "Export"( name = _qf_Map_next ) and "Done"( name = _qf_Map_done ) buttom. 
+   * Execute when press "Export"( name = _qf_Map_next ) and "Done"( name = _qf_Map_done ) buttom.
    * @param  $params  The parameters in postProcess();
    * @return none
    */
   private function updateAndSaveMapping($params){
-    if ( CRM_Utils_Array::value('updateMapping', $params)) { 
+    if ( CRM_Utils_Array::value('updateMapping', $params)) {
       //save mapping fields
       CRM_Core_BAO_Mapping::saveMappingFields($params, $params['mappingId'] );
     }
-    
-    if ( CRM_Utils_Array::value('saveMapping', $params) ) { 
+
+    if ( CRM_Utils_Array::value('saveMapping', $params) ) {
       $mappingParams = array(
         'name'      => $params['saveMappingName'],
         'description'   => $params['saveMappingDesc'],
         'mapping_type_id' => $this->get( 'mappingTypeId'),
       );
-      
+
       $saveMapping = CRM_Core_BAO_Mapping::add( $mappingParams );
-      
+
       //save mapping fields
       CRM_Core_BAO_Mapping::saveMappingFields($params, $saveMapping->id);
     }
