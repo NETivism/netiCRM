@@ -375,6 +375,18 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
     if ($buttonName == $this->_actionButtonName || $buttonName == $this->_printButtonName) {
       // check actionName and if next, then do not repeat a search, since we are going to the next page
 
+      // refs #18784, take sortOrder to CRM_Contribute_Form_Task
+      $this->_queryParams = &CRM_Contact_BAO_Query::convertFormValues($this->_formValues);
+      $selector = new CRM_Contribute_Selector_Search($this->_queryParams,
+        $this->_action,
+        NULL,
+        $this->_single,
+        $this->_limit,
+        $this->_context
+      );
+      $sortOrder = $selector->getSortOrder(CRM_Core_Action::VIEW);
+      $this->controller->set('sortOrder',$sortOrder);
+
       // hack, make sure we reset the task values
       $stateMachine = &$this->controller->getStateMachine();
       $formName = $stateMachine->getTaskFormName();
