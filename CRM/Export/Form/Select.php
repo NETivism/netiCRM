@@ -191,7 +191,7 @@ FROM   {$this->_componentTable}
       }
       $this->set('force', 0);
       $this->postProcess();
-      CRM_Utils_System::redirect(CRM_Utils_System::url(CRM_Utils_System::currentPath(), '_qf_Map_display=true&qfKey='.$this->controller->_key));
+      $this->controller->nextPage();
     }
   }
 

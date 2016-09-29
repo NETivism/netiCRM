@@ -1176,9 +1176,11 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
   static function getMappingFieldsUfJoin($entityTable, $entityId){
     if ($entityTable == 'civicrm_event') {
       $module = 'CiviEvent';
+      $component = 'event';
     }
     elseif($entityTable == 'civicrm_contribution_page') {
       $module = 'CiviContribute';
+      $component = 'contribute';
     }
     $ufJoinParams = array(
       'entity_table' => $entityTable,
@@ -1187,15 +1189,27 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
     );
     $gids = CRM_Core_BAO_UFJoin::getUFGroupIds($ufJoinParams);
     if(count($gids)) {
-      return self::getMappingFieldsUfGroup($gids);
+      return self::getMappingFieldsUfGroup($gids, $component);
     }
     else{
       return array();
     }
   }
 
-  static function getMappingFieldsUfGroup($gids){
+  static function getMappingFieldsUfGroup($gids, $component = NULL){
     $mappingObject = array();
+    $ufFields = array();
+    if ($component) {
+      $structure = CRM_Core_FieldHierarchy::$hierarchy;
+      if (isset($structure[$component])) {
+        foreach($structure[$component] as $fieldName => $skip) {
+          $ufFields[$component][$fieldName] = array(
+            'name' => $fieldName,
+            'field_type' => $component == 'event' ? 'Participant' : 'Contribution',
+          );
+        }
+      }
+    }
     foreach ($gids as $gid) {
       if (!isset($ufFields[$gid])) {
         $ufFields[$gid] = CRM_Core_BAO_UFGroup::getFields($gid, FALSE, CRM_Core_Action::ADD);
@@ -1207,7 +1221,7 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
     foreach(array('mappingName', 'mappingContactType', 'mappingLocation', 'mappingPhoneType', 'mappingImProvider', 'mappingRelation', 'mappingOperator', 'mappingValue', 'mappingWebsiteType') as $objName) {
       $mappingObject[$objName] = array(1 => array());
     }
-    foreach($ufFields as $gid => $fields){
+    foreach($ufFields as $fields){
       foreach ($fields as $fieldName => $field) {
         if (strstr($field['name'], '-')) {
           list($fieldName, $locationTypeId) = explode('-', $field['name']);

@@ -440,6 +440,15 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
     }
   }
 
+  public function nextPage(){
+    $this->_actionName = $this->getActionName();
+    list($pageName, $action) = $this->_actionName;
+    $this->resetPage($pageName, TRUE);
+    $state = $this->_stateMachine->getState($pageName);
+    $page = &$this->_pages[$pageName];
+    $state->handleNextState($page);
+  }
+
   /**
    * QFC does not provide native support to have different 'submit' buttons.
    * We introduce this notion to QFC by using button specific data. Thus if
