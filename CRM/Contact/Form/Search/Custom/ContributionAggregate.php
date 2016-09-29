@@ -76,11 +76,19 @@ class CRM_Contact_Form_Search_Custom_ContributionAggregate implements CRM_Contac
     $form->addDate('start_date', ts('Contribution Date From'), FALSE, array('formatType' => 'custom'));
     $form->addDate('end_date', ts('...through'), FALSE, array('formatType' => 'custom'));
 
+    $form->add('checkbox', 'top100', ts('Top 100 contributors.'));
+
+    $form->add('select', 'contribution_recurring', ts('Find Recurring Contributions?'), array(
+      'all' => ts('All'),
+      'recur' => ts('Recurring Contribution'),
+      'not_recur' => ts('Non-Recurring Contribution'),
+    ));
+
     /**
      * If you are using the sample template, this array tells the template fields to render
      * for the search form.
      */
-    $form->assign('elements', array('min_amount', 'max_amount', 'start_date', 'end_date'));
+    $form->assign( 'elements', array( 'min_amount', 'max_amount', 'start_date', 'end_date','top100','contribution_recurring') );
   }
 
   /**
@@ -113,6 +121,12 @@ count(contrib.id) AS donation_count
 
     $where = $this->where($includeContactIDs);
 
+    if($this->_formValues['contribution_recurring'] == 'recur'){
+      $where .= ' AND contrib.contribution_recur_id IS NOT NULL';
+    }else if($this->_formValues['contribution_recurring'] == 'not_recur'){
+      $where .= ' AND contrib.contribution_recur_id IS NULL';
+    }
+
     $having = $this->having();
     if ($having) {
       $having = " HAVING $having ";
@@ -127,6 +141,10 @@ $having
 ";
     //for only contact ids ignore order.
     if (!$onlyIDs) {
+      if(!empty($this->_formValues['top100'])){
+        $sql .= 'ORDER BY donation_amount DESC LIMIT 100';
+        $sql = "SELECT * FROM ($sql) orig ";
+      }
       // Define ORDER BY for query in $sort, with default value
       if (!empty($sort)) {
         if (is_string($sort)) {
