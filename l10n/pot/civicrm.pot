@@ -45202,3 +45202,7 @@ msgstr ""
 #: CRM/Import/Parser/Contact.php
 msgid "Invalid value for field(s)"
 msgstr ""
+
+#: CRM/Contact/Form/Search/Custom/ContributionAggregate.php
+msgid "Amount of top contributors"
+msgstr ""
