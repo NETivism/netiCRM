@@ -92,6 +92,17 @@ class CRM_Event_StateMachine_Search extends CRM_Core_StateMachine {
     }
     else {
       $value = CRM_Utils_Array::value('task', $_POST);
+      if (empty($value)) {
+        foreach($_POST as $key => $whatever){
+          if (preg_match('/^_qf_.*task_(\d+)$/', $key, $matches)) {
+            if (!empty($matches[0]) && is_numeric($matches[1])) {
+              $value = $matches[1];
+              $_POST['task'] = $value;
+              break;
+            }
+          }
+        }
+      }
     }
     if (!isset($value)) {
       $value = $this->_controller->get('task');
