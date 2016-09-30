@@ -1188,6 +1188,7 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
       'module' => $module,
     );
     $gids = CRM_Core_BAO_UFJoin::getUFGroupIds($ufJoinParams);
+    $gids = array_filter($gids);
     if(count($gids)) {
       return self::getMappingFieldsUfGroup($gids, $component);
     }
