@@ -1188,15 +1188,11 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
       'module' => $module,
     );
     $gids = CRM_Core_BAO_UFJoin::getUFGroupIds($ufJoinParams);
-    if(count($gids)) {
-      return self::getMappingFieldsUfGroup($gids, $component);
-    }
-    else{
-      return array();
-    }
+    $gids = array_filter($gids);
+    return self::getMappingFieldsUfGroup($component, $gids);
   }
 
-  static function getMappingFieldsUfGroup($gids, $component = NULL){
+  static function getMappingFieldsUfGroup($component = NULL, $gids = NULL){
     $mappingObject = array();
     $ufFields = array();
     if ($component) {
@@ -1210,42 +1206,46 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
         }
       }
     }
-    foreach ($gids as $gid) {
-      if (!isset($ufFields[$gid])) {
-        $ufFields[$gid] = CRM_Core_BAO_UFGroup::getFields($gid, FALSE, CRM_Core_Action::ADD);
+    if (!empty($gids)) {
+      foreach ($gids as $gid) {
+        if (!isset($ufFields[$gid])) {
+          $ufFields[$gid] = CRM_Core_BAO_UFGroup::getFields($gid, FALSE, CRM_Core_Action::ADD);
+        }
       }
     }
 
-    $fieldCount = 0;
-    $defaultLocationType = CRM_Core_BAO_LocationType::getDefault();
-    foreach(array('mappingName', 'mappingContactType', 'mappingLocation', 'mappingPhoneType', 'mappingImProvider', 'mappingRelation', 'mappingOperator', 'mappingValue', 'mappingWebsiteType') as $objName) {
-      $mappingObject[$objName] = array(1 => array());
-    }
-    foreach($ufFields as $fields){
-      foreach ($fields as $fieldName => $field) {
-        if (strstr($field['name'], '-')) {
-          list($fieldName, $locationTypeId) = explode('-', $field['name']);
-          if(empty($field['location_type_id'])){
-            if (!is_numeric($locationTypeId)) {
-              $field['location_type_id'] = $defaultLocationType->id;
+    if(!empty($ufFields)) {
+      $fieldCount = 0;
+      $defaultLocationType = CRM_Core_BAO_LocationType::getDefault();
+      foreach(array('mappingName', 'mappingContactType', 'mappingLocation', 'mappingPhoneType', 'mappingImProvider', 'mappingRelation', 'mappingOperator', 'mappingValue', 'mappingWebsiteType') as $objName) {
+        $mappingObject[$objName] = array(1 => array());
+      }
+      foreach($ufFields as $fields){
+        foreach ($fields as $fieldName => $field) {
+          if (strstr($field['name'], '-')) {
+            list($fieldName, $locationTypeId) = explode('-', $field['name']);
+            if(empty($field['location_type_id'])){
+              if (!is_numeric($locationTypeId)) {
+                $field['location_type_id'] = $defaultLocationType->id;
+              }
             }
           }
+          if ($field['field_type'] == 'Contact') {
+            $field['field_type'] = 'Individual';
+          }
+          $mappingObject['mappingName'][1][$fieldCount] = $fieldName;
+          $mappingObject['mappingContactType'][1][$fieldCount] = $field['field_type'];
+          if (!empty($field['location_type_id'])) {
+            $mappingObject['mappingLocation'][1][$fieldCount] = $field['location_type_id'];
+          }
+          if (!empty($field['phone_type_id'])) {
+            $mappingObject['mappingPhoneType'][1][$fieldCount] = $field['phone_type_id'];
+          }
+          if (!empty($field['website_type_id'])) {
+            $mappingObject['mappingWebsiteType'][1][$fieldCount] = $field['website_type_id'];
+          }
+          $fieldCount++;
         }
-        if ($field['field_type'] == 'Contact') {
-          $field['field_type'] = 'Individual';
-        }
-        $mappingObject['mappingName'][1][$fieldCount] = $fieldName;
-        $mappingObject['mappingContactType'][1][$fieldCount] = $field['field_type'];
-        if (!empty($field['location_type_id'])) {
-          $mappingObject['mappingLocation'][1][$fieldCount] = $field['location_type_id'];
-        }
-        if (!empty($field['phone_type_id'])) {
-          $mappingObject['mappingPhoneType'][1][$fieldCount] = $field['phone_type_id'];
-        }
-        if (!empty($field['website_type_id'])) {
-          $mappingObject['mappingWebsiteType'][1][$fieldCount] = $field['website_type_id'];
-        }
-        $fieldCount++;
       }
     }
     return $mappingObject;

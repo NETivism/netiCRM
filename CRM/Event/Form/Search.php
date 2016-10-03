@@ -157,6 +157,7 @@ class CRM_Event_Form_Search extends CRM_Core_Form {
     $this->_searchButtonName = $this->getButtonName('refresh');
     $this->_printButtonName = $this->getButtonName('next', 'print');
     $this->_actionButtonName = $this->getButtonName('next', 'action');
+    $this->_exportButtonName = $this->getButtonName('next', 'task_3');
 
     $this->_done = FALSE;
     $this->defaults = array();
@@ -309,6 +310,14 @@ class CRM_Event_Form_Search extends CRM_Core_Form {
         )
       );
 
+      // override default task
+      $this->addElement('hidden', 'task_force', 3);
+      $this->add('submit', $this->_exportButtonName, ts('Export Participants'),
+        array('class' => 'form-submit',
+          'id' => 'export',
+        )
+      );
+
       $this->add('submit', $this->_printButtonName, ts('Print'),
         array('class' => 'form-submit',
           'onclick' => "return checkPerformAction('mark_x', '" . $this->getName() . "', 1);",
@@ -386,13 +395,19 @@ class CRM_Event_Form_Search extends CRM_Core_Form {
     $this->set('queryParams', $this->_queryParams);
 
     $buttonName = $this->controller->getButtonName();
-    if ($buttonName == $this->_actionButtonName || $buttonName == $this->_printButtonName) {
+    if ($buttonName == $this->_actionButtonName || $buttonName == $this->_printButtonName || $buttonName == $this->_exportButtonName) {
       // check actionName and if next, then do not repeat a search, since we are going to the next page
 
       // hack, make sure we reset the task values
       $stateMachine = &$this->controller->getStateMachine();
       $formName = $stateMachine->getTaskFormName();
       $this->controller->resetPage($formName);
+
+      if ($buttonName == $this->_exportButtonName) {
+        $this->controller->set('force', 1);
+        $this->controller->set('entityTable', 'civicrm_event');
+        $this->controller->set('entityId', $this->_eventId);
+      }
       return;
     }
 
@@ -505,6 +520,7 @@ class CRM_Event_Form_Search extends CRM_Core_Form {
       }
     }
     if ($event) {
+      $this->_eventId = $event;
       require_once 'CRM/Event/PseudoConstant.php';
       $this->_formValues['event_id'] = $event;
       $this->assign('id', $event);
