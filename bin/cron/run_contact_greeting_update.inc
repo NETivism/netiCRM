@@ -8,7 +8,6 @@ function run_contact_greeting_update($limit = 100){
   require_once 'CRM/Core/PseudoConstant.php';
   require_once 'CRM/Contact/BAO/Contact.php';
   require_once 'CRM/Core/OptionGroup.php';
-  require_once 'CRM/Activity/BAO/Activity.php';
   require_once 'CRM/Mailing/BAO/Mailing.php';
   require_once 'CRM/Utils/Token.php';
 
@@ -84,7 +83,7 @@ function run_contact_greeting_update($limit = 100){
 
         if($greetingString){
           $allContactIds[] = $contactID;
-          CRM_Activity_BAO_Activity::replaceGreetingTokens($greetingString, $contactDetails, $contactID );
+          CRM_Utils_Token::replaceGreetingTokens($greetingString, $contactDetails, $contactID );
           $greetingString = CRM_Core_DAO::escapeString( $greetingString );
           $cacheFieldQuery .= " WHEN {$contactID} THEN '{$greetingString}' ";
         }

@@ -286,10 +286,13 @@ class CRM_Activity_Form_Search extends CRM_Core_Form {
       );
 
       // need to perform tasks on all or selected items ? using radio_ts(task selection) for it
-      $this->addElement('radio', 'radio_ts', NULL, '', 'ts_sel', array('checked' => 'checked'));
-      $this->addElement('radio', 'radio_ts', NULL, '', 'ts_all',
+      $selectedRowsRadio = $this->addElement('radio', 'radio_ts', NULL, '', 'ts_sel', array('checked' => 'checked'));
+      $this->assign('ts_sel_id', $selectedRowsRadio->_attributes['id']);
+
+      $allRowsRadio = $this->addElement('radio', 'radio_ts', NULL, '', 'ts_all',
         array('onchange' => $this->getName() . ".toggleSelect.checked = false; toggleCheckboxVals('mark_x_',this); toggleTaskAction( true );")
       );
+      $this->assign('ts_all_id', $allRowsRadio->_attributes['id']);
     }
 
     // add buttons

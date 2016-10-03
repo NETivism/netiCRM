@@ -133,6 +133,7 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
     // get all the details needed to generate a receipt
     $contribIDs = implode(',', $this->_contributionIds);
     $details = &CRM_Contribute_Form_Task_Status::getDetails($contribIDs);
+    $details = array_replace(array_flip($this->_contributionIds), $details);
 
     $params = $this->controller->exportValues($this->_name);
 
