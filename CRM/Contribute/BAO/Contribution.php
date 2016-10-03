@@ -2407,8 +2407,8 @@ WHERE c.id = $id";
             $event_params = array('id' => $ids['event']);
             CRM_Event_BAO_Event::retrieve($event_params, $pageValues);
             $pageValues['url'] = CRM_Utils_System::url('civicrm/event/info', 'reset=1&id='.$pageValues['id'], TRUE);
-            if($pageValues['is_email_receipt']){
-              $sendParams['from'] = $pageValues['receipt_from_name'].' <'.$pageValues['receipt_from_email'].'>';
+            if($pageValues['is_email_confirm']){
+              $sendParams['from'] = $pageValues['confirm_from_name']. ' <'.$pageValues['confirm_from_email'].'>';
             }
           }
         }
@@ -2416,8 +2416,8 @@ WHERE c.id = $id";
           if(!empty($ids['page_id'])){
             CRM_Contribute_BAO_ContributionPage::setValues($ids['page_id'], $pageValues);
             $pageValues['url'] = CRM_Utils_System::url('civicrm/contribute/transact', 'reset=1&id='.$pageValues['id'], TRUE);
-            if($pageValues['is_email_confirm']){
-              $sendParams['from'] = $pageValues['confirm_from_name']. ' <'.$pageValues['confirm_from_email'].'>';
+            if($pageValues['is_email_receipt']){
+              $sendParams['from'] = $pageValues['receipt_from_name'].' <'.$pageValues['receipt_from_email'].'>';
             }
           }
         }
