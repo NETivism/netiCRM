@@ -58,6 +58,7 @@ class CRM_Contribute_Page_ContributionPage extends CRM_Core_Page {
   private static $_contributionLinks;
   private static $_configureActionLinks;
   private static $_onlineContributionLinks;
+  private static $_exportLinks;
 
   private static $_links = NULL;
 
@@ -271,6 +272,31 @@ class CRM_Contribute_Page_ContributionPage extends CRM_Core_Page {
   }
 
   /**
+   * Get the export links.
+   *
+   * @return array $_exportLinks
+   *
+   */
+  function &exportLinks() {
+    if (!isset(self::$_exportLinks)) {
+      $urlString = 'civicrm/contribute/search';
+      $urlParams = 'reset=1&pid=%%id%%&force=1&test=0';
+
+      self::$_exportLinks = array(
+        CRM_Core_Action::CLOSE=> array(
+          'name' => ts('Export Contributions'),
+          'title' => ts('Export Contributions'),
+          'url' => $urlString,
+          'qs' => $urlParams,
+          'uniqueName' => 'export_contributions',
+        ),
+      );
+    }
+
+    return self::$_exportLinks;
+  }
+
+  /**
    * Run the page.
    *
    * This method is called after the page is created. It checks for the
@@ -476,6 +502,9 @@ ORDER BY title asc
       //add contribution search links.
       $action += array_sum(array_keys(self::contributionLinks()));
 
+      //add export links
+      $action += array_sum(array_keys(self::exportLinks()));
+
       if ($dao->is_active) {
         $action -= CRM_Core_Action::ENABLE;
       }
@@ -502,6 +531,14 @@ ORDER BY title asc
         $action,
         array('id' => $dao->id),
         ts('Contributions'),
+        TRUE
+      );
+
+      //export links.
+      $contribution[$dao->id]['exportLinks'] = CRM_Core_Action::formLink(self::exportLinks(),
+        $action,
+        array('id' => $dao->id),
+        ts('Export'),
         TRUE
       );
 

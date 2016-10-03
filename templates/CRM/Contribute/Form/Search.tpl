@@ -63,6 +63,7 @@
         {* This section handles form elements for action task select and submit *}
         <div class="crm-search-tasks crm-event-search-tasks">
             {include file="CRM/common/searchResultTasks.tpl" context="Contribution"}
+            <div class="crm-search-task-4 crm-search-task-export">{$form._qf_Search_next_task_4.html}</div>
         </div>
 
         {* This section displays the rows along and includes the paging controls *}

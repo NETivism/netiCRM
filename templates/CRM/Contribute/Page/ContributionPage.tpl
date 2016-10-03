@@ -72,7 +72,7 @@
 		  	</div>
                   	{/if}
 
-                  	{if $row.contributionLinks}	
+        {if $row.contributionLinks}	
 		  	<div class="crm-contribution-online-contribution-actions">
 		       	     {$row.contributionLinks|replace:'xx':$row.id}
 		  	</div>
@@ -81,6 +81,11 @@
 		  	{if $row.onlineContributionLinks}	
 		  	<div class="crm-contribution-search-contribution-actions">
 		       	     {$row.onlineContributionLinks|replace:'xx':$row.id}
+		  	</div>
+		  	{/if}
+		  	{if $row.exportLinks}	
+		  	<div class="crm-contribution-search-contribution-actions">
+		      {$row.exportLinks|replace:'xx':$row.id}
 		  	</div>
 		  	{/if}
 

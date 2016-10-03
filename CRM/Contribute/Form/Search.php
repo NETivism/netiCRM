@@ -157,6 +157,7 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
     $this->_searchButtonName = $this->getButtonName('refresh');
     $this->_printButtonName = $this->getButtonName('next', 'print');
     $this->_actionButtonName = $this->getButtonName('next', 'action');
+    $this->_exportButtonName = $this->getButtonName('next', 'task_4');
 
     $this->_done = FALSE;
     $this->defaults = array();
@@ -300,6 +301,14 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
         )
       );
 
+      // override default task
+      $this->addElement('hidden', 'task_force', 4);
+      $this->add('submit', $this->_exportButtonName, ts('Export Contributions'),
+        array('class' => 'form-submit',
+          'id' => 'export',
+        )
+      );
+
       // need to perform tasks on all or selected items ? using radio_ts(task selection) for it
       $this->addElement('radio', 'radio_ts', NULL, '', 'ts_sel', array('checked' => 'checked'));
       $this->addElement('radio', 'radio_ts', NULL, '', 'ts_all', array('onclick' => $this->getName() . ".toggleSelect.checked = false; toggleCheckboxVals('mark_x_',this); toggleTaskAction( true );"));
@@ -369,13 +378,19 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
     $this->set('queryParams', $this->_queryParams);
 
     $buttonName = $this->controller->getButtonName();
-    if ($buttonName == $this->_actionButtonName || $buttonName == $this->_printButtonName) {
+    if ($buttonName == $this->_actionButtonName || $buttonName == $this->_printButtonName || $buttonName == $this->_exportButtonName) {
       // check actionName and if next, then do not repeat a search, since we are going to the next page
 
       // hack, make sure we reset the task values
       $stateMachine = &$this->controller->getStateMachine();
       $formName = $stateMachine->getTaskFormName();
       $this->controller->resetPage($formName);
+
+      if ($buttonName == $this->_exportButtonName) {
+        $this->controller->set('force', 1);
+        $this->controller->set('entityTable', 'civicrm_contribution_page');
+        $this->controller->set('entityId', $this->_formValues['contribution_page_id']);
+      }
       return;
     }
 
