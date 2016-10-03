@@ -45206,3 +45206,7 @@ msgstr ""
 #: CRM/Contact/Form/Search/Custom/ContributionAggregate.php
 msgid "Amount of top contributors"
 msgstr ""
+
+#: CRM/Contribute/Page/ContributionPage.php
+msgid "Export"
+msgstr ""
