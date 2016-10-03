@@ -783,6 +783,8 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
         'postal_greeting_custom' => 'postal_greeting',
         'addressee_custom' => 'addressee',
       );
+      $config = CRM_Core_Config::singleton();
+      $custom_serial = $config->receiptSerial;
       // hack for CRM-665
       if (isset($details->$name) || $name == 'group' || $name == 'tag') {
         // to handle gender / suffix / prefix
@@ -869,7 +871,7 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
           $values[$index] = $paramsNew[$index];
           $params[$index] = $paramsNew[$name];
         }
-        elseif ($name == 'legal_identifier') {
+        elseif ($name == 'legal_identifier' || $name == 'custom_'.$custom_serial) {
           $params[$index] = $details->$name;
           $values[$index] = substr($details->$name, 0, 1) . str_repeat('*', strlen($details->$name) - 5) . substr($details->$name, -4, 4);
         }
@@ -1020,6 +1022,9 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
           }
         }
       }
+
+      watchdog('UFGroup', var_export($params,true));
+      watchdog('UFGroup', var_export($values,true));
 
       if ($field['visibility'] == "Public Pages and Listings" &&
         CRM_Core_Permission::check('profile listings and forms')
