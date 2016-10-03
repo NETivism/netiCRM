@@ -169,6 +169,7 @@ class CRM_Event_Form_Search extends CRM_Core_Form {
 
     $this->_reset = CRM_Utils_Request::retrieve('reset', 'Boolean', CRM_Core_DAO::$_nullObject);
     $this->_force = CRM_Utils_Request::retrieve('force', 'Boolean', $this, FALSE);
+    $this->_eventId = CRM_Utils_Request::retrieve('event', 'Positive', CRM_Core_DAO::$_nullObject);
     $this->_limit = CRM_Utils_Request::retrieve('limit', 'Positive', $this);
     $this->_context = CRM_Utils_Request::retrieve('context', 'String', $this, FALSE, 'search');
     $this->_ssID = CRM_Utils_Request::retrieve('ssID', 'Positive', $this);
@@ -217,6 +218,7 @@ class CRM_Event_Form_Search extends CRM_Core_Form {
 
     $this->assign("{$prefix}limit", $this->_limit);
     $this->assign("{$prefix}single", $this->_single);
+    $this->assign("event_id", $this->_eventId);
 
     $controller = new CRM_Core_Selector_Controller($selector,
       $this->get(CRM_Utils_Pager::PAGE_ID),
