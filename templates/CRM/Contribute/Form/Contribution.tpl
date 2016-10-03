@@ -478,7 +478,7 @@ function buildAmount( priceSetId ) {
       return;
   }
 
-  var dataUrl = {/literal}"{crmURL h=0 q='snippet=4'}"{literal} + '&priceSetId=' + priceSetId;
+  var dataUrl = {/literal}"{crmURL h=0 q='snippet=4'}"{literal} + '&priceSetId=' + priceSetId + '&pageKey={/literal}{$pageKey}{literal}';
 
   cj.ajax({
 		url: dataUrl,

@@ -74,6 +74,7 @@ class CRM_Contact_Form_Search_Custom_RecurSearch  extends CRM_Contact_Form_Searc
       'ROUND(SUM(c.total_amount),0)' => 'total_amount', 
       'MAX(c.created_date)' => 'current_created_date',
       'r.contribution_status_id' => 'contribution_status_id',
+      'last_receive_date' => 'last_receive_date',
     );
     $this->_columns = array(
       ts('ID') => 'id',
@@ -170,7 +171,8 @@ $having
     return "civicrm_contribution_recur AS r 
     INNER JOIN civicrm_contribution AS c ON c.contribution_recur_id = r.id
     INNER JOIN civicrm_contact AS contact_a ON contact_a.id = r.contact_id
-    INNER JOIN civicrm_email AS contact_email ON contact_email.contact_id = r.contact_id";
+    INNER JOIN civicrm_email AS contact_email ON contact_email.contact_id = r.contact_id
+    LEFT JOIN (SELECT contribution_recur_id AS rid, MAX(receive_date) AS last_receive_date FROM civicrm_contribution WHERE contribution_status_id = 1 AND contribution_recur_id IS NOT NULL GROUP BY contribution_recur_id) lr ON lr.rid = r.id";
   }
 
   /**
@@ -441,10 +443,6 @@ SUM(total_amount) as total_amount
     if($this->_formValues['contribution_created_date'] || $this->_formValues['start_date']){
       $sql = "SELECT count(*) FROM civicrm_contribution WHERE contribution_status_id = 1 AND contribution_recur_id = {$row['id']}";
       $row['donation_count'] = CRM_Core_DAO::singleValueQuery($sql, CRM_Core_DAO::$_nullArray);
-    }
-    if(empty($row['last_receive_date'])){
-      $sql = "SELECT receive_date FROM civicrm_contribution WHERE contribution_status_id = 1 AND contribution_recur_id = {$row['id']} ORDER BY receive_date DESC";
-      $row['last_receive_date'] = CRM_Core_DAO::singleValueQuery($sql, CRM_Core_DAO::$_nullArray);
     }
     if($this->_formValues['contribution_created_date']){
       $month = $this->_formValues['contribution_created_date'].'-01 00:00:00';

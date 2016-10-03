@@ -341,6 +341,8 @@ class CRM_Member_Selector_Search extends CRM_Core_Selector_Base implements CRM_C
       $permissions[] = CRM_Core_Permission::DELETE;
     }
     $mask = CRM_Core_Action::mask($permissions);
+    $memberNameStatus = CRM_Member_PseudoConstant::membershipStatus();
+    $memberLabelStatus = CRM_Member_PseudoConstant::membershipStatus(NULL, NULL, 'label');
 
     while ($result->fetch()) {
       $row = array();
@@ -361,10 +363,11 @@ class CRM_Member_Selector_Search extends CRM_Core_Selector_Base implements CRM_C
       if (!isset($result->owner_membership_id)) {
         // unset renew and followup link for deceased membership
         $currentMask = $mask;
-        if ($result->membership_status == ts('Deceased')) {
+        $statusId = array_search($result->membership_status, $memberLabelStatus);
+        if ($memberNameStatus[$statusId] == 'Deceased') {
           $currentMask = $currentMask & ~CRM_Core_Action::RENEW & ~CRM_Core_Action::FOLLOWUP;
         }
-        if ($result->membership_status == ts('Pending')) {
+        if ($memberNameStatus[$statusId] == 'Pending') {
           $currentMask = $currentMask & ~CRM_Core_Action::RENEW & ~CRM_Core_Action::FOLLOWUP;
         }
         $row['action'] = CRM_Core_Action::formLink(self::links('all',

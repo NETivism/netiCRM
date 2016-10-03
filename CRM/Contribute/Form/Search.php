@@ -312,8 +312,11 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
       );
 
       // need to perform tasks on all or selected items ? using radio_ts(task selection) for it
-      $this->addElement('radio', 'radio_ts', NULL, '', 'ts_sel', array('checked' => 'checked'));
-      $this->addElement('radio', 'radio_ts', NULL, '', 'ts_all', array('onclick' => $this->getName() . ".toggleSelect.checked = false; toggleCheckboxVals('mark_x_',this); toggleTaskAction( true );"));
+      $selectedRowsRadio = $this->addElement('radio', 'radio_ts', NULL, '', 'ts_sel', array('checked' => 'checked'));
+      $this->assign('ts_sel_id', $selectedRowsRadio->_attributes['id']);
+      
+      $allRowsRadio = $this->addElement('radio', 'radio_ts', NULL, '', 'ts_all', array('onclick' => $this->getName() . ".toggleSelect.checked = false; toggleCheckboxVals('mark_x_',this); toggleTaskAction( true );"));
+      $this->assign('ts_all_id', $allRowsRadio->_attributes['id']);
     }
 
     // add buttons
@@ -382,6 +385,18 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
     $buttonName = $this->controller->getButtonName();
     if ($buttonName == $this->_actionButtonName || $buttonName == $this->_printButtonName || $buttonName == $this->_exportButtonName) {
       // check actionName and if next, then do not repeat a search, since we are going to the next page
+
+      // refs #18784, take sortOrder to CRM_Contribute_Form_Task
+      $this->_queryParams = &CRM_Contact_BAO_Query::convertFormValues($this->_formValues);
+      $selector = new CRM_Contribute_Selector_Search($this->_queryParams,
+        $this->_action,
+        NULL,
+        $this->_single,
+        $this->_limit,
+        $this->_context
+      );
+      $sortOrder = $selector->getSortOrder(CRM_Core_Action::VIEW);
+      $this->controller->set('sortOrder',$sortOrder);
 
       // hack, make sure we reset the task values
       $stateMachine = &$this->controller->getStateMachine();

@@ -54,8 +54,12 @@ class CRM_Event_Form_Task_ParticipantStatus extends CRM_Event_Form_Task_Batch {
 
     # CRM-4321: display info on users being notified if any of the below statuses is enabled
     require_once 'CRM/Event/PseudoConstant.php';
-    $notifyingStatuses = array(ts('Pending from waitlist'), ts('Pending from approval'), ts('Expired'), ts('Cancelled'));
-    $notifyingStatuses = array_intersect($notifyingStatuses, CRM_Event_PseudoConstant::participantStatus());
+    $notifyingStatuses = array('Pending from waitlist', 'Pending from approval', 'Expired', 'Cancelled');
+    $notifyingStatuses = array_intersect(CRM_Event_PseudoConstant::participantStatus(), $notifyingStatuses);
+    foreach($notifyingStatuses as $k => $v){
+      $notifyingStatuses[$k] = ts($v);
+    }
+    $this->assign('notifyingStatusesIds', json_encode(array_keys($notifyingStatuses)));
     $this->assign('notifyingStatuses', implode(', ', $notifyingStatuses));
 
     parent::buildQuickForm();
