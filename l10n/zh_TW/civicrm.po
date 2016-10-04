@@ -11,8 +11,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2016-10-03 14:46+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
+"PO-Revision-Date: 2016-10-04 07:46+0000\n"
+"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45257,3 +45257,11 @@ msgid ""
 "<li><strong>Create contact when not found</strong> will always create new contact when duplicate rule doesn't found of this contact. Contact fields will be updated only when currently empty.</li>\n"
 "<li><strong>Do not create or update contact</strong> will never create new contact during contribution. Use this when you are sure you just want to insert or update contribution of exists contact. This also skip any contact fields update.</li></ul>"
 msgstr "每次匯入時，系統會檢查每筆捐款，依照所選的欄位規則來尋找對應聯絡人。當找不到聯絡人時，你可以選擇以下幾種動作：\n<ul><li><strong>匯入資料沒有ID時便建立聯絡人</strong>，是建議的預設值，也是最安全的方式避免重複建立過多聯絡人。這個選項將會檢查每筆捐款是否包含聯絡人的系統編號，或是外部編號，僅僅在沒有這些編號對應時，才會嘗試建立新的聯絡人。</li>\n<li><strong>找不到時便建立聯絡人</strong>，只要欄位對應沒有發現聯絡人，就會建立新的聯絡人。</li>\n<li><strong>不要建立或更新聯絡人</strong>，將不會新增任何聯絡人，如果你僅需要把捐款紀錄附加於系統已存在的聯絡人，請選擇此選項。</li></ul>"
+
+#: betterContributionForm.tpl
+msgid "Individual Donor"
+msgstr "個人名義捐款"
+
+#: betterContributionForm.tpl
+msgid "Organization Donor"
+msgstr "組織名義捐款"
