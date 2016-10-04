@@ -2203,7 +2203,7 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
     foreach ($ufGroups as $id => $title) {
       $ptype = CRM_Core_BAO_UFField::getProfileType($id, FALSE, $onlyPure);
       if (in_array($ptype, $types)) {
-        $profiles[$id] = $title;
+        $profiles[$id] = $title.' (ID '.$id.')';
       }
     }
 
