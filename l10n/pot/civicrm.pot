@@ -19905,7 +19905,7 @@ msgid "Your CiviCRM Profile '%1' has been deleted."
 msgstr ""
 
 #: CRM/UF/Form/Group.php
-msgid "YourProfile '%1' has been saved."
+msgid "Your CiviCRM Profile '%1' has been saved."
 msgstr ""
 
 #: CRM/UF/Form/Group.php

@@ -11,8 +11,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2016-10-04 07:46+0000\n"
-"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
+"PO-Revision-Date: 2016-10-04 17:00+0000\n"
+"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19903,7 +19903,7 @@ msgid "Your CiviCRM Profile '%1' has been deleted."
 msgstr "已刪除資料表單「%1」。"
 
 #: CRM/UF/Form/Group.php
-msgid "YourProfile '%1' has been saved."
+msgid "Your CiviCRM Profile '%1' has been saved."
 msgstr "已儲存資料表單「%1」。"
 
 #: CRM/UF/Form/Group.php
