@@ -3,8 +3,8 @@
 cj(function($){
   if($('#custom_{/literal}{$receiptTitle}{literal},#custom_{/literal}{$receiptSerial}{literal}').length >= 1){
     // receiptTitle, receiptSerial
-    var r_person = mdFormElement('radio', '{/literal}{ts}Individual{/ts}{literal}', {name:'receipt_type', id:'r_person', checked:'checked'});
-    var receipt_type = mdFormElement('radio', '{/literal}{ts}Legal{/ts}{literal}', {name:'receipt_type', id:'r_company'});
+    var r_person = mdFormElement('radio', '{/literal}{ts}Individual Donor{/ts}{literal}', {name:'receipt_type', id:'r_person', checked:'checked'});
+    var receipt_type = mdFormElement('radio', '{/literal}{ts}Organization Donor{/ts}{literal}', {name:'receipt_type', id:'r_company'});
 
     $('<div class="crm-section receipt_type"><div class="label"></div><div class="content">' + r_person + receipt_type +'</div></div>')
     .insertBefore($('.custom_{/literal}{$receiptTitle}{literal}-section'));
@@ -163,7 +163,7 @@ cj(function($){
   function doCheckSameAs(){
     var $sameas = $('#same_as');
     var error = false;
-    if( $sameas.is(':checked') ){
+    if( $sameas.is(':checked') && $('#r_person').is(':checked')){
       if($('#legal_identifier').length >= 1){
         if(($('#legal_identifier').val() == '' ) || !validTWID($('#legal_identifier').val())){
           error = true;
@@ -199,13 +199,17 @@ cj(function($){
         $('#same_as').trigger('click');
       }
     }
-    if($('#same_as').is(':checked') && $('#last_name,#first_name').length > 1 && $('#r_person').is(':checked')){
-        $('#custom_{/literal}{$receiptTitle}{literal}').val($('#last_name').val()+$('#first_name').val()).attr('readonly','readonly');
+    if($('#same_as').is(':checked') && $('#r_company').is(':checked') && $('#is_for_organization').length > 0 && $('#is_for_organization').is(':checked')){
+      $('#custom_{/literal}{$receiptTitle}{literal}').val($('#organization_name').val());
+    }else if($('#same_as').is(':checked') && $('#last_name,#first_name').length > 1 && $('#r_person').is(':checked')){
+      $('#custom_{/literal}{$receiptTitle}{literal}').val($('#last_name').val()+$('#first_name').val()).attr('readonly','readonly');
     }
     else{
       $('#custom_{/literal}{$receiptTitle}{literal}').removeAttr('readonly');
     }
-    if($('#same_as').is(':checked') && $('#legal_identifier').length >= 1 && $('#r_person').is(':checked')){
+    if($('#same_as').is(':checked') && $('#r_company').is(':checked') && $('#is_for_organization').length > 0 && $('#is_for_organization').is(':checked')){
+      $('#custom_{/literal}{$receiptSerial}{literal}').val($('#sic_code').val());
+    }else if($('#same_as').is(':checked') && $('#legal_identifier').length >= 1 && $('#r_person').is(':checked')){
       $('#custom_{/literal}{$receiptSerial}{literal}').val($('#legal_identifier').val()).attr('readonly', 'readonly');
     }
     else{

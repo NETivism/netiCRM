@@ -45235,3 +45235,10 @@ msgstr ""
 msgid "For each import, system will find your match contact record in each contribution. When contact not found, you can choose default action of import:<ul>\n<li><strong>Create contact only on identifier not import</strong> is default option, also the secure way to prevent import too many contacts. This will try to match each contribution import row to see if your import have these contact identifier or external identifier. If none of these column found, we will create new contact. Contact fields will be updated only when currently empty.</li>\n<li><strong>Create contact when not found</strong> will always create new contact when duplicate rule doesn't found of this contact. Contact fields will be updated only when currently empty.</li>\n<li><strong>Do not create or update contact</strong> will never create new contact during contribution. Use this when you are sure you just want to insert or update contribution of exists contact. This also skip any contact fields update.</li></ul>"
 msgstr ""
 
+#: betterContributionForm.tpl
+msgid "Individual Donor"
+msgstr ""
+
+#: betterContributionForm.tpl
+msgid "Organization Donor"
+msgstr ""
