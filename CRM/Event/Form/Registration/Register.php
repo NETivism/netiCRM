@@ -528,7 +528,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
         }
       }
 
-      if (($this->_requireApproval || $this->_allowWaitlist) && !$this->_allowConfirmation) {
+      if (($this->_requireApproval || $this->_isOnWaitlist) && !$this->_allowConfirmation) {
         $this->assign('show_payment_processors', 0);
       }
       else{
