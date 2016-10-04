@@ -38,7 +38,7 @@
             <p>{ts}NOTE: Alternatively, you can enable the <strong>Pay Later</strong> option below without setting up a payment processor. All users will then be asked to submit payment offline (e.g. mail in a check, call in a credit card, etc.).{/ts}</p>
         </div>
     {/if}
-    <table class="form-layout-compressed">  
+    <table class="form-layout-compressed">
         <tr class="crm-contribution-contributionpage-amount-form-block-is_monetary"><th scope="row" class="label" width="20%">{$form.is_monetary.label}</th>
             <td>{$form.is_monetary.html}<br />
             <span class="description">{ts}Uncheck this box if you are using this contribution page for free membership signup ONLY, or to solicit in-kind / non-monetary donations such as furniture, equipment.. etc.{/ts}</span></td>
@@ -48,10 +48,14 @@
             <span class="description">{ts}Select the currency to be used for contributions submitted from this contribution page.{/ts}</span></td>
         </tr>	
         {if $paymentProcessor}
+        </table>
+        <table class="form-layout-compressed" id="payment_processor">
         <tr class="crm-contribution-contributionpage-amount-form-block-payment_processor"><th scope="row" class="label" width="20%">{$form.payment_processor.label}</th>
             <td>{$form.payment_processor.html}<br />
             <span class="description">{ts}Select the payment processor to be used for contributions submitted from this contribution page (unless you are soliciting non-monetary / in-kind contributions only).{/ts} {docURL page="CiviContribute Payment Processor Configuration"}</span></td>
         </tr>
+        </table>
+        <table class="form-layout-compressed">
         {/if}
         <tr class="crm-contribution-contributionpage-amount-form-block-amount_block_is_active"><th scope="row" class="label">{$form.amount_block_is_active.label}</th>
             <td>{$form.amount_block_is_active.html}<br />
@@ -218,6 +222,13 @@
 	   var priceSetID = {/literal}'{$priceSetID}'{literal};
 
 	   switch ( elementName ) {
+          case 'is_monetary':
+              if ( element.checked ) {
+                cj('#payment_processor').show();
+              }else{
+                cj('#payment_processor').hide();
+              }
+          break;
 		  case 'price_set_id':
 		       if ( element ) {
 		       	  hide('amountFields', 'block');
@@ -281,6 +292,16 @@
     target_element_id   = "pledgeFields" 
     target_element_type = "table-row"
     field_type          = "radio"
+    invert              = "false"
+}
+{/if}
+{if $paymentProcessor}
+{include file="CRM/common/showHideByFieldValue.tpl"
+    trigger_field_id    ="is_monetary"
+    trigger_value       ="true"
+    target_element_id   ="payment_processor"
+    target_element_type ="table-row"
+    field_type          ="radio"
     invert              = "false"
 }
 {/if}
