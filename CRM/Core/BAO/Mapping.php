@@ -1174,20 +1174,39 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
   }
 
   static function getMappingFieldsUfJoin($entityTable, $entityId){
+    $ufJoinParams = array();
     if ($entityTable == 'civicrm_event') {
-      $module = 'CiviEvent';
       $component = 'event';
+      $ufJoinParams[] = array(
+        'entity_table' => $entityTable,
+        'entity_id' => $entityId,
+        'module' => 'CiviEvent',
+      );
+      $ufJoinParams[] = array(
+        'entity_table' => $entityTable,
+        'entity_id' => $entityId,
+        'module' => 'CiviEvent_Additional',
+      );
     }
     elseif($entityTable == 'civicrm_contribution_page') {
-      $module = 'CiviContribute';
       $component = 'contribute';
+      $ufJoinParams[] = array(
+        'entity_table' => $entityTable,
+        'entity_id' => $entityId,
+        'module' => 'CiviContribute',
+      );
     }
-    $ufJoinParams = array(
-      'entity_table' => $entityTable,
-      'entity_id' => $entityId,
-      'module' => $module,
-    );
-    $gids = CRM_Core_BAO_UFJoin::getUFGroupIds($ufJoinParams);
+
+    $gids = array();
+    foreach ($ufJoinParams as $params) {
+      list($pre, $post, $preActive, $postActive) = CRM_Core_BAO_UFJoin::getUFGroupIds($params);
+      if($preActive) {
+        $gids[] = $pre;
+      }
+      if($postActive) {
+        $gids[] = $post;
+      }
+    }
     $gids = array_filter($gids);
     return self::getMappingFieldsUfGroup($component, $gids);
   }
@@ -1222,6 +1241,10 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
       }
       foreach($ufFields as $fields){
         foreach ($fields as $fieldName => $field) {
+          // we don't support export contact note here
+          if($fieldName == 'note') {
+            continue;
+          }
           if (strstr($field['name'], '-')) {
             list($fieldName, $locationTypeId) = explode('-', $field['name']);
             if(empty($field['location_type_id'])){
