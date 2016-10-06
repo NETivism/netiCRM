@@ -45242,3 +45242,7 @@ msgstr ""
 #: betterContributionForm.tpl
 msgid "Organization Donor"
 msgstr ""
+
+#: CRM/Contact/Task.php
+msgid "Print PDF Letter"
+msgstr ""
