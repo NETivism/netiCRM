@@ -552,6 +552,10 @@ class CRM_Core_SelectValues {
           $tokens[$key] = $value;
         }
       }
+      $tokens['{domain.name}'] = ts('Domain name');
+      $tokens['{domain.address}'] = ts('Domain (organization) address');
+      $tokens['{domain.phone}'] = ts('Domain (organization) phone');
+      $tokens['{domain.email}'] = ts('Domain (organization) email');
     }
 
     return $tokens;

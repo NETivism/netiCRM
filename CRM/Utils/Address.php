@@ -214,10 +214,10 @@ class CRM_Utils_Address {
     }
     else {
       if ($microformat == 1) {
-        $formatted = "\n<div class=\"location vcard\"><span class=\"adr\">\n$formatted</span></div>\n";
+        $formatted = "\n<span class=\"location vcard\"><span class=\"adr\">\n$formatted</span></span>\n";
       }
       else {
-        $formatted = "\n<div class=\"vcard\"><span class=\"adr\">$formatted</span></div>\n";
+        $formatted = "\n<span class=\"vcard\"><span class=\"adr\">$formatted</span></span>\n";
       }
     }
 
