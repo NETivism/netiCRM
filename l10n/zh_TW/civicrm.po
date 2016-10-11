@@ -11,7 +11,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2016-10-04 17:00+0000\n"
+"PO-Revision-Date: 2016-10-11 09:11+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -45265,3 +45265,15 @@ msgstr "個人名義捐款"
 #: betterContributionForm.tpl
 msgid "Organization Donor"
 msgstr "組織名義捐款"
+
+#: CRM/Contact/Task.php
+msgid "Print PDF Letter"
+msgstr "製作 PDF 信件"
+
+#: CRM/Contribute/Form/Contribution.php
+msgid "Update status related to"
+msgstr "更新相關紀錄的狀態"
+
+#: CRM/Contribute/Form/Contribution.php
+msgid "Check this will also update related component status."
+msgstr "勾選此選項，將會依據此繳款的狀態更新相關紀錄的狀態。"

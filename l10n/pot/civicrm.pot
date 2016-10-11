@@ -45246,3 +45246,11 @@ msgstr ""
 #: CRM/Contact/Task.php
 msgid "Print PDF Letter"
 msgstr ""
+
+#: CRM/Contribute/Form/Contribution.php
+msgid "Update status related to"
+msgstr ""
+
+#: CRM/Contribute/Form/Contribution.php
+msgid "Check this will also update related component status."
+msgstr ""
