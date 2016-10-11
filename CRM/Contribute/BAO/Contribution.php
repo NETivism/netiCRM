@@ -1461,11 +1461,12 @@ LEFT JOIN  civicrm_contribution contribution ON ( componentPayment.contribution_
     require_once 'CRM/Contribute/PseudoConstant.php';
     $contributionStatuses = CRM_Contribute_PseudoConstant::contributionStatus(NULL, 'name');
 
-    // we process only ( Completed, Cancelled, or Failed ) contributions.
+    // we process only ( Completed, Cancelled, Failed, Overdue ) contributions.
     if (!$contributionId ||
       !in_array($contributionStatusId, array(array_search('Completed', $contributionStatuses),
           array_search('Cancelled', $contributionStatuses),
           array_search('Failed', $contributionStatuses),
+          array_search('Overdue', $contributionStatuses),
         ))
     ) {
       return $updateResult;
@@ -1585,16 +1586,6 @@ LEFT JOIN  civicrm_contribution contribution ON ( componentPayment.contribution_
       }
     }
     elseif ($contributionStatusId == array_search('Failed', $contributionStatuses)) {
-      if ($membership) {
-        $membership->status_id = array_search('Expired', $membershipStatuses);
-        $membership->save();
-
-        $updateResult['updatedComponents']['CiviMember'] = $membership->status_id;
-        if ($processContributionObject) {
-          $processContribution = TRUE;
-        }
-      }
-
       if ($participant) {
         $updatedStatusId = array_search('Cancelled', $participantStatuses);
         CRM_Event_BAO_Participant::updateParticipantStatus($participant->id, $oldStatus, $updatedStatusId, TRUE);
@@ -1609,6 +1600,17 @@ LEFT JOIN  civicrm_contribution contribution ON ( componentPayment.contribution_
         CRM_Pledge_BAO_Payment::updatePledgePaymentStatus($pledgeID, $pledgePaymentIDs, $contributionStatusId);
 
         $updateResult['updatedComponents']['CiviPledge'] = $contributionStatusId;
+        if ($processContributionObject) {
+          $processContribution = TRUE;
+        }
+      }
+    }
+    elseif ($contributionStatusId == array_search('Overdue', $contributionStatuses)) {
+      if ($membership) {
+        $membership->status_id = array_search('Expired', $membershipStatuses);
+        $membership->save();
+
+        $updateResult['updatedComponents']['CiviMember'] = $membership->status_id;
         if ($processContributionObject) {
           $processContribution = TRUE;
         }

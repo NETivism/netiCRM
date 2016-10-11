@@ -58,6 +58,8 @@ class CRM_Contribute_Form_Contribution extends CRM_Core_Form {
 
   public $_participantId;
 
+  public $_membershipId;
+
   /**
    * the id of the contribution that we are proceessing
    *
@@ -199,19 +201,30 @@ class CRM_Contribute_Form_Contribution extends CRM_Core_Form {
     $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE, 'add');
     $this->assign('action', $this->_action);
 
-    // add participant payment links for this contribution
-    if($this->_action & CRM_Core_Action::ADD && CRM_Utils_Request::retrieve( 'participant_id', 'Positive', $this)) {
-      $pid = CRM_Utils_Request::retrieve( 'participant_id', 'Positive', $this);
-      $pcid = CRM_Core_DAO::getFieldValue('CRM_Event_DAO_Participant', $pid, 'contact_id');
-      // check if participant is the same with this contact
-      if($this->_contactID == $pcid){
-        $this->_participantId = CRM_Utils_Request::retrieve('participant_id', 'Positive', $this);
-        $this->assign( 'participantId', $this->_participantId);
-      }
-    }
-
     //get the contribution id if update
     $this->_id = CRM_Utils_Request::retrieve('id', 'Positive', $this);
+
+    // add participant payment links for this contribution
+    $pid = CRM_Utils_Request::retrieve( 'participant_id', 'Positive', $this);
+    $mid = CRM_Utils_Request::retrieve( 'membership_id', 'Positive', $this);
+    if($this->_action & CRM_Core_Action::ADD) {
+      if($pid) {
+        $pcid = CRM_Core_DAO::getFieldValue('CRM_Event_DAO_Participant', $pid, 'contact_id');
+        // check if participant is the same with this contact
+        if($this->_contactID == $pcid){
+          $this->_participantId = $pid;
+          $this->assign('participantId', $this->_participantId);
+        }
+      }
+      if($mid) {
+        $mcid = CRM_Core_DAO::getFieldValue('CRM_Member_DAO_Membership', $mid, 'contact_id');
+        // check if membership is the same with this contact
+        if($this->_contactID == $mcid){
+          $this->_membershipId = $mid;
+          $this->assign('membershipId', $this->_membershipId);
+        }
+      }
+    }
 
     $this->_context = CRM_Utils_Request::retrieve('context', 'String', $this);
     $this->assign('context', $this->_context);
@@ -459,6 +472,26 @@ WHERE  contribution_id = {$this->_id}
       ) {
         $this->assign('showCheckNumber', TRUE);
       }
+
+      // fetch current contribution detail
+      $details = CRM_Contribute_BAO_Contribution::getComponentDetails(array($this->_id));
+      $details = reset($details);
+      if ($details['component'] == 'event' && !empty($details['participant'])) {
+        $this->_participantId = $details['participant'];
+        $this->_multiContribComponent = CRM_Core_DAO::singleValueQuery("SELECT COUNT(*) FROM civicrm_participant_payment WHERE participant_id = %1 AND contribution_id != %2", array(
+          1 => array($this->_participantId, 'Positive'),
+          2 => array($this->_id, 'Positive'),
+        ));
+        $this->assign('participantId', $this->_participantId);
+      }
+      elseif($details['membership']){
+        $this->_membershipId = $details['membership'];
+        $this->_multiContribComponent = CRM_Core_DAO::singleValueQuery("SELECT COUNT(*) FROM civicrm_membership_payment WHERE membership_id = %1 AND contribution_id != %2", array(
+          1 => array($this->_membershipId, 'Positive'),
+          2 => array($this->_id, 'Positive'),
+        ));
+        $this->assign('membershipId', $this->_membershipId);
+      }
     }
 
     // when custom data is included in this page
@@ -505,8 +538,11 @@ WHERE  contribution_id = {$this->_id}
       $defaults['option_type'] = 1;
     }
 
-    if( $this->_participantId ){
+    if($this->_participantId){
       $defaults['participant_id'] = $this->_participantId;
+    }
+    if($this->_membershipId){
+      $defaults['membership_id'] = $this->_membershipId;
     }
 
     $fields = array();
@@ -639,6 +675,13 @@ WHERE  contribution_id = {$this->_id}
       ));
     $this->assign('currency', CRM_Utils_Array::value('currency', $defaults));
     $this->assign('totalAmount', CRM_Utils_Array::value('total_amount', $defaults));
+
+    if ($this->_action & CRM_Core_Action::UPDATE && $this->_updateRelatedStatus) {
+      $defaults['update_related_component'] = 0;
+      if ($this->_participantId && !$this->_multiContribComponent) {
+        $defaults['update_related_component'] = 1;
+      }
+    }
 
     return $defaults;
   }
@@ -873,6 +916,15 @@ WHERE  contribution_id = {$this->_id}
       }
     }
 
+    // if ($this->_action & CRM_Core_Action::UPDATE && $this->_updateRelatedStatus) {
+    if ($this->_action & CRM_Core_Action::UPDATE) {
+      $this->addElement('checkbox', 'update_related_component', ts('Update status related to'));
+    }
+    else{
+      $this->addElement('hidden', 'update_related_component', 0);
+    }
+
+    $this->addElement('hidden', 'soft_contact_id', '', array('id' => 'soft_contact_id'));
     $this->add('select', 'contribution_status_id',
       ts('Contribution Status'),
       $status,
@@ -994,9 +1046,17 @@ WHERE  contribution_id = {$this->_id}
     $this->addElement('hidden', 'soft_contact_id', '', array('id' => 'soft_contact_id'));
 
     // add form element for participant
-    if(!empty($this->_participantId)){
-      $element = $this->add( 'text', 'participant_id', ts('Link Participant'));
-      $element->freeze();
+    if ($this->_action & CRM_Core_Action::ADD) {
+      if(!empty($this->_participantId)){
+        $element = $this->add('text', 'participant_id', ts('Participant'));
+        $element->freeze();
+      }
+
+      // add form element for membership
+      if(!empty($this->_membershipId)){
+        $element = $this->add('text', 'membership_id', ts('Membership'));
+        $element->freeze();
+      }
     }
 
     if (CRM_Utils_Array::value('pcp_made_through_id', $defaults) &&
@@ -1490,7 +1550,7 @@ WHERE  contribution_id = {$this->_id}
 
       // process associated membership / participant, CRM-4395
       $relatedComponentStatusMsg = NULL;
-      if ($contribution->id && $this->_action & CRM_Core_Action::UPDATE) {
+      if ($submittedValues['update_related_component'] && $contribution->id && $this->_action & CRM_Core_Action::UPDATE) {
         $relatedComponentStatusMsg = $this->updateRelatedComponent($contribution->id,
           $contribution->contribution_status_id,
           CRM_Utils_Array::value('contribution_status_id',
@@ -1499,14 +1559,25 @@ WHERE  contribution_id = {$this->_id}
         );
       }
 
-      // process associated participant
-      if ( $contribution->id && $this->_action & CRM_Core_Action::ADD && $submittedValues['participant_id']) {
-        $paymentParticipant = array(
-          'participant_id' => $submittedValues['participant_id'],
-          'contribution_id' => $contribution->id,
-        );
-        $ids = array();
-        CRM_Event_BAO_ParticipantPayment::create( $paymentParticipant, $ids);
+      // add participant / membership record when create contribution
+      if ( $contribution->id && $this->_action & CRM_Core_Action::ADD) {
+        if ($submittedValues['participant_id']) {
+          $paymentParticipant = array(
+            'participant_id' => $submittedValues['participant_id'],
+            'contribution_id' => $contribution->id,
+          );
+          $ids = array();
+          CRM_Event_BAO_ParticipantPayment::create($paymentParticipant, $ids);
+        }
+        if ($submittedValues['membership_id']) {
+          $ids = array();
+          $mpDAO = new CRM_Member_DAO_MembershipPayment();
+          $mpDAO->membership_id = $submittedValues['membership_id'];
+          $mpDAO->contribution_id = $contribution->id;
+          CRM_Utils_Hook::pre('create', 'MembershipPayment', NULL, $mpDAO);
+          $mpDAO->save();
+          CRM_Utils_Hook::post('create', 'MembershipPayment', $mpDAO->id, $mpDAO);
+        }
       }
 
       //process  note
@@ -1611,7 +1682,8 @@ WHERE  contribution_id = {$this->_id}
       return $statusMsg;
     }
 
-    $params = array('contribution_id' => $contributionId,
+    $params = array(
+      'contribution_id' => $contributionId,
       'contribution_status_id' => $statusId,
       'previous_contribution_status_id' => $previousStatusId,
     );
