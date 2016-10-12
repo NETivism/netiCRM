@@ -65,7 +65,7 @@ class CRM_Contact_Form_Search_Custom_RecurSearch  extends CRM_Contact_Form_Searc
       'ROUND(r.amount,0)' => 'amount',
       'COUNT(IF(c.contribution_status_id = 1, 1, NULL))' => 'donation_count',
       'CAST(r.installments AS SIGNED) - COUNT(c.id)' => 'remain_installments',
-      'r.Installments' => 'installments',
+      'r.installments' => 'installments',
       'r.start_date' => 'start_date',
       'r.end_date' => 'end_date',
       'r.cancel_date' => 'cancel_date',
