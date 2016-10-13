@@ -1023,9 +1023,6 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
         }
       }
 
-      watchdog('UFGroup', var_export($params,true));
-      watchdog('UFGroup', var_export($values,true));
-
       if ($field['visibility'] == "Public Pages and Listings" &&
         CRM_Core_Permission::check('profile listings and forms')
       ) {
