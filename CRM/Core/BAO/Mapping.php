@@ -964,13 +964,16 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
           }
           $contactType = $v[0];
         }
+
         if (CRM_Utils_Array::value('1', $v)) {
           $fldName = $v[1];
-          if ($v2 = CRM_Utils_Array::value('2', $v) && trim($v2)) {
+          $v2 = CRM_Utils_Array::value('2', $v);
+          $v3 = CRM_Utils_Array::value('3', $v);
+          if ($v2 && trim($v2)) {
             $fldName .= "-{$v[2]}";
           }
 
-          if ($v3 = CRM_Utils_Array::value('3', $v) && trim($v3)) {
+          if ($v3 && trim($v3)) {
             $fldName .= "-{$v[3]}";
           }
 
@@ -994,21 +997,19 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
           }
 
           if ($row) {
-            $fields[] = array($fldName,
-              $params['operator'][$key][$k],
-              $value,
-              $key,
-              $k,
-            );
+            $rowValue = $k;
           }
           else {
-            $fields[] = array($fldName,
-              $params['operator'][$key][$k],
-              $value,
-              $key,
-              0,
-            );
+            $rowValue = 0;
           }
+          $fields[] = array(
+            $fldName,
+            $params['operator'][$key][$k],
+            $value,
+            $key,
+            $rowValue,
+          );
+
         }
       }
       if ($contactType) {
