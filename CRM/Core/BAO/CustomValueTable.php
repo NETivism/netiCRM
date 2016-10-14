@@ -472,7 +472,7 @@ AND    $cond
     require_once 'CRM/Core/BAO/CustomField.php';
     foreach ($params as $n => $v) {
       if ($customFieldInfo = CRM_Core_BAO_CustomField::getKeyID($n, TRUE)) {
-        $fieldID = (int ) $customFieldInfo[0];
+        $fieldID = (int) $customFieldInfo[0];
         if (CRM_Utils_Type::escape($fieldID,
             'Integer', FALSE
           ) === NULL) {
@@ -493,7 +493,11 @@ AND    $cond
       }
     }
 
-    $fieldIDList = implode(',', array_keys($fieldValues));
+    $keys = array_keys($fieldValues);
+    if(empty($keys)) {
+      return CRM_Core_Error::createAPIError(ts('Set custom value without necessery keys'));
+    }
+    $fieldIDList = implode(',', $keys);
 
     // format it so that we can just use create
     $sql = "
