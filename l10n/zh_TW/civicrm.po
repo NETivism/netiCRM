@@ -11,8 +11,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2016-10-17 08:41+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
+"PO-Revision-Date: 2016-10-17 11:03+0000\n"
+"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45281,3 +45281,7 @@ msgstr "勾選此選項，將會依據此繳款的狀態更新相關紀錄的狀
 #: CRM/Contact/Form/Search/Custom/AnnualReceipt.php
 msgid "Receipt Year"
 msgstr "收據開立年度"
+
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php
+msgid "Over %1"
+msgstr "超過%1期"

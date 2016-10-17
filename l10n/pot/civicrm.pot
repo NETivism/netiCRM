@@ -45258,3 +45258,7 @@ msgstr ""
 #: CRM/Contact/Form/Search/Custom/AnnualReceipt.php
 msgid "Receipt Year"
 msgstr ""
+
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php
+msgid "Over %1"
+msgstr ""
