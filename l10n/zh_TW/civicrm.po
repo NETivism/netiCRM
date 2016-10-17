@@ -11,7 +11,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2016-10-11 09:11+0000\n"
+"PO-Revision-Date: 2016-10-17 08:41+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -44730,7 +44730,7 @@ msgstr "此操作會影響自動編序收據編號的功能。請確認您知道
 msgid ""
 "This is a recurring contribution. %4, every %1 %2 will charge from %3 "
 "payment."
-msgstr "這是定期定額捐款。%4，每 %1 %2將會從您的 %3 扣款。"
+msgstr "這是定期定額捐款。%4，每 %1 個 %2將會從您的 %3 扣款。"
 
 msgid "To modify or cancel future contributions please contact %1"
 msgstr "若要修改或取消後續的定期定額捐款，請聯繫%1"
@@ -44983,7 +44983,7 @@ msgstr "您需要在 <strong>%1</strong> 前（繳費期限），以下列方式
 msgid ""
 "If you can make it before expire date, you can <a href=\"%1\">go page</a> "
 "submit again."
-msgstr "若本繳費單逾期，則需請您<a href=\"%1\">重新產生</a>新的繳費資訊。"
+msgstr "若本繳費單逾期將無法再次利用，需請您回到<a href=\"%1\">原本繳費頁面</a>，重新操作報名或捐款。"
 
 #: CRM/Contribute/Page/Invoice.php
 msgid "Completed or cancelled transaction doesn't need invoice."
@@ -45277,3 +45277,7 @@ msgstr "更新相關紀錄的狀態"
 #: CRM/Contribute/Form/Contribution.php
 msgid "Check this will also update related component status."
 msgstr "勾選此選項，將會依據此繳款的狀態更新相關紀錄的狀態。"
+
+#: CRM/Contact/Form/Search/Custom/AnnualReceipt.php
+msgid "Receipt Year"
+msgstr "收據開立年度"

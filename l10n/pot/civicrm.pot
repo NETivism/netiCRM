@@ -45254,3 +45254,7 @@ msgstr ""
 #: CRM/Contribute/Form/Contribution.php
 msgid "Check this will also update related component status."
 msgstr ""
+
+#: CRM/Contact/Form/Search/Custom/AnnualReceipt.php
+msgid "Receipt Year"
+msgstr ""

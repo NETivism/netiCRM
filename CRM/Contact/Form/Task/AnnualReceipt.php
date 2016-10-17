@@ -52,13 +52,13 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
     $years = array();
     if(!empty($this->_year)){
       $years[$this->_year] = $this->_year;
-      $ele = $this->addElement('select', 'year', ts('Receipt Date'), $years);
+      $ele = $this->addElement('select', 'year', ts('Receipt Year'), $years);
     }
     else{
       for($year = date('Y'); $year < date('Y') + 4; $year++) {
         $years[$year - 3] = $year - 3;
       }
-      $this->addElement('select', 'year', ts('Receipt Date'), $years);
+      $this->addElement('select', 'year', ts('Receipt Year'), $years);
     }
 
     $contribution_type = CRM_Contribute_PseudoConstant::contributionType();
