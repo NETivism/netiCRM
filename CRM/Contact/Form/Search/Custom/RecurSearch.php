@@ -142,7 +142,7 @@ PRIMARY KEY (id)
 SELECT $select
 FROM   $from
 WHERE  $where
-GROUP BY r.id
+GROUP BY r.id, c.id
 $having
 ";
     $dao = CRM_Core_DAO::executeQuery($sql, CRM_Core_DAO::$_nullArray);
@@ -427,6 +427,9 @@ SUM(total_amount) as total_amount
   function alterRow(&$row) {
     $dao = $row['#dao'];
     $row['contribution_status_id'] = $this->_cstatus[$row['contribution_status_id']];
+    if($row['remain_installments'] < 0){
+       $row['remain_installments'] = ts('Over %1',array( 1 => -$row['remain_installments']));
+    }
     if(!empty($row['#dao']['installments'])){
       $row['remain_installments'] = $row['remain_installments'] . ' / ' . $row['#dao']['installments'];
     }
