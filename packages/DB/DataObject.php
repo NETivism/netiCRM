@@ -2454,21 +2454,6 @@ class DB_DataObject extends DB_DataObject_Overload
             return $this->raiseError($result);
         }
 
-        /* CRM-3225 */
-        if (function_exists('variable_get') && variable_get('dev_query', 0)) {
-            // this is for drupal devel module
-            // If devel.module query logging is enabled, prepend a comment with the username and calling function
-            // to the SQL string.
-            $bt = debug_backtrace();
-            // t() may not be available yet so we don't wrap 'Anonymous'
-            $name = $user->uid ? $user->name : variable_get('anonymous', 'Anonymous');
-            $query = $bt[3]['function'] ."\n/* ". $name .' */ '. str_replace("\n ", '', $string);
-            list($usec, $sec) = explode(' ', microtime());
-            $stop = (float)$usec + (float)$sec;
-            $diff = $stop - $time;
-            $queries[] = array($query, $diff);
-        }
-
         if (!empty($_DB_DATAOBJECT['CONFIG']['debug'])) {
             $t= explode(' ',microtime());
             $_DB_DATAOBJECT['QUERYENDTIME'] = $t[0]+$t[1];
