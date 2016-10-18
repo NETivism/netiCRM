@@ -129,7 +129,7 @@ class CRM_Mailing_Selector_Browse extends CRM_Core_Selector_Base implements CRM_
       }
       else {
         // sort by completed date for archived and undefined get
-        $completedOrder = CRM_Utils_Sort::DESCENDING;
+        $scheduledOrder = CRM_Utils_Sort::DESCENDING;
       }
 
       self::$_columnHeaders = array(
@@ -176,7 +176,7 @@ class CRM_Mailing_Selector_Browse extends CRM_Core_Selector_Base implements CRM_
         array(
           'name' => ts('Completed'),
           'sort' => 'end_date',
-          'direction' => $completedOrder,
+          'direction' => CRM_Utils_Sort::DONTCARE,
         ),
       );
 
