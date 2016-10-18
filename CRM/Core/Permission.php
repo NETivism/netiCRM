@@ -382,6 +382,7 @@ class CRM_Core_Permission {
         'access deleted contacts' => ts('access deleted contacts'),
         'delete contacts permanantly' => ts('delete contacts permanantly'),
         'import contacts' => ts('import contacts'),
+        'import SQL datasource' => ts('import SQL datasource'),
         'edit groups' => ts('edit groups'),
         'administer CiviCRM' => ts('administer CiviCRM'),
         'administer Reserved Option' => ts('administer Reserved Option'),

@@ -75,5 +75,10 @@ abstract class CRM_Import_DataSource {
    * @access public
    */
   abstract public function postProcess(&$params, &$db);
+
+  public function checkPermission() {
+    $info = $this->getInfo();
+    return empty($info['permissions']) || CRM_Core_Permission::check($info['permissions']);
+  }
 }
 
