@@ -391,7 +391,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
     $externalID = CRM_Utils_Array::value($this->_externalIdentifierIndex, $values);
     if ($externalID) {
       /* If it's a dupe,external Identifier  */
-      if ($externalDupe = CRM_Utils_Array::key($externalID,
+      if ($externalDupe = CRM_Utils_Array::value($externalID,
           $this->_allExternalIdentifiers
         )) {
         $errorMessage = ts('External Identifier conflicts with record %1', array(1 => $externalDupe));
@@ -401,7 +401,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
         return CRM_Import_Parser::ERROR;
       }
       //otherwise, count it and move on
-      $this->_allExternalIdentifiers[$this->_lineCount] = $externalID;
+      $this->_allExternalIdentifiers[$externalID] = $this->_lineCount;
     }
 
     //Checking error in custom data
