@@ -99,7 +99,8 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
         $messageTemplate->selectAdd('msg_text, msg_html');
         $messageTemplate->find(TRUE);
 
-        $defaults['text_message'] = $messageTemplate->msg_text;
+        // do not load tempalte txt
+        $defaults['text_message'] = '';
         $htmlMessage = $messageTemplate->msg_html;
       }
 
