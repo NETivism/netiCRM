@@ -37,7 +37,9 @@
  * This file is used to build the form configuring mailing details
  */
 class CRM_Mailing_Form_Upload extends CRM_Core_Form {
-  public $_mailingID; function preProcess() {
+  public $_mailingID;
+  
+  function preProcess() {
     $this->_mailingID = $this->get('mailing_id');
     require_once 'CRM/Core/Permission.php';
     if (CRM_Core_Permission::check('administer CiviCRM')) {
@@ -116,9 +118,8 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
       //set default from email address.
       require_once 'CRM/Core/OptionGroup.php';
       if (CRM_Utils_Array::value('from_name', $defaults) && CRM_Utils_Array::value('from_email', $defaults)) {
-        $defaults['from_email_address'] = array_search('"' . $defaults['from_name'] . '" <' . $defaults['from_email'] . '>',
-          CRM_Core_OptionGroup::values('from_email_address')
-        );
+        $fromMailAddr = '"' . $defaults['from_name'] . '" <' . $defaults['from_email'] . '>';
+        $defaults['from_email_address'] = array_search($fromMailAddr, CRM_Core_OptionGroup::values('from_email_address'));
       }
       else {
         //get the default from email address.
@@ -219,15 +220,16 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
       $session->setStatus($status);
     }
     else {
-      foreach ($fromEmailAddress as $key => $email) {
-        $fromEmailAddress[$key] = htmlspecialchars($fromEmailAddress[$key]);
+      $c++;
+      foreach ($fromEmailAddress as $email) {
+        $fromOptions[$c] = htmlspecialchars($email);
       }
     }
 
     $this->add('select', 'from_email_address',
       ts('From Email Address'), array(
         '' => '- select -',
-      ) + $fromEmailAddress, TRUE
+      ) + $fromOptions, TRUE
     );
 
     // Added code to add custom field as Reply-To on form when it is enabled from Mailer settings
@@ -235,7 +237,7 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
       $this->add('select', 'reply_to_address', ts('Reply-To'),
         array(
           '' => '- select -',
-        ) + $fromEmailAddress
+        ) + $fromOptions
       );
     }
     elseif (CRM_Utils_Array::value('override_verp', $options)) {
