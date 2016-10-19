@@ -409,7 +409,7 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
 
       if (CRM_Utils_Array::value('updateTemplate', $composeParams)) {
         $templateParams = array(
-          'msg_text' => $text_message,
+          'msg_text' => '',
           'msg_html' => $html_message,
           'msg_subject' => $params['subject'],
           'is_active' => TRUE,
@@ -422,7 +422,7 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
 
       if (CRM_Utils_Array::value('saveTemplate', $composeParams)) {
         $templateParams = array(
-          'msg_text' => $text_message,
+          'msg_text' => '',
           'msg_html' => $html_message,
           'msg_subject' => $params['subject'],
           'is_active' => TRUE,
