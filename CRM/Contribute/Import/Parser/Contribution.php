@@ -237,6 +237,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
     $session = CRM_Core_Session::singleton();
     $dateType = $session->get("dateTypes");
     foreach ($params as $key => $val) {
+      $is_deleted = NULL;
       if ($val) {
         switch ($key) {
           case 'receive_date':
@@ -280,6 +281,18 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
             }
             else {
               CRM_Import_Parser_Contact::addToErrorMsg(ts('Thank You Date'), $errorMessage);
+            }
+            break;
+          case 'contribution_contact_id':
+            $is_deleted = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $val, 'is_deleted', 'id');
+            if ($is_deleted) {
+              CRM_Import_Parser_Contact::addToErrorMsg(ts('Deleted Contact(s): %1', array(1 => ts('Contact ID').'-'.$val)), $errorMessage);
+            }
+            break;
+          case 'external_identifier':
+            $is_deleted = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $val, 'is_deleted', 'external_identifier');
+            if ($is_deleted) {
+              CRM_Import_Parser_Contact::addToErrorMsg(ts('Deleted Contact(s): %1', array(1 => ts('External Identifier').'-'.$val)), $errorMessage);
             }
             break;
         }

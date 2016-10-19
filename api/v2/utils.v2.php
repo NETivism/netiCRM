@@ -573,6 +573,9 @@ function _civicrm_duplicate_formatted_contact(&$params,
       if ($params['contact_type'] != $contact->contact_type) {
         return civicrm_create_error("Mismatched contact IDs OR Mismatched contact Types");
       }
+      if ($contact->is_deleted) {
+        return civicrm_create_error("Found contact have external id or contact id already deleted");
+      }
 
       $error = CRM_Core_Error::createError("Found matching contacts: $contact->id",
         CRM_Core_Error::DUPLICATE_CONTACT,
