@@ -678,7 +678,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
     $pass = $contactID = 0;
     $checkCid = new CRM_Contact_DAO_Contact();
     if (!empty($params['external_identifier'])) {
-      $checkCid->external_identifier = $param['external_identifier'];
+      $checkCid->external_identifier = $params['external_identifier'];
       $checkCid->is_deleted = 0;
       if($checkCid->find(TRUE)){
         $contactID = $checkCid->id;
