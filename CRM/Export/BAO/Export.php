@@ -136,6 +136,8 @@ class CRM_Export_BAO_Export {
         'im',
       );
 
+      $index = 2;
+
       foreach ($fields as $key => $value) {
         $phoneTypeId = $imProviderId = NULL;
         $relationshipTypes = $fieldName = CRM_Utils_Array::value(1, $value);
@@ -186,68 +188,70 @@ class CRM_Export_BAO_Export {
         if ($relationField) {
           if (in_array($relationField, $locationTypeFields) && is_numeric($relLocTypeId)) {
             if ($relPhoneTypeId) {
-              $returnProperties[$relationshipTypes]['location'][$locationTypes[$relLocTypeId]]['phone-' . $relPhoneTypeId] = 1;
+              $returnProperties[$relationshipTypes]['location'][$locationTypes[$relLocTypeId]]['phone-' . $relPhoneTypeId] = $index++;
             }
             elseif ($relIMProviderId) {
-              $returnProperties[$relationshipTypes]['location'][$locationTypes[$relLocTypeId]]['im-' . $relIMProviderId] = 1;
+              $returnProperties[$relationshipTypes]['location'][$locationTypes[$relLocTypeId]]['im-' . $relIMProviderId] = $index++;
             }
             else {
-              $returnProperties[$relationshipTypes]['location'][$locationTypes[$relLocTypeId]][$relationField] = 1;
+              $returnProperties[$relationshipTypes]['location'][$locationTypes[$relLocTypeId]][$relationField] = $index++;
             }
             $relPhoneTypeId = $relIMProviderId = NULL;
           }
           else {
-            $returnProperties[$relationshipTypes][$relationField] = 1;
+            $returnProperties[$relationshipTypes][$relationField] = $index++;
           }
         }
         elseif (is_numeric($locTypeId)) {
           if ($phoneTypeId) {
-            $returnProperties['location'][$locationTypes[$locTypeId]]['phone-' . $phoneTypeId] = 1;
+            $returnProperties['location'][$locationTypes[$locTypeId]]['phone-' . $phoneTypeId] = $index++;
           }
           elseif (isset($imProviderId)) {
             //build returnProperties for IM service provider
-            $returnProperties['location'][$locationTypes[$locTypeId]]['im-' . $imProviderId] = 1;
+            $returnProperties['location'][$locationTypes[$locTypeId]]['im-' . $imProviderId] = $index++;
           }
           else {
-            $returnProperties['location'][$locationTypes[$locTypeId]][$fieldName] = 1;
+            $returnProperties['location'][$locationTypes[$locTypeId]][$fieldName] = $index++;
           }
         }
         else {
           //hack to fix component fields
           if ($fieldName == 'event_id') {
-            $returnProperties['event_title'] = 1;
+            $returnProperties['event_title'] = $index++;
           }
           else {
-            $returnProperties[$fieldName] = 1;
+            $returnProperties[$fieldName] = $index++;
           }
         }
       }
 
       // hack to add default returnproperty based on export mode
-      if ($exportMode == CRM_Export_Form_Select::CONTRIBUTE_EXPORT) {
-        $returnProperties['contribution_id'] = 1;
+      if ($exportMode == CRM_Export_Form_Select::CONTRIBUTE_EXPORT && empty($returnProperties['contribution_id'])) {
+        $returnProperties['contribution_id'] = $index++;
       }
       elseif ($exportMode == CRM_Export_Form_Select::EVENT_EXPORT) {
-        $returnProperties['participant_id'] = 1;
+        if(empty($returnProperties['participant_id'])){
+          $returnProperties['participant_id'] = $index++;
+        }
         if ($returnProperties['participant_role']) {
+          $returnProperties['participant_role_id'] = $returnProperties['participant_role'];
           unset($returnProperties['participant_role']);
-          $returnProperties['participant_role_id'] = 1;
         }
       }
-      elseif ($exportMode == CRM_Export_Form_Select::MEMBER_EXPORT) {
-        $returnProperties['membership_id'] = 1;
+      elseif ($exportMode == CRM_Export_Form_Select::MEMBER_EXPORT && empty($returnProperties['membership_id'])) {
+        $returnProperties['membership_id'] = $index++;
       }
-      elseif ($exportMode == CRM_Export_Form_Select::PLEDGE_EXPORT) {
-        $returnProperties['pledge_id'] = 1;
+      elseif ($exportMode == CRM_Export_Form_Select::PLEDGE_EXPORT && empty($returnProperties['pledge_id'])) {
+        $returnProperties['pledge_id'] = $index++;
       }
-      elseif ($exportMode == CRM_Export_Form_Select::CASE_EXPORT) {
-        $returnProperties['case_id'] = 1;
+      elseif ($exportMode == CRM_Export_Form_Select::CASE_EXPORT && empty($returnProperties['case_id'])) {
+        $returnProperties['case_id'] = $index++;
       }
-      elseif ($exportMode == CRM_Export_Form_Select::GRANT_EXPORT) {
-        $returnProperties['grant_id'] = 1;
+      elseif ($exportMode == CRM_Export_Form_Select::GRANT_EXPORT && empty($returnProperties['grant_id'])) {
+        $returnProperties['grant_id'] = $index++;
       }
-      elseif ($exportMode == CRM_Export_Form_Select::ACTIVITY_EXPORT) {
-        $returnProperties['activity_id'] = 1;
+      elseif ($exportMode == CRM_Export_Form_Select::ACTIVITY_EXPORT && empty($returnProperties['activity_id'])) {
+        $returnProperties['activity_id'] = $index++;
       }
     }
     else {
@@ -256,16 +260,16 @@ class CRM_Export_BAO_Export {
       foreach ($fields as $key => $var) {
         if ($key && (substr($key, 0, 6) != 'custom')) {
           //for CRM=952
-          $returnProperties[$key] = 1;
+          $returnProperties[$key] = $index++;
         }
       }
 
       if ($primary) {
-        $returnProperties['location_type'] = 1;
-        $returnProperties['im_provider'] = 1;
-        $returnProperties['phone_type_id'] = 1;
-        $returnProperties['provider_id'] = 1;
-        $returnProperties['current_employer'] = 1;
+        $returnProperties['location_type'] = $index++;
+        $returnProperties['im_provider'] = $index++;
+        $returnProperties['phone_type_id'] = $index++;
+        $returnProperties['provider_id'] = $index++;
+        $returnProperties['current_employer'] = $index++;
       }
 
       $extraReturnProperties = array();
@@ -294,9 +298,15 @@ class CRM_Export_BAO_Export {
           $extraReturnProperties = CRM_Case_BAO_Query::extraReturnProperties($queryMode);
           break;
       }
+      foreach ($extraReturnProperties as $key => $value) {
+        $extraReturnProperties[$key] = $index++;
+      }
 
       if ($queryMode != CRM_Contact_BAO_Query::MODE_CONTACTS) {
         $componentReturnProperties = CRM_Contact_BAO_Query::defaultReturnProperties($queryMode);
+        foreach ($componentReturnProperties as $key => $value) {
+          $componentReturnProperties[$key] = $index++;
+        }
         $returnProperties = array_merge($returnProperties, $componentReturnProperties);
 
         if (!empty($extraReturnProperties)) {
@@ -318,21 +328,21 @@ class CRM_Export_BAO_Export {
 
       //make sure the addressee fields are selected
       //while using merge same address feature
-      $returnProperties['addressee'] = 1;
-      $returnProperties['street_name'] = 1;
+      $returnProperties['addressee'] = $index++;
+      $returnProperties['street_name'] = $index++;
       if (!CRM_Utils_Array::value('last_name', $returnProperties)) {
-        $returnProperties['last_name'] = 1;
+        $returnProperties['last_name'] = $index++;
         $drop = 'last_name';
       }
-      $returnProperties['household_name'] = 1;
-      $returnProperties['street_address'] = 1;
+      $returnProperties['household_name'] = $index++;
+      $returnProperties['street_address'] = $index++;
     }
 
     if ($moreReturnProperties) {
       // fix for CRM-7066
       if (CRM_Utils_Array::value('group', $moreReturnProperties)) {
         unset($moreReturnProperties['group']);
-        $moreReturnProperties['groups'] = 1;
+        $moreReturnProperties['groups'] = $index++;
       }
       $returnProperties = array_merge($returnProperties, $moreReturnProperties);
     }
@@ -342,7 +352,7 @@ class CRM_Export_BAO_Export {
 
     if ($mergeSameHousehold == 1) {
       if (!$returnProperties['id']) {
-        $returnProperties['id'] = 1;
+        $returnProperties['id'] = $index++;
         $setId = TRUE;
       }
       else {
@@ -570,13 +580,16 @@ class CRM_Export_BAO_Export {
           if ($setHeader) {
             $sqlDone = FALSE;
             if (isset($query->_fields[$field]['title'])) {
-              $headerRows[] = $query->_fields[$field]['title'];
+              $headerRows[$value] = $query->_fields[$field]['title'];
+              $fieldOrder[] = $value;
             }
             elseif ($field == 'phone_type_id') {
-              $headerRows[] = 'Phone Type';
+              $headerRows[$value] = 'Phone Type';
+              $fieldOrder[] = $value;
             }
             elseif ($field == 'provider_id') {
-              $headerRows[] = 'Im Service Provider';
+              $headerRows[$value] = 'Im Service Provider';
+              $fieldOrder[] = $value;
             }
             elseif (is_array($value) && $field == 'location') {
               // fix header for location type case
@@ -593,18 +606,21 @@ class CRM_Export_BAO_Export {
                       $hdr .= "-" . CRM_Utils_Array::value($type[1], $imProviders);
                     }
                   }
-                  $headerRows[] = $hdr;
-                  self::sqlColumnDefn($query, $sqlColumns, $hdr);
+                  $headerRows[$val[$fld]] = $hdr;
+                  $fieldOrder[] = $val[$fld];
+                  self::sqlColumnDefn($query, $sqlColumns, $hdr, $val[$fld]);
                 }
                 $sqlDone = TRUE;
               }
             }
             elseif (substr($field, 0, 5) == 'case_') {
               if ($query->_fields['case'][$field]['title']) {
-                $headerRows[] = $query->_fields['case'][$field]['title'];
+                $headerRows[$value] = $query->_fields['case'][$field]['title'];
+                $fieldOrder[] = $value;
               }
               elseif ($query->_fields['activity'][$field]['title']) {
-                $headerRows[] = $query->_fields['activity'][$field]['title'];
+                $headerRows[$value] = $query->_fields['activity'][$field]['title'];
+                $fieldOrder[] = $value;
               }
             }
             elseif (array_key_exists($field, $contactRelationshipTypes)) {
@@ -613,18 +629,21 @@ class CRM_Export_BAO_Export {
                 // below block is same as primary block (duplicate)
                 if (isset($relationQuery[$field]->_fields[$relationField]['title'])) {
                   $headerName = $field . '-' . $relationQuery[$field]->_fields[$relationField]['title'];
-                  $headerRows[] = $headerName;
-                  self::sqlColumnDefn($query, $sqlColumns, $headerName);
+                  $headerRows[$relationValue] = $headerName;
+                  $fieldOrder[] = $relationValue;
+                  self::sqlColumnDefn($query, $sqlColumns, $headerName, $relationValue);
                 }
                 elseif ($relationField == 'phone_type_id') {
                   $headerName = $field . '-' . 'Phone Type';
-                  $headerRows[] = $headerName;
-                  self::sqlColumnDefn($query, $sqlColumns, $headerName);
+                  $headerRows[$relationValue] = $headerName;
+                  $fieldOrder[] = $relationValue;
+                  self::sqlColumnDefn($query, $sqlColumns, $headerName, $relationValue);
                 }
                 elseif ($relationField == 'provider_id') {
                   $headerName = $field . '-' . 'Im Service Provider';
-                  $headerRows[] = $headerName;
-                  self::sqlColumnDefn($query, $sqlColumns, $headerName);
+                  $headerRows[$relationValue] = $headerName;
+                  $fieldOrder[] = $relationValue;
+                  self::sqlColumnDefn($query, $sqlColumns, $headerName, $relationValue);
                 }
                 elseif (is_array($relationValue) && $relationField == 'location') {
                   // fix header for location type case
@@ -642,19 +661,21 @@ class CRM_Export_BAO_Export {
                         }
                       }
                       $headerName = $field . '-' . $hdr;
-                      $headerRows[] = $headerName;
-                      self::sqlColumnDefn($query, $sqlColumns, $headerName);
+                      $headerRows[$val[$fld]] = $headerName;
+                      $fieldOrder[] = $val[$fld];
+                      self::sqlColumnDefn($query, $sqlColumns, $headerName, $val[$fld]);
                     }
                   }
                 }
               }
             }
             else {
-              $headerRows[] = $field;
+              $headerRows[$value] = $field;
+              $fieldOrder[] = $value;
             }
 
             if (!$sqlDone) {
-              self::sqlColumnDefn($query, $sqlColumns, $field);
+              self::sqlColumnDefn($query, $sqlColumns, $field, $value);
             }
           }
           if ($field == 'state_province') {
@@ -875,6 +896,21 @@ class CRM_Export_BAO_Export {
           }
         }
 
+        $newRow = array();
+        $rowIndex = 0;
+        foreach ($row as $value) {
+          $newRow[$fieldOrder[$rowIndex]] = $value;
+          $rowIndex++;
+        }
+        $row = $newRow;
+
+        if ($setHeader) {
+          ksort($headerRows);
+          ksort($sqlColumns);
+        }
+
+        ksort($row);
+
         // add payment headers if required
         if ($addPaymentHeader && $paymentFields) {
           $headerRows = array_merge($headerRows, $paymentHeaders);
@@ -1074,7 +1110,7 @@ class CRM_Export_BAO_Export {
     CRM_Utils_System::civiExit();
   }
 
-  static function sqlColumnDefn(&$query, &$sqlColumns, $field) {
+  static function sqlColumnDefn(&$query, &$sqlColumns, $field, $index = 1) {
     if (substr($field, -4) == '_a_b' ||
       substr($field, -4) == '_b_a'
     ) {
@@ -1087,20 +1123,21 @@ class CRM_Export_BAO_Export {
     }
 
     // set the sql columns
+    $newColumn = '';
     if (isset($query->_fields[$field]['type'])) {
       switch ($query->_fields[$field]['type']) {
         case CRM_Utils_Type::T_INT:
         case CRM_Utils_Type::T_BOOL:
         case CRM_Utils_Type::T_BOOLEAN:
-          $sqlColumns[$fieldName] = "$fieldName varchar(16)";
+          $newColumn = "$fieldName varchar(16)";
           break;
 
         case CRM_Utils_Type::T_STRING:
           if (isset($query->_fields[$field]['maxlength'])) {
-            $sqlColumns[$fieldName] = "$fieldName varchar({$query->_fields[$field]['maxlength']})";
+            $newColumn = "$fieldName varchar({$query->_fields[$field]['maxlength']})";
           }
           else {
-            $sqlColumns[$fieldName] = "$fieldName varchar(64)";
+            $newColumn = "$fieldName varchar(64)";
           }
           break;
 
@@ -1108,7 +1145,7 @@ class CRM_Export_BAO_Export {
         case CRM_Utils_Type::T_LONGTEXT:
         case CRM_Utils_Type::T_BLOB:
         case CRM_Utils_Type::T_MEDIUMBLOB:
-          $sqlColumns[$fieldName] = "$fieldName longtext";
+          $newColumn = "$fieldName longtext";
           break;
 
         case CRM_Utils_Type::T_FLOAT:
@@ -1121,18 +1158,18 @@ class CRM_Export_BAO_Export {
         case CRM_Utils_Type::T_URL:
         case CRM_Utils_Type::T_CCNUM:
         default:
-          $sqlColumns[$fieldName] = "$fieldName varchar(32)";
+          $newColumn = "$fieldName varchar(32)";
           break;
       }
     }
     else {
       if (substr($fieldName, -3, 3) == '_id') {
-        $sqlColumns[$fieldName] = "$fieldName varchar(16)";
+        $newColumn = "$fieldName varchar(16)";
       }
       else {
         $changeFields = array('groups', 'tags', 'notes', 'contribution_note');
         if (in_array($fieldName, $changeFields)) {
-          $sqlColumns[$fieldName] = "$fieldName text";
+          $newColumn = "$fieldName text";
         }
         else {
           // set the sql columns for custom data
@@ -1143,23 +1180,29 @@ class CRM_Export_BAO_Export {
               case 'StateProvince':
               case 'Link':
               case 'String':
-                $sqlColumns[$fieldName] = "$fieldName varchar(255)";
+                $newColumn = "$fieldName varchar(255)";
                 break;
 
               case 'Memo':
-                $sqlColumns[$fieldName] = "$fieldName text";
+                $newColumn = "$fieldName text";
                 break;
 
               default:
-                $sqlColumns[$fieldName] = "$fieldName varchar(64)";
+                $newColumn = "$fieldName varchar(64)";
                 break;
             }
           }
           else {
-            $sqlColumns[$fieldName] = "$fieldName varchar(64)";
+            $newColumn = "$fieldName varchar(64)";
           }
         }
       }
+    }
+
+    if($index == 1){
+      $sqlColumns[] = $newColumn;
+    }else{
+      $sqlColumns[$index] = $newColumn;
     }
   }
 
@@ -1172,6 +1215,12 @@ class CRM_Export_BAO_Export {
 SELECT max(id)
 FROM   $tableName
 ";
+
+    $sqlColumnsKeys = array();
+    foreach ($sqlColumns as $value) {
+      $arr = explode(' ', $value);
+      $sqlColumnsKeys[] = $arr[0];
+    }
 
     $id = CRM_Core_DAO::singleValueQuery($sql);
     if (!$id) {
@@ -1194,7 +1243,7 @@ FROM   $tableName
       $sqlClause[] = '(' . implode(',', $valueString) . ')';
     }
 
-    $sqlColumnString = '(id, ' . implode(',', array_keys($sqlColumns)) . ')';
+    $sqlColumnString = '(id, ' . implode(',', $sqlColumnsKeys) . ')';
 
     $sqlValueString = implode(",\n", $sqlClause);
 
@@ -1226,10 +1275,13 @@ CREATE TABLE {$exportTempTable} (
     // add indexes for street_address and household_name if present
     $addIndices = array('street_address', 'household_name', 'civicrm_primary_id');
     foreach ($addIndices as $index) {
-      if (isset($sqlColumns[$index])) {
-        $sql .= ",
+      foreach($sqlColumns as $column){
+        if(strstr($column, $index)){
+          $sql .= ",
   INDEX index_{$index}( $index )
 ";
+          break;
+        }
       }
     }
 
@@ -1345,7 +1397,12 @@ ALTER TABLE $tableName
 DROP  $drop";
 
       CRM_Core_DAO::executeQuery($dropQuery);
-      $allKeys = array_keys($sqlColumns);
+
+      $allKeys = array();
+      foreach ($sqlColumns as $value) {
+        $arr = explode(' ', $value);
+        $allKeys[] = $arr[0];
+      }
 
       if ($key = CRM_Utils_Array::key($drop, $allKeys)) {
         unset($headerRows[$key]);
@@ -1365,7 +1422,11 @@ DROP  $drop";
    */
   static function mergeSameHousehold($exportTempTable, &$headerRows, &$sqlColumns, $prefix) {
     $prefixColumn = $prefix . '_';
-    $allKeys = array_keys($sqlColumns);
+    $allKeys = array();
+    foreach ($sqlColumns as $value) {
+      $arr = explode(' ', $value);
+      $allKeys[] = $arr[0];
+    }
     $replaced = array();
 
     // name map of the non standard fields in header rows & sql columns
@@ -1389,7 +1450,9 @@ DROP  $drop";
     );
 
     //figure out which columns are to be replaced by which ones
-    foreach ($sqlColumns as $columnNames => $dontCare) {
+    $index = 0;
+    foreach ($sqlColumns as $dontCare) {
+      $columnNames = $allKeys[$index];
       if ($rep = CRM_Utils_Array::value($columnNames, $mappingFields)) {
         $replaced[$columnNames] = CRM_Utils_String::munge($prefixColumn . $rep, '_', 64);
       }
@@ -1400,6 +1463,7 @@ DROP  $drop";
           $replaced[$columnNames] = $householdColName;
         }
       }
+      $index++;
     }
     $query = "UPDATE $exportTempTable SET ";
 
@@ -1468,7 +1532,9 @@ FROM   $exportTempTable
       while ($dao->fetch()) {
         $row = array();
 
-        foreach ($sqlColumns as $column => $dontCare) {
+        foreach ($sqlColumns as $column => $sqlColumn) {
+          $arr = explode(' ', $sqlColumn);
+          $column = $arr[0];
           $row[$column] = $dao->$column;
         }
 
