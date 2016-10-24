@@ -2,7 +2,7 @@
 CALLEDPATH=`dirname $0`
 CIVICRMPATH=`cd $CALLEDPATH/../../ && pwd`
 LANGUAGE='zh_TW'
-MAJOR_VERSION='2.3'
+MAJOR_VERSION='2.4'
 
 neticrm_merge(){
   TAG=`git tag | grep "^$MAJOR_VERSION" | awk -F "." '{print $3}' | sort -nr | head -n 1`
