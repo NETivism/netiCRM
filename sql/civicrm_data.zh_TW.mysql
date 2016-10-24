@@ -4575,7 +4575,7 @@ VALUES
    (@option_group_id_act, 'EDM郵件',                         19, 'Bulk Email',         NULL, 1, NULL, 19, 'EDM已寄出。',                                                    0, 1, 1, NULL, NULL),
    (@option_group_id_act, '指派個案角色',                   20, 'Assign Case Role', NULL,0, 0, 20, '', 0, 0, 1, @caseCompId, NULL),
    (@option_group_id_act, '刪除個案角色',                   21, 'Remove Case Role', NULL,0, 0, 21, '', 0, 0, 1, @caseCompId, NULL),
-   (@option_group_id_act, 'Print PDF Letter',                   22, 'Print PDF Letter',    NULL, 0, NULL, 22, 'Print PDF Letter.',                                                  0, 1, 1, NULL, NULL),
+   (@option_group_id_act, '製作 PDF 信件',                   22, 'Print PDF Letter',    NULL, 0, NULL, 22, 'Print PDF Letter.',                                                  0, 1, 1, NULL, NULL),
    (@option_group_id_act, '合併個案',                         23, 'Merge Case', NULL, 0,  NULL, 23, '', 0, 1, 1, @caseCompId, NULL ),
    (@option_group_id_act, 'Reassigned Case',                    24, 'Reassigned Case', NULL, 0,  NULL, 24, '', 0, 1, 1, @caseCompId, NULL ),
    (@option_group_id_act, 'Link Cases',                         25, 'Link Cases', NULL, 0,  NULL, 25, '', 0, 1, 1, @caseCompId, NULL ),

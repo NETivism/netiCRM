@@ -2843,7 +2843,7 @@ CREATE TABLE civicrm_openid (
      id int unsigned NOT NULL AUTO_INCREMENT  COMMENT 'Unique OpenID ID',
      contact_id int unsigned    COMMENT 'FK to Contact ID',
      location_type_id int unsigned    COMMENT 'Which Location does this email belong to.',
-     openid varchar(255)    COMMENT 'the OpenID (or OpenID-style http://username.domain/) unique identifier for this contact mainly used for logging in to CiviCRM',
+     openid varchar(255)    COMMENT 'OpenID',
      allowed_to_login tinyint NOT NULL  DEFAULT 0 COMMENT 'Whether or not this user is allowed to login',
      is_primary tinyint   DEFAULT 0 COMMENT 'Is this the primary email for this contact and location.' 
 ,
