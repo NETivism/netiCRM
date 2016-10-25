@@ -475,10 +475,20 @@ class CRM_Utils_Date {
     $cen = substr($now['year'], 0, 2);
     $prevCen = $cen - 1;
 
-    $value = NULL;
+    $value = $time = NULL;
     if (CRM_Utils_Array::value($dateParam, $params)) {
-      //suppress hh:mm if it exists
-      $value = preg_replace("/(\s(([01]\d)|[2][0-3]):([0-5]\d))$/", "", $params[$dateParam]);
+      //suppress hh:mm:ss if it exists
+      preg_match("/(\s(([01]\d)|[2][0-3]):([0-5]\d):?([0-5]\d)?)$/", $params[$dateParam], $matches);
+      if(!empty($matches[1])) {
+        $value = str_replace($matches[0], '', $params[$dateParam]);
+        $time = preg_replace('/[^\d]/i', '', $matches[1]);
+        if(strlen($time) == 4) {
+          $time .= '00';
+        }
+        if(strlen($time) != 6) {
+          return FALSE;
+        }
+      }
     }
 
     switch ($dateType) {
@@ -527,6 +537,9 @@ class CRM_Utils_Date {
         $day = (int) $formattedDate[2];
       }
       elseif (count($formattedDate) == 1 && (strlen($value) == 8)) {
+        if ($time) {
+          $params[$dateParam] = $value.$time;
+        }
         return TRUE;
       }
       else {
@@ -642,6 +655,9 @@ class CRM_Utils_Date {
     }
     //if month is invalid return as error
     if ($month !== '00' && $month <= 12) {
+      if ($time) {
+        $params[$dateParam] .= $time;
+      }
       return TRUE;
     }
     return FALSE;

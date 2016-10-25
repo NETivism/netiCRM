@@ -1781,7 +1781,6 @@ AND civicrm_contact.is_opt_out =0";
                             COUNT(DISTINCT {$t['reply']}.id) as reply,
                             COUNT(DISTINCT {$t['forward']}.id) as forward,
                             COUNT(DISTINCT {$t['bounce']}.id) as bounce,
-                            COUNT(DISTINCT {$t['urlopen']}.id) as url,
                             COUNT(DISTINCT {$t['spool']}.id) as spool
             FROM            {$t['job']}
             LEFT JOIN       {$t['queue']}
@@ -1834,6 +1833,8 @@ AND civicrm_contact.is_opt_out =0";
       $row['unsubscribe'] = CRM_Mailing_Event_BAO_Unsubscribe::getTotalCount($mailing_id, $mailing->id, TRUE);
       $report['event_totals']['unsubscribe'] += $row['unsubscribe'];
 
+      $row['url'] = CRM_Mailing_Event_BAO_TrackableURLOpen::getTotalCount($mailing_id, $mailing->id, TRUE);
+      $report['event_totals']['url'] += $row['url'];
 
       foreach (array_keys(CRM_Mailing_BAO_Job::fields()) as $field) {
         $row[$field] = $mailing->$field;
@@ -1999,7 +2000,7 @@ AND civicrm_contact.is_opt_out =0";
       ),
       'opened' => CRM_Utils_System::url(
         'civicrm/mailing/report/event',
-        "reset=1&event=opened&mid=$mailing_id"
+        "reset=1&event=opened&mid=$mailing_id&distinct=1"
       ),
     );
 

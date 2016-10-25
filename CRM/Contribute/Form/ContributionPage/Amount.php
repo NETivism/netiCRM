@@ -87,7 +87,7 @@ class CRM_Contribute_Form_ContributionPage_Amount extends CRM_Contribute_Form_Co
 
     $this->addElement('checkbox', 'amount_block_is_active', ts('Contribution Amounts section enabled'), NULL, array('onclick' => "showHideAmountBlock( this, 'amount_block_is_active' );"));
 
-    $this->addElement('checkbox', 'is_monetary', ts('Execute real-time monetary transactions'));
+    $this->addElement('checkbox', 'is_monetary', ts('Execute real-time monetary transactions'),NULL,array('onclick' => "showHideAmountBlock( this, 'is_monetary' );"));
 
     $paymentProcessor = &CRM_Core_PseudoConstant::paymentProcessor();
     $recurringPaymentProcessor = array();
@@ -278,13 +278,14 @@ SELECT id
         $errors['min_amount'] = ts('Minimum Amount should be less than Maximum Amount');
       }
     }
-
-    if (isset($fields['is_pay_later'])) {
-      if (empty($fields['pay_later_text'])) {
-        $errors['pay_later_text'] = ts('Please enter the text for the \'pay later\' checkbox displayed on the contribution form.');
-      }
-      if (empty($fields['pay_later_receipt'])) {
-        $errors['pay_later_receipt'] = ts('Please enter the instructions to be sent to the contributor when they choose to \'pay later\'.');
+    if (isset($fields['is_monetary'])) {
+      if (isset($fields['is_pay_later'])) {
+        if (empty($fields['pay_later_text'])) {
+          $errors['pay_later_text'] = ts('Please enter the text for the \'pay later\' checkbox displayed on the contribution form.');
+        }
+        if (empty($fields['pay_later_receipt'])) {
+          $errors['pay_later_receipt'] = ts('Please enter the instructions to be sent to the contributor when they choose to \'pay later\'.');
+        }
       }
     }
 
@@ -315,9 +316,11 @@ SELECT id
       }
     }
     else {
-      if (isset($fields['is_recur'])) {
-        if (empty($fields['recur_frequency_unit'])) {
-          $errors['recur_frequency_unit'] = ts('At least one recurring frequency option needs to be checked.');
+      if (isset($fields['is_monetary'])) {
+        if (isset($fields['is_recur'])) {
+          if (empty($fields['recur_frequency_unit'])) {
+            $errors['recur_frequency_unit'] = ts('At least one recurring frequency option needs to be checked.');
+          }
         }
       }
 

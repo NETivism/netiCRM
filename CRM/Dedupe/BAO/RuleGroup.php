@@ -356,11 +356,16 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup {
    * @access public
    */
   function dedupeRuleFieldsWeight($params) {
-    require_once 'CRM/Dedupe/BAO/Rule.php';
     $rgBao = new CRM_Dedupe_BAO_RuleGroup();
-    $rgBao->level = $params['level'];
-    $rgBao->contact_type = $params['contact_type'];
-    $rgBao->is_default = 1;
+    if (!empty($params['id'])) {
+      $rgBao->id = $params['id'];
+    }
+    else{
+      // find default
+      $rgBao->level = $params['level'];
+      $rgBao->contact_type = $params['contact_type'];
+      $rgBao->is_default = 1;
+    }
     $rgBao->find(TRUE);
 
     $ruleBao = new CRM_Dedupe_BAO_Rule();
@@ -404,6 +409,25 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup {
       $result[$dao->id] = $name;
     }
     return $result;
+  }
+
+  static function getDetailsByParams($params = array()) {
+    $ruleGroups = array();
+    $dao = new CRM_Dedupe_DAO_RuleGroup();
+    $dao->orderBy('contact_type,level,is_default DESC');
+    foreach($params as $k => $v) {
+      $dao->{$k} = $v;
+    }
+    $dao->find();
+    while ($dao->fetch()) {
+      $ruleGroups[$dao->id] = array();
+      $fields = array();
+      $fieldParams = array('id' => $dao->id);
+      $fields = CRM_Dedupe_BAO_Rule::dedupeRuleFields($fieldParams);
+      CRM_Core_DAO::storeValues($dao, $ruleGroups[$dao->id]);
+      $ruleGroups[$dao->id]['fields'] = $fields;
+    }
+    return $ruleGroups;
   }
 }
 

@@ -154,11 +154,8 @@ function selectValue( val ) {
     cj.post( dataUrl, {tid: val}, function( data ) {
         cj("#subject").val( data.subject );
 
-        if ( data.msg_text ) {      
-            cj("#text_message").val( data.msg_text );
-        } else {
-            cj("#text_message").val("");
-        }
+        // do not load text message from template
+        cj("#text_message").val("");
 
         var html_body  = "";
         if (  data.msg_html ) {

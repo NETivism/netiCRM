@@ -23,15 +23,20 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
    * @access public
    */
   function preProcess() {
-    parent::preProcess();
-    $session = CRM_Core_Session::singleton();
+    $cid = CRM_Utils_Request::retrieve('cid', 'Positive', $this, FALSE);
+    if ($cid) {
+      $this->_contactIds = array($cid);
+    }
+    else {
+      parent::preProcess();
+      $session = CRM_Core_Session::singleton();
+      $year = $session->get('year', 'AnnualReceipt');
+      if(!empty($year)){
+        $this->_year = $year;
+      }
+    }
 
     // this session comes from custom search
-    $year = $session->get('year', 'AnnualReceipt');
-    if(!empty($year)){
-      $this->_year = $year;
-    }
-    
     CRM_Utils_System::appendBreadCrumb($breadCrumb);
     CRM_Utils_System::setTitle(ts('Print Annual Receipt'));
   }
@@ -47,13 +52,13 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
     $years = array();
     if(!empty($this->_year)){
       $years[$this->_year] = $this->_year;
-      $ele = $this->addElement('select', 'year', ts('Receipt Date'), $years);
+      $ele = $this->addElement('select', 'year', ts('Receipt Year'), $years);
     }
     else{
       for($year = date('Y'); $year < date('Y') + 4; $year++) {
         $years[$year - 3] = $year - 3;
       }
-      $this->addElement('select', 'year', ts('Receipt Date'), $years);
+      $this->addElement('select', 'year', ts('Receipt Year'), $years);
     }
 
     $contribution_type = CRM_Contribute_PseudoConstant::contributionType();
@@ -65,10 +70,10 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
     $contribution_type = CRM_Contribute_PseudoConstant::contributionType();
     $is_recur = array(
       '' => '- '.ts('All').' -' ,
-      -1 => ts('Normal'),
+      -1 => ts('Non-Recurring Contribution'),
       1 => ts('Recurring Contribution'),
     );
-    $this->addElement('select', 'is_recur', ts('Recurring Contribution'), $is_recur);
+    $this->addElement('select', 'is_recur', ts('Find Recurring Contributions?'), $is_recur);
 
     $this->addButtons(array(
         array(

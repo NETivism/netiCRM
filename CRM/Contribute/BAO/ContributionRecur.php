@@ -394,7 +394,7 @@ GROUP BY c.currency";
 
   static function chartEstimateMonthly($limit = 12){
     $frequency_unit = 'month';
-    $sql = "SELECT SUM(result.amount) as amount, result.installments FROM (SELECT r.amount, r.installments-count(c.id) as installments FROM civicrm_contribution_recur r INNER JOIN civicrm_contribution c ON c.contribution_recur_id = r.id WHERE r.contribution_status_id = 5 AND r.is_test = 0 AND r.frequency_unit = 'month' AND c.contribution_status_id = 1 AND c.is_test = 0 GROUP BY r.id ORDER BY installments ASC) as result GROUP BY result.installments DESC";
+    $sql = "SELECT SUM(result.amount) as amount, result.installments FROM (SELECT r.amount, CAST(r.installments AS SIGNED) - CAST(count(c.id) AS SIGNED) as installments FROM civicrm_contribution_recur r INNER JOIN civicrm_contribution c ON c.contribution_recur_id = r.id WHERE r.contribution_status_id = 5 AND r.is_test = 0 AND r.frequency_unit = 'month' AND c.contribution_status_id = 1 AND c.is_test = 0 GROUP BY r.id ORDER BY installments ASC) as result GROUP BY result.installments DESC";
     $dao = CRM_Core_DAO::executeQuery($sql);
     $unlimit = $over = NULL;
     $slot = array_fill(1, $limit, 0);

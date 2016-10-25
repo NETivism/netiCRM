@@ -29,7 +29,7 @@
   border: none !important;
   border-bottom: 2px solid #9E9E9E !important;
   border-radius: 0 !important;
-  background-color: transparent !important;
+  background: none !important;
   -webkit-transition: all .15s ease-out;
   transition: all .15s ease-out;
   -webkit-box-sizing: border-box;
@@ -68,13 +68,23 @@
 .md-elem textarea.form-textarea:focus {
   outline: 0 !important;
   color: #000;
-  border: 0;
+  border: none !important;
+  box-shadow: none !important;
 }
 .md-elem input[type="text"].readonly:hover,
 .md-elem select.readonly:hover,
 .md-elem textarea.readonly:hover {
   outline: 0 !important;
-  border: 0;
+  border: none !important;
+  box-shadow: none !important;
+}
+.md-elem input[type="text"]:hover,
+.md-elem input.form-text:hover,
+.md-elem select:hover,
+.md-elem select.form-select:hover,
+.md-elem textarea:hover,
+.md-elem textarea.form-textarea:hover {
+  border-bottom: 2px solid #9E9E9E !important;
 }
 .md-elem input[type="text"]:focus,
 .md-elem input.form-text:focus,
@@ -105,6 +115,18 @@ textarea.md-textarea + .grippie {
 .md-elem input.readonly,
 .md-elem select.readonly,
 .md-elem textarea.readonly,
+.crm-container .md-elem input[disabled],
+.crm-container .md-elem select[disabled],
+.crm-container .md-elem textarea[disabled],
+.crm-container .md-elem input[readonly],
+.crm-container .md-elem select[readonly],
+.crm-container .md-elem textarea[readonly],
+.crm-container .md-elem input[disabled]:focus,
+.crm-container .md-elem select[disabled]:focus,
+.crm-container .md-elem textarea[disabled]:focus,
+.crm-container .md-elem input[readonly]:focus,
+.crm-container .md-elem select[readonly]:focus,
+.crm-container .md-elem textarea[readonly]:focus,
 .crm-container .md-elem .readonly,
 .crm-container .md-elem input[type="text"].readonly,
 .crm-container .md-elem input[type="file"].readonly {
@@ -289,12 +311,13 @@ input.md-textfield,
   left: 0;
   top: 1px;
   margin-left: -14px;
+  cursor: pointer;
   background-color: white;
   border: 2px solid #9e9e9e;
   -webkit-border-radius: 2px;
   border-radius: 2px;
+  box-sizing: content-box;
   background-clip: padding-box;
-  cursor: pointer;
 }
 .md-radio-label::before,
 .md-checkbox-label::before {
@@ -304,6 +327,8 @@ input.md-textfield,
   height: 4px;
   top: 5px;
   left: 7px;
+  z-index: 1;
+  opacity: 0;
   margin-left: -18px;
   border: 3px solid #3F51B5;
   border-top: none;
@@ -314,11 +339,10 @@ input.md-textfield,
   -ms-transform: rotate(-45deg);
   -webkit-transform: rotate(-45deg);
   transform: rotate(-45deg);
-  opacity: 0;
   -webkit-transition: all 0.15s ease-in-out;
   -o-transition: all 0.15s ease-in-out;
   transition: all 0.15s ease-in-out;
-  z-index: 1;
+  box-sizing: content-box;
 }
 .md-radio-label:active::before
 .md-checkbox-label:active::before {
@@ -404,15 +428,43 @@ input.md-textfield,
   color: #bdbdbd;
 }
 
+/* md-elem dateplugin */
+.md-elem.dateplugin input.dateplugin {
+  width: 16rem;
+}
+.md-elem.dateplugin input.dateplugin,
+.md-elem.dateplugin input.dateplugin[readonly] {
+  outline: 0 !important;
+  cursor: auto !important;
+  border: none !important;
+  border-bottom: 2px solid #9E9E9E !important;
+  background: none !important;
+}
+.md-elem.dateplugin input.dateplugin:focus,
+.md-elem.dateplugin input.dateplugin[readonly]:focus {
+  outline: 0 !important;
+  cursor: auto !important;
+  border: none !important;
+  border-bottom: 2px solid #3F51B5 !important;
+  background: none !important;
+}
+.md-elem.dateplugin::after {
+  content: "\f331";
+}
+.md-elem-focus.dateplugin::after {
+  color: #3F51B5;
+}
+
 /* civicrm */
 /* crm form elements */
 /* crm tw address */
-.crm-container div[class*="crm-section state_province-"] .md-select-single {
+.crm-container div[class*="crm-section state_province-"] .crm-form-elem {
   margin-right: 15px;
 }
-.crm-container div[class*="crm-section state_province-"] .md-select-single .form-select {
-  width: 10rem;
+.crm-container div[class*="crm-section state_province-"] .crm-form-elem:last-child {
+  margin-right: 0;
 }
+.crm-container div[class*="crm-section state_province-"] .md-select-single .form-select,
 .crm-container div[class*="crm-section state_province-"] .crm-form-post-code .form-text {
   width: 10rem;
 }

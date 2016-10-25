@@ -203,6 +203,7 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
 
     $first = TRUE;
 
+    $domain = CRM_Core_BAO_Domain::getDomain();
     foreach ($form->_contactIds as $item => $contactId) {
       $params = array('contact_id' => $contactId);
 
@@ -214,7 +215,8 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
       }
 
       $tokenHtml = CRM_Utils_Token::replaceContactTokens($html_message, $contact[$contactId], TRUE, $messageToken);
-      $tokenHtml = CRM_Utils_Token::replaceHookTokens($html_message, $contact[$contactId], $categories, TRUE);
+      $tokenHtml = CRM_Utils_Token::replaceDomainTokens($tokenHtml, $domain, TRUE, $messageToken);
+      $tokenHtml = CRM_Utils_Token::replaceHookTokens($tokenHtml, $contact[$contactId], $categories, TRUE);
 
       if (defined('CIVICRM_MAIL_SMARTY')) {
         $smarty = CRM_Core_Smarty::singleton();

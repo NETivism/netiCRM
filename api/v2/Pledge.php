@@ -434,7 +434,7 @@ function _civicrm_pledge_format_params(&$params, &$values, $create = FALSE) {
       case 'create_date':
       case 'scheduled_date':
       case 'start_date':
-        if (!CRM_Utils_Rule::datetime($value)) {
+        if (!CRM_Utils_Rule::dateTime($value)) {
           return civicrm_create_error("$key not a valid date: $value");
         }
         break;

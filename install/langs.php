@@ -1,1 +1,0 @@
-<?php $langs = unserialize('a:0:{}');

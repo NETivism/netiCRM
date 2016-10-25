@@ -232,10 +232,11 @@ function onChangeOverlayCheckBox(){
  * When click "Add new " checkbox on location type field
  */
 function onChangeAddnewCheckbox(){
-  if(cj(this).attr('checked')){
-    cj(this).parent().prev().find('[id^="move_"]').attr('checked',true);
+  $this = cj(this);
+  if($this.attr('checked')){
+    $this.closest('td').prev().find('[id^="move_"]').attr('checked',true);
   }
-  checkDataIsErase(cj(this));
+  checkDataIsErase($this);
 }
 
 
@@ -253,8 +254,13 @@ function checkDataIsErase(cjCheckboxElement){
     return ;
   }
 
-  var cj_left_td = cjCheckboxElement.parent().prev();
-  var cj_right_td = cjCheckboxElement.parent().next();
+  var cj_left_td = cjCheckboxElement.closest('td').prev();
+  var cj_right_td = cjCheckboxElement.closest('td').next();
+
+  if(cjCheckboxElement.length <= 0){
+    console.log('The query element cjCheckboxElement have error, Please check your code.');
+    return ;
+  }
 
   if(cjCheckboxElement.attr('id').match(/^location/)){
     checkDataIsErase(cj_left_td.find('input[id^="move_"]'));
@@ -271,7 +277,7 @@ function checkDataIsErase(cjCheckboxElement){
       
     }
 
-    is_erase?cj_right_td.find('span').addClass('is-erase'):cj_right_td.find('span').removeClass('is-erase');
+    is_erase?cj_right_td.children('span').addClass('is-erase'):cj_right_td.children('span').removeClass('is-erase');
 
   }
 

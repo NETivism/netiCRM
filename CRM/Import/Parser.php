@@ -220,11 +220,34 @@ abstract class CRM_Import_Parser {
   public $_contactType;
 
   /**
+   * import job object
+   *
+   * @var object
+   */
+  public $_job;
+
+  /**
    * on duplicate
    *
    * @var int
    */
-  public $_onDuplicate; function __construct() {
+  public $_onDuplicate;
+
+  /**
+   * on duplicate check rule group id
+   *
+   * @var int
+   */
+  public $_dedupeRuleGroupId;
+
+  /**
+   * contact log register message
+   *
+   * @var int
+   */
+  public $_contactLog;
+
+  function __construct() {
     $this->_maxLinesToProcess = 0;
     $this->_maxErrorCount = self::MAX_ERRORS;
   }
@@ -450,11 +473,6 @@ abstract class CRM_Import_Parser {
 
       // clean up memory from dao's
       CRM_Core_DAO::freeResult();
-
-      // see if we've hit our timeout yet
-      /* if ( $the_thing_with_the_stuff ) {
-                do_something( );
-            } */
     }
 
 

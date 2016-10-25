@@ -38,25 +38,20 @@
             <p>{ts}NOTE: Alternatively, you can enable the <strong>Pay Later</strong> option below without setting up a payment processor. All users will then be asked to submit payment offline (e.g. mail in a check, call in a credit card, etc.).{/ts}</p>
         </div>
     {/if}
-    <table class="form-layout-compressed">  
+    <table class="form-layout-compressed">
         <tr class="crm-contribution-contributionpage-amount-form-block-is_monetary"><th scope="row" class="label" width="20%">{$form.is_monetary.label}</th>
             <td>{$form.is_monetary.html}<br />
             <span class="description">{ts}Uncheck this box if you are using this contribution page for free membership signup ONLY, or to solicit in-kind / non-monetary donations such as furniture, equipment.. etc.{/ts}</span></td>
         </tr>
-	<tr class="crm-contribution-contributionpage-amount-form-block-currency"><th scope="row" class="label" width="20%">{$form.currency.label}</th>
-            <td>{$form.currency.html}<br />
-            <span class="description">{ts}Select the currency to be used for contributions submitted from this contribution page.{/ts}</span></td>
-        </tr>	
         {if $paymentProcessor}
+        </table>
+        <table class="form-layout-compressed" id="payment_processor">
         <tr class="crm-contribution-contributionpage-amount-form-block-payment_processor"><th scope="row" class="label" width="20%">{$form.payment_processor.label}</th>
             <td>{$form.payment_processor.html}<br />
             <span class="description">{ts}Select the payment processor to be used for contributions submitted from this contribution page (unless you are soliciting non-monetary / in-kind contributions only).{/ts} {docURL page="CiviContribute Payment Processor Configuration"}</span></td>
         </tr>
-        {/if}
-        <tr class="crm-contribution-contributionpage-amount-form-block-amount_block_is_active"><th scope="row" class="label">{$form.amount_block_is_active.label}</th>
-            <td>{$form.amount_block_is_active.html}<br />
-            <span class="description">{ts}Uncheck this box if you are using this contribution page for membership signup and renewal only - and you do NOT want users to select or enter any additional contribution amounts.{/ts}</span></td>
-        </tr>
+
+        <!-- is_pay_later BEGIN -->
             <tr class="crm-contribution-contributionpage-amount-form-block-is_pay_later"><th scope="row" class="label">{$form.is_pay_later.label}</th>
             <td>{$form.is_pay_later.html}<br />
             <span class="description">{ts}Check this box if you want to give users the option to submit payment offline (e.g. mail in a check, call in a credit card, etc.).{/ts}</span></td></tr>
@@ -72,6 +67,39 @@
             </table>
             </td>
         </tr>
+        <!-- is_pay_later END -->
+
+
+        {if $recurringPaymentProcessor}
+            <tr id="recurringContribution" class="crm-contribution-form-block-is_recur"><th scope="row" class="label" width="20%">{$form.is_recur.label}</th>
+               <td>{$form.is_recur.html}<br />
+                  <span class="description">{ts}Check this box if you want to give users the option to make recurring contributions. (This feature requires that you use a payment processor with this functionality built in - Paypal std or Pro, Pay2Cash or Payjunction at the time of writing.){/ts}</span>
+               </td>
+            </tr>
+            <tr id="recurFields" class="crm-contribution-form-block-recurFields"><td>&nbsp;</td>
+               <td>
+                  <table class="form-layout-compressed">
+                    <tr class="crm-contribution-form-block-recur_frequency_unit"><th scope="row" class="label">{$form.recur_frequency_unit.label}<span class="marker" title="This field is required.">*</span></th>
+                        <td>{$form.recur_frequency_unit.html}<br />
+                        <span class="description">{ts}Select recurring units supported for recurring payments.{/ts}</span></td>
+                    </tr>
+                  </table>
+                </td>
+            </tr>
+        {/if}
+
+        </table>
+        <table class="form-layout-compressed">
+        {/if}
+        <tr class="crm-contribution-contributionpage-amount-form-block-currency"><th scope="row" class="label" width="20%">{$form.currency.label}</th>
+            <td>{$form.currency.html}<br />
+            <span class="description">{ts}Select the currency to be used for contributions submitted from this contribution page.{/ts}</span></td>
+        </tr>
+        <tr class="crm-contribution-contributionpage-amount-form-block-amount_block_is_active"><th scope="row" class="label">{$form.amount_block_is_active.label}</th>
+            <td>{$form.amount_block_is_active.html}<br />
+            <span class="description">{ts}Uncheck this box if you are using this contribution page for membership signup and renewal only - and you do NOT want users to select or enter any additional contribution amounts.{/ts}</span></td>
+        </tr>
+
 	<tr id="priceSet" class="crm-contribution-contributionpage-amount-form-block-priceSet">
 	     <th scope="row" class="label">{$form.price_set_id.label}</th>
 	     {if $price eq true}
@@ -117,24 +145,6 @@
                 </td>
             </tr>
             {/if}
-
-            {if $recurringPaymentProcessor}
-            <tr id="recurringContribution" class="crm-contribution-form-block-is_recur"><th scope="row" class="label" width="20%">{$form.is_recur.label}</th>
-               <td>{$form.is_recur.html}<br />
-                  <span class="description">{ts}Check this box if you want to give users the option to make recurring contributions. (This feature requires that you use a payment processor with this functionality built in - Paypal std or Pro, Pay2Cash or Payjunction at the time of writing.){/ts}</span>
-               </td>
-            </tr>
-            <tr id="recurFields" class="crm-contribution-form-block-recurFields"><td>&nbsp;</td>
-               <td>
-                  <table class="form-layout-compressed">
-                    <tr class="crm-contribution-form-block-recur_frequency_unit"><th scope="row" class="label">{$form.recur_frequency_unit.label}<span class="marker" title="This field is required.">*</span></th>
-                        <td>{$form.recur_frequency_unit.html}<br />
-                        <span class="description">{ts}Select recurring units supported for recurring payments.{/ts}</span></td>
-                    </tr> 
-                  </table>
-                </td>
-            </tr>
-            {/if}    
 	
             <tr class="crm-contribution-form-block-is_allow_other_amount"><th scope="row" class="label" width="20%">{$form.is_allow_other_amount.label}</th>
             <td>{$form.is_allow_other_amount.html}<br />
@@ -218,6 +228,13 @@
 	   var priceSetID = {/literal}'{$priceSetID}'{literal};
 
 	   switch ( elementName ) {
+          case 'is_monetary':
+              if ( element.checked ) {
+                cj('#payment_processor').show();
+              }else{
+                cj('#payment_processor').hide();
+              }
+          break;
 		  case 'price_set_id':
 		       if ( element ) {
 		       	  hide('amountFields', 'block');
@@ -281,6 +298,16 @@
     target_element_id   = "pledgeFields" 
     target_element_type = "table-row"
     field_type          = "radio"
+    invert              = "false"
+}
+{/if}
+{if $paymentProcessor}
+{include file="CRM/common/showHideByFieldValue.tpl"
+    trigger_field_id    ="is_monetary"
+    trigger_value       ="true"
+    target_element_id   ="payment_processor"
+    target_element_type ="table-row"
+    field_type          ="radio"
     invert              = "false"
 }
 {/if}

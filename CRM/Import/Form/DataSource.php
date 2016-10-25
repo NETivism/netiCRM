@@ -253,8 +253,11 @@ class CRM_Import_Form_DataSource extends CRM_Core_Form {
       ) {
         $dataSourceClass = "CRM_Import_DataSource_" . $matches[1];
         require_once $dataSourceDir . DIRECTORY_SEPARATOR . $dataSourceFile;
-        eval("\$info = $dataSourceClass::getInfo();");
-        $dataSources[$dataSourceClass] = $info['title'];
+        $object = new $dataSourceClass();
+        $info = $object->getInfo();
+        if ($object->checkPermission()) {
+          $dataSources[$dataSourceClass] = $info['title'];
+        }
       }
     }
     closedir($dataSourceHandle);

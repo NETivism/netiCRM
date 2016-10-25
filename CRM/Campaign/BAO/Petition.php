@@ -127,8 +127,10 @@ Class CRM_Campaign_BAO_Petition extends CRM_Campaign_BAO_Survey {
         CRM_Core_BAO_CustomValueTable::store($params['custom'], 'civicrm_activity', $activity->id);
       }
 
-      // set permanent cookie to indicate this petition already signed on the computer
-      setcookie('signed_' . $params['sid'], $activity->id, time() + $this->cookieExpire, '/');
+      // set browser cookie to indicate this petition already signed on the computer
+      $config = CRM_Core_Config::singleton();
+      $urlParts = parse_url($config->userFrameworkBaseURL);
+      setcookie('signed_' . $params['sid'], $activity->id, time() + $this->cookieExpire, $urlParts['path'], $urlParts['host'], CRM_Utils_System::isSSL());
     }
 
     return $activity;
@@ -159,8 +161,10 @@ Class CRM_Campaign_BAO_Petition extends CRM_Campaign_BAO_Survey {
     $tag_params['tag_id'] = $tag['id'];
     $tag_value = civicrm_entity_tag_remove($tag_params);
 
-    // set permanent cookie to indicate this users email address now confirmed
-    setcookie('confirmed_' . $petition_id, $activity_id, time() + $this->cookieExpire, '/');
+    // set browser cookie to indicate this users email address now confirmed
+    $config = CRM_Core_Config::singleton();
+    $urlParts = parse_url($config->userFrameworkBaseURL);
+    setcookie('confirmed_' . $petition_id, $activity_id, time() + $this->cookieExpire, $urlParts['path'], $urlParts['host'], CRM_Utils_System::isSSL());
 
     return TRUE;
   }

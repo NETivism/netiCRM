@@ -1,5 +1,5 @@
   <div id="dialog-confirm" title="{ts}Procceed Receipt Generation?{/ts}" style="display:none;">
-    <p><i class="zmdi zmdi-alert-circle"></i>{ts}This will take a period of time.{/ts}<br />{ts}Are you sure you want to continue?{/ts}</p>
+    <p>{ts}This will take a period of time{/ts}<br />{ts}Are you sure you want to continue?{/ts}</p>
   </div>
 <div class="form-item">
   <div class="crm-section">

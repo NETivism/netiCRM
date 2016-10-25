@@ -783,6 +783,8 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
         'postal_greeting_custom' => 'postal_greeting',
         'addressee_custom' => 'addressee',
       );
+      $config = CRM_Core_Config::singleton();
+      $custom_serial = $config->receiptSerial;
       // hack for CRM-665
       if (isset($details->$name) || $name == 'group' || $name == 'tag') {
         // to handle gender / suffix / prefix
@@ -869,7 +871,7 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
           $values[$index] = $paramsNew[$index];
           $params[$index] = $paramsNew[$name];
         }
-        elseif ($name == 'legal_identifier') {
+        elseif ($name == 'legal_identifier' || $name == 'custom_'.$custom_serial) {
           $params[$index] = $details->$name;
           $values[$index] = substr($details->$name, 0, 1) . str_repeat('*', strlen($details->$name) - 5) . substr($details->$name, -4, 4);
         }
@@ -1193,7 +1195,8 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
 
     $ufGroupID = CRM_Utils_Array::value('ufgroup', $ids);
     if (!$ufGroupID) {
-      $ufGroup->name = CRM_Utils_String::munge($ufGroup->title, '_', 64);
+      $gid = CRM_Core_DAO::getNextId(CRM_Core_DAO_UFGroup::$_tableName);
+      $ufGroup->name = CRM_Utils_String::munge($ufGroup->title, '_', 50).'_'.$gid;
     }
     $ufGroup->id = $ufGroupID;
 
@@ -2197,7 +2200,7 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
     foreach ($ufGroups as $id => $title) {
       $ptype = CRM_Core_BAO_UFField::getProfileType($id, FALSE, $onlyPure);
       if (in_array($ptype, $types)) {
-        $profiles[$id] = $title;
+        $profiles[$id] = $title.' (ID '.$id.')';
       }
     }
 

@@ -573,6 +573,9 @@ function _civicrm_duplicate_formatted_contact(&$params,
       if ($params['contact_type'] != $contact->contact_type) {
         return civicrm_create_error("Mismatched contact IDs OR Mismatched contact Types");
       }
+      if ($contact->is_deleted) {
+        return civicrm_create_error("Found contact have external id or contact id already deleted");
+      }
 
       $error = CRM_Core_Error::createError("Found matching contacts: $contact->id",
         CRM_Core_Error::DUPLICATE_CONTACT,
@@ -782,7 +785,7 @@ function _civicrm_participant_formatted_param(&$params, &$values, $create = FALS
         break;
 
       case 'participant_register_date':
-        if (!CRM_Utils_Rule::date($value)) {
+        if (!CRM_Utils_Rule::dateTime($value)) {
           return civicrm_create_error("$key not a valid date: $value");
         }
         break;
@@ -968,7 +971,7 @@ function _civicrm_contribute_formatted_param(&$params, &$values, $create = FALSE
       case 'cancel_date':
       case 'receipt_date':
       case 'thankyou_date':
-        if (!CRM_Utils_Rule::date($value)) {
+        if (!CRM_Utils_Rule::dateTime($value)) {
           return civicrm_create_error("$key not a valid date: $value");
         }
         break;
@@ -1362,7 +1365,7 @@ function _civicrm_activity_formatted_param(&$params, &$values, $create = FALSE) 
 /**
  *  Function to check duplicate contacts based on de-deupe parameters
  */
-function civicrm_check_contact_dedupe(&$params) {
+function civicrm_check_contact_dedupe(&$params, $dedupeRuleGroupID = NULL) {
   static $cIndieFields = NULL;
   static $defaultLocationId = NULL;
 
@@ -1427,7 +1430,7 @@ function civicrm_check_contact_dedupe(&$params) {
 
   $contactFormatted['contact_type'] = $contactType;
 
-  return _civicrm_duplicate_formatted_contact($contactFormatted);
+  return _civicrm_duplicate_formatted_contact($contactFormatted, $dedupeRuleGroupID);
 }
 
 /**

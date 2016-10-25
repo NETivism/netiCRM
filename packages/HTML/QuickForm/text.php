@@ -55,6 +55,9 @@ class HTML_QuickForm_text extends HTML_QuickForm_input
      */
     function HTML_QuickForm_text($elementName=null, $elementLabel=null, $attributes=null)
     {
+        if (empty($attributes)) {
+          $attributes = array();
+        }
         if (!isset($attributes['placeholder'])) {
           $attributes['placeholder'] = $elementLabel;
         }

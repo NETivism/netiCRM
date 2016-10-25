@@ -1070,9 +1070,27 @@ WHERE id={$id}; ";
           CRM_Core_DAO_Note::import()
         );
 
-        //website fields
+        // website fields
         $fields = array_merge($fields, CRM_Core_DAO_Website::import());
         $fields['url']['hasWebsiteType'] = TRUE;
+
+        // group field, #18274
+        $groupField = CRM_Contact_DAO_Group::import();
+        if (!empty($groupField['title'])) {
+          $groupField['group_name'] = $groupField['title'];
+          $groupField['group_name']['title'] = ts('Group Name');
+          unset($groupField['title']);
+          $fields = array_merge($fields, $groupField);
+        }
+
+        // tag field, #18274
+        $tagField = CRM_Core_DAO_Tag::import();
+        if (!empty($tagField['name'])) {
+          $tagField['tag_name'] = $tagField['name'];
+          $tagField['tag_name']['title'] = ts('Tag Name');
+          unset($tagField['name']);
+          $fields = array_merge($fields, $tagField);
+        }
 
         if ($contactType != 'All') {
           $fields = array_merge($fields,
@@ -1940,6 +1958,11 @@ ORDER BY civicrm_email.is_primary DESC";
           $data[$key] = 0;
         }
       }
+    }
+
+    // log
+    if (isset($params['log_data'])) {
+      $data['log_data'] = $params['log_data'];
     }
 
     return array($data, $contactDetails);

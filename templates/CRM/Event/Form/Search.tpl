@@ -68,9 +68,12 @@
 {if $rows}
 <div class="crm-results-block">
     {* Search request has returned 1 or more matching rows. *}
-        {* This section handles form elements for action task select and submit *}
-        <div class="crm-search-tasks crm-event-search-tasks">
-           {include file="CRM/common/searchResultTasks.tpl" context='Event'}
+      {* This section handles form elements for action task select and submit *}
+      <div class="crm-search-tasks crm-event-search-tasks">
+        {include file="CRM/common/searchResultTasks.tpl" context='Event'}
+        {if $event_id}
+        <div class="crm-search-task-3 crm-search-task-export">{$form._qf_Search_next_task_3.html}</div>
+        {/if}
 	    </div>
         {* This section displays the rows along and includes the paging controls *}
     	<div id='participantSearch' class="crm-event-search-results">

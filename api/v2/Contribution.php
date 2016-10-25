@@ -266,6 +266,9 @@ function &civicrm_contribution_format_create(&$params) {
   CRM_Contribute_BAO_Contribution::resolveDefaults($params, TRUE);
 
   $contribution = CRM_Contribute_BAO_Contribution::create($params, $ids);
+  if (is_a($contribution, 'CRM_Core_Error')) {
+    return civicrm_create_error(ts($contribution->_errors[0]['message']));
+  }
   _civicrm_object_to_array($contribution, $contributeArray);
   return $contributeArray;
 }

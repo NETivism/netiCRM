@@ -42,6 +42,11 @@ abstract class CRM_Contribute_Import_Parser {
   CONST MAX_ERRORS = 250, MAX_WARNINGS = 25, VALID = 1, WARNING = 2, ERROR = 3, CONFLICT = 4, STOP = 5, DUPLICATE = 6, MULTIPLE_DUPE = 7, NO_MATCH = 8, SOFT_CREDIT = 9, SOFT_CREDIT_ERROR = 10, PLEDGE_PAYMENT = 11, PLEDGE_PAYMENT_ERROR = 12;
 
   /**
+   * import contact when import contribution
+   */
+  CONST CONTACT_NOIDCREATE = 100, CONTACT_AUTOCREATE = 101, CONTACT_DONTCREATE = 102;
+
+  /**
    * various parser modes
    */
   CONST MODE_MAPFIELD = 1, MODE_PREVIEW = 2, MODE_SUMMARY = 4, MODE_IMPORT = 8;
@@ -54,7 +59,7 @@ abstract class CRM_Contribute_Import_Parser {
   /**
    * various Contact types
    */
-  CONST CONTACT_INDIVIDUAL = 1, CONTACT_HOUSEHOLD = 2, CONTACT_ORGANIZATION = 4;
+  CONST CONTACT_INDIVIDUAL = 'Individual', CONTACT_HOUSEHOLD = 'Household', CONTACT_ORGANIZATION = 'Organization';
 
   protected $_fileName;
 
@@ -247,6 +252,20 @@ abstract class CRM_Contribute_Import_Parser {
   protected $_haveColumnHeader;
 
   /**
+   * Dedupe group id for contact matching
+   *
+   * @var integer 
+   */
+  protected $_dedupeRuleGroupId;
+
+  /**
+   * Create contact mode
+   *
+   * @var integer
+   */
+  protected $_createContactOption;
+
+  /**
    * contact type
    *
    * @var int
@@ -264,25 +283,17 @@ abstract class CRM_Contribute_Import_Parser {
     $skipColumnHeader = FALSE,
     $mode = self::MODE_PREVIEW,
     $contactType = self::CONTACT_INDIVIDUAL,
-    $onDuplicate = self::DUPLICATE_SKIP
+    $onDuplicate = self::DUPLICATE_SKIP,
+    $createContactOption = self::CONTACT_NOIDCREATE,
+    $dedupeRuleGroupId = 0
   ) {
     if (!is_array($fileName)) {
       CRM_Core_Error::fatal();
     }
     $fileName = $fileName['name'];
-
-    switch ($contactType) {
-      case self::CONTACT_INDIVIDUAL:
-        $this->_contactType = 'Individual';
-        break;
-
-      case self::CONTACT_HOUSEHOLD:
-        $this->_contactType = 'Household';
-        break;
-
-      case self::CONTACT_ORGANIZATION:
-        $this->_contactType = 'Organization';
-    }
+    $this->_contactType = $contactType;
+    $this->_createContactOption = $createContactOption;
+    $this->_dedupeRuleGroupId = $dedupeRuleGroupId;
 
     $this->init();
 
@@ -317,7 +328,7 @@ abstract class CRM_Contribute_Import_Parser {
     while (!feof($fd)) {
       $this->_lineCount++;
 
-      $values = fgetcsv($fd, 8192, $seperator);
+      $values = fgetcsv($fd, 20000, $seperator);
       if (!$values) {
         continue;
       }
@@ -554,7 +565,6 @@ abstract class CRM_Contribute_Import_Parser {
    */
   function setActiveFields($fieldKeys) {
     $this->_activeFieldCount = count($fieldKeys);
-    require_once 'CRM/Contribute/Import/Field.php';
     foreach ($fieldKeys as $key) {
       if (empty($this->_fields[$key])) {
         $this->_activeFields[] = new CRM_Contribute_Import_Field('', ts('- do not import -'));
@@ -595,6 +605,38 @@ abstract class CRM_Contribute_Import_Parser {
     return $valid;
   }
 
+  function setActiveFieldLocationTypes($elements) {
+    for ($i = 0; $i < count($elements); $i++) {
+      $this->_activeFields[$i]->_hasLocationType = $elements[$i];
+    }
+  }
+
+  function setActiveFieldPhoneTypes($elements) {
+    for ($i = 0; $i < count($elements); $i++) {
+      $this->_activeFields[$i]->_phoneType = $elements[$i];
+    }
+  }
+
+  function setActiveFieldWebsiteTypes($elements) {
+    for ($i = 0; $i < count($elements); $i++) {
+      $this->_activeFields[$i]->_websiteType = $elements[$i];
+    }
+  }
+
+  /**
+   * Function to set IM Service Provider type fields
+   *
+   * @param array $elements IM service provider type ids
+   *
+   * @return void
+   * @access public
+   */
+  function setActiveFieldImProviders($elements) {
+    for ($i = 0; $i < count($elements); $i++) {
+      $this->_activeFields[$i]->_imProvider = $elements[$i];
+    }
+  }
+
   /**
    * function to format the field values for input to the api
    *
@@ -610,6 +652,37 @@ abstract class CRM_Contribute_Import_Parser {
             $params[$this->_activeFields[$i]->_name] = array();
           }
           $params[$this->_activeFields[$i]->_name][$this->_activeFields[$i]->_softCreditField] = $this->_activeFields[$i]->_value;
+        }
+
+        if (isset($this->_activeFields[$i]->_hasLocationType)) {
+          if (!isset($params[$this->_activeFields[$i]->_name])) {
+            $params[$this->_activeFields[$i]->_name] = array();
+          }
+
+          $value = array(
+            $this->_activeFields[$i]->_name =>
+            $this->_activeFields[$i]->_value,
+            'location_type_id' =>
+            $this->_activeFields[$i]->_hasLocationType,
+          );
+
+          if (isset($this->_activeFields[$i]->_phoneType)) {
+            $value['phone_type_id'] = $this->_activeFields[$i]->_phoneType;
+          }
+
+          // get IM service Provider type id
+          if (isset($this->_activeFields[$i]->_imProvider)) {
+            $value['provider_id'] = $this->_activeFields[$i]->_imProvider;
+          }
+
+          $params[$this->_activeFields[$i]->_name][] = $value;
+        }
+        elseif (isset($this->_activeFields[$i]->_websiteType)) {
+          $value = array($this->_activeFields[$i]->_name => $this->_activeFields[$i]->_value,
+            'website_type_id' => $this->_activeFields[$i]->_websiteType,
+          );
+
+          $params[$this->_activeFields[$i]->_name][] = $value;
         }
 
         if (!isset($params[$this->_activeFields[$i]->_name])) {
@@ -658,20 +731,17 @@ abstract class CRM_Contribute_Import_Parser {
     return $values;
   }
 
-  function addField($name, $title, $type = CRM_Utils_Type::T_INT, $headerPattern = '//', $dataPattern = '//') {
+  function addField($name, $title, $type = CRM_Utils_Type::T_INT, $headerPattern = '//', $dataPattern = '//', $hasLocationType = FALSE) {
     if (empty($name)) {
-      $this->_fields['doNotImport'] = new CRM_Contribute_Import_Field($name, $title, $type, $headerPattern, $dataPattern);
+      $this->_fields['doNotImport'] = new CRM_Contribute_Import_Field($name, $title, $type, $headerPattern, $dataPattern, $hasLocationType);
     }
     else {
       $tempField = CRM_Contact_BAO_Contact::importableFields('All', NULL);
       if (!array_key_exists($name, $tempField)) {
-        $this->_fields[$name] = new CRM_Contribute_Import_Field($name, $title, $type, $headerPattern, $dataPattern);
+        $this->_fields[$name] = new CRM_Contribute_Import_Field($name, $title, $type, $headerPattern, $dataPattern, $hasLocationType);
       }
       else {
-        require_once 'CRM/Import/Field.php';
-        $this->_fields[$name] = new CRM_Import_Field($name, $title, $type, $headerPattern, $dataPattern,
-          CRM_Utils_Array::value('hasLocationType', $tempField[$name])
-        );
+        $this->_fields[$name] = new CRM_Import_Field($name, $title, $type, $headerPattern, $dataPattern, $hasLocationType);
       }
     }
   }

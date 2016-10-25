@@ -1310,5 +1310,16 @@ SELECT contact_id
     }
     return $tableName;
   }
+
+  static function getNextId($tableName) {
+    if($tableName) {
+      $query = CRM_Core_DAO::executeQuery("SHOW TABLE STATUS LIKE %1", array(1 => array($tableName, 'String')));
+      $query->fetch();
+      if (!empty($query->Auto_increment)) {
+        return $query->Auto_increment;
+      }
+    }
+    return NULL;
+  }
 }
 

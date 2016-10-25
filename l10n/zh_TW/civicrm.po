@@ -11,8 +11,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2016-07-01 07:27+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
+"PO-Revision-Date: 2016-10-17 11:03+0000\n"
+"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2871,7 +2871,7 @@ msgstr "刪除聯絡人頭像"
 
 #: CRM/Contact/Form/Contact.php CRM/Profile/Form.php
 msgid "Save Matching Contact"
-msgstr "儲存聯絡人"
+msgstr "儲存對應的聯絡人"
 
 #: CRM/Contact/Form/Contact.php CRM/Contact/Form/RelatedContact.php
 msgid "Your %1 contact record has been saved."
@@ -9280,11 +9280,11 @@ msgstr "第一次捐款？"
 
 #: CRM/Contact/Form/Search/Custom/ContributionAggregate.php
 msgid "Aggregate Total Between $"
-msgstr "總金額介於 $"
+msgstr "累計總金額從 $"
 
 #: CRM/Contact/Form/Search/Custom/ContributionAggregate.php
 msgid "...and $"
-msgstr "及 $"
+msgstr "至 $"
 
 #: CRM/Contact/Form/Search/Custom/DateAdded.php
 #: templates/CRM/Contact/Page/View/GroupContact.tpl
@@ -10462,7 +10462,7 @@ msgstr "出貨"
 
 #: CRM/Contribute/Form/AdditionalInfo.php
 msgid "This Invoice ID already exists in the database."
-msgstr "此收據編號已存在於資料庫。"
+msgstr "此帳單編號已存在於資料庫。"
 
 #: CRM/Contribute/Form/AdditionalInfo.php
 msgid "Send Initial Reminder"
@@ -19903,7 +19903,7 @@ msgid "Your CiviCRM Profile '%1' has been deleted."
 msgstr "已刪除資料表單「%1」。"
 
 #: CRM/UF/Form/Group.php
-msgid "YourProfile '%1' has been saved."
+msgid "Your CiviCRM Profile '%1' has been saved."
 msgstr "已儲存資料表單「%1」。"
 
 #: CRM/UF/Form/Group.php
@@ -29720,7 +29720,7 @@ msgid ""
 "include a unique identifer to match to the existing records. This can be "
 "either the CiviCRM-assigned contribution ID, a unique Invoice ID, or a "
 "unique Transaction ID."
-msgstr "在每次匯入程序中，您都可以選擇插入新的捐款記錄，或更新現存記錄，但您不能在一次匯入時同時執行兩個操作。如果您要更新現存捐款，您需要在匯入檔案內加上一欄辨識編號（例如系統自動建立的捐款編號、收據編號、或交易編號），用來與現存紀錄做配對。"
+msgstr "在每次匯入程序中，您都可以選擇插入新的捐款記錄，或更新現存記錄，但您不能在一次匯入時同時執行兩個操作。如果您要更新現存捐款，您需要在匯入檔案內加上一欄辨識編號（例如系統自動建立的捐款編號、帳單編號、或交易編號），用來與現存紀錄做配對。"
 
 #: templates/CRM/Contribute/Import/Form/UploadFile.tpl
 msgid ""
@@ -31047,7 +31047,7 @@ msgid ""
 "space becomes available, the first participant from the waitlist will move "
 "to 'Pending from waitlist' status, and will be sent an email with a link to "
 "complete their registration (including paying event fees - if any)."
-msgstr "當活動額滿，您可以允許使用者陳列候補名單。當有多於名額可接受報名時，候補名單中的第一位參加者將會移到「待處理-在候補名單」，然後會收到一封提供有報名連結的電子郵件，以利完成報名（如果有的話，還有支付參加費用）。"
+msgstr "當活動額滿，您可以允許使用者陳列候補名單。當有多於名額可接受報名時，候補名單中的第一位參加者將會移到「待處理-在正取名單」，然後會收到一封提供有報名連結的電子郵件，以利完成報名（如果有的話，還有支付參加費用）。"
 
 #: templates/CRM/Event/Form/ManageEvent/EventInfo.hlp
 msgid ""
@@ -31934,7 +31934,7 @@ msgid ""
 "However, they will only be allowed to complete their registration if the "
 "event is not full (e.g. the number of registered participants is less than "
 "the maximum number of participants configured for the event)."
-msgstr "若您正將參加者從「在候補名單」移到「待處理-在候補名單」，請確定這個活動還有可供報名的人數。包含報名確認連結的電子郵件會自動寄出。倘若活動尚未額滿，他們將可完成報名程序（例如：報名參加的人數未達名額上限）。"
+msgstr "若您正將參加者從「在候補名單」移到「待處理-在正取名單」，請確定這個活動還有可供報名的人數。包含報名確認連結的電子郵件會自動寄出。倘若活動尚未額滿，他們將可完成報名程序（例如：報名參加的人數未達名額上限）。"
 
 #: templates/CRM/Event/Form/Task/PickProfile.tpl
 msgid "Batch Update Event via Profile"
@@ -40327,7 +40327,7 @@ msgid ""
 "For each import, you can either INSERT new contribution records, or UPDATE existing records. You can not do both types of operations in a single import session. If you are UPDATING existing\n"
 "    contributions, you will need to include a unique identifer to match to the existing records. This can be either the CiviCRM-assigned contribution ID, a unique Invoice ID,\n"
 "    or a unique Transaction ID."
-msgstr "在每次匯入程序中，您都可以選擇插入新的捐款記錄，或更新現存記錄，但您不能在一次匯入時同時執行兩個操作。如果您要更新現存捐款資料，您需要在匯入檔案內加上一欄辨識欄位，例如「捐款編號」、「收據編號」或「交易編號」，用來與現存紀錄做配對。您可以透過「搜尋捐款」來匯出辨識資料，並找到系統給予的「捐款編號」、「收據編號」或「交易編號」。"
+msgstr "在每次匯入程序中，您都可以選擇插入新的捐款記錄，或更新現存記錄，但您不能在一次匯入時同時執行兩個操作。如果您要更新現存捐款資料，您需要在匯入檔案內加上一欄辨識欄位，例如「捐款編號」、「帳單編號」或「交易編號」，用來與現存紀錄做配對。您可以透過「搜尋捐款」來匯出辨識資料，並找到系統給予的「捐款編號」、「帳單編號」或「交易編號」。"
 
 #: templates/CRM/Contribute/Page/Tab.hlp
 msgid ""
@@ -44730,7 +44730,7 @@ msgstr "此操作會影響自動編序收據編號的功能。請確認您知道
 msgid ""
 "This is a recurring contribution. %4, every %1 %2 will charge from %3 "
 "payment."
-msgstr "這是定期定額捐款。%4，每 %1 %2將會從您的 %3 扣款。"
+msgstr "這是定期定額捐款。%4，每 %1 個 %2將會從您的 %3 扣款。"
 
 msgid "To modify or cancel future contributions please contact %1"
 msgstr "若要修改或取消後續的定期定額捐款，請聯繫%1"
@@ -44983,7 +44983,7 @@ msgstr "您需要在 <strong>%1</strong> 前（繳費期限），以下列方式
 msgid ""
 "If you can make it before expire date, you can <a href=\"%1\">go page</a> "
 "submit again."
-msgstr "若本繳費單逾期，則需請您<a href=\"%1\">重新產生</a>新的繳費資訊。"
+msgstr "若本繳費單逾期將無法再次利用，需請您回到<a href=\"%1\">原本繳費頁面</a>，重新操作報名或捐款。"
 
 #: CRM/Contribute/Page/Invoice.php
 msgid "Completed or cancelled transaction doesn't need invoice."
@@ -45205,3 +45205,83 @@ msgstr "排除開啟這些郵件的收件人"
 #: xml/templates/civicrm_data.tpl
 msgid "Home"
 msgstr "住家"
+
+#: CRM/Core/Form.php
+msgid ""
+"This message indicate that your have submitted this form before. You stop "
+"here because we need to prevent your double submissions."
+msgstr "因為你填寫的資料已經送出一次了，避免讓你重複送出資訊，我們將您先導引到這裡。"
+
+#: CRM/Core/Form.php
+msgid "Correct page to add another submission"
+msgstr "要重送資料，可到正確的頁面"
+
+#: CRM/Import/Parser/Contact.php
+msgid "Invalid value for field(s)"
+msgstr "欄位中有格式不正確的值"
+
+#: CRM/Contact/Form/Search/Custom/ContributionAggregate.php
+msgid "Amount of top contributors"
+msgstr "總金額排名數"
+
+#: CRM/Contribute/Page/ContributionPage.php
+msgid "Export"
+msgstr "匯出"
+
+#: CRM/Contribute/Import/Form/UploadFile.php
+msgid "Create contact only on identifier not import"
+msgstr "匯入資料沒有ID時便建立聯絡人"
+
+#: CRM/Contribute/Import/Form/UploadFile.php
+msgid "Create contact when not found"
+msgstr "找不到時便建立聯絡人"
+
+#: CRM/Contribute/Import/Form/UploadFile.php
+msgid "Do not create or update contact"
+msgstr "不要建立或更新聯絡人"
+
+#: CRM/Contribute/Import/Form/UploadFile.php
+msgid "Dedupe Rule of Contact"
+msgstr "尋找聯絡人欄位對應規則"
+
+#: CRM/Contribute/Import/Form/UploadFile.php
+msgid ""
+"Use rule you choose above for matching contact in each row. You can also <a "
+"href=\"%1\">add new rule</a> anytime."
+msgstr "使用上面選擇的規則將會檢查每一行匯入的資料欄位，以對應正確的聯絡人。你也可以 <a href=\"%1\">加上新的規則</a>。"
+
+#: CRM/Contribute/Import/Form/UploadFile.php
+msgid ""
+"For each import, system will find your match contact record in each contribution. When contact not found, you can choose default action of import:<ul>\n"
+"<li><strong>Create contact only on identifier not import</strong> is default option, also the secure way to prevent import too many contacts. This will try to match each contribution import row to see if your import have these contact identifier or external identifier. If none of these column found, we will create new contact. Contact fields will be updated only when currently empty.</li>\n"
+"<li><strong>Create contact when not found</strong> will always create new contact when duplicate rule doesn't found of this contact. Contact fields will be updated only when currently empty.</li>\n"
+"<li><strong>Do not create or update contact</strong> will never create new contact during contribution. Use this when you are sure you just want to insert or update contribution of exists contact. This also skip any contact fields update.</li></ul>"
+msgstr "每次匯入時，系統會檢查每筆捐款，依照所選的欄位規則來尋找對應聯絡人。當找不到聯絡人時，你可以選擇以下幾種動作：\n<ul><li><strong>匯入資料沒有ID時便建立聯絡人</strong>，是建議的預設值，也是最安全的方式避免重複建立過多聯絡人。這個選項將會檢查每筆捐款是否包含聯絡人的系統編號，或是外部編號，僅僅在沒有這些編號對應時，才會嘗試建立新的聯絡人。</li>\n<li><strong>找不到時便建立聯絡人</strong>，只要欄位對應沒有發現聯絡人，就會建立新的聯絡人。</li>\n<li><strong>不要建立或更新聯絡人</strong>，將不會新增任何聯絡人，如果你僅需要把捐款紀錄附加於系統已存在的聯絡人，請選擇此選項。</li></ul>"
+
+#: betterContributionForm.tpl
+msgid "Individual Donor"
+msgstr "個人名義捐款"
+
+#: betterContributionForm.tpl
+msgid "Organization Donor"
+msgstr "組織名義捐款"
+
+#: CRM/Contact/Task.php
+msgid "Print PDF Letter"
+msgstr "製作 PDF 信件"
+
+#: CRM/Contribute/Form/Contribution.php
+msgid "Update status related to"
+msgstr "更新相關紀錄的狀態"
+
+#: CRM/Contribute/Form/Contribution.php
+msgid "Check this will also update related component status."
+msgstr "勾選此選項，將會依據此繳款的狀態更新相關紀錄的狀態。"
+
+#: CRM/Contact/Form/Search/Custom/AnnualReceipt.php
+msgid "Receipt Year"
+msgstr "收據開立年度"
+
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php
+msgid "Over %1"
+msgstr "超過%1期"

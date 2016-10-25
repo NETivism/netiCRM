@@ -99,9 +99,10 @@ class CRM_Export_Form_Select extends CRM_Core_Form {
       $components = array('Contribute', 'Member', 'Event', 'Pledge', 'Case', 'Grant', 'Activity');
 
       if (in_array($componentName[1], $components)) {
-        eval('$this->_exportMode = self::' . strtoupper($componentName[1]) . '_EXPORT;');
-        require_once "CRM/{$componentName[1]}/Form/Task.php";
-        eval('CRM_' . $componentName[1] . '_Form_Task::preProcessCommon( $this, true );');
+        $modeVar = strtoupper($componentName[1]) . '_EXPORT';
+        $this->_exportMode = constant("self::$modeVar");
+        $componentClass = 'CRM_'.$componentName[1].'_Form_Task';
+        $componentClass::preProcessCommon($this, TRUE);
         $values = $this->controller->exportValues('Search');
       }
       else {
@@ -145,7 +146,8 @@ class CRM_Export_Form_Select extends CRM_Core_Form {
     }
     else {
       $this->assign('taskName', "Export $componentName[1]");
-      eval('$componentTasks = CRM_' . $componentName[1] . '_Task::tasks();');
+      $componentClass = 'CRM_'.$componentName[1].'_Task';
+      $componentClass::tasks();
       $taskName = $componentTasks[$this->_task];
     }
 
@@ -173,6 +175,26 @@ FROM   {$this->_componentTable}
     $this->set('exportMode', $this->_exportMode);
     $this->set('componentClause', $this->_componentClause);
     $this->set('componentTable', $this->_componentTable);
+
+    $exportOption = $this->controller->exportValue($this->_name, 'exportOption');
+    $this->_force = CRM_Utils_Request::retrieve('force', 'Boolean', $this, FALSE);
+    $this->_mappingId = CRM_Utils_Request::retrieve('mappingId', 'Integer', $this, FALSE);
+    if ($this->_force) {
+      if (is_numeric($this->_mappingId) && !empty($this->_mappingId)) {
+        $this->set('mappingId', $this->_mappingId);
+      }
+      else {
+        $entityTable = CRM_Utils_Request::retrieve('entityTable', 'String', $this);
+        $entityId = CRM_Utils_Request::retrieve('entityId', 'Integer', $this);
+        if($entityTable && $entityId) {
+          $mappingObject = CRM_Core_BAO_Mapping::getMappingFieldsUfJoin($entityTable, $entityId);
+          $this->set('mappingObject', $mappingObject);
+        }
+      }
+      $this->set('force', 0);
+      $this->postProcess();
+      $this->controller->nextPage();
+    }
   }
 
   /**
@@ -245,7 +267,10 @@ FROM   {$this->_componentTable}
     $merge_same_address = $this->controller->exportValue($this->_name, 'merge_same_address');
     $merge_same_household = $this->controller->exportValue($this->_name, 'merge_same_household');
 
-    $mappingId = $this->controller->exportValue($this->_name, 'mapping');
+    $mappingId = $this->get('mappingId');
+    if (empty($mappingId)) {
+      $mappingId = $this->controller->exportValue($this->_name, 'mapping');
+    }
     if ($mappingId) {
       $this->set('mappingId', $mappingId);
     }

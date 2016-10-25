@@ -1891,6 +1891,10 @@ class CRM_Contact_BAO_Query {
           $value = "%$value%";
           $op = 'LIKE';
         }
+        $type = NULL;
+        if (CRM_Utils_Array::value('type', $field)) {
+          $type = CRM_Utils_Type::typeToString($field['type']);
+        }
 
         if (isset($locType[1]) &&
           is_numeric($locType[1])
@@ -1903,10 +1907,7 @@ class CRM_Contact_BAO_Query {
 
           $where = "`$tName`.$fldName";
 
-          $this->_where[$grouping][] = self::buildClause("LOWER($where)",
-            $op,
-            $value
-          );
+          $this->_where[$grouping][] = self::buildClause("LOWER($where)", $op, $value, $type);
           $this->_whereTables[$tName] = $this->_tables[$tName];
           $this->_qill[$grouping][] = "$field[title] $op '$value'";
         }
@@ -1924,16 +1925,7 @@ class CRM_Contact_BAO_Query {
             }
           }
 
-          $type = NULL;
-          if (CRM_Utils_Array::value('type', $field)) {
-            $type = CRM_Utils_Type::typeToString($field['type']);
-          }
-
-          $this->_where[$grouping][] = self::buildClause($fieldName,
-            $op,
-            $value,
-            $type
-          );
+          $this->_where[$grouping][] = self::buildClause($fieldName, $op, $value, $type);
           $this->_qill[$grouping][] = "$field[title] $op $value";
         }
       }

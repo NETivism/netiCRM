@@ -58,6 +58,14 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
   public $_mode;
 
   /**
+   * Prevent multiple submission
+   *
+   * @var Boolean
+   * @protected
+   */
+  protected $_preventMultipleSubmission;
+
+  /**
    * the contact id related to a membership
    *
    * @var int

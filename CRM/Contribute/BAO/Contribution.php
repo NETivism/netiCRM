@@ -56,6 +56,7 @@ class CRM_Contribute_BAO_Contribution extends CRM_Contribute_DAO_Contribution {
    * @static
    */
   static $_exportableFields = NULL;
+
   function __construct() {
     parent::__construct();
   }
@@ -217,7 +218,7 @@ class CRM_Contribute_BAO_Contribution extends CRM_Contribute_DAO_Contribution {
     }
 
     // calculate receipt id
-    if (!$params['receipt_id'] && empty($params['skipRecentView'])) {
+    if (!$params['receipt_id'] && empty($params['skipRecentView']) && !empty($params['receipt_date'])) {
       $params['receipt_id'] = CRM_Contribute_BAO_Contribution::genReceiptID($params, FALSE);
     }
 
@@ -503,51 +504,41 @@ class CRM_Contribute_BAO_Contribution extends CRM_Contribute_DAO_Contribution {
         $fields = array('' => array('title' => ts('- Contribution Fields -')));
       }
 
-      require_once 'CRM/Core/DAO/Note.php';
       $note = CRM_Core_DAO_Note::import();
       $tmpFields = CRM_Contribute_DAO_Contribution::import();
+      $tmpFields['contribution_contact_id']['title'] = ts('Contact') . '::' .$tmpFields['contribution_contact_id']['title'];
       unset($tmpFields['option_value']);
-      require_once 'CRM/Core/OptionValue.php';
       $optionFields = CRM_Core_OptionValue::getFields($mode = 'contribute');
-      require_once 'CRM/Contact/BAO/Contact.php';
-      $contactFields = CRM_Contact_BAO_Contact::importableFields($contacType, NULL);
+
+      $contactFields = array();
+      $tmpContactFields = CRM_Contact_BAO_Contact::importableFields($contacType, NULL);
+      $contactFieldsIgnore = array('id', 'note', 'do_not_import', 'contact_sub_type', 'group_name', 'tag_name');
 
       // Using new Dedupe rule.
       $ruleParams = array(
         'contact_type' => $contacType,
         'level' => 'Strict',
       );
-      require_once 'CRM/Dedupe/BAO/Rule.php';
-      $fieldsArray = CRM_Dedupe_BAO_Rule::dedupeRuleFields($ruleParams);
-      $tmpConatctField = array();
-      if (is_array($fieldsArray)) {
-        foreach ($fieldsArray as $value) {
-          //skip if there is no dupe rule
-          if ($value == 'none') {
-            continue;
-          }
-
-          $tmpConatctField[trim($value)] = $contactFields[trim($value)];
-          if (!$status) {
-            $title = $tmpConatctField[trim($value)]['title'] . ' ' . ts('(match to contact)');
-          }
-          else {
-            $title = $tmpConatctField[trim($value)]['title'];
-          }
-          $tmpConatctField[trim($value)]['title'] = $title;
+      $dupeFields = CRM_Dedupe_BAO_Rule::dedupeRuleFields($ruleParams);
+      if (!is_array($dupeFields)) {
+        $dupeFields = array();
+      }
+      foreach ($tmpContactFields as $fieldName => $fieldData) {
+        $fieldName = trim($fieldName);
+        if (in_array($fieldName, $contactFieldsIgnore)) {
+          continue;
         }
+        $index = $fieldName;
+        $contactFields[$index] = $fieldData;
+        $contactFields[$index]['title'] = ts('Contact') . '::' .$contactFields[$index]['title'];
       }
 
-      $tmpConatctField['external_identifier'] = $contactFields['external_identifier'];
-      $tmpConatctField['external_identifier']['title'] = $contactFields['external_identifier']['title'] . ' ' . ts('(match to contact)');
-      $tmpFields['contribution_contact_id']['title'] = $tmpFields['contribution_contact_id']['title'] . ' ' . ts('(match to contact)');
-      $fields = array_merge($fields, $tmpConatctField);
-      $fields = array_merge($fields, $tmpFields);
-      $fields = array_merge($fields, $note);
-      $fields = array_merge($fields, $optionFields);
-      require_once 'CRM/Contribute/DAO/ContributionType.php';
       $fields = array_merge($fields, CRM_Contribute_DAO_ContributionType::export());
+      $fields = array_merge($fields, $tmpFields);
       $fields = array_merge($fields, CRM_Core_BAO_CustomField::getFieldsForImport('Contribution'));
+      $fields = array_merge($fields, $optionFields);
+      $fields = array_merge($fields, $note);
+      $fields = array_merge($fields, $contactFields);
       self::$_importableFields = $fields;
     }
     return self::$_importableFields;
@@ -1470,11 +1461,12 @@ LEFT JOIN  civicrm_contribution contribution ON ( componentPayment.contribution_
     require_once 'CRM/Contribute/PseudoConstant.php';
     $contributionStatuses = CRM_Contribute_PseudoConstant::contributionStatus(NULL, 'name');
 
-    // we process only ( Completed, Cancelled, or Failed ) contributions.
+    // we process only ( Completed, Cancelled, Failed, Overdue ) contributions.
     if (!$contributionId ||
       !in_array($contributionStatusId, array(array_search('Completed', $contributionStatuses),
           array_search('Cancelled', $contributionStatuses),
           array_search('Failed', $contributionStatuses),
+          array_search('Overdue', $contributionStatuses),
         ))
     ) {
       return $updateResult;
@@ -1594,16 +1586,6 @@ LEFT JOIN  civicrm_contribution contribution ON ( componentPayment.contribution_
       }
     }
     elseif ($contributionStatusId == array_search('Failed', $contributionStatuses)) {
-      if ($membership) {
-        $membership->status_id = array_search('Expired', $membershipStatuses);
-        $membership->save();
-
-        $updateResult['updatedComponents']['CiviMember'] = $membership->status_id;
-        if ($processContributionObject) {
-          $processContribution = TRUE;
-        }
-      }
-
       if ($participant) {
         $updatedStatusId = array_search('Cancelled', $participantStatuses);
         CRM_Event_BAO_Participant::updateParticipantStatus($participant->id, $oldStatus, $updatedStatusId, TRUE);
@@ -1618,6 +1600,17 @@ LEFT JOIN  civicrm_contribution contribution ON ( componentPayment.contribution_
         CRM_Pledge_BAO_Payment::updatePledgePaymentStatus($pledgeID, $pledgePaymentIDs, $contributionStatusId);
 
         $updateResult['updatedComponents']['CiviPledge'] = $contributionStatusId;
+        if ($processContributionObject) {
+          $processContribution = TRUE;
+        }
+      }
+    }
+    elseif ($contributionStatusId == array_search('Overdue', $contributionStatuses)) {
+      if ($membership) {
+        $membership->status_id = array_search('Expired', $membershipStatuses);
+        $membership->save();
+
+        $updateResult['updatedComponents']['CiviMember'] = $membership->status_id;
         if ($processContributionObject) {
           $processContribution = TRUE;
         }
@@ -1976,6 +1969,14 @@ SELECT source_contact_id
     $template->assign('currency', $contribution->currency);
     $template->assign('instrument', $instruments[$contribution->payment_instrument_id]);
 
+    // refs #18399
+    $source_name_array = explode(': ', $contribution->source);
+    if(count($source_name_array) >= 2){
+      $prefix = $source_name_array[0].': ';
+      $source_name = str_replace($prefix, '', $contribution->source);
+      $template->assign('source_name' , $source_name);
+    }
+
     $entityBlock = array('contact_id' => $contact->id);
     $addresses = CRM_Core_BAO_Address::getValues($entityBlock);
     $addr = reset($addresses);
@@ -2149,10 +2150,10 @@ SELECT source_contact_id
 
     // filter by recurring contribution
     if(!empty($option['is_recur'])){
-      if($option['is_recur'] === 1){
+      if($option['is_recur'] == 1){
         $where[] = "c.contribution_recur_id IS NOT NULL";
       }
-      elseif($option['is_recur'] === -1){
+      elseif($option['is_recur'] == -1){
         $where[] = "c.contribution_recur_id IS NULL";
       }
     }
@@ -2408,8 +2409,8 @@ WHERE c.id = $id";
             $event_params = array('id' => $ids['event']);
             CRM_Event_BAO_Event::retrieve($event_params, $pageValues);
             $pageValues['url'] = CRM_Utils_System::url('civicrm/event/info', 'reset=1&id='.$pageValues['id'], TRUE);
-            if($pageValues['is_email_receipt']){
-              $sendParams['from'] = $pageValues['receipt_from_name'].' <'.$pageValues['receipt_from_email'].'>';
+            if($pageValues['is_email_confirm']){
+              $sendParams['from'] = $pageValues['confirm_from_name']. ' <'.$pageValues['confirm_from_email'].'>';
             }
           }
         }
@@ -2417,8 +2418,8 @@ WHERE c.id = $id";
           if(!empty($ids['page_id'])){
             CRM_Contribute_BAO_ContributionPage::setValues($ids['page_id'], $pageValues);
             $pageValues['url'] = CRM_Utils_System::url('civicrm/contribute/transact', 'reset=1&id='.$pageValues['id'], TRUE);
-            if($pageValues['is_email_confirm']){
-              $sendParams['from'] = $pageValues['confirm_from_name']. ' <'.$pageValues['confirm_from_email'].'>';
+            if($pageValues['is_email_receipt']){
+              $sendParams['from'] = $pageValues['receipt_from_name'].' <'.$pageValues['receipt_from_email'].'>';
             }
           }
         }

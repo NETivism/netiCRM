@@ -462,7 +462,7 @@ class CRM_Mailing_Selector_Event extends CRM_Core_Selector_Base implements CRM_C
          : ts('Tracked Opens'),
       );
     }
-    return $events[$this->_event_type];
+    return ts('Statistics').': '.$events[$this->_event_type];
   }
 
   function getTitle() {

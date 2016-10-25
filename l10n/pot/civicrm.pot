@@ -19905,7 +19905,7 @@ msgid "Your CiviCRM Profile '%1' has been deleted."
 msgstr ""
 
 #: CRM/UF/Form/Group.php
-msgid "YourProfile '%1' has been saved."
+msgid "Your CiviCRM Profile '%1' has been saved."
 msgstr ""
 
 #: CRM/UF/Form/Group.php
@@ -45189,4 +45189,76 @@ msgstr ""
 
 #: xml/templates/civicrm_data.tpl
 msgid "Home"
+msgstr ""
+
+#: CRM/Core/Form.php
+msgid "This message indicate that your have submitted this form before. You stop here because we need to prevent your double submissions."
+msgstr ""
+
+#: CRM/Core/Form.php
+msgid "Correct page to add another submission"
+msgstr ""
+
+#: CRM/Import/Parser/Contact.php
+msgid "Invalid value for field(s)"
+msgstr ""
+
+#: CRM/Contact/Form/Search/Custom/ContributionAggregate.php
+msgid "Amount of top contributors"
+msgstr ""
+
+#: CRM/Contribute/Page/ContributionPage.php
+msgid "Export"
+msgstr ""
+
+#: CRM/Contribute/Import/Form/UploadFile.php
+msgid "Create contact only on identifier not import"
+msgstr ""
+
+#: CRM/Contribute/Import/Form/UploadFile.php
+msgid "Create contact when not found"
+msgstr ""
+
+#: CRM/Contribute/Import/Form/UploadFile.php
+msgid "Do not create or update contact"
+msgstr ""
+
+#: CRM/Contribute/Import/Form/UploadFile.php
+msgid "Dedupe Rule of Contact"
+msgstr ""
+
+#: CRM/Contribute/Import/Form/UploadFile.php
+msgid "Use rule you choose above for matching contact in each row. You can also <a href=\"%1\">add new rule</a> anytime."
+msgstr ""
+
+#: CRM/Contribute/Import/Form/UploadFile.php
+msgid "For each import, system will find your match contact record in each contribution. When contact not found, you can choose default action of import:<ul>\n<li><strong>Create contact only on identifier not import</strong> is default option, also the secure way to prevent import too many contacts. This will try to match each contribution import row to see if your import have these contact identifier or external identifier. If none of these column found, we will create new contact. Contact fields will be updated only when currently empty.</li>\n<li><strong>Create contact when not found</strong> will always create new contact when duplicate rule doesn't found of this contact. Contact fields will be updated only when currently empty.</li>\n<li><strong>Do not create or update contact</strong> will never create new contact during contribution. Use this when you are sure you just want to insert or update contribution of exists contact. This also skip any contact fields update.</li></ul>"
+msgstr ""
+
+#: betterContributionForm.tpl
+msgid "Individual Donor"
+msgstr ""
+
+#: betterContributionForm.tpl
+msgid "Organization Donor"
+msgstr ""
+
+#: CRM/Contact/Task.php
+msgid "Print PDF Letter"
+msgstr ""
+
+#: CRM/Contribute/Form/Contribution.php
+msgid "Update status related to"
+msgstr ""
+
+#: CRM/Contribute/Form/Contribution.php
+msgid "Check this will also update related component status."
+msgstr ""
+
+#: CRM/Contact/Form/Search/Custom/AnnualReceipt.php
+msgid "Receipt Year"
+msgstr ""
+
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php
+msgid "Over %1"
 msgstr ""

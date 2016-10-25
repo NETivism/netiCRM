@@ -119,10 +119,10 @@
                   <script type="text/javascript">
                     var relType = 0;
                     cj( function( ) {
+                      cj(document).on("keypress", "#rel_contact", function(event) {return event.keyCode != 13;});
                         createRelation( );
                         var relationshipType = cj('#relationship_type_id'); 
                         relationshipType.change( function() { 
-                            cj('#relationship-refresh-save').hide();
 			     cj('#saveButtons').hide();
                             cj('#rel_contact').val('');
                             cj("input[name=rel_contact_id]").val('');
@@ -143,7 +143,6 @@
                              relContact.autocomplete( dataUrl, { width : 180, selectFirst : false, matchContains: true });
                              relContact.result(function( event, data ) {
                                	cj("input[name=rel_contact_id]").val(data[1]);
-                                cj('#relationship-refresh-save').show( );
                                 buildRelationFields( relType );
                              });
                         } else { 
@@ -158,80 +157,8 @@
                 <td>的{$form.relationship_type_id.html}</td>
               </tr>
               </table>
-                <div class="crm-submit-buttons">
-                    <span id="relationship-refresh" class="crm-button crm-button-type-refresh crm-button_qf_Relationship_refresh">{$form._qf_Relationship_refresh.html}</span>
-                    <span id="relationship-refresh-save" class="crm-button crm-button-type-save crm-button_qf_Relationship_refresh_save" style="display:none">{$form._qf_Relationship_refresh_save.html}</span>
-                    <span class="crm-button crm-button-type-cancel crm-button_qf_Relationship_cancel">{$form._qf_Relationship_cancel.html}</span>
-                </div>
                 <div class="clear"></div>
 
-              {if $searchDone } {* Search button clicked *} 
-                {if $searchCount || $callAjax}
-                    {if $searchRows || $callAjax} {* we got rows to display *}
-                        <fieldset id="searchResult"><legend>{ts}Mark Target Contact(s) for this Relationship{/ts}</legend>
-                        <div class="description">
-                            {ts}Mark the target contact(s) for this relationship if it appears below. Otherwise you may modify the search name above and click Search again.{/ts}
-                        </div>
-                        {strip}
-			            {if $callAjax}
-                			<div id="count_selected"> </div><br />
-                			{$form.store_contacts.html}
-		
-                			{if $isEmployeeOf || $isEmployerOf}
-                			     {$form.store_employer.html}     	
-                			{/if}
-			                {include file="CRM/common/jsortable.tpl"  sourceUrl=$sourceUrl useAjax=1 callBack=1 }
-			            {/if}
-
-                        <table id="rel-contacts" class="pagerDisplay">
-			                <thead>
-                                <tr class="columnheader">
-                                    <th id="nosort" class="contact_select">&nbsp;</th>
-                                    <th>{ts}Name{/ts}</th>
-                                {if $isEmployeeOf}<th id="nosort" class="current_employer">{ts}Current Employer?{/ts}</th> 
-                                {elseif $isEmployerOf}<th id="nosort" class="current_employer">{ts}Current Employee?{/ts}</th>{/if}
-                                    <th>{ts}City{/ts}</th>
-                                    <th>{ts}State{/ts}</th>
-                                    <th>{ts}Email{/ts}</th>
-                                    <th>{ts}Phone{/ts}</th>
-                                </tr>
-			                </thead>
- 			                <tbody>
-                			{if !$callAjax}
-                                {foreach from=$searchRows item=row}
-                                <tr class="{cycle values="odd-row,even-row"}">
-                                    <td class="contact_select">{$form.contact_check[$row.id].html}</td>
-                                    <td>{$row.type} {$row.name}</td>
-                                    {if $isEmployeeOf}<td>{$form.employee_of[$row.id].html}</td>
-                                    {elseif $isEmployerOf}<td>{$form.employer_of[$row.id].html}</td>{/if}
-                                    <td>{$row.city}</td>
-                                    <td>{$row.state}</td>
-                                    <td>{$row.email}</td>
-                                    <td>{$row.phone}</td>
-                                </tr>
-                                {/foreach}
-                			{else}
-                			    <tr><td colspan="5" class="dataTables_empty">Loading data from server</td></tr>
-                			{/if}
-                			</tbody>
-                        </table>
-                        {/strip}
-                        </fieldset>
-                        <div class="spacer"></div>
-                    {else} {* too many results - we display only 50 *}
-                        {if $duplicateRelationship}  
-                            {capture assign=infoMessage}{ts}Duplicate relationship.{/ts}{/capture}
-                        {else}   
-                            {capture assign=infoMessage}{ts}Too many matching results. Please narrow your search by entering a more complete target contact name.{/ts}{/capture}
-                        {/if}  
-                        {include file="CRM/common/info.tpl"}
-                    {/if}
-                {else} {* no valid matches for name + contact_type *}
-                        {capture assign=infoMessage}{ts}No matching results for{/ts} <ul><li>{ts 1=$form.rel_contact.value}Name like: %1{/ts}</li><li>{ts}Contact Type{/ts}: {$contact_type_display}</li></ul>{ts}Check your spelling, or try fewer letters for the target contact name.{/ts}{/capture}
-                        {include file="CRM/common/info.tpl"}                
-                {/if} {* end if searchCount *}
-              {else}
-              {/if} {* end if searchDone *}
         {/if} {* end action = add *}
         
             <div id = 'saveElements'>
@@ -468,13 +395,9 @@ cj(document).ready(function(){
 	     return false;
 	     }
          cj("input[name=rel_contact_id]").val('');
-         cj('#relationship-refresh').show( );
-         cj('#relationship-refresh-save').hide( );
     }); } else {
          cj('#rel_contact').focus( function() {
          cj("input[name=rel_contact_id]").val('');
-         cj('#relationship-refresh').show( );
-         cj('#relationship-refresh-save').hide( ); 
 }); }
 });
 
@@ -511,8 +434,6 @@ function buildRelationFields( relType ) {
                 show('addCurrentEmployer');
             }
         }
-        hide('relationship-refresh');
-        show('relationship-refresh-save');
         show('details-save');
         show('saveElements');
         show('saveDetails');
@@ -527,7 +448,6 @@ function buildRelationFields( relType ) {
 function changeCustomData( cType ) {
     {/literal}{if $action EQ 1} {literal}
     cj('#customData').html('');
-    show('relationship-refresh');
     hide('saveElements');
     hide('addCurrentEmployee');
     hide('addCurrentEmployer');

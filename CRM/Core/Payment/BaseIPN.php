@@ -247,6 +247,7 @@ class CRM_Core_Payment_BaseIPN {
     $contribution->save();
 
     if ($membership) {
+      /* Do not update membership status in online payment, refs #19008
       $failed_id = array_search('Cancelled', self::$_membershipStatus);
       $membership->status_id = $failed_id;
       $membership->save();
@@ -255,6 +256,7 @@ class CRM_Core_Payment_BaseIPN {
       require_once 'CRM/Member/BAO/Membership.php';
       $params = array('status_id' => $failed_id);
       CRM_Member_BAO_Membership::updateRelatedMemberships($membership->id, $params);
+      */
     }
 
     if ($participant) {

@@ -157,6 +157,7 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
     $this->_searchButtonName = $this->getButtonName('refresh');
     $this->_printButtonName = $this->getButtonName('next', 'print');
     $this->_actionButtonName = $this->getButtonName('next', 'action');
+    $this->_exportButtonName = $this->getButtonName('next', 'task_4');
 
     $this->_done = FALSE;
     $this->defaults = array();
@@ -169,6 +170,7 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
 
     $this->_reset = CRM_Utils_Request::retrieve('reset', 'Boolean', CRM_Core_DAO::$_nullObject);
     $this->_force = CRM_Utils_Request::retrieve('force', 'Boolean', $this, FALSE);
+    $this->_pageId = CRM_Utils_Request::retrieve('pid', 'Positive', CRM_Core_DAO::$_nullObject);
     $this->_test = CRM_Utils_Request::retrieve('test', 'Boolean', $this);
     $this->_limit = CRM_Utils_Request::retrieve('limit', 'Positive', $this);
     $this->_context = CRM_Utils_Request::retrieve('context', 'String', $this, FALSE, 'search');
@@ -222,6 +224,7 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
 
     $this->assign("{$prefix}limit", $this->_limit);
     $this->assign("{$prefix}single", $this->_single);
+    $this->assign("page_id", $this->_pageId);
 
     $controller = new CRM_Core_Selector_Controller($selector,
       $this->get(CRM_Utils_Pager::PAGE_ID),
@@ -300,6 +303,14 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
         )
       );
 
+      // override default task
+      $this->addElement('hidden', 'task_force', 4);
+      $this->add('submit', $this->_exportButtonName, ts('Export Contributions'),
+        array('class' => 'form-submit',
+          'id' => 'export',
+        )
+      );
+
       // need to perform tasks on all or selected items ? using radio_ts(task selection) for it
       $selectedRowsRadio = $this->addElement('radio', 'radio_ts', NULL, '', 'ts_sel', array('checked' => 'checked'));
       $this->assign('ts_sel_id', $selectedRowsRadio->_attributes['id']);
@@ -372,7 +383,7 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
     $this->set('queryParams', $this->_queryParams);
 
     $buttonName = $this->controller->getButtonName();
-    if ($buttonName == $this->_actionButtonName || $buttonName == $this->_printButtonName) {
+    if ($buttonName == $this->_actionButtonName || $buttonName == $this->_printButtonName || $buttonName == $this->_exportButtonName) {
       // check actionName and if next, then do not repeat a search, since we are going to the next page
 
       // refs #18784, take sortOrder to CRM_Contribute_Form_Task
@@ -391,6 +402,12 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
       $stateMachine = &$this->controller->getStateMachine();
       $formName = $stateMachine->getTaskFormName();
       $this->controller->resetPage($formName);
+
+      if ($buttonName == $this->_exportButtonName) {
+        $this->controller->set('force', 1);
+        $this->controller->set('entityTable', 'civicrm_contribution_page');
+        $this->controller->set('entityId', $this->_formValues['contribution_page_id']);
+      }
       return;
     }
 

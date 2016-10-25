@@ -44,11 +44,6 @@
        <name>openid</name>
        <type>varchar</type>
        <length>255</length>
-       <import>true</import>
-       <headerPattern>/^Open.?ID|u(niq\w*)?.?ID/i</headerPattern>
-        <dataPattern>/^[\w\/\:\.]+$/</dataPattern>
-        <comment>the OpenID (or OpenID-style http://username.domain/) unique identifier for this contact mainly used for logging in to CiviCRM</comment>
-       <rule>url</rule>
        <comment>OpenID</comment>
        <add>2.0</add>
   </field>

@@ -93,6 +93,12 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
   static protected $_template;
 
   /**
+   * The count of submissions in the same form
+   * @var int
+   */
+  protected $_submissionCount;
+
+  /**
    * constants for attributes for various form elements
    * attempt to standardize on the number of variations that we
    * use of the below form elements
@@ -241,14 +247,21 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
    * This function is just a wrapper, so that we can call all the hook functions
    */
   function mainProcess() {
-    CRM_Utils_Hook::preSave(get_class($this),
-      $this
-    );
-    $this->postProcess();
+    CRM_Utils_Hook::preSave(get_class($this), $this);
 
-    CRM_Utils_Hook::postProcess(get_class($this),
-      $this
-    );
+    // before postProcess, count submission at form object
+    if (empty($this->_submissionCount)) {
+      $this->_submissionCount = $this->get('submissionCount');
+    }
+    if ($this->_preventMultipleSubmission) {
+      $this->_submissionCount++;
+      $this->set('submissionCount', $this->_submissionCount);
+      $this->preventMultipleSubmission();
+    }
+
+    // everything fine.
+    $this->postProcess();
+    CRM_Utils_Hook::postProcess(get_class($this), $this);
   }
 
   /**
@@ -308,6 +321,11 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
    */
   function buildForm() {
     $this->_formBuilt = TRUE;
+
+    $initPage = $this->get('initPage');
+    if (empty($initPage)) {
+      $this->set('initPage', $_SERVER['REQUEST_URI']);
+    }
 
     $this->preProcess();
 
@@ -1180,6 +1198,17 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
           }
         }
       }
+    }
+  }
+
+  function preventMultipleSubmission() {
+    if ($this->_submissionCount > 1) {
+      $message = ts('This message indicate that your have submitted this form before. You stop here because we need to prevent your double submissions.');
+      $initPage = $this->get('initPage');
+      if ($initPage) {
+        $message .= '<div align="right">&raquo; '. '<a href="'.$initPage.'">'.ts('Correct page to add another submission').'</a></div>';
+      }
+      CRM_Core_Error::fatal($message);
     }
   }
 }

@@ -70,6 +70,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
   protected $_externalIdentifierIndex;
   protected $_allExternalIdentifiers;
   protected $_parseStreetAddress;
+  protected $_lastImportContactId;
 
   /**
    * Array of succesfully imported contact id's
@@ -289,6 +290,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
    */
   function summary(&$values) {
     $response = $this->setActiveFieldValues($values);
+    $this->_lineCount++;
 
     $errorMessage = NULL;
     $errorRequired = FALSE;
@@ -389,7 +391,6 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
     $externalID = CRM_Utils_Array::value($this->_externalIdentifierIndex, $values);
     if ($externalID) {
       /* If it's a dupe,external Identifier  */
-
       if ($externalDupe = CRM_Utils_Array::value($externalID,
           $this->_allExternalIdentifiers
         )) {
@@ -445,6 +446,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
    * @access public
    */
   function import($onDuplicate, &$values, $doGeocodeAddress = FALSE) {
+    $this->_lastImportContactId = 0;
     $config = &CRM_Core_Config::singleton();
     $this->_unparsedStreetAddressContacts = array();
     if (!$doGeocodeAddress) {
@@ -465,6 +467,17 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
     }
 
     $params = &$this->getActiveFieldParams();
+    $groupNames = $tagNames = array();
+    if (!empty($params['group_name'])) {
+      $params['group_name'] = str_replace('|', ',', $params['group_name']);
+      $groupNames = explode(',', $params['group_name']);
+      unset($params['group_name']);
+    }
+    if (!empty($params['tag_name'])) {
+      $params['tag_name'] = str_replace('|', ',', $params['tag_name']);
+      $tagNames = explode(',', $params['tag_name']);
+      unset($params['tag_name']);
+    }
     $formatted = array('contact_type' => $this->_contactType);
 
     static $contactFields = NULL;
@@ -746,6 +759,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
       // call import hook
       require_once 'CRM/Utils/Hook.php';
       $currentImportID = end($values);
+      $this->_lastImportContactId = $contactID;
 
       $hookParams = array('contactID' => $contactID,
         'importID' => $currentImportID,
@@ -759,6 +773,18 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
         $this,
         $hookParams
       );
+
+      // import group and tag when each contact
+      $addIds = array($contactID);
+      if ($this->_job->_newGroupName || count($this->_job->_groups)) {
+        $this->_job->addImportedContactsToNewGroup($addIds, $this->_job->_newGroupName, $this->_job->_newGroupDesc);
+      }
+      if ($this->_job->_newTagName || count($this->_job->_tag)) {
+        $this->_job->tagImportedContactsWithNewTag($addIds, $this->_job->_newTagName, $this->_job->_newTagDesc);
+      }
+      if (!empty($groupNames) || !empty($tagNames)) {
+        $this->_job->addContactToGroupTag($contactID, $groupNames, $tagNames);
+      }
     }
 
     if ($relationship) {
@@ -1683,7 +1709,8 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
     require_once 'api/v2/Contact.php';
     // setting required check to false, CRM-2839
     // plus we do our own required check in import
-    $error = civicrm_contact_check_params($formatted, $dupeCheck, TRUE, FALSE);
+    $dedupeRuleGroupId = $this->_dedupeRuleGroupId ? $this->_dedupeRuleGroupId : NULL;
+    $error = civicrm_contact_check_params($formatted, $dupeCheck, TRUE, FALSE, $dedupeRuleGroupId);
 
     if ((is_null($error)) &&
       (civicrm_error(_civicrm_validate_formatted_contact($formatted)))
@@ -1701,6 +1728,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
       // pass doNotResetCache flag since resetting and rebuilding cache could be expensive.
       $config = &CRM_Core_Config::singleton();
       $config->doNotResetCache = 1;
+      $formatted['log_data'] = !empty($this->_contactLog) ? $this->_contactLog : ts('Import Contact');
       $cid = CRM_Contact_BAO_Contact::createProfileContact($formatted, $contactFields,
         $contactId, NULL, NULL,
         $formatted['contact_type']
@@ -2176,6 +2204,10 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
     }
 
     return $allowToCreate;
+  }
+
+  function getLastImportContactId() {
+    return $this->_lastImportContactId;
   }
 }
 

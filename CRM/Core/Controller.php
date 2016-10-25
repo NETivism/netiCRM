@@ -311,6 +311,29 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
     return $page->_errors;
   }
 
+  function findValid() {
+    // the names of the action and page should be saved
+    // note that this is split into two, because some versions of
+    // php 5.x core dump on the triple assignment :)
+    $this->_actionName = $this->getActionName();
+    list($pageNameOld, $action) = $this->_actionName;
+    $pageNames = array_flip(array_keys($this->_pages));
+
+    if ($this->isModal()) {
+      $pageNameCorrect = $this->findInvalid();
+      $action = 'display';
+    }
+
+    // note that based on action, control might not come back!!
+    // e.g. if action is a valid JUMP, u basically do a redirect
+    // to the appropriate place
+    if($pageNames[$pageNameCorrect] > $pageNames[$pageNameOld]) {
+      $redirect = '_qf_'.$pageNameCorrect.'_'.$action.'=true&qfKey='.$this->_key;
+      return $redirect;
+    }
+    return FALSE;
+  }
+
   /**
    * Helper function to add all the needed default actions. Note that the framework
    * redefines all of the default QFC actions
@@ -415,6 +438,15 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
       //as we have deprecated reference object creation.
       unset($$stateName);
     }
+  }
+
+  public function nextPage(){
+    $this->_actionName = $this->getActionName();
+    list($pageName, $action) = $this->_actionName;
+    $this->resetPage($pageName, TRUE);
+    $state = $this->_stateMachine->getState($pageName);
+    $page = &$this->_pages[$pageName];
+    $state->handleNextState($page);
   }
 
   /**

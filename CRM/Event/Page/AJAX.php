@@ -44,10 +44,7 @@ class CRM_Event_Page_AJAX {
   function event() {
     require_once 'CRM/Utils/Type.php';
     $name = trim(CRM_Utils_Type::escape($_GET['s'], 'String'));
-    if (!$name) {
-      $name = '%';
-    }
-    $whereClause = " title LIKE '$name%' AND ( civicrm_event.is_template IS NULL OR civicrm_event.is_template = 0 )";
+    $whereClause = " title LIKE '%$name%' AND ( civicrm_event.is_template IS NULL OR civicrm_event.is_template = 0 )";
 
     $query = "
 SELECT title, id
@@ -68,10 +65,7 @@ ORDER BY title
   function eventType() {
     require_once 'CRM/Utils/Type.php';
     $name = trim(CRM_Utils_Type::escape($_GET['s'], 'String'));
-    if (!$name) {
-      $name = '%';
-    }
-    $whereClause = " v.label LIKE '$name%' ";
+    $whereClause = " v.label LIKE '%$name%' ";
 
     $query = "
 SELECT v.label ,v.value

@@ -101,7 +101,7 @@
       {include file="CRM/Price/Form/PriceSet.tpl"}
       {include file="CRM/Price/Form/ParticipantCount.tpl"}
     </fieldset>
-    {if $event.is_pay_later && !$form.payment_processor}
+    {if $event.is_pay_later && $show_payment_processors}
       <div class="crm-section pay_later-section">
         <div class="label">{ts}Payment Method{/ts}</div>
         <div class="content">
@@ -119,7 +119,7 @@
         <div class="content">{$form.amount.html}</div>
         <div class="clear"></div>
       </div>
-      {if $event.is_pay_later && !$form.payment_processor}
+      {if $event.is_pay_later && $show_payment_processors}
         <div class="crm-section pay_later-section">
           <div class="label">{ts}Payment Method{/ts}</div>
           <div class="content"><input type="checkbox" checked="checked" disabled="disabled"/>{$event.pay_later_text}<br />

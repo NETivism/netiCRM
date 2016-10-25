@@ -29,6 +29,7 @@
        <name>title</name>
        <type>varchar</type>
        <length>64</length>
+       <import>true</import>
        <comment>Name of Group.</comment>
        <add>1.1</add>
   </field>

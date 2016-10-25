@@ -1733,8 +1733,9 @@ cj(function() {
     $buttonName = $this->controller->getButtonName();
     if ($this->_context == 'standalone') {
       if ($buttonName == $this->getButtonName('upload', 'new')) {
+        $query_sufix = !empty($this->_eID) ? "&eid=".$this->_eID : "";
         $session->replaceUserContext(CRM_Utils_System::url('civicrm/participant/add',
-            'reset=1&action=add&context=standalone'
+            'reset=1&action=add&context=standalone'.$query_sufix
           ));
       }
       else {

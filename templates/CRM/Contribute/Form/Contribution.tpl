@@ -73,8 +73,11 @@
         {else}
             {include file="CRM/Contact/Form/NewContact.tpl"}
         {/if}
-        {if $participantId}
-           <tr class="crm-contribution-form-block-participant_id"><td class="label nowrap">{$form.participant_id.label}</td><td><a href="{crmURL p='civicrm/contact/view/participant' q="reset=1&action=view&id=$participantId&cid=$contactID"}" target="_blank">{$participantId}</a></td></tr>
+        {if $form.participant_id.label}
+          <tr class="crm-contribution-form-block-participant_id"><td class="label nowrap">{$form.participant_id.label}</td><td><a href="{crmURL p='civicrm/contact/view/participant' q="reset=1&action=view&id=$participantId&cid=$contactID"}" target="_blank">{$participantId}</a></td></tr>
+        {/if}
+        {if $form.membership_id.label}
+          <tr class="crm-contribution-form-block-membership_id"><td class="label nowrap">{$form.membership_id.label}</td><td><a href="{crmURL p='civicrm/contact/view/membership' q="reset=1&action=view&id=$membershipId&cid=$contactID"}" target="_blank">{$membershipId}</a></td></tr>
         {/if}
         {if $contributionMode}
            <tr class="crm-contribution-form-block-payment_processor_id"><td class="label nowrap">{$form.payment_processor_id.label}<span class="marker"> * </span></td><td>{$form.payment_processor_id.html}</td></tr>
@@ -174,9 +177,17 @@
                 </div>
               </td>
             </tr>
+            {if ($participantId || $membershipId) && $form.update_related_component.label}
+            <tr class="crm-contribution-form-block-update_related_component"><td class="label">{$form.update_related_component.label}</td><td>
+              {if $membershipId}<a href="{crmURL p='civicrm/contact/view/membership' q="reset=1&action=view&id=$membershipId&cid=$contactID"}" target="_blank">{ts}Membership{/ts}: {$membershipId}</a>
+              {elseif $participantId}<a href="{crmURL p='civicrm/contact/view/participant' q="reset=1&action=view&id=$participantId&cid=$contactID"}" target="_blank">{ts}Participant{/ts}: {$participantId}</a>
+              {/if}
+              {$form.update_related_component.html}
+              <span class="description">{ts}Check this will also update related component status.{/ts}</span></div>
+            </td></tr>
+            {/if}
             <tr class="crm-contribution-form-block-contribution_status_id"><td class="label">{$form.contribution_status_id.label}</td><td>{$form.contribution_status_id.html}
             {if $contribution_status_id eq 2}{if $is_pay_later }: {ts}Pay Later{/ts} {else}: {ts}Incomplete Transaction{/ts}{/if}{/if}</td></tr>
-
             {* Cancellation fields are hidden unless contribution status is set to Cancelled *}
             <tr id="cancelInfo" class="crm-contribution-form-block-cancelInfo"> 
                 <td>&nbsp;</td> 
