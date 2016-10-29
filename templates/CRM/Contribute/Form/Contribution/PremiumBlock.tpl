@@ -70,16 +70,16 @@ function selectPremium(optionField) {
         {assign var="showSelectOptions" value="1"}
     {/if}
     {strip}
-        <table id="premiums-listings">
+        <table class="premiums-listings">
         {foreach from=$products item=row}
-        <tr {if $context EQ "makeContribution"}class="odd-row" {/if}valign="top"> 
+        <tr {if $context EQ "makeContribution"} {/if}valign="top"> 
             {if $showRadioPremium }
                 {assign var="pid" value=$row.id}
-                <td>{$form.selectProduct.$pid.html}</td>
+                <td class="premium-selected">{$form.selectProduct.$pid.html}</td>
             {/if}
-            <td>{if $row.thumbnail}<a href="javascript:popUp('{$row.image}')" ><img src="{$row.thumbnail}" alt="{$row.name}" class="no-border" /></a>{/if}</td>    	
-	        <td>
-                <label><strong>{$row.name}</strong></label>
+            <td class="premium-img">{if $row.thumbnail}<label for="{$form.selectProduct.$pid.id}"><img src="{$row.thumbnail}" alt="{$row.name}" class="no-border" /></label>{/if}</td>
+	        <td class="premium-info">
+                <label class="premium-name" for="{$form.selectProduct.$pid.id}">{$row.name}</label>
                 <div>{$row.description|nl2br}</div>
                 {if ( ($premiumBlock.premiums_display_min_contribution AND $context EQ "makeContribution") OR $preview EQ 1) AND $row.min_contribution GT 0 }
                     {ts 1=$row.min_contribution|crmMoney}(Contribute at least %1 to be eligible for this gift.){/ts}
@@ -87,17 +87,17 @@ function selectPremium(optionField) {
             {if $showSelectOptions }
                 {assign var="pid" value="options_"|cat:$row.id}
                 {if $pid}
-                    <div id="product-options">
+                    <div class="premium-options">
                       <div>{$form.$pid.html}</div>
                     </div>
                 {/if}
             {else}
-                <div id="product-options">
+                <div class="premium-options">
                     <div><strong>{$row.options}</strong></div>
                 </div>
             {/if}
             {if $context EQ "thankContribution" AND $is_deductible AND $row.price}
-                <div id="premium-tax-disclaimer">
+                <div class="premium-tax-disclaimer">
                 <p>
                 {ts 1=$row.price|crmMoney}The value of this premium is %1. This may affect the amount of the tax deduction you can claim. Consult your tax advisor for more information.{/ts}
                 </p>
@@ -107,7 +107,7 @@ function selectPremium(optionField) {
         </tr>
         {/foreach}
         {if $showRadioPremium AND !$preview }
-            <tr class="odd-row"><td colspan="4">{$form.selectProduct.no_thanks.html}</td></tr> 
+            <tr><td colspan="4">{$form.selectProduct.no_thanks.html}</td></tr> 
         {/if}          
         </table>
     {/strip}

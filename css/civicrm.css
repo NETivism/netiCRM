@@ -2262,7 +2262,7 @@ a.token-trigger, a.token-trigger label {
 /* specific, targeted fixes */
 .crm-container .dashboard-elements,
 .crm-container #membership-listings,
-.crm-container #premiums-listings,
+.crm-container .premiums-listings,
 .crm-container #searchForm table {
     margin: 0em;
     border-collapse: collapse;
@@ -3102,6 +3102,21 @@ ul.ui-sortable {
   margin: 5px 0;
   font-size: .875rem;
   color: #757575;
+}
+
+/* premium list */
+.crm-container .premiums-listings td {
+  padding: 10px 4px;
+}
+.crm-container .premium-img {
+  width: 37%;
+}
+.crm-container .premium-img + .premium-info {
+  padding-left: 20px;
+}
+.crm-container .premium-name {
+  margin-bottom: 10px;
+  line-height: 1.4;
 }
 
 /* form elements */
@@ -4130,6 +4145,18 @@ tbody.scrollContent tr.alternateRow {
   }
   .crm-container .wizard-bar > li {
     width: 100px;
+  }
+}
+
+@media screen and (max-width: 425px) {
+  .crm-container .premium-selected .crm-form-radio {
+    margin-right: 0;
+  }
+  .crm-container .premium-img {
+    width: 25%;
+  }
+  .crm-container .premium-img + .premium-info {
+    padding-left: 8px;
   }
 }
 
