@@ -142,7 +142,7 @@ PRIMARY KEY (id)
 SELECT $select
 FROM   $from
 WHERE  $where
-GROUP BY r.id, c.id
+GROUP BY r.id
 $having
 ";
     $dao = CRM_Core_DAO::executeQuery($sql, CRM_Core_DAO::$_nullArray);
@@ -171,7 +171,7 @@ $having
     return "civicrm_contribution_recur AS r 
     INNER JOIN civicrm_contribution AS c ON c.contribution_recur_id = r.id
     INNER JOIN civicrm_contact AS contact_a ON contact_a.id = r.contact_id
-    INNER JOIN civicrm_email AS contact_email ON contact_email.contact_id = r.contact_id
+    INNER JOIN (SELECT contact_id, email, is_primary FROM civicrm_email WHERE is_primary = 1 GROUP BY contact_id ) AS contact_email ON contact_email.contact_id = r.contact_id
     LEFT JOIN (SELECT contribution_recur_id AS rid, MAX(receive_date) AS last_receive_date FROM civicrm_contribution WHERE contribution_status_id = 1 AND contribution_recur_id IS NOT NULL GROUP BY contribution_recur_id) lr ON lr.rid = r.id";
   }
 
