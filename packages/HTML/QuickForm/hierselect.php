@@ -229,6 +229,7 @@ class HTML_QuickForm_hierselect extends HTML_QuickForm_group
     {
         $toLoad = '';
         foreach (array_keys($this->_elements) AS $key) {
+            if(is_string($this->_options[$key]))continue;
             if (eval("return isset(\$this->_options[{$key}]{$toLoad});") ) {
                 $array = eval("return \$this->_options[{$key}]{$toLoad};");
                 if (is_array($array)) {
