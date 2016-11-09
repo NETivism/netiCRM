@@ -259,9 +259,11 @@ cj(document).ready( function() {
     cj('.crm-ajax-accordion .crm-accordion-header').one('click', function() { 
     	loadPanes(cj(this).attr('id')); 
     });
-    cj('.crm-ajax-accordion.crm-accordion-open .crm-accordion-header').each(function(index) { 
-    	loadPanes(cj(this).attr('id')); 
-    	});
+    window.setTimeout(function(){
+      cj('.crm-ajax-accordion.crm-accordion-open .crm-accordion-header').each(function(index) {
+        loadPanes(cj(this).attr('id'));
+      });
+    }, 2500);
 });
 // load panes function calls for snippet based on id of crm-accordion-header
 function loadPanes( id ) {
