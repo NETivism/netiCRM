@@ -62,6 +62,7 @@ class CRM_Contribute_Form_ContributionType extends CRM_Contribute_Form {
     $this->add('text', 'accounting_code', ts('Accounting Code'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionType', 'accounting_code'));
 
     $this->add('checkbox', 'is_deductible', ts('Tax-deductible?'));
+    $this->add('checkbox', 'is_taxreceipt', ts('Tax Receipt'));
     $this->add('checkbox', 'is_active', ts('Enabled?'));
 
     if ($this->_action == CRM_Core_Action::UPDATE && CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionType', $this->_id, 'is_reserved')) {

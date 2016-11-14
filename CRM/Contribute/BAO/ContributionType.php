@@ -100,6 +100,7 @@ class CRM_Contribute_BAO_ContributionType extends CRM_Contribute_DAO_Contributio
 
     $params['is_active'] = CRM_Utils_Array::value('is_active', $params, FALSE);
     $params['is_deductible'] = CRM_Utils_Array::value('is_deductible', $params, FALSE);
+    $params['is_taxreceipt'] = CRM_Utils_Array::value('is_taxreceipt', $params, FALSE);
 
     // action is taken depending upon the mode
     $contributionType = new CRM_Contribute_DAO_ContributionType();

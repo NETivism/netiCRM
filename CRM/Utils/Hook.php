@@ -945,5 +945,22 @@ class CRM_Utils_Hook {
     $null = &CRM_Core_DAO::$_nullObject;
     return eval('return '.$config->userHookClass.'::invoke(3, $contribution_id, $tplParams, $message, $null, $null, \'civicrm_prepareInvoice\' );');
   }
+
+  /**
+   * This hooks allows other module invoke tax receipt link
+   *
+   * @param $contribution_id
+   *   Contribution id
+   * @param $object
+   *   Variable to save variables 
+   *
+   * @return mixed
+   */
+  static function taxReceiptLink($contribution_id, &$object) {
+    $config = CRM_Core_Config::singleton();
+    require_once (str_replace('_', DIRECTORY_SEPARATOR, $config->userHookClass) . '.php');
+    $null = &CRM_Core_DAO::$_nullObject;
+    return eval('return '.$config->userHookClass.'::invoke(2, $contribution_id, $object, $null, $null, $null, \'civicrm_taxReceiptLink\' );');
+  }
 }
 

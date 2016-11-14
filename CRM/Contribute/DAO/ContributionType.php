@@ -105,6 +105,12 @@ class CRM_Contribute_DAO_ContributionType extends CRM_Core_DAO
    */
   public $description;
   /**
+   * Is this contribution type a tax-receipt? If true, you will have tax receipt interface in contribution.
+   *
+   * @var boolean
+   */
+  public $is_taxreceipt;
+  /**
    * Is this contribution type tax-deductible? If true, contributions of this type may be fully OR partially deductible - non-deductible amount is stored in the Contribution record.
    *
    * @var boolean
@@ -176,6 +182,11 @@ class CRM_Contribute_DAO_ContributionType extends CRM_Core_DAO
           'title' => ts('Description') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
+        ) ,
+        'is_taxreceipt' => array(
+          'name' => 'is_taxreceipt',
+          'type' => CRM_Utils_Type::T_BOOLEAN,
+          'default' => '',
         ) ,
         'is_deductible' => array(
           'name' => 'is_deductible',

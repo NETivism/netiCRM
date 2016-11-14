@@ -242,6 +242,13 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
           'title' => ts('Receipt'),
           'fe' => 1,
         ),
+        CRM_Core_Action::FOLLOWUP => array(
+          'name' => ts('Tax Receipt'),
+          'url' => 'civicrm/contribute',
+          'qs' => "reset=1&action=update&id=%%id%%&cid=%%cid%%&context=%%cxt%%",
+          'title' => ts('Receipt'),
+          'fe' => 1,
+        ),
       );
     }
     return self::$_links;
@@ -335,6 +342,9 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
 
     // get all contribution status
     $contributionStatuses = CRM_Core_OptionGroup::values('contribution_status', FALSE, FALSE, FALSE, NULL, 'name', FALSE);
+    $taxReceiptTypes = array();
+    CRM_Core_PseudoConstant::populate($taxReceiptTypes, 'CRM_Contribute_DAO_ContributionType', FALSE, 'name', 'is_active', 'is_taxreceipt=1');
+
     $ids = array();
     While ($result->fetch()) {
       $row = array();
@@ -373,6 +383,9 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
       // receipt only available when receipt id generated.
       if (empty($result->receipt_id)) {
         unset($links[CRM_Core_Action::PREVIEW]);
+      }
+      if ($result->contribution_status_id != 1 || empty($taxReceiptTypes[$result->contribution_type_id])) {
+        unset($links[CRM_Core_Action::FOLLOWUP]);
       }
       $row['action'] = CRM_Core_Action::formLink($links, $mask, $actions);
 

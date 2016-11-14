@@ -1296,6 +1296,7 @@ CREATE TABLE civicrm_contribution_type (
      name varchar(64)    COMMENT 'Contribution Type Name.',
      accounting_code varchar(64)    COMMENT 'Optional value for mapping contributions to accounting system codes for each type/category of contribution.',
      description varchar(255)    COMMENT 'Contribution Type Description.',
+     is_taxreceipt tinyint   DEFAULT 1 COMMENT 'Is this contribution type a tax-receipt? If true, you will have tax receipt interface in contribution.',
      is_deductible tinyint   DEFAULT 1 COMMENT 'Is this contribution type tax-deductible? If true, contributions of this type may be fully OR partially deductible - non-deductible amount is stored in the Contribution record.',
      is_reserved tinyint    COMMENT 'Is this a predefined system object?',
      is_active tinyint    COMMENT 'Is this property active?' 

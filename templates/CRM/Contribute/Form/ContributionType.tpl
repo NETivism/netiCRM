@@ -54,6 +54,12 @@
 	      <span class="description">{ts}Are contributions of this type tax-deductible?{/ts}</span>
 	  </td>
        </tr>
+       <tr class="crm-contribution-form-block-is_taxreceipt">
+    	  <td class="label">{$form.is_taxreceipt.label}</td>
+        <td class="html-adjust">{$form.is_taxreceipt.html}<br />
+          <span class="description">{ts}Are contributions of this type is a tax receipt?{/ts}</span>
+        </td>
+       </tr>
        <tr class="crm-contribution-form-block-is_active">	 
     	  <td class="label">{$form.is_active.label}</td>
 	  <td class="html-adjust">{$form.is_active.html}</td>
@@ -62,3 +68,18 @@
    {/if}
    <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="botttom"}</div>
 </div>
+<script>{literal}
+cj(document).ready(function($){
+  var showHideTaxReceipt = function(){
+    if($('#is_deductible').attr('checked')) {
+      $('#is_taxreceipt').removeAttr('checked');
+      $('tr.crm-contribution-form-block-is_taxreceipt').hide();
+    }
+    else {
+      $('tr.crm-contribution-form-block-is_taxreceipt').show();
+    }
+  }
+  $('#is_deductible').click(showHideTaxReceipt);
+  showHideTaxReceipt();
+});
+{/literal}</script>

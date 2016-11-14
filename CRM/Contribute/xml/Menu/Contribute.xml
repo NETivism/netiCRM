@@ -55,6 +55,16 @@
      <weight>380</weight>
   </item>
   <item>
+     <path>civicrm/admin/taxreceipt</path>
+     <title>Tax Receipt Settings</title>
+     <page_callback>CRM_Admin_Form_Setting_TaxReceipt</page_callback>
+     <desc>Configure tax receipt number and format.</desc>
+     <access_arguments>administer CiviCRM</access_arguments>
+     <adminGroup>CiviContribute</adminGroup>
+     <icon>admin/small/accepted_creditcards.png</icon>
+     <weight>385</weight>
+  </item>
+  <item>
      <path>civicrm/admin/recurring</path>
      <title>Recurring Settings</title>
      <page_callback>CRM_Admin_Form_Setting_Recurring</page_callback>
@@ -187,6 +197,12 @@
      <path>civicrm/contact/view/contribution/receipt</path>
      <title>Contributions</title>
      <page_callback>CRM_Contribute_Page_Receipt</page_callback>
+     <access_arguments>access CiviContribute,edit contributions</access_arguments>
+  </item>
+  <item>
+     <path>civicrm/contact/view/contribution/taxreceipt</path>
+     <title>Tax Receipt</title>
+     <page_callback>CRM_Contribute_Page_TaxReceipt</page_callback>
      <access_arguments>access CiviContribute,edit contributions</access_arguments>
   </item>
    <item>
