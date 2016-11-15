@@ -220,6 +220,7 @@
       <div class="clear"></div>
     </div>
   {/if}
+{/if}{*is_monetary*}
 
 
 {if $priceSet}
@@ -264,6 +265,8 @@
       {/if}
   {/if}
 {/if}{*priceset*}
+
+{if $is_monetary}
   </fieldset>
   {if $form.is_recur}
     <div class="crm-section {$form.is_recur.name}-section">
