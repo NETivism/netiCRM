@@ -150,6 +150,24 @@ class CRM_Core_Smarty extends Smarty {
 
     $printerFriendly = CRM_Utils_System::makeURL('snippet', FALSE, FALSE) . '2';
     $this->assign('printerFriendly', $printerFriendly);
+
+    // Add class to crm container
+    $crm_container_class_arr = array("crm-container");
+    $current_path = strtok($_SERVER["REQUEST_URI"],'?');
+
+    $md_allow_path = array(
+      "/civicrm/event/register",
+      "/civicrm/event/info",
+      "/civicrm/contribute/transact",
+      "/civicrm/profile/create"
+    );
+
+    if (in_array($current_path, $md_allow_path)) {
+      $crm_container_class_arr[] = 'crm-container-md';
+    }
+
+    $crm_container_class = implode(" ", $crm_container_class_arr);
+    $this->assign('crm_container_class', $crm_container_class);
   }
 
   /**
