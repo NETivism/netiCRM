@@ -244,7 +244,7 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
         ),
         CRM_Core_Action::FOLLOWUP => array(
           'name' => ts('Tax Receipt'),
-          'url' => 'civicrm/contribute',
+          'url' => 'civicrm/contribute/taxreceipt',
           'qs' => "reset=1&action=update&id=%%id%%&cid=%%cid%%&context=%%cxt%%",
           'title' => ts('Receipt'),
           'fe' => 1,

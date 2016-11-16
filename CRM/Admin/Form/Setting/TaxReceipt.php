@@ -20,7 +20,7 @@ class CRM_Admin_Form_Setting_TaxReceipt extends CRM_Admin_Form_Setting {
     foreach ($fields as $custom_id => $f) {
       $option[$custom_id] = $f['label'];
     }
-    $this->addElement('select', 'taxReceiptType', ts('Receipt with Tax Included'));
+    $this->addElement('select', 'taxReceiptType', ts('Tax receipt type'), $option);
     $this->addElement('select', 'taxReceiptDeviceType', ts('Field to save tax receipt device type'), $option);
     $this->addElement('select', 'taxReceiptDeviceNumber', ts('Field to save tax receipt device number'), $option);
     $this->addElement('select', 'taxReceiptDonate', ts('Field to save tax receipt donate org'), $option);

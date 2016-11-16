@@ -200,9 +200,9 @@
      <access_arguments>access CiviContribute,edit contributions</access_arguments>
   </item>
   <item>
-     <path>civicrm/contact/view/contribution/taxreceipt</path>
+     <path>civicrm/contribute/taxreceipt</path>
      <title>Tax Receipt</title>
-     <page_callback>CRM_Contribute_Page_TaxReceipt</page_callback>
+     <page_callback>CRM_Contribute_Form_TaxReceipt</page_callback>
      <access_arguments>access CiviContribute,edit contributions</access_arguments>
   </item>
    <item>

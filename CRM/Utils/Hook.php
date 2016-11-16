@@ -947,7 +947,26 @@ class CRM_Utils_Hook {
   }
 
   /**
-   * This hooks allows other module invoke tax receipt link
+   * This hooks allows other module invoke tax receipt info
+   *
+   * @param $contribution_id
+   *   Contribution id
+   * @param $tplParams
+   *   Prepare template printing element
+   * @param $object
+   *   Variable to save variables
+   *
+   * @return mixed
+   */
+  static function prepareTaxReceipt($contribution_id, &$tplParams, &$taxReceipt, &$object) {
+    $config = CRM_Core_Config::singleton();
+    require_once (str_replace('_', DIRECTORY_SEPARATOR, $config->userHookClass) . '.php');
+    $null = &CRM_Core_DAO::$_nullObject;
+    return eval('return '.$config->userHookClass.'::invoke(4, $contribution_id, $tplParams, $taxReceipt, $object, $null, \'civicrm_prepareTaxReceipt\' );');
+  }
+
+  /**
+   * This hooks allows other module invoke tax receipt info
    *
    * @param $contribution_id
    *   Contribution id
@@ -956,11 +975,11 @@ class CRM_Utils_Hook {
    *
    * @return mixed
    */
-  static function taxReceiptLink($contribution_id, &$object) {
+  static function createTaxReceipt($contribution_id, &$result, &$object) {
     $config = CRM_Core_Config::singleton();
     require_once (str_replace('_', DIRECTORY_SEPARATOR, $config->userHookClass) . '.php');
     $null = &CRM_Core_DAO::$_nullObject;
-    return eval('return '.$config->userHookClass.'::invoke(2, $contribution_id, $object, $null, $null, $null, \'civicrm_taxReceiptLink\' );');
+    return eval('return '.$config->userHookClass.'::invoke(3, $contribution_id, $result, $object, $null, $null, \'civicrm_createTaxReceipt\' );');
   }
 }
 
