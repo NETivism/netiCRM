@@ -21,6 +21,17 @@
 function civicrm_api($entity, $action, $params, $extra = NULL) {
   $apiWrappers = array(CRM_Core_HTMLInputCoder::singleton());
   try {
+
+    $fields = array();
+    foreach ($params as $key => $value) {
+      if(is_null($value)){
+        $fields[] = $key;
+      }
+    }
+    if(count($fields) > 0){
+      return civicrm_api3_create_error(ts("This can't be empty, please provide a value"), array("error_code" => "required", "field" => $fields));
+    }
+
     require_once ('api/v3/utils.php');
     require_once 'api/Exception.php';
     if (!is_array($params)) {
