@@ -47,7 +47,7 @@ function selectPremium(optionField) {
 
         <fieldset class="crm-group premiums_select-group">
         {if $premiumBlock.premiums_intro_title}
-            <legend>{$premiumBlock.premiums_intro_title}</legend>
+            <legend>{$premiumBlock.premiums_intro_title}<span class="crm-marker" title="{ts}This field is required.{/ts}">*</span></legend>
         {/if}
         {if $premiumBlock.premiums_intro_text}
             <div id="premiums-intro" class="crm-section premiums_intro-section">
@@ -71,6 +71,9 @@ function selectPremium(optionField) {
     {/if}
     {strip}
         <table class="premiums-listings">
+        {if $showRadioPremium AND !$preview }
+            <tr><td colspan="4">{$form.selectProduct.no_thanks.html}</td></tr>
+        {/if}
         {foreach from=$products item=row}
         <tr {if $context EQ "makeContribution"} {/if}valign="top"> 
             {if $showRadioPremium }
@@ -106,9 +109,6 @@ function selectPremium(optionField) {
             </td>
         </tr>
         {/foreach}
-        {if $showRadioPremium AND !$preview }
-            <tr><td colspan="4">{$form.selectProduct.no_thanks.html}</td></tr> 
-        {/if}          
         </table>
     {/strip}
     {if $context EQ "makeContribution"}

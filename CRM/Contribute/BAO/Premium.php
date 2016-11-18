@@ -160,6 +160,9 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
         if ($formItems) {
           $radio[''] = $form->createElement('radio', NULL, NULL, ts('No thank you'), 'no_thanks', NULL);
           $form->addGroup($radio, 'selectProduct', NULL);
+          $form->addRule('selectProduct', ts('%1 is a required field.', array(1 => ts('Premium'))), 'required');
+          $default = array('selectProduct' => 'no_thanks');
+          $form->setDefaults($default);
         }
         $form->assign('showSelectOptions', $formItems);
         $form->assign('products', $products);
