@@ -6,13 +6,13 @@
 # jimyhuang <jimmy@netivism.com.tw>, 2013,2015-2016
 # Chang Shu-huai <junsuwhy@gmail.com>, 2015-2016
 # SharonKwan <sharon@netivism.com.tw>, 2015-2016
-# charlesc <yeouhsin@gmail.com>, 2013-2014
+# charlesc <yeouhsin@gmail.com>, 2013-2014,2016
 # 花玉婷 <klavier1976@netivism.com.tw>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2016-10-17 11:03+0000\n"
-"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
+"PO-Revision-Date: 2016-11-22 07:00+0000\n"
+"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36728,10 +36728,10 @@ msgid "Website Types"
 msgstr "網站類型"
 
 msgid "Taipei City"
-msgstr "台北市"
+msgstr "臺北市"
 
 msgid "Taichung City"
-msgstr "台中市"
+msgstr "臺中市"
 
 msgid "Kaohsiung City"
 msgstr "高雄市"
@@ -36743,7 +36743,7 @@ msgid "Hsinchu City"
 msgstr "新竹市"
 
 msgid "Tainan City"
-msgstr "台南市"
+msgstr "臺南市"
 
 msgid "Changhua County"
 msgstr "彰化縣"
@@ -36776,7 +36776,7 @@ msgid "Taipei County"
 msgstr "新北市"
 
 msgid "Taitung County"
-msgstr "台東縣"
+msgstr "臺東縣"
 
 msgid "Taoyuan City"
 msgstr "桃園市"
@@ -45016,7 +45016,7 @@ msgstr "剩餘期數"
 
 #: templates/CRM/Contribute/Page/DashBoard.tpl
 msgid "There are %1 contributions in this %2 by %3 contacts. Total amount: %4"
-msgstr "本 %2 有 %3 人捐了 %1 筆定期定額，總金額為 %4"
+msgstr "本%2預計將有 %3 人、 %1 筆定期定額捐款，總金額為 %4。（可能會因為卡片過期/失效而有誤差）"
 
 #: CRM/Contact/Form/Search/Custom/RecurSearch.php
 msgid "Recurring ended"
