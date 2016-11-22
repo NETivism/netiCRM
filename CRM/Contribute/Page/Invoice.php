@@ -20,7 +20,7 @@ class CRM_Contribute_Page_Invoice extends CRM_Core_Page {
         }
 
         if(!empty($echo)){
-          $html = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></head><body>' . $echo . '</body></html>';
+          $html = '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></head><body>' . $echo . '</body></html>';
         }
         else{
           $html = CRM_Contribute_BAO_Contribution::getInvoice($contribution_id, $tplParams, $message);
