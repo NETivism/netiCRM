@@ -130,7 +130,7 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task {
     }
 
     //build the returnproperties
-    $returnProperties = array('display_name' => 1, 'contact_type' => 1);
+    $returnProperties = array('display_name' => 1, 'contact_type' => 1, 'sort_name' => 1);
     $mailingFormat = CRM_Core_BAO_Preferences::value('mailing_format');
 
     $mailingFormatProperties = array();
@@ -216,6 +216,10 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task {
       }
     }
 
+    $addresseeFormat = CRM_Core_OptionGroup::values('addressee');
+    ksort($addresseeFormat);
+    $defaultAddressee = key($addresseeFormat);
+
     foreach ($this->_contactIds as $value) {
       foreach ($custom as $cfID) {
         if (isset($details[0][$value]["custom_{$cfID}"])) {
@@ -299,6 +303,21 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task {
         }
         if (CRM_Utils_Array::value('addressee', $contact)) {
           $contact['addressee'] = $contact['addressee_display'];
+        }
+        if (empty($contact['addressee_display']) && empty($contact['addressee_id'])) {
+          $contactDAO = new CRM_Contact_DAO_Contact();
+          $contactDAO->id = $value;
+          $contactDAO->find(true);
+          $contactDAO->addressee_id = $defaultAddressee;
+          CRM_Contact_BAO_Contact::processGreetings($contactDAO);
+          $contactDAO->free();
+          $contact['addressee_display'] = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $value, 'addressee_display');
+          $contact['addressee'] = trim($contact['addressee_display']);
+        }
+
+        if (empty($contact['addressee_display'])) {
+          $contact['addressee_display'] = $contact['sort_name'];
+          $contact['addressee'] = $contact['sort_name'];
         }
 
         // now create the rows for generating mailing labels

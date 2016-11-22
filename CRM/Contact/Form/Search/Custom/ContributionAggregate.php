@@ -183,6 +183,7 @@ civicrm_contact AS contact_a
     $clauses = array();
 
     $clauses[] = "contrib.contact_id = contact_a.id";
+    $clauses[] = "contrib.contribution_status_id = 1";
     $clauses[] = "contrib.is_test = 0";
 
     $startDate = CRM_Utils_Date::processDate($this->_formValues['start_date']);

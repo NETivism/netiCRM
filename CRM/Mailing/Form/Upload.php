@@ -120,14 +120,11 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
       require_once 'CRM/Core/OptionGroup.php';
       if (CRM_Utils_Array::value('from_name', $defaults) && CRM_Utils_Array::value('from_email', $defaults)) {
         $fromMailAddr = '"' . $defaults['from_name'] . '" <' . $defaults['from_email'] . '>';
-        $defaults['from_email_address'] = array_search($fromMailAddr, CRM_Core_OptionGroup::values('from_email_address'));
+        $defaults['from_email_address'] = array_search($fromMailAddr, CRM_Core_PseudoConstant::fromEmailAddress());
       }
       else {
         //get the default from email address.
-        $defaultAddress = CRM_Core_OptionGroup::values('from_email_address', NULL, NULL, NULL, ' AND is_default = 1');
-        foreach ($defaultAddress as $id => $value) {
-          $defaults['from_email_address'] = $id;
-        }
+        $defaults['from_email_address'] = 'default';
       }
 
       if (CRM_Utils_Array::value('replyto_email', $defaults)) {
@@ -221,9 +218,8 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
       $session->setStatus($status);
     }
     else {
-      $c++;
-      foreach ($fromEmailAddress as $email) {
-        $fromOptions[$c] = htmlspecialchars($email);
+      foreach ($fromEmailAddress as $key => $email) {
+        $fromOptions[$key] = htmlspecialchars($email);
       }
     }
 

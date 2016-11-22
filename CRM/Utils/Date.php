@@ -489,6 +489,9 @@ class CRM_Utils_Date {
           return FALSE;
         }
       }
+      else {
+        $value = $params[$dateParam];
+      }
     }
 
     switch ($dateType) {
