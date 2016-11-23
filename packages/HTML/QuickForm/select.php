@@ -479,6 +479,7 @@ class HTML_QuickForm_select extends HTML_QuickForm_element {
             $tabs    = $this->_getTabs();
             $strHtml = '';
             $output = '';
+            $selectType = 'single';
 
             if ($this->getComment() != '') {
                 $strHtml .= $tabs . '<!-- ' . $this->getComment() . " //-->\n";
@@ -487,6 +488,7 @@ class HTML_QuickForm_select extends HTML_QuickForm_element {
             if (!$this->getMultiple()) {
                 $attrString = $this->_getAttrString($this->_attributes);
             } else {
+                $selectType = 'multiple';
                 $myName = $this->getName();
                 $this->setName($myName . '[]');
                 $attrString = $this->_getAttrString($this->_attributes);
@@ -503,7 +505,7 @@ class HTML_QuickForm_select extends HTML_QuickForm_element {
                             $option['text'] . "</option>\n";
             }
 
-            $output = '<div class="crm-form-elem crm-form-select">' . $strHtml . $tabs . '</select></div>';
+            $output = '<div class="crm-form-elem crm-form-select crm-form-select-' . $selectType . '">' . $strHtml . $tabs . '</select></div>';
 
             return $output;
         }

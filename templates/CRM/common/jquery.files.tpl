@@ -88,6 +88,3 @@ js/jquery/jquery.disablesubmit.js
 packages/fontawesome/css/font-awesome.min.css
 
 packages/material-design-iconic-font/css/material-design-iconic-font.min.css
-
-packages/neticrm_md/md-init.js
-packages/neticrm_md/md-style.css
