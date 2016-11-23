@@ -29,6 +29,15 @@ class CRM_Contribute_Form_TaxReceipt extends CRM_Core_Form {
         // assign these element
         $this->assign($this->_tplParams);
       }
+
+      // we needs taxReceipt have receipt_info, receipt_status, receipt_message
+      if ($this->_taxReceipt['receipt_status']) {
+        $this->assign('taxReceiptInfo', $this->_taxReceipt['receipt_info']);
+      }
+
+      if ($this->_taxReceipt['receipt_print']) {
+        $this->assign('taxReceiptPrint', $this->_taxReceipt['receipt_print']);
+      }
     }
   }
 
@@ -84,7 +93,6 @@ class CRM_Contribute_Form_TaxReceipt extends CRM_Core_Form {
       if($contribution->find(TRUE)) {
         $result = array();
         CRM_Utils_Hook::createTaxReceipt($this->_id, $result, $contribution);
-        // dpm($result);
         if (!empty($result)) {
           CRM_Core_Session::setStatus(ts('Successuful created tax receipt.'));
         }
