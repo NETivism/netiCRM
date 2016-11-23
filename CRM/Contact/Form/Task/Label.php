@@ -438,37 +438,37 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task {
       // load complete address as array key
       $address =
       trim($rows[$rowID]['street_address']) . trim($rows[$rowID]['city']) . trim($rows[$rowID]['state_province']) . trim($rows[$rowID]['postal_code']) . trim($rows[$rowID]['country']);
-      if (isset($rows[$rowID]['last_name'])) {
-        $name = $rows[$rowID]['last_name'];
+      if (isset($rows[$rowID]['sort_name'])) {
+        $name = $rows[$rowID]['sort_name'];
       }
       else {
         $name = $rows[$rowID]['display_name'];
       }
       // fill uniqueAddress array with last/first name tree
       if (isset($uniqueAddress[$address])) {
-        $uniqueAddress[$address]['names'][$name][] = $rows[$rowID]['first_name'];
+        $uniqueAddress[$address]['names'][$name][] = $rows[$rowID]['sort_name'];
         // drop unnecessary rows
         unset($rows[$rowID]);
         // this is the first listing at this address
       }
       else {
         $uniqueAddress[$address]['ID'] = $rowID;
-        $uniqueAddress[$address]['names'][$name][] = $rows[$rowID]['first_name'];
+        $uniqueAddress[$address]['names'][$name][] = $rows[$rowID]['sort_name'];
       }
     }
     foreach ($uniqueAddress as $address => $data) {
       // copy data back to $rows
       $count = 0;
       // one last name list per row
-      foreach ($data['names'] as $last_name => $first_names) {
+      foreach ($data['names'] as $sort_name => $sort_names) {
         // too many to list
         if ($count > 2) {
           break;
         }
         // collapse the tree to summarize
-        $family = trim(implode(" & ", $first_names) . " " . $last_name);
+        $family = trim(implode(" , ", $sort_names));
         if ($count) {
-          $processedNames .= "\n" . $family;
+          $processedNames .= " , " . $family;
         }
         else {
           // build display_name string
