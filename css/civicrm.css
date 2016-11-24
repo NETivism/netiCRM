@@ -3108,6 +3108,10 @@ ul.ui-sortable {
 .crm-container .premiums-listings td {
   padding: 10px 4px;
 }
+.crm-container .premiums-listings img {
+  max-width: 100%;
+  height: auto;
+}
 .crm-container .premium-img {
   width: 37%;
 }
