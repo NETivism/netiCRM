@@ -78,6 +78,7 @@
   <div id="intro_text" class="crm-section intro_text-section">
     {$intro_text}
   </div>
+<!--intro-separator-->
 
   {if $pcpSupporterText}
     <div class="crm-section pcpSupporterText-section">
@@ -198,6 +199,7 @@
   </div>
   {include file="CRM/common/moveEmail.tpl"}
   {include file="CRM/Contribute/Form/Contribution/MembershipBlock.tpl" context="makeContribution"}
+<!--ufform-separator-->
 
 {if $is_monetary}
   <fieldset class="crm-group payment_options-group">
@@ -299,6 +301,7 @@
       </fieldset>
     </div>
     {/if}
+<!--payment-separator-->
 
   {if $isCaptcha}
   {include file='CRM/common/ReCAPTCHA.tpl'}

@@ -49,6 +49,7 @@
 {/if}
 </div>
 {include file="CRM/Event/Form/Registration/Progress.tpl"}
+<!--progress-separator-->
 {if $action & 1024}
   {include file="CRM/Event/Form/Registration/PreviewHeader.tpl"}
 {/if}
@@ -63,6 +64,7 @@
       <p>{$event.intro_text}</p>
   </div>
 {/if}
+<!--intro-separator-->
 {if $contact_id and $smarty.get.id and !$allowConfirmation}
   <div id="register-who">
     <a href="#register-now" id="register-me" class="button"><span><i class="zmdi zmdi-sign-in"></i>{ts 1=$display_name}Registering Yourself (%1){/ts}</span></a>
@@ -95,6 +97,7 @@
   {include file="CRM/UF/Form/Block.tpl" fields=$customPre} 
   {include file="CRM/UF/Form/Block.tpl" fields=$customPost}   
   {include file="CRM/common/moveEmail.tpl"}
+<!--ufform-separator-->
 
   {if $priceSet}
     <fieldset id="priceset" class="crm-group priceset-group"><legend>{$event.fee_label}</legend>
@@ -138,6 +141,7 @@
   </div>
   <div id="billing-payment-block"></div>
   {include file="CRM/common/paymentBlock.tpl"}
+<!--payment-separator-->
 
   {if $isCaptcha}
     {include file='CRM/common/ReCAPTCHA.tpl'}
