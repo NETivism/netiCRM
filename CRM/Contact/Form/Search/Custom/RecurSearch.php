@@ -91,6 +91,7 @@ class CRM_Contact_Form_Search_Custom_RecurSearch  extends CRM_Contact_Form_Searc
       ts('Current Total Amount') => 'total_amount',
       $filter_month. ts('Created Date') => 'current_created_date',
       ts('Last Receive Date') => 'last_receive_date',
+      'installments',
     );
   }
 
@@ -425,17 +426,18 @@ SUM(total_amount) as total_amount
   }
 
   function alterRow(&$row) {
-    $dao = $row['#dao'];
     $row['contribution_status_id'] = $this->_cstatus[$row['contribution_status_id']];
     if($row['remain_installments'] < 0){
        $row['remain_installments'] = ts('Over %1',array( 1 => -$row['remain_installments']));
     }
-    if(!empty($row['#dao']['installments'])){
-      $row['remain_installments'] = $row['remain_installments'] . ' / ' . $row['#dao']['installments'];
+    if(!empty($row['installments'])){
+      $row['remain_installments'] = $row['remain_installments'] . ' / ' . $row['installments'];
     }
     else{
       $row['remain_installments'] = ts('no limit');
     }
+    unset($row['installments']);
+
     $date = array('start_date', 'end_date', 'cancel_date');
     foreach($date as $d){
       if(!empty($row[$d])){
