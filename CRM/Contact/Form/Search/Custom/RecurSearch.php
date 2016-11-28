@@ -91,7 +91,7 @@ class CRM_Contact_Form_Search_Custom_RecurSearch  extends CRM_Contact_Form_Searc
       ts('Current Total Amount') => 'total_amount',
       $filter_month. ts('Created Date') => 'current_created_date',
       ts('Last Receive Date') => 'last_receive_date',
-      'installments',
+      0 => 'installments',
     );
   }
 
