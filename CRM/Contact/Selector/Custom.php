@@ -152,12 +152,13 @@ class CRM_Contact_Selector_Custom extends CRM_Core_Selector_Base implements CRM_
           require_once (str_replace('_', DIRECTORY_SEPARATOR, $customSearchClass) . '.php');
         }
       }
-      eval('$this->_search = new ' . $customSearchClass . '( $formValues );');
+      $this->_search = new $customSearchClass($formValues);
     }
     else {
       $customSearchFile = $ext->keyToPath($customSearchClass, 'search');
       require_once ($customSearchFile);
-      eval('$this->_search = new ' . $ext->keyToClass($customSearchClass, 'search') . '( $formValues );');
+      $className = $ext->keyToClass($customSearchClass, 'search');
+      $this->_search = new $className($formValues);
     }
   }
   //end of constructor
@@ -233,6 +234,11 @@ class CRM_Contact_Selector_Custom extends CRM_Core_Selector_Base implements CRM_
    */
   function &getColumnHeaders($action = NULL, $output = NULL) {
     $columns = $this->_search->columns();
+    foreach($columns as $key => $value){
+      if (is_numeric($key)) {
+        unset($columns[$key]);
+      }
+    }
     if ($output == CRM_Core_Selector_Controller::EXPORT) {
       return array_keys($columns);
     }
