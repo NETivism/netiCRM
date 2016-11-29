@@ -1105,6 +1105,17 @@ class CRM_Export_BAO_Export {
       $rows[] = $row;
     }
 
+    // remove the fields which key is numeric. refs #19235
+    foreach ($header as $key => $value) {
+      if(is_numeric($value)){
+        unset($header[$key]);
+        foreach ($rows as $row) {
+          unset($row[$fields[$key]]);
+        }
+        unset($fields[$key]);
+      }
+    }
+
     require_once 'CRM/Core/Report/Excel.php';
     CRM_Core_Report_Excel::writeCSVFile(self::getExportFileName(), $header, $rows);
     CRM_Utils_System::civiExit();
