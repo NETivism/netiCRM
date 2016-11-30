@@ -905,6 +905,18 @@ class CRM_Profile_Form extends CRM_Core_Form {
     // second, trying to send mail to subscrber.
     $mailingType = array();
     $config = CRM_Core_Config::singleton();
+    $groupSubscribed = array();
+    //array of group id, subscribed by contact
+    if ($this->_id) {
+      $contactGroups = new CRM_Contact_DAO_GroupContact();
+      $contactGroups->contact_id = $this->_id;
+      $contactGroups->status = 'Added';
+      $contactGroups->find();
+      while ($contactGroups->fetch()) {
+        $groupSubscribed[$contactGroups->group_id] = 1;
+      }
+    }
+
     if ($config->profileDoubleOptIn && !empty($submittedGroup)) {
       $profile = NULL;
       foreach ($params as $name => $values) {
@@ -912,27 +924,12 @@ class CRM_Profile_Form extends CRM_Core_Form {
           $profile['email'] = $values;
         }
       }
-      $groupSubscribed = array();
       if (!empty($profile['email'])) {
-        require_once 'CRM/Contact/DAO/Group.php';
-        //array of group id, subscribed by contact
-        $contactGroup = array();
-        if ($this->_id) {
-          $contactGroups = new CRM_Contact_DAO_GroupContact();
-          $contactGroups->contact_id = $this->_id;
-          $contactGroups->status = 'Added';
-          $contactGroups->find();
-          $contactGroup = array();
-          while ($contactGroups->fetch()) {
-            $contactGroup[$contactGroups->group_id] = 1;
-            $groupSubscribed[$contactGroups->group_id] = 1;
-          }
-        }
         foreach ($submittedGroup as $key => $val) {
-          if ($val) {
+          if (!empty($val)) {
             // only add who not subscribed
             if (empty($groupSubscribed[$key])) {
-              $mailingType[] = $key;
+              $mailingType[$key] = 1;
               unset($submittedGroup[$key]);
             }
           }
@@ -946,24 +943,26 @@ class CRM_Profile_Form extends CRM_Core_Form {
     // third, keep subscribed contact remain in group
     if (CRM_Utils_Array::value('add_to_group', $params)) {
       $addToGroupId = $params['add_to_group'];
-      $key = array_search($addToGroupId, $mailingType);
-      if ($key) {
+      $submittedGroup[$addToGroupId] = 1;
+      if (!empty($mailingType[$addToGroupId])) {
         unset($mailingType[$key]);
-        $submittedGroup[$addToGroupId] = 1;
       }
     }
     if (!empty($submittedGroup)) {
       // this means we are coming in via profile, not admin
       $method = 'Web';
       $visibility = TRUE;
-      $submittedGroup = array_merge($submittedGroup, $groupSubscribed);
+
+      foreach($groupSubscribed as $key => $val){
+        $submittedGroup[$key] = 1;
+      }
       CRM_Contact_BAO_GroupContact::create($submittedGroup, $this->_id, $visibility, $method);
     }
 
     // last, if still have mail to subscribe group, send mail
     if (!empty($mailingType)) {
-      require_once 'CRM/Mailing/Event/BAO/Subscribe.php';
-      CRM_Mailing_Event_BAO_Subscribe::commonSubscribe($mailingType, $profile, $this->_id);
+      $toSubscribe = array_keys($mailingType);
+      CRM_Mailing_Event_BAO_Subscribe::commonSubscribe($toSubscribe, $profile, $this->_id);
     }
 
     require_once 'CRM/Core/BAO/UFGroup.php';
