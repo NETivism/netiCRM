@@ -4110,8 +4110,10 @@ tbody.scrollContent tr.alternateRow {
 .crm-container-md .crm-form-elem input,
 .crm-container-md .crm-form-elem textarea,
 .crm-container-md .crm-form-elem select {
+  /*
   -webkit-appearance: none;
   -moz-appearance: none;
+  */
 }
 .crm-container-md .crm-form-elem select::-ms-expand {
   display: none;
