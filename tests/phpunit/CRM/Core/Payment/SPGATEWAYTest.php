@@ -73,8 +73,10 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
 
             'is_test' => 0,
             'user_name' => !empty($p['user_name_label']) ? 'abcd' : NULL,
-            'password' => !empty($p['password_label']) ? 'abcd' : NULL,
-            'signature' => !empty($p['signature_label']) ? 'abcd' : NULL,
+            // 'password' => !empty($p['password_label']) ? 'abcd' : NULL,
+            // 'signature' => !empty($p['signature_label']) ? 'abcd' : NULL,
+            'password' => 'abcd',
+            'signature' => 'abcd',
             'url_site' => !empty($p['url_site_default']) ? $p['url_site_default'] : NULL,
             'url_api' => !empty($p['url_api_default']) ? $p['url_api_default'] : NULL,
             'class_name' => $p['class_name'],
@@ -192,7 +194,6 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
       'InstEach' => 0,
       'Inst' => 0,
       'ECI' => '',
-
     );
     $json = json_encode($data);
     $jsonData = json_encode(array(
@@ -218,7 +219,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     $this->assertNotEmpty($cid, "In line " . __LINE__);
   }
 
-  /*function testRecurringPaymentNotify(){
+  function testRecurringPaymentNotify(){
     $now = time()+60;
     $trxn_id = 'ut'.substr($now, -5);
     $amount = 111;
@@ -282,21 +283,41 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     // manually trigger ipn
     $get = $post = $ids = array();
     $ids = CRM_Contribute_BAO_Contribution::buildIds($contribution->id);
-    $query = CRM_Contribute_BAO_Contribution::makeNotifyUrl($ids, NULL, $return_query = TRUE);
+    // $query = CRM_Contribute_BAO_Contribution::makeNotifyUrl($ids, NULL, $return_query = TRUE);
+    $vars = array(
+      'contactID' => $this->_cid,
+      'contributionID' => $contribution->id,
+      'is_recur' => 1,
+      'contributionRecurID' => $contribution->contribution_recur_id,
+      'contributionPageID' => $this->_page_id,
+      'payment_processor' => $this->_processor['id'],
+    );
+    $instrument_code = $contrib['payment_instrument_id'];
+    module_load_include('inc', 'civicrm_spgateway', 'civicrm_spgateway.checkout');
+    $query = _civicrm_spgateway_notify_url($vars, 'spgateway/ipn/'.$instrument_code, 'contribution');
     parse_str($query, $get);
     $post = array(
-      'MerchantID' => '2000132',
-      'MerchantTradeNo' => $trxn_id,
-      'RtnCode' => '1',
-      'RtnMsg' => 'success',
-      'TradeNo' => '201203151740582564',
-      'TradeAmt' => $amount,
-      'PaymentDate' => date('Y-m-d H:i:s', $now),
-      'PaymentType' => 'Credit',
-      'PaymentTypeChargeFee' => '10',
-      'TradeDate' => date('Y-m-d H:i:s', $now),
-      'SimulatePaid' => '1',
+      "Status" => "SUCCESS",
+      "Message" => "委託單成立，且首次授權成功",
+      "Result" => array(
+        "MerchantID" => $trxn_id,
+        "MerchantOrderNo" => "testdev500302T368",
+        "PeriodType" => "M",
+        "PeriodAmt" => $amount,
+        "AuthTimes" => "26",
+        "DateArray" => "2016-11-24,2016-12-24,2017-01-24,2017-02-24,2017-03-24,2017-04-24,2017-05-24,2017-06-24,2017-07-24,2017-08-24,2017-09-24,2017-10-24,2017-11-24,2017-12-24,2018-01-24,2018-02-24,2018-03-24,2018-04-24,2018-05-24,2018-06-24,2018-07-24,2018-08-24,2018-09-24,2018-10-24,2018-11-24,2018-12-24",
+        "TradeNo" => "16112415263934243",
+        "AuthCode" => "930637",
+        "RespondCode" => "00",
+        "AuthTime" => "20161124152639",
+        "CardNo" => "400022******1111",
+        "EscrowBank" => "KGI",
+        "AuthBank" => "KGI",
+      ),
     );
+    $ppid = $this->_processor['id'];
+    $PaymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($ppid, $this->_is_test?'test':'live');
+    $post = array('Period' => _civicrm_spgateway_recur_encrypt(json_encode($post), $PaymentProcessor));
     civicrm_spgateway_ipn('Credit', $post, $get);
 
     // verify contribution status after trigger
@@ -321,6 +342,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     $this->assertDBState('CRM_Contribute_DAO_ContributionRecur', $recurring->id, $params);
 
     // second payment
+    /*
     $now = time()+120;
     $gwsr1 = 111111;
     $get = $post = $ids = array();
@@ -329,21 +351,25 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     parse_str($query, $get);
     $get['is_recur'] = 1;
     $post = array(
-      'MerchantID' => '2000132',
-      'MerchantTradeNo' => $trxn_id,
-      'RtnCode' => '1',
-      'RtnMsg' => 'success',
-      'PeriodType' => 'M',
-      'Frequency' => '1',
-      'ExecTimes' => '12',
-      'Amount' => $amount,
-      'Gwsr' => $gwsr1,
-      'ProcessDate' => date('Y-m-d H:i:s', $now+3600),
-      'AuthCode' => '777777',
-      'FirstAuthAmount' => $amount,
-      'TotalSuccessTimes' => 2,
-      'SimulatePaid' => '1',
+      "Status" => "SUCCESS",
+      "Message" => "委託單成立，且首次授權成功",
+      "Result" => array(
+        "MerchantID" => $trxn_id,
+        "MerchantOrderNo" => "testdev500302T368",
+        "PeriodType" => "M",
+        "PeriodAmt" => $amount,
+        "AuthTimes" => "26",
+        "DateArray" => "2016-11-24,2016-12-24,2017-01-24,2017-02-24,2017-03-24,2017-04-24,2017-05-24,2017-06-24,2017-07-24,2017-08-24,2017-09-24,2017-10-24,2017-11-24,2017-12-24,2018-01-24,2018-02-24,2018-03-24,2018-04-24,2018-05-24,2018-06-24,2018-07-24,2018-08-24,2018-09-24,2018-10-24,2018-11-24,2018-12-24",
+        "TradeNo" => "16112415263934243",
+        "AuthCode" => "930637",
+        "RespondCode" => "00",
+        "AuthTime" => "20161124152639",
+        "CardNo" => "400022******1111",
+        "EscrowBank" => "KGI",
+        "AuthBank" => "KGI",
+      ),
     );
+    $post = array('Period' => _civicrm_spgateway_recur_encrypt($post, $this->_processor));
     civicrm_spgateway_ipn('Credit', $post, $get);
     $trxn_id2 = _civicrm_spgateway_recur_trxn($trxn_id, $gwsr1);
 
@@ -362,6 +388,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     $params = array(
       1 => array($trxn_id2, 'String'),
     );
+
     $this->assertDBQuery(1, "SELECT contribution_status_id FROM civicrm_contribution WHERE trxn_id = %1", $params);
     $cid2 = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution WHERE trxn_id = %1", $params);
 
@@ -475,7 +502,8 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
       'contribution_status_id' => 3,
     );
     $this->assertDBState('CRM_Contribute_DAO_ContributionRecur', $recurring->id, $params);
-  }*/
+    */
+  }
 
   /*
   function testNonCreditNotify(){
