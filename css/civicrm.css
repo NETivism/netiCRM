@@ -4106,14 +4106,14 @@ tbody.scrollContent tr.alternateRow {
 .crm-container-md .crm-form-elem {
   position: relative;
 }
+/*
+.crm-container-md .crm-form-elem input, // refs #19265 javascript validate
+*/
 .crm-container-md .crm-form-elem button,
-.crm-container-md .crm-form-elem input,
 .crm-container-md .crm-form-elem textarea,
 .crm-container-md .crm-form-elem select {
-  /*
   -webkit-appearance: none;
   -moz-appearance: none;
-  */
 }
 .crm-container-md .crm-form-elem select::-ms-expand {
   display: none;
