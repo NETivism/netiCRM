@@ -675,7 +675,7 @@ class CRM_Contribute_BAO_Query {
     );
 
     $attrs = array('multiple' => 'multiple');
-    $ctypes = CRM_Contribute_PseudoConstant::contributionType(NULL, 'mark');
+    $ctypes = CRM_Contribute_PseudoConstant::contributionType(NULL, NULL, TRUE);
     $form->addElement('select', 'contribution_type_id', ts('Contribution Type'), $ctypes, $attrs);
 
     $form->add('select', 'contribution_page_id',

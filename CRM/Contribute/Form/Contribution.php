@@ -867,7 +867,7 @@ WHERE  contribution_id = {$this->_id}
 
     $element = $this->add('select', 'contribution_type_id',
       ts('Contribution Type'),
-      array('' => ts('- select -')) + CRM_Contribute_PseudoConstant::contributionType(),
+      array('' => ts('- select -')) + CRM_Contribute_PseudoConstant::contributionType(NULL, NULL, TRUE),
       TRUE, array('onChange' => "buildCustomData( 'Contribution', this.value );")
     );
     if ($this->_online) {

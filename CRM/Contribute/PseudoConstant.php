@@ -123,31 +123,38 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
    * @return array - array reference of all contribution types if any
    * @static
    */
-  public static function &contributionType($id = NULL, $dedutible = FALSE) {
+  public static function &contributionType($id = NULL, $receiptType = FALSE, $receiptTypeLabel = FALSE) {
     if (!self::$contributionType) {
       CRM_Core_PseudoConstant::populate(self::$contributionType, 'CRM_Contribute_DAO_ContributionType');
+      CRM_Core_PseudoConstant::populate($deductibleType, 'CRM_Contribute_DAO_ContributionType', FALSE, 'is_deductible', 'is_active', 'is_deductible=1');
+      CRM_Core_PseudoConstant::populate($taxType, 'CRM_Contribute_DAO_ContributionType', FALSE, 'is_taxreceipt', 'is_active', 'is_taxreceipt=1');
     }
-    if (is_numeric($dedutible)) {
-      CRM_Core_PseudoConstant::populate($types, 'CRM_Contribute_DAO_ContributionType', FALSE, 'is_deductible', 'is_active', 'is_deductible=1');
-      return array_intersect_key(self::$contributionType, $types);
+    $types = array();
+    if ($receiptType == 'is_deductible') {
+      $types = array_intersect_key(self::$contributionType, $deductibleType);
     }
-    elseif ($dedutible !== FALSE) {
-      CRM_Core_PseudoConstant::populate($types, 'CRM_Contribute_DAO_ContributionType', FALSE, 'is_deductible');
-      $result = self::$contributionType;
-      foreach ($result as $k => $v) {
-        if ($types[$k] == 1) {
-          $result[$k] .= '(' . ts('Deductible') . ')';
-        }
-      }
-      return $result;
+    elseif($receiptType == 'is_taxreceipt'){
+      $types = array_intersect_key(self::$contributionType, $taxType);
     }
     else {
-      if ($id) {
-        $result = CRM_Utils_Array::value($id, self::$contributionType);
-        return $result;
+      $types = self::$contributionType;
+    }
+
+    if ($receiptTypeLabel) {
+      foreach ($types as $k => $v) {
+        if(!empty($deductibleType[$k])) {
+          $types[$k] .= ' (' . ts('Deductible') . ')';
+        }
+        elseif(!empty($taxType[$k])) {
+          $types[$k] .= ' (' . ts('Tax Receipt') . ')';
+        }
       }
     }
-    return self::$contributionType;
+    if ($id) {
+      $result = CRM_Utils_Array::value($id, $types);
+      return $result;
+    }
+    return $types;
   }
 
   /**

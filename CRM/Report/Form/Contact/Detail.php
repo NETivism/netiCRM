@@ -740,7 +740,7 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
           if ($component == 'contribution_civireport') {
             require_once 'CRM/Contribute/PseudoConstant.php';
             if ($val = CRM_Utils_Array::value('civicrm_contribution_contribution_type_id', $row)) {
-              $componentRows[$contactID][$component][$rowNum]['civicrm_contribution_contribution_type_id'] = CRM_Contribute_PseudoConstant::contributionType($val, FALSE);
+              $componentRows[$contactID][$component][$rowNum]['civicrm_contribution_contribution_type_id'] = CRM_Contribute_PseudoConstant::contributionType($val);
             }
 
             if ($val = CRM_Utils_Array::value('civicrm_contribution_contribution_status_id', $row)) {

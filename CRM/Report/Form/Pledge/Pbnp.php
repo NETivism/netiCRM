@@ -269,7 +269,7 @@ class CRM_Report_Form_Pledge_Pbnp extends CRM_Report_Form {
       //handle the Contribution Type Ids
       if (array_key_exists('civicrm_pledge_contribution_type_id', $row)) {
         if ($value = $row['civicrm_pledge_contribution_type_id']) {
-          $rows[$rowNum]['civicrm_pledge_contribution_type_id'] = CRM_Contribute_PseudoConstant::contributionType($value, FALSE);
+          $rows[$rowNum]['civicrm_pledge_contribution_type_id'] = CRM_Contribute_PseudoConstant::contributionType($value);
         }
         $entryFound = TRUE;
       }
