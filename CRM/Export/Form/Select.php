@@ -267,9 +267,12 @@ FROM   {$this->_componentTable}
     $merge_same_address = $this->controller->exportValue($this->_name, 'merge_same_address');
     $merge_same_household = $this->controller->exportValue($this->_name, 'merge_same_household');
 
-    $mappingId = $this->get('mappingId');
-    if (empty($mappingId)) {
-      $mappingId = $this->controller->exportValue($this->_name, 'mapping');
+    $submitted = $this->controller->exportValues();
+    if (isset($submitted['mapping'])) {
+      $mappingId = $submitted['mapping'];
+    }
+    else {
+      $mappingId = $this->get('mappingId');
     }
     if ($mappingId) {
       $this->set('mappingId', $mappingId);
