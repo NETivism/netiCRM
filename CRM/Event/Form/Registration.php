@@ -533,6 +533,15 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
     );
   }
 
+  function getParam($name) {
+    if (isset($this->_params[$name])) {
+      return $this->_params[$name];
+    }
+    else {
+      return NULL;
+    }
+  }
+
   /**
    * assign the minimal set of variables to the template
    *
