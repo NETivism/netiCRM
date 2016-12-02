@@ -24,6 +24,7 @@
  +--------------------------------------------------------------------+
 *}
 {include file="CRM/Event/Form/Registration/Progress.tpl"}
+<!--progress-separator-->
 {if $action & 1024}
     {include file="CRM/Event/Form/Registration/PreviewHeader.tpl"}
 {/if}
@@ -71,6 +72,7 @@
             {include file="CRM/Event/Form/Registration/EventInfoBlock.tpl"}
         </div>
     </div>
+<!--intro-separator-->
     
     {if $paidEvent} 
         <div class="crm-group event_fees-group">
@@ -159,6 +161,7 @@
             </fieldset>
         </div>
     {/if}
+<!--ufform-separator-->
 
     {*display Additional Participant Profile Information*}
     {if $addParticipantProfile}
@@ -193,6 +196,7 @@
             </div>
         <div class="spacer"></div>
         {/foreach}
+<!--additional-participant-separator-->
     {/if}
 
     {if $contributeMode ne 'notify' and !$is_pay_later and $paidEvent and !$isAmountzero and !$isOnWaitlist and !$isRequireApproval}
@@ -247,6 +251,7 @@
             </div>
         </fieldset>    
     {/if}
+<!--payment-separator-->
 
     <div id="crm-submit-buttons" class="crm-submit-buttons">
 	    {include file="CRM/common/formButtons.tpl" location="bottom"}

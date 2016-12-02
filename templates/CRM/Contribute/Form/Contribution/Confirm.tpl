@@ -102,6 +102,7 @@
         </div>
     </div>
     {/if}
+<!--intro-separator-->
         
     {include file="CRM/Contribute/Form/Contribution/Honor.tpl"}
 
@@ -235,6 +236,7 @@
             </fieldset>
         </div>
     {/if}
+<!--ufform-separator-->
   
     {if $contributeMode eq 'direct' and $paymentProcessor.payment_type & 2}
     <div class="crm-group debit_agreement-group">
@@ -271,6 +273,7 @@
         </table>
         </fieldset>    
     {/if}
+<!--payment-separator-->
 
     <div id="crm-submit-buttons" class="crm-submit-buttons">
       {include file="CRM/common/formButtons.tpl" location="bottom"}
