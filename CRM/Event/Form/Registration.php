@@ -135,9 +135,9 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
    * The params submitted by the form and computed by the app
    *
    * @var array
-   * @protected
+   * @public
    */
-  protected $_params;
+  public $_params;
 
   /**
    * The fields involved in this contribution page
@@ -531,15 +531,6 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
       $this->_values['event'],
       $config->defaultCurrency
     );
-  }
-
-  function getParam($name) {
-    if (isset($this->_params[$name])) {
-      return $this->_params[$name];
-    }
-    else {
-      return NULL;
-    }
   }
 
   /**
