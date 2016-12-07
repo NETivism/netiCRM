@@ -3109,11 +3109,14 @@ ul.ui-sortable {
   padding: 10px 4px;
 }
 .crm-container .premiums-listings img {
-  max-width: 100%;
+  max-width: 300px;
   height: auto;
 }
-.crm-container .premium-img {
-  width: 37%;
+.crm-container .premium-img > label {
+  cursor: pointer;
+}
+.crm-container .premium-img > label > img {
+  pointer-events: none;
 }
 .crm-container .premium-img + .premium-info {
   padding-left: 20px;
@@ -3121,6 +3124,7 @@ ul.ui-sortable {
 .crm-container .premium-name {
   margin-bottom: 10px;
   line-height: 1.4;
+  cursor: pointer;
 }
 
 /* form elements */
