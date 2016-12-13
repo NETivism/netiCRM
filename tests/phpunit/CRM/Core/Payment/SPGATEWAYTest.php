@@ -181,13 +181,10 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
       'EscrowBank' => 'KGI',
       'ItemDesc' => 'This is description.',
       'Gateway' => 'MPG',
-      'IsLogin' => FALSE, 
+      'IsLogin' => FALSE,
       'LangType' => 'zh-Tw',
       'PayTime' => date('Y-m-d H:i:s',$now),
       'RespondCode' => '00',
-      'Auth' => '930637',
-      'Card6No' => '400022',
-      'Card4No' => '1111',
       'Exp' => '2112',
       'TokenUseStatus' => 0,
       'InstFirst' => 100,
@@ -511,9 +508,81 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     */
   }
 
-  /*
+
   function testNonCreditNotify(){
+    // BARCODE : 11
+    $now = time()+300;
+    $trxn_id = 'ut'.substr($now, -5);
+    $amount = 111;
+
+    $instrument_id = 11;
+    $payment_type = 'BARCODE';
+
+    $return_params = array(
+      'Barcode_1' => 'test1',
+      'Barcode_2' => 'test2',
+      'Barcode_3' => 'test3',
+      );
+
+    $this->doSingleNonCreditTest(
+      $now,
+      $trxn_id,
+      $amount,
+      $instrument_id,
+      $payment_type,
+      $return_params
+    );
+
+    // CVS : 12
+    $now = $now + 60;
+    $trxn_id = 'ut'.substr($now, -5);
+    $amount = 111;
+
+    $instrument_id = 12;
+    $payment_type = 'CVS';
+
+    $return_params = array(
+      'CodeNo' => '12345',
+      );
+
+    $this->doSingleNonCreditTest(
+      $now,
+      $trxn_id,
+      $amount,
+      $instrument_id,
+      $payment_type,
+      $return_params
+    );
+
+    // ATM : 13
+    $now = $now + 60;
+    $trxn_id = 'ut'.substr($now, -5);
+    $amount = 111;
+
+    $instrument_id = 13;
+    $payment_type = 'VACC';
+
+    $return_params = array(
+      'PayBankCode' => '111',
+      'PayerAccount5Code' => '12345',
+      );
+
+    $this->doSingleNonCreditTest(
+      $now,
+      $trxn_id,
+      $amount,
+      $instrument_id,
+      $payment_type,
+      $return_params
+    );
+
+    // WebATM : 14
+
+
+
+
     // update
+    /*
     $cid = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution_spgateway ORDER BY id DESC LIMIT 0,1");
     $_POST = array(
       'MerchantID' => $cid,
@@ -523,6 +592,78 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     $_GET['q'] = 'spgateway/record';
     civicrm_spgateway_record($cid);
     $this->assertDBQuery($cid, "SELECT cid FROM civicrm_contribution_spgateway WHERE data LIKE '%#info%TEST1%' AND cid = $cid");
+    */
   }
-  */
+
+  function doSingleNonCreditTest($now, $trxn_id, $amount, $instrument_id, $payment_type, $return_params){
+    // create contribution
+    $contrib = array(
+      'trxn_id' => $trxn_id,
+      'contact_id' => $this->_cid,
+      'contribution_contact_id' => $this->_cid,
+      'contribution_type_id' => 1,
+      'contribution_page_id' => $this->_page_id,
+      'payment_processor_id' => $this->_processor['id'],
+      'payment_instrument_id' => $instrument_id,
+      'created_date' => date('YmdHis', $now),
+      'non_deductible_amount' => 0,
+      'total_amount' => $amount,
+      'currency' => 'TWD',
+      'cancel_reason' => '0',
+      'source' => 'AUTO: unit test',
+      'contribution_source' => 'AUTO: unit test',
+      'amount_level' => '',
+      'is_test' => $this->_is_test,
+      'is_pay_later' => 0,
+      'contribution_status_id' => 2,
+    );
+
+    $contribution = CRM_Contribute_BAO_Contribution::create($contrib, CRM_Core_DAO::$_nullArray);
+    $this->assertNotEmpty($contribution->id, "In line " . __LINE__);
+    $params = array(
+      'is_test' => $this->_is_test,
+      'id' => $contribution->id,
+    );
+    $this->assertDBState('CRM_Contribute_DAO_Contribution', $contribution->id, $params);
+
+    // manually trigger ipn
+    $afteweek = $now + ( 7 * 86400 );
+    $get = $post = $ids = array();
+    $ids = CRM_Contribute_BAO_Contribution::buildIds($contribution->id);
+    $query = CRM_Contribute_BAO_Contribution::makeNotifyUrl($ids, NULL, $return_query = TRUE);
+    parse_str($query, $get);
+    $data = array(
+      'MerchantID' => 'abcd',// have to modify
+      'Amt' => $amount,
+      'TradeNo' => '16112117153757079',
+      'MerchantOrderNo' => $trxn_id,
+      'PaymentType' => $payment_type,
+      'ExpireDate' => date('Y-m-d',$afteweek),
+    );
+    $data = array_merge($data, $return_params);
+    $json = json_encode($data);
+    $jsonData = json_encode(array(
+      'Status' => 'SUCCESS',
+      'Message' => '',
+      'Result' => $json,
+      ));
+    $post = array('JSONData' => $jsonData);
+    civicrm_spgateway_ipn('Credit', $post, $get);
+
+    // verify contribution status after trigger
+    $this->assertDBCompareValue(
+      'CRM_Contribute_DAO_Contribution',
+      $searchValue = $contribution->id,
+      $returnColumn = 'contribution_status_id',
+      $searchColumn = 'id',
+      $expectedValue = 1,
+      "In line " . __LINE__
+    );
+
+    // verify data in drupal module
+    $cid = CRM_Core_DAO::singleValueQuery("SELECT cid FROM civicrm_contribution_spgateway WHERE cid = $contribution->id");
+    $this->assertNotEmpty($cid, "In line " . __LINE__);
+  }
+
 }
+
