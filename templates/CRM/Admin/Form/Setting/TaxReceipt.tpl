@@ -49,6 +49,10 @@
             <td class="label">{$form.taxReceiptSerial.label}</td><td>{$form.taxReceiptSerial.html}<br />
             </td>
         </tr>
+        <tr class="crm-mail-form-block-taxReceiptItem">
+            <td class="label">{$form.taxReceiptItem.label}</td><td>{$form.taxReceiptItem.html}<br />
+            </td>
+        </tr>
         <tr class="crm-mail-form-block-taxReceiptNumber">
             <td class="label">{$form.taxReceiptNumber.label}</td><td>{$form.taxReceiptNumber.html}<br />
             </td>
