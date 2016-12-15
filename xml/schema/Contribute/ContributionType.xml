@@ -46,11 +46,18 @@
        <add>1.3</add>
   </field>
   <field>
+       <name>tax_rate</name>
+       <type>int unsigned</type>
+       <default>0</default>
+       <comment>What the tax rate?</comment>
+       <add>4.0</add>
+  </field>
+  <field>
        <name>is_taxreceipt</name>
        <type>boolean</type>
-       <default>1</default>
+       <default>0</default>
        <comment>Is this contribution type a tax-receipt? If true, you will have tax receipt interface in contribution.</comment>
-       <add>1.3</add>
+       <add>4.0</add>
   </field>
   <field>
        <name>is_deductible</name>

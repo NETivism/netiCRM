@@ -58,6 +58,11 @@
     	  <td class="label">{$form.is_taxreceipt.label}</td>
         <td class="html-adjust">{$form.is_taxreceipt.html}<br />
           <span class="description">{ts}Are contributions of this type is a tax receipt?{/ts}</span>
+          <table><tr class="crm-contribution-form-block-tax_rate">
+            <td class="label">{$form.tax_rate.label}</td>
+            <td class="html-adjust">{$form.tax_rate.html}%</td>
+           </tr>
+          </table>
         </td>
        </tr>
        <tr class="crm-contribution-form-block-is_active">	 
@@ -79,7 +84,14 @@ cj(document).ready(function($){
       $('tr.crm-contribution-form-block-is_taxreceipt').show();
     }
   }
+  var showHideTaxRate = function() {
+    if ($('#is_taxreceipt').attr('checked')) {
+    
+    }
+  }
   $('#is_deductible').click(showHideTaxReceipt);
+  $('#is_taxreceipt').click(showHideTaxRate);
   showHideTaxReceipt();
+  showHideTaxRate();
 });
 {/literal}</script>

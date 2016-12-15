@@ -39,9 +39,11 @@
  	{include file="CRM/common/enableDisable.tpl"}
         <table cellpadding="0" cellspacing="0" border="0">
            <thead class="sticky">
+            <th>{ts}ID{/ts}</th>
             <th>{ts}Name{/ts}</th>
             <th>{ts}Description{/ts}</th>
             <th>{ts}Acctg Code{/ts}</th>
+            <th>{ts}Tax Receipt?{/ts}</th>
             <th>{ts}Deductible?{/ts}</th>
             <th>{ts}Reserved?{/ts}</th>
             <th>{ts}Enabled?{/ts}</th>
@@ -49,9 +51,11 @@
           </thead>
          {foreach from=$rows item=row}
         <tr id="row_{$row.id}"class="{cycle values="odd-row,even-row"} {$row.class}{if NOT $row.is_active} disabled{/if}">
+	        <td>{$row.id}</td>	
 	        <td>{$row.name}</td>	
 	        <td>{$row.description}</td>
             	<td>{$row.accounting_code}</td>
+	        <td>{if $row.is_taxreceipt eq 1} {ts}Yes{/ts} ({ts}Tax Rate{/ts}: {$row.tax_rate}%) {else} {ts}No{/ts} {/if}</td>
 	        <td>{if $row.is_deductible eq 1} {ts}Yes{/ts} {else} {ts}No{/ts} {/if}</td>
 	        <td>{if $row.is_reserved eq 1} {ts}Yes{/ts} {else} {ts}No{/ts} {/if}</td>
 	        <td id="row_{$row.id}_status">{if $row.is_active eq 1} {ts}Yes{/ts} {else} {ts}No{/ts} {/if}</td>

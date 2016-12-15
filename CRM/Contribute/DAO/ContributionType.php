@@ -105,6 +105,12 @@ class CRM_Contribute_DAO_ContributionType extends CRM_Core_DAO
    */
   public $description;
   /**
+   * What the tax rate?
+   *
+   * @var int unsigned
+   */
+  public $tax_rate;
+  /**
    * Is this contribution type a tax-receipt? If true, you will have tax receipt interface in contribution.
    *
    * @var boolean
@@ -183,10 +189,14 @@ class CRM_Contribute_DAO_ContributionType extends CRM_Core_DAO
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
         ) ,
+        'tax_rate' => array(
+          'name' => 'tax_rate',
+          'type' => CRM_Utils_Type::T_INT,
+          'title' => ts('Tax Rate') ,
+        ) ,
         'is_taxreceipt' => array(
           'name' => 'is_taxreceipt',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-          'default' => '',
         ) ,
         'is_deductible' => array(
           'name' => 'is_deductible',

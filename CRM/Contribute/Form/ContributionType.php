@@ -60,6 +60,7 @@ class CRM_Contribute_Form_ContributionType extends CRM_Contribute_Form {
 
     $this->add('text', 'description', ts('Description'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionType', 'description'));
     $this->add('text', 'accounting_code', ts('Accounting Code'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionType', 'accounting_code'));
+    $this->add('text', 'tax_rate', ts('Tax Rate'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionType', 'tax_rate'));
 
     $this->add('checkbox', 'is_deductible', ts('Tax-deductible?'));
     $this->add('checkbox', 'is_taxreceipt', ts('Tax Receipt'));
