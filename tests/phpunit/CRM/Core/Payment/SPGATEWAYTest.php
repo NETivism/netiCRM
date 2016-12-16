@@ -229,7 +229,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
       'amount' => $amount,
       'frequency_unit' => 'month',
       'frequency_interval' => 1,
-      'installments' => 12,
+      'installments' => 3,
       'is_test' => $this->_is_test,
       'start_date' => $date,
       'create_date' => $date,
@@ -302,8 +302,8 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
         "MerchantOrderNo" => $trxn_id,
         "PeriodType" => "M",
         "PeriodAmt" => $amount,
-        "AuthTimes" => "26",
-        "DateArray" => "2016-11-24,2016-12-24,2017-01-24,2017-02-24,2017-03-24,2017-04-24,2017-05-24,2017-06-24,2017-07-24,2017-08-24,2017-09-24,2017-10-24,2017-11-24,2017-12-24,2018-01-24,2018-02-24,2018-03-24,2018-04-24,2018-05-24,2018-06-24,2018-07-24,2018-08-24,2018-09-24,2018-10-24,2018-11-24,2018-12-24",
+        "AuthTimes" => "3",
+        "DateArray" => "2016-11-24,2016-12-24",
         "TradeNo" => "16112415263934243",
         "AuthCode" => "930637",
         "RespondCode" => "00",
@@ -343,7 +343,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     // second payment
 
     $now = time()+120;
-    $trxn_id2 = $trxn_id . "_1";
+    $trxn_id2 = $trxn_id . "_2";
     $get = $post = $ids = array();
     $ids = CRM_Contribute_BAO_Contribution::buildIds($contribution->id);
 
@@ -360,8 +360,8 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
         "OrderNo" => $trxn_id2,
         "TradeNo" => "16112415263934243",
         "AuthDate" => date("Y-m-d h:i:s",$now),
-        "TotalTimes" => "26",
-        "AlreadyTimes" => 1,
+        "TotalTimes" => "3",
+        "AlreadyTimes" => 2,
         "AuthAmt" => $amount,
         "AuthCode" => "930637",
         "EscrowBank" => "KGI",
@@ -397,115 +397,61 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     $this->assertNotEmpty($data, "In line " . __LINE__);
 
 
-    // use civicrm_spgateway_recur_check to insert third Payment_SPGATEWAY
-    /*
-    $gwsr2 = 222222;
+    // third pay, finish recur.
+
+    $now = time()+180;
+    $trxn_id3 = $trxn_id . "_3";
     $get = $post = $ids = array();
-    $order_base = (object)(array(
-      'ExecStatus' => '1',
-      'MerchantID' => '2000132',
-      'MerchantTradeNo' => $trxn_id,
-      'TradeNo' => '1501101152542267',
-      'RtnCode' => 1,
-      'PeriodType' => 'M',
-      'Frequency' => 1,
-      'ExecTimes' => 99,
-      'PeriodAmount' => $amount,
-      'amount' => $amount,
-      'gwsr' => '000000',
-      'process_date' => date('Y-m-d H:i:s', $now+86400*2),
-      'auth_code' => '777777',
-      'card4no' => '1234',
-      'card6no' => '123456',
-      'TotalSuccessTimes' => 3,
-      'TotalSuccessAmount' => $amount*3,
-      'ExecLog' => array (
-        0 => (object)(array(
-           'RtnCode' => 1,
-           'amount' => $amount,
-           'gwsr' => '000000',
-           'process_date' => date('Y-m-d H:i:s', $now),
-           'auth_code' => '777777',
-        )),
-        1 => (object)(array(
-           'RtnCode' => 1,
-           'amount' => $amount,
-           'gwsr' => $gwsr1,
-           'process_date' => date('Y-m-d H:i:s', $now+3600),
-           'auth_code' => '777777',
-        )),
-        2 => (object)(array(
-           'RtnCode' => 1,
-           'amount' => $amount,
-           'gwsr' => $gwsr2,
-           'process_date' => date('Y-m-d H:i:s', $now+86400*2),
-           'auth_code' => '777777',
-        )),
-        // fail contribution from recurring
-        3 => (object)(array(
-           'RtnCode' => '',
-           'amount' => '',
-           'gwsr' => '',
-           'process_date' => date('Y-m-d H:i:s', $now+86400*3),
-           'auth_code' => '',
-        )),
+    $ids = CRM_Contribute_BAO_Contribution::buildIds($contribution->id);
+
+    // $query = CRM_Contribute_BAO_Contribution::makeNotifyUrl($ids, NULL, $return_query = TRUE);
+    parse_str($query, $get);
+    // $get['is_recur'] = 1;
+    $post = array(
+      "Status" => "SUCCESS",
+      "Message" => "委託單成立，且首次授權成功",
+      "Result" => array(
+        "RespondCode" => "00",
+        "MerchantID" => 'abcd',
+        "MerOrderNo" => $trxn_id,
+        "OrderNo" => $trxn_id3,
+        "TradeNo" => "16112415263934243",
+        "AuthDate" => date("Y-m-d h:i:s",$now),
+        "TotalTimes" => "3",
+        "AlreadyTimes" => 3,
+        "AuthAmt" => $amount,
+        "AuthCode" => "930637",
+        "EscrowBank" => "KGI",
+        "AuthBank" => "KGI",
+        "NextAuthDate" => "",
       ),
-    ));
-    $trxn_id3 = _civicrm_spgateway_recur_trxn($trxn_id, $gwsr2);
-    $order_json = json_encode($order_base);
-    $order_sample = json_decode($order_json);
-
-    // add new payment from recurring notification
-    civicrm_spgateway_recur_check($recurring->id, $order_sample);
-    $params = array(
-      'id' => $recurring->id,
-      'contribution_status_id' => 5,
     );
-    $this->assertDBState('CRM_Contribute_DAO_ContributionRecur', $recurring->id, $params);
+    $post = array('Period' => _civicrm_spgateway_recur_encrypt(json_encode($post), $PaymentProcessor));
+    civicrm_spgateway_ipn('Credit', $post, $get);
+    // $trxn_id2 = _civicrm_spgateway_recur_trxn($trxn_id, $gwsr1);
+    // $trxn_id2 = "testdev500302T368_2";
 
-    $params = array(
-      1 => array($recurring->id, 'Integer'),
-    );
-    $this->assertDBQuery(4, "SELECT count(*) FROM civicrm_contribution WHERE contribution_recur_id = %1", $params);
-
-    $params = array(
-      1 => array($trxn_id3, 'String'),
-    );
-    $this->assertDBQuery(1, "SELECT contribution_status_id FROM civicrm_contribution WHERE trxn_id = %1", $params);
-    $cid3 = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution WHERE trxn_id = %1", $params);
-
-    $data = CRM_Core_DAO::singleValueQuery("SELECT data FROM civicrm_contribution_spgateway WHERE cid = $cid3");
-    $this->assertNotEmpty($data, "In line " . __LINE__);
-
-    // fail contribution from recurring
-    $hash = substr(md5(implode('', (array)$order_base->ExecLog[3])), 0, 8);
-    $trxn_id4 = _civicrm_spgateway_recur_trxn($trxn_id, $hash);
-    $params = array(
-      1 => array($trxn_id4, 'String'),
-    );
-    $this->assertDBQuery(4, "SELECT contribution_status_id FROM civicrm_contribution WHERE trxn_id = %1", $params);
-    $cid4 = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution WHERE trxn_id = %1", $params);
-    $data = CRM_Core_DAO::singleValueQuery("SELECT data FROM civicrm_contribution_spgateway WHERE cid = $cid4");
-    $this->assertNotEmpty($data, "In line " . __LINE__);
-
-    // completed recurring
-    $order_base->ExecStatus = 2;
-    civicrm_spgateway_recur_check($recurring->id, $order_base);
+    // check second payment contribution exists
     $params = array(
       'id' => $recurring->id,
       'contribution_status_id' => 1,
     );
     $this->assertDBState('CRM_Contribute_DAO_ContributionRecur', $recurring->id, $params);
 
-    // cancelled recurring
-    $order_base->ExecStatus = 0;
-    civicrm_spgateway_recur_check($recurring->id, $order_base);
     $params = array(
-      'id' => $recurring->id,
-      'contribution_status_id' => 3,
+      1 => array($recurring->id, 'Integer'),
     );
-    $this->assertDBState('CRM_Contribute_DAO_ContributionRecur', $recurring->id, $params);
-    */
+    $this->assertDBQuery(3, "SELECT count(*) FROM civicrm_contribution WHERE contribution_recur_id = %1", $params);
+
+    $params = array(
+      1 => array($trxn_id3, 'String'),
+    );
+
+    $this->assertDBQuery(1, "SELECT contribution_status_id FROM civicrm_contribution WHERE trxn_id = %1", $params);
+    $cid2 = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution WHERE trxn_id = %1", $params);
+
+    $data = CRM_Core_DAO::singleValueQuery("SELECT data FROM civicrm_contribution_spgateway WHERE cid = $cid2");
+    $this->assertNotEmpty($data, "In line " . __LINE__);
   }
 
 
