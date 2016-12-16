@@ -64,7 +64,7 @@ install:
   - chmod -R 777 sites/default
   - drush --yes pm-download simpletest
   - drush --yes pm-enable civicrm simpletest
-  - drush --yes pm-enable civicrm_allpay civicrm_neweb
+  - drush --yes pm-enable civicrm_allpay civicrm_neweb civicrm_spgateway
   - drush --yes variable-set civicrm_demo_sample_data 1
   - drush --yes pm-enable civicrm_demo
   - drush --yes variable-set error_level 0
@@ -80,6 +80,7 @@ before_script:
 script:
   - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/ALLPAYTest.php
   - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/NewebTest.php
+  - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/SPGATEWAYTest.php
   - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/pages.js
   - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/event_register.js
   #- drush test-run 'Travis-CI Drupal Module Example' --uri=http://127.0.0.1:8080
