@@ -104,7 +104,15 @@
       {include file="CRM/Price/Form/PriceSet.tpl"}
       {include file="CRM/Price/Form/ParticipantCount.tpl"}
     </fieldset>
-    {if $event.is_pay_later && $show_payment_processors}
+    {if $form.payment_processor.label}
+      <div class="crm-section payment_processor-section">
+        <div class="label">{$form.payment_processor.label}</div>
+        <div class="content">{$form.payment_processor.html}</div>
+        <div class="clear"></div>
+      </div>
+      <div id="billing-payment-block"></div>
+      {include file="CRM/common/paymentBlock.tpl"}
+    {elseif $event.is_pay_later && $show_payment_processors}
       <div class="crm-section pay_later-section">
         <div class="label">{ts}Payment Method{/ts}</div>
         <div class="content">
@@ -122,7 +130,15 @@
         <div class="content">{$form.amount.html}</div>
         <div class="clear"></div>
       </div>
-      {if $event.is_pay_later && $show_payment_processors}
+      {if $form.payment_processor.label}
+        <div class="crm-section payment_processor-section">
+          <div class="label">{$form.payment_processor.label}</div>
+          <div class="content">{$form.payment_processor.html}</div>
+          <div class="clear"></div>
+        </div>
+        <div id="billing-payment-block"></div>
+        {include file="CRM/common/paymentBlock.tpl"}
+      {elseif $event.is_pay_later && $show_payment_processors}
         <div class="crm-section pay_later-section">
           <div class="label">{ts}Payment Method{/ts}</div>
           <div class="content"><input type="checkbox" checked="checked" disabled="disabled"/>{$event.pay_later_text}<br />
@@ -133,14 +149,6 @@
       {/if}
     {/if}
   {/if}
-
-  <div class="crm-section payment_processor-section">
-    <div class="label">{$form.payment_processor.label}</div>
-    <div class="content">{$form.payment_processor.html}</div>
-    <div class="clear"></div>
-  </div>
-  <div id="billing-payment-block"></div>
-  {include file="CRM/common/paymentBlock.tpl"}
 <!--payment-separator-->
 
   {if $isCaptcha}
