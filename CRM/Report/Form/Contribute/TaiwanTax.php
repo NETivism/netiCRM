@@ -189,6 +189,7 @@ class CRM_Report_Form_Contribute_TaiwanTax extends CRM_Report_Form {
 
   function modifyColumnHeaders(){
     $this->_columnHeaders["civicrm_contribution_total_amount"]['type'] = 1;
+    $this->_columnHeaders["civicrm_contribution_receive_date"]['type'] = 1;
   }
 
   static function formRule($fields, $files, $self) {
@@ -225,9 +226,10 @@ class CRM_Report_Form_Contribute_TaiwanTax extends CRM_Report_Form {
     $this->_columnHeaders = array();
     $this->_columnSort = array(
       'receive_date' => '捐贈年度',
-      'total_amount' => '捐款金額',
       $this->_receiptSerial => '捐贈者身分證統一編號',
-      $this->_receiptTitle => '受贈者名稱',
+      $this->_receiptTitle => '捐贈者姓名',
+      'total_amount' => '捐款金額',
+      'other1' => '受捐贈單位統一編號',
     );
     foreach($this->_columnSort as $c => $name){
       foreach($columnHeaders as $header => $value){
@@ -240,7 +242,7 @@ class CRM_Report_Form_Contribute_TaiwanTax extends CRM_Report_Form {
     }
     $this->_columnHeaders['other1'] = array('type' => 2, 'title' => '受捐贈單位統一編號');
     $this->_columnHeaders['other2'] = array('type' => 2, 'title' => '捐贈別');
-    $this->_columnHeaders['other3'] = array('type' => 2, 'title' => '受捐贈者姓名');
+    $this->_columnHeaders['other3'] = array('type' => 2, 'title' => '受捐贈者名稱');
     $this->_columnHeaders['other4'] = array('type' => 2, 'title' => '專案核准文號');
 
     // custom code to alter rows
@@ -270,7 +272,7 @@ class CRM_Report_Form_Contribute_TaiwanTax extends CRM_Report_Form {
   }
 
   function _chineseYear($date){
-    $year = date('Y', strtotime($date));
+    $year = (int) date('Y', strtotime($date));
     $year -= 1911;
     return sprintf('%03s', $year);
   }
