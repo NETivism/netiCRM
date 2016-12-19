@@ -231,7 +231,6 @@ WHERE  inst.report_id = %1";
       }
       //Output the data row.
       $output .= implode(',', $displayRows) . "\n";
-      dpm($displayRows);
     }
     // convert csv output to excel
     require_once 'packages/PHPExcel/PHPExcel.php';
