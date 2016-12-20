@@ -873,7 +873,17 @@ ORDER BY   i.contact_id, i.email_id
       $group = new CRM_Contact_DAO_Group();
       $group->id = $testParams['test_group'];
       $contacts = CRM_Contact_BAO_GroupContact::getGroupContacts($group);
+      $queued = array();
       foreach ($contacts as $contact) {
+        if (empty($contact->email)) {
+          continue;
+        }
+        elseif (!empty($queued[$contact->contact_id])) {
+          continue;
+        }
+        else {
+          $queued[$contact->contact_id] = 1;
+        }
         $query = "SELECT DISTINCT civicrm_email.id AS email_id, civicrm_email.is_primary as is_primary,
                                  civicrm_email.is_bulkmail as is_bulkmail
 FROM civicrm_email
