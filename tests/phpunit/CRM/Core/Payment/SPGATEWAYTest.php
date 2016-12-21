@@ -59,8 +59,6 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
       );
       $result = civicrm_api('PaymentProcessorType', 'get', $params);
       $this->assertAPISuccess($result);
-      print("!!!PPType : ");
-      var_export($result);
       if(!empty($result['count'])){
         $domain_id = CRM_Core_Config::domainID();
         foreach($result['values'] as $type_id => $p){
@@ -318,8 +316,6 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     $ppid = $this->_processor['id'];
     $get['ppid'] = $ppid;
     $PaymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($ppid, $this->_is_test?'test':'live');
-    print("!!!!!Encrypt payment processor");
-    var_export($PaymentProcessor);
     $post = array('Period' => _civicrm_spgateway_recur_encrypt(json_encode($post), $PaymentProcessor));
     civicrm_spgateway_ipn('Credit', $post, $get);
 
