@@ -2330,6 +2330,74 @@ div#civicrm-dashboard form {
     width: 495px;
 }
 
+/* chart & chartist custom */
+.chartist-chart {
+  position: relative;
+}
+.ct-chart-pie .ct-label {
+  font-size: 16px;
+  fill: rgba(0,0,0,.5);
+  color: rgba(0,0,0,.4);
+}
+.ct-chart-pie-medium {
+  min-height: 400px;
+}
+.chartist-wrapper::after {
+  content:"";
+  display:block;
+  clear:both;
+}
+.chart-with-legend .chartist-chart {
+  float: left;
+  width: 50%;
+  margin-right: 5%;
+  min-height: 400px;
+}
+.chart-with-legend .chartist-chart .ct-label {
+  font-size: 15px;
+  text-shadow: 1px 1px 1px #333;
+  fill: rgba(255,255,255,.8);
+  color: rgba(255,255,255,.8);
+}
+.chart-with-legend .chart-legend {
+  float: left;
+  margin: 0;
+  width: 45%;
+  list-style: none;
+}
+.chart-legend > li {
+  padding-left: 20px;
+  position: relative;
+  line-height: 1.4;
+  margin-bottom: 6px;
+}
+.chart-legend > li:before {
+  content: " ";
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  width: 12px;
+  height: 12px;
+  border-radius: 12px;
+  margin: 5px 0 0 0;
+}
+.chart-legend > li:nth-child(1):before { background: #d70206; }
+.chart-legend > li:nth-child(2):before { background: #f05b4f; }
+.chart-legend > li:nth-child(3):before { background: #f4c63d; }
+.chart-legend > li:nth-child(4):before { background: #d17905; }
+.chart-legend > li:nth-child(5):before { background: #453d3f; }
+.chart-legend > li:nth-child(6):before { background: #59922b; }
+.chart-legend > li:nth-child(7):before { background: #0544d3; }
+.chart-legend > li:nth-child(8):before { background: #6b0392; }
+.chart-legend > li:nth-child(9):before { background: #f05b4f; }
+.chart-legend > li:nth-child(10):before { background: #dda458; }
+.chart-legend > li:nth-child(11):before { background: #eacf7d; }
+.chart-legend > li:nth-child(12):before { background: #86797d; }
+.chart-legend > li:nth-child(13):before { background: #b2c326; }
+.chart-legend > li:nth-child(14):before { background: #6188e2; }
+.chart-legend > li:nth-child(15):before { background: #a748ca; }
+
 /* editor skin tweaks */
 .crm-container span.cke_skin_kama {border:none;}
 .crm-container .cke_skin_kama .cke_wrapper {background-image: none;}

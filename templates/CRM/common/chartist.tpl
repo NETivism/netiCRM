@@ -4,9 +4,52 @@
   <link rel="stylesheet" href="{$config->resourceBase}packages/chartist/dist/chartist.min.css">
 {if $chartist.labels && $chartist.series}
   {if $chartist.title}<h3>{$chartist.title}</h3>{/if}
-  <div class="chartist-chart ct-major-twelfth"></div>
+  
+  {php}
+    $chartClasses = array('chartist-chart','ct-major-twelfth');
+    $chartist = $this->get_template_vars('chartist');
+    
+    if (count($chartist['classes']) > 0) {
+      $chartClasses = array_merge($chartClasses, $chartist['classes']); 
+    }
+
+    $chartClasses = implode(' ', $chartClasses);
+    $this->assign('chartClasses', $chartClasses);
+  {/php}
+  
+  {if $chartist.id}
+    <div id="{$chartist.id}" class="{$chartClasses}"></div>
+  {else}
+    <div class="{$chartClasses}"></div>
+  {/if}
+
 <script>{literal}
 (function(){
+  var chartSelector = "{/literal}{$chartist.selector|default:'.chartist-chart'}{literal}";
+  var chartType = "{/literal}{$chartist.type|capitalize|default:'Line'}{literal}";
+  var labelType = "{/literal}{$chartist.labelType|default:'label'}{literal}";
+
+  var renderChartLegend = function(elem, data) {
+    var label, desc, val, percent;
+    var sum = function(a, b) { return a + b };
+    var total = data.series.reduce(sum);
+    var ul = cj("<ul class='chart-legend' />");
+    for (var i = 0; i < data.series.length; i++) {
+      val = data.series[i];
+      percent = Math.round(val / total * 100);
+      label = data.labels[i];
+      desc = label + " (" + percent + "%)";
+      var li = cj("<li/>").attr("title", desc).text(label).appendTo(ul);
+    }
+
+    var chartLoaded = setInterval(function() {
+      if (cj(elem + " > svg > g").length > 0) {
+        cj(elem).after(ul);
+        clearInterval(chartLoaded);
+      }
+    }, 100);
+  }
+
   var data = {
     // A labels array that can contain any sort of values
     "labels": {/literal}{$chartist.labels}{literal},
@@ -16,7 +59,7 @@
   // Create a new line chart object where as first parameter we pass in a selector
   // that is resolving to our chart container element. The Second parameter
   // is the actual data object.
-  var chartType = "{/literal}{$chartist.type|capitalize|default:'Line'}{literal}";
+
   var options = {};
   if(chartType == 'Line' || chartType == 'Bar') {
     options = {
@@ -42,9 +85,20 @@
   }
   else{
     var sum = function(a, b) { return a + b };
+    var i = 0;
     options = {
       labelInterpolationFnc: function(value) {
-        return value;
+        switch (labelType) {
+          case 'percent':
+            var series = data.series[i];
+            i++;
+            return Math.round(series / data.series.reduce(sum) * 100) + '%';
+            break;
+
+          default:
+            return value;
+            break;
+        } 
       } 
     }; 
   }
@@ -67,9 +121,21 @@
     }
   });
   options.plugins.push(axis);
+{/literal}{/if}
+
+{if $chartist.withLegend}{literal}
+  options.labelOffset = 65;
+  cj(chartSelector).closest('.chartist-wrapper').addClass('chart-with-legend');
+  renderChartLegend(chartSelector, data);
+{/literal}{/if}
+
+{if $chartist.labelOffset}{literal}
+  options.labelOffset = {/literal}{$chartist.labelOffset}{literal};
 {/literal}{/if}{literal}
-  new Chartist.{/literal}{$chartist.type|capitalize|default:'Line'}{literal}('.chartist-chart', data, options);
+
+  new Chartist.{/literal}{$chartist.type|capitalize|default:'Line'}{literal}(chartSelector, data, options);
 })();
-{/literal}</script>
+{/literal}
+</script>
 {/if}
 </div>
