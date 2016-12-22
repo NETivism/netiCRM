@@ -1,15 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1" ?>
 <menu>
   <item>
-     <path>civicrm/report</path>
-     <title>CiviReport</title>
-     <page_callback>CRM_Report_Page_Report</page_callback>
-     <access_arguments>access CiviReport</access_arguments>
-     <page_type>1</page_type>
-     <weight>1200</weight>
-     <component>CiviReport</component>
-  </item>
-  <item>
      <path>civicrm/report/list</path>
      <title>CiviCRM Reports</title>
      <page_callback>CRM_Report_Page_InstanceList</page_callback>
@@ -69,5 +60,11 @@
      <desc>Browse existing report, change report criteria and settings.</desc>
      <adminGroup>CiviReport</adminGroup>
      <icon>admin/small/report_list.gif</icon>
+  </item>
+  <item>
+     <path>civicrm/report/summary</path>
+     <title>Summary</title>
+     <page_callback>CRM_Report_Page_Summary</page_callback>
+     <access_arguments>access CiviReport</access_arguments>
   </item>
 </menu>
