@@ -27,16 +27,11 @@
 {if $hasChart}
 
 
-{* chartist *}
-{include file="CRM/common/chartist.tpl" chartist=$chart}
+  {* chartist *}
+  {include file="CRM/common/chartist.tpl" chartist=$chartInsSum}
+  <div id="chart-pie-with-legend-contribute-instrument"></div>
 
-<div class="form-layout-compressed" >
-<table>
-      <td class="label">{$form.select_year.label}</td><td>{$form.select_year.html}</td> 
-</table> 
-</div>
-{else}
- <div class="messages status"> 
-    {ts}There are no live contribution records to display.{/ts}  
- </div>
+  {include file="CRM/common/chartist.tpl" chartist=$chartTypeSum}
+  <div id="chart-pie-with-legend-contribute-type"></div>
+
 {/if}
