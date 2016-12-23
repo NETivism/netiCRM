@@ -49,19 +49,7 @@ class CRM_Core_Payment_ProcessorForm {
       $form->_paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($form->_type, $form->_mode);
     }
 
-    //$form->_paymentProcessor['processorName'] = $form->_paymentObject->_processorName;
     $form->set('paymentProcessor', $form->_paymentProcessor);
-
-    // also set cancel subscription url
-    /*
-        if (CRM_Utils_Array::value('is_recur', $form->_paymentProcessor) &&
-          CRM_Utils_Array::value('is_recur', $form->_values)
-        ) {
-          $form->_paymentObject = &CRM_Core_Payment::singleton($mode, $form->_paymentProcessor, $form);
-          $form->_values['cancelSubscriptionUrl'] = $form->_paymentObject->subscriptionURL();
-        }
-*/
-
 
     //checks after setting $form->_paymentProcessor
     // we do this outside of the above conditional to avoid
@@ -93,7 +81,7 @@ class CRM_Core_Payment_ProcessorForm {
       !$form->_paymentProcessor['class_name'] &&
       !CRM_Utils_Array::value('is_pay_later', $form->_values)
     ) {
-      CRM_Core_Error::fatal(ts('Payment processor is not set for this page'));
+      $form->addRule('payment_processor', ts('%1 is a required field.', array(1 => ts('Payment Method'))), 'required');
     }
 
     if (!empty($form->_membershipBlock) &&
