@@ -31,12 +31,12 @@
 
   var renderChartLegend = function(elem, data) {
     var label, desc, val, percent;
-    var sum = function(a, b) { return a + b };
+    var sum = function(a, b) { return Number(a) + Number(b) };
     var total = data.series.reduce(sum);
     var ul = cj("<ul class='chart-legend' />");
     for (var i = 0; i < data.series.length; i++) {
       val = data.series[i];
-      percent = Math.round(val / total * 100);
+      percent = Math.round(Number(val) / total * 100);
       label = data.labels[i];
       desc = label + " (" + percent + "%)";
       var li = cj("<li/>").attr("title", desc).text(label).appendTo(ul);
@@ -84,7 +84,7 @@
     };
   }
   else{
-    var sum = function(a, b) { return a + b };
+    var sum = function(a, b) { return Number(a) + Number(b) };
     var i = 0;
     options = {
       labelInterpolationFnc: function(value) {
@@ -92,7 +92,7 @@
           case 'percent':
             var series = data.series[i];
             i++;
-            return Math.round(series / data.series.reduce(sum) * 100) + '%';
+            return Math.round(Number(series) / data.series.reduce(sum) * 100) + '%';
             break;
 
           default:
