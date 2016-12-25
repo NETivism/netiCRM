@@ -2,6 +2,12 @@
   <script type="text/javascript" src="{$config->resourceBase}packages/chartist/dist/chartist.min.js"></script>
   <script type="text/javascript" src="{$config->resourceBase}packages/chartist/plugin/chartist-plugin-axistitle.js"></script>
   <link rel="stylesheet" href="{$config->resourceBase}packages/chartist/dist/chartist.min.css">
+  
+  {if $chartist.withToolTip}
+  <link rel="stylesheet" href="{$config->resourceBase}packages/chartist/plugin/chartist-plugin-tooltip/chartist-plugin-tooltip.css">
+  <script type="text/javascript" src="{$config->resourceBase}packages/chartist/plugin/chartist-plugin-tooltip/chartist-plugin-tooltip.min.js"></script>
+  {/if}
+
 {if $chartist.labels && $chartist.series}
   {if $chartist.title}<h3>{$chartist.title}</h3>{/if}
   
@@ -25,20 +31,27 @@
 
 <script>{literal}
 (function(){
+  var chartLabels = {/literal}{$chartist.labels}{literal};
+  var chartSeries = {/literal}{$chartist.series}{literal};
+  var withToolTip = {/literal}{$chartist.withToolTip|default:0}{literal};
   var chartSelector = "{/literal}{$chartist.selector|default:'.chartist-chart'}{literal}";
   var chartType = "{/literal}{$chartist.type|capitalize|default:'Line'}{literal}";
   var labelType = "{/literal}{$chartist.labelType|default:'label'}{literal}";
 
+  var getSum = function(a, b) { return Number(a) + Number(b); }
+  var getPercent = function(val, total) { return Math.round(Number(val) / total * 100); }
+  var getDesc = function(label, series, percent) { return label + '：' + series + '筆（' + percent + '%）'; }
+
   var renderChartLegend = function(elem, data) {
-    var label, desc, val, percent;
-    var sum = function(a, b) { return Number(a) + Number(b) };
-    var total = data.series.reduce(sum);
+    var label, series, percent, desc;
+    var total = data.series.reduce(getSum);
     var ul = cj("<ul class='chart-legend' />");
+
     for (var i = 0; i < data.series.length; i++) {
-      val = data.series[i];
-      percent = Math.round(Number(val) / total * 100);
       label = data.labels[i];
-      desc = label + " (" + percent + "%)";
+      series = data.series[i];
+      percent = getPercent(series, total);
+      desc = getDesc(label, series, percent);
       var li = cj("<li/>").attr("title", desc).text(label).appendTo(ul);
     }
 
@@ -50,12 +63,29 @@
     }, 100);
   }
 
+  var renderToolTipData = function(data) {
+    var label, series, percent, desc;
+    var total = data.series.reduce(getSum);
+    
+    for (var i = 0; i < data.series.length; i++) {
+      label = data.labels[i];
+      series = data.series[i];
+      percent = getPercent(series, total);
+      desc = getDesc(label, series, percent);
+      data.series[i] = {meta: desc, value: series}
+    }
+
+    return data;
+  }
+
+
   var data = {
     // A labels array that can contain any sort of values
     "labels": {/literal}{$chartist.labels}{literal},
     // Our series array that contains series objects or in this case series data arrays
     "series": {/literal}{$chartist.series}{literal}
   };
+
   // Create a new line chart object where as first parameter we pass in a selector
   // that is resolving to our chart container element. The Second parameter
   // is the actual data object.
@@ -83,16 +113,29 @@
       }
     };
   }
-  else{
-    var sum = function(a, b) { return Number(a) + Number(b) };
-    var i = 0;
+  else {
     options = {
-      labelInterpolationFnc: function(value) {
+      labelInterpolationFnc: function(value, index) {
         switch (labelType) {
           case 'percent':
-            var series = data.series[i];
-            i++;
-            return Math.round(Number(series) / data.series.reduce(sum) * 100) + '%';
+            var label, series = 0, percent = 0, total = 0;
+
+            if (withToolTip) {
+              series = data.series[index].value;
+
+              for (var i = 0; i < data.series.length; i++) {
+                total += data.series[i].value;
+              }
+            } 
+            else {
+              series = data.series[index];
+              total = data.series.reduce(getSum);
+            }
+
+            percent = getPercent(series ,total);
+            label = percent + '%';
+
+            return label;
             break;
 
           default:
@@ -132,6 +175,15 @@
 {if $chartist.labelOffset}{literal}
   options.labelOffset = {/literal}{$chartist.labelOffset}{literal};
 {/literal}{/if}{literal}
+
+
+  if (withToolTip) {
+    if (chartType == 'Pie') {
+      data = renderToolTipData(data);
+      var tooltip = Chartist.plugins.tooltip();
+      options.plugins.push(tooltip);
+    }
+  }
 
   new Chartist.{/literal}{$chartist.type|capitalize|default:'Line'}{literal}(chartSelector, data, options);
 })();

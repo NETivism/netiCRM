@@ -59,22 +59,27 @@
   /*
   id：設定此元素的 id
   classes：設定此元素的 class，資料格式為陣列，可多值，例如 array('ct-chart-pie', 'ct-chart-pie-medium')
+  selector：要產生圖表的元素的選擇器，預設為「.chartist-chart」
   type：chartist 圖表的類型，預設為「Line」，可使用的類型：Line、Bar、Pie
   labels：chartist 圖表的標籤，資料格式為陣列，可多值，PHP 丟資料時記得加上 json_encode，讓 js 能夠讀取
   series：chartist 圖表的值，資料格式為陣列，可多值，PHP 丟資料時記得加上 json_encode，讓 js 能夠讀取
   labelType：圖表標籤的類型，預設為「label」，可使用的類型：label、percent 
   labelOffset：圖表標籤的位置，預設為 0，如果有圖例，預設值為 65
   withLegend：是否有圖例，資料格式為布林值，預設為「false」
+  withToolTip：是否有提示，資料格式為布林值，預設為「false」
   */
 
   $chart = array(
     'id' => 'chart-pie-with-legend-demo',
     'classes' => array('ct-chart-pie'),
+    'selector' => '#chart-pie-with-legend-demo',
     'type' => 'Pie',
-    'labels' => json_encode(array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O')),
+    //'labels' => json_encode(array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O')),
+    'labels' => json_encode(array('夏天的香蕉是白色的', '活動報名', '募款餐會餐券', '春天的蘋果還沒成熟', '超商代碼', '回收再生正夯，廢棄啤酒麥粕變身環保建材', '電子報', '秋天的葡萄釀成酒剛剛好', '熱門文章', '聯絡人匯入', '機器人將取代人類工作？美國非營利組織積極培訓勞工，開拓未來就業之路', '冬天的橘子不用烤也好吃', '行動菜車 農村到都市的任意門', '網絡行動科技', '海洋吸塵器')),
     'series' => json_encode(array(10, 15, 20, 4, 19, 40, 29, 14, 34, 20, 49, 10, 23, 10, 5)),
     'labelType' => 'percent', 
-    'withLegend' => true
+    'withLegend' => true,
+    'withToolTip' => true
   );
   $this->assign('chart', $chart);
 {/php}

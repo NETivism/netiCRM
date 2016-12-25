@@ -2398,6 +2398,31 @@ div#civicrm-dashboard form {
 .chart-legend > li:nth-child(14):before { background: #6188e2; }
 .chart-legend > li:nth-child(15):before { background: #a748ca; }
 
+/* chartist tooltip */
+.chartist-chart .chartist-tooltip {
+  border: 1px solid #9e9e9e;
+  background: #fff;
+  box-shadow: 1px 1px 2px #9e9e9e;
+  z-index: 999;
+}
+.chartist-chart .chartist-tooltip:before {
+  border-top-color: #9e9e9e;
+}
+.chartist-chart .chartist-tooltip:after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  margin-left: -12px;
+  border: 12px solid transparent;
+  border-top-color: #fff;
+}
+.chartist-chart .chartist-tooltip-value {
+  display: none;
+}
+
 /* editor skin tweaks */
 .crm-container span.cke_skin_kama {border:none;}
 .crm-container .cke_skin_kama .cke_wrapper {background-image: none;}
