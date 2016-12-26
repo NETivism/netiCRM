@@ -48,11 +48,14 @@
     var ul = cj("<ul class='chart-legend' />");
 
     for (var i = 0; i < data.series.length; i++) {
-      label = data.labels[i];
       series = data.series[i];
-      percent = getPercent(series, total);
-      desc = getDesc(label, series, percent);
-      var li = cj("<li/>").attr("title", desc).text(label).appendTo(ul);
+
+      if (series != 0) {
+        label = data.labels[i];
+        percent = getPercent(series, total);
+        desc = getDesc(label, series, percent);
+        var li = cj("<li/>").attr({"title": desc, "data-chart-series": series, "data-chart-percent": percent}).text(label).appendTo(ul);
+      }
     }
 
     var chartLoaded = setInterval(function() {
@@ -115,6 +118,7 @@
   }
   else {
     options = {
+      ignoreEmptyValues: true,
       labelInterpolationFnc: function(value, index) {
         switch (labelType) {
           case 'percent':
@@ -142,7 +146,7 @@
             return value;
             break;
         } 
-      } 
+      }
     }; 
   }
   options.plugins = [];
