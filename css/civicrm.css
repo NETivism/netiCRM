@@ -2331,6 +2331,10 @@ div#civicrm-dashboard form {
 }
 
 /* chart & chartist custom */
+.chartist-wrapper {
+  position: relative;
+  margin-bottom: 40px;
+}
 .chartist-wrapper::after {
   content:"";
   display:block;
@@ -2362,6 +2366,8 @@ div#civicrm-dashboard form {
 .chartist-chart > svg > .ct-series:nth-last-child(14) .ct-slice-pie { fill: #b2c326; }
 .chartist-chart > svg > .ct-series:nth-last-child(15) .ct-slice-pie { fill: #6188e2; }
 .chartist-chart > svg > .ct-series:nth-last-child(16) .ct-slice-pie { fill: #a748ca; }
+
+/* chart with legend */
 .chart-with-legend .chartist-chart {
   float: left;
   width: 50%;
@@ -2436,6 +2442,22 @@ div#civicrm-dashboard form {
 }
 .chartist-chart .chartist-tooltip-value {
   display: none;
+}
+
+/* chartist fill donut */
+.ct-chart-fill-donut .ct-series-a .ct-slice-donut {
+  stroke: #03a9f4;
+}
+.ct-chart-fill-donut .ct-series-b .ct-slice-donut {
+  stroke: rgba(0,0,0,.4);
+  opacity: 0.0;
+}
+.ct-chart-fill-donut .ct-fill-donut .ct-slice-donut {
+  stroke: rgba(0,0,0,.4);
+  opacity: 1;
+}
+.ct-fill-donut-label .chart-percent {
+  font-size: 32px;
 }
 
 /* editor skin tweaks */

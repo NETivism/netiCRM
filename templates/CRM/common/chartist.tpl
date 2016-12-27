@@ -8,7 +8,11 @@
   <script type="text/javascript" src="{$config->resourceBase}packages/chartist/plugin/chartist-plugin-tooltip/chartist-plugin-tooltip.min.js"></script>
   {/if}
 
-{if $chartist.labels && $chartist.series}
+  {if $chartist.type eq 'Pie' and $chartist.isFillDonut}
+  <script type="text/javascript" src="{$config->resourceBase}packages/chartist/plugin/chartist-plugin-fill-donut/chartist-plugin-fill-donut.min.js"></script>
+  {/if}
+
+{if $chartist.series}
   {if $chartist.title}<h3>{$chartist.title}</h3>{/if}
   
   {php}
@@ -31,9 +35,12 @@
 
 <script>{literal}
 (function(){
-  var chartLabels = {/literal}{$chartist.labels}{literal};
-  var chartSeries = {/literal}{$chartist.series}{literal};
+  var chartLabels = {/literal}{$chartist.labels|default:"[]"}{literal};
+  var chartSeries = {/literal}{$chartist.series|default:"[]"}{literal};
   var withToolTip = {/literal}{$chartist.withToolTip|default:0}{literal};
+  var isDonut = {/literal}{$chartist.isDonut|default:0}{literal};
+  var isFillDonut = {/literal}{$chartist.isFillDonut|default:0}{literal};
+  var animation = {/literal}{$chartist.animation|default:0}{literal};
   var chartSelector = "{/literal}{$chartist.selector|default:'.chartist-chart'}{literal}";
   var chartType = "{/literal}{$chartist.type|capitalize|default:'Line'}{literal}";
   var labelType = "{/literal}{$chartist.labelType|default:'label'}{literal}";
@@ -81,13 +88,15 @@
     return data;
   }
 
-
   var data = {
-    // A labels array that can contain any sort of values
-    "labels": {/literal}{$chartist.labels}{literal},
     // Our series array that contains series objects or in this case series data arrays
     "series": {/literal}{$chartist.series}{literal}
   };
+
+  if (typeof chartLabels !== 'undefined' && chartLabels.length > 0) {    
+    // A labels array that can contain any sort of values
+    data['labels'] = chartLabels;
+  }
 
   // Create a new line chart object where as first parameter we pass in a selector
   // that is resolving to our chart container element. The Second parameter
@@ -189,7 +198,77 @@
     }
   }
 
-  new Chartist.{/literal}{$chartist.type|capitalize|default:'Line'}{literal}(chartSelector, data, options);
+  if (chartType == 'Pie') {
+    if (isDonut) {
+      options.donut = true;
+    }
+
+    if (isFillDonut) {
+      var percent = getPercent(data.series[0], data.series[1]);
+      var difference = 100 - percent;
+      data.series[0] = percent;
+      data.series[1] = difference;
+
+      options.donut = true;
+      options.donutWidth = 20;
+      options.startAngle = 0;
+      options.showLabel = false;
+
+      var fillDonut = Chartist.plugins.fillDonut({
+          items: [{
+              content: '',
+              position: 'bottom',
+              offsetY : 10,
+              offsetX: -2
+          }, {
+              content: '<div class="chart-percent">' + data.series[0] + '%</div>'
+          }]
+      });
+
+      options.plugins.push(fillDonut);
+    }
+  }
+
+  var chart = new Chartist.{/literal}{$chartist.type|capitalize|default:'Line'}{literal}(chartSelector, data, options);
+
+  if (animation) {
+    if (chartType == 'Pie') {
+      if (isFillDonut) {
+        chart.on('draw', function(data) {
+          if(data.type === 'slice' && data.index == 0) {
+            // Get the total path length in order to use for dash array animation
+            var pathLength = data.element._node.getTotalLength();
+
+            // Set a dasharray that matches the path length as prerequisite to animate dashoffset
+            data.element.attr({
+                'stroke-dasharray': pathLength + 'px ' + pathLength + 'px'
+            });
+
+            // Create animation definition while also assigning an ID to the animation for later sync usage
+            var animationDefinition = {
+                'stroke-dashoffset': {
+                    id: 'anim' + data.index,
+                    dur: 1200,
+                    from: -pathLength + 'px',
+                    to:  '0px',
+                    easing: Chartist.Svg.Easing.easeOutQuint,
+                    fill: 'freeze'
+                }
+            };
+
+            // We need to set an initial value before the animation starts as we are not in guided mode which would do that for us
+            data.element.attr({
+                'stroke-dashoffset': -pathLength + 'px'
+            });
+
+            // We can't use guided mode as the animations need to rely on setting begin manually
+            // See http://gionkunz.github.io/chartist-js/api-documentation.html#chartistsvg-function-animate
+            data.element.animate(animationDefinition, true);
+          }
+        });
+      }
+    }
+  }
 })();
 {/literal}
 </script>

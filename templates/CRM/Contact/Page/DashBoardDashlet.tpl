@@ -54,7 +54,36 @@
 </div>
 <div class="clear"></div>
 
-<div class="chartist-test">
+<div id="chart-fill-donut" class="chartist-test">
+{php}
+  /*
+  id：設定此元素的 id
+  classes：設定此元素的 class，資料格式為陣列，可多值，例如 array('ct-chart-pie', 'ct-chart-pie-medium')
+  selector：要產生圖表的元素的選擇器，預設為「.chartist-chart」
+  type：chartist 圖表的類型，預設為「Line」，可使用的類型：Line、Bar、Pie
+  labels：chartist 圖表的標籤，資料格式為陣列，可多值，PHP 丟資料時記得加上 json_encode，讓 js 能夠讀取
+  series：chartist 圖表的值，資料格式為陣列，第一個值為資料值，第二個值為總數，PHP 丟資料時記得加上 json_encode，讓 js 能夠讀取
+  withToolTip：是否有提示，資料格式為布林值，預設為「false」
+  isDonut：是否為甜甜圈，圖表類型必須要是「Pie」才有作用，資料格式為布林值，預設為「false」
+  isFillDonut：是否為填充式甜甜圈（以百分比顯示），圖表類型必須要是「Pie」才有作用，資料格式為布林值，預設為「false」
+  animation：是否有動畫效果，資料格式為布林值，預設為「false」
+  */
+
+  $chart = array(
+    'id' => 'chart-donut-fill',
+    'classes' => array('ct-chart-pie', 'ct-chart-fill-donut'),
+    'selector' => '#chart-donut-fill',
+    'type' => 'Pie',
+    'series' => json_encode(array(160, 200)),
+    'isFillDonut' => true,
+    'animation' => true
+  );
+  $this->assign('chart', $chart);
+{/php}
+{include file="CRM/common/chartist.tpl" chartist=$chart}
+</div>
+
+<div id="chart-pie-with-legend" class="chartist-test">
 {php}
   /*
   id：設定此元素的 id
@@ -85,6 +114,8 @@
 {/php}
 {include file="CRM/common/chartist.tpl" chartist=$chart}
 </div>
+
+
 
 {literal}
 <script type="text/javascript">
