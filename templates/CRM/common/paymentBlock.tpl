@@ -46,11 +46,19 @@ function buildPaymentBlock( type ) {
   {literal}
 
 	var fname = '#billing-payment-block';	
-	var response = cj.ajax({	
+  cj.ajax({	
     url: dataUrl,
     async: false
-  }).responseText;
-  cj( fname ).html( response );	
+  })
+  .done(function(data){
+    cj(fname).html(data);	
+    if(cj("input[name^=civicrm_instrument_id]").length > 0) {
+      var $checked = cj("input[name^=civicrm_instrument_id]:checked");
+      if ($checked.length) {
+        cj("input[name=civicrm_instrument_id]").val($checked.val());
+      }
+    }
+  });
 }
 
 cj(document).ready(function() {
@@ -68,7 +76,7 @@ cj(document).ready(function() {
   }
 
   cj('input[name="payment_processor"]').change( function() {
-    buildPaymentBlock( cj(this).val() );    
+    buildPaymentBlock( cj(this).val() );
   });
 });
 
