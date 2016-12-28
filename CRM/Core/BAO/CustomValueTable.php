@@ -652,5 +652,87 @@ AND    cf.id IN ( $fieldIDList )
       return $result;
     }
   }
+
+  /**
+   * Return an array of specify custom field values associated with multiple entities.
+   *
+   * @param array       $entityIDs     Identification number of the entity
+   * @param string      $entityType    Type of entity that the entityID corresponds to, specified
+   *                                   as a string with format "'<EntityName>'". Comma separated
+   *                                   list may be used to specify OR matches. Allowable values
+   *                                   are enumerated types in civicrm_custom_group.extends field.
+   *                                   Optional. Default value assumes entityID references a
+   *                                   contact entity.
+   * @param array       $fieldIDs      optional list of fieldIDs that we want to retrieve. If this
+   *                                   is set the entityType is ignored
+   *
+   * @access public
+   * @static
+   */
+  public static function getEntitiesValues($entityIDs, $entityType = NULL, $fieldIDs = NULL) {
+    if (empty($entityIDs)) {
+      // adding this here since an empty contact id could have serious repurcussions
+      // like looping forever
+      CRM_Core_Error::fatal('Please file an issue with the backtrace');
+      return NULL;
+    }
+
+    $cond = array();
+    if ($entityType) {
+      $cond[] = "cg.extends IN ( '$entityType' )";
+    }
+    if ($fieldIDs &&
+      is_array($fieldIDs)
+    ) {
+      $fieldIDList = implode(',', $fieldIDs);
+      $cond[] = "cf.id IN ( $fieldIDList )";
+    }
+    if (empty($cond)) {
+      $cond[] = "cg.extends IN ( 'Contact', 'Individual', 'Household', 'Organization' )";
+    }
+    $cond = implode(' AND ', $cond);
+
+    // first find all the fields that extend this type of entity
+    $query = "
+SELECT cg.table_name,
+       cg.id as groupID,
+       cg.is_multiple,
+       cf.column_name,
+       cf.id as fieldID
+FROM   civicrm_custom_group cg,
+       civicrm_custom_field cf
+WHERE  cf.custom_group_id = cg.id
+AND    cg.is_active = 1
+AND    cf.is_active = 1
+AND    $cond
+";
+    $dao = CRM_Core_DAO::executeQuery($query);
+
+    $select = $fields = $isMultiple = array();
+
+    while ($dao->fetch()) {
+      if (!array_key_exists($dao->table_name, $select)) {
+        $fields[$dao->table_name] = array();
+        $select[$dao->table_name] = array();
+      }
+      $fields[$dao->table_name][] = $dao->fieldID;
+      $select[$dao->table_name][] = "{$dao->column_name} AS custom_{$dao->fieldID}";
+      $isMultiple[$dao->table_name] = $dao->is_multiple ? TRUE : FALSE;
+    }
+
+    $result = array();
+    $ids = implode(',', $entityIDs);
+    foreach ($select as $tableName => $clauses) {
+      $query = "SELECT entity_id, " . implode(', ', $clauses) . " FROM $tableName WHERE entity_id IN ({$ids})";
+      $dao = CRM_Core_DAO::executeQuery($query);
+      while ($dao->fetch()) {
+        foreach ($fields[$tableName] as $fieldID) {
+          $fieldName = "custom_{$fieldID}";
+          $result[$dao->entity_id]["custom_".$fieldID] = $dao->$fieldName;
+        }
+      }
+    }
+    return $result;
+  }
 }
 

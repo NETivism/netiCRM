@@ -2045,6 +2045,7 @@ SELECT source_contact_id
     $config = CRM_Core_Config::singleton();
     $domain = CRM_Core_BAO_Domain::getDomain();
     $location = $domain->getLocationValues();
+    $records = self::getAnnualReceiptRecord($contact_id, $option);
 
     $params = array('id' => $contact_id);
     $contact = array();
@@ -2052,12 +2053,10 @@ SELECT source_contact_id
     
     // set display address of contact
     if ($contact['contact_type'] == 'Individual') {
-      $legal_identifier = $contact['legal_identifier'];
-      $template->assign('serial_id', $legal_identifier);
+      $serial_id = $contact['legal_identifier'];
     }
     elseif ($contact['contact_type'] == 'Organization') {
-      $sic_code = $contact['sic_code'];
-      $template->assign('serial_id', $sic_code);
+      $serial_id = $contact['sic_code'];
     }
 
     $sort_name = $contact['sort_name'];
@@ -2078,14 +2077,47 @@ SELECT source_contact_id
     }
 
     // set email in the template here
-    $records = self::getAnnualReceiptRecord($contact_id, $option);
     if(!empty($records)){
+      $config = CRM_Core_Config::singleton();
+      $annualRecords = $contactInfo = array();
+      if (!empty($config->receiptTitle)) {
+        foreach($records as $key => $record) {
+          // name
+          if (!empty($record['custom_'.$config->receiptTitle])) {
+            $name = trim($record['custom_'.$config->receiptTitle]);
+          }
+          else {
+            $name = $sort_name;
+          }
+
+          // serial
+          if (!empty($record['custom_'.$config->receiptSerial])) {
+            $serial = trim($record['custom_'.$config->receiptSerial]);
+          }
+          else {
+            $serial = trim($serial_id);
+          }
+
+          if (empty($contactInfo[$name]['sort_name'])) {
+            $contactInfo[$name]['sort_name'] = $name;
+            $contactInfo[$name]['addressee'] = $name != $sort_name ? $name : $addressee;
+          }
+          if (empty($contactInfo[$name]['serial_id'])) {
+            $contactInfo[$name]['serial_id'] = $serial;
+          }
+          $annualRecords[$name][$key] = $record;
+        }
+      }
+      else {
+        $annualRecords[$sort_name] = $records;
+      }
+
       $tplParams = array(
         'email' => $email,
         'receiptFromEmail' => $values['receipt_from_email'],
         'contactID' => $contact_id,
-        'addressee' => $addressee,
         'sort_name' => $sort_name,
+        'contact_info' => $contactInfo,
         'address' => $address,
         'logo' => $receipt_logo,
         'domain_name' => $domain->name,
@@ -2119,6 +2151,7 @@ SELECT source_contact_id
   }
 
   static function getAnnualReceiptRecord($contact_id, $option = NULL){
+    $config = CRM_Core_Config::singleton();
     $where = array();
 
     // filter by year by receipt date
@@ -2162,23 +2195,37 @@ SELECT source_contact_id
     $args = array(
       1 => array($contact_id, 'Integer'),
     );
-    $query = "SELECT c.id, c.contribution_type_id, c.payment_instrument_id, c.receipt_id, DATE(c.receipt_date) as receipt_date, c.total_amount FROM civicrm_contribution c WHERE c.contact_id = %1 AND c.is_test = 0 AND c.contribution_status_id = 1 $where ORDER BY c.receipt_date ASC";
+    $query = "SELECT c.id, c.contribution_type_id, c.payment_instrument_id, c.receipt_id, DATE(c.receipt_date) as receipt_date, c.total_amount FROM civicrm_contribution c WHERE c.contact_id = %1 AND c.is_test = 0 AND c.contribution_status_id = 1 $where ORDER BY c.receipt_id, c.receipt_date ASC";
     $result = CRM_Core_DAO::executeQuery($query, $args);
    
     $contribution_type = array();
     CRM_Core_PseudoConstant::populate($contribution_type, 'CRM_Contribute_DAO_ContributionType', TRUE);
     $instruments = CRM_Contribute_PseudoConstant::paymentInstrument();
-    $record = array();
+    $records = array();
     while($result->fetch()){
-      $record[] = array(
-        $result->receipt_id,
-        $contribution_type[$result->contribution_type_id],
-        $instruments[$result->payment_instrument_id],
-        $result->receipt_date,
-        $result->total_amount,
+      $records[$result->id] = array(
+        'receipt_id' => $result->receipt_id,
+        'receipt_date' => $result->receipt_date,
+        'total_amount' => $result->total_amount,
       );
+      $records[$result->id]['contribution_type'] = $contribution_type[$result->contribution_type_id];
+      $records[$result->id]['instrument'] = $instruments[$result->payment_instrument_id];
+      $contributionIds[$result->id] = $result->id;
     }
-    return $record;
+    if (!empty($config->receiptTitle)) {
+      $receiptFields = array(
+        $config->receiptTitle,
+        $config->receiptSerial,
+      );
+      $contributionIds = array_keys($records);
+      $receiptInfo = CRM_Core_BAO_CustomValueTable::getEntitiesValues($contributionIds, 'Contribution', $receiptFields);
+      foreach($records as $contributionId => $contrib) {
+        if (!empty($receiptInfo[$contributionId])) {
+          $records[$contributionId] = array_merge($records[$contributionId], $receiptInfo[$contributionId]);
+        }
+      }
+    }
+    return $records;
   }
 
   static function genReceiptID(&$contrib, $save = TRUE, $is_online = FALSE, $reset = FALSE) {
