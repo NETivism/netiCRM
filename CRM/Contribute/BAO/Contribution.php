@@ -2082,6 +2082,7 @@ SELECT source_contact_id
       $annualRecords = $contactInfo = array();
       if (!empty($config->receiptTitle)) {
         foreach($records as $key => $record) {
+          $record['total_amount'] = (int) $record['total_amount'];
           // name
           if (!empty($record['custom_'.$config->receiptTitle])) {
             $name = trim($record['custom_'.$config->receiptTitle]);
@@ -2106,6 +2107,7 @@ SELECT source_contact_id
             $contactInfo[$name]['serial_id'] = $serial;
           }
           $annualRecords[$name][$key] = $record;
+          $contactInfo[$name]['total'] = $record['total_amount'] + $contactInfo[$name]['total'];
         }
       }
       else {
@@ -2126,7 +2128,7 @@ SELECT source_contact_id
         'domain_address' => $location['address'][1]['display_text'],
         'receiptOrgInfo' => htmlspecialchars_decode($config->receiptOrgInfo),
         'receiptDescription' => htmlspecialchars_decode($config->receiptDescription),
-        'record' => $records,
+        'record' => $annualRecords,
         'recordHeader' => array(
           ts('Receipt ID'),
           ts('Contribution Types'),

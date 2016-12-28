@@ -6,6 +6,7 @@
 
 table { width: 100%; border-collapse:collapse; }
 table td { padding: 2px 4px; }
+.align-right { text-align: right; }
 
 .row { display:table-row;}
 .line { border-top: 1px dashed #aaa; padding-top: 20px;}
@@ -20,10 +21,9 @@ table td { padding: 2px 4px; }
 
 .receipt-body {clear:both; position: relative; }
 .receipt-body table, .receipt-body td { border:0px; }
-.receipt-body table .col-1 {width: 24%; text-align: right;}
+.receipt-body table .col-1 { width: 24%; }
 .receipt-body table .col-1:after { content: "：";}
 .receipt-body table .col-2 {width: 48.6%;}
-.receipt-body table .signature { height: 80px; vertical-align: bottom; }
 .receipt-body .content { float: left; maring:0; margin-left:10px; padding-left:10px;}
 .receipt-body .content li { margin: 8px 0;}
 .receipt-body .stamp { position: absolute; left:50%;}
@@ -37,6 +37,11 @@ table td { padding: 2px 4px; }
 .receipt-record table { font-size: 11pt; }
 .receipt-record table th { border: 1px solid #777; }
 .receipt-record table td { border: 1px solid #777; font-size: 10pt; padding: 1px 4px;}
+.receipt-record .annual-total { text-align: right; font-size: 11pt; margin-right: 5px; }
+
+.receipt-signature { margin: 50px 0 0 0; }
+.receipt-signature table td.label { font-size: 11pt; text-align: right; }
+.receipt-signature table td.value { font-size: 11pt; text-align: left; }
 
 .receipt-footer {clear:both; position: relative; margin-top: 10px; font-size: 10pt;}
 .receipt-footer table {font-size: 10pt;}
