@@ -83,6 +83,12 @@
      <is_public>true</is_public>
   </item>
   <item>
+     <path>civicrm/chartsample</path>
+     <title>Chart Sample</title>
+     <page_callback>CRM_Admin_Page_ChartSample</page_callback>
+     <access_arguments>access CiviCRM</access_arguments>
+  </item>
+  <item>
      <path>civicrm/ajax/rest</path>
      <page_callback>CRM_Utils_REST::ajax</page_callback>
      <access_arguments>access CiviCRM</access_arguments>
