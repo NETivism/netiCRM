@@ -47,11 +47,19 @@
 
   var getSum = function(a, b) { return Number(a) + Number(b); }
   var getPercent = function(val, total) { return Math.round(Number(val) / total * 100); }
-  var getDesc = function(label, series, percent) { return label + '：' + series + '筆（' + percent + '%）'; }
+  var getDesc = function(label, series, type, percent) {
+    if (type == 'Pie') {
+      return label + '：' + series + '筆（' + percent + '%）'; 
+    } 
+    if (type == 'Line' || type == 'Bar') {
+      return label + '：' + series + '筆'; 
+    }
+  }
 
   var renderChartLegend = function(elem, data) {
     var label, series, percent, desc;
     var total = data.series.reduce(getSum);
+    var type = chartType;
     var ul = cj("<ul class='chart-legend' />");
 
     for (var i = 0; i < data.series.length; i++) {
@@ -60,7 +68,7 @@
       if (series != 0) {
         label = data.labels[i];
         percent = getPercent(series, total);
-        desc = getDesc(label, series, percent);
+        desc = getDesc(label, series, type, percent);
         var li = cj("<li/>").attr({"title": desc, "data-chart-series": series, "data-chart-percent": percent}).text(label).appendTo(ul);
       }
     }
@@ -73,16 +81,34 @@
     }, 100);
   }
 
-  var renderToolTipData = function(data) {
-    var label, series, percent, desc;
-    var total = data.series.reduce(getSum);
-    
-    for (var i = 0; i < data.series.length; i++) {
-      label = data.labels[i];
-      series = data.series[i];
-      percent = getPercent(series, total);
-      desc = getDesc(label, series, percent);
-      data.series[i] = {meta: desc, value: series}
+  var renderToolTipData = function(data, type, unit) {
+    var label, series, desc;
+
+    if (type == 'Line' || type == 'Bar') {
+      for (var i = 0; i < data.series.length; i++) {
+        //console.log(data.series[i]);
+        for (var j = 0; j < data.series[i].length; j++) {
+          label = data.labels[j];
+          console.log(data.series[i][j]);
+          series = data.series[i][j];
+          desc = getDesc(label, series, type);
+          data.series[i][j] = {"meta": desc, "value": series};
+          console.log(data.series[i][j]);
+        }  
+      }
+    }
+
+    if (type == 'Pie') {
+      var percent = 0;
+      var total = data.series.reduce(getSum);
+      
+      for (var i = 0; i < data.series.length; i++) {
+        label = data.labels[i];
+        series = data.series[i];
+        percent = getPercent(series, total);
+        desc = getDesc(label, series, type, percent);
+        data.series[i] = {"meta": desc, "value": series};
+      }
     }
 
     return data;
@@ -90,7 +116,7 @@
 
   var data = {
     // Our series array that contains series objects or in this case series data arrays
-    "series": {/literal}{$chartist.series}{literal}
+    "series": chartSeries
   };
 
   if (typeof chartLabels !== 'undefined' && chartLabels.length > 0) {    
@@ -191,11 +217,9 @@
 
 
   if (withToolTip) {
-    if (chartType == 'Pie') {
-      data = renderToolTipData(data);
+      data = renderToolTipData(data, chartType);
       var tooltip = Chartist.plugins.tooltip();
-      options.plugins.push(tooltip);
-    }
+      options.plugins.push(tooltip);   
   }
 
   if (chartType == 'Pie') {

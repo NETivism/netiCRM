@@ -54,7 +54,7 @@
 </div>
 <div class="clear"></div>
 
-<div id="chart-fill-donut" class="chartist-test">
+<div class="chartist-test">
 {php}
   /*
   id：設定此元素的 id
@@ -83,7 +83,7 @@
 {include file="CRM/common/chartist.tpl" chartist=$chart}
 </div>
 
-<div id="chart-pie-with-legend" class="chartist-test">
+<div class="chartist-test">
 {php}
   /*
   id：設定此元素的 id
@@ -115,7 +115,53 @@
 {include file="CRM/common/chartist.tpl" chartist=$chart}
 </div>
 
+<div class="chartist-test">
+{php}
+  $chart = array(
+    'id' => 'chart-line',
+    'classes' => array('ct-chart-line'),
+    'selector' => '#chart-line',
+    'type' => 'Line',
+    'labels' => json_encode(array('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday')),
+    'series' => json_encode(array(array(12, 9, 7, 8, 5), array(2, 1, 3.5, 7, 3), array(1, 3, 4, 5, 6))), 
+    'withToolTip' => true
+  );
+  $this->assign('chart', $chart);
+{/php}
+{include file="CRM/common/chartist.tpl" chartist=$chart}
+</div>
 
+<div class="chartist-test">
+{php}
+  $chart = array(
+    'id' => 'chart-bar',
+    'classes' => array('ct-chart-bar'),
+    'selector' => '#chart-bar',
+    'type' => 'Bar',
+    'labels' => json_encode(array('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday')),
+    'series' => json_encode(array(array(5, 2, 4, 2, 0))), 
+    'withToolTip' => true
+  );
+  $this->assign('chart', $chart);
+{/php}
+{include file="CRM/common/chartist.tpl" chartist=$chart}
+</div>
+
+<div class="chartist-test">
+{php}
+  $chart = array(
+    'id' => 'chart-overlapping-bars',
+    'classes' => array('ct-chart-bar'),
+    'selector' => '#chart-overlapping-bars',
+    'type' => 'Bar',
+    'labels' => json_encode(array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec')),
+    'series' => json_encode(array(array(5, 4, 3, 7, 5, 10, 3, 4, 8, 10, 6, 8), array(3, 2, 9, 5, 4, 6, 4, 6, 7, 8, 7, 4))), 
+    'withToolTip' => true
+  );
+  $this->assign('chart', $chart);
+{/php}
+{include file="CRM/common/chartist.tpl" chartist=$chart}
+</div>
 
 {literal}
 <script type="text/javascript">
