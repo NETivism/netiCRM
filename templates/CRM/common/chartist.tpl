@@ -41,6 +41,8 @@
   var isDonut = {/literal}{$chartist.isDonut|default:0}{literal};
   var isFillDonut = {/literal}{$chartist.isFillDonut|default:0}{literal};
   var animation = {/literal}{$chartist.animation|default:0}{literal};
+  {/literal}{if $chartist.valuePrefix} var valuePrefix = '{$chartist.valuePrefix}'; {else} var valuePrefix = ''; {/if}{literal}
+  {/literal}{if $chartist.valueSuffix} var valueSuffix = '{$chartist.valueSuffix}'; {else} var valueSuffix = ''; {/if}{literal}
   var chartSelector = "{/literal}{$chartist.selector|default:'.chartist-chart'}{literal}";
   var chartType = "{/literal}{$chartist.type|capitalize|default:'Line'}{literal}";
   var labelType = "{/literal}{$chartist.labelType|default:'label'}{literal}";
@@ -49,10 +51,10 @@
   var getPercent = function(val, total) { return Math.round(Number(val) / total * 100); }
   var getDesc = function(label, series, type, percent) {
     if (type == 'Pie') {
-      return label + '：' + series + '（' + percent + '%）';
+      return label + ': ' + valuePrefix +' '+ series +' '+ valueSuffix + '（' + percent + '%）';
     }
     if (type == 'Line' || type == 'Bar') {
-      return label + '：' + series;
+      return label + ': ' + valuePrefix +' '+ series +' '+ valueSuffix;
     }
   }
 

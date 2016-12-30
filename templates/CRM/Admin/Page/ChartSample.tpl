@@ -1,16 +1,16 @@
 <div class="chartist-test">
 {php}
   /*
-  id：設定此元素的 id
-  classes：設定此元素的 class，資料格式為陣列，可多值，例如 array('ct-chart-pie', 'ct-chart-pie-medium')
-  selector：要產生圖表的元素的選擇器，預設為「.chartist-chart」
-  type：chartist 圖表的類型，預設為「Line」，可使用的類型：Line、Bar、Pie
-  labels：chartist 圖表的標籤，資料格式為陣列，可多值，PHP 丟資料時記得加上 json_encode，讓 js 能夠讀取
-  series：chartist 圖表的值，資料格式為陣列，第一個值為資料值，第二個值為總數，PHP 丟資料時記得加上 json_encode，讓 js 能夠讀取
-  withToolTip：是否有提示，資料格式為布林值，預設為「false」
-  isDonut：是否為甜甜圈，圖表類型必須要是「Pie」才有作用，資料格式為布林值，預設為「false」
-  isFillDonut：是否為填充式甜甜圈（以百分比顯示），圖表類型必須要是「Pie」才有作用，資料格式為布林值，預設為「false」
-  animation：是否有動畫效果，資料格式為布林值，預設為「false」
+  id: 設定此元素的 id
+  classes: 設定此元素的 class，資料格式為陣列，可多值，例如 array('ct-chart-pie', 'ct-chart-pie-medium')
+  selector: 要產生圖表的元素的選擇器，預設為「.chartist-chart」
+  type: chartist 圖表的類型，預設為「Line」，可使用的類型: Line、Bar、Pie
+  labels: chartist 圖表的標籤，資料格式為陣列，可多值，PHP 丟資料時記得加上 json_encode，讓 js 能夠讀取
+  series: chartist 圖表的值，資料格式為陣列，第一個值為資料值，第二個值為總數，PHP 丟資料時記得加上 json_encode，讓 js 能夠讀取
+  withToolTip: 是否有提示，資料格式為布林值，預設為「false」
+  isDonut: 是否為甜甜圈，圖表類型必須要是「Pie」才有作用，資料格式為布林值，預設為「false」
+  isFillDonut: 是否為填充式甜甜圈（以百分比顯示），圖表類型必須要是「Pie」才有作用，資料格式為布林值，預設為「false」
+  animation: 是否有動畫效果，資料格式為布林值，預設為「false」
   */
 
   $chart = array(
@@ -30,16 +30,18 @@
 <div class="chartist-test">
 {php}
   /*
-  id：設定此元素的 id
-  classes：設定此元素的 class，資料格式為陣列，可多值，例如 array('ct-chart-pie', 'ct-chart-pie-medium')
-  selector：要產生圖表的元素的選擇器，預設為「.chartist-chart」
-  type：chartist 圖表的類型，預設為「Line」，可使用的類型：Line、Bar、Pie
-  labels：chartist 圖表的標籤，資料格式為陣列，可多值，PHP 丟資料時記得加上 json_encode，讓 js 能夠讀取
-  series：chartist 圖表的值，資料格式為陣列，可多值，PHP 丟資料時記得加上 json_encode，讓 js 能夠讀取
-  labelType：圖表標籤的類型，預設為「label」，可使用的類型：label、percent 
-  labelOffset：圖表標籤的位置，預設為 0，如果有圖例，預設值為 65
-  withLegend：是否有圖例，資料格式為布林值，預設為「false」
-  withToolTip：是否有提示，資料格式為布林值，預設為「false」
+  id: 設定此元素的 id
+  classes: 設定此元素的 class，資料格式為陣列，可多值，例如 array('ct-chart-pie', 'ct-chart-pie-medium')
+  selector: 要產生圖表的元素的選擇器，預設為「.chartist-chart」
+  type: chartist 圖表的類型，預設為「Line」，可使用的類型: Line、Bar、Pie
+  labels: chartist 圖表的標籤，資料格式為陣列，可多值，PHP 丟資料時記得加上 json_encode，讓 js 能夠讀取
+  series: chartist 圖表的值，資料格式為陣列，可多值，PHP 丟資料時記得加上 json_encode，讓 js 能夠讀取
+  labelType: 圖表標籤的類型，預設為「label」，可使用的類型: label、percent 
+  labelOffset: 圖表標籤的位置，預設為 0，如果有圖例，預設值為 65
+  withLegend: 是否有圖例，資料格式為布林值，預設為「false」
+  withToolTip: 是否有提示，資料格式為布林值，預設為「false」
+  valuePrefix: tooltip顯示值時的前置字串，預設為空字串
+  valueSuffix: tooltip顯示值時的後置字串，預設為空字串
   */
 
   $chart = array(
@@ -52,7 +54,9 @@
     'series' => json_encode(array(10, 0, 15, 20, 4, 19, 0, 40, 29, 14, 34, 20, 49, 10, 23, 10, 5)),
     'labelType' => 'percent', 
     'withLegend' => true,
-    'withToolTip' => true
+    'withToolTip' => true,
+    'valuePrefix' => '$',
+    'valueSuffix' => '元',
   );
   $this->assign('chart', $chart);
 {/php}
@@ -68,7 +72,8 @@
     'type' => 'Line',
     'labels' => json_encode(array('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday')),
     'series' => json_encode(array(array(12, 9, 7, 8, 5), array(2, 1, 3.5, 7, 3), array(1, 3, 4, 5, 6))), 
-    'withToolTip' => true
+    'withToolTip' => true,
+    'valueSuffix' => '筆',
   );
   $this->assign('chart', $chart);
 {/php}
@@ -84,7 +89,8 @@
     'type' => 'Bar',
     'labels' => json_encode(array('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday')),
     'series' => json_encode(array(array(5, 2, 4, 2, 0))), 
-    'withToolTip' => true
+    'withToolTip' => true,
+    'valueSuffix' => '人',
   );
   $this->assign('chart', $chart);
 {/php}
