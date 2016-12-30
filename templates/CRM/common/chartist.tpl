@@ -2,7 +2,7 @@
   <script type="text/javascript" src="{$config->resourceBase}packages/chartist/dist/chartist.min.js"></script>
   <script type="text/javascript" src="{$config->resourceBase}packages/chartist/plugin/chartist-plugin-axistitle.js"></script>
   <link rel="stylesheet" href="{$config->resourceBase}packages/chartist/dist/chartist.min.css">
-  
+
   {if $chartist.withToolTip}
   <link rel="stylesheet" href="{$config->resourceBase}packages/chartist/plugin/chartist-plugin-tooltip/chartist-plugin-tooltip.css">
   <script type="text/javascript" src="{$config->resourceBase}packages/chartist/plugin/chartist-plugin-tooltip/chartist-plugin-tooltip.min.js"></script>
@@ -14,19 +14,19 @@
 
 {if $chartist.series}
   {if $chartist.title}<h3>{$chartist.title}</h3>{/if}
-  
+
   {php}
     $chartClasses = array('chartist-chart','ct-major-twelfth');
     $chartist = $this->get_template_vars('chartist');
-    
+
     if (count($chartist['classes']) > 0) {
-      $chartClasses = array_merge($chartClasses, $chartist['classes']); 
+      $chartClasses = array_merge($chartClasses, $chartist['classes']);
     }
 
     $chartClasses = implode(' ', $chartClasses);
     $this->assign('chartClasses', $chartClasses);
   {/php}
-  
+
   {if $chartist.id}
     <div id="{$chartist.id}" class="{$chartClasses}"></div>
   {else}
@@ -49,10 +49,10 @@
   var getPercent = function(val, total) { return Math.round(Number(val) / total * 100); }
   var getDesc = function(label, series, type, percent) {
     if (type == 'Pie') {
-      return label + '：' + series + '筆（' + percent + '%）'; 
-    } 
+      return label + '：' + series + '（' + percent + '%）';
+    }
     if (type == 'Line' || type == 'Bar') {
-      return label + '：' + series + '筆'; 
+      return label + '：' + series;
     }
   }
 
@@ -94,14 +94,14 @@
           desc = getDesc(label, series, type);
           data.series[i][j] = {"meta": desc, "value": series};
           console.log(data.series[i][j]);
-        }  
+        }
       }
     }
 
     if (type == 'Pie') {
       var percent = 0;
       var total = data.series.reduce(getSum);
-      
+
       for (var i = 0; i < data.series.length; i++) {
         label = data.labels[i];
         series = data.series[i];
@@ -119,7 +119,7 @@
     "series": chartSeries
   };
 
-  if (typeof chartLabels !== 'undefined' && chartLabels.length > 0) {    
+  if (typeof chartLabels !== 'undefined' && chartLabels.length > 0) {
     // A labels array that can contain any sort of values
     data['labels'] = chartLabels;
   }
@@ -165,7 +165,7 @@
               for (var i = 0; i < data.series.length; i++) {
                 total += data.series[i].value;
               }
-            } 
+            }
             else {
               series = data.series[index];
               total = data.series.reduce(getSum);
@@ -180,9 +180,9 @@
           default:
             return value;
             break;
-        } 
+        }
       }
-    }; 
+    };
   }
   options.plugins = [];
 {/literal}{if $chartist.axisx || $chartist.axisy}{literal}
@@ -219,7 +219,7 @@
   if (withToolTip) {
       data = renderToolTipData(data, chartType);
       var tooltip = Chartist.plugins.tooltip();
-      options.plugins.push(tooltip);   
+      options.plugins.push(tooltip);
   }
 
   if (chartType == 'Pie') {
