@@ -132,8 +132,8 @@ class CRM_Contribute_Form_ContributionCharts extends CRM_Core_Form {
         'labels' => json_encode($abbrMonthNames),
         'series' => json_encode(array(array_values($chartData))),
         'withToolTip' => true,
-        'valuePrefix' => '$',
-        'valueSuffix' => ts('dollars'),
+        'serialUnit' => '$',
+        'seriesUnitPosition' => 'prefix',
       );
       $this->assign('chart', $chart);
       $this->assign('hasChart', TRUE);
