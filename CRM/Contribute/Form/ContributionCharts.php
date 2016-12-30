@@ -114,7 +114,7 @@ class CRM_Contribute_Form_ContributionCharts extends CRM_Core_Form {
       $chartData = $abbrMonthNames = array();
       if (is_array($chartInfoMonthly)) {
         foreach ($chartInfoMonthly['By Month'] as $value) {
-          $chartData[] = $value;
+          $chartData[] = (int) round($value);
         }
       }
       CRM_Core_BAO_Cache::setItem($this->_years, $group, $path.'_chartYearsList', $components['CiviContribute']->componentID);
@@ -126,9 +126,14 @@ class CRM_Contribute_Form_ContributionCharts extends CRM_Core_Form {
     }
     if(!empty($chartData)){
       $chart = array(
-        'type' => 'bar',
+        'id' => 'chart-monthly',
+        'selector' => '#chart-monthly',
+        'type' => 'Bar',
         'labels' => json_encode($abbrMonthNames),
         'series' => json_encode(array(array_values($chartData))),
+        'withToolTip' => true,
+        'valuePrefix' => '$',
+        'valueSuffix' => ts('dollars'),
       );
       $this->assign('chart', $chart);
       $this->assign('hasChart', TRUE);

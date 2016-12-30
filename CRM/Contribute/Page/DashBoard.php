@@ -122,6 +122,9 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
       $template->assign('summaryRecur', $summary);
       $template->assign('frequencyUnit', 'month');
       $chart = CRM_Contribute_BAO_ContributionRecur::chartEstimateMonthly(12);
+      $chart['withToolTip'] = true;
+      $chart['valuePrefix'] = '$';
+      $chart['valueSuffix'] = ts('dollars');
       $template->assign('chartRecur', $chart);
     }
 
