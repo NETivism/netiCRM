@@ -26,12 +26,44 @@
 {* Display monthly and yearly contributions using Google charts (Bar and Pie) *} 
 {if $hasChart}
 
+  <div class="column-summary-count">
+    {if $contribute_total}<div>線上捐款{$contribute_total}元</div>{/if}
+    {if $participant_total}<div>線上活動報名{$participant_total}次</div>{/if}
+    {if $contact_total}<div>聯絡人{$contact_total}人</div>{/if}
+    {if $mailing}<div>寄出電子報{$mailing}封</div>{/if}
+  </div>
 
+  <div class="column-contact-source">
+    <h3>聯絡人來源</h3>
+    {* chartist *}
+    {include file="CRM/common/chartist.tpl" chartist=$chartContact}
+    <div id="{$chartContact.id}"></div>
+
+  </div>
+
+  <div class="column-contribution-instrument">
+    <h3>捐款工具</h3>
   {* chartist *}
   {include file="CRM/common/chartist.tpl" chartist=$chartInsSum}
   <div id="chart-pie-with-legend-contribute-instrument"></div>
 
-  {include file="CRM/common/chartist.tpl" chartist=$chartTypeSum}
-  <div id="chart-pie-with-legend-contribute-type"></div>
+  </div>
+
+  <div class="column-contribution-times">
+    <h3>捐款回流率</h3>
+  {include file="CRM/common/chartist.tpl" chartist=$chartContribTimes}
+  <div id="chart-pie-with-legend-contribute-times"></div>
+  </div>
+
+  <div class="column-mailing-delivered">
+    <h3>電子報發送</h3>
+    {include file="CRM/common/chartist.tpl" chartist=$chartMailing}
+  <div id="chart-bar-mailing"></div>
+  </div>
+
+  <div class="column-contribution-types">
+
+  </div>
+
 
 {/if}

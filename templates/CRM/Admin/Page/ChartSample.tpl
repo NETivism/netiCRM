@@ -66,6 +66,22 @@
 <div class="chartist-test">
 {php}
   $chart = array(
+    'id' => 'chart-pie-simple-demo',
+    'classes' => array('ct-chart-pie'),
+    'selector' => '#chart-pie-simple-demo',
+    'type' => 'Pie',
+    'series' => json_encode(array(10, 2, 4, 3)),
+    'labelType' => 'percent',
+    'withToolTip' => true
+  );
+  $this->assign('chart', $chart);
+{/php}
+{include file="CRM/common/chartist.tpl" chartist=$chart}
+</div>
+
+<div class="chartist-test">
+{php}
+  $chart = array(
     'id' => 'chart-line',
     'classes' => array('ct-chart-line'),
     'selector' => '#chart-line',
