@@ -143,7 +143,7 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
       'selector' => '#chart-bar-mailing',
       'type' => 'Bar',
       'labels' => json_encode($mailing['label']),
-      'series' => json_encode($mailing['count']),
+      'series' => json_encode(array($mailing['count'])),
       'withToolTip' => true
     );
     $this->assign('chartMailing', $chartMailing);
