@@ -44,19 +44,55 @@
   var chartSelector = "{/literal}{$chartist.selector|default:'.chartist-chart'}{literal}";
   var chartType = "{/literal}{$chartist.type|capitalize|default:'Line'}{literal}";
   var labelType = "{/literal}{$chartist.labelType|default:'label'}{literal}";
+  var seriesUnit = "{/literal}{$chartist.seriesUnit|default:''}{literal}";
+  var seriesUnitPosition = "{/literal}{$chartist.seriesUnitPosition|default:'suffix'}{literal}";
 
   var getSum = function(a, b) { return Number(a) + Number(b); }
-  var getPercent = function(val, total) { return Math.round(Number(val) / total * 100); }
-  var getDesc = function(label, series, type, percent) {
-    if (type == 'Pie') {
-      return label + '：' + series + '筆（' + percent + '%）'; 
-    } 
-    if (type == 'Line' || type == 'Bar') {
-      return label + '：' + series + '筆'; 
+  var getPercent = function(val, total) { return Math.round(Number(val) / Number(total) * 100); }
+  var getDesc = function(label, series, type, unit, percent) {
+    var result = '';
+
+    if (label.replace(/\s/g, "").length > 0) {
+      result += label + '：';
     }
+    
+    if (unit.replace(/\s/g, "").length > 0) {
+      result += renderUnitLabel(series, seriesUnit, seriesUnitPosition, 'desc');
+    } 
+    else {
+      result += series;
+    }
+
+    if (percent) {
+      result += '（' + percent + '%）';
+    }
+
+    return result;
   }
 
-  var renderChartLegend = function(elem, data) {
+  var renderUnitLabel = function(value, unit, position) {
+    var result = '';
+
+    if (unit.replace(/\s/g, "").length > 0) {
+      if (unit.trim() == '$') {
+        value = value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      }
+
+      if (position == 'prefix') {
+        result = unit + value;
+      }
+      else {
+        result = value + unit;
+      }
+    }
+    else {
+      result = value;
+    }
+
+    return result;
+  }
+
+  var renderChartLegend = function(elem, data, unit) {
     var label, series, percent, desc;
     var total = data.series.reduce(getSum);
     var type = chartType;
@@ -68,7 +104,8 @@
       if (series != 0) {
         label = data.labels[i];
         percent = getPercent(series, total);
-        desc = getDesc(label, series, type, percent);
+
+        desc = getDesc(label, series, type, unit, percent);
         var li = cj("<li/>").attr({"title": desc, "data-chart-series": series, "data-chart-percent": percent}).text(label).appendTo(ul);
       }
     }
@@ -82,16 +119,17 @@
   }
 
   var renderToolTipData = function(data, type, unit) {
-    var label, series, desc;
+    var label, series, desc, descData = {};
+    var unit = typeof unit !== 'undefined' ? unit : '';
 
     if (type == 'Line' || type == 'Bar') {
       for (var i = 0; i < data.series.length; i++) {
         //console.log(data.series[i]);
         for (var j = 0; j < data.series[i].length; j++) {
-          label = data.labels[j];
+          label = typeof data.labels !== 'undefined' ? data.labels[j] : '';
           console.log(data.series[i][j]);
           series = data.series[i][j];
-          desc = getDesc(label, series, type);
+          desc = getDesc(label, series, type, unit);
           data.series[i][j] = {"meta": desc, "value": series};
           console.log(data.series[i][j]);
         }  
@@ -103,10 +141,10 @@
       var total = data.series.reduce(getSum);
       
       for (var i = 0; i < data.series.length; i++) {
-        label = data.labels[i];
+        label = typeof data.labels !== 'undefined' ? data.labels[i] : '';
         series = data.series[i];
         percent = getPercent(series, total);
-        desc = getDesc(label, series, type, percent);
+        desc = getDesc(label, series, type, unit, percent);
         data.series[i] = {"meta": desc, "value": series};
       }
     }
@@ -146,7 +184,8 @@
       axisY: {
         offset: 80,
         labelInterpolationFnc: function(value) {
-          return '$ ' + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+          var label = seriesUnit ? renderUnitLabel(value, seriesUnit, seriesUnitPosition, 'axis') : value;
+          return label;
         }
       }
     };
@@ -208,7 +247,7 @@
 {if $chartist.withLegend}{literal}
   options.labelOffset = 65;
   cj(chartSelector).closest('.chartist-wrapper').addClass('chart-with-legend');
-  renderChartLegend(chartSelector, data);
+  renderChartLegend(chartSelector, data, seriesUnit);
 {/literal}{/if}
 
 {if $chartist.labelOffset}{literal}
@@ -217,7 +256,7 @@
 
 
   if (withToolTip) {
-      data = renderToolTipData(data, chartType);
+      data = renderToolTipData(data, chartType, seriesUnit);
       var tooltip = Chartist.plugins.tooltip();
       options.plugins.push(tooltip);   
   }
