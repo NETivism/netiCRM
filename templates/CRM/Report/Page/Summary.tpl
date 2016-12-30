@@ -27,10 +27,10 @@
 {if $hasChart}
 
   <div class="column-summary-count">
-    <div>線上捐款{$contribute_total}元</div>
-    <div>線上活動報名{$participant_total}次</div>
-    <div>聯絡人{$contact_total}人</div>
-    <div>寄出電子報{$mailing}封</div>
+    {if $contribute_total}<div>線上捐款{$contribute_total}元</div>{/if}
+    {if $participant_total}<div>線上活動報名{$participant_total}次</div>{/if}
+    {if $contact_total}<div>聯絡人{$contact_total}人</div>{/if}
+    {if $mailing}<div>寄出電子報{$mailing}封</div>{/if}
   </div>
 
   <div class="column-contact-source">

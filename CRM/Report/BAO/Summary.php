@@ -254,7 +254,12 @@ WHERE c.receive_date > mm.time_stamp AND c.receive_date < DATE_ADD(mm.time_stamp
     $allData['by_apply'] = self::parseDataFromSql("SELECT COUNT(contact_id) people FROM (SELECT contact_id, register_date FROM civicrm_participant WHERE 1 GROUP BY contact_id) p INNER JOIN (SELECT entity_id,modified_date FROM civicrm_log WHERE entity_table = 'civicrm_contact' GROUP BY entity_id) cl ON p.contact_id = cl.entity_id WHERE register_date < DATE_ADD(modified_date, INTERVAL 10 second)");
     $allData['other']['people'] = $all - $allData['by_contribute']['people'] - $allData['by_apply']['people'];
 
-    return self::convertArrayToChartUse($allData);
+    $allData = array(
+      'all' => $all,
+      'filted' => self::convertArrayToChartUse($allData),
+    );
+
+    return $allData;
   }
 
 

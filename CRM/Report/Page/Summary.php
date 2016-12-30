@@ -48,21 +48,20 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
    */
   function run() {
 
-    /*
-    $allData = array();
-    $allData['電子報統計'] = CRM_Report_BAO_Summary::getMailingData();
-    $allData['參加者統計'] = CRM_Report_BAO_Summary::getParitcipantData();
-    $allData['捐款統計'] = CRM_Report_BAO_Summary::getContributionData();
-    // $allData['參加者轉捐款統計'] = CRM_Report_BAO_Summary::getActToConData();
-    // $allData['捐款轉參加者統計'] = CRM_Report_BAO_Summary::getConToActData();
-    // $allData['電子報轉參加者統計'] = CRM_Report_BAO_Summary::getMailToActData();
-    // $allData['電子報轉捐款統計'] = CRM_Report_BAO_Summary::getMailToConData();
-    // $allData['開信後多久報名活動'] = CRM_Report_BAO_Summary::getActAfterMailData();
-    // $allData['開信後多久捐款'] = CRM_Report_BAO_Summary::getConAfterMailData();
-    $allData['成為聯絡人是透過報名還是捐款'] = CRM_Report_BAO_Summary::getContactSource();
-    dpm($allData);
-    */
-
+    if($_GET['dpm'] == 'all'){
+      $allData = array();
+      $allData['電子報統計'] = CRM_Report_BAO_Summary::getMailingData();
+      $allData['參加者統計'] = CRM_Report_BAO_Summary::getParitcipantData();
+      $allData['捐款統計'] = CRM_Report_BAO_Summary::getContributionData();
+      $allData['參加者轉捐款統計'] = CRM_Report_BAO_Summary::getActToConData();
+      $allData['捐款轉參加者統計'] = CRM_Report_BAO_Summary::getConToActData();
+      $allData['電子報轉參加者統計'] = CRM_Report_BAO_Summary::getMailToActData();
+      $allData['電子報轉捐款統計'] = CRM_Report_BAO_Summary::getMailToConData();
+      $allData['開信後多久報名活動'] = CRM_Report_BAO_Summary::getActAfterMailData();
+      $allData['開信後多久捐款'] = CRM_Report_BAO_Summary::getConAfterMailData();
+      $allData['成為聯絡人是透過報名還是捐款'] = CRM_Report_BAO_Summary::getContactSource();
+      dpm($allData);
+    }
     $contacts = CRM_Report_BAO_Summary::getContactSource();
 
     $contribute = CRM_Report_BAO_Summary::getContributionData();
@@ -75,7 +74,7 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
     $template = CRM_Core_Smarty::singleton();
     $template->assign('contribute_total', $contribute['total_contribute']['sum']);
     $template->assign('participant_total',$participants['participants']['count']);
-    $template->assign('contact_total',$contacts['all']['people']);
+    $template->assign('contact_total',$contacts['all']);
     $template->assign('mailing',$mailing['sended']['count']);
 
     $instrumentsSum = self::getArrayLabelAndValue($contribute['instruments'], 'sum');
@@ -88,8 +87,8 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
       'classes' => array('ct-chart-pie'),
       'selector' => '#chart-pie-with-legend-contact-source',
       'type' => 'Pie',
-      'labels' => json_encode($contacts['label']),
-      'series' => json_encode($contacts['people']),
+      'labels' => json_encode($contacts['filted']['label']),
+      'series' => json_encode($contacts['filted']['people']),
       'labelType' => 'percent',
       'withLegend' => true,
       'withToolTip' => true
