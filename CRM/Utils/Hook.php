@@ -922,7 +922,7 @@ class CRM_Utils_Hook {
    *
    * @return mixed
    */
-  static function alterTemplateVars($resourceName, &$vars) {
+  static function alterTemplateVars(&$resourceName, &$vars) {
     $config = CRM_Core_Config::singleton();
     require_once (str_replace('_', DIRECTORY_SEPARATOR, $config->userHookClass) . '.php');
     $null = &CRM_Core_DAO::$_nullObject;
