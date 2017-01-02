@@ -93,7 +93,7 @@
                 {$row.status}</td>
             {/if}
             <td>{$row.contact_type}</td>	
-            <td class="crm-search-display_name"><a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$row.contact_id`"}">{if $row.is_deleted}<del>{/if}{$row.sort_name}{if $row.is_deleted}</del>{/if}</a></td>
+            <td class="crm-search-display_name"><a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$row.contact_id`"}">{if $row.is_deleted}<del>{/if}{$row.sort_name}{if $row.nick_name} ({$row.nick_name}){/if}{if $row.is_deleted}</del>{/if}</a></td>
             {if $action eq 512 or $action eq 256}
               <td class="overflow-safe{if $row.on_hold} status-hold{/if}">{$row.email}{if $row.on_hold}&nbsp;(On Hold){/if}</td>
               <td>{$row.country}</td>

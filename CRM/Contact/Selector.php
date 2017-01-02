@@ -771,6 +771,9 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
 
         $row['contact_id'] = $result->contact_id;
         $row['sort_name'] = $result->sort_name;
+        if ($config->includeNickNameInName) {
+          $row['nick_name'] = !empty($result->nick_name) ? $result->nick_name : '';
+        }
         if (array_key_exists('id', $row)) {
           $row['id'] = $result->contact_id;
         }
