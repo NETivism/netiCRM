@@ -44,7 +44,7 @@ class CRM_Contact_Page_AJAX {
     $name = CRM_Utils_Type::escape($name, 'String');
     $limit = '10';
     $list = array_keys(CRM_Core_BAO_Preferences::valueOptions('contact_autocomplete_options'), '1');
-    $select = array('sort_name');
+    $select = array();
     $where = '';
     $from = array();
     foreach ($list as $value) {
@@ -116,7 +116,12 @@ class CRM_Contact_Page_AJAX {
       $strSearch = "$name%";
     }
 
-    $whereClause = " WHERE sort_name LIKE '$strSearch' {$where} ";
+    if ($config->includeNickNameInName) {
+      $whereClause = " WHERE (LOWER(sort_name) LIKE '$strSearch' OR LOWER(nick_name) LIKE '$strSearch') {$where}";
+    }
+    else {
+      $whereClause = " WHERE sort_name LIKE '$strSearch' {$where} ";
+    }
 
     $additionalFrom = '';
     if ($relType) {
@@ -130,9 +135,9 @@ class CRM_Contact_Page_AJAX {
 
     //CRM-5954
     $query = "
-            SELECT id, data 
+            SELECT id, data, sort_name, nick_name
             FROM (
-                SELECT cc.id as id, CONCAT_WS( ' :: ', {$select} ) as data, sort_name
+                SELECT cc.id as id, CONCAT_WS( ' :: ', {$select} ) as data, sort_name, nick_name
                 FROM civicrm_contact cc {$from}
         {$aclFrom}
         {$additionalFrom}
@@ -153,7 +158,15 @@ class CRM_Contact_Page_AJAX {
     $dao = CRM_Core_DAO::executeQuery($query);
     $contactList = NULL;
     while ($dao->fetch()) {
-      $d = str_replace(array("\n", "\r", "\t"), '', $dao->data);
+      if ($dao->data) {
+        $d = ' :: '.str_replace(array("\n", "\r", "\t"), '', $dao->data);
+      }
+      if ($config->includeNickNameInName && !empty($dao->nick_name)) {
+        $d = "$dao->sort_name ({$dao->nick_name})" . $d;
+      }
+      else {
+        $d = "$dao->sort_name" . $d;
+      }
       echo $contactList = "$d|$dao->id\n";
     }
 
