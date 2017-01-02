@@ -52,11 +52,11 @@
   var getDesc = function(label, series, type, unit, percent) {
     var result = '';
 
-    if (label.replace(/\s/g, "").length > 0) {
+    if (String(label).replace(/\s/g, "").length > 0) {
       result += label + '：';
     }
     
-    if (unit.replace(/\s/g, "").length > 0) {
+    if (String(unit).replace(/\s/g, "").length > 0) {
       result += renderUnitLabel(series, seriesUnit, seriesUnitPosition, 'desc');
     } 
     else {
@@ -102,7 +102,7 @@
       series = data.series[i];
 
       if (series != 0) {
-        label = data.labels[i];
+        label = typeof data.labels !== 'undefined' ? data.labels[i] : '';
         percent = getPercent(series, total);
 
         desc = getDesc(label, series, type, unit, percent);
@@ -124,14 +124,11 @@
 
     if (type == 'Line' || type == 'Bar') {
       for (var i = 0; i < data.series.length; i++) {
-        //console.log(data.series[i]);
         for (var j = 0; j < data.series[i].length; j++) {
           label = typeof data.labels !== 'undefined' ? data.labels[j] : '';
-          console.log(data.series[i][j]);
           series = data.series[i][j];
           desc = getDesc(label, series, type, unit);
           data.series[i][j] = {"meta": desc, "value": series};
-          console.log(data.series[i][j]);
         }  
       }
     }
@@ -202,7 +199,7 @@
               series = data.series[index].value;
 
               for (var i = 0; i < data.series.length; i++) {
-                total += data.series[i].value;
+                total += Number(data.series[i].value);
               }
             } 
             else {
