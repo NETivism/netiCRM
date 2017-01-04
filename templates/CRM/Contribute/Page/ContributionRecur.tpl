@@ -46,8 +46,10 @@
             <tr><td></td><td></td></tr>
             {if $recur.processor_id}<tr><td class="label">{ts}Processor ID{/ts}</td><td>{$recur.processor_id}</td></tr>{/if}
             {if $recur.contribution_status_id neq 3}<tr><td class="label">{ts}Next Sched Contribution{/ts}</td><td>{$recur.next_sched_contribution|crmDate}</td></tr>{/if}
-            <!--
+
+            {* trxn_id Used in spgateway. refs #16960 - flr. 65 *}
             <tr><td class="label">{ts}Transaction ID{/ts}</td><td>{$recur.trxn_id}</td></tr>
+            <!--
             {if $recur.invoice_id}<tr><td class="label">{ts}Invoice ID{/ts}</td><td>{$recur.invoice_id}</td></tr>{/if}
             {if $recur.failure_count}<tr><td class="label">{ts}Failure Count{/ts}</td><td>{$recur.failure_count}</td></tr>{/if}
             {if $recur.next_sched_contribution}<tr><td class="label">{ts}Failure Retry Date{/ts}</td><td>{$recur.next_sched_contribution|crmDate}</td></tr>{/if}
