@@ -117,7 +117,7 @@ class CRM_Report_Form_Event_IncomeCountSummary extends CRM_Report_Form {
         array('sid' => array('name' => 'status_id',
             'title' => ts('Participant Status'),
             'operatorType' => CRM_Report_Form::OP_MULTISELECT,
-            'options' => CRM_Event_PseudoConstant::participantStatus(),
+            'options' => CRM_Event_PseudoConstant::participantStatus(NULL, NULL, 'label'),
           ),
           'rid' => array('name' => 'role_id',
             'title' => ts('Participant Role'),
