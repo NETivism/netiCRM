@@ -64,6 +64,9 @@
         {include file="CRM/Contribute/Form/Selector.tpl" context="Search"}	
     {/if}
 
+    {assign var='urlParams' value="reset=1&action=add&cid=$contact_id&context=contribution&membership_id=$id"}
+    <a class="button" href="{crmURL p='civicrm/contact/view/contribution' q=$urlParams}" accesskey="n"><span><div class="zmdi zmdi-plus"></div> {ts}Add Contribution{/ts}</span></a>
+
     <div class="crm-submit-buttons">
         {* Check permissions and make sure this is not an inherited membership (edit and delete not allowed for inherited memberships) *}
         {if ! $owner_contact_id AND call_user_func(array('CRM_Core_Permission','check'), 'edit memberships') }
