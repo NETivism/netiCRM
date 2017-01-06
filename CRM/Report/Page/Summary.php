@@ -47,8 +47,8 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
    * @return void
    */
   function run() {
-
-    if($_GET['dpm'] == 'all'){
+    $debug = $_GET['debug'];
+    if(!empty($_GET['debug'])){
       $allData = array();
       $allData['電子報統計'] = CRM_Report_BAO_Summary::getMailingData();
       $allData['參加者統計'] = CRM_Report_BAO_Summary::getParitcipantData();
@@ -60,24 +60,65 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
       $allData['開信後多久報名活動'] = CRM_Report_BAO_Summary::getActAfterMailData();
       $allData['開信後多久捐款'] = CRM_Report_BAO_Summary::getConAfterMailData();
       $allData['成為聯絡人是透過報名還是捐款'] = CRM_Report_BAO_Summary::getContactSource();
-      dpm($allData);
+      switch ($debug) {
+        case 'dpm':
+          dpm($allData);
+          break;
+        case 'dpr':
+          dpr($allData);
+          break;
+        case 'debug_var':
+          CRM_Core_Error::debug_var('CRM_Report_BAO_Summary', $allData);
+          break;
+        default:
+        case 'var_export':
+          var_export($allData);
+          break;
+      }
     }
     $contacts = CRM_Report_BAO_Summary::getContactSource();
 
     $contribute = CRM_Report_BAO_Summary::getContributionData();
 
-    $participants = CRM_Report_BAO_Summary::getParitcipantData();
+    $participant = CRM_Report_BAO_Summary::getParitcipantData();
 
     $mailing = CRM_Report_BAO_Summary::getMailingData();
 
 
     $template = CRM_Core_Smarty::singleton();
     $template->assign('contribute_total', $contribute['total_contribute']['sum']);
-    $template->assign('participant_total',$participants['participants']['count']);
+    $template->assign('participant_total',$participant['participants']['count']);
     $template->assign('contact_total',$contacts['all']);
     $template->assign('mailing',$mailing['sended']['count']);
 
-    $instrumentsSum = self::getArrayLabelAndValue($contribute['instruments'], 'sum');
+
+    /**
+     * Online-offline contribution
+     */
+    $chartContact = array(
+      'id' => 'chart-pie-with-legend-contribution-online-offline',
+      'classes' => array('ct-chart-pie'),
+      'selector' => '#chart-pie-with-legend-contribution-online-offline',
+      'type' => 'Pie',
+      'series' => self::getDonutData($contribute['online_offline']['sum']),
+      'isFillDonut' => true,
+    );
+    $template->assign('chartConributeOnlineOffline', $chartContact);
+
+    /**
+     * Online-offline participant
+     */
+    $chartContact = array(
+      'id' => 'chart-pie-with-legend-participant-online-offline',
+      'classes' => array('ct-chart-pie'),
+      'selector' => '#chart-pie-with-legend-participant-online-offline',
+      'type' => 'Pie',
+      'series' => self::getDonutData($participant['online_offline']['count']),
+      'isFillDonut' => true,
+    );
+    $template->assign('chartParticipantOnlineOffline', $chartContact);
+
+
     /**
      * Contribute
      */
@@ -148,29 +189,35 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
     );
     $this->assign('chartMailing', $chartMailing);
 
+    $this->assign('static_label',array(ts("Total Amount"),ts("Avg Amount"),ts("Count"),ts("People")));
+    $this->assign('contribution_type_table',$contribute['contribution_type_table']);
+
+    $this->assign('recur_table',$contribute['recur_table']);
 
     // $template->assign('chartInsSum', $chartInsSum);
     // $template->assign('chartTypeSum', $chartTypeSum);
     $template->assign('hasChart', TRUE);
 
+    CRM_Utils_System::setTitle(ts('Report Summary'));
+
 
     return parent::run();
   }
 
-  static function getArrayLabelAndValue($array, $key){
-    $returnLabel = Array();
-    $returnValue = Array();
-    foreach ($array as $label => $ele) {
-      if(!empty($ele[$key])){
-        $returnLabel[] = $label;
-        $returnValue[] = $ele[$key];
+  static private function getDonutData($data){
+    $i = 0;
+    $returnData = array();
+    foreach ($data as $value) {
+      if($i == 0){
+        $returnData[0] = $value;
+      }elseif($i == 1){
+        $returnData[] = $returnData[0] + $value;
+      }else{
+        break;
       }
-      else{
-        $returnLabel[] = $label;
-        $returnValue[] = 0;
-      }
+      $i ++;
     }
-    return array($returnLabel, $returnValue);
+    return json_encode($returnData);
   }
 
 }

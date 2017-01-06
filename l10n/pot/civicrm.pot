@@ -45262,3 +45262,19 @@ msgstr ""
 #: CRM/Contact/Form/Search/Custom/RecurSearch.php
 msgid "Over %1"
 msgstr ""
+
+#: CRM/Report/BAO/Summary.php
+msgid "Sended Count"
+msgstr ""
+
+msgid "Non-online Contribution"
+msgstr ""
+
+msgid "Non-online Registration"
+msgstr ""
+
+msgid "People"
+msgstr
+
+msgid "Report Summary"
+msgstr
