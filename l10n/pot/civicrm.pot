@@ -45274,7 +45274,7 @@ msgid "Non-online Registration"
 msgstr ""
 
 msgid "People"
-msgstr
+msgstr ""
 
 msgid "Report Summary"
-msgstr
+msgstr ""
