@@ -3118,6 +3118,14 @@ ul.ui-sortable {
   content: "\f1f7";
 }
 
+/* crm messages: warning */
+.crm-container div.warning {
+  background-color: #ff9800;
+}
+.crm-container div.warning::before {
+  content: "\f1f4";
+}
+
 /* crm messages: error */
 .crm-container div.crm-error {
   background: #d50000;
@@ -3333,6 +3341,9 @@ ul.ui-sortable {
   padding: 6px 18px;
 }
 
+.crm-container .crm-form-elem .messages {
+  margin: 5px 0;
+}
 
 /* ac results */
 .ac_results {
