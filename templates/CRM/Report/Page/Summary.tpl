@@ -24,6 +24,19 @@
  +--------------------------------------------------------------------+
 *}
 {* Display monthly and yearly contributions using Google charts (Bar and Pie) *} 
+
+<style>
+  {literal}
+  .page-title:after{
+    content: "beta";
+    font-size: 13px;
+    color: #9e9e9e;
+    vertical-align: top;
+    padding-left: 5px;
+  }
+  {/literal}
+</style>
+
 {if $hasChart}
 
   <div class="column-summary-count">
