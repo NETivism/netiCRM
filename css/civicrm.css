@@ -2367,6 +2367,10 @@ div#civicrm-dashboard form {
 .chartist-chart > svg > .ct-series:nth-last-child(15) .ct-slice-pie { fill: #6188e2; }
 .chartist-chart > svg > .ct-series:nth-last-child(16) .ct-slice-pie { fill: #a748ca; }
 
+.chartist-wrapper .ct-label[data-chart-percent^="0"] {
+  display: none;
+}
+
 /* chart with legend */
 .chart-with-legend .chartist-chart {
   float: left;
