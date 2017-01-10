@@ -401,9 +401,10 @@ Alternatively you can get a version of CiviCRM that matches your PHP version
     $attributes = '';
     $this->checkAndAppend($attributes, $dbXML, 'character_set', 'DEFAULT CHARACTER SET ', '');
     $this->checkAndAppend($attributes, $dbXML, 'collate', 'COLLATE ', '');
+    $this->checkAndAppend($attributes, $dbXML, 'table_row_format', 'ROW_FORMAT=', '');
     $database['attributes'] = $attributes;
 
-    $tableAttributes_modern = $tableAttributes_simple = '';
+    $tableRowAttributes = $tableAttributes_modern = $tableAttributes_simple = '';
     $this->checkAndAppend($tableAttributes_modern, $dbXML, 'table_type', 'ENGINE=', '');
     $this->checkAndAppend($tableAttributes_simple, $dbXML, 'table_type', 'TYPE=', '');
     $database['tableAttributes_modern'] = trim($tableAttributes_modern . ' ' . $attributes);

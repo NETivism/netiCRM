@@ -5,6 +5,7 @@
 <character_set>utf8</character_set>
 <collate>utf8_unicode_ci</collate>
 <table_type>InnoDB</table_type>
+<table_row_format>DYNAMIC</table_row_format>
 <comment>Schema for CiviCRM</comment>
 
 <xi:include href="Core/files.xml"              parse="xml" />
