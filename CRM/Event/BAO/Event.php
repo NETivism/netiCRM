@@ -67,6 +67,16 @@ class CRM_Event_BAO_Event extends CRM_Event_DAO_Event {
     return NULL;
   }
 
+  static function retrieveField($eventId, $fieldName) {
+    $params = array('id' => $eventId);
+    $object = array();
+    self::retrieve($params, $object);
+    if (isset($object[$fieldName])) {
+      return $object[$fieldName];
+    }
+    return NULL;
+  }
+
   /**
    * update the is_active flag in the db
    *

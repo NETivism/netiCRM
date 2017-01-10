@@ -1273,15 +1273,7 @@ class CRM_Contact_BAO_Query {
       $likeNames = array('sort_name', 'email', 'note', 'display_name');
     }
 
-    if (!$useEquals &&
-      in_array($id, $likeNames)
-    ) {
-      $result = array($id, 'LIKE', $values, 0, 1);
-    }
-    elseif (is_string($values) && strpos($values, '%') !== FALSE) {
-      $result = array($id, 'LIKE', $values, 0, 0);
-    }
-    elseif ($id == 'group') {
+    if ($id == 'group') {
       if (is_array($values)) {
         foreach ($values as $groupIds => $val) {
           $matches = array();
@@ -1312,6 +1304,15 @@ class CRM_Contact_BAO_Query {
         }
       }
       $result = array($id, 'IN', $values, 0, 0);
+    }
+    elseif (!$useEquals && in_array($id, $likeNames)) {
+      $result = array($id, 'LIKE', $values, 0, 1);
+    }
+    elseif (!$useEquals && preg_match('/^\d+(,\d+)*$/', $values) && !is_numeric($values)) {
+      $result = array($id, 'IN', '('.$values.')', 0);
+    }
+    elseif (is_string($values) && strpos($values, '%') !== FALSE) {
+      $result = array($id, 'LIKE', $values, 0, 0);
     }
     else {
       $result = array($id, '=', $values, 0, $wildcard);

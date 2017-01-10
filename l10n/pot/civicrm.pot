@@ -45278,3 +45278,6 @@ msgstr ""
 
 msgid "Report Summary"
 msgstr ""
+
+msgid "Type in a partial or complete name of an existing event."
+msgstr ""

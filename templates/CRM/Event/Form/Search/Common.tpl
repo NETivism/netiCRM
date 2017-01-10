@@ -24,7 +24,7 @@
  +--------------------------------------------------------------------+
 *}
 <tr>
-    <td class="crm-event-form-block-event_type"> {$form.event_name.label}  <br />{$form.event_name.html|crmReplace:class:huge} </td>
+    <td class="crm-event-form-block-event_type"> {$form.event_id.label}  <br />{$form.event_id.html|crmReplace:class:huge} </td>
     <td class="crm-event-form-block-event_type"> {$form.event_type.label}<br />{$form.event_type.html} </td>
 </tr>     
  
@@ -68,14 +68,22 @@
 {/if}
 
 {literal}
-<script type="text/javascript"> 
+<script type="text/javascript">
+eval( 'tokenClass = { tokenList: "token-input-list-facebook", token: "token-input-token-facebook", tokenDelete: "token-input-delete-token-facebook", selectedToken: "token-input-selected-token-facebook", highlightedToken: "token-input-highlighted-token-facebook", dropdown: "token-input-dropdown-facebook", dropdownItem: "token-input-dropdown-item-facebook", dropdownItem2: "token-input-dropdown-item2-facebook", selectedDropdownItem: "token-input-selected-dropdown-item-facebook", inputToken: "token-input-input-token-facebook" } ');
+
+var hintText = "{/literal}{ts}Type in a partial or complete name of an existing event.{/ts}{literal}";
 var eventUrl = "{/literal}{$dataURLEvent}{literal}";
+{/literal}
+{if $eventPrepopulate}
+  var eventPrepopulate = {$eventPrepopulate};
+{else}
+  var eventPrepopulate = '';
+{/if}
+{literal}
+cj("#event_id").tokenInput( eventUrl, { prePopulate: eventPrepopulate, classes: tokenClass, hintText: hintText });
+
 var typeUrl  = "{/literal}{$dataURLEventType}{literal}";
 var feeUrl   = "{/literal}{$dataURLEventFee}{literal}";
-
-cj('#event_name').autocomplete( eventUrl, { width : 280, selectFirst : false, matchContains: true
-                            }).result( function(event, data, formatted) { cj( "input#event_id" ).val( data[1] );
-                            }).bind( 'click', function( ) { cj( "input#event_id" ).val(''); });
 
 cj('#event_type').autocomplete( typeUrl, { width : 180, selectFirst : false, matchContains: true
                                }).result(function(event, data, formatted) { cj( "input#event_type_id" ).val( data[1] );
