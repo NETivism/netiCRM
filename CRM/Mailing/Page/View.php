@@ -163,7 +163,7 @@ class CRM_Mailing_Page_View extends CRM_Core_Page {
     if ($print) {
       header($header);
       if (!strstr($html, '</body>')) {
-        echo '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head><body>'."\n";
+        echo '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head><body style="margin:0;">'."\n";
         echo $content."\n";
         echo '</body></html>';
       }
