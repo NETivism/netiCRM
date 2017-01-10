@@ -46,34 +46,31 @@ class CRM_Report_BAO_Summary {
 
   static function getMailingData(){
     $allData = array();
-    $allData['mailing_count'] = self::parseDataFromSql("SELECT COUNT(DISTINCT mj.mailing_id) count FROM civicrm_mailing_job mj WHERE mj.is_test = 0");
-    $allData['sended'] = self::parseDataFromSql("SELECT COUNT(DISTINCT meq.id) count FROM civicrm_mailing_job mj LEFT JOIN civicrm_mailing_event_queue meq ON meq.job_id = mj.id {JOIN} WHERE mj.is_test = 0 {AND}");
-    $allData['received'] = self::parseDataFromSql("SELECT COUNT(DISTINCT med.id) count FROM civicrm_mailing_job mj LEFT JOIN civicrm_mailing_event_queue meq ON meq.job_id = mj.id {JOIN} INNER JOIN civicrm_mailing_event_delivered med ON med.event_queue_id = meq.id WHERE mj.is_test = 0 {AND}");
-    $allData['opened'] = self::parseDataFromSql("SELECT COUNT(DISTINCT meo.id) count FROM civicrm_mailing_job mj LEFT JOIN civicrm_mailing_event_queue meq ON meq.job_id = mj.id {JOIN} INNER JOIN civicrm_mailing_event_opened meo ON meo.event_queue_id = meq.id WHERE mj.is_test = 0 {AND}");
-    $allData['clicked'] = self::parseDataFromSql("SELECT COUNT(DISTINCT met.id) count FROM civicrm_mailing_job mj LEFT JOIN civicrm_mailing_event_queue meq ON meq.job_id = mj.id {JOIN} INNER JOIN civicrm_mailing_event_trackable_url_open met ON met.event_queue_id = meq.id WHERE mj.is_test = 0 {AND}");
+    $allData['Sended Count'] = self::parseDataFromSql("SELECT COUNT(DISTINCT meq.id) count FROM civicrm_mailing_job mj LEFT JOIN civicrm_mailing_event_queue meq ON meq.job_id = mj.id {JOIN} WHERE mj.is_test = 0 {AND}");
+    $allData['Successful Deliveries'] = self::parseDataFromSql("SELECT COUNT(DISTINCT meq.id) count FROM civicrm_mailing_job mj LEFT JOIN civicrm_mailing_event_queue meq ON meq.job_id = mj.id {JOIN} INNER JOIN civicrm_mailing_event_delivered med ON med.event_queue_id = meq.id WHERE mj.is_test = 0 {AND}");
+    $allData['Opened Count'] = self::parseDataFromSql("SELECT COUNT(DISTINCT meq.id) count FROM civicrm_mailing_job mj LEFT JOIN civicrm_mailing_event_queue meq ON meq.job_id = mj.id {JOIN} INNER JOIN civicrm_mailing_event_opened meo ON meo.event_queue_id = meq.id WHERE mj.is_test = 0 {AND}");
+    $allData['Click Count'] = self::parseDataFromSql("SELECT COUNT(DISTINCT meq.id) count FROM civicrm_mailing_job mj LEFT JOIN civicrm_mailing_event_queue meq ON meq.job_id = mj.id {JOIN} INNER JOIN civicrm_mailing_event_trackable_url_open met ON met.event_queue_id = meq.id WHERE mj.is_test = 0 {AND}");
+    $allData = self::convertArrayToChartUse($allData);
+    $allData['Mailing'] = self::parseDataFromSql("SELECT COUNT(DISTINCT mj.mailing_id) count FROM civicrm_mailing_job mj WHERE mj.is_test = 0");
 
-    return self::convertArrayToChartUse($allData);
+    return $allData;
   }
 
   static function getParitcipantData(){
     $allData = array();
-    $allData['events'] = self::parseDataFromSql("SELECT count(e.id) count FROM civicrm_event e");
+    $allData['Event Total'] = self::parseDataFromSql("SELECT count(e.id) count FROM civicrm_event e");
     $allData['online_offline'] = array();
-    $allData['online_offline']['online_participants'] = self::parseDataFromSql("SELECT count(p.id) count,COUNT(DISTINCT p.contact_id) people  FROM civicrm_participant p {JOIN} WHERE p.source LIKE '線上活動報名%' AND p.is_test = 0 {AND}");
-    $allData['online_offline']['offline_participants'] = self::parseDataFromSql("SELECT count(p.id) count,COUNT(DISTINCT p.contact_id) people  FROM civicrm_participant p {JOIN} WHERE (p.source NOT LIKE '線上活動報名%' OR p.source IS NULL) AND p.is_test = 0 {AND}");
-    $allData['participants'] = self::parseDataFromSql("SELECT count(p.id) count,COUNT(DISTINCT p.contact_id) people  FROM civicrm_participant p {JOIN} WHERE p.is_test = 0 {AND}");
+    $allData['online_offline']["Online Registration"] = self::parseDataFromSql("SELECT count(p.id) count,COUNT(DISTINCT p.contact_id) people  FROM civicrm_participant p {JOIN} WHERE p.source LIKE '".ts("Online Event Registration")."%' AND p.is_test = 0 {AND}");
+    $allData['online_offline']['Non-online Registration'] = self::parseDataFromSql("SELECT count(p.id) count,COUNT(DISTINCT p.contact_id) people  FROM civicrm_participant p {JOIN} WHERE (p.source NOT LIKE '".ts("Online Event Registration")."%' OR p.source IS NULL) AND p.is_test = 0 {AND}");
+    $allData['Participants Count'] = self::parseDataFromSql("SELECT count(p.id) count,COUNT(DISTINCT p.contact_id) people  FROM civicrm_participant p {JOIN} WHERE p.is_test = 0 {AND}");
     return self::convertArrayToChartUse($allData);
   }
 
   static function getContributionData(){
     $allData = array();
     $allData['online_offline'] = array();
-    $allData['online_offline']['online'] = self::parseDataFromSql("SELECT SUM(c.total_amount) sum, COUNT(c.id) count,COUNT(DISTINCT c.contact_id) people FROM civicrm_contribution c {JOIN} WHERE c.source LIKE '線上捐款%' AND c.is_test = 0 {AND};");
-    // $allData['online_offline']['online'] = self::parseDataFromSql("SELECT SUM(total_amount) sum, COUNT(id) count,COUNT(DISTINCT contact_id) people {SELECT} FROM civicrm_contribution {JOIN} WHERE source LIKE '線上捐款%' AND is_test = 0 {WHERE};");
-    // {JOIN} -> INNER JOIN civicrm_contact contact_a ;
-    // {WHERE} -> AND contact_a.is_deleted = 0;
-    $allData['online_offline']['offline'] = self::parseDataFromSql("SELECT SUM(c.total_amount) sum, COUNT(c.id) count,COUNT(DISTINCT c.contact_id) people FROM civicrm_contribution c {JOIN} WHERE ((c.source NOT LIKE '線上活動報名%' AND c.source NOT LIKE '線上捐款%') OR c.source IS NULL) AND c.is_test = 0 {AND}");
-    
+    $allData['online_offline']['Online Contribution'] = self::parseDataFromSql("SELECT SUM(c.total_amount) sum, COUNT(c.id) count,COUNT(DISTINCT c.contact_id) people FROM civicrm_contribution c {JOIN} WHERE c.source LIKE '".ts("Online Contribution")."%' AND c.is_test = 0 {AND};");
+    $allData['online_offline']['Non-online Contribution'] = self::parseDataFromSql("SELECT SUM(c.total_amount) sum, COUNT(c.id) count,COUNT(DISTINCT c.contact_id) people FROM civicrm_contribution c {JOIN} WHERE ((c.source NOT LIKE '".ts("Online Event Registration")."%' AND c.source NOT LIKE '".ts("Online Contribution")."%') OR c.source IS NULL) AND c.is_test = 0 {AND}");
     // contribution_type
     $allData['contribution_type'] = array();
     $sql = "SELECT id,name FROM civicrm_contribution_type";
@@ -81,7 +78,7 @@ class CRM_Report_BAO_Summary {
     while($dao->fetch()){
       $name = $dao->name;
       $id = $dao->id;
-      $allData['contribution_type'][$name] = self::parseDataFromSql("SELECT SUM(c.total_amount) sum, COUNT(c.id) count,COUNT(DISTINCT c.contact_id) people FROM civicrm_contribution c {JOIN} WHERE (c.source NOT LIKE '線上活動報名%' OR c.source IS NULL) AND c.contribution_type_id = $id AND c.is_test = 0 {AND}");
+      $allData['contribution_type'][$name] = self::parseDataFromSql("SELECT SUM(c.total_amount) sum, COUNT(c.id) count,COUNT(DISTINCT c.contact_id) people FROM civicrm_contribution c {JOIN} LEFT JOIN civicrm_participant_payment pp ON c.id = pp.contribution_id WHERE pp.participant_id IS NULL AND c.contribution_type_id = $id AND c.is_test = 0 {AND}");
     }
 
     // instruments
@@ -93,27 +90,30 @@ class CRM_Report_BAO_Summary {
     while($dao->fetch()){
       $name = $dao->label;
       $value = $dao->value;
-      $allData['instruments'][$name] = self::parseDataFromSql("SELECT SUM(c.total_amount) sum, COUNT(c.id) count,COUNT(DISTINCT c.contact_id) people FROM civicrm_contribution c {JOIN} WHERE (c.source NOT LIKE '線上活動報名%' OR c.source IS NULL) AND c.payment_instrument_id = $value AND c.is_test = 0 {AND}");
+      $allData['instruments'][$name] = self::parseDataFromSql("SELECT SUM(c.total_amount) sum, COUNT(c.id) count,COUNT(DISTINCT c.contact_id) people FROM civicrm_contribution c {JOIN} LEFT JOIN civicrm_participant_payment pp ON c.id = pp.contribution_id WHERE pp.participant_id IS NULL AND c.payment_instrument_id = $value AND c.is_test = 0 {AND}");
     }
 
     $allData['recur'] = array();
-    $allData['recur']['recur'] = self::parseDataFromSql("SELECT SUM(c.total_amount) sum, COUNT(c.id) count,COUNT(DISTINCT c.contact_id) people FROM civicrm_contribution c {JOIN} WHERE (c.source NOT LIKE '線上活動報名%' OR c.source IS NULL) AND c.contribution_recur_id IS NOT NULL AND c.is_test = 0 {AND} {AND}");
-    $allData['recur']['non_recur'] = self::parseDataFromSql("SELECT SUM(c.total_amount) sum, COUNT(c.id) count,COUNT(DISTINCT c.contact_id) people FROM civicrm_contribution c {JOIN} WHERE (c.source NOT LIKE '線上活動報名%' OR c.source IS NULL) AND c.contribution_recur_id IS NULL AND c.is_test = 0 {AND}");
+    $allData['recur']['Recurring Contribution'] = self::parseDataFromSql("SELECT SUM(c.total_amount) sum, COUNT(c.id) count,COUNT(DISTINCT c.contact_id) people FROM civicrm_contribution c {JOIN} LEFT JOIN civicrm_participant_payment pp ON c.id = pp.contribution_id WHERE pp.participant_id IS NULL AND c.contribution_recur_id IS NOT NULL AND c.is_test = 0 {AND} {AND}");
+    $allData['recur']["Non-recurring Contribution"] = self::parseDataFromSql("SELECT SUM(c.total_amount) sum, COUNT(c.id) count,COUNT(DISTINCT c.contact_id) people FROM civicrm_contribution c {JOIN} LEFT JOIN civicrm_participant_payment pp ON c.id = pp.contribution_id WHERE pp.participant_id IS NULL AND c.contribution_recur_id IS NULL AND c.is_test = 0 {AND}");
 
     $allData['times'] = array();
-    $allData['times']['1'] = self::parseDataFromSql("SELECT SUM(sum) sum, count(DISTINCT contact_id) people FROM (SELECT SUM(c.total_amount) sum, COUNT(c.contact_id) count,contact_id FROM civicrm_contribution c {JOIN} WHERE (c.source NOT LIKE '線上活動報名%' OR c.source IS NULL)  AND c.is_test = 0 {AND} GROUP BY c.contact_id) a  WHERE a.count=1 ");
-    $allData['times']['over_2'] = self::parseDataFromSql("SELECT SUM(sum) sum, count(DISTINCT contact_id) people FROM (SELECT SUM(c.total_amount) sum, COUNT(c.contact_id) count,c.contact_id FROM civicrm_contribution c {JOIN} WHERE (c.source NOT LIKE '線上活動報名%' OR c.source IS NULL)  AND c.is_test = 0 {AND} GROUP BY c.contact_id) a  WHERE a.count>=2 ");
+    $allData['times']['First by Contributor'] = self::parseDataFromSql("SELECT SUM(sum) sum, count(DISTINCT contact_id) people FROM (SELECT SUM(c.total_amount) sum, COUNT(c.contact_id) count,contact_id FROM civicrm_contribution c {JOIN} LEFT JOIN civicrm_participant_payment pp ON c.id = pp.contribution_id WHERE pp.participant_id IS NULL AND c.is_test = 0 {AND} GROUP BY c.contact_id) a  WHERE a.count=1 ");
+    $allData['times']['Second or Later by Contributor'] = self::parseDataFromSql("SELECT SUM(sum) sum, count(DISTINCT contact_id) people FROM (SELECT SUM(c.total_amount) sum, COUNT(c.contact_id) count,c.contact_id FROM civicrm_contribution c {JOIN} LEFT JOIN civicrm_participant_payment pp ON c.id = pp.contribution_id WHERE pp.participant_id IS NULL AND c.is_test = 0 {AND} GROUP BY c.contact_id) a  WHERE a.count>=2 ");
 
-    $allData['total_contribute'] = self::parseDataFromSql("SELECT SUM(c.total_amount) sum, COUNT(c.id) count,COUNT(DISTINCT c.contact_id) people FROM civicrm_contribution c {JOIN} WHERE (c.source NOT LIKE '線上活動報名%' OR c.source IS NULL) AND c.is_test = 0 {AND}");
-    $allData['total_application_fee'] = self::parseDataFromSql("SELECT SUM(c.total_amount) sum, COUNT(c.id) count,COUNT(DISTINCT c.contact_id) people FROM civicrm_contribution c {JOIN} WHERE c.source LIKE '線上活動報名%' AND c.is_test = 0 {AND}");
+    $allData['total_contribute'] = self::parseDataFromSql("SELECT SUM(c.total_amount) sum, COUNT(c.id) count,COUNT(DISTINCT c.contact_id) people FROM civicrm_contribution c {JOIN} LEFT JOIN civicrm_participant_payment pp ON c.id = pp.contribution_id WHERE pp.participant_id IS NULL AND c.is_test = 0 {AND}");
+    $allData['total_application_fee'] = self::parseDataFromSql("SELECT SUM(c.total_amount) sum, COUNT(c.id) count,COUNT(DISTINCT c.contact_id) people FROM civicrm_contribution c {JOIN} LEFT JOIN civicrm_participant_payment pp ON c.id = pp.contribution_id WHERE pp.participant_id IS NULL AND c.is_test = 0 {AND}");
     $allData['total_amount'] = self::parseDataFromSql("SELECT SUM( c.total_amount ) sum, COUNT( c.id ) count,COUNT(DISTINCT c.contact_id) people FROM civicrm_contribution c {JOIN} WHERE c.is_test =0 {AND}");
-    return self::convertArrayToChartUse($allData);
+    $allData = self::convertArrayToChartUse($allData);
+    $allData['contribution_type_table'] = self::convertArrayToTableUse($allData['contribution_type']);
+    $allData['recur_table'] = self::convertArrayToTableUse($allData['recur']);
+    return $allData;
   }
 
   static function getActToConData(){
     $allData = array();
-    $allData['has_applied'] = self::parseDataFromSql("SELECT COUNT( p.id ) count,COUNT(DISTINCT p.contact_id) people FROM civicrm_participant p {JOIN} WHERE (p.source LIKE '線上活動報名%' ) AND p.is_test = 0 {AND}");
-    $allData['has_contributed'] = self::parseDataFromSql("SELECT COUNT( c.id ) count,COUNT(DISTINCT c.contact_id) people FROM civicrm_contribution c {JOIN} WHERE c.source LIKE '線上捐款%' AND c.is_test =0 {AND}");
+    $allData['Event Registration'] = self::parseDataFromSql("SELECT COUNT( p.id ) count,COUNT(DISTINCT p.contact_id) people FROM civicrm_participant p {JOIN} WHERE (p.source LIKE '".ts("Online Event Registration")."%' ) AND p.is_test = 0 {AND}");
+    $allData['Contribution'] = self::parseDataFromSql("SELECT COUNT( c.id ) count,COUNT(DISTINCT c.contact_id) people FROM civicrm_contribution c {JOIN} WHERE c.source LIKE '".ts("Online Contribution")."%' AND c.is_test =0 {AND}");
     
     $allData['apply_after_contributed'] = self::parseDataFromSql('SELECT count(c.contact_id) people, p.register_date FROM 
   (SELECT cc.* FROM (SELECT ccc.contact_id, ccc.receive_date FROM civicrm_contribution ccc LEFT JOIN civicrm_participant_payment pp ON pp.contribution_id = ccc.id WHERE pp.contribution_id IS NULL AND ccc.receive_date IS NOT NULL ORDER BY ccc.receive_date) cc GROUP BY cc.contact_id) c
@@ -131,8 +131,8 @@ WHERE
 
   static function getConToActData(){
     $allData = array();
-    $allData['has_applied'] = self::parseDataFromSql("SELECT COUNT( p.id ) count,COUNT(DISTINCT p.contact_id) people FROM civicrm_participant p {JOIN} WHERE (p.source LIKE '線上活動報名%' ) AND p.is_test = 0 {AND}");
-    $allData['has_contributed'] = self::parseDataFromSql("SELECT COUNT( c.id ) count,COUNT(DISTINCT c.contact_id) people FROM civicrm_contribution c {JOIN} WHERE c.source LIKE '線上捐款%' AND c.is_test =0 {AND}");
+    $allData['Event Registration'] = self::parseDataFromSql("SELECT COUNT( p.id ) count,COUNT(DISTINCT p.contact_id) people FROM civicrm_participant p {JOIN} WHERE (p.source LIKE '".ts("Online Event Registration")."%' ) AND p.is_test = 0 {AND}");
+    $allData['Contribution'] = self::parseDataFromSql("SELECT COUNT( c.id ) count,COUNT(DISTINCT c.contact_id) people FROM civicrm_contribution c {JOIN} WHERE c.source LIKE '".ts("Online Contribution")."%' AND c.is_test =0 {AND}");
     
     $allData['contribute_after_applied'] = self::parseDataFromSql('SELECT count(c.contact_id) people, p.register_date FROM 
   (SELECT cc.* FROM (SELECT ccc.contact_id, ccc.receive_date FROM civicrm_contribution ccc LEFT JOIN civicrm_participant_payment pp ON pp.contribution_id = ccc.id WHERE pp.contribution_id IS NULL AND ccc.receive_date IS NOT NULL ORDER BY ccc.receive_date) cc GROUP BY cc.contact_id) c
@@ -148,8 +148,8 @@ WHERE
 
   static function getMailToActData(){
     $allData = array();
-    $allData['received'] = self::parseDataFromSql("SELECT COUNT(DISTINCT med.id) count,COUNT(DISTINCT meq.contact_id) people FROM civicrm_mailing_job mj LEFT JOIN civicrm_mailing_event_queue meq ON meq.job_id = mj.id INNER JOIN civicrm_mailing_event_delivered med ON med.event_queue_id = meq.id {JOIN} WHERE mj.is_test = 0");
-    $allData['clicked'] = self::parseDataFromSql("SELECT COUNT(DISTINCT med.id) count,COUNT(DISTINCT meq.contact_id) people FROM civicrm_mailing_job mj LEFT JOIN civicrm_mailing_event_queue meq ON meq.job_id = mj.id INNER JOIN civicrm_mailing_event_trackable_url_open med ON med.event_queue_id = meq.id {JOIN} WHERE mj.is_test = 0");
+    $allData['Successful Deliveries'] = self::parseDataFromSql("SELECT COUNT(DISTINCT med.id) count,COUNT(DISTINCT meq.contact_id) people FROM civicrm_mailing_job mj LEFT JOIN civicrm_mailing_event_queue meq ON meq.job_id = mj.id INNER JOIN civicrm_mailing_event_delivered med ON med.event_queue_id = meq.id {JOIN} WHERE mj.is_test = 0");
+    $allData['Click Count'] = self::parseDataFromSql("SELECT COUNT(DISTINCT med.id) count,COUNT(DISTINCT meq.contact_id) people FROM civicrm_mailing_job mj LEFT JOIN civicrm_mailing_event_queue meq ON meq.job_id = mj.id INNER JOIN civicrm_mailing_event_trackable_url_open med ON med.event_queue_id = meq.id {JOIN} WHERE mj.is_test = 0");
     $allData['received_application_url'] = self::parseDataFromSql("SELECT COUNT(DISTINCT med.id) count,COUNT(DISTINCT meq.contact_id) people FROM civicrm_mailing_job mj 
       LEFT JOIN civicrm_mailing_event_queue meq ON meq.job_id = mj.id 
       INNER JOIN civicrm_mailing_event_delivered med ON med.event_queue_id = meq.id
@@ -188,8 +188,8 @@ WHERE p.register_date > mm.time_stamp AND p.register_date < DATE_ADD(mm.time_sta
 
   static function getMailToConData(){
     $allData = array();
-    $allData['received'] = self::parseDataFromSql("SELECT COUNT(DISTINCT med.id) count,COUNT(DISTINCT meq.contact_id) people FROM civicrm_mailing_job mj LEFT JOIN civicrm_mailing_event_queue meq ON meq.job_id = mj.id INNER JOIN civicrm_mailing_event_delivered med ON med.event_queue_id = meq.id {JOIN} WHERE mj.is_test = 0 {AND}");
-    $allData['clicked'] = self::parseDataFromSql("SELECT COUNT(DISTINCT med.id) count,COUNT(DISTINCT meq.contact_id) people FROM civicrm_mailing_job mj LEFT JOIN civicrm_mailing_event_queue meq ON meq.job_id = mj.id INNER JOIN civicrm_mailing_event_trackable_url_open med ON med.event_queue_id = meq.id {JOIN} WHERE mj.is_test = 0 {AND}");
+    $allData['Successful Deliveries'] = self::parseDataFromSql("SELECT COUNT(DISTINCT med.id) count,COUNT(DISTINCT meq.contact_id) people FROM civicrm_mailing_job mj LEFT JOIN civicrm_mailing_event_queue meq ON meq.job_id = mj.id INNER JOIN civicrm_mailing_event_delivered med ON med.event_queue_id = meq.id {JOIN} WHERE mj.is_test = 0 {AND}");
+    $allData['Click Count'] = self::parseDataFromSql("SELECT COUNT(DISTINCT med.id) count,COUNT(DISTINCT meq.contact_id) people FROM civicrm_mailing_job mj LEFT JOIN civicrm_mailing_event_queue meq ON meq.job_id = mj.id INNER JOIN civicrm_mailing_event_trackable_url_open med ON med.event_queue_id = meq.id {JOIN} WHERE mj.is_test = 0 {AND}");
     $allData['received_contribute_url'] = self::parseDataFromSql("SELECT COUNT(DISTINCT meq.id) count,COUNT(DISTINCT meq.contact_id) people FROM civicrm_mailing_job mj 
       LEFT JOIN civicrm_mailing_event_queue meq ON meq.job_id = mj.id 
       INNER JOIN civicrm_mailing_trackable_url mtu ON mtu.mailing_id = mj.mailing_id {JOIN} 
@@ -250,9 +250,9 @@ WHERE c.receive_date > mm.time_stamp AND c.receive_date < DATE_ADD(mm.time_stamp
     $all = self::parseDataFromSql("SELECT COUNT(id) people FROM civicrm_contact");
     $all = $all['people'];
     // $allData['all'] = self::parseDataFromSql("SELECT COUNT(id) people FROM civicrm_contact");
-    $allData['by_contribute'] = self::parseDataFromSql("SELECT COUNT(contact_id) people FROM (SELECT cc.* FROM (SELECT ccc.contact_id, ccc.created_date FROM civicrm_contribution ccc LEFT JOIN civicrm_participant_payment pp ON pp.contribution_id = ccc.id WHERE pp.contribution_id IS NULL AND ccc.receive_date IS NOT NULL ORDER BY ccc.receive_date) cc GROUP BY cc.contact_id) c INNER JOIN (SELECT entity_id,modified_date FROM civicrm_log WHERE entity_table = 'civicrm_contact' GROUP BY entity_id) cl ON c.contact_id = cl.entity_id WHERE created_date < DATE_ADD(modified_date, INTERVAL 10 second)");
-    $allData['by_apply'] = self::parseDataFromSql("SELECT COUNT(contact_id) people FROM (SELECT contact_id, register_date FROM civicrm_participant WHERE 1 GROUP BY contact_id) p INNER JOIN (SELECT entity_id,modified_date FROM civicrm_log WHERE entity_table = 'civicrm_contact' GROUP BY entity_id) cl ON p.contact_id = cl.entity_id WHERE register_date < DATE_ADD(modified_date, INTERVAL 10 second)");
-    $allData['other']['people'] = $all - $allData['by_contribute']['people'] - $allData['by_apply']['people'];
+    $allData['Contributions'] = self::parseDataFromSql("SELECT COUNT(contact_id) people FROM (SELECT cc.* FROM (SELECT ccc.contact_id, ccc.created_date FROM civicrm_contribution ccc LEFT JOIN civicrm_participant_payment pp ON pp.contribution_id = ccc.id WHERE pp.contribution_id IS NULL AND ccc.receive_date IS NOT NULL ORDER BY ccc.receive_date) cc GROUP BY cc.contact_id) c INNER JOIN (SELECT entity_id,modified_date FROM civicrm_log WHERE entity_table = 'civicrm_contact' GROUP BY entity_id) cl ON c.contact_id = cl.entity_id WHERE created_date < DATE_ADD(modified_date, INTERVAL 10 second)");
+    $allData['Event Registration'] = self::parseDataFromSql("SELECT COUNT(contact_id) people FROM (SELECT contact_id, register_date FROM civicrm_participant WHERE 1 GROUP BY contact_id) p INNER JOIN (SELECT entity_id,modified_date FROM civicrm_log WHERE entity_table = 'civicrm_contact' GROUP BY entity_id) cl ON p.contact_id = cl.entity_id WHERE register_date < DATE_ADD(modified_date, INTERVAL 10 second)");
+    $allData['Other']['people'] = $all - $allData['Contributions']['people'] - $allData['Event Registration']['people'];
 
     $allData = array(
       'all' => $all,
@@ -307,7 +307,7 @@ WHERE cc.receive_date > mm.time_stamp AND cc.receive_date < DATE_ADD(mm.time_sta
         }
 
         foreach ($origArray as $key => $value) {
-          $returnArray['label'][] = $key;
+          $returnArray['label'][] = ts($key);
           foreach ($valueType as $type) {
             $returnArray[$type][] = !empty($value[$type])?$value[$type]:0;
           }
@@ -322,6 +322,26 @@ WHERE cc.receive_date > mm.time_stamp AND cc.receive_date < DATE_ADD(mm.time_sta
       return $returnArray;
 
     }
+  }
+
+  private static function convertArrayToTableUse($origArray){
+    $returnArray = array();
+    $sum_sum = array_sum($origArray['sum']);
+    $sum_count = array_sum($origArray['count']);
+    $sum_people = array_sum($origArray['people']);
+    foreach ($origArray['label'] as $key => $value) {
+      $row = array();
+      $row[0] = $origArray['label'][$key];
+      $v_sum = $origArray['sum'][$key];
+      $row[1] = '$'. $v_sum . '('. round( 100 * $v_sum / $sum_sum ,2) .'%)';
+      $v_count = $origArray['count'][$key];
+      $row[2] = round( $v_sum / $v_count ,2);
+      $row[3] = $origArray['count'][$key];
+      $row[4] = $origArray['people'][$key];
+      $returnArray[] = $row;
+    }
+    $returnArray[] = array(ts('Total'),$sum_sum,$sum_count,$sum_people);
+    return $returnArray;
   }
 
   private static function isArrayDataFormat($origArray){
