@@ -553,13 +553,12 @@ class CRM_Event_BAO_Query {
     $form->assign('dataURLEventType', $dataURLEventType);
     $form->assign('dataURLEventFee', $dataURLEventFee);
 
-    $eventId = &$form->add('text', 'event_name', ts('Event Name'));
-    $eventType = &$form->add('text', 'event_type', ts('Event Type'));
-    $participantFee = &$form->add('text', 'participant_fee_level', ts('Fee Level'));
+    $form->add('text', 'event_id', ts('Event Name'), array('id' => 'event_id'));
+    $form->add('text', 'event_type', ts('Event Type'));
+    $form->add('text', 'participant_fee_level', ts('Fee Level'));
 
     //elements for assigning value operation
-    $eventNameId = &$form->add('hidden', 'event_id', '', array('id' => 'event_id'));
-    $eventTypeId = &$form->add('hidden', 'event_type_id', '', array('id' => 'event_type_id'));
+    $form->add('hidden', 'event_type_id', '', array('id' => 'event_type_id'));
     $participantFeeId = &$form->add('hidden', 'participant_fee_id', '', array('id' => 'participant_fee_id'));
 
     $form->addDate('event_start_date_low', ts('Event Dates - From'), FALSE, array('formatType' => 'searchDate'));

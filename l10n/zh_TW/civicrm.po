@@ -1,6 +1,6 @@
 # 
 # Translators:
-# Chang Shu-huai <junsuwhy@gmail.com>, 2016
+# Chang Shu-huai <junsuwhy@gmail.com>, 2016-2017
 # Fuyuan Cheng <gloomcheng@gmail.com>, 2013-2015
 # IreneLin, 2013
 # jimyhuang <jimmy@netivism.com.tw>, 2013,2015-2016
@@ -11,8 +11,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2016-11-22 07:00+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
+"PO-Revision-Date: 2017-01-10 04:44+0000\n"
+"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45285,3 +45285,30 @@ msgstr "收據開立年度"
 #: CRM/Contact/Form/Search/Custom/RecurSearch.php
 msgid "Over %1"
 msgstr "超過%1期"
+
+#: CRM/Report/BAO/Summary.php
+msgid "Sended Count"
+msgstr "寄送數"
+
+msgid "Non-online Contribution"
+msgstr "非線上捐款"
+
+msgid "Non-online Registration"
+msgstr "非線上報名"
+
+msgid "People"
+msgstr "人數"
+
+msgid "Report Summary"
+msgstr "報表摘要"
+
+msgid "Type in a partial or complete name of an existing event."
+msgstr ""
+
+#: templates/CRM/Event/Form/ParticipantView.tpl
+msgid "Add a participant payment record"
+msgstr "新增一筆活動費用紀錄"
+
+#: templates/CRM/Member/Form/MembershipView.tpl
+msgid "Add a membership payment record"
+msgstr "新增一筆會員費用紀錄"

@@ -676,7 +676,7 @@ WHERE  contribution_id = {$this->_id}
     $this->assign('currency', CRM_Utils_Array::value('currency', $defaults));
     $this->assign('totalAmount', CRM_Utils_Array::value('total_amount', $defaults));
 
-    if ($this->_action & CRM_Core_Action::UPDATE && $this->_updateRelatedStatus) {
+    if ($this->_action & CRM_Core_Action::UPDATE) {
       $defaults['update_related_component'] = 0;
       if ($this->_participantId && !$this->_multiContribComponent) {
         $defaults['update_related_component'] = 1;

@@ -126,7 +126,7 @@ class CRM_Report_Form_Event_ParticipantListing extends CRM_Report_Form {
           'sid' => array('name' => 'status_id',
             'title' => ts('Participant Status'),
             'operatorType' => CRM_Report_Form::OP_MULTISELECT,
-            'options' => CRM_Event_PseudoConstant::participantStatus(),
+            'options' => CRM_Event_PseudoConstant::participantStatus(NULL, NULL, 'label'),
           ),
           'rid' => array('name' => 'role_id',
             'title' => ts('Participant Role'),
@@ -376,7 +376,7 @@ class CRM_Report_Form_Event_ParticipantListing extends CRM_Report_Form {
       // handle participant status id
       if (array_key_exists('civicrm_participant_status_id', $row)) {
         if ($value = $row['civicrm_participant_status_id']) {
-          $rows[$rowNum]['civicrm_participant_status_id'] = CRM_Event_PseudoConstant::participantStatus($value, FALSE);
+          $rows[$rowNum]['civicrm_participant_status_id'] = CRM_Event_PseudoConstant::participantStatus($value, FALSE, 'label');
         }
         $entryFound = TRUE;
       }

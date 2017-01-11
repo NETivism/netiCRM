@@ -74,7 +74,7 @@ class CRM_Report_Form_Event_Income extends CRM_Report_Form {
 
     $eventID = implode(',', $eventIDs);
 
-    $participantStatus = CRM_Event_PseudoConstant::participantStatus(NULL, "is_counted = 1");
+    $participantStatus = CRM_Event_PseudoConstant::participantStatus(NULL, "is_counted = 1", 'label');
     $participantRole = CRM_Event_PseudoConstant::participantRole();
     $paymentInstruments = CRM_Contribute_PseudoConstant::paymentInstrument();
 

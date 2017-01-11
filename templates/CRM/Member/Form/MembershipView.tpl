@@ -40,7 +40,7 @@
 	    {if ( $context eq 'fulltext' || $context eq 'search' ) && $searchKey}
 	    {assign var='urlParams' value="reset=1&id=$id&cid=$contact_id&action=delete&context=$context&key=$searchKey"}  
 	    {/if}
-            <a class="button" href="{crmURL p='civicrm/contact/view/membership' q=$urlParams}"><span><div class="zmdi zmdi-delete"></div>{ts}Delete{/ts}</span></a>
+            <a class="button" href="{crmURL p='civicrm/contact/view/membership' q=$urlParams}"><span><div class="zmdi zmdi-delete"></div> {ts}Delete{/ts}</span></a>
         {/if}
         {include file="CRM/common/formButtons.tpl" location="bottom"}
     </div>
@@ -65,7 +65,7 @@
     {/if}
 
     {assign var='urlParams' value="reset=1&action=add&cid=$contact_id&context=contribution&membership_id=$id"}
-    <a class="button" href="{crmURL p='civicrm/contact/view/contribution' q=$urlParams}" accesskey="n"><span><div class="zmdi zmdi-plus"></div> {ts}Add Contribution{/ts}</span></a>
+    <a class="button" href="{crmURL p='civicrm/contact/view/contribution' q=$urlParams}" accesskey="n"><span><div class="zmdi zmdi-plus"></div> {ts}Add a membership payment record{/ts}</span></a>
 
     <div class="crm-submit-buttons">
         {* Check permissions and make sure this is not an inherited membership (edit and delete not allowed for inherited memberships) *}
@@ -82,7 +82,7 @@
 	    {if ( $context eq 'fulltext' || $context eq 'search' ) && $searchKey}
 	    {assign var='urlParams' value="reset=1&id=$id&cid=$contact_id&action=delete&context=$context&key=$searchKey"}  
 	    {/if}
-            <a class="button" href="{crmURL p='civicrm/contact/view/membership' q=$urlParams}"><span><div class="zmdi zmdi-delete"></div>{ts}Delete{/ts}</span></a>
+            <a class="button" href="{crmURL p='civicrm/contact/view/membership' q=$urlParams}"><span><div class="zmdi zmdi-delete"></div> {ts}Delete{/ts}</span></a>
         {/if}
         {include file="CRM/common/formButtons.tpl" location="bottom"}
     </div>

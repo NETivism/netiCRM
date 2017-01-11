@@ -2595,7 +2595,7 @@ SELECT  $mailing.id as mailing_id
     $html = CRM_Utils_Request::retrieve('html', 'Boolean', $form);
     if ($html) {
       if (!strstr($html, '</body>')) {
-        echo '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head><body>'."\n";
+        echo '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head><body style="margin:0;">'."\n";
         echo $htmlHeader . $report['mailing']['body_html'] . $htmlFooter."\n";
         echo '</body></html>';
       }

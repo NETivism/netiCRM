@@ -52,10 +52,10 @@
             <table id="options" class="display">
         	    <thead>
                     <tr>
-            	        <th>{ts}Tag{/ts}</th>
-                        <th>{ts}ID{/ts}</th>
-            	        <th id="nosort">{ts}Description{/ts}</th>
-            	        <th>{ts}Parent ID{/ts}</th>
+                    <th>{ts}ID{/ts}</th>
+            	      <th>{ts}Tag{/ts}</th>
+            	      <th id="nosort">{ts}Description{/ts}</th>
+            	      <th>{ts}Parent ID{/ts}</th>
             		    <th>{ts}Used For{/ts}</th>
             		    <th>{ts}Tag set?{/ts}</th>
             		    <th>{ts}Reserved?{/ts}</th>
@@ -64,8 +64,8 @@
                 </thead>
                 {foreach from=$rows item=row key=id }
                 <tr class="{cycle values="odd-row,even-row"} {$row.class} crm-tag">
-                    <td class="crm-tag-name">{$row.name}</td>
                     <td class="crm-tag-id">{$row.id}</td>	
+                    <td class="crm-tag-name"><a href="{crmURL p="civicrm/contact/search" q="reset=1&force=1&tid=`$row.id`" target="_blank"}">{$row.name}</a></td>
                     <td class="crm-tag-description">{$row.description} </td>
                     <td class="crm-tag-parent">{$row.parent} {if $row.parent_id}({$row.parent_id}){/if}</td>
         	        <td>{$row.used_for}</td>

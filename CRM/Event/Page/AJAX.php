@@ -43,7 +43,7 @@ class CRM_Event_Page_AJAX {
    */
   function event() {
     require_once 'CRM/Utils/Type.php';
-    $name = trim(CRM_Utils_Type::escape($_GET['s'], 'String'));
+    $name = trim(CRM_Utils_Type::escape($_GET['name'], 'String'));
     $whereClause = " title LIKE '%$name%' AND ( civicrm_event.is_template IS NULL OR civicrm_event.is_template = 0 )";
 
     $query = "
@@ -51,11 +51,16 @@ SELECT title, id
 FROM civicrm_event
 WHERE {$whereClause}
 ORDER BY title
+LIMIT 0, 50
 ";
+
     $dao = CRM_Core_DAO::executeQuery($query);
+    $results = array();
     while ($dao->fetch()) {
-      echo $elements = "$dao->title|$dao->id\n";
+      $e = array('id' => $dao->id, 'name' => $dao->title);
+      $results[] = $e;
     }
+    echo json_encode($results);
     CRM_Utils_System::civiExit();
   }
 

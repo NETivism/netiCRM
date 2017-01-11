@@ -100,6 +100,10 @@ cj(function($){
     setRequiredFields();
   }
 
+  if ($('#is_for_organization').length > 0) {
+    formElemRebuild('#is_for_organization', 'checkbox');
+  }
+
   function showHideReceiptFields(){
     if(isShowChecked()){
       {/literal}{if $receiptTitle}{literal}
@@ -302,9 +306,20 @@ cj(function($){
     }
   }
 
+  function formElemRebuild(elem, type) {
+    var $elem = $(elem);
+    var classname = ' crm-form-elem crm-form-' + type;
 
+    if (type == 'checkbox' || type == 'radio') {
+      if ($elem.next('label').length > 0) {
+        var $wrap = $elem.next('label');
+        $wrap.addClass(classname);
+        $wrap.html('<span class="elem-label">' + $wrap.html() + '</span>');
+        $elem.prependTo($wrap);
+      }
+    }
+  }
 });
-
 
 function validTWID(value){
   if(value=='')return true;
@@ -335,6 +350,5 @@ function validTWID(value){
   }
   return true;
 }
-
 {/literal}
 </script>

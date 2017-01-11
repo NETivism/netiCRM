@@ -775,7 +775,7 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
             }
 
             if ($val = CRM_Utils_Array::value('civicrm_participant_participant_status_id', $row)) {
-              $componentRows[$contactID][$component][$rowNum]['civicrm_participant_participant_status_id'] = CRM_Event_PseudoConstant::participantStatus($val, FALSE);
+              $componentRows[$contactID][$component][$rowNum]['civicrm_participant_participant_status_id'] = CRM_Event_PseudoConstant::participantStatus($val, FALSE, 'label');
             }
             if ($val = CRM_Utils_Array::value('civicrm_participant_role_id', $row)) {
               $roles = explode(CRM_Core_DAO::VALUE_SEPARATOR, $val);
