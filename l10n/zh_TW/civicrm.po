@@ -11,7 +11,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2017-01-09 04:17+0000\n"
+"PO-Revision-Date: 2017-01-10 04:44+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -45301,3 +45301,14 @@ msgstr "人數"
 
 msgid "Report Summary"
 msgstr "報表摘要"
+
+msgid "Type in a partial or complete name of an existing event."
+msgstr ""
+
+#: templates/CRM/Event/Form/ParticipantView.tpl
+msgid "Add a participant payment record"
+msgstr "新增一筆活動費用紀錄"
+
+#: templates/CRM/Member/Form/MembershipView.tpl
+msgid "Add a membership payment record"
+msgstr "新增一筆會員費用紀錄"

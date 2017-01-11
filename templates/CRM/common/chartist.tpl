@@ -47,8 +47,15 @@
   var seriesUnit = "{/literal}{$chartist.seriesUnit|default:''}{literal}";
   var seriesUnitPosition = "{/literal}{$chartist.seriesUnitPosition|default:'suffix'}{literal}";
 
+  var floorDecimal = function (val, precision) {
+    return Math.floor(Math.floor(val * Math.pow(10, (precision || 0) + 1)) / 10) / Math.pow(10, (precision || 0));
+  }
+
+  var getPercent = function(val, total, precision) { 
+    var percent = Number(val) / Number(total) * 100;
+    return floorDecimal(percent, precision); 
+  }
   var getSum = function(a, b) { return Number(a) + Number(b); }
-  var getPercent = function(val, total) { return Math.round(Number(val) / Number(total) * 100); }
   var getDesc = function(label, series, type, unit, percent) {
     var result = '';
 
@@ -68,6 +75,45 @@
     }
 
     return result;
+  }
+
+  var getNotEmptySeries = function(data) {
+    var series, newSeries = [];
+
+    for (var i = 0; i < data.series.length; i++) {
+      series = data.series[i];
+
+      if (series != 0) {
+        newSeries.push(series);
+      }
+    }
+
+    return newSeries;
+  }
+
+  var addAttrToSeries = function(elem, series) {
+    var total = series.reduce(getSum);
+    var seriesLength = series.length;
+    var addData = function(item, i) {
+      var percent = getPercent(series[i], total, 1);
+      item.attr({"data-chart-series": series[i], "data-chart-percent": percent});  
+    }
+
+    var chartLoaded = setInterval(function() {
+      if (cj(elem + " > svg > g:not(.ct-series) > text").length == seriesLength) {
+        series.reverse();
+        cj(elem + " > svg > g.ct-series").each(function(i) {
+          addData(cj(this), i);
+        });
+
+        series.reverse();
+        cj(elem + " > svg > g:not(.ct-series) > text").each(function(i) {
+          addData(cj(this), i);
+        });
+
+        clearInterval(chartLoaded);
+      }
+    }, 100);
   }
 
   var renderUnitLabel = function(value, unit, position) {
@@ -103,7 +149,7 @@
 
       if (series != 0) {
         label = typeof data.labels !== 'undefined' ? data.labels[i] : '';
-        percent = getPercent(series, total);
+        percent = getPercent(series, total, 1);
 
         desc = getDesc(label, series, type, unit, percent);
         var li = cj("<li/>").attr({"title": desc, "data-chart-series": series, "data-chart-percent": percent}).text(label).appendTo(ul);
@@ -140,7 +186,7 @@
       for (var i = 0; i < data.series.length; i++) {
         label = typeof data.labels !== 'undefined' ? data.labels[i] : '';
         series = data.series[i];
-        percent = getPercent(series, total);
+        percent = getPercent(series, total, 1);
         desc = getDesc(label, series, type, unit, percent);
         data.series[i] = {"meta": desc, "value": series};
       }
@@ -251,7 +297,11 @@
   options.labelOffset = {/literal}{$chartist.labelOffset}{literal};
 {/literal}{/if}{literal}
 
-
+  if (chartType == 'Pie') {
+    var notEmptySeries = getNotEmptySeries(data);
+    addAttrToSeries(chartSelector, notEmptySeries);
+  }
+    
   if (withToolTip) {
       data = renderToolTipData(data, chartType, seriesUnit);
       var tooltip = Chartist.plugins.tooltip();
