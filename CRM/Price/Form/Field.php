@@ -511,6 +511,7 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
     $params['is_display_amounts'] = CRM_Utils_Array::value('is_display_amounts', $params, FALSE);
     $params['is_required'] = CRM_Utils_Array::value('is_required', $params, FALSE);
     $params['is_active'] = CRM_Utils_Array::value('is_active', $params, FALSE);
+    $params['is_member'] = CRM_Utils_Array::value('is_member', $params, FALSE);
     $params['active_on'] = CRM_Utils_Date::format(CRM_Utils_Array::value('active_on', $params));
     $params['expire_on'] = CRM_Utils_Date::format(CRM_Utils_Array::value('expire_on', $params));
     $params['visibility_id'] = CRM_Utils_Array::value('visibility_id', $params, FALSE);
