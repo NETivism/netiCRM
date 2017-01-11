@@ -49,11 +49,20 @@ class CRM_Report_Page_InstanceList extends CRM_Core_Page {
    */
   static $_links = NULL;
 
-  public static function &info($ovID = NULL, &$title = NULL) {
+  public static function &info($ovID = NULL, &$title = NULL, $compName = NULL) {
 
     $report = '';
     if ($ovID) {
       $report = " AND v.id = {$ovID} ";
+    }
+    if ($compName) {
+      if (strtolower($compName) == 'contact') {
+        $report .= " AND comp.name IS NULL";
+      }
+      else {
+        $compName = CRM_Utils_Type::escape($compName.'%', 'String');
+        $report .= " AND LOWER(SUBSTRING(comp.name, 5)) LIKE '$compName'";
+      }
     }
     $sql = "
         SELECT inst.id, inst.title, inst.report_id, inst.description, v.label, 
@@ -110,7 +119,8 @@ class CRM_Report_Page_InstanceList extends CRM_Core_Page {
     //option value ID of the Report
     $ovID = $title = NULL;
     $ovID = CRM_Utils_Request::retrieve('ovid', 'Positive', $this);
-    $rows = &self::info($ovID, $title);
+    $compName = CRM_Utils_Request::retrieve('component', 'String', $this);
+    $rows = &self::info($ovID, $title, $compName);
 
     $this->assign('list', $rows);
     if ($ovID) {
