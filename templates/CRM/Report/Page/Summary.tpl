@@ -41,19 +41,22 @@
 
   <div class="column-summary-count">
     {if $contribute_total}<div>線上捐款{$contribute_total}元</div>{/if}
-      <div class="column-contribution-online-offline">
-          <h3>線上捐款金額</h3>
-        {include file="CRM/common/chartist.tpl" chartist=$chartConributeOnlineOffline}
-        <div id="chart-pie-with-legend-contribution-online-offline"></div>
-        </div>
     {if $participant_total}<div>線上活動報名{$participant_total}次</div>{/if}
-    <div class="column-participant-online-offline">
-          <h3>線上活動報名</h3>
-        {include file="CRM/common/chartist.tpl" chartist=$chartParticipantOnlineOffline}
-        <div id="chart-pie-with-legend-participant-online-offline"></div>
-        </div>
     {if $contact_total}<div>聯絡人{$contact_total}人</div>{/if}
     {if $mailing}<div>寄出電子報{$mailing}封</div>{/if}
+
+    <div class="column-contribution-online-offline">
+      <h3>線上捐款金額</h3>
+    {include file="CRM/common/chartist.tpl" chartist=$chartConributeOnlineOffline}
+    <div id="chart-pie-with-legend-contribution-online-offline"></div>
+    </div>
+
+    <div class="column-participant-online-offline">
+      <h3>線上活動報名</h3>
+    {include file="CRM/common/chartist.tpl" chartist=$chartParticipantOnlineOffline}
+    <div id="chart-pie-with-legend-participant-online-offline"></div>
+    </div>
+
   </div>
 
   <div class="column-contact-source">

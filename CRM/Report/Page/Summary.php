@@ -47,50 +47,16 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
    * @return void
    */
   function run() {
-    $debug = $_GET['debug'];
-    if(!empty($_GET['debug'])){
-      $allData = array();
-      $allData['電子報統計'] = CRM_Report_BAO_Summary::getMailingData();
-      $allData['參加者統計'] = CRM_Report_BAO_Summary::getParitcipantData();
-      $allData['捐款統計'] = CRM_Report_BAO_Summary::getContributionData();
-      $allData['參加者轉捐款統計'] = CRM_Report_BAO_Summary::getActToConData();
-      $allData['捐款轉參加者統計'] = CRM_Report_BAO_Summary::getConToActData();
-      $allData['電子報轉參加者統計'] = CRM_Report_BAO_Summary::getMailToActData();
-      $allData['電子報轉捐款統計'] = CRM_Report_BAO_Summary::getMailToConData();
-      $allData['開信後多久報名活動'] = CRM_Report_BAO_Summary::getActAfterMailData();
-      $allData['開信後多久捐款'] = CRM_Report_BAO_Summary::getConAfterMailData();
-      $allData['成為聯絡人是透過報名還是捐款'] = CRM_Report_BAO_Summary::getContactSource();
-      switch ($debug) {
-        case 'dpm':
-          dpm($allData);
-          break;
-        case 'dpr':
-          dpr($allData);
-          break;
-        case 'debug_var':
-          CRM_Core_Error::debug_var('CRM_Report_BAO_Summary', $allData);
-          break;
-        default:
-        case 'var_export':
-          var_export($allData);
-          break;
-      }
-    }
     $contacts = CRM_Report_BAO_Summary::getContactSource();
-
     $contribute = CRM_Report_BAO_Summary::getContributionData();
-
     $participant = CRM_Report_BAO_Summary::getParitcipantData();
-
     $mailing = CRM_Report_BAO_Summary::getMailingData();
-
 
     $template = CRM_Core_Smarty::singleton();
     $template->assign('contribute_total', $contribute['total_contribute']['sum']);
-    $template->assign('participant_total',$participant['participants']['count']);
+    $template->assign('participant_total',$participant['Participants Count']['count']);
     $template->assign('contact_total',$contacts['all']);
-    $template->assign('mailing',$mailing['sended']['count']);
-
+    $template->assign('mailing',$mailing['count'][0]);
 
     /**
      * Online-offline contribution
@@ -199,7 +165,6 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
     $template->assign('hasChart', TRUE);
 
     CRM_Utils_System::setTitle(ts('Report Summary'));
-
 
     return parent::run();
   }
