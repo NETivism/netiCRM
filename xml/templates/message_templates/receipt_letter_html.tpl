@@ -7,7 +7,7 @@
     {/if}
     {if $single_page_letter eq 'two_pages_letter'}<div class="address"><div class="address-label">From: </div>{$domain_address}</div>{/if}
     {if $address}<div class="address">{if $single_page_letter eq 'two_pages_letter'}<div class="address-label">To: </div>{/if}{$address}</div>{/if}
-    <div><span class="web-name">{$sort_name}收</span></div>
+    <div><span class="web-name">{$addressee}收</span></div>
   </div>
 </div>
 {counter print=false}
@@ -23,7 +23,7 @@
 <div class="receipt {$type}">
   <div class="receipt-head">
     <div class="logo"><img src="{$logo}" height="30" /></div>
-    <div class="title">收據 Receipt</div>
+    <div class="title">收據</div>
     <div class="date"><label>日期：</label>{$receipt_date}</div>
     <div class="serial">
       <label class="type">{$type_label}</label><br />
@@ -35,7 +35,7 @@
       <tr>
         <td class="col-1">姓名/抬頭</td>
         <td class="col-2">{$sort_name}</td>
-        <td class="col-3 signature">協會簽章</td>
+        <td class="col-3 signature">組織簽章</td>
       </tr>
       <tr>
         <td class="col-1">身分證字號/統一編號</td>

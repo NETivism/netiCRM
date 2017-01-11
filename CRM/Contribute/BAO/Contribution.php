@@ -1957,7 +1957,9 @@ SELECT source_contact_id
     }
 
     $sort_name = $custom_values[$custom_title] ? $custom_values[$custom_title] : $contact->sort_name;
+    $addressee = !empty($contact->addressee_custom) ? $contact->addressee_custom : (!empty($contact->addressee_display) ? $contact->addressee_display : $contact->sort_name);
     $template->assign('id' , $contribution->id);
+    $template->assign('addressee', $addressee);
     $template->assign('sort_name', $sort_name);
     $template->assign('logo', $receipt_logo);
     $template->assign('trxn_id', $contribution->trxn_id);
