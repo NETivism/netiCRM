@@ -86,6 +86,102 @@
     </div>
   {/if}
 
+{if $is_monetary}
+  <fieldset class="crm-group payment_options-group">
+    <legend>{ts}Payment Options{/ts}</legend>
+  {if $form.payment_processor.label}
+    <div class="crm-section payment_processor-section">
+      <div class="label">{$form.payment_processor.label}</div>
+      <div class="content">{$form.payment_processor.html}</div>
+      <div class="clear"></div>
+    </div>
+    <div id="billing-payment-block"></div>
+    {include file="CRM/common/paymentBlock.tpl'}
+  {elseif $is_pay_later}
+    <div class="crm-section pay_later_receipt-section">
+      <div class="label">{ts}Payment Method{/ts}</div>
+      <div class="content">
+        <input type="checkbox" checked="checked" disabled="disabled"/>{$pay_later_text|nl2br}<br />
+        <span class="description">{$pay_later_receipt|nl2br}</span>
+      </div>
+      <div class="clear"></div>
+    </div>
+  {/if}
+{/if}{*is_monetary*}
+
+
+{if $priceSet}
+  <div id="priceset">
+    <fieldset>
+      <legend>&nbsp;</legend>
+      {include file="CRM/Price/Form/PriceSet.tpl"}
+    </fieldset>
+  </div>
+{else}
+  {if $form.amount}
+      <div class="crm-section {$form.amount.name}-section">
+      <div class="label">{$form.amount.label}</div>
+      <div class="content">{$form.amount.html}</div>
+      <div class="clear"></div>
+      </div>
+  {/if}
+  {if $is_allow_other_amount}
+      <div class="crm-section {$form.amount_other.name}-section">
+      <div class="label">{$form.amount_other.label}</div>
+      <div class="content">{$form.amount_other.html|crmMoney}</div>
+      <div class="clear"></div>
+      </div>
+  {/if}
+  {if $pledgeBlock}
+      {if $is_pledge_payment}
+      <div class="crm-section {$form.pledge_amount.name}-section">
+      <div class="label">{$form.pledge_amount.label}&nbsp;<span class="marker">*</span></div>
+      <div class="content">{$form.pledge_amount.html}</div>
+      <div class="clear"></div>
+      </div>
+      {else}
+      <div class="crm-section {$form.is_pledge.name}-section">
+      <div class="content">
+        {$form.is_pledge.html}&nbsp;
+        {if $is_pledge_interval}
+          {$form.pledge_frequency_interval.html}&nbsp;
+        {/if}
+        {$form.pledge_frequency_unit.html}&nbsp;{ts}for{/ts}&nbsp;{$form.pledge_installments.html}&nbsp;{ts}installments.{/ts}
+      </div>
+      </div>
+      {/if}
+  {/if}
+{/if}{*priceset*}
+
+{if $is_monetary}
+  </fieldset>
+  {if $form.is_recur}
+    <div class="crm-section {$form.is_recur.name}-section">
+      <div class="content">
+        {$form.is_recur.html}
+        {if $form.frequency_unit.html}
+        <div class="recur-element" id="recur-options-interval">
+          {$form.frequency_unit.label}: {$form.frequency_unit.html}
+        </div>
+        {/if}
+        <div class="recur-element" id="recur-options-installmnts">
+          {$form.installments.label}: {$form.installments.html}
+        </div>
+        <p>
+          <span class="description">{ts}Your recurring contribution will be processed automatically for the number of installments you specify. You can leave the number of installments blank if you want to make an open-ended commitment. In either case, you can choose to cancel at any time.{/ts}
+            {if $is_email_receipt}
+                {ts}You will receive an email receipt for each recurring contribution. The receipts will include a link you can use if you decide to modify or cancel your future contributions.{/ts}
+            {/if}
+        </p>
+      </div>
+    </div>{*recur section*}
+  {/if}{*is_recur*}
+{/if}{*is_monetary*}
+
+  {* User account registration option. Displays if enabled for one of the profiles on this page. *}
+  {include file="CRM/common/CMSUser.tpl"}
+  {include file="CRM/Contribute/Form/Contribution/PremiumBlock.tpl" context="makeContribution"}
+
   {if $form.is_for_organization}
     <div class="crm-section {$form.is_for_organization.name}-section">
         <div class="content">
@@ -99,9 +195,6 @@
      {include file=CRM/Contact/Form/OnBehalfOf.tpl}
   {/if}
 
-  {* User account registration option. Displays if enabled for one of the profiles on this page. *}
-  {include file="CRM/common/CMSUser.tpl"}
-  {include file="CRM/Contribute/Form/Contribution/PremiumBlock.tpl" context="makeContribution"}
 
   {if $honor_block_is_active}
   <fieldset class="crm-group honor_block-group">
@@ -200,98 +293,6 @@
   {include file="CRM/common/moveEmail.tpl"}
   {include file="CRM/Contribute/Form/Contribution/MembershipBlock.tpl" context="makeContribution"}
 <!--ufform-separator-->
-
-{if $is_monetary}
-  <fieldset class="crm-group payment_options-group">
-    <legend>{ts}Payment Options{/ts}</legend>
-  {if $form.payment_processor.label}
-    <div class="crm-section payment_processor-section">
-      <div class="label">{$form.payment_processor.label}</div>
-      <div class="content">{$form.payment_processor.html}</div>
-      <div class="clear"></div>
-    </div>
-    <div id="billing-payment-block"></div>
-    {include file="CRM/common/paymentBlock.tpl'}
-  {elseif $is_pay_later}
-    <div class="crm-section pay_later_receipt-section">
-      <div class="label">{ts}Payment Method{/ts}</div>
-      <div class="content">
-        <input type="checkbox" checked="checked" disabled="disabled"/>{$pay_later_text|nl2br}<br />
-        <span class="description">{$pay_later_receipt|nl2br}</span>
-      </div>
-      <div class="clear"></div>
-    </div>
-  {/if}
-{/if}{*is_monetary*}
-
-
-{if $priceSet}
-  <div id="priceset">
-    <fieldset>
-      <legend>&nbsp;</legend>
-      {include file="CRM/Price/Form/PriceSet.tpl"}
-    </fieldset>
-  </div>
-{else}
-  {if $form.amount}
-      <div class="crm-section {$form.amount.name}-section">
-      <div class="label">{$form.amount.label}</div>
-      <div class="content">{$form.amount.html}</div>
-      <div class="clear"></div>
-      </div>
-  {/if}
-  {if $is_allow_other_amount}
-      <div class="crm-section {$form.amount_other.name}-section">
-      <div class="label">{$form.amount_other.label}</div>
-      <div class="content">{$form.amount_other.html|crmMoney}</div>
-      <div class="clear"></div>
-      </div>
-  {/if}
-  {if $pledgeBlock}
-      {if $is_pledge_payment}
-      <div class="crm-section {$form.pledge_amount.name}-section">
-      <div class="label">{$form.pledge_amount.label}&nbsp;<span class="marker">*</span></div>
-      <div class="content">{$form.pledge_amount.html}</div>
-      <div class="clear"></div>
-      </div>
-      {else}
-      <div class="crm-section {$form.is_pledge.name}-section">
-      <div class="content">
-        {$form.is_pledge.html}&nbsp;
-        {if $is_pledge_interval}
-          {$form.pledge_frequency_interval.html}&nbsp;
-        {/if}
-        {$form.pledge_frequency_unit.html}&nbsp;{ts}for{/ts}&nbsp;{$form.pledge_installments.html}&nbsp;{ts}installments.{/ts}
-      </div>
-      </div>
-      {/if}
-  {/if}
-{/if}{*priceset*}
-
-{if $is_monetary}
-  </fieldset>
-  {if $form.is_recur}
-    <div class="crm-section {$form.is_recur.name}-section">
-      <div class="content">
-        {$form.is_recur.html}
-        {if $form.frequency_unit.html}
-        <div class="recur-element" id="recur-options-interval">
-          {$form.frequency_unit.label}: {$form.frequency_unit.html}
-        </div>
-        {/if}
-        <div class="recur-element" id="recur-options-installmnts">
-          {$form.installments.label}: {$form.installments.html}
-        </div>
-        <p>
-          <span class="description">{ts}Your recurring contribution will be processed automatically for the number of installments you specify. You can leave the number of installments blank if you want to make an open-ended commitment. In either case, you can choose to cancel at any time.{/ts}
-            {if $is_email_receipt}
-                {ts}You will receive an email receipt for each recurring contribution. The receipts will include a link you can use if you decide to modify or cancel your future contributions.{/ts}
-            {/if}
-        </p>
-      </div>
-    </div>{*recur section*}
-  {/if}{*is_recur*}
-{/if}{*is_monetary*}
 
     {if $is_monetary and $form.bank_account_number}
     <div id="payment_notice">
