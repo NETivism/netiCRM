@@ -5,14 +5,14 @@
 # IreneLin, 2013
 # jimyhuang <jimmy@netivism.com.tw>, 2013,2015-2017
 # Chang Shu-huai <junsuwhy@gmail.com>, 2015-2016
-# SharonKwan <sharon@netivism.com.tw>, 2015-2016
+# SharonKwan <sharon@netivism.com.tw>, 2015-2017
 # charlesc <yeouhsin@gmail.com>, 2013-2014,2016
-# 花玉婷 <klavier1976@netivism.com.tw>, 2016
+# 花玉婷 <klavier1976@netivism.com.tw>, 2016-2017
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2017-01-12 02:55+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
+"PO-Revision-Date: 2017-01-12 06:09+0000\n"
+"Last-Translator: SharonKwan <sharon@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3632,12 +3632,12 @@ msgstr "致謝標題"
 #: CRM/Contribute/DAO/ContributionPage.php
 #: CRM/Contribute/Form/ContributionPage/ThankYou.php
 msgid "Payment Notification From Name"
-msgstr "捐（繳）款確認開立名稱"
+msgstr "付款成功確認信寄件者名稱"
 
 #: CRM/Contribute/DAO/ContributionPage.php
 #: CRM/Contribute/Form/ContributionPage/ThankYou.php
 msgid "Payment Notification From Email"
-msgstr "捐（繳）款確認開立者 Email"
+msgstr "付款成功確認信寄件者 Email"
 
 #: CRM/Contribute/DAO/ContributionPage.php CRM/Event/DAO/Event.php
 #: CRM/Event/Form/ManageEvent/Registration.php
@@ -4114,7 +4114,7 @@ msgstr "致謝內容"
 #: CRM/Contribute/Form/ContributionPage/ThankYou.php
 #: CRM/Member/Form/Membership.php
 msgid "Payment Notification Message"
-msgstr "捐（繳）款確認訊息"
+msgstr "付款成功確認信內文"
 
 #: CRM/Contribute/Form/ContributionPage/ThankYou.php
 #: CRM/Event/Form/ManageEvent/Registration.php
@@ -10227,7 +10227,7 @@ msgstr "代表組織"
 
 #: CRM/Contribute/DAO/ContributionPage.php
 msgid "Payment Notification Text"
-msgstr "捐（繳）款確認文字"
+msgstr "付款成功確認信文字"
 
 #: CRM/Contribute/DAO/ContributionPage.php
 msgid "Honor Block Title"
@@ -11052,7 +11052,7 @@ msgstr "致謝頁頁尾"
 
 #: CRM/Contribute/Form/ContributionPage/ThankYou.php
 msgid "Email Payment Notification to User?"
-msgstr "寄送捐（繳）款確認給使用者？"
+msgstr "寄送付款成功確認信？"
 
 #: CRM/Contribute/Form/ContributionPage/ThankYou.php
 msgid "CC Payment Notification To"
@@ -11066,7 +11066,7 @@ msgstr "密件副本收件者"
 msgid ""
 "A valid Receipt From Email address must be specified if Email Payment "
 "Notification to User is enabled"
-msgstr "若啟用 Email 收據功能，必須填寫一個有效的捐（繳）款確認信的開立者 Email"
+msgstr "若啟用 Email 收據功能，必須填寫一個有效的付款成功確認信寄件者 Email"
 
 #: CRM/Contribute/Form/ContributionPage/ThankYou.php
 msgid "Thanks and Receipt"
@@ -11191,7 +11191,7 @@ msgstr "信用卡資訊"
 
 #: CRM/Contribute/Form/Contribution.php
 msgid "Send Payment Notification"
-msgstr "寄送捐（繳）款確認"
+msgstr "寄送付款成功確認信"
 
 #: CRM/Contribute/Form/Contribution.php
 #: templates/CRM/Contribute/Form/ContributionView.tpl
@@ -28716,7 +28716,7 @@ msgid ""
 "content and layout of the thank-you section below. You also control whether "
 "an electronic payment notification is automatically emailed to each "
 "contributor - and can add a custom message to that notification."
-msgstr "您可在此步驟設定致謝訊息及捐（繳）款確認信選項。捐款人完成捐款後，將會看到確認及致謝頁面，請您在下方提供的致謝頁與捐（繳）款確認頁設定欄位中輸入自訂文案，也可選擇要不要自動將捐（繳）款確認Email給捐款人。"
+msgstr "您可在此步驟設定致謝訊息及付款成功確認信選項。捐款人完成捐款後，將會看到確認及致謝頁面，請您在下方提供的致謝頁與付款成功確認信設定欄位中輸入自訂文案，也可選擇要不要自動將付款成功確認信Email給捐款人。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/ThankYou.tpl
 msgid ""
@@ -28741,19 +28741,19 @@ msgstr "輸入您想出現在致謝頁底部的連結及/或文字。您可以�
 msgid ""
 "Check this box if you want an electronic payment notification to be sent "
 "automatically."
-msgstr "如果您需要系統自動寄送捐（繳）款確認信，請勾選此框。"
+msgstr "如果您需要系統自動寄送付款成功確認信，請勾選此框。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/ThankYou.tpl
 msgid ""
 "Enter the FROM name to be used when payment notifications are emailed to "
 "contributors."
-msgstr "請輸入寄件者名稱，這會顯示在捐（繳）款確認信開立者位置。"
+msgstr "請輸入寄件者名稱，這會顯示在付款成功確認信寄件者位置。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/ThankYou.tpl
 msgid ""
 "Enter the FROM email address to be used when payment notification are "
 "emailed to contributors."
-msgstr "請輸入寄件者 Email 地址，這會顯示在捐（繳）款確認信開立者 Email。"
+msgstr "請輸入寄件者 Email 地址，這會顯示在付款成功確認信寄件者 Email。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/ThankYou.tpl
 msgid ""
@@ -28761,7 +28761,7 @@ msgid ""
 "notifiction. NOTE: This text will be included in both TEXT and HTML versions"
 " of payment notificationsemails so we do not recommend including HTML tags /"
 " formatting here."
-msgstr "請在此輸入捐（繳）款確認信的頁首訊息。請注意：電子收據有純文字及 HTML 版本，頁首訊息將同時套用在這兩種版本，所以我們不建議您在此輸入任何 HTML 標記語言。"
+msgstr "請在此輸入付款成功確認信的頁首訊息。請注意：付款成功確認信有純文字及 HTML 版本，頁首訊息將同時套用在這兩種版本，所以我們不建議您在此輸入任何 HTML 標記語言。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/ThankYou.tpl
 msgid ""
@@ -28769,7 +28769,7 @@ msgid ""
 "emailed payment notification, enter one or more email addresses here. "
 "Multiple email addresses should be separated by a comma (e.g. "
 "jane@example.org, paula@example.org)."
-msgstr "如果您想讓您組織內部成員也收到捐（繳）款確認信的副本（例如會計人員、募款活動負責人），請在此輸入 Email 地址。若要輸入多個 Email 地址，請用半型逗號分隔（例如 jane@example.org, paula@example.org）。"
+msgstr "如果您想讓您組織內部成員也收到付款成功確認信的副本（例如會計人員、募款活動負責人），請在此輸入 Email 地址。若要輸入多個 Email 地址，請用半型逗號分隔（例如 jane@example.org, paula@example.org）。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/ThankYou.tpl
 msgid ""
@@ -28777,7 +28777,7 @@ msgid ""
 " each emailed payment notification, enter one or more email addresses here. "
 "Multiple email addresses should be separated by a comma (e.g. "
 "jane@example.org, paula@example.org)."
-msgstr "如果您想讓您組織內部成員也收到捐（繳）款確認信的副本（密件副本），請在此輸入 Email 地址。若要輸入多個 Email 地址，請用半型逗號分隔（例如 jane@example.org, paula@example.org）。"
+msgstr "如果您想讓您組織內部成員也收到付款成功確認信的副本（密件副本），請在此輸入 Email 地址。若要輸入多個 Email 地址，請用半型逗號分隔（例如 jane@example.org, paula@example.org）。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/Widget.hlp
 msgid ""
@@ -29071,11 +29071,11 @@ msgstr "捐款人的實際捐款金額。"
 #: templates/CRM/Contribute/Form/Contribution.tpl
 msgid ""
 "Automatically email a payment notification for this contribution to %1?"
-msgstr "自動寄送 Email 捐（繳）款確認給 %1 ？"
+msgstr "自動寄送付款成功確認信給 %1 ？"
 
 #: templates/CRM/Contribute/Form/Contribution.tpl
 msgid "Automatically email a payment notification for this contribution to "
-msgstr "自動寄送 Email 捐（繳）款確認給"
+msgstr "自動寄送付款成功確認信給"
 
 #: templates/CRM/Contribute/Form/Contribution.tpl
 msgid "Date that a receipt was sent to the contributor."
@@ -44701,7 +44701,7 @@ msgstr "其他參加者"
 msgid ""
 "Until to the last step, your registeration is not complete and we won't "
 "reserve any spaces for your registeration."
-msgstr "提醒您，您尚未完成報名程序。在進行到最後一個步驟完成報名之前，我們不會為您保留名額。"
+msgstr "提醒您，完整填寫以下內容並順利送出表單後，才算正式完成報名程序喔！"
 
 #: templates/CRM/Event/Form/Registration/Register.tpl
 msgid "Registering Yourself (%1)"
@@ -45317,4 +45317,4 @@ msgstr "新增一筆會員費用紀錄"
 
 #: templates/message_templates/contribution_offline_receipt_subject.tpl
 msgid "Payment Notification"
-msgstr "捐（繳）款確認"
+msgstr "付款成功確認信"
