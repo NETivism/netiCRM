@@ -168,9 +168,9 @@ final class Barcode39 {
 	 * @param string $filename (optional)
 	 * @return bool
 	 */
-	public function draw($filename = null) {
+	public function draw($filename = NULL, $header = NULL) {
 		// check if GB library functions installed
-		if(!function_exists("imagegif")) {
+		if(!function_exists("imagepng")) {
 			return false;
 		}
 
@@ -295,12 +295,15 @@ final class Barcode39 {
 
 		// check if writing image
 		if($filename) {
-			imagegif($img, $filename);
+			imagepng($img, $filename);
 		// display image
-		} else {
-			header("Content-type: image/gif");
-			imagegif($img);
+		} elseif($header) {
+			header("Content-type: image/png");
+			imagepng($img);
 		}
+    else {
+			imagepng($img);
+    }
 		
 		imagedestroy($img);
 
