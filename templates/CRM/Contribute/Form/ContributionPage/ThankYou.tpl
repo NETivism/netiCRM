@@ -69,14 +69,14 @@
 	<td class="label">{$form.receipt_from_email.label}{$reqMark}
 	</td>
 	<td class="html-adjust">{$form.receipt_from_email.html}<br />
-	    <span class="description">{ts}Enter the FROM email address to be used when payment notifications are emailed to contributors.{/ts}</span>
+	    <span class="description">{ts}Enter the FROM email address to be used when payment notification are emailed to contributors.{/ts}</span>
 	</td>
     </tr>
     <tr class="crm-contribution-contributionpage-thankyou-form-block-receipt_text">
 	<td class="label">{$form.receipt_text.label}{if $action == 2}{include file='CRM/Core/I18n/Dialog.tpl' table='civicrm_contribution_page' field='receipt_text' id=$id}{/if}
 	</td>
 	<td class="html-adjust">{$form.receipt_text.html}<br />
-	    <span class="description">{ts}Enter a message you want included at the beginning of emailed payment notification. NOTE: This text will be included in both TEXT and HTML versions of payment notifications emails so we do not recommend including HTML tags / formatting here.{/ts}<br /></span>
+	    <span class="description">{ts}Enter a message you want included at the beginning of emailed payment notifiction. NOTE: This text will be included in both TEXT and HTML versions of payment notificationsemails so we do not recommend including HTML tags / formatting here.{/ts}<br /></span>
 	</td>
     </tr>
     <tr class="crm-contribution-contributionpage-thankyou-form-block-cc_receipt">
