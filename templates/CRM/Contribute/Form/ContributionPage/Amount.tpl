@@ -43,16 +43,17 @@
             <td>{$form.is_monetary.html}<br />
             <span class="description">{ts}Uncheck this box if you are using this contribution page for free membership signup ONLY, or to solicit in-kind / non-monetary donations such as furniture, equipment.. etc.{/ts}</span></td>
         </tr>
-        {if $paymentProcessor}
         </table>
-        <table class="form-layout-compressed" id="payment_processor">
+        <table class="form-layout-compressed" id="is_monetary_child_table">
+        {if $paymentProcessor}
         <tr class="crm-contribution-contributionpage-amount-form-block-payment_processor"><th scope="row" class="label" width="20%">{$form.payment_processor.label}</th>
             <td>{$form.payment_processor.html}<br />
             <span class="description">{ts}Select the payment processor to be used for contributions submitted from this contribution page (unless you are soliciting non-monetary / in-kind contributions only).{/ts} {docURL page="CiviContribute Payment Processor Configuration"}</span></td>
         </tr>
+        {/if}
 
         <!-- is_pay_later BEGIN -->
-            <tr class="crm-contribution-contributionpage-amount-form-block-is_pay_later"><th scope="row" class="label">{$form.is_pay_later.label}</th>
+            <tr class="crm-contribution-contributionpage-amount-form-block-is_pay_later"><th scope="row" class="label" width="20%">{$form.is_pay_later.label}</th>
             <td>{$form.is_pay_later.html}<br />
             <span class="description">{ts}Check this box if you want to give users the option to submit payment offline (e.g. mail in a check, call in a credit card, etc.).{/ts}</span></td></tr>
         <tr id="payLaterFields" class="crm-contribution-form-block-payLaterFields"><td>&nbsp;</td>
@@ -90,7 +91,6 @@
 
         </table>
         <table class="form-layout-compressed">
-        {/if}
         <tr class="crm-contribution-contributionpage-amount-form-block-currency"><th scope="row" class="label" width="20%">{$form.currency.label}</th>
             <td>{$form.currency.html}<br />
             <span class="description">{ts}Select the currency to be used for contributions submitted from this contribution page.{/ts}</span></td>
@@ -230,9 +230,9 @@
 	   switch ( elementName ) {
           case 'is_monetary':
               if ( element.checked ) {
-                cj('#payment_processor').show();
+                cj('#is_monetary_child_table').show();
               }else{
-                cj('#payment_processor').hide();
+                cj('#is_monetary_child_table').hide();
               }
           break;
 		  case 'price_set_id':
@@ -305,7 +305,7 @@
 {include file="CRM/common/showHideByFieldValue.tpl"
     trigger_field_id    ="is_monetary"
     trigger_value       ="true"
-    target_element_id   ="payment_processor"
+    target_element_id   ="is_monetary_child_table"
     target_element_type ="table-row"
     field_type          ="radio"
     invert              = "false"
