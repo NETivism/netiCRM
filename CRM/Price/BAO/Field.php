@@ -384,7 +384,10 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
           }
           $selectOption[$opt['id']] = $opt['label'];
 
-          if (!in_array($opt['id'], $freezeOptions)) {
+          if (in_array($opt['id'], $freezeOptions)) {
+            unset($selectOption[$opt['id']]);
+          }
+          else {
             $allowedOptions[] = $opt['id'];
           }
         }
@@ -397,7 +400,7 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
         // CRM-6902
         $button = substr($qf->controller->getButtonName(), -4);
         if (!empty($freezeOptions) && $button != 'skip') {
-          $qf->addRule($elementName, ts('Participant count for this option is full.'), 'regex', "/" . implode('|', $allowedOptions) . "/");
+          $qf->addRule($elementName, ts('Invalid value for field(s)'), 'regex', "/" . implode('|', $allowedOptions) . "/");
         }
         break;
 
