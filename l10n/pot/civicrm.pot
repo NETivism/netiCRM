@@ -3621,12 +3621,12 @@ msgstr ""
 
 #: CRM/Contribute/DAO/ContributionPage.php
 #: CRM/Contribute/Form/ContributionPage/ThankYou.php
-msgid "Receipt From Name"
+msgid "Payment Notification From Name"
 msgstr ""
 
 #: CRM/Contribute/DAO/ContributionPage.php
 #: CRM/Contribute/Form/ContributionPage/ThankYou.php
-msgid "Receipt From Email"
+msgid "Payment Notification From Email"
 msgstr ""
 
 #: CRM/Contribute/DAO/ContributionPage.php CRM/Event/DAO/Event.php
@@ -4103,7 +4103,7 @@ msgstr ""
 
 #: CRM/Contribute/Form/ContributionPage/ThankYou.php
 #: CRM/Member/Form/Membership.php
-msgid "Receipt Message"
+msgid "Payment Notification Message"
 msgstr ""
 
 #: CRM/Contribute/Form/ContributionPage/ThankYou.php
@@ -10221,15 +10221,7 @@ msgid "On Behalf Of Organization"
 msgstr ""
 
 #: CRM/Contribute/DAO/ContributionPage.php
-msgid "Cc Receipt"
-msgstr ""
-
-#: CRM/Contribute/DAO/ContributionPage.php
-msgid "Bcc Receipt"
-msgstr ""
-
-#: CRM/Contribute/DAO/ContributionPage.php
-msgid "Receipt Text"
+msgid "Payment Notification Text"
 msgstr ""
 
 #: CRM/Contribute/DAO/ContributionPage.php
@@ -11054,21 +11046,21 @@ msgid "Thank-you Page Footer"
 msgstr ""
 
 #: CRM/Contribute/Form/ContributionPage/ThankYou.php
-msgid "Email Receipt to Contributor?"
+msgid "Email Payment Notification to User?"
 msgstr ""
 
 #: CRM/Contribute/Form/ContributionPage/ThankYou.php
-msgid "CC Receipt To"
+msgid "CC Payment Notification To"
 msgstr ""
 
 #: CRM/Contribute/Form/ContributionPage/ThankYou.php
-msgid "BCC Receipt To"
+msgid "BCC Payment Notification To"
 msgstr ""
 
 #: CRM/Contribute/Form/ContributionPage/ThankYou.php
 msgid ""
-"A valid Receipt From Email address must be specified if Email Receipt to "
-"Contributor is enabled"
+"A valid Receipt From Email address must be specified if Email Payment Notification to "
+"User is enabled"
 msgstr ""
 
 #: CRM/Contribute/Form/ContributionPage/ThankYou.php
@@ -28731,12 +28723,12 @@ msgstr ""
 
 #: templates/CRM/Contribute/Form/ContributionPage/ThankYou.tpl
 msgid ""
-"Use this form to configure the thank-you message and receipting options. "
+"Use this form to configure the thank-you message and payment notification options. "
 "Contributors will see a confirmation and thank-you page after whenever an "
 "online contribution is successfully processed. You provide the content and "
 "layout of the thank-you section below. You also control whether an "
-"electronic receipt is automatically emailed to each contributor - and can "
-"add a custom message to that receipt."
+"electronic payment notification is automatically emailed to each contributor - and can "
+"add a custom message to that notification."
 msgstr ""
 
 #: templates/CRM/Contribute/Form/ContributionPage/ThankYou.tpl
@@ -28760,31 +28752,31 @@ msgstr ""
 
 #: templates/CRM/Contribute/Form/ContributionPage/ThankYou.tpl
 msgid ""
-"Check this box if you want an electronic receipt to be sent automatically."
+"Check this box if you want an electronic payment notification to be sent automatically."
 msgstr ""
 
 #: templates/CRM/Contribute/Form/ContributionPage/ThankYou.tpl
 msgid ""
-"Enter the FROM name to be used when receipts are emailed to contributors."
+"Enter the FROM name to be used when payment notifications are emailed to contributors."
 msgstr ""
 
 #: templates/CRM/Contribute/Form/ContributionPage/ThankYou.tpl
 msgid ""
-"Enter the FROM email address to be used when receipts are emailed to "
+"Enter the FROM email address to be used when payment notification are emailed to "
 "contributors."
 msgstr ""
 
 #: templates/CRM/Contribute/Form/ContributionPage/ThankYou.tpl
 msgid ""
-"Enter a message you want included at the beginning of emailed receipts. "
-"NOTE: This text will be included in both TEXT and HTML versions of receipt "
+"Enter a message you want included at the beginning of emailed payment notifiction. "
+"NOTE: This text will be included in both TEXT and HTML versions of payment notifications"
 "emails so we do not recommend including HTML tags / formatting here."
 msgstr ""
 
 #: templates/CRM/Contribute/Form/ContributionPage/ThankYou.tpl
 msgid ""
 "If you want member(s) of your organization to receive a carbon copy of each "
-"emailed receipt, enter one or more email addresses here. Multiple email "
+"emailed payment notification, enter one or more email addresses here. Multiple email "
 "addresses should be separated by a comma (e.g. jane@example.org, "
 "paula@example.org)."
 msgstr ""
@@ -28792,7 +28784,7 @@ msgstr ""
 #: templates/CRM/Contribute/Form/ContributionPage/ThankYou.tpl
 msgid ""
 "If you want member(s) of your organization to receive a BLIND carbon copy of"
-" each emailed receipt, enter one or more email addresses here. Multiple "
+" each emailed payment notification, enter one or more email addresses here. Multiple "
 "email addresses should be separated by a comma (e.g. jane@example.org, "
 "paula@example.org)."
 msgstr ""

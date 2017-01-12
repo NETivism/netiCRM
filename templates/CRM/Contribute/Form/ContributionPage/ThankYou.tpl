@@ -28,7 +28,7 @@
 {capture assign='reqMark'}<span class="marker"  title="{ts}This field is required.{/ts}">*</span>{/capture}
 <div class="crm-block crm-form-block crm-contribution-contributionpage-thankyou-form-block">
 <div id="help">
-    <p>{ts}Use this form to configure the thank-you message and receipting options. Contributors will see a confirmation and thank-you page after whenever an online contribution is successfully processed. You provide the content and layout of the thank-you section below. You also control whether an electronic receipt is automatically emailed to each contributor - and can add a custom message to that receipt.{/ts}</p>
+    <p>{ts}Use this form to configure the thank-you message and payment notification options. Contributors will see a confirmation and thank-you page after whenever an online contribution is successfully processed. You provide the content and layout of the thank-you section below. You also control whether an electronic payment notification is automatically emailed to each contributor - and can add a custom message to that notification.{/ts}</p>
 </div>
     <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>				    
     <table class="form-layout-compressed">
@@ -53,7 +53,7 @@
     <tr class="crm-contribution-contributionpage-thankyou-form-block-is_email_receipt">
        <td class="label"></td>
        <td class="html-adjust">{$form.is_email_receipt.html}{$form.is_email_receipt.label}<br />
-       	   <span class="description">{ts}Check this box if you want an electronic receipt to be sent automatically.{/ts}</span>
+       	   <span class="description">{ts}Check this box if you want an electronic payment notification to be sent automatically.{/ts}</span>
        </td>
     </tr>
     </table>
@@ -62,28 +62,28 @@
 	<td class="label">{$form.receipt_from_name.label}{if $action == 2}{include file='CRM/Core/I18n/Dialog.tpl' table='civicrm_contribution_page' field='receipt_from_name' id=$id}{/if}
     	</td>
     	<td class="html-adjust">{$form.receipt_from_name.html}<br />
-    	    <span class="description">{ts}Enter the FROM name to be used when receipts are emailed to contributors.{/ts}</span>
+    	    <span class="description">{ts}Enter the FROM name to be used when payment notifications are emailed to contributors.{/ts}</span>
 	</td>
     </tr>
     <tr class="crm-contribution-contributionpage-thankyou-form-block-receipt_from_email">
 	<td class="label">{$form.receipt_from_email.label}{$reqMark}
 	</td>
 	<td class="html-adjust">{$form.receipt_from_email.html}<br />
-	    <span class="description">{ts}Enter the FROM email address to be used when receipts are emailed to contributors.{/ts}</span>
+	    <span class="description">{ts}Enter the FROM email address to be used when payment notifications are emailed to contributors.{/ts}</span>
 	</td>
     </tr>
     <tr class="crm-contribution-contributionpage-thankyou-form-block-receipt_text">
 	<td class="label">{$form.receipt_text.label}{if $action == 2}{include file='CRM/Core/I18n/Dialog.tpl' table='civicrm_contribution_page' field='receipt_text' id=$id}{/if}
 	</td>
 	<td class="html-adjust">{$form.receipt_text.html}<br />
-	    <span class="description">{ts}Enter a message you want included at the beginning of emailed receipts. NOTE: This text will be included in both TEXT and HTML versions of receipt emails so we do not recommend including HTML tags / formatting here.{/ts}<br /></span>
+	    <span class="description">{ts}Enter a message you want included at the beginning of emailed payment notification. NOTE: This text will be included in both TEXT and HTML versions of payment notifications emails so we do not recommend including HTML tags / formatting here.{/ts}<br /></span>
 	</td>
     </tr>
     <tr class="crm-contribution-contributionpage-thankyou-form-block-cc_receipt">
 	<td class="label">{$form.cc_receipt.label}
     	</td>
 	<td class="html-adjust">{$form.cc_receipt.html}<br />
-	    <span  class="description">{ts}If you want member(s) of your organization to receive a carbon copy of each emailed receipt, enter one or more email addresses here. Multiple email addresses should be separated by a comma (e.g. jane@example.org, paula@example.org).{/ts}
+	    <span  class="description">{ts}If you want member(s) of your organization to receive a carbon copy of each emailed payment notification, enter one or more email addresses here. Multiple email addresses should be separated by a comma (e.g. jane@example.org, paula@example.org).{/ts}
 	    </span>
 	</td>
     </tr>
@@ -91,7 +91,7 @@
 	<td class="label">{$form.bcc_receipt.label}
 	</td>
 	<td class="html-adjust">{$form.bcc_receipt.html}<br />
-	    <span class="description">{ts}If you want member(s) of your organization to receive a BLIND carbon copy of each emailed receipt, enter one or more email addresses here. Multiple email addresses should be separated by a comma (e.g. jane@example.org, paula@example.org).{/ts}</span>
+	    <span class="description">{ts}If you want member(s) of your organization to receive a BLIND carbon copy of each emailed payment notification, enter one or more email addresses here. Multiple email addresses should be separated by a comma (e.g. jane@example.org, paula@example.org).{/ts}</span>
 	</td>
     </tr>
     </table>

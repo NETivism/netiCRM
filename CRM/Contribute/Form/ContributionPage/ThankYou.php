@@ -68,15 +68,15 @@ class CRM_Contribute_Form_ContributionPage_ThankYou extends CRM_Contribute_Form_
     $this->addWysiwyg('thankyou_text', ts('Thank-you Message'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionPage', 'thankyou_text'));
     $this->addWysiwyg('thankyou_footer', ts('Thank-you Page Footer'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionPage', 'thankyou_footer'));
 
-    $this->addElement('checkbox', 'is_email_receipt', ts('Email Receipt to Contributor?'), NULL, array('onclick' => "showReceipt()"));
-    $this->add('text', 'receipt_from_name', ts('Receipt From Name'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionPage', 'receipt_from_name'));
-    $this->add('text', 'receipt_from_email', ts('Receipt From Email'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionPage', 'receipt_from_email'));
-    $this->addWysiwyg('receipt_text', ts('Receipt Message'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionPage', 'receipt_text'));
+    $this->addElement('checkbox', 'is_email_receipt', ts('Email Payment Notification to User?'), NULL, array('onclick' => "showReceipt()"));
+    $this->add('text', 'receipt_from_name', ts('Payment Notification From Name'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionPage', 'receipt_from_name'));
+    $this->add('text', 'receipt_from_email', ts('Payment Notification From Email'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionPage', 'receipt_from_email'));
+    $this->addWysiwyg('receipt_text', ts('Payment Notification Message'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionPage', 'receipt_text'));
 
-    $this->add('text', 'cc_receipt', ts('CC Receipt To'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionPage', 'cc_receipt'));
+    $this->add('text', 'cc_receipt', ts('CC Payment Notification To'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionPage', 'cc_receipt'));
     $this->addRule('cc_receipt', ts('Please enter a valid list of comma delimited email addresses'), 'emailList');
 
-    $this->add('text', 'bcc_receipt', ts('BCC Receipt To'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionPage', 'bcc_receipt'));
+    $this->add('text', 'bcc_receipt', ts('BCC Payment Notification To'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionPage', 'bcc_receipt'));
     $this->addRule('bcc_receipt', ts('Please enter a valid list of comma delimited email addresses'), 'emailList');
 
     $this->addFormRule(array('CRM_Contribute_Form_ContributionPage_ThankYou', 'formRule'));
@@ -103,7 +103,7 @@ class CRM_Contribute_Form_ContributionPage_ThankYou extends CRM_Contribute_Form_
       //added for CRM-1348
       $email = trim(CRM_Utils_Array::value('receipt_from_email', $fields));
       if (empty($email) || !CRM_Utils_Rule::email($email)) {
-        $errors['receipt_from_email'] = ts('A valid Receipt From Email address must be specified if Email Receipt to Contributor is enabled');
+        $errors['receipt_from_email'] = ts('A valid Receipt From Email address must be specified if Email Payment Notification to User is enabled');
       }
     }
     return $errors;

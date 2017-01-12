@@ -11,7 +11,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2017-01-12 02:09+0000\n"
+"PO-Revision-Date: 2017-01-12 02:55+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -3631,13 +3631,13 @@ msgstr "致謝標題"
 
 #: CRM/Contribute/DAO/ContributionPage.php
 #: CRM/Contribute/Form/ContributionPage/ThankYou.php
-msgid "Receipt From Name"
-msgstr "收據開立者名稱"
+msgid "Payment Notification From Name"
+msgstr "捐（繳）款確認開立名稱"
 
 #: CRM/Contribute/DAO/ContributionPage.php
 #: CRM/Contribute/Form/ContributionPage/ThankYou.php
-msgid "Receipt From Email"
-msgstr "收據開立者 Email"
+msgid "Payment Notification From Email"
+msgstr "捐（繳）款確認開立者 Email"
 
 #: CRM/Contribute/DAO/ContributionPage.php CRM/Event/DAO/Event.php
 #: CRM/Event/Form/ManageEvent/Registration.php
@@ -4113,8 +4113,8 @@ msgstr "致謝內容"
 
 #: CRM/Contribute/Form/ContributionPage/ThankYou.php
 #: CRM/Member/Form/Membership.php
-msgid "Receipt Message"
-msgstr "收據訊息"
+msgid "Payment Notification Message"
+msgstr "捐（繳）款確認訊息"
 
 #: CRM/Contribute/Form/ContributionPage/ThankYou.php
 #: CRM/Event/Form/ManageEvent/Registration.php
@@ -10226,16 +10226,8 @@ msgid "On Behalf Of Organization"
 msgstr "代表組織"
 
 #: CRM/Contribute/DAO/ContributionPage.php
-msgid "Cc Receipt"
-msgstr "副本"
-
-#: CRM/Contribute/DAO/ContributionPage.php
-msgid "Bcc Receipt"
-msgstr "密送副本"
-
-#: CRM/Contribute/DAO/ContributionPage.php
-msgid "Receipt Text"
-msgstr "收據文字"
+msgid "Payment Notification Text"
+msgstr "捐（繳）款確認文字"
 
 #: CRM/Contribute/DAO/ContributionPage.php
 msgid "Honor Block Title"
@@ -11059,22 +11051,22 @@ msgid "Thank-you Page Footer"
 msgstr "致謝頁頁尾"
 
 #: CRM/Contribute/Form/ContributionPage/ThankYou.php
-msgid "Email Receipt to Contributor?"
-msgstr "Email 收據給捐/繳款人？"
+msgid "Email Payment Notification to User?"
+msgstr "寄送捐（繳）款確認給使用者？"
 
 #: CRM/Contribute/Form/ContributionPage/ThankYou.php
-msgid "CC Receipt To"
+msgid "CC Payment Notification To"
 msgstr "副本收件者"
 
 #: CRM/Contribute/Form/ContributionPage/ThankYou.php
-msgid "BCC Receipt To"
-msgstr "密件副本"
+msgid "BCC Payment Notification To"
+msgstr "密件副本收件者"
 
 #: CRM/Contribute/Form/ContributionPage/ThankYou.php
 msgid ""
-"A valid Receipt From Email address must be specified if Email Receipt to "
-"Contributor is enabled"
-msgstr "若啟用 Email 收據功能，必須填寫一個有效的收據開立者 Email"
+"A valid Receipt From Email address must be specified if Email Payment "
+"Notification to User is enabled"
+msgstr "若啟用 Email 收據功能，必須填寫一個有效的捐（繳）款確認信的開立者 Email"
 
 #: CRM/Contribute/Form/ContributionPage/ThankYou.php
 msgid "Thanks and Receipt"
@@ -28718,13 +28710,13 @@ msgstr "當您的頁是啓用狀態，您可使用選單管理，建立前端連
 
 #: templates/CRM/Contribute/Form/ContributionPage/ThankYou.tpl
 msgid ""
-"Use this form to configure the thank-you message and receipting options. "
-"Contributors will see a confirmation and thank-you page after whenever an "
-"online contribution is successfully processed. You provide the content and "
-"layout of the thank-you section below. You also control whether an "
-"electronic receipt is automatically emailed to each contributor - and can "
-"add a custom message to that receipt."
-msgstr "您可在此步驟設定致謝訊息及收據選項。捐款人完成捐款後，將會看到確認及致謝頁面，請您在下方提供的致謝頁與收據頁設定欄位中輸入自訂文案，也可選擇要不要自動將電子收據Email給捐款人。"
+"Use this form to configure the thank-you message and payment notification "
+"options. Contributors will see a confirmation and thank-you page after "
+"whenever an online contribution is successfully processed. You provide the "
+"content and layout of the thank-you section below. You also control whether "
+"an electronic payment notification is automatically emailed to each "
+"contributor - and can add a custom message to that notification."
+msgstr "您可在此步驟設定致謝訊息及捐（繳）款確認信選項。捐款人完成捐款後，將會看到確認及致謝頁面，請您在下方提供的致謝頁與捐（繳）款確認頁設定欄位中輸入自訂文案，也可選擇要不要自動將捐（繳）款確認Email給捐款人。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/ThankYou.tpl
 msgid ""
@@ -28747,42 +28739,45 @@ msgstr "輸入您想出現在致謝頁底部的連結及/或文字。您可以�
 
 #: templates/CRM/Contribute/Form/ContributionPage/ThankYou.tpl
 msgid ""
-"Check this box if you want an electronic receipt to be sent automatically."
-msgstr "如果您需要系統自動寄送電子收據，請勾選此框。"
+"Check this box if you want an electronic payment notification to be sent "
+"automatically."
+msgstr "如果您需要系統自動寄送捐（繳）款確認信，請勾選此框。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/ThankYou.tpl
 msgid ""
-"Enter the FROM name to be used when receipts are emailed to contributors."
-msgstr "請輸入寄件者名稱，這會顯示在收據開立者位置。"
-
-#: templates/CRM/Contribute/Form/ContributionPage/ThankYou.tpl
-msgid ""
-"Enter the FROM email address to be used when receipts are emailed to "
+"Enter the FROM name to be used when payment notifications are emailed to "
 "contributors."
-msgstr "請輸入寄件者 Email 地址，這會顯示在收據開立者 Email。"
+msgstr "請輸入寄件者名稱，這會顯示在捐（繳）款確認信開立者位置。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/ThankYou.tpl
 msgid ""
-"Enter a message you want included at the beginning of emailed receipts. "
-"NOTE: This text will be included in both TEXT and HTML versions of receipt "
-"emails so we do not recommend including HTML tags / formatting here."
-msgstr "請在此輸入電子收據的頁首訊息。請注意：電子收據有純文字及 HTML 版本，頁首訊息將同時套用在這兩種版本，所以我們不建議您在此輸入任何 HTML 標記語言。"
+"Enter the FROM email address to be used when payment notification are "
+"emailed to contributors."
+msgstr "請輸入寄件者 Email 地址，這會顯示在捐（繳）款確認信開立者 Email。"
+
+#: templates/CRM/Contribute/Form/ContributionPage/ThankYou.tpl
+msgid ""
+"Enter a message you want included at the beginning of emailed payment "
+"notifiction. NOTE: This text will be included in both TEXT and HTML versions"
+" of payment notificationsemails so we do not recommend including HTML tags /"
+" formatting here."
+msgstr "請在此輸入捐（繳）款確認信的頁首訊息。請注意：電子收據有純文字及 HTML 版本，頁首訊息將同時套用在這兩種版本，所以我們不建議您在此輸入任何 HTML 標記語言。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/ThankYou.tpl
 msgid ""
 "If you want member(s) of your organization to receive a carbon copy of each "
-"emailed receipt, enter one or more email addresses here. Multiple email "
-"addresses should be separated by a comma (e.g. jane@example.org, "
-"paula@example.org)."
-msgstr "如果您想讓您組織內部成員也收到電子收據的副本（例如會計人員、募款活動負責人），請在此輸入 Email 地址。若要輸入多個 Email 地址，請用半型逗號分隔（例如 jane@example.org, paula@example.org）。"
+"emailed payment notification, enter one or more email addresses here. "
+"Multiple email addresses should be separated by a comma (e.g. "
+"jane@example.org, paula@example.org)."
+msgstr "如果您想讓您組織內部成員也收到捐（繳）款確認信的副本（例如會計人員、募款活動負責人），請在此輸入 Email 地址。若要輸入多個 Email 地址，請用半型逗號分隔（例如 jane@example.org, paula@example.org）。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/ThankYou.tpl
 msgid ""
 "If you want member(s) of your organization to receive a BLIND carbon copy of"
-" each emailed receipt, enter one or more email addresses here. Multiple "
-"email addresses should be separated by a comma (e.g. jane@example.org, "
-"paula@example.org)."
-msgstr "如果您想讓您組織內部成員也收到電子收據的副本（密件副本），請在此輸入 Email 地址。若要輸入多個 Email 地址，請用半型逗號分隔（例如 jane@example.org, paula@example.org）。"
+" each emailed payment notification, enter one or more email addresses here. "
+"Multiple email addresses should be separated by a comma (e.g. "
+"jane@example.org, paula@example.org)."
+msgstr "如果您想讓您組織內部成員也收到捐（繳）款確認信的副本（密件副本），請在此輸入 Email 地址。若要輸入多個 Email 地址，請用半型逗號分隔（例如 jane@example.org, paula@example.org）。"
 
 #: templates/CRM/Contribute/Form/ContributionPage/Widget.hlp
 msgid ""
