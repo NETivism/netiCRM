@@ -69,7 +69,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
      <table style="border: 1px solid #999; margin: 1em 0em 1em; border-collapse: collapse; width:100%;">
       <tr>
        <th {$headerStyle}>
-        {ts}Copy of Contribution Receipt{/ts}
+        {ts}Receipt{/ts} - {ts}CC{/ts}
        </th>
       </tr>
       <tr>

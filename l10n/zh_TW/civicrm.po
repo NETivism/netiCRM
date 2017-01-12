@@ -3,7 +3,7 @@
 # Chang Shu-huai <junsuwhy@gmail.com>, 2016-2017
 # Fuyuan Cheng <gloomcheng@gmail.com>, 2013-2015
 # IreneLin, 2013
-# jimyhuang <jimmy@netivism.com.tw>, 2013,2015-2016
+# jimyhuang <jimmy@netivism.com.tw>, 2013,2015-2017
 # Chang Shu-huai <junsuwhy@gmail.com>, 2015-2016
 # SharonKwan <sharon@netivism.com.tw>, 2015-2016
 # charlesc <yeouhsin@gmail.com>, 2013-2014,2016
@@ -11,8 +11,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2017-01-10 04:44+0000\n"
-"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
+"PO-Revision-Date: 2017-01-12 02:09+0000\n"
+"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -11198,8 +11198,8 @@ msgid "Credit Card Information"
 msgstr "信用卡資訊"
 
 #: CRM/Contribute/Form/Contribution.php
-msgid "Send Receipt?"
-msgstr "寄送收據？"
+msgid "Send Payment Notification"
+msgstr "寄送捐（繳）款確認"
 
 #: CRM/Contribute/Form/Contribution.php
 #: templates/CRM/Contribute/Form/ContributionView.tpl
@@ -29074,12 +29074,13 @@ msgid "Actual amount given by contributor."
 msgstr "捐款人的實際捐款金額。"
 
 #: templates/CRM/Contribute/Form/Contribution.tpl
-msgid "Automatically email a receipt for this contribution to %1?"
-msgstr "自動寄送 Email 收據給%1？"
+msgid ""
+"Automatically email a payment notification for this contribution to %1?"
+msgstr "自動寄送 Email 捐（繳）款確認給 %1 ？"
 
 #: templates/CRM/Contribute/Form/Contribution.tpl
-msgid "Automatically email a receipt for this contribution to "
-msgstr "自動寄送電子收據給"
+msgid "Automatically email a payment notification for this contribution to "
+msgstr "自動寄送 Email 捐（繳）款確認給"
 
 #: templates/CRM/Contribute/Form/Contribution.tpl
 msgid "Date that a receipt was sent to the contributor."
@@ -44574,6 +44575,12 @@ msgstr "會員註冊確認信與收據"
 msgid "Membership Renewal Confirmation and Receipt"
 msgstr "會籍更新確認信與收據"
 
+msgid "Membership Confirmation"
+msgstr "會員註冊確認信"
+
+msgid "Membership Renewal Confirmation"
+msgstr "會員更新確認信"
+
 msgid "Online tempalte"
 msgstr "線上範本"
 
@@ -45312,3 +45319,7 @@ msgstr "新增一筆活動費用紀錄"
 #: templates/CRM/Member/Form/MembershipView.tpl
 msgid "Add a membership payment record"
 msgstr "新增一筆會員費用紀錄"
+
+#: templates/message_templates/contribution_offline_receipt_subject.tpl
+msgid "Payment Notification"
+msgstr "捐（繳）款確認"

@@ -899,7 +899,7 @@ WHERE  contribution_id = {$this->_id}
 
 
     //add receipt for offline contribution
-    $this->addElement('checkbox', 'is_email_receipt', ts('Send Receipt?'), NULL);
+    $this->addElement('checkbox', 'is_email_receipt', ts('Send Payment Notification').'?', NULL);
 
     // add receipt id text area
     $receipt_attr = array_merge($attributes['receipt_id'], array('readonly' => 'readonly', 'class' => 'readonly'));

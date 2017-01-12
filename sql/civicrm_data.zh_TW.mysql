@@ -5962,7 +5962,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
 
 {if $receiptMessage}
 ###########################################################
-{ts}Copy of Contribution Receipt{/ts}
+{ts}Receipt{/ts} - {ts}CC{/ts}
 
 ###########################################################
 {$receiptMessage}
@@ -6039,7 +6039,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
      <table style="border: 1px solid #999; margin: 1em 0em 1em; border-collapse: collapse; width:100%;">
       <tr>
        <th {$headerStyle}>
-        {ts}Copy of Contribution Receipt{/ts}
+        {ts}Receipt{/ts} - {ts}CC{/ts}
        </th>
       </tr>
       <tr>
@@ -6073,7 +6073,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
 
 {if $receiptMessage}
 ###########################################################
-{ts}Copy of Contribution Receipt{/ts}
+{ts}Receipt{/ts} - {ts}CC{/ts}
 
 ###########################################################
 {$receiptMessage}
@@ -6150,7 +6150,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
      <table style="border: 1px solid #999; margin: 1em 0em 1em; border-collapse: collapse; width:100%;">
       <tr>
        <th {$headerStyle}>
-        {ts}Copy of Contribution Receipt{/ts}
+        {ts}Receipt{/ts} - {ts}CC{/ts}
        </th>
       </tr>
       <tr>
@@ -6171,7 +6171,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
 ', @tpl_ovid_contribution_dupalert, 0,          1) ,      
       
       
-      ('捐款 - 收據（離線）', '{ts}Contribution Receipt{/ts}
+      ('捐款 - 收據（離線）', '{ts}Payment Notification{/ts}
 ', '{if $formValues.receipt_text}
 {$formValues.receipt_text}
 {else}{ts}Thanks for your support.{/ts}{/if}
@@ -6531,7 +6531,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
 </body>
 </html>
 ', @tpl_ovid_contribution_offline_receipt, 1,          0),
-      ('捐款 - 收據（離線）', '{ts}Contribution Receipt{/ts}
+      ('捐款 - 收據（離線）', '{ts}Payment Notification{/ts}
 ', '{if $formValues.receipt_text}
 {$formValues.receipt_text}
 {else}{ts}Thanks for your support.{/ts}{/if}
@@ -6893,7 +6893,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
 ', @tpl_ovid_contribution_offline_receipt, 0,          1) ,      
       
       
-      ('捐款 - 收據（在線）', '{if $is_pay_later}{ts}Invoice{/ts}{else}{ts}Receipt{/ts}{/if} - {$title}
+      ('捐款 - 收據（在線）', '{if $is_pay_later}{ts}Invoice{/ts}{else}{ts}Payment Notification{/ts}{/if} - {$title}
 ', '{if $receipt_text}
 {$receipt_text}
 {/if}
@@ -7459,7 +7459,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
 </body>
 </html>
 ', @tpl_ovid_contribution_online_receipt, 1,          0),
-      ('捐款 - 收據（在線）', '{if $is_pay_later}{ts}Invoice{/ts}{else}{ts}Receipt{/ts}{/if} - {$title}
+      ('捐款 - 收據（在線）', '{if $is_pay_later}{ts}Invoice{/ts}{else}{ts}Payment Notification{/ts}{/if} - {$title}
 ', '{if $receipt_text}
 {$receipt_text}
 {/if}
@@ -13660,9 +13660,9 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
       
       
       ('會員 - 註冊與資格更新收據（離線）', '{if $receiptType EQ \'membership signup\'}
-{ts}Membership Confirmation and Receipt{/ts}
+{ts}Membership Confirmation{/ts}
 {elseif $receiptType EQ \'membership renewal\'}
-{ts}Membership Renewal Confirmation and Receipt{/ts}
+{ts}Membership Renewal Confirmation{/ts}
 {/if}
 ', '{if $formValues.receipt_text_signup}
 {$formValues.receipt_text_signup}
@@ -13939,9 +13939,9 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
 </html>
 ', @tpl_ovid_membership_offline_receipt, 1,          0),
       ('會員 - 註冊與資格更新收據（離線）', '{if $receiptType EQ \'membership signup\'}
-{ts}Membership Confirmation and Receipt{/ts}
+{ts}Membership Confirmation{/ts}
 {elseif $receiptType EQ \'membership renewal\'}
-{ts}Membership Renewal Confirmation and Receipt{/ts}
+{ts}Membership Renewal Confirmation{/ts}
 {/if}
 ', '{if $formValues.receipt_text_signup}
 {$formValues.receipt_text_signup}
@@ -14219,7 +14219,7 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
 ', @tpl_ovid_membership_offline_receipt, 0,          1) ,      
       
       
-      ('會員 - 收據（在線）', '{if $is_pay_later}{ts}Invoice{/ts}{else}{ts}Receipt{/ts}{/if} - {$title}
+      ('會員 - 收據（在線）', '{if $is_pay_later}{ts}Invoice{/ts}{else}{ts}Payment Notification{/ts}{/if} - {$title}
 ', '{if $receipt_text}
 {$receipt_text}
 {/if}
@@ -14920,7 +14920,7 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
 </body>
 </html>
 ', @tpl_ovid_membership_online_receipt, 1,          0),
-      ('會員 - 收據（在線）', '{if $is_pay_later}{ts}Invoice{/ts}{else}{ts}Receipt{/ts}{/if} - {$title}
+      ('會員 - 收據（在線）', '{if $is_pay_later}{ts}Invoice{/ts}{else}{ts}Payment Notification{/ts}{/if} - {$title}
 ', '{if $receipt_text}
 {$receipt_text}
 {/if}

@@ -11193,7 +11193,7 @@ msgid "Credit Card Information"
 msgstr ""
 
 #: CRM/Contribute/Form/Contribution.php
-msgid "Send Receipt?"
+msgid "Send Payment Notification"
 msgstr ""
 
 #: CRM/Contribute/Form/Contribution.php
@@ -29087,11 +29087,11 @@ msgid "Actual amount given by contributor."
 msgstr ""
 
 #: templates/CRM/Contribute/Form/Contribution.tpl
-msgid "Automatically email a receipt for this contribution to %1?"
+msgid "Automatically email a payment notification for this contribution to %1?"
 msgstr ""
 
 #: templates/CRM/Contribute/Form/Contribution.tpl
-msgid "Automatically email a receipt for this contribution to "
+msgid "Automatically email a payment notification for this contribution to "
 msgstr ""
 
 #: templates/CRM/Contribute/Form/Contribution.tpl
@@ -44608,6 +44608,12 @@ msgstr ""
 msgid "Membership Renewal Confirmation and Receipt"
 msgstr ""
 
+msgid "Membership Confirmation"
+msgstr ""
+
+msgid "Membership Renewal Confirmation"
+msgstr ""
+
 msgid "Online tempalte"
 msgstr ""
 
@@ -45288,4 +45294,8 @@ msgstr ""
 
 #: templates/CRM/Member/Form/MembershipView.tpl
 msgid "Add a membership payment record"
+msgstr ""
+
+#: templates/message_templates/contribution_offline_receipt_subject.tpl
+msgid "Payment Notification"
 msgstr ""

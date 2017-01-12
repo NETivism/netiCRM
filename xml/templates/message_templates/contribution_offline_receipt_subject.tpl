@@ -1,1 +1,1 @@
-{ts}Contribution Receipt{/ts}
+{ts}Payment Notification{/ts}

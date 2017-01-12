@@ -12,7 +12,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
 
 {if $receiptMessage}
 ###########################################################
-{ts}Copy of Contribution Receipt{/ts}
+{ts}Receipt{/ts} - {ts}CC{/ts}
 
 ###########################################################
 {$receiptMessage}
