@@ -486,7 +486,7 @@ class CRM_Event_Form_Search extends CRM_Core_Form {
   static function formRule($fields) {
     $errors = array();
 
-    if (!is_numeric($fields['event_id'])) {
+    if (!empty($fields['event_id']) && !is_numeric($fields['event_id'])) {
       if (strstr($fields['event_id'], ',')) {
         $ids = explode(',', $fields['event_id']);
         foreach($ids as $id) {
