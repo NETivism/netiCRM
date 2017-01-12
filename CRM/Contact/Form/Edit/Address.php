@@ -150,12 +150,12 @@ class CRM_Contact_Form_Edit_Address {
           }
           else {
             $stateCountryMap[$blockId]['state_province'] = "address_{$blockId}_{$name}";
-            if ($countryDefault) {
-              $selectOptions = array('' => ts('- select -')) + CRM_Core_PseudoConstant::stateProvinceForCountry($countryDefault);
+            $enabledCountry = CRM_Core_PseudoConstant::country();
+            $stateOptions = array();
+            foreach($enabledCountry as $cid => $country) {
+              $stateOptions += CRM_Core_PseudoConstant::stateProvinceForCountry($cid);
             }
-            else {
-              $selectOptions = array('' => ts('- select a country -'));
-            }
+            $selectOptions = array('' => ts('- select a country -')) + $stateOptions;
           }
           $form->addElement('select',
             "address[$blockId][$name]",
