@@ -303,7 +303,23 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
     $params['contact_type'] = 'Contribution';
 
     //checking error in custom data
-    CRM_Import_Parser_Contact::isErrorInCustomData($params, $errorMessage);
+    $contactParams = array();
+    $contactParams['contact_type'] = $this->_contactType;
+    if (!empty($this->_contactSubType)) {
+      $csType = $this->_contactSubType;
+    }
+    if (CRM_Utils_Array::value('contact_sub_type', $params)) {
+      $csType = CRM_Utils_Array::value('contact_sub_type', $params);
+    }
+    $contactFields = CRM_Core_BAO_CustomField::getFields($this->_contactType, FALSE, FALSE, $csType);
+    if(!empty($contactFields)){
+      foreach(array_keys($contactFields) as $customKey) {
+        if (isset($params['custom_'.$customKey])) {
+          $contactParams['custom_'.$customKey] = $params['custom_'.$customKey];
+        }
+      }
+      CRM_Import_Parser_Contact::isErrorInCustomData($contactParams, $errorMessage);
+    }
 
     if ($errorMessage) {
       $tempMsg = ts('Invalid value for field(s)').': '. $errorMessage;
