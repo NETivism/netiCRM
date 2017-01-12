@@ -45291,3 +45291,22 @@ msgstr ""
 #: templates/message_templates/contribution_offline_receipt_subject.tpl
 msgid "Payment Notification"
 msgstr ""
+
+#: CRM/Report/BAO/Summary.php
+msgid "times"
+msgstr ""
+
+msgid "Emailing Sended Count"
+msgstr ""
+
+msgid "times"
+msgstr ""
+
+msgid "letters"
+msgstr ""
+
+msgid "Online Contribution Amount"
+msgstr ""
+
+msgid "Percentage"
+msgstr ""

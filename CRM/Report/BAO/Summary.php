@@ -63,7 +63,9 @@ class CRM_Report_BAO_Summary {
     $allData['online_offline']["Online Registration"] = self::parseDataFromSql("SELECT count(p.id) count,COUNT(DISTINCT p.contact_id) people  FROM civicrm_participant p {JOIN} WHERE p.source LIKE '".ts("Online Event Registration")."%' AND p.is_test = 0 {AND}");
     $allData['online_offline']['Non-online Registration'] = self::parseDataFromSql("SELECT count(p.id) count,COUNT(DISTINCT p.contact_id) people  FROM civicrm_participant p {JOIN} WHERE (p.source NOT LIKE '".ts("Online Event Registration")."%' OR p.source IS NULL) AND p.is_test = 0 {AND}");
     $allData['Participants Count'] = self::parseDataFromSql("SELECT count(p.id) count,COUNT(DISTINCT p.contact_id) people  FROM civicrm_participant p {JOIN} WHERE p.is_test = 0 {AND}");
-    return self::convertArrayToChartUse($allData);
+    $allData['online_offline-chart-data'] = self::convertArrayToChartUse($allData);
+
+    return $allData;
   }
 
   static function getContributionData(){
@@ -102,7 +104,7 @@ class CRM_Report_BAO_Summary {
     $allData['times']['Second or Later by Contributor'] = self::parseDataFromSql("SELECT SUM(sum) sum, count(DISTINCT contact_id) people FROM (SELECT SUM(c.total_amount) sum, COUNT(c.contact_id) count,c.contact_id FROM civicrm_contribution c {JOIN} LEFT JOIN civicrm_participant_payment pp ON c.id = pp.contribution_id WHERE pp.participant_id IS NULL AND c.is_test = 0 {AND} GROUP BY c.contact_id) a  WHERE a.count>=2 ");
 
     $allData['total_contribute'] = self::parseDataFromSql("SELECT SUM(c.total_amount) sum, COUNT(c.id) count,COUNT(DISTINCT c.contact_id) people FROM civicrm_contribution c {JOIN} LEFT JOIN civicrm_participant_payment pp ON c.id = pp.contribution_id WHERE pp.participant_id IS NULL AND c.is_test = 0 {AND}");
-    $allData['total_application_fee'] = self::parseDataFromSql("SELECT SUM(c.total_amount) sum, COUNT(c.id) count,COUNT(DISTINCT c.contact_id) people FROM civicrm_contribution c {JOIN} LEFT JOIN civicrm_participant_payment pp ON c.id = pp.contribution_id WHERE pp.participant_id IS NULL AND c.is_test = 0 {AND}");
+    $allData['total_application_fee'] = self::parseDataFromSql("SELECT SUM(c.total_amount) sum, COUNT(c.id) count,COUNT(DISTINCT c.contact_id) people FROM civicrm_contribution c {JOIN} LEFT JOIN civicrm_participant_payment pp ON c.id = pp.contribution_id WHERE pp.participant_id IS NOT NULL AND c.is_test = 0 {AND}");
     $allData['total_amount'] = self::parseDataFromSql("SELECT SUM( c.total_amount ) sum, COUNT( c.id ) count,COUNT(DISTINCT c.contact_id) people FROM civicrm_contribution c {JOIN} WHERE c.is_test =0 {AND}");
     $allData = self::convertArrayToChartUse($allData);
     $allData['contribution_type_table'] = self::convertArrayToTableUse($allData['contribution_type']);
@@ -256,7 +258,7 @@ WHERE c.receive_date > mm.time_stamp AND c.receive_date < DATE_ADD(mm.time_stamp
 
     $allData = array(
       'all' => $all,
-      'filted' => self::convertArrayToChartUse($allData),
+      'filtered' => self::convertArrayToChartUse($allData),
     );
 
     return $allData;
@@ -328,19 +330,20 @@ WHERE cc.receive_date > mm.time_stamp AND cc.receive_date < DATE_ADD(mm.time_sta
     $returnArray = array();
     $sum_sum = array_sum($origArray['sum']);
     $sum_count = array_sum($origArray['count']);
-    $sum_people = array_sum($origArray['people']);
+    // $sum_people = array_sum($origArray['people']);
     foreach ($origArray['label'] as $key => $value) {
       $row = array();
       $row[0] = $origArray['label'][$key];
       $v_sum = $origArray['sum'][$key];
-      $row[1] = '$'. $v_sum . '('. round( 100 * $v_sum / $sum_sum ,2) .'%)';
+      $row[1] = CRM_Utils_Money::format( $v_sum );
+      $row[2] = round( 100 * $v_sum / $sum_sum ) . '%';
       $v_count = $origArray['count'][$key];
-      $row[2] = round( $v_sum / $v_count ,2);
-      $row[3] = $origArray['count'][$key];
-      $row[4] = $origArray['people'][$key];
+      $row[3] = CRM_Utils_Money::format( $v_count == 0 ? 0 : $v_sum / $v_count );
+      $row[4] = $origArray['count'][$key];
+      $row[5] = $origArray['people'][$key];
       $returnArray[] = $row;
     }
-    $returnArray[] = array(ts('Total'),$sum_sum,$sum_count,$sum_people);
+    $returnArray[] = array(ts('Total'),CRM_Utils_Money::format($sum_sum),'100%', CRM_Utils_Money::format($sum_sum /$sum_count ) ,$sum_count);
     return $returnArray;
   }
 
