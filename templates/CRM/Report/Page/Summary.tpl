@@ -88,7 +88,7 @@
 
   <div class="column-contribution-types">
   <h3>{ts}Contribution Total{/ts}</h3>
-    <table class="report-data-table">
+    <table class="crm-data-table crm-data-table-horizontal crm-data-table-striped">
       <tr>
         <th></th>
         {foreach from=$static_label item=label}
@@ -115,7 +115,7 @@
        {/foreach}
 
        <tr>
-        <th colspan="{capture assign=colspan}{$static_label|@count}{/capture}{$colspan+1}"></th>
+        <th class="full-colspan empty-cell" colspan="{capture assign=colspan}{$static_label|@count}{/capture}{$colspan+1}"></th>
        </tr>
 
        {foreach from=$recur_table item=row}

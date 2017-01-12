@@ -532,6 +532,66 @@ div.spacer,
     padding-left: 3em;
 }
 
+/* CRM Data Table */
+.crm-container .crm-data-table {
+  empty-cells: show;
+  border: 1px solid #cbcbcb;
+}
+.crm-container .crm-data-table.mdl-shadow--2dp {
+  border: none;
+}
+.crm-container .crm-data-table td:first-child,
+.crm-container .crm-data-table th:first-child {
+  border-left-width: 0;
+}
+.crm-container .crm-data-table td,
+.crm-container .crm-data-table th {
+  margin: 0;
+  padding: .5em 1em;
+  text-align: right;
+  border-left: 1px solid #cbcbcb;
+}
+.crm-container .crm-data-table th {
+  vertical-align: bottom;
+  color: #000;
+  background-color: #e0e0e0;
+}
+.crm-container .crm-data-table td {
+  background-color: #fff;
+}
+.crm-container .crm-data-table-bordered th,
+.crm-container .crm-data-table-bordered td {
+  border-bottom: 1px solid #cbcbcb;
+}
+.crm-container .crm-data-table-horizontal td,
+.crm-container .crm-data-table-horizontal th {
+  border-width: 0 0 1px;
+  border-bottom: 1px solid #cbcbcb;
+}
+.crm-container .crm-data-table-striped tr,
+.crm-container .crm-data-table-striped td {
+  background-color: #fff;
+}
+.crm-container .crm-data-table-striped tr:nth-child(odd),
+.crm-container .crm-data-table-striped tr:nth-child(odd) td {
+  background-color: #f2f2f2;
+}
+.crm-container .crm-data-table-dark th {
+  font-weight: normal;
+  /*
+  color: #D5DDE5;
+  background-color: #1b1e24;
+  background-color: #616161;
+  */
+  color: #fff;
+  background-color: #616161;
+}
+.crm-container .crm-data-table .full-colspan.empty-cells {
+  padding: 0;
+  border-bottom-width: 5px;
+  background-color: #cbcbcb;
+}
+
 /*
 ** CSS for links from Drupal Blocks.
 */
