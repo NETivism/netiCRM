@@ -36,6 +36,23 @@
 
 require_once 'CRM/Utils/Hook.php';
 class CRM_Utils_Hook_Drupal extends CRM_Utils_Hook {
+
+  static function availableHooks($hook) {
+    if (function_exists('module_implements')) {
+      return module_implements($hook);
+    }
+    elseif (function_exists('module_list')) {
+      $implements = array();
+      foreach (module_list() as $module) {
+        $fnName = "{$module}_{$hook}";
+        if (function_exists($fnName)) {
+          $implements[] = $module;
+        }
+      }
+      return $implements;
+    }
+  }
+
   static function invoke($numParams,
     &$arg1, &$arg2, &$arg3, &$arg4, &$arg5,
     $fnSuffix

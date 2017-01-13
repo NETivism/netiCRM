@@ -51,6 +51,21 @@ class CRM_Utils_Hook {
   CONST SUMMARY_REPLACE = 3;
 
   /**
+   * This will return implemented module of hook 
+   *
+   * @param string $hook
+   *   hook name with civicrm to search
+   */
+  static function availableHooks($hook) {
+    $config = CRM_Core_Config::singleton();
+    require_once (str_replace('_', DIRECTORY_SEPARATOR, $config->userHookClass) . '.php');
+    return eval('return '.
+      $config->userHookClass . 
+      '::availableHooks($hook);'
+    );
+  }
+
+  /**
    * This hook is called before a db write on some core objects.
    * This hook does not allow the abort of the operation
    *
@@ -949,37 +964,38 @@ class CRM_Utils_Hook {
   /**
    * This hooks allows other module invoke tax receipt info
    *
-   * @param $contribution_id
+   * @param $contributionId
    *   Contribution id
    * @param $tplParams
    *   Prepare template printing element
+   * @param $taxReceipt
+   *   TaxReceipt object return from contribution
    * @param $object
    *   Variable to save variables
    *
    * @return mixed
    */
-  static function prepareTaxReceipt($contribution_id, &$tplParams, &$taxReceipt, &$object) {
+  static function prepareTaxReceipt($contributionId, &$tplParams, &$taxReceipt, &$object) {
     $config = CRM_Core_Config::singleton();
     require_once (str_replace('_', DIRECTORY_SEPARATOR, $config->userHookClass) . '.php');
     $null = &CRM_Core_DAO::$_nullObject;
-    return eval('return '.$config->userHookClass.'::invoke(4, $contribution_id, $tplParams, $taxReceipt, $object, $null, \'civicrm_prepareTaxReceipt\' );');
+    return eval('return '.$config->userHookClass.'::invoke(4, $contributionId, $tplParams, $taxReceipt, $object, $null, \'civicrm_prepareTaxReceipt\' );');
   }
 
   /**
-   * This hooks allows other module invoke tax receipt info
-   *
-   * @param $contribution_id
+   * validate tax receipt info
+   * 
+   * @param $contributionId
    *   Contribution id
-   * @param $object
-   *   Variable to save variables 
-   *
-   * @return mixed
+   * @param $receipt
+   *   Receipt object stored here.
    */
-  static function createTaxReceipt($contribution_id, &$result, &$object) {
+  static function validateTaxReceipt($contributionId, &$receipt) {
     $config = CRM_Core_Config::singleton();
     require_once (str_replace('_', DIRECTORY_SEPARATOR, $config->userHookClass) . '.php');
     $null = &CRM_Core_DAO::$_nullObject;
-    return eval('return '.$config->userHookClass.'::invoke(3, $contribution_id, $result, $object, $null, $null, \'civicrm_createTaxReceipt\' );');
+  
+    return eval('return '.$config->userHookClass.'::invoke(2, $contributionId, $receipt, $null, $null, $null, \'civicrm_validateTaxReceipt\' );');
   }
 }
 
