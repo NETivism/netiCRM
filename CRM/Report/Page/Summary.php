@@ -199,8 +199,11 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
     $contribute = $data['contribute'];
     $participant =  $data['participant'];
     $mailing =  $data['mailing'];
+    dpm($contribute);
 
-    $return_array['part_online_offline'] = $this->showhidden('part_online_offline',$participant['online_offline']);
+    $return_array['part_online_offline'] = $this->showhidden('part_online_offline',$participant['online_offline-chart-data']['online_offline']);
+    $return_array['contrib_recur'] = $this->showhidden('contrib_recur',$contribute['recur']);
+
     $this->assign('showhiddenChart', $return_array);
   }
 
@@ -211,8 +214,8 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
       'classes' => array('ct-chart-bar'),
       'selector' => '#chart-bar-'.$name,
       'type' => 'Bar',
-      'labels' => json_encode(array_keys($data)),
-      'series' => json_encode(self::arrayRemoveKey($data)), 
+      'labels' => json_encode($data['label']),
+      'series' => json_encode(self::dataTransferShowHidden($data)),
       'withToolTip' => true,
     );
     // $this->assign('chart'.$name, $chart);
@@ -226,6 +229,27 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
       $return[] = self::arrayRemoveKey($value);
     }
     return $return;
+  }
+
+  static private function dataTransferShowHidden($arr){
+    $return = array();
+    $count = array();
+    foreach ($arr['count'] as $key => $value) {
+      $count[] = $value;
+    }
+    if(!empty($arr['people'])){
+      $people = array();
+      foreach ($arr['people'] as $key => $value) {
+        $people[] = $value;
+      }
+    }
+    if(!empty($arr['sum'])){
+      $sum = array();
+      foreach ($arr['sum'] as $key => $value) {
+        $sum[] = $value;
+      }
+    }
+    return array($count, $people, $sum);
   }
 
 }

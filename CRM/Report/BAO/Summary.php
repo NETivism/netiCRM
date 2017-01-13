@@ -343,7 +343,7 @@ WHERE cc.receive_date > mm.time_stamp AND cc.receive_date < DATE_ADD(mm.time_sta
       $row[5] = $origArray['people'][$key];
       $returnArray[] = $row;
     }
-    $returnArray[] = array(ts('Total'),CRM_Utils_Money::format($sum_sum),'100%', CRM_Utils_Money::format($sum_sum /$sum_count ) ,$sum_count);
+    $returnArray[] = array(ts('Total'),CRM_Utils_Money::format($sum_sum),'100%', CRM_Utils_Money::format($sum_sum /$sum_count ) ,$sum_count, '');
     return $returnArray;
   }
 
