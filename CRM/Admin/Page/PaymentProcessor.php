@@ -152,6 +152,14 @@ class CRM_Admin_Page_PaymentProcessor extends CRM_Core_Page_Basic {
       );
     }
     $this->assign('rows', $paymentProcessor);
+
+    $dao = new CRM_Core_DAO_PaymentProcessorType();
+    $dao->is_test = 0;
+    $dao->orderBy('name');
+    $dao->find(TRUE);
+    if ($dao->name) {
+      $this->assign('availablePaymentProcessor', $dao->name);
+    }
   }
 
   /**

@@ -61,15 +61,19 @@
 
         {if $action ne 1 and $action ne 2}
 	    <div class="action-link-button">
-    	<a href="{crmURL q="action=add&reset=1"}" id="newPaymentProcessor" class="button"><span><i class="zmdi zmdi-plus-circle-o"></i>{ts}Add Payment Processor{/ts}</span></a>
+      {if $availablePaymentProcessor}
+    	<a href="{crmURL q="action=add&reset=1&pp=`$availablePaymentProcessor`"}" id="newPaymentProcessor" class="button"><span><i class="zmdi zmdi-plus-circle-o"></i>{ts}Add Payment Processor{/ts}</span></a>
+      {/if}
         </div>
         {/if}
 </div>
 {elseif $action ne 1}
     <div class="messages status">
       
-        {capture assign=crmURL}{crmURL p='civicrm/admin/paymentProcessor' q="action=add&reset=1"}{/capture}
+      {if $availablePaymentProcessor}
+        {capture assign=crmURL}{crmURL p='civicrm/admin/paymentProcessor' q="action=add&reset=1&pp=`$availablePaymentProcessor`"}{/capture}
       {ts 1=$crmURL}There are no Payment Processors entered. You can <a href='%1'>add one</a>.{/ts}
+      {/if}
      </div>    
 {/if}
 {/if}
