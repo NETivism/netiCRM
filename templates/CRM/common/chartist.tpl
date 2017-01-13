@@ -19,6 +19,16 @@
     $chartClasses = array('chartist-chart','ct-major-twelfth');
     $chartist = $this->get_template_vars('chartist');
     
+    $chartClasses[] = 'ct-chart-' . strtolower($chartist['type']);
+
+    if (array_key_exists('isDonut', $chartist)) {
+      $chartClasses[] = 'ct-chart-donut';
+    }
+
+    if (array_key_exists('isFillDonut', $chartist)) {
+      $chartClasses[] = 'ct-chart-fill-donut';
+    }
+
     if (count($chartist['classes']) > 0) {
       $chartClasses = array_merge($chartClasses, $chartist['classes']); 
     }
