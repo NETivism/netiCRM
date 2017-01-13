@@ -11,7 +11,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2017-01-13 08:33+0000\n"
+"PO-Revision-Date: 2017-01-13 08:48+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -45337,3 +45337,59 @@ msgstr ""
 
 msgid "Enter text here"
 msgstr "請在此輸入"
+
+msgid "Tax receipt type"
+msgstr "發票種類"
+
+msgid "Tax receipt device type"
+msgstr "發票載具類型"
+
+msgid "Tax receipt give org field"
+msgstr "發票捐贈組織的欄位"
+
+msgid "Give tax receipt to listed organization"
+msgstr "將發票捐贈給列出的單位"
+
+msgid "Tax receipt serial number field"
+msgstr "發票上統編欄位"
+
+msgid "Invoice item name field"
+msgstr "發票品項使用的欄位"
+
+msgid "Invoice number field"
+msgstr "發票號碼欄位"
+
+msgid "Settings - Receipt Tax included"
+msgstr "設定 - 發票"
+
+msgid "Tax Receipt Fields"
+msgstr "發票相關欄位"
+
+msgid "Print Tax Receipt"
+msgstr "列印發票"
+
+msgid "Tax Receipt Information"
+msgstr "發票資訊"
+
+msgid "Once create tax receipt, you can't withdraw your receipt."
+msgstr "一旦發票開立了，便無法在這裡作廢。"
+
+msgid ""
+"This record not complete, you can only create tax receipt for completed "
+"payment."
+msgstr "這個紀錄還未完成交易，你僅僅可以針對已完成的交易開立發票。"
+
+msgid "You need specify transaction number to create new tax receipt"
+msgstr "你必須有交易編號，才可以開立發票"
+
+msgid "Create Tax Receipt"
+msgstr "開立發票"
+
+msgid "Tax Receipt"
+msgstr "發票"
+
+msgid "Are contributions of this type is a tax receipt?"
+msgstr "這個費用類型是否為可開發票？"
+
+msgid "Tax Rate"
+msgstr "稅率"

@@ -45310,3 +45310,57 @@ msgstr ""
 
 msgid "Enter text here"
 msgstr ""
+
+msgid "Tax receipt type"
+msgstr ""
+
+msgid "Tax receipt device type"
+msgstr ""
+
+msgid "Tax receipt give org field"
+msgstr ""
+
+msgid "Give tax receipt to listed organization"
+msgstr ""
+
+msgid "Tax receipt serial number field"
+msgstr ""
+
+msgid "Invoice item name field"
+msgstr ""
+
+msgid "Invoice number field"
+msgstr ""
+
+msgid "Settings - Receipt Tax included"
+msgstr ""
+
+msgid "Tax Receipt Fields"
+msgstr ""
+
+msgid "Print Tax Receipt"
+msgstr ""
+
+msgid "Tax Receipt Information"
+msgstr ""
+
+msgid "Once create tax receipt, you can't withdraw your receipt."
+msgstr ""
+
+msgid "This record not complete, you can only create tax receipt for completed payment."
+msgstr ""
+
+msgid "You need specify transaction number to create new tax receipt"
+msgstr ""
+
+msgid "Create Tax Receipt"
+msgstr ""
+
+msgid "Tax Receipt"
+msgstr ""
+
+msgid "Are contributions of this type is a tax receipt?"
+msgstr ""
+
+msgid "Tax Rate"
+msgstr ""
