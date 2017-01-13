@@ -11,7 +11,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2017-01-12 07:52+0000\n"
+"PO-Revision-Date: 2017-01-13 08:33+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -45318,3 +45318,22 @@ msgstr "新增一筆會員費用紀錄"
 #: templates/message_templates/contribution_offline_receipt_subject.tpl
 msgid "Payment Notification"
 msgstr "付款成功確認信"
+
+#: CRM/Report/BAO/Summary.php
+msgid "times"
+msgstr ""
+
+msgid "Emailing Sended Count"
+msgstr ""
+
+msgid "letters"
+msgstr ""
+
+msgid "Online Contribution Amount"
+msgstr ""
+
+msgid "Percentage"
+msgstr ""
+
+msgid "Enter text here"
+msgstr "請在此輸入"

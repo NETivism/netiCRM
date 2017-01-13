@@ -45299,9 +45299,6 @@ msgstr ""
 msgid "Emailing Sended Count"
 msgstr ""
 
-msgid "times"
-msgstr ""
-
 msgid "letters"
 msgstr ""
 
@@ -45309,4 +45306,7 @@ msgid "Online Contribution Amount"
 msgstr ""
 
 msgid "Percentage"
+msgstr ""
+
+msgid "Enter text here"
 msgstr ""
