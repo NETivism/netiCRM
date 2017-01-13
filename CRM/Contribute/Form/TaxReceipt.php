@@ -48,7 +48,20 @@ class CRM_Contribute_Form_TaxReceipt extends CRM_Core_Form {
    * @access public
    */
   public function buildQuickForm() {
-    if (empty($this->_taxReceipt) || empty($this->_taxReceipt['issue_response']) || (isset($this->_taxReceipt['issue_response']->Status) && $this->_taxReceipt['issue_response']->Status != 'SUCCESS')) {
+    // just for display error message when issue tax receipt
+    $this->addElement('hidden', 'error_placeholder', '');
+    if (!empty($this->_taxReceipt)) {
+      $valid = CRM_Utils_Hook::validateTaxReceipt($this->_id, $this->_taxReceipt);
+
+      // if tax receipt not validated, display create button let user create again.
+      if (!$valid) {
+        $addButton = TRUE;
+      }
+    }
+    else {
+      $addButton = TRUE;
+    }
+    if ($addButton) {
       $this->addButtons(array(
           array(
             'type' => 'next',
@@ -58,9 +71,7 @@ class CRM_Contribute_Form_TaxReceipt extends CRM_Core_Form {
         )
       );
     }
-    else {
-      // display message here
-    }
+    
     return;
   }
 
@@ -87,19 +98,6 @@ class CRM_Contribute_Form_TaxReceipt extends CRM_Core_Form {
    * @return None
    */
   public function postProcess() {
-    if (!empty($this->_id)) {
-      $contribution = new CRM_Contribute_DAO_Contribution();
-      $contribution->id = $this->_id;
-      if($contribution->find(TRUE)) {
-        $result = array();
-        CRM_Utils_Hook::createTaxReceipt($this->_id, $result, $contribution);
-        if (!empty($result)) {
-          CRM_Core_Session::setStatus(ts('Successuful created tax receipt.'));
-        }
-      }
-      $query = "reset=1&action=update&id={$this->_id}&cid={$contribution->contact_id}&context=search";
-      CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/contribute/taxreceipt', $query));
-    }
   }
 
   /**
