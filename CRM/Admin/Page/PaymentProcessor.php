@@ -155,9 +155,9 @@ class CRM_Admin_Page_PaymentProcessor extends CRM_Core_Page_Basic {
 
     $dao = new CRM_Core_DAO_PaymentProcessorType();
     $dao->is_test = 0;
+    $dao->is_active = 1;
     $dao->orderBy('name');
-    $dao->find(TRUE);
-    if ($dao->name) {
+    if ($dao->find(TRUE)) {
       $this->assign('availablePaymentProcessor', $dao->name);
     }
   }
