@@ -25,125 +25,177 @@
 *}
 {* Display monthly and yearly contributions using Google charts (Bar and Pie) *} 
 
-<style>
-  {literal}
-  .page-title:after{
-    content: "beta";
-    font-size: 13px;
-    color: #9e9e9e;
-    vertical-align: top;
-    padding-left: 5px;
-  }
-  {/literal}
-</style>
-
 {if $hasChart}
-
-  <div class="column-summary-count">
-    {if $contribute_total}<div>{ts}Online Contribution{/ts}{$contribute_total}</div>{/if}
-    {if $participant_total}<div>{ts}Online Registration{/ts}{$participant_total}{ts}times{/ts}</div>{/if}
-    {if $contact_total}<div>{ts}Contact{/ts}{$contact_total}{ts}People{/ts}</div>{/if}
-    {if $mailing}<div>{ts}Emailing Sended Count{/ts}{$mailing}{ts}{/ts}</div>{/if}
-
-    <div class="column-contribution-online-offline">
-      <h3>{ts}Online Contribution Amount{/ts}</h3>
-    {include file="CRM/common/chartist.tpl" chartist=$chartConributeOnlineOffline}
-    <div id="chart-pie-with-legend-contribution-online-offline"></div>
+  {if $contribute_total or $chartConributeOnlineOffline or $participant_total or $chartParticipantOnlineOffline or $contact_total or $mailing}
+  <div class="row">
+    {if $contribute_total or $chartConributeOnlineOffline}
+    <div class="col-md-3">
+      <div id="column-contribution-online-offline" class="box mdl-shadow--2dp">
+        <div class="box-content">
+          {if $contribute_total}
+          <div class="kpi-box">
+            <h4 class="kpi-box-title">{ts}Online Contribution{/ts}</h4>
+            <div class="kpi-box-value">{$contribute_total}<span class="kpi-unit"></span></div>
+          </div>
+          {/if}
+          {if $chartConributeOnlineOffline}{include file="CRM/common/chartist.tpl" chartist=$chartConributeOnlineOffline}{/if}
+        </div>
+      </div>
     </div>
-
-    <div class="column-participant-online-offline">
-      <h3>{ts}Online Event Registration{/ts}</h3>
-    {include file="CRM/common/chartist.tpl" chartist=$chartParticipantOnlineOffline}
-    <div id="chart-pie-with-legend-participant-online-offline"></div>
+    {/if}
+    {if $participant_total or $chartParticipantOnlineOffline}
+    <div class="col-md-3">
+      <div id="column-participant-online-offline" class="box mdl-shadow--2dp">
+        <div class="box-content">
+          {if $participant_total}
+          <div class="kpi-box">
+            <h4 class="kpi-box-title">{ts}Online Registration{/ts}</h4>
+            <div class="kpi-box-value">{$participant_total}<span class="kpi-unit">{ts}times{/ts}</span></div>
+          </div>
+          {/if}
+          {if $chartParticipantOnlineOffline}{include file="CRM/common/chartist.tpl" chartist=$chartParticipantOnlineOffline}{/if}
+        </div>
+      </div>
     </div>
-
+    {/if}
+    {if $contact_total}
+    <div class="col-md-3">
+      <div id="column-contact-online-offline" class="box mdl-shadow--2dp">
+        <div class="box-content">
+          <div class="kpi-box">
+            <h4 class="kpi-box-title">{ts}Contact{/ts}</h4>
+            <div class="kpi-box-value">{$contact_total}<span class="kpi-unit">{ts}People{/ts}</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {/if}
+    {if $mailing}
+    <div class="col-md-3">
+      <div id="column-mailing-online-offline" class="box mdl-shadow--2dp">
+        <div class="box-content">
+          <div class="kpi-box">
+            <h4 class="kpi-box-title">{ts}Emailing Sended Count{/ts}</h4>
+            <div class="kpi-box-value">{$mailing}<span class="kpi-unit"></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {/if}
   </div>
-
-  <div class="column-contact-source">
-    <h3>{ts}Contact Source{/ts}</h3>
-    {* chartist *}
-    {include file="CRM/common/chartist.tpl" chartist=$chartContact}
-    <div id="{$chartContact.id}"></div>
-
+  {/if}
+  
+  {if $chartContact}
+  <div class="row">
+    <div class="col-md-12">
+      <div id="column-contact-source" class="box mdl-shadow--2dp">
+        <div class="box-header">
+          <h3 class="box-title">{ts}Contact Source{/ts}</h3>
+        </div>
+        <div class="box-content">{include file="CRM/common/chartist.tpl" chartist=$chartContact}</div>
+      </div>
+    </div>
   </div>
+  {/if}
 
-  <div class="column-contribution-instrument">
-    <h3>{ts}Payment Instrument{/ts}</h3>
-  {* chartist *}
-  {include file="CRM/common/chartist.tpl" chartist=$chartInsSum}
-  <div id="chart-pie-with-legend-contribute-instrument"></div>
+  {if $chartInsSum}
+  <div class="row">
+    <div class="col-md-12">
+      <div id="column-contribution-instrument" class="box mdl-shadow--2dp">
+        <div class="box-header">
+          <h3 class="box-title">{ts}Payment Instrument{/ts}</h3>
+        </div>
+        <div class="box-content">{include file="CRM/common/chartist.tpl" chartist=$chartInsSum}</div>
+      </div>
+    </div>
   </div>
+  {/if}
 
-  <div class="column-contribution-times">
-    <h3>{ts}Donation Count{/ts}</h3>
-  {include file="CRM/common/chartist.tpl" chartist=$chartContribTimes}
-  <div id="chart-pie-with-legend-contribute-times"></div>
+  {if $chartContribTime}
+  <div class="row">
+    <div class="col-md-12">
+      <div id="column-contribution-times" class="box mdl-shadow--2dp">
+        <div class="box-header">
+          <h3 class="box-title">{ts}Donation Count{/ts}</h3>
+        </div>
+        <div class="box-content">{include file="CRM/common/chartist.tpl" chartist=$chartContribTimes}</div>
+      </div>
+    </div>
   </div>
+  {/if}
 
-  <div class="column-mailing-delivered">
-    <h3>{ts}Mailing{/ts}</h3>
-    {include file="CRM/common/chartist.tpl" chartist=$chartMailing}
-  <div id="chart-bar-mailing"></div>
+  {if $chartMailing}
+  <div class="row">
+    <div class="col-md-12">
+      <div id="column-mailing-delivered" class="box mdl-shadow--2dp">
+        <div class="box-header">
+          <h3 class="box-title">{ts}Mailing{/ts}</h3>
+        </div>
+        <div class="box-content">{include file="CRM/common/chartist.tpl" chartist=$chartMailing}</div>
+      </div>
+    </div>
   </div>
+  {/if}
 
-  <div class="column-contribution-types">
-  <h3>{ts}Contribution Total{/ts}</h3>
-    <table class="crm-data-table crm-data-table-horizontal crm-data-table-striped">
-      <tr>
-        <th></th>
-        {foreach from=$static_label item=label}
-        <th>
-          {$label}
-        </th>
-        {/foreach}
-      </tr>
-      {foreach from=$contribution_type_table item=row}
-      <tr>
+  {if $static_label and $contribution_type_table}
+  <div class="row">
+    <div class="col-md-12">
+      <div id="column-contribution-types" class="box mdl-shadow--2dp">
+        <div class="box-header">
+          <h3 class="box-title">{ts}Contribution Total{/ts}</h3>
+        </div>
+        <div class="box-content">
+          <table class="crm-data-table crm-data-table-horizontal crm-data-table-striped">
+            <tr>
+              <th></th>
+              {foreach from=$static_label item=label}
+              <th>
+                {$label}
+              </th>
+              {/foreach}
+            </tr>
+            {foreach from=$contribution_type_table item=row}
+            <tr>
 
-        {foreach from=$row item=item key=key}
-        {if $key == 0}
-        <th>
-          {$item}
-        </th>
-        {else}
-          <td>
-            {$item}
-          </td>
-        {/if}
-        {/foreach}
-       </tr>
-       {/foreach}
+              {foreach from=$row item=item key=key}
+              {if $key == 0}
+              <th>
+                {$item}
+              </th>
+              {else}
+                <td>
+                  {$item}
+                </td>
+              {/if}
+              {/foreach}
+             </tr>
+             {/foreach}
 
-       <tr>
-        <th class="full-colspan empty-cell" colspan="{capture assign=colspan}{$static_label|@count}{/capture}{$colspan+1}"></th>
-       </tr>
+             <tr>
+              <th class="full-colspan empty-cells" colspan="{capture assign=colspan}{$static_label|@count}{/capture}{$colspan+1}"></th>
+             </tr>
 
-       {foreach from=$recur_table item=row}
-      <tr>
-        {foreach from=$row item=item key=key}
-        {if $key == 0}
-        <th>
-          {$item}
-        </th>
-        {else}
-          <td>
-            {$item}
-          </td>
-        {/if}
-        {/foreach}
-       </tr>
-       {/foreach}
-
-    </table>
+             {foreach from=$recur_table item=row}
+            <tr>
+              {foreach from=$row item=item key=key}
+              {if $key == 0}
+              <th>
+                {$item}
+              </th>
+              {else}
+                <td>
+                  {$item}
+                </td>
+              {/if}
+              {/foreach}
+             </tr>
+             {/foreach}
+          </table>
+        </div>
+      </div>
+    </div>
   </div>
-
-  {literal}
-  <style>
-     table.report-data-table td, table.report-data-table th{
-      text-align: right;
-    }
-  </style>
-  {/literal}
+  {/if}
 
   {if $showhidden}
   {foreach from=$showhiddenChart item=item key=key}
