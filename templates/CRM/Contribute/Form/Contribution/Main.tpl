@@ -86,36 +86,36 @@
     </div>
   {/if}
 
+
 {if $is_monetary}
   <fieldset class="crm-group payment_options-group">
     <legend>{ts}Payment Options{/ts}</legend>
-  {if $form.payment_processor.label}
-    <div class="crm-section payment_processor-section">
-      <div class="label">{$form.payment_processor.label}</div>
-      <div class="content">{$form.payment_processor.html}</div>
-      <div class="clear"></div>
-    </div>
-    <div id="billing-payment-block"></div>
-    {include file="CRM/common/paymentBlock.tpl'}
-  {elseif $is_pay_later}
-    <div class="crm-section pay_later_receipt-section">
-      <div class="label">{ts}Payment Method{/ts}</div>
+  {if $form.is_recur}
+    <div class="crm-section {$form.is_recur.name}-section">
       <div class="content">
-        <input type="checkbox" checked="checked" disabled="disabled"/>{$pay_later_text|nl2br}<br />
-        <span class="description">{$pay_later_receipt|nl2br}</span>
+        {$form.is_recur.html}
+        {if $form.frequency_unit.html}
+        <div class="recur-element" id="recur-options-interval">
+          {$form.frequency_unit.label}: {$form.frequency_unit.html}
+        </div>
+        {/if}
+        <div class="recur-element" id="recur-options-installmnts">
+          {$form.installments.label}: {$form.installments.html}
+        </div>
+        <p>
+          <span class="description">{ts}Your recurring contribution will be processed automatically for the number of installments you specify. You can leave the number of installments blank if you want to make an open-ended commitment. In either case, you can choose to cancel at any time.{/ts}
+            {if $is_email_receipt}
+                {ts}You will receive an email receipt for each recurring contribution. The receipts will include a link you can use if you decide to modify or cancel your future contributions.{/ts}
+            {/if}
+        </p>
       </div>
-      <div class="clear"></div>
-    </div>
-  {/if}
+    </div>{*recur section*}
+  {/if}{*is_recur*}
 {/if}{*is_monetary*}
-
 
 {if $priceSet}
   <div id="priceset">
-    <fieldset>
-      <legend>&nbsp;</legend>
       {include file="CRM/Price/Form/PriceSet.tpl"}
-    </fieldset>
   </div>
 {else}
   {if $form.amount}
@@ -154,28 +154,25 @@
 {/if}{*priceset*}
 
 {if $is_monetary}
-  </fieldset>
-  {if $form.is_recur}
-    <div class="crm-section {$form.is_recur.name}-section">
+  {if $form.payment_processor.label}
+    <div class="crm-section payment_processor-section">
+      <div class="label">{$form.payment_processor.label}</div>
+      <div class="content">{$form.payment_processor.html}</div>
+      <div class="clear"></div>
+    </div>
+    <div id="billing-payment-block"></div>
+    {include file="CRM/common/paymentBlock.tpl'}
+  {elseif $is_pay_later}
+    <div class="crm-section pay_later_receipt-section">
+      <div class="label">{ts}Payment Method{/ts}</div>
       <div class="content">
-        {$form.is_recur.html}
-        {if $form.frequency_unit.html}
-        <div class="recur-element" id="recur-options-interval">
-          {$form.frequency_unit.label}: {$form.frequency_unit.html}
-        </div>
-        {/if}
-        <div class="recur-element" id="recur-options-installmnts">
-          {$form.installments.label}: {$form.installments.html}
-        </div>
-        <p>
-          <span class="description">{ts}Your recurring contribution will be processed automatically for the number of installments you specify. You can leave the number of installments blank if you want to make an open-ended commitment. In either case, you can choose to cancel at any time.{/ts}
-            {if $is_email_receipt}
-                {ts}You will receive an email receipt for each recurring contribution. The receipts will include a link you can use if you decide to modify or cancel your future contributions.{/ts}
-            {/if}
-        </p>
+        <input type="checkbox" checked="checked" disabled="disabled"/>{$pay_later_text|nl2br}<br />
+        <span class="description">{$pay_later_receipt|nl2br}</span>
       </div>
-    </div>{*recur section*}
-  {/if}{*is_recur*}
+      <div class="clear"></div>
+    </div>
+  {/if}
+  </fieldset>
 {/if}{*is_monetary*}
 
   {* User account registration option. Displays if enabled for one of the profiles on this page. *}
