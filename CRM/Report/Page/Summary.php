@@ -209,7 +209,7 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
 
     $return_array['part_online_offline'] = $this->showhidden(
       'part_online_offline',
-      self::arrayRemoveKey($participantPart['online_offline']),
+      self::arrayRemoveKey($participant['online_offline']),
       $participant['online_offline']['label']
     );
 
