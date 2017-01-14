@@ -1229,7 +1229,7 @@ div.spacer,
 }
 .crm-container .crm-data-table-striped tr:nth-child(odd),
 .crm-container .crm-data-table-striped tr:nth-child(odd) td {
-  background-color: #f2f2f2;
+  background-color: #fafafa;
 }
 .crm-container .crm-data-table-dark th {
   font-weight: normal;
@@ -1274,6 +1274,7 @@ div.spacer,
 .crm-container .kpi-box-value .kpi-unit {
   margin-left: 5px;
   font-size: 15px;
+  color: #9e9e9e;
 }
 .crm-container .box-content .kpi-box:last-child {
   margin-bottom: 0;
@@ -3221,11 +3222,11 @@ div#civicrm-dashboard form {
   stroke: #03a9f4;
 }
 .ct-chart-fill-donut .ct-series-b .ct-slice-donut {
-  stroke: rgba(0,0,0,.4);
+  stroke: rgba(0,0,0,.3);
   opacity: 0.0;
 }
 .ct-chart-fill-donut .ct-fill-donut .ct-slice-donut {
-  stroke: rgba(0,0,0,.4);
+  stroke: rgba(0,0,0,.3);
   opacity: 1;
 }
 .ct-fill-donut-label .chart-percent {
@@ -4982,10 +4983,13 @@ tbody.scrollContent tr.alternateRow {
   vertical-align: top;
   padding-left: 5px;
   font-size: 13px;
-  color: #9e9e9e;
+  color: #f44336;
 }
 .page-civicrm-report-summary #printer-friendly {
   display: none;
+}
+#column-contribution-online-offline .ct-chart-fill-donut .ct-series-a .ct-slice-donut {
+  stroke: #9575CD;
 }
 
 /* Search */
@@ -5610,4 +5614,10 @@ input.crm-form-textfield,
     width: 100%;
     margin: 0;
   }
+}
+
+/* Temp */
+#column-contact-online-offline .kpi-box,
+#column-mailing-online-offline .kpi-box {
+  margin-bottom: 170px;
 }

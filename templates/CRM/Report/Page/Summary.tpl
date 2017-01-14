@@ -29,7 +29,7 @@
   {if $contribute_total or $chartConributeOnlineOffline or $participant_total or $chartParticipantOnlineOffline or $contact_total or $mailing}
   <div class="row">
     {if $contribute_total or $chartConributeOnlineOffline}
-    <div class="col-md-3">
+    <div class="col-md-3 col-xs-6">
       <div id="column-contribution-online-offline" class="box mdl-shadow--2dp">
         <div class="box-content">
           {if $contribute_total}
@@ -44,7 +44,7 @@
     </div>
     {/if}
     {if $participant_total or $chartParticipantOnlineOffline}
-    <div class="col-md-3">
+    <div class="col-md-3 col-xs-6">
       <div id="column-participant-online-offline" class="box mdl-shadow--2dp">
         <div class="box-content">
           {if $participant_total}
@@ -59,7 +59,7 @@
     </div>
     {/if}
     {if $contact_total}
-    <div class="col-md-3">
+    <div class="col-md-3 col-xs-6">
       <div id="column-contact-online-offline" class="box mdl-shadow--2dp">
         <div class="box-content">
           <div class="kpi-box">
@@ -71,7 +71,7 @@
     </div>
     {/if}
     {if $mailing}
-    <div class="col-md-3">
+    <div class="col-md-3 col-xs-6">
       <div id="column-mailing-online-offline" class="box mdl-shadow--2dp">
         <div class="box-content">
           <div class="kpi-box">
