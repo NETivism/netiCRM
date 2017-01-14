@@ -34,7 +34,7 @@
         <div class="box-content">
           {if $contribute_total}
           <div class="kpi-box">
-            <h4 class="kpi-box-title">{ts}Online Contribution{/ts}</h4>
+            <h4 class="kpi-box-title">{ts}Online Contribution Amount{/ts}</h4>
             <div class="kpi-box-value">{$contribute_total}<span class="kpi-unit"></span></div>
           </div>
           {/if}

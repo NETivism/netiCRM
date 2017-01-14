@@ -79,7 +79,7 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
       'classes' => array('ct-chart-pie'),
       'selector' => '#chart-pie-with-legend-participant-online-offline',
       'type' => 'Pie',
-      'series' => self::getDonutData($participant['online_offline-chart-data']['online_offline']['count']),
+      'series' => self::getDonutData($participant['online_offline']['count']),
       'isFillDonut' => true,
     );
     $template->assign('chartParticipantOnlineOffline', $chartContact);
@@ -199,57 +199,128 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
     $contribute = $data['contribute'];
     $participant =  $data['participant'];
     $mailing =  $data['mailing'];
-    dpm($contribute);
 
-    $return_array['part_online_offline'] = $this->showhidden('part_online_offline',$participant['online_offline-chart-data']['online_offline']);
-    $return_array['contrib_recur'] = $this->showhidden('contrib_recur',$contribute['recur']);
+    $participant_to_contributor = CRM_Report_BAO_Summary::getPartToConData();
+    $contributor_to_participant = CRM_Report_BAO_Summary::getConToPartData();
+    $mailing_to_participant = CRM_Report_BAO_Summary::getMailToPartData();
+    $mailing_to_contributor = CRM_Report_BAO_Summary::getMailToConData();
+    $participant_after_mailing = CRM_Report_BAO_Summary::getPartAfterMailData();
+    $contribute_after_mailing = CRM_Report_BAO_Summary::getConAfterMailData();
+
+    $return_array['part_online_offline'] = $this->showhidden(
+      'part_online_offline',
+      self::arrayRemoveKey($participantPart['online_offline']),
+      $participant['online_offline']['label']
+    );
+
+    $return_array['contrib_recur'] = $this->showhidden(
+      'contrib_recur',
+      self::arrayRemoveKey($contribute['recur']),
+      $contribute['recur']['label']
+    );
+    $return_array['contrib_recur_sum'] = $this->showhidden(
+      'contrib_recur_sum',
+      self::arrayRemoveKey($contribute['recur'], array('sum')),
+      $contribute['recur']['label']
+    );
+
+    $array = array(
+      'total_contribute' => $contribute['total_contribute'],
+      'total_application_fee' => $contribute['total_application_fee'],
+      'total_amount' => $contribute['total_amount'],
+      );
+
+    $return_array['contrib_applicate'] = $this->showhidden(
+      'contrib_applicate',
+      self::dataTransferShowHidden($array),
+      array_keys($array)
+    );
+    $return_array['contrib_applicate_sum'] = $this->showhidden(
+      'contrib_applicate_sum',
+      self::dataTransferShowHidden($array,array('sum')),
+      array_keys($array)
+    );
+
+    $return_array['participant_to_contributor'] = $this->showhidden(
+      'participant_to_contributor',
+      self::dataTransferShowHidden($participant_to_contributor),
+      array_keys($participant_to_contributor)
+    );
+
+    $return_array['contributor_to_participant'] = $this->showhidden(
+      'contributor_to_participant',
+      self::dataTransferShowHidden($contributor_to_participant),
+      array_keys($contributor_to_participant)
+    );
+
+    $return_array['mailing_to_participant'] = $this->showhidden(
+      'mailing_to_participant',
+      self::dataTransferShowHidden($mailing_to_participant),
+      array_keys($mailing_to_participant)
+    );
+
+    $return_array['mailing_to_contributor'] = $this->showhidden(
+      'mailing_to_contributor',
+      self::dataTransferShowHidden($mailing_to_contributor),
+      array_keys($mailing_to_contributor)
+    );
+
+    $return_array['participant_after_mailing'] = $this->showhidden(
+      'participant_after_mailing',
+      self::dataTransferShowHidden($participant_after_mailing),
+      array_keys($participant_after_mailing)
+    );
+
+    $return_array['contribute_after_mailing'] = $this->showhidden(
+      'contribute_after_mailing',
+      self::dataTransferShowHidden($contribute_after_mailing),
+      array_keys($contribute_after_mailing)
+    );
 
     $this->assign('showhiddenChart', $return_array);
   }
 
-  private function showhidden($name, $data){
+  private function showhidden($name, $data, $labels){
     $return_name = 'showhidden'.$name;
     $chart = array(
       'id' => 'chart-bar-'.$name,
-      'classes' => array('ct-chart-bar'),
       'selector' => '#chart-bar-'.$name,
       'type' => 'Bar',
-      'labels' => json_encode($data['label']),
-      'series' => json_encode(self::dataTransferShowHidden($data)),
+      'labels' => json_encode($labels),
+      'series' => json_encode($data),
       'withToolTip' => true,
     );
     // $this->assign('chart'.$name, $chart);
     return $chart;
   }
 
-  static private function arrayRemoveKey($arr){
+  static private function arrayRemoveKey($arr, $types = array('count','people')){
     $return = array();
     if(!is_array($arr))return $arr;
-    foreach ($arr as $key => $value) {
-      $return[] = self::arrayRemoveKey($value);
+    foreach ($types as $type) {
+      foreach ($arr as $key => $value) {
+        if($key == $type){
+          $set = array();
+          foreach ($value as $key => $value2) {
+            $set[] = self::arrayRemoveKey($value2);
+          }
+          $return[] = $set;
+        }
+      }
     }
     return $return;
   }
 
-  static private function dataTransferShowHidden($arr){
+  static private function dataTransferShowHidden($arr, $types = array('count','people')){
     $return = array();
-    $count = array();
-    foreach ($arr['count'] as $key => $value) {
-      $count[] = $value;
-    }
-    if(!empty($arr['people'])){
-      $people = array();
-      foreach ($arr['people'] as $key => $value) {
-        $people[] = $value;
+    foreach ($types as $type) {
+      $set = array();
+      foreach ($arr as $value) {
+        $set[] = $value[$type];
       }
+      $return[] = $set;
     }
-    if(!empty($arr['sum'])){
-      $sum = array();
-      foreach ($arr['sum'] as $key => $value) {
-        $sum[] = $value;
-      }
-    }
-    return array($count, $people, $sum);
+    return $return;
   }
 
 }
