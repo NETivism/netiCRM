@@ -27,7 +27,7 @@
 {assign var="showEdit" value=1}
 {foreach from=$viewCustomData item=customValues key=customGroupId}
     {foreach from=$customValues item=cd_edit key=cvID}
-	<table class="no-border">
+	<table class="crm-custom-data-view no-border">
 	    {assign var='index' value=$groupId|cat:"_$cvID"}
 	    {if $editOwnCustomData or ($showEdit and $editCustomData and $groupId)}	
 		<tr>

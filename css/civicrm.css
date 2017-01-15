@@ -2701,6 +2701,31 @@ span.icon {
     padding: 10px;
 }
 
+/* crm custom data view */
+.crm-container-md .crm-custom-data-view {
+  width: 100%;
+}
+.crm-container-md .crm-custom-data-view td {
+  border: none;
+}
+.crm-container-md .crm-custom-data-view .crm-info-panel {
+  margin-bottom: 3px;
+  width: 100%;
+  border: none;
+}
+.crm-container-md .crm-custom-data-view .crm-info-panel td {
+  font-size: 1rem;
+}
+.crm-container-md .crm-custom-data-view .crm-info-panel td.label {
+  width: 28%;
+  text-align: right;
+  font-size: 1rem;
+  font-weight: normal;
+  color: #000;
+}
+.crm-container-md .crm-custom-data-view .crm-accordion-body {
+  padding: 12px;
+}
 
 /* civicrm admin menu */
 body.civicrm-menu-enabled {
