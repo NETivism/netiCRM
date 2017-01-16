@@ -248,12 +248,12 @@ WHERE c.receive_date > mm.time_stamp AND c.receive_date < DATE_ADD(mm.time_stamp
   }
 
   static function getContactSource(){
-    $allData = array();
-    $all = self::parseDataFromSql("SELECT COUNT(id) people FROM civicrm_contact");
+        $allData = array();
+    $all = self::parseDataFromSql("SELECT COUNT(id) people FROM civicrm_contact WHERE is_deleted = 0");
     $all = $all['people'];
     // $allData['all'] = self::parseDataFromSql("SELECT COUNT(id) people FROM civicrm_contact");
-    $allData['Contributions'] = self::parseDataFromSql("SELECT COUNT(contact_id) people FROM (SELECT cc.* FROM (SELECT ccc.contact_id, ccc.created_date FROM civicrm_contribution ccc LEFT JOIN civicrm_participant_payment pp ON pp.contribution_id = ccc.id WHERE pp.contribution_id IS NULL AND ccc.receive_date IS NOT NULL ORDER BY ccc.receive_date) cc GROUP BY cc.contact_id) c INNER JOIN (SELECT entity_id,modified_date FROM civicrm_log WHERE entity_table = 'civicrm_contact' GROUP BY entity_id) cl ON c.contact_id = cl.entity_id WHERE created_date < DATE_ADD(modified_date, INTERVAL 10 second)");
-    $allData['Event Registration'] = self::parseDataFromSql("SELECT COUNT(contact_id) people FROM (SELECT contact_id, register_date FROM civicrm_participant WHERE 1 GROUP BY contact_id) p INNER JOIN (SELECT entity_id,modified_date FROM civicrm_log WHERE entity_table = 'civicrm_contact' GROUP BY entity_id) cl ON p.contact_id = cl.entity_id WHERE register_date < DATE_ADD(modified_date, INTERVAL 10 second)");
+    $allData['Contributions'] = self::parseDataFromSql("SELECT COUNT(contact_id) people FROM (SELECT cc.* FROM (SELECT ccc.contact_id, ccc.created_date FROM civicrm_contribution ccc LEFT JOIN civicrm_participant_payment pp ON pp.contribution_id = ccc.id WHERE pp.contribution_id IS NULL AND ccc.receive_date IS NOT NULL ORDER BY ccc.receive_date) cc GROUP BY cc.contact_id) c INNER JOIN (SELECT entity_id,modified_date FROM civicrm_log INNER JOIN civicrm_contact ON civicrm_log.entity_id = civicrm_contact.id WHERE entity_table = 'civicrm_contact' AND civicrm_contact.is_deleted = 0 GROUP BY entity_id) cl ON c.contact_id = cl.entity_id WHERE created_date < DATE_ADD(modified_date, INTERVAL 10 second) ");
+    $allData['Event Registration'] = self::parseDataFromSql("SELECT COUNT(contact_id) people FROM (SELECT contact_id, register_date FROM civicrm_participant WHERE 1 GROUP BY contact_id) p INNER JOIN (SELECT entity_id,modified_date FROM civicrm_log INNER JOIN civicrm_contact ON civicrm_log.entity_id = civicrm_contact.id WHERE entity_table = 'civicrm_contact' AND civicrm_contact.is_deleted = 0 GROUP BY entity_id) cl ON p.contact_id = cl.entity_id WHERE register_date < DATE_ADD(modified_date, INTERVAL 10 second)");
     $allData['Other']['people'] = $all - $allData['Contributions']['people'] - $allData['Event Registration']['people'];
 
     $allData = array(
