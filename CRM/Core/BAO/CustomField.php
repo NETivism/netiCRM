@@ -707,6 +707,7 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
         else {
           $attributes .= ' cols=60';
         }
+        $attributes .= ' placeholder="'.ts('Enter text here').' ..."';
         $element = &$qf->add(strtolower($field->html_type), $elementName, $label,
           $attributes, (($useRequired || ($useRequired && $field->is_required)) && !$search)
         );
