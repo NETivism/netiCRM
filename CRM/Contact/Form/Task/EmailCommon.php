@@ -317,7 +317,6 @@ class CRM_Contact_Form_Task_EmailCommon {
 
     // check and ensure that
     $formValues = $form->controller->exportValues($form->getName());
-    dpm($formValues);
 
     $fromEmail = $formValues['fromEmailAddress'];
     $from = CRM_Utils_Array::value($fromEmail, $form->_emails);
