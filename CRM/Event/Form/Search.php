@@ -555,7 +555,7 @@ class CRM_Event_Form_Search extends CRM_Core_Form {
       $this->_eventId = $event;
       require_once 'CRM/Event/PseudoConstant.php';
       $this->_formValues['event_id'] = $event;
-      $eventTitle = CRM_Event_BAO_Event::retrieveField($defaults['event_id'], 'title');
+      $eventTitle = CRM_Event_BAO_Event::retrieveField($event, 'title');
       $this->_formValues['event_name'] = $eventTitle;
       $this->assign('id', $event);
       $prePopulate = array(
