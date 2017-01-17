@@ -45,11 +45,13 @@ table td { padding: 2px 4px; }
 .receipt-footer .org-desc { display:table-cell; font-size:8pt; }
 
 .single-page-header { height: 440px; position: relative;}
-.single-page-header .info {position: absolute; top: 45px; left: 90px;}
+.single-page-header .info {position: absolute; top: 45px; left: 50px; max-width: 250px;}
+.single-page-header .address { margin-bottom: 10px;}
 .single-page-header .web-name {margin-right: 120px;}
 
 .two-sections-header { height: 270px; position: relative;}
-.two-sections-header .info {position: absolute; top: 15px; left: 19px;}
+.two-sections-header .info {position: absolute; top: 15px; left: 50px; max-width: 250px;}
+.two-sections-header .address { margin-bottom: 10px;}
 .two-sections-header .web-name {margin-right: 120px;}
 
 .page-contain-2-sections.receipt-with-address .line.copy{padding-top: 10px;}
