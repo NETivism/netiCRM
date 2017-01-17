@@ -60,11 +60,14 @@ class CRM_Contact_Form_Search_Custom_AnnualReceipt extends CRM_Contact_Form_Sear
       }
     }
     $years = array();
-    for($year = date('Y'); $year < date('Y') + 4; $year++) {
-      $years[$year - 3] = $year - 3;
+    for($year = date('Y'); $year < date('Y') + 10; $year++) {
+      $years[$year - 9] = $year - 9;
     }
     $form->addElement('select', 'year', ts('Receipt Year'), $years);
     $form->assign('elements', array('year'));
+    $defaults = array();
+    $defaults['year'] = date('m') == '12' ? date('Y') : date('Y') - 1;
+    $form->setDefaults($defaults);
 
     // reset session when visit first selection
     $session = CRM_Core_Session::singleton();
