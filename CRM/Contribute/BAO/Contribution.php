@@ -2097,13 +2097,16 @@ SELECT source_contact_id
           if (!empty($record['custom_'.$config->receiptSerial])) {
             $serial = trim($record['custom_'.$config->receiptSerial]);
           }
-          else {
+          elseif($name == $sort_name) {
             $serial = trim($serial_id);
+          }
+          else {
+            $serial = '';
           }
 
           if (empty($contactInfo[$name]['sort_name'])) {
             $contactInfo[$name]['sort_name'] = $name;
-            $contactInfo[$name]['addressee'] = $name != $sort_name ? $name : $addressee;
+            $contactInfo[$name]['addressee'] = $name != $sort_name ? $name . " ($sort_name)" : $addressee;
           }
           if (empty($contactInfo[$name]['serial_id'])) {
             $contactInfo[$name]['serial_id'] = $serial;

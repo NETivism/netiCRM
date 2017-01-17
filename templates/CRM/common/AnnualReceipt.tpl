@@ -56,8 +56,8 @@ table td { padding: 2px 4px; }
 .receipt-footer .org-desc { display:table-cell; font-size:8pt; }
 
 .single-page-header { height: 200px; position: relative; }
-.single-page-header .info {position: absolute; top: 45px; left: 90px;}
-.single-page-header .web-name {margin-right: 120px;}
+.single-page-header .info {position: absolute; top: 45px; left: 90px; max-width:250px; }
+.single-page-header .info .address { margin-bottom: 10px;}
 {/literal}
 </style>
 </head>
