@@ -35,7 +35,7 @@
           {if $contribute_total}
           <div class="kpi-box">
             <h4 class="kpi-box-title">{ts}Online Contribution Amount{/ts}</h4>
-            <div class="kpi-box-value">{$contribute_online}<span class="kpi-unit"></span><br><span class="kpi-total-txt">{$contribute_total}</span><span class="kpi-unit"></span></div>
+            <div class="kpi-box-value">{$contribute_online}<span class="kpi-unit"></span><span class="kpi-total-txt">{ts}Total{/ts} {$contribute_total}</span></div>
           </div>
           {/if}
           {if $chartConributeOnlineOffline}{include file="CRM/common/chartist.tpl" chartist=$chartConributeOnlineOffline}{/if}
@@ -50,7 +50,7 @@
           {if $participant_total}
           <div class="kpi-box">
             <h4 class="kpi-box-title">{ts}Online Registration{/ts}</h4>
-            <div class="kpi-box-value">{$participant_online}<span class="kpi-unit">{ts}times{/ts}</span><br><span class="kpi-total-txt">{$participant_total}</span><span class="kpi-unit">{ts}times{/ts}</span></div>
+            <div class="kpi-box-value">{$participant_online}<span class="kpi-unit">{ts}times{/ts}</span><span class="kpi-total-txt">{ts}Total{/ts} {$participant_total} {ts}times{/ts}</span></div>
           </div>
           {/if}
           {if $chartParticipantOnlineOffline}{include file="CRM/common/chartist.tpl" chartist=$chartParticipantOnlineOffline}{/if}
