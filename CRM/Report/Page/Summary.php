@@ -54,7 +54,9 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
 
     $template = CRM_Core_Smarty::singleton();
     $template->assign('contribute_total', CRM_Utils_Money::format($contribute['total_contribute']['sum']));
+    $template->assign('contribute_online', CRM_Utils_Money::format($contribute['online_offline']['sum'][0]));
     $template->assign('participant_total',$participant['Participants Count']['count']);
+    $template->assign('participant_online',$participant['online_offline']['count'][0]);
     $template->assign('contact_total',$contacts['all']);
     $template->assign('mailing',$mailing['count'][0]);
 

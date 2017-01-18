@@ -1276,6 +1276,10 @@ div.spacer,
   font-size: 15px;
   color: #9e9e9e;
 }
+.crm-container .kpi-box-value .kpi-total-txt {
+  margin-left: 5px;
+  font-size: 15px;
+}
 .crm-container .box-content .kpi-box:last-child {
   margin-bottom: 0;
 }
