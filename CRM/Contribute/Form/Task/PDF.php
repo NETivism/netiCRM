@@ -200,18 +200,7 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
 
     foreach ($details as $contribID => $detail) {
       $input = $ids = $objects = array();
-      $template = &CRM_Core_Smarty::singleton();
-      $template->assign('print_type', $print_type);
-      $template->assign('single_page_letter', $window_envelope);
-      $template->assign('domain_name', $domain->name);
-      $template->assign('domain_email', $location['email'][1]['email']);
-      $template->assign('domain_phone', $location['phone'][1]['phone']);
-      $template->assign('domain_address', $location['address'][1]['display_text']);
-      $template->assign('receiptOrgInfo', htmlspecialchars_decode($config->receiptOrgInfo));
-      $template->assign('receiptDescription', htmlspecialchars_decode($config->receiptDescription));
-
       $input['component'] = $detail['component'];
-
       $ids['contact'] = $detail['contact'];
       $ids['contribution'] = $contribID;
       $ids['contributionRecur'] = NULL;
@@ -226,6 +215,20 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
       }
       $contribution = &$objects['contribution'];
 
+      $deductible = CRM_Contribute_BAO_ContributionType::deductible($contribution->contribution_type_id);
+      if(!$deductible) continue;
+
+      $template = &CRM_Core_Smarty::singleton();
+      $template->assign('print_type', $print_type);
+      $template->assign('single_page_letter', $window_envelope);
+      $template->assign('domain_name', $domain->name);
+      $template->assign('domain_email', $location['email'][1]['email']);
+      $template->assign('domain_phone', $location['phone'][1]['phone']);
+      $template->assign('domain_address', $location['address'][1]['display_text']);
+      $template->assign('receiptOrgInfo', htmlspecialchars_decode($config->receiptOrgInfo));
+      $template->assign('receiptDescription', htmlspecialchars_decode($config->receiptDescription));
+
+
       // set some fake input values so we can reuse IPN code
       $input['amount'] = $contribution->total_amount;
       $input['is_test'] = $contribution->is_test;
@@ -237,6 +240,17 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
       $values = array();
       if ($count) {
         $html = '<div style="page-break-after: always;"></div>';
+      }
+
+      if(empty($contribution->receipt_id)){
+        if(empty($contribution->receipt_date)){
+          $contribution->receive_date = CRM_Utils_Date::isoToMysql($contribution->receive_date);
+          $contribution->created_date = CRM_Utils_Date::isoToMysql($contribution->created_date);
+          $contribution->receipt_date = date('YmdHis');
+        }else{
+          $contribution->receipt_date = date('YmdHis', strtotime($contribution->receipt_date));
+        }
+        $receipt_id = CRM_Contribute_BAO_Contribution::genReceiptID($contribution);
       }
       $html .= CRM_Contribute_BAO_Contribution::getReceipt($input, $ids, $objects, $values);
 
