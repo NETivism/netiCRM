@@ -112,6 +112,7 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
           $option[$k] = $p;
         }
       }
+      CRM_Utils_Hook::postProcess(get_class($this), $this);
       self::makeReceipt($this->_contactIds, $option);
       self::makePDF();
     }
