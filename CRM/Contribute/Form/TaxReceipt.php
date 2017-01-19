@@ -14,6 +14,14 @@ class CRM_Contribute_Form_TaxReceipt extends CRM_Core_Form {
     $this->_id = CRM_Utils_Request::retrieve('id', 'Positive', $this);
     $this->_type = CRM_Utils_Request::retrieve('type', 'String', $this);
     $this->_contactId = CRM_Utils_Request::retrieve('cid', 'Positive', $this, TRUE);
+ 
+    $breadcrumb = array(
+      array(
+				'title' => ts('View Contribution'),
+				'url' => CRM_Utils_System::url('civicrm/contact/view/contribution', "reset=1&action=view&context=$context&selectedChild=contribute&cid=$this->_contactId&id=$this->_id"),
+      )
+		);
+    CRM_Utils_System::appendBreadCrumb($breadcrumb);
 
     $contribution = new CRM_Contribute_DAO_Contribution();
     $contribution->id = $this->_id;
