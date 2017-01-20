@@ -995,7 +995,9 @@ class CRM_Utils_Hook {
     require_once (str_replace('_', DIRECTORY_SEPARATOR, $config->userHookClass) . '.php');
     $null = &CRM_Core_DAO::$_nullObject;
   
-    return eval('return '.$config->userHookClass.'::invoke(2, $contributionId, $receipt, $null, $null, $null, \'civicrm_validateTaxReceipt\' );');
+    return call_user_func_array(array($config->userHookClass, 'invoke'), array(
+      2, &$contributionId, &$receipt, &$null, &$null, &$null, 'civicrm_validateTaxReceipt'
+    ));
   }
 }
 
