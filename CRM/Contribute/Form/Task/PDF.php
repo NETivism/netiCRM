@@ -104,6 +104,9 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
    * @return void
    */
   public function buildQuickForm() {
+    // make receipt target popup new tab
+    $this->updateAttributes(array('target' => '_blank'));
+
     $options = self::getPrintingTypes();
 
     $this->addRadio( 'window_envelope',ts('Apply to window envelope'),$options,null,'<br/>',true );
@@ -216,7 +219,9 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
       $contribution = &$objects['contribution'];
 
       $deductible = CRM_Contribute_BAO_ContributionType::deductible($contribution->contribution_type_id);
-      if(!$deductible) continue;
+      if(!$deductible) {
+        continue;
+      }
 
       $template = &CRM_Core_Smarty::singleton();
       $template->assign('print_type', $print_type);
