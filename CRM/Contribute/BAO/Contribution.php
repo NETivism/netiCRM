@@ -2217,14 +2217,13 @@ SELECT source_contact_id
       );
       $records[$result->id]['contribution_type'] = $contribution_type[$result->contribution_type_id];
       $records[$result->id]['instrument'] = $instruments[$result->payment_instrument_id];
-      $contributionIds[$result->id] = $result->id;
     }
-    if (!empty($config->receiptTitle)) {
+    if (!empty($config->receiptTitle) && !empty($records)) {
+      $contributionIds = array_keys($records);
       $receiptFields = array(
         $config->receiptTitle,
         $config->receiptSerial,
       );
-      $contributionIds = array_keys($records);
       $receiptInfo = CRM_Core_BAO_CustomValueTable::getEntitiesValues($contributionIds, 'Contribution', $receiptFields);
       foreach($records as $contributionId => $contrib) {
         if (!empty($receiptInfo[$contributionId])) {

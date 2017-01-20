@@ -49,6 +49,9 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
    * @return void
    */
   public function buildQuickForm() {
+    // make receipt target popup new tab
+    $this->updateAttributes(array('target' => '_blank'));
+
     $years = array();
     if(!empty($this->_year)){
       $years[$this->_year] = $this->_year;
@@ -61,7 +64,7 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
       $this->addElement('select', 'year', ts('Receipt Year'), $years);
     }
 
-    $contribution_type = CRM_Contribute_PseudoConstant::contributionType();
+    $contribution_type = CRM_Contribute_PseudoConstant::contributionType(NULL, 'is_deductible', TRUE);
     $deductible = array( 0 => '- '.ts('All').' '.ts('Deductible').' -');
     $contribution_type = $deductible + $contribution_type;
     $attrs = array('multiple' => 'multiple');
@@ -112,6 +115,7 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
           $option[$k] = $p;
         }
       }
+      CRM_Utils_Hook::postProcess(get_class($this), $this);
       self::makeReceipt($this->_contactIds, $option);
       self::makePDF();
     }
