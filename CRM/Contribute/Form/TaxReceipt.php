@@ -5,6 +5,7 @@ class CRM_Contribute_Form_TaxReceipt extends CRM_Core_Form {
   public $_contactId = NULL;
   public $_id = NULL;
   public $_type = NULL;
+  public $_name = NULL;
   public $_tplParams = array();
   public $_taxReceipt = NULL;
   public $_userContext = NULL;
@@ -12,6 +13,7 @@ class CRM_Contribute_Form_TaxReceipt extends CRM_Core_Form {
   public function preProcess() {
     $context = CRM_Utils_Request::retrieve('context', 'String', $this);
     $this->_id = CRM_Utils_Request::retrieve('id', 'Positive', $this);
+    $this->_name = 'taxreceipt_'.$this->_id;
     $this->_type = CRM_Utils_Request::retrieve('type', 'String', $this);
     $this->_contactId = CRM_Utils_Request::retrieve('cid', 'Positive', $this, TRUE);
  
@@ -40,6 +42,9 @@ class CRM_Contribute_Form_TaxReceipt extends CRM_Core_Form {
 
       // we needs taxReceipt have receipt_info, receipt_status, receipt_message
       if ($this->_taxReceipt['receipt_status']) {
+        if (!empty($this->_taxReceipt['invoice_number'])) {
+          $this->_name = 'taxreceipt_'.$this->_taxReceipt['invoice_number'];
+        }
         $this->assign('taxReceiptInfo', $this->_taxReceipt['receipt_info']);
       }
 
@@ -58,26 +63,53 @@ class CRM_Contribute_Form_TaxReceipt extends CRM_Core_Form {
   public function buildQuickForm() {
     // just for display error message when issue tax receipt
     $this->addElement('hidden', 'error_placeholder', '');
+    $createButton = $printButton = FALSE;
     if (!empty($this->_taxReceipt)) {
       $valid = CRM_Utils_Hook::validateTaxReceipt($this->_id, $this->_taxReceipt);
 
       // if tax receipt not validated, display create button let user create again.
       if (isset($valid['success']) && !$valid['success']) {
-        $addButton = TRUE;
+        $createButton = TRUE;
+      }
+      else {
+        $printButton = TRUE;
       }
     }
     else {
-      $addButton = TRUE;
+      $createButton = TRUE;
     }
-    if ($addButton) {
-      $this->addButtons(array(
-          array(
-            'type' => 'next',
-            'name' => ts('Create Tax Receipt'),
-            'isDefault' => TRUE,
-          ),
-        )
+
+    $button = array();
+    $button['create'] = array(
+      'type' => 'next',
+      'name' => ts('Create Tax Receipt'),
+      'isDefault' => TRUE,
+    );
+    $button['print'] = array(
+      'type' => 'print',
+      'name' => ts('Print Tax Receipt'),
+      'js' => array('disabled' => 'disabled'),
+    );
+    $button['pdf'] = array(
+      'type' => 'pdf',
+      'name' => ts('PDF'),
+      'js' => array('disabled' => 'disabled'),
+    );
+    if (!$createButton) {
+      $button['create']['js'] = array('disabled' => 'disabled');
+    }
+    if ($printButton) {
+      $printUrl = CRM_Utils_System::url('civicrm/contribute/taxreceipt', "reset=1&id={$this->_id}&cid={$this->_contactId}&snippet=2", FALSE, NULL, FALSE);
+      $button['print']['js'] = array(
+        'onclick' => 'window.open("'.$printUrl.'"); return false;',
       );
+      $pdfUrl = CRM_Utils_System::url('civicrm/contribute/taxreceipt', "reset=1&id={$this->_id}&cid={$this->_contactId}&snippet=3", FALSE, NULL, FALSE);
+      $button['pdf']['js'] = array(
+        'onclick' => 'window.open("'.$pdfUrl.'"); return false;',
+      );
+    }
+    if (!empty($button)) {
+      $this->addButtons($button);
     }
     
     return;

@@ -1,4 +1,12 @@
+{if $smarty.get.snippet eq 2}{* print *}
+  {include file="CRM/common/TaxReceipt.tpl"}
+{elseif $smarty.get.snippet eq 3}{* pdf *}
+  {include file="CRM/common/TaxReceipt.tpl"}
+{else}{* normal html *}
 <div class="crm-block crm-content-block crm-contribution-tax-invoice-form-block">
+<div class="crm-submit-buttons">
+  {include file="CRM/common/formButtons.tpl" location="bottom"}
+</div>
 <h3>{ts}Tax Receipt Fields{/ts}</h3>
   <table class="crm-info-panel taxreceipt-fields">
   {foreach from=$taxReceiptFields key=fieldName item=fieldInfo}
@@ -10,7 +18,6 @@
   </table>
 {if $taxReceiptPrint}
 <h3>{ts}Print Tax Receipt{/ts}</h3>
-  {$taxReceiptPrint}
 {/if}
 <h3>{ts}Tax Receipt Information{/ts}</h3>
   <table class="crm-info-panel taxreceipt-info">
@@ -22,10 +29,10 @@
   {/foreach}
   </table>
 
-  <div class="crm-submit-buttons">
-    {include file="CRM/common/formButtons.tpl" location="bottom"}
-  </div>
+<div class="crm-submit-buttons">
+  {include file="CRM/common/formButtons.tpl" location="bottom"}
 </div>
+</div><!-- crm-block -->
 <script>{literal}
 cj(document).ready(function($){
   $('input[name=_qf_TaxReceipt_next]').click(function(e){
@@ -37,3 +44,4 @@ cj(document).ready(function($){
   });
 });
 {/literal}</script>
+{/if}{* print or not *}
