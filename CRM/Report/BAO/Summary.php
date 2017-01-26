@@ -112,7 +112,7 @@ class CRM_Report_BAO_Summary {
     return $allData;
   }
 
-  static function getPartToConData(){
+  static function getConToPartData(){
     $allData = array();
     $allData['Event Registration'] = self::parseDataFromSql("SELECT COUNT( p.id ) count,COUNT(DISTINCT p.contact_id) people FROM civicrm_participant p {JOIN} WHERE (p.source LIKE '".ts("Online Event Registration")."%' ) AND p.is_test = 0 {AND}");
     $allData['Contribution'] = self::parseDataFromSql("SELECT COUNT( c.id ) count,COUNT(DISTINCT c.contact_id) people FROM civicrm_contribution c {JOIN} WHERE c.source LIKE '".ts("Online Contribution")."%' AND c.is_test =0 {AND}");
@@ -131,7 +131,7 @@ WHERE
     return $allData;
   }
 
-  static function getConToPartData(){
+  static function getPartToConData(){
     $allData = array();
     $allData['Event Registration'] = self::parseDataFromSql("SELECT COUNT( p.id ) count,COUNT(DISTINCT p.contact_id) people FROM civicrm_participant p {JOIN} WHERE (p.source LIKE '".ts("Online Event Registration")."%' ) AND p.is_test = 0 {AND}");
     $allData['Contribution'] = self::parseDataFromSql("SELECT COUNT( c.id ) count,COUNT(DISTINCT c.contact_id) people FROM civicrm_contribution c {JOIN} WHERE c.source LIKE '".ts("Online Contribution")."%' AND c.is_test =0 {AND}");
@@ -155,19 +155,17 @@ WHERE
     $allData['Received Application Url'] = self::parseDataFromSql("SELECT COUNT(DISTINCT med.id) count,COUNT(DISTINCT meq.contact_id) people FROM civicrm_mailing_job mj 
       LEFT JOIN civicrm_mailing_event_queue meq ON meq.job_id = mj.id 
       INNER JOIN civicrm_mailing_event_delivered med ON med.event_queue_id = meq.id
-      INNER JOIN civicrm_mailing_trackable_url mtu ON mtu.mailing_id = mj.mailing_id 
-      {JOIN} 
-      WHERE mj.is_test = 0 AND mtu.url REGEXP  '^{baseurl}/civicrm/event/'");
+      INNER JOIN civicrm_mailing_trackable_url mtu ON mtu.mailing_id = mj.mailing_id
+      WHERE mj.is_test = 0 AND mtu.url LIKE '{baseurl}/civicrm/event/%'");
     $allData['Clicked Application Url'] = self::parseDataFromSql("SELECT COUNT(DISTINCT met.id) count,COUNT(DISTINCT meq.contact_id) people FROM civicrm_mailing_job mj 
       LEFT JOIN civicrm_mailing_event_queue meq ON meq.job_id = mj.id 
       INNER JOIN civicrm_mailing_event_trackable_url_open met ON met.event_queue_id = meq.id 
       INNER JOIN civicrm_mailing_trackable_url mtu ON mtu.id = met.trackable_url_id
-      {JOIN} 
-      WHERE mj.is_test = 0 AND mtu.url REGEXP  '^{baseurl}/civicrm/event/'");
+      WHERE mj.is_test = 0 AND mtu.url LIKE '{baseurl}/civicrm/event/%'");
     $allData['Apply After Click Url'] = self::parseDataFromSql('SELECT count(p.contact_id) people,m.time_stamp FROM 
   (SELECT pp.* FROM (SELECT contact_id, register_date FROM civicrm_participant ORDER BY register_date) pp GROUP BY pp.contact_id) p 
 INNER JOIN 
-  (SELECT mm.* FROM (SELECT med.time_stamp,meq.contact_id FROM civicrm_mailing_event_opened med LEFT JOIN civicrm_mailing_event_queue meq ON med.event_queue_id = meq.id {JOIN} {WHERE}) mm GROUP BY contact_id) m
+  (SELECT mm.* FROM (SELECT med.time_stamp,meq.contact_id FROM civicrm_mailing_event_opened med LEFT JOIN civicrm_mailing_event_queue meq ON med.event_queue_id = meq.id ) mm GROUP BY contact_id) m
   ON m.contact_id = p.contact_id 
 WHERE
   p.register_date > m.time_stamp
@@ -179,8 +177,7 @@ LEFT JOIN
       LEFT JOIN civicrm_mailing_event_queue meq ON meq.job_id = mj.id 
       INNER JOIN civicrm_mailing_event_trackable_url_open med ON med.event_queue_id = meq.id 
   INNER JOIN civicrm_mailing_trackable_url mtu ON mtu.id = med.trackable_url_id 
-  {JOIN}
-  WHERE mj.is_test = 0 AND mtu.url REGEXP \'^{baseurl}/civicrm/event/\' {AND}
+  WHERE mj.is_test = 0 AND mtu.url LIKE \'{baseurl}/civicrm/event/%\'
   ) mm
   ON mm.contact_id = p.contact_id
 WHERE p.register_date > mm.time_stamp AND p.register_date < DATE_ADD(mm.time_stamp, INTERVAL 1 hour) GROUP BY contact_id) pm;');
@@ -194,14 +191,13 @@ WHERE p.register_date > mm.time_stamp AND p.register_date < DATE_ADD(mm.time_sta
     $allData['Click Count'] = self::parseDataFromSql("SELECT COUNT(DISTINCT med.id) count,COUNT(DISTINCT meq.contact_id) people FROM civicrm_mailing_job mj LEFT JOIN civicrm_mailing_event_queue meq ON meq.job_id = mj.id INNER JOIN civicrm_mailing_event_trackable_url_open med ON med.event_queue_id = meq.id {JOIN} WHERE mj.is_test = 0 {AND}");
     $allData['Received Contribute Url'] = self::parseDataFromSql("SELECT COUNT(DISTINCT meq.id) count,COUNT(DISTINCT meq.contact_id) people FROM civicrm_mailing_job mj 
       LEFT JOIN civicrm_mailing_event_queue meq ON meq.job_id = mj.id 
-      INNER JOIN civicrm_mailing_trackable_url mtu ON mtu.mailing_id = mj.mailing_id {JOIN} 
-      WHERE mj.is_test = 0 AND mtu.url REGEXP  '^{baseurl}/civicrm/contribute/transact?' {AND}");
+      INNER JOIN civicrm_mailing_trackable_url mtu ON mtu.mailing_id = mj.mailing_id
+      WHERE mj.is_test = 0 AND mtu.url LIKE  '{baseurl}/civicrm/contribute/transact%'");
     $allData['Clicked Contribute Url'] = self::parseDataFromSql("SELECT COUNT(DISTINCT med.id) count,COUNT(DISTINCT meq.contact_id) people FROM civicrm_mailing_job mj 
       LEFT JOIN civicrm_mailing_event_queue meq ON meq.job_id = mj.id 
       INNER JOIN civicrm_mailing_event_trackable_url_open med ON med.event_queue_id = meq.id 
       INNER JOIN civicrm_mailing_trackable_url mtu ON mtu.id = med.trackable_url_id
-      {JOIN}
-      WHERE mj.is_test = 0 AND mtu.url REGEXP  '^{baseurl}/civicrm/contribute/transact?' {AND}");
+      WHERE mj.is_test = 0 AND mtu.url LIKE '{baseurl}/civicrm/contribute/transact%'");
     $allData['Contribute After Click Url'] = self::parseDataFromSql('SELECT count(c.contact_id) people, m.time_stamp FROM 
   (SELECT cc.* FROM (SELECT ccc.contact_id, ccc.receive_date FROM civicrm_contribution ccc LEFT JOIN civicrm_participant_payment pp ON pp.contribution_id = ccc.id WHERE pp.contribution_id IS NULL AND ccc.receive_date IS NOT NULL ORDER BY ccc.receive_date) cc GROUP BY cc.contact_id) c
 INNER JOIN 
@@ -218,10 +214,9 @@ LEFT JOIN
       LEFT JOIN civicrm_mailing_event_queue meq ON meq.job_id = mj.id 
       INNER JOIN civicrm_mailing_event_trackable_url_open med ON med.event_queue_id = meq.id  
   INNER JOIN civicrm_mailing_trackable_url mtu ON mtu.id = med.trackable_url_id
-      WHERE mj.is_test = 0 AND mtu.url REGEXP  \'^{baseurl}/civicrm/contribute/transact?\') mm
+      WHERE mj.is_test = 0 AND mtu.url LIKE \'{baseurl}/civicrm/contribute/transact%\') mm
   ON mm.contact_id = c.contact_id
-  {JOIN}
-WHERE c.receive_date > mm.time_stamp AND c.receive_date < DATE_ADD(mm.time_stamp, INTERVAL 1 hour) {AND} GROUP BY contact_id) cm;');
+WHERE c.receive_date > mm.time_stamp AND c.receive_date < DATE_ADD(mm.time_stamp, INTERVAL 1 hour) GROUP BY contact_id) cm;');
     return $allData;
   }
 
