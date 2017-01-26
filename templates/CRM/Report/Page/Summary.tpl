@@ -147,13 +147,16 @@
         <div class="box-content">
           <table class="crm-data-table crm-data-table-horizontal crm-data-table-striped">
             <tr>
-              <th></th>
+              <th>
+                {ts}Payment Instrument{/ts}
+              </th>
               {foreach from=$static_label item=label}
               <th>
                 {$label}
               </th>
               {/foreach}
             </tr>
+
             {foreach from=$contribution_type_table item=row}
             <tr>
 
@@ -170,10 +173,18 @@
               {/foreach}
              </tr>
              {/foreach}
-
+          </table>
+          <table class="crm-data-table crm-data-table-horizontal crm-data-table-striped">
              <tr>
-              <th class="full-colspan empty-cells" colspan="{capture assign=colspan}{$static_label|@count}{/capture}{$colspan+1}"></th>
-             </tr>
+              <th>
+                {ts}Recurring contributions{/ts}
+              </th>
+              {foreach from=$static_label item=label}
+              <th>
+                {$label}
+              </th>
+              {/foreach}
+            </tr>
 
              {foreach from=$recur_table item=row}
             <tr>
@@ -203,7 +214,7 @@
   <div class="column-chart-bar-showhidden">
     <h3>{$key}</h3>
     {include file="CRM/common/chartist.tpl" chartist=$item}
-  <div id="chart-bar-{$key}"></div>
+  <div id="{$item.id}"></div>
   </div>
   {/foreach}
 

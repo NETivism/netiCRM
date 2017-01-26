@@ -209,18 +209,18 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
     $participant_after_mailing = CRM_Report_BAO_Summary::getPartAfterMailData();
     $contribute_after_mailing = CRM_Report_BAO_Summary::getConAfterMailData();
 
-    $return_array['part_online_offline'] = $this->showhidden(
+    $return_array['Count and people by participants online-offline'] = $this->showhidden(
       'part_online_offline',
       self::arrayRemoveKey($participant['online_offline']),
       $participant['online_offline']['label']
     );
 
-    $return_array['contrib_recur'] = $this->showhidden(
+    $return_array['Count and people by recur contribution.'] = $this->showhidden(
       'contrib_recur',
       self::arrayRemoveKey($contribute['recur']),
       $contribute['recur']['label']
     );
-    $return_array['contrib_recur_sum'] = $this->showhidden(
+    $return_array['Contribution sum amount by recur'] = $this->showhidden(
       'contrib_recur_sum',
       self::arrayRemoveKey($contribute['recur'], array('sum')),
       $contribute['recur']['label']
@@ -232,48 +232,59 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
       'total_amount' => $contribute['total_amount'],
       );
 
-    $return_array['contrib_applicate'] = $this->showhidden(
+    $return_array['Count and people by contribution and application fee.'] = $this->showhidden(
       'contrib_applicate',
       self::dataTransferShowHidden($array),
       array_keys($array)
     );
-    $return_array['contrib_applicate_sum'] = $this->showhidden(
+    $return_array['Sum amount by contribution and application fee.'] = $this->showhidden(
       'contrib_applicate_sum',
       self::dataTransferShowHidden($array,array('sum')),
       array_keys($array)
     );
 
-    $return_array['participant_to_contributor'] = $this->showhidden(
+    $return_array['Count and people by contribution times.'] = $this->showhidden(
+      'contrib_times',
+      self::arrayRemoveKey($contribute['times']),
+      $contribute['times']['label']
+    );
+    $return_array['Sum amount by contribution times.'] = $this->showhidden(
+      'contrib_times_sum',
+      self::arrayRemoveKey($contribute['times'], array('sum')),
+      $contribute['times']['label']
+    );
+
+    $return_array['Count and people from participant to contributor.'] = $this->showhidden(
       'participant_to_contributor',
       self::dataTransferShowHidden($participant_to_contributor),
       array_keys($participant_to_contributor)
     );
 
-    $return_array['contributor_to_participant'] = $this->showhidden(
+    $return_array['Count and people from contributor to participant.'] = $this->showhidden(
       'contributor_to_participant',
       self::dataTransferShowHidden($contributor_to_participant),
       array_keys($contributor_to_participant)
     );
 
-    $return_array['mailing_to_participant'] = $this->showhidden(
+    $return_array['Count and people from receiving mail to participant.'] = $this->showhidden(
       'mailing_to_participant',
       self::dataTransferShowHidden($mailing_to_participant),
       array_keys($mailing_to_participant)
     );
 
-    $return_array['mailing_to_contributor'] = $this->showhidden(
+    $return_array['Count and people from receiving mail to contributor.'] = $this->showhidden(
       'mailing_to_contributor',
       self::dataTransferShowHidden($mailing_to_contributor),
       array_keys($mailing_to_contributor)
     );
 
-    $return_array['participant_after_mailing'] = $this->showhidden(
+    $return_array['People participant after receiving mail.'] = $this->showhidden(
       'participant_after_mailing',
       self::dataTransferShowHidden($participant_after_mailing),
       array_keys($participant_after_mailing)
     );
 
-    $return_array['contribute_after_mailing'] = $this->showhidden(
+    $return_array['People contributor after receiving mail.'] = $this->showhidden(
       'contribute_after_mailing',
       self::dataTransferShowHidden($contribute_after_mailing),
       array_keys($contribute_after_mailing)
@@ -283,8 +294,8 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
   }
 
   private function showhidden($name, $data, $labels){
-    $return_name = 'showhidden'.$name;
     $chart = array(
+      'name' => $name,
       'id' => 'chart-bar-'.$name,
       'selector' => '#chart-bar-'.$name,
       'type' => 'Bar',
