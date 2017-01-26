@@ -11,8 +11,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2017-01-14 09:57+0000\n"
-"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
+"PO-Revision-Date: 2017-01-26 09:11+0000\n"
+"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28923,7 +28923,7 @@ msgstr "付款確認信已Email到%1。"
 msgid ""
 "Your contribution has been submitted to %1 for processing. Please print this"
 " page for your records."
-msgstr "您的捐/繳款資料已使用%1繳付。請保存此信件，以作存查。"
+msgstr "您的捐/繳款資料已送%1處理。請保存此信件，以作存查。"
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid ""
@@ -45393,3 +45393,14 @@ msgstr "這個費用類型是否為可開發票？"
 
 msgid "Tax Rate"
 msgstr "稅率"
+
+msgid "Skip status calculate"
+msgstr "不要自訂計算狀態"
+
+msgid ""
+"Check this will skip membership status automatic calculate by start and end "
+"date."
+msgstr "勾選這個選項後，儲存時將不會由開始、結束日期來計算會籍的狀態。"
+
+msgid "It's default when membership status is pending"
+msgstr "當狀態為「待處理」，預設會勾選此選項。"

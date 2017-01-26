@@ -45364,3 +45364,12 @@ msgstr ""
 
 msgid "Tax Rate"
 msgstr ""
+
+msgid "Skip status calculate"
+msgstr ""
+
+msgid "Check this will skip membership status automatic calculate by start and end date."
+msgstr ""
+
+msgid "It's default when membership status is pending"
+msgstr ""
