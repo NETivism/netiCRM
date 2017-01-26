@@ -42,6 +42,7 @@
  	{include file="CRM/common/enableDisable.tpl"}
         <table cellpadding="0" cellspacing="0" border="0">
         <thead class="sticky">
+            <th>{ts}ID{/ts}</th>
             <th>{ts}Status{/ts}</th>
             <th>{ts}Start Event{/ts}</th>
             <th>{ts}End Event{/ts}</th>
@@ -53,6 +54,7 @@
         </thead>
         {foreach from=$rows item=row}
         <tr id="row_{$row.id}" class="{cycle values="odd-row,even-row"} {$row.class} {if NOT $row.is_active} disabled{/if} crm-membership-status">
+          <td class="crm-membership-status-id">{$row.id}</td>
 	        <td class="crm-membership-status-label">{$row.label}</td>	
 	        <td class="crm-membership-status-start_event">{ts}{$row.start_event}{/ts}</td>
 	        <td class="crm-membership-status-end_event">{ts}{$row.end_event}{/ts}</td>

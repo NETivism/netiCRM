@@ -177,6 +177,8 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
 
     $defaults = array();
     $defaults = &parent::setDefaultValues();
+    $membershipStatuses = CRM_Member_PseudoConstant::membershipStatus();
+    $pendingId = array_search('Pending', $membershipStatuses);
 
     //setting default join date and receive date
     list($now) = CRM_Utils_Date::setDateDefaults();
@@ -241,6 +243,10 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
     $this->assign("member_is_test", CRM_Utils_Array::value('member_is_test', $defaults));
 
     $this->assign('membership_status_id', CRM_Utils_Array::value('status_id', $defaults));
+
+    if ($defaults['status_id'] == $pendingId) {
+      $defaults['skip_status_cal'] = 1;
+    }
 
     if (CRM_Utils_Array::value('is_pay_later', $defaults)) {
       $this->assign('is_pay_later', TRUE);
@@ -397,6 +403,7 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
         ts('Status Override?'), NULL,
         array('onClick' => 'showHideMemberStatus()')
       );
+      $this->addElement('checkbox', 'skip_status_cal', ts('Skip status calculate'));
 
       $this->addElement('checkbox', 'record_contribution', ts('Record Membership Payment?'));
 
@@ -525,6 +532,11 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
     }
 
     $joinDate = NULL;
+    if (!CRM_Utils_Array::value('skip_status_cal', $params)) {
+      $errors['join_date'] = ts('Please enter the join date.');
+      $errors['start_date'] = ts('Start date must be the same or later than join date.');
+    }
+
     if (CRM_Utils_Array::value('join_date', $params)) {
       $joinDate = CRM_Utils_Date::processDate($params['join_date']);
       require_once 'CRM/Member/BAO/MembershipType.php';
@@ -652,6 +664,8 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
       return;
     }
     $config = CRM_Core_Config::singleton();
+    $membershipStatuses = CRM_Member_PseudoConstant::membershipStatus();
+
     // get the submitted form values.
     $this->_params = $formValues = $this->controller->exportValues($this->_name);
 
@@ -701,13 +715,22 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
       'reminder_date',
     );
     $currentTime = getDate();
+    $pendingId = array_search('Pending', $membershipStatuses);
     foreach ($dates as $d) {
       //first give priority to form values then calDates.
       $date = CRM_Utils_Array::value($d, $formValues);
-      if (!$date) {
+      if (!$date && $formValues['status_id'] != $pendingId) {
         $date = CRM_Utils_Array::value($d, $calcDates);
       }
-      $params[$d] = CRM_Utils_Date::processDate($date, NULL, TRUE);
+      if ($date) {
+        $params[$d] = CRM_Utils_Date::processDate($date, NULL, TRUE);
+      }
+      else {
+        $params[$d] = '';
+      }
+    }
+    if ($formValues['skip_status_cal'] == 1) {
+      $params['skipStatusCal'] = 1;
     }
 
     $tdates = array('receive_date', 'receipt_date');
@@ -918,9 +941,8 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
           $endDate = $membership->end_date;
 
           require_once 'CRM/Member/PseudoConstant.php';
-          $membershipStatues = CRM_Member_PseudoConstant::membershipStatus();
-          if (!in_array($membership->status_id, array(array_search('Cancelled', $membershipStatues),
-                array_search('Expired', $membershipStatues),
+          if (!in_array($membership->status_id, array(array_search('Cancelled', $membershipStatuses),
+                array_search('Expired', $membershipStatuses),
               ))) {
             $cancelled = FALSE;
           }
