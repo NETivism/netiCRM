@@ -532,8 +532,7 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
     }
 
     $joinDate = NULL;
-    if (!CRM_Utils_Array::value('skip_status_cal', $params)) {
-      $errors['join_date'] = ts('Please enter the join date.');
+    if (!CRM_Utils_Array::value('skip_status_cal', $params) && empty($params['start_date'])) {
       $errors['start_date'] = ts('Start date must be the same or later than join date.');
     }
 
