@@ -367,7 +367,13 @@ class CRM_Core_Payment_BaseIPN {
           $dates['join_date'] = CRM_Utils_Date::customFormat($currentMembership['join_date'], $format);
         }
         else {
-          $dates = CRM_Member_BAO_MembershipType::getDatesForMembershipType($membership->membership_type_id);
+          // see if we need join date
+          if (!empty($membership->join_date_as_start_date)) {
+            $dates = CRM_Member_BAO_MembershipType::getDatesForMembershipType($membership->membership_type_id, $membership['join_date']);
+          }
+          else {
+            $dates = CRM_Member_BAO_MembershipType::getDatesForMembershipType($membership->membership_type_id);
+          }
         }
 
         //get the status for membership.
