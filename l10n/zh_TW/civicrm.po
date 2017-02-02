@@ -11,7 +11,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2017-01-26 09:11+0000\n"
+"PO-Revision-Date: 2017-02-02 06:48+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -27931,7 +27931,7 @@ msgstr "我想要每%1 %2捐款此金額，總共捐款%3期。"
 
 #: templates/CRM/Contribute/Form/Contribution/Confirm.tpl
 msgid "I want to contribute this amount every %1 %2(s)."
-msgstr "我每隔%1 %2捐款此金額。"
+msgstr "我每%1 %2以此金額捐款。"
 
 #: templates/CRM/Contribute/Form/Contribution/Confirm.tpl
 msgid ""
@@ -45395,7 +45395,7 @@ msgid "Tax Rate"
 msgstr "稅率"
 
 msgid "Skip status calculate"
-msgstr "不要自訂計算狀態"
+msgstr "不要自動更新會籍狀態"
 
 msgid ""
 "Check this will skip membership status automatic calculate by start and end "
