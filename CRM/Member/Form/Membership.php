@@ -707,6 +707,11 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
     $calcDates = CRM_Member_BAO_MembershipType::getDatesForMembershipType($params['membership_type_id'],
       $joinDate, $startDate, $endDate
     );
+    $excludeIsAdmin = CRM_Utils_Array::value('exclude_is_admin', $params, FALSE);
+    if (!$excludeIsAdmin && !CRM_Utils_Array::value('is_override', $params)) {
+      $excludeIsAdmin = TRUE;
+    }
+    $calcStatus = CRM_Member_BAO_MembershipStatus::getMembershipStatusByDate($startDate, $endDate, $joinDate, 'today', $excludeIsAdmin);
 
     $dates = array('join_date',
       'start_date',
@@ -718,8 +723,13 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
     foreach ($dates as $d) {
       //first give priority to form values then calDates.
       $date = CRM_Utils_Array::value($d, $formValues);
-      if (!$date && $formValues['status_id'] != $pendingId) {
-        $date = CRM_Utils_Array::value($d, $calcDates);
+      if (!$date) {
+        if ($formValues['status_id'] == $pendingId && !$formValues['skip_status_cal'] && $calcStatus['id'] != $pendingId) {
+          $date = CRM_Utils_Array::value($d, $calcDates);
+        }
+        elseif($formValues['status_id'] != $pendingId) {
+          $date = CRM_Utils_Array::value($d, $calcDates);
+        }
       }
       if ($date) {
         $params[$d] = CRM_Utils_Date::processDate($date, NULL, TRUE);

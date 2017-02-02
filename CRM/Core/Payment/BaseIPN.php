@@ -332,7 +332,6 @@ class CRM_Core_Payment_BaseIPN {
     $membership = &$objects['membership'];
     $participant = &$objects['participant'];
     $event = &$objects['event'];
-    $changeToday = CRM_Utils_Array::value('trxn_date', $input, self::$_now);
 
     if ($input['component'] == 'contribute') {
       require_once 'CRM/Contribute/BAO/ContributionPage.php';
@@ -352,22 +351,32 @@ class CRM_Core_Payment_BaseIPN {
           $membership->is_test, $membership->id
         );
         if ($currentMembership) {
-          /*
-                     * Fixed FOR CRM-4433
-                     * In BAO/Membership.php(renewMembership function), we skip the extend membership date and status 
-                     * when Contribution mode is notify and membership is for renewal ) 
-                     */
+          /**
+           * Fixed FOR CRM-4433
+           * In BAO/Membership.php(renewMembership function), we skip the extend membership date and status 
+           * when Contribution mode is notify and membership is for renewal ) 
+           */
 
+          if (!empty($membership->end_date_as_start_date)) {
+            $useEndDate = $membership->end_date ? $membership->end_date : $currentMembership['end_date'];
+            $changeToday = date('YmdHis', strtotime($useEndDate) + 86400);
+          }
+          if (empty($changeToday)) {
+            $changeToday = CRM_Utils_Array::value('trxn_date', $input, self::$_now);
+          }
           CRM_Member_BAO_Membership::fixMembershipStatusBeforeRenew($currentMembership, $changeToday);
-
-          $dates = CRM_Member_BAO_MembershipType::getRenewalDatesForMembershipType($membership->id,
-            $changeToday
-          );
+          $dates = CRM_Member_BAO_MembershipType::getRenewalDatesForMembershipType($membership->id, $changeToday);
 
           $dates['join_date'] = CRM_Utils_Date::customFormat($currentMembership['join_date'], $format);
         }
         else {
-          $dates = CRM_Member_BAO_MembershipType::getDatesForMembershipType($membership->membership_type_id);
+          // see if we can use join date as start date
+          if (!empty($membership->join_date_as_start_date)) {
+            $dates = CRM_Member_BAO_MembershipType::getDatesForMembershipType($membership->membership_type_id, $membership['join_date']);
+          }
+          else {
+            $dates = CRM_Member_BAO_MembershipType::getDatesForMembershipType($membership->membership_type_id);
+          }
         }
 
         //get the status for membership.
