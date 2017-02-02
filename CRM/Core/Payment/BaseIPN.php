@@ -359,7 +359,7 @@ class CRM_Core_Payment_BaseIPN {
 
           if (!empty($membership->end_date_as_start_date)) {
             $useEndDate = $membership->end_date ? $membership->end_date : $currentMembership['end_date'];
-            $changeToday = $useEndDate; 
+            $changeToday = date('YmdHis', strtotime($useEndDate) + 86400);
           }
           if (empty($changeToday)) {
             $changeToday = CRM_Utils_Array::value('trxn_date', $input, self::$_now);
