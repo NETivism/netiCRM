@@ -854,10 +854,15 @@ class CRM_Contact_DAO_Contact extends CRM_Core_DAO
           'dataPattern' => '',
           'FKClassName' => 'CRM_Contact_DAO_Contact',
         ) ,
-        'is_deleted' => array(
+        'contact_is_deleted' => array(
           'name' => 'is_deleted',
           'type' => CRM_Utils_Type::T_BOOLEAN,
+          'title' => ts('Contact is in Trash') ,
           'required' => true,
+          'export' => true,
+          'where' => 'civicrm_contact.is_deleted',
+          'headerPattern' => '',
+          'dataPattern' => '',
         ) ,
       );
     }

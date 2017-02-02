@@ -590,8 +590,11 @@
   </foreignKey>
   <field>
     <name>is_deleted</name>
+    <title>Contact is in Trash</title>
+    <uniqueName>contact_is_deleted</uniqueName>
     <type>boolean</type>
     <default>0</default>
+    <export>true</export>
     <required>true</required>
     <add>3.2</add>
   </field>
