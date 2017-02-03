@@ -96,11 +96,13 @@
     {* Show editable status field when is_override is TRUE *}
         <tr id="memberStatus"><td class="label">{$form.status_id.label}</td><td>{$form.status_id.html}<br />
             <span class="description">{ts}If <strong>Status Override</strong> is checked, the selected status will remain in force (it will NOT be modified by the automated status update script).{/ts}</span></td></tr>
+        {if $form.skip_status_cal.label}
         <tr id="skipStatusCal">
           <td class="label">{$form.skip_status_cal.label}</td><td class="view-value">{$form.skip_status_cal.html}<br />
           <span class="description">{ts}Check this will skip membership status automatic calculate by start and end date.{/ts}{ts}It's default when membership status is pending{/ts}</span>
           </td>
         </tr>
+        {/if}
 	{elseif $membershipMode}
         <tr class="crm-membership-form-block-billing"><td colspan="2">
         {include file='CRM/Core/BillingBlock.tpl'}
