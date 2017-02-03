@@ -53,9 +53,17 @@ class CRM_Member_Form extends CRM_Core_Form {
    *
    * @var string
    */
-  protected $_BAOName; function preProcess() {
+  protected $_BAOName;
+ 
+  function preProcess() {
     $this->_id = $this->get('id');
     $this->_BAOName = $this->get('BAOName');
+    if (!empty($this->_id)) {
+      $defaults = array();
+      $params = array('id' => $this->_id);
+      call_user_func_array(array($this->_BAOName, 'retrieve'), array(&$params, &$defaults));
+      $this->_defaults = $defaults;
+    }
   }
 
   /**
@@ -67,13 +75,11 @@ class CRM_Member_Form extends CRM_Core_Form {
    * @return None
    */
   function setDefaultValues() {
-    $defaults = array();
-    $params = array();
-
-    if (isset($this->_id)) {
-      $params = array('id' => $this->_id);
-      require_once (str_replace('_', DIRECTORY_SEPARATOR, $this->_BAOName) . ".php");
-      eval($this->_BAOName . '::retrieve( $params, $defaults );');
+    if (!empty($this->_defaults)) {
+      $defaults =& $this->_defaults;
+    }
+    else {
+      $defaults = array();
     }
 
     if (isset($defaults['minimum_fee'])) {
