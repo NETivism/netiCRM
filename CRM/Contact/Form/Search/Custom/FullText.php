@@ -59,38 +59,18 @@ class CRM_Contact_Form_Search_Custom_FullText implements CRM_Contact_Form_Search
   protected $_limitNumber = 10;
 
   protected $_foundRows = array();
+
   function __construct(&$formValues) {
+    $formValues['table'] = $this->getFieldValue($formValues, 'table', 'String');
+    $this->_table = $formValues['table'];
+
+    $formValues['text'] = trim($this->getFieldValue($formValues, 'text', 'String', ''));
+    $this->_text = $formValues['text'];
+
     if(empty($formValues['text'])){
       return;
     }
     $this->_formValues = &$formValues;
-
-    $this->_text = CRM_Utils_Array::value('text',
-      $formValues
-    );
-    $this->_table = CRM_Utils_Array::value('table',
-      $formValues
-    );
-
-    if (!$this->_text) {
-      $this->_text = CRM_Utils_Request::retrieve('text', 'String',
-        CRM_Core_DAO::$_nullObject
-      );
-      if ($this->_text) {
-        $this->_text = trim($this->_text);
-        $formValues['text'] = $this->_text;
-      }
-    }
-
-    if (!$this->_table) {
-      $this->_table = CRM_Utils_Request::retrieve('table', 'String',
-        CRM_Core_DAO::$_nullObject
-      );
-      if ($this->_table) {
-        $formValues['table'] = $this->_table;
-      }
-    }
-
 
     // fix text to include wild card characters at begining and end
     if ($this->_text) {
@@ -132,6 +112,24 @@ class CRM_Contact_Form_Search_Custom_FullText implements CRM_Contact_Form_Search
 
     $this->fillTable();
   }
+
+  /**
+   * Get a value from $formValues. If missing, get it from the request.
+   *
+   * @param $formValues
+   * @param $field
+   * @param $type
+   * @param null $default
+   * @return mixed|null
+   */
+  public function getFieldValue($formValues, $field, $type, $default = NULL) {
+    $value = CRM_Utils_Array::value($field, $formValues);
+    if (!$value) {
+      return CRM_Utils_Request::retrieve($field, $type, CRM_Core_DAO::$_nullObject, FALSE, $default);
+    }
+    return $value;
+  }
+
 
   function __destruct() {}
 
