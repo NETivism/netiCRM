@@ -252,6 +252,13 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
       $this->applyFilter('saveMappingName', 'trim');
       $this->add('text', 'saveMappingName', ts('Name'));
       $this->add('text', 'saveMappingDesc', ts('Description'));
+      $this->_locationFields = array_merge(
+        CRM_Core_DAO_Address::import(),
+        CRM_Core_DAO_Phone::import(),
+        CRM_Core_DAO_Email::import(),
+        CRM_Core_DAO_IM::import(TRUE),
+        CRM_Core_DAO_OpenID::import()
+      );
     }
     else {
       $savedMapping = $this->get('savedMapping');
@@ -453,21 +460,49 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
         //end of load mapping
       }
       else {
-        $js .= "swapOptions($formName, 'mapper[$i]', 0, 3, 'hs_mapper_" . $i . "_');\n";
+        // $js .= "swapOptions($formName, 'mapper[$i]', 0, 3, 'hs_mapper_" . $i . "_');\n";
+        $mappedHeaderKey = '';
+        $mappedTypeId = $mappedLocationId = 0;
         if ($hasHeaders) {
           // Infer the default from the skipped headers if we have them
-          $defaults["mapper[$i]"] = array(
-            $this->defaultFromHeader(CRM_Utils_Array::value($i, $this->_columnHeaders), $headerPatterns), 
-            0,
-          );
+          $mappedHeaderKey = $this->defaultFromHeader(CRM_Utils_Array::value($i, $this->_columnHeaders), $headerPatterns);
+          $mappedLocationId = !empty($mappedHeaderKey) && !empty($this->_locationFields[$mappedHeaderKey]) ? $defaultLocationType->id : 0;
         }
         else {
           // Otherwise guess the default from the form of the data
-          $defaults["mapper[$i]"] = array(
-            $this->defaultFromData($dataPatterns, $i),
-            0,
-          );
+          $mappedHeaderKey = $this->defaultFromData($dataPatterns, $i);
+          $mappedLocationId = !empty($mappedHeaderKey) && !empty($this->_locationFields[$mappedHeaderKey]) ? $defaultLocationType->id : 0;
         }
+        if ($mappedLocationId) {
+          switch($mappedHeaderKey){
+            case 'im':
+              $mappedTypeId = key($imProviders);
+              break;
+            case 'phone':
+              $mappedTypeId = key($phoneTypes);
+              break;
+            default:
+              $mappedTypeId = 0;
+              break;
+          }
+        }
+        if ($mappedHeaderKey == 'website') {
+          $mappedLocationId = key($websiteTypes); 
+        }
+        if (!empty($mappedHeaderKey)) {
+          $defaults["mapper[$i]"] = array($mappedHeaderKey, $mappedLocationId, $mappedTypeId);
+          if ((!$mappedLocationId)) {
+            $js .= "{$formName}['mapper[$i][1]'].style.display = 'none';\n";
+          }
+          if ((!$mappedTypeId)) {
+            $js .= "{$formName}['mapper[$i][2]'].style.display = 'none';\n";
+          }
+        }
+        else {
+          $js .= "{$formName}['mapper[$i][1]'].style.display = 'none';\n";
+          $js .= "{$formName}['mapper[$i][2]'].style.display = 'none';\n";
+        }
+        $js .= "{$formName}['mapper[$i][3]'].style.display = 'none';\n";
       }
       $sel->setOptions(array($sel1, $sel2, (isset($sel3)) ? $sel3 : "", (isset($sel4)) ? $sel4 : ""));
     }
