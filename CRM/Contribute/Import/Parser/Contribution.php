@@ -576,38 +576,52 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
       }
       else {
         // Using new Dedupe rule for error message handling
-        $ruleParams = array(
-          'contact_type' => $this->_contactType,
-          'level' => 'Strict',
-        );
-        require_once 'CRM/Dedupe/BAO/Rule.php';
+        if (!empty($this->_dedupeRuleGroupId)) {
+          $ruleParams = array(
+            'id' => $this->_dedupeRuleGroupId,
+          );
+        }
+        else {
+          $ruleParams = array(
+            'contact_type' => $this->_contactType,
+            'level' => 'Strict',
+          );
+        }
         $fieldsArray = CRM_Dedupe_BAO_Rule::dedupeRuleFields($ruleParams);
 
+        $dispArray = array();
         foreach ($fieldsArray as $value) {
-          if (array_key_exists(trim($value), $params)) {
+          if ($this->_createContactOption == self::CONTACT_AUTOCREATE) {
+            if (!array_key_exists(trim($value), $params)) {
+              $dispArray[] = $this->_importableContactFields[$value]['title'];
+            }
+          }
+          elseif (array_key_exists(trim($value), $params)) {
             $paramValue = $params[trim($value)];
             if (is_array($paramValue)) {
-              $errDisp .= $params[trim($value)][0][trim($value)] . " ";
+              $dispArray[] = $params[trim($value)][0][trim($value)];
             }
             else {
-              $errDisp .= $params[trim($value)] . " ";
+              $dispArray[] = $params[trim($value)];
             }
           }
         }
 
-        if (CRM_Utils_Array::value('external_identifier', $params)) {
-          if ($errDisp) {
-            $errDisp .= "AND {$params['external_identifier']}";
+        if (CRM_Utils_Array::value('external_identifier', $params) && $this->_createContactOption != self::CONTACT_AUTOCREATE) {
+          $dispArray[] = $params['external_identifier'];
+        }
+        if (!empty($dispArray)) {
+          if ($this->_createContactOption == self::CONTACT_AUTOCREATE) {
+            $errDisp = ts('Missing required contact matching fields.')." - ".implode('|', $dispArray);
           }
           else {
-            $errDisp = $params['external_identifier'];
+            $errDisp = "No matching Contact found for (" . implode('|', $dispArray) . ")";
           }
         }
-        $errDisp = "No matching Contact found for (" . $errDisp . ")";
       }
     }
 
-    if ($doCreateContact && empty($checkContactId)) {
+    if ($doCreateContact && empty($checkContactId) && empty($errDisp)) {
       // trying to create new contact base on exists contact related params
       $doGeocodeAddress = FALSE;
       $contactImportResult = $this->_parserContact->import(CRM_Import_Parser::DUPLICATE_FILL, $contactValues, $doGeocodeAddress);
@@ -615,6 +629,9 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
       if (!empty($contactID) && $contactImportResult == CRM_Import_Parser::VALID) {
         $formatted['contact_id'] = $contactID;
         return $this->importContribution($formatted, $values);
+      }
+      else {
+        $errDisp = $contactValues[0];
       }
     }
     else {
@@ -626,7 +643,6 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
       elseif ($checkContactId === FALSE) {
         $errDisp = "Mismatch of External identifier :" . $paramValues['external_identifier'] . " and Contact Id:" . $formatted['contact_id'];
       }
-      // $errDisp = "Invalid Contact ID: There is no contact record with contact_id = {$formatted['contribution_contact_id']}.";
     }
 
     // cache all for CRM_Contribute_Import_Parser::DUPLICATE_SKIP
