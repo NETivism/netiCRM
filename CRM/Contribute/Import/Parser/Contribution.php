@@ -591,7 +591,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
 
         $dispArray = array();
         foreach ($fieldsArray as $value) {
-          if ($this->_createContactOption == self::CONTACT_AUTOCREATE) {
+          if ($doCreateContact) {
             if (!array_key_exists(trim($value), $params)) {
               $dispArray[] = $this->_importableContactFields[$value]['title'];
             }
@@ -607,21 +607,22 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
           }
         }
 
-        if (CRM_Utils_Array::value('external_identifier', $params) && $this->_createContactOption != self::CONTACT_AUTOCREATE) {
+        if (CRM_Utils_Array::value('external_identifier', $params) && !$doCreateContact) {
           $dispArray[] = $params['external_identifier'];
         }
         if (!empty($dispArray)) {
-          if ($this->_createContactOption == self::CONTACT_AUTOCREATE) {
+          if ($doCreateContact) {
             $errDisp = ts('Missing required contact matching fields.')." - ".implode('|', $dispArray);
           }
           else {
             $errDisp = "No matching Contact found for (" . implode('|', $dispArray) . ")";
           }
+          $doCreateContact = FALSE;
         }
       }
     }
 
-    if ($doCreateContact && empty($checkContactId) && empty($errDisp)) {
+    if ($doCreateContact && empty($checkContactId)) {
       // trying to create new contact base on exists contact related params
       $doGeocodeAddress = FALSE;
       $contactImportResult = $this->_parserContact->import(CRM_Import_Parser::DUPLICATE_FILL, $contactValues, $doGeocodeAddress);
