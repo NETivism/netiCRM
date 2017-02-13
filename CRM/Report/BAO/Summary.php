@@ -35,6 +35,12 @@
 
 class CRM_Report_BAO_Summary {
 
+  const
+    GENDER = 0,
+    AGE = 1,
+    PROVINCE = 2;
+
+
   /** 
    * 1. Summary
    * 2. Contact source
@@ -257,6 +263,49 @@ WHERE c.receive_date > mm.time_stamp AND c.receive_date < DATE_ADD(mm.time_stamp
     );
 
     return $allData;
+  }
+
+  static function getStaWithCondition($condition, $params){
+    switch ($condition) {
+      case self::GENDER:
+        // $group_by_condition = $group_by_field = 'gender.label';
+        $group_by_field = 'gender.label';
+        $table = 'civicrm_contact';
+        break;
+      case self::AGE:
+        $group_by_field = 'CONCAT(10 * ROUND(year / 10), \'-\', (10 * ROUND(year / 10) + 9))';
+        // $group_by_condition = 'ranges ORDER BY year';
+        $order_by = 'ORDER BY year';
+        $table = '(SELECT c.id, (YEAR(current_timestamp) - YEAR(c.birth_date)) year FROM civicrm_contact c)';
+        break;
+      case self::PROVINCE:
+        // $group_by_condition = $group_by_field = 'p.name';
+        $group_by_field = 'p.name';
+        $table = 'civicrm_contact';
+        break;
+    }
+    $is_contribution = $params['is_contribution'];
+    if($is_contribution){
+      $contribution_field = ' SUM(cc.count) count, SUM(cc.sum) sum,';
+      $contribution_query = ' INNER JOIN (SELECT COUNT(DISTINCT c.contact_id) people, COUNT(c.contact_id) count, SUM(c.total_amount) sum, c.contact_id FROM civicrm_contribution c WHERE c.contribution_status_id = 1 AND c.is_test = 0 GROUP BY c.contact_id) cc ON c.id = cc.contact_id';
+    }else{
+      $contribution_field = $contribution_query = '';
+    }
+    $sql = "SELECT count(DISTINCT c.id) people, $contribution_field $group_by_field tag FROM $table c $contribution_query GROUP BY tag $order_by";
+    // dpm($sql);
+    // return ;
+
+    $dao = CRM_Core_DAO::executeQuery($sql);
+    $returnArray = array();
+    while($dao->fetch()){
+      array_push($returnArray, array(
+        'count' => $dao->count,
+        'people' => $dao->people,
+        'sum' => $dao->sum,
+        'tag' => $dao->tag,
+      ));
+    }
+    return $returnArray;
   }
 
 
