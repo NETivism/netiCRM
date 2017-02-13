@@ -270,18 +270,20 @@ WHERE c.receive_date > mm.time_stamp AND c.receive_date < DATE_ADD(mm.time_stamp
       case self::GENDER:
         // $group_by_condition = $group_by_field = 'gender.label';
         $group_by_field = 'gender.label';
-        $table = 'civicrm_contact';
+        $table = 'civicrm_contact c LEFT JOIN (SELECT v.value value, v.label label FROM civicrm_option_value v INNER JOIN civicrm_option_group g ON v.option_group_id = g.id WHERE g.name = \'gender\') gender ON c.gender_id = gender.value';
         break;
       case self::AGE:
-        $group_by_field = 'CONCAT(10 * ROUND(year / 10), \'-\', (10 * ROUND(year / 10) + 9))';
+        $interval = empty($params['interval'])? 10 : $params['interval'];
+        $interval_1 = $interval - 1;
+        $group_by_field = "CONCAT($interval * ROUND(year / $interval), '-', ($interval * ROUND(year / $interval) + $interval_1))";
         // $group_by_condition = 'ranges ORDER BY year';
         $order_by = 'ORDER BY year';
-        $table = '(SELECT c.id, (YEAR(current_timestamp) - YEAR(c.birth_date)) year FROM civicrm_contact c)';
+        $table = '(SELECT c.id, (YEAR(current_timestamp) - YEAR(c.birth_date)) year FROM civicrm_contact c) c';
         break;
       case self::PROVINCE:
         // $group_by_condition = $group_by_field = 'p.name';
         $group_by_field = 'p.name';
-        $table = 'civicrm_contact';
+        $table = 'civicrm_contact c LEFT JOIN (SELECT a.contact_id contact_id, p.name name FROM civicrm_address a INNER JOIN civicrm_state_province p ON a.state_province_id = p.id WHERE a.is_primary = 1 AND a.country_id = 1208) p ON c.id = p.contact_id';
         break;
     }
     $is_contribution = $params['is_contribution'];
@@ -291,19 +293,18 @@ WHERE c.receive_date > mm.time_stamp AND c.receive_date < DATE_ADD(mm.time_stamp
     }else{
       $contribution_field = $contribution_query = '';
     }
-    $sql = "SELECT count(DISTINCT c.id) people, $contribution_field $group_by_field tag FROM $table c $contribution_query GROUP BY tag $order_by";
+    $sql = "SELECT count(DISTINCT c.id) people, $contribution_field $group_by_field tag FROM $table $contribution_query GROUP BY tag $order_by";
     // dpm($sql);
     // return ;
 
     $dao = CRM_Core_DAO::executeQuery($sql);
     $returnArray = array();
     while($dao->fetch()){
-      array_push($returnArray, array(
+      $returnArray[$dao->tag] = array(
         'count' => $dao->count,
         'people' => $dao->people,
         'sum' => $dao->sum,
-        'tag' => $dao->tag,
-      ));
+      );
     }
     return $returnArray;
   }
