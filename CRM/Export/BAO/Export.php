@@ -139,7 +139,7 @@ class CRM_Export_BAO_Export {
       $index = 2;
 
       foreach ($fields as $key => $value) {
-        $phoneTypeId = $imProviderId = NULL;
+        $phoneTypeId = $imProviderId = $relationField = NULL;
         $relationshipTypes = $fieldName = CRM_Utils_Array::value(1, $value);
         if (!$fieldName) {
           continue;
@@ -380,6 +380,7 @@ class CRM_Export_BAO_Export {
           NULL, FALSE, FALSE, $queryMode
         );
         list($relationSelect, $relationFrom, $relationWhere) = $relationQuery[$rel]->query();
+        $relationSelect = str_replace('civicrm_state_province.abbreviation', 'civicrm_state_province.name', $relationSelect);
 
         list($id, $direction) = explode('_', $rel, 2);
         // identify the relationship direction
