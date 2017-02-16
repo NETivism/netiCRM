@@ -115,9 +115,7 @@ class CRM_Mailing_Event_BAO_TrackableURLOpen extends CRM_Mailing_Event_DAO_Track
    * @access public
    * @static
    */
-  public static function getTotalCount($mailing_id, $job_id = NULL,
-    $is_distinct = FALSE, $url_id = NULL
-  ) {
+  public static function getTotalCount($mailing_id, $job_id = NULL, $is_distinct = FALSE, $url_id = NULL) {
     $dao = new CRM_Core_DAO();
 
     $click = self::getTableName();
@@ -153,7 +151,7 @@ class CRM_Mailing_Event_BAO_TrackableURLOpen extends CRM_Mailing_Event_DAO_Track
     $dao->query($query);
 
     if ($dao->fetch()) {
-      return $dao->opened;
+      return $dao->N;
     }
 
     return NULL;

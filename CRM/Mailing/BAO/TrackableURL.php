@@ -126,5 +126,14 @@ class CRM_Mailing_BAO_TrackableURL extends CRM_Mailing_DAO_TrackableURL {
 
     $msg = preg_replace($pattern, $replacement, $msg);
   }
+
+  public static function getTrackerURLCount($mailing_id) {
+    $tracker = new CRM_Mailing_BAO_TrackableURL();
+    $tracker->mailing_id = $mailing_id;
+    if ($tracker->find(TRUE)) {
+      return $tracker->N;
+    }
+    return 0;
+  }
 }
 
