@@ -29,13 +29,6 @@
       {include file="CRM/Contribute/Form/Task.tpl"}
 </div>
 <div id="help">
-  <label>{ts}Contribution need to match conditions below in order to generate receipt(and receipt serial id number){/ts}</label>
-  <ul>
-    <li>{ts 1="$contribution_type_setting"}Contribution record must dedutible.(base on <a href="%1">Contribution type</a> settings){/ts}</li>
-    <li>{ts}Contribution record must completed.{/ts}</li>
-    <li>{ts}Contribution record must have receive date.{/ts}</li>
-  </ul>
-
   <div>{ts}Please notice that, because the serial number must continuous, once you generate receipt, it will also generte receipt ID and you can't modify receipt ID after generation. Make sure your search result have correct receive date search to prevent generate wrong number.{/ts}</div>
 </div>
 

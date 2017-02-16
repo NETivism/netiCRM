@@ -44620,9 +44620,6 @@ msgstr ""
 msgid "Contribution record must completed."
 msgstr ""
 
-msgid "Contribution record must have receive date."
-msgstr ""
-
 msgid ""
 "Please notice that, because the serial number must continuous, once you "
 "generate receipt, it will also generte receipt ID and you can't modify "

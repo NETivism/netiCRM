@@ -71,11 +71,28 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
       parent::preProcess();
     }
 
+    $deductible_type_id = array();
+    $sql = "SELECT * FROM civicrm_contribution_type WHERE is_deductible = 0";
+    $dao = CRM_Core_DAO::executeQuery($sql);
+    while($dao->fetch()){
+      $deductible_type_id[] = $dao->id;
+    }
+    $deductible_type = implode(',', $deductible_type_id);
     // check that all the contribution ids have pending status
-    $query = " SELECT count(*) FROM civicrm_contribution WHERE  contribution_status_id != 1 AND {$this->_componentClause}";
+    $query = " SELECT count(*) FROM civicrm_contribution WHERE (contribution_status_id != 1 OR contribution_type_id IN ($deductible_type)) AND {$this->_componentClause}";
     $count = CRM_Core_DAO::singleValueQuery($query, CRM_Core_DAO::$_nullArray);
     if ($count != 0) {
-      CRM_Core_Error::statusBounce(ts("Please select only contributions with Completed status."));
+      $msg = ts('Contribution need to match conditions below in order to generate receipt(and receipt serial id number)');
+      $cond1 = ts('Contribution record must dedutible.(base on <a href="%1">Contribution type</a> settings)',
+        array(1 => CRM_Utils_System::url('civicrm/admin/contribute/contributionType','reset=1'))
+        );
+      $cond2 = ts('Contribution record must completed.');
+      $str = "<label>$msg</label>;
+  <ul>
+    <li>$cond1</li>
+    <li>$cond2</li>
+  </ul>";
+      CRM_Core_Error::statusBounce($str);
     }
 
     // we have all the contribution ids, so now we get the contact ids
