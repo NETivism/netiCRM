@@ -152,11 +152,10 @@ WHERE
     $allData = array();
     $allData['Successful Deliveries'] = self::parseDataFromSql("SELECT COUNT(DISTINCT med.id) count,COUNT(DISTINCT meq.contact_id) people FROM civicrm_mailing_job mj LEFT JOIN civicrm_mailing_event_queue meq ON meq.job_id = mj.id INNER JOIN civicrm_mailing_event_delivered med ON med.event_queue_id = meq.id {JOIN} WHERE mj.is_test = 0");
     $allData['Click Count'] = self::parseDataFromSql("SELECT COUNT(DISTINCT med.id) count,COUNT(DISTINCT meq.contact_id) people FROM civicrm_mailing_job mj LEFT JOIN civicrm_mailing_event_queue meq ON meq.job_id = mj.id INNER JOIN civicrm_mailing_event_trackable_url_open med ON med.event_queue_id = meq.id {JOIN} WHERE mj.is_test = 0");
-    $allData['Received Application Url'] = self::parseDataFromSql("SELECT COUNT(DISTINCT med.id) count,COUNT(DISTINCT meq.contact_id) people FROM civicrm_mailing_job mj 
-      LEFT JOIN civicrm_mailing_event_queue meq ON meq.job_id = mj.id 
-      INNER JOIN civicrm_mailing_event_delivered med ON med.event_queue_id = meq.id
-      INNER JOIN civicrm_mailing_trackable_url mtu ON mtu.mailing_id = mj.mailing_id
-      WHERE mj.is_test = 0 AND mtu.url LIKE '{baseurl}/civicrm/event/%'");
+    $allData['Received Application Url'] = self::parseDataFromSql("SELECT COUNT(DISTINCT meq.id) count,COUNT(DISTINCT meq.contact_id) people FROM civicrm_mailing_event_queue meq 
+      INNER JOIN civicrm_mailing_event_delivered med ON med.event_queue_id = meq.id 
+      INNER JOIN civicrm_mailing_job mj ON mj.id = meq.job_id WHERE mj.mailing_id IN 
+      (SELECT DISTINCT mj.mailing_id FROM civicrm_mailing_job mj INNER JOIN civicrm_mailing_trackable_url mtu ON mtu.mailing_id = mj.mailing_id WHERE mtu.url LIKE  '{baseurl}/civicrm/event/%')");
     $allData['Clicked Application Url'] = self::parseDataFromSql("SELECT COUNT(DISTINCT met.id) count,COUNT(DISTINCT meq.contact_id) people FROM civicrm_mailing_job mj 
       LEFT JOIN civicrm_mailing_event_queue meq ON meq.job_id = mj.id 
       INNER JOIN civicrm_mailing_event_trackable_url_open met ON met.event_queue_id = meq.id 
@@ -189,10 +188,10 @@ WHERE p.register_date > mm.time_stamp AND p.register_date < DATE_ADD(mm.time_sta
     $allData = array();
     $allData['Successful Deliveries'] = self::parseDataFromSql("SELECT COUNT(DISTINCT med.id) count,COUNT(DISTINCT meq.contact_id) people FROM civicrm_mailing_job mj LEFT JOIN civicrm_mailing_event_queue meq ON meq.job_id = mj.id INNER JOIN civicrm_mailing_event_delivered med ON med.event_queue_id = meq.id {JOIN} WHERE mj.is_test = 0 {AND}");
     $allData['Click Count'] = self::parseDataFromSql("SELECT COUNT(DISTINCT med.id) count,COUNT(DISTINCT meq.contact_id) people FROM civicrm_mailing_job mj LEFT JOIN civicrm_mailing_event_queue meq ON meq.job_id = mj.id INNER JOIN civicrm_mailing_event_trackable_url_open med ON med.event_queue_id = meq.id {JOIN} WHERE mj.is_test = 0 {AND}");
-    $allData['Received Contribute Url'] = self::parseDataFromSql("SELECT COUNT(DISTINCT meq.id) count,COUNT(DISTINCT meq.contact_id) people FROM civicrm_mailing_job mj 
-      LEFT JOIN civicrm_mailing_event_queue meq ON meq.job_id = mj.id 
-      INNER JOIN civicrm_mailing_trackable_url mtu ON mtu.mailing_id = mj.mailing_id
-      WHERE mj.is_test = 0 AND mtu.url LIKE  '{baseurl}/civicrm/contribute/transact%'");
+    $allData['Received Contribute Url'] = self::parseDataFromSql("SELECT COUNT(DISTINCT meq.id) count,COUNT(DISTINCT meq.contact_id) people FROM civicrm_mailing_event_queue meq 
+      INNER JOIN civicrm_mailing_event_delivered med ON med.event_queue_id = meq.id 
+      INNER JOIN civicrm_mailing_job mj ON mj.id = meq.job_id WHERE mj.mailing_id IN 
+      (SELECT DISTINCT mj.mailing_id FROM civicrm_mailing_job mj INNER JOIN civicrm_mailing_trackable_url mtu ON mtu.mailing_id = mj.mailing_id WHERE mtu.url LIKE  '{baseurl}/civicrm/contribute/transact%')");
     $allData['Clicked Contribute Url'] = self::parseDataFromSql("SELECT COUNT(DISTINCT med.id) count,COUNT(DISTINCT meq.contact_id) people FROM civicrm_mailing_job mj 
       LEFT JOIN civicrm_mailing_event_queue meq ON meq.job_id = mj.id 
       INNER JOIN civicrm_mailing_event_trackable_url_open med ON med.event_queue_id = meq.id 
