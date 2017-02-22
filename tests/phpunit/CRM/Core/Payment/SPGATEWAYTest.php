@@ -333,6 +333,9 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     $cid = CRM_Core_DAO::singleValueQuery("SELECT cid FROM civicrm_contribution_spgateway WHERE cid = $contribution->id");
     $this->assertNotEmpty($cid, "In line " . __LINE__);
 
+    // record first time data to check after second
+    $first_data = CRM_Core_DAO::singleValueQuery("SELECT data FROM civicrm_contribution_spgateway WHERE cid = $contribution->id");
+
     // verify recurring status
     $params = array(
       'id' => $recurring->id,
@@ -396,6 +399,8 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     $data = CRM_Core_DAO::singleValueQuery("SELECT data FROM civicrm_contribution_spgateway WHERE cid = $cid2");
     $this->assertNotEmpty($data, "In line " . __LINE__);
 
+    // Check if first time data is recovered by second post.
+    $this->assertDBQuery($first_data, "SELECT data FROM civicrm_contribution_spgateway WHERE cid = $contribution->id");
 
     // third pay, finish recur.
 
