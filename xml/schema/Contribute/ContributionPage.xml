@@ -241,7 +241,15 @@
        <localizable>true</localizable>
        <comment>text to include above standard receipt info on receipt email. emails are text-only, so do not allow html for now</comment>
        <add>1.3</add>  
-  </field>  
+  </field>
+  <field>  
+       <name>recur_fail_notify</name>  
+       <title>Recurring Failed Notification to</title>
+       <type>varchar</type>  
+       <length>255</length>
+       <comment>comma-separated list of email addresses to each time a recurring is failed</comment>  
+       <add>1.3</add>  
+  </field>
   <field>
        <name>is_active</name>
        <type>boolean</type>

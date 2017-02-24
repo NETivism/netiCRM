@@ -94,6 +94,13 @@
 	    <span class="description">{ts}If you want member(s) of your organization to receive a BLIND carbon copy of each emailed payment notification, enter one or more email addresses here. Multiple email addresses should be separated by a comma (e.g. jane@example.org, paula@example.org).{/ts}</span>
 	</td>
     </tr>
+    <tr class="crm-contribution-contributionpage-thankyou-form-block-recur_fail_notify">
+  <td class="label">{$form.recur_fail_notify.label}
+  </td>
+  <td class="html-adjust">{$form.recur_fail_notify.html}<br />
+      <span class="description">{ts}If you want member(s) of your organization to receive a message of each recurring failed notification, enter one or more email addresses here. Multiple email addresses should be separated by a comma (e.g. jane@example.org, paula@example.org).{/ts}</span>
+  </td>
+    </tr>
     </table>
     <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
 </div>

@@ -255,6 +255,12 @@ class CRM_Contribute_DAO_ContributionPage extends CRM_Core_DAO
    */
   public $receipt_text;
   /**
+   * comma-separated list of email addresses to each time a recurring is failed
+   *
+   * @var string
+   */
+  public $recur_fail_notify;
+  /**
    * Is this property active?
    *
    * @var boolean
@@ -520,6 +526,13 @@ class CRM_Contribute_DAO_ContributionPage extends CRM_Core_DAO
           'title' => ts('Payment Notification Text') ,
           'rows' => 6,
           'cols' => 50,
+        ) ,
+        'recur_fail_notify' => array(
+          'name' => 'recur_fail_notify',
+          'type' => CRM_Utils_Type::T_STRING,
+          'title' => ts('Recurring Failed Notification to') ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
         ) ,
         'is_active' => array(
           'name' => 'is_active',

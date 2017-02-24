@@ -234,11 +234,12 @@ class CRM_Core_Payment_BaseIPN {
     return TRUE;
   }
 
-  function failed(&$objects, &$transaction) {
+  function failed(&$objects, &$transaction, $message = '') {
     CRM_Utils_Hook::ipnPre('failed', $objects);
     $contribution = &$objects['contribution'];
     $membership = &$objects['membership'];
     $participant = &$objects['participant'];
+    $contact = &$objects['contact'];
 
     $contribution->contribution_status_id = 4;
     if (!empty($contribution->created_date)) {
@@ -267,8 +268,32 @@ class CRM_Core_Payment_BaseIPN {
     $transaction->commit();
     CRM_Utils_Hook::ipnPost('failed', $objects);
     CRM_Core_Error::debug_log_message("Setting contribution status to failed");
+
+    // Send notify email as
+    if(!empty($contribution->contribution_recur_id)){
+      $sql = "SELECT COUNT(id) FROM civicrm_contribution WHERE contribution_recur_id = {$contribution->contribution_recur_id}";
+      $crcount = CRM_Core_DAO::singleValueQuery($sql);
+
+      $sql_recur_fail_notify = "SELECT cp.recur_fail_notify FROM civicrm_contribution c INNER JOIN civicrm_contribution_page cp ON c.contribution_page_id = cp.id WHERE c.id = {$contribution->id}";
+      $recur_fail_notify = CRM_Core_DAO::singleValueQuery($sql_recur_fail_notify);
+
+      if($crcount >= 2 && $contribution->contribution_status_id == 4 && !empty($recur_fail_notify)){
+        $values = array(
+          'contribution_id' => $contribution->id,
+          'currency' => $contribution->currency,
+          'total_amount' => $contribution->total_amount,
+          'receive_date' => $contribution->receive_date,
+          'contribution_recur_id' => $contribution->contribution_recur_id,
+          'trxn_id' => $contribution->trxn_id,
+          'display_name' => $contact->display_name,
+          'recur_fail_notify' => $recur_fail_notify,
+          );
+        $returnArray = CRM_Contribute_BAO_ContributionPage::sendFailedNotifyMail($ids['contact'], $values, $contribution->is_test, TRUE);
+      }
+    }
+
     //echo "Success: Setting contribution status to failed<p>";
-    return TRUE;
+    return $returnArray;
   }
 
   function pending(&$objects, &$transaction) {

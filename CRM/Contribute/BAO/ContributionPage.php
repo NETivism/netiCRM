@@ -317,6 +317,70 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
     }
   }
 
+
+  /**
+   * Function to send the emails
+   *
+   * @param int     $contactID         contact id
+   * @param array   $values            associated array of fields
+   * @param boolean $isTest            if in test mode
+   * @param boolean $returnMessageText return the message text instead of sending the mail
+   *
+   * @return void
+   * @access public
+   * @static
+   */
+  static function sendFailedNotifyMail($contactID, &$values, $isTest = FALSE, $returnMessageText = FALSE) {
+    $recur_id = CRM_Utils_Array::value('contribution_recur_id', $values);
+    $contribution_id = CRM_Utils_Array::value('contribution_id', $values);
+    $tplParams = array(
+      'display_name'    => CRM_Utils_Array::value('display_name', $values),
+      'amount'          => 
+        CRM_Utils_Money::format(
+          CRM_Utils_Array::value('total_amount', $values),
+          CRM_Utils_Array::value('currency', $values)
+        ),
+      'receive_date'    => CRM_Utils_Array::value('receive_date', $values),
+      'url'             => 
+        CRM_Utils_System::url(
+          'civicrm/contact/view/contributionrecur',
+          "reset=1&id={$recur_id}&cid={$contactID}",
+          TRUE
+        ),
+      'detail'          => CRM_Core_BAO_Note::getNote( $contribution_id, 'civicrm_contribution' ),
+      'trxn_id'         => CRM_Utils_Array::value('trxn_id', $values),
+    );
+
+    $recur_fail_notify = CRM_Utils_Array::value('recur_fail_notify', $values);
+    $emailList = explode(',', $recur_fail_notify);
+    require_once 'CRM/Core/BAO/Domain.php';
+    list($domainEmailName, $domainEmailAddress) = CRM_Core_BAO_Domain::getNameAndEmail();
+    require_once 'CRM/Core/BAO/MessageTemplates.php';
+    foreach ($emailList as $emailTo) {
+      // FIXME: take the below out of the foreach loop
+      list($sent, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate(
+        array(
+          'groupName' => 'msg_tpl_workflow_contribution',
+          'valueName' => 'contribution_recur_fail_notify',
+          'contactId' => $contactID,
+          'tplParams' => $tplParams,
+          'from' => "$domainEmailName <$domainEmailAddress>",
+          'toEmail' => str_replace(' ', '', $emailTo),
+        )
+      );
+      $returnArray[] = array(
+        'success' => $sent,
+        'subject' => $subject,
+        'body' => $message,
+        'to' => $emailTo,
+        'html' => $html,
+      );
+    }
+    if ($returnMessageText){
+      return $returnArray;
+    }
+  }
+
   /**
    * Function to send the emails for Recurring Contribution Notication
    *

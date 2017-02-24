@@ -5647,7 +5647,7 @@ INSERT INTO civicrm_option_group
 
 INSERT INTO civicrm_option_value
   (option_group_id,        name,       label,   value,                                  weight) VALUES
-      (@tpl_ogid_case, 'case_activity', '個案 - 寄出任務複本',            1, 1) ,      (@tpl_ogid_contribution, 'contribution_dupalert', '捐款 - 重複組織警示',            1, 1) ,      (@tpl_ogid_contribution, 'contribution_offline_receipt', '捐款 - 收據（離線）',            2, 2) ,      (@tpl_ogid_contribution, 'contribution_online_receipt', '捐款 - 收據（在線）',            3, 3) ,      (@tpl_ogid_contribution, 'contribution_recurring_notify', '捐款 - 定期捐款的開始和結束通知',            4, 4) ,      (@tpl_ogid_contribution, 'contribution_invoice_notify', '捐款 - 帳單通知',            5, 5) ,      (@tpl_ogid_contribution, 'pcp_notify', '個人募款頁 - 管理通知',            6, 6) ,      (@tpl_ogid_contribution, 'pcp_status_change', '個人募款頁 - 支持者狀態更改通知',            7, 7) ,      (@tpl_ogid_contribution, 'pcp_supporter_notify', '個人募款頁 - 歡迎支持者',            8, 8) ,      (@tpl_ogid_event, 'event_offline_receipt', '活動 - 登記確認與收據（離線）',            1, 1) ,      (@tpl_ogid_event, 'event_online_receipt', '活動 - 登記確認與收據（在線）',            2, 2) ,      (@tpl_ogid_event, 'participant_cancelled', '活動 - 登記取消通知',            3, 3) ,      (@tpl_ogid_event, 'participant_confirm', '活動 - 登記確認邀請',            4, 4) ,      (@tpl_ogid_event, 'participant_expired', '活動- 等候登記過期通知',            5, 5) ,      (@tpl_ogid_friend, 'friend', 'Email 推薦給朋友',            1, 1) ,      (@tpl_ogid_membership, 'membership_offline_receipt', '會員 - 註冊與資格更新收據（離線）',            1, 1) ,      (@tpl_ogid_membership, 'membership_online_receipt', '會員 - 收據（在線）',            2, 2) ,      (@tpl_ogid_meta, 'test_preview', '測試 - 收據頁首',            1, 1) ,      (@tpl_ogid_pledge, 'pledge_acknowledge', '認捐 - 感謝函',            1, 1) ,      (@tpl_ogid_pledge, 'pledge_reminder', '認捐 - 付款提醒',            2, 2) ,      (@tpl_ogid_uf, 'uf_notify', '資料表單 - 管理提示',            1, 1) ,      (@tpl_ogid_petition, 'petition_sign', 'Petition - signature added',            1, 1) ,      (@tpl_ogid_petition, 'petition_confirmation_needed', 'Petition - need verification',            2, 2) ;
+      (@tpl_ogid_case, 'case_activity', '個案 - 寄出任務複本',            1, 1) ,      (@tpl_ogid_contribution, 'contribution_dupalert', '捐款 - 重複組織警示',            1, 1) ,      (@tpl_ogid_contribution, 'contribution_offline_receipt', '捐款 - 收據（離線）',            2, 2) ,      (@tpl_ogid_contribution, 'contribution_online_receipt', '捐款 - 收據（在線）',            3, 3) ,      (@tpl_ogid_contribution, 'contribution_recurring_notify', '捐款 - 定期捐款的開始和結束通知',            4, 4) ,      (@tpl_ogid_contribution, 'contribution_invoice_notify', '捐款 - 帳單通知',            5, 5) ,      (@tpl_ogid_contribution, 'pcp_notify', '個人募款頁 - 管理通知',            6, 6) ,      (@tpl_ogid_contribution, 'pcp_status_change', '個人募款頁 - 支持者狀態更改通知',            7, 7) ,      (@tpl_ogid_contribution, 'pcp_supporter_notify', '個人募款頁 - 歡迎支持者',            8, 8) ,      (@tpl_ogid_contribution, 'contribution_recur_fail_notify', 'Contributions - Recurring Failed Notification',            9, 9) ,      (@tpl_ogid_event, 'event_offline_receipt', '活動 - 登記確認與收據（離線）',            1, 1) ,      (@tpl_ogid_event, 'event_online_receipt', '活動 - 登記確認與收據（在線）',            2, 2) ,      (@tpl_ogid_event, 'participant_cancelled', '活動 - 登記取消通知',            3, 3) ,      (@tpl_ogid_event, 'participant_confirm', '活動 - 登記確認邀請',            4, 4) ,      (@tpl_ogid_event, 'participant_expired', '活動- 等候登記過期通知',            5, 5) ,      (@tpl_ogid_friend, 'friend', 'Email 推薦給朋友',            1, 1) ,      (@tpl_ogid_membership, 'membership_offline_receipt', '會員 - 註冊與資格更新收據（離線）',            1, 1) ,      (@tpl_ogid_membership, 'membership_online_receipt', '會員 - 收據（在線）',            2, 2) ,      (@tpl_ogid_meta, 'test_preview', '測試 - 收據頁首',            1, 1) ,      (@tpl_ogid_pledge, 'pledge_acknowledge', '認捐 - 感謝函',            1, 1) ,      (@tpl_ogid_pledge, 'pledge_reminder', '認捐 - 付款提醒',            2, 2) ,      (@tpl_ogid_uf, 'uf_notify', '資料表單 - 管理提示',            1, 1) ,      (@tpl_ogid_petition, 'petition_sign', 'Petition - signature added',            1, 1) ,      (@tpl_ogid_petition, 'petition_confirmation_needed', 'Petition - need verification',            2, 2) ;
     SELECT @tpl_ovid_case_activity := MAX(id) FROM civicrm_option_value WHERE option_group_id = @tpl_ogid_case AND name = 'case_activity';
     SELECT @tpl_ovid_contribution_dupalert := MAX(id) FROM civicrm_option_value WHERE option_group_id = @tpl_ogid_contribution AND name = 'contribution_dupalert';
     SELECT @tpl_ovid_contribution_offline_receipt := MAX(id) FROM civicrm_option_value WHERE option_group_id = @tpl_ogid_contribution AND name = 'contribution_offline_receipt';
@@ -5657,6 +5657,7 @@ INSERT INTO civicrm_option_value
     SELECT @tpl_ovid_pcp_notify := MAX(id) FROM civicrm_option_value WHERE option_group_id = @tpl_ogid_contribution AND name = 'pcp_notify';
     SELECT @tpl_ovid_pcp_status_change := MAX(id) FROM civicrm_option_value WHERE option_group_id = @tpl_ogid_contribution AND name = 'pcp_status_change';
     SELECT @tpl_ovid_pcp_supporter_notify := MAX(id) FROM civicrm_option_value WHERE option_group_id = @tpl_ogid_contribution AND name = 'pcp_supporter_notify';
+    SELECT @tpl_ovid_contribution_recur_fail_notify := MAX(id) FROM civicrm_option_value WHERE option_group_id = @tpl_ogid_contribution AND name = 'contribution_recur_fail_notify';
     SELECT @tpl_ovid_event_offline_receipt := MAX(id) FROM civicrm_option_value WHERE option_group_id = @tpl_ogid_event AND name = 'event_offline_receipt';
     SELECT @tpl_ovid_event_online_receipt := MAX(id) FROM civicrm_option_value WHERE option_group_id = @tpl_ogid_event AND name = 'event_online_receipt';
     SELECT @tpl_ovid_participant_cancelled := MAX(id) FROM civicrm_option_value WHERE option_group_id = @tpl_ogid_event AND name = 'participant_cancelled';
@@ -9239,6 +9240,106 @@ your page, tell friends, and update your contact info.{/ts}</p>
 </body>
 </html>
 ', @tpl_ovid_pcp_supporter_notify, 0,          1) ,      
+      
+      
+      ('Contributions - Recurring Failed Notification', '{ts}Recurring Failed Notification{/ts}
+', '
+
+===========================================================
+{ts}Recurring Failed Notification{/ts}
+
+===========================================================
+
+捐款人 {$display_name} 的定期定額捐款 {$amount}，於 {$receive_date} 因故請款失敗（ {$url} ）。{if $detail}原因如下：
+{foreach from=$detail item=item}
+- {$item}
+{/foreach}
+{/if}
+{if $trxn_id}
+若有不清楚的地方，可再到金流服務後台以交易編號 {$trxn_id} 進行查詢
+{/if}
+您可評估是否要通知捐款人進行相關處理（例如因為信用卡過期而需重新上網進行捐款），或是等待下個月的定期定額自動請款（假如本次是因為餘額不足導致無法請款）。
+
+若有需要，也可以透過 https://neticrm.tw/support 的線上客服與我們聯絡。謝謝。', '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+ <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+ <title></title>
+</head>
+<body>
+
+<p>捐款人 {$display_name} 的定期定額捐款 {$amount}，於 {$receive_date}因故請款失敗（ {$url} ）。{if $detail}原因如下：{/if}</p>
+
+{if $detail}
+
+<ul>
+{foreach from=$detail item=item}
+<li>{$item}</li>
+{/foreach}
+</ul>
+
+{/if}
+
+{if $trxn_id}
+<p>若有不清楚的地方，可再到金流服務後台以交易編號 {$trxn_id} 進行查詢</p>
+{/if}
+
+<p>您可評估是否要通知捐款人進行相關處理（例如因為信用卡過期而需重新上網進行捐款），或是等待下個月的定期定額自動請款（假如本次是因為餘額不足導致無法請款）。</p>
+
+<p>若有需要，也可以透過 https://neticrm.tw/support 的線上客服與我們聯絡。謝謝。</p>
+
+
+</body>
+</html>', @tpl_ovid_contribution_recur_fail_notify, 1,          0),
+      ('Contributions - Recurring Failed Notification', '{ts}Recurring Failed Notification{/ts}
+', '
+
+===========================================================
+{ts}Recurring Failed Notification{/ts}
+
+===========================================================
+
+捐款人 {$display_name} 的定期定額捐款 {$amount}，於 {$receive_date} 因故請款失敗（ {$url} ）。{if $detail}原因如下：
+{foreach from=$detail item=item}
+- {$item}
+{/foreach}
+{/if}
+{if $trxn_id}
+若有不清楚的地方，可再到金流服務後台以交易編號 {$trxn_id} 進行查詢
+{/if}
+您可評估是否要通知捐款人進行相關處理（例如因為信用卡過期而需重新上網進行捐款），或是等待下個月的定期定額自動請款（假如本次是因為餘額不足導致無法請款）。
+
+若有需要，也可以透過 https://neticrm.tw/support 的線上客服與我們聯絡。謝謝。', '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+ <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+ <title></title>
+</head>
+<body>
+
+<p>捐款人 {$display_name} 的定期定額捐款 {$amount}，於 {$receive_date}因故請款失敗（ {$url} ）。{if $detail}原因如下：{/if}</p>
+
+{if $detail}
+
+<ul>
+{foreach from=$detail item=item}
+<li>{$item}</li>
+{/foreach}
+</ul>
+
+{/if}
+
+{if $trxn_id}
+<p>若有不清楚的地方，可再到金流服務後台以交易編號 {$trxn_id} 進行查詢</p>
+{/if}
+
+<p>您可評估是否要通知捐款人進行相關處理（例如因為信用卡過期而需重新上網進行捐款），或是等待下個月的定期定額自動請款（假如本次是因為餘額不足導致無法請款）。</p>
+
+<p>若有需要，也可以透過 https://neticrm.tw/support 的線上客服與我們聯絡。謝謝。</p>
+
+
+</body>
+</html>', @tpl_ovid_contribution_recur_fail_notify, 0,          1) ,      
       
       
       ('活動 - 登記確認與收據（離線）', '{ts}Event Confirmation{/ts} - {$event.title}

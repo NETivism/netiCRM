@@ -78,6 +78,8 @@ class CRM_Contribute_Form_ContributionPage_ThankYou extends CRM_Contribute_Form_
 
     $this->add('text', 'bcc_receipt', ts('BCC Payment Notification To'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionPage', 'bcc_receipt'));
     $this->addRule('bcc_receipt', ts('Please enter a valid list of comma delimited email addresses'), 'emailList');
+    $this->add('text', 'recur_fail_notify', ts('Recurring Failed Notification to'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionPage', 'recur_fail_notify'));
+    $this->addRule('recur_fail_notify', ts('Please enter a valid list of comma delimited email addresses'), 'emailList');
 
     $this->addFormRule(array('CRM_Contribute_Form_ContributionPage_ThankYou', 'formRule'));
 

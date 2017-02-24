@@ -45370,3 +45370,15 @@ msgstr ""
 
 msgid "It's default when membership status is pending"
 msgstr ""
+
+#: CRM/Contribute/DAO/ContributionPage.php
+msgid "Recurring Failed Notification to"
+msgstr ""
+
+#: xml/templates/civicrm_msg_template.tpl
+msgid "Contributions - Recurring Failed Notification"
+msgstr ""
+
+#: templates/CRM/Contribute/Form/ContributionPage/ThankYou.tpl
+msgid "If you want member(s) of your organization to receive a message of each recurring failed notification, enter one or more email addresses here. Multiple email addresses should be separated by a comma (e.g. jane@example.org, paula@example.org)."
+msgstr ""
