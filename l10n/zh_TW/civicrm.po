@@ -11,7 +11,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2017-02-17 08:15+0000\n"
+"PO-Revision-Date: 2017-03-01 08:29+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -44590,9 +44590,6 @@ msgstr "捐/繳款須滿足下列條件才能列印收據（與收據編號）"
 msgid "Contribution record must completed."
 msgstr "捐/繳款狀態必須是「已完成」。"
 
-msgid "Contribution record must have receive date."
-msgstr "捐/繳款必須有「收到日期」。"
-
 msgid ""
 "Please notice that, because the serial number must continuous, once you "
 "generate receipt, it will also generte receipt ID and you can't modify "
@@ -45404,3 +45401,42 @@ msgstr "勾選這個選項後，儲存時將不會由開始、結束日期來計
 
 msgid "It's default when membership status is pending"
 msgstr "當狀態為「待處理」，預設會勾選此選項。"
+
+#: CRM/Contribute/DAO/ContributionPage.php
+msgid "Recurring Failed Notification to"
+msgstr ""
+
+#: xml/templates/civicrm_msg_template.tpl
+msgid "Contributions - Recurring Failed Notification"
+msgstr ""
+
+#: templates/CRM/Contribute/Form/ContributionPage/ThankYou.tpl
+msgid ""
+"If you want member(s) of your organization to receive a message of each "
+"recurring failed notification, enter one or more email addresses here. "
+"Multiple email addresses should be separated by a comma (e.g. "
+"jane@example.org, paula@example.org)."
+msgstr ""
+
+#: xml/templates/message_templates/contribution_recur_fail_notify_html.tpl
+msgid ""
+"The recurring contribution %1 by contributor %2 is failed at %3.( Link: %4 )"
+msgstr "捐款人 %2 的定期定額捐款 %1，於 %3 因故請款失敗（ %4 ）。"
+
+msgid "Details:"
+msgstr ""
+
+msgid ""
+"If you need more infomation, please check source from payment processor "
+"service page by transaction ID: %1"
+msgstr "若有不清楚的地方，可再到金流服務後台以交易編號 %1 進行查詢"
+
+msgid ""
+"You can evaluate whether to notify the contributor for the relevant "
+"treatment (for example, due to the credit card expires and need to make "
+"online contribution again), or wait for the next time the transaction "
+"executing (if this is due to insufficient balance can not pay)."
+msgstr "您可評估是否要通知捐款人進行相關處理（例如因為信用卡過期而需重新上網進行捐款），或是等待下個月的定期定額自動請款（假如本次是因為餘額不足導致無法請款）。"
+
+msgid "Or you can contact us by our support on https://neticrm.tw/support ."
+msgstr "若有需要，也可以透過 https://neticrm.tw/support 的線上客服與我們聯絡。謝謝。"

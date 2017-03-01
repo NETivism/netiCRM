@@ -45382,3 +45382,16 @@ msgstr ""
 #: templates/CRM/Contribute/Form/ContributionPage/ThankYou.tpl
 msgid "If you want member(s) of your organization to receive a message of each recurring failed notification, enter one or more email addresses here. Multiple email addresses should be separated by a comma (e.g. jane@example.org, paula@example.org)."
 msgstr ""
+
+#: xml/templates/message_templates/contribution_recur_fail_notify_html.tpl
+msgid "The recurring contribution %1 by contributor %2 is failed at %3.( Link: %4 )"
+msgstr ""
+
+msgid "If you need more infomation, please check source from payment processor service page by transaction ID: %1"
+msgstr ""
+
+msgid "You can evaluate whether to notify the contributor for the relevant treatment (for example, due to the credit card expires and need to make online contribution again), or wait for the next time the transaction executing (if this is due to insufficient balance can not pay)."
+msgstr ""
+
+msgid "Or you can contact us by our support on https://neticrm.tw/support ."
+msgstr ""

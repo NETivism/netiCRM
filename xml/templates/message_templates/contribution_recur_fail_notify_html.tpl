@@ -6,7 +6,7 @@
 </head>
 <body>
 
-<p>捐款人 {$display_name} 的定期定額捐款 {$amount}，於 {$receive_date}因故請款失敗（ {$url} ）。{if $detail}原因如下：{/if}</p>
+<p>{ts 1=$amount 2=$display_name 3=$receive_date 4=$url}The recurring contribution %1 by contributor %2 is failed at %3.( Link: %4 ){/ts}{if $detail}{ts}Additional Details:{/ts}{/if}</p>
 
 {if $detail}
 
@@ -19,12 +19,12 @@
 {/if}
 
 {if $trxn_id}
-<p>若有不清楚的地方，可再到金流服務後台以交易編號 {$trxn_id} 進行查詢</p>
+<p>{ts 1=$trxn_id}If you need more infomation, please check source from payment processor service page by transaction ID: %1{/ts}</p>
 {/if}
 
-<p>您可評估是否要通知捐款人進行相關處理（例如因為信用卡過期而需重新上網進行捐款），或是等待下個月的定期定額自動請款（假如本次是因為餘額不足導致無法請款）。</p>
+<p>{ts}You can evaluate whether to notify the contributor for the relevant treatment (for example, due to the credit card expires and need to make online contribution again), or wait for the next time the transaction executing (if this is due to insufficient balance can not pay).{/ts}</p>
 
-<p>若有需要，也可以透過 https://neticrm.tw/support 的線上客服與我們聯絡。謝謝。</p>
+<p>{ts}Or you can contact us by our support on https://neticrm.tw/support .{/ts}</p>
 
 
 </body>
