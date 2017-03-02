@@ -288,7 +288,7 @@ class CRM_Core_Payment_BaseIPN {
           'display_name' => $contact->display_name,
           'recur_fail_notify' => $recur_fail_notify,
           );
-        $returnArray = CRM_Contribute_BAO_ContributionPage::sendFailedNotifyMail($ids['contact'], $values, $contribution->is_test, TRUE);
+        $returnArray = CRM_Contribute_BAO_ContributionPage::sendFailedNotifyMail($contribution->contact_id, $values, $contribution->is_test, TRUE);
       }
     }
 

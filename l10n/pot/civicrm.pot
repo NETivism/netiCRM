@@ -45395,3 +45395,7 @@ msgstr ""
 
 msgid "Or you can contact us by our support on https://neticrm.tw/support ."
 msgstr ""
+
+#: xml/templates/message_templates/contribution_recur_fail_notify_subject.tpl
+msgid "Recurring Failed Notification"
+msgstr ""
