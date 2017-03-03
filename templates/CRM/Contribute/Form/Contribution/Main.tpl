@@ -86,6 +86,7 @@
     </div>
   {/if}
 
+  {include file="CRM/Contribute/Form/Contribution/MembershipBlock.tpl" context="makeContribution"}
 
 {if $is_monetary}
   <fieldset class="crm-group payment_options-group">
@@ -288,7 +289,6 @@
       {include file="CRM/UF/Form/Block.tpl" fields=$customPost}
   </div>
   {include file="CRM/common/moveEmail.tpl"}
-  {include file="CRM/Contribute/Form/Contribution/MembershipBlock.tpl" context="makeContribution"}
 <!--ufform-separator-->
 
     {if $is_monetary and $form.bank_account_number}
