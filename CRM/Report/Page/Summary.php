@@ -204,8 +204,6 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
 
     $participant_to_contributor = CRM_Report_BAO_Summary::getPartToConData();
     $contributor_to_participant = CRM_Report_BAO_Summary::getConToPartData();
-    $mailing_to_participant = CRM_Report_BAO_Summary::getMailToPartData();
-    $mailing_to_contributor = CRM_Report_BAO_Summary::getMailToConData();
     $participant_after_mailing = CRM_Report_BAO_Summary::getPartAfterMailData();
     $contribute_after_mailing = CRM_Report_BAO_Summary::getConAfterMailData();
 
@@ -264,18 +262,6 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
       'contributor_to_participant',
       self::dataTransferShowHidden($contributor_to_participant),
       array_keys($contributor_to_participant)
-    );
-
-    $return_array['Count and people from receiving mail to participant.'] = $this->showhidden(
-      'mailing_to_participant',
-      self::dataTransferShowHidden($mailing_to_participant),
-      array_keys($mailing_to_participant)
-    );
-
-    $return_array['Count and people from receiving mail to contributor.'] = $this->showhidden(
-      'mailing_to_contributor',
-      self::dataTransferShowHidden($mailing_to_contributor),
-      array_keys($mailing_to_contributor)
     );
 
     $return_array['People participant after receiving mail.'] = $this->showhidden(
