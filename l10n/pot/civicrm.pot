@@ -45399,3 +45399,9 @@ msgstr ""
 #: xml/templates/message_templates/contribution_recur_fail_notify_subject.tpl
 msgid "Recurring Failed Notification"
 msgstr ""
+
+msgid "Use paper receipt. This will cancel user selection even they choose donate receipt or electronic receipt. User need keep receipt on their own and system will not email any further notification."
+msgstr ""
+
+msgid "Use paper receipt"
+msgstr ""
