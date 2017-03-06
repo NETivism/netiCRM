@@ -24,7 +24,7 @@
  +--------------------------------------------------------------------+
 *}
 <div class="crm-block crm-content-block crm-contribution-view-form-block">
-<h3>{ts}View Contribution{/ts}</h3>
+<h3>{ts}View Contribution{/ts}{if $is_test} - (<span class="font-red">{ts}Is Test{/ts}</span>){/if}</h3>
 <div class="crm-actions-ribbon action-link-button">
   <ul>
     {if call_user_func(array('CRM_Core_Permission','check'), 'edit contributions')}
@@ -71,7 +71,7 @@
     </tr>
     <tr>
         <td class="label">{ts}Contribution Type{/ts}</td>
-    	<td>{$contribution_type}{if $is_test} {ts}(test){/ts} {/if}</td>
+    	<td>{$contribution_type}</td>
     </tr>
     {if $lineItem}
     <tr>
