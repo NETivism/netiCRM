@@ -340,7 +340,7 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
           CRM_Utils_Array::value('total_amount', $values),
           CRM_Utils_Array::value('currency', $values)
         ),
-      'receive_date'    => CRM_Utils_Array::value('receive_date', $values),
+      'receive_date'    => date('Y-m-d H:i:s',strtotime(CRM_Utils_Array::value('receive_date', $values))),
       'url'             => 
         CRM_Utils_System::url(
           'civicrm/contact/view/contributionrecur',

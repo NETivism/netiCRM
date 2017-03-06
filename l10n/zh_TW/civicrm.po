@@ -11,7 +11,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2017-03-01 08:29+0000\n"
+"PO-Revision-Date: 2017-03-02 07:48+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -45404,11 +45404,11 @@ msgstr "當狀態為「待處理」，預設會勾選此選項。"
 
 #: CRM/Contribute/DAO/ContributionPage.php
 msgid "Recurring Failed Notification to"
-msgstr ""
+msgstr "定期失敗通知信箱"
 
 #: xml/templates/civicrm_msg_template.tpl
 msgid "Contributions - Recurring Failed Notification"
-msgstr ""
+msgstr "捐款 - 定期捐款失敗通知信"
 
 #: templates/CRM/Contribute/Form/ContributionPage/ThankYou.tpl
 msgid ""
@@ -45416,7 +45416,7 @@ msgid ""
 "recurring failed notification, enter one or more email addresses here. "
 "Multiple email addresses should be separated by a comma (e.g. "
 "jane@example.org, paula@example.org)."
-msgstr ""
+msgstr "如果您想讓您組織內部成員收到定期定額失敗的通知信，請在此輸入 Email 地址。若要輸入多個 Email 地址，請用半型逗號分隔（例如 jane@example.org, paula@example.org）。"
 
 #: xml/templates/message_templates/contribution_recur_fail_notify_html.tpl
 msgid ""
@@ -45440,3 +45440,7 @@ msgstr "您可評估是否要通知捐款人進行相關處理（例如因為信
 
 msgid "Or you can contact us by our support on https://neticrm.tw/support ."
 msgstr "若有需要，也可以透過 https://neticrm.tw/support 的線上客服與我們聯絡。謝謝。"
+
+#: xml/templates/message_templates/contribution_recur_fail_notify_subject.tpl
+msgid "Recurring Failed Notification"
+msgstr "定期捐款失敗通知"
