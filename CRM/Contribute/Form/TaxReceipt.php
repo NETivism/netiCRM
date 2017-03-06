@@ -34,6 +34,10 @@ class CRM_Contribute_Form_TaxReceipt extends CRM_Core_Form {
       if (empty($contribution->trxn_id)) {
         CRM_Core_Error::fatal(ts('You need specify transaction number to create new tax receipt'));
       }
+      if ($contribution->total_amount <= 0) {
+        CRM_Core_Error::fatal(ts('Total amount needs greater than zero.'));
+      }
+      $this->assign('trxn_id', $contribution->trxn_id);
       CRM_Utils_Hook::prepareTaxReceipt($this->_id, $this->_tplParams, $this->_taxReceipt, $contribution);
       if (!empty($this->_tplParams)) {
         // assign these element
@@ -77,6 +81,12 @@ class CRM_Contribute_Form_TaxReceipt extends CRM_Core_Form {
     }
     else {
       $createButton = TRUE;
+    }
+
+    $config = CRM_Core_Config::singleton();
+    if ($config->taxReceiptPaper && $createButton) {
+      // force paper receipt
+      $this->add('checkbox', 'tax_receipt_paper', ts('Use paper receipt'));
     }
 
     $button = array();

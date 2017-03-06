@@ -57,6 +57,10 @@
             <td class="label">{$form.taxReceiptNumber.label}</td><td>{$form.taxReceiptNumber.html}<br />
             </td>
         </tr>
+        <tr class="crm-mail-form-block-taxReceiptPaper">
+            <td class="label">{$form.taxReceiptPaper.label}</td><td>{$form.taxReceiptPaper.html}<br />
+            </td>
+        </tr>
       </table>
 <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>     
 <div class="spacer"></div>
