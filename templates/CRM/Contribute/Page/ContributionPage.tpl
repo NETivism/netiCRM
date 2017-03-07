@@ -53,16 +53,18 @@
              <table id="options" class="display">
                <thead>
                <tr>
-                 <th id="sortable">{ts}Title{/ts}</th>
             	 <th>{ts}ID{/ts}</th>
+               <th>{ts}Title{/ts}</th>
+               <th>{ts}Contribution Type{/ts}</th>
             	 <th>{ts}Enabled?{/ts}</th>
 		 <th></th>
                </tr>
                </thead>
                {foreach from=$rows item=row}
                  <tr id="row_{$row.id}" class="{cycle values="odd-row,even-row"} {$row.class}{if NOT $row.is_active} disabled{/if}">
-                     <td><strong>{$row.title}</strong></td>
                      <td>{$row.id}</td>
+                     <td><strong>{$row.title}</strong></td>
+                     <td>{$row.contribution_type}</td>
                      <td id="row_{$row.id}_status">{if $row.is_active eq 1} {ts}Yes{/ts} {else} {ts}No{/ts} {/if}</td>
 		     <td class="crm-contribution-page-actions right nowrap">
 		
