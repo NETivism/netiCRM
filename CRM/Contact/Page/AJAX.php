@@ -158,6 +158,7 @@ class CRM_Contact_Page_AJAX {
     $dao = CRM_Core_DAO::executeQuery($query);
     $contactList = NULL;
     while ($dao->fetch()) {
+      $d = '';
       if ($dao->data) {
         $d = ' :: '.str_replace(array("\n", "\r", "\t"), '', $dao->data);
       }
