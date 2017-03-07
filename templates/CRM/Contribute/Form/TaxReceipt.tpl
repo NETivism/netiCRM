@@ -9,6 +9,10 @@
 </div>
 <h3>{ts}Tax Receipt Fields{/ts}</h3>
   <table class="crm-info-panel taxreceipt-fields">
+    <tr>
+      <td class="label">{ts}Transaction ID{/ts}</td>
+      <td>{$trxn_id}</td>
+    </tr>
   {foreach from=$taxReceiptFields key=fieldName item=fieldInfo}
     <tr>
       <td class="label">{$fieldInfo.label}</td>
@@ -28,6 +32,16 @@
     </tr>
   {/foreach}
   </table>
+
+{if $form.tax_receipt_paper.html}
+<div class="crm-section {$form.tax_receipt_paper.name}-section">
+  <div class="label">{$form.tax_receipt_paper.label}</div>
+  <div class="content">
+    {$form.tax_receipt_paper.html}
+    <div class="description">{ts}Use paper receipt. This will cancel user selection even they choose donate receipt or electronic receipt. User need keep receipt on their own and system will not email any further notification.{/ts}</div>
+  </div>
+</div>
+{/if}
 
 <div class="crm-submit-buttons">
   {include file="CRM/common/formButtons.tpl" location="bottom"}

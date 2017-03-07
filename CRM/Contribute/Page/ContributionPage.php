@@ -447,7 +447,6 @@ WHERE       cp.contribution_page_id = {$id}";
     $this->search();
 
     $params = array();
-
     $whereClause = $this->whereClause($params, FALSE);
     $this->pagerAToZ($whereClause, $params);
 
@@ -478,7 +477,7 @@ WHERE       cp.contribution_page_id = {$id}";
 SELECT *
 FROM civicrm_contribution_page
 WHERE $whereClause
-ORDER BY title asc
+ORDER BY is_active DESC, id ASC
    LIMIT $offset, $rowCount";
 
     $dao = CRM_Core_DAO::executeQuery($query, $params, TRUE, 'CRM_Contribute_DAO_ContributionPage');
@@ -486,9 +485,12 @@ ORDER BY title asc
     //get configure actions links.
     $configureActionLinks = self::configureActionLinks();
 
+    $contributionTypes = CRM_Contribute_PseudoConstant::contributionType(NULl, NULL, TRUE);
+    $contributionPage = array();
     while ($dao->fetch()) {
-      $contribution[$dao->id] = array();
-      CRM_Core_DAO::storeValues($dao, $contribution[$dao->id]);
+      $contributionPage[$dao->id] = array();
+      CRM_Core_DAO::storeValues($dao, $contributionPage[$dao->id]);
+      $contributionPage[$dao->id]['contribution_type'] = $contributionTypes[$dao->contribution_type_id];
 
       // form all action links
       $action = array_sum(array_keys($this->actionLinks()));
@@ -519,7 +521,7 @@ ORDER BY title asc
 
       //build the configure links.
       $sectionsInfo = CRM_Utils_Array::value($dao->id, $contriPageSectionInfo, array());
-      $contribution[$dao->id]['configureActionLinks'] = CRM_Core_Action::formLink(self::formatConfigureLinks($sectionsInfo),
+      $contributionPage[$dao->id]['configureActionLinks'] = CRM_Core_Action::formLink(self::formatConfigureLinks($sectionsInfo),
         $action,
         array('id' => $dao->id),
         ts('Configure'),
@@ -527,7 +529,7 @@ ORDER BY title asc
       );
 
       //build the contributions links.
-      $contribution[$dao->id]['contributionLinks'] = CRM_Core_Action::formLink(self::contributionLinks(),
+      $contributionPage[$dao->id]['contributionLinks'] = CRM_Core_Action::formLink(self::contributionLinks(),
         $action,
         array('id' => $dao->id),
         ts('Contributions'),
@@ -535,7 +537,7 @@ ORDER BY title asc
       );
 
       //export links.
-      $contribution[$dao->id]['exportLinks'] = CRM_Core_Action::formLink(self::exportLinks(),
+      $contributionPage[$dao->id]['exportLinks'] = CRM_Core_Action::formLink(self::exportLinks(),
         $action,
         array('id' => $dao->id),
         ts('Export'),
@@ -543,7 +545,7 @@ ORDER BY title asc
       );
 
       //build the online contribution links.
-      $contribution[$dao->id]['onlineContributionLinks'] = CRM_Core_Action::formLink(self::onlineContributionLinks(),
+      $contributionPage[$dao->id]['onlineContributionLinks'] = CRM_Core_Action::formLink(self::onlineContributionLinks(),
         $action,
         array('id' => $dao->id),
         ts('Links'),
@@ -551,7 +553,7 @@ ORDER BY title asc
       );
 
       //build the normal action links.
-      $contribution[$dao->id]['action'] = CRM_Core_Action::formLink(self::actionLinks(),
+      $contributionPage[$dao->id]['action'] = CRM_Core_Action::formLink(self::actionLinks(),
         $action,
         array('id' => $dao->id),
         ts('more'),
@@ -559,8 +561,8 @@ ORDER BY title asc
       );
     }
 
-    if (isset($contribution)) {
-      $this->assign('rows', $contribution);
+    if (isset($contributionPage)) {
+      $this->assign('rows', $contributionPage);
     }
   }
 
@@ -609,7 +611,7 @@ ORDER BY title asc
       if (is_array($value)) {
         foreach ($value as $k => $v) {
           if ($v) {
-            $val[$k] = $k;
+            $val[$v] = $v;
           }
         }
         $type = implode(',', $val);

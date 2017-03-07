@@ -24,7 +24,7 @@
  +--------------------------------------------------------------------+
 *}
 <div class="crm-block crm-content-block crm-contribution-view-form-block">
-<h3>{ts}View Contribution{/ts}</h3>
+<h3>{ts}View Contribution{/ts}{if $is_test} - (<span class="font-red">{ts}Is Test{/ts}</span>){/if}</h3>
 <div class="crm-actions-ribbon action-link-button">
   <ul>
     {if call_user_func(array('CRM_Core_Permission','check'), 'edit contributions')}
@@ -70,8 +70,9 @@
         <td class="bold">{$displayName}</td>
     </tr>
     <tr>
-        <td class="label">{ts}Contribution Type{/ts}</td>
-    	<td>{$contribution_type}{if $is_test} {ts}(test){/ts} {/if}</td>
+      {assign var='urlParams' value="reset=1&id=$id&cid=$contact_id&action=update"}
+      <td class="label">{ts}Contribution Type{/ts}</td>
+    	<td>{$contribution_type}{if $is_taxreceipt} (<a href="{crmURL p="civicrm/contribute/taxreceipt" q=$urlParams"}" target="_blank">{ts}Tax Receipt{/ts}</a>){/if}</td>
     </tr>
     {if $lineItem}
     <tr>

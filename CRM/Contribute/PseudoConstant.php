@@ -54,6 +54,8 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
    * @static
    */
   private static $contributionType;
+  private static $deductibleType;
+  private static $taxType;
 
   /**
    * contribution pages
@@ -126,15 +128,15 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
   public static function &contributionType($id = NULL, $receiptType = FALSE, $receiptTypeLabel = FALSE) {
     if (!self::$contributionType) {
       CRM_Core_PseudoConstant::populate(self::$contributionType, 'CRM_Contribute_DAO_ContributionType');
-      CRM_Core_PseudoConstant::populate($deductibleType, 'CRM_Contribute_DAO_ContributionType', FALSE, 'is_deductible', 'is_active', 'is_deductible=1');
-      CRM_Core_PseudoConstant::populate($taxType, 'CRM_Contribute_DAO_ContributionType', FALSE, 'is_taxreceipt', 'is_active', 'is_taxreceipt=1');
+      CRM_Core_PseudoConstant::populate(self::$deductibleType, 'CRM_Contribute_DAO_ContributionType', FALSE, 'is_deductible', 'is_active', 'is_deductible=1');
+      CRM_Core_PseudoConstant::populate(self::$taxType, 'CRM_Contribute_DAO_ContributionType', FALSE, 'is_taxreceipt', 'is_active', 'is_taxreceipt=1');
     }
     $types = array();
     if ($receiptType == 'is_deductible') {
-      $types = array_intersect_key(self::$contributionType, $deductibleType);
+      $types = array_intersect_key(self::$contributionType, self::$deductibleType);
     }
     elseif($receiptType == 'is_taxreceipt'){
-      $types = array_intersect_key(self::$contributionType, $taxType);
+      $types = array_intersect_key(self::$contributionType, self::$taxType);
     }
     else {
       $types = self::$contributionType;
@@ -142,10 +144,10 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
 
     if ($receiptTypeLabel) {
       foreach ($types as $k => $v) {
-        if(!empty($deductibleType[$k])) {
+        if(!empty(self::$deductibleType[$k])) {
           $types[$k] .= ' (' . ts('Deductible') . ')';
         }
-        elseif(!empty($taxType[$k])) {
+        elseif(!empty(self::$taxType[$k])) {
           $types[$k] .= ' (' . ts('Tax Receipt') . ')';
         }
       }

@@ -49,7 +49,7 @@ class CRM_Contribute_Form_SearchContribution extends CRM_Core_Form {
 
     $this->add('text', 'title', ts('Find'), $attributes);
 
-    $contribution_type = CRM_Contribute_PseudoConstant::contributionType();
+    $contribution_type = CRM_Contribute_PseudoConstant::contributionType(NULl, NULL, TRUE);
     $attrs = array('multiple' => 'multiple');
     $this->addElement('select', 'contribution_type_id', 'Contribution Type', $contribution_type, $attrs);
 

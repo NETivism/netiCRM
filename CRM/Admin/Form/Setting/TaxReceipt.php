@@ -28,6 +28,7 @@ class CRM_Admin_Form_Setting_TaxReceipt extends CRM_Admin_Form_Setting {
     $this->addElement('select', 'taxReceiptSerial', ts('Tax receipt serial number field'), $option);
     $this->addElement('select', 'taxReceiptItem', ts('Invoice item name field'), $option);
     $this->addElement('select', 'taxReceiptNumber', ts('Invoice number field'), $option);
+    $this->addElement('select', 'taxReceiptPaper', ts('Printing paper invoice field'), $option);
 
     // redirect to Administer Section After hitting either Save or Cancel button.
     $session = CRM_Core_Session::singleton();

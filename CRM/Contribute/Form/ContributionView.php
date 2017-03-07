@@ -62,6 +62,15 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form {
       $values = array_merge($values, $softContribution);
     }
     CRM_Contribute_BAO_Contribution::resolveDefaults($values);
+    $taxTypes = CRM_Contribute_PseudoConstant::contributionType(NULL, 'is_taxreceipt');
+    if (!empty($taxTypes[$values['contribution_type_id']])) {
+      $taxReceiptImplements = CRM_Utils_Hook::availableHooks('civicrm_validateTaxReceipt');
+      $taxReceiptImplements = count($taxReceiptImplements);
+      if (!empty($taxReceiptImplements)) {
+        $values['is_taxreceipt'] = 1;
+      }
+    }
+
     if (CRM_Utils_Array::value('contribution_page_id', $values)) {
       $contribPages = CRM_Contribute_PseudoConstant::contributionPage();
       $values["contribution_page_title"] = CRM_Utils_Array::value(CRM_Utils_Array::value('contribution_page_id', $values), $contribPages);

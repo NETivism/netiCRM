@@ -11,8 +11,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2017-03-02 07:48+0000\n"
-"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
+"PO-Revision-Date: 2017-03-07 06:35+0000\n"
+"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44800,7 +44800,7 @@ msgstr "請確認聯絡人姓名或身份證字號欄位是否正確"
 
 #: CRM/Contact/Form/Search/Custom/RecurSearch.php
 msgid "First recurring date"
-msgstr "開始捐款日期"
+msgstr "定期定額開始日期"
 
 #: CRM/Contact/Form/Search/Custom/RecurSearch.php
 msgid "Last Receive Date"
@@ -45423,9 +45423,6 @@ msgid ""
 "The recurring contribution %1 by contributor %2 is failed at %3.( Link: %4 )"
 msgstr "捐款人 %2 的定期定額捐款 %1，於 %3 因故請款失敗（ %4 ）。"
 
-msgid "Details:"
-msgstr ""
-
 msgid ""
 "If you need more infomation, please check source from payment processor "
 "service page by transaction ID: %1"
@@ -45444,3 +45441,12 @@ msgstr "若有需要，也可以透過 https://neticrm.tw/support 的線上客�
 #: xml/templates/message_templates/contribution_recur_fail_notify_subject.tpl
 msgid "Recurring Failed Notification"
 msgstr "定期捐款失敗通知"
+
+msgid ""
+"Use paper receipt. This will cancel user selection even they choose donate "
+"receipt or electronic receipt. User need keep receipt on their own and "
+"system will not email any further notification."
+msgstr "選擇開立紙本發票，將會取消本繳款設定的「捐發票」和「電子發票」的方式。使用者必須自行保存發票以進行兌獎。"
+
+msgid "Use paper receipt"
+msgstr "開立紙本發票"
