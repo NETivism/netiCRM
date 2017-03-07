@@ -11,7 +11,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2017-03-06 10:14+0000\n"
+"PO-Revision-Date: 2017-03-07 06:35+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -44800,7 +44800,7 @@ msgstr "請確認聯絡人姓名或身份證字號欄位是否正確"
 
 #: CRM/Contact/Form/Search/Custom/RecurSearch.php
 msgid "First recurring date"
-msgstr "開始捐款日期"
+msgstr "定期定額開始日期"
 
 #: CRM/Contact/Form/Search/Custom/RecurSearch.php
 msgid "Last Receive Date"
