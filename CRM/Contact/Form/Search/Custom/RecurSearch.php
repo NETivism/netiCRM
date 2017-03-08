@@ -62,7 +62,7 @@ class CRM_Contact_Form_Search_Custom_RecurSearch  extends CRM_Contact_Form_Searc
       'r.contact_id' => 'contact_id',
       'contact_email.email' => 'email',
       'ROUND(r.amount,0)' => 'amount',
-      'COUNT(IF(c.contribution_status_id = 1, 1, NULL))' => 'donation_count',
+      'COUNT(IF(c.contribution_status_id = 1, 1, NULL))' => 'completed_count',
       'CAST(r.installments AS SIGNED) - COUNT(IF(c.contribution_status_id = 1, 1, NULL))' => 'remain_installments',
       'r.installments' => 'installments',
       'r.start_date' => 'start_date',
@@ -70,7 +70,6 @@ class CRM_Contact_Form_Search_Custom_RecurSearch  extends CRM_Contact_Form_Searc
       'r.cancel_date' => 'cancel_date',
       'COUNT(c.id)' => 'total_count',
       'ROUND(SUM(IF(c.contribution_status_id = 1, c.total_amount, 0)),0)' => 'receive_amount',
-      'CAST(r.installments AS SIGNED) * ROUND(r.amount,0)' => 'total_amount',
       'MAX(c.created_date)' => 'current_created_date',
       'r.contribution_status_id' => 'contribution_status_id',
       'last_receive_date' => 'last_receive_date',
@@ -79,18 +78,17 @@ class CRM_Contact_Form_Search_Custom_RecurSearch  extends CRM_Contact_Form_Searc
       ts('ID') => 'id',
       ts('Name') => 'sort_name',
       ts('Amount') => 'amount',
-      ts('Completed Donation') => 'donation_count',
       ts('Remain Installments') => 'remain_installments',
+      ts('Processed Installments').' /<br>'.ts('Total Installments') => 'installments',
       ts('Start Date') => 'start_date',
       ts('End Date') => 'end_date',
       ts('Cancel Date') => 'cancel_date',
       ts('Recurring Status') => 'contribution_status_id',
-      ts('Total Count') => 'total_count',
+      ts('Completed Donation').'/<br>'.ts('Total Count') => 'completed_count',
       ts('Total Receive Amount') => 'receive_amount',
-      ts('Current Total Amount') => 'total_amount',
       ts('Most Recent').' '.ts('Created Date') => 'current_created_date',
       ts('Last Receive Date') => 'last_receive_date',
-      0 => 'installments',
+      0 => 'total_count',
     );
   }
 
@@ -214,6 +212,10 @@ $having
     if($email){
       $clauses[] = "(`email` LIKE '%$email%')";
     }
+    $installments = $this->_formValues['installments'];
+    if ($installments === '0') {
+      $clauses[] = "(r.installments IS NULL OR r.installments = 0)";
+    }
 
     return implode(' AND ', $clauses);
   }
@@ -221,13 +223,8 @@ $having
   function tempHaving(){
     $clauses = array();
     $installments = $this->_formValues['installments'];
-    if (is_numeric($installments) && $installments > 0) {
-      if ($installments == 1) {
-        $clauses[] = "(remain_installments = $installments)";
-      }
-      else {
-        $clauses[] = "(remain_installments >= $installments)";
-      }
+    if (is_numeric($installments) && $installments != '0') {
+      $clauses[] = "(remain_installments = $installments)";
     }
     if(count($clauses)){
       return implode(' AND ', $clauses);
@@ -257,11 +254,13 @@ $having
     $form->addRadio('status', ts('Recurring Status'), $statuses, array('allowClear' => TRUE));
     
     $installments = array(
-      '0' => ts('no limit'),
-      '1' => ts('In progress and last 1 time.'),
-      '2' => ts('In progress and having over 2 times.'),
+      '' => ts('- select -'),
+      '0' => ts('no installments specified'),
     );
-    $form->addElement('select', 'installments', ts('Installments'), $installments);
+    for ($i = 1; $i <= 6; $i++) {
+      $installments[$i] = ts('%1 installments left', array(1 => $i));
+    }
+    $form->addElement('select', 'installments', ts('Installments Left'), $installments);
 
     $form->addElement('text', 'sort_name', ts('Contact Name'));
 
@@ -399,27 +398,31 @@ SUM(total_amount) as total_amount
 
   function alterRow(&$row) {
     $row['contribution_status_id'] = $this->_cstatus[$row['contribution_status_id']];
+    $processedInstallments = $row['installments'] - $row['remain_installments'];
+    if(empty($row['installments'])){
+      $row['remain_installments'] = ts('no limit');
+      $row['installments'] = $row['completed_count'].' / '.ts('no limit');
+    }
+    else {
+      $row['installments'] = $processedInstallments.' / '.$row['installments'];
+    }
     if($row['remain_installments'] < 0){
        $row['remain_installments'] = ts('Over %1',array( 1 => -$row['remain_installments']));
     }
-    if(!empty($row['installments'])){
-      $row['remain_installments'] = $row['remain_installments'] . ' / ' . $row['installments'];
+    
+    if ($row['completed_count']) {
+      $row['completed_count'] = $row['completed_count'].' / '.$row['total_count'];
     }
-    else{
-      $row['remain_installments'] = ts('no limit');
+    else {
+      $row['completed_count'] = '0 / '.$row['total_count'];
     }
-    unset($row['installments']);
+    unset($row['total_count']);
 
     $date = array('start_date', 'end_date', 'cancel_date');
     foreach($date as $d){
       if(!empty($row[$d])){
         $row[$d] = CRM_Utils_Date::customFormat($row[$d], $this->_config->dateformatFull);
       }
-    }
-
-    if($this->_formValues['start_date_from']){
-      $sql = "SELECT count(*) FROM civicrm_contribution WHERE contribution_status_id = 1 AND contribution_recur_id = {$row['id']}";
-      $row['donation_count'] = CRM_Core_DAO::singleValueQuery($sql, CRM_Core_DAO::$_nullArray);
     }
 
     $action = array_sum(array_keys(CRM_Contribute_Page_Tab::recurLinks()));

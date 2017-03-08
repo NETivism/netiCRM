@@ -1074,7 +1074,7 @@ class CRM_Export_BAO_Export {
     else {
       require_once ($ext->classToPath($customSearchClass));
     }
-    eval('$search = new ' . $customSearchClass . '( $formValues );');
+    $search = new $customSearchClass($formValues);
 
     $includeContactIDs = FALSE;
     if ($formValues['radio_ts'] == 'ts_sel') {
@@ -1103,11 +1103,13 @@ class CRM_Export_BAO_Export {
       if ($alterRow) {
         $search->alterRow($row);
       }
+      unset($row['action']);
       $rows[] = $row;
     }
 
     // remove the fields which key is numeric. refs #19235
     foreach ($header as $key => $value) {
+      $header[$key] = strip_tags($value);
       if(is_numeric($value)){
         unset($header[$key]);
         foreach ($rows as $row) {

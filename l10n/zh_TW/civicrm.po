@@ -11,7 +11,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2017-03-07 06:35+0000\n"
+"PO-Revision-Date: 2017-03-08 07:49+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -45450,3 +45450,18 @@ msgstr "選擇開立紙本發票，將會取消本繳款設定的「捐發票」
 
 msgid "Use paper receipt"
 msgstr "開立紙本發票"
+
+msgid "no installments specified"
+msgstr "未指定期數"
+
+msgid "Processed Installments"
+msgstr "執行期數"
+
+msgid "Total Installments"
+msgstr "約定總期數"
+
+msgid "%1 installments left"
+msgstr "剩餘%1期"
+
+msgid "Installments Left"
+msgstr "剩餘定期期數"

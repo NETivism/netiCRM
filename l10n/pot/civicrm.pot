@@ -45405,3 +45405,18 @@ msgstr ""
 
 msgid "Use paper receipt"
 msgstr ""
+
+msgid "no installments specified"
+msgstr ""
+
+msgid "Processed Installments"
+msgstr ""
+
+msgid "Total Installments"
+msgstr ""
+
+msgid "%1 installments left"
+msgstr ""
+
+msgid "Installments Left"
+msgstr ""
