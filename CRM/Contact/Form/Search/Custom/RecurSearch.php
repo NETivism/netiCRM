@@ -168,7 +168,7 @@ $having
           $values[] = 'NULL';
         }
       }
-      $values = implode(',' , $values);
+      $values = implode(', ' , $values);
       $sql = "REPLACE INTO {$this->_tableName} VALUES ($values)";
       CRM_Core_DAO::executeQuery($sql, CRM_Core_DAO::$_nullArray);
     }
