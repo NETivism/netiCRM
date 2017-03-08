@@ -377,19 +377,21 @@ $having
     $query = CRM_Core_DAO::executeQuery("SELECT SUM(receive_amount) as amount, COUNT(contribution_status_id) as count, contribution_status_id FROM {$this->_tableName} GROUP BY contribution_status_id");
     $aggregateAmount = 0;
     $aggregateCount = 0;
+    $summaryStatus = array();
     while($query->fetch()) {
       $aggregateAmount += $query->amount;
       $aggregateCount += $query->count;
-      $summary[$query->contribution_status_id] = array(
-        'count' => $query->count,
-        'value' => '$ '.number_format($query->amount),
-        'label' => $this->_cstatus[$query->contribution_status_id],
-      );
+      $count = ' ('.ts('%count Result', array('count' => $query->count, 'plural' => '%count Results')).')';
+      $summaryStatus[$query->contribution_status_id] = $this->_cstatus[$query->contribution_status_id] . $count;
     }
+    krsort($summaryStatus);
+    $summary['statuses'] = array(
+      'label' => ts('Recurring Status'),
+      'value' => implode(',', $summaryStatus),
+    );
     $summary['total_amount'] = array(
       'label' => ts('Aggregate Amount'),
       'value' => '$ '.number_format($aggregateAmount),
-      'count' => $aggregateCount,
     );
     return $summary;
   }
