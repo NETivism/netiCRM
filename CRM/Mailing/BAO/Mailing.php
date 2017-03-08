@@ -1815,7 +1815,7 @@ AND civicrm_contact.is_opt_out =0";
     $report['jobs'] = array();
     $report['event_totals'] = array();
     $elements = array(
-      'queue', 'delivered', 'url', 'forward',
+      'queue', 'delivered', 'url_opened', 'forward',
       'reply', 'unsubscribe', 'opened', 'bounce', 'spool',
     );
 
@@ -1823,6 +1823,9 @@ AND civicrm_contact.is_opt_out =0";
     foreach ($elements as $field) {
       $report['event_totals'][$field] = 0;
     }
+
+    // url count
+    $urlCount = CRM_Mailing_BAO_TrackableURL::getTrackerURLCount($mailing_id);
 
     while ($mailing->fetch()) {
       $row = array();
@@ -1844,7 +1847,7 @@ AND civicrm_contact.is_opt_out =0";
       $report['event_totals']['unsubscribe'] += $row['unsubscribe'];
 
       $row['url'] = CRM_Mailing_Event_BAO_TrackableURLOpen::getTotalCount($mailing_id, $mailing->id, TRUE);
-      $report['event_totals']['url'] += $row['url'];
+      $report['event_totals']['url_opened'] += $row['url'];
 
       foreach (array_keys(CRM_Mailing_BAO_Job::fields()) as $field) {
         $row[$field] = $mailing->$field;
@@ -1924,8 +1927,8 @@ AND civicrm_contact.is_opt_out =0";
       $report['event_totals']['delivered_rate'] = (100.0 * $report['event_totals']['delivered']) / $report['event_totals']['queue'];
       $report['event_totals']['bounce_rate'] = (100.0 * $report['event_totals']['bounce']) / $report['event_totals']['queue'];
       $report['event_totals']['unsubscribe_rate'] = (100.0 * $report['event_totals']['unsubscribe']) / $report['event_totals']['queue'];
-      $report['event_totals']['opened_rate'] = $row['opened_rate'];
-      $report['event_totals']['clicked_rate'] = $row['clicked_rate'];
+      $report['event_totals']['opened_rate'] = (100.0 * $report['event_totals']['opened']) / $report['event_totals']['delivered'];
+      $report['event_totals']['clicked_rate'] = (100.0 * $report['event_totals']['url_opened']) / $report['event_totals']['delivered'];
     }
     else {
       $report['event_totals']['delivered_rate'] = 0;

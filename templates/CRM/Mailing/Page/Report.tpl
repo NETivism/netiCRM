@@ -34,7 +34,7 @@
     <tr><td class="label"><a href="{$report.event_totals.links.opened}">{ts}Unique Tracked Opens{/ts}</a></td><td>{$report.event_totals.opened} ({$report.event_totals.opened_rate|string_format:"%0.2f"}%)</td></tr>
   {/if}
   {if $report.mailing.url_tracking}
-    <tr><td class="label"><a href="{$report.event_totals.links.clicks_unique}">{ts}Unique Click-throughs{/ts}</a></td><td>{$report.event_totals.url} ({$report.event_totals.clicked_rate|string_format:"%0.2f"}%)</td></tr>
+    <tr><td class="label"><a href="{$report.event_totals.links.clicks_unique}">{ts}Unique Click-throughs{/ts}</a></td><td>{$report.event_totals.url_opened} ({$report.event_totals.clicked_rate|string_format:"%0.2f"}%)</td></tr>
   {/if}
   <tr><td class="label"><a href="{$report.event_totals.links.forward}">{ts}Forwards{/ts}</a></td><td>{$report.event_totals.forward}</td></tr>
   <tr><td class="label"><a href="{$report.event_totals.links.reply}">{ts}Replies{/ts}</a></td><td>{$report.event_totals.reply}</td></tr>

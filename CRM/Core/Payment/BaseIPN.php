@@ -396,8 +396,8 @@ class CRM_Core_Payment_BaseIPN {
         }
         else {
           // see if we can use join date as start date
-          if (!empty($membership->join_date_as_start_date)) {
-            $dates = CRM_Member_BAO_MembershipType::getDatesForMembershipType($membership->membership_type_id, $membership['join_date']);
+          if (!empty($membership->join_date_as_start_date) && !empty($membership->join_date)) {
+            $dates = CRM_Member_BAO_MembershipType::getDatesForMembershipType($membership->membership_type_id, $membership->join_date);
           }
           else {
             $dates = CRM_Member_BAO_MembershipType::getDatesForMembershipType($membership->membership_type_id);
