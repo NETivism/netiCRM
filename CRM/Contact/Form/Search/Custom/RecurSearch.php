@@ -49,6 +49,7 @@ class CRM_Contact_Form_Search_Custom_RecurSearch  extends CRM_Contact_Form_Searc
       $randomNum = substr(md5($this->_formValues['qfKey']), 0, 8);
       $this->_tableName = "civicrm_temp_custom_{$randomNum}";
       $this->_cstatus = CRM_Contribute_PseudoConstant::contributionStatus();
+      $this->_cstatus[1] = ts('Recurring ended');
       $this->_gender = CRM_Core_PseudoConstant::gender();
       $this->_config = CRM_Core_Config::singleton();
       $this->buildColumn();
@@ -192,11 +193,11 @@ $having
 
     $startDateFrom = CRM_Utils_Date::processDate($this->_formValues['start_date_from']);
     if ($startDateFrom) {
-      $clauses[] = "(r.start_date >= '$startDateFrom 00:00:00')";
+      $clauses[] = "(r.start_date >= '$startDateFrom')";
     }
-    $startDateTo = CRM_Utils_Date::processDate($this->_formValues['start_date_to']);
+    $startDateTo = CRM_Utils_Date::processDate($this->_formValues['start_date_to'].' 23:59:59');
     if ($startDateTo) {
-      $clauses[] = "(r.start_date <= '$startDateTo 23:59:59')";
+      $clauses[] = "(r.start_date <= '$startDateTo')";
     }
 
     if ($this->_formValues['status'] && is_numeric($this->_formValues['status'])) {
@@ -247,7 +248,7 @@ $having
     // Define the search form fields here
     
     $form->addDateRange('start_date', ts('First recurring date'), NULL, FALSE);
-    $statuses = CRM_Contribute_PseudoConstant::contributionStatus();
+    $statuses = $this->_cstatus;
     unset($statuses[6]);
     unset($statuses[4]);
     krsort($statuses);
@@ -355,45 +356,42 @@ $having
   }
 
   function summary(){
-  /*
-    $select = "
-r.id,
-COUNT(DISTINCT(id)) as recurring_count,
-SUM(total_count) as total_count,
-SUM(total_amount) as total_amount 
-    ";
-    $from = $this->from();
-    $where = $this->where($includeRecurIds);
-    $having = $this->having();
-
-    if ($having) {
-      $having = " HAVING $having ";
+    $summary = array();
+    if(!$this->_filled){
+      $this->fillTable();
+      $this->_filled = TRUE;
+    }
+    if ($this->_formValues['start_date_from']) {
+      $summary['start_date'] = array(
+        'label' => ts('First recurring date'),
+        'value' => $this->_formValues['start_date_from'],
+      );
+      if ($this->_formValues['start_date_to']) {
+        $summary['start_date']['value'] .= ' ~ '.$this->_formValues['start_date_to'];
+      }
+      else {
+        $summary['start_date']['value'] .= ' ~ '.ts('Current Day');
+      }
     }
 
-    $sql = "SELECT $select FROM $from WHERE $where GROUP BY r.id WITH ROLLUP $having";
-    $dao = CRM_Core_DAO::executeQuery($sql);
-    if($dao->fetch()){
-      $summary = array(
-        $dao->recurring_count . ' '.ts('Recurring Count'),
-        $dao->donation_count . ' '. ts('Contribution Count'),
-        round($dao->total_amount) .' '. ts('Total Amount'),
-      );
-      if(!empty($this->_formValues['start_date'])){
-        $start_date = CRM_Utils_Date::customFormat($this->_formValues['start_date'], $this->_config->dateformatFull);
-        $title = ts('Start Date') .' '. ts('>') .' '. $start_date;
-      }
-      else{
-        $title = ts('Search Results');
-      }
-      return array(
-        'summary' => $title,
-        'total' => '<ul><li>'.implode('</li><li>', $summary).'</li></ul>',
+    $query = CRM_Core_DAO::executeQuery("SELECT SUM(receive_amount) as amount, COUNT(contribution_status_id) as count, contribution_status_id FROM {$this->_tableName} GROUP BY contribution_status_id");
+    $aggregateAmount = 0;
+    $aggregateCount = 0;
+    while($query->fetch()) {
+      $aggregateAmount += $query->amount;
+      $aggregateCount += $query->count;
+      $summary[$query->contribution_status_id] = array(
+        'count' => $query->count,
+        'value' => '$ '.number_format($query->amount),
+        'label' => $this->_cstatus[$query->contribution_status_id],
       );
     }
-    else{
-      return NULL;
-    }
-    */
+    $summary['total_amount'] = array(
+      'label' => ts('Aggregate Amount'),
+      'value' => '$ '.number_format($aggregateAmount),
+      'count' => $aggregateCount,
+    );
+    return $summary;
   }
 
   function alterRow(&$row) {

@@ -40,7 +40,11 @@
 {/if}
 
 {if $summary}
-    {$summary.summary}: {$summary.total}
+  <ul>
+    {foreach from=$summary item=summary_item}
+    <li><label>{$summary_item.label}</label>: {$summary_item.value} {if $summary_item.count}({ts count=$summary_item.count plural='%count Results'}%count Result{/ts}){/if}</li>
+    {/foreach}
+  </ul>
 {/if}
 
 {if $rows}
