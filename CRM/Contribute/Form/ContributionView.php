@@ -190,11 +190,6 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form {
         "action=update&reset=1&id={$values['id']}&cid={$values['contact_id']}&context=home"
       );
     }
-    if (CRM_Core_Permission::checkActionPermission('CiviContribute', CRM_Core_Action::DELETE)) {
-      $recentOther['deleteUrl'] = CRM_Utils_System::url('civicrm/contact/view/contribution',
-        "action=delete&reset=1&id={$values['id']}&cid={$values['contact_id']}&context=home"
-      );
-    }
     $pdfTypes = CRM_Contribute_Form_Task_PDF::getPrintingTypes();
     $this->assign('pdfTypes', $pdfTypes);
 
