@@ -335,13 +335,13 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
     $contribution_id = CRM_Utils_Array::value('contribution_id', $values);
     $tplParams = array(
       'display_name'    => CRM_Utils_Array::value('display_name', $values),
-      'amount'          => 
+      'amount'          =>
         CRM_Utils_Money::format(
           CRM_Utils_Array::value('total_amount', $values),
           CRM_Utils_Array::value('currency', $values)
         ),
       'receive_date'    => date('Y-m-d H:i:s',strtotime(CRM_Utils_Array::value('receive_date', $values))),
-      'url'             => 
+      'url'             =>
         CRM_Utils_System::url(
           'civicrm/contact/view/contributionrecur',
           "reset=1&id={$recur_id}&cid={$contactID}",
@@ -366,6 +366,7 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
           'tplParams' => $tplParams,
           'from' => "$domainEmailName <$domainEmailAddress>",
           'toEmail' => str_replace(' ', '', $emailTo),
+          'isTest' => $isTest,
         )
       );
       $returnArray[] = array(

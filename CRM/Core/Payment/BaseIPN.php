@@ -288,6 +288,10 @@ class CRM_Core_Payment_BaseIPN {
           'display_name' => $contact->display_name,
           'recur_fail_notify' => $recur_fail_notify,
           );
+        $isTest = FALSE;
+        if($contribution->is_test){
+          $isTest = TRUE;
+        }
         $returnArray = CRM_Contribute_BAO_ContributionPage::sendFailedNotifyMail($contribution->contact_id, $values, $contribution->is_test, TRUE);
       }
     }
@@ -954,7 +958,7 @@ class CRM_Core_Payment_BaseIPN {
 
       require_once 'CRM/Core/OptionGroup.php';
       $values['amount_level'] = CRM_Core_OptionGroup::optionLabel("civicrm_contribution_page.amount.".(string)$values['id'],(int)($template->get_template_vars('amount')));
-      $template->assign('amount_level', $values['amount_level']);      
+      $template->assign('amount_level', $values['amount_level']);
       // 2015.1.30 End
 
       $template->assign('paymentProcessor',$objects['paymentProcessor']);
