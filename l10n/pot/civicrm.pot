@@ -10474,9 +10474,7 @@ msgid ""
 msgstr ""
 
 #: CRM/Contribute/Form/ContributionBase.php
-msgid ""
-"A payment processor must be selected for this contribution page (contact the"
-" site administrator for assistance)."
+msgid "A payment processor must be selected for this contribution page or must be configured to give users the option to pay later."
 msgstr ""
 
 #: CRM/Contribute/Form/ContributionBase.php
@@ -15633,10 +15631,7 @@ msgid "Registration for this event ended on %1"
 msgstr ""
 
 #: CRM/Event/Form/Registration.php
-msgid ""
-"A payment processor must be selected for this event registration page, or "
-"the event must be configured to give users the option to pay later (contact "
-"the site administrator for assistance)."
+msgid "A payment processor must be selected for this event registration page, or the event must be configured to give users the option to pay later."
 msgstr ""
 
 #: CRM/Event/Form/Registration.php

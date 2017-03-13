@@ -11,7 +11,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2017-03-08 07:49+0000\n"
+"PO-Revision-Date: 2017-03-13 08:52+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -10480,9 +10480,9 @@ msgstr "你的捐款已經提送。若果你想繼續捐款，請按 <a href='%1
 
 #: CRM/Contribute/Form/ContributionBase.php
 msgid ""
-"A payment processor must be selected for this contribution page (contact the"
-" site administrator for assistance)."
-msgstr "此募款頁面必須選擇金流機制。如您需要協助，請聯繫網站管理員。"
+"A payment processor must be selected for this contribution page or must be "
+"configured to give users the option to pay later."
+msgstr "此募款頁至少需要啟用一種「金流機制」，或是讓使用者可以選用「稍候付款」的選項。"
 
 #: CRM/Contribute/Form/ContributionBase.php
 msgid ""
@@ -15637,9 +15637,8 @@ msgstr "登記截止日：%1"
 #: CRM/Event/Form/Registration.php
 msgid ""
 "A payment processor must be selected for this event registration page, or "
-"the event must be configured to give users the option to pay later (contact "
-"the site administrator for assistance)."
-msgstr "此活動必須選擇一個金流付款機制，或啟用「稍後付款」選項。如您需要協助，請聯繫網站管理員。"
+"the event must be configured to give users the option to pay later."
+msgstr "此活動報名至少需要啟用一種「金流機制」，或是讓使用者可以選用「稍候付款」的選項。"
 
 #: CRM/Event/Form/Registration.php
 msgid ""

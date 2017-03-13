@@ -287,6 +287,10 @@ SELECT id
           $errors['pay_later_receipt'] = ts('Please enter the instructions to be sent to the contributor when they choose to \'pay later\'.');
         }
       }
+      if (empty($fields['is_pay_later']) && empty($fields['payment_processor'])) {
+        $errors['payment_processor'] = ts('A payment processor must be selected for this contribution page or must be configured to give users the option to pay later.');
+        $errors['is_pay_later'] = ts('A payment processor must be selected for this contribution page or must be configured to give users the option to pay later.');
+      }
     }
 
     //as for separate membership payment we has to have

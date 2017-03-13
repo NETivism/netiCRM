@@ -98,8 +98,8 @@
          </table>
       <table id="payLater" class="form-layout">
           <tr class="crm-event-manage-fee-form-block-is_pay_later">
-             <td class="extra-long-fourty label">{$form.is_pay_later.html}</td>
-             <td>{$form.is_pay_later.label}<br />
+             <td class="extra-long-fourty label">{$form.is_pay_later.label}</td>
+             <td>{$form.is_pay_later.html}<br />
                 <span class="description">{ts}Check this box if you want to give users the option to submit payment offline (e.g. mail in a check, call in a credit card, etc.).{/ts}</span>
             </td>
           </tr>
