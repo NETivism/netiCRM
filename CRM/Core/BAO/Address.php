@@ -452,15 +452,19 @@ class CRM_Core_BAO_Address extends CRM_Core_DAO_Address {
       if (!empty($address->state_province_id)) {
         $address->state = CRM_Core_PseudoConstant::stateProvinceAbbreviation($address->state_province_id);
         $address->state_name = CRM_Core_PseudoConstant::stateProvince($address->state_province_id);
+        $values['state_province_name'] = $address->state_name;
+        $values['state_province'] = $address->state;
       }
 
       if (!empty($address->country_id)) {
         $address->country = CRM_Core_PseudoConstant::country($address->country_id);
+        $values['country'] = $address->country;
 
         //get world region
         $regionId = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_Country', $address->country_id, 'region_id');
 
         $address->world_region = CRM_Core_PseudoConstant::worldregion($regionId);
+        $values['world_region'] = $address->world_region;
       }
 
       $address->addDisplay($microformat);
@@ -1004,6 +1008,25 @@ ORDER BY civicrm_address.is_primary DESC, civicrm_address.location_type_id DESC,
         'count' => $addressCount,
       );
     }
+  }
+
+  /**
+   * @addresses array from CRM_BAO_Address::getValues()
+   *
+   * @type is_primary or is_billing
+   *
+   * @return return if type exists, or return first address
+   */
+  static function getAddressByDefault($addresses, $type) {
+    if (is_array($addresses)) {
+      foreach($addresses as $addr) {
+        if (isset($addr[$type]) && $addr[$type]) {
+          return $addr;
+        }
+      }
+      return reset($addresses);
+    }
+    return array();
   }
 }
 

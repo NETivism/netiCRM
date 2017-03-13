@@ -1979,14 +1979,20 @@ SELECT source_contact_id
       $template->assign('source_name' , $source_name);
     }
 
-    $entityBlock = array('contact_id' => $contact->id);
-    $addresses = CRM_Core_BAO_Address::getValues($entityBlock);
-    $addr = reset($addresses);
-    if (!empty($addr)) {
-      $addr['state_province_name'] = CRM_Core_PseudoConstant::stateProvince($addr['state_province_id'], FALSE);
+    $addrParams = array('contact_id' => $contact->id);
+    $addresses = CRM_Core_BAO_Address::getValues($addrParams);
+    if (!empty($config->receiptAddrType)) {
+      $addr = CRM_Core_BAO_Address::getAddressByDefault($addresses, $config->receiptAddrType);
     }
-    $address = CRM_Utils_Address::format($addr, NULL, FALSE, TRUE);
-    $template->assign('address', $address);
+    else {
+      $addr = reset($addresses);
+    }
+    if (!empty($addr)) {
+      $template->assign('address', $addr['display_text']);
+    }
+    else {
+      $template->assign('address', '');
+    }
 
     $values['contribution_id'] = $contribution->id;
     $isTest = FALSE;
@@ -2065,13 +2071,20 @@ SELECT source_contact_id
     $addressee = !empty($contact['addressee_custom']) ? $contact['addressee_custom'] : (!empty($contact['addressee_display']) ? $contact['addressee_display'] : $sort_name);
     $receipt_logo = $config->receiptLogo;
 
-    $entityBlock = array('contact_id' => $contact_id);
-    $addresses = CRM_Core_BAO_Address::getValues($entityBlock);
-    $addr = reset($addresses);
-    if (!empty($addr)) {
-      $addr['state_province_name'] = CRM_Core_PseudoConstant::stateProvince($addr['state_province_id'], FALSE);
+    $addrParams = array('contact_id' => $contact_id);
+    $addresses = CRM_Core_BAO_Address::getValues($addrParams);
+    if (!empty($config->receiptAddrType)) {
+      $addr = CRM_Core_BAO_Address::getAddressByDefault($addresses, $config->receiptAddrType);
     }
-    $address = CRM_Utils_Address::format($addr, NULL, FALSE, TRUE);
+    else {
+      $addr = reset($addresses);
+    }
+    if (!empty($addr)) {
+      $template->assign('address', $addr['display_text']);
+    }
+    else {
+      $template->assign('address', '');
+    }
 
     // get primary location email if no email exist( for billing location).
     if (!$email) {

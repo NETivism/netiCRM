@@ -23,39 +23,43 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
-<div class="crm-block crm-form-block crm-mail-form-block">
+<div class="crm-block crm-form-block crm-form-block">
 <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>                         
       <table class="form-layout-compressed">
-        <tr class="crm-mail-form-block-receiptLogo">
+        <tr class="crm-form-block-receiptLogo">
             <td class="label">{$form.receiptLogo.label}</td><td>{$form.receiptLogo.html}<br />    
             <span class="description">{ts}Paste logo url. Start with http://{/ts}</span></td>
         </tr>
-        <tr class="crm-mail-form-block-receiptPrefix">
+        <tr class="crm-form-block-receiptPrefix">
             <td class="label">{$form.receiptPrefix.label}</td><td>{$form.receiptPrefix.html}<br />    
             <span class="description">{ts}Receipt ID prefix. Can be numberic or alphabetic.{/ts} {ts}Use this screen to configure formats for date display and date input fields. Defaults are provided for standard United States formats. Settings use standard POSIX specifiers.{/ts} {help id='date-format'}</span></td>
         </tr>
-        <tr class="crm-mail-form-block-receiptDescription">
+        <tr class="crm-form-block-receiptDescription">
             <td class="label">{$form.receiptDescription.label}</td><td>{$form.receiptDescription.html}<br />    
             <span class="description">{ts}Description will appear at the end of receipt.{/ts}</span></td>
         </tr>
-        <tr class="crm-mail-form-block-receiptOrgInfo">
+        <tr class="crm-form-block-receiptOrgInfo">
             <td class="label">{$form.receiptOrgInfo.label}</td><td>{$form.receiptOrgInfo.html}<br />
             <span class="description">{ts}Organization info will appear at the end of receipt.{/ts}</span></td>
         </tr>
-        <tr class="crm-mail-form-block-receiptYesNo">
+        <tr class="crm-form-block-receiptYesNo">
             <td class="label">{$form.receiptYesNo.label}</td><td>{$form.receiptYesNo.html}<br />
             <span class="description">{ts}Choose a Checkbox or a Radio field. If the field is selected to 'Yes' by contributor, then the receipt title and serial field will be required. On the contrary, the receipt title and serial field will hide.{/ts}</span></td>
         </tr>
-        <tr class="crm-mail-form-block-receiptTitle">
+        <tr class="crm-form-block-receiptTitle">
             <td class="label">{$form.receiptTitle.label}</td><td>{$form.receiptTitle.html}<br />
             <span class="description">{ts}When your receipt title save in another field, use this to select the field.{/ts}</span></td>
         </tr>
-        <tr class="crm-mail-form-block-receiptSerial">
+        <tr class="crm-form-block-receiptSerial">
             <td class="label">{$form.receiptSerial.label}</td><td>{$form.receiptSerial.html}<br />
             <span class="description">{ts}When your serial code save in another field, use this to select the field.{/ts}</span></td>
         </tr>
-        <tr class="crm-mail-form-block-receiptDonorCredit">
+        <tr class="crm-form-block-receiptDonorCredit">
             <td class="label">{$form.receiptDonorCredit.label}</td><td>{$form.receiptDonorCredit.html}<br />
+            <span class="description">{ts}When use custom field to record donor credit, use this to select the field.{/ts}</span></td>
+        </tr>
+        <tr class="crm-form-block-receiptAddrType">
+            <td class="label">{$form.receiptAddrType.label}</td><td>{$form.receiptAddrType.html}<br />
             <span class="description">{ts}When use custom field to record donor credit, use this to select the field.{/ts}</span></td>
         </tr>
       </table>
