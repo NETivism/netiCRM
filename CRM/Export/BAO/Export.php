@@ -442,7 +442,10 @@ class CRM_Export_BAO_Export {
                 INNER JOIN civicrm_relationship crel ON crel.{$contactB} = contact_a.id AND crel.relationship_type_id = {$id} 
                 {$relationshipJoin} ";
 
-        $relationWhere = " WHERE contact_a.is_deleted = 0 {$relationshipClause}";
+        $relationWhere = " WHERE contact_a.is_deleted = 0 AND crel.is_active = 1
+         AND ((crel.start_date < current_timestamp AND crel.end_date IS NULL)
+          OR (crel.start_date < current_timestamp AND crel.end_date > current_timestamp)
+          OR (crel.start_date IS NULL AND crel.end_date > current_timestamp)) {$relationshipClause}";
         $relationGroupBy = " GROUP BY crel.{$contactA}";
         $relationSelect = "{$relationSelect}, {$contactA} as refContact ";
         $relationQueryString = "$relationSelect $relationFrom $relationWhere $relationGroupBy";
