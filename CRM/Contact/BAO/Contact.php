@@ -1368,7 +1368,7 @@ WHERE id={$id}; ";
    */
   static function &makeHierReturnProperties($fields, $contactId = NULL) {
     require_once 'CRM/Core/PseudoConstant.php';
-    $locationTypes = CRM_Core_PseudoConstant::locationType();
+    $locationTypes = CRM_Core_PseudoConstant::locationType(NULL, 'name');
 
     $returnProperties = array();
     $locationIds = array();
@@ -1379,7 +1379,8 @@ WHERE id={$id}; ";
 
         if (!in_array($fieldName, $multipleFields)) {
           if ($id == 'Primary') {
-            $locationTypeName = 1;
+            $defaultLocationType = &CRM_Core_BAO_LocationType::getDefault();
+            $locationTypeName = $defaultLocationType->name;
           }
           else {
             $locationTypeName = CRM_Utils_Array::value($id, $locationTypes);
@@ -1433,8 +1434,19 @@ WHERE id={$id}; ";
    * @access public
    * @static
    */
-  static function getPrimaryLocationType($contactId, $skipDefaultPriamry = FALSE) {
-    $query = "
+  static function getPrimaryLocationType($contactId, $skipDefaultPriamry = FALSE, $block = NULL) {
+    if ($block) {
+      $entityBlock = array('contact_id' => $contactId);
+      $blocks = CRM_Core_BAO_Location::getValues($entityBlock);
+      foreach ($blocks[$block] as $key => $value) {
+        if (!empty($value['is_primary'])) {
+          $locationType = CRM_Utils_Array::value('location_type_id', $value);
+          return $locationType;
+        }
+      }
+    }
+    else {
+      $query = "
 SELECT
  IF ( civicrm_email.location_type_id IS NULL,
     IF ( civicrm_address.location_type_id IS NULL, 
@@ -1452,14 +1464,15 @@ FROM civicrm_contact
      LEFT JOIN civicrm_im      ON ( civicrm_im.is_primary      = 1 AND civicrm_im.contact_id = civicrm_contact.id)
      LEFT JOIN civicrm_openid  ON ( civicrm_openid.is_primary  = 1 AND civicrm_openid.contact_id = civicrm_contact.id)
 WHERE  civicrm_contact.id = %1 ";
+    
+      $params = array(1 => array($contactId, 'Integer'));
 
-    $params = array(1 => array($contactId, 'Integer'));
+      $dao = CRM_Core_DAO::executeQuery($query, $params);
 
-    $dao = &CRM_Core_DAO::executeQuery($query, $params);
-
-    $locationType = NULL;
-    if ($dao->fetch()) {
-      $locationType = $dao->locationType;
+      $locationType = NULL;
+      if ($dao->fetch()) {
+        $locationType = $dao->locationType;
+      }
     }
 
     if ($locationType) {
@@ -1470,10 +1483,7 @@ WHERE  civicrm_contact.id = %1 ";
       return NULL;
     }
     else {
-      // if there is no primart contact location, then return default
-      // location type of the system
-      require_once 'CRM/Core/BAO/LocationType.php';
-      $defaultLocationType = &CRM_Core_BAO_LocationType::getDefault();
+      $defaultLocationType = CRM_Core_BAO_LocationType::getDefault();
       return $defaultLocationType->id;
     }
   }
