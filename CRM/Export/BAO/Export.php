@@ -439,9 +439,8 @@ class CRM_Export_BAO_Export {
         }
 
         $relationFrom = " {$relationFrom}
-                INNER JOIN civicrm_relationship crel ON crel.{$contactB} = contact_a.id AND crel.relationship_type_id = {$id} 
+                INNER JOIN (SELECT * FROM civicrm_relationship ORDER BY is_active DESC, start_date DESC) crel ON crel.{$contactB} = contact_a.id AND crel.relationship_type_id = {$id} 
                 {$relationshipJoin} ";
-
         $relationWhere = " WHERE contact_a.is_deleted = 0 {$relationshipClause}";
         $relationGroupBy = " GROUP BY crel.{$contactA}";
         $relationSelect = "{$relationSelect}, {$contactA} as refContact ";
