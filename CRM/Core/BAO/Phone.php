@@ -97,7 +97,7 @@ class CRM_Core_BAO_Phone extends CRM_Core_DAO_Phone {
 
     $query = "
    SELECT phone, civicrm_location_type.name as locationType, civicrm_phone.is_primary as is_primary,
-     civicrm_phone.id as phone_id, civicrm_phone.location_type_id as locationTypeId
+     civicrm_phone.id as phone_id, civicrm_phone.location_type_id as locationTypeId, civicrm_phone.phone_type_id
      FROM civicrm_contact
 LEFT JOIN civicrm_phone ON ( civicrm_contact.id = civicrm_phone.contact_id )
 LEFT JOIN civicrm_location_type ON ( civicrm_phone.location_type_id = civicrm_location_type.id )
@@ -114,6 +114,7 @@ ORDER BY civicrm_phone.is_primary DESC,  phone_id ASC ";
         'is_primary' => $dao->is_primary,
         'id' => $dao->phone_id,
         'phone' => $dao->phone,
+        'phone_type_id' => $dao->phone_type_id,
         'locationTypeId' => $dao->locationTypeId,
       );
 

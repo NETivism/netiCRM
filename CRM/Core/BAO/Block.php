@@ -226,9 +226,7 @@ class CRM_Core_BAO_Block {
     foreach ($params[$blockName] as $count => $value) {
       $blockId = CRM_Utils_Array::value('id', $value);
       if ($blockId) {
-        if (is_array($blockIds)
-          && array_key_exists($blockId, $blockIds)
-        ) {
+        if (is_array($blockIds) && array_key_exists($blockId, $blockIds)) {
           unset($blockIds[$blockId]);
         }
         else {
@@ -236,9 +234,7 @@ class CRM_Core_BAO_Block {
         }
       }
       //lets allow to update primary w/ more cleanly.
-      if (!$resetPrimaryId &&
-        CRM_Utils_Array::value('is_primary', $value)
-      ) {
+      if (!$resetPrimaryId && CRM_Utils_Array::value('is_primary', $value)) {
         if (is_array($blockIds)) {
           foreach ($blockIds as $blockId => $blockValue) {
             if (CRM_Utils_Array::value('is_primary', $blockValue)) {
@@ -265,19 +261,25 @@ class CRM_Core_BAO_Block {
       if (!is_array($value)) {
         continue;
       }
-      $contactFields = array('contact_id' => $contactId,
+      $contactFields = array(
+        'contact_id' => $contactId,
         'location_type_id' => $value['location_type_id'],
       );
 
       //check for update
-      if (!CRM_Utils_Array::value('id', $value) &&
-        is_array($blockIds) && !empty($blockIds)
-      ) {
+      if (!CRM_Utils_Array::value('id', $value) && is_array($blockIds) && !empty($blockIds)) {
         foreach ($blockIds as $blockId => $blockValue) {
           if ($updateBlankLocInfo) {
             if (CRM_Utils_Array::value($count, $blockIds)) {
               $value['id'] = $blockIds[$count]['id'];
               unset($blockIds[$count]);
+            }
+          }
+          else if($blockName == 'phone') {
+            if ($blockValue['locationTypeId'] == $value['location_type_id'] && $blockValue['phone_type_id'] == $value['phone_type_id']) {
+              $value['id'] = $blockValue['id'];
+              unset($blockIds[$blockId]);
+              break;
             }
           }
           else {
@@ -291,17 +293,17 @@ class CRM_Core_BAO_Block {
         }
       }
 
-      $dataExits = self::dataExists(self::$requiredBlockFields[$blockName], $value);
+      $dataExists = self::dataExists(self::$requiredBlockFields[$blockName], $value);
 
       // Note there could be cases when block info already exist ($value[id] is set) for a contact/entity
       // BUT info is not present at this time, and therefore we should be really careful when deleting the block.
       // $updateBlankLocInfo will help take appropriate decision. CRM-5969
-      if (CRM_Utils_Array::value('id', $value) && !$dataExits && $updateBlankLocInfo) {
+      if (CRM_Utils_Array::value('id', $value) && !$dataExists && $updateBlankLocInfo) {
         //delete the existing record
         self::blockDelete($name, array('id' => $value['id']));
         continue;
       }
-      elseif (!$dataExits) {
+      elseif (!$dataExists) {
         continue;
       }
 

@@ -962,18 +962,17 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
             // fix for CRM-1543
             // not sure why we'd every use Primary location type id
             // we need to fix the source if we are using it
-            // $locationTypeName = CRM_Contact_BAO_Contact::getPrimaryLocationType( $cid );
-            $locationTypeName = 1;
+            $locationTypeId = CRM_Contact_BAO_Contact::getPrimaryLocationType($cid);
           }
           else {
-            $locationTypeName = CRM_Utils_Array::value($id, $locationTypes);
+            $locationTypeId = CRM_Utils_Array::value($id, $locationTypes);
           }
 
-          if (!$locationTypeName) {
+          if (!$locationTypeId ) {
             continue;
           }
 
-          $detailName = "{$locationTypeName}-{$fieldName}";
+          $detailName = "{$locationTypeId}-{$fieldName}";
           $detailName = str_replace(' ', '_', $detailName);
 
           if (in_array($fieldName, array('phone', 'im', 'email', 'openid'))) {
@@ -2052,15 +2051,22 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
           if (!in_array($fieldName, $multipleFields)) {
             if (is_array($details)) {
               foreach ($details as $key => $value) {
-                // when we fixed CRM-5319 - get primary loc
-                // type as per loc field and removed below code.
+                $primaryLocationType = FALSE;
                 if ($locTypeId == 'Primary') {
-                  $locTypeId = CRM_Contact_BAO_Contact::getPrimaryLocationType($contactId);
+                  if (is_array($value) && array_key_exists($fieldName, $value)) {
+                    $primaryLocationType = TRUE;
+                    if (in_array($fieldName, $blocks)) {
+                      $locTypeId = CRM_Contact_BAO_Contact::getPrimaryLocationType($contactId, FALSE, $fieldName);
+                    }
+                    else {
+                      $locTypeId = CRM_Contact_BAO_Contact::getPrimaryLocationType($contactId, FALSE, 'address');
+                    }
+                  }
                 }
 
                 // fixed for CRM-665
                 if (is_numeric($locTypeId)) {
-                  if ($locTypeId == CRM_Utils_Array::value('location_type_id', $value)) {
+                  if ($primaryLocationType || $locTypeId == CRM_Utils_Array::value('location_type_id', $value)) {
                     if (CRM_Utils_Array::value($fieldName, $value)) {
                       //to handle stateprovince and country
                       if ($fieldName == 'state_province') {
@@ -2085,7 +2091,11 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
                           }
                         }
                         else {
-                          $defaults[$fldName] = $value['phone'];
+                          $phoneDefault = CRM_Utils_Array::value('phone', $value);
+                          // CRM-9216
+                          if (!is_array($phoneDefault)) {
+                            $defaults[$fldName] = $phoneDefault;
+                          }
                         }
                       }
                       elseif ($fieldName == 'email') {

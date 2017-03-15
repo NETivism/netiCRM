@@ -173,10 +173,9 @@ class CRM_Event_BAO_Query {
 
       //participant note
       if (CRM_Utils_Array::value('participant_note', $query->_returnProperties)) {
-        $query->_select['participant_note'] = "civicrm_note.note as participant_note";
+        $query->_select['participant_note'] = "civicrm_note_participant.note as participant_note";
         $query->_element['participant_note'] = 1;
         $query->_tables['participant_note'] = 1;
-        $query->_whereTables['civicrm_note'] = 1;
       }
 
       if (CRM_Utils_Array::value('participant_is_pay_later', $query->_returnProperties)) {
@@ -462,8 +461,8 @@ class CRM_Event_BAO_Query {
         break;
 
       case 'participant_note':
-        $from .= " $side JOIN civicrm_note ON ( civicrm_note.entity_table = 'civicrm_participant' AND
-                                                        civicrm_participant.id = civicrm_note.entity_id AND civicrm_note.note IS NOT NULL)";
+        $from .= " $side JOIN civicrm_note civicrm_note_participant ON ( civicrm_note_participant.entity_table = 'civicrm_participant' AND
+          civicrm_participant.id = civicrm_note_participant.entity_id AND civicrm_note_participant.note IS NOT NULL)";
         break;
 
       case 'participant_status':
