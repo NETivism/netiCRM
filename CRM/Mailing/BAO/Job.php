@@ -83,27 +83,22 @@ class CRM_Mailing_BAO_Job extends CRM_Mailing_DAO_Job {
     }
     else {
       $currentTime = date('YmdHis');
-      $mailingACL = CRM_Mailing_BAO_Mailing::mailingACL('m');
       $domainID = CRM_Core_Config::domainID();
 
       // Select the first child job that is scheduled
       // CRM-6835
       $query = "
-			SELECT   j.*
-			  FROM   $jobTable     j,
-					 $mailingTable m
-			 WHERE   m.id = j.mailing_id AND m.domain_id = {$domainID}
-			   AND   j.is_test = 0
-			   AND   ( ( j.start_date IS null
-			   AND       j.scheduled_date <= $currentTime
-			   AND       j.status = 'Scheduled' )
-                OR     ( j.status = 'Running'
-			   AND       j.end_date IS null ) )
-			   AND (j.job_type = 'child')
-			   AND   {$mailingACL}
-			ORDER BY j.scheduled_date, j.mailing_id, j.id
-			";
-
+SELECT j.*
+  FROM $jobTable j
+  INNER JOIN $mailingTable m ON m.id = j.mailing_id AND m.domain_id = {$domainID}
+WHERE j.is_test = 0
+  AND (
+    ( j.start_date IS null AND j.scheduled_date <= $currentTime AND  j.status = 'Scheduled' )
+    OR
+    ( j.status = 'Running' AND j.end_date IS null)
+  )
+  AND j.job_type = 'child'
+ORDER BY j.scheduled_date, m.scheduled_date, j.mailing_id, j.id ASC";
       $job->query($query);
     }
 
@@ -209,21 +204,18 @@ class CRM_Mailing_BAO_Job extends CRM_Mailing_DAO_Job {
     $mailingTable = CRM_Mailing_DAO_Mailing::getTableName();
 
     $currentTime = date('YmdHis');
-    $mailingACL = CRM_Mailing_BAO_Mailing::mailingACL('m');
     $domainID = CRM_Core_Config::domainID();
 
     $query = "
-                SELECT   j.*
-                  FROM   $jobTable     j,
-                                 $mailingTable m
-                 WHERE   m.id = j.mailing_id AND m.domain_id = {$domainID}
-                   AND   j.is_test = 0
-                   AND       j.scheduled_date <= $currentTime
-                   AND       j.status = 'Running'
-                   AND       j.end_date IS null
-                   AND       (j.job_type != 'child' OR j.job_type is NULL)
-                ORDER BY j.scheduled_date,
-                                 j.start_date";
+SELECT j.*
+  FROM $jobTable j
+  INNER JOIN $mailingTable m ON m.id = j.mailing_id AND m.domain_id = {$domainID}
+WHERE j.is_test = 0
+  AND j.scheduled_date <= $currentTime
+  AND j.status = 'Running'
+  AND j.end_date IS null
+  AND (j.job_type != 'child' OR j.job_type is NULL)
+ORDER BY j.scheduled_date, j.start_date ASC";
 
     $job->query($query);
 
@@ -233,12 +225,12 @@ class CRM_Mailing_BAO_Job extends CRM_Mailing_DAO_Job {
       $child_job = new CRM_Mailing_BAO_Job();
 
       $child_job_sql = "
-            SELECT count(j.id) 
-                        FROM civicrm_mailing_job j, civicrm_mailing m
-                        WHERE m.id = j.mailing_id
-                        AND j.job_type = 'child'
-                        AND j.parent_id = %1
-            AND j.status <> 'Complete'";
+SELECT count(j.id)
+  FROM civicrm_mailing_job j
+  INNER JOIN civicrm_mailing m ON m.id = j.mailing_id
+WHERE j.job_type = 'child'
+  AND j.parent_id = %1
+  AND j.status <> 'Complete'";
       $params = array(1 => array($job->id, 'Integer'));
 
       $anyChildLeft = CRM_Core_DAO::singleValueQuery($child_job_sql, $params);
@@ -275,31 +267,19 @@ class CRM_Mailing_BAO_Job extends CRM_Mailing_DAO_Job {
     $mailingTable = CRM_Mailing_DAO_Mailing::getTableName();
 
     $currentTime = date('YmdHis');
-    $mailingACL = CRM_Mailing_BAO_Mailing::mailingACL('m');
-
-
-    $workflowClause = CRM_Mailing_BAO_Job::workflowClause();
 
     $domainID = CRM_Core_Config::domainID();
 
     // Select all the mailing jobs that are created from
     // when the mailing is submitted or scheduled.
     $query = "
-		SELECT   j.*
-		  FROM   $jobTable     j,
-				 $mailingTable m
-		 WHERE   m.id = j.mailing_id AND m.domain_id = {$domainID}
-                 $workflowClause
-		   AND   j.is_test = 0
-		   AND   ( ( j.start_date IS null
-		   AND       j.scheduled_date <= $currentTime
-		   AND       j.status = 'Scheduled'
-		   AND       j.end_date IS null ) )
-		   AND ((j.job_type is NULL) OR (j.job_type <> 'child'))
-		ORDER BY j.scheduled_date,
-				 j.start_date";
-
-
+SELECT j.*
+  FROM $jobTable j
+  INNER JOIN $mailingTable m ON m.id = j.mailing_id AND m.domain_id = {$domainID}
+WHERE j.is_test = 0
+  AND ( j.start_date IS null AND j.scheduled_date <= $currentTime AND j.status = 'Scheduled' AND j.end_date IS null )
+  AND ( j.job_type is NULL OR j.job_type <> 'child' )
+ORDER BY j.scheduled_date, j.start_date ASC";
     $job->query($query);
 
     require_once 'CRM/Core/Lock.php';
@@ -840,7 +820,7 @@ AND    status IN ( 'Scheduled', 'Running', 'Paused' )
       //check whether activity is already created for this mailing.
       //if yes then create only target contact record.
       $query = "
-SELECT id 
+SELECT id
 FROM   civicrm_activity
 WHERE  civicrm_activity.activity_type_id = %1
 AND    civicrm_activity.source_record_id = %2";
