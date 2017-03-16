@@ -45415,3 +45415,9 @@ msgstr ""
 
 msgid "Installments Left"
 msgstr ""
+
+msgid "Do not use free mail address as mail sender. (eg. %1)"
+msgstr ""
+
+msgid "Most of mail providers apply DMARC, that means if you use free email address as mail sender, the mail will be blocked by destination inbox."
+msgstr ""

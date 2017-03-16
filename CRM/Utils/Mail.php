@@ -34,7 +34,7 @@
  */
 class CRM_Utils_Mail {
 
-  const MAIL_PROVIDERS = 'yahoo.com|gmail.com|msn.com|outlook.com|hotmail.com'; 
+  const DMARC_MAIL_PROVIDERS = 'yahoo.com|gmail.com|msn.com|outlook.com|hotmail.com';
 
   /**
    * Wrapper function to send mail in CiviCRM. Hooks are called from this function. The input parameter
@@ -312,10 +312,9 @@ class CRM_Utils_Mail {
   }
 
   static function checkMailProviders($email) {
-    $mailProviders = '/yahoo\.com|gmail\.com|msn\.com|outlook\.com|hotmail\.com/i'; 
-    $mailProviders = str_replace('.', '\.', self::MAIL_PROVIDERS);
+    $mailProviders = str_replace('.', '\.', self::DMARC_MAIL_PROVIDERS);
     if (preg_match('/'.$mailProviders.'/i', $email)) {
-      return FALSE; 
+      return FALSE;
     }
     return TRUE;
   }

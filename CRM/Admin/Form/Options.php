@@ -89,7 +89,7 @@ class CRM_Admin_Form_Options extends CRM_Admin_Form {
     $this->assign('id', $this->_id);
 
     if ($this->_gName == 'from_email_address') {
-      $this->assign('mail_providers', str_replace('|', ', ', CRM_Utils_Mail::MAIL_PROVIDERS));
+      $this->assign('mail_providers', str_replace('|', ', ', CRM_Utils_Mail::DMARC_MAIL_PROVIDERS));
     }
 
     require_once 'CRM/Core/OptionGroup.php';
@@ -321,7 +321,7 @@ class CRM_Admin_Form_Options extends CRM_Admin_Form {
       }
 
       if (!CRM_Utils_Mail::checkMailProviders($formEmail)) {
-        $errors['label'] = ts('Do not use free mail address as mail sender. (eg. %1)', array(1 => str_replace('|', ', ', CRM_Utils_Mail::MAIL_PROVIDERS)));
+        $errors['label'] = ts('Do not use free mail address as mail sender. (eg. %1)', array(1 => str_replace('|', ', ', CRM_Utils_Mail::DMARC_MAIL_PROVIDERS)));
       }
     }
 

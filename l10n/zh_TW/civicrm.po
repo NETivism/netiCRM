@@ -11,7 +11,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2017-03-13 08:52+0000\n"
+"PO-Revision-Date: 2017-03-16 06:58+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -45464,3 +45464,11 @@ msgstr "剩餘%1期"
 
 msgid "Installments Left"
 msgstr "剩餘定期期數"
+
+msgid "Do not use free mail address as mail sender. (eg. %1)"
+msgstr "請勿使用免費信箱當作你的寄件者（免費信箱如： %1）"
+
+msgid ""
+"Most of mail providers apply DMARC, that means if you use free email address"
+" as mail sender, the mail will be blocked by destination inbox."
+msgstr "現今多數的信箱已使用避免釣魚詐騙信件的規則（ DMARC ），若您用免費信箱當作本系統的寄件者，郵件將會被收件方阻擋。"
