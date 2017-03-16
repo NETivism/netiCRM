@@ -88,6 +88,10 @@ class CRM_Admin_Form_Options extends CRM_Admin_Form {
     $session->pushUserContext(CRM_Utils_System::url($url, $params));
     $this->assign('id', $this->_id);
 
+    if ($this->_gName == 'from_email_address') {
+      $this->assign('mail_providers', str_replace('|', ', ', CRM_Utils_Mail::MAIL_PROVIDERS));
+    }
+
     require_once 'CRM/Core/OptionGroup.php';
     if ($this->_id && in_array($this->_gName, CRM_Core_OptionGroup::$_domainIDGroups)) {
       $domainID = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionValue', $this->_id, 'domain_id', 'id');
@@ -314,6 +318,10 @@ class CRM_Admin_Form_Options extends CRM_Admin_Form {
       $formName = explode('"', $fields['label']);
       if (!CRM_Utils_Array::value(1, $formName) || count($formName) != 3) {
         $errors['label'] = ts('Please follow the proper format for From Email Address');
+      }
+
+      if (!CRM_Utils_Mail::checkMailProviders($formEmail)) {
+        $errors['label'] = ts('Do not use free mail address as mail sender. (eg. %1)', array(1 => str_replace('|', ', ', CRM_Utils_Mail::MAIL_PROVIDERS)));
       }
     }
 

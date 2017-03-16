@@ -48,13 +48,15 @@
 		<table class="form-layout-compressed">
 		<tr>
 			<td>
+        <div>
 				{$form.email_name.label} {help id="from-name"}<br />
 				{$form.email_name.html}
-			</td>
-			<td class="">
+        </div>
+        <div>
 				{$form.email_address.label} {help id="from-email"}<br />
 				{$form.email_address.html} 
-				   <br /><span class="description">(info@example.org)</span>
+				   <br /><span class="description"><a href="{crmURL p="civicrm/admin/options/from_email_address" q="group=from_email_address&reset=1"}" target="_blank">{ts}Edit Field{/ts}</a></span>
+        </div>
 			</td>
 		</tr>
 		</table>
