@@ -1288,7 +1288,7 @@ CREATE TABLE {$exportTempTable} (
     $addIndices = array('street_address', 'household_name', 'civicrm_primary_id');
     foreach ($addIndices as $index) {
       foreach($sqlColumns as $column){
-        if(strstr($column, $index)){
+        if($column == $index){
           $sql .= ",
   INDEX index_{$index}( $index )
 ";
