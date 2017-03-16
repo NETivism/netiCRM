@@ -206,6 +206,11 @@ class CRM_Core_Invoke {
         else {
           CRM_Core_Error::fatal();
         }
+        if ($config->debug) {
+          if (method_exists($object, 'editForm')) {
+            $template->assign('callbackArgs', $object->editForm());
+          }
+        }
         $result = $object->run($newArgs, $pageArgs);
       }
 

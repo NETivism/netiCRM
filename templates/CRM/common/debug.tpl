@@ -24,8 +24,8 @@
  +--------------------------------------------------------------------+
 *}
 
+<!-- fun invoke: {$callbackPath} {$callbackArgs} -->
 <!-- tpl invoke: templates/{$tplFile} -->
-<!-- fun invoke: {$callbackPath} -->
 {if $smarty.get.smartyDebug}
 {debug}
 {/if}
