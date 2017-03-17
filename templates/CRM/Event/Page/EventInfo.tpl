@@ -43,6 +43,11 @@
       <div class="crm-section event_summary-section">
         {$event.summary}
       </div>
+    {literal}
+    <script type="text/javascript">
+      cj(".event-info-header").insertAfter("#content-header");
+    </script>
+    {/literal}
     </div> <!-- .event-info-header -->
   {/if}
 
@@ -217,11 +222,3 @@
     </div> <!-- .event-info-content -->      
   </div> <!-- .event-info -->
 </div><!-- .crm-event-info-form-block -->
-
-{literal}
-<script type="text/javascript">
-  if (cj("#content-header").next("#content-main").length == 0) {
-    cj(".event-info-header").insertAfter("#content-header");
-  }
-</script>
-{/literal}
