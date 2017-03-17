@@ -24,8 +24,8 @@
  +--------------------------------------------------------------------+
 *}
 {if $showDirectly}
-  {assign var=height value="350px"}
-  {assign var=width  value="425px"}
+  {assign var=height value="450px"}
+  {assign var=width  value="100%"}
 {else}	
   {assign var=height value="600px"}
   {assign var=width  value="100%"}
@@ -126,4 +126,4 @@
     }
 </script>
 {/literal}
-<div id="google_map" style="width: {$width}; height: {$height}"></div>
+<div id="google_map" class="event-map media_embed" style="width: {$width}; height: {$height}"></div>
