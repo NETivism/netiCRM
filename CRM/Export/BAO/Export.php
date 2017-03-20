@@ -438,7 +438,7 @@ class CRM_Export_BAO_Export {
           $relationshipClause = " AND crel.{$contactA} IN ( {$relID} )";
         }
         $relTempName = CRM_Core_DAO::createTempTableName('civicrm_relationship_temp', FALSE);
-        $sqlTempTable = "CREATE TEMPORARY TABLE IF NOT EXISTS $relTempName AS (SELECT * FROM civicrm_relationship ORDER BY is_active, start_date DESC )";
+        $sqlTempTable = "CREATE TEMPORARY TABLE IF NOT EXISTS $relTempName AS (SELECT * FROM civicrm_relationship ORDER BY is_active DESC, start_date DESC )";
         CRM_Core_DAO::executeQuery($sqlTempTable);
         $relationFrom = " {$relationFrom}
                 INNER JOIN {$relTempName} crel ON crel.{$contactB} = contact_a.id AND crel.relationship_type_id = {$id}
