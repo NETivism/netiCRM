@@ -11,7 +11,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2017-03-16 06:58+0000\n"
+"PO-Revision-Date: 2017-03-22 11:04+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -28977,7 +28977,7 @@ msgstr "您可以取消日後的定期定額捐款。"
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid "To modify or cancel future contributions please contact us at %1."
-msgstr "若要更改或取消預定捐款，請使用%1與我們聯繫。"
+msgstr "若需要更改或取消預定捐款，可以透過 %1 與我們聯繫。"
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid "You will receive an email receipt for each recurring contribution."
@@ -39680,7 +39680,7 @@ msgstr "這是一個定期定額捐款。您可以隨時與我們聯絡，以取
 msgid ""
 "This is a recurring contribution. To modify or cancel future contributions "
 "please contact us at %1."
-msgstr "這是一個定期定額捐款。您可以修改或取消未來的捐款，請在 %1 通知我們."
+msgstr "這是一個定期定額捐款。若要修改或取消未來的捐款，請透過 %1 與我們聯繫。"
 
 #: xml/templates/message_templates/contribution_online_receipt_html.tpl
 #: xml/templates/message_templates/contribution_online_receipt_text.tpl
@@ -44734,7 +44734,7 @@ msgid "To modify or cancel future contributions please contact %1"
 msgstr "若要修改或取消後續的定期定額捐款，請聯繫%1"
 
 msgid "To modify or cancel future contributions please contact us"
-msgstr "若要修改或取消後續的定期定額捐款，請聯繫我們"
+msgstr "若要修改或取消後續的定期定額捐款，請與我們聯繫。"
 
 msgid "Filter by month"
 msgstr "依月份篩選"
