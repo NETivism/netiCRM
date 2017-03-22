@@ -98,7 +98,7 @@ WHERE j.is_test = 0
     ( j.status = 'Running' AND j.end_date IS null)
   )
   AND j.job_type = 'child'
-ORDER BY j.scheduled_date, m.scheduled_date, j.mailing_id, j.id ASC";
+ORDER BY j.scheduled_date ASC, m.scheduled_date ASC, j.mailing_id ASC, j.id ASC";
       $job->query($query);
     }
 
@@ -215,7 +215,7 @@ WHERE j.is_test = 0
   AND j.status = 'Running'
   AND j.end_date IS null
   AND (j.job_type != 'child' OR j.job_type is NULL)
-ORDER BY j.scheduled_date, j.start_date ASC";
+ORDER BY j.scheduled_date ASC, j.start_date ASC";
 
     $job->query($query);
 
@@ -279,7 +279,7 @@ SELECT j.*
 WHERE j.is_test = 0
   AND ( j.start_date IS null AND j.scheduled_date <= $currentTime AND j.status = 'Scheduled' AND j.end_date IS null )
   AND ( j.job_type is NULL OR j.job_type <> 'child' )
-ORDER BY j.scheduled_date, j.start_date ASC";
+ORDER BY j.scheduled_date ASC, j.start_date ASC";
     $job->query($query);
 
     require_once 'CRM/Core/Lock.php';
