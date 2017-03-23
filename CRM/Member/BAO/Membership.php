@@ -1017,6 +1017,7 @@ AND civicrm_membership.is_test = %2";
       );
     }
     else {
+      $form->assign('is_pay_later', 0);
       // create the CMS contact here since we normally do this under processConfirm
       CRM_Contribute_BAO_Contribution_Utils::createCMSUser($membershipParams,
         $membershipParams['cms_contactID'],
