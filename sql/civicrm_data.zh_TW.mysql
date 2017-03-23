@@ -5678,8 +5678,7 @@ INSERT INTO civicrm_msg_template
       
       
       
-      ('個案 - 寄出任務複本', '{if $idHash}[case #{$idHash}]{/if} {$activitySubject}
-', '===========================================================
+      ('個案 - 寄出任務複本', '{if $idHash}[case #{$idHash}]{/if} {$activitySubject}', '===========================================================
 {ts}Activity Summary{/ts} - {$activityTypeName}
 ===========================================================
 {if $isCaseActivity}
@@ -5812,8 +5811,7 @@ INSERT INTO civicrm_msg_template
 </body>
 </html>
 ', @tpl_ovid_case_activity, 1,          0),
-      ('個案 - 寄出任務複本', '{if $idHash}[case #{$idHash}]{/if} {$activitySubject}
-', '===========================================================
+      ('個案 - 寄出任務複本', '{if $idHash}[case #{$idHash}]{/if} {$activitySubject}', '===========================================================
 {ts}Activity Summary{/ts} - {$activityTypeName}
 ===========================================================
 {if $isCaseActivity}
@@ -5948,8 +5946,7 @@ INSERT INTO civicrm_msg_template
 ', @tpl_ovid_case_activity, 0,          1) ,      
       
       
-      ('捐款 - 重複組織警示', '{ts}CiviContribute Alert: Possible Duplicate Contact Record{/ts}
-', '{ts}A contribution / membership signup was made on behalf of the organization listed below.{/ts}
+      ('捐款 - 重複組織警示', '{ts}CiviContribute Alert: Possible Duplicate Contact Record{/ts}', '{ts}A contribution / membership signup was made on behalf of the organization listed below.{/ts}
 {ts}The information provided matched multiple existing database records based on the configured
 Duplicate Matching Rules for your site.{/ts}
 
@@ -6059,8 +6056,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
 </body>
 </html>
 ', @tpl_ovid_contribution_dupalert, 1,          0),
-      ('捐款 - 重複組織警示', '{ts}CiviContribute Alert: Possible Duplicate Contact Record{/ts}
-', '{ts}A contribution / membership signup was made on behalf of the organization listed below.{/ts}
+      ('捐款 - 重複組織警示', '{ts}CiviContribute Alert: Possible Duplicate Contact Record{/ts}', '{ts}A contribution / membership signup was made on behalf of the organization listed below.{/ts}
 {ts}The information provided matched multiple existing database records based on the configured
 Duplicate Matching Rules for your site.{/ts}
 
@@ -6172,8 +6168,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
 ', @tpl_ovid_contribution_dupalert, 0,          1) ,      
       
       
-      ('捐款 - 收據（離線）', '{ts}Payment Notification{/ts}
-', '{if $formValues.receipt_text}
+      ('捐款 - 收據（離線）', '{ts}Payment Notification{/ts}', '{if $formValues.receipt_text}
 {$formValues.receipt_text}
 {else}{ts}Thanks for your support.{/ts}{/if}
 
@@ -6532,8 +6527,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
 </body>
 </html>
 ', @tpl_ovid_contribution_offline_receipt, 1,          0),
-      ('捐款 - 收據（離線）', '{ts}Payment Notification{/ts}
-', '{if $formValues.receipt_text}
+      ('捐款 - 收據（離線）', '{ts}Payment Notification{/ts}', '{if $formValues.receipt_text}
 {$formValues.receipt_text}
 {else}{ts}Thanks for your support.{/ts}{/if}
 
@@ -6894,8 +6888,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
 ', @tpl_ovid_contribution_offline_receipt, 0,          1) ,      
       
       
-      ('捐款 - 收據（在線）', '{if $is_pay_later}{ts}Invoice{/ts}{else}{ts}Payment Notification{/ts}{/if} - {$title}
-', '{if $receipt_text}
+      ('捐款 - 收據（在線）', '{if $is_pay_later}{ts}Invoice{/ts}{elseif $is_monetary}{ts}Payment Notification{/ts} - {/if}{$title}', '{if $receipt_text}
 {$receipt_text}
 {/if}
 {if $is_pay_later}
@@ -7460,8 +7453,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
 </body>
 </html>
 ', @tpl_ovid_contribution_online_receipt, 1,          0),
-      ('捐款 - 收據（在線）', '{if $is_pay_later}{ts}Invoice{/ts}{else}{ts}Payment Notification{/ts}{/if} - {$title}
-', '{if $receipt_text}
+      ('捐款 - 收據（在線）', '{if $is_pay_later}{ts}Invoice{/ts}{elseif $is_monetary}{ts}Payment Notification{/ts} - {/if}{$title}', '{if $receipt_text}
 {$receipt_text}
 {/if}
 {if $is_pay_later}
@@ -8028,8 +8020,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
 ', @tpl_ovid_contribution_online_receipt, 0,          1) ,      
       
       
-      ('捐款 - 定期捐款的開始和結束通知', '{ts}Recurring Contribution Notification{/ts}
-', '{ts 1=$displayName}Dear %1{/ts},
+      ('捐款 - 定期捐款的開始和結束通知', '{ts}Recurring Contribution Notification{/ts}', '{ts 1=$displayName}Dear %1{/ts},
 
 {if $recur_txnType eq \'START\'}
 
@@ -8133,8 +8124,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
 </body>
 </html>
 ', @tpl_ovid_contribution_recurring_notify, 1,          0),
-      ('捐款 - 定期捐款的開始和結束通知', '{ts}Recurring Contribution Notification{/ts}
-', '{ts 1=$displayName}Dear %1{/ts},
+      ('捐款 - 定期捐款的開始和結束通知', '{ts}Recurring Contribution Notification{/ts}', '{ts 1=$displayName}Dear %1{/ts},
 
 {if $recur_txnType eq \'START\'}
 
@@ -8468,8 +8458,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
 </html>', @tpl_ovid_contribution_invoice_notify, 0,          1) ,      
       
       
-      ('個人募款頁 - 管理通知', '{ts}Personal Campaign Page Notification{/ts}
-', '===========================================================
+      ('個人募款頁 - 管理通知', '{ts}Personal Campaign Page Notification{/ts}', '===========================================================
 {ts}Personal Campaign Page Notification{/ts}
 
 ===========================================================
@@ -8584,8 +8573,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
 </body>
 </html>
 ', @tpl_ovid_pcp_notify, 1,          0),
-      ('個人募款頁 - 管理通知', '{ts}Personal Campaign Page Notification{/ts}
-', '===========================================================
+      ('個人募款頁 - 管理通知', '{ts}Personal Campaign Page Notification{/ts}', '===========================================================
 {ts}Personal Campaign Page Notification{/ts}
 
 ===========================================================
@@ -8702,8 +8690,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
 ', @tpl_ovid_pcp_notify, 0,          1) ,      
       
       
-      ('個人募款頁 - 支持者狀態更改通知', '{ts 1=$contribPageTitle}Your Personal Campaign Page for %1{/ts}
-', '{if $pcpStatus eq \'Approved\'}
+      ('個人募款頁 - 支持者狀態更改通知', '{ts 1=$contribPageTitle}Your Personal Campaign Page for %1{/ts}', '{if $pcpStatus eq \'Approved\'}
 ============================
 {ts}Your Personal Campaign Page{/ts}
 
@@ -8810,8 +8797,7 @@ which prevented us from approving the page. We are sorry for any inconvenience.{
 </body>
 </html>
 ', @tpl_ovid_pcp_status_change, 1,          0),
-      ('個人募款頁 - 支持者狀態更改通知', '{ts 1=$contribPageTitle}Your Personal Campaign Page for %1{/ts}
-', '{if $pcpStatus eq \'Approved\'}
+      ('個人募款頁 - 支持者狀態更改通知', '{ts 1=$contribPageTitle}Your Personal Campaign Page for %1{/ts}', '{if $pcpStatus eq \'Approved\'}
 ============================
 {ts}Your Personal Campaign Page{/ts}
 
@@ -8920,8 +8906,7 @@ which prevented us from approving the page. We are sorry for any inconvenience.{
 ', @tpl_ovid_pcp_status_change, 0,          1) ,      
       
       
-      ('個人募款頁 - 歡迎支持者', '{ts 1=$contribPageTitle}Your Personal Campaign Page for %1{/ts}
-', '{ts}Dear supporter{/ts},
+      ('個人募款頁 - 歡迎支持者', '{ts 1=$contribPageTitle}Your Personal Campaign Page for %1{/ts}', '{ts}Dear supporter{/ts},
 {ts 1="$contribPageTitle"}Thanks for creating a personal campaign page in support of %1.{/ts}
 
 {if $pcpStatus eq \'Approved\'}
@@ -9080,8 +9065,7 @@ your page, tell friends, and update your contact info.{/ts}</p>
 </body>
 </html>
 ', @tpl_ovid_pcp_supporter_notify, 1,          0),
-      ('個人募款頁 - 歡迎支持者', '{ts 1=$contribPageTitle}Your Personal Campaign Page for %1{/ts}
-', '{ts}Dear supporter{/ts},
+      ('個人募款頁 - 歡迎支持者', '{ts 1=$contribPageTitle}Your Personal Campaign Page for %1{/ts}', '{ts}Dear supporter{/ts},
 {ts 1="$contribPageTitle"}Thanks for creating a personal campaign page in support of %1.{/ts}
 
 {if $pcpStatus eq \'Approved\'}
@@ -9242,8 +9226,7 @@ your page, tell friends, and update your contact info.{/ts}</p>
 ', @tpl_ovid_pcp_supporter_notify, 0,          1) ,      
       
       
-      ('捐款 - 定期捐款失敗通知信', '{ts}Recurring Failed Notification{/ts}
-', '{ts}Recurring Failed Notification{/ts}
+      ('捐款 - 定期捐款失敗通知信', '{ts}Recurring Failed Notification{/ts}', '{ts}Recurring Failed Notification{/ts}
 
 {ts 1=$amount 2=$display_name 3=$receive_date 4=$url}The recurring contribution %1 by contributor %2 is failed at %3.( Link: %4 ){/ts}{if $detail}{ts}Additional Details:{/ts}
 {foreach from=$detail item=item}
@@ -9286,8 +9269,7 @@ your page, tell friends, and update your contact info.{/ts}</p>
 
 </body>
 </html>', @tpl_ovid_contribution_recur_fail_notify, 1,          0),
-      ('捐款 - 定期捐款失敗通知信', '{ts}Recurring Failed Notification{/ts}
-', '{ts}Recurring Failed Notification{/ts}
+      ('捐款 - 定期捐款失敗通知信', '{ts}Recurring Failed Notification{/ts}', '{ts}Recurring Failed Notification{/ts}
 
 {ts 1=$amount 2=$display_name 3=$receive_date 4=$url}The recurring contribution %1 by contributor %2 is failed at %3.( Link: %4 ){/ts}{if $detail}{ts}Additional Details:{/ts}
 {foreach from=$detail item=item}
@@ -9332,8 +9314,7 @@ your page, tell friends, and update your contact info.{/ts}</p>
 </html>', @tpl_ovid_contribution_recur_fail_notify, 0,          1) ,      
       
       
-      ('活動 - 登記確認與收據（離線）', '{ts}Event Confirmation{/ts} - {$event.title}
-', '{if $event.confirm_email_text AND (not $isOnWaitlist AND not $isRequireApproval)}
+      ('活動 - 登記確認與收據（離線）', '{ts}Event Confirmation{/ts} - {$event.title}', '{if $event.confirm_email_text AND (not $isOnWaitlist AND not $isRequireApproval)}
 {$event.confirm_email_text}
 {/if}
 
@@ -10071,8 +10052,7 @@ registration process.{/ts}</p>
 </body>
 </html>
 ', @tpl_ovid_event_offline_receipt, 1,          0),
-      ('活動 - 登記確認與收據（離線）', '{ts}Event Confirmation{/ts} - {$event.title}
-', '{if $event.confirm_email_text AND (not $isOnWaitlist AND not $isRequireApproval)}
+      ('活動 - 登記確認與收據（離線）', '{ts}Event Confirmation{/ts} - {$event.title}', '{if $event.confirm_email_text AND (not $isOnWaitlist AND not $isRequireApproval)}
 {$event.confirm_email_text}
 {/if}
 
@@ -10812,8 +10792,7 @@ registration process.{/ts}</p>
 ', @tpl_ovid_event_offline_receipt, 0,          1) ,      
       
       
-      ('活動 - 登記確認與收據（在線）', '{if $isOnWaitlist}{ts}Wait List Confirmation{/ts}{else}{ts}Registration Confirmation{/ts}{/if} - {$title}
-', '{if $event.confirm_email_text AND (not $isOnWaitlist AND not $isRequireApproval)}
+      ('活動 - 登記確認與收據（在線）', '{if $isOnWaitlist}{ts}Wait List Confirmation{/ts}{else}{ts}Registration Confirmation{/ts}{/if} - {$title}', '{if $event.confirm_email_text AND (not $isOnWaitlist AND not $isRequireApproval)}
 {$event.confirm_email_text}
 {/if}
 
@@ -11545,8 +11524,7 @@ registration process.{/ts}</p>
 </body>
 </html>
 ', @tpl_ovid_event_online_receipt, 1,          0),
-      ('活動 - 登記確認與收據（在線）', '{if $isOnWaitlist}{ts}Wait List Confirmation{/ts}{else}{ts}Registration Confirmation{/ts}{/if} - {$title}
-', '{if $event.confirm_email_text AND (not $isOnWaitlist AND not $isRequireApproval)}
+      ('活動 - 登記確認與收據（在線）', '{if $isOnWaitlist}{ts}Wait List Confirmation{/ts}{else}{ts}Registration Confirmation{/ts}{/if} - {$title}', '{if $event.confirm_email_text AND (not $isOnWaitlist AND not $isRequireApproval)}
 {$event.confirm_email_text}
 {/if}
 
@@ -12280,8 +12258,7 @@ registration process.{/ts}</p>
 ', @tpl_ovid_event_online_receipt, 0,          1) ,      
       
       
-      ('活動 - 登記取消通知', '{ts 1=$event.event_title}Event Registration Cancelled for %1{/ts}
-', '{ts 1=$contact.display_name}Dear %1{/ts},
+      ('活動 - 登記取消通知', '{ts 1=$event.event_title}Event Registration Cancelled for %1{/ts}', '{ts 1=$contact.display_name}Dear %1{/ts},
 
 {ts}Your Event Registration has been cancelled.{/ts}
 
@@ -12496,8 +12473,7 @@ registration process.{/ts}</p>
 </body>
 </html>
 ', @tpl_ovid_participant_cancelled, 1,          0),
-      ('活動 - 登記取消通知', '{ts 1=$event.event_title}Event Registration Cancelled for %1{/ts}
-', '{ts 1=$contact.display_name}Dear %1{/ts},
+      ('活動 - 登記取消通知', '{ts 1=$event.event_title}Event Registration Cancelled for %1{/ts}', '{ts 1=$contact.display_name}Dear %1{/ts},
 
 {ts}Your Event Registration has been cancelled.{/ts}
 
@@ -12714,8 +12690,7 @@ registration process.{/ts}</p>
 ', @tpl_ovid_participant_cancelled, 0,          1) ,      
       
       
-      ('活動 - 登記確認邀請', '{ts 1=$event.event_title}Confirm your registration for %1{/ts}
-', '{ts 1=$contact.display_name}Dear %1{/ts},
+      ('活動 - 登記確認邀請', '{ts 1=$event.event_title}Confirm your registration for %1{/ts}', '{ts 1=$contact.display_name}Dear %1{/ts},
 {if !$isAdditional and $participant.id}
 
 ===========================================================
@@ -12949,8 +12924,7 @@ Click this link to go to a web page where you can confirm your registration onli
 </body>
 </html>
 ', @tpl_ovid_participant_confirm, 1,          0),
-      ('活動 - 登記確認邀請', '{ts 1=$event.event_title}Confirm your registration for %1{/ts}
-', '{ts 1=$contact.display_name}Dear %1{/ts},
+      ('活動 - 登記確認邀請', '{ts 1=$event.event_title}Confirm your registration for %1{/ts}', '{ts 1=$contact.display_name}Dear %1{/ts},
 {if !$isAdditional and $participant.id}
 
 ===========================================================
@@ -13186,8 +13160,7 @@ Click this link to go to a web page where you can confirm your registration onli
 ', @tpl_ovid_participant_confirm, 0,          1) ,      
       
       
-      ('活動- 等候登記過期通知', '{ts 1=$event.event_title}Event registration has expired for %1{/ts}
-', '{ts 1=$contact.display_name}Dear %1{/ts},
+      ('活動- 等候登記過期通知', '{ts 1=$event.event_title}Event registration has expired for %1{/ts}', '{ts 1=$contact.display_name}Dear %1{/ts},
 
 {ts 1=$event.event_title}Your pending event registration for %1 has expired
 because you did not confirm your registration.{/ts}
@@ -13409,8 +13382,7 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
 </body>
 </html>
 ', @tpl_ovid_participant_expired, 1,          0),
-      ('活動- 等候登記過期通知', '{ts 1=$event.event_title}Event registration has expired for %1{/ts}
-', '{ts 1=$contact.display_name}Dear %1{/ts},
+      ('活動- 等候登記過期通知', '{ts 1=$event.event_title}Event registration has expired for %1{/ts}', '{ts 1=$contact.display_name}Dear %1{/ts},
 
 {ts 1=$event.event_title}Your pending event registration for %1 has expired
 because you did not confirm your registration.{/ts}
@@ -13634,8 +13606,7 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
 ', @tpl_ovid_participant_expired, 0,          1) ,      
       
       
-      ('Email 推薦給朋友', '{ts 1=$senderContactName 2=$title}%1 wants you to know about %2{/ts}
-', '{$senderMessage}
+      ('Email 推薦給朋友', '{ts 1=$senderContactName 2=$title}%1 wants you to know about %2{/ts}', '{$senderMessage}
 
 {if $generalLink}{ts}For more information, visit:{/ts}
 >> {$generalLink}
@@ -13691,8 +13662,7 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
 </body>
 </html>
 ', @tpl_ovid_friend, 1,          0),
-      ('Email 推薦給朋友', '{ts 1=$senderContactName 2=$title}%1 wants you to know about %2{/ts}
-', '{$senderMessage}
+      ('Email 推薦給朋友', '{ts 1=$senderContactName 2=$title}%1 wants you to know about %2{/ts}', '{$senderMessage}
 
 {if $generalLink}{ts}For more information, visit:{/ts}
 >> {$generalLink}
@@ -13750,12 +13720,7 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
 ', @tpl_ovid_friend, 0,          1) ,      
       
       
-      ('會員 - 註冊與資格更新收據（離線）', '{if $receiptType EQ \'membership signup\'}
-{ts}Membership Confirmation{/ts}
-{elseif $receiptType EQ \'membership renewal\'}
-{ts}Membership Renewal Confirmation{/ts}
-{/if}
-', '{if $formValues.receipt_text_signup}
+      ('會員 - 註冊與資格更新收據（離線）', '{if $receiptType EQ \'membership signup\'}{ts}Membership Confirmation{/ts}{elseif $receiptType EQ \'membership renewal\'}{ts}Membership Renewal Confirmation{/ts}{/if}', '{if $formValues.receipt_text_signup}
 {$formValues.receipt_text_signup}
 {elseif $formValues.receipt_text_renewal}
 {$formValues.receipt_text_renewal}
@@ -14029,12 +13994,7 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
 </body>
 </html>
 ', @tpl_ovid_membership_offline_receipt, 1,          0),
-      ('會員 - 註冊與資格更新收據（離線）', '{if $receiptType EQ \'membership signup\'}
-{ts}Membership Confirmation{/ts}
-{elseif $receiptType EQ \'membership renewal\'}
-{ts}Membership Renewal Confirmation{/ts}
-{/if}
-', '{if $formValues.receipt_text_signup}
+      ('會員 - 註冊與資格更新收據（離線）', '{if $receiptType EQ \'membership signup\'}{ts}Membership Confirmation{/ts}{elseif $receiptType EQ \'membership renewal\'}{ts}Membership Renewal Confirmation{/ts}{/if}', '{if $formValues.receipt_text_signup}
 {$formValues.receipt_text_signup}
 {elseif $formValues.receipt_text_renewal}
 {$formValues.receipt_text_renewal}
@@ -14310,8 +14270,7 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
 ', @tpl_ovid_membership_offline_receipt, 0,          1) ,      
       
       
-      ('會員 - 收據（在線）', '{if $is_pay_later}{ts}Invoice{/ts}{else}{ts}Payment Notification{/ts}{/if} - {$title}
-', '{if $receipt_text}
+      ('會員 - 收據（在線）', '{if $is_pay_later}{ts}Invoice{/ts}{elseif $is_monetary}{ts}Payment Notification{/ts} - {/if}{$title}', '{if $receipt_text}
 {$receipt_text}
 {/if}
 {if $is_pay_later}
@@ -15011,8 +14970,7 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
 </body>
 </html>
 ', @tpl_ovid_membership_online_receipt, 1,          0),
-      ('會員 - 收據（在線）', '{if $is_pay_later}{ts}Invoice{/ts}{else}{ts}Payment Notification{/ts}{/if} - {$title}
-', '{if $receipt_text}
+      ('會員 - 收據（在線）', '{if $is_pay_later}{ts}Invoice{/ts}{elseif $is_monetary}{ts}Payment Notification{/ts} - {/if}{$title}', '{if $receipt_text}
 {$receipt_text}
 {/if}
 {if $is_pay_later}
@@ -15714,8 +15672,7 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
 ', @tpl_ovid_membership_online_receipt, 0,          1) ,      
       
       
-      ('測試 - 收據頁首', '[TEST] 
-', '***********************************************************
+      ('測試 - 收據頁首', '[TEST] ', '***********************************************************
 
 {ts}Test-drive Email / Receipt{/ts} 
 
@@ -15733,8 +15690,7 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
  </table>
 </center>
 ', @tpl_ovid_test_preview, 1,          0),
-      ('測試 - 收據頁首', '[TEST] 
-', '***********************************************************
+      ('測試 - 收據頁首', '[TEST] ', '***********************************************************
 
 {ts}Test-drive Email / Receipt{/ts} 
 
@@ -15754,8 +15710,7 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
 ', @tpl_ovid_test_preview, 0,          1) ,      
       
       
-      ('認捐 - 感謝函', '{ts}Thank you for your Pledge{/ts}
-', '{ts 1=$contact.display_name}Dear %1{/ts},
+      ('認捐 - 感謝函', '{ts}Thank you for your Pledge{/ts}', '{ts 1=$contact.display_name}Dear %1{/ts},
 
 {ts}Thank you for your generous pledge. Please print this acknowledgment for your records.{/ts}
 
@@ -15943,8 +15898,7 @@ or need to modify your payment schedule.{/ts}</p>
 </body>
 </html>
 ', @tpl_ovid_pledge_acknowledge, 1,          0),
-      ('認捐 - 感謝函', '{ts}Thank you for your Pledge{/ts}
-', '{ts 1=$contact.display_name}Dear %1{/ts},
+      ('認捐 - 感謝函', '{ts}Thank you for your Pledge{/ts}', '{ts 1=$contact.display_name}Dear %1{/ts},
 
 {ts}Thank you for your generous pledge. Please print this acknowledgment for your records.{/ts}
 
@@ -16134,8 +16088,7 @@ or need to modify your payment schedule.{/ts}</p>
 ', @tpl_ovid_pledge_acknowledge, 0,          1) ,      
       
       
-      ('認捐 - 付款提醒', '{ts}Pledge Payment Reminder{/ts}
-', '{ts 1=$contact.display_name}Dear %1{/ts},
+      ('認捐 - 付款提醒', '{ts}Pledge Payment Reminder{/ts}', '{ts 1=$contact.display_name}Dear %1{/ts},
 
 {ts 1=$next_payment|truncate:10:\'\'|crmDate}This is a reminder that the next payment on your pledge is due on %1.{/ts}
 
@@ -16276,8 +16229,7 @@ or need to modify your payment schedule.{/ts}</p>
 </body>
 </html>
 ', @tpl_ovid_pledge_reminder, 1,          0),
-      ('認捐 - 付款提醒', '{ts}Pledge Payment Reminder{/ts}
-', '{ts 1=$contact.display_name}Dear %1{/ts},
+      ('認捐 - 付款提醒', '{ts}Pledge Payment Reminder{/ts}', '{ts 1=$contact.display_name}Dear %1{/ts},
 
 {ts 1=$next_payment|truncate:10:\'\'|crmDate}This is a reminder that the next payment on your pledge is due on %1.{/ts}
 
@@ -16420,8 +16372,7 @@ or need to modify your payment schedule.{/ts}</p>
 ', @tpl_ovid_pledge_reminder, 0,          1) ,      
       
       
-      ('資料表單 - 管理提示', '{$grouptitle} {ts 1=$displayName}Submitted by %1{/ts}
-', '{ts}Submitted For:{/ts} {$displayName}
+      ('資料表單 - 管理提示', '{$grouptitle} {ts 1=$displayName}Submitted by %1{/ts}', '{ts}Submitted For:{/ts} {$displayName}
 {ts}Date:{/ts} {$currentDate}
 {ts}Contact Summary:{/ts} {$contactLink}
 
@@ -16507,8 +16458,7 @@ or need to modify your payment schedule.{/ts}</p>
 </body>
 </html>
 ', @tpl_ovid_uf_notify, 1,          0),
-      ('資料表單 - 管理提示', '{$grouptitle} {ts 1=$displayName}Submitted by %1{/ts}
-', '{ts}Submitted For:{/ts} {$displayName}
+      ('資料表單 - 管理提示', '{$grouptitle} {ts 1=$displayName}Submitted by %1{/ts}', '{ts}Submitted For:{/ts} {$displayName}
 {ts}Date:{/ts} {$currentDate}
 {ts}Contact Summary:{/ts} {$contactLink}
 
@@ -16608,8 +16558,7 @@ or need to modify your payment schedule.{/ts}</p>
 ', @tpl_ovid_petition_sign, 0,          1) ,      
       
       
-      ('Petition - need verification', 'Confirmation of signature needed for {$petition.title}
-', 'Thank you for signing {$petition.title}.
+      ('Petition - need verification', 'Confirmation of signature needed for {$petition.title}', 'Thank you for signing {$petition.title}.
 
 In order to complete your signature, we must confirm your e-mail. 
 Please do so by visiting the following email confirmation web page:
@@ -16628,8 +16577,7 @@ Email confirmation page: <a href="{$petition.confirmUrl} ">{$petition.confirmUrl
 
 <p>If you did not sign this petition, please ignore this message.</p>
 ', @tpl_ovid_petition_confirmation_needed, 1,          0),
-      ('Petition - need verification', 'Confirmation of signature needed for {$petition.title}
-', 'Thank you for signing {$petition.title}.
+      ('Petition - need verification', 'Confirmation of signature needed for {$petition.title}', 'Thank you for signing {$petition.title}.
 
 In order to complete your signature, we must confirm your e-mail. 
 Please do so by visiting the following email confirmation web page:
