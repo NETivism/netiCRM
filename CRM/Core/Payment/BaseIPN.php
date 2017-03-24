@@ -242,6 +242,15 @@ class CRM_Core_Payment_BaseIPN {
     $contact = &$objects['contact'];
 
     $contribution->contribution_status_id = 4;
+    $contribution->cancel_date = self::$_now;
+    if ($message) {
+      if ($contribution->cancel_reason) {
+        $contribution->cancel_reason .= "\n".$message;
+      }
+      else {
+        $contribution->cancel_reason = $message;
+      }
+    }
     if (!empty($contribution->created_date)) {
       $contribution->created_date = CRM_Utils_Date::isoToMysql($contribution->created_date);
     }

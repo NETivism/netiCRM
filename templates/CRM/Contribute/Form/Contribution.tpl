@@ -191,7 +191,7 @@
             {* Cancellation fields are hidden unless contribution status is set to Cancelled *}
             <tr id="cancelInfo" class="crm-contribution-form-block-cancelInfo"> 
                 <td>&nbsp;</td> 
-                <td><fieldset><legend>{ts}Cancellation Information{/ts}</legend>
+                <td><fieldset><legend>{ts}Cancellation or Failure Information{/ts}</legend>
                 <table class="form-layout-compressed">
                   <tr id="cancelDate" class="crm-contribution-form-block-cancel_date">
                     <td class="label">{$form.cancel_date.label}</td>
@@ -366,7 +366,7 @@ function loadPanes( id ) {
 {if !$contributionMode} 
 {include file="CRM/common/showHideByFieldValue.tpl" 
     trigger_field_id    ="contribution_status_id"
-    trigger_value       = '3'
+    trigger_value       = '3|4'
     target_element_id   ="cancelInfo" 
     target_element_type ="table-row"
     field_type          ="select"

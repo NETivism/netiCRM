@@ -45421,3 +45421,12 @@ msgstr ""
 
 msgid "Most of mail providers apply DMARC, that means if you use free email address as mail sender, the mail will be blocked by destination inbox."
 msgstr ""
+
+msgid "Cancelled or Failed Reason"
+msgstr ""
+
+msgid "Cancelled or Failed Date"
+msgstr ""
+
+msgid "Cancellation or Failure Information"
+msgstr ""

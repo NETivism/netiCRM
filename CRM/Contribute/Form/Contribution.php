@@ -929,8 +929,8 @@ WHERE  contribution_id = {$this->_id}
       ts('Contribution Status'),
       $status,
       FALSE, array(
-        'onClick' => "if (this.value != 3) {  status();} else return false",
-        'onChange' => "return showHideByValue('contribution_status_id','3','cancelInfo','table-row','select',false);",
+        'onClick' => "if (this.value != 3 && this.value != 4) {  status();} else return false",
+        'onChange' => "return showHideByValue('contribution_status_id','3|4','cancelInfo','table-row','select',false);",
       )
     );
 
@@ -954,9 +954,9 @@ WHERE  contribution_id = {$this->_id}
       */
     }
 
-    $this->addDateTime('cancel_date', ts('Cancelled Date'), FALSE, array('formatType' => 'activityDateTime'));
+    $this->addDateTime('cancel_date', ts('Cancelled or Failed Date'), FALSE, array('formatType' => 'activityDateTime'));
 
-    $this->add('textarea', 'cancel_reason', ts('Cancellation Reason'), $attributes['cancel_reason']);
+    $this->add('textarea', 'cancel_reason', ts('Cancelled or Failed Reason'), $attributes['cancel_reason']);
 
     $element = $this->add('select', 'payment_processor_id',
       ts('Payment Processor'),
