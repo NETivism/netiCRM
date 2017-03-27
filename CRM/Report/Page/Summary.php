@@ -157,6 +157,21 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
     );
     $this->assign('chartMailing', $chartMailing);
 
+    /**
+     * Mailing Funnel
+     */
+
+    $chartMailingFunnel = array(
+      'id' => 'chart-bar-mailing-funnel',
+      'classes' => array('ct-chart-bar'),
+      'selector' => '#chart-bar-mailing-funnel',
+      'type' => 'Bar',
+      'labels' => json_encode(array_slice($mailing['label'],1)),
+      'series' => json_encode($mailing['funnel']['count']),
+      'withToolTip' => true
+    );
+    $this->assign('chartMailingFunnel', $chartMailingFunnel);
+
     $this->assign('static_label',array(ts("Total Amount"), ts("Percentage"),ts("Avg Amount"),ts("Count"),ts("People")));
     $this->assign('contribution_type_table',$contribute['contribution_type_table']);
 

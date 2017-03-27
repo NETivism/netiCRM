@@ -54,10 +54,12 @@ class CRM_Report_BAO_Summary {
     $allData = array();
     $allData['Sended Count'] = self::parseDataFromSql("SELECT COUNT(DISTINCT meq.id) count FROM civicrm_mailing_event_queue meq");
     $allData['Successful Deliveries'] = self::parseDataFromSql("SELECT COUNT(DISTINCT med.id) count FROM civicrm_mailing_event_delivered med");
-    $allData['Opened Count'] = self::parseDataFromSql("SELECT COUNT(DISTINCT meo.id) count FROM civicrm_mailing_event_opened meo");
-    $allData['Click Count'] = self::parseDataFromSql("SELECT COUNT(DISTINCT met.id) count FROM civicrm_mailing_event_trackable_url_open met");
+    $allData['Opened Count'] = self::parseDataFromSql("SELECT COUNT(count) count FROM (SELECT COUNT(DISTINCT meo.id) count FROM civicrm_mailing_event_opened meo GROUP BY event_queue_id) subq");
+    $allData['Click Count'] = self::parseDataFromSql("SELECT COUNT(count) count FROM (SELECT COUNT(DISTINCT met.id) count FROM civicrm_mailing_event_trackable_url_open met GROUP BY event_queue_id) subq");
     $allData = self::convertArrayToChartUse($allData);
     $allData['Mailing'] = self::parseDataFromSql("SELECT COUNT(DISTINCT mj.mailing_id) count FROM civicrm_mailing_job mj WHERE mj.is_test = 0");
+    $allData['funnel']['count'] = self::parseArrayToFunnel($allData['count']);
+    $allData['funnel']['people'] = self::parseArrayToFunnel($allData['people']);
 
     return $allData;
   }
@@ -463,5 +465,14 @@ WHERE cc.receive_date > mm.time_stamp AND cc.receive_date < DATE_ADD(mm.time_sta
       $alldata[] = $data;
     }
     return $alldata;
+  }
+
+  private static function parseArrayToFunnel($arr){
+    $rtnArr = array(array(),array());
+    for ($i=1; $i < count($arr); $i++) {
+      $rtnArr[0][] = $arr[$i];
+      $rtnArr[1][] = $arr[$i-1] - $arr[$i];
+    }
+    return $rtnArr;
   }
 }
