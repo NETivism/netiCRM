@@ -1522,7 +1522,7 @@ WHERE  contribution_id = {$this->_id}
         $params['receipt_date'] = date("Y-m-d");
       }
 
-      if ($params['contribution_status_id'] == 3) {
+      if ($params['contribution_status_id'] == 3 || $params['contribution_status_id'] == 4) {
         if (CRM_Utils_System::isNull(CRM_Utils_Array::value('cancel_date', $params))) {
           $params['cancel_date'] = date("Y-m-d");
         }

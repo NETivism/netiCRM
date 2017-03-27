@@ -73,9 +73,14 @@
     <td class="crm-contribution-receive_date">{$row.receive_date|crmDate}</td>
     {* <td class="crm-contribution-thankyou_date">{$row.thankyou_date|crmDate}</td> *}
     <td class="crm-contribution-status"> 
-        {$row.contribution_status}<br />
-        {if $row.cancel_date}    
-        {$row.cancel_date|crmDate}
+        <div>{$row.contribution_status}</div>
+        {if $row.cancel_date}
+          <div>
+            {$row.cancel_date|crmDate}
+            {if $row.cancel_reason}
+              {help id="cancel-reason-`$row.contribution_id`" text="`$row.cancel_reason`"}
+            {/if}
+          </div>
         {/if}
     </td>
     {* <td class="crm-contribution-product_name">{$row.product_name}</td> *}
