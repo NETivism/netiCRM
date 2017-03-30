@@ -123,9 +123,9 @@ class CRM_Contribute_DAO_ContributionPage extends CRM_Core_DAO
    */
   public $is_monetary;
   /**
-   * if true - allows recurring contributions, valid only for PayPal_Standard
+   * 0 - disabled reucrring, 1 - enable both, 2 - enabled recur only
    *
-   * @var boolean
+   * @var int unsigned
    */
   public $is_recur;
   /**
@@ -405,7 +405,7 @@ class CRM_Contribute_DAO_ContributionPage extends CRM_Core_DAO
         ) ,
         'is_recur' => array(
           'name' => 'is_recur',
-          'type' => CRM_Utils_Type::T_BOOLEAN,
+          'type' => CRM_Utils_Type::T_INT,
         ) ,
         'recur_frequency_unit' => array(
           'name' => 'recur_frequency_unit',

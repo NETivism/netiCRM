@@ -45430,3 +45430,9 @@ msgstr ""
 
 msgid "Cancellation or Failure Information"
 msgstr ""
+
+msgid "Only allowed recurring contribution"
+msgstr ""
+
+msgid "Check this box will turn off single transaction of this page."
+msgstr ""

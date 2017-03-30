@@ -123,11 +123,12 @@ SELECT id
       $this->addElement('checkbox', 'is_recur', ts('Recurring contributions'), NULL,
         array('onclick' => "showHideByValue('is_recur',true,'recurFields','table-row','radio',false); showRecurInterval( );")
       );
-      require_once 'CRM/Core/OptionGroup.php';
+      $this->addElement('checkbox', 'is_recur_only', ts('Only allowed recurring contribution'), NULL);
+      $recurFrequencyUnits = CRM_Core_OptionGroup::values('recur_frequency_units', TRUE, FALSE, FALSE, NULL, 'label');
       $this->addCheckBox('recur_frequency_unit', ts('Supported recurring units'),
-        CRM_Core_OptionGroup::values('recur_frequency_units', FALSE, FALSE, FALSE, NULL, 'name'),
+        $recurFrequencyUnits,
         NULL, NULL, NULL, NULL,
-        array('&nbsp;&nbsp;', '&nbsp;&nbsp;', '&nbsp;&nbsp;', '<br/>')
+        array('&nbsp;&nbsp;')
       );
       // $this->addElement('checkbox', 'is_recur_interval', ts('Support recurring intervals'));
       $this->addElement('hidden', 'is_recur_interval', 0);
@@ -412,7 +413,9 @@ SELECT id
     }
 
     if ($params['is_recur']) {
-      require_once 'CRM/Core/BAO/CustomOption.php';
+      if ($params['is_recur_only']) {
+        $params['is_recur'] = 2;
+      }
       $params['recur_frequency_unit'] = implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
         array_keys($params['recur_frequency_unit'])
       );
