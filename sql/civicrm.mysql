@@ -3382,7 +3382,7 @@ CREATE TABLE civicrm_contribution_page (
      payment_processor varchar(128)    COMMENT 'Payment Processors configured for this contribution Page ',
      is_credit_card_only tinyint   DEFAULT 0 COMMENT 'if true - processing logic must reject transaction at confirmation stage if pay method != credit card',
      is_monetary tinyint   DEFAULT 1 COMMENT 'if true - allows real-time monetary transactions otherwise non-monetary transactions',
-     is_recur tinyint   DEFAULT 0 COMMENT 'if true - allows recurring contributions, valid only for PayPal_Standard',
+     is_recur int unsigned   DEFAULT 0 COMMENT '0 - disabled reucrring, 1 - enable both, 2 - enabled recur only',
      recur_frequency_unit varchar(128)    COMMENT 'Supported recurring frequency units.',
      is_recur_interval tinyint   DEFAULT 0 COMMENT 'if true - supports recurring intervals',
      is_pay_later tinyint   DEFAULT 0 COMMENT 'if true - allows the user to send payment directly to the org later',

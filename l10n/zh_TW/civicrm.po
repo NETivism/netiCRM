@@ -11,7 +11,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2017-03-22 11:04+0000\n"
+"PO-Revision-Date: 2017-03-30 08:33+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -31759,7 +31759,7 @@ msgid ""
 "Fill in your registration information on this page. If you are registering "
 "additional people, you will be able to enter their registration information "
 "after you complete this page and click &quot;Continue&quot;."
-msgstr "請在此頁填寫您的報名資訊。如果您想一次報名多位，請先在此頁填寫完資訊後，點選「繼續」鍵，再幫他們填完資料。"
+msgstr "如欲報名多位參加者，請先在此頁填寫第一位參加者資料，點選「下一步」按鈕，再填寫第二位參加者資料，以此類推。"
 
 #: templates/CRM/Event/Form/Registration/ThankYou.tpl
 msgid "You have been added to the WAIT LIST for this event."
@@ -45472,3 +45472,18 @@ msgid ""
 "Most of mail providers apply DMARC, that means if you use free email address"
 " as mail sender, the mail will be blocked by destination inbox."
 msgstr "現今多數的信箱已使用避免釣魚詐騙信件的規則（ DMARC ），若您用免費信箱當作本系統的寄件者，郵件將會被收件方阻擋。"
+
+msgid "Cancelled or Failed Reason"
+msgstr "取消或失敗原因"
+
+msgid "Cancelled or Failed Date"
+msgstr "取消或失敗日期"
+
+msgid "Cancellation or Failure Information"
+msgstr "取消或失敗的相關資訊"
+
+msgid "Only allowed recurring contribution"
+msgstr "僅允許定期定額"
+
+msgid "Check this box will turn off single transaction of this page."
+msgstr "勾選此選項，將會隱藏此頁面的非定期的選項，僅允許定期選項出現。"

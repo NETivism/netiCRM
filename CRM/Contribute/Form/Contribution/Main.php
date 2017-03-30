@@ -833,7 +833,12 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
    */
   function buildRecur() {
     $attributes = CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionRecur');
-    $this->_defaults['is_recur'] = 0;
+    if ($this->_values['is_recur'] == 2) {
+      $this->_defaults['is_recur'] = 1;
+    }
+    else {
+      $this->_defaults['is_recur'] = 0;
+    }
 
     if ($this->_values['is_recur_interval']) {
       $this->add('text', 'frequency_interval', ts('Every'),
@@ -872,7 +877,9 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
       $recurOptionLabel = ts('Recurring contributions').' - '.$units[$unitVal];
     }
     $elements = array();
-    $elements[] = &$this->createElement('radio', NULL, '', ts('I want to make a one-time contribution.'), 0);
+    if ($this->_values['is_recur'] < 2) {
+      $elements[] = &$this->createElement('radio', NULL, '', ts('I want to make a one-time contribution.'), 0);
+    }
     $elements[] = &$this->createElement('radio', NULL, '', $recurOptionLabel, 1);
     $this->addGroup($elements, 'is_recur', NULL, '<br />');
 
