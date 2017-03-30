@@ -51,6 +51,11 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
     $contribute = CRM_Report_BAO_Summary::getContributionData();
     $participant = CRM_Report_BAO_Summary::getParitcipantData();
     $mailing = CRM_Report_BAO_Summary::getMailingData();
+    $people_by_condition = array(
+      'gender' => CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::GENDER),
+      'age' => CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::AGE),
+      'province' => CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::PROVINCE),
+      );
 
     $template = CRM_Core_Smarty::singleton();
     $template->assign('contribute_total', CRM_Utils_Money::format($contribute['total_contribute']['sum']));
@@ -176,6 +181,52 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
     $this->assign('contribution_type_table',$contribute['contribution_type_table']);
 
     $this->assign('recur_table',$contribute['recur_table']);
+
+
+
+    $chartPeopleGender = array(
+      'id' => 'chart-pie-with-legend-people-by-gender',
+      'classes' => array('ct-chart-pie'),
+      'selector' => '#chart-pie-with-legend-people-by-gender',
+      'type' => 'Pie',
+      'labels' => json_encode($people_by_condition['gender']['label']),
+      'series' => json_encode($people_by_condition['gender']['people']),
+      'labelType' => 'percent',
+      'withLegend' => true,
+      'withToolTip' => true
+    );
+
+    $template->assign('chartPeopleGender', $chartPeopleGender);
+
+    $chartPeopleAge = array(
+      'id' => 'chart-pie-with-legend-people-by-age',
+      'classes' => array('ct-chart-pie'),
+      'selector' => '#chart-pie-with-legend-people-by-age',
+      'type' => 'Pie',
+      'labels' => json_encode($people_by_condition['age']['label']),
+      'series' => json_encode($people_by_condition['age']['people']),
+      'labelType' => 'percent',
+      'withLegend' => true,
+      'withToolTip' => true
+    );
+
+    $template->assign('chartPeopleAge', $chartPeopleAge);
+
+    $chartPeopleProvince = array(
+      'id' => 'chart-pie-with-legend-people-by-province',
+      'classes' => array('ct-chart-pie'),
+      'selector' => '#chart-pie-with-legend-people-by-province',
+      'type' => 'Pie',
+      'labels' => json_encode($people_by_condition['province']['label']),
+      'series' => json_encode($people_by_condition['province']['people']),
+      'labelType' => 'percent',
+      'withLegend' => true,
+      'withToolTip' => true
+    );
+
+    $template->assign('chartPeopleProvince', $chartPeopleProvince);
+
+
 
     // $template->assign('chartInsSum', $chartInsSum);
     // $template->assign('chartTypeSum', $chartTypeSum);
