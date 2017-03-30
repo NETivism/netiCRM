@@ -150,6 +150,45 @@
   </div>
   {/if}
 
+  {if $chartPeopleGender}
+  <div class="row">
+    <div class="col-md-12">
+      <div id="column-people-by-gender" class="box mdl-shadow--2dp">
+        <div class="box-header">
+          <h3 class="box-title">{ts}People by gender{/ts}</h3>
+        </div>
+        <div class="box-content">{include file="CRM/common/chartist.tpl" chartist=$chartPeopleGender}</div>
+      </div>
+    </div>
+  </div>
+  {/if}
+
+  {if $chartPeopleAge}
+  <div class="row">
+    <div class="col-md-12">
+      <div id="column-people-by-age" class="box mdl-shadow--2dp">
+        <div class="box-header">
+          <h3 class="box-title">{ts}People by age{/ts}</h3>
+        </div>
+        <div class="box-content">{include file="CRM/common/chartist.tpl" chartist=$chartPeopleAge}</div>
+      </div>
+    </div>
+  </div>
+  {/if}
+
+  {if $chartPeopleProvince}
+  <div class="row">
+    <div class="col-md-12">
+      <div id="column-people-by-province" class="box mdl-shadow--2dp">
+        <div class="box-header">
+          <h3 class="box-title">{ts}People by province{/ts}</h3>
+        </div>
+        <div class="box-content">{include file="CRM/common/chartist.tpl" chartist=$chartPeopleProvince}</div>
+      </div>
+    </div>
+  </div>
+  {/if}
+
   {if $static_label and $contribution_type_table}
   <div class="row">
     <div class="col-md-12">

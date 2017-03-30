@@ -266,6 +266,12 @@ WHERE c.receive_date > mm.time_stamp AND c.receive_date < DATE_ADD(mm.time_stamp
     return $allData;
   }
 
+  /**
+   * Get statistics by condition such as gender, age and province.
+   * @param  Constant $condition such as self::GENDER, self::AGE, self::PROVINCE
+   * @param  Array    $params
+   * @return Array
+   */
   static function getStaWithCondition($condition, $params){
     switch ($condition) {
       case self::GENDER:
@@ -285,6 +291,7 @@ WHERE c.receive_date > mm.time_stamp AND c.receive_date < DATE_ADD(mm.time_stamp
         // $group_by_condition = $group_by_field = 'p.name';
         $group_by_field = 'p.name';
         $table = 'civicrm_contact c LEFT JOIN (SELECT a.contact_id contact_id, p.name name FROM civicrm_address a INNER JOIN civicrm_state_province p ON a.state_province_id = p.id WHERE a.is_primary = 1 AND a.country_id = 1208) p ON c.id = p.contact_id';
+        $order_by = 'ORDER BY people DESC';
         break;
     }
     $is_contribution = $params['is_contribution'];
@@ -294,20 +301,31 @@ WHERE c.receive_date > mm.time_stamp AND c.receive_date < DATE_ADD(mm.time_stamp
     }else{
       $contribution_field = $contribution_query = '';
     }
-    $sql = "SELECT count(DISTINCT c.id) people, $contribution_field $group_by_field tag FROM $table $contribution_query GROUP BY tag $order_by";
+    $sql = "SELECT count(DISTINCT c.id) people, $contribution_field $group_by_field label FROM $table $contribution_query GROUP BY label $order_by";
     // dpm($sql);
     // return ;
 
     $dao = CRM_Core_DAO::executeQuery($sql);
     $returnArray = array();
+    $count = 0;
     while($dao->fetch()){
-      $returnArray[$dao->tag] = array(
+      if($condition == self::PROVINCE){
+        if(!empty($dao->label)){
+          $count++;
+          if($count >= 5){
+            $returnArray[ts('Other')]['people'] += $dao->people;
+            continue;
+          }
+        }
+      }
+      $label = empty($dao->label) ? ts("None") : $dao->label;
+      $returnArray[$label] = array(
         'count' => $dao->count,
         'people' => $dao->people,
         'sum' => $dao->sum,
       );
     }
-    return $returnArray;
+    return self::convertArrayToChartUse($returnArray);
   }
 
 
