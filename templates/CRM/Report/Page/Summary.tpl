@@ -25,6 +25,8 @@
 *}
 {* Display monthly and yearly contributions using Google charts (Bar and Pie) *} 
 
+{ts 1=$update_time}Last Update at %1{/ts}
+
 {if $hasChart}
   {if $contribute_total or $chartConributeOnlineOffline or $participant_total or $chartParticipantOnlineOffline or $contact_total or $mailing}
   <div class="row">
