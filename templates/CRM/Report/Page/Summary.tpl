@@ -142,11 +142,11 @@
   {if $chartMailingFunnel}
   <div class="row">
     <div class="col-md-12">
-      <div id="column-mailing-delivered" class="box mdl-shadow--2dp">
+      <div id="column-mailing-funnel" class="box mdl-shadow--2dp">
         <div class="box-header">
           <h3 class="box-title">{ts}Mailing{/ts} (funnel)</h3>
         </div>
-        <div class="box-content">{include file="CRM/common/chartist.tpl" chartist=$chartMailingFunnel}</div>
+        <div class="box-content">{include file="CRM/common/funnel.tpl" funnel=$chartMailingFunnel}</div>
       </div>
     </div>
   </div>

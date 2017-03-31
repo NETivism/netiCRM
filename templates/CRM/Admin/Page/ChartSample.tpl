@@ -129,3 +129,17 @@
 {include file="CRM/common/chartist.tpl" chartist=$chart}
 </div>
 
+<div class="chartist-test">
+{php}
+  $chart = array(
+    'id' => 'chart-funnel',
+    'selector' => '#chart-funnel',
+    'labels' => json_encode(array('成功寄送', '開信次數', '點擊次數')),
+    'series' => json_encode(array(array(38, 38, 3), array(0, 0, 35))), 
+  );
+  $this->assign('chart', $chart);
+{/php}
+{include file="CRM/common/funnel.tpl" funnel=$chart}
+</div>
+
+
