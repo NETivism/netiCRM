@@ -4,3 +4,4 @@
 *.orig
 .svn*
 vendor
+*.DS_Store
