@@ -38,7 +38,7 @@
 {/htxt}
 
 {htxt id='id-profile_weight'}
-{ts}Weight controls the order in which profiles are presented when more than one profile is included in User Registration or My Account screens. Enter a positive or negative integer - lower numbers are displayed ahead of higher numbers.{/ts}
+{ts}Weight controls the order in which profiles are presented when more than one profile is included in User Registration or My Account screens. Enter a positive integer - lower numbers are displayed ahead of higher numbers.{/ts}
 {/htxt}
 
 {htxt id='id-help_pre'}

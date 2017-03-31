@@ -183,7 +183,7 @@ function custom_option_html_type( ) {
             <td class="label">{$form.weight.label}</td>
             <td>{$form.weight.html|crmReplace:class:two}
                 {if $action neq 4}
-                <span class="description">{ts}Weight controls the order in which fields are displayed in a group. Enter a positive or negative integer - lower numbers are displayed ahead of higher numbers.{/ts}</span>
+                <span class="description">{ts}Weight controls the order in which fields are displayed in a group. Enter a positive integer - lower numbers are displayed ahead of higher numbers.{/ts}</span>
                 {/if}
             </td>
         </tr>

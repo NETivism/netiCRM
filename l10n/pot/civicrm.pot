@@ -30559,7 +30559,7 @@ msgstr ""
 #: templates/CRM/Custom/Form/Field.tpl templates/CRM/Price/Form/Field.tpl
 msgid ""
 "Weight controls the order in which fields are displayed in a group. Enter a "
-"positive or negative integer - lower numbers are displayed ahead of higher "
+"positive integer - lower numbers are displayed ahead of higher "
 "numbers."
 msgstr ""
 
@@ -30787,7 +30787,7 @@ msgstr ""
 #: templates/CRM/Custom/Page/Group.hlp
 msgid ""
 "Weight controls the order in which custom field sets are presented when "
-"there are more than one. Enter a positive or negative integer - lower "
+"there are more than one. Enter a positive integer - lower "
 "numbers are displayed ahead of higher numbers."
 msgstr ""
 
@@ -35796,7 +35796,7 @@ msgstr ""
 #: templates/CRM/UF/Form/Field.tpl
 msgid ""
 "Weight controls the order in which fields are displayed within a profile. "
-"Enter a positive or negative integer - lower numbers are displayed ahead of "
+"Enter a positive integer - lower numbers are displayed ahead of "
 "higher numbers."
 msgstr ""
 
@@ -35877,7 +35877,7 @@ msgstr ""
 msgid ""
 "Weight controls the order in which profiles are presented when more than one"
 " profile is included in User Registration or My Account screens. Enter a "
-"positive or negative integer - lower numbers are displayed ahead of higher "
+"positive integer - lower numbers are displayed ahead of higher "
 "numbers."
 msgstr ""
 
@@ -40431,7 +40431,7 @@ msgstr ""
 #: templates/CRM/Custom/Page/Group.hlp
 msgid ""
 "Weight controls the order in which custom data groups are presented when "
-"there are more than one. Enter a positive or negative integer - lower "
+"there are more than one. Enter a positive integer - lower "
 "numbers are displayed ahead of higher numbers."
 msgstr ""
 
@@ -45435,4 +45435,8 @@ msgid "Only allowed recurring contribution"
 msgstr ""
 
 msgid "Check this box will turn off single transaction of this page."
+msgstr ""
+
+#: templates/CRM/Admin/Form/Options.tpl
+msgid "Weight controls the order in which options are displayed in a group. Enter a positive integer - lower numbers are displayed ahead of higher numbers."
 msgstr ""
