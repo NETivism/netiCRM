@@ -521,21 +521,7 @@ class CRM_Event_Form_Search extends CRM_Core_Form {
   function &setDefaultValues() {
     $defaults = array();
     $defaults = $this->_formValues;
-    if (!empty($defaults['event_id'])) {
-      $prePopulate = array();
-      if (is_numeric($defaults['event_id'])) {
-        $eventTitle = CRM_Event_BAO_Event::retrieveField($defaults['event_id'], 'title');
-        $prePopulate[] = array('id' => $defaults['event_id'], 'name' => $eventTitle);
-      }
-      else {
-        $ids = explode(',', $defaults['event_id']);
-        foreach($ids as $id) {
-          $eventTitle = CRM_Event_BAO_Event::retrieveField($id, 'title');
-          $prePopulate[] = array('id' => $id, 'name' => $eventTitle);
-        }
-      }
-      $this->assign('eventPrepopulate', json_encode($prePopulate));
-    }
+    self::fixEventIdDefaultValues($defaults);
 
     return $defaults;
   }
@@ -674,6 +660,25 @@ class CRM_Event_Form_Search extends CRM_Core_Form {
    */
   public function getTitle() {
     return ts('Find Participants');
+  }
+
+  public static function fixEventIdDefaultValues($defaults) {
+    if (!empty($defaults['event_id'])) {
+      $prePopulate = array();
+      if (is_numeric($defaults['event_id'])) {
+        $eventTitle = CRM_Event_BAO_Event::retrieveField($defaults['event_id'], 'title');
+        $prePopulate[] = array('id' => trim($defaults['event_id']), 'name' => $eventTitle);
+      }
+      else {
+        $ids = explode(',', $defaults['event_id']);
+        foreach($ids as $id) {
+          $eventTitle = CRM_Event_BAO_Event::retrieveField($id, 'title');
+          $prePopulate[] = array('id' => trim($id), 'name' => $eventTitle);
+        }
+      }
+      $template = CRM_Core_Smarty::singleton();
+      $template->assign('eventPrepopulate', json_encode($prePopulate));
+    }
   }
 }
 
