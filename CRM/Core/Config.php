@@ -52,6 +52,10 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
   ///
   /// BASE SYSTEM PROPERTIES (CIVICRM.SETTINGS.PHP)
   ///
+  /**
+   * System default language(fallback language)
+   */
+  CONST SYSTEM_LANG = 'en_US';
 
   /**
    * the dsn of the database connection

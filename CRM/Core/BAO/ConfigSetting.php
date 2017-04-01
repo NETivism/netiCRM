@@ -184,7 +184,7 @@ class CRM_Core_BAO_ConfigSetting {
         }
       }
       if (empty($defaults['lcMessages'])) {
-        $defaults['lcMessages'] = 'en_US';
+        $defaults['lcMessages'] = CRM_Core_Config::SYSTEM_LANG;
       }
 
       // since language field won't be present before upgrade.

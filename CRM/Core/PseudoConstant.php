@@ -720,7 +720,7 @@ class CRM_Core_PseudoConstant {
 
       // localise the province names if in an non-en_US locale
       global $tsLocale;
-      if ($tsLocale != '' and $tsLocale != 'en_US') {
+      if ($tsLocale != '' and $tsLocale != CRM_Core_Config::SYSTEM_LANG) {
         $i18n = &CRM_Core_I18n::singleton();
         $i18n->localizeArray(self::$stateProvince, array('context' => 'province'));
         asort(self::$stateProvince);
@@ -852,7 +852,7 @@ WHERE  id = %1";
 
       // localise the country names if in an non-en_US locale
       global $tsLocale;
-      if ($tsLocale != '' and $tsLocale != 'en_US') {
+      if ($tsLocale != '' and $tsLocale != CRM_Core_Config::SYSTEM_LANG) {
         $i18n = &CRM_Core_I18n::singleton();
         $i18n->localizeArray(self::$country, array('context' => 'country'));
         asort(self::$country);
@@ -1449,7 +1449,7 @@ ORDER BY name";
     // localise the stateProvince names if in an non-en_US locale
     $config = CRM_Core_Config::singleton();
     global $tsLocale;
-    if ($tsLocale != '' and $tsLocale != 'en_US') {
+    if ($tsLocale != '' and $tsLocale != CRM_Core_Config::SYSTEM_LANG) {
       $i18n = &CRM_Core_I18n::singleton();
       $i18n->localizeArray($result);
       asort($result);
