@@ -23,9 +23,11 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
-<div id="help">
-{ts}If you want to provide an Online Registration page for this event, check the first box below and then complete the fields on this form.{/ts} 
-</div>
+{if !$form.is_online_registration.value}
+  <div id="help">
+  {ts}If you want to provide an Online Registration page for this event, check the first box below and then complete the fields on this form.{/ts} 
+  </div>
+{/if}
 {include file="CRM/Event/Form/ManageEvent/Tab.tpl"}
 {assign var=eventID value=$id}
 <div class="crm-block crm-form-block crm-event-manage-registration-form-block">

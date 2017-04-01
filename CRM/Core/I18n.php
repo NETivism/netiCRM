@@ -47,6 +47,13 @@ class CRM_Core_I18n {
   private $_nativegettext = FALSE;
 
   /**
+   * Whether we initialized config or not.
+   */
+  public $_initConfig = FALSE;
+  public $_customTranslateFunction;
+  public $_localeCustomStrings;
+
+  /**
    * A locale-based constructor that shouldn't be called from outside of this class (use singleton() instead).
    *
    * @param  $locale string  the base of this certain object's existence
@@ -57,30 +64,43 @@ class CRM_Core_I18n {
     if (!empty($locale) and $locale != 'en_US') {
       $config = CRM_Core_Config::singleton();
 
+      if (empty($config->gettextResourceDir)) {
+        global $civicrm_root;
+        $gettextResourceDir = rtrim($civicrm_root, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'l10n' . DIRECTORY_SEPARATOR;
+      }
+      else {
+        $gettextResourceDir = $config->gettextResourceDir;
+      }
       if (function_exists('gettext')) {
-        require_once 'CRM/Core/I18n/NativeGettext.php';
-
         $this->_nativegettext = TRUE;
 
         $locale .= '.utf8';
         putenv("LANG=$locale");
         setlocale(LC_ALL, $locale);
 
-        bindtextdomain('civicrm', $config->gettextResourceDir);
+        bindtextdomain('civicrm', $gettextResourceDir);
         bind_textdomain_codeset('civicrm', 'UTF-8');
         textdomain('civicrm');
 
         $this->_phpgettext = new CRM_Core_I18n_NativeGettext();
-        return;
       }
       else{
         // Otherwise, use PHP-gettext
-        require_once 'PHPgettext/streams.php';
-        require_once 'PHPgettext/gettext.php';
-
-        $streamer = new FileReader($config->gettextResourceDir . $locale . DIRECTORY_SEPARATOR . 'LC_MESSAGES' . DIRECTORY_SEPARATOR . 'civicrm.mo');
+        $streamer = new FileReader($gettextResourceDir . $locale . DIRECTORY_SEPARATOR . 'LC_MESSAGES' . DIRECTORY_SEPARATOR . 'civicrm.mo');
         $this->_phpgettext = new gettext_reader($streamer);
       }
+      $this->initialize();
+    }
+  }
+
+  function initialize() {
+    $config = CRM_Core_Config::singleton();
+    if ($config->initialized && !$this->_initConfig) {
+      $this->_customTranslateFunction = $config->customTranslateFunction;
+      if (!empty($config->localeCustomStrings)) {
+        $this->_localeCustomStrings = $config->localeCustomStrings;
+      }
+      $this->_initConfig = TRUE;
     }
   }
 
@@ -101,9 +121,16 @@ class CRM_Core_I18n {
 
       // check which ones are available; add them to $all if not there already
       $config = CRM_Core_Config::singleton();
+      if (empty($config->gettextResourceDir)) {
+        global $civicrm_root;
+        $gettextResourceDir = rtrim($civicrm_root, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'l10n' . DIRECTORY_SEPARATOR;
+      }
+      else {
+        $gettextResourceDir = $config->gettextResourceDir;
+      }
       $codes = array();
-      if (is_dir($config->gettextResourceDir)) {
-        $dir = opendir($config->gettextResourceDir);
+      if (is_dir($gettextResourceDir)) {
+        $dir = opendir($gettextResourceDir);
         while ($filename = readdir($dir)) {
           if (preg_match('/^[a-z][a-z]_[A-Z][A-Z]$/', $filename)) {
             $codes[] = $filename;
@@ -221,9 +248,8 @@ class CRM_Core_I18n {
     }
 
     // do all wildcard translations first
-    require_once 'CRM/Utils/Array.php';
-    $config = CRM_Core_Config::singleton();
-    $stringTable = CRM_Utils_Array::value($config->lcMessages, $config->localeCustomStrings);
+    global $tsLocale;
+    $stringTable = CRM_Utils_Array::value($tsLocale, $this->_localeCustomStrings);
 
     $exactMatch = FALSE;
     if (isset($stringTable['enabled']['exactMatch'])) {
@@ -361,7 +387,9 @@ class CRM_Core_I18n {
     if (!isset($singleton[$tsLocale])) {
       $singleton[$tsLocale] = new CRM_Core_I18n($tsLocale);
     }
-
+    if (!$singleton[$tsLocale]->_initConfig) {
+      $singleton[$tsLocale]->initialize();
+    }
     return $singleton[$tsLocale];
   }
 
@@ -393,10 +421,8 @@ class CRM_Core_I18n {
  * @return         string  the translated string
  */
 function ts($text, $params = array()) {
-  static $config;
   static $function;
   static $locale;
-  static $i18n;
   global $tsLocale;
 
   if (empty($tsLocale)) {
@@ -407,16 +433,12 @@ function ts($text, $params = array()) {
     return '';
   }
 
-  if ($config === NULL) {
-    $config = CRM_Core_Config::singleton();
-  }
-
-  if(!$i18n || $locale != $tsLocale){
-    $i18n = CRM_Core_I18n::singleton();
+  $i18n = CRM_Core_I18n::singleton();
+  if($locale != $tsLocale){
     $locale = $tsLocale;
-    if (!empty($config->customTranslateFunction) && $function === NULL) {
-      if (function_exists($config->customTranslateFunction)) {
-        $function = $config->customTranslateFunction;
+    if (!empty($i18n->_customTranslateFunction) && $function === NULL) {
+      if (function_exists($i18n->_customTranslateFunction)) {
+        $function = $i18n->_customTranslateFunction;
       }
       else {
         $function = FALSE;

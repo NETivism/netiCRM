@@ -438,9 +438,11 @@ class CRM_Export_BAO_Export {
           $relID = implode(',', $relIDs);
           $relationshipClause = " AND crel.{$contactA} IN ( {$relID} )";
         }
-
+        $relTempName = CRM_Core_DAO::createTempTableName('civicrm_relationship_temp', FALSE);
+        $sqlTempTable = "CREATE TEMPORARY TABLE IF NOT EXISTS $relTempName AS (SELECT * FROM civicrm_relationship ORDER BY is_active DESC, start_date DESC )";
+        CRM_Core_DAO::executeQuery($sqlTempTable);
         $relationFrom = " {$relationFrom}
-                INNER JOIN (SELECT * FROM civicrm_relationship ORDER BY is_active DESC, start_date DESC) crel ON crel.{$contactB} = contact_a.id AND crel.relationship_type_id = {$id} 
+                INNER JOIN {$relTempName} crel ON crel.{$contactB} = contact_a.id AND crel.relationship_type_id = {$id}
                 {$relationshipJoin} ";
         $relationWhere = " WHERE contact_a.is_deleted = 0 {$relationshipClause}";
         $relationGroupBy = " GROUP BY crel.{$contactA}";
@@ -1289,7 +1291,7 @@ CREATE TABLE {$exportTempTable} (
     $addIndices = array('street_address', 'household_name', 'civicrm_primary_id');
     foreach ($addIndices as $index) {
       foreach($sqlColumns as $column){
-        if(strstr($column, $index)){
+        if($column == $index){
           $sql .= ",
   INDEX index_{$index}( $index )
 ";

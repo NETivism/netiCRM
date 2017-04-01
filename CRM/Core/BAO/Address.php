@@ -454,6 +454,8 @@ class CRM_Core_BAO_Address extends CRM_Core_DAO_Address {
         $address->state_name = CRM_Core_PseudoConstant::stateProvince($address->state_province_id);
         $values['state_province_name'] = $address->state_name;
         $values['state_province'] = $address->state;
+        $address->state = CRM_Core_PseudoConstant::stateProvinceAbbreviation($address->state_province_id, FALSE);
+        $address->state_name = CRM_Core_PseudoConstant::stateProvince($address->state_province_id, FALSE);
       }
 
       if (!empty($address->country_id)) {

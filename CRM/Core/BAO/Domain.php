@@ -48,7 +48,7 @@ class CRM_Core_BAO_Domain extends CRM_Core_DAO_Domain {
   /**
    * Cache for a domain's location array
    */
-  private $_location = NULL;
+  public $_location = NULL;
 
   /**
    * Takes a bunch of params that are needed to match certain criteria and
@@ -76,13 +76,15 @@ class CRM_Core_BAO_Domain extends CRM_Core_DAO_Domain {
    * @static
    */
   static function &getDomain() {
-    static $domain = NULL;
-    if (!$domain) {
-      $domain = new CRM_Core_BAO_Domain();
-      $domain->id = CRM_Core_Config::domainID();
-      if (!$domain->find(TRUE)) {
-        CRM_Core_Error::fatal();
-      }
+    $config = CRM_Core_Config::singleton();
+    if (!empty($config->domain->id)) {
+      return $config->domain;
+    }
+
+    $domain = new CRM_Core_BAO_Domain();
+    $domain->id = CRM_Core_Config::domainID();
+    if (!$domain->find(TRUE)) {
+      CRM_Core_Error::fatal();
     }
     return $domain;
   }
@@ -157,6 +159,10 @@ class CRM_Core_BAO_Domain extends CRM_Core_DAO_Domain {
   }
 
   static function getNameAndEmail() {
+    $config = CRM_Core_Config::singleton();
+    if (!empty($config->domain->from) && !empty($config->domain->email)) {
+      return array($config->domain->from, $config->domain->email);
+    }
     require_once 'CRM/Core/OptionGroup.php';
     $fromEmailAddress = CRM_Core_OptionGroup::values('from_email_address', NULL, NULL, NULL, ' AND is_default = 1');
     if (!empty($fromEmailAddress)) {
