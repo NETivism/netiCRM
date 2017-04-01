@@ -47,15 +47,31 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
    * @return void
    */
   function run() {
-    $contacts = CRM_Report_BAO_Summary::getContactSource();
-    $contribute = CRM_Report_BAO_Summary::getContributionData();
-    $participant = CRM_Report_BAO_Summary::getParitcipantData();
-    $mailing = CRM_Report_BAO_Summary::getMailingData();
-    $people_by_condition = array(
-      'gender' => CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::GENDER),
-      'age' => CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::AGE),
-      'province' => CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::PROVINCE),
-      );
+
+    $components = CRM_Core_Component::getEnabledComponents();
+    $path = get_class($this);
+    $allData = CRM_Core_BAO_Cache::getItem('Report Page Summary', $path.'_reportPageSummary', $components['CiviReport']->componentID);
+
+    if(empty($allData) || time() - $allData['time'] > 86400 || $_GET['update']) {
+      $allData['contacts'] = CRM_Report_BAO_Summary::getContactSource();
+      $allData['contribute'] = CRM_Report_BAO_Summary::getContributionData();
+      $allData['participant'] = CRM_Report_BAO_Summary::getParitcipantData();
+      $allData['mailing'] = CRM_Report_BAO_Summary::getMailingData();
+      $allData['people_by_condition'] = array(
+        'gender' => CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::GENDER),
+        'age' => CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::AGE),
+        'province' => CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::PROVINCE),
+        );
+      $allData['time'] = time();
+      CRM_Core_BAO_Cache::setItem($allData, 'Report Page Summary', $path.'_reportPageSummary', $components['CiviReport']->componentID);
+    }
+
+    $contacts = &$allData['contacts'];
+    $contribute = &$allData['contribute'];
+    $participant = &$allData['participant'];
+    $mailing = &$allData['mailing'];
+    $people_by_condition = &$allData['people_by_condition'];
+    $time = $allData['time'];
 
     $template = CRM_Core_Smarty::singleton();
     $template->assign('contribute_total', CRM_Utils_Money::format($contribute['total_contribute']['sum']));
@@ -226,7 +242,7 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
 
     $template->assign('chartPeopleProvince', $chartPeopleProvince);
 
-
+    $template->assign('update_time', date('Y-m-d H:i:s',$time));
 
     // $template->assign('chartInsSum', $chartInsSum);
     // $template->assign('chartTypeSum', $chartTypeSum);
@@ -234,11 +250,7 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
 
     if($_GET['showhidden'] == 1){
       $template->assign('showhidden', TRUE);
-      $data['contacts'] = $contacts;
-      $data['contribute'] = $contribute;
-      $data['participant'] = $participant;
-      $data['mailing'] = $mailing;
-      $this->showhiddenall($data);
+      $this->showhiddenall($allData);
     }
 
     CRM_Utils_System::setTitle(ts('Report Summary'));

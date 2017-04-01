@@ -25,6 +25,8 @@
 *}
 {* Display monthly and yearly contributions using Google charts (Bar and Pie) *} 
 
+{ts 1=$update_time}Last Update at %1{/ts}
+
 {if $hasChart}
   {if $contribute_total or $chartConributeOnlineOffline or $participant_total or $chartParticipantOnlineOffline or $contact_total or $mailing}
   <div class="row">
@@ -140,11 +142,11 @@
   {if $chartMailingFunnel}
   <div class="row">
     <div class="col-md-12">
-      <div id="column-mailing-delivered" class="box mdl-shadow--2dp">
+      <div id="column-mailing-funnel" class="box mdl-shadow--2dp">
         <div class="box-header">
           <h3 class="box-title">{ts}Mailing{/ts} (funnel)</h3>
         </div>
-        <div class="box-content">{include file="CRM/common/chartist.tpl" chartist=$chartMailingFunnel}</div>
+        <div class="box-content">{include file="CRM/common/funnel.tpl" funnel=$chartMailingFunnel}</div>
       </div>
     </div>
   </div>

@@ -1008,7 +1008,7 @@ cj(function() {
         $status = ts('The following participants no longer have an event fee recorded. You can edit their registration and record a replacement contribution by clicking the links below:') . '<br>' . $participantLinks;
       }
       else {
-        $status = ("Selected Participants was deleted sucessfully.");
+        $status = ts("Selected Participants was deleted sucessfully.");
       }
       CRM_Core_Session::setStatus($status);
       return;

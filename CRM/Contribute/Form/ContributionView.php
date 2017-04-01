@@ -93,8 +93,9 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form {
       $params = array(1 => array($values['contribution_recur_id'], 'Integer'));
       $dao = CRM_Core_DAO::executeQuery($sql, $params);
       if ($dao->fetch()) {
-        $values["recur_installments"] = $dao->installments;
-        $values["recur_frequency_unit"] = $dao->frequency_unit;
+        $values["recur_installments"] = empty($dao->installments) ? ts("no limit") : $dao->installments;
+        $frequency_unit = CRM_Core_OptionGroup::values('recur_frequency_units');
+        $values["recur_frequency_unit"] = $frequency_unit[$dao->frequency_unit];
         $values["recur_frequency_interval"] = $dao->frequency_interval;
         $values["recur_info_url"] = CRM_Utils_System::url('civicrm/contact/view/contributionrecur', "reset=1&id={$values['contribution_recur_id']}&cid={$values['contact_id']}");
       }

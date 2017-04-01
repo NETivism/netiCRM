@@ -128,7 +128,7 @@
         {/if}
               <tr class="crm-admin-options-form-block-weight">
                 <td class="label">{$form.weight.label}</td>
-                <td>{$form.weight.html}</td>
+                <td>{$form.weight.html}<br/><span class="description">&nbsp;{ts}Weight controls the order in which options are displayed in a group. Enter a positive integer - lower numbers are displayed ahead of higher numbers.{/ts}</span></td>
               </tr>
         {if $form.component_id.html} {* Component ID is exposed for activity types if CiviCase is enabled. *}
               <tr class="crm-admin-options-form-block-component_id"> 

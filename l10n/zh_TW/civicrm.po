@@ -11,8 +11,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2017-03-30 08:33+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
+"PO-Revision-Date: 2017-03-31 06:29+0000\n"
+"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30550,9 +30550,8 @@ msgstr "年後"
 #: templates/CRM/Custom/Form/Field.tpl templates/CRM/Price/Form/Field.tpl
 msgid ""
 "Weight controls the order in which fields are displayed in a group. Enter a "
-"positive or negative integer - lower numbers are displayed ahead of higher "
-"numbers."
-msgstr "權重可控制群組欄位的出現次序。您可輸入正整數或負整數 - 數值越小，出現位置越前面。"
+"positive integer - lower numbers are displayed ahead of higher numbers."
+msgstr "權重可控制群組欄位的出現次序。您可輸入正整數 - 數值越小，出現位置越前面。"
 
 #: templates/CRM/Custom/Form/Field.tpl
 msgid ""
@@ -30778,9 +30777,9 @@ msgstr "如果您想在記錄數目設定一個指定限額。輸入那個數字
 #: templates/CRM/Custom/Page/Group.hlp
 msgid ""
 "Weight controls the order in which custom field sets are presented when "
-"there are more than one. Enter a positive or negative integer - lower "
-"numbers are displayed ahead of higher numbers."
-msgstr "權重可控制多個資料群組的出現次序。您可輸入正整數或負整數 - 數值越小，出現依序越高。"
+"there are more than one. Enter a positive integer - lower numbers are "
+"displayed ahead of higher numbers."
+msgstr "權重可控制多個資料群組的出現次序。您可輸入正整數 - 數值越小，出現依序越高。"
 
 #: templates/CRM/Custom/Page/Group.hlp
 msgid ""
@@ -35771,9 +35770,9 @@ msgstr "為此欄位顯示說明解釋文字（可以使用 HTML 標籤）。"
 #: templates/CRM/UF/Form/Field.tpl
 msgid ""
 "Weight controls the order in which fields are displayed within a profile. "
-"Enter a positive or negative integer - lower numbers are displayed ahead of "
-"higher numbers."
-msgstr "權重可控制資料表單欄位的出現次序。您可輸入正整數或負整數 - 數值越小，出現依序越高。"
+"Enter a positive integer - lower numbers are displayed ahead of higher "
+"numbers."
+msgstr "權重可控制資料表單欄位的出現次序。您可輸入正整數 - 數值越小，出現依序越高。"
 
 #: templates/CRM/UF/Form/Field.tpl
 msgid ""
@@ -35852,8 +35851,7 @@ msgstr "勾選<strong>查看/編輯使用者帳戶</strong>，以在現存的使
 msgid ""
 "Weight controls the order in which profiles are presented when more than one"
 " profile is included in User Registration or My Account screens. Enter a "
-"positive or negative integer - lower numbers are displayed ahead of higher "
-"numbers."
+"positive integer - lower numbers are displayed ahead of higher numbers."
 msgstr ""
 
 #: templates/CRM/UF/Form/Group.hlp
@@ -40405,9 +40403,9 @@ msgstr "您也可以設定可以記錄每一個聯絡人的最多記錄數目。
 #: templates/CRM/Custom/Page/Group.hlp
 msgid ""
 "Weight controls the order in which custom data groups are presented when "
-"there are more than one. Enter a positive or negative integer - lower "
-"numbers are displayed ahead of higher numbers."
-msgstr "權重可控制多個資料群組的出現次序。您可輸入正整數或負整數 - 數值越小，出現依序越高。"
+"there are more than one. Enter a positive integer - lower numbers are "
+"displayed ahead of higher numbers."
+msgstr "權重可控制多個資料群組的出現次序。您可輸入正整數 - 數值越小，出現依序越高。"
 
 #: templates/CRM/Event/Form/ManageEvent/EventInfo.hlp
 msgid ""
@@ -45487,3 +45485,9 @@ msgstr "僅允許定期定額"
 
 msgid "Check this box will turn off single transaction of this page."
 msgstr "勾選此選項，將會隱藏此頁面的非定期的選項，僅允許定期選項出現。"
+
+#: templates/CRM/Admin/Form/Options.tpl
+msgid ""
+"Weight controls the order in which options are displayed in a group. Enter a"
+" positive integer - lower numbers are displayed ahead of higher numbers."
+msgstr "權重可控制選項的出現次序。您可輸入正整數 - 數值越小，出現依序越高。"
