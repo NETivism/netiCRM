@@ -228,7 +228,7 @@ class CRM_Core_Config_Variables extends CRM_Core_Config_Defaults {
   /**
    * Default location of gettext resource files.
    */
-  public $gettextResourceDir = './l10n/';
+  public $gettextResourceDir = NULL;
 
   /**
    * Default user framework
