@@ -10,7 +10,7 @@ var vars = {
 
 // you should add your own testing variables below
   url: [
-    {title:'New 個人', url:'civicrm/contact/add?reset=1&ct=Individual'},
+    {title:'New Individual', url:'civicrm/contact/add?reset=1&ct=Individual'},
     {title:'Custom Data', url:'civicrm/admin/custom/group?reset=1'},
     {title:'New Activity', url:'civicrm/activity?reset=1&action=add&context=standalone'},
     {title:'Administer CiviCRM', url:'civicrm/admin?reset=1'},
@@ -20,9 +20,9 @@ var vars = {
     {title:'CiviCRM Home', url:'civicrm/civicrm/admin/configtask?reset=1'},
     {title:'Synchronize Users to Contacts', url:'civicrm/admin/synchUser?reset=1'},
     {title:'Find Contacts', url:'civicrm/contact/search?reset=1'},
-    {title:'New 個人', url:'civicrm/contact/add?reset=1&ct=Individual'},
-    {title:'New 組織', url:'civicrm/contact/add?reset=1&ct=Organization'},
-    {title:'New 家庭', url:'civicrm/contact/add?reset=1&ct=Household'},
+    {title:'New Individual', url:'civicrm/contact/add?reset=1&ct=Individual'},
+    {title:'New Organization', url:'civicrm/contact/add?reset=1&ct=Organization'},
+    {title:'New Household', url:'civicrm/contact/add?reset=1&ct=Household'},
     {title:'Activities', url:'civicrm/activity/add?atype=3&action=add&reset=1&context=standalone'},
     {title:'Import Contacts', url:'civicrm/import/contact?reset=1'},
     {title:'Manage Groups', url:'civicrm/group?reset=1'},
