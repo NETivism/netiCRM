@@ -258,7 +258,6 @@ class CRM_Core_BAO_ConfigSetting {
             $lcMessages = $ufm->language;
           }
           $session->set('lcMessages', $lcMessages);
-          dpm($lcMessages);
         }
       }
 
@@ -301,6 +300,8 @@ class CRM_Core_BAO_ConfigSetting {
       list($emailFrom, $emailAddr) = CRM_Core_BAO_Domain::getNameAndEmail();
       $domain->from = $emailFrom;
       $domain->email = $emailAddr;
+      $domain->getLocationValues();
+      unset($domain->config_backend);
       $defaults['domain'] = $domain;
     }
 
