@@ -34,7 +34,7 @@
  */
 
 function civicrm_conf_init() {
-    global $skipConfigError, $civicrm_root;
+    global $skipConfigError, $civicrm_root, $civicrm_conf_path;
 
     static $conf = '';
 
@@ -97,6 +97,7 @@ function civicrm_conf_init() {
 
     $conf = "$confdir/default";
 
+    $civicrm_conf_path = $conf;
     return $conf;
 }
 

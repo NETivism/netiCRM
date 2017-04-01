@@ -387,28 +387,18 @@ HTACCESS;
 
   /**
    * Create the base file path from which all our internal directories are
-   * offset. This is derived from the template compile directory set
+   * offset. This is derived from the cms public dir
    */
-  static function baseFilePath($templateCompileDir = NULL) {
-    static $_path = NULL;
-    if (!$_path) {
-      if ($templateCompileDir == NULL) {
-        $config = CRM_Core_Config::singleton();
-        $templateCompileDir = $config->templateCompileDir;
+  static function baseFilePath($cmsDir = NULL) {
+    static $path = NULL;
+    if (!$path) {
+      global $cms_root;
+      if ($cmsDir == NULL) {
+        $cmsDir = CRM_Utils_System::cmsDir('public');
       }
-      $path = dirname($templateCompileDir);
-      //this fix is to avoid creation of upload dirs inside templates_c directory
-      $checkPath = explode(DIRECTORY_SEPARATOR, $path);
-      $unset = array(php_sapi_name(), 'templates_c');
-      foreach($checkPath as $k => $c){
-        if (in_array($c, $unset)) {
-          unset($checkPath[$k]);
-        }
-      }
-      $path = implode(DIRECTORY_SEPARATOR, $checkPath);
-      $_path = CRM_Utils_File::addTrailingSlash($path);
+      $path = $cms_root . DIRECTORY_SEPARATOR . $cmsDir . DIRECTORY_SEPARATOR . CRM_Core_Config::SYSTEM_FILEDIR;
     }
-    return $_path;
+    return self::addTrailingSlash($path);
   }
 
   static function relativeDirectory($directory) {

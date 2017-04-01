@@ -56,6 +56,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
    * System default language(fallback language)
    */
   CONST SYSTEM_LANG = 'en_US';
+  CONST SYSTEM_FILEDIR = 'civicrm';
 
   /**
    * the dsn of the database connection
@@ -94,7 +95,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
    * compiled files
    * @var string
    */
-  public $templateCompileDir = './templates_c/en_US/';
+  public $templateCompileDir = NULL;
 
   public $configAndLogDir = NULL;
 
@@ -193,14 +194,21 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
       self::$_singleton = $cache->get('CRM_Core_Config' . CRM_Core_Config::domainID());
 
       // if not in cache, fire off config construction
+      global $cms_root, $civicrm_conf_path;
       if (!self::$_singleton) {
         self::$_singleton = new CRM_Core_Config;
         self::$_singleton->_initialize($loadFromDB);
+        if (empty($cms_root)) {
+          $cms_root = self::$_singleton->userSystem->cmsRootPath();
+        }
+        if (empty($civicrm_conf_path)) {
+          $civicrm_conf_path = self::$_singleton->userSystem->confPath();
+        }
 
         //initialize variables. for gencode we cannot load from the
         //db since the db might not be initialized
         if ($loadFromDB) {
-          self::$_singleton->_initVariables();
+          self::$_singleton->_initVariables($loadFromDB);
 
           // retrieve and overwrite stuff from the settings file
           self::$_singleton->setCoreVariables();
@@ -212,7 +220,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
         self::$_singleton->_initialize($loadFromDB);
 
         if ($loadFromDB) {
-          self::$_singleton->_initVariables();
+          self::$_singleton->_initVariables($loadFromDB);
         }
         // add component specific settings
         self::$_singleton->componentRegistry->addConfig($this);
@@ -299,7 +307,6 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
    * @access public
    */
   private function _initialize($loadFromDB = TRUE) {
-
     // following variables should be set in CiviCRM settings and
     // as crucial ones, are defined upon initialisation
     // instead of in CRM_Core_Config_Defaults
@@ -309,28 +316,6 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
     elseif ($loadFromDB) {
       // bypass when calling from gencode
       echo 'You need to define CIVICRM_DSN in civicrm.settings.php';
-      exit();
-    }
-
-    if (defined('CIVICRM_TEMPLATE_COMPILEDIR')) {
-      $this->templateCompileDir = CRM_Utils_File::addTrailingSlash(CIVICRM_TEMPLATE_COMPILEDIR . php_sapi_name());
-
-      // we're automatically prefixing compiled templates directories with country/language code
-      global $tsLocale;
-      if (!empty($tsLocale)) {
-        $this->templateCompileDir .= CRM_Utils_File::addTrailingSlash($tsLocale);
-      }
-      elseif (!empty($this->lcMessages)) {
-        $this->templateCompileDir .= CRM_Utils_File::addTrailingSlash($this->lcMessages);
-      }
-
-      // also make sure we create the config directory within this directory
-      // the below statement will create both the templates directory and the config and log directory
-      $this->configAndLogDir = $this->templateCompileDir . 'ConfigAndLog' . DIRECTORY_SEPARATOR;
-      CRM_Utils_File::createDir($this->configAndLogDir);
-    }
-    elseif ($loadFromDB) {
-      echo 'You need to define CIVICRM_TEMPLATE_COMPILEDIR in civicrm.settings.php';
       exit();
     }
 
@@ -391,10 +376,25 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
    * @return void
    * @access private
    */
-  private function _initVariables() {
+  private function _initVariables($loadFromDB) {
     // retrieve serialised settings
     $variables = array();
     CRM_Core_BAO_ConfigSetting::retrieve($variables);
+
+    // after locales initialized in configsetting
+    global $tsLocale;
+    $temp = CRM_Utils_System::cmsDir('temp');
+    if ($temp) {
+      $this->templateCompileDir = $temp . DIRECTORY_SEPARATOR . 'smarty' . php_sapi_name() . DIRECTORY_SEPARATOR . $_SERVER['HTTP_HOST'] . DIRECTORY_SEPARATOR . $tsLocale . DIRECTORY_SEPARATOR;
+    }
+    elseif(defined('CIVICRM_TEMPLATE_COMPILEDIR')) {
+      $this->templateCompileDir = CRM_Utils_File::addTrailingSlash(CIVICRM_TEMPLATE_COMPILEDIR).CRM_Utils_File::addTrailingSlash($tsLocale);
+    }
+
+    // also make sure we create the config directory within this directory
+    // the below statement will create both the templates directory and the config and log directory
+    $this->configAndLogDir = $this->templateCompileDir . CRM_Utils_File::addTrailingSlash('ConfigAndLog');
+    CRM_Utils_File::createDir($this->configAndLogDir);
 
     // if settings are not available, go down the full path
     if (empty($variables)) {
@@ -437,13 +437,6 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
           CRM_Core_Session::setStatus(ts('%1 has an incorrect directory path. Please go to the <a href="%2">path setting page</a> and correct it.', array(1 => $key, 2 => $url)) . '<br/>');
         }
       }
-      elseif ($key == 'lcMessages') {
-        // reset the templateCompileDir to locale-specific and make sure it exists
-        $this->templateCompileDir = str_replace('/' . $this->lcMessages . '/', '/', $this->templateCompileDir);
-        $this->templateCompileDir .= CRM_Utils_File::addTrailingSlash($value, '/');
-        CRM_Utils_File::createDir($this->templateCompileDir);
-      }
-
       $this->$key = $value;
     }
 
