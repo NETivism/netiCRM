@@ -162,14 +162,14 @@ class CRM_Core_BAO_ConfigSetting {
    */
   static function retrieve(&$defaults) {
     require_once "CRM/Core/DAO/Domain.php";
-    $domain = new CRM_Core_DAO_Domain();
+    $domain = new CRM_Core_BAO_Domain();
     $domain->selectAdd();
 
     if (CRM_Utils_Array::value('q', $_GET) == 'civicrm/upgrade') {
       $domain->selectAdd('config_backend');
     }
     else {
-      $domain->selectAdd('config_backend, locales, locale_custom_strings');
+      $domain->selectAdd('name, description, config_backend, version, loc_block_id, locales, locale_custom_strings');
     }
 
     $domain->id = CRM_Core_Config::domainID();
@@ -258,6 +258,7 @@ class CRM_Core_BAO_ConfigSetting {
             $lcMessages = $ufm->language;
           }
           $session->set('lcMessages', $lcMessages);
+          dpm($lcMessages);
         }
       }
 
@@ -293,6 +294,14 @@ class CRM_Core_BAO_ConfigSetting {
       if (function_exists('mb_internal_encoding')) {
         mb_internal_encoding('UTF-8');
       }
+    }
+
+    // refs #20044
+    if ($domain->id) {
+      list($emailFrom, $emailAddr) = CRM_Core_BAO_Domain::getNameAndEmail();
+      $domain->from = $emailFrom;
+      $domain->email = $emailAddr;
+      $defaults['domain'] = $domain;
     }
 
     // dont add if its empty
