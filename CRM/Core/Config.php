@@ -223,6 +223,10 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
         set_include_path($include_path);
       }
 
+      if (!empty(self::$_singleton->domain->id)) {
+        self::$_singleton->domain->getLocationValues();
+      }
+
       // set the callback at the very very end, to avoid an infinite loop
       // set the error callback
       CRM_Core_Error::setCallback();
