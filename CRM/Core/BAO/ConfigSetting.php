@@ -183,6 +183,9 @@ class CRM_Core_BAO_ConfigSetting {
           unset($defaults[$skip]);
         }
       }
+      if (empty($defaults['lcMessages'])) {
+        $defaults['lcMessages'] = 'en_US';
+      }
 
       // since language field won't be present before upgrade.
       if (CRM_Utils_Array::value('q', $_GET) == 'civicrm/upgrade') {
@@ -300,7 +303,6 @@ class CRM_Core_BAO_ConfigSetting {
       list($emailFrom, $emailAddr) = CRM_Core_BAO_Domain::getNameAndEmail();
       $domain->from = $emailFrom;
       $domain->email = $emailAddr;
-      $domain->getLocationValues();
       unset($domain->config_backend);
       $defaults['domain'] = $domain;
     }
