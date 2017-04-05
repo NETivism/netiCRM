@@ -188,6 +188,7 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
       'selector' => '#chart-bar-mailing-funnel',
       'type' => 'Bar',
       'labels' => json_encode(array_slice($mailing['label'],1)),
+      'labelsTop' => json_encode(array_slice($mailing['label'],0,count($mailing['label'])-1)),
       'series' => json_encode($mailing['funnel']['count']),
       'withToolTip' => true
     );
