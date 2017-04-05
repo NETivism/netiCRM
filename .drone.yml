@@ -8,3 +8,5 @@ pipeline:
       - CIVICRM_TEST_DSN=mysql://root@127.0.0.1/neticrmci
       - DRUPAL=7.54
       - NETICRM=develop
+    commands:
+			- /usr/bin/supervisord -n
