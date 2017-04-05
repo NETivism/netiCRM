@@ -1,0 +1,12 @@
+pipeline:
+  build:
+    image: netivism/neticrm-ci
+    environment:
+      - TZ=Asia/Taipei
+      - RUNPORT=80
+      - DRUPAL_ROOT=/var/www/html
+      - CIVICRM_TEST_DSN=mysql://root@127.0.0.1/neticrmci
+      - DRUPAL=7.54
+      - NETICRM=develop
+    commands:
+      - /init.sh
