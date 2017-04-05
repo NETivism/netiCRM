@@ -1,6 +1,6 @@
 pipeline:
   build:
-    image: netivism/neticrm-ci
+    image: netivism/neticrm-ci:drone
     environment:
       - TZ=Asia/Taipei
       - RUNPORT=80
@@ -9,4 +9,10 @@ pipeline:
       - DRUPAL=7.54
       - NETICRM=develop
     commands:
+      - /usr/bin/supervisord
       - /init.sh
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/ALLPAYTest.php
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/NewebTest.php
+      - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/SPGATEWAYTest.php
+      - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/pages.js
+      - cd $DRUPAL_ROOT && casperjs test sites/all/modules/civicrm/tests/casperjs/event_register.js
