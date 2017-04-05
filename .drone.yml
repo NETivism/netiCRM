@@ -9,4 +9,4 @@ pipeline:
       - DRUPAL=7.54
       - NETICRM=develop
     commands:
-			- /usr/bin/supervisord -n
+      - /usr/bin/supervisord -n
