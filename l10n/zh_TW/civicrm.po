@@ -11,7 +11,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2017-03-31 06:29+0000\n"
+"PO-Revision-Date: 2017-04-05 09:08+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -45491,3 +45491,16 @@ msgid ""
 "Weight controls the order in which options are displayed in a group. Enter a"
 " positive integer - lower numbers are displayed ahead of higher numbers."
 msgstr "權重可控制選項的出現次序。您可輸入正整數 - 數值越小，出現依序越高。"
+
+#: templates/CRM/Report/Page/Summary.tpl
+msgid "Last update at %1"
+msgstr "最近更新於 %1"
+
+msgid "People percentage by gender"
+msgstr "依性別區分聯絡人比例"
+
+msgid "People percentage by age"
+msgstr "依年齡區間區分聯絡人比例"
+
+msgid "People percentage by province"
+msgstr "依縣市區分聯絡人比例"

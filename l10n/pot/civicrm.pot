@@ -45440,3 +45440,16 @@ msgstr ""
 #: templates/CRM/Admin/Form/Options.tpl
 msgid "Weight controls the order in which options are displayed in a group. Enter a positive integer - lower numbers are displayed ahead of higher numbers."
 msgstr ""
+
+#: templates/CRM/Report/Page/Summary.tpl
+msgid "Last update at %1"
+msgstr ""
+
+msgid "People percentage by gender"
+msgstr ""
+
+msgid "People percentage by age"
+msgstr ""
+
+msgid "People percentage by province"
+msgstr ""

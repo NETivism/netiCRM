@@ -25,7 +25,9 @@
 *}
 {* Display monthly and yearly contributions using Google charts (Bar and Pie) *} 
 
-{ts 1=$update_time}Last Update at %1{/ts}
+<div class="last-update-date">
+  {ts 1=$update_time}Last update at %1{/ts}
+</div>
 
 {if $hasChart}
   {if $contribute_total or $chartConributeOnlineOffline or $participant_total or $chartParticipantOnlineOffline or $contact_total or $mailing}
@@ -157,7 +159,7 @@
     <div class="col-md-12">
       <div id="column-people-by-gender" class="box mdl-shadow--2dp">
         <div class="box-header">
-          <h3 class="box-title">{ts}People by gender{/ts}</h3>
+          <h3 class="box-title">{ts}People percentage by gender{/ts}</h3>
         </div>
         <div class="box-content">{include file="CRM/common/chartist.tpl" chartist=$chartPeopleGender}</div>
       </div>
@@ -170,7 +172,7 @@
     <div class="col-md-12">
       <div id="column-people-by-age" class="box mdl-shadow--2dp">
         <div class="box-header">
-          <h3 class="box-title">{ts}People by age{/ts}</h3>
+          <h3 class="box-title">{ts}People percentage by age{/ts}</h3>
         </div>
         <div class="box-content">{include file="CRM/common/chartist.tpl" chartist=$chartPeopleAge}</div>
       </div>
@@ -183,7 +185,7 @@
     <div class="col-md-12">
       <div id="column-people-by-province" class="box mdl-shadow--2dp">
         <div class="box-header">
-          <h3 class="box-title">{ts}People by province{/ts}</h3>
+          <h3 class="box-title">{ts}People percentage by province{/ts}</h3>
         </div>
         <div class="box-content">{include file="CRM/common/chartist.tpl" chartist=$chartPeopleProvince}</div>
       </div>
