@@ -151,8 +151,44 @@ class CRM_Utils_System_UnitTests {
     return NULL;
   }
 
-  function languageNegotiationURL($url, $addLanguagePart = TRUE, $removeLanguagePart = FALSE) {
+  static function languageNegotiationURL($url, $addLanguagePart = TRUE, $removeLanguagePart = FALSE) {
     return NULL;
+  }
+
+  static function cmsRootPath() {
+    if (defined('DRUPAL_ROOT')) {
+      return DRUPAL_ROOT;
+    }
+    $cmsRoot = $valid = NULL;
+    if (!empty($_SERVER['PWD'])) {
+      $scriptPath = $_SERVER['PWD'];
+    }
+    else {
+      $scriptPath = $_SERVER['SCRIPT_FILENAME'];
+    }
+    $pathVars = explode('/', str_replace('\\', '/', $scriptPath));
+
+    //might be windows installation.
+    $firstVar = array_shift($pathVars);
+    if ($firstVar) {
+      $cmsRoot = $firstVar;
+    }
+
+    //start w/ csm dir search.
+    foreach ($pathVars as $var) {
+      $cmsRoot .= "/$var";
+      $cmsIncludePath = "$cmsRoot/includes";
+      //stop as we found bootstrap.
+      if (file_exists("$cmsIncludePath/bootstrap.inc")) {
+        $valid = TRUE;
+        break;
+      }
+    }
+
+    if ($valid) {
+      define('DRUPAL_ROOT', $cmsRoot);
+      return $cmsRoot;
+    }
   }
 }
 
