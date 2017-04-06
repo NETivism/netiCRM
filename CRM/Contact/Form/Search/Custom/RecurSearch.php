@@ -361,38 +361,19 @@ $having
       $this->fillTable();
       $this->_filled = TRUE;
     }
-    if ($this->_formValues['start_date_from']) {
-      $summary['start_date'] = array(
-        'label' => ts('First recurring date'),
-        'value' => $this->_formValues['start_date_from'],
-      );
-      if ($this->_formValues['start_date_to']) {
-        $summary['start_date']['value'] .= ' ~ '.$this->_formValues['start_date_to'];
-      }
-      else {
-        $summary['start_date']['value'] .= ' ~ '.ts('Current Day');
-      }
+    $count = $this->count();
+
+    $summary['search_results'] = array(
+      'label' => ts('Search Results'),
+      'value' => ts('There are %1 recurring contributions.', array(1 => $count)),
+    );
+    $query = CRM_Core_DAO::executeQuery("SELECT SUM(receive_amount) as amount, COUNT(contribution_status_id) as count, contribution_status_id FROM {$this->_tableName} WHERE contribution_status_id = 1 GROUP BY contribution_status_id");
+    $query->fetch();
+    
+    if ($query->amount) {
+      $summary['search_results']['value'] .= ' '.ts('Total amount of completed contributions is %1.', array(1 => $query->amount));
     }
 
-    $query = CRM_Core_DAO::executeQuery("SELECT SUM(receive_amount) as amount, COUNT(contribution_status_id) as count, contribution_status_id FROM {$this->_tableName} GROUP BY contribution_status_id");
-    $aggregateAmount = 0;
-    $aggregateCount = 0;
-    $summaryStatus = array();
-    while($query->fetch()) {
-      $aggregateAmount += $query->amount;
-      $aggregateCount += $query->count;
-      $count = ' ('.ts('%count Result', array('count' => $query->count, 'plural' => '%count Results')).')';
-      $summaryStatus[$query->contribution_status_id] = $this->_cstatus[$query->contribution_status_id] . $count;
-    }
-    krsort($summaryStatus);
-    $summary['statuses'] = array(
-      'label' => ts('Recurring Status'),
-      'value' => implode(',', $summaryStatus),
-    );
-    $summary['total_amount'] = array(
-      'label' => ts('Aggregate Amount'),
-      'value' => '$ '.number_format($aggregateAmount),
-    );
     return $summary;
   }
 

@@ -45453,3 +45453,9 @@ msgstr ""
 
 msgid "People percentage by province"
 msgstr ""
+
+msgid "There are %1 recurring contributions."
+msgstr ""
+
+msgid "Total amount of completed contributions is %1."
+msgstr ""

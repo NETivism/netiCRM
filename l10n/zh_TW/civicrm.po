@@ -11,8 +11,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2017-04-05 09:08+0000\n"
-"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
+"PO-Revision-Date: 2017-04-06 07:12+0000\n"
+"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45504,3 +45504,9 @@ msgstr "依年齡區間區分聯絡人比例"
 
 msgid "People percentage by province"
 msgstr "依縣市區分聯絡人比例"
+
+msgid "There are %1 recurring contributions."
+msgstr "總共有 %1 筆定期定額。"
+
+msgid "Total amount of completed contributions is %1."
+msgstr "已完成的捐款總計為 %1。"

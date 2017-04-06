@@ -1,7 +1,7 @@
 {* handle enable/disable actions*}
 {include file="CRM/common/enableDisable.tpl"}
 <div class="crm-block crm-form-block crm-contact-custom-search-form-block">
-<div class="crm-accordion-wrapper crm-custom_search_form-accordion {if $rows}crm-accordion-closed{else}crm-accordion-open{/if}">
+<div class="crm-accordion-wrapper crm-custom_search_form-accordion crm-accordion-open">
     <div class="crm-accordion-header crm-master-accordion-header">
       <div class="zmdi crm-accordion-pointer"></div>
       {ts}Edit Search Criteria{/ts}
@@ -40,11 +40,9 @@
 {/if}
 
 {if $summary}
-  <ul>
-    {foreach from=$summary item=summary_item}
-    <li><label>{$summary_item.label}</label>: {$summary_item.value}</li>
-    {/foreach}
-  </ul>
+  {foreach from=$summary item=summary_item}
+  <div><label>{$summary_item.label}</label>: {$summary_item.value}</div>
+  {/foreach}
 {/if}
 
 {if $rows}
