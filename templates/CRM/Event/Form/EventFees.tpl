@@ -271,19 +271,23 @@ function checkEmail( ) {
 </script>
 {/if}
 <script>{literal}
-     function fillTotalAmount( totalAmount ) {
-          if ( !totalAmount ) {
-     	      var eventFeeBlockValues = {/literal}{$eventFeeBlockValues}{literal};
-	      totalAmount = eval('eventFeeBlockValues.amount_id_'+{/literal}{$form.amount.value}{literal});
-	  }
-          cj('#total_amount').val( totalAmount );
-    }
-    cj('#record_contribution').click(function(){
-      fillTotalAmount();
-    });
+function fillTotalAmount( totalAmount ) {
+  if ( !totalAmount ) {
+    {/literal}{if $eventFeeBlockValues}{literal}
+    var eventFeeBlockValues = {/literal}{$eventFeeBlockValues}{literal};
+	  totalAmount = eval('eventFeeBlockValues.amount_id_'+{/literal}{$form.amount.value}{literal});
+    {/literal}{/if}{literal}
+	}
+  if (totalAmount) {
+    cj('#total_amount').val( totalAmount );
+  }
+}
+cj('#record_contribution').click(function(){
+  fillTotalAmount();
+});
 {/literal}
 {if $showFeeBlock && $feeBlockPaid && !$priceSet && $action neq 2}
-    fillTotalAmount( );
+  fillTotalAmount();
 {/if}
 </script>
 
