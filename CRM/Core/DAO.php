@@ -85,7 +85,7 @@ class CRM_Core_DAO extends DB_DataObject {
    * @return void
    * @access private
    */
-  function init($dsn) {
+  static function init($dsn) {
     $options = &PEAR::getStaticProperty('DB_DataObject', 'options');
     $options['database'] = $dsn;
     if (defined('CIVICRM_DAO_DEBUG')) {
@@ -144,7 +144,7 @@ class CRM_Core_DAO extends DB_DataObject {
    * @return void
    * @access public
    */
-  function setFactory(&$factory) {
+  static function setFactory(&$factory) {
     self::$_factory = &$factory;
   }
 
@@ -347,7 +347,7 @@ class CRM_Core_DAO extends DB_DataObject {
    * @return void
    * @access public
    */
-  function storeValues(&$object, &$values) {
+  static function storeValues(&$object, &$values) {
     $fields = &$object->fields();
     foreach ($fields as $name => $value) {
       $dbName = $value['name'];

@@ -225,7 +225,7 @@ class CRM_Utils_Mail {
    *
    * @return string          the plucked email address
    */
-  function pluckEmailFromHeader($header) {
+  static function pluckEmailFromHeader($header) {
     preg_match('/<([^<]*)>$/', $header, $matches);
     return $matches[1];
   }

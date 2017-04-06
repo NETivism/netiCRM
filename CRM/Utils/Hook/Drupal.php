@@ -55,7 +55,7 @@ class CRM_Utils_Hook_Drupal extends CRM_Utils_Hook {
 
   static function invoke($numParams,
     &$arg1, &$arg2, &$arg3, &$arg4, &$arg5,
-    $fnSuffix
+    $fnSuffix, $fnPrefix
   ) {
     static $functions = array();
     $result = array();

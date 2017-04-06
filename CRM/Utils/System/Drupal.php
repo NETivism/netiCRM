@@ -537,7 +537,7 @@ class CRM_Utils_System_Drupal {
   }
 
   static function cmsRootPath() {
-    if (defined(DRUPAL_ROOT)) {
+    if (defined('DRUPAL_ROOT')) {
       return DRUPAL_ROOT;
     }
     $cmsRoot = $valid = NULL;
@@ -701,7 +701,11 @@ class CRM_Utils_System_Drupal {
   }
 
   function confPath() {
-    return conf_path(FALSE);
+    global $civicrm_conf_path;
+    if (empty($civicrm_conf_path)) {
+      $civicrm_conf_path = conf_path(FALSE);
+    }
+    return $civicrm_conf_path;
   }
 }
 

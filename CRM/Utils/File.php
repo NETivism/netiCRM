@@ -105,7 +105,7 @@ class CRM_Utils_File {
    * @access public
    * @static
    */
-  function createDir($path, $abort = TRUE) {
+  static function createDir($path, $abort = TRUE) {
     if (is_dir($path) || empty($path)) {
       return;
     }
@@ -392,11 +392,10 @@ HTACCESS;
   static function baseFilePath($cmsDir = NULL) {
     static $path = NULL;
     if (!$path) {
-      global $cms_root;
       if ($cmsDir == NULL) {
         $cmsDir = CRM_Utils_System::cmsDir('public');
       }
-      $path = $cms_root . DIRECTORY_SEPARATOR . $cmsDir . DIRECTORY_SEPARATOR . CRM_Core_Config::SYSTEM_FILEDIR;
+      $path = CRM_Utils_System::cmsRootPath() . DIRECTORY_SEPARATOR . $cmsDir . DIRECTORY_SEPARATOR . CRM_Core_Config::SYSTEM_FILEDIR;
     }
     return self::addTrailingSlash($path);
   }

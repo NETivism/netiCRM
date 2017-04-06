@@ -703,7 +703,7 @@ class CRM_Core_PseudoConstant {
       $config = CRM_Core_Config::singleton();
       if ($limit) {
         // limit the state/province list to the countries specified in CIVICRM_PROVINCE_LIMIT
-        $countryIsoCodes = &self::countryIsoCode();
+        $countryIsoCodes = self::countryIsoCode();
         $limitCodes = $config->provinceLimit();
         $limitIds = array();
         foreach ($limitCodes as $code) {
@@ -721,7 +721,7 @@ class CRM_Core_PseudoConstant {
       // localise the province names if in an non-en_US locale
       global $tsLocale;
       if ($tsLocale != '' and $tsLocale != CRM_Core_Config::SYSTEM_LANG) {
-        $i18n = &CRM_Core_I18n::singleton();
+        $i18n = CRM_Core_I18n::singleton();
         $i18n->localizeArray(self::$stateProvince, array('context' => 'province'));
         asort(self::$stateProvince);
       }
@@ -767,7 +767,7 @@ WHERE  id = %1";
 
       if ($limit) {
         $config = CRM_Core_Config::singleton();
-        $countryIsoCodes = &self::countryIsoCode();
+        $countryIsoCodes = self::countryIsoCode();
         $limitCodes = $config->provinceLimit();
         $limitIds = array();
         foreach ($limitCodes as $code) {
@@ -853,7 +853,7 @@ WHERE  id = %1";
       // localise the country names if in an non-en_US locale
       global $tsLocale;
       if ($tsLocale != '' and $tsLocale != CRM_Core_Config::SYSTEM_LANG) {
-        $i18n = &CRM_Core_I18n::singleton();
+        $i18n = CRM_Core_I18n::singleton();
         $i18n->localizeArray(self::$country, array('context' => 'country'));
         asort(self::$country);
       }
