@@ -63,6 +63,11 @@ class CRM_Utils_System_Drupal {
     $v = empty($v) ? '' : $v;
     $class = 'CRM_Utils_System_Drupal'.$v;
     $this->_pseudoClass = new $class();
+    // bootstrap drupal when needed
+    global $user;
+    if (empty($user)) {
+      self::loadBootStrap();
+    }
   }
 
   /**
@@ -512,10 +517,9 @@ class CRM_Utils_System_Drupal {
     chdir($cmsPath);
     require_once 'includes/bootstrap.inc';
     @drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
+    global $user;
 
-    if (!function_exists('module_exists') ||
-      !module_exists('civicrm')
-    ) {
+    if (empty($user)) {
       echo '<br />Sorry, could not able to load drupal bootstrap.';
       exit();
     }
@@ -533,8 +537,17 @@ class CRM_Utils_System_Drupal {
   }
 
   static function cmsRootPath() {
+    if (defined(DRUPAL_ROOT)) {
+      return DRUPAL_ROOT;
+    }
     $cmsRoot = $valid = NULL;
-    $pathVars = explode('/', str_replace('\\', '/', $_SERVER['SCRIPT_FILENAME']));
+    if (!empty($_SERVER['PWD'])) {
+      $scriptPath = $_SERVER['PWD'];
+    }
+    else {
+      $scriptPath = $_SERVER['SCRIPT_FILENAME'];
+    }
+    $pathVars = explode('/', str_replace('\\', '/', $scriptPath));
 
     //might be windows installation.
     $firstVar = array_shift($pathVars);
@@ -547,15 +560,16 @@ class CRM_Utils_System_Drupal {
       $cmsRoot .= "/$var";
       $cmsIncludePath = "$cmsRoot/includes";
       //stop as we found bootstrap.
-      if (@opendir($cmsIncludePath) &&
-        file_exists("$cmsIncludePath/bootstrap.inc")
-      ) {
+      if (file_exists("$cmsIncludePath/bootstrap.inc")) {
         $valid = TRUE;
         break;
       }
     }
 
-    return ($valid) ? $cmsRoot : NULL;
+    if ($valid) {
+      define('DRUPAL_ROOT', $cmsRoot);
+      return $cmsRoot;
+    }
   }
 
   /**
@@ -662,5 +676,32 @@ class CRM_Utils_System_Drupal {
     return;
   }
 
+  function cmsDir($type) {
+    $config = CRM_Core_Config::singleton();
+    $version = $config->userSystem->version;
+    switch($type) {
+      case 'temp':
+        return file_directory_temp();
+      case 'public':
+        if ($version >= 6 && $version < 7){
+          return file_directory_path();
+        }
+        if ($version >= 7 && $version < 8) {
+          return variable_get('file_public_path', 'sites/default/files');
+        }
+      case 'private':
+        if ($version >= 6 && $version < 7){
+          return FALSE;
+        }
+        if ($version >= 7 && $version < 8) {
+          return variable_get('file_private_path', '');
+        }
+    }
+    return FALSE;
+  }
+
+  function confPath() {
+    return conf_path(FALSE);
+  }
 }
 
