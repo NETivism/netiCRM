@@ -189,21 +189,13 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
       $timezone = date_default_timezone_get();
 
       // first, attempt to get configuration object from cache
-      require_once 'CRM/Utils/Cache.php';
       $cache = &CRM_Utils_Cache::singleton();
       self::$_singleton = $cache->get('CRM_Core_Config' . CRM_Core_Config::domainID());
 
       // if not in cache, fire off config construction
-      global $cms_root, $civicrm_conf_path;
       if (!self::$_singleton) {
         self::$_singleton = new CRM_Core_Config;
         self::$_singleton->_initialize($loadFromDB);
-        if (empty($cms_root)) {
-          $cms_root = self::$_singleton->userSystem->cmsRootPath();
-        }
-        if (empty($civicrm_conf_path)) {
-          $civicrm_conf_path = self::$_singleton->userSystem->confPath();
-        }
 
         //initialize variables. for gencode we cannot load from the
         //db since the db might not be initialized
@@ -213,7 +205,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
           // retrieve and overwrite stuff from the settings file
           self::$_singleton->setCoreVariables();
         }
-        $cache->set('CRM_Core_Config' . CRM_Core_Config::domainID(), self::$_singleton);
+        $cache->set('CRM_Core_Config_' . CRM_Core_Config::domainID(), self::$_singleton);
       }
       else {
         // we retrieve the object from memcache, so we now initialize the objects
