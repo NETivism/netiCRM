@@ -751,7 +751,7 @@ class CRM_Contact_BAO_Query {
       return;
     }
 
-    $locationTypes = CRM_Core_PseudoConstant::locationType();
+    $locationTypes = CRM_Core_PseudoConstant::locationType(FALSE, 'name');
     $processed = array();
     $index = 0;
 
@@ -762,7 +762,17 @@ class CRM_Contact_BAO_Query {
     $locationPrimary = array();
 
     foreach ($this->_returnProperties['location'] as $name => $elements) {
-      $lCond = self::getPrimaryCondition($name);
+      $isPrimary = FALSE;
+      if ($elements['location_type'] == 'Primary') {
+        $lCond = self::getPrimaryCondition(1);
+        $isPrimary = TRUE;
+      }
+      else {
+        $lCond = self::getPrimaryCondition($name);
+        if ($lCond == 'is_primary = 1') {
+          $isPrimary = TRUE; 
+        }
+      }
 
       if (!$lCond) {
         $locationTypeId = array_search($name, $locationTypes);
@@ -824,7 +834,6 @@ class CRM_Contact_BAO_Query {
           // this is either phone, email or IM
           list($elementName, $elementType) = explode('-', $elementName);
 
-
           if (($elementName != 'phone') && ($elementName != 'im')) {
             $cond = self::getPrimaryCondition($elementType);
           }
@@ -846,14 +855,14 @@ class CRM_Contact_BAO_Query {
             // fix for CRM-882( to handle phone types )
             !is_numeric($elementType)
           ) {
-            if (is_numeric($name)) {
+            if ($isPrimary) {
               $field = CRM_Utils_Array::value($elementName . "-Primary$elementType", $this->_fields);
             }
             else {
               $field = CRM_Utils_Array::value($elementName . "-$locationTypeId$elementType", $this->_fields);
             }
           }
-          elseif (is_numeric($name)) {
+          elseif ($isPrimary) {
             //this for phone type to work
             if ($elementName == "phone") {
               $field = CRM_Utils_Array::value($elementName . "-Primary" . $elementType, $this->_fields);
