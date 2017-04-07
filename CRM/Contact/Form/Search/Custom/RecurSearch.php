@@ -73,7 +73,8 @@ class CRM_Contact_Form_Search_Custom_RecurSearch  extends CRM_Contact_Form_Searc
       'ROUND(SUM(IF(c.contribution_status_id = 1, c.total_amount, 0)),0)' => 'receive_amount',
       'MAX(c.created_date)' => 'current_created_date',
       'r.contribution_status_id' => 'contribution_status_id',
-      'last_receive_date' => 'last_receive_date',
+      'lrd.last_receive_date' => 'last_receive_date',
+      'lfd.last_failed_date' => 'last_failed_date',
     );
     $this->_columns = array(
       ts('ID') => 'id',
@@ -89,6 +90,7 @@ class CRM_Contact_Form_Search_Custom_RecurSearch  extends CRM_Contact_Form_Searc
       ts('Total Receive Amount') => 'receive_amount',
       ts('Most Recent').' '.ts('Created Date') => 'current_created_date',
       ts('Last Receive Date') => 'last_receive_date',
+      ts('Last Failed Date') => 'last_failed_date',
       0 => 'total_count',
     );
   }
@@ -180,7 +182,8 @@ $having
     INNER JOIN civicrm_contribution AS c ON c.contribution_recur_id = r.id
     INNER JOIN civicrm_contact AS contact ON contact.id = r.contact_id
     INNER JOIN (SELECT contact_id, email, is_primary FROM civicrm_email WHERE is_primary = 1 GROUP BY contact_id ) AS contact_email ON contact_email.contact_id = r.contact_id
-    LEFT JOIN (SELECT contribution_recur_id AS rid, MAX(receive_date) AS last_receive_date FROM civicrm_contribution WHERE contribution_status_id = 1 AND contribution_recur_id IS NOT NULL GROUP BY contribution_recur_id) lr ON lr.rid = r.id";
+    LEFT JOIN (SELECT contribution_recur_id AS rid, MAX(receive_date) AS last_receive_date FROM civicrm_contribution WHERE contribution_status_id = 1 AND contribution_recur_id IS NOT NULL GROUP BY contribution_recur_id) lrd ON lrd.rid = r.id
+    LEFT JOIN (SELECT contribution_recur_id AS rid, MAX(cancel_date) AS last_failed_date FROM civicrm_contribution WHERE contribution_status_id = 4 AND contribution_recur_id IS NOT NULL GROUP BY contribution_recur_id) lfd ON lfd.rid = r.id";
   }
 
   /**
@@ -371,7 +374,8 @@ $having
     $query->fetch();
     
     if ($query->amount) {
-      $summary['search_results']['value'] .= ' '.ts('Total amount of completed contributions is %1.', array(1 => $query->amount));
+      $amount = CRM_Utils_Money::format($query->amount, '$');
+      $summary['search_results']['value'] .= ' '.ts('Total amount of completed contributions is %1.', array(1 => $amount));
     }
 
     return $summary;

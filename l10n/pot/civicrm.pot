@@ -45459,3 +45459,6 @@ msgstr ""
 
 msgid "Total amount of completed contributions is %1."
 msgstr ""
+
+msgid "Last Failed Date"
+msgstr ""

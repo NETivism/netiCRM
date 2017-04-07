@@ -11,7 +11,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2017-04-06 07:12+0000\n"
+"PO-Revision-Date: 2017-04-07 03:21+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -45510,3 +45510,6 @@ msgstr "總共有 %1 筆定期定額。"
 
 msgid "Total amount of completed contributions is %1."
 msgstr "已完成的捐款總計為 %1。"
+
+msgid "Last Failed Date"
+msgstr "最近失敗日期"
