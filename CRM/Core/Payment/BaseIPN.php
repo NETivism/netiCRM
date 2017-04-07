@@ -244,7 +244,9 @@ class CRM_Core_Payment_BaseIPN {
     $contact = &$objects['contact'];
 
     $contribution->contribution_status_id = 4;
-    $contribution->cancel_date = self::$_now;
+    if (empty($contribution->cancel_date)) {
+      $contribution->cancel_date = self::$_now;
+    }
     if ($message) {
       if ($contribution->cancel_reason) {
         $contribution->cancel_reason .= "\n".$message;
@@ -256,6 +258,7 @@ class CRM_Core_Payment_BaseIPN {
     if (!empty($contribution->created_date)) {
       $contribution->created_date = CRM_Utils_Date::isoToMysql($contribution->created_date);
     }
+    $contribution->receive_date = 'null';
     $contribution->save();
 
     if ($membership) {
@@ -523,6 +526,9 @@ class CRM_Core_Payment_BaseIPN {
     $contribution->trxn_id = $input['trxn_id'];
     if (!empty($contribution->receive_date)) {
       $contribution->receive_date = CRM_Utils_Date::isoToMysql($contribution->receive_date);
+    }
+    else {
+      $contribution->receive_date = self::$_now;
     }
     $contribution->created_date = CRM_Utils_Date::isoToMysql($contribution->created_date);
     $contribution->cancel_date = 'null';
