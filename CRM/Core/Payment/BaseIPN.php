@@ -52,7 +52,9 @@ class CRM_Core_Payment_BaseIPN {
       echo "Failure: Could not find contribution record for $contributionID<p>";
       return FALSE;
     }
-    $contribution->receive_date = CRM_Utils_Date::isoToMysql($contribution->receive_date);
+    if (!empty($contribution->receive_date)) {
+      $contribution->receive_date = CRM_Utils_Date::isoToMysql($contribution->receive_date);
+    }
     $contribution->created_date = CRM_Utils_Date::isoToMysql($contribution->created_date);
 
     // make sure contact exists and is valid
@@ -519,7 +521,9 @@ class CRM_Core_Payment_BaseIPN {
     $contribution->fee_amount = $input['fee_amount'];
     $contribution->net_amount = $input['net_amount'];
     $contribution->trxn_id = $input['trxn_id'];
-    $contribution->receive_date = CRM_Utils_Date::isoToMysql($contribution->receive_date);
+    if (!empty($contribution->receive_date)) {
+      $contribution->receive_date = CRM_Utils_Date::isoToMysql($contribution->receive_date);
+    }
     $contribution->created_date = CRM_Utils_Date::isoToMysql($contribution->created_date);
     $contribution->cancel_date = 'null';
 
