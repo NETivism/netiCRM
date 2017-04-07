@@ -3340,10 +3340,8 @@ WHERE  id IN ( $groupIDs )
   function privacyOptions($values) {
     list($name, $op, $value, $grouping, $wildcard) = $values;
 
-    if (empty($value) ||
-      !is_array($value)
-    ) {
-      continue;
+    if (empty($value) || !is_array($value)) {
+      return;
     }
 
     // get the operator and toggle values
