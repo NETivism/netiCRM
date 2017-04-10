@@ -340,15 +340,15 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
           CRM_Utils_Array::value('total_amount', $values),
           CRM_Utils_Array::value('currency', $values)
         ),
-      'receive_date'    => date('Y-m-d H:i:s',strtotime(CRM_Utils_Array::value('receive_date', $values))),
+      'cancel_date'     => date('Y-m-d H:i:s',strtotime(CRM_Utils_Array::value('cancel_date', $values))),
       'url'             =>
         CRM_Utils_System::url(
           'civicrm/contact/view/contributionrecur',
           "reset=1&id={$recur_id}&cid={$contactID}",
           TRUE
         ),
-      'detail'          => CRM_Core_BAO_Note::getNote( $contribution_id, 'civicrm_contribution' ),
       'trxn_id'         => CRM_Utils_Array::value('trxn_id', $values),
+      'detail'          => CRM_Utils_Array::value('message', $values),
     );
 
     $recur_fail_notify = CRM_Utils_Array::value('recur_fail_notify', $values);

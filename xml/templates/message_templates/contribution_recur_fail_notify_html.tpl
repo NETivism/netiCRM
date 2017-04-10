@@ -6,16 +6,14 @@
 </head>
 <body>
 
-<p>{ts 1=$amount 2=$display_name 3=$receive_date 4=$url}The recurring contribution %1 by contributor %2 is failed at %3.( Link: %4 ){/ts}{if $detail}{ts}Additional Details:{/ts}{/if}</p>
+<p>{ts 1=$amount 2=$display_name 3=$cancel_date 4=$url}The recurring contribution %1 by contributor %2 is failed at %3.( Link: %4 ){/ts}
+</p>
 
 {if $detail}
-
-<ul>
-{foreach from=$detail item=item}
-<li>{$item}</li>
-{/foreach}
-</ul>
-
+<h3>{ts}Additional Details:{/ts}</h3>
+<p>
+{$detail}
+</p>
 {/if}
 
 {if $trxn_id}
