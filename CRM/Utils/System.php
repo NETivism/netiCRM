@@ -1347,7 +1347,7 @@ class CRM_Utils_System {
    *
    * @return boolean.
    */
-  public static function cmsRootPath($type) {
+  public static function cmsRootPath() {
     $config = CRM_Core_Config::singleton();
     return $config->userSystem->cmsRootPath();
   }
