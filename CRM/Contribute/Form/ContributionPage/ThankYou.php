@@ -71,6 +71,7 @@ class CRM_Contribute_Form_ContributionPage_ThankYou extends CRM_Contribute_Form_
     $this->addElement('checkbox', 'is_email_receipt', ts('Email Payment Notification to User?'), NULL, array('onclick' => "showReceipt()"));
     $this->add('text', 'receipt_from_name', ts('Payment Notification From Name'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionPage', 'receipt_from_name'));
     $this->add('text', 'receipt_from_email', ts('Payment Notification From Email'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionPage', 'receipt_from_email'));
+    $this->assign('mail_providers', str_replace('|', ', ', CRM_Utils_Mail::DMARC_MAIL_PROVIDERS));
     $this->addWysiwyg('receipt_text', ts('Payment Notification Message'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionPage', 'receipt_text'));
 
     $this->add('text', 'cc_receipt', ts('CC Payment Notification To'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionPage', 'cc_receipt'));
@@ -104,8 +105,16 @@ class CRM_Contribute_Form_ContributionPage_ThankYou extends CRM_Contribute_Form_
     if (CRM_Utils_Array::value('is_email_receipt', $fields)) {
       //added for CRM-1348
       $email = trim(CRM_Utils_Array::value('receipt_from_email', $fields));
-      if (empty($email) || !CRM_Utils_Rule::email($email)) {
+      if (empty($email)) {
         $errors['receipt_from_email'] = ts('A valid Receipt From Email address must be specified if Email Payment Notification to User is enabled');
+      }
+      else {
+        if (!CRM_Utils_Rule::email($email)) {
+          $errors['receipt_from_email'] = ts('Please enter the valid email address.'); 
+        }
+        if (!CRM_Utils_Mail::checkMailProviders($email)) {
+          $errors['receipt_from_email'] = ts('Do not use free mail address as mail sender. (eg. %1)', array(1 => str_replace('|', ', ', CRM_Utils_Mail::DMARC_MAIL_PROVIDERS)));
+        }
       }
     }
     return $errors;
