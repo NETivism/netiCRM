@@ -296,11 +296,12 @@ class CRM_Core_Payment_BaseIPN {
           'contribution_id' => $contribution->id,
           'currency' => $contribution->currency,
           'total_amount' => $contribution->total_amount,
-          'receive_date' => $contribution->cancel_date,
+          'cancel_date' => $contribution->cancel_date,
           'contribution_recur_id' => $contribution->contribution_recur_id,
           'trxn_id' => $contribution->trxn_id,
           'display_name' => $contact->display_name,
           'recur_fail_notify' => $recur_fail_notify,
+          'message' => $message,
           );
         $isTest = FALSE;
         if($contribution->is_test){
