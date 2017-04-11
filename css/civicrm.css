@@ -5605,6 +5605,29 @@ input.crm-form-textfield,
 }
 
 @media screen and (max-width: 768px) {
+  /* media embed */ 
+  .media_embed {
+    position: relative;
+    padding-bottom: 56.25%;
+    padding-top: 30px;
+    width: auto !important;
+    height: 0 !important;
+    overflow: hidden;
+  }
+  .media_embed iframe,
+  .media_embed object,
+  .media_embed video,
+  .media_embed embed {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .crm-container {
+    margin-top: 0;
+  }
   .crm-container-md .crm-form-elem {
     position: relative;
   }
@@ -5633,9 +5656,18 @@ input.crm-form-textfield,
     width: 100%;
     text-align: left;
   }
+  .crm-container .crm-section-big .label {
+    text-align: center;
+  }
+  .crm-container .crm-section-big .label > label {
+    font-size: 1.5rem;
+  }
   .crm-container .crm-section .content, 
   .crm-section .content {
     margin-left: 0;
+  }
+  .crm-container .crm-section-big .content {
+    width: 100%;
   }
   .crm-container-md div[class*="crm-section state_province-"] .crm-form-select-single,
   .crm-container-md div[class*="crm-section state_province-"] .crm-form-post-code {
@@ -5665,6 +5697,9 @@ input.crm-form-textfield,
   }
   .crm-container .premium-img + .premium-info {
     padding-left: 8px;
+  }
+  .crm-container .event_date_time-section .add-to-calendar {
+    display: block;
   }
 }
 
