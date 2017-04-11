@@ -248,6 +248,8 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
 
 
   private function _setUserFrameworkConfig($userFramework) {
+    global $civicrm_root;
+
     $this->userFrameworkClass = 'CRM_Utils_System_' . $userFramework;
     $this->userHookClass = 'CRM_Utils_Hook_' . $userFramework;
     $this->userPermissionClass = 'CRM_Core_Permission_' . $userFramework;
@@ -267,19 +269,20 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
       $this->userFrameworkURLVar = 'task';
     }
 
+    $scheme = CRM_Utils_System::isSSL() ? 'https' : 'http';
     if (defined('CIVICRM_UF_BASEURL')) {
-      $this->userFrameworkBaseURL = CRM_Utils_File::addTrailingSlash(CIVICRM_UF_BASEURL, '/');
+      $url = parse_url(CIVICRM_UF_BASEURL);
+      $host = $url['host'];
+      $path = $url['path'];
     }
-    else{
-      $https = (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on') ? 'https://' : 'http://';
-      $this->userFrameworkBaseURL = $https.$_SERVER['HTTP_HOST'].'/';
+    else {
+      $host = $_SERVER['HTTP_HOST'];
+      $path = '/';
     }
+    $this->userFrameworkBaseURL = $scheme.'://'.$host.$path;
+
     //format url for language negotiation, CRM-7803
     $this->userFrameworkBaseURL = CRM_Utils_System::languageNegotiationURL($this->userFrameworkBaseURL);
-
-    if (CRM_Utils_System::isSSL()) {
-      $this->userFrameworkBaseURL = str_replace('http://', 'https://', $this->userFrameworkBaseURL);
-    }
 
     // this is dynamically figured out in the civicrm.settings.php file
     if (defined('CIVICRM_CLEANURL')) {
@@ -287,6 +290,10 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
     }
     else {
       $this->cleanURL = 0;
+    }
+
+    if (!$this->userFrameworkResourceURL) {
+      $this->userFrameworkResourceURL = rtrim($this->userFrameworkBaseURL, '/') . str_replace($this->userSystem->cmsRootPath(), '', $civicrm_root);
     }
   }
 
@@ -432,18 +439,17 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
       $this->$key = $value;
     }
 
-    if ($this->userFrameworkResourceURL) {
-      // we need to do this here so all blocks also load from an ssl server
-      if(CRM_Utils_System::isSSL()) {
-        CRM_Utils_System::mapConfigToSSL();
-      }
-      $rrb = parse_url($this->userFrameworkResourceURL);
-      // dont use absolute path if resources are stored on a different server
-      // CRM-4642
-      $this->resourceBase = $this->userFrameworkResourceURL;
-      if (isset($_SERVER['HTTP_HOST'])) {
-        $this->resourceBase = ($rrb['host'] == $_SERVER['HTTP_HOST']) ? $rrb['path'] : $this->userFrameworkResourceURL;
-      }
+    $rrb = parse_url($this->userFrameworkResourceURL);
+    // dont use absolute path if resources are stored on a different server
+    // CRM-4642
+    $this->resourceBase = $this->userFrameworkResourceURL;
+    if (isset($_SERVER['HTTP_HOST'])) {
+      $this->resourceBase = ($rrb['host'] == $_SERVER['HTTP_HOST']) ? $rrb['path'] : $this->userFrameworkResourceURL;
+    }
+
+    // we need to do this here so all blocks also load from an ssl server
+    if(CRM_Utils_System::isSSL()) {
+      CRM_Utils_System::mapConfigToSSL();
     }
 
     if (!$this->customFileUploadDir) {

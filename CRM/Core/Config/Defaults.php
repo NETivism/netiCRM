@@ -111,6 +111,7 @@ class CRM_Core_Config_Defaults {
    * @access public
    */
   public function setValues(&$defaults, $formMode = FALSE) {
+    global $civicrm_root;
     $config = CRM_Core_Config::singleton();
 
     $scheme = CRM_Utils_System::isSSL() ? 'https://' : 'http://';
@@ -138,7 +139,10 @@ class CRM_Core_Config_Defaults {
     //set defaults if not set in db
     if (!isset($defaults['userFrameworkResourceURL'])) {
       $testIMG = "i/tracker.gif";
-      if ($config->userFramework == 'Joomla') {
+      if ($config->userFrameworkResourceURL) {
+        $defaults['userFrameworkResourceURL'] = $config->userFrameworkResourceURL;
+      }
+      elseif ($config->userFramework == 'Joomla') {
         if (CRM_Utils_System::checkURL("{$baseURL}components/com_civicrm/civicrm/{$testIMG}")) {
           $defaults['userFrameworkResourceURL'] = $baseURL . "components/com_civicrm/civicrm/";
         }
@@ -155,8 +159,7 @@ class CRM_Core_Config_Defaults {
         // we dont use checkURL since drupal generates an error page and throws
         // the system for a loop on lobo's macosx box
         // or in modules
-        global $civicrm_root;
-        $defaults['userFrameworkResourceURL'] = $baseURL . str_replace('\\', '/', $civicrm_root);
+        $defaults['userFrameworkResourceURL'] = rtrim($config->userFrameworkBaseURL, '/') . str_replace($config->userSystem->cmsRootPath(), '', $civicrm_root);
       }
     }
 
