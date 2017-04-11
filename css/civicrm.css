@@ -757,6 +757,8 @@
 
 /* CRM */
 .crm-container {
+  position: relative;
+  margin-top: 50px;
   line-height: 1.5;
 }
 
@@ -4047,6 +4049,31 @@ ul.ui-sortable {
   color: #757575;
 }
 
+/* crm section: big */
+.crm-container .crm-section-big .label {
+  display: block;
+  float: none;
+  width: auto;
+  text-align: center;
+  font-size: 1.5rem;
+  border-bottom: 1px solid #bdbdbd;
+  color: #212121;
+  padding: 0 30px 10px 30px;
+}
+.crm-container .crm-section-big .label > label {
+  font-weight: normal;
+  font-size: 1.75rem;
+}
+.crm-container .crm-section-big .content {
+  margin: 0 auto;
+  padding: 30px 0;
+  width: 600px;
+}
+.crm-container .crm-section-big .content > * {
+  margin: 0 auto;
+}
+
+
 /* premium list */
 .crm-container .premiums-listings td {
   padding: 10px 4px;
@@ -4385,8 +4412,10 @@ ul.ui-sortable {
 
 /* printer friendly */
 .crm-container #printer-friendly {
-  position: relative;
-  float: right;
+  position: absolute;
+  right: 0;
+  top: -30px;
+  float: none;
   margin: 0 10px;
   z-index: 10;
 }
@@ -4971,15 +5000,12 @@ tbody.scrollContent tr.alternateRow {
 }
 .crm-container .crm-event-info-form-block .register_link-section a.crm-register-button {
   padding: 15px 30px;
+  font-weight: 500;
   font-size: 1.5rem;
   box-shadow: 0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12);
 }
 .crm-container .crm-event-info-form-block .register_link-section a.crm-register-button:active {
   box-shadow: 0 4px 5px 0 rgba(0,0,0,.14),0 1px 10px 0 rgba(0,0,0,.12),0 2px 4px -1px rgba(0,0,0,.2);
-}
-.crm-container .crm-event-info-form-block .register_link-top a.crm-register-button {
-  padding: 8px 15px;
-  font-size: .9375rem;
 }
 .crm-container .crm-event-info-form-block .action-link a.crm-register-button:last-child {
   margin-right: 0;
@@ -4988,9 +5014,17 @@ tbody.scrollContent tr.alternateRow {
   margin: 30px 0 15px 0;
   text-align: center;
 }
-.crm-container .crm-event-info-form-block .register_link-top {
-  margin: 0 0 0 15px;
-  text-align: left;
+.crm-container .crm-event-info-form-block .register_link-top,
+#content .crm-container .crm-event-info-form-block .register_link-top {
+  float: none;
+  margin: 0 0 10px 0;
+  padding: 0 0 25px 0;
+  text-align: center;
+  border-bottom: 1px solid #bdbdbd;
+}
+.crm-container .crm-event-info-form-block .register_link-top a.crm-register-button {
+  padding: 12px 26px;
+  font-size: 1.375rem;
 }
 .crm-container form[action="/civicrm/event/register"] .crm-submit-buttons {
   text-align: right;
@@ -5001,6 +5035,21 @@ tbody.scrollContent tr.alternateRow {
 .crm-container .msg-event-full .seat-msg {
   font-weight: bold;
   color: #0D47A1;
+}
+.crm-container .event_address-section.crm-section-big .content {
+  padding-bottom: 15px;
+  text-align: center;
+}
+.crm-container .event_map-section.crm-section-big .content {
+  padding-top: 0;
+}
+.crm-container .event-map,
+.crm-container .event-map.media_embed {
+  margin: 0 auto;
+}
+.crm-container .event-map-links {
+  text-align: center;
+  margin: 15px 0;
 }
 
 /* Profiles Page */
@@ -5550,7 +5599,35 @@ input.crm-form-textfield,
   width: 10rem;
 }
 
+/* md: page element */
+.crm-container-md table.form-layout-compressed {
+  width: auto;
+}
+
 @media screen and (max-width: 768px) {
+  /* media embed */ 
+  .media_embed {
+    position: relative;
+    padding-bottom: 56.25%;
+    padding-top: 30px;
+    width: auto !important;
+    height: 0 !important;
+    overflow: hidden;
+  }
+  .media_embed iframe,
+  .media_embed object,
+  .media_embed video,
+  .media_embed embed {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .crm-container {
+    margin-top: 0;
+  }
   .crm-container-md .crm-form-elem {
     position: relative;
   }
@@ -5579,9 +5656,18 @@ input.crm-form-textfield,
     width: 100%;
     text-align: left;
   }
+  .crm-container .crm-section-big .label {
+    text-align: center;
+  }
+  .crm-container .crm-section-big .label > label {
+    font-size: 1.5rem;
+  }
   .crm-container .crm-section .content, 
   .crm-section .content {
     margin-left: 0;
+  }
+  .crm-container .crm-section-big .content {
+    width: 100%;
   }
   .crm-container-md div[class*="crm-section state_province-"] .crm-form-select-single,
   .crm-container-md div[class*="crm-section state_province-"] .crm-form-post-code {
@@ -5611,6 +5697,9 @@ input.crm-form-textfield,
   }
   .crm-container .premium-img + .premium-info {
     padding-left: 8px;
+  }
+  .crm-container .event_date_time-section .add-to-calendar {
+    display: block;
   }
 }
 
