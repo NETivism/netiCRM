@@ -75,7 +75,7 @@
                     </abbr>   
                 {/if}
             {/if}
-            <span><a target="_blank" href="http://www.google.com/calendar/event?action=TEMPLATE&text={$event.event_title}&dates={$gcal_start_date}/{$gcal_end_date}{if $event.summary}&details={$event.summary}{/if}{if $location.address.1}&location={$location.address.1.display|strip_tags}{/if}&trp=true&sprop={if $smarty.server.HTTPS}https{else}http{/if}%3A%2F%2F{$smarty.server.HTTP_HOST|escape:'url'}{$smarty.server.REQUEST_URI|escape:'url'}&sprop=name:{$smarty.server.HTTP_HOST}"><i class="fa fa-calendar"></i>{ts}Add to Google Calendar{/ts}</a></span>
+            <a class="add-to-calendar" target="_blank" href="http://www.google.com/calendar/event?action=TEMPLATE&text={$event.event_title}&dates={$gcal_start_date}/{$gcal_end_date}{if $event.summary}&details={$event.summary}{/if}{if $location.address.1}&location={$location.address.1.display|strip_tags}{/if}&trp=true&sprop={if $smarty.server.HTTPS}https{else}http{/if}%3A%2F%2F{$smarty.server.HTTP_HOST|escape:'url'}{$smarty.server.REQUEST_URI|escape:'url'}&sprop=name:{$smarty.server.HTTP_HOST}"><i class="fa fa-calendar"></i>{ts}Add to Google Calendar{/ts}</a>
         </div>
     <div class="clear"></div>
   </div>
