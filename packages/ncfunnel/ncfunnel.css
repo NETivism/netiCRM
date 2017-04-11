@@ -62,6 +62,21 @@
   transition: height 0.6s ease;
   /* overflow: hidden; */
 }
+.ncf-horizontal .ncf-bar:before {
+  content: " ";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-left: 20px solid #337ab7;
+}
+.ncf-horizontal .ncf-bar-0:before {
+  border-color: #4CAF50;
+}
+.ncf-horizontal .ncf-bar-1:before {
+  border-color: #F44336;
+}
 .ncf-arrow {
   background: #E0E0E0;
   height: 10px;
@@ -84,6 +99,15 @@
   width: 140%;
   left: -20%;
   margin-left: -5px;
+}
+.ncf-horizontal .ncf-arrow:before {
+  content: " ";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-top: 10px solid #E0E0E0;
 }
 
 .ncf-chart-bar + .ncf-chart-label {
