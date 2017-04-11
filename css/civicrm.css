@@ -4049,6 +4049,31 @@ ul.ui-sortable {
   color: #757575;
 }
 
+/* crm section: big */
+.crm-container .crm-section-big .label {
+  display: block;
+  float: none;
+  width: auto;
+  text-align: center;
+  font-size: 1.5rem;
+  border-bottom: 1px solid #bdbdbd;
+  color: #212121;
+  padding: 0 30px 10px 30px;
+}
+.crm-container .crm-section-big .label > label {
+  font-weight: normal;
+  font-size: 1.75rem;
+}
+.crm-container .crm-section-big .content {
+  margin: 0 auto;
+  padding: 30px 0;
+  width: 600px;
+}
+.crm-container .crm-section-big .content > * {
+  margin: 0 auto;
+}
+
+
 /* premium list */
 .crm-container .premiums-listings td {
   padding: 10px 4px;
@@ -5011,6 +5036,21 @@ tbody.scrollContent tr.alternateRow {
   font-weight: bold;
   color: #0D47A1;
 }
+.crm-container .event_address-section.crm-section-big .content {
+  padding-bottom: 15px;
+  text-align: center;
+}
+.crm-container .event_map-section.crm-section-big .content {
+  padding-top: 0;
+}
+.crm-container .event-map,
+.crm-container .event-map.media_embed {
+  margin: 0 auto;
+}
+.crm-container .event-map-links {
+  text-align: center;
+  margin: 15px 0;
+}
 
 /* Profiles Page */
 .crm-container form[action="/civicrm/profile/create"] .crm-submit-buttons {
@@ -5557,6 +5597,11 @@ input.crm-form-textfield,
 .crm-container-md div[class*="crm-section state_province-"] .crm-form-select-single .form-select,
 .crm-container-md div[class*="crm-section state_province-"] .crm-form-post-code .form-text {
   width: 10rem;
+}
+
+/* md: page element */
+.crm-container-md table.form-layout-compressed {
+  width: auto;
 }
 
 @media screen and (max-width: 768px) {
