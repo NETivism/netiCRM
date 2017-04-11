@@ -98,7 +98,7 @@
 	</td>
     </tr>
     <tr class="crm-contribution-contributionpage-thankyou-form-block-recur_fail_notify">
-  <td class="label">{$form.recur_fail_notify.label}
+  <td class="label">{$form.recur_fail_notify.label}&nbsp;<span style="color: #f44336;">BETA</span>
   </td>
   <td class="html-adjust">{$form.recur_fail_notify.html}<br />
       <span class="description">{ts}If you want member(s) of your organization to receive a message of each recurring failed notification, enter one or more email addresses here. Multiple email addresses should be separated by a comma (e.g. jane@example.org, paula@example.org).{/ts}</span>
