@@ -12,7 +12,7 @@
   clear: both;
 }
 .ncf-container,
-.ncf-container > * {
+.ncf-container * {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
@@ -109,15 +109,25 @@
   left: 0;
   border-top: 10px solid #E0E0E0;
 }
-
-.ncf-chart-bar + .ncf-chart-label {
-  margin-top: 10px;
-}
-.ncf-chart-label {
+.ncf-chart-label,
+.ncf-chart-label-top {
   padding: 5px;
   text-align: center;
 }
-
+.ncf-chart-label-top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: -35px 0 0 0;
+  width: 100%;
+}
+.ncf-chart-label {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  margin: 0 0 -35px 0;
+  width: 100%;
+}
 .ncf-bar > div {
   -webkit-transform: rotate(-180deg); /* Chrome, Safari, Opera */
   transform: rotate(-180deg);

@@ -9,18 +9,23 @@
   }
 
   var renderFunnel = function(target, options) {
-    var settings = {labels: null, series: null};
+    var settings = {
+      series: null, 
+      labels: null, 
+      labelsTop: null
+    };
     $.extend(settings, options);
 
-    var $funnel   = target;
-    var labels    = options.labels;
-    var series    = options.series;
-    var row       = series.length;
-    var column    = series[0].length;
-    var barSum    = column;
-    var arrowSum  = barSum - 1;
-    var itemSum   = barSum + arrowSum;
-    var itemWidth = floorDecimal(100 / itemSum, 3);
+    var $funnel     = target;
+    var series      = options.series;
+    var labels      = options.labels;
+    var labelsTop   = options.labelsTop;
+    var row         = series.length;
+    var column      = series[0].length;
+    var barSum      = column;
+    var arrowSum    = barSum - 1;
+    var itemSum     = barSum + arrowSum;
+    var itemWidth   = floorDecimal(100 / itemSum, 3);
 
     $funnel.addClass("ncf-container ncf-horizontal");
 
@@ -34,7 +39,6 @@
         var valSum = 0;
         var k = i / 2;
         bar.items = [];
-        bar.label = labels[k];
         
         for (var j = 0; j < row; j++) {
           var val = parseFloat(series[j][k]);
@@ -47,6 +51,13 @@
           bar.items[j].percent = getPercent(bar.items[j].value, valSum, 2);
         }
 
+        // Render top label
+        if (labelsTop && labelsTop.length > 0) {
+          bar.labelTop = labelsTop[k];
+          itemOutput += "<div class='ncf-chart-label-top'>" + bar.labelTop + "</div>";
+        }
+
+        // Render chart bar
         itemOutput += "<div class='ncf-chart-bar'>";
         for (var b in bar.items) {
           var v = bar.items[b].value;
@@ -57,10 +68,14 @@
             "<div class='ncf-bar-percent'>" + p + "%</div>" +
             "<div class='ncf-bar-meta'>" + v + "</div>" + 
           "</div>";
-
         }
         itemOutput += "</div>";
-        itemOutput += "<div class='ncf-chart-label'>" + bar.label + "</div>";
+
+        // Render label
+        if (labels && labels.length > 0) {
+          bar.label = labels[k];
+          itemOutput += "<div class='ncf-chart-label'>" + bar.label + "</div>";
+        }
       }
       else {
         itemOutput += "<div class='ncf-arrow ncf-arrow-right'><div class='arrow'></div></div>";
