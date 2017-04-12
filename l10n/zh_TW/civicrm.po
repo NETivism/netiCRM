@@ -11,8 +11,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2017-04-07 03:21+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
+"PO-Revision-Date: 2017-04-12 08:28+0000\n"
+"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45496,14 +45496,14 @@ msgstr "權重可控制選項的出現次序。您可輸入正整數 - 數值越
 msgid "Last update at %1"
 msgstr "最近更新於 %1"
 
-msgid "People percentage by gender"
-msgstr "依性別區分聯絡人比例"
+msgid "Contribution people percentage by gender"
+msgstr "依性別區分捐款人比例"
 
-msgid "People percentage by age"
-msgstr "依年齡區間區分聯絡人比例"
+msgid "Contribution people percentage by age"
+msgstr "依年齡區間區分捐款人比例"
 
-msgid "People percentage by province"
-msgstr "依縣市區分聯絡人比例"
+msgid "Contribution people percentage by province"
+msgstr "依縣市區分捐款人比例"
 
 msgid "There are %1 recurring contributions."
 msgstr "總共有 %1 筆定期定額。"
@@ -45513,3 +45513,22 @@ msgstr "已完成的捐款總計為 %1。"
 
 msgid "Last Failed Date"
 msgstr "最近失敗日期"
+
+#: templates/CRM/Report/Page/Summary.tpl
+msgid "Contribution sum percentage by gender"
+msgstr "依性別區分捐款金額比例"
+
+msgid "Contribution sum percentage by age"
+msgstr "依年齡區間區分捐款金額比例"
+
+msgid "Contribution sum percentage by province"
+msgstr "依縣市區分捐款金額比例"
+
+msgid "Participants count in ... after opened mail"
+msgstr "開啟電子報後 ... 內報名人次"
+
+msgid "Contribution count in ... after opened mail"
+msgstr "開啟電子報後 ... 內捐款人次"
+
+msgid "Unsuccessful Deliveries"
+msgstr "未成功寄送"
