@@ -22,15 +22,20 @@
 
   <script type="text/javascript">{literal}
   jQuery(document).ready(function() {
-    var chartLabels = {/literal}{$funnel.labels|default:"[]"}{literal};
     var chartSeries = {/literal}{$funnel.series|default:"[]"}{literal};
+    var chartLabels = {/literal}{$funnel.labels|default:"[]"}{literal};
+    var chartLabelsTop = {/literal}{$funnel.labelsTop|default:"[]"}{literal};
     var chartSelector = "{/literal}{$funnel.selector|default:'.ncfunnel-chart'}{literal}";
     var options = {
       "series": chartSeries
     }
 
-    if (typeof chartLabels !== 'undefined' && chartLabels.length > 0) {    
+    if (typeof chartLabels !== 'undefined' && chartLabels.length > 0) {
       options.labels = chartLabels;
+    }
+
+    if (typeof chartLabelsTop !== 'undefined' && chartLabelsTop.length > 0) {
+      options.labelsTop = chartLabelsTop;
     }
 
     jQuery(chartSelector).ncfunnel(options);
