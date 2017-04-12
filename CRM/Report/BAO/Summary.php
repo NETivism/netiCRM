@@ -229,10 +229,10 @@ WHERE c.receive_date > mm.time_stamp AND c.receive_date < DATE_ADD(mm.time_stamp
 
   static function getPartAfterMailData(){
     $allData = array();
-    $allData['Apply After Open Mail In 1 hr'] = self::getPartAfterMailFromSql(1);
-    $allData['Apply After Open Mail In 1 Day'] = self::getPartAfterMailFromSql(24);
-    $allData['Apply After Open Mail In 3 Day'] = self::getPartAfterMailFromSql(72);
-    $allData['Apply After Open Mail In 7 Day'] = self::getPartAfterMailFromSql(168);
+    $allData['1'.ts('hr')] = self::getPartAfterMailFromSql(1);
+    $allData['1'.ts('day')] = self::getPartAfterMailFromSql(24);
+    $allData['3'.ts('day')] = self::getPartAfterMailFromSql(72);
+    $allData['7'.ts('day')] = self::getPartAfterMailFromSql(168);
     
 
     return $allData;
@@ -240,17 +240,17 @@ WHERE c.receive_date > mm.time_stamp AND c.receive_date < DATE_ADD(mm.time_stamp
 
   static function getConAfterMailData(){
     $allData = array();
-    $allData['Contribute After Open Mail In 1 hr'] = self::getConAfterMailFromSql(1);
-    $allData['Contribute After Open Mail In 1 Day'] = self::getConAfterMailFromSql(24);
-    $allData['Contribute After Open Mail In 3 Day'] = self::getConAfterMailFromSql(72);
-    $allData['Contribute After Open Mail In 7 Day'] = self::getConAfterMailFromSql(168);
+    $allData['1'.ts('hr')] = self::getConAfterMailFromSql(1);
+    $allData['1'.ts('day')] = self::getConAfterMailFromSql(24);
+    $allData['3'.ts('day')] = self::getConAfterMailFromSql(72);
+    $allData['7'.ts('day')] = self::getConAfterMailFromSql(168);
     
 
     return $allData;
   }
 
   static function getContactSource(){
-        $allData = array();
+    $allData = array();
     $all = self::parseDataFromSql("SELECT COUNT(id) people FROM civicrm_contact WHERE is_deleted = 0");
     $all = $all['people'];
     // $allData['all'] = self::parseDataFromSql("SELECT COUNT(id) people FROM civicrm_contact");
@@ -294,7 +294,7 @@ WHERE c.receive_date > mm.time_stamp AND c.receive_date < DATE_ADD(mm.time_stamp
         $order_by = 'ORDER BY people DESC';
         break;
     }
-    $is_contribution = $params['is_contribution'];
+    $is_contribution = $params['contribution'];
     if($is_contribution){
       $contribution_field = ' SUM(cc.count) count, SUM(cc.sum) sum,';
       $contribution_query = ' INNER JOIN (SELECT COUNT(DISTINCT c.contact_id) people, COUNT(c.contact_id) count, SUM(c.total_amount) sum, c.contact_id FROM civicrm_contribution c WHERE c.contribution_status_id = 1 AND c.is_test = 0 GROUP BY c.contact_id) cc ON c.id = cc.contact_id';

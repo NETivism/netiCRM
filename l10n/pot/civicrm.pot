@@ -45445,13 +45445,13 @@ msgstr ""
 msgid "Last update at %1"
 msgstr ""
 
-msgid "People percentage by gender"
+msgid "Contribution people percentage by gender"
 msgstr ""
 
-msgid "People percentage by age"
+msgid "Contribution people percentage by age"
 msgstr ""
 
-msgid "People percentage by province"
+msgid "Contribution people percentage by province"
 msgstr ""
 
 msgid "There are %1 recurring contributions."
@@ -45461,4 +45461,23 @@ msgid "Total amount of completed contributions is %1."
 msgstr ""
 
 msgid "Last Failed Date"
+msgstr ""
+
+#: templates/CRM/Report/Page/Summary.tpl
+msgid "Contribution sum percentage by gender"
+msgstr ""
+
+msgid "Contribution sum percentage by age"
+msgstr ""
+
+msgid "Contribution sum percentage by province"
+msgstr ""
+
+msgid "Participants count in ... after opened mail"
+msgstr ""
+
+msgid "Contribution count in ... after opened mail"
+msgstr ""
+
+msgid "Unsuccessful Deliveries"
 msgstr ""

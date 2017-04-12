@@ -57,11 +57,14 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
       $allData['contribute'] = CRM_Report_BAO_Summary::getContributionData();
       $allData['participant'] = CRM_Report_BAO_Summary::getParitcipantData();
       $allData['mailing'] = CRM_Report_BAO_Summary::getMailingData();
-      $allData['people_by_condition'] = array(
-        'gender' => CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::GENDER),
-        'age' => CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::AGE),
-        'province' => CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::PROVINCE),
+      $params = array('contribution' => 1);
+      $allData['statistic_by_condition'] = array(
+        'gender' => CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::GENDER,$params),
+        'age' => CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::AGE,$params),
+        'province' => CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::PROVINCE,$params),
         );
+      $allData['participant_after_mailing'] = CRM_Report_BAO_Summary::getPartAfterMailData();
+      $allData['contribute_after_mailing'] = CRM_Report_BAO_Summary::getConAfterMailData();
       $allData['time'] = time();
       CRM_Core_BAO_Cache::setItem($allData, 'Report Page Summary', $path.'_reportPageSummary', $components['CiviReport']->componentID);
     }
@@ -70,7 +73,9 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
     $contribute = &$allData['contribute'];
     $participant = &$allData['participant'];
     $mailing = &$allData['mailing'];
-    $people_by_condition = &$allData['people_by_condition'];
+    $statistic_by_condition = &$allData['statistic_by_condition'];
+    $participant_after_mailing = $allData['participant_after_mailing'];
+    $contribute_after_mailing = $allData['contribute_after_mailing'];
     $time = $allData['time'];
 
     $template = CRM_Core_Smarty::singleton();
@@ -163,85 +168,138 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
 
     $template->assign('chartContribTimes', $chartContribTimes);
 
-    /**
-     * Mailing
-     */
-
-    $chartMailing = array(
-      'id' => 'chart-bar-mailing',
-      'classes' => array('ct-chart-bar'),
-      'selector' => '#chart-bar-mailing',
-      'type' => 'Bar',
-      'labels' => json_encode($mailing['label']),
-      'series' => json_encode(array($mailing['count'])),
-      'withToolTip' => true
-    );
-    $this->assign('chartMailing', $chartMailing);
-
-    /**
-     * Mailing Funnel
-     */
-
-    $chartMailingFunnel = array(
-      'id' => 'chart-bar-mailing-funnel',
-      'classes' => array('ct-chart-bar'),
-      'selector' => '#chart-bar-mailing-funnel',
-      'type' => 'Bar',
-      'labels' => json_encode(array_slice($mailing['label'],1)),
-      'labelsTop' => json_encode(array_slice($mailing['label'],0,count($mailing['label'])-1)),
-      'series' => json_encode($mailing['funnel']['count']),
-      'withToolTip' => true
-    );
-    $this->assign('chartMailingFunnel', $chartMailingFunnel);
-
     $this->assign('static_label',array(ts("Total Amount"), ts("Percentage"),ts("Avg Amount"),ts("Count"),ts("People")));
     $this->assign('contribution_type_table',$contribute['contribution_type_table']);
 
     $this->assign('recur_table',$contribute['recur_table']);
-
-
 
     $chartPeopleGender = array(
       'id' => 'chart-pie-with-legend-people-by-gender',
       'classes' => array('ct-chart-pie'),
       'selector' => '#chart-pie-with-legend-people-by-gender',
       'type' => 'Pie',
-      'labels' => json_encode($people_by_condition['gender']['label']),
-      'series' => json_encode($people_by_condition['gender']['people']),
+      'labels' => json_encode($statistic_by_condition['gender']['label']),
+      'series' => json_encode($statistic_by_condition['gender']['people']),
+      'labelType' => 'percent',
+      'withLegend' => false,
+      'withToolTip' => true
+    );
+
+    $template->assign('chartPeopleGender', $chartPeopleGender);
+
+    $chartContributionGender = array(
+      'id' => 'chart-pie-with-legend-contribution-by-gender',
+      'classes' => array('ct-chart-pie'),
+      'selector' => '#chart-pie-with-legend-contribution-by-gender',
+      'type' => 'Pie',
+      'labels' => json_encode($statistic_by_condition['gender']['label']),
+      'series' => json_encode($statistic_by_condition['gender']['sum']),
       'labelType' => 'percent',
       'withLegend' => true,
       'withToolTip' => true
     );
 
-    $template->assign('chartPeopleGender', $chartPeopleGender);
+    $template->assign('chartContributionGender', $chartContributionGender);
 
     $chartPeopleAge = array(
       'id' => 'chart-pie-with-legend-people-by-age',
       'classes' => array('ct-chart-pie'),
       'selector' => '#chart-pie-with-legend-people-by-age',
       'type' => 'Pie',
-      'labels' => json_encode($people_by_condition['age']['label']),
-      'series' => json_encode($people_by_condition['age']['people']),
+      'labels' => json_encode($statistic_by_condition['age']['label']),
+      'series' => json_encode($statistic_by_condition['age']['people']),
+      'labelType' => 'percent',
+      'withLegend' => false,
+      'withToolTip' => true
+    );
+
+    $template->assign('chartPeopleAge', $chartPeopleAge);
+
+    $chartContributionAge = array(
+      'id' => 'chart-pie-with-legend-contribution-by-age',
+      'classes' => array('ct-chart-pie'),
+      'selector' => '#chart-pie-with-legend-contribution-by-age',
+      'type' => 'Pie',
+      'labels' => json_encode($statistic_by_condition['age']['label']),
+      'series' => json_encode($statistic_by_condition['age']['sum']),
       'labelType' => 'percent',
       'withLegend' => true,
       'withToolTip' => true
     );
 
-    $template->assign('chartPeopleAge', $chartPeopleAge);
+    $template->assign('chartContributionAge', $chartContributionAge);
 
     $chartPeopleProvince = array(
       'id' => 'chart-pie-with-legend-people-by-province',
       'classes' => array('ct-chart-pie'),
       'selector' => '#chart-pie-with-legend-people-by-province',
       'type' => 'Pie',
-      'labels' => json_encode($people_by_condition['province']['label']),
-      'series' => json_encode($people_by_condition['province']['people']),
+      'labels' => json_encode($statistic_by_condition['province']['label']),
+      'series' => json_encode($statistic_by_condition['province']['people']),
+      'labelType' => 'percent',
+      'withLegend' => false,
+      'withToolTip' => true
+    );
+
+    $template->assign('chartPeopleProvince', $chartPeopleProvince);
+
+    $chartContributionProvince = array(
+      'id' => 'chart-pie-with-legend-contribution-by-province',
+      'classes' => array('ct-chart-pie'),
+      'selector' => '#chart-pie-with-legend-contribution-by-province',
+      'type' => 'Pie',
+      'labels' => json_encode($statistic_by_condition['province']['label']),
+      'series' => json_encode($statistic_by_condition['province']['sum']),
       'labelType' => 'percent',
       'withLegend' => true,
       'withToolTip' => true
     );
 
-    $template->assign('chartPeopleProvince', $chartPeopleProvince);
+    $template->assign('chartContributionProvince', $chartContributionProvince);
+
+    /**
+     * Mailing Funnel
+     */
+    $labelsTopMailing = array(ts('Unsuccessful Deliveries'),ts("Unopened/Hidden"),ts("Not Clicked"));
+    $chartMailingFunnel = array(
+      'id' => 'chart-bar-mailing-funnel',
+      'classes' => array('ct-chart-bar'),
+      'selector' => '#chart-bar-mailing-funnel',
+      'type' => 'Bar',
+      'labels' => json_encode(array_slice($mailing['label'],1)),
+      'labelsTop' => json_encode($labelsTopMailing),
+      'series' => json_encode($mailing['funnel']['count']),
+      'withToolTip' => true
+    );
+    $this->assign('chartMailingFunnel', $chartMailingFunnel);
+
+    if(end(end($participant_after_mailing)) > 0){
+      $chartParticipantAfterMailing = array(
+        'name' => 'participant_after_mailing',
+        'id' => 'chart-bar-participant_after_mailing',
+        'selector' => '#chart-bar-participant_after_mailing',
+        'type' => 'Line',
+        'labels' => json_encode(array_keys($participant_after_mailing)),
+        'series' => json_encode(self::dataTransferShowHidden($participant_after_mailing)),
+        'withToolTip' => true,
+      );
+
+      $template->assign('chartParticipantAfterMailing', $chartParticipantAfterMailing);
+    }
+
+    if(end(end($contribution_after_mailing)) > 0){
+      $chartContributionAfterMailing = array(
+        'name' => 'contribution_after_mailing',
+        'id' => 'chart-bar-contribution_after_mailing',
+        'selector' => '#chart-bar-contribution_after_mailing',
+        'type' => 'Line',
+        'labels' => json_encode(array_keys($contribution_after_mailing)),
+        'series' => json_encode(self::dataTransferShowHidden($contribution_after_mailing)),
+        'withToolTip' => true,
+      );
+
+      $template->assign('chartContributionAfterMailing', $chartContributionAfterMailing);
+    }
 
     $template->assign('update_time', date('Y-m-d H:i:s',$time));
 
@@ -343,18 +401,6 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
       array_keys($contributor_to_participant)
     );
 
-    $return_array['People participant after receiving mail.'] = $this->showhidden(
-      'participant_after_mailing',
-      self::dataTransferShowHidden($participant_after_mailing),
-      array_keys($participant_after_mailing)
-    );
-
-    $return_array['People contributor after receiving mail.'] = $this->showhidden(
-      'contribute_after_mailing',
-      self::dataTransferShowHidden($contribute_after_mailing),
-      array_keys($contribute_after_mailing)
-    );
-
     $this->assign('showhiddenChart', $return_array);
   }
 
@@ -389,6 +435,24 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
     return $return;
   }
 
+  /**
+   * Let array(
+   * 'name1' => array('count' => 1, 'people' => 1),
+   * 'name2' => array('count' => 10, 'people' => 11),
+   * 'name3' => array('count' => 100,'people' => 111),
+   * 'name4' => array('count' => 1000,'people' => 1111),
+   * )
+   *
+   * Become
+   *
+   * array(
+   *   array(1,10,100,1000),
+   *   array(1,11,111,1111),
+   * )
+   * @param  [type] $arr   [description]
+   * @param  array  $types [description]
+   * @return [type]        [description]
+   */
   static private function dataTransferShowHidden($arr, $types = array('count','people')){
     $return = array();
     foreach ($types as $type) {
