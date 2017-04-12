@@ -102,6 +102,77 @@
   </div>
   {/if}
 
+  {if $static_label and $contribution_type_table}
+  <div class="row">
+    <div class="col-md-12">
+      <div id="column-contribution-types" class="box mdl-shadow--2dp">
+        <div class="box-header">
+          <h3 class="box-title">{ts}Contribution Total{/ts}</h3>
+        </div>
+        <div class="box-content">
+          <table class="crm-data-table crm-data-table-horizontal crm-data-table-striped">
+            <tr>
+              <th>
+                {ts}Payment Instrument{/ts}
+              </th>
+              {foreach from=$static_label item=label}
+              <th>
+                {$label}
+              </th>
+              {/foreach}
+            </tr>
+
+            {foreach from=$contribution_type_table item=row}
+            <tr>
+
+              {foreach from=$row item=item key=key}
+              {if $key == 0}
+              <th>
+                {$item}
+              </th>
+              {else}
+                <td>
+                  {$item}
+                </td>
+              {/if}
+              {/foreach}
+             </tr>
+             {/foreach}
+          </table>
+          <table class="crm-data-table crm-data-table-horizontal crm-data-table-striped">
+             <tr>
+              <th>
+                {ts}Recurring contributions{/ts}
+              </th>
+              {foreach from=$static_label item=label}
+              <th>
+                {$label}
+              </th>
+              {/foreach}
+            </tr>
+
+             {foreach from=$recur_table item=row}
+            <tr>
+              {foreach from=$row item=item key=key}
+              {if $key == 0}
+              <th>
+                {$item}
+              </th>
+              {else}
+                <td>
+                  {$item}
+                </td>
+              {/if}
+              {/foreach}
+             </tr>
+             {/foreach}
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  {/if}
+
   {if $chartInsSum}
   <div class="row">
     <div class="col-md-12">
@@ -202,77 +273,6 @@
     {/if}
   </div>
 {/if}
-
-  {if $static_label and $contribution_type_table}
-  <div class="row">
-    <div class="col-md-12">
-      <div id="column-contribution-types" class="box mdl-shadow--2dp">
-        <div class="box-header">
-          <h3 class="box-title">{ts}Contribution Total{/ts}</h3>
-        </div>
-        <div class="box-content">
-          <table class="crm-data-table crm-data-table-horizontal crm-data-table-striped">
-            <tr>
-              <th>
-                {ts}Payment Instrument{/ts}
-              </th>
-              {foreach from=$static_label item=label}
-              <th>
-                {$label}
-              </th>
-              {/foreach}
-            </tr>
-
-            {foreach from=$contribution_type_table item=row}
-            <tr>
-
-              {foreach from=$row item=item key=key}
-              {if $key == 0}
-              <th>
-                {$item}
-              </th>
-              {else}
-                <td>
-                  {$item}
-                </td>
-              {/if}
-              {/foreach}
-             </tr>
-             {/foreach}
-          </table>
-          <table class="crm-data-table crm-data-table-horizontal crm-data-table-striped">
-             <tr>
-              <th>
-                {ts}Recurring contributions{/ts}
-              </th>
-              {foreach from=$static_label item=label}
-              <th>
-                {$label}
-              </th>
-              {/foreach}
-            </tr>
-
-             {foreach from=$recur_table item=row}
-            <tr>
-              {foreach from=$row item=item key=key}
-              {if $key == 0}
-              <th>
-                {$item}
-              </th>
-              {else}
-                <td>
-                  {$item}
-                </td>
-              {/if}
-              {/foreach}
-             </tr>
-             {/foreach}
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
-  {/if}
 
   {if $chartMailingFunnel}
   <div class="row">
