@@ -1958,5 +1958,33 @@ LEFT  JOIN  civicrm_price_field_value value ON ( value.id = lineItem.price_field
 
     return (int)CRM_Core_DAO::singleValueQuery($query, array(1 => array($eventId, 'Positive')));
   }
+
+  static function assignEventShare($event, $templateObject = NULL) {
+    if (!$templateObject) {
+      $templateObject = CRM_Core_Smarty::singleton();
+    }
+    // Used is Add to Google Calendar button. refs #16572
+    $eventInfoUrl = CRM_Utils_System::url('civicrm/event/info', 'reset=1&id='.$event['id'], TRUE, FALSE, FALSE);
+    $gcal = array(
+      'trp' => 'true',
+      'action' => 'TEMPLATE',
+      'text' => $event['event_title'],
+      'sprop' => $eventInfoUrl,
+      'details' => $eventInfoUrl,
+    );
+    $event['event_start_date'] = strtotime($event['event_start_date']);
+    if (empty($event['event_end_date'])) {
+      $event['event_end_date'] = strtotime('+1 hour',$event['event_start_date']);
+    }
+    $gcal['dates'] = gmstrftime('%Y%m%dT%H%M%SZ', $event['event_start_date']).'/'.gmstrftime('%Y%m%dT%H%M%SZ', $event['event_end_date']);
+
+    if ($event['address']) {
+      $gcal['location'] = $event['address'];
+    }
+    if ($event['summary']) {
+      $gcal['details'] .= "\n\n". strip_tags($event['summary']);
+    }
+    $templateObject->assign('share_google_calendar', 'http://www.google.com/calendar/event?'.http_build_query($gcal));
+  }
 }
 
