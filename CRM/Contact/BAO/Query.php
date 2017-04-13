@@ -751,7 +751,7 @@ class CRM_Contact_BAO_Query {
       return;
     }
 
-    $locationTypes = CRM_Core_PseudoConstant::locationType();
+    $locationTypes = CRM_Core_PseudoConstant::locationType(FALSE, 'name');
     $processed = array();
     $index = 0;
 
@@ -823,7 +823,6 @@ class CRM_Contact_BAO_Query {
         if (strpos($elementName, '-') !== FALSE) {
           // this is either phone, email or IM
           list($elementName, $elementType) = explode('-', $elementName);
-
 
           if (($elementName != 'phone') && ($elementName != 'im')) {
             $cond = self::getPrimaryCondition($elementType);
@@ -3340,10 +3339,8 @@ WHERE  id IN ( $groupIDs )
   function privacyOptions($values) {
     list($name, $op, $value, $grouping, $wildcard) = $values;
 
-    if (empty($value) ||
-      !is_array($value)
-    ) {
-      continue;
+    if (empty($value) || !is_array($value)) {
+      return;
     }
 
     // get the operator and toggle values
