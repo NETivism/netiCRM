@@ -1190,10 +1190,6 @@ WHERE civicrm_event.is_active = 1
           if (!$groupTitle) {
             $groupTitle = $v["groupTitle"];
           }
-          // suppress all file fields from display
-          if (CRM_Utils_Array::value('data_type', $v, '') == 'File' || CRM_Utils_Array::value('name', $v, '') == 'image_URL') {
-            unset($fields[$k]);
-          }
           // unset all view only profile field
           if ($v['is_view']){
             unset($fields[$k]);
@@ -1229,6 +1225,13 @@ WHERE civicrm_event.is_active = 1
         }
 
         CRM_Core_BAO_UFGroup::getValues($cid, $fields, $values, FALSE, $params);
+
+        foreach ($fields as $k => $v) {
+          // suppress all file fields from display
+          if ((CRM_Utils_Array::value('data_type', $v, '') == 'File' || CRM_Utils_Array::value('name', $v, '') == 'image_URL') && !empty($values[$v['title']] )){
+            $values[$v['title']] = ts("Uploaded files received");
+          }
+        }
 
         if (isset($values[$fields['participant_status_id']['title']]) &&
           is_numeric($values[$fields['participant_status_id']['title']])
