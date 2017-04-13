@@ -16,16 +16,17 @@
     };
     $.extend(settings, options);
 
-    var $funnel     = target;
-    var series      = options.series;
-    var labels      = options.labels;
-    var labelsTop   = options.labelsTop;
-    var row         = series.length;
-    var column      = series[0].length;
-    var barSum      = column;
-    var arrowSum    = barSum - 1;
-    var itemSum     = barSum + arrowSum;
-    var itemWidth   = floorDecimal(100 / itemSum, 3);
+    var $funnel       = target;
+    var series        = options.series;
+    var labels        = options.labels;
+    var labelsTop     = options.labelsTop;
+    var row           = series.length;
+    var column        = series[0].length;
+    var barSum        = column;
+    var arrowSum      = barSum - 1;
+    var itemSum       = barSum + arrowSum;
+    var itemWidth     = floorDecimal(100 / itemSum, 3);
+    var progress      = [];
 
     $funnel.addClass("ncf-container ncf-horizontal");
 
@@ -39,7 +40,7 @@
         var valSum = 0;
         var k = i / 2;
         bar.items = [];
-        
+
         for (var j = 0; j < row; j++) {
           var val = parseFloat(series[j][k]);
           bar.items[j] = {};
@@ -47,14 +48,27 @@
           valSum += val;
         }
         
-        for (var j = 0; j < row; j++) {
-          bar.items[j].percent = getPercent(bar.items[j].value, valSum, 2);
+        if (k > 0) {
+          progress[k-1] = {};
         }
 
-        // Render top label
+        for (var j = 0; j < row; j++) {
+          bar.items[j].percent = getPercent(bar.items[j].value, valSum, 2);
+
+          if (k > 0) {
+            if (j == 0) {
+              progress[k-1].bottom = bar.items[j].percent;
+            }
+            else {
+              progress[k-1].top = bar.items[j].percent;
+            }
+          }
+        }
+
+        // Render label (top)
         if (labelsTop && labelsTop.length > 0) {
           bar.labelTop = labelsTop[k];
-          itemOutput += "<div class='ncf-chart-label-top'>" + bar.labelTop + "</div>";
+          itemOutput += "<div class='ncf-chart-label-top'><div class='ncf-label'>" + bar.labelTop + "</div></div>";
         }
 
         // Render chart bar
@@ -74,14 +88,24 @@
         // Render label
         if (labels && labels.length > 0) {
           bar.label = labels[k];
-          itemOutput += "<div class='ncf-chart-label'>" + bar.label + "</div>";
+          itemOutput += "<div class='ncf-chart-label'><div class='ncf-label'>" + bar.label + "</div></div>";
         }
       }
       else {
+        // Render arrow
         itemOutput += "<div class='ncf-arrow ncf-arrow-right'><div class='arrow'></div></div>";
       }
       
       $funnel.find(".ncf-item").eq(i).append(itemOutput);
+    }
+
+    // Render progress content
+    for (var i in progress) {
+      var progressTop = "<div class='ncf-progress ncf-progress-top'>" + progress[i].top  + "%</div>";
+      $funnel.find(".ncf-arrow").eq(i).before(progressTop);
+      
+      var progressBottom = "<div class='ncf-progress ncf-progress-bottom'>" + progress[i].bottom  + "%</div>";
+      $funnel.find(".ncf-arrow").eq(i).after(progressBottom);
     }
   }
 
