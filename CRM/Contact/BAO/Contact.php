@@ -1379,8 +1379,7 @@ WHERE id={$id}; ";
 
         if (!in_array($fieldName, $multipleFields)) {
           if ($id == 'Primary') {
-            $defaultLocationType = &CRM_Core_BAO_LocationType::getDefault();
-            $locationTypeName = $defaultLocationType->name;
+            $locationTypeName = 1;
           }
           else {
             $locationTypeName = CRM_Utils_Array::value($id, $locationTypes);

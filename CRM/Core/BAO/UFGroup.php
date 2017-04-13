@@ -752,7 +752,7 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
 
     require_once 'CRM/Core/PseudoConstant.php';
     $locationTypes = $imProviders = array();
-    $locationTypes = CRM_Core_PseudoConstant::locationType();
+    $locationTypes = CRM_Core_PseudoConstant::locationType(TRUE, 'name');
     $imProviders = CRM_Core_PseudoConstant::IMProvider();
     $websiteTypes = CRM_Core_PseudoConstant::websiteType();
 
@@ -962,17 +962,17 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
             // fix for CRM-1543
             // not sure why we'd every use Primary location type id
             // we need to fix the source if we are using it
-            $locationTypeId = CRM_Contact_BAO_Contact::getPrimaryLocationType($cid);
+            $locationTypeName = 1;
           }
           else {
-            $locationTypeId = CRM_Utils_Array::value($id, $locationTypes);
+            $locationTypeName = CRM_Utils_Array::value($id, $locationTypes);
           }
 
-          if (!$locationTypeId ) {
+          if (!$locationTypeName) {
             continue;
           }
 
-          $detailName = "{$locationTypeId}-{$fieldName}";
+          $detailName = "{$locationTypeName}-{$fieldName}";
           $detailName = str_replace(' ', '_', $detailName);
 
           if (in_array($fieldName, array('phone', 'im', 'email', 'openid'))) {
