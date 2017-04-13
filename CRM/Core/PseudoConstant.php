@@ -410,9 +410,7 @@ class CRM_Core_PseudoConstant {
    *
    */
   public static function &locationType($all = FALSE, $field = 'label') {
-    if (!self::$locationType) {
-      self::populate(self::$locationType, 'CRM_Core_DAO_LocationType', $all, $field);
-    }
+    self::populate(self::$locationType, 'CRM_Core_DAO_LocationType', $all, $field);
     return self::$locationType;
   }
 
