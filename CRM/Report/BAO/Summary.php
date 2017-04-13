@@ -325,6 +325,12 @@ WHERE c.receive_date > mm.time_stamp AND c.receive_date < DATE_ADD(mm.time_stamp
         'sum' => $dao->sum,
       );
     }
+    $noneLabel = ts("None");
+    if(!empty($returnArray[$noneLabel])){
+      $tempItem = $returnArray[$noneLabel];
+      unset($returnArray[$noneLabel]);
+      $returnArray[$noneLabel] = $tempItem;
+    }
     return self::convertArrayToChartUse($returnArray);
   }
 

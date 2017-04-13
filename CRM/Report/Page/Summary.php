@@ -181,7 +181,7 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
       'labels' => json_encode($statistic_by_condition['gender']['label']),
       'series' => json_encode($statistic_by_condition['gender']['people']),
       'labelType' => 'percent',
-      'withLegend' => false,
+      'withLegend' => true,
       'withToolTip' => true
     );
 
@@ -209,7 +209,7 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
       'labels' => json_encode($statistic_by_condition['age']['label']),
       'series' => json_encode($statistic_by_condition['age']['people']),
       'labelType' => 'percent',
-      'withLegend' => false,
+      'withLegend' => true,
       'withToolTip' => true
     );
 
@@ -237,7 +237,7 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
       'labels' => json_encode($statistic_by_condition['province']['label']),
       'series' => json_encode($statistic_by_condition['province']['people']),
       'labelType' => 'percent',
-      'withLegend' => false,
+      'withLegend' => true,
       'withToolTip' => true
     );
 

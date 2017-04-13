@@ -25,7 +25,7 @@
 *}
 {* Display monthly and yearly contributions using Google charts (Bar and Pie) *} 
 
-<div class="last-update-date">
+<div class="last-update-date" style="float: right;font-size: 15px;">
   {ts 1=$update_time}Last update at %1{/ts}
 </div>
 
@@ -326,3 +326,11 @@
   {/if}
 
 {/if}
+
+{literal}
+<script type="text/javascript">
+(function($){
+  $('.last-update-date').appendTo('h1.page-title');
+})(jQuery);
+</script>
+{/literal}
