@@ -45481,3 +45481,6 @@ msgstr ""
 
 msgid "Unsuccessful Deliveries"
 msgstr ""
+
+msgid "Uploaded files received"
+msgstr ""

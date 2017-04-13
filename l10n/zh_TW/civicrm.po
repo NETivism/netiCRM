@@ -11,7 +11,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2017-04-12 08:28+0000\n"
+"PO-Revision-Date: 2017-04-13 04:57+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -45532,3 +45532,6 @@ msgstr "開啟電子報後 ... 內捐款人次"
 
 msgid "Unsuccessful Deliveries"
 msgstr "未成功寄送"
+
+msgid "Uploaded files received"
+msgstr "已收到上傳的檔案"

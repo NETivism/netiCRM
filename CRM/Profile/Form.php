@@ -979,8 +979,8 @@ class CRM_Profile_Form extends CRM_Core_Form {
         $values = CRM_Core_BAO_UFGroup::checkFieldsEmptyValues($gId, $this->_id, NULL);
         $fields = CRM_Core_BAO_UFGroup::getFields($gId, FALSE, CRM_Core_Action::VIEW);
         foreach ($fields as $k => $v) {
-          if (CRM_Utils_Array::value('data_type', $v, '') == 'File' || CRM_Utils_Array::value('name', $v, '') == 'image_URL') {
-            unset($values['values'][$v['title']]);
+          if ((CRM_Utils_Array::value('data_type', $v, '') == 'File' || CRM_Utils_Array::value('name', $v, '') == 'image_URL') && !empty($values['values'][$v['title']] )){
+            $values['values'][$v['title']] = ts("Uploaded files received");
           }
         }
         CRM_Core_BAO_UFGroup::commonSendMail($this->_id, $values);
