@@ -762,17 +762,7 @@ class CRM_Contact_BAO_Query {
     $locationPrimary = array();
 
     foreach ($this->_returnProperties['location'] as $name => $elements) {
-      $isPrimary = FALSE;
-      if ($elements['location_type'] == 'Primary') {
-        $lCond = self::getPrimaryCondition(1);
-        $isPrimary = TRUE;
-      }
-      else {
-        $lCond = self::getPrimaryCondition($name);
-        if ($lCond == 'is_primary = 1') {
-          $isPrimary = TRUE; 
-        }
-      }
+      $lCond = self::getPrimaryCondition($name);
 
       if (!$lCond) {
         $locationTypeId = array_search($name, $locationTypes);
@@ -855,14 +845,14 @@ class CRM_Contact_BAO_Query {
             // fix for CRM-882( to handle phone types )
             !is_numeric($elementType)
           ) {
-            if ($isPrimary) {
+            if (is_numeric($name)) {
               $field = CRM_Utils_Array::value($elementName . "-Primary$elementType", $this->_fields);
             }
             else {
               $field = CRM_Utils_Array::value($elementName . "-$locationTypeId$elementType", $this->_fields);
             }
           }
-          elseif ($isPrimary) {
+          elseif (is_numeric($name)) {
             //this for phone type to work
             if ($elementName == "phone") {
               $field = CRM_Utils_Array::value($elementName . "-Primary" . $elementType, $this->_fields);
