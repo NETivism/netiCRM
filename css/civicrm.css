@@ -5724,6 +5724,24 @@ input.crm-form-textfield,
   .crm-container .wizard-bar > li {
     width: 100px;
   }
+  .crm-container-md .crm-custom-data-view .crm-accordion-header {
+    font-size: 1.5rem;
+  }
+  .crm-container-md .crm-custom-data-view .crm-accordion-header .crm-accordion-pointer {
+    margin: 9px 0;
+  }
+  .crm-container-md .crm-custom-data-view .crm-accordion-body {
+    width: 100%;
+  }
+  .crm-container-md .crm-custom-data-view .crm-info-panel td {
+    padding: .5em;
+  }
+  .crm-container-md .crm-custom-data-view .crm-info-panel tr > td:first-of-type {
+    padding-left: 0;
+  }
+  .crm-container-md .crm-custom-data-view .crm-info-panel tr > td:last-of-type {
+    padding-right: 0;
+  }
 }
 
 @media screen and (max-width: 425px) {
@@ -5772,6 +5790,18 @@ input.crm-form-textfield,
     display: block;
     width: 100%;
     margin: 0;
+  }
+  .crm-container-md .crm-custom-data-view .crm-info-panel td,
+  .crm-container-md .crm-custom-data-view .crm-info-panel td.label {
+    display: block;
+    width: 100%;
+  }
+  .crm-container-md .crm-custom-data-view .crm-info-panel td {
+    padding: 0 0 1.5em 0;
+  }
+  .crm-container-md .crm-custom-data-view .crm-info-panel td.label {
+    text-align: left;
+    padding: 0 0 .5em 0;
   }
 }
 
