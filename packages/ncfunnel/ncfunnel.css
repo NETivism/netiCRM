@@ -172,6 +172,15 @@
   right: 0;
   margin: 0 30px 0 0;
 }
+.ncf-horizontal .ncf-bar[data-value="0"] .ncf-bar-meta {
+  display: none;
+  top: auto;
+  bottom: auto;
+  color: #000;
+}
+.ncf-horizontal .ncf-chart-bar > .ncf-bar[data-value="0"]:first-child .ncf-bar-meta {
+  display: block;
+}
 .ncf-chart-bar .ncf-bar:first-child .ncf-bar-meta {
   bottom: auto;
   top: 0;
