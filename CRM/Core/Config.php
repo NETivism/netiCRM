@@ -273,13 +273,14 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
     if (defined('CIVICRM_UF_BASEURL')) {
       $url = parse_url(CIVICRM_UF_BASEURL);
       $host = $url['host'];
+      $port = empty($url['port'])? '': ':'.$url['port'];
       $path = $url['path'];
     }
     else {
       $host = $_SERVER['HTTP_HOST'];
       $path = '/';
     }
-    $this->userFrameworkBaseURL = $scheme.'://'.$host.$path;
+    $this->userFrameworkBaseURL = $scheme.'://'.$host.$port.$path;
 
     //format url for language negotiation, CRM-7803
     $this->userFrameworkBaseURL = CRM_Utils_System::languageNegotiationURL($this->userFrameworkBaseURL);
