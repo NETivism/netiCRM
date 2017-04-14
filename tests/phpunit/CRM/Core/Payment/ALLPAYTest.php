@@ -420,6 +420,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
       1 => array($trxn_id3, 'String'),
     );
     $this->assertDBQuery(1, "SELECT contribution_status_id FROM civicrm_contribution WHERE trxn_id = %1", $params);
+    $this->assertDBQuery(1, "SELECT count(*) FROM civicrm_contribution WHERE trxn_id = %1 AND receive_date IS NOT NULL AND receive_date >= '".date('Y-m-d H:i:s', $now)."'", $params);
     $cid3 = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution WHERE trxn_id = %1", $params);
 
     $data = CRM_Core_DAO::singleValueQuery("SELECT data FROM civicrm_contribution_allpay WHERE cid = $cid3");
