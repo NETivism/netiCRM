@@ -751,7 +751,8 @@ class CRM_Contact_BAO_Query {
       return;
     }
 
-    $locationTypes = CRM_Core_PseudoConstant::locationType(FALSE, 'name');
+    $locationTypesName = CRM_Core_PseudoConstant::locationType(FALSE, 'name');
+    $locationTypes = CRM_Core_PseudoConstant::locationType(FALSE, 'label');
     $processed = array();
     $index = 0;
 
@@ -765,7 +766,10 @@ class CRM_Contact_BAO_Query {
       $lCond = self::getPrimaryCondition($name);
 
       if (!$lCond) {
-        $locationTypeId = array_search($name, $locationTypes);
+        $locationTypeId = array_search($name, $locationTypesName);
+        if (!$locationTypeId) {
+          $locationTypeId = array_search($name, $locationTypes);
+        }
         if ($locationTypeId === FALSE) {
           continue;
         }
