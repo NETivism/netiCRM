@@ -140,7 +140,7 @@ cj(function($){
     if($($('[name=custom_{/literal}{$receiptYesNo}{literal}]')[0]).attr('type') == 'radio'){
       var $no_label = false;
       $('.custom_{/literal}{$receiptYesNo}{literal}-section .content input[type="radio"]').each(function(){
-        if(!$(this).val().match(/1|true|yes/)){
+        if($(this).val().match(/0|false|no/)){
           $no_label = $(this);
         }
       });
