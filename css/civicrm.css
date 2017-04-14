@@ -2711,29 +2711,57 @@ span.icon {
 }
 
 /* crm custom data view */
-.crm-container-md .crm-custom-data-view {
+.crm-container-md table.crm-custom-data-view,
+.crm-container-md table.crm-custom-data-view.no-border {
+  display: table;
+  margin-bottom: 15px;
   width: 100%;
 }
 .crm-container-md .crm-custom-data-view td {
   border: none;
 }
+.crm-container-md .crm-custom-data-view .crm-accordion-open {
+  box-shadow: none;
+}
+.crm-container-md .crm-custom-data-view .crm-accordion-header {
+  display: block;
+  float: none;
+  padding: 0 30px 10px 30px;
+  width: auto;
+  text-align: center;
+  line-height: 1.7;
+  font-size: 1.75rem;
+  color: #212121;
+  border-bottom: 1px solid #bdbdbd;
+  background: transparent;
+}
+.crm-container-md .crm-custom-data-view .crm-accordion-header .crm-accordion-pointer {
+  position: absolute;
+  right: 0;
+  margin: 16px 10px;
+  font-size: 1.5rem;
+}
+.crm-container-md .crm-custom-data-view .crm-accordion-body {
+  margin: 0 auto;
+  padding: 30px 0;
+  width: 600px;
+}
 .crm-container-md .crm-custom-data-view .crm-info-panel {
+  display: table;
   margin-bottom: 3px;
   width: 100%;
   border: none;
 }
 .crm-container-md .crm-custom-data-view .crm-info-panel td {
   font-size: 1rem;
+  color: #212121;
+  background-color: transparent;
 }
 .crm-container-md .crm-custom-data-view .crm-info-panel td.label {
   width: 28%;
   text-align: right;
   font-size: 1rem;
-  font-weight: normal;
   color: #000;
-}
-.crm-container-md .crm-custom-data-view .crm-accordion-body {
-  padding: 12px;
 }
 
 /* civicrm admin menu */
@@ -4654,6 +4682,15 @@ tbody.scrollContent tr.alternateRow {
   border: none;
 }
 
+.crm-container .form-layout-compressed td {
+  color: #212121;
+}
+
+.crm-container .form-layout-compressed td.label,
+.crm-container .form-layout-compressed td.crm-event-label {
+  font-weight: bold;
+}
+
 .crm-container .control-panel td {
   padding: 3px;
   width: 25%;
@@ -5601,6 +5638,7 @@ input.crm-form-textfield,
 
 /* md: page element */
 .crm-container-md table.form-layout-compressed {
+  display: table;
   width: auto;
 }
 
