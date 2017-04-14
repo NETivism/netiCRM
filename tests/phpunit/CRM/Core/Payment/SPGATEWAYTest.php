@@ -219,8 +219,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
   */
 
   function testRecurringPaymentNotify(){
-
-    $now = time()+60;
+    $now = time();
     $trxn_id = 'ut'.substr($now, -5);
     $amount = 222;
 
@@ -351,7 +350,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
      * second payment
      */
 
-    $now = time()+120;
+    $now += 86400;
     $trxn_id2 = $trxn_id . "_2";
     $get = $post = $ids = array();
     $ids = CRM_Contribute_BAO_Contribution::buildIds($contribution->id);
@@ -361,7 +360,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     // $get['is_recur'] = 1;
     $post = array(
       "Status" => "SUCCESS",
-      "Message" => "委託單成立，且首次授權成功",
+      "Message" => "成功",
       "Result" => array(
         "RespondCode" => "00",
         "MerchantID" => 'abcd',
@@ -412,7 +411,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     /**
      * Failed
      */
-    $now = time()+180;
+    $now += 86400;
     $trxn_id3 = $trxn_id . "_3";
     $get = $post = $ids = array();
     $ids = CRM_Contribute_BAO_Contribution::buildIds($contribution->id);
@@ -470,7 +469,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
      * Forth pay, finish recur.
      */
 
-    $now = time()+180;
+    $now += 86400;
     $trxn_id4 = $trxn_id . "_4";
     $get = $post = $ids = array();
     $ids = CRM_Contribute_BAO_Contribution::buildIds($contribution->id);
@@ -498,6 +497,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
       ),
     );
     $post = array('Period' => _civicrm_spgateway_recur_encrypt(json_encode($post), $PaymentProcessor));
+
     civicrm_spgateway_ipn('Credit', $post, $get);
     // $trxn_id2 = _civicrm_spgateway_recur_trxn($trxn_id, $gwsr1);
     // $trxn_id2 = "testdev500302T368_2";
@@ -518,7 +518,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     );
 
     $this->assertDBQuery(1, "SELECT contribution_status_id FROM civicrm_contribution WHERE trxn_id = %1", $params);
-    $this->assertDBQuery(1, "SELECT count(*) FROM civicrm_contribution WHERE trxn_id = %1 AND receive_date IS NOT NULL AND receive_date >= '".date('Y-m-d H:i:s', $now-3600)."'", $params);
+    $this->assertDBQuery(1, "SELECT count(*) FROM civicrm_contribution WHERE trxn_id = %1 AND receive_date IS NOT NULL AND receive_date >= '".date('Y-m-d H:i:s')."'", $params);
     $cid4 = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution WHERE trxn_id = %1", $params);
 
     $data = CRM_Core_DAO::singleValueQuery("SELECT data FROM civicrm_contribution_spgateway WHERE cid = $cid4");
