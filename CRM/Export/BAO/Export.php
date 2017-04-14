@@ -120,7 +120,7 @@ class CRM_Export_BAO_Export {
     require_once 'CRM/Core/BAO/CustomField.php';
     if ($fields) {
       //construct return properties
-      $locationTypes = CRM_Core_PseudoConstant::locationType();
+      $locationTypes = CRM_Core_PseudoConstant::locationType(NULL, 'name');
       $locationTypeFields = array('street_address',
         'supplemental_address_1',
         'supplemental_address_2',
