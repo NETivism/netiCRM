@@ -5,7 +5,12 @@
 
   var getPercent = function(val, sum, precision) { 
     var percent = Number(val) / Number(sum) * 100;
-    return floorDecimal(percent, precision); 
+    if (isNaN(percent)) {
+      return 0;
+    } 
+    else {
+      return floorDecimal(percent, precision);
+    }
   }
 
   var renderFunnel = function(target, options) {
@@ -42,7 +47,7 @@
         bar.items = [];
 
         for (var j = 0; j < row; j++) {
-          var val = parseFloat(series[j][k]);
+          var val = typeof series[j][k] !== "undefined" && series[j][k] !== null ? parseFloat(series[j][k]) : 0;
           bar.items[j] = {};
           bar.items[j].value = val;
           valSum += val;
