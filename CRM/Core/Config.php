@@ -200,7 +200,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
         //initialize variables. for gencode we cannot load from the
         //db since the db might not be initialized
         if ($loadFromDB) {
-          self::$_singleton->_initVariables($loadFromDB);
+          self::$_singleton->_initVariables();
 
           // retrieve and overwrite stuff from the settings file
           self::$_singleton->setCoreVariables();
@@ -212,7 +212,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
         self::$_singleton->_initialize($loadFromDB);
 
         if ($loadFromDB) {
-          self::$_singleton->_initVariables($loadFromDB);
+          self::$_singleton->_initVariables();
         }
         // add component specific settings
         self::$_singleton->componentRegistry->addConfig($this);
@@ -376,7 +376,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
    * @return void
    * @access private
    */
-  private function _initVariables($loadFromDB) {
+  private function _initVariables() {
     // retrieve serialised settings
     $variables = array();
     CRM_Core_BAO_ConfigSetting::retrieve($variables);
@@ -397,7 +397,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
     CRM_Utils_File::createDir($this->configAndLogDir);
 
     // if settings are not available, go down the full path
-    if (empty($variables)) {
+    if (empty($variables['userFrameworkResourceURL'])) {
       // Step 1. get system variables with their hardcoded defaults
       $variables = get_object_vars($this);
 
