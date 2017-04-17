@@ -67,6 +67,7 @@ class CRM_Admin_Form_Options extends CRM_Admin_Form {
    */
   public function preProcess() {
     parent::preProcess();
+    $config = CRM_Core_Config::singleton();
     $session = CRM_Core_Session::singleton();
     if (!$this->_gName) {
       $this->_gName = CRM_Utils_Request::retrieve('group', 'String', $this, FALSE, 0);
@@ -87,6 +88,13 @@ class CRM_Admin_Form_Options extends CRM_Admin_Form {
     $params = "group={$this->_gName}&reset=1";
     $session->pushUserContext(CRM_Utils_System::url($url, $params));
     $this->assign('id', $this->_id);
+
+    if ($this->_gName == 'from_email_address') {
+      $this->assign('mail_providers', str_replace('|', ', ', CRM_Utils_Mail::DMARC_MAIL_PROVIDERS));
+			$defaultFromMail = CRM_Mailing_BAO_Mailing::defaultFromMail();
+			$this->assign('default_from_target', 'label');
+			$this->assign('default_from_value', '"'.$config->domain->name.'" <'.$defaultFromMail.'>');
+    }
 
     require_once 'CRM/Core/OptionGroup.php';
     if ($this->_id && in_array($this->_gName, CRM_Core_OptionGroup::$_domainIDGroups)) {
@@ -314,6 +322,10 @@ class CRM_Admin_Form_Options extends CRM_Admin_Form {
       $formName = explode('"', $fields['label']);
       if (!CRM_Utils_Array::value(1, $formName) || count($formName) != 3) {
         $errors['label'] = ts('Please follow the proper format for From Email Address');
+      }
+
+      if (!CRM_Utils_Mail::checkMailProviders($formEmail)) {
+        $errors['label'] = ts('Do not use free mail address as mail sender. (eg. %1)', array(1 => str_replace('|', ', ', CRM_Utils_Mail::DMARC_MAIL_PROVIDERS)));
       }
     }
 

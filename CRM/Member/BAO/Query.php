@@ -189,8 +189,7 @@ class CRM_Member_BAO_Query {
         return;
 
       case 'member_status_id':
-        require_once 'CRM/Member/PseudoConstant.php';
-        $status = implode(',', array_keys($value));
+        $status = implode(',', $value);
 
         if (count($value) > 1) {
           $op = 'IN';
@@ -236,8 +235,7 @@ class CRM_Member_BAO_Query {
         return;
 
       case 'member_membership_type_id':
-        require_once 'CRM/Member/PseudoConstant.php';
-        $mType = implode(',', array_keys($value));
+        $mType = implode(',', $value);
         if (count($value) > 1) {
           $op = 'IN';
           $mType = "({$mType})";

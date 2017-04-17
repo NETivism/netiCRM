@@ -156,6 +156,14 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
       $indexExist = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_CustomField', $params['id'], 'is_searchable');
     }
 
+    $daoName = 'CRM_Core_DAO_CustomField';
+    $fieldValues = array('custom_group_id' => $params['custom_group_id']);      
+    if(empty($params['weight'])){
+      $params['weight'] = CRM_Utils_Weight::getDefaultWeight($daoName, $fieldValues);
+    }else{
+      $params['weight'] = CRM_Utils_Weight::updateOtherWeights($daoName, '', $params['weight'], $fieldValues);
+    }
+
     if (($params['html_type'] == 'CheckBox' ||
         $params['html_type'] == 'AdvMulti-Select' ||
         $params['html_type'] == 'Multi-Select'
@@ -234,7 +242,9 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
                 $optionValue->value = trim($v);
             }
 
-            $optionValue->weight = $params['option_weight'][$k];
+            $className = 'CRM_Core_DAO_OptionValue';
+            $customField = array('option_group_id' => $optionGroup->id);
+            $optionValue->weight = CRM_Utils_Weight::updateOtherWeights($className, '', $params['option_weight'][$k], $customField);
             $optionValue->is_active = CRM_Utils_Array::value($k, $params['option_status'], FALSE);
             $optionValue->save();
           }

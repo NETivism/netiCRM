@@ -52,6 +52,11 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
   ///
   /// BASE SYSTEM PROPERTIES (CIVICRM.SETTINGS.PHP)
   ///
+  /**
+   * System default language(fallback language)
+   */
+  CONST SYSTEM_LANG = 'en_US';
+  CONST SYSTEM_FILEDIR = 'civicrm';
 
   /**
    * the dsn of the database connection
@@ -90,7 +95,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
    * compiled files
    * @var string
    */
-  public $templateCompileDir = './templates_c/en_US/';
+  public $templateCompileDir = NULL;
 
   public $configAndLogDir = NULL;
 
@@ -184,7 +189,6 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
       $timezone = date_default_timezone_get();
 
       // first, attempt to get configuration object from cache
-      require_once 'CRM/Utils/Cache.php';
       $cache = &CRM_Utils_Cache::singleton();
       self::$_singleton = $cache->get('CRM_Core_Config' . CRM_Core_Config::domainID());
 
@@ -201,7 +205,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
           // retrieve and overwrite stuff from the settings file
           self::$_singleton->setCoreVariables();
         }
-        $cache->set('CRM_Core_Config' . CRM_Core_Config::domainID(), self::$_singleton);
+        $cache->set('CRM_Core_Config_' . CRM_Core_Config::domainID(), self::$_singleton);
       }
       else {
         // we retrieve the object from memcache, so we now initialize the objects
@@ -244,6 +248,8 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
 
 
   private function _setUserFrameworkConfig($userFramework) {
+    global $civicrm_root;
+
     $this->userFrameworkClass = 'CRM_Utils_System_' . $userFramework;
     $this->userHookClass = 'CRM_Utils_Hook_' . $userFramework;
     $this->userPermissionClass = 'CRM_Core_Permission_' . $userFramework;
@@ -263,19 +269,21 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
       $this->userFrameworkURLVar = 'task';
     }
 
+    $scheme = CRM_Utils_System::isSSL() ? 'https' : 'http';
     if (defined('CIVICRM_UF_BASEURL')) {
-      $this->userFrameworkBaseURL = CRM_Utils_File::addTrailingSlash(CIVICRM_UF_BASEURL, '/');
+      $url = parse_url(CRM_Utils_File::addTrailingSlash(CIVICRM_UF_BASEURL, '/'));
+      $host = $url['host'];
+      $port = empty($url['port'])? '': ':'.$url['port'];
+      $path = $url['path'];
     }
-    else{
-      $https = (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on') ? 'https://' : 'http://';
-      $this->userFrameworkBaseURL = $https.$_SERVER['HTTP_HOST'].'/';
+    else {
+      $host = $_SERVER['HTTP_HOST'];
+      $path = '/';
     }
+    $this->userFrameworkBaseURL = $scheme.'://'.$host.$port.$path;
+
     //format url for language negotiation, CRM-7803
     $this->userFrameworkBaseURL = CRM_Utils_System::languageNegotiationURL($this->userFrameworkBaseURL);
-
-    if (CRM_Utils_System::isSSL()) {
-      $this->userFrameworkBaseURL = str_replace('http://', 'https://', $this->userFrameworkBaseURL);
-    }
 
     // this is dynamically figured out in the civicrm.settings.php file
     if (defined('CIVICRM_CLEANURL')) {
@@ -283,6 +291,10 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
     }
     else {
       $this->cleanURL = 0;
+    }
+
+    if (!$this->userFrameworkResourceURL) {
+      $this->userFrameworkResourceURL = rtrim($this->userFrameworkBaseURL, '/') . str_replace($this->userSystem->cmsRootPath(), '', $civicrm_root);
     }
   }
 
@@ -295,7 +307,6 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
    * @access public
    */
   private function _initialize($loadFromDB = TRUE) {
-
     // following variables should be set in CiviCRM settings and
     // as crucial ones, are defined upon initialisation
     // instead of in CRM_Core_Config_Defaults
@@ -305,28 +316,6 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
     elseif ($loadFromDB) {
       // bypass when calling from gencode
       echo 'You need to define CIVICRM_DSN in civicrm.settings.php';
-      exit();
-    }
-
-    if (defined('CIVICRM_TEMPLATE_COMPILEDIR')) {
-      $this->templateCompileDir = CRM_Utils_File::addTrailingSlash(CIVICRM_TEMPLATE_COMPILEDIR . php_sapi_name());
-
-      // we're automatically prefixing compiled templates directories with country/language code
-      global $tsLocale;
-      if (!empty($tsLocale)) {
-        $this->templateCompileDir .= CRM_Utils_File::addTrailingSlash($tsLocale);
-      }
-      elseif (!empty($this->lcMessages)) {
-        $this->templateCompileDir .= CRM_Utils_File::addTrailingSlash($this->lcMessages);
-      }
-
-      // also make sure we create the config directory within this directory
-      // the below statement will create both the templates directory and the config and log directory
-      $this->configAndLogDir = $this->templateCompileDir . 'ConfigAndLog' . DIRECTORY_SEPARATOR;
-      CRM_Utils_File::createDir($this->configAndLogDir);
-    }
-    elseif ($loadFromDB) {
-      echo 'You need to define CIVICRM_TEMPLATE_COMPILEDIR in civicrm.settings.php';
       exit();
     }
 
@@ -392,10 +381,26 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
     $variables = array();
     CRM_Core_BAO_ConfigSetting::retrieve($variables);
 
+    // after locales initialized in configsetting
+    global $tsLocale;
+    $temp = CRM_Utils_System::cmsDir('temp');
+    if ($temp) {
+      $this->templateCompileDir = $temp . DIRECTORY_SEPARATOR . 'smarty' . php_sapi_name() . DIRECTORY_SEPARATOR . $_SERVER['HTTP_HOST'] . DIRECTORY_SEPARATOR . $tsLocale . DIRECTORY_SEPARATOR;
+    }
+    elseif(defined('CIVICRM_TEMPLATE_COMPILEDIR')) {
+      $this->templateCompileDir = CRM_Utils_File::addTrailingSlash(CIVICRM_TEMPLATE_COMPILEDIR).CRM_Utils_File::addTrailingSlash($tsLocale);
+    }
+
+    // also make sure we create the config directory within this directory
+    // the below statement will create both the templates directory and the config and log directory
+    $this->configAndLogDir = $this->templateCompileDir . CRM_Utils_File::addTrailingSlash('ConfigAndLog');
+    CRM_Utils_File::createDir($this->configAndLogDir);
+
     // if settings are not available, go down the full path
-    if (empty($variables)) {
+    if (empty($variables['userFrameworkResourceURL'])) {
       // Step 1. get system variables with their hardcoded defaults
-      $variables = get_object_vars($this);
+      $defaultVariables = get_object_vars($this);
+      $variables = array_merge($defaultVariables, $variables);
 
       // Step 2. get default values (with settings file overrides if
       // available - handled in CRM_Core_Config_Defaults)
@@ -433,28 +438,20 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
           CRM_Core_Session::setStatus(ts('%1 has an incorrect directory path. Please go to the <a href="%2">path setting page</a> and correct it.', array(1 => $key, 2 => $url)) . '<br/>');
         }
       }
-      elseif ($key == 'lcMessages') {
-        // reset the templateCompileDir to locale-specific and make sure it exists
-        $this->templateCompileDir = str_replace('/' . $this->lcMessages . '/', '/', $this->templateCompileDir);
-        $this->templateCompileDir .= CRM_Utils_File::addTrailingSlash($value, '/');
-        CRM_Utils_File::createDir($this->templateCompileDir);
-      }
-
       $this->$key = $value;
     }
 
-    if ($this->userFrameworkResourceURL) {
-      // we need to do this here so all blocks also load from an ssl server
-      if(CRM_Utils_System::isSSL()) {
-        CRM_Utils_System::mapConfigToSSL();
-      }
-      $rrb = parse_url($this->userFrameworkResourceURL);
-      // dont use absolute path if resources are stored on a different server
-      // CRM-4642
-      $this->resourceBase = $this->userFrameworkResourceURL;
-      if (isset($_SERVER['HTTP_HOST'])) {
-        $this->resourceBase = ($rrb['host'] == $_SERVER['HTTP_HOST']) ? $rrb['path'] : $this->userFrameworkResourceURL;
-      }
+    $rrb = parse_url($this->userFrameworkResourceURL);
+    // dont use absolute path if resources are stored on a different server
+    // CRM-4642
+    $this->resourceBase = $this->userFrameworkResourceURL;
+    if (isset($_SERVER['HTTP_HOST'])) {
+      $this->resourceBase = ($rrb['host'] == $_SERVER['HTTP_HOST']) ? $rrb['path'] : $this->userFrameworkResourceURL;
+    }
+
+    // we need to do this here so all blocks also load from an ssl server
+    if(CRM_Utils_System::isSSL()) {
+      CRM_Utils_System::mapConfigToSSL();
     }
 
     if (!$this->customFileUploadDir) {

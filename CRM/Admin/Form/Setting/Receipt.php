@@ -27,12 +27,18 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
     $this->addElement('select', 'receiptTitle', ts('Field for receipt title'), $option);
     $this->addElement('select', 'receiptSerial', ts('Field for receipt serial number'), $option);
     $this->addElement('select', 'receiptDonorCredit', ts('Field for donor credit'), $option);
-    $check = TRUE;
+
+    $addressFields = array(
+      'is_primary' => ts('Is Primary Address'),
+      'is_billing' => ts('Is Billing Address'),
+    );
+    $this->addElement('select', 'receiptAddrType', ts('Address Fields'), $addressFields);
 
     // redirect to Administer Section After hitting either Save or Cancel button.
     $session = CRM_Core_Session::singleton();
     $session->pushUserContext(CRM_Utils_System::url('civicrm/admin', 'reset=1'));
 
+    $check = TRUE;
     parent::buildQuickForm($check);
   }
 }

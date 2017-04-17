@@ -237,6 +237,11 @@ class CRM_Contribute_Form_ContributionPage extends CRM_Core_Form {
       if (CRM_Utils_Array::value('start_date', $defaults)) {
         list($defaults['start_date'], $defaults['start_date_time']) = CRM_Utils_Date::setDateDefaults($defaults['start_date']);
       }
+
+      if (CRM_Utils_Array::value('is_recur', $defaults) && $defaults['is_recur'] == 2) {
+        $defaults['is_recur_only'] = 1;
+        $defaults['is_recur'] = 1;
+      }
     }
     else {
       $defaults['is_active'] = 1;

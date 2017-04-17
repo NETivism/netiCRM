@@ -86,7 +86,7 @@ class CRM_Utils_String {
    */
   static function munge($name, $char = '_', $len = 63) {
     // replace all white space and non-alpha numeric with $char
-    $name = str_replace("-", $char, $name);
+    $name = preg_replace('/[-.]+/', $char, $name);
 
     // dirty way to detect chinese
     preg_match('/[^0-9a-z-_]+/i', $name, $matches);

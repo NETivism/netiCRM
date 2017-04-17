@@ -296,7 +296,12 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
     $form->addRule("bcc_confirm", ts('Please enter a valid list of comma delimited email addresses'), 'emailList');
     $form->add('text', 'confirm_from_name', ts('Confirm From Name'));
     $form->add('text', 'confirm_from_email', ts('Confirm From Email'));
+    $form->assign('mail_providers', str_replace('|', ', ', CRM_Utils_Mail::DMARC_MAIL_PROVIDERS));
     $form->addRule("confirm_from_email", ts('Email is not valid.'), 'email');
+
+    $defaultFromMail = CRM_Mailing_BAO_Mailing::defaultFromMail();
+    $this->assign('default_from_target', 'confirm_from_email');
+    $this->assign('default_from_value', $defaultFromMail);
   }
 
   function buildThankYouBlock(&$form) {
@@ -341,8 +346,17 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
           $errorMsg['confirm_from_name'] = ts('Please enter Confirmation Email FROM Name.');
         }
 
-        if (!$values['confirm_from_email']) {
+        $email = trim(CRM_Utils_Array::value('confirm_from_email', $values));
+        if (empty($email)) {
           $errorMsg['confirm_from_email'] = ts('Please enter Confirmation Email FROM Email Address.');
+        }
+        else {
+          if(!CRM_Utils_Rule::email($email)) {
+            $errorMsg['confirm_from_email'] = ts('Please enter the valid email address.');
+          }
+          if (!CRM_Utils_Mail::checkMailProviders($email)) {
+            $errorMsg['confirm_from_email'] = ts('Do not use free mail address as mail sender. (eg. %1)', array(1 => str_replace('|', ', ', CRM_Utils_Mail::DMARC_MAIL_PROVIDERS)));
+          }
         }
       }
     }

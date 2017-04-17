@@ -10474,9 +10474,7 @@ msgid ""
 msgstr ""
 
 #: CRM/Contribute/Form/ContributionBase.php
-msgid ""
-"A payment processor must be selected for this contribution page (contact the"
-" site administrator for assistance)."
+msgid "A payment processor must be selected for this contribution page or must be configured to give users the option to pay later."
 msgstr ""
 
 #: CRM/Contribute/Form/ContributionBase.php
@@ -15633,10 +15631,7 @@ msgid "Registration for this event ended on %1"
 msgstr ""
 
 #: CRM/Event/Form/Registration.php
-msgid ""
-"A payment processor must be selected for this event registration page, or "
-"the event must be configured to give users the option to pay later (contact "
-"the site administrator for assistance)."
+msgid "A payment processor must be selected for this event registration page, or the event must be configured to give users the option to pay later."
 msgstr ""
 
 #: CRM/Event/Form/Registration.php
@@ -30564,7 +30559,7 @@ msgstr ""
 #: templates/CRM/Custom/Form/Field.tpl templates/CRM/Price/Form/Field.tpl
 msgid ""
 "Weight controls the order in which fields are displayed in a group. Enter a "
-"positive or negative integer - lower numbers are displayed ahead of higher "
+"positive integer - lower numbers are displayed ahead of higher "
 "numbers."
 msgstr ""
 
@@ -30792,7 +30787,7 @@ msgstr ""
 #: templates/CRM/Custom/Page/Group.hlp
 msgid ""
 "Weight controls the order in which custom field sets are presented when "
-"there are more than one. Enter a positive or negative integer - lower "
+"there are more than one. Enter a positive integer - lower "
 "numbers are displayed ahead of higher numbers."
 msgstr ""
 
@@ -35801,7 +35796,7 @@ msgstr ""
 #: templates/CRM/UF/Form/Field.tpl
 msgid ""
 "Weight controls the order in which fields are displayed within a profile. "
-"Enter a positive or negative integer - lower numbers are displayed ahead of "
+"Enter a positive integer - lower numbers are displayed ahead of "
 "higher numbers."
 msgstr ""
 
@@ -35882,7 +35877,7 @@ msgstr ""
 msgid ""
 "Weight controls the order in which profiles are presented when more than one"
 " profile is included in User Registration or My Account screens. Enter a "
-"positive or negative integer - lower numbers are displayed ahead of higher "
+"positive integer - lower numbers are displayed ahead of higher "
 "numbers."
 msgstr ""
 
@@ -40436,7 +40431,7 @@ msgstr ""
 #: templates/CRM/Custom/Page/Group.hlp
 msgid ""
 "Weight controls the order in which custom data groups are presented when "
-"there are more than one. Enter a positive or negative integer - lower "
+"there are more than one. Enter a positive integer - lower "
 "numbers are displayed ahead of higher numbers."
 msgstr ""
 
@@ -44620,9 +44615,6 @@ msgstr ""
 msgid "Contribution record must completed."
 msgstr ""
 
-msgid "Contribution record must have receive date."
-msgstr ""
-
 msgid ""
 "Please notice that, because the serial number must continuous, once you "
 "generate receipt, it will also generte receipt ID and you can't modify "
@@ -45372,4 +45364,126 @@ msgid "Check this will skip membership status automatic calculate by start and e
 msgstr ""
 
 msgid "It's default when membership status is pending"
+msgstr ""
+
+#: CRM/Contribute/DAO/ContributionPage.php
+msgid "Recurring Failed Notification to"
+msgstr ""
+
+#: xml/templates/civicrm_msg_template.tpl
+msgid "Contributions - Recurring Failed Notification"
+msgstr ""
+
+#: templates/CRM/Contribute/Form/ContributionPage/ThankYou.tpl
+msgid "If you want member(s) of your organization to receive a message of each recurring failed notification, enter one or more email addresses here. Multiple email addresses should be separated by a comma (e.g. jane@example.org, paula@example.org)."
+msgstr ""
+
+#: xml/templates/message_templates/contribution_recur_fail_notify_html.tpl
+msgid "The recurring contribution %1 by contributor %2 is failed at %3.( Link: %4 )"
+msgstr ""
+
+msgid "If you need more infomation, please check source from payment processor service page by transaction ID: %1"
+msgstr ""
+
+msgid "You can evaluate whether to notify the contributor for the relevant treatment (for example, due to the credit card expires and need to make online contribution again), or wait for the next time the transaction executing (if this is due to insufficient balance can not pay)."
+msgstr ""
+
+msgid "Or you can contact us by our support on https://neticrm.tw/support ."
+msgstr ""
+
+#: xml/templates/message_templates/contribution_recur_fail_notify_subject.tpl
+msgid "Recurring Failed Notification"
+msgstr ""
+
+msgid "Use paper receipt. This will cancel user selection even they choose donate receipt or electronic receipt. User need keep receipt on their own and system will not email any further notification."
+msgstr ""
+
+msgid "Use paper receipt"
+msgstr ""
+
+msgid "no installments specified"
+msgstr ""
+
+msgid "Processed Installments"
+msgstr ""
+
+msgid "Total Installments"
+msgstr ""
+
+msgid "%1 installments left"
+msgstr ""
+
+msgid "Installments Left"
+msgstr ""
+
+msgid "Do not use free mail address as mail sender. (eg. %1)"
+msgstr ""
+
+msgid "Most of mail providers apply DMARC, that means if you use free email address as mail sender, the mail will be blocked by destination inbox."
+msgstr ""
+
+msgid "Cancelled or Failed Reason"
+msgstr ""
+
+msgid "Cancelled or Failed Date"
+msgstr ""
+
+msgid "Cancellation or Failure Information"
+msgstr ""
+
+msgid "Only allowed recurring contribution"
+msgstr ""
+
+msgid "Check this box will turn off single transaction of this page."
+msgstr ""
+
+#: templates/CRM/Admin/Form/Options.tpl
+msgid "Weight controls the order in which options are displayed in a group. Enter a positive integer - lower numbers are displayed ahead of higher numbers."
+msgstr ""
+
+#: templates/CRM/Report/Page/Summary.tpl
+msgid "Last update at %1"
+msgstr ""
+
+msgid "Contribution people percentage by gender"
+msgstr ""
+
+msgid "Contribution people percentage by age"
+msgstr ""
+
+msgid "Contribution people percentage by province"
+msgstr ""
+
+msgid "There are %1 recurring contributions."
+msgstr ""
+
+msgid "Total amount of completed contributions is %1."
+msgstr ""
+
+msgid "Last Failed Date"
+msgstr ""
+
+#: templates/CRM/Report/Page/Summary.tpl
+msgid "Contribution sum percentage by gender"
+msgstr ""
+
+msgid "Contribution sum percentage by age"
+msgstr ""
+
+msgid "Contribution sum percentage by province"
+msgstr ""
+
+msgid "Participants count in ... after opened mail"
+msgstr ""
+
+msgid "Contribution count in ... after opened mail"
+msgstr ""
+
+msgid "Unsuccessful Deliveries"
+msgstr ""
+
+msgid "Uploaded files received"
+msgstr ""
+
+msgid "Use default: %1"
 msgstr ""

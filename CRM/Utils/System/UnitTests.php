@@ -151,8 +151,73 @@ class CRM_Utils_System_UnitTests {
     return NULL;
   }
 
-  function languageNegotiationURL($url, $addLanguagePart = TRUE, $removeLanguagePart = FALSE) {
+  static function languageNegotiationURL($url, $addLanguagePart = TRUE, $removeLanguagePart = FALSE) {
     return NULL;
+  }
+
+  static function cmsRootPath() {
+    if (defined('DRUPAL_ROOT')) {
+      return DRUPAL_ROOT;
+    }
+    $cmsRoot = $valid = NULL;
+    if (!empty($_SERVER['PWD'])) {
+      $scriptPath = $_SERVER['PWD'];
+    }
+    else {
+      $scriptPath = $_SERVER['SCRIPT_FILENAME'];
+    }
+    $pathVars = explode('/', str_replace('\\', '/', $scriptPath));
+
+    //might be windows installation.
+    $firstVar = array_shift($pathVars);
+    if ($firstVar) {
+      $cmsRoot = $firstVar;
+    }
+
+    //start w/ csm dir search.
+    foreach ($pathVars as $var) {
+      $cmsRoot .= "/$var";
+      $cmsIncludePath = "$cmsRoot/includes";
+      //stop as we found bootstrap.
+      if (file_exists("$cmsIncludePath/bootstrap.inc")) {
+        $valid = TRUE;
+        break;
+      }
+    }
+
+    if ($valid) {
+      define('DRUPAL_ROOT', $cmsRoot);
+      return $cmsRoot;
+    }
+  }
+
+  function cmsDir($type) {
+    $config = CRM_Core_Config::singleton();
+    $version = $config->userSystem->version;
+    if (empty($version)) {
+      $version = 7;
+    }
+    if (function_exists('file_directory_temp') && function_exists('variable_get')) {
+      switch($type) {
+        case 'temp':
+          return file_directory_temp();
+        case 'public':
+          if ($version >= 6 && $version < 7){
+            return file_directory_path();
+          }
+          if ($version >= 7 && $version < 8) {
+            return variable_get('file_public_path', 'sites/default/files');
+          }
+        case 'private':
+          if ($version >= 6 && $version < 7){
+            return FALSE;
+          }
+          if ($version >= 7 && $version < 8) {
+            return variable_get('file_private_path', '');
+          }
+      }
+    }
+    return FALSE;
   }
 }
 

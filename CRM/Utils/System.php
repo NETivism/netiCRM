@@ -1331,5 +1331,35 @@ class CRM_Utils_System {
       CRM_Core_Error::debug("decrease $diff", NULL, TRUE, FALSE);
     }
   }
+
+  /**
+   * Get CMS public or private or temp dir
+   *
+   * @return boolean.
+   */
+  public static function cmsDir($type) {
+    $config = CRM_Core_Config::singleton();
+    return $config->userSystem->cmsDir($type);
+  }
+
+  /**
+   * Get CMS public or private or temp dir
+   *
+   * @return boolean.
+   */
+  public static function cmsRootPath() {
+    $config = CRM_Core_Config::singleton();
+    return $config->userSystem->cmsRootPath();
+  }
+
+  /**
+   * Get CMS public or private or temp dir
+   *
+   * @return boolean.
+   */
+  public static function confPath($type) {
+    $config = CRM_Core_Config::singleton();
+    return $config->userSystem->confPath();
+  }
 }
 

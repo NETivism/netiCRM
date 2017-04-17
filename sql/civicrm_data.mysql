@@ -5647,7 +5647,7 @@ INSERT INTO civicrm_option_group
 
 INSERT INTO civicrm_option_value
   (option_group_id,        name,       label,   value,                                  weight) VALUES
-      (@tpl_ogid_case, 'case_activity', 'Cases - Send Copy of an Activity',            1, 1) ,      (@tpl_ogid_contribution, 'contribution_dupalert', 'Contributions - Duplicate Organization Alert',            1, 1) ,      (@tpl_ogid_contribution, 'contribution_offline_receipt', 'Contributions - Receipt (off-line)',            2, 2) ,      (@tpl_ogid_contribution, 'contribution_online_receipt', 'Contributions - Receipt (on-line)',            3, 3) ,      (@tpl_ogid_contribution, 'contribution_recurring_notify', 'Contributions - Recurring Start and End Notification',            4, 4) ,      (@tpl_ogid_contribution, 'contribution_invoice_notify', 'Contributions - Invoice Notification',            5, 5) ,      (@tpl_ogid_contribution, 'pcp_notify', 'Personal Campaign Pages - Admin Notification',            6, 6) ,      (@tpl_ogid_contribution, 'pcp_status_change', 'Personal Campaign Pages - Supporter Status Change Notification',            7, 7) ,      (@tpl_ogid_contribution, 'pcp_supporter_notify', 'Personal Campaign Pages - Supporter Welcome',            8, 8) ,      (@tpl_ogid_event, 'event_offline_receipt', 'Events - Registration Confirmation and Receipt (off-line)',            1, 1) ,      (@tpl_ogid_event, 'event_online_receipt', 'Events - Registration Confirmation and Receipt (on-line)',            2, 2) ,      (@tpl_ogid_event, 'participant_cancelled', 'Events - Registration Cancellation Notice',            3, 3) ,      (@tpl_ogid_event, 'participant_confirm', 'Events - Registration Confirmation Invite',            4, 4) ,      (@tpl_ogid_event, 'participant_expired', 'Events - Pending Registration Expiration Notice',            5, 5) ,      (@tpl_ogid_friend, 'friend', 'Tell-a-Friend Email',            1, 1) ,      (@tpl_ogid_membership, 'membership_offline_receipt', 'Memberships - Signup and Renewal Receipts (off-line)',            1, 1) ,      (@tpl_ogid_membership, 'membership_online_receipt', 'Memberships - Receipt (on-line)',            2, 2) ,      (@tpl_ogid_meta, 'test_preview', 'Test-drive - Receipt Header',            1, 1) ,      (@tpl_ogid_pledge, 'pledge_acknowledge', 'Pledges - Acknowledgement',            1, 1) ,      (@tpl_ogid_pledge, 'pledge_reminder', 'Pledges - Payment Reminder',            2, 2) ,      (@tpl_ogid_uf, 'uf_notify', 'Profiles - Admin Notification',            1, 1) ,      (@tpl_ogid_petition, 'petition_sign', 'Petition - signature added',            1, 1) ,      (@tpl_ogid_petition, 'petition_confirmation_needed', 'Petition - need verification',            2, 2) ;
+      (@tpl_ogid_case, 'case_activity', 'Cases - Send Copy of an Activity',            1, 1) ,      (@tpl_ogid_contribution, 'contribution_dupalert', 'Contributions - Duplicate Organization Alert',            1, 1) ,      (@tpl_ogid_contribution, 'contribution_offline_receipt', 'Contributions - Receipt (off-line)',            2, 2) ,      (@tpl_ogid_contribution, 'contribution_online_receipt', 'Contributions - Receipt (on-line)',            3, 3) ,      (@tpl_ogid_contribution, 'contribution_recurring_notify', 'Contributions - Recurring Start and End Notification',            4, 4) ,      (@tpl_ogid_contribution, 'contribution_invoice_notify', 'Contributions - Invoice Notification',            5, 5) ,      (@tpl_ogid_contribution, 'pcp_notify', 'Personal Campaign Pages - Admin Notification',            6, 6) ,      (@tpl_ogid_contribution, 'pcp_status_change', 'Personal Campaign Pages - Supporter Status Change Notification',            7, 7) ,      (@tpl_ogid_contribution, 'pcp_supporter_notify', 'Personal Campaign Pages - Supporter Welcome',            8, 8) ,      (@tpl_ogid_contribution, 'contribution_recur_fail_notify', 'Contributions - Recurring Failed Notification',            9, 9) ,      (@tpl_ogid_event, 'event_offline_receipt', 'Events - Registration Confirmation and Receipt (off-line)',            1, 1) ,      (@tpl_ogid_event, 'event_online_receipt', 'Events - Registration Confirmation and Receipt (on-line)',            2, 2) ,      (@tpl_ogid_event, 'participant_cancelled', 'Events - Registration Cancellation Notice',            3, 3) ,      (@tpl_ogid_event, 'participant_confirm', 'Events - Registration Confirmation Invite',            4, 4) ,      (@tpl_ogid_event, 'participant_expired', 'Events - Pending Registration Expiration Notice',            5, 5) ,      (@tpl_ogid_friend, 'friend', 'Tell-a-Friend Email',            1, 1) ,      (@tpl_ogid_membership, 'membership_offline_receipt', 'Memberships - Signup and Renewal Receipts (off-line)',            1, 1) ,      (@tpl_ogid_membership, 'membership_online_receipt', 'Memberships - Receipt (on-line)',            2, 2) ,      (@tpl_ogid_meta, 'test_preview', 'Test-drive - Receipt Header',            1, 1) ,      (@tpl_ogid_pledge, 'pledge_acknowledge', 'Pledges - Acknowledgement',            1, 1) ,      (@tpl_ogid_pledge, 'pledge_reminder', 'Pledges - Payment Reminder',            2, 2) ,      (@tpl_ogid_uf, 'uf_notify', 'Profiles - Admin Notification',            1, 1) ,      (@tpl_ogid_petition, 'petition_sign', 'Petition - signature added',            1, 1) ,      (@tpl_ogid_petition, 'petition_confirmation_needed', 'Petition - need verification',            2, 2) ;
     SELECT @tpl_ovid_case_activity := MAX(id) FROM civicrm_option_value WHERE option_group_id = @tpl_ogid_case AND name = 'case_activity';
     SELECT @tpl_ovid_contribution_dupalert := MAX(id) FROM civicrm_option_value WHERE option_group_id = @tpl_ogid_contribution AND name = 'contribution_dupalert';
     SELECT @tpl_ovid_contribution_offline_receipt := MAX(id) FROM civicrm_option_value WHERE option_group_id = @tpl_ogid_contribution AND name = 'contribution_offline_receipt';
@@ -5657,6 +5657,7 @@ INSERT INTO civicrm_option_value
     SELECT @tpl_ovid_pcp_notify := MAX(id) FROM civicrm_option_value WHERE option_group_id = @tpl_ogid_contribution AND name = 'pcp_notify';
     SELECT @tpl_ovid_pcp_status_change := MAX(id) FROM civicrm_option_value WHERE option_group_id = @tpl_ogid_contribution AND name = 'pcp_status_change';
     SELECT @tpl_ovid_pcp_supporter_notify := MAX(id) FROM civicrm_option_value WHERE option_group_id = @tpl_ogid_contribution AND name = 'pcp_supporter_notify';
+    SELECT @tpl_ovid_contribution_recur_fail_notify := MAX(id) FROM civicrm_option_value WHERE option_group_id = @tpl_ogid_contribution AND name = 'contribution_recur_fail_notify';
     SELECT @tpl_ovid_event_offline_receipt := MAX(id) FROM civicrm_option_value WHERE option_group_id = @tpl_ogid_event AND name = 'event_offline_receipt';
     SELECT @tpl_ovid_event_online_receipt := MAX(id) FROM civicrm_option_value WHERE option_group_id = @tpl_ogid_event AND name = 'event_online_receipt';
     SELECT @tpl_ovid_participant_cancelled := MAX(id) FROM civicrm_option_value WHERE option_group_id = @tpl_ogid_event AND name = 'participant_cancelled';
@@ -5677,8 +5678,7 @@ INSERT INTO civicrm_msg_template
       
       
       
-      ('Cases - Send Copy of an Activity', '{if $idHash}[case #{$idHash}]{/if} {$activitySubject}
-', '===========================================================
+      ('Cases - Send Copy of an Activity', '{if $idHash}[case #{$idHash}]{/if} {$activitySubject}', '===========================================================
 {ts}Activity Summary{/ts} - {$activityTypeName}
 ===========================================================
 {if $isCaseActivity}
@@ -5811,8 +5811,7 @@ INSERT INTO civicrm_msg_template
 </body>
 </html>
 ', @tpl_ovid_case_activity, 1,          0),
-      ('Cases - Send Copy of an Activity', '{if $idHash}[case #{$idHash}]{/if} {$activitySubject}
-', '===========================================================
+      ('Cases - Send Copy of an Activity', '{if $idHash}[case #{$idHash}]{/if} {$activitySubject}', '===========================================================
 {ts}Activity Summary{/ts} - {$activityTypeName}
 ===========================================================
 {if $isCaseActivity}
@@ -5947,8 +5946,7 @@ INSERT INTO civicrm_msg_template
 ', @tpl_ovid_case_activity, 0,          1) ,      
       
       
-      ('Contributions - Duplicate Organization Alert', '{ts}CiviContribute Alert: Possible Duplicate Contact Record{/ts}
-', '{ts}A contribution / membership signup was made on behalf of the organization listed below.{/ts}
+      ('Contributions - Duplicate Organization Alert', '{ts}CiviContribute Alert: Possible Duplicate Contact Record{/ts}', '{ts}A contribution / membership signup was made on behalf of the organization listed below.{/ts}
 {ts}The information provided matched multiple existing database records based on the configured
 Duplicate Matching Rules for your site.{/ts}
 
@@ -6058,8 +6056,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
 </body>
 </html>
 ', @tpl_ovid_contribution_dupalert, 1,          0),
-      ('Contributions - Duplicate Organization Alert', '{ts}CiviContribute Alert: Possible Duplicate Contact Record{/ts}
-', '{ts}A contribution / membership signup was made on behalf of the organization listed below.{/ts}
+      ('Contributions - Duplicate Organization Alert', '{ts}CiviContribute Alert: Possible Duplicate Contact Record{/ts}', '{ts}A contribution / membership signup was made on behalf of the organization listed below.{/ts}
 {ts}The information provided matched multiple existing database records based on the configured
 Duplicate Matching Rules for your site.{/ts}
 
@@ -6171,8 +6168,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
 ', @tpl_ovid_contribution_dupalert, 0,          1) ,      
       
       
-      ('Contributions - Receipt (off-line)', '{ts}Payment Notification{/ts}
-', '{if $formValues.receipt_text}
+      ('Contributions - Receipt (off-line)', '{ts}Payment Notification{/ts}', '{if $formValues.receipt_text}
 {$formValues.receipt_text}
 {else}{ts}Thanks for your support.{/ts}{/if}
 
@@ -6531,8 +6527,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
 </body>
 </html>
 ', @tpl_ovid_contribution_offline_receipt, 1,          0),
-      ('Contributions - Receipt (off-line)', '{ts}Payment Notification{/ts}
-', '{if $formValues.receipt_text}
+      ('Contributions - Receipt (off-line)', '{ts}Payment Notification{/ts}', '{if $formValues.receipt_text}
 {$formValues.receipt_text}
 {else}{ts}Thanks for your support.{/ts}{/if}
 
@@ -6893,8 +6888,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
 ', @tpl_ovid_contribution_offline_receipt, 0,          1) ,      
       
       
-      ('Contributions - Receipt (on-line)', '{if $is_pay_later}{ts}Invoice{/ts}{else}{ts}Payment Notification{/ts}{/if} - {$title}
-', '{if $receipt_text}
+      ('Contributions - Receipt (on-line)', '{if $is_pay_later}{ts}Invoice{/ts}{elseif $is_monetary}{ts}Payment Notification{/ts} - {/if}{$title}', '{if $receipt_text}
 {$receipt_text}
 {/if}
 {if $is_pay_later}
@@ -7459,8 +7453,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
 </body>
 </html>
 ', @tpl_ovid_contribution_online_receipt, 1,          0),
-      ('Contributions - Receipt (on-line)', '{if $is_pay_later}{ts}Invoice{/ts}{else}{ts}Payment Notification{/ts}{/if} - {$title}
-', '{if $receipt_text}
+      ('Contributions - Receipt (on-line)', '{if $is_pay_later}{ts}Invoice{/ts}{elseif $is_monetary}{ts}Payment Notification{/ts} - {/if}{$title}', '{if $receipt_text}
 {$receipt_text}
 {/if}
 {if $is_pay_later}
@@ -8027,8 +8020,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
 ', @tpl_ovid_contribution_online_receipt, 0,          1) ,      
       
       
-      ('Contributions - Recurring Start and End Notification', '{ts}Recurring Contribution Notification{/ts}
-', '{ts 1=$displayName}Dear %1{/ts},
+      ('Contributions - Recurring Start and End Notification', '{ts}Recurring Contribution Notification{/ts}', '{ts 1=$displayName}Dear %1{/ts},
 
 {if $recur_txnType eq \'START\'}
 
@@ -8132,8 +8124,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
 </body>
 </html>
 ', @tpl_ovid_contribution_recurring_notify, 1,          0),
-      ('Contributions - Recurring Start and End Notification', '{ts}Recurring Contribution Notification{/ts}
-', '{ts 1=$displayName}Dear %1{/ts},
+      ('Contributions - Recurring Start and End Notification', '{ts}Recurring Contribution Notification{/ts}', '{ts 1=$displayName}Dear %1{/ts},
 
 {if $recur_txnType eq \'START\'}
 
@@ -8467,8 +8458,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
 </html>', @tpl_ovid_contribution_invoice_notify, 0,          1) ,      
       
       
-      ('Personal Campaign Pages - Admin Notification', '{ts}Personal Campaign Page Notification{/ts}
-', '===========================================================
+      ('Personal Campaign Pages - Admin Notification', '{ts}Personal Campaign Page Notification{/ts}', '===========================================================
 {ts}Personal Campaign Page Notification{/ts}
 
 ===========================================================
@@ -8583,8 +8573,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
 </body>
 </html>
 ', @tpl_ovid_pcp_notify, 1,          0),
-      ('Personal Campaign Pages - Admin Notification', '{ts}Personal Campaign Page Notification{/ts}
-', '===========================================================
+      ('Personal Campaign Pages - Admin Notification', '{ts}Personal Campaign Page Notification{/ts}', '===========================================================
 {ts}Personal Campaign Page Notification{/ts}
 
 ===========================================================
@@ -8701,8 +8690,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
 ', @tpl_ovid_pcp_notify, 0,          1) ,      
       
       
-      ('Personal Campaign Pages - Supporter Status Change Notification', '{ts 1=$contribPageTitle}Your Personal Campaign Page for %1{/ts}
-', '{if $pcpStatus eq \'Approved\'}
+      ('Personal Campaign Pages - Supporter Status Change Notification', '{ts 1=$contribPageTitle}Your Personal Campaign Page for %1{/ts}', '{if $pcpStatus eq \'Approved\'}
 ============================
 {ts}Your Personal Campaign Page{/ts}
 
@@ -8809,8 +8797,7 @@ which prevented us from approving the page. We are sorry for any inconvenience.{
 </body>
 </html>
 ', @tpl_ovid_pcp_status_change, 1,          0),
-      ('Personal Campaign Pages - Supporter Status Change Notification', '{ts 1=$contribPageTitle}Your Personal Campaign Page for %1{/ts}
-', '{if $pcpStatus eq \'Approved\'}
+      ('Personal Campaign Pages - Supporter Status Change Notification', '{ts 1=$contribPageTitle}Your Personal Campaign Page for %1{/ts}', '{if $pcpStatus eq \'Approved\'}
 ============================
 {ts}Your Personal Campaign Page{/ts}
 
@@ -8919,8 +8906,7 @@ which prevented us from approving the page. We are sorry for any inconvenience.{
 ', @tpl_ovid_pcp_status_change, 0,          1) ,      
       
       
-      ('Personal Campaign Pages - Supporter Welcome', '{ts 1=$contribPageTitle}Your Personal Campaign Page for %1{/ts}
-', '{ts}Dear supporter{/ts},
+      ('Personal Campaign Pages - Supporter Welcome', '{ts 1=$contribPageTitle}Your Personal Campaign Page for %1{/ts}', '{ts}Dear supporter{/ts},
 {ts 1="$contribPageTitle"}Thanks for creating a personal campaign page in support of %1.{/ts}
 
 {if $pcpStatus eq \'Approved\'}
@@ -9079,8 +9065,7 @@ your page, tell friends, and update your contact info.{/ts}</p>
 </body>
 </html>
 ', @tpl_ovid_pcp_supporter_notify, 1,          0),
-      ('Personal Campaign Pages - Supporter Welcome', '{ts 1=$contribPageTitle}Your Personal Campaign Page for %1{/ts}
-', '{ts}Dear supporter{/ts},
+      ('Personal Campaign Pages - Supporter Welcome', '{ts 1=$contribPageTitle}Your Personal Campaign Page for %1{/ts}', '{ts}Dear supporter{/ts},
 {ts 1="$contribPageTitle"}Thanks for creating a personal campaign page in support of %1.{/ts}
 
 {if $pcpStatus eq \'Approved\'}
@@ -9241,8 +9226,95 @@ your page, tell friends, and update your contact info.{/ts}</p>
 ', @tpl_ovid_pcp_supporter_notify, 0,          1) ,      
       
       
-      ('Events - Registration Confirmation and Receipt (off-line)', '{ts}Event Confirmation{/ts} - {$event.title}
-', '{if $event.confirm_email_text AND (not $isOnWaitlist AND not $isRequireApproval)}
+      ('Contributions - Recurring Failed Notification', '{ts}Recurring Failed Notification{/ts}', '{ts}Recurring Failed Notification{/ts}
+
+{ts 1=$amount 2=$display_name 3=$receive_date 4=$url}The recurring contribution %1 by contributor %2 is failed at %3.( Link: %4 ){/ts}
+
+{if $detail}
+{ts}Additional Details:{/ts}
+# {$detail}
+
+{/if}
+{if $trxn_id}
+{ts 1=$trxn_id}If you need more infomation, please check source from payment processor service page by transaction ID: %1{/ts}
+{/if}
+{ts}You can evaluate whether to notify the contributor for the relevant treatment (for example, due to the credit card expires and need to make online contribution again), or wait for the next time the transaction executing (if this is due to insufficient balance can not pay).{/ts}
+
+{ts}Or you can contact us by our support on https://neticrm.tw/support .{/ts}', '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+ <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+ <title></title>
+</head>
+<body>
+
+<p>{ts 1=$amount 2=$display_name 3=$cancel_date 4=$url}The recurring contribution %1 by contributor %2 is failed at %3.( Link: %4 ){/ts}
+</p>
+
+{if $detail}
+<h3>{ts}Additional Details:{/ts}</h3>
+<p>
+{$detail}
+</p>
+{/if}
+
+{if $trxn_id}
+<p>{ts 1=$trxn_id}If you need more infomation, please check source from payment processor service page by transaction ID: %1{/ts}</p>
+{/if}
+
+<p>{ts}You can evaluate whether to notify the contributor for the relevant treatment (for example, due to the credit card expires and need to make online contribution again), or wait for the next time the transaction executing (if this is due to insufficient balance can not pay).{/ts}</p>
+
+<p>{ts}Or you can contact us by our support on https://neticrm.tw/support .{/ts}</p>
+
+
+</body>
+</html>', @tpl_ovid_contribution_recur_fail_notify, 1,          0),
+      ('Contributions - Recurring Failed Notification', '{ts}Recurring Failed Notification{/ts}', '{ts}Recurring Failed Notification{/ts}
+
+{ts 1=$amount 2=$display_name 3=$receive_date 4=$url}The recurring contribution %1 by contributor %2 is failed at %3.( Link: %4 ){/ts}
+
+{if $detail}
+{ts}Additional Details:{/ts}
+# {$detail}
+
+{/if}
+{if $trxn_id}
+{ts 1=$trxn_id}If you need more infomation, please check source from payment processor service page by transaction ID: %1{/ts}
+{/if}
+{ts}You can evaluate whether to notify the contributor for the relevant treatment (for example, due to the credit card expires and need to make online contribution again), or wait for the next time the transaction executing (if this is due to insufficient balance can not pay).{/ts}
+
+{ts}Or you can contact us by our support on https://neticrm.tw/support .{/ts}', '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+ <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+ <title></title>
+</head>
+<body>
+
+<p>{ts 1=$amount 2=$display_name 3=$cancel_date 4=$url}The recurring contribution %1 by contributor %2 is failed at %3.( Link: %4 ){/ts}
+</p>
+
+{if $detail}
+<h3>{ts}Additional Details:{/ts}</h3>
+<p>
+{$detail}
+</p>
+{/if}
+
+{if $trxn_id}
+<p>{ts 1=$trxn_id}If you need more infomation, please check source from payment processor service page by transaction ID: %1{/ts}</p>
+{/if}
+
+<p>{ts}You can evaluate whether to notify the contributor for the relevant treatment (for example, due to the credit card expires and need to make online contribution again), or wait for the next time the transaction executing (if this is due to insufficient balance can not pay).{/ts}</p>
+
+<p>{ts}Or you can contact us by our support on https://neticrm.tw/support .{/ts}</p>
+
+
+</body>
+</html>', @tpl_ovid_contribution_recur_fail_notify, 0,          1) ,      
+      
+      
+      ('Events - Registration Confirmation and Receipt (off-line)', '{ts}Event Confirmation{/ts} - {$event.title}', '{if $event.confirm_email_text AND (not $isOnWaitlist AND not $isRequireApproval)}
 {$event.confirm_email_text}
 {/if}
 
@@ -9980,8 +10052,7 @@ registration process.{/ts}</p>
 </body>
 </html>
 ', @tpl_ovid_event_offline_receipt, 1,          0),
-      ('Events - Registration Confirmation and Receipt (off-line)', '{ts}Event Confirmation{/ts} - {$event.title}
-', '{if $event.confirm_email_text AND (not $isOnWaitlist AND not $isRequireApproval)}
+      ('Events - Registration Confirmation and Receipt (off-line)', '{ts}Event Confirmation{/ts} - {$event.title}', '{if $event.confirm_email_text AND (not $isOnWaitlist AND not $isRequireApproval)}
 {$event.confirm_email_text}
 {/if}
 
@@ -10721,8 +10792,7 @@ registration process.{/ts}</p>
 ', @tpl_ovid_event_offline_receipt, 0,          1) ,      
       
       
-      ('Events - Registration Confirmation and Receipt (on-line)', '{if $isOnWaitlist}{ts}Wait List Confirmation{/ts}{else}{ts}Registration Confirmation{/ts}{/if} - {$title}
-', '{if $event.confirm_email_text AND (not $isOnWaitlist AND not $isRequireApproval)}
+      ('Events - Registration Confirmation and Receipt (on-line)', '{if $isOnWaitlist}{ts}Wait List Confirmation{/ts}{else}{ts}Registration Confirmation{/ts}{/if} - {$title}', '{if $event.confirm_email_text AND (not $isOnWaitlist AND not $isRequireApproval)}
 {$event.confirm_email_text}
 {/if}
 
@@ -11454,8 +11524,7 @@ registration process.{/ts}</p>
 </body>
 </html>
 ', @tpl_ovid_event_online_receipt, 1,          0),
-      ('Events - Registration Confirmation and Receipt (on-line)', '{if $isOnWaitlist}{ts}Wait List Confirmation{/ts}{else}{ts}Registration Confirmation{/ts}{/if} - {$title}
-', '{if $event.confirm_email_text AND (not $isOnWaitlist AND not $isRequireApproval)}
+      ('Events - Registration Confirmation and Receipt (on-line)', '{if $isOnWaitlist}{ts}Wait List Confirmation{/ts}{else}{ts}Registration Confirmation{/ts}{/if} - {$title}', '{if $event.confirm_email_text AND (not $isOnWaitlist AND not $isRequireApproval)}
 {$event.confirm_email_text}
 {/if}
 
@@ -12189,8 +12258,7 @@ registration process.{/ts}</p>
 ', @tpl_ovid_event_online_receipt, 0,          1) ,      
       
       
-      ('Events - Registration Cancellation Notice', '{ts 1=$event.event_title}Event Registration Cancelled for %1{/ts}
-', '{ts 1=$contact.display_name}Dear %1{/ts},
+      ('Events - Registration Cancellation Notice', '{ts 1=$event.event_title}Event Registration Cancelled for %1{/ts}', '{ts 1=$contact.display_name}Dear %1{/ts},
 
 {ts}Your Event Registration has been cancelled.{/ts}
 
@@ -12405,8 +12473,7 @@ registration process.{/ts}</p>
 </body>
 </html>
 ', @tpl_ovid_participant_cancelled, 1,          0),
-      ('Events - Registration Cancellation Notice', '{ts 1=$event.event_title}Event Registration Cancelled for %1{/ts}
-', '{ts 1=$contact.display_name}Dear %1{/ts},
+      ('Events - Registration Cancellation Notice', '{ts 1=$event.event_title}Event Registration Cancelled for %1{/ts}', '{ts 1=$contact.display_name}Dear %1{/ts},
 
 {ts}Your Event Registration has been cancelled.{/ts}
 
@@ -12623,8 +12690,7 @@ registration process.{/ts}</p>
 ', @tpl_ovid_participant_cancelled, 0,          1) ,      
       
       
-      ('Events - Registration Confirmation Invite', '{ts 1=$event.event_title}Confirm your registration for %1{/ts}
-', '{ts 1=$contact.display_name}Dear %1{/ts},
+      ('Events - Registration Confirmation Invite', '{ts 1=$event.event_title}Confirm your registration for %1{/ts}', '{ts 1=$contact.display_name}Dear %1{/ts},
 {if !$isAdditional and $participant.id}
 
 ===========================================================
@@ -12858,8 +12924,7 @@ Click this link to go to a web page where you can confirm your registration onli
 </body>
 </html>
 ', @tpl_ovid_participant_confirm, 1,          0),
-      ('Events - Registration Confirmation Invite', '{ts 1=$event.event_title}Confirm your registration for %1{/ts}
-', '{ts 1=$contact.display_name}Dear %1{/ts},
+      ('Events - Registration Confirmation Invite', '{ts 1=$event.event_title}Confirm your registration for %1{/ts}', '{ts 1=$contact.display_name}Dear %1{/ts},
 {if !$isAdditional and $participant.id}
 
 ===========================================================
@@ -13095,8 +13160,7 @@ Click this link to go to a web page where you can confirm your registration onli
 ', @tpl_ovid_participant_confirm, 0,          1) ,      
       
       
-      ('Events - Pending Registration Expiration Notice', '{ts 1=$event.event_title}Event registration has expired for %1{/ts}
-', '{ts 1=$contact.display_name}Dear %1{/ts},
+      ('Events - Pending Registration Expiration Notice', '{ts 1=$event.event_title}Event registration has expired for %1{/ts}', '{ts 1=$contact.display_name}Dear %1{/ts},
 
 {ts 1=$event.event_title}Your pending event registration for %1 has expired
 because you did not confirm your registration.{/ts}
@@ -13318,8 +13382,7 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
 </body>
 </html>
 ', @tpl_ovid_participant_expired, 1,          0),
-      ('Events - Pending Registration Expiration Notice', '{ts 1=$event.event_title}Event registration has expired for %1{/ts}
-', '{ts 1=$contact.display_name}Dear %1{/ts},
+      ('Events - Pending Registration Expiration Notice', '{ts 1=$event.event_title}Event registration has expired for %1{/ts}', '{ts 1=$contact.display_name}Dear %1{/ts},
 
 {ts 1=$event.event_title}Your pending event registration for %1 has expired
 because you did not confirm your registration.{/ts}
@@ -13543,8 +13606,7 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
 ', @tpl_ovid_participant_expired, 0,          1) ,      
       
       
-      ('Tell-a-Friend Email', '{ts 1=$senderContactName 2=$title}%1 wants you to know about %2{/ts}
-', '{$senderMessage}
+      ('Tell-a-Friend Email', '{ts 1=$senderContactName 2=$title}%1 wants you to know about %2{/ts}', '{$senderMessage}
 
 {if $generalLink}{ts}For more information, visit:{/ts}
 >> {$generalLink}
@@ -13600,8 +13662,7 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
 </body>
 </html>
 ', @tpl_ovid_friend, 1,          0),
-      ('Tell-a-Friend Email', '{ts 1=$senderContactName 2=$title}%1 wants you to know about %2{/ts}
-', '{$senderMessage}
+      ('Tell-a-Friend Email', '{ts 1=$senderContactName 2=$title}%1 wants you to know about %2{/ts}', '{$senderMessage}
 
 {if $generalLink}{ts}For more information, visit:{/ts}
 >> {$generalLink}
@@ -13659,12 +13720,7 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
 ', @tpl_ovid_friend, 0,          1) ,      
       
       
-      ('Memberships - Signup and Renewal Receipts (off-line)', '{if $receiptType EQ \'membership signup\'}
-{ts}Membership Confirmation{/ts}
-{elseif $receiptType EQ \'membership renewal\'}
-{ts}Membership Renewal Confirmation{/ts}
-{/if}
-', '{if $formValues.receipt_text_signup}
+      ('Memberships - Signup and Renewal Receipts (off-line)', '{if $receiptType EQ \'membership signup\'}{ts}Membership Confirmation{/ts}{elseif $receiptType EQ \'membership renewal\'}{ts}Membership Renewal Confirmation{/ts}{/if}', '{if $formValues.receipt_text_signup}
 {$formValues.receipt_text_signup}
 {elseif $formValues.receipt_text_renewal}
 {$formValues.receipt_text_renewal}
@@ -13938,12 +13994,7 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
 </body>
 </html>
 ', @tpl_ovid_membership_offline_receipt, 1,          0),
-      ('Memberships - Signup and Renewal Receipts (off-line)', '{if $receiptType EQ \'membership signup\'}
-{ts}Membership Confirmation{/ts}
-{elseif $receiptType EQ \'membership renewal\'}
-{ts}Membership Renewal Confirmation{/ts}
-{/if}
-', '{if $formValues.receipt_text_signup}
+      ('Memberships - Signup and Renewal Receipts (off-line)', '{if $receiptType EQ \'membership signup\'}{ts}Membership Confirmation{/ts}{elseif $receiptType EQ \'membership renewal\'}{ts}Membership Renewal Confirmation{/ts}{/if}', '{if $formValues.receipt_text_signup}
 {$formValues.receipt_text_signup}
 {elseif $formValues.receipt_text_renewal}
 {$formValues.receipt_text_renewal}
@@ -14219,8 +14270,7 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
 ', @tpl_ovid_membership_offline_receipt, 0,          1) ,      
       
       
-      ('Memberships - Receipt (on-line)', '{if $is_pay_later}{ts}Invoice{/ts}{else}{ts}Payment Notification{/ts}{/if} - {$title}
-', '{if $receipt_text}
+      ('Memberships - Receipt (on-line)', '{if $is_pay_later}{ts}Invoice{/ts}{elseif $is_monetary}{ts}Payment Notification{/ts} - {/if}{$title}', '{if $receipt_text}
 {$receipt_text}
 {/if}
 {if $is_pay_later}
@@ -14920,8 +14970,7 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
 </body>
 </html>
 ', @tpl_ovid_membership_online_receipt, 1,          0),
-      ('Memberships - Receipt (on-line)', '{if $is_pay_later}{ts}Invoice{/ts}{else}{ts}Payment Notification{/ts}{/if} - {$title}
-', '{if $receipt_text}
+      ('Memberships - Receipt (on-line)', '{if $is_pay_later}{ts}Invoice{/ts}{elseif $is_monetary}{ts}Payment Notification{/ts} - {/if}{$title}', '{if $receipt_text}
 {$receipt_text}
 {/if}
 {if $is_pay_later}
@@ -15623,8 +15672,7 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
 ', @tpl_ovid_membership_online_receipt, 0,          1) ,      
       
       
-      ('Test-drive - Receipt Header', '[TEST] 
-', '***********************************************************
+      ('Test-drive - Receipt Header', '[TEST] ', '***********************************************************
 
 {ts}Test-drive Email / Receipt{/ts} 
 
@@ -15642,8 +15690,7 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
  </table>
 </center>
 ', @tpl_ovid_test_preview, 1,          0),
-      ('Test-drive - Receipt Header', '[TEST] 
-', '***********************************************************
+      ('Test-drive - Receipt Header', '[TEST] ', '***********************************************************
 
 {ts}Test-drive Email / Receipt{/ts} 
 
@@ -15663,8 +15710,7 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
 ', @tpl_ovid_test_preview, 0,          1) ,      
       
       
-      ('Pledges - Acknowledgement', '{ts}Thank you for your Pledge{/ts}
-', '{ts 1=$contact.display_name}Dear %1{/ts},
+      ('Pledges - Acknowledgement', '{ts}Thank you for your Pledge{/ts}', '{ts 1=$contact.display_name}Dear %1{/ts},
 
 {ts}Thank you for your generous pledge. Please print this acknowledgment for your records.{/ts}
 
@@ -15852,8 +15898,7 @@ or need to modify your payment schedule.{/ts}</p>
 </body>
 </html>
 ', @tpl_ovid_pledge_acknowledge, 1,          0),
-      ('Pledges - Acknowledgement', '{ts}Thank you for your Pledge{/ts}
-', '{ts 1=$contact.display_name}Dear %1{/ts},
+      ('Pledges - Acknowledgement', '{ts}Thank you for your Pledge{/ts}', '{ts 1=$contact.display_name}Dear %1{/ts},
 
 {ts}Thank you for your generous pledge. Please print this acknowledgment for your records.{/ts}
 
@@ -16043,8 +16088,7 @@ or need to modify your payment schedule.{/ts}</p>
 ', @tpl_ovid_pledge_acknowledge, 0,          1) ,      
       
       
-      ('Pledges - Payment Reminder', '{ts}Pledge Payment Reminder{/ts}
-', '{ts 1=$contact.display_name}Dear %1{/ts},
+      ('Pledges - Payment Reminder', '{ts}Pledge Payment Reminder{/ts}', '{ts 1=$contact.display_name}Dear %1{/ts},
 
 {ts 1=$next_payment|truncate:10:\'\'|crmDate}This is a reminder that the next payment on your pledge is due on %1.{/ts}
 
@@ -16185,8 +16229,7 @@ or need to modify your payment schedule.{/ts}</p>
 </body>
 </html>
 ', @tpl_ovid_pledge_reminder, 1,          0),
-      ('Pledges - Payment Reminder', '{ts}Pledge Payment Reminder{/ts}
-', '{ts 1=$contact.display_name}Dear %1{/ts},
+      ('Pledges - Payment Reminder', '{ts}Pledge Payment Reminder{/ts}', '{ts 1=$contact.display_name}Dear %1{/ts},
 
 {ts 1=$next_payment|truncate:10:\'\'|crmDate}This is a reminder that the next payment on your pledge is due on %1.{/ts}
 
@@ -16329,8 +16372,7 @@ or need to modify your payment schedule.{/ts}</p>
 ', @tpl_ovid_pledge_reminder, 0,          1) ,      
       
       
-      ('Profiles - Admin Notification', '{$grouptitle} {ts 1=$displayName}Submitted by %1{/ts}
-', '{ts}Submitted For:{/ts} {$displayName}
+      ('Profiles - Admin Notification', '{$grouptitle} {ts 1=$displayName}Submitted by %1{/ts}', '{ts}Submitted For:{/ts} {$displayName}
 {ts}Date:{/ts} {$currentDate}
 {ts}Contact Summary:{/ts} {$contactLink}
 
@@ -16416,8 +16458,7 @@ or need to modify your payment schedule.{/ts}</p>
 </body>
 </html>
 ', @tpl_ovid_uf_notify, 1,          0),
-      ('Profiles - Admin Notification', '{$grouptitle} {ts 1=$displayName}Submitted by %1{/ts}
-', '{ts}Submitted For:{/ts} {$displayName}
+      ('Profiles - Admin Notification', '{$grouptitle} {ts 1=$displayName}Submitted by %1{/ts}', '{ts}Submitted For:{/ts} {$displayName}
 {ts}Date:{/ts} {$currentDate}
 {ts}Contact Summary:{/ts} {$contactLink}
 
@@ -16517,8 +16558,7 @@ or need to modify your payment schedule.{/ts}</p>
 ', @tpl_ovid_petition_sign, 0,          1) ,      
       
       
-      ('Petition - need verification', 'Confirmation of signature needed for {$petition.title}
-', 'Thank you for signing {$petition.title}.
+      ('Petition - need verification', 'Confirmation of signature needed for {$petition.title}', 'Thank you for signing {$petition.title}.
 
 In order to complete your signature, we must confirm your e-mail. 
 Please do so by visiting the following email confirmation web page:
@@ -16537,8 +16577,7 @@ Email confirmation page: <a href="{$petition.confirmUrl} ">{$petition.confirmUrl
 
 <p>If you did not sign this petition, please ignore this message.</p>
 ', @tpl_ovid_petition_confirmation_needed, 1,          0),
-      ('Petition - need verification', 'Confirmation of signature needed for {$petition.title}
-', 'Thank you for signing {$petition.title}.
+      ('Petition - need verification', 'Confirmation of signature needed for {$petition.title}', 'Thank you for signing {$petition.title}.
 
 In order to complete your signature, we must confirm your e-mail. 
 Please do so by visiting the following email confirmation web page:

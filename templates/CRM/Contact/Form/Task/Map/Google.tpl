@@ -24,17 +24,13 @@
  +--------------------------------------------------------------------+
 *}
 {if $showDirectly}
-  {assign var=height value="350px"}
-  {assign var=width  value="425px"}
+  {assign var=height value="450px"}
+  {assign var=width  value="100%"}
 {else}	
   {assign var=height value="600px"}
   {assign var=width  value="100%"}
 {/if}
-{if $smarty.server.HTTPS}
-  {assign var=protocol value="https://"}
-{else}
-  {assign var=protocol value="http://"}
-{/if}
+{assign var=protocol value="https://"}
 {assign var=defaultZoom value=12}  
 {literal}
 <script src="{/literal}{$protocol}{literal}maps.googleapis.com/maps/api/js?sensor=false" type="text/javascript"></script>
@@ -126,4 +122,4 @@
     }
 </script>
 {/literal}
-<div id="google_map" style="width: {$width}; height: {$height}"></div>
+<div id="google_map" class="event-map media_embed" style="width: {$width}; height: {$height}"></div>

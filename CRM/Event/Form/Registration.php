@@ -375,7 +375,7 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
           $this->_values['event']
         );
         if (!$ppID) {
-          CRM_Core_Error::statusBounce(ts('A payment processor must be selected for this event registration page, or the event must be configured to give users the option to pay later (contact the site administrator for assistance).'), $infoUrl);
+          CRM_Core_Error::statusBounce(ts('A payment processor must be selected for this event registration page, or the event must be configured to give users the option to pay later.'), $infoUrl);
         }
         $ppIds = explode(CRM_Core_DAO::VALUE_SEPARATOR, $ppID);
 

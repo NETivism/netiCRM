@@ -140,9 +140,16 @@ class CRM_Utils_Weight {
       $newWeight = 1;
     }
 
+    // if there have duplicate weight, correct them.
+    if(self::isDuplicateWeights($daoName, $fieldValues, $weightField)){
+      $isDuplicateWeights = true;
+      self::correctDuplicateWeights($daoName, $fieldValues, $weightField);
+    }
+
     // if they're the same, nothing to do
     if ($oldWeight == $newWeight) {
-      return $newWeight;
+
+      return $isDuplicateWeights ? null : $newWeight;
     }
 
     // if oldWeight not present, indicates new weight is to be added. So create a gap for a new row to be inserted.
@@ -388,8 +395,15 @@ class CRM_Utils_Weight {
     $dst = CRM_Utils_Request::retrieve('dst', 'Integer', CRM_Core_DAO::$_nullObject);
     $dir = CRM_Utils_Request::retrieve('dir', 'String', CRM_Core_DAO::$_nullObject);
 
-    require_once (str_replace('_', DIRECTORY_SEPARATOR, $daoName) . ".php");
-    eval('$object   = new ' . $daoName . '( );');
+    $wheres = explode('AND',$filter);
+    foreach ($wheres as $where) {
+      $where_array = explode('=',$where);
+      $fieldValues[trim($where_array[0])] = trim($where_array[1]);
+    }
+    if(self::isDuplicateWeights($daoName, $fieldValues)){
+      self::correctDuplicateWeights($daoName, $fieldValues);
+    }
+
     $srcWeight = CRM_Core_DAO::getFieldValue($daoName,
       $src,
       'weight',
@@ -400,10 +414,8 @@ class CRM_Utils_Weight {
       'weight',
       $idName
     );
-    if ($srcWeight == $dstWeight) {
-      CRM_Utils_System::redirect($url);
-    }
-
+    require_once (str_replace('_', DIRECTORY_SEPARATOR, $daoName) . ".php");
+    $object = new $daoName();
     $tableName = $object->tableName();
 
     $query = "UPDATE $tableName SET weight = %1 WHERE $idName = %2";
@@ -442,6 +454,27 @@ class CRM_Utils_Weight {
     }
 
     CRM_Utils_System::redirect($url);
+  }
+
+  /**
+   * Check if there are multiple same weight value.
+   * @param string $daoName Dao class name in CRM
+   * @param string $filter  WHERE clause in sql (Not include 'WHERE')
+   */
+  static function isDuplicateWeights($daoName, $filter, $weightField = 'weight'){
+    $selectField = "COUNT($weightField) as count";
+    $weightDAO = &CRM_Utils_Weight::query(
+      'SELECT',
+      $daoName,
+      $fieldValues,
+      $selectField,
+      NULL,
+      'count DESC LIMIT 1',
+      $weightField
+    );
+    $weightDAO->fetch();
+    return ($weightDAO->count > 1);
+
   }
 }
 

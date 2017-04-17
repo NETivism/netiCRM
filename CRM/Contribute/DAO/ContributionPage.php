@@ -123,9 +123,9 @@ class CRM_Contribute_DAO_ContributionPage extends CRM_Core_DAO
    */
   public $is_monetary;
   /**
-   * if true - allows recurring contributions, valid only for PayPal_Standard
+   * 0 - disabled reucrring, 1 - enable both, 2 - enabled recur only
    *
-   * @var boolean
+   * @var int unsigned
    */
   public $is_recur;
   /**
@@ -254,6 +254,12 @@ class CRM_Contribute_DAO_ContributionPage extends CRM_Core_DAO
    * @var text
    */
   public $receipt_text;
+  /**
+   * comma-separated list of email addresses to each time a recurring is failed
+   *
+   * @var string
+   */
+  public $recur_fail_notify;
   /**
    * Is this property active?
    *
@@ -399,7 +405,7 @@ class CRM_Contribute_DAO_ContributionPage extends CRM_Core_DAO
         ) ,
         'is_recur' => array(
           'name' => 'is_recur',
-          'type' => CRM_Utils_Type::T_BOOLEAN,
+          'type' => CRM_Utils_Type::T_INT,
         ) ,
         'recur_frequency_unit' => array(
           'name' => 'recur_frequency_unit',
@@ -520,6 +526,13 @@ class CRM_Contribute_DAO_ContributionPage extends CRM_Core_DAO
           'title' => ts('Payment Notification Text') ,
           'rows' => 6,
           'cols' => 50,
+        ) ,
+        'recur_fail_notify' => array(
+          'name' => 'recur_fail_notify',
+          'type' => CRM_Utils_Type::T_STRING,
+          'title' => ts('Recurring Failed Notification to') ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
         ) ,
         'is_active' => array(
           'name' => 'is_active',

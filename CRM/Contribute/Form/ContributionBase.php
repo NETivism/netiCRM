@@ -311,7 +311,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
       if ($isMonetary && (!$isPayLater || CRM_Utils_Array::value('payment_processor', $this->_values))) {
         $ppID = CRM_Utils_Array::value('payment_processor', $this->_values);
         if (!$ppID) {
-          CRM_Core_Error::fatal(ts('A payment processor must be selected for this contribution page (contact the site administrator for assistance).'));
+          CRM_Core_Error::fatal(ts('A payment processor must be selected for this contribution page or must be configured to give users the option to pay later.'));
         }
 
         $ppIds = explode(CRM_Core_DAO::VALUE_SEPARATOR, $ppID);

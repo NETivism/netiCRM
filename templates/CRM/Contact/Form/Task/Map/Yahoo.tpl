@@ -48,7 +48,7 @@
 </style>
 {/literal}
 
-<div id="mapContainer"></div>
+<div id="mapContainer" class="event-map media_embed"></div>
 {literal}
 <script type="text/javascript">
 

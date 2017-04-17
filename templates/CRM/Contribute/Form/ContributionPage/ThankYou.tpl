@@ -68,8 +68,13 @@
     <tr class="crm-contribution-contributionpage-thankyou-form-block-receipt_from_email">
 	<td class="label">{$form.receipt_from_email.label}{$reqMark}
 	</td>
-	<td class="html-adjust">{$form.receipt_from_email.html}<br />
-	    <span class="description">{ts}Enter the FROM email address to be used when payment notification are emailed to contributors.{/ts}</span>
+	<td class="html-adjust">{$form.receipt_from_email.html}
+      {include file="CRM/common/defaultFrom.tpl"}
+      <br />
+	    <span class="description">{ts}Enter the FROM email address to be used when payment notification are emailed to contributors.{/ts}<br>
+      {ts}Most of mail providers apply DMARC, that means if you use free email address as mail sender, the mail will be blocked by destination inbox.{/ts}<br>
+			{ts 1=`$mail_providers`}Do not use free mail address as mail sender. (eg. %1){/ts}
+      </span>
 	</td>
     </tr>
     <tr class="crm-contribution-contributionpage-thankyou-form-block-receipt_text">
@@ -93,6 +98,13 @@
 	<td class="html-adjust">{$form.bcc_receipt.html}<br />
 	    <span class="description">{ts}If you want member(s) of your organization to receive a BLIND carbon copy of each emailed payment notification, enter one or more email addresses here. Multiple email addresses should be separated by a comma (e.g. jane@example.org, paula@example.org).{/ts}</span>
 	</td>
+    </tr>
+    <tr class="crm-contribution-contributionpage-thankyou-form-block-recur_fail_notify">
+  <td class="label">{$form.recur_fail_notify.label}&nbsp;<span style="color: #f44336;">BETA</span>
+  </td>
+  <td class="html-adjust">{$form.recur_fail_notify.html}<br />
+      <span class="description">{ts}If you want member(s) of your organization to receive a message of each recurring failed notification, enter one or more email addresses here. Multiple email addresses should be separated by a comma (e.g. jane@example.org, paula@example.org).{/ts}</span>
+  </td>
     </tr>
     </table>
     <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>

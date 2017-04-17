@@ -86,6 +86,7 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
     'contribution_status',
     'trxn_id',
     'cancel_date',
+    'cancel_reason',
     'product_name',
     'is_test',
     'contribution_recur_id',
@@ -383,7 +384,8 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
       $links = self::links($componentId, $componentAction, $qfKey, $componentContext);
 
       // receipt only available when receipt id generated.
-      if (empty($result->receipt_id)) {
+      $deductible = CRM_Contribute_BAO_ContributionType::deductible($result->contribution_type_id);
+      if (empty($result->receipt_id) || empty($result->receipt_date) || $result->contribution_status_id != 1 || !$deductible) {
         unset($links[CRM_Core_Action::PREVIEW]);
       }
       if ($result->contribution_status_id != 1 || empty($taxReceiptTypes[$result->contribution_type_id]) || !$taxReceiptImplements) {

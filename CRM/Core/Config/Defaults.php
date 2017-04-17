@@ -111,6 +111,7 @@ class CRM_Core_Config_Defaults {
    * @access public
    */
   public function setValues(&$defaults, $formMode = FALSE) {
+    global $civicrm_root;
     $config = CRM_Core_Config::singleton();
 
     $scheme = CRM_Utils_System::isSSL() ? 'https://' : 'http://';
@@ -133,14 +134,15 @@ class CRM_Core_Config_Defaults {
     }
 
     $baseCMSURL = CRM_Utils_System::baseCMSURL();
-    if ($config->templateCompileDir) {
-      $path = CRM_Utils_File::baseFilePath(CRM_Utils_File::baseFilePath($config->templateCompileDir));
-    }
+    $path = CRM_Utils_File::baseFilePath();
 
     //set defaults if not set in db
     if (!isset($defaults['userFrameworkResourceURL'])) {
       $testIMG = "i/tracker.gif";
-      if ($config->userFramework == 'Joomla') {
+      if ($config->userFrameworkResourceURL) {
+        $defaults['userFrameworkResourceURL'] = $config->userFrameworkResourceURL;
+      }
+      elseif ($config->userFramework == 'Joomla') {
         if (CRM_Utils_System::checkURL("{$baseURL}components/com_civicrm/civicrm/{$testIMG}")) {
           $defaults['userFrameworkResourceURL'] = $baseURL . "components/com_civicrm/civicrm/";
         }
@@ -157,37 +159,7 @@ class CRM_Core_Config_Defaults {
         // we dont use checkURL since drupal generates an error page and throws
         // the system for a loop on lobo's macosx box
         // or in modules
-        global $civicrm_root;
-        $crm_root = rtrim($civicrm_root, DIRECTORY_SEPARATOR);
-        require_once "CRM/Utils/System/Drupal.php";
-        $cmsPath = CRM_Utils_System_Drupal::cmsRootPath();
-        $defaults['userFrameworkResourceURL'] = $baseURL . str_replace("$cmsPath/", '', str_replace('\\', '/', $civicrm_root));
-
-        if (strpos($crm_root,
-            DIRECTORY_SEPARATOR . 'sites' .
-            DIRECTORY_SEPARATOR . 'all' .
-            DIRECTORY_SEPARATOR . 'modules'
-          ) === FALSE) {
-          $startPos = strpos($crm_root,
-            DIRECTORY_SEPARATOR . 'sites' . DIRECTORY_SEPARATOR
-          );
-          $endPos = strpos($crm_root,
-            DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR
-          );
-          if ($startPos && $endPos) {
-            // if component is in sites/SITENAME/modules
-            $siteName = substr($crm_root,
-              $startPos + 7,
-              $endPos - $startPos - 7
-            );
-
-            $civicrmDirName = trim(basename($crm_root));
-            $defaults['userFrameworkResourceURL'] = $baseURL . "sites/$siteName/modules/$civicrmDirName/";
-            if (!isset($defaults['imageUploadURL'])) {
-              $defaults['imageUploadURL'] = $baseURL . "sites/$siteName/files/civicrm/persist/contribute/";
-            }
-          }
-        }
+        $defaults['userFrameworkResourceURL'] = rtrim($config->userFrameworkBaseURL, '/') . str_replace($config->userSystem->cmsRootPath(), '', $civicrm_root);
       }
     }
 
@@ -203,31 +175,27 @@ class CRM_Core_Config_Defaults {
         $defaults['imageUploadURL'] = $baseURL . "files/civicrm/persist/contribute/";
       }
       else {
-        if (function_exists('file_directory_path')) {
-          $defaults['imageUploadURL'] = $baseURL . file_directory_path() . "/civicrm/persist/contribute/";
-        }
-        else {
-          $defaults['imageUploadURL'] = $baseURL . "sites/default/files/civicrm/persist/contribute/";
-        }
+        $defaults['imageUploadURL'] = $baseURL . CRM_Utils_System::cmsDir('public') . "/civicrm/persist/contribute/";
       }
     }
 
-    if (!isset($defaults['imageUploadDir']) && is_dir($config->templateCompileDir)) {
+    if (!isset($defaults['imageUploadDir'])) {
       $imgDir = $path . "persist/contribute/";
 
       CRM_Utils_File::createDir($imgDir);
       $defaults['imageUploadDir'] = $imgDir;
     }
 
-    if (!isset($defaults['uploadDir']) && is_dir($config->templateCompileDir)) {
-      $uploadDir = $path . "upload/";
+    if (!isset($defaults['uploadDir'])) {
+      $uploadDir = CRM_Utils_System::cmsDir('temp') .'/'.$_SERVER['HTTP_HOST']."/upload/";
 
       CRM_Utils_File::createDir($uploadDir);
       CRM_Utils_File::restrictAccess($uploadDir);
+      CRM_Utils_File::chmod($uploadDir, 0777);
       $defaults['uploadDir'] = $uploadDir;
     }
 
-    if (!isset($defaults['customFileUploadDir']) && is_dir($config->templateCompileDir)) {
+    if (!isset($defaults['customFileUploadDir'])) {
       $customDir = $path . "custom/";
 
       CRM_Utils_File::createDir($customDir);

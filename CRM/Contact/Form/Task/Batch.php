@@ -249,6 +249,12 @@ class CRM_Contact_Form_Task_Batch extends CRM_Contact_Form_Task {
       CRM_Contact_BAO_Contact::createProfileContact($value, $this->_fields, $key, NULL, $ufGroupId);
       if ($notify) {
         $values = CRM_Core_BAO_UFGroup::checkFieldsEmptyValues($ufGroupId, $key, NULL);
+        $fields = CRM_Core_BAO_UFGroup::getFields($ufGroupId, FALSE, CRM_Core_Action::VIEW);
+        foreach ($fields as $k => $v) {
+          if ((CRM_Utils_Array::value('data_type', $v, '') == 'File' || CRM_Utils_Array::value('name', $v, '') == 'image_URL') && !empty($values['values'][$v['title']] )){
+            $values['values'][$v['title']] = ts("Uploaded files received");
+          }
+        }
         CRM_Core_BAO_UFGroup::commonSendMail($key, $values);
       }
     }

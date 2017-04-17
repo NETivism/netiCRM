@@ -147,9 +147,11 @@ class CRM_Contact_Form_Domain extends CRM_Core_Form {
     $this->add('text', 'name', ts('Domain Name'), array('size' => 25), TRUE);
     $this->add('text', 'description', ts('Description'), array('size' => 25));
 
-    $this->add('text', 'email_name', ts('FROM Name'), CRM_Core_DAO::getAttribute('CRM_Core_DAO_Email', 'email'), TRUE);
+    $eleName = $this->add('text', 'email_name', ts('FROM Name'), CRM_Core_DAO::getAttribute('CRM_Core_DAO_Email', 'email'), TRUE);
+    $eleName->freeze();
+    $eleAddr = $this->add('text', 'email_address', ts('FROM Email Address'), CRM_Core_DAO::getAttribute('CRM_Core_DAO_Email', 'email'), TRUE);
+    $eleAddr->freeze();
 
-    $this->add('text', 'email_address', ts('FROM Email Address'), CRM_Core_DAO::getAttribute('CRM_Core_DAO_Email', 'email'), TRUE);
     $this->addRule("email_address", ts('Domain Email Address must use a valid email address format (e.g. \'info@example.org\').'), 'email');
 
     //build location blocks.
@@ -238,38 +240,6 @@ class CRM_Contact_Form_Domain extends CRM_Core_Form {
 
     require_once 'CRM/Core/BAO/Domain.php';
     CRM_Core_BAO_Domain::edit($params, $this->_id);
-
-    //set domain from email address, CRM-3552
-    $emailName = '"' . $params['email_name'] . '" <' . $params['email_address'] . '>';
-
-    $emailParams = array('label' => $emailName,
-      'description' => $params['description'],
-      'is_active' => 1,
-      'is_default' => 1,
-    );
-
-    $groupParams = array('name' => 'from_email_address');
-
-    //get the option value wt.
-    if ($this->_fromEmailId) {
-      $action = $this->_action;
-      $emailParams['weight'] = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionValue', $this->_fromEmailId, 'weight');
-    }
-    else {
-      //add from email address.
-      $action = CRM_Core_Action::ADD;
-      require_once 'CRM/Utils/Weight.php';
-      $grpId = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionGroup', 'from_email_address', 'id', 'name');
-      $fieldValues = array('option_group_id' => $grpId);
-      $emailParams['weight'] = CRM_Utils_Weight::getDefaultWeight('CRM_Core_DAO_OptionValue', $fieldValues);
-    }
-
-    require_once 'CRM/Core/OptionValue.php';
-
-    //reset default within domain.
-    $emailParams['reset_default_for'] = array('domain_id' => CRM_Core_Config::domainID());
-
-    CRM_Core_OptionValue::addOptionValue($emailParams, $groupParams, $action, $this->_fromEmailId);
 
     CRM_Core_Session::setStatus(ts('Domain information for \'%1\' has been saved.', array(1 => $domain->name)));
     $session = CRM_Core_Session::singleton();

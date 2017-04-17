@@ -158,6 +158,12 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
         $email = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_UFGroup', $gId, 'notify');
         if ($email) {
           $val = CRM_Core_BAO_UFGroup::checkFieldsEmptyValues($gId, $contactID, $params[$key]);
+          $fields = CRM_Core_BAO_UFGroup::getFields($gId, FALSE, CRM_Core_Action::VIEW);
+          foreach ($fields as $k => $v) {
+            if ((CRM_Utils_Array::value('data_type', $v, '') == 'File' || CRM_Utils_Array::value('name', $v, '') == 'image_URL') && !empty($val['values'][$v['title']] )){
+              $val['values'][$v['title']] = ts("Uploaded files received");
+            }
+          }
           CRM_Core_BAO_UFGroup::commonSendMail($contactID, $val);
         }
       }
@@ -317,6 +323,71 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
     }
   }
 
+
+  /**
+   * Function to send the emails
+   *
+   * @param int     $contactID         contact id
+   * @param array   $values            associated array of fields
+   * @param boolean $isTest            if in test mode
+   * @param boolean $returnMessageText return the message text instead of sending the mail
+   *
+   * @return void
+   * @access public
+   * @static
+   */
+  static function sendFailedNotifyMail($contactID, &$values, $isTest = FALSE, $returnMessageText = FALSE) {
+    $recur_id = CRM_Utils_Array::value('contribution_recur_id', $values);
+    $contribution_id = CRM_Utils_Array::value('contribution_id', $values);
+    $tplParams = array(
+      'display_name'    => CRM_Utils_Array::value('display_name', $values),
+      'amount'          =>
+        CRM_Utils_Money::format(
+          CRM_Utils_Array::value('total_amount', $values),
+          CRM_Utils_Array::value('currency', $values)
+        ),
+      'cancel_date'     => date('Y-m-d H:i:s',strtotime(CRM_Utils_Array::value('cancel_date', $values))),
+      'url'             =>
+        CRM_Utils_System::url(
+          'civicrm/contact/view/contributionrecur',
+          "reset=1&id={$recur_id}&cid={$contactID}",
+          TRUE
+        ),
+      'trxn_id'         => CRM_Utils_Array::value('trxn_id', $values),
+      'detail'          => CRM_Utils_Array::value('message', $values),
+    );
+
+    $recur_fail_notify = CRM_Utils_Array::value('recur_fail_notify', $values);
+    $emailList = explode(',', $recur_fail_notify);
+    require_once 'CRM/Core/BAO/Domain.php';
+    list($domainEmailName, $domainEmailAddress) = CRM_Core_BAO_Domain::getNameAndEmail();
+    require_once 'CRM/Core/BAO/MessageTemplates.php';
+    foreach ($emailList as $emailTo) {
+      // FIXME: take the below out of the foreach loop
+      list($sent, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate(
+        array(
+          'groupName' => 'msg_tpl_workflow_contribution',
+          'valueName' => 'contribution_recur_fail_notify',
+          'contactId' => $contactID,
+          'tplParams' => $tplParams,
+          'from' => "$domainEmailName <$domainEmailAddress>",
+          'toEmail' => str_replace(' ', '', $emailTo),
+          'isTest' => $isTest,
+        )
+      );
+      $returnArray[] = array(
+        'success' => $sent,
+        'subject' => $subject,
+        'body' => $message,
+        'to' => $emailTo,
+        'html' => $html,
+      );
+    }
+    if ($returnMessageText){
+      return $returnArray;
+    }
+  }
+
   /**
    * Function to send the emails for Recurring Contribution Notication
    *
@@ -399,10 +470,6 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
           if (!$groupTitle) {
             $groupTitle = $v["groupTitle"];
           }
-          // suppress all file fields from display
-          if (CRM_Utils_Array::value('data_type', $v, '') == 'File' || CRM_Utils_Array::value('name', $v, '') == 'image_URL') {
-            unset($fields[$k]);
-          }
           // unset all view only profile field
           if ($v['is_view']){
             unset($fields[$k]);
@@ -414,6 +481,13 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
         }
 
         CRM_Core_BAO_UFGroup::getValues($cid, $fields, $values, FALSE, $params);
+
+        foreach ($fields as $k => $v) {
+          // suppress all file fields from display
+          if ((CRM_Utils_Array::value('data_type', $v, '') == 'File' || CRM_Utils_Array::value('name', $v, '') == 'image_URL') && !empty($values[$v['title']] )){
+            $values[$v['title']] = ts("Uploaded files received");
+          }
+        }
 
         if (count($values)) {
           $template->assign($name, $values);

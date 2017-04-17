@@ -11,7 +11,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2017-02-02 06:48+0000\n"
+"PO-Revision-Date: 2017-04-17 16:02+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -8895,7 +8895,7 @@ msgstr "職稱"
 msgid ""
 "First Name and Last Name OR an email OR an OpenID in the Primary Location "
 "should be set."
-msgstr "必須在預設地址裡設定姓名、或Email位址、或是OpenID。"
+msgstr "您必須先輸入姓名或是電子郵件等資料才能儲存喔！"
 
 #: CRM/Contact/Form/Edit/OpenID.php
 msgid "OpenID is not a valid URL."
@@ -10480,9 +10480,9 @@ msgstr "你的捐款已經提送。若果你想繼續捐款，請按 <a href='%1
 
 #: CRM/Contribute/Form/ContributionBase.php
 msgid ""
-"A payment processor must be selected for this contribution page (contact the"
-" site administrator for assistance)."
-msgstr "此募款頁面必須選擇金流機制。如您需要協助，請聯繫網站管理員。"
+"A payment processor must be selected for this contribution page or must be "
+"configured to give users the option to pay later."
+msgstr "此募款頁至少需要啟用一種「金流機制」，或是讓使用者可以選用「稍候付款」的選項。"
 
 #: CRM/Contribute/Form/ContributionBase.php
 msgid ""
@@ -15637,9 +15637,8 @@ msgstr "登記截止日：%1"
 #: CRM/Event/Form/Registration.php
 msgid ""
 "A payment processor must be selected for this event registration page, or "
-"the event must be configured to give users the option to pay later (contact "
-"the site administrator for assistance)."
-msgstr "此活動必須選擇一個金流付款機制，或啟用「稍後付款」選項。如您需要協助，請聯繫網站管理員。"
+"the event must be configured to give users the option to pay later."
+msgstr "此活動報名至少需要啟用一種「金流機制」，或是讓使用者可以選用「稍候付款」的選項。"
 
 #: CRM/Event/Form/Registration.php
 msgid ""
@@ -28978,7 +28977,7 @@ msgstr "您可以取消日後的定期定額捐款。"
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid "To modify or cancel future contributions please contact us at %1."
-msgstr "若要更改或取消預定捐款，請使用%1與我們聯繫。"
+msgstr "若需要更改或取消預定捐款，可以透過 %1 與我們聯繫。"
 
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
 msgid "You will receive an email receipt for each recurring contribution."
@@ -30551,9 +30550,8 @@ msgstr "年後"
 #: templates/CRM/Custom/Form/Field.tpl templates/CRM/Price/Form/Field.tpl
 msgid ""
 "Weight controls the order in which fields are displayed in a group. Enter a "
-"positive or negative integer - lower numbers are displayed ahead of higher "
-"numbers."
-msgstr "權重可控制群組欄位的出現次序。您可輸入正整數或負整數 - 數值越小，出現位置越前面。"
+"positive integer - lower numbers are displayed ahead of higher numbers."
+msgstr "權重可控制群組欄位的出現次序。您可輸入正整數 - 數值越小，出現位置越前面。"
 
 #: templates/CRM/Custom/Form/Field.tpl
 msgid ""
@@ -30779,9 +30777,9 @@ msgstr "如果您想在記錄數目設定一個指定限額。輸入那個數字
 #: templates/CRM/Custom/Page/Group.hlp
 msgid ""
 "Weight controls the order in which custom field sets are presented when "
-"there are more than one. Enter a positive or negative integer - lower "
-"numbers are displayed ahead of higher numbers."
-msgstr "權重可控制多個資料群組的出現次序。您可輸入正整數或負整數 - 數值越小，出現依序越高。"
+"there are more than one. Enter a positive integer - lower numbers are "
+"displayed ahead of higher numbers."
+msgstr "權重可控制多個資料群組的出現次序。您可輸入正整數 - 數值越小，出現依序越高。"
 
 #: templates/CRM/Custom/Page/Group.hlp
 msgid ""
@@ -31760,7 +31758,7 @@ msgid ""
 "Fill in your registration information on this page. If you are registering "
 "additional people, you will be able to enter their registration information "
 "after you complete this page and click &quot;Continue&quot;."
-msgstr "請在此頁填寫您的報名資訊。如果您想一次報名多位，請先在此頁填寫完資訊後，點選「繼續」鍵，再幫他們填完資料。"
+msgstr "如欲報名多位參加者，請先在此頁填寫第一位參加者資料，點選「下一步」按鈕，再填寫第二位參加者資料，以此類推。"
 
 #: templates/CRM/Event/Form/Registration/ThankYou.tpl
 msgid "You have been added to the WAIT LIST for this event."
@@ -35772,9 +35770,9 @@ msgstr "為此欄位顯示說明解釋文字（可以使用 HTML 標籤）。"
 #: templates/CRM/UF/Form/Field.tpl
 msgid ""
 "Weight controls the order in which fields are displayed within a profile. "
-"Enter a positive or negative integer - lower numbers are displayed ahead of "
-"higher numbers."
-msgstr "權重可控制資料表單欄位的出現次序。您可輸入正整數或負整數 - 數值越小，出現依序越高。"
+"Enter a positive integer - lower numbers are displayed ahead of higher "
+"numbers."
+msgstr "權重可控制資料表單欄位的出現次序。您可輸入正整數 - 數值越小，出現依序越高。"
 
 #: templates/CRM/UF/Form/Field.tpl
 msgid ""
@@ -35853,9 +35851,8 @@ msgstr "勾選<strong>查看/編輯使用者帳戶</strong>，以在現存的使
 msgid ""
 "Weight controls the order in which profiles are presented when more than one"
 " profile is included in User Registration or My Account screens. Enter a "
-"positive or negative integer - lower numbers are displayed ahead of higher "
-"numbers."
-msgstr ""
+"positive integer - lower numbers are displayed ahead of higher numbers."
+msgstr "如果一個頁面有多個資料表單出現在使用者的註冊頁、使用者的個人頁，權重可控制資料表單的順序。請您輸入正整數 - 數值越小，出現位置越前面。"
 
 #: templates/CRM/UF/Form/Group.hlp
 msgid "Explanatory text displayed at the beginning of the form."
@@ -39681,7 +39678,7 @@ msgstr "這是一個定期定額捐款。您可以隨時與我們聯絡，以取
 msgid ""
 "This is a recurring contribution. To modify or cancel future contributions "
 "please contact us at %1."
-msgstr "這是一個定期定額捐款。您可以修改或取消未來的捐款，請在 %1 通知我們."
+msgstr "這是一個定期定額捐款。若要修改或取消未來的捐款，請透過 %1 與我們聯繫。"
 
 #: xml/templates/message_templates/contribution_online_receipt_html.tpl
 #: xml/templates/message_templates/contribution_online_receipt_text.tpl
@@ -40406,9 +40403,9 @@ msgstr "您也可以設定可以記錄每一個聯絡人的最多記錄數目。
 #: templates/CRM/Custom/Page/Group.hlp
 msgid ""
 "Weight controls the order in which custom data groups are presented when "
-"there are more than one. Enter a positive or negative integer - lower "
-"numbers are displayed ahead of higher numbers."
-msgstr "權重可控制多個資料群組的出現次序。您可輸入正整數或負整數 - 數值越小，出現依序越高。"
+"there are more than one. Enter a positive integer - lower numbers are "
+"displayed ahead of higher numbers."
+msgstr "權重可控制多個資料群組的出現次序。您可輸入正整數 - 數值越小，出現依序越高。"
 
 #: templates/CRM/Event/Form/ManageEvent/EventInfo.hlp
 msgid ""
@@ -44590,15 +44587,12 @@ msgstr "捐/繳款須滿足下列條件才能列印收據（與收據編號）"
 msgid "Contribution record must completed."
 msgstr "捐/繳款狀態必須是「已完成」。"
 
-msgid "Contribution record must have receive date."
-msgstr "捐/繳款必須有「收到日期」。"
-
 msgid ""
 "Please notice that, because the serial number must continuous, once you "
 "generate receipt, it will also generte receipt ID and you can't modify "
 "receipt ID after generation. Make sure your search result have correct "
 "receive date search to prevent generate wrong number."
-msgstr "請注意，由於收據編號必須是連號，當您按下列印收據，系統產生的收據編號是不能修改的。請務必確認您搜尋條件的「收到日期」是正確的，以免產生錯誤的收據編號。"
+msgstr "請注意，由於收據編號是以「收到日期」來排序，也必須是連號，當您按下列印收據，系統產生的收據編號是不能修改的。請務必確認您搜尋條件的「收到日期」是正確的，以免產生錯誤的收據編號。"
 
 msgid "Single page with address letter"
 msgstr "包含開窗信封地址的單聯收據"
@@ -44738,7 +44732,7 @@ msgid "To modify or cancel future contributions please contact %1"
 msgstr "若要修改或取消後續的定期定額捐款，請聯繫%1"
 
 msgid "To modify or cancel future contributions please contact us"
-msgstr "若要修改或取消後續的定期定額捐款，請聯繫我們"
+msgstr "若要修改或取消後續的定期定額捐款，請與我們聯繫。"
 
 msgid "Filter by month"
 msgstr "依月份篩選"
@@ -44803,7 +44797,7 @@ msgstr "請確認聯絡人姓名或身份證字號欄位是否正確"
 
 #: CRM/Contact/Form/Search/Custom/RecurSearch.php
 msgid "First recurring date"
-msgstr "開始捐款日期"
+msgstr "定期定額開始日期"
 
 #: CRM/Contact/Form/Search/Custom/RecurSearch.php
 msgid "Last Receive Date"
@@ -45404,3 +45398,143 @@ msgstr "勾選這個選項後，儲存時將不會由開始、結束日期來計
 
 msgid "It's default when membership status is pending"
 msgstr "當狀態為「待處理」，預設會勾選此選項。"
+
+#: CRM/Contribute/DAO/ContributionPage.php
+msgid "Recurring Failed Notification to"
+msgstr "定期失敗通知信箱"
+
+#: xml/templates/civicrm_msg_template.tpl
+msgid "Contributions - Recurring Failed Notification"
+msgstr "捐款 - 定期捐款失敗通知信"
+
+#: templates/CRM/Contribute/Form/ContributionPage/ThankYou.tpl
+msgid ""
+"If you want member(s) of your organization to receive a message of each "
+"recurring failed notification, enter one or more email addresses here. "
+"Multiple email addresses should be separated by a comma (e.g. "
+"jane@example.org, paula@example.org)."
+msgstr "如果您想讓您組織內部成員收到定期定額失敗的通知信，請在此輸入 Email 地址。若要輸入多個 Email 地址，請用半型逗號分隔（例如 jane@example.org, paula@example.org）。"
+
+#: xml/templates/message_templates/contribution_recur_fail_notify_html.tpl
+msgid ""
+"The recurring contribution %1 by contributor %2 is failed at %3.( Link: %4 )"
+msgstr "捐款人 %2 的定期定額捐款 %1，於 %3 因故請款失敗（ %4 ）。"
+
+msgid ""
+"If you need more infomation, please check source from payment processor "
+"service page by transaction ID: %1"
+msgstr "若有不清楚的地方，可再到金流服務後台以交易編號 %1 進行查詢"
+
+msgid ""
+"You can evaluate whether to notify the contributor for the relevant "
+"treatment (for example, due to the credit card expires and need to make "
+"online contribution again), or wait for the next time the transaction "
+"executing (if this is due to insufficient balance can not pay)."
+msgstr "您可評估是否要通知捐款人進行相關處理（例如因為信用卡過期而需重新上網進行捐款），或是等待下個月的定期定額自動請款（假如本次是因為餘額不足導致無法請款）。"
+
+msgid "Or you can contact us by our support on https://neticrm.tw/support ."
+msgstr "若有需要，也可以透過 https://neticrm.tw/support 的線上客服與我們聯絡。謝謝。"
+
+#: xml/templates/message_templates/contribution_recur_fail_notify_subject.tpl
+msgid "Recurring Failed Notification"
+msgstr "定期捐款失敗通知"
+
+msgid ""
+"Use paper receipt. This will cancel user selection even they choose donate "
+"receipt or electronic receipt. User need keep receipt on their own and "
+"system will not email any further notification."
+msgstr "選擇開立紙本發票，將會取消本繳款設定的「捐發票」和「電子發票」的方式。使用者必須自行保存發票以進行兌獎。"
+
+msgid "Use paper receipt"
+msgstr "開立紙本發票"
+
+msgid "no installments specified"
+msgstr "未指定期數"
+
+msgid "Processed Installments"
+msgstr "執行期數"
+
+msgid "Total Installments"
+msgstr "約定總期數"
+
+msgid "%1 installments left"
+msgstr "剩餘%1期"
+
+msgid "Installments Left"
+msgstr "剩餘定期期數"
+
+msgid "Do not use free mail address as mail sender. (eg. %1)"
+msgstr "請勿使用免費信箱當作你的寄件者（免費信箱如： %1）"
+
+msgid ""
+"Most of mail providers apply DMARC, that means if you use free email address"
+" as mail sender, the mail will be blocked by destination inbox."
+msgstr "現今多數的信箱已使用避免釣魚詐騙信件的規則（ DMARC ），若您用免費信箱當作本系統的寄件者，郵件將會被收件方阻擋。"
+
+msgid "Cancelled or Failed Reason"
+msgstr "取消或失敗原因"
+
+msgid "Cancelled or Failed Date"
+msgstr "取消或失敗日期"
+
+msgid "Cancellation or Failure Information"
+msgstr "取消或失敗的相關資訊"
+
+msgid "Only allowed recurring contribution"
+msgstr "僅允許定期定額"
+
+msgid "Check this box will turn off single transaction of this page."
+msgstr "勾選此選項，將會隱藏此頁面的非定期的選項，僅允許定期選項出現。"
+
+#: templates/CRM/Admin/Form/Options.tpl
+msgid ""
+"Weight controls the order in which options are displayed in a group. Enter a"
+" positive integer - lower numbers are displayed ahead of higher numbers."
+msgstr "權重可控制選項的出現次序。您可輸入正整數 - 數值越小，出現依序越高。"
+
+#: templates/CRM/Report/Page/Summary.tpl
+msgid "Last update at %1"
+msgstr "最近更新於 %1"
+
+msgid "Contribution people percentage by gender"
+msgstr "依性別區分捐款人比例"
+
+msgid "Contribution people percentage by age"
+msgstr "依年齡區間區分捐款人比例"
+
+msgid "Contribution people percentage by province"
+msgstr "依縣市區分捐款人比例"
+
+msgid "There are %1 recurring contributions."
+msgstr "總共有 %1 筆定期定額。"
+
+msgid "Total amount of completed contributions is %1."
+msgstr "已完成的捐款總計為 %1。"
+
+msgid "Last Failed Date"
+msgstr "最近失敗日期"
+
+#: templates/CRM/Report/Page/Summary.tpl
+msgid "Contribution sum percentage by gender"
+msgstr "依性別區分捐款金額比例"
+
+msgid "Contribution sum percentage by age"
+msgstr "依年齡區間區分捐款金額比例"
+
+msgid "Contribution sum percentage by province"
+msgstr "依縣市區分捐款金額比例"
+
+msgid "Participants count in ... after opened mail"
+msgstr "開啟電子報後 ... 內報名人次"
+
+msgid "Contribution count in ... after opened mail"
+msgstr "開啟電子報後 ... 內捐款人次"
+
+msgid "Unsuccessful Deliveries"
+msgstr "未成功寄送"
+
+msgid "Uploaded files received"
+msgstr "已收到上傳的檔案"
+
+msgid "Use default: %1"
+msgstr "帶入預設值: %1"

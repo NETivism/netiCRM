@@ -105,9 +105,6 @@ function civicrm_api3_uf_field_create($params) {
   if (CRM_Core_BAO_UFField::duplicateField($params, $ids)) {
     return civicrm_api3_create_error("The field was not added. It already exists in this profile.");
   }
-  if (CRM_Utils_Array::value('option.autoweight', $params, TRUE)) {
-    $params['weight'] = CRM_Core_BAO_UFField::autoWeight($params);
-  }
   $ufField = CRM_Core_BAO_UFField::add($params, $ids);
 
   $fieldsType = CRM_Core_BAO_UFGroup::calculateGroupType($groupId);

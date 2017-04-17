@@ -23,33 +23,25 @@ cj(function($){
     $same_as_md.wrap('<div class="same-as-wrapper"></div>');
 
     $('#same_as').change(doCheckSameAs);
+    $('#custom_{/literal}{$receiptSerial}{literal}').keyup(checkTWorOrgID).blur(checkTWorOrgID);
     $('.receipt_type input').change(function(){
       if($('#r_person').is(':checked')){
         $('#custom_{/literal}{$receiptTitle}{literal}').attr('placeholder',"{/literal}{ts}Contact Name{/ts}{literal}");
         $('#custom_{/literal}{$receiptSerial}{literal}').attr('placeholder',"{/literal}{ts}Legal Identifier{/ts}{literal}");
-        $('#custom_{/literal}{$receiptSerial}{literal}').off("keyup").keyup(checkTWID).off('blur').blur(checkTWID);
       }
       if($('#r_company').is(':checked')){
         $('#custom_{/literal}{$receiptTitle}{literal}').attr('placeholder',"{/literal}{ts}Organization{/ts}{literal}");
         $('#custom_{/literal}{$receiptSerial}{literal}').attr('placeholder',"{/literal}{ts}Sic Code{/ts}{literal}");
-        $('#custom_{/literal}{$receiptSerial}{literal}').off("keyup").off('blur');
-        while($('#custom_{/literal}{$receiptSerial}{literal}').parent().find('.error-twid').length>=1){
-          $('#custom_{/literal}{$receiptSerial}{literal}').parent().find('.error-twid').remove();
-        }
       }
     });
 
     $('#Main').submit('#custom_{/literal}{$receiptSerial}{literal}',function(){
       if(isShowChecked()){
-        if($('#r_person').length>=1){
-          if($('#r_person').is(':checked')){
-            if(checkTWID()){
-              return true;
-            }else{
-              $(window).scrollTop($('#custom_{/literal}{$receiptSerial}{literal}').offset().top - $(window).height()/2);
-              return false;
-            }
-          }
+        if(checkTWorOrgID()){
+          return true;
+        }else{
+          $(window).scrollTop($('#custom_{/literal}{$receiptSerial}{literal}').offset().top - $(window).height()/2);
+          return false;
         }
       }
       return true;
@@ -58,7 +50,7 @@ cj(function($){
   }
   $('.receipt_type input').trigger('change').change(updateName);
 
-  // Display Donor Credit 
+  // Display Donor Credit
   if($('#custom_{/literal}{$receiptDonorCredit}{literal}').length>=1){
     var hornor_name = [
       mdFormElement('radio', '{/literal}{ts}Full Name{/ts}{literal}', {name:'receipt_name', id:'r_name_full'}),
@@ -84,7 +76,7 @@ cj(function($){
       var $r_name_textfield = $(this).closest('.r-name-items').next('.md-elem');
       if (r_name_id != 'r_name_custom') {
         $r_name_textfield.addClass('md-elem-readonly');
-      } 
+      }
       else {
         $r_name_textfield.removeClass('md-elem-readonly');
       }
@@ -144,11 +136,11 @@ cj(function($){
   }
 
   function isShowChecked(){
-    // radio option 
+    // radio option
     if($($('[name=custom_{/literal}{$receiptYesNo}{literal}]')[0]).attr('type') == 'radio'){
       var $no_label = false;
       $('.custom_{/literal}{$receiptYesNo}{literal}-section .content input[type="radio"]').each(function(){
-        if(!$(this).val().match(/1|true|yes/)){
+        if($(this).val().match(/0|false|no/)){
           $no_label = $(this);
         }
       });
@@ -239,13 +231,13 @@ cj(function($){
             last_name = last_name[0];
             for (var i = 1; i < last_name_leng; i++) {
               last_name += "*";
-            };  
+            };
           }
-          
+
 
           var first_name_leng = first_name.length;
           if(first_name_leng>1){
-            
+
             first_name = first_name[first_name_leng-1];
             for (var i = 0; i < first_name_leng-1; i++) {
               first_name = "*"+first_name;
@@ -292,12 +284,10 @@ cj(function($){
     $('.name-id-error').remove();
   }
 
-  function checkTWID(){
-    while($('#custom_{/literal}{$receiptSerial}{literal}').parent().find('.error-twid').length>=1){
-      $('#custom_{/literal}{$receiptSerial}{literal}').parent().find('.error-twid').remove();
-    }
+  function checkTWorOrgID(){
+    removeTWIDErrorMsg();
     var value = $('#custom_{/literal}{$receiptSerial}{literal}').val();
-    if(validTWID(value)){
+    if(validTWID(value) || validOrgID(value)){
       $('#custom_{/literal}{$receiptSerial}{literal}').removeClass('error');
       return true;
     }else{
@@ -306,10 +296,15 @@ cj(function($){
     }
   }
 
+  function removeTWIDErrorMsg(){
+    while($('#custom_{/literal}{$receiptSerial}{literal}').parent().find('.error-twid').length>=1){
+      $('#custom_{/literal}{$receiptSerial}{literal}').parent().find('.error-twid').remove();
+    }
+  }
+
   function formElemRebuild(elem, type) {
     var $elem = $(elem);
     var classname = ' crm-form-elem crm-form-' + type;
-
     if (type == 'checkbox' || type == 'radio') {
       if ($elem.next('label').length > 0) {
         var $wrap = $elem.next('label');
@@ -349,6 +344,15 @@ function validTWID(value){
     return false;
   }
   return true;
+}
+
+function validOrgID(value){
+  if(value=='')return true;
+  var checkRegex = RegExp("^[0-9]{8}$");
+  if(checkRegex.test(value)){
+    return true;
+  }
+  return false;
 }
 {/literal}
 </script>

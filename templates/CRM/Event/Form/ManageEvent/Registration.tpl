@@ -233,8 +233,13 @@
              </tr>
              <tr class="crm-event-manage-registration-form-block-confirm_from_email">
                <td scope="row" class="label" width="20%">{$form.confirm_from_email.label} <span class="marker">*</span></td>
-               <td>{$form.confirm_from_email.html}<br />
-                   <span class="description">{ts}FROM email address (this must be a valid email account with your SMTP email service provider).{/ts}</span>
+               <td>{$form.confirm_from_email.html}
+                   {include file="CRM/common/defaultFrom.tpl"}
+                   <br />
+                   <span class="description">{ts}FROM email address (this must be a valid email account with your SMTP email service provider).{/ts}<br>
+                   {ts}Most of mail providers apply DMARC, that means if you use free email address as mail sender, the mail will be blocked by destination inbox.{/ts}<br>
+                   {ts 1=`$mail_providers`}Do not use free mail address as mail sender. (eg. %1){/ts}
+                   </span>
                </td>
              </tr>
              <tr class="crm-event-manage-registration-form-block-cc_confirm">

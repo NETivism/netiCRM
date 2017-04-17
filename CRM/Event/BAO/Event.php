@@ -1190,10 +1190,6 @@ WHERE civicrm_event.is_active = 1
           if (!$groupTitle) {
             $groupTitle = $v["groupTitle"];
           }
-          // suppress all file fields from display
-          if (CRM_Utils_Array::value('data_type', $v, '') == 'File' || CRM_Utils_Array::value('name', $v, '') == 'image_URL') {
-            unset($fields[$k]);
-          }
           // unset all view only profile field
           if ($v['is_view']){
             unset($fields[$k]);
@@ -1229,6 +1225,13 @@ WHERE civicrm_event.is_active = 1
         }
 
         CRM_Core_BAO_UFGroup::getValues($cid, $fields, $values, FALSE, $params);
+
+        foreach ($fields as $k => $v) {
+          // suppress all file fields from display
+          if ((CRM_Utils_Array::value('data_type', $v, '') == 'File' || CRM_Utils_Array::value('name', $v, '') == 'image_URL') && !empty($values[$v['title']] )){
+            $values[$v['title']] = ts("Uploaded files received");
+          }
+        }
 
         if (isset($values[$fields['participant_status_id']['title']]) &&
           is_numeric($values[$fields['participant_status_id']['title']])
@@ -1957,6 +1960,34 @@ LEFT  JOIN  civicrm_price_field_value value ON ( value.id = lineItem.price_field
   GROUP BY  participant.event_id";
 
     return (int)CRM_Core_DAO::singleValueQuery($query, array(1 => array($eventId, 'Positive')));
+  }
+
+  static function assignEventShare($event, $templateObject = NULL) {
+    if (!$templateObject) {
+      $templateObject = CRM_Core_Smarty::singleton();
+    }
+    // Used is Add to Google Calendar button. refs #16572
+    $eventInfoUrl = CRM_Utils_System::url('civicrm/event/info', 'reset=1&id='.$event['id'], TRUE, FALSE, FALSE);
+    $gcal = array(
+      'trp' => 'true',
+      'action' => 'TEMPLATE',
+      'text' => $event['event_title'],
+      'sprop' => $eventInfoUrl,
+      'details' => $eventInfoUrl,
+    );
+    $event['event_start_date'] = strtotime($event['event_start_date']);
+    if (empty($event['event_end_date'])) {
+      $event['event_end_date'] = strtotime('+1 hour',$event['event_start_date']);
+    }
+    $gcal['dates'] = gmstrftime('%Y%m%dT%H%M%SZ', $event['event_start_date']).'/'.gmstrftime('%Y%m%dT%H%M%SZ', $event['event_end_date']);
+
+    if ($event['address']) {
+      $gcal['location'] = $event['address'];
+    }
+    if ($event['summary']) {
+      $gcal['details'] .= "\n\n". strip_tags($event['summary']);
+    }
+    $templateObject->assign('share_google_calendar', 'http://www.google.com/calendar/event?'.http_build_query($gcal));
   }
 }
 

@@ -61,7 +61,7 @@ class CRM_Core_I18n {
    * @return         void
    */
   function __construct($locale) {
-    if (!empty($locale) and $locale != 'en_US') {
+    if (!empty($locale) and $locale != CRM_Core_Config::SYSTEM_LANG) {
       $config = CRM_Core_Config::singleton();
 
       if (empty($config->gettextResourceDir)) {
@@ -144,7 +144,7 @@ class CRM_Core_I18n {
 
       // drop the unavailable languages (except en_US)
       foreach (array_keys($all) as $code) {
-        if ($code == 'en_US') {
+        if ($code == CRM_Core_Config::SYSTEM_LANG) {
           continue;
         }
         if (!in_array($code, $codes))unset($all[$code]);
@@ -347,7 +347,7 @@ class CRM_Core_I18n {
   function localizeArray(&$array, $params = array()) {
     global $tsLocale;
 
-    if ($tsLocale == 'en_US') {
+    if ($tsLocale == CRM_Core_Config::SYSTEM_LANG) {
       return;
     }
 

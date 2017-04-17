@@ -34,6 +34,8 @@
  */
 class CRM_Utils_Mail {
 
+  const DMARC_MAIL_PROVIDERS = 'yahoo.com|gmail.com|msn.com|outlook.com|hotmail.com';
+
   /**
    * Wrapper function to send mail in CiviCRM. Hooks are called from this function. The input parameter
    * is an associateive array which holds the values of field needed to send an email. These are:
@@ -223,7 +225,7 @@ class CRM_Utils_Mail {
    *
    * @return string          the plucked email address
    */
-  function pluckEmailFromHeader($header) {
+  static function pluckEmailFromHeader($header) {
     preg_match('/<([^<]*)>$/', $header, $matches);
     return $matches[1];
   }
@@ -307,6 +309,14 @@ class CRM_Utils_Mail {
 
     $result .= "<{$email}>";
     return $result;
+  }
+
+  static function checkMailProviders($email) {
+    $mailProviders = str_replace('.', '\.', self::DMARC_MAIL_PROVIDERS);
+    if (preg_match('/'.$mailProviders.'/i', $email)) {
+      return FALSE;
+    }
+    return TRUE;
   }
 }
 

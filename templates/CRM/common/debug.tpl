@@ -23,6 +23,9 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
+
+<!-- fun invoke: {$callbackPath} {$callbackArgs} -->
+<!-- tpl invoke: templates/{$tplFile} -->
 {if $smarty.get.smartyDebug}
 {debug}
 {/if}

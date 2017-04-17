@@ -131,6 +131,8 @@ class CRM_Core_OptionValue {
       if ($dao->is_reserved) {
         $action = CRM_Core_Action::UPDATE;
         if(CRM_Core_Permission::check('administer Reserved Option')){
+          $action += CRM_Core_Action::ENABLE;
+          $action += CRM_Core_Action::DISABLE;
           if ($dao->is_active) {
             $action -= CRM_Core_Action::ENABLE;
           }

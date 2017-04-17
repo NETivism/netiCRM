@@ -25,6 +25,10 @@
 *}
 {* Display monthly and yearly contributions using Google charts (Bar and Pie) *} 
 
+<div class="last-update-date" style="float: right;font-size: 15px;">
+  {ts 1=$update_time}Last update at %1{/ts}
+</div>
+
 {if $hasChart}
   {if $contribute_total or $chartConributeOnlineOffline or $participant_total or $chartParticipantOnlineOffline or $contact_total or $mailing}
   <div class="row">
@@ -93,45 +97,6 @@
           <h3 class="box-title">{ts}Contact Source{/ts}</h3>
         </div>
         <div class="box-content">{include file="CRM/common/chartist.tpl" chartist=$chartContact}</div>
-      </div>
-    </div>
-  </div>
-  {/if}
-
-  {if $chartInsSum}
-  <div class="row">
-    <div class="col-md-12">
-      <div id="column-contribution-instrument" class="box mdl-shadow--2dp">
-        <div class="box-header">
-          <h3 class="box-title">{ts}Payment Instrument{/ts}</h3>
-        </div>
-        <div class="box-content">{include file="CRM/common/chartist.tpl" chartist=$chartInsSum}</div>
-      </div>
-    </div>
-  </div>
-  {/if}
-
-  {if $chartContribTime}
-  <div class="row">
-    <div class="col-md-12">
-      <div id="column-contribution-times" class="box mdl-shadow--2dp">
-        <div class="box-header">
-          <h3 class="box-title">{ts}Donation Count{/ts}</h3>
-        </div>
-        <div class="box-content">{include file="CRM/common/chartist.tpl" chartist=$chartContribTimes}</div>
-      </div>
-    </div>
-  </div>
-  {/if}
-
-  {if $chartMailing}
-  <div class="row">
-    <div class="col-md-12">
-      <div id="column-mailing-delivered" class="box mdl-shadow--2dp">
-        <div class="box-header">
-          <h3 class="box-title">{ts}Mailing{/ts}</h3>
-        </div>
-        <div class="box-content">{include file="CRM/common/chartist.tpl" chartist=$chartMailing}</div>
       </div>
     </div>
   </div>
@@ -208,6 +173,146 @@
   </div>
   {/if}
 
+  {if $chartInsSum}
+  <div class="row">
+    <div class="col-md-12">
+      <div id="column-contribution-instrument" class="box mdl-shadow--2dp">
+        <div class="box-header">
+          <h3 class="box-title">{ts}Payment Instrument{/ts}</h3>
+        </div>
+        <div class="box-content">{include file="CRM/common/chartist.tpl" chartist=$chartInsSum}</div>
+      </div>
+    </div>
+  </div>
+  {/if}
+
+  {if $chartContribTimes}
+  <div class="row">
+    <div class="col-md-12">
+      <div id="column-contribution-times" class="box mdl-shadow--2dp">
+        <div class="box-header">
+          <h3 class="box-title">{ts}Donation Count{/ts}</h3>
+        </div>
+        <div class="box-content">{include file="CRM/common/chartist.tpl" chartist=$chartContribTimes}</div>
+      </div>
+    </div>
+  </div>
+  {/if}
+
+{if $chartPeopleGender or $chartContributionGender}
+  <div class="row">
+  {if $chartPeopleGender}
+    <div class="col-md-6">
+      <div id="column-people-by-gender" class="box mdl-shadow--2dp">
+        <div class="box-header">
+          <h3 class="box-title">{ts}Contribution people percentage by gender{/ts}</h3>
+        </div>
+        <div class="box-content">{include file="CRM/common/chartist.tpl" chartist=$chartPeopleGender}</div>
+      </div>
+    </div>
+    {/if}
+  {if $chartContributionGender}
+    <div class="col-md-6">
+      <div id="column-people-by-gender" class="box mdl-shadow--2dp">
+        <div class="box-header">
+          <h3 class="box-title">{ts}Contribution sum percentage by gender{/ts}</h3>
+        </div>
+        <div class="box-content">{include file="CRM/common/chartist.tpl" chartist=$chartContributionGender}</div>
+      </div>
+    </div>
+    {/if}
+  </div>
+  {/if}
+  
+  {if $chartPeopleAge or $chartContributionAge}
+  <div class="row">
+  {if $chartPeopleAge}
+    <div class="col-md-6">
+      <div id="column-people-by-age" class="box mdl-shadow--2dp">
+        <div class="box-header">
+          <h3 class="box-title">{ts}Contribution people percentage by age{/ts}</h3>
+        </div>
+        <div class="box-content">{include file="CRM/common/chartist.tpl" chartist=$chartPeopleAge}</div>
+      </div>
+    </div>
+    {/if}
+    {if $chartContributionAge}
+    <div class="col-md-6">
+      <div id="column-people-by-age" class="box mdl-shadow--2dp">
+        <div class="box-header">
+          <h3 class="box-title">{ts}Contribution sum percentage by age{/ts}</h3>
+        </div>
+        <div class="box-content">{include file="CRM/common/chartist.tpl" chartist=$chartContributionAge}</div>
+      </div>
+    </div>
+    {/if}
+  </div>
+  {/if}
+
+{if $chartPeopleProvince or $chartContributionProvince}
+  <div class="row">
+    {if $chartPeopleProvince}
+    <div class="col-md-6">
+      <div id="column-people-by-province" class="box mdl-shadow--2dp">
+        <div class="box-header">
+          <h3 class="box-title">{ts}Contribution people percentage by province{/ts}</h3>
+        </div>
+        <div class="box-content">{include file="CRM/common/chartist.tpl" chartist=$chartPeopleProvince}</div>
+      </div>
+    </div>
+    {/if}
+    {if $chartContributionProvince}
+    <div class="col-md-6">
+      <div id="column-people-by-province" class="box mdl-shadow--2dp">
+        <div class="box-header">
+          <h3 class="box-title">{ts}Contribution sum percentage by province{/ts}</h3>
+        </div>
+        <div class="box-content">{include file="CRM/common/chartist.tpl" chartist=$chartContributionProvince}</div>
+      </div>
+    </div>
+    {/if}
+  </div>
+{/if}
+
+  {if $chartMailingFunnel}
+  <div class="row">
+    <div class="col-md-12">
+      <div id="column-mailing-funnel" class="box mdl-shadow--2dp">
+        <div class="box-header">
+          <h3 class="box-title">{ts}Mailing{/ts}</h3>
+        </div>
+        <div class="box-content">{include file="CRM/common/funnel.tpl" funnel=$chartMailingFunnel}</div>
+      </div>
+    </div>
+  </div>
+  {/if}
+
+{if $chartParticipantAfterMailing}
+  <div class="row">
+    <div class="col-md-12">
+      <div id="column-participant-after-mailing" class="box mdl-shadow--2dp">
+        <div class="box-header">
+          <h3 class="box-title">{ts}Participants count in ... after opened mail{/ts}</h3>
+        </div>
+        <div class="box-content">{include file="CRM/common/chartist.tpl" chartist=$chartParticipantAfterMailing}</div>
+      </div>
+    </div>
+  </div>
+{/if}
+
+{if $chartContributionAfterMailing}
+  <div class="row">
+    <div class="col-md-12">
+      <div id="column-contribution-after-mailing" class="box mdl-shadow--2dp">
+        <div class="box-header">
+          <h3 class="box-title">{ts}Contribution count in ... after opened mail{/ts}</h3>
+        </div>
+        <div class="box-content">{include file="CRM/common/chartist.tpl" chartist=$chartContributionAfterMailing}</div>
+      </div>
+    </div>
+  </div>
+{/if}
+
   {if $showhidden}
   {foreach from=$showhiddenChart item=item key=key}
     
@@ -221,3 +326,11 @@
   {/if}
 
 {/if}
+
+{literal}
+<script type="text/javascript">
+(function($){
+  $('.last-update-date').appendTo('h1.page-title');
+})(jQuery);
+</script>
+{/literal}

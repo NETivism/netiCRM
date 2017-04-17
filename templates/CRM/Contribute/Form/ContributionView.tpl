@@ -24,7 +24,7 @@
  +--------------------------------------------------------------------+
 *}
 <div class="crm-block crm-content-block crm-contribution-view-form-block">
-<h3>{ts}View Contribution{/ts}</h3>
+<h3>{ts}View Contribution{/ts}{if $is_test} - (<span class="font-red">{ts}Is Test{/ts}</span>){/if}</h3>
 <div class="crm-actions-ribbon action-link-button">
   <ul>
     {if call_user_func(array('CRM_Core_Permission','check'), 'edit contributions')}
@@ -33,13 +33,6 @@
        {assign var='urlParams' value="reset=1&id=$id&cid=$contact_id&action=update&context=$context&key=$searchKey"}	   
        {/if}
        <li><a class="button" href="{crmURL p='civicrm/contact/view/contribution' q=$urlParams}" accesskey="e"><i class="zmdi zmdi-edit"></i>{ts}Edit{/ts}</a></li>
-    {/if}
-    {if call_user_func(array('CRM_Core_Permission','check'), 'delete in CiviContribute')}
-       {assign var='urlParams' value="reset=1&id=$id&cid=$contact_id&action=delete&context=$context"}
-       {if ( $context eq 'fulltext' || $context eq 'search' ) && $searchKey}
-       {assign var='urlParams' value="reset=1&id=$id&cid=$contact_id&action=delete&context=$context&key=$searchKey"}	   
-       {/if}
-       <li><a class="button" href="{crmURL p='civicrm/contact/view/contribution' q=$urlParams}"><i class="zmdi zmdi-delete"></i>{ts}Delete{/ts}</a></li>
     {/if}
      {if $receipt_id}
        {assign var='urlParams' value="reset=1&id=$id&cid=$contact_id&action=pdf&context=$context"}
@@ -70,8 +63,9 @@
         <td class="bold">{$displayName}</td>
     </tr>
     <tr>
-        <td class="label">{ts}Contribution Type{/ts}</td>
-    	<td>{$contribution_type}{if $is_test} {ts}(test){/ts} {/if}</td>
+      {assign var='urlParams' value="reset=1&id=$id&cid=$contact_id&action=update"}
+      <td class="label">{ts}Contribution Type{/ts}</td>
+    	<td>{$contribution_type}{if $is_taxreceipt} (<a href="{crmURL p="civicrm/contribute/taxreceipt" q=$urlParams"}" target="_blank">{ts}Tax Receipt{/ts}</a>){/if}</td>
     </tr>
     {if $lineItem}
     <tr>
@@ -84,7 +78,7 @@
         <td><strong>{$total_amount|crmMoney:$currency}</strong>&nbsp; 
             {if $contribution_recur_id}
               <strong>{ts}Recurring Contribution{/ts}</strong> <br/>
-              {ts}Installments{/ts}: {$recur_installments}, {ts}Interval{/ts}: {$recur_frequency_interval} {$recur_frequency_unit}(s)
+              {ts}Installments{/ts}: {$recur_installments}, {ts}Interval{/ts}: {$recur_frequency_interval} {$recur_frequency_unit}
             {/if}
         </td>
     </tr>
@@ -277,13 +271,6 @@
        {assign var='urlParams' value="reset=1&id=$id&cid=$contact_id&action=update&context=$context&key=$searchKey"}	   
        {/if}
        <a class="button" href="{crmURL p='civicrm/contact/view/contribution' q=$urlParams}" accesskey="e"><span><i class="zmdi zmdi-edit"></i>{ts}Edit{/ts}</span></a>
-    {/if}
-    {if call_user_func(array('CRM_Core_Permission','check'), 'delete in CiviContribute')}
-       {assign var='urlParams' value="reset=1&id=$id&cid=$contact_id&action=delete&context=$context"}
-       {if ( $context eq 'fulltext' || $context eq 'search' ) && $searchKey}
-       {assign var='urlParams' value="reset=1&id=$id&cid=$contact_id&action=delete&context=$context&key=$searchKey"}	   
-       {/if}
-       <a class="button" href="{crmURL p='civicrm/contact/view/contribution' q=$urlParams}"><span><i class="zmdi zmdi-delete"></i>{ts}Delete{/ts}</span></a>
     {/if}
     {include file="CRM/common/formButtons.tpl" location="bottom"}
 </div>

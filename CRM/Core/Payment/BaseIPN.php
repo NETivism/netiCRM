@@ -52,7 +52,9 @@ class CRM_Core_Payment_BaseIPN {
       echo "Failure: Could not find contribution record for $contributionID<p>";
       return FALSE;
     }
-    $contribution->receive_date = CRM_Utils_Date::isoToMysql($contribution->receive_date);
+    if (!empty($contribution->receive_date)) {
+      $contribution->receive_date = CRM_Utils_Date::isoToMysql($contribution->receive_date);
+    }
     $contribution->created_date = CRM_Utils_Date::isoToMysql($contribution->created_date);
 
     // make sure contact exists and is valid
@@ -234,16 +236,29 @@ class CRM_Core_Payment_BaseIPN {
     return TRUE;
   }
 
-  function failed(&$objects, &$transaction) {
+  function failed(&$objects, &$transaction, $message = '') {
     CRM_Utils_Hook::ipnPre('failed', $objects);
     $contribution = &$objects['contribution'];
     $membership = &$objects['membership'];
     $participant = &$objects['participant'];
+    $contact = &$objects['contact'];
 
     $contribution->contribution_status_id = 4;
+    if (empty($contribution->cancel_date)) {
+      $contribution->cancel_date = self::$_now;
+    }
+    if ($message) {
+      if ($contribution->cancel_reason) {
+        $contribution->cancel_reason .= "\n".$message;
+      }
+      else {
+        $contribution->cancel_reason = $message;
+      }
+    }
     if (!empty($contribution->created_date)) {
       $contribution->created_date = CRM_Utils_Date::isoToMysql($contribution->created_date);
     }
+    $contribution->receive_date = 'null';
     $contribution->save();
 
     if ($membership) {
@@ -267,8 +282,37 @@ class CRM_Core_Payment_BaseIPN {
     $transaction->commit();
     CRM_Utils_Hook::ipnPost('failed', $objects);
     CRM_Core_Error::debug_log_message("Setting contribution status to failed");
+
+    // Send notify email as
+    if(!empty($contribution->contribution_recur_id)){
+      $sql = "SELECT COUNT(id) FROM civicrm_contribution WHERE contribution_recur_id = {$contribution->contribution_recur_id}";
+      $crcount = CRM_Core_DAO::singleValueQuery($sql);
+
+      $sql_recur_fail_notify = "SELECT cp.recur_fail_notify FROM civicrm_contribution c INNER JOIN civicrm_contribution_page cp ON c.contribution_page_id = cp.id WHERE c.id = {$contribution->id}";
+      $recur_fail_notify = CRM_Core_DAO::singleValueQuery($sql_recur_fail_notify);
+
+      if($crcount >= 2 && $contribution->contribution_status_id == 4 && !empty($recur_fail_notify)){
+        $values = array(
+          'contribution_id' => $contribution->id,
+          'currency' => $contribution->currency,
+          'total_amount' => $contribution->total_amount,
+          'cancel_date' => $contribution->cancel_date,
+          'contribution_recur_id' => $contribution->contribution_recur_id,
+          'trxn_id' => $contribution->trxn_id,
+          'display_name' => $contact->display_name,
+          'recur_fail_notify' => $recur_fail_notify,
+          'message' => $message,
+          );
+        $isTest = FALSE;
+        if($contribution->is_test){
+          $isTest = TRUE;
+        }
+        $returnArray = CRM_Contribute_BAO_ContributionPage::sendFailedNotifyMail($contribution->contact_id, $values, $contribution->is_test, TRUE);
+      }
+    }
+
     //echo "Success: Setting contribution status to failed<p>";
-    return TRUE;
+    return $returnArray;
   }
 
   function pending(&$objects, &$transaction) {
@@ -481,7 +525,12 @@ class CRM_Core_Payment_BaseIPN {
     $contribution->fee_amount = $input['fee_amount'];
     $contribution->net_amount = $input['net_amount'];
     $contribution->trxn_id = $input['trxn_id'];
-    $contribution->receive_date = CRM_Utils_Date::isoToMysql($contribution->receive_date);
+    if (!empty($contribution->receive_date)) {
+      $contribution->receive_date = CRM_Utils_Date::isoToMysql($contribution->receive_date);
+    }
+    else {
+      $contribution->receive_date = self::$_now;
+    }
     $contribution->created_date = CRM_Utils_Date::isoToMysql($contribution->created_date);
     $contribution->cancel_date = 'null';
 
@@ -929,7 +978,7 @@ class CRM_Core_Payment_BaseIPN {
 
       require_once 'CRM/Core/OptionGroup.php';
       $values['amount_level'] = CRM_Core_OptionGroup::optionLabel("civicrm_contribution_page.amount.".(string)$values['id'],(int)($template->get_template_vars('amount')));
-      $template->assign('amount_level', $values['amount_level']);      
+      $template->assign('amount_level', $values['amount_level']);
       // 2015.1.30 End
 
       $template->assign('paymentProcessor',$objects['paymentProcessor']);

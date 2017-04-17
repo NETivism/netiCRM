@@ -123,7 +123,7 @@ class CRM_Core_Config_Variables extends CRM_Core_Config_Defaults {
    * Locale for the application to run with.
    * @var string
    */
-  public $lcMessages = 'en_US';
+  public $lcMessages = CRM_Core_Config::SYSTEM_LANG;
 
   /**
    * String format for date+time

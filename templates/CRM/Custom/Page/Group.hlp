@@ -58,7 +58,7 @@
 {/htxt}
 
 {htxt id="id-weight"}
-    {ts}Weight controls the order in which custom field sets are presented when there are more than one. Enter a positive or negative integer - lower numbers are displayed ahead of higher numbers.{/ts}
+    {ts}Weight controls the order in which custom field sets are presented when there are more than one. Enter a positive integer - lower numbers are displayed ahead of higher numbers.{/ts}
 {/htxt}
 
 {htxt id="id-collapse"}

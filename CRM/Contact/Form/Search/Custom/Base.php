@@ -38,7 +38,9 @@ class CRM_Contact_Form_Search_Custom_Base {
 
   protected $_formValues;
 
-  protected $_columns; function __construct(&$formValues) {
+  protected $_columns;
+  
+  function __construct(&$formValues) {
     $this->_formValues = &$formValues;
   }
 

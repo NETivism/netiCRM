@@ -436,6 +436,36 @@ class CRM_Core_Payment_NewebTest extends CiviUnitTestCase {
       'contribution_status_id' => 1, 
     );
     $this->assertDBState('CRM_Contribute_DAO_Contribution', $next_id, $params);
+    $params = array(
+      1 => array($next_trxn_id, 'String'),
+    );
+    $this->assertDBQuery(1, "SELECT count(*) FROM civicrm_contribution WHERE trxn_id = %1 AND receive_date IS NOT NULL AND receive_date >= '".date('Y-m-d H:i:s', $now-3600)."'", $params);
+
+    /**
+     * Test failed contribution.
+     */
+    // update contribution by .log files
+    $next_id = $id + 2;
+    $next_trxn_id = 900000000 + $next_id;
+
+    $line = array(
+      "$this->_merchant_no,$recurring->id,$next_trxn_id,200,34,171,3/-10,654321,$today01,$today$next_trxn_id,0"
+      );
+    write_file($file_path,$line);
+
+    civicrm_neweb_process_transaction($this->_is_test,$now, $this->_processor['id']);
+
+    // verify new contribution status
+    $params = array(
+      'is_test' => $this->_is_test,
+      'trxn_id' => $next_trxn_id,
+      'contribution_status_id' => 4,
+    );
+    $this->assertDBState('CRM_Contribute_DAO_Contribution', $next_id, $params);
+    $params = array(
+      1 => array($next_trxn_id, 'String'),
+    );
+    $this->assertDBQuery(1, "SELECT count(*) FROM civicrm_contribution WHERE trxn_id = %1 AND receive_date IS NULL AND cancel_date IS NOT NULL AND cancel_reason IS NOT NULL", $params);
     
   }
 }

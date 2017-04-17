@@ -530,6 +530,10 @@ class CRM_Event_Form_ManageEvent_Fee extends CRM_Event_Form_ManageEvent {
           $errors['pay_later_receipt'] = ts('Please enter the Pay Later instructions to be displayed to your users.');
         }
       }
+      if (empty($values['is_pay_later']) && empty($values['payment_processor'])) {
+        $errors['payment_processor'] = ts('Payment processor is not set for this page');
+        $errors['is_pay_later'] = ts('A payment processor must be selected for this event registration page, or the event must be configured to give users the option to pay later.');
+      }
     }
     return empty($errors) ? TRUE : $errors;
   }

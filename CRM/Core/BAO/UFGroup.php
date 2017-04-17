@@ -2348,7 +2348,7 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
             'contactLink' => $contactLink,
           ),
           'from' => "$domainEmailName <$domainEmailAddress>",
-          'toEmail' => $emailTo,
+          'toEmail' => str_replace(' ', '', $emailTo),
         )
       );
     }
