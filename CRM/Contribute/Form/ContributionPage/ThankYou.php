@@ -72,6 +72,10 @@ class CRM_Contribute_Form_ContributionPage_ThankYou extends CRM_Contribute_Form_
     $this->add('text', 'receipt_from_name', ts('Payment Notification From Name'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionPage', 'receipt_from_name'));
     $this->add('text', 'receipt_from_email', ts('Payment Notification From Email'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionPage', 'receipt_from_email'));
     $this->assign('mail_providers', str_replace('|', ', ', CRM_Utils_Mail::DMARC_MAIL_PROVIDERS));
+    $defaultFromMail = CRM_Mailing_BAO_Mailing::defaultFromMail();
+    $this->assign('default_from_target', 'receipt_from_email');
+    $this->assign('default_from_value', $defaultFromMail);
+
     $this->addWysiwyg('receipt_text', ts('Payment Notification Message'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionPage', 'receipt_text'));
 
     $this->add('text', 'cc_receipt', ts('CC Payment Notification To'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionPage', 'cc_receipt'));

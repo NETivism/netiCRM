@@ -68,7 +68,9 @@
     <tr class="crm-contribution-contributionpage-thankyou-form-block-receipt_from_email">
 	<td class="label">{$form.receipt_from_email.label}{$reqMark}
 	</td>
-	<td class="html-adjust">{$form.receipt_from_email.html}<br />
+	<td class="html-adjust">{$form.receipt_from_email.html}
+      {include file="CRM/common/defaultFrom.tpl"}
+      <br />
 	    <span class="description">{ts}Enter the FROM email address to be used when payment notification are emailed to contributors.{/ts}<br>
       {ts}Most of mail providers apply DMARC, that means if you use free email address as mail sender, the mail will be blocked by destination inbox.{/ts}<br>
 			{ts 1=`$mail_providers`}Do not use free mail address as mail sender. (eg. %1){/ts}

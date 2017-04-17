@@ -67,6 +67,7 @@ class CRM_Admin_Form_Options extends CRM_Admin_Form {
    */
   public function preProcess() {
     parent::preProcess();
+    $config = CRM_Core_Config::singleton();
     $session = CRM_Core_Session::singleton();
     if (!$this->_gName) {
       $this->_gName = CRM_Utils_Request::retrieve('group', 'String', $this, FALSE, 0);
@@ -90,6 +91,9 @@ class CRM_Admin_Form_Options extends CRM_Admin_Form {
 
     if ($this->_gName == 'from_email_address') {
       $this->assign('mail_providers', str_replace('|', ', ', CRM_Utils_Mail::DMARC_MAIL_PROVIDERS));
+			$defaultFromMail = CRM_Mailing_BAO_Mailing::defaultFromMail();
+			$this->assign('default_from_target', 'label');
+			$this->assign('default_from_value', '"'.$config->domain->name.'" <'.$defaultFromMail.'>');
     }
 
     require_once 'CRM/Core/OptionGroup.php';

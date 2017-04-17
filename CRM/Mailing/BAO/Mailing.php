@@ -2734,5 +2734,16 @@ ORDER BY civicrm_mailing.name";
 
     return $list;
   }
+
+  public static function defaultFromMail($part = ""){
+    $localpart = CRM_Core_BAO_MailSettings::defaultLocalpart();
+    $localpart = rtrim($localpart, '+');
+    $emailDomain = CRM_Core_BAO_MailSettings::defaultDomain();
+    $part = empty($part) ? '' : '+'.$part;
+    if (!empty($localpart) && !empty($emailDomain)) {
+      return $localpart.$part.'@'.$emailDomain;
+    }
+    return '';
+  }
 }
 
