@@ -439,5 +439,9 @@ HTACCESS;
 
     return $basePath . $directory;
   }
+
+  static function chmod($dir, $mode) {
+    chmod($dir, $mode);
+  }
 }
 

@@ -191,6 +191,7 @@ class CRM_Core_Config_Defaults {
 
       CRM_Utils_File::createDir($uploadDir);
       CRM_Utils_File::restrictAccess($uploadDir);
+      CRM_Utils_File::chmod($uploadDir, 0777);
       $defaults['uploadDir'] = $uploadDir;
     }
 

@@ -399,7 +399,8 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
     // if settings are not available, go down the full path
     if (empty($variables['userFrameworkResourceURL'])) {
       // Step 1. get system variables with their hardcoded defaults
-      $variables = get_object_vars($this);
+      $defaultVariables = get_object_vars($this);
+      $variables = array_merge($defaultVariables, $variables);
 
       // Step 2. get default values (with settings file overrides if
       // available - handled in CRM_Core_Config_Defaults)
