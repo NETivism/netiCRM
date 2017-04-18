@@ -53,20 +53,13 @@
           valSum += val;
         }
         
-        if (k > 0) {
-          progress[k-1] = {};
-        }
+        progress[k] = {};
 
         for (var j = 0; j < row; j++) {
           bar.items[j].percent = getPercent(bar.items[j].value, valSum, 2);
 
-          if (k > 0) {
-            if (j == 0) {
-              progress[k-1].bottom = bar.items[j].percent;
-            }
-            else {
-              progress[k-1].top = bar.items[j].percent;
-            }
+          if (j == 0) {
+            progress[k].bottom = bar.items[j].percent;
           }
         }
 
@@ -106,9 +99,6 @@
 
     // Render progress content
     for (var i in progress) {
-      var progressTop = "<div class='ncf-progress ncf-progress-top'>" + progress[i].top  + "%</div>";
-      $funnel.find(".ncf-arrow").eq(i).before(progressTop);
-      
       var progressBottom = "<div class='ncf-progress ncf-progress-bottom'>" + progress[i].bottom  + "%</div>";
       $funnel.find(".ncf-arrow").eq(i).after(progressBottom);
     }
