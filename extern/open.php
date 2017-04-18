@@ -9,7 +9,7 @@ if (!$queue_id) {
 }
 CRM_Mailing_Event_BAO_Opened::open($queue_id);
 
-$filename = "../i/tracker.gif";
+$filename = __DIR__."/../i/tracker.gif";
 
 header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 header('Content-Description: File Transfer');
