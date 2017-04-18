@@ -77,8 +77,10 @@
 
           itemOutput += 
           "<div class='ncf-bar ncf-bar-" + b + "' role='bar' aria-valuenow='" + p + "' aria-valuemin='0' aria-valuemax='100' data-value='" + v + "' data-percent='" + p + "' style='height: "+ p +"%;'>" +
-            "<div class='ncf-bar-percent'>" + p + "%</div>" +
-            "<div class='ncf-bar-meta'>" + v + "</div>" + 
+            "<div class='ncf-bar-meta'>" +
+              "<div class='ncf-bar-meta-sum'>" + v.toLocaleString() + "</div>" +
+              "<div class='ncf-bar-meta-percent'>" + p + "%</div>" +
+            "</div>" +
           "</div>";
         }
         itemOutput += "</div>";

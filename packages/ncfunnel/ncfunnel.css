@@ -21,6 +21,7 @@
   position: relative;
   float: left;
   height: 100%;
+  font-size: 16px;
 }
 .ncf-chart-bar {
   position: relative;
@@ -33,7 +34,6 @@
   width: 0;
   height: 100%;
   text-align: center;
-  font-size: 12px;
   line-height: 20px;
   color: #fff;
   background-color: #337ab7;
@@ -172,6 +172,7 @@
   right: 0;
   margin: 0 30px 0 0;
 }
+/*
 .ncf-horizontal .ncf-bar[data-value="0"] .ncf-bar-meta {
   display: none;
   top: auto;
@@ -181,6 +182,7 @@
 .ncf-horizontal .ncf-chart-bar > .ncf-bar[data-value="0"]:first-child .ncf-bar-meta {
   display: block;
 }
+*/
 .ncf-chart-bar .ncf-bar:first-child .ncf-bar-meta {
   bottom: auto;
   top: 0;
@@ -190,4 +192,11 @@
 }
 .ncf-horizontal .ncf-bar-1 .ncf-bar-meta {
   color: #E53935;
+}
+.ncf-horizontal .ncf-bar-meta-sum {
+  font-size: 15px;
+}
+.ncf-horizontal .ncf-bar-meta-percent {
+  font-size: 12px;
+  color: #9E9E9E;
 }
