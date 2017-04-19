@@ -47,5 +47,6 @@ $output = '
   var jsondata = '.json_encode( $data ) .';
 ';
 
+header('Content-type: application/javascript');
 echo $output;
 CRM_Utils_System::civiExit( );
