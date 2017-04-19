@@ -287,18 +287,18 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
       $template->assign('chartParticipantAfterMailing', $chartParticipantAfterMailing);
     }
 
-    if(end(end($contribution_after_mailing)) > 0){
-      $chartContributionAfterMailing = array(
-        'name' => 'contribution_after_mailing',
-        'id' => 'chart-bar-contribution_after_mailing',
-        'selector' => '#chart-bar-contribution_after_mailing',
+    if(end(end($contribute_after_mailing)) > 0){
+      $chartContributeAfterMailing = array(
+        'name' => 'contribute_after_mailing',
+        'id' => 'chart-bar-contribute_after_mailing',
+        'selector' => '#chart-bar-contribute_after_mailing',
         'type' => 'Line',
-        'labels' => json_encode(array_keys($contribution_after_mailing)),
-        'series' => json_encode(self::dataTransferShowHidden($contribution_after_mailing)),
+        'labels' => json_encode(array_keys($contribute_after_mailing)),
+        'series' => json_encode(self::dataTransferShowHidden($contribute_after_mailing)),
         'withToolTip' => true,
       );
 
-      $template->assign('chartContributionAfterMailing', $chartContributionAfterMailing);
+      $template->assign('chartContributeAfterMailing', $chartContributeAfterMailing);
     }
 
     $template->assign('update_time', date('Y-m-d H:i:s',$time));

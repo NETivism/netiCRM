@@ -291,7 +291,7 @@ WHERE c.receive_date > mm.time_stamp AND c.receive_date < DATE_ADD(mm.time_stamp
         // $group_by_condition = $group_by_field = 'p.name';
         $group_by_field = 'p.name';
         $table = 'civicrm_contact c LEFT JOIN (SELECT a.contact_id contact_id, p.name name FROM civicrm_address a INNER JOIN civicrm_state_province p ON a.state_province_id = p.id WHERE a.is_primary = 1 AND a.country_id = 1208) p ON c.id = p.contact_id';
-        $order_by = 'ORDER BY people DESC';
+        $order_by = 'ORDER BY sum DESC';
         break;
     }
     $is_contribution = $params['contribution'];
@@ -312,8 +312,10 @@ WHERE c.receive_date > mm.time_stamp AND c.receive_date < DATE_ADD(mm.time_stamp
       if($condition == self::PROVINCE){
         if(!empty($dao->label)){
           $count++;
-          if($count >= 5){
+          if($count > 5){
+            $returnArray[ts('Other')]['count'] += $dao->count;
             $returnArray[ts('Other')]['people'] += $dao->people;
+            $returnArray[ts('Other')]['sum'] += $dao->sum;
             continue;
           }
         }
