@@ -312,6 +312,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
     // instead of in CRM_Core_Config_Defaults
     if (defined('CIVICRM_DSN')) {
       $this->dsn = CIVICRM_DSN;
+      $this->_initDAO();
     }
     elseif ($loadFromDB) {
       // bypass when calling from gencode
@@ -327,8 +328,6 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
       echo 'You need to define CIVICRM_UF in civicrm.settings.php';
       exit();
     }
-
-    $this->_initDAO();
 
     // also initialize the logger
     self::$_log = &Log::singleton('display');
