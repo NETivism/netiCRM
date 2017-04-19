@@ -122,13 +122,7 @@
   {/if}
 
   {if $event.description}
-      <div class="crm-section event_description-section summary">
-          {* Put the top register link to the right of description if no summary *}
-          {if $allowRegistration && !$event.summary}
-              <div class="action-link section register_link-section register_link-top">
-                <a href="{$registerURL}" title="{$registerText}" class="button crm-register-button"><span>{$registerText}</span></a>
-              </div>
-          {/if}
+      <div class="crm-section event_description-section">
           {$event.description}
       </div>
   {/if}
