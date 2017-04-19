@@ -300,14 +300,14 @@
   </div>
 {/if}
 
-{if $chartContributionAfterMailing}
+{if $chartContributeAfterMailing}
   <div class="row">
     <div class="col-md-12">
-      <div id="column-contribution-after-mailing" class="box mdl-shadow--2dp">
+      <div id="column-contribute-after-mailing" class="box mdl-shadow--2dp">
         <div class="box-header">
           <h3 class="box-title">{ts}Contribution count in ... after opened mail{/ts}</h3>
         </div>
-        <div class="box-content">{include file="CRM/common/chartist.tpl" chartist=$chartContributionAfterMailing}</div>
+        <div class="box-content">{include file="CRM/common/chartist.tpl" chartist=$chartContributeAfterMailing}</div>
       </div>
     </div>
   </div>
