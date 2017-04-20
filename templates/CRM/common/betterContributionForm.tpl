@@ -160,12 +160,12 @@ cj(function($){
     var $sameas = $('#same_as');
     var error = false;
     if( $sameas.is(':checked') && $('#r_person').is(':checked')){
-      if($('#legal_identifier').length >= 1){
+      if($('#legal_identifier').length >= 1 && $('#custom_{/literal}{$receiptSerial}{literal}').length > 1){
         if(($('#legal_identifier').val() == '' ) || !validTWID($('#legal_identifier').val())){
           error = true;
         }
       }
-      if($('#last_name,#first_name').length>1){
+      if($('#last_name,#first_name').length>1 && $('#custom_{/literal}{$receiptTitle}{literal}').length > 1){
         if(($('#last_name').val()+$('#first_name').val()) == ''){
           error = true;
         }
