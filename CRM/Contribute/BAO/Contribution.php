@@ -2080,10 +2080,10 @@ SELECT source_contact_id
       $addr = reset($addresses);
     }
     if (!empty($addr)) {
-      $template->assign('address', $addr['display_text']);
+      $address = $addr['display_text'];
     }
     else {
-      $template->assign('address', '');
+      $address = '';
     }
 
     // get primary location email if no email exist( for billing location).
