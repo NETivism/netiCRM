@@ -45487,3 +45487,6 @@ msgstr ""
 
 msgid "Use default: %1"
 msgstr ""
+
+msgid "First match address type. If not found, will use the other address type."
+msgstr ""

@@ -11,7 +11,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2017-04-17 16:02+0000\n"
+"PO-Revision-Date: 2017-04-21 04:36+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -39556,7 +39556,7 @@ msgstr "Email 寄件者"
 
 #: xml/templates/civicrm_navigation.tpl
 msgid "Addressee Formats"
-msgstr "地址格式"
+msgstr "收件人格式"
 
 #: xml/templates/civicrm_navigation.tpl
 msgid "Phone Types"
@@ -45538,3 +45538,7 @@ msgstr "已收到上傳的檔案"
 
 msgid "Use default: %1"
 msgstr "帶入預設值: %1"
+
+msgid ""
+"First match address type. If not found, will use the other address type."
+msgstr "收據地址的首要條件，如果沒有找到任何地址，將會使用第一個找到的地址。"

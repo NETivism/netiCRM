@@ -1020,13 +1020,24 @@ ORDER BY civicrm_address.is_primary DESC, civicrm_address.location_type_id DESC,
    * @return return if type exists, or return first address
    */
   static function getAddressByDefault($addresses, $type) {
+    $locationTypes = CRM_Core_PseudoConstant::locationType(FALSE, 'name');
+    $billingLocationTypeId = array_search('Billing', $locationTypes);
+    $billingLocationAddr = NULL;
     if (is_array($addresses)) {
       foreach($addresses as $addr) {
+        if ($addr['location_type_id'] == $billingLocationTypeId) {
+          $billingLocationAddr = $addr;
+        }
         if (isset($addr[$type]) && $addr[$type]) {
           return $addr;
         }
       }
-      return reset($addresses);
+      if ($type == 'is_billing' && $billingLocationAddr) {
+        return $billingLocationAddr;
+      }
+      else {
+        return reset($addresses);
+      }
     }
     return array();
   }
