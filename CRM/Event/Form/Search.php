@@ -143,6 +143,14 @@ class CRM_Event_Form_Search extends CRM_Core_Form {
   protected $_ssID;
 
   /**
+   * event infomation from saved event
+   *
+   * @var int
+   * @access protected
+   */
+  protected $_event;
+
+  /**
    * processing needed for buildForm and later
    *
    * @return void
@@ -169,7 +177,6 @@ class CRM_Event_Form_Search extends CRM_Core_Form {
 
     $this->_reset = CRM_Utils_Request::retrieve('reset', 'Boolean', CRM_Core_DAO::$_nullObject);
     $this->_force = CRM_Utils_Request::retrieve('force', 'Boolean', $this, FALSE);
-    $this->_eventId = CRM_Utils_Request::retrieve('event', 'Positive', CRM_Core_DAO::$_nullObject);
     $this->_limit = CRM_Utils_Request::retrieve('limit', 'Positive', $this);
     $this->_context = CRM_Utils_Request::retrieve('context', 'String', $this, FALSE, 'search');
     $this->_ssID = CRM_Utils_Request::retrieve('ssID', 'Positive', $this);
@@ -183,6 +190,41 @@ class CRM_Event_Form_Search extends CRM_Core_Form {
     else {
       $this->_formValues = $this->get('formValues');
     }
+
+    $this->_eventId = CRM_Utils_Request::retrieve('event', 'Positive', CRM_Core_DAO::$_nullObject);
+    if (empty($this->_eventId) && !empty($this->_formValues['event_id']) && is_numeric($this->_formValues['event_id'])) {
+      $this->_eventId = $this->_formValues['event_id']; 
+    }
+    if ($this->_eventId) {
+      $params = array('id' => $this->_eventId);
+      CRM_Event_BAO_Event::retrieve($params, $this->_event);
+
+      if ($this->_event['id']) {
+        // participant count
+        $max_participants = $this->_event['max_participants'];
+        $status_summary = CRM_Event_PseudoConstant::participantStatus('', NULL, 'label');
+        $status_summary = array_flip($status_summary);
+        $summary = CRM_Event_BAO_Participant::statusEventSeats($this->_eventId);
+        $summary['status'] = $status_summary;
+        $summary['space'] = $max_participants ? $max_participants : 0;
+        $this->assign('participantSummary', $summary);
+
+        // prepopulate form
+        $prePopulate = array(
+          array('id' => $event, 'name' => $this->_event['title']),
+        );
+        $this->assign('eventPrepopulate', json_encode($prePopulate));
+
+        // online registration links
+        $this->assign('isOnlineRegistration', $this->_event['is_online_registration']);
+        $participantListingID = CRM_Utils_Array::value('participant_listing_id', $eventInfo);
+        if ($this->_event['participant_listing_id']) {
+          $participantListingURL = CRM_Utils_System::url('civicrm/event/participant', "reset=1&id={$event}", TRUE, NULL, TRUE, TRUE);
+          $this->assign('participantListingURL', $participantListingURL);
+        }
+      }
+    }
+    $this->assign("event_id", $this->_eventId);
 
     if (empty($this->_formValues)) {
       if (isset($this->_ssID)) {
@@ -218,7 +260,6 @@ class CRM_Event_Form_Search extends CRM_Core_Form {
 
     $this->assign("{$prefix}limit", $this->_limit);
     $this->assign("{$prefix}single", $this->_single);
-    $this->assign("event_id", $this->_eventId);
 
     $controller = new CRM_Core_Selector_Controller($selector,
       $this->get(CRM_Utils_Pager::PAGE_ID),
@@ -530,44 +571,17 @@ class CRM_Event_Form_Search extends CRM_Core_Form {
     // if this search has been forced
     // then see if there are any get values, and if so over-ride the post values
     // note that this means that GET over-rides POST :)
-    $event = CRM_Utils_Request::retrieve('event', 'Positive', CRM_Core_DAO::$_nullObject);
-    if(empty($event) && is_numeric($this->_formValues['event_id'])){
-      $sessionFormValues = $this->controller->get('formValues');
-      if(!empty($sessionFormValues['event_id']) && $sessionFormValues['event_id'] == $this->_formValues['event_id']){
-        $event = $sessionFormValues['event_id'];
-      }
-    }
-    if ($event) {
-      $this->_eventId = $event;
-      require_once 'CRM/Event/PseudoConstant.php';
-      $this->_formValues['event_id'] = $event;
-      $eventTitle = CRM_Event_BAO_Event::retrieveField($event, 'title');
-      $this->_formValues['event_name'] = $eventTitle;
-      $this->assign('id', $event);
-      $prePopulate = array(
-        array('id' => $event, 'name' => $eventTitle),
-      );
-      $this->assign('eventPrepopulate', json_encode($prePopulate));
-      $this->assign('isOnlineRegistration', $object['is_online_registration']);
-      $this->assign('hideParticipantLink', 1);
-      $participantListingURL = CRM_Utils_System::url('civicrm/event/participant', "reset=1&id={$event}", TRUE, NULL, TRUE, TRUE);
-      $this->assign('participantListingURL', $participantListingURL);
-      CRM_Utils_System::setTitle($eventTitle);
-
-      // participant count
-      $max_participants = CRM_Core_DAO::getFieldValue('CRM_Event_DAO_Event', $event, 'max_participants');
-
-      $status_summary = CRM_Event_PseudoConstant::participantStatus('', NULL, 'label');
-      $status_summary = array_flip($status_summary);
-      $summary = CRM_Event_BAO_Participant::statusEventSeats($event);
-      $summary['status'] = $status_summary;
-      $summary['space'] = $max_participants ? $max_participants : 0;
-      $this->assign('participantSummary', $summary);
+    if (($this->_event['id'] && $this->_force) ||
+        ($this->_event['id'] == $this->_formValues['event_id'])
+    ) {
+      $this->_formValues['event_id'] = $this->_event['id'];
+      $this->_formValues['event_name'] = $this->_event['title'];
+      CRM_Utils_System::setTitle($this->_event['title']);
     }
     else {
       if (isset($this->_defaultValues['event_id']) && !empty($this->_defaultValues['event_id'])) {
         if (is_numeric($this->_defaultValues['event_id'])) {
-          $this->assign('id', $this->_defaultValues['event_id']);
+          $this->assign('event_id', $this->_defaultValues['event_id']);
         }
       }
     }

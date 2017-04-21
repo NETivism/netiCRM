@@ -8,7 +8,7 @@
       </li>
       <li>
         <div class="action-wrapper">
-    	    <div class="action-link-button" id="crm-event-nav-link"><a class="button" href="{crmURL p='civicrm/participant/add' q="reset=1&action=add&context=standalone&eid=`$id`"}"><i class="zmdi zmdi-account-add"></i>{ts}Register New Participant{/ts}</a></div>
+    	    <div class="action-link-button" id="crm-event-nav-link"><a class="button" href="{crmURL p='civicrm/participant/add' q="reset=1&action=add&context=standalone&eid=`$id`"}" target="_blank"><i class="zmdi zmdi-account-add"></i>{ts}Register New Participant{/ts}</a></div>
         </div>
       </li>
       <li>
@@ -35,10 +35,10 @@
               <ul>
                 <li><a class="crm-event-info" href="{crmURL p='civicrm/event/info' q="reset=1&id=`$id`" fe='true'}" target="_blank">{ts}Event Info{/ts}</a></li>
                 {if $isOnlineRegistration}
-                <li><a class="crm-event-test" href="{crmURL p='civicrm/event/register' q="reset=1&action=preview&id=`$id`"}">{ts}Online Registration (Test-drive){/ts}</a></li>
+                <li><a class="crm-event-test" href="{crmURL p='civicrm/event/register' q="reset=1&action=preview&id=`$id`"}" target="_blank">{ts}Online Registration (Test-drive){/ts}</a></li>
                 <li><a class="crm-event-live" href="{crmURL p='civicrm/event/register' q="reset=1&id=`$id`" fe='true'}" target="_blank">{ts}Online Registration (Live){/ts}</a></li>
                 {if $participantListingURL}
-                <li><a class="crm-participant-listing" href="{$participantListingURL}">{ts}Public Participant Listing{/ts}</a></li>
+                <li><a class="crm-participant-listing" href="{$participantListingURL}" target="_blank">{ts}Public Participant Listing{/ts}</a></li>
                 {/if}
                 {/if}
               </ul>

@@ -24,7 +24,8 @@
  +--------------------------------------------------------------------+
 *}
 {* Search form and results for Event Participants *}
-{if $id}
+{if $event_id}
+  {assign var="id" value=$event_id}
   {include file="CRM/Event/Form/ManageEvent/Navigator.tpl"}
   {include file="CRM/common/participantCount.tpl"}
 {/if}
