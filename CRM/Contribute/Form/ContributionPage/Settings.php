@@ -131,7 +131,7 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
 
     $this->add('select', 'contribution_type_id',
       ts('Contribution Type'),
-      CRM_Contribute_PseudoConstant::contributionType(),
+      CRM_Contribute_PseudoConstant::contributionType(NULL, FALSE, TRUE),
       TRUE,
       array('onChange' => "buildCustomData( 'ContributionPage', this.value );")
     );

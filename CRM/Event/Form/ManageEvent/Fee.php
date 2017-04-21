@@ -272,7 +272,7 @@ class CRM_Event_Form_ManageEvent_Fee extends CRM_Event_Form_ManageEvent {
     );
 
     $this->add('select', 'contribution_type_id', ts('Contribution Type'),
-      array('' => ts('- select -')) + CRM_Contribute_PseudoConstant::contributionType()
+      array('' => ts('- select -')) + CRM_Contribute_PseudoConstant::contributionType(NULL, FALSE, TRUE)
     );
 
     // add pay later options

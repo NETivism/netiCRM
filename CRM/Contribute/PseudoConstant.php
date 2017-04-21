@@ -122,6 +122,10 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
    *
    * @access public
    *
+   * @param null $id - specify id for return
+   * @param false $receiptType - limit option based on receipt type
+   * @param false $receiptTypeLabel - display receipt type label
+   *
    * @return array - array reference of all contribution types if any
    * @static
    */
