@@ -25,6 +25,7 @@
 *}
 <div class="crm-block crm-form-block crm-mail-form-block">
 <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>                         
+   <h2>{ts}Mapping Option{/ts}</h2>
       <table class="form-layout-compressed">
         <tr class="crm-mail-form-block-taxReceiptType">
             <td class="label">{$form.taxReceiptType.label}</td><td>{$form.taxReceiptType.html}<br />    
@@ -35,14 +36,6 @@
         </tr>
         <tr class="crm-mail-form-block-taxreceiptDeviceNumber">
             <td class="label">{$form.taxReceiptDeviceNumber.label}</td><td>{$form.taxReceiptDeviceNumber.html}<br />
-            </td>
-        </tr>
-        <tr class="crm-mail-form-block-taxReceiptDonate">
-            <td class="label">{$form.taxReceiptDonate.label}</td><td>{$form.taxReceiptDonate.html}<br />
-            </td>
-        </tr>
-        <tr class="crm-mail-form-block-taxReceiptDonateSelect">
-            <td class="label">{$form.taxReceiptDonateSelect.label}</td><td>{$form.taxReceiptDonateSelect.html}<br />
             </td>
         </tr>
         <tr class="crm-mail-form-block-taxReceiptSerial">
@@ -59,6 +52,18 @@
         </tr>
         <tr class="crm-mail-form-block-taxReceiptPaper">
             <td class="label">{$form.taxReceiptPaper.label}</td><td>{$form.taxReceiptPaper.html}<br />
+            </td>
+        </tr>
+      </table>
+   <h2>{ts}Tax Invoice Giving{/ts}</h2>
+      <table class="form-layout-compressed">
+        <tr class="crm-mail-form-block-taxReceiptDonate">
+            <td class="label">{$form.taxReceiptDonate.label}</td><td>{$form.taxReceiptDonate.html}<br />
+            </td>
+        </tr>
+        <tr class="crm-mail-form-block-taxReceiptDonateSelect">
+            <td class="label">{$form.taxReceiptDonateSelect.label}</td><td>{$form.taxReceiptDonateSelect.html}
+            <div class="description">{ts}Use 'lovecode|organization' format to config this field, each line is one option.{/ts}</div>
             </td>
         </tr>
       </table>

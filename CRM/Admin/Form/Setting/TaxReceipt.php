@@ -23,12 +23,13 @@ class CRM_Admin_Form_Setting_TaxReceipt extends CRM_Admin_Form_Setting {
     $this->addElement('select', 'taxReceiptType', ts('Tax receipt type'), $option);
     $this->addElement('select', 'taxReceiptDeviceType', ts('Tax receipt device type'), $option);
     $this->addElement('select', 'taxReceiptDeviceNumber', ts('Tax receipt device number'), $option);
-    $this->addElement('select', 'taxReceiptDonate', ts('Tax receipt give org field'), $option);
-    $this->addElement('textarea', 'taxReceiptDonateSelect', ts('Give tax receipt to listed organization'));
     $this->addElement('select', 'taxReceiptSerial', ts('Tax receipt serial number field'), $option);
     $this->addElement('select', 'taxReceiptItem', ts('Invoice item name field'), $option);
     $this->addElement('select', 'taxReceiptNumber', ts('Invoice number field'), $option);
     $this->addElement('select', 'taxReceiptPaper', ts('Printing paper invoice field'), $option);
+
+    $this->addElement('select', 'taxReceiptDonate', ts('Tax receipt give org field'), $option);
+    $this->addElement('textarea', 'taxReceiptDonateSelect', ts('Give tax receipt to listed organization'));
 
     // redirect to Administer Section After hitting either Save or Cancel button.
     $session = CRM_Core_Session::singleton();

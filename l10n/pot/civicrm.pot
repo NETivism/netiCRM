@@ -45490,3 +45490,18 @@ msgstr ""
 
 msgid "First match address type. If not found, will use the other address type."
 msgstr ""
+
+msgid "Tax Receipt Settings"
+msgstr ""
+
+msgid "Tax receipt device number"
+msgstr ""
+
+msgid "Printing paper invoice field"
+msgstr ""
+
+msgid "Use 'lovecode|organization' format to config this field, each line is one option."
+msgstr ""
+
+msgid "Tax Invoice Giving"
+msgstr ""

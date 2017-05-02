@@ -11,7 +11,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2017-04-21 04:36+0000\n"
+"PO-Revision-Date: 2017-05-02 07:24+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -45542,3 +45542,20 @@ msgstr "帶入預設值: %1"
 msgid ""
 "First match address type. If not found, will use the other address type."
 msgstr "收據地址的首要條件，如果沒有找到任何地址，將會使用第一個找到的地址。"
+
+msgid "Tax Receipt Settings"
+msgstr "發票設定"
+
+msgid "Tax receipt device number"
+msgstr "發票載具編號"
+
+msgid "Printing paper invoice field"
+msgstr "強制列印紙本收據"
+
+msgid ""
+"Use 'lovecode|organization' format to config this field, each line is one "
+"option."
+msgstr "愛心碼設定請用「1234|組織名稱」的格式來設定，每一行代表一個選項。"
+
+msgid "Tax Invoice Giving"
+msgstr "發票捐贈"
