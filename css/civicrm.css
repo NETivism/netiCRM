@@ -2717,6 +2717,8 @@ span.icon {
   margin-bottom: 15px;
   width: 100%;
 }
+.crm-container-md .crm-custom-data-view tr,
+.crm-container-md .crm-custom-data-view th,
 .crm-container-md .crm-custom-data-view td {
   border: none;
 }
@@ -2750,6 +2752,11 @@ span.icon {
   display: table;
   margin-bottom: 3px;
   width: 100%;
+  border: none;
+}
+.crm-container-md .crm-custom-data-view .crm-info-panel tr,
+.crm-container-md .crm-custom-data-view .crm-info-panel th,
+.crm-container-md .crm-custom-data-view .crm-info-panel td {
   border: none;
 }
 .crm-container-md .crm-custom-data-view .crm-info-panel td {
@@ -5530,28 +5537,44 @@ input.crm-form-textfield,
   opacity: 1;
 }
 .crm-container-md .crm-form-radio .form-radio:disabled,
-.crm-container-md .crm-form-checkbox .form-checkbox:disabled {
+.crm-container-md .crm-form-checkbox .form-checkbox:disabled,
+.crm-container-md .crm-form-radio .form-radio[readonly],
+.crm-container-md .crm-form-checkbox .form-checkbox[readonly] {
   cursor: not-allowed;
 }
 .crm-container-md .crm-form-radio .form-radio:disabled + .elem-label,
-.crm-container-md .crm-form-checkbox .form-checkbox:disabled + .elem-label {
+.crm-container-md .crm-form-checkbox .form-checkbox:disabled + .elem-label,
+.crm-container-md .crm-form-radio .form-radio[readonly] + .elem-label,
+.crm-container-md .crm-form-checkbox .form-checkbox[readonly] + .elem-label {
   cursor: not-allowed;
   color: #9e9e9e;
 }
 .crm-container-md .crm-form-radio .form-radio:disabled + .elem-label::after,
-.crm-container-md .crm-form-checkbox .form-checkbox:disabled + .elem-label::after {
+.crm-container-md .crm-form-checkbox .form-checkbox:disabled + .elem-label::after,
+.crm-container-md .crm-form-radio .form-radio[readonly] + .elem-label::after,
+.crm-container-md .crm-form-checkbox .form-checkbox[readonly] + .elem-label::after {
   cursor: not-allowed;
   border: 2px solid #bdbdbd;
   background-color: #fff;
 }
 .crm-container-md .crm-form-radio .form-radio:disabled + .elem-label::before,
-.crm-container-md .crm-form-checkbox .form-checkbox:disabled + .elem-label::before {
+.crm-container-md .crm-form-checkbox .form-checkbox:disabled + .elem-label::before,
+.crm-container-md .crm-form-radio .form-radio[readonly] + .elem-label::before,
+.crm-container-md .crm-form-checkbox .form-checkbox[readonly] + .elem-label::before {
   display: none;
 }
 .crm-container-md .crm-form-radio .form-radio:disabled:checked + .elem-label::before,
-.crm-container-md .crm-form-checkbox .form-checkbox:disabled:checked + .elem-label::before {
+.crm-container-md .crm-form-checkbox .form-checkbox:disabled:checked + .elem-label::before,
+.crm-container-md .crm-form-radio .form-radio[readonly]:checked + .elem-label::before,
+.crm-container-md .crm-form-checkbox .form-checkbox[readonly]:checked + .elem-label::before {
   display: block;
   opacity: .3;
+}
+.crm-container-md .crm-form-radio .form-radio:disabled:checked + .elem-label::after,
+.crm-container-md .crm-form-checkbox .form-checkbox:disabled:checked + .elem-label::after,
+.crm-container-md .crm-form-radio .form-radio[readonly]:checked + .elem-label::after,
+.crm-container-md .crm-form-checkbox .form-checkbox[readonly]:checked + .elem-label::after {
+  opacity: .5;
 }
 .crm-container-md .crm-form-radio .elem-label::after {
   -webkit-border-radius: 50%;

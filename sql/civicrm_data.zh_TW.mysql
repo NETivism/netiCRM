@@ -6888,7 +6888,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
 ', @tpl_ovid_contribution_offline_receipt, 0,          1) ,      
       
       
-      ('捐款 - 收據（在線）', '{if $is_pay_later}{ts}Invoice{/ts}{elseif $is_monetary}{ts}Payment Notification{/ts} - {/if}{$title}', '{if $receipt_text}
+      ('捐款 - 收據（在線）', '{if $is_pay_later}{ts}Invoice{/ts} - {elseif $is_monetary}{ts}Payment Notification{/ts} - {/if}{$title}', '{if $receipt_text}
 {$receipt_text}
 {/if}
 {if $is_pay_later}
@@ -7453,7 +7453,7 @@ rule for Organizations to find the potential duplicates and merge them if approp
 </body>
 </html>
 ', @tpl_ovid_contribution_online_receipt, 1,          0),
-      ('捐款 - 收據（在線）', '{if $is_pay_later}{ts}Invoice{/ts}{elseif $is_monetary}{ts}Payment Notification{/ts} - {/if}{$title}', '{if $receipt_text}
+      ('捐款 - 收據（在線）', '{if $is_pay_later}{ts}Invoice{/ts} - {elseif $is_monetary}{ts}Payment Notification{/ts} - {/if}{$title}', '{if $receipt_text}
 {$receipt_text}
 {/if}
 {if $is_pay_later}
@@ -14270,7 +14270,7 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
 ', @tpl_ovid_membership_offline_receipt, 0,          1) ,      
       
       
-      ('會員 - 收據（在線）', '{if $is_pay_later}{ts}Invoice{/ts}{elseif $is_monetary}{ts}Payment Notification{/ts} - {/if}{$title}', '{if $receipt_text}
+      ('會員 - 收據（在線）', '{if $is_pay_later}{ts}Invoice{/ts} - {elseif $is_monetary}{ts}Payment Notification{/ts} - {/if}{$title}', '{if $receipt_text}
 {$receipt_text}
 {/if}
 {if $is_pay_later}
@@ -14970,7 +14970,7 @@ or want to inquire about reinstating your registration for this event.{/ts}</p>
 </body>
 </html>
 ', @tpl_ovid_membership_online_receipt, 1,          0),
-      ('會員 - 收據（在線）', '{if $is_pay_later}{ts}Invoice{/ts}{elseif $is_monetary}{ts}Payment Notification{/ts} - {/if}{$title}', '{if $receipt_text}
+      ('會員 - 收據（在線）', '{if $is_pay_later}{ts}Invoice{/ts} - {elseif $is_monetary}{ts}Payment Notification{/ts} - {/if}{$title}', '{if $receipt_text}
 {$receipt_text}
 {/if}
 {if $is_pay_later}
