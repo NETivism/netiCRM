@@ -2717,6 +2717,8 @@ span.icon {
   margin-bottom: 15px;
   width: 100%;
 }
+.crm-container-md .crm-custom-data-view tr,
+.crm-container-md .crm-custom-data-view th,
 .crm-container-md .crm-custom-data-view td {
   border: none;
 }
@@ -2750,6 +2752,11 @@ span.icon {
   display: table;
   margin-bottom: 3px;
   width: 100%;
+  border: none;
+}
+.crm-container-md .crm-custom-data-view .crm-info-panel tr,
+.crm-container-md .crm-custom-data-view .crm-info-panel th,
+.crm-container-md .crm-custom-data-view .crm-info-panel td {
   border: none;
 }
 .crm-container-md .crm-custom-data-view .crm-info-panel td {
