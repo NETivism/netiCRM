@@ -313,7 +313,7 @@ class CRM_Contact_BAO_Contact extends CRM_Contact_DAO_Contact {
       }
     }
 
-    if (array_key_exists('group', $params)) {
+    if (isset($params['group']) && !empty($params['group'])) {
       require_once 'CRM/Contact/BAO/GroupContact.php';
       $contactIds = array($params['contact_id']);
       foreach ($params['group'] as $groupId => $flag) {
@@ -1601,17 +1601,22 @@ ORDER BY civicrm_email.is_primary DESC";
     }
 
     // Process group and tag
-    if (CRM_Utils_Array::value('group', $fields)) {
+    if (CRM_Utils_Array::value('group', $fields) && !empty($params['group'])) {
+      $contactIds = array($contactID);
       $method = 'Admin';
       // this for sure means we are coming in via profile since i added it to fix
       // removing contacts from user groups -- lobo
       if ($visibility) {
         $method = 'Web';
       }
-      CRM_Contact_BAO_GroupContact::create($params['group'], $contactID, $visibility, $method);
+      foreach($params['group'] as $groupId => $add) {
+        if ($add) {
+          CRM_Contact_BAO_GroupContact::addContactsToGroup($contactIds, $groupId, $method);
+        }
+      }
     }
 
-    if (CRM_Utils_Array::value('tag', $fields)) {
+    if (CRM_Utils_Array::value('tag', $fields) && !empty($params['tag'])) {
       require_once 'CRM/Core/BAO/EntityTag.php';
       CRM_Core_BAO_EntityTag::create($params['tag'], 'civicrm_contact', $contactID);
     }

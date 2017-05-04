@@ -509,12 +509,6 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
       }
     }
 
-    foreach ($addToGroups as $k) {
-      if (array_key_exists($k, $subscribeGroupIds)) {
-        unset($addToGroups[$k]);
-      }
-    }
-
     $params['log_data'] = !empty($params['log_data']) ? $params['log_data'] : ts('Contribution Page').' - '.$this->_id;
     if (!isset($contactID)) {
       require_once 'CRM/Dedupe/Finder.php';
