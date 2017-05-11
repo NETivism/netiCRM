@@ -36,9 +36,6 @@ class CRM_Contribute_Form_TaxReceipt extends CRM_Core_Form {
       if ($contribution->contribution_status_id != 1) {
         CRM_Core_Error::fatal(ts('This record not complete, you can only create tax receipt for completed payment.'));
       }
-      if (empty($contribution->trxn_id)) {
-        CRM_Core_Error::fatal(ts('You need specify transaction number to create new tax receipt'));
-      }
       if ($contribution->total_amount <= 0) {
         CRM_Core_Error::fatal(ts('Contribution amount must be greater than %1', array(1 => 0)));
       }
