@@ -63,7 +63,6 @@ cj(function($){
 
   // Display Donor Credit
   if($('#custom_{/literal}{$receiptDonorCredit}{literal}').length>=1){
-    {/literal}console.log('{$receipt_name}');{literal}
     var hornor_name = [
       mdFormElement('radio', '{/literal}{ts}Full Name{/ts}{literal}', {name:'receipt_name', id:'r_name_full', value:'r_name_full'{/literal}{if $receipt_name eq 'r_name_full'}, checked: 'checked'{/if}{literal}}),
       mdFormElement('radio', '{/literal}{ts}Part of Name{/ts}{literal}', {name:'receipt_name', id:'r_name_half', value:'r_name_half'{/literal}{if $receipt_name eq 'r_name_half'}, checked: 'checked'{/if}{literal}}),
@@ -241,6 +240,7 @@ cj(function($){
    */
   function doScrollTo($element){
     var $html = $('html, body');
+    var $w = $(window);
     $html.animate({scrollTop:$element.offset().top - $w.height()/2}, 'fast');
   }
 
