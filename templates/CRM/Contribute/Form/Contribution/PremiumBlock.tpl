@@ -24,7 +24,7 @@
  +--------------------------------------------------------------------+
 *}
 {if $products}
-<div id="premiums" class="premiums-group">
+<div id="premiums" class="crm-group premiums-group">
     {if $context EQ "makeContribution"}
 
 {literal}
