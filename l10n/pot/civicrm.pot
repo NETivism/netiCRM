@@ -45505,3 +45505,6 @@ msgstr ""
 
 msgid "Tax Invoice Giving"
 msgstr ""
+
+msgid "Please fill legal identifier to upload data."
+msgstr ""
