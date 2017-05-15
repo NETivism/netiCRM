@@ -11,8 +11,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2017-05-02 07:24+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
+"PO-Revision-Date: 2017-05-15 11:09+0000\n"
+"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44793,7 +44793,7 @@ msgstr "自訂名稱"
 
 #: betterContributionForm.tpl
 msgid "Please verify name and Legal Identifier fields."
-msgstr "請確認聯絡人姓名或身份證字號欄位是否正確"
+msgstr "請確認聯絡人姓名或身份證字號欄位是否填寫正確"
 
 #: CRM/Contact/Form/Search/Custom/RecurSearch.php
 msgid "First recurring date"
@@ -45559,3 +45559,6 @@ msgstr "愛心碼設定請用「1234|組織名稱」的格式來設定，每一�
 
 msgid "Tax Invoice Giving"
 msgstr "發票捐贈"
+
+msgid "Please fill legal identifier to upload data."
+msgstr "上傳資料至國稅局需要身份證字號"
