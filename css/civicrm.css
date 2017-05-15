@@ -5664,6 +5664,16 @@ input.crm-form-textfield,
   display: table;
   width: auto;
 }
+.crm-container-md .crm-group,
+.crm-container-md .crm-section {
+  clear: both;
+}
+.crm-container-md .crm-group:after,
+.crm-container-md .crm-section:after {
+  content: "";
+  display: block;
+  clear: both;
+}
 
 @media screen and (max-width: 768px) {
   /* media embed */ 
