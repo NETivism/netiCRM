@@ -302,7 +302,7 @@ AND    co.id IN ( $contribIDs )";
         $input['trxn_id'] = trim($params["trxn_id_{$row['contribution_id']}"]);
       }
       else {
-        $input['trxn_id'] = $contribution->invoice_id;
+        $input['trxn_id'] = '';
       }
       $input['trxn_date'] = CRM_Utils_Date::processDate($params["trxn_date_{$row['contribution_id']}"]);
 
