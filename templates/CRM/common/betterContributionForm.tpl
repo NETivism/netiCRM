@@ -55,9 +55,18 @@ cj(function($){
       }
       return true;
     });
+    $('#Main').submit('#custom_{/literal}{$receiptTitle}{literal}',function(){
+      {/literal}{if $receiptTitle}{literal}
+      // If has $receiptYesNo field, And need no receipt. skip id check.
+      if(getRequireType() == 0) return true;
+      {/literal}{/if}{literal}
+      if($('#custom_{/literal}{$receiptTitle}{literal}').length > 0 && $('#custom_{/literal}{$receiptTitle}{literal}').hasClass('required') && $('#custom_{/literal}{$receiptTitle}{literal}').val() == ''){
+        return false;
+      }
+      return true;
+    });
     {/literal}{/if}{literal}
 
-    $('#custom_{/literal}{$receiptTitle}{literal},#custom_{/literal}{$receiptSerial}{literal}').focus(doClearNameIdErrorMessage);
   }
   $('.receipt_type input').trigger('change').change(doCheckSameAs);
 
@@ -118,6 +127,7 @@ cj(function($){
    */
   function doShowHideReceiptFields(){
     doClearNameIdErrorMessage();
+    $('.upload-info').remove();
 
     if(getRequireType() > 0){
       {/literal}{if $receiptTitle}{literal}
@@ -125,6 +135,9 @@ cj(function($){
       {/literal}{/if}{literal}
       {/literal}{if $receiptSerial}{literal}
       $('.custom_{/literal}{$receiptSerial}{literal}-section').show('slow');
+      if(getRequireType() == 2){
+        $('.custom_{/literal}{$receiptSerial}{literal}-section .content').append('<div class="description upload-info">{/literal}{ts}Please fill legal identifier to upload data.{/ts}{literal}</div>');
+      }
       {/literal}{/if}{literal}
       $('.receipt_type').show('slow');
     }
@@ -193,9 +206,9 @@ cj(function($){
     var $sameas = $('#same_as');
     var error = [];
     if( $sameas.is(':checked') && $('#r_person').is(':checked')){
-      if($('#legal_identifier').length >= 1 && $('#custom_{/literal}{$receiptSerial}{literal}').length >= 1){
+      if($('#legal_identifier').length >= 1 && $('#custom_{/literal}{$receiptSerial}{literal}').length >= 1 && $('#custom_{/literal}{$receiptSerial}{literal}').hasClass('required')){
         if($('#legal_identifier').val() == '' ){
-          error['legal_identifier'] = '{/literal}{ts}This field is required.{/ts}{literal}';
+          error['legal_identifier'] = '{/literal}{ts}Please fill legal identifier to upload data.{/ts}{literal}';
         }else if(!validTWID($('#legal_identifier').val())){
           error['legal_identifier'] = '{/literal}{ts}Invalid value for field(s){/ts}{literal}';
         }
