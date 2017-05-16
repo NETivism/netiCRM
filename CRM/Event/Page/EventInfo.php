@@ -309,7 +309,7 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page {
     $descript = $values['event']['description'];
     $descript = preg_replace("/ *<(?<tag>(style|script))( [^=]+=['\"][^'\"]*['\"])*>(.*?(\n))+.*?<\/\k<tag>>/", "", $descript);
     $descript = strip_tags($descript);
-    $descript = preg_replace("/(?:(?:&nbsp;)|\n|\r|\s)/", '', $descript);
+    $descript = preg_replace("/(?:(?:&nbsp;)|\n|\r)+/", ' ', $descript);
     $descript = substr($descript,0,150);
     $meta[] = array(
       'tag' => 'meta',
