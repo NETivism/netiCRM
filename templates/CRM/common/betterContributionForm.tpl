@@ -3,8 +3,8 @@
 cj(function($){
   if($('#custom_{/literal}{$receiptTitle}{literal},#custom_{/literal}{$receiptSerial}{literal}').length >= 1){
     // receiptTitle, receiptSerial
-    var r_person = mdFormElement('radio', '{/literal}{ts}Individual Donor{/ts}{literal}', {name:'receipt_type', id:'r_person', checked:'checked'});
-    var receipt_type = mdFormElement('radio', '{/literal}{ts}Organization Donor{/ts}{literal}', {name:'receipt_type', id:'r_company'});
+    var r_person = mdFormElement('radio', '{/literal}{ts}Individual Donor{/ts}{literal}', {name:'receipt_type', id:'r_person', value:'r_person'{/literal}{if $receipt_type neq 'r_company'}, checked:'checked'{/if}{literal}});
+    var receipt_type = mdFormElement('radio', '{/literal}{ts}Organization Donor{/ts}{literal}', {name:'receipt_type', id:'r_company', value:'r_company'{/literal}{if $receipt_type eq 'r_company'}, checked:'checked'{/if}{literal}});
 
     $('<div class="crm-section receipt_type"><div class="label"></div><div class="content">' + r_person + receipt_type +'</div></div>')
     .insertBefore($('.custom_{/literal}{$receiptTitle}{literal}-section'));
@@ -23,40 +23,60 @@ cj(function($){
     $same_as_md.wrap('<div class="same-as-wrapper"></div>');
 
     $('#same_as').change(doCheckSameAs);
-    $('#custom_{/literal}{$receiptSerial}{literal}').keyup(checkTWorOrgID).blur(checkTWorOrgID);
+    $('#custom_{/literal}{$receiptSerial}{literal}').keyup(doCheckTWorOrgID).blur(doCheckTWorOrgID);
     $('.receipt_type input').change(function(){
       if($('#r_person').is(':checked')){
         $('#custom_{/literal}{$receiptTitle}{literal}').attr('placeholder',"{/literal}{ts}Contact Name{/ts}{literal}");
         $('#custom_{/literal}{$receiptSerial}{literal}').attr('placeholder',"{/literal}{ts}Legal Identifier{/ts}{literal}");
+        $('.same-as-wrapper').show('fast');
       }
       if($('#r_company').is(':checked')){
         $('#custom_{/literal}{$receiptTitle}{literal}').attr('placeholder',"{/literal}{ts}Organization{/ts}{literal}");
         $('#custom_{/literal}{$receiptSerial}{literal}').attr('placeholder',"{/literal}{ts}Sic Code{/ts}{literal}");
+        $(same_as).prop('checked',false);
+        $('.same-as-wrapper').hide('fast');
       }
+      doUpdateName();
     });
 
+    {/literal}{if $receiptSerial}{literal}
     $('#Main').submit('#custom_{/literal}{$receiptSerial}{literal}',function(){
-      if(isShowChecked()){
-        if(checkTWorOrgID()){
+      {/literal}{if $receiptYesNo}{literal}
+      // If has $receiptYesNo field, And need no receipt. skip id check.
+      if(getRequireType() == 0) return true;
+      {/literal}{/if}{literal}
+      if($('#custom_{/literal}{$receiptSerial}{literal}').length > 0){
+        if(doCheckTWorOrgID()){
           return true;
         }else{
-          $(window).scrollTop($('#custom_{/literal}{$receiptSerial}{literal}').offset().top - $(window).height()/2);
+          doScrollTo($('#custom_{/literal}{$receiptSerial}{literal}'));
           return false;
         }
       }
       return true;
     });
-    $('#custom_{/literal}{$receiptTitle}{literal},#custom_{/literal}{$receiptSerial}{literal}').focus(clearNameIdErrorMessage);
+    $('#Main').submit('#custom_{/literal}{$receiptTitle}{literal}',function(){
+      {/literal}{if $receiptTitle}{literal}
+      // If has $receiptYesNo field, And need no receipt. skip id check.
+      if(getRequireType() == 0) return true;
+      {/literal}{/if}{literal}
+      if($('#custom_{/literal}{$receiptTitle}{literal}').length > 0 && $('#custom_{/literal}{$receiptTitle}{literal}').hasClass('required') && $('#custom_{/literal}{$receiptTitle}{literal}').val() == ''){
+        return false;
+      }
+      return true;
+    });
+    {/literal}{/if}{literal}
+
   }
-  $('.receipt_type input').trigger('change').change(updateName);
+  $('.receipt_type input').trigger('change').change(doCheckSameAs);
 
   // Display Donor Credit
   if($('#custom_{/literal}{$receiptDonorCredit}{literal}').length>=1){
     var hornor_name = [
-      mdFormElement('radio', '{/literal}{ts}Full Name{/ts}{literal}', {name:'receipt_name', id:'r_name_full'}),
-      mdFormElement('radio', '{/literal}{ts}Part of Name{/ts}{literal}', {name:'receipt_name', id:'r_name_half'}),
-      mdFormElement('radio', '{/literal}{ts}Anonymity{/ts}{literal}', {name:'receipt_name', id:'r_name_hide'}),
-      mdFormElement('radio', '{/literal}{ts}Custom Name{/ts}{literal}', {name:'receipt_name', id:'r_name_custom'})
+      mdFormElement('radio', '{/literal}{ts}Full Name{/ts}{literal}', {name:'receipt_name', id:'r_name_full', value:'r_name_full'{/literal}{if $receipt_name eq 'r_name_full'}, checked: 'checked'{/if}{literal}}),
+      mdFormElement('radio', '{/literal}{ts}Part of Name{/ts}{literal}', {name:'receipt_name', id:'r_name_half', value:'r_name_half'{/literal}{if $receipt_name eq 'r_name_half'}, checked: 'checked'{/if}{literal}}),
+      mdFormElement('radio', '{/literal}{ts}Anonymity{/ts}{literal}', {name:'receipt_name', id:'r_name_hide', value:'r_name_hide'{/literal}{if $receipt_name eq 'r_name_hide'}, checked: 'checked'{/if}{literal}}),
+      mdFormElement('radio', '{/literal}{ts}Custom Name{/ts}{literal}', {name:'receipt_name', id:'r_name_custom', value:'r_name_custom'{/literal}{if $receipt_name eq 'r_name_custom'}, checked: 'checked'{/if}{literal}})
     ];
     var items = hornor_name.join('');
 
@@ -67,9 +87,9 @@ cj(function($){
     $r_name_items_md.insertBefore($r_name_items_md_parent);
     $r_name_items_md.wrapAll('<div class="r-name-items"></div>');
 
-    $('#last_name,#first_name,#legal_identifier').keyup(updateName);
-    $('.custom_{/literal}{$receiptDonorCredit}{literal}-section input[type=radio]').change(updateName);
-    updateName;
+    $('#last_name,#first_name,#legal_identifier').keyup(doUpdateName);
+    $('.custom_{/literal}{$receiptDonorCredit}{literal}-section input[type=radio]').change(doUpdateName);
+    doUpdateName();
 
     $('.custom_{/literal}{$receiptDonorCredit}{literal}-section input[type=radio]').change(function (){
       var r_name_id = $(this).attr('id');
@@ -86,7 +106,7 @@ cj(function($){
 
   // Yes No Selection
   if($('.custom_{/literal}{$receiptYesNo}{literal}-section').length >= 1){
-    $('.custom_{/literal}{$receiptYesNo}{literal}-section .content input').change(showHideReceiptFields);
+    $('.custom_{/literal}{$receiptYesNo}{literal}-section .content input').change(doShowHideReceiptFields);
     $('.custom_{/literal}{$receiptYesNo}{literal}-section .content input').trigger('change');
     $('.custom_{/literal}{$receiptYesNo}{literal}-section .content input').change(setRequiredFields);
     setRequiredFields();
@@ -96,13 +116,28 @@ cj(function($){
     formElemRebuild('#is_for_organization', 'checkbox');
   }
 
-  function showHideReceiptFields(){
-    if(isShowChecked()){
+  {/literal}{if $same_as}{literal}
+  $('#same_as').prop('checked',true);
+  doUpdateName();
+  {/literal}{/if}{literal}
+
+
+  /**
+   * Show or hide receipt related fields
+   */
+  function doShowHideReceiptFields(){
+    doClearNameIdErrorMessage();
+    $('.upload-info').remove();
+
+    if(getRequireType() > 0){
       {/literal}{if $receiptTitle}{literal}
       $('.custom_{/literal}{$receiptTitle}{literal}-section').show('slow');
       {/literal}{/if}{literal}
       {/literal}{if $receiptSerial}{literal}
       $('.custom_{/literal}{$receiptSerial}{literal}-section').show('slow');
+      if(getRequireType() == 2){
+        $('.custom_{/literal}{$receiptSerial}{literal}-section .content').append('<div class="description upload-info">{/literal}{ts}Please fill legal identifier to upload data.{/ts}{literal}</div>');
+      }
       {/literal}{/if}{literal}
       $('.receipt_type').show('slow');
     }
@@ -118,34 +153,41 @@ cj(function($){
   }
 
   function setRequiredFields(){
-    if(isShowChecked()){
+    {/literal}{if $receiptTitle}{literal}
+    $('.custom_{/literal}{$receiptTitle}{literal}-section .label label .crm-marker').remove();
+    $('#custom_{/literal}{$receiptTitle}{literal}').removeClass('required');
+    {/literal}{/if}{literal}
+
+    {/literal}{if $receiptSerial}{literal}
+    $('.custom_{/literal}{$receiptSerial}{literal}-section .label label .crm-marker').remove();
+    $('#custom_{/literal}{$receiptSerial}{literal}').removeClass('required');
+    {/literal}{/if}{literal}
+    // remove $receiptSerial part in #18692
+
+    var requireType = getRequireType();
+    if(requireType > 0){
       {/literal}{if $receiptTitle}{literal}
       $('.custom_{/literal}{$receiptTitle}{literal}-section .label label .crm-marker').remove();
       $('.custom_{/literal}{$receiptTitle}{literal}-section').find('.label label').append('<span class="crm-marker" title="{/literal}{ts}This field is required.{/ts}{literal}">*</span>');
       $('#custom_{/literal}{$receiptTitle}{literal}').addClass('required');
       {/literal}{/if}{literal}
       // remove $receiptSerial part in #18692
-    }
-    else{
-      {/literal}{if $receiptTitle}{literal}
-      $('.custom_{/literal}{$receiptTitle}{literal}-section .label label .crm-marker').remove();
-      $('#custom_{/literal}{$receiptTitle}{literal}').removeClass('required');
-      {/literal}{/if}{literal}
-      // remove $receiptSerial part in #18692
+      if(requireType == 2){
+        $('.custom_{/literal}{$receiptSerial}{literal}-section .label label .crm-marker').remove();
+        $('.custom_{/literal}{$receiptSerial}{literal}-section').find('.label label').append('<span class="crm-marker" title="{/literal}{ts}This field is required.{/ts}{literal}">*</span>');
+        $('#custom_{/literal}{$receiptSerial}{literal}').addClass('required');
+      }
     }
   }
 
-  function isShowChecked(){
+/**
+ * Get need receipt field selected value. if the field is checkbox, only return boolean
+ * @return number or boolean
+ */
+  function getRequireType(){
     // radio option
-    if($($('[name=custom_{/literal}{$receiptYesNo}{literal}]')[0]).attr('type') == 'radio'){
-      var $no_label = false;
-      $('.custom_{/literal}{$receiptYesNo}{literal}-section .content input[type="radio"]').each(function(){
-        if($(this).val().match(/0|false|no/)){
-          $no_label = $(this);
-        }
-      });
-      var showFields = !$no_label.is(':checked');
-      return showFields;
+    if($('.custom_{/literal}{$receiptYesNo}{literal}-section input[type=radio]:checked').length){
+      return $('.custom_{/literal}{$receiptYesNo}{literal}-section input[type=radio]:checked').val();
     }
 
     // checkbox
@@ -156,24 +198,44 @@ cj(function($){
     return showFields;
   }
 
+  /**
+   * Occur when press same_as button. Valid legal id and last_name, first_name fields, display error message.
+   */
   function doCheckSameAs(){
+    doClearNameIdErrorMessage();
     var $sameas = $('#same_as');
-    var error = false;
+    var error = [];
     if( $sameas.is(':checked') && $('#r_person').is(':checked')){
-      if($('#legal_identifier').length >= 1 && $('#custom_{/literal}{$receiptSerial}{literal}').length > 1){
-        if(($('#legal_identifier').val() == '' ) || !validTWID($('#legal_identifier').val())){
-          error = true;
+      if($('#legal_identifier').length >= 1 && $('#custom_{/literal}{$receiptSerial}{literal}').length >= 1 && $('#custom_{/literal}{$receiptSerial}{literal}').hasClass('required')){
+        if($('#legal_identifier').val() == '' ){
+          error['legal_identifier'] = '{/literal}{ts}Please fill legal identifier to upload data.{/ts}{literal}';
+        }else if(!validTWID($('#legal_identifier').val())){
+          error['legal_identifier'] = '{/literal}{ts}Invalid value for field(s){/ts}{literal}';
         }
       }
-      if($('#last_name,#first_name').length>1 && $('#custom_{/literal}{$receiptTitle}{literal}').length > 1){
+      if($('#last_name,#first_name').length>1 && $('#custom_{/literal}{$receiptTitle}{literal}').length >= 1){
         if(($('#last_name').val()+$('#first_name').val()) == ''){
-          error = true;
+          error['last_name'] = '{/literal}{ts}This field is required.{/ts}{literal}';
+          error['first_name'] = '{/literal}{ts}This field is required.{/ts}{literal}';
         }
       }
-      if(error){
+      if(Object.keys(error).length > 0){
         $sameas.prop('checked', false);
         if($('.name-id-error').length === 0){
           $sameas.parent().append('<label for="same_as" generated="true" class="error name-id-error" style="color: rgb(238, 85, 85); padding-left: 10px;">{/literal}{ts}Please verify name and Legal Identifier fields.{/ts}{literal}</label>');
+          for(var id in error){
+            var $element = $('#'+id);
+            if(!$element.is('.error')){
+              $element.addClass('error');
+              $ele_next = $element.next();
+              if(!$ele_next.is('label.error')){
+                $element.after('<label for="'+id+'" generated="true" class="error" style="color: rgb(238, 85, 85); padding-left: 10px;">'+error[id]+'</label>');
+              }else{
+                $ele_next.show().text(error[id]);
+              }
+            }
+          }
+          doScrollTo($element);
         }
         return
       }
@@ -182,10 +244,23 @@ cj(function($){
     else {
       $('#custom_{/literal}{$receiptTitle}{literal}').parent('.md-elem').removeClass('md-elem-readonly');
     }
-    updateName();
+    doUpdateName();
   }
 
-  function updateName(){
+  /**
+   * Scroll window to $element y-position.
+   * @param   $element    jQuery object
+   */
+  function doScrollTo($element){
+    var $html = $('html, body');
+    var $w = $(window);
+    $html.animate({scrollTop:$element.offset().top - $w.height()/2}, 'fast');
+  }
+
+  /**
+   * Update last_name, first_name, and id to receipt fileds. Should trigger when any related fields change.
+   */
+  function doUpdateName(){
     if($('#r_person').is(':checked')){
       // $('#same_as').parents('.same-as-wrapper').show('slow');
     }
@@ -276,32 +351,43 @@ cj(function($){
 
     $('#custom_{/literal}{$receiptTitle}{literal} input.required:visible:not([type=checkbox])').trigger('blur');
 
-    clearNameIdErrorMessage();
-
   }
 
-  function clearNameIdErrorMessage(){
+/**
+ * Clear error messages of receipt fields .
+ */
+  function doClearNameIdErrorMessage(){
+    var $elements = $('#custom_{/literal}{$receiptTitle}{literal},#custom_{/literal}{$receiptSerial}{literal}');
+    $elements.removeClass('error')
+    if($elements.next('label.error').length>0){
+      $elements.next('label.error').remove();
+    }
     $('.name-id-error').remove();
   }
 
-  function checkTWorOrgID(){
-    removeTWIDErrorMsg();
+/**
+ * Valid receipt id field
+ * @return boolean  passed or not
+ */
+  function doCheckTWorOrgID(){
+    while($('#custom_{/literal}{$receiptSerial}{literal}').parent().find('.error-twid').length>=1){
+      $('#custom_{/literal}{$receiptSerial}{literal}').parent().find('.error-twid').remove();
+    }
     var value = $('#custom_{/literal}{$receiptSerial}{literal}').val();
     if(validTWID(value) || validOrgID(value)){
       $('#custom_{/literal}{$receiptSerial}{literal}').removeClass('error');
       return true;
     }else{
-      $('#custom_{/literal}{$receiptSerial}{literal}').addClass('error').parent().append('<label for="custom_{/literal}{$receiptSerial}{literal}" class="error-twid" style="padding-left: 10px;color: #e55;">{/literal}{ts}Please enter correct Data ( in valid format ).{/ts}{literal}</label>');
+      $('#custom_{/literal}{$receiptSerial}{literal}').addClass('error').parent().append('<label for="custom_{/literal}{$receiptSerial}{literal}" class="error error-twid" style="padding-left: 10px;color: #e55;">{/literal}{ts}Please enter correct Data ( in valid format ).{/ts}{literal}</label>');
       return false;
     }
   }
 
-  function removeTWIDErrorMsg(){
-    while($('#custom_{/literal}{$receiptSerial}{literal}').parent().find('.error-twid').length>=1){
-      $('#custom_{/literal}{$receiptSerial}{literal}').parent().find('.error-twid').remove();
-    }
-  }
-
+/**
+ * Used on #is_for_organization fields
+ * @param  {[type]} elem [description]
+ * @param  {[type]} type [description]
+ */
   function formElemRebuild(elem, type) {
     var $elem = $(elem);
     var classname = ' crm-form-elem crm-form-' + type;
@@ -316,6 +402,11 @@ cj(function($){
   }
 });
 
+/**
+ * Validate TW ID, Should match TW ID formula.
+ * @param  String value
+ * @return boolean
+ */
 function validTWID(value){
   if(value=='')return true;
   value = value.toUpperCase();
@@ -346,6 +437,11 @@ function validTWID(value){
   return true;
 }
 
+/**
+ * Validate Organize ID. Should be 8 numbers.
+ * @param  String value
+ * @return boolean
+ */
 function validOrgID(value){
   if(value=='')return true;
   var checkRegex = RegExp("^[0-9]{8}$");

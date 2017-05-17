@@ -275,7 +275,12 @@ function fillTotalAmount( totalAmount ) {
   if ( !totalAmount ) {
     {/literal}{if $eventFeeBlockValues}{literal}
     var eventFeeBlockValues = {/literal}{$eventFeeBlockValues}{literal};
-	  totalAmount = eval('eventFeeBlockValues.amount_id_'+{/literal}{$form.amount.value}{literal});
+    if (cj("#feeBlock").length) {
+      totalAmount = eval('eventFeeBlockValues.amount_id_' + cj("#feeBlock").find("[name=amount]:checked").val());
+    }
+    if (!totalAmount) {
+      totalAmount = eval('eventFeeBlockValues.amount_id_'+{/literal}{$form.amount.value}{literal});
+    }
     {/literal}{/if}{literal}
 	}
   if (totalAmount) {
