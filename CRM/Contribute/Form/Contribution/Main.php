@@ -149,7 +149,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     $descript = $this->_values['intro_text'];
     $descript = preg_replace("/ *<(?<tag>(style|script))( [^=]+=['\"][^'\"]*['\"])*>(.*?(\n))+.*?<\/\k<tag>>/", "", $descript);
     $descript = strip_tags($descript);
-    $descript = preg_replace("/(?:(?:&nbsp;)|\n|\r|\s)/", '', $descript);
+    $descript = preg_replace("/(?:(?:&nbsp;)|\n|\r)/", '', $descript);
     $descript = substr($descript,0,150);
     $meta[] = array(
       'tag' => 'meta',
