@@ -298,6 +298,8 @@ SELECT     civicrm_email.id as email_id
     $message->setTxtBody($text);
     $b = CRM_Utils_Mail::setMimeParams($message);
     $h = &$message->headers($headers);
+    CRM_Mailing_BAO_Mailing::addMessageIdHeader($h, 's', $this->contact_id, $this->id, $this->hash);
+
     $mailer = &$config->getMailer();
 
     require_once 'CRM/Mailing/BAO/Mailing.php';

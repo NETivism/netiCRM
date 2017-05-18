@@ -121,6 +121,7 @@ class CRM_Utils_Mail {
         $headers['From'] = "\"{$from[0]}\" <{$from[1]}";
       }
     }
+    CRM_Mailing_BAO_Mailing::addMessageIdHeader($headers);
 
     require_once 'Mail/mime.php';
     $msg = new Mail_mime("\n");

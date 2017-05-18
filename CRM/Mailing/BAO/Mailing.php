@@ -976,6 +976,69 @@ AND civicrm_contact.is_opt_out =0";
   }
 
   /**
+   * Given and array of headers and a prefix, job ID, event queue ID, and hash,
+   * add a Message-ID header if needed.
+   *
+   * i.e. if the global includeMessageId is set and there isn't already a
+   * Message-ID in the array.
+   * The message ID is structured the same way as a verp. However no interpretation
+   * is placed on the values received, so they do not need to follow the verp
+   * convention.
+   *
+   * @param array $headers
+   *   Array of message headers to update, in-out.
+   * @param string $prefix
+   *   Prefix for the message ID, use same prefixes as verp.
+   *                                wherever possible
+   * @param string $job_id
+   *   Job ID component of the generated message ID.
+   * @param string $event_queue_id
+   *   Event Queue ID component of the generated message ID.
+   * @param string $hash
+   *   Hash component of the generated message ID.
+   *
+   * @return void
+   */
+  public static function addMessageIdHeader(&$headers, $prefix = NULL, $job_id = NULL, $event_queue_id = NULL, $hash = NULL) {
+    $config = CRM_Core_Config::singleton();
+    $localpart = CRM_Core_BAO_MailSettings::defaultLocalpart();
+    $emailDomain = CRM_Core_BAO_MailSettings::defaultDomain();
+    $fields = array();
+    $fields[] = 'Message-ID';
+    // CRM-17754 check if Resent-Message-id is set also if not add it in when re-laying reply email
+    if ($prefix == 'r') {
+      $fields[] = 'Resent-Message-ID';
+    }
+
+    // send from activity, single mail
+    if (empty($prefix) && empty($job_id) && !array_key_exists('Message-ID', $headers)) {
+      $localpart = CRM_Core_BAO_MailSettings::defaultLocalpart();
+      list($send, $host) = explode('@', $headers['Return-Path']); 
+      $mailing_id = sprintf("<%s%s.%s@%s>",
+        $localpart,
+        base_convert(microtime(), 10, 36),
+        base_convert(bin2hex(openssl_random_pseudo_bytes(8)), 16, 36),
+        $host
+      );
+      $headers['Message-ID'] = $mailing_id;
+    }
+    else {
+      foreach ($fields as $field) {
+        if (!array_key_exists($field, $headers)) {
+          $headers[$field] = '<' . implode($config->verpSeparator,
+              array(
+                $localpart . $prefix,
+                $job_id,
+                $event_queue_id,
+                $hash,
+              )
+            ) . "@{$emailDomain}>";
+        }
+      }
+    }
+  }
+
+  /**
    * get verp, urls and headers
    *
    * @param int $job_id           ID of the Job associated with this message
@@ -1061,6 +1124,7 @@ AND civicrm_contact.is_opt_out =0";
       'Subject' => $this->subject,
     );
     $headers['Reply-To'] = $headers['From'];
+		self::addMessageIdHeader($headers, 'm', $job_id, $event_queue_id, $hash);
 
     if ($isForward) {
       $headers['Subject'] = "[Fwd:{$this->subject}]";
