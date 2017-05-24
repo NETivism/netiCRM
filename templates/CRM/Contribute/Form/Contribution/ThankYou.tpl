@@ -30,7 +30,7 @@
 {include file="CRM/common/TrackingFields.tpl"}
 
 <div class="crm-block crm-contribution-thankyou-form-block">
-    {if $thankyou_text}
+    {if $thankyou_text and $payment_result_type neq 4}
         <div id="thankyou_text" class="crm-section thankyou_text-section">
             {$thankyou_text}
         </div>
@@ -324,11 +324,10 @@
             </fieldset>
         </div>
     {/if}
-
+    {if $thankyou_footer and $payment_result_type neq 4}
     <div id="thankyou_footer" class="contribution_thankyou_footer-section">
-        <p>
         {$thankyou_footer}
-        </p>
     </div>
+    {/if}
 	
 </div>
