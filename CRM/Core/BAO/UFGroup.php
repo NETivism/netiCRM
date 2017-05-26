@@ -2055,12 +2055,7 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
                 if ($locTypeId == 'Primary') {
                   if (is_array($value) && array_key_exists($fieldName, $value)) {
                     $primaryLocationType = TRUE;
-                    if (in_array($fieldName, $blocks)) {
-                      $locTypeId = CRM_Contact_BAO_Contact::getPrimaryLocationType($contactId, FALSE, $fieldName);
-                    }
-                    else {
-                      $locTypeId = CRM_Contact_BAO_Contact::getPrimaryLocationType($contactId, FALSE, 'address');
-                    }
+                    $locTypeId = CRM_Contact_BAO_Contact::getPrimaryLocationType($contactId, FALSE, $fieldName);
                   }
                 }
 
