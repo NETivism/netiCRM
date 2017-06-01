@@ -170,16 +170,7 @@ WHERE  inst.report_id = %1";
     return CRM_Utils_Mail::send($params);
   }
 
-  static function export2csv(&$form, &$rows) {
-    /*
-        //Mark as a CSV file.
-        header('Content-Type: text/csv');
-
-        //Force a download and name the file using the current timestamp.
-        header('Content-Disposition: attachment; filename=Report_' . $_SERVER['REQUEST_TIME'] . '.csv');
-    */
-
-
+  static function export2xls(&$form, &$rows) {
     require_once 'CRM/Utils/Money.php';
     $config = CRM_Core_Config::singleton();
 
@@ -190,17 +181,15 @@ WHERE  inst.report_id = %1";
     foreach ($columnHeaders as $header) {
       if (isset($form->_columnHeaders[$header])) {
         if(CRM_Utils_Array::value('type', $form->_columnHeaders[$header]) == 1024){
-          $headers[] = '"' . $form->_columnHeaders[$header]['title'] . ':' . ts('Currency') . '"';
+          $headers[] = $form->_columnHeaders[$header]['title'] . ':' . ts('Currency');
         }
-        $headers[] = '"' . html_entity_decode(strip_tags($form->_columnHeaders[$header]['title'])) . '"';
+        $headers[] = html_entity_decode(strip_tags($form->_columnHeaders[$header]['title']));
       }
     }
-    //Output the headers.
-    $output .= implode(',', $headers) . "\n";
 
     $displayRows = array();
     $value = NULL;
-    foreach ($rows as $row) {
+    foreach ($rows as $i => $row) {
       foreach ($columnHeaders as $k => $v) {
         if ($value = CRM_Utils_Array::value($v, $row)) {
           // Remove HTML, unencode entities, and escape quotation marks.
@@ -223,33 +212,18 @@ WHERE  inst.report_id = %1";
             $currency = $config->defaultCurrency;
             $value = $currency . '","' . $value;
           }
-          $displayRows[$v] = '"' . $value . '"';
+          $displayRows[$i][] = trim($value);
         }
         else {
-          $displayRows[$v] = " ";
+          $displayRows[$i][] = '';
         }
       }
-      //Output the data row.
-      $output .= implode(',', $displayRows) . "\n";
     }
-    // convert csv output to excel
-    require_once 'packages/PHPExcel/PHPExcel.php';
-    require_once 'packages/PHPExcel/PHPExcel/IOFactory.php';
-    $tmp_filename = tempnam("/tmp", "csv");
-    file_put_contents($tmp_filename, $output);
-    $objReader = PHPExcel_IOFactory::createReader('CSV');
-    $objPHPExcel = $objReader->load($tmp_filename);
-    $sheet = $objPHPExcel->getActiveSheet();
-    $highest_column = $sheet->getHighestColumn();
-    $highest_row = $sheet->getHighestRow();
-    $sheet->getStyle('A1:' . $highest_column . $highest_row)->getNumberFormat()->setFormatCode('@');
-
-    $filename = 'report-' . $_SERVER['REQUEST_TIME'] . '.xls';
-    header('Content-Type: application/vnd.ms-excel');
-    header('Content-Disposition: attachment;filename="' . $filename . '"');
-    header('Cache-Control: max-age=0');
-    $writer = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
-    $writer->save('php://output');
+    $config = CRM_Core_Config::singleton();
+    $fileName = $config->uploadDir . 'report-' . $_SERVER['REQUEST_TIME'] . '.xls';
+    $result = CRM_Core_Report_Excel::writeCSVFile($fileName, $headers, $displayRows, NULL, $writeHeader = TRUE, $saveFile = TRUE);
+    file_put_contents($fileName, $result);
+    CRM_Core_Report_Excel::writeExcelFile($fileName);
     CRM_Utils_System::civiExit();
   }
 
