@@ -4428,7 +4428,7 @@ SELECT COUNT( civicrm_contribution.total_amount ) as cancel_count,
     switch ($op) {
       case 'IS NULL':
       case 'IS NOT NULL':
-        return $clause;
+        return "NULLIF(TRIM($field), '') $op";
 
       case 'IN':
         if (isset($dataType)) {
