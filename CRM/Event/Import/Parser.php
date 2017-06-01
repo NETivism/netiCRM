@@ -639,10 +639,7 @@ abstract class CRM_Event_Import_Parser {
    * @access public
    */
   static function exportCSV($fileName, $header, $data) {
-    $fileName = str_replace("csv", "xls", $fileName);
-    $result = CRM_Core_Report_Excel::writeCSVFile($fileName, $header, $data, NULL, $writeHeader = TRUE, $saveFile = TRUE);
-    file_put_contents($fileName, $result);
-    CRM_Core_Report_Excel::writeExcelFile($fileName, TRUE);
+    CRM_Core_Report_Excel::writeExcelFile($fileName, $header, $data, $download = FALSE);
   }
 
   /**
@@ -666,13 +663,11 @@ abstract class CRM_Event_Import_Parser {
   }
 
   function errorFileName($type) {
-    require_once 'CRM/Import/Parser.php';
     $fileName = CRM_Import_Parser::errorFileName($type);
     return $fileName;
   }
 
   function saveFileName($type) {
-    require_once 'CRM/Import/Parser.php';
     $fileName = CRM_Import_Parser::saveFileName($type);
     return $fileName;
   }

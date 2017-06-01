@@ -991,34 +991,38 @@ class CRM_Export_BAO_Export {
    *
    * @return string name of the file
    */
-  function getExportFileName($output = 'csv', $mode = CRM_Export_Form_Select::CONTACT_EXPORT) {
+  function getExportFileName($mode = NULL) {
     $rand = substr(md5(microtime(TRUE)), 0, 4);
-    return "civicrm_export_" . $_SERVER['REQUEST_TIME'] . $rand;
     switch ($mode) {
       case CRM_Export_Form_Select::CONTACT_EXPORT:
-        return ts('CiviCRM Contact Search');
-
+        $name = ts('CiviCRM Contact Search');
+        break;
       case CRM_Export_Form_Select::CONTRIBUTE_EXPORT:
-        return ts('CiviCRM Contribution Search');
-
+        $name = ts('CiviCRM Contribution Search');
+        break;
       case CRM_Export_Form_Select::MEMBER_EXPORT:
-        return ts('CiviCRM Member Search');
-
+        $name = ts('CiviCRM Member Search');
+        break;
       case CRM_Export_Form_Select::EVENT_EXPORT:
-        return ts('CiviCRM Participant Search');
-
+        $name = ts('CiviCRM Participant Search');
+        break;
       case CRM_Export_Form_Select::PLEDGE_EXPORT:
-        return ts('CiviCRM Pledge Search');
-
+        $name = ts('CiviCRM Pledge Search');
+        break;
       case CRM_Export_Form_Select::CASE_EXPORT:
-        return ts('CiviCRM Case Search');
-
+        $name = ts('CiviCRM Case Search');
+        break;
       case CRM_Export_Form_Select::GRANT_EXPORT:
-        return ts('CiviCRM Grant Search');
-
+        $name = ts('CiviCRM Grant Search');
+        break;
       case CRM_Export_Form_Select::ACTIVITY_EXPORT:
-        return ts('CiviCRM Activity Search');
+        $name = ts('CiviCRM Activity Search');
+        break;
+      default:
+        $name = 'civicrm_export';
+        break;
     }
+    return date('Ymd_').str_replace(array(' ', '.', '/', '-') , '_', $name) . "_" . $rand . '.xlsx';
   }
 
   /**
@@ -1048,14 +1052,17 @@ class CRM_Export_BAO_Export {
       ) {
         eval('$errorFileName =' . $parserName . '::errorFileName( $type );');
         eval('$saveFileName =' . $parserName . '::saveFileName( $type );');
-        if (!empty($errorFileName) &&
-          !empty($saveFileName)
-        ) {
-          header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-          header('Content-Description: File Transfer');
-          header('Content-Type: application/vnd.ms-excel');
-          header('Content-Length: ' . filesize($errorFileName));
-          header('Content-Disposition: attachment; filename=' . $saveFileName);
+        $config = CRM_Core_Config::singleton();
+        $errorFileName = $config->uploadDir . $errorFileName;
+        if (!empty($errorFileName) && !empty($saveFileName) ) {
+          $buffer = '';
+          CRM_Utils_System::download(
+            $saveFileName,
+            'application/vnd.ms-excel',
+            $buffer,
+            NULL,
+            FALSE
+          );
 
           readfile($errorFileName);
         }
@@ -1120,8 +1127,7 @@ class CRM_Export_BAO_Export {
       }
     }
 
-    require_once 'CRM/Core/Report/Excel.php';
-    CRM_Core_Report_Excel::writeCSVFile(self::getExportFileName(), $header, $rows);
+    CRM_Core_Report_Excel::writeExcelFile(self::getExportFileName(), $header, $rows);
     CRM_Utils_System::civiExit();
   }
 
@@ -1523,54 +1529,25 @@ GROUP BY civicrm_primary_id ";
   }
 
   static function writeCSVFromTable($exportTempTable, $headerRows, $sqlColumns, $exportMode) {
-    $writeHeader = TRUE;
-    $saveFile = TRUE;
-    $fileName = self::getExportFileName('csv', $exportMode);
-    $offset = 0;
-    $limit = self::EXPORT_ROW_COUNT;
+    $fileName = self::getExportFileName($exportMode);
 
-    $query = "
-SELECT *
-FROM   $exportTempTable
-";
-    $total_row = CRM_Core_DAO::singleValueQuery("SELECT count(*) FROM $exportTempTable");
-    require_once 'CRM/Core/Report/Excel.php';
-    while (1) {
-      $limitQuery = $query . " LIMIT $offset, $limit";
-      $dao = CRM_Core_DAO::executeQuery($limitQuery);
+    $query = "SELECT * FROM $exportTempTable";
+    $componentDetails = array();
+    $writer = CRM_Core_Report_Excel::singleton('excel');
+    $writer->openToBrowser($fileName);
+    $writer->addRow($headerRows);
 
-      if ($dao->N <= 0) {
-        break;
+    $dao = CRM_Core_DAO::executeQuery($query);
+    while ($dao->fetch()) {
+      $row = array();
+      foreach ($sqlColumns as $column => $sqlColumn) {
+        $arr = explode(' ', $sqlColumn);
+        $column = $arr[0];
+        $row[$column] = $dao->$column;
       }
-
-      $componentDetails = array();
-      while ($dao->fetch()) {
-        $row = array();
-
-        foreach ($sqlColumns as $column => $sqlColumn) {
-          $arr = explode(' ', $sqlColumn);
-          $column = $arr[0];
-          $row[$column] = $dao->$column;
-        }
-
-        $componentDetails[] = $row;
-      }
-      // only support csv to prevent memory leak
-      if ($total_row > 5000) {
-        $result = CRM_Core_Report_Excel::writeCSVFile($fileName, $headerRows, $componentDetails, NULL, $writeHeader);
-        $writeHeader = FALSE;
-      }
-      else {
-        $result = CRM_Core_Report_Excel::writeCSVFile($fileName, $headerRows, $componentDetails, NULL, $writeHeader, $saveFile);
-        $writeHeader = FALSE;
-        file_put_contents('/tmp/' . $fileName, $result, FILE_APPEND);
-        $result = NULL;
-      }
-      $offset += $limit;
+      $writer->addRow($row);
     }
-    if ($total_row <= 5000) {
-      CRM_Core_Report_Excel::writeExcelFile('/tmp/' . $fileName);
-    }
+    $writer->close();
   }
 
   /**

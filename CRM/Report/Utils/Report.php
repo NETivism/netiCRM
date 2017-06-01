@@ -220,10 +220,8 @@ WHERE  inst.report_id = %1";
       }
     }
     $config = CRM_Core_Config::singleton();
-    $fileName = $config->uploadDir . 'report-' . $_SERVER['REQUEST_TIME'] . '.xls';
-    $result = CRM_Core_Report_Excel::writeCSVFile($fileName, $headers, $displayRows, NULL, $writeHeader = TRUE, $saveFile = TRUE);
-    file_put_contents($fileName, $result);
-    CRM_Core_Report_Excel::writeExcelFile($fileName);
+    $fileName = 'report_' . $_SERVER['REQUEST_TIME'] . '.xlsx';
+    CRM_Core_Report_Excel::writeExcelFile($fileName, $headers, $displayRows, $download = TRUE);
     CRM_Utils_System::civiExit();
   }
 
