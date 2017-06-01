@@ -327,6 +327,15 @@ SELECT label, value
       foreach ($values as $tuple) {
         list($name, $op, $value, $grouping, $wildcard) = $tuple;
 
+        if ($op == 'LIKE' && $value === '!%' && !$wildcard) {
+          $op = 'IS NULL';
+          $value = '';
+        }
+        elseif ($op == 'LIKE' && $value === '%' && !$wildcard) {
+          $op = 'IS NOT NULL';
+          $value = '';
+        }
+
         // fix $value here to escape sql injection attacks
         $field = $this->_fields[$id];
         $qillValue = CRM_Core_BAO_CustomField::getDisplayValue($value, $id, $this->_options);
@@ -417,14 +426,7 @@ SELECT label, value
 
                 //FIX for custom data query fired against no value(NULL/NOT NULL)
                 // handling empty sting
-                if($op == 'IS NOT NULL'){
-                  $whereQuery = CRM_Contact_BAO_Query::buildClause($sql, $op, $val, $field['data_type']);
-                  $whereQuery .= ' AND '. CRM_Contact_BAO_Query::buildClause($sql, '!=', '', $field['data_type']); 
-                  $this->_where[$grouping][] = '( '.$whereQuery.' )';
-                }
-                else{
-                  $this->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause($sql, $op, $val, $field['data_type']);
-                }
+                $this->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause($sql, $op, $val, $field['data_type']);
                 $this->_qill[$grouping][] = "$field[label] $op $qillValue";
               }
             }

@@ -159,7 +159,15 @@ class CRM_Contribute_BAO_Query {
   static function whereClauseSingle(&$values, &$query) {
     list($name, $op, $value, $grouping, $wildcard) = $values;
 
-    if ($op == 'LIKE' && !$wildcard) {
+    if ($op == 'LIKE' && $value === '!%' && !$wildcard) {
+      $op = 'IS NULL';
+      $value = '';
+    }
+    elseif ($op == 'LIKE' && $value === '%' && !$wildcard) {
+      $op = 'IS NOT NULL';
+      $value = '';
+    }
+    elseif ($op == 'LIKE' && !$wildcard) {
       $value = '%' . trim($value, '%') . '%';
     }
 
@@ -367,18 +375,28 @@ class CRM_Contribute_BAO_Query {
 
       case 'contribution_trxn_id':
       case 'contribution_transaction_id':
-        $wc = ($op != 'LIKE') ? "LOWER(civicrm_contribution.trxn_id)" : "civicrm_contribution.trxn_id";
-        $value = ($op != 'LIKE') ? $value.'%' : $value;
-        $op = 'LIKE';
+        $wc = "LOWER(civicrm_contribution.trxn_id)";
+        $value = $value.'%';
+        if (!strstr(strtolower($op), 'null')) {
+          $op = 'LIKE';
+        }
+        if ($wildcard) {
+          $value = "%".trim($value, '%')."%";
+        }
         $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause($wc, $op, $value, "String");
         $query->_qill[$grouping][] = ts('Transaction ID %1 %2', array(1 => $op, 2 => $quoteValue));
         $query->_tables['civicrm_contribution'] = $query->_whereTables['civicrm_contribution'] = 1;
         return;
 
       case 'contribution_receipt_id':
-        $wc = ($op != 'LIKE') ? "LOWER(civicrm_contribution.receipt_id)" : "civicrm_contribution.receipt_id";
-        $value = ($op != 'LIKE') ? $value.'%' : $value;
-        $op = 'LIKE';
+        $wc = "LOWER(civicrm_contribution.receipt_id)";
+        $value = $value.'%';
+        if (!strstr(strtolower($op), 'null')) {
+          $op = 'LIKE';
+        }
+        if ($wildcard) {
+          $value = "%".trim($value, '%')."%";
+        }
         $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause($wc, $op, $value, "String");
         $query->_qill[$grouping][] = ts('Receipt ID %1 %2', array(1 => $op, 2 => $quoteValue));
         $query->_tables['civicrm_contribution'] = $query->_whereTables['civicrm_contribution'] = 1;
