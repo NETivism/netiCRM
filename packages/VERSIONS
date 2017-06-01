@@ -97,6 +97,7 @@ dompdf         0.5.1      LGPL 2.1+   http://digitaljunkies.ca/dompdf/          
 eZ Components  2009.1.2   BSD 3-cl.   http://ezcomponents.org/                                      local changes
 html2text      1.0.0      GPL 2+      http://chuggnutt.com/html2text.php                            local changes
 reCAPTCHA      1.10       X11         http://recaptcha.net/
+spout          2.7.2      Apache 2    https://github.com/box/spout
 
 payment processors for CiviCRM
 ==============================
