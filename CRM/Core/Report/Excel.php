@@ -26,10 +26,28 @@
 */
 
 
+require_once 'Spout/Autoloader/autoload.php';
+use Box\Spout\Writer\WriterFactory;
+use Box\Spout\Common\Type;
 
-require_once 'CRM/Utils/String.php';
 class CRM_Core_Report_Excel {
+  private static $_singleton = NULL;
 
+  static function &singleton($type) {
+    if (self::$_singleton === NULL) {
+      switch($type) {
+        case 'excel':
+          $writer = WriterFactory::create(Type::XLSX);
+          break;
+        case 'csv':
+          $writer = WriterFactory::create(Type::CSV);
+          $writer->setShouldAddBOM(TRUE); // this is default
+          break;
+      }
+      self::$_singleton = $writer;
+    }
+    return self::$_singleton;
+  }
   /**
    * Code copied from phpMyAdmin (v2.6.1-pl3)
    * File: PHPMYADMIN/libraries/export/csv.php
@@ -190,58 +208,34 @@ class CRM_Core_Report_Excel {
     echo "</tbody></table>";
   }
 
-  function writeCSVFile($fileName, &$header, &$rows, $titleHeader = NULL, $outputHeader = TRUE, $saveFile = NULL) {
-    if ($outputHeader && !$saveFile) {
-      CRM_Utils_System::download(CRM_Utils_String::munge($fileName),
-        'text/x-csv',
-        CRM_Core_DAO::$_nullObject,
-        'csv',
-        FALSE
-      );
-      echo "\xEF\xBB\xBF";
-    }
-
-    if (!empty($rows)) {
-      $print = TRUE;
-      if ($saveFile) {
-        $print = 0;
-      }
-      return self::makeCSVTable($header, $rows, $titleHeader, $print, $outputHeader);
-    }
+  static function writeCSVFile($fileName, &$header, &$rows, $download = TRUE) {
+    return self::writeExportFile('csv', $fileName, $header, $rows, $download);
   }
 
-  function writeExcelFile($file, $return = NULL) {
-    if (!file_exists($file)) {
-      return;
-    }
-    $filename = basename($file);
-    require_once 'packages/PHPExcel/PHPExcel.php';
-    require_once 'packages/PHPExcel/PHPExcel/IOFactory.php';
-    $objReader = PHPExcel_IOFactory::createReader('CSV');
-    $objPHPExcel = $objReader->load($file);
-    $sheet = $objPHPExcel->getActiveSheet();
-    $highest_column = $sheet->getHighestColumn();
-    $highest_row = $sheet->getHighestRow();
-    $sheet->getStyle('A1:' . $highest_column . $highest_row)->getNumberFormat()->setFormatCode('@');
-
-    if ($return) {
-      $writer = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
-      $writer->save($file);
-      return TRUE;
+  static function writeExcelFile($fileName, &$header, &$rows, $download = TRUE) {
+    return self::writeExportFile('excel', $fileName, $header, $rows, $download);
+  }
+  
+  static function writeExportFile($type = 'excel', $fileName, &$header, &$rows, $download = TRUE) {
+    $config = CRM_Core_Config::singleton();
+    $writer = self::singleton($type);
+    if ($download) {
+      $writer->openToBrowser($fileName);
     }
     else {
-      CRM_Utils_System::download(CRM_Utils_String::munge($filename),
-        'application/vnd.ms-excel',
-        CRM_Core_DAO::$_nullObject,
-        'xls',
-        FALSE
-      );
-      $writer = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
-      $writer->save('php://output');
+      $filePath = $config->uploadDir.$fileName;
+      $writer->openToFile($filePath);
+    }
+    $writer
+      ->addRow($header)
+      ->addRows($rows)
+      ->close();
+    if ($download) {
       CRM_Utils_System::civiExit();
     }
-
-    return FALSE;
+    else {
+      return $filePath;
+    }
   }
 }
 

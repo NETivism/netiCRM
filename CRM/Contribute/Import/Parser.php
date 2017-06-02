@@ -837,10 +837,7 @@ abstract class CRM_Contribute_Import_Parser {
    * @access public
    */
   static function exportCSV($fileName, $header, $data) {
-    $fileName = str_replace("csv", "xls", $fileName);
-    $result = CRM_Core_Report_Excel::writeCSVFile($fileName, $header, $data, NULL, $writeHeader = TRUE, $saveFile = TRUE);
-    file_put_contents($fileName, $result);
-    CRM_Core_Report_Excel::writeExcelFile($fileName, TRUE);
+    CRM_Core_Report_Excel::writeExcelFile($fileName, $header, $data, $download = FALSE);
   }
 
   /**
@@ -895,11 +892,11 @@ abstract class CRM_Contribute_Import_Parser {
         break;
 
       case CRM_Contribute_Import_Parser::SOFT_CREDIT_ERROR:
-        $fileName .= '.softCreditErrors';
+        $fileName .= '.softCreditErrors.xlsx';
         break;
 
       case CRM_Contribute_Import_Parser::PLEDGE_PAYMENT_ERROR:
-        $fileName .= '.pledgePaymentErrors';
+        $fileName .= '.pledgePaymentErrors.xlsx';
         break;
     }
 
@@ -935,11 +932,11 @@ abstract class CRM_Contribute_Import_Parser {
         break;
 
       case CRM_Contribute_Import_Parser::SOFT_CREDIT_ERROR:
-        $fileName = 'Import_Soft_Credit_Errors.csv';
+        $fileName = 'Import_Soft_Credit_Errors.xlsx';
         break;
 
       case CRM_Contribute_Import_Parser::PLEDGE_PAYMENT_ERROR:
-        $fileName = 'Import_Pledge_Payment_Errors.csv';
+        $fileName = 'Import_Pledge_Payment_Errors.xlsx';
         break;
     }
 

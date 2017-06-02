@@ -1859,7 +1859,7 @@ WHERE cg.extends IN ('" . implode("','", $this->_customGroupExtends) . "') AND
                   CRM_Utils_System::civiExit();
                 }
                 elseif ($this->_outputMode == 'csv') {
-                  CRM_Report_Utils_Report::export2csv($this, $rows);
+                  CRM_Report_Utils_Report::export2xls($this, $rows);
                 }
                 elseif ($this->_outputMode == 'group') {
                   $group = $this->_params['groups'];

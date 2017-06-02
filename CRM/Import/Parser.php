@@ -898,10 +898,6 @@ abstract class CRM_Import_Parser {
    * @access public
    */
   static function exportCSV($fileName, $header, $data) {
-
-    if (file_exists($fileName) && !is_writable($fileName)) {
-      CRM_Core_Error::movedSiteError($fileName);
-    }
     //hack to remove '_status', '_statusMsg' and '_id' from error file
     $errorValues = array();
     $dbRecordStatus = array('IMPORTED', 'ERROR', 'DUPLICATE', 'INVALID', 'NEW');
@@ -916,34 +912,7 @@ abstract class CRM_Import_Parser {
       }
     }
     $data = $errorValues;
-
-    $fileName = str_replace("csv", "xls", $fileName);
-    $result = CRM_Core_Report_Excel::writeCSVFile($fileName, $header, $data, NULL, $writeHeader = TRUE, $saveFile = TRUE);
-    file_put_contents($fileName, $result);
-    CRM_Core_Report_Excel::writeExcelFile($fileName, TRUE);
-
-    /*
-        $output = array();
-          $fd = fopen($fileName, 'w');
-        
-        foreach ($header as $key => $value) {
-            $header[$key] = "\"$value\"";
-        }
-        $config = CRM_Core_Config::singleton( );
-        $output[] = implode($config->fieldSeparator, $header);
-
-        foreach ($data as $datum) {
-            foreach ($datum as $key => $value) {
-                $datum[$key] = "\"$value\"";
-            }
-            $output[] = implode($config->fieldSeparator, $datum);
-        }
-         */
-
-    /*
-        fwrite($fd, implode("\n", $output));
-        fclose($fd);
-         */
+    CRM_Core_Report_Excel::writeExcelFile($fileName, $header, $data, $download = FALSE);
   }
 
   /**
@@ -985,7 +954,7 @@ abstract class CRM_Import_Parser {
     }
 
     $config = CRM_Core_Config::singleton();
-    $fileName = $config->uploadDir . "sqlImport";
+    $fileName = "sqlImport";
     switch ($type) {
       case CRM_Import_Parser::ERROR:
         $fileName .= '.errors';
@@ -1008,7 +977,7 @@ abstract class CRM_Import_Parser {
         break;
     }
 
-    return $fileName;
+    return $fileName . '.xlsx';
   }
 
   function saveFileName($type) {
@@ -1018,27 +987,27 @@ abstract class CRM_Import_Parser {
     }
     switch ($type) {
       case CRM_Import_Parser::ERROR:
-        $fileName = 'Import_Errors.xls';
+        $fileName = 'Import_Errors';
         break;
 
       case CRM_Import_Parser::CONFLICT:
-        $fileName = 'Import_Conflicts.xls';
+        $fileName = 'Import_Conflicts';
         break;
 
       case CRM_Import_Parser::DUPLICATE:
-        $fileName = 'Import_Duplicates.xls';
+        $fileName = 'Import_Duplicates';
         break;
 
       case CRM_Import_Parser::NO_MATCH:
-        $fileName = 'Import_Mismatch.xls';
+        $fileName = 'Import_Mismatch';
         break;
 
       case CRM_Import_Parser::UNPARSED_ADDRESS_WARNING:
-        $fileName = 'Import_Unparsed_Address.xls';
+        $fileName = 'Import_Unparsed_Address';
         break;
     }
 
-    return $fileName;
+    return $fileName . '.xlsx';
   }
 }
 

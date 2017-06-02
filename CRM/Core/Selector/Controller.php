@@ -322,7 +322,8 @@ class CRM_Core_Selector_Controller {
       CRM_Utils_Hook::searchColumns($contextName, $columnHeaders, $rows, $this);
       if ($this->_output == self::EXPORT) {
         // export the rows.
-        CRM_Core_Report_Excel::writeCSVFile($this->_object->getExportFileName(),
+        CRM_Core_Report_Excel::writeExcelFile(
+          $this->_object->getExportFileName(),
           $columnHeaders,
           $rows
         );
