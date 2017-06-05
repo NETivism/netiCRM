@@ -177,6 +177,10 @@ cj(function($){
         $('.custom_{/literal}{$receiptSerial}{literal}-section').find('.label label').append('<span class="crm-marker" title="{/literal}{ts}This field is required.{/ts}{literal}">*</span>');
         $('#custom_{/literal}{$receiptSerial}{literal}').addClass('required');
       }
+      if($('#same_as').prop('checked') && Object.keys(doCheckSameAs(false)).length > 0 ){
+        $('#same_as').prop('checked',false);
+        doUpdateName();
+      }
     }
   }
 
@@ -201,7 +205,7 @@ cj(function($){
   /**
    * Occur when press same_as button. Valid legal id and last_name, first_name fields, display error message.
    */
-  function doCheckSameAs(){
+  function doCheckSameAs(isShowError = true){
     doClearNameIdErrorMessage();
     var $sameas = $('#same_as');
     var error = [];
@@ -219,7 +223,7 @@ cj(function($){
           error['first_name'] = '{/literal}{ts}This field is required.{/ts}{literal}';
         }
       }
-      if(Object.keys(error).length > 0){
+      if(Object.keys(error).length > 0 && isShowError){
         $sameas.prop('checked', false);
         if($('.name-id-error').length === 0){
           $sameas.parent().append('<label for="same_as" generated="true" class="error name-id-error" style="color: rgb(238, 85, 85); padding-left: 10px;">{/literal}{ts}Please verify name and Legal Identifier fields.{/ts}{literal}</label>');
@@ -237,7 +241,7 @@ cj(function($){
           }
           doScrollTo($element);
         }
-        return
+        return error;
       }
       $('#custom_{/literal}{$receiptTitle}{literal}').parent('.md-elem').addClass('md-elem-readonly');
     }
@@ -245,6 +249,7 @@ cj(function($){
       $('#custom_{/literal}{$receiptTitle}{literal}').parent('.md-elem').removeClass('md-elem-readonly');
     }
     doUpdateName();
+    return error;
   }
 
   /**
@@ -270,6 +275,8 @@ cj(function($){
         $('#same_as').trigger('click');
       }
     }
+
+    // For Name
     if($('#same_as').is(':checked') && $('#r_company').is(':checked') && $('#is_for_organization').length > 0 && $('#is_for_organization').is(':checked')){
       $('#custom_{/literal}{$receiptTitle}{literal}').val($('#organization_name').val());
     }else if($('#same_as').is(':checked') && $('#last_name,#first_name').length > 1 && $('#r_person').is(':checked')){
@@ -278,10 +285,16 @@ cj(function($){
     else{
       $('#custom_{/literal}{$receiptTitle}{literal}').removeAttr('readonly');
     }
+
+    // For ReceiptSerial Number
     if($('#same_as').is(':checked') && $('#r_company').is(':checked') && $('#is_for_organization').length > 0 && $('#is_for_organization').is(':checked')){
       $('#custom_{/literal}{$receiptSerial}{literal}').val($('#sic_code').val());
     }else if($('#same_as').is(':checked') && $('#legal_identifier').length >= 1 && $('#r_person').is(':checked')){
-      $('#custom_{/literal}{$receiptSerial}{literal}').val($('#legal_identifier').val()).attr('readonly', 'readonly');
+      if(/^_+$/.test($('#legal_identifier').val())){
+        $('#custom_{/literal}{$receiptSerial}{literal}').val("").attr('readonly', 'readonly');
+      }else{
+        $('#custom_{/literal}{$receiptSerial}{literal}').val($('#legal_identifier').val()).attr('readonly', 'readonly');
+      }
     }
     else{
       $('#custom_{/literal}{$receiptSerial}{literal}').removeAttr('readonly');
@@ -308,7 +321,6 @@ cj(function($){
               last_name += "*";
             };
           }
-
 
           var first_name_leng = first_name.length;
           if(first_name_leng>1){
@@ -378,7 +390,7 @@ cj(function($){
       $('#custom_{/literal}{$receiptSerial}{literal}').removeClass('error');
       return true;
     }else{
-      $('#custom_{/literal}{$receiptSerial}{literal}').addClass('error').parent().append('<label for="custom_{/literal}{$receiptSerial}{literal}" class="error error-twid" style="padding-left: 10px;color: #e55;">{/literal}{ts}Please enter correct Data ( in valid format ).{/ts}{literal}</label>');
+      $('#custom_{/literal}{$receiptSerial}{literal}').addClass('error').parent().append('<label for="custom_{/literal}{$receiptSerial}{literal}" class="error-twid" style="padding-left: 10px;color: #e55;">{/literal}{ts}Please enter correct Data ( in valid format ).{/ts}{literal}</label>');
       return false;
     }
   }

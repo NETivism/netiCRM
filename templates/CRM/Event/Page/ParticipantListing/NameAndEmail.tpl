@@ -41,8 +41,8 @@
          </tr>
       {foreach from=$rows item=row}
          <tr class="{cycle values="odd-row,even-row"}">
-            <td class="crm-participant-name">{$row.name|regex_replace:"/\@/":" [AT] "|regex_replace:"/.$/u":"＊"}</td>	
-            <td class="crm-participant-email">{$row.email|regex_replace:"/\@/":" [AT] "|regex_replace:"/...$/u":"＊＊"}</td>
+            <td class="crm-participant-name">{$row.name|replaceCharByStar}</td>
+            <td class="crm-participant-email">{$row.email|replaceCharByStar}</td>
          </tr>
       {/foreach}
       </table>

@@ -1528,6 +1528,9 @@ SELECT $select
         return 'civicrm_membership';
 
       case 'Participant':
+      case 'ParticipantEventName':
+      case 'ParticipantEventType':
+      case 'ParticipantRole':
         return 'civicrm_participant';
 
       case 'Grant':

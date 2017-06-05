@@ -152,20 +152,9 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
   public function postProcess() {
     // get all the details needed to generate a receipt
     $contribIDs = implode(',', $this->_contributionIds);
-    $sql = "SELECT id FROM civicrm_contribution WHERE id IN ($contribIDs) AND receive_date IS NOT NULL ORDER BY receive_date ASC";
-    $dao = CRM_Core_DAO::executeQuery($sql);
-    $OrderContribIDs = array();
-    while($dao->fetch()){
-      $OrderContribIDs[] = $dao->id;
-    }
-    $sql = "SELECT id FROM civicrm_contribution WHERE id IN ($contribIDs) AND receive_date = NULL";
-    $dao = CRM_Core_DAO::executeQuery($sql);
-    while($dao->fetch()){
-      $OrderContribIDs[] = $dao->id;
-    }
 
     $details = &CRM_Contribute_Form_Task_Status::getDetails($contribIDs);
-    $details = array_replace(array_flip($OrderContribIDs), $details);
+    $details = array_replace(array_flip($this->_contributionIds), $details);
     $params = $this->controller->exportValues($this->_name);
 
     self::makeReceipt($details, $params['window_envelope']);

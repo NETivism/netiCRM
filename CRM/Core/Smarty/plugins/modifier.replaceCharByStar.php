@@ -1,4 +1,5 @@
-{*
+<?php
+/*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
  +--------------------------------------------------------------------+
@@ -22,34 +23,50 @@
  | GNU Affero General Public License or the licensing of CiviCRM,     |
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
-*}
-{* Displays participant listing for an event. *}
-{if $rows}
-    {include file="CRM/common/pager.tpl" location="top"}
-       <table cellpadding="0" cellspacing="0" border="0">
-         <tr class="columnheader">
-        {foreach from=$headers item=header}
-        <th scope="col">
-        {if $header.sort}
-          {assign var='key' value=$header.sort}
-          {$sort->_response.$key.link}
-        {else}
-          {$header.name}
-        {/if}
-        </th>
-      {/foreach}
-         </tr>
-      {foreach from=$rows item=row}
-         <tr class="{cycle values="odd-row,even-row"} crm-participant-name">
-            <td>{$row.name|replaceCharByStar}</td>
-         </tr>
-      {/foreach}
-      </table>
-    {include file="CRM/common/pager.tpl" location="bottom"}
-{else}
-    <div class='spacer'></div>
-    <div class="messages status">
-    
-        {ts}There are currently no participants registered for this event.{/ts}
-    </div>
-{/if}
+*/
+
+/**
+ *
+ * @package CRM
+ * @copyright CiviCRM LLC (c) 2004-2010
+ * $Id$
+ *
+ */
+
+function smarty_modifier_replacecharbystar($str) {
+  if(strpos($str, '@') !== false){
+    $glue = '@';
+  }else{
+    $glue = ' ';
+  }
+  $str_array = explode($glue, $str);
+  $return_array = array();
+  foreach ($str_array as $str2) {
+    $return_array[] = _doAddStar($str2);
+  }
+  $return = implode($glue, $return_array);
+  return $return;
+}
+
+function _doAddStar($str) {
+   if(mb_strlen($str) > 2){
+    $return = mb_substr($str,0,1);
+    for ($i=1; $i < mb_strlen($str)-1 ; $i++) {
+      $cha = mb_substr($str,$i,1);
+      if($cha == ' '){
+        $return .= ' ';
+      }else if(ord($cha)> 0xa0){
+        $return .= '＊';
+      }else{
+        $return .= '*';
+      }
+    }
+    $return .= mb_substr($str,-1,1);
+  }else{
+   $return = preg_replace('/.$/u', '＊', $str);
+  }
+  return $return;
+}
+
+
+
