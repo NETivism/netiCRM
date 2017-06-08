@@ -174,6 +174,24 @@ class CRM_Report_Form_Contribute_TaiwanTax extends CRM_Report_Form {
             if($fieldName == 'total_amount'){
               $select[] = "SUM({$field['dbAlias']}) as {$tableName}_{$fieldName}";
             }
+            elseif ($fieldName == $this->_receiptTitle) {
+              $select[] = "
+(CASE
+  WHEN {$field['dbAlias']} IS NOT NULL AND LENGTH({$field['dbAlias']}) > 0 
+  THEN {$field['dbAlias']}
+  ELSE {$this->_aliases['civicrm_contact']}.sort_name END) as receipt_title
+";
+            }
+            elseif ($fieldName == $this->_receiptSerial) {
+              $select[] = "
+(CASE
+  WHEN {$field['dbAlias']} IS NOT NULL AND LENGTH({$field['dbAlias']}) > 0
+  THEN {$field['dbAlias']}
+  ELSE 
+    (CASE WHEN {$this->_aliases['civicrm_contact']}.contact_type = 'Organization' THEN {$this->_aliases['civicrm_contact']}.sic_code ELSE {$this->_aliases['civicrm_contact']}.legal_identifier END)
+  END) as receipt_serial
+";
+            }
             else{
               $select[] = "{$field['dbAlias']} as {$tableName}_{$fieldName}";
             }
@@ -190,6 +208,8 @@ class CRM_Report_Form_Contribute_TaiwanTax extends CRM_Report_Form {
   function modifyColumnHeaders(){
     $this->_columnHeaders["civicrm_contribution_total_amount"]['type'] = 1;
     $this->_columnHeaders["civicrm_contribution_receive_date"]['type'] = 1;
+    $this->_columnHeaders["receipt_title"]['type'] = 1;
+    $this->_columnHeaders["receipt_serial"]['type'] = 1;
   }
 
   static function formRule($fields, $files, $self) {
@@ -199,20 +219,19 @@ class CRM_Report_Form_Contribute_TaiwanTax extends CRM_Report_Form {
   }
 
   function from() {
-    $this->_from = NULL;
     $this->_from = "
-        FROM civicrm_contact {$this->_aliases['civicrm_contact']} {$this->_aclFrom}
-        	INNER JOIN civicrm_contribution {$this->_aliases['civicrm_contribution']}
-		          ON {$this->_aliases['civicrm_contact']}.id = {$this->_aliases['civicrm_contribution']}.contact_id AND {$this->_aliases['civicrm_contribution']}.is_test = 0
-        ";
+FROM civicrm_contribution {$this->_aliases['civicrm_contribution']}
+INNER JOIN civicrm_contact {$this->_aliases['civicrm_contact']}
+ON {$this->_aliases['civicrm_contact']}.id = {$this->_aliases['civicrm_contribution']}.contact_id AND {$this->_aliases['civicrm_contribution']}.is_test = 0 ";
   }
 
   function groupBy(){
-    $this->_groupBy = " GROUP BY (CASE WHEN {$this->_aliases['civicrm_contact']}.legal_identifier IS NULL OR {$this->_aliases['civicrm_contact']}.legal_identifier = '' THEN {$this->_aliases['civicrm_contact']}.id ELSE {$this->_aliases['civicrm_contact']}.legal_identifier END)";
+    $this->_groupBy = "
+GROUP BY receipt_title, receipt_serial";
   }
 
   function orderBy() {
-    $this->_orderBy = " ORDER BY {$this->_aliases['civicrm_contribution']}.receive_date ";
+    $this->_orderBy = " ORDER BY receipt_title ASC";
   }
 
   function postProcess() {
@@ -226,8 +245,8 @@ class CRM_Report_Form_Contribute_TaiwanTax extends CRM_Report_Form {
     $this->_columnHeaders = array();
     $this->_columnSort = array(
       'receive_date' => '捐贈年度',
-      $this->_receiptSerial => '捐贈者身分證統一編號',
-      $this->_receiptTitle => '捐贈者姓名',
+      'receipt_serial' => '捐贈者身分證統一編號',
+      'receipt_title' => '捐贈者姓名',
       'total_amount' => '捐款金額',
       'other1' => '受捐贈單位統一編號',
     );
@@ -257,13 +276,6 @@ class CRM_Report_Form_Contribute_TaiwanTax extends CRM_Report_Form {
         }
 
         // donor's name when not enough personal id
-        if(empty($row[$receiptTitle])){
-          $rows[$n][$receiptTitle] = !empty($row['civicrm_contact_sort_name']) ? $row['civicrm_contact_sort_name'] : '';
-        }
-        if(empty($row[$receiptSerial])){
-          $alterSerialColumn = $row['civicrm_contact_contact_type'] == 'Individual' ?  'legal_identifier' : 'sic_code';
-          $rows[$n][$receiptSerial] = !empty($row['civicrm_contact_'.$alterSerialColumn]) ? $row['civicrm_contact_'.$alterSerialColumn] : '';
-        }
         if(!empty($row['civicrm_contribution_total_amount'])){
           $rows[$n]['civicrm_contribution_total_amount'] = round($row['civicrm_contribution_total_amount']);
         }

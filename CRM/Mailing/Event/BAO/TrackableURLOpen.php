@@ -72,9 +72,7 @@ class CRM_Mailing_Event_BAO_TrackableURLOpen extends CRM_Mailing_Event_DAO_Track
     $turl = CRM_Mailing_BAO_TrackableURL::getTableName();
 
     if (!$queue_id) {
-      $search->query("SELECT $turl.url as url from $turl
-                    WHERE $turl.id = " . CRM_Utils_Type::escape($url_id, 'Integer')
-      );
+      $search->query("SELECT $turl.url as url from $turl WHERE $turl.id = " . CRM_Utils_Type::escape($url_id, 'Integer'));
       if (!$search->fetch()) {
         return CRM_Utils_System::baseURL();
       }
@@ -88,10 +86,14 @@ class CRM_Mailing_Event_BAO_TrackableURLOpen extends CRM_Mailing_Event_DAO_Track
     );
 
     if (!$search->fetch()) {
-      /* Whoops, error, don't track it.  Return the base url. */
-
-
-      return CRM_Utils_System::baseURL();
+      // fallback to only return search url
+      $search->query("SELECT $turl.url as url from $turl WHERE $turl.id = " . CRM_Utils_Type::escape($url_id, 'Integer'));
+      if (!$search->fetch()) {
+        return CRM_Utils_System::baseURL();
+      }
+      else {
+        return $search->url;
+      }
     }
 
     $open = new CRM_Mailing_Event_BAO_TrackableURLOpen();

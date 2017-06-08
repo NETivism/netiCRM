@@ -1642,7 +1642,13 @@ WHERE cg.extends IN ('" . implode("','", $this->_customGroupExtends) . "') AND
                 if ($applyLimit && !CRM_Utils_Array::value('charts', $this->_params)) {
                   $this->limit();
                 }
-                $sql = "{$this->_select} {$this->_from} {$this->_where} {$this->_groupBy} {$this->_having} {$this->_orderBy} {$this->_limit}";
+                $sql = "{$this->_select}
+                {$this->_from}
+                {$this->_where}
+                {$this->_groupBy}
+                {$this->_having}
+                {$this->_orderBy}
+                {$this->_limit}";
 
                 return $sql;
               }
