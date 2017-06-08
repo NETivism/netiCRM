@@ -212,7 +212,10 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
 
     require_once 'CRM/Event/PseudoConstant.php';
     $participantStatuses = &CRM_Event_PseudoConstant::participantStatus();
-    if (in_array('Awaiting approval', $participantStatuses) and in_array('Pending from approval', $participantStatuses) and in_array('Rejected', $participantStatuses)) {
+    if (in_array('Awaiting approval', $participantStatuses) &&
+        in_array('Pending from approval', $participantStatuses) &&
+        in_array('Rejected', $participantStatuses) &&
+        !$this->_eventInfo['has_waitlist']) {
       $this->addElement('checkbox',
         'requires_approval',
         ts('Require participant approval?'),
