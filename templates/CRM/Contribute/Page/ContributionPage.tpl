@@ -63,7 +63,7 @@
                {foreach from=$rows item=row}
                  <tr id="row_{$row.id}" class="{cycle values="odd-row,even-row"} {$row.class}{if NOT $row.is_active} disabled{/if}">
                      <td>{$row.id}</td>
-                     <td><strong>{$row.title}</strong></td>
+                     <td><strong><a href="{crmURL a=true p='civicrm/admin/contribute' q="action=update&reset=1&id=`$row.id`"}">{$row.title}</a></strong></td>
                      <td>{$row.contribution_type}</td>
                      <td id="row_{$row.id}_status">{if $row.is_active eq 1} {ts}Yes{/ts} {else} {ts}No{/ts} {/if}</td>
 		     <td class="crm-contribution-page-actions right nowrap">

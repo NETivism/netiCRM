@@ -24,29 +24,35 @@
  +--------------------------------------------------------------------+
 *}
 <h2>{$title}</h2>                                
-<div class="messages status">
-    {if $is_active}
-        <img src="{$config->resourceBase}i/traffic_green.gif" alt="{ts}status{/ts}"/>
-        <a href="{crmURL p='civicrm/contribute/transact' q="reset=1&id=`$id`" fe='true'}" target="_blank">&raquo; {ts}Go to this LIVE Online Contribution page{/ts}</a>
-        {if $config->userFramework EQ 'Drupal'}
-            <p>{ts}Create links to this contribution page by copying and pasting the following URL into any web page.{/ts}:<br />
-            <a id="contributionLiveUrl" href="{crmURL p='civicrm/contribute/transact' q="reset=1&id=`$id`"}">{crmURL a=true p='civicrm/contribute/transact' q="reset=1&id=`$id`"}</a>
-        {elseif $config->userFramework EQ 'Joomla'}
-            {ts 1=$id}Create front-end links to this contribution page using the Menu Manager. Select <strong>Online Contribution</strong> and choose your desired contribution page from the parameters section.{/ts}
-        {/if}
-    {else}
-        <img src="{$config->resourceBase}i/traffic_red.gif" alt="{ts}status{/ts}"/>
-        <p>{ts}This page is currently <strong>inactive</strong> (not accessible to visitors).{/ts}</p>
-        {capture assign=crmURL}{crmURL p='civicrm/admin/contribute/settings' q="reset=1&action=update&id=`$id`"}{/capture}
-        <p>{ts 1=$crmURL}When you are ready to make this page live, click <a href='%1'>Title and Settings</a> and update the <strong>Active?</strong> checkbox.{/ts}</p>
-    {/if}
-</div>
-
 <div id="help">
     {capture assign=docLink}{docURL page="CiviContribute Admin" text="CiviContribute Administration Documentation"}{/capture}
     {ts 1=$docLink}Use the links below to update features and content for this Online Contribution Page, as well as to run through the contribution process in <strong>test mode</strong>. Refer to the %1 for more information.{/ts}
 </div>
 <table class="report"> 
+<tr>
+    {if $is_active}
+        <td nowrap><a href="{crmURL p='civicrm/contribute/transact' q="reset=1&id=`$id`" fe='true'}" target="_blank" class="button"><i class="zmdi zmdi-share"></i> {ts}Go to this LIVE Online Contribution page{/ts}</a></td>
+        <td>
+        {if $config->userFramework EQ 'Drupal'}
+         {ts}Create links to this contribution page by copying and pasting the following URL into any web page.{/ts}<br>
+         <textarea cols="60" rows="1" onclick="this.select()">{crmURL a=true p='civicrm/contribute/transact' q="reset=1&id=`$id`"}</textarea>
+
+        {elseif $config->userFramework EQ 'Joomla'}
+            {ts 1=$id}Create front-end links to this contribution page using the Menu Manager. Select <strong>Online Contribution</strong> and choose your desired contribution page from the parameters section.{/ts}
+        {/if}
+        </td>
+    {else}
+        <td>{ts}This page is currently <strong>inactive</strong> (not accessible to visitors).{/ts}</td>
+        <td>
+        {capture assign=crmURL}{crmURL p='civicrm/admin/contribute/settings' q="reset=1&action=update&id=`$id`"}{/capture}
+        {ts 1=$crmURL}When you are ready to make this page live, click <a href='%1'>Title and Settings</a> and update the <strong>Active?</strong> checkbox.{/ts}</td>
+    {/if}
+</tr>
+<tr>
+    <td><a href="{crmURL p='civicrm/contribute/transact' q="reset=1&action=preview&id=`$id`"}" target="_blank" class="button"><i class="zmdi zmdi-link"></i>{ts}Test-drive{/ts}</a></td>
+    <td>{ts}Test-drive the entire contribution process - including custom fields, confirmation, thank-you page, and receipting. Transactions will be directed to your payment processor's test server. <strong>No live financial transactions will be submitted. However, a contact record will be created or updated and a test contribution record will be saved to the database. Use obvious test contact names so you can review and delete these records as needed. Test contributions are not visible on the Contributions tab, but can be viewed by searching for 'Test Contributions' in the CiviContribute search form.</strong>{/ts}
+    </td>
+</tr>
 <tr>
     <td class="nowrap"><a href="{crmURL p='civicrm/admin/contribute/settings' q="reset=1&action=update&id=`$id`"}" id="idTitleAndSettings">&raquo; {ts}Title and Settings{/ts}</a></td>
     <td>{ts}Set page title and describe your cause or campaign. Select contribution type (donation, campaign contribution, etc.), and set optional fund-raising goal and campaign start and end dates. Enable honoree features and allow individuals to contribute on behalf of an organization. Enable or disable this page.{/ts}</td>
@@ -80,8 +86,12 @@
 </tr>
 {capture assign=pcpAdminURL}{crmURL p="civicrm/admin/pcp" q="reset=1"}{/capture}
 <tr>
-    <td class="nowrap"><a href="{crmURL p='civicrm/admin/contribute/pcp' q="reset=1&action=update&id=`$id`"}" id="idPcp">&raquo; {ts}Personal Campaign Pages{/ts}</a></td>
-    <td>{ts 1=$pcpAdminURL}Allow constituents to create their own personal fundraising pages and drive traffic to this contribution page. (<a href="%1">Or you can view and manage existing Personal Campaign Pages.</a>){/ts}</td>
+    <td class="nowrap" id="idPcp">&raquo; {ts}Personal Campaign Pages{/ts}</td>
+    <td>{ts}Allow constituents to create their own personal fundraising pages linked to this contribution page.{/ts}<br>
+      <a href="{crmURL p='civicrm/admin/contribute/pcp' q="reset=1&action=update&id=`$id`"}" target="_blank"><i class="zmdi zmdi-link"></i> {ts}Personal Campaign Pages{/ts} - {ts}Settings{/ts}</a> <br>
+      <a href="{$pcpAdminURL}" target="_blank"><i class="zmdi zmdi-link"></i> {ts}Manage Personal Campaign Pages{/ts}</a> <br>
+      <a href="{crmURL a=true p='civicrm/contribute/campaign' q="action=add&reset=1&pageId=`$id`"}" target="_blank"><i class="zmdi zmdi-link"></i> {ts}Setup a Personal Campaign Page{/ts}</a>
+    </td>
 </tr>
 <tr>
     <td class="nowrap"><a href="{crmURL p='civicrm/admin/contribute/widget' q="reset=1&action=update&id=`$id`"}" id="idWidget">&raquo; {ts}Contribution Widget{/ts}</a></td>
@@ -91,22 +101,4 @@
     <td class="nowrap"><a href="{crmURL p='civicrm/admin/contribute/premium' q="reset=1&action=update&id=`$id`"}" id="idPremiums">&raquo; {ts}Premiums{/ts}</a></td>
     <td>{ts}Enable a Premiums section (incentives / thank-you gifts) for this page, and configure premiums offered to contributors.{/ts}</td>
 </tr>
-<tr>
-    <td class="nowrap"><a href="{crmURL p='civicrm/contribute/transact' q="reset=1&action=preview&id=`$id`"}" id="idTest-drive">&raquo; {ts}Test-drive{/ts}</a></td>
-    <td>{ts}Test-drive the entire contribution process - including custom fields, confirmation, thank-you page, and receipting. Transactions will be directed to your payment processor's test server. <strong>No live financial transactions will be submitted. However, a contact record will be created or updated and a test contribution record will be saved to the database. Use obvious test contact names so you can review and delete these records as needed. Test contributions are not visible on the Contributions tab, but can be viewed by searching for 'Test Contributions' in the CiviContribute search form.</strong>{/ts}</td>
-</tr>
-{if $is_active}
-<tr>
-    <td class="nowrap"><a href="{crmURL p='civicrm/contribute/transact' q="reset=1&id=`$id`" fe='true'}" id="idLive" target="_blank">&raquo; {ts}Live Contribution Page{/ts}</a></td>
-    <td>{ts}Review your customized <strong>LIVE</strong> online contribution page here.{/ts}
-        {if $config->userFramework EQ 'Drupal'}
-            {ts}Use the following URL in links and buttons on any website to send visitors to this live page{/ts}:<br />
-            <strong>{crmURL a=true p='civicrm/contribute/transact' q="reset=1&id=`$id`"}</strong>
-        {elseif $config->userFramework EQ 'Joomla'}
-            {ts 1=$id}When your page is active, create front-end links to the contribution page using the Menu Manager. Select <strong>Online Contribution</strong> and choose your desired contribution page from the parameters section.{/ts}
-        {/if}
-    </td>
-</tr>
-{/if}
-
 </table>
