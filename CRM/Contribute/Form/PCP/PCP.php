@@ -124,6 +124,12 @@ class CRM_Contribute_Form_PCP_PCP extends CRM_Core_Form {
    */
   function setDefaultValues() {
     $defaults = array();
+    if (!empty($_REQUEST['contribution_page_id'])) {
+      $defaults['contribution_page_id'] = $_REQUEST['contribution_page_id'];
+    }
+    if (!empty($_REQUEST['status_id'])) {
+      $defaults['status_id'] = $_REQUEST['status_id'];
+    }
     return $defaults;
   }
 
@@ -160,7 +166,7 @@ class CRM_Contribute_Form_PCP_PCP extends CRM_Core_Form {
       );
 
       $this->addElement('select', 'status_id', ts('Status'), $status);
-      $this->addElement('select', 'contibution_page_id', ts('Contribution Page'), $contribution_page);
+      $this->addElement('select', 'contribution_page_id', ts('Contribution Page'), $contribution_page);
       $this->addButtons(array(
           array('type' => 'refresh',
             'name' => ts('Search'),

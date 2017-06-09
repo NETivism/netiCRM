@@ -94,7 +94,7 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
    */
   public function buildQuickForm() {
     $this->add('text', 'title', ts('Title'), NULL, TRUE);
-    $this->add('textarea', 'intro_text', ts('Welcome'), NULL, TRUE);
+    $this->add('textarea', 'intro_text', ts('Event Summary'), NULL, TRUE);
     $this->add('text', 'goal_amount', ts('Your Goal'), NULL, TRUE);
     $this->addRule('goal_amount', ts('Goal Amount should be a numeric value'), 'money');
     $attributes = array();
