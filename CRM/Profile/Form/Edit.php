@@ -211,6 +211,7 @@ SELECT module
     $buttons[] = array('type' => $buttonName,
       'name' => ts('Submit'),
       'isDefault' => TRUE,
+      'js' => array('data' => 'submit-once'),
     );
 
     if ($this->_context != 'dialog') {

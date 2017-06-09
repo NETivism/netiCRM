@@ -1,6 +1,9 @@
 (function($){
   $(document).ready(function(){
     var qfkey = getUrlParams('qfKey');
+    if(!qfkey){
+      qfkey = $('[name=submit_once_check]').val();
+    }
     var submitted = getCookie(qfkey);
     var $obj = $('input[data=submit-once]');
     if($obj.length && qfkey){
