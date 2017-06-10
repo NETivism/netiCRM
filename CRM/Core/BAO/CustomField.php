@@ -855,14 +855,14 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
       case 'Select State/Province':
         //Add State
         $stateOption = array('' => ts('- select -')) + CRM_Core_PseudoConstant::stateProvince();
-        $qf->add('select', $elementName, $label, $stateOption, (($useRequired || ($useRequired && $field->is_required)) && !$search), array("state/province"));
+        $qf->add('select', $elementName, $label, $stateOption, (($useRequired || ($useRequired && $field->is_required)) && !$search), array("state-province"));
         break;
 
       case 'Multi-Select State/Province':
         //Add Multi-select State/Province
         $stateOption = CRM_Core_PseudoConstant::stateProvince();
 
-        $qf->addElement('select', $elementName, $label, $stateOption, array("size" => "5", "multiple", "state/province"));
+        $qf->addElement('select', $elementName, $label, $stateOption, array("size" => "5", "multiple", "state-province"));
         if (($useRequired || ($useRequired && $field->is_required)) && !$search) {
           $qf->addRule($elementName, ts('%1 is a required field.', array(1 => $label)), 'required');
         }
