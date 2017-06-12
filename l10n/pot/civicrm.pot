@@ -45508,3 +45508,9 @@ msgstr ""
 
 msgid "Please fill legal identifier to upload data."
 msgstr ""
+
+msgid "Campaign owner profile"
+msgstr ""
+
+msgid "Setup a Personal Campaign Page"
+msgstr ""
