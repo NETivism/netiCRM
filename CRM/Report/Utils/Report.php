@@ -210,7 +210,7 @@ WHERE  inst.report_id = %1";
           }
           elseif (CRM_Utils_Array::value('type', $form->_columnHeaders[$v]) == 1024) {
             $currency = $config->defaultCurrency;
-            $value = $currency . '","' . $value;
+            $displayRows[$i][] = $currency;
           }
           $displayRows[$i][] = trim($value);
         }
