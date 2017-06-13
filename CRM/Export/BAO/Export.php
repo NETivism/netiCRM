@@ -1106,7 +1106,7 @@ class CRM_Export_BAO_Export {
       $row = array();
 
       foreach ($fields as $field) {
-        $row[$field] = $dao->$field;
+        $row[$field] = CRM_Utils_String::toNumber($dao->$field);
       }
       if ($alterRow) {
         $search->alterRow($row);
@@ -1543,7 +1543,7 @@ GROUP BY civicrm_primary_id ";
       foreach ($sqlColumns as $column => $sqlColumn) {
         $arr = explode(' ', $sqlColumn);
         $column = $arr[0];
-        $row[$column] = $dao->$column;
+        $row[$column] = CRM_Utils_String::toNumber($dao->$column);
       }
       $writer->addRow($row);
     }

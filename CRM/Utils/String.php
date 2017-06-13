@@ -581,5 +581,25 @@ class CRM_Utils_String {
     $html = preg_replace('/(<img[^>]+)(height=[\'"][^\'"]+[\'"])([^>]+>)/i', '$1 $3', $html); 
     return $html;
   }
+
+  static function toNumber($str) {
+    $str = trim($str);
+    if (is_numeric($str)) {
+      // leading zero and no any other sign
+      if (preg_match('/^0\d+$/', $str)) {
+        return $str;
+      }
+      if (is_float($str)) {
+        return (float) $str;
+      }
+      if (is_int($str)) {
+        return (int) $str;
+      }
+      if (is_numeric($str)) {
+        return (int) $str;
+      }
+    }
+    return $str;
+  }
 }
 

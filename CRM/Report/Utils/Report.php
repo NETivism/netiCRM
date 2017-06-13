@@ -212,7 +212,9 @@ WHERE  inst.report_id = %1";
             $currency = $config->defaultCurrency;
             $displayRows[$i][] = $currency;
           }
-          $displayRows[$i][] = trim($value);
+          // check numeric value
+          $value = CRM_Utils_String::toNumber($value);
+          $displayRows[$i][] = $value;
         }
         else {
           $displayRows[$i][] = '';
