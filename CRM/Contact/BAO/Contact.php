@@ -1500,7 +1500,7 @@ WHERE  civicrm_contact.id = %1 ";
     // check if the contact type
     $contactType = self::getContactType($id);
 
-    $nameFields = ($contactType == 'Individual') ? "civicrm_contact.first_name, civicrm_contact.last_name, civicrm_contact.display_name" : "civicrm_contact.display_name";
+    $nameFields = ($contactType == 'Individual') ? "civicrm_contact.first_name, civicrm_contact.last_name, civicrm_contact.sort_name" : "civicrm_contact.sort_name";
 
     $sql = "
 SELECT $nameFields, civicrm_email.email, civicrm_contact.do_not_email, civicrm_email.on_hold, civicrm_contact.is_deceased
@@ -1511,7 +1511,7 @@ ORDER BY civicrm_email.is_primary DESC";
     $dao = &CRM_Core_DAO::executeQuery($sql, $params);
 
     if ($dao->fetch()) {
-      $name = $dao->display_name;
+      $name = $dao->sort_name;
       $email = $dao->email;
       $doNotEmail = $dao->do_not_email ? TRUE : FALSE;
       $onHold = $dao->on_hold ? TRUE : FALSE;
