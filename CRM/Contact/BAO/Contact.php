@@ -1511,17 +1511,7 @@ ORDER BY civicrm_email.is_primary DESC";
     $dao = &CRM_Core_DAO::executeQuery($sql, $params);
 
     if ($dao->fetch()) {
-      if ($contactType == 'Individual') {
-        if ($dao->first_name || $dao->last_name) {
-          $name = "{$dao->first_name} {$dao->last_name}";
-        }
-        else {
-          $name = $dao->display_name;
-        }
-      }
-      else {
-        $name = $dao->display_name;
-      }
+      $name = $dao->display_name;
       $email = $dao->email;
       $doNotEmail = $dao->do_not_email ? TRUE : FALSE;
       $onHold = $dao->on_hold ? TRUE : FALSE;
