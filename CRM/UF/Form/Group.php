@@ -140,14 +140,6 @@ class CRM_UF_Form_Group extends CRM_Core_Form {
     $this->add('text', 'title', ts('Profile Name'), CRM_Core_DAO::getAttribute('CRM_Core_DAO_UFGroup', 'title'), TRUE);
 
 
-    //add checkboxes
-    $uf_group_type = array();
-    $UFGroupType = CRM_Core_SelectValues::ufGroupTypes();
-    foreach ($UFGroupType as $key => $value) {
-      $uf_group_type[] = HTML_QuickForm::createElement('checkbox', $key, NULL, $value);
-    }
-    $this->addGroup($uf_group_type, 'uf_group_type', ts('Used For'), '&nbsp;');
-
     // help text
     $this->addWysiwyg('help_pre', ts('Pre-form Help'), CRM_Core_DAO::getAttribute('CRM_Core_DAO_UFGroup', 'help_post'));
     $this->addWysiwyg('help_post', ts('Post-form Help'), CRM_Core_DAO::getAttribute('CRM_Core_DAO_UFGroup', 'help_post'));
@@ -159,9 +151,16 @@ class CRM_UF_Form_Group extends CRM_Core_Form {
     // is this group active ?
     $this->addElement('checkbox', 'is_active', ts('Is this CiviCRM Profile active?'));
 
-    require_once 'CRM/UF/Form/AdvanceSetting.php';
-    $paneNames = array('Advanced Settings' => 'buildAdvanceSetting');
+    // add select for groups
+    $group = array('' => ts('- select -')) + $this->_group;
 
+    //group where new contacts are directed.
+    $this->addElement('select', 'add_contact_to_group', ts('Add new contacts to a Group?'), $group);
+
+    //add notify field
+    $this->addElement('text', 'notify', ts('Notify when profile form is submitted?'), array('placeholder' => 'name1@example.org,name2.example.org', 'class' => 'huge'));
+
+    $paneNames = array('Advanced Settings' => 'buildAdvanceSetting');
     foreach ($paneNames as $name => $type) {
       if ($this->_id) {
         $dataURL = "&reset=1&action=update&id={$this->_id}&snippet=4&formType={$type}";
@@ -170,14 +169,12 @@ class CRM_UF_Form_Group extends CRM_Core_Form {
         $dataURL = "&reset=1&action=add&snippet=4&formType={$type}";
       }
 
-      $allPanes[$name] = array('url' => CRM_Utils_System::url('civicrm/admin/uf/group/setting',
-          $dataURL
-        ),
+      $allPanes[$name] = array(
+        'url' => CRM_Utils_System::url('civicrm/admin/uf/group/setting', $dataURL),
         'open' => 'false',
         'id' => $type,
       );
-
-      eval('CRM_UF_Form_AdvanceSetting::' . $type . '( $this );');
+      call_user_func_array(array('CRM_UF_Form_AdvanceSetting', $type), array(&$this));
     }
 
     $this->addButtons(array(

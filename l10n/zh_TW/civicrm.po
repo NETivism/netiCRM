@@ -11,8 +11,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2017-05-16 02:10+0000\n"
-"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
+"PO-Revision-Date: 2017-06-14 08:04+0000\n"
+"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4717,7 +4717,7 @@ msgstr "- 任何 -"
 
 #: CRM/Custom/Form/Group.php CRM/Price/Form/Set.php CRM/UF/Form/Group.php
 msgid "Pre-form Help"
-msgstr "訊息開頭"
+msgstr "文案說明"
 
 #: CRM/Custom/Form/Group.php CRM/Price/Form/Set.php CRM/UF/Form/Group.php
 msgid "Post-form Help"
@@ -9481,7 +9481,7 @@ msgstr "新增聯絡人： %1"
 
 #: CRM/Contact/Form/Task/AddToGroup.php
 msgid "Add Contacts to A Group"
-msgstr "新增聯絡人到群組 A"
+msgstr "將聯絡人加入至群組 A"
 
 #: CRM/Contact/Form/Task/AddToGroup.php
 msgid "Added Contact(s) to %1"
@@ -19694,7 +19694,7 @@ msgstr "當送出個人資料表單時進行通知？"
 
 #: CRM/UF/Form/AdvanceSetting.php
 msgid "Add new contacts to a Group?"
-msgstr "新增聯絡人到群組？"
+msgstr "將聯絡人加入指定群組？"
 
 #: CRM/UF/Form/AdvanceSetting.php
 msgid "Include reCAPTCHA?"
@@ -19710,19 +19710,19 @@ msgstr "在搜尋結果裡包括%1使用者帳號資訊連結？"
 
 #: CRM/UF/Form/AdvanceSetting.php
 msgid "No account create option"
-msgstr "沒有使用者建立選項"
+msgstr "不開啟帳號註冊"
 
 #: CRM/UF/Form/AdvanceSetting.php
 msgid "Give option, but not required"
-msgstr "提供選項，但非必填"
+msgstr "可註冊帳號，但非必填"
 
 #: CRM/UF/Form/AdvanceSetting.php
 msgid "Account creation required"
-msgstr "必須建立帳號"
+msgstr "填寫表單過程必須註冊帳號或登入現有帳號"
 
 #: CRM/UF/Form/AdvanceSetting.php
 msgid "%1 user account registration option?"
-msgstr "%1使用者帳號註冊選項？"
+msgstr "開啟使用者註冊帳號的功能？"
 
 #: CRM/UF/Form/AdvanceSetting.php
 msgid "None"
@@ -19883,7 +19883,7 @@ msgstr "資料表單名稱"
 
 #: CRM/UF/Form/Group.php
 msgid "Is this CiviCRM Profile active?"
-msgstr "此資料表單是否作用中？"
+msgstr "此資料表單是否啟用？"
 
 #: CRM/UF/Form/Group.php
 msgid "Profile '%1' already exists in Database."
@@ -35856,7 +35856,7 @@ msgstr "如果一個頁面有多個資料表單出現在使用者的註冊頁、
 
 #: templates/CRM/UF/Form/Group.hlp
 msgid "Explanatory text displayed at the beginning of the form."
-msgstr "說明文字顯示在表格的最上方。"
+msgstr "文案說明將會顯示在表單的上方。"
 
 #: templates/CRM/UF/Form/Group.hlp
 msgid ""
@@ -35865,7 +35865,7 @@ msgstr "請注意，這個協助文字只會顯示在建立/編輯檔案的頁�
 
 #: templates/CRM/UF/Form/Group.hlp
 msgid "Explanatory text displayed at the end of the form."
-msgstr "說明文字顯示在表格的最下方。"
+msgstr "說明文字顯示在表單的最下方。"
 
 #: templates/CRM/UF/Form/Group.hlp
 msgid ""
@@ -45562,3 +45562,12 @@ msgstr "發票捐贈"
 
 msgid "Please fill legal identifier to upload data."
 msgstr "上傳資料至國稅局需要身份證字號或機構統一編號"
+
+msgid "Campaign owner profile"
+msgstr "個人募款頁創建者個人資料"
+
+msgid "Setup a Personal Campaign Page"
+msgstr "設定一個個人募款頁"
+
+msgid "You can add some notice or contact info here."
+msgstr "你可以在這裡填寫一些注意事項和聯絡資訊。"

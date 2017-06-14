@@ -45514,3 +45514,6 @@ msgstr ""
 
 msgid "Setup a Personal Campaign Page"
 msgstr ""
+
+msgid "You can add some notice or contact info here."
+msgstr ""
