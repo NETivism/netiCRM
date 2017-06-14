@@ -81,6 +81,8 @@ class CRM_Event_Form_ManageEvent extends CRM_Core_Form {
 
   protected $_cancelURL = NULL;
 
+  protected $_eventInfo = NULL;
+
   /**
    * Function to set variables up before form is built
    *
@@ -107,6 +109,7 @@ class CRM_Event_Form_ManageEvent extends CRM_Core_Form {
       $params = array('id' => $this->_id);
       require_once 'CRM/Event/BAO/Event.php';
       CRM_Event_BAO_Event::retrieve($params, $eventInfo);
+      $this->_eventInfo = $eventInfo;
 
       // its an update mode, do a permission check
       require_once 'CRM/Event/BAO/Event.php';

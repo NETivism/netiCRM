@@ -238,7 +238,7 @@ class CRM_Event_Form_ManageEvent_EventInfo extends CRM_Event_Form_ManageEvent {
 
     require_once 'CRM/Event/PseudoConstant.php';
     $participantStatuses = &CRM_Event_PseudoConstant::participantStatus();
-    if (in_array('On waitlist', $participantStatuses) and in_array('Pending from waitlist', $participantStatuses)) {
+    if (in_array('On waitlist', $participantStatuses) and in_array('Pending from waitlist', $participantStatuses) && !$this->_eventInfo['requires_approval']) {
       $this->addElement('checkbox', 'has_waitlist', ts('Offer a Waitlist?'), NULL, array('onclick' => "showHideByValue('has_waitlist','0','id-event_full','table-row','radio',true); showHideByValue('has_waitlist','0','id-waitlist-text','table-row','radio',false);"));
       $this->add('textarea', 'waitlist_text', ts('Waitlist Message'), $attributes['waitlist_text']);
     }
