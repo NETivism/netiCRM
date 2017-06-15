@@ -95,7 +95,7 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
     if ($mailingID) {
       $mailing = new CRM_Mailing_DAO_Mailing();
       $mailing->id = $mailingID;
-      $mailing->addSelect('name', 'campaign_id');
+      $mailing->addSelectByOption('name', 'campaign_id');
       $mailing->find(TRUE);
 
       $defaults['name'] = $mailing->name;

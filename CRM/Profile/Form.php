@@ -508,8 +508,7 @@ class CRM_Profile_Form extends CRM_Core_Form {
       if ($this->_gid) {
         $dao = new CRM_Core_DAO_UFGroup();
         $dao->id = $this->_gid;
-        $dao->addSelect();
-        $dao->addSelect('add_captcha', 'is_update_dupe');
+        $this->addSelectByOption('add_captcha', 'is_update_dupe');
         if ($dao->find(TRUE)) {
           if ($dao->add_captcha) {
             $setCaptcha = TRUE;

@@ -72,6 +72,8 @@ class CRM_UF_Form_Group extends CRM_Core_Form {
     if (!$this->_id) {
       $this->_id = CRM_Utils_Request::retrieve('id', 'Positive', $this, FALSE, 0);
     }
+    $this->_context = CRM_Utils_Request::retrieve('context', 'String', $this, FALSE, 'Profile');
+
     $this->assign('gid', $this->_id);
     $this->_group = CRM_Core_PseudoConstant::group();
 
@@ -86,18 +88,18 @@ class CRM_UF_Form_Group extends CRM_Core_Form {
       $status = CRM_Core_BAO_UFGroup::usedByModule($this->_id);
       if ($this->_action & (CRM_Core_Action::DISABLE)) {
         if ($status) {
-          $message = 'This profile is currently used for ' . $ufGroup['module'] . '. If you disable the profile - it will be removed from these forms and/or modules. Do you want to continue?';
+          $message = ts('This profile is currently used for %1. If you %2 the profile - it will be removed from these forms and/or modules. This action cannot be undone. Do you want to continue?', array(1 => ts($ufGroup['module']), 2 => ts('disable')));
         }
         else {
-          $message = 'Are you sure you want to disable this Profile?';
+          $message = ts('Are you sure you want to disable this profile?');
         }
       }
       else {
         if ($status) {
-          $message = 'This profile is currently used for ' . $ufGroup['module'] . '. If you delete the profile - it will be removed from these forms and/or modules. This action cannot be undone. Do you want to continue?';
+          $message = ts('This profile is currently used for %1. If you %2 the profile - it will be removed from these forms and/or modules. This action cannot be undone. Do you want to continue?', array(1 => ts($ufGroup['module']), 2 => ts('delete')));
         }
         else {
-          $message = 'Are you sure you want to delete this Profile? This action cannot be undone.';
+          $message = ts('Are you sure you want to delete this profile?'). ts('This action cannot be undone.');
         }
       }
       $this->assign('message', $message);
@@ -116,10 +118,10 @@ class CRM_UF_Form_Group extends CRM_Core_Form {
   public function buildQuickForm() {
     if ($this->_action & (CRM_Core_Action::DISABLE | CRM_Core_Action::DELETE)) {
       if ($this->_action & (CRM_Core_Action::DISABLE)) {
-        $display = 'Disable Profile';
+        $display = ts('Disable Profile');
       }
       else {
-        $display = 'Delete Profile';
+        $display = ts('Delete Profile');
       }
       $this->addButtons(array(
           array('type' => 'next',
@@ -139,6 +141,24 @@ class CRM_UF_Form_Group extends CRM_Core_Form {
     // title
     $this->add('text', 'title', ts('Profile Name'), CRM_Core_DAO::getAttribute('CRM_Core_DAO_UFGroup', 'title'), TRUE);
 
+    //add checkboxes
+    $ufGroupTypes = CRM_Core_SelectValues::ufGroupTypes();
+    $ufJoinRecords = CRM_Core_BAO_UFGroup::getUFJoinRecord($this->_id);
+    $this->addCheckBox('uf_group_type', ts('Used For'), $ufGroupTypes, NULL, NULL, NULL, NULL, '<br>', $flip = TRUE);
+    $ele = $this->getElement('uf_group_type');
+    if (!empty($ufJoinRecords) && $this->_action & CRM_Core_Action::UPDATE) {
+      foreach ($ele->_elements as &$e) {
+        $e->freeze();
+      }
+    }
+    $userFormTypes = CRM_Core_SelectValues::ufGroupTypes('register');
+    $this->addCheckBox('uf_group_type_user', ts('User Settings'), $userFormTypes, NULL, NULL, NULL, NULL, '<br>', $flip = TRUE);
+    $ele = $this->getElement('uf_group_type_user');
+    if (!empty($ufJoinRecords) && $this->_action & CRM_Core_Action::UPDATE) {
+      foreach ($ele->_elements as &$e) {
+        $e->freeze();
+      }
+    }
 
     // help text
     $this->addWysiwyg('help_pre', ts('Pre-form Help'), CRM_Core_DAO::getAttribute('CRM_Core_DAO_UFGroup', 'help_post'));
@@ -229,21 +249,17 @@ class CRM_UF_Form_Group extends CRM_Core_Form {
       $defaults['add_contact_to_group'] = CRM_Utils_Array::value('add_to_group_id', $defaults);
       //get the uf join records for current uf group
       $ufJoinRecords = CRM_Core_BAO_UFGroup::getUFJoinRecord($this->_id);
+      $ufJoinChecked = $ufJoinCheckedUser = array();
       foreach ($ufJoinRecords as $key => $value) {
-        $checked[$value] = 1;
-      }
-      $defaults['uf_group_type'] = isset($checked) ? $checked : "";
-
-      //get the uf join records for current uf group other than default modules
-      $otherModules = array();
-      $otherModules = CRM_Core_BAO_UFGroup::getUFJoinRecord($this->_id, TRUE, TRUE);
-      if (!empty($otherModules)) {
-        $otherModuleString = NULL;
-        foreach ($otherModules as $key) {
-          $otherModuleString .= " [ x ] <label>" . $key . "</label>";
+        if ($value == 'User Registration' || $value == 'User Account') {
+          $ufJoinCheckedUser[$value] = 1;
         }
-        $this->assign('otherModuleString', $otherModuleString);
+        else {
+          $ufJoinChecked[$value] = 1;
+        }
       }
+      $defaults['uf_group_type'] = isset($ufJoinChecked) ? $ufJoinChecked: "";
+      $defaults['uf_group_type_user'] = isset($ufJoinCheckedUser) ? $ufJoinCheckedUser: "";
 
       $showAdvanced = 0;
       $advFields = array('group', 'post_URL', 'cancel_URL',
@@ -316,9 +332,15 @@ class CRM_UF_Form_Group extends CRM_Core_Form {
 
       // create uf group
       $ufGroup = CRM_Core_BAO_UFGroup::add($params, $ids);
+      if (!empty($params['uf_group_type']) && !is_array($params['uf_group_type'])) {
+        $params['uf_group_type'] = array($params['uf_group_type'] => 1);
+      }
 
       if (CRM_Utils_Array::value('is_active', $params)) {
         //make entry in uf join table
+        if (!empty($params['uf_group_type_user']) && is_array($params['uf_group_type_user'])) {
+          $params['uf_group_type'] = array_merge($params['uf_group_type'], $params['uf_group_type_user']);
+        }
         CRM_Core_BAO_UFGroup::createUFJoin($params, $ufGroup->id);
       }
       elseif ($this->_id) {

@@ -11,7 +11,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2017-06-14 08:04+0000\n"
+"PO-Revision-Date: 2017-06-15 07:12+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -1929,7 +1929,7 @@ msgstr "選擇"
 #: templates/CRM/Custom/Page/Group.tpl templates/CRM/Price/Page/Set.tpl
 #: templates/CRM/UF/Page/Group.tpl
 msgid "Used For"
-msgstr "使用於"
+msgstr "使用類型"
 
 #: CRM/Admin/Page/Admin.php CRM/Admin/Page/Persistent.php
 #: CRM/Contribute/BAO/PCP.php CRM/Contribute/Page/ContributionPage.php
@@ -6216,7 +6216,7 @@ msgstr "檢查 Email 並建立任務處理"
 
 #: CRM/Admin/Form/MailSettings.php
 msgid "Used For?"
-msgstr "使用於？"
+msgstr "使用類型？"
 
 #: CRM/Admin/Form/MailSettings.php
 msgid "Selected Mail Setting has been deleted."
@@ -19677,12 +19677,12 @@ msgid "What to do upon duplicate match"
 msgstr "更新重複的聯絡人資料？"
 
 #: CRM/UF/Form/AdvanceSetting.php
-msgid "Redirect URL"
-msgstr "重新導向網址"
+msgid "Redirect URL after Submitted"
+msgstr "完成填寫後導向網址"
 
 #: CRM/UF/Form/AdvanceSetting.php
-msgid "Cancel Redirect URL"
-msgstr "取消重新導向網址"
+msgid "Back to Website URL"
+msgstr "回到網站網址"
 
 #: CRM/UF/Form/AdvanceSetting.php
 msgid "Limit listings to a specific Group?"
@@ -35899,11 +35899,9 @@ msgstr "如果您將此資料表單用在聯絡人報名或填寫表單，並且
 
 #: templates/CRM/UF/Form/Group.hlp
 msgid ""
-"If you are using this profile as a contact signup or edit form, and want to "
-"redirect the user to a static URL if they click the Cancel button - enter "
-"the complete URL here. If this field is left blank, the built-in Profile "
-"form will be redisplayed."
-msgstr ""
+"This url will be displayed on the form page. Use this field to specify the "
+"website you want to promote."
+msgstr "這個網址連結將會出現在表單的畫面，您可以填入主要推廣此表單的網站，以供使用者連回網站觀看資訊。"
 
 #: templates/CRM/UF/Form/Group.hlp
 msgid ""
@@ -45571,3 +45569,30 @@ msgstr "設定一個個人募款頁"
 
 msgid "You can add some notice or contact info here."
 msgstr "你可以在這裡填寫一些注意事項和聯絡資訊。"
+
+msgid "Online Form for Data Collection"
+msgstr "嵌入網站中蒐集資料用的表單"
+
+msgid "Delete Profile"
+msgstr "刪除資料表單"
+
+msgid "Disable Profile"
+msgstr "停用資料表單"
+
+msgid ""
+"This profile is currently used for %1. If you %2 the profile - it will be "
+"removed from these forms and/or modules. This action cannot be undone. Do "
+"you want to continue?"
+msgstr "這個資料表單目前使用於「%1 」，如果你將此表單%2，原本在「%1」用途中的表單將會消失。"
+
+msgid "Are you sure you want to delete this profile?"
+msgstr "你確定要刪除這個資料表單嗎？"
+
+msgid "Form in Contribution or Membership Page"
+msgstr "募款頁中或會員加入頁的表單"
+
+msgid "Form in Event Registeration Page for Participant"
+msgstr "活動報名參加者填寫的表單"
+
+msgid "User Settings"
+msgstr "帳號設定"

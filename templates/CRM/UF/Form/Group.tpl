@@ -43,52 +43,63 @@
             </div>   
 	       
     {else}
-<table class="form-layout">
-  <tr class="crm-uf_group-form-block-is_active" >
-    <td class="label"></td><td class="html-adjust">{$form.is_active.html} {$form.is_active.label}</td>
-  </tr>
-  <tr class="crm-uf_group-form-block-title">
-    <td class="label">{$form.title.label} {if $action == 2}{include file='CRM/Core/I18n/Dialog.tpl' table='civicrm_uf_group' field='title' id=$gid}{/if}</td>
-    <td class="html-adjust">{$form.title.html}</td>
-  </tr>
-  <tr class="crm-uf_group-form-block-weight" >
-    <td class="label">{$form.weight.label}{if $config->userFramework EQ 'Drupal'} {help id='id-profile_weight' file="CRM/UF/Form/Group.hlp"}{/if}</td>
-    <td class="html-adjust">{$form.weight.html}</td>
-  </tr>
-  <tr class="crm-uf_group-form-block-help_pre" >
-    <td class="label">{$form.help_pre.label}</td>
-    <td class="html-adjust">{$form.help_pre.html}
-      <div class="description">{ts}Explanatory text displayed at the beginning of the form.{/ts}</div>
-    </td>
-  </tr>
-  <tr class="crm-uf_group-form-block-help_post" >
-    <td class="label">{$form.help_post.label}</td>
-    <td class="html-adjust">{$form.help_post.html}
-      <div class="description">{ts}Explanatory text displayed at the end of the form.{/ts}{ts}You can add some notice or contact info here.{/ts}</div>
-    </td>
-  </tr>
-  <tr class="crm-uf-advancesetting-form-block-add_contact_to_group">
-    <td class="label">{$form.add_contact_to_group.label}</td>
-    <td>{$form.add_contact_to_group.html} {help id='id-add_group' file="CRM/UF/Form/Group.hlp"}</td>
-  </tr>
-  
-  <tr class="crm-uf-advancesetting-form-block-notify">
-    <td class="label">{$form.notify.label}</td>
-    <td>{$form.notify.html} {help id='id-notify_email' file="CRM/UF/Form/Group.hlp"}</td>
-  </tr>
-</table>
+<div class="crm-accordion-wrapper crm-accordion_title-accordion crm-accordion-open">
+  <div class="crm-accordion-header">
+    <div class="zmdi crm-accordion-pointer"></div> 
+    {ts}Settings{/ts}
+  </div><!-- /.crm-accordion-header -->
+  <div class="crm-accordion-body">
+    <table class="form-layout">
+      <tr class="crm-uf_group-form-block-is_active" >
+        <td class="label"></td><td class="html-adjust">{$form.is_active.html} {$form.is_active.label}</td>
+      </tr>
+      <tr class="crm-uf_group-form-block-title">
+        <td class="label">{$form.title.label} {if $action == 2}{include file='CRM/Core/I18n/Dialog.tpl' table='civicrm_uf_group' field='title' id=$gid}{/if}</td>
+        <td class="html-adjust">{$form.title.html}</td>
+      </tr>
+      <tr class="crm-uf_group-form-block-uf_group_type">
+        <td class="label">{$form.uf_group_type.label}</td>
+        <td class="html-adjust">{$form.uf_group_type.html}</td>
+      </tr>
+      <tr class="crm-uf-group-form-block-uf_group_type_user">
+        <td class="label">{$form.uf_group_type_user.label}</td>
+        <td>{$form.uf_group_type_user.html}</td>
+      </tr>		
+      <tr class="crm-uf_group-form-block-help_pre" >
+        <td class="label">{$form.help_pre.label}</td>
+        <td class="html-adjust">{$form.help_pre.html}
+          <div class="description">{ts}Explanatory text displayed at the beginning of the form.{/ts}</div>
+        </td>
+      </tr>
+      <tr class="crm-uf_group-form-block-help_post" >
+        <td class="label">{$form.help_post.label}</td>
+        <td class="html-adjust">{$form.help_post.html}
+          <div class="description">{ts}Explanatory text displayed at the end of the form.{/ts}{ts}You can add some notice or contact info here.{/ts}</div>
+        </td>
+      </tr>
+      <tr class="crm-uf-advancesetting-form-block-add_contact_to_group">
+        <td class="label">{$form.add_contact_to_group.label}</td>
+        <td>{$form.add_contact_to_group.html} {help id='id-add_group' file="CRM/UF/Form/Group.hlp"}</td>
+      </tr>
+      
+      <tr class="crm-uf-advancesetting-form-block-notify">
+        <td class="label">{$form.notify.label}</td>
+        <td>{$form.notify.html} {help id='id-notify_email' file="CRM/UF/Form/Group.hlp"}</td>
+      </tr>
+    </table>
+  </div><!-- /.crm-accordion-body -->
+</div><!-- /.crm-accordion-wrapper -->
 {* adding advance setting tab *}
 <div class="crm-accordion-wrapper crm-accordion_title-accordion crm-accordion-closed">
- <div class="crm-accordion-header">
+  <div class="crm-accordion-header">
     <div class="zmdi crm-accordion-pointer"></div> 
     {ts}Advanced options{/ts}
   </div><!-- /.crm-accordion-header -->
   <div class="crm-accordion-body">
-  <div class="crm-block crm-form-block crm-uf-advancesetting-form-block">
     <table class="form-layout">
-      <tr class="crm-uf_group-form-block-uf_group_type">
-        <td class="label">{$form.uf_group_type.label} {help id='id-used_for' file="CRM/UF/Form/Group.hlp"}</td>
-        <td class="html-adjust">{$form.uf_group_type.html}&nbsp;{$otherModuleString}</td>
+      <tr class="crm-uf_group-form-block-weight" >
+        <td class="label">{$form.weight.label}{if $config->userFramework EQ 'Drupal'} {help id='id-profile_weight' file="CRM/UF/Form/Group.hlp"}{/if}</td>
+        <td class="html-adjust">{$form.weight.html}</td>
       </tr>
       <tr class="crm-uf-advancesetting-form-block-post_URL">
         <td class="label">{$form.post_URL.label}</td>
@@ -98,6 +109,14 @@
         <td class="label">{$form.cancel_URL.label}</td>
         <td>{$form.cancel_URL.html} {help id='id-cancel_URL' file="CRM/UF/Form/Group.hlp"}</td>
       </tr>
+      <tr class="crm-uf-advancesetting-form-block-add_captcha">
+        <td class="label">{ts}Add Captcha{/ts}</td>
+        <td>{$form.add_captcha.html} {$form.add_captcha.label} {help id='id-add_captcha' file="CRM/UF/Form/Group.hlp"}</td>
+      </tr>
+      <tr class="crm-uf-advancesetting-form-block-is_update_dupe">
+        <td class="label">{$form.is_update_dupe.label}</td>
+        <td>{$form.is_update_dupe.html} {help id='id-is_update_dupe' file="CRM/UF/Form/Group.hlp"}</td>
+      </tr>
       {if ($config->userFramework == 'Drupal') OR ($config->userFramework == 'Joomla') }
           {* Create CMS user only available for Drupal/Joomla installs. *}
       <tr class="crm-uf-advancesetting-form-block-is_cms_user">
@@ -105,23 +124,38 @@
         <td>{$form.is_cms_user.html} {help id='id-is_cms_user' file="CRM/UF/Form/Group.hlp"}</td>
       </tr>		
       {/if}
-      <tr class="crm-uf-advancesetting-form-block-is_update_dupe">
-        <td class="label">{$form.is_update_dupe.label}</td>
-        <td>{$form.is_update_dupe.html} {help id='id-is_update_dupe' file="CRM/UF/Form/Group.hlp"}</td>
-      </tr>
-      <tr class="crm-uf-advancesetting-form-block-add_captcha">
-        <td class="label">{ts}Add Captcha{/ts}</td>
-        <td>{$form.add_captcha.html} {$form.add_captcha.label} {help id='id-add_captcha' file="CRM/UF/Form/Group.hlp"}</td>
-      </tr>
-      
     </table>
   </div><!-- /.crm-accordion-body -->
 </div><!-- /.crm-accordion-wrapper -->
 {literal}
 <script type="text/javascript">
-    cj(function() {
-        cj().crmaccordions(); 
+cj(function($) {
+  $().crmaccordions(); 
+  $("#is_active").change(function(){
+    if (!this.checked) {
+      var answer = window.confirm("{/literal}{ts}If you disable the profile - it will be removed from these forms and/or modules. Do you want to continue?{/ts}{literal}");
+      if (!answer) {
+        this.checked = true;
+        return;
+      }
+    }
+  });
+  $("input[id^=uf_group_type]").change(function(){
+    var show = true;
+    $("input[id^=uf_group_type\\\[Civi]").each(function(){
+      if (this.checked) {
+        $("tr.crm-uf-group-form-block-uf_group_type_user").find("input").each(function() {
+          this.checked = false;
+        });
+        $("tr.crm-uf-group-form-block-uf_group_type_user").hide();
+        show = false;
+      }
     });
+    if (show) {
+      $("tr.crm-uf-group-form-block-uf_group_type_user").show();
+    }
+  });
+});
 </script>
 {/literal}
 

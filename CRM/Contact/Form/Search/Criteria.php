@@ -382,7 +382,7 @@ class CRM_Contact_Form_Search_Criteria {
       // we add 2 select boxes, one for the task from the task table
       $taskSelect = array('' => '- select -') + CRM_Core_PseudoConstant::tasks();
       $form->addElement('select', 'task_id', ts('Task'), $taskSelect);
-      $form->addSelect('task_status', ts('Task Status'));
+      $form->addSelectByOption('task_status', ts('Task Status'));
     }
   }
 

@@ -825,8 +825,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
     $this->addDate($name . '_to', ts('To'), $required, array('formatType' => $dateFormat));
   }
 
-  function addSelect($name, $label, $prefix = NULL, $required = NULL, $extra = NULL, $select = '- select -') {
-    require_once "CRM/Core/OptionGroup.php";
+  function addSelectByOption($name, $label, $prefix = NULL, $required = NULL, $extra = NULL, $select = '- select -') {
     if ($prefix) {
       $this->addElement('select', $name . '_id' . $prefix, $label,
         array('' => $select) + CRM_Core_OptionGroup::values($name), $extra
@@ -836,7 +835,6 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
       }
     }
     else {
-      require_once 'CRM/Core/OptionGroup.php';
       $this->addElement('select', $name . '_id', $label,
         array('' => $select) + CRM_Core_OptionGroup::values($name), $extra
       );
@@ -873,9 +871,8 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
     }
   }
 
-  function addSelectOther($name, $label, $options, $attributes, $required = NULL, $javascriptMethod = NULL) {
-
-    $this->addElement('select', $name . '_id', $label, $options, $javascriptMethod);
+  function addSelect($name, $label, $options, $attributes, $required = NULL, $others = NULL) {
+    $this->addElement('select', $name, $label, $options);
 
     if ($required) {
       $this->addRule($name . '_id', ts('Please select %1', array(1 => $label)), 'required');

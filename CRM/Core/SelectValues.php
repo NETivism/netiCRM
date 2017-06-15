@@ -278,20 +278,20 @@ class CRM_Core_SelectValues {
    *
    * @static
    */
-  static function &ufGroupTypes() {
-    static $ufGroupType = NULL;
-    if (!$ufGroupType) {
-      $ufGroupType = array(
-        'Profile' => ts('Public Pages'),
-        'Search Profile' => ts('Search Results'),
+  static function &ufGroupTypes($type = '') {
+    $ufGroupType = array();
+    if ($type == 'all' || empty($type)) {
+      $ufGroupType += array(
+        'Profile' => ts('Online Form for Data Collection'),
+        'CiviContribute' => ts('Form in Contribution or Membership Page'),
+        'CiviEvent' => ts('Form in Event Registeration Page for Participant'),
       );
-      $config = CRM_Core_Config::singleton();
-      if ($config->userFramework == 'Drupal') {
-        $ufGroupType += array(
-          'User Registration' => ts('Drupal User Registration'),
-          'User Account' => ts('View/Edit Drupal User Account'),
-        );
-      }
+    }
+    if ($type == 'all' || $type == 'register') {
+      $ufGroupType += array(
+        'User Registration' => ts('Drupal User Registration'),
+        'User Account' => ts('View/Edit Drupal User Account'),
+      );
     }
     return $ufGroupType;
   }

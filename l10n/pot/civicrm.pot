@@ -19675,11 +19675,11 @@ msgid "What to do upon duplicate match"
 msgstr ""
 
 #: CRM/UF/Form/AdvanceSetting.php
-msgid "Redirect URL"
+msgid "Redirect URL after Submitted"
 msgstr ""
 
 #: CRM/UF/Form/AdvanceSetting.php
-msgid "Cancel Redirect URL"
+msgid "Back to Website URL"
 msgstr ""
 
 #: CRM/UF/Form/AdvanceSetting.php
@@ -35926,10 +35926,8 @@ msgstr ""
 
 #: templates/CRM/UF/Form/Group.hlp
 msgid ""
-"If you are using this profile as a contact signup or edit form, and want to "
-"redirect the user to a static URL if they click the Cancel button - enter "
-"the complete URL here. If this field is left blank, the built-in Profile "
-"form will be redisplayed."
+"This url will be displayed on the form page. Use this field to specify the "
+"website you want to promote."
 msgstr ""
 
 #: templates/CRM/UF/Form/Group.hlp
@@ -45516,4 +45514,28 @@ msgid "Setup a Personal Campaign Page"
 msgstr ""
 
 msgid "You can add some notice or contact info here."
+msgstr ""
+
+msgid "Online Form for Data Collection"
+msgstr ""
+
+msgid "Delete Profile"
+msgstr ""
+
+msgid "Disable Profile"
+msgstr ""
+
+msgid "This profile is currently used for %1. If you %2 the profile - it will be removed from these forms and/or modules. This action cannot be undone. Do you want to continue?"
+msgstr ""
+
+msgid "Are you sure you want to delete this profile?"
+msgstr ""
+
+msgid "Form in Contribution or Membership Page"
+msgstr ""
+
+msgid "Form in Event Registeration Page for Participant"
+msgstr ""
+
+msgid "User Settings"
 msgstr ""

@@ -46,27 +46,20 @@ class CRM_UF_Form_AdvanceSetting extends CRM_UF_Form_Group {
    * @return None
    */
   function buildAdvanceSetting(&$form) {
-    //add checkboxes
-    $uf_group_type = array();
-    $UFGroupType = CRM_Core_SelectValues::ufGroupTypes();
-    foreach ($UFGroupType as $key => $value) {
-      $uf_group_type[] = HTML_QuickForm::createElement('checkbox', $key, NULL, $value);
-    }
-    $form->addGroup($uf_group_type, 'uf_group_type', ts('Used For'), '&nbsp;');
-
     // should mapping be enabled for this group
     $form->addElement('checkbox', 'is_map', ts('Enable mapping for this profile?'));
 
     // should we allow updates on a exisitng contact
-    $options = array();
-    $options[] = HTML_QuickForm::createElement('radio', NULL, NULL, ts('Issue warning and do not save'), 0);
-    $options[] = HTML_QuickForm::createElement('radio', NULL, NULL, ts('Update the matching contact'), 1);
-    $options[] = HTML_QuickForm::createElement('radio', NULL, NULL, ts('Allow duplicate contact to be created'), 2);
+    $options = array(
+      0 => ts('Issue warning and do not save'),
+      1 => ts('Update the matching contact'),
+      2 => ts('Allow duplicate contact to be created'),
+    );
+    $form->addRadio('is_update_dupe', ts('What to do upon duplicate match'), $options, NULL, '<br>');
 
-    $form->addGroup($options, 'is_update_dupe', ts('What to do upon duplicate match'));
     // we do not have any url checks to allow relative urls
-    $form->addElement('text', 'post_URL', ts('Redirect URL'), CRM_Core_DAO::getAttribute('CRM_Core_DAO_UFGroup', 'post_URL'));
-    $form->addElement('text', 'cancel_URL', ts('Cancel Redirect URL'), CRM_Core_DAO::getAttribute('CRM_Core_DAO_UFGroup', 'cancel_URL'));
+    $form->addElement('text', 'post_URL', ts('Redirect URL after Submitted'), CRM_Core_DAO::getAttribute('CRM_Core_DAO_UFGroup', 'post_URL'));
+    $form->addElement('text', 'cancel_URL', ts('Back to Website URL'), CRM_Core_DAO::getAttribute('CRM_Core_DAO_UFGroup', 'cancel_URL'));
 
     // add select for groups
     $group = array('' => ts('- select -')) + $form->_group;
@@ -89,20 +82,21 @@ class CRM_UF_Form_AdvanceSetting extends CRM_UF_Form_Group {
       $form->_cmsId = TRUE;
     }
 
-    $options = array();
-    $options[] = HTML_QuickForm::createElement('radio', NULL, NULL, ts('No account create option'), 0);
-    $options[] = HTML_QuickForm::createElement('radio', NULL, NULL, ts('Give option, but not required'), 1);
-    $options[] = HTML_QuickForm::createElement('radio', NULL, NULL, ts('Account creation required'), 2);
-
-    $form->addGroup($options, 'is_cms_user', ts('%1 user account registration option?', array(1 => $config->userFramework)));
+    $options = array(
+      0 => ts('No account create option'),
+      1 => ts('Give option, but not required'),
+      2 => ts('Account creation required'),
+    );
+    $form->addRadio('is_cms_user', ts('%1 user account registration option?'), $options, NULL, '<br>');
 
     // options for including Proximity Search in the profile search form
-    $proxOptions = array();
-    $proxOptions[] = HTML_QuickForm::createElement('radio', NULL, NULL, ts('None'), 0);
-    $proxOptions[] = HTML_QuickForm::createElement('radio', NULL, NULL, ts('Optional'), 1);
-    $proxOptions[] = HTML_QuickForm::createElement('radio', NULL, NULL, ts('Required'), 2);
+    $proxOptions = array(
+      0 => ts('None'),
+      1 => ts('Optional'),
+      2 => ts('Required'),
+    );
+    $form->addRadio('is_proximity_search', ts('Proximity search'), $proxOptions, NULL, '<br>');
 
-    $form->addGroup($proxOptions, 'is_proximity_search', ts('Proximity search'));
   }
 }
 
