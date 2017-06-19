@@ -45539,3 +45539,67 @@ msgstr ""
 
 msgid "User Settings"
 msgstr ""
+
+#: CRM/Contribute/Page/Booster.php
+msgid "Connect Exists Donors"
+msgstr ""
+
+#: CRM/Contribute/Page/Booster.php
+msgid "First time donation donors"
+msgstr ""
+
+#: CRM/Contribute/Page/Booster.php
+msgid "Send some message to these people who have first time donation to you. This should be first step to maintain your relationship with these donors."
+msgstr ""
+
+#: CRM/Contribute/Page/Booster.php
+msgid "Donor who donate in last 6 month"
+msgstr ""
+
+#: CRM/Contribute/Page/Booster.php
+msgid "You can send some result or impact of your project to them. And don't forget to exclude them in donation letter."
+msgstr ""
+
+#: CRM/Contribute/Page/Booster.php
+msgid "Last year but not this year donors"
+msgstr ""
+
+#: CRM/Contribute/Page/Booster.php
+msgid "These supporter have donation last year, but not in this year. Remember to connect them when you have some donation campaign."
+msgstr ""
+
+#: CRM/Contribute/Page/Booster.php
+msgid "After payment failed but not retry in a week"
+msgstr ""
+
+#: CRM/Contribute/Page/Booster.php
+msgid "They may not have enough motivation to complete donation. Instead of contriubtion campaign, send some impact or result of your effort to them."
+msgstr ""
+
+#: CRM/Contribute/Page/Booster.php
+msgid "Potential Donors"
+msgstr ""
+
+#: CRM/Contribute/Page/Booster.php
+msgid "Single donation over three times"
+msgstr ""
+
+#: CRM/Contribute/Page/Booster.php
+msgid "These supporter appeal they are interested in your orgnization. You should invite them to join your recurring campaign."
+msgstr ""
+
+#: CRM/Contribute/Page/Booster.php
+msgid "End of recurring contribution"
+msgstr ""
+
+#: CRM/Contribute/Page/Booster.php
+msgid "These supporter will finished their promised recurring contribution. Time to invite them join your next recurring campaign again."
+msgstr ""
+
+#: CRM/Contribute/Page/Booster.php
+msgid "Attendee but not donor"
+msgstr ""
+
+#: CRM/Contribute/Page/Booster.php
+msgid "They join your event, but not become your donor yet. Time to try to invite them."
+msgstr ""
