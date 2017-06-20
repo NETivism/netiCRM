@@ -51,11 +51,6 @@
     </div> <!-- .event-info-header -->
   {/if}
 
-  {php}
-  $e = $this->get_template_vars('event');
-  //dpm($e);
-  {/php}
-
   <div class="event-info-content">
   <div class="crm-section event_date_time-section">
       <div class="label"><label>{ts}Event Date{/ts}</label></div>

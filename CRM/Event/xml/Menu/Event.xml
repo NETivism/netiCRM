@@ -43,6 +43,15 @@
      <is_ssl>true</is_ssl>
   </item>
   <item>
+     <path>civicrm/event/cancel</path>
+     <title>Cancel Event Registration</title>
+     <page_callback>CRM_Event_Form_Registration_ParticipantCancel</page_callback>
+     <access_callback>1</access_callback>
+     <access_arguments>register for events</access_arguments>
+     <is_public>true</is_public>
+     <is_ssl>true</is_ssl>
+  </item>
+  <item>
      <path>civicrm/event/ical</path>
      <title>Current and Upcoming Events</title>
      <page_callback>CRM_Event_Page_ICalendar</page_callback>
