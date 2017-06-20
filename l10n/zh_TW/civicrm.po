@@ -11,8 +11,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2017-06-15 07:12+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
+"PO-Revision-Date: 2017-06-20 06:31+0000\n"
+"Last-Translator: 花玉婷 <klavier1976@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45596,3 +45596,81 @@ msgstr "活動報名參加者填寫的表單"
 
 msgid "User Settings"
 msgstr "帳號設定"
+
+#: CRM/Contribute/Page/Booster.php
+msgid "Connect Exists Donors"
+msgstr "主動關懷捐款人"
+
+#: CRM/Contribute/Page/Booster.php
+msgid "First time donation donors"
+msgstr "找到首次捐款人"
+
+#: CRM/Contribute/Page/Booster.php
+msgid ""
+"Send some message to these people who have first time donation to you. This "
+"should be first step to maintain your relationship with these donors."
+msgstr "找出近期內第一次捐款人，好好傳達你的感謝吧～這會是維持關係啟動更多參與的第一步！"
+
+#: CRM/Contribute/Page/Booster.php
+msgid "Donor who donate in last 6 month"
+msgstr "最近6個月有捐款的支持者"
+
+#: CRM/Contribute/Page/Booster.php
+msgid ""
+"You can send some result or impact of your project to them. And don't forget"
+" to exclude them in donation letter."
+msgstr "該寄送成果報告或專案進度給這些捐款人囉～然後要寄送募款信時，也別忘了排除這些階款人。"
+
+#: CRM/Contribute/Page/Booster.php
+msgid "Last year but not this year donors"
+msgstr "去年有捐款，但今年尚未捐款的支持者"
+
+#: CRM/Contribute/Page/Booster.php
+msgid ""
+"These supporter have donation last year, but not in this year. Remember to "
+"connect them when you have some donation campaign."
+msgstr "去年有捐款，但今年尚未捐，建議寫封信問候關心一下，並提供今年的募款專案給支持者參考。"
+
+#: CRM/Contribute/Page/Booster.php
+msgid "After payment failed but not retry in a week"
+msgstr "捐款失敗之後七天內沒有再次捐款"
+
+#: CRM/Contribute/Page/Booster.php
+msgid ""
+"They may not have enough motivation to complete donation. Instead of "
+"contriubtion campaign, send some impact or result of your effort to them."
+msgstr "這些支持者可能捐款動機不夠強，這時候不要寄送募款活動了，改為寄送組織努力的成果或影響，加強他們的捐款動機吧！"
+
+#: CRM/Contribute/Page/Booster.php
+msgid "Potential Donors"
+msgstr "挖掘潛在捐款人"
+
+#: CRM/Contribute/Page/Booster.php
+msgid "Single donation over three times"
+msgstr "單筆捐款滿三次的捐款人"
+
+#: CRM/Contribute/Page/Booster.php
+msgid ""
+"These supporter appeal they are interested in your orgnization. You should "
+"invite them to join your recurring campaign."
+msgstr "已經捐三筆捐款了，代表很有愛，可以邀請他們來定期定額囉！"
+
+#: CRM/Contribute/Page/Booster.php
+msgid "End of recurring contribution"
+msgstr "即將到期的定期定額"
+
+#: CRM/Contribute/Page/Booster.php
+msgid ""
+"These supporter will finished their promised recurring contribution. Time to"
+" invite them join your next recurring campaign again."
+msgstr "定期定額快要到期的捐款人，是時候開始進行挽留了。"
+
+#: CRM/Contribute/Page/Booster.php
+msgid "Attendee but not donor"
+msgstr "參加過活動但尚未捐款"
+
+#: CRM/Contribute/Page/Booster.php
+msgid ""
+"They join your event, but not become your donor yet. Time to try to invite "
+"them."
+msgstr "快速找出那些參加過活動但尚未捐過款的支持者，邀請他們捐款支持。"
