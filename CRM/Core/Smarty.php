@@ -159,7 +159,9 @@ class CRM_Core_Smarty extends Smarty {
       "/civicrm/event/register",
       "/civicrm/event/info",
       "/civicrm/contribute/transact",
-      "/civicrm/profile/create"
+      "/civicrm/profile/create",
+      "/civicrm/event/confirm",
+      "/civicrm/event/cancel"
     );
 
     if (in_array($current_path, $md_allow_path)) {

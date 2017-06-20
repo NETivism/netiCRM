@@ -45603,3 +45603,7 @@ msgstr ""
 #: CRM/Contribute/Page/Booster.php
 msgid "They join your event, but not become your donor yet. Time to try to invite them."
 msgstr ""
+
+#: CRM/Event/xml/Menu/Event.xml
+msgid "Cancel Event Registration"
+msgstrt ""
