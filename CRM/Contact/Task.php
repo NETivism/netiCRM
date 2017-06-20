@@ -63,75 +63,93 @@ class CRM_Contact_Task {
       self::$_tasks = array(
         1 => array('title' => ts('Add Contacts to Group'),
           'class' => 'CRM_Contact_Form_Task_AddToGroup',
+          'optgroup' => 'Group',
         ),
         2 => array('title' => ts('Remove Contacts from Group'),
           'class' => 'CRM_Contact_Form_Task_RemoveFromGroup',
+          'optgroup' => 'Group',
         ),
         3 => array('title' => ts('Tag Contacts (assign tags)'),
           'class' => 'CRM_Contact_Form_Task_AddToTag',
+          'optgroup' => 'Tags',
         ),
         4 => array('title' => ts('Untag Contacts (remove tags)'),
           'class' => 'CRM_Contact_Form_Task_RemoveFromTag',
+          'optgroup' => 'Tags',
         ),
         5 => array('title' => ts('Export Contacts'),
           'class' => array('CRM_Export_Form_Select',
             'CRM_Export_Form_Map',
           ),
           'result' => FALSE,
+          'optgroup' => 'Contact Information',
         ),
         6 => array('title' => ts('Send Email to Contacts'),
           'class' => 'CRM_Contact_Form_Task_Email',
           'result' => TRUE,
+          'optgroup' => 'Send Mailing',
         ),
         7 => array('title' => ts('Send SMS to Contacts'),
           'class' => 'CRM_Contact_Form_Task_SMS',
           'result' => TRUE,
+          'optgroup' => 'Send Mailing',
         ),
         8 => array('title' => ts('Delete Contacts'),
           'class' => 'CRM_Contact_Form_Task_Delete',
           'result' => FALSE,
+          'optgroup' => 'Delete Contact',
         ),
         11 => array('title' => ts('Record Activity for Contacts'),
           'class' => 'CRM_Activity_Form_Activity',
+          'optgroup' => 'Contact Information',
         ),
         13 => array('title' => ts('New Smart Group'),
           'class' => 'CRM_Contact_Form_Task_SaveSearch',
           'result' => TRUE,
+          'optgroup' => 'Group',
         ),
         14 => array('title' => ts('Update Smart Group'),
           'class' => 'CRM_Contact_Form_Task_SaveSearch_Update',
           'result' => TRUE,
+          'optgroup' => 'Group',
         ),
         15 => array('title' => ts('Print Contacts'),
           'class' => 'CRM_Contact_Form_Task_Print',
           'result' => FALSE,
+          'optgroup' => 'Print',
         ),
         16 => array('title' => ts('Mailing Labels'),
           'class' => 'CRM_Contact_Form_Task_Label',
           'result' => TRUE,
+          'optgroup' => 'Print',
         ),
         17 => array('title' => ts('Batch Update via Profile'),
           'class' => array('CRM_Contact_Form_Task_PickProfile',
             'CRM_Contact_Form_Task_Batch',
           ),
           'result' => TRUE,
+          'optgroup' => 'Contact Information',
         ),
         19 => array('title' => ts('Print PDF Letter for Contacts'),
           'class' => 'CRM_Contact_Form_Task_PDF',
           'result' => TRUE,
+          'optgroup' => 'Print',
         ),
         22 => array('title' => ts('Unhold Emails'),
           'class' => 'CRM_Contact_Form_Task_Unhold',
+          'optgroup' => 'Send Mailing',
         ),
         self::RESTORE => array(
           'title' => ts('Restore Contacts'),
           'class' => 'CRM_Contact_Form_Task_Delete',
           'result' => FALSE,
+          'optgroup' => 'Delete Contact',
         ),
         self::DELETE_PERMANENTLY => array(
           'title' => ts('Delete Permanently'),
           'class' => 'CRM_Contact_Form_Task_Delete',
           'result' => FALSE,
+          'optgroup' => 'Delete Contact',
         ),
       );
       if (CRM_Contact_BAO_ContactType::isActive('Household')) {
@@ -140,6 +158,7 @@ class CRM_Contact_Task {
             array(1 => $label)
           ),
           'class' => 'CRM_Contact_Form_Task_AddToHousehold',
+          'optgroup' => 'Contact Information',
         );
       }
       if (CRM_Contact_BAO_ContactType::isActive('Organization')) {
@@ -148,12 +167,14 @@ class CRM_Contact_Task {
             array(1 => $label)
           ),
           'class' => 'CRM_Contact_Form_Task_AddToOrganization',
+          'optgroup' => 'Contact Information',
         );
       }
       if (CRM_Core_Permission::check('merge duplicate contacts')) {
         self::$_tasks[21] = array('title' => ts('Merge Contacts'),
           'class' => 'CRM_Contact_Form_Task_Merge',
           'result' => TRUE,
+          'optgroup' => 'Contact Information',
         );
       }
       //CRM-4418, check for delete
@@ -168,12 +189,14 @@ class CRM_Contact_Task {
         self::$_tasks[12] = array('title' => ts('Map Contacts'),
           'class' => 'CRM_Contact_Form_Task_Map',
           'result' => FALSE,
+          'optgroup' => 'Contact Information',
         );
       }
 
       if (CRM_Core_Permission::access('CiviEvent')) {
         self::$_tasks[18] = array('title' => ts('Add Contacts to Event'),
           'class' => 'CRM_Event_Form_Participant',
+          'optgroup' => 'Event',
         );
       }
 
@@ -186,6 +209,7 @@ class CRM_Contact_Task {
             'CRM_Mailing_Form_Schedule',
           ),
           'result' => FALSE,
+          'optgroup' => 'Send Mailing',
         );
       }
 
@@ -209,10 +233,7 @@ class CRM_Contact_Task {
   static function &taskTitles() {
     self::initTasks();
 
-    $titles = array();
-    foreach (self::$_tasks as $id => $value) {
-      $titles[$id] = $value['title'];
-    }
+    $titles = self::$_tasks;
 
     // hack unset update saved search and print contacts
     unset($titles[14]);
@@ -234,8 +255,24 @@ class CRM_Contact_Task {
     if (!CRM_Core_Permission::check('access deleted contacts')) {
       unset($titles[self::DELETE_PERMANENTLY]);
     }
-    asort($titles);
-    return $titles;
+    $finalTitles = array();
+    $others = array();
+    foreach ($titles as $id => $value) {
+      $titles[$id] = $value['title'];
+      if (!empty($value['optgroup'])) {
+        $optgroup = ts($value['optgroup']);
+        $finalTitles[$optgroup][$id] = $value['title'];
+      }
+      else {
+        $optgroup = ts('Other');
+        $others[$optgroup][$id] = $value['title'];
+      }
+    }
+    if (!empty($others)) {
+      $finalTitles += $others;
+    }
+
+    return $finalTitles;
   }
 
   /**
