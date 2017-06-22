@@ -49,10 +49,7 @@ class CRM_Contact_Form_Search_Custom extends CRM_Contact_Form_Search {
     $gID = CRM_Utils_Request::retrieve('gid', 'Integer', $this);
     $force = CRM_Utils_Request::retrieve('force', 'Boolean', $this);
 
-    list($this->_customSearchID,
-      $this->_customSearchClass,
-      $formValues
-    ) = CRM_Contact_BAO_SearchCustom::details($csID, $ssID, $gID);
+    list($this->_customSearchID, $this->_customSearchClass, $formValues) = CRM_Contact_BAO_SearchCustom::details($csID, $ssID, $gID);
 
     if (!$this->_customSearchID) {
       CRM_Core_Error::fatal('Could not get details for custom search.');
@@ -82,14 +79,15 @@ class CRM_Contact_Form_Search_Custom extends CRM_Contact_Form_Search {
   }
 
   function setDefaultValues() {
-    if (empty($this->_formValues) &&
-      method_exists($this->_customSearchClass,
-        'setDefaultValues'
-      )
-    ) {
-      return $this->_customClass->setDefaultValues();
+    $formValues = $this->_formValues;
+    unset($formValues['component_mode']);
+    if (empty($formValues) && method_exists($this->_customSearchClass, 'setDefaultValues')) {
+      $defaults = $this->_customClass->setDefaultValues();
+      return $defaults;
     }
-    return $this->_formValues;
+    else {
+      return $this->_formValues;
+    }
   }
 
   function buildQuickForm() {
