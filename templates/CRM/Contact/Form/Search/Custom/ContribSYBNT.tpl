@@ -23,60 +23,40 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
-{* Template for "Sample" custom search component. *}
-{assign var="showBlock" value="'searchForm'"}
-{assign var="hideBlock" value="'searchForm_show','searchForm_hide'"}
-
-<div id="searchForm_show" class="form-item">
-    <a href="#" onclick="hide('searchForm_show'); show('searchForm'); return false;"><img src="{$config->resourceBase}i/TreePlus.gif" class="action-icon" alt="{ts}open section{/ts}" /></a>
-    <label>{ts}Edit Search Criteria{/ts}</label>
-</div>
 
 <div id="searchForm" class="crm-block crm-form-block crm-contact-custom-search-contribSYBNT-form-block">
-    <fieldset>
-        <legend><span id="searchForm_hide"><a href="#" onclick="hide('searchForm','searchForm_hide'); show('searchForm_show'); return false;"><img src="{$config->resourceBase}i/TreeMinus.gif" class="action-icon" alt="{ts}close section{/ts}" /></a></span>{ts}Search Criteria{/ts}</legend>
+<div class="crm-accordion-wrapper crm-custom_search_form-accordion crm-accordion-open">
+    <div class="crm-accordion-header crm-master-accordion-header">
+      <div class="zmdi crm-accordion-pointer"></div>
+      {ts}Edit Search Criteria{/ts}
+    </div><!-- /.crm-accordion-header -->
+    <div class="crm-accordion-body">
         <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>
+        <h2>{ts}Without Donations{/ts}</h2>
         <table class="form-layout-compressed">
-            <tr class="crm-contact-custom-search-contribSYBNT-form-block-min_amount_1">
-                <td><label>{ts}Amount One: Min/Max{/ts}</label></td>
-                <td>{$form.min_amount_1.html}</td>
-                <td>{$form.max_amount_1.html}</td>
-                <td>&nbsp;</td>
-            </tr>
-            <tr class="crm-contact-custom-search-contribSYBNT-form-block-inclusion_date_one">
-                <td><label>Inclusion Date One: Start/End</label></td>
-                <td>{include file="CRM/common/jcalendar.tpl" elementName=start_date_1}</td>
-                <td>{include file="CRM/common/jcalendar.tpl" elementName=end_date_1}</td>
-                <td>{$form.is_first_amount.html}&nbsp;{ts}First time donor only?{/ts}</td>
-            </tr>
-            <tr class="crm-contact-custom-search-contribSYBNT-form-block-min_amount_2">
-                <td><label>{ts}Amount Two: Min/Max{/ts}</label></td>
-                <td>{$form.min_amount_2.html}</td>
-                <td>{$form.max_amount_2.html}</td>
-                <td>&nbsp;</td>
-            </tr>
-            <tr class="crm-contact-custom-search-contribSYBNT-form-block-inclusion_date_two">
-                <td><label>Inclusion Date Two: Start/End</label></td>
-                <td>{include file="CRM/common/jcalendar.tpl" elementName=start_date_2}</td>
-                <td>{include file="CRM/common/jcalendar.tpl" elementName=end_date_2}</td>
-                <td>&nbsp;</td>
-            </tr>
-            <tr class="crm-contact-custom-search-contribSYBNT-form-block-exclude_min_amount">
-                <td><label>Exclusion Amount: Min/Max</label></td>
-                <td>{$form.exclude_min_amount.html}</td>
-                <td>{$form.exclude_max_amount.html}</td>
-                <td>&nbsp;</td>
-            </tr>
             <tr class="crm-contact-custom-search-contribSYBNT-form-block-exclusion_date">
-                <td><label>Exclusion Date: Start/End</label></td>
-                <td>{include file="CRM/common/jcalendar.tpl" elementName=exclude_start_date}</td>
-                <td>{include file="CRM/common/jcalendar.tpl" elementName=exclude_end_date}</td>
-                <td>&nbsp;</td>
+                <td><label>{ts}Date{/ts}</label></td>
+                <td>{ts}From{/ts}: {include file="CRM/common/jcalendar.tpl" elementName=exclude_start_date}</td>
+                <td>{ts}To{/ts}:{include file="CRM/common/jcalendar.tpl" elementName=exclude_end_date}</td>
             </tr>
-         </table> 
-         <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
-    </fieldset>
-</div>
+        </table> 
+        <h2>{ts}Have Donations{/ts}</h2>
+        <table class="form-layout-compressed">
+            <tr class="crm-contact-custom-search-contribSYBNT-form-block-inclusion_date_one">
+                <td><label>{ts}Date{/ts}</label></td>
+                <td>{ts}From{/ts}: {include file="CRM/common/jcalendar.tpl" elementName=include_start_date}</td>
+                <td>{ts}To{/ts}: {include file="CRM/common/jcalendar.tpl" elementName=include_end_date}</td>
+            </tr>
+            <tr class="crm-contact-custom-search-contribSYBNT-form-block-min_amount_1">
+                <td><label>{ts}Total Receive Amount{/ts}</label></td>
+                <td>{ts}Min{/ts}: {$form.include_min_amount.html}</td>
+                <td>{ts}Max{/ts}: {$form.include_max_amount.html}</td>
+            </tr>
+        </table> 
+        <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
+    </div><!-- /.crm-accordion-body -->
+</div><!-- /.crm-accordion-wrapper -->
+</div><!-- /.crm-form-block -->
 
 {if $rowsEmpty}
     {include file="CRM/Contact/Form/Search/Custom/EmptyResults.tpl"}
@@ -98,8 +78,6 @@
         <p>
 
         {include file="CRM/common/pager.tpl" location="top"}
-
-        {include file="CRM/common/pagerAToZ.tpl"}
 
         {strip}
         <table class="selector" summary="{ts}Search results listings.{/ts}">
@@ -147,12 +125,10 @@
     </fieldset>
     {* END Actions/Results section *}
 {/if}
-
+{literal}
 <script type="text/javascript">
-    var showBlock = new Array({$showBlock});
-    var hideBlock = new Array({$hideBlock});
-
-    {* hide and display the appropriate blocks *}
-    on_load_init_blocks( showBlock, hideBlock );
+cj(function() {
+   cj().crmaccordions(); 
+});
 </script>
-
+{/literal}
