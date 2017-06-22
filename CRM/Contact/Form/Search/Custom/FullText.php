@@ -697,11 +697,6 @@ WHERE      c.sort_name LIKE {$this->_text}
     );
 
     $form->assign('csID', CRM_Utils_Array::value('customSearchID', $this->_formValues));
-
-    /**
-     * You can define a custom title for the search form
-     */
-    $this->setTitle(ts('Full-text Search'));
   }
 
   function &columns() {
@@ -811,12 +806,6 @@ FROM
   }
 
   function alterRow(&$row) {}
-
-  function setTitle($title) {
-    if ($title) {
-      CRM_Utils_System::setTitle($title);
-    }
-  }
 
   /**
    * get entity id retrieve related data from db and move all data to detail table.

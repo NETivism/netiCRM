@@ -68,7 +68,7 @@ class CRM_Contact_Form_Search_Custom_Sample extends CRM_Contact_Form_Search_Cust
     /**
      * You can define a custom title for the search form
      */
-    $this->setTitle('My Search Title');
+    $form->setTitle('My Search Title');
 
     /**
      * if you are using the standard template, this array tells the template what elements
@@ -160,15 +160,6 @@ LEFT JOIN civicrm_state_province state_province ON state_province.id = address.s
 
   function alterRow(&$row) {
     $row['sort_name'] .= ' ( altered )';
-  }
-
-  function setTitle($title) {
-    if ($title) {
-      CRM_Utils_System::setTitle($title);
-    }
-    else {
-      CRM_Utils_System::setTitle(ts('Search'));
-    }
   }
 }
 

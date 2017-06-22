@@ -187,13 +187,6 @@ AND    p.entity_id    = e.id
   }
 
   function buildForm(&$form) {
-    CRM_Core_OptionValue::getValues(array('name' => 'custom_search'), $custom_search);
-    foreach ($custom_search as $c) {
-      if ($c['value'] == $_GET['csid']) {
-        $this->setTitle($c['description']);
-        break;
-      }
-    }
     $dao = $this->priceSetDAO();
 
     $event = array();
@@ -214,15 +207,11 @@ AND    p.entity_id    = e.id
     );
 
     /**
-     * You can define a custom title for the search form
-     */
-    $this->setTitle(ts('Price Set Export') .' - '. ts('Event'));
-
-    /**
      * if you are using the standard template, this array tells the template what elements
      * are part of the search criteria
      */
     $form->assign('elements', array('event_id'));
+    $form->setTitle(ts('Price Set Export') .' - '. ts('Event'));
   }
 
   function setColumns() {
@@ -313,15 +302,6 @@ INNER JOIN {$this->_tableName} tempTable ON ( tempTable.contact_id = contact_a.i
 
   function alterRow(&$row) {
     $row['status_id'] = $this->_pstatus[$row['status_id']];
-  }
-
-  function setTitle($title) {
-    if ($title) {
-      CRM_Utils_System::setTitle($title);
-    }
-    else {
-      CRM_Utils_System::setTitle(ts('Export Price Set Info for an Event'));
-    }
   }
 }
 

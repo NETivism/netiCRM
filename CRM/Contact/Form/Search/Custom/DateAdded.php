@@ -50,13 +50,6 @@ class CRM_Contact_Form_Search_Custom_DateAdded extends CRM_Contact_Form_Search_C
   }
 
   function buildForm(&$form) {
-    CRM_Core_OptionValue::getValues(array('name' => 'custom_search'), $custom_search);
-    foreach ($custom_search as $c) {
-      if ($c['value'] == $_GET['csid']) {
-        $this->setTitle($c['description']);
-        break;
-      }
-    }
     $form->addDate('start_date', ts('Start Date'), FALSE, array('formatType' => 'custom'));
     $form->addDate('end_date', ts('End Date'), FALSE, array('formatType' => 'custom'));
 
@@ -82,7 +75,6 @@ class CRM_Contact_Form_Search_Custom_DateAdded extends CRM_Contact_Form_Search_C
     $inG->setButtonAttributes('remove', array('value' => ts('<< Remove')));
     $outG->setButtonAttributes('remove', array('value' => ts('<< Remove')));
 
-    $this->setTitle('Search by date added to CiviCRM');
 
     //redirect if group not available for search criteria
     if (count($groups) == 0) {
@@ -363,15 +355,6 @@ class CRM_Contact_Form_Search_Custom_DateAdded extends CRM_Contact_Form_Search_C
 
   function templateFile() {
     return 'CRM/Contact/Form/Search/Custom.tpl';
-  }
-
-  function setTitle($title) {
-    if ($title) {
-      CRM_Utils_System::setTitle($title);
-    }
-    else {
-      CRM_Utils_System::setTitle(ts('Search'));
-    }
   }
 
   function count() {

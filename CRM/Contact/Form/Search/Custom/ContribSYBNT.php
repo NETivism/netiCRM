@@ -36,16 +36,20 @@
 require_once 'CRM/Contact/Form/Search/Interface.php';
 class CRM_Contact_Form_Search_Custom_ContribSYBNT implements CRM_Contact_Form_Search_Interface {
 
-  protected $_formValues; function __construct(&$formValues) {
+  protected $_formValues;
+
+  function __construct(&$formValues) {
     $this->_formValues = $formValues;
 
-    $this->_columns = array(ts('Contact Id') => 'contact_id',
+    $this->_columns = array(
+      ts('Contact Id') => 'contact_id',
       ts('Name') => 'display_name',
       ts('Donation Count') => 'donation_count',
       ts('Donation Amount') => 'donation_amount',
     );
 
-    $this->_amounts = array('min_amount_1' => ts('Min Amount One'),
+    $this->_amounts = array(
+      'min_amount_1' => ts('Min Amount One'),
       'max_amount_1' => ts('Max Amount One'),
       'min_amount_2' => ts('Min Amount Two'),
       'max_amount_2' => ts('Max Amount Two'),

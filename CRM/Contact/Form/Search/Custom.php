@@ -47,6 +47,7 @@ class CRM_Contact_Form_Search_Custom extends CRM_Contact_Form_Search {
     $csID = CRM_Utils_Request::retrieve('csid', 'Integer', $this);
     $ssID = CRM_Utils_Request::retrieve('ssID', 'Integer', $this);
     $gID = CRM_Utils_Request::retrieve('gid', 'Integer', $this);
+    $force = CRM_Utils_Request::retrieve('force', 'Boolean', $this);
 
     list($this->_customSearchID,
       $this->_customSearchClass,
@@ -61,14 +62,6 @@ class CRM_Contact_Form_Search_Custom extends CRM_Contact_Form_Search {
       $this->_formValues = $formValues;
     }
 
-    // set breadcrumb to return to Custom Search listings page
-    $breadCrumb = array(array('title' => ts('Custom Searches'),
-        'url' => CRM_Utils_System::url('civicrm/contact/search/custom/list',
-          'reset=1'
-        ),
-      ));
-    CRM_Utils_System::appendBreadCrumb($breadCrumb);
-
     // use the custom selector
     require_once 'CRM/Contact/Selector/Custom.php';
     $this->_selectorName = 'CRM_Contact_Selector_Custom';
@@ -81,6 +74,11 @@ class CRM_Contact_Form_Search_Custom extends CRM_Contact_Form_Search {
     // instantiate the new class
     $objectName = $this->_customSearchClass;
     $this->_customClass = new $objectName($this->_formValues);
+
+    if ($force) {
+      $this->postProcess();
+      $this->set('force', 0);
+    }
   }
 
   function setDefaultValues() {
@@ -95,6 +93,13 @@ class CRM_Contact_Form_Search_Custom extends CRM_Contact_Form_Search {
   }
 
   function buildQuickForm() {
+    $titles = array();
+    $titles = CRM_Core_OptionGroup::values('custom_search', FALSE, FALSE, FALSE, NULL, 'description');
+    $csid = !empty($this->_formValues['customSearchID']) ? $this->_formValues['customSearchID'] : (!empty($_GET['csid']) ? $_GET['csid'] : NULL);
+    if($csid && !empty($titles[$csid])){
+      $this->setTitle($titles[$csid]);
+    }
+
     $this->_customClass->buildForm($this);
 
     parent::buildQuickForm();
@@ -134,8 +139,14 @@ class CRM_Contact_Form_Search_Custom extends CRM_Contact_Form_Search {
     parent::postProcess();
   }
 
-  public function getTitle() {
-    return ts('Custom Search');
+  function setTitle($title){
+    if ($title) {
+      CRM_Utils_System::setTitle($title);
+    }
+    else {
+      CRM_Utils_System::setTitle(ts('Custom Search'));
+    }
   }
+
 }
 

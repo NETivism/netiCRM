@@ -89,14 +89,6 @@ class CRM_Contact_Form_Search_Custom_MultipleValues extends CRM_Contact_Form_Sea
   }
 
   function buildForm(&$form) {
-    CRM_Core_OptionValue::getValues(array('name' => 'custom_search'), $custom_search);
-    foreach ($custom_search as $c) {
-      if ($c['value'] == $_GET['csid']) {
-        $this->setTitle($c['description']);
-        break;
-      }
-    }
-
     $form->add('text', 'sort_name', ts('Contact Name'), TRUE);
 
     // add select for contact type
@@ -290,10 +282,6 @@ contact_a.sort_name    as sort_name,
         $row["custom_{$fieldID}"] = implode(', ', $customVal);
       }
     }
-  }
-
-  function setTitle($title) {
-    CRM_Utils_System::setTitle($title);
   }
 }
 

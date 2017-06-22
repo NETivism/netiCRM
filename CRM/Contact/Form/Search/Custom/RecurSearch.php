@@ -237,17 +237,6 @@ $having
   }
 
   function buildForm(&$form){
-    CRM_Core_OptionValue::getValues(array('name' => 'custom_search'), $custom_search);
-    $csid = !empty($form->_formValues['customSearchID']) ? $form->_formValues['customSearchID'] : (!empty($_GET['csid']) ? $_GET['csid'] : NULL);
-    if($csid){
-      foreach ($custom_search as $c) {
-        if ($c['value'] == $csid) {
-          $this->setTitle($c['description']);
-          break;
-        }
-      }
-    }
-
     // Define the search form fields here
     
     $form->addDateRange('start_date', ts('First recurring date'), NULL, FALSE);
@@ -349,15 +338,6 @@ $having
     return $this->_columns;
   }
   
-  function setTitle($title){
-    if ($title) {
-      CRM_Utils_System::setTitle($title);
-    }
-    else {
-      CRM_Utils_System::setTitle(ts('Recurring contributions'));
-    }
-  }
-
   function summary(){
     $summary = array();
     if(!$this->_filled){

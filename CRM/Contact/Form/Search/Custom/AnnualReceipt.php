@@ -52,13 +52,6 @@ class CRM_Contact_Form_Search_Custom_AnnualReceipt extends CRM_Contact_Form_Sear
   }
 
   function buildForm(&$form) {
-    CRM_Core_OptionValue::getValues(array('name' => 'custom_search'), $custom_search);
-    foreach ($custom_search as $c) {
-      if ($c['value'] == $_GET['csid']) {
-        $this->setTitle($c['description']);
-        break;
-      }
-    }
     $years = array();
     for($year = date('Y'); $year < date('Y') + 10; $year++) {
       $years[$year - 9] = $year - 9;
@@ -138,15 +131,6 @@ INNER JOIN civicrm_contribution contribution ON contact_a.id = contribution.cont
   }
 
   function alterRow(&$row) {
-  }
-
-  function setTitle($title) {
-    if ($title) {
-      CRM_Utils_System::setTitle($title);
-    }
-    else {
-      CRM_Utils_System::setTitle(ts('Search'));
-    }
   }
 }
 

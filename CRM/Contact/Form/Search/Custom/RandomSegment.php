@@ -70,13 +70,6 @@ class CRM_Contact_Form_Search_Custom_RandomSegment extends CRM_Contact_Form_Sear
   }
 
   function buildForm(&$form) {
-    CRM_Core_OptionValue::getValues(array('name' => 'custom_search'), $custom_search);
-    foreach ($custom_search as $c) {
-      if ($c['value'] == $_GET['csid']) {
-        $this->setTitle($c['description']);
-        break;
-      }
-    }
     $form->add('text',
       'segmentSize',
       ts('Segment Size'),
@@ -105,7 +98,7 @@ class CRM_Contact_Form_Search_Custom_RandomSegment extends CRM_Contact_Form_Sear
     $inG->setButtonAttributes('remove', array('value' => ts('<< Remove')));
     $outG->setButtonAttributes('remove', array('value' => ts('<< Remove')));
 
-    $this->setTitle('Create a random segment of contacts');
+    $form->setTitle('Create a random segment of contacts');
 
     /**
      * if you are using the standard template, this array tells the template what elements
@@ -317,15 +310,6 @@ class CRM_Contact_Form_Search_Custom_RandomSegment extends CRM_Contact_Form_Sear
 
   function templateFile() {
     return 'CRM/Contact/Form/Search/Custom.tpl';
-  }
-
-  function setTitle($title) {
-    if ($title) {
-      CRM_Utils_System::setTitle($title);
-    }
-    else {
-      CRM_Utils_System::setTitle(ts('Search'));
-    }
   }
 
   function count() {

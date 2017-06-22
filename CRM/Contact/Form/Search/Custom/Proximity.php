@@ -90,14 +90,6 @@ class CRM_Contact_Form_Search_Custom_Proximity extends CRM_Contact_Form_Search_C
   }
 
   function buildForm(&$form) {
-    CRM_Core_OptionValue::getValues(array('name' => 'custom_search'), $custom_search);
-    foreach ($custom_search as $c) {
-      if ($c['value'] == $_GET['csid']) {
-        $this->setTitle($c['description']);
-        break;
-      }
-    }
-
     $config = CRM_Core_Config::singleton();
     $countryDefault = $config->defaultContactCountry;
 
@@ -152,7 +144,7 @@ class CRM_Contact_Form_Search_Custom_Proximity extends CRM_Contact_Form_Search_C
     /**
      * You can define a custom title for the search form
      */
-    $this->setTitle('Proximity Search');
+    $form->setTitle('Proximity Search');
 
     /**
      * if you are using the standard template, this array tells the template what elements
@@ -262,14 +254,5 @@ AND cgc.group_id = {$this->_group}
   }
 
   function alterRow(&$row) {}
-
-  function setTitle($title) {
-    if ($title) {
-      CRM_Utils_System::setTitle($title);
-    }
-    else {
-      CRM_Utils_System::setTitle(ts('Search'));
-    }
-  }
 }
 

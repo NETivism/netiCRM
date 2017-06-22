@@ -186,13 +186,6 @@ WHERE  p.price_set_id = e.id
   }
 
   function buildForm(&$form) {
-    CRM_Core_OptionValue::getValues(array('name' => 'custom_search'), $custom_search);
-    foreach ($custom_search as $c) {
-      if ($c['value'] == $_GET['csid']) {
-        $this->setTitle($c['description']);
-        break;
-      }
-    }
     $dao = $this->priceSetDAO();
 
     $price_set = array();
@@ -216,7 +209,7 @@ WHERE  p.price_set_id = e.id
     /**
      * You can define a custom title for the search form
      */
-    $this->setTitle(ts('Price Set Export') . ' - '.ts('Contribution Page'));
+    $form->setTitle(ts('Price Set Export') . ' - '.ts('Contribution Page'));
 
     /**
      * if you are using the standard template, this array tells the template what elements
@@ -323,14 +316,5 @@ contact_a.display_name   as display_name";
       $row['action'] = implode('<br>', $action);
     }
   } 
-
-  function setTitle($title) {
-    if ($title) {
-      CRM_Utils_System::setTitle($title);
-    }
-    else {
-      CRM_Utils_System::setTitle(ts('Export Price Set Info for a Contribution Page'));
-    }
-  }
 }
 

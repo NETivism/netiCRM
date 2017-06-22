@@ -47,7 +47,7 @@ class CRM_Contact_Form_Search_Custom_UpcomingBirthdays implements CRM_Contact_Fo
     /**
      * You can define a custom title for the search form
      */
-    $this->setTitle('Find Upcoming Birthdays');
+    $form->setTitle('Find Upcoming Birthdays');
 
     /**
      * Define the search form fields here
@@ -220,15 +220,6 @@ class CRM_Contact_Form_Search_Custom_UpcomingBirthdays implements CRM_Contact_Fo
 
   function &columns() {
     return $this->_columns;
-  }
-
-  function setTitle($title) {
-    if ($title) {
-      CRM_Utils_System::setTitle($title);
-    }
-    else {
-      CRM_Utils_System::setTitle(ts('Search'));
-    }
   }
 
   function summary() {
