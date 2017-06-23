@@ -188,6 +188,7 @@ SELECT module
         $this->_errorURL = str_replace('&amp;', '&', $this->_errorURL);
         $this->addElement('hidden', 'errorURL', $this->_errorURL);
       }
+      $this->addElement('hidden', 'submit_once_check', uniqid('submit-once-'));
 
       // replace the session stack in case user cancels (and we dont go into postProcess)
       $session = CRM_Core_Session::singleton();
@@ -210,6 +211,7 @@ SELECT module
     $buttons[] = array('type' => $buttonName,
       'name' => ts('Submit'),
       'isDefault' => TRUE,
+      'js' => array('data' => 'submit-once'),
     );
 
     if ($this->_context != 'dialog') {
