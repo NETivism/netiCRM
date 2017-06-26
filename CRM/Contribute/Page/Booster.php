@@ -28,17 +28,17 @@ class CRM_Contribute_Page_Booster extends CRM_Core_Page {
         array(
           'title' => ts('Single donation over three times'),
           'description' => ts('These supporter appeal they are interested in your orgnization. You should invite them to join your recurring campaign.'),
-          'link' => '',
+          'link' => CRM_Utils_System::url('civicrm/search/SingleNotRecurring', 'force=1'),
         ),
         array(
           'title' => ts('End of recurring contribution'),
           'description' => ts('These supporter will finished their promised recurring contribution. Time to invite them join your next recurring campaign again.'),
-          'link' => '',
+          'link' => CRM_Utils_System::url('civicrm/search/RecurSearch', 'mode=booster&force=1'),
         ),
         array(
           'title' => ts('Attendee but not donor'),
           'description' => ts('They join your event, but not become your donor yet. Time to try to invite them.'),
-          'link' => '',
+          'link' => CRM_Utils_System::url('civicrm/search/AttendeeNotDonor', 'force=1'),
         ),
       ),
     );

@@ -41,13 +41,13 @@ class CRM_Contact_Form_Search_Custom_RecurSearch  extends CRM_Contact_Form_Searc
   protected $_config;
   protected $_tableName = NULL;
   protected $_filled = NULL;
+  protected $_context = NULL;
   
   function __construct(&$formValues){
     parent::__construct($formValues);
     $this->_filled = FALSE;
     if(empty($this->_tableName)){
-      $randomNum = substr(md5($this->_formValues['qfKey']), 0, 8);
-      $this->_tableName = "civicrm_temp_custom_{$randomNum}";
+      $this->_tableName = "civicrm_temp_custom_recursearch";
       $this->_cstatus = CRM_Contribute_PseudoConstant::contributionStatus();
       $this->_cstatus[1] = ts('Recurring ended');
       $this->_gender = CRM_Core_PseudoConstant::gender();
@@ -238,14 +238,27 @@ $having
 
   function buildForm(&$form){
     // Define the search form fields here
+    $this->_mode = CRM_Utils_Request::retrieve('mode', 'String', $form);
+    if (!empty($this->_mode)) {
+      $form->set($this->_mode);
+    }
     
-    $form->addDateRange('start_date', ts('First recurring date'), NULL, FALSE);
+    if ($this->_mode != 'booster') {
+      $form->addDateRange('start_date', ts('First recurring date'), NULL, FALSE);
+      $form->addElement('text', 'sort_name', ts('Contact Name'));
+      $form->addElement('text', 'email', ts('Email'));
+    }
+    else {
+      $defaults = $this->setDefaultValues();
+      $form->setDefaults($defaults);
+    }
+    
     $statuses = $this->_cstatus;
     unset($statuses[6]);
     unset($statuses[4]);
     krsort($statuses);
     $form->addRadio('status', ts('Recurring Status'), $statuses, array('allowClear' => TRUE));
-    
+
     $installments = array(
       '' => ts('- select -'),
       '0' => ts('no installments specified'),
@@ -255,15 +268,21 @@ $having
     }
     $form->addElement('select', 'installments', ts('Installments Left'), $installments);
 
-    $form->addElement('text', 'sort_name', ts('Contact Name'));
-
-    $form->addElement('text', 'email', ts('Email'));
-
     /**
      * If you are using the sample template, this array tells the template fields to render
      * for the search form.
      */
     $form->assign('elements', array('status', 'installments', 'sort_name', 'email'));
+  }
+
+  function setDefaultValues() {
+    if ($this->_mode == 'booster') {
+      return array(
+        'status' => 5,
+        'installments' => '1',
+      );
+    }
+    return array();
   }
 
   function count(){
