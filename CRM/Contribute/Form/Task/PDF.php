@@ -77,9 +77,12 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
     while($dao->fetch()){
       $deductible_type_id[] = $dao->id;
     }
-    $deductible_type = implode(',', $deductible_type_id);
+    if(count($deductible_type_id) > 0){
+      $deductible_type = implode(',', $deductible_type_id);
+      $deductible_type_clause = "OR contribution_type_id IN ($deductible_type)";
+    }
     // check that all the contribution ids have pending status
-    $query = " SELECT count(*) FROM civicrm_contribution WHERE (contribution_status_id != 1 OR contribution_type_id IN ($deductible_type)) AND {$this->_componentClause}";
+    $query = " SELECT count(*) FROM civicrm_contribution WHERE (contribution_status_id != 1 $deductible_type_clause) AND {$this->_componentClause}";
     $count = CRM_Core_DAO::singleValueQuery($query, CRM_Core_DAO::$_nullArray);
     if ($count != 0) {
       $msg = ts('Contribution need to match conditions below in order to generate receipt(and receipt serial id number)');
