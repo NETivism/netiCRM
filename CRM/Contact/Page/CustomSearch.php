@@ -51,7 +51,7 @@ class CRM_Contact_Page_CustomSearch extends CRM_Core_Page {
 
   public static function &info() {
     $sql = "
-SELECT v.value, v.label, v.description
+SELECT v.value, v.label, v.name, v.description
 FROM   civicrm_option_group g,
        civicrm_option_value v
 WHERE  v.option_group_id = g.id
@@ -66,10 +66,10 @@ ORDER By  v.weight
     $rows = array();
     while ($dao->fetch()) {
       if (trim($dao->description)) {
-        $rows[$dao->value] = $dao->description;
+        $rows[$dao->value] = $dao->label;
       }
       else {
-        $rows[$dao->value] = $dao->label;
+        $rows[$dao->value] = $dao->name;
       }
     }
     return $rows;

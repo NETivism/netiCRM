@@ -180,6 +180,7 @@ class CRM_Admin_Form_Options extends CRM_Admin_Form {
     $required = FALSE;
     if ($this->_gName == 'custom_search') {
       $required = TRUE;
+      $this->add('text', 'name', ts('Class Name'), CRM_Core_DAO::getAttribute('CRM_Core_DAO_OptionValue', 'name'));
     }
     elseif ($this->_gName == 'redaction_rule') {
       $this->add('text',

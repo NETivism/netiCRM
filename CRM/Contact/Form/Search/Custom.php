@@ -54,6 +54,11 @@ class CRM_Contact_Form_Search_Custom extends CRM_Contact_Form_Search {
     if (!$this->_customSearchID) {
       CRM_Core_Error::fatal('Could not get details for custom search.');
     }
+    $titles = CRM_Core_OptionGroup::values('custom_search');
+    if(!empty($titles[$this->_customSearchID])){
+      $this->setTitle($titles[$this->_customSearchID]);
+    }
+
 
     if (!empty($formValues)) {
       $this->_formValues = $formValues;
@@ -91,13 +96,6 @@ class CRM_Contact_Form_Search_Custom extends CRM_Contact_Form_Search {
   }
 
   function buildQuickForm() {
-    $titles = array();
-    $titles = CRM_Core_OptionGroup::values('custom_search', FALSE, FALSE, FALSE, NULL, 'description');
-    $csid = !empty($this->_formValues['customSearchID']) ? $this->_formValues['customSearchID'] : (!empty($_GET['csid']) ? $_GET['csid'] : NULL);
-    if($csid && !empty($titles[$csid])){
-      $this->setTitle($titles[$csid]);
-    }
-
     $this->_customClass->buildForm($this);
 
     parent::buildQuickForm();

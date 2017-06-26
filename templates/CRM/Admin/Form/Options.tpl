@@ -40,8 +40,14 @@
         {if $gName eq 'custom_search'} 
            <tr class="crm-admin-options-form-block-custom_search_path">
              <td class="label">{ts}Custom Search Path{/ts}</td>
-             <td>{$form.label.html}<br />
+             <td>{$form.name.html}<br />
                 <span class="description">{ts}Enter the "class path" for this custom search here.{/ts} {docURL page="Custom Search Components"}
+             </td>
+           </tr>
+           <tr class="crm-admin-options-form-block-search_title">
+             <td class="label">{ts}Search Title{/ts}</td>
+             <td>{$form.label.html}<br />
+               <span class="description">{ts}This title is displayed to users in the Custom Search listings.{/ts}</span>
              </td>
            </tr>
         {elseif $gName eq 'from_email_address'} 
@@ -79,11 +85,9 @@
             </tr>
 	    {/if}
         {if $gName eq 'custom_search'}
-           <tr class="crm-admin-options-form-block-search_title">
-             <td class="label">{ts}Search Title{/ts}</td>
-             <td>{$form.description.html}<br />
-               <span class="description">{ts}This title is displayed to users in the Custom Search listings.{/ts}</span>
-             </td>
+           <tr class="crm-admin-options-form-block-search_description">
+             <td class="label">{ts}Search Description{/ts}</td>
+             <td>{$form.description.html}</td>
            </tr>
         {else}
            {if $gName eq 'redaction_rule'}

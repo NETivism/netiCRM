@@ -64,10 +64,11 @@ class CRM_Contact_BAO_SearchCustom {
     // check that the csid exists in the db along with the right file
     // and implements the right interface
     require_once 'CRM/Core/OptionGroup.php';
-    $customSearchClass = CRM_Core_OptionGroup::getLabel('custom_search',
-      $customSearchID
-    );
-    if (!$customSearchClass) {
+    $allCustom = CRM_Core_OptionGroup::values('custom_search', FALSE, FALSE, FALSE, NULL, 'name');
+    if (!empty($allCustom[$customSearchID])) {
+      $customSearchClass = $allCustom[$customSearchID];
+    }
+    else {
       return $error;
     }
 
