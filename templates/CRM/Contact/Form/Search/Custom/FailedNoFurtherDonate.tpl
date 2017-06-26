@@ -5,22 +5,6 @@
       {ts}Edit Search Criteria{/ts}
     </div><!-- /.crm-accordion-header -->
     <div class="crm-accordion-body">
-        <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>
-        <table class="form-layout-compressed">
-                <tr class="crm-contact-custom-search-form-row-receive_date">
-                    <td class="label">{$form.receive_date_from.label}</td>
-                    <td>{include file="CRM/common/jcalendar.tpl" elementName=receive_date_from} <span>{$form.receive_date_to.label}</span>
-                        {include file="CRM/common/jcalendar.tpl" elementName=receive_date_to}
-                    </td>
-                </tr>
-            {* Loop through all defined search criteria fields (defined in the buildForm() function). *}
-            {foreach from=$elements item=element}
-                <tr class="crm-contact-custom-search-form-row-{$element}">
-                    <td class="label">{$form.$element.label}</td>
-                    <td>{$form.$element.html}</td>
-                </tr>
-            {/foreach}
-        </table>
         <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
     </div><!-- /.crm-accordion-body -->
 </div><!-- /.crm-accordion-wrapper -->

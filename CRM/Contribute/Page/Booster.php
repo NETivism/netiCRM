@@ -21,7 +21,7 @@ class CRM_Contribute_Page_Booster extends CRM_Core_Page {
         array(
           'title' => ts('After payment failed but not retry in a week'),
           'description' => ts('They may not have enough motivation to complete donation. Instead of contriubtion campaign, send some impact or result of your effort to them.'),
-          'link' => '',
+          'link' => CRM_Utils_System::url('civicrm/search/FailedNoFurtherDonate', 'force=1'),
         ),
       ),
       ts('Potential Donors') => array(
