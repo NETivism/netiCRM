@@ -644,7 +644,8 @@ class CRM_Event_Form_Registration_AdditionalParticipant extends CRM_Event_Form_R
    */
   function isLastParticipant($isButtonJs = FALSE) {
     $participant = $isButtonJs ? $this->_params[0]['additional_participants'] : $this->_params[0]['additional_participants'] + 1;
-    if (count($this->_params) == $participant) {
+    // ">" is used when after submitted (In thankyou page.), press "last step" with back to AdditionalParticipant form will need it.
+    if (count($this->_params) >= $participant) {
       return TRUE;
     }
     return FALSE;
