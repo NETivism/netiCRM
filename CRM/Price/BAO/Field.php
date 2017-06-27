@@ -249,9 +249,13 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
     // validate member related fields
     static $optionMemberJson;
     $optionMember = array();
-    foreach ($customOption as $optId => $opt) {
-      if ($opt['is_member']) {
-        $optionMember[$optId] = $opt;
+    $backendForm = array('CRM_Event_Form_Participant', 'CRM_Contribute_Form_Contribution');
+    $formClass = get_class($qf);
+    if (!in_array($formClass, $backendForm)) {
+      foreach ($customOption as $optId => $opt) {
+        if ($opt['is_member']) {
+          $optionMember[$optId] = $opt;
+        }
       }
     }
 
