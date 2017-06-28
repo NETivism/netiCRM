@@ -101,6 +101,13 @@ class CRM_Event_Form_Registration_ParticipantCancel extends CRM_Event_Form_Regis
    * @access public
    */
   public function buildQuickForm() {
+    if(CRM_Utils_Array::value('is_monetary', $values['event'])){
+      $statusMessage = ts("Cancelling registration only available for free events. Contact your site administrator if you need assistance.");
+      CRM_Core_Error::statusBounce($statusMessage, CRM_Utils_System::url('civicrm/event/info', "reset=1&id={$this->_eventId}&noFullMsg=1",
+          FALSE, NULL, FALSE, TRUE
+        ));
+      return ;
+    }
     $params = array('id' => $this->_eventId);
     $values = array();
     CRM_Core_DAO::commonRetrieve('CRM_Event_DAO_Event', $params, $values,
@@ -108,8 +115,6 @@ class CRM_Event_Form_Registration_ParticipantCancel extends CRM_Event_Form_Regis
     );
 
     $buttons = array();
-    require_once 'CRM/Event/PseudoConstant.php';
-    // only pending status class family able to confirm.
 
     $statusMsg = NULL;
 
@@ -124,7 +129,8 @@ class CRM_Event_Form_Registration_ParticipantCancel extends CRM_Event_Form_Regis
             'js' => array('onclick' => 'return confirm(\'' . $cancelConfirm . '\');'),
           )));
       if (!$statusMsg) {
-        $statusMsg = ts('You can cancel your registration for %1 by clicking "Cancel Registration".', array(1 => $values['title']));
+        $url = CRM_Utils_System::url('civicrm/event/info', "reset=1&id={$this->_eventId}&noFullMsg=1",FALSE, NULL, FALSE, TRUE );
+        $statusMsg = ts('You can cancel your registration for %1 by clicking "Cancel Registration".', array(1 => "<a href='$url' target='_blank'>".$values['title']."</a>"));
       }
     }
     if (!$statusMsg) {
@@ -140,79 +146,12 @@ class CRM_Event_Form_Registration_ParticipantCancel extends CRM_Event_Form_Regis
     $this->assign('event', $values['event']);
     $this->assign('isShowLocation', CRM_Utils_Array::value('is_show_location', $values['event']));
 
-    // show event fees.
-    require_once 'CRM/Price/BAO/Set.php';
-    if ($this->_eventId && CRM_Utils_Array::value('is_monetary', $values['event'])) {
-      // get price set options, - CRM-5209
-      if ($priceSetId = CRM_Price_BAO_Set::getFor('civicrm_event', $this->_eventId)) {
-        $setDetails = CRM_Price_BAO_Set::getSetDetail($priceSetId);
-        $priceSetFields = $setDetails[$priceSetId]['fields'];
-        if (is_array($priceSetFields)) {
-          $fieldCnt = 1;
-          require_once 'CRM/Core/PseudoConstant.php';
-          $visibility = CRM_Core_PseudoConstant::visibility('name');
-
-          foreach ($priceSetFields as $fid => $fieldValues) {
-            if (!is_array($fieldValues['options']) ||
-              empty($fieldValues['options']) ||
-              CRM_Utils_Array::value('visibility_id', $fieldValues) != array_search('public', $visibility)
-            ) {
-              continue;
-            }
-
-            if (count($fieldValues['options']) > 1) {
-              $values['feeBlock']['value'][$fieldCnt] = '';
-              $values['feeBlock']['label'][$fieldCnt] = $fieldValues['label'];
-              $values['feeBlock']['lClass'][$fieldCnt] = 'price_set_option_group-label';
-              $fieldCnt++;
-              $labelClass = 'price_set_option-label';
-            }
-            else {
-              $labelClass = 'price_set_field-label';
-            }
-
-            foreach ($fieldValues['options'] as $optionId => $optionVal) {
-              $values['feeBlock']['value'][$fieldCnt] = $optionVal['amount'];
-              $values['feeBlock']['label'][$fieldCnt] = $optionVal['label'];
-              $values['feeBlock']['lClass'][$fieldCnt] = $labelClass;
-              $fieldCnt++;
-            }
-          }
-        }
-        // Tell tpl we have price set fee data
-        $this->assign('isPriceSet', 1);
-      }
-      else {
-        //retrieve event fee block.
-        require_once 'CRM/Core/OptionGroup.php';
-        require_once 'CRM/Core/BAO/Discount.php';
-        $discountId = CRM_Core_BAO_Discount::findSet($this->_eventId, 'civicrm_event');
-        if ($discountId) {
-          CRM_Core_OptionGroup::getAssoc(CRM_Core_DAO::getFieldValue('CRM_Core_DAO_Discount',
-              $discountId,
-              'option_group_id'
-            ),
-            $values['feeBlock'], FALSE, 'id'
-          );
-        }
-        else {
-          CRM_Core_OptionGroup::getAssoc("civicrm_event.amount.{$this->_eventId}", $values['feeBlock']);
-        }
-      }
-
-      $this->assign('feeBlock', $values['feeBlock']);
-    }
-
     $params = array('entity_id' => $this->_eventId, 'entity_table' => 'civicrm_event');
     require_once 'CRM/Core/BAO/Location.php';
     $values['location'] = CRM_Core_BAO_Location::getValues($params, TRUE);
 
-    //retrieve custom field information
-    require_once 'CRM/Core/BAO/CustomGroup.php';
-    $groupTree = &CRM_Core_BAO_CustomGroup::getTree("Event", $this, $this->_id, 0, $values['event']['event_type_id']);
-    CRM_Core_BAO_CustomGroup::buildCustomDataView($this, $groupTree);
-    $this->assign('action', CRM_Core_Action::VIEW);
     //To show the event location on maps directly on event info page
+    $config = CRM_Core_Config::singleton();
     $locations = &CRM_Event_BAO_Event::getMapInfo($this->_eventId);
     if (!empty($locations) && CRM_Utils_Array::value('is_map', $values['event'])) {
       $this->assign('locations', $locations);

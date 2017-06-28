@@ -29,6 +29,11 @@
   </div>
 
   <div class="event-info-content">
+
+  <div id="crm-submit-buttons">
+  {include file="CRM/common/formButtons.tpl" location="bottom"}
+  </div>
+
   <div class="crm-section event_date_time-section">
       <div class="label"><label>{ts}Event Date{/ts}</label></div>
       <div class="content">
@@ -53,10 +58,6 @@
     <div class="clear"></div>
   </div>
 
-  <div id="crm-submit-buttons">
-  {include file="CRM/common/formButtons.tpl" location="bottom"}
-  </div>
-
   {if $isShowLocation}
     {if $location.address.1}
       <div class="crm-section event_address-section">
@@ -71,29 +72,6 @@
   {if $event.description}
       <div class="crm-section event_description-section">
           {$event.description}
-      </div>
-  {/if}
-
-    {if $event.is_monetary eq 1 && $feeBlock.value}
-      <div class="crm-section event_fees-section crm-section-big">
-          <div class="label"><label>{$event.fee_label}</label></div>
-          <div class="content">
-              <table class="form-layout-compressed fee_block-table">
-                  {foreach from=$feeBlock.value name=fees item=value}
-                      {assign var=idx value=$smarty.foreach.fees.iteration}
-                      {if $feeBlock.lClass.$idx}
-                          {assign var="lClass" value=$feeBlock.lClass.$idx}
-                      {else}
-                          {assign var="lClass" value="fee_level-label"}
-                      {/if}
-                      <tr>
-                          <td class="{$lClass} crm-event-label">{$feeBlock.label.$idx}</td>
-                          <td class="fee_amount-value right">{$feeBlock.value.$idx|crmMoney}</td>
-                      </tr>
-                  {/foreach}
-              </table>
-          </div>
-          <div class="clear"></div>
       </div>
   {/if}
 
@@ -152,9 +130,6 @@
           <div class="clear"></div>
       </div>
   {/if}
-
-
-    {include file="CRM/Custom/Page/CustomDataView.tpl"}
 
   <div id="crm-submit-buttons">
 	{include file="CRM/common/formButtons.tpl" location="bottom"}

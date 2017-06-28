@@ -45606,4 +45606,8 @@ msgstr ""
 
 #: CRM/Event/xml/Menu/Event.xml
 msgid "Cancel Event Registration"
-msgstrt ""
+msgstr ""
+
+#: CRM/Event/Form/Registration/ParticipantCancel.php
+msgid "Cancelling registration only available for free events. Contact your site administrator if you need assistance."
+msgstr ""
