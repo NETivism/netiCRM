@@ -83,6 +83,9 @@
   text-decoration: none;
   color: #303F9F;
 }
+.mdl-card .mdl-card__actions a:hover {
+  text-decoration: none;
+}
 .mdl-card .mdl-card__actions a i {
   font-size: 18px;
   top: -2px;

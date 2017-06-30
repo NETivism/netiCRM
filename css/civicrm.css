@@ -5054,6 +5054,7 @@ tbody.scrollContent tr.alternateRow {
   background-color: #1e9494;
 }
 .crm-contribute-booster #attendee-not-donor .mdl-card__title {
+  color: #000;
   background-image: url(images/card_bg_irrigation_idea.jpg);
   background-position: 50% 100%;
 }
