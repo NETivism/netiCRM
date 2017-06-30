@@ -107,7 +107,7 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
     $this->addWysiwyg('page_text', ts('Your Message'), $attrib);
     //        $this->add('textarea', 'page_text', ts('Your Message'), null, false );
 
-    $maxAttachments = 1;
+    $maxAttachments = 5;
     require_once 'CRM/Core/BAO/File.php';
     CRM_Core_BAO_File::buildAttachment($this, 'civicrm_pcp', $this->_pageId, $maxAttachments);
 
@@ -147,14 +147,21 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
     if (strlen($fields['donate_link_text']) >= 64) {
       $errors['donate_link_text'] = ts('Button Text must be less than 64 characters.');
     }
-    if (isset($files['attachFile_1']) &&
-      CRM_Utils_Array::value('tmp_name', $files['attachFile_1'])
-    ) {
+    /*
+    if (isset($files['attachFile_1']) && CRM_Utils_Array::value('tmp_name', $files['attachFile_1'])) {
+      $maxWidth = 2000;
+      $maxHeight = 2000;
       list($width, $height) = getimagesize($files['attachFile_1']['tmp_name']);
-      if ($width > 360 || $height > 360) {
-        $errors['attachFile_1'] = "Your picture or image file can not be larger than 360 x 360 pixels in size." . " The dimensions of the image you've selected is " . $width . " x " . $height . ". Please shrink or crop the file or find another smaller image and try again.";
+      if ($width > $maxWidth || $height > $maxHeight) {
+        $tmpFile = tempnam(CRM_Utils_System::cmsDir('temp'), 'pcp_');
+        $image = new CRM_Utils_Image($files['attachFile_1']['tmp_name'], $tmpFile);
+        $resized = $image->scale($maxWidth);
+        if ($resized) {
+          $files['attachFile_1']['tmp_name'] = $tmpFile;
+        }
       }
     }
+    */
     return $errors;
   }
 
@@ -199,11 +206,8 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
     $pcp = CRM_Contribute_BAO_PCP::add($params, FALSE);
 
     // add attachments as needed
-    CRM_Core_BAO_File::formatAttachment($params,
-      $params,
-      'civicrm_pcp',
-      $pcp->id
-    );
+    $maxAttachments = 5;
+    CRM_Core_BAO_File::formatAttachment($params, $params, 'civicrm_pcp', $pcp->id, $maxAttachments);
 
     $pageStatus = isset($this->_pageId) ? ts('updated') : ts('created');
     $statusId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_PCP', $pcp->id, 'status_id');
@@ -290,7 +294,7 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
       }
     }
 
-    CRM_Core_BAO_File::processAttachment($params, 'civicrm_pcp', $pcp->id);
+    CRM_Core_BAO_File::processAttachment($params, 'civicrm_pcp', $pcp->id, $maxAttachments);
 
     // send email notification to supporter, if initial setup / add mode.
     if (!$this->_pageId) {

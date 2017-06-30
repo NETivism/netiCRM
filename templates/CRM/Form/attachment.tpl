@@ -23,7 +23,7 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
-{if $form.attachFile_1}
+{if $form.attachFile.0 || $currentAttachmentURL}
 {if $action EQ 4 AND $currentAttachmentURL} {* For View action we exclude the form fields and just show any current attachments. *}
     <tr>
         <td class="label"><label>{ts}Current Attachment(s){/ts}</label></td>
@@ -39,31 +39,25 @@
     {/if}
     {if !$noexpand}
     <div class="crm-accordion-wrapper crm-accordion_title-accordion {$openCloseStyle}">
- 		<div class="crm-accordion-header">
-  			<div class="zmdi crm-accordion-pointer"></div> 
-  			{$attachTitle}
-			</div><!-- /.crm-accordion-header -->
- 		<div class="crm-accordion-body">    
- 	{/if}
+     <div class="crm-accordion-header">
+        <div class="zmdi crm-accordion-pointer"></div> 
+        {$attachTitle}
+      </div><!-- /.crm-accordion-header -->
+     <div class="crm-accordion-body">    
+   {/if}
     <div id="attachments">
-        {if $context EQ 'pcpCampaign'}
-            <div class="description">{ts}You can upload a picture or image to include on your page. Your file should be in .jpg, .gif, or .png format. Recommended image size is 250 x 250 pixels. Maximum size is 360 x 360 pixels.{/ts}</div>
-        {/if}
-        <table class="form-layout-compressed">
+    <table class="form-layout-compressed">
+    {if $form.attachFile.0}
             <tr>
-                <td class="label">{$form.attachFile_1.label}</td>
-                <td>{$form.attachFile_1.html}<br />
-                    <span class="description">{ts}Browse to the <strong>file</strong> you want to upload.{/ts}{if $numAttachments GT 1} {ts 1=$numAttachments}You can have a maximum of %1 attachment(s).{/ts}{/if}</span>
+                <td class="label">{$form.attachFile.0.label}</td>
+                <td>{$form.attachFile.0.html}<br />
+                  {if $context EQ 'pcpCampaign'}
+                      <div class="description">{ts}You can upload a picture or image to include on your page. Your file should be in .jpg, .gif, or .png format.{/ts}</div>
+                  {/if}
+                  <div class="description">{ts}Browse to the <strong>file</strong> you want to upload.{/ts}{if $numAttachments GT 1} {ts 1=$numAttachments}You can have a maximum of %1 attachment(s).{/ts}{/if}</div>
                 </td>
             </tr>
-    {section name=attachLoop start=2 loop=$numAttachments+1}
-        {assign var=index value=$smarty.section.attachLoop.index}
-        {assign var=attachName value="attachFile_"|cat:$index}
-            <tr>
-                <td class="label"></td>
-                <td>{$form.$attachName.html}</td>
-            </tr>
-    {/section}
+    {/if}
     {if $currentAttachmentURL}
         <tr>
             <td class="label">{ts}Current Attachment(s){/ts}</td>
@@ -78,18 +72,51 @@
     {/if}
         </table>
     </div>
-	</div><!-- /.crm-accordion-body -->
-	</div><!-- /.crm-accordion-wrapper -->
-{if !$noexpand}
-    {literal}
+  </div><!-- /.crm-accordion-body -->
+  </div><!-- /.crm-accordion-wrapper -->
+  {literal}
+  <script type="text/javascript">
+    var maxFilesize = {/literal}{$maxFileSize}{literal};
+    var numAttachments = {/literal}{$numAttachments}{literal};
+    cj(function($) {
+      $("#attachFile_").closest('form').submit(function(e){
+        var files = $('#attachFile_').get(0).files;
+        if (typeof files !== 'undefined' && files.length > 0) {
+          var valid = 1;
+          if (parseInt(files.length) > numAttachments){
+            alert("{/literal}{ts 1=$numAttachments}You can have a maximum of %1 attachment(s).{/ts}{literal}");
+            valid = 0;
+          }
+          var filesize = 0;
+          for (i = 0; i < files.length; i++) {
+            filesize += files[i].size;
+          }
+          filesize = filesize/1024/1024;
+          if (filesize > maxFilesize) {
+            alert("{/literal}{ts 1=$maxFileSize}File size should be less than %1 MByte(s){/ts}{literal}");
+            valid = 0;
+          }
+          if (!valid) {
+            e.preventDefault();
+						$('html, body').animate({
+              scrollTop: $("#attachFile_").offset().top - 100
+						}, 1000);
+          }
+        }
+      }); 
+    });
+  </script>
+  {/literal}
+  {if !$noexpand}
+  {literal}
     <script type="text/javascript">
         var attachmentUrl = {/literal}'{$currentAttachmentURL}'{literal};
-		cj(function() {
-		   cj().crmaccordions(); 
-		});
+    cj(function() {
+       cj().crmaccordions(); 
+    });
     </script>
-    {/literal}
-{/if}
-    {/if}
-{/if}
+  {/literal}
+  {/if}{* end noexpand *}
+{/if}{* end action *}
+{/if}{* end first if *}
 

@@ -92,20 +92,20 @@ class CRM_Core_QuickForm_Action_Upload extends CRM_Core_QuickForm_Action {
       if ($element->isUploadedFile()) {
         // rename the uploaded file with a unique number at the end
         $value = $element->getValue();
+        $uploadData = $data['values'][$pageName][$uploadName];
 
-        require_once 'CRM/Utils/File.php';
-        $newName = CRM_Utils_File::makeFileName($value['name']);
-        $status = $element->moveUploadedFile($this->_uploadDir, $newName);
-        if (!$status) {
-          CRM_Core_Error::statusBounce(ts('We could not move the uploaded file %1 to the upload directory %2. Please verify that the \'Temporary Files\' setting points to a valid path which is writable by your web server.', array(1 => $value['name'], 2 => $this->_uploadDir)));
+        $newNames = CRM_Utils_File::makeFileName($value['name']);
+        foreach($newNames as $idx => $newName) {
+          $status = $element->moveUploadedFile($this->_uploadDir, $newName, $idx);
+          if (!$status) {
+            CRM_Core_Error::statusBounce(ts('We could not move the uploaded file %1 to the upload directory %2. Please verify that the \'Temporary Files\' setting points to a valid path which is writable by your web server.', array(1 => $oldName, 2 => $this->_uploadDir)));
+          }
+          
+          $data['values'][$pageName][$uploadName][$idx] = array(
+            'name' => $this->_uploadDir . $newName,
+            'type' => $value['type'][$idx],
+          );
         }
-        if (!empty($data['values'][$pageName][$uploadName]['name'])) {
-          @unlink($this->_uploadDir . $data['values'][$pageName][$uploadName]);
-        }
-
-        $data['values'][$pageName][$uploadName] = array('name' => $this->_uploadDir . $newName,
-          'type' => $value['type'],
-        );
       }
     }
   }

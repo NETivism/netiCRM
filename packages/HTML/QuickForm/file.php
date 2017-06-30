@@ -203,13 +203,19 @@ class HTML_QuickForm_file extends HTML_QuickForm_input
      * @access   public
      * @return   bool    Whether the file was moved successfully
      */
-    function moveUploadedFile($dest, $fileName = '')
+    function moveUploadedFile($dest, $fileName = '', $idx = NULL)
     {
         if ($dest != ''  && substr($dest, -1) != '/') {
             $dest .= '/';
         }
         $fileName = ($fileName != '') ? $fileName : basename($this->_value['name']);
-        return move_uploaded_file($this->_value['tmp_name'], $dest . $fileName); 
+        if (isset($idx) && is_numeric($idx)) {
+            return move_uploaded_file($this->_value['tmp_name'][$idx], $dest . $fileName); 
+        }
+        else {
+            return move_uploaded_file($this->_value['tmp_name'], $dest . $fileName); 
+        
+        }
     } // end func moveUploadedFile
     
     // }}}
@@ -238,12 +244,25 @@ class HTML_QuickForm_file extends HTML_QuickForm_input
      */
     function _ruleIsUploadedFile($elementValue)
     {
-        if ((isset($elementValue['error']) && $elementValue['error'] == 0) ||
-            (!empty($elementValue['tmp_name']) && $elementValue['tmp_name'] != 'none')) {
-            return is_uploaded_file($elementValue['tmp_name']);
-        } else {
-            return false;
+        if (is_array($elementValue['error'])) {
+            foreach($elementValue['error'] as $idx => $err) {
+                if ($err != 0) {
+                    unset($elementValue['error'][$idx]);
+                    unset($elementValue['tmp_name'][$idx]);
+                }
+            }
+            if (count($elementValue['tmp_name']) > 0) {
+                $tmpName = reset($elementValue['tmp_name']);
+                return is_uploaded_file($tmpName);
+            }
         }
+        else{
+            if ((isset($elementValue['error']) && $elementValue['error'] == 0) ||
+                (!empty($elementValue['tmp_name']) && $elementValue['tmp_name'] != 'none')) {
+                return is_uploaded_file($elementValue['tmp_name']);
+            }
+        }
+        return false;
     } // end func _ruleIsUploadedFile
     
     // }}}
@@ -266,7 +285,15 @@ class HTML_QuickForm_file extends HTML_QuickForm_input
         if (!HTML_QuickForm_file::_ruleIsUploadedFile($elementValue)) {
             return true;
         }
-        return ($maxSize >= @filesize($elementValue['tmp_name']));
+        if (is_array($elementValue['tmp_name'])) {
+          foreach($elementValue['tmp_name'] as $file) {
+            $size += @filesize($file);
+          }
+        }
+        else {
+          $size = @filesize($elementValue['tmp_name']);
+        }
+        return ($maxSize >= $size);
     } // end func _ruleCheckMaxFileSize
 
     // }}}
@@ -328,6 +355,7 @@ class HTML_QuickForm_file extends HTML_QuickForm_input
             return null;
         }
         $elementName = $this->getName();
+        $elementName = preg_replace('/\[\]$/', '', $elementName);
         if (isset($_FILES[$elementName])) {
             return $_FILES[$elementName];
         } elseif (false !== ($pos = strpos($elementName, '['))) {

@@ -1208,5 +1208,21 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
       CRM_Core_Error::fatal($message);
     }
   }
+
+  function addFile($name, $label = '', $attributes = '', $required = FALSE, $javascript = NULL) {
+    $element = &$this->addElement('file', $name, $label, $attributes, $javascript);
+    if (HTML_QuickForm::isError($element)) {
+      CRM_Core_Error::fatal(HTML_QuickForm::errorMessage($element));
+    }
+
+    if ($required) {
+      $error = $this->addRule($name, ts('%1 is a required field.', array(1 => $label)), 'required');
+      if (HTML_QuickForm::isError($error)) {
+        CRM_Core_Error::fatal(HTML_QuickForm::errorMessage($element));
+      }
+    }
+
+    return $element;
+  }
 }
 

@@ -331,20 +331,28 @@ class CRM_Utils_File {
   }
 
   static function makeFileName($name) {
-    $uniqID = md5(uniqid(rand(), TRUE));
-    $info = pathinfo($name);
-    $basename = substr($info['basename'],
-      0, -(strlen(CRM_Utils_Array::value('extension', $info)) + (CRM_Utils_Array::value('extension', $info) == '' ? 0 : 1))
-    );
-    if (!self::isExtensionSafe(CRM_Utils_Array::value('extension', $info))) {
-      // munge extension so it cannot have an embbeded dot in it
-      // The maximum length of a filename for most filesystems is 255 chars.
-      // We'll truncate at 240 to give some room for the extension.
-      return CRM_Utils_String::munge("{$basename}_" . CRM_Utils_Array::value('extension', $info) . "_{$uniqID}", '_', 240) . ".unknown";
+    if (!is_array($name)) {
+      $names = array($name);
     }
     else {
-      return CRM_Utils_String::munge("{$basename}_{$uniqID}", '_', 240) . "." . CRM_Utils_Array::value('extension', $info);
+      $names = $name;
     }
+    $returnNames = array();
+    foreach($names as $idx => $name) {
+      $uniqID = CRM_Utils_String::createRandom(8, CRM_Utils_String::ALPHANUMERIC);
+      $info = pathinfo($name);
+      $basename = substr($info['basename'], 0, -(strlen(CRM_Utils_Array::value('extension', $info)) + (CRM_Utils_Array::value('extension', $info) == '' ? 0 : 1)));
+      if (!self::isExtensionSafe(CRM_Utils_Array::value('extension', $info))) {
+        // munge extension so it cannot have an embbeded dot in it
+        // The maximum length of a filename for most filesystems is 255 chars.
+        // We'll truncate at 240 to give some room for the extension.
+        $returnNames[$idx] = CRM_Utils_String::munge("{$basename}_" . CRM_Utils_Array::value('extension', $info) . "_{$uniqID}", '_', 240) . ".unknown";
+      }
+      else {
+        $returnNames[$idx] = CRM_Utils_String::munge("{$basename}_{$uniqID}", '_', 240) . "." . CRM_Utils_Array::value('extension', $info);
+      }
+    }
+    return $returnNames;
   }
 
   static function getFilesByExtension($path, $ext) {

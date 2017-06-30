@@ -109,7 +109,7 @@ class CRM_Core_BAO_File extends CRM_Core_DAO_File {
 
     if (!rename($data, $directoryName . DIRECTORY_SEPARATOR . $filename)) {
       CRM_Core_Error::fatal(ts('Could not move custom file to custom upload directory'));
-      break;
+      return;
     }
 
     // to get id's
@@ -235,12 +235,14 @@ class CRM_Core_BAO_File extends CRM_Core_DAO_File {
    * combination
    */
   public function &getEntityFile($entityTable, $entityID) {
-    require_once 'CRM/Utils/File.php';
+    static $entityFiles;
     $config = CRM_Core_Config::singleton();
+    if (!empty($entityFiles[$entityTable][$entityID])) {
+      return $entityFiles[$entityTable][$entityID];
+    }
 
     list($sql, $params) = self::sql($entityTable, $entityID, NULL);
     $dao = CRM_Core_DAO::executeQuery($sql, $params);
-    $results = array();
     while ($dao->fetch()) {
       $result['fileID'] = $dao->cfID;
       $result['entityID'] = $dao->cefID;
@@ -249,10 +251,13 @@ class CRM_Core_BAO_File extends CRM_Core_DAO_File {
       $result['cleanName'] = CRM_Utils_File::cleanFileName($dao->uri);
       $result['fullPath'] = $config->customFileUploadDir . DIRECTORY_SEPARATOR . $dao->uri;
       $result['url'] = CRM_Utils_System::url('civicrm/file', "reset=1&id={$dao->cfID}&eid={$entityID}");
-      $result['href'] = "<a href=\"{$result['url']}\">{$result['cleanName']}</a>";
-      $results[$dao->cfID] = $result;
+      $result['href'] = "<a href=\"{$result['url']}\" target=\"_blank\">{$result['cleanName']}</a>";
+      if (strstr($dao->mime_type, 'image')) {
+        $result['img'] = '<a href="'.$result['url'].'" target="_blank"><img src="'.$result['url'].'" width="150"></a>';
+      }
+      $entityFiles[$entityTable][$entityID][$dao->cfID] = $result;
     }
-    return $results;
+    return $entityFiles[$entityTable][$entityID];
   }
 
   public function sql($entityTable, $entityID, $fileID = NULL) {
@@ -284,19 +289,22 @@ AND       CEF.entity_id    = %2";
     if (!$numAttachments) {
       $numAttachments = $config->maxAttachments;
     }
+    if ($entityID) {
+      $currentAttachments = self::getEntityFile($entityTable, $entityID);
+      $numAttachments -= count($currentAttachments);
+    }
+    if ($numAttachments > 0 ) {
+      // set default max file size as 2MB
+      $maxFileSize = $config->maxFileSize ? $config->maxFileSize : 10;
 
-    // set default max file size as 2MB
-    $maxFileSize = $config->maxFileSize ? $config->maxFileSize : 2;
-
-    $form->assign('numAttachments', $numAttachments);
-    // add attachments
-    for ($i = 1; $i <= $numAttachments; $i++) {
-      $form->addElement('file', "attachFile_$i", ts('Attach File'), 'size=30 maxlength=60');
+      $form->assign('numAttachments', $numAttachments);
+      // add attachments
+      $form->addFile("attachFile[]", ts('Attach File'), 'size=30 maxlength=60 multiple');
       $form->setMaxFileSize($maxFileSize * 1024 * 1024);
-      $form->addRule("attachFile_$i",
-        ts('File size should be less than %1 MByte(s)',
-          array(1 => $maxFileSize)
-        ),
+      $form->assign('maxFileSize', $maxFileSize);
+      $form->addRule(
+        "attachFile[]",
+        ts('File size should be less than %1 MByte(s)', array(1 => $maxFileSize)),
         'maxfilesize',
         $maxFileSize * 1024 * 1024
       );
@@ -305,9 +313,7 @@ AND       CEF.entity_id    = %2";
     $attachmentInfo = self::attachmentInfo($entityTable, $entityID);
     if ($attachmentInfo) {
       $form->add('checkbox', 'is_delete_attachment', ts('Delete Current Attachment(s)'));
-      $form->assign('currentAttachmentURL',
-        $attachmentInfo
-      );
+      $form->assign('currentAttachmentURL', $attachmentInfo);
     }
     else {
       $form->assign('currentAttachmentURL', NULL);
@@ -319,15 +325,18 @@ AND       CEF.entity_id    = %2";
       return NULL;
     }
 
-    $currentAttachments = self::getEntityFile($entityTable,
-      $entityID
-    );
+    $currentAttachments = self::getEntityFile($entityTable, $entityID);
     if (!empty($currentAttachments)) {
       $currentAttachmentURL = array();
       foreach ($currentAttachments as $fileID => $attach) {
-        $currentAttachmentURL[] = $attach['href'];
+        if (!empty($attach['img'])) {
+          $currentAttachmentURL[] = $attach['img'];
+        }
+        else {
+          $currentAttachmentURL[] = $attach['href'];
+        }
       }
-      return implode($separator, $currentAttachmentURL);
+      return implode(' ', $currentAttachmentURL);
     }
     return NULL;
   }
@@ -335,36 +344,36 @@ AND       CEF.entity_id    = %2";
   static function formatAttachment(&$formValues,
     &$params,
     $entityTable,
-    $entityID = NULL
+    $entityID = NULL,
+    $maxAttachments
   ) {
 
     // delete current attachments if applicable
-    if ($entityID &&
-      CRM_Utils_Array::value('is_delete_attachment', $formValues)
-    ) {
-      CRM_Core_BAO_File::deleteEntityFile($entityTable,
-        $entityID
-      );
+    if ($entityID && (CRM_Utils_Array::value('is_delete_attachment', $formValues))) {
+      CRM_Core_BAO_File::deleteEntityFile($entityTable, $entityID);
     }
 
     $config = CRM_Core_Config::singleton();
-    $numAttachments = $config->maxAttachments;
+    $numAttachments = $maxAttachments ? $maxAttachments : $config->maxAttachments;
+    if ($entityID) {
+      $currentAttachments = self::getEntityFile($entityTable, $entityID);
+      $numAttachments -= count($currentAttachments);
+    }
 
     // setup all attachments
-    for ($i = 1; $i <= $numAttachments; $i++) {
-      $attachName = "attachFile_$i";
-      if (isset($formValues[$attachName]) &&
-        !empty($formValues[$attachName])
-      ) {
+    $attachName = "attachFile[]";
+    if (isset($formValues[$attachName]) && !empty($formValues[$attachName])) {
+      for ($i = 0; $i < $numAttachments; $i++) {
         // ensure file is not empty
-        $contents = file_get_contents($formValues[$attachName]['name']);
+        $contents = file_get_contents($formValues[$attachName][$i]['name']);
         if ($contents) {
-          $fileParams = array('uri' => $formValues[$attachName]['name'],
-            'type' => $formValues[$attachName]['type'],
+          $fileParams = array(
+            'uri' => $formValues[$attachName][$i]['name'],
+            'type' => $formValues[$attachName][$i]['type'],
             'upload_date' => date('Ymdhis'),
-            'location' => $formValues[$attachName]['name'],
+            'location' => $formValues[$attachName][$i]['name'],
           );
-          $params[$attachName] = $fileParams;
+          $params['attachFile_'.$i] = $fileParams;
         }
       }
     }
@@ -372,12 +381,14 @@ AND       CEF.entity_id    = %2";
 
   static function processAttachment(&$params,
     $entityTable,
-    $entityID
+    $entityID,
+    $maxAttachments
   ) {
     $config = CRM_Core_Config::singleton();
-    $numAttachments = $config->maxAttachments;
+    $numAttachments = $maxAttachments ? $maxAttachments : $config->maxAttachments;
+    
 
-    for ($i = 1; $i <= $numAttachments; $i++) {
+    for ($i = 0; $i < $numAttachments; $i++) {
       if (isset($params["attachFile_$i"]) &&
         is_array($params["attachFile_$i"])
       ) {
@@ -397,13 +408,16 @@ AND       CEF.entity_id    = %2";
 
   static function uploadNames() {
     $config = CRM_Core_Config::singleton();
-    $numAttachments = $config->maxAttachments;
+    $numAttachments = 3;
 
-    $names = array();
-    for ($i = 1; $i <= $numAttachments; $i++) {
+    $names = array(
+      "uploadFile",
+      "attachFile",
+      "attachFile[]",
+    );
+    for ($i = 0; $i < $numAttachments; $i++) {
       $names[] = "attachFile_{$i}";
     }
-    $names[] = 'uploadFile';
     return $names;
   }
 
