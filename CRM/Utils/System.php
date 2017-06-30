@@ -634,32 +634,27 @@ class CRM_Utils_System {
     return $memory;
   }
 
-  static function download($name, $mimeType, &$buffer,
-    $ext = NULL,
-    $output = TRUE
-  ) {
+  static function download($name, $mimeType, &$buffer, $ext = NULL, $output = TRUE) {
     $now = gmdate('D, d M Y H:i:s') . ' GMT';
 
     header('Content-Type: ' . $mimeType);
     header('Expires: ' . $now);
 
     // lem9 & loic1: IE need specific headers
-    $isIE = strstr($_SERVER['HTTP_USER_AGENT'], 'MSIE');
     if ($ext) {
       $fileString = "filename=\"{$name}.{$ext}\"";
     }
     else {
       $fileString = "filename=\"{$name}\"";
     }
-    if ($isIE) {
-      header("Content-Disposition: inline; $fileString");
-      header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-      header('Pragma: public');
+
+    if (strstr($mimeType, 'image')) {
+      header("Content-Disposition: inline");
     }
     else {
       header("Content-Disposition: attachment; $fileString");
-      header('Pragma: no-cache');
     }
+    header('Pragma: no-cache');
 
     if ($output) {
       print $buffer;

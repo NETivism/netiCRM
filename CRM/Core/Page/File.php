@@ -71,11 +71,7 @@ class CRM_Core_Page_File extends CRM_Core_Page {
       }
     }
     else {
-      require_once 'CRM/Utils/File.php';
-      CRM_Utils_System::download(CRM_Utils_File::cleanFileName(basename($path)),
-        $mimeType,
-        $buffer
-      );
+      CRM_Utils_System::download(CRM_Utils_File::cleanFileName(basename($path)), $mimeType, $buffer);
     }
   }
 }
