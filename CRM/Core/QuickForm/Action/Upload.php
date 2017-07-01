@@ -92,18 +92,32 @@ class CRM_Core_QuickForm_Action_Upload extends CRM_Core_QuickForm_Action {
       if ($element->isUploadedFile()) {
         // rename the uploaded file with a unique number at the end
         $value = $element->getValue();
-        $uploadData = $data['values'][$pageName][$uploadName];
-
-        $newNames = CRM_Utils_File::makeFileName($value['name']);
-        foreach($newNames as $idx => $newName) {
-          $status = $element->moveUploadedFile($this->_uploadDir, $newName, $idx);
-          if (!$status) {
-            CRM_Core_Error::statusBounce(ts('We could not move the uploaded file %1 to the upload directory %2. Please verify that the \'Temporary Files\' setting points to a valid path which is writable by your web server.', array(1 => $oldName, 2 => $this->_uploadDir)));
+        
+        if (is_array($value['name'])) {
+          $newName = array();
+          foreach($value['name'] as $idx => $name) {
+            $newName[$idx] = CRM_Utils_File::makeFileName($name);
           }
-          
-          $data['values'][$pageName][$uploadName][$idx] = array(
+        }
+        else {
+          $newName = CRM_Utils_File::makeFileName($value['name']);
+        }
+        $status = $element->moveUploadedFile($this->_uploadDir, $newName);
+        if (!$status) {
+          CRM_Core_Error::statusBounce(ts('We could not move the uploaded file %1 to the upload directory %2. Please verify that the \'Temporary Files\' setting points to a valid path which is writable by your web server.', array(1 => $oldName, 2 => $this->_uploadDir)));
+        }
+        if (is_array($newName)) {
+          foreach($newName as $idx => $name) {
+            $data['values'][$pageName][$uploadName][$idx] = array(
+              'name' => $this->_uploadDir . $name,
+              'type' => $value['type'][$idx],
+            );
+          }
+        }
+        else {
+          $data['values'][$pageName][$uploadName] = array(
             'name' => $this->_uploadDir . $newName,
-            'type' => $value['type'][$idx],
+            'type' => $value['type'],
           );
         }
       }

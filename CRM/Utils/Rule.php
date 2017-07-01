@@ -454,12 +454,27 @@ class CRM_Utils_Rule {
    * @return    bool      true if file has been uploaded, false otherwise
    */
   static function asciiFile($elementValue) {
-    if ((isset($elementValue['error']) && $elementValue['error'] == 0) ||
-      (!empty($elementValue['tmp_name']) && $elementValue['tmp_name'] != 'none')
-    ) {
-      return CRM_Utils_File::isAscii($elementValue['tmp_name']);
+    $valid = TRUE;
+    if (is_array($elementValue['tmp_name'])) {
+      foreach($elementValue['tmp_name'] as $idx => $tmpName){
+        if ((isset($elementValue['error'][$idx]) && $elementValue['error'][$idx] == 0) ||
+          (!empty($elementValue['tmp_name'][$idx]) && $elementValue['tmp_name'][$idx] != 'none')
+        ) {
+          $valid = CRM_Utils_File::isAscii($tmpName);
+        }
+        if (!$valid) {
+          break;
+        }
+      }
     }
-    return FALSE;
+    else {
+      if ((isset($elementValue['error']) && $elementValue['error'] == 0) ||
+        (!empty($elementValue['tmp_name']) && $elementValue['tmp_name'] != 'none')
+      ) {
+        $valid = CRM_Utils_File::isAscii($elementValue['tmp_name']);
+      }
+    }
+    return $valid;
   }
 
   /**
@@ -472,19 +487,39 @@ class CRM_Utils_Rule {
    */
   static function utf8File($elementValue) {
     $success = FALSE;
+    if (is_array($elementValue['tmp_name'])) {
+      foreach($elementValue['tmp_name'] as $idx => $tmpName) {
+        if ((isset($elementValue['error'][$idx]) && $elementValue['error'][$idx] == 0) ||
+          (!empty($elementValue['tmp_name'][$idx]) && $elementValue['tmp_name'][$idx] != 'none')
+        ) {
 
-    if ((isset($elementValue['error']) && $elementValue['error'] == 0) ||
-      (!empty($elementValue['tmp_name']) && $elementValue['tmp_name'] != 'none')
-    ) {
+          $success = CRM_Utils_File::isAscii($tmpName);
 
-      $success = CRM_Utils_File::isAscii($elementValue['tmp_name']);
+          // if it's a file, but not UTF-8, let's try and recode it
+          // and then make sure it's an UTF-8 file in the end
+          if (!$success) {
+            $success = CRM_Utils_File::toUtf8($tmpName);
+            if ($success) {
+              $success = CRM_Utils_File::isAscii($tmpName);
+            }
+          }
+        }
+      }
+    }
+    else {
+      if ((isset($elementValue['error']) && $elementValue['error'] == 0) ||
+        (!empty($elementValue['tmp_name']) && $elementValue['tmp_name'] != 'none')
+      ) {
 
-      // if it's a file, but not UTF-8, let's try and recode it
-      // and then make sure it's an UTF-8 file in the end
-      if (!$success) {
-        $success = CRM_Utils_File::toUtf8($elementValue['tmp_name']);
-        if ($success) {
-          $success = CRM_Utils_File::isAscii($elementValue['tmp_name']);
+        $success = CRM_Utils_File::isAscii($elementValue['tmp_name']);
+
+        // if it's a file, but not UTF-8, let's try and recode it
+        // and then make sure it's an UTF-8 file in the end
+        if (!$success) {
+          $success = CRM_Utils_File::toUtf8($elementValue['tmp_name']);
+          if ($success) {
+            $success = CRM_Utils_File::isAscii($elementValue['tmp_name']);
+          }
         }
       }
     }
@@ -501,10 +536,26 @@ class CRM_Utils_Rule {
    * @return    bool      true if file has been uploaded, false otherwise
    */
   static function htmlFile($elementValue) {
-    if ((isset($elementValue['error']) && $elementValue['error'] == 0) ||
-      (!empty($elementValue['tmp_name']) && $elementValue['tmp_name'] != 'none')
-    ) {
-      return CRM_Utils_File::isHtmlFile($elementValue['tmp_name']);
+    if (is_array($elementValue['tmp_name'])) {
+      $valid = FALSE;
+      foreach($elementValue['tmp_name'] as $idx => $tmpName) {
+        if ((isset($elementValue['error'][$idx]) && $elementValue['error'][$idx] == 0) ||
+          (!empty($elementValue['tmp_name'][$idx]) && $elementValue['tmp_name'][$idx] != 'none')
+        ) {
+          $valid = CRM_Utils_File::isHtmlFile($tmpName);
+          if (!$valid) {
+            break;
+          }
+        }
+      }
+      return $valid;
+    }
+    else {
+      if ((isset($elementValue['error']) && $elementValue['error'] == 0) ||
+        (!empty($elementValue['tmp_name']) && $elementValue['tmp_name'] != 'none')
+      ) {
+        return CRM_Utils_File::isHtmlFile($elementValue['tmp_name']);
+      }
     }
     return FALSE;
   }

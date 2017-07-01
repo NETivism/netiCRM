@@ -203,19 +203,26 @@ class HTML_QuickForm_file extends HTML_QuickForm_input
      * @access   public
      * @return   bool    Whether the file was moved successfully
      */
-    function moveUploadedFile($dest, $fileName = '', $idx = NULL)
+    function moveUploadedFile($dest, $fileName = NULL)
     {
         if ($dest != ''  && substr($dest, -1) != '/') {
             $dest .= '/';
         }
-        $fileName = ($fileName != '') ? $fileName : basename($this->_value['name']);
-        if (isset($idx) && is_numeric($idx)) {
-            return move_uploaded_file($this->_value['tmp_name'][$idx], $dest . $fileName); 
+        if (is_array($this->_value['name'])) {
+            foreach($this->_value['name'] as $idx => $name) {
+                $filename = is_array($fileName) && !empty($fileName[$idx]) ? $fileName[$idx] : basename($name);
+                $moved = move_uploaded_file($this->_value['tmp_name'][$idx], $dest . $filename);
+                if (!$moved) {
+                    break;
+                }
+            }
         }
         else {
-            return move_uploaded_file($this->_value['tmp_name'], $dest . $fileName); 
-        
+            $filename = $fileName ? $fileName : basename($this->_value['name']);
+            $moved = move_uploaded_file($this->_value['tmp_name'], $dest . $filename); 
         }
+
+        return $moved;
     } // end func moveUploadedFile
     
     // }}}
@@ -312,10 +319,26 @@ class HTML_QuickForm_file extends HTML_QuickForm_input
         if (!HTML_QuickForm_file::_ruleIsUploadedFile($elementValue)) {
             return true;
         }
-        if (is_array($mimeType)) {
-            return in_array($elementValue['type'], $mimeType);
+        $valid = TRUE;
+        if (is_array($elementValue['type'])) {
+            foreach($elementValue['type'] as $type)  {
+                if (is_array($mimeType) && !in_array($type, $mimeType)) {
+                   $valid = FALSE;
+                }
+                elseif($type != $mimeType) {
+                   $valid = FALSE;
+                }
+            }
         }
-        return $elementValue['type'] == $mimeType;
+        else {
+            if (is_array($mimeType) && !in_array($elementValue['type'], $mimeType)) {
+               $valid = FALSE;
+            }
+            elseif($elementValue['type'] != $mimeType) {
+               $valid = FALSE;
+            }
+        }
+        return $valid;
     } // end func _ruleCheckMimeType
 
     // }}}
@@ -334,7 +357,20 @@ class HTML_QuickForm_file extends HTML_QuickForm_input
         if (!HTML_QuickForm_file::_ruleIsUploadedFile($elementValue)) {
             return true;
         }
-        return (bool)preg_match($regex, $elementValue['name']);
+        $valid = TRUE;
+        if (is_array($elementValue['name'])) {
+            foreach($elementValue['name'] as $name) {
+                if (!preg_match($regex, $name)) {
+                    $valid = FALSE;
+                }
+            }
+        }
+        else {
+            if (!preg_match($regex, $elementValue['name'])) {
+                $valid = FALSE;
+            }
+        }
+        return $valid;
     } // end func _ruleCheckFileName
     
     // }}}

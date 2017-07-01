@@ -263,21 +263,19 @@ class CRM_Utils_Mail_Incoming {
       for ($i = 0; $i < count($attachments); $i++) {
         $attachNum = $i + 1;
         $fileName = basename($attachments[$i]['fullName']);
-        $newNames = CRM_Utils_File::makeFileName($fileName);
-        foreach($newNames as $newName) {
-          $location = $config->uploadDir . $newName;
+        $newName = CRM_Utils_File::makeFileName($fileName);
+        $location = $config->uploadDir . $newName;
 
-          // move file to the civicrm upload directory
-          rename($attachments[$i]['fullName'], $location);
+        // move file to the civicrm upload directory
+        rename($attachments[$i]['fullName'], $location);
 
-          $mimeType = "{$attachments[$i]['contentType']}/{$attachments[$i]['mimeType']}";
+        $mimeType = "{$attachments[$i]['contentType']}/{$attachments[$i]['mimeType']}";
 
-          $params["attachFile_$attachNum"] = array('uri' => $fileName,
-            'type' => $mimeType,
-            'upload_date' => $date,
-            'location' => $location,
-          );
-        }
+        $params["attachFile_$attachNum"] = array('uri' => $fileName,
+          'type' => $mimeType,
+          'upload_date' => $date,
+          'location' => $location,
+        );
       }
     }
 

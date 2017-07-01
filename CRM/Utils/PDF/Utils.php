@@ -43,7 +43,7 @@ class CRM_Utils_PDF_Utils {
    */
   static function html2pdf($text, $fileName = 'output.pdf', $orientation = 'portrait', $paperSize = 'a4', $download = TRUE) {
     $config = CRM_Core_Config::singleton();
-    $fileName = reset(CRM_Utils_File::makeFileName($fileName));
+    $fileName = CRM_Utils_File::makeFileName($fileName);
     $dest = $config->templateCompileDir .$fileName;
     $paperSize = $paperSize ? $paperSize : 'a4';
 
