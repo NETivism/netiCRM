@@ -1,0 +1,92 @@
+.mdl-container:after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
+/* Card */
+.mdl-card {
+  position: relative;
+  display: inline-block;
+  margin: 0 16px 20px 0;
+  vertical-align: top;
+}
+.mdl-card > a {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+.mdl-card > a:hover {
+  text-decoration: none !important;
+  filter: opacity(90%);
+}
+.mdl-card__title {
+  font-size: 1.5rem;
+  color: #000;
+}
+.mdl-card-theme .mdl-card__title {
+  color: #fff;
+  background-color: #607d8b;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.mdl-card__title > .mdl-card__title-text {
+  margin: 0;
+  padding: 0;
+  font-size: 1.25rem;
+}
+.mdl-card__supporting-text {
+  width: 100%;
+  line-height: 1.6;
+  font-size: 1rem;
+  color: #212121;
+  box-sizing: border-box;
+}
+.mdl-card__supporting-text h4 {
+  font-size: 1.125rem;
+  margin: 0 0 5px 0;
+}
+.mdl-card ul,
+.mdl-card ol {
+  margin: 0 0 15px 0;
+  padding-left: 20px;
+}
+.mdl-card ul:last-child,
+.mdl-card ol:last-child {
+  margin: 0;
+}
+.mdl-card ul > li,
+.mdl-card ol > li {
+  margin-bottom: 6px;
+}
+.mdl-card ul a,
+.mdl-card ol a {
+  color: #3f51b5;
+  text-decoration: none;
+}
+.mdl-card ul a:hover,
+.mdl-card ol a:hover {
+  color: #1A237E;
+}
+.mdl-card li a i {
+  color: #3f51b5;
+}
+.mdl-card li a:hover i {
+  color: #1A237E;
+}
+.mdl-card .mdl-card__actions a {
+  font-size: .9375rem;
+  padding: 0 8px;
+  text-decoration: none;
+  color: #303F9F;
+}
+.mdl-card .mdl-card__actions a:hover {
+  text-decoration: none;
+}
+.mdl-card .mdl-card__actions a i {
+  font-size: 18px;
+  top: -2px;
+}
