@@ -31,7 +31,7 @@
         <table class="form-layout-compressed">
 	    <tr>
 		    <td>{$form.status_id.label}<br />{$form.status_id.html}</td>
-		    <td>{$form.contibution_page_id.label}<br />{$form.contibution_page_id.html}</td>
+		    <td>{$form.contribution_page_id.label}<br />{$form.contribution_page_id.html}</td>
 	    </tr>
         </table>
         <div class="crm-submit-buttons">{$form.buttons.html}</div>

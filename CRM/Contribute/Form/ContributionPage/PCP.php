@@ -68,8 +68,6 @@ class CRM_Contribute_Form_ContributionPage_PCP extends CRM_Contribute_Form_Contr
 
     if (!CRM_Utils_Array::value('id', $defaults)) {
       $defaults['is_approval_needed'] = 1;
-      $defaults['is_tellfriend_enabled'] = 1;
-      $defaults['tellfriend_limit'] = 5;
       $defaults['link_text'] = ts('Create your own fundraising page');
 
       if ($ccReceipt = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage', $this->_id, 'cc_receipt')) {
@@ -106,16 +104,11 @@ class CRM_Contribute_Form_ContributionPage_PCP extends CRM_Contribute_Form_Contr
       $this->assign('profile', $profile);
     }
 
-    $this->add('select', 'supporter_profile_id', ts('Supporter profile'), array('' => ts('- select -')) + $profile);
-
-    $this->addElement('checkbox', 'is_tellfriend_enabled', ts("Allow 'Tell a friend' functionality"), NULL, array('onclick' => "return showHideByValue('is_tellfriend_enabled',true,'tflimit','table-row','radio',false);"));
-
-    $this->add('text',
-      'tellfriend_limit',
-      ts("'Tell a friend' maximum recipients limit"),
-      CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionPage', 'pcp_tellfriend_limit')
-    );
-    $this->addRule('tellfriend_limit', ts('Please enter a valid limit.'), 'integer');
+    $this->add('select', 'supporter_profile_id', ts('Campaign owner profile'), array('' => ts('- select -')) + $profile);
+    if (count($profile)) {
+      $defaultProfile = key($profile);
+      $this->setDefaults(array('supporter_profile_id' => $defaultProfile));
+    }
 
     $this->add('text',
       'link_text',
@@ -123,7 +116,9 @@ class CRM_Contribute_Form_ContributionPage_PCP extends CRM_Contribute_Form_Contr
       CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_PCPBlock', 'pcp_link_text')
     );
 
-    $this->add('text', 'notify_email', ts('Notify Email'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_PCPBlock', 'notify_email'));
+    $notifyAttr = CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_PCPBlock', 'notify_email');
+    $notifyAttr['placeholder'] = 'jane@example.org,paula@example.org';
+    $this->add('text', 'notify_email', ts('Notify Email'), $notifyAttr);
 
     parent::buildQuickForm();
     $this->addFormRule(array('CRM_Contribute_Form_ContributionPage_PCP', 'formRule'), $this);
@@ -142,11 +137,6 @@ class CRM_Contribute_Form_ContributionPage_PCP extends CRM_Contribute_Form_Contr
     $errors = array();
     if (CRM_Utils_Array::value('is_active', $params)) {
 
-      if (CRM_Utils_Array::value('is_tellfriend_enabled', $params) &&
-        (CRM_Utils_Array::value('tellfriend_limit', $params) <= 0)
-      ) {
-        $errors['tellfriend_limit'] = ts('if Tell Friend is enable, Maximum recipients limit should be greater than zero.');
-      }
       if (!CRM_Utils_Array::value('supporter_profile_id', $params)) {
         $errors['supporter_profile_id'] = ts('Supporter profile is a required field.');
       }
@@ -189,7 +179,6 @@ class CRM_Contribute_Form_ContributionPage_PCP extends CRM_Contribute_Form_Contr
     $params['id'] = $dao->id;
     $params['is_active'] = CRM_Utils_Array::value('is_active', $params, FALSE);
     $params['is_approval_needed'] = CRM_Utils_Array::value('is_approval_needed', $params, FALSE);
-    $params['is_tellfriend_enabled'] = CRM_Utils_Array::value('is_tellfriend_enabled', $params, FALSE);
 
     require_once 'CRM/Contribute/BAO/PCP.php';
     $dao = CRM_Contribute_BAO_PCP::add($params);

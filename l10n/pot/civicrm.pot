@@ -45490,3 +45490,9 @@ msgstr ""
 
 msgid "First match address type. If not found, will use the other address type."
 msgstr ""
+
+msgid "Campaign owner profile"
+msgstr ""
+
+msgid "Setup a Personal Campaign Page"
+msgstr ""

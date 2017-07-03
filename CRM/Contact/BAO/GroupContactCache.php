@@ -288,7 +288,7 @@ WHERE  id = %1
 
     if ($sql) {
       if (preg_match('/distinct/i', $sql)) {
-        $sql = preg_replace("/distinct(.+)\sfrom/i", "DISTINCT$1, $groupID as group_id FROM", $sql);
+        $sql = preg_replace("/distinct(.+)\sfrom/i", "$groupID as group_id, $1 FROM", $sql);
       }
       else {
         $sql = preg_replace("/^\s*SELECT/", "SELECT $groupID as group_id, ", $sql);
