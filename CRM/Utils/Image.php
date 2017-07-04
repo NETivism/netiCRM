@@ -7,7 +7,7 @@ class CRM_Utils_Image {
     if (!is_file($source) && !is_uploaded_file($source)) {
       return FALSE;
     }
-    if (is_file($destination)) {
+    if (is_file($destination) && $source !== $destination) {
       if (!$replace) {
         $destination = CRM_Utils_File::existsRename($destination);
       }
@@ -137,7 +137,8 @@ class CRM_Utils_Image {
     }
       
     if ($success) {
-      rename($tempName, $this->destination);
+      @copy($tempName, $this->destination);
+      @unlink($tempName);
       return $success;
     }
     return FALSE;
@@ -173,6 +174,19 @@ class CRM_Utils_Image {
     return FALSE;
   }
 
+  function sharpen($matrix = array()) {
+    if (empty($matrix)) {
+      $matrix = array( 
+        array(0, -2, 0),
+        array(-2, 11, -2),
+        array(0, -2, 0),
+      );
+    }
+    $divisor = array_sum(array_map('array_sum', $matrix));
+    $offset = 0;
+    imageconvolution($this->resource, $matrix, $divisor, $offset);
+  }
+
   function crop($x, $y, $width, $height) {
 		$width = (int) round($width);
 		$height = (int) round($height);
@@ -204,6 +218,7 @@ class CRM_Utils_Image {
   function scale($width, $height, $upscale = FALSE) {
     list($width, $height) = $this->getConvertDimensions($width, $height, $upscale);
     if ($this->resize($width, $height, $upscale)) {
+      $this->sharpen();
       return $this->save();
     }
     else {
@@ -217,6 +232,7 @@ class CRM_Utils_Image {
     $y = ($this->info['height'] * $scale - $height) / 2;
     if ($this->resize($this->info['width'] * $scale, $this->info['height'] * $scale, $upscale)) {
       if ($this->crop($x, $y, $width, $height)) {
+        $this->sharpen();
         return $this->save();
       }
     }
