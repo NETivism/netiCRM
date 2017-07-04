@@ -109,7 +109,7 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
 
     $maxAttachments = 5;
     require_once 'CRM/Core/BAO/File.php';
-    CRM_Core_BAO_File::buildAttachment($this, 'civicrm_pcp', $this->_pageId, $maxAttachments);
+    CRM_Core_BAO_File::buildAttachment($this, 'civicrm_pcp', $this->_pageId, $maxAttachments, array('accept' => 'image/x-png,image/gif,image/jpeg', 'multiple' => 'multiple'));
 
     $this->addElement('checkbox', 'is_thermometer', ts('Progress Bar'));
     $this->addElement('checkbox', 'is_honor_roll', ts('Honor Roll'), NULL);
@@ -147,21 +147,20 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
     if (strlen($fields['donate_link_text']) >= 64) {
       $errors['donate_link_text'] = ts('Button Text must be less than 64 characters.');
     }
-    /*
-    if (isset($files['attachFile_1']) && CRM_Utils_Array::value('tmp_name', $files['attachFile_1'])) {
+    if (isset($files['attachFile']) && is_array($files['attachFile']['tmp_name'])) {
       $maxWidth = 2000;
       $maxHeight = 2000;
-      list($width, $height) = getimagesize($files['attachFile_1']['tmp_name']);
-      if ($width > $maxWidth || $height > $maxHeight) {
-        $tmpFile = tempnam(CRM_Utils_System::cmsDir('temp'), 'pcp_');
-        $image = new CRM_Utils_Image($files['attachFile_1']['tmp_name'], $tmpFile);
-        $resized = $image->scale($maxWidth);
-        if ($resized) {
-          $files['attachFile_1']['tmp_name'] = $tmpFile;
+      foreach($files['attachFile']['tmp_name'] as $tmpName) {
+        list($width, $height) = getimagesize($tmpName);
+        if ($width && $height) {
+          if ($width > $maxWidth || $height > $maxHeight) {
+            $image = new CRM_Utils_Image($tmpName, $tmpName);
+            $resized = $image->scale($maxWidth, $maxHeight);
+          }
         }
       }
     }
-    */
+
     return $errors;
   }
 

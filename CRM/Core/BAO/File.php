@@ -282,7 +282,7 @@ AND       CEF.entity_id    = %2";
     return array($sql, $params);
   }
 
-  static function buildAttachment(&$form, $entityTable, $entityID = NULL, $numAttachments = NULL) {
+  static function buildAttachment(&$form, $entityTable, $entityID = NULL, $numAttachments = NULL, $attr = array()) {
 
     $config = CRM_Core_Config::singleton();
 
@@ -296,10 +296,17 @@ AND       CEF.entity_id    = %2";
     if ($numAttachments > 0 ) {
       // set default max file size as 2MB
       $maxFileSize = $config->maxFileSize ? $config->maxFileSize : 10;
+      $attributes = array(
+        'size' => 30,
+        'maxlength' => 60,
+      );
+      if (is_array($attr) && !empty($attr)) {
+        $attributes = array_merge($attributes, $attr);
+      }
 
       $form->assign('numAttachments', $numAttachments);
       // add attachments
-      $form->addFile("attachFile[]", ts('Attach File'), 'size=30 maxlength=60 multiple');
+      $form->addFile("attachFile[]", ts('Attach File'), $attributes);
       $form->setMaxFileSize($maxFileSize * 1024 * 1024);
       $form->assign('maxFileSize', $maxFileSize);
       $form->addRule(
