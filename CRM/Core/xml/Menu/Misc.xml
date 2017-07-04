@@ -52,7 +52,8 @@
   <item>
      <path>civicrm/file</path>
      <title>Browse Uploaded files</title>
-     <access_arguments>access uploaded files</access_arguments>
+     <access_callback>1</access_callback>
+     <is_public>true</is_public>
      <page_callback>CRM_Core_Page_File</page_callback>
   </item>
   <item>

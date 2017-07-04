@@ -46,7 +46,15 @@ class CRM_Core_Page_File extends CRM_Core_Page {
     $action = CRM_Utils_Request::retrieve('action', 'String', $this);
 
     require_once 'CRM/Core/BAO/File.php';
-    list($path, $mimeType) = CRM_Core_BAO_File::path($id, $eid, NULL, $quest);
+    list($path, $mimeType, $entityTable) = CRM_Core_BAO_File::path($id, $eid, NULL, $quest);
+    $publicFileSection = explode(',', CRM_Core_BAO_File::PUBLIC_ENTITY_TABLE);
+    if (!in_array($entityTable, $publicFileSection)) {
+      if (!CRM_Core_Permission::check('access uploaded files')) {
+        CRM_Utils_System::permissionDenied();
+        return;
+      }
+    }
+
     if (!$path) {
       CRM_Core_Error::statusBounce('Could not retrieve the file');
     }
