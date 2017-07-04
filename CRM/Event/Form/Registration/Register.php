@@ -610,7 +610,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
       //freeze button to avoid multiple calls.
       $js = NULL;
 
-      if (!CRM_Utils_Array::value('is_monetary', $this->_values['event'])) {
+      if (!CRM_Utils_Array::value('is_monetary', $this->_values['event']) && empty($this->_submitValues['additional_participants'])) {
         $js = array('data' => 'submit-once');
       }
 

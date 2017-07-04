@@ -58,17 +58,16 @@
 	    <td class="label">{$form.supporter_profile_id.label} <span class="marker"> *</span></td>
 	    <td>{$form.supporter_profile_id.html} {help id="id-supporter_profile"}</td>
    </tr>
-   <tr class="crm-contribution-contributionpage-pcp-form-block-is_tellfriend_enabled">
-	    <td class="label">{$form.is_tellfriend_enabled.label}</td>
-	    <td>{$form.is_tellfriend_enabled.html} {help id="id-is_tellfriend"}</td>
-   </tr>
-   <tr id="tflimit" class="crm-contribution-contributionpage-pcp-form-block-tellfriend_limit">
-	    <td class="label">{$form.tellfriend_limit.label}</td>
-	    <td>{$form.tellfriend_limit.html|crmReplace:class:four} {help id="id-tellfriend_limit"}</td>
-   </tr>
    <tr class="crm-contribution-contributionpage-pcp-form-block-link_text">
 	    <td class="label">{$form.link_text.label}</td>
-	    <td>{$form.link_text.html|crmReplace:class:huge} {help id="id-link_text"}</td>
+	    <td>
+        {$form.link_text.html|crmReplace:class:huge}
+        <div class="description">
+          {ts}Text for the link inviting constituents to create a Personal Contribution Page. This link will appear on the Contribution Thank-you page as well as on each Personal Campaign Page.{/ts}{ts}Create links to this contribution page by copying and pasting the following URL into any web page.{/ts}<br />
+          {ts}URL{/ts}: <a href="{crmURL a=true p='civicrm/contribute/campaign' q="action=add&reset=1&pageId=`$pageId`"}">{crmURL a=true p='civicrm/contribute/campaign' q="action=add&reset=1&pageId=`$pageId`"}</a><br />
+        
+        </div>
+      </td>
    </tr>
 </table>
 </div>
@@ -79,14 +78,6 @@
     trigger_value       = "true"
     target_element_id   = "pcpFields" 
     target_element_type = "block"
-    field_type          = "radio"
-    invert              = "false"
-}
-{include file="CRM/common/showHideByFieldValue.tpl" 
-    trigger_field_id    = "is_tellfriend_enabled"
-    trigger_value       = "true"
-    target_element_id   = "tflimit" 
-    target_element_type = "table-row"
     field_type          = "radio"
     invert              = "false"
 }

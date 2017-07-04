@@ -580,9 +580,11 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
     $this->add('text', 'label', ts('Field Label'), $attributes['label']);
 
     $js = NULL;
+    /* refs #20424
     if ($this->_hasSearchableORInSelector) {
       $js = array('onclick' => "return verify( );");
     }
+    */
 
     // add buttons
     $this->addButtons(array(

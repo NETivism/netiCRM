@@ -176,18 +176,18 @@ class CRM_Contribute_Page_PCP extends CRM_Core_Page_Basic {
     $pcpSummary = $params = array();
     $whereClause = NULL;
 
-    if (!empty($_POST)) {
-      if ($_POST['status_id'] != 0) {
+    if (!empty($_POST) || (!empty($_GET['status_id']) || !empty($_GET['contribution_page_id']))) {
+      if ($_REQUEST['status_id'] != 0) {
         $whereClause = ' AND cp.status_id = %1';
-        $params['1'] = array($_POST['status_id'], 'Integer');
+        $params['1'] = array($_REQUEST['status_id'], 'Integer');
       }
 
-      if ($_POST['contibution_page_id'] != 0) {
+      if ($_REQUEST['contibution_page_id'] != 0) {
         $whereClause .= ' AND cp.contribution_page_id = %2';
-        $params['2'] = array($_POST['contibution_page_id'], 'Integer');
+        $params['2'] = array($_REQUEST['contibution_page_id'], 'Integer');
       }
 
-      if ($_POST['status_id'] != 0 || $_POST['contibution_page_id'] != 0) {
+      if ($_REQUEST['status_id'] != 0 || $_REQUEST['contibution_page_id'] != 0) {
         $this->set('whereClause', $whereClause);
         $this->set('params', $params);
       }
