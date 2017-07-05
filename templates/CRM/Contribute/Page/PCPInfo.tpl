@@ -48,9 +48,8 @@
 </div>
 {/if}
 
-{if $image}
-<div class="pcp-leading">
-  {$image}
+{if $pcpImageSrc}
+<div class="pcp-leading" style="background-image:url({$pcpImageSrc})">
 </div>
 {/if}
 {if $pcp.is_thermometer}

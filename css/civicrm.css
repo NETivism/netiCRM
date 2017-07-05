@@ -1810,11 +1810,11 @@ table.campaign td,
 }
 
 .crm-container .pcp-leading {
-    max-height: 480px;
+    min-height: 300px;
     overflow:hidden;
-}
-.crm-container .pcp-leading img {
-    display: block;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    background-size: cover;
 }
 .crm-container .thermometer-wrapper {
     display: table;
@@ -1832,11 +1832,11 @@ table.campaign td,
     width: 80%;
 }
 .crm-container .thermometer-fill {
-    background: #AAAAAA;
     bottom:0;
     left:0;
     position:absolute;
     height: 50px;
+    background: #fff73b;
 }
 .crm-container .thermometer-fill:after {
     position: absolute;
@@ -1847,12 +1847,13 @@ table.campaign td,
     right: -25px;
 		border-style: solid;
 		border-width: 25px 0 25px 25px;
-		border-color: transparent transparent transparent #AAAAAA;
+		border-color: transparent transparent transparent #fff73b;
 }
 
 .crm-container .thermometer-pointer {
     position:absolute;
-    top: 55px;
+    top: 15px;
+    color: #777;
 }
 .crm-container .pcp-amount-raised {
     position:absolute;
