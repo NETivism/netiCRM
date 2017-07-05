@@ -1804,51 +1804,83 @@ table.campaign td,
     background : url("../i/contribute/pcp_achieve.gif");
 }
 
-.crm-container .honor_roll {
-    margin           : 1em 20px 0 0;
-    padding          : 10px;
-    width            : 120px;
-    background-color : #fafafa;
-    border           : 1px solid #9d9fca;
-    height:220px;
+.crm-container .honor-roll-wrapper {
+    width:150px;
+    margin: 30px 0;
 }
 
-.crm-container .thermometer-wrapper,
-.crm-container .honor-roll-wrapper {
-    float:left;
-    width:150px;
-    margin-left:1em;
+.crm-container .pcp-leading {
+    max-height: 480px;
+    overflow:hidden;
+}
+.crm-container .pcp-leading img {
+    display: block;
+}
+.crm-container .thermometer-wrapper {
+    display: table;
+    width: 100%;
+    background: #EFEFEF;
+    margin-bottom: 50px;
+}
+.crm-container .thermometer-cell {
+    display: table-cell;
 }
 
 .crm-container .thermometer-fill-wrapper {
-    background:transparent url("../i/contribute/pcp_remain.gif") repeat-y scroll left bottom;
-    height:220px;
+    height: 50px;
     position:relative;
-    margin:1em 0 1.5em 0;
+    width: 80%;
 }
-
 .crm-container .thermometer-fill {
-    background:transparent url(../i/contribute/pcp_achieve.gif) repeat-y scroll 0 bottom;
+    background: #AAAAAA;
     bottom:0;
     left:0;
     position:absolute;
-    width:130px;
+    height: 50px;
+}
+.crm-container .thermometer-fill:after {
+    position: absolute;
+    content:'';
+    display: block;
+		width: 0;
+		height: 0;
+    right: -25px;
+		border-style: solid;
+		border-width: 25px 0 25px 25px;
+		border-color: transparent transparent transparent #AAAAAA;
 }
 
 .crm-container .thermometer-pointer {
-    background:transparent url(images/thermometer-pointer.gif) no-repeat scroll 130px 3px;
-    padding-left:45px; /* width of thermometer + a little actual padding */
     position:absolute;
-    top:-10px; /* vertically center text on percentage raised */
-    line-height: 1em;
+    top: 55px;
+}
+.crm-container .pcp-amount-raised {
+    position:absolute;
+    left: 0px;
+    padding: 10px;
+}
+.crm-container .pcp-amount-goal {
+    position:absolute;
+    right: 0px;
+    padding: 10px;
+}
+.crm-container .thermometer-cell.pcp-donate {
+    border-left: 1px solid #555;
+}
+.crm-container .pcp-donate {
+    text-align: center;
 }
 
-.crm-container .pcp-intro-text {padding-bottom: 1em;}
-
-.crm-container .pcp-image {
-    float:left;
-    margin: 0 1em 1em 0;
+.crm-container .pcp-intro-text {
+  margin: 30px 50px 30px 50px;
+  font-size: 1.75em;
+  text-indent: -16px;
 }
+.crm-container .pcp-intro-text .zmdi{
+  font-size: 30px;
+  color: #999;
+}
+
 
 .crm-container .ui-draggable {
   background: url("../i/draggable.png") no-repeat left 1px;
@@ -1858,24 +1890,6 @@ table.campaign td,
   width:16px;
 }
 
-.crm-container .pcp-widgets {
-    border:1px solid #CCCCCC;
-    float:right;
-    margin:0 0 1em 1em;
-    padding:0.5em;
-}
-
-.crm-container .pcp_honor_roll_entry {
-    margin-bottom:1em;
-}
-
-.crm-container .pcp-honor_roll-nickname {
-    font-weight:bold;
-}
-
-.crm-container .pcp-donate {
-    height:24px;
-}
 .crm-container a.pcp-contribute-button {font-weight:bold;}
 
 .crm-container .pcp-create-your-own {
@@ -1885,6 +1899,12 @@ table.campaign td,
 
 .crm-container .pcp-page-text {
     margin-bottom: 1em;
+    max-width: 768px;
+    margin: 0 auto;
+}
+.crm-container .pcp-parent-link {
+    text-align: center;
+    margin: 10px 0;
 }
 
 .crm-container table.nestedSelector {

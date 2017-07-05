@@ -65,6 +65,15 @@ function smarty_function_help($params, &$smarty) {
     return;
   }
 
+  if (isset($params['helpicon'])) {
+    $helpclass = $params['helpicon'];
+    $helpselector = '.'.str_replace(' ', '.', $helpclass);;
+  }
+  else {
+    $helpclass = 'helpicon';
+    $helpselector = '.helpicon';
+  }
+
   $file = str_replace('.tpl', '.hlp', $file);
   $id = urlencode($params['id']);
   if ($id == 'accesskeys') {
@@ -77,8 +86,8 @@ function smarty_function_help($params, &$smarty) {
     $help = $smarty->fetch($file);
   }
   return <<< EOT
-<script type="text/javascript"> cj( function() { cj(".helpicon").toolTip(); });</script>
-<div class="helpicon">&nbsp;<span id="{$id}_help" style="display:none">$help</span></div>&nbsp;&nbsp;&nbsp;
+<script type="text/javascript"> cj( function() { cj("{$helpselector}").toolTip(); });</script>
+<div class="{$helpclass}">&nbsp;<span id="{$id}_help" style="display:none">$help</span></div>&nbsp;&nbsp;&nbsp;
 EOT;
 }
 

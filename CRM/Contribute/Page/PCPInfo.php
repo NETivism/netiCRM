@@ -171,10 +171,11 @@ class CRM_Contribute_Page_PCPInfo extends CRM_Core_Page {
     $honor = CRM_Contribute_BAO_PCP::honorRoll($this->_id);
 
     if ($file_id = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_EntityFile', $this->_id, 'file_id', 'entity_id')) {
-      $image = '<img src="' . CRM_Utils_System::url('civicrm/file',
-        "reset=1&id=$file_id&eid={$this->_id}"
-      ) . '" />';
-      $this->assign('image', $image);
+      list($src) = CRM_Core_BAO_File::url($file_id, $this->_id, 'civicrm_pcp');
+      if ($src) {
+        $image = '<img src="'.$src.'" />';
+        $this->assign('image', $image);
+      }
     }
 
     $totalAmount = CRM_Contribute_BAO_PCP::thermoMeter($this->_id);
