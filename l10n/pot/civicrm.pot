@@ -45611,3 +45611,7 @@ msgstr ""
 #: CRM/Event/Form/Registration/ParticipantCancel.php
 msgid "Cancelling registration only available for free events. Contact your site administrator if you need assistance."
 msgstr ""
+
+#: templates/CRM/Contribute/Page/PCPInfo.tpl
+msgid "Back to contribution page"
+msgstr ""
