@@ -872,7 +872,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
   }
 
   function addSelect($name, $label, $options, $attributes, $required = NULL, $others = NULL) {
-    $this->addElement('select', $name, $label, $options);
+    $this->addElement('select', $name, $label, $options, $attributes);
 
     if ($required) {
       $this->addRule($name . '_id', ts('Please select %1', array(1 => $label)), 'required');

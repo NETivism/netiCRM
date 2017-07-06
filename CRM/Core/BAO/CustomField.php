@@ -860,7 +860,7 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
         $stateOption = array(
           '' => ts('- select -'),
         );
-        if (count($countryIsoCodes) > 1) {
+        if (count($limitCountry) > 1) {
           foreach($limitCountry as $countryAbbr) {
             $countryId = array_search($countryAbbr, $countryIsoCodes);
             if ($countryId) {
