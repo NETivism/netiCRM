@@ -684,6 +684,7 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
     if (!isset($label)) {
       $label = $field->label;
     }
+    $config = CRM_Core_Config::singleton();
 
     /**
      * at some point in time we might want to split the below into small functions
@@ -854,8 +855,25 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
 
       case 'Select State/Province':
         //Add State
-        $stateOption = array('' => ts('- select -')) + CRM_Core_PseudoConstant::stateProvince();
-        $qf->add('select', $elementName, $label, $stateOption, (($useRequired || ($useRequired && $field->is_required)) && !$search), array("state-province"));
+        $limitCountry = $config->provinceLimit();
+        $countryIsoCodes = CRM_Core_PseudoConstant::countryIsoCode();
+        $stateOption = array(
+          '' => ts('- select -'),
+        );
+        if (count($countryIsoCodes) > 1) {
+          foreach($limitCountry as $countryAbbr) {
+            $countryId = array_search($countryAbbr, $countryIsoCodes);
+            if ($countryId) {
+              $countryName = CRM_Core_PseudoConstant::country($countryId);
+              $stateOption[$countryName] = CRM_Core_PseudoConstant::stateProvinceForCountry($countryId);
+            }
+          }
+        }
+        else {
+          $stateOption = CRM_Core_PseudoConstant::stateProvince();
+        }
+
+        $qf->addSelect($elementName, $label, $stateOption, array("state-province"), (($useRequired || ($useRequired && $field->is_required)) && !$search));
         break;
 
       case 'Multi-Select State/Province':
@@ -1526,7 +1544,7 @@ SELECT id
       // rename this file to go into the secure directory
       if (!rename($fName, $config->customFileUploadDir . $filename)) {
         CRM_Core_Error::statusBounce(ts('Could not move custom file to custom upload directory'));
-        break;
+        return;
       }
 
       if ($customValueId) {
