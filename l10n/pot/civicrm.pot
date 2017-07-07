@@ -45615,3 +45615,7 @@ msgstr ""
 #: templates/CRM/Contribute/Page/PCPInfo.tpl
 msgid "Back to contribution page"
 msgstr ""
+
+#: templates/CRM/UF/Form/Group.tpl
+msgid "This is not a standalone form and will not allowed to be embbed because used in contribution and event."
+msgstr ""

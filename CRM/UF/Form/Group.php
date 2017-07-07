@@ -75,6 +75,7 @@ class CRM_UF_Form_Group extends CRM_Core_Form {
     $this->_context = CRM_Utils_Request::retrieve('context', 'String', $this, FALSE, 'Profile');
 
     $this->assign('gid', $this->_id);
+    $this->assign('onlineProfile', 0); 
     $this->_group = CRM_Core_PseudoConstant::group();
 
     // setting title for html page
@@ -259,6 +260,9 @@ class CRM_UF_Form_Group extends CRM_Core_Form {
         }
       }
       $defaults['uf_group_type'] = isset($ufJoinChecked) ? $ufJoinChecked: "";
+      if (!empty($ufJoinChecked['Profile'])) {
+        $this->assign('onlineProfile', 1);
+      }
       $defaults['uf_group_type_user'] = isset($ufJoinCheckedUser) ? $ufJoinCheckedUser: "";
 
       $showAdvanced = 0;

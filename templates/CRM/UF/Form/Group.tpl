@@ -59,7 +59,10 @@
       </tr>
       <tr class="crm-uf_group-form-block-uf_group_type">
         <td class="label">{$form.uf_group_type.label}</td>
-        <td class="html-adjust">{$form.uf_group_type.html}</td>
+        <td class="html-adjust">
+          {$form.uf_group_type.html}
+          <div class="description online-profile-{$onlineProfile} font-red" style="display:none;">{if !$sonlineProfile}{ts}This is not a standalone form and will not allowed to be embbed because used in contribution and event.{/ts}{/if}</div>
+        </td>
       </tr>
       <tr class="crm-uf-group-form-block-uf_group_type_user">
         <td class="label">{$form.uf_group_type_user.label}</td>
@@ -140,6 +143,7 @@ cj(function($) {
       }
     }
   });
+  
   $("input[id^=uf_group_type]").change(function(){
     var show = true;
     $("input[id^=uf_group_type\\\[Civi]").each(function(){
@@ -150,11 +154,35 @@ cj(function($) {
         $("tr.crm-uf-group-form-block-uf_group_type_user").hide();
         show = false;
       }
+      else {
+        $(this).closest('td').find('.description').show();
+      }
     });
     if (show) {
+      $("tr.crm-uf_group-form-block-uf_group_type .description").hide();
       $("tr.crm-uf-group-form-block-uf_group_type_user").show();
+      $("#uf_group_type\\\[Profile\\\]").attr('checked', true);
+    }
+    else {
+      $("#uf_group_type\\\[Profile\\\]").attr('checked', false);
+      $("tr.crm-uf_group-form-block-uf_group_type .description").show();
     }
   });
+
+  if ($("#uf_group_type\\\[Profile\\\]").attr('type') == 'hidden') {
+    var standalone = true;
+    $("input[id^=uf_group_type\\\[Civi]").each(function(){
+      if ($(this).val()) {
+        standalone = false;
+      }
+    });
+    if (!standalone) {
+      $('.online-profile-1, .online-profile-0').show();
+    }
+    else {
+      $('.online-profile-1, .online-profile-0').hide();
+    }
+  }
 });
 </script>
 {/literal}
