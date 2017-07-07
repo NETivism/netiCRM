@@ -45619,3 +45619,7 @@ msgstr ""
 #: templates/CRM/UF/Form/Group.tpl
 msgid "This is not a standalone form and will not allowed to be embbed because used in contribution and event."
 msgstr ""
+
+#: templates/CRM/UF/Form/Group.hlp
+msgid "When use this option, double opt-in confirm will not process when subscibe newsletter."
+msgstr ""
