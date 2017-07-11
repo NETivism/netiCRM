@@ -1810,7 +1810,7 @@ table.campaign td,
     max-width: 768px;
 }
 
-.crm-container ..pcp-honor-roll-entry {
+.crm-container .pcp-honor-roll-entry {
     display: inline-block;
     min-width: 150px;
     margin: 10px 0;
