@@ -119,7 +119,7 @@ class CRM_Event_Form_Task_Badge extends CRM_Event_Form_Task {
     require_once 'CRM/Contact/BAO/Query.php';
 
     $returnProperties = &CRM_Event_BAO_Query::defaultReturnProperties(CRM_Contact_BAO_Query::MODE_EVENT);
-    $additionalFields = array('first_name', 'last_name', 'middle_name', 'current_employer');
+    $additionalFields = array('sort_name', 'current_employer');
     foreach ($additionalFields as $field) {
       $returnProperties[$field] = 1;
     }
