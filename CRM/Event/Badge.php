@@ -145,13 +145,18 @@ class CRM_Event_Badge {
     }
     $img = $this->getImageFileName($this->event->id, $img);
     if ($img) {
-      $imgsize = getimagesize($img);
-      // mm
-      $f = $this->imgRes / 25.4;
-      $w = $imgsize[0] / $f;
-      $h = $imgsize[1] / $f;
-      $this->lMarginLogo = $w+4;
-      $this->pdf->Image($img, $this->pdf->GetAbsX()+2, $this->pdf->GetY()+2, $w, $h, strtoupper($this->imgExtension), '', '', FALSE, 72, '', FALSE, FALSE, $this->debug, FALSE, FALSE, FALSE);
+      $imgsize = @getimagesize($img);
+      if (!empty($imgsize)) {
+        // mm
+        $f = $this->imgRes / 25.4;
+        $w = $imgsize[0] / $f;
+        $h = $imgsize[1] / $f;
+        $this->lMarginLogo = $w+4;
+        $this->pdf->Image($img, $this->pdf->GetAbsX()+2, $this->pdf->GetY()+2, $w, $h, strtoupper($this->imgExtension), '', '', FALSE, 72, '', FALSE, FALSE, $this->debug, FALSE, FALSE, FALSE);
+      }
+      else {
+        $this->lMarginLogo = 2;
+      }
     }
     $this->pdf->SetXY($x, $y);
   }
