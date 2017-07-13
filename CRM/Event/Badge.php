@@ -96,16 +96,25 @@ class CRM_Event_Badge {
 
   function getImageFileName($eventID, $img = FALSE) {
     global $civicrm_root;
+
+    $config = CRM_Core_Config::singleton();
     $path = "CRM/Event/Badge";
-    if ($img == FALSE) {
+    if ($img === FALSE) {
       return FALSE;
     }
-    if ($img == TRUE) {
+    elseif ($img === TRUE) {
       $img = get_class($this) . "." . $this->imgExtension;
     }
+    elseif (preg_match('/^https?:\/\//i', $img)) {
+      $imgContent = file_get_contents($img);
+      if ($imgContent) {
+        $imgFile = CRM_Utils_System::cmsDir('temp').'/badge_'.basename($img);
+        file_put_contents($imgFile, $imgContent);
+        return $imgFile;
+      }
+      return FALSE;
+    }
 
-    require_once 'CRM/Core/Config.php';
-    $config = CRM_Core_Config::singleton();
     $imgFile = $config->customTemplateDir . "/$path/$eventID/$img";
     if (file_exists($imgFile)) {
       return $imgFile;
@@ -136,12 +145,18 @@ class CRM_Event_Badge {
     }
     $img = $this->getImageFileName($this->event->id, $img);
     if ($img) {
-      $imgsize = getimagesize($img);
-      // mm
-      $f = $this->imgRes / 25.4;
-      $w = $imgsize[0] / $f;
-      $h = $imgsize[1] / $f;
-      $this->pdf->Image($img, $this->pdf->GetAbsX(), $this->pdf->GetY(), $w, $h, strtoupper($this->imgExtension), '', '', FALSE, 72, '', FALSE, FALSE, $this->debug, FALSE, FALSE, FALSE);
+      $imgsize = @getimagesize($img);
+      if (!empty($imgsize)) {
+        // mm
+        $f = $this->imgRes / 25.4;
+        $w = $imgsize[0] / $f;
+        $h = $imgsize[1] / $f;
+        $this->lMarginLogo = $w+4;
+        $this->pdf->Image($img, $this->pdf->GetAbsX()+2, $this->pdf->GetY()+2, $w, $h, strtoupper($this->imgExtension), '', '', FALSE, 72, '', FALSE, FALSE, $this->debug, FALSE, FALSE, FALSE);
+      }
+      else {
+        $this->lMarginLogo = 2;
+      }
     }
     $this->pdf->SetXY($x, $y);
   }
@@ -184,7 +199,7 @@ class CRM_Event_Badge {
     foreach ($participants as $participant) {
       $this->pdf->AddPdfLabel($participant);
     }
-    $this->pdf->Output($this->event->title . '.pdf', 'D');
+    $this->pdf->Output($this->event->title . '.pdf', 'I');
   }
 }
 

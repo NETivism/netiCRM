@@ -214,7 +214,7 @@ class CRM_Event_Form_Registration_AdditionalParticipant extends CRM_Event_Form_R
     $this->addRule("email-{$this->_bltID}", ts('Email is not valid.'), 'email');
     //add buttons
     $js = NULL;
-    if ($this->isLastParticipant(TRUE) && !CRM_Utils_Array::value('is_monetary', $this->_values['event'])) {
+    if ($this->isLastParticipant() && !CRM_Utils_Array::value('is_monetary', $this->_values['event'])) {
       $js = array('data' => 'submit-once');
     }
 
@@ -360,6 +360,7 @@ class CRM_Event_Form_Registration_AdditionalParticipant extends CRM_Event_Form_R
           $buttons = array_merge($buttons, array(array('type' => 'next',
                 'name' => ts('Skip Participant >>|'),
                 'subName' => 'skip',
+                'js' => $js,
               ),
             )
           );
@@ -642,9 +643,11 @@ class CRM_Event_Form_Registration_AdditionalParticipant extends CRM_Event_Form_R
    * @return boolean ture on success.
    * @access public
    */
-  function isLastParticipant($isButtonJs = FALSE) {
-    $participant = $isButtonJs ? $this->_params[0]['additional_participants'] : $this->_params[0]['additional_participants'] + 1;
-    if (count($this->_params) == $participant) {
+  function isLastParticipant() {
+    $formName = $this->_attributes['name'];
+    $participantNo = str_replace('Participant_', '', $formName);
+
+    if ($participantNo == $this->_params[0]['additional_participants']) {
       return TRUE;
     }
     return FALSE;

@@ -41,22 +41,36 @@
 require_once 'CRM/Event/Badge.php';
 require_once 'CRM/Utils/Date.php';
 class CRM_Event_Badge_Simple extends CRM_Event_Badge {
+  function __construct() {
+    parent::__construct();
+    $config = CRM_Core_Config::singleton();
+    // A4
+    $pw = 210;
+    $ph = 297;
+    $h = 60;
+    $w = 90;
+    $this->format = array('name' => 'Sigel 3C', 'paper-size' => 'A4', 'metric' => 'mm', 'lMargin' => ($pw - $w * 2) / 2,
+      'tMargin' => ($ph - $h * 4) / 2, 'NX' => 2, 'NY' => 4, 'SpaceX' => 0, 'SpaceY' => 0,
+      'width' => $w, 'height' => $h, 'font-size' => 12,
+    );
+    $this->tMarginName = 20;
+  }
 
   public function generateLabel($participant) {
-    $date = CRM_Utils_Date::customFormat($participant['event_start_date'], "%e %b");
-    $this->pdf->SetFontSize(8);
-    $y = $this->pdf->GetY();
     $x = $this->pdf->GetAbsX();
-    $this->pdf->Cell($this->pdf->width, $this->pdf->lineHeight, $participant['event_title'], 0, 1, "L");
-    $this->pdf->SetXY($x, $y + 4);
-    $this->pdf->Cell($this->pdf->width, $this->pdf->lineHeight, $date, 0, 2, "R");
-    $this->pdf->SetFontSize(12);
-    $this->pdf->SetXY($x, $this->pdf->GetY() + 5);
-    $this->pdf->Cell($this->pdf->width, $this->pdf->lineHeight, $participant['first_name'] . " " . $participant['last_name'], 0, 2, "C");
+    $y = $this->pdf->GetY();
+    $this->pdf->SetLineStyle(array('width' => 0.1, 'cap' => 'butt', 'join' => 'miter', 'dash' => '0', 'color' => array(200, 200, 200)));
+    $this->pdf->Cell($this->format['width'], $this->format['height'], '', 1);
+
+    $this->pdf->SetFontSize(8);
+    $this->pdf->MultiCell($this->pdf->width - 4, 0, $participant['event_title'], $this->border, "L", 0, 1, $x + 2, $y + 2);
+
+    $this->pdf->SetXY($x, $y + $this->pdf->height - 5);
+
+    $this->pdf->SetFontSize(15);
+    $this->pdf->MultiCell($this->pdf->width, 10, $participant['sort_name'], $this->border, "C", 0, 1, $x, $y + $this->tMarginName);
     $this->pdf->SetFontSize(10);
-    $this->pdf->SetXY($x, $this->pdf->GetY() + 2);
-    $this->pdf->Cell($this->pdf->width, $this->pdf->lineHeight, $participant['current_employer'], 0, 2, "C");
-    //$this->pdf->MultiCell ($this->pdf->width, $this->pdf->lineHeight, $txt,1,"L");
+    $this->pdf->MultiCell($this->pdf->width, 0, $participant['current_employer'], $this->border, "C", 0, 1, $x, $this->pdf->getY());
   }
 }
 

@@ -344,7 +344,12 @@ class CRM_Export_BAO_Export {
         unset($moreReturnProperties['group']);
         $moreReturnProperties['groups'] = $index++;
       }
-      $returnProperties = array_merge($returnProperties, $moreReturnProperties);
+      $returnProperties_keys = array_keys($returnProperties);
+      $moreReturnProperties_keys = array_keys($moreReturnProperties);
+      $diff_moreReturnProperties = array_diff($moreReturnProperties_keys, $returnProperties_keys);
+      foreach ($diff_moreReturnProperties as $field) {
+        $returnProperties[$field] = $index++;
+      }
     }
 
     $query = new CRM_Contact_BAO_Query(0, $returnProperties, NULL, FALSE, FALSE, $queryMode);
