@@ -67,6 +67,9 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
       $allData['contribute_after_mailing'] = CRM_Report_BAO_Summary::getConAfterMailData();
       $allData['time'] = time();
       CRM_Core_BAO_Cache::setItem($allData, 'Report Page Summary', $path.'_reportPageSummary', $components['CiviReport']->componentID);
+      if ($_GET['update']) {
+        CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/report/summary', 'reset=1'));
+      }
     }
 
     $contacts = &$allData['contacts'];
@@ -301,7 +304,7 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
       $template->assign('chartContributeAfterMailing', $chartContributeAfterMailing);
     }
 
-    $template->assign('update_time', date('Y-m-d H:i:s',$time));
+    $template->assign('update_time', date('n/d H:i',$time));
 
     // $template->assign('chartInsSum', $chartInsSum);
     // $template->assign('chartTypeSum', $chartTypeSum);

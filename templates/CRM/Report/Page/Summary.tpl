@@ -26,7 +26,7 @@
 {* Display monthly and yearly contributions using Google charts (Bar and Pie) *} 
 
 <div class="last-update-date" style="float: right;font-size: 15px;">
-  {ts 1=$update_time}Last update at %1{/ts}
+  {ts 1=$update_time}Generated at %1{/ts} (<a href="{crmURL p="civicrm/report/summary" q="reset=1&update=1"}">{ts}Update{/ts}</a>)
 </div>
 
 {if $hasChart}

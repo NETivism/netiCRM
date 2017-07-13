@@ -45440,7 +45440,7 @@ msgid "Weight controls the order in which options are displayed in a group. Ente
 msgstr ""
 
 #: templates/CRM/Report/Page/Summary.tpl
-msgid "Last update at %1"
+msgid "Generated at %1"
 msgstr ""
 
 msgid "Contribution people percentage by gender"
