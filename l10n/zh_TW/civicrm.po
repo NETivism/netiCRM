@@ -11,8 +11,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2017-06-20 06:31+0000\n"
-"Last-Translator: 花玉婷 <klavier1976@netivism.com.tw>\n"
+"PO-Revision-Date: 2017-07-13 06:55+0000\n"
+"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -11423,7 +11423,7 @@ msgstr "進度顯示條"
 
 #: CRM/Contribute/Form/PCP/Campaign.php
 msgid "Honor Roll"
-msgstr "捐款人名冊"
+msgstr "贊助者"
 
 #: CRM/Contribute/Form/PCP/Campaign.php
 msgid "Goal Amount should be a numeric value greater than zero."
@@ -30201,7 +30201,7 @@ msgstr "目標金額"
 
 #: templates/CRM/Contribute/Page/PCPInfo.tpl
 msgid "raised"
-msgstr "籌得"
+msgstr "已募得"
 
 #: templates/CRM/Contribute/Page/PCPInfo.tpl
 msgid "HONOR ROLL"
@@ -45491,8 +45491,8 @@ msgid ""
 msgstr "權重可控制選項的出現次序。您可輸入正整數 - 數值越小，出現依序越高。"
 
 #: templates/CRM/Report/Page/Summary.tpl
-msgid "Last update at %1"
-msgstr "最近更新於 %1"
+msgid "Generated at %1"
+msgstr "於 %1 產生"
 
 msgid "Contribution people percentage by gender"
 msgstr "依性別區分捐款人比例"
@@ -45674,3 +45674,29 @@ msgid ""
 "They join your event, but not become your donor yet. Time to try to invite "
 "them."
 msgstr "快速找出那些參加過活動但尚未捐過款的支持者，邀請他們捐款支持。"
+
+#: CRM/Event/xml/Menu/Event.xml
+msgid "Cancel Event Registration"
+msgstr "取消活動報名"
+
+#: CRM/Event/Form/Registration/ParticipantCancel.php
+msgid ""
+"Cancelling registration only available for free events. Contact your site "
+"administrator if you need assistance."
+msgstr "免費活動才能取消報名，如有任何問題請洽您的活動管理者"
+
+#: templates/CRM/Contribute/Page/PCPInfo.tpl
+msgid "Back to contribution page"
+msgstr "回到組織募款頁面"
+
+#: templates/CRM/UF/Form/Group.tpl
+msgid ""
+"This is not a standalone form and will not allowed to be embbed because used"
+" in contribution and event."
+msgstr ""
+
+#: templates/CRM/UF/Form/Group.hlp
+msgid ""
+"When use this option, double opt-in confirm will not process when subscibe "
+"newsletter."
+msgstr ""
