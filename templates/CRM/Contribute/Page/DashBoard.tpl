@@ -81,7 +81,7 @@
   {capture assign=frequency_unit}{ts}{$frequencyUnit}{/ts}{/capture}
   {foreach from=$summaryRecur key=currency item=summary}
     <ul>
-      <li><strong>{ts 1=$summary.contributions 2=$frequency_unit 3=$summary.contacts 4=$summary.amount|crmMoney}There are %1 contributions in this %2 by %3 contacts. Total amount: %4{/ts}</strong></li>
+      <li>{ts 1=$summaryTime}Generated at %1{/ts} <a href="{crmURL p=civicrm/contribute q=reset=1&update=1}">{ts}Update{/ts}</a> - <strong>{ts 1=$summary.contributions 2=$frequency_unit 3=$summary.contacts 4=$summary.amount|crmMoney}There are %1 contributions in this %2 by %3 contacts. Total amount: %4{/ts}</strong></li>
     </ul>
   {/foreach}
 </div>

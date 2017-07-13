@@ -114,12 +114,16 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
     $path = get_class($this);
     $summary = CRM_Core_BAO_Cache::getItem('Contribution Chart', $path.'_currentRunningSummary', $components['CiviContribute']->componentID);
     $summaryTime = CRM_Core_BAO_Cache::getItem('Contribution Chart', $path.'_currentRunningSummary_time', $components['CiviContribute']->componentID);
-    if(empty($summary) || time() - $summaryTime > 86400) {
+    if(empty($summary) || time() - $summaryTime > 86400 || $_GET['update']) {
       $summary = CRM_Contribute_BAO_ContributionRecur::currentRunningSummary();
       CRM_Core_BAO_Cache::setItem($summary, 'Contribution Chart', $path.'_currentRunningSummary', $components['CiviContribute']->componentID);
+      if ($_GET['update']) {
+        CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/contribute', 'reset=1'));
+      }
     }
     if(!empty($summary)){
       $template->assign('summaryRecur', $summary);
+      $template->assign('summaryTime', date('n/d H:i', $summaryTime));
       $template->assign('frequencyUnit', 'month');
       $chart = CRM_Contribute_BAO_ContributionRecur::chartEstimateMonthly(12);
       $chart['withToolTip'] = true;
