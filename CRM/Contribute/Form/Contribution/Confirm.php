@@ -132,9 +132,11 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
       }
       $this->_params['amount'] = $this->get('amount');
 
-      if ($this->_params['amount']) {
-        require_once 'CRM/Core/OptionGroup.php';
-        $this->_params['amount_level'] = CRM_Core_OptionGroup::optionLabel("civicrm_contribution_page.amount.{$this->_id}",
+      if($this->get('amount_level')){
+        $this->_params['amount_level'] = $this->get('amount_level');
+      }
+      else if ($this->_params['amount']) {
+          $this->_params['amount_level'] = CRM_Core_OptionGroup::optionLabel("civicrm_contribution_page.amount.{$this->_id}",
           $this->_params['amount']
         );
       }
