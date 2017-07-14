@@ -12,7 +12,7 @@
           $(this)[0].onclick = null;
         });
         $obj.css({"color":"#aaa","cursor":"not-allowed"});
-        $obj.attr("disabled", true);
+        $obj.attr("readonly", true);
         $('.disable-submit-message').show();
         $obj.parents("form").on('submit', function(e){
           e.preventDefault();
@@ -39,7 +39,7 @@
         else {
           // Mark it so that the next submit can be ignored
           $form.data('submitted', true);
-          $obj.attr("disabled", true);
+          $obj.attr("readonly", true);
         }
       });
     }
