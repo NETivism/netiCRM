@@ -13,7 +13,7 @@ class CRM_Contribute_Page_Booster extends CRM_Core_Page {
         array(
           'id' => 'half-year-donor',
           'class' => 'mdl-card-theme',
-          'title' => ts('Donor who donate in last 6 month'),
+          'title' => ts('Donor who donate in last %count month', array('count' => 6, 'plural' => 'Donor who donate in last %count months')),
           'description' => ts('You can send some result or impact of your project to them. And don\'t forget to exclude them in donation letter.'),
           'link' => CRM_Utils_System::url('civicrm/search/HalfYearDonor', 'force=1'),
         ),

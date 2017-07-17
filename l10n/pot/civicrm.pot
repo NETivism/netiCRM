@@ -45553,8 +45553,10 @@ msgid "Send some message to these people who have first time donation to you. Th
 msgstr ""
 
 #: CRM/Contribute/Page/Booster.php
-msgid "Donor who donate in last 6 month"
-msgstr ""
+msgid "Donor who donate in last %count month"
+msgid_plural "Donor who donate in last %count months."
+msgstr[0] ""
+msgstr[1] ""
 
 #: CRM/Contribute/Page/Booster.php
 msgid "You can send some result or impact of your project to them. And don't forget to exclude them in donation letter."
@@ -45622,4 +45624,8 @@ msgstr ""
 
 #: templates/CRM/UF/Form/Group.hlp
 msgid "When use this option, double opt-in confirm will not process when subscibe newsletter."
+msgstr ""
+
+#: CRM/Contribute/Page/Booster.php
+msgid "Contribute Booster"
 msgstr ""

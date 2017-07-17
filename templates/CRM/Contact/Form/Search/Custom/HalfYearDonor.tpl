@@ -1,5 +1,13 @@
 <div class="crm-block crm-form-block crm-contact-custom-search-form-block">
-[Description]
+<div class="crm-accordion-wrapper crm-custom_search_form-accordion crm-accordion-open">
+    <div class="crm-accordion-header crm-master-accordion-header">
+      <div class="zmdi crm-accordion-pointer"></div>
+      {ts}Edit Search Criteria{/ts}
+    </div><!-- /.crm-accordion-header -->
+    <div class="crm-accordion-body">
+    {ts 1=$form.month.html}Donor who donate in last %1 month(s){/ts} <span class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</span>
+    </div><!-- /.crm-accordion-body -->
+</div><!-- /.crm-accordion-wrapper -->
 </div><!-- /.crm-form-block -->
 
 {if $rowsEmpty || $rows}

@@ -47,18 +47,12 @@ class CRM_Contact_Form_Search_Custom extends CRM_Contact_Form_Search {
     $csID = CRM_Utils_Request::retrieve('csid', 'Integer', $this);
     $ssID = CRM_Utils_Request::retrieve('ssID', 'Integer', $this);
     $gID = CRM_Utils_Request::retrieve('gid', 'Integer', $this);
-    $force = CRM_Utils_Request::retrieve('force', 'Boolean', $this);
 
     list($this->_customSearchID, $this->_customSearchClass, $formValues) = CRM_Contact_BAO_SearchCustom::details($csID, $ssID, $gID);
 
     if (!$this->_customSearchID) {
       CRM_Core_Error::fatal('Could not get details for custom search.');
     }
-    $titles = CRM_Core_OptionGroup::values('custom_search');
-    if(!empty($titles[$this->_customSearchID])){
-      $this->setTitle($titles[$this->_customSearchID]);
-    }
-
 
     if (!empty($formValues)) {
       $this->_formValues = $formValues;
@@ -72,20 +66,22 @@ class CRM_Contact_Form_Search_Custom extends CRM_Contact_Form_Search {
     $this->set('customSearchClass', $this->_customSearchClass);
 
     parent::preProcess();
-
-    // instantiate the new class
-    $objectName = $this->_customSearchClass;
-    $this->_customClass = new $objectName($this->_formValues);
-
-    if ($force) {
-      $this->postProcess();
-      $this->set('force', 0);
+    $this->_customClass =& $this->selector->_search;
+    if (method_exists($this->_customSearchClass, 'setTitle')) {
+      $this->_customClass->setTitle();
+    }
+    else {
+      $titles = CRM_Core_OptionGroup::values('custom_search');
+      if(!empty($titles[$this->_customSearchID])){
+        $this->setTitle($titles[$this->_customSearchID]);
+      }
     }
   }
 
   function setDefaultValues() {
     $formValues = $this->_formValues;
     unset($formValues['component_mode']);
+    unset($formValues['qfKey']);
     if (empty($formValues) && method_exists($this->_customSearchClass, 'setDefaultValues')) {
       $defaults = $this->_customClass->setDefaultValues();
       return $defaults;

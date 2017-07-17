@@ -112,9 +112,9 @@ class CRM_Contact_Selector_Custom extends CRM_Core_Selector_Base implements CRM_
   /**
    * The object that implements the search interface
    */
-  protected $_search;
+  public $_search;
 
-  protected $_customSearchClass;
+  public $_customSearchClass;
 
   /**
    * Class constructor
@@ -127,7 +127,7 @@ class CRM_Contact_Selector_Custom extends CRM_Core_Selector_Base implements CRM_
    * @access public
    */
   function __construct($customSearchClass,
-    $formValues = NULL,
+    &$formValues = NULL,
     $params = NULL,
     $returnProperties = NULL,
     $action = CRM_Core_Action::NONE,
