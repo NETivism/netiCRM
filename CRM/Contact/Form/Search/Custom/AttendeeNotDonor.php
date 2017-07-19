@@ -131,16 +131,33 @@ $having
   }
 
   function tempHaving(){
-    /*
+    $attended = $this->_formValues['attended'];
     $clauses = array();
+    $clauses[] = 'COUNT(p.id) >= '.$attended;
     return implode(' AND ', $clauses);
-    */
-    return '';
   }
 
   function buildForm(&$form){
-    // Define the search form fields here
-    //$form->assign('elements', array('receive_date', 'status', 'recurring', 'contribution_page_id'));
+    for ($i = 1; $i <= 5; $i++) {
+      $option[$i] = $i;
+    }
+    $form->addSelect('attended', ts('Attended'), $option);
+  }
+
+  function setDefaultValues() {
+    return array(
+      'attended' => 1,
+    );
+  }
+
+  function qill(){
+    $attendeeStatus = CRM_Event_PseudoConstant::participantStatus(NULL, 'is_counted = 1');
+    $attendeeStatus = array_map('ts', $attendeeStatus);
+    return array(
+      1 => array(
+        'participantStatus' => ts('Participant Statuses').': '.implode(', ', $attendeeStatus),
+      ),
+    );
   }
 
   function setBreadcrumb() {
@@ -229,7 +246,7 @@ $having
    * Define the smarty template used to layout the search form and results listings.
    */
   function templateFile(){
-    return 'CRM/Contact/Form/Search/Custom/SingleNotRecurring.tpl';
+    return 'CRM/Contact/Form/Search/Custom/AttendeeNotDonor.tpl';
   }
 
   function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
