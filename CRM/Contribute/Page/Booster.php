@@ -37,7 +37,7 @@ class CRM_Contribute_Page_Booster extends CRM_Core_Page {
         array(
           'id' => 'single-not-recurring',
           'class' => 'mdl-card-theme',
-          'title' => ts('Single donation over three times'),
+          'title' => ts('Single donation over %1 times', array(1 => '3')),
           'description' => ts('These supporter appeal they are interested in your orgnization. You should invite them to join your recurring campaign.'),
           'link' => CRM_Utils_System::url('civicrm/search/SingleNotRecurring', 'force=1'),
         ),

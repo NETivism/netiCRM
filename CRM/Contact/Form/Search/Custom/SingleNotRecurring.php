@@ -127,19 +127,34 @@ $having
   }
 
   function tempHaving(){
+    $count = $this->_formValues['contribution_count'];
     $clauses = array();
-    $clauses[] = "COUNT(c.id) >= 3";
+    $clauses[] = "COUNT(c.id) >= $count";
     return implode(' AND ', $clauses);
     return '';
   }
 
   function buildForm(&$form){
-    // Define the search form fields here
-    //$form->assign('elements', array('receive_date', 'status', 'recurring', 'contribution_page_id'));
+    for ($i = 2; $i <= 10; $i++) {
+      $option[$i] = $i;
+    }
+    $form->addSelect('contribution_count', ts('month'), $option);
+  }
+
+  function setDefaultValues() {
+    return array(
+      'contribution_count' => 3,
+    );
   }
 
   function setBreadcrumb() {
     CRM_Contribute_Page_Booster::setBreadcrumb();
+  }
+
+  function setTitle(){
+    $count = $this->_formValues['contribution_count'];
+    $title = ts('Single donation over %1 times', array(1 => $count));
+    CRM_Utils_System::setTitle($title);
   }
 
   function count(){

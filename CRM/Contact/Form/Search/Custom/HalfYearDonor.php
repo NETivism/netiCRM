@@ -136,7 +136,7 @@ $having
 
   function buildForm(&$form){
     for($i = 1; $i <= 12; $i++) {
-      $option[$i] = ts('%count month', array('count' => $i, 'plural' => '%count months'));
+      $option[$i] = $i;
     } 
     $form->addSelect('month', ts('month'), $option);
   }
