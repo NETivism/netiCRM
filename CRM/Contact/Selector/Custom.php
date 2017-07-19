@@ -367,11 +367,17 @@ class CRM_Contact_Selector_Custom extends CRM_Core_Selector_Base implements CRM_
    * @access public
    */
   public function getQILL() {
+    if (method_exists($this->_search, 'qill')) {
+      return $this->_search->qill();
+    }
     return NULL;
   }
 
   public function getSummary() {
-    return $this->_search->summary();
+    if (method_exists($this->_search, 'summary')) {
+      return $this->_search->summary();
+    }
+    return NULL;
   }
 
   /**
