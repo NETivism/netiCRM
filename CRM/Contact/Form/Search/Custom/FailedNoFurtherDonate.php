@@ -128,29 +128,38 @@ $having
    * WHERE clause is an array built from any required JOINS plus conditional filters based on search criteria field values
    */
   function tempWhere(){
+    $days = $this->_formValues['days'] ? $this->_formValues['days'] : 7;
     $clauses = array();
     $clauses[] = "contact.is_deleted = 0";
-    $clauses[] = "(success.created_date IS NULL OR success.created_date > date_add(failed.created_date, INTERVAL 7 DAY) OR success.created_date <= failed.created_date)";
+    $clauses[] = "(success.created_date IS NULL OR success.created_date > date_add(failed.created_date, INTERVAL $days DAY) OR success.created_date <= failed.created_date)";
 
     return implode(' AND ', $clauses);
   }
 
   function tempHaving(){
-  /*
-    $clauses = array();
-    $clauses[] = "COUNT(c.id) = 1";
-    return implode(' AND ', $clauses);
-    */
     return '';
   }
 
   function buildForm(&$form){
-    // Define the search form fields here
-    //$form->assign('elements', array('receive_date', 'status', 'recurring', 'contribution_page_id'));
+    for($i = 2; $i <= 15; $i++) {
+      $option[$i] = $i;
+    } 
+    $form->addSelect('days', ts('days'), $option);
+  }
+
+  function setDefaultValues() {
+    return array(
+      'days' => 7,
+    );
   }
 
   function setBreadcrumb() {
     CRM_Contribute_Page_Booster::setBreadcrumb();
+  }
+
+  function setTitle() {
+    $days = $this->_formValues['days']; 
+    CRM_Utils_System::setTitle(ts('After payment failed but not retry in %1 days', array(1 => $days)));
   }
 
   function count(){
