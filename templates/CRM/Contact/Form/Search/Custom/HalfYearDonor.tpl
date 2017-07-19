@@ -16,11 +16,6 @@
     {include file="CRM/Contact/Form/Search/Custom/EmptyResults.tpl"}
 {/if}
 
-{if $summary}
-  {foreach from=$summary item=summary_item}
-  <div><label>{$summary_item.label}</label>: {$summary_item.value}</div>
-  {/foreach}
-{/if}
 
 {if $rows}
 	<div class="crm-results-block">

@@ -156,6 +156,7 @@ $having
     $dao = CRM_Core_DAO::executeQuery($sql,
       CRM_Core_DAO::$_nullArray
     );
+    $this->_count = $dao->N;
     return $dao->N;
   }
 
@@ -220,11 +221,19 @@ $having
   
   function setTitle(){
     $month = $this->_formValues['month'];
-    CRM_Utils_System::setTitle(ts('Custom Search'));
+    $title = ts('Donor who donate in last %count month', array('count' => $month, 'plural' => 'Donor who donate in last %count months'));
+    CRM_Utils_System::setTitle($title);
   }
 
-  function summary(){
-    // return $summary;
+  function qill(){
+    // just add qill
+    $month = $this->_formValues['month'];
+    $past = date('Y-m-01', strtotime('-'.$month.' month'));
+    return array(
+      1 => array(
+        'monthrange' => ts('Donor who donate in last %count month', array('count' => $month, 'plural' => 'Donor who donate in last %count months')). ' ( '.$past.' ~ '.ts('Today').')'
+      ),
+    );
   }
 
   function alterRow(&$row) {
