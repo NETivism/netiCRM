@@ -45558,6 +45558,10 @@ msgid_plural "Donor who donate in last %count months"
 msgstr[0] ""
 msgstr[1] ""
 
+#: templates/CRM/Contact/Form/Search/Custom/HalfYearDonor.tpl
+msgid "Donor who donate in last %1 month(s)"
+msgstr ""
+
 #: CRM/Contribute/Page/Booster.php
 msgid "You can send some result or impact of your project to them. And don't forget to exclude them in donation letter."
 msgstr ""
@@ -45571,7 +45575,7 @@ msgid "These supporter have donation last year, but not in this year. Remember t
 msgstr ""
 
 #: CRM/Contribute/Page/Booster.php
-msgid "After payment failed but not retry in a week"
+msgid "After payment failed but not retry in %1 days"
 msgstr ""
 
 #: CRM/Contribute/Page/Booster.php
@@ -45583,7 +45587,7 @@ msgid "Potential Donors"
 msgstr ""
 
 #: CRM/Contribute/Page/Booster.php
-msgid "Single donation over three times"
+msgid "Single donation over %1 times"
 msgstr ""
 
 #: CRM/Contribute/Page/Booster.php
@@ -45628,4 +45632,12 @@ msgstr ""
 
 #: CRM/Contribute/Page/Booster.php
 msgid "Contribution Booster"
+msgstr ""
+
+#: templates/CRM/Contact/Form/Search/Custom/ContribSYBNT.tpl
+msgid "Without Donations"
+msgstr ""
+
+#: templates/CRM/Contact/Form/Search/Custom/ContribSYBNT.tpl
+msgid "Have Donations"
 msgstr ""
