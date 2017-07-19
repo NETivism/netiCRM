@@ -690,9 +690,11 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
     if ($this->_force) {
       // using default value as custom search force rule
       if ($this->_customSearchID) {
-        $defaults = $this->selector->_search->setDefaultValues();
-        if (!empty($defaults)) {
-          $this->_formValues = array_merge($this->_formValues, $defaults);
+        if (method_exists($this->selector->_search, 'setDefaultValues')) {
+          $defaults = $this->selector->_search->setDefaultValues();
+          if (!empty($defaults)) {
+            $this->_formValues = array_merge($this->_formValues, $defaults);
+          }
         }
       }
       $this->postProcess();
