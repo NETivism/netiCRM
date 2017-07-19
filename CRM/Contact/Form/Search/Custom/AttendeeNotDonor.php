@@ -143,6 +143,10 @@ $having
     //$form->assign('elements', array('receive_date', 'status', 'recurring', 'contribution_page_id'));
   }
 
+  function setBreadcrumb() {
+    CRM_Contribute_Page_Booster::setBreadcrumb();
+  }
+
   function count(){
     if(!$this->_filled){
       $this->fillTable();

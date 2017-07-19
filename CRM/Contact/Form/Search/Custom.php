@@ -76,6 +76,10 @@ class CRM_Contact_Form_Search_Custom extends CRM_Contact_Form_Search {
         $this->setTitle($titles[$this->_customSearchID]);
       }
     }
+
+    if (method_exists($this->_customSearchClass, 'setBreadcrumb')) {
+      $this->_customClass->setBreadcrumb();
+    }
   }
 
   function setDefaultValues() {

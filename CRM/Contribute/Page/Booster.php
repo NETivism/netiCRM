@@ -1,6 +1,7 @@
 <?php
 class CRM_Contribute_Page_Booster extends CRM_Core_Page {
   function run() {
+    CRM_utils_System::setTitle(ts('Contribution Booster'));
     $mainCategories = array(
       ts('Connect Exists Donors') => array(
         array(
@@ -58,5 +59,14 @@ class CRM_Contribute_Page_Booster extends CRM_Core_Page {
     );
     $this->assign('main_categories', $mainCategories);
     parent::run();
+  }
+
+  static function setBreadcrumb() {
+    CRM_Utils_System::appendBreadCrumb(array(
+      0 => array(
+        'title' => ts('Contribution Booster'),
+        'url' => CRM_Utils_System::url('civicrm/contribute/booster'),
+      )
+    ));
   }
 }

@@ -301,7 +301,7 @@
   </item>
   <item>
      <path>civicrm/contribute/booster</path>
-     <title>Contribute Booster</title>
+     <title>Contribution Booster</title>
      <page_callback>CRM_Contribute_Page_Booster</page_callback>
      <access_arguments>access CiviContribute</access_arguments>
   </item>

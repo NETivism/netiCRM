@@ -11,7 +11,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2017-07-13 06:55+0000\n"
+"PO-Revision-Date: 2017-07-19 08:28+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -45612,8 +45612,9 @@ msgid ""
 msgstr "找出近期內第一次捐款人，好好傳達你的感謝吧～這會是維持關係啟動更多參與的第一步！"
 
 #: CRM/Contribute/Page/Booster.php
-msgid "Donor who donate in last 6 month"
-msgstr "最近6個月有捐款的支持者"
+msgid "Donor who donate in last %count month"
+msgid_plural "Donor who donate in last %count months."
+msgstr[0] "最近 %count 個月已有捐款的支持者"
 
 #: CRM/Contribute/Page/Booster.php
 msgid ""
@@ -45700,3 +45701,7 @@ msgid ""
 "When use this option, double opt-in confirm will not process when subscibe "
 "newsletter."
 msgstr ""
+
+#: CRM/Contribute/Page/Booster.php
+msgid "Contribution Booster"
+msgstr "捐款加速器"
