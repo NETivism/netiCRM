@@ -31,29 +31,32 @@
       {ts}Edit Search Criteria{/ts}
     </div><!-- /.crm-accordion-header -->
     <div class="crm-accordion-body">
-        <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>
-        <h2>{ts}Without Donations{/ts}</h2>
+        <h3>{ts}Without Donations{/ts}</h3>
         <table class="form-layout-compressed">
             <tr class="crm-contact-custom-search-contribSYBNT-form-block-exclusion_date">
-                <td><label>{ts}Date{/ts}</label></td>
+                <td class="label"><label>{ts}Date{/ts}</label></td>
                 <td>{ts}From{/ts}: {include file="CRM/common/jcalendar.tpl" elementName=exclude_start_date}</td>
                 <td>{ts}To{/ts}:{include file="CRM/common/jcalendar.tpl" elementName=exclude_end_date}</td>
             </tr>
         </table> 
-        <h2>{ts}Have Donations{/ts}</h2>
+        <h3>{ts}Have Donations{/ts}</h3>
         <table class="form-layout-compressed">
             <tr class="crm-contact-custom-search-contribSYBNT-form-block-inclusion_date_one">
-                <td><label>{ts}Date{/ts}</label></td>
+                <td class="label"><label>{ts}Date{/ts}</label></td>
                 <td>{ts}From{/ts}: {include file="CRM/common/jcalendar.tpl" elementName=include_start_date}</td>
                 <td>{ts}To{/ts}: {include file="CRM/common/jcalendar.tpl" elementName=include_end_date}</td>
             </tr>
             <tr class="crm-contact-custom-search-contribSYBNT-form-block-min_amount_1">
-                <td><label>{ts}Total Receive Amount{/ts}</label></td>
+                <td class="label"><label>{ts}Total Receive Amount{/ts}</label></td>
                 <td>{ts}Min{/ts}: {$form.include_min_amount.html}</td>
                 <td>{ts}Max{/ts}: {$form.include_max_amount.html}</td>
             </tr>
+            <tr>
+                <td colspan="3">
+                  <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
+                </td>
+            </tr>
         </table> 
-        <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
     </div><!-- /.crm-accordion-body -->
 </div><!-- /.crm-accordion-wrapper -->
 </div><!-- /.crm-form-block -->

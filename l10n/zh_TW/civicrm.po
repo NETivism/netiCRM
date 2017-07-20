@@ -11,7 +11,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2017-07-13 06:55+0000\n"
+"PO-Revision-Date: 2017-07-19 11:46+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -45612,8 +45612,13 @@ msgid ""
 msgstr "找出近期內第一次捐款人，好好傳達你的感謝吧～這會是維持關係啟動更多參與的第一步！"
 
 #: CRM/Contribute/Page/Booster.php
-msgid "Donor who donate in last 6 month"
-msgstr "最近6個月有捐款的支持者"
+msgid "Donor who donate in last %count month"
+msgid_plural "Donor who donate in last %count months"
+msgstr[0] "最近 %count 個月已有捐款的支持者"
+
+#: templates/CRM/Contact/Form/Search/Custom/HalfYearDonor.tpl
+msgid "Donor who donate in last %1 month(s)"
+msgstr "最近 %1 個月已有捐款的支持者"
 
 #: CRM/Contribute/Page/Booster.php
 msgid ""
@@ -45632,8 +45637,8 @@ msgid ""
 msgstr "去年有捐款，但今年尚未捐，建議寫封信問候關心一下，並提供今年的募款專案給支持者參考。"
 
 #: CRM/Contribute/Page/Booster.php
-msgid "After payment failed but not retry in a week"
-msgstr "捐款失敗之後七天內沒有再次捐款"
+msgid "After payment failed but not retry in %1 days"
+msgstr "捐款失敗後 %1 天內無再次捐款者"
 
 #: CRM/Contribute/Page/Booster.php
 msgid ""
@@ -45646,8 +45651,8 @@ msgid "Potential Donors"
 msgstr "挖掘潛在捐款人"
 
 #: CRM/Contribute/Page/Booster.php
-msgid "Single donation over three times"
-msgstr "單筆捐款滿三次的捐款人"
+msgid "Single donation over %1 times"
+msgstr "單筆捐款滿 %1 次"
 
 #: CRM/Contribute/Page/Booster.php
 msgid ""
@@ -45700,3 +45705,15 @@ msgid ""
 "When use this option, double opt-in confirm will not process when subscibe "
 "newsletter."
 msgstr ""
+
+#: CRM/Contribute/Page/Booster.php
+msgid "Contribution Booster"
+msgstr "捐款加速器"
+
+#: templates/CRM/Contact/Form/Search/Custom/ContribSYBNT.tpl
+msgid "Without Donations"
+msgstr "沒有捐款"
+
+#: templates/CRM/Contact/Form/Search/Custom/ContribSYBNT.tpl
+msgid "Have Donations"
+msgstr "有捐款"

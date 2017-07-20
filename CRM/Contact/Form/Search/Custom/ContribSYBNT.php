@@ -98,6 +98,15 @@ class CRM_Contact_Form_Search_Custom_ContribSYBNT implements CRM_Contact_Form_Se
     return $defaults;
   }
 
+  function setBreadcrumb() {
+    CRM_Contribute_Page_Booster::setBreadcrumb();
+  }
+
+  function setTitle() {
+    $title = ts('Last year but not this year donors');
+    CRM_Utils_System::setTitle($title);
+  }
+
   function count() {
     $sql = $this->all();
 

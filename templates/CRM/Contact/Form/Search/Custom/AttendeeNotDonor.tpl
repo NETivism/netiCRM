@@ -5,7 +5,7 @@
       {ts}Edit Search Criteria{/ts}
     </div><!-- /.crm-accordion-header -->
     <div class="crm-accordion-body">
-        <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
+       {ts}Attended{/ts}: {ts 1=$form.attended.html}greater than or equal to '%1'{/ts} {ts}times{/ts} <span class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</span>
     </div><!-- /.crm-accordion-body -->
 </div><!-- /.crm-accordion-wrapper -->
 </div><!-- /.crm-form-block -->

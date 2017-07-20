@@ -11,13 +11,9 @@ class CRM_Contact_Form_Search_Custom_HalfYearDonor extends CRM_Contact_Form_Sear
   function __construct(&$formValues){
     parent::__construct($formValues);
     $this->_filled = FALSE;
-    if(empty($this->_tableName)){
-      $randomNum = CRM_Utils_String::createRandom(8, CRM_Utils_String::ALPHANUMERIC);
-      $this->_tableName = !empty($formValues['temp_table']) ? $formValues['temp_table'] : "civicrm_temp_custom_{$randomNum}";
-      $this->_cstatus = CRM_Contribute_PseudoConstant::contributionStatus();
-      $this->_config = CRM_Core_Config::singleton();
-      $this->buildColumn();
-    }
+    $this->_tableName = 'civicrm_temp_custom_halfyeardonor';
+    $this->_config = CRM_Core_Config::singleton();
+    $this->buildColumn();
   }
 
   function buildColumn(){
@@ -125,7 +121,8 @@ $having
    * WHERE clause is an array built from any required JOINS plus conditional filters based on search criteria field values
    */
   function tempWhere(){
-    $halfyear = date('Y-m-01 00:00:00', time() - strtotime('-6 month'));
+    $month = $this->_formValues['month'];
+    $halfyear = date('Y-m-01 00:00:00', strtotime('-'.$month.' month'));
     $clauses = array();
     $clauses[] = "contact.is_deleted = 0 AND pp.id IS NULL AND mp.id IS NULL";
     $clauses[] = "c.receive_date > '$halfyear'";
@@ -138,46 +135,20 @@ $having
   }
 
   function buildForm(&$form){
-    CRM_Core_OptionValue::getValues(array('name' => 'custom_search'), $custom_search);
-    $csid = !empty($form->_formValues['customSearchID']) ? $form->_formValues['customSearchID'] : (!empty($_GET['csid']) ? $_GET['csid'] : NULL);
-    if($csid){
-      foreach ($custom_search as $c) {
-        if ($c['value'] == $csid) {
-          $this->setTitle($c['description']);
-          break;
-        }
-      }
-    }
+    for($i = 1; $i <= 12; $i++) {
+      $option[$i] = $i;
+    } 
+    $form->addSelect('month', ts('month'), $option);
+  }
 
-    // Define the search form fields here
-    
-    /*
-    $form->addDateRange('receive_date', ts('First time donation donors').' - '.ts('From'), NULL, FALSE);
-    $statuses = $this->_cstatus;
-    unset($statuses[6]);
-    unset($statuses[4]);
-    ksort($statuses);
-    $statuses = array_flip($statuses);
-    $form->addCheckBox('status', ts('Contribution Status'), $statuses, NULL, NULL, NULL, NULL, '&nbsp;');
-
-    $recurring = array(
-      2 => ts('All'),
-      1 => ts("Recurring Contribution"),
-      0 => ts("Non-recurring Contribution"),
+  function setDefaultValues() {
+    return array(
+      'month' => 6,
     );
-    $form->addRadio('recurring', ts('Recurring Contribution'), $recurring);
-    $form->addSelect('contribution_page_id', ts('Contribution Page'), array('' => ts('- select -')) + CRM_Contribute_PseudoConstant::contributionPage());
-    $form->add('hidden', 'temp_table', $this->_tableName);
-    $defaults = array(
-      'receive_date_from' => date('Y-m-d', time() - 86400*90),
-      'recurring' => 2,
-      'status[1]' => 1,
-    );
-    $form->setDefaults($defaults);
+  }
 
-    $form->assign('elements', array('receive_date', 'status', 'recurring', 'contribution_page_id'));
-    */
-    $form->postProcess();
+  function setBreadcrumb() {
+    CRM_Contribute_Page_Booster::setBreadcrumb();
   }
 
   function count(){
@@ -189,6 +160,7 @@ $having
     $dao = CRM_Core_DAO::executeQuery($sql,
       CRM_Core_DAO::$_nullArray
     );
+    $this->_count = $dao->N;
     return $dao->N;
   }
 
@@ -224,47 +196,6 @@ $having
   }
 
   function where($includeContactIDs = false) {
-  /*
-    $receive_date_from = CRM_Utils_Array::value('receive_date_from', $this->_formValues);
-    $receive_date_to = CRM_Utils_Array::value('receive_date_to', $this->_formValues);
-    if ($receive_date_from) {
-      $clauses[] = "receive_date >= $receive_date_from";
-    }
-    if ($receive_date_to) {
-      $clauses[] = "receive_date <= $receive_date_to";
-    }
-
-    $status = CRM_Utils_Array::value('status', $this->_formValues);
-    if (is_array($status)) {
-      $status = array_keys($status);
-      $clauses[] = "contribution_status_id IN (".implode(',', $status).")";
-    }
-
-    $recurring = CRM_Utils_Array::value('recurring', $this->_formValues);
-    if ($recurring != 2) {
-      if ($recurring) {
-        $clauses[] = "contribution_recur_id > 0";
-      }
-      else {
-        $clauses[] = "NULLIF(contribution_recur_id, 0) IS NULL";
-      }
-    }
-
-    $page_id = CRM_Utils_Array::value('contribution_page_id', $this->_formValues);
-    if ($page_id) {
-      $clauses[] = "contribution_page_id = $page_id";
-    }
-    if (count($clauses)) {
-      $sql = '('.implode(' AND ', $clauses).')';
-    }
-    else {
-      $sql = '(1)';
-    }
-    if ($includeContactIDs) {
-      $this->includeContactIDs($sql, $this->_formValues);
-    }
-    return $sql;
-    */
     return '(1)';
   }
 
@@ -292,17 +223,21 @@ $having
     return $this->_columns;
   }
   
-  function setTitle($title){
-    if ($title) {
-      CRM_Utils_System::setTitle($title);
-    }
-    else {
-      CRM_Utils_System::setTitle(ts('Recurring contributions'));
-    }
+  function setTitle(){
+    $month = $this->_formValues['month'];
+    $title = ts('Donor who donate in last %count month', array('count' => $month, 'plural' => 'Donor who donate in last %count months'));
+    CRM_Utils_System::setTitle($title);
   }
 
-  function summary(){
-    // return $summary;
+  function qill(){
+    // just add qill
+    $month = $this->_formValues['month'];
+    $past = date('Y-m-01', strtotime('-'.$month.' month'));
+    return array(
+      1 => array(
+        'monthrange' => ts('Donor who donate in last %count month', array('count' => $month, 'plural' => 'Donor who donate in last %count months')). ' ( '.$past.' ~ '.ts('Today').')'
+      ),
+    );
   }
 
   function alterRow(&$row) {

@@ -5,7 +5,7 @@
       {ts}Edit Search Criteria{/ts}
     </div><!-- /.crm-accordion-header -->
     <div class="crm-accordion-body">
-        <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
+      {ts 1=$form.contribution_count.html}Single donation over %1 times{/ts} <span class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</span>
     </div><!-- /.crm-accordion-body -->
 </div><!-- /.crm-accordion-wrapper -->
 </div><!-- /.crm-form-block -->
@@ -14,12 +14,6 @@
 <div class="crm-content-block">
 {if $rowsEmpty}
     {include file="CRM/Contact/Form/Search/Custom/EmptyResults.tpl"}
-{/if}
-
-{if $summary}
-  {foreach from=$summary item=summary_item}
-  <div><label>{$summary_item.label}</label>: {$summary_item.value}</div>
-  {/foreach}
 {/if}
 
 {if $rows}

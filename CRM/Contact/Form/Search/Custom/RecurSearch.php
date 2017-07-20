@@ -285,6 +285,10 @@ $having
     return array();
   }
 
+  function setBreadcrumb() {
+    CRM_Contribute_Page_Booster::setBreadcrumb();
+  }
+
   function count(){
     if(!$this->_filled){
       $this->fillTable();
