@@ -157,8 +157,47 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
     $controller->setEmbedded(TRUE);
     $controller->set('id', $this->_id);
     $controller->set('cid', $this->_contactId);
+    $controller->run();
 
-    return $controller->run();
+    $search_values = array(
+      'contact_id' => $this->_contactId,
+      // 'id' => $this->_id,
+    );
+    $this->_queryParams = &CRM_Contact_BAO_Query::convertFormValues($search_values);
+    $selector = new CRM_Member_Selector_MembershipHistory($this->_queryParams,
+      1,
+      NULL,
+      0,
+      0,
+      'search'
+    );
+
+    // Don't use same variable name as origin controller
+    $prefix = 'memberHistory_';
+
+    $pageID = $this->get($prefix.CRM_Utils_Pager::PAGE_ID);
+
+    $sortID = NULL;
+    if ($this->get($prefix.CRM_Utils_Sort::SORT_ID)) {
+      $sortID = CRM_Utils_Sort::sortIDValue($this->get($prefix.CRM_Utils_Sort::SORT_ID),
+        $this->get($prefix.CRM_Utils_Sort::SORT_DIRECTION)
+      );
+    }
+
+    // Use another controller
+    $memberHistoryController = new CRM_Core_Selector_Controller($selector,
+      $pageID,
+      $sortID,
+      CRM_Core_Action::VIEW,
+      $this,
+      CRM_Core_Selector_Controller::TRANSFER,
+      $prefix
+    );
+
+    $memberHistoryController->setEmbedded(TRUE);
+    $memberHistoryController->moveFromSessionToTemplate();
+    $memberHistoryController->run();
+
   }
 
   /**
