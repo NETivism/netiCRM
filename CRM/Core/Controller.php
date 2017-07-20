@@ -209,7 +209,7 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
     // do this at the end so we have initialized the object
     // and created the scope etc
     $this->set('qfKey', $this->_key);
-    $this->set('expired', CRM_REQUEST_TIME + 86400);
+    $this->set('expired', CRM_REQUEST_TIME + CRM_Core_Session::EXPIRED_TIME);
 
     require_once 'CRM/Utils/Request.php';
 
@@ -467,8 +467,9 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
    */
   function reset() {
     $data = &$this->container(TRUE);
-    $data['expired'] = CRM_REQUEST_TIME + 86400;
+    $data['expired'] = CRM_REQUEST_TIME + CRM_Core_Session::EXPIRED_TIME;
     self::$_session->resetScope($this->_scope);
+    self::$_session->purgeExpired();
   }
 
   /**
