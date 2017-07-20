@@ -48,6 +48,9 @@ require_once 'CRM/Utils/File.php';
 require_once 'CRM/Core/Session.php';
 require_once 'CRM/Core/Config/Variables.php';
 require_once 'api/api.php';
+
+define('CRM_REQUEST_TIME', (int) $_SERVER['REQUEST_TIME']);
+
 class CRM_Core_Config extends CRM_Core_Config_Variables {
   ///
   /// BASE SYSTEM PROPERTIES (CIVICRM.SETTINGS.PHP)

@@ -222,7 +222,7 @@ WHERE  inst.report_id = %1";
       }
     }
     $config = CRM_Core_Config::singleton();
-    $fileName = 'report_' . $_SERVER['REQUEST_TIME'] . '.xlsx';
+    $fileName = 'report_' . CRM_REQUEST_TIME . '.xlsx';
     CRM_Core_Report_Excel::writeExcelFile($fileName, $headers, $displayRows, $download = TRUE);
     CRM_Utils_System::civiExit();
   }

@@ -48,6 +48,7 @@ class CRM_Core_Session {
    */
   protected $_key = 'CiviCRM';
   CONST USER_CONTEXT = 'userContext';
+  CONST EXPIRED_TIME = 21600; // second
 
   /**
    * This is just a reference to the real session. Allows us to
@@ -462,6 +463,42 @@ class CRM_Core_Session {
     return $lastElement >= 0 ? $this->_session[$this->_key][self::USER_CONTEXT][$lastElement] : $config->userFrameworkBaseURL;
   }
 
+  function purgeExpired($force = FALSE) {
+    if (empty($this->_session['lastExpired'])) {
+      $this->_session[$this->_key]['lastExpired'] = CRM_REQUEST_TIME;
+      return;
+    }
+
+    // trigger purge every one hour
+    if (CRM_REQUEST_TIME - $this->_session[$this->_key]['lastExpired'] > 3600 || $force) {
+      // CiviCRM/*Controller
+      foreach ($this->_session[$this->_key] as $prefix => $object) {
+        if (is_array($object)) {
+          if(!empty($object['expired']) && $object['expired'] > CRM_REQUEST_TIME) {
+            unset($this->_session[$this->_key][$prefix]);
+          }
+          elseif(empty($object['expired'])) {
+            $this->_session[$this->_key][$prefix]['expired'] = CRM_REQUEST_TIME + EXPIRED_TIME;
+          }
+        }
+      }
+
+      // _CRM__*__container
+      foreach ($this->_session as $prefix => $object) {
+        if (preg_match('/^_CRM.*_container$/', $prefix)) {
+          if(!empty($object['expired']) && $object['expired'] > CRM_REQUEST_TIME) {
+            unset($this->_session[$prefix]);
+          }
+          elseif(empty($object['expired'])) {
+            $this->_session[$prefix]['expired'] = CRM_REQUEST_TIME + EXPIRED_TIME;
+          }
+        }
+      }
+
+      $this->_session[$this->_key]['lastExpired'] = CRM_REQUEST_TIME;
+    }
+  }
+
   /**
    * dumps the session to the log
    */
@@ -560,5 +597,6 @@ class CRM_Core_Session {
 
     self::$_managedNames = NULL;
   }
+
 }
 
