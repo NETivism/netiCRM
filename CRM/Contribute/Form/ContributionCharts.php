@@ -100,12 +100,13 @@ class CRM_Contribute_Form_ContributionCharts extends CRM_Core_Form {
     $chartYears = CRM_Core_BAO_Cache::getItem($group, $path.'_chartYearsList', $components['CiviContribute']->componentID);
     $chartData = CRM_Core_BAO_Cache::getItem($group, $path.'_chartData'.$selectedYear, $components['CiviContribute']->componentID);
     $chartTime = CRM_Core_BAO_Cache::getItem($group, $path.'_chartTime'.$selectedYear, $components['CiviContribute']->componentID);
+    $this->assign('generateDate', date('n/j H:i', $chartTime));
     $abbrMonthNames = array();
     for ($i = 0; $i < 12; $i++) {
       $abbrMonthNames[$i] = strftime('%b', mktime(0, 0, 0, $i+1, 10, 1970));
     }
 
-    if(empty($chartData) || time() - $chartTime > 86400) {
+    if(empty($chartData) || time() - $chartTime > 86400 || $_GET['update']) {
       $chartInfoYearly = CRM_Contribute_BAO_Contribution_Utils::contributionChartYearly();
       $this->_years = $chartInfoYearly['By Year'];
 

@@ -304,7 +304,7 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
       $template->assign('chartContributeAfterMailing', $chartContributeAfterMailing);
     }
 
-    $template->assign('update_time', date('n/d H:i',$time));
+    $template->assign('update_time', date('n/j H:i',$time));
 
     // $template->assign('chartInsSum', $chartInsSum);
     // $template->assign('chartTypeSum', $chartTypeSum);
