@@ -1978,6 +1978,8 @@ LEFT  JOIN  civicrm_price_field_value value ON ( value.id = lineItem.price_field
     $event['event_start_date'] = strtotime($event['event_start_date']);
     if (empty($event['event_end_date'])) {
       $event['event_end_date'] = strtotime('+1 hour',$event['event_start_date']);
+    }else{
+      $event['event_end_date'] = strtotime($event['event_end_date']);
     }
     $gcal['dates'] = gmstrftime('%Y%m%dT%H%M%SZ', $event['event_start_date']).'/'.gmstrftime('%Y%m%dT%H%M%SZ', $event['event_end_date']);
 
