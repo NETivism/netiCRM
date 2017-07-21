@@ -11,8 +11,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2017-07-19 11:46+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
+"PO-Revision-Date: 2017-07-21 06:45+0000\n"
+"Last-Translator: 花玉婷 <klavier1976@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -14400,7 +14400,7 @@ msgstr "此欄位能否被搜尋？"
 
 #: CRM/Custom/Form/Field.php
 msgid "Search by Range?"
-msgstr "以距離來搜尋？"
+msgstr "以可用範圍來搜尋？"
 
 #: CRM/Custom/Form/Field.php
 msgid "Custom field '%1' already exists in Database."
@@ -45717,3 +45717,86 @@ msgstr "沒有捐款"
 #: templates/CRM/Contact/Form/Search/Custom/ContribSYBNT.tpl
 msgid "Have Donations"
 msgstr "有捐款"
+
+#: Custom/AttendeeNotDonor.tpl
+msgid ""
+"They are already familiar with your organization.They have supported you. "
+"They learned something from you if your event is great. They may like you if"
+" they made new friends at your event."
+msgstr "會報名參加活動的參加者，對組織已有一定的認識，甚至已有從參與活動得到經驗與知識的成長，或參與幫助得到了成就感與獲得許多新的朋友等。"
+
+#: Custom/AttendeeNotDonor.tpl
+msgid ""
+"Time to reach them and invite to join your campaign, help your financial "
+"goal and help your good project."
+msgstr "建議組織可提供他們除了參加活動之外，更多參與組織運作的方式，例如成為捐款人，在財務上幫助組織達成更多改變世界的目標。"
+
+#: Custom/ContribSYBNT.tpl
+msgid ""
+"Someone had donated last year but not this year. You can take care of them "
+"to see if they still remember you."
+msgstr "去年有捐款成功紀錄，但今年還沒捐，建議可寫封信問候關心一下，也可提醒再次捐款～"
+
+#: Custom/FailedNoFurtherDonate.tpl
+msgid ""
+"Someone have tried once and failed. No further trying. Maybe they need "
+"stronger motivation. Maybe the interrupted by something and forgot to "
+"complete the donation."
+msgstr "捐款失敗後無再次捐款，可能是捐款動機不夠強，或是因當下有其他要事被打斷而忘記再次嘗試捐款。"
+
+#: Custom/FailedNoFurtherDonate.tpl
+msgid ""
+"You can add this contacts(include recurring and non-recurring donors) into a"
+" group and send a further message to them. Thanks for them and invite them "
+"to try again."
+msgstr "建議您可將此搜尋結果（包括單筆與定期定額）加入到群組例如「yyyy-mm 捐款失敗7天內無再次捐款」，組織可寄送再次募款信，內容可先感謝對方嘗試捐款的熱情支持，並附上最近募款專案需求，邀請對方再次捐款。"
+
+#: Custom/FirstTimeDonor.tpl
+msgid ""
+"You should take care of each new donor. They may grow up with your "
+"organization if you are doing right and provide good information to them."
+msgstr "每一個全新的捐款者，不管從哪裡來的，都是一顆顆正在萌芽的種子，若是能好好追蹤並且提供合適的資訊，他們可以與組織一起成長，持續支持組織的服務。若捐後不理，則萌芽中的種子就可能乾枯死掉了。"
+
+#: Custom/HalfYearDonor.tpl
+msgid "Someone doesn't need your contribution campaign newsletter."
+msgstr "寄送募款信的同時，要考慮到有些支持者並不合適收到你的募款信喔！"
+
+#: Custom/HalfYearDonor.tpl
+msgid ""
+"This search result included recurring and non-recurring donors. You can add "
+"these supporters to a group and send a semi-annual report to them. Or you "
+"can exclude them from ongoing contribution campaign newsletter to prevent "
+"they receive duplicated contribution message."
+msgstr "下方搜尋結果有近6個月已有捐款記錄的支持者（包括單筆與定期定額），組織在寄送募款信的同時，可在電子報寄件者時排除此群組，也可以另外寄送感謝信或其他（例如近半年的工作成果報告），作為啟動下一次捐款的起點。"
+
+#: Custom/RecurSearch.tpl
+msgid ""
+"You should trying to invite them again when donors at the end of recurring "
+"contribution."
+msgstr "定捐快要到期的捐款人，是要開始進行挽留了。"
+
+#: Custom/RecurSearch.tpl
+msgid ""
+"When you reach them, don't forget to present how much thanks you have "
+"received their donation. If you can send some project report to them, they "
+"may want to join you again after reading your needs."
+msgstr "但我們建議，邀請對方再次進行定期定額的同時，也要能傳達鄭重的謝忱，感謝他們與組織並肩作戰的不離不棄，讓組織在推動各項任務時的無後顧之憂，也最好在感謝信中附上近期的工作成果報告與紀錄等，或是近期即將啟動的專案，邀請定捐者再次加入支持。"
+
+#: Custom/SingleNotRecurring.tpl
+msgid ""
+"Best list for increase your recurring contribution pool. If someone already "
+"donated multiple times but not your recurring contribution donors, this is a"
+" good chance let them become your long-term donors."
+msgstr "最適合寄送定期定額捐款勸募的名單，底加啦！已經單筆捐款滿3次，應是累積了相當程度對貴會的支持與認同，建議您可寄送感謝信，並同時邀請對方定期定額長期支持。定期定額支持者是非營利組織營運的基石，但定期捐助承諾本身是很珍貴且得來不易，與其對沒有互動過的群眾進行勸募，更建議從已與組織有過互動的支持者開始，單筆捐款滿三次，真的很有愛，請給他一個機會定期支持吧！"
+
+#: Custom/SingleNotRecurring.tpl
+msgid ""
+"You can filter specific range of date of these people. Invite them to become"
+" your recurring donor."
+msgstr "本功能提供您篩選特定日期區間，單筆捐款滿三次以上的支持者，組織可針對這些捐款人寄送特別的勸募信（內容要不同於沒有特定對象的勸募信），讓組織的募款更細緻分眾，增強募款成效。"
+
+#: Custom/SingleNotRecurring.tpl
+msgid ""
+"This search result will exclude exists online recurring donors (can not "
+"exclude offline donors)."
+msgstr "本搜尋功能搜尋結果會排除已經是線上定期捐款人，但無法排除離線定期捐款人。"
