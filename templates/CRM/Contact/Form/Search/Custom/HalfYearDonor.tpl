@@ -1,4 +1,8 @@
 <div class="crm-block crm-form-block crm-contact-custom-search-form-block">
+<div class="crm-custom-search-description">
+  <p>{ts}Someone doesn't need your contribution campaign newsletter.{/ts}</p>
+  <p>{ts}This search result included recurring and non-recurring donors. You can add these supporters to a group and send a semi-annual report to them. Or you can exclude them from ongoing contribution campaign newsletter to prevent they receive duplicated contribution message.{/ts}</p>
+</div>
 <div class="crm-accordion-wrapper crm-custom_search_form-accordion crm-accordion-open">
     <div class="crm-accordion-header crm-master-accordion-header">
       <div class="zmdi crm-accordion-pointer"></div>

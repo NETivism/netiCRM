@@ -45641,3 +45641,56 @@ msgstr ""
 #: templates/CRM/Contact/Form/Search/Custom/ContribSYBNT.tpl
 msgid "Have Donations"
 msgstr ""
+
+#: Custom/AttendeeNotDonor.tpl
+msgid "They are already familiar with your organization.They have supported you. They learned something from you if your event is great. They may like you if they made new friends at your event."
+msgstr ""
+
+#: Custom/AttendeeNotDonor.tpl
+msgid "Time to reach them and invite to join your campaign, help your financial goal and help your good project."
+msgstr ""
+
+#: Custom/ContribSYBNT.tpl
+msgid "Someone had donated last year but not this year. You can take care of them to see if they still remember you."
+msgstr ""
+
+#: Custom/FailedNoFurtherDonate.tpl
+msgid "Someone have tried once and failed. No further trying. Maybe they need stronger motivation. Maybe the interrupted by something and forgot to complete the donation."
+msgstr ""
+
+#: Custom/FailedNoFurtherDonate.tpl
+msgid "You can add this contacts(include recurring and non-recurring donors) into a group and send a further message to them. Thanks for them and invite them to try again."
+msgstr ""
+
+#: Custom/FirstTimeDonor.tpl
+msgid "You should take care of each new donor. They may grow up with your organization if you are doing right and provide good information to them."
+msgstr ""
+
+#: Custom/HalfYearDonor.tpl
+msgid "Someone doesn't need your contribution campaign newsletter."
+msgstr ""
+
+#: Custom/HalfYearDonor.tpl
+msgid "This search result included recurring and non-recurring donors. You can add these supporters to a group and send a semi-annual report to them. Or you can exclude them from ongoing contribution campaign newsletter to prevent they receive duplicated contribution message."
+msgstr ""
+
+#: Custom/RecurSearch.tpl
+msgid "You should trying to invite them again when donors at the end of recurring contribution."
+msgstr ""
+
+#: Custom/RecurSearch.tpl
+msgid "When you reach them, don't forget to present how much thanks you have received their donation. If you can send some project report to them, they may want to join you again after reading your needs."
+msgstr ""
+
+#: Custom/SingleNotRecurring.tpl
+msgid "Best list for increase your recurring contribution pool. If someone already donated multiple times but not your recurring contribution donors, this is a good chance let them become your long-term donors."
+msgstr ""
+
+#: Custom/SingleNotRecurring.tpl
+msgid "You can filter specific range of date of these people. Invite them to become your recurring donor."
+msgstr ""
+
+#: Custom/SingleNotRecurring.tpl
+msgid "This search result will exclude exists online recurring donors (can not exclude offline donors)."
+msgstr ""
+

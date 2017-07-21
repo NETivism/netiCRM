@@ -5218,6 +5218,23 @@ tbody.scrollContent tr.alternateRow {
   margin-top: 0;
 }
 
+.crm-container .crm-custom-search-description {
+  padding: 12px 12px 12px 55px;
+  color: #4b6572;
+  position: relative;
+}
+
+.crm-container .crm-custom-search-description:before {
+	content: "\f1a7";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: 0;
+	margin: 3px 0 0 15px;
+	font-family: 'Material-Design-Iconic-Font';
+	font-size: 30px;
+}
+
 .crm-container .freeze-unchecked, .container .freeze-checked {
   cursor: not-allowed;
 }

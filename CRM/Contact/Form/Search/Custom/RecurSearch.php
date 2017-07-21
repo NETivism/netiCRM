@@ -46,6 +46,7 @@ class CRM_Contact_Form_Search_Custom_RecurSearch  extends CRM_Contact_Form_Searc
   function __construct(&$formValues){
     parent::__construct($formValues);
     $this->_filled = FALSE;
+    $this->_mode = CRM_Utils_Request::retrieve('mode', 'String', $form);
     if(empty($this->_tableName)){
       $this->_tableName = "civicrm_temp_custom_recursearch";
       $this->_cstatus = CRM_Contribute_PseudoConstant::contributionStatus();
@@ -236,11 +237,15 @@ $having
     return '';
   }
 
+  function prepareForm(&$form) {
+    $this->_mode = CRM_Utils_Request::retrieve('mode', 'String', $form);
+  }
+
   function buildForm(&$form){
     // Define the search form fields here
-    $this->_mode = CRM_Utils_Request::retrieve('mode', 'String', $form);
     if (!empty($this->_mode)) {
       $form->set($this->_mode);
+      $form->assign('mode', $this->_mode);
     }
     
     if ($this->_mode != 'booster') {
@@ -283,6 +288,15 @@ $having
       );
     }
     return array();
+  }
+
+  function setTitle() {
+    if ($this->_mode == 'booster') {
+      CRM_utils_System::setTitle(ts('End of recurring contribution'));
+    }
+    else {
+      CRM_utils_System::setTitle(ts('Custom Search').' - '.ts('Recurring Contribution'));
+    }
   }
 
   function setBreadcrumb() {

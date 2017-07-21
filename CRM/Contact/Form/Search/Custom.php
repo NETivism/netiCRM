@@ -67,6 +67,9 @@ class CRM_Contact_Form_Search_Custom extends CRM_Contact_Form_Search {
 
     parent::preProcess();
     $this->_customClass =& $this->selector->_search;
+    if (method_exists($this->_customSearchClass, 'prepareForm')) {
+      $this->_customClass->prepareForm($this);
+    }
     if (method_exists($this->_customSearchClass, 'setTitle')) {
       $this->_customClass->setTitle();
     }

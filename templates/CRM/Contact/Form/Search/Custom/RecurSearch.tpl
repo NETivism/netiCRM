@@ -1,6 +1,12 @@
 {* handle enable/disable actions*}
 {include file="CRM/common/enableDisable.tpl"}
 <div class="crm-block crm-form-block crm-contact-custom-search-form-block">
+{if $mode == 'booster'}
+<div class="crm-custom-search-description">
+  <p>{ts}You should trying to invite them again when donors at the end of recurring contribution.{/ts}</p>
+  <p>{ts}When you reach them, don't forget to present how much thanks you have received their donation. If you can send some project report to them, they may want to join you again after reading your needs.{/ts}</p>
+</div>
+{/if}
 <div class="crm-accordion-wrapper crm-custom_search_form-accordion crm-accordion-open">
     <div class="crm-accordion-header crm-master-accordion-header">
       <div class="zmdi crm-accordion-pointer"></div>

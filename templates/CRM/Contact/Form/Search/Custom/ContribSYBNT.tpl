@@ -25,6 +25,9 @@
 *}
 
 <div id="searchForm" class="crm-block crm-form-block crm-contact-custom-search-contribSYBNT-form-block">
+<div class="crm-custom-search-description">
+  <p>{ts}Someone had donated last year but not this year. You can take care of them to see if they still remember you.{/ts}</p>
+</div>
 <div class="crm-accordion-wrapper crm-custom_search_form-accordion crm-accordion-open">
     <div class="crm-accordion-header crm-master-accordion-header">
       <div class="zmdi crm-accordion-pointer"></div>
@@ -73,14 +76,18 @@
     {* Search request has returned 1 or more matching rows. Display results and collapse the search criteria fieldset. *}
     {assign var="showBlock" value="'searchForm_show'"}
     {assign var="hideBlock" value="'searchForm'"}    
-    <fieldset>    
-        {* This section handles form elements for action task select and submit *}
-        {include file="CRM/Contact/Form/Search/ResultTasks.tpl"}
-
-        {* This section displays the rows along and includes the paging controls *}
+	<div class="crm-results-block">
+    <div class="crm-search-tasks">        
+      {include file="CRM/Contact/Form/Search/ResultTasks.tpl"}
+		</div>
         <p>
 
         {include file="CRM/common/pager.tpl" location="top"}
+
+        {* Include alpha pager if defined. *}
+        {if $atoZ}
+            {include file="CRM/common/pagerAToZ.tpl"}
+        {/if}
 
         {strip}
         <table class="selector" summary="{ts}Search results listings.{/ts}">
@@ -124,8 +131,8 @@
         </script>
 
         {include file="CRM/common/pager.tpl" location="bottom"}
-        </p>
     </fieldset>
+    </div>
     {* END Actions/Results section *}
 {/if}
 {literal}
