@@ -1,4 +1,7 @@
 <div class="crm-block crm-form-block crm-contact-custom-search-form-block">
+<div class="crm-custom-search-description">
+  {ts}You should take care of each new donor. They may grow up with your organization if you are doing right and provide good information to them.{/ts}
+</div>
 <div class="crm-accordion-wrapper crm-custom_search_form-accordion crm-accordion-open">
     <div class="crm-accordion-header crm-master-accordion-header">
       <div class="zmdi crm-accordion-pointer"></div>

@@ -1,4 +1,9 @@
 <div class="crm-block crm-form-block crm-contact-custom-search-form-block">
+<div class="crm-custom-search-description">
+  <p>{ts}Someone have tried once and failed. No further trying. Maybe they need stronger motivation. Maybe the interrupted by something and forgot to complete the donation.{/ts}</p>
+  <p>{ts}You can add this contacts(include recurring and non-recurring donors) into a group and send a further message to them. Thanks for them and invite them to try again.{/ts}</p>
+</div>
+
 <div class="crm-accordion-wrapper crm-custom_search_form-accordion crm-accordion-open">
     <div class="crm-accordion-header crm-master-accordion-header">
       <div class="zmdi crm-accordion-pointer"></div>

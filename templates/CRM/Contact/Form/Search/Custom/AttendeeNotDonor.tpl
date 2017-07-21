@@ -1,4 +1,8 @@
 <div class="crm-block crm-form-block crm-contact-custom-search-form-block">
+<div class="crm-custom-search-description">
+  <p>{ts}They are already familiar with your organization.They have supported you. They learned something from you if your event is great. They may like you if they made new friends at your event.{/ts}</p>
+  <p>{ts}Time to reach them and invite to join your campaign, help your financial goal and help your good project.{/ts}</p>
+</div>
 <div class="crm-accordion-wrapper crm-custom_search_form-accordion crm-accordion-open">
     <div class="crm-accordion-header crm-master-accordion-header">
       <div class="zmdi crm-accordion-pointer"></div>
