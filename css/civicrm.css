@@ -5044,50 +5044,42 @@ tbody.scrollContent tr.alternateRow {
 /* path: civicrm/contribute/booster */
 .crm-contribute-booster .mdl-card {
   width: 340px;
-  min-height: 320px;
+  min-height: 360px;
 }
-.crm-contribute-booster .mdl-card .mdl-card__title {
-  height: 180px;
+.crm-contribute-booster .mdl-card-theme .mdl-card__title {
+  display: none;
 }
-.crm-contribute-booster #first-time-donor .mdl-card__title {
-  background-image: url(images/card_bg_irrigation_idea.jpg);
+.crm-contribute-booster .mdl-card-theme .mdl-card__supporting-text {
+  padding-top: 260px;
 }
-.crm-contribute-booster #half-year-donor .mdl-card__title {
-  background-image: url(images/card_bg_rocket.jpg);
-  background-position: 100% 0;
-  background-size: 220px 220px;
-  background-color: #51abb4;
+.crm-contribute-booster #first-time-donor {
+  background-image: url(images/card/card-contribute-first-time-donor@2x.png);
 }
-.crm-contribute-booster #contrib-sybnt .mdl-card__title {
-  color: #000;
-  background-image: url(images/card_bg_bird_mail.jpg);
-  background-size: 240px 240px;
-  background-position: 78px -15px;
-  background-color: #dde6ed;
+.crm-contribute-booster #half-year-donor {
+  background-image: url(images/card/card-contribute-half-year-donor@2x.png);
 }
-.crm-contribute-booster #failed-no-further-donate .mdl-card__title {
-  background-image: url(images/card_bg_magnet_like.jpg);
-  background-position: 50% -187px;
-  background-color: #0AB9E8;
+.crm-contribute-booster #contrib-sybnt {
+  background-image: url(images/card/card-contribute-contrib-sybnt@2x.png);
 }
-.crm-contribute-booster #single-not-recurring .mdl-card__title {
-  background-image: url(images/card_bg_magnet_like.jpg);
-  background-position: 50% 0;
+.crm-contribute-booster #failed-no-further-donate {
+  background-image: url(images/card/card-contribute-failed-no-further-donate@2x.png);
 }
-.crm-contribute-booster #recur-search .mdl-card__title {
-  background-image: url(images/card_bg_birds.jpg);
-  background-position: center -105px;
-  background-color: #1e9494;
+.crm-contribute-booster #single-not-recurring {
+  background-image: url(images/card/card-contribute-single-not-recurring@2x.png);
 }
-.crm-contribute-booster #attendee-not-donor .mdl-card__title {
-  color: #000;
-  background-image: url(images/card_bg_irrigation_idea.jpg);
-  background-position: 50% 100%;
+.crm-contribute-booster #recur-search {
+  background-image: url(images/card/card-contribute-recur-search@2x.png);
+}
+.crm-contribute-booster #attendee-not-donor {
+  background-image: url(images/card/card-contribute-attendee-not-donor@2x.png);
 }
 
 @media screen and (max-width: 1440px) {
   .crm-contribute-booster .mdl-card {
     width: 300px;
+  }
+  .crm-contribute-booster .mdl-card-theme .mdl-card__supporting-text {
+    padding-top: 240px;
   }
 }
 

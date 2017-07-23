@@ -10,6 +10,19 @@
   display: inline-block;
   margin: 0 16px 20px 0;
   vertical-align: top;
+  transition: box-shadow .2s;
+
+  /* Card raised elevation: 2dp. */
+  box-shadow: 0 2px 2px 0 rgba(0,0,0,.14), 0 3px 1px -2px rgba(0,0,0,.2), 0 1px 5px 0 rgba(0,0,0,.12)
+}
+.mdl-card:hover {
+  /* Card raised elevation: 8dp. */
+  box-shadow: 0 8px 10px 1px rgba(0,0,0,.14), 0 3px 14px 2px rgba(0,0,0,.12), 0 5px 5px -3px rgba(0,0,0,.2); 
+}
+.mdl-card-theme {
+  background-repeat: no-repeat;
+  background-position: 50% 0;
+  background-size: contain;
 }
 .mdl-card > a {
   display: block;
