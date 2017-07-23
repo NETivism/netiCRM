@@ -45694,3 +45694,6 @@ msgstr ""
 msgid "This search result will exclude exists online recurring donors (can not exclude offline donors)."
 msgstr ""
 
+#: templates/message_templates/event_online_receipt_html.tpl
+msgid "Go to a web page where you can cancel your registration online"
+msgstr ""
