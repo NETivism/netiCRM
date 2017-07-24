@@ -93,10 +93,12 @@ class CRM_Contribute_Form extends CRM_Core_Form {
    * @access public
    */
   public function buildQuickForm() {
+    $js = array('data' => 'click-once');
     $this->addButtons(array(
         array('type' => 'next',
           'name' => ts('Save'),
           'isDefault' => TRUE,
+          'js' => $js,
         ),
         array('type' => 'cancel',
           'name' => ts('Cancel'),

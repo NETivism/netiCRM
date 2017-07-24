@@ -198,11 +198,13 @@ class CRM_UF_Form_Group extends CRM_Core_Form {
       call_user_func_array(array('CRM_UF_Form_AdvanceSetting', $type), array(&$this));
     }
 
+    $js = array('data' => 'click-once');
     $this->addButtons(array(
         array('type' => 'next',
           'name' => ts('Save'),
           'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
           'isDefault' => TRUE,
+          'js' => $js,
         ),
         array('type' => 'cancel',
           'name' => ts('Cancel'),

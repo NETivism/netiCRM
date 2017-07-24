@@ -186,11 +186,13 @@ class CRM_Price_Form_Set extends CRM_Core_Form {
     // is this set active ?
     $this->addElement('checkbox', 'is_active', ts('Is this Price Set active?'));
 
+    $js = array('data' => 'click-once');
     $this->addButtons(array(
         array('type' => 'next',
           'name' => ts('Save'),
           'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
           'isDefault' => TRUE,
+          'js' => $js,
         ),
         array('type' => 'cancel',
           'name' => ts('Cancel'),

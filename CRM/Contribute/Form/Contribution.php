@@ -1077,7 +1077,7 @@ WHERE  contribution_id = {$this->_id}
 
     $js = NULL;
     if (!$this->_mode) {
-      $js = array('onclick' => "return verify( );");
+      $js = array('onclick' => "return verify( );",'data' => 'click-once');
     }
 
     require_once 'CRM/Core/BAO/Preferences.php';

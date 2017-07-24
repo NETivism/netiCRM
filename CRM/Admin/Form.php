@@ -122,10 +122,12 @@ class CRM_Admin_Form extends CRM_Core_Form {
       );
     }
     else {
+      $js = array('data' => 'click-once');
       $this->addButtons(array(
           array('type' => 'next',
             'name' => ts('Save'),
             'isDefault' => TRUE,
+            'js' => $js,
           ),
           array('type' => 'cancel',
             'name' => ts('Cancel'),

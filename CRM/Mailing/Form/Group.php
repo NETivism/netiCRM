@@ -324,15 +324,18 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
 
     //FIXME : currently we are hiding save an continue later when
     //search base mailing, we should handle it when we fix CRM-3876
+    $js = array('data' => 'click-once');
     $buttons = array(
       array('type' => 'next',
         'name' => ts('Next >>'),
         'spacing' => '&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;',
         'isDefault' => TRUE,
+        'js' => $js,
       ),
       array(
         'type' => 'submit',
         'name' => ts('Save & Continue Later'),
+        'js' => $js,
       ),
       array(
         'type' => 'cancel',

@@ -179,11 +179,13 @@ class CRM_Contribute_Form_ManagePremiums extends CRM_Contribute_Form {
 
     $this->addFormRule(array('CRM_Contribute_Form_ManagePremiums', 'formRule'));
 
+    $js = array('data' => 'click-once');
     $this->addButtons(array(
         array(
           'type' => 'upload',
           'name' => ts('Save'),
           'isDefault' => TRUE,
+          'js' => $js,
         ),
         array(
           'type' => 'cancel',

@@ -313,6 +313,7 @@ class CRM_Group_Form_Edit extends CRM_Core_Form {
     }
     //build custom data
     CRM_Custom_Form_Customdata::buildQuickForm($this);
+    $js = array('data' => 'click-once');
 
     $this->addButtons(array(
         array('type' => 'upload',
@@ -320,6 +321,7 @@ class CRM_Group_Form_Edit extends CRM_Core_Form {
           ($this->_action == CRM_Core_Action::ADD) ?
           ts('Continue') : ts('Save'),
           'isDefault' => TRUE,
+          'js' => $js,
         ),
         array('type' => 'cancel',
           'name' => ts('Cancel'),

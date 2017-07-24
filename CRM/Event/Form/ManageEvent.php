@@ -301,10 +301,12 @@ class CRM_Event_Form_ManageEvent extends CRM_Core_Form {
           'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
         );
       }
+      $js = array('data' => 'click-once');
       $buttons[] = array('type' => 'upload',
         'name' => ts('Continue >>'),
         'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
         'isDefault' => TRUE,
+        'js' => $js,
       );
       $buttons[] = array('type' => 'cancel',
         'name' => ts('Cancel'),

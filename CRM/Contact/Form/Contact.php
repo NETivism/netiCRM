@@ -820,16 +820,20 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
       ts('Save With Duplicate Household')
     );
 
+    $js = array('data' => 'click-once');
+
     $this->addButtons(array(
         array('type' => 'upload',
           'name' => ts('Save'),
           'subName' => 'view',
           'isDefault' => TRUE,
+          'js' => $js,
         ),
         array('type' => 'upload',
           'name' => ts('Save and New'),
           'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
           'subName' => 'new',
+          'js' => $js,
         ),
         array('type' => 'cancel',
           'name' => ts('Cancel'),

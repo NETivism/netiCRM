@@ -120,14 +120,17 @@ class CRM_Member_Form extends CRM_Core_Form {
       $name = ts('Save');
     }
 
+    $js = array('data' => 'click-once');
     $this->addButtons(array(
         array('type' => 'upload',
           'name' => $name,
           'isDefault' => TRUE,
+          'js' => $js,
         ),
         array('type' => 'upload',
           'name' => ts('Save and New'),
           'subName' => 'new',
+          'js' => $js,
         ),
         array('type' => 'cancel',
           'name' => ts('Cancel'),

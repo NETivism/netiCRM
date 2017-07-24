@@ -860,7 +860,7 @@ cj(function() {
       $contributionStatusId = array_search('Completed',
         CRM_Contribute_PseudoConstant::contributionStatus(NULL, 'name')
       );
-      $confirmJS = array('onclick' => "return confirmStatus( {$participantStatusId}, {$contributionStatusId} );");
+      $confirmJS = array('onclick' => "return confirmStatus( {$participantStatusId}, {$contributionStatusId} );",'data' => 'click-once');
     }
 
     $this->_participantStatuses = CRM_Event_PseudoConstant::participantStatus(NULL, NULL, 'label');
