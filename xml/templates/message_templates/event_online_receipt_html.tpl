@@ -448,7 +448,7 @@ registration process.{/ts}</p>
       {if !$event.is_monetary}
       <tr>
         <td colspan="2" {$valueStyle}>
-         {capture assign=cancelUrl}{crmURL p='civicrm/event/cancel' q="reset=1&participantId=`$participant.id`&cs=`$checksumValue`" a=true h=0 fe=1}{/capture}
+         {capture assign=cancelUrl}{crmURL p='civicrm/event/cancel' q="reset=1&participantId=`$participantID`&cs=`$checksumValue`" a=true h=0 fe=1}{/capture}
          <a href="{$cancelUrl}">{ts}Go to a web page where you can cancel your registration online{/ts}</a>
         </td>
       </tr>

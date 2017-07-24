@@ -224,7 +224,7 @@ class CRM_Event_Form_Registration_ParticipantCancel extends CRM_Event_Form_Regis
     $eventId = $this->_eventId;
     $participantId = $this->_participantId;
 
-    if ($buttonName == '_qf_ParticipantConfirm_next') {
+    if ($buttonName == '_qf_ParticipantCancel_next') {
       //need to registration status to 'cancelled'.
       require_once 'CRM/Event/PseudoConstant.php';
       require_once 'CRM/Event/BAO/Participant.php';
