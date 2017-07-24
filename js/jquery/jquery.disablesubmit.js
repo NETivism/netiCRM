@@ -51,7 +51,7 @@
       // prevent double submit
       $obj.parents("form").on('submit', function(e){
         var $form = $(this);
-        if ($form.data('submitted') === true || $form.has('.error:visible').length > 0 || $obj.attr("readonly")) {
+        if ($form.data('submitted') === true || $obj.attr("readonly")) {
           // Previously submitted - don't submit again
           e.preventDefault();
         }
