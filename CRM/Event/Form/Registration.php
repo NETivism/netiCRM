@@ -679,6 +679,42 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
           CRM_Core_Session::setStatus(ts("Some of the profile fields cannot be configured for this page."));
         }
       }
+
+      foreach ($fields as $key => $field) {
+        if(strstr($key, 'custom_')){
+          $field_id = explode('custom_', $key);
+          $field_id = $field_id[1];
+
+          $sql = "SELECT f.custom_group_id FROM civicrm_custom_field f WHERE f.id =$field_id";
+          $custom_group_id = CRM_Core_DAO::singleValueQuery($sql);
+          $group_id = $custom_group_id ;
+          $group = new CRM_Core_DAO_CustomGroup();
+          $group->id = $group_id;
+          $group->find(TRUE);
+          if($group->extends == 'Participant' && !empty($group->extends_entity_column_value )){
+
+            $extends_entity_column_values = explode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,$group->extends_entity_column_value);
+            if($group->extends_entity_column_id == 1){
+              // for participant_role
+
+              $sql = "SELECT v.value FROM civicrm_option_value v INNER JOIN civicrm_option_group g ON v.option_group_id = g.id WHERE g.name = 'participant_role' AND v.label = '{$this->_values['event']['participant_role']}'";
+              $participant_role = CRM_Core_DAO::singleValueQuery($sql);
+              if( !in_array($participant_role, $extends_entity_column_values)){
+                unset($fields[$key]);
+              }
+            }else if($group->extends_entity_column_id == 2
+              && !in_array($this->_values['event']['id'], $extends_entity_column_values) ){
+              // for event_id
+              unset($fields[$key]);
+            }else if($group->extends_entity_column_id == 3
+              && !in_array($this->_values['event']['event_type_id'], $extends_entity_column_values) ){
+              // for event_type
+              unset($fields[$key]);
+            }
+          }
+        }
+      }
+
       $addCaptcha = FALSE;
       $fields = array_diff_assoc($fields, $this->_fields);
       $this->assign($name, $fields);
