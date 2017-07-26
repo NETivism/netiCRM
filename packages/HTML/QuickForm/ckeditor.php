@@ -64,11 +64,18 @@ class HTML_QuickForm_CKeditor extends HTML_QuickForm_textarea
         } else {
             $perm = CRM_Core_Permission::check('access CiviCRM');
             $name = $this->getAttribute('name');
+            $fullPage = $this->getAttribute('fullpage');
             if($perm) {
               $allowedContent = "editor.config.allowedContent = true;";
             }
             else{
               $allowedContent = "editor.config.allowedContent = 'h1 h2 h3 p blockquote; strong em; a[!href]; img(left,right)[!src,alt,width,height];';";
+            }
+            if ($fullPage) {
+              $fullPage = "editor.config.fullPage = true;";
+            }
+            else {
+              $fullPage = "editor.config.fullPage = false;";
             }
             $html = parent::toHtml() . "<script type='text/javascript'>
                 cj( function( ) {
@@ -85,6 +92,7 @@ class HTML_QuickForm_CKeditor extends HTML_QuickForm_textarea
                         editor.config.width  = '".$this->width."';
                         editor.config.height = '".$this->height."';
                         ".$allowedContent."
+                        ".$fullPage."
                     }
                 }); 
             </script>";

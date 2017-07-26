@@ -2537,7 +2537,9 @@ LEFT JOIN civicrm_mailing_group g ON g.mailing_id   = m.id
     $form->addWysiwyg('html_message',
       ts('HTML format'),
       array(
-        'cols' => '80', 'rows' => '8',
+        'cols' => '80',
+        'rows' => '8',
+        'fullpage' => '1',
         'onkeyup' => "return verify(this)",
       )
     );
