@@ -134,11 +134,13 @@
         var $this = cj(this);
         var horizontalPadding = 30;
         var verticalPadding = 30;
+        var popupHeight = cj(window).height() * 0.85;
+        var popupWidth = cj(window).width() * 0.95;
         cj('<iframe id="externalSite" class="externalSite" src="' + this.href + '" />').dialog({
             title: ($this.attr('title')) ? $this.attr('title') : 'Online template',
             autoOpen: true,
-            width: 850,
-            height: 630,
+            width: popupWidth,
+            height: popupHeight,
             modal: true,
             resizable: true,
             autoResize: true,
@@ -146,7 +148,7 @@
               opacity: 0.5,
               background: "black"
             }
-        }).width(850 - horizontalPadding).height(630 - verticalPadding);
+        }).width(popupWidth - horizontalPadding).height(popupHeight - verticalPadding);
       });
     });
 </script>
