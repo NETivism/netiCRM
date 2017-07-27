@@ -142,6 +142,9 @@ class CRM_Utils_System_Drupal {
       }
     }
     elseif($version >= 7 && $version < 8){
+      // refs #20890, prevent infinite page loop when system needs cron
+      global $conf;
+      $conf['cron_safe_threshold'] = 0;
       if(!$print && $type == 'page'){
         if ($maintenance) {
           drupal_set_breadcrumb('');
