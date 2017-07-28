@@ -45697,3 +45697,61 @@ msgstr ""
 #: templates/message_templates/event_online_receipt_html.tpl
 msgid "Go to a web page where you can cancel your registration online"
 msgstr ""
+
+#: HongKong regions
+msgid "Central and Western"
+msgstr ""
+
+msgid "Wan Chai"
+msgstr ""
+
+msgid "Eastern"
+msgstr ""
+
+msgid "Southern"
+msgstr ""
+
+msgid "Yau Tsim Mong"
+msgstr ""
+
+msgid "Sham Shui Po"
+msgstr ""
+
+msgid "Kowloon City"
+msgstr ""
+
+msgid "Wong Tai Sin"
+msgstr ""
+
+msgid "Kwun Tong"
+msgstr ""
+
+msgid "Kwai Tsing"
+msgstr ""
+
+msgid "Tsuen Wan"
+msgstr ""
+
+msgid "Tuen Mun"
+msgstr ""
+
+msgid "Yuen Long"
+msgstr ""
+
+msgid "North"
+msgstr ""
+
+msgid "Tai Po"
+msgstr ""
+
+msgid "Sha Tin"
+msgstr ""
+
+msgid "Sai Kung"
+msgstr ""
+
+msgid "Islands"
+msgstr ""
+
+msgid "Membership Log"
+msgstr ""

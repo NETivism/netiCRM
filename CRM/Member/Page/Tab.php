@@ -160,20 +160,13 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
     $controller->run();
 
     $search_values = array(
-      'contact_id' => $this->_contactId,
-      // 'id' => $this->_id,
+      'membership_id' => $this->_id,
     );
     $this->_queryParams = &CRM_Contact_BAO_Query::convertFormValues($search_values);
-    $selector = new CRM_Member_Selector_MembershipHistory($this->_queryParams,
-      1,
-      NULL,
-      0,
-      0,
-      'search'
-    );
+    $selector = new CRM_Member_Selector_MembershipLog($this->_queryParams);
 
     // Don't use same variable name as origin controller
-    $prefix = 'memberHistory_';
+    $prefix = 'memberLog_';
 
     $pageID = $this->get($prefix.CRM_Utils_Pager::PAGE_ID);
 
@@ -182,10 +175,12 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
       $sortID = CRM_Utils_Sort::sortIDValue($this->get($prefix.CRM_Utils_Sort::SORT_ID),
         $this->get($prefix.CRM_Utils_Sort::SORT_DIRECTION)
       );
+    }else{
+      $sortID = CRM_Utils_Sort::sortIDValue(5, CRM_Utils_Sort::DESCENDING);
     }
 
     // Use another controller
-    $memberHistoryController = new CRM_Core_Selector_Controller($selector,
+    $memberLogController = new CRM_Core_Selector_Controller($selector,
       $pageID,
       $sortID,
       CRM_Core_Action::VIEW,
@@ -194,9 +189,9 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
       $prefix
     );
 
-    $memberHistoryController->setEmbedded(TRUE);
-    $memberHistoryController->moveFromSessionToTemplate();
-    $memberHistoryController->run();
+    $memberLogController->setEmbedded(TRUE);
+    $memberLogController->moveFromSessionToTemplate();
+    $memberLogController->run();
 
   }
 

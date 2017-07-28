@@ -170,60 +170,52 @@
     {/if}
 {/if} {* End of $action eq 16 - browse memberships. *}
 
-<!-- From templates/CRM/Member/Form/Selector.tpl-->
+{if $action eq 4}
+<div class="crm-accordion-wrapper crm-membership_log-accordion collapsed crm-accordion-closed">
+        <div class="crm-accordion-header" id="crm-membership_log">{ts}Membership Log{/ts}</div>
+        <!-- /.crm-accordion-header -->
+        <div class="crm-accordion-body">
 
-<div class="form-item">
-    <table class="selector">
-    <thead class="sticky">
-      {foreach from=$memberHistory_columnHeaders item=header}
-        <th scope="col">
-        {if $header.sort}
-          {assign var='key' value=$header.sort}
-          {$memberHistory_sort->_response.$key.link}
-        {else}
-          {$header.name}
-        {/if}
-        </th>
-      {/foreach}
-      </thead>
-
-      {counter start=0 skip=1 print=false}
-      {foreach from=$memberHistory_rows item=row}
-      <tr id='rowid{$row.membership_id}' class="{cycle values="odd-row,even-row"} {*if $row.cancel_date} disabled{/if*} crm-membership_{$row.membership_id}">
-         {if ! $single }
-           <td>{$row.contact_type}</td>
-           <td class="crm-search-display_name">
-                <a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$row.contact_id`"}" title="{ts}View contact record{/ts}">{$row.sort_name}</a>
-            </td> 
-        {/if}
-        <td class="crm-membership-type crm-membership-type_{$row.membership_type}">
-            {$row.membership_type}
-            {if $row.owner_membership_id}<br />({ts}by relationship{/ts}){/if}
-        </td>
-        <td class="crm-membership-join_date">{$row.join_date|truncate:10:''|crmDate}</td>
-        <td class="crm-membership-start_date">{$row.membership_start_date|truncate:10:''|crmDate}</td>
-        <td class="crm-membership-end_date">{$row.membership_end_date|truncate:10:''|crmDate}</td>
-        <td class="crm-membership-source">{$row.membership_source}</td>
-        <td class="crm-membership-status crm-membership-status_{$row.membership_status}">{$row.membership_status}</td>
-        <td class="row-action">
-            {$row.action|replace:'xx':$row.membership_id}
-            {if $row.owner_membership_id}
-                &nbsp;|&nbsp;<a href="{crmURL p='civicrm/membership/view' q="reset=1&id=`$row.owner_membership_id`&action=view&context=search"}" title="{ts}View Primary member record{/ts}">{ts}View Primary{/ts}</a>
+          <!-- From templates/CRM/Member/Form/Selector.tpl-->
+        <table class="selector">
+        <thead class="sticky">
+          {foreach from=$memberLog_columnHeaders item=header}
+            <th scope="col">
+            {if $header.sort}
+              {assign var='key' value=$header.sort}
+              {$memberLog_sort->_response.$key.link}
+            {else}
+              {$header.name}
             {/if}
-        </td>
-       </tr>
-      {/foreach}
-    {* Link to "View all memberships" for Contact Summary selector display *}
-    {if ($context EQ 'membership') AND $memberHistory_pager->_totalItems GT $limit}
-      <tr class="even-row">
-        <td colspan="7"><a href="{crmURL p='civicrm/contact/view' q="reset=1&force=1&selectedChild=member&cid=$contactId"}">&raquo; {ts}View all memberships for this contact{/ts}...</a></td></tr>
-      </tr>
-    {/if}
-    {if ($context EQ 'dashboard') AND $memberHistory_pager->_totalItems GT $limit}
-      <tr class="even-row">
-        <td colspan="9"><a href="{crmURL p='civicrm/member/search' q='reset=1'}">&raquo; {ts}Find more members{/ts}...</a></td></tr>
-      </tr>
-    {/if}
-    </table>
-</div>
+            </th>
+          {/foreach}
+          </thead>
+
+          {counter start=0 skip=1 print=false}
+          {foreach from=$memberLog_rows item=row}
+          <tr id='rowid{$row.id}' class="{cycle values="odd-row,even-row"} crm-id_{$row.id}">
+            <td class="crm-membership-status_id crm-membership-status_id_{$row.status_id}">
+                {$row.status}
+            </td>
+            <td class="crm-membership-start_date">{$row.start_date|truncate:10:''|crmDate}</td>
+            <td class="crm-membership-end_date">{$row.end_date|truncate:10:''|crmDate}</td>
+            <td class="crm-membership-modified_by">
+                {if $row.modified_by}
+                    <a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$row.modified_id`"}">{$row.modified_by}</a>
+                {else}
+                    {$row.modified_id}
+                {/if}
+            </td>
+            <td class="crm-membership-modified_date">{$row.modified_date|truncate:10:''|crmDate}</td>
+            <td class="crm-membership-renewal_reminder_date">{$row.renewal_reminder_date|truncate:10:''|crmDate}</td>
+           </tr>
+          {/foreach}
+        </table>
+
+        </div>
+        <!-- /.crm-accordion-body -->
+      </div>
+{/if}
+
+
 </div>
