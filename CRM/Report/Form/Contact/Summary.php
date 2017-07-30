@@ -42,7 +42,9 @@ class CRM_Report_Form_Contact_Summary extends CRM_Report_Form {
 
   protected $_phoneField = FALSE;
 
-  protected $_customGroupExtends = array('Contact', 'Individual', 'Household', 'Organization'); function __construct() {
+  protected $_customGroupExtends = array('Contact', 'Individual', 'Household', 'Organization');
+
+  function __construct() {
     $this->_columns = array('civicrm_contact' =>
       array('dao' => 'CRM_Contact_DAO_Contact',
         'fields' =>

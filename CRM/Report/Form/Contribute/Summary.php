@@ -43,7 +43,9 @@ class CRM_Report_Form_Contribute_Summary extends CRM_Report_Form {
     'pieChart' => 'Pie Chart',
   );
   protected $_customGroupExtends = array('Contribution');
-  protected $_customGroupGroupBy = TRUE; function __construct() {
+  protected $_customGroupGroupBy = TRUE;
+
+  function __construct() {
     $this->_columns = array('civicrm_contact' =>
       array('dao' => 'CRM_Contact_DAO_Contact',
         'fields' =>
@@ -225,6 +227,9 @@ class CRM_Report_Form_Contribute_Summary extends CRM_Report_Form {
             'chart' => TRUE,
           ),
           'contribution_source' => NULL,
+          'payment_instrument_id' => array(
+            'title' => ts('Payment Instrument'),
+          ),
         ),
       ),
       'civicrm_group' =>
@@ -645,7 +650,7 @@ class CRM_Report_Form_Contribute_Summary extends CRM_Report_Form {
       }
 
       // convert payment instruments display
-      if (array_key_exists('civicrm_contribution_payment_instrument_id', $row) && $row['civicrm_contribution_payment_instrument_id']) {
+      if (array_key_exists('civicrm_contribution_payment_instrument_id', $row)) {
         $rows[$rowNum]['civicrm_contribution_payment_instrument_id'] = $payment_instrument[$rows[$rowNum]['civicrm_contribution_payment_instrument_id']];
         $entryFound = TRUE;
       }

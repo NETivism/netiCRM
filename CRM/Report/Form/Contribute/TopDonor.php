@@ -39,10 +39,16 @@ class CRM_Report_Form_Contribute_TopDonor extends CRM_Report_Form {
 
   protected $_summary = NULL;
 
+  protected $_phoneField = FALSE;
+
   protected $_charts = array('' => 'Tabular',
     'barChart' => 'Bar Chart',
     'pieChart' => 'Pie Chart',
-  ); function __construct() {
+  );
+
+  protected $_customGroupExtends = array('Contact', 'Individual', 'Household', 'Organization');
+
+  function __construct() {
     $this->_columns = array('civicrm_contact' =>
       array('dao' => 'CRM_Contact_DAO_Contact',
         'fields' =>
@@ -78,7 +84,7 @@ class CRM_Report_Form_Contribute_TopDonor extends CRM_Report_Form {
           'total_range' =>
           array('title' => ts('Show no. of Top Donors'),
             'type' => CRM_Utils_Type::T_INT,
-            'default_op' => 'eq',
+            'default_op' => 'lte',
           ),
           'contribution_type_id' =>
           array('name' => 'contribution_type_id',
@@ -128,11 +134,23 @@ class CRM_Report_Form_Contribute_TopDonor extends CRM_Report_Form {
           array('default' => TRUE),
         ),
       ),
+      'civicrm_phone' =>
+      array('dao' => 'CRM_Core_DAO_Phone',
+        'fields' =>
+        array('phone' => NULL),
+        'grouping' => 'contact-fields',
+      ),
 
     );
 
     $this->_tagFilter = TRUE;
     parent::__construct();
+  }
+
+  function buildQuickForm() {
+    parent::buildQuickForm();
+
+    $this->getElement('total_range_op')->freeze();
   }
 
   function preProcess() {
@@ -186,6 +204,10 @@ class CRM_Report_Form_Contribute_TopDonor extends CRM_Report_Form {
               $this->_columnHeaders["{$tableName}_{$fieldName}"]['title'] = $field['title'];
             }
           }
+
+          if($tableName == 'civicrm_phone') {
+            $this->_phoneField = TRUE;
+          }
         }
       }
     }
@@ -219,6 +241,13 @@ class CRM_Report_Form_Contribute_TopDonor extends CRM_Report_Form {
                    ON ({$this->_aliases['civicrm_contact']}.id = {$this->_aliases['civicrm_address']}.contact_id AND 
                       {$this->_aliases['civicrm_address']}.is_primary = 1 ) 
         ";
+
+    if ($this->_phoneField) {
+      $this->_from .= "
+            LEFT JOIN civicrm_phone {$this->_aliases['civicrm_phone']}
+                   ON {$this->_aliases['civicrm_contact']}.id = {$this->_aliases['civicrm_phone']}.contact_id AND 
+                      {$this->_aliases['civicrm_phone']}.is_primary = 1 ";
+    }
   }
 
   function where() {
@@ -287,6 +316,8 @@ class CRM_Report_Form_Contribute_TopDonor extends CRM_Report_Form {
     $this->select();
 
     $this->from();
+
+    $this->customDataFrom();
 
     $this->where();
 
