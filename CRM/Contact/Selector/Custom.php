@@ -331,7 +331,7 @@ class CRM_Contact_Selector_Custom extends CRM_Core_Selector_Base implements CRM_
         }
       }
       if (!$empty) {
-        $contactID = isset($dao->contact_id) ? $dao->contact_id : NULL;
+        $contactID = is_numeric($dao->contact_id) ? $dao->contact_id : (is_numeric($dao->id) ? $dao->id : NULL);
 
         $row['checkbox'] = CRM_Core_Form::CB_PREFIX . $contactID;
         $row['action'] = CRM_Core_Action::formLink($links,
