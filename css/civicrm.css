@@ -4158,8 +4158,11 @@ ul.ui-sortable {
   padding: 10px 4px;
 }
 .crm-container .premiums-listings img {
-  max-width: 300px;
+  max-width: 100%;
   height: auto;
+}
+.crm-container .premium-img {
+  width: 37%;
 }
 .crm-container .premium-img > label {
   cursor: pointer;
@@ -5881,17 +5884,17 @@ input.crm-form-textfield,
   .crm-container-md .crm-custom-data-view .crm-info-panel tr > td:last-of-type {
     padding-right: 0;
   }
+  .crm-container .premium-img {
+    width: 28%;
+  }
+  .crm-container .premium-img + .premium-info {
+    padding-left: 8px;
+  }
 }
 
 @media screen and (max-width: 425px) {
   .crm-container .premium-selected .crm-form-radio {
     margin-right: 0;
-  }
-  .crm-container .premium-img {
-    width: 25%;
-  }
-  .crm-container .premium-img + .premium-info {
-    padding-left: 8px;
   }
   .crm-container .event_date_time-section .add-to-calendar {
     display: block;
