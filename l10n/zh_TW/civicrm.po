@@ -12,7 +12,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2017-07-28 08:17+0000\n"
+"PO-Revision-Date: 2017-07-31 06:47+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -14401,7 +14401,7 @@ msgstr "此欄位能否被搜尋？"
 
 #: CRM/Custom/Form/Field.php
 msgid "Search by Range?"
-msgstr "以可用範圍來搜尋？"
+msgstr "可用範圍來搜尋？"
 
 #: CRM/Custom/Form/Field.php
 msgid "Custom field '%1' already exists in Database."
@@ -27938,7 +27938,7 @@ msgid ""
 "Your initial contribution will be processed once you complete the "
 "confirmation step. You will be able to modify or cancel future contributions"
 " at any time by logging in to your account."
-msgstr "您一旦完成確認的步驟，第一期捐款就會執行。您登入之後，將可在任何時間修改或取消日後的定期捐款。"
+msgstr "您一旦完成確認的步驟，第一期捐款就會執行。您可以隨時與我們聯絡，以取消日後的定期定額捐款。"
 
 #: templates/CRM/Contribute/Form/Contribution/Confirm.tpl
 #: templates/CRM/Contribute/Form/Contribution/ThankYou.tpl
