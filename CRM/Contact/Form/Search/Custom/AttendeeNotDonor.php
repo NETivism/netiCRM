@@ -3,10 +3,14 @@
 class CRM_Contact_Form_Search_Custom_AttendeeNotDonor extends CRM_Contact_Form_Search_Custom_Base implements CRM_Contact_Form_Search_Interface {
 
   protected $_formValues;
-  protected $_cstatus = NULL;
   protected $_config;
   protected $_tableName = NULL;
   protected $_filled = NULL;
+
+  protected $_participantStatuses = array(
+    'Registered',
+    'Attended'
+  );
   
   function __construct(&$formValues){
     parent::__construct($formValues);
@@ -27,7 +31,7 @@ class CRM_Contact_Form_Search_Custom_AttendeeNotDonor extends CRM_Contact_Form_S
     $this->_columns = array(
       ts('ID') => 'id',
       ts('Name') => 'sort_name',
-      ts('Register Count') => 'register_count',
+      ts('register count') => 'register_count',
     );
   }
   function buildTempTable() {
@@ -111,8 +115,10 @@ $having
 
 
   function tempFrom() {
-    $attendeeStatus = CRM_Event_PseudoConstant::participantStatus(NULL, 'is_counted = 1');
-    $attendeeStatusId = array_keys($attendeeStatus);
+    $attendeeStatus = CRM_Event_PseudoConstant::participantStatus(NULL);
+    $statuses = array_intersect($attendeeStatus, $this->_participantStatuses);
+    
+    $attendeeStatusId = array_keys($statuses);
     $from = "civicrm_contact AS contact INNER JOIN civicrm_participant p ON p.contact_id = contact.id AND p.is_test = 0 AND p.status_id IN (".implode(',', $attendeeStatusId).") 
     LEFT JOIN (SELECT cc.* FROM civicrm_contribution cc LEFT JOIN civicrm_membership_payment mp ON mp.contribution_id = cc.id LEFT JOIN civicrm_participant_payment pp ON pp.contribution_id = cc.id WHERE cc.is_test = 0 AND cc.contribution_status_id = 1 AND pp.id IS NULL AND mp.id IS NULL ORDER BY cc.created_date DESC) c ON c.contact_id = contact.id
     ";
@@ -123,9 +129,17 @@ $having
    * WHERE clause is an array built from any required JOINS plus conditional filters based on search criteria field values
    */
   function tempWhere(){
+    $from = !empty($this->_formValues['register_date_from']) ? $this->_formValues['register_date_from'] : NULL;
+    $to = !empty($this->_formValues['register_date_to']) ? $this->_formValues['register_date_to'] : NULL;
     $clauses = array();
     $clauses[] = "contact.is_deleted = 0";
     $clauses[] = "c.id IS NULL";
+    if ($from) {
+      $clauses[] = "p.register_date >= '$from'";
+    }
+    if ($to) {
+      $clauses[] = "p.register_date <= '$to'";
+    }
 
     return implode(' AND ', $clauses);
   }
@@ -141,7 +155,9 @@ $having
     for ($i = 1; $i <= 5; $i++) {
       $option[$i] = $i;
     }
-    $form->addSelect('attended', ts('Attended'), $option);
+    $attendeeStatus = array_map('ts', $this->_participantStatuses);
+    $form->addDateRange('register_date', ts('Register Date').' - '.ts('From'), NULL, FALSE);
+    $form->addSelect('attended', implode(', ', $attendeeStatus), $option);
   }
 
   function setDefaultValues() {
@@ -151,13 +167,19 @@ $having
   }
 
   function qill(){
-    $attendeeStatus = CRM_Event_PseudoConstant::participantStatus(NULL, 'is_counted = 1');
-    $attendeeStatus = array_map('ts', $attendeeStatus);
-    return array(
-      1 => array(
-        'participantStatus' => ts('Participant Statuses').': '.implode(', ', $attendeeStatus),
-      ),
-    );
+    $qill = array();
+
+    $attendeeStatus = array_map('ts', $this->_participantStatuses);
+    $qill[] = array('participantStatus' => ts('Participant Statuses').': '.implode(', ', $attendeeStatus));
+
+    $from = !empty($this->_formValues['register_date_from']) ? $this->_formValues['register_date_from'] : NULL;
+    $to = !empty($this->_formValues['register_date_to']) ? $this->_formValues['register_date_to'] : NULL;
+    if ($from || $to) {
+      $to = empty($to) ? ts('Today') : $to;
+      $from = empty($from) ? ' ... ' : $from;
+      $qill[] = array('registerDateRange' => ts("Register Date").': '. $from . '~' . $to);
+    }
+    return $qill;  
   }
 
   function setBreadcrumb() {

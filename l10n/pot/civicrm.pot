@@ -45755,3 +45755,6 @@ msgstr ""
 
 msgid "Membership Log"
 msgstr ""
+
+msgid "register count"
+msgstr ""
