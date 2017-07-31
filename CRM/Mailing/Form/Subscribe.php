@@ -108,6 +108,7 @@ SELECT   id, title, description
     OR     saved_search_id IS NULL )
    AND   visibility != 'User and User Admin Only'
    AND   $groupTypeCondition
+   AND   is_active = 1
 ORDER BY title";
       $dao = CRM_Core_DAO::executeQuery($query, CRM_Core_DAO::$_nullArray);
       $rows = array();
