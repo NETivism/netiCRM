@@ -7,16 +7,33 @@ class CRM_Contact_Form_Search_Custom_FirstTimeDonor extends CRM_Contact_Form_Sea
   protected $_config;
   protected $_tableName = NULL;
   protected $_filled = NULL;
-  
+  protected $_recurringStatus = array();   
+  protected $_contributionPage = NULL;
+
   function __construct(&$formValues){
     parent::__construct($formValues);
+
     $this->_filled = FALSE;
-    if(empty($this->_tableName)){
-      $randomNum = CRM_Utils_String::createRandom(8, CRM_Utils_String::ALPHANUMERIC);
-      $this->_tableName = !empty($formValues['temp_table']) ? $formValues['temp_table'] : "civicrm_temp_custom_{$randomNum}";
-      $this->_cstatus = CRM_Contribute_PseudoConstant::contributionStatus();
-      $this->_config = CRM_Core_Config::singleton();
-      $this->buildColumn();
+    $this->_tableName = 'civicrm_temp_custom_FirstTimeDonor';
+    $statuses = CRM_Contribute_PseudoConstant::contributionStatus();
+    unset($statuses[5]);
+    unset($statuses[6]);
+    ksort($statuses);
+    $this->_cstatus = $statuses;
+    $this->_recurringStatus = array(
+      2 => ts('All'),
+      1 => ts("Recurring Contribution"),
+      0 => ts("Non-recurring Contribution"),
+    );
+    $this->_contributionPage = CRM_Contribute_PseudoConstant::contributionPage();
+    $this->_config = CRM_Core_Config::singleton();
+    $this->buildColumn();
+    if (!empty($formValues)) {
+      foreach($formValues as $k => $v) {
+        if (preg_match('/^status\[(\d)\]/i', $k, $matches)) {
+          $formValues['status'][$matches[1]] = $matches[1];
+        }
+      }
     }
   }
 
@@ -142,28 +159,48 @@ $having
     
     $form->addDateRange('receive_date', ts('First time donation donors').' - '.ts('From'), NULL, FALSE);
     $statuses = $this->_cstatus;
-    unset($statuses[6]);
-    unset($statuses[4]);
-    ksort($statuses);
-    $statuses = array_flip($statuses);
-    $form->addCheckBox('status', ts('Contribution Status'), $statuses, NULL, NULL, NULL, NULL, '&nbsp;');
+    $form->addCheckBox('status', ts('Contribution Status'), $statuses, NULL, NULL, NULL, NULL, '&nbsp;', TRUE);
 
-    $recurring = array(
-      2 => ts('All'),
-      1 => ts("Recurring Contribution"),
-      0 => ts("Non-recurring Contribution"),
-    );
-    $form->addRadio('recurring', ts('Recurring Contribution'), $recurring);
-    $form->addSelect('contribution_page_id', ts('Contribution Page'), array('' => ts('- select -')) + CRM_Contribute_PseudoConstant::contributionPage());
-    $form->add('hidden', 'temp_table', $this->_tableName);
-    $defaults = array(
-      'receive_date_from' => date('Y-m-d', time() - 86400*90),
+    $recurring = $form->addRadio('recurring', ts('Recurring Contribution'), $this->_recurringStatus);
+    $form->addSelect('contribution_page_id', ts('Contribution Page'), array('' => ts('- select -')) + $this->_contributionPage);
+
+    $form->assign('elements', array('receive_date', 'status', 'recurring', 'contribution_page_id'));
+  }
+
+  function setDefaultValues() {
+    return array(
+      'receive_date_from' => date('Y-m-01', time() - 86400*90),
       'recurring' => 2,
       'status[1]' => 1,
     );
-    $form->setDefaults($defaults);
+  }
 
-    $form->assign('elements', array('receive_date', 'status', 'recurring', 'contribution_page_id'));
+  function qill(){
+    $qill = array();
+    $from = !empty($this->_formValues['receive_date_from']) ? $this->_formValues['receive_date_from'] : NULL;
+    $to = !empty($this->_formValues['receive_date_to']) ? $this->_formValues['receive_date_to'] : NULL;
+    if ($from || $to) {
+      $to = empty($to) ? ts('Today') : $to;
+      $from = empty($from) ? ' ... ' : $from;
+      $qill[1]['receiveDateRange'] = ts("Receive Date").': '. $from . '~' . $to;
+    }
+
+    if (!empty($this->_formValues['status'])) {
+      $statuses = $this->_formValues['status'];
+      foreach($statuses as $v) {
+        $selectedStatus[] = $this->_cstatus[$v];
+      }
+      $qill[1]['status'] = ts('Status').': '.implode(', ', $selectedStatus);
+    }
+
+    if (!empty($this->_formValues['recurring'])) {
+      $qill[1]['recurring'] = ts('Recurring Contribution').': '.$this->_recurringStatus[$this->_formValues['recurring']];
+    }
+
+    if (!empty($this->_formValues['contribution_page_id'])) {
+      $qill[1]['contributionPage'] = ts('Contribution Page').': '.$this->_contributionPage[$this->_formValues['contribution_page_id']];
+    }
+    return $qill;  
   }
 
   function setBreadcrumb() {
@@ -225,7 +262,6 @@ $having
 
     $status = CRM_Utils_Array::value('status', $this->_formValues);
     if (is_array($status)) {
-      $status = array_keys($status);
       $clauses[] = "contribution_status_id IN (".implode(',', $status).")";
     }
 
