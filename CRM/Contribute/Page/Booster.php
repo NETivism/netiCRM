@@ -9,7 +9,7 @@ class CRM_Contribute_Page_Booster extends CRM_Core_Page {
           'class' => 'mdl-card-theme',
           'title' => ts('First time donation donors'),
           'description' => ts('Send some message to these people who have first time donation to you. This should be first step to maintain your relationship with these donors.'),
-          'link' => CRM_Utils_System::url('civicrm/search/FirstTimeDonor'),
+          'link' => CRM_Utils_System::url('civicrm/search/FirstTimeDonor', 'force=1'),
         ),
         array(
           'id' => 'half-year-donor',
