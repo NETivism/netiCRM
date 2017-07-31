@@ -170,14 +170,14 @@ $having
     $qill = array();
 
     $attendeeStatus = array_map('ts', $this->_participantStatuses);
-    $qill[] = array('participantStatus' => ts('Participant Statuses').': '.implode(', ', $attendeeStatus));
+    $qill[1][] = ts('Participant Statuses').': '.implode(', ', $attendeeStatus);
 
     $from = !empty($this->_formValues['register_date_from']) ? $this->_formValues['register_date_from'] : NULL;
     $to = !empty($this->_formValues['register_date_to']) ? $this->_formValues['register_date_to'] : NULL;
     if ($from || $to) {
       $to = empty($to) ? ts('Today') : $to;
       $from = empty($from) ? ' ... ' : $from;
-      $qill[] = array('registerDateRange' => ts("Register Date").': '. $from . '~' . $to);
+      $qill[1][] = ts("Register Date").': '. $from . '~' . $to;
     }
     return $qill;  
   }
