@@ -93,9 +93,26 @@ class CRM_Contact_Form_Search_Custom_ContribSYBNT implements CRM_Contact_Form_Se
       'exclude_start_date' => $thisYear.'-01-01',
       'exclude_end_date' => $thisYear.'-12-31',
       'include_min_amount' => 100,
-      'exclude_min_amount' => 0,
+      'include_max_amount' => 0,
     );
     return $defaults;
+  }
+
+  function qill() {
+    $qill = array();
+    if ($this->_formValues['include_start_date'] && $this->_formValues['include_end_date']) {
+      $qill[1]['includeDate'] = ts('Have Donations').': '.$this->_formValues['include_start_date'] . ' ~ ' . $this->_formValues['include_end_date'];
+    }
+
+    if ($this->_formValues['include_min_amount'] || $this->_formValues['include_max_amount']) {
+      $min = $this->_formValues['include_min_amount'] ? '$'.$this->_formValues['include_min_amount'] : '0';
+      $max = $this->_formValues['include_max_amount'] ? '$'.$this->_formValues['include_max_amount'] : ts('no limit');
+      $qill[1]['amountRange'] = ts('Have Donations').': '."$min ~ $max";
+    }
+    if ($this->_formValues['exclude_start_date'] && $this->_formValues['exclude_end_date']) {
+      $qill[1]['excludeDate'] = ts('Without Donations').': '.$this->_formValues['exclude_start_date'] . ' ~ ' . $this->_formValues['exclude_end_date'];
+    }
+    return $qill;
   }
 
   function setBreadcrumb() {

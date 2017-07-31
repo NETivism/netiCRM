@@ -28,20 +28,12 @@
 <div class="crm-custom-search-description">
   <p>{ts}Someone had donated last year but not this year. You can take care of them to see if they still remember you.{/ts}</p>
 </div>
-<div class="crm-accordion-wrapper crm-custom_search_form-accordion crm-accordion-open">
+  <div class="crm-accordion-wrapper crm-custom_search_form-accordion crm-accordion-{if $rowsEmpty}open{else}closed{/if}">
     <div class="crm-accordion-header crm-master-accordion-header">
       <div class="zmdi crm-accordion-pointer"></div>
       {ts}Edit Search Criteria{/ts}
     </div><!-- /.crm-accordion-header -->
     <div class="crm-accordion-body">
-        <h3>{ts}Without Donations{/ts}</h3>
-        <table class="form-layout-compressed">
-            <tr class="crm-contact-custom-search-contribSYBNT-form-block-exclusion_date">
-                <td class="label"><label>{ts}Date{/ts}</label></td>
-                <td>{ts}From{/ts}: {include file="CRM/common/jcalendar.tpl" elementName=exclude_start_date}</td>
-                <td>{ts}To{/ts}:{include file="CRM/common/jcalendar.tpl" elementName=exclude_end_date}</td>
-            </tr>
-        </table> 
         <h3>{ts}Have Donations{/ts}</h3>
         <table class="form-layout-compressed">
             <tr class="crm-contact-custom-search-contribSYBNT-form-block-inclusion_date_one">
@@ -53,6 +45,14 @@
                 <td class="label"><label>{ts}Total Receive Amount{/ts}</label></td>
                 <td>{ts}Min{/ts}: {$form.include_min_amount.html}</td>
                 <td>{ts}Max{/ts}: {$form.include_max_amount.html}</td>
+            </tr>
+        </table> 
+        <h3>{ts}Without Donations{/ts}</h3>
+        <table class="form-layout-compressed">
+            <tr class="crm-contact-custom-search-contribSYBNT-form-block-exclusion_date">
+                <td class="label"><label>{ts}Date{/ts}</label></td>
+                <td>{ts}From{/ts}: {include file="CRM/common/jcalendar.tpl" elementName=exclude_start_date}</td>
+                <td>{ts}To{/ts}:{include file="CRM/common/jcalendar.tpl" elementName=exclude_end_date}</td>
             </tr>
             <tr>
                 <td colspan="3">
