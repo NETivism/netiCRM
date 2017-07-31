@@ -3,13 +3,20 @@
   <p>{ts}Best list for increase your recurring contribution pool. If someone already donated multiple times but not your recurring contribution donors, this is a good chance let them become your long-term donors.{/ts} {ts}You can filter specific range of date of these people. Invite them to become your recurring donor.{/ts}</p>
   <p>{ts}This search result will exclude exists online recurring donors (can not exclude offline donors).{/ts}</p>
 </div>
-<div class="crm-accordion-wrapper crm-custom_search_form-accordion crm-accordion-open">
+<div class="crm-accordion-wrapper crm-custom_search_form-accordion crm-accordion-{if $rowsEmpty}open{else}closed{/if}">
     <div class="crm-accordion-header crm-master-accordion-header">
       <div class="zmdi crm-accordion-pointer"></div>
       {ts}Edit Search Criteria{/ts}
     </div><!-- /.crm-accordion-header -->
     <div class="crm-accordion-body">
+      <div>
       {ts 1=$form.contribution_count.html}Single donation over %1 times{/ts} <span class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</span>
+      </div>
+      <div>
+      {$form.receive_date_from.label}
+      {include file="CRM/common/jcalendar.tpl" elementName=receive_date_from} <span>{$form.receive_date_to.label}</span>
+      {include file="CRM/common/jcalendar.tpl" elementName=receive_date_to}
+      </div>
     </div><!-- /.crm-accordion-body -->
 </div><!-- /.crm-accordion-wrapper -->
 </div><!-- /.crm-form-block -->

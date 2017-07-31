@@ -123,6 +123,15 @@ $having
     $clauses = array();
     $clauses[] = "contact.is_deleted = 0";
 
+    $from = !empty($this->_formValues['receive_date_from']) ? $this->_formValues['receive_date_from'] : NULL;
+    $to = !empty($this->_formValues['receive_date_to']) ? $this->_formValues['receive_date_to'] : NULL;
+    if ($from) {
+      $clauses[] = "c.receive_date >= '$from'";
+    }
+    if ($to) {
+      $clauses[] = "c.receive_date <= '$to'";
+    }
+
     return implode(' AND ', $clauses);
   }
 
@@ -139,12 +148,30 @@ $having
       $option[$i] = $i;
     }
     $form->addSelect('contribution_count', ts('month'), $option);
+    $form->addDateRange('receive_date', ts('Received Date').' - '.ts('From'), NULL, FALSE);
   }
 
   function setDefaultValues() {
     return array(
       'contribution_count' => 3,
     );
+  }
+
+  function qill(){
+    $qill = array();
+
+    $attendeeStatus = array_map('ts', $this->_participantStatuses);
+    $count = $this->_formValues['contribution_count'];
+    $qill[] = array('count' => ts('Single donation over %1 times', array(1 => $count)));
+
+    $from = !empty($this->_formValues['receive_date_from']) ? $this->_formValues['receive_date_from'] : NULL;
+    $to = !empty($this->_formValues['receive_date_to']) ? $this->_formValues['receive_date_to'] : NULL;
+    if ($from || $to) {
+      $to = empty($to) ? ts('Today') : $to;
+      $from = empty($from) ? ' ... ' : $from;
+      $qill[] = array('receiveDateRange' => ts("Receive Date").': '. $from . '~' . $to);
+    }
+    return $qill;  
   }
 
   function setBreadcrumb() {
