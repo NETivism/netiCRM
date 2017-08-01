@@ -12,8 +12,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2017-07-31 06:47+0000\n"
-"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
+"PO-Revision-Date: 2017-07-31 12:07+0000\n"
+"Last-Translator: 花玉婷 <klavier1976@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44591,7 +44591,7 @@ msgid ""
 "generate receipt, it will also generte receipt ID and you can't modify "
 "receipt ID after generation. Make sure your search result have correct "
 "receive date search to prevent generate wrong number."
-msgstr "請注意，由於收據編號是以「收到日期」來排序，也必須是連號，當您按下列印收據，系統產生的收據編號是不能修改的。請務必確認您搜尋條件的「收到日期」是正確的，以免產生錯誤的收據編號。"
+msgstr "系統預設以搜尋結果列表頁排序來產生收據編號順序。如果需要照收到日期產生收據編號，請到上一頁，確認勾選的捐款是以收到日期排序。"
 
 msgid "Single page with address letter"
 msgstr "包含開窗信封地址的單聯收據"
@@ -44756,7 +44756,7 @@ msgstr "請款次數"
 
 #: CRM/Contact/Form/Search/Custom/RecurSearch.php
 msgid "Total Receive Amount"
-msgstr "實際總金額"
+msgstr "收到金額總計"
 
 #: CRM/Contact/Form/Search/Custom/RecurSearch.php
 msgid "Last receive Date"
@@ -45713,11 +45713,11 @@ msgstr "捐款加速器"
 
 #: templates/CRM/Contact/Form/Search/Custom/ContribSYBNT.tpl
 msgid "Without Donations"
-msgstr "沒有捐款"
+msgstr "尚未捐款"
 
 #: templates/CRM/Contact/Form/Search/Custom/ContribSYBNT.tpl
 msgid "Have Donations"
-msgstr "有捐款"
+msgstr "已有捐款"
 
 #: Custom/AttendeeNotDonor.tpl
 msgid ""
@@ -45743,14 +45743,14 @@ msgid ""
 "Someone have tried once and failed. No further trying. Maybe they need "
 "stronger motivation. Maybe the interrupted by something and forgot to "
 "complete the donation."
-msgstr "捐款失敗後無再次捐款，可能是捐款動機不夠強，或是因當下有其他要事被打斷而忘記再次嘗試捐款。"
+msgstr "捐款失敗後無再次捐款，可能是捐款動機不夠強，或是因當下有其他要事被打斷而忘記再次嘗試捐款，也有可能是金流發生問題導致。"
 
 #: Custom/FailedNoFurtherDonate.tpl
 msgid ""
 "You can add this contacts(include recurring and non-recurring donors) into a"
 " group and send a further message to them. Thanks for them and invite them "
 "to try again."
-msgstr "建議您可將此搜尋結果（包括單筆與定期定額）加入到群組例如「yyyy-mm 捐款失敗7天內無再次捐款」，組織可寄送再次募款信，內容可先感謝對方嘗試捐款的熱情支持，並附上最近募款專案需求，邀請對方再次捐款。"
+msgstr "建議您可將此搜尋結果（包括單筆與定期定額）加入到群組例如「yyyy-mm 捐款失敗7天內無再次捐款」，組織可寄送再次募款信，內容可先感謝對方嘗試捐款的熱情支持，並且詢問對方若捐款時遭遇金流問題例如刷卡失敗等，可以回覆給組織，有益於組織向金流公司提出問題並改善，並附上最近募款專案需求，邀請對方再次捐款。"
 
 #: Custom/FirstTimeDonor.tpl
 msgid ""
@@ -45788,7 +45788,7 @@ msgid ""
 "Best list for increase your recurring contribution pool. If someone already "
 "donated multiple times but not your recurring contribution donors, this is a"
 " good chance let them become your long-term donors."
-msgstr "最適合寄送定期定額捐款勸募的名單，底加啦！已經單筆捐款滿3次，應是累積了相當程度對貴會的支持與認同，建議您可寄送感謝信，並同時邀請對方定期定額長期支持。定期定額支持者是非營利組織營運的基石，但定期捐助承諾本身是很珍貴且得來不易，與其對沒有互動過的群眾進行勸募，更建議從已與組織有過互動的支持者開始，單筆捐款滿三次，真的很有愛，請給他一個機會定期支持吧！"
+msgstr "定期定額支持者是非營利組織營運的基石，但定期捐助承諾本身是很珍貴且得來不易，與其對沒有互動過的群眾進行勸募，更建議從已與組織有過互動的支持者開始，單筆捐款滿三次，真的很有愛，請給他一個機會定期支持吧！"
 
 #: Custom/SingleNotRecurring.tpl
 msgid ""
