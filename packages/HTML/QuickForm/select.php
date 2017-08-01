@@ -304,25 +304,27 @@ class HTML_QuickForm_select extends HTML_QuickForm_element {
      */
     // CLY - modification to allow optgroups
     // function addOption($text, $value, $attributes=null)
-    function addOption($text, $value, $attributes=null, &$optGroup=null) {
+    function addOption($text, $value, $attributes=null) {
         // if text is an array, start an optgroup
         if (is_array($text)) {
-            if (is_array($optGroup)) {
-                $optGroup[$value]['options'] = array();
-                $optGroup =& $optGroup[$value]['options'];
+            $groupName = $value;
+            $options = array();
+            
+            foreach($text as $key => $val) {
+                $attributes = $this->optionAttributes($attributes, $key);
+                $options[$key] = array('text' => $val, 'attr' => $attributes);
             }
-            else {
-                $this->_options[$value]['options'] = array();
-                $optGroup =& $this->_options[$value]['options'];
-            };
-            foreach($text as $key=>$val) {
-                $this->addOption($val, $key, null, $optGroup);
-            }
-            // done all the options in the optgroup
+            $this->_options[$groupName] = array('options' => $options);
             return;
         }
-    // end mod
+        else {
+            $attributes = $this->optionAttributes($attributes, $value);
+            $this->_options[] = array('text' => $text, 'attr' => $attributes);
+        }
 
+    } // end func addOption
+
+    function optionAttributes($attributes, $value) {
         if (null === $attributes) {
             $attributes = array('value' => (string)$value);
         } else {
@@ -338,34 +340,8 @@ class HTML_QuickForm_select extends HTML_QuickForm_element {
             }
             $this->_updateAttrArray($attributes, array('value' => (string)$value));
         }
-       // CLY - modification to allow optgroups
-        // if $optGroup is an array, add the option to it
-        if (is_array($optGroup)) {
-            $optGroup[$text]['attr'] = $attributes;
-        }
-        // if $optGroup is a string, add the option to the option group
-        // used if directly adding an option to an optgroup
-        elseif (is_string($optGroup)) {
-            $optGroups = explode($optGroup, ',');
-            $target =& $this->_options;
-            foreach($optGroups as $group) {
-                // create the option group if it does not exist
-                if (empty($target[$group]['options'])) {
-                    $target[$group]['options'] = array();
-                }
-                $target =& $target[$group]['options'];
-            }
-            // foreach
-            // add the option
-            $target[$text] = array('text' => $text, 'attr' => $attributes);
-        }
-        // else if there are attributes, add them to the option
-        elseif (is_array($attributes)) {
-            $this->_options[$text] = array('text' => $text, 'attr' => $attributes);
-        }
-      //  $this->_options[] = array('text' => $text, 'attr' => $attributes);
-      // end mod
-    } // end func addOption
+        return $attributes;
+    }
 
     // }}}
     // {{{ loadArray()
@@ -574,20 +550,21 @@ class HTML_QuickForm_select extends HTML_QuickForm_element {
     {
         $tabs = $this->_getTabs();
         // if an option has options it's an optgroup
-        if (isset($option['options'])) {
-            $strHtml = $tabs . "<optgroup label=\"$text\">\n";
-            foreach($option['options'] as $txt=>$opt) {
-                $strHtml .= $tabs . $this->_optionToHtml($txt, $opt);
+        if (isset($option['options']) && is_array($option['options'])) {
+            $groupName = $text;
+            $strHtml = $tabs . "<optgroup label=\"$groupName\">\n";
+            foreach($option['options'] as $key=>$opt) {
+                $strHtml .= $tabs . $this->_optionToHtml($opt['text'], $opt);
             }
             $strHtml .= $tabs . "</optgroup>\n";
             return($strHtml);
         }
-        // else it's an option
-        else {
+        // else it's an option group
+        elseif (!empty($option['text'])){
             if (is_array($this->_values) && in_array((string)$option['attr']['value'], $this->_values)) {
                 $this->_updateAttrArray($option['attr'], array('selected' => 'selected'));
             }
-            return("\t<option" . $this->_getAttrString($option['attr']) . ">$text</option>\n");
+            return("\t<option" . $this->_getAttrString($option['attr']) . ">{$option['text']}</option>\n");
         }
     }
 
@@ -605,9 +582,17 @@ class HTML_QuickForm_select extends HTML_QuickForm_element {
             foreach ($this->_values as $key => $val) {
                 if ( $val || is_numeric($val) ) {
                     foreach ($this->_options as $text=>$option) {
-                        if (($frozenVal = $this->_optionToFrozen($text, $option)) !== null) {
-                            $value[$key] = $frozenVal;
-                            break;
+                        if (isset($option['options']) && is_array($option['options'])) {
+                            foreach($option['options'] as $optKey => $optLabel) {
+                                if (0 == strcmp($val, $optKey)) {
+                                    $value[$key] = $optLabel;
+                                }
+                            }
+                        }
+                        else {
+                            if (0 == strcmp($val, $option['attr']['value'])) {
+                                $value[$key] = $option['text'];
+                            }
                         }
                     }
                 }
@@ -729,27 +714,5 @@ class HTML_QuickForm_select extends HTML_QuickForm_element {
     }
 
     // }}}
-    // {{{ _optionToFrozen()
-
-    function _optionToFrozen($text, $option) {
-
-	// if an option has options it's an optgroup
-	if (isset($option['options'])) {
-		foreach($option['options'] as $txt=>$opt) {
-			if (($value = $this->_optionToFrozen($txt, $opt)) !== null) {
-				return $value;
-			}
-		}
-	}
-	// else it's an option
-	else {
-		if (is_array($this->_values) && in_array((string)$option['attr']['value'], $this->_values)) {
-			return $text;
-		}
-		return null;
-	}
-    }
-
-  // }}}
 } //end class HTML_QuickForm_select
 ?>
