@@ -3,7 +3,6 @@
 class CRM_Contact_Form_Search_Custom_SingleNotRecurring extends CRM_Contact_Form_Search_Custom_Base implements CRM_Contact_Form_Search_Interface {
 
   protected $_formValues;
-  protected $_cstatus = NULL;
   protected $_config;
   protected $_tableName = NULL;
   protected $_filled = NULL;
@@ -160,7 +159,6 @@ $having
   function qill(){
     $qill = array();
 
-    $attendeeStatus = array_map('ts', $this->_participantStatuses);
     $count = $this->_formValues['contribution_count'];
     $qill[1]['count'] = ts('Single donation over %1 times', array(1 => $count));
 

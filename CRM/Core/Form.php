@@ -871,7 +871,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
     }
   }
 
-  function addSelect($name, $label, $options, $attributes, $required = NULL, $others = NULL) {
+  function addSelect($name, $label, $options, $attributes = NULL, $required = NULL, $others = NULL) {
     $this->addElement('select', $name, $label, $options, $attributes);
 
     if ($required) {
