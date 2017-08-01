@@ -93,7 +93,7 @@ class CRM_Admin_Page_Options extends CRM_Core_Page_Basic {
       self::$_gId = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionGroup', self::$_gName, 'id', 'name');
     }
     else {
-      CRM_Core_Error::fatal();
+      CRM_Core_Error::fatal('Do not specify group name.');
     }
 
     self::$_GName = ucwords(str_replace('_', ' ', self::$_gName));
