@@ -992,7 +992,7 @@ class CRM_Report_Form extends CRM_Core_Form {
       case 'nll':
       case 'nnll':
         $sqlOP = self::getSQLOperator($op);
-        $clause = "( {$field['dbAlias']} $sqlOP )";
+        $clause = "( NULLIF(TRIM({$field['dbAlias']}), '') $sqlOP )";
         break;
 
       default:
