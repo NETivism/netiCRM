@@ -291,15 +291,15 @@ class CRM_Core_Error extends PEAR_ErrorStack {
    * @access public
    * @static
    */
-  static function debug($name, $variable = NULL, $log = TRUE, $html = TRUE) {
+  static function debug($name, $variable = NULL, $print = TRUE, $html = TRUE) {
     $error = &self::singleton();
+    $out = self::debug_var($name, $variable);
 
     if ($variable === NULL) {
       $variable = $name;
       $name = NULL;
     }
 
-    $out = print_r($variable, TRUE);
     $prefix = NULL;
     if ($html) {
       $out = htmlspecialchars($out);
@@ -314,7 +314,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
       }
       $out = "{$prefix}$out\n";
     }
-    if ($log) {
+    if ($print) {
       echo $out;
     }
 
@@ -340,14 +340,14 @@ class CRM_Core_Error extends PEAR_ErrorStack {
    * @see CRM_Core_Error::debug_log_message()
    */
   static function debug_var($variable_name,
-    $variable,
-    $print = TRUE,
+    $variable = NULL,
+    $print = FALSE,
     $log = TRUE,
     $comp = ''
   ) {
     // check if variable is set
-    if (!isset($variable)) {
-      $out = "\$$variable_name is not set";
+    if ($variable === NULL) {
+      $out = (string) $variable_name;
     }
     else {
       if ($print) {
@@ -428,7 +428,6 @@ class CRM_Core_Error extends PEAR_ErrorStack {
     $backTrace = debug_backtrace();
 
     $msgs = array();
-    require_once 'CRM/Utils/Array.php';
     foreach ($backTrace as $trace) {
       $msgs[] = implode(', ',
         array(CRM_Utils_Array::value('file', $trace),
