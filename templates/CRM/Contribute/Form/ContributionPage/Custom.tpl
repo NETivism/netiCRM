@@ -41,6 +41,10 @@
 {if ! $noProfile} 
 <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</div>
     <table class="form-layout-compressed">
+    <tr class='crm-contribution-contributionpage-custom-form--block-create-new-profile'>
+        <td class="label"></td>
+        <td><a href="{crmURL p='civicrm/admin/uf/group/add' q='reset=1&action=add'}" target="_blank"><i class="zmdi zmdi-plus-circle"></i> {ts}Add Profile{/ts}</a></td>
+    </tr>
     <tr class="crm-contribution-contributionpage-custom-form-block-custom_pre_id">
        <td class="label">{$form.custom_pre_id.label}
        </td>
@@ -54,10 +58,6 @@
        <td class="html-adjust">{$form.custom_post_id.html} <span class="profile-links"></span><br />
           <span class="description">{ts}Include additional fields in this online contribution page by configuring and selecting a CiviCRM Profile to be included at the bottom of the page.{/ts}</span>
        </td>
-    </tr>
-    <tr class='crm-contribution-contributionpage-custom-form--block-create-new-profile'>
-        <td class="label"></td>
-        <td><a href="{crmURL p='civicrm/admin/uf/group/add' q='reset=1&action=add'}" target="_blank">{ts}Add Profile{/ts}</td>
     </tr>
     </table>
 {/if}
