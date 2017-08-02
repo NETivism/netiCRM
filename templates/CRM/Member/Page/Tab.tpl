@@ -171,8 +171,9 @@
 {/if} {* End of $action eq 16 - browse memberships. *}
 
 {if $action eq 4}
-<div class="crm-accordion-wrapper crm-membership_log-accordion collapsed crm-accordion-closed">
-        <div class="crm-accordion-header" id="crm-membership_log">{ts}Membership Log{/ts}</div>
+<div class="crm-accordion-wrapper crm-membership_log-accordion {if $memberLog_rows}crm-accordion-closed{else}crm-accordion-open{/if}">
+ <div class="crm-accordion-header crm-master-accordion-header">
+  <div class="zmdi crm-accordion-pointer"></div>{ts}Membership Log{/ts}</div>
         <!-- /.crm-accordion-header -->
         <div class="crm-accordion-body">
 
