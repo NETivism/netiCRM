@@ -71,6 +71,14 @@
                  {ts}If this is a paid event and you want users to be able to register and pay online, select a payment processor to use.{/ts}
                  {ts}NOTE: Alternatively, you can enable the <strong>Pay Later</strong> feature below without setting up a payment processor. All users will then be asked to submit payment offline (e.g. mail in a check, call in a credit card, etc.).{/ts} {docURL page="CiviContribute Payment Processor Configuration"}<td>
              </tr>
+          {if $form.payment_instrument}
+          <tr class="crm-event-manage-fee-form-block-payment_instrument"><td></td><td>
+            <table><tr>
+                <th scope="row" class="label" width="20%">{$form.payment_instrument.label}</th>
+                <td>{$form.payment_instrument.html}</td>
+            </tr></table>
+          </tr>
+          {/if}
         </table>
         {/if}
            

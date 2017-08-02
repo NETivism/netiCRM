@@ -50,6 +50,14 @@
             <td>{$form.payment_processor.html}<br />
             <span class="description">{ts}Select the payment processor to be used for contributions submitted from this contribution page (unless you are soliciting non-monetary / in-kind contributions only).{/ts} {docURL page="CiviContribute Payment Processor Configuration"}</span></td>
         </tr>
+          {if $form.payment_instrument}
+          <tr class="crm-contribution-contributionpage-amount-form-block-payment_instrument"><td></td><td>
+            <table><tr>
+                <th scope="row" class="label" width="20%">{$form.payment_instrument.label}</th>
+                <td>{$form.payment_instrument.html}</td>
+            </tr></table>
+          </tr>
+          {/if}
         {/if}
 
         <!-- is_pay_later BEGIN -->
