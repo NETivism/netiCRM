@@ -89,6 +89,10 @@
       </div>
       <div class="crm-accordion-body">
         <table class="form-layout-compressed">
+        <tr class='crm-event-manage-registration-form--block-create-new-profile'>
+            <td class="label"></td>
+            <td><a href="{crmURL p='civicrm/admin/uf/group/add' q='reset=1&action=add'}" target="_blank"><i class="zmdi zmdi-plus-circle"></i> {ts}Add Profile{/ts}</a></td>
+        </tr>
          <tr class="crm-event-manage-registration-form-block-custom_pre_id">
             <td scope="row" class="label" width="20%">{$form.custom_pre_id.label}</td>
             <td>{$form.custom_pre_id.html} <span class="profile-links"></span></span><br />

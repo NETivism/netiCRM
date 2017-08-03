@@ -55,6 +55,10 @@ class CRM_Contribute_Form_ContributionPage_Custom extends CRM_Contribute_Form_Co
 
     $profiles = CRM_Core_BAO_UFGroup::getProfiles($types);
 
+    // filter again use uf_join
+    $pageProfiles = CRM_Core_BAO_UFGroup::getModuleUFGroup('CiviContribute');
+    $profiles = array_intersect_key($profiles, $pageProfiles);
+
     if (empty($profiles)) {
       $this->assign('noProfile', TRUE);
     }
