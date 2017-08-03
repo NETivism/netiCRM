@@ -211,11 +211,6 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
           ),
         ),
         'grouping' => 'contri-fields',
-        'group_bys' =>
-        array('title' => array(
-            'title' => ts('Contribution Page'),
-          )
-        ),
       ),
     );
 
