@@ -28,10 +28,8 @@ table td { padding: 2px 4px; }
 .receipt-body .content li { margin: 8px 0;}
 .receipt-body .stamp { position: absolute; left:50%;}
 .receipt-body .handle { margin-top:50px;}
-.receipt-body .unit { padding:0 8px; font-size:10pt;}
 .receipt-body li.amount .desc { padding-left: 5px; }
 .receipt-body li.amount .second-line { padding-left: 50px; }
-.receipt-body .start.unit { font-size: 12pt; padding-left: 5px;}
 
 .receipt-footer {clear:both; position: relative; margin-top: 10px; font-size: 10pt;}
 .receipt-footer table {font-size: 10pt;}

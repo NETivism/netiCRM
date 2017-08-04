@@ -143,6 +143,9 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
             'statistics' =>
             array('sum' => ts('Amount')),
           ),
+          'payment_instrument_id' => array(
+            'title' => ts('Payment Instrument'),
+          ),
         ),
         'filters' =>
         array('receive_date' =>
@@ -160,6 +163,16 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
           ),
           'total_amount' =>
           array('title' => ts('Contribution Amount')),
+          'contribution_page_id' =>
+          array('title' => ts('Contribution Page'),
+            'operatorType' => CRM_Report_Form::OP_MULTISELECT,
+            'options' => CRM_Contribute_PseudoConstant::contributionPage(),
+          ),
+          'payment_instrument_id' =>
+          array('title' => ts('Payment Instrument'),
+            'operatorType' => CRM_Report_Form::OP_MULTISELECT,
+            'options' => CRM_Core_OptionGroup::values('payment_instrument'),
+          ),
         ),
         'grouping' => 'contri-fields',
       ),
@@ -188,6 +201,16 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
             ),
           ),
         ),
+      ),
+      'civicrm_contribution_page' =>
+        array(
+        'dao' => 'CRM_Contribute_DAO_ContributionPage',
+        'fields' =>
+          array('title' => array(
+            'title' => ts('Contribution Page'),
+          ),
+        ),
+        'grouping' => 'contri-fields',
       ),
     );
 
@@ -266,7 +289,9 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
                       ON {$this->_aliases['civicrm_contribution_ordinality']}.id = {$this->_aliases['civicrm_contribution']}.id
                LEFT JOIN  civicrm_phone {$this->_aliases['civicrm_phone']} 
                       ON ({$this->_aliases['civicrm_contact']}.id = {$this->_aliases['civicrm_phone']}.contact_id AND 
-                         {$this->_aliases['civicrm_phone']}.is_primary = 1)";
+                         {$this->_aliases['civicrm_phone']}.is_primary = 1)
+               LEFT JOIN civicrm_contribution_page  {$this->_aliases['civicrm_contribution_page']} 
+                     ON {$this->_aliases['civicrm_contribution']}.contribution_page_id ={$this->_aliases['civicrm_contribution_page']}.id";
 
     if ($this->_addressField OR (!empty($this->_params['state_province_id_value']) OR !empty($this->_params['country_id_value']))) {
       $this->_from .= "
@@ -329,6 +354,7 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
     $entryFound = FALSE;
     $display_flag = $prev_cid = $cid = 0;
     $contributionTypes = CRM_Contribute_PseudoConstant::contributionType();
+    $payment_instrument = CRM_Core_OptionGroup::values('payment_instrument');
 
     foreach ($rows as $rowNum => $row) {
       if (!empty($this->_noRepeats) && $this->_outputMode != 'csv') {
@@ -420,6 +446,12 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
         );
         $rows[$rowNum]['civicrm_contribution_total_amount_sum_link'] = $url;
         $rows[$rowNum]['civicrm_contribution_total_amount_sum_hover'] = ts("View Details of this Contribution.");
+        $entryFound = TRUE;
+      }
+
+      // convert payment instruments display
+      if (array_key_exists('civicrm_contribution_payment_instrument_id', $row)) {
+        $rows[$rowNum]['civicrm_contribution_payment_instrument_id'] = $payment_instrument[$rows[$rowNum]['civicrm_contribution_payment_instrument_id']];
         $entryFound = TRUE;
       }
 
