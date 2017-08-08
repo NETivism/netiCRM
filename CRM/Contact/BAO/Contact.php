@@ -1732,7 +1732,7 @@ ORDER BY civicrm_email.is_primary DESC";
     }
 
     // get the billing location type
-    $locationTypes = CRM_Core_PseudoConstant::locationType();
+    $locationTypes = CRM_Core_PseudoConstant::locationType(TRUE, 'name');
     $billingLocationTypeId = array_search('Billing', $locationTypes);
 
     $blocks = array('email', 'phone', 'im', 'openid');

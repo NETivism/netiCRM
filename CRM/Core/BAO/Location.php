@@ -88,6 +88,8 @@ class CRM_Core_BAO_Location extends CRM_Core_DAO {
     else {
       // make sure contact should have only one primary block, CRM-5051
       self::checkPrimaryBlocks(CRM_Utils_Array::value('contact_id', $params));
+      // make sure we always have billing flag #20146
+      self::checkBillingAddress(CRM_Utils_Array::value('contact_id', $params));
     }
 
     return $location;
@@ -381,6 +383,55 @@ WHERE e.id = %1";
         CRM_Core_DAO::setFieldValue("CRM_Core_DAO_" . $block,
           array_pop($nonPrimaryBlockIds[$name]), 'is_primary', 1
         );
+      }
+    }
+  }
+
+  static function checkBillingAddress($contactId) {
+    if (!$contactId) {
+      return;
+    }
+
+    $dao = CRM_Core_DAO::executeQuery("SELECT id, location_type_id, is_billing, is_primary FROM civicrm_address WHERE contact_id = %1", array(1 => array($contactId, 'Integer')));
+    $addr = array('billing' => array(), 'nonbilling' => array());
+    while ($dao->fetch()) {
+      if ($dao->is_billing) {
+        $addr['billing'][$dao->id] = $dao->location_type_id;
+      }
+      else {
+        $addr['nonbilling'][$dao->id] = $dao->location_type_id;
+      }
+    }
+    $locationTypes = CRM_Core_PseudoConstant::locationType(TRUE, 'name');
+    $billingLocationTypeId = array_search('Billing', $locationTypes);
+
+    if (count($addr['billing']) > 1) {
+      // keep only single block as billing.
+      $keepId = 0;
+      foreach ($addr['billing'] as $addressId => $locationTypeId) {
+        if ($locationTypeId == $billingLocationTypeId) {
+          $keepId = $addressId;
+          break;
+        }
+      }
+      if (!$keepId) {
+        $keep = array_pop($addr['billing']);
+      }
+      unset($addr['billing'][$keepId]);
+      $restIds = "(" . implode(',', array_keys($addr['billing'])) . ")";
+      CRM_Core_DAO::executeQuery("UPDATE civicrm_address SET is_billing = 0 WHERE id IN $restIds");
+    }
+    elseif (count($addr['billing']) == 0 && count($addr['nonbilling']) > 0) {
+      $setBilling = FALSE;
+      foreach ($addr['nonbilling'] as $addressId => $locationTypeId) {
+        if ($locationTypeId == $billingLocationTypeId) {
+          CRM_Core_DAO::setFieldValue("CRM_Core_DAO_Address", $addressId, 'is_billing', 1);
+          $setBilling = TRUE;
+          break;
+        }
+      }
+      if (!$setBilling) {
+        CRM_Core_DAO::setFieldValue("CRM_Core_DAO_Address", key($addr['nonbilling']), 'is_billing', 1);
       }
     }
   }

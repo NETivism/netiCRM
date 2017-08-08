@@ -533,6 +533,7 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
         if ($instance == 1) {
           $hasPrimary = TRUE;
           $defaults[$name][$instance]['is_primary'] = TRUE;
+          $defaults[$name][$instance]['is_billing'] = TRUE;
           $defaults[$name][$instance]['location_type_id'] = $locationType->id;
         }
         else {

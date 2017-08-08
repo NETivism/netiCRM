@@ -108,11 +108,11 @@ function singleSelect( object ) {
     }
 
 	//check if non of elements is set Primary / Allowed to Login.
-	if( cj.inArray( element['2'].slice('2'), [ 'Primary', 'Login' ] ) != -1 ) {
+	if( cj.inArray( element['2'].slice('2'), [ 'Primary', 'Login', 'Billing' ] ) != -1 ) {
 		primary = false;
 		cj( execBlock ).each( function( ) { 
 			if ( cj(this).attr( 'checked' ) ) {
-				primary = true;				
+				primary = true;
 			}
 		});
 		if( ! primary ) {
