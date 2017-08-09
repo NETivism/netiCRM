@@ -348,6 +348,13 @@
       <add>1.7</add>     
   </field>
   <field>
+      <name>allow_cancel_by_link</name>
+      <type>boolean</type>
+      <default>0</default>
+      <comment>If true, allow participant cancel event by link in confirm mail.</comment>
+      <add>1.7</add>
+  </field>
+  <field>
       <name>default_fee_id</name>
       <type>int unsigned</type>
       <comment>FK to civicrm_option_value.</comment>

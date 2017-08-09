@@ -12,8 +12,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2017-08-02 07:30+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
+"PO-Revision-Date: 2017-08-09 08:18+0000\n"
+"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35887,7 +35887,7 @@ msgid ""
 "enter one or more email addresses here. Multiple email addresses should be "
 "separated by a comma (e.g. jane@example.org, paula@example.org). The first "
 "email address listed will be used as the FROM address in the notifications."
-msgstr ""
+msgstr "當這份資料表單被填寫送出後，您的組織成員將會收到送出表單的E-mail通知，請在此輸入組織成員的E-mail，若不只一位，請用逗號分隔E-mail，例如：jane@example.org, paula@example.org，而第一位的E-mail會被用來當作是通知信的寄件者。"
 
 #: templates/CRM/UF/Form/Group.hlp
 msgid ""
@@ -35938,7 +35938,7 @@ msgid ""
 "online contribution page OR an event registration page, anonymous users will"
 " be given the option to create a %1 User Account as part of completing the "
 "form."
-msgstr ""
+msgstr "如果你把這個資料表單用在聯絡人註冊頁、線上捐款頁、或是活動報名頁，這個選項可以提供匿名使用者是否要建立一個%1使用者帳號。"
 
 #: templates/CRM/UF/Form/Group.hlp
 msgid ""
@@ -35964,7 +35964,7 @@ msgstr ""
 #: templates/CRM/UF/Form/Group.hlp
 msgid ""
 "In addition, you must include a Primary Email Address field in the profile."
-msgstr ""
+msgstr "此外，你必須要有一個主要的電子郵件地址。"
 
 #: templates/CRM/UF/Form/Group.hlp
 msgid ""
@@ -35982,7 +35982,7 @@ msgid ""
 "contribution, membership signup or event registration form. In this case a "
 "contact match always results in the transaction being linked to the matching"
 " contact.</p>"
-msgstr "若這個檔案有嵌入一個線上捐款、會員註冊或活動報名表格，這個設定將會被忽略。In this case a contact match always results in the transaction being linked to the matching contact.</p>"
+msgstr "若這個資料表單被嵌入在一個線上捐款、會員註冊或活動報名的頁面，在這種情況下，聯絡人會自動比對是否為重複聯絡人，這個選項的設定將會被忽略。"
 
 #: templates/CRM/UF/Form/Group.hlp
 msgid ""
@@ -45863,3 +45863,18 @@ msgstr "離島"
 
 msgid "Membership Log"
 msgstr "會籍變動歷史"
+
+msgid "register count"
+msgstr ""
+
+#: CRM/Event/DAO/Event.php
+msgid "Allow Cancel By Link"
+msgstr "可藉連結取消報名"
+
+#: CRM/Event/Form/ManageEvent/Registration.php
+msgid "Attach cancel registration link"
+msgstr "附上取消報名連結"
+
+#: templates/CRM/Event/Form/ManageEvent/Registration.tpl
+msgid "Links only displays on free event."
+msgstr "連結只在免費活動時才出現"

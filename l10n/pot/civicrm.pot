@@ -45758,3 +45758,15 @@ msgstr ""
 
 msgid "register count"
 msgstr ""
+
+#: CRM/Event/DAO/Event.php
+msgid "Allow Cancel By Link"
+msgstr ""
+
+#: CRM/Event/Form/ManageEvent/Registration.php
+msgid "Attach cancel registration link"
+msgstr ""
+
+#: templates/CRM/Event/Form/ManageEvent/Registration.tpl
+msgid "Links only displays on free event."
+msgstr ""

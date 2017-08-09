@@ -4369,6 +4369,7 @@ CREATE TABLE civicrm_event (
      confirm_from_email varchar(255)    COMMENT 'FROM email address used for confirmation emails.',
      cc_confirm varchar(255)    COMMENT 'comma-separated list of email addresses to cc each time a confirmation is sent',
      bcc_confirm varchar(255)    COMMENT 'comma-separated list of email addresses to bcc each time a confirmation is sent',
+     allow_cancel_by_link tinyint   DEFAULT 0 COMMENT 'If true, allow participant cancel event by link in confirm mail.',
      default_fee_id int unsigned    COMMENT 'FK to civicrm_option_value.',
      default_discount_fee_id int unsigned    COMMENT 'FK to civicrm_option_value.',
      thankyou_title varchar(255)   DEFAULT NULL COMMENT 'Title for ThankYou page.',

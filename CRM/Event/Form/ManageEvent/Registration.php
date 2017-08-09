@@ -305,6 +305,11 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
     $form->assign('mail_providers', str_replace('|', ', ', CRM_Utils_Mail::DMARC_MAIL_PROVIDERS));
     $form->addRule("confirm_from_email", ts('Email is not valid.'), 'email');
 
+    $this->addElement('checkbox',
+      'allow_cancel_by_link',
+      ts('Attach cancel registration link'),
+      NULL);
+
     $defaultFromMail = CRM_Mailing_BAO_Mailing::defaultFromMail();
     $this->assign('default_from_target', 'confirm_from_email');
     $this->assign('default_from_value', $defaultFromMail);

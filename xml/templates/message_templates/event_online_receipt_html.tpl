@@ -445,7 +445,7 @@ registration process.{/ts}</p>
      {/if}
 
 
-      {if !$event.is_monetary}
+      {if $hasCancelLink}
       <tr>
         <td colspan="2" {$valueStyle}>
          {capture assign=cancelUrl}{crmURL p='civicrm/event/cancel' q="reset=1&participantId=`$participantID`&cs=`$checksumValue`" a=true h=0 fe=1}{/capture}

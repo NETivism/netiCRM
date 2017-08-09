@@ -290,6 +290,12 @@ class CRM_Event_DAO_Event extends CRM_Core_DAO
    */
   public $bcc_confirm;
   /**
+   * If true, allow participant cancel event by link in confirm mail.
+   *
+   * @var boolean
+   */
+  public $allow_cancel_by_link;
+  /**
    * FK to civicrm_option_value.
    *
    * @var int unsigned
@@ -679,6 +685,11 @@ class CRM_Event_DAO_Event extends CRM_Core_DAO
           'title' => ts('Bcc Confirm') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
+        ) ,
+        'allow_cancel_by_link' => array(
+          'name' => 'allow_cancel_by_link',
+          'type' => CRM_Utils_Type::T_BOOLEAN,
+          'title' => ts('Allow Cancel By Link') ,
         ) ,
         'default_fee_id' => array(
           'name' => 'default_fee_id',
