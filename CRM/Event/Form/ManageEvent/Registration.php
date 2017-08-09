@@ -397,6 +397,7 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
     $params['is_multiple_registrations'] = CRM_Utils_Array::value('is_multiple_registrations', $params, FALSE);
     $params['allow_same_participant_emails'] = CRM_Utils_Array::value('allow_same_participant_emails', $params, FALSE);
     $params['requires_approval'] = CRM_Utils_Array::value('requires_approval', $params, FALSE);
+    $params['allow_cancel_by_link'] = CRM_Utils_Array::value('allow_cancel_by_link', $params, FALSE);
 
     // reset is_email confirm if not online reg
     if (!$params['is_online_registration']) {
