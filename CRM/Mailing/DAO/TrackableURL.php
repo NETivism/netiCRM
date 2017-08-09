@@ -142,7 +142,7 @@ class CRM_Mailing_DAO_TrackableURL extends CRM_Core_DAO
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Url') ,
           'required' => true,
-          'maxlength' => 255,
+          'maxlength' => 511,
           'size' => CRM_Utils_Type::HUGE,
         ) ,
         'mailing_id' => array(

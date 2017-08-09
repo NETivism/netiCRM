@@ -1130,7 +1130,7 @@ CREATE TABLE civicrm_mailing_trackable_url (
 
 
      id int unsigned NOT NULL AUTO_INCREMENT  ,
-     url varchar(255) NOT NULL   COMMENT 'The URL to be tracked.',
+     url varchar(511) NOT NULL   COMMENT 'The URL to be tracked.',
      mailing_id int unsigned NOT NULL   COMMENT 'FK to the mailing' 
 ,
     PRIMARY KEY ( id )

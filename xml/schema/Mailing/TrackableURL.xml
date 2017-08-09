@@ -17,7 +17,7 @@
     <field>
         <name>url</name>
         <type>varchar</type>
-        <length>255</length>
+        <length>511</length>
         <required>true</required>
         <comment>The URL to be tracked.</comment>
     </field>
