@@ -12,8 +12,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2017-08-09 08:18+0000\n"
-"Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
+"PO-Revision-Date: 2017-08-10 07:44+0000\n"
+"Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45865,7 +45865,7 @@ msgid "Membership Log"
 msgstr "會籍變動歷史"
 
 msgid "register count"
-msgstr ""
+msgstr "註冊次數"
 
 #: CRM/Event/DAO/Event.php
 msgid "Allow Cancel By Link"
@@ -45878,3 +45878,7 @@ msgstr "附上取消報名連結"
 #: templates/CRM/Event/Form/ManageEvent/Registration.tpl
 msgid "Links only displays on free event."
 msgstr "連結只在免費活動時才出現"
+
+#: templates/CRM/Profile/Form/Edit.tpl
+msgid "Back to Website"
+msgstr "回到網站"

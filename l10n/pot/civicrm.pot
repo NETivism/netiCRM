@@ -45770,3 +45770,7 @@ msgstr ""
 #: templates/CRM/Event/Form/ManageEvent/Registration.tpl
 msgid "Links only displays on free event."
 msgstr ""
+
+#: templates/CRM/Profile/Form/Edit.tpl
+msgid "Back to Website"
+msgstr ""

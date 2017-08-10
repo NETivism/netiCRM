@@ -5188,8 +5188,15 @@ tbody.scrollContent tr.alternateRow {
 
 /* Profiles Page */
 .crm-container form[action="/civicrm/profile/create"] .crm-submit-buttons {
-  margin-top: 80px;
   text-align: center;
+}
+.crm-container .crm-profile-cancel {
+  position: absolute;
+  bottom: 8px;
+}
+.crm-container .crm-profile-cancel a,
+.crm-container .crm-profile-cancel a:link {
+  color: #929a9c;
 }
 
 /* Report Summary */
