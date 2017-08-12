@@ -1832,7 +1832,12 @@ table.campaign td,
 .crm-container .thermometer-cell {
     display: table-cell;
 }
-
+.crm-container .thermometer-cell label {
+    font-weight: normal;
+}
+.crm-container .thermometer-cell .crmMoney {
+    font-weight: bold;
+}
 .crm-container .thermometer-fill-wrapper {
     height: 50px;
     position:relative;
@@ -1859,13 +1864,26 @@ table.campaign td,
 
 .crm-container .thermometer-pointer {
     position:absolute;
-    top: 15px;
+    top: 26px;
     color: #777;
+}
+.crm-container .thermometer-pointer-over {
+    position:absolute;
+    top: 10px;
+    color: #999;
+    font-size: 1.2em;
+    font-weight: bold;
 }
 .crm-container .pcp-amount-raised {
     position:absolute;
     left: 0px;
     padding: 10px;
+}
+.crm-container .pcp-amount-raised-over {
+    position: absolute;
+    left: 30%;
+    padding: 10px;
+    font-size: 1.2em;
 }
 .crm-container .pcp-amount-goal {
     position:absolute;
@@ -1873,7 +1891,15 @@ table.campaign td,
     padding: 10px;
 }
 .crm-container .thermometer-cell.pcp-donate {
-    border-left: 1px solid #555;
+    border-left: 3px solid #FFF;
+}
+.crm-container .thermometer-cell.pcp-donate a.button {
+    white-space: nowrap;
+    margin: 8px 0;
+}
+.crm-container .thermometer-full .thermometer-cell.pcp-donate {
+    border: 0;
+    background: #fff73b;
 }
 .crm-container .pcp-donate {
     text-align: center;
@@ -1907,6 +1933,7 @@ table.campaign td,
     margin-bottom: 1em;
     max-width: 768px;
     margin: 0 auto;
+    padding: 10px;
 }
 .crm-container .pcp-parent-link {
     text-align: center;
@@ -5188,8 +5215,15 @@ tbody.scrollContent tr.alternateRow {
 
 /* Profiles Page */
 .crm-container form[action="/civicrm/profile/create"] .crm-submit-buttons {
-  margin-top: 80px;
   text-align: center;
+}
+.crm-container .crm-profile-cancel {
+  position: absolute;
+  bottom: 8px;
+}
+.crm-container .crm-profile-cancel a,
+.crm-container .crm-profile-cancel a:link {
+  color: #929a9c;
 }
 
 /* Report Summary */
@@ -5898,6 +5932,45 @@ input.crm-form-textfield,
   }
   .crm-container .event_date_time-section .add-to-calendar {
     display: block;
+  }
+  .crm-container .pcp-leading {
+    min-height: 175px;
+  }
+  .crm-container .thermometer-cell {
+    display: block;
+  }
+  .crm-container .pcp-amount-goal label {
+    display: none;
+  }
+  .crm-container .thermometer-wrapper {
+    background: transparent;
+  }
+  .crm-container .thermometer-cell.pcp-donate {
+    border: 0;
+    display: block;
+  }
+  .crm-container .thermometer-fill-wrapper {
+    width: 100%;
+  }
+  .crm-container .pcp-amount-raised-over {
+    left: 0;
+    right: 0;
+    padding: 0;
+    font-size: .85em;
+    width: 300px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .crm-container .thermometer-pointer-over {
+    top: 25px;
+    left: 0 !important;
+    right: 0;
+    width: 100px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .crm-container .pcp-intro-text {
+    font-size: 1.25em;
   }
 }
 

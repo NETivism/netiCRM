@@ -173,13 +173,12 @@ SELECT module
         }
       }
 
-      if (!$this->_cancelURL) {
-        $this->_cancelURL = CRM_Utils_System::url('civicrm/profile', "reset=1&gid={$gidString}");
+      if ($this->_cancelURL) {
+        $this->_cancelURL = str_replace('&amp;', '&', $this->_cancelURL);
       }
 
       // we do this gross hack since qf also does entity replacement
       $this->_postURL = str_replace('&amp;', '&', $this->_postURL);
-      $this->_cancelURL = str_replace('&amp;', '&', $this->_cancelURL);
 
       // also retain error URL if set
       $this->_errorURL = CRM_Utils_Array::value('errorURL', $_POST);
@@ -209,18 +208,14 @@ SELECT module
     }
 
     $buttons[] = array('type' => $buttonName,
-      'name' => ts('Submit'),
+      'name' => ts('Submit').' >> ',
       'isDefault' => TRUE,
       'js' => array('data' => 'submit-once'),
     );
 
-    if ($this->_context != 'dialog') {
-      $buttons[] = array(
-        'type' => 'cancel',
-        'name' => ts('Cancel'),
-        'isDefault' => TRUE,
-        'js' => array('onclick' => "location.href='{$this->_cancelURL}'; return false;"),
-      );
+    if ($this->_context != 'dialog' && $this->_cancelURL) {
+      // assign back url
+      $this->assign('backWebsiteUrl', $this->_cancelURL);
     }
 
     $this->addButtons($buttons);

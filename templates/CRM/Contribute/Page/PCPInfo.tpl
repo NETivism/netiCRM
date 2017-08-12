@@ -53,16 +53,23 @@
 </div>
 {/if}
 {if $pcp.is_thermometer}
-<div class="thermometer-wrapper">
+<div class="thermometer-wrapper {if $achieved >= 100}thermometer-full{else}thermometer-middle{/if}">
   <div class="thermometer-cell thermometer-fill-wrapper">
-    <div class="thermometer-fill" style="width: {$achieved}%;"></div><!-- /.thermometer-fill -->
-    <div class="thermometer-pointer" style="left: {$achieved}%;"><span class="pcp-percent-raised">{$achieved}%</span></div>
+    <div class="thermometer-fill" data-percent="{$achievedPercent}"></div><!-- /.thermometer-fill -->
+    {if $achieved < 100}
+    <div class="thermometer-pointer" data-percent="{$achievedPercent}"><span class="pcp-percent-raised">{$achieved}%</span></div>
     <div class="pcp-amount-raised">
-      <span class="raised-amount crmMoney">{$total|crmMoney}</span> {ts}raised{/ts}
+      <span class="raised-amount crmMoney">{$total|crmMoney}</span> {ts}raised{/ts}</label>
     </div>
     <div class="pcp-amount-goal">
-      {ts}Goal{/ts} <span class="goal-amount crmMoney">{$pcp.goal_amount|crmMoney}</span>
+      <label>{ts}Goal{/ts}</label> <span class="goal-amount crmMoney">{$pcp.goal_amount|crmMoney}</span>
     </div>
+    {else}
+    <div class="thermometer-pointer thermometer-pointer-over" style="left: 90%;"><span class="pcp-percent-raised">{$achieved}%</span></div>
+    <div class="pcp-amount-raised-over">
+      <label>{ts}Goal{/ts}</label> <span class="goal-amount crmMoney">{$pcp.goal_amount|crmMoney}</span> &#9829; <label>{ts}raised{/ts}</label> <span class="raised-amount crmMoney">{$total|crmMoney}</span>
+    </div>
+    {/if}
   </div><!-- /.thermometer-fill-wrapper -->
 {if $validDate && $contributeURL}
   <div class="thermometer-cell pcp-donate"> 
@@ -104,21 +111,15 @@
 
 {literal}
 <script language="JavaScript">
-
-
-var start=true;
-function roll_start_stop( ) {
-	if ( start ) {
-		document.getElementById('roll').innerHTML = "{/literal}{ts}Start{/ts}{literal}";
-		document.getElementById('roll').title = "{/literal}{ts}Start scrolling{/ts}{literal}";
-		document.getElementById('pcp_roll').stop();
-		start=false;
-      	 } else {
-		document.getElementById('roll').innerHTML = "{/literal}{ts}Stop{/ts}{literal}";
-		document.getElementById('roll').title = "{/literal}{ts}Stop scrolling{/ts}{literal}";
-		document.getElementById('pcp_roll').start();
-		start=true;
-       	}
-}
+cj(document).ready(function($){
+  var percent = $('.thermometer-wrapper .thermometer-fill').data('percent');
+  if (percent) {
+    $('.thermometer-fill').css({"width":"0%", "transition":"width 1.5s ease-in-out"});
+    setTimeout(function(){
+      $('.thermometer-fill').css({"width":percent+"%"});
+      $('.thermometer-pointer').animate({"left":percent+'%'}, 1500);
+    }, 500);
+  }
+});
 </script>
 {/literal}
