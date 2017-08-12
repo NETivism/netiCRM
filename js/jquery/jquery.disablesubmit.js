@@ -46,12 +46,12 @@
       });
     }
 
-    var $obj = $('input[data=click-once]');
-    if($obj.length){
+    var $obj_click_once = $('input[data=click-once]');
+    if($obj_click_once.length){
       // prevent double submit
-      $obj.parents("form").on('submit', function(e){
+      $obj_click_once.parents("form").on('submit', function(e){
         var $form = $(this);
-        if ($form.data('submitted') === true || $obj.attr("readonly")) {
+        if ($form.data('submitted') === true || $obj_click_once.attr("readonly")) {
           // Previously submitted - don't submit again
           e.preventDefault();
         }
@@ -59,7 +59,7 @@
           // Mark it so that the next submit can be ignored
           $form.data('submitted', true);
           // Don't use disabled cause profile edit will have problem. refs #20289 - 9F
-          $obj.attr("readonly", true);
+          $obj_click_once.attr("readonly", true);
         }
       });
     }

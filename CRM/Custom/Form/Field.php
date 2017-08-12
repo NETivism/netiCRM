@@ -467,14 +467,17 @@ class CRM_Custom_Form_Field extends CRM_Core_Form {
     $this->addGroup($searchRange, 'is_search_range', ts('Search by Range?'));
 
     // add buttons
+    $js = array('data' => 'click-once');
     $this->addButtons(array(
         array('type' => 'next',
           'name' => ts('Save'),
           'isDefault' => TRUE,
+          'js' => $js,
         ),
         array('type' => 'next',
           'name' => ts('Save and New'),
           'subName' => 'new',
+          'js' => $js,
         ),
         array('type' => 'cancel',
           'name' => ts('Cancel'),
