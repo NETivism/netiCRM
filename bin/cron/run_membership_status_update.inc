@@ -118,6 +118,7 @@ AND    civicrm_membership.is_test = 0
                     $smarty->append_by_ref('memberParams', $statusChange, true );
                     
                     //process membership record.
+                    unset($deceasedMembership['membership_type']);
                     civicrm_contact_membership_create( $deceasedMembership );
                 }
                 continue;
@@ -152,6 +153,7 @@ AND    civicrm_membership.is_test = 0
                     $smarty->append_by_ref('memberParams', $statusChange, true );
                     
                     //process member record.
+                    unset($memParams['membership_type']);
                     civicrm_contact_membership_create( $memParams );
                 }
             }

@@ -298,9 +298,9 @@ function _civicrm_membership_format_params(&$params, &$values, $create = FALSE) 
         break;
 
       case 'membership_type':
-        $membershipTypeId = CRM_Utils_Array::key(ucfirst($value),
-          CRM_Member_PseudoConstant::membershipType()
-        );
+        $allTypes = CRM_Member_PseudoConstant::membershipType();
+        $membershipTypeId = array_search($value, $allTypes);
+
         if ($membershipTypeId) {
           if (CRM_Utils_Array::value('membership_type_id', $values) &&
             $membershipTypeId != $values['membership_type_id']
