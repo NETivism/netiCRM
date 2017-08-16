@@ -229,12 +229,7 @@ class CRM_Core_Payment_NewebTest extends CiviUnitTestCase {
 
     // create_date is last 15th day in month.
     $now = time();
-    if(date('d',$now)>15){
-      $create_date = strtotime(date('Y-m-15 H:i:s',$now));
-    }else{
-      $last_month = $now - 28 * 86400;
-      $create_date = strtotime(date('Y-m-15 H:i:s',$last_month));
-    }
+    $create_date = strtotime(date('Y-m-d H:i:s', $now - 86400*3));
     // $before_yesterday = $now - 86400 * 2;
     $trxn_id = 990000000 + $id;
     $amount = 222;
