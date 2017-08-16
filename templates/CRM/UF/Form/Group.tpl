@@ -141,11 +141,19 @@ cj(function($) {
         this.checked = true;
         return;
       }
+      else {
+        $("input[id^=uf_group_type]").each(function() {
+          this.checked = false;
+        });
+      }
     }
   });
   
   $("input[id^=uf_group_type]").change(function(){
     var show = true;
+    if ($("#is_active").length) {
+      $("#is_active").attr("checked", true);
+    }
     $("input[id^=uf_group_type\\\[Civi]").each(function(){
       if (this.checked) {
         $("tr.crm-uf-group-form-block-uf_group_type_user").find("input").each(function() {
