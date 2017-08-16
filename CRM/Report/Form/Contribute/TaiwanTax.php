@@ -83,6 +83,15 @@ class CRM_Report_Form_Contribute_TaiwanTax extends CRM_Report_Form {
             'no_repeat' => FALSE,
           ),
         ),
+        'filters' => 
+        array(
+          'contact_type' =>
+          array('title' => ts('Contact Type'),
+            'operatorType' => CRM_Report_Form::OP_MULTISELECT,
+            'options' => CRM_Contact_BAO_ContactType::basicTypePairs(),
+            'default' => array('Individual'),
+          ),
+        ),
       ),
       'civicrm_contribution' =>
       array('dao' => 'CRM_Contribute_DAO_Contribution',
