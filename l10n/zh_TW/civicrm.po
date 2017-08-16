@@ -12,7 +12,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2017-08-10 07:44+0000\n"
+"PO-Revision-Date: 2017-08-16 06:55+0000\n"
 "Last-Translator: jimyhuang <jimmy@netivism.com.tw>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -10603,7 +10603,7 @@ msgstr "<< 返回"
 
 #: CRM/Contribute/Form/Contribution/Main.php
 msgid "Mixed profile not allowed for on behalf of registration/sign up."
-msgstr "混合的資料表單不允許用在使用者註冊。"
+msgstr "資料表單包含多種類型的欄位時，無法啟用「代表組織捐款」、「線上註冊」等功能。"
 
 #: CRM/Contribute/Form/Contribution/Main.php
 msgid ""
