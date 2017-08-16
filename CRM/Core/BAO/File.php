@@ -414,7 +414,7 @@ AND       CEF.entity_id    = %2";
   static function processAttachment(&$params,
     $entityTable,
     $entityID,
-    $maxAttachments
+    $maxAttachments = 0
   ) {
     $config = CRM_Core_Config::singleton();
     $numAttachments = $maxAttachments ? $maxAttachments : $config->maxAttachments;
