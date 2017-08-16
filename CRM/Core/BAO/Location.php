@@ -431,7 +431,9 @@ WHERE e.id = %1";
         }
       }
       if (!$setBilling) {
-        CRM_Core_DAO::setFieldValue("CRM_Core_DAO_Address", key($addr['nonbilling']), 'is_billing', 1);
+        reset($addr['nonbilling']);
+        $firstAddr = key($addr['nonbilling']);
+        CRM_Core_DAO::setFieldValue("CRM_Core_DAO_Address", $firstAddr, 'is_billing', 1);
       }
     }
   }
