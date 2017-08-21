@@ -560,7 +560,7 @@ class HTML_QuickForm_select extends HTML_QuickForm_element {
             return($strHtml);
         }
         // else it's an option group
-        elseif (!empty($option['text'])){
+        elseif (isset($option['text'])){
             if (is_array($this->_values) && in_array((string)$option['attr']['value'], $this->_values)) {
                 $this->_updateAttrArray($option['attr'], array('selected' => 'selected'));
             }
