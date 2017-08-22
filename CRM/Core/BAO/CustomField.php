@@ -857,10 +857,10 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
         //Add State
         $limitCountry = $config->provinceLimit();
         $countryIsoCodes = CRM_Core_PseudoConstant::countryIsoCode();
-        $stateOption = array(
-          '' => ts('- select -'),
-        );
         if (count($limitCountry) > 1) {
+          $stateOption = array(
+            '' => ts('- select -'),
+          );
           foreach($limitCountry as $countryAbbr) {
             $countryId = array_search($countryAbbr, $countryIsoCodes);
             if ($countryId) {
@@ -870,7 +870,9 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
           }
         }
         else {
-          $stateOption = CRM_Core_PseudoConstant::stateProvince();
+          $stateOption = array_merge(array(
+            '' => ts('- select -'),
+          ),CRM_Core_PseudoConstant::stateProvince());
         }
 
         $qf->addSelect($elementName, $label, $stateOption, array("state-province"), (($useRequired || ($useRequired && $field->is_required)) && !$search));
