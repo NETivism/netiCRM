@@ -128,6 +128,10 @@ cj(function($){
   function doShowHideReceiptFields(){
     doClearNameIdErrorMessage();
     $('.upload-info').remove();
+    if($('#r_company').length > 0){
+      $('#r_company').removeAttr('readonly').parent('label').css('pointer-events','');
+      $('.upload-person-only-info').remove();
+    }
 
     if(getRequireType() > 0){
       {/literal}{if $receiptTitle}{literal}
@@ -136,6 +140,11 @@ cj(function($){
       {/literal}{if $receiptSerial}{literal}
       $('.custom_{/literal}{$receiptSerial}{literal}-section').show('slow');
       if(getRequireType() == 2){
+        if($('#r_person').length > 0){
+          $('#r_person').prop('checked',true);
+          $('#r_company').attr('readonly','readonly').parent('label').css('pointer-events','none');
+          $('.receipt_type .content').append($('<div class="description upload-person-only-info">{/literal}{ts}To upload data is only for person contribution.{/ts}{literal}</div>'));
+        }
         $('.custom_{/literal}{$receiptSerial}{literal}-section .content').append('<div class="description upload-info">{/literal}{ts}Please fill legal identifier to upload data.{/ts}{literal}</div>');
       }
       {/literal}{/if}{literal}

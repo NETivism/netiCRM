@@ -45774,3 +45774,7 @@ msgstr ""
 #: templates/CRM/Profile/Form/Edit.tpl
 msgid "Back to Website"
 msgstr ""
+
+#: templates/CRM/common/betterContributionForm.tpl
+msgid "To upload data is only for person contribution."
+msgstr ""
