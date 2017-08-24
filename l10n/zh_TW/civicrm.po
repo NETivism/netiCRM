@@ -12,7 +12,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2017-08-23 08:02+0000\n"
+"PO-Revision-Date: 2017-08-24 08:24+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -44641,7 +44641,7 @@ msgstr "收據抬頭所使用的欄位"
 
 #: civicrm/CRM/Admin/Form/Setting/Receipt.php
 msgid "Field for receipt serial number"
-msgstr "收據編號欄位"
+msgstr "報稅憑證欄位"
 
 #: civicrm/CRM/Admin/Form/Setting/Receipt.php
 msgid "Field for donor credit"
@@ -45560,7 +45560,7 @@ msgid "Tax Invoice Giving"
 msgstr "發票捐贈"
 
 msgid "Please fill legal identifier to upload data."
-msgstr "上傳資料至國稅局需要身份證字號或機構統一編號"
+msgstr "上傳資料至國稅局需要身份證字號"
 
 msgid "Campaign owner profile"
 msgstr "個人募款頁創建者個人資料"
