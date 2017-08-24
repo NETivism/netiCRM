@@ -141,7 +141,7 @@ cj(function($){
       $('.custom_{/literal}{$receiptSerial}{literal}-section').show('slow');
       if(getRequireType() == 2){
         if($('#r_person').length > 0){
-          $('#r_person').prop('checked',true);
+          $('#r_person').prop('checked',true).trigger('change');
           $('#r_company').attr('readonly','readonly').parent('label').css('pointer-events','none');
           $('.receipt_type .content').append($('<div class="description upload-person-only-info">{/literal}{ts}To upload data is only for person contribution.{/ts}{literal}</div>'));
         }
