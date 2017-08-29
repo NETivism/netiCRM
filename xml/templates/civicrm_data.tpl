@@ -468,11 +468,16 @@ VALUES
   (@option_group_id_csearch , '{ts escape="sql"}Zip Code Range{/ts}'         ,10, 'CRM_Contact_Form_Search_Custom_ZipCodeRange', NULL, 0, NULL, 10, '', 0, 0, 1, NULL, NULL),
   (@option_group_id_csearch , '{ts escape="sql"}Date Added to CiviCRM{/ts}'            ,11, 'CRM_Contact_Form_Search_Custom_DateAdded', NULL, 0, NULL, 11, '', 0, 0, 1, NULL, NULL),
   (@option_group_id_csearch , '{ts escape="sql"}Custom Group Multiple Values Listing{/ts}'       ,12, 'CRM_Contact_Form_Search_Custom_MultipleValues', NULL, 0, NULL, 12, '', 0, 0, 1, NULL, NULL),
-  (@option_group_id_csearch , '{ts escape="sql"}Contributions made in Year X and not Year Y{/ts}'         ,13, 'CRM_Contact_Form_Search_Custom_ContribSYBNT', NULL, 0, NULL, 13, '', 0, 0, 1, NULL, NULL),
+  (@option_group_id_csearch , '{ts escape="sql"}Last year but not this year donors{/ts}'         ,13, 'CRM_Contact_Form_Search_Custom_ContribSYBNT', NULL, 0, NULL, 13, '', 0, 0, 1, NULL, NULL),
   (@option_group_id_csearch , '{ts escape="sql"}Find Contribution Amounts by Tag{/ts}'     ,14, 'CRM_Contact_Form_Search_Custom_TagContributions', NULL, 0, NULL, 14, '', 0, 0, 1, NULL, NULL),
   (@option_group_id_csearch , '{ts escape="sql"}Full-text Search{/ts}'             ,15, 'CRM_Contact_Form_Search_Custom_FullText', NULL, 0, NULL, 15, '', 0, 0, 1, NULL, NULL),
   (@option_group_id_csearch , '{ts escape="sql"}Export Price Set Info for a Contribution Page{/ts}' ,16, 'CRM_Contact_Form_Search_Custom_PriceSetContribution', NULL, 0, NULL, 16, '', 0, 0, 1, NULL, NULL),
   (@option_group_id_csearch , '{ts escape="sql"}Recurring contributions{/ts}'          ,17, 'CRM_Contact_Form_Search_Custom_RecurSearch', NULL, 0, NULL, 17, '', 0, 0, 1, NULL, NULL),
+  (@option_group_id_csearch , '{ts escape="sql"}First time donation donors{/ts}'          ,18, 'CRM_Contact_Form_Search_Custom_FirstTimeDonor', NULL, 0, NULL, 18, '', 0, 0, 1, NULL, NULL),
+  (@option_group_id_csearch , '{ts escape="sql" count=6 plural="Donor who donate in last %count months"}Donor who donate in last %count month{/ts}'          ,19, 'CRM_Contact_Form_Search_Custom_HalfYearDonor', NULL, 0, NULL, 19, '', 0, 0, 1, NULL, NULL),
+  (@option_group_id_csearch , '{ts escape="sql" 1="7"}After payment failed but not retry in %1 days{/ts}'          ,20, 'CRM_Contact_Form_Search_Custom_FailedNoFurtherDonate', NULL, 0, NULL, 20, '', 0, 0, 1, NULL, NULL),
+  (@option_group_id_csearch , '{ts escape="sql" 1="3"}Single donation over %1 times{/ts}'          ,21, 'CRM_Contact_Form_Search_Custom_SingleNotRecurring', NULL, 0, NULL, 21, '', 0, 0, 1, NULL, NULL),
+  (@option_group_id_csearch , '{ts escape="sql"}Attendee but not donor{/ts}'          ,22, 'CRM_Contact_Form_Search_Custom_AttendeeNotDonor', NULL, 0, NULL, 22, '', 0, 0, 1, NULL, NULL),
 
 -- report templates
   (@option_group_id_report , '{ts escape="sql"}Constituent Report (Summary){/ts}',            'contact/summary',                'CRM_Report_Form_Contact_Summary',                NULL, 0, NULL, 1,  '{ts escape="sql"}Provides a list of address and telephone information for constituent records in your system.{/ts}', 0, 0, 1, NULL, NULL),

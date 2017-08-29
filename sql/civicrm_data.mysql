@@ -4745,11 +4745,16 @@ VALUES
   (@option_group_id_csearch , 'Zip Code Range'         ,10, 'CRM_Contact_Form_Search_Custom_ZipCodeRange', NULL, 0, NULL, 10, '', 0, 0, 1, NULL, NULL),
   (@option_group_id_csearch , 'Date Added to CiviCRM'            ,11, 'CRM_Contact_Form_Search_Custom_DateAdded', NULL, 0, NULL, 11, '', 0, 0, 1, NULL, NULL),
   (@option_group_id_csearch , 'Custom Group Multiple Values Listing'       ,12, 'CRM_Contact_Form_Search_Custom_MultipleValues', NULL, 0, NULL, 12, '', 0, 0, 1, NULL, NULL),
-  (@option_group_id_csearch , 'Contributions made in Year X and not Year Y'         ,13, 'CRM_Contact_Form_Search_Custom_ContribSYBNT', NULL, 0, NULL, 13, '', 0, 0, 1, NULL, NULL),
+  (@option_group_id_csearch , 'Last year but not this year donors'         ,13, 'CRM_Contact_Form_Search_Custom_ContribSYBNT', NULL, 0, NULL, 13, '', 0, 0, 1, NULL, NULL),
   (@option_group_id_csearch , 'Find Contribution Amounts by Tag'     ,14, 'CRM_Contact_Form_Search_Custom_TagContributions', NULL, 0, NULL, 14, '', 0, 0, 1, NULL, NULL),
   (@option_group_id_csearch , 'Full-text Search'             ,15, 'CRM_Contact_Form_Search_Custom_FullText', NULL, 0, NULL, 15, '', 0, 0, 1, NULL, NULL),
   (@option_group_id_csearch , 'Export Price Set Info for a Contribution Page' ,16, 'CRM_Contact_Form_Search_Custom_PriceSetContribution', NULL, 0, NULL, 16, '', 0, 0, 1, NULL, NULL),
   (@option_group_id_csearch , 'Recurring contributions'          ,17, 'CRM_Contact_Form_Search_Custom_RecurSearch', NULL, 0, NULL, 17, '', 0, 0, 1, NULL, NULL),
+  (@option_group_id_csearch , 'First time donation donors'          ,18, 'CRM_Contact_Form_Search_Custom_FirstTimeDonor', NULL, 0, NULL, 18, '', 0, 0, 1, NULL, NULL),
+  (@option_group_id_csearch , 'Donor who donate in last 6 months'          ,19, 'CRM_Contact_Form_Search_Custom_HalfYearDonor', NULL, 0, NULL, 19, '', 0, 0, 1, NULL, NULL),
+  (@option_group_id_csearch , 'After payment failed but not retry in 7 days'          ,20, 'CRM_Contact_Form_Search_Custom_FailedNoFurtherDonate', NULL, 0, NULL, 20, '', 0, 0, 1, NULL, NULL),
+  (@option_group_id_csearch , 'Single donation over 3 times'          ,21, 'CRM_Contact_Form_Search_Custom_SingleNotRecurring', NULL, 0, NULL, 21, '', 0, 0, 1, NULL, NULL),
+  (@option_group_id_csearch , 'Attendee but not donor'          ,22, 'CRM_Contact_Form_Search_Custom_AttendeeNotDonor', NULL, 0, NULL, 22, '', 0, 0, 1, NULL, NULL),
 
 -- report templates
   (@option_group_id_report , 'Constituent Report (Summary)',            'contact/summary',                'CRM_Report_Form_Contact_Summary',                NULL, 0, NULL, 1,  'Provides a list of address and telephone information for constituent records in your system.', 0, 0, 1, NULL, NULL),

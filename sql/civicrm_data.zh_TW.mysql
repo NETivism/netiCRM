@@ -4745,11 +4745,16 @@ VALUES
   (@option_group_id_csearch , '郵遞區號範圍'         ,10, 'CRM_Contact_Form_Search_Custom_ZipCodeRange', NULL, 0, NULL, 10, '', 0, 0, 1, NULL, NULL),
   (@option_group_id_csearch , '新增日期到 CiviCRM'            ,11, 'CRM_Contact_Form_Search_Custom_DateAdded', NULL, 0, NULL, 11, '', 0, 0, 1, NULL, NULL),
   (@option_group_id_csearch , '自訂群組多重數值列表'       ,12, 'CRM_Contact_Form_Search_Custom_MultipleValues', NULL, 0, NULL, 12, '', 0, 0, 1, NULL, NULL),
-  (@option_group_id_csearch , 'X年且非Y年的捐款'         ,13, 'CRM_Contact_Form_Search_Custom_ContribSYBNT', NULL, 0, NULL, 13, '', 0, 0, 1, NULL, NULL),
+  (@option_group_id_csearch , '去年有捐款，但今年尚未捐款的支持者'         ,13, 'CRM_Contact_Form_Search_Custom_ContribSYBNT', NULL, 0, NULL, 13, '', 0, 0, 1, NULL, NULL),
   (@option_group_id_csearch , '依標籤搜尋捐款金額'     ,14, 'CRM_Contact_Form_Search_Custom_TagContributions', NULL, 0, NULL, 14, '', 0, 0, 1, NULL, NULL),
   (@option_group_id_csearch , '全文搜尋'             ,15, 'CRM_Contact_Form_Search_Custom_FullText', NULL, 0, NULL, 15, '', 0, 0, 1, NULL, NULL),
   (@option_group_id_csearch , '匯出募款專頁的價格表內容' ,16, 'CRM_Contact_Form_Search_Custom_PriceSetContribution', NULL, 0, NULL, 16, '', 0, 0, 1, NULL, NULL),
   (@option_group_id_csearch , '定期捐款'          ,17, 'CRM_Contact_Form_Search_Custom_RecurSearch', NULL, 0, NULL, 17, '', 0, 0, 1, NULL, NULL),
+  (@option_group_id_csearch , '找到首次捐款人'          ,18, 'CRM_Contact_Form_Search_Custom_FirstTimeDonor', NULL, 0, NULL, 18, '', 0, 0, 1, NULL, NULL),
+  (@option_group_id_csearch , '最近 6 個月已有捐款的支持者'          ,19, 'CRM_Contact_Form_Search_Custom_HalfYearDonor', NULL, 0, NULL, 19, '', 0, 0, 1, NULL, NULL),
+  (@option_group_id_csearch , '捐款失敗後 7 天內無再次捐款者'          ,20, 'CRM_Contact_Form_Search_Custom_FailedNoFurtherDonate', NULL, 0, NULL, 20, '', 0, 0, 1, NULL, NULL),
+  (@option_group_id_csearch , '單筆捐款滿 3 次'          ,21, 'CRM_Contact_Form_Search_Custom_SingleNotRecurring', NULL, 0, NULL, 21, '', 0, 0, 1, NULL, NULL),
+  (@option_group_id_csearch , '參加過活動但尚未捐款'          ,22, 'CRM_Contact_Form_Search_Custom_AttendeeNotDonor', NULL, 0, NULL, 22, '', 0, 0, 1, NULL, NULL),
 
 -- report templates
   (@option_group_id_report , '支持者報表（概況）',            'contact/summary',                'CRM_Report_Form_Contact_Summary',                NULL, 0, NULL, 1,  '在您的系統上，為支持者記錄提供地址和電話訊息組成的名單。', 0, 0, 1, NULL, NULL),
