@@ -66,11 +66,18 @@ class CRM_Contact_Form_Search_Custom extends CRM_Contact_Form_Search {
     $this->set('customSearchClass', $this->_customSearchClass);
 
     parent::preProcess();
-    $this->_customClass =& $this->selector->_search;
-    if (method_exists($this->_customSearchClass, 'prepareForm')) {
+    if (!empty($this->selector->_search)) {
+      $this->_customClass =& $this->selector->_search;
+    }
+    else {
+      $objectName = $this->_customSearchClass;
+      $this->_customClass = new $objectName($this->_formValues);
+    }
+
+    if (method_exists($this->_customClass, 'prepareForm')) {
       $this->_customClass->prepareForm($this);
     }
-    if (method_exists($this->_customSearchClass, 'setTitle')) {
+    if (method_exists($this->_customClass, 'setTitle')) {
       $this->_customClass->setTitle();
     }
     else {
@@ -80,7 +87,7 @@ class CRM_Contact_Form_Search_Custom extends CRM_Contact_Form_Search {
       }
     }
 
-    if (method_exists($this->_customSearchClass, 'setBreadcrumb')) {
+    if (method_exists($this->_customClass, 'setBreadcrumb')) {
       $this->_customClass->setBreadcrumb();
     }
   }
@@ -89,7 +96,7 @@ class CRM_Contact_Form_Search_Custom extends CRM_Contact_Form_Search {
     $formValues = $this->_formValues;
     unset($formValues['component_mode']);
     unset($formValues['qfKey']);
-    if (empty($formValues) && method_exists($this->_customSearchClass, 'setDefaultValues')) {
+    if (empty($formValues) && method_exists($this->_customClass, 'setDefaultValues')) {
       $defaults = $this->_customClass->setDefaultValues();
       return $defaults;
     }
@@ -99,8 +106,9 @@ class CRM_Contact_Form_Search_Custom extends CRM_Contact_Form_Search {
   }
 
   function buildQuickForm() {
-    $this->_customClass->buildForm($this);
-
+    if (method_exists($this->_customClass, 'buildForm')) {
+      $this->_customClass->buildForm($this);
+    }
     parent::buildQuickForm();
   }
 
