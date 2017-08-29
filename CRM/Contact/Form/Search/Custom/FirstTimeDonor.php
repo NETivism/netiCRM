@@ -254,10 +254,10 @@ $having
     $receive_date_from = CRM_Utils_Array::value('receive_date_from', $this->_formValues);
     $receive_date_to = CRM_Utils_Array::value('receive_date_to', $this->_formValues);
     if ($receive_date_from) {
-      $clauses[] = "receive_date >= $receive_date_from";
+      $clauses[] = "receive_date >= '$receive_date_from 00:00:00'";
     }
     if ($receive_date_to) {
-      $clauses[] = "receive_date <= $receive_date_to";
+      $clauses[] = "receive_date <= '$receive_date_to 23:59:59'";
     }
 
     $status = CRM_Utils_Array::value('status', $this->_formValues);
