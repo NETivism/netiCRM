@@ -70,6 +70,7 @@ class CRM_Export_BAO_Export {
     $mergeSameAddress = FALSE,
     $mergeSameHousehold = FALSE
   ) {
+    set_time_limit(1800);
     $headerRows = $returnProperties = array();
     $primary = $paymentFields = FALSE;
     $origFields = $fields;
