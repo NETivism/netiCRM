@@ -875,7 +875,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
     $this->addElement('select', $name, $label, $options, $attributes);
 
     if ($required) {
-      $this->addRule($name . '_id', ts('Please select %1', array(1 => $label)), 'required');
+      $this->addRule($name, ts('Please select %1', array(1 => $label)), 'required');
     }
   }
 
