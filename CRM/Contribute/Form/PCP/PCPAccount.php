@@ -61,11 +61,12 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
     $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE);
     $this->_pageId = CRM_Utils_Request::retrieve('pageId', 'Positive', $this);
     $this->_id = CRM_Utils_Request::retrieve('id', 'Positive', $this);
+    $this->_contactID = CRM_Utils_Request::retrieve('cid', 'Positive', $this);
     if ($this->_id) {
-      $contactID = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_PCP', $this->_id, 'contact_id');
+      $this->_contactID = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_PCP', $this->_id, 'contact_id');
     }
+    $this->set('contactID', $this->_contactID);
 
-    $this->_contactID = isset($contactID) ? $contactID : $session->get('userID');
     if (!$this->_pageId) {
       if (!$this->_id) {
         $msg = ts('We can\'t load the requested web page due to an incomplete link. This can be caused by using your browser\'s Back button or by using an incomplete or invalid link.');
@@ -137,7 +138,7 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
    * @access public
    */
   public function buildQuickForm() {
-    require_once 'CRM/Contribute/BAO/PCP.php';
+    $session = CRM_Core_Session::singleton();
     $id = CRM_Contribute_BAO_PCP::getSupporterProfileId($this->_pageId);
     if (CRM_Contribute_BAO_PCP::checkEmailProfile($id)) {
       $this->assign('profileDisplay', TRUE);
@@ -151,9 +152,9 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
       $this->addFormRule(array('CRM_Contribute_Form_PCP_PCPAccount', 'formRule'), $this);
     }
     else {
-      require_once 'CRM/Core/BAO/CMSUser.php';
-      CRM_Core_BAO_CMSUser::buildForm($this, $id, TRUE);
-
+			if (!$session->get('userID')) {
+				CRM_Core_BAO_CMSUser::buildForm($this, $id, TRUE);
+			}
       $fields = CRM_Core_BAO_UFGroup::getFields($id, FALSE, CRM_Core_Action::ADD);
     }
 
@@ -240,6 +241,7 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
    * @return None
    */
   public function postProcess() {
+    $session = CRM_Core_Session::singleton();
     $params = $this->controller->exportValues($this->getName());
 
     if (!$this->_contactID && isset($params['cms_create_account'])) {
@@ -275,7 +277,9 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
     }
 
     require_once "CRM/Contribute/BAO/Contribution/Utils.php";
-    CRM_Contribute_BAO_Contribution_Utils::createCMSUser($params, $contactID, 'email');
+    if (!$session->get('userID')) {
+      CRM_Contribute_BAO_Contribution_Utils::createCMSUser($params, $contactID, 'email');
+    }
   }
 }
 

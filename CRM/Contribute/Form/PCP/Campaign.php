@@ -50,6 +50,7 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
     $this->assign('context', $this->_context);
 
     $this->_pageId = CRM_Utils_Request::retrieve('id', 'Positive', $this, FALSE);
+    $this->_contactID = CRM_Utils_Request::retrieve('contactID', 'Positive', $this, FALSE);
     $title = ts('Setup a Personal Campaign Page - Step 2');
 
     if ($this->_pageId) {
@@ -79,9 +80,13 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
 
     if ($this->get('action') & CRM_Core_Action::ADD) {
       $defaults['is_active'] = 1;
+      $defaults['is_thermometer'] = 1;
+      $defaults['is_honor_roll'] = 1;
     }
 
-    $this->_contactID = CRM_Utils_Array::value('contact_id', $defaults);
+    if (!empty($defaults['contact_id'])) {
+      $this->_contactID = CRM_Utils_Array::value('contact_id', $defaults);
+    }
     $this->_contriPageId = CRM_Utils_Array::value('contribution_page_id', $defaults);
     return $defaults;
   }
