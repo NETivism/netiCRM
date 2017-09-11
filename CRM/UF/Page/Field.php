@@ -79,7 +79,7 @@ class CRM_UF_Page_Field extends CRM_Core_Page {
         CRM_Core_Action::PREVIEW => array(
           'name' => ts('Preview'),
           'url' => 'civicrm/admin/uf/group/field',
-          'qs' => 'action=preview&id=%%id%%&field=1',
+          'qs' => 'action=preview&id=%%id%%&gid=%%gid%%&field=1',
           'title' => ts('Preview CiviCRM Profile Field'),
         ),
         CRM_Core_Action::DISABLE => array(
