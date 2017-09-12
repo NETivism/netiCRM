@@ -162,12 +162,6 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
       $this->assign('fields', $fields);
       $addCaptcha = FALSE;
       foreach ($fields as $key => $field) {
-        if (isset($field['data_type']) && $field['data_type'] == 'File') {
-          // ignore file upload fields
-          continue;
-        }
-        require_once "CRM/Core/BAO/UFGroup.php";
-        require_once "CRM/Profile/Form.php";
         CRM_Core_BAO_UFGroup::buildProfile($this, $field, CRM_Profile_Form::MODE_CREATE);
         $this->_fields[$key] = $field;
         if ($field['add_captcha']) {
@@ -187,7 +181,7 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
     $this->assign('campaignName', CRM_Contribute_PseudoConstant::contributionPage($this->_pageId));
 
     if ($this->_single) {
-      $button = array(array('type' => 'next',
+      $button = array(array('type' => 'upload',
           'name' => ts('Save'),
           'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
           'isDefault' => TRUE,
@@ -198,7 +192,7 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
       );
     }
     else {
-      $button[] = array('type' => 'next',
+      $button[] = array('type' => 'upload',
         'name' => ts('Continue >>'),
         'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
         'isDefault' => TRUE,
@@ -243,6 +237,9 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
   public function postProcess() {
     $session = CRM_Core_Session::singleton();
     $params = $this->controller->exportValues($this->getName());
+    if (CRM_Utils_Array::value('image_URL', $params)) {
+      CRM_Contact_BAO_Contact::processImageParams($params);
+    }
 
     if (!$this->_contactID && isset($params['cms_create_account'])) {
       foreach ($params as $key => $value) {
