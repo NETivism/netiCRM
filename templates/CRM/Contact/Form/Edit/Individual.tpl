@@ -41,28 +41,32 @@ var checkSimilar = {$checkSimilar};
      }
 
      // prevent multiple trigger ajax when ime input
+     var nextkeyword = thiskeyword = '';
      var queue = [];
      cj('#first_name').bind("keyup input paste",function(e){
        queue.push('run');
      });
 
-     setInterval(function(){
-       if(queue.length > 0){
-         cj('#lastname_msg').remove();
-         cj.getJSON(contactIndividual, {sort_name:cj('#first_name').val()}, dupelist);
+     cj('#first_name, #last_name').blur(function(){
+       var searchkey = '';
+       if (cj('#last_name').val()) {
+         searchkey += cj('#last_name').val();
        }
-       queue = [];
-     }, 1500);
-
-     cj('#first_name').blur(function(){
-       cj.getJSON(contactIndividual,{sort_name:cj(this).val()}, dupelist);
+       if (cj('#first_name').val()) {
+         searchkey += cj('#first_name').val();
+       }
+       if (searchkey) {
+         nextkeyword = cj(this).val();
+         thiskeyword = searchkey;
+         cj.getJSON(contactIndividual,{sort_name:searchkey}, dupelist);
+       }
      });
      var dupelist = function(data){
+       cj('#lastname_msg').remove();
        if(data.is_error == 1){
          return;
        }
        else if(data.values.length !== 0){
-         cj('#lastname_msg').remove();
          var msg = "<tr id='lastname_msg'><td colspan='5'><div class='messages status'>";
 
          if(data.values.length == 1){
@@ -74,11 +78,15 @@ var checkSimilar = {$checkSimilar};
          }
          msg = msg + '<table class="matching-contacts-actions">';
          cj.each(data.values, function(i,contact){
-           msg = msg + '<tr><td><a href="'+viewIndividual+contact.contact_id+'">'+ contact.display_name + '</a></td><td>' + contact.email + '</td><td class="action-items"><a class="action-item action-item-first" href="' + viewIndividual + contact.contact_id + '">{/literal}{ts}View{/ts}{literal}</a><a class="action-item" href="' + editIndividual + contact.contact_id + '">{/literal}{ts}Edit{/ts}{literal}</a></td></tr>';
+           msg = msg + '<tr><td><a href="'+viewIndividual+contact.contact_id+'">'+ contact.display_name + '</a> (ID: '+ contact.id +')</td><td>' + contact.email + '</td><td class="action-items"><a class="action-item action-item-first" href="' + viewIndividual + contact.contact_id + '" target="_blank">{/literal}{ts}View{/ts}{literal}</a><a class="action-item" href="' + editIndividual + contact.contact_id + '" target="_blank">{/literal}{ts}Edit{/ts}{literal}</a></td></tr>';
          });
          msg = msg + '</table>';
          cj('#last_name').closest('tr').after(msg + '</div><td></tr>');
          cj('#lastname_msg a').click(function(){global_formNavigate = true; return true;});// No confirmation dialog on click
+       }
+       else if(nextkeyword != thiskeyword){
+         thiskweyword = nextkeyword;
+         cj.getJSON(contactIndividual,{sort_name:nextkeyword}, dupelist);
        }
        queue = [];
      }
