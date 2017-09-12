@@ -96,7 +96,7 @@
     <div class="pcp-honor-roll-names">
       {foreach from=$honor item=v key=honor_id} 
         <div class="pcp-honor-roll-entry">
-          <div class="pcp-honor-roll-nickname" id="pcp-honor-roll-{$honor_id}">{$v.nickname}{help id="pcp-honor-roll-$honor_id" text=$v.personal_note helpicon='zmdi zmdi-comment-text-alt'}</div>
+          <div class="pcp-honor-roll-nickname" id="pcp-honor-roll-{$honor_id}">{$v.nickname}{if $v.personal_note}{help id="pcp-honor-roll-$honor_id" text=$v.personal_note helpicon='zmdi zmdi-comment-text-alt'}{else}<i class="zmdi zmdi-comment-outline"></i>{/if}</div>
         </div>
       {/foreach} 
     </div>

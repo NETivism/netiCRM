@@ -377,6 +377,9 @@ pcpAnonymous();
 function pcpAnonymous( ) {
   // clear nickname field if anonymous is true
   if ( document.getElementsByName("pcp_is_anonymous")[1].checked ) {
+    document.getElementById('pcp_roll_nickname').value = '{/literal}{ts}Anonymity{/ts}{literal}';
+  }
+  else {
     document.getElementById('pcp_roll_nickname').value = '';
   }
   if ( ! document.getElementsByName("pcp_display_in_roll")[0].checked ) {
@@ -389,11 +392,6 @@ function pcpAnonymous( ) {
       show('nameID', 'block');
       show('nickID', 'block');
       show('personalNoteID', 'block');
-    }
-    else {
-      show('nameID', 'block');
-      hide('nickID', 'block');
-      hide('personalNoteID', 'block');
     }
   }
 }
