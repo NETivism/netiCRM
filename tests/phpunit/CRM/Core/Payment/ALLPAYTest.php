@@ -427,10 +427,6 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
     $this->assertDBState('CRM_Contribute_DAO_ContributionRecur', $recurring->id, $params);
 
     $params = array(
-      1 => array($recurring->id, 'Integer'),
-    );
-
-    $params = array(
       1 => array($trxn_id3, 'String'),
     );
     $this->assertDBQuery(1, "SELECT contribution_status_id FROM civicrm_contribution WHERE trxn_id = %1", $params);
@@ -465,6 +461,9 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
 
     // normal contribution but empty gwsr
     // execlog 5 will be skipped, so total number is 5 not 6
+    $params = array(
+      1 => array($recurring->id, 'Integer'),
+    );
     $this->assertDBQuery(5, "SELECT count(*) FROM civicrm_contribution WHERE contribution_recur_id = %1", $params);
 
     // completed recurring
