@@ -870,9 +870,7 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
           }
         }
         else {
-          $stateOption = array_merge(array(
-            '' => ts('- select -'),
-          ),CRM_Core_PseudoConstant::stateProvince());
+          $stateOption = array('' => ts('- select -')) + CRM_Core_PseudoConstant::stateProvince();
         }
 
         $qf->addSelect($elementName, $label, $stateOption, array("state-province"), (($useRequired || ($useRequired && $field->is_required)) && !$search));
