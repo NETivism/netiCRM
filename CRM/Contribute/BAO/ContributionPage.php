@@ -233,7 +233,7 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
       $tplParams = array(
         'createdDate' => CRM_Utils_Array::value('created_date', $values),
         'email' => $email,
-        'receiptFromEmail' => $values['receipt_from_email'],
+        'receiptFromEmail' => strstr($values['receipt_from_email'], 'neticrm.net') ? '' : $values['receipt_from_email'],
         'contactID' => $contactID,
         'contributionID' => $values['contribution_id'],
         'membershipID' => CRM_Utils_Array::value('membership_id', $values),
