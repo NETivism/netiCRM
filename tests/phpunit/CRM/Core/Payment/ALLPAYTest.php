@@ -483,10 +483,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
     $this->assertDBQuery(4, "SELECT contribution_status_id FROM civicrm_contribution WHERE trxn_id = %1", $params);
 
     $trxn_id7 = _civicrm_allpay_recur_trxn($trxn_id, _civicrm_allpay_noid_hash($order_base->ExecLog[7], $trxn_id));
-    $params = array(
-      1 => array($trxn_id7, 'String'),
-    );
-    $this->assertDBQuery(0, "SELECT count(*) FROM civicrm_contribution WHERE trxn_id = %1", $params);
+    $this->assertEquals($trxn_id7, $trxn_id6, 'In line' . __LINE__ );
 
     // normal contribution but empty gwsr
     // execlog 5, 7 will be skipped, so total number is 6 not 7
