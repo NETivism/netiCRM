@@ -420,15 +420,6 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
            'process_date' => date('Y-m-d H:i:s', $now+86400*6),
            'auth_code' => '',
         )),
-        // #21187 failed contribution and no gwsr, but we won't generate duplicate record
-        // because we have same process date
-        7 => (object)(array(
-           'RtnCode' => '0',
-           'amount' => $amount,
-           'gwsr' => '',
-           'process_date' => date('Y-m-d H:i:s', $now+86400*6),
-           'auth_code' => '',
-        )),
       ),
     ));
     $trxn_id3 = _civicrm_allpay_recur_trxn($trxn_id, $gwsr2);
@@ -482,11 +473,17 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
     );
     $this->assertDBQuery(4, "SELECT contribution_status_id FROM civicrm_contribution WHERE trxn_id = %1", $params);
 
-    $trxn_id7 = _civicrm_allpay_recur_trxn($trxn_id, _civicrm_allpay_noid_hash($order_base->ExecLog[7], $trxn_id));
-    $this->assertEquals($trxn_id7, $trxn_id6, 'In line' . __LINE__ );
-
     // normal contribution but empty gwsr
-    // execlog 5, 7 will be skipped, so total number is 6 not 7
+    // execlog 5 will be skipped, so total number is 6
+    $params = array(
+      1 => array($recurring->id, 'Integer'),
+    );
+    $this->assertDBQuery(6, "SELECT count(*) FROM civicrm_contribution WHERE contribution_recur_id = %1", $params);
+
+    // refs #21187, submit again but change gwsr data (simulate gw bad api)
+    // we should still 6 records
+    $order_base->ExecLog[6]->gwsr = 0;
+    civicrm_allpay_recur_check($recurring->id, $order_base);
     $params = array(
       1 => array($recurring->id, 'Integer'),
     );
