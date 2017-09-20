@@ -367,6 +367,8 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
       foreach ($modules as $k => $v) {
         $modules[$k] = ts(str_replace("_", " ", $v));
       }
+      // remove duplicate string
+      $modules = array_unique($modules);
       $ufGroup[$id]['module'] = implode(',<br />', $modules);
     }
 

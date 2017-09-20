@@ -1290,7 +1290,7 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
     if ($displayName) {
       $UFGroupType = array();
       require_once "CRM/Core/SelectValues.php";
-      $UFGroupType = CRM_Core_SelectValues::ufGroupTypes();
+      $UFGroupType = CRM_Core_SelectValues::ufGroupTypes('all');
     }
 
     $ufJoin = array();
@@ -1309,10 +1309,11 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
         $ufJoin[$dao->id] = $dao->module;
       }
       else {
-        if (isset($UFGroupType[$dao->module])) {
+        $module  = $dao->module == 'CiviEvent_Additional' ? 'CiviEvent' : $dao->module;
+        if (isset($UFGroupType[$module])) {
           // skip the default modules
           if (!$status) {
-            $ufJoin[$dao->id] = $UFGroupType[$dao->module];
+            $ufJoin[$dao->id] = $UFGroupType[$module];
           }
           // added for CRM-1475
         }
