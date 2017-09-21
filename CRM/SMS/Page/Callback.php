@@ -1,4 +1,5 @@
-{*
+<?php
+/*
  +--------------------------------------------------------------------+
  | CiviCRM version 4.7                                                |
  +--------------------------------------------------------------------+
@@ -22,22 +23,24 @@
  | GNU Affero General Public License or the licensing of CiviCRM,     |
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
-*}
-<div class="form-item">
-<fieldset>
-<legend>{ts}Send an SMS{/ts}</legend>
-<dl>
-<dt>{ts}From{/ts}</dt><dd>{$from|escape}</dd>
-{if $single eq false}
-<dt>{ts}Recipient(s){/ts}</dt><dd>{$to|escape}</dd>
-{else}
-<dt>{$form.to.label}</dt><dd>{$form.to.html}</dd>
-{/if}
-<dt>{$form.message.label}</dt><dd>{$form.message.html}</dd>
-{if $single eq false}
-    <dt></dt><dd>{include file="CRM/Contact/Form/Task.tpl"}</dd>
-{/if}
-<dt></dt><dd>{$form.buttons.html}</dd>
-</dl>
-</fieldset>
-</div>
+ */
+
+/**
+ *
+ * @package CRM
+ * @copyright CiviCRM LLC (c) 2004-2017
+ */
+class CRM_SMS_Page_Callback {
+
+  public function run() {
+    $provider = CRM_SMS_Provider::singleton($_REQUEST);
+
+    if (array_key_exists('status', $_REQUEST)) {
+      $provider->callback();
+    }
+    else {
+      $provider->inbound();
+    }
+  }
+
+}

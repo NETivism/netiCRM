@@ -40,6 +40,7 @@ $dao['ContributionType'] = 'CRM_Contribute_DAO_ContributionType';
 $dao['Premium'] = 'CRM_Contribute_DAO_Premium';
 $dao['Product'] = 'CRM_Contribute_DAO_Product';
 $dao['PremiumsProduct'] = 'CRM_Contribute_DAO_PremiumsProduct';
+$dao['Provider'] = 'CRM_SMS_DAO_Provider';
 $dao['Project'] = 'CRM_Project_DAO_Project';
 $dao['Task'] = 'CRM_Project_DAO_Task';
 $dao['TaskStatus'] = 'CRM_Project_DAO_TaskStatus';

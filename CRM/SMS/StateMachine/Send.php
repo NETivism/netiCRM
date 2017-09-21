@@ -1,4 +1,5 @@
-{*
+<?php
+/*
  +--------------------------------------------------------------------+
  | CiviCRM version 4.7                                                |
  +--------------------------------------------------------------------+
@@ -22,22 +23,37 @@
  | GNU Affero General Public License or the licensing of CiviCRM,     |
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
-*}
-<div class="form-item">
-<fieldset>
-<legend>{ts}Send an SMS{/ts}</legend>
-<dl>
-<dt>{ts}From{/ts}</dt><dd>{$from|escape}</dd>
-{if $single eq false}
-<dt>{ts}Recipient(s){/ts}</dt><dd>{$to|escape}</dd>
-{else}
-<dt>{$form.to.label}</dt><dd>{$form.to.html}</dd>
-{/if}
-<dt>{$form.message.label}</dt><dd>{$form.message.html}</dd>
-{if $single eq false}
-    <dt></dt><dd>{include file="CRM/Contact/Form/Task.tpl"}</dd>
-{/if}
-<dt></dt><dd>{$form.buttons.html}</dd>
-</dl>
-</fieldset>
-</div>
+ */
+
+/**
+ *
+ * @package CRM
+ * @copyright CiviCRM LLC (c) 2004-2017
+ */
+
+/**
+ * State machine for managing different states of the Import process.
+ */
+class CRM_SMS_StateMachine_Send extends CRM_Core_StateMachine {
+
+  /**
+   * Class constructor.
+   *
+   * @param object $controller
+   * @param \const|int $action
+   *
+   * @return \CRM_SMS_StateMachine_Send CRM_SMS_StateMachine
+   */
+  public function __construct($controller, $action = CRM_Core_Action::NONE) {
+    parent::__construct($controller, $action);
+
+    $this->_pages = array(
+      'CRM_SMS_Form_Group' => NULL,
+      'CRM_SMS_Form_Upload' => NULL,
+      'CRM_SMS_Form_Schedule' => NULL,
+    );
+
+    $this->addSequentialPages($this->_pages, $action);
+  }
+
+}

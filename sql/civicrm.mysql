@@ -149,6 +149,7 @@ DROP TABLE IF EXISTS civicrm_membership_type;
 DROP TABLE IF EXISTS civicrm_task_status;
 DROP TABLE IF EXISTS civicrm_task;
 DROP TABLE IF EXISTS civicrm_project;
+DROP TABLE IF EXISTS civicrm_sms_provider;
 DROP TABLE IF EXISTS civicrm_premiums_product;
 DROP TABLE IF EXISTS civicrm_product;
 DROP TABLE IF EXISTS civicrm_premiums;
@@ -1394,6 +1395,35 @@ CREATE TABLE civicrm_premiums_product (
 ,      
      CONSTRAINT FK_civicrm_premiums_product_premiums_id FOREIGN KEY (premiums_id) REFERENCES civicrm_premiums(id) ,      
      CONSTRAINT FK_civicrm_premiums_product_product_id FOREIGN KEY (product_id) REFERENCES civicrm_product(id)   
+)  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
+
+-- /*******************************************************
+-- *
+-- * civicrm_sms_provider
+-- *
+-- * Table to add different sms providers 
+-- *
+-- *******************************************************/
+CREATE TABLE civicrm_sms_provider (
+
+
+     id int unsigned NOT NULL AUTO_INCREMENT  COMMENT 'SMS Provider ID',
+     name varchar(64)    COMMENT 'Provider internal name points to option_value of option_group sms_provider_name',
+     title varchar(64)    COMMENT 'Provider name visible to user',
+     username varchar(255)    ,
+     password varchar(255)    ,
+     api_type int unsigned NOT NULL   COMMENT 'points to value in civicrm_option_value for group sms_api_type',
+     api_url varchar(128)    ,
+     api_params text    COMMENT 'the api params in xml, http or smtp format',
+     is_default tinyint   DEFAULT 0 ,
+     is_active tinyint   DEFAULT 0 ,
+     domain_id int unsigned    COMMENT 'Which Domain is this sms provider for' 
+,
+    PRIMARY KEY ( id )
+ 
+ 
+,      
+     CONSTRAINT FK_civicrm_sms_provider_domain_id FOREIGN KEY (domain_id) REFERENCES civicrm_domain(id) ON DELETE SET NULL  
 )  ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************

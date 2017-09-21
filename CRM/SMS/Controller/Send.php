@@ -1,4 +1,5 @@
-{*
+<?php
+/*
  +--------------------------------------------------------------------+
  | CiviCRM version 4.7                                                |
  +--------------------------------------------------------------------+
@@ -22,22 +23,52 @@
  | GNU Affero General Public License or the licensing of CiviCRM,     |
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
-*}
-<div class="form-item">
-<fieldset>
-<legend>{ts}Send an SMS{/ts}</legend>
-<dl>
-<dt>{ts}From{/ts}</dt><dd>{$from|escape}</dd>
-{if $single eq false}
-<dt>{ts}Recipient(s){/ts}</dt><dd>{$to|escape}</dd>
-{else}
-<dt>{$form.to.label}</dt><dd>{$form.to.html}</dd>
-{/if}
-<dt>{$form.message.label}</dt><dd>{$form.message.html}</dd>
-{if $single eq false}
-    <dt></dt><dd>{include file="CRM/Contact/Form/Task.tpl"}</dd>
-{/if}
-<dt></dt><dd>{$form.buttons.html}</dd>
-</dl>
-</fieldset>
-</div>
+ */
+
+/**
+ *
+ * @package CRM
+ * @copyright CiviCRM LLC (c) 2004-2017
+ */
+class CRM_SMS_Controller_Send extends CRM_Core_Controller {
+
+  /**
+   * Class constructor.
+   *
+   * @param string $title
+   * @param bool|int $action
+   * @param bool $modal
+   */
+  public function __construct($title = NULL, $action = CRM_Core_Action::NONE, $modal = TRUE) {
+    parent::__construct($title, $modal, NULL, FALSE, TRUE);
+
+    $mailingID = CRM_Utils_Request::retrieve('mid', 'String', $this, FALSE, NULL);
+
+    // also get the text and html file
+    $txtFile = CRM_Utils_Request::retrieve('txtFile', 'String',
+      CRM_Core_DAO::$_nullObject, FALSE, NULL
+    );
+
+    $config = CRM_Core_Config::singleton();
+    if ($txtFile &&
+      file_exists($config->uploadDir . $txtFile)
+    ) {
+      $this->set('textFilePath', $config->uploadDir . $txtFile);
+    }
+
+    $this->_stateMachine = new CRM_SMS_StateMachine_Send($this, $action, $mailingID);
+
+    // create and instantiate the pages
+    $this->addPages($this->_stateMachine, $action);
+
+    // add all the actions
+    $uploadNames = array_merge(array('textFile'),
+      CRM_Core_BAO_File::uploadNames()
+    );
+
+    $this->addActions(CRM_Core_Config::singleton()->uploadDir,
+      $uploadNames
+    );
+  }
+
+}

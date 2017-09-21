@@ -124,6 +124,7 @@ DROP TABLE IF EXISTS civicrm_membership_type;
 DROP TABLE IF EXISTS civicrm_task_status;
 DROP TABLE IF EXISTS civicrm_task;
 DROP TABLE IF EXISTS civicrm_project;
+DROP TABLE IF EXISTS civicrm_sms_provider;
 DROP TABLE IF EXISTS civicrm_premiums_product;
 DROP TABLE IF EXISTS civicrm_product;
 DROP TABLE IF EXISTS civicrm_premiums;

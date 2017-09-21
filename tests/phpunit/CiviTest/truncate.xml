@@ -81,6 +81,8 @@
 
   <civicrm_premiums_product />
 
+  <civicrm_sms_provider />
+
   <civicrm_project />
 
   <civicrm_task />
