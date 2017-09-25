@@ -175,7 +175,19 @@ class CRM_SMS_Form_Provider extends CRM_Core_Form {
       if ($this->_id) {
         $recData['id'] = $this->_id;
       }
-      civicrm_api3('SmsProvider', 'create', $recData);
+      $dao = new CRM_SMS_DAO_Provider();
+      $dao->name = $recData['name'];
+      $dao->title = $recData['title'];
+      $dao->username = $recData['username'];
+      $dao->password = $recData['password'];
+      $dao->api_type = $recData['api_type'];
+      $dao->api_url = $recData['api_url'];
+      $dao->api_params = $recData['api_params'];
+      $dao->is_active = CRM_Utils_Array::value('is_active', $recData, 0);;
+      $dao->is_default = CRM_Utils_Array::value('is_default', $recData, 0);;
+      $dao->id = $this->_id;
+      $dao->save();
+      // civicrm_api3('SmsProvider', 'create', $recData);
     }
   }
 

@@ -194,6 +194,8 @@ VALUES
    ('system_extensions'             , '{ts escape="sql"}CiviCRM Extensions{/ts}'                 , 0, 1),
    ('directory_preferences'         , '{ts escape="sql"}Directory Preferences{/ts}'              , 0, 1),
    ('url_preferences'               , '{ts escape="sql"}URL Preferences{/ts}'                    , 0, 1);
+   ('sms_api_type'                  , '{ts escape="sql"}Api Type{/ts}'                           , 0, 1),
+   ('sms_provider_name'             , '{ts escape="sql"}Sms Provider Internal Name{/ts}'         , 0, 1),
 
    
 SELECT @option_group_id_pcm            := max(id) from civicrm_option_group where name = 'preferred_communication_method';
@@ -251,6 +253,8 @@ SELECT @option_group_id_campaignStatus := max(id) from civicrm_option_group wher
 SELECT @option_group_id_extensions     := max(id) from civicrm_option_group where name = 'system_extensions';
 SELECT @option_group_id_directory_pref := max(id) from civicrm_option_group where name = 'directory_preferences';
 SELECT @option_group_id_url_pref       := max(id) from civicrm_option_group where name = 'url_preferences';
+SELECT @option_group_id_sms_api_type   := max(id) from civicrm_option_group where name = 'sms_api_type';
+SELECT @option_group_id_sms_provider_name := max(id) from civicrm_option_group where name = 'sms_provider_name';
 
 SELECT @contributeCompId := max(id) FROM civicrm_component where name = 'CiviContribute';
 SELECT @eventCompId      := max(id) FROM civicrm_component where name = 'CiviEvent';
@@ -699,6 +703,12 @@ VALUES
   (@option_group_id_url_pref, '{ts escape="sql"}CiviCRM Resource URL{/ts}' , '', 'userFrameworkResourceURL', NULL, 0, 0, 1, NULL, 0, 1, 1, NULL, @domainID, NULL),
   (@option_group_id_url_pref, '{ts escape="sql"}Image Upload URL{/ts}' , '', 'imageUploadURL', NULL, 0, 0, 2, NULL, 0, 1, 1, NULL, @domainID, NULL),
   (@option_group_id_url_pref, '{ts escape="sql"}Custom CiviCRM CSS URL{/ts}' , '', 'customCSSURL', NULL, 0, 0, 3, NULL, 0, 1, 1, NULL, @domainID, NULL);
+
+-- sms_api_type
+   (@option_group_id_sms_api_type, 'http', 1, 'http', NULL, NULL, 0, 1, NULL, 0, 1, 1, NULL, NULL),
+   (@option_group_id_sms_api_type, 'xml',  2, 'xml',  NULL, NULL, 0, 2, NULL, 0, 1, 1, NULL, NULL),
+   (@option_group_id_sms_api_type, 'smtp', 3, 'smtp', NULL, NULL, 0, 3, NULL, 0, 1, 1, NULL, NULL),
+
 
 
 

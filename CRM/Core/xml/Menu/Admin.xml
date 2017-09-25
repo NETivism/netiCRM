@@ -597,7 +597,7 @@
    <desc>To configure a sms provider</desc>
    <page_callback>CRM_SMS_Page_Provider</page_callback>
    <access_arguments>administer CiviCRM</access_arguments>
-   <adminGroup>System Settings</adminGroup>
+   <adminGroup>Configure</adminGroup>
    <icon>admin/small/36.png</icon>
    <weight>500</weight>
 </item>

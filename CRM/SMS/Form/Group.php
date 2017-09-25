@@ -73,6 +73,7 @@ class CRM_SMS_Form_Group extends CRM_Contact_Form_Task {
         $this->set('mailing_id', $mailingID);
       }
 
+      /*
       $dao = new CRM_Mailing_DAO_MailingGroup();
 
       $mailingGroups = array();
@@ -87,6 +88,7 @@ class CRM_SMS_Form_Group extends CRM_Contact_Form_Task {
 
       $defaults['includeMailings'] = CRM_Utils_Array::value('Include', CRM_Utils_Array::value('civicrm_mailing', $mailingGroups));
       $defaults['excludeMailings'] = CRM_Utils_Array::value('Exclude', CRM_Utils_Array::value('civicrm_mailing', $mailingGroups));
+      */
     }
 
     return $defaults;
@@ -108,7 +110,9 @@ class CRM_SMS_Form_Group extends CRM_Contact_Form_Task {
     );
 
     // Get the mailing groups.
-    $groups = CRM_Core_PseudoConstant::nestedGroup('Mailing');
+    // $groups = CRM_Core_PseudoConstant::nestedGroup('Mailing');
+    $groups = CRM_Core_PseudoConstant::group();
+    // $groups = CRM_Contact_BAO_Group::getGroupsHierarchy($groups, NULL, '&nbsp;&nbsp;', TRUE);
 
     // Get the sms mailing list.
     $mailings = CRM_Mailing_PseudoConstant::completed('sms');
