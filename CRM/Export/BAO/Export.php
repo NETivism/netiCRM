@@ -480,6 +480,13 @@ class CRM_Export_BAO_Export {
 
     if ($componentTable) {
       $from .= " INNER JOIN $componentTable ctTable ON ctTable.contact_id = contact_a.id ";
+      if ($order) {
+        list($field, $dir) = explode(' ', $order, 2);
+        $field = trim($field);
+        if (CRM_Utils_Array::value($field, $returnProperties)) {
+          $orderBy = " ORDER BY $order ";
+        }
+      }
     }
     elseif ($componentClause) {
       if (empty($where)) {
@@ -488,6 +495,8 @@ class CRM_Export_BAO_Export {
       else {
         $where .= " AND $componentClause";
       }
+      $field = preg_replace('/ IN.+$/', '', $componentClause);
+      $orderBy = " ORDER BY FIELD($field,".implode(',', $ids).") ";
     }
 
     $queryString = "$select $from $where";
@@ -516,14 +525,7 @@ class CRM_Export_BAO_Export {
     if ($queryMode & CRM_Contact_BAO_Query::MODE_ACTIVITY) {
       $groupBy = " GROUP BY civicrm_activity.id ";
     }
-    $queryString .= $groupBy;
-    if ($order) {
-      list($field, $dir) = explode(' ', $order, 2);
-      $field = trim($field);
-      if (CRM_Utils_Array::value($field, $returnProperties)) {
-        // $queryString .= " ORDER BY $order";
-      }
-    }
+    $queryString .= $groupBy . $orderBy ;
 
     //hack for student data
     require_once 'CRM/Core/OptionGroup.php';

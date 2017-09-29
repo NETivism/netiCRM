@@ -45778,3 +45778,7 @@ msgstr ""
 #: templates/CRM/common/betterContributionForm.tpl
 msgid "To upload data is only for person contribution."
 msgstr ""
+
+#: templates/CRM/Contribute/Form/ManagePremiums.tpl
+msgid "Current Image Thumbnail"
+msgstr ""

@@ -80,8 +80,10 @@ function selectPremium(optionField) {
                 {assign var="pid" value=$row.id}
                 <td class="premium-selected">{$form.selectProduct.$pid.html}</td>
             {/if}
-            <td class="premium-img">{if $row.thumbnail}<label for="{$form.selectProduct.$pid.id}"><img src="{$row.thumbnail}" alt="{$row.name}" class="no-border" /></label>{/if}</td>
-	        <td class="premium-info">
+            {if $row.thumbnail}
+            <td class="premium-img"><label for="{$form.selectProduct.$pid.id}"><img src="{$row.thumbnail}" alt="{$row.name}" class="no-border" /></label></td>
+            {/if}
+	        <td class="premium-info"{if !$row.thumbnail} colspan="2"{/if}>
                 <label class="premium-name" for="{$form.selectProduct.$pid.id}">{$row.name}</label>
                 <div>{$row.description|nl2br}</div>
                 {if ( ($premiumBlock.premiums_display_min_contribution AND $context EQ "makeContribution") OR $preview EQ 1) AND $row.min_contribution GT 0 }
