@@ -4982,9 +4982,9 @@ VALUES
   (@option_group_id_url_pref, 'Custom CiviCRM CSS URL' , '', 'customCSSURL', NULL, 0, 0, 3, NULL, 0, 1, 1, NULL, @domainID, NULL),
 
 -- sms_api_type
-   (@option_group_id_sms_api_type, 'http', 1, 'http', NULL, NULL, 0, 1, NULL, 0, 1, 1, NULL, NULL),
-   (@option_group_id_sms_api_type, 'xml',  2, 'xml',  NULL, NULL, 0, 2, NULL, 0, 1, 1, NULL, NULL),
-   (@option_group_id_sms_api_type, 'smtp', 3, 'smtp', NULL, NULL, 0, 3, NULL, 0, 1, 1, NULL, NULL);
+   (@option_group_id_sms_api_type, 'http', 1, 'http', NULL, 0, 1, 1, NULL, 0, 1, 1, NULL, @domainID, NULL),
+   (@option_group_id_sms_api_type, 'xml',  2, 'xml',  NULL, 0, 0, 2, NULL, 0, 1, 1, NULL, @domainID, NULL),
+   (@option_group_id_sms_api_type, 'smtp', 3, 'smtp', NULL, 0, 0, 3, NULL, 0, 1, 1, NULL, @domainID, NULL);
 
 
 
