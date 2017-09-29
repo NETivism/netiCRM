@@ -602,6 +602,7 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
     $dates = array('join_date',
       'start_date',
       'end_date',
+      'reminder_date',
     );
 
     foreach ($dates as $d) {
