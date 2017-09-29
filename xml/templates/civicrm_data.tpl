@@ -193,9 +193,9 @@ VALUES
    ('campaign_status'               , '{ts escape="sql"}Campaign Status{/ts}'                    , 0, 1),
    ('system_extensions'             , '{ts escape="sql"}CiviCRM Extensions{/ts}'                 , 0, 1),
    ('directory_preferences'         , '{ts escape="sql"}Directory Preferences{/ts}'              , 0, 1),
-   ('url_preferences'               , '{ts escape="sql"}URL Preferences{/ts}'                    , 0, 1);
+   ('url_preferences'               , '{ts escape="sql"}URL Preferences{/ts}'                    , 0, 1),
    ('sms_api_type'                  , '{ts escape="sql"}Api Type{/ts}'                           , 0, 1),
-   ('sms_provider_name'             , '{ts escape="sql"}Sms Provider Internal Name{/ts}'         , 0, 1),
+   ('sms_provider_name'             , '{ts escape="sql"}Sms Provider Internal Name{/ts}'         , 0, 1);
 
    
 SELECT @option_group_id_pcm            := max(id) from civicrm_option_group where name = 'preferred_communication_method';

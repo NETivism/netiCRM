@@ -4473,9 +4473,9 @@ VALUES
    ('campaign_status'               , '募款活動狀態'                    , 0, 1),
    ('system_extensions'             , 'CiviCRM 套件'                 , 0, 1),
    ('directory_preferences'         , 'Directory Preferences'              , 0, 1),
-   ('url_preferences'               , 'URL Preferences'                    , 0, 1);
+   ('url_preferences'               , 'URL Preferences'                    , 0, 1),
    ('sms_api_type'                  , 'Api Type'                           , 0, 1),
-   ('sms_provider_name'             , 'Sms Provider Internal Name'         , 0, 1),
+   ('sms_provider_name'             , 'Sms Provider Internal Name'         , 0, 1);
 
    
 SELECT @option_group_id_pcm            := max(id) from civicrm_option_group where name = 'preferred_communication_method';
