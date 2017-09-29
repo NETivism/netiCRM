@@ -65,6 +65,7 @@
     <td class="crm-membership-join_date">{$row.join_date|truncate:10:''|crmDate}</td>
     <td class="crm-membership-start_date">{$row.membership_start_date|truncate:10:''|crmDate}</td>
     <td class="crm-membership-end_date">{$row.membership_end_date|truncate:10:''|crmDate}</td>
+    <td class="crm-membership-reminder_date">{$row.reminder_date|truncate:10:''|crmDate}</td>
     <td class="crm-membership-source">{$row.membership_source}</td>
     <td class="crm-membership-status crm-membership-status_{$row.membership_status}">{$row.membership_status}</td>
     <td class="row-action">

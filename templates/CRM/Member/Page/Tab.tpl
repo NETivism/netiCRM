@@ -69,9 +69,11 @@
         <table id="active_membership" class="display">
             <thead>
             <tr>
-                <th>{ts}Membership{/ts}</th>
+                <th>{ts}Membership Type{/ts}</th>
+                <th>{ts}Join Date{/ts}</th>
                 <th>{ts}Start Date{/ts}</th>
                 <th>{ts}End Date{/ts}</th>
+                <th>{ts}Reminder Date{/ts}</th>
                 <th>{ts}Status{/ts}</th>
                 <th>{ts}Source{/ts}</th>
                 <th></th>
@@ -83,8 +85,10 @@
                     {$activeMember.membership_type}
                     {if $activeMember.owner_membership_id}<br />({ts}by relationship{/ts}){/if}
                 </td>
+                <td class="crm-membership-join_date">{$activeMember.join_date|crmDate}</td>
                 <td class="crm-membership-start_date">{$activeMember.start_date|crmDate}</td>
                 <td class="crm-membership-end_date">{$activeMember.end_date|crmDate}</td>
+                <td class="crm-membership-reminder_date">{$activeMember.reminder_date|crmDate}</td>
                 <td class="crm-membership-status">{$activeMember.status}</td>
                 <td class="crm-membership-source">{$activeMember.source}</td>
                 <td>
@@ -108,9 +112,11 @@
         <table id="pending_membership" class="display">
             <thead>
             <tr>
-                <th>{ts}Membership{/ts}</th>
+                <th>{ts}Membership Type{/ts}</th>
+                <th>{ts}Join Date{/ts}</th>
                 <th>{ts}Start Date{/ts}</th>
                 <th>{ts}End Date{/ts}</th>
+                <th>{ts}Reminder Date{/ts}</th>
                 <th>{ts}Status{/ts}</th>
                 <th>{ts}Source{/ts}</th>
                 <th></th>
@@ -119,8 +125,10 @@
             {foreach from=$inActiveMembers item=inActiveMember}
             <tr id="crm-membership_{$inActiveMember.id}" class="{cycle values="odd-row,even-row"} {$inActiveMember.class} crm-membership">
                 <td class="crm-membership-membership_type">{$inActiveMember.membership_type}</td>
+                <td class="crm-membership-join_date">{$inActiveMember.join_date|crmDate}</td>
                 <td class="crm-membership-start_date">{$inActiveMember.start_date|crmDate}</td>
                 <td class="crm-membership-end_date">{$inActiveMember.end_date|crmDate}</td>
+                <td class="crm-membership-reminder_date">{$inActiveMember.reminder_date|crmDate}</td>
                 <td class="crm-membership-status">{$inActiveMember.status}</td>
                 <td class="crm-membership-source">{$inActiveMember.source}</td>
                 <td>{$inActiveMember.action|replace:'xx':$inActiveMember.id}</td>

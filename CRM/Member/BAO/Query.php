@@ -104,6 +104,12 @@ class CRM_Member_BAO_Query {
         $query->_element['membership_end_date'] = 1;
       }
 
+      //add reminder_date
+      if (CRM_Utils_Array::value('reminder_date', $query->_returnProperties)) {
+        $query->_select['reminder_date'] = "civicrm_membership.reminder_date as reminder_date";
+        $query->_element['reminder_date'] = 1;
+      }
+
       //add owner_membership_id
       if (CRM_Utils_Array::value('owner_membership_id', $query->_returnProperties)) {
         $query->_select['owner_membership_id'] = "civicrm_membership.owner_membership_id as owner_membership_id";
@@ -330,6 +336,7 @@ class CRM_Member_BAO_Query {
         'membership_source' => 1,
         'membership_status' => 1,
         'membership_id' => 1,
+        'reminder_date' => 1,
         'owner_membership_id' => 1,
       );
 

@@ -296,6 +296,10 @@ class CRM_Member_DAO_Membership extends CRM_Core_DAO
           'name' => 'reminder_date',
           'type' => CRM_Utils_Type::T_DATE,
           'title' => ts('Reminder Date') ,
+          'export' => true,
+          'where' => 'civicrm_membership.reminder_date',
+          'headerPattern' => '',
+          'dataPattern' => '',
         ) ,
         'owner_membership_id' => array(
           'name' => 'owner_membership_id',

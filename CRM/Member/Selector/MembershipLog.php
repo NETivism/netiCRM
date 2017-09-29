@@ -203,6 +203,9 @@ class CRM_Member_Selector_MembershipLog extends CRM_Core_Selector_Base implement
         $orderBy = trim($sort->orderBy());
       }
     }
+    if (!empty($orderBy) && !preg_match('/^id/i', $orderBy)) {
+      $orderBy .= ', id DESC'; 
+    }
     $order = empty($orderBy)?"":"ORDER BY $orderBy";
 
     $offsetClause = !empty($offset) ? "OFFSET $offset" : "";

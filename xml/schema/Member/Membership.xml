@@ -132,6 +132,7 @@
   <field> 
       <name>reminder_date</name>  
       <type>date</type>
+      <export>true</export>
       <comment>When should a reminder be sent.</comment>  
       <add>1.6</add>  
   </field> 
