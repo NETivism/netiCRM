@@ -136,7 +136,6 @@ class CRM_Contribute_Form_ManagePremiums extends CRM_Contribute_Form {
 
     $image['image'] = $this->createElement('radio', NULL, NULL, ts('Upload from my computer'), 'image', 'onclick="add_upload_file_block(\'image\');');
     $image['thumbnail'] = $this->createElement('radio', NULL, NULL, ts('Display image and thumbnail from these locations on the web:'), 'thumbnail', 'onclick="add_upload_file_block(\'thumbnail\');');
-    $image['default_image'] = $this->createElement('radio', NULL, NULL, ts('Use default image'), 'default_image', 'onclick="add_upload_file_block(\'default\');');
     $image['noImage'] = $this->createElement('radio', NULL, NULL, ts('Do not display an image'), 'noImage', 'onclick="add_upload_file_block(\'noImage\');');
 
     $this->addGroup($image, 'imageOption', ts('Premium Image'));
@@ -314,11 +313,6 @@ class CRM_Contribute_Form_ManagePremiums extends CRM_Contribute_Form {
         elseif ($value == 'thumbnail') {
           $params['image'] = $params['imageUrl'];
           $params['thumbnail'] = $params['thumbnailUrl'];
-        }
-        elseif ($value == 'default_image') {
-          $url = parse_url($config->userFrameworkBaseURL);
-          $params['image'] = $config->resourceBase . 'i/contribute/default_premium.jpg';
-          $params['thumbnail'] = $config->resourceBase . 'i/contribute/default_premium_thumb.jpg';
         }
         else {
           $params['image'] = "";

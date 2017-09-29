@@ -12,7 +12,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2017-08-24 08:24+0000\n"
+"PO-Revision-Date: 2017-09-29 07:02+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -45625,7 +45625,7 @@ msgstr "最近 %1 個月已有捐款的支持者"
 msgid ""
 "You can send some result or impact of your project to them. And don't forget"
 " to exclude them in donation letter."
-msgstr "該寄送成果報告或專案進度給這些捐款人囉～然後要寄送募款信時，也別忘了排除這些階款人。"
+msgstr "該寄送成果報告或專案進度給這些捐款人囉～然後要寄送募款信時，也別忘了排除這些捐款人。"
 
 #: CRM/Contribute/Page/Booster.php
 msgid "Last year but not this year donors"
@@ -45886,3 +45886,7 @@ msgstr "回到網站"
 #: templates/CRM/common/betterContributionForm.tpl
 msgid "To upload data is only for person contribution."
 msgstr "上傳資料至國稅局僅限個人捐款"
+
+#: templates/CRM/Contribute/Form/ManagePremiums.tpl
+msgid "Current Image Thumbnail"
+msgstr "目前圖片縮圖"
