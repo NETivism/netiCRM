@@ -68,16 +68,10 @@ abstract class CRM_SMS_Provider {
 
     $providerName = CRM_Utils_Type::escape($providerName, 'String');
     $cacheKey = "{$providerName}_" . (int) $providerID . "_" . (int) $mailingID;
-
     if (!isset(self::$_singleton[$cacheKey]) || $force) {
-      $ext = CRM_Extension_System::singleton()->getMapper();
-      if ($ext->isExtensionKey($providerName)) {
-        $paymentClass = $ext->keyToClass($providerName);
-        require_once "{$paymentClass}.php";
-      }
-      else {
-        CRM_Core_Error::fatal("Could not locate extension for {$providerName}.");
-      }
+      $paymentClass = $providerName;
+      $paymentFile = str_replace('_', '/', $providerName);
+      require_once "{$paymentFile}.php";
 
       self::$_singleton[$cacheKey] = $paymentClass::singleton($providerParams, $force);
     }
@@ -158,7 +152,8 @@ INNER JOIN civicrm_mailing_job mj ON mj.mailing_id = m.id AND mj.id = %1";
       return FALSE;
     }
 
-    $activityTypeID = CRM_Core_OptionGroup::getValue('activity_type', 'SMS delivery', 'name');
+    // $activityTypeID = CRM_Core_OptionGroup::getValue('activity_type', 'SMS delivery', 'name');
+    $activityTypeID = CRM_Utils_Array::key('SMS delivery', CRM_Core_PseudoConstant::activityType(TRUE, TRUE, FALSE, 'name', TRUE));
     // note: lets not pass status here, assuming status will be updated by callback
     $activityParams = array(
       'source_contact_id' => $sourceContactID,
@@ -222,10 +217,13 @@ INNER JOIN civicrm_mailing_job mj ON mj.mailing_id = m.id AND mj.id = %1";
       // unknown mobile sender -- create new contact
       // use fake @mobile.sms email address for new contact since civi
       // requires email or name for all contacts
-      $locationTypes = CRM_Core_PseudoConstant::get('CRM_Core_DAO_Address', 'location_type_id');
-      $phoneTypes = CRM_Core_PseudoConstant::get('CRM_Core_DAO_Phone', 'phone_type_id');
-      $phoneloc = array_search('Home', $locationTypes);
-      $phonetype = array_search('Mobile', $phoneTypes);
+      $locationTypes = CRM_Core_PseudoConstant::locationType();
+      $phoneTypes = CRM_Core_PseudoConstant::phoneType();
+      $phoneloc = CRM_Utils_Array::key(ts('Home'), $locationTypes);
+      if(empty($phoneloc)){
+        $phoneloc = CRM_Utils_Array::key('Home', $locationTypes);
+      }
+      $phonetype = CRM_Utils_Array::key(ts('Mobile'), $phoneTypes);
       $stripFrom = $this->stripPhone($message->from);
       $contactparams = array(
         'contact_type' => 'Individual',
@@ -260,7 +258,8 @@ INNER JOIN civicrm_mailing_job mj ON mj.mailing_id = m.id AND mj.id = %1";
 
     if ($message->fromContactID) {
       $actStatusIDs = array_flip(CRM_Core_OptionGroup::values('activity_status'));
-      $activityTypeID = CRM_Core_PseudoConstant::getKey('CRM_Activity_BAO_Activity', 'activity_type_id', 'Inbound SMS');
+      $activityTypeID = CRM_Utils_Array::key('SMS', CRM_Core_PseudoConstant::activityType(TRUE, TRUE, FALSE, 'name', TRUE));
+        // 'Inbound SMS');
 
       // note: lets not pass status here, assuming status will be updated by callback
       $activityParams = array(

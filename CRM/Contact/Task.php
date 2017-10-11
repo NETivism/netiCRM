@@ -152,6 +152,18 @@ class CRM_Contact_Task {
           'optgroup' => 'Delete Contact',
         ),
       );
+
+      //CRM-16329, if SMS provider is configured show sms action.
+      $providersCount = CRM_SMS_BAO_Provider::activeProviderCount();
+      if ($providersCount) {
+        self::$_tasks[self::SMS_CONTACTS] = array(
+          'title' => ts('SMS - schedule/send'),
+          'class' => 'CRM_Contact_Form_Task_SMS',
+          'result' => TRUE,
+          'optgroup' => 'Send Mailing',
+        );
+      }
+
       if (CRM_Contact_BAO_ContactType::isActive('Household')) {
         $label = CRM_Contact_BAO_ContactType::getLabel('Household');
         self::$_tasks[9] = array('title' => ts('Add Contacts to %1',
@@ -245,10 +257,6 @@ class CRM_Contact_Task {
     if (!CRM_Utils_Mail::validOutBoundMail()) {
       unset($titles[6]);
       unset($titles[20]);
-    }
-
-    if (!in_array('CiviSMS', $config->enableComponents)) {
-      unset($titles[7]);
     }
 
     // CRM-6806
