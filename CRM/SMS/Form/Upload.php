@@ -409,7 +409,7 @@ class CRM_SMS_Form_Upload extends CRM_Core_Form {
       }
     }
 
-    $templateName = CRM_Core_BAO_MessageTemplate::getMessageTemplates();
+    $templateName = CRM_Core_BAO_MessageTemplates::getMessageTemplates();
     if (!empty($params['SMSsaveTemplate']) && in_array(CRM_Utils_Array::value('SMSsaveTemplateName', $params), $templateName)
     ) {
       $errors['SMSsaveTemplate'] = ts('Duplicate Template Name.');
