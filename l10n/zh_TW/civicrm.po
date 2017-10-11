@@ -12,7 +12,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
-"PO-Revision-Date: 2017-09-29 07:02+0000\n"
+"PO-Revision-Date: 2017-10-11 05:25+0000\n"
 "Last-Translator: Chang Shu-huai <junsuwhy@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -2893,7 +2893,7 @@ msgstr "選擇群組"
 #: CRM/Group/Form/Edit.php CRM/Mailing/Selector/Browse.php
 #: CRM/Upgrade/Form.php
 msgid "Continue"
-msgstr "繼續"
+msgstr "下一步"
 
 #: CRM/Contact/Form/DedupeRules.php CRM/Dedupe/DAO/RuleGroup.php
 msgid "Fuzzy"
@@ -44661,7 +44661,7 @@ msgstr "收據編號預設以年月數字為流水序號，您可以在此設定
 
 #: templates/CRM/Admin/Form/Setting/Receipt.tpl
 msgid "Description will appear at the end of receipt."
-msgstr "這裡的描述將會縣市在收據底部。"
+msgstr "這裡的描述將會顯示在收據底部。"
 
 #: templates/CRM/Admin/Form/Setting/Receipt.tpl
 msgid "Organization info will appear at the end of receipt."
