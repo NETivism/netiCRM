@@ -238,4 +238,13 @@
       <comment>Remove duplicate emails?</comment>
       <add>3.3</add>    
   </field>
+  <field>
+    <name>sms_provider_id</name>
+    <title>Mailing SMS Provider</title>
+    <type>int unsigned</type>
+    <add>3.3</add>
+    <html>
+      <type>Select</type>
+    </html>
+  </field>
 </table>

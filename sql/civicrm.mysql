@@ -436,7 +436,8 @@ CREATE TABLE civicrm_msg_template (
      is_active tinyint   DEFAULT 1 ,
      workflow_id int unsigned    COMMENT 'a pseudo-FK to civicrm_option_value',
      is_default tinyint   DEFAULT 1 COMMENT 'is this the default message template for the workflow referenced by workflow_id?',
-     is_reserved tinyint    COMMENT 'is this the reserved message template which we ship for the workflow referenced by workflow_id?' 
+     is_reserved tinyint    COMMENT 'is this the reserved message template which we ship for the workflow referenced by workflow_id?',
+     is_sms tinyint   DEFAULT 0 COMMENT 'Is this message template used for sms?' 
 ,
     PRIMARY KEY ( id )
  
@@ -1078,7 +1079,8 @@ CREATE TABLE civicrm_mailing (
      scheduled_date datetime    COMMENT 'Date and time this mailing was scheduled.',
      is_archived tinyint   DEFAULT 0 COMMENT 'Is this mailing archived?',
      visibility enum('User and User Admin Only', 'Public Pages')   DEFAULT 'User and User Admin Only' COMMENT 'In what context(s) is the mailing contents visible (online viewing)',
-     dedupe_email tinyint   DEFAULT 0 COMMENT 'Remove duplicate emails?' 
+     dedupe_email tinyint   DEFAULT 0 COMMENT 'Remove duplicate emails?',
+     sms_provider_id int unsigned     
 ,
     PRIMARY KEY ( id )
  

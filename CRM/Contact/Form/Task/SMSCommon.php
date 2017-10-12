@@ -104,7 +104,7 @@ class CRM_Contact_Form_Task_SMSCommon {
       $form->_contactIds = array($cid);
     }
 
-    $to = $form->add('text', 'to', ts('To'), array('class' => 'huge'), TRUE);
+    $to = $form->add('text', 'to', ts('To'), array('class' => 'huge'));
     $form->add('text', 'activity_subject', ts('Name The SMS'), array('class' => 'huge'), TRUE);
 
     $toSetDefault = TRUE;
@@ -252,6 +252,18 @@ class CRM_Contact_Form_Task_SMSCommon {
           );
         }
       }
+
+      // Custom in Neticrm
+      
+      $toArrayIdPhone = array();
+      foreach ($toArray as $key => $value) {
+        $toArrayIdPhone[] = $value['id'];
+      }
+      $toDefault = implode(', ', $toArrayIdPhone);
+      $defaults['to'] = $toDefault;
+      $form->setDefaults($defaults);
+
+      // Custom end
 
       if (empty($toArray)) {
         CRM_Core_Error::statusBounce(ts('Selected contact(s) do not have a valid Phone, or communication preferences specify DO NOT SMS, or they are deceased'));

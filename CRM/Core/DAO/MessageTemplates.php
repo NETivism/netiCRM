@@ -134,6 +134,12 @@ class CRM_Core_DAO_MessageTemplates extends CRM_Core_DAO
    */
   public $is_reserved;
   /**
+   * Is this message template used for sms?
+   *
+   * @var boolean
+   */
+  public $is_sms;
+  /**
    * class constructor
    *
    * @access public
@@ -202,6 +208,11 @@ class CRM_Core_DAO_MessageTemplates extends CRM_Core_DAO
         'is_reserved' => array(
           'name' => 'is_reserved',
           'type' => CRM_Utils_Type::T_BOOLEAN,
+        ) ,
+        'is_sms' => array(
+          'name' => 'is_sms',
+          'type' => CRM_Utils_Type::T_BOOLEAN,
+          'title' => ts('Message Template is used for SMS?') ,
         ) ,
       );
     }

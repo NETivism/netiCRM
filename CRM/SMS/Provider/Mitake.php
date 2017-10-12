@@ -37,7 +37,7 @@ class CRM_SMS_Provider_Mitake extends CRM_SMS_Provider {
     $data_str = http_build_query($param);
     $this->sms = new SmsData($recipients, $message);
     $options['data'] = $this->prepareSmsData();
-    $this->do_request($this->_providerInfo['api_url'] . '?' . $data_str .'&' . $options['data'] .'&outtype=1&Encoding_PostIn=UTF8', 'POST', $options);
+    print_r($this->do_request($this->_providerInfo['api_url'] . '?' . $data_str .'&' . $options['data'] .'&outtype=1&Encoding_PostIn=UTF8', 'POST', $options));
 	}
 
 	protected function do_request($req_uri, $method = 'GET', $options = array()) {
