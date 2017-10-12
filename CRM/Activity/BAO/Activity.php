@@ -1519,7 +1519,7 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
       'contact_id' => $toID,
       'record_type_id' => $targetID,
     );
-    CRM_Activity_BAO_ActivityContact::create($activityTargetParams);
+    // CRM_Activity_BAO_ActivityContact::create($activityTargetParams);
 
     return TRUE;
   }
