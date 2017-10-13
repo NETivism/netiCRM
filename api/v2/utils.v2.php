@@ -1288,10 +1288,10 @@ function _civicrm_membership_formatted_param(&$params, &$values, $create = FALSE
         if (is_numeric($value)) {
           $values[$key] = $id;
         }
-        elseif (!empty(array_search($value, $statuses))) {
+        elseif (array_search($value, $statuses) !== FALSE) {
           $values[$key] = array_search($value, $statuses);
         }
-        elseif (!empty(array_search($value, $statusesLabel))) {
+        elseif (array_search($value, $statusesLabel) !== FALSE) {
           $values[$key] = array_search($value, $statusesLabel);
         }
         else {
