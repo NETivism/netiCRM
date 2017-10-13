@@ -1283,8 +1283,20 @@ function _civicrm_membership_formatted_param(&$params, &$values, $create = FALSE
         break;
 
       case 'status_id':
-        $id = CRM_Core_DAO::getFieldValue("CRM_Member_DAO_MembershipStatus", $value, 'id', 'name');
-        $values[$key] = $id;
+        $statuses = CRM_Member_PseudoConstant::membershipStatus(); // name
+        $statusesLabel = CRM_Member_PseudoConstant::membershipStatus(NULL, NULL, 'label'); // name
+        if (is_numeric($value)) {
+          $values[$key] = $id;
+        }
+        elseif (!empty(array_search($value, $statuses))) {
+          $values[$key] = array_search($value, $statuses);
+        }
+        elseif (!empty(array_search($value, $statusesLabel))) {
+          $values[$key] = array_search($value, $statusesLabel);
+        }
+        else {
+          $values[$key] = NULL;
+        }
         break;
 
       case 'member_is_test':

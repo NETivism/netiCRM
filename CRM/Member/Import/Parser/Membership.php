@@ -216,7 +216,12 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
             break;
 
           case 'status_id':
-            if (!CRM_Utils_Array::crmInArray($val, CRM_Member_PseudoConstant::membershipStatus())) {
+            $statuses = CRM_Member_PseudoConstant::membershipStatus(NULL, NULL, 'name');
+            $statusesLabel = CRM_Member_PseudoConstant::membershipStatus(NULL, NULL, 'label');
+            if (is_numeric($val) && !array_key_exists($val, $statuses)) {
+              CRM_Import_Parser_Contact::addToErrorMsg('Membership Status', $errorMessage);
+            }
+            elseif (!CRM_Utils_Array::crmInArray($val, $statues) && !CRM_Utils_Array::crmInArray($val, $statusesLabel)) {
               CRM_Import_Parser_Contact::addToErrorMsg('Membership Status', $errorMessage);
             }
             break;
