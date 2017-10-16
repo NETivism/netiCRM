@@ -28,6 +28,9 @@
 <script type="text/Javascript">
     function option_html_type(form) { 
         var html_type = document.getElementById("html_type");
+        if (typeof html_type.options === 'undefined') {
+          return;
+        }
         var html_type_name = html_type.options[html_type.selectedIndex].value;
 
         if (html_type_name == "Text") {
@@ -156,7 +159,8 @@
 
            <tr class="crm-price-field-form-block-help_post">
               <td class="label">{$form.help_post.label}</td>
-              <td>{if $action == 2}{include file='CRM/Core/I18n/Dialog.tpl' table='civicrm_price_field' field='help_post' id=$id}{/if}{$form.help_post.html|crmReplace:class:huge}&nbsp;
+              <td>{if $action == 2}{include file='CRM/Core/I18n/Dialog.tpl' table='civicrm_price_field' field='help_post' id=$id}{/if}
+                    {$form.help_post.html|crmReplace:class:huge}
                   {if $action neq 4}
                     <div class="description">{ts}Explanatory text displayed to users for this field.{/ts}</div>
                   {/if}

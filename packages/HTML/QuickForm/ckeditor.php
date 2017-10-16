@@ -79,11 +79,11 @@ class HTML_QuickForm_CKeditor extends HTML_QuickForm_textarea
             }
             $html = parent::toHtml() . "<script type='text/javascript'>
                 cj( function( ) {
-                    if (cj('#{$name}').hasClass('processed')) {
+                    if (cj('#{$name}').hasClass('ckeditor-processed')) {
                       return;
                     }
                     else {
-                      cj('#{$name}').addClass('processed');
+                      cj('#{$name}').addClass('ckeditor-processed');
                     }
                     CKEDITOR.replace('{$name}');
                     var editor = CKEDITOR.instances['{$name}'];
