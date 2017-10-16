@@ -250,6 +250,14 @@ class CRM_Member_BAO_Membership extends CRM_Member_DAO_Membership {
       $params['status_id'] = $calcStatus['id'];
     }
 
+    // calc reminder date if not provided
+    if (empty($params['reminder_date'])) {
+      $calcDates = CRM_Member_BAO_MembershipType::getDatesForMembershipType($params['membership_type_id'], $params['join_date'], $params['start_date'], $params['end_date']);
+      if (!empty($calcDates['reminder_date'])) {
+        $params['reminder_date'] = $calcDates['reminder_date'];
+      }
+    }
+
     require_once 'CRM/Core/Transaction.php';
     $transaction = new CRM_Core_Transaction();
 

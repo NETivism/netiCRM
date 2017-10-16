@@ -391,11 +391,11 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
           'Membership'
         );
         if ($dao->find(TRUE)) {
-          $ids = array('membership' => $formatValues['membership_id'],
+          $ids = array(
+            'membership' => $formatValues['membership_id'],
             'userId' => $session->get('userID'),
           );
-
-          $newMembership = &CRM_Member_BAO_Membership::create($formatted, $ids, TRUE);
+          $newMembership = &CRM_Member_BAO_Membership::create($formatted, $ids, TRUE, 'Membership Renewal');
           if (civicrm_error($newMembership)) {
             array_unshift($values, $newMembership['is_error'] . " for Membership ID " . $formatValues['membership_id'] . ". Row was skipped.");
             return CRM_Member_Import_Parser::ERROR;
