@@ -178,6 +178,7 @@ function add_upload_file_block(parms) {
 
 function select_option() {
   cj('[name="imageOption"][value="image"]').prop('checked',true);
+  add_upload_file_block('image');
 }
 
 {/literal}

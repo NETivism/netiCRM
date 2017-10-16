@@ -72,7 +72,10 @@ function selectPremium(optionField) {
     {strip}
         <table class="premiums-listings">
         {if $showRadioPremium AND !$preview }
-            <tr><td colspan="4">{$form.selectProduct.no_thanks.html}</td></tr>
+            <tr>
+                <td>{$form.selectProduct.no_thanks.html}</td>
+                <td colspan="3"><label for="{$form.selectProduct.no_thanks.id}">{$no_thanks_label}</label></td>
+            </tr>
         {/if}
         {foreach from=$products item=row}
         <tr {if $context EQ "makeContribution"} {/if}valign="top"> 
