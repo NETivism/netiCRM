@@ -59,7 +59,7 @@
     {if $achieved < 100}
     <div class="thermometer-pointer" data-percent="{$achievedPercent}"><span class="pcp-percent-raised">{$achieved}%</span></div>
     <div class="pcp-amount-raised">
-      <span class="raised-amount crmMoney">{$total|crmMoney}</span> {ts}raised{/ts}</label>
+      <label>{ts}raised{/ts}</label> <span class="raised-amount crmMoney">{$total|crmMoney}</span>
     </div>
     <div class="pcp-amount-goal">
       <label>{ts}Goal{/ts}</label> <span class="goal-amount crmMoney">{$pcp.goal_amount|crmMoney}</span>
