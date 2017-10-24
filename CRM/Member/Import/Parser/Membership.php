@@ -216,7 +216,12 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
             break;
 
           case 'status_id':
-            if (!CRM_Utils_Array::crmInArray($val, CRM_Member_PseudoConstant::membershipStatus())) {
+            $statuses = CRM_Member_PseudoConstant::membershipStatus(NULL, NULL, 'name');
+            $statusesLabel = CRM_Member_PseudoConstant::membershipStatus(NULL, NULL, 'label');
+            if (is_numeric($val) && !array_key_exists($val, $statuses)) {
+              CRM_Import_Parser_Contact::addToErrorMsg('Membership Status', $errorMessage);
+            }
+            elseif (!CRM_Utils_Array::crmInArray($val, $statues) && !CRM_Utils_Array::crmInArray($val, $statusesLabel)) {
               CRM_Import_Parser_Contact::addToErrorMsg('Membership Status', $errorMessage);
             }
             break;
@@ -262,11 +267,6 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
     }
 
     $params = &$this->getActiveFieldParams();
-
-    //assign join date equal to start date if join date is not provided
-    if (!$params['join_date'] && $params['membership_start_date']) {
-      $params['join_date'] = $params['membership_start_date'];
-    }
 
     $session = CRM_Core_Session::singleton();
     $dateType = $session->get("dateTypes");
@@ -373,24 +373,24 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
         require_once 'CRM/Member/BAO/Membership.php';
         $dao = new CRM_Member_BAO_Membership();
         $dao->id = $formatValues['membership_id'];
-        $dates = array('join_date', 'start_date', 'end_date');
-        foreach ($dates as $v) {
-          if (!$formatted[$v]) {
-            $formatted[$v] = CRM_Core_DAO::getFieldValue('CRM_Member_DAO_Membership', $formatValues['membership_id'], $v);
-          }
-        }
-
-        $formatted['custom'] = CRM_Core_BAO_CustomField::postProcess($formatted,
-          CRM_Core_DAO::$_nullObject,
-          $formatValues['membership_id'],
-          'Membership'
-        );
         if ($dao->find(TRUE)) {
-          $ids = array('membership' => $formatValues['membership_id'],
-            'userId' => $session->get('userID'),
+          $dates = array('join_date', 'start_date', 'end_date');
+          foreach ($dates as $v) {
+            if (empty($formatted[$v]) && !empty($dao->$v)) {
+              $formatted[$v] = $dao->$v;
+            }
+          }
+          $formatted['custom'] = CRM_Core_BAO_CustomField::postProcess($formatted,
+            CRM_Core_DAO::$_nullObject,
+            $formatValues['membership_id'],
+            'Membership'
           );
 
-          $newMembership = &CRM_Member_BAO_Membership::create($formatted, $ids, TRUE);
+          $ids = array(
+            'membership' => $formatValues['membership_id'],
+            'userId' => $session->get('userID'),
+          );
+          $newMembership = &CRM_Member_BAO_Membership::create($formatted, $ids, TRUE, 'Membership Renewal');
           if (civicrm_error($newMembership)) {
             array_unshift($values, $newMembership['is_error'] . " for Membership ID " . $formatValues['membership_id'] . ". Row was skipped.");
             return CRM_Member_Import_Parser::ERROR;
@@ -408,6 +408,12 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
     }
 
     //Format dates
+    //assign join date equal to start date if join date is not provided
+    if (!$params['join_date'] && $params['membership_start_date']) {
+      $params['join_date'] = $params['membership_start_date'];
+      $formatted['join_date'] = $params['join_date'];
+    }
+
     $startDate = CRM_Utils_Date::customFormat($formatted['start_date'], '%Y-%m-%d');
     $endDate = CRM_Utils_Date::customFormat($formatted['end_date'], '%Y-%m-%d');
     $joinDate = CRM_Utils_Date::customFormat($formatted['join_date'], '%Y-%m-%d');

@@ -57,9 +57,7 @@ class CRM_Mailing_Page_View extends CRM_Core_Page {
     // check for visibility, if visibility is Public Pages and they have the permission
     // return true
     require_once 'CRM/Core/Permission.php';
-    if ($this->_mailing->visibility == 'Public Pages' &&
-      CRM_Core_Permission::check('view public CiviMail content')
-    ) {
+    if ($this->_mailing->visibility == 'Public Pages') {
       return TRUE;
     }
 
