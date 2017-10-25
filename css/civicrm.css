@@ -985,6 +985,7 @@ div.spacer,
 }
 
 .crm-container input[type="text"],
+.crm-container input[type="number"],
 .crm-container input[type="password"] {
     border: 1px solid #999;
     vertical-align:middle;
@@ -4208,6 +4209,7 @@ ul.ui-sortable {
 
 /* form elements */
 .crm-container input[type="text"], 
+.crm-container input[type="number"], 
 .crm-container textarea, 
 .crm-container select,
 .crm-container input.form-autocomplete, 
@@ -5321,6 +5323,7 @@ tbody.scrollContent tr.alternateRow {
 }
 .crm-container-md .crm-form-elem input[type="file"],
 .crm-container-md .crm-form-elem input[type="text"],
+.crm-container-md .crm-form-elem input[type="number"],
 .crm-container-md .crm-form-elem input.form-text,
 .crm-container-md .crm-form-elem select,
 .crm-container-md .crm-form-elem select.form-select,
@@ -5344,6 +5347,7 @@ tbody.scrollContent tr.alternateRow {
   box-sizing: border-box;
 }
 .crm-container-md .crm-form-elem input[type="text"],
+.crm-container-md .crm-form-elem input[type="number"],
 .crm-container-md .crm-form-elem input.form-text,
 .crm-container-md .crm-form-elem select,
 .crm-container-md .crm-form-elem select.form-select {
@@ -5354,6 +5358,7 @@ tbody.scrollContent tr.alternateRow {
   width: 40rem;
 }
 .crm-container-md .crm-form-elem input[type="text"].error,
+.crm-container-md .crm-form-elem input[type="number"].error,
 .crm-container-md .crm-form-elem input.form-text.error,
 .crm-container-md .crm-form-elem select.error,
 .crm-container-md .crm-form-elem select.form-select.error,
@@ -5362,12 +5367,14 @@ tbody.scrollContent tr.alternateRow {
   border-bottom: 2px solid #F44336 !important;
 }
 .crm-container-md .crm-form-elem input[type="text"]:hover,
+.crm-container-md .crm-form-elem input[type="number"]:hover,
 .crm-container-md .crm-form-elem input.form-text:hover,
 .crm-container-md .crm-form-elem select:hover,
 .crm-container-md .crm-form-elem select.form-select:hover,
 .crm-container-md .crm-form-elem textarea:hover,
 .crm-container-md .crm-form-elem textarea.form-textarea:hover,
 .crm-container-md .crm-form-elem input[type="text"]:focus,
+.crm-container-md .crm-form-elem input[type="number"]:focus,
 .crm-container-md .crm-form-elem input.form-text:focus,
 .crm-container-md .crm-form-elem select:focus,
 .crm-container-md .crm-form-elem select.form-select:focus,
@@ -5379,6 +5386,7 @@ tbody.scrollContent tr.alternateRow {
   box-shadow: none !important;
 }
 .crm-container-md .crm-form-elem input[type="text"].readonly:hover,
+.crm-container-md .crm-form-elem input[type="number"].readonly:hover,
 .crm-container-md .crm-form-elem select.readonly:hover,
 .crm-container-md .crm-form-elem textarea.readonly:hover {
   outline: 0 !important;
@@ -5386,6 +5394,7 @@ tbody.scrollContent tr.alternateRow {
   box-shadow: none !important;
 }
 .crm-container-md .crm-form-elem input[type="text"]:hover,
+.crm-container-md .crm-form-elem input[type="number"]:hover,
 .crm-container-md .crm-form-elem input.form-text:hover,
 .crm-container-md .crm-form-elem select:hover,
 .crm-container-md .crm-form-elem select.form-select:hover,
@@ -5394,6 +5403,7 @@ tbody.scrollContent tr.alternateRow {
   border-bottom: 2px solid #9E9E9E !important;
 }
 .crm-container-md .crm-form-elem input[type="text"]:focus,
+.crm-container-md .crm-form-elem input[type="number"]:focus,
 .crm-container-md .crm-form-elem input.form-text:focus,
 .crm-container-md .crm-form-elem select:focus,
 .crm-container-md .crm-form-elem select.form-select:focus,
@@ -5402,6 +5412,7 @@ tbody.scrollContent tr.alternateRow {
   border-bottom: 2px solid #000 !important;
 }
 .crm-container-md .crm-form-elem input[type="text"].error:focus,
+.crm-container-md .crm-form-elem input[type="number"].error:focus,
 .crm-container-md .crm-form-elem input.form-text.error:focus,
 .crm-container-md .crm-form-elem select.error:focus,
 .crm-container-md .crm-form-elem select.form-select.error:focus,
@@ -5437,6 +5448,8 @@ tbody.scrollContent tr.alternateRow {
 .crm-container-md .crm-form-elem .readonly,
 .crm-container-md .crm-form-elem input[type="text"].readonly,
 .crm-container-md .crm-form-elem input[type="text"].readonly:hover,
+.crm-container-md .crm-form-elem input[type="number"].readonly,
+.crm-container-md .crm-form-elem input[type="number"].readonly:hover,
 .crm-container-md .crm-form-elem input[type="file"].readonly {
   cursor: not-allowed;
   color: #9E9E9E;
@@ -5854,12 +5867,12 @@ input.crm-form-textfield,
   }
   .crm-container-md .crm-form-elem input[type="file"],
   .crm-container-md .crm-form-elem input[type="text"],
+  .crm-container-md .crm-form-elem input[type="number"],
   .crm-container-md .crm-form-elem input.form-text,
   .crm-container-md .crm-form-elem select,
   .crm-container-md .crm-form-elem select.form-select,
   .crm-container-md .crm-form-elem textarea,
   .crm-container-md .crm-form-elem textarea.form-textarea,
-  .crm-container-md .crm-form-elem input[type="text"], 
   .crm-container-md .crm-form-elem input[type="password"],
   .crm-container-md .crm-form-elem.dateplugin input.dateplugin {
     width: 100%;
