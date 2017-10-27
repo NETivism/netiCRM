@@ -4745,6 +4745,7 @@ tbody.scrollContent tr.alternateRow {
 
 .crm-container table.advmultiselect td select {
   width: 150px;
+  overflow-x: auto;
 }
 .crm-container .form-layout td {
   vertical-align: top;
