@@ -118,10 +118,10 @@ $having
       $values = array();
       foreach($this->_queryColumns as $name){
         if($name == 'id'){
-          $values[] = $dao->id;
+          $values[] = CRM_Utils_Type::escape($dao->id, 'Integer');
         }
         elseif(isset($dao->$name)){
-          $values[] = "'". $dao->$name."'";
+          $values[] = "'". CRM_Utils_Type::escape($dao->$name, 'String')."'";
         }
         else{
           $values[] = 'NULL';
