@@ -187,10 +187,18 @@ SELECT module
         $this->_errorURL = str_replace('&amp;', '&', $this->_errorURL);
         $this->addElement('hidden', 'errorURL', $this->_errorURL);
       }
-      $this->addElement('hidden', 'submit_once_check', uniqid('submit-once-'));
+      $checkid = uniqid('submit-once-');
+      $this->addElement('hidden', 'submit_once_check', $checkid);
+      $this->set('last_check_id', $checkid);
 
       // replace the session stack in case user cancels (and we dont go into postProcess)
       $session = CRM_Core_Session::singleton();
+      $last_check_id = $session->get('last_check_id');
+
+      if(!empty($last_check_id)){
+        $this->addElement('hidden', 'last_check_id', $last_check_id);
+      }
+
       $session->replaceUserContext($this->_postURL);
     }
 
@@ -254,6 +262,9 @@ SELECT module
       if (!empty($this->_profileIds)) {
         $gidString = implode(',', $this->_profileIds);
       }
+
+      $last_check_id = $this->get('last_check_id');
+      $session->set('last_check_id',$last_check_id);
 
       $url = CRM_Utils_System::url('civicrm/profile/create', "reset=1&gid={$gidString}");
     }

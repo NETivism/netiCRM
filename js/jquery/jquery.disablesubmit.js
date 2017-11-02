@@ -1,8 +1,33 @@
 (function($){
   $(document).ready(function(){
+
+    // solve last submitted qfkey
+    last_qfkey = getUrlParams('qfkey');
+    if(!last_qfkey){
+      last_qfkey = $('[name=qfKey]').val();
+      if(!last_qfkey && $('name="last_check_id"').length >= 1){
+        last_qfkey = $('name="last_check_id"').val();
+      }
+    }
+
+    if(last_qfkey){
+      submitted = getCookie(last_qfkey);
+      if(submitted == 1){
+        if($('.crm-error').length == 0){
+          submitted = 2; // don't change btn stat anymore.
+        }else{
+          submitted = 0;
+        }
+        setCookie(last_qfkey, submitted, 3600);
+      }
+    }
+
     var qfkey = getUrlParams('qfKey');
     if(!qfkey){
-      qfkey = $('[name=submit_once_check]').val();
+      qfkey = $('[name=qfKey]').val();
+      if(!qfkey){
+        qfkey = $('[name=submit_once_check]').val();
+      }
     }
     var submitted = getCookie(qfkey);
     var $obj = $('input[data=submit-once]');
@@ -22,7 +47,7 @@
         // set cookie
         $obj.bind('click', function(e){
           // If attribute is readonly, don't enable.
-          if(submitted < 1 && $obj.parents("form").has('.error:visible').length == 0 && !$obj.attr("readonly")){
+          if(submitted < 1 && $obj.parents("form").has('label.error:visible').length == 0 && !$obj.attr("readonly")){
             setCookie(qfkey, 1, 3600);
             submitted = 1;
             $(this).val($(this).val() + ' ...');
@@ -33,7 +58,7 @@
       // prevent double submit
       $obj.parents("form").on('submit', function(e){
         var $form = $(this);
-        if ($form.data('submitted') === true || $form.has('.error:visible').length > 0 || $obj.attr("readonly")) {
+        if ($form.data('submitted') === true || $form.has('label.error:visible').length > 0 || $obj.attr("readonly")) {
           // Previously submitted - don't submit again
           e.preventDefault();
         }
