@@ -669,29 +669,28 @@ WHERE civicrm_address.geo_code_1 IS NOT NULL
     while ($dao->fetch()) {
 
       $location = array();
-      $location['displayName'] = addslashes($dao->display_name);
-      $location['lat'] = $dao->latitude;
+      $location['locationName'] = $dao->display_name;
+      $location['displayName'] = $dao->display_name;
       $location['marker_class'] = 'Event';
+      $location['lat'] = $dao->latitude;
       $location['lng'] = $dao->longitude;
-      $address = '';
+      $location['contactID'] = $dao->contact_id;
+      $location['city'] = $dao->city;
+      $location['state'] = $dao->state;
+      $location['postal_code'] = $dao->postal_code;
+      $location['lat'] = $dao->latitude;
+      $location['lng'] = $dao->longitude;
+      $location['street_address'] = $dao->street_address;
+      $location['supplemental_address_1'] = $dao->supplemental_address_1;
+      $location['supplemental_address_2'] = $dao->supplemental_address_2;
+      $location['state_province_name'] = ts($dao->state_province_name);
+      $location['country'] = $dao->country;
 
-      CRM_Utils_String::append($address, '<br />',
-        array($dao->street_address,
-          $dao->city,
-        )
-      );
-      CRM_Utils_String::append($address, ', ',
-        array($dao->state, $dao->postal_code)
-      );
-      CRM_Utils_String::append($address, '<br /> ',
-        array($dao->country)
-      );
-      $location['address'] = addslashes($address);
+      $address = str_replace("\n", '', CRM_Utils_Address::format($location));
+      $location['address'] = $address;
+      $location['displayAddress'] = str_replace('<br />', ', ', $address);
       $location['url'] = CRM_Utils_System::url('civicrm/event/register', 'reset=1&id=' . $dao->event_id);
       $location['location_type'] = $dao->location_type;
-      $eventImage = '<img src="' . $config->resourceBase . 'i/contact_org.gif" alt="Organization " height="20" width="15" />';
-      $location['image'] = $eventImage;
-      $location['displayAddress'] = str_replace('<br />', ', ', $address);
       $locations[] = $location;
     }
     return $locations;

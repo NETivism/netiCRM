@@ -105,7 +105,7 @@ class CRM_Contact_Form_Task_Map extends CRM_Contact_Form_Task {
         $ids = $this->_contactIds;
       }
     }
-    self::createMapXML($ids, $lid, $this, TRUE, $type);
+    self::createMap($ids, $lid, $this, TRUE, $type);
     $this->assign('single', $this->_single);
   }
 
@@ -145,7 +145,7 @@ class CRM_Contact_Form_Task_Map extends CRM_Contact_Form_Task {
    * @return string           the location of the file we have created
    * @access protected
    */
-  static function createMapXML($ids, $locationId, &$page, $addBreadCrumb, $type = 'Contact') {
+  static function createMap($ids, $locationId, &$page, $addBreadCrumb, $type = 'Contact') {
     $config = CRM_Core_Config::singleton();
 
     CRM_Utils_System::setTitle(ts('Map Location(s)'));
@@ -194,15 +194,7 @@ class CRM_Contact_Form_Task_Map extends CRM_Contact_Form_Task {
     }
 
     $page->assign_by_ref('locations', $locations);
-
-    // only issue a javascript warning if we know we will not
-    // mess the poor user with too many warnings
-    if (count($locations) <= 3) {
-      $page->assign('geoCodeWarn', TRUE);
-    }
-    else {
-      $page->assign('geoCodeWarn', FALSE);
-    }
+    $page->assign('locationsJson', json_encode($locations));
 
     $sumLat = $sumLng = 0;
     $maxLat = $maxLng = -400;

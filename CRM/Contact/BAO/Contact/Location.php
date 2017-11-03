@@ -126,6 +126,7 @@ LEFT JOIN civicrm_phone ON ( civicrm_phone.contact_id = civicrm_contact.id )
           civicrm_contact.contact_type as contact_type,
           civicrm_contact.contact_sub_type as contact_sub_type,
           civicrm_contact.display_name as display_name,
+          civicrm_contact.image_URL as image_url,
           civicrm_address.street_address as street_address,
           civicrm_address.supplemental_address_1 as supplemental_address_1,
           civicrm_address.supplemental_address_2 as supplemental_address_2,
@@ -134,6 +135,7 @@ LEFT JOIN civicrm_phone ON ( civicrm_phone.contact_id = civicrm_contact.id )
           civicrm_address.postal_code_suffix as postal_code_suffix,
           civicrm_address.geo_code_1 as latitude,
           civicrm_address.geo_code_2 as longitude,
+          civicrm_address.id as address_id,
           civicrm_state_province.abbreviation as state_province,
           civicrm_state_province.name as state_province_name,
           civicrm_country.name as country,
@@ -143,9 +145,7 @@ LEFT JOIN civicrm_address ON civicrm_address.contact_id = civicrm_contact.id
 LEFT JOIN civicrm_state_province ON civicrm_address.state_province_id = civicrm_state_province.id
 LEFT JOIN civicrm_country ON civicrm_address.country_id = civicrm_country.id
 LEFT JOIN civicrm_location_type ON civicrm_location_type.id = civicrm_address.location_type_id
-WHERE civicrm_address.geo_code_1 IS NOT NULL 
-AND civicrm_address.geo_code_2 IS NOT NULL 
-AND civicrm_contact.id IN $idString ";
+WHERE civicrm_contact.id IN $idString ";
 
     $params = array();
     if (!$locationTypeID) {
@@ -159,11 +159,35 @@ AND civicrm_contact.id IN $idString ";
 
     $locations = array();
     $config = CRM_Core_Config::singleton();
+    $maxiumDecode = 10; // each search only decode 10 addersss
+    $runDecode = 0;
 
     while ($dao->fetch()) {
-      $location = array();
+      $location = $reverseGeoDecode = array();
+      if (empty($dao->latitude) && empty($dao->longtude) && !empty($dao->street_address) && $runDecode < $maxiumDecode) {
+        $reverseGeoDecode['street_address'] = $dao->street_address;
+        $reverseGeoDecode['city'] = $dao->city;
+        $reverseGeoDecode['state_province_name'] = ts($dao->state_province_name);
+        $reverseGeoDecode['postal_code'] = $dao->postal_code;
+        $reverseGeoDecode['country'] = $dao->country;
+        $runDecode++;
+        call_user_func_array(array($config->geocodeMethod, 'format'), array(&$reverseGeoDecode));
+        if (!empty($reverseGeoDecode['geo_code_1']) && $reverseGeoDecode['geo_code_1'] != 'null') {
+          CRM_Core_DAO::executeQuery("UPDATE civicrm_address SET geo_code_1 = %1, geo_code_2 = %2 WHERE id = %3", array(
+            1 => array($reverseGeoDecode['geo_code_1'], 'Float'),
+            2 => array($reverseGeoDecode['geo_code_2'], 'Float'),
+            3 => array($dao->address_id, 'Integer'),
+          ));
+          $dao->latitude = $reverseGeoDecode['geo_code_1'];
+          $dao->longitude = $reverseGeoDecode['geo_code_2'];
+        }
+      }
+      if (empty($dao->latitude) || empty($dao->longitude)){
+        continue;
+      } 
       $location['contactID'] = $dao->contact_id;
-      $location['displayName'] = addslashes($dao->display_name);
+      $location['displayName'] = $dao->display_name;
+      $location['photo'] = $dao->image_url;
       $location['city'] = $dao->city;
       $location['state'] = $dao->state;
       $location['postal_code'] = $dao->postal_code;
@@ -179,7 +203,7 @@ AND civicrm_contact.id IN $idString ";
 
       $address = str_replace("\n", '', CRM_Utils_Address::format($location));
 
-      $location['address'] = addslashes($address);
+      $location['address'] = $address;
       $location['displayAddress'] = str_replace('<br />', ', ', $address);
       $location['url'] = CRM_Utils_System::url('civicrm/contact/view', 'reset=1&cid=' . $dao->contact_id);
       $location['location_type'] = $dao->location_type;
