@@ -169,6 +169,7 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page {
       $this->assign('locationsJson', json_encode($locations));
       $this->assign_by_ref('locations', $locations);
       $this->assign('mapProvider', $config->mapProvider);
+      $this->assign('mapKey', $config->mapAPIKey);
     }
     require_once 'CRM/Event/BAO/Participant.php';
     $eventFullMessage = CRM_Event_BAO_Participant::eventFull($this->_id);
